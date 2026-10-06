@@ -3,26 +3,1043 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `completions.ts`
 
-file--completions.ts
-file--packet-download-link.pipe.ts
-file--packet-list.component.css
-file--packet-list.component.html
-file--packet-list.component.ts
-file--PacketBuffer.ts
-file--packets.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/completions.ts`
+
+
+```typescript
+import { Completion, insertCompletionText } from '@codemirror/autocomplete';
+import { EditorView } from 'codemirror';
+
+function applyString(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  const replacement = completion.label + ' = \"\"';
+  const tr = insertCompletionText(view.state, replacement, from, to);
+  // Place cursor between quotes
+  tr.selection = { anchor: from + replacement.length - 1 };
+  view.dispatch(tr);
+}
+
+function applyNumber(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' = ', from, to),
+  );
+}
+
+function applyLogicalOperator(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' ', from, to),
+  );
+}
+
+export const PACKET_COMPLETIONS: Completion[] = [
+  {
+    label: 'name',
+    type: 'method',
+    info: 'Filter by packet name',
+    apply: applyString,
+  },
+  {
+    label: 'binary',
+    type: 'method',
+    info: 'Filter by hex packet binary',
+    apply: applyString,
+  },
+  {
+    label: 'link',
+    type: 'method',
+    info: 'Filter by link',
+    apply: applyString,
+  },
+  {
+    label: 'seqNumber',
+    type: 'method',
+    info: 'Filter by packet sequence number',
+    apply: applyNumber,
+  },
+  {
+    label: 'size',
+    type: 'method',
+    info: 'Filter by packet size',
+    apply: applyNumber,
+  },
+  {
+    section: 'Exclude packets',
+    label: '-name',
+    type: 'method',
+    info: 'Exclude packets based on name',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude packets',
+    label: '-binary',
+    type: 'method',
+    info: 'Exclude packets based on hex packet binary',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude packets',
+    label: '-link',
+    type: 'method',
+    info: 'Exclude packets based on link',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude packets',
+    label: '-seqNumber',
+    type: 'method',
+    info: 'Exclude packets based on sequence number',
+    apply: applyNumber,
+  },
+  {
+    section: 'Exclude packets',
+    label: '-size',
+    type: 'method',
+    info: 'Exclude packets based on packet size',
+    apply: applyNumber,
+  },
+  {
+    section: 'Logical operators',
+    label: 'AND',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'OR',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'NOT',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+];
 ```
 
-## 항목
+### `packet-download-link.pipe.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/completions.ts`](file--completions.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-download-link.pipe.ts`](file--packet-download-link.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.css`](file--packet-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.html`](file--packet-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.ts`](file--packet-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/PacketBuffer.ts`](file--PacketBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packets.datasource.ts`](file--packets.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-download-link.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Packet, YamcsService } from '@yamcs/webapp-sdk';
+
+@Pipe({
+  name: 'packetDownloadLink',
+})
+export class PacketDownloadLinkPipe implements PipeTransform {
+  constructor(private yamcs: YamcsService) {}
+
+  transform(packet: Packet | null): string | null {
+    if (!packet) {
+      return null;
+    }
+
+    const instance = this.yamcs.instance!;
+    return this.yamcs.yamcsClient.getPacketDownloadURL(
+      instance,
+      packet.id.name,
+      packet.generationTime,
+      packet.sequenceNumber,
+    );
+  }
+}
+```
+
+### `packet-list.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.css`
+
+
+```css
+.ya-filter-bar.query {
+  height: unset;
+}
+
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.table-wrapper tr {
+  cursor: pointer;
+}
+```
+
+### `packet-list.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Packets">
+    <ya-page-button (clicked)="jumpToNow()" icon="refresh">Jump to now</ya-page-button>
+  </ya-instance-toolbar>
+
+  <ya-detail-pane>
+    @if (detailPacket$ | async; as detailPacket) {
+      <ya-detail-toolbar>Packet detail</ya-detail-toolbar>
+      <ya-attr-list style="padding: 0 16px 16px 16px">
+        <ya-attr label="Packet name">
+          {{ detailPacket.id.name }}
+        </ya-attr>
+
+        <ya-attr label="Generation time">
+          {{ detailPacket.generationTime | datetime }}
+        </ya-attr>
+
+        <ya-attr label="Earth reception time">
+          {{ (detailPacket.earthReceptionTime | datetime) || "-" }}
+          @if (detailPacket.earthReceptionTime) {
+            ({{ detailPacket.earthReceptionTime | deltaWith: detailPacket.generationTime }})
+          }
+        </ya-attr>
+
+        <ya-attr label="Reception time">
+          {{ detailPacket.receptionTime | datetime }}
+          ({{ detailPacket.receptionTime | deltaWith: detailPacket.generationTime }})
+        </ya-attr>
+
+        <ya-attr label="Link">
+          {{ detailPacket.link || "-" }}
+        </ya-attr>
+
+        <ya-attr label="Size">
+          {{ detailPacket.size | formatBytes }}
+        </ya-attr>
+
+        <ya-attr>
+          <ng-template ya-attr-label>
+            Binary
+            <ya-more icon="more_horiz">
+              <button mat-menu-item (click)="copyHex(detailPacket)">Copy hex</button>
+              <button mat-menu-item (click)="copyBinary(detailPacket)">Copy binary</button>
+              <mat-divider />
+              <ya-download-menu-item [link]="detailPacket | packetDownloadLink">
+                Download
+              </ya-download-menu-item>
+            </ya-more>
+          </ng-template>
+          <app-hex #hexdump [base64String]="detailPacket.packet" />
+        </ya-attr>
+      </ya-attr-list>
+    } @else {
+      <ya-detail-toolbar>Select a packet</ya-detail-toolbar>
+    }
+  </ya-detail-pane>
+
+  <div class="table-wrapper">
+    <ya-panel>
+      <app-packets-page-tabs>
+        <ya-button
+          appearance="text"
+          icon="clear"
+          (click)="clearQuery()"
+          [disabled]="!isClearQueryEnabled()">
+          Clear query
+        </ya-button>
+        <ya-button appearance="text" icon="save" (click)="openSaveQueryDialog()">
+          Save query
+        </ya-button>
+      </app-packets-page-tabs>
+
+      <ya-filter-bar [formGroup]="filterForm" class="query" style="margin-top: 16px">
+        <ya-select icon="access_time" formControlName="interval">
+          <ya-option id="PT1H" label="Last hour" />
+          <ya-option id="PT6H" label="Last 6 hours" />
+          <ya-option id="P1D" label="Last 24 hours" />
+          <ya-option id="NO_LIMIT" label="No limit" />
+          <ya-option id="CUSTOM" label="Custom" group="true" />
+        </ya-select>
+        @if (filterForm.value["interval"] === "CUSTOM") {
+          <ya-date-time-input formControlName="customStart" />
+          <ya-date-time-input formControlName="customStop" />
+          <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+        }
+        <ya-search-filter2
+          #searchFilter
+          formControlName="filter"
+          placeholder="Search packets"
+          style="flex: 1 1 auto"
+          [completions]="completions"
+          (typedValue)="parseQuery($event)" />
+        <ya-select [options]="nameOptions$ | async" formControlName="name" />
+        <ya-select [options]="linkOptions$ | async" formControlName="link" />
+      </ya-filter-bar>
+
+      <ya-table-window [duration]="appliedInterval" [start]="validStart" [stop]="validStop">
+        @if (dataSource.loading$ | async) {
+          <ya-dots />
+        }
+        <mat-menu #exportMenu="matMenu" class="ya-menu">
+          <ya-download-menu-item [link]="downloadURL$ | async">Raw dump</ya-download-menu-item>
+        </mat-menu>
+        <ya-button
+          [matMenuTriggerFor]="exportMenu"
+          [disabled]="!(dataSource.packets$ | async)?.length"
+          icon="download"
+          appearance="text"
+          dropdown="true">
+          Export
+        </ya-button>
+        <ya-column-chooser
+          #columnChooser
+          [columns]="columns"
+          preferenceKey="tmPackets"
+          appearance="text"
+          icon="view_columns" />
+      </ya-table-window>
+
+      @if (searchFilter.dirty()) {
+        <ya-table-top>
+          The search filter has changed.
+          @if (!(searchFilter.errorState$ | async)) {
+            &nbsp;
+            <a href class="ya-link" (click)="searchFilter.doSearch(); $event.preventDefault()">
+              Apply filter
+            </a>
+            .
+          }
+        </ya-table-top>
+      }
+      <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+        <ng-container matColumnDef="packetName">
+          <th mat-header-cell *matHeaderCellDef>Packet name</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.id.name }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="generationTime">
+          <th mat-header-cell *matHeaderCellDef>Generation time</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.generationTime | datetime }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sequenceNumber">
+          <th mat-header-cell *matHeaderCellDef>Seq</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.sequenceNumber ?? "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="earthReceptionTime">
+          <th mat-header-cell *matHeaderCellDef>Earth reception time</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ (packet.earthReceptionTime | datetime) || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="receptionTime">
+          <th mat-header-cell *matHeaderCellDef>Reception time</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.receptionTime | datetime }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="link">
+          <th mat-header-cell *matHeaderCellDef>Link</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.link || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="size">
+          <th mat-header-cell *matHeaderCellDef>Size</th>
+          <td mat-cell *matCellDef="let packet">
+            {{ packet.size | formatBytes }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let packet">
+            <ya-text-action icon="output" (click)="extractPacket(packet)">Extract</ya-text-action>
+            <ya-more>
+              <button mat-menu-item (click)="copyHex(packet)">Copy hex</button>
+              <button mat-menu-item (click)="copyBinary(packet)">Copy binary</button>
+              <mat-divider />
+              <ya-download-menu-item [link]="packet | packetDownloadLink">
+                Download
+              </ya-download-menu-item>
+            </ya-more>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          (click)="selectPacket(row)"
+          [class.selected]="isSelected(row)"></tr>
+      </table>
+
+      <ya-toolbar appearance="bottom" align="center">
+        <ya-button [disabled]="!dataSource.hasMore()" (click)="loadMoreData()">Load more</ya-button>
+      </ya-toolbar>
+    </ya-panel>
+  </div>
+</ya-instance-page>
+```
+
+### `packet-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packet-list.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  OnDestroy,
+  OnInit,
+  viewChild,
+} from '@angular/core';
+import {
+  FormControl,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import {
+  BaseComponent,
+  DownloadPacketsOptions,
+  GetPacketsOptions,
+  Packet,
+  ParseFilterSubscription,
+  utils,
+  WebappSdkModule,
+  YaColumnInfo,
+  YaSearchFilter2,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { HexComponent } from '../../../shared/hex/hex.component';
+import { CreatePacketQueryDialogComponent } from '../create-packet-query-dialog/create-packet-query-dialog.component';
+import { PacketsPageTabsComponent } from '../packets-page-tabs/packets-page-tabs.component';
+import { PACKET_COMPLETIONS } from './completions';
+import { PacketDownloadLinkPipe } from './packet-download-link.pipe';
+import { PacketsDataSource } from './packets.datasource';
+
+const defaultInterval = 'PT1H';
+
+@Component({
+  templateUrl: './packet-list.component.html',
+  styleUrl: './packet-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    HexComponent,
+    PacketDownloadLinkPipe,
+    PacketsPageTabsComponent,
+    WebappSdkModule,
+  ],
+})
+export class PacketListComponent
+  extends BaseComponent
+  implements OnInit, OnDestroy
+{
+  filter = input<string>();
+  name = input<string>();
+  link = input<string>();
+  interval = input<string>();
+  customStart = input<string>();
+  customStop = input<string>();
+
+  // From resolver
+  parseFilterSubscription = input.required<ParseFilterSubscription>();
+
+  columns: YaColumnInfo[] = [
+    { id: 'packetName', label: 'Packet name', alwaysVisible: true },
+    { id: 'generationTime', label: 'Generation time', alwaysVisible: true },
+    { id: 'earthReceptionTime', label: 'Earth reception time', visible: false },
+    { id: 'receptionTime', label: 'Reception time', visible: true },
+    { id: 'sequenceNumber', label: 'Sequence number', visible: false },
+    { id: 'link', label: 'Link', visible: true },
+    { id: 'size', label: 'Size', visible: true },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  searchFilter = viewChild.required<YaSearchFilter2>('searchFilter');
+  completions = PACKET_COMPLETIONS;
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new UntypedFormGroup({
+    filter: new FormControl<string | null>(null),
+    name: new UntypedFormControl('ANY'),
+    link: new UntypedFormControl('ANY'),
+    interval: new FormControl<string | null>(defaultInterval),
+    customStart: new FormControl<string | null>(null),
+    customStop: new FormControl<string | null>(null),
+  });
+
+  dataSource: PacketsDataSource;
+
+  detailPacket$ = new BehaviorSubject<Packet | null>(null);
+
+  nameOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'ANY', label: 'Any name' },
+  ]);
+
+  linkOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'ANY', label: 'Any link' },
+  ]);
+
+  downloadURL$ = new BehaviorSubject<string | null>(null);
+
+  constructor(
+    private dialog: MatDialog,
+    private route: ActivatedRoute,
+    private clipboard: Clipboard,
+  ) {
+    super();
+    this.setTitle('Packets');
+
+    this.dataSource = new PacketsDataSource(this.yamcs, this.synchronizer);
+
+    this.yamcs.yamcsClient
+      .getPacketNames(this.yamcs.instance!)
+      .then((message) => {
+        for (const name of message.packets || []) {
+          this.nameOptions$.next([
+            ...this.nameOptions$.value,
+            {
+              id: name,
+              label: name,
+            },
+          ]);
+        }
+        for (const name of message.links || []) {
+          this.linkOptions$.next([
+            ...this.linkOptions$.value,
+            {
+              id: name,
+              label: name,
+            },
+          ]);
+        }
+      });
+  }
+
+  ngOnInit(): void {
+    this.parseFilterSubscription().addMessageListener((data) => {
+      if (data.errorMessage) {
+        this.searchFilter().addErrorMark(data.errorMessage, {
+          beginLine: data.beginLine!,
+          beginColumn: data.beginColumn!,
+          endLine: data.endLine!,
+          endColumn: data.endColumn!,
+        });
+      } else {
+        this.searchFilter().clearErrorMark();
+      }
+    });
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('filter')!.valueChanges.forEach((filter) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('name')!.valueChanges.forEach((name) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('link')!.valueChanges.forEach((link) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    if (this.filter()) {
+      const filter = this.filter()!;
+      this.filterForm.get('filter')!.setValue(filter);
+    }
+    if (this.name()) {
+      const name = this.name()!;
+      this.filterForm.get('name')!.setValue(name);
+    }
+    if (this.link()) {
+      const link = this.link()!;
+      this.filterForm.get('link')!.setValue(link);
+    }
+    if (this.interval()) {
+      this.appliedInterval = this.interval()!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = this.customStart()!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = this.customStop()!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval === 'CUSTOM') {
+      // For simplicity reasons, just reset to default 1h interval.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  // Used in table trackBy to prevent continuous row recreation
+  // tableTrackerFn = (index: number, entry: CommandHistoryEntry) => ;
+
+  applyCustomDates() {
+    const { controls } = this.filterForm;
+    this.validStart = utils.toDate(controls['customStart'].value);
+    this.validStop = utils.toDate(controls['customStop'].value);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  loadData() {
+    const { controls } = this.filterForm;
+    this.updateURL();
+    const options: GetPacketsOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.filter = filter;
+    }
+    const name = controls['name'].value;
+    if (name !== 'ANY') {
+      options.name = [name];
+    }
+    const link = controls['link'].value;
+    if (link !== 'ANY') {
+      options.link = link;
+    }
+
+    const dlOptions: DownloadPacketsOptions = {};
+    if (this.validStart) {
+      dlOptions.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      dlOptions.stop = this.validStop.toISOString();
+    }
+    if (name !== 'ANY') {
+      dlOptions.name = name;
+    }
+    if (link !== 'ANY') {
+      dlOptions.link = link;
+    }
+
+    this.dataSource
+      .loadEntries('realtime', options)
+      .then((packets) => {
+        const downloadURL = this.yamcs.yamcsClient.getPacketsDownloadURL(
+          this.yamcs.instance!,
+          dlOptions,
+        );
+        this.downloadURL$.next(downloadURL);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  loadMoreData() {
+    const { controls } = this.filterForm;
+    const options: GetPacketsOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.filter = filter;
+    }
+    const name = controls['name'].value;
+    if (name && name !== 'ANY') {
+      options.name = [name];
+    }
+    const link = controls['link'].value;
+    if (link && link !== 'ANY') {
+      options.link = link;
+    }
+
+    this.dataSource
+      .loadMoreData(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  copyHex(packet: Packet) {
+    this.fetchPacket(packet)
+      .then((packetDetail) => {
+        const hex = utils.convertBase64ToHex(packetDetail.packet ?? '');
+        if (this.clipboard.copy(hex)) {
+          this.messageService.showInfo('Hex copied');
+        } else {
+          this.messageService.showInfo('Hex copy failed');
+        }
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  copyBinary(packet: Packet) {
+    this.fetchPacket(packet)
+      .then((packetDetail) => {
+        const raw = window.atob(packetDetail.packet ?? '');
+        if (this.clipboard.copy(raw)) {
+          this.messageService.showInfo('Binary copied');
+        } else {
+          this.messageService.showInfo('Binary copy failed');
+        }
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const { controls } = this.filterForm;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: controls['filter'].value || null,
+        name: controls['name'].value === 'ANY' ? null : controls['name'].value,
+        link: controls['link'].value === 'ANY' ? null : controls['link'].value,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStart']
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? this.filterForm.value['customStop']
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectPacket(packet: Packet) {
+    this.fetchPacket(packet)
+      .then((packetDetail) => {
+        this.detailPacket$.next(packetDetail);
+        this.openDetailPane();
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private fetchPacket(packet: Packet) {
+    // Fetch the full detail of a packet, which includes the binary
+    return this.yamcs.yamcsClient.getPacket(
+      this.yamcs.instance!,
+      packet.id.name,
+      packet.generationTime,
+      packet.sequenceNumber,
+    );
+  }
+
+  extractPacket(packet: Packet) {
+    this.router.navigate(
+      [
+        '/telemetry/packets' + packet.id.name,
+        '-',
+        'log',
+        packet.generationTime,
+        packet.sequenceNumber,
+      ],
+      {
+        queryParams: {
+          c: this.yamcs.context,
+        },
+      },
+    );
+  }
+
+  isSelected(packet: Packet) {
+    const detail = this.detailPacket$.value;
+    if (detail) {
+      return (
+        packet.id.name === detail.id.name &&
+        packet.generationTime === detail.generationTime &&
+        packet.sequenceNumber === detail.sequenceNumber
+      );
+    }
+    return false;
+  }
+
+  clearQuery() {
+    this.filterForm.reset({
+      severity: 'INFO',
+      source: [],
+      interval: defaultInterval,
+    });
+  }
+
+  openSaveQueryDialog() {
+    const { controls } = this.filterForm;
+    this.dialog
+      .open(CreatePacketQueryDialogComponent, {
+        width: '800px',
+        data: {
+          name: controls['name'].value,
+          nameOptions: this.nameOptions$.value,
+          link: controls['link'].value,
+          linkOptions: this.linkOptions$.value,
+          // Use currently typed value (even if not submitted)
+          filter: this.searchFilter().getTypedValue(),
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.messageService.showInfo('Query saved');
+        }
+      });
+  }
+
+  parseQuery(typedQuery: string) {
+    this.parseFilterSubscription().sendMessage({
+      resource: 'packets',
+      filter: typedQuery,
+    });
+  }
+
+  isClearQueryEnabled() {
+    const fv = this.filterForm.value;
+    return (
+      this.searchFilter().empty() || fv.name !== 'ANY' || fv.link !== 'ANY'
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.parseFilterSubscription().cancel();
+  }
+}
+```
+
+### `PacketBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/PacketBuffer.ts`
+
+
+```typescript
+import { Packet } from '@yamcs/webapp-sdk';
+
+export class PacketBuffer {
+  public dirty = false;
+
+  private archivePackets: Packet[] = [];
+
+  addArchiveData(packets: Packet[]) {
+    this.archivePackets = this.archivePackets.concat(packets);
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archivePackets = [];
+    this.dirty = true;
+  }
+
+  snapshot(): Packet[] {
+    return this.archivePackets;
+  }
+}
+```
+
+### `packets.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/packets.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  GetPacketsOptions,
+  Packet,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { PacketBuffer } from './PacketBuffer';
+
+export class PacketsDataSource extends DataSource<Packet> {
+  pageSize = 100;
+  continuationToken?: string;
+  options: GetPacketsOptions;
+  blockHasMore = false;
+
+  packets$ = new BehaviorSubject<Packet[]>([]);
+  private buffer: PacketBuffer;
+
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.buffer.dirty && !this.loading$.getValue()) {
+        this.emitPackets();
+        this.buffer.dirty = false;
+      }
+    });
+
+    this.buffer = new PacketBuffer();
+  }
+
+  override connect() {
+    return this.packets$;
+  }
+
+  private emitPackets() {
+    this.packets$.next(this.buffer.snapshot());
+  }
+
+  loadEntries(processorName: string, options: GetPacketsOptions) {
+    this.loading$.next(true);
+    return this.loadPage({
+      ...options,
+      limit: this.pageSize,
+    }).then((packets) => {
+      this.loading$.next(false);
+      this.buffer.reset();
+      this.blockHasMore = false;
+      this.buffer.addArchiveData(packets);
+
+      // Quick emit, don't wait on sync tick
+      this.emitPackets();
+    });
+  }
+
+  hasMore() {
+    return !!this.continuationToken && !this.blockHasMore;
+  }
+
+  private loadPage(options: GetPacketsOptions) {
+    return this.yamcs.yamcsClient
+      .getPackets(this.yamcs.instance!, {
+        ...options,
+        fields: [
+          // Everything except the packet binary
+          'id',
+          'generationTime',
+          'earthReceptionTime',
+          'receptionTime',
+          'sequenceNumber',
+          'link',
+          'size',
+        ],
+      })
+      .then((page) => {
+        this.continuationToken = page.continuationToken;
+        return page.packets || [];
+      });
+  }
+
+  async loadMoreData(options: GetPacketsOptions) {
+    if (!this.continuationToken) {
+      return;
+    }
+    return this.loadPage({
+      ...options,
+      next: this.continuationToken,
+      limit: this.pageSize,
+    }).then((packets) => {
+      this.buffer.addArchiveData(packets);
+
+      // Quick emit, don't wait on sync tick
+      this.emitPackets();
+    });
+  }
+
+  disconnect() {
+    this.syncSubscription?.unsubscribe();
+    this.packets$.complete();
+    this.loading$.complete();
+  }
+
+  isEmpty() {
+    return !this.packets$.getValue().length;
+  }
+}
+```

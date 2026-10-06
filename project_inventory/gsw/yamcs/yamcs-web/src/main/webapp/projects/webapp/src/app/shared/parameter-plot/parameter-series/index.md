@@ -3,14 +3,43 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-series/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-series.component.ts`
 
-file--parameter-series.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-series/parameter-series.component.ts`
+
+
+```typescript
+import { Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-parameter-series',
+  template: '',
+})
+export class ParameterSeriesComponent {
+  @Input()
+  parameter: string;
+
+  @Input()
+  grid = false;
+
+  @Input()
+  axis = true;
+
+  @Input()
+  axisLineWidth = 1;
+
+  @Input()
+  alarmRanges: 'line' | 'fill' | 'none' = 'line';
+
+  @Input()
+  color = '#1b61b9';
+
+  @Input()
+  label: string;
+
+  @Input()
+  strokeWidth = 2;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-series/parameter-series.component.ts`](file--parameter-series.component.ts) — UTF-8 텍스트 파일 본문 포함

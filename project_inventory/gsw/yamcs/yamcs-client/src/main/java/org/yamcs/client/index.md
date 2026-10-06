@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,77 +16,2329 @@ processor/index
 storage/index
 timeline/index
 utils/index
-file--Acknowledgment.java
-file--AlarmSubscription.java
-file--BasicAuthCredentials.java
-file--ClearanceSubscription.java
-file--ClientException.java
-file--Command.java
-file--CommandListener.java
-file--CommandSubscription.java
-file--ConnectionListener.java
-file--ContainerSubscription.java
-file--Credentials.java
-file--EventSubscription.java
-file--GlobalAlarmStatusSubscription.java
-file--Helpers.java
-file--InstanceFilter.java
-file--LinkSubscription.java
-file--MessageListener.java
-file--OAuth2Credentials.java
-file--PacketSubscription.java
-file--Page.java
-file--ParameterSubscription.java
-file--ProcessorSubscription.java
-file--QueueEventSubscription.java
-file--QueueStatisticsSubscription.java
-file--StreamReceiver.java
-file--StreamSender.java
-file--Subscription.java
-file--TimeListener.java
-file--TimeSubscription.java
-file--UnauthorizedException.java
-file--YamcsClient.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/archive/`](archive/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/base/`](base/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/filetransfer/`](filetransfer/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/processor/`](processor/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/`](storage/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/timeline/`](timeline/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/utils/`](utils/index) — 폴더
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Acknowledgment.java`](file--Acknowledgment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/AlarmSubscription.java`](file--AlarmSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/BasicAuthCredentials.java`](file--BasicAuthCredentials.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClearanceSubscription.java`](file--ClearanceSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClientException.java`](file--ClientException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Command.java`](file--Command.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandListener.java`](file--CommandListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandSubscription.java`](file--CommandSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ConnectionListener.java`](file--ConnectionListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ContainerSubscription.java`](file--ContainerSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Credentials.java`](file--Credentials.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/EventSubscription.java`](file--EventSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/GlobalAlarmStatusSubscription.java`](file--GlobalAlarmStatusSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Helpers.java`](file--Helpers.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/InstanceFilter.java`](file--InstanceFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/LinkSubscription.java`](file--LinkSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/MessageListener.java`](file--MessageListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/OAuth2Credentials.java`](file--OAuth2Credentials.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/PacketSubscription.java`](file--PacketSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Page.java`](file--Page.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ParameterSubscription.java`](file--ParameterSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ProcessorSubscription.java`](file--ProcessorSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueEventSubscription.java`](file--QueueEventSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueStatisticsSubscription.java`](file--QueueStatisticsSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamReceiver.java`](file--StreamReceiver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamSender.java`](file--StreamSender.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Subscription.java`](file--Subscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeListener.java`](file--TimeListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeSubscription.java`](file--TimeSubscription.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/UnauthorizedException.java`](file--UnauthorizedException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/YamcsClient.java`](file--YamcsClient.java) — UTF-8 텍스트 파일 본문 포함
+### `Acknowledgment.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Acknowledgment.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+
+public class Acknowledgment {
+
+    public static final String QUEUED = "Acknowledge_Queued";
+    public static final String RELEASED = "Acknowledge_Released";
+    public static final String SENT = "Acknowledge_Sent";
+
+    private String name;
+    private Instant time;
+    private String status;
+    private String message;
+
+    Acknowledgment(String name, Instant time, String status, String message) {
+        this.name = name;
+        this.time = time;
+        this.status = status;
+        this.message = message;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public boolean isLocal() {
+        return QUEUED.equals(name) || RELEASED.equals(name) || SENT.equals(name);
+    }
+
+    /**
+     * Last update time of this acknowledgment.
+     */
+    public Instant getTime() {
+        return time;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s: %s", name, status);
+    }
+}
+```
+
+### `AlarmSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/AlarmSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.AlarmData;
+import org.yamcs.protobuf.alarms.SubscribeAlarmsRequest;
+
+/**
+ * Subscription for receiving alarm detail.
+ */
+public class AlarmSubscription extends AbstractSubscription<SubscribeAlarmsRequest, AlarmData> {
+
+    protected AlarmSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "alarms", AlarmData.class);
+    }
+}
+```
+
+### `BasicAuthCredentials.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/BasicAuthCredentials.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+
+public class BasicAuthCredentials implements Credentials {
+
+    private final String authorizationHeader;
+
+    public BasicAuthCredentials(String username, char[] password) {
+        authorizationHeader = "Basic " + Base64.getEncoder().encodeToString(
+                (username + ":" + new String(password)).getBytes(StandardCharsets.UTF_8));
+    }
+
+    public String getAuthorizationHeader() {
+        return authorizationHeader;
+    }
+
+    @Override
+    public boolean isExpired() {
+        return false;
+    }
+
+    @Override
+    public void modifyRequest(HttpRequest request) {
+        request.headers().add(HttpHeaderNames.AUTHORIZATION, authorizationHeader);
+    }
+}
+```
+
+### `ClearanceSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClearanceSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ClearanceInfo;
+
+import com.google.protobuf.Empty;
+
+/**
+ * Subscription for receiving clearance updates.
+ */
+public class ClearanceSubscription extends AbstractSubscription<Empty, ClearanceInfo> {
+
+    private volatile ClearanceInfo latest;
+
+    protected ClearanceSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "clearance", ClearanceInfo.class);
+        addMessageListener(this::processMessage);
+    }
+
+    protected void processMessage(ClearanceInfo clearance) {
+        latest = clearance;
+    }
+
+    public ClearanceInfo getCurrent() {
+        return latest;
+    }
+}
+```
+
+### `ClientException.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ClientException.java`
+
+
+```java
+package org.yamcs.client;
+
+import com.google.protobuf.Any;
+
+@SuppressWarnings("serial")
+public class ClientException extends Exception {
+
+    private final ExceptionData detail;
+
+    public ClientException(String message) {
+        this(message, null);
+    }
+
+    public ClientException(Throwable t) {
+        this(null, t);
+    }
+
+    public ClientException(String message, Throwable t) {
+        super(message, t);
+        this.detail = null;
+    }
+    public ClientException(ExceptionData detail) {
+        super(detail.getMessage());
+        this.detail = detail;
+    }
+
+    public ExceptionData getDetail() {
+        return detail;
+    }
+
+    public static class ExceptionData {
+        private String type;
+        private String message;
+        private Any detail;
+
+        public ExceptionData(String type, String message, Any detail) {
+            this.type = type;
+            this.message = message;
+            this.detail = detail;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public Any getDetail() {
+            return detail;
+        }
+
+        @Override
+        public String toString() {
+            return "ExceptionData{" +
+                    "type='" + type + '\'' +
+                    ", message='" + message + '\'' +
+                    ", detail=" + detail +
+                    '}';
+        }
+    }
+}
+```
+
+### `Command.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Command.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.protobuf.Commanding.CommandAssignment;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.IssueCommandResponse;
+
+public class Command implements Comparable<Command> {
+
+    private static final String ATTR_BINARY = "binary";
+    private static final String ATTR_QUEUE = "queue";
+    private static final String ATTR_UNPROCESSED_BINARY = "unprocessedBinary";
+    private static final String ATTR_USERNAME = "username";
+    private static final String ATTR_COMMENT = "comment";
+    private static final String LEGACY_ATTR_SOURCE = "source";
+    private static final String[] STANDARD_ATTRIBUTES = new String[] {
+            ATTR_BINARY,
+            ATTR_COMMENT,
+            ATTR_QUEUE,
+            ATTR_UNPROCESSED_BINARY,
+            ATTR_USERNAME,
+            LEGACY_ATTR_SOURCE,
+    };
+
+    private static final String PREFIX_COMMAND_COMPLETE = "CommandComplete";
+    private static final String PREFIX_TRANSMISSION_CONSTRAINTS = "TransmissionConstraints";
+    private static final String[] STANDARD_ATTRIBUTE_PREFIXES = new String[] {
+            PREFIX_COMMAND_COMPLETE,
+            PREFIX_TRANSMISSION_CONSTRAINTS,
+    };
+
+    private static final String SUFFIX_TIME = "_Time";
+    private static final String SUFFIX_MESSAGE = "_Message";
+    private static final String SUFFIX_STATUS = "_Status";
+    private static final String[] STANDARD_ATTRIBUTE_SUFFIXES = new String[] {
+            SUFFIX_TIME,
+            SUFFIX_MESSAGE,
+            SUFFIX_STATUS,
+    };
+
+    // Entries that come from a cascading server are prefixed with one or more
+    // patterns of the kind: yamcs<SERVER>_
+    private static final Pattern CASCADED_PREFIX = Pattern.compile("^(yamcs<[^>]+>_)+(.+)");
+
+    private final String id;
+    private final String name;
+    private final Map<String, String> aliases = new HashMap<>();
+    private final List<CommandAssignment> assignments;
+    private final String origin;
+    private final int sequenceNumber;
+    private final Instant generationTime;
+    private final String source;
+
+    private Map<String, Object> attributes = Collections.synchronizedMap(new LinkedHashMap<>());
+
+    // Command info that was relayed from an upstream (cascaded) server.
+    private Map<String, Command> cascadedRecordsByPrefix = new LinkedHashMap<>();
+
+    public Command(String id, String name, Map<String, String> aliases, List<CommandAssignment> assignments,
+            String origin, int sequenceNumber,
+            Instant generationTime) {
+        this.id = id;
+        this.name = name;
+        this.aliases.putAll(aliases);
+        this.assignments = assignments;
+        this.origin = origin;
+        this.sequenceNumber = sequenceNumber;
+        this.generationTime = generationTime;
+        this.source = buildSource(name, assignments);
+    }
+
+    public Command(IssueCommandResponse response) {
+        this.id = response.getId();
+        this.name = response.getCommandName();
+        this.aliases.putAll(response.getAliasesMap());
+        this.assignments = response.getAssignmentsList();
+        this.origin = response.getOrigin();
+        this.sequenceNumber = response.getSequenceNumber();
+        this.generationTime = Helpers.toInstant(response.getGenerationTime());
+        this.source = buildSource(name, response.getAssignmentsList());
+
+        if (response.hasUnprocessedBinary()) {
+            attributes.put(ATTR_UNPROCESSED_BINARY, response.getUnprocessedBinary().toByteArray());
+        }
+        if (response.hasBinary()) {
+            attributes.put(ATTR_BINARY, response.getBinary().toByteArray());
+        }
+        if (response.hasQueue()) {
+            attributes.put(ATTR_QUEUE, response.getQueue());
+        }
+        if (response.hasUsername()) {
+            attributes.put(ATTR_USERNAME, response.getUsername());
+        }
+    }
+
+    public Command(CommandHistoryEntry entry) {
+        this(entry.getId(), entry.getCommandName(), entry.getAliasesMap(), entry.getAssignmentsList(),
+                entry.getOrigin(), entry.getSequenceNumber(), Helpers.toInstant(entry.getGenerationTime()));
+        merge(entry);
+    }
+
+    private static String buildSource(String name, List<CommandAssignment> assignments) {
+        StringBuilder buf = new StringBuilder(name).append("(");
+        buf.append(assignments.stream()
+                .filter(CommandAssignment::getUserInput)
+                .map(assignment -> {
+                    Object value = Helpers.parseValue(assignment.getValue());
+                    if (value instanceof String) {
+                        return assignment.getName() + ": \"" + value + "\"";
+                    } else if (value instanceof byte[]) {
+                        return assignment.getName() + ": 0x" + WellKnownTypes.toHex((byte[]) value);
+                    } else {
+                        return assignment.getName() + ": " + value;
+                    }
+                }).collect(Collectors.joining(", ")));
+        return buf.append(")").toString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Instant getGenerationTime() {
+        return generationTime;
+    }
+
+    /**
+     * Fully qualified command name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Alias under the specified namespace. Returns {@code null} if this command has no such alias.
+     */
+    public String getName(String namespace) {
+        return aliases.get(namespace);
+    }
+
+    public List<CommandAssignment> getAssignments() {
+        return Collections.unmodifiableList(assignments);
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public int getSequenceNumber() {
+        return sequenceNumber;
+    }
+
+    /**
+     * Username of the issuer
+     */
+    public String getUsername() {
+        return (String) attributes.get(ATTR_USERNAME);
+    }
+
+    /**
+     * The assigned command queue
+     */
+    public String getQueue() {
+        return (String) attributes.get(ATTR_QUEUE);
+    }
+
+    /**
+     * String representation of the command
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * Unprocessed binary representation of the command (prior to postprocessing).
+     */
+    public byte[] getUnprocessedBinary() {
+        return (byte[]) attributes.get(ATTR_UNPROCESSED_BINARY);
+    }
+
+    /**
+     * Binary representation of the command
+     */
+    public byte[] getBinary() {
+        return (byte[]) attributes.get(ATTR_BINARY);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T getAttribute(String key) {
+        return (T) attributes.get(key);
+    }
+
+    /**
+     * Returns whether this command is complete. A command can be complete, yet still failed.
+     */
+    public boolean isComplete() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null && (ack.getStatus().equals("OK") || ack.getStatus().equals("NOK"));
+    }
+
+    /**
+     * Returns true if this command has completed successfully
+     */
+    public boolean isSuccess() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null && ack.getStatus().equals("OK");
+    }
+
+    /**
+     * Returns true if this command failed
+     */
+    public boolean isFailure() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        return ack != null && ack.getStatus().equals("NOK");
+    }
+
+    /**
+     * Error message in case this command failed
+     */
+    public String getError() {
+        Acknowledgment ack = getAcknowledgment(PREFIX_COMMAND_COMPLETE);
+        if (ack != null && ack.getStatus().equals("NOK")) {
+            return ack.getMessage();
+        }
+        return null;
+    }
+
+    public String getComment() {
+        return (String) attributes.get(ATTR_COMMENT);
+    }
+
+    /**
+     * Returns all attributes of this commands.
+     */
+    public Map<String, Object> getAttributes() {
+        synchronized (attributes) {
+            return new LinkedHashMap<>(attributes);
+        }
+    }
+
+    public void merge(CommandHistoryEntry entry) {
+        for (CommandHistoryAttribute attr : entry.getAttrList()) {
+            var matcher = CASCADED_PREFIX.matcher(attr.getName());
+            if (matcher.matches()) {
+                var prefix = matcher.group(1);
+                var cascadedCommand = cascadedRecordsByPrefix.get(prefix);
+                if (cascadedCommand == null) {
+                    cascadedCommand = new Command(id, name, entry.getAliasesMap(), assignments, origin, sequenceNumber,
+                            generationTime);
+                    cascadedRecordsByPrefix.put(prefix, cascadedCommand);
+                }
+                var truncatedName = matcher.group(2);
+                cascadedCommand.attributes.put(truncatedName, Helpers.parseValue(attr.getValue()));
+            } else {
+                attributes.put(attr.getName(), Helpers.parseValue(attr.getValue()));
+            }
+        }
+    }
+
+    public void merge(Command other) {
+        synchronized (other.attributes) {
+            attributes.putAll(other.attributes);
+        }
+        for (var entry : other.cascadedRecordsByPrefix.entrySet()) {
+            var prefix = entry.getKey();
+            var cascadedRecord = entry.getValue();
+            var existing = cascadedRecordsByPrefix.get(prefix);
+            if (existing == null) {
+                cascadedRecordsByPrefix.put(prefix, cascadedRecord);
+            } else {
+                synchronized (cascadedRecord.attributes) {
+                    existing.attributes.putAll(cascadedRecord.attributes);
+                }
+            }
+        }
+    }
+
+    /**
+     * Returns non-standard attributes
+     */
+    public LinkedHashMap<String, Object> getExtraAttributes() {
+        var extra = new LinkedHashMap<String, Object>();
+        synchronized (attributes) {
+            for (var attr : attributes.entrySet()) {
+                String name = attr.getKey();
+                if (isExtraAttribute(name)) {
+                    extra.put(name, attr.getValue());
+                }
+            }
+        }
+        return extra;
+    }
+
+    /**
+     * All acknowledgments by name
+     */
+    public LinkedHashMap<String, Acknowledgment> getAcknowledgments() {
+        var acknowledgments = new LinkedHashMap<String, Acknowledgment>();
+        synchronized (attributes) {
+            for (var attr : attributes.entrySet()) {
+                String name = attr.getKey();
+                if (isAcknowledgmentStatusAttribute(name)) {
+                    var ack = getAcknowledgment(name.substring(0, name.length() - 7));
+                    if (ack != null) {
+                        acknowledgments.put(ack.getName(), ack);
+                    }
+                }
+            }
+        }
+        return acknowledgments;
+    }
+
+    private boolean isExtraAttribute(String attributeName) {
+        for (String suffix : STANDARD_ATTRIBUTE_SUFFIXES) {
+            if (attributeName.endsWith(suffix)) {
+                return false;
+            }
+        }
+        for (String prefix : STANDARD_ATTRIBUTE_PREFIXES) {
+            if (attributeName.startsWith(prefix)) {
+                return false;
+            }
+        }
+        return Arrays.binarySearch(STANDARD_ATTRIBUTES, attributeName) >= 0;
+    }
+
+    private boolean isAcknowledgmentStatusAttribute(String attributeName) {
+        if (!attributeName.endsWith(SUFFIX_STATUS)) {
+            return false;
+        }
+        for (String prefix : STANDARD_ATTRIBUTE_PREFIXES) {
+            if (attributeName.startsWith(prefix)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Acknowledgment getQueuedAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.QUEUED);
+    }
+
+    public Acknowledgment getReleasedAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.RELEASED);
+    }
+
+    public Acknowledgment getSentAcknowledgment() {
+        return getAcknowledgment(Acknowledgment.SENT);
+    }
+
+    public Acknowledgment getAcknowledgment(String name) {
+        Instant time = (Instant) attributes.get(name + SUFFIX_TIME);
+        String status = (String) attributes.get(name + SUFFIX_STATUS);
+        String message = (String) attributes.get(name + SUFFIX_MESSAGE);
+        if (time != null && status != null) {
+            return new Acknowledgment(name, time, status, message);
+        }
+        return null;
+    }
+
+    /**
+     * Returns command records that capture state of upstream (cascaded) servers.
+     * <p>
+     * The returned map is keyed by the cascading prefix, for example: {@code yamcs<SERVER1>_} when the information is
+     * cascaded from SERVER1, or {@code yamcs<SERVER2>_yamcs<SERVER1>_} when the information is cascaded from SERVER 1
+     * over SERVER2.
+     */
+    public Map<String, Command> getCascadedRecords() {
+        return Collections.unmodifiableMap(cascadedRecordsByPrefix);
+    }
+
+
+    @Override
+    public int compareTo(Command other) {
+        return id.compareTo(other.id);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Command)) {
+            return false;
+        }
+        Command other = (Command) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return getId();
+    }
+}
+```
+
+### `CommandListener.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandListener.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+
+@FunctionalInterface
+public interface CommandListener {
+
+    /**
+     * Called when a new command is received and also updated.
+     * 
+     * @param command
+     */
+    void onUpdate(Command command);
+
+    /**
+     * Same as above but also provides the list of new/updated attributes
+     * 
+     * @param command
+     *            command including all attributes
+     * @param cmdHistEntry
+     *            the list of new or updated attributes
+     */
+    default void onUpdate(Command command, CommandHistoryEntry cmdHistEntry) {
+    }
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+```
+
+### `CommandSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/CommandSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.SubscribeCommandsRequest;
+
+/**
+ * Subscription for tracking issued commands, their attributes and acknowledgment status.
+ */
+public class CommandSubscription extends AbstractSubscription<SubscribeCommandsRequest, CommandHistoryEntry> {
+
+    // Concurrency only between consumers and update mechanism.
+    // We are not expecting (nor supporting) parallel updates.
+    private Map<String, Command> commands = new ConcurrentHashMap<>();
+    private Set<CommandListener> commandListeners = new CopyOnWriteArraySet<>();
+
+    public CommandSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "commands", CommandHistoryEntry.class);
+        addMessageListener(new MessageListener<CommandHistoryEntry>() {
+
+            @Override
+            public void onMessage(CommandHistoryEntry entry) {
+                Instant generationTime = Helpers.toInstant(entry.getGenerationTime());
+                Command command = commands.computeIfAbsent(entry.getId(), id -> new Command(entry.getId(),
+                        entry.getCommandName(), entry.getAliasesMap(), entry.getAssignmentsList(), entry.getOrigin(),
+                        entry.getSequenceNumber(), generationTime));
+                command.merge(entry);
+                commandListeners.forEach(l -> {
+                    l.onUpdate(command);
+                    l.onUpdate(command, entry);
+                });
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                commandListeners.forEach(l -> l.onError(t));
+            }
+        });
+    }
+
+    public void addListener(CommandListener listener) {
+        commandListeners.add(listener);
+    }
+
+    public void removeListener(CommandListener listener) {
+        commandListeners.remove(listener);
+    }
+
+    public void clear() {
+        commands.clear();
+    }
+
+    public Command getCommand(String id) {
+        return commands.get(id);
+    }
+}
+```
+
+### `ConnectionListener.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ConnectionListener.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.EventListener;
+
+/**
+ * A connection listener interface for clients connecting to Yamcs.
+ */
+public interface ConnectionListener extends EventListener {
+
+    /**
+     * Called right before the initial connection to Yamcs is being made.
+     */
+    public void connecting();
+
+    /**
+     * Called after a successful connection to Yamcs has been established.
+     */
+    public void connected();
+
+    /**
+     * Called when the initial connection to Yamcs has failed, e.g. the maximum number of retry attempts has exceeded.
+     * 
+     * @param cause
+     *            Optional cause of the connection failure, may be null.
+     */
+    public void connectionFailed(Throwable cause);
+
+    /**
+     * Called when the connection to Yamcs is closed.
+     */
+    public void disconnected();
+
+    /**
+     * Used to log messages.
+     * 
+     * @param message
+     *            the messages to be logged
+     */
+    default void log(String message) {
+    }
+}
+```
+
+### `ContainerSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ContainerSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ContainerData;
+import org.yamcs.protobuf.SubscribeContainersRequest;
+
+public class ContainerSubscription extends AbstractSubscription<SubscribeContainersRequest, ContainerData> {
+    protected ContainerSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "containers", ContainerData.class);
+    }
+}
+```
+
+### `Credentials.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Credentials.java`
+
+
+```java
+package org.yamcs.client;
+
+import io.netty.handler.codec.http.HttpRequest;
+
+public interface Credentials {
+
+    boolean isExpired();
+
+    void modifyRequest(HttpRequest request);
+}
+```
+
+### `EventSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/EventSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.SubscribeEventsRequest;
+
+/**
+ * Subscription for receiving events.
+ */
+public class EventSubscription extends AbstractSubscription<SubscribeEventsRequest, Event> {
+
+    protected EventSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "events", Event.class);
+    }
+}
+```
+
+### `GlobalAlarmStatusSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/GlobalAlarmStatusSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.alarms.GlobalAlarmStatus;
+import org.yamcs.protobuf.alarms.SubscribeGlobalStatusRequest;
+
+/**
+ * Subscription for receiving alarm detail.
+ */
+public class GlobalAlarmStatusSubscription
+        extends AbstractSubscription<SubscribeGlobalStatusRequest, GlobalAlarmStatus> {
+
+    protected GlobalAlarmStatusSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "global-alarm-status", GlobalAlarmStatus.class);
+    }
+}
+```
+
+### `Helpers.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Helpers.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+
+import com.google.protobuf.Timestamp;
+
+public class Helpers {
+
+    public static Instant toInstant(Timestamp timestamp) {
+        return Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+    }
+
+    public static NamedObjectId toNamedObjectId(String name) {
+        // Some API calls still require NamedObjectId objects, which are bothersome.
+        // This method automatically generates them from a name which can either be the qualified name (preferred)
+        // or some alias in the form NAMESPACE/NAME
+        if (name.startsWith("/")) {
+            return NamedObjectId.newBuilder().setName(name).build();
+        } else {
+            String[] parts = name.split("\\/", 2);
+            if (parts.length < 2) {
+                throw new IllegalArgumentException(String.format("'%s' is not a valid name."
+                        + " Use fully-qualified names or, alternatively,"
+                        + " an alias in the format NAMESPACE/NAME", name));
+            }
+            return NamedObjectId.newBuilder().setNamespace(parts[0]).setName(parts[1]).build();
+        }
+    }
+
+    public static String toName(NamedObjectId id) {
+        if (id.hasNamespace()) {
+            return id.getNamespace() + "/" + id.getName();
+        } else {
+            return id.getName();
+        }
+    }
+
+    /**
+     * Converts a Protobuf value from the API into a Java equivalent
+     */
+    public static Object parseValue(Value value) {
+        switch (value.getType()) {
+        case FLOAT:
+            return value.getFloatValue();
+        case DOUBLE:
+            return value.getDoubleValue();
+        case SINT32:
+            return value.getSint32Value();
+        case UINT32:
+            return value.getUint32Value() & 0xFFFFFFFFL;
+        case UINT64:
+            return value.getUint64Value();
+        case SINT64:
+            return value.getSint64Value();
+        case STRING:
+            return value.getStringValue();
+        case BOOLEAN:
+            return value.getBooleanValue();
+        case TIMESTAMP:
+            return Instant.parse(value.getStringValue());
+        case ENUMERATED:
+            return value.getStringValue();
+        case BINARY:
+            return value.getBinaryValue().toByteArray();
+        case ARRAY:
+            List<Object> arr = new ArrayList<>(value.getArrayValueCount());
+            for (Value item : value.getArrayValueList()) {
+                arr.add(parseValue(item));
+            }
+            return arr;
+        case AGGREGATE:
+            Map<String, Object> obj = new LinkedHashMap<>();
+            for (int i = 0; i < value.getAggregateValue().getNameCount(); i++) {
+                obj.put(value.getAggregateValue().getName(i), value.getAggregateValue().getValue(i));
+            }
+            return obj;
+        default:
+            throw new IllegalStateException("Unexpected value type " + value.getType());
+        }
+    }
+}
+```
+
+### `InstanceFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/InstanceFilter.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.YamcsInstance.InstanceState;
+
+public class InstanceFilter {
+
+    private List<String> filterExpressions = new ArrayList<>();
+
+    public void addLabel(String label, String value) {
+        filterExpressions.add("label." + label + "=" + value);
+    }
+
+    public void setState(InstanceState state) {
+        filterExpressions.add("state=" + state);
+    }
+
+    public void excludeState(InstanceState state) {
+        filterExpressions.add("state!=" + state);
+    }
+
+    List<String> getFilterExpressions() {
+        return filterExpressions;
+    }
+}
+```
+
+### `LinkSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/LinkSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.links.LinkEvent;
+import org.yamcs.protobuf.links.SubscribeLinksRequest;
+
+/**
+ * Subscription for receiving link-related events.
+ */
+public class LinkSubscription extends AbstractSubscription<SubscribeLinksRequest, LinkEvent> {
+
+    protected LinkSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "links", LinkEvent.class);
+    }
+}
+```
+
+### `MessageListener.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/MessageListener.java`
+
+
+```java
+package org.yamcs.client;
+
+import com.google.protobuf.Message;
+
+/**
+ * A listener for handling data messages received from a WebSocket call.
+ */
+@FunctionalInterface
+public interface MessageListener<T extends Message> {
+
+    /**
+     * Called when a single data message is received. Implementations should return quickly.
+     */
+    void onMessage(T message);
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+```
+
+### `OAuth2Credentials.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/OAuth2Credentials.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.client.base.SpnegoInfo;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * Contains the authorization state for an identified user or service account.
+ */
+public class OAuth2Credentials implements Credentials {
+
+    // Matches patterns of the form:
+    // "key": "value",
+    // "key": "value"}
+    // "key": value,
+    // "key": value}
+    private static final Pattern KEY_VALUE = Pattern.compile("\"(\\w+)\"\\s*\\:\\s*\"?([^\",]*)\"?\\s*[,\\}]");
+
+    private String tokenResponse;
+    private String accessToken;
+    private String refreshToken;
+    private Date expiry;
+
+    // We keep this around for when we need to acquire a new access token
+    // (SPNEGO connections do not get refreshed using oauth, so that the TGT can be reconfirmed)
+    private SpnegoInfo spnegoInfo;
+
+    public OAuth2Credentials(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
+
+    /**
+     * Returns a JSON string with the full unmodified token response.
+     */
+    public String getTokenResponse() {
+        return tokenResponse;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public SpnegoInfo getSpnegoInfo() {
+        return spnegoInfo;
+    }
+
+    public void setSpnegoInfo(SpnegoInfo spnegoInfo) {
+        this.spnegoInfo = spnegoInfo;
+    }
+
+    @Override
+    public boolean isExpired() {
+        return expiry != null && new Date().getTime() >= expiry.getTime();
+    }
+
+    @Override
+    public void modifyRequest(HttpRequest request) {
+        request.headers().set(HttpHeaderNames.AUTHORIZATION, "Bearer " + accessToken);
+    }
+
+    public static OAuth2Credentials fromJsonTokenResponse(String json) {
+        Map<String, String> map = toMap(json);
+        String accessToken = map.get("access_token");
+        String refreshToken = map.get("refresh_token");
+        var credentials = new OAuth2Credentials(accessToken, refreshToken);
+
+        int ttl = Integer.valueOf(map.get("expires_in"));
+        credentials.expiry = new Date(new Date().getTime() + (ttl * 1000));
+        credentials.tokenResponse = json;
+        return credentials;
+    }
+
+    private static Map<String, String> toMap(String json) {
+        // Use just a simple regex because we prefer not to force a full-blown JSON library
+        // as a dependency of yamcs-client.
+        Map<String, String> map = new HashMap<>();
+        Matcher matcher = KEY_VALUE.matcher(json);
+        while (matcher.find()) {
+            map.put(matcher.group(1), matcher.group(2));
+        }
+        return map;
+    }
+}
+```
+
+### `PacketSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/PacketSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.SubscribePacketsRequest;
+import org.yamcs.protobuf.TmPacketData;
+
+/**
+ * Subscription for receiving packet updates.
+ */
+public class PacketSubscription extends AbstractSubscription<SubscribePacketsRequest, TmPacketData> {
+
+    protected PacketSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "packets", TmPacketData.class);
+    }
+}
+```
+
+### `Page.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Page.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.concurrent.CompletableFuture;
+
+public interface Page<T> extends Iterable<T> {
+
+    boolean hasNextPage();
+
+    CompletableFuture<Page<T>> getNextPage();
+}
+```
+
+### `ParameterSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ParameterSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Pvalue.ParameterValue;
+import org.yamcs.protobuf.SubscribeParametersData;
+import org.yamcs.protobuf.SubscribeParametersRequest;
+import org.yamcs.protobuf.SubscribeParametersRequest.Action;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+public class ParameterSubscription extends AbstractSubscription<SubscribeParametersRequest, SubscribeParametersData> {
+
+    protected Set<Listener> listeners = new CopyOnWriteArraySet<>();
+
+    private Map<NamedObjectId, ParameterValue> latestValues = new ConcurrentHashMap<>();
+
+    // Maps server-assigned numeric ids against the request identifiers
+    protected Map<Integer, NamedObjectId> mapping = new ConcurrentHashMap<>();
+
+    protected ParameterSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "parameters", SubscribeParametersData.class);
+        addMessageListener(this::processMessage);
+    }
+
+    protected void processMessage(SubscribeParametersData message) {
+        mapping.putAll(message.getMappingMap());
+
+        for (NamedObjectId id : message.getInvalidList()) {
+            listeners.forEach(l -> l.onInvalidIdentification(id));
+        }
+
+        List<ParameterValue> values = new ArrayList<>(message.getValuesCount());
+        for (ParameterValue incomingValue : message.getValuesList()) {
+            NamedObjectId id = mapping.get(incomingValue.getNumericId());
+            ParameterValue value = ParameterValue.newBuilder(incomingValue).setId(id).build();
+            values.add(value);
+            latestValues.put(id, value);
+        }
+
+        if (!values.isEmpty()) {
+            listeners.forEach(l -> l.onData(values));
+        }
+    }
+
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * Get the latest value for a specific parameter. This method looks for the value from a local cache. It does not
+     * contact Yamcs.
+     */
+    public ParameterValue get(NamedObjectId id) {
+        return latestValues.get(id);
+    }
+
+    /**
+     * Extends the ongoing subscription with the provided identifiers.
+     */
+    public void add(List<NamedObjectId> ids) {
+        if (!ids.isEmpty()) {
+            clientObserver.next(SubscribeParametersRequest.newBuilder()
+                    .setAction(Action.ADD)
+                    .setAbortOnInvalid(false)
+                    .addAllId(ids)
+                    .build());
+        }
+    }
+
+    /**
+     * Shrinks the ongoing subscription by removing the provided identifiers.
+     */
+    public void remove(List<NamedObjectId> ids) {
+        if (!ids.isEmpty()) {
+            clientObserver.next(SubscribeParametersRequest.newBuilder()
+                    .setAction(Action.REMOVE)
+                    .setAbortOnInvalid(false)
+                    .addAllId(ids)
+                    .build());
+        }
+    }
+
+    @FunctionalInterface
+    public static interface Listener {
+
+        void onData(List<ParameterValue> values);
+
+        default void onInvalidIdentification(NamedObjectId id) {
+        }
+    }
+}
+```
+
+### `ProcessorSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/ProcessorSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.SubscribeProcessorsRequest;
+
+public class ProcessorSubscription extends AbstractSubscription<SubscribeProcessorsRequest, ProcessorInfo> {
+
+    protected ProcessorSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "processors", ProcessorInfo.class);
+    }
+}
+```
+
+### `QueueEventSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueEventSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandQueueEvent;
+import org.yamcs.protobuf.SubscribeQueueEventsRequest;
+
+public class QueueEventSubscription extends AbstractSubscription<SubscribeQueueEventsRequest, CommandQueueEvent> {
+
+    protected QueueEventSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "queue-events", CommandQueueEvent.class);
+    }
+}
+```
+
+### `QueueStatisticsSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/QueueStatisticsSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.Commanding.CommandQueueInfo;
+import org.yamcs.protobuf.SubscribeQueueStatisticsRequest;
+
+public class QueueStatisticsSubscription
+        extends AbstractSubscription<SubscribeQueueStatisticsRequest, CommandQueueInfo> {
+
+    protected QueueStatisticsSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "queue-stats", CommandQueueInfo.class);
+    }
+}
+```
+
+### `StreamReceiver.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamReceiver.java`
+
+
+```java
+package org.yamcs.client;
+
+@FunctionalInterface
+public interface StreamReceiver<T> {
+
+    void accept(T message);
+}
+```
+
+### `StreamSender.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/StreamSender.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.concurrent.CompletableFuture;
+
+public interface StreamSender<ItemT, ResponseT> {
+
+    void send(ItemT message);
+
+    CompletableFuture<ResponseT> complete();
+}
+```
+
+### `Subscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/Subscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.util.concurrent.Future;
+
+import com.google.protobuf.Message;
+
+/**
+ * Top-level interface for any topic subscriptions to Yamcs that make use of the WebSocket API.
+ * <p>
+ * Topics are capable of bi-directional communication, where each topic has only a single client and server message
+ * type. In practice most topics are one-directional, with the client issuing a single subscription request.
+ * <p>
+ * A topic subscription is usually long-running. The server keeps pushing updates until the client cancels the call, or
+ * closes the connection. Instances of this class are also futures covering the lifecycle of the call (or any error
+ * replies to sent message).
+ * <p>
+ * This base class adds general listener support for receiving the unprocessed data messages. Specific implementations
+ * of this class sometimes add more customized functionalities, such as polling or processing.
+ * 
+ * @param <C>
+ *            The client message
+ * @param <S>
+ *            The server message
+ */
+public interface Subscription<C extends Message, S extends Message> extends Future<Void> {
+
+    /**
+     * Get updated on received server messages.
+     */
+    void addMessageListener(MessageListener<S> listener);
+
+    /**
+     * Sends a message to Yamcs. Note that most topic subscriptions support only a single message to be sent.
+     */
+    void sendMessage(C message);
+}
+```
+
+### `TimeListener.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeListener.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+
+@FunctionalInterface
+public interface TimeListener {
+
+    void onUpdate(Instant time);
+
+    /**
+     * Called when an exception claused the call to abort.
+     */
+    default void onError(Throwable t) {
+    }
+}
+```
+
+### `TimeSubscription.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/TimeSubscription.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.time.Instant;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.AbstractSubscription;
+import org.yamcs.protobuf.SubscribeTimeRequest;
+
+import com.google.protobuf.Timestamp;
+
+/**
+ * Subscription for receiving time updates.
+ */
+public class TimeSubscription extends AbstractSubscription<SubscribeTimeRequest, Timestamp> {
+
+    private volatile Instant latest;
+    private Set<TimeListener> timeListeners = new CopyOnWriteArraySet<>();
+
+    protected TimeSubscription(MethodHandler methodHandler) {
+        super(methodHandler, "time", Timestamp.class);
+        addMessageListener(new MessageListener<Timestamp>() {
+            @Override
+            public void onMessage(Timestamp timestamp) {
+                latest = Instant.ofEpochSecond(timestamp.getSeconds(), timestamp.getNanos());
+                timeListeners.forEach(l -> l.onUpdate(latest));
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                timeListeners.forEach(l -> l.onError(t));
+            }
+        });
+    }
+
+    public void addListener(TimeListener listener) {
+        timeListeners.add(listener);
+    }
+
+    public void removeListener(TimeListener listener) {
+        timeListeners.remove(listener);
+    }
+
+    /**
+     * Returns the value of the latest received timestamp.
+     */
+    public Instant getCurrent() {
+        return latest;
+    }
+}
+```
+
+### `UnauthorizedException.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/UnauthorizedException.java`
+
+
+```java
+package org.yamcs.client;
+
+@SuppressWarnings("serial")
+public class UnauthorizedException extends ClientException {
+
+    public UnauthorizedException() {
+        super("Unauthorized");
+    }
+
+    public UnauthorizedException(String message) {
+        super("Unauthorized: " + message);
+    }
+
+    public UnauthorizedException(ExceptionData restData) {
+        super(restData);
+    }
+}
+```
+
+### `YamcsClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/YamcsClient.java`
+
+
+```java
+package org.yamcs.client;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.nio.file.Path;
+import java.security.GeneralSecurityException;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.archive.ArchiveClient;
+import org.yamcs.client.base.HttpMethodHandler;
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.client.base.RestClient;
+import org.yamcs.client.base.ServerURL;
+import org.yamcs.client.base.SpnegoInfo;
+import org.yamcs.client.base.WebSocketClient;
+import org.yamcs.client.base.WebSocketClientCallback;
+import org.yamcs.client.mdb.MissionDatabaseClient;
+import org.yamcs.client.processor.ProcessorClient;
+import org.yamcs.client.storage.StorageClient;
+import org.yamcs.client.timeline.TimelineClient;
+import org.yamcs.protobuf.CreateEventRequest;
+import org.yamcs.protobuf.CreateInstanceRequest;
+import org.yamcs.protobuf.CreateProcessorRequest;
+import org.yamcs.protobuf.Event;
+import org.yamcs.protobuf.EventsApiClient;
+import org.yamcs.protobuf.FileTransferApiClient;
+import org.yamcs.protobuf.FileTransferServiceInfo;
+import org.yamcs.protobuf.GetInstanceRequest;
+import org.yamcs.protobuf.GetServerInfoResponse;
+import org.yamcs.protobuf.IamApiClient;
+import org.yamcs.protobuf.InstancesApiClient;
+import org.yamcs.protobuf.LeapSecondsTable;
+import org.yamcs.protobuf.ListFileTransferServicesRequest;
+import org.yamcs.protobuf.ListFileTransferServicesResponse;
+import org.yamcs.protobuf.ListInstancesRequest;
+import org.yamcs.protobuf.ListInstancesResponse;
+import org.yamcs.protobuf.ListProcessorsRequest;
+import org.yamcs.protobuf.ListProcessorsResponse;
+import org.yamcs.protobuf.ListServicesRequest;
+import org.yamcs.protobuf.ListServicesResponse;
+import org.yamcs.protobuf.ProcessingApiClient;
+import org.yamcs.protobuf.ProcessorInfo;
+import org.yamcs.protobuf.ReconfigureInstanceRequest;
+import org.yamcs.protobuf.RestartInstanceRequest;
+import org.yamcs.protobuf.ServerApiClient;
+import org.yamcs.protobuf.ServiceInfo;
+import org.yamcs.protobuf.ServicesApiClient;
+import org.yamcs.protobuf.StartInstanceRequest;
+import org.yamcs.protobuf.StartServiceRequest;
+import org.yamcs.protobuf.StopInstanceRequest;
+import org.yamcs.protobuf.StopServiceRequest;
+import org.yamcs.protobuf.TimeApiClient;
+import org.yamcs.protobuf.UserInfo;
+import org.yamcs.protobuf.YamcsInstance;
+import org.yamcs.protobuf.alarms.AlarmsApiClient;
+import org.yamcs.protobuf.alarms.EditAlarmRequest;
+import org.yamcs.protobuf.alarms.ListAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListAlarmsResponse;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsRequest;
+import org.yamcs.protobuf.alarms.ListProcessorAlarmsResponse;
+import org.yamcs.protobuf.links.DisableLinkRequest;
+import org.yamcs.protobuf.links.EnableLinkRequest;
+import org.yamcs.protobuf.links.LinkInfo;
+import org.yamcs.protobuf.links.LinksApiClient;
+
+import com.google.protobuf.Empty;
+
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.websocketx.WebSocketHandshakeException;
+
+public class YamcsClient {
+
+    private static final Logger log = Logger.getLogger(YamcsClient.class.getName());
+
+    private final ServerURL serverURL;
+    private boolean verifyTls;
+    private int connectionAttempts;
+    private long retryDelay;
+
+    private final RestClient baseClient;
+    private final WebSocketClient websocketClient;
+
+    private volatile boolean closed = false;
+
+    private List<ConnectionListener> connectionListeners = new CopyOnWriteArrayList<>();
+
+    private MethodHandler methodHandler;
+
+    private AlarmsApiClient alarmService;
+    private TimeApiClient timeService;
+    private ServicesApiClient serviceService;
+    private InstancesApiClient instanceService;
+    private LinksApiClient linkService;
+    private EventsApiClient eventService;
+    private ProcessingApiClient processingService;
+    private IamApiClient iamService;
+    private ServerApiClient serverService;
+
+    private YamcsClient(ServerURL serverURL, boolean verifyTls, int connectionAttempts, long retryDelay) {
+        this.serverURL = serverURL;
+        this.verifyTls = verifyTls;
+        this.connectionAttempts = connectionAttempts;
+        this.retryDelay = retryDelay;
+
+        baseClient = new RestClient(serverURL);
+        baseClient.setAutoclose(false);
+
+        websocketClient = new WebSocketClient(serverURL, new WebSocketClientCallback() {
+            @Override
+            public void disconnected() {
+                if (!closed) {
+                    String msg = String.format("Connection to %s lost", serverURL);
+                    connectionListeners.forEach(l -> l.log(msg));
+                    log.warning(msg);
+                }
+                connectionListeners.forEach(l -> l.disconnected());
+            }
+        });
+
+        methodHandler = new HttpMethodHandler(this, baseClient, websocketClient);
+
+        alarmService = new AlarmsApiClient(methodHandler);
+        eventService = new EventsApiClient(methodHandler);
+        linkService = new LinksApiClient(methodHandler);
+        iamService = new IamApiClient(methodHandler);
+        instanceService = new InstancesApiClient(methodHandler);
+        timeService = new TimeApiClient(methodHandler);
+        processingService = new ProcessingApiClient(methodHandler);
+        serverService = new ServerApiClient(methodHandler);
+        serviceService = new ServicesApiClient(methodHandler);
+    }
+
+    public static Builder newBuilder(String serverUrl) {
+        return new Builder(ServerURL.parse(serverUrl));
+    }
+
+    public static Builder newBuilder(String host, int port) {
+        return new Builder(ServerURL.parse("http://" + host + ":" + port));
+    }
+
+    public synchronized void loginWithKerberos() throws ClientException {
+        loginWithKerberos(System.getProperty("user.name"));
+    }
+
+    public synchronized void loginWithKerberos(String principal) throws ClientException {
+        pollServer();
+        SpnegoInfo spnegoInfo = new SpnegoInfo(serverURL, verifyTls, principal);
+        String authorizationCode;
+        try {
+            authorizationCode = baseClient.authorizeKerberos(spnegoInfo);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw new UnauthorizedException();
+        }
+
+        try {
+            baseClient.loginWithAuthorizationCode(authorizationCode);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw e;
+        }
+        var creds = (OAuth2Credentials) baseClient.getCredentials();
+        creds.setSpnegoInfo(spnegoInfo); // Can get reused when the access token expires
+    }
+
+    public synchronized void login(String username, char[] password) throws ClientException {
+        pollServer();
+        try {
+            baseClient.login(username, password);
+        } catch (ClientException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw e;
+        }
+    }
+
+    /**
+     * Polls the server, to see if it is ready.
+     */
+    public void pollServer() throws ClientException {
+        for (int i = 0; i < connectionAttempts; i++) {
+            synchronized (this) {
+                try {
+                    // Use an endpoint that does not require auth
+                    baseClient.doBaseRequest("/auth", HttpMethod.GET, null).get(5, TimeUnit.SECONDS);
+                    return; // Server up!
+                } catch (ExecutionException e) {
+                    Throwable cause = e.getCause();
+                    if (cause instanceof UnauthorizedException) {
+                        for (ConnectionListener cl : connectionListeners) {
+                            cl.connectionFailed((UnauthorizedException) cause);
+                        }
+                        logConnectionFailed(cause);
+                        throw (UnauthorizedException) cause; // Jump out
+                    } else {
+                        for (ConnectionListener cl : connectionListeners) {
+                            cl.connectionFailed(cause);
+                        }
+                        logConnectionFailed(cause);
+                    }
+                } catch (TimeoutException e) {
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connectionFailed(e);
+                    }
+                    logConnectionFailed(e);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    for (ConnectionListener cl : connectionListeners) {
+                        cl.connectionFailed(new ClientException("Thread interrupted", e));
+                    }
+                }
+            }
+
+            if (i + 1 < connectionAttempts) {
+                try {
+                    Thread.sleep(retryDelay);
+                } catch (InterruptedException e1) {
+                    Thread.currentThread().interrupt();
+                }
+            }
+        }
+
+        if (connectionAttempts > 1) {
+            ClientException e = new ClientException(connectionAttempts + " connection attempts failed, giving up.");
+            for (ConnectionListener cl : connectionListeners) {
+                cl.log(connectionAttempts + " connection attempts failed, giving up.");
+                cl.connectionFailed(e);
+            }
+            log.log(Level.WARNING, connectionAttempts + " connection attempts failed, giving up.");
+            throw e;
+        } else {
+            throw new ClientException("Server is not available");
+        }
+    }
+
+    /**
+     * Establish a live communication channel.
+     */
+    public synchronized void connectWebSocket() throws ClientException {
+        Credentials creds = baseClient.getCredentials();
+        if (creds == null) {
+            connect(null, false);
+        } else if (creds instanceof OAuth2Credentials) {
+            String accessToken = ((OAuth2Credentials) creds).getAccessToken();
+            String authorization = "Bearer " + accessToken;
+            connect(authorization, true);
+        } else if (creds instanceof BasicAuthCredentials) {
+            String authorization = ((BasicAuthCredentials) creds).getAuthorizationHeader();
+            connect(authorization, true);
+        } else {
+            throw new IllegalStateException("Unexpected credentials of type " + creds.getClass());
+        }
+    }
+
+    /**
+     * Establish a live communication channel using a previously acquired access token.
+     */
+    private synchronized void connect(String authorization, boolean bypassUpCheck) throws ClientException {
+        if (!bypassUpCheck) {
+            pollServer();
+        }
+
+        for (ConnectionListener cl : connectionListeners) {
+            cl.connecting();
+        }
+
+        try {
+            websocketClient.connect(authorization).get(5000, TimeUnit.MILLISECONDS);
+
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connected();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        } catch (SSLException | GeneralSecurityException | TimeoutException e) {
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(e);
+            }
+            logConnectionFailed(e);
+            throw new ClientException("Cannot connect WebSocket client", e);
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            for (ConnectionListener cl : connectionListeners) {
+                cl.connectionFailed(cause);
+            }
+            logConnectionFailed(cause);
+            if (cause instanceof WebSocketHandshakeException && cause.getMessage().contains("401")) {
+                throw new UnauthorizedException();
+            } else if (cause instanceof ClientException) {
+                throw (ClientException) cause;
+            } else {
+                throw new ClientException(cause);
+            }
+        }
+    }
+
+    public CompletableFuture<YamcsInstance> createInstance(CreateInstanceRequest request) {
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.createInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<YamcsInstance> reconfigureInstance(ReconfigureInstanceRequest request) {
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.reconfigureInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<List<YamcsInstance>> listInstances() {
+        CompletableFuture<ListInstancesResponse> f = new CompletableFuture<>();
+        instanceService.listInstances(null, ListInstancesRequest.getDefaultInstance(), new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getInstancesList());
+    }
+
+    public CompletableFuture<YamcsInstance> getInstance(String instance) {
+        GetInstanceRequest request = GetInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.getInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<ListInstancesResponse> listInstances(InstanceFilter filter) {
+        ListInstancesRequest.Builder requestb = ListInstancesRequest.newBuilder();
+        for (String expression : filter.getFilterExpressions()) {
+            requestb.addFilter(expression);
+        }
+        CompletableFuture<ListInstancesResponse> f = new CompletableFuture<>();
+        instanceService.listInstances(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<YamcsInstance> startInstance(String instance) {
+        StartInstanceRequest request = StartInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.startInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<YamcsInstance> stopInstance(String instance) {
+        StopInstanceRequest request = StopInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.stopInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<YamcsInstance> restartInstance(String instance) {
+        RestartInstanceRequest request = RestartInstanceRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<YamcsInstance> f = new CompletableFuture<>();
+        instanceService.restartInstance(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<List<ProcessorInfo>> listProcessors(String instance) {
+        ListProcessorsRequest request = ListProcessorsRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<ListProcessorsResponse> f = new CompletableFuture<>();
+        processingService.listProcessors(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getProcessorsList());
+    }
+
+    public CompletableFuture<GetServerInfoResponse> getServerInfo() {
+        CompletableFuture<GetServerInfoResponse> f = new CompletableFuture<>();
+        serverService.getServerInfo(null, Empty.getDefaultInstance(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public String getServerURL() {
+        return serverURL.toString();
+    }
+
+    public CompletableFuture<UserInfo> getOwnUserInfo() {
+        CompletableFuture<UserInfo> f = new CompletableFuture<>();
+        iamService.getOwnUser(null, Empty.getDefaultInstance(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<List<ServiceInfo>> listServices(String instance) {
+        ListServicesRequest request = ListServicesRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<ListServicesResponse> f = new CompletableFuture<>();
+        serviceService.listServices(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getServicesList());
+    }
+
+    public CompletableFuture<Void> startService(String instance, String service) {
+        StartServiceRequest request = StartServiceRequest.newBuilder()
+                .setInstance(instance)
+                .setName(service)
+                .build();
+        CompletableFuture<Empty> f = new CompletableFuture<>();
+        serviceService.startService(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<LinkInfo> enableLink(String instance, String link) {
+        EnableLinkRequest request = EnableLinkRequest.newBuilder()
+                .setInstance(instance)
+                .setLink(link)
+                .build();
+        CompletableFuture<LinkInfo> f = new CompletableFuture<>();
+        linkService.enableLink(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<LinkInfo> disableLink(String instance, String link) {
+        DisableLinkRequest request = DisableLinkRequest.newBuilder()
+                .setInstance(instance)
+                .setLink(link)
+                .build();
+        CompletableFuture<LinkInfo> f = new CompletableFuture<>();
+        linkService.disableLink(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<Void> stopService(String instance, String service) {
+        StopServiceRequest request = StopServiceRequest.newBuilder()
+                .setInstance(instance)
+                .setName(service)
+                .build();
+        CompletableFuture<Empty> f = new CompletableFuture<>();
+        serviceService.stopService(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<LeapSecondsTable> getLeapSeconds() {
+        CompletableFuture<LeapSecondsTable> f = new CompletableFuture<>();
+        timeService.getLeapSeconds(null, Empty.getDefaultInstance(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<ProcessorClient> createProcessor(CreateProcessorRequest request) {
+        CompletableFuture<Empty> f = new CompletableFuture<>();
+        processingService.createProcessor(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> new ProcessorClient(methodHandler, request.getInstance(), request.getName()));
+    }
+
+    public CompletableFuture<Event> createEvent(CreateEventRequest request) {
+        CompletableFuture<Event> f = new CompletableFuture<>();
+        eventService.createEvent(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<ListAlarmsResponse> listAlarms(String instance) {
+        ListAlarmsRequest request = ListAlarmsRequest.newBuilder()
+                .setInstance(instance)
+                .build();
+        CompletableFuture<ListAlarmsResponse> f = new CompletableFuture<>();
+        alarmService.listAlarms(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<ListProcessorAlarmsResponse> listAlarms(String instance, String processor) {
+        ListProcessorAlarmsRequest request = ListProcessorAlarmsRequest.newBuilder()
+                .setInstance(instance)
+                .setProcessor(processor)
+                .build();
+        CompletableFuture<ListProcessorAlarmsResponse> f = new CompletableFuture<>();
+        alarmService.listProcessorAlarms(null, request, new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<Void> editAlarm(EditAlarmRequest request) {
+        CompletableFuture<Empty> f = new CompletableFuture<>();
+        alarmService.editAlarm(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<List<FileTransferServiceInfo>> getFileTransferServices(String instance) {
+        ListFileTransferServicesRequest request = ListFileTransferServicesRequest.newBuilder().setInstance(instance)
+                .build();
+        CompletableFuture<ListFileTransferServicesResponse> f = new CompletableFuture<>();
+
+        FileTransferApiClient ftService = new FileTransferApiClient(methodHandler);
+        ftService.listFileTransferServices(null, request, new ResponseObserver<>(f));
+        return f.thenApply(r -> r.getServicesList());
+    }
+
+    public StorageClient createStorageClient() {
+        return new StorageClient(methodHandler);
+    }
+
+    public ArchiveClient createArchiveClient(String instance) {
+        instance = Objects.requireNonNull(instance);
+        return new ArchiveClient(methodHandler, instance);
+    }
+
+    public MissionDatabaseClient createMissionDatabaseClient(String instance) {
+        instance = Objects.requireNonNull(instance);
+        return new MissionDatabaseClient(methodHandler, instance);
+    }
+
+    public ProcessorClient createProcessorClient(String instance, String processor) {
+        instance = Objects.requireNonNull(instance);
+        processor = Objects.requireNonNull(processor);
+        return new ProcessorClient(methodHandler, instance, processor);
+    }
+
+    public TimelineClient createTimelineClient(String instance, String processor) {
+        instance = Objects.requireNonNull(instance);
+        return new TimelineClient(methodHandler, instance);
+    }
+
+    public String getHost() {
+        return serverURL.getHost();
+    }
+
+    public int getPort() {
+        return serverURL.getPort();
+    }
+
+    public boolean isTLS() {
+        return serverURL.isTLS();
+    }
+
+    public String getContext() {
+        return serverURL.getContext();
+    }
+
+    public boolean isVerifyTLS() {
+        return verifyTls;
+    }
+
+    public void addConnectionListener(ConnectionListener connectionListener) {
+        connectionListeners.add(connectionListener);
+    }
+
+    public void removeConnectionListener(ConnectionListener connectionListener) {
+        connectionListeners.remove(connectionListener);
+    }
+
+    public WebSocketClient getWebSocketClient() {
+        return websocketClient;
+    }
+
+    public MethodHandler getMethodHandler() {
+        return methodHandler;
+    }
+
+    public String getUrl() {
+        return serverURL.toString();
+    }
+
+    public TimeSubscription createTimeSubscription() {
+        return new TimeSubscription(methodHandler);
+    }
+
+    public ClearanceSubscription createClearanceSubscription() {
+        return new ClearanceSubscription(methodHandler);
+    }
+
+    public EventSubscription createEventSubscription() {
+        return new EventSubscription(methodHandler);
+    }
+
+    public AlarmSubscription createAlarmSubscription() {
+        return new AlarmSubscription(methodHandler);
+    }
+
+    public GlobalAlarmStatusSubscription createGlobalAlarmStatusSubscription() {
+        return new GlobalAlarmStatusSubscription(methodHandler);
+    }
+
+    public PacketSubscription createPacketSubscription() {
+        return new PacketSubscription(methodHandler);
+    }
+
+    public ProcessorSubscription createProcessorSubscription() {
+        return new ProcessorSubscription(methodHandler);
+    }
+
+    public CommandSubscription createCommandSubscription() {
+        return new CommandSubscription(methodHandler);
+    }
+
+    public QueueEventSubscription createQueueEventSubscription() {
+        return new QueueEventSubscription(methodHandler);
+    }
+
+    public QueueStatisticsSubscription createQueueStatisticsSubscription() {
+        return new QueueStatisticsSubscription(methodHandler);
+    }
+
+    public ParameterSubscription createParameterSubscription() {
+        return new ParameterSubscription(methodHandler);
+    }
+
+    public LinkSubscription createLinkSubscription() {
+        return new LinkSubscription(methodHandler);
+    }
+
+    public ContainerSubscription createContainerSubscription() {
+        return new ContainerSubscription(methodHandler);
+    }
+
+    public void close() {
+        if (closed) {
+            return;
+        }
+        closed = true;
+        if (websocketClient.isConnected()) {
+            websocketClient.disconnect();
+        }
+        baseClient.close();
+        websocketClient.shutdown();
+    }
+
+    public static class Builder {
+
+        private ServerURL serverURL;
+        private boolean verifyTls = true;
+        private Path caCertFile;
+        private String userAgent;
+        private Credentials credentials;
+        private int maxResponseLength = 10 * 1024 * 1024;
+        private int maxFramePayloadLength = 10 * 1024 * 1024;
+
+        private int connectionAttempts = 1;
+        private long retryDelay = 5000;
+
+        private Builder(ServerURL serverURL) {
+            this.serverURL = serverURL;
+        }
+
+        /**
+         * Deprecated: append any context to the server URL instead.
+         */
+        @Deprecated
+        public Builder withContext(String context) {
+            serverURL.setContext(context);
+            return this;
+        }
+
+        /**
+         * Deprecated: use either http:// or https:// on the server URL instead.
+         */
+        @Deprecated
+        public Builder withTls(boolean tls) {
+            serverURL.setTLS(tls);
+            return this;
+        }
+
+        public Builder withVerifyTls(boolean verifyTls) {
+            this.verifyTls = verifyTls;
+            return this;
+        }
+
+        public Builder withCaCertFile(Path caCertFile) {
+            this.caCertFile = caCertFile;
+            return this;
+        }
+
+        public Builder withUserAgent(String userAgent) {
+            this.userAgent = userAgent;
+            return this;
+        }
+
+        public Builder withConnectionAttempts(int connectionAttempts) {
+            this.connectionAttempts = connectionAttempts;
+            return this;
+        }
+
+        public Builder withRetryDelay(long retryDelay) {
+            this.retryDelay = retryDelay;
+            return this;
+        }
+
+        public Builder withCredentials(Credentials credentials) {
+            this.credentials = credentials;
+            return this;
+        }
+
+        public Builder withMaxResponseLength(int maxResponseLength) {
+            this.maxResponseLength = maxResponseLength;
+            return this;
+        }
+
+        public Builder withMaxFramePayloadLength(int maxFramePayloadLength) {
+            this.maxFramePayloadLength = maxFramePayloadLength;
+            return this;
+        }
+
+        public YamcsClient build() {
+            YamcsClient client = new YamcsClient(serverURL, verifyTls, connectionAttempts, retryDelay);
+            client.baseClient.setInsecureTls(!verifyTls);
+            client.websocketClient.setInsecureTls(!verifyTls);
+            client.baseClient.setCredentials(credentials);
+            if (caCertFile != null) {
+                try {
+                    client.baseClient.setCaCertFile(caCertFile.toString());
+                    client.websocketClient.setCaCertFile(caCertFile.toString());
+                } catch (IOException | GeneralSecurityException e) {
+                    throw new RuntimeException("Cannot set CA Cert file", e);
+                }
+            }
+            if (userAgent != null) {
+                client.baseClient.setUserAgent(userAgent);
+                client.websocketClient.setUserAgent(userAgent);
+            }
+            client.baseClient.setMaxResponseLength(maxResponseLength);
+            client.websocketClient.setMaxFramePayloadLength(maxFramePayloadLength);
+            return client;
+        }
+    }
+
+    private void logConnectionFailed(Throwable cause) {
+        if (cause instanceof SocketException) {
+            log.log(Level.WARNING, "Connection to " + serverURL + " failed: " + cause.getMessage());
+        } else {
+            log.log(Level.WARNING, "Connection to " + serverURL + " failed", cause);
+        }
+    }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,20 +17,74 @@ ut_service_tm_sdlp/index
 ut_service_tm_sync/index
 ut_trans_rs422/index
 ut_trans_udp/index
-file--.gitignore
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut-assert/`](ut-assert/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tctf/`](ut_format_tctf/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_format_tmtf/`](ut_format_tmtf/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_cop1/`](ut_service_cop1/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tc_sync/`](ut_service_tc_sync/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sdlp/`](ut_service_tm_sdlp/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/`](ut_service_tm_sync/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/`](ut_trans_rs422/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/`](ut_trans_udp/index) — 폴더
-- [`fsw/apps/io_lib/fsw/unit_test/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/.gitignore`
+
+
+```text
+*.o
+*.exe
+*.gcov
+*.out
+```
+
+### `Makefile`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/Makefile`
+
+
+```make
+#
+# Master $(MAKE)file for unit tests
+#
+
+all: 
+	$(MAKE) -C ut_format_tctf
+	$(MAKE) -C ut_format_tmtf
+	$(MAKE) -C ut_service_cop1
+	$(MAKE) -C ut_service_tc_sync
+	$(MAKE) -C ut_service_tm_sdlp
+	$(MAKE) -C ut_service_tm_sync
+	$(MAKE) -C ut_trans_rs422
+	$(MAKE) -C ut_trans_udp
+
+clean:
+	rm -f ./*.o
+	$(MAKE) -C ut_format_tctf clean
+	$(MAKE) -C ut_format_tmtf clean
+	$(MAKE) -C ut_service_cop1 clean
+	$(MAKE) -C ut_service_tc_sync clean
+	$(MAKE) -C ut_service_tm_sdlp clean
+	$(MAKE) -C ut_service_tm_sync clean
+	$(MAKE) -C ut_trans_rs422 clean
+	$(MAKE) -C ut_trans_udp clean
+
+run:
+# note the leading "-" makes it always run and ignore errors
+	-$(MAKE) -C ut_format_tctf run
+	-$(MAKE) -C ut_format_tmtf run
+	-$(MAKE) -C ut_service_cop1 run
+	-$(MAKE) -C ut_service_tc_sync run
+	-$(MAKE) -C ut_service_tm_sdlp run
+	-$(MAKE) -C ut_service_tm_sync run
+	-$(MAKE) -C ut_trans_rs422 run
+	-$(MAKE) -C ut_trans_udp run
+
+gcov:
+	$(MAKE) -C ut_format_tctf gcov
+	$(MAKE) -C ut_format_tmtf gcov
+	$(MAKE) -C ut_service_cop1 gcov
+	$(MAKE) -C ut_service_tc_sync gcov
+	$(MAKE) -C ut_service_tm_sdlp gcov
+	$(MAKE) -C ut_service_tm_sync gcov
+	$(MAKE) -C ut_trans_rs422 gcov
+	$(MAKE) -C ut_trans_udp gcov
+
+
+
+```

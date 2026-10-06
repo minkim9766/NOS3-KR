@@ -3,20 +3,470 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `admin-action-log.component.css`
 
-file--admin-action-log.component.css
-file--admin-action-log.component.html
-file--admin-action-log.component.ts
-file--model.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.css`
+
+
+```css
+h4 {
+  margin-top: 2em;
+  margin-bottom: 0.5em;
+  font-size: 12px;
+}
+
+h4.first {
+  margin-top: 0;
+}
+
+tr.item-row.expanded td {
+  border-bottom: none;
+}
+
+tr.item-detail td {
+  padding-left: 40px !important;
+}
+
+.mat-mdc-row {
+  cursor: pointer;
+}
+
+tr.item-detail:not(.expanded) {
+  display: none;
+}
+
+.dl-horizontal dt {
+  border-right: 1px solid #e5e5e5;
+}
+
+.dl-horizontal dt,
+.dl-horizontal dd {
+  line-height: 20px;
+}
+
+.dl-horizontal dd {
+  min-height: 20px;
+}
+
+.ya-data-table tr.mat-mdc-row:hover {
+  /* doesn't look good when expanded */
+  background: inherit;
+}
 ```
 
-## 항목
+### `admin-action-log.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.css`](file--admin-action-log.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.html`](file--admin-action-log.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.ts`](file--admin-action-log.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/model.ts`](file--model.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Action log" />
+
+  <ya-panel>
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-search-filter formControlName="filter" placeholder="Filter by text search" />
+      <ya-select [options]="intervalOptions" icon="access_time" formControlName="interval" />
+      @if (filterForm.value["interval"] === "CUSTOM") {
+        <ya-date-time-input formControlName="customStart" />
+        <ya-date-time-input formControlName="customStop" />
+        <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+      } @else {
+        <ya-button (click)="jumpToNow()">Jump to now</ya-button>
+      }
+    </ya-filter-bar>
+
+    @for (rowGroup of rowGroups$ | async; track rowGroup; let isFirst = $first) {
+      <h4 [class.first]="isFirst">{{ rowGroup.grouper }}</h4>
+      <table
+        mat-table
+        [dataSource]="rowGroup.dataSource"
+        class="ya-data-table"
+        style="border-top: 1px solid rgba(0, 0, 0, 0.1)"
+        multiTemplateDataRows>
+        <ng-container matColumnDef="time">
+          <td mat-cell *matCellDef="let row" style="width: 100px">
+            {{ row.item.time.substring(11, 16) }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="user">
+          <td mat-cell *matCellDef="let row" style="width: 200px">
+            {{ row.item.user || "-" }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="summary">
+          <td mat-cell *matCellDef="let row" style="width: 400px">
+            <ya-action-log-summary [text]="row.item.summary" />
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <td mat-cell *matCellDef="let row" style="text-align: right">
+            @if (row.expanded) {
+              <mat-icon>expand_less</mat-icon>
+            } @else {
+              <mat-icon>expand_more</mat-icon>
+            }
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="detail">
+          <td mat-cell *matCellDef="let row" [attr.colspan]="displayedColumns.length">
+            <dl class="dl-horizontal">
+              <dt>Service</dt>
+              <dd>{{ row.item.service }}</dd>
+              <dt>Method</dt>
+              <dd>{{ row.item.method }}</dd>
+              @for (option of row.requestOptions; track option) {
+                <dt style="white-space: pre">{{ option.key }}</dt>
+                <dd>{{ option.value || "" }}</dd>
+              }
+            </dl>
+          </td>
+        </ng-container>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          class="item-row"
+          [class.expanded]="row.expanded"
+          (click)="row.expanded = !row.expanded"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: ['detail']"
+          class="item-detail"
+          [class.expanded]="row.expanded"
+          (click)="row.expanded = !row.expanded"></tr>
+      </table>
+    }
+    @if (!(rowGroups$ | async)!.length) {
+      <ya-empty-message>No actions for the current filter criteria.</ya-empty-message>
+    }
+  </ya-panel>
+</app-admin-page>
+```
+
+### `admin-action-log.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/admin-action-log.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  input,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuditRecord,
+  GetAuditRecordsOptions,
+  MessageService,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, debounceTime } from 'rxjs';
+import { AdminPageTemplateComponent } from '../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../shared/admin-toolbar/admin-toolbar.component';
+import { RequestOption, Row, RowGroup } from './model';
+
+const defaultInterval = 'NO_LIMIT';
+
+@Component({
+  templateUrl: './admin-action-log.component.html',
+  styleUrl: './admin-action-log.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class AdminActionLogComponent implements OnInit {
+  filter = input<string>();
+  interval = input<string>();
+  customStart = input<string>();
+  customStop = input<string>();
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new FormGroup({
+    filter: new FormControl<string | null>(null),
+    interval: new FormControl<string | null>(defaultInterval),
+    customStart: new FormControl<string | null>(null),
+    customStop: new FormControl<string | null>(null),
+  });
+
+  displayedColumns = ['time', 'user', 'summary', 'actions'];
+
+  intervalOptions: YaSelectOption[] = [
+    { id: 'PT1H', label: 'Last hour' },
+    { id: 'PT6H', label: 'Last 6 hours' },
+    { id: 'P1D', label: 'Last 24 hours' },
+    { id: 'NO_LIMIT', label: 'No limit' },
+    { id: 'CUSTOM', label: 'Custom', group: true },
+  ];
+
+  rowGroups$ = new BehaviorSubject<RowGroup[]>([]);
+
+  constructor(
+    private yamcs: YamcsService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    title: Title,
+  ) {
+    title.setTitle('Admin area');
+  }
+
+  ngOnInit(): void {
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm
+      .get('filter')!
+      .valueChanges.pipe(debounceTime(400))
+      .forEach((filter) => {
+        this.loadData();
+      });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const now = new Date();
+        const customStart = this.validStart || now;
+        const customStop = this.validStop || now;
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else if (nextInterval) {
+        this.validStop = new Date();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    if (this.filter()) {
+      const filter = this.filter()!;
+      this.filterForm.get('filter')!.setValue(filter);
+    }
+    if (this.interval()) {
+      this.appliedInterval = this.interval()!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = this.customStart()!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = this.customStop()!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = new Date();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = null;
+      this.validStart = null;
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval === 'CUSTOM') {
+      // For simplicity reasons, just reset to default 1h interval.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval) {
+      this.validStop = new Date();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  applyCustomDates() {
+    const { controls } = this.filterForm;
+    this.validStart = utils.toDate(controls['customStart'].value);
+    this.validStop = utils.toDate(controls['customStop'].value);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  /**
+   * Loads the first page of data within validStart and validStop
+   */
+  loadData() {
+    this.updateURL();
+    const options: GetAuditRecordsOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    if (this.filterForm.controls['filter'].value) {
+      options.q = this.filterForm.controls['filter'].value;
+    }
+
+    const today = new Date().toISOString().substring(0, 10);
+    const yesterday = utils
+      .subtractDuration(new Date(), 'P1D')
+      .toISOString()
+      .substring(0, 10);
+    this.yamcs.yamcsClient
+      .getAuditRecords('_global', options)
+      .then((page) => {
+        const rowGroups = this.groupByDay(page.records || []).map((group) => {
+          const dataSource = new MatTableDataSource<Row>();
+          dataSource.data = group.map((item) => {
+            const requestOptions: any[] = [{ key: 'Request', value: '' }];
+            if (item.request) {
+              this.flatten(item.request, requestOptions, '    ');
+            }
+            return { item, expanded: false, requestOptions };
+          });
+          let grouper = group[0].time.substring(0, 10);
+          if (grouper === today) {
+            grouper = 'Today';
+          } else if (grouper === yesterday) {
+            grouper = 'Yesterday';
+          }
+          return { grouper, dataSource };
+        });
+        this.rowGroups$.next(rowGroups);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  loadMoreData() {
+    /*const options: GetAuditRecordsOptions = {
+    };
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.filter) {
+      options.q = this.filter;
+    }
+
+    this.dataSource.loadMoreData(options);*/
+  }
+
+  private updateURL() {
+    const { controls } = this.filterForm;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: controls['filter'].value || null,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStart'].value
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStop'].value
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private groupByDay(records: AuditRecord[]) {
+    const byDay: Array<AuditRecord[]> = [];
+    let currentDay: string | undefined;
+    let dayRecords: AuditRecord[] = [];
+    for (const record of records) {
+      const day = record.time.substring(0, 10);
+      if (day !== currentDay) {
+        currentDay = day;
+        if (dayRecords.length) {
+          byDay.push(dayRecords);
+          dayRecords = [];
+        }
+      }
+      dayRecords.push(record);
+    }
+    if (dayRecords.length) {
+      byDay.push(dayRecords);
+    }
+    return byDay;
+  }
+
+  private flatten(
+    node: { [key: string]: any },
+    result: RequestOption[],
+    indent = '',
+  ) {
+    for (const key in node) {
+      const value = node[key];
+      if (Array.isArray(value)) {
+        result.push({ key: indent + key, value: '' });
+        for (let i = 0; i < value.length; i++) {
+          result.push({
+            key: indent + '    ' + key + ' ' + (i + 1),
+            value: value[i],
+          });
+        }
+      } else if (typeof value === 'object') {
+        result.push({ key: indent + key, value: '' });
+        this.flatten(value, result, indent + '    ');
+      } else {
+        result.push({ key: indent + key, value: '' + value });
+      }
+    }
+  }
+}
+```
+
+### `model.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/model.ts`
+
+
+```typescript
+import { MatTableDataSource } from '@angular/material/table';
+import { AuditRecord } from '@yamcs/webapp-sdk';
+
+export interface RowGroup {
+  grouper: string;
+  dataSource: MatTableDataSource<Row>;
+}
+
+export interface RequestOption {
+  key: string;
+  value: string;
+}
+
+export interface Row {
+  expanded: boolean;
+  item: AuditRecord;
+  requestOptions: RequestOption[];
+}
+```

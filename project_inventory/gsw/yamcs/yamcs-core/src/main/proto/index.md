@@ -3,26 +3,511 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/proto/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activities.proto`
 
-file--activities.proto
-file--cmdhistory.proto
-file--db.proto
-file--replication.proto
-file--security.proto
-file--tablespace.proto
-file--timeline.proto
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/activities.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.activities.protobuf";
+option java_outer_classname = "ActivitiesProto";
+option java_multiple_files = true;
+
+import "google/protobuf/struct.proto";
+
+message ActivityDefinition {
+  // Activity type
+  optional string type = 1;
+
+  // Activity arguments. The expected arguments
+  // are different for each activity type
+  optional google.protobuf.Struct args = 2;
+}
 ```
 
-## 항목
+### `cmdhistory.proto`
 
-- [`gsw/yamcs/yamcs-core/src/main/proto/activities.proto`](file--activities.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/cmdhistory.proto`](file--cmdhistory.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/db.proto`](file--db.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/replication.proto`](file--replication.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/security.proto`](file--security.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/tablespace.proto`](file--tablespace.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/proto/timeline.proto`](file--timeline.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/cmdhistory.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.cmdhistory.protobuf";
+
+import "yamcs/protobuf/yamcs.proto";
+
+message AssignmentInfo {
+  repeated Assignment assignment = 1;
+}
+
+message Assignment {
+  optional string name = 1;
+  optional yamcs.protobuf.Value value = 2;
+  optional bool userInput = 3;
+}
+```
+
+### `db.proto`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/db.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.yarch.protobuf";
+
+import "yamcs/protobuf/yamcs.proto";
+import "yamcs/protobuf/events/events.proto";
+import "yamcs/protobuf/pvalue/pvalue.proto";
+import "yamcs/protobuf/mdb/mdb.proto";
+
+
+//this message has been copied in Yamcs 5 from pvalue.proto 
+// and is used when storing parameter values in tables (ParameterValueColumnSerializer.java).
+//
+// if the name of the parameter is the same with the column name, it is not stored.
+// For compatiblity with Yamcs 4, the protobuf field numbers are kept unchanged 
+message ParameterValue {
+	optional string name = 1;
+    optional yamcs.protobuf.Value rawValue = 2;
+    optional yamcs.protobuf.Value engValue = 3;
+    optional int64 acquisitionTime = 4;
+    optional int64 generationTime = 5;
+    optional yamcs.protobuf.pvalue.AcquisitionStatus acquisitionStatus = 6 [deprecated = true];
+    optional bool processingStatus = 7;
+    optional yamcs.protobuf.pvalue.MonitoringResult monitoringResult = 8;
+    optional yamcs.protobuf.pvalue.RangeCondition rangeCondition = 9;
+
+    // Context-dependent ranges
+    repeated yamcs.protobuf.mdb.AlarmRange alarmRange = 25;
+
+    // How long (in milliseconds) this parameter value is valid
+    // Note that there is an option when subscribing to parameters to get
+    // updated when the parameter values expire. 
+    optional int64 expireMillis = 26;
+    
+    //this replaces the acquisitionStatus enum above
+    optional int32 acqStatus = 27;
+}
+
+message Event {
+    optional string source = 1;
+    optional int64 generationTime = 2;
+    optional int64 receptionTime = 3;
+    optional int32 seqNumber = 4;
+    optional string type = 5;
+    required string message = 6;
+    optional yamcs.protobuf.events.Event.EventSeverity severity = 7[default=INFO];
+  
+    // Set by API when event was posted by a user
+    optional string createdBy = 10;
+
+    // Additional properties
+    map<string, string> extra = 11;
+}
+
+// used in the ParameterArchive to store the status flags associated to one parameter value
+message ParameterStatus {
+    optional yamcs.protobuf.pvalue.AcquisitionStatus acquisitionStatus = 1 [deprecated = true];
+    optional yamcs.protobuf.pvalue.MonitoringResult monitoringResult = 2;
+    optional yamcs.protobuf.pvalue.RangeCondition rangeCondition = 3;
+    // context-dependent ranges
+    repeated yamcs.protobuf.mdb.AlarmRange alarmRange = 4;
+
+    //when the value expires
+    optional int64 expireMillis = 5;
+    
+    //this replaces the acquisitionStatus enum above
+    optional int32 acqStatus = 6;
+}
+enum ProtoDataType {
+  //error in replay
+  DT_ERROR = 1;
+
+  //the replay status has changed (e.g. stopped or closed) the body contains a ReplayStatus
+  STATE_CHANGE = 2;
+
+  TM_PACKET = 3;
+  PP = 4;
+  EVENT = 5;
+  ARCHIVE_INDEX = 6;
+  ARCHIVE_TAG = 7;
+  PARAMETER = 8;
+  CMD_HISTORY = 9;
+}
+```
+
+### `replication.proto`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/replication.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.replication.protobuf";
+option java_outer_classname = "ReplicationProto";
+option java_multiple_files = true;
+
+
+//sent from Slave to Master directly when the Master is the TCP server 
+//or after a Wakeup when the Slave is the TCP server
+message Request {
+    enum Type {START_REPLAY = 1;};
+    optional string authToken = 1;
+    optional uint32 requestSeq = 2;//used to track back the response
+    optional string yamcsInstance =3;
+    optional Type type = 4;  //currently only START_REPLAY
+    optional uint64 startTxId = 5; //start replay with this transaction 
+}
+
+//sent from Master to Slave when the Slave is the TCP server
+//the Slave will send back a Request on the same socket
+message Wakeup {
+    optional string authToken = 1 ;
+    optional string yamcsInstance = 2; 
+}
+
+//sent regularely from Master to Slave
+// contains the mission time relation to the local time
+// used also as a heartbeat to keep the TCP link alive and detect link failures
+message TimeMessage {
+    //local UNIX time in millisecs
+	optional int64 localTime = 1;
+	//Yamcs time in millisecs
+	optional int64 missionTime = 2;
+	//time speed (mission time vs wall clock time)
+	optional double speed = 3;
+}
+
+message Response {
+   optional uint32 requestSeq = 1;
+   optional int32 result = 2;
+   optional string errorMsg = 3;
+}
+
+message ColumnInfo {
+    optional uint32 id = 1;
+    optional string name = 2;  
+    optional string type = 3;
+    optional string protoClass = 4; //the name of the class implementing the proto object if the dataType=PROTOBUF
+}
+
+message StreamInfo {
+    optional uint32 id = 1;   //stream id 
+    optional string name = 2;  //stream name
+    repeated ColumnInfo columns = 3;
+}
+```
+
+### `security.proto`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/security.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.security.protobuf";
+option java_outer_classname = "SecurityProto";
+option java_multiple_files = true;
+
+import "google/protobuf/timestamp.proto";
+
+// These collections use surrogate ids. They make it more
+// convenient to do things like renaming a user. Internal storage
+// that references a user "should" make use of the id, although
+// it's true this is not yet the case everywhere.
+
+message AccountCollection {
+  optional int32 seq = 1;
+  repeated AccountRecord records = 2;
+}
+
+message AccountRecord {
+  optional int32 id = 1;
+  optional string name = 2;
+  optional string displayName = 3;
+  optional bool active = 4;
+  optional int32 createdBy = 5;
+  optional google.protobuf.Timestamp creationTime = 6;
+  optional google.protobuf.Timestamp confirmationTime = 7;
+  optional google.protobuf.Timestamp lastLoginTime = 8;
+  
+  oneof accountType {
+    UserAccountRecordDetail userDetail = 9;
+    ServiceAccountRecordDetail serviceDetail = 10;
+  }
+}
+
+message UserAccountRecordDetail {
+  optional string email = 1;
+  optional string hash = 2;
+  optional bool superuser = 3;
+  repeated string roles = 5;
+  repeated ExternalIdentity identities = 4;
+  optional Clearance clearance = 6;
+}
+
+message ServiceAccountRecordDetail {
+  optional string applicationId = 1;
+  optional string applicationHash = 2;
+}
+
+message ExternalIdentity {
+  optional string identity = 1;
+  optional string provider = 2;
+}
+
+message Clearance {
+  optional string level = 1;
+  optional int32 issuedBy = 2;
+  optional google.protobuf.Timestamp issueTime = 3;
+}
+
+message GroupCollection {
+  optional int32 seq = 1;
+  repeated GroupRecord records = 2;
+}
+
+message GroupRecord {
+  optional int32 id = 1;
+  optional string name = 2;
+  optional string description = 3;
+  repeated int32 members = 4;
+}
+```
+
+### `tablespace.proto`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/tablespace.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.yarch.rocksdb.protobuf";
+
+message TimeBasedPartition {
+  optional string partitionDir = 1;
+  optional int64 partitionStart = 2;
+  optional int64 partitionEnd = 3;
+  optional string partitionCf = 4;
+  optional uint32 parchiveVersion = 5 [default = 0];
+}
+
+/**
+ *  This is used to encode values in the tablespace metadata database
+ */
+message TablespaceRecord {
+  	enum Type {
+    	//used to store table (partition) data
+    	//relevant information: instanceName, tableName and optionally partitionValue, partitionDir, partitionStart and partitionEnd
+    	TABLE_PARTITION = 1;
+
+    	//used to store table histogram data
+    	//relevant information: instanceName, tableName, columnName
+    	HISTOGRAM = 2;
+
+    	//used as part of the ParameterArchive to keep the parameter group id -> parameter group (list of parameter ids) mapping
+    	//relevant information: instanceName
+    	//there is only one record of this type for each instance and ParameterArchive
+    	PARCHIVE_PGID2PG = 4;
+
+    	//used to store ParameterArchive data. There is one record for each separate parameter 
+    	//(taking into account that a different type represents a different parameter in the ParameterArchive even if it has the same name)
+    	//relevant information: instanceName, parameterFqn, parameterType
+    	PARCHIVE_DATA = 5;
+
+    	//used to store information about the partitions of the ParameterArchive in case they are partitioned by time
+    	// relevant information: instanceName, partitioningSchema
+    	//there is only one record of this type for each instance and ParameterArchive
+    	PARCHIVE_PINFO = 6;
+     
+    	//used by the tag database
+    	// relevant information: instanceName
+    	TAGDB = 7;
+
+    	//used to store bucket and user objects
+    	// relevant information: instanceName, bucketProperties
+    	BUCKET = 8;
+
+    	//used to store (CCSDS) TM index
+    	//relevant information: instanceName, tmIndexName
+    	TM_INDEX = 9;
+    
+    	//used to store small named protobuf messages
+    	PROTOBUF = 10;
+  
+  		//used to store table definitions
+    	TABLE_DEFINITION = 11;
+    	
+    	//secondary index records
+    	SECONDARY_INDEX = 12;
+
+        //parameter archive info about array and aggregates - contains the list of member ids
+        //relevant information: instanceName, parameterFqn, memberId
+        PARCHIVE_AGGARR_INFO = 13;
+ 	 }
+  
+  	optional uint32 tbsIndex = 1;
+  	optional Type type = 2;
+
+  	// used for all record types
+  	//if not specified then instanceName = tablespaceName
+  	optional string instanceName = 3;
+
+    //used for TABLE_DEFINITION, TABLE_PARTITION, HISTOGRAM and SECONDARY_INDEX
+  	optional string tableName = 4;
+
+  	//used for HISTOGRAM 
+  	optional string histogramColumnName = 5;
+
+  	// used for TABLE_PARTITION: if partitioned by value - the value
+  	optional bytes partitionValue = 6;
+
+ 	 // used for TABLE_PARTITION, HISTOGRAM and PARCHIVE: if partition by time 
+  	//  - partitionDir is subdirectory name (usually something like 2017/11)
+  	//  - partitionStart/End are the times representing partition start(inclusive) and end (exclusive)
+  	optional TimeBasedPartition partition = 7;
+
+  	//used by the PARCHIVE_DATA to associate parameter ids to (parameter qualified  name, parameterType)
+  	//tbsIndex is the parameter id 
+  	//parameterType is a number assigned to (rawType,engType) combination
+  	//parameterFqn is the parameter fully qualified name (something like /system/subsystem1/subsystem2/paraName)
+  	optional string parameterFqn = 8;
+  	optional uint32 parameterType = 9;
+
+  	//partitioning schema used currently for parameter archive
+  	optional string partitioningSchema = 10;
+  
+  	//bucketProperties
+  	optional BucketProperties bucketProperties = 11;
+  
+  	//used for TABLE_DEFINITION
+  	optional ProtoTableDefinition tableDefinition = 12;
+  	
+  	//used for SECONDARY_INDEX
+  	optional SecondaryIndex secondaryIndex = 13;
+  	
+  	//used for TM_INDEX
+  	optional string tmIndexName = 14;
+
+    //used for PARCHIVE_AGGARR_INFO
+    repeated uint32 memberId = 15;
+
+    //used for PARCHIVE_AGGARR_INFO to store the numeric type (engType, rawType) of the parameter
+    optional uint32 numericType = 16;
+    
+    //if time based partitioning is not used for the parameter archive, this indicates that parameter archive data is stored in separate column family
+    //if partitioning is used, each partition has the property partitionCf indicating the name of the column family
+    // if this is not set, the parameter archive is not stored in separate column family  (databases created 
+    //  with Yamcs versions prior to 5.8.1) 
+    optional string parchiveCf = 17;
+    
+    //Starting with Yamcs 5.10.0 stores the version of the Parameter Archive in case time based partitioning is not used
+    // if time based partitioning is used, each partition has its own version
+    optional uint32 parchiveVersion = 18 [default = 0];
+}
+
+//associated to each bucket
+message BucketProperties {
+  	optional string name = 1;
+  	optional int64 created = 2;
+  	optional int32 maxNumObjects = 3; //maximum number of objects in the bucket
+  	optional uint64 maxSize = 4; //maximum size in bytes
+  	optional int32 numObjects = 5; //current number of objects in the bucket
+  	optional uint64 size = 6; //current bucket size
+}
+
+//associated to each user object
+message ObjectProperties {
+  	optional string name = 1;
+  	optional uint32 objectId = 2;
+  	optional string contentType = 3;
+  	optional int64 created = 4;
+  	optional uint64 size = 5;
+
+ 	map<string, string> metadata = 6;
+}
+
+
+message TableColumnInfo {
+	message EnumValue {
+  		optional int32 value = 1;
+  		optional string label = 2;
+	}
+	
+  	optional string name = 1;
+  	optional string type = 2;
+  	repeated EnumValue enumValue = 3;
+  	optional bool autoincrement = 4;
+}
+
+message PartitioningInfo {
+  	enum PartitioningType {
+    	TIME = 1;
+    	VALUE = 2;
+    	TIME_AND_VALUE = 3;
+  	}
+  	optional PartitioningType type = 1;
+  	optional string timeColumn = 2;
+  	optional string timePartitionSchema = 3;
+  	optional string valueColumn = 4;
+  	optional string valueColumnType = 5;
+}
+
+//to allow future extensions we define multi-column secondary indices for each table
+//as of now only a single index on one column is supported
+message SecondaryIndex {
+	repeated string columnName = 1;
+}
+
+message ProtoTableDefinition {
+  	repeated TableColumnInfo keyColumn = 2;
+  	repeated TableColumnInfo valueColumn = 3;
+  	repeated string histogramColumn = 5;
+  	optional string storageEngine = 6;
+  	optional int32 formatVersion = 7;
+  	optional string tablespace = 8;
+  	optional bool compressed = 9;
+  	optional PartitioningInfo partitioningInfo = 10;
+  	repeated SecondaryIndex secondaryIndex = 11;
+  	optional string cfName = 12;
+}
+
+```
+
+### `timeline.proto`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/proto/timeline.proto`
+
+
+```text
+syntax = "proto2";
+
+option java_package = "org.yamcs.timeline.protobuf";
+option java_outer_classname = "TimelineProto";
+option java_multiple_files = true;
+
+//this is a copy of the message defined in the API but we define it separately so we can make the two 
+//different in the future if required
+message BandFilter {
+   message FilterCriterion {
+      optional string key = 1;
+      optional string value = 2;
+   }
+  
+   message ItemFilter {
+      repeated FilterCriterion criteria = 1;
+   }
+   
+   repeated ItemFilter filters = 1;
+}
+```

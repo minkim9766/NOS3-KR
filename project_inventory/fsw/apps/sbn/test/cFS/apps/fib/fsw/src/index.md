@@ -3,20 +3,145 @@
 
 **경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fib_app.c`
 
-file--fib_app.c
-file--fib_app.h
-file--fib_app_events.h
-file--fib_app_msg.h
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app.c`
+
+
+```c
+#include "cfe_platform_cfg.h"
+#include "fib_app_events.h"
+#include "fib_app.h"
+
+Fib_AppData_t Fib_AppData;
+
+void FIB_AppMain(void)
+{
+    int32     status;
+    fib_tlm_t tlm;
+
+    Fib_AppData.prev1 = 1;
+    Fib_AppData.prev2 = 1;
+
+    CFE_MSG_Init((CFE_MSG_Message_t *)&tlm, CFE_SB_ValueToMsgId(FIB_TLM_MID), sizeof(tlm));
+
+    CFE_EVS_Register(NULL, 0, CFE_EVS_NO_FILTER);
+
+    Fib_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    if (CFE_SB_CreatePipe(&Fib_AppData.Pipe, FIB_PIPE_DEPTH, "FIB_CMD_PIPE") != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_ERROR, "error creating pipe");
+        return;
+    }
+
+    CFE_EVS_SendDbg(FIB_EID, "Subscribing to 0x%04x", FIB_CMD_MID);
+    if ((status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(FIB_CMD_MID), Fib_AppData.Pipe)) != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_ERROR, "error subscribing to command");
+        return;
+    }
+
+    CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_INFORMATION, "Fib App Initialized.");
+
+    tlm.fib = 1;
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&tlm);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&tlm, true); /* send out the 1, 1; as is tradition */
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&tlm, true);
+
+    while (CFE_ES_RunLoop(&Fib_AppData.RunStatus) == true)
+    {
+        /* Pend on receipt of command packet */
+        CFE_SB_Buffer_t *MsgBuf;
+
+        status = CFE_SB_ReceiveBuffer(&MsgBuf, Fib_AppData.Pipe, CFE_SB_PEND_FOREVER);
+
+        if (status == CFE_SUCCESS)
+        {
+            tlm.fib           = Fib_AppData.prev1 + Fib_AppData.prev2;
+            Fib_AppData.prev2 = Fib_AppData.prev1;
+            Fib_AppData.prev1 = tlm.fib;
+
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&tlm);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&tlm, true);
+        }
+        else
+        {
+            CFE_EVS_SendEvent(FIB_EID, CFE_EVS_EventType_ERROR, "FIB APP: SB Pipe Read Error, App Will Exit");
+
+            Fib_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    CFE_ES_ExitApp(Fib_AppData.RunStatus);
+}
 ```
 
-## 항목
+### `fib_app.h`
 
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app.c`](file--fib_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app.h`](file--fib_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app_events.h`](file--fib_app_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app_msg.h`](file--fib_app_msg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app.h`
+
+
+```c
+#ifndef _fib_app_h_
+#define _fib_app_h_
+
+#include "cfe.h"
+#include "cfe_error.h"
+#include "cfe_evs.h"
+#include "cfe_sb.h"
+#include "cfe_es.h"
+
+#include "fib_app_msgids.h"
+#include "fib_app_msg.h"
+
+#define FIB_PIPE_DEPTH 32
+
+typedef struct
+{
+    uint32 RunStatus;
+    uint32 prev1, prev2;
+
+    CFE_SB_PipeId_t Pipe;
+} Fib_AppData_t;
+
+void FIB_AppMain(void);
+
+#endif
+```
+
+### `fib_app_events.h`
+
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app_events.h`
+
+
+```c
+#ifndef _fib_app_events_h_
+#define _fib_app_events_h_
+
+#define FIB_EID 0
+
+#define FIB_EVENT_COUNTS 1
+
+#endif
+```
+
+### `fib_app_msg.h`
+
+**경로:** `fsw/apps/sbn/test/cFS/apps/fib/fsw/src/fib_app_msg.h`
+
+
+```c
+#ifndef _fib_app_msg_h_
+#define _fib_app_msg_h_
+
+typedef struct
+{
+    uint8  TlmHdr[sizeof(CFE_MSG_TelemetryHeader_t)];
+    uint32 fib;
+} fib_tlm_t;
+
+#endif
+```

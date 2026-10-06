@@ -3,20 +3,107 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ComCcsdsConfig.fpp
-file--ComCcsdsSubtopologyConfig.cpp
-file--ComCcsdsSubtopologyConfig.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/CMakeLists.txt`
+
+
+```cmake
+register_fprime_config(
+    EXCLUDE_FROM_ALL
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/ComCcsdsSubtopologyConfig.cpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/ComCcsdsSubtopologyConfig.hpp"
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/ComCcsdsConfig.fpp"
+    DEPENDS
+        Fw_Types
+)
 ```
 
-## 항목
+### `ComCcsdsConfig.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsConfig.fpp`](file--ComCcsdsConfig.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsSubtopologyConfig.cpp`](file--ComCcsdsSubtopologyConfig.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsSubtopologyConfig.hpp`](file--ComCcsdsSubtopologyConfig.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsConfig.fpp`
+
+
+```fpp
+module ComCcsdsConfig {
+    #Base ID for the ComCcsds Subtopology, all components are offsets from this base ID
+    constant BASE_ID = 0x02000000
+    
+    module QueueSizes {
+        constant comQueue    = 1000
+    }
+    
+    module StackSizes {
+        constant comQueue   = 64 * 1024
+    }
+
+    module Priorities {
+        constant comQueue   = 101
+    }
+
+    # Queue configuration constants
+    module QueueDepths {
+        constant events      = 100             
+        constant tlm         = 500            
+        constant file        = 100            
+    }
+
+    module QueuePriorities {
+        constant events      = 0                 
+        constant tlm         = 2                 
+        constant file        = 1                   
+    }
+
+    # Buffer management constants
+    module BuffMgr {
+        constant frameAccumulatorSize  = 2048     
+        constant commsBuffSize         = 2048      
+        constant commsFileBuffSize     = 3000      
+        constant commsBuffCount        = 20        
+        constant commsFileBuffCount    = 30       
+        constant commsBuffMgrId        = 200      
+    }
+}
+```
+
+### `ComCcsdsSubtopologyConfig.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsSubtopologyConfig.cpp`
+
+
+```cpp
+#include "ComCcsdsSubtopologyConfig.hpp"
+
+namespace ComCcsds {
+namespace Allocation {
+// This instance can be changed to use a different allocator in the ComCcsds Subtopology
+Fw::MallocAllocator mallocatorInstance;
+Fw::MemAllocator& memAllocator = mallocatorInstance;
+}  // namespace Allocation
+}  // namespace ComCcsds
+```
+
+### `ComCcsdsSubtopologyConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/ComCcsdsConfig/ComCcsdsSubtopologyConfig.hpp`
+
+
+```cpp
+#ifndef COMCCSDSSUBTOPOLOGY_CONFIG_HPP
+#define COMCCSDSSUBTOPOLOGY_CONFIG_HPP
+
+#include "Fw/Types/MallocAllocator.hpp"
+
+namespace ComCcsds {
+namespace Allocation {
+extern Fw::MemAllocator& memAllocator;
+}
+}  // namespace ComCcsds
+
+#endif
+```

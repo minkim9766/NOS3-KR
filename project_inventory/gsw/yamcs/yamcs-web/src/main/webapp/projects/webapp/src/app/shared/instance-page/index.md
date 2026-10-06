@@ -3,18 +3,722 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `instance-page.component.css`
 
-file--instance-page.component.css
-file--instance-page.component.html
-file--instance-page.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.css`
+
+
+```css
+mat-sidenav-container {
+  --top-height: 48px;
+  --message-bar-height: 48px;
+
+  position: absolute;
+  top: var(--top-height);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--y-background-color);
+}
+
+mat-sidenav-container.focus {
+  --top-height: 0;
+}
+
+mat-sidenav-container.message-bar-visible {
+  top: calc(var(--top-height) + var(--message-bar-height));
+}
+
+mat-sidenav {
+  width: 250px;
+  background-color: #181818;
+  border-right: 0 !important;
+}
+
+.sidenav-content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+mat-toolbar {
+  background-color: #181818;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: content-box;
+  color: #d3d3d3;
+  font-weight: 300;
+  font-size: 14px;
+}
+
+.mat-toolbar .mat-icon {
+  padding-right: 16px;
+}
+
+.search-input {
+  font: inherit;
+  line-height: 18px;
+  background: transparent;
+  color: currentColor;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  vertical-align: bottom;
+  text-align: inherit;
+}
+
+.search-input:focus {
+  color: #009e87;
+}
+
+.mat-divider.extra {
+  border-top-color: rgba(255, 255, 255, 0.1);
+  margin-top: 1em;
+  margin-top: 2em;
+}
+
+.navbar-logo {
+  text-align: center;
+  line-height: 0;
+}
+
+.navbar-logo img {
+  max-width: 100%;
+}
+
+.mat-toolbar.module-title {
+  min-height: 48px;
+}
+
+.mat-toolbar.module-title .mat-toolbar-row {
+  height: 48px;
+  font-weight: 400;
+}
 ```
 
-## 항목
+### `instance-page.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.css`](file--instance-page.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.html`](file--instance-page.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.ts`](file--instance-page.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.html`
+
+
+```html
+<ya-message-bar #messageBar />
+
+<mat-sidenav-container
+  #pageContainer
+  [class.fullscreen]="fullScreenMode$ | async"
+  [class.focus]="focusMode$ | async"
+  [class.message-bar-visible]="messageBar.show$ | async">
+  <mat-sidenav mode="side" [opened]="!(focusMode$ | async)" [disableClose]="true">
+    <div class="sidenav-content">
+      <mat-toolbar class="module-title" (click)="searchInput.focus()" style="cursor: text">
+        <mat-toolbar-row style="cursor: text">
+          <mat-icon style="cursor: text">search</mat-icon>
+          <input
+            #searchInput
+            type="text"
+            class="search-input"
+            placeholder="Search parameter"
+            autocomplete="off"
+            spellcheck="false"
+            [formControl]="searchControl"
+            [matAutocomplete]="auto"
+            (document:keydown)="handleKeydown($event)" />
+          <mat-autocomplete
+            #auto
+            class="ya-autocomplete"
+            panelWidth="400px"
+            (optionSelected)="onSearchSelect($event)">
+            @for (option of filteredOptions | async; track option) {
+              <mat-option [value]="option | memberPath">
+                {{ option | memberPath }}
+              </mat-option>
+            }
+          </mat-autocomplete>
+        </mat-toolbar-row>
+      </mat-toolbar>
+
+      <mat-nav-list dense>
+        <ya-sidebar-nav-item
+          activeWhen="/instance"
+          routerLink="/instance"
+          [queryParams]="{ c: yamcs.context }">
+          <mat-icon class="item-icon">home</mat-icon>
+          Home
+        </ya-sidebar-nav-item>
+        @if (showLinksItem()) {
+          <ya-sidebar-nav-item
+            activeWhen="/links"
+            routerLink="/links"
+            [queryParams]="{ c: yamcs.context }">
+            <mat-icon class="item-icon">swap_horiz</mat-icon>
+            Links
+          </ya-sidebar-nav-item>
+        }
+        @if (telemetryItems.length) {
+          <ya-sidebar-nav-group
+            label="Telemetry"
+            icon="speed"
+            [active]="telemetryActive"
+            [expanded]="telemetryExpanded"
+            (toggle)="toggleTelemetryGroup()">
+            @for (item of telemetryItems; track item) {
+              <ya-sidebar-nav-item
+                [activeWhen]="'/telemetry/' + (item.activeWhen ?? item.path)"
+                [routerLink]="'/telemetry/' + item.path"
+                [queryParams]="{ c: yamcs.context }"
+                [exact]="item.path === ''"
+                [subitem]="true">
+                {{ item.label }}
+              </ya-sidebar-nav-item>
+            }
+          </ya-sidebar-nav-group>
+        }
+
+        @if (showAlgorithmsItem()) {
+          <ya-sidebar-nav-item
+            activeWhen="/algorithms"
+            routerLink="/algorithms"
+            [queryParams]="{ c: yamcs.context }">
+            <mat-icon class="item-icon">transform</mat-icon>
+            Algorithms
+          </ya-sidebar-nav-item>
+        }
+
+        @if (showEventsItem()) {
+          <ya-sidebar-nav-item
+            activeWhen="/events"
+            routerLink="/events"
+            [queryParams]="{ c: yamcs.context }">
+            <mat-icon class="item-icon">event_note</mat-icon>
+            Events
+          </ya-sidebar-nav-item>
+        }
+
+        @if (showAlarmsItem()) {
+          @if (
+            (connectionInfo$ | async)?.processor?.hasAlarms ||
+            ((connectionInfo$ | async)?.instance?.capabilities | arrayContains: "alarm-mirror")
+          ) {
+            <app-alarm-label />
+          } @else {
+            <ya-sidebar-nav-item
+              activeWhen="/alarms"
+              routerLink="/alarms"
+              [queryParams]="{ c: yamcs.context }">
+              <mat-icon class="item-icon">notifications_none</mat-icon>
+              Alarms
+            </ya-sidebar-nav-item>
+          }
+        }
+
+        @if (commandingItems.length) {
+          <ya-sidebar-nav-group
+            label="Commanding"
+            icon="rss_feed"
+            [active]="commandingActive"
+            [expanded]="commandingExpanded"
+            (toggle)="toggleCommandingGroup()">
+            @for (item of commandingItems; track item) {
+              <ya-sidebar-nav-item
+                [activeWhen]="'/commanding/' + (item.activeWhen ?? item.path)"
+                [routerLink]="'/commanding/' + item.path"
+                [queryParams]="{ c: yamcs.context }"
+                [exact]="item.path === ''"
+                [subitem]="true">
+                {{ item.label }}
+              </ya-sidebar-nav-item>
+            }
+          </ya-sidebar-nav-group>
+        }
+
+        @if (
+          ((connectionInfo$ | async)?.instance?.capabilities | arrayContains: "file-transfer") &&
+          showFileTransferItem()
+        ) {
+          <ya-sidebar-nav-item
+            activeWhen="/file-transfer"
+            routerLink="/file-transfer"
+            [queryParams]="{ c: yamcs.context }">
+            <mat-icon class="item-icon">file_copy</mat-icon>
+            File transfer
+          </ya-sidebar-nav-item>
+        }
+
+        @if (proceduresItems.length) {
+          <ya-sidebar-nav-group
+            label="Procedures"
+            icon="playlist_play"
+            [active]="proceduresActive"
+            [expanded]="proceduresExpanded"
+            (toggle)="toggleProceduresGroup()">
+            @for (item of proceduresItems; track item) {
+              <ya-sidebar-nav-item
+                [activeWhen]="'/procedures/' + (item.activeWhen ?? item.path)"
+                [routerLink]="'/procedures/' + item.path"
+                [queryParams]="{ c: yamcs.context }"
+                [exact]="item.path === ''"
+                [subitem]="true">
+                {{ item.label }}
+              </ya-sidebar-nav-item>
+            }
+          </ya-sidebar-nav-group>
+        }
+
+        @if ((connectionInfo$ | async)?.instance?.capabilities | arrayContains: "timeline") {
+          @if (timelineItems.length) {
+            <ya-sidebar-nav-group
+              label="Timeline"
+              icon="view_timeline"
+              [active]="timelineActive"
+              [expanded]="timelineExpanded"
+              (toggle)="toggleTimelineGroup()">
+              @for (item of timelineItems; track item) {
+                <ya-sidebar-nav-item
+                  [activeWhen]="'/timeline/' + (item.activeWhen ?? item.path)"
+                  [routerLink]="'/timeline/' + item.path"
+                  [queryParams]="{ c: yamcs.context }"
+                  [exact]="item.path === ''"
+                  [subitem]="true">
+                  {{ item.label }}
+                </ya-sidebar-nav-item>
+              }
+            </ya-sidebar-nav-group>
+          }
+        }
+
+        @if (
+          showActivitiesItem() &&
+          ((connectionInfo$ | async)?.instance?.capabilities | arrayContains: "activities")
+        ) {
+          <app-activities-label />
+        }
+
+        @if (mdbItems.length) {
+          <ya-sidebar-nav-group
+            label="Mission database"
+            icon="auto_stories"
+            [active]="mdbActive"
+            [expanded]="mdbExpanded"
+            (toggle)="toggleMdbGroup()">
+            @for (item of mdbItems; track item) {
+              <ya-sidebar-nav-item
+                [activeWhen]="'/mdb/' + (item.activeWhen ?? item.path)"
+                [routerLink]="'/mdb/' + item.path"
+                [queryParams]="{ c: yamcs.context }"
+                [exact]="item.path === ''"
+                [subitem]="true">
+                {{ item.label }}
+              </ya-sidebar-nav-item>
+            }
+          </ya-sidebar-nav-group>
+        }
+
+        @if (showArchiveBrowserItem()) {
+          <ya-sidebar-nav-item
+            activeWhen="/archive"
+            routerLink="/archive"
+            [queryParams]="{ c: yamcs.context }">
+            <mat-icon class="item-icon">inventory_2</mat-icon>
+            Archive browser
+          </ya-sidebar-nav-item>
+        }
+
+        @if (extraItems.length) {
+          <mat-divider class="extra" />
+          @for (item of extraItems; track item) {
+            <ya-sidebar-nav-item
+              [activeWhen]="'/' + (item.activeWhen ?? item.path)"
+              [routerLink]="'/' + item.path"
+              [queryParams]="{ c: yamcs.context }">
+              <mat-icon class="item-icon">{{ item.icon || "loupe" }}</mat-icon>
+              {{ item.label }}
+            </ya-sidebar-nav-item>
+          }
+        }
+      </mat-nav-list>
+
+      <div style="flex: 1 1 auto"></div>
+      @if (config.logo) {
+        <div class="navbar-logo">
+          <img [src]="config.logo" />
+        </div>
+      }
+    </div>
+  </mat-sidenav>
+
+  <mat-sidenav-content #pageContent>
+    <router-outlet />
+  </mat-sidenav-content>
+</mat-sidenav-container>
+```
+
+### `instance-page.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/instance-page/instance-page.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  effect,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import {
+  MatSidenavContainer,
+  MatSidenavContent,
+} from '@angular/material/sidenav';
+import { NavigationEnd, Router } from '@angular/router';
+import {
+  AppearanceService,
+  AuthService,
+  ConfigService,
+  ConnectionInfo,
+  ExtensionService,
+  MessageService,
+  NavItem,
+  Parameter,
+  User,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Observable, Subscription, of } from 'rxjs';
+import { debounceTime, filter, map, switchMap } from 'rxjs/operators';
+import { ActivitiesLabelComponent } from '../activities-label/activities-label.component';
+import { AlarmLabelComponent } from '../alarm-label/alarm-label.component';
+
+@Component({
+  templateUrl: './instance-page.component.html',
+  styleUrl: './instance-page.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ActivitiesLabelComponent, AlarmLabelComponent, WebappSdkModule],
+})
+export class InstancePageComponent implements OnInit, OnDestroy {
+  @ViewChild(MatSidenavContainer)
+  pageContainer: MatSidenavContainer;
+
+  @ViewChild(MatSidenavContent)
+  pageContent: MatSidenavContent;
+
+  @ViewChild('searchInput')
+  searchInput: ElementRef<HTMLInputElement>;
+
+  connectionInfo$: Observable<ConnectionInfo | null>;
+
+  searchControl = new UntypedFormControl(null);
+  filteredOptions: Observable<Parameter[]>;
+
+  user: User;
+
+  config: WebsiteConfig;
+
+  telemetryActive = false;
+  telemetryExpanded = false;
+  commandingActive = false;
+  commandingExpanded = false;
+  proceduresActive = false;
+  proceduresExpanded = false;
+  timelineActive = false;
+  timelineExpanded = false;
+  mdbActive = false;
+  mdbExpanded = false;
+
+  telemetryItems: NavItem[] = [];
+  commandingItems: NavItem[] = [];
+  proceduresItems: NavItem[] = [];
+  timelineItems: NavItem[] = [];
+  mdbItems: NavItem[] = [];
+  extraItems: NavItem[] = [];
+
+  fullScreenMode$: Observable<boolean>;
+  focusMode$: Observable<boolean>;
+
+  private routerSubscription: Subscription;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    configService: ConfigService,
+    authService: AuthService,
+    appearanceService: AppearanceService,
+    extensionService: ExtensionService,
+    messageService: MessageService,
+    private router: Router,
+  ) {
+    this.connectionInfo$ = this.yamcs.connectionInfo$;
+    this.fullScreenMode$ = appearanceService.fullScreenMode$;
+    this.focusMode$ = appearanceService.focusMode$;
+    this.config = configService.getConfig();
+    this.user = authService.getUser()!;
+
+    effect(() => {
+      if (appearanceService.fullScreenRequested()) {
+        const el = this.pageContent.getElementRef().nativeElement;
+        el.requestFullscreen().catch((err) => messageService.showError(err));
+      }
+    });
+
+    if (
+      this.config.tmArchive &&
+      this.user.hasAnyObjectPrivilegeOfType('ReadPacket')
+    ) {
+      this.telemetryItems.push({ path: 'packets', label: 'Packets' });
+    }
+    if (this.user.hasAnyObjectPrivilegeOfType('ReadParameter')) {
+      this.telemetryItems.push({ path: 'parameters', label: 'Parameters' });
+      if (
+        (yamcs.connectionInfo$.value?.instance.capabilities ?? []).indexOf(
+          'parameter-lists',
+        ) !== -1
+      ) {
+        this.telemetryItems.push({
+          path: 'parameter-lists',
+          label: 'Parameter lists',
+        });
+      }
+    }
+    const displayBucket = configService.getDisplayBucket();
+    if (this.user.hasObjectPrivilege('ReadBucket', displayBucket)) {
+      this.telemetryItems.push({ path: 'displays', label: 'Displays' });
+    }
+    for (const item of extensionService.getNavItems('telemetry')) {
+      if (item.condition && item.condition(this.user)) {
+        this.telemetryItems.push(item);
+      }
+    }
+
+    if (this.config.tc && this.user.hasAnyObjectPrivilegeOfType('Command')) {
+      this.commandingItems.push({ path: 'send', label: 'Send a command' });
+    }
+    const stackBucket = configService.getStackBucket();
+    if (this.user.hasAnyObjectPrivilegeOfType('CommandHistory')) {
+      this.commandingItems.push({ path: 'history', label: 'Command history' });
+    }
+    if (this.config.tc && this.user.hasSystemPrivilege('ControlCommandQueue')) {
+      this.commandingItems.push({ path: 'queues', label: 'Queues' });
+    }
+    if (
+      this.config.commandClearanceEnabled &&
+      this.user.hasSystemPrivilege('ControlCommandClearances')
+    ) {
+      this.commandingItems.push({ path: 'clearances', label: 'Clearances' });
+    }
+    for (const item of extensionService.getNavItems('commanding')) {
+      if (item.condition && item.condition(this.user)) {
+        this.commandingItems.push(item);
+      }
+    }
+
+    if (
+      this.config.tc &&
+      this.user.hasObjectPrivilege('ReadBucket', stackBucket)
+    ) {
+      this.proceduresItems.push({ path: 'stacks', label: 'Stacks' });
+    }
+    if (
+      this.user.hasSystemPrivilege('ControlActivities') &&
+      (yamcs.connectionInfo$.value?.instance.capabilities ?? []).indexOf(
+        'activities',
+      ) !== -1
+    ) {
+      this.proceduresItems.push({ path: 'script', label: 'Run a script' });
+    }
+    for (const item of extensionService.getNavItems('procedures')) {
+      if (item.condition && item.condition(this.user)) {
+        this.proceduresItems.push(item);
+      }
+    }
+
+    if (this.user.hasSystemPrivilege('ReadTimeline')) {
+      this.timelineItems.push({ path: 'chart', label: 'Chart' });
+    }
+    if (this.user.hasSystemPrivilege('ControlTimeline')) {
+      this.timelineItems.push({ path: 'views', label: 'Views' });
+      this.timelineItems.push({ path: 'bands', label: 'Bands' });
+      this.timelineItems.push({ path: 'items', label: 'Items' });
+    }
+
+    if (this.user.hasSystemPrivilege('GetMissionDatabase')) {
+      this.mdbItems.push({ path: '', label: 'Overview' });
+      this.mdbItems.push({ path: 'parameters', label: 'Parameters' });
+      this.mdbItems.push({ path: 'parameter-types', label: 'Parameter types' });
+      this.mdbItems.push({ path: 'containers', label: 'Containers' });
+      this.mdbItems.push({ path: 'commands', label: 'Commands' });
+      this.mdbItems.push({ path: 'algorithms', label: 'Algorithms' });
+      for (const item of extensionService.getNavItems('mdb')) {
+        if (item.condition && item.condition(this.user)) {
+          this.mdbItems.push(item);
+        }
+      }
+    }
+
+    for (const item of extensionService.getNavItems('archive')) {
+      if (!item.condition || item.condition(this.user)) {
+        this.extraItems.push(item);
+      }
+    }
+
+    this.routerSubscription = router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe((evt: any) => {
+        const url = evt.url as string;
+        this.mdbActive = false;
+        this.commandingActive = false;
+        this.proceduresActive = false;
+        this.telemetryActive = false;
+        this.timelineActive = false;
+        this.collapseAllGroups();
+        if (url.match(/\/mdb.*/)) {
+          this.mdbActive = true;
+          this.mdbExpanded = true;
+        } else if (url.match(/\/commanding.*/)) {
+          this.commandingActive = true;
+          this.commandingExpanded = true;
+        } else if (url.match(/\/procedures.*/)) {
+          this.proceduresActive = true;
+          this.proceduresExpanded = true;
+        } else if (url.match(/\/telemetry.*/)) {
+          this.telemetryActive = true;
+          this.telemetryExpanded = true;
+        } else if (url.match(/\/timeline.*/)) {
+          this.timelineActive = true;
+          this.timelineExpanded = true;
+        }
+      });
+  }
+
+  ngOnInit() {
+    this.filteredOptions = this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      switchMap((val) => {
+        if (val) {
+          return this.yamcs.yamcsClient.getParameters(this.yamcs.instance!, {
+            q: val,
+            limit: 25,
+            searchMembers: true,
+          });
+        } else {
+          return of({ parameters: [] });
+        }
+      }),
+      map((page) => page.parameters || []),
+    );
+  }
+
+  onSearchSelect(event: MatAutocompleteSelectedEvent) {
+    this.searchControl.setValue('');
+    this.router.navigate(['/telemetry/parameters' + event.option.value], {
+      queryParams: { c: this.yamcs.context },
+    });
+  }
+
+  private collapseAllGroups() {
+    this.telemetryExpanded = false;
+    this.commandingExpanded = false;
+    this.proceduresExpanded = false;
+    this.timelineExpanded = false;
+    this.mdbExpanded = false;
+  }
+
+  toggleTelemetryGroup() {
+    const expanded = this.telemetryExpanded;
+    this.collapseAllGroups();
+    this.telemetryExpanded = !expanded;
+  }
+
+  toggleCommandingGroup() {
+    const expanded = this.commandingExpanded;
+    this.collapseAllGroups();
+    this.commandingExpanded = !expanded;
+  }
+
+  toggleProceduresGroup() {
+    const expanded = this.proceduresExpanded;
+    this.collapseAllGroups();
+    this.proceduresExpanded = !expanded;
+  }
+
+  toggleMdbGroup() {
+    const expanded = this.mdbExpanded;
+    this.collapseAllGroups();
+    this.mdbExpanded = !expanded;
+  }
+
+  toggleTimelineGroup() {
+    const expanded = this.timelineExpanded;
+    this.collapseAllGroups();
+    this.timelineExpanded = !expanded;
+  }
+
+  showLinksItem() {
+    return this.user.hasSystemPrivilege('ReadLinks');
+  }
+
+  showAlgorithmsItem() {
+    return this.user.hasAnyObjectPrivilegeOfType('ReadAlgorithm');
+  }
+
+  showEventsItem() {
+    return this.user.hasSystemPrivilege('ReadEvents');
+  }
+
+  showAlarmsItem() {
+    return this.user.hasSystemPrivilege('ReadAlarms');
+  }
+
+  showFileTransferItem() {
+    return this.user.hasSystemPrivilege('ReadFileTransfers');
+  }
+
+  showActivitiesItem() {
+    return this.user.hasSystemPrivilege('ReadActivities');
+  }
+
+  showArchiveBrowserItem() {
+    return this.user.hasAnyObjectPrivilegeOfType('ReadPacket');
+  }
+
+  handleKeydown(event: KeyboardEvent) {
+    const el: HTMLInputElement = this.searchInput.nativeElement;
+    if (event.key === '/' && this.isValidKeySource()) {
+      el.focus();
+      event.preventDefault();
+    } else if (event.key === 'Enter') {
+      const value = this.searchControl.value;
+      if (value) {
+        this.searchControl.setValue('');
+        this.router.navigate(['/search'], {
+          queryParams: { c: this.yamcs.context, q: value },
+        });
+      }
+    }
+  }
+
+  private isValidKeySource() {
+    const { activeElement } = document;
+    if (!activeElement) {
+      return true;
+    }
+    return (
+      activeElement.tagName !== 'INPUT' &&
+      activeElement.tagName !== 'SELECT' &&
+      activeElement.tagName !== 'TEXTAREA' &&
+      !activeElement.classList.contains('cm-content')
+    ); // Exclude CodeMirror editor
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+  }
+}
+```

@@ -3,16 +3,29 @@
 
 **경로:** `gsw/yamcs/examples/templates/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 instance-templates/index
-file--yamcs.yaml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/templates/src/main/yamcs/etc/instance-templates/`](instance-templates/index) — 폴더
-- [`gsw/yamcs/examples/templates/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/examples/templates/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.http.HttpServer
+
+instances: []
+
+secretKey: changeme
+
+yamcs-web:
+  tag: "Example: templates"
+```

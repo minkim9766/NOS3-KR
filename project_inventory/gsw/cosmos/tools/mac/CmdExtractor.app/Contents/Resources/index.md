@@ -3,14 +3,10 @@
 
 **경로:** `gsw/cosmos/tools/mac/CmdExtractor.app/Contents/Resources/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `appIcon.icns`
 
-file--appIcon.icns
-```
+**경로:** `gsw/cosmos/tools/mac/CmdExtractor.app/Contents/Resources/appIcon.icns`
 
-## 항목
-
-- [`gsw/cosmos/tools/mac/CmdExtractor.app/Contents/Resources/appIcon.icns`](file--appIcon.icns) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

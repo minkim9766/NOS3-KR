@@ -3,18 +3,110 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `icon-button.component.css`
 
-file--icon-button.component.css
-file--icon-button.component.html
-file--icon-button.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.css`
+
+
+```css
+:host {
+  display: inline-block;
+}
+
+button {
+  width: 100%;
+}
+
+button {
+  height: 24px;
+  border: 1px solid #d3d3d3;
+  background-color: #fff;
+  outline: none;
+  color: rgba(0, 0, 0, 0.75);
+  padding: 1px 6px;
+  margin: 0;
+  border-radius: 1px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02));
+  cursor: pointer;
+  font:
+    400 12px / 12px Roboto,
+    sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+button:active {
+  border-color: #bbb;
+  color: rgba(0, 0, 0, 0.75);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
+}
+
+button:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+button.toggled {
+  color: var(--y-accent);
+}
+
+button .material-symbols {
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+}
 ```
 
-## 항목
+### `icon-button.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.css`](file--icon-button.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.html`](file--icon-button.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.ts`](file--icon-button.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.html`
+
+
+```html
+<button [class.toggled]="toggled()" [disabled]="disabled()" (click)="onClick($event)">
+  <mat-icon>{{ icon() }}</mat-icon>
+</button>
+```
+
+### `icon-button.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/icon-button/icon-button.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-icon-button',
+  templateUrl: './icon-button.component.html',
+  styleUrl: './icon-button.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon],
+})
+export class YaIconButton {
+  icon = input.required<string>();
+  disabled = input(false, { transform: booleanAttribute });
+  toggled = input(false, { transform: booleanAttribute });
+
+  click = output<MouseEvent>();
+
+  onClick(event: MouseEvent) {
+    this.click.emit(event);
+    event.stopPropagation();
+  }
+}
+```

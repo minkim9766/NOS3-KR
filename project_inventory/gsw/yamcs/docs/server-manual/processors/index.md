@@ -3,38 +3,701 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/processors/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _images/index
-file--alarm-reporter.rst
-file--alarms.rst
-file--algorithm-manager.rst
-file--command-processing.rst
-file--index.rst
-file--local-parameter-manager.rst
-file--processor-configuration.rst
-file--replay-service.rst
-file--stream-parameter-provider.rst
-file--stream-tc-command-releaser.rst
-file--stream-tm-packet-provider.rst
-file--tm-processing.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/processors/_images/`](_images/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/processors/alarm-reporter.rst`](file--alarm-reporter.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/alarms.rst`](file--alarms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/algorithm-manager.rst`](file--algorithm-manager.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/command-processing.rst`](file--command-processing.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/local-parameter-manager.rst`](file--local-parameter-manager.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/processor-configuration.rst`](file--processor-configuration.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/replay-service.rst`](file--replay-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/stream-parameter-provider.rst`](file--stream-parameter-provider.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/stream-tc-command-releaser.rst`](file--stream-tc-command-releaser.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/stream-tm-packet-provider.rst`](file--stream-tm-packet-provider.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/processors/tm-processing.rst`](file--tm-processing.rst) — UTF-8 텍스트 파일 본문 포함
+### `alarm-reporter.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/alarm-reporter.rst`
+
+
+```rst
+Alarm Reporter
+==============
+
+Generates events for changes in the alarm state of any parameter on the specific processor. Note that this is independent from the actual alarm checking.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.alarms.AlarmReporter`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.alarms.AlarmReporter
+
+
+Configuration Options
+---------------------
+
+source (string)
+    The source name of the generated events. Default: ``AlarmChecker``
+```
+
+### `alarms.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/alarms.rst`
+
+
+```rst
+Alarms
+======
+
+This section describes the alarm handling in Yamcs.
+
+
+There are two types of alarms:
+ - Parameter Alarms: These are triggered when a monitored parameter goes out of limits (as defined in the MDB).
+ - Event Alarms: These are raised for events that have severity other than INFO.
+
+Both types of alarms can be enabled/disabled in `processor.yaml` 
+
+
+**Alarm States**
+
+Alarms in Yamcs follow a lifecycle inspired from the standard ISA-18.2 ("Management of Alarm Systems for the Process Industries").
+The figure below presents a state diagram for the alarm handling process:
+
+.. image:: _images/alarm-states.png
+    :alt: Alarm state diagram
+    :align: center
+
+The "Process" in the diagram refers to the state of the Parameter or the Event.
+ - for Parameters, ProcessOK means that the latest known value of the parameter is wihitn limits or that the monitoring has been disabled.
+ - for Events, ProcessOK means that an event with the same (source, type) and severity INFO has been received.
+
+`RTN` means Return to Normal.
+
+
+** Latching and Auto-acknowlegment
+- Latching Alarms require an explicit action from the operator to clear, even if the alarm has been acknowledged and the parameter returns to normal. 
+- Auto-acknowlegment means that the alarm clears itself as soon as the parameter returns to normal.
+
+Currently all alarms in Yamcs have these flags disabled, meaning that an alarm clears if the operator has acknowledged it and the parameter returned to normal.
+Allowing configuring these flags probably require extending the XTCE MDB and may be done in the future (if interest from users exists). 
+
+
+```
+
+### `algorithm-manager.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/algorithm-manager.rst`
+
+
+```rst
+Algorithm Manager
+=================
+
+Executes algorithms and provides output parameters.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.algorithms.AlgorithmManager`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.algorithms.AlgorithmManager
+          args:
+            libraries:
+              JavaScript:
+                - "mdb/mylib.js"
+
+
+Configuration Options
+---------------------
+
+libraries (map)
+    Libraries to be included in algorithms. The map points from the scripting language to a list of file paths.
+```
+
+### `command-processing.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/command-processing.rst`
+
+
+```rst
+Command Processing
+====================
+
+This section provides a detailed description of how Yamcs processes commands based on MDB definitions, following a series of steps as outlined in the diagram below.
+
+The figure below provides an overview of the steps involved, followed by a more detailed description of each step.
+
+.. image:: _images/command-processing.png
+    :alt: Command Processing
+    :align: center
+
+**1. Command has container?**
+When a command is received via API, the first step is to determine whether the command includes a container. The `allowContainerlessCommands` processor option is required for the command to be allowed without a container. 
+
+If the command has a container, proceed to step 2, where the parameters used for container inheritance are generated.
+
+**2. Generate parameters**
+
+XTCE defines two methods for command inheritance conditions: using parameter conditions (this step) and argument assignments (step 3). P
+
+Parameter inheritance resembles telemetry, where conditions are based on parameter comparisons, allowing only equality conditions (as opposed to more general boolean conditions in TM inheritance).
+
+An example can be seen in the `CCSDS green book <https://github.com/yamcs/yamcs/blob/master/yamcs-core/src/test/resources/xtce/ccsds-green-book.xml>`__
+
+Note that only equality conditions are allowed (whereas in TM inheritance general boolean conditions may be used).
+
+Yamcs will generate some parameter values according to the inheritance condition. The parameters may be used later in building the binary packet. Note that other than in the command building the value of these parameters are not published anywhere. The parameter generated are with both raw and engineering value.
+
+**3. Collect inherited arguments**
+
+The next step is to collect the arguments from all the ArgumentAssignments part of the inheritance conditions. This is similar with step 2.
+
+**4. Collect and check all arguments**
+
+In this step, all arguments — whether received from the user (via the API), inherited or from the default values — are gathered. All arguments are checked for validity. The value that is collected is the engineering value. The conversion to raw value will be performed only if the command has a container in step 8 below.
+
+**5. Command has container?**
+
+If the command has a container associated, the process moves to step 6, where the binary packet starts to being built. If not, the process skips directly to step 13 for verification.
+
+**6. For each entry in container**
+
+For commands with containers, each entry within the container is processed and inserted into the binary packet. The processing starts from the root container.
+The type of entry determines the next steps in the flow.
+
+**7. Entry Type**
+
+Here, the type of entry within the container is determined:
+
+If the entry is an argument, the flow continues to step 8, where the argument is converted from engineering units to raw values.
+If the entry has a fixed value, the process moves to step 11, where the fixed value binary is written to the packet. The fixed values are specified in binary, they do not need conversion.
+If the entry is a parameter, the flow proceeds to step 10 to convert the parameter to binary.
+
+**8. Engineering to raw**
+
+For argument entries, the first step is to convert the engineering value to raw value. This may involve a calibration step.
+
+**9. Argument Raw to binary**
+
+The raw value is converted to a binary value according to the data encoding, possibly using an algorithm.
+
+**10. Parameter Raw to binary**
+
+Similarly, for parameter entries, the raw values are converted into binary format according to their data encoding. The parameter values used here are in priority those generated at step 2, or collected from the current values in the processor (from incoming TM). If no value is found for a parameter, an exception is thrown and the command processing stops.  
+
+**11.  Write entry binary to the packet**
+
+The converted binary values are written into the binary packet according to their absolute or relative position.
+
+
+**12.  Inherited containers**
+
+The steps 6-11 are repeated by traversing down the tree from the root container to the container associated to the command sent by the user, converting and inserting all entries.
+
+At this stage the command is built, ready to be sent. Yamcs will perform a few permissions checks: users with the `CommandOptions` system privilege are allowed to add different attributes to the command as well as disable transmission constraints and verifiers. Other users attempting to do that will be rejected. 
+
+The API allows to issue a command with an option `dry_run=True`, case in which the processing will stop here and the prepared command including the binary and the collected argument values will be returned to the API user.
+
+
+**13. Queue Command**
+
+At this step the command is inserted into the command queue and also into the Command History (this is the 'Q' ack in the command history). The queue where the command is inserted is determined by probing all the configures queues in order for these criteria:
+- is the user allowed to enter commands in that queue
+- is the command significance level appropriate for the queue
+- is the command qualified name matching the patterns specified by the queue. This condition will satisfy if the queue has no pattern.
+
+If no queue matches the criteria, the last default queue will be used. Depending on the state of the selected queue, the following will happen:
+
+- If the selected queue is in state `DISABLED`, the command processing is immediately terminated.
+- If the selected queue is in state `BLOCKED`, the command processing is suspended waiting for the queue to be enabled (or disabled and then the processing is terminated).
+- If the selected queue is in state `ENABLED`, then the processing continues with the next step.
+
+**14.  Transmission Constraints check**
+
+If the command has transmission constraints (and have not been disabled in the API request), the constrains will be checked possibly waiting a configured interval. The constraints typically involve checking some telemetry parameters. If no delay has been specified, the current value of the parameters are received from the processor cache and if the check fails, the command is failed. If the delay has been specified in the transmission constraint, the parameter is checked (if found in the cache) and if the check fails, a subscription will be created to the incoming parameters.
+
+If a successful check can be performed in the configured delay interval for all the constraints, then the command is released from the queue.
+
+Just before releasing the command from the queue, if the command has verifiers (and the verifiers have not been disabled in the API request), the verifiers are started. 
+
+**15. Release Command**
+
+This step usually involves releasing the command into a stream (it corresponds to the 'R' ack in the command history). Note that the command releaser could be changed by the user in the processor.yaml. Here we describe what the default StreamTcCommandReleaser does. 
+
+There maybe multiple streams where the command can be released. The instance configuration contains a list of TC streams (in the `streamConfig` section) each stream with a list of TC patterns specified. In addition, the user may specify via the API a particular stream where the command should be released. The streams are checked in order and the first stream that satisfies both conditions will be used.
+
+Finally, some services may insert themselves in the release list in front of the regular streams configured in the instance configuration. For example the Yamcs Gateway will do that to ensure that certain commands that it declare reach the nodes. Generally any component in Yamcs may define a command in MDB and add itself in the release list to make sure it receives that command.
+
+
+**16. Send Command**
+
+If the command has been released into one of the regular streams, it ends up with the Link Manager. The Link Manager is the component that controls all the links declared in the instance configuration. Based on the `tcStream` property of each link, it has for each stream an ordered (the order is given by the link configuration) list of links that can send command from that stream.
+
+Once the Link Manager receives the command on a stream, it sequentially considers the *enabled* links associated with that stream. It attempts to send the command on each link in the order specified by the link configuration. Each link can either:
+
+1. decline sending the command passing it to the next link.
+2. attempt to send the command and in this case the Link Manager will not attempt to use another link.
+
+If all the links have declined the offer to send the command (or were disabled), the Link Manager will fail the command with the error "no link available".
+
+Once a link has accepted to send the command, it is responsible to update the command hisotry with the Sent ('S') ack. If it failed to send the command it is also responsible for completing the command with failure.
+
+**17. Command Verification**
+
+As mentioned above, before the command has been released from the stream, all the verifiers are started. The command verifiers usually check for certain conditions in telemetry and populate the command history accordingly. Each verifier can at any time declare the command completion (either successfully or with failure) case in which all other running verifiers are immediately aborted. Similarly, the verifiers monitor the command history for command completion events generated by other sources (for example the link failing the command if it cannot send it) and they immediately abort in case the command has bene completed.
+
+Note that Yamcs does not enforce strict handling of command completion. For example, while a verifier may declare a command as failed, another component (such as a link) can later mark the same command as successful, updating the specific attribute in the Command History (which is a table in the database).
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/index.rst`
+
+
+```rst
+Processors
+==========
+
+Yamcs processes TM/TC according to Mission Database definitions. Yamcs supports concurrent processing of parallel streams; one processing context is called *Processor*. Processors have clients that receive TM and send TC. Typically one Yamcs instance contains one realtime processor processing data coming in realtime and on-request replay processors, processing data from the archive. Internally, Yamcs creates a replay processors for tasks like filling up the Parameter Archive.
+
+Each processor is composed of a set of services with varying functionality.
+
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    tm-processing
+    command-processing
+    alarms
+    processor-configuration    
+    alarm-reporter
+    algorithm-manager
+    local-parameter-manager
+    replay-service
+    stream-parameter-provider
+    stream-tc-command-releaser
+    stream-tm-packet-provider
+```
+
+### `local-parameter-manager.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/local-parameter-manager.rst`
+
+
+```rst
+Local Parameter Manager
+=======================
+
+Manages and provides local parameters.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.parameter.LocalParameterManager`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.parameter.LocalParameterManager
+```
+
+### `processor-configuration.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/processor-configuration.rst`
+
+
+```rst
+Processor Configuration
+=======================
+
+The configuration of the different processor types can be found in :file:`etc/processor.yaml`. The file defines a map whose keys are the processor types. The type is used to define a specific configuration used when creating the processor. In addition to its type, each processor has a unique name specified at the moment of creation.
+
+The Yamcs processors are created in various ways:
+
+* at startup by the :doc:`../services/instance/processor-creator-service`. This is how typically the realtime processor is started. Note that here "realtime" is both the type and the name of the processor.
+* by asking for archive data via the API with `dataSource = replay`. This will create a processor of type ``ArchiveRetrieval``.
+* the :doc:`../services/instance/parameter-archive-service` creates regularly processors of type "ParameterArchive" to build up the parameter archive.
+* new processors of any type can be created via API. Yamcs Studio and Yamcs Web make use of this functionality to perform replays of data from the archive and they create processors of type "Archive".
+
+Note that the types ``Archive``, ``ParameterArchive`` and ``ArchiveRetrieval`` are often hardcoded in the services that use those processor types so it is advisable not to change them in the :file:`etc/processor.yaml`. The user can define additional processor types for implementing custom functionality. 
+
+One current restriction is that all instances share the same processor types. It is not possible for example that the ParameterArchive processor type behaves differently in two different instances of the same Yamcs server.
+
+Example of the ``realtime`` processor type configuration:
+
+.. code-block:: yaml
+
+  realtime:
+      services:
+        - class: org.yamcs.StreamTmPacketProvider
+        ...
+      config:
+          subscribeAll: true
+          recordInitialValues: true
+          recordInitialValues: true
+          persistParameters: true
+          maxTcSize: 4096
+          
+          alarm:
+              parameterCheck: true
+              parameterServer: enabled
+              eventServer: enabled
+              eventAlarmMinViolations: 1
+              loadDays: 30
+
+          tmProcessor:
+              ignoreOutOfContainerEntries: false
+              expirationTolerance: 1.9
+          
+
+Options
+-------
+
+services (list)
+    A list of services that are started together with the processor. The list is similar with the list of services used in the instance definitions. The reason is that originally (Yamcs v1) there were no instances but only processors and the data links were connected directly to them.
+    The different available services are described in the subsequent chapters after this one.
+
+The other options are under the `config` key:
+
+subscribeAll (boolean)
+    If true, all the services that provide parameters will provide all parameters starting at the processor creation. If set to false, the parameter are requested (subscribed) only when the external user asks for them (for example when opening a display, Yamcs Studio will subscribe to all parameters that are in the display). One service which can benefit of this is the XTCE TM processor: sometimes it is possible to extract only a selected list of parameters from packets and skip altogether the packets for which no parameter is requested. The advantage is that there is less work to perform; the disadvantage is that no value is available when subscribing a parameter for the first time (e.g. when opening a display for the first time, there will be no value shown until a packet containing the parameters on the display will have arrived).
+    
+    The providers are free to ignore this option and to provide more parameters than subscribed. This is for example the case for the XTCE TM processor when extracting parameters from a packet where the position of the entries is not absolute but relative to a previous entry. In this case the only way to extract a parameter in the middle or end of the packet is to extract all the parameters appearing in front.
+    
+recordInitialValues
+    The Mission database can contain initial (default) values for parameters. Enabling this option will cause an archive entry to be created at processor start with the values for all these parameters.
+    
+recordLocalValues
+    Local parameters are those known inside Yamcs and not provided by an external system. They are set by users via API calls. This option allows to record the values for these parameters each time they change.
+    
+maxTcSize (integer)
+    The maximum size of a telecommand packet. This value will set the maximum value regardless of the command definition in the Mission Database. There can be commands which have variable size arguments that do not specify a maximum size; this option will practically limit those cases to an overall maximum.
+
+subscribeContainerArchivePartitions (boolean)
+    If set to true (default) the containers declared to be used as archive partition are subscribed by default in the processor. Otherwise the containers are only subscribed when a user subscribes to them or to a parameter contained in them. If alarms are enabled, the subscription to the parameters that can trigger alarms will also cause some container subscriptions.
+    The only reason to switch this option off is for improving the performance when doing a archive retrieval that only extracts a few parameters. It is thus advisable to only configure it for the ArchiveRetrieval processor type.
+    Note: the statistics shown on the yamcs-web instance home page contain the containers subscribed inside the currently selected processor. If no container is subscribed, only the root containers will be shown.
+
+persistParameters (boolean)
+    If set to true, save the value of the parameters when the processor is closed and restore them when a processor with the same name starts. Only the parameters with the persistence flag set will be saved. By default in XTCE all parameters are set as persistent whereas in the spreadsheet the persistance has to be enabled by specifying the "p" flag.
+    This is typically set to true for the realtime processor such that the values of the parameters are saved when Yamcs is shut down and restored when Yamcs starts up again.
+    Default: false
+
+    
+Alarm options 
+-------------
+
+These options are defined under config -> alarm.
+
+parameterCheck (boolean)
+    If set to true, the parameters will be checked against the Mission Database defined limits. The users will receive the limit information as part of the parameter status. For example Yamcs Studio displays these parameters with a red or yellow border, depending on the severity of the limit. If set to false the limits will be ignored and all parameters will have the status unmonitored (equivalent with having no limit defined in the Mission Database).
+
+parameterServer (string)
+    Can be enabled or disabled. If enabled, an alarm server managing the alarm status of parameters will be started as part of the processor. This option requires the parameterCheck to be enabled. If disabled but the parameterCheck set to true, the parameters will still have their out of limit status associated but there will be no alarms generated.
+
+eventServer (string)
+    Can be enabled or disabled. If enabled, an alarm server managing the alarm status of events will be started as part of the processor. This works similarly with the alarms for parameters - the severity of the event is used to derive the severity of the alarm. However because the events do not have a definition similar with the parameters in the Mission Database, the event source/type is used as a key for the alarm. That means that if a second event with the same source,type is being received as one that has already triggered an alarm, it is considered another occurrence of the same alarm. 
+
+eventAlarmMinViolations (integer)
+    The number of occurrences of a specific event (identified by its source and type) required to raise an alarm. By default it is 1. Note that the parameters do not have this setting because it is part of the Mission Database definition.
+
+loadDays (float)
+    Specifies the number of days of past alarms to load at Yamcs startup. If the value is zero or negative, no alarms will be loaded.
+    This option has been introduced in Yamcs version 5.9.9 and 10.1.2. In earlier versions, triggered alarms were not reloaded into the alarm server during Yamcs startup.
+    Default: 30
+
+
+
+TM (container) processing options
+---------------------------------
+
+These options are defined under the config -> tmProcessor.
+
+ignoreOutOfContainerEntries (boolean)
+    If set to false (default), when processing a TM packet, parameters whose position falls outside of the packet, will generate a warning. This option can be used to turn off that warning. Usually it is a sign of an ill-defined Mission Database and it is better to fix the Mission Database than setting this option.
+    
+.. _expirationTolerance:
+
+expirationTolerance (double)
+    The Mission Database can define an expected rate in stream for packets (containers). This signifies how often a packet is expected to be sent by the remote system. The rate in stream property will cause Yamcs to set an expiration time for the parameters extracted from that packet. The expiration of parameters is used to warn the operators that they are potentially looking at stale data in the displays.
+    
+    Yamcs will compute the expiration time as the rate in stream defined in the Mission Database multiplied by this configuration option. The tolerance is needed in order to avoid generating false expiration warnings.
+
+maxArraySize (integer)
+    The maximum size of arrays extracted from TM packets. The arrays can be dynamically sized (meaning the size is given by a parameter in the packet) and this option configures the maximum size allowed. Default: ``10000``.
+```
+
+### `replay-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/replay-service.rst`
+
+
+```rst
+Replay Service
+==============
+
+Provides telemetry packets and processed parameters from the archive.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.ReplayService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    Archive:
+      services:
+        - class: org.yamcs.tctm.ReplayService
+
+
+Configuration Options
+---------------------
+
+excludeParameterGroups (list of string)
+    Parameter groups to exclude from being replayed.
+```
+
+### `stream-parameter-provider.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/stream-parameter-provider.rst`
+
+
+```rst
+Stream Parameter Provider
+=========================
+
+Provides parameters received from the configured ``param`` stream.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.StreamParameterProvider`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.tctm.StreamParameterProvider
+          args:
+            stream: "pp_realtime"
+
+
+Configuration Options
+---------------------
+
+streams (list of strings)
+    **Required.** The streams to read.
+```
+
+### `stream-tc-command-releaser.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/stream-tc-command-releaser.rst`
+
+
+```rst
+Stream TC Command Releaser
+==========================
+
+Sends commands to the configured ``tc`` streams. 
+
+The service supports sending commands to multiple streams depending on the command name. Each stream can be connected to a different data link, thus allowing Yamcs to control multiple targets concurrently.
+
+The streams where the commands are sent to are defined as part of the :doc:`streamConfig section<../data-management/streams>` in the :file:`etc/yamcs.{instance}.yaml` instance configuration file.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.StreamTcCommandReleaser`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.StreamTcCommandReleaser
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    The stream to send commands to. This option is deprecated in favor of the stream configuration defined at instance level. Among others, that configuration is preferred because it allows having different streams for different instances, whereas :file:`etc/processor.yaml` defines this service is common for all instances.
+```
+
+### `stream-tm-packet-provider.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/stream-tm-packet-provider.rst`
+
+
+```rst
+Stream TM Packet Provider
+=========================
+
+Receives packets from ``tm`` streams and sends them to the processor for extraction of parameters.
+
+This respects the root container defined as part of the ``streamConfig`` in :file:`etc/yamcs.yaml`.
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.StreamTmPacketProvider`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/processor.yaml`. Example:
+
+.. code-block:: yaml
+
+    realtime:
+      services:
+        - class: org.yamcs.StreamTmPacketProvider
+          args:
+            streams: ["tm_realtime", "tm_dump"]
+
+
+Configuration Options
+---------------------
+
+streams (list of strings)
+    **Required.** The streams to read.
+```
+
+### `tm-processing.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/tm-processing.rst`
+
+
+```rst
+TM Packet Processing
+====================
+
+This section describes how Yamcs processes the TM packets according to the MDB definitions.
+Note that when Yamcs receives a packet, it sends it first to a :doc:`../links/packet-preprocessor` which assigns it a generation time. The generation time is saved in the archive and also used as generation time for all parameters extracted from that packet.
+
+The figure below provides an overview of the steps involved, followed by a more detailed description of each step.
+
+.. image:: _images/tm-processing.png
+    :alt: TM Packet Processing
+    :align: center
+
+**1. Container identification**
+
+When Yamcs has to process a TM packet it has first to know which MDB container it corresponds to.
+For realtime packets this is done based on the stream on which the packet is coming. Each stream has an attribute ``rootContainer`` (defined in ``streamConfig -> tm`` in :file:`etc/yamcs.{instance}.yaml`) which configures the container used for all packets coming on that stream.
+For historical reasons that attribute is optional; if not configured Yamcs will take the first container (when traversing the MDB tree) having no parent.
+For archive packets, that information is stored in the archive the first time the packet is received.
+
+The processing returns to this step when processing sub-containers or inherited containers (see below).
+   
+**2. Entry selection**
+
+Once a packet is matched to a container, Yamcs can proceed to extract the container entries. There are cases when, in order to improve the performance, Yamcs performs a partial retrieval - only a subset of the entries are processed. 
+
+This for example is done as part of the XtceTmRecorder service when Yamcs does not want to extract parameters but only to identify the packet to its lowest sub-container; it is also done when performing a reply for the purpose of extracting a parameter or a set of parameters.
+The property that configures this behavior is ``config -> subscribeAll`` in the processor configuration in :file:`etc/processor.yaml`. If the property is set to false, then only the parameter subscribed (and the dependent parameters) will be extracted.
+
+**3. Entry processing**
+
+A container has different types of entries: 
+
+- parameters - for these the processing continues with the steps 3-6 below. 
+- sub-containers - a new container processing context (bit offset starting from 0!) is created and the processing continues from step 1.
+- array parameters (not shown in the figure) - these have their size either preset in the MDB or given by another parameter which has already been extracted from the packet. Yamcs will loop and extract the necessary number of array elements according to their data types in the steps 3-6 below. Note that there cannot be gaps between the elements of the array.
+- aggregate parameters (not shown in the figure) - are parameters containing multiple members (like a struct in C). For each member of the aggregate Yamcs will extract the aggregate member according to its data type. As for the array elements, there can be no gap between aggregate members.
+- indirect parameters (not shown in the figure) - are placeholders for other parameters - the exact parameter that will be extracted is determined by the value of another parameter proceeding it in the packet. Typically there is an id followed by some data, the data represents one parameter value and the id tells which parameter exactly the data represents.
+
+For each entry, the MDB defines the position (in bits) in the packet of the start of the entry. This can be specified either absolute from the beginning of the packet or relative to the previous entry. Note that XTCE allows positions relative to the end of the packet but this is not supported by Yamcs.
+
+**4. Binary value delimitation**
+
+The start of the parameter in the packet is given by the offset in the container entry definition as explained above. The size in bits is given by the *Data Encoding* (or element/member Data Encoding for the arrays/aggregates). Some data encodings can be fixed in size (e.g. a 32 bit floating point number or a 4 bits integer), some of them can be variable size - typical examples are strings or binary. Finally there can be an user defined algorithm which can determine the size and also extract the raw value as explained below. The data decoding algorithms have to be implemented in Java (Javascript and Python are not supported)
+
+**5. Binary to raw value**
+
+Part of the data type processing is also extracting the raw value from the packet. The raw value is one of the usual types: boolean, signed/unsigned integer (max 64 bits), float (32 or 64 bits), string, binary, array or aggregate. Note that the binary type is an array of bytes but it is not an array parameter type. Using a binary parameter types instead of an array of 8 bit integers is more efficient and thus preferred in most cases.
+
+**6. Raw to engineering value**
+
+Next step in the processing is the conversion of the raw value to the engineering value. This is done using the calibration rule (if any) part of the **Parameter Type** MDB definition. A special case is an enumerated parameter type - the engineering value of such parameter is a special type called EnumeratedValue which has a dual integer/string representation. Other special type is an absolute time - the engineering value is a timestamp (resolution is millisecond). 
+
+After the engineering value has been computed, Yamcs defers further processing until all entries have been extracted.
+
+**7. Container inheritance**
+
+After all entries from one container have been extracted, Yamcs proceeds to check if there is any inherited container which matches the condition. If there is, the container is processed starting with step 1.
+
+Note that the bit offset is not re-initialized to 0 as for sub-containers. It is considered that the inherited container contains the entries of the parent (already extracted) and thus any absolute position is counted from the beginning of the original packet. 
+
+**8. Validity check**
+
+After all entries from the root container and all inherited containers to the deepest level have been extracted, Yamcs proceeds to perform checks on the extracted parameters. The first is checking against the validity range (if any) - if the check fails the parameter is declared as invalid and monitoring limits in the next step are not checked (no alarm raised either). If a parameter is invalid, it usually means that something went wrong with the transmission of the data.
+
+**9. Monitoring check**
+
+If a parameter has passed the validity checks, the monitoring checks are performed. This means checking a numeric parameter as being inside certain limits or checking an enumerated parameter having certain values. There is no monitoring check for boolean, string, binary, aggregate or array parameters. The monitoring checks can use contextual information - that means the limits checked depend on other parameters. The monitoring checks can be disabled by setting ``config -> alarm -> parameterCheck`` to false in :file:`etc/processor.yaml`.
+
+**10. Alarm raising**
+
+If the alarm server is enabled (``config -> alarm -> parameterServer`` in :file:`etc/processor.yaml`), alarm will be raised for all parameters which are determined by the previous step to be out of limits.
+
+**11. Algorithms**
+
+If there is any algorithm taking as input one of the parameters extracted, the value is provided to the algorithm. Depending on the algorithm definition, the algorithm is also run possibly producing more parameters. These parameters are also passed through the monitoring checks and alarms in step 9 and 10 (if they have defined limits).
+
+**12. Data distribution**
+
+Finally the list of all parameter values (those extracted from packet and those computed by algorithms) are distributed to all clients (displays, yamcs-web, etc).
+```

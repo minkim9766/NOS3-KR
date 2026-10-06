@@ -3,18 +3,202 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP/lib/interfaces/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfdp_protocol.rb`
 
-file--cfdp_protocol.rb
-file--cosmos_cfdp_interface.rb
-file--visiona_cfdp_interface.rb
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/interfaces/cfdp_protocol.rb`
+
+
+```ruby
+require "cosmos/interfaces/protocols/protocol"
+require "cfdp_engine"
+require 'cfdp_vars'
+
+module Cosmos
+  # Protocol which permanently overrides an item value such that reading the
+  # item returns the overriden value. Methods are prefixed with underscores
+  # so the API can include the original name which calls out to these
+  # methods. Clearing the override requires calling normalize_tlm.
+  class CfdpProtocol < Protocol
+
+    # @param allow_empty_data [true/false] Whether STOP should be returned on empty data
+    def initialize(allow_empty_data = false)
+
+      super(allow_empty_data)
+      @pdu_queue = Queue.new #dcm
+    end
+
+    def getCFDPTask
+
+      Cosmos::CmdTlmServer.background_tasks.all.each {|task| return task if task.is_a?(Cosmos::CfdpEngineTask)}
+      return nil
+    end
+
+    def read_packet(packet)
+
+      # update packet counter here.
+      identified_packet = System.telemetry.identify!(packet.buffer, [PDU_TARGET_NAME_RX])
+
+      unless identified_packet.nil?
+
+        packetPayload = identified_packet.read('PAYLOAD', :RAW)
+        pdu = CFDP::PDUPacket.new(packetPayload.bytes)
+        @pdu_queue << packetPayload.bytes   #dcm
+        cfdpTask = getCFDPTask
+
+        unless cfdpTask.break
+
+          cfdpTask.update_received_counter(pdu.pduPayload.class) unless cfdpTask.nil?
+          Thread.new do
+            #dcm CFDP::CFDPEngine.instance.handlePDUReceived(packetPayload.bytes)
+            CFDP::CFDPEngine.instance.handlePDUReceived(@pdu_queue)  #dcm
+          end
+        end
+      end
+
+      return packet
+    end
+
+    def write_packet(packet)
+
+      # update packet counter here.
+      identified_packet = System.commands.identify(packet.buffer, [PDU_TARGET_NAME_TX])
+
+      unless identified_packet.nil?
+
+        if identified_packet.packet_name.eql?(PDU_SEND_TARGET_PACKET)
+
+          pdu = CFDP::PDUPacket.new(identified_packet.read('PAYLOAD', :RAW).bytes)
+          cfdpTask = getCFDPTask
+          cfdpTask.update_sent_counter(pdu.pduPayload.class) unless cfdpTask.nil?
+        end
+      end
+
+      return packet
+    end
+  end
+end
 ```
 
-## 항목
+### `cosmos_cfdp_interface.rb`
 
-- [`gsw/cosmos/config/targets/CFDP/lib/interfaces/cfdp_protocol.rb`](file--cfdp_protocol.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/interfaces/cosmos_cfdp_interface.rb`](file--cosmos_cfdp_interface.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/lib/interfaces/visiona_cfdp_interface.rb`](file--visiona_cfdp_interface.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/interfaces/cosmos_cfdp_interface.rb`
+
+
+```ruby
+# This file is a interface between CFDP Engine and Cosmos (not an external interface for Cosmos).
+# It is used to send User Indication's messages to cmdtlmsrvr Logger.
+
+require 'thread'
+require 'cosmos'
+
+module CFDP
+
+	def CFDP_Indication(string)
+
+		Cosmos::Logger.info string
+	end
+
+	module_function :CFDP_Indication
+end
+
+module Cosmos
+
+	def Start_CFDP_Uplink(classType, destID, sourceFileName, destFileName)
+
+		Thread.new do
+			begin
+				CFDP::CFDPEngine.instance.uplinkRequest(classType, destID, sourceFileName, destFileName)
+			rescue Exception => err
+				Cosmos::Logger.error ("UPLINK REQUEST ERROR: \"#{err.to_s}\"")
+			end
+		end
+	end
+
+	module_function :Start_CFDP_Uplink
+end	# module Cosmos
+```
+
+### `visiona_cfdp_interface.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/lib/interfaces/visiona_cfdp_interface.rb`
+
+
+```ruby
+require 'cosmos/interfaces/interface'
+require 'cfdp/cfdp'
+
+module Cosmos
+
+  # Base class for interfaces that send and receive messages over UDP
+  class VisionaCfdpInterface < Interface
+
+    CFDP_TARGET_NAME = "CFDP"
+    HK_PACKET_TIMING = 1
+
+    def initialize
+
+      super
+    end
+
+    def connected?
+
+      return true
+    end
+
+    def read
+
+      while connected?
+
+        sleep(HK_PACKET_TIMING)
+        data = CFDP::CFDPEngine.instance.hkpacket.pack
+        data = data.pack('c*')
+        read_interface_base(data)
+        packet = convert_data_to_packet(data)
+        @read_count += 1
+
+        return packet
+      end
+    end
+
+    def write(packet)
+
+      @write_count +=1
+      command_data = packet.buffer
+      @bytes_written += command_data.length
+      @written_raw_data_time = Time.now
+      @written_raw_data = command_data
+
+      identified_command = System.commands.identify(command_data, [CFDP_TARGET_NAME])
+      if identified_command
+        case identified_command.packet_name
+        when "SEND_FILE"
+          begin
+            classe = packet.read('CLASS', :FORMATTED).to_i
+            destID = packet.read('DEST_ID', :FORMATTED).to_i
+            srcFileName = packet.read('SRCFILENAME', :FORMATTED)
+            dstFileName = packet.read('DSTFILENAME', :FORMATTED)
+            CFDP::CFDPEngine.instance.uplinkRequest(classe, destID, srcFileName, dstFileName)
+          rescue Exception => err
+            Cosmos::Logger.error "Error while receiving SEND_FILE command. Error is #{err}.\n Backtrace #{err.backtrace}"
+          end
+        else
+          raise "Unknown command received at SEND_FILE Interface."
+        end
+      else
+        raise "Unknown command received at CFDP Interface."
+      end
+    end
+
+    def write_raw(_data)
+      raise "write_raw not implemented for CFDP Interface"
+    end
+
+    # Raise an error because raw logging is not supported for this interface
+    def raw_logger_pair=(_raw_logger_pair)
+      raise "Raw logging not supported for CFDP Interface"
+    end
+  end
+end
+```

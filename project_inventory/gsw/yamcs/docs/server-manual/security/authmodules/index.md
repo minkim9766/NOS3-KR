@@ -3,30 +3,549 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/security/authmodules/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `index.rst`
 
-file--index.rst
-file--ip-address.rst
-file--kerberos.rst
-file--ldap.rst
-file--openid.rst
-file--remote-user.rst
-file--single-user.rst
-file--spnego.rst
-file--yaml.rst
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/index.rst`
+
+
+```rst
+AuthModules
+===========
+
+.. toctree::
+    :maxdepth: 1
+
+    ldap
+    yaml
+    kerberos
+    remote-user
+    single-user
+    ip-address
+    spnego
+    openid
+
+
+The security subsystem is modular by design and allows combining different AuthModules together. This allows for scenarios where for example you want to authenticate via LDAP, but determine privileges via YAML files.
+
+The default set of AuthModules include:
+
+:doc:`ldap`
+    Authenticates against an LDAP directory. Also capable of mapping LDAP groups to Yamcs roles.
+:doc:`yaml`
+    Reads YAML files to verify the credentials of the user, or assign privileges.
+:doc:`kerberos`
+    Supports authenticating against a Kerberos server.
+:doc:`remote-user`
+    Supports authentication based on a custom HTTP header.
+:doc:`single-user`
+    Read AuthModule configuration to verify the credentials of a single user.
+:doc:`ip-address`
+    Supports authentication based on the remote IP address.
+:doc:`spnego`
+    Supports authenticating against a Kerberos server using Single Sign On from a web context.
+:doc:`openid`
+    Supports authenticating against an OpenID Connect server.
+
+AuthModules have an order. When a login attempt is made, AuthModules are iterated a first time in this order. Each AuthModule is asked if it can authenticate with the provided credentials. The first matching AuthModule contributes the user principal. A second iteration is done to then contribute privileges to the identified user. During both iterations, AuthModules reserve the right to halt the global login process for any reason.
+
+Some AuthModules are only useful for specific flows. For example OpenID Connect (which in a nutshell redirects to an external login form) would need to be accompanied with other AuthModules in case not all target clients are browser-based.
 ```
 
-## 항목
+### `ip-address.rst`
 
-- [`gsw/yamcs/docs/server-manual/security/authmodules/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/ip-address.rst`](file--ip-address.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/kerberos.rst`](file--kerberos.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/ldap.rst`](file--ldap.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/openid.rst`](file--openid.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/remote-user.rst`](file--remote-user.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/single-user.rst`](file--single-user.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/spnego.rst`](file--spnego.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/security/authmodules/yaml.rst`](file--yaml.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/ip-address.rst`
+
+
+```rst
+IP Address AuthModule
+=====================
+
+This AuthModule supports the login of a single preconfigured user based on an authorized remote IP address. Currently, it can only be used for API requests, and not for accessing the Yamcs web interface.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.IPAddressAuthModule`
+
+
+Configuration Options
+---------------------
+
+address (string or list of strings)
+    IPv4 or IPv6 address, or a range with CIDR mask.
+
+    A list of addresses or ranges may be specified. The user is then accepted when any of the entries matches the incoming request.
+
+username (string)
+    Username of the authenticated user.
+
+name (string)
+    Display name of the user account.
+
+email (string)
+    Email address of the user account.
+
+superuser (boolean)
+    If ``true`` the account has superuser privileges. Superusers are not subject to permission checks. Default: ``false``.
+
+privileges (map)
+    Map of assigned privileges, where each entry is either:
+
+    * An object privilege, with as value a list of patterns.
+    * The special name ``System``, with as value a list of system privileges.
+
+
+Example
+-------
+
+AuthModules are configured in the file :file:`etc/security.yaml`.
+
+.. code-block:: yaml
+
+    authModules:
+      - class: org.yamcs.security.IPAddressAuthModule
+        args:
+          address: "127.0.0.1"
+          username: ipv4_user
+
+      - class: org.yamcs.security.IPAddressAuthModule
+        args:
+          address: "::1"
+          username: ipv6_user
+
+      - class: org.yamcs.security.IPAddressAuthModule
+        args:
+          address:
+            - "192.168.0.0/16"
+            - "127.0.0.1"
+          username: testuser
+```
+
+### `kerberos.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/kerberos.rst`
+
+
+```rst
+Kerberos AuthModule
+===================
+
+This AuthModule supports password-based authentication of users via an external Kerberos server.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.KerberosAuthModule`
+
+
+Configuration Options
+---------------------
+
+This module reads Kerberos configuration from the Kerberos system configuration file. This is usually available at :file:`/etc/krb5.conf`. If you need to override this location, you have to set a system property at :abbr:`JVM (Java Virtual Machine)` level:
+
+    -Djava.security.krb5.conf=/my/custom/krb5.conf
+```
+
+### `ldap.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/ldap.rst`
+
+
+```rst
+LDAP AuthModule
+===============
+
+The LDAP AuthModule supports authentication of users via the LDAP protocol.
+
+It first searches for the distinguished name that matches a submitted username, and then attempts a bind using the submitted password.
+
+This module can also be chained to the :doc:`kerberos` or :doc:`spnego` modules in order to add user attributes and roles to a user that logged in via Kerberos or Kerberos SPNEGO.
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.LdapAuthModule`
+
+
+Configuration Options
+---------------------
+
+host (string)
+    **Required.** The LDAP host
+
+userBase (string)
+    **Required.** The search base for users.
+    
+    Example: ``ou=people,dc=example,dc=com``
+
+port (integer)
+    The LDAP port. Default: 389 for unencrypted connections, otherwise 636.
+
+tls (boolean)
+    If ``true`` the LDAP connection will be encrypted. Default: ``false``
+
+user (string)
+    The bind DN that Yamcs should use to search user properties. If unspecified Yamcs will attempt to do an anonymous bind. On many LDAP installations an anonymous bind does not give sufficient access to user information.
+
+password (string)
+    The password matching the bind DN.
+
+attributes (map)
+    Configure which LDAP attributes are to be considered. If unset, Yamcs uses defaults that work out of the box with many LDAP installations.
+
+userFilter (string)
+    User search filter. If unspecified, the default is to search by the account name attribute. See `RFC 4515 <https://datatracker.ietf.org/doc/html/rfc4515>`_ for filter syntax.
+
+    The filter should include at least one occurrence of the ``{0}`` character sequence, which upon login is replaced with the attempted username.
+
+    Example: ``(&(sAMAccountName={0})(memberOf=cn=developers,ou=groups,dc=example,dc=com))``
+
+groupMappings (list of maps)
+    Manage mappings from LDAP groups to Yamcs roles.
+
+    This makes use of the ``memberOf`` attribute in the user entry. If the LDAP directory does not support the ``memberOf`` attribute, you can instead configure the options ``groupBase``, ``groupFilter`` and ``groupFilterUserAttribute``.
+
+requiredIfKerberos (boolean)
+    If ``true`` this module performs an LDAP lookup on users that were identified by :doc:`kerberos` or :doc:`spnego`. If the lookup fails, the login process is aborted.
+
+If the LDAP directory does not support ``memberOf``, you can configure group lookup with the following configuration options:
+
+groupBase (string or list of strings)
+    DNs to search through for finding memberships.
+
+    Example: ``ou=groups,dc=example,dc=com``
+
+groupFilter (string)
+    Search filter to find group entries for the user. The filter should include at least one occurrence of the ``{0}`` character sequence, which gets replaced with the value of the ``groupFilterUserAttribute`` configuration option.
+
+    Example: ``(member={0})``
+
+groupFilterUserAttribute (string)
+    Attribute from the user entry to use in the ``groupFilter`` lookup.
+
+    Example: ``dn``
+
+Attributes sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+name (string)
+    The name of the account name attribute. This is used to search a DN within the ``userBase`` as well as to map to the Yamcs account name. For Active Directory this should usually be set to ``sAMAccountName``.
+
+    Default: ``uid``.
+
+email (string or string[])
+    The name of the email attribute. If multiples are defined, they are tried in order. Default: ``[mail, email, userPrincipalName]``.
+
+displayName (string or string[])
+    The name of the display name attribute. If multiples are defined, they are tried in order. Default: ``cn``.
+
+
+Group Mapping sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+dn (string)
+    **Required.** DN of an LDAP group.
+
+role (string)
+    Name of a Yamcs role to assign to this user.
+
+superuser (boolean)
+    If true, grant this user the superuser attribute, implying all privileges. Default: ``false``.
+```
+
+### `openid.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/openid.rst`
+
+
+```rst
+OpenID Connect AuthModule
+=========================
+
+This AuthModule supports federated identity by redirecting web application users to the authorization (or consent) page of an OpenID Connect server. This allows for remote management of users and could be used to perform cross-domain Single Sign On with multiple other browser applications.
+
+This AuthModule is used for authentication only. It does not directly support importing roles. But you could do so by extending this module.
+
+If the token endpoint of the OpenID server provides a refresh token, then Yamcs will refresh the access token whenever it has expired.
+
+If the token endpoint of the OpenID server does not provide a refresh token, Yamcs will only interact once with the OpenID server (for the initial auth), and afterwards no longer.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.OpenIDAuthModule`
+
+
+Configuration Options
+---------------------
+
+authorizationEndpoint (string)
+    **Required.** The URL of the OpenID server page where to redirect users for authorization and/or consent.
+
+    This URL must be accessible by clients.
+
+tokenEndpoint (string)
+    **Required.** The URL of the OpenID server page where OAuth2 tokens can be retrieved.
+
+    This URL must be accessible by Yamcs itself.
+
+clientId (string)
+    **Required.** An identifier that identifies your Yamcs server installation as a client against the Open ID server. This should be set up using the configuration tools of the Open ID server.
+
+clientSecret (string)
+    **Required.** The secret matching with the ``clientId``.
+
+scope (string)
+    Space-separated scope to be used in authorization request. Default: ``openid email profile``
+
+attributes (map)
+    Configure how claims are mapped to Yamcs attributes. If unset, Yamcs uses defaults that work out of the box against some common OpenID Connect providers.
+
+verifyTls (boolean)
+    If false, disable TLS and hostname verification when Yamcs uses the token endpoint. Default: true.
+
+
+Attributes sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+name (string or string[])
+    The claim that matches with the account name. This is used internally by Yamcs to map the user to a single identity. If multiples are defined, they are tried in order. Default: ``[preferred_username, nickname, email]``.
+
+email (string or string[])
+    The claim that matches with the email. If multiples are defined, they are tried in order. Default: ``email``.
+
+displayName (string or string[])
+    The claim that matches with the display name. If multiples are defined, they are tried in order. Default: ``name``.
+
+
+Back-channel Logout
+-------------------
+
+This AuthModule adds an endpoint ``/openid/backchannel-logout`` to Yamcs that may be called by the OpenID server when a user is to be logged out. This is called back-channel because the communication is directly from the Open ID server to Yamcs, rather than via the user agent. If not used, a logout on the Open ID server is only detected when the next token refresh is attempted.
+
+
+Note to third-party developers
+------------------------------
+
+This AuthModule implements the conventions for server-side web applications. In other words: the ``id_token`` is retrieved and decoded on Yamcs server only. Before Yamcs can obtain the ``id_token`` it expects to be given some information by the integrating application.
+
+The source code of the Yamcs web interface serves as the best reference. But generally it works like this:
+
+#. The browser application retrieves OpenID Connect options on the ``/auth`` endpoint. This includes the ``client_id``, the ``authorizationEndpoint`` and the ``scope``. Other configuration options are reserved for server use.
+
+#. The browser application uses the ``authorizationEndpoint`` to redirect the browser to a login or consent page of the  upstream OIDC server. The following is an example:
+   
+   .. code-block:: JavaScript
+
+       window.location.href = "https://oidc.example.com" +
+               "?client_id=encodeURIComponent(CLIENT_ID)" +
+               "&state=encodeURIComponent(STATE)" +
+               "&response_mode=query" +
+               "&response_type=code" +
+               "&scope=openid+email+profile" +
+               "&redirect_uri=encodeURIComponent(REDIRECT_URI)";
+    
+   ``STATE`` can be anything, and is typically used for encoding information about the original request such that when the authentication is done, the user is redirected back to the original attempted route.
+
+   ``REDIRECT_URI`` is the path where OIDC will redirect back the user after the login or consent is confirmed.
+
+#. When OIDC redirects the user's browser back to REDIRECT_URI, extract the ``code`` and ``state`` from the query params.
+
+#. Use this upstream ``code`` to make an encoded string like this:
+
+   .. code-block:: JavaScript
+
+       var codeForYamcs = "oidc " + JWT;
+
+   Here, JWT represent a JSON Web Token that stringifies a payload containing at least these properties:
+
+   .. code-block:: text
+
+       {
+         "redirect_uri": REDIRECT_URI,
+         "code": UPSTREAM_CODE,
+       }
+
+#. The string value of the variable ``codeForYamcs`` can be used against the Yamcs ``/auth`` endpoint using ``grant_type=authorization_code`` for converting it to a standard Yamcs-level access token.
+
+   In the background what happens is that Yamcs will use the upstream code and exchange it against OIDC for an ``id_token`` which tells Yamcs what the username, email and display name are for the authenticated user. The ``redirect_uri`` property is not actually used anymore, but most OIDC servers will check on this being specified and matching the original ``redirect_uri`` used for obtaining the upstream code.
+```
+
+### `remote-user.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/remote-user.rst`
+
+
+```rst
+Remote User AuthModule
+======================
+
+This AuthModule supports the login of users based on a provided HTTP header containing the username. Currently, it can only be used for API requests, and not for accessing the Yamcs web interface.
+
+.. warning::
+    When using this module you must protect Yamcs against spoofing attacks.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.RemoteUserAuthModule`
+
+
+Configuration Options
+---------------------
+
+header (string)
+    | Name of the HTTP request header that indicates the remotely identified user.
+    | Default: ``X-REMOTE-USER``
+```
+
+### `single-user.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/single-user.rst`
+
+
+```rst
+Single User AuthModule
+======================
+
+This AuthModule supports authentication and authorization of a single user whose information is directly specified in the AuthModule configuration.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.SingleUserAuthModule`
+
+
+Configuration Options
+---------------------
+
+username (string)
+    **Required.** Username of the authenticated user.
+
+password (string)
+    **Required.** Password for this user.
+
+name (string)
+    Display name of the user account.
+
+email (string)
+    Email address of the user account.
+
+superuser (boolean)
+    If ``true`` the account has superuser privileges. Superusers are not subject to permission checks. Default: ``false``.
+
+privileges (map)
+    Map of assigned privileges, where each entry is either:
+
+    * An object privilege, with as value a list of patterns.
+    * The special name ``System``, with as value a list of system privileges.
+
+hasher (string)
+    Hasher class that can be used to verify if a password is correct without actually storing the password. When omitted, passwords in :file:`etc/users.yaml` should be defined in clear text. Possible values are:
+
+    * :javadoc:`org.yamcs.security.PBKDF2PasswordHasher`
+```
+
+### `spnego.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/spnego.rst`
+
+
+```rst
+SPNEGO AuthModule
+=================
+
+This AuthModule supports Single Sign On authentication of users via SPNEGO. This is usually stacked together with the :doc:`kerberos` module in case the single sign on does not work, or in case Yamcs is accessed from a non-web context.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.SpnegoAuthModule`
+
+
+Configuration Options
+---------------------
+
+principal (string)
+    | **Required.** Kerberos Service Principal of the HTTP service that matches the external address of Yamcs.
+    | This should be in the format ``HTTP/<host>.<domain>@<realm>``
+
+keytab (string)
+    | **Required.** Path to the keytab file matching the principal.
+
+stripRealm (boolean)
+    | Whether to strip the realm from the username (e.g. ``user@<realm>`` becomes just ``user``).
+    | Default: ``true``.
+
+This module reads Kerberos configuration from the Kerberos system configuration file. This is usually available at :file:`/etc/krb5.conf`. If you need to override this location, you have to set a system property at :abbr:`JVM (Java Virtual Machine)` level:
+
+.. code-block:: text
+
+   -Djava.security.krb5.conf=/my/custom/krb5.conf
+```
+
+### `yaml.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/security/authmodules/yaml.rst`
+
+
+```rst
+YAML AuthModule
+===============
+
+This AuthModule supports authentication and authorization of users via YAML files available directly in the Yamcs configuration folder.
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.security.YamlAuthModule`
+
+
+Configuration Options
+---------------------
+
+hasher (string)
+    Hasher class that can be used to verify if a password is correct without actually storing the password. When omitted, passwords in :file:`etc/users.yaml` should be defined in clear text. Possible values are:
+
+    * :javadoc:`org.yamcs.security.PBKDF2PasswordHasher`
+
+required (boolean)
+    When set to ``true`` the YAML AuthModule will veto the login process if it does not know the user. This may be of interest in situations where the YAML AuthModule does not authenticate the user, yet still some control is required via configuration files over which users can login. Default is ``false``.
+
+The YAML AuthModule reads further configuration from a YAML file: :file:`etc/users.yaml`.
+
+
+users.yaml
+----------
+
+This file defines users, passwords and user roles.
+
+.. code-block:: yaml
+
+    admin:
+      password: somepassword
+      superuser: true
+
+    someuser:
+      displayName: Some User
+      password: somepassword
+      roles: [ Operator ]
+
+The ``password`` key may be omitted if the YAML AuthModule is not used for authentication.
+
+If you do use YAML AuthModule for authentication, consider hashing the passwords for better security. Password hashes can be obtained via the command line:
+
+.. code-block:: text
+
+    yamcsadmin password-hash
+
+This command prompts for the password and outputs a randomly salted PBKDF2 hash. This output can be assigned to the ``password`` key, replacing the clear password.
+```

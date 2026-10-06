@@ -3,40 +3,1325 @@
 
 **경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe-configdata-stubs.c`
 
-file--cfe-configdata-stubs.c
-file--libc-stdio-stubs.c
-file--libc-stdlib-stubs.c
-file--libc-string-stubs.c
-file--vxworks-ataDrv-stubs.c
-file--vxworks-cacheLib-stubs.c
-file--vxworks-excLib-stubs.c
-file--vxworks-fppLib-stubs.c
-file--vxworks-mcpx750-stubs.c
-file--vxworks-moduleLib-stubs.c
-file--vxworks-rebootLib-stubs.c
-file--vxworks-sysLib-stubs.c
-file--vxworks-taskLib-stubs.c
-file--vxworks-vxLib-stubs.c
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/cfe-configdata-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for string.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "common_types.h"
+#include "target_config.h"
+
+#include "PCS_cfe_configdata.h"
+
+CFE_StaticModuleLoadEntry_t CFE_PSP_BASE_MODULE_LIST[] = {{NULL}};
+
+Target_CfeConfigData GLOBAL_CFE_CONFIGDATA = {
+
+    /**
+     * 1Hz ISR entry point.  Called from PSP once per second on HW clock.
+     */
+    .System1HzISR = PCS_System1HzISR,
+
+    /**
+     * Main CFE entry point.  Called from PSP startup code.
+     */
+    .SystemMain = PCS_SystemMain,
+
+    /**
+     * Notification function. Called from PSP after async event handling.
+     */
+    .SystemNotify = PCS_SystemNotify};
+
+Target_ConfigData GLOBAL_CONFIGDATA = {.MissionVersion       = PCS_CONFIG_MISSIONVERSION,
+                                       .CfeVersion           = PCS_CONFIG_CFEVERSION,
+                                       .OsalVersion          = PCS_CONFIG_OSALVERSION,
+                                       .Config               = PCS_CONFIG_CONFIGSTR,
+                                       .Date                 = PCS_CONFIG_DATESTR,
+                                       .User                 = PCS_CONFIG_USERSTR,
+                                       .Default_CpuName      = PCS_CONFIG_CPUNAME,
+                                       .Default_CpuId        = PCS_CONFIG_CPUNUMBER,
+                                       .Default_SpacecraftId = PCS_CONFIG_SPACECRAFT,
+                                       .CfeConfig            = &GLOBAL_CFE_CONFIGDATA};
+
+/**
+ * Stub for the main system entry function implemented in CFE ES
+ */
+void PCS_SystemMain(uint32 StartType, uint32 StartSubtype, uint32 ModeId, const char *StartFilePath)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_SystemMain), StartType);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_SystemMain), StartSubtype);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_SystemMain), ModeId);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_SystemMain), StartFilePath);
+    UT_DEFAULT_IMPL(PCS_SystemMain);
+}
+
+/**
+ * Stub for 1Hz ISR function implemented in CFE TIME
+ */
+void PCS_System1HzISR(void)
+{
+    UT_DEFAULT_IMPL(PCS_System1HzISR);
+}
+
+/**
+ * Stub for notification function implemented in CFE ES
+ */
+void PCS_SystemNotify(void)
+{
+    UT_DEFAULT_IMPL(PCS_SystemNotify);
+}
 ```
 
-## 항목
+### `libc-stdio-stubs.c`
 
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/cfe-configdata-stubs.c`](file--cfe-configdata-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/libc-stdio-stubs.c`](file--libc-stdio-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/libc-stdlib-stubs.c`](file--libc-stdlib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/libc-string-stubs.c`](file--libc-string-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-ataDrv-stubs.c`](file--vxworks-ataDrv-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-cacheLib-stubs.c`](file--vxworks-cacheLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-excLib-stubs.c`](file--vxworks-excLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-fppLib-stubs.c`](file--vxworks-fppLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-mcpx750-stubs.c`](file--vxworks-mcpx750-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-moduleLib-stubs.c`](file--vxworks-moduleLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-rebootLib-stubs.c`](file--vxworks-rebootLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-sysLib-stubs.c`](file--vxworks-sysLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-taskLib-stubs.c`](file--vxworks-taskLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-vxLib-stubs.c`](file--vxworks-vxLib-stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/libc-stdio-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for stdio.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "PCS_stdio.h"
+
+struct PCS_FILE
+{
+    int f;
+};
+
+#define PCS_STDIO_MAX_SIZE 0x01000000
+
+int PCS_fclose(PCS_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_fclose);
+
+    return Status;
+}
+
+char *PCS_fgets(char *s, int n, PCS_FILE *stream)
+{
+    int32  Status;
+    uint32 CopySize;
+
+    Status = UT_DEFAULT_IMPL_RC(PCS_fgets, PCS_STDIO_MAX_SIZE);
+
+    if (Status > 0)
+    {
+        if (Status > n)
+        {
+            CopySize = n;
+        }
+        else
+        {
+            CopySize = Status;
+        }
+
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(PCS_fgets), s, CopySize);
+
+        if (CopySize != 0)
+        {
+            Status = CopySize;
+        }
+        else if (Status <= n)
+        {
+            memset(s, 'x', Status);
+        }
+        else if (UT_GetStubCount(UT_KEY(PCS_fgets) < 4))
+        {
+            memset(s, 'x', n);
+            Status = n;
+        }
+        else
+        {
+            Status = 0;
+        }
+    }
+
+    if (Status <= 0)
+    {
+        return NULL;
+    }
+
+    return s;
+}
+
+PCS_FILE *PCS_fopen(const char *filename, const char *modes)
+{
+    int32           Status;
+    PCS_FILE *      retval;
+    static PCS_FILE FOPEN_FP = {0};
+
+    Status = UT_DEFAULT_IMPL(PCS_fopen);
+
+    if (Status == 0)
+    {
+        retval = &FOPEN_FP;
+    }
+    else
+    {
+        retval = NULL;
+    }
+
+    return retval;
+}
+
+int PCS_fputs(const char *s, PCS_FILE *stream)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_fputs);
+
+    return Status;
+}
+
+int PCS_putchar(int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_putchar);
+
+    return Status;
+}
+
+int PCS_remove(const char *filename)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_remove);
+
+    return Status;
+}
+
+int PCS_rename(const char *old, const char *nw)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_rename);
+
+    return Status;
+}
+
+int PCS_snprintf(char *s, size_t maxlen, const char *format, ...)
+{
+    int32   Status;
+    int     actual = 0;
+    va_list ap;
+
+    Status = UT_DEFAULT_IMPL(PCS_snprintf);
+
+    /* need to actually _do_ the snprintf */
+    if (Status >= 0)
+    {
+        va_start(ap, format);
+        actual = vsnprintf(s, maxlen, format, ap);
+        va_end(ap);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int PCS_vsnprintf(char *s, size_t maxlen, const char *format, PCS_va_list arg)
+{
+    int32 Status;
+    int   actual = 0;
+
+    Status = UT_DEFAULT_IMPL(PCS_vsnprintf);
+
+    /* need to actually _do_ something here -
+     * cannot do the real vsnprintf because we lost the args. */
+    if (Status >= 0)
+    {
+        actual = snprintf(s, maxlen, "%s", format);
+    }
+
+    if (Status != 0)
+    {
+        actual = Status;
+    }
+
+    return actual;
+}
+
+int PCS_printf(const char *format, ...)
+{
+    return UT_DEFAULT_IMPL(PCS_printf);
+}
+
+static PCS_FILE LOCAL_FP[3] = {{10}, {11}, {12}};
+
+PCS_FILE *PCS_stdin  = &LOCAL_FP[0];
+PCS_FILE *PCS_stdout = &LOCAL_FP[1];
+PCS_FILE *PCS_stderr = &LOCAL_FP[2];
+```
+
+### `libc-stdlib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/libc-stdlib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for stdlib.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+#include "utassert.h"
+
+#include "PCS_stdlib.h"
+
+/*
+ * The malloc emulator relies on two magic numbers;
+ * one at the start of the pool, one for each block allocated.
+ *
+ * Note that the malloc emulator is not a real allocator,
+ * it only allocates sequential blocks and does not recover
+ * the space after free.
+ */
+#define MPOOL_START_SIGNATURE 0x8a458c6b
+#define MPOOL_BLOCK_SIGNATURE 0x3ef65721
+#define MPOOL_ALIGN           16
+
+struct MPOOL_REC
+{
+    cpuaddr BlockAddr;
+    uint32  Magic;
+    uint32  Size;
+};
+
+void PCS_exit(int c)
+{
+    UT_DEFAULT_IMPL(PCS_exit);
+
+    /*
+     * This call is never supposed to return, but this stub will.
+     * The application therefore must handle a return from exit()
+     *
+     * TBD: IT would be nice if this could use a setjmp-like
+     * method to avoid returning here.
+     */
+}
+
+unsigned long int PCS_strtoul(const char *nptr, char **endptr, int base)
+{
+    int32         Status;
+    unsigned long Result = 0;
+
+    Status = UT_DEFAULT_IMPL_RC(PCS_strtoul, -1);
+
+    if (Status < 0)
+    {
+        /* do the real op */
+        Result = strtoul(nptr, endptr, base);
+    }
+    else
+    {
+        Result = Status;
+    }
+
+    return Result;
+}
+
+int PCS_system(const char *command)
+{
+    return UT_DEFAULT_IMPL(PCS_system);
+}
+
+void *PCS_malloc(size_t sz)
+{
+    int32             Status;
+    void *            PoolPtr;
+    cpuaddr           PoolStart;
+    cpuaddr           PoolEnd;
+    cpuaddr           NextBlock;
+    size_t            NextSize;
+    size_t            PoolSize;
+    uint32            CallCnt;
+    struct MPOOL_REC *Rec;
+
+    Rec     = NULL;
+    CallCnt = UT_GetStubCount(UT_KEY(PCS_malloc));
+    UT_GetDataBuffer(UT_KEY(PCS_malloc), &PoolPtr, &PoolSize, NULL);
+
+    if (PoolPtr != NULL)
+    {
+        PoolStart = (cpuaddr)PoolPtr;
+        PoolEnd   = PoolStart + PoolSize;
+        PoolStart = (PoolStart + MPOOL_ALIGN - 1) & ~((cpuaddr)MPOOL_ALIGN - 1);
+        PoolSize  = PoolEnd - PoolStart;
+
+        if (PoolSize > (MPOOL_ALIGN * 2))
+        {
+            Rec       = (struct MPOOL_REC *)PoolStart;
+            NextBlock = PoolStart + MPOOL_ALIGN;
+            PoolSize -= MPOOL_ALIGN;
+            if (CallCnt == 0)
+            {
+                Rec->Magic     = MPOOL_START_SIGNATURE;
+                Rec->Size      = 0;
+                Rec->BlockAddr = NextBlock;
+            }
+            else if (Rec->Magic != MPOOL_START_SIGNATURE)
+            {
+                UtAssert_Failed("PCS_malloc() heap corruption detected");
+            }
+        }
+    }
+
+    Status = UT_DEFAULT_IMPL(PCS_malloc);
+
+    if (Status != 0 || Rec == NULL)
+    {
+        return NULL;
+    }
+
+    NextSize = Rec->Size + sz + MPOOL_ALIGN;
+    if (NextSize > PoolSize)
+    {
+        /*
+         * This indicates that the application is trying to allocate
+         * a block larger than the pool.  It typically means that the
+         * emulated heap size is too small, so it is prudent to generate
+         * a message.
+         */
+        UtAssert_Failed("PCS_malloc() heap has been exhausted");
+        return NULL;
+    }
+
+    NextSize  = (NextSize + MPOOL_ALIGN - 1) & ~((size_t)MPOOL_ALIGN);
+    NextBlock = Rec->BlockAddr + MPOOL_ALIGN;
+    Rec->BlockAddr += NextSize;
+    Rec->Size += NextSize;
+
+    Rec            = (struct MPOOL_REC *)(NextBlock - sizeof(struct MPOOL_REC));
+    Rec->BlockAddr = NextBlock;
+    Rec->Magic     = MPOOL_BLOCK_SIGNATURE;
+    Rec->Size      = sz;
+
+    return (void *)NextBlock;
+}
+
+void PCS_free(void *ptr)
+{
+    int32             Status;
+    cpuaddr           BlockAddr;
+    void *            PoolPtr;
+    size_t            PoolSize;
+    struct MPOOL_REC *Rec;
+
+    /*
+     * If there is a data buffer associated with free() then this
+     * will sanity-check that the block being freed came from that heap.
+     */
+    UT_GetDataBuffer(UT_KEY(PCS_free), &PoolPtr, &PoolSize, NULL);
+
+    Status = UT_DEFAULT_IMPL(PCS_free);
+    if (Status == 0 && PoolPtr != NULL)
+    {
+        BlockAddr = (cpuaddr)ptr;
+        if (BlockAddr < (cpuaddr)PoolPtr || BlockAddr >= ((cpuaddr)PoolPtr + PoolSize))
+        {
+            UtAssert_Failed("PCS_free(): Heap corruption -- Non-Heap pointer");
+        }
+        else
+        {
+            Rec = (struct MPOOL_REC *)(BlockAddr - sizeof(struct MPOOL_REC));
+            if (Rec->Magic == MPOOL_BLOCK_SIGNATURE)
+            {
+                Rec->Magic = ~MPOOL_BLOCK_SIGNATURE;
+            }
+            else if (Rec->Magic == ~MPOOL_BLOCK_SIGNATURE)
+            {
+                UtAssert_Failed("PCS_free(): Heap corruption -- Double free detected");
+            }
+            else
+            {
+                UtAssert_Failed("PCS_free(): Heap corruption -- Corrupted block detected");
+            }
+        }
+    }
+}
+```
+
+### `libc-string-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/libc-string-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for string.h */
+#include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "utstubs.h"
+
+#include "PCS_string.h"
+
+void *PCS_memset(void *s, int c, size_t n)
+{
+    int32 Status;
+    void *Result;
+
+    Status = UT_DEFAULT_IMPL(PCS_memset);
+
+    if (Status == 0)
+    {
+        Result = memset(s, c, n);
+    }
+    else
+    {
+        Result = NULL;
+    }
+
+    return Result;
+}
+
+void *PCS_memcpy(void *dest, const void *src, size_t n)
+{
+    int32 Status;
+    void *Result;
+
+    Status = UT_DEFAULT_IMPL(PCS_memcpy);
+
+    if (Status == 0)
+    {
+        Result = memcpy(dest, src, n);
+    }
+    else
+    {
+        Result = NULL;
+    }
+
+    return Result;
+}
+
+char *PCS_strchr(const char *s, int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strchr);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strchr(s, c);
+    }
+    if (Status < 0)
+    {
+        return (char *)0;
+    }
+
+    return (char *)&s[Status - 1];
+}
+
+char *PCS_strrchr(const char *s, int c)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strrchr);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strrchr(s, c);
+    }
+    if (Status < 0)
+    {
+        return (char *)0;
+    }
+
+    return (char *)&s[Status - 1];
+}
+
+size_t PCS_strlen(const char *s)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(PCS_strlen, strlen(s));
+
+    return Status;
+}
+
+char *PCS_strcat(char *dest, const char *src)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strcat);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strcat(dest, src);
+    }
+
+    return (char *)0;
+}
+
+char *PCS_strncat(char *dest, const char *src, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strncat);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strncat(dest, src, size);
+    }
+
+    return (char *)0;
+}
+
+int PCS_strncmp(const char *s1, const char *s2, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(PCS_strncmp, strncmp(s1, s2, size));
+
+    return Status;
+}
+
+int PCS_strcmp(const char *s1, const char *s2)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL_RC(PCS_strcmp, strcmp(s1, s2));
+
+    return Status;
+}
+
+char *PCS_strcpy(char *dst, const char *src)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strcpy);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strcpy(dst, src);
+    }
+
+    return (char *)0;
+}
+
+char *PCS_strncpy(char *dst, const char *src, size_t size)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strncpy);
+
+    if (Status == 0)
+    {
+        /* "nominal" response */
+        return strncpy(dst, src, size);
+    }
+
+    return (char *)0;
+}
+
+char *PCS_strerror(int errnum)
+{
+    static char str[16];
+    int32       Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_strerror);
+
+    if (Status != 0)
+    {
+        return NULL;
+    }
+
+    /* "nominal" response */
+    snprintf(str, sizeof(str), "UT_ERR_%d", errnum);
+    return str;
+}
+```
+
+### `vxworks-ataDrv-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-ataDrv-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for ataDrv.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_drv_hdisk_ataDrv.h"
+
+PCS_device_t PCS_ataXbdDevCreate(int ctrl, int drive, unsigned int nBlks, unsigned int offset, const char *name)
+{
+    return UT_DEFAULT_IMPL(PCS_ataXbdDevCreate);
+}
+```
+
+### `vxworks-cacheLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-cacheLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for cacheLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_cacheLib.h"
+
+PCS_STATUS PCS_cacheTextUpdate(void *adrs, size_t bytes)
+{
+    return UT_DEFAULT_IMPL(PCS_cacheTextUpdate);
+}
+```
+
+### `vxworks-excLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-excLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for excLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_excLib.h"
+
+void PCS_excHookAdd(void (*Hook)(PCS_TASK_ID, int, void *))
+{
+    UT_DEFAULT_IMPL(PCS_excHookAdd);
+}
+```
+
+### `vxworks-fppLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-fppLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for fppLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_fppLib.h"
+
+void PCS_fppSave(PCS_FP_CONTEXT *fpc)
+{
+    UT_DEFAULT_IMPL(PCS_fppSave);
+}
+```
+
+### `vxworks-mcpx750-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-mcpx750-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for memPartLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_mcpx750.h"
+
+static uint32_t PCS_SYS_REG_BLRR_VALUE;
+
+uint32_t *PCS_SYS_REG_BLRR = &PCS_SYS_REG_BLRR_VALUE;
+```
+
+### `vxworks-moduleLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-moduleLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for moduleLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_moduleLib.h"
+
+PCS_MODULE_ID PCS_moduleFindByName(const char *moduleName)
+{
+    PCS_MODULE_ID retval;
+    int32         Status;
+
+    retval = NULL;
+    Status = UT_DEFAULT_IMPL(PCS_moduleFindByName);
+    if (Status == 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(PCS_moduleFindByName), &retval, sizeof(retval));
+    }
+
+    return retval;
+}
+
+PCS_STATUS PCS_moduleInfoGet(PCS_MODULE_ID moduleId, PCS_MODULE_INFO *pModuleInfo)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_moduleInfoGet);
+
+    if (Status == 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(PCS_moduleInfoGet), pModuleInfo, sizeof(*pModuleInfo)) < sizeof(*pModuleInfo))
+    {
+        memset(pModuleInfo, 0, sizeof(*pModuleInfo));
+    }
+
+    return Status;
+}
+```
+
+### `vxworks-rebootLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-rebootLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for rebootLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_rebootLib.h"
+
+void PCS_reboot(int boottype)
+{
+    UT_DEFAULT_IMPL(PCS_reboot);
+}
+```
+
+### `vxworks-sysLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-sysLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for sysLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_sysLib.h"
+
+int PCS_sysClkRateGet(void)
+{
+    return UT_DEFAULT_IMPL_RC(PCS_sysClkRateGet, 10000);
+}
+
+char *PCS_sysMemTop(void)
+{
+    int32 Status;
+    char *BufPtr;
+
+    BufPtr = NULL;
+    Status = UT_DEFAULT_IMPL(PCS_sysMemTop);
+    if (Status == 0)
+    {
+        UT_GetDataBuffer(UT_KEY(PCS_sysMemTop), (void **)&BufPtr, NULL, NULL);
+    }
+
+    return BufPtr;
+}
+
+void PCS_PciOutByte(uint32_t address, uint8_t data)
+{
+    UT_DEFAULT_IMPL(PCS_PciOutByte);
+}
+
+void PCS_PciOutLong(uint32_t address, uint32_t data)
+{
+    UT_DEFAULT_IMPL(PCS_PciOutLong);
+}
+
+void PCS_sysPciWrite32(uint32_t address, uint32_t data)
+{
+    UT_DEFAULT_IMPL(PCS_sysPciWrite32);
+}
+
+void PCS_sysPciRead32(uint32_t address, uint32_t *data)
+{
+    UT_DEFAULT_IMPL(PCS_sysPciRead32);
+}
+
+unsigned int PCS_GetWrsKernelTextStart(void)
+{
+    return UT_DEFAULT_IMPL(PCS_GetWrsKernelTextStart);
+}
+
+unsigned int PCS_GetWrsKernelTextEnd(void)
+{
+    return UT_DEFAULT_IMPL(PCS_GetWrsKernelTextEnd);
+}
+```
+
+### `vxworks-taskLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-taskLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for taskLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_taskLib.h"
+#include "PCS_errnoLib.h"
+
+static PCS_WIND_TCB PCS_LOCAL_TASK = {0};
+
+const char *PCS_taskName(PCS_TASK_ID task_id)
+{
+    const char *retval;
+    int32       Status;
+
+    retval = NULL;
+    Status = UT_DEFAULT_IMPL(PCS_taskName);
+    if (Status == 0)
+    {
+        UT_Stub_CopyToLocal(UT_KEY(PCS_taskName), &retval, sizeof(retval));
+    }
+
+    return retval;
+}
+
+void PCS_taskExit(int code)
+{
+    UT_DEFAULT_IMPL(PCS_taskExit);
+}
+
+PCS_TASK_ID PCS_taskIdSelf(void)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_taskIdSelf);
+    if (Status != 0)
+    {
+        return (PCS_TASK_ID)PCS_ERROR;
+    }
+
+    return &PCS_LOCAL_TASK;
+}
+
+PCS_TASK_ID PCS_taskNameToId(const char *name)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_taskNameToId);
+    if (Status != 0)
+    {
+        return (PCS_TASK_ID)PCS_ERROR;
+    }
+
+    return &PCS_LOCAL_TASK;
+}
+
+PCS_STATUS PCS_taskDelay(int ticks)
+{
+    return UT_DEFAULT_IMPL(PCS_taskDelay);
+}
+
+PCS_STATUS PCS_taskDelete(PCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(PCS_taskDelete);
+}
+
+PCS_STATUS PCS_taskDeleteForce(PCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(PCS_taskDeleteForce);
+}
+
+PCS_STATUS PCS_taskSuspend(PCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(PCS_taskSuspend);
+}
+
+PCS_STATUS PCS_taskResume(PCS_TASK_ID tid)
+{
+    return UT_DEFAULT_IMPL(PCS_taskResume);
+}
+
+PCS_STATUS PCS_taskPrioritySet(PCS_TASK_ID tid, int newPriority)
+{
+    return UT_DEFAULT_IMPL(PCS_taskPrioritySet);
+}
+
+PCS_STATUS PCS_taskInit(PCS_WIND_TCB *pTcb, char *name, int priority, int options, char *pStackBase, int stackSize,
+                        PCS_FUNCPTR entryPt, int arg1, int arg2, int arg3, int arg4, int arg5, int arg6, int arg7,
+                        int arg8, int arg9, int arg10)
+{
+    return UT_DEFAULT_IMPL(PCS_taskInit);
+}
+
+PCS_TASK_ID PCS_taskSpawn(char *name, int priority, int options, int stackSize, PCS_FUNCPTR entryPt, int arg1, int arg2,
+                          int arg3, int arg4, int arg5, int arg6, int arg7, int arg8, int arg9, int arg10)
+
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_taskSpawn);
+    if (Status != 0)
+    {
+        return (PCS_TASK_ID)PCS_ERROR;
+    }
+
+    return &PCS_LOCAL_TASK;
+}
+
+PCS_STATUS PCS_taskActivate(PCS_TASK_ID tid)
+{
+    int32 Status;
+
+    Status = UT_DEFAULT_IMPL(PCS_taskActivate);
+
+    return Status;
+}
+
+PCS_WIND_TCB *PCS_taskTcb(PCS_TASK_ID tid)
+{
+    int32         Status;
+    PCS_WIND_TCB *LocalTcb;
+
+    Status = UT_DEFAULT_IMPL(PCS_taskTcb);
+    if (Status != 0)
+    {
+        return NULL;
+    }
+
+    if (UT_Stub_CopyToLocal(UT_KEY(PCS_taskTcb), &LocalTcb, sizeof(LocalTcb)) < sizeof(LocalTcb))
+    {
+        /*
+         * On VxWorks the TASK_ID is defined as a direct type cast
+         * of the TCB address.  This is actually documented
+         * in the API and application code that works with TCBs
+         * certainly will depend on this being the case.
+         */
+        LocalTcb = (PCS_WIND_TCB *)tid;
+    }
+
+    return LocalTcb;
+}
+```
+
+### `vxworks-vxLib-stubs.c`
+
+**경로:** `fsw/psp/unit-test-coverage/ut-stubs/src/vxworks-vxLib-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* PSP coverage stub replacement for vxLib.h */
+#include <string.h>
+#include <stdlib.h>
+#include "utstubs.h"
+
+#include "PCS_vxLib.h"
+#include "PCS_arch_ppc_vxPpcLib.h"
+
+void PCS_vxTimeBaseGet(uint32_t *u, uint32_t *l)
+{
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_vxTimeBaseGet), u);
+    UT_Stub_RegisterContextGenericArg(UT_KEY(PCS_vxTimeBaseGet), l);
+    *u = 0;
+    *l = 0;
+    UT_DEFAULT_IMPL(PCS_vxTimeBaseGet);
+}
+
+void PCS_vxMsrSet(uint32_t val)
+{
+    UT_DEFAULT_IMPL(PCS_vxMsrSet);
+}
+
+uint32_t PCS_vxMsrGet(void)
+{
+    return UT_DEFAULT_IMPL(PCS_vxMsrGet);
+}
+
+void PCS_vxFpscrSet(uint32_t val)
+{
+    UT_DEFAULT_IMPL(PCS_vxFpscrSet);
+}
+
+uint32_t PCS_vxFpscrGet(void)
+{
+    return UT_DEFAULT_IMPL(PCS_vxFpscrGet);
+}
+
+uint32_t PCS_vxDecGet(void)
+{
+    return UT_DEFAULT_IMPL(PCS_vxDecGet);
+}
+```

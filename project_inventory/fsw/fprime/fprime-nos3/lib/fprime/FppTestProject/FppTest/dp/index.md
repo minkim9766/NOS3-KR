@@ -3,22 +3,620 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--DpTest.cpp
-file--DpTest.fpp
-file--DpTest.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.cpp`](file--DpTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.fpp`](file--DpTest.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.hpp`](file--DpTest.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpTest.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DpTest.fpp"
+)
+
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpTest.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpTestTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpTestTester.cpp"
+)
+set(UT_MOD_DEPS STest)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+```
+
+### `DpTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpTest.cpp
+// \author bocchino
+// \brief  cpp file for DpTest component implementation class
+// ======================================================================
+
+#include <cstdio>
+
+#include "FppTest/dp/DpTest.hpp"
+#include "Fw/Dp/test/ut/DpContainerTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+DpTest::DpTest(const char* const compName,
+               U32 a_u32RecordData,
+               U16 a_dataRecordData,
+               const U8ArrayRecordData& a_u8ArrayRecordData,
+               const U32ArrayRecordData& a_u32ArrayRecordData,
+               const DataArrayRecordData& a_dataArrayRecordData,
+               const Fw::StringBase& a_stringRecordData)
+    : DpTestComponentBase(compName),
+      m_container(),
+      u32RecordData(a_u32RecordData),
+      dataRecordData(a_dataRecordData),
+      u8ArrayRecordData(a_u8ArrayRecordData),
+      u32ArrayRecordData(a_u32ArrayRecordData),
+      dataArrayRecordData(a_dataArrayRecordData),
+      stringRecordData(a_stringRecordData),
+      sendTime(Fw::ZERO_TIME) {
+    for (auto& elt : this->stringArrayRecordData) {
+        elt = &a_stringRecordData;
+    }
+}
+
+DpTest ::~DpTest() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void DpTest::schedIn_handler(const FwIndexType portNum, U32 context) {
+    // Request a buffer for Container 1
+    this->dpRequest_Container1(CONTAINER_1_DATA_SIZE);
+    // Request a buffer for Container 2
+    this->dpRequest_Container2(CONTAINER_2_DATA_SIZE);
+    // Request a buffer for Container 3
+    this->dpRequest_Container3(CONTAINER_3_DATA_SIZE);
+    // Request a buffer for Container 4
+    this->dpRequest_Container4(CONTAINER_4_DATA_SIZE);
+    // Request a buffer for Container 5
+    this->dpRequest_Container5(CONTAINER_5_DATA_SIZE);
+    // Request a buffer for Container 6
+    this->dpRequest_Container6(CONTAINER_6_DATA_SIZE);
+    // Get a buffer for Container 1
+    {
+        Fw::Success status = this->dpGet_Container1(CONTAINER_1_DATA_SIZE, this->m_container);
+        FW_ASSERT(status == Fw::Success::SUCCESS, static_cast<FwAssertArgType>(status));
+        // Check the container
+        this->checkContainer(this->m_container, ContainerId::Container1, CONTAINER_1_PACKET_SIZE,
+                             DpTest::ContainerPriority::Container1);
+    }
+    // Get a buffer for Container 2
+    {
+        Fw::Success status = this->dpGet_Container2(CONTAINER_2_DATA_SIZE, this->m_container);
+        FW_ASSERT(status == Fw::Success::SUCCESS);
+        // Check the container
+        this->checkContainer(this->m_container, ContainerId::Container2, CONTAINER_2_PACKET_SIZE,
+                             DpTest::ContainerPriority::Container2);
+    }
+    // Get a buffer for Container 3
+    {
+        Fw::Success status = this->dpGet_Container3(CONTAINER_3_DATA_SIZE, this->m_container);
+        // This one should fail
+        FW_ASSERT(status == Fw::Success::FAILURE);
+    }
+    // Get a buffer for Container 4
+    {
+        Fw::Success status = this->dpGet_Container4(CONTAINER_4_DATA_SIZE, this->m_container);
+        FW_ASSERT(status == Fw::Success::SUCCESS);
+        // Check the container
+        this->checkContainer(this->m_container, ContainerId::Container4, CONTAINER_4_PACKET_SIZE,
+                             DpTest::ContainerPriority::Container4);
+    }
+    // Get a buffer for Container 5
+    {
+        Fw::Success status = this->dpGet_Container5(CONTAINER_5_DATA_SIZE, this->m_container);
+        FW_ASSERT(status == Fw::Success::SUCCESS);
+        // Check the container
+        this->checkContainer(this->m_container, ContainerId::Container5, CONTAINER_5_PACKET_SIZE,
+                             DpTest::ContainerPriority::Container5);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Data product handler implementations
+// ----------------------------------------------------------------------
+
+void DpTest ::dpRecv_Container1_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_1_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_U32Record(this->u32RecordData);
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container2_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        const DpTest_Data dataRecord(this->dataRecordData);
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_2_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_DataRecord(dataRecord);
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Provide an explicit time stamp
+        this->dpSend(this->m_container, this->sendTime);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container3_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_3_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_U8ArrayRecord(this->u8ArrayRecordData.data(),
+                                                                              this->u8ArrayRecordData.size());
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container4_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_4_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_U32ArrayRecord(this->u32ArrayRecordData.data(),
+                                                                               this->u32ArrayRecordData.size());
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container5_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_5_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_DataArrayRecord(this->dataArrayRecordData.data(),
+                                                                                this->dataArrayRecordData.size());
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container6_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_6_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_StringRecord(this->stringRecordData);
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+void DpTest ::dpRecv_Container7_handler(DpContainer& container, Fw::Success::T status) {
+    // Test container assignment
+    this->m_container = container;
+    this->checkContainerEmpty(this->m_container);
+    if (status == Fw::Success::SUCCESS) {
+        auto serializeStatus = Fw::FW_SERIALIZE_OK;
+        for (FwSizeType i = 0; i < CONTAINER_7_DATA_SIZE; ++i) {
+            serializeStatus = this->m_container.serializeRecord_StringArrayRecord(
+                this->stringArrayRecordData, FW_NUM_ARRAY_ELEMENTS(this->stringArrayRecordData));
+            if (serializeStatus == Fw::FW_SERIALIZE_NO_ROOM_LEFT) {
+                break;
+            }
+            FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, static_cast<FwAssertArgType>(status));
+        }
+        // Use the time stamp from the time get port
+        this->dpSend(this->m_container);
+        // Check that buffer is no longer valid
+        FW_ASSERT(!this->m_container.getBuffer().isValid());
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private helper functions
+// ----------------------------------------------------------------------
+
+void DpTest::checkContainerEmpty(const DpContainer& container) const {
+    const FwSizeType dataSize = container.getDataSize();
+    FW_ASSERT(dataSize == 0, static_cast<FwAssertArgType>(dataSize));
+    FW_ASSERT(Fw::DpContainerTester::isDataBufferEmpty(container));
+}
+
+void DpTest::checkContainer(const DpContainer& container,
+                            FwDpIdType localId,
+                            FwSizeType size,
+                            FwDpPriorityType priority) const {
+    this->checkContainerEmpty(container);
+    FW_ASSERT(container.getBaseId() == this->getIdBase(), static_cast<FwAssertArgType>(container.getBaseId()),
+              static_cast<FwAssertArgType>(this->getIdBase()));
+    FW_ASSERT(container.getId() == container.getBaseId() + localId, static_cast<FwAssertArgType>(container.getId()),
+              static_cast<FwAssertArgType>(container.getBaseId()),
+              static_cast<FwAssertArgType>(ContainerId::Container1));
+    FW_ASSERT(container.getBuffer().getSize() == size, static_cast<FwAssertArgType>(container.getBuffer().getSize()),
+              static_cast<FwAssertArgType>(size));
+    FW_ASSERT(container.getPriority() == priority, static_cast<FwAssertArgType>(container.getPriority()),
+              static_cast<FwAssertArgType>(priority));
+}
+
+}  // end namespace FppTest
+```
+
+### `DpTest.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.fpp`
+
+
+```fpp
+module FppTest {
+
+  @ A component for testing data product code gen
+  active component DpTest {
+
+    # ----------------------------------------------------------------------
+    # Constants
+    # ----------------------------------------------------------------------
+
+    constant stringSize = 80
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ Data for a DataRecord
+    struct Data {
+      @ A U16 field
+      u16Field: U16
+    }
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Data product get port
+    product get port productGetOut
+
+    @ Data product request port
+    product request port productRequestOut
+
+    @ Data product receive port
+    async product recv port productRecvIn
+
+    @ Data product send port
+    product send port productSendOut
+
+    @ Time get port
+    time get port timeGetOut
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ A schedIn port to run the data product generation
+    async input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Records
+    # ----------------------------------------------------------------------
+
+    @ Record 1
+    product record U32Record: U32 id 100
+
+    @ Record 2
+    product record DataRecord: Data id 200
+
+    @ Record 3
+    product record U8ArrayRecord: U8 array id 300
+
+    @ Record 4
+    product record U32ArrayRecord: U32 array id 400
+
+    @ Record 5
+    product record DataArrayRecord: Data array id 500
+
+    @ Record 6
+    product record StringRecord: string size stringSize id 600
+
+    @ Record 7
+    product record StringArrayRecord: string size stringSize array id 700
+
+    # ----------------------------------------------------------------------
+    # Containers
+    # ----------------------------------------------------------------------
+
+    @ Container 1
+    product container Container1 id 100 default priority 10
+
+    @ Container 2
+    product container Container2 id 200 default priority 20
+
+    @ Container 3
+    product container Container3 id 300 default priority 30
+
+    @ Container 4
+    product container Container4 id 400 default priority 40
+
+    @ Container 5
+    product container Container5 id 500 default priority 50
+
+    @ Container 6
+    product container Container6 id 600 default priority 60
+
+    @ Container 7
+    product container Container7 id 700 default priority 70
+
+  }
+
+}
+```
+
+### `DpTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/dp/DpTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpTest.hpp
+// \author bocchino
+// \brief  hpp file for DpTest component implementation class
+// ======================================================================
+
+#ifndef FppTest_DpTest_HPP
+#define FppTest_DpTest_HPP
+
+#include <array>
+
+#include "FppTest/dp/DpTestComponentAc.hpp"
+#include "Fw/Types/String.hpp"
+
+namespace FppTest {
+
+class DpTest : public DpTestComponentBase {
+    // Friend class for testing
+    friend class DpTestTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    static constexpr FwSizeType CONTAINER_1_DATA_SIZE = 100;
+    static constexpr FwSizeType CONTAINER_1_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_1_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_2_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_2_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_2_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_3_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_3_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_3_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_4_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_4_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_4_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_5_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_5_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_5_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_6_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_6_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_6_DATA_SIZE);
+    static constexpr FwSizeType CONTAINER_7_DATA_SIZE = 1000;
+    static constexpr FwSizeType CONTAINER_7_PACKET_SIZE = DpContainer::getPacketSizeForDataSize(CONTAINER_7_DATA_SIZE);
+
+    static constexpr FwSizeType STRING_ARRAY_RECORD_ARRAY_SIZE = 10;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    using U8ArrayRecordData = std::array<U8, 256>;
+    using U32ArrayRecordData = std::array<U32, 100>;
+    using DataArrayRecordData = std::array<DpTest_Data, 300>;
+    using PtrToConstStringBase = const Fw::StringBase*;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object DpTest
+    DpTest(const char* const compName,                      //!< The component name
+           U32 u32RecordData,                               //!< The U32Record data
+           U16 dataRecordData,                              //!< The DataRecord data
+           const U8ArrayRecordData& u8ArrayRecordData,      //!< The U8ArrayRecord data
+           const U32ArrayRecordData& u32ArrayRecordData,    //!< The U32ArrayRecord data
+           const DataArrayRecordData& dataArrayRecordData,  //!< The DataArrayRecord data
+           const Fw::StringBase& stringRecordData           //!< The StringRecord data
+    );
+
+    //! Destroy object DpTest
+    ~DpTest();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public interface methods
+    // ----------------------------------------------------------------------
+
+    //! Set the send time
+    void setSendTime(Fw::Time time) { this->sendTime = time; }
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for schedIn
+    void schedIn_handler(const FwIndexType portNum,  //!< The port number
+                         U32 context                 //!< The call order
+                         ) final;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Data product handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Receive a data product container of type Container1
+    //! \return Serialize status
+    void dpRecv_Container1_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container2
+    //! \return Serialize status
+    void dpRecv_Container2_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container3
+    //! \return Serialize status
+    void dpRecv_Container3_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container4
+    //! \return Serialize status
+    void dpRecv_Container4_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container5
+    //! \return Serialize status
+    void dpRecv_Container5_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container6
+    //! \return Serialize status
+    void dpRecv_Container6_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+    //! Receive a data product container of type Container7
+    //! \return Serialize status
+    void dpRecv_Container7_handler(DpContainer& container,  //!< The container
+                                   Fw::Success::T           //!< The container status
+                                   ) final;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper functions
+    // ----------------------------------------------------------------------
+
+    //! Check that a container is empty
+    void checkContainerEmpty(const DpContainer& container  //!< The container
+    ) const;
+
+    //! Check a container for validity
+    void checkContainer(const DpContainer& container,  //!< The container
+                        FwDpIdType localId,            //!< The expected local id
+                        FwSizeType size,               //!< The expected size
+                        FwDpPriorityType priority      //!< The expected priority
+    ) const;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! Stored container
+    DpContainer m_container;
+
+    //! U32Record data
+    const U32 u32RecordData;
+
+    //! DataRecord data
+    const U16 dataRecordData;
+
+    //! U8ArrayRecord data
+    const U8ArrayRecordData& u8ArrayRecordData;
+
+    //! U32ArrayRecord data
+    const U32ArrayRecordData& u32ArrayRecordData;
+
+    //! DataArrayRecord data
+    const DataArrayRecordData& dataArrayRecordData;
+
+    //! StringRecord data
+    const Fw::StringBase& stringRecordData;
+
+    //! StringArrayRecord data
+    PtrToConstStringBase stringArrayRecordData[STRING_ARRAY_RECORD_ARRAY_SIZE];
+
+    //! Send time for testing
+    Fw::Time sendTime;
+};
+
+}  // end namespace FppTest
+
+#endif
+```

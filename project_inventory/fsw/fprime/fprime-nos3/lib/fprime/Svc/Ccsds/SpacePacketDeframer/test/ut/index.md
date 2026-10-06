@@ -3,18 +3,262 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SpacePacketDeframerTester.cpp`
 
-file--SpacePacketDeframerTester.cpp
-file--SpacePacketDeframerTester.hpp
-file--SpacePacketDeframerTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketDeframerTester.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketDeframer component test harness implementation class
+// ======================================================================
+
+#include "SpacePacketDeframerTester.hpp"
+#include "STest/Random/Random.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+SpacePacketDeframerTester ::SpacePacketDeframerTester()
+    : SpacePacketDeframerGTestBase("SpacePacketDeframerTester", SpacePacketDeframerTester::MAX_HISTORY_SIZE),
+      component("SpacePacketDeframer") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+SpacePacketDeframerTester ::~SpacePacketDeframerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void SpacePacketDeframerTester ::testDataReturnPassthrough() {
+    U8 data[1];
+    Fw::Buffer buffer(data, sizeof(data));
+    ComCfg::FrameContext nullContext;
+    this->invoke_to_dataReturnIn(0, buffer, nullContext);
+    ASSERT_from_dataReturnOut_SIZE(1);  // incoming buffer should be deallocated
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getData(), data);
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getSize(), sizeof(data));
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).context, nullContext);
+}
+
+void SpacePacketDeframerTester ::testNominalDeframing() {
+    ComCfg::APID::T apid = static_cast<ComCfg::APID::T>(STest::Random::lowerUpper(0, 0x7FF));  // random 11 bit APID
+    U16 seqCount = static_cast<U8>(STest::Random::lowerUpper(0, 0x3FFF));  // random 14 bit sequence count
+    U16 dataLength =
+        static_cast<U8>(STest::Random::lowerUpper(1, MAX_TEST_PACKET_DATA_SIZE));  // bytes of data, random length
+    U8 data[dataLength];
+    U16 lengthToken = static_cast<U16>(dataLength - 1);  // Length token is length - 1
+    for (FwIndexType i = 0; i < static_cast<FwIndexType>(dataLength); ++i) {
+        data[i] = static_cast<U8>(i);
+    }
+
+    Fw::Buffer buffer = this->assemblePacket(apid, seqCount, lengthToken, data, dataLength);
+    ComCfg::FrameContext nullContext;
+
+    this->invoke_to_dataIn(0, buffer, nullContext);
+
+    // Check output packet payload
+    ASSERT_from_dataOut_SIZE(1);
+    Fw::Buffer outBuffer = this->fromPortHistory_dataOut->at(0).data;
+    ASSERT_EQ(outBuffer.getSize(), static_cast<Fw::Buffer::SizeType>(dataLength));
+    for (U32 i = 0; i < dataLength; ++i) {
+        ASSERT_EQ(outBuffer.getData()[i], data[i]);
+    }
+    // Check output context (header info)
+    ComCfg::FrameContext context = this->fromPortHistory_dataOut->at(0).context;
+    ASSERT_EQ(context.get_apid(), apid);
+    ASSERT_EQ(context.get_sequenceCount(), seqCount);
+
+    ASSERT_EVENTS_SIZE(0);  // No events should be generated in the nominal case
+}
+
+void SpacePacketDeframerTester ::testDeframingIncorrectLength() {
+    ComCfg::APID::T apid = static_cast<ComCfg::APID::T>(STest::Random::lowerUpper(0, 0x7FF));  // random 11 bit APID
+    U16 seqCount = static_cast<U8>(STest::Random::lowerUpper(0, 0x3FFF));  // random 14 bit sequence count
+    U16 realDataLength =
+        static_cast<U8>(STest::Random::lowerUpper(1, MAX_TEST_PACKET_DATA_SIZE));  // bytes of data, random length
+    U16 invalidLengthToken =
+        static_cast<U16>(realDataLength + 1);  // Length token is greater than actual data available
+    U8 data[realDataLength];
+
+    Fw::Buffer buffer = this->assemblePacket(apid, seqCount, invalidLengthToken, data, realDataLength);
+    ComCfg::FrameContext nullContext;
+
+    this->invoke_to_dataIn(0, buffer, nullContext);
+
+    // No data emitted
+    ASSERT_from_dataOut_SIZE(0);
+    // Data returned (frame dropped)
+    ASSERT_from_dataReturnOut_SIZE(1);
+    Fw::Buffer returnedBuffer = this->fromPortHistory_dataReturnOut->at(0).data;
+    ASSERT_EQ(returnedBuffer.getSize(), buffer.getSize());
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).context, nullContext);  // Data should be the same as input
+
+    // Event logging failure
+    ASSERT_EVENTS_SIZE(1);                // No events should be generated in the nominal case
+    ASSERT_EVENTS_InvalidLength_SIZE(1);  // No events should be generated in the nominal case
+    ASSERT_EVENTS_InvalidLength(0, static_cast<U16>(invalidLengthToken + 1),
+                                realDataLength);  // Event logs the size in bytes, so add 1 to length token
+}
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+
+Fw::Buffer SpacePacketDeframerTester ::assemblePacket(U16 apid,
+                                                      U16 seqCount,
+                                                      U16 lengthToken,
+                                                      U8* packetData,
+                                                      U16 packetDataLen) {
+    SpacePacketHeader header;
+    header.set_packetIdentification(apid);
+    header.set_packetSequenceControl(seqCount);  // Sequence Flags = 0b11 (unsegmented) & unused Seq count
+    header.set_packetDataLength(lengthToken);
+
+    Fw::ExternalSerializeBuffer serializer(static_cast<U8*>(this->m_packetBuffer), sizeof(this->m_packetBuffer));
+    serializer.serialize(header);
+    serializer.serialize(packetData, packetDataLen, Fw::Serialization::OMIT_LENGTH);
+    return Fw::Buffer(this->m_packetBuffer,
+                      static_cast<Fw::Buffer::SizeType>(packetDataLen + SpacePacketHeader::SERIALIZED_SIZE));
+}
+
+}  // namespace Ccsds
+}  // namespace Svc
 ```
 
-## 항목
+### `SpacePacketDeframerTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTester.cpp`](file--SpacePacketDeframerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTester.hpp`](file--SpacePacketDeframerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTestMain.cpp`](file--SpacePacketDeframerTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketDeframerTester.hpp
+// \author thomas-bc
+// \brief  hpp file for SpacePacketDeframer component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_SpacePacketDeframerTester_HPP
+#define Svc_Ccsds_SpacePacketDeframerTester_HPP
+
+#include "Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframer.hpp"
+#include "Svc/Ccsds/SpacePacketDeframer/SpacePacketDeframerGTestBase.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+class SpacePacketDeframerTester final : public SpacePacketDeframerGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object SpacePacketDeframerTester
+    SpacePacketDeframerTester();
+
+    //! Destroy object SpacePacketDeframerTester
+    ~SpacePacketDeframerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    void testDataReturnPassthrough();
+    void testNominalDeframing();
+    void testDeframingIncorrectLength();
+    // void testDeframingIncorrectSeqCount();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+    //! Assemble a packet with the given parameters
+    Fw::Buffer assemblePacket(U16 apid, U16 seqCount, U16 lengthToken, U8* packetData, U16 packetDataLen);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    SpacePacketDeframer component;
+
+    //! Test buffer
+    static const FwSizeType MAX_TEST_PACKET_DATA_SIZE = 200;  // this value needs to fit in a U8 for testing
+    U8 m_packetBuffer[SpacePacketHeader::SERIALIZED_SIZE + MAX_TEST_PACKET_DATA_SIZE];
+};
+
+}  // namespace Ccsds
+
+}  // namespace Svc
+
+#endif
+```
+
+### `SpacePacketDeframerTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketDeframer/test/ut/SpacePacketDeframerTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketDeframerTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketDeframer component test main function
+// ======================================================================
+
+#include "SpacePacketDeframerTester.hpp"
+
+TEST(SpacePacketDeframer, testDataReturnPassthrough) {
+    Svc::Ccsds::SpacePacketDeframerTester tester;
+    tester.testDataReturnPassthrough();
+}
+
+TEST(SpacePacketDeframer, testNominalDeframing) {
+    Svc::Ccsds::SpacePacketDeframerTester tester;
+    tester.testNominalDeframing();
+}
+
+TEST(SpacePacketDeframer, testDeframingIncorrectLength) {
+    Svc::Ccsds::SpacePacketDeframerTester tester;
+    tester.testDeframingIncorrectLength();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

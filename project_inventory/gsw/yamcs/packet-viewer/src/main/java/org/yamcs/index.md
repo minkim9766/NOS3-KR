@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 ui/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/`](ui/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

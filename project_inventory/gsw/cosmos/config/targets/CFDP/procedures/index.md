@@ -3,16 +3,57 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--cfdp_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFDP/procedures/tests/`](tests/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP/procedures/cfdp_test.rb`](file--cfdp_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `cfdp_test.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/procedures/cfdp_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+
+class Cfdp_Automated_Test < Cosmos::Test
+  # Verify cFS TO output is enabled
+  # def test_to_enabled
+  #   start("tests/verify_to_enabled.rb")
+  # end
+
+  # Test Class 1 uplink capabilities
+  def test_uplink_class1
+    start("tests/verify_uplink_class1.rb")
+  end
+
+  # Test Class 2 uplink capabilities
+  def test_uplink_class2
+    start("tests/verify_uplink_class2.rb")
+  end
+
+  # Test Class 1 downlink capabilities
+  def test_downlink_class1
+    # Test Class 2 downlink capabilities
+    start("tests/verify_downlink_class1.rb")
+  end
+
+  # Test Class 2 downlink capabilities
+  def test_downlink_class2
+    start("tests/verify_downlink_class2.rb")
+  end
+end
+
+class Cfdp_Test < Cosmos::TestSuite
+  def initialize
+    super()
+    add_test('Cfdp_Automated_Test')
+  end
+end
+```

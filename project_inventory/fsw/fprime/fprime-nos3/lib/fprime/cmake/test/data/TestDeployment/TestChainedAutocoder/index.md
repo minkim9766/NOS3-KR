@@ -3,18 +3,38 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--test1.test-target.txt
-file--test2.test-target.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/CMakeLists.txt`
+
+
+```cmake
+register_fprime_module(
+        TestChainedAutocoderModule
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/test1.test-target.txt"
+        "${CMAKE_CURRENT_LIST_DIR}/test2.test-target.txt"
+    EXCLUDE_FROM_ALL
+    INTERFACE
+)
 ```
 
-## 항목
+### `test1.test-target.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/test1.test-target.txt`](file--test1.test-target.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/test2.test-target.txt`](file--test2.test-target.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/test1.test-target.txt`
+
+
+```text
+test1
+```
+
+### `test2.test-target.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestChainedAutocoder/test2.test-target.txt`
+
+
+```text
+test2
+```

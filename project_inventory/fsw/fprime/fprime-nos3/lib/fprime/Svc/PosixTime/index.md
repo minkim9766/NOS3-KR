@@ -3,24 +3,129 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--PosixTime.cpp
-file--PosixTime.fpp
-file--PosixTime.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.cpp`](file--PosixTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.fpp`](file--PosixTime.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.hpp`](file--PosixTime.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+restrict_platforms(Posix)
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PosixTime.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PosixTime.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PosixTime.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixTimeTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/PosixTimeMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `PosixTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.cpp`
+
+
+```cpp
+/*
+ * TestCommand1Impl.cpp
+ *
+ *  Created on: Mar 28, 2014
+ *      Author: tcanham
+ */
+
+#include <Fw/Time/Time.hpp>
+#include <Svc/PosixTime/PosixTime.hpp>
+#include <ctime>
+
+namespace Svc {
+
+PosixTime::PosixTime(const char* name) : PosixTimeComponentBase(name) {}
+
+PosixTime::~PosixTime() {}
+
+void PosixTime::timeGetPort_handler(FwIndexType portNum, /*!< The port number*/
+                                    Fw::Time& time       /*!< The U32 cmd argument*/
+) {
+    timespec stime;
+    (void)clock_gettime(CLOCK_REALTIME, &stime);
+    time.set(TimeBase::TB_WORKSTATION_TIME, 0, static_cast<U32>(stime.tv_sec), static_cast<U32>(stime.tv_nsec / 1000));
+}
+}  // namespace Svc
+```
+
+### `PosixTime.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.fpp`
+
+
+```fpp
+module Svc {
+  @ A component for getting time
+  passive component PosixTime {
+    import Time
+  }
+}
+```
+
+### `PosixTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PosixTime/PosixTime.hpp`
+
+
+```cpp
+/*
+ * TestTelemRecvImpl.hpp
+ *
+ *  Created on: Mar 28, 2014
+ *      Author: tcanham
+ */
+
+#ifndef POSIX_TIME_HPP_
+#define POSIX_TIME_HPP_
+
+#include <Svc/PosixTime/PosixTimeComponentAc.hpp>
+
+namespace Svc {
+
+class PosixTime final : public PosixTimeComponentBase {
+  public:
+    explicit PosixTime(const char* compName);
+    virtual ~PosixTime();
+
+  protected:
+    void timeGetPort_handler(FwIndexType portNum, /*!< The port number*/
+                             Fw::Time& time       /*!< The U32 cmd argument*/
+    );
+
+  private:
+};
+
+}  // namespace Svc
+
+#endif /* POSIX_TIME_HPP_ */
+```

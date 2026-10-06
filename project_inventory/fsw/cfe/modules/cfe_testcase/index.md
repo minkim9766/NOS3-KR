@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/cfe_testcase/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,133 @@ config/index
 eds/index
 src/index
 tables/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/cfe_testcase/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/cfe_testcase/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/cfe_testcase/src/`](src/index) — 폴더
-- [`fsw/cfe/modules/cfe_testcase/tables/`](tables/index) — 폴더
-- [`fsw/cfe/modules/cfe_testcase/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TEST Core Module platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TEST configuration
+set(TEST_PLATFORM_CONFIG_FILE_LIST
+  cfe_test_msgids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TEST_CFGFILE ${TEST_PLATFORM_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TEST_CFGFILE}" NAME_WE)
+  if (DEFINED TEST_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE "${TEST_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TEST_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TEST_CFGFILE}"
+    FALLBACK_FILE       ${DEFAULT_SOURCE}
+  )
+endforeach()
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/CMakeLists.txt`
+
+
+```cmake
+include_directories(inc)
+
+# Filenames based on doxygen groups.
+# Create the app module
+add_cfe_app(cfe_testcase    
+    src/cfe_test.c
+    src/cfe_test_table.c
+    src/es_application_control_test.c
+    src/es_behavior_test.c
+    src/es_error_test.c
+    src/es_info_test.c
+    src/es_task_test.c
+    src/es_cds_test.c
+    src/es_counter_test.c
+    src/es_misc_test.c
+    src/es_mempool_test.c
+    src/es_perf_test.c
+    src/es_resource_id_test.c
+    src/evs_filters_test.c
+    src/evs_send_test.c
+    src/fs_header_test.c
+    src/fs_util_test.c
+    src/message_id_test.c
+    src/msg_api_test.c
+    src/resource_id_misc_test.c
+    src/sb_pipe_mang_test.c
+    src/sb_sendrecv_test.c
+    src/sb_subscription_test.c
+    src/tbl_content_access_test.c
+    src/tbl_content_mang_test.c
+    src/tbl_information_test.c
+    src/tbl_registration_test.c
+    src/time_arithmetic_test.c
+    src/time_current_test.c
+    src/time_conversion_test.c
+    src/time_external_test.c
+    src/time_misc_test.c
+)
+
+# register the dependency on cfe_assert
+add_cfe_app_dependency(cfe_testcase cfe_assert)
+add_cfe_tables(cfeTestAppTable tables/cfe_test_tbl.c)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# TEST Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the TEST configuration
+set(TEST_MISSION_CONFIG_FILE_LIST
+  cfe_test_tbl.h
+  cfe_test_topicids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(TEST_CFGFILE ${TEST_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${TEST_CFGFILE}" NAME_WE)
+  if (DEFINED TEST_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${TEST_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${TEST_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${TEST_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

@@ -3,18 +3,78 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `markdown.component.css`
 
-file--markdown.component.css
-file--markdown.component.html
-file--markdown.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.css`
+
+
+```css
+/**
+ * Avoid blank trailing line. Especially visible with oneline text
+ */
+:host ::ng-deep div > p:last-child,
+:host ::ng-deep div > ul:last-child {
+  margin-bottom: 0;
+}
+
+:host {
+  font-family: Roboto, sans-serif;
+  font-weight: normal;
+  letter-spacing: normal;
+  font-size: 12px;
+  line-height: normal;
+}
 ```
 
-## 항목
+### `markdown.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.css`](file--markdown.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.html`](file--markdown.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.ts`](file--markdown.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.html`
+
+
+```html
+<div #md></div>
+```
+
+### `markdown.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/markdown/markdown.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  ElementRef,
+  input,
+  SecurityContext,
+  viewChild,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { marked } from 'marked';
+
+@Component({
+  selector: 'app-markdown',
+  templateUrl: './markdown.component.html',
+  styleUrl: './markdown.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class MarkdownComponent {
+  text = input.required<string>();
+  ref = viewChild<ElementRef<HTMLDivElement>>('md');
+
+  constructor(sanitizer: DomSanitizer) {
+    effect(() => {
+      const ref = this.ref();
+      if (ref) {
+        const text = this.text();
+        let html = text ? marked.parse(text) : '';
+        html = sanitizer.sanitize(SecurityContext.HTML, html)!;
+        ref.nativeElement.innerHTML = html;
+      }
+    });
+  }
+}
+```

@@ -3,24 +3,285 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--PingReceiver.fpp
-file--PingReceiver.hpp
-file--PingReceiverComponentImpl.cpp
-file--PingReceiverComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiver.fpp`](file--PingReceiver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiver.hpp`](file--PingReceiver.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiverComponentImpl.cpp`](file--PingReceiverComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiverComponentImpl.hpp`](file--PingReceiverComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PingReceiver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PingReceiverComponentImpl.cpp"
+)
+register_fprime_module()
+```
+
+### `PingReceiver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiver.fpp`
+
+
+```fpp
+module Ref {
+
+  @ A rate group active component with input and output ping ports
+  active component PingReceiver {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ The ping input port
+    async input port PingIn: Svc.Ping
+
+    @ The ping input port
+    output port PingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Command to disable ping response
+    async command PR_StopPings \
+      opcode 0
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Disabled ping responses
+    event PR_PingsDisabled \
+      severity activity high \
+      id 0 \
+      format "PingReceiver ping responses disabled"
+
+    @ Got ping
+    event PR_PingReceived(
+                           code: U32 @< Ping code
+                         ) \
+      severity diagnostic \
+      id 1 \
+      format "PingReceiver pinged with code {}"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Number of pings received
+    telemetry PR_NumPings: U32 id 0
+
+  }
+
+}
+```
+
+### `PingReceiver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiver.hpp`
+
+
+```cpp
+// ======================================================================
+// PingReceiver.hpp
+// Standardization header for PingReceiver
+// ======================================================================
+
+#ifndef Ref_PingReceiver_HPP
+#define Ref_PingReceiver_HPP
+
+#include "Ref/PingReceiver/PingReceiverComponentImpl.hpp"
+
+namespace Ref {
+
+  typedef PingReceiverComponentImpl PingReceiver;
+
+}
+
+#endif
+```
+
+### `PingReceiverComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiverComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PingReceiverImpl.cpp
+// \author tim
+// \brief  cpp file for PingReceiver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+
+#include <Ref/PingReceiver/PingReceiverComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Ref {
+
+  // ----------------------------------------------------------------------
+  // Construction, initialization, and destruction
+  // ----------------------------------------------------------------------
+
+  PingReceiverComponentImpl ::
+    PingReceiverComponentImpl(
+        const char *const compName
+    ) : PingReceiverComponentBase(compName), m_inhibitPings(false), m_pingsRecvd(0)
+  {
+
+  }
+
+  PingReceiverComponentImpl ::
+    ~PingReceiverComponentImpl()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for user-defined typed input ports
+  // ----------------------------------------------------------------------
+
+  void PingReceiverComponentImpl ::
+    PingIn_handler(
+        const FwIndexType portNum,
+        U32 key
+    )
+  {
+    //this->log_DIAGNOSTIC_PR_PingReceived(key);
+    this->tlmWrite_PR_NumPings(this->m_pingsRecvd++);
+    if (not this->m_inhibitPings) {
+        PingOut_out(0,key);
+    }
+  }
+
+  void PingReceiverComponentImpl::PR_StopPings_cmdHandler(
+          FwOpcodeType opCode, /*!< The opcode*/
+          U32 cmdSeq /*!< The command sequence number*/
+      ) {
+      this->m_inhibitPings = true;
+      this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+  }
+
+} // end namespace Ref
+```
+
+### `PingReceiverComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/PingReceiverComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PingReceiverImpl.hpp
+// \author tim
+// \brief  hpp file for PingReceiver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef PingReceiver_HPP
+#define PingReceiver_HPP
+
+#include "Ref/PingReceiver/PingReceiverComponentAc.hpp"
+
+namespace Ref {
+
+  class PingReceiverComponentImpl final :
+    public PingReceiverComponentBase
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Construction, initialization, and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct object PingReceiver
+      //!
+      PingReceiverComponentImpl(
+          const char *const compName /*!< The component name*/
+      );
+
+      //! Destroy object PingReceiver
+      //!
+      ~PingReceiverComponentImpl();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for user-defined typed input ports
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for PingIn
+      //!
+      void PingIn_handler(
+          const FwIndexType portNum, /*!< The port number*/
+          U32 key /*!< Value to return to pinger*/
+      );
+
+      void PR_StopPings_cmdHandler(
+              FwOpcodeType opCode, /*!< The opcode*/
+              U32 cmdSeq /*!< The command sequence number*/
+          );
+
+      bool m_inhibitPings;
+      U32 m_pingsRecvd;
+
+
+    };
+
+} // end namespace Ref
+
+#endif
+```

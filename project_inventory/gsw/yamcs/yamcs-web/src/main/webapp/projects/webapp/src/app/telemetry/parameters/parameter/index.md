@@ -3,18 +3,298 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter.component.css`
 
-file--parameter.component.css
-file--parameter.component.html
-file--parameter.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.css`
+
+
+```css
+.tab-content-wrapper {
+  position: absolute;
+  /* tab height + border */
+  top: 37px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.tab-content-wrapper.noscroll {
+  overflow: hidden;
+}
 ```
 
-## 항목
+### `parameter.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.css`](file--parameter.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.html`](file--parameter.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.ts`](file--parameter.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.html`
+
+
+```html
+@if (parameter$ | async; as parameter) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @for (parent of parameter.qualifiedName | parents; track parent; let isFirst = $first) {
+          @if (!isFirst) {
+            <a
+              routerLink="/telemetry/parameters"
+              class="ya-link ya-header-link"
+              [queryParams]="{ c: yamcs.context, system: parent.path }">
+              {{ parent.name }}
+            </a>
+          }
+          /
+        }
+        <span>{{ parameter.qualifiedName | shortName }}{{ offset$ | async }}</span>
+        <ya-title-copy [text]="parameter.qualifiedName + ((offset$ | async) || '')" />
+      </ng-template>
+
+      @if (isWritable() && maySetParameter() && !(offset$ | async)) {
+        <ya-page-button (clicked)="setParameter()" icon="edit">Set value</ya-page-button>
+      }
+      @if (mayReadMissionDatabase()) {
+        <ya-page-button
+          [routerLink]="['/mdb/parameters', parameter.qualifiedName]"
+          [queryParams]="{ c: yamcs.context }"
+          icon="auto_stories">
+          View in MDB
+        </ya-page-button>
+      }
+    </ya-instance-toolbar>
+
+    <ya-page-tabs #tabs>
+      <a
+        routerLink="-/summary"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [class.active]="rla.isActive"
+        [queryParams]="{ c: yamcs.context }">
+        Summary
+      </a>
+      @if (config.tmArchive) {
+        <a
+          routerLink="-/chart"
+          routerLinkActive
+          #rlb="routerLinkActive"
+          [class.active]="rlb.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Chart
+        </a>
+      }
+      @if (mayReadAlarms()) {
+        <a
+          routerLink="-/alarms"
+          routerLinkActive
+          #rlc="routerLinkActive"
+          [class.active]="rlc.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Alarm history
+        </a>
+      }
+      @if (config.tmArchive) {
+        <a
+          routerLink="-/data"
+          routerLinkActive
+          #rld="routerLinkActive"
+          [class.active]="rld.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Historical data
+        </a>
+      }
+    </ya-page-tabs>
+
+    <div class="tab-content-wrapper" [class.noscroll]="tabs.selectedIndex === 1">
+      <router-outlet />
+    </div>
+  </ya-instance-page>
+}
+```
+
+### `parameter.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter/parameter.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnChanges,
+  OnDestroy,
+  input,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import {
+  AuthService,
+  ConfigService,
+  Formatter,
+  MessageService,
+  Parameter,
+  ParameterSubscription,
+  ParameterValue,
+  Value,
+  WebsiteConfig,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { SetParameterDialogComponent } from '../set-parameter-dialog/set-parameter-dialog.component';
+
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './parameter.component.html',
+  styleUrl: './parameter.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterComponent implements OnChanges, OnDestroy {
+  qualifiedName = input.required<string>({ alias: 'parameter' });
+
+  config: WebsiteConfig;
+  parameter$ = new BehaviorSubject<Parameter | null>(null);
+  offset$ = new BehaviorSubject<string | null>(null);
+
+  parameterValue$ = new BehaviorSubject<ParameterValue | null>(null);
+  parameterValueSubscription: ParameterSubscription;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    private title: Title,
+    private formatter: Formatter,
+    configService: ConfigService,
+  ) {
+    this.config = configService.getConfig();
+  }
+
+  ngOnChanges() {
+    const qualifiedName = this.qualifiedName();
+    this.yamcs.yamcsClient
+      .getParameter(this.yamcs.instance!, qualifiedName)
+      .then((parameter) => {
+        this.parameter$.next(parameter);
+
+        if (qualifiedName !== parameter.qualifiedName) {
+          this.offset$.next(
+            qualifiedName.substring(parameter.qualifiedName.length),
+          );
+        } else {
+          this.offset$.next(null);
+        }
+
+        this.updateTitle();
+      })
+      .catch((err) => {
+        this.messageService.showError(err);
+      });
+
+    if (this.parameterValueSubscription) {
+      this.parameterValueSubscription.cancel();
+    }
+
+    this.parameterValueSubscription =
+      this.yamcs.yamcsClient.createParameterSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+          id: [{ name: qualifiedName }],
+          abortOnInvalid: false,
+          sendFromCache: true,
+          updateOnExpiration: true,
+          action: 'REPLACE',
+        },
+        (data) => {
+          this.parameterValue$.next(data.values ? data.values[0] : null);
+          this.updateTitle();
+        },
+      );
+  }
+
+  updateTitle() {
+    const parameter = this.parameter$.getValue();
+    const offset = this.offset$.getValue();
+    if (parameter) {
+      let title = parameter.name;
+      if (offset) {
+        title += offset;
+      }
+      const pval = this.parameterValue$.getValue();
+      if (pval?.engValue) {
+        title += ': ' + this.formatter.formatValue(pval.engValue);
+        if (parameter.type && parameter.type.unitSet) {
+          title += ' ' + utils.getUnits(parameter.type.unitSet);
+        }
+        if (pval.rangeCondition && pval.rangeCondition === 'LOW') {
+          title += ' ↓';
+        } else if (pval.rangeCondition && pval.rangeCondition === 'HIGH') {
+          title += ' ↑';
+        }
+      }
+      this.title.setTitle(title);
+    }
+  }
+
+  isWritable() {
+    const parameter = this.parameter$.value;
+    if (parameter) {
+      return (
+        parameter.dataSource === 'LOCAL' ||
+        parameter.dataSource === 'EXTERNAL1' ||
+        parameter.dataSource === 'EXTERNAL2' ||
+        parameter.dataSource === 'EXTERNAL3'
+      );
+    }
+    return false;
+  }
+
+  maySetParameter() {
+    const parameter = this.parameter$.value;
+    if (parameter) {
+      return this.authService
+        .getUser()!
+        .hasObjectPrivilege('WriteParameter', parameter.qualifiedName);
+    }
+    return false;
+  }
+
+  mayReadAlarms() {
+    return this.authService.getUser()!.hasSystemPrivilege('ReadAlarms');
+  }
+
+  mayReadMissionDatabase() {
+    return this.authService.getUser()!.hasSystemPrivilege('GetMissionDatabase');
+  }
+
+  setParameter() {
+    const parameter = this.parameter$.value!;
+    const dialogRef = this.dialog.open(SetParameterDialogComponent, {
+      width: '600px',
+      data: {
+        parameter: this.parameter$.value,
+      },
+    });
+    dialogRef.afterClosed().subscribe((value: Value) => {
+      if (value) {
+        this.yamcs.yamcsClient
+          .setParameterValue(
+            this.yamcs.instance!,
+            this.yamcs.processor!,
+            parameter.qualifiedName,
+            value,
+          )
+          .catch((err) => this.messageService.showError(err));
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    this.parameterValueSubscription?.cancel();
+  }
+}
+```

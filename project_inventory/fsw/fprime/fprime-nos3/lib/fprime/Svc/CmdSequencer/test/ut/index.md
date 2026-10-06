@@ -3,80 +3,4217 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 SeqF/index
 SequenceFiles/index
-file--.gitignore
-file--AMPCS.cpp
-file--AMPCS.hpp
-file--CmdSequencerMain.cpp
-file--CmdSequencerTester.cpp
-file--CmdSequencerTester.hpp
-file--CommandBuffers.cpp
-file--CommandBuffers.hpp
-file--Health.cpp
-file--Health.hpp
-file--Immediate.cpp
-file--Immediate.hpp
-file--ImmediateBase.cpp
-file--ImmediateBase.hpp
-file--ImmediateEOS.cpp
-file--ImmediateEOS.hpp
-file--Interceptors.cpp
-file--InvalidFiles.cpp
-file--InvalidFiles.hpp
-file--JoinWait.cpp
-file--JoinWait.hpp
-file--Mixed.cpp
-file--Mixed.hpp
-file--MixedRelativeBase.cpp
-file--MixedRelativeBase.hpp
-file--NoFiles.cpp
-file--NoFiles.hpp
-file--NoRecords.cpp
-file--NoRecords.hpp
-file--Relative.cpp
-file--Relative.hpp
-file--UnitTest.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SeqF/`](SeqF/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/`](SequenceFiles/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/AMPCS.cpp`](file--AMPCS.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/AMPCS.hpp`](file--AMPCS.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerMain.cpp`](file--CmdSequencerMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerTester.cpp`](file--CmdSequencerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerTester.hpp`](file--CmdSequencerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CommandBuffers.cpp`](file--CommandBuffers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CommandBuffers.hpp`](file--CommandBuffers.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Health.cpp`](file--Health.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Health.hpp`](file--Health.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Immediate.cpp`](file--Immediate.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Immediate.hpp`](file--Immediate.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateBase.cpp`](file--ImmediateBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateBase.hpp`](file--ImmediateBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateEOS.cpp`](file--ImmediateEOS.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateEOS.hpp`](file--ImmediateEOS.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Interceptors.cpp`](file--Interceptors.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/InvalidFiles.cpp`](file--InvalidFiles.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/InvalidFiles.hpp`](file--InvalidFiles.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/JoinWait.cpp`](file--JoinWait.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/JoinWait.hpp`](file--JoinWait.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Mixed.cpp`](file--Mixed.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Mixed.hpp`](file--Mixed.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/MixedRelativeBase.cpp`](file--MixedRelativeBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/MixedRelativeBase.hpp`](file--MixedRelativeBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoFiles.cpp`](file--NoFiles.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoFiles.hpp`](file--NoFiles.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoRecords.cpp`](file--NoRecords.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoRecords.hpp`](file--NoRecords.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Relative.cpp`](file--Relative.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Relative.hpp`](file--Relative.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/UnitTest.hpp`](file--UnitTest.hpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/.gitignore`
+
+
+```text
+bin/
+```
+
+### `AMPCS.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/AMPCS.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AMPCS.cpp
+// \author Rob Bocchino
+// \brief  AMPCS-specific tests
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/AMPCS.hpp"
+#include "Os/FileSystem.hpp"
+
+namespace Svc {
+
+namespace AMPCS {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester() : Svc::CmdSequencerTester(SequenceFiles::File::Format::AMPCS) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::MissingCRC() {
+    // Write the file
+    SequenceFiles::MissingCRCFile file(this->format);
+    file.write();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert no response on seqDone
+    ASSERT_from_seqDone_SIZE(0);
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    Fw::String crcFileName(file.getName());
+    crcFileName += ".CRC32";
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileNotFound(0, crcFileName.toChar());
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::MissingFile() {
+    // Remove the file
+    SequenceFiles::MissingFile file(this->format);
+    file.write();
+    file.remove();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileInvalid(0, file.getName().toChar(), CmdSequencer_FileReadStage::READ_HEADER_SIZE,
+                                 Os::FileSystem::DOESNT_EXIST);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+}  // namespace AMPCS
+
+}  // namespace Svc
+```
+
+### `AMPCS.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/AMPCS.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AMPCS.hpp
+// \author Rob bocchino
+// \brief  AMPCS-specific tests
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_AMPCS_HPP
+#define Svc_AMPCS_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace AMPCS {
+
+//! Test sequencer behavior with no input files
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Missing CRC
+    void MissingCRC();
+
+    //! Missing file
+    void MissingFile();
+};
+
+}  // namespace AMPCS
+
+}  // namespace Svc
+
+#endif
+```
+
+### `CmdSequencerMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerMain.cpp`
+
+
+```cpp
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include <Os/FileSystem.hpp>
+#include "CmdSequencerTester.hpp"
+#include "Svc/CmdSequencer/test/ut/AMPCS.hpp"
+#include "Svc/CmdSequencer/test/ut/Health.hpp"
+#include "Svc/CmdSequencer/test/ut/Immediate.hpp"
+#include "Svc/CmdSequencer/test/ut/ImmediateEOS.hpp"
+#include "Svc/CmdSequencer/test/ut/InvalidFiles.hpp"
+#include "Svc/CmdSequencer/test/ut/JoinWait.hpp"
+#include "Svc/CmdSequencer/test/ut/Mixed.hpp"
+#include "Svc/CmdSequencer/test/ut/NoFiles.hpp"
+#include "Svc/CmdSequencer/test/ut/NoRecords.hpp"
+#include "Svc/CmdSequencer/test/ut/Relative.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SequenceFiles.hpp"
+#include "Svc/CmdSequencer/test/ut/UnitTest.hpp"
+
+TEST(AMPCS, MissingCRC) {
+    Svc::AMPCS::CmdSequencerTester tester;
+    tester.MissingCRC();
+}
+
+TEST(AMPCS, MissingFile) {
+    Svc::AMPCS::CmdSequencerTester tester;
+    tester.MissingFile();
+}
+
+TEST(Health, Ping) {
+    TEST_CASE(103.1.9, "Nominal ping test");
+    Svc::Health::CmdSequencerTester tester;
+    tester.Ping();
+}
+
+TEST(Immediate, AutoByCommand) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.AutoByCommand();
+}
+
+TEST(Immediate, AutoByCommandAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.AutoByCommand();
+}
+
+TEST(Immediate, AutoByPort) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.AutoByPort();
+}
+
+TEST(Immediate, AutoByPortAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.AutoByPort();
+}
+
+TEST(Immediate, Cancel) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.Cancel();
+}
+
+TEST(Immediate, CancelAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Cancel();
+}
+
+TEST(Immediate, FailedCommands) {
+    TEST_CASE(103.2.6, "Off-Nominal failed command");
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.FailedCommands();
+}
+
+TEST(Immediate, FailedCommandsAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.FailedCommands();
+}
+
+TEST(Immediate, FileErrors) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.FileErrors();
+}
+
+TEST(Immediate, FileErrorsAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.FileErrors();
+}
+
+TEST(Immediate, InvalidManualCommands) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.InvalidManualCommands();
+}
+
+TEST(Immediate, InvalidManualCommandsAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.InvalidManualCommands();
+}
+
+TEST(Immediate, LoadOnInit) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.LoadOnInit();
+}
+
+TEST(Immediate, LoadRunRun) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.LoadRunRun();
+}
+
+TEST(Immediate, LoadOnInitAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.LoadOnInit();
+}
+
+TEST(Immediate, Manual) {
+    TEST_CASE(103.1.8, "Nominal Manual Sequence Stepping - No end of sequence marker");
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.Manual();
+}
+
+TEST(Immediate, ManualAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Manual();
+}
+
+TEST(Immediate, NeverLoaded) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.NeverLoaded();
+}
+
+TEST(Immediate, NewSequence) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.NewSequence();
+}
+
+TEST(Immediate, NewSequenceAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.NewSequence();
+}
+
+TEST(Immediate, SequenceTimeout) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.SequenceTimeout();
+}
+
+TEST(Immediate, SequenceTimeoutAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.SequenceTimeout();
+}
+
+TEST(Immediate, UnexpectedCommandResponse) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.UnexpectedCommandResponse();
+}
+
+TEST(Immediate, UnexpectedCommandResponseAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.UnexpectedCommandResponse();
+}
+
+TEST(Immediate, Validate) {
+    Svc::Immediate::CmdSequencerTester tester;
+    tester.Validate();
+}
+
+TEST(Immediate, ValidateAMPCS) {
+    Svc::Immediate::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Validate();
+}
+
+TEST(ImmediateEOS, AutoByCommand) {
+    TEST_CASE(103.1.2, "Nominal Immediate Commands");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.AutoByCommand();
+}
+
+TEST(ImmediateEOS, AutoByPort) {
+    TEST_CASE(103.1.5, "Nominal Immediate Port Sequence");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.AutoByPort();
+}
+
+TEST(ImmediateEOS, Cancel) {
+    TEST_CASE(103.1.6, "Nominal Sequence Cancel");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.Cancel();
+}
+
+TEST(ImmediateEOS, FileErrors) {
+    TEST_CASE(103.2.14, "File Load errors");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.FileErrors();
+}
+
+TEST(ImmediateEOS, InvalidManualCommands) {
+    TEST_CASE(103.2.13, "Invalid Manual Commands");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.InvalidManualCommands();
+}
+
+TEST(ImmediateEOS, Manual) {
+    TEST_CASE(103.1.7, "Nominal Manual Sequence Stepping");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.Manual();
+}
+
+TEST(ImmediateEOS, NewSequence) {
+    TEST_CASE(103.2.7, "Off-Nominal invalid modes");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.NewSequence();
+}
+
+TEST(ImmediateEOS, SequenceTimeout) {
+    TEST_CASE(103.2.12, "Sequence timeout");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.SequenceTimeout();
+}
+
+TEST(ImmediateEOS, UnexpectedCommandResponse) {
+    TEST_CASE(103.2.11, "Unexpected completion after completed sequence");
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.UnexpectedCommandResponse();
+}
+
+TEST(ImmediateEOS, Validate) {
+    Svc::ImmediateEOS::CmdSequencerTester tester;
+    tester.Validate();
+}
+
+TEST(InvalidFiles, BadCRC) {
+    TEST_CASE(103.2.2, "Off-Nominal Bad File CRC");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.BadCRC();
+}
+
+TEST(InvalidFiles, BadCRCAMPCS) {
+    Svc::InvalidFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.BadCRC();
+}
+
+TEST(InvalidFiles, BadRecordDescriptor) {
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.BadRecordDescriptor();
+}
+
+TEST(InvalidFiles, BadRecordDescriptorAMPCS) {
+    Svc::InvalidFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.BadRecordDescriptor();
+}
+
+TEST(InvalidFiles, BadTimeBase) {
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.BadTimeBase();
+}
+
+TEST(InvalidFiles, BadTimeContext) {
+    TEST_CASE(103.2.10, "Bad time context");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.BadTimeContext();
+}
+
+TEST(InvalidFiles, DataAfterRecords) {
+    TEST_CASE(103.2.15, "Extra Data after records");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.DataAfterRecords();
+}
+
+TEST(InvalidFiles, EmptyFile) {
+    TEST_CASE(103.2.3, "Off-Nominal Empty Sequence File");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.EmptyFile();
+}
+
+TEST(InvalidFiles, EmptyFileAMPCS) {
+    Svc::InvalidFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.EmptyFile();
+}
+
+TEST(InvalidFiles, FileTooLarge) {
+    TEST_CASE(103.2.5, "Off-Nominal File Too Large");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.FileTooLarge();
+}
+
+TEST(InvalidFiles, FileTooLargeAMPCS) {
+    Svc::InvalidFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.FileTooLarge();
+}
+
+TEST(InvalidFiles, MissingCRC) {
+    TEST_CASE(103.2.4, "Off-Nominal Missing CRC");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.MissingCRC();
+}
+
+TEST(InvalidFiles, MissingFile) {
+    TEST_CASE(103.2.1, "Off-Nominal Missing File");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.MissingFile();
+}
+
+TEST(InvalidFiles, SizeFieldTooLarge) {
+    TEST_CASE(103.2.9, "Size field too large");
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.SizeFieldTooLarge();
+}
+
+TEST(InvalidFiles, SizeFieldTooSmall) {
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.SizeFieldTooSmall();
+}
+
+TEST(InvalidFiles, USecFieldTooShort) {
+    Svc::InvalidFiles::CmdSequencerTester tester;
+    tester.USecFieldTooShort();
+}
+
+TEST(Mixed, AutoByCommand) {
+    TEST_CASE(103.1.4, "Nominal Timed Relative Commands");
+    Svc::Mixed::CmdSequencerTester tester;
+    tester.AutoByCommand();
+}
+
+TEST(Mixed, AutoByCommandAMPCS) {
+    Svc::Mixed::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.AutoByCommand();
+}
+
+TEST(Mixed, Validate) {
+    Svc::Mixed::CmdSequencerTester tester;
+    tester.Validate();
+}
+
+TEST(Mixed, ValidateAMPCS) {
+    Svc::Mixed::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Validate();
+}
+TEST(NoFiles, Init) {
+    TEST_CASE(103.1.1, "Nominal Initialization");
+    Svc::NoFiles::CmdSequencerTester tester;
+    tester.Init();
+}
+
+TEST(NoFiles, InitAMPCS) {
+    Svc::NoFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Init();
+}
+
+TEST(NoFiles, NoSequenceActive) {
+    TEST_CASE(103.2.8, "Off-Nominal no active sequence");
+    Svc::NoFiles::CmdSequencerTester tester;
+    tester.NoSequenceActive();
+}
+
+TEST(NoFiles, NoSequenceActiveAMPCS) {
+    Svc::NoFiles::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.NoSequenceActive();
+}
+
+TEST(Relative, AutoByCommand) {
+    TEST_CASE(103.1.3, "Nominal Relative Commands");
+    Svc::Relative::CmdSequencerTester tester;
+    tester.AutoByCommand();
+}
+
+TEST(Relative, AutoByCommandAMPCS) {
+    Svc::Relative::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.AutoByCommand();
+}
+
+TEST(Relative, Validate) {
+    Svc::Relative::CmdSequencerTester tester;
+    tester.Validate();
+}
+
+TEST(Relative, ValidateAMPCS) {
+    Svc::Relative::CmdSequencerTester tester(Svc::SequenceFiles::File::Format::AMPCS);
+    tester.Validate();
+}
+
+TEST(JoinWait, JoinWaitNoActiveSeq) {
+    Svc::JoinWait::CmdSequencerTester tester;
+    tester.test_join_wait_without_active_seq();
+}
+
+TEST(JoinWait, JoinWaitWithActiveSeq) {
+    Svc::JoinWait::CmdSequencerTester tester;
+    tester.test_join_wait_with_active_seq();
+}
+
+TEST(InvalidFiles, RunNoRecords) {
+    Svc::NoRecords::CmdSequencerTester tester;
+    tester.RunNoRecords();
+}
+
+TEST(InvalidFiles, ValidateNoRecords) {
+    Svc::NoRecords::CmdSequencerTester tester;
+    tester.ValidateNoRecords();
+}
+
+int main(int argc, char** argv) {
+    // Create ./bin directory for test files
+    Os::FileSystem::createDirectory("./bin");
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `CmdSequencerTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSequencer.cpp
+// \author Canham/Bocchino
+// \brief  CmdSequencer test implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "CmdSequencerTester.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Posix/Directory.hpp"
+#include "Os/Posix/FileSystem.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/FPrime/FPrime.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : CmdSequencerGTestBase("Tester", MAX_HISTORY_SIZE),
+      component("CmdSequencer"),
+      format(a_format),
+      sequences(this->component) {
+    this->initComponents();
+    this->connectPorts();
+    this->setComponentSequenceFormat();
+    this->component.allocateBuffer(ALLOCATOR_ID, this->mallocator, BUFFER_SIZE);
+    this->component.preamble();
+    this->component.setTimeout(TIMEOUT);
+    this->component.regCommands();
+}
+
+CmdSequencerTester ::~CmdSequencerTester() {
+    this->component.deallocateBuffer(this->mallocator);
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::from_seqDone_handler(const FwIndexType portNum,
+                                               FwOpcodeType opCode,
+                                               U32 cmdSeq,
+                                               const Fw::CmdResponse& response) {
+    this->pushFromPortEntry_seqDone(opCode, cmdSeq, response);
+}
+
+void CmdSequencerTester ::from_comCmdOut_handler(const FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    this->pushFromPortEntry_comCmdOut(data, context);
+}
+
+void CmdSequencerTester ::from_pingOut_handler(const FwIndexType portNum, U32 key) {
+    this->pushFromPortEntry_pingOut(key);
+}
+
+// ----------------------------------------------------------------------
+// Virtual function interface
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsAuto(const char* const fileName,
+                                              const U32 numCommands,
+                                              const U32 bound,
+                                              const CmdExecMode::t mode) {
+    ASSERT_TRUE(false) << "executeCommandsAuto is not implemented\n";
+}
+
+void CmdSequencerTester ::executeCommandsError(const char* const fileName, const U32 numCommands) {
+    ASSERT_TRUE(false) << "executeCommandsError is not implemented\n";
+}
+
+void CmdSequencerTester ::executeCommandsManual(const char* const fileName, const U32 numCommands) {
+    ASSERT_TRUE(false) << "executeCommandsManual is not implemented\n";
+}
+
+// ----------------------------------------------------------------------
+// Tests parameterized by file type
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::parameterizedAutoByCommand(SequenceFiles::File& file,
+                                                     const U32 numCommands,
+                                                     const U32 bound) {
+    ASSERT_TRUE(false) << "parameterizedAutoByCommand is not implemented\n";
+}
+
+void CmdSequencerTester ::parameterizedCancel(SequenceFiles::File& file, const U32 numCommands, const U32 bound) {
+    REQUIREMENT("ISF-CMDS-005");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NO_NEW_SEQUENCE);
+    // Cancel sequence
+    this->cancelSequence(100, fileName);
+}
+
+void CmdSequencerTester ::parameterizedFailedCommands(SequenceFiles::File& file, const U32 numCommands) {
+    REQUIREMENT("ISF-CMDS-004");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Start the sequence
+    this->runSequence(0, fileName);
+    // Execute commands
+    this->executeCommandsError(fileName, numCommands);
+    // Check to see if the component has cleaned up
+    ASSERT_EQ(CmdSequencerComponentImpl::STOPPED, this->component.m_runMode);
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+}
+
+void CmdSequencerTester ::parameterizedFileErrors(SequenceFiles::File& file) {
+    this->parameterizedFileOpenErrors(file);
+    this->parameterizedHeaderReadErrors(file);
+    this->parameterizedDataReadErrors(file);
+}
+
+void CmdSequencerTester ::parameterizedFileOpenErrors(SequenceFiles::File& file) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    file.write();
+    // Get error info
+    SequenceFiles::File::ErrorInfo errorInfo;
+    file.getErrorInfo(errorInfo);
+    const char* const errorFileName = errorInfo.open.fileName.toChar();
+    // Enable open interceptor
+    this->interceptor.enable(Interceptor::EnableType::OPEN);
+    // DOESNT_EXIST
+    {
+        this->interceptor.fileStatus = Os::File::Status::DOESNT_EXIST;
+        // Validate the file
+        this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+        this->clearAndDispatch();
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_FileNotFound_SIZE(1);
+        ASSERT_EVENTS_CS_FileNotFound(0, errorFileName);
+    }
+    // NO_PERMISSION
+    {
+        this->interceptor.fileStatus = Os::File::NO_PERMISSION;
+        // Validate the file
+        const U32 validateCmdSeq = 14;
+        this->sendCmd_CS_VALIDATE(0, validateCmdSeq, file.getName());
+        this->clearAndDispatch();
+        // Assert command response
+        ASSERT_CMD_RESPONSE_SIZE(1);
+        ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, validateCmdSeq,
+                            Fw::CmdResponse::EXECUTION_ERROR);
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_FileReadError_SIZE(1);
+        ASSERT_EVENTS_CS_FileReadError(0, errorFileName);
+    }
+    // Disable open interceptor
+    this->interceptor.disable();
+}
+
+void CmdSequencerTester ::parameterizedHeaderReadErrors(SequenceFiles::File& file) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    file.write();
+    // Get error info
+    SequenceFiles::File::ErrorInfo errorInfo;
+    file.getErrorInfo(errorInfo);
+    const char* const errorFileName = errorInfo.headerRead.fileName.toChar();
+    // Enable read interceptor
+    this->interceptor.enable(Interceptor::EnableType::READ);
+    // Read error reading header
+    {
+        // Set up fault injection state
+        this->interceptor.waitCount = errorInfo.headerRead.waitCount;
+        this->interceptor.fileStatus = Os::File::NO_SPACE;
+        this->interceptor.errorType = Interceptor::ErrorType::READ;
+        // TODO: fix me Os::setLastError(Os::File::NO_SPACE);
+        //  Validate file
+        const U32 validateCmdSeq = 14;
+        this->sendCmd_CS_VALIDATE(0, validateCmdSeq, file.getName());
+        this->clearAndDispatch();
+        // Assert command response
+        ASSERT_CMD_RESPONSE_SIZE(1);
+        ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, validateCmdSeq,
+                            Fw::CmdResponse::EXECUTION_ERROR);
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_FileInvalid(0, errorFileName, CmdSequencer_FileReadStage::READ_HEADER, Os::File::NO_SPACE);
+    }
+    // Disable read interceptor
+    this->interceptor.disable();
+}
+
+void CmdSequencerTester ::parameterizedDataReadErrors(SequenceFiles::File& file) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    file.write();
+    // Get error info
+    SequenceFiles::File::ErrorInfo errorInfo;
+    file.getErrorInfo(errorInfo);
+    const char* const errorFileName = errorInfo.dataRead.fileName.toChar();
+    // Enable read interceptor
+    this->interceptor.enable(Interceptor::EnableType::READ);
+    // Read error reading data
+    {
+        // Set up fault injection state
+        this->interceptor.waitCount = errorInfo.dataRead.waitCount;
+        this->interceptor.fileStatus = Os::File::NO_SPACE;
+        this->interceptor.errorType = Interceptor::ErrorType::READ;
+
+        // Validate file
+        const U32 validateCmdSeq = 14;
+        this->sendCmd_CS_VALIDATE(0, validateCmdSeq, file.getName());
+        this->clearAndDispatch();
+        // Assert command response
+        ASSERT_CMD_RESPONSE_SIZE(1);
+        ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, validateCmdSeq,
+                            Fw::CmdResponse::EXECUTION_ERROR);
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_FileInvalid_SIZE(1);
+        ASSERT_EVENTS_CS_FileInvalid(0, errorFileName, CmdSequencer_FileReadStage::READ_SEQ_DATA, Os::File::NO_SPACE);
+    }
+    // Size error reading data
+    {
+        // Set up fault injection state
+        this->interceptor.waitCount = errorInfo.dataRead.waitCount;
+        this->interceptor.fileStatus = Os::File::OP_OK;
+        this->interceptor.errorType = Interceptor::ErrorType::SIZE;
+        this->interceptor.size = 2;
+        // Validate file
+        const U32 validateCmdSeq = 14;
+        this->sendCmd_CS_VALIDATE(0, validateCmdSeq, file.getName());
+        this->clearAndDispatch();
+        // Assert command response
+        ASSERT_CMD_RESPONSE_SIZE(1);
+        ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, validateCmdSeq,
+                            Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_FileInvalid_SIZE(1);
+        ASSERT_EVENTS_CS_FileInvalid(0, errorFileName, CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE, 2);
+    }
+    // Disable read interceptor
+    this->interceptor.disable();
+}
+
+void CmdSequencerTester ::parameterizedNeverLoaded() {
+    // Try to run a sequence
+    Fw::String fArg("");
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert seqDone response
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0U, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR)));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(1);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::parameterizedSequenceTimeout(SequenceFiles::File& file) {
+    REQUIREMENT("ISF-CMDS-006");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Check command buffers
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 0, 1);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Assert that timer is set
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimeoutTimer.m_state);
+    // Set the test time to be after the timeout
+    testTime.set(TimeBase::TB_WORKSTATION_TIME, 2 * TIMEOUT, 1);
+    this->setTestTime(testTime);
+    // Call the schedule port
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_SequenceTimeout(0, fileName, 0);
+    // Verify that the sequencer is idle again
+    ASSERT_EQ(CmdSequencerComponentImpl::STOPPED, this->component.m_runMode);
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+    ASSERT_EQ(0U, this->component.m_executedCount);
+    // Assert command response on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR)));
+}
+
+void CmdSequencerTester ::parameterizedUnexpectedCommandResponse(SequenceFiles::File& file,
+                                                                 const U32 numCommands,
+                                                                 const U32 bound) {
+    // Run the sequence
+    this->parameterizedAutoByCommand(file, numCommands, bound);
+    // Send unexpected command response
+    this->invoke_to_cmdResponseIn(0, 0x10, 0, Fw::CmdResponse(Fw::CmdResponse::OK));
+    this->clearAndDispatch();
+    // Check events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_UnexpectedCompletion_SIZE(1);
+    ASSERT_EVENTS_CS_UnexpectedCompletion(0, 0x10);
+}
+
+void CmdSequencerTester ::parameterizedValidate(SequenceFiles::File& file) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+}
+
+// ----------------------------------------------------------------------
+// Instance helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::connectPorts() {
+    // LogText
+    this->component.set_LogText_OutputPort(0, this->get_from_LogText(0));
+
+    // cmdIn
+    this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_cmdRegOut(0));
+
+    // cmdResponseIn
+    this->connect_to_cmdResponseIn(0, this->component.get_cmdResponseIn_InputPort(0));
+
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_cmdResponseOut(0));
+
+    // comCmdOut
+    this->component.set_comCmdOut_OutputPort(0, this->get_from_comCmdOut(0));
+
+    // logOut
+    this->component.set_logOut_OutputPort(0, this->get_from_logOut(0));
+
+    // pingIn
+    this->connect_to_pingIn(0, this->component.get_pingIn_InputPort(0));
+
+    // pingOut
+    this->component.set_pingOut_OutputPort(0, this->get_from_pingOut(0));
+
+    // schedIn
+    this->connect_to_schedIn(0, this->component.get_schedIn_InputPort(0));
+
+    // seqDone
+    this->component.set_seqDone_OutputPort(0, this->get_from_seqDone(0));
+
+    // seqRunIn
+    this->connect_to_seqRunIn(0, this->component.get_seqRunIn_InputPort(0));
+
+    // timeCaller
+    this->component.set_timeCaller_OutputPort(0, this->get_from_timeCaller(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
+}
+
+#if VERBOSE
+void CmdSequencerTester ::textLogIn(const FwEventIdType id,          //!< The event ID
+                                    Fw::Time& timeTag,               //!< The time
+                                    const Fw::LogSeverity severity,  //!< The severity
+                                    const Fw::TextLogString& text    //!< The event string
+) {
+    TextLogEntry e = {id, timeTag, severity, text};
+    printTextLogHistoryEntry(e, stdout);
+}
+#endif
+
+void CmdSequencerTester ::initComponents() {
+    this->init();
+    this->component.init(QUEUE_DEPTH, INSTANCE);
+}
+
+void CmdSequencerTester ::setComponentSequenceFormat() {
+    switch (this->format) {
+        case SequenceFiles::File::Format::F_PRIME:
+            // Use default format
+            break;
+        case SequenceFiles::File::Format::AMPCS:
+            this->component.setSequenceFormat(this->sequences.ampcsSequence);
+            break;
+        default:
+            ASSERT_TRUE(0) << "Invalid sequence format " << format << "\n";
+            break;
+    }
+}
+
+void CmdSequencerTester ::clearAndDispatch() {
+    this->clearHistory();
+    ASSERT_EQ(Fw::QueuedComponentBase::MSG_DISPATCH_OK, this->component.doDispatch());
+}
+
+void CmdSequencerTester ::validateFile(const U32 cmdSeq, const char* const fileName) {
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, cmdSeq, Fw::CmdStringArg(fileName));
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, cmdSeq, Fw::CmdResponse::OK);
+    // Assert events
+    ASSERT_EVENTS_SIZE(2);
+    ASSERT_EVENTS_CS_SequenceValid(0, fileName);
+    ASSERT_EVENTS_CS_SequenceLoaded(0, fileName);
+}
+
+void CmdSequencerTester ::loadSequence(const char* const fileName) {
+    // Invoke the port
+    Fw::String fArg(fileName);
+    this->clearHistory();
+    this->component.loadSequence(fArg);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_SequenceLoaded(0, fileName);
+}
+
+void CmdSequencerTester ::runSequence(const U32 cmdSeq, const char* const fileName) {
+    // Send run command
+    this->sendCmd_CS_RUN(0, cmdSeq, Fw::CmdStringArg(fileName), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_RUN, cmdSeq, Fw::CmdResponse::OK);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_SequenceLoaded(0, fileName);
+}
+
+void CmdSequencerTester ::runSequenceByPortCall(const char* const fileName) {
+    // Invoke the port
+    Fw::String fArg(fileName);
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert no command response
+    ASSERT_CMD_RESPONSE_SIZE(0);
+    // Assert events
+    ASSERT_EVENTS_SIZE(2);
+    ASSERT_EVENTS_CS_SequenceLoaded(0, fileName);
+    ASSERT_EVENTS_CS_PortSequenceStarted(0, fileName);
+}
+
+void CmdSequencerTester ::runLoadedSequence() {
+    // Invoke the port
+    Fw::String fArg("");
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert no command response
+    ASSERT_CMD_RESPONSE_SIZE(0);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    const Fw::LogStringArg& fileName = this->component.m_sequence->getLogFileName();
+    ASSERT_EVENTS_CS_PortSequenceStarted(0, fileName.toChar());
+}
+
+void CmdSequencerTester ::startNewSequence(const char* const fileName) {
+    // Start the sequence
+    this->sendCmd_CS_RUN(0, 0, Fw::CmdStringArg(fileName), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_RUN, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, Fw::CmdStringArg(fileName));
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_VALIDATE, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+    // Invoke sequence port
+    Fw::String fArg(fileName);
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert response on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+}
+
+void CmdSequencerTester ::startSequence(const U32 cmdSeq, const char* const fileName) {
+    // Send start command
+    this->sendCmd_CS_START(0, cmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_START, cmdSeq, Fw::CmdResponse::OK);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_CmdStarted(0, fileName);
+}
+
+void CmdSequencerTester ::cancelSequence(const U32 cmdSeq, const char* const fileName) {
+    // Send cancel command
+    this->sendCmd_CS_CANCEL(0, cmdSeq);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_SequenceCanceled(0, fileName);
+    // Verify state
+    ASSERT_EQ(CmdSequencerComponentImpl::STOPPED, this->component.m_runMode);
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+}
+
+void CmdSequencerTester ::goToManualMode(const U32 cmdSeq) {
+    // Send manual command
+    this->sendCmd_CS_MANUAL(0, cmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_MANUAL, cmdSeq, Fw::CmdResponse(Fw::CmdResponse::OK));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_ModeSwitched(0, CmdSequencer_SeqMode::STEP);
+}
+
+void CmdSequencerTester ::goToAutoMode(const U32 cmdSeq) {
+    // Send auto command
+    this->sendCmd_CS_AUTO(0, cmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_AUTO, cmdSeq, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+
+void CmdSequencerTester ::stepSequence(const U32 cmdSeq) {
+    // Send step command
+    this->sendCmd_CS_STEP(0, cmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, CmdSequencerComponentBase::OPCODE_CS_STEP, cmdSeq, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+}  // namespace Svc
+
+namespace Os {
+
+//! \brief get a delegate for FileInterface that intercepts calls for command sequencer testing
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileInterface* FileInterface::getDelegate(FileHandleStorage& aligned_placement_new_memory,
+                                          const FileInterface* to_copy) {
+    return Os::Delegate::makeDelegate<FileInterface, Svc::CmdSequencerTester::Interceptor::PosixFileInterceptor>(
+        aligned_placement_new_memory, to_copy);
+}
+
+//! \brief get a delegate for FileSystemInterface that intercepts calls for stub fileSystem usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileSystemInterface* FileSystemInterface::getDelegate(FileSystemHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<FileSystemInterface, Os::Posix::FileSystem::PosixFileSystem>(
+        aligned_placement_new_memory);
+}
+
+//! \brief get a delegate for DirectoryInterface that intercepts calls for stub Directory usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+DirectoryInterface* DirectoryInterface::getDelegate(DirectoryHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<DirectoryInterface, Os::Posix::Directory::PosixDirectory>(
+        aligned_placement_new_memory);
+}
+
+}  // namespace Os
+```
+
+### `CmdSequencerTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CmdSequencerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CmdSequencerTester.hpp
+// \author Bocchino/Canham
+// \brief  CmdSequencer test interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Tester_HPP
+#define Svc_Tester_HPP
+
+#include "CmdSequencerGTestBase.hpp"
+#include "Fw/Types/MallocAllocator.hpp"
+#include "Os/Posix/File.hpp"
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+#include "Svc/CmdSequencer/formats/AMPCSSequence.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/SequenceFiles.hpp"
+#include "Svc/CmdSequencer/test/ut/UnitTest.hpp"
+
+#define ALLOCATOR_ID 100
+#define BUFFER_SIZE 1024
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 10
+#define QUEUE_DEPTH 10
+#define TIMEOUT 100
+
+namespace Svc {
+
+class CmdSequencerTester : public CmdSequencerGTestBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    static const FwSizeType TEST_SEQ_BUFFER_SIZE = 255;
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Accessor methods for opcodes
+    // ----------------------------------------------------------------------
+
+    static FwOpcodeType getRunOpcode() { return CmdSequencerComponentBase::OPCODE_CS_RUN; }
+
+    static FwOpcodeType getStartOpcode() { return CmdSequencerComponentBase::OPCODE_CS_START; }
+
+    static FwOpcodeType getAutoOpcode() { return CmdSequencerComponentBase::OPCODE_CS_AUTO; }
+
+    static FwOpcodeType getManualOpcode() { return CmdSequencerComponentBase::OPCODE_CS_MANUAL; }
+
+    static FwOpcodeType getStepOpcode() { return CmdSequencerComponentBase::OPCODE_CS_STEP; }
+
+    static FwOpcodeType getValidateOpcode() { return CmdSequencerComponentBase::OPCODE_CS_VALIDATE; }
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Mode for executing commands
+    struct CmdExecMode {
+        typedef enum {
+            //! Don't start a new sequence
+            NO_NEW_SEQUENCE,
+            //! Start a new sequence
+            NEW_SEQUENCE
+        } t;
+    };
+
+    //! Sequences encoding binary formats
+    struct Sequences {
+        //! Construct a Sequences object
+        Sequences(CmdSequencerComponentImpl& component  //!< The component under test
+                  )
+            : ampcsSequence(component) {}
+
+        //! The AMPCS sequence
+        AMPCSSequence ampcsSequence;
+    };
+
+  public:
+    class Interceptor {
+      public:
+        // ----------------------------------------------------------------------
+        // Types
+        // ----------------------------------------------------------------------
+
+        //! Type of injected errors
+        struct EnableType {
+            typedef enum {
+                NONE,  // Don't enable interception
+                OPEN,  // Intercept opens
+                READ,  // Intercept reads
+            } t;
+        };
+
+        //! Type of injected errors
+        struct ErrorType {
+            typedef enum {
+                NONE,  // Don't inject any errors
+                READ,  // Bad read status
+                SIZE,  // Bad size
+                DATA   // Unexpected data
+            } t;
+        };
+
+      public:
+        // ----------------------------------------------------------------------
+        // Constructors
+        // ----------------------------------------------------------------------
+
+        Interceptor();
+
+      public:
+        // ----------------------------------------------------------------------
+        // Public instance methods
+        // ----------------------------------------------------------------------
+
+        //! Enable the interceptor
+        void enable(EnableType::t enableType);
+
+        //! Disable the interceptor
+        void disable();
+
+        class PosixFileInterceptor : public Os::Posix::File::PosixFile {
+            friend class Interceptor;
+
+          public:
+            PosixFileInterceptor() = default;
+
+            PosixFileInterceptor(const PosixFileInterceptor& other) = default;
+
+            Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+            Status read(U8* buffer, FwSizeType& size, WaitType wait) override;
+
+            //! Current interceptor
+            static Interceptor* s_current_interceptor;
+        };
+
+      public:
+        // ----------------------------------------------------------------------
+        // Public member variables
+        // ----------------------------------------------------------------------
+        EnableType::t enabled;
+
+        //! Error type
+        ErrorType::t errorType;
+
+        //! How many read calls to let pass before modifying
+        U32 waitCount;
+
+        //! Read data
+        BYTE data[TEST_SEQ_BUFFER_SIZE];
+
+        //! Read size
+        U32 size;
+
+        //! Status
+        Os::File::Status fileStatus;
+    };
+
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+    //! Destroy object CmdSequencerTester
+    ~CmdSequencerTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_seqDone
+    //!
+    void from_seqDone_handler(const FwIndexType portNum,       //!< The port number
+                              FwOpcodeType opCode,             //!< Command Op Code
+                              U32 cmdSeq,                      //!< Command Sequence
+                              const Fw::CmdResponse& response  //!< The command response argument
+    );
+
+    //! Handler for from_comCmdOut
+    //!
+    void from_comCmdOut_handler(const FwIndexType portNum,  //!< The port number
+                                Fw::ComBuffer& data,        //!< Buffer containing packet data
+                                U32 context                 //!< Call context value; meaning chosen by user
+    );
+
+    //! Handler for from_pingOut
+    //!
+    void from_pingOut_handler(const FwIndexType portNum,  //!< The port number
+                              U32 key                     //!< Value to return to pinger
+    );
+
+#if VERBOSE
+  protected:
+    // ----------------------------------------------------------------------
+    // TesterBase interface
+    // ----------------------------------------------------------------------
+
+    //! Handle a text event
+    void textLogIn(const FwEventIdType id,          //!< The event ID
+                   Fw::Time& timeTag,               //!< The time
+                   const Fw::LogSeverity severity,  //!< The severity
+                   const Fw::TextLogString& text    //!< The event string
+    );
+#endif
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Virtual function interface
+    // ----------------------------------------------------------------------
+
+    //! Execute sequence commands for an automatic sequence
+    virtual void executeCommandsAuto(const char* const fileName,  //!< The file name
+                                     const U32 numCommands,       //!< The number of commands in the sequence
+                                     const U32 bound,             //!< The number of commands to run
+                                     const CmdExecMode::t mode    //!< The mode
+    );
+
+    //! Execute sequence commands with a command response error
+    virtual void executeCommandsError(const char* const fileName,  //!< The file name
+                                      const U32 numCommands        //!< The number of commands in the sequence
+    );
+
+    //! Execute commands for a manual sequence
+    virtual void executeCommandsManual(const char* const fileName,  //!< The file name
+                                       const U32 numCommands        //!< The number of commands in the sequence
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Tests parameterized by file type
+    // ----------------------------------------------------------------------
+
+    //! Run an automatic sequence by command
+    virtual void parameterizedAutoByCommand(SequenceFiles::File& file,  //!< The file
+                                            const U32 numCommands,      //!< The number of commands in the sequence
+                                            const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Inject data read errors
+    void parameterizedDataReadErrors(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Inject file errors
+    void parameterizedFileErrors(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Inject file open errors
+    void parameterizedFileOpenErrors(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Inject header read errors
+    void parameterizedHeaderReadErrors(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Run a sequence with failed commands
+    void parameterizedFailedCommands(SequenceFiles::File& file,  //!< The file
+                                     const U32 numCommands       //!< The number of commands to run
+    );
+
+    //! Don't load any sequence, then try to run a sequence
+    void parameterizedNeverLoaded();
+
+    //! Sequence timeout
+    void parameterizedSequenceTimeout(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Start and cancel a sequence
+    void parameterizedCancel(SequenceFiles::File& file,  //!< The file
+                             const U32 numCommands,      //!< The number of commands in the sequence
+                             const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Run a complete sequence and then issue a command response
+    void parameterizedUnexpectedCommandResponse(SequenceFiles::File& file,  //!< The file
+                                                const U32 numCommands,      //!< The number of commands in the sequence
+                                                const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Validate a sequence
+    void parameterizedValidate(SequenceFiles::File& file  //!< The file
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Instance helper methods
+    // ----------------------------------------------------------------------
+
+    //! Cancel a sequence
+    void cancelSequence(const U32 cmdSeq,           //!< The command sequence number
+                        const char* const fileName  //!< The file name
+    );
+
+    //! Clear history and dispatch messages
+    void clearAndDispatch();
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Go to auto mode
+    void goToAutoMode(const U32 cmdSeq  //!< The command sequence number
+    );
+
+    //! Go to manual mode
+    void goToManualMode(const U32 cmdSeq  //!< The command sequence number
+    );
+
+    //! Initialize components
+    void initComponents();
+
+    //! Load a sequence
+    void loadSequence(const char* const fileName  //!< The file name
+    );
+
+    //! Run a loaded sequence
+    void runLoadedSequence();
+
+    //! Run a sequence by command
+    void runSequence(const U32 cmdSeq,           //!< The command sequence number
+                     const char* const fileName  //!< The file name
+    );
+
+    //! Run a sequence by port call
+    void runSequenceByPortCall(const char* const fileName  //!< The file name
+    );
+
+    //! Send a step command
+    void stepSequence(const U32 cmdSeq  //!< The command sequence number
+    );
+
+    //! Set the component sequence format
+    void setComponentSequenceFormat();
+
+    //! Start a new sequence while checking command buffers
+    void startNewSequence(const char* const fileName  //!< The file name
+    );
+
+    //! Start a sequence in manual mode
+    void startSequence(const U32 cmdSeq,           //!< The command sequence number
+                       const char* const fileName  //!< The file name
+    );
+
+    //! Validate a sequence file
+    void validateFile(const U32 cmdSeq,           //!< The command sequence number
+                      const char* const fileName  //!< The file name
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    CmdSequencerComponentImpl component;
+
+    //! The file format to use
+    const SequenceFiles::File::Format::t format;
+
+    //! Sequences encoding binary formats
+    Sequences sequences;
+
+    //! The allocator
+    Fw::MallocAllocator mallocator;
+
+    //! Open/Read interceptor
+    Interceptor interceptor;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `CommandBuffers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CommandBuffers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CommandBuffers.cpp
+// \author Canham/Bocchino
+// \brief  Command buffers for testing sequences
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace CommandBuffers {
+
+void create(Fw::ComBuffer& comBuff, const FwOpcodeType opcode, const U32 argument) {
+    comBuff.resetSer();
+    const FwPacketDescriptorType descriptor = Fw::ComPacketType::FW_PACKET_COMMAND;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, comBuff.serializeFrom(descriptor));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, comBuff.serializeFrom(opcode));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, comBuff.serializeFrom(argument));
+}
+
+}  // namespace CommandBuffers
+
+}  // namespace Svc
+```
+
+### `CommandBuffers.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/CommandBuffers.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CommandBuffers.hpp
+// \author Canham/Bocchino
+// \brief  Command buffers for testing sequences
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_CommandBuffers_HPP
+#define Svc_CommandBuffers_HPP
+
+#include "Fw/Com/ComBuffer.hpp"
+
+namespace Svc {
+
+namespace CommandBuffers {
+
+//! Create a command buffer with an opcode and one U32 argument
+void create(Fw::ComBuffer& comBuff,     //!< The com buffer
+            const FwOpcodeType opcode,  //!< The opcode
+            const U32 argument          //!< The argument
+);
+
+}  // namespace CommandBuffers
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Health.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Health.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.cpp
+// \author Canham/Bocchino
+// \brief  Test health pings
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/Health.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::Ping() {
+    const U32 key = 1234;
+    this->invoke_to_pingIn(0, key);
+    this->clearAndDispatch();
+    ASSERT_from_pingOut_SIZE(1);
+    ASSERT_from_pingOut(0, key);
+}
+
+}  // namespace Health
+
+}  // namespace Svc
+```
+
+### `Health.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Health.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.hpp
+// \author Canham/Bocchino
+// \brief  Test health pings
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Health_HPP
+#define Svc_Health_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test health pings
+    void Ping();
+};
+
+}  // namespace Health
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Immediate.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Immediate.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Immediate.cpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with  record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/Immediate.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace Immediate {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : ImmediateBase::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::AutoByCommand() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedAutoByCommand(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::AutoByPort() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedAutoByPort(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Cancel() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numRecords - 1;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedCancel(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::FailedCommands() {
+    const U32 numRecords = 3;
+    const U32 numCommands = numRecords;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedFailedCommands(file, numCommands);
+}
+
+void CmdSequencerTester ::FileErrors() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedFileErrors(file);
+}
+
+void CmdSequencerTester ::InvalidManualCommands() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedInvalidManualCommands(file);
+}
+
+void CmdSequencerTester ::LoadOnInit() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedLoadOnInit(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::LoadRunRun() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedLoadRunRun(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Manual() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedManual(file, numCommands);
+}
+
+void CmdSequencerTester ::NeverLoaded() {
+    this->parameterizedNeverLoaded();
+}
+
+void CmdSequencerTester ::NewSequence() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedNewSequence(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::SequenceTimeout() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedSequenceTimeout(file);
+}
+
+void CmdSequencerTester ::UnexpectedCommandResponse() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedUnexpectedCommandResponse(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Validate() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateFile file(numRecords, this->format);
+    this->parameterizedValidate(file);
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsManual(const char* const fileName, const U32 numCommands) {
+    for (U32 i = 0; i < numCommands; ++i) {
+        PRINT("REC %d\n", i);
+        // Check command buffer
+        Fw::ComBuffer comBuff;
+        CommandBuffers::create(comBuff, i, i + 1);
+        ASSERT_from_comCmdOut_SIZE(1);
+        ASSERT_from_comCmdOut(0, comBuff, 0U);
+        // Assert that timer is clear
+        ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+        // Send command response
+        this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse::OK);
+        this->clearAndDispatch();
+        if (i < numCommands - 1) {
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(1);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+            // Step sequence
+            this->stepSequence(12);
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CmdStepped(0, fileName, i + 1);
+        } else {
+            // Assert events
+            ASSERT_EVENTS_SIZE(2);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            ASSERT_EVENTS_CS_SequenceComplete_SIZE(1);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(2);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+            ASSERT_TLM_CS_SequencesCompleted(0, 1);
+        }
+    }
+}
+
+}  // namespace Immediate
+
+}  // namespace Svc
+```
+
+### `Immediate.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Immediate.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Immediate.hpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with  record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Immediate_HPP
+#define Svc_Immediate_HPP
+
+#include "Svc/CmdSequencer/test/ut/ImmediateBase.hpp"
+
+namespace Svc {
+
+namespace Immediate {
+
+//! Test sequences with immediate commands followed by a marker
+class CmdSequencerTester : public ImmediateBase::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Don't load any sequence, then try to run a sequence
+    void NeverLoaded();
+
+    //! Inject file errors
+    void FileErrors();
+
+    //! Load a sequence, then run a sequence, then try to run a pre-loaded
+    //! sequence
+    void LoadRunRun();
+
+    //! Run a complete sequence and then issue a command response
+    void UnexpectedCommandResponse();
+
+    //! Run a sequence and, while it is running, start a new sequence
+    //! The new sequence should cause an error
+    void NewSequence();
+
+    //! Run a sequence manually
+    void Manual();
+
+    //! Run a sequence with failed commands
+    void FailedCommands();
+
+    //! Run an automatic sequence by command
+    void AutoByCommand();
+
+    //! Run an automatic sequence through a port call
+    void AutoByPort();
+
+    //! Send invalid manual commands while a sequence is running
+    void InvalidManualCommands();
+
+    //! Load a sequence on initialization and then run it
+    void LoadOnInit();
+
+    //! Sequence timeout
+    void SequenceTimeout();
+
+    //! Start and cancel a sequence
+    void Cancel();
+
+    //! Validate a sequence file
+    void Validate();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Execute commands for a manual sequence
+    void executeCommandsManual(const char* const fileName,  //!< The file name
+                               const U32 numCommands        //!< The number of commands in the sequence
+    );
+};
+
+}  // namespace Immediate
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ImmediateBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateBase.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateBase.cpp
+// \author Canham/Bocchino
+// \brief  Base class for Immediate and ImmediateEOS
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/ImmediateBase.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace ImmediateBase {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests parameterized by file type
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::parameterizedAutoByCommand(SequenceFiles::File& file,
+                                                     const U32 numCommands,
+                                                     const U32 bound) {
+    REQUIREMENT("ISF-CMDS-003");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NO_NEW_SEQUENCE);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+
+void CmdSequencerTester ::parameterizedAutoByPort(SequenceFiles::File& file, const U32 numCommands, const U32 bound) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Run the sequence by port call
+    this->runSequenceByPortCall(fileName);
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NO_NEW_SEQUENCE);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+
+void CmdSequencerTester ::parameterizedInvalidManualCommands(SequenceFiles::File& file) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Attempt to start manual mode without a sequence - should fail
+    const U32 startCmdSeq = 14;
+    this->sendCmd_CS_START(0, startCmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getStartOpcode(), startCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(1);
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Check command buffers
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 0, 1);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Assert that timer is set
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimeoutTimer.m_state);
+    // Attempt to start a manual sequence - should fail
+    this->sendCmd_CS_START(0, startCmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getStartOpcode(), startCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+    // Attempt to go to auto mode - should fail
+    const U32 autoCmdSeq = 14;
+    this->sendCmd_CS_AUTO(0, autoCmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getAutoOpcode(), autoCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+    // Attempt to go to manual mode - should fail
+    const U32 manualCmdSeq = 14;
+    this->sendCmd_CS_MANUAL(0, manualCmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getManualOpcode(), manualCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+}
+
+void CmdSequencerTester ::parameterizedLoadRunRun(SequenceFiles::File& file, const U32 numCommands, const U32 bound) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Load the sequence
+    this->loadSequence(fileName);
+    // Run another sequence
+    this->parameterizedAutoByPort(file, numCommands, bound);
+    // Try to run a loaded sequence
+    Fw::String fArg("");
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert seqDone response
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0U, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(1);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::parameterizedManual(SequenceFiles::File& file, const U32 numCommands) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Go to manual mode
+    this->goToManualMode(10);
+    // Run sequence
+    // This should validate and load the sequence, then stop
+    this->runSequence(0, fileName);
+    // Assert no command buffer
+    ASSERT_from_comCmdOut_SIZE(0);
+    // Send start command to load first command
+    this->startSequence(14, fileName);
+    // Execute commands
+    this->executeCommandsManual(fileName, numCommands);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+    // Send step command. Should return error since no active sequence
+    const U32 stepCmdSeq = 12;
+    this->sendCmd_CS_STEP(0, stepCmdSeq);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getStepOpcode(), stepCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_InvalidMode_SIZE(1);
+    // Go back to auto mode
+    this->goToAutoMode(stepCmdSeq);
+}
+
+void CmdSequencerTester ::parameterizedNewSequence(SequenceFiles::File& file, const U32 numCommands, const U32 bound) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NEW_SEQUENCE);
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+
+void CmdSequencerTester ::parameterizedLoadOnInit(SequenceFiles::File& file, const U32 numCommands, const U32 bound) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Load the sequence
+    this->loadSequence(fileName);
+    // Run the loaded sequence
+    this->runLoadedSequence();
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NO_NEW_SEQUENCE);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+}
+
+// ----------------------------------------------------------------------
+// Protected helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsAuto(const char* const fileName,
+                                              const U32 numCommands,
+                                              const U32 bound,
+                                              const CmdExecMode::t mode) {
+    for (U32 i = 0; i < bound; ++i) {
+        PRINT("REC %d\n", i);
+        // Check command buffer
+        Fw::ComBuffer comBuff;
+        CommandBuffers::create(comBuff, i, i + 1);
+        ASSERT_from_comCmdOut_SIZE(1);
+        ASSERT_from_comCmdOut(0, comBuff, 0U);
+        // Assert that timer is set
+        ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimeoutTimer.m_state);
+        // Start a new sequence if necessary
+        if (i == 0 and mode == CmdExecMode::NEW_SEQUENCE) {
+            this->startNewSequence(fileName);
+        }
+        // Send status back
+        this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse(Fw::CmdResponse::OK));
+        this->clearAndDispatch();
+        if (i < numCommands - 1) {
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(1);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+        } else {
+            // Assert events
+            ASSERT_EVENTS_SIZE(2);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            ASSERT_EVENTS_CS_SequenceComplete_SIZE(1);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(2);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+            ASSERT_TLM_CS_SequencesCompleted(0, 1);
+        }
+    }
+}
+
+void CmdSequencerTester ::executeCommandsError(const char* const fileName, const U32 numCommands) {
+    for (U32 i = 0; i < numCommands - 1; ++i) {
+        // Check command buffer
+        Fw::ComBuffer comBuff;
+        CommandBuffers::create(comBuff, i, i + 1);
+        ASSERT_from_comCmdOut_SIZE(1);
+        ASSERT_from_comCmdOut(0, comBuff, 0U);
+        if (i == 0) {
+            // Send good status back
+            this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse(Fw::CmdResponse::OK));
+            this->clearAndDispatch();
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(1);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+        } else {
+            // Send failed status back
+            this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+            this->clearAndDispatch();
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CommandError_SIZE(1);
+            ASSERT_EVENTS_CS_CommandError(0, fileName, 1, i, Fw::CmdResponse::EXECUTION_ERROR);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(1);
+            ASSERT_TLM_CS_Errors_SIZE(1);
+            ASSERT_TLM_CS_Errors(0, 1);
+            // Check for command complete on seqDone
+            ASSERT_from_seqDone_SIZE(1);
+            ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+        }
+    }
+}
+
+}  // namespace ImmediateBase
+
+}  // namespace Svc
+```
+
+### `ImmediateBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateBase.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateBase.hpp
+// \author Canham/Bocchino
+// \brief  Base class for Immediate and ImmediateEOS
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_ImmediateBase_HPP
+#define Svc_ImmediateBase_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace ImmediateBase {
+
+//! Base class for Immediate and ImmediateEOS
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests parameterized by file type
+    // ----------------------------------------------------------------------
+
+    //! Run an automatic sequence by command
+    void parameterizedAutoByCommand(SequenceFiles::File& file,  //!< The file
+                                    const U32 numCommands,      //!< The number of commands in the sequence
+                                    const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Run an automatic sequence by port call
+    void parameterizedAutoByPort(SequenceFiles::File& file,  //!< The file
+                                 const U32 numCommands,      //!< The number of commands in the sequence
+                                 const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Send invalid manual commands while a sequence is running
+    void parameterizedInvalidManualCommands(SequenceFiles::File& file  //!< The file
+    );
+
+    //! Run a manual sequence
+    void parameterizedManual(SequenceFiles::File& file,  //!< The file
+                             const U32 numCommands       //!< The number of commands in the sequence
+    );
+
+    //! Run a sequence and, while it is running, start a new sequence
+    //! The new sequence should cause an error
+    void parameterizedNewSequence(SequenceFiles::File& file,  //!< The file
+                                  const U32 numCommands,      //!< The number of commands in the sequence
+                                  const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Load a sequence on initialization and then run it
+    void parameterizedLoadOnInit(SequenceFiles::File& file,  //!< The file
+                                 const U32 numCommands,      //!< The number of commands in the sequence
+                                 const U32 bound             //!< The number of commands to execute
+    );
+
+    //! Load a sequence, then run a sequence, then try to run a pre-loaded
+    //! sequence
+    void parameterizedLoadRunRun(SequenceFiles::File& file,  //!< The file
+                                 const U32 numCommands,      //!< The number of commands in the sequence
+                                 const U32 bound             //!< The number of commands to execute
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Protected helper methods
+    // ----------------------------------------------------------------------
+
+    //! Execute sequence commands for an automatic sequence
+    void executeCommandsAuto(const char* const fileName,  //!< The file name
+                             const U32 numCommands,       //!< The number of commands in the sequence
+                             const U32 bound,             //!< The number of commands to run
+                             const CmdExecMode::t mode    //!< The mode
+    );
+
+    //! Execute sequence commands with a command response error
+    void executeCommandsError(const char* const fileName,  //!< The file name
+                              const U32 numCommands        //!< The number of commands in the sequence
+    );
+};
+
+}  // namespace ImmediateBase
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ImmediateEOS.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateEOS.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateEOS.cpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/ImmediateEOS.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace ImmediateEOS {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : ImmediateBase::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::AutoByCommand() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    const U32 numCommands = numRecords - 1;
+    const U32 bound = numCommands;
+    this->parameterizedAutoByCommand(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Cancel() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    const U32 numCommands = numRecords - 1;
+    const U32 bound = numCommands - 1;
+    this->parameterizedCancel(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::FileErrors() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedFileErrors(file);
+}
+
+void CmdSequencerTester ::InvalidManualCommands() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedInvalidManualCommands(file);
+}
+
+void CmdSequencerTester ::Manual() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords - 1;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedManual(file, numCommands);
+}
+
+void CmdSequencerTester ::NewSequence() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords - 1;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedNewSequence(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::AutoByPort() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords - 1;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedAutoByPort(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::SequenceTimeout() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedSequenceTimeout(file);
+}
+
+void CmdSequencerTester ::UnexpectedCommandResponse() {
+    const U32 numRecords = 5;
+    const U32 numCommands = numRecords - 1;
+    const U32 bound = numCommands;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedUnexpectedCommandResponse(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Validate() {
+    const U32 numRecords = 5;
+    SequenceFiles::ImmediateEOSFile file(numRecords, this->format);
+    this->parameterizedValidate(file);
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsManual(const char* const fileName, const U32 numCommands) {
+    for (U32 i = 0; i < numCommands; ++i) {
+        PRINT("REC %d\n", i);
+        // Check command buffer
+        Fw::ComBuffer comBuff;
+        CommandBuffers::create(comBuff, i, i + 1);
+        ASSERT_from_comCmdOut_SIZE(1);
+        ASSERT_from_comCmdOut(0, comBuff, 0U);
+        // Assert that timer is clear
+        ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimeoutTimer.m_state);
+        // Send command response
+        this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse::OK);
+        this->clearAndDispatch();
+        // Assert events
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+        // Assert telemetry
+        ASSERT_TLM_SIZE(1);
+        ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+        // Step sequence
+        this->stepSequence(12);
+        // Assert events
+        if (i < numCommands - 1) {
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CmdStepped(0, fileName, i + 1);
+        } else {
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_SequenceComplete_SIZE(1);
+        }
+    }
+}
+
+}  // namespace ImmediateEOS
+
+}  // namespace Svc
+```
+
+### `ImmediateEOS.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/ImmediateEOS.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ImmediateEOS.hpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_ImmediateEOS_HPP
+#define Svc_ImmediateEOS_HPP
+
+#include "Svc/CmdSequencer/test/ut/ImmediateBase.hpp"
+
+namespace Svc {
+
+namespace ImmediateEOS {
+
+//! Test sequences with immediate commands followed by an EOS marker
+class CmdSequencerTester : public ImmediateBase::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Inject file errors
+    void FileErrors();
+
+    //! Run a complete sequence and then issue a command response
+    void UnexpectedCommandResponse();
+
+    //! Run a sequence and, while it is running, start a new sequence
+    //! The new sequence should cause an error
+    void NewSequence();
+
+    //! Run a sequence manually
+    void Manual();
+
+    //! Run an automatic sequence by command
+    void AutoByCommand();
+
+    //! Run an automatic sequence through a port call
+    void AutoByPort();
+
+    //! Send invalid manual commands while a sequence is running
+    void InvalidManualCommands();
+
+    //! Sequence timeout
+    void SequenceTimeout();
+
+    //! Start and cancel a sequence
+    void Cancel();
+
+    //! Validate a sequence file
+    void Validate();
+
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+  private:
+    //! Execute commands for a manual sequence
+    void executeCommandsManual(const char* const fileName,  //!< The file name
+                               const U32 numCommands        //!< The number of commands in the sequence
+    );
+};
+
+}  // namespace ImmediateEOS
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Interceptors.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Interceptors.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Interceptors.cpp
+// \author Canham/Bocchino
+// \brief  Implementation for CmdSequencerTester::Interceptors
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "CmdSequencerTester.hpp"
+#include "Os/Stub/test/File.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+CmdSequencerTester::Interceptor* CmdSequencerTester::Interceptor::PosixFileInterceptor::s_current_interceptor = nullptr;
+CmdSequencerTester::Interceptor::Interceptor()
+    : enabled(EnableType::NONE), errorType(ErrorType::NONE), waitCount(0), size(0), fileStatus(Os::File::OP_OK) {
+    CmdSequencerTester::Interceptor::PosixFileInterceptor::s_current_interceptor = this;
+}
+
+void CmdSequencerTester::Interceptor::enable(EnableType::t enableType) {
+    this->enabled = enableType;
+}
+
+void CmdSequencerTester::Interceptor::disable() {
+    this->enabled = EnableType::t::NONE;
+}
+
+Os::FileInterface::Status CmdSequencerTester::Interceptor::PosixFileInterceptor::open(const char* path,
+                                                                                      Mode mode,
+                                                                                      OverwriteType overwrite) {
+    if ((s_current_interceptor != nullptr) && (s_current_interceptor->enabled == EnableType::t::OPEN)) {
+        return s_current_interceptor->fileStatus;
+    }
+    return this->Os::Posix::File::PosixFile::open(path, mode, overwrite);
+}
+
+Os::File::Status CmdSequencerTester::Interceptor::PosixFileInterceptor::read(U8* buffer,
+                                                                             FwSizeType& requestSize,
+                                                                             Os::File::WaitType waitType) {
+    (void)waitType;
+    Os::File::Status status = this->Os::Posix::File::PosixFile::read(buffer, requestSize, waitType);
+    if (s_current_interceptor == nullptr) {
+        return status;
+    } else if ((s_current_interceptor->enabled == EnableType::READ) &&
+               (s_current_interceptor->errorType != ErrorType::NONE)) {
+        if (s_current_interceptor->waitCount > 0) {
+            // Not time to inject an error yet: decrement wait count
+            --s_current_interceptor->waitCount;
+        } else {
+            // Time to inject an error: check test scenario
+            switch (s_current_interceptor->errorType) {
+                case ErrorType::READ:
+                    status = s_current_interceptor->fileStatus;
+                    break;
+                case ErrorType::SIZE:
+                    requestSize = s_current_interceptor->size;
+                    status = Os::File::OP_OK;
+                    break;
+                case ErrorType::DATA:
+                    memcpy(buffer, s_current_interceptor->data, s_current_interceptor->size);
+                    status = Os::File::OP_OK;
+                    break;
+                default:
+                    EXPECT_TRUE(false);
+                    break;
+            }
+        }
+    }
+    return status;
+}
+}  // namespace Svc
+```
+
+### `InvalidFiles.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/InvalidFiles.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  InvalidFiles.cpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/InvalidFiles.hpp"
+#include "Os/FileSystem.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace InvalidFiles {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::BadCRC() {
+    REQUIREMENT("ISF-CMDS-002");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+    // Write the file
+    SequenceFiles::BadCRCFile file(this->format);
+    file.write();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    const CmdSequencerComponentImpl::FPrimeSequence::CRC& crc = file.getCRC();
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileCrcFailure(0, file.getName().toChar(), crc.m_stored, crc.m_computed);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::BadRecordDescriptor() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    FwSizeType numRecords = 1;
+    SequenceFiles::BadDescriptorFile file(numRecords, this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_FORMAT_ERROR);
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_FORMAT_ERROR);
+}
+
+void CmdSequencerTester ::BadTimeBase() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const FwSizeType numRecords = 5;
+    SequenceFiles::BadTimeBaseFile file(numRecords, this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_TimeBaseMismatch_SIZE(1);
+    ASSERT_EVENTS_CS_TimeBaseMismatch(0, file.getName().toChar(), TimeBase::TB_WORKSTATION_TIME,
+                                      TimeBase::TB_PROC_TIME);
+}
+
+void CmdSequencerTester ::BadTimeContext() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const U32 numRecords = 5;
+    SequenceFiles::BadTimeContextFile file(numRecords, this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_TimeContextMismatch_SIZE(1);
+    ASSERT_EVENTS_CS_TimeContextMismatch(0, file.getName().toChar(), 0, 1);
+}
+
+void CmdSequencerTester ::EmptyFile() {
+    // Write the file
+    SequenceFiles::EmptyFile file(this->format);
+    file.write();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileInvalid(0, file.getName().toChar(), CmdSequencer_FileReadStage::READ_HEADER_SIZE,
+                                 Os::FileSystem::OP_OK);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::DataAfterRecords() {
+    REQUIREMENT("ISF-CMDS-001");
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    const U32 numRecords = 5;
+    SequenceFiles::DataAfterRecordsFile file(numRecords, this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordMismatch_SIZE(1);
+    ASSERT_EVENTS_CS_RecordMismatch(0, file.getName().toChar(), 5, 8);
+}
+
+void CmdSequencerTester ::FileTooLarge() {
+    // Write the file
+    SequenceFiles::TooLargeFile file(BUFFER_SIZE, this->format);
+    file.write();
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    const U32 dataSize = file.getDataSize();
+    ASSERT_EVENTS_CS_FileSizeError(0, file.getName().toChar(), dataSize);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::MissingCRC() {
+    // Write the file
+    SequenceFiles::MissingCRCFile file(this->format);
+    file.write();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert no response on seqDone
+    ASSERT_from_seqDone_SIZE(0);
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileInvalid(0, file.getName().toChar(), CmdSequencer_FileReadStage::READ_SEQ_CRC, sizeof(U8));
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+    // Validate file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert no response on seqDone
+    ASSERT_from_seqDone_SIZE(0);
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileInvalid(0, file.getName().toChar(), CmdSequencer_FileReadStage::READ_SEQ_CRC, sizeof(U8));
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 2);
+    // Run the sequence by port call
+    Fw::String fArg(file.getName());
+    this->invoke_to_seqRunIn(0, fArg);
+    this->clearAndDispatch();
+    // Assert seqDone response
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0U, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileInvalid(0, file.getName().toChar(), CmdSequencer_FileReadStage::READ_SEQ_CRC, sizeof(U8));
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 3);
+}
+
+void CmdSequencerTester ::MissingFile() {
+    // Remove the file
+    SequenceFiles::MissingFile file(this->format);
+    file.remove();
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse(Fw::CmdResponse::EXECUTION_ERROR));
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_FileNotFound(0, file.getName().toChar());
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_Errors(0, 1);
+}
+
+void CmdSequencerTester ::SizeFieldTooLarge() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    SequenceFiles::SizeFieldTooLargeFile file(BUFFER_SIZE, this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+}
+
+void CmdSequencerTester ::SizeFieldTooSmall() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    SequenceFiles::SizeFieldTooSmallFile file(this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+}
+
+void CmdSequencerTester ::USecFieldTooShort() {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 1, 1);
+    this->setTestTime(testTime);
+    // Write the file
+    SequenceFiles::USecFieldTooShortFile file(this->format);
+    file.write();
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, file.getName());
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+    // Run the sequence
+    this->sendCmd_CS_RUN(0, 0, file.getName(), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_RecordInvalid(0, file.getName().toChar(), 0, Fw::FW_DESERIALIZE_SIZE_MISMATCH);
+}
+
+}  // namespace InvalidFiles
+
+}  // namespace Svc
+```
+
+### `InvalidFiles.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/InvalidFiles.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  InvalidFiles.hpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_InvalidFiles_HPP
+#define Svc_InvalidFiles_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace InvalidFiles {
+
+//! Test sequences with immediate commands followed by an EOS marker
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Bad CRC
+    void BadCRC();
+
+    //! Bad record descriptor
+    void BadRecordDescriptor();
+
+    //! Bad time base
+    void BadTimeBase();
+
+    //! Bad time context
+    void BadTimeContext();
+
+    //! Empty file
+    void EmptyFile();
+
+    //! Extra data after command records
+    void DataAfterRecords();
+
+    //! File too large
+    void FileTooLarge();
+
+    //! Microseconds field too short
+    void USecFieldTooShort();
+
+    //! Missing CRC
+    void MissingCRC();
+
+    //! Missing file
+    void MissingFile();
+
+    //! Size field too large
+    void SizeFieldTooLarge();
+
+    //! Size field too small
+    void SizeFieldTooSmall();
+};
+
+}  // namespace InvalidFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `JoinWait.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/JoinWait.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  JoinWait.hpp
+// \author janamian
+// \brief  cpp file for CmdSequencer test harness implementation class
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/JoinWait.hpp"
+#include "Svc/CmdSequencer/test/ut/Relative.hpp"
+
+namespace Svc {
+
+namespace JoinWait {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::test_join_wait_without_active_seq() {
+    // Send join wait command when there is no active seq
+    this->sendCmd_CS_JOIN_WAIT(0, 0);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(1);
+}
+
+void CmdSequencerTester ::test_join_wait_with_active_seq() {
+    const U32 numRecords = 1;
+    SequenceFiles::RelativeFile file(numRecords, this->format);
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Run the sequence
+    this->runSequence(0, fileName);
+
+    // Assert that timer is set
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+
+    // Run one cycle to make sure nothing is dispatched yet
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    ASSERT_from_comCmdOut_SIZE(0);
+    ASSERT_EVENTS_SIZE(0);
+
+    // Assert that timer hasn't expired
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+
+    // Request join wait
+    this->sendCmd_CS_JOIN_WAIT(0, 0);
+    this->clearAndDispatch();
+    // Make sure JOIN_WAIT is active
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(0);
+    ASSERT_TRUE(this->component.m_join_waiting);
+
+    // Send status back
+    this->invoke_to_cmdResponseIn(0, 0, 0, Fw::CmdResponse::OK);
+    this->clearAndDispatch();
+
+    // Make sure we received completion for both command and join_wait
+    ASSERT_EVENTS_SIZE(2);
+    // Make sure join wait has been cleared
+    ASSERT_FALSE(this->component.m_join_waiting);
+}
+
+}  // namespace JoinWait
+
+}  // namespace Svc
+```
+
+### `JoinWait.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/JoinWait.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  JoinWait.hpp
+// \author janamian
+// \brief  hpp file for CmdSequencer test harness implementation class
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef JOIN_WAIT_HPP
+#define JOIN_WAIT_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace JoinWait {
+
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test
+    void test_join_wait_without_active_seq();
+
+    void test_join_wait_with_active_seq();
+};
+
+}  // namespace JoinWait
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Mixed.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Mixed.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Mixed.cpp
+// \author Canham/Bocchino
+// \brief  Test mixed immediate, relative, and absolute commands
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/Mixed.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace Mixed {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : MixedRelativeBase::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::AutoByCommand() {
+    SequenceFiles::MixedFile file(this->format);
+    const U32 numCommands = 4;
+    const U32 bound = numCommands;
+    this->parameterizedAutoByCommand(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Validate() {
+    SequenceFiles::MixedFile file(this->format);
+    this->parameterizedValidate(file);
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsAuto(const char* const fileName,
+                                              const U32 numCommands,
+                                              const U32 bound,
+                                              const CmdExecMode::t mode) {
+    ASSERT_EQ(4U, numCommands);
+    ASSERT_EQ(4U, bound);
+    ASSERT_EQ(CmdExecMode::NO_NEW_SEQUENCE, mode);
+    this->executeCommand1(fileName);
+    this->executeCommand2(fileName);
+    this->executeCommand3(fileName);
+    this->executeCommand4(fileName);
+}
+
+void CmdSequencerTester ::executeCommand1(const char* const fileName) {
+    // Set the time to past absolute command
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 3, 0);
+    this->setTestTime(testTime);
+    // Invoke schedIn
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+    // Check command buffer
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 0, 1);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Send status back
+    this->invoke_to_cmdResponseIn(0, 0, 0, Fw::CmdResponse::OK);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_CommandComplete(0, fileName, 0, 0);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_CommandsExecuted(0, 1);
+    // Assert that timer is clear - no scheduled command
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+}
+
+void CmdSequencerTester ::executeCommand2(const char* const fileName) {
+    // Check command buffer
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 2, 3);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Send status back
+    this->invoke_to_cmdResponseIn(0, 2, 0, Fw::CmdResponse::OK);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_CommandComplete(0, fileName, 1, 2);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_CommandsExecuted(0, 2);
+    // Assert that timer is waiting for relative command
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+}
+
+void CmdSequencerTester ::executeCommand3(const char* const fileName) {
+    // Set the time to past relative timer
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 5, 0);
+    this->setTestTime(testTime);
+    // Invoke schedIn
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    // Assert that timer is clear
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+    // Check command buffer
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 4, 5);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Send status back
+    this->invoke_to_cmdResponseIn(0, 4, 0, Fw::CmdResponse::OK);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_CommandComplete(0, fileName, 2, 4);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_CS_CommandsExecuted(0, 3);
+    // Assert that timer is clear - no scheduled command
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+}
+
+void CmdSequencerTester ::executeCommand4(const char* const fileName) {
+    // Assert that timer is clear - immediate command
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+    // Check command buffer
+    Fw::ComBuffer comBuff;
+    CommandBuffers::create(comBuff, 6, 7);
+    ASSERT_from_comCmdOut_SIZE(1);
+    ASSERT_from_comCmdOut(0, comBuff, 0U);
+    // Send status back
+    this->invoke_to_cmdResponseIn(0, 6, 0, Fw::CmdResponse::OK);
+    this->clearAndDispatch();
+    // Assert that timer is clear - no scheduled command
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+    // Assert events
+    ASSERT_EVENTS_SIZE(2);
+    ASSERT_EVENTS_CS_CommandComplete(0, fileName, 3, 6);
+    ASSERT_EVENTS_CS_SequenceComplete_SIZE(1);
+    // Assert telemetry
+    ASSERT_TLM_SIZE(2);
+    ASSERT_TLM_CS_SequencesCompleted(0, 1);
+    ASSERT_TLM_CS_CommandsExecuted(0, 4);
+    // Check for command complete on seqDone
+    ASSERT_from_seqDone_SIZE(1);
+    ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+    // Run a cycle. Should be no output
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    ASSERT_from_comCmdOut_SIZE(0);
+    // Assert no more events or telemetry
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_TLM_SIZE(0);
+}
+
+}  // namespace Mixed
+
+}  // namespace Svc
+```
+
+### `Mixed.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Mixed.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Mixed.hpp
+// \author Canham/Bocchino
+// \brief  Test mixed immediate, relative, and absolute commands
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Mixed_HPP
+#define Svc_Mixed_HPP
+
+#include "Svc/CmdSequencer/test/ut/MixedRelativeBase.hpp"
+
+namespace Svc {
+
+namespace Mixed {
+
+//! Test sequences with mixed absolute and relative commands
+class CmdSequencerTester : public MixedRelativeBase::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run an automatic sequence by command
+    void AutoByCommand();
+
+    //! Validate a sequence file
+    void Validate();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Execute sequence commands for an automatic sequence
+    void executeCommandsAuto(const char* const fileName,  //!< The file name
+                             const U32 numCommands,       //!< The number of commands in the sequence
+                             const U32 bound,             //!< The number of commands to run
+                             const CmdExecMode::t mode    //!< The mode
+    );
+
+    //! Execute command 1 (immediate)
+    void executeCommand1(const char* const fileName  //!< The file name
+    );
+
+    //! Execute command 2 (absolute)
+    void executeCommand2(const char* const fileName  //!< The file name
+    );
+
+    //! Execute command 3 (relative)
+    void executeCommand3(const char* const fileName  //!< The file name
+    );
+
+    //! Execute command 4 (immediate)
+    void executeCommand4(const char* const fileName  //!< The file name
+    );
+};
+
+}  // namespace Mixed
+
+}  // namespace Svc
+
+#endif
+```
+
+### `MixedRelativeBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/MixedRelativeBase.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  MixedRelativeBase.cpp
+// \author Canham/Bocchino
+// \brief  Base class for Mixed and Relative
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/MixedRelativeBase.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace MixedRelativeBase {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests parameterized by file type
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::parameterizedAutoByCommand(SequenceFiles::File& file,
+                                                     const U32 numCommands,
+                                                     const U32 bound) {
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+    // Validate the file
+    this->validateFile(0, fileName);
+    // Run the sequence
+    this->runSequence(0, fileName);
+    // Assert that timer is set
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+    // Run one cycle to make sure nothing is dispatched yet
+    this->invoke_to_schedIn(0, 0);
+    this->clearAndDispatch();
+    ASSERT_from_comCmdOut_SIZE(0);
+    ASSERT_EVENTS_SIZE(0);
+    // Assert that timer hasn't expired
+    ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+    // Execute commands
+    this->executeCommandsAuto(fileName, numCommands, bound, CmdExecMode::NO_NEW_SEQUENCE);
+}
+
+}  // namespace MixedRelativeBase
+
+}  // namespace Svc
+```
+
+### `MixedRelativeBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/MixedRelativeBase.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  MixedRelativeBase.hpp
+// \author Canham/Bocchino
+// \brief  Base class for Mixed and Relative
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_MixedRelativeBase_HPP
+#define Svc_MixedRelativeBase_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace MixedRelativeBase {
+
+//! Base class for Mixed and Relative
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests parameterized by file type
+    // ----------------------------------------------------------------------
+
+    //! Run an automatic sequence by command
+    void parameterizedAutoByCommand(SequenceFiles::File& file,  //!< The file
+                                    const U32 numCommands,      //!< The number of commands in the sequence
+                                    const U32 bound             //!< The number of commands to execute
+    );
+};
+
+}  // namespace MixedRelativeBase
+
+}  // namespace Svc
+
+#endif
+```
+
+### `NoFiles.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoFiles.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoFiles.cpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/NoFiles.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace NoFiles {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::Init() {
+    // Nothing to do
+}
+
+void CmdSequencerTester ::NoSequenceActive() {
+    // Send cancel command
+    this->sendCmd_CS_CANCEL(0, 0);
+    this->clearAndDispatch();
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoSequenceActive_SIZE(1);
+}
+
+}  // namespace NoFiles
+
+}  // namespace Svc
+```
+
+### `NoFiles.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoFiles.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoFiles.hpp
+// \author Canham/Bocchino
+// \brief  Test immediate command sequences with EOS record
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_NoFiles_HPP
+#define Svc_NoFiles_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace NoFiles {
+
+//! Test sequencer behavior with no input files
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Initialization
+    void Init();
+
+    //! Issue a cancel command with no sequence active
+    void NoSequenceActive();
+};
+
+}  // namespace NoFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `NoRecords.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoRecords.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoRecords.hpp
+// \author Joaquim Silveira
+// \brief  Test command sequence with no records
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/NoRecords.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/NoRecordsFile.hpp"
+
+namespace Svc {
+
+namespace NoRecords {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : Svc::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::Init() {
+    // Nothing to do
+}
+
+void CmdSequencerTester ::ValidateNoRecords() {
+    SequenceFiles::NoRecordsFile file(this->format);
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+
+    // Validate the file
+    this->sendCmd_CS_VALIDATE(0, 0, Fw::CmdStringArg(fileName));
+    this->clearAndDispatch();
+
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getValidateOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoRecords(0, fileName);
+}
+
+void CmdSequencerTester ::RunNoRecords() {
+    SequenceFiles::NoRecordsFile file(this->format);
+
+    // Set the time
+    Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 0, 0);
+    this->setTestTime(testTime);
+
+    // Write the file
+    const char* const fileName = file.getName().toChar();
+    file.write();
+
+    // Send run command
+    this->sendCmd_CS_RUN(0, 0, Fw::CmdStringArg(fileName), Svc::CmdSequencer_BlockState::NO_BLOCK);
+    this->clearAndDispatch();
+    // Assert command response
+    ASSERT_CMD_RESPONSE_SIZE(1);
+    ASSERT_CMD_RESPONSE(0, this->getRunOpcode(), 0, Fw::CmdResponse::EXECUTION_ERROR);
+    // Assert events
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_CS_NoRecords(0, fileName);
+}
+
+}  // namespace NoRecords
+
+}  // namespace Svc
+```
+
+### `NoRecords.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/NoRecords.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  NoRecords.hpp
+// \author Joaquim Silveira
+// \brief  Test command sequence with no records
+//
+// ======================================================================
+
+#ifndef Svc_NoRecords_HPP
+#define Svc_NoRecords_HPP
+
+#include "CmdSequencerTester.hpp"
+
+namespace Svc {
+
+namespace NoRecords {
+
+//! Test sequencer behavior with no input files
+class CmdSequencerTester : public Svc::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Initialization
+    void Init();
+
+    //! Issue a validate command on an empty sequence
+    void ValidateNoRecords();
+
+    //! Issue a run command on an empty sequence
+    void RunNoRecords();
+};
+
+}  // namespace NoRecords
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Relative.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Relative.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Relative.cpp
+// \author Canham/Bocchino
+// \brief  Test relative command sequences
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/Relative.hpp"
+#include "Svc/CmdSequencer/test/ut/CommandBuffers.hpp"
+
+namespace Svc {
+
+namespace Relative {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+CmdSequencerTester ::CmdSequencerTester(const SequenceFiles::File::Format::t a_format)
+    : MixedRelativeBase::CmdSequencerTester(a_format) {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::AutoByCommand() {
+    const U32 numRecords = 3;
+    SequenceFiles::RelativeFile file(numRecords, this->format);
+    const U32 numCommands = numRecords;
+    const U32 bound = numCommands;
+    this->parameterizedAutoByCommand(file, numCommands, bound);
+}
+
+void CmdSequencerTester ::Validate() {
+    const U32 numRecords = 5;
+    SequenceFiles::RelativeFile file(numRecords, this->format);
+    this->parameterizedValidate(file);
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+void CmdSequencerTester ::executeCommandsAuto(const char* const fileName,
+                                              const U32 numCommands,
+                                              const U32 bound,
+                                              const CmdExecMode::t mode) {
+    for (U32 i = 0; i < numCommands; ++i) {
+        // Set the time to after time of command
+        Fw::Time testTime(TimeBase::TB_WORKSTATION_TIME, 2 * i + 3, 0);
+        this->setTestTime(testTime);
+        // Run a cycle. Should dispatch timed command
+        this->invoke_to_schedIn(0, 0);
+        this->clearAndDispatch();
+        // Assert that timer is clear
+        ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+        // Check command buffer
+        Fw::ComBuffer comBuff;
+        CommandBuffers::create(comBuff, i, i + 1);
+        ASSERT_from_comCmdOut_SIZE(1);
+        ASSERT_from_comCmdOut(0, comBuff, 0U);
+        // Send status back
+        this->invoke_to_cmdResponseIn(0, i, 0, Fw::CmdResponse::OK);
+        this->clearAndDispatch();
+        if (i < numCommands - 1) {
+            // Assert events
+            ASSERT_EVENTS_SIZE(1);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(1);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+            // Assert that timer is set for next i
+            ASSERT_EQ(CmdSequencerComponentImpl::Timer::SET, this->component.m_cmdTimer.m_state);
+        } else {
+            // Assert events
+            ASSERT_EVENTS_SIZE(2);
+            ASSERT_EVENTS_CS_CommandComplete(0, fileName, i, i);
+            ASSERT_EVENTS_CS_SequenceComplete_SIZE(1);
+            // Assert telemetry
+            ASSERT_TLM_SIZE(2);
+            ASSERT_TLM_CS_SequencesCompleted(0, 1);
+            ASSERT_TLM_CS_CommandsExecuted(0, i + 1);
+            // Assert that timer is clear
+            ASSERT_EQ(CmdSequencerComponentImpl::Timer::CLEAR, this->component.m_cmdTimer.m_state);
+            // Assert command complete on seqDone
+            ASSERT_from_seqDone_SIZE(1);
+            ASSERT_from_seqDone(0, 0U, 0U, Fw::CmdResponse(Fw::CmdResponse::OK));
+        }
+        // No port call
+        ASSERT_from_comCmdOut_SIZE(0);
+        // Run a cycle. Should be no output.
+        this->invoke_to_schedIn(0, 0);
+        this->clearAndDispatch();
+        ASSERT_from_comCmdOut_SIZE(0);
+        // Command and sequence complete EVR
+        ASSERT_EVENTS_SIZE(0);
+        ASSERT_TLM_SIZE(0);
+    }
+}
+
+}  // namespace Relative
+
+}  // namespace Svc
+```
+
+### `Relative.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/Relative.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Relative.hpp
+// \author Canham/Bocchino
+// \brief  Test relative command sequences
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Relative_HPP
+#define Svc_Relative_HPP
+
+#include "Svc/CmdSequencer/test/ut/MixedRelativeBase.hpp"
+
+namespace Svc {
+
+namespace Relative {
+
+//! Test sequences with immediate commands followed by a marker
+class CmdSequencerTester : public MixedRelativeBase::CmdSequencerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct object CmdSequencerTester
+    CmdSequencerTester(const SequenceFiles::File::Format::t a_format =
+                           SequenceFiles::File::Format::F_PRIME  //!< The file format to use
+    );
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run an automatic sequence by command
+    void AutoByCommand();
+
+    //! Validate a sequence file
+    void Validate();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Execute sequence commands for an automatic sequence
+    void executeCommandsAuto(const char* const fileName,  //!< The file name
+                             const U32 numCommands,       //!< The number of commands in the sequence
+                             const U32 bound,             //!< The number of commands to run
+                             const CmdExecMode::t mode    //!< The mode
+    );
+};
+
+}  // namespace Relative
+
+}  // namespace Svc
+
+#endif
+```
+
+### `UnitTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/UnitTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  UnitTester.hpp
+// \author Rob Bocchino
+// \brief  Unit test macros
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_UnitTest_HPP
+#define Svc_UnitTest_HPP
+
+#define VERBOSE 0
+
+#if VERBOSE
+#include "Fw/Test/UnitTest.hpp"
+#define PRINT(s, ...) printf(s, __VA_ARGS__)
+#else
+#define PRINT(s, ...)
+#define REQUIREMENT(x)
+#define TEST_CASE(a, b)
+#endif
+
+#endif
+```

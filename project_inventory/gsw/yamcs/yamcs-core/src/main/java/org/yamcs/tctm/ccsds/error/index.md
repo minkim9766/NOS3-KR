@@ -3,30 +3,719 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AosFrameHeaderErrorCorr.java`
 
-file--AosFrameHeaderErrorCorr.java
-file--BchCltuGenerator.java
-file--CltuGenerator.java
-file--Crc16Calculator.java
-file--Crc32Calculator.java
-file--CrcCciitCalculator.java
-file--Ldpc256CltuGenerator.java
-file--Ldpc64CltuGenerator.java
-file--ProximityCrc32.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/AosFrameHeaderErrorCorr.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import org.yamcs.rs.ReedSolomon;
+import org.yamcs.rs.ReedSolomonException;
+
+/**
+ * Reed-Solomon (10, 6) encoding/decoding as specified in
+ * CCSDS RECOMMENDED STANDARD FOR AOS SPACE DATA LINK PROTOCOL
+ * 
+ * CCSDS 732.0-B-3 September 2015
+ * 4.1.2.6 Frame Header Error Control
+ * 
+ * @author nm
+ *
+ */
+public class AosFrameHeaderErrorCorr {
+    static ReedSolomon rs = new ReedSolomon(4, 4, 6, 1, 0x13, 5);
+
+    /**
+     * Compute the Error Control word based on the virtual channel id and signaling field byte
+     * 
+     * @param gvcid
+     *            10-bit Master Channel Identifier followed by the Virtual Channel Identifier in the lowest 16 bits of
+     *            the variable
+     * @param signalingField
+     *            - 8 bit signalling byte in the lowest 8 bits of the variable
+     * @return
+     */
+    public static int encode(int gvcid, int signalingField) {
+        byte[] data = new byte[] {
+                (byte) ((gvcid >> 12) & 0xF),
+                (byte) ((gvcid >> 8) & 0xF),
+                (byte) ((gvcid >> 4) & 0xF),
+                (byte) ((gvcid) & 0xF),
+                (byte) ((signalingField >> 4) & 0xF),
+                (byte) ((signalingField) & 0xF) };
+
+        byte[] parity = new byte[4];
+
+        rs.encode(data, parity);
+        return (parity[0] << 12) + (parity[1] << 8) + (parity[2] << 4) + (parity[3]);
+    }
+
+    /**
+     * Based on the received header information, reconstitutes the correct header if possible
+     * 
+     * @param gvcid
+     *            10-bit Master Channel Identifier followed by the Virtual Channel Identifier
+     * @param signalingField
+     *            8 bit signalling byte
+     * @param errControl
+     *            16 bits error control
+     * @return
+     * @throws ReedSolomonException
+     *             thrown if data cannot be decoded/corrected
+     */
+    public static DecoderResult decode(int gvcid, int signalingField, int errControl) throws ReedSolomonException {
+        byte[] data = new byte[] {
+                (byte) ((gvcid >> 12) & 0xF),
+                (byte) ((gvcid >> 8) & 0xF),
+                (byte) ((gvcid >> 4) & 0xF),
+                (byte) ((gvcid) & 0xF),
+                (byte) ((signalingField >> 4) & 0xF),
+                (byte) ((signalingField) & 0xF),
+                (byte) ((errControl >> 12) & 0xF),
+                (byte) ((errControl >> 8) & 0xF),
+                (byte) ((errControl >> 4) & 0xF),
+                (byte) ((errControl & 0xF))
+        };
+
+        int numc = rs.decode(data, null);
+        int cvcid = (data[0] << 12) + (data[1] << 8) + (data[2] << 4) + data[3];
+        int csig = (data[4] << 4) + data[5];
+        return new DecoderResult(cvcid, csig, numc);
+
+    }
+
+    public static class DecoderResult {
+        public final int gvcid;
+        public final int signalingField;
+        public final int numErrorsCorrected;
+
+        public DecoderResult(int gvcid, int signalingField, int numErrs) {
+            super();
+            this.gvcid = gvcid;
+            this.signalingField = signalingField;
+            this.numErrorsCorrected = numErrs;
+        }
+
+    }
+
+}
 ```
 
-## 항목
+### `BchCltuGenerator.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/AosFrameHeaderErrorCorr.java`](file--AosFrameHeaderErrorCorr.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/BchCltuGenerator.java`](file--BchCltuGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/CltuGenerator.java`](file--CltuGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Crc16Calculator.java`](file--Crc16Calculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Crc32Calculator.java`](file--Crc32Calculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/CrcCciitCalculator.java`](file--CrcCciitCalculator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Ldpc256CltuGenerator.java`](file--Ldpc256CltuGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Ldpc64CltuGenerator.java`](file--Ldpc64CltuGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/ProximityCrc32.java`](file--ProximityCrc32.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/BchCltuGenerator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import org.yamcs.tctm.ccsds.Randomizer;
+
+/**
+ * Makes CLTUs from command transfer frames as per
+ * CCSDS 231.0-B-3 (TC SYNCHRONIZATION AND CHANNEL CODING)
+ * 
+ * <p>
+ * Implements BCH encoder
+ */
+public class BchCltuGenerator extends CltuGenerator {
+    public static final byte[] CCSDS_START_SEQ = { (byte) 0xEB, (byte) 0x90 };
+    public static final byte[] CCSDS_TAIL_SEQ = { (byte) 0xC5, (byte) 0xC5, (byte) 0xC5, (byte) 0xC5,
+            (byte) 0xC5, (byte) 0xC5, (byte) 0xC5, 0x79 };
+
+    
+    public BchCltuGenerator() {
+        this(CCSDS_START_SEQ, CCSDS_TAIL_SEQ);
+    }
+
+    public BchCltuGenerator(byte[] startSeq, byte[] tailSeq) {
+        super(startSeq, tailSeq);
+    }
+
+    @Override
+    public byte[] makeCltu(byte[] data, boolean randomize) {
+        if (randomize) {
+            Randomizer.randomizeTc(data);
+        }
+        int numBlocks = (data.length - 1) / 7 + 1;
+        int length = startSeq.length + 8 * numBlocks + tailSeq.length;
+
+        byte[] encData = new byte[length];
+        // start sequence
+        System.arraycopy(startSeq, 0, encData, 0, startSeq.length);
+
+        // data
+        int inOffset = 0;
+        int outOffset = startSeq.length;
+        int n = data.length / 7;
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(data, inOffset, encData, outOffset, 7);
+            encData[outOffset + 7] = BchEncoder.encode(encData, outOffset);
+            outOffset += 8;
+            inOffset += 7;
+        }
+        int d = data.length - inOffset;
+        if (d > 0) {// last block is padded with alternating 0 1 bits
+            System.arraycopy(data, inOffset, encData, outOffset, d);
+            for (int i = 0; i < 7 - d; i++) {
+                encData[outOffset + d + i] = 0x55;
+            }
+            encData[outOffset + 7] = BchEncoder.encode(encData, outOffset);
+            outOffset += 8;
+        }
+        // tail sequence
+        System.arraycopy(tailSeq, 0, encData, outOffset, tailSeq.length);
+        return encData;
+    }
+
+    public static class BchEncoder {
+        static byte r[] = new byte[256];
+        static final int POLYNOMIAL = 0x8A;
+        static {
+            init();
+        }
+
+        static void init() {
+            int remainder;
+
+            for (int i = 0; i < 256; ++i) {
+                remainder = i;
+                for (int j = 0; j < 8; j++) {
+                    if ((remainder & 0x80) == 0) {
+                        remainder = (remainder << 1);
+                    } else {
+                        remainder = (remainder << 1) ^ POLYNOMIAL;
+                    }
+                }
+                r[i] = (byte) remainder;
+            }
+
+        }
+
+        public static byte encode(byte p[]) {
+            return encode(p, 0);
+        }
+
+        /**
+         * Encodes 7 bytes of data from p:offset and returns the result
+         * 
+         * @param p
+         * @param offset
+         * @return
+         */
+        public static byte encode(byte p[], int offset) {
+            int remainder = 0;
+            int len = 7;
+
+            for (int i = offset; i < offset + len; i++) {
+                remainder = r[0xFF & (p[i] ^ remainder)];
+            }
+
+            remainder ^= 0xFF;
+            remainder &= 0xFE;
+            return (byte) remainder;
+        }
+
+    }
+}
+```
+
+### `CltuGenerator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/CltuGenerator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+
+/**
+ *  Makes CLTUs from command transfer frames as per 
+ *  CCSDS 231.0-B-3 (TC SYNCHRONIZATION AND CHANNEL CODING)
+ *  
+ */
+public abstract class CltuGenerator {
+    public final static byte[] EMPTY_SEQ = {};
+    protected final byte[] startSeq;
+    protected final byte[] tailSeq;
+    
+    public enum Encoding {
+        BCH, LDCP64, LDPC256, CUSTOM
+    };
+
+    public CltuGenerator(byte[] startSeq, byte[] tailSeq) {
+        this.startSeq = startSeq;
+        this.tailSeq = tailSeq;
+    }
+
+    /**
+     * encode the data optionally randomizing it. Note that randomization is mandatory for the LDCP codec so that codec
+     * will throw an IllegalArgumentException if the argument is false.
+     *
+     * @param -
+     *            data to be encoded
+     * @param -
+     *            randomize. If true the data will be randomized before (BCH) or after (LPDC) encoding
+     * @return - the encoded data
+     */
+    public abstract byte[] makeCltu(byte[] data, boolean randomize);
+}
+```
+
+### `Crc16Calculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Crc16Calculator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import java.nio.ByteBuffer;
+
+public class Crc16Calculator {
+    final int polynomial;
+    short r[] = new short[256];
+
+    public Crc16Calculator(int polynomial) {
+        this.polynomial = polynomial;
+        init();
+    }
+
+    void init() {
+        int remainder;
+        for (int dividend = 0; dividend < 256; dividend++) {
+            remainder = dividend << 8;
+
+            for (int j = 0; j < 8; j++) {
+                if ((remainder & 0x8000) == 0) {
+                    remainder = (remainder << 1);
+                } else {
+                    remainder = (remainder << 1) ^ polynomial;
+                }
+            }
+
+            r[dividend] = (short) remainder;
+        }
+    }
+
+    public int compute(byte[] data, int offset, int length, int initialValue) {
+        int crc = initialValue;
+
+        for (int i = offset; i < offset + length; i++) {
+            int idx = (data[i] ^ (crc >> 8)) & 0xff;
+            crc = r[idx] ^ (crc << 8);
+        }
+
+        return crc & 0xFFFF;
+
+    }
+
+    public int compute(ByteBuffer bb, int offset, int length, int initialValue) {
+        int crc = initialValue;
+
+        for (int i = offset; i < offset + length; i++) {
+            int idx = (bb.get(i) ^ (crc >> 8)) & 0xff;
+            crc = r[idx] ^ (crc << 8);
+        }
+
+        return crc & 0xFFFF;
+    }
+}
+```
+
+### `Crc32Calculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Crc32Calculator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+public class Crc32Calculator {
+    final long polynomial;
+    int r[] = new int[256];
+
+    public Crc32Calculator(int polynomial) {
+        this.polynomial = polynomial;
+        init();
+    }
+
+    void init() {
+        long remainder;
+        for (int dividend = 0; dividend < 256; dividend++) {
+            remainder = dividend << 24;
+
+            for (int j = 0; j < 8; j++) {
+                if ((remainder & 0x80000000L) == 0) {
+                    remainder = (remainder << 1);
+                } else {
+                    remainder = (remainder << 1) ^ polynomial;
+                }
+                
+            }
+            
+            r[dividend] = (int) remainder;
+        }
+    }
+
+    public int compute(byte[] data, int offset, int length, int initialValue) {
+        int crc = initialValue;
+
+        for (int i = offset; i < offset + length; i++) {
+            int idx = (data[i] ^ (crc >> 24)) & 0xff;
+            crc = r[idx] ^ (crc << 8);
+        }
+
+        return crc;
+
+    }
+}
+```
+
+### `CrcCciitCalculator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/CrcCciitCalculator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.ErrorDetectionWordCalculator;
+
+/**
+ * Cylcic Redundancy Check (CRC-CCIIT 0xFFFF) with the polynomial:
+ * <p>
+ * 1 + x^5 + x^12 + x^16
+ * <p>
+ * Also specified in: CCSDS TC Space Data Link Protocol (CCSDS 232.0-B-3), CCSDS TM Space Data Link Protocol (CCSDS
+ * 132.0-B-3) and CCSDS AOS Space Data Link Protocol (CCSDS 732.0-B-4)
+ *
+ */
+public class CrcCciitCalculator implements ErrorDetectionWordCalculator {
+    final int initialValue;
+    final int polynomial = 0x1021; // 0001 0000 0010 0001 (0, 5, 12)
+    Crc16Calculator cc = new Crc16Calculator(0x1021);
+
+    public CrcCciitCalculator() {
+        initialValue = 0xFFFF;
+    }
+
+    public CrcCciitCalculator(YConfiguration c) {
+        initialValue = c.getInt("initialValue", 0xFFFF);
+    }
+
+    @Override
+    public int compute(byte[] data, int offset, int length) {
+        return cc.compute(data, offset, length, initialValue);
+    }
+
+    public int compute(ByteBuffer data, int offset, int length) {
+        return cc.compute(data, offset, length, initialValue);
+    }
+
+    @Override
+    public int sizeInBits() {
+        return 16;
+    }
+
+}
+```
+
+### `Ldpc256CltuGenerator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Ldpc256CltuGenerator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import org.yamcs.tctm.ccsds.Randomizer;
+import org.yamcs.utils.ByteArrayUtils;
+
+public class Ldpc256CltuGenerator extends CltuGenerator {
+    static final public byte[] CCSDS_START_SEQ = new byte[] { 0x03, 0x47, 0x76, (byte) 0xC7, 0x27, 0x28, (byte) 0x95,
+            (byte) 0xB0 };
+
+    public Ldpc256CltuGenerator() {
+        this(CCSDS_START_SEQ, EMPTY_SEQ);
+    }
+
+    public Ldpc256CltuGenerator(byte[] startSeq, byte[] tailSeq) {
+        super(startSeq, tailSeq);
+    }
+
+    @Override
+    public byte[] makeCltu(byte[] frameData, boolean randomize) {
+        if (!randomize) {
+            throw new IllegalArgumentException("Randomization is mandatory for the LDPC codec");
+        }
+        int numBlocks = (frameData.length - 1) / 32 + 1;
+        int length = startSeq.length + 64 * numBlocks + tailSeq.length;
+
+        byte[] encData = new byte[length];
+        // start sequence
+        System.arraycopy(startSeq, 0, encData, 0, startSeq.length);
+
+        // data
+        int inOffset = 0;
+        int outOffset = startSeq.length;
+        int n = frameData.length / 32;
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(frameData, inOffset, encData, outOffset, 32);
+            Ldpc256Encoder.encode(encData, outOffset, encData, outOffset + 32);
+            Randomizer.randomizeTc(encData, outOffset, 64);
+            inOffset += 32;
+            outOffset += 64;
+        }
+        int d = frameData.length - inOffset;
+        if (d > 0) {// last block is padded with alternating 0 1 bits
+            System.arraycopy(frameData, inOffset, encData, outOffset, d);
+            for (int i = 0; i < 32 - d; i++) {
+                encData[outOffset + d + i] = 0x55;
+            }
+            Ldpc256Encoder.encode(encData, outOffset, encData, outOffset + 32);
+            Randomizer.randomizeTc(encData, outOffset, 64);
+            outOffset += 64;
+        }
+        if (tailSeq.length > 0) { // tail sequence
+            System.arraycopy(tailSeq, 0, encData, outOffset, tailSeq.length);
+        }
+
+        return encData;
+    }
+
+    public static class Ldpc256Encoder {
+
+        static final long[][] W256 = new long[][] {
+                { 0x1D21794A22761FAEL, 0x59945014257E130DL, 0x74D6054003794014L, 0x2DADEB9CA25EF12EL },
+                { 0x60E0B6623C5CE512L, 0x4D2C81ECC7F469ABL, 0x20678DBFB7523ECEL, 0x2B54B906A9DBE98CL },
+                { 0xF6739BCF54273E77L, 0x167BDA120C6C4774L, 0x4C071EFF5E32A759L, 0x3138670C095C39B5L },
+                { 0x28706BD045300258L, 0x2DAB85F05B9201D0L, 0x8DFDEE2D9D84CA88L, 0xB371FAE63A4EB07EL }
+        };
+
+        /**
+         * Encodes a block of 32 bytes from in:inOffset into a code of 32 bytes stored in out:outOffset
+         * 
+         * @param in
+         * @param inOffset
+         * @param out
+         * @param outOffset
+         */
+        public static void encode(byte[] in, int inOffset, byte[] out, int outOffset) {
+            long r0 = 0;
+            long r1 = 0;
+            long r2 = 0;
+            long r3 = 0;
+
+            for (int i = 0; i < 4; i++) {
+                long wl0 = W256[i][0];
+                long wl1 = W256[i][1];
+                long wl2 = W256[i][2];
+                long wl3 = W256[i][3];
+
+                for (int j = 0; j < 8; j++) {
+                    int d = in[inOffset++];
+                    for (int k = 7; k >= 0; k--) {
+                        if (((d >>> k) & 1) == 1) {
+                            r0 = r0 ^ wl0;
+                            r1 = r1 ^ wl1;
+                            r2 = r2 ^ wl2;
+                            r3 = r3 ^ wl3;
+                        }
+                        wl0 = Long.rotateRight(wl0, 1);
+                        wl1 = Long.rotateRight(wl1, 1);
+                        wl2 = Long.rotateRight(wl2, 1);
+                        wl3 = Long.rotateRight(wl3, 1);
+                    }
+                }
+            }
+            ByteArrayUtils.encodeLong(r0, out, outOffset);
+            ByteArrayUtils.encodeLong(r1, out, outOffset + 8);
+            ByteArrayUtils.encodeLong(r2, out, outOffset + 16);
+            ByteArrayUtils.encodeLong(r3, out, outOffset + 24);
+        }
+
+        // this performs slightly worse than the method above
+        public static void encode2(byte[] in, int inOffset, byte[] out, int outOffset) {
+            long[] r = new long[4];// {0, 0, 0, 0};
+
+            for (int i = 0; i < 4; i++) {
+                long[] wl = { W256[i][0], W256[i][1], W256[i][2], W256[i][3] };// Arrays.copyOf(W256[i], 4);
+
+                for (int j = 0; j < 8; j++) {
+                    int d = in[inOffset++];
+                    for (int k = 7; k >= 0; k--) {
+                        if (((d >>> k) & 1) == 1) {
+                            for (int v = 0; v < 4; v++) {
+                                r[v] = r[v] ^ wl[v];
+                            }
+                        }
+                        for (int v = 0; v < 4; v++) {
+                            wl[v] = Long.rotateRight(wl[v], 1);
+                        }
+                    }
+                }
+            }
+            for (int v = 0; v < 4; v++) {
+                ByteArrayUtils.encodeLong(r[v], out, outOffset + 8 * v);
+            }
+        }
+    }
+
+}
+```
+
+### `Ldpc64CltuGenerator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/Ldpc64CltuGenerator.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import org.yamcs.tctm.ccsds.Randomizer;
+import org.yamcs.utils.ByteArrayUtils;
+
+public class Ldpc64CltuGenerator extends CltuGenerator {
+    static public final byte[] CCSDS_START_SEQ = { 0x03, 0x47, 0x76, (byte) 0xC7, 0x27, 0x28, (byte) 0x95,
+            (byte) 0xB0 };
+    static public final byte[] CCSDS_TAIL_SEQ = { 0x55, 0x55, 0x55, 0x56, (byte) 0xAA, (byte) 0xAA, (byte) 0xAA,
+            (byte) 0xAA,
+            0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55, 0x55 };
+
+    public Ldpc64CltuGenerator(byte[] startSeq, byte[] tailSeq) {
+        super(startSeq, tailSeq);
+    }
+
+    public Ldpc64CltuGenerator(boolean withTail) {
+        this(CCSDS_START_SEQ, withTail ? CCSDS_TAIL_SEQ : EMPTY_SEQ);
+    }
+
+    @Override
+    public byte[] makeCltu(byte[] frameData, boolean randomize) {
+        if (!randomize) {
+            throw new IllegalArgumentException("Randomization is mandatory for the LDPC codec");
+        }
+        int numBlocks = (frameData.length - 1) / 8 + 1;
+        int length = startSeq.length + 16 * numBlocks + tailSeq.length;
+
+        byte[] encData = new byte[length];
+        // start sequence
+        System.arraycopy(startSeq, 0, encData, 0, startSeq.length);
+
+        // data
+        int inOffset = 0;
+        int outOffset = startSeq.length;
+        int n = frameData.length / 8;
+        for (int i = 0; i < n; i++) {
+            System.arraycopy(frameData, inOffset, encData, outOffset, 8);
+            Ldpc64Encoder.encode(encData, outOffset, encData, outOffset + 8);
+            Randomizer.randomizeTc(encData, outOffset, 16);
+            inOffset += 8;
+            outOffset += 16;
+        }
+        int d = frameData.length - inOffset;
+        if (d > 0) {// last block is padded with alternating 0 1 bits
+            System.arraycopy(frameData, inOffset, encData, outOffset, d);
+            for (int i = 0; i < 8 - d; i++) {
+                encData[outOffset + d + i] = 0x55;
+            }
+            Ldpc64Encoder.encode(encData, outOffset, encData, outOffset + 8);
+            Randomizer.randomizeTc(encData, outOffset, 16);
+            outOffset += 16;
+        }
+        if (tailSeq.length > 0) { // tail sequence
+            System.arraycopy(tailSeq, 0, encData, outOffset, tailSeq.length);
+        }
+        return encData;
+    }
+
+    public static class Ldpc64Encoder {
+
+        static final long[] W64 = new long[] {
+                0x0E69166BEF4C0BC2L,
+                0x7766137EBB248418L,
+                0xC480FEB9CD53A713L,
+                0x4EAA22FA465EEA11L
+        };
+
+        /**
+         * Encodes a block of 8 bytes from in:inOffset into a code of 8 bytes stored in out:outOffset
+         * 
+         * @param in
+         * @param inOffset
+         * @param out
+         * @param outOffset
+         */
+        public static void encode(byte[] in, int inOffset, byte[] out, int outOffset) {
+            long r = 0;
+            for (int i = 0; i < 4; i++) {
+                long wl = W64[i];
+                for (int j = 0; j < 2; j++) {
+                    int d = in[inOffset++];
+                    for (int k = 7; k >= 0; k--) {
+                        if (((d >>> k) & 1) == 1) {
+                            r = r ^ wl;
+                        }
+                        wl = rotrGroupOf16(wl);
+                    }
+                }
+            }
+            ByteArrayUtils.encodeLong(r, out, outOffset);
+        }
+
+        // Circularly shift to the right each group of 16 bits
+        static long rotrGroupOf16(long x) {
+            return (x >>> 1 & 0x7FFF7FFF7FFF7FFFL) | ((x & 0x0001000100010001L) << 15);
+        }
+    }
+}
+```
+
+### `ProximityCrc32.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/ProximityCrc32.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import org.yamcs.tctm.ErrorDetectionWordCalculator;
+/**
+ * CRC-32 error detection code as specified in
+ * CCSDS 211.0-B-5 PROXIMITY-1 SPACE LINK PROTOCOL— DATA LINK LAYER 
+ * <p>
+ * also used in USLP frames   CCSDS 732.1-B-1
+ * 
+ * <p>
+ * WARNING: we did not find an alternative implementation to compare with!
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class ProximityCrc32 implements ErrorDetectionWordCalculator {
+    final int initialValue = 0;
+    final int polynomial = 0xA00805;
+    Crc32Calculator cc = new Crc32Calculator(polynomial);
+    
+    
+    @Override
+    public int compute(byte[] data, int offset, int length) {
+        return cc.compute(data, offset, length, initialValue);
+    }
+
+
+    @Override
+    public int sizeInBits() {
+        return 32;
+    }
+}
+```

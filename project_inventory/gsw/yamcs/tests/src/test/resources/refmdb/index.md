@@ -3,14 +3,15 @@
 
 **경로:** `gsw/yamcs/tests/src/test/resources/refmdb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `yamcs.refmdb.yaml`
 
-file--yamcs.refmdb.yaml
+**경로:** `gsw/yamcs/tests/src/test/resources/refmdb/yamcs.refmdb.yaml`
+
+
+```yaml
+mdb:
+  - type: "sheet"
+    spec: "../yamcs-core/mdb/refmdb.xls"    
 ```
-
-## 항목
-
-- [`gsw/yamcs/tests/src/test/resources/refmdb/yamcs.refmdb.yaml`](file--yamcs.refmdb.yaml) — UTF-8 텍스트 파일 본문 포함

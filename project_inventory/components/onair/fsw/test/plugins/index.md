@@ -3,7 +3,7 @@
 
 **경로:** `components/onair/fsw/test/plugins/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ kalman/index
 reporter/index
 ```
 
-## 항목
-
-- [`components/onair/fsw/test/plugins/csv_output/`](csv_output/index) — 폴더
-- [`components/onair/fsw/test/plugins/generic/`](generic/index) — 폴더
-- [`components/onair/fsw/test/plugins/kalman/`](kalman/index) — 폴더
-- [`components/onair/fsw/test/plugins/reporter/`](reporter/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

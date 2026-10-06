@@ -3,18 +3,37 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--test1.test-build.cpp
-file--test2.test-build.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/CMakeLists.txt`
+
+
+```cmake
+register_fprime_module(
+        TestBuildAutocoderModule
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/test1.test-build.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test2.test-build.cpp"
+    EXCLUDE_FROM_ALL
+)
 ```
 
-## 항목
+### `test1.test-build.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/test1.test-build.cpp`](file--test1.test-build.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/test2.test-build.cpp`](file--test2.test-build.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/test1.test-build.cpp`
+
+
+```cpp
+bool a = true;
+```
+
+### `test2.test-build.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestBuildAutocoder/test2.test-build.cpp`
+
+
+```cpp
+bool b = true;
+```

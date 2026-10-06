@@ -3,26 +3,697 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AosFrameHeaderErrorCorrTest.java`
 
-file--AosFrameHeaderErrorCorrTest.java
-file--BchCltuGeneratorTest.java
-file--BitMatrix.java
-file--Crc32Test.java
-file--CrcCciitCalculatorTest.java
-file--LdpcEncoderTest.java
-file--ProximityCrcTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/AosFrameHeaderErrorCorrTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.rs.ReedSolomonException;
+import org.yamcs.tctm.ccsds.error.AosFrameHeaderErrorCorr.DecoderResult;
+
+public class AosFrameHeaderErrorCorrTest {
+
+    @Test
+    public void testEncode() {
+        assertEquals(0x94DC, AosFrameHeaderErrorCorr.encode(0x1234, 0x56));
+
+        assertEquals(0x457C, AosFrameHeaderErrorCorr.encode(0x369C, 0xFA));
+    }
+
+    @Test
+    public void testDecode() throws ReedSolomonException {
+        DecoderResult dr = AosFrameHeaderErrorCorr.decode(0x1234, 0x56, 0x94DC);
+        checkEqual(0x1234, 0x56, dr);
+
+        dr = AosFrameHeaderErrorCorr.decode(0x1234, 0x56, 0x9400);
+        checkEqual(0x1234, 0x56, dr);
+
+        dr = AosFrameHeaderErrorCorr.decode(0x1211, 0x56, 0x94DC);
+        checkEqual(0x1234, 0x56, dr);
+
+        dr = AosFrameHeaderErrorCorr.decode(0x1234, 0xAA, 0x94DC);
+        checkEqual(0x1234, 0x56, dr);
+
+    }
+
+    @Test
+    public void testUncorrecable() {
+        assertThrows(ReedSolomonException.class, () -> {
+            DecoderResult dr = AosFrameHeaderErrorCorr.decode(0x1230, 0x00, 0x94DC);
+            checkEqual(0x1234, 0x56, dr);
+        });
+    }
+
+    private void checkEqual(int vcid, int sig, DecoderResult dr) {
+        assertEquals(vcid, dr.gvcid);
+        assertEquals(sig, dr.signalingField);
+    }
+}
 ```
 
-## 항목
+### `BchCltuGeneratorTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/AosFrameHeaderErrorCorrTest.java`](file--AosFrameHeaderErrorCorrTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/BchCltuGeneratorTest.java`](file--BchCltuGeneratorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/BitMatrix.java`](file--BitMatrix.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/Crc32Test.java`](file--Crc32Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/CrcCciitCalculatorTest.java`](file--CrcCciitCalculatorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/LdpcEncoderTest.java`](file--LdpcEncoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/ProximityCrcTest.java`](file--ProximityCrcTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/BchCltuGeneratorTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.yamcs.tctm.ccsds.AosFrameDecoderTest.intToByteArray;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.tctm.ccsds.error.BchCltuGenerator.BchEncoder;
+
+public class BchCltuGeneratorTest {
+
+    @Test
+    public void testBch() {
+        byte[][] msg = {
+                { 0x22, (byte) 0xF6, 0x00, (byte) 0xFF, 0x00, 0x42, 0x1A, 0x12 },
+                { (byte) 0x8C, (byte) 0xC0, 0x0E, 0x01, 0x0D, 0x19, 0x06, 0x5A },
+                { 0x30, 0x1B, 0x00, 0x09, 0x00, (byte) 0x82, 0x00, (byte) 0x54 },
+                { 0x10, (byte) 0xE4, (byte) 0xC1, 0x55, 0x55, 0x55, 0x55, 0x3E }
+        };
+
+        for (byte[] p : msg) {
+            assertEquals(p[7], BchEncoder.encode(p));
+        }
+    }
+
+    @Test
+    public void testCltu1() {
+        BchCltuGenerator g = new BchCltuGenerator();
+        byte[] cltu = g.makeCltu(TC_FRAME_01, false);
+        assertArrayEquals(CLTU_01, cltu);
+    }
+
+    @Test
+    public void testCltu2() {
+        BchCltuGenerator g = new BchCltuGenerator();
+        byte[] cltu = g.makeCltu(TC_FRAME_02, false);
+        assertArrayEquals(CLTU_02, cltu);
+    }
+
+    // Examples copied from SpacePyLibrary
+    // https://github.com/Stefan-Korner/SpacePyLibrary/blob/master/UnitTest/testData.py
+
+    static byte[] TC_FRAME_01 = intToByteArray(new int[] {
+            0x22, 0xF6, 0x00, 0xFF, 0x00, 0x42, 0x1A, 0x8C,
+            0xC0, 0x0E, 0x01, 0x0D, 0x19, 0x06, 0x02, 0x00,
+            0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00,
+            0x00, 0x00, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x01, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x02, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x03, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x04, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x05, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x06, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x07, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x08, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x09, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0A, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0B, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0C, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0D, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0E, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x0F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x10, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x11, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x12, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x13, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x14, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x15, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x16, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x17, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x18, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x19, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x1A, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x1B, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x1C, 0xFF, 0x00, 0x00, 0x00, 0xAD, 0x1A });
+
+    static byte[] CLTU_01 = intToByteArray(new int[] {
+            0xEB, 0x90, 0x22, 0xF6, 0x00, 0xFF, 0x00, 0x42,
+            0x1A, 0x12, 0x8C, 0xC0, 0x0E, 0x01, 0x0D, 0x19,
+            0x06, 0x5A, 0x02, 0x00, 0x00, 0x01, 0x00, 0x00,
+            0x00, 0x8A, 0x00, 0x01, 0x00, 0x00, 0x00, 0xFF,
+            0x00, 0xCC, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x01,
+            0xFF, 0x28, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00,
+            0x02, 0x5A, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x92, 0x03, 0xFF, 0x00, 0x00, 0x00, 0x00,
+            0x0F, 0xD6, 0x00, 0x04, 0xFF, 0x00, 0x00, 0x00,
+            0x00, 0xD4, 0x0F, 0x00, 0x05, 0xFF, 0x00, 0x00,
+            0x00, 0xA8, 0x00, 0x0F, 0x00, 0x06, 0xFF, 0x00,
+            0x00, 0xC8, 0x00, 0x00, 0x0F, 0x00, 0x07, 0xFF,
+            0x00, 0xCA, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x08,
+            0xFF, 0x66, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00,
+            0x09, 0xA8, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x92, 0x0A, 0xFF, 0x00, 0x00, 0x00, 0x00,
+            0x0F, 0xF4, 0x00, 0x0B, 0xFF, 0x00, 0x00, 0x00,
+            0x00, 0x5A, 0x0F, 0x00, 0x0C, 0xFF, 0x00, 0x00,
+            0x00, 0xB0, 0x00, 0x0F, 0x00, 0x0D, 0xFF, 0x00,
+            0x00, 0xD8, 0x00, 0x00, 0x0F, 0x00, 0x0E, 0xFF,
+            0x00, 0x96, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x0F,
+            0xFF, 0xDA, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00,
+            0x10, 0x82, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x92, 0x11, 0xFF, 0x00, 0x00, 0x00, 0x00,
+            0x0F, 0x92, 0x00, 0x12, 0xFF, 0x00, 0x00, 0x00,
+            0x00, 0x2A, 0x0F, 0x00, 0x13, 0xFF, 0x00, 0x00,
+            0x00, 0x24, 0x00, 0x0F, 0x00, 0x14, 0xFF, 0x00,
+            0x00, 0x4A, 0x00, 0x00, 0x0F, 0x00, 0x15, 0xFF,
+            0x00, 0x72, 0x00, 0x00, 0x00, 0x0F, 0x00, 0x16,
+            0xFF, 0x2E, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x00,
+            0x17, 0x20, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x92, 0x18, 0xFF, 0x00, 0x00, 0x00, 0x00,
+            0x0F, 0xB0, 0x00, 0x19, 0xFF, 0x00, 0x00, 0x00,
+            0x00, 0x90, 0x0F, 0x00, 0x1A, 0xFF, 0x00, 0x00,
+            0x00, 0x3C, 0x00, 0x0F, 0x00, 0x1B, 0xFF, 0x00,
+            0x00, 0xF8, 0x00, 0x00, 0x0F, 0x00, 0x1C, 0xFF,
+            0x00, 0x2E, 0x00, 0x00, 0xAD, 0x1A, 0x55, 0x55,
+            0x55, 0xEC, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5,
+            0xC5, 0x79 });
+
+    static byte[] TC_FRAME_02 = intToByteArray(new int[] {
+            0x22, 0xF6, 0x00, 0x23, 0x00, 0x82, 0x00, 0x0F,
+            0x00, 0x1D, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x1E, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0x00, 0x1F, 0xFF, 0x00, 0x00, 0x00, 0x00, 0x0F,
+            0xAC, 0x8F, 0x00, 0x68 });
+
+    static byte[] CLTU_02 = intToByteArray(new int[] {
+            0xEB, 0x90, 0x22, 0xF6, 0x00, 0x23, 0x00, 0x82,
+            0x00, 0x24, 0x0F, 0x00, 0x1D, 0xFF, 0x00, 0x00,
+            0x00, 0x34, 0x00, 0x0F, 0x00, 0x1E, 0xFF, 0x00,
+            0x00, 0x10, 0x00, 0x00, 0x0F, 0x00, 0x1F, 0xFF,
+            0x00, 0xD8, 0x00, 0x00, 0x00, 0x0F, 0xAC, 0x8F,
+            0x00, 0x90, 0x68, 0x55, 0x55, 0x55, 0x55, 0x55,
+            0x55, 0x06, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5, 0xC5,
+            0xC5, 0x79 });
+}
+```
+
+### `BitMatrix.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/BitMatrix.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import java.util.Arrays;
+import java.util.BitSet;
+
+/**
+ * simple bit matrix based on java bitsets
+ * 
+ * used only for testing the LDPC coding implementation
+ * 
+ * @author nm
+ *
+ */
+public class BitMatrix {
+    int n; // num rows
+    int m;// num cols
+
+    BitSet[] rows;
+
+    static byte lookup[] = {
+            0x0, 0x8, 0x4, 0xc, 0x2, 0xa, 0x6, 0xe,
+            0x1, 0x9, 0x5, 0xd, 0x3, 0xb, 0x7, 0xf, };
+
+    public BitMatrix(int n, int m) {
+        this(n, m, true);
+    }
+
+    private BitMatrix(int n, int m, boolean init) {
+        this.m = m;
+        this.n = n;
+        rows = new BitSet[n];
+        if (init) {
+            for (int i = 0; i < n; i++) {
+                rows[i] = new BitSet(m);
+            }
+        }
+    }
+
+    public static BitMatrix ZeroMatrix(int n) {
+        return new BitMatrix(n, n);
+    }
+
+    public static BitMatrix IdentityMatrix(int n) {
+        BitMatrix bm = new BitMatrix(n, n);
+        for (int i = 0; i < n; i++) {
+            bm.rows[i].set(i);
+        }
+        return bm;
+    }
+
+    public static BitMatrix compose(BitMatrix[][] bm) {
+        int n = 0;
+        int m = 0;
+        for (int i = 0; i < bm.length; i++) {
+            n += bm[i][0].n;
+        }
+        for (int j = 0; j < bm[0].length; j++) {
+            m += bm[0][j].m;
+        }
+        int rc = 0;
+        BitMatrix r = new BitMatrix(n, m, false);
+        for (BitMatrix[] bmr : bm) {
+            for (int i = 0; i < bmr[0].n; i++) {
+                BitSet bs = bmr[0].rows[i];
+                int bsl = bmr[0].m;
+                for (int j = 1; j < bmr.length; j++) {
+                    bs = concat(bs, bsl, bmr[j].rows[i], bmr[0].m);
+                    bsl += bmr[0].m;
+                }
+                r.rows[rc] = bs;
+                rc++;
+            }
+        }
+        return r;
+    }
+
+    public static BitMatrix add(BitMatrix bm1, BitMatrix bm2) {
+        if (bm1.n != bm2.n || bm1.m != bm2.m) {
+            throw new IllegalArgumentException(" the matrices should have the same number of rows and columns");
+        }
+        BitMatrix r = new BitMatrix(bm1.n, bm2.m, false);
+        for (int i = 0; i < bm1.n; i++) {
+            BitSet bs = (BitSet) bm1.rows[i].clone();
+            bs.xor(bm2.rows[i]);
+            r.rows[i] = bs;
+        }
+
+        return r;
+    }
+
+    // right shifts all rows by x positions
+    public BitMatrix circularRightShift(int x) {
+        BitMatrix bm = new BitMatrix(n, m, false);
+        for (int i = 0; i < n; i++) {
+            bm.rows[i] = shiftRightCircular(rows[i], m, x);
+        }
+        return bm;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(n).append("x").append(m).append(": {\n");
+        for (int i = 0; i < n; i++) {
+            sb.append("  ");
+            sb.append(i).append(":").append(rows[i]).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+
+    private static BitSet concat(BitSet bs1, int m1, BitSet bs2, int m2) {
+        BitSet bs = new BitSet(m1 + m2);
+        for (int i = 0; i < m1; i++) {
+            bs.set(i, bs1.get(i));
+        }
+        for (int i = 0; i < m2; i++) {
+            bs.set(i + m1, bs2.get(i));
+        }
+        return bs;
+    }
+
+    private static BitSet shiftRightCircular(BitSet bs, int m, int x) {
+        BitSet bs1 = new BitSet(m);
+        for (int i = 0; i < m; i++) {
+            bs1.set((i + x) % m, bs.get(i));
+        }
+        return bs1;
+    }
+
+    public byte[] multiply(byte[] d) {
+        if (d.length != m / 8) {
+            throw new IllegalArgumentException("Bad array length, should be " + (m / 8));
+        }
+        byte[] d1 = new byte[d.length];
+        for (int i = 0; i < d.length; i++) {
+            d1[i] = reverse(d[i]);
+        }
+        BitSet dbs = BitSet.valueOf(d1);
+       // System.out.println("dbs: "+dbs);
+        
+        BitSet r = new BitSet(n);
+
+        for (int i = 0; i < n; i++) {
+            BitSet bs = (BitSet) rows[i].clone();
+            bs.and(dbs);
+            
+            r.set(i, (bs.cardinality()&1)==1);
+        }
+        
+        d1 = r.toByteArray();
+        byte[] d2 = new byte[n / 8];
+        for (int i = 0; i < d1.length; i++) {
+            d2[i] = reverse(d1[i]);
+        }
+
+        return d2;
+    }
+
+    byte reverse(byte x) {
+        return (byte) ((lookup[x & 0xF] << 4) | lookup[(x >>> 4) & 0xF]);
+    }
+
+  
+
+    public static BitMatrix from(long[][] x) {
+        BitMatrix bm = new BitMatrix(x.length, 64 * x[0].length, false);
+        for (int i = 0; i < x.length; i++) {
+            bm.rows[i] = getBitset(x[i]);
+        }
+        return bm;
+    }
+
+    public static BitMatrix from(short[][] x) {
+        BitMatrix bm = new BitMatrix(x.length, 16 * x[0].length, false);
+        for (int i = 0; i < x.length; i++) {
+            bm.rows[i] = getBitset(x[i]);
+        }
+        return bm;
+    }
+
+    private static BitSet getBitset(short[] a) {
+        BitSet bs = new BitSet(a.length * 16);
+        for (int i = 0; i < a.length; i++) {
+            int x = 0xFFFF & a[i];
+            for (int j = 0; j < 16; j++) {
+                bs.set(16 * i + j, (((x >> (15-j)) & 1) == 1));
+            }
+        }
+        return bs;
+    }
+
+    private static BitSet getBitset(long[] l) {
+        BitSet bs = new BitSet(l.length * 64);
+        for (int i = 0; i < l.length; i++) {
+            long x = l[i];
+            for (int j = 0; j < 64; j++) {
+                bs.set(8 * i + j, (((x >> (63-j)) & 1) == 1));
+            }
+        }
+        return bs;
+    }
+
+    public BitMatrix transpose() {
+        BitMatrix bm = new BitMatrix(m, n, true);
+        for(int i = 0; i<m; i++) {
+            for(int j = 0; j<n; j++) {
+                bm.rows[i].set(j, rows[j].get(i));
+            }
+        }
+        return bm;
+    }
+    
+    
+    public static void main(String[] args) {
+        BitSet bs = new BitSet();
+        bs.set(0);
+        bs.set(2);
+
+        System.out.println("bs: " + bs);
+
+        BitSet bs2 = shiftRightCircular(bs, 4, 1);
+        System.out.println("bs2: " + bs2);
+
+        BitMatrix b0 = ZeroMatrix(2);
+        BitMatrix b1 = IdentityMatrix(2);
+
+        System.out.println("b1: " + b1);
+
+        System.out.println("b0 + b1: " + add(b0, b1));
+        System.out.println("b1 + b1: " + add(b1, b1));
+
+        BitMatrix b = compose(new BitMatrix[][] { { b1, b0 }, { b1, b1 } });
+        System.out.println(b);
+
+        System.out.println("------ circular right shift");
+
+        System.out.println(b.circularRightShift(1));
+        System.out.println("------ circular right shift transposed");
+        System.out.println(b.circularRightShift(1).transpose());
+
+        byte[] d = new byte[] { 5 };
+        BitMatrix i8 = IdentityMatrix(8);
+        System.out.println("I8*5: " + Arrays.toString(i8.multiply(d)));
+
+        BitMatrix z8 = ZeroMatrix(8);
+        System.out.println("Z8*d: " + Arrays.toString(z8.multiply(d)));
+        
+        System.out.println("I8.transposed: " + i8.transpose());
+    }
+}
+```
+
+### `Crc32Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/Crc32Test.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class Crc32Test {
+
+    @Test
+    public void test1() {
+        byte[] data = { 0x12, 0x34, 0x56, 0x78 };
+
+        ProximityCrc32 c = new ProximityCrc32();
+        assertEquals(0x34D74CB3, c.compute(data, 0, data.length));
+    }
+}
+```
+
+### `CrcCciitCalculatorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/CrcCciitCalculatorTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+
+public class CrcCciitCalculatorTest {
+    @Test
+    public void test1() {
+        CrcCciitCalculator c = new CrcCciitCalculator(YConfiguration.emptyConfig());
+        byte[] data = new byte[] { 0x6, 0x0, 0x0c, (byte) 0xf0, 0x00, 0x04, 0x00, 0x55, (byte) 0x88, 0x73, (byte) 0xc9,
+                0x00, 0x00, 0x05, 0x21 };
+        int x = c.compute(data, 0, data.length);
+        assertEquals(0x75FB, x);
+    }
+}
+```
+
+### `LdpcEncoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/LdpcEncoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.yamcs.tctm.ccsds.error.BitMatrix.add;
+
+import java.util.Arrays;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.tctm.ccsds.error.Ldpc256CltuGenerator.Ldpc256Encoder;
+import org.yamcs.tctm.ccsds.error.Ldpc64CltuGenerator.Ldpc64Encoder;
+import org.yamcs.utils.ByteArrayUtils;
+
+public class LdpcEncoderTest {
+    static BitMatrix h64;
+    static BitMatrix h256;
+
+    @BeforeAll
+    public static void buildH64() {
+        BitMatrix im = BitMatrix.IdentityMatrix(16);
+        BitMatrix zm = BitMatrix.ZeroMatrix(16);
+        BitMatrix p0 = im;
+        BitMatrix p1 = im.circularRightShift(1);
+        BitMatrix p2 = im.circularRightShift(2);
+        BitMatrix p3 = im.circularRightShift(3);
+        BitMatrix p4 = im.circularRightShift(4);
+        BitMatrix p6 = im.circularRightShift(6);
+        BitMatrix p7 = im.circularRightShift(7);
+        BitMatrix p9 = im.circularRightShift(9);
+        BitMatrix p11 = im.circularRightShift(11);
+        BitMatrix p13 = im.circularRightShift(13);
+        BitMatrix p14 = im.circularRightShift(14);
+        BitMatrix p15 = im.circularRightShift(15);
+
+        h64 = BitMatrix.compose(new BitMatrix[][] {
+                { add(im, p7), p2, p14, p6, zm, p0, p13, im },
+                { p6, add(im, p15), p0, p1, im, zm, p0, p7 },
+                { p4, p1, add(im, p15), p14, p11, im, zm, p3 },
+                { p0, p1, p9, add(im, p13), p14, p1, im, zm }
+        });
+
+        // System.out.println("h64: "+h64);
+    }
+
+    @BeforeAll
+    public static void buildH256() {
+        BitMatrix zm = BitMatrix.ZeroMatrix(64);
+        BitMatrix im = BitMatrix.IdentityMatrix(64);
+        BitMatrix p0 = im;
+        BitMatrix p3 = im.circularRightShift(3);
+        BitMatrix p11 = im.circularRightShift(11);
+        BitMatrix p16 = im.circularRightShift(16);
+        BitMatrix p23 = im.circularRightShift(23);
+        BitMatrix p25 = im.circularRightShift(25);
+        BitMatrix p26 = im.circularRightShift(26);
+        BitMatrix p27 = im.circularRightShift(27);
+        BitMatrix p30 = im.circularRightShift(30);
+        BitMatrix p35 = im.circularRightShift(35);
+        BitMatrix p37 = im.circularRightShift(37);
+        BitMatrix p43 = im.circularRightShift(43);
+        BitMatrix p50 = im.circularRightShift(50);
+        BitMatrix p55 = im.circularRightShift(55);
+        BitMatrix p56 = im.circularRightShift(56);
+        BitMatrix p58 = im.circularRightShift(58);
+        BitMatrix p61 = im.circularRightShift(61);
+        BitMatrix p62 = im.circularRightShift(62);
+        BitMatrix p63 = im.circularRightShift(63);
+
+        h256 = BitMatrix.compose(new BitMatrix[][] {
+                { add(im, p63), p30, p50, p25, zm, p43, p62, im },
+                { p56, add(im, p61), p50, p23, im, zm, p37, p26 },
+                { p16, p0, add(im, p55), p27, p56, im, zm, p43 },
+                { p35, p56, p62, add(im, p11), p58, p3, im, zm }
+        });
+
+    }
+
+    @Test
+    public void testRotrby16() {
+        assertEquals(0x0800_1000_8000_0000L, Ldpc64Encoder.rotrGroupOf16(0x1000_2000_0001_0000L));
+    }
+
+    @Test
+    public void test64() {
+        byte[] d = new byte[] { 8, 0, 5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
+        Ldpc64Encoder.encode(d, 0, d, 8);
+
+        byte[] zero = new byte[8];
+        assertArrayEquals(zero, h64.multiply(d));
+
+        Random r = new Random();
+        r.nextBytes(d);
+
+        Ldpc64Encoder.encode(d, 0, d, 8);
+        assertArrayEquals(zero, h64.multiply(d), "failing input data: " + Arrays.toString(d));
+
+    }
+
+    @Test
+    @Disabled
+    public void test64Speed() {
+        int n = 10_000_000;
+        long c = 0;
+        long t0 = System.currentTimeMillis();
+        byte[] d = new byte[] { 8, 0, 5, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        for (int i = 0; i < n; i++) {
+            ByteArrayUtils.encodeLong(i, d, 0);
+            Ldpc64Encoder.encode(d, 0, d, 8);
+            c += d[8];
+        }
+        long t1 = System.currentTimeMillis();
+
+        long delta = t1 - t0;
+        System.out.println(c + " time: " + delta / 1000 + " sec speed " + delta * 1000_000.0 / n + " nanosec/ops, "
+                + (n * 8 * 1000.0) / (delta * 1024 * 1024) + " MBps");
+    }
+
+    @Test
+    @Disabled
+    public void test256Speed() {
+        int n = 10_000_000;
+        long c = 0;
+        long t0 = System.currentTimeMillis();
+        byte[] d = new byte[64];
+
+        for (int i = 0; i < n; i++) {
+            ByteArrayUtils.encodeLong(i, d, 0);
+            Ldpc256Encoder.encode(d, 0, d, 8);
+            c += d[32];
+        }
+        long t1 = System.currentTimeMillis();
+
+        long delta = t1 - t0;
+        System.out.println(c + " time: " + delta / 1000 + " sec speed: " + delta * 1000_000.0 / n + " nanosec/ops, "
+                + (n * 32 * 1000.0) / (delta * 1024 * 1024) + " MBps");
+    }
+
+    @Test
+    public void test256() {
+        byte[] d = new byte[64];
+        d[31] = 1;
+        Ldpc256Encoder.encode(d, 0, d, 32);
+        byte[] zero = new byte[32];
+        assertArrayEquals(zero, h256.multiply(d));
+
+        Random r = new Random();
+        r.nextBytes(d);
+
+        Ldpc256Encoder.encode(d, 0, d, 32);
+        assertArrayEquals(zero, h256.multiply(d), "failing input data: " + Arrays.toString(d));
+    }
+}
+```
+
+### `ProximityCrcTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/ProximityCrcTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds.error;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+
+public class ProximityCrcTest {
+    @Test
+    public void test1() {
+        CrcCciitCalculator c = new CrcCciitCalculator(YConfiguration.emptyConfig());
+        byte[] data = new byte[] { 0x6, 0x0, 0x0c, (byte) 0xf0, 0x00, 0x04, 0x00, 0x55, (byte) 0x88, 0x73, (byte) 0xc9,
+                0x00, 0x00, 0x05, 0x21 };
+        int x = c.compute(data, 0, data.length);
+        assertEquals(0x75FB, x);
+    }
+}
+```

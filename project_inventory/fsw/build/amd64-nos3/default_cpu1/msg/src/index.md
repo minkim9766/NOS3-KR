@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/msg/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `check_ccsds_hdr.h.c`
 
-file--check_ccsds_hdr.h.c
-file--check_cfe_msg_api_typedefs.h.c
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/msg/src/check_ccsds_hdr.h.c`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/msg/src/check_ccsds_hdr.h.c`](file--check_ccsds_hdr.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/msg/src/check_cfe_msg_api_typedefs.h.c`](file--check_cfe_msg_api_typedefs.h.c) — 빌드 산출물 (경로만)
+### `check_cfe_msg_api_typedefs.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/msg/src/check_cfe_msg_api_typedefs.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

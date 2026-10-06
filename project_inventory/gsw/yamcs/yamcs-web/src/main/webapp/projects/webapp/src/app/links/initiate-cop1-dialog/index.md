@@ -3,16 +3,159 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/initiate-cop1-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `initiate-cop1-dialog.component.html`
 
-file--initiate-cop1-dialog.component.html
-file--initiate-cop1-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/initiate-cop1-dialog/initiate-cop1-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Initiate COP-1 AD Service</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field>
+      <div class="radio-group">
+        <label class="radio" [class.checked]="form.value.type === 'WITHOUT_CLCW_CHECK'">
+          <input type="radio" formControlName="type" value="WITHOUT_CLCW_CHECK" />
+          Without CLCW check
+        </label>
+        <label class="radio" [class.checked]="form.value.type === 'WITH_CLCW_CHECK'">
+          <input type="radio" formControlName="type" value="WITH_CLCW_CHECK" />
+          With CLCW check
+        </label>
+        <label class="radio" [class.checked]="form.value.type === 'UNLOCK'">
+          <input type="radio" formControlName="type" value="UNLOCK" />
+          With Unlock
+        </label>
+        <label class="radio" [class.checked]="form.value.type === 'SET_VR'">
+          <input type="radio" formControlName="type" value="SET_VR" />
+          With Set V(R)
+        </label>
+      </div>
+    </ya-field>
+
+    @if (form.controls.type.value == "WITH_CLCW_CHECK" || form.controls.type.value == "SET_VR") {
+      <ya-field-divider />
+
+      @if (form.controls.type.value == "WITH_CLCW_CHECK") {
+        <ya-field label="CLCW check timeout (milliseconds)">
+          <ya-help dialogTitle="CLCW Check Timeout">
+            <p>
+              Timeout associated to acknowledgment CLCWs. If a command frame is not acknowledged
+              within this time, it will be retransmitted.
+            </p>
+            <p>
+              Other names:
+              <code>T1_Initial</code>
+              &nbsp;&bull;&nbsp;
+              <code>Timer_Initial_Value</code>
+              .
+            </p>
+          </ya-help>
+          <input type="text" formControlName="clcwCheckTimeout" />
+        </ya-field>
+      } @else if (form.controls.type.value == "SET_VR") {
+        <ya-field label="V(R)">
+          <ya-help dialogTitle="V(R)">
+            <p>
+              The N(S) frame sequence number expected to be seen by FARM-1 in the next Type-AD
+              transfer frame.
+            </p>
+            <p>
+              Other name:
+              <code>Receiver_Frame_Sequence_Number</code>
+              .
+            </p>
+          </ya-help>
+          <input type="text" formControlName="vr" />
+        </ya-field>
+      }
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="sendRequest()" [disabled]="!form.valid">
+    INITIATE
+  </ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `initiate-cop1-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/initiate-cop1-dialog/initiate-cop1-dialog.component.html`](file--initiate-cop1-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/initiate-cop1-dialog/initiate-cop1-dialog.component.ts`](file--initiate-cop1-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/initiate-cop1-dialog/initiate-cop1-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { InitiateCop1Request, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+const CombinedValidator: ValidatorFn = (form: UntypedFormGroup) => {
+  const type = form.get('type')!.value;
+
+  const clcwCheckTimeout = form.get('clcwCheckTimeout')!.value;
+  const vr = form.get('vr')!.value;
+
+  if (
+    type == 'WITH_CLCW_CHECK' &&
+    (clcwCheckTimeout === null || '' === clcwCheckTimeout)
+  ) {
+    return { combined: 'CLCW Check Timeout must be specified' };
+  } else if (type == 'SET_VR' && (vr === null || '' == vr)) {
+    return { combined: 'V(R) must be specified' };
+  }
+  return null;
+};
+
+@Component({
+  selector: 'app-initiate-cop1-dialog',
+  templateUrl: './initiate-cop1-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class InitiateCop1DialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<InitiateCop1DialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form = formBuilder.group(
+      {
+        type: ['WITH_CLCW_CHECK', Validators.required],
+        clcwCheckTimeout: '3000',
+        vr: null,
+      },
+      {
+        validators: [CombinedValidator],
+      },
+    );
+  }
+
+  sendRequest() {
+    const value = this.form.value;
+
+    const options: InitiateCop1Request = {
+      type: value['type'],
+    };
+
+    if (options.type === 'WITH_CLCW_CHECK') {
+      options.clcwCheckInitializeTimeout = Number(value['clcwCheckTimeout']);
+    } else if (options.type === 'SET_VR') {
+      options.vR = Number(value['vr']);
+    }
+
+    this.dialogRef.close(options);
+  }
+}
+```

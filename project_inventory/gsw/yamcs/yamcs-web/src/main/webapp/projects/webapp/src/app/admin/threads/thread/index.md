@@ -3,16 +3,108 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `thread.component.html`
 
-file--thread.component.html
-file--thread.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/thread.component.html`
+
+
+```html
+@if (thread$ | async; as thread) {
+  <app-admin-page>
+    <app-admin-toolbar>
+      <ng-template app-admin-toolbar-label>
+        <ya-page-icon-button routerLink=".." icon="arrow_back" />
+        {{ thread.name }}
+      </ng-template>
+    </app-admin-toolbar>
+
+    <ya-panel class="ya-link">
+      <dl class="dl-horizontal no-lead">
+        <dt>ID</dt>
+        <dd>{{ thread.id }}</dd>
+        <dt>Name</dt>
+        <dd>{{ thread.name }}</dd>
+        <dt>Native</dt>
+        <dd>
+          {{ thread.native ? "Yes" : "No" }}
+        </dd>
+        <dt>Suspended</dt>
+        <dd>
+          {{ thread.suspended ? "Yes" : "No" }}
+        </dd>
+        <dt>Group</dt>
+        <dd>{{ thread.group?.name || "-" }}</dd>
+      </dl>
+      <div class="section-divider">
+        <mat-divider />
+      </div>
+      <h4>Stack trace</h4>
+      @if (thread.trace) {
+        <table yaDataTable>
+          @for (element of thread.trace; track element) {
+            <tr>
+              <td>
+                <app-trace-element [element]="element" />
+              </td>
+            </tr>
+          }
+        </table>
+      } @else {
+        Information not available
+      }
+    </ya-panel>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `thread.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/thread.component.html`](file--thread.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/thread.component.ts`](file--thread.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/thread/thread.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { ThreadInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { TraceElementComponent } from '../trace-element/trace-element.component';
+import { AppAdminToolbarLabel } from '../../shared/admin-toolbar/admin-toolbar-label.directive';
+
+@Component({
+  templateUrl: './thread.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    AppAdminToolbarLabel,
+    WebappSdkModule,
+    TraceElementComponent,
+  ],
+})
+export class ThreadComponent {
+  thread$ = new BehaviorSubject<ThreadInfo | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private title: Title,
+  ) {
+    route.paramMap.subscribe((params) => {
+      const id = params.get('id')!;
+      this.changeThread(Number(id));
+    });
+  }
+
+  private changeThread(id: number) {
+    this.yamcs.yamcsClient.getThread(id).then((thread) => {
+      this.thread$.next(thread);
+      this.title.setTitle(thread.name);
+    });
+  }
+}
+```

@@ -3,18 +3,179 @@
 
 **경로:** `fsw/apps/sbn/ut-stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--sbn_stubs.c
-file--sbn_stubs.h
+**경로:** `fsw/apps/sbn/ut-stubs/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# SBN stub function build recipe
+#
+# This CMake file contains the recipe for building the stub function
+# libraries that correlate with the library public API.  This supports
+# unit testing of OTHER modules, where the test cases for those modules
+# are linked with the stubs supplied here.
+#
+##################################################################
+
+# Use the UT assert public headers 
+include_directories(${osal_MISSION_DIR}/ut_assert/inc)
+
+# Create a static library containing all stubs.
+#
+# There should be a 1:1 relationship between application source files
+# and the stub files.  Each stub file should provide the same set of
+# functions that the application source file provides.
+add_library(ut_sbn_stubs STATIC 
+    sbn_stubs.c
+)
 ```
 
-## 항목
+### `sbn_stubs.c`
 
-- [`fsw/apps/sbn/ut-stubs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/ut-stubs/sbn_stubs.c`](file--sbn_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/ut-stubs/sbn_stubs.h`](file--sbn_stubs.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn/ut-stubs/sbn_stubs.c`
+
+
+```c
+/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2020 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/*
+** File: sbn_stubs.c
+**
+** Purpose:
+** Stubs for SBN functions so that modules can be tested.
+*/
+
+#include <string.h> /* for memcpy */
+
+#include "sbn_stubs.h"
+#include "utstubs.h"
+
+void SBN_PackMsg(void *SBNMsgBuf, SBN_MsgSz_t MsgSz, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID, void *Msg)
+{
+    UT_DEFAULT_IMPL(SBN_PackMsg);
+} /* end SBN_PackMsg() */
+
+bool SBN_UnpackMsg(void *SBNBuf, SBN_MsgSz_t *MsgSzPtr, SBN_MsgType_t *MsgTypePtr, CFE_ProcessorID_t *ProcessorIDPtr,
+                   void *Msg)
+{
+    uint32           status = 0;
+    SBN_Unpack_Buf_t p;
+
+    status = UT_DEFAULT_IMPL(SBN_UnpackMsg);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(SBN_UnpackMsg), &p, sizeof(p)) < sizeof(p))
+        {
+            return NULL;
+        }
+    }
+
+    if (MsgSzPtr != NULL)
+        *MsgSzPtr = p.MsgSz;
+    if (MsgTypePtr != NULL)
+        *MsgTypePtr = p.MsgType;
+    if (ProcessorIDPtr != NULL)
+        *ProcessorIDPtr = p.ProcessorID;
+    if (Msg != NULL)
+        memcpy(Msg, p.MsgBuf, p.MsgSz);
+
+    return true;
+} /* end SBN_UnpackMsg() */
+
+SBN_Status_t SBN_Connected(SBN_PeerInterface_t *Peer)
+{
+    SBN_Status_t status;
+
+    status = UT_DEFAULT_IMPL(SBN_Connected);
+
+    if (status >= 0)
+    {
+        Peer->Connected = true;
+    }
+
+    return status;
+} /* end SBN_Connected() */
+
+SBN_Status_t SBN_Disconnected(SBN_PeerInterface_t *Peer)
+{
+    SBN_Status_t status;
+
+    status = UT_DEFAULT_IMPL(SBN_Disconnected);
+
+    if (status >= 0)
+    {
+        Peer->Connected = false;
+    }
+
+    return status;
+} /* end SBN_Disconnected() */
+
+SBN_Status_t SBN_SendNetMsg(SBN_MsgType_t MsgType, SBN_MsgSz_t MsgSz, void *Msg, SBN_PeerInterface_t *Peer)
+{
+    return UT_DEFAULT_IMPL(SBN_SendNetMsg);
+} /* end SBN_SendNetMsg() */
+
+SBN_PeerInterface_t *SBN_GetPeer(SBN_NetInterface_t *Net, CFE_ProcessorID_t ProcessorID)
+{
+    uint32               status = 0;
+    SBN_PeerInterface_t *p      = NULL;
+
+    status = UT_DEFAULT_IMPL(SBN_GetPeer);
+
+    if (status >= 0)
+    {
+        if (UT_Stub_CopyToLocal(UT_KEY(SBN_GetPeer), &p, sizeof(p)) < sizeof(p))
+        {
+            return NULL;
+        }
+    }
+
+    return p;
+} /* end SBN_GetPeer() */
+```
+
+### `sbn_stubs.h`
+
+**경로:** `fsw/apps/sbn/ut-stubs/sbn_stubs.h`
+
+
+```c
+#ifndef _sbn_stubs_h_
+#define _sbn_stubs_h_
+
+#include "sbn_interfaces.h"
+
+typedef struct SBN_Unpack_Buf
+{
+    SBN_MsgSz_t       MsgSz;
+    SBN_MsgType_t     MsgType;
+    CFE_ProcessorID_t ProcessorID;
+    uint8             MsgBuf[256]; /* TODO: use a defined buffer size? */
+} SBN_Unpack_Buf_t;
+
+#endif /* _sbn_stubs_h_ */
+```

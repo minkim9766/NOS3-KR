@@ -3,20 +3,63 @@
 
 **경로:** `fsw/apps/sbn_client/doc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Indv_CLA_SBNC.pdf`
 
-file--Indv_CLA_SBNC.pdf
-file--makefile
-file--requirements.md
-file--requirements.pdf
+**경로:** `fsw/apps/sbn_client/doc/Indv_CLA_SBNC.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `makefile`
+
+**경로:** `fsw/apps/sbn_client/doc/makefile`
+
+
+```text
+all: requirements.pdf
+
+requirements.pdf: requirements.md
+	pandoc -f markdown -t latex -V geometry:margin=1in --variable urlcolor=blue -o requirements.pdf requirements.md
+
+clean:
+	rm -f *.pdf
 ```
 
-## 항목
+### `requirements.md`
 
-- [`fsw/apps/sbn_client/doc/Indv_CLA_SBNC.pdf`](file--Indv_CLA_SBNC.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sbn_client/doc/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/doc/requirements.md`](file--requirements.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/doc/requirements.pdf`](file--requirements.pdf) — 바이너리 (경로만)
+**경로:** `fsw/apps/sbn_client/doc/requirements.md`
+
+
+```markdown
+# Software Bus Network Client (SBNC) Requirements
+
+Refer to git commits for document history and revisions.
+
+The primary requirement of the software is that it must correctly implement the SBN communication protocol.
+Fulfillment of this requirement is confirmed via unit tests which are included with the source code.
+Functional testing is performed with demonstration projects (not yet publicly available).
+
+## 1. Implement SBN Protocol
+
+SBNC shall implement the Software Bus Network (SBN) protocol for one or more of the supported modules (such as TCP / IP).
+This includes subscribing, sending, and receiving messages to and from the Software Bus.
+
+## 2. Build for cFS Applications 
+
+SBNC shall support building and linking as a library for cFS applications that are isolated from cFS as an external process.
+
+## 3. Build as Standalone Library
+
+SBNC shall support building and linking as a standalone library for C applications (without linking cFS).
+
+### 3.1 Language Support
+
+The standalone library shall be usable by programs written in other languages such as Python through foreign function interfaces.
+```
+
+### `requirements.pdf`
+
+**경로:** `fsw/apps/sbn_client/doc/requirements.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

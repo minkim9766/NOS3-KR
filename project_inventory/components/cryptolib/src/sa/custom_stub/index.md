@@ -3,14 +3,38 @@
 
 **경로:** `components/cryptolib/src/sa/custom_stub/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sa_interface_custom.stub.c`
 
-file--sa_interface_custom.stub.c
+**경로:** `components/cryptolib/src/sa/custom_stub/sa_interface_custom.stub.c`
+
+
+```c
+/*
+ * Copyright 2021, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged.
+ * Any commercial use must be negotiated with the Office of Technology
+ * Transfer at the California Institute of Technology.
+ *
+ * This software may be subject to U.S. export control laws. By accepting
+ * this software, the user agrees to comply with all applicable U.S.
+ * export laws and regulations. User has the responsibility to obtain
+ * export licenses, or other export authority as may be required before
+ * exporting such information to foreign countries or providing access to
+ * foreign persons.
+ */
+
+#include "sa_interface.h"
+
+/* Variables */
+static SaInterfaceStruct sa_if_struct;
+
+/* Functions */
+SaInterface get_sa_interface_custom(void)
+{
+    fprintf(stderr, "ERROR: Loading custom SA interface stub source code. Rebuild CryptoLib with -DSA_CUSTOM=ON to use "
+                    "proper internal implementation.\n");
+    return &sa_if_struct;
+}
 ```
-
-## 항목
-
-- [`components/cryptolib/src/sa/custom_stub/sa_interface_custom.stub.c`](file--sa_interface_custom.stub.c) — UTF-8 텍스트 파일 본문 포함

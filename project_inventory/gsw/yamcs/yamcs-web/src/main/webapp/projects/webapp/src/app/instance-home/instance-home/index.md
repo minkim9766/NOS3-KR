@@ -3,16 +3,86 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/instance-home/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `instance-home.component.html`
 
-file--instance-home.component.html
-file--instance-home.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/instance-home/instance-home.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Home" />
+
+  <ya-panel>
+    @if (showPackets()) {
+      <app-tmstats-table [tmstats$]="tmstats$" />
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `instance-home.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/instance-home/instance-home.component.html`](file--instance-home.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/instance-home/instance-home.component.ts`](file--instance-home.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/instance-home/instance-home/instance-home.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  AuthService,
+  ConfigService,
+  TMStatisticsSubscription,
+  TmStatistics,
+  User,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { TmStatsTableComponent } from '../tm-stats-table/tm-stats-table.component';
+
+@Component({
+  templateUrl: './instance-home.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule, TmStatsTableComponent],
+})
+export class InstanceHomeComponent implements OnDestroy {
+  private user: User;
+  config: WebsiteConfig;
+
+  tmstats$ = new BehaviorSubject<TmStatistics[]>([]);
+  tmstatsSubscription: TMStatisticsSubscription;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    title: Title,
+    configService: ConfigService,
+  ) {
+    this.config = configService.getConfig();
+
+    this.user = authService.getUser()!;
+    title.setTitle(this.yamcs.instance!);
+    if (this.yamcs.processor) {
+      this.tmstatsSubscription =
+        yamcs.yamcsClient.createTMStatisticsSubscription(
+          {
+            instance: this.yamcs.instance!,
+            processor: this.yamcs.processor,
+          },
+          (stats) => this.tmstats$.next(stats.tmstats || []),
+        );
+    }
+  }
+
+  showPackets() {
+    return this.user.hasAnyObjectPrivilegeOfType('ReadPacket');
+  }
+
+  ngOnDestroy() {
+    this.tmstatsSubscription?.cancel();
+  }
+}
+```

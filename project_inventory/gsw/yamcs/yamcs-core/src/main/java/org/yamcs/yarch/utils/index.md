@@ -3,16 +3,156 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SqlArrays.java`
 
-file--SqlArrays.java
-file--SqlExpressions.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/SqlArrays.java`
+
+
+```java
+package org.yamcs.yarch.utils;
+
+import java.util.List;
+import java.util.Objects;
+
+public class SqlArrays {
+    /**
+     * returns true if the two lists have at least one common element
+     */
+    static public boolean overlap(List<Object> l1, List<Object> l2) {
+        for (Object o1 : l1) {
+            for (Object o2 : l2) {
+                if (Objects.equals(o1, o2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
 ```
 
-## 항목
+### `SqlExpressions.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/SqlArrays.java`](file--SqlArrays.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/SqlExpressions.java`](file--SqlExpressions.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/SqlExpressions.java`
+
+
+```java
+package org.yamcs.yarch.utils;
+
+import java.util.Arrays;
+
+public class SqlExpressions {
+    public static Object EQUAL(Object v1, Object v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) == 0;
+        } else {
+            return v1.equals(v2);
+        }
+    }
+
+    public static Object NOT_EQUAL(Object v1, Object v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) != 0;
+        } else {
+            return !v1.equals(v2);
+        }
+    }
+
+    public static Object GREATER_OR_EQUAL(Comparable v1, Comparable v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) >= 0;
+        } else {
+            return v1.compareTo(v2) >= 0;
+        }
+    }
+
+    public static Object GREATER(Comparable v1, Comparable v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) > 0;
+        } else {
+            return v1.compareTo(v2) > 0;
+        }
+    }
+
+    public static Object LESS_OR_EQUAL(Comparable v1, Comparable v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) <= 0;
+        } else {
+            return v1.compareTo(v2) <= 0;
+        }
+    }
+
+    public static Object LESS(Comparable v1, Comparable v2) {
+        if (v1 == null || v2 == null) {
+            return null;
+        }
+
+        if (v1 instanceof Number && v2 instanceof Number) {
+            return compareNumbers((Number) v1, (Number) v2) < 0;
+        } else {
+            return v1.compareTo(v2) < 0;
+        }
+    }
+
+
+    private static int compareNumbers(Number v1, Number v2) {
+        if ((v1 instanceof Float || v1 instanceof Double) && (v2 instanceof Float || v2 instanceof Double)) {
+            return Double.compare(v1.doubleValue(), v2.doubleValue());
+        } else {
+            return Long.compare(v1.longValue(), v2.longValue());
+        }
+    }
+
+    public static Object AND(Object... values) {
+        boolean r = true;
+        for (Object o : values) {
+            if (o == null) {
+                return null;
+            }
+            if (o instanceof Boolean) {
+                r = r & (Boolean) o;
+            } else {
+                throw new IllegalStateException("Illegal value in AND " + o);
+            }
+        }
+        return r;
+    }
+
+    public static Object OR(Object... values) {
+        boolean r = false;
+        for (Object o : values) {
+            if (o == null) {
+                return null;
+            }
+            if (o instanceof Boolean) {
+                r = r | (Boolean) o;
+            } else {
+                throw new IllegalStateException("Illegal value in OR " + o);
+            }
+        }
+        return r;
+    }
+}
+```

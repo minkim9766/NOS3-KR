@@ -3,46 +3,3714 @@
 
 **경로:** `fsw/osal/src/unit-tests/oscore-test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ut_oscore_binsem_test.c
-file--ut_oscore_binsem_test.h
-file--ut_oscore_countsem_test.c
-file--ut_oscore_countsem_test.h
-file--ut_oscore_misc_test.c
-file--ut_oscore_misc_test.h
-file--ut_oscore_mutex_test.c
-file--ut_oscore_mutex_test.h
-file--ut_oscore_queue_test.c
-file--ut_oscore_queue_test.h
-file--ut_oscore_select_test.c
-file--ut_oscore_select_test.h
-file--ut_oscore_task_test.c
-file--ut_oscore_task_test.h
-file--ut_oscore_test.c
-file--ut_oscore_test.h
+**경로:** `fsw/osal/src/unit-tests/oscore-test/CMakeLists.txt`
+
+
+```cmake
+# CMake snippet for OSAL core test
+
+set(TEST_MODULE_FILES 
+  ut_oscore_binsem_test.c    
+  ut_oscore_misc_test.c   
+  ut_oscore_queue_test.c  
+  ut_oscore_select_test.c  
+  ut_oscore_countsem_test.c  
+  ut_oscore_mutex_test.c  
+  ut_oscore_task_test.c   
+  ut_oscore_test.c
+)
+  
+add_osal_ut_exe(osal_core_UT ${TEST_MODULE_FILES})
+
 ```
 
-## 항목
+### `ut_oscore_binsem_test.c`
 
-- [`fsw/osal/src/unit-tests/oscore-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_binsem_test.c`](file--ut_oscore_binsem_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_binsem_test.h`](file--ut_oscore_binsem_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_countsem_test.c`](file--ut_oscore_countsem_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_countsem_test.h`](file--ut_oscore_countsem_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_misc_test.c`](file--ut_oscore_misc_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_misc_test.h`](file--ut_oscore_misc_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_mutex_test.c`](file--ut_oscore_mutex_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_mutex_test.h`](file--ut_oscore_mutex_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_queue_test.c`](file--ut_oscore_queue_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_queue_test.h`](file--ut_oscore_queue_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_select_test.c`](file--ut_oscore_select_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_select_test.h`](file--ut_oscore_select_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_task_test.c`](file--ut_oscore_task_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_task_test.h`](file--ut_oscore_task_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_test.c`](file--ut_oscore_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/oscore-test/ut_oscore_test.h`](file--ut_oscore_test.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_binsem_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_binsem_test.c
+** Owner: Alan Cudmore
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_binsem_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemCreate
+** Purpose: Creates a binary semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_TAKEN if the name passed in has already been used
+**          OS_ERR_NO_FREE_IDS if there are no more free binary semaphore ids
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_create_test()
+{
+    int       i;
+    char      sem_name[UT_OS_NAME_BUFF_SIZE];
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+    osal_id_t sem_ids[OS_MAX_BIN_SEMAPHORES + 1];
+
+    memset(sem_ids, 0, sizeof(sem_ids));
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemCreate(NULL, "BinSem1", 1, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemCreate(&sem_ids[0], NULL, 1, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    memset(long_sem_name, 'X', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_BinSemCreate(&sem_ids[0], long_sem_name, 1, 0), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* Setup */
+    for (i = 0; i < OS_MAX_BIN_SEMAPHORES; i++)
+    {
+        memset(sem_name, '\0', sizeof(sem_name));
+        UT_os_sprintf(sem_name, "BINSEM%d", i);
+
+        if (!UT_SETUP(OS_BinSemCreate(&sem_ids[i], sem_name, 1, 0)))
+        {
+            break;
+        }
+    }
+
+    if (i == OS_MAX_BIN_SEMAPHORES) /* setup was successful */
+    {
+        UT_RETVAL(OS_BinSemCreate(&sem_ids[OS_MAX_BIN_SEMAPHORES], "OneTooMany", 1, 0), OS_ERR_NO_FREE_IDS);
+    }
+
+    /* Reset test environment */
+    OS_DeleteAllObjects();
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&sem_ids[0], "DUPLICATE", 1, 0)))
+    {
+        UT_RETVAL(OS_BinSemCreate(&sem_ids[0], "DUPLICATE", 1, 0), OS_ERR_NAME_TAKEN);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_BinSemDelete(sem_ids[0]));
+    }
+
+    /*-----------------------------------------------------*/
+    UT_NOMINAL(OS_BinSemCreate(&sem_ids[0], "Good", 1, 0));
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_BinSemDelete(sem_ids[0]));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemDelete
+** Purpose: Deletes a binary semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in does not exist
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_delete_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemDelete(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemDelete(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "DeleteTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemFlush
+** Purpose: Releases all the tasks waiting on the given semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SEM_FAILURE if the semaphore was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_flush_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemFlush(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemFlush(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "FlushTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemFlush(bin_sem_id));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemGive
+** Purpose: Gives back a binary semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SEM_FAILURE if the semaphore was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_give_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemGive(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemGive(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "GiveTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemGive(bin_sem_id));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemTake
+** Purpose: Reserves a binary semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SEM_FAILURE if the semaphore was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_take_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemTake(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemTake(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "TakeTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemTake(bin_sem_id));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemTimedWait
+** Purpose: Reserves a binary semaphore with a timeout
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SEM_TIMEOUT if the semaphore was not relinquished in time
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_timed_wait_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemTimedWait(UT_OBJID_INCORRECT, 1000), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemTimedWait(OS_OBJECT_ID_UNDEFINED, 1000), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "TimedWait", 1, 0)) && UT_SETUP(OS_BinSemTake(bin_sem_id)))
+    {
+        UT_RETVAL(OS_BinSemTimedWait(bin_sem_id, 1000), OS_SEM_TIMEOUT);
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "TimedWait", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemTimedWait(bin_sem_id, 1000));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemGetIdByName
+** Purpose: Returns the id of a given binary semaphore name
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_NOT_FOUND if the name passed in was not found in the binary
+**                                semaphore table
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_get_id_by_name_test()
+{
+    osal_id_t bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemGetIdByName(NULL, "InvalidName"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemGetIdByName(&bin_sem_id, NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    memset(long_sem_name, 'Y', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_BinSemGetIdByName(&bin_sem_id, long_sem_name), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemGetIdByName(&bin_sem_id, "NameNotFound"), OS_ERR_NAME_NOT_FOUND);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "GetIDByName", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemGetIdByName(&bin_sem_id, "GetIDByName"));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_BinSemGetInfo
+** Purpose: Returns semaphore information about the given binary semaphore id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SUCCESS if succeeded
+** Test #1: TBD
+**--------------------------------------------------------------------------------*/
+void UT_os_bin_sem_get_info_test()
+{
+    osal_id_t         bin_sem_id = OS_OBJECT_ID_UNDEFINED;
+    OS_bin_sem_prop_t bin_sem_prop;
+
+    /*-----------------------------------------------------*/
+    UT_RETVAL(OS_BinSemGetInfo(UT_OBJID_INCORRECT, &bin_sem_prop), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_BinSemGetInfo(OS_OBJECT_ID_UNDEFINED, &bin_sem_prop), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "GetInfo", 1, 0)))
+    {
+        UT_RETVAL(OS_BinSemGetInfo(bin_sem_id, NULL), OS_INVALID_POINTER);
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+
+    /*-----------------------------------------------------*/
+    if (UT_SETUP(OS_BinSemCreate(&bin_sem_id, "GetInfo", 1, 0)))
+    {
+        UT_NOMINAL(OS_BinSemGetInfo(bin_sem_id, &bin_sem_prop));
+        UT_TEARDOWN(OS_BinSemDelete(bin_sem_id));
+    }
+}
+
+/*================================================================================*
+** End of File: ut_oscore_binsem_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_binsem_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_binsem_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Alan Cudmore
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_BINSEM_TEST_H
+#define UT_OSCORE_BINSEM_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_bin_sem_create_test(void);
+void UT_os_bin_sem_delete_test(void);
+void UT_os_bin_sem_flush_test(void);
+void UT_os_bin_sem_give_test(void);
+void UT_os_bin_sem_timed_wait_test(void);
+void UT_os_bin_sem_take_test(void);
+void UT_os_bin_sem_get_id_by_name_test(void);
+void UT_os_bin_sem_get_info_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_BINSEM_TEST_H */
+```
+
+### `ut_oscore_countsem_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_countsem_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_countsem_test.c
+** Owner: Alan Cudmore
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_countsem_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemCreate
+** Purpose: Creates a counting semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_TAKEN if the name passed in has already been used
+**          OS_ERR_NO_FREE_IDS if there are no more free counting semaphore ids
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_create_test()
+{
+    int       i;
+    osal_id_t count_sem_ids[OS_MAX_COUNT_SEMAPHORES + 1];
+    char      sem_name[UT_OS_NAME_BUFF_SIZE];
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+
+    memset(count_sem_ids, 0, sizeof(count_sem_ids));
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg-1 */
+
+    UT_RETVAL(OS_CountSemCreate(NULL, "CountSem1", 1, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Null-pointer-arg-2 */
+
+    UT_RETVAL(OS_CountSemCreate(&count_sem_ids[0], NULL, 1, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_sem_name, 'X', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_CountSemCreate(&count_sem_ids[0], long_sem_name, 1, 0), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 Initial-count-too-high */
+
+    /*
+     * The intent with this test case is to call OS_CountSemCreate() with an initial
+     * value greater than SEM_VALUE_MAX and confirm it returns OS_INVALID_SEM_VALUE.
+     *
+     * However, none of the currently available test platforms are able to produce
+     * this condition, because SEM_VALUE_MAX is either not defined/exposed or it
+     * is equal to UINT32_MAX and thus impossible to pass a value greater than this.
+     *
+     * Therefore a placeholder is here in case a platform in the future does permit
+     * it to be tested.  Note that the check and return value is still tested in the
+     * coverage test for this function.
+     */
+    UtAssert_NA("#4 Initial-count-too-high");
+
+    /*-----------------------------------------------------*/
+    /* #5 No-free-IDs */
+
+    /* Setup */
+    for (i = 0; i <= OS_MAX_COUNT_SEMAPHORES; i++)
+    {
+        memset(sem_name, '\0', sizeof(sem_name));
+        UT_os_sprintf(sem_name, "COUNTSEM%d", i);
+
+        if (i == OS_MAX_COUNT_SEMAPHORES)
+        {
+            UT_RETVAL(OS_CountSemCreate(&count_sem_ids[i], "OneTooMany", 1, 0), OS_ERR_NO_FREE_IDS);
+        }
+        else if (!UT_SETUP(OS_CountSemCreate(&count_sem_ids[i], sem_name, 1, 0)))
+        {
+            break;
+        }
+    }
+
+    /* Reset test environment */
+    OS_DeleteAllObjects();
+
+    /*-----------------------------------------------------*/
+    /* #6 Duplicate-name */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_ids[0], "DUPLICATE", 1, 0)))
+    {
+        UT_RETVAL(OS_CountSemCreate(&count_sem_ids[1], "DUPLICATE", 1, 0), OS_ERR_NAME_TAKEN);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_ids[0]));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #8 Nominal */
+
+    UT_NOMINAL(OS_CountSemCreate(&count_sem_ids[0], "Good", 1, 0));
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_CountSemDelete(count_sem_ids[0]));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemDelete
+** Purpose: Deletes a counting semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid counting semaphore id
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_delete_test()
+{
+    osal_id_t count_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_CountSemDelete(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_CountSemDelete(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "DeleteTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemGive
+** Purpose: Gives back a counting semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid counting semaphore id
+**          OS_SEM_FAILURE if the semaphore was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_give_test()
+{
+    osal_id_t count_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_CountSemGive(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_CountSemGive(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "GiveTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemGive(count_sem_id));
+
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemTake
+** Purpose: Reserves a counting semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid counting semaphore id
+**          OS_SEM_FAILURE if the semaphore was not previously init'd
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_take_test()
+{
+    osal_id_t count_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_CountSemTake(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_CountSemTake(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "TakeTest", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemTake(count_sem_id));
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemTimedWait
+** Purpose: Reserves a counting semaphore with a timeout
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid counting semaphore id
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SEM_TIMEOUT if the semaphore was not relinquished in time
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_timed_wait_test()
+{
+    osal_id_t count_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_CountSemTimedWait(UT_OBJID_INCORRECT, 1000), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_CountSemTimedWait(OS_OBJECT_ID_UNDEFINED, 1000), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Sem-take-timed-out */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "TimedWait", 1, 0)))
+    {
+        if (UT_SETUP(OS_CountSemTake(count_sem_id)))
+        {
+            UT_RETVAL(OS_CountSemTimedWait(count_sem_id, 1000), OS_SEM_TIMEOUT);
+        }
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #4 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "TimedWait", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemTimedWait(count_sem_id, 1000));
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemGetIdByName
+** Purpose: Returns the id of a given counting semaphore name
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_NOT_FOUND if the name passed in was not found in the counting
+**                                semaphore table
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_get_id_by_name_test()
+{
+    osal_id_t count_sem_id = OS_OBJECT_ID_UNDEFINED;
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg-1 */
+
+    UT_RETVAL(OS_CountSemGetIdByName(NULL, "Name"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-2 */
+
+    UT_RETVAL(OS_CountSemGetIdByName(&count_sem_id, NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_sem_name, 'Y', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_CountSemGetIdByName(&count_sem_id, long_sem_name), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 Name-not-found */
+
+    UT_RETVAL(OS_CountSemGetIdByName(&count_sem_id, "NotFound"), OS_ERR_NAME_NOT_FOUND);
+
+    /*-----------------------------------------------------*/
+    /* #5 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "GetIDByName", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemGetIdByName(&count_sem_id, "GetIDByName"));
+
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_CountSemGetInfo
+** Purpose: Returns semaphore information about the given binary semaphore id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_count_sem_get_info_test()
+{
+    osal_id_t           count_sem_id = OS_OBJECT_ID_UNDEFINED;
+    OS_count_sem_prop_t count_sem_prop;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_CountSemGetInfo(UT_OBJID_INCORRECT, &count_sem_prop), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_CountSemGetInfo(OS_OBJECT_ID_UNDEFINED, &count_sem_prop), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg */
+
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "GetInfo", 1, 0)))
+    {
+        UT_RETVAL(OS_CountSemGetInfo(count_sem_id, NULL), OS_INVALID_POINTER);
+
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_CountSemCreate(&count_sem_id, "GetInfo", 1, 0)))
+    {
+        UT_NOMINAL(OS_CountSemGetInfo(count_sem_id, &count_sem_prop));
+
+        UT_TEARDOWN(OS_CountSemDelete(count_sem_id));
+    }
+}
+
+/*================================================================================*
+** End of File: ut_oscore_countsem_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_countsem_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_countsem_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Alan Cudmore
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_COUNTSEM_TEST_H
+#define UT_OSCORE_COUNTSEM_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_count_sem_create_test(void);
+void UT_os_count_sem_delete_test(void);
+void UT_os_count_sem_give_test(void);
+void UT_os_count_sem_timed_wait_test(void);
+void UT_os_count_sem_take_test(void);
+void UT_os_count_sem_get_id_by_name_test(void);
+void UT_os_count_sem_get_info_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_COUNTSEM_TEST_H */
+```
+
+### `ut_oscore_misc_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_misc_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_misc_test.c
+** Owner: Tam Ngo
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_misc_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_API_Init(void)
+** Purpose: Initializes the tables that the OS API uses to keep track of information
+**          about objects
+** Parameters: None
+** Returns: OS_ERROR on an unsuccessful inits
+**          OS_SUCCESS on a successful inits
+**          OS_ERR_NOT_IMPLEMENTED if not implemented
+** -----------------------------------------------------
+** Test #0: Not-implemented condition
+**   1) Call this routine
+**   2) If the returned value is OS_ERR_NOT_IMPLEMENTED, then exit test
+**   3) Otherwise, continue
+** -----------------------------------------------------
+** Test #1: Init-not-call-first condition
+**   1) Don't call this routine first
+**   2) Call OS_QueueCreate, OS_BinSemCreate, OS_CountSemCreate, OS_MutSemCreate
+**   3) Expect the returned value from those routines to be
+**       (a) __not__ OS_SUCCESS
+*** -----------------------------------------------------
+** Test #2: Nominal condition
+**   1) Call this routine
+**   2) Expect the returned value to be
+**       (a) OS_SUCCESS (although results are not directly observable)
+**   3) Call OS_QueueCreate, OS_BinSemCreate, OS_CountSemCreate, OS_MutSemCreate
+**   4) Expect the returned value from those routines to be
+**       (a) OS_SUCCESS
+*--------------------------------------------------------------------------------*/
+void UT_os_apiinit_test()
+{
+    osal_id_t         qId          = OS_OBJECT_ID_UNDEFINED;
+    osal_blockcount_t qDepth       = OSAL_BLOCKCOUNT_C(10);
+    size_t            qSize        = OSAL_SIZE_C(4);
+    uint32            qFlags       = 0;
+    osal_id_t         semIds[3]    = {OS_OBJECT_ID_UNDEFINED, OS_OBJECT_ID_UNDEFINED, OS_OBJECT_ID_UNDEFINED};
+    uint32            semInitValue = 1;
+    uint32            semOptions   = 0;
+
+    /*-----------------------------------------------------*/
+    /* #1 Init-not-call-first */
+
+    /*
+     * Note that OS_API_Init() is supposed to be the first function invoked,
+     * calling any other OSAL API before this is technically undefined behavior.
+     * There is code to check for errors in this regard so this just tests that
+     * the result is _not_ success.  The specific status code if called before
+     * OS_API_Init is not documented.
+     */
+    UT_NOT_SUCCESS(OS_QueueCreate(&qId, "Queue A", qDepth, qSize, qFlags));
+    UT_NOT_SUCCESS(OS_BinSemCreate(&semIds[0], "BinSem 1", semInitValue, semOptions));
+    UT_NOT_SUCCESS(OS_CountSemCreate(&semIds[1], "CountSem 1", semInitValue, semOptions));
+    UT_NOT_SUCCESS(OS_MutSemCreate(&semIds[2], "MutexSem 1", semOptions));
+
+    /*-----------------------------------------------------*/
+    /* #2 Nominal */
+
+    UT_NOMINAL(OS_API_Init());
+
+    UT_RETVAL(OS_QueueCreate(&qId, "Queue A", qDepth, qSize, qFlags), OS_SUCCESS);
+    UT_RETVAL(OS_BinSemCreate(&semIds[0], "BinSem 1", semInitValue, semOptions), OS_SUCCESS);
+    UT_RETVAL(OS_CountSemCreate(&semIds[1], "CountSem 1", semInitValue, semOptions), OS_SUCCESS);
+    UT_RETVAL(OS_MutSemCreate(&semIds[2], "MutexSem 1", semOptions), OS_SUCCESS);
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_QueueDelete(qId));
+    UT_TEARDOWN(OS_BinSemDelete(semIds[0]));
+    UT_TEARDOWN(OS_CountSemDelete(semIds[1]));
+    UT_TEARDOWN(OS_MutSemDelete(semIds[2]));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_RegisterEventHandler(OS_EventHandler_t handler)
+** See header file for list of return values
+**--------------------------------------------------------------------------------*/
+int32 UT_os_eventhandler(OS_Event_t event, osal_id_t object_id, void *data)
+{
+    return OS_SUCCESS;
+}
+
+void UT_os_registereventhandler_test()
+{
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg */
+    UT_RETVAL(OS_RegisterEventHandler(NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Nominal */
+    UT_NOMINAL(OS_RegisterEventHandler(UT_os_eventhandler));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: void OS_printf(const char String, ...)
+** Purpose: Provides a printing utility similar to printf
+** Parameters: String - text portion of the print
+**             ellipsis - the other parameters to print
+** Returns: Nothing
+** -----------------------------------------------------
+** Test #1: Nominal condition
+**   1) Call OS_printf_enable
+**   2) Call this routine to print a text string.
+**   3) Visually observe that the text string in #2 did get print.
+**--------------------------------------------------------------------------------*/
+void UT_os_printf_test()
+{
+    OS_printf_enable();
+    UT_MIR_VOID(OS_printf("OS_printf() - #1 Nominal [This is the expected stdout output after API call]\n"));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: void OS_printf_enable(void)
+** Purpose: Enables the UART or console output of OS_printf
+** Parameters: None
+** Returns: Nothing
+** Test #1: Nominal condition
+**   1) Call OS_printf_disable
+**   2) Call OS_printf to print a text string.
+**   3) Call this routine
+**   4) Call OS_printf to print a text string that's different than #2
+**   5) Visually observe that text string in #2 did not print, but text string in #4 did.
+**--------------------------------------------------------------------------------*/
+void UT_os_printfenable_test()
+{
+    OS_printf_disable();
+
+    OS_printf_enable();
+    UT_MIR_VOID(OS_printf("OS_printf_enable() - #1 Nominal [This is the expected stdout output after API call]\n"));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: void OS_printf_disable(void)
+** Purpose: Disables the UART or console output of OS_printf
+** Parameters: None
+** Returns: Nothing
+** Test #1: Nominal condition
+**   1) Call OS_printf_enable
+**   2) Call OS_printf() to print a text string.
+**   3) Call this routine
+**   4) Call OS_printf() to print a text string that's different than #2
+**   5) Visually observe that text string in #2 did get print, but text string in #4 did not.
+**--------------------------------------------------------------------------------*/
+void UT_os_printfdisable_test()
+{
+    OS_printf_enable();
+    UT_MIR_VOID(OS_printf("OS_printf_disable() - #1 Nominal [This is the expected stdout output before API call]\n"));
+
+    OS_printf_disable();
+    UT_MIR_VOID(
+        OS_printf("OS_printf_disable() - #1 Nominal [This is NOT the expected stdout output after API call]\n"));
+
+    /* Reset test environment */
+    OS_printf_enable();
+    UT_MIR_VOID(OS_printf("OS_printf_disable() - #1 Nominal [This is the expected stdout output after test reset]\n"));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_GetLocalTime(OS_time_t *time_struct)
+** Purpose: Returns the local time of the machine it is on
+** Parameters: *time_struct - a pointer to an OS_time_t structure that will hold
+**                            the current time in seconds and milliseconds
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**          OS_ERR_NOT_IMPLEMENTED
+** -----------------------------------------------------
+** Test #0: Not-implemented condition
+**   1) Call this routine
+**   2) If the returned value is OS_ERR_NOT_IMPLEMENTED, then exit test
+**   3) Otherwise, continue
+** -----------------------------------------------------
+** Test #1: Null-pointer-argument condition
+**   1) Call this routine with a null-pointer argument
+**   2) Expect the returned value to be
+**        (a) OS_INVALID_POINTER
+** -----------------------------------------------------
+** Test #2: OS-call-failure condition
+**   1) Setup test to cause the OS call to fail inside this routine
+**   2) Call this routine
+**   3) Expect the returned value to be
+**        (a) OS_ERROR
+** -----------------------------------------------------
+** Test #3: Nominal condition
+**   1) Call this routine with valid argument
+**   2) Expect the returned value to be
+**        (a) OS_SUCCESS (although results are not directly observable)
+**--------------------------------------------------------------------------------*/
+void UT_os_getlocaltime_test()
+{
+    OS_time_t time_struct;
+    int32     i = 0;
+
+    memset(&time_struct, 0, sizeof(time_struct));
+
+    /*-----------------------------------------------------*/
+    /* API not implemented */
+
+    if (!UT_IMPL(OS_GetLocalTime(NULL)))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg */
+    UT_RETVAL(OS_GetLocalTime(NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    for (i = 0; i < 5; i++)
+    {
+        UT_NOMINAL(OS_GetLocalTime(&time_struct));
+        UtPrintf("[Expecting output after API call to increase over time: %ld.%ld]\n",
+                 (long)OS_TimeGetTotalSeconds(time_struct), (long)OS_TimeGetMicrosecondsPart(time_struct));
+
+        OS_TaskDelay(20);
+    }
+
+    /* #3 Nominal - Manual inspection required */
+    UT_MIR_STATUS(OS_GetLocalTime(&time_struct));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_SetLocalTime(OS_time_t *time_struct)
+** Purpose: Allows user to set the local time of the machine it is on
+** Parameters: *time_struct - a pointer to an OS_time_t structure that holds the
+**                            target time in seconds and milliseconds
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**          OS_ERR_NOT_IMPLEMENTED if not implemented
+** -----------------------------------------------------
+** Test #0: Not-implemented condition
+**   1) Call this routine
+**   2) If the returned value is OS_ERR_NOT_IMPLEMENTED, then exit test
+**   3) Otherwise, continue
+** -----------------------------------------------------
+** Test #1: Null-pointer-argument condition
+**   1) Call this routine with a null-pointer argument
+**   2) Expect the returned value to be
+**        (a) OS_INVALID_POINTER
+** -----------------------------------------------------
+** Test #2: OS-call-failure condition
+**   1) Setup the test to cause the OS call to fail inside this routine
+**   2) Call this routine
+**   3) Expect the returned value to be
+**        (a) OS_ERROR
+** -----------------------------------------------------
+** Test #3: Nominal condition
+**   - Call this routine with valid argument
+**   - Expect the returned value to be
+**       (a) OS_SUCCESS
+**--------------------------------------------------------------------------------*/
+void UT_os_setlocaltime_test()
+{
+    OS_time_t time_struct;
+    int32     i = 0;
+
+    memset(&time_struct, 0, sizeof(time_struct));
+
+    /*-----------------------------------------------------*/
+    /* API not implemented */
+
+    if (!UT_IMPL(OS_SetLocalTime(NULL)))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg */
+
+    UT_RETVAL(OS_SetLocalTime(NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    for (i = 0; i < 5; i++)
+    {
+        UT_NOMINAL(OS_GetLocalTime(&time_struct));
+        UtPrintf("[Expecting output before API call to increase over time: %ld.%ld]\n",
+                 (long)OS_TimeGetTotalSeconds(time_struct), (long)OS_TimeGetMicrosecondsPart(time_struct));
+
+        OS_TaskDelay(20);
+    }
+
+    time_struct = OS_TimeAssembleFromNanoseconds(20000, 123000);
+
+    /*
+     * This case is MIR because on some systems this requires permission,
+     * failure is expected if user does not have the required permission
+     */
+    if (UT_MIR_STATUS(OS_SetLocalTime(&time_struct)))
+    {
+        UtPrintf("OS_SetLocalTime() - #3 Nominal [New time set at %ld.%ld]\n",
+                 (long)OS_TimeGetTotalSeconds(time_struct), (long)OS_TimeGetMicrosecondsPart(time_struct));
+
+        for (i = 0; i < 5; i++)
+        {
+            UT_NOMINAL(OS_GetLocalTime(&time_struct));
+            UtPrintf("[Expecting output before API call to increase over time: %ld.%ld]\n",
+                     (long)OS_TimeGetTotalSeconds(time_struct), (long)OS_TimeGetMicrosecondsPart(time_struct));
+
+            OS_TaskDelay(20);
+        }
+
+        UT_MIR_STATUS(OS_GetLocalTime(&time_struct));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: void OS_GetErrorName(int32 error_num, os_err_name_t * err_name)
+** Purpose: Returns the string name of the error value
+** Parameters: error_num - an error value
+**             *err_name - pointer to hold the returned string name
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_SUCCESS if succeeded
+**          OS_ERR_NOT_IMPLEMENTED if not implemented
+** -----------------------------------------------------
+** Test #0: Not-implemented condition
+**   1) Call this routine
+**   2) If the returned value is OS_ERR_NOT_IMPLEMENTED, then exit test
+**   3) Otherwise, continue
+** -----------------------------------------------------
+** Test #1: Null-pointer-argument condition
+**   1) Call this routine with a null-pointer argument
+**   2) Expect the returned value to be
+**        (a) OS_INVALID_POINTER
+** -----------------------------------------------------
+** Test #2: Nominal condition
+**   1) Call this routine with valid argument
+**   2) Expect the returned value to be
+**        (a) OS_SUCCESS
+**--------------------------------------------------------------------------------*/
+void UT_os_geterrorname_test(void)
+{
+    os_err_name_t errNames[4];
+
+    memset(errNames, 0, sizeof(errNames));
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg */
+
+    UT_RETVAL(OS_GetErrorName(OS_ERROR, NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Undefined Error */
+
+    UT_RETVAL(OS_GetErrorName(12345, &errNames[0]), OS_ERROR);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    UT_NOMINAL(OS_GetErrorName(OS_ERR_NAME_TOO_LONG, &errNames[0]));
+    UtAssert_StrCmp(errNames[0], "OS_ERR_NAME_TOO_LONG", "%s == %s", errNames[0], "OS_ERR_NAME_TOO_LONG");
+
+    UT_NOMINAL(OS_GetErrorName(OS_ERR_NAME_TAKEN, &errNames[1]));
+    UtAssert_StrCmp(errNames[1], "OS_ERR_NAME_TAKEN", "%s == %s", errNames[1], "OS_ERR_NAME_TAKEN");
+
+    UT_NOMINAL(OS_GetErrorName(OS_ERR_NO_FREE_IDS, &errNames[2]));
+    UtAssert_StrCmp(errNames[2], "OS_ERR_NO_FREE_IDS", "%s == %s", errNames[2], "OS_ERR_NO_FREE_IDS");
+}
+
+/*--------------------------------------------------------------------------------*
+** OS_StatusToString test helper function to avoid repeating logic
+**--------------------------------------------------------------------------------*/
+void UT_os_statustostring_test_helper(osal_status_t status)
+{
+    os_status_string_t status_string;
+    char *             rtn_addr;
+    char               expected[OS_STATUS_STRING_LENGTH + 1];
+
+    /* Used oversized string to test for truncation */
+    snprintf(expected, sizeof(expected) - 1, "%ld", OS_StatusToInteger(status));
+    rtn_addr = OS_StatusToString(status, &status_string);
+    UtAssert_ADDRESS_EQ(rtn_addr, status_string);
+    UtAssert_STRINGBUF_EQ(status_string, sizeof(status_string), expected, sizeof(expected));
+}
+
+/*--------------------------------------------------------------------------------*
+** Functional OS_StatusToString test
+**--------------------------------------------------------------------------------*/
+void UT_os_statustostring_test(void)
+{
+    /* NULL test */
+    UtAssert_ADDRESS_EQ(OS_StatusToString(OS_SUCCESS, NULL), NULL);
+
+    /* Status value tests */
+    UT_os_statustostring_test_helper(OS_SUCCESS);
+    UT_os_statustostring_test_helper(OS_ERROR);
+    UT_os_statustostring_test_helper(OSAL_STATUS_C(INT32_MAX));
+    UT_os_statustostring_test_helper(OSAL_STATUS_C(INT32_MIN));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_HeapGetInfo(OS_heap_prop_t *heap_prop)
+** Purpose: Returns current info on the heap
+** Parameters: prop - out pointer to heap data
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_SUCCESS if succeeded
+**          OS_ERROR if OS call failed
+**          OS_ERR_NOT_IMPLEMENTED if not implemented
+** -----------------------------------------------------
+** Test #0: Not-implemented condition
+**   1) Call this routine
+**   2) If the returned value is OS_ERR_NOT_IMPLEMENTED, then exit test
+**   3) Otherwise, continue
+** -----------------------------------------------------
+** Test #1: Null-pointer-argument condition
+**   1) Call this routine with a null-pointer argument
+**   2) Expect the returned value to be
+**        (a) OS_INVALID_POINTER
+** -----------------------------------------------------
+** Test #2: OS-call-failure condition
+**   1) Setup test to cause the OS call to fail inside this routine
+**   2) Call this routine
+**   3) Expect the returned value to be
+**        (a) OS_ERROR
+** -----------------------------------------------------
+** Test #3: Nominal condition
+**   1) Call this routine with valid argument
+**   2) Expect the returned value to be
+**        (a) OS_SUCCESS
+**--------------------------------------------------------------------------------*/
+void UT_os_heapgetinfo_test(void)
+{
+    OS_heap_prop_t heapProp;
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg */
+
+    UT_RETVAL(OS_HeapGetInfo(NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal (allows for not implemented) */
+
+    UT_NOMINAL_OR_NOTIMPL(OS_HeapGetInfo(&heapProp));
+}
+
+/*================================================================================*
+** End of File: ut_oscore_misc_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_misc_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_misc_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_MISC_TEST_H
+#define UT_OSCORE_MISC_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_apiinit_test(void);
+void UT_os_registereventhandler_test(void);
+
+void UT_os_printf_test(void);
+void UT_os_printfenable_test(void);
+void UT_os_printfdisable_test(void);
+
+void UT_os_getlocaltime_test(void);
+void UT_os_setlocaltime_test(void);
+
+void UT_os_geterrorname_test(void);
+void UT_os_statustostring_test(void);
+
+void UT_os_heapgetinfo_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_MISC_TEST_H */
+```
+
+### `ut_oscore_mutex_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_mutex_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_mutex_test.c
+** Owner: Alan Cudmore
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_mutex_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemCreate
+** Purpose: Creates a mutex semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_TAKEN if the name passed in has already been used
+**          OS_ERR_NO_FREE_IDS if there are no more free mutex ids
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_create_test()
+{
+    int       i;
+    osal_id_t mut_sem_id  = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t mut_sem_id2 = OS_OBJECT_ID_UNDEFINED;
+    char      sem_name[UT_OS_NAME_BUFF_SIZE];
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg-1 */
+
+    UT_RETVAL(OS_MutSemCreate(NULL, "MutSem1", 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Null-pointer-arg-2 */
+
+    UT_RETVAL(OS_MutSemCreate(&mut_sem_id, NULL, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_sem_name, 'X', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_MutSemCreate(&mut_sem_id, long_sem_name, 0), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 No-free-IDs */
+
+    /* Setup */
+    for (i = 0; i <= OS_MAX_MUTEXES; i++)
+    {
+        memset(sem_name, '\0', sizeof(sem_name));
+        UT_os_sprintf(sem_name, "MUTSEM%d", i);
+        if (i == OS_MAX_MUTEXES)
+        {
+            UT_RETVAL(OS_MutSemCreate(&mut_sem_id, "OneTooMany", 0), OS_ERR_NO_FREE_IDS);
+        }
+        else if (!UT_SETUP(OS_MutSemCreate(&mut_sem_id, sem_name, 0)))
+        {
+            break;
+        }
+    }
+
+    /* Reset test environment */
+    OS_DeleteAllObjects();
+
+    /*-----------------------------------------------------*/
+    /* #5 Duplicate-name */
+
+    /* Setup */
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id2, "DUPLICATE", 0)))
+    {
+        UT_RETVAL(OS_MutSemCreate(&mut_sem_id, "DUPLICATE", 0), OS_ERR_NAME_TAKEN);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id2));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #7 Nominal */
+
+    UT_NOMINAL(OS_MutSemCreate(&mut_sem_id, "Good", 0));
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemDelete
+** Purpose: Deletes a mutex semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid mutex id
+**          OS_ERR_SEM_NOT_FULL if the mutex is empty
+**          OS_SEM_FAILURE if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_delete_test()
+{
+    osal_id_t mut_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_MutSemDelete(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_MutSemDelete(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "DeleteTest", 0)))
+    {
+        UT_NOMINAL(OS_MutSemDelete(mut_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemGive
+** Purpose: Releases a mutex semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid mutex id
+**          OS_SEM_FAILURE if the mutex was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_give_test()
+{
+    osal_id_t mut_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_MutSemGive(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_MutSemGive(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "GiveTest", 0)))
+    {
+        if (UT_SETUP(OS_MutSemTake(mut_sem_id)))
+        {
+            UT_NOMINAL(OS_MutSemGive(mut_sem_id));
+        }
+
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemTake
+** Purpose: Allocates a mutex semaphore
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid mutex id
+**          OS_SEM_FAILURE if the mutex was not previously init'd or is not in the
+**                         array of semaphores defined by the system
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_take_test()
+{
+    osal_id_t mut_sem_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_MutSemTake(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_MutSemTake(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "TakeTest", 0)))
+    {
+        UT_NOMINAL(OS_MutSemTake(mut_sem_id));
+
+        UT_TEARDOWN(OS_MutSemGive(mut_sem_id));
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemGetIdByName
+** Purpose: Returns the id of a given mutex semaphore name
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_NOT_FOUND if the name was not found in the mutex semaphore table
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_get_id_by_name_test()
+{
+    osal_id_t mut_sem_id = OS_OBJECT_ID_UNDEFINED;
+    char      long_sem_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg-1 */
+
+    UT_RETVAL(OS_MutSemGetIdByName(NULL, "Name"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-2 */
+
+    UT_RETVAL(OS_MutSemGetIdByName(&mut_sem_id, NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_sem_name, 'Y', sizeof(long_sem_name));
+    long_sem_name[sizeof(long_sem_name) - 1] = '\0';
+    UT_RETVAL(OS_MutSemGetIdByName(&mut_sem_id, long_sem_name), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 Name-not-found */
+
+    UT_RETVAL(OS_MutSemGetIdByName(&mut_sem_id, "NotFound"), OS_ERR_NAME_NOT_FOUND);
+
+    /*-----------------------------------------------------*/
+    /* #5 Nominal */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "GetIDByName", 0)))
+    {
+        UT_NOMINAL(OS_MutSemGetIdByName(&mut_sem_id, "GetIDByName"));
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_MutSemGetInfo
+** Purpose: Returns mutex semaphore information about a given mutex id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in is not a valid binary semaphore id
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_mut_sem_get_info_test()
+{
+    osal_id_t         mut_sem_id = OS_OBJECT_ID_UNDEFINED;
+    OS_mut_sem_prop_t mut_sem_prop;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_MutSemGetInfo(UT_OBJID_INCORRECT, &mut_sem_prop), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_MutSemGetInfo(OS_OBJECT_ID_UNDEFINED, &mut_sem_prop), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "InvalidPtr", 0)))
+    {
+        UT_RETVAL(OS_MutSemGetInfo(mut_sem_id, NULL), OS_INVALID_POINTER);
+
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_MutSemCreate(&mut_sem_id, "GetInfo", 0)))
+    {
+        UT_NOMINAL(OS_MutSemGetInfo(mut_sem_id, &mut_sem_prop));
+
+        UT_TEARDOWN(OS_MutSemDelete(mut_sem_id));
+    }
+}
+
+/*================================================================================*
+** End of File: ut_oscore_mutex_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_mutex_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_mutex_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Alan Cudmore
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_MUTEX_TEST_H
+#define UT_OSCORE_MUTEX_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_mut_sem_create_test(void);
+void UT_os_mut_sem_delete_test(void);
+void UT_os_mut_sem_give_test(void);
+void UT_os_mut_sem_take_test(void);
+void UT_os_mut_sem_get_id_by_name_test(void);
+void UT_os_mut_sem_get_info_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_MUTEX_TEST_H */
+```
+
+### `ut_oscore_queue_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_queue_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_queue_test.c
+** Owner: Alan Cudmore
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_queue_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueueCreate
+** Purpose: Creates a queue in the OS
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_TAKEN if the name has already been used on a created queue
+**          OS_ERR_NO_FREE_IDS if there are no more free queue ids
+**          OS_ERROR if the OS create call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_create_test()
+{
+    int       i         = 0;
+    osal_id_t queue_id  = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t queue_id2 = OS_OBJECT_ID_UNDEFINED;
+    char      queue_name[UT_OS_NAME_BUFF_SIZE];
+    char      long_queue_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg-1 */
+
+    UT_RETVAL(OS_QueueCreate(NULL, "Queue1", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Null-pointer-arg-2 */
+
+    UT_RETVAL(OS_QueueCreate(&queue_id, NULL, OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+
+    /* Invalid item size */
+    UT_RETVAL(OS_QueueCreate(&queue_id, "Queue1", OSAL_BLOCKCOUNT_C(10), 0, 0), OS_ERR_INVALID_SIZE);
+    /* Invalid depth */
+    UT_RETVAL(OS_QueueCreate(&queue_id, "Queue1", OSAL_BLOCKCOUNT_C(OS_QUEUE_MAX_DEPTH + 1), sizeof(uint32), 0),
+              OS_QUEUE_INVALID_SIZE);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_queue_name, 'X', sizeof(long_queue_name));
+    long_queue_name[sizeof(long_queue_name) - 1] = '\0';
+    UT_RETVAL(OS_QueueCreate(&queue_id, long_queue_name, OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0),
+              OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 No-free-IDs */
+
+    /* Setup */
+    for (i = 0; i <= OS_MAX_QUEUES; i++)
+    {
+        memset(queue_name, '\0', sizeof(queue_name));
+        UT_os_sprintf(queue_name, "QUEUE%d", i);
+        if (i == OS_MAX_QUEUES)
+        {
+            UT_RETVAL(OS_QueueCreate(&queue_id, "OneTooMany", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0),
+                      OS_ERR_NO_FREE_IDS);
+        }
+        else if (!UT_SETUP(OS_QueueCreate(&queue_id, queue_name, OSAL_BLOCKCOUNT_C(2), sizeof(uint32), 0)))
+        {
+            break;
+        }
+    }
+
+    /* Reset test environment */
+    OS_DeleteAllObjects();
+
+    /*-----------------------------------------------------*/
+    /* #5 Duplicate-name */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id2, "DUPLICATE", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueueCreate(&queue_id, "DUPLICATE", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0), OS_ERR_NAME_TAKEN);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_QueueDelete(queue_id2));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #7 Nominal */
+
+    UT_NOMINAL(OS_QueueCreate(&queue_id, "Good", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0));
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_QueueDelete(queue_id));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueueDelete
+** Purpose: Deletes a queue in the OS
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in does not exist
+**          OS_ERROR if the OS call to delete the queue failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_delete_test()
+{
+    osal_id_t queue_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_QueueDelete(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_QueueDelete(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "DeleteTest", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_NOMINAL(OS_QueueDelete(queue_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueueGet
+** Purpose: Retrieves a data item from an existing queue
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in does not exist
+**          OS_QUEUE_EMPTY if the queue has no message on it to be received
+**          OS_QUEUE_TIMEOUT if the timeout was OS_PEND and the time expired
+**          OS_QUEUE_INVALID_SIZE if the size copied from the queue is incorrect
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_get_test()
+{
+    osal_id_t queue_id = OS_OBJECT_ID_UNDEFINED;
+    uint32    queue_data_out;
+    uint32    queue_data_in;
+    size_t    size_copied;
+    size_t    data_size;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_QueueGet(UT_OBJID_INCORRECT, (void *)&queue_data_in, sizeof(uint32), &size_copied, OS_CHECK),
+              OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_QueueGet(OS_OBJECT_ID_UNDEFINED, (void *)&queue_data_in, sizeof(uint32), &size_copied, OS_CHECK),
+              OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-1 */
+    /* #3 Invalid-pointer-arg-2 */
+
+    /* Setup */
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueGet", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueueGet(queue_id, NULL, sizeof(uint32), &size_copied, OS_CHECK), OS_INVALID_POINTER);
+        UT_RETVAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), NULL, OS_CHECK), OS_INVALID_POINTER);
+        UT_RETVAL(OS_QueueGet(queue_id, &queue_data_in, 0, &size_copied, OS_CHECK), OS_ERR_INVALID_SIZE);
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #4 Queue-empty */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueEmpty", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), &data_size, OS_CHECK), OS_QUEUE_EMPTY);
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #5 Queue-timed-out */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueTimeout", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), &data_size, 2), OS_QUEUE_TIMEOUT);
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #6 Invalid-queue-size */
+
+    /* Setup */
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueuePut", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        if (UT_SETUP(OS_QueuePut(queue_id, &queue_data_out, OSAL_SIZE_C(2), 0)))
+        {
+            UT_RETVAL(OS_QueueGet(queue_id, &queue_data_in, OSAL_SIZE_C(3), &data_size, OS_CHECK),
+                      OS_QUEUE_INVALID_SIZE);
+        }
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #8 Nominal Pend */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueGet", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        if (UT_SETUP(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0)))
+        {
+            UT_NOMINAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), &data_size, OS_PEND));
+        }
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #9 Nominal timeout */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueGet", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        if (UT_SETUP(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0)))
+        {
+            UT_NOMINAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), &data_size, 20));
+        }
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #10 Nominal check */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueGet", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        if (UT_SETUP(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0)))
+        {
+            UT_NOMINAL(OS_QueueGet(queue_id, &queue_data_in, sizeof(uint32), &data_size, OS_CHECK));
+        }
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueuePut
+** Purpose: Sends data on an existing queue
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in does not exist
+**          OS_QUEUE_FULL if the queue could not accept another message
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_put_test()
+{
+    osal_id_t queue_id       = OS_OBJECT_ID_UNDEFINED;
+    uint32    queue_data_out = 0;
+    int       i;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_QueuePut(UT_OBJID_INCORRECT, (void *)&queue_data_out, sizeof(uint32), 0), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_QueuePut(OS_OBJECT_ID_UNDEFINED, (void *)&queue_data_out, sizeof(uint32), 0), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg */
+
+    /* Setup */
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueuePut", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueuePut(queue_id, NULL, sizeof(uint32), 0), OS_INVALID_POINTER);
+        UT_RETVAL(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32) + 1, 0), OS_QUEUE_INVALID_SIZE);
+        UT_RETVAL(OS_QueuePut(queue_id, &queue_data_out, 0, 0), OS_ERR_INVALID_SIZE);
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #4 Queue-full */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueuePut", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        for (i = 0; i <= 10; i++)
+        {
+            if (i == 10)
+            {
+                UT_RETVAL(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0), OS_QUEUE_FULL);
+            }
+            else if (!UT_SETUP(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0)))
+            {
+                break;
+            }
+        }
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #5 Nominal */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "QueueGet", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        queue_data_out = 0x11223344;
+        UT_NOMINAL(OS_QueuePut(queue_id, &queue_data_out, sizeof(uint32), 0));
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueueGetIdByName
+** Purpose: Returns the queue id of a given queue name
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the name of id pointers are null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_NOT_FOUND if the name was not found in the queue table
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_get_id_by_name_test()
+{
+    osal_id_t queue_id = OS_OBJECT_ID_UNDEFINED;
+    char      long_queue_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg-1 */
+
+    UT_RETVAL(OS_QueueGetIdByName(NULL, "Name"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-2 */
+
+    UT_RETVAL(OS_QueueGetIdByName(&queue_id, NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    memset(long_queue_name, 'Y', sizeof(long_queue_name));
+    long_queue_name[sizeof(long_queue_name) - 1] = '\0';
+    UT_RETVAL(OS_QueueGetIdByName(&queue_id, long_queue_name), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 Name-not-found */
+
+    UT_RETVAL(OS_QueueGetIdByName(&queue_id, "NameNotFound"), OS_ERR_NAME_NOT_FOUND);
+
+    /*-----------------------------------------------------*/
+    /* #5 Nominal */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "GetIDByName", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_NOMINAL(OS_QueueGetIdByName(&queue_id, "GetIDByName"));
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_QueueGetInfo
+** Purpose: Returns queue information about the given queue id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in does not exist
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_queue_get_info_test()
+{
+    osal_id_t       queue_id = OS_OBJECT_ID_UNDEFINED;
+    OS_queue_prop_t queue_prop;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_QueueGetInfo(UT_OBJID_INCORRECT, &queue_prop), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_QueueGetInfo(OS_OBJECT_ID_UNDEFINED, &queue_prop), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "GetInfo", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_RETVAL(OS_QueueGetInfo(queue_id, NULL), OS_INVALID_POINTER);
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_QueueCreate(&queue_id, "GetInfo", OSAL_BLOCKCOUNT_C(10), sizeof(uint32), 0)))
+    {
+        UT_NOMINAL(OS_QueueGetInfo(queue_id, &queue_prop));
+
+        UT_TEARDOWN(OS_QueueDelete(queue_id));
+    }
+}
+
+/*================================================================================*
+** End of File: ut_oscore_queue_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_queue_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_queue_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Alan Cudmore
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_QUEUE_TEST_H
+#define UT_OSCORE_QUEUE_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_queue_create_test(void);
+void UT_os_queue_delete_test(void);
+void UT_os_queue_put_test(void);
+void UT_os_queue_get_test(void);
+void UT_os_queue_get_id_by_name_test(void);
+void UT_os_queue_get_info_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_QUEUE_TEST_H */
+```
+
+### `ut_oscore_select_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_select_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_select_test.c
+** Owner: Chris Knight
+** Date:  March 2020
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_select_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+#define UT_SELECT_FN "/cf/select_test.tmp"
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+static osal_id_t selecttest_fd;
+static osal_id_t invalid_fd;
+
+/*--------------------------------------------------------------------------------*
+** External function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+char *fsAddrPtr = NULL;
+void  UT_os_select_setup_file(void)
+{
+    UT_SETUP(OS_mkfs(fsAddrPtr, "/ramdev3", "RAM3", OSAL_SIZE_C(512), OSAL_BLOCKCOUNT_C(20)));
+    UT_SETUP(OS_mount("/ramdev3", "/drive3"));
+    UT_SETUP(OS_OpenCreate(&selecttest_fd, "/drive3/select_test.txt", OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE,
+                           OS_READ_WRITE));
+
+    /* create a bad ID by flipping the bits of a good ID */
+    invalid_fd = OS_ObjectIdFromInteger(OS_ObjectIdToInteger(selecttest_fd) ^ 0xFFFFFFFF);
+}
+
+void UT_os_select_teardown_file(void)
+{
+    OS_close(selecttest_fd);
+    OS_remove("/drive3/select_test.txt");
+    OS_unmount("/drive3");
+    OS_rmfs("/ramdev3");
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_SelectFdZero, OS_SelectFdAdd, OS_SelectFdClear, OS_SelectFdIsSet
+** Purpose: Configure file descriptor set for select
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_select_fd_test(void)
+{
+    OS_FdSet FdSet;
+
+    if (!UT_NOMINAL_OR_NOTIMPL(OS_SelectFdZero(&FdSet)))
+    {
+        return;
+    }
+
+    UT_RETVAL(OS_SelectFdZero(NULL), OS_INVALID_POINTER);
+    UT_RETVAL(OS_SelectFdAdd(NULL, selecttest_fd), OS_INVALID_POINTER);
+    UT_RETVAL(OS_SelectFdClear(NULL, selecttest_fd), OS_INVALID_POINTER);
+    UT_RETVAL(OS_SelectFdIsSet(NULL, selecttest_fd), false);
+
+    UT_RETVAL(OS_SelectFdAdd(&FdSet, invalid_fd), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_SelectFdAdd(&FdSet, OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_SelectFdClear(&FdSet, invalid_fd), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_SelectFdClear(&FdSet, OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_SelectFdIsSet(&FdSet, invalid_fd), false);
+    UT_RETVAL(OS_SelectFdIsSet(&FdSet, OS_OBJECT_ID_UNDEFINED), false);
+
+    UT_NOMINAL(OS_SelectFdZero(&FdSet));
+    UT_NOMINAL(OS_SelectFdAdd(&FdSet, selecttest_fd));
+    UT_RETVAL(OS_SelectFdIsSet(&FdSet, selecttest_fd), true);
+
+    UT_NOMINAL(OS_SelectFdZero(&FdSet));
+    UT_NOMINAL(OS_SelectFdAdd(&FdSet, selecttest_fd));
+    UT_NOMINAL(OS_SelectFdClear(&FdSet, selecttest_fd));
+    UT_RETVAL(OS_SelectFdIsSet(&FdSet, selecttest_fd), false);
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_SelectSingle(uint32 objid, uint32 *StateFlags, int32 msecs);
+** Purpose: Select on a single file descriptor
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_select_single_test(void)
+{
+    uint32 StateFlags;
+
+    UT_RETVAL(OS_SelectSingle(selecttest_fd, NULL, 0), OS_INVALID_POINTER);
+
+    StateFlags = OS_STREAM_STATE_WRITABLE;
+    if (!UT_NOMINAL_OR_NOTIMPL(OS_SelectSingle(selecttest_fd, &StateFlags, 0)))
+    {
+        return;
+    }
+
+    UtAssert_True((StateFlags & OS_STREAM_STATE_WRITABLE) != 0, "StateFlags (0x%x) & OS_STREAM_STATE_WRITABLE",
+                  (unsigned int)StateFlags);
+
+    StateFlags = OS_STREAM_STATE_READABLE;
+    UT_NOMINAL(OS_SelectSingle(selecttest_fd, &StateFlags, 1));
+
+    UtAssert_True((StateFlags & OS_STREAM_STATE_READABLE) != 0, "StateFlags (0x%x) & OS_STREAM_STATE_READABLE",
+                  (unsigned int)StateFlags);
+
+    UT_RETVAL(OS_SelectSingle(invalid_fd, &StateFlags, 0), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_SelectSingle(OS_OBJECT_ID_UNDEFINED, &StateFlags, 0), OS_ERR_INVALID_ID);
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: int32 OS_SelectMultiple(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+** Purpose: Select on a multiple file descriptors
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_select_multi_test(void)
+{
+    OS_FdSet ReadSet, WriteSet;
+
+    UT_SETUP(OS_SelectFdZero(&WriteSet));
+    UT_SETUP(OS_SelectFdAdd(&WriteSet, selecttest_fd));
+    if (!UT_NOMINAL_OR_NOTIMPL(OS_SelectMultiple(NULL, &WriteSet, 1)))
+    {
+        return;
+    }
+
+    UtAssert_True(OS_SelectFdIsSet(&WriteSet, selecttest_fd), "OS_SelectFdIsSet(&WriteSet, selecttest_fd)");
+
+    UT_SETUP(OS_SelectFdZero(&ReadSet));
+    UT_SETUP(OS_SelectFdAdd(&ReadSet, selecttest_fd));
+    UT_NOMINAL(OS_SelectMultiple(&ReadSet, NULL, 1));
+
+    UtAssert_True(OS_SelectFdIsSet(&ReadSet, selecttest_fd), "!OS_SelectFdIsSet(&ReadSet, selecttest_fd)");
+
+    /* empty set */
+    UT_RETVAL(OS_SelectMultiple(NULL, NULL, 1), OS_ERR_INVALID_ID);
+}
+
+/*================================================================================*
+** End of File: ut_oscore_queue_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_select_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_select_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Chris Knight
+ * Date:  March 2020
+ */
+
+#ifndef UT_OSCORE_SELECT_TEST_H
+#define UT_OSCORE_SELECT_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_select_setup_file(void);
+void UT_os_select_teardown_file(void);
+
+void UT_os_select_fd_test(void);
+void UT_os_select_single_test(void);
+void UT_os_select_multi_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_SELECT_TEST_H */
+```
+
+### `ut_oscore_task_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_task_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_task_test.c
+** Owner: Alan Cudmore
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_task_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+#define UT_TASK_STACK_SIZE 0x2000
+#define UT_TASK_PRIORITY   111
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+extern char *g_task_names[UT_OS_TASK_LIST_LEN];
+extern char  g_long_task_name[UT_OS_NAME_BUFF_SIZE];
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+uint32    g_task_result = 0;
+bool      g_task_handler_called;
+osal_id_t g_task_sync_sem;
+osal_id_t g_task_ids[UT_OS_TASK_LIST_LEN];
+osal_id_t g_task_get_id_result;
+struct
+{
+    uint32 words[UT_TASK_STACK_SIZE];
+} g_task_stacks[UT_OS_TASK_LIST_LEN];
+
+/*--------------------------------------------------------------------------------*
+** External function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*/
+
+void generic_test_task(void)
+{
+    osal_id_t      task_id;
+    OS_task_prop_t task_prop;
+
+    task_id = OS_TaskGetId();
+    OS_TaskGetInfo(task_id, &task_prop);
+
+    UtPrintf("Starting GenericTask: %s, id: %lx\n", task_prop.name, OS_ObjectIdToInteger(task_id));
+
+    while (1)
+    {
+        OS_TaskDelay(1000);
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskCreate
+** Purpose: Creates a task
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_INVALID_PRIORITY if the priority passed in is bad
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_TAKEN if the name passed in has already been used
+**          OS_ERR_NO_FREE_IDS if there no more task can be created
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_create_test()
+{
+    int32 i = 0;
+    char  task_name[UT_OS_NAME_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg-1 */
+
+    UT_RETVAL(OS_TaskCreate(NULL, g_task_names[1], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[1]),
+                            sizeof(g_task_stacks[1]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+              OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Null-pointer-arg-2 */
+
+    UT_RETVAL(OS_TaskCreate(&g_task_ids[2], NULL, generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[2]),
+                            sizeof(g_task_stacks[2]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+              OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Null-pointer-arg-3 */
+
+    UT_RETVAL(OS_TaskCreate(&g_task_ids[3], g_task_names[3], NULL, OSAL_STACKPTR_C(&g_task_stacks[3]),
+                            sizeof(g_task_stacks[3]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+              OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* Bad stack size */
+
+    UT_RETVAL(OS_TaskCreate(&g_task_ids[3], g_task_names[3], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[3]), 0,
+                            OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+              OS_ERR_INVALID_SIZE);
+
+    /*-----------------------------------------------------*/
+    /* #4 Name-too-long */
+
+    UT_RETVAL(OS_TaskCreate(&g_task_ids[4], g_long_task_name, generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[4]),
+                            sizeof(g_task_stacks[4]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+              OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #6 No-free-IDs */
+
+    for (i = 0; i <= OS_MAX_TASKS; i++)
+    {
+        memset(task_name, '\0', sizeof(task_name));
+        UT_os_sprintf(task_name, "CREATE_TASK%d", (int)i);
+        if (i == OS_MAX_TASKS)
+        {
+            UT_RETVAL(OS_TaskCreate(&g_task_ids[i], task_name, generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[i]),
+                                    sizeof(g_task_stacks[i]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+                      OS_ERR_NO_FREE_IDS);
+        }
+        else if (!UT_SETUP(OS_TaskCreate(&g_task_ids[i], task_name, generic_test_task,
+                                         OSAL_STACKPTR_C(&g_task_stacks[i]), sizeof(g_task_stacks[i]),
+                                         OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+        {
+            break;
+        }
+
+        /* Delay to let child task run */
+        OS_TaskDelay(200);
+    }
+
+    /* Reset test environment */
+    for (i = 0; i < OS_MAX_TASKS; i++)
+    {
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[i]));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #7 Duplicate-name */
+
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[7], g_task_names[7], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[7]),
+                               sizeof(g_task_stacks[7]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        UT_RETVAL(OS_TaskCreate(&g_task_ids[8], g_task_names[7], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[8]),
+                                sizeof(g_task_stacks[8]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0),
+                  OS_ERR_NAME_TAKEN);
+
+        /* Delay to let child task run */
+        OS_TaskDelay(200);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[7]));
+    }
+
+    /*-----------------------------------------------------*/
+    /* Nominal, fixed stack */
+
+    UT_NOMINAL(OS_TaskCreate(&g_task_ids[9], g_task_names[9], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[9]),
+                             sizeof(g_task_stacks[9]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0));
+
+    /*-----------------------------------------------------*/
+    /* Nominal, dynamic stack */
+
+    UT_NOMINAL(OS_TaskCreate(&g_task_ids[8], g_task_names[8], generic_test_task, NULL, sizeof(g_task_stacks[8]),
+                             OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0));
+
+    /* Delay to let child task run */
+    OS_TaskDelay(200);
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_TaskDelete(g_task_ids[8]));
+    UT_TEARDOWN(OS_TaskDelete(g_task_ids[9]));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskDelete
+** Purpose: Deletes a task
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid task id
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_delete_test()
+{
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_TaskDelete(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_TaskDelete(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[3], g_task_names[3], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[3]),
+                               sizeof(g_task_stacks[3]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        /* Delay to let child task run */
+        OS_TaskDelay(200);
+
+        UT_NOMINAL(OS_TaskDelete(g_task_ids[3]));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskInstallDeleteHandler
+** Purpose: Installs a callback function that is called when the task is deleted
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid task id
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void delete_handler_callback(void)
+{
+    UtPrintf("Task delete callback...\n");
+    g_task_handler_called = true;
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void delete_handler_test_task(void)
+{
+    osal_id_t      task_id;
+    OS_task_prop_t task_prop;
+
+    task_id = OS_TaskGetId();
+    OS_TaskGetInfo(task_id, &task_prop);
+
+    UtPrintf("Starting DeleteTest Task: %s, id: %lx\n", task_prop.name, OS_ObjectIdToInteger(task_id));
+
+    g_task_result = OS_TaskInstallDeleteHandler(&delete_handler_callback);
+
+    /*
+    ** Release the semaphore so the main function can record the results of the test
+    ** and clean up
+    */
+    OS_BinSemGive(g_task_sync_sem);
+
+    for (;;)
+    {
+        OS_TaskDelay(1000);
+    }
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_task_install_delete_handler_test(void)
+{
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    /*
+    ** This test works because it is being called from the main task
+    **  which should not be an official OSAL task
+    */
+    UT_RETVAL(OS_TaskInstallDeleteHandler(&delete_handler_callback), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Nominal */
+
+    if (UT_SETUP(OS_BinSemCreate(&g_task_sync_sem, "TaskSync", 1, 0)))
+    {
+        OS_BinSemTake(g_task_sync_sem);
+
+        g_task_handler_called = false;
+
+        if (UT_SETUP(OS_TaskCreate(&g_task_ids[2], g_task_names[2], delete_handler_test_task,
+                                   OSAL_STACKPTR_C(&g_task_stacks[2]), sizeof(g_task_stacks[2]),
+                                   OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+        {
+            /* Wait for the task to finish the test */
+            UT_SETUP(OS_BinSemTake(g_task_sync_sem));
+
+            /* Delay to let child task run */
+            OS_TaskDelay(500);
+
+            UT_TEARDOWN(OS_TaskDelete(g_task_ids[2]));
+
+            UtAssert_True(g_task_result == OS_SUCCESS, "OS_TaskInstallDeleteHandler() (%d) == OS_SUCCESS",
+                          (int)g_task_result);
+            UtAssert_True(g_task_handler_called, "OS_TaskInstallDeleteHandler() callback invoked");
+        }
+
+        UT_TEARDOWN(OS_BinSemDelete(g_task_sync_sem));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskExit
+** Purpose: Allows a task to delete itself
+** Parameters: To-be-filled-in
+** Returns: Nothing
+**--------------------------------------------------------------------------------*/
+void exit_test_task(void)
+{
+    osal_id_t      task_id;
+    OS_task_prop_t task_prop;
+
+    task_id = OS_TaskGetId();
+    OS_TaskGetInfo(task_id, &task_prop);
+
+    UtPrintf("Starting ExitTest Task: %s, id: %lx\n", task_prop.name, OS_ObjectIdToInteger(task_id));
+
+    /*
+    ** The parent task will check to see if this task is valid.
+    ** As long as it has not successfully called OS_TaskExit, it should
+    ** be valid.
+    */
+    while (1)
+    {
+        OS_BinSemGive(g_task_sync_sem);
+
+        OS_TaskExit();
+    }
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_task_exit_test(void)
+{
+    OS_task_prop_t task_prop;
+
+    /*-----------------------------------------------------*/
+    /* #1 Nominal */
+
+    if (UT_SETUP(OS_BinSemCreate(&g_task_sync_sem, "TaskSync", 1, 0)))
+    {
+        UT_SETUP(OS_BinSemTake(g_task_sync_sem));
+
+        if (UT_SETUP(OS_TaskCreate(&g_task_ids[1], g_task_names[1], exit_test_task, OSAL_STACKPTR_C(&g_task_stacks[1]),
+                                   sizeof(g_task_stacks[1]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+        {
+            /* Wait for the task to finish the test */
+            UT_SETUP(OS_BinSemTake(g_task_sync_sem));
+
+            /* Delay to let the child task run */
+            OS_TaskDelay(500);
+
+            /*
+            ** The only real way to tell if TaskExit ran is to check to see if the
+            ** task ID is valid. It should not be valid
+            */
+            UT_RETVAL(OS_TaskGetInfo(g_task_ids[1], &task_prop), OS_ERR_INVALID_ID);
+        }
+
+        UT_TEARDOWN(OS_BinSemDelete(g_task_sync_sem));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskDelay
+** Purpose: Suspends a given task for the given period of milliseconds
+** Parameters: To-be-filled-in
+** Returns: OS_ERROR if sleep failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_delay_test()
+{
+    OS_time_t before_time;
+    OS_time_t after_time;
+    int64     elapsed;
+
+    /* Initialize to avoid static analysis warnings */
+    memset(&before_time, 0, sizeof(before_time));
+    memset(&after_time, 0, sizeof(after_time));
+
+    /*
+     * Note, if running under a VM/hypervisor, the real time clock may not
+     * be very precise, depending on its implementation.  Therefore the allowed
+     * ranges are slightly extended here.
+     */
+
+    /*-----------------------------------------------------*/
+    /* Nominal, 100ms delay */
+    UT_SETUP(OS_GetLocalTime(&before_time));
+    UT_NOMINAL(OS_TaskDelay(100));
+    UT_SETUP(OS_GetLocalTime(&after_time));
+
+    elapsed = OS_TimeGetTotalMilliseconds(OS_TimeSubtract(after_time, before_time));
+    UtAssert_True(elapsed >= 95, "Elapsed time %ld msec, expected 100", (long)elapsed);
+
+    /*-----------------------------------------------------*/
+    /* Nominal, 250ms delay */
+    UT_SETUP(OS_GetLocalTime(&before_time));
+    UT_NOMINAL(OS_TaskDelay(250));
+    UT_SETUP(OS_GetLocalTime(&after_time));
+
+    elapsed = OS_TimeGetTotalMilliseconds(OS_TimeSubtract(after_time, before_time));
+    UtAssert_True(elapsed >= 245, "Elapsed time %ld msec, expected 250", (long)elapsed);
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskSetPriority
+** Purpose: Sets task priority for the given task id
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid task id
+**          OS_ERR_INVALID_PRIORITY if the priority passed in is greater than the max allowed
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_set_priority_test()
+{
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_TaskSetPriority(UT_OBJID_INCORRECT, OSAL_PRIORITY_C(100)), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_TaskSetPriority(OS_OBJECT_ID_UNDEFINED, OSAL_PRIORITY_C(100)), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #4 Nominal */
+
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[4], g_task_names[4], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[4]),
+                               sizeof(g_task_stacks[4]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        UT_NOMINAL(OS_TaskSetPriority(g_task_ids[4], OSAL_PRIORITY_C(UT_TASK_PRIORITY - 10)));
+
+        /* Delay to let child task run */
+        OS_TaskDelay(500);
+
+        UT_NOMINAL(OS_TaskSetPriority(g_task_ids[4], OSAL_PRIORITY_C(UT_TASK_PRIORITY)));
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[4]));
+    }
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void getid_test_task(void)
+{
+    OS_task_prop_t task_prop;
+
+    g_task_get_id_result = OS_TaskGetId();
+    OS_TaskGetInfo(g_task_get_id_result, &task_prop);
+
+    while (1)
+    {
+        OS_TaskDelay(1000);
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskGetId
+** Purpose: Returns the task id for the task that calls this routine
+** Parameters: To-be-filled-in
+** Returns: Task id of the task that calls this routine
+**--------------------------------------------------------------------------------*/
+void UT_os_task_get_id_test()
+{
+    /*
+     * Note this function does not return a normal status code,
+     * there is no provision to return/check for OS_ERR_NOT_IMPLEMENTED.
+     */
+
+    /*-----------------------------------------------------*/
+    /* #1 Nominal */
+
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[1], g_task_names[1], getid_test_task, OSAL_STACKPTR_C(&g_task_stacks[1]),
+                               sizeof(g_task_stacks[1]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        OS_TaskDelay(500);
+
+        UtAssert_True(OS_ObjectIdEqual(g_task_get_id_result, g_task_ids[1]), "OS_TaskGetId() (%lu) == %lu",
+                      OS_ObjectIdToInteger(g_task_get_id_result), OS_ObjectIdToInteger(g_task_ids[1]));
+
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[1]));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskGetIdByName
+** Purpose: Returns the task id of the given task name
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NAME_TOO_LONG if the name passed in is too long
+**          OS_ERR_NAME_NOT_FOUND if the name passed in is not in the task table
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_get_id_by_name_test()
+{
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg-1 */
+
+    UT_RETVAL(OS_TaskGetIdByName(NULL, "Name"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-2 */
+
+    UT_RETVAL(OS_TaskGetIdByName(&g_task_ids[2], NULL), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Name-too-long */
+
+    UT_RETVAL(OS_TaskGetIdByName(&g_task_ids[3], g_long_task_name), OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* #4 Name-not-found */
+
+    UT_RETVAL(OS_TaskGetIdByName(&g_task_ids[4], "NotFound"), OS_ERR_NAME_NOT_FOUND);
+
+    /*-----------------------------------------------------*/
+    /* #5 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[5], g_task_names[5], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[5]),
+                               sizeof(g_task_stacks[5]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        UT_NOMINAL(OS_TaskGetIdByName(&g_task_ids[6], g_task_names[5]));
+
+        UtAssert_True(OS_ObjectIdEqual(g_task_ids[5], g_task_ids[6]), "OS_TaskGetIdByName() ID (%lu) == %lu",
+                      OS_ObjectIdToInteger(g_task_ids[5]), OS_ObjectIdToInteger(g_task_ids[6]));
+
+        OS_TaskDelay(500); /* Delay to let task run */
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[5]));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskGetInfo
+** Purpose: Returns task information about the given task id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in is not a valid task id
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_task_get_info_test()
+{
+    OS_task_prop_t task_prop;
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_TaskGetInfo(UT_OBJID_INCORRECT, &task_prop), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_TaskGetInfo(OS_OBJECT_ID_UNDEFINED, &task_prop), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg */
+
+    /* Setup */
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[2], g_task_names[2], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[2]),
+                               sizeof(g_task_stacks[2]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        UT_RETVAL(OS_TaskGetInfo(g_task_ids[2], NULL), OS_INVALID_POINTER);
+
+        /* Delay to let child task run */
+        OS_TaskDelay(500);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[2]));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    if (UT_SETUP(OS_TaskCreate(&g_task_ids[3], g_task_names[3], generic_test_task, OSAL_STACKPTR_C(&g_task_stacks[3]),
+                               sizeof(g_task_stacks[3]), OSAL_PRIORITY_C(UT_TASK_PRIORITY), 0)))
+    {
+        UT_NOMINAL(OS_TaskGetInfo(g_task_ids[3], &task_prop));
+
+        /* Delay to let child task run */
+        OS_TaskDelay(500);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_TaskDelete(g_task_ids[3]));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_TaskFindIdBySystemData
+** Purpose: Finds the abstract OSAL task ID from the system ID data
+**--------------------------------------------------------------------------------*/
+void UT_os_task_getid_by_sysdata_test()
+{
+    uint8     sysdata = 0;
+    osal_id_t task_id;
+
+    /*
+     * NOTE: OSAL does not provide a means to get the low level system ID data directly.
+     * This API is intended to aid in exception processing in a PSP/BSP, where the
+     * low level task information is obtained outside of OSAL in a platform-specific
+     * manner.
+     *
+     * As a result this cannot check for nominal conditions, only validate the error checking.
+     */
+    UT_RETVAL(OS_TaskFindIdBySystemData(NULL, &sysdata, sizeof(sysdata)), OS_INVALID_POINTER);
+    UT_RETVAL(OS_TaskFindIdBySystemData(&task_id, NULL, sizeof(sysdata)), OS_INVALID_POINTER);
+    UT_RETVAL(OS_TaskFindIdBySystemData(&task_id, &sysdata, 0), OS_INVALID_POINTER);
+}
+
+/*================================================================================*
+** End of File: ut_oscore_task_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_task_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_task_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Alan Cudmore
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSCORE_TASK_TEST_H
+#define UT_OSCORE_TASK_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+#define UT_OS_TASK_LIST_LEN (OS_MAX_TASKS + 10)
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_task_create_test(void);
+void UT_os_task_delete_test(void);
+void UT_os_task_install_delete_handler_test(void);
+void UT_os_task_exit_test(void);
+void UT_os_task_set_priority_test(void);
+void UT_os_task_register_test(void);
+void UT_os_task_get_id(void);
+void UT_os_task_get_id_by_name_test(void);
+void UT_os_task_get_info_test(void);
+void UT_os_task_delay_test(void);
+void UT_os_task_get_id_test(void);
+void UT_os_task_getid_by_sysdata_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_TASK_TEST_H */
+```
+
+### `ut_oscore_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_oscore_test.c
+** Owner: Tam Ngo/Alan Cudmore
+** Date:  May 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_oscore_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+const char *g_task_names[UT_OS_TASK_LIST_LEN];
+char        g_long_task_name[UT_OS_NAME_BUFF_SIZE];
+
+/*--------------------------------------------------------------------------------*
+** External function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_misc(void);
+void UT_os_init_task_create_test(void);
+void UT_os_init_task_delete_test(void);
+void UT_os_setup_install_delete_handler_test(void);
+void UT_os_init_task_exit_test(void);
+void UT_os_init_task_delay_test(void);
+void UT_os_init_task_set_priority_test(void);
+void UT_os_init_task_register_test(void);
+void UT_os_init_task_get_id_test(void);
+void UT_os_init_task_get_id_by_name_test(void);
+void UT_os_init_task_get_info_test(void);
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_misc()
+{
+    memset(g_long_task_name, 'X', sizeof(g_long_task_name));
+    g_long_task_name[sizeof(g_long_task_name) - 1] = '\0';
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_create_test()
+{
+    g_task_names[0] = "Create_NotImpl";
+    g_task_names[1] = "Create_NullPtr1";
+    g_task_names[2] = "Create_NullPtr2";
+    g_task_names[3] = "Create_NullPtr3";
+    g_task_names[4] = "Create_LongName";
+    g_task_names[5] = "Create_InvPrior";
+    g_task_names[6] = "Create_Full";
+    g_task_names[7] = "Create_DuplName";
+    g_task_names[8] = "Create_OsErr";
+    g_task_names[9] = "Create_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_delete_test()
+{
+    g_task_names[0] = "Delete_NotImpl";
+    g_task_names[1] = "Delete_InvArg";
+    g_task_names[2] = "Delete_OsErr";
+    g_task_names[3] = "Delete_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_setup_install_delete_handler_test()
+{
+    g_task_names[0] = "DelHandler_NotImpl";
+    g_task_names[1] = "DelHandler_InvArg";
+    g_task_names[2] = "DelHandler_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_exit_test()
+{
+    g_task_names[0] = "Exit_NotImpl";
+    g_task_names[1] = "Exit_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_delay_test()
+{
+    g_task_names[0] = "Delay_NotImpl";
+    g_task_names[1] = "Delay_OsErr";
+    g_task_names[2] = "Delay_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_set_priority_test()
+{
+    g_task_names[0] = "SetPrio_NotImpl";
+    g_task_names[1] = "SetPrio_InvArg";
+    g_task_names[2] = "SetPrio_InvPrio";
+    g_task_names[3] = "SetPrio_OsErr";
+    g_task_names[4] = "SetPrio_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_register_test()
+{
+    g_task_names[0] = "Register_NotImpl";
+    g_task_names[1] = "Register_InvArg";
+    g_task_names[2] = "Register_OsErr";
+    g_task_names[3] = "Register_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_get_id_test()
+{
+    g_task_names[0] = "GetId_NotImpl";
+    g_task_names[1] = "GetId_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_get_id_by_name_test()
+{
+    g_task_names[0] = "GetIdByName_NotImpl";
+    g_task_names[1] = "GetIdByName_InvPtr1";
+    g_task_names[2] = "GetIdByName_InvPtr2";
+    g_task_names[3] = "GetIdByName_LongName";
+    g_task_names[4] = "GetIdByName_NotFound";
+    g_task_names[5] = "GetIdByName_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*/
+
+void UT_os_init_task_get_info_test()
+{
+    g_task_names[0] = "GetInfo_NotImpl";
+    g_task_names[1] = "GetInfo_InvId";
+    g_task_names[2] = "GetInfo_InvPtr";
+    g_task_names[3] = "GetInfo_Nominal";
+}
+
+/*--------------------------------------------------------------------------------*
+** Main
+**--------------------------------------------------------------------------------*/
+
+void UtTest_Setup(void)
+{
+    /* the test should call OS_API_Teardown() before exiting */
+    UtTest_AddTeardown(OS_API_Teardown, "Cleanup");
+
+    UtTest_Add(UT_os_apiinit_test, NULL, NULL, "OS_API_Init");
+    UtTest_Add(UT_os_registereventhandler_test, NULL, NULL, "OS_RegisterEventHandler");
+
+    UtTest_Add(UT_os_printf_test, NULL, NULL, "OS_printf");
+    UtTest_Add(UT_os_printfenable_test, NULL, NULL, "OS_printf_enable");
+    UtTest_Add(UT_os_printfdisable_test, NULL, NULL, "OS_printf_disable");
+
+    UtTest_Add(UT_os_bin_sem_create_test, NULL, NULL, "OS_BinSemCreate");
+    UtTest_Add(UT_os_bin_sem_delete_test, NULL, NULL, "OS_BinSemDelete");
+    UtTest_Add(UT_os_bin_sem_flush_test, NULL, NULL, "OS_BinSemFlush");
+    UtTest_Add(UT_os_bin_sem_give_test, NULL, NULL, "OS_BinSemGive");
+    UtTest_Add(UT_os_bin_sem_take_test, NULL, NULL, "OS_BinSemTake");
+    UtTest_Add(UT_os_bin_sem_timed_wait_test, NULL, NULL, "OS_BinSemTimedWait");
+    UtTest_Add(UT_os_bin_sem_get_id_by_name_test, NULL, NULL, "OS_BinSemGetIdByName");
+    UtTest_Add(UT_os_bin_sem_get_info_test, NULL, NULL, "OS_BinSemGetInfo");
+
+    UtTest_Add(UT_os_count_sem_create_test, NULL, NULL, "OS_CountSemCreate");
+    UtTest_Add(UT_os_count_sem_delete_test, NULL, NULL, "OS_CountSemDelete");
+    UtTest_Add(UT_os_count_sem_give_test, NULL, NULL, "OS_CountSemGive");
+    UtTest_Add(UT_os_count_sem_take_test, NULL, NULL, "OS_CountSemTake");
+    UtTest_Add(UT_os_count_sem_timed_wait_test, NULL, NULL, "OS_CountSemTimedWait");
+    UtTest_Add(UT_os_count_sem_get_id_by_name_test, NULL, NULL, "OS_CountSemGetIdByName");
+    UtTest_Add(UT_os_count_sem_get_info_test, NULL, NULL, "OS_CountSemGetInfo");
+
+    UtTest_Add(UT_os_mut_sem_create_test, NULL, NULL, "OS_MutSemCreate");
+    UtTest_Add(UT_os_mut_sem_delete_test, NULL, NULL, "OS_MutSemDelete");
+    UtTest_Add(UT_os_mut_sem_give_test, NULL, NULL, "OS_MutSemGive");
+    UtTest_Add(UT_os_mut_sem_take_test, NULL, NULL, "OS_MutSemTake");
+    UtTest_Add(UT_os_mut_sem_get_id_by_name_test, NULL, NULL, "OS_MutSemGetIdByName");
+    UtTest_Add(UT_os_mut_sem_get_info_test, NULL, NULL, "OS_MutSemGetInfo");
+
+    UtTest_Add(UT_os_queue_create_test, NULL, NULL, "OS_QueueCreate");
+    UtTest_Add(UT_os_queue_delete_test, NULL, NULL, "OS_QueueDelete");
+    UtTest_Add(UT_os_queue_put_test, NULL, NULL, "OS_QueuePut");
+    UtTest_Add(UT_os_queue_get_test, NULL, NULL, "OS_QueueGet");
+    UtTest_Add(UT_os_queue_get_id_by_name_test, NULL, NULL, "OS_QueueGetIdByName");
+    UtTest_Add(UT_os_queue_get_info_test, NULL, NULL, "OS_QueueGetInfo");
+
+    UtTest_Add(UT_os_select_fd_test, UT_os_select_setup_file, UT_os_select_teardown_file, "OS_SelectFd");
+    UtTest_Add(UT_os_select_single_test, UT_os_select_setup_file, UT_os_select_teardown_file, "OS_SelectSingle");
+    UtTest_Add(UT_os_select_multi_test, UT_os_select_setup_file, UT_os_select_teardown_file, "OS_SelectMultiple");
+
+    UtTest_Add(NULL, UT_os_init_task_misc, NULL, "UT_os_init_task_misc");
+    UtTest_Add(UT_os_task_create_test, UT_os_init_task_create_test, NULL, "OS_TaskCreate");
+    UtTest_Add(UT_os_task_delete_test, UT_os_init_task_delete_test, NULL, "OS_TaskDelete");
+    UtTest_Add(UT_os_task_install_delete_handler_test, UT_os_setup_install_delete_handler_test, NULL,
+               "OS_TaskInstallDeleteHandler");
+    UtTest_Add(UT_os_task_exit_test, UT_os_init_task_exit_test, NULL, "OS_TaskExit");
+    UtTest_Add(UT_os_task_delay_test, UT_os_init_task_delay_test, NULL, "OS_TaskDelay");
+    UtTest_Add(UT_os_task_set_priority_test, UT_os_init_task_set_priority_test, NULL, "OS_TaskSetPriority");
+    UtTest_Add(UT_os_task_get_id_test, UT_os_init_task_get_id_test, NULL, "OS_TaskGetId");
+    UtTest_Add(UT_os_task_get_id_by_name_test, UT_os_init_task_get_id_by_name_test, NULL, "OS_TaskGetIdByName");
+    UtTest_Add(UT_os_task_get_info_test, UT_os_init_task_get_info_test, NULL, "OS_TaskGetInfo");
+    UtTest_Add(UT_os_task_getid_by_sysdata_test, UT_os_task_getid_by_sysdata_test, NULL, "OS_TaskFindIdBySystemData");
+
+    UtTest_Add(UT_os_geterrorname_test, NULL, NULL, "OS_GetErrorName");
+    UtTest_Add(UT_os_statustostring_test, NULL, NULL, "OS_StatusToString");
+
+    UtTest_Add(UT_os_getlocaltime_test, NULL, NULL, "OS_GetLocalTime");
+    UtTest_Add(UT_os_setlocaltime_test, NULL, NULL, "OS_SetLocalTime");
+
+    UtTest_Add(UT_os_heapgetinfo_test, NULL, NULL, "OS_HeapGetInfo");
+}
+
+/*================================================================================*
+** End of File: ut_oscore_test.c
+**================================================================================*/
+```
+
+### `ut_oscore_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/oscore-test/ut_oscore_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo/Alan Cudmore
+ * Date:  May 2013
+ */
+
+#ifndef UT_OSCORE_TEST_H
+#define UT_OSCORE_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+#include "ut_oscore_misc_test.h"
+#include "ut_oscore_binsem_test.h"
+#include "ut_oscore_countsem_test.h"
+#include "ut_oscore_mutex_test.h"
+#include "ut_oscore_queue_test.h"
+#include "ut_oscore_select_test.h"
+#include "ut_oscore_task_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSCORE_TEST_H */
+```

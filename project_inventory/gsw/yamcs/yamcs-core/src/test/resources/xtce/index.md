@@ -3,54 +3,6071 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `a1.xml`
 
-file--a1.xml
-file--a2.xml
-file--array-arg.xml
-file--array-in-array-arg.xml
-file--array-tm.xml
-file--b.xml
-file--BogusSAT-1.xml
-file--BogusSAT-2.xml
-file--booleans.xml
-file--ccsds-green-book.xml
-file--container-entry.xml
-file--empty-match-criteria.xml
-file--enum-arg.xml
-file--ref-xtce.xml
-file--refsolver1.xml
-file--refsolver2.xml
-file--refsolver3.xml
-file--strings-cmd.xml
-file--strings-tm.xml
-file--test_float_add_js.xml
-file--VariableBinary.xml
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/a1.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<xtce:SpaceSystem name="b" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+</xtce:SpaceSystem>
 ```
 
-## 항목
+### `a2.xml`
 
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/a1.xml`](file--a1.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/a2.xml`](file--a2.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/array-arg.xml`](file--array-arg.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/array-in-array-arg.xml`](file--array-in-array-arg.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/array-tm.xml`](file--array-tm.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/b.xml`](file--b.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/BogusSAT-1.xml`](file--BogusSAT-1.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/BogusSAT-2.xml`](file--BogusSAT-2.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/booleans.xml`](file--booleans.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/ccsds-green-book.xml`](file--ccsds-green-book.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/container-entry.xml`](file--container-entry.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/empty-match-criteria.xml`](file--empty-match-criteria.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/enum-arg.xml`](file--enum-arg.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/ref-xtce.xml`](file--ref-xtce.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver1.xml`](file--refsolver1.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver2.xml`](file--refsolver2.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver3.xml`](file--refsolver3.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/strings-cmd.xml`](file--strings-cmd.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/strings-tm.xml`](file--strings-tm.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/test_float_add_js.xml`](file--test_float_add_js.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/xtce/VariableBinary.xml`](file--VariableBinary.xml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/a2.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<xtce:SpaceSystem name="a2" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+</xtce:SpaceSystem>
+```
+
+### `array-arg.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/array-arg.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xi="http://www.w3.org/2001/XInclude" name="ArrayArgTest"
+	shortDescription="Test of binary parameter and argument with variable size" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+
+	<CommandMetaData>
+		<ArgumentTypeSet>
+			<IntegerArgumentType name="uint16">
+				<IntegerDataEncoding sizeInBits="16" />
+			</IntegerArgumentType>
+			<IntegerArgumentType name="uint16_max5">
+				<IntegerDataEncoding sizeInBits="16" />
+				<ValidRangeSet>
+					<ValidRange maxInclusive="5" />
+				</ValidRangeSet>
+			</IntegerArgumentType>
+			<IntegerArgumentType name="uint8">
+				<IntegerDataEncoding sizeInBits="8" />
+			</IntegerArgumentType>
+			<ArrayArgumentType name="array1_type" arrayTypeRef="uint8">
+				<DimensionList>
+					<Dimension>
+						<StartingIndex>
+							<FixedValue>0</FixedValue>
+						</StartingIndex>
+						<EndingIndex>
+							<DynamicValue>
+								<ArgumentInstanceRef argumentRef="length" />
+								<LinearAdjustment intercept="-1" />
+							</DynamicValue>
+						</EndingIndex>
+					</Dimension>
+				</DimensionList>
+			</ArrayArgumentType>
+		</ArgumentTypeSet>
+		<MetaCommandSet>
+			<MetaCommand name="cmd1">
+				<ArgumentList>
+					<Argument name="length" argumentTypeRef="uint16_max5" />
+					<Argument name="array1" argumentTypeRef="array1_type" />
+				</ArgumentList>
+				<CommandContainer name="cmd1_container">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="length" />
+						<ArgumentRefEntry argumentRef="array1" />
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+		</MetaCommandSet>
+	</CommandMetaData>
+</SpaceSystem>
+```
+
+### `array-in-array-arg.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/array-in-array-arg.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xi="http://www.w3.org/2001/XInclude" name="ArrayInArrayArgTest"
+	shortDescription="Test of array in array argument" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+
+    <CommandMetaData>
+        <ArgumentTypeSet>
+        	<IntegerArgumentType name="uint8">
+				<IntegerDataEncoding sizeInBits="8" />
+			</IntegerArgumentType>
+			<IntegerArgumentType name="uint16">
+				<IntegerDataEncoding sizeInBits="16" />
+			</IntegerArgumentType>		
+			<IntegerArgumentType name="uint32">
+				<IntegerDataEncoding sizeInBits="32" />
+			</IntegerArgumentType>        	
+            <ArrayArgumentType name="inner_array" arrayTypeRef="uint16">
+                <DimensionList>
+                    <Dimension>
+                        <StartingIndex>
+                            <FixedValue>0</FixedValue>
+                        </StartingIndex>
+                        <EndingIndex>
+                            <DynamicValue>
+                                <ArgumentInstanceRef argumentRef="inner_array_length" />
+                                <LinearAdjustment intercept="-1" />
+                            </DynamicValue>
+                        </EndingIndex>
+                    </Dimension>
+                </DimensionList>
+            </ArrayArgumentType>
+			<AggregateArgumentType name="aggr_type">
+                <MemberList>              
+                    <Member name="inner_array_length" typeRef="uint8"/>
+                    <Member name="inner_array" typeRef="inner_array"/>
+                </MemberList>
+            </AggregateArgumentType>
+             <ArrayArgumentType name="outer_array_type" arrayTypeRef="aggr_type">
+                <DimensionList>
+                    <Dimension>
+                        <StartingIndex>
+                            <FixedValue>0</FixedValue>
+                        </StartingIndex>
+                        <EndingIndex>
+                            <DynamicValue>
+                                <ArgumentInstanceRef argumentRef="outer_array_length" />
+                                <LinearAdjustment intercept="-1" />
+                            </DynamicValue>
+                        </EndingIndex>
+                    </Dimension>
+                </DimensionList>
+            </ArrayArgumentType>
+        </ArgumentTypeSet>
+        <MetaCommandSet>
+            <MetaCommand name="cmd1">                
+                <ArgumentList>
+                    <Argument name="outer_array_length" argumentTypeRef="uint16"/>
+                    <Argument name="outer_array" argumentTypeRef="outer_array_type"/>
+                </ArgumentList>
+                <CommandContainer name="cmd1_container">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="outer_array_length"/>
+                        <ArgumentRefEntry argumentRef="outer_array"/>                       
+                    </EntryList>                    
+                </CommandContainer>
+            </MetaCommand>
+        </MetaCommandSet>
+    </CommandMetaData>
+</SpaceSystem>
+```
+
+### `array-tm.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/array-tm.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xi="http://www.w3.org/2001/XInclude" name="ArrayTmTest"
+	shortDescription="Test of binary parameter and argument with variable size" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<IntegerParameterType name="uint32" signed="false">
+				<IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+			</IntegerParameterType>
+			<EnumeratedParameterType name="enum1">
+				<IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+				<EnumerationList>
+					<Enumeration value="0" label="zero" />
+					<Enumeration value="1" label="unu" />
+					<Enumeration value="2" label="doi" />
+					<Enumeration value="3" label="trei" />
+				</EnumerationList>
+			</EnumeratedParameterType>
+			<FloatParameterType name="f64" sizeInBits="64">
+				<IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+			</FloatParameterType>	
+			<AggregateParameterType name="aggrtype">
+				<MemberList>
+					<Member typeRef="uint32" name="m1"/>
+					<Member typeRef="uint32" name="m2"/>
+				</MemberList>
+			</AggregateParameterType>
+			<AggregateParameterType name="aggrtype_enum">
+				<MemberList>
+					<Member typeRef="uint32" name="m1"/>
+					<Member typeRef="enum1" name="m2"/>
+				</MemberList>
+			</AggregateParameterType>
+			<ArrayParameterType arrayTypeRef="uint32" name="uint32arraytype">
+				<DimensionList>
+					<Dimension>
+						<StartingIndex>
+							<FixedValue>0</FixedValue>
+						</StartingIndex>
+						<EndingIndex>
+							<DynamicValue>
+								<ParameterInstanceRef parameterRef="n"/>
+								<LinearAdjustment intercept="-1"/>
+							</DynamicValue>
+						</EndingIndex>
+					</Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<ArrayParameterType arrayTypeRef="f64" name="f64arraytype">
+				<DimensionList>
+					<Dimension>
+						<StartingIndex>
+							<FixedValue>0</FixedValue>
+						</StartingIndex>
+						<EndingIndex>
+							<DynamicValue>
+								<ParameterInstanceRef parameterRef="n"/>
+								<LinearAdjustment intercept="-1"/>
+							</DynamicValue>
+						</EndingIndex>
+					</Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<ArrayParameterType arrayTypeRef="aggrtype" name="aggrarraytype">
+				<DimensionList>
+					<Dimension>
+						<StartingIndex>
+							<FixedValue>0</FixedValue>
+						</StartingIndex>
+						<EndingIndex>
+							<DynamicValue>
+								<ParameterInstanceRef parameterRef="n"/>
+								<LinearAdjustment intercept="-1"/>
+							</DynamicValue>
+						</EndingIndex>
+					</Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+			<ArrayParameterType arrayTypeRef="aggrtype_enum" name="aggrarraytype_enum">
+				<DimensionList>
+					<Dimension>
+						<StartingIndex>
+							<FixedValue>0</FixedValue>
+						</StartingIndex>
+						<EndingIndex>
+							<DynamicValue>
+								<ParameterInstanceRef parameterRef="n"/>
+								<LinearAdjustment intercept="-1"/>
+							</DynamicValue>
+						</EndingIndex>
+					</Dimension>
+				</DimensionList>
+			</ArrayParameterType>
+		</ParameterTypeSet>
+		<ParameterSet>
+			<Parameter parameterTypeRef="uint32" name="n"/>
+			<Parameter parameterTypeRef="uint32arraytype" name="array1"/>
+			<Parameter parameterTypeRef="f64arraytype" name="array2"/>
+			<Parameter parameterTypeRef="aggrarraytype" name="array3"/>
+			<Parameter parameterTypeRef="aggrarraytype_enum" name="array4"/>
+		</ParameterSet>
+		<ContainerSet>
+			<SequenceContainer name="packet1">
+				<EntryList>
+					<ParameterRefEntry parameterRef="n"/>
+					<ArrayParameterRefEntry parameterRef="array1"/>
+				</EntryList>
+			</SequenceContainer>
+			<SequenceContainer name="packet2">
+				<EntryList>
+					<ParameterRefEntry parameterRef="n"/>
+					<ArrayParameterRefEntry parameterRef="array2"/>
+				</EntryList>
+			</SequenceContainer>
+			<SequenceContainer name="packet3">
+				<EntryList>
+					<ParameterRefEntry parameterRef="n"/>
+					<ArrayParameterRefEntry parameterRef="array3"/>
+				</EntryList>
+			</SequenceContainer>
+			<SequenceContainer name="packet4">
+				<EntryList>
+					<ParameterRefEntry parameterRef="n"/>
+					<ArrayParameterRefEntry parameterRef="array4"/>
+				</EntryList>
+			</SequenceContainer>
+		</ContainerSet>
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `b.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/b.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<xtce:SpaceSystem name="a1" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+</xtce:SpaceSystem>
+```
+
+### `BogusSAT-1.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/BogusSAT-1.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+Copyright 2015 David Overeem (dovereem@cox.net)
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<xtce:SpaceSystem name="BogusSAT" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.omg.org/space/xtce SpaceSystemV1.2-27Feb2014-mods.xsd">
+	<xtce:LongDescription>This is a bogus satellite telemetry and telecommand database.  The purpose of BogusSAT is to exercise the capabilities of XTCE and the XTCE View tool.</xtce:LongDescription>
+	<xtce:Header validationStatus="Working" classification="NotClassified" version="1.0" date="27-10-2012">
+		<xtce:AuthorSet>
+			<xtce:Author>David Overeem, Member of the OMG SDTF and XTCE RTF</xtce:Author>
+		</xtce:AuthorSet>
+		<xtce:NoteSet>
+			<xtce:Note>The root SpaceSystem for BogusSAT contains the parameters needed to define the transport of data for any of the BogusSAT satellites in the fleet or constellation.</xtce:Note>
+                        <xtce:Note>This document is used for unit tests and has deliberate errors.  Do not trust this for examples.</xtce:Note>
+		</xtce:NoteSet>
+	</xtce:Header>
+	<xtce:TelemetryMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:AbsoluteTimeParameterType name="POSIXTimeType" shortDescription="POSIX UNIX Time 'timeval' which is 2 unsigned 32 bit integers">
+				<xtce:Encoding>
+					<xtce:IntegerDataEncoding sizeInBits="64"/>
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:Epoch>1970-01-01</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+			<xtce:EnumeratedParameterType name="TM_CHECKSUMType" initialValue="NotUsed">
+				<xtce:UnitSet/>
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="NotUsed" value="0"/>
+					<xtce:Enumeration label="CRC" value="1"/>
+					<xtce:Enumeration label="Checksum" value="2"/>
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:EnumeratedParameterType name="MissionType" shortDescription="Reserved Mission Phase and Operating Modes">
+				<xtce:UnitSet/>
+				<xtce:EnumerationList>
+					<xtce:Enumeration value="0" label="TestBed"/>
+					<xtce:Enumeration value="1" label="IntegrationTest"/>
+					<xtce:Enumeration value="2" label="Vibration"/>
+					<xtce:Enumeration value="3" label="ThermalVac"/>
+					<xtce:Enumeration value="4" label="EMC"/>
+					<xtce:Enumeration value="5" label="Platform"/>
+					<xtce:Enumeration value="6" label="Launch"/>
+					<xtce:Enumeration value="7" label="Orbit"/>
+					<xtce:Enumeration value="8" label="Checkout"/>
+					<xtce:Enumeration value="9" label="Mission"/>
+					<xtce:Enumeration value="10" label="Safe"/>
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSSCIDType">
+				<xtce:UnitSet/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSVCIDType">
+				<xtce:UnitSet/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSVersionType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="3"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSTypeType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="1"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSSecHType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="1"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSAPIDType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="11"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSGroupFlagsType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="2"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSSourceSequenceCountType">
+				<xtce:UnitSet/>
+				<xtce:IntegerDataEncoding sizeInBits="14"/>
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="CCSDSPacketLengthType">
+				<xtce:UnitSet>
+					<xtce:Unit description="Size">Octets</xtce:Unit>
+				</xtce:UnitSet>
+				<xtce:IntegerDataEncoding sizeInBits="16" bitOrder="mostSignificantBitFirst" encoding="unsigned"/>
+				<xtce:ValidRange minInclusive="13" maxInclusive="65536"/>
+			</xtce:IntegerParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter parameterTypeRef="TM_CHECKSUMType" name="TM_CHECKSUM">
+				<xtce:ParameterProperties dataSource="constant" readOnly="true"/>
+			</xtce:Parameter>
+			<xtce:Parameter parameterTypeRef="CCSDSSCIDType" name="CCSDSSCID">
+				<xtce:ParameterProperties dataSource="local"/>
+			</xtce:Parameter>
+			<xtce:Parameter parameterTypeRef="CCSDSVCIDType" name="CCSDSVCID">
+				<xtce:ParameterProperties dataSource="local"/>
+			</xtce:Parameter>
+			<xtce:Parameter parameterTypeRef="CCSDSVersionType" name="CCSDSVersion"/>
+			<xtce:Parameter parameterTypeRef="CCSDSTypeType" name="CCSDSType"/>
+			<xtce:Parameter parameterTypeRef="CCSDSSecHType" name="CCSDSSecH"/>
+			<xtce:Parameter parameterTypeRef="CCSDSAPIDType" name="CCSDSAPID"/>
+			<xtce:Parameter parameterTypeRef="CCSDSGroupFlagsType" name="CCSDSGroupFlags"/>
+			<xtce:Parameter parameterTypeRef="CCSDSSourceSequenceCountType" name="CCSDSSourceSequenceCount"/>
+			<xtce:Parameter parameterTypeRef="CCSDSPacketLengthType" name="CCSDSPacketLength"/>
+			<xtce:Parameter parameterTypeRef="MissionType" name="Mission">
+				<xtce:ParameterProperties dataSource="local"/>
+			</xtce:Parameter>
+		</xtce:ParameterSet>
+		<xtce:ContainerSet>
+			<xtce:SequenceContainer abstract="true" name="CCSDSPacket">
+				<xtce:LongDescription>Super-container for all CCSDS telemetry and command packets</xtce:LongDescription>
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="CCSDSVersion"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSType"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSSecH"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSAPID"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSGroupFlags"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSSourceSequenceCount"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPacketLength"/>
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer abstract="true" name="CCSDSTelemetryPacket">
+				<xtce:LongDescription>Super-container for all CCSDS telemetry packets.</xtce:LongDescription>
+				<xtce:EntryList/>
+				<xtce:BaseContainer containerRef="CCSDSPacket">
+					<xtce:RestrictionCriteria>
+						<xtce:ComparisonList>
+							<xtce:Comparison value="0" parameterRef="CCSDSVersion"/>
+							<xtce:Comparison value="0" parameterRef="CCSDSType"/>
+						</xtce:ComparisonList>
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+			</xtce:SequenceContainer>
+				<!-- skipped - it makes references to unexisting parameters
+			<xtce:SequenceContainer abstract="true" name="CCSDSPUSTelemetryPacket">
+				<xtce:LongDescription>Super-container for all CCSDS/ECSS PUS telemetry packets.</xtce:LongDescription>
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSspare1"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSVersion"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSspare4"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSService"/>
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSSubService"/>
+				 this is where the PUS data field goes  
+					
+					
+					in Yamcs we don't support referenceLocation = containerEnd
+					<xtce:ParameterRefEntry parameterRef="CCSDSPUSErrorControlField">
+						<xtce:LocationInContainerInBits referenceLocation="containerEnd">
+							<xtce:FixedValue>16</xtce:FixedValue>
+						</xtce:LocationInContainerInBits>
+						<xtce:IncludeCondition>
+							<xtce:Comparison parameterRef="TM_CHECKSUM" value="NotUsed" useCalibratedValue="true" comparisonOperator="!="/>
+						</xtce:IncludeCondition>
+					</xtce:ParameterRefEntry>
+				</xtce:EntryList>
+				<xtce:BaseContainer containerRef="CCSDSTelemetryPacket">
+					<xtce:RestrictionCriteria>
+						<xtce:Comparison parameterRef="CCSDSSecH" value="1"/>
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+			</xtce:SequenceContainer>-->
+		</xtce:ContainerSet>
+	</xtce:TelemetryMetaData>
+	<xtce:CommandMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:EnumeratedParameterType name="TC_CHECKSUMType" initialValue="NotUsed">
+				<xtce:UnitSet/>
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="NotUsed" value="0"/>
+					<xtce:Enumeration label="CRC" value="1"/>
+					<xtce:Enumeration label="Checksum" value="2"/>
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter parameterTypeRef="TC_CHECKSUMType" name="TC_CHECKSUM">
+				<xtce:ParameterProperties dataSource="constant" readOnly="true"/>
+			</xtce:Parameter>
+		</xtce:ParameterSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand abstract="true" name="CCSDSCommand">
+				<xtce:LongDescription>Super-Command for all CCSDS commands.</xtce:LongDescription>
+				<xtce:CommandContainer name="CCSDSCommandPacket">
+					<xtce:LongDescription>Super-container for all CCSDS command packets.</xtce:LongDescription>
+					<xtce:EntryList/>
+					<xtce:BaseContainer containerRef="CCSDSPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="0" parameterRef="CCSDSVersion"/>
+								<xtce:Comparison value="1" parameterRef="CCSDSType"/>
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand abstract="true" name="CCSDSPUSTelecommand">
+				<xtce:LongDescription>Super-Command for all CCSDS/ECSS PUS command packets.</xtce:LongDescription>
+				<xtce:CommandContainer name="CCSDSPUSCommandPacket">
+					<xtce:EntryList/>
+					<xtce:BaseContainer containerRef="CCSDSCommandPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:Comparison parameterRef="CCSDSSecH" value="1"/>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+	</xtce:CommandMetaData>
+	<xtce:SpaceSystem name="SC001" shortDescription="This is the first spacecraft in the BogusSAT system">
+		<xtce:SpaceSystem name="BusElectronics">
+			<xtce:Header validationStatus="Test" classification="NotClassified" version="Build0" date="27-10-2012"/>
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:StringParameterType name="Bus_Fault_Message_Type" shortDescription="Bus Error Message">
+						<xtce:UnitSet/>
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8">
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>128</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+					</xtce:StringParameterType>
+					<xtce:BooleanParameterType name="Battery_Charge_Mode_Type" zeroStringValue="DISCHARGE" oneStringValue="CHARGE" shortDescription="This parameter indicates whether the charger is charging the battery">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="1" changeThreshold="1"/>
+					</xtce:BooleanParameterType>
+					<xtce:FloatParameterType name="Battery_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured battery voltage">
+						<xtce:LongDescription>The battery on BogusSAT is a modeled by a typical flooded lead acid car battery.</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Potential">Volts</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01"/>
+						<xtce:ValidRange minInclusive="0.0" maxInclusive="15.0"/>
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:WarningRange minExclusive="12.35" maxExclusive="13.80"/>
+								<xtce:CriticalRange minExclusive="12.10" maxExclusive="14.34"/>
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+						<xtce:ContextAlarmList>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:StaticAlarmRanges>
+									<xtce:WarningRange minInclusive="12.60" maxInclusive="14.00"/>
+									<xtce:CriticalRange minInclusive="12.35" maxInclusive="14.34"/>
+								</xtce:StaticAlarmRanges>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Battery_Charge_Mode" value="CHARGE"/>
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:StaticAlarmRanges>
+									<xtce:WarningRange minInclusive="12.35" maxInclusive="12.60"/>
+									<xtce:CriticalRange minInclusive="12.10" maxInclusive="13.00"/>
+								</xtce:StaticAlarmRanges>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Battery_Charge_Mode" value="DISCHARGE"/>
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+						</xtce:ContextAlarmList>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Battery_Current_Type" sizeInBits="32" shortDescription="This parameter describes the measured current draw" initialValue="0.2">
+						<xtce:LongDescription>The battery on BogusSAT is a modeled by a typical flooded lead acid car battery.</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Current">Amperes</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01"/>
+						<xtce:ValidRange minInclusive="-100.0" maxInclusive="100.0"/>
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:WarningRange minExclusive="-5.0" maxExclusive="10.0"/>
+								<xtce:CriticalRange minExclusive="-20.0" maxExclusive="15.0"/>
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Battery_State_Of_Charge_Type" sizeInBits="32" shortDescription="Calculated battery state of charge">
+						<xtce:UnitSet>
+							<xtce:Unit>Percent</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:ValidRange minInclusive="0.0" maxInclusive="100.0"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Solar_Array_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured solar array output voltage at the charger">
+						<xtce:LongDescription>The solar array on BogusSAT is 10 230W Trina TSM-DA05 monocrystalline panels, wired in series.</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Potential">Volts</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="12" changeThreshold="1">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-100.0"/>
+									<xtce:Term exponent="1" coefficient="0.1"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:IntegerDataEncoding>
+						<xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00"/>
+						<xtce:DefaultAlarm minViolations="2">
+							<xtce:StaticAlarmRanges>
+								<xtce:CriticalRange minInclusive="0.0" maxInclusive="370.0"/>
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_Type" sizeInBits="64" shortDescription="This is an analog parameter with a simple quadratic encoding">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 + 2x - 8">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-8"/>
+									<xtce:Term exponent="1" coefficient="2"/>
+									<xtce:Term exponent="2" coefficient="1"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:IntegerDataEncoding>
+						<xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00" rangeAppliesToCalibrated="true"/>
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:CriticalRange minInclusive="-100.0" maxInclusive="100.0"/>
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_SingleRoot_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 + 1">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="1"/>
+									<xtce:Term exponent="2" coefficient="1"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="10.00" rangeAppliesToCalibrated="false"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_SingleRoot2_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 - 4x + 4">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="4.0"/>
+									<xtce:Term exponent="1" coefficient="-4.0"/>
+									<xtce:Term exponent="2" coefficient="1"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Spline_Demo_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="1" extrapolate="false">
+									<xtce:SplinePoint raw="-6.0" calibrated="1.0"/>
+									<xtce:SplinePoint raw="-3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="-1.0" calibrated="3.0"/>
+									<xtce:SplinePoint raw="1.0" calibrated="3.0"/>
+									<xtce:SplinePoint raw="3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="6.0" calibrated="1.0"/>
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Spline_Quad_Interpolate_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding and unsupported interpolation">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="2" extrapolate="false">
+									<xtce:SplinePoint raw="-6.0" calibrated="1.0"/>
+									<xtce:SplinePoint raw="-3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="-1.0" calibrated="3.0"/>
+									<xtce:SplinePoint raw="1.0" calibrated="3.0"/>
+									<xtce:SplinePoint raw="3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="6.0" calibrated="1.0"/>
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Spline_Quad_Infinite_Slope_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding and infinite slope - no good">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="1" extrapolate="false">
+									<xtce:SplinePoint raw="-6.0" calibrated="1.0"/>
+									<xtce:SplinePoint raw="-3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="-1.0" calibrated="3.0"/>
+									<xtce:SplinePoint raw="1.0" calibrated="3.0"/>
+                                                                        <xtce:SplinePoint raw="1.0" calibrated="2.5"/>
+									<xtce:SplinePoint raw="3.0" calibrated="2.0"/>
+									<xtce:SplinePoint raw="6.0" calibrated="1.0"/>
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_Missing_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with no terms in a polynomial calibrator (invalid)">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator/>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="10.00" rangeAppliesToCalibrated="false"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_Order0_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 0 polynomial calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="2.2"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_Order1_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 1 polynomial calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="0.5"/>
+                                                                        <xtce:Term exponent="1" coefficient="1.5"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_Order3_PolyTerms_Type" sizeInBits="32" shortDescription="This is a float parameter with an order 3 polynomial calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="0.5"/>
+                                                                        <xtce:Term exponent="1" coefficient="1.5"/>
+                                                                        <xtce:Term exponent="3" coefficient="0.1"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="100.00" rangeAppliesToCalibrated="false"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_1_Type" sizeInBits="32" shortDescription="This is a float parameter with a simple math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>0.5</xtce:ValueOperand>
+                                                                <xtce:ThisParameterOperand/>
+                                                                <xtce:Operator>*</xtce:Operator>
+                                                                <xtce:ValueOperand>1.25</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_2_Type" sizeInBits="64" shortDescription="This is a float parameter with a longer math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <!-- Equation in "infix" notation: 64 * log(2)[1.234 * value] 
+                                                                    also is 64 * (ln[1.234 * value] / ln[2]) -->
+                                                                <xtce:ValueOperand>1.234</xtce:ValueOperand>
+                                                                <xtce:ThisParameterOperand/>
+                                                                <xtce:Operator>*</xtce:Operator>
+                                                                <xtce:Operator>ln</xtce:Operator>
+                                                                <xtce:ValueOperand>2.0</xtce:ValueOperand>
+                                                                <xtce:Operator>ln</xtce:Operator>
+                                                                <xtce:Operator>/</xtce:Operator>
+                                                                <xtce:ValueOperand>64.0</xtce:ValueOperand>
+                                                                <xtce:Operator>*</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_3_Type" sizeInBits="32" shortDescription="This is a float parameter with no operations in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator/>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_4_Type" sizeInBits="32" shortDescription="This is a float parameter with unsupported element in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+						<!-- not supported in Yamcs to refer to other parameters for calibration
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>3.0</xtce:ValueOperand>
+                                                                <xtce:ParameterInstanceRefOperand parameterRef="Float_MathOpCal_1"/>
+                                                                <xtce:Operator>*</xtce:Operator>
+                                                                <xtce:ParameterInstanceRefOperand parameterRef="Float_MathOpCal_2" useCalibratedValue="false"/>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+							 -->
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_5_Type" sizeInBits="32" shortDescription="This is a float parameter with short stack in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>3.0</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_6_Type" sizeInBits="32" shortDescription="This is a float parameter with unsupported operator in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<!--commented out otherwise 'foo' will throw an exception in the yamcs parser
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>3.0</xtce:ValueOperand>
+                                                                <xtce:ThisParameterOperand/>
+                                                                <xtce:Operator>foo</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+							 -->
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_7_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>5.0</xtce:ValueOperand>
+                                                                <xtce:ValueOperand>3.0</xtce:ValueOperand>
+                                                                <xtce:Operator>-</xtce:Operator>
+                                                                <xtce:ValueOperand>3.0</xtce:ValueOperand>
+                                                                <xtce:Operator>^</xtce:Operator>
+                                                                <xtce:ValueOperand>92</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                                <xtce:Operator>log</xtce:Operator>
+                                                                <xtce:Operator>1/x</xtce:Operator>
+                                                                <xtce:ValueOperand>-4.0</xtce:ValueOperand>
+                                                                <xtce:Operator>*</xtce:Operator>
+                                                                <xtce:Operator>abs</xtce:Operator>
+                                                                <xtce:ValueOperand>5.0</xtce:ValueOperand>
+                                                                <xtce:Operator>swap</xtce:Operator>
+                                                                <xtce:Operator>-</xtce:Operator>
+                                                                <xtce:ValueOperand>2.0</xtce:ValueOperand>
+                                                                <xtce:Operator>-</xtce:Operator>
+                                                                <xtce:Operator>asin</xtce:Operator>
+                                                                <xtce:Operator>cos</xtce:Operator>
+                                                                <xtce:Operator>acos</xtce:Operator>
+                                                                <xtce:Operator>sin</xtce:Operator>
+                                                                <xtce:Operator>acos</xtce:Operator>
+                                                                <xtce:Operator>atan</xtce:Operator>
+                                                                <xtce:ValueOperand>19.0</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                                <xtce:ValueOperand>8.0</xtce:ValueOperand>
+                                                                <xtce:Operator>%</xtce:Operator>
+                                                                <xtce:ValueOperand>4.0</xtce:ValueOperand>
+                                                                <xtce:Operator>y^x</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_8_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+						<!-- The conditional operatos are not supported in Yamcs, not sure what they should do
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>99</xtce:ValueOperand>
+                                                                <xtce:ValueOperand>100</xtce:ValueOperand>
+                                                                <xtce:Operator>==</xtce:Operator>
+                                                                <xtce:ValueOperand>12</xtce:ValueOperand>
+                                                                <xtce:Operator>!=</xtce:Operator>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>==</xtce:Operator>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>!=</xtce:Operator>
+                                                                <xtce:ValueOperand>5</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;</xtce:Operator>
+                                                                <xtce:ValueOperand>0</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;</xtce:Operator>
+                                                                <xtce:ValueOperand>5</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;</xtce:Operator>
+                                                                <xtce:ValueOperand>-1</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;</xtce:Operator>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;=</xtce:Operator>
+                                                                <xtce:ValueOperand>2</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;=</xtce:Operator>
+                                                                <xtce:ValueOperand>0</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;=</xtce:Operator>
+                                                                <xtce:ValueOperand>4</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;=</xtce:Operator>
+                                                                <xtce:ValueOperand>0</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;=</xtce:Operator>
+                                                                <xtce:ValueOperand>0</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;=</xtce:Operator>
+                                                                <xtce:Operator>e^x</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+							 -->
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_9_Type" sizeInBits="64" shortDescription="This is a float parameter with lots of operators in math operation calibrator">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                <xtce:ValueOperand>90</xtce:ValueOperand>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>-</xtce:Operator>
+                                                                <xtce:Operator>cos</xtce:Operator>
+                                                                <xtce:ValueOperand>89</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                                <xtce:Operator>cos</xtce:Operator>
+                                                                <xtce:ValueOperand>45</xtce:ValueOperand>
+                                                                <xtce:Operator>+</xtce:Operator>
+                                                                <xtce:Operator>tan</xtce:Operator>
+                                                                <xtce:Operator>tanh</xtce:Operator>
+                                                                <xtce:Operator>cosh</xtce:Operator>
+                                                                <xtce:Operator>sinh</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_10_Type" sizeInBits="32" shortDescription="This is a float parameter with arithmetic exception in math operation calibrator">
+						<xtce:UnitSet/>
+						
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+						<!-- The conditional operatos are not supported in Yamcs, not sure what they should do
+							<xtce:DefaultCalibrator>
+                                                            <xtce:MathOperationCalibrator>
+                                                                - multi-purpose bad expression, throws on divide by zero but catches extra operators on infix print -
+                                                                <xtce:ThisParameterOperand/>
+                                                                <xtce:ValueOperand>0.0</xtce:ValueOperand>
+                                                                <xtce:Operator>/</xtce:Operator>
+                                                                <xtce:Operator>x!</xtce:Operator>
+                                                                <xtce:Operator>atanh</xtce:Operator>
+                                                                <xtce:Operator>acosh</xtce:Operator>
+                                                                <xtce:Operator>asinh</xtce:Operator>
+                                                                <xtce:ValueOperand>2</xtce:ValueOperand>
+                                                                <xtce:Operator>&amp;</xtce:Operator>
+                                                                <xtce:ValueOperand>3</xtce:ValueOperand>
+                                                                <xtce:Operator>|</xtce:Operator>
+                                                                <xtce:ValueOperand>2</xtce:ValueOperand>
+                                                                <xtce:Operator>&lt;&lt;</xtce:Operator>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;&gt;</xtce:Operator>
+                                                                <xtce:ValueOperand>1</xtce:ValueOperand>
+                                                                <xtce:Operator>&gt;&gt;&gt;</xtce:Operator>
+                                                            </xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator> -->
+						</xtce:FloatDataEncoding>
+						
+					</xtce:FloatParameterType>
+					<xtce:BooleanParameterType name="Solar_Array_Voltage_State_Type" initialValue="OFF" zeroStringValue="OFF" oneStringValue="ON" shortDescription="The operational state of the solar array voltage sensor">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="8" changeThreshold="1"/>
+					</xtce:BooleanParameterType>
+					<xtce:FloatParameterType sizeInBits="64" name="SunSensorPolyCalType">
+						<xtce:UnitSet>
+							<xtce:Unit>cd/m^2</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-10.0"/>
+									<xtce:Term exponent="1" coefficient="5.0"/>
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+							<xtce:ContextCalibratorList>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="LOW" parameterRef="/BogusSAT/SC001/BusElectronics/SunSensorMode"/>
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term exponent="0" coefficient="0.0"/>
+											<xtce:Term exponent="1" coefficient="5.0"/>
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="HIGH" parameterRef="SunSensorMode"/>
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term exponent="0" coefficient="0.0"/>
+											<xtce:Term exponent="1" coefficient="15.0"/>
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+							</xtce:ContextCalibratorList>
+						</xtce:IntegerDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType sizeInBits="64" name="EarthSensorSplineCalType">
+						<xtce:UnitSet>
+							<xtce:Unit>cd/m^2</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="1">
+									<xtce:SplinePoint raw="0" calibrated="0.0"/>
+									<xtce:SplinePoint raw="10" calibrated="5.0"/>
+									<xtce:SplinePoint raw="20" calibrated="10.0"/>
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+							<xtce:ContextCalibratorList>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="LOW" parameterRef="EarthSensorMode"/>
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:SplineCalibrator order="1">
+											<xtce:SplinePoint raw="0" calibrated="5.0"/>
+											<xtce:SplinePoint raw="10" calibrated="10.0"/>
+											<xtce:SplinePoint raw="20" calibrated="15.0"/>
+										</xtce:SplineCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="HIGH" parameterRef="/BogusSAT/SC001/BusElectronics/EarthSensorMode"/>
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:SplineCalibrator order="0">
+											<xtce:SplinePoint raw="0" calibrated="10.0"/>
+											<xtce:SplinePoint raw="10" calibrated="15.0"/>
+											<xtce:SplinePoint raw="20" calibrated="20.0"/>
+										</xtce:SplineCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+							</xtce:ContextCalibratorList>
+						</xtce:IntegerDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:EnumeratedParameterType name="SunSensorModeType" initialValue="OFF">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="OFF" value="0"/>
+							<xtce:Enumeration label="LOW" value="1"/>
+							<xtce:Enumeration label="HIGH" value="2"/>
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Battery_Charge_Mode" parameterTypeRef="Battery_Charge_Mode_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_Voltage" parameterTypeRef="Battery_Voltage_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_Current" parameterTypeRef="Battery_Current_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_State_Of_Charge" parameterTypeRef="Battery_State_Of_Charge_Type">
+						<xtce:ParameterProperties dataSource="derived" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_State_Of_Charge_Custom" parameterTypeRef="Battery_State_Of_Charge_Type">
+						<xtce:ParameterProperties dataSource="derived" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_1_State" parameterTypeRef="Solar_Array_Voltage_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_2_State" parameterTypeRef="Solar_Array_Voltage_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo" parameterTypeRef="Quadratic_Demo_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo_SingleRoot" parameterTypeRef="Quadratic_Demo_SingleRoot_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo_SingleRoot2" parameterTypeRef="Quadratic_Demo_SingleRoot2_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Spline_Demo" parameterTypeRef="Spline_Demo_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Spline_Quad_Interpolate_Bad" parameterTypeRef="Spline_Quad_Interpolate_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Spline_Quad_Infinite_Slope" parameterTypeRef="Spline_Quad_Infinite_Slope_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_Missing_PolyTerms" parameterTypeRef="Float_Missing_PolyTerms_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_Order0_PolyTerms" parameterTypeRef="Float_Order0_PolyTerms_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_Order1_PolyTerms" parameterTypeRef="Float_Order1_PolyTerms_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_Order3_PolyTerms" parameterTypeRef="Float_Order3_PolyTerms_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_1" parameterTypeRef="Float_MathOpCal_1_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_2" parameterTypeRef="Float_MathOpCal_2_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_3" parameterTypeRef="Float_MathOpCal_3_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_4" parameterTypeRef="Float_MathOpCal_4_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_5" parameterTypeRef="Float_MathOpCal_5_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_6" parameterTypeRef="Float_MathOpCal_6_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_7" parameterTypeRef="Float_MathOpCal_7_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_8" parameterTypeRef="Float_MathOpCal_8_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_9" parameterTypeRef="Float_MathOpCal_9_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_10" parameterTypeRef="Float_MathOpCal_10_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_1" parameterTypeRef="Solar_Array_Voltage_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100345"/>
+							<xtce:Alias nameSpace="FOO" alias="Hello"/>
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+							<xtce:ValidityCondition>
+								<xtce:Comparison parameterRef="Solar_Array_Voltage_1_State" value="ON"/>
+							</xtce:ValidityCondition>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb000f100" sourceName="RAM"/>
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_2" parameterTypeRef="Solar_Array_Voltage_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100445"/>
+							<!-- xtce:Alias nameSpace="ID" alias="123456"/-->
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+							<xtce:ValidityCondition>
+								<xtce:Comparison parameterRef="Solar_Array_Voltage_2_State" value="ON"/>
+							</xtce:ValidityCondition>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb000f101" sourceName="RAM"/>
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Bus_Fault_Message" parameterTypeRef="Bus_Fault_Message_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100999"/>
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb0010000" sourceName="RAM"/>
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="SensorTime" parameterTypeRef="/BogusSAT/POSIXTimeType" shortDescription="Measurement time of the sensor data">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+					</xtce:Parameter>
+					<xtce:Parameter name="SunSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the sun sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+					</xtce:Parameter>
+					<xtce:Parameter name="EarthSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the earth sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+					</xtce:Parameter>
+					<xtce:Parameter name="SunSensorLevel" parameterTypeRef="SunSensorPolyCalType" shortDescription="Illumination level measurement of the sun sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+					</xtce:Parameter>
+					<xtce:Parameter name="EarthSensorLevel" parameterTypeRef="EarthSensorSplineCalType" shortDescription="Illumination level of the earth sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+				<xtce:ContainerSet>
+					<xtce:SequenceContainer name="SensorHistoryRecord">
+					<xtce:DefaultRateInStream basis="perSecond" minimumValue="0.1" maximumValue="10"/> 
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="SensorTime"/>
+							<xtce:ParameterRefEntry parameterRef="SunSensorMode"/>
+							<xtce:ParameterRefEntry parameterRef="EarthSensorMode"/>
+							<xtce:ParameterRefEntry parameterRef="SunSensorLevel"/>
+							<xtce:ParameterRefEntry parameterRef="EarthSensorLevel"/>
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="SensorHistoryBuffer">
+						<xtce:EntryList>
+							<xtce:ContainerRefEntry containerRef="SensorHistoryRecord">
+								<xtce:RepeatEntry>
+									<xtce:Count>
+										<xtce:FixedValue>4</xtce:FixedValue>
+									</xtce:Count>
+								</xtce:RepeatEntry>
+							</xtce:ContainerRefEntry>
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+				</xtce:ContainerSet>
+				<xtce:AlgorithmSet>
+					<xtce:MathAlgorithm name="ComputeBatterySOC" shortDescription="Compute the battery state of charge">
+						<xtce:MathOperation outputParameterRef="Battery_State_Of_Charge">
+							<xtce:ParameterInstanceRefOperand parameterRef="Battery_Voltage"/>
+							<xtce:ValueOperand>11.7</xtce:ValueOperand>
+							<xtce:Operator>-</xtce:Operator>
+							<xtce:ValueOperand>0.9</xtce:ValueOperand>
+							<xtce:Operator>/</xtce:Operator>
+							<xtce:TriggerSet>
+								<xtce:OnParameterUpdateTrigger parameterRef="Battery_Voltage"/>
+							</xtce:TriggerSet>
+						</xtce:MathOperation>
+					</xtce:MathAlgorithm>
+					<xtce:CustomAlgorithm name="ComputeBatterySOC_Custom" shortDescription="Compute the battery state of charge with custom algorithm">
+						<xtce:AlgorithmText language="JavaScript">
+							bscc.value = bv.value - 12;
+						</xtce:AlgorithmText>
+						<xtce:InputSet>
+							<xtce:InputParameterInstanceRef parameterRef="Battery_Voltage" inputName="bv"/>
+						</xtce:InputSet>
+						<xtce:OutputSet>
+							<xtce:OutputParameterRef parameterRef="Battery_State_Of_Charge_Custom" outputName="bscc"/>
+						</xtce:OutputSet>
+						<xtce:TriggerSet>
+							<xtce:OnParameterUpdateTrigger parameterRef="Battery_Voltage"/>
+						</xtce:TriggerSet>
+					</xtce:CustomAlgorithm>
+				</xtce:AlgorithmSet>
+			</xtce:TelemetryMetaData>
+			<xtce:CommandMetaData>
+				<xtce:ArgumentTypeSet>
+					<xtce:BooleanArgumentType name="Bool_Arg_Type" shortDescription="boolean argument type" initialValue="True">
+						<xtce:UnitSet/>
+						<IntegerDataEncoding sizeInBits="1"/>
+					</xtce:BooleanArgumentType>
+					<xtce:StringArgumentType name="FV_String_Type" shortDescription="fixed value string argument type">
+						<xtce:UnitSet/>
+						<StringDataEncoding>
+						<SizeInBits>
+						    <Fixed>
+                     			<FixedValue>320</FixedValue>
+                  			</Fixed>
+               				</SizeInBits>
+           				 </StringDataEncoding>
+					</xtce:StringArgumentType>
+					<xtce:BinaryArgumentType name="FV_Binary_Type" shortDescription="fixed value binary argument type">
+						<xtce:UnitSet/>
+						<BinaryDataEncoding>
+						<SizeInBits>
+						    <Fixed>
+                     			<FixedValue>128</FixedValue>
+                  			</Fixed>
+               				</SizeInBits>
+           				 </BinaryDataEncoding>
+					</xtce:BinaryArgumentType>
+
+					<xtce:IntegerArgumentType name="RW_UNIT_ID_Type" shortDescription="ID number of the reaction wheel">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+						<xtce:ValidRange minInclusive="1" maxInclusive="2"/>
+					</xtce:IntegerArgumentType>
+					<xtce:IntegerArgumentType name="CmdId_Type">
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+					</xtce:IntegerArgumentType>
+					<xtce:EnumeratedArgumentType name="RW_PWR_STATE_Type" shortDescription="Flag to indicate if power should be turned on or off">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="OFF"/>
+							<xtce:Enumeration value="1" label="ON"/>
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+					<xtce:EnumeratedArgumentType name="PHASE_Type">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="SAFE"/>
+							<xtce:Enumeration value="1" label="LEOP"/>
+							<xtce:Enumeration value="2" label="ASCENT"/>
+							<xtce:Enumeration value="3" label="MISSION"/>
+							<xtce:Enumeration value="4" label="STORAGE"/>
+							<xtce:Enumeration value="5" label="DEBORBIT"/>
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+				</xtce:ArgumentTypeSet>
+				<xtce:MetaCommandSet>
+				  <xtce:MetaCommand name="AbstractCmd" shortDescription="parent command" abstract="true">						
+						<xtce:ArgumentList>
+							<xtce:Argument name="CmdId" argumentTypeRef="CmdId_Type" shortDescription="Command Identifier"/>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="AbstractCmd_container">							
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="CmdId"/>
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<!-- 
+					<xtce:MetaCommand name="Reaction_Wheel_Control" shortDescription="Power on/off reaction wheel">
+						<xtce:LongDescription>This hardware telecommand directs the hardware to power on or off either of the 2 reaction wheels</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_PWR"/>
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="../../CCSDSDirectTelecommand"/>
+						<xtce:ArgumentList>
+							<xtce:Argument name="RW_UNIT_ID" argumentTypeRef="RW_UNIT_ID_Type"/>
+							<xtce:Argument name="RW_PWR_STATE" argumentTypeRef="RW_PWR_STATE_Type"/>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Reaction_Wheel_Control_Container">
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="RW_UNIT_ID"/>
+								<xtce:ArgumentRefEntry argumentRef="RW_PWR_STATE"/>
+							</xtce:EntryList>
+							<xtce:BaseContainer containerRef="../../CCSDSDirectTelecommand"/>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					 
+					<xtce:MetaCommand name="Reaction_Wheel_1_On" shortDescription="Turn power on for reaction wheel 1">
+						<xtce:LongDescription>This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns ON reaction wheel 1</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_1_ON"/>
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1"/>
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON"/>
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_1_On_Container">
+							<xtce:EntryList/>
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_1_Off" shortDescription="Turn power off for reaction wheel 1">
+						<xtce:LongDescription>This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns OFF reaction wheel 1</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_1_OFF"/>
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1"/>
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF"/>
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_1_Off_Container">
+							<xtce:EntryList/>
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_2_On" shortDescription="Turn power on for reaction wheel 2">
+						<xtce:LongDescription>This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns ON reaction wheel 2</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_2_ON"/>
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2"/>
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON"/>
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_2_On_Container">
+							<xtce:EntryList/>
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_2_Off" shortDescription="Turn power off for reaction wheel 2">
+						<xtce:LongDescription>This hardware telecommand is a derived form of 'Reaction_Wheel_Control' that turns OFF reaction wheel 2</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_2_OFF"/>
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2"/>
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF"/>
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_2_Off_Container">
+							<xtce:EntryList/>
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container"/>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					-->
+					<xtce:MetaCommand name="Set_Mission_Phase" shortDescription="Set the bus electronics mission phase">
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/>
+						<xtce:ArgumentList>
+							<xtce:Argument name="PHASE" argumentTypeRef="PHASE_Type" shortDescription="Mission Operational Mode"/>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Set_Mission_Phase_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/>
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="PHASE"/>
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					
+					<xtce:MetaCommand name="Cmd1" shortDescription="testing various argument types">
+						<xtce:BaseMetaCommand metaCommandRef="AbstractCmd">
+							<ArgumentAssignmentList>
+                  				<ArgumentAssignment argumentName="CmdId" argumentValue="1" />                 				
+               				</ArgumentAssignmentList>							
+						</xtce:BaseMetaCommand>
+						<xtce:ArgumentList>
+							<xtce:Argument name="STRING_FV" argumentTypeRef="FV_String_Type" shortDescription="fixed string"  initialValue="blabla"/>
+						</xtce:ArgumentList>
+						<xtce:ArgumentList>
+							<xtce:Argument name="BINARY_FV" argumentTypeRef="FV_Binary_Type" shortDescription="fixed string"/>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Cmd1_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/>
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="STRING_FV"/>
+								<xtce:ArgumentRefEntry argumentRef="BINARY_FV"/>
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					
+					
+				</xtce:MetaCommandSet>
+			</xtce:CommandMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Payload1">
+			<xtce:LongDescription>This is the primary revenue generating payload software monitor and control data.</xtce:LongDescription>
+			<xtce:Header validationStatus="Working" classification="NotClassified" version="Build2" date="27-10-2012"/>
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:IntegerParameterType name="GENERIC_16BIT_UNSIGNED_INT" signed="false" sizeInBits="16" shortDescription="Generic unsigned 16 bit number">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1"/>
+					</xtce:IntegerParameterType>
+					<xtce:StringParameterType name="Payload_Fault_Message_Type" shortDescription="Payload Error Message">
+						<xtce:UnitSet/>
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8">
+							<xtce:SizeInBits>
+								<xtce:TerminationChar>00</xtce:TerminationChar>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+						<xtce:SizeRangeInCharacters minInclusive="1" maxInclusive="256"/>
+					</xtce:StringParameterType>
+					<xtce:BinaryParameterType name="Payload_MD5_Type" shortDescription="MD5 Sum of Software Image">
+						<xtce:UnitSet/>
+						<xtce:BinaryDataEncoding bitOrder="mostSignificantBitFirst">
+							<xtce:SizeInBits>
+								<xtce:FixedValue>128</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:BinaryParameterType>
+					<xtce:BooleanParameterType name="Payload_1_State_Type" zeroStringValue="OFF" oneStringValue="ON" shortDescription="Payload 1 enable state">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="4" encoding="unsigned" changeThreshold="1"/>
+					</xtce:BooleanParameterType>
+					<xtce:EnumeratedParameterType name="Payload_1_Phase_Type" shortDescription="Operational Phase of Payload">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="4" encoding="unsigned" changeThreshold="1"/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1"/>
+							<xtce:Enumeration label="LAUNCH" value="2"/>
+							<xtce:Enumeration label="STANDBY" value="3"/>
+							<xtce:Enumeration label="ACTIVE" value="4"/>
+							<xtce:Enumeration label="SHUTDOWN" value="5"/>
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16"/>
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="Payload_1_Antenna_State_Type" shortDescription="Payload 1 antenna operational state">
+						<xtce:UnitSet/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="OFF" value="0"/>
+							<xtce:Enumeration label="STANDBY" value="1"/>
+							<xtce:Enumeration label="SIGNAL_PRESENT" value="2"/>
+							<xtce:Enumeration label="ACQUIRED" value="3"/>
+							<xtce:Enumeration label="SIGNAL_LOST" value="4"/>
+							<xtce:Enumeration label="FAILED" value="5"/>
+						</xtce:EnumerationList>
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:EnumerationAlarmList>
+								<xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical"/>
+							</xtce:EnumerationAlarmList>
+						</xtce:DefaultAlarm>
+						<xtce:ContextAlarmList>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:EnumerationAlarmList>
+									<xtce:EnumerationAlarm enumerationLabel="SIGNAL_LOST" alarmLevel="warning"/>
+									<xtce:EnumerationAlarm enumerationLabel="OFF" alarmLevel="critical"/>
+									<xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical"/>
+								</xtce:EnumerationAlarmList>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Payload_1_State" value="ON" comparisonOperator="==" useCalibratedValue="true"/>
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+						</xtce:ContextAlarmList>
+					</xtce:EnumeratedParameterType>
+					<xtce:StringParameterType name="CPU_Fault_Message_Type" shortDescription="CPU Error Message">
+						<xtce:UnitSet/>
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-16">
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>64</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+					</xtce:StringParameterType>
+					<xtce:FloatParameterType name="Basic_Float32_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a simple float32 encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.001"/>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Basic_Float64_Type" sizeInBits="64" shortDescription="This is a float64 parameter with a simple float64 encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64" changeThreshold="0.000001"/>
+					</xtce:FloatParameterType>
+					<!--Skipped because Yamcs does not support  MILSTD_1750A encoding on 16 bits
+					<xtce:FloatParameterType name="Basic_MilFloat16_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a milstd float16 encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="16" changeThreshold="0.001"/>
+					</xtce:FloatParameterType>
+					-->					
+					<xtce:FloatParameterType name="Basic_MilFloat32_Type" sizeInBits="32" shortDescription="This is a float32 parameter with a milstd float32 encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="32" changeThreshold="0.001"/>
+					</xtce:FloatParameterType>					
+					<xtce:FloatParameterType name="Basic_MilFloat48_Type" sizeInBits="64" shortDescription="This is a float64 parameter with a milstd float48 encoding">
+						<xtce:UnitSet/>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="MILSTD_1750A" sizeInBits="48" changeThreshold="0.001"/>
+					</xtce:FloatParameterType>
+					 
+					<xtce:IntegerParameterType name="Basic_uint32_Type" signed="false" sizeInBits="32" shortDescription="Generic unsigned 32 bit number">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="32" changeThreshold="1"/>
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_signmag_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with sign magnitude encoding">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="signMagnitude" sizeInBits="32" changeThreshold="1"/>
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_twoscomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with twos complement encoding">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="twosComplement" sizeInBits="32" changeThreshold="1"/>
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_onescomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with ones complement encoding">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="onesComplement" sizeInBits="32" changeThreshold="1"/>
+					</xtce:IntegerParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Payload_1_State" parameterTypeRef="Payload_1_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_1_Phase" parameterTypeRef="Payload_1_Phase_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_1_Antenna_State" parameterTypeRef="Payload_1_Antenna_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>GCS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_Fault_Message" parameterTypeRef="Payload_Fault_Message_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="CPU_Fault_Message" parameterTypeRef="CPU_Fault_Message_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_MD5" parameterTypeRef="Payload_MD5_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_Float32" parameterTypeRef="Basic_Float32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_Float64" parameterTypeRef="Basic_Float64_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<!-- not supported by Yamcs  
+					<xtce:Parameter name="Basic_MilFloat16" parameterTypeRef="Basic_MilFloat16_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					 -->
+					<xtce:Parameter name="Basic_MilFloat32" parameterTypeRef="Basic_MilFloat32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_MilFloat48" parameterTypeRef="Basic_MilFloat48_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					
+					<xtce:Parameter name="Basic_uint32" parameterTypeRef="Basic_uint32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_signmag" parameterTypeRef="Basic_int32_signmag_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_twoscomp" parameterTypeRef="Basic_int32_twoscomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_onescomp" parameterTypeRef="Basic_int32_onescomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+			</xtce:TelemetryMetaData>
+			<xtce:CommandMetaData>
+				<xtce:ArgumentTypeSet>
+					<xtce:EnumeratedArgumentType name="Payload_State_Type">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding encoding="signMagnitude" sizeInBits="8"/>
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="-1" label="OFF"/>
+							<xtce:Enumeration value="1" label="ON"/>
+							<xtce:Enumeration value="0" label="STANDBY"/>
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+					<xtce:FloatArgumentType name="Output_Power_Type" shortDescription="Payload output power">
+						<xtce:UnitSet>
+							<xtce:Unit description="current">Amperes</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985"/>
+					</xtce:FloatArgumentType>
+					<xtce:AggregateArgumentType name="Config_Item_Type">
+						<xtce:MemberList>
+							<xtce:Member name="ADDRESS" typeRef="Address_Type"/>
+							<xtce:Member name="VALUE32" typeRef="Value32_Type"/>
+						</xtce:MemberList>
+					</xtce:AggregateArgumentType>
+					<xtce:IntegerArgumentType name="Address_Type" signed="false" shortDescription="Address of configurable">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+					</xtce:IntegerArgumentType>
+					<xtce:IntegerArgumentType name="Value32_Type" shortDescription="New value to set to 32 bit integer item">
+						<xtce:UnitSet/>
+						<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+					</xtce:IntegerArgumentType>
+				</xtce:ArgumentTypeSet>
+				<xtce:MetaCommandSet>
+					<xtce:MetaCommand name="Payload_1_Control" shortDescription="Controls the state of payload operation">
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/>
+						<xtce:ArgumentList>
+							<xtce:Argument name="STATE" argumentTypeRef="Payload_State_Type"/>
+							<xtce:Argument name="OUTPUT_POWER" argumentTypeRef="Output_Power_Type">
+								<xtce:LongDescription>Long Description of the output power argument</xtce:LongDescription>
+							</xtce:Argument>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Payload_1_Control_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/>
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="STATE"/>
+								<xtce:FixedValueEntry binaryValue="f0" sizeInBits="8"/>
+								<xtce:ArgumentRefEntry argumentRef="OUTPUT_POWER"/>
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Adjust_Payload_1_Config" shortDescription="Modify payload configuration">
+						<xtce:LongDescription>Modifies an internal configurable item at a provided address for the payload processor</xtce:LongDescription>
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand"/>
+						<xtce:ArgumentList>
+						<!--  aggregates not supported by Yamcs
+							<xtce:Argument name="CFGITEM" argumentTypeRef="Config_Item_Type"/>
+					     -->
+						</xtce:ArgumentList>
+						
+						<xtce:CommandContainer name="Adjust_Payload_1_Config_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSCommandPacket"/>
+							<xtce:EntryList>
+							<!--  aggregates not supported by Yamcs
+								<xtce:ArgumentRefEntry argumentRef="CFGITEM"/>
+						     -->
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+				</xtce:MetaCommandSet>
+			</xtce:CommandMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Payload2" xsi:nil="true"/>
+	</xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `BogusSAT-2.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/BogusSAT-2.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2015 David Overeem (dovereem@cox.net) Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy
+	of the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+	WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License. -->
+<xtce:SpaceSystem name="BogusSAT" xmlns:xtce="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/space/xtce ../../../../omg/space/xtce/schema/SpaceSystemV1.2-27Feb2014-mods.xsd"
+	shortDescription="This is a bogus satellite telemetry and telecommand database." operationalStatus="unittest">
+	<xtce:LongDescription>This is a bogus satellite telemetry and
+		telecommand database. The purpose of BogusSAT is to exercise the
+		capabilities of XTCE and the XTCE View tool.
+	</xtce:LongDescription>
+	<xtce:Header validationStatus="Working" classification="NotClassified" version="1.0" date="27-10-2012">
+		<xtce:AuthorSet>
+			<xtce:Author>David Overeem, Member of the OMG SDTF and XTCE RTF
+			</xtce:Author>
+		</xtce:AuthorSet>
+		<xtce:NoteSet>
+			<xtce:Note>The root SpaceSystem for BogusSAT contains the parameters
+				needed to define the transport of data for any of the BogusSAT
+				satellites in the fleet or constellation.
+			</xtce:Note>
+		</xtce:NoteSet>
+	</xtce:Header>
+	<xtce:TelemetryMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:AbsoluteTimeParameterType name="POSIXTimeType" shortDescription="POSIX UNIX Time 'timeval' which is 2 unsigned 32 bit integers">
+				<xtce:Encoding>
+					<xtce:IntegerDataEncoding sizeInBits="64" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:Epoch>1970-01-01</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+			<xtce:IntegerParameterType name="Generic_8bits_unsigned" signed="false">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="Generic_16bits_unsigned" signed="false">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="Generic_32bits_unsigned" signed="false">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="32" />
+			</xtce:IntegerParameterType>
+			<xtce:EnumeratedParameterType name="TM_CHECKSUMType" initialValue="CRC">
+				<xtce:UnitSet />
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="NotUsed" value="0" />
+					<xtce:Enumeration label="CRC" value="1" />
+					<xtce:Enumeration label="Checksum" value="2" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:EnumeratedParameterType name="APPL_TIME_CODEType" initialValue="CUC">
+				<xtce:UnitSet />
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="NotUsed" value="0" />
+					<xtce:Enumeration label="CUC" value="1" />
+					<xtce:Enumeration label="CDS" value="2" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:EnumeratedParameterType name="MissionType" shortDescription="Reserved Mission Phase and Operating Modes">
+				<xtce:UnitSet />
+				<xtce:EnumerationList>
+					<xtce:Enumeration value="0" label="TestBed" />
+					<xtce:Enumeration value="1" label="IntegrationTest" />
+					<xtce:Enumeration value="2" label="Vibration" />
+					<xtce:Enumeration value="3" label="ThermalVac" />
+					<xtce:Enumeration value="4" label="EMC" />
+					<xtce:Enumeration value="5" label="Platform" />
+					<xtce:Enumeration value="6" label="Launch" />
+					<xtce:Enumeration value="7" label="Orbit" />
+					<xtce:Enumeration value="8" label="Checkout" />
+					<xtce:Enumeration value="9" label="Mission" />
+					<xtce:Enumeration value="10" label="Safe" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:IntegerParameterType name="SomeParameter_Type" signed="false" shortDescription="Used to demonstrate going backwards in the parameterRef attribute">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="7" />
+			</xtce:IntegerParameterType>
+			<xtce:AggregateParameterType name="CCSDS_Packet_ID_Type" shortDescription="CCSDS Header Packet ID fields">
+				<xtce:MemberList>
+					<xtce:Member name="Version" typeRef="CCSDSVersionType" />
+					<xtce:Member name="Type" typeRef="CCSDSTypeType" />
+					<xtce:Member name="SecHdrFlag" typeRef="CCSDSSecHdrFlagType" />
+					<xtce:Member name="APID" typeRef="CCSDSAPIDType" />
+				</xtce:MemberList>
+			</xtce:AggregateParameterType>
+			<xtce:AggregateParameterType name="CCSDS_Packet_Sequence_Type" shortDescription="CCSDS Header Packet Sequence Control fields">
+				<xtce:MemberList>
+					<xtce:Member name="GroupFlags" typeRef="CCSDSGroupFlagsType" />
+					<xtce:Member name="Count" typeRef="CCSDSSourceSequenceCountType" />
+				</xtce:MemberList>
+			</xtce:AggregateParameterType>
+			<xtce:IntegerParameterType name="CCSDSSCIDType" signed="false" shortDescription="Satellite ID">
+				<xtce:UnitSet />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="CCSDSVCIDType" signed="false" shortDescription="Virtual Channel ID">
+				<xtce:UnitSet />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="CCSDSVersionType" signed="false" initialValue="0" shortDescription="CCSDS Version Number">
+				<xtce:LongDescription>By changing the version number, future
+					variations of the telemetry source packet structure can be
+					introduced. At present, however, only one version number shall be
+					used: (value
+					= 0).
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="3" />
+			</xtce:IntegerParameterType>
+			<xtce:BooleanParameterType name="CCSDSTypeType" zeroStringValue="TM" oneStringValue="TC" shortDescription="CCSDS Packet Type">
+				<xtce:LongDescription>This bit distinguishes between telecommand
+					packets and telemetry source packets. For telemetry source packets,
+					the type = 0.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="1" />
+			</xtce:BooleanParameterType>
+			<xtce:BooleanParameterType name="CCSDSSecHdrFlagType" zeroStringValue="NotPresent" oneStringValue="Present" shortDescription="CCSDS Secondary Header Flag">
+				<xtce:LongDescription>This indicates the presence or absence of a
+					data field header. If using ECSS PUS, and with the exception of the
+					spacecraft time source packet, all telemetry source packets
+					shall
+					have a data field header, for which this bit shall be set to 1.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="1" />
+			</xtce:BooleanParameterType>
+			<xtce:IntegerParameterType name="CCSDSAPIDType" initialValue="2047" signed="false" shortDescription="CCSDS Application Process ID, with 2047 being an IDLE fill packet">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="11" />
+			</xtce:IntegerParameterType>
+			<xtce:EnumeratedParameterType name="CCSDSGroupFlagsType" initialValue="Standalone" shortDescription="CCSDS Packet Grouping Flag">
+				<xtce:LongDescription>The grouping flags shall be used when a number
+					of telemetry source packets originating from the same application
+					process are sent in a group. The interpretation of the grouping
+					flags shall be 1=first packet of a group of packets, 0=continuation
+					packet, 2=last packet of a group of packets, 3="stand-alone"
+					packet. If using ECSS PUS, All standard telemetry source packets
+					defined are stand-alone packets.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="2" />
+				<xtce:EnumerationList>
+					<xtce:Enumeration value="0" label="Continuation" />
+					<xtce:Enumeration value="1" label="First" />
+					<xtce:Enumeration value="2" label="Last" />
+					<xtce:Enumeration value="3" label="Standalone" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:IntegerParameterType name="CCSDSSourceSequenceCountType" signed="false" shortDescription="CCSDS Packet Sequence Counter">
+				<xtce:LongDescription>A separate source sequence count shall be
+					maintained by each APID and shall be incremented by 1 whenever it
+					releases a packet. If the application process can send distinct
+					packets to distinct destinations using the optional Destination ID
+					field shown below, then a separate source sequence count is
+					maintained for each destination. Therefore the counter corresponds
+					to
+					the order of release of packets by the source and enables the
+					destination (e.g. the ground system) to detect missing packets.
+					This counter should never re-initialize; however, under no
+					circumstances shall it “shortcycle” (i.e. have a discontinuity
+					other than to a value zero). The counter wraps around from max
+					value to zero.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="14" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="CCSDSPacketLengthType" signed="false" shortDescription="CCSDS Packet Length Field">
+				<xtce:LongDescription>The packet length field specifies the number
+					of octets contained within the packet data field. The number shall
+					be an unsigned integer “C” where C = (Number of octets in packet
+					data field) minus 1. NOTE The actual length of the entire telemetry
+					source packet, including the source packet header, is 6 octets
+					longer.
+				</xtce:LongDescription>
+				<xtce:UnitSet>
+					<xtce:Unit description="Size">Octets</xtce:Unit>
+				</xtce:UnitSet>
+				<xtce:IntegerDataEncoding sizeInBits="16" />
+			</xtce:IntegerParameterType>
+			<xtce:AggregateParameterType name="PUS_Data_Field_Header_Type" shortDescription="ECSS PUS Data Field Header">
+				<xtce:MemberList>
+					<xtce:Member name="Spare1" typeRef="PUSspare1Type" />
+					<xtce:Member name="Version" typeRef="PUSVersionType" />
+					<xtce:Member name="Spare4" typeRef="PUSspare4Type" />
+					<xtce:Member name="Service" typeRef="PUSServiceType">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>PUS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Member>
+					<xtce:Member name="Subservice" typeRef="PUSSubServiceType" />
+					<xtce:Member name="SeqCount" typeRef="PUSSeqCountType" />
+					<xtce:Member name="Destination" typeRef="PUSDestinationType" />
+				</xtce:MemberList>
+			</xtce:AggregateParameterType>
+			<xtce:IntegerParameterType name="PUSspare1Type" signed="false" initialValue="0" shortDescription="Spare Bit">
+				<xtce:LongDescription>To maintain symmetry with the telecommand
+					packet data field header, this bit shall be reserved and set to
+					zero.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="1" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="PUSVersionType" initialValue="1" shortDescription="PUS Version Number">
+				<xtce:LongDescription>By changing the PUS version number, future
+					variations of the telemetry source packet can be introduced. It is
+					expected to introduce a new version in the future for telemetry
+					source packets that contain more than one service data unit. Users
+					of ECSS PUS shall use version 1
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="3" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="PUSspare4Type" signed="false" initialValue="0" shortDescription="Four Spare Bit">
+				<xtce:LongDescription>Spare bits shall be introduced in order tomake
+					up an integral octet. These spare bits shall be set to zero.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="4" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="PUSServiceType" signed="false" shortDescription="PUS Service Identifier">
+				<xtce:LongDescription>This indicates the service to which this
+					telemetry source packet relates. Service types 0 to 127 shall be
+					reserved for this Standard, service types 128 to 255 are
+					mission-specific.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="PUSSubServiceType" signed="false" shortDescription="PUS Service Identifier">
+				<xtce:LongDescription>Together with the service type, the subtype
+					uniquely identifies the nature of the service report constituted by
+					this telemetry source packet. Within standard services, subtypes
+					0
+					to 127 shall be reserved for this Standard, subtypes 128 to 255 are
+					mission-specific. Within mission-specific services, all subtypes (0
+					to 255) are available for mission-specific use.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="PUSSeqCountType" signed="false" shortDescription="OPTIONAL PUS Subsequence Counter">
+				<xtce:LongDescription>This is a counter that increments each time
+					the application process releases a newpacket of this type and
+					subtype. If the application process can send distinct packets to
+					distinct destinations using the optional Destination ID field shown
+					below, then a separate source sequence count shall be maintained
+					for each destination. Whilst the source sequence count enables
+					the
+					destination (e.g. the ground) to detect a transmission gap, this
+					packet sub-counter givesmore information on the nature of the
+					particular packets that are missing. This field shall be
+					systematically omitted if this information is not applicable for
+					this application process.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="PUSDestinationType" signed="false" shortDescription="OPTIONAL PUS Destination ID">
+				<xtce:LongDescription>This field identifies the destination of the
+					telemetry source packet. The length of this field is known
+					implicitly for the mission. This field shall be systematically
+					omitted if
+					the mission has only a single destination (i.e. the
+					ground system) for telemetry source packets or has no requirement
+					to distinguish between destinations.
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:AbsoluteTimeParameterType name="PUSTimeType" shortDescription="OPTIONAL PUS Timestamp (CUC or CDS CCSDS Time Standard)">
+				<xtce:LongDescription>The on-board reference time of the packet,
+					expressed in either the CUC or CDS format (as defined in CCSDS
+					301.0-B-2). The choice between CUC and CDS formats and the
+					resolution
+					of the timefield can vary from mission to mission and
+					even between different application processes within the same
+					satellite. For some missions or application processes, this time
+					field may even not
+					be present.The presence or absence of the field
+					and its encoding are explicitly defined by the mission constant
+					"APPL_TIME_CODE" of which there are asmany as there are on-board
+					application
+					processes. The representations of the timefield are
+					those defined in clause 23 of thisStandard. If the CDS format is
+					used, the standard CCSDS epoch of 1958 January 1 shall be
+					applicable, see CCSDS
+					301.0-B-2. The packet on-board time
+					corresponds to any well-defined time before the sampling of any
+					data within the packet.
+				</xtce:LongDescription>
+				<xtce:Encoding>
+					<xtce:IntegerDataEncoding sizeInBits="64" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<!--xtce:Epoch>TAI</xtce:Epoch -->
+					<xtce:Epoch>1970-01-01</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+			<xtce:BinaryParameterType name="PUSErrorControlFieldType" shortDescription="OPTIONAL PUS Error Control Field">
+				<xtce:LongDescription>The packet error control field transports an
+					error detection code that can be used by the ground system to
+					verify the integrity of the complete telemetry source packet. The
+					presence of the PEC and its type (either a checksum or CRC) shall
+					be fixed for the complete mission for each application process and
+					defined by the mission constant "TM_CHECKSUM_TYPE".
+				</xtce:LongDescription>
+				<xtce:UnitSet />
+				<xtce:BinaryDataEncoding>
+					<xtce:SizeInBits>
+						<xtce:FixedValue>16</xtce:FixedValue>
+					</xtce:SizeInBits>
+				</xtce:BinaryDataEncoding>
+			</xtce:BinaryParameterType>
+			<xtce:EnumeratedParameterType name="PUS_Structure_ID_Type">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="8" />
+				<xtce:EnumerationList>
+					<xtce:Enumeration value="0" label="No_Content" />
+					<xtce:Enumeration value="1" label="ECSS_SpacePacket1" />
+					<xtce:Enumeration value="2" label="ECSS_SpacePacket2" />
+					<xtce:Enumeration value="3" label="ECSS_SpacePacket3" />
+					<xtce:Enumeration value="4" label="ECSS_SpacePacket4" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:IntegerParameterType name="LittleEndianInteger1" signed="true">
+				<xtce:LongDescription>This parameter type is used to test the
+					byteOrder attribute
+				</xtce:LongDescription>
+				<xtce:IntegerDataEncoding sizeInBits="16" byteOrder="leastSignificantByteFirst" />
+			</xtce:IntegerParameterType>
+			<xtce:FloatParameterType name="LittleEndianFloat1" signed="true">
+				<xtce:LongDescription>This parameter type is used to test the
+					byteOrder attribute
+				</xtce:LongDescription>
+				<xtce:FloatDataEncoding sizeInBits="64" byteOrder="leastSignificantByteFirst" />
+			</xtce:FloatParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter name="TM_CHECKSUM_TYPE" parameterTypeRef="TM_CHECKSUMType" shortDescription="ECSS PUS Constant">
+				<xtce:LongDescription>This indicates the presence and (if present)
+					the type of checksumused for checking the integrity of telemetry
+					source packets for the given application process. The type shall
+					be
+					either an ISO standard checksum or a Cyclic Redundancy Check (CRC).
+				</xtce:LongDescription>
+				<xtce:ParameterProperties dataSource="constant" readOnly="true" />
+			</xtce:Parameter>
+			<xtce:Parameter name="APPL_TIME_CODE" parameterTypeRef="APPL_TIME_CODEType" shortDescription="ECSS PUS Constant">
+				<xtce:LongDescription>This mission constant identifies the presence
+					or absence of the telemetry source packet time field as well as the
+					time format (CUC or CDS) and the encoding of the time field.
+					There
+					is one such mission constant for each on-board application process.
+				</xtce:LongDescription>
+				<xtce:ParameterProperties dataSource="constant" readOnly="true" />
+			</xtce:Parameter>
+			<xtce:Parameter name="CCSDSSCID" parameterTypeRef="CCSDSSCIDType">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+			<xtce:Parameter name="CCSDSVCID" parameterTypeRef="CCSDSVCIDType">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+			<xtce:Parameter name="SomeParameter" parameterTypeRef="SomeParameter_Type" />
+			<xtce:Parameter name="CCSDS_Packet_ID" parameterTypeRef="CCSDS_Packet_ID_Type" />
+			<xtce:Parameter name="CCSDS_Packet_Sequence" parameterTypeRef="CCSDS_Packet_Sequence_Type" />
+			<xtce:Parameter name="CCSDS_Packet_Length" parameterTypeRef="CCSDSPacketLengthType" />
+			<xtce:Parameter name="PUS_Data_Field_Header" parameterTypeRef="PUS_Data_Field_Header_Type" />
+			<xtce:Parameter name="PUS_Time" parameterTypeRef="PUSTimeType" />
+			<xtce:Parameter name="PUS_Error_Control_Field" parameterTypeRef="PUSErrorControlFieldType" />
+			<xtce:Parameter name="Mission" parameterTypeRef="MissionType">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+			<xtce:Parameter name="PUS_Structure_ID" parameterTypeRef="PUS_Structure_ID_Type"
+				shortDescription="The PUS Structure ID identifies a specific Housekeeping Parameter content in service (3,25)" />
+		</xtce:ParameterSet>
+		<xtce:ContainerSet>
+			<xtce:SequenceContainer abstract="true" name="CCSDSPacket" shortDescription="Super-container for all CCSDS telemetry and telecommand packets">
+				<xtce:LongDescription>Structure of this container is standardized.
+					This representation was borrowed for the ECSS PUS Document
+					E-70-41A, which restates the general CCSDS standard for the CCSDS
+					header.
+				</xtce:LongDescription>
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_ID" />
+					<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_Sequence" />
+					<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_Length" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer abstract="true" name="CCSDSTelemetryPacket" shortDescription="Super-container for all CCSDS telemetry packets">
+				<xtce:LongDescription>Restricted based on the two identifying values
+					in the standard that are a general requirement for a telemetry
+					packet.
+				</xtce:LongDescription>
+				<xtce:EntryList />
+				<xtce:BaseContainer containerRef="CCSDSPacket">
+					<xtce:RestrictionCriteria>
+						<xtce:ComparisonList>
+							<xtce:Comparison value="0" parameterRef="CCSDS_Packet_ID.Version" />
+							<xtce:Comparison value="TM" parameterRef="CCSDS_Packet_ID.Type" />
+						</xtce:ComparisonList>
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer abstract="true" name="CCSDSPUSTelemetryPacket">
+				<xtce:LongDescription>Super-container for all CCSDS/ECSS PUS
+					telemetry packets.
+				</xtce:LongDescription>
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="PUS_Data_Field_Header" />
+					<xtce:ParameterRefEntry parameterRef="PUS_Time">
+						<xtce:IncludeCondition>
+							<xtce:Comparison parameterRef="APPL_TIME_CODE" value="NotUsed" useCalibratedValue="true" comparisonOperator="!=" />
+						</xtce:IncludeCondition>
+					</xtce:ParameterRefEntry>
+					<!-- this is where the PUS data field goes -->
+					<!-- currently not supported by Yamcs <xtce:ParameterRefEntry parameterRef="PUS_Error_Control_Field"> <xtce:LocationInContainerInBits referenceLocation="containerEnd"> <xtce:FixedValue>16</xtce:FixedValue>
+						</xtce:LocationInContainerInBits> <xtce:IncludeCondition> <xtce:Comparison parameterRef="TM_CHECKSUM_TYPE" value="NotUsed" useCalibratedValue="true" comparisonOperator="!="/> </xtce:IncludeCondition>
+						</xtce:ParameterRefEntry> -->
+				</xtce:EntryList>
+				<xtce:BaseContainer containerRef="CCSDSTelemetryPacket">
+					<xtce:RestrictionCriteria>
+						<xtce:Comparison parameterRef="CCSDS_Packet_ID.SecHdrFlag" value="Present" />
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+				<xtce:AncillaryDataSet>
+					<xtce:AncillaryData name="Yamcs">UseAsArchivingPartition
+					</xtce:AncillaryData>
+				</xtce:AncillaryDataSet>
+			</xtce:SequenceContainer>
+		</xtce:ContainerSet>
+		<xtce:StreamSet>
+			<xtce:VariableFrameStream name="CCSDS-TM" shortDescription="CCSDS Telemetry Stream">
+				<xtce:ContainerRef containerRef="CCSDSTelemetryPacket" />
+				<xtce:SyncStrategy>
+					<xtce:Flag />
+				</xtce:SyncStrategy>
+			</xtce:VariableFrameStream>
+		</xtce:StreamSet>
+	</xtce:TelemetryMetaData>
+	<xtce:CommandMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:EnumeratedParameterType name="TC_CHECKSUMType" initialValue="NotUsed">
+				<xtce:UnitSet />
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="NotUsed" value="0" />
+					<xtce:Enumeration label="CRC" value="1" />
+					<xtce:Enumeration label="Checksum" value="2" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter parameterTypeRef="TC_CHECKSUMType" name="TC_CHECKSUM">
+				<xtce:ParameterProperties dataSource="constant" readOnly="true" />
+			</xtce:Parameter>
+		</xtce:ParameterSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand abstract="true" name="CCSDSTelecommand">
+				<xtce:LongDescription>Base telecommand structure for all CCSDS based
+					telecommands.
+				</xtce:LongDescription>
+				<xtce:CommandContainer name="CCSDSTelecommandPacket">
+					<xtce:LongDescription>Super-container for all CCSDS telecommand
+						packets.
+					</xtce:LongDescription>
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_ID" />
+						<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_Sequence" />
+						<xtce:ParameterRefEntry parameterRef="CCSDS_Packet_Length" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand abstract="true" name="CCSDSPUSTelecommand">
+				<xtce:LongDescription>Base telecommand structure for all CCSDS/ECSS
+					PUS based telecommand packets.
+				</xtce:LongDescription>
+				<xtce:BaseMetaCommand metaCommandRef="CCSDSTelecommand" />
+				<xtce:CommandContainer name="CCSDSPUSTelecommand">
+					<xtce:EntryList />
+					<!-- need to fill these in -->
+					<xtce:BaseContainer containerRef="CCSDSTelecommandPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:Comparison parameterRef="CCSDS_Packet_ID.SecHdrFlag" value="Present" />
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand abstract="true" name="CCSDSDirectTelecommand">
+				<xtce:LongDescription>Base telecommand structure for all CCSDS based
+					hardware direct telecommand packets.
+				</xtce:LongDescription>
+				<xtce:BaseMetaCommand metaCommandRef="CCSDSTelecommand" />
+				<xtce:CommandContainer name="CCSDSDirectTelecommand">
+					<xtce:EntryList />
+					<xtce:BaseContainer containerRef="CCSDSTelecommandPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:Comparison parameterRef="CCSDS_Packet_ID.SecHdrFlag" value="NotPresent" />
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+		<xtce:CommandContainerSet>
+			<xtce:CommandContainer name="CCSDSTelecommandPacket" shortDescription="Super-container for all CCSDS telecommand packets">
+				<xtce:LongDescription>Restricted based on the two identifying values
+					in the standard that are a general requirement for a telemetry
+					packet.
+				</xtce:LongDescription>
+				<xtce:EntryList />
+				<xtce:BaseContainer containerRef="CCSDSPacket">
+					<xtce:RestrictionCriteria>
+						<xtce:ComparisonList>
+							<xtce:Comparison value="0" parameterRef="CCSDS_Packet_ID.Version" />
+							<xtce:Comparison value="TC" parameterRef="CCSDS_Packet_ID.Type" />
+						</xtce:ComparisonList>
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+			</xtce:CommandContainer>
+		</xtce:CommandContainerSet>
+	</xtce:CommandMetaData>
+	<xtce:SpaceSystem name="SC001" shortDescription="This is the first spacecraft in the BogusSAT system">
+		<xtce:LongDescription>This space system contains the telemetry packets
+			that comprise TM parameters from the various subsystems on the
+			satellite.
+		</xtce:LongDescription>
+		<xtce:TelemetryMetaData>
+			<xtce:ContainerSet>
+				<xtce:SequenceContainer name="CCSDS_SpacePacket1">
+					<xtce:EntryList>
+						<!-- Demonstrate the UNIX style path stuff working -->
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Voltage" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Current" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/../BusElectronics/Battery_Charge_Mode" />
+						<xtce:ParameterRefEntry parameterRef="../SomeParameter" />
+						<xtce:ParameterRefEntry parameterRef="/BogusSAT/SC001/BusElectronics/Solar_Array_Voltage_1" />
+						<xtce:ParameterRefEntry parameterRef="./BusElectronics/Solar_Array_Voltage_2" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="NotPresent" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="1" parameterRef="CCSDS_Packet_ID.APID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="CCSDS_SpacePacket2">
+					<xtce:EntryList>
+						<!-- Demonstrate the IncludeConditions working -->
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_1_State" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_1">
+							<xtce:IncludeCondition>
+								<xtce:Comparison parameterRef="BusElectronics/Solar_Array_Voltage_1_State" value="ON" useCalibratedValue="true" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_2_State" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_2">
+							<xtce:IncludeCondition>
+								<xtce:Comparison parameterRef="BusElectronics/Solar_Array_Voltage_2_State" value="1" useCalibratedValue="false" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<!-- Empty space above will not appear since the referene location is previous entry, now fix the position -->
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Voltage">
+							<xtce:LocationInContainerInBits referenceLocation="containerStart">
+								<xtce:FixedValue>88</xtce:FixedValue>
+							</xtce:LocationInContainerInBits>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Current" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="NotPresent" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="2" parameterRef="CCSDS_Packet_ID.APID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="CCSDS_SpacePacket4">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Payload1/Payload_1_State" />
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer1">
+							<xtce:IncludeCondition>
+								<xtce:Comparison parameterRef="Payload1/Payload_1_State" value="ON" />
+							</xtce:IncludeCondition>
+						</xtce:ContainerRefEntry>
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer2" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="NotPresent" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="4" parameterRef="CCSDS_Packet_ID/APID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="CCSDS_SpacePacket5">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Payload1/Payload_1_State" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_1_State" />
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer3">
+							<xtce:IncludeCondition>
+								<xtce:Comparison parameterRef="Payload1/Payload_1_State" value="ON" />
+							</xtce:IncludeCondition>
+						</xtce:ContainerRefEntry>
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer1" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="NotPresent" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="5" parameterRef="CCSDS_Packet_ID.APID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="CCSDS_SpacePacket6">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Payload1/Payload_1_State" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Solar_Array_Voltage_1_State" />
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer3" />
+						<xtce:ArrayParameterRefEntry parameterRef="Payload1/PAYLOAD_ANTENNA_POINTING_ARRAY1">
+							<xtce:DimensionList>
+								<xtce:Size>
+									<xtce:FixedValue>9</xtce:FixedValue>
+								</xtce:Size>
+							</xtce:DimensionList>
+						</xtce:ArrayParameterRefEntry>
+						<xtce:ArrayParameterRefEntry parameterRef="Payload1/PAYLOAD_ANTENNA_POINTING_ARRAY2">
+							<xtce:LocationInContainerInBits referenceLocation="previousEntry">
+								<xtce:FixedValue>8</xtce:FixedValue>
+							</xtce:LocationInContainerInBits>
+							<xtce:RepeatEntry>
+								<xtce:Count>
+									<xtce:FixedValue>2</xtce:FixedValue>
+								</xtce:Count>
+							</xtce:RepeatEntry>
+							<xtce:DimensionList>
+								<xtce:Size>
+									<xtce:FixedValue>9</xtce:FixedValue>
+								</xtce:Size>
+							</xtce:DimensionList>
+						</xtce:ArrayParameterRefEntry>
+						<xtce:ContainerRefEntry containerRef="Payload1/IncludedContainer1" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="NotPresent" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="6" parameterRef="CCSDS_Packet_ID.APID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_Service_1_Subservice_1" shortDescription="Telecommand Acceptance Report - Success (1,1)">
+					<!--xtce:LongDescription>Report of acceptance of a telecommand packet. This example is based on the design presented in document ECSS-E-70-41A (30 Jan 2003).</xtce:LongDescription -->
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Packet_ID" />
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Packet_Sequence_Control" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="BogusSAT/CCSDSPUSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="Present" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="100" parameterRef="CCSDS_Packet_ID.APID" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare1" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Version" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare4" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Service" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Subservice" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_Service_1_Subservice_2" shortDescription="Telecommand Acceptance Report - Failure (1,2)">
+					<xtce:LongDescription>Report of refused/failed acceptance of a
+						telecommand packet. This example is based on the design presented
+						in document ECSS-E-70-41A (30 Jan 2003).
+					</xtce:LongDescription>
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Packet_ID" />
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Packet_Sequence_Control" />
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Accept_Failure_Code" />
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Parameter_Count" />
+						<xtce:ParameterRefEntry parameterRef="Commanding/TC_Parameter_Data">
+							<xtce:RepeatEntry>
+								<xtce:Count>
+									<xtce:DynamicValue>
+										<xtce:ParameterInstanceRef parameterRef="Commanding/TC_Parameter_Count" useCalibratedValue="true" />
+									</xtce:DynamicValue>
+								</xtce:Count>
+							</xtce:RepeatEntry>
+						</xtce:ParameterRefEntry>
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="Present" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="100" parameterRef="CCSDS_Packet_ID.APID" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare1" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Version" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare4" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Service" />
+								<xtce:Comparison value="2" parameterRef="PUS_Data_Field_Header.Subservice" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_Service_3_Subservice_25" abstract="true" shortDescription="Housekeeping Parameter Report (3,25)">
+					<xtce:LongDescription>The service 3,25 packet of the ECSS PUS
+						contains the housekeeping telemetry subpackets, switched with the
+						PUS_Structure_ID parameter. This example is based on the design
+						presented in document ECSS-E-70-41A (30 Jan 2003).
+					</xtce:LongDescription>
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="../PUS_Structure_ID" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="Present" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="100" parameterRef="CCSDS_Packet_ID.APID" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare1" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Version" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare4" />
+								<xtce:Comparison value="3" parameterRef="PUS_Data_Field_Header.Service" />
+								<xtce:Comparison value="25" parameterRef="PUS_Data_Field_Header.Subservice" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_Service_6_Subservice_6" shortDescription="Memory Dump using Absolute Addresses Report (6,6)">
+					<xtce:LongDescription>The packet defines the contents of a response
+						to the telecommand "Dump Memory using Absolute Addresses (6,5)".
+						This assumes that only 1 address+data can be dumped at a time.
+						The
+						length of the data is variable and the checksum for the data is
+						used. This example is based on the design presented in document
+						ECSS-E-70-41A (30 Jan 2003).
+					</xtce:LongDescription>
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="Memory/Dump_Memory_ID" />
+						<!-- xtce:ParameterRefEntry parameterRef="Memory/Dump_Memory_Count_Areas"/ -->
+						<xtce:ParameterRefEntry parameterRef="Memory/Dump_Memory_Address" />
+						<xtce:ParameterRefEntry parameterRef="Memory/Dump_Memory_Length" />
+						<xtce:ArrayParameterRefEntry parameterRef="Memory/Dump_Memory_Data">
+							<xtce:DimensionList>
+								<xtce:Size>
+									<xtce:DynamicValue>
+										<xtce:ParameterInstanceRef parameterRef="Memory/Dump_Memory_Length" useCalibratedValue="true" />
+									</xtce:DynamicValue>
+								</xtce:Size>
+							</xtce:DimensionList>
+						</xtce:ArrayParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="Memory/Dump_Memory_Chksum" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelemetryPacket">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="Present" parameterRef="CCSDS_Packet_ID.SecHdrFlag" />
+								<xtce:Comparison value="100" parameterRef="CCSDS_Packet_ID.APID" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare1" />
+								<xtce:Comparison value="1" parameterRef="PUS_Data_Field_Header.Version" />
+								<xtce:Comparison value="0" parameterRef="PUS_Data_Field_Header.Spare4" />
+								<xtce:Comparison value="6" parameterRef="PUS_Data_Field_Header.Service" />
+								<xtce:Comparison value="6" parameterRef="PUS_Data_Field_Header.Subservice" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_SpacePacket1">
+					<xtce:EntryList>
+						<!-- Demonstrate the UNIX style path stuff working -->
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Voltage" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Current" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/../BusElectronics/Battery_Charge_Mode" />
+						<xtce:ParameterRefEntry parameterRef="../SomeParameter" />
+						<xtce:ParameterRefEntry parameterRef="/BogusSAT/SC001/BusElectronics/Solar_Array_Voltage_1" />
+						<xtce:ParameterRefEntry parameterRef="./BusElectronics/Solar_Array_Voltage_2" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="ECSS_Service_3_Subservice_25">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="ECSS_SpacePacket1" parameterRef="../PUS_Structure_ID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="ECSS_SpacePacket2">
+					<xtce:EntryList>
+						<!-- Demonstrate the UNIX style path stuff working -->
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Voltage" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Battery_Current" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Flag_Parameter" />
+						<xtce:ParameterRefEntry parameterRef="BusElectronics/Optional_Parameter">
+							<xtce:IncludeCondition>
+								<xtce:Comparison parameterRef="BusElectronics/Flag_Parameter" value="1" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="/BogusSAT/SC001/BusElectronics/Solar_Array_Voltage_1" />
+						<xtce:ParameterRefEntry parameterRef="./BusElectronics/Solar_Array_Voltage_2" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="ECSS_Service_3_Subservice_25">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison value="ECSS_SpacePacket2" parameterRef="../PUS_Structure_ID" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:SequenceContainer>
+			</xtce:ContainerSet>
+		</xtce:TelemetryMetaData>
+		<xtce:SpaceSystem name="Commanding" shortDescription="Commanding Subsystem Parameters">
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:EnumeratedParameterType name="TC_Accept_Failure_Code_Type">
+						<xtce:LongDescription>The code indicates the reason for the
+							failure of the telecommand at this verification stage.
+						</xtce:LongDescription>
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="ILLEGAL_APID" />
+							<xtce:Enumeration value="1" label="INCOMPLETE_PACKET" />
+							<xtce:Enumeration value="2" label="INCORRECT_CHECKSUM" />
+							<xtce:Enumeration value="3" label="ILLEGAL_PACKET_TYPE" />
+							<xtce:Enumeration value="4" label="ILLEGAL_PACKET_SUBTYPE" />
+							<xtce:Enumeration value="5" label="INCONSISTENT_APPL_DATA" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="TC_Packet_ID" parameterTypeRef="/BogusSAT/Generic_16bits_unsigned" shortDescription="TC Packet Identifier">
+						<xtce:LongDescription>This is a copy of the corresponding fields
+							from the packet header of the telecommand to which this
+							verification packet relates.
+						</xtce:LongDescription>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="TC_Packet_Sequence_Control" parameterTypeRef="/BogusSAT/Generic_16bits_unsigned" shortDescription="TC Packet Sequence Number">
+						<xtce:LongDescription>This is a copy of the corresponding fields
+							from the packet header of the telecommand to which this
+							verification packet relates.
+						</xtce:LongDescription>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="TC_Accept_Failure_Code" parameterTypeRef="TC_Accept_Failure_Code_Type" shortDescription="Acceptance Failure Reason">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="TC_Parameter_Count" parameterTypeRef="/BogusSAT/Generic_8bits_unsigned" shortDescription="TC Packet Parameters (specific to the TC)">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="TC_Parameter_Data" parameterTypeRef="/BogusSAT/Generic_8bits_unsigned" shortDescription="Unrealistic repeating list of 32 bit parameter data">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+			</xtce:TelemetryMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Memory" shortDescription="Memory Management Subsystem Parameters">
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:EnumeratedParameterType name="Dump_Memory_ID_Type">
+						<xtce:LongDescription>The names of the memory areas on the
+							physical processor.
+						</xtce:LongDescription>
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="8" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="RAM" />
+							<xtce:Enumeration value="1" label="PRI_EEPROM" />
+							<xtce:Enumeration value="2" label="RED_EEPROM" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:IntegerParameterType name="Dump_Memory_Length_Type">
+						<xtce:UnitSet>
+							<xtce:Unit>bytes</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+					</xtce:IntegerParameterType>
+					<xtce:ArrayParameterType name="Dump_Memory_Data_Type" arrayTypeRef="/BogusSAT/Generic_8bits_unsigned" numberOfDimensions="1" />
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Dump_Memory_ID" parameterTypeRef="Dump_Memory_ID_Type" shortDescription="Physical Memory Area Name">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Dump_Memory_Address" parameterTypeRef="/BogusSAT/Generic_32bits_unsigned"
+						shortDescription="Source address of the physical memory where the data block originates">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Dump_Memory_Length" parameterTypeRef="Dump_Memory_Length_Type" shortDescription="Length of the data being dumped in the data field">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Dump_Memory_Data" parameterTypeRef="Dump_Memory_Data_Type" shortDescription="The binary data being dumped from the source address">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Dump_Memory_Chksum" parameterTypeRef="/BogusSAT/Generic_16bits_unsigned" shortDescription="ISO standard 16 bit checksum for the data block being dumped">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+			</xtce:TelemetryMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Onboard_Tables" shortDescription="Tables of data onboard that are not part of the regular TM stream">
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:FloatParameterType name="Float32_Offset">
+						<xtce:LongDescription>A long description for this type
+						</xtce:LongDescription>
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding encoding="IEEE754_1985" sizeInBits="32" />
+						<xtce:ValidRange minInclusive="-100.0" maxInclusive="100.0" />
+					</xtce:FloatParameterType>
+					<xtce:IntegerParameterType name="Uint32_Offset">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="twosComplement" sizeInBits="32" />
+						<xtce:ValidRange minInclusive="-50" maxInclusive="40" />
+					</xtce:IntegerParameterType>
+					<xtce:FloatParameterType name="Float64_Offset">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding encoding="IEEE754_1985" sizeInBits="64" />
+						<xtce:ValidRange minInclusive="-80.0" maxInclusive="75.0" />
+					</xtce:FloatParameterType>
+					<xtce:EnumeratedParameterType name="Start_Mode_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="8" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="DIAGNOSTIC" />
+							<xtce:Enumeration value="1" label="NORMAL" />
+							<xtce:Enumeration value="2" label="SAFEHOLD" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Battery_Voltage_Offset" initialValue="2.5" parameterTypeRef="Float32_Offset" shortDescription="Correction for battery voltage measurements">
+						<xtce:LongDescription>Extended discussion about the nature of the
+							battery voltage offset
+						</xtce:LongDescription>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false">
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceName="CPU1" sourceAddress="0000f010" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_1_Offset" initialValue="2" parameterTypeRef="Uint32_Offset" shortDescription="Correction for solar array voltage measurements">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false">
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceName="CPU1" sourceAddress="0000f016" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_2_Offset" initialValue="1" parameterTypeRef="Uint32_Offset" shortDescription="Correction for solar array voltage measurements">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false">
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceName="CPU1" sourceAddress="0000f01a" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_Current_Offset" initialValue="-1.5" parameterTypeRef="Float64_Offset" shortDescription="Correction for battery current measurements">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false">
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceName="CPU1" sourceAddress="0000f020" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Default_CPU_Start_Mode" initialValue="NORMAL" parameterTypeRef="Start_Mode_Type" shortDescription="Starting mode for the onboard processor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false">
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceName="CPU1" sourceAddress="0000f028" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+				<xtce:ContainerSet>
+					<xtce:SequenceContainer name="Calibration_Offsets" shortDescription="This is an onboard table for upload/download that contains configuration parameters">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="Battery_Voltage_Offset" />
+							<xtce:ParameterRefEntry parameterRef="Solar_Array_Voltage_1_Offset">
+								<xtce:LocationInContainerInBits referenceLocation="previousEntry">
+									<xtce:FixedValue>16</xtce:FixedValue>
+								</xtce:LocationInContainerInBits>
+							</xtce:ParameterRefEntry>
+							<xtce:ParameterRefEntry parameterRef="Solar_Array_Voltage_2_Offset" />
+							<xtce:ParameterRefEntry parameterRef="Battery_Current_Offset">
+								<xtce:LocationInContainerInBits referenceLocation="containerStart">
+									<xtce:FixedValue>112</xtce:FixedValue>
+								</xtce:LocationInContainerInBits>
+							</xtce:ParameterRefEntry>
+							<xtce:ParameterRefEntry parameterRef="Default_CPU_Start_Mode" />
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+				</xtce:ContainerSet>
+				<xtce:StreamSet>
+					<xtce:VariableFrameStream name="CALTABLE" shortDescription="This is an onboard table for upload/download that contains configuration parameters">
+						<xtce:ContainerRef containerRef="Calibration_Offsets" />
+						<xtce:SyncStrategy>
+							<xtce:Flag />
+						</xtce:SyncStrategy>
+					</xtce:VariableFrameStream>
+				</xtce:StreamSet>
+			</xtce:TelemetryMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Onboard_Processor_Config"
+			shortDescription="This is the onboard processor configuration parameters uploaded and/or downloaded as binary data for reconfiguration">
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:EnumeratedParameterType name="Table_Processor_ID_Type">
+						<xtce:LongDescription>The processor ID value of the table is not
+							used by the onboard processor except at transfer time for data
+							assurance and as such is not a part of the memory image onboard.
+						</xtce:LongDescription>
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="NOT_YET_SET" />
+							<xtce:Enumeration value="1" label="PROCESSOR1" />
+							<xtce:Enumeration value="2" label="PROCESSOR2" />
+							<xtce:Enumeration value="3" label="PROCESSOR3" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:BinaryParameterType name="Table_CRC_Value_Type" shortDescription="CRC-16-CCITT">
+						<xtce:LongDescription>The CRC value of the table is not used by
+							the onboard processor except at transfer time for data assurance
+							and as such is not a part of the memory image onboard.
+						</xtce:LongDescription>
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>16</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:BinaryParameterType>
+					<xtce:AggregateParameterType name="Config_Log_Levels_Type">
+						<LongDescription>Test Long Description</LongDescription>
+						<AncillaryDataSet>
+							<AncillaryData name="TEST_ANC_DATA">1</AncillaryData>
+						</AncillaryDataSet>
+						<xtce:MemberList>
+							<xtce:Member name="COREINF" typeRef="Log_Level_Type" shortDescription="Log level for Common Infrastructure Software" />
+							<xtce:Member name="ANTCTRL" typeRef="Log_Level_Type" shortDescription="Log level for Payload Antenna Control Software" />
+							<xtce:Member name="TCMGMNT" typeRef="Log_Level_Type" shortDescription="Log level for Telecommand Management Software" />
+							<xtce:Member name="TIME" typeRef="Log_Level_Type" shortDescription="Log level for Time Keeping Software" />
+							<xtce:Member name="TMMGMNT" typeRef="Log_Level_Type" shortDescription="Log level for Telemetry Management Software" />
+							<xtce:Member name="INTERFACE" typeRef="Log_Level_Type" shortDescription="Log level for Bus and Payload Hardware Interface Software" />
+							<xtce:Member name="MW1553" typeRef="Log_Level_Type" shortDescription="Log level for 1553 Communications Interface Software" />
+						</xtce:MemberList>
+					</xtce:AggregateParameterType>
+					<xtce:EnumeratedParameterType initialValue="warning" name="Log_Level_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="debug" />
+							<xtce:Enumeration value="1" label="info" />
+							<xtce:Enumeration value="2" label="warning" />
+							<xtce:Enumeration value="3" label="error" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:IntegerParameterType initialValue="5" signed="false" name="Config_Watchdog_Type">
+						<xtce:UnitSet>
+							<xtce:Unit>seconds</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+						<xtce:ValidRange minInclusive="1" maxInclusive="300" />
+					</xtce:IntegerParameterType>
+					<xtce:AggregateParameterType name="Config_PROM_Access_Type">
+						<xtce:LongDescription>PROM programming and access timing
+							constraints
+						</xtce:LongDescription>
+						<xtce:MemberList>
+							<xtce:Member name="Read" typeRef="PROM_Programming_Access_Timing_Type" />
+							<xtce:Member name="Write" typeRef="PROM_Programming_Access_Timing_Type" />
+							<xtce:Member name="Erase" typeRef="PROM_Programming_Access_Timing_Type" />
+							<xtce:Member name="Lock" typeRef="PROM_Programming_Access_Timing_Type" />
+						</xtce:MemberList>
+					</xtce:AggregateParameterType>
+					<xtce:IntegerParameterType initialValue="100" signed="false" name="PROM_Programming_Access_Timing_Type">
+						<xtce:UnitSet>
+							<xtce:Unit>microseconds</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+						<xtce:ValidRange minInclusive="10" maxInclusive="50000" />
+					</xtce:IntegerParameterType>
+					<xtce:AggregateParameterType name="Config_Self_Tests_Type">
+						<xtce:MemberList>
+							<xtce:Member name="pad_2bits" typeRef="Unused_2bits_Type" />
+							<xtce:Member name="Antenna" typeRef="Self_Test_Type" />
+							<xtce:Member name="CPU" typeRef="Self_Test_Type" />
+							<xtce:Member name="RAM" typeRef="Self_Test_Type" />
+							<xtce:Member name="EEPROM" typeRef="Self_Test_Type" />
+							<xtce:Member name="Flash" typeRef="Self_Test_Type" />
+							<xtce:Member name="Modem" typeRef="Self_Test_Type" />
+						</xtce:MemberList>
+					</xtce:AggregateParameterType>
+					<xtce:BinaryParameterType name="Unused_2bits_Type" initialValue="00" shortDescription="Empty Space In Structure">
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>2</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:BinaryParameterType>
+					<xtce:EnumeratedParameterType initialValue="ENABLED" name="Self_Test_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="1" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="DISABLED" shortDescription="Built-In Self Test not to execute on boot" />
+							<xtce:Enumeration value="1" label="ENABLED" shortDescription="Built-In Self Test execute on boot" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType initialValue="PRIMARY" name="Config_Clock_ID_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="signMagnitude" sizeInBits="8" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration shortDescription="Do Not Synchronize" value="-1" label="NOSYNC" />
+							<xtce:Enumeration shortDescription="Use primary oscillator" value="0" label="PRIMARY" />
+							<xtce:Enumeration shortDescription="Use secondary oscillator" value="1" label="SECONDARY" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:FloatParameterType initialValue="-0.6" name="Power_Level_Type">
+						<xtce:LongDescription>This demonstrates using a ContextCalibrator
+							so that the engineering conversion is different for each of the
+							two processors.
+						</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit>dB</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding encoding="twosComplement" sizeInBits="16">
+							<xtce:DefaultCalibrator name="Default_Counts" shortDescription="This calibrator is used for PROCESSOR3">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term coefficient="1.5" exponent="0" />
+									<xtce:Term coefficient="1" exponent="1" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+							<xtce:ContextCalibratorList>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison parameterRef="Table_Processor_ID" value="PROCESSOR1" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term coefficient="-0.2" exponent="0" />
+											<xtce:Term coefficient="1" exponent="1" />
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison parameterRef="Table_Processor_ID" value="PROCESSOR2" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term coefficient="-1.0" exponent="0" />
+											<xtce:Term coefficient="1" exponent="1" />
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+							</xtce:ContextCalibratorList>
+						</xtce:IntegerDataEncoding>
+						<xtce:ValidRange validRangeAppliesToCalibrated="true" minInclusive="-10.0" maxInclusive="10.0" />
+					</xtce:FloatParameterType>
+					<xtce:EnumeratedParameterType name="Payload_Interface_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="1" label="LINK1" />
+							<xtce:Enumeration value="2" label="LINK2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="Payload_Performance_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="OFF" />
+							<xtce:Enumeration value="1" label="LEGACY" />
+							<xtce:Enumeration value="2" label="NORMAL" />
+							<xtce:Enumeration value="3" label="ENHANCED" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Table_Processor_ID" initialValue="NOT_YET_SET" parameterTypeRef="Table_Processor_ID_Type"
+						shortDescription="Identifier for the onboard processor associated with the configuration table">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Table_CRC_Value" parameterTypeRef="Table_CRC_Value_Type" shortDescription="CRC value of the configuration table for data assurance">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Config_Log_Levels_Type" name="Config_Log_Levels">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_loglevel" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Immediate
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Config_Watchdog_Type" name="Config_Watchdog">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_wdt_seconds" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Reset
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Config_PROM_Access_Type" name="Config_PROM_Access">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_prom_delay_us" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Immediate
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Config_Self_Tests_Type" name="Config_Self_Test" shortDescription="Built-In Self Test Processor Restart Configuration Flags">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_bist" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Reset
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Config_Clock_ID_Type" name="Config_Clock_ID" shortDescription="Onboard Clock to Synchronize with on Reset">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_primary_clock" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Reset
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Power_Level_Type" name="Config_Ant_Power_Level" shortDescription="Default transmit power level setting">
+						<xtce:LongDescription>The power level setting is calibrated
+							differently for the three on-board processors. This is due to a
+							slight hardware difference between the 1, 2, and 3 units.
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_ant_power_counts" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Delayed
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Payload_Interface_Type" name="Config_Payload_IF_ID" initialValue="LINK1" shortDescription="The payload interface ID to use">
+						<xtce:LongDescription>The payload interface is only available to
+							processor 1. The backup processor cannot do payload functions.
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_pl_interface_link" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Reset
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+					<xtce:Parameter parameterTypeRef="Payload_Performance_Type" name="Config_Payload_Perf" initialValue="NORMAL" shortDescription="The payload performance mode to use">
+						<xtce:LongDescription>The payload interface is only available to
+							processor 1. The backup processor cannot do payload functions.
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="FSW" alias="cfg_pl_mode" />
+						</xtce:AliasSet>
+						<xtce:AncillaryDataSet>
+							<xtce:AncillaryData name="InControl">timeout=undef
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="InControl">retain="yes"
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="OS/Comet">PERSIST
+							</xtce:AncillaryData>
+							<xtce:AncillaryData name="Effectivity">Reset
+							</xtce:AncillaryData>
+						</xtce:AncillaryDataSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="false" />
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+				<xtce:ContainerSet>
+					<xtce:SequenceContainer name="Processor_Config_Table" abstract="true"
+						shortDescription="This is the onboard processor configuration table container layout for encoding and decoding parameters">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="Table_Processor_ID" />
+							<xtce:ParameterRefEntry parameterRef="Config_Log_Levels" />
+							<xtce:ParameterRefEntry parameterRef="Config_Watchdog">
+								<xtce:LocationInContainerInBits>
+									<xtce:FixedValue>8</xtce:FixedValue>
+								</xtce:LocationInContainerInBits>
+							</xtce:ParameterRefEntry>
+							<xtce:ParameterRefEntry parameterRef="Config_PROM_Access" />
+							<xtce:ParameterRefEntry parameterRef="Config_Self_Test" />
+							<xtce:ParameterRefEntry parameterRef="Config_Clock_ID" />
+							<xtce:ParameterRefEntry parameterRef="Config_Ant_Power_Level" />
+							<!-- not supported by Yamcs <xtce:ParameterRefEntry parameterRef="Table_CRC_Value"> <xtce:LocationInContainerInBits referenceLocation="containerEnd"> <xtce:FixedValue>0</xtce:FixedValue> </xtce:LocationInContainerInBits>
+								</xtce:ParameterRefEntry> -->
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="Processor_1_Config_Table"
+						shortDescription="This is the onboard processor 1 specific configuration table container layout for encoding and decoding parameters">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="Config_Payload_IF_ID" />
+							<xtce:ParameterRefEntry parameterRef="Config_Payload_Perf" />
+						</xtce:EntryList>
+						<xtce:BaseContainer containerRef="Processor_Config_Table">
+							<xtce:RestrictionCriteria>
+								<xtce:Comparison parameterRef="Table_Processor_ID" value="PROCESSOR1" />
+							</xtce:RestrictionCriteria>
+						</xtce:BaseContainer>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="Processor_2_Config_Table"
+						shortDescription="This is the onboard processor 2 specific configuration table container layout for encoding and decoding parameters">
+						<xtce:EntryList />
+						<xtce:BaseContainer containerRef="Processor_Config_Table">
+							<xtce:RestrictionCriteria>
+								<xtce:Comparison parameterRef="Table_Processor_ID" value="PROCESSOR2" />
+							</xtce:RestrictionCriteria>
+						</xtce:BaseContainer>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="Processor_3_Config_Table"
+						shortDescription="This is the onboard processor 3 specific configuration table container layout for encoding and decoding parameters">
+						<xtce:EntryList>
+							<xtce:ContainerRefEntry containerRef="Dummy_24bit_Container" />
+							<xtce:ParameterRefEntry parameterRef="Config_Payload_IF_ID" />
+							<xtce:ParameterRefEntry parameterRef="Config_Payload_Perf" />
+						</xtce:EntryList>
+						<xtce:BaseContainer containerRef="Processor_Config_Table">
+							<xtce:RestrictionCriteria>
+								<xtce:Comparison parameterRef="Table_Processor_ID" value="PROCESSOR3" />
+							</xtce:RestrictionCriteria>
+						</xtce:BaseContainer>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="Dummy_24bit_Container" shortDescription="This container has no content">
+						<xtce:LongDescription>This is NOT a recommended practice. This
+							container exists to verify in the unit tests that this will work,
+							albeit not the best idea. There might be some corner cases in a
+							database design where something like this is actually needed, so
+							it is supported as a possibility.
+						</xtce:LongDescription>
+						<xtce:BinaryEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>24</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryEncoding>
+						<xtce:EntryList />
+					</xtce:SequenceContainer>
+				</xtce:ContainerSet>
+				<xtce:StreamSet>
+					<xtce:VariableFrameStream name="CFGTABLE" shortDescription="This is the onboard processor configuration table binary file stream">
+						<xtce:ContainerRef containerRef="Processor_Config_Table" />
+						<xtce:SyncStrategy>
+							<xtce:Flag />
+						</xtce:SyncStrategy>
+					</xtce:VariableFrameStream>
+				</xtce:StreamSet>
+			</xtce:TelemetryMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="BusElectronics">
+			<xtce:Header validationStatus="Test" classification="NotClassified" version="Build0" date="27-10-2012" />
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:StringParameterType name="Bus_Fault_Message_Type" shortDescription="Bus Error Message">
+						<xtce:UnitSet />
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8">
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>128</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+					</xtce:StringParameterType>
+					<xtce:BooleanParameterType name="Battery_Charge_Mode_Type" zeroStringValue="DISCHARGE" oneStringValue="CHARGE"
+						shortDescription="This parameter indicates whether the charger is charging the battery">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="1" changeThreshold="1" />
+					</xtce:BooleanParameterType>
+					<xtce:BooleanParameterType name="boolean_float32_Type" zeroStringValue="FALSE" oneStringValue="TRUE"
+						shortDescription="Generic boolean EU type with float32 data encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="1" />
+					</xtce:BooleanParameterType>
+					<xtce:BooleanParameterType name="boolean_float64_Type" zeroStringValue="FALSE" oneStringValue="TRUE"
+						shortDescription="Generic boolean EU type with float64 data encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64" changeThreshold="1" />
+					</xtce:BooleanParameterType>
+					<xtce:BooleanParameterType name="boolean_binary_Type" zeroStringValue="FALSE" oneStringValue="TRUE" shortDescription="Generic boolean EU type with binary data encoding">
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>4</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:BooleanParameterType>
+					<xtce:BooleanParameterType name="boolean_string_Type" zeroStringValue="FALSE" oneStringValue="TRUE" shortDescription="Generic boolean EU type with string data encoding">
+						<xtce:UnitSet />
+						<xtce:StringDataEncoding encoding="UTF-8">
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>32</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+					</xtce:BooleanParameterType>
+					<xtce:FloatParameterType name="Battery_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured battery voltage">
+						<xtce:LongDescription>The battery on BogusSAT is a modeled by a
+							typical flooded lead acid car battery.
+						</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Potential">Volts</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01" />
+						<xtce:ValidRange minInclusive="0.0" maxInclusive="15.0" />
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:WarningRange minExclusive="12.35" maxExclusive="13.80" />
+								<xtce:CriticalRange minExclusive="12.10" maxExclusive="14.34" />
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+						<xtce:ContextAlarmList>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:StaticAlarmRanges>
+									<xtce:WarningRange minInclusive="12.60" maxInclusive="14.00" />
+									<xtce:CriticalRange minInclusive="12.35" maxInclusive="14.34" />
+								</xtce:StaticAlarmRanges>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Battery_Charge_Mode" value="CHARGE" />
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:StaticAlarmRanges>
+									<xtce:WarningRange minInclusive="12.35" maxInclusive="12.60" />
+									<xtce:CriticalRange minInclusive="12.10" maxInclusive="13.00" />
+								</xtce:StaticAlarmRanges>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Battery_Charge_Mode" value="DISCHARGE" />
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+						</xtce:ContextAlarmList>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Battery_Current_Type" sizeInBits="32" shortDescription="This parameter describes the measured current draw">
+						<xtce:LongDescription>The battery on BogusSAT is a modeled by a
+							typical flooded lead acid car battery.
+						</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Current">Amperes</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.01" />
+						<xtce:ValidRange minInclusive="-100.0" maxInclusive="100.0" />
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:WarningRange minExclusive="-5.0" maxExclusive="10.0" />
+								<xtce:CriticalRange minExclusive="-20.0" maxExclusive="15.0" />
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Battery_State_Of_Charge_Type" sizeInBits="32" shortDescription="Calculated battery state of charge">
+						<xtce:UnitSet>
+							<xtce:Unit>Percent</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:ValidRange minInclusive="0.0" maxInclusive="100.0" />
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Solar_Array_Voltage_Type" sizeInBits="32" shortDescription="This parameter describes the measured solar array output voltage at the charger">
+						<xtce:LongDescription>The solar array on BogusSAT is 10 230W Trina
+							TSM-DA05 monocrystalline panels, wired in series.
+						</xtce:LongDescription>
+						<xtce:UnitSet>
+							<xtce:Unit description="Potential">Volts</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="12" changeThreshold="1">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-100.0" />
+									<xtce:Term exponent="1" coefficient="0.1" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:IntegerDataEncoding>
+						<xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00" />
+						<xtce:DefaultAlarm minViolations="2">
+							<xtce:StaticAlarmRanges>
+								<xtce:CriticalRange minInclusive="0.0" maxInclusive="370.0" />
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_Type" sizeInBits="64" shortDescription="This is an analog parameter with a simple quadratic encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 + 2x - 8">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-8" />
+									<xtce:Term exponent="1" coefficient="2" />
+									<xtce:Term exponent="2" coefficient="1" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:IntegerDataEncoding>
+						<xtce:ValidRange minInclusive="0.00" maxInclusive="4000.00" validRangeAppliesToCalibrated="true" />
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:StaticAlarmRanges>
+								<xtce:CriticalRange minInclusive="-100.0" maxInclusive="100.0" />
+							</xtce:StaticAlarmRanges>
+						</xtce:DefaultAlarm>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_SingleRoot_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 + 1">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="1" />
+									<xtce:Term exponent="2" coefficient="1" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minInclusive="-10.00" maxInclusive="10.00" validRangeAppliesToCalibrated="false" />
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Quadratic_Demo_SingleRoot2_Type" sizeInBits="32" shortDescription="This is a float parameter with a float quadratic encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator shortDescription="this is y = x^2 - 4x + 4">
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="4.0" />
+									<xtce:Term exponent="1" coefficient="-4.0" />
+									<xtce:Term exponent="2" coefficient="1" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+						<xtce:ValidRange minExclusive="-32.0" maxExclusive="32.0" />
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Spline_Demo_Type" sizeInBits="64" shortDescription="This is a float parameter with a float spline encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="1" extrapolate="false">
+									<xtce:SplinePoint raw="-6.0" calibrated="1.0" />
+									<xtce:SplinePoint raw="-3.0" calibrated="2.0" />
+									<xtce:SplinePoint raw="-1.0" calibrated="3.0" />
+									<xtce:SplinePoint raw="1.0" calibrated="3.0" />
+									<xtce:SplinePoint raw="3.0" calibrated="2.0" />
+									<xtce:SplinePoint raw="6.0" calibrated="1.0" />
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:BooleanParameterType name="Solar_Array_Voltage_State_Type" initialValue="OFF" zeroStringValue="OFF" oneStringValue="ON"
+						shortDescription="The operational state of the solar array voltage sensor">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="8" changeThreshold="1" />
+					</xtce:BooleanParameterType>
+					<xtce:FloatParameterType sizeInBits="64" name="SunSensorPolyCalType">
+						<xtce:UnitSet>
+							<xtce:Unit>cd/m^2</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement">
+							<xtce:DefaultCalibrator>
+								<xtce:PolynomialCalibrator>
+									<xtce:Term exponent="0" coefficient="-10.0" />
+									<xtce:Term exponent="1" coefficient="5.0" />
+								</xtce:PolynomialCalibrator>
+							</xtce:DefaultCalibrator>
+							<xtce:ContextCalibratorList>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="LOW" parameterRef="/BogusSAT/SC001/BusElectronics/SunSensorMode" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term exponent="0" coefficient="0.0" />
+											<xtce:Term exponent="1" coefficient="5.0" />
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="HIGH" parameterRef="SunSensorMode" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:PolynomialCalibrator>
+											<xtce:Term exponent="0" coefficient="0.0" />
+											<xtce:Term exponent="1" coefficient="15.0" />
+										</xtce:PolynomialCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+							</xtce:ContextCalibratorList>
+						</xtce:IntegerDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType sizeInBits="64" name="EarthSensorSplineCalType">
+						<xtce:UnitSet>
+							<xtce:Unit>cd/m^2</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement">
+							<xtce:DefaultCalibrator>
+								<xtce:SplineCalibrator order="1">
+									<xtce:SplinePoint raw="0" calibrated="0.0" />
+									<xtce:SplinePoint raw="10" calibrated="5.0" />
+									<xtce:SplinePoint raw="20" calibrated="10.0" />
+								</xtce:SplineCalibrator>
+							</xtce:DefaultCalibrator>
+							<xtce:ContextCalibratorList>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="LOW" parameterRef="EarthSensorMode" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:SplineCalibrator order="1">
+											<xtce:SplinePoint raw="0" calibrated="5.0" />
+											<xtce:SplinePoint raw="10" calibrated="10.0" />
+											<xtce:SplinePoint raw="20" calibrated="15.0" />
+										</xtce:SplineCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+								<xtce:ContextCalibrator>
+									<xtce:ContextMatch>
+										<xtce:Comparison value="HIGH" parameterRef="/BogusSAT/SC001/BusElectronics/EarthSensorMode" />
+									</xtce:ContextMatch>
+									<xtce:Calibrator>
+										<xtce:SplineCalibrator order="0">
+											<xtce:SplinePoint raw="0" calibrated="10.0" />
+											<xtce:SplinePoint raw="10" calibrated="15.0" />
+											<xtce:SplinePoint raw="20" calibrated="20.0" />
+										</xtce:SplineCalibrator>
+									</xtce:Calibrator>
+								</xtce:ContextCalibrator>
+							</xtce:ContextCalibratorList>
+						</xtce:IntegerDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:EnumeratedParameterType name="SunSensorModeType" initialValue="OFF">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="OFF" value="0" />
+							<xtce:Enumeration label="LOW" value="1" />
+							<xtce:Enumeration label="HIGH" value="2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_1_Type" sizeInBits="32" shortDescription="This is a float parameter with a simple math operation calibrator">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32">
+							<xtce:DefaultCalibrator>
+								<xtce:MathOperationCalibrator>
+									<xtce:ValueOperand>0.5</xtce:ValueOperand>
+									<xtce:ThisParameterOperand />
+									<xtce:Operator>*</xtce:Operator>
+									<xtce:ValueOperand>1.25</xtce:ValueOperand>
+									<xtce:Operator>+</xtce:Operator>
+								</xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_2_Type" sizeInBits="64" shortDescription="This is a float parameter with a longer math operation calibrator">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:MathOperationCalibrator>
+									<!-- Equation in "infix" notation: 64 * log(2)[1.234 * value] also is 64 * (ln[1.234 * value] / ln[2]) -->
+									<xtce:ValueOperand>1.234</xtce:ValueOperand>
+									<xtce:ThisParameterOperand />
+									<xtce:Operator>*</xtce:Operator>
+									<xtce:Operator>ln</xtce:Operator>
+									<xtce:ValueOperand>2.0</xtce:ValueOperand>
+									<xtce:Operator>ln</xtce:Operator>
+									<xtce:Operator>/</xtce:Operator>
+									<xtce:ValueOperand>64.0</xtce:ValueOperand>
+									<xtce:Operator>*</xtce:Operator>
+								</xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Float_MathOpCal_3_Type" sizeInBits="64">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64">
+							<xtce:DefaultCalibrator>
+								<xtce:MathOperationCalibrator>
+									<!-- Equation in "infix" notation: 1 / ( -0.2054 ln(x)^3 + 0.08678 ln(x)^2 - 0.01209 ln(x) + 0.0005638 ) - 273.15 -->
+									<xtce:ValueOperand>-0.2054</xtce:ValueOperand>
+									<xtce:ThisParameterOperand />
+									<xtce:Operator>ln</xtce:Operator>
+									<xtce:ValueOperand>3.0</xtce:ValueOperand>
+									<xtce:Operator>^</xtce:Operator>
+									<xtce:Operator>*</xtce:Operator>
+									<xtce:ValueOperand>0.08678</xtce:ValueOperand>
+									<xtce:ThisParameterOperand />
+									<xtce:Operator>ln</xtce:Operator>
+									<xtce:ValueOperand>2.0</xtce:ValueOperand>
+									<xtce:Operator>^</xtce:Operator>
+									<xtce:Operator>*</xtce:Operator>
+									<xtce:Operator>+</xtce:Operator>
+									<xtce:ValueOperand>0.01209</xtce:ValueOperand>
+									<xtce:ThisParameterOperand />
+									<xtce:Operator>ln</xtce:Operator>
+									<xtce:Operator>*</xtce:Operator>
+									<xtce:Operator>-</xtce:Operator>
+									<xtce:ValueOperand>0.0005638</xtce:ValueOperand>
+									<xtce:Operator>+</xtce:Operator>
+									<xtce:ValueOperand>1.0</xtce:ValueOperand>
+									<xtce:Operator>/</xtce:Operator>
+									<xtce:ValueOperand>273.15</xtce:ValueOperand>
+									<xtce:Operator>-</xtce:Operator>
+								</xtce:MathOperationCalibrator>
+							</xtce:DefaultCalibrator>
+						</xtce:FloatDataEncoding>
+					</xtce:FloatParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Battery_Charge_Mode" parameterTypeRef="Battery_Charge_Mode_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="boolean_float32" parameterTypeRef="boolean_float32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="boolean_float64" parameterTypeRef="boolean_float64_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="boolean_binary" parameterTypeRef="boolean_binary_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="boolean_string" parameterTypeRef="boolean_string_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_Voltage" parameterTypeRef="Battery_Voltage_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_Current" parameterTypeRef="Battery_Current_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Battery_State_Of_Charge" parameterTypeRef="Battery_State_Of_Charge_Type">
+						<xtce:ParameterProperties dataSource="derived" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_1_State" parameterTypeRef="Solar_Array_Voltage_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_2_State" parameterTypeRef="Solar_Array_Voltage_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo" parameterTypeRef="Quadratic_Demo_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo_SingleRoot" parameterTypeRef="Quadratic_Demo_SingleRoot_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Quadratic_Demo_SingleRoot2" parameterTypeRef="Quadratic_Demo_SingleRoot2_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Spline_Demo" parameterTypeRef="Spline_Demo_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_1" parameterTypeRef="Solar_Array_Voltage_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100345" />
+							<xtce:Alias nameSpace="FOO" alias="Hello" />
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+							<xtce:ValidityCondition>
+								<xtce:Comparison parameterRef="Solar_Array_Voltage_1_State" value="ON" />
+							</xtce:ValidityCondition>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb000f100" sourceName="RAM" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Solar_Array_Voltage_2" parameterTypeRef="Solar_Array_Voltage_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100445" />
+							<!-- xtce:Alias nameSpace="ID" alias="123456"/ -->
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>EPS</xtce:SystemName>
+							<xtce:ValidityCondition>
+								<xtce:Comparison parameterRef="Solar_Array_Voltage_2_State" value="ON" />
+							</xtce:ValidityCondition>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb000f101" sourceName="RAM" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Bus_Fault_Message" parameterTypeRef="Bus_Fault_Message_Type">
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="ID" alias="100999" />
+						</xtce:AliasSet>
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+							<xtce:PhysicalAddressSet>
+								<xtce:PhysicalAddress sourceAddress="0xb0010000" sourceName="RAM" />
+							</xtce:PhysicalAddressSet>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Flag_Parameter" parameterTypeRef="/BogusSAT/Generic_8bits_unsigned">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Optional_Parameter" parameterTypeRef="/BogusSAT/Generic_16bits_unsigned">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="SensorTime" parameterTypeRef="/BogusSAT/POSIXTimeType" shortDescription="Measurement time of the sensor data">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="SunSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the sun sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="EarthSensorMode" parameterTypeRef="SunSensorModeType" shortDescription="Operational mode of the earth sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="SunSensorLevel" parameterTypeRef="SunSensorPolyCalType" shortDescription="Illumination level measurement of the sun sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="EarthSensorLevel" parameterTypeRef="EarthSensorSplineCalType" shortDescription="Illumination level of the earth sensor">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_1" parameterTypeRef="Float_MathOpCal_1_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_2" parameterTypeRef="Float_MathOpCal_2_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Float_MathOpCal_3" parameterTypeRef="Float_MathOpCal_3_Type" shortDescription="Ohms to Celcius Calibrator">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>NONE</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+				<xtce:ContainerSet>
+					<xtce:SequenceContainer name="SensorHistoryRecord">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="SensorTime" />
+							<xtce:ParameterRefEntry parameterRef="SunSensorMode" />
+							<xtce:ParameterRefEntry parameterRef="EarthSensorMode" />
+							<xtce:ParameterRefEntry parameterRef="SunSensorLevel" />
+							<xtce:ParameterRefEntry parameterRef="EarthSensorLevel" />
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="SensorHistoryBuffer">
+						<xtce:EntryList>
+							<xtce:ContainerRefEntry containerRef="SensorHistoryRecord">
+								<xtce:RepeatEntry>
+									<xtce:Count>
+										<xtce:FixedValue>4</xtce:FixedValue>
+									</xtce:Count>
+								</xtce:RepeatEntry>
+							</xtce:ContainerRefEntry>
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+				</xtce:ContainerSet>
+				<xtce:AlgorithmSet>
+					<xtce:MathAlgorithm name="ComputeBatterySOC" shortDescription="Compute the battery state of charge">
+						<xtce:MathOperation outputParameterRef="Battery_State_Of_Charge">
+							<xtce:ParameterInstanceRefOperand parameterRef="Battery_Voltage" />
+							<xtce:ValueOperand>11.7</xtce:ValueOperand>
+							<xtce:Operator>-</xtce:Operator>
+							<xtce:ValueOperand>0.9</xtce:ValueOperand>
+							<xtce:Operator>/</xtce:Operator>
+							<xtce:TriggerSet>
+								<xtce:OnParameterUpdateTrigger parameterRef="Battery_Voltage" />
+							</xtce:TriggerSet>
+						</xtce:MathOperation>
+					</xtce:MathAlgorithm>
+				</xtce:AlgorithmSet>
+			</xtce:TelemetryMetaData>
+			<xtce:CommandMetaData>
+				<xtce:ArgumentTypeSet>
+					<xtce:IntegerArgumentType name="RW_UNIT_ID_Type" shortDescription="ID number of the reaction wheel">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+						<xtce:ValidRange minInclusive="1" maxInclusive="2" />
+					</xtce:IntegerArgumentType>
+					<xtce:EnumeratedArgumentType name="RW_PWR_STATE_Type" shortDescription="Flag to indicate if power should be turned on or off">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="OFF" />
+							<xtce:Enumeration value="1" label="ON" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+					<xtce:EnumeratedArgumentType name="PHASE_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="0" label="SAFE" />
+							<xtce:Enumeration value="1" label="LEOP" />
+							<xtce:Enumeration value="2" label="ASCENT" />
+							<xtce:Enumeration value="3" label="MISSION" />
+							<xtce:Enumeration value="4" label="STORAGE" />
+							<xtce:Enumeration value="5" label="DEBORBIT" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+				</xtce:ArgumentTypeSet>
+				<xtce:MetaCommandSet>
+					<xtce:MetaCommand name="Reaction_Wheel_Control" shortDescription="Power on/off reaction wheel">
+						<xtce:LongDescription>This hardware telecommand directs the
+							hardware to power on or off either of the 2 reaction wheels
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_PWR" />
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="../../CCSDSDirectTelecommand" />
+						<xtce:ArgumentList>
+							<xtce:Argument name="RW_UNIT_ID" argumentTypeRef="RW_UNIT_ID_Type" />
+							<xtce:Argument name="RW_PWR_STATE" argumentTypeRef="RW_PWR_STATE_Type" />
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Reaction_Wheel_Control_Container">
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="RW_UNIT_ID" />
+								<xtce:ArgumentRefEntry argumentRef="RW_PWR_STATE" />
+							</xtce:EntryList>
+							<xtce:BaseContainer containerRef="../../CCSDSDirectTelecommand" />
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_1_On" shortDescription="Turn power on for reaction wheel 1">
+						<xtce:LongDescription>This hardware telecommand is a derived form
+							of 'Reaction_Wheel_Control' that turns ON reaction wheel 1
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_1_ON" />
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1" />
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON" />
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_1_On_Container">
+							<xtce:EntryList />
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container" />
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_1_Off" shortDescription="Turn power off for reaction wheel 1">
+						<xtce:LongDescription>This hardware telecommand is a derived form
+							of 'Reaction_Wheel_Control' that turns OFF reaction wheel 1
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_1_OFF" />
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="1" />
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF" />
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_1_Off_Container">
+							<xtce:EntryList />
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container" />
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_2_On" shortDescription="Turn power on for reaction wheel 2">
+						<xtce:LongDescription>This hardware telecommand is a derived form
+							of 'Reaction_Wheel_Control' that turns ON reaction wheel 2
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_2_ON" />
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2" />
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="ON" />
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_2_On_Container">
+							<xtce:EntryList />
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container" />
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Reaction_Wheel_2_Off" shortDescription="Turn power off for reaction wheel 2">
+						<xtce:LongDescription>This hardware telecommand is a derived form
+							of 'Reaction_Wheel_Control' that turns OFF reaction wheel 2
+						</xtce:LongDescription>
+						<xtce:AliasSet>
+							<xtce:Alias nameSpace="OPS" alias="RW_2_OFF" />
+						</xtce:AliasSet>
+						<xtce:BaseMetaCommand metaCommandRef="Reaction_Wheel_Control">
+							<xtce:ArgumentAssignmentList>
+								<xtce:ArgumentAssignment argumentName="RW_UNIT_ID" argumentValue="2" />
+								<xtce:ArgumentAssignment argumentName="RW_PWR_STATE" argumentValue="OFF" />
+							</xtce:ArgumentAssignmentList>
+						</xtce:BaseMetaCommand>
+						<xtce:CommandContainer name="Reaction_Wheel_2_Off_Container">
+							<xtce:EntryList />
+							<xtce:BaseContainer containerRef="Reaction_Wheel_Control_Container" />
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Set_Mission_Phase" shortDescription="Set the bus electronics mission phase">
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand" />
+						<xtce:ArgumentList>
+							<xtce:Argument name="PHASE" argumentTypeRef="PHASE_Type" shortDescription="Mission Operational Mode" />
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Set_Mission_Phase_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelecommand" />
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="PHASE" />
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+				</xtce:MetaCommandSet>
+			</xtce:CommandMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Payload1">
+			<xtce:LongDescription>This is the primary revenue generating payload
+				software monitor and control data.
+			</xtce:LongDescription>
+			<xtce:Header validationStatus="Working" classification="NotClassified" version="Build2" date="27-10-2012" />
+			<xtce:TelemetryMetaData>
+				<xtce:ParameterTypeSet>
+					<xtce:IntegerParameterType name="GENERIC_16BIT_UNSIGNED_INT" signed="false" sizeInBits="16" shortDescription="Generic unsigned 16 bit number">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="16" changeThreshold="1" />
+					</xtce:IntegerParameterType>
+					<xtce:StringParameterType name="Payload_Fault_Message_Type" shortDescription="Payload Error Message">
+						<xtce:UnitSet />
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-8">
+							<xtce:Variable maxSizeInBits="16448">
+								<xtce:DynamicValue>
+									<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+								</xtce:DynamicValue>
+								<xtce:TerminationChar>00</xtce:TerminationChar>
+							</xtce:Variable>
+						</xtce:StringDataEncoding>
+						<xtce:SizeRangeInCharacters minInclusive="1" maxInclusive="256" />
+					</xtce:StringParameterType>
+					<xtce:BinaryParameterType name="Payload_MD5_Type" shortDescription="MD5 Sum of Software Image">
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding bitOrder="mostSignificantBitFirst">
+							<xtce:SizeInBits>
+								<xtce:FixedValue>128</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:BinaryParameterType>
+					<xtce:BooleanParameterType name="Payload_1_State_Type" zeroStringValue="OFF" oneStringValue="ON" shortDescription="Payload 1 enable state">
+						<xtce:UnitSet />
+						<!-- sizeInBits used to be 4 but that will push some following sub container to start at the middle of the byte and Yamcs doesn't like that -->
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="8" encoding="unsigned" changeThreshold="1" />
+					</xtce:BooleanParameterType>
+					<xtce:EnumeratedParameterType name="Payload_1_Phase_Type" shortDescription="Operational Phase of Payload">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" sizeInBits="4" encoding="unsigned" changeThreshold="1" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_int16_signmag_Type" shortDescription="Generic EU Enumerated type with raw int16 signMagnitude encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="signMagnitude" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_int16_twoscomp_Type" shortDescription="Generic EU Enumerated type with raw int16 twosComplement encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_int16_onescomp_Type" shortDescription="Generic EU Enumerated type with raw int16 onesComplement encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="16" encoding="onesComplement" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_binary_Type" shortDescription="Generic EU Enumerated type with raw binary encoding">
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>32</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_float32_Type" shortDescription="Generic EU Enumerated type with raw float32 encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_float64_Type" shortDescription="Generic EU Enumerated type with raw float64 encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding sizeInBits="64" encoding="IEEE754_1985" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="enum_string_Type" shortDescription="Generic EU Enumerated type with raw string encoding">
+						<xtce:UnitSet />
+						<xtce:StringDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>32</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="TEST" value="1" />
+							<xtce:Enumeration label="LAUNCH" value="2" />
+							<xtce:Enumeration label="STANDBY" value="3" />
+							<xtce:Enumeration label="ACTIVE" value="4" />
+							<xtce:Enumeration label="SHUTDOWN" value="5" />
+							<xtce:Enumeration label="FAILED" value="6" maxValue="16" />
+							<xtce:Enumeration label="NEGNUM" value="-2" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedParameterType>
+					<xtce:EnumeratedParameterType name="Payload_1_Antenna_State_Type" shortDescription="Payload 1 antenna operational state">
+						<xtce:UnitSet />
+						<xtce:EnumerationList>
+							<xtce:Enumeration label="OFF" value="0" />
+							<xtce:Enumeration label="STANDBY" value="1" />
+							<xtce:Enumeration label="SIGNAL_PRESENT" value="2" />
+							<xtce:Enumeration label="ACQUIRED" value="3" />
+							<xtce:Enumeration label="SIGNAL_LOST" value="4" />
+							<xtce:Enumeration label="FAILED" value="5" />
+						</xtce:EnumerationList>
+						<xtce:DefaultAlarm minViolations="1">
+							<xtce:EnumerationAlarmList>
+								<xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical" />
+							</xtce:EnumerationAlarmList>
+						</xtce:DefaultAlarm>
+						<xtce:ContextAlarmList>
+							<xtce:ContextAlarm minViolations="1">
+								<xtce:EnumerationAlarmList>
+									<xtce:EnumerationAlarm enumerationLabel="SIGNAL_LOST" alarmLevel="warning" />
+									<xtce:EnumerationAlarm enumerationLabel="OFF" alarmLevel="critical" />
+									<xtce:EnumerationAlarm enumerationLabel="FAILED" alarmLevel="critical" />
+								</xtce:EnumerationAlarmList>
+								<xtce:ContextMatch>
+									<xtce:Comparison parameterRef="Payload_1_State" value="ON" comparisonOperator="==" useCalibratedValue="true" />
+								</xtce:ContextMatch>
+							</xtce:ContextAlarm>
+						</xtce:ContextAlarmList>
+					</xtce:EnumeratedParameterType>
+					<xtce:StringParameterType name="CPU_Fault_Message_Type" shortDescription="CPU Error Message">
+						<xtce:UnitSet />
+						<xtce:StringDataEncoding bitOrder="mostSignificantBitFirst" encoding="UTF-16">
+							<xtce:SizeInBits>
+								<xtce:Fixed>
+									<xtce:FixedValue>64</xtce:FixedValue>
+								</xtce:Fixed>
+							</xtce:SizeInBits>
+						</xtce:StringDataEncoding>
+					</xtce:StringParameterType>
+					<xtce:FloatParameterType name="Basic_Float32_Type" sizeInBits="32" shortDescription="This is an float32 parameter with a simple float32 encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="32" changeThreshold="0.001" />
+					</xtce:FloatParameterType>
+					<xtce:FloatParameterType name="Basic_Float64_Type" sizeInBits="64" shortDescription="This is an float64 parameter with a simple float64 encoding">
+						<xtce:UnitSet />
+						<xtce:FloatDataEncoding bitOrder="mostSignificantBitFirst" encoding="IEEE754_1985" sizeInBits="64" changeThreshold="0.000001" />
+						<xtce:ValidRange minExclusive="-256.0" maxExclusive="1024.5" />
+					</xtce:FloatParameterType>
+					<xtce:IntegerParameterType name="Basic_uint32_Type" signed="false" sizeInBits="32" shortDescription="Generic unsigned 32 bit number">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="unsigned" sizeInBits="32" changeThreshold="1" />
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_signmag_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with sign magnitude encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="signMagnitude" sizeInBits="32" changeThreshold="1" />
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_twoscomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with twos complement encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="twosComplement" sizeInBits="32" changeThreshold="1" />
+					</xtce:IntegerParameterType>
+					<xtce:IntegerParameterType name="Basic_int32_onescomp_Type" signed="true" sizeInBits="32" shortDescription="Generic signed 32 bit number with ones complement encoding">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding bitOrder="mostSignificantBitFirst" encoding="onesComplement" sizeInBits="32" changeThreshold="1" />
+					</xtce:IntegerParameterType>
+					<xtce:StringParameterType name="Basic_string_binary_Type" shortDescription="Generic string encoded as binary octets instead of C style char string encoding">
+						<xtce:UnitSet />
+						<xtce:BinaryDataEncoding>
+							<xtce:SizeInBits>
+								<xtce:FixedValue>128</xtce:FixedValue>
+							</xtce:SizeInBits>
+						</xtce:BinaryDataEncoding>
+					</xtce:StringParameterType>
+					<xtce:ArrayParameterType name="Array_Dim1_Float64_Type" arrayTypeRef="Basic_Float64_Type" numberOfDimensions="1">
+						<xtce:LongDescription>
+							This is some calibration values for a payload device
+						</xtce:LongDescription>
+					</xtce:ArrayParameterType>
+					<xtce:ArrayParameterType name="Array_Dim1_Float32_Type" arrayTypeRef="Basic_Float32_Type" numberOfDimensions="1">
+						<xtce:LongDescription>
+							This is some more calibration values for a payload device
+						</xtce:LongDescription>
+					</xtce:ArrayParameterType>
+				</xtce:ParameterTypeSet>
+				<xtce:ParameterSet>
+					<xtce:Parameter name="Payload_1_State" parameterTypeRef="Payload_1_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_1_Phase" parameterTypeRef="Payload_1_Phase_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_binary" parameterTypeRef="enum_binary_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_float32" parameterTypeRef="enum_float32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_float64" parameterTypeRef="enum_float64_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_string" parameterTypeRef="enum_string_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_int16_signmag" parameterTypeRef="enum_int16_signmag_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_int16_twoscomp" parameterTypeRef="enum_int16_twoscomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="enum_int16_onescomp" parameterTypeRef="enum_int16_onescomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_1_Antenna_State" parameterTypeRef="Payload_1_Antenna_State_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>GCS</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_Fault_Message" parameterTypeRef="Payload_Fault_Message_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="CPU_Fault_Message" parameterTypeRef="CPU_Fault_Message_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Payload_MD5" parameterTypeRef="Payload_MD5_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_Float32" parameterTypeRef="Basic_Float32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_Float64" parameterTypeRef="Basic_Float64_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_uint32" parameterTypeRef="Basic_uint32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_signmag" parameterTypeRef="Basic_int32_signmag_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_twoscomp" parameterTypeRef="Basic_int32_twoscomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_int32_onescomp" parameterTypeRef="Basic_int32_onescomp_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="Basic_string_binary" parameterTypeRef="Basic_string_binary_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>CPU</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="PAYLOAD_ANTENNA_POINTING_ARRAY1" parameterTypeRef="Array_Dim1_Float64_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>ANTENNA1</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+					<xtce:Parameter name="PAYLOAD_ANTENNA_POINTING_ARRAY2" parameterTypeRef="Array_Dim1_Float32_Type">
+						<xtce:ParameterProperties dataSource="telemetered" readOnly="true">
+							<xtce:SystemName>ANTENNA2</xtce:SystemName>
+						</xtce:ParameterProperties>
+					</xtce:Parameter>
+				</xtce:ParameterSet>
+				<xtce:ContainerSet>
+					<xtce:SequenceContainer name="IncludedContainer1" shortDescription="Unit Test of container to include">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="Basic_uint32" />
+							<xtce:ParameterRefEntry parameterRef="Basic_int32_signmag" />
+							<xtce:ParameterRefEntry parameterRef="Basic_int32_twoscomp" />
+							<xtce:ParameterRefEntry parameterRef="Basic_int32_onescomp" />
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="IncludedContainer2" shortDescription="Unit Test of container to include">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="Basic_Float32" />
+							<xtce:ParameterRefEntry parameterRef="Basic_Float64" />
+							<xtce:ParameterRefEntry parameterRef="enum_int16_signmag" />
+							<xtce:ParameterRefEntry parameterRef="enum_int16_twoscomp" />
+							<xtce:ParameterRefEntry parameterRef="enum_int16_onescomp" />
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+					<xtce:SequenceContainer name="IncludedContainer3" shortDescription="Unit Test of conditionally included container with conditionally included parameter">
+						<xtce:EntryList>
+							<xtce:ParameterRefEntry parameterRef="enum_binary" />
+							<xtce:ParameterRefEntry parameterRef="enum_float32" />
+							<xtce:ParameterRefEntry parameterRef="enum_float64">
+								<xtce:IncludeCondition>
+									<xtce:Comparison parameterRef="../BusElectronics/Solar_Array_Voltage_1_State" value="ON" />
+								</xtce:IncludeCondition>
+							</xtce:ParameterRefEntry>
+							<xtce:ParameterRefEntry parameterRef="enum_int16_signmag">
+								<xtce:IncludeCondition>
+									<xtce:Comparison parameterRef="../BusElectronics/Solar_Array_Voltage_1_State" comparisonOperator="!=" value="ON" />
+								</xtce:IncludeCondition>
+							</xtce:ParameterRefEntry>
+							<xtce:ParameterRefEntry parameterRef="enum_int16_twoscomp" />
+							<xtce:ParameterRefEntry parameterRef="enum_int16_onescomp" />
+						</xtce:EntryList>
+					</xtce:SequenceContainer>
+				</xtce:ContainerSet>
+			</xtce:TelemetryMetaData>
+			<xtce:CommandMetaData>
+				<xtce:ArgumentTypeSet>
+					<xtce:EnumeratedArgumentType name="Payload_State_Type">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding encoding="signMagnitude" sizeInBits="8" />
+						<xtce:EnumerationList>
+							<xtce:Enumeration value="-1" label="OFF" />
+							<xtce:Enumeration value="1" label="ON" />
+							<xtce:Enumeration value="0" label="STANDBY" />
+						</xtce:EnumerationList>
+					</xtce:EnumeratedArgumentType>
+					<xtce:FloatArgumentType name="Output_Power_Type" shortDescription="Payload output power">
+						<xtce:UnitSet>
+							<xtce:Unit description="current">Amperes</xtce:Unit>
+						</xtce:UnitSet>
+						<xtce:FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" />
+					</xtce:FloatArgumentType>
+					<xtce:AggregateArgumentType name="Config_Item_Type">
+						<xtce:MemberList>
+							<xtce:Member name="ADDRESS" typeRef="Address_Type" />
+							<xtce:Member name="VALUE32" typeRef="Value32_Type" />
+						</xtce:MemberList>
+					</xtce:AggregateArgumentType>
+					<xtce:IntegerArgumentType name="Address_Type" signed="false" shortDescription="Address of configurable">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+					</xtce:IntegerArgumentType>
+					<xtce:IntegerArgumentType name="Value32_Type" shortDescription="New value to set to 32 bit integer item">
+						<xtce:UnitSet />
+						<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+					</xtce:IntegerArgumentType>
+				</xtce:ArgumentTypeSet>
+				<xtce:MetaCommandSet>
+					<xtce:MetaCommand name="Payload_1_Control" shortDescription="Controls the state of payload operation">
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand" />
+						<xtce:ArgumentList>
+							<xtce:Argument name="STATE" argumentTypeRef="Payload_State_Type" />
+							<xtce:Argument name="OUTPUT_POWER" argumentTypeRef="Output_Power_Type">
+								<xtce:LongDescription>Long Description of the output power
+									argument
+								</xtce:LongDescription>
+							</xtce:Argument>
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Payload_1_Control_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelecommand" />
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="STATE" />
+								<xtce:FixedValueEntry binaryValue="f0" sizeInBits="8" />
+								<xtce:ArgumentRefEntry argumentRef="OUTPUT_POWER" />
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+					<xtce:MetaCommand name="Adjust_Payload_1_Config" shortDescription="Modify payload configuration">
+						<xtce:LongDescription>Modifies an internal configurable item at a
+							provided address for the payload processor
+						</xtce:LongDescription>
+						<xtce:BaseMetaCommand metaCommandRef="/BogusSAT/CCSDSPUSTelecommand" />
+						<xtce:ArgumentList>
+							<xtce:Argument name="CFGITEM" argumentTypeRef="Config_Item_Type" />
+						</xtce:ArgumentList>
+						<xtce:CommandContainer name="Adjust_Payload_1_Config_Container">
+							<xtce:BaseContainer containerRef="/BogusSAT/CCSDSPUSTelecommand" />
+							<xtce:EntryList>
+								<xtce:ArgumentRefEntry argumentRef="CFGITEM" />
+							</xtce:EntryList>
+						</xtce:CommandContainer>
+					</xtce:MetaCommand>
+				</xtce:MetaCommandSet>
+			</xtce:CommandMetaData>
+		</xtce:SpaceSystem>
+		<xtce:SpaceSystem name="Payload2" />
+	</xtce:SpaceSystem>
+	<xtce:SpaceSystem name="LOG_MSGS">
+		<xtce:LongDescription>Example of variable length log messages from a
+			satellite
+		</xtce:LongDescription>
+		<xtce:TelemetryMetaData>
+			<xtce:ParameterTypeSet>
+				<xtce:AbsoluteTimeParameterType name="POSIXTime_Type" shortDescription="POSIX UNIX Time 'timeval' which is 2 unsigned 32 bit integers">
+					<xtce:Encoding>
+						<xtce:IntegerDataEncoding sizeInBits="64" />
+					</xtce:Encoding>
+					<xtce:ReferenceTime>
+						<xtce:Epoch>1970-01-01</xtce:Epoch>
+					</xtce:ReferenceTime>
+				</xtce:AbsoluteTimeParameterType>
+				<xtce:EnumeratedParameterType name="LOGLEVEL_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" bitOrder="mostSignificantBitFirst" />
+					<xtce:EnumerationList>
+						<xtce:Enumeration label="DEBUG" value="0" />
+						<xtce:Enumeration label="INFO" value="1" />
+						<xtce:Enumeration label="WARNING" value="2" />
+						<xtce:Enumeration label="ERROR" value="3" />
+						<xtce:Enumeration label="CRITICAL" value="4" />
+					</xtce:EnumerationList>
+				</xtce:EnumeratedParameterType>
+				<xtce:IntegerParameterType name="UINT4BIT_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" bitOrder="mostSignificantBitFirst" />
+				</xtce:IntegerParameterType>
+				<xtce:EnumeratedParameterType name="FACILITY_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="4" bitOrder="mostSignificantBitFirst" />
+					<xtce:EnumerationList>
+						<xtce:Enumeration label="BUS" value="0" />
+						<xtce:Enumeration label="PAYLOAD" value="1" />
+						<xtce:Enumeration label="OS" value="2" />
+					</xtce:EnumerationList>
+				</xtce:EnumeratedParameterType>
+				<xtce:IntegerParameterType name="UINT8_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="8" bitOrder="mostSignificantBitFirst" />
+				</xtce:IntegerParameterType>
+				<xtce:IntegerParameterType name="UINT16_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" bitOrder="mostSignificantBitFirst" />
+				</xtce:IntegerParameterType>
+				<xtce:IntegerParameterType name="UINT32_Type" signed="false">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="32" bitOrder="mostSignificantBitFirst" />
+				</xtce:IntegerParameterType>
+				<xtce:EnumeratedParameterType name="ERRORCODE_Type">
+					<xtce:UnitSet />
+					<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" bitOrder="mostSignificantBitFirst" />
+					<xtce:EnumerationList>
+						<xtce:Enumeration value="123" label="ERROR_CODE_A" shortDescription="Detailed description of error case A" />
+						<xtce:Enumeration value="456" label="ERROR_CODE_B" shortDescription="Detailed description of error case B" />
+						<xtce:Enumeration value="789" label="ERROR_CODE_C" shortDescription="Detailed description of error case C" />
+						<xtce:Enumeration value="25" label="ERROR_CODE_D" shortDescription="Detailed description of error case D" />
+						<xtce:Enumeration value="50" label="ERROR_CODE_E" shortDescription="Detailed description of error case E" />
+					</xtce:EnumerationList>
+				</xtce:EnumeratedParameterType>
+				<xtce:BinaryParameterType name="Binary128_Type">
+					<xtce:UnitSet />
+					<xtce:BinaryDataEncoding>
+						<xtce:SizeInBits>
+							<xtce:FixedValue>128</xtce:FixedValue>
+						</xtce:SizeInBits>
+					</xtce:BinaryDataEncoding>
+				</xtce:BinaryParameterType>
+				<xtce:BinaryParameterType name="Binary256_Type">
+					<xtce:UnitSet />
+					<xtce:BinaryDataEncoding>
+						<xtce:SizeInBits>
+							<xtce:FixedValue>256</xtce:FixedValue>
+						</xtce:SizeInBits>
+					</xtce:BinaryDataEncoding>
+				</xtce:BinaryParameterType>
+			</xtce:ParameterTypeSet>
+			<xtce:ParameterSet>
+				<xtce:Parameter name="RECORDFLAG" initialValue="3735928559" parameterTypeRef="UINT32_Type" shortDescription="Record Marker">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="LOGLEVEL" parameterTypeRef="LOGLEVEL_Type" shortDescription="Log entry severity level">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="FACILITY" parameterTypeRef="FACILITY_Type" shortDescription="Subsystem or facility flag">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERRORCODE" parameterTypeRef="ERRORCODE_Type" shortDescription="Error code enumeration">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="DATAWORDS" parameterTypeRef="UINT8_Type" shortDescription="Number of words of supplementary data for the error code">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="LOGTIME" parameterTypeRef="POSIXTime_Type" shortDescription="Time of log record">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="DYNAMIC_REGION_1" parameterTypeRef="Binary128_Type" shortDescription="Dynamic binary data space">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="DYNAMIC_REGION_2" parameterTypeRef="Binary256_Type" shortDescription="Dynamic binary data space">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="WRAP_FLAG" parameterTypeRef="UINT16_Type" shortDescription="Rolling wrap around has occurred">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="START_POINTER" parameterTypeRef="UINT16_Type" shortDescription="Current starting pointer at lowest time entry">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="END_POINTER" parameterTypeRef="UINT16_Type" shortDescription="Current ending pointer at lowest time entry">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="SIZE_USED" parameterTypeRef="UINT16_Type" shortDescription="Number of words used">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_B_DETAIL_WORD_1" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_C_DETAIL_WORD_1" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_C_DETAIL_WORD_2" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_D_DETAIL_WORD_1" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_D_DETAIL_WORD_2" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+				<xtce:Parameter name="ERROR_CODE_D_DETAIL_WORD_3" parameterTypeRef="UINT32_Type">
+					<xtce:ParameterProperties dataSource="telemetered" readOnly="true" />
+				</xtce:Parameter>
+			</xtce:ParameterSet>
+			<xtce:ContainerSet>
+				<xtce:SequenceContainer name="LOG_DATA">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="RECORDFLAG" />
+						<xtce:ParameterRefEntry parameterRef="LOGLEVEL" />
+						<xtce:ParameterRefEntry parameterRef="FACILITY" />
+						<xtce:ParameterRefEntry parameterRef="ERRORCODE" />
+						<xtce:ParameterRefEntry parameterRef="DATAWORDS" />
+						<xtce:ParameterRefEntry parameterRef="LOGTIME" />
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_B_DETAIL_WORD_1">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="456" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_C_DETAIL_WORD_1">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="789" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_C_DETAIL_WORD_2">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="789" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_D_DETAIL_WORD_1">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="25" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_D_DETAIL_WORD_2">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="25" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+						<xtce:ParameterRefEntry parameterRef="ERROR_CODE_D_DETAIL_WORD_3">
+							<xtce:IncludeCondition>
+								<xtce:Comparison value="25" useCalibratedValue="false" parameterRef="ERRORCODE" />
+							</xtce:IncludeCondition>
+						</xtce:ParameterRefEntry>
+					</xtce:EntryList>
+					<xtce:AncillaryDataSet>
+						<xtce:AncillaryData name="Yamcs">UseAsArchivingPartition</xtce:AncillaryData>
+					</xtce:AncillaryDataSet>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="LOG_FOOTER">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="WRAP_FLAG" />
+						<xtce:ParameterRefEntry parameterRef="START_POINTER" />
+						<xtce:ParameterRefEntry parameterRef="END_POINTER" />
+						<xtce:ParameterRefEntry parameterRef="SIZE_USED" />
+					</xtce:EntryList>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="LOG_ALL">
+					<xtce:EntryList>
+						<xtce:ContainerRefEntry containerRef="LOG_DYNAMIC_MEMORY" />
+						<xtce:ContainerRefEntry containerRef="LOG_DATA">
+							<xtce:RepeatEntry>
+								<xtce:Count>
+									<xtce:FixedValue>10</xtce:FixedValue>
+								</xtce:Count>
+							</xtce:RepeatEntry>
+						</xtce:ContainerRefEntry>
+						<!-- 128 bits + 256 bits + 2048 bits (256 bytes) = 2432 bits -->
+						<xtce:ContainerRefEntry containerRef="LOG_FOOTER">
+							<xtce:LocationInContainerInBits referenceLocation="containerStart">
+								<xtce:FixedValue>2432</xtce:FixedValue>
+							</xtce:LocationInContainerInBits>
+						</xtce:ContainerRefEntry>
+					</xtce:EntryList>
+				</xtce:SequenceContainer>
+				<xtce:SequenceContainer name="LOG_DYNAMIC_MEMORY">
+					<xtce:EntryList>
+						<xtce:ParameterRefEntry parameterRef="DYNAMIC_REGION_1" />
+						<xtce:ParameterRefEntry parameterRef="DYNAMIC_REGION_2" />
+					</xtce:EntryList>
+				</xtce:SequenceContainer>
+			</xtce:ContainerSet>
+			<xtce:StreamSet>
+				<xtce:VariableFrameStream name="LOG_DATA">
+					<xtce:ContainerRef containerRef="LOG_DATA" />
+					<xtce:SyncStrategy>
+						<xtce:Flag />
+					</xtce:SyncStrategy>
+				</xtce:VariableFrameStream>
+				<xtce:VariableFrameStream name="LOG_FOOTER">
+					<xtce:ContainerRef containerRef="LOG_FOOTER" />
+					<xtce:SyncStrategy>
+						<xtce:Flag />
+					</xtce:SyncStrategy>
+				</xtce:VariableFrameStream>
+				<xtce:VariableFrameStream name="LOG_DYNAMIC_MEMORY">
+					<xtce:ContainerRef containerRef="LOG_DYNAMIC_MEMORY" />
+					<xtce:SyncStrategy>
+						<xtce:Flag />
+					</xtce:SyncStrategy>
+				</xtce:VariableFrameStream>
+				<xtce:VariableFrameStream name="LOG_ALL">
+					<xtce:ContainerRef containerRef="LOG_ALL" />
+					<xtce:SyncStrategy>
+						<xtce:Flag />
+					</xtce:SyncStrategy>
+				</xtce:VariableFrameStream>
+			</xtce:StreamSet>
+		</xtce:TelemetryMetaData>
+	</xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `booleans.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/booleans.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string arguments with yamcs
+-->
+<SpaceSystem name="Booleans" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<BooleanParameterType name="bool1">
+				<IntegerDataEncoding sizeInBits="8" />
+			</BooleanParameterType>
+			<BooleanParameterType name="bool2" oneStringValue="yes!" zeroStringValue="nooo">
+				<StringDataEncoding>
+					<SizeInBits>
+						<Fixed>
+							<FixedValue>32</FixedValue>
+						</Fixed>
+						<TerminationChar>00</TerminationChar>
+					</SizeInBits>
+				</StringDataEncoding>
+			</BooleanParameterType>
+		</ParameterTypeSet>
+		<ParameterSet>
+			<Parameter parameterTypeRef="bool1" name="bool1"></Parameter>
+			<Parameter parameterTypeRef="bool2" name="bool2"></Parameter>
+		</ParameterSet>
+		<ContainerSet>
+			<SequenceContainer name="packet1">
+				<EntryList>
+					<ParameterRefEntry parameterRef="bool1"></ParameterRefEntry>
+				</EntryList>
+			</SequenceContainer>
+			<SequenceContainer name="packet2">
+				<EntryList>
+					<ParameterRefEntry parameterRef="bool2"></ParameterRefEntry>
+				</EntryList>
+			</SequenceContainer>
+		</ContainerSet>
+	</TelemetryMetaData>
+	<CommandMetaData>
+		<ArgumentTypeSet>
+			<BooleanArgumentType name="bool1">
+				<IntegerDataEncoding sizeInBits="8" />
+			</BooleanArgumentType>
+			<BooleanArgumentType name="bool2" oneStringValue="yes!" zeroStringValue="nooo">
+				<StringDataEncoding>
+					<SizeInBits>
+						<Fixed>
+							<FixedValue>32</FixedValue>
+						</Fixed>
+						<TerminationChar>00</TerminationChar>
+					</SizeInBits>
+				</StringDataEncoding>
+			</BooleanArgumentType>
+		</ArgumentTypeSet>
+		<MetaCommandSet>
+			<MetaCommand name="command1">
+				<ArgumentList>
+					<Argument name="bool1" argumentTypeRef="bool1" />
+				</ArgumentList>
+				<CommandContainer name="command1">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="bool1" />
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+
+			<MetaCommand name="command2">
+				<ArgumentList>
+					<Argument name="bool2" argumentTypeRef="bool2" />
+				</ArgumentList>
+				<CommandContainer name="bool2">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="bool2" />
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+		</MetaCommandSet>
+	</CommandMetaData>
+</SpaceSystem>
+```
+
+### `ccsds-green-book.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/ccsds-green-book.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem xmlns:xtce="http://www.omg.org/space/xtce"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="SpaceVehicle"
+	xsi:schemaLocation="http://www.omg.org/space/xtce SpaceSystemV1.1.xsd">
+	<xtce:TelemetryMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:IntegerParameterType signed="false" name="IDType">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="8" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false"
+				name="SecHType">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="1" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false"
+				name="TypeType">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="7" />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType signed="false" name="LengthType" initialValue="0">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="16" />
+			</xtce:IntegerParameterType>
+			<xtce:EnumeratedParameterType name="PSWHLTIMFLGType" initialValue="TIMER_OFF">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="16" />
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="TIMER_OFF" value="0" />
+					<xtce:Enumeration label="TIMER_ON" value="1" />
+					<xtce:Enumeration label="TIMER_COMPLETED" value="2" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedParameterType>
+			<xtce:FloatParameterType sizeInBits="64" name="PBATMTEMPType">
+				<xtce:UnitSet>
+					<xtce:Unit description="Bq">units:Becquerel</xtce:Unit>
+				</xtce:UnitSet>
+				<xtce:IntegerDataEncoding sizeInBits="16" encoding="twosComplement">
+					<xtce:DefaultCalibrator>
+						<xtce:PolynomialCalibrator>
+							<xtce:Term coefficient="-7459.23273708" exponent="0" />
+							<xtce:Term coefficient="8.23643519148" exponent="1" />
+							<xtce:Term coefficient="-3.02185061876e-3" exponent="2" />
+							<xtce:Term coefficient="2.33422429056e-7" exponent="3" />
+							<xtce:Term coefficient="5.67189556173e-11" exponent="4" />
+						</xtce:PolynomialCalibrator>
+					</xtce:DefaultCalibrator>
+				</xtce:IntegerDataEncoding>
+			</xtce:FloatParameterType>
+			<xtce:AbsoluteTimeParameterType name="MissionTimeType">
+				<xtce:ReferenceTime>
+					<xtce:OffsetFrom parameterRef="Seconds" />
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+			<xtce:AbsoluteTimeParameterType name="SecondsType">
+                <xtce:Encoding units="seconds">
+					<xtce:IntegerDataEncoding sizeInBits="32" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:Epoch>TAI</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+			<xtce:AbsoluteTimeParameterType name="MilliSecondsType">
+			    <xtce:Encoding  scale="0.001" units="seconds">
+					<xtce:IntegerDataEncoding sizeInBits="16" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:OffsetFrom parameterRef="Seconds" />
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter name="SecH" parameterTypeRef="SecHType" />
+			<xtce:Parameter name="Type" parameterTypeRef="TypeType" />
+			<xtce:Parameter name="ID" parameterTypeRef="IDType" />
+			<xtce:Parameter name="Length" parameterTypeRef="LengthType" />
+			<xtce:Parameter name="Seconds" parameterTypeRef="SecondsType" />
+			<xtce:Parameter name="MilliSeconds" parameterTypeRef="MilliSecondsType" />
+			<xtce:Parameter name="PBATMTEMP" parameterTypeRef="PBATMTEMPType" />
+			<xtce:Parameter name="PSWHLTIMFLG" parameterTypeRef="PSWHLTIMFLGType" />
+			<xtce:Parameter name="MissionTime" parameterTypeRef="MissionTimeType">
+				<xtce:ParameterProperties dataSource="derived" />
+			</xtce:Parameter>
+		</xtce:ParameterSet>
+		<xtce:ContainerSet>
+			<xtce:SequenceContainer abstract="true" name="Header">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="ID" />
+					<xtce:ParameterRefEntry parameterRef="SecH" />
+					<xtce:ParameterRefEntry parameterRef="Type" />
+					<xtce:ParameterRefEntry parameterRef="Length" />
+					<xtce:ContainerRefEntry containerRef="SecondaryHeader">
+						<xtce:IncludeCondition>
+							<xtce:Comparison parameterRef="SecH" value="1" />
+						</xtce:IncludeCondition>
+					</xtce:ContainerRefEntry>
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="SecondaryHeader">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="Seconds" />
+					<xtce:ParameterRefEntry parameterRef="MilliSeconds" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="HealthSafety1">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="PBATMTEMP" />
+					<xtce:ParameterRefEntry parameterRef="PSWHLTIMFLG" />
+				</xtce:EntryList>
+				<xtce:BaseContainer containerRef="Header">
+					<xtce:RestrictionCriteria>
+						<xtce:ComparisonList>
+							<xtce:Comparison value="1" parameterRef="Type" />
+							<xtce:Comparison value="24" parameterRef="ID" />
+						</xtce:ComparisonList>
+					</xtce:RestrictionCriteria>
+				</xtce:BaseContainer>
+			</xtce:SequenceContainer>
+		</xtce:ContainerSet>
+	</xtce:TelemetryMetaData>
+	<xtce:CommandMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:IntegerParameterType name="CommandReturnType"
+				signed="false">
+				<xtce:UnitSet />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="CommandCounterType"
+				signed="false">
+				<xtce:UnitSet />
+			</xtce:IntegerParameterType>
+			<xtce:IntegerParameterType name="CheckSumType" signed="false" initialValue="0">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding />
+			</xtce:IntegerParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter name="CommandCounter"
+				parameterTypeRef="CommandCounterType">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+			<xtce:Parameter name="CheckSum" parameterTypeRef="CheckSumType">
+				<xtce:ParameterProperties dataSource="derived" />
+			</xtce:Parameter>
+			<xtce:Parameter name="CommandReturn" parameterTypeRef="CommandReturnType">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+		</xtce:ParameterSet>
+		<xtce:ArgumentTypeSet>
+			<xtce:EnumeratedArgumentType name="TimerStartStopType">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="16" />
+				<xtce:EnumerationList>
+					<xtce:Enumeration label="TIMER_STOP" value="0" />
+					<xtce:Enumeration label="TIMER_START" value="1" />
+				</xtce:EnumerationList>
+			</xtce:EnumeratedArgumentType>
+		</xtce:ArgumentTypeSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand name="PWHTMR">
+				<xtce:ArgumentList>
+					<xtce:Argument name="TimerStartStop" argumentTypeRef="TimerStartStopType" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="PWHTMRPacket">
+					<xtce:BinaryEncoding>
+						<xtce:SizeInBits>
+							<xtce:FixedValue>32</xtce:FixedValue>
+						</xtce:SizeInBits>
+					</xtce:BinaryEncoding>
+					<xtce:EntryList>
+						<xtce:FixedValueEntry binaryValue="1e" />
+						<xtce:ParameterRefEntry parameterRef="CheckSum" />
+						<xtce:ArgumentRefEntry argumentRef="TimerStartStop" />
+					</xtce:EntryList>
+					<xtce:BaseContainer containerRef="Header">
+						<xtce:RestrictionCriteria>
+							<xtce:ComparisonList>
+								<xtce:Comparison parameterRef="ID" value="255" />
+								<xtce:Comparison parameterRef="Type" value="0" />
+								<xtce:Comparison parameterRef="SecH" value="0" />
+							</xtce:ComparisonList>
+						</xtce:RestrictionCriteria>
+					</xtce:BaseContainer>
+				</xtce:CommandContainer>
+				<xtce:DefaultSignificance consequenceLevel="critical" />
+				<xtce:VerifierSet>
+					<xtce:CompleteVerifier>
+						<xtce:ContainerRef containerRef="HealthSafety1" />
+						<xtce:CheckWindow timeToStopChecking="PT10M" />
+					</xtce:CompleteVerifier>
+					<xtce:FailedVerifier>
+						<xtce:Comparison parameterRef="CommandReturn"
+							value="0" />
+						<xtce:CheckWindow timeToStopChecking="PT10M" />
+					</xtce:FailedVerifier>
+				</xtce:VerifierSet>
+				<xtce:ParameterToSetList>
+					<xtce:ParameterToSet parameterRef="CommandReturn"
+						setOnVerification="release">
+						<xtce:NewValue>0x00</xtce:NewValue>
+					</xtce:ParameterToSet>
+					<xtce:ParameterToSet parameterRef="CommandReturn">
+						<xtce:NewValue>0x55</xtce:NewValue>
+					</xtce:ParameterToSet>
+				</xtce:ParameterToSetList>
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+	</xtce:CommandMetaData>
+</xtce:SpaceSystem>
+```
+
+### `container-entry.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/container-entry.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem name="ce" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+	<Header validationStatus="unittest" version="1.0" date="2020-07-01T16:48:10Z" />
+	<TelemetryMetaData>
+	<ParameterTypeSet>
+		<IntegerParameterType name="uint8" signed="false">
+			<IntegerDataEncoding sizeInBits="8"/>
+		</IntegerParameterType>
+	</ParameterTypeSet>
+	<ParameterSet>
+		<Parameter parameterTypeRef="uint8" name="p1"/>
+		<Parameter parameterTypeRef="uint8" name="p2"/>		
+	</ParameterSet>
+	<ContainerSet>
+		<SequenceContainer name="sc1">
+			<EntryList>
+				<ParameterRefEntry parameterRef="p1"/>
+			</EntryList>
+		</SequenceContainer>
+		<SequenceContainer name="sc2">
+			<EntryList>
+				<ContainerRefEntry containerRef="sc1"/>
+				<ParameterRefEntry parameterRef="p2"/>
+			</EntryList>
+		</SequenceContainer>		
+	</ContainerSet>
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `empty-match-criteria.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/empty-match-criteria.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem name="EMC"
+  xmlns="http://www.omg.org/spec/XTCE/20180204"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  shortDescription="Example XTCE to illustrate setting validity ranges for parameters and arguments">
+
+  <TelemetryMetaData>
+    <ParameterTypeSet>
+      <FloatParameterType name="double" sizeInBits="64">
+        <FloatDataEncoding sizeInBits="64" byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" />
+        <ValidRange minInclusive="-90.0" maxInclusive="90.0" />
+      </FloatParameterType>
+    </ParameterTypeSet>
+    <ParameterSet>
+      <Parameter parameterTypeRef="double" name="para1" />
+      <Parameter parameterTypeRef="double" name="para2" />
+    </ParameterSet>
+    <ContainerSet>
+      <SequenceContainer name="c1">
+        <EntryList>
+          <ParameterRefEntry parameterRef="para1" />
+        </EntryList>
+      </SequenceContainer>
+      <SequenceContainer name="c2">
+        <EntryList>
+          <ParameterRefEntry parameterRef="para2" />
+        </EntryList>
+        <BaseContainer containerRef="c1"/>
+      </SequenceContainer>
+    </ContainerSet>
+  </TelemetryMetaData>
+  
+ 
+</SpaceSystem>
+```
+
+### `enum-arg.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/enum-arg.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:xi="http://www.w3.org/2001/XInclude"
+        name="EnumArgTest"
+        xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+
+    <CommandMetaData>
+        <ArgumentTypeSet>
+            <EnumeratedArgumentType name="PHASE_Type">
+                <UnitSet/>
+                <IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+                <EnumerationList>
+                    <Enumeration value="0" label="SAFE"/>
+                    <Enumeration value="1" label="LEOP"/>
+                    <Enumeration value="2" label="ASCENT"/>
+                    <Enumeration value="3" label="MISSION"/>
+                    <Enumeration value="4" label="STORAGE"/>
+                    <Enumeration value="5" label="DEBORBIT"/>
+                </EnumerationList>
+            </EnumeratedArgumentType>
+        </ArgumentTypeSet>
+        <MetaCommandSet>
+            <MetaCommand name="cmd1">
+                <ArgumentList>
+                    <Argument name="phase" argumentTypeRef="PHASE_Type" />
+                </ArgumentList>
+                <CommandContainer name="cmd1_container">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="phase" />
+                    </EntryList>
+                </CommandContainer>
+            </MetaCommand>
+        </MetaCommandSet>
+    </CommandMetaData>
+</SpaceSystem>
+```
+
+### `ref-xtce.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/ref-xtce.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to use Yamcs with XTCE.
+	There are a few extensions which make the file incompatible with the XTCE 1.2 schema.
+	They are documented as such.
+-->
+<xtce:SpaceSystem name="RefXtce" xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+
+	<xtce:TelemetryMetaData>
+		<xtce:ParameterTypeSet>
+			<xtce:IntegerParameterType signed="false" name="uint16">
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+			</xtce:IntegerParameterType>
+
+			<xtce:IntegerParameterType signed="false" name="int_encoded_as_string">
+				<xtce:StringDataEncoding>
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:IntegerParameterType>
+			<xtce:FloatParameterType name="float_encoded_as_string">
+				<xtce:StringDataEncoding>
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:FloatParameterType>
+
+			<xtce:FloatParameterType sizeInBits="32" name="float32">
+				<xtce:FloatDataEncoding encoding="IEEE754_1985" sizeInBits="32" />
+			</xtce:FloatParameterType>
+			
+			<xtce:BooleanParameterType name="boolean"/>
+			<xtce:BinaryParameterType name="binary_param_type">
+				<xtce:BinaryDataEncoding>
+					<xtce:SizeInBits>
+						<!-- -1 means the algorithm will find the size -->
+						<xtce:FixedValue>-1</xtce:FixedValue>
+					</xtce:SizeInBits>
+					<xtce:FromBinaryTransformAlgorithm name="LeadingSizeBinaryDecoder" shortDescription="decodes byte arrays whith the size specified at the beginning">
+						<!-- the 8 passed to the constructor means the size is encoded on 8 bits -->
+						<xtce:AlgorithmText language="java">
+       	   		    		org.yamcs.algo.LeadingSizeBinaryDecoder(8)
+       	   	   			</xtce:AlgorithmText>
+					</xtce:FromBinaryTransformAlgorithm>
+				</xtce:BinaryDataEncoding>
+			</xtce:BinaryParameterType>
+			<xtce:AggregateParameterType name="aggregate_param_type1">
+				<xtce:MemberList>
+					<xtce:Member name="m1" typeRef="float32" />
+					<xtce:Member name="m2" typeRef="uint16" />
+				</xtce:MemberList>
+			</xtce:AggregateParameterType>
+			<xtce:ArrayParameterType name="array_param_type" arrayTypeRef="uint16">
+				<xtce:DimensionList>
+					<xtce:Dimension>
+						<xtce:StartingIndex>
+							<xtce:FixedValue>0</xtce:FixedValue>
+						</xtce:StartingIndex>
+						<xtce:EndingIndex>
+							<xtce:FixedValue>3</xtce:FixedValue>
+						</xtce:EndingIndex>
+					</xtce:Dimension>
+				</xtce:DimensionList>
+			</xtce:ArrayParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter name="param1" parameterTypeRef="binary_param_type" />
+			<xtce:Parameter name="param2" parameterTypeRef="aggregate_param_type1" />
+			<xtce:Parameter name="param3" parameterTypeRef="float32" />
+			<xtce:Parameter name="param4" parameterTypeRef="float32" />
+			<xtce:Parameter name="param5" parameterTypeRef="float32" initialValue="3.14" />
+			<xtce:Parameter name="param6" parameterTypeRef="float32" />
+			<xtce:Parameter name="param7" parameterTypeRef="float32" />
+			<xtce:Parameter name="param9" parameterTypeRef="int_encoded_as_string" />
+			<xtce:Parameter name="param10" parameterTypeRef="float_encoded_as_string" />
+			<xtce:Parameter name="param11" parameterTypeRef="boolean" />
+			<xtce:Parameter name="avg4_result" parameterTypeRef="float32" />
+			<xtce:Parameter name="param8" parameterTypeRef="array_param_type" />
+			<xtce:Parameter name="uint16_param1" parameterTypeRef="uint16" />
+			<xtce:Parameter name="uint16_param2" parameterTypeRef="uint16" />
+			<xtce:Parameter name="local_para1" parameterTypeRef="uint16">
+				<xtce:ParameterProperties dataSource="local" />
+			</xtce:Parameter>
+			<xtce:Parameter name="local_para2" parameterTypeRef="uint16">
+				<xtce:ParameterProperties dataSource="local" persistence="false"/>
+			</xtce:Parameter>
+			<xtce:Parameter name="para_with_subsys_type" parameterTypeRef="subsys1/subsys_ptype1" />
+		</xtce:ParameterSet>
+		<xtce:ContainerSet>
+			<xtce:SequenceContainer name="packet1">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+
+			<xtce:SequenceContainer name="packet2">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="param2" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+
+			<xtce:SequenceContainer name="packet3">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="param8" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+
+			<xtce:SequenceContainer name="packet4">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="param9" />
+					<xtce:ParameterRefEntry parameterRef="param10" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+		</xtce:ContainerSet>
+
+		<xtce:AlgorithmSet>
+			<xtce:MathAlgorithm name="avg1">
+				<xtce:MathOperation outputParameterRef="param3">
+					<xtce:ParameterInstanceRefOperand parameterRef="param2/m1" />
+					<xtce:ParameterInstanceRefOperand parameterRef="param2/m2" />
+					<xtce:Operator>+</xtce:Operator>
+					<xtce:ValueOperand>2</xtce:ValueOperand>
+					<xtce:Operator>/</xtce:Operator>
+					<xtce:TriggerSet>
+						<xtce:OnParameterUpdateTrigger parameterRef="param2" />
+					</xtce:TriggerSet>
+				</xtce:MathOperation>
+			</xtce:MathAlgorithm>
+			<xtce:CustomAlgorithm name="avg2">
+				<xtce:AlgorithmText language="JavaScript">
+                    avg.value = (m1.value+m2.value)/2
+                </xtce:AlgorithmText>
+				<xtce:InputSet>
+					<xtce:InputParameterInstanceRef parameterRef="param2/m1" inputName="m1" />
+					<xtce:InputParameterInstanceRef parameterRef="param2/m2" inputName="m2" />
+				</xtce:InputSet>
+				<xtce:OutputSet>
+					<xtce:OutputParameterRef parameterRef="param4" outputName="avg" />
+				</xtce:OutputSet>
+			</xtce:CustomAlgorithm>
+			<xtce:CustomAlgorithm name="avg3">
+				<xtce:AlgorithmText language="Java">
+                    org.yamcs.algorithms.RefXtceAlgorithmTest$AvgAlgorithm() 
+                </xtce:AlgorithmText>
+				<xtce:InputSet>
+					<xtce:InputParameterInstanceRef parameterRef="param2" />
+				</xtce:InputSet>
+				<xtce:OutputSet>
+					<xtce:OutputParameterRef parameterRef="param7" outputName="avg" />
+				</xtce:OutputSet>
+			</xtce:CustomAlgorithm>
+			<xtce:CustomAlgorithm name="avg4">
+				<xtce:AlgorithmText language="java-expression">
+                    float m1v = m1.getEngValue().getFloatValue();
+                    float m2v = m2.getEngValue().getUint32Value();
+                    avg.setFloatValue((m1v + m2v) / 2);
+                </xtce:AlgorithmText>
+				<xtce:InputSet>
+					<xtce:InputParameterInstanceRef parameterRef="param2/m1" inputName="m1" />
+					<xtce:InputParameterInstanceRef parameterRef="param2/m2" inputName="m2" />
+				</xtce:InputSet>
+				<xtce:OutputSet>
+					<xtce:OutputParameterRef parameterRef="avg4_result" outputName="avg" />
+				</xtce:OutputSet>
+			</xtce:CustomAlgorithm>
+			<xtce:MathAlgorithm name="copy_param5_into_param6">
+				<!-- The param5 has an initial value and this algorithm is copying it to param6 -->
+				<xtce:MathOperation outputParameterRef="param6">
+					<xtce:ParameterInstanceRefOperand parameterRef="param5" />
+					<xtce:TriggerSet>
+						<!-- we use this as a trigger to control it easier from unit tests -->
+						<xtce:OnParameterUpdateTrigger parameterRef="param2" />
+					</xtce:TriggerSet>
+				</xtce:MathOperation>
+			</xtce:MathAlgorithm>
+			<xtce:CustomAlgorithm name="flipflop">
+				<xtce:AlgorithmText language="JavaScript">
+                    if (m1.value >0) { param11.value = true}
+                </xtce:AlgorithmText>
+				<xtce:InputSet>
+					<xtce:InputParameterInstanceRef parameterRef="param2/m1" inputName="m1" />
+				</xtce:InputSet>
+				<xtce:OutputSet>
+					<xtce:OutputParameterRef parameterRef="param11" />
+				</xtce:OutputSet>
+			</xtce:CustomAlgorithm>
+		</xtce:AlgorithmSet>
+	</xtce:TelemetryMetaData>
+	<xtce:CommandMetaData>
+		<xtce:ArgumentTypeSet>
+			<xtce:AbsoluteTimeArgumentType name="gps_time_type">
+				<xtce:Encoding>
+					<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:Epoch>GPS</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeArgumentType>
+			<xtce:AbsoluteTimeArgumentType name="unix_time_type">
+				<xtce:Encoding>
+					<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+				</xtce:Encoding>
+				<xtce:ReferenceTime>
+					<xtce:Epoch>UNIX</xtce:Epoch>
+				</xtce:ReferenceTime>
+			</xtce:AbsoluteTimeArgumentType>
+
+			<xtce:AggregateArgumentType name="aggr_arg_type1">
+				<xtce:MemberList>
+					<xtce:Member name="m1" typeRef="u32" />
+					<xtce:Member name="m2" typeRef="f64limit100" />
+				</xtce:MemberList>
+			</xtce:AggregateArgumentType>
+			<xtce:AggregateArgumentType name="aggr_arg_with_initial_values">
+				<xtce:MemberList>
+					<xtce:Member name="m1" typeRef="u32" initialValue="7" />
+					<xtce:Member name="m2" typeRef="f64limit100" initialValue="3.14" />
+				</xtce:MemberList>
+			</xtce:AggregateArgumentType>
+			<xtce:IntegerArgumentType name="u32" signed="false">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned" />
+			</xtce:IntegerArgumentType>
+			<xtce:FloatArgumentType name="f64limit100">
+				<xtce:UnitSet />
+				<xtce:FloatDataEncoding sizeInBits="64" />
+				<xtce:ValidRangeSet>
+					<xtce:ValidRange maxInclusive="100" />
+				</xtce:ValidRangeSet>
+			</xtce:FloatArgumentType>
+			<xtce:BinaryArgumentType name="barray">
+				<xtce:AncillaryDataSet>
+					<xtce:AncillaryData name="Yamcs">minLength=2</xtce:AncillaryData>
+					<xtce:AncillaryData name="Yamcs">maxLength=10</xtce:AncillaryData>
+				</xtce:AncillaryDataSet>
+				<xtce:BinaryDataEncoding>
+					<!-- this SizInBits section is superfluous and can be removed -->
+					<xtce:SizeInBits>
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+						</xtce:DynamicValue>
+					</xtce:SizeInBits>
+					<xtce:ToBinaryTransformAlgorithm name="LeadingSizeBinaryEncoder" shortDescription="encodes byte arrays whith the size specified at the beginning">
+						<!-- the 16 passed to the constructor means the size is encoded on 16 bits -->
+						<xtce:AlgorithmText language="java">
+       	   		    		org.yamcs.algo.LeadingSizeBinaryEncoder(16)
+       	   	   			</xtce:AlgorithmText>
+					</xtce:ToBinaryTransformAlgorithm>
+				</xtce:BinaryDataEncoding>
+			</xtce:BinaryArgumentType>
+			<xtce:FloatArgumentType name="arg1_with_algo">
+				<xtce:UnitSet />
+				<xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned">
+					<xtce:DefaultCalibrator>
+						<xtce:MathOperationCalibrator>
+							<xtce:ThisParameterOperand />
+							<xtce:ValueOperand>10</xtce:ValueOperand>
+							<xtce:Operator>*</xtce:Operator>
+						</xtce:MathOperationCalibrator>
+					</xtce:DefaultCalibrator>
+				</xtce:IntegerDataEncoding>
+			</xtce:FloatArgumentType>
+			<xtce:FloatArgumentType name="arg2_with_algo">
+				<xtce:UnitSet>
+					<xtce:Unit description="pressure">kPa</xtce:Unit>
+				</xtce:UnitSet>
+				<xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned">
+					<xtce:DefaultCalibrator>
+						<xtce:PolynomialCalibrator>
+							<xtce:Term coefficient="55.24296675" exponent="1" />
+							<xtce:Term coefficient="6138.107417" exponent="0" />
+						</xtce:PolynomialCalibrator>
+					</xtce:DefaultCalibrator>
+				</xtce:IntegerDataEncoding>
+				<xtce:ValidRangeSet>
+					<xtce:ValidRange minInclusive="100" maxInclusive="1100" />
+				</xtce:ValidRangeSet>
+			</xtce:FloatArgumentType>
+		</xtce:ArgumentTypeSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand name="command1">
+				<xtce:ArgumentList>
+					<xtce:Argument name="t1" argumentTypeRef="gps_time_type" />
+					<xtce:Argument name="t2" argumentTypeRef="unix_time_type" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command1_Container">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="t1" />
+						<xtce:ArgumentRefEntry argumentRef="t2" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="command2">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="aggr_arg_type1" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="test_cmd_arg">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="command3">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="barray" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command3">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="command4">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="aggr_arg_with_initial_values" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command4">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="vital_command">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="vital_command">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:DefaultSignificance reasonForWarning="no particular reason" consequenceLevel="vital" />
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="cmd_with_constraint1">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_constraint1">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:TransmissionConstraintList>
+					<xtce:TransmissionConstraint timeOut="PT1.234S">
+						<xtce:ComparisonList>
+							<xtce:Comparison value="42" parameterRef="local_para1" />
+						</xtce:ComparisonList>
+					</xtce:TransmissionConstraint>
+				</xtce:TransmissionConstraintList>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="cmd_with_constraint2">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_constraint2">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:TransmissionConstraintList>
+					<xtce:TransmissionConstraint timeOut="PT1S">
+						<xtce:ComparisonList>
+							<xtce:Comparison value="15" parameterRef="/yamcs/cmd/arg/arg1" />
+						</xtce:ComparisonList>
+					</xtce:TransmissionConstraint>
+				</xtce:TransmissionConstraintList>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="cmd_with_verifier1">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_verifier1">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:VerifierSet>
+					<xtce:CompleteVerifier>
+						<xtce:Comparison value="47" parameterRef="local_para1" />
+						<xtce:CheckWindow timeToStartChecking="PT0.1S" timeToStopChecking="PT1S" />
+					</xtce:CompleteVerifier>
+				</xtce:VerifierSet>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="cmd_with_verifier2">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_verifier2">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:VerifierSet>
+					<xtce:CompleteVerifier>
+						<xtce:ParameterValueChange>
+							<xtce:ParameterRef parameterRef="local_para1" />
+							<xtce:Change value="10" />
+						</xtce:ParameterValueChange>
+						<xtce:CheckWindow timeToStopChecking="PT1S" />
+						<!-- The value of local_para2 will be saved in the command history -->
+						<xtce:ReturnParmRef parameterRef="local_para2" />
+					</xtce:CompleteVerifier>
+				</xtce:VerifierSet>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="cmd_with_verifier3">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_verifier3">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:VerifierSet>
+					<xtce:CompleteVerifier>
+						<xtce:BooleanExpression>
+							<xtce:Condition>
+								<!-- the special /yamcs/cmd/arg namespace means that this is the value of an command argument,
+									(including those set via command inheritance in BaseCommand -> ArgumentAssignmentList -> ArgumentAssignment)
+									The argument value is not like a parameter because it only exists in a command verifier context,
+									same command can run in parallel multiple times each with its own context (different argument values).
+
+									The condition below says that the command is verified if the local_para1 takes the same value as the arg1 argument.
+									The arg1 could be an id which uniquely identifies the command.
+								-->
+								<xtce:ParameterInstanceRef parameterRef="/yamcs/cmd/arg/arg1" />
+								<xtce:ComparisonOperator>==</xtce:ComparisonOperator>
+								<xtce:ParameterInstanceRef parameterRef="local_para1" />
+							</xtce:Condition>
+						</xtce:BooleanExpression>
+						<xtce:CheckWindow timeToStartChecking="PT0S" timeToStopChecking="PT1S" />
+					</xtce:CompleteVerifier>
+				</xtce:VerifierSet>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="cmd_with_verifier4">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="u32" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="cmd_with_verifier4">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+				<xtce:VerifierSet>
+					<xtce:CompleteVerifier>
+						<xtce:BooleanExpression>
+							<xtce:Condition>
+								<!-- This is not valid according to XTCE but we think it should be made part of the standard.
+									It achieves the same as the example above without using the false /yamcs/cmd/arg parameter reference. -->
+								<xtce:ArgumentInstanceRef argumentRef="arg1" />
+								<xtce:ComparisonOperator>==</xtce:ComparisonOperator>
+								<xtce:ParameterInstanceRef parameterRef="local_para1" />
+							</xtce:Condition>
+						</xtce:BooleanExpression>
+						<xtce:CheckWindow timeToStartChecking="PT0S" timeToStopChecking="PT1S" />
+					</xtce:CompleteVerifier>
+				</xtce:VerifierSet>
+			</xtce:MetaCommand>
+			<xtce:MetaCommand name="command_with_algo">
+				<xtce:ArgumentList>
+					<xtce:Argument name="arg1" argumentTypeRef="arg1_with_algo" />
+					<xtce:Argument name="arg2" argumentTypeRef="arg2_with_algo" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command_with_algo_Container">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="arg1" />
+						<xtce:ArgumentRefEntry argumentRef="arg2" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+	</xtce:CommandMetaData>
+	<xtce:SpaceSystem name="subsys1">
+		<xtce:TelemetryMetaData>
+			<xtce:ParameterTypeSet>
+				<xtce:IntegerParameterType name="subsys_ptype1" />
+			</xtce:ParameterTypeSet>
+		</xtce:TelemetryMetaData>
+	</xtce:SpaceSystem>
+</xtce:SpaceSystem>
+```
+
+### `refsolver1.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver1.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string arguments with yamcs
+-->
+<SpaceSystem name="refsolver1" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+	<TelemetryMetaData>
+		<ParameterSet>
+			<Parameter parameterTypeRef="/refsolver2/bool_type" name="bool1"></Parameter>
+		</ParameterSet>
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `refsolver2.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver2.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string arguments with yamcs
+-->
+<SpaceSystem name="refsolver2" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<BooleanParameterType name="bool_type" baseType="/refsolver3/base_type"/>
+		</ParameterTypeSet>
+		
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `refsolver3.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/refsolver3.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string arguments with yamcs
+-->
+<SpaceSystem name="refsolver3" xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<BooleanParameterType name="base_type">
+				<IntegerDataEncoding sizeInBits="12" />
+			</BooleanParameterType>
+		</ParameterTypeSet>
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `strings-cmd.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/strings-cmd.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string arguments with yamcs
+-->
+<xtce:SpaceSystem name="StringsCmd" xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+
+	<xtce:CommandMetaData>
+		<xtce:ArgumentTypeSet>
+			<!-- null terminated string in fixed size buffer
+				The string is maximum 6 bytes long;
+				If it is maximum size the terminator will not be present. -->
+			<xtce:StringArgumentType name="string1">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:StringArgumentType>
+
+			<!-- Fixed size string in fixed size buffer.
+				The string is always 6 bytes long. -->
+			<xtce:StringArgumentType name="string2">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:StringArgumentType>
+
+			<!-- Null terminated string in undefined buffer.
+				The terminator is mandatory in this case.
+				The buffer is effectively as long as the string + terminator
+				The maxSizeInBits refers to the size of the buffer, so the maximum size of the string is 5.
+
+				Note the _yamcs_ignore parameter reference which is used to workaround XTCE mandating a dynamic value
+			-->
+			<xtce:StringArgumentType name="string3">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+						</xtce:DynamicValue>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringArgumentType>
+
+			<!-- prefixed size string in buffer whose size is given by another parameter -->
+			<xtce:StringArgumentType name="string4">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ArgumentInstanceRef argumentRef="buf_length" />
+							<xtce:LinearAdjustment slope="8" />
+						</xtce:DynamicValue>
+						<xtce:LeadingSize sizeInBitsOfSizeTag="8" />
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringArgumentType>
+
+			<!-- prefixed size string in undefined buffer.
+				The buffer is effectively as long as the prefix + string.
+				The maxSizeInBits refers to the size of the buffer, so the maximum size of the string is 4.
+
+				Note the _yamcs_ignore parameter reference which is used to workaround XTCE mandating a dynamic value
+			-->
+			<xtce:StringArgumentType name="string5">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+						</xtce:DynamicValue>
+						<xtce:LeadingSize sizeInBitsOfSizeTag="16" />
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringArgumentType>
+
+			<!-- string encoded as binary -->
+			<xtce:StringArgumentType name="string6">
+				<xtce:BinaryDataEncoding>
+					<xtce:SizeInBits>
+						<xtce:FixedValue>40</xtce:FixedValue>
+					</xtce:SizeInBits>
+				</xtce:BinaryDataEncoding>
+			</xtce:StringArgumentType>
+
+			<xtce:IntegerArgumentType signed="false" name="uint16">
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+			</xtce:IntegerArgumentType>
+		</xtce:ArgumentTypeSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand name="command1">
+				<xtce:ArgumentList>
+					<xtce:Argument name="string1" argumentTypeRef="string1" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command1">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="string1" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="command2">
+				<xtce:ArgumentList>
+					<xtce:Argument name="string2" argumentTypeRef="string2" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command2">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="string2" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="command3">
+				<xtce:ArgumentList>
+					<xtce:Argument name="string3" argumentTypeRef="string3" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command3">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="string3" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="command4">
+				<xtce:ArgumentList>
+					<xtce:Argument name="buf_length" argumentTypeRef="uint16" />
+					<xtce:Argument name="string4" argumentTypeRef="string4" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command4">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="buf_length" />
+						<xtce:ArgumentRefEntry argumentRef="string4" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="command5">
+				<xtce:ArgumentList>
+					<xtce:Argument name="string5" argumentTypeRef="string5" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command5">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="string5" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+
+			<xtce:MetaCommand name="command6">
+				<xtce:ArgumentList>
+					<xtce:Argument name="string6" argumentTypeRef="string6" />
+					<xtce:Argument name="para1" argumentTypeRef="uint16" />
+				</xtce:ArgumentList>
+				<xtce:CommandContainer name="command6">
+					<xtce:EntryList>
+						<xtce:ArgumentRefEntry argumentRef="string6" />
+						<xtce:ArgumentRefEntry argumentRef="para1" />
+					</xtce:EntryList>
+				</xtce:CommandContainer>
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+
+	</xtce:CommandMetaData>
+</xtce:SpaceSystem>
+```
+
+### `strings-tm.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/strings-tm.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="xtce_template.xsl"?>
+<!--
+	This file contains several examples on how to define string parameters with yamcs
+-->
+<xtce:SpaceSystem name="StringsTm" xmlns:xtce="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd" shortDescription="Testing Yamcs XTCE processing" operationalStatus="unittest">
+
+	<xtce:TelemetryMetaData>
+		<xtce:ParameterTypeSet>
+			<!-- null terminated string in fixed size buffer
+				The string is maximum 6 bytes long;
+				If it is maximum size the terminator will not be present. -->
+			<xtce:StringParameterType name="string1">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<!-- Fixed size string in fixed size buffer.
+				The string is always 6 bytes long. -->
+			<xtce:StringParameterType name="string2">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:SizeInBits>
+						<xtce:Fixed>
+							<xtce:FixedValue>48</xtce:FixedValue>
+						</xtce:Fixed>
+					</xtce:SizeInBits>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<!-- Null terminated string in undefined buffer.
+				The terminator is mandatory in this case.
+				The buffer is effectively as long as the string + terminator
+				The maxSizeInBits refers to the size of the buffer, so the maximum size of the string is 5.
+
+				Note the _yamcs_ignore parameter reference which is used to workaround XTCE mandating a dynamic value
+			-->
+			<xtce:StringParameterType name="string3">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+						</xtce:DynamicValue>
+						<xtce:TerminationChar>00</xtce:TerminationChar>
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<!-- prefixed size string in buffer whose size is given by another parameter -->
+			<xtce:StringParameterType name="string4">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="uint16_param2" />
+							<xtce:LinearAdjustment slope="8" />
+						</xtce:DynamicValue>
+						<xtce:LeadingSize sizeInBitsOfSizeTag="8" />
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<!-- prefixed size string in undefined buffer.
+				The buffer is effectively as long as the prefix + string.
+				The maxSizeInBits refers to the size of the buffer, so the maximum size of the string is 4.
+
+				Note the _yamcs_ignore parameter reference which is used to workaround XTCE mandating a dynamic value
+			-->
+			<xtce:StringParameterType name="string5">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="_yamcs_ignore" />
+						</xtce:DynamicValue>
+						<xtce:LeadingSize sizeInBitsOfSizeTag="16" />
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<!-- string in buffer whose size is given by another parameter -->
+			<xtce:StringParameterType name="string6">
+				<xtce:StringDataEncoding encoding="UTF-8">
+					<xtce:Variable maxSizeInBits="48">
+						<xtce:DynamicValue>
+							<xtce:ParameterInstanceRef parameterRef="uint16_param2" />
+							<xtce:LinearAdjustment slope="8" />
+						</xtce:DynamicValue>
+					</xtce:Variable>
+				</xtce:StringDataEncoding>
+			</xtce:StringParameterType>
+
+			<xtce:IntegerParameterType signed="false" name="uint16">
+				<xtce:IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+			</xtce:IntegerParameterType>
+		</xtce:ParameterTypeSet>
+		<xtce:ParameterSet>
+			<xtce:Parameter name="string1" parameterTypeRef="string1" />
+			<xtce:Parameter name="string2" parameterTypeRef="string2" />
+			<xtce:Parameter name="string3" parameterTypeRef="string3" />
+			<xtce:Parameter name="string4" parameterTypeRef="string4" />
+			<xtce:Parameter name="string5" parameterTypeRef="string5" />
+			<xtce:Parameter name="string6" parameterTypeRef="string6" />
+			<xtce:Parameter name="uint16_param1" parameterTypeRef="uint16" />
+			<xtce:Parameter name="uint16_param2" parameterTypeRef="uint16" />
+		</xtce:ParameterSet>
+		<xtce:ContainerSet>
+			<xtce:SequenceContainer name="packet1">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="string1" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="packet2">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="string2" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="packet3">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="string3" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="packet4">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="uint16_param2" />
+					<xtce:ParameterRefEntry parameterRef="string4" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="packet5">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="string5" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+			<xtce:SequenceContainer name="packet6">
+				<xtce:EntryList>
+					<xtce:ParameterRefEntry parameterRef="uint16_param2" />
+					<xtce:ParameterRefEntry parameterRef="string6" />
+					<xtce:ParameterRefEntry parameterRef="uint16_param1" />
+				</xtce:EntryList>
+			</xtce:SequenceContainer>
+		</xtce:ContainerSet>
+
+	</xtce:TelemetryMetaData>
+	<xtce:CommandMetaData>
+		<xtce:ArgumentTypeSet>
+			<xtce:IntegerArgumentType name="uint16"></xtce:IntegerArgumentType>
+		</xtce:ArgumentTypeSet>
+		<xtce:MetaCommandSet>
+			<xtce:MetaCommand name="cmd1">
+
+			</xtce:MetaCommand>
+		</xtce:MetaCommandSet>
+	</xtce:CommandMetaData>
+</xtce:SpaceSystem>
+```
+
+### `test_float_add_js.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/test_float_add_js.xml`
+
+
+```xml
+<?xml version="1.0"?>
+<SpaceSystem xmlns="http://www.omg.org/space/xtce" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://archive.astro.umd.edu/omg/trunk/SpaceSystemV1.1.xsd" name="DV">
+	<TelemetryMetaData>
+		<AlgorithmSet>
+			<CustomAlgorithm name="test_float_add_js">
+				<AlgorithmText language="JavaScript">
+					f0 = FloatPara1_1_2;
+					f1 = FloatPara1_1_3;
+					test_float_add_js = f0+f1;
+				</AlgorithmText>
+				<InputSet>
+					<ParameterInstanceRef parameterName="SUBSYS1_FloatPara1_1_2"/>
+					<ParameterInstanceRef parameterName="SUBSYS1_FloatPara1_1_3"/>
+				</InputSet>
+				<OutputSet>
+					<OutputParameterRef parameterName="test_float_add_js"/>
+				</OutputSet>
+			</CustomAlgorithm>
+		</AlgorithmSet>
+		
+		<AlgorithmSet>
+			<CustomAlgorithm name="test_float_ypr_js">
+				<AlgorithmText language="JavaScript">
+					q0 = FloatPara1_1_2;
+q1 = FloatPara1_1_3;
+q2 = IntegerPara1_1_6;
+q3 = IntegerPara1_1_7;
+test_float_ypr_js = Math.atan2(2*(q0*q1 + q3*q2), (1 - 2*(q1*q1 + q2*q2))) * 360 / (2 * Math.PI);
+				</AlgorithmText>
+				<InputSet>
+					<ParameterInstanceRef parameterName="SUBSYS1_FloatPara1_1_2"/>
+					<ParameterInstanceRef parameterName="SUBSYS1_FloatPara1_1_3"/>
+					<ParameterInstanceRef parameterName="SUBSYS1_IntegerPara1_1_6"/>
+					<ParameterInstanceRef parameterName="SUBSYS1_IntegerPara1_1_7"/>
+				</InputSet>
+				<OutputSet>
+					<OutputParameterRef parameterName="test_float_ypr_js"/>
+				</OutputSet>
+			</CustomAlgorithm>
+		</AlgorithmSet>
+	</TelemetryMetaData>
+</SpaceSystem>
+```
+
+### `VariableBinary.xml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/xtce/VariableBinary.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<SpaceSystem xmlns="http://www.omg.org/spec/XTCE/20180204" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xi="http://www.w3.org/2001/XInclude" name="VariableBinaryTest"
+	shortDescription="Test of binary parameter and argument with variable size" xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+
+	<TelemetryMetaData>
+		<ParameterTypeSet>
+			<IntegerParameterType name="SizeType" sizeInBits="16">
+				<IntegerDataEncoding sizeInBits="16" byteOrder="mostSignificantByteFirst" encoding="unsigned" />
+			</IntegerParameterType>
+			<FloatParameterType name="FloatType" sizeInBits="32">
+				<FloatDataEncoding sizeInBits="32" byteOrder="mostSignificantByteFirst" encoding="IEEE754_1985" />
+			</FloatParameterType>
+			<BinaryParameterType name="BinaryType">
+				<BinaryDataEncoding>
+					<SizeInBits>
+						<DynamicValue>
+							<ParameterInstanceRef parameterRef="size" />
+						</DynamicValue>
+					</SizeInBits>
+				</BinaryDataEncoding>
+			</BinaryParameterType>
+		</ParameterTypeSet>
+		<ParameterSet>
+			<Parameter parameterTypeRef="SizeType" name="size" />
+			<Parameter parameterTypeRef="BinaryType" name="data" />
+			<Parameter parameterTypeRef="FloatType" name="value" />
+		</ParameterSet>
+		<ContainerSet>
+			<SequenceContainer name="Packet">
+				<EntryList>
+					<ParameterRefEntry parameterRef="size" />
+					<ParameterRefEntry parameterRef="data" />
+					<ParameterRefEntry parameterRef="value" />
+				</EntryList>
+			</SequenceContainer>
+		</ContainerSet>
+	</TelemetryMetaData>
+
+	<CommandMetaData>
+		<ArgumentTypeSet>
+			<IntegerArgumentType name="SizeType" sizeInBits="16" signed="false">
+				<IntegerDataEncoding sizeInBits="16" byteOrder="mostSignificantByteFirst" encoding="unsigned" />
+				<ValidRangeSet>
+					<ValidRange maxInclusive="6" />
+				</ValidRangeSet>
+			</IntegerArgumentType>
+			<BinaryArgumentType name="BinaryType">
+				<BinaryDataEncoding>
+					<SizeInBits>
+						<DynamicValue>
+							<ArgumentInstanceRef argumentRef="size" />
+							<LinearAdjustment slope="8" />
+						</DynamicValue>
+					</SizeInBits>
+				</BinaryDataEncoding>
+			</BinaryArgumentType>
+			<BinaryArgumentType name="BinaryType1">
+				<AncillaryDataSet>
+					<!-- these two are Yamcs extensions which limit the size of the user accepted argument -->
+					<AncillaryData name="Yamcs">minLength=2</AncillaryData>
+					<AncillaryData name="Yamcs">maxLength=5</AncillaryData>
+				</AncillaryDataSet>
+				<BinaryDataEncoding>
+					<SizeInBits> <!-- -1 means the size will be taken from the argument value passed by the user -->
+						<FixedValue>-1</FixedValue>
+					</SizeInBits>
+				</BinaryDataEncoding>
+			</BinaryArgumentType>
+			<FloatArgumentType name="FloatType" sizeInBits="32">
+				<FloatDataEncoding sizeInBits="32" encoding="IEEE754_1985" />
+			</FloatArgumentType>
+		</ArgumentTypeSet>
+		<MetaCommandSet>
+			<MetaCommand name="Command">
+				<ArgumentList>
+					<Argument argumentTypeRef="SizeType" name="size" />
+					<Argument argumentTypeRef="BinaryType" name="data" />
+					<Argument argumentTypeRef="FloatType" name="value" />
+				</ArgumentList>
+				<CommandContainer name="CommandContainer">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="size" />
+						<ArgumentRefEntry argumentRef="data" />
+						<ArgumentRefEntry argumentRef="value" />
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+
+			<MetaCommand name="Command1">
+				<ArgumentList>
+					<Argument argumentTypeRef="BinaryType1" name="data" />
+					<Argument argumentTypeRef="FloatType" name="value" />
+				</ArgumentList>
+				<CommandContainer name="Command1Container">
+					<EntryList>
+						<ArgumentRefEntry argumentRef="data" />
+						<ArgumentRefEntry argumentRef="value" />
+					</EntryList>
+				</CommandContainer>
+			</MetaCommand>
+		</MetaCommandSet>
+	</CommandMetaData>
+
+</SpaceSystem>
+```

@@ -3,7 +3,7 @@
 
 **경로:** `components/generic_mag/fsw/fprime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,41 @@
 mag_src/index
 mission_inc/index
 platform_inc/index
-file--CMakeLists.txt
-file--library.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_mag/fsw/fprime/mag_src/`](mag_src/index) — 폴더
-- [`components/generic_mag/fsw/fprime/mission_inc/`](mission_inc/index) — 폴더
-- [`components/generic_mag/fsw/fprime/platform_inc/`](platform_inc/index) — 폴더
-- [`components/generic_mag/fsw/fprime/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/fsw/fprime/library.cmake`](file--library.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_mag/fsw/fprime/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_GENERIC_MAG_APP C)
+
+include(../../ComponentSettings.cmake)
+
+include_directories(public_inc)
+include_directories(mission_inc)
+include_directories(platform_inc)
+include_directories(src)
+
+include_directories(${hwlib_MISSION_DIR}/fsw/public_inc)
+
+aux_source_directory(src APP_SRC_FILES)
+
+# Create the app module
+add_cfe_app(generic_mag ${APP_SRC_FILES})
+```
+
+### `library.cmake`
+
+**경로:** `components/generic_mag/fsw/fprime/library.cmake`
+
+
+```cmake
+add_fprime_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/mag_src"
+)
+```

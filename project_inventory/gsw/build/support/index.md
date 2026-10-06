@@ -3,20 +3,30 @@
 
 **경로:** `gsw/build/support/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--Makefile
-file--standalone
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/build/support/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`gsw/build/support/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`gsw/build/support/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`gsw/build/support/standalone`](file--standalone) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `gsw/build/support/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `gsw/build/support/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `standalone`
+
+**경로:** `gsw/build/support/standalone`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

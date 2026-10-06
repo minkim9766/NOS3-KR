@@ -3,26 +3,48 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--Makefile
-file--nlohmann_json.pc
-file--nlohmann_jsonConfig.cmake
-file--nlohmann_jsonConfigVersion.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_json.pc`](file--nlohmann_json.pc) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_jsonConfig.cmake`](file--nlohmann_jsonConfig.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_jsonConfigVersion.cmake`](file--nlohmann_jsonConfigVersion.cmake) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nlohmann_json.pc`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_json.pc`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nlohmann_jsonConfig.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_jsonConfig.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nlohmann_jsonConfigVersion.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/syn/json/nlohmann_jsonConfigVersion.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

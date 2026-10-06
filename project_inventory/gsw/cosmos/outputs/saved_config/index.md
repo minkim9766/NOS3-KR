@@ -3,14 +3,10 @@
 
 **경로:** `gsw/cosmos/outputs/saved_config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `2026_08_26_08_05_44_d46b80621ccef71709bd4066144fefb6.zip`
 
-file--2026_08_26_08_05_44_d46b80621ccef71709bd4066144fefb6.zip
-```
+**경로:** `gsw/cosmos/outputs/saved_config/2026_08_26_08_05_44_d46b80621ccef71709bd4066144fefb6.zip`
 
-## 항목
-
-- [`gsw/cosmos/outputs/saved_config/2026_08_26_08_05_44_d46b80621ccef71709bd4066144fefb6.zip`](file--2026_08_26_08_05_44_d46b80621ccef71709bd4066144fefb6.zip) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

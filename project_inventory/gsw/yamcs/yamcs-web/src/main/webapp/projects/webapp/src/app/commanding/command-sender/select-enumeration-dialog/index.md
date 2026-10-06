@@ -3,18 +3,189 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `select-enumeration-dialog.component.css`
 
-file--select-enumeration-dialog.component.css
-file--select-enumeration-dialog.component.html
-file--select-enumeration-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.css`
+
+
+```css
+td {
+  cursor: pointer;
+}
+
+.scrollpane {
+  overflow: auto;
+  height: 200px;
+}
 ```
 
-## 항목
+### `select-enumeration-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.css`](file--select-enumeration-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.html`](file--select-enumeration-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.ts`](file--select-enumeration-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Select enumeration state</h2>
+
+<mat-dialog-content>
+  <ya-filter-bar>
+    <ya-search-filter
+      [formControl]="filterControl"
+      width="100%"
+      (onArrowDown)="selectNext()"
+      (onArrowUp)="selectPrevious()"
+      (onEnter)="applySelection()"
+      style="flex: 1 1 auto" />
+  </ya-filter-bar>
+
+  <div class="scrollpane">
+    <table mat-table [dataSource]="dataSource" class="ya-data-table" style="width: 100%">
+      <ng-container cdkColumnDef="value">
+        <th mat-header-cell *cdkHeaderCellDef>Value</th>
+        <td mat-cell *cdkCellDef="let row">
+          {{ row.value }}
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="name">
+        <th mat-header-cell *cdkHeaderCellDef>Label</th>
+        <td mat-cell *cdkCellDef="let row">
+          <strong>{{ row.label }}</strong>
+        </td>
+      </ng-container>
+
+      <ng-container cdkColumnDef="hex">
+        <th mat-header-cell *cdkHeaderCellDef>Hex value</th>
+        <td mat-cell *cdkCellDef="let row">
+          {{ toHex(row.value) }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *cdkRowDef="let row; columns: displayedColumns"
+        [class.selected]="selection.isSelected(row)"
+        (click)="selection.toggle(row)"></tr>
+    </table>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <mat-paginator [pageSize]="100" [hidePageSize]="true" [showFirstLastButtons]="true" />
+  <div style="flex: 1 1 auto"></div>
+
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+
+  <ya-button appearance="primary" [disabled]="selection.isEmpty()" (click)="applySelection()">
+    SELECT
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `select-enumeration-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/select-enumeration-dialog/select-enumeration-dialog.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { ArgumentType, EnumValue, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-select-enumeration-dialog',
+  templateUrl: './select-enumeration-dialog.component.html',
+  styleUrl: './select-enumeration-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SelectEnumerationDialogComponent implements AfterViewInit {
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  dataSource = new MatTableDataSource<EnumValue>([]);
+  selection = new SelectionModel<EnumValue>();
+
+  displayedColumns = ['name', 'value'];
+
+  constructor(
+    private dialogRef: MatDialogRef<SelectEnumerationDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    const argumentType = data.type as ArgumentType;
+    const isHex = argumentType.dataEncoding?.encoding === 'UNSIGNED';
+    this.dataSource.filterPredicate = (enumValue, filter) => {
+      const { label, value } = enumValue;
+      return (
+        label.toLowerCase().indexOf(filter) >= 0 ||
+        String(value).indexOf(filter) >= 0 ||
+        (isHex && Number(value).toString(16).indexOf(filter) >= 0)
+      );
+    };
+
+    this.dataSource.data = argumentType.enumValue || [];
+    if (isHex) {
+      this.displayedColumns.push('hex');
+    }
+  }
+
+  ngAfterViewInit() {
+    this.filterControl.valueChanges.subscribe(() => {
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+    });
+
+    this.dataSource.paginator = this.paginator;
+  }
+
+  selectNext() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  toHex(value: string) {
+    return Number(value).toString(16);
+  }
+
+  applySelection() {
+    const selected = this.selection.selected;
+    if (selected.length) {
+      this.dialogRef.close(selected[0]);
+    }
+  }
+}
+```

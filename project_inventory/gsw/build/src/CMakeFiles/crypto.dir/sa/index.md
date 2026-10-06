@@ -3,7 +3,7 @@
 
 **경로:** `gsw/build/src/CMakeFiles/crypto.dir/sa/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ internal/index
 mariadb_stub/index
 ```
 
-## 항목
-
-- [`gsw/build/src/CMakeFiles/crypto.dir/sa/custom_stub/`](custom_stub/index) — 폴더
-- [`gsw/build/src/CMakeFiles/crypto.dir/sa/internal/`](internal/index) — 폴더
-- [`gsw/build/src/CMakeFiles/crypto.dir/sa/mariadb_stub/`](mariadb_stub/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

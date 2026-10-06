@@ -3,28 +3,343 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `buffer-get.png`
 
-file--buffer-get.png
-file--buffer-get.txt
-file--buffer-request.json
-file--buffer-request.png
-file--buffer-request.txt
-file--product-send.json
-file--product-send.png
-file--product-send.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-get.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `buffer-get.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-get.txt`
+
+
+```text
+producer
+productGetOut
+0
+dpManager
+productGetIn
+0
+
+dpManager
+bufferGetOut
+0
+bufferManager
+bufferGetCallee
+0
 ```
 
-## 항목
+### `buffer-request.json`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-get.png`](file--buffer-get.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-get.txt`](file--buffer-get.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.json`](file--buffer-request.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.png`](file--buffer-request.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.txt`](file--buffer-request.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.json`](file--product-send.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.png`](file--product-send.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.txt`](file--product-send.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.json`
+
+
+```json
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "client",
+        "inputPorts" : [
+          {
+            "name" : "productRecvIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "productRequestOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "dpManager",
+        "inputPorts" : [
+          {
+            "name" : "productRequestIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferGetOut",
+            "portNumbers" : [
+              0
+            ]
+          },
+          {
+            "name" : "productResponseOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "bufferManager",
+        "inputPorts" : [
+          {
+            "name" : "bufferGetCallee",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        1,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  ]
+}
+```
+
+### `buffer-request.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `buffer-request.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/buffer-request.txt`
+
+
+```text
+producer
+productRequestOut
+0
+dpManager
+productRequestIn
+0
+
+dpManager
+bufferGetOut
+0
+bufferManager
+bufferGetCallee
+0
+
+dpManager
+productResponseOut
+0
+producer
+productRecvIn
+0
+```
+
+### `product-send.json`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.json`
+
+
+```json
+{
+  "columns" : [
+    [
+      {
+        "instanceName" : "client",
+        "inputPorts" : [],
+        "outputPorts" : [
+          {
+            "name" : "productSendOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "dpManager",
+        "inputPorts" : [
+          {
+            "name" : "productSendIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "productSendOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "dpWriter",
+        "inputPorts" : [
+          {
+            "name" : "bufferSendIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : [
+          {
+            "name" : "bufferSendOut",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ]
+      }
+    ],
+    [
+      {
+        "instanceName" : "bufferManager",
+        "inputPorts" : [
+          {
+            "name" : "bufferSendIn",
+            "portNumbers" : [
+              0
+            ]
+          }
+        ],
+        "outputPorts" : []
+      }
+    ]
+  ],
+  "connections" : [
+    [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        0,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        0
+      ]
+    ],
+    [
+      [
+        2,
+        0,
+        0,
+        0
+      ],
+      [
+        3,
+        0,
+        0,
+        0
+      ]
+    ]
+  ]
+}
+```
+
+### `product-send.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `product-send.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/product-send.txt`
+
+
+```text
+producer
+productSendOut
+0
+dpManager
+productSendIn
+0
+
+dpManager
+productSendOut
+0
+dpWriter
+bufferSendIn
+0
+
+dpWriter
+bufferSendOut
+0
+bufferManager
+bufferSendIn
+0
+```

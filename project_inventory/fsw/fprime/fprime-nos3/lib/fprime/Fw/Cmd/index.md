@@ -3,30 +3,389 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--Cmd.fpp
-file--CmdArgBuffer.cpp
-file--CmdArgBuffer.hpp
-file--CmdPacket.cpp
-file--CmdPacket.hpp
-file--CmdString.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/Cmd.fpp`](file--Cmd.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdArgBuffer.cpp`](file--CmdArgBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdArgBuffer.hpp`](file--CmdArgBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdPacket.cpp`](file--CmdPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdPacket.hpp`](file--CmdPacket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdString.hpp`](file--CmdString.hpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Fw::CommandResponse
+Fw::CmdResponse
+
+Fw::COMMAND_OK
+Fw::CmdResponse::OK
+
+Fw::COMMAND_INVALID_OPCODE
+Fw::CmdResponse::INVALID_OPCODE
+
+Fw::COMMAND_VALIDATION_ERROR
+Fw::CmdResponse::VALIDATION_ERROR
+
+Fw::COMMAND_FORMAT_ERROR
+Fw::CmdResponse::FORMAT_ERROR
+
+Fw::COMMAND_EXECUTION_ERROR
+Fw::CmdResponse::EXECUTION_ERROR
+
+Fw::COMMAND_BUSY
+Fw::CmdResponse::BUSY
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(MOD_DEPS
+    Fw/Com
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CmdArgBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/CmdPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Cmd.fpp"
+)
+register_fprime_module()
+```
+
+### `Cmd.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/Cmd.fpp`
+
+
+```fpp
+module Fw {
+
+  type CmdArgBuffer
+
+  @ Command registration port
+  port CmdReg(
+               opCode: FwOpcodeType @< Command Op Code
+             )
+
+  @ Port for sending commands
+  port Cmd(
+            opCode: FwOpcodeType @< Command Op Code
+            cmdSeq: U32 @< Command Sequence
+            ref args: CmdArgBuffer @< Buffer containing arguments
+          )
+
+  @ Enum representing a command response
+  enum CmdResponse {
+    OK = 0 @< Command successfully executed
+    INVALID_OPCODE = 1 @< Invalid opcode dispatched
+    VALIDATION_ERROR = 2 @< Command failed validation
+    FORMAT_ERROR = 3 @< Command failed to deserialize
+    EXECUTION_ERROR = 4 @< Command had execution error
+    BUSY = 5 @< Component busy
+  }
+
+  @ Port for sending command responses
+  port CmdResponse(
+                    opCode: FwOpcodeType @< Command Op Code
+                    cmdSeq: U32 @< Command Sequence
+                    response: CmdResponse @< The command response argument
+                  )
+
+}
+```
+
+### `CmdArgBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdArgBuffer.cpp`
+
+
+```cpp
+#include <Fw/Cmd/CmdArgBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+CmdArgBuffer::CmdArgBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = this->setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+CmdArgBuffer::CmdArgBuffer() {}
+
+CmdArgBuffer::~CmdArgBuffer() {}
+
+CmdArgBuffer::CmdArgBuffer(const CmdArgBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = this->setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+CmdArgBuffer& CmdArgBuffer::operator=(const CmdArgBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = this->setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType CmdArgBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* CmdArgBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* CmdArgBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `CmdArgBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdArgBuffer.hpp`
+
+
+```cpp
+/*
+ *
+ *
+ *  Created on: March 1, 2014
+ *      Author: T. Canham
+ */
+
+/*
+ * Description:
+ * This object contains the CmdARgBuffer type, used for holding the serialized arguments of commands
+ */
+#ifndef FW_CMD_ARG_BUFFER_HPP
+#define FW_CMD_ARG_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class CmdArgBuffer final : public SerializeBufferBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_CMD_BUFF,                    //!< type id for CmdArgBuffer
+        SERIALIZED_SIZE = FW_CMD_ARG_BUFFER_MAX_SIZE + sizeof(I32)  //!< size when serialized. Buffer + size of buffer
+    };
+
+    CmdArgBuffer(const U8* args, FwSizeType size);       //!< buffer source constructor
+    CmdArgBuffer();                                      //!< default constructor
+    CmdArgBuffer(const CmdArgBuffer& other);             //!< other arg buffer constructor
+    virtual ~CmdArgBuffer();                             //!< destructor
+    CmdArgBuffer& operator=(const CmdArgBuffer& other);  //!< Equal operator
+
+    FwSizeType getBuffCapacity() const;  //!< return capacity of buffer (how much it can hold)
+    U8* getBuffAddr();                   //!< return address of buffer (non const version)
+    const U8* getBuffAddr() const;       //!< return address of buffer (const version)
+
+  private:
+    U8 m_bufferData[FW_CMD_ARG_BUFFER_MAX_SIZE];  //!< command argument buffer
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `CmdPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdPacket.cpp`
+
+
+```cpp
+/*
+ * CmdPacket.cpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/Cmd/CmdPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cstdio>
+
+namespace Fw {
+
+CmdPacket::CmdPacket() : m_opcode(0) {
+    this->m_type = ComPacketType::FW_PACKET_COMMAND;
+}
+
+CmdPacket::~CmdPacket() {}
+
+// New serialization interface methods
+SerializeStatus CmdPacket::serializeTo(SerializeBufferBase& buffer) const {
+    // Shouldn't be called, no use case for serializing CmdPackets in FSW (currently)
+    FW_ASSERT(0);
+    return FW_SERIALIZE_OK;  // for compiler
+}
+
+SerializeStatus CmdPacket::deserializeFrom(SerializeBufferBase& buffer) {
+    SerializeStatus stat = ComPacket::deserializeBase(buffer);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // double check packet type
+    if (this->m_type != ComPacketType::FW_PACKET_COMMAND) {
+        return FW_DESERIALIZE_TYPE_MISMATCH;
+    }
+
+    stat = buffer.deserializeTo(this->m_opcode);
+    if (stat != FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // if non-empty, copy data
+    if (buffer.getBuffLeft()) {
+        // copy the serialized arguments to the buffer
+        stat = buffer.copyRaw(this->m_argBuffer, buffer.getBuffLeft());
+    }
+
+    return stat;
+}
+
+FwOpcodeType CmdPacket::getOpCode() const {
+    return this->m_opcode;
+}
+
+CmdArgBuffer& CmdPacket::getArgBuffer() {
+    return this->m_argBuffer;
+}
+
+} /* namespace Fw */
+```
+
+### `CmdPacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdPacket.hpp`
+
+
+```cpp
+/*
+ * CmdPacket.hpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#ifndef CMDPACKET_HPP_
+#define CMDPACKET_HPP_
+
+#include <Fw/Cmd/CmdArgBuffer.hpp>
+#include <Fw/Com/ComPacket.hpp>
+
+namespace Fw {
+
+class CmdPacket : public ComPacket {
+  public:
+    CmdPacket();
+    virtual ~CmdPacket();
+
+    // New serialization interface methods
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const;
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer);
+
+    FwOpcodeType getOpCode() const;
+    CmdArgBuffer& getArgBuffer();
+
+  protected:
+    FwOpcodeType m_opcode;
+    CmdArgBuffer m_argBuffer;
+};
+
+} /* namespace Fw */
+
+#endif /* CMDPACKET_HPP_ */
+```
+
+### `CmdString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Cmd/CmdString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   CmdString.hpp
+// @author F Prime
+// @brief  A string sized for a command argument
+// ======================================================================
+
+#ifndef FW_CMD_STRING_HPP
+#define FW_CMD_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class CmdStringArg final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_CMD_STR,
+        STRING_SIZE = FW_CMD_STRING_MAX_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE),
+    };
+
+    CmdStringArg() : StringBase() { *this = ""; }
+
+    CmdStringArg(const CmdStringArg& src) : StringBase() { *this = src; }
+
+    CmdStringArg(const StringBase& src) : StringBase() { *this = src; }
+
+    explicit CmdStringArg(const char* src) : StringBase() { *this = src; }
+
+    ~CmdStringArg() {}
+
+    CmdStringArg& operator=(const CmdStringArg& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    CmdStringArg& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    CmdStringArg& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```

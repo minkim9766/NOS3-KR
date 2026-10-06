@@ -3,28 +3,49 @@
 
 **경로:** `fsw/build/exe/cpu1/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cf/index
 data/index
-file--.cdskeyfile
-file--.reservedkeyfile
-file--.resetkeyfile
-file--core-cpu1
-file--log.txt
-file--sa_save_file.bin
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/`](cf/index) — 폴더
-- [`fsw/build/exe/cpu1/data/`](data/index) — 폴더
-- [`fsw/build/exe/cpu1/.cdskeyfile`](file--.cdskeyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/.reservedkeyfile`](file--.reservedkeyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/.resetkeyfile`](file--.resetkeyfile) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/core-cpu1`](file--core-cpu1) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/log.txt`](file--log.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/sa_save_file.bin`](file--sa_save_file.bin) — 빌드 산출물 (경로만)
+### `.cdskeyfile`
+
+**경로:** `fsw/build/exe/cpu1/.cdskeyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `.reservedkeyfile`
+
+**경로:** `fsw/build/exe/cpu1/.reservedkeyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `.resetkeyfile`
+
+**경로:** `fsw/build/exe/cpu1/.resetkeyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `core-cpu1`
+
+**경로:** `fsw/build/exe/cpu1/core-cpu1`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `log.txt`
+
+**경로:** `fsw/build/exe/cpu1/log.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sa_save_file.bin`
+
+**경로:** `fsw/build/exe/cpu1/sa_save_file.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

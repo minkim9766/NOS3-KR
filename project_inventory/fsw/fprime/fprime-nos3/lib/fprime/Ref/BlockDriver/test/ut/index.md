@@ -3,18 +3,234 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BlockDriverTester.cpp`
 
-file--BlockDriverTester.cpp
-file--BlockDriverTester.hpp
-file--BlockDriverTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BlockDriverTester.cpp
+// \author root
+// \brief  cpp file for BlockDriver component test harness implementation class
+// ======================================================================
+
+#include "BlockDriverTester.hpp"
+
+namespace Ref {
+
+  // ----------------------------------------------------------------------
+  // Construction and destruction
+  // ----------------------------------------------------------------------
+
+  BlockDriverTester ::
+    BlockDriverTester() :
+      BlockDriverGTestBase("BlockDriverTester", BlockDriverTester::MAX_HISTORY_SIZE),
+      component("BlockDriver")
+  {
+    this->initComponents();
+    this->connectPorts();
+  }
+
+  BlockDriverTester ::
+    ~BlockDriverTester()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Tests
+  // ----------------------------------------------------------------------
+
+  void BlockDriverTester ::
+    testDataLoopBack()
+  {
+    const U8 data[] = {1, 2, 3, 4, 5, 6, 7};
+    Drv::DataBuffer dataBuffer(data, 7);
+
+    this->clearHistory();
+
+    // input data
+    this->invoke_to_BufferIn(0, dataBuffer);
+
+    this->component.doDispatch();
+
+    // verify data output
+    ASSERT_from_BufferOut_SIZE(1);
+    ASSERT_from_BufferOut(0, dataBuffer);
+  }
+
+  void BlockDriverTester ::
+    testPing()
+  {
+    const U32 key = 42;
+
+    this->clearHistory();
+
+    // call Ping port with the key
+    this->invoke_to_PingIn(0, key);
+
+    this->component.doDispatch();
+
+    // verify Ping output
+    ASSERT_from_PingOut_SIZE(1);
+    ASSERT_from_PingOut(0, key);
+  }
+
+  void BlockDriverTester ::
+    testCycleIncrement()
+  {
+    this->clearHistory();
+
+    // call ISR
+    this->invoke_to_Sched(0,0);
+    this->component.doDispatch();
+
+    // there shall be one report with 0 cycle
+    ASSERT_TLM_SIZE(1);
+    ASSERT_TLM_BD_Cycles_SIZE(1);
+    ASSERT_TLM_BD_Cycles(0, 0);
+
+    // call ISR once again
+    this->invoke_to_Sched(0,0);
+    this->component.doDispatch();
+
+    // there shall be one more report with 1 cycle
+    ASSERT_TLM_SIZE(2);
+    ASSERT_TLM_BD_Cycles_SIZE(2);
+    ASSERT_TLM_BD_Cycles(1, 1);
+  }
+
+}
 ```
 
-## 항목
+### `BlockDriverTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTester.cpp`](file--BlockDriverTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTester.hpp`](file--BlockDriverTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTestMain.cpp`](file--BlockDriverTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BlockDriverTester.hpp
+// \author root
+// \brief  hpp file for BlockDriver component test harness implementation class
+// ======================================================================
+
+#ifndef Ref_BlockDriverTester_HPP
+#define Ref_BlockDriverTester_HPP
+
+#include "Ref/BlockDriver/BlockDriverGTestBase.hpp"
+#include "Ref/BlockDriver/BlockDriver.hpp"
+
+namespace Ref {
+
+  class BlockDriverTester final :
+    public BlockDriverGTestBase
+  {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Constants
+      // ----------------------------------------------------------------------
+
+      // Maximum size of histories storing events, telemetry, and port outputs
+      static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+      // Instance ID supplied to the component instance under test
+      static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+      // Queue depth supplied to the component instance under test
+      static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct object BlockDriverTester
+      BlockDriverTester();
+
+      //! Destroy object BlockDriverTester
+      ~BlockDriverTester();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Tests
+      // ----------------------------------------------------------------------
+
+      //! Test data loop back port
+      void testDataLoopBack();
+
+      //! Test Ping port
+      void testPing();
+
+      //! Test ISR cycle increment
+      void testCycleIncrement();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Helper functions
+      // ----------------------------------------------------------------------
+
+      //! Connect ports
+      void connectPorts();
+
+      //! Initialize components
+      void initComponents();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Member variables
+      // ----------------------------------------------------------------------
+
+      //! The component under test
+      BlockDriver component;
+
+  };
+
+}
+
+#endif
+```
+
+### `BlockDriverTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/ut/BlockDriverTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BlockDriverTestMain.cpp
+// \author root
+// \brief  cpp file for BlockDriver component test main function
+// ======================================================================
+
+#include "BlockDriverTester.hpp"
+
+TEST(Nominal, testDataLoopBack) {
+  Ref::BlockDriverTester tester;
+  tester.testDataLoopBack();
+}
+
+TEST(Nominal, testPing) {
+  Ref::BlockDriverTester tester;
+  tester.testPing();
+}
+
+TEST(Nominal, testCycleIncrement) {
+  Ref::BlockDriverTester tester;
+  tester.testCycleIncrement();
+}
+
+int main(int argc, char** argv) {
+  ::testing::InitGoogleTest(&argc, argv);
+  return RUN_ALL_TESTS();
+}
+```

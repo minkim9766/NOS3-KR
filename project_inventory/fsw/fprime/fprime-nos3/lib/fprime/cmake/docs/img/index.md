@@ -3,24 +3,40 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMake - Architecture.png`
 
-file--CMake%20-%20Architecture.png
-file--CMake%20File%20Organization.png
-file--CMake%20Lists%20Hierarchy.png
-file--CMake%20Ops%20-%20Old%20Style.png
-file--CMake%20Ops%20-%20Recommended.png
-file--CMake%20Ops%20-%20Traditional.png
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake - Architecture.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake - Architecture.png`](file--CMake%20-%20Architecture.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake File Organization.png`](file--CMake%20File%20Organization.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Lists Hierarchy.png`](file--CMake%20Lists%20Hierarchy.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Old Style.png`](file--CMake%20Ops%20-%20Old%20Style.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Recommended.png`](file--CMake%20Ops%20-%20Recommended.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Traditional.png`](file--CMake%20Ops%20-%20Traditional.png) — 바이너리 (경로만)
+### `CMake File Organization.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake File Organization.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CMake Lists Hierarchy.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Lists Hierarchy.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CMake Ops - Old Style.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Old Style.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CMake Ops - Recommended.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Recommended.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CMake Ops - Traditional.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/docs/img/CMake Ops - Traditional.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

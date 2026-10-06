@@ -3,16 +3,366 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bucket-list.component.html`
 
-file--bucket-list.component.html
-file--bucket-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/bucket-list.component.html`
+
+
+```html
+<app-storage-page>
+  <app-storage-toolbar label="Storage">
+    @if (mayManageBuckets()) {
+      <ya-page-button (clicked)="createBucket()" icon="add_box">Create bucket</ya-page-button>
+    }
+    @if (mayManageBuckets()) {
+      <ya-page-button
+        (clicked)="deleteSelectedBuckets()"
+        [disabled]="!selection.hasValue()"
+        icon="delete">
+        Delete
+      </ya-page-button>
+    }
+  </app-storage-toolbar>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter
+        [formControl]="filterControl"
+        placeholder="Filter buckets"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+    </ya-filter-bar>
+
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="ya-data-table expand"
+      matSort
+      matSortActive="name"
+      matSortDirection="asc"
+      matSortDisableClear>
+      <ng-container cdkColumnDef="select">
+        <th
+          mat-header-cell
+          *cdkHeaderCellDef
+          class="checkbox"
+          (click)="cb.toggle(); $event.stopPropagation()">
+          <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+        </th>
+        <td
+          mat-cell
+          *cdkCellDef="let item"
+          class="checkbox"
+          (click)="cb.toggle(); $event.stopPropagation()">
+          <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" [item]="item" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Bucket</th>
+        <td mat-cell *matCellDef="let bucket">
+          <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+            shopping_basket
+          </mat-icon>
+          <a [routerLink]="[bucket.name]" (click)="$event.stopPropagation()">{{ bucket.name }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="created">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Created</th>
+        <td mat-cell *matCellDef="let bucket">{{ bucket.created | datetime | nvl: "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="size">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Used</th>
+        <td mat-cell *matCellDef="let bucket" style="text-align: right">
+          {{ bucket.size | formatBytes | nvl: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="avail">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">
+          Available
+        </th>
+        <td mat-cell *matCellDef="let bucket" style="text-align: right">
+          {{ zeroOrMore(bucket.maxSize - bucket.size) | formatBytes | nvl: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="capacity">
+        <th mat-header-cell *matHeaderCellDef>Capacity</th>
+        <td mat-cell *matCellDef="let bucket">
+          <ya-progress [value]="bucket.size" [total]="bucket.maxSize" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="numObjects">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">Objects</th>
+        <td mat-cell *matCellDef="let bucket" style="text-align: right">
+          {{ bucket.numObjects | number | nvl: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="availObjects">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header style="text-align: right">
+          Avail. objects
+        </th>
+        <td mat-cell *matCellDef="let bucket" style="text-align: right">
+          {{ zeroOrMore(bucket.maxObjects - bucket.numObjects) | number | nvl: "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="pctObjects">
+        <th mat-header-cell *matHeaderCellDef>%objects</th>
+        <td mat-cell *matCellDef="let bucket">
+          <ya-progress [value]="bucket.numObjects" [total]="bucket.maxObjects" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef>Location</th>
+        <td mat-cell *matCellDef="let bucket">
+          {{ bucket.location.description }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row">
+          @if (mayManageBuckets()) {
+            <ya-more>
+              <button mat-menu-item (click)="deleteBucket(row)">Delete bucket</button>
+            </ya-more>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns()"
+        [class.selected]="selection.isSelected(row)"
+        (click)="toggleOne(row)"></tr>
+    </table>
+  </ya-panel>
+</app-storage-page>
 ```
 
-## 항목
+### `bucket-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/bucket-list.component.html`](file--bucket-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/bucket-list.component.ts`](file--bucket-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-list/bucket-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  Bucket,
+  MessageService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { StoragePageTemplateComponent } from '../../storage-page-template/storage-page-template.component';
+import { AppStorageToolbar } from '../../storage-toolbar/storage-toolbar.component';
+import { CreateBucketDialogComponent } from '../create-bucket-dialog/create-bucket-dialog.component';
+
+@Component({
+  templateUrl: './bucket-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppStorageToolbar, StoragePageTemplateComponent, WebappSdkModule],
+})
+export class BucketListComponent implements AfterViewInit {
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = signal<string[]>([
+    'name',
+    'created',
+    'size',
+    'avail',
+    'capacity',
+    'numObjects',
+    'availObjects',
+    'pctObjects',
+    'location',
+    'actions',
+  ]);
+
+  dataSource = new MatTableDataSource<Bucket>();
+  selection = new SelectionModel<Bucket>(true, []);
+
+  private storageClient: StorageClient;
+
+  constructor(
+    private yamcs: YamcsService,
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
+    private messageService: MessageService,
+    private authService: AuthService,
+    title: Title,
+  ) {
+    title.setTitle('Buckets');
+    this.storageClient = this.yamcs.createStorageClient();
+
+    this.initializeOptions();
+    this.refreshView();
+
+    if (this.mayManageBuckets()) {
+      this.displayedColumns.set(['select', ...this.displayedColumns()]);
+    }
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+
+      for (const item of this.selection.selected) {
+        if (this.dataSource.filteredData.indexOf(item) === -1) {
+          this.selection.deselect(item);
+        }
+      }
+    });
+  }
+
+  toggleOne(row: Bucket) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  createBucket() {
+    const dialogRef = this.dialog.open(CreateBucketDialogComponent, {
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.refreshView();
+      }
+    });
+  }
+
+  zeroOrMore(value: number) {
+    return Math.max(0, value);
+  }
+
+  mayManageBuckets() {
+    return this.authService.getUser()!.hasSystemPrivilege('ManageAnyBucket');
+  }
+
+  deleteSelectedBuckets() {
+    if (confirm('Are you sure you want to delete the selected buckets?')) {
+      const deletePromises = [];
+      for (const bucket of this.selection.selected) {
+        const promise = this.storageClient.deleteBucket(bucket.name);
+        deletePromises.push(promise);
+      }
+
+      Promise.all(deletePromises).then(() => {
+        this.selection.clear();
+        this.refreshView();
+      });
+    }
+  }
+
+  deleteBucket(bucket: Bucket) {
+    if (confirm(`Are you sure you want to delete the bucket ${bucket.name}?`)) {
+      this.storageClient
+        .deleteBucket(bucket.name)
+        .then(() => {
+          this.selection.clear();
+          this.refreshView();
+        })
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+
+  selectNext() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem =
+        this.selection.selected[this.selection.selected.length - 1];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue() && this.selection.selected.length === 1) {
+      const item = this.selection.selected[0];
+      this.router.navigate(['/buckets', item.name]);
+    }
+  }
+
+  private refreshView() {
+    this.updateURL();
+    this.storageClient
+      .getBuckets()
+      .then((buckets) => {
+        this.dataSource.data = buckets;
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+}
+```

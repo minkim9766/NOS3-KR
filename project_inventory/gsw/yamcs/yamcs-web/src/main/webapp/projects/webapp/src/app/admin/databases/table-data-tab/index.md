@@ -3,18 +3,136 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table-data-tab.component.css`
 
-file--table-data-tab.component.css
-file--table-data-tab.component.html
-file--table-data-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.css`
+
+
+```css
+.data-table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.data-table-wrapper th,
+.data-table-wrapper td {
+  white-space: nowrap;
+}
+
+.data-table-wrapper td {
+  cursor: pointer;
+}
+
+.data-table-wrapper tr:hover td {
+  background: #fafafa;
+}
 ```
 
-## 항목
+### `table-data-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.css`](file--table-data-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.html`](file--table-data-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.ts`](file--table-data-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.html`
+
+
+```html
+@if (table$ | async; as table) {
+  <ya-detail-pane>
+    @if (selectedRecord$ | async; as selectedRecord) {
+      <ya-detail-toolbar>Record</ya-detail-toolbar>
+      <div style="padding: 0 16px 16px 16px">
+        <app-record [table]="table" [record]="selectedRecord" />
+      </div>
+    } @else {
+      <ya-detail-toolbar>Select a record</ya-detail-toolbar>
+    }
+  </ya-detail-pane>
+
+  <div class="data-table-wrapper">
+    <ya-panel>
+      @if (records$ | async; as records) {
+        @if (records.length) {
+          <table yaDataTable>
+            <tr>
+              @for (column of table.keyColumn; track column) {
+                <th>{{ column.name }}</th>
+              }
+              @for (column of table.valueColumn; track column) {
+                <th>{{ column.name }}</th>
+              }
+            </tr>
+            @for (record of records; track record) {
+              <tr
+                [ngClass]="{ selected: record === (selectedRecord$ | async) }"
+                (click)="selectRecord(record)">
+                @for (column of table.keyColumn; track column) {
+                  <td>
+                    {{ (record.column | columnValue: column.name | value) || "-" }}
+                  </td>
+                }
+                @for (column of table.valueColumn; track column) {
+                  <td [class.mono]="column.type === 'BINARY'">
+                    {{ (record.column | columnValue: column.name | value) || "-" }}
+                  </td>
+                }
+              </tr>
+            }
+          </table>
+        } @else {
+          <ya-empty-message>Empty table.</ya-empty-message>
+        }
+      } @else {
+        <ya-empty-message>Empty table.</ya-empty-message>
+      }
+    </ya-panel>
+  </div>
+}
+```
+
+### `table-data-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table-data-tab/table-data-tab.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import {
+  BaseComponent,
+  Record,
+  Table,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { RecordComponent } from '../record/record.component';
+import { ColumnValuePipe } from '../shared/column-value.pipe';
+
+@Component({
+  templateUrl: './table-data-tab.component.html',
+  styleUrl: './table-data-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ColumnValuePipe, RecordComponent, WebappSdkModule],
+})
+export class TableDataTabComponent extends BaseComponent {
+  table$: Promise<Table>;
+  records$: Promise<Record[]>;
+
+  selectedRecord$ = new BehaviorSubject<Record | null>(null);
+
+  constructor(route: ActivatedRoute, yamcs: YamcsService) {
+    super();
+    const parent = route.snapshot.parent!;
+    const database = parent.parent!.paramMap.get('database')!;
+    const name = parent.paramMap.get('table')!;
+    this.table$ = yamcs.yamcsClient.getTable(database, name);
+    this.records$ = yamcs.yamcsClient.getTableData(database, name);
+  }
+
+  selectRecord(record: Record) {
+    this.selectedRecord$.next(record);
+    this.openDetailPane();
+  }
+}
+```

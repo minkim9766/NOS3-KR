@@ -3,16 +3,108 @@
 
 **경로:** `fsw/osal/src/os/nos/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `NOS-time.h`
 
-file--NOS-time.h
-file--os-impl-tasks.h
+**경로:** `fsw/osal/src/os/nos/inc/NOS-time.h`
+
+
+```c
+/* Copyright (C) 2022 - 2022 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+
+/* NOS stub replacement for time.h */
+#ifndef _NOS_STUB_TIME_H_
+#define _NOS_STUB_TIME_H_
+
+#include <time.h>
+
+#define NOS_NANO 1000000000
+
+/* ----------------------------------------- */
+/* prototypes normally declared in time.h */
+/* ----------------------------------------- */
+
+int NOS_clock_getres (clockid_t clock_id, struct timespec * res);
+int NOS_clock_gettime (clockid_t clock_id, struct timespec * tp);
+int NOS_clock_nanosleep (clockid_t clock_id, int flags, const struct timespec * req, struct timespec * rem);
+int NOS_clock_settime (clockid_t clock_id, const struct timespec * tp);
+int NOS_timer_create (clockid_t clock_id, const struct sigevent * evp, timer_t * timerid);
+int NOS_timer_delete (timer_t timerid) ;
+// int NOS_timer_gettime (timer_t timerid, struct itimerspec * value); // unused
+int NOS_timer_settime (timer_t timerid, int flags, const struct itimerspec * value, struct itimerspec * ovalue);
+void NOS_to_real_timespec(const struct timespec *nos, struct timespec *real);
+
+#endif /* _NOS_STUB_TIME_H_ */
+
 ```
 
-## 항목
+### `os-impl-tasks.h`
 
-- [`fsw/osal/src/os/nos/inc/NOS-time.h`](file--NOS-time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/inc/os-impl-tasks.h`](file--os-impl-tasks.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/nos/inc/os-impl-tasks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_TASKS_H
+#define OS_IMPL_TASKS_H
+
+#include "os-shared-task.h"
+
+#include "osconfig.h"
+#include <pthread.h>
+
+/*tasks */
+typedef struct
+{
+    pthread_t id;
+} OS_impl_task_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+int32 OS_Posix_InternalTaskCreate_Impl(pthread_t *pthr, const char *taskname, osal_priority_t priority, size_t stacksz,
+                                       PthreadFuncPtr_t entry, void *entry_arg);
+
+#endif /* OS_IMPL_TASKS_H */
+```

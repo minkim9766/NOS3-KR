@@ -3,26 +3,387 @@
 
 **경로:** `components/onair/fsw/onair/src/util/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
-file--cleanup.py
-file--data_conversion.py
-file--file_io.py
-file--plugin_import.py
-file--print_io.py
-file--sim_io.py
+**경로:** `components/onair/fsw/onair/src/util/__init__.py`
+
+
+```python
 ```
 
-## 항목
+### `cleanup.py`
 
-- [`components/onair/fsw/onair/src/util/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/cleanup.py`](file--cleanup.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/data_conversion.py`](file--data_conversion.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/file_io.py`](file--file_io.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/plugin_import.py`](file--plugin_import.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/print_io.py`](file--print_io.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/onair/src/util/sim_io.py`](file--sim_io.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/onair/src/util/cleanup.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+cleanup.py
+Utility file to clean and remove unwanted files post-run, or setup folders pre-run
+"""
+
+import os
+
+def setup_folders(results_path):
+    if not os.path.isdir(results_path):
+        os.mkdir(results_path)
+```
+
+### `data_conversion.py`
+
+**경로:** `components/onair/fsw/onair/src/util/data_conversion.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+data_conversion.py
+Utility file to perform conversions for supervised learning, and beyond
+"""
+import numpy as np 
+
+classes = {'RED' : 0,
+        'YELLOW' : 1,
+         'GREEN' : 2,
+           '---' : 3}
+
+def status_to_oneHot(status):
+    if isinstance(status, np.ndarray):
+        return status
+    one_hot = [0.0, 0.0, 0.0, 0.0]
+    one_hot[classes[status]] = 1.0
+    return list(one_hot)
+```
+
+### `file_io.py`
+
+**경로:** `components/onair/fsw/onair/src/util/file_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+file_io.py
+Utility file for parsing file data
+"""
+
+import json
+
+def parse_associations_from_json(filepath):
+    with open(filepath) as f:
+      data = json.load(f)
+
+    associations_list = []
+    raw_associations = data['children']
+    for association in raw_associations:
+        antecedant = association['name']
+        for connection in association['connections']:
+            consequent = connection['target']
+            weight = connection['weight']
+            relationship = (antecedant, consequent)
+            weighted_relationship = (relationship, weight)
+            associations_list.append(weighted_relationship)
+    
+    associations_list.sort(key = lambda x: x[1], reverse=True)
+    
+    for elem in associations_list:
+        ant = elem[0][0]
+        cons = elem[0][1]
+        wei = elem[1]
+        print(str(ant) + ' --> ' + str(cons) + ', ' + str(wei))
+
+def aggregate_results():
+    return
+```
+
+### `plugin_import.py`
+
+**경로:** `components/onair/fsw/onair/src/util/plugin_import.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+plugin_import.py
+Function to import user-specified plugins (from config files) into interfaces
+"""
+
+import importlib.util
+import sys
+import os
+
+def import_plugins(headers, module_dict):
+    plugin_list = []
+    init_filename = "__init__.py"
+    for construct_name, module_path in module_dict.items():
+        true_path = module_path
+        # Compatibility for plugin paths that already include __init__.py
+        if module_path.endswith(init_filename):
+            true_path = module_path[:-len(init_filename) - 1]
+        # Last directory name is the module name
+        mod_name = os.path.basename(true_path)
+        # import module if not already available
+        if mod_name not in sys.modules:
+            # add init file to get proper path for spec
+            full_path = os.path.join(true_path, init_filename)
+            # define spec for module loading
+            spec = importlib.util.spec_from_file_location(mod_name, full_path)
+            # create uninitialize module from spec
+            module = importlib.util.module_from_spec(spec)
+            # initialize the created module
+            spec.loader.exec_module(module)
+            # add plugin module to system for importation
+            sys.modules[mod_name] = module
+        # import the created module's plugin file for use
+        plugin_name = f'{mod_name}_plugin'
+        plugin = __import__(f'{mod_name}.{plugin_name}',
+                            fromlist=[plugin_name])
+        # add an instance of the module's was an OnAIR plugin
+        plugin_list.append(plugin.Plugin(construct_name, headers))
+    return(plugin_list)
+```
+
+### `print_io.py`
+
+**경로:** `components/onair/fsw/onair/src/util/print_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+print_io.py
+Helper script used by sim.py to print out simulation data with pretty colors
+"""
+
+#############################     COLORS    #############################
+# Static class to hold color constants
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+# Global colors dictionary
+scolors = {'HEADER' : bcolors.HEADER,
+           'OKBLUE' : bcolors.OKBLUE,
+           'OKGREEN' : bcolors.OKGREEN,
+           'WARNING' : bcolors.WARNING,
+           'FAIL' : bcolors.FAIL,
+           'ENDC' : bcolors.ENDC,
+           'BOLD' : bcolors.BOLD,
+           'UNDERLINE' : bcolors.UNDERLINE}
+
+# Global dictionary for STATUS -> COLOR
+status_colors = {'GREEN' : bcolors.OKGREEN,
+                 'YELLOW' : bcolors.WARNING,
+                 'RED' : bcolors.FAIL,
+                 '---' : bcolors.OKBLUE}
+
+#############################      I/O     #############################
+# Print that the simulation started
+def print_sim_header():
+    print(bcolors.HEADER + bcolors.BOLD+ "\n***************************************************")
+    print("************    SIMULATION STARTED     ************")
+    print("***************************************************" + bcolors.ENDC)
+
+# Print when a new step is starting
+def print_sim_step(step_num):
+    print(bcolors.HEADER + bcolors.BOLD + "\n--------------------- STEP " + str(step_num) + " ---------------------\n" + bcolors.ENDC)
+
+# Print a line to separate things
+def print_separator(color=bcolors.HEADER):
+    print(color + bcolors.BOLD + "\n------------------------------------------------\n" + bcolors.ENDC)
+
+# Print header update
+def update_header(msg, clr=bcolors.BOLD):
+    print(clr + "--------- " + msg + ' update' + bcolors.ENDC)
+
+# Print header update
+def print_msg(msg, clrs=['HEADER']):
+    for clr in clrs:
+        print(scolors[clr])
+    print("---- " + msg + bcolors.ENDC)
+
+# Print interpreted system status
+def print_system_status(agent, data = None):
+    # print_separator(bcolors.OKBLUE)
+    if data != None:
+        print("CURRENT DATA: " + str(data)) 
+    print("INTERPRETED SYSTEM STATUS: " + str(format_status(agent.mission_status)))
+    # print_separator(bcolors.OKBLUE)
+
+# Print diagnosis info
+def print_diagnosis(diagnosis):
+    status_list = diagnosis.get_status_list()
+    tree_traversal = diagnosis.fault_tree
+    activations = diagnosis.current_activations
+    print_separator()
+    print(bcolors.HEADER + bcolors.BOLD + "DIAGNOSIS INFO: \n" + bcolors.ENDC)
+    for status in status_list:
+        stat = status[1]
+        print(status[0] + ': ' + format_status(stat))
+
+    print(bcolors.HEADER + bcolors.BOLD + "\nCURRENT ACTIVATIONS: \n" + bcolors.ENDC)
+    if len(activations) > 0:
+        for activation in activations:
+            print('---' + str(activation))
+    print_separator()
+
+# Print subsystem status
+def subsystem_status_str(ss):
+    s = bcolors.BOLD + '[' + str(ss.type)+ '] : ' + bcolors.ENDC
+    stat = ss.get_status()
+    s = s + '\n' + status_colors[stat] + ' ---- ' + str(stat) + bcolors.ENDC + ' (' + str(ss.uncertainty) + ')'
+    return s + '\n'
+
+# Print out subsystem information
+def subsystem_str(ss):
+    s = bcolors.BOLD + ss.type + '\n' + bcolors.ENDC
+    s = s + '--[headers] '
+    for h in ss.headers:
+        s = s + '\n---' + str(h)
+    s = s + '\n--[tests] '
+    for t in ss.tests:
+        s = s + '\n---' + str(t)
+    s = s + '\n--[test data] '
+    for d in ss.test_data:
+        s = s + '\n---' + str(d)
+    return s
+
+# Print out headers
+def headers_string(headers):
+    s = ''
+    for hdr in headers:
+        s = s + '\n  -- ' + hdr
+    return s
+
+# Print out status
+def format_status(stat):
+    if type(stat) == str:
+        return status_colors[stat] + stat + scolors['ENDC']
+    else: 
+        s = '('
+        for status in stat:
+            s = s + format_status(status) + ', '
+        s = s[:-2] + ')'
+        return s    
+
+```
+
+### `sim_io.py`
+
+**경로:** `components/onair/fsw/onair/src/util/sim_io.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+sim_io.py
+Utility file for sim io
+"""
+
+import os
+import json 
+
+def render_reasoning(diagnosis_list):
+    with open(os.path.join(os.environ.get('ONAIR_DIAGNOSIS_SAVE_PATH'), 'diagnosis.txt'), mode='a') as out:
+        out.write('==========================================================\n')
+        out.write('                        DIAGNOSIS                         \n')
+        out.write('==========================================================\n')
+        for diagnosis in diagnosis_list:
+            out.write('\n----------------------------------------------------------\n')
+            out.write('***                DIAGNOSIS AT FRAME {}               ***\n'.format(diagnosis.get_time_step()))
+            out.write(diagnosis.__str__())
+            out.write('----------------------------------------------------------\n')
+    with open(os.path.join(os.environ.get('ONAIR_DIAGNOSIS_SAVE_PATH'), 'diagnosis.csv'), mode='a') as out:
+        out.write('time_step, cohens_kappa, faults, subgraph\n')
+        for diagnosis in diagnosis_list:
+            out.write(diagnosis.results_csv())
+
+def render_viz(status_data, sensor_data, sim_name, diagnosis=None):
+    # Status Staburst
+    status_report = {} 
+    status_report['filename'] = sim_name
+    status_report['data'] = status_data
+    with open(os.path.join(os.environ.get('ONAIR_VIZ_SAVE_PATH'), 'system.json'), 'w') as outfile:
+        json.dump(status_report, outfile)
+
+    # Associativity
+    sensor_status_report = {}
+    sensor_status_report['name'] = 'MISSION'
+    sensor_status_report['children'] = sensor_data
+
+    with open(os.path.join(os.environ.get('ONAIR_VIZ_SAVE_PATH'), 'faults.json'), 'w') as outfile:
+        json.dump(sensor_status_report, outfile)
+
+    # Diagnosis info
+    if diagnosis is not None:
+        results = diagnosis.get_diagnosis_viz_json()
+        with open(os.path.join(os.environ.get('ONAIR_VIZ_SAVE_PATH'), 'results.json'), 'w') as outfile:
+            json.dump(results, outfile)
+
+def print_dots(ts):
+    incrFlag = ts % 20
+    if incrFlag < 10:
+        dots = ts % 10
+    else:
+        dots = 10 - (ts % 10)
+    print('\033[95m' + (dots+1)*'.' + '\033[0m')
+
+
+```

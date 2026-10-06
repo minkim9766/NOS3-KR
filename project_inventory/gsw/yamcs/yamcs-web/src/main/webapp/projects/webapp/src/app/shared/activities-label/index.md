@@ -3,18 +3,122 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activities-label.component.css`
 
-file--activities-label.component.css
-file--activities-label.component.html
-file--activities-label.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.css`
+
+
+```css
+.count {
+  display: block-inline;
+  border-radius: 2px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #000;
+  margin-left: 1em;
+  padding: 0 5px;
+}
+
+.count.ongoing {
+  background-color: #fff;
+  color: #000;
+}
 ```
 
-## 항목
+### `activities-label.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.css`](file--activities-label.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.html`](file--activities-label.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.ts`](file--activities-label.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.html`
+
+
+```html
+@if (context$ | async; as context) {
+  <ya-sidebar-nav-item
+    activeWhen="/activities"
+    routerLink="/activities"
+    [queryParams]="{ c: yamcs.context }">
+    <mat-icon class="item-icon">pending_actions</mat-icon>
+    Activities
+    @if (status$ | async; as status) {
+      @if (status.ongoingCount) {
+        <div class="count ongoing">{{ status.ongoingCount }} ongoing</div>
+      }
+    }
+  </ya-sidebar-nav-item>
+}
+```
+
+### `activities-label.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/activities-label/activities-label.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  AuthService,
+  GlobalActivityStatus,
+  GlobalActivityStatusSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-activities-label',
+  templateUrl: './activities-label.component.html',
+  styleUrl: './activities-label.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivitiesLabelComponent implements OnDestroy {
+  private connectionInfoSubscription: Subscription;
+
+  context$ = new BehaviorSubject<string | null>(null);
+  status$ = new BehaviorSubject<GlobalActivityStatus | null>(null);
+
+  private statusSubscription: GlobalActivityStatusSubscription;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    authService: AuthService,
+  ) {
+    this.connectionInfoSubscription = yamcs.connectionInfo$.subscribe(
+      (connectionInfo) => {
+        if (connectionInfo && connectionInfo.instance) {
+          let context = connectionInfo.instance.name;
+          if (connectionInfo.processor) {
+            if (authService.getUser()!.hasSystemPrivilege('ReadActivities')) {
+              const options = {
+                instance: connectionInfo.instance.name,
+              };
+              this.statusSubscription =
+                yamcs.yamcsClient.createGlobalActivityStatusSubscription(
+                  options,
+                  (status) => {
+                    this.status$.next(status);
+                  },
+                );
+            }
+            context += ';' + connectionInfo.processor;
+          }
+          this.context$.next(context);
+        } else {
+          this.clearActivitySubscription();
+          this.context$.next(null);
+        }
+      },
+    );
+  }
+
+  private clearActivitySubscription() {
+    this.statusSubscription?.cancel();
+    this.status$.next(null);
+  }
+
+  ngOnDestroy() {
+    this.clearActivitySubscription();
+    this.connectionInfoSubscription?.unsubscribe();
+  }
+}
+```

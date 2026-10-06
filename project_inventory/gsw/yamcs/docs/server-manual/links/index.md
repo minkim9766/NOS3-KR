@@ -3,36 +3,1167 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/links/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ccsds-frame-processing.rst`
 
-file--ccsds-frame-processing.rst
-file--command-post-processor.rst
-file--file-polling-tm-data-link.rst
-file--index.rst
-file--packet-preprocessor.rst
-file--tcp-tc-data-link.rst
-file--tcp-tm-data-link.rst
-file--tse-data-link.rst
-file--udp-parameter-data-link.rst
-file--udp-tc-data-link.rst
-file--udp-tm-data-link.rst
-file--yamcs-cascading.rst
+**경로:** `gsw/yamcs/docs/server-manual/links/ccsds-frame-processing.rst`
+
+
+```rst
+CCSDS Frame Processing
+======================
+
+This section describes Yamcs support for parts of the following CCSDS specifications:
+
+* TM Space Data Link Protocol `CCSDS 132.0-B-3 <https://public.ccsds.org/Pubs/132x0b3.pdf>`_
+* AOS Space Data Link Protocol `CCSDS 732.0-B-4 <https://public.ccsds.org/Pubs/732x0b4.pdf>`_
+* TC Space Data Link Protocol `CCSDS 232.0-B-4 <https://public.ccsds.org/Pubs/232x0b4.pdf>`_
+* Unified Space Data Link Protocol `CCSDS 732.1-B-2  <https://public.ccsds.org/Pubs/732x1b2.pdf>`_
+* TC Synchronization and Channel Coding `CCSDS 231.0-B-4 <https://public.ccsds.org/Pubs/232x0b4e1c1.pdf>`_
+* TM Synchronization and Channel Coding `CCSDS 131.0-B-4 <https://public.ccsds.org/Pubs/131x0b4.pdf>`_
+* Communications Operation Procedure (COP-1) `CCSDS 232.1-B-2 <https://public.ccsds.org/Pubs/232x1b2e2c1.pdf>`_
+* Space Packet Protocol `CCSDS 133.0-B-2 <https://public.ccsds.org/Pubs/133x0b2e2.pdf>`_
+* Encapsulation Service `CCSDS 133.1-B-3 <https://public.ccsds.org/Pubs/133x1b3e1.pdf>`_
+
+These specifications are dealing with multiplexing and to a certain extent encoding data for transmission on a space link.
+
+The document `Space Data Link Protocols — Summary of Concept and Rationale <https://public.ccsds.org/Pubs/130x2g3.pdf>`_ provides a comprehensive summary of the different protocols and it is recommended to read it before attempting to configure Yamcs to use these protocols.
+
+
+Telemetry Frame Processing
+--------------------------
+
+The CCSDS specifies how to transport data into three types of frames:
+
+* AOS
+* TM
+* USLP
+
+Yamcs supports to a certain extent all three of them. The main support is around the "packet service" - that is describing how the telemetry packets are extracted from the frames. The implementation is however generic enough (hopefully) such that it is possible to add additional functionality for processing non-packet data (e.g. sending video to external application).
+
+The packets are inserted into frames which are sent as part of Virtual Channels (VC). The VCs can have different priority on-board, for example one VC can be used to transport low volume HK data, while another one to transport high volume science data.
+
+Note that The USLP and TC frames support a second level of multiplexing called Multiplexer Access Point (MAP) which allows multiplexing data inside a VC. The MAP service is only supported for TC, not for USLP.
+
+Currently the built-in way to receive frame data inside Yamcs is by using the UdpTmFrameLink data link. The yamcs-sle project provides an implementation of the Space Link Extension (SLE) which allows receiving frame data from SLE-enabled Ground Stations (such as those from NASA Deep Space Network or :abbr:`ESA (European Space Agency)` :abbr:`ESTRACK (European Space Tracking)`). The options described below are valid for both link types.
+
+An example of a UDP TM frame link specification is below:
+
+.. code-block:: yaml
+
+    - name: UDP_FRAME_IN
+      class: org.yamcs.tctm.ccsds.UdpTmFrameLink
+      args:
+        port: 10017
+        rawFrameDecoder:
+            codec: RS
+            interleavingDepth: 5
+            errorCorrectionCapability: 16
+            derandomize: false
+        frameType: "AOS"
+        spacecraftId: 0xAB
+        frameLength: 512
+        frameHeaderErrorControlPresent: true
+        insertZoneLength: 0
+        errorDetection: CRC16
+        clcwStream: clcw
+        goodFrameStream: good_frames
+        badFrameStream: bad_frames
+        virtualChannels:
+          - vcId: 0
+            ocfPresent: true
+            service: "PACKET"
+            maxPacketLength: 2048
+            packetPreprocessorClassName: org.yamcs.tctm.IssPacketPreprocessor
+            packetPreprocessorArgs:
+              [...]
+            stream: "tm_realtime"
+          - vcId: 1
+            ocfPresent: true
+            service: "PACKET"
+            maxPacketLength: 2048
+            stripEncapsulationHeader: true
+            packetPreprocessorClassName: org.yamcs.tctm.GenericPacketPreprocessor
+            packetPreprocessorArgs:
+              [...]
+            stream: "tm2_realtime"
+          - vcId: 2
+            ocfPresent: true
+            service: "PACKET" 
+            maxPacketLength: 2048
+            packetPreprocessorClassName: org.yamcs.tctm.IssPacketPreprocessor
+            stream: "tm_dump"
+
+The following general options are supported:
+
+
+rawFrameDecoder (map) supported since Yamcs 5.5.7
+   Decodes raw frame data using an error correction scheme and/or randomization. For the moment only the Reed-Solomon codec is supported. If this is not set, the frames are considered already decoded. See below for the options to the Reed-Solomon codec.
+
+frameType (string)
+    **Required.** One of ``AOS``, ``TM`` or ``USLP``. The first 2 bits for AOS/TM and 4 bits for USLP represent the version number and have to have the value 0, 1 or 12 respectively. If a frame is received that has a different version, it is discarded (with a warning log message). 
+
+derandomize (boolean)
+    If true, derandomize the frames with the derandomizer as per CCSDS 131.0-B-4. Default: false
+    
+spacecraftId (integer)
+    **Required.** The expected spacecraft identifier. The spacecraftId is encoded in the frame header. If a frame with a different identifier is received, it is discarded (with a warning log message).
+    
+frameLength (integer)
+    The expected frame length. This parameter is mandatory for AOS and TM frames and optional for USLP frames which can have variable length. If a frame is received that does not have this length, it is discarded (with a warning log message).
+    For USLP frames, if this parameter is specified, the following two are ignored; Yamcs will use maxFrameLength = minFrameLength = frameLength.
+
+maxFrameLength (integer)
+    Used for USLP with variable frame length to specify the maximum length of the frame. This parameter is ignored if the frameLength parameter is also specified.
+    
+minFrameLength (integer)
+    Used for USLP with variable frame length to specify the minimum length of the frame. This parameter is ignored if the frameLength parameter is also specified. 
+
+frameHeaderErrorControlPresent (boolean)
+    Used only for AOS frames to specify the presence/absence of the 2 bytes Frame Header Error Control. This can be used to detect and correct errors in parts of the AOS frame headers using a  Reed-Solomon (10,6) code.
+ 
+insertZoneLength (integer)
+    The AOS and USLP frames can optionally use an Insert Service to transfer fixed-length data synchronized with the release of the frames. The insert data follows immediately the frame primary header. If the Insert Service is used, this parameter specifies the length of the insert data. If not used, please set it to 0 (default). For TM frames this parameter is ignored.
+    Currently Yamcs ignores any data in the insert zone. 
+
+errorDetection (string)
+    One of ``NONE``, ``CRC16`` or ``CRC32``. Specifies the error detection scheme used. TM and AOS frames support either NONE or CRC16 while USLP supports NONE, CRC16 or CRC32. If present, the last 2 respectively 4 bytes of the frame will contain an error control field. If the CRC does not match the computation, the frame will be discarded (with a warning message).
+
+clcwStream (string)
+    Can be used to specify the name of the stream where the Command Link Control Words (CLCW) will be sent. The CLCW is the mechanism used by COP-1 to acknowledge uplinked frames. For TM and USLP frames, there is an OCF flag part of the frame header indicating the presence or not of the CLCW. For AOS frames it has to be configured with the ``ocfPresent`` flag below.
+    If present, the CLCW is also extracted from idle frames (i.e. frames that are inserted when no data needs to be transmitted in order to keep the constant bitrate required for downlink).
+    
+goodFrameStream (string)
+    If specified, the good frames will be sent on a stream with that name. The stream will be created if it does not exist.
+    
+badFrameStream (string)
+    If specified, the bad frames will be sent on a stream with that name. Bad frames are considered as those that fail decoding for various reasons: length in the header does not match the size of the data received, frame version does not match, bad CRC, bad spacecraft id, bad vcid.
+
+virtualChannels (map)
+    **Required.** Used to specify the Virtual Channel specific configuration.
+
+For each Virtual Channel in the ``virtualChannels`` map, the following parameters can be used:
+
+vcId (integer)
+    **Required.** The configured Virtual Channel identifier.
+
+ocfPresent: (boolean)
+    Used for AOS frames to indicate that the Virtual Channel uses the  Operational Control Field (OCF) Service to transport the CLCW containing acknowledgments for the uplinked TC frames. For TM and USLP frames, there is a flag in each frame that indicates the presence or absence of OCF.
+
+service:
+    **Required.** This specifies the type of data that is part of the Virtual Channel. One of ``PACKET``, ``IDLE`` or ``VCA``
+    
+    PACKET:
+       This is used if the data contains packets - it requires the presence of the first header pointer to indicate where in the frame the packet starts. Both CCSDS space packets and CCSDS encapsulation packets are supported (even multiplexed on the same virtual channel). The type of packet is detected based on the first 3 bits of data: 000=CCSDS space packet, 111=encapsulation packets. 
+       Idle CCSDS space packets (having APID = 0x7FF) and idle encapsulation packets (having first byte = 0x1C) are discarded.   
+    IDLE:
+       Supported for AOS and USLP to indicate that the Virtual Channel contains only idle frames . Normally, the AOS and USLP use the Virtual Channel 63 to transmit idle frames and you do not need to define this virtual channel (in conclusion ``IDLE`` is not very useful). The TM frames have a different mechanism to signal idle frames (first header pointer is 0x7FE).
+    VCA:
+       VCA stands for Virtual Channel Access - it is  a mechanism for the user to plug a custom handler for the virtual channel data. The ``vcaHandlerClassName`` property has to be defined if this option is specified (see  below).
+
+maxPacketLength:
+    **Required if service=PACKET.**  Specifies the maximum size of a packet (header included). Valid for both CCSDS Space Packets and CCSDS encapsulation packets. If the header of a packet indicates a packet size larger than this value, a warning event is raised and the packet is dropped including all the data until a new frame containing a packet start. 
+
+packetPreprocessorClassName and packetPreprocessorArgs
+    **Required if service=PACKET.** Specifies the packet pre-processor and its configuration that will be used for the packets extracted from this Virtual Channel. See :doc:`packet-preprocessor` for details.
+
+vcaHandlerClassName:
+    **Required if the service = VCA** Specifies the name of the class which handles data for this virtual channel. The class has to implement :javadoc:`~org.yamcs.tctm.ccsds.VcDownlinkHandler` interface. Optionally it can implement :javadoc:`~org.yamcs.tctm.Link` interface to appear as a data link (e.g. in yamcs-web). An example implementation of such class can be found in the ccsds-frames example project.
+
+*Raw Frame Decoder*
+
+The options which can be selected under the ``rawFrameDecoder`` key are the following:
+
+codec (string)
+   **Required.** Specifies the error correction codec to use. Valid values are ``NONE`` and ``RS``. None means the data will not be error corrected (can be still useful if only de-randomization is required).
+   RS means the Reed-Solomon codec is used and the errorCorrectionCapability and interleavingDepth below can be used to configure the codec.
+
+interleavingDepth (int)
+   The interleaving depth specifies the number of RS decoders running in "parallel" for one frame. Each interleavingDepth'th byte in the frame will be passed to a different decoder. Note however that as of Yamcs 5.5.7, the data is process sequentially not in parallel. Default: 5
+
+errorCorrectionCapability (int)
+   This is either 8 or 16 determining the RS(255, 239) respectively RS(255,223) codec to be used. Default: 16
+
+derandomize (boolean)
+    If true, the data will be passed through a derandomizer after being decoded. Default: false
+
+
+Telecommand Frame Processing
+----------------------------
+
+Yamcs supports packing telecommand packets into TC Transfer Frames and in addition encapsulating the frames into Communications Link Transmission Unit (CLTU).
+
+Currently the built-in way to send telecommand frames from  Yamcs is by using the UdpTcFrameLink data link. The yamcs-sle project provides an implementation of the Space Link Extension (SLE) which allows sending CLTUs to SLE-enabled Ground Stations. The options described below are valid for both link types.
+
+An example of a UDP TC frame link specification is below:
+
+.. code-block:: yaml
+
+    - name: UDP_FRAME_OUT
+      class: org.yamcs.tctm.ccsds.UdpTcFrameLink
+      host: localhost
+      port: 10018
+      spacecraftId: 0xAB
+      maxFrameLength: 1024
+      cltuEncoding: BCH
+      priorityScheme: FIFO
+      randomizeCltu: false
+      virtualChannels:
+          - vcId: 0
+            service: "PACKET"
+            mapId: 1
+            priority: 1
+            commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+            commandPostprocessorArgs:
+              [...]
+            stream: "tc_sim"
+            useCop1: true
+            clcwStream: "clcw"
+            initialClcwWait: 3600
+            cop1T1: 3
+            cop1TxLimit: 3
+            slidingWindowWidth: 15
+            bdAbsolutePriority: false
+
+
+The following general options are supported:
+
+spacecraftId (integer)
+    **Required.** The spacecraftId is encoded in the TC Transfer Frame primary header.
+    
+maxFrameLength (integer)
+    **Required.** The maximum length of the frames sent over this link. The Virtual Channel can also specify an option for this but the VC specific maximum frame length has to be smaller or equal than this. Note that since Yamcs does not support segmentation (i.e. splitting a TC packet over multiple frames), this value limits effectively the size of the TC packet that can be sent.
+
+priorityScheme (string)
+    One of ``FIFO``, ``ABSOLUTE`` or ``POLLING_VECTOR``. This configures the priority of the different Virtual Channels. The different schemes are described below.
+    
+cltuEncoding (string)
+    One of ``BCH``, ``LDPC64``, ``LDPC256``, or ``CUSTOM``. If this parameter is present, the TC transfer frames will be encoded into CLTUs and this parameter configures the code to be used. If this parameter is not present, the frames will not be encapsulated into CLTUs and the following related parameters are ignored. If the value is ``CUSTOM``, the CLTU generator class must be specified as indicated below.
+
+cltuStartSequence (string)
+    This parameter can optionally set the  CLTU start sequence in hexadecimal if different than the CCSDS specs.
+
+cltuTailSequence (string)
+    This parameter can optionally set the CLTU tail sequence in hexadecimal if different than the CCSDS specs.
+    
+randomizeCltu (boolean)
+    Used if cltuEncoding is BCH or CUSTOM to enable/disable the randomization. For LDPC encoding, randomization is always on.
+    Note that as per issue 4 of CCSDS 231.0 (TC Synchronization and Channel Coding), the randomization is done before the encoding when BCH is enabled whereas if LDPC encoding is enabled, the randomization is done after the encoding. This has been changed in Yamcs version 5.5.4 - in versions 5.5.3 and earlier the randomization was always applied before the encoding (as per issue 3 of the CCSDS standard). If CUSTOM CLTU encoding is used, the custom encoder is responsible for the randomization - it can use this option or its own separate option for configuration.
+
+skipRandomizationForVcs (list of integers) added in Yamcs 5.5.6
+    If randomizeCltu is true, this option can define a list of virtual channels for which randomization is not performed. This is not as per CCSDS standard which specifies that the randomization is enabled/disabled at the physical channel level.
+ 
+cltuGeneratorClassName (string)
+    **Required if cltuEncoding is CUSTOM.** Specifies the name of the class which constructs the CLTU from the frame, if a custom format is required.
+
+cltuGeneratorArgs
+    Optional if cltuEncoding is CUSTOM, ignored otherwise. Arguments to pass to the constructor for the CLTU generator class.
+
+virtualChannels (map)
+    **Required.** Used to specify the Virtual Channel specific configuration.
+
+errorDetection (string)
+    One of ``NONE`` or ``CRC16``. Specifies the error detection scheme used. If present, the last 2 bytes of the frame will contain an error control field. 
+    Default: ``CRC16``
+    
+frameMaxRate (double)
+    maximum number of command frames to send per second. This option is specific to the UDP TC link.
+
+    
+For each Virtual Channel in the ``virtualChannels`` map, the following parameters can be used:
+
+vcId (integer)
+    **Required.** The Virtual Channel identifier to be used in the frames. You can define multiple entries in the map with the same vcId, if the data is coming from different streams.
+
+service (string)
+    Currently the only supported option is ``PACKET`` which is also the default.
+
+commandPostprocessorClassName (string) and commandPostprocessorArgs (string)
+   **Required if service=PACKET.** Specifies the command post-processor and its configuration. See :doc:`command-post-processor` for details.
+   
+stream (string)
+     **Required.** The stream on which the commands are received.
+     
+multiplePacketsPerFrame (boolean)
+    If set to true (default), Yamcs sends multiple command packets in one frame if possible (i.e. if the accumulated size fits within the maximum frame size and the commands are available when a frame has to be sent).
+
+useCop1 (boolean)
+    If set to true, the COP-1 protocol is used for acknowledgment of TC frames.
+
+clcwStream (string)
+    If COP-1 is enabled, this parameter configures the stream where the Command Link Control Words (CLCW) is read from.
+
+initialClcwWait (integer)
+    If COP-1 is enabled, this specifies how many seconds to wait for the first CLCW.
+
+cop1T1 (integer)
+    If COP-1 is enabled, this specifies the value in seconds for the timeout associated to command acknowledgments. If the command frame is not acknowledged within that time, it will be retransmitted. The default value is 3 seconds.
+
+cop1TxLimit (integer)
+    If COP-1 is enabled, this specifies the number of retransmissions for each un-acknowledged frame before suspending operations.
+
+slidingWindowWidth (integer)
+    If COP-1 is enabled, this specifies the default value for the FOP_SLIDING_WINDOW_WIDTH (K). Default: ``10``
+
+bdAbsolutePriority (false)
+    If COP-1 is enabled, this specifies that the BD frames have absolute priority over normal AD frames. This means that if there are a number of AD frames ready to be uplinked and a TC with ``cop1Bypass`` flag is received (see below for an explanation of this flag), it will pass in front of the queue so ti will be the first frame uplinked (once the multiplexer decides to uplink frames from this Virtual Channel). This flag only applies when the COP-1 state is active, if the COP-1 synchronization has not taken place, the BD frames are uplinked anyway (because all AD frames are waiting). 
+    
+tcQueueSize (integer)
+    This is used if COP-1 is not enabled, to determine the size of the command queue. Note that this is number of commands (not frames!). If the queue is full, the new commands will be rejected. Commands are taken from the queue by the multiplexer, according to the priority scheme defined below. Default: ``10``.
+
+errorDetection (string)
+    One of ``NONE`` or ``CRC16``. Specifies the error detection scheme used for the virtual channel, overriding the setting at link level. This is not according to the CCSDS standard which specifies the frame error detection shall be configured at physical channel level.
+    If not specified (default), the setting at the link level will be used.
+
+mapId (integer)
+    If specified and positive, use the MAP service. Supported for TC frames only (not for USLP). Each frame will contain an extra byte after the primary header. The first two bits of the byte are set to 1 (i.e. unsegmented) and the last 6 bits are the map id. The default id is the one specified in this configuration. It can be overridden in the MDB or via command attributes. The map id has to be between ``0`` and ``15``.
+    Default: ``-1`` (MAP service not used)
+
+           
+Priority Schemes
+****************
+
+The multiplexing of command frames from the different Virtual Channels is done according to the defined priority scheme. The multiplexer is triggered by the availability of the uplink - when a command frame is to be uplinked it has to decide from which Virtual Channel it will release it. 
+
+``FIFO`` means that the first frame received across all virtual channels will be the first one sent.
+
+``ABSOLUTE`` means that the frames will be sent according to the priority set on each Virtual Channel (set by the ``priority`` parameter). This means that as long as a high priority VC has commands to be sent, the lower priority VC will not release any command.
+
+
+``POLLING_VECTOR`` means that a polling vector will be built and each Virtual Channel will have the number of entries in the vector according to its priority. The multiplexing algorithm will cycle through the vector releasing the first command available. 
+For example if there are two VCs VC1 with priority 2 and VC2 with priority 4, the polling vector will look like: [VC1, VC1, VC2, VC2, VC2, VC2]. This means that if both VCs have a high number of frames to be sent, the multiplexer will send 2 frames from VC1 followed by 4 from VC2 and then again. If however VC2 has only one frame to be sent, it will lose its other three slots for that cycle and the multiplexer will go back to sending two frames from VC1.
+
+
+COP-1 Support
+*************
+
+
+COP-1 is the protocol specified in  `CCSDS 232.1-B-2 <https://public.ccsds.org/Pubs/232x1b2e2c1.pdf>`_ for ensuring complete and correct transmission of TC frames. The protocol is using a sliding window principle based on the frame counter assigned by Yamcs to each uplinked frame.
+
+The mechanism through which the on-board system reports the reception of commands is called Command Link Control Word (CLCW). This is a 4 byte word which is sent regularly by the on-board system to ground and contains the value of the latest received command counter and a few status bits. In Yamcs, we expect the CLCW to be made available on a stream (configured with the ``clcwStream`` parameter). The TM frame decoding can place the content of the OCF onto this stream. If the CLCW is sent as part of a regular TM packet, a StreamSQL statement like the following can be used:
+
+.. code-block:: sql
+
+   create stream clcw (clcw int)
+   insert into clcw select extract_int(packet, 12) as clcw from tm_realtime where extract_short(packet, 0) = 2080
+
+The first statement creates the stream, and the second inserts 4 bytes extracted from offset 12 from all telemetry packets having the first 2 bytes equal with 2080. 
+
+If the ``initialClcwWait`` parameter is positive, at the link startup, Yamcs waits for that number of seconds for a CLCW to be received; once it is received, Yamcs will set the value of the ground counter (called ``vS`` in the spec) to the on-board counter value (called ``nR`` in the spec) received in the CLCW. That will ensure that the next command frame sent by Yamcs will contain the counter value expected by the on-board system.
+
+If the ``initialClcwWait`` parameter is not positive (the value will be ignored) or if no CLCW has been received within the specified time, the synchronization has to be initiated manually via the user interface. This can be done either waiting again for a new CLCW, setting manually a value for ``vS`` (this requires the operator to know somehow what value the on-board system is expecting) or sending a command to the on-board system to force the on-board counter to the same value like the ground.
+
+If the ground and on-board systems are not synchronized and a command is received, there are two possible outcomes:
+
+* if the initialization process has been started (manually or at the link startup with the ``initialClcwWait`` parameter), the command will be put in a wait queue to be sent once the Synchronization took place.
+* if the initialization process has not been started or has failed, the command will be rejected straight away with the NACK on the Sent acknowledgment.
+
+
+.. rubric:: AD, BD and BC frames
+
+The CCSDS Standard distinguishes between three types of TC frames (the type is encoded in some bits in the frame primary header):
+
+* AD frames contain normal telecommands and they are subjected to COP-1 transmission verification.
+* BD frames contain normal telecommands but they are not subjected to COP-1 transmission verification.
+* BC frames contain control commands generated by the ground COP-1 state machine and they are used to control the on-board state machine.
+
+To send BD frames with Yamcs, you can use an attribute on the command called ``cop1Bypass``. If the link finds this attribute set to true, it will send the command in a BD frame, bypassing the COP-1 verification. The BC frames are sent only by the COP-1 state machine and it is not possible to send them from the user.
+
+The user interface allows also to deactivate the COP-1 and the user can opt for sending all the commands as AD frames or BD frames regardless of the cop1Bypass attribute.
 ```
 
-## 항목
+### `command-post-processor.rst`
 
-- [`gsw/yamcs/docs/server-manual/links/ccsds-frame-processing.rst`](file--ccsds-frame-processing.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/command-post-processor.rst`](file--command-post-processor.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/file-polling-tm-data-link.rst`](file--file-polling-tm-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/packet-preprocessor.rst`](file--packet-preprocessor.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/tcp-tc-data-link.rst`](file--tcp-tc-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/tcp-tm-data-link.rst`](file--tcp-tm-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/tse-data-link.rst`](file--tse-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/udp-parameter-data-link.rst`](file--udp-parameter-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/udp-tc-data-link.rst`](file--udp-tc-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/udp-tm-data-link.rst`](file--udp-tm-data-link.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/links/yamcs-cascading.rst`](file--yamcs-cascading.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/links/command-post-processor.rst`
+
+
+```rst
+Command Post-Processor
+======================
+
+Similar to the TM packet pre-processors, the command post-processors are used to change the command before being sent out on the data link. The post-processors are java classes that implement the :javadoc:`~org.yamcs.tctm.CommandPostprocessor` interface.
+
+Typical tasks performed by the post-processors are:
+ 
+* assigning a sequence count (e.g. the CCSDS sequence counts are assigned per APID)
+* computing and appending a checksum or CRC
+```
+
+### `file-polling-tm-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/file-polling-tm-data-link.rst`
+
+
+```rst
+File Polling TM Data Link
+=========================
+
+Reads data from files in a directory, importing it into the configured stream. The directory is polled regularly for new files and the files are imported one by one. After the import, the file is removed.
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.FilePollingTmDataLink`
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    **Required.** The stream where data is emitted
+
+incomingDir (string)
+    **Required.** The directory where the data will be read from.
+
+deleteAfterImport (boolean)
+    Remove the file after importing all the data. By default set to true, can be set to false to import the same data again and again.
+
+delayBetweenPackets (integer)
+    When importing a file, wait this many milliseconds after each packet. This option together with the previous one can be used to simulate incoming realtime data.
+
+packetPreprocessorClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.PacketPreprocessor` implementation. Default is :javadoc:`org.yamcs.tctm.IssPacketPreprocessor` which applies :abbr:`ISS (International Space Station)` conventions.
+
+packetPreprocessorArgs (map)
+    Optional args of arbitrary complexity to pass to the PacketPreprocessor. Each PacketPreprocessor may support different options.
+
+lastPacketStream (string)
+    Optional stream name. If specified, the last packet in an imported file, is emitted to this stream, in addition to the regular stream defined with the ``stream`` option.
+
+    The intended use case, is to have ``stream: tm_dump`` and ``lastPacketStream: tm_realtime``. Then most data goes directly into the Archive, while only the last packet's data goes to realtime clients.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/index.rst`
+
+
+```rst
+Data Links
+==========
+
+Data Links represent special components that communicate with the target instrument or spacecraft. There are three types of Data Links: TM, TC and PP (processed parameters). TM and PP receive telemetry packets or parameters and inject them into the realtime or dump TM or PP streams. The TC data links subscribe to the realtime TC stream and send data to the external systems.
+
+Data Links can report on their status and can also be controlled by an operator to connect or disconnect from their data source.
+
+Note that any Yamcs Service can connect to external sources and inject data in the streams. Data links however, can report on their status using a predefined interface and can also be controlled to connect or disconnect from their data source.
+
+Data links are defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    dataLinks:
+      - name: tm_realtime
+        class: org.yamcs.tctm.TcpTmDataLink
+        enabledAtStartup: true
+        stream: tm_realtime
+        invalidPackets: DIVERT
+        invalidPacketsStream: invalid_tm_stream
+        ....
+
+General configuration options.
+
+name (string)
+    **Required.** The name that will be assigned to the link. Each link needs a unique name; the name can be seen in the user interface and can be used for API calls.
+
+class (string)
+    **Required.** The name of the class that is implementing the link. The class has to implement the :javadoc:`~org.yamcs.tctm.Link` interface.
+
+enabledAtStartup (boolean)
+    If set to false, the link will be disabled at startup. When true, the link will be enabled at startup.
+
+    If unset, the link's enabled/disabled state is restored from a previous run, defaulting to enabled.
+
+stream (string)
+    The name of the stream where the data is taken from or injected into.
+
+tmStream (string)
+    This is an alternative to *stream*; can be used for links serving more than one of TM, TC or PP (processed parameters).
+    
+tcStream (string)
+     This is an alternative to *stream*; can be used for links serving more than one of TM, TC or PP.
+    
+ppStream (string)
+     This is an alternative to *stream*; can be used for links serving more than one of TM, TC or PP.
+
+invalidPackets (string)
+    One of ``DROP``, ``PROCESS`` or ``DIVERT``. Used for TM links to specify what happens with the packets that the pre-processor decides are invalid:
+
+    ``DROP`` means they are discarded.
+    
+    ``PROCESS`` means they are put on the normal stream (configured with the ``stream`` parameter), same like the valid packets.
+    
+    ``DIVERT`` means they are put on another stream specified by the option ``invalidPacketsStream``.
+
+invalidPacketsStream (string)
+    If ``invalidPackets`` is set to ``DIVERT``, this configures the stream where the packets are sent.
+
+updateSimulationTime (boolean)
+    If set to true, the link will update the simulation time using the generation time of each packet received. The SimulationTimeService has to be configured for the instance, otherwise an error will be raised at startup.
+
+Other options are link-specific and documented in their respective sections.
+          
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+    
+    packet-preprocessor
+    command-post-processor
+    file-polling-tm-data-link
+    tcp-tc-data-link
+    tcp-tm-data-link
+    tse-data-link
+    udp-parameter-data-link
+    udp-tc-data-link
+    udp-tm-data-link
+    ccsds-frame-processing
+    yamcs-cascading
+```
+
+### `packet-preprocessor.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/packet-preprocessor.rst`
+
+
+```rst
+Packet Pre-processor
+====================
+
+Yamcs generally uses the Mission Database to process telemetry packets. When data is received from external systems, there are two processing steps done as part of the Data Link which are outside the Mission Database definition:
+
+1. Splitting a data stream into packets. This is done only for the links that receive data as a stream (e.g. TCP). For Data Links where input is naturally split into frames (e.g. UDP) this step is not necessary and not performed.
+2. Pre-processing of packets in order to detect/correct errors and to retrieve basic information about the packets.
+
+
+Stream Splitting
+----------------
+
+The data stream splitter is a java class that implements the :javadoc:`~org.yamcs.tctm.PacketInputStream` interface.
+
+A generic splitter for binary streams is defined in :javadoc:`~org.yamcs.tctm.GenericPacketInputStream`. This class can split a stream based on a packet length that is encoded in a header. It requires all packets to have the length on the same number of bytes.
+
+
+Packet pre-processing
+---------------------
+
+The packet pre-processor is a java class that implements the :javadoc:`~org.yamcs.tctm.PacketPreprocessor` interface.
+ 
+It is responsible for error detection (and possibly correction) and extracting basic information required for further packet processing:
+
+* packet generation time: it represents the time when the packet has been generated on-board.
+* sequence count: a number used to distinguish two packets having the same timestamp.
+ 
+The generation time and sequence count are used as primary key in the tm table in the archive. That means they have to uniquely identify a packet; if the archive receives a new packet with the same (generation time, sequence count) as an existing packet in the archive, it will be considered a duplicate and discarded.
+ 
+The sequence count is used to distinguish two packets that have the same timestamp; it does not need to be incremental. For example the :javadoc:`~org.yamcs.tctm.IssPacketPreprocessor` uses the first 4 bytes of the CCSDS primary header (containing APID and CCSDS sequence count among others) as sequence count for the telemetry stream.
+ 
+Each mission has specific ways to encode information in the header but there are some standards supported to a certain extent by Yamcs:
+
+* :abbr:`PUS (Packet Utilisation Standard)` from :abbr:`ESA (European Space Agency)`: implemented in :javadoc:`~org.yamcs.tctm.pus.PusPacketPreprocessor`.
+* :abbr:`NASA (National Aeronautics and Space Administration)` cFS: implemented in  :javadoc:`~org.yamcs.tctm.cfs.CfsPacketPreprocessor`.
+* :abbr:`CSP (CubeSat Space Protocol)`: implemented in  :javadoc:`~org.yamcs.tctm.csp.CspPacketPreprocessor`.
+
+
+.. rubric:: Generation Time
+ 
+A particular difficulty when writing a pre-processor is dealing with the generation time. Yamcs originated in the :abbr:`ISS (International Space Station)` world where all the payloads and instruments are time synchronized to GPS and each packet sent to ground has a reliable timestamp. This is of course not true for all spacecrafts - most on-board computer have just an internal clock count which resets to 0 when the computer is restarted.
+ 
+The Yamcs archive needs the generation time for all its functions, not having it means that a large part of the functionality of Yamcs is not usable.
+ 
+There are different mechanisms to synchronize the on-board time with the ground:
+ 
+* Do not attempt to synchronize the time. The pre-processor can use local generation (computer) reception time as generation time. The on-board time will be still available as a parameter if defined in the MDB. This method is especially useful when using Yamcs as part of a test and check-out system, the system under test might be incomplete and have no (reliable) clock at all. The disadvantage is that when receiving data in non-realtime (e.g. recorded on board or in a ground station), it will not fit orderly in the archive.
+* Synchronize the on-board system to the ground each time it resets. This is the method employed by :abbr:`cFS (Core Flight System)`. It allows setting a spacecraft time correction factor (STCF) on-board and that will make the on-board time correlated to the ground. 
+* Maintain a correlation factor on ground, his is the method specified by :abbr:`ESA (European Space Agency)` PUS standard. In this case the packet pre-processor has to implement the time correlation. The :doc:`../services/instance/time-correlation` can be used to correlate the on-board time with the ground time.
+ 
+Regardless of which method is used, it is important that the pre-processor does not generate packets with wrong timestamps. These might be difficult to locate and remove from the archive later.
+
+
+.. rubric:: Time Decoding
+
+The packet pre-processors can use time decoders to decode the time from the packet. The time decoders are classes implementing the :javadoc:`~org.yamcs.tctm.time.TimeDecoder` interface. All the pre-processors extending the :javadoc:`~org.yamcs.tctm.AbstractPacketPreprocessor` will have access to the time decoders configured by the ``timeEncoding`` option.
+
+The time decoders are responsible for providing a relative time in milliseconds; the relative time is converted to an absolute time using a specified epoch.
+
+If there is no epoch specified, the time is considered ``raw`` and the :doc:`../services/instance/time-correlation` service is used for converting the time to an absolute time. This is the case when the on-board time is not synchronized to anything and the time in the packet is the value of an on-board computer clock which is just a counter most likely initialized at 0 when the on-board computer resets. The raw times do not have units, it is up to the time decoder to decide what value to return; the requirement however is to be linearly correlated to the time. The time correlation service will compute the gradient and the offset that can be used to convert the raw value to an absolute time.
+
+There are a few common options for all time decoders:
+
+epoch (string)
+    Specifies to which epoch the time relates to. Can be one of:
+
+    * TAI - the time is a delta from 1-Jan-1958, as recommended by CCSDS Time Code Formats.
+    * J2000 - the time is a delta from J2000 epoch which corresponds to 2000-01-01T11:58:55.816 UTC.
+    * GPS - the time is a delta from GPS epoch which corresponds to 1980-01-6T00:00:00 UTC.
+    * UNIX - the time corresponds to the time as kept by UNIX - that is a pseudo-number of seconds from 1-Jan-1970. We say "pseudo" because this time does not include leap seconds and therefore it is not a true delta time from the epoch (and the epoch is anyway not well defined). However that number can be used to calculate a UTC time (by applying Gregorian-calendar conventions). Yamcs will convert that time to the internal time format by adding the leap seconds.
+    * CUSTOM - the time corresponds to a delta or pseudo delta specified in the option ``epochUTC``. 
+    * NONE - the time read from the packet is not a delta from an epoch but rather the value of free running clock . A time correlation service can be used to translate that value to a real time.
+        
+epochUTC (ISO8601 string)
+    If the epoch is defined as ``CUSTOM``, can be used to specify the UTC time from which the decoded time is a delta or pseudo-delta.
+    
+timeIncludesLeapSeconds: (boolean)
+    If the epoch is defined as ``CUSTOM``, can be used to specify if the time read from that epoch includes the leap seconds (meaning it is a true delta time). If the value is false, Yamcs will add the missing leap seconds between the time specified in the epochUTC and the time read from the packet.
+
+    From the 4 standard epochs (TAI, J2000, GPS and UNIX), only the UNIX time will have this set to false. Default: true
+
+Two time decoder types are currently implemented: CUC and FIXED.
+
+
+.. rubric:: CUC time decoder
+
+``CUC`` which is an abbreviation for CCSDS Unsegmented time Code. *Unsegmented* means that the entire time field can be seen as a continuous integer counter of the fractional time unit. A segmented time code for example  one which provides days and millisecond of the day and in which a 32 bit field is used to represent the millisecond of the day is not continuous because there are less than :math:`2^{32}` milliseconds in a day.
+       
+The time is decoded as specified in `CCSDS Time Code Formats CCSDS 301.0-B-4 <https://public.ccsds.org/Pubs/301x0b4e1.pdf>`_, Chapter 3.2. In short the time is encoded as an optional 1 or 2 bytes ``pfield`` (preamble field) followed by a 1-7 bytes basic time followed by a 0-10 bytes fractional time. The ``pfield`` specifies the length in bytes of the basic and fractional times.
+       
+For example ``pfield = 0x2E`` means that the basic time is encoded on 4 bytes and the fractional time is encoded on 2 bytes, making the length of the time in the packet 6 bytes when the ``pfield`` is implicit or 7 bytes when it is part of the packet.
+       
+The ``pfield`` contains some information about the epoch used. This information is ignored, the epoch is configured with the ``epoch`` option, as described below.
+
+The standard allows in principle more than 2 ``pfield`` bytes but this is not supported (a custom time decoder has to be used in this case).
+       
+The CUC decoder can work in two modes depending whether the time decoded is a delta time from a configured epoch or the value of a free running on-board clock.
+       
+If the time decoded is a delta time from a configured epoch ( ``epoch`` is different than ``NONE``), the CUC decoder assumes the basic time unit to be the second and it decodes the time to a delta or pseudo-delta from the epoch. The precision is milliseconds (as all time storage in Yamcs), irrespective of the precision used in the encoded time - this means that at maximum two bytes of fractional time will be used. If the fractional time is 2 bytes (i.e. each fractional unit is :math:`1/2^{16}` seconds) or more, it will be be down-rounded when converted to Yamcs time. The maximum length of supported basic time is 6 bytes; this is because 7 or more bytes cannot be converted to 64 bits milliseconds.
+       
+When the decoded time is the value of a free running on-board clock (epoch is ``NONE``), the CUC decoder provides the "raw" time in the unit of the fractional time (without any precision loss). The time is decoded as a big endian value on bn+fn bytes where bt is the number of basic time bytes and fn is the number of fractional time bytes (as read from the ``pfield``). Practically in this case the decoder doesn't make distinction between basic time and fractional time (this works because the time is unsegmented). The value thus obtained is expected to be passed to a :doc:`../services/instance/time-correlation` which will convert it to an actual time, automatically detecting the unit of the fractional time.
+       
+The maximum supported length of the "raw" time is 8 bytes,  if the time is encoded on 9 or more bytes, an exception will be thrown in the ``decodeRaw()`` method.
+
+CUC decoder configuration options:
+
+type (string)
+    Has to be ``CUC`` to select the CUC decoder.
+    
+implicitPField (integer)
+    If the ``pfield`` is not encoded in the packet, it can be set by this option.
+    
+    A value of -1 means that the ``pfield`` is explicitly provided in the packet. Default: -1.
+    
+implicitPFieldCont (integer)
+    This can be used to configure the next octet of the ``pfield`` in case the first bit of the first octet (specified above) is 1.
+    
+
+.. rubric:: FIXED time decoder
+
+The FIXED decoder decodes the time as a signed integer on 4 or 8 bytes and has an optional multiplier to convert the integer to milliseconds. The multiplier is not used when decoding the time as raw time (i.e. when the epoch is NONE).
+
+FIXED decoder options:
+
+type (string)
+    Has to be ``FIXED`` to select the FIXED decoder.
+    
+size(integer)
+    number of bytes containing the time. It has to be 4 or 8. Default: 8
+
+multiplier (double)
+    used to transform the extracted integer to milliseconds. Default: 1.0
+    
+
+Pre-processor Configuration
+---------------------------
+
+The :javadoc:`~org.yamcs.tctm.AbstractPacketPreprocessor` provides some general configuration options which can be used in custom pre-processors and are used in the :abbr:`PUS (Packet Utilisation Standard)` and :abbr:`cFS (Core Flight System)` pre-processors.
+
+.. rubric:: Example
+
+.. code-block:: yaml
+
+  dataLinks:
+    - name: tm_realtime
+      ...
+      packetPreprocessorClassName: org.yamcs.tctm.pus.PusPacketPreprocessor
+      packetPreprocessorArgs:
+        errorDetection:
+           type: CRC-16-CCIIT
+        useLocalGenerationTime: false
+        timeEncoding:
+           type: CUC
+           epoch: CUSTOM
+           epochUTC: "2010-09-01T00:00:00Z"
+           timeIncludesLeapSeconds: true
+        tcoService: tco0
+
+ 
+.. rubric:: Configuration Options
+ 
+errorDetection (map)
+    If specified, the *errorDetectionCalculator* object will be made available to the pre-processor to calculate the CRC used to verify the integrity of the packet. The sub-options are:
+    
+    type (string)
+        **Required.** Can take one of the values:
+
+        * ``16-SUM``: calculates a 16 bits checksum over the entire packet which has to contain an even number of bytes. This checksum is used in Columbus/:abbr:`ISS (International Space Station)` data.
+        * ``CRC-16-CCIIT``: standard CRC algorithm used in PUS and also in CCSDS standards for frame encoding. 
+        * ``ISO-16``: specified in PUS as alternative to CRC-16-CCIIT.
+        * ``NONE``: no error detection will be used, this is the default if the ``errorDetection`` map is not present.
+    
+    initialValue (integer)
+       Used when the type is ``CRC-16-CCIIT`` to specify the initial value used for the algorithm. Default: ``0xFFFF``.
+
+userLocalGenerationTime (boolean)
+    If true, the packets will be timestamp with local mission time rather than the time extracted from the packets. Default: false.
+
+timeEncoding (map)
+    This contains instructions from how to read the time from the packet. See above for description on how to configure the time decoder.
+ 
+```
+
+### `tcp-tc-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/tcp-tc-data-link.rst`
+
+
+```rst
+TCP TC Data Link
+================
+
+Sends telecommands via TCP.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.TcpTcDataLink`
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    **Required.** The stream where command instructions are received
+
+host (string)
+    **Required.** The host of the TC provider
+
+port (integer)
+    **Required.** The TCP port to connect to
+
+tcQueueSize (integer)
+    Limit the size of the queue. Default: unlimited
+
+tcMaxRate (integer)
+    Ensure that on overage no more than ``tcMaxRate`` commands are issued during any given second. Default: unspecified
+
+commandPostprocessorClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.CommandPostprocessor` implementation. Default is :javadoc:`org.yamcs.tctm.IssCommandPostprocessor` which applies :abbr:`ISS (International Space Station)` conventions.
+
+commandPostprocessorArgs (map)
+    Optional args of arbitrary complexity to pass to the CommandPostprocessor. Each CommandPostprocessor may support different options.
+```
+
+### `tcp-tm-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/tcp-tm-data-link.rst`
+
+
+```rst
+TCP TM Data Link
+================
+
+Provides packets received via plain TCP sockets.
+
+In case the TCP connection with the telemetry server cannot be opened or is broken, it retries to connect each 10 seconds.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.TcpTmDataLink`
+
+
+Configuration Options
+---------------------
+
+host (string)
+    **Required.** The host of the TM provider
+
+port (integer)
+    **Required.** The TCP port to connect to
+
+stream (string)
+    **Required.** The stream where data is emitted
+
+packetInputStreamClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.PacketInputStream`. Default is :javadoc:`org.yamcs.tctm.CcsdsPacketInputStream` which reads CCSDS Packets.
+
+packetInputStreamArgs (map)
+    Optional args of arbitrary complexity to pass to the PacketInputStream. Each PacketInputStream may support different options.
+
+packetPreprocessorClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.PacketPreprocessor` implementation. Default is :javadoc:`org.yamcs.tctm.IssPacketPreprocessor` which applies :abbr:`ISS (International Space Station)` conventions.
+
+packetPreprocessorArgs (map)
+    Optional args of arbitrary complexity to pass to the PacketPreprocessor. Each PacketPreprocessor may support different options.
+```
+
+### `tse-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/tse-data-link.rst`
+
+
+```rst
+TSE Data Link
+=============
+
+Sends telecommands to a configured `../services/global/tse-commander` and reads back output as processed parameters.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tse.TseDataLink`
+
+
+Configuration Options
+---------------------
+
+host (string)
+    **Required.** The host of the TSE Commander.
+
+port (integer)
+    **Required.** The TCP port of the TSE Commander.
+
+tcStream (string)
+    Stream where command instructions are received. Default: ``tc_tse``.
+
+ppStream (string)
+    Stream where to emit received parameters. Default: ``pp_tse``.
+```
+
+### `udp-parameter-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/udp-parameter-data-link.rst`
+
+
+```rst
+UDP Parameter Data Link
+=======================
+
+Listens on a UDP port for datagrams containing Protobuf encoded messages. One datagram is equivalent to a message of type :javadoc:`~org.yamcs.protobuf.Pvalue.ParameterData`.
+
+By enabling the ``json`` option, this link can also be switched to accepting the JSON equivalent of a Protobuf ``ParameterData`` message.
+
+If more flexibility is needed, this link class can be extended in Java to override the ``decodeDatagram(byte[] data, int offset, int length)`` method. Then you can use custom logic to convert the incoming datagram to a message of type ``ParameterData``.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.UdpParameterDataLink`
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    **Required.** The stream where data is emitted
+
+port (integer)
+    **Required.** The UDP port to listen on
+
+recordingGroup (string)
+    Name of the group used for incoming updates. Groups are identifiable in the Archive Browser.
+
+    The recording group can also be specified as a property in ``ParameterData``, overriding this configuration setting.
+
+    Default: ``DEFAULT``
+
+json (boolean)
+    If ``true``, decode the incoming message from JSON instead of Protobuf.
+
+    Default: ``false``
+
+
+JSON Example
+------------
+
+Add ``UdpParameterDataLink`` to the list of data links:
+
+.. code-block:: yaml
+   :caption: :file:`etc/yamcs.{instance}.yaml`
+
+   dataLinks:
+     - name: pp-in
+       class: org.yamcs.tctm.UdpParameterDataLink
+       stream: pp_realtime
+       port: 11016
+       json: true
+
+Then a Python script like the following updates two parameters at the same time with a single datagram:
+
+.. code-block:: python
+
+   import json
+   import socket
+   from datetime import datetime, timezone
+
+   gentime = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+   data = json.dumps(
+       {
+           "parameter": [
+               {
+                   "id": {"name": "/myproject/Battery1_Temp"},
+                   "generationTime": gentime,
+                   "engValue": {
+                       "type": "FLOAT",
+                       "floatValue": 123,
+                   },
+               },
+               {
+                   "id": {"name": "/myproject/ElapsedSeconds"},
+                   "generationTime": gentime,
+                   "engValue": {
+                       "type": "UINT32",
+                       "uint32Value": 123,
+                   },
+               },
+           ]
+       }
+   ).encode()
+
+   with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+       s.sendto(data, ("localhost", 11016))
+```
+
+### `udp-tc-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/udp-tc-data-link.rst`
+
+
+```rst
+UDP TC Data Link
+================
+
+Sends telecommands via UDP socket. One datagram is equivalent to one command.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.UdpTcDataLink`
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    **Required.** The stream where data is emitted
+
+host (string)
+    **Required.** The host of the TC provider
+
+port (integer)
+    **Required.** The UDP port to send to
+
+port (integer)
+    **Required.** The UDP port to listen on
+
+tcQueueSize (integer)
+    Limit the size of the queue. Default: unlimited
+
+tcMaxRate (integer)
+    Ensure that on overage no more than ``tcMaxRate`` commands are issued during any given second. Default: unspecified
+
+commandPostprocessorClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.CommandPostprocessor` implementation. Default is :javadoc:`org.yamcs.tctm.IssCommandPostprocessor` which applies :abbr:`ISS (International Space Station)` conventions.
+
+commandPostprocessorArgs (map)
+    Optional args of arbitrary complexity to pass to the CommandPostprocessor. Each CommandPostprocessor may support different options.
+```
+
+### `udp-tm-data-link.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/udp-tm-data-link.rst`
+
+
+```rst
+UDP TM Data Link
+================
+
+Listens on a UDP port for datagrams containing CCSDS packets. One datagram is equivalent to one packet.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.UdpTmDataLink`
+
+
+Configuration Options
+---------------------
+
+stream (string)
+    **Required.** The stream where data is emitted
+
+port (integer)
+    **Required.** The UDP port to listen on
+
+maxLength (integer)
+    The maximum length of the packets received. If a larger datagram is received, the data will be truncated. Default: 1500 bytes
+
+packetPreprocessorClassName (string)
+    Class name of a :javadoc:`~org.yamcs.tctm.PacketPreprocessor` implementation. Default is :javadoc:`org.yamcs.tctm.IssPacketPreprocessor` which applies :abbr:`ISS (International Space Station)` conventions.
+
+packetPreprocessorArgs (map)
+    Optional args of arbitrary complexity to pass to the PacketPreprocessor. Each PacketPreprocessor may support different options.
+```
+
+### `yamcs-cascading.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/links/yamcs-cascading.rst`
+
+
+```rst
+Yamcs Cascading Link
+====================
+
+The Yamcs Cascading Link functions as a client to an upstream Yamcs server. It provides the following data:
+
+* TM packet reception in realtime and archive
+* Parameter reception in realtime
+* Event reception in realtime
+* Command sending and Command History provision
+
+The link is configured with one entry in the links section of the :file:`etc/yamcs.{instance}.yaml` configuration file.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.cascading.YamcsLink`
+
+In the :file:`examples/cascading` directory of the main yamcs repository there is a configuration with two Yamcs instances ``upstream`` and ``downstream`` demonstrating the cascading functionality.
+
+Configuration Options
+---------------------
+
+upstreamName (string)
+  **Required.** The name of the upstream Yamcs server. The name is used on the local Yamcs for the command history entries and for the system (``/yamcs``) parameters.
+
+yamcsUrl (string)
+  **Required.** The URL to connect to the upstream Yamcs server; The URL has to include http or https.
+
+username (string)
+  Username to connect to the upstream Yamcs server (if authentication is enabled); has to be set together with password.
+
+password (string)
+  Password to connect to the upstream Yamcs server (if authentication is enabled); has to be set together with username.
+
+upstreamInstance (string)
+  **Required.** The instance of Yamcs on the upstream server.
+
+verifyTls (boolean)
+    If the connection is over TLS (when ``yamcsUrl`` starts with https), this option can enable/disable the verification of the server certificate against local accepted CA list. Default: ``true``
+
+upstreamProcessor (string)
+  The processor to connect to on the upstream Yamcs server. Default: ``realtime``
+  
+tm (boolean)
+  Subscribe telemetry containers (packets). The list of containers (packets) has to be specified using the containers option. Default: ``true``
+
+containers (list of strings)
+  **Required if tm is true.** The list of containers(packets) to subscribe to. The list has to contain fully qualified names of containers.
+
+  At this moment both the local (downstream) MDB and the upstream MDB have to contain definitions for the containers specified in this list.
+
+  However, the local MDB can contain a more refined version. 
+
+  For example the upstream MDB may define the container with just the header or a few parameters whereas the local MDB may define it in full and additionally other derived containers. 
+
+tmRealtimeStream (string)
+  Stream to which the TM packets will be sent. Default: ``tm_realtime``.
+
+tmArchive (boolean)
+  Enables TM archival. Default: ``true``.
+
+tmArchiveStream (string)
+  Stream to which the TM packets will be archived. Default: ``tm_dump``.
+
+gapFillingInterval (integer)
+  Number of seconds between each archive gap filling attempt. Default: ``300``.
+
+pp (boolean) 
+  Subscribe parameters (pp stands for "processed parameters"). The list of parameters has to be specified using the parameters option. Default: ``true``
+
+parameters (list of strings)
+  **Required if pp is true.** The list of parameters has to subscribe to. The list should contain fully qualified name of parameters which
+  have to be present both in the local MDB and in the remote(upstream) MDB. Wildcards using glob patterns can be used.
+
+  The requirement to have the parameters in both MDBs is a a current limitation due to the fact that we do not add parameters dynamically to the MDB.
+  One exception is the Yamcs system parameters (those in the ``/yamcs`` namespace) - these do not have to be present in the local MDB, they are created on the fly.
+
+  The /yamcs system parameters will be renamed such that ``/yamcs/a/b/c/parameter_name`` is saved in the local archive as ``/yamcs/upstreamName_a/b/c/parameter_name``.
+
+ppRealtimeStream (string)
+  Stream to which the parameter packets will be sent. Default: ``pp_realtime``.
+
+tc (boolean)
+  Allow to send TC and subscribe to command history.
+
+  All the command history entries received from the upstream server will be renamed to the shape yamcs<upstreamName>_OriginalEntryName.
+
+  Exception make those added in the ``keepUpstreamAcks`` configuration.
+
+  Default: true
+
+keepUpstreamAcks (list of strings)
+  List of command acknowledgments names received from the upstream server to keep unmodified. 
+
+  Default is "ccsds-seqcount" - this key is used by one of the CCSDS links to set the sequence count associated to the command and required in the simulation configuration to be able to verify the command execution (because the sequence count is reported in returning telemetry containing the command execution status).
+
+event (boolean)
+   Subscribe to realtime events. The events on the upstream server will be mirrored to the local server.
+
+   Default: true
+
+eventRealtimeStream (string)
+  Stream to which the events will be sent. Default: ``events_realtime``.
+
+connectionAttempts (integer)
+  How many times to attempt reconnection if the connection fails. Reconnection will only be attempted once if the authentication fails.
+
+  Link disable/enable is required to reattempt the connection once this number has passed.
+
+reconnectionDelay (integer)
+   If the connection fails or breaks, the time (in milliseconds) to wait before reconnection.
+
+commandMapping (list of CommandMapData)
+    This option is used to configure the mapping between the downstream command names and the upstream command names.
+    Each entry in the list can have the following structure:
+
+    type (string)
+        **Required.** Can take one of the values:
+
+        * ``DIRECT``: maps all the arguments in the downstream command directly onto the arguments in the upstream commands. The command names can be changed using the ``local`` and ``upstream`` configuration options below.
+        * ``EMBEDDED_BINARY``: encodes the downstream command to binary and sets the binary as an argument in the upstream command. The ``argument`` configuration option below is the name of the argument of the downstream command.
+            If a post-processor is defined (see below) the binary is as generated by the post-processor.
+        * ``DEFAULT``: this is the default behavior before Yamcs 5.8.7; it assumes that upstream and downstream MDBs have the same commands.
+
+    local (string)
+        **Required if type is DIRECT or EMBEDDED_BINARY** Downstream path to be mapped. 
+        Can be either a path (ending with /) to a downstream subsystem or a specific downstream command.
+
+    upstream (string)
+        **Required  if type is DIRECT or EMBEDDED_BINARY** Upstream path to be mapped.
+        If the type is DIRECT and local is a path, then this can also be a path to an upstream subsystem.
+        If ``local`` and ``upstream`` are paths, then the upstream command is found by replacing the path specified in ``local`` with the path specified in ``upstream``
+
+    argument (string)
+        **Required if type is EMBEDDED_BINARY.** Argument in the upstream command that will be used for the embedded binary downstream command.
+    
+    The list of ``commandMapping`` is checked in order - the first entry which matches the ``local`` entry will be used.
+
+    If no entry matches the sent command, the command will fail.
+    
+failCommandIfNoMappingMatches (boolean)
+    Since Yamcs 5.9.7. If no mapping was found for the local command, setting this option to true will cause immediately the command to fail. If set to false (default) the command will not fail immediately and the link manager will try to send it on another link (if available).
+
+commandPostprocessorClassName (string)
+    The class name for the command post-processor. The post-processor is used for the embedded binary commands.
+    
+commandPostprocessorClassName (map)
+    The arguments to use for initializing the post-processor.
+```

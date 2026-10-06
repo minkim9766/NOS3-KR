@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -44,39 +44,4 @@ to/index
 to_lab/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/arducam/`](arducam/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cf/`](cf/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cfe_assert/`](cfe_assert/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/ci/`](ci/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/ci_lab/`](ci_lab/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/cryptolib/`](cryptolib/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/ds/`](ds/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/fm/`](fm/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_adcs/`](generic_adcs/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_css/`](generic_css/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_eps/`](generic_eps/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_fss/`](generic_fss/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/`](generic_imu/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_mag/`](generic_mag/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_radio/`](generic_radio/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_reaction_wheel/`](generic_reaction_wheel/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/`](generic_star_tracker/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_thruster/`](generic_thruster/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_torquer/`](generic_torquer/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/hwlib/`](hwlib/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/io_lib/`](io_lib/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/`](lc/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/mgr/`](mgr/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/novatel_oem615/`](novatel_oem615/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/onair/`](onair/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sample/`](sample/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn/`](sbn/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn_client/`](sbn_client/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn_tcp/`](sbn_tcp/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sc/`](sc/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sch/`](sch/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/syn/`](syn/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to/`](to/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/to_lab/`](to_lab/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

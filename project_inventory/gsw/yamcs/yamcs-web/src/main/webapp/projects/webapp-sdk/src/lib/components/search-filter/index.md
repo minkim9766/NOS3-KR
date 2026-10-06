@@ -3,18 +3,215 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `search-filter.component.css`
 
-file--search-filter.component.css
-file--search-filter.component.html
-file--search-filter.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.css`
+
+
+```css
+.search-input {
+  position: relative;
+  display: inline-block;
+}
+
+.search-input input {
+  width: 100%;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.filter {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.filter .material-symbols {
+  color: darkgrey;
+  padding: 4px;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.clear {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.clear .material-symbols {
+  cursor: pointer;
+  color: darkgrey;
+  padding: 4px;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.clear:hover .material-symbols {
+  color: black;
+}
 ```
 
-## 항목
+### `search-filter.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.css`](file--search-filter.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.html`](file--search-filter.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.ts`](file--search-filter.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.html`
+
+
+```html
+<div class="search-input" [style.width]="width">
+  <input
+    #input
+    class="ya-input"
+    type="text"
+    [placeholder]="placeholder"
+    (keydown)="onKeydown($event)" />
+  <div class="filter">
+    <mat-icon>{{ icon }}</mat-icon>
+  </div>
+  @if (showClear$ | async) {
+    <div class="clear" (click)="clearInput()">
+      <mat-icon>close</mat-icon>
+    </div>
+  }
+</div>
+```
+
+### `search-filter.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/search-filter/search-filter.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  ViewChild,
+  forwardRef,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { Subject, Subscription, fromEvent, merge } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+
+@Component({
+  selector: 'ya-search-filter',
+  templateUrl: './search-filter.component.html',
+  styleUrl: './search-filter.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaSearchFilter),
+      multi: true,
+    },
+  ],
+  imports: [AsyncPipe, MatIcon],
+})
+export class YaSearchFilter
+  implements ControlValueAccessor, AfterViewInit, OnDestroy
+{
+  @ViewChild('input', { static: true })
+  filter: ElementRef;
+
+  @Input()
+  placeholder = 'Filter';
+
+  @Input()
+  width = '400px';
+
+  @Input()
+  debounceTime = 400;
+
+  @Input()
+  icon = 'filter_list';
+
+  @Output()
+  onArrowDown = new EventEmitter<string>();
+
+  @Output()
+  onArrowUp = new EventEmitter<string>();
+
+  @Output()
+  onEnter = new EventEmitter<string>();
+
+  showClear$ = new Subject<boolean>();
+
+  private setEvent$ = new Subject<string>();
+  private eventSubscription: Subscription;
+
+  private onChange = (_: string | null) => {};
+
+  constructor(private changeDetection: ChangeDetectorRef) {}
+
+  ngAfterViewInit() {
+    const keyObservable = fromEvent(this.filter.nativeElement, 'keyup').pipe(
+      debounceTime(this.debounceTime),
+      map(() => this.filter.nativeElement.value.trim()), // Detect 'distinct' on value not on KeyEvent
+    );
+
+    this.showClear$.next(!!this.getValue());
+    this.changeDetection.detectChanges();
+
+    this.eventSubscription = merge(keyObservable, this.setEvent$)
+      .pipe(distinctUntilChanged())
+      .subscribe((value) => {
+        this.onChange(value);
+        this.showClear$.next(!!value);
+      });
+  }
+
+  getValue() {
+    return this.filter.nativeElement.value.trim();
+  }
+
+  writeValue(value: any) {
+    this.filter.nativeElement.value = value;
+    this.setEvent$.next(value);
+  }
+
+  clearInput() {
+    this.writeValue('');
+    const el = this.filter.nativeElement as HTMLInputElement;
+    el.focus();
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  onKeydown(event: KeyboardEvent) {
+    switch (event.key) {
+      case 'ArrowDown':
+        this.onArrowDown.emit((event.target as HTMLInputElement).value);
+        event.preventDefault();
+        return false;
+      case 'ArrowUp':
+        this.onArrowUp.emit((event.target as HTMLInputElement).value);
+        event.preventDefault();
+        return false;
+      case 'Enter':
+        this.onEnter.emit((event.target as HTMLInputElement).value);
+        event.preventDefault();
+        return false;
+    }
+  }
+
+  ngOnDestroy() {
+    this.eventSubscription?.unsubscribe();
+  }
+}
+```

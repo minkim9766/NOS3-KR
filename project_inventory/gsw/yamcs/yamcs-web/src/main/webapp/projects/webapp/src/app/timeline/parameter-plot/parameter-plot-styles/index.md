@@ -3,18 +3,121 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-plot-styles.component.css`
 
-file--parameter-plot-styles.component.css
-file--parameter-plot-styles.component.html
-file--parameter-plot-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.css`
+
+
+```css
+.inline {
+  display: inline-block !important;
+  width: 100px !important;
+}
 ```
 
-## 항목
+### `parameter-plot-styles.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.css`](file--parameter-plot-styles.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.html`](file--parameter-plot-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.ts`](file--parameter-plot-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.html`
+
+
+```html
+<form [formGroup]="form">
+  <table class="style-table" formGroupName="properties">
+    <tr>
+      <td class="property">
+        Frozen
+        <ya-help dialogTitle="Frozen">
+          Fix this line to the top of the view. Frozen bands are always rendered above other bands.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <mat-slide-toggle formControlName="frozen" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Height</td>
+      <td class="widget">
+        <input type="number" formControlName="height" class="inline" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">
+        Minimum
+        <ya-help dialogTitle="Minimum">
+          Minimum value on the Y axis. Values lower than the minimum are not visible. If undefined,
+          the value is automatically derived from the actual trace data.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="minimum" class="inline" />
+        <span class="hint">Leave empty for automatic determination</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="property">
+        Maximum
+        <ya-help dialogTitle="Maximum">
+          Maximum value on the Y axis. Values higher than the maximum are not visible. If undefined,
+          the value is automatically derived from the actual trace data.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <input type="number" formControlName="maximum" class="inline" />
+        <span class="hint">Leave empty for automatic determination</span>
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Zero line width</td>
+      <td class="widget">
+        <input type="number" formControlName="zeroLineWidth" class="inline" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Zero line color</td>
+      <td class="widget">
+        <input type="color" formControlName="zeroLineColor" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Minimum fraction digits</td>
+      <td class="widget">
+        <input type="number" formControlName="minimumFractionDigits" class="inline" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Maximum fraction digits</td>
+      <td class="widget">
+        <input type="number" formControlName="maximumFractionDigits" class="inline" min="0" />
+      </td>
+    </tr>
+  </table>
+</form>
+```
+
+### `parameter-plot-styles.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/parameter-plot-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-parameter-plot-styles',
+  templateUrl: './parameter-plot-styles.component.html',
+  styleUrls: [
+    './parameter-plot-styles.component.css',
+    '../../shared/StyleTable.css',
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterPlotStylesComponent {
+  @Input()
+  form: FormGroup;
+}
+```

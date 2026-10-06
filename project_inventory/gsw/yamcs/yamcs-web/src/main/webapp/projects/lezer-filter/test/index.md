@@ -3,30 +3,258 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `comments.txt`
 
-file--comments.txt
-file--comparisons.txt
-file--literals.txt
-file--logical.txt
-file--negate.txt
-file--parens.txt
-file--strings.txt
-file--test-filter.js
-file--texts.txt
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/comments.txt`
+
+
+```text
+# Line comment
+
+-- Some comment
+foo = 123
+
+==>
+
+Filter(LineComment,Comparison(Comparable,CompareOp,Number))
 ```
 
-## 항목
+### `comparisons.txt`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/comments.txt`](file--comments.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/comparisons.txt`](file--comparisons.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/literals.txt`](file--literals.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/logical.txt`](file--logical.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/negate.txt`](file--negate.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/parens.txt`](file--parens.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/strings.txt`](file--strings.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/test-filter.js`](file--test-filter.js) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/texts.txt`](file--texts.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/comparisons.txt`
+
+
+```text
+# Text Comparison
+
+foo = 123
+
+==>
+
+Filter(Comparison(Comparable,CompareOp,Number))
+
+# String Comparison
+
+foo="123"
+
+==>
+
+Filter(Comparison(Comparable,CompareOp,String))
+
+# Operators
+
+foo != "123"
+foo < "123"
+foo <= "123"
+foo > "123"
+foo >= "123"
+foo =~ "123"
+foo !~ "123"
+foo : "123"
+
+==>
+
+Filter(
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String),
+  Comparison(Comparable,CompareOp,String))
+```
+
+### `literals.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/literals.txt`
+
+
+```text
+# True
+
+true
+
+==>
+
+Filter(True)
+
+# False
+
+false
+
+==>
+
+Filter(False)
+
+# Null
+
+null
+
+==>
+
+Filter(Null)
+```
+
+### `logical.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/logical.txt`
+
+
+```text
+# Logical operator
+
+foo = 123 AND bar = "abc"
+
+==>
+
+Filter(
+  Comparison(Comparable,CompareOp,Number),
+  LogicOp,
+  Comparison(Comparable,CompareOp,String),)
+
+# Not a logical operator
+
+foo = 123 and bar = "abc"
+
+==>
+
+Filter(
+  Comparison(Comparable,CompareOp,Number),
+  Text,
+  Comparison(Comparable,CompareOp,String),)
+```
+
+### `negate.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/negate.txt`
+
+
+```text
+# Single term
+
+-foo = 123
+
+==>
+
+Filter(Comparison(Minus, Comparable, CompareOp, Number))
+```
+
+### `parens.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/parens.txt`
+
+
+```text
+# Single term
+
+abc OR (def AND ghi)
+
+==>
+
+Filter(Text,LogicOp,Text,LogicOp,Text)
+```
+
+### `strings.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/strings.txt`
+
+
+```text
+# Empty String
+
+""
+
+==>
+
+Filter(String)
+
+# Non-empty String
+
+"This is a boring old string"
+
+==>
+
+Filter(String)
+
+# All The Valid One-Character Escapes
+
+"\"\\\/\b\f\n\rt\t"
+
+==>
+
+Filter(String)
+```
+
+### `test-filter.js`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/test-filter.js`
+
+
+```javascript
+import { fileTests } from '@lezer/generator/dist/test';
+import { parser } from '../dist/index.js';
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+let caseDir = path.dirname(fileURLToPath(import.meta.url));
+
+for (let file of fs.readdirSync(caseDir)) {
+  if (file === 'test-filter.js') continue;
+
+  let name = /^[^\.]*/.exec(file)[0];
+  describe(name, () => {
+    for (let { name, run } of fileTests(
+      fs.readFileSync(path.join(caseDir, file), 'utf8'),
+      file,
+    ))
+      it(name, () => run(parser));
+  });
+}
+```
+
+### `texts.txt`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/test/texts.txt`
+
+
+```text
+# Single term
+
+abc
+
+==>
+
+Filter(Text)
+
+# Sequence
+
+abc
+def
+
+==>
+
+Filter(Text, Text)
+
+# Negate text term
+
+abc
+-def
+
+==>
+
+Filter(Text, Minus, Text)
+
+
+# Negate string term
+
+"abc def"
+-"def ghi"
+
+==>
+
+Filter(String, Minus, String)
+```

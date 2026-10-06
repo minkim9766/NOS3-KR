@@ -3,32 +3,417 @@
 
 **경로:** `components/syn/synopsis/test/data/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `dd_example.db`
 
-file--dd_example.db
-file--dd_example_config.json
-file--dd_example_rules.json
-file--dd_example_rules.srd
-file--dd_example_similarity_config.json
-file--example_dp.dat
-file--example_metadata.json
-file--instrument_pair.db
-file--instrument_pair_rules.json
-file--instrument_pair_rules.srd
+**경로:** `components/syn/synopsis/test/data/dd_example.db`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `dd_example_config.json`
+
+**경로:** `components/syn/synopsis/test/data/dd_example_config.json`
+
+
+```json
+{
+  "functions": {
+    "default": [
+      {
+        "key": ["OWLS", "ACME"],
+        "function": {
+          "diversity_descriptor": ["background_avg", "unique_masses"],
+          "weights": [1.0, 0.5],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.34289567767
+          }
+        }
+      }
+    ],
+    "7": [
+      {
+        "key": ["OWLS", "ACME"],
+        "function": {
+          "diversity_descriptor": ["background_avg", "unique_masses"],
+          "weights": [1.0, 0.5],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.34289567767
+          }
+        }
+      }
+    ]
+  },
+  "alphas": {
+    "default": 1.0,
+    "7": 1.0
+  }
+}
 ```
 
-## 항목
+### `dd_example_rules.json`
 
-- [`components/syn/synopsis/test/data/dd_example.db`](file--dd_example.db) — 바이너리 (경로만)
-- [`components/syn/synopsis/test/data/dd_example_config.json`](file--dd_example_config.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/dd_example_rules.json`](file--dd_example_rules.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/dd_example_rules.srd`](file--dd_example_rules.srd) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/dd_example_similarity_config.json`](file--dd_example_similarity_config.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/example_dp.dat`](file--example_dp.dat) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/example_metadata.json`](file--example_metadata.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/instrument_pair.db`](file--instrument_pair.db) — 바이너리 (경로만)
-- [`components/syn/synopsis/test/data/instrument_pair_rules.json`](file--instrument_pair_rules.json) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/test/data/instrument_pair_rules.srd`](file--instrument_pair_rules.srd) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/synopsis/test/data/dd_example_rules.json`
+
+
+```json
+{
+  "0": {
+    "rules": [],
+    "constraints": [
+      {
+        "__type__": "Constraint",
+        "__contents__": {
+          "variables": [
+            "x"
+          ],
+          "application": {
+            "__type__": "ComparatorExpression",
+            "__contents__": {
+              "comparator": "==",
+              "left_expression": {
+                "__type__": "Field",
+                "__contents__": {
+                  "variable_name": "x",
+                  "field_name": "instrument_name"
+                }
+              },
+              "right_expression": {
+                "__type__": "StringConstant",
+                "__contents__": {
+                  "value": "OWLS"
+                }
+              }
+            }
+          },
+          "sum_field": null,
+          "constraint_value": 3.0
+        }
+      }
+    ]
+  }
+}
+```
+
+### `dd_example_rules.srd`
+
+**경로:** `components/syn/synopsis/test/data/dd_example_rules.srd`
+
+
+```text
+BIN 0:
+
+CONSTRAINT(x):
+APPLIES x.instrument_name == "OWLS"
+COUNT
+LESS THAN 3;
+```
+
+### `dd_example_similarity_config.json`
+
+**경로:** `components/syn/synopsis/test/data/dd_example_similarity_config.json`
+
+
+```json
+{
+  "functions": {
+    "default": [
+      {
+        "key": ["OWLS", "ACME"],
+        "function": {
+          "diversity_descriptor": ["background_avg", "unique_masses"],
+          "weights": [1.0, 0.5],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.34289567767
+          }
+        }
+      }
+    ],
+    "7": [
+      {
+        "key": ["OWLS", "ACME"],
+        "function": {
+          "diversity_descriptor": ["background_avg", "unique_masses"],
+          "weights": [1.0, 0.5],
+          "similarity_type": "gaussian",
+          "similarity_parameters": {
+            "sigma": 1.34289567767
+          }
+        }
+      }
+    ]
+  },
+  "alphas": {
+    "default": 1.0,
+    "7": 1.0
+  }
+}
+```
+
+### `example_dp.dat`
+
+**경로:** `components/syn/synopsis/test/data/example_dp.dat`
+
+
+```text
+This is an example data product containing raw text.
+```
+
+### `example_metadata.json`
+
+**경로:** `components/syn/synopsis/test/data/example_metadata.json`
+
+
+```json
+{
+  "science_utility_estimate": 0.123,
+  "priority_bin": 7,
+  "metadata" : {
+    "metadata_field_int": 123,
+    "metadata_field_float": 1.23,
+    "metadata_field_string": "hello world"
+  }
+}
+```
+
+### `instrument_pair.db`
+
+**경로:** `components/syn/synopsis/test/data/instrument_pair.db`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `instrument_pair_rules.json`
+
+**경로:** `components/syn/synopsis/test/data/instrument_pair_rules.json`
+
+
+```json
+{
+  "default": {
+    "rules": [
+      {
+        "__type__": "Rule",
+        "__contents__": {
+          "variables": [
+            "x"
+          ],
+          "application": {
+            "__type__": "BinaryLogicalExpression",
+            "__contents__": {
+              "operator": "AND",
+              "left_expression": {
+                "__type__": "BinaryLogicalExpression",
+                "__contents__": {
+                  "operator": "AND",
+                  "left_expression": {
+                    "__type__": "ComparatorExpression",
+                    "__contents__": {
+                      "comparator": "==",
+                      "left_expression": {
+                        "__type__": "Field",
+                        "__contents__": {
+                          "variable_name": "x",
+                          "field_name": "instrument_name"
+                        }
+                      },
+                      "right_expression": {
+                        "__type__": "StringConstant",
+                        "__contents__": {
+                          "value": "SFI"
+                        }
+                      }
+                    }
+                  },
+                  "right_expression": {
+                    "__type__": "ComparatorExpression",
+                    "__contents__": {
+                      "comparator": "==",
+                      "left_expression": {
+                        "__type__": "Field",
+                        "__contents__": {
+                          "variable_name": "x",
+                          "field_name": "type"
+                        }
+                      },
+                      "right_expression": {
+                        "__type__": "StringConstant",
+                        "__contents__": {
+                          "value": "ZOOM"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "right_expression": {
+                "__type__": "LogicalNot",
+                "__contents__": {
+                  "expression": {
+                    "__type__": "ExistentialExpression",
+                    "__contents__": {
+                      "variable": "y",
+                      "expression": {
+                        "__type__": "BinaryLogicalExpression",
+                        "__contents__": {
+                          "operator": "AND",
+                          "left_expression": {
+                            "__type__": "BinaryLogicalExpression",
+                            "__contents__": {
+                              "operator": "AND",
+                              "left_expression": {
+                                "__type__": "ComparatorExpression",
+                                "__contents__": {
+                                  "comparator": "==",
+                                  "left_expression": {
+                                    "__type__": "Field",
+                                    "__contents__": {
+                                      "variable_name": "y",
+                                      "field_name": "instrument_name"
+                                    }
+                                  },
+                                  "right_expression": {
+                                    "__type__": "StringConstant",
+                                    "__contents__": {
+                                      "value": "SFI"
+                                    }
+                                  }
+                                }
+                              },
+                              "right_expression": {
+                                "__type__": "ComparatorExpression",
+                                "__contents__": {
+                                  "comparator": "==",
+                                  "left_expression": {
+                                    "__type__": "Field",
+                                    "__contents__": {
+                                      "variable_name": "y",
+                                      "field_name": "type"
+                                    }
+                                  },
+                                  "right_expression": {
+                                    "__type__": "StringConstant",
+                                    "__contents__": {
+                                      "value": "CTX"
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          },
+                          "right_expression": {
+                            "__type__": "ComparatorExpression",
+                            "__contents__": {
+                              "comparator": "==",
+                              "left_expression": {
+                                "__type__": "Field",
+                                "__contents__": {
+                                  "variable_name": "x",
+                                  "field_name": "context_image_id"
+                                }
+                              },
+                              "right_expression": {
+                                "__type__": "Field",
+                                "__contents__": {
+                                  "variable_name": "y",
+                                  "field_name": "id"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "adjustment": {
+            "__type__": "BinaryExpression",
+            "__contents__": {
+              "operator": "*",
+              "left_expression": {
+                "__type__": "ConstExpression",
+                "__contents__": {
+                  "__type__": "ConstExpression",
+                  "value": -0.5
+                }
+              },
+              "right_expression": {
+                "__type__": "Field",
+                "__contents__": {
+                  "variable_name": "x",
+                  "field_name": "science_utility_estimate"
+                }
+              }
+            }
+          },
+          "max_applications": null
+        }
+      }
+    ],
+    "constraints": [
+      {
+        "__type__": "Constraint",
+        "__contents__": {
+          "variables": [
+            "x"
+          ],
+          "application": {
+            "__type__": "ComparatorExpression",
+            "__contents__": {
+              "comparator": "==",
+              "left_expression": {
+                "__type__": "Field",
+                "__contents__": {
+                  "variable_name": "x",
+                  "field_name": "instrument_name"
+                }
+              },
+              "right_expression": {
+                "__type__": "StringConstant",
+                "__contents__": {
+                  "value": "SFI"
+                }
+              }
+            }
+          },
+          "sum_field": {
+            "__type__": "Field",
+            "__contents__": {
+              "variable_name": "x",
+              "field_name": "size"
+            }
+          },
+          "constraint_value": 3.0
+        }
+      }
+    ]
+  }
+}
+```
+
+### `instrument_pair_rules.srd`
+
+**경로:** `components/syn/synopsis/test/data/instrument_pair_rules.srd`
+
+
+```text
+DEFAULT:
+
+CONSTRAINT(x):
+APPLIES x.instrument_name == "SFI"
+SUM x.size
+LESS THAN 3;
+
+RULE (x):
+APPLIES (x.instrument_name == "SFI" AND x.type == "ZOOM")
+        AND NOT EXISTS y: (
+          (y.instrument_name == "SFI" AND y.type == "CTX")
+          AND x.context_image_id == y.id
+        )
+ADJUST UTILITY -0.5 * x.science_utility_estimate;
+```

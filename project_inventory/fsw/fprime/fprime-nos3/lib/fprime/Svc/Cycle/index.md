@@ -3,18 +3,53 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Cycle.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/Cycle.fpp`](file--Cycle.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Cycle.fpp"
+)
+set(MOD_DEPS
+    Os
+    Fw/Port
+)
+register_fprime_module()
+```
+
+### `Cycle.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Cycle/Cycle.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Time cycle Port with timestamp argument
+  port Cycle(
+              ref cycleStart: Os.RawTime @< Cycle start timestamp
+            )
+
+}
+```

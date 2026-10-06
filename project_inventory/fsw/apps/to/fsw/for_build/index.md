@@ -3,16 +3,242 @@
 
 **경로:** `fsw/apps/to/fsw/for_build/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Makefile`
 
-file--Makefile
-file--totables.mak
+**경로:** `fsw/apps/to/fsw/for_build/Makefile`
+
+
+```make
+#######################################################################################
+#
+# File:    CFS Application Makefile 
+# Author:  GSFC/Flight Software Branch/Code 582
+# Date:    2008-2010
+#
+#######################################################################################
+
+#
+# Subsystem produced by this makefile
+#
+export APPTARGET = to
+
+# 
+# Entry Point for task
+# 
+ENTRY_PT = TO_AppMain
+
+#
+# Object files required to build subsystem.
+#
+OBJS = to_app.o to_cmds.o to_utils.o to_custom.o 
+
+#
+# Source files required to build subsystem; used to generate dependencies.
+# As long as there are no assembly files this can be automated.
+#
+SOURCES = $(OBJS:.o=.c)
+
+#
+# Specify extra C Flags needed to build this subsystem
+#
+LOCAL_COPTS = 
+
+#
+# EXEDIR is defined here, just in case it needs to be different for a custom build
+#
+EXEDIR=../exe
+
+#
+# Certain OSs and Application Loaders require the following option for shared libraries. 
+# Currently only needed for vxWorks 5.5 and RTEMS.
+# For each shared library that this app depends on, you need to have an entry like the
+# following:
+#    -R../tst_lib/tst_lib.elf
+#
+SHARED_LIB_LINK = 
+
+#======================================================================================
+# Should not have to change below this line, except for customized mission and cFE
+# directory structures
+#======================================================================================
+#
+# Set build type to CFE_APP. This allows us to 
+# define different compiler flags for the cFE Core and Apps.
+# 
+BUILD_TYPE = CFE_APP
+
+# 
+# Include all necessary cFE make rules
+# Any of these can be copied to a local file and changed if needed.
+#
+#       cfe-config.mak contains PSP and OS selection
+#
+include ../cfe/cfe-config.mak
+#
+#       debug-opts.mak contains debug switches
+#
+include ../cfe/debug-opts.mak
+#
+#       compiler-opts.mak contains compiler definitions and switches/defines
+#
+include $(CFE_PSP_SRC)/$(PSP)/make/compiler-opts.mak
+
+#
+# Setup the include path for this subsystem
+# The OS specific includes are in the build-rules.make file
+#
+# If this subsystem needs include files from another app, add the path here.
+#
+INCLUDE_PATH = -I$(OSAL_SRC)/inc \
+               -I$(CFE_CORE_SRC)/inc \
+               -I$(CFE_PSP_SRC)/inc \
+               -I$(CFE_PSP_SRC)/$(PSP)/inc \
+               -I$(CFS_APP_SRC)/inc \
+               -I$(CFS_APP_SRC)/io_lib/fsw/public_inc \
+               -I$(CFS_APP_SRC)/$(APPTARGET)/fsw/src \
+               -I$(CFS_APP_SRC)/$(APPTARGET)/fsw/tables \
+               -I$(CFS_MISSION_INC) \
+               -I../cfe/inc \
+               -I../inc \
+               -I../../components/cryptolib
+
+#
+# Define the VPATH make variable. 
+# This can be modified to include source from another directory.
+# If there is no corresponding app in the cfs-apps directory, then this can be discarded,
+# or if the mission chooses to put the src in another directory such as "src", then that
+# can be added here as well.
+#
+VPATH = $(CFS_APP_SRC)/$(APPTARGET)/fsw/src \
+        $(CFS_APP_SRC)/$(APPTARGET)/fsw/tables 
+
+#
+# Include the common make rules for building a cFE Application
+#
+include $(CFE_CORE_SRC)/make/app-rules.mak
+
+#######################################################################################
+    
 ```
 
-## 항목
+### `totables.mak`
 
-- [`fsw/apps/to/fsw/for_build/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/for_build/totables.mak`](file--totables.mak) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/to/fsw/for_build/totables.mak`
+
+
+```text
+###############################################################################
+# File: CFS Application Table Makefile 
+#
+#
+# History:
+#
+###############################################################################
+#
+# The Application needs to be specified here
+#
+APPTARGET = to
+
+#
+# List the tables that are generated here.
+# Restrictions:
+# 1. The table file name must be the same as the C source file name
+# 2. There must be a single C source file for each table
+#
+TABLES = to_config.tbl to_config_2.tbl 
+
+##################################################################################
+# Normally, nothing has to be changed below this line
+# The following are changes that may have to be made for a custom app environment:
+# 1. INCLUDE_PATH - This may be customized to tailor the include path for an app
+# 2. VPATH - This may be customized to tailor the location of the table sources.
+#            For example: if the tables were stored in a "tables" subdirectory
+#                        ( build/cpu1/sch/tables )
+#################################################################################
+
+#
+# Object files required for tables
+#
+OBJS = $(TABLES:.tbl=.o)
+
+#
+# Source files required to build tables.
+#
+SOURCES = $(OBJS:.o=.c)
+
+##
+## Specify extra C Flags needed to build this subsystem
+##
+LOCAL_COPTS = 
+
+##
+## EXEDIR is defined here, just in case it needs to be different for a custom
+## build
+##
+EXEDIR=../exe
+
+########################################################################
+# Should not have to change below this line, except for customized 
+# Mission and cFE directory structures
+########################################################################
+
+#
+# Set build type to CFE_APP. This allows us to 
+# define different compiler flags for the cFE Core and Apps.
+# 
+BUILD_TYPE = CFE_TABLE
+
+## 
+## Include all necessary cFE make rules
+## Any of these can be copied to a local file and 
+## changed if needed.
+##
+##
+##       cfe-config.mak contians arch, BSP, and OS selection
+##
+include ../cfe/cfe-config.mak
+
+##
+##       debug-opts.mak contains debug switches -- Note that the table must be
+##       built with -g for the elf2tbl utility to work.
+##
+include ../cfe/debug-opts.mak
+
+##
+##       compiler-opts.mak contains compiler definitions and switches/defines
+##
+include $(CFE_PSP_SRC)/$(PSP)/make/compiler-opts.mak
+
+##
+## Setup the include path for this subsystem
+## The OS specific includes are in the build-rules.make file
+##
+## If this subsystem needs include files from another app, add the path here.
+##
+INCLUDE_PATH = \
+-I$(OSAL_SRC)/inc \
+-I$(CFE_CORE_SRC)/inc \
+-I$(CFE_PSP_SRC)/$(PSP)/inc \
+-I$(CFE_PSP_SRC)/inc \
+-I$(CFS_APP_SRC)/inc \
+-I$(CFS_APP_SRC)/$(APPTARGET)/fsw/src \
+-I$(CFS_MISSION_INC) \
+-I../cfe/inc \
+-I../inc
+
+##
+## Define the VPATH make variable. 
+## This can be modified to include source from another directory.
+## If there is no corresponding app in the cfe-apps directory, then this can be discarded, or
+## if the mission chooses to put the src in another directory such as "src", then that can be 
+## added here as well.
+##
+VPATH = $(CFS_APP_SRC)/$(APPTARGET)/fsw/tables 
+
+##
+## Include the common make rules for building a cFE Application
+##
+include $(CFE_CORE_SRC)/make/table-rules.mak
+```

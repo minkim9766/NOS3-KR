@@ -3,16 +3,24 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/resources/META-INF/services/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `org.yamcs.activities.ActivityExecutor`
 
-file--org.yamcs.activities.ActivityExecutor
-file--org.yamcs.buckets.BucketProvider
+**경로:** `gsw/yamcs/yamcs-core/src/main/resources/META-INF/services/org.yamcs.activities.ActivityExecutor`
+
+
+```text
+org.yamcs.activities.CommandExecutor
+org.yamcs.activities.CommandStackExecutor
+org.yamcs.activities.ScriptExecutor
 ```
 
-## 항목
+### `org.yamcs.buckets.BucketProvider`
 
-- [`gsw/yamcs/yamcs-core/src/main/resources/META-INF/services/org.yamcs.activities.ActivityExecutor`](file--org.yamcs.activities.ActivityExecutor) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/resources/META-INF/services/org.yamcs.buckets.BucketProvider`](file--org.yamcs.buckets.BucketProvider) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/resources/META-INF/services/org.yamcs.buckets.BucketProvider`
+
+
+```text
+org.yamcs.buckets.RemoteYamcsBucketProvider
+```

@@ -3,14 +3,12 @@
 
 **경로:** `gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitkeep`
 
-file--.gitkeep
+**경로:** `gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/cmd_tlm/.gitkeep`
+
+
+```text
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/cmd_tlm/.gitkeep`](file--.gitkeep) — UTF-8 텍스트 파일 본문 포함

@@ -3,18 +3,234 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SignalGenTester.cpp`
 
-file--SignalGenTester.cpp
-file--SignalGenTester.hpp
-file--SignalGenTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SignalGen.hpp
+// \author mstarch
+// \brief  cpp file for SignalGen test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "SignalGenTester.hpp"
+
+namespace Ref {
+
+  // ----------------------------------------------------------------------
+  // Construction and destruction
+  // ----------------------------------------------------------------------
+
+  SignalGenTester ::
+    SignalGenTester() :
+      SignalGenGTestBase("Tester", MAX_HISTORY_SIZE),
+      component("SignalGen")
+  {
+    this->initComponents();
+    this->connectPorts();
+    this->m_reqDpBuff.set(this->m_dpBuff,sizeof(this->m_dpBuff));
+  }
+
+  SignalGenTester ::
+    ~SignalGenTester()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Tests
+  // ----------------------------------------------------------------------
+
+  void SignalGenTester ::
+    test_start()
+  {
+       ASSERT_TLM_Output_SIZE(0);
+       sendCmd_Toggle(0, 0);
+       component.doDispatch();
+       invoke_to_schedIn(0, 0);
+       component.doDispatch();
+       ASSERT_TLM_Output_SIZE(1);
+       sendCmd_Dp(0,10,Ref::SignalGen_DpReqType::IMMEDIATE,1,1);
+       component.doDispatch();
+       // verify request for data product buffer
+       ASSERT_PRODUCT_GET_SIZE(1);
+       // run 2 cycles, should output data product on second
+       invoke_to_schedIn(0, 0);
+       ASSERT_PRODUCT_SEND_SIZE(1);
+
+  }
+
+    //! Handle a text event
+    void SignalGenTester::textLogIn(
+        FwEventIdType id, //!< The event ID
+        const Fw::Time& timeTag, //!< The time
+        const Fw::LogSeverity severity, //!< The severity
+        const Fw::TextLogString& text //!< The event string
+    ) {
+      TextLogEntry e = { id, timeTag, severity, text };
+
+      printTextLogHistoryEntry(e, stdout);
+
+    }
+
+    Fw::Success::T SignalGenTester ::
+    productGet_handler(
+        FwDpIdType id,
+        FwSizeType dataSize,
+        Fw::Buffer& buffer
+    )
+  {
+    printf ("Component requested %" PRI_FwSizeType " bytes.\n",dataSize);
+    buffer.set(this->m_dpBuff,dataSize);
+    this->pushProductGetEntry(id, dataSize);
+    return Fw::Success::SUCCESS;
+  }
+
+
+} // end namespace Ref
 ```
 
-## 항목
+### `SignalGenTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTester.cpp`](file--SignalGenTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTester.hpp`](file--SignalGenTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTestMain.cpp`](file--SignalGenTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SignalGen/test/ut/Tester.hpp
+// \author mstarch
+// \brief  hpp file for SignalGen test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "SignalGenGTestBase.hpp"
+#include "Ref/SignalGen/SignalGen.hpp"
+
+namespace Ref {
+
+  class SignalGenTester :
+    public SignalGenGTestBase
+  {
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+    public:
+      // Maximum size of histories storing events, telemetry, and port outputs
+      static const U32 MAX_HISTORY_SIZE = 10;
+      // Instance ID supplied to the component instance under test
+      static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+      // Queue depth supplied to component instance under test
+      static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+      //! Construct object SignalGenTester
+      //!
+      SignalGenTester();
+
+      //! Destroy object SignalGenTester
+      //!
+      ~SignalGenTester();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Tests
+      // ----------------------------------------------------------------------
+
+      //! To do
+      //!
+      void test_start();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Helper methods
+      // ----------------------------------------------------------------------
+
+      //! Connect ports
+      //!
+      void connectPorts();
+
+      //! Initialize components
+      //!
+      void initComponents();
+
+    private:
+
+      //! Handle a data product get from the component under test
+      //!
+      //! By default, (1) call pushProductGetEntry; (2) do not allocate a buffer
+      //! and return FAILURE. You can override this behavior, e.g., to call
+      //! pushProductGetEntry, allocate a buffer and return SUCCESS.
+      Fw::Success::T productGet_handler (
+        FwDpIdType id, //!< The container ID (input)
+        FwSizeType dataSize, //!< The data size of the requested buffer (input)
+        Fw::Buffer& buffer //!< The buffer (output)
+      ) override;
+
+
+      // ----------------------------------------------------------------------
+      // Variables
+      // ----------------------------------------------------------------------
+
+      //! The component under test
+      //!
+      SignalGen component;
+
+      void textLogIn(
+        FwEventIdType id, //!< The event ID
+        const Fw::Time& timeTag, //!< The time
+        const Fw::LogSeverity severity, //!< The severity
+        const Fw::TextLogString& text //!< The event string
+      ) override;
+
+      U8 m_dpBuff[1024];
+      Fw::Buffer m_reqDpBuff;
+
+  };
+
+} // end namespace Ref
+
+#endif
+```
+
+### `SignalGenTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/ut/SignalGenTestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "SignalGenTester.hpp"
+
+TEST(Nominal, TestStart) {
+    Ref::SignalGenTester tester;
+    tester.test_start();
+}
+
+int main(int argc, char **argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

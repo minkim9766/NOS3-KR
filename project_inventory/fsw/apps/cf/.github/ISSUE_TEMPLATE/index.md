@@ -3,16 +3,89 @@
 
 **경로:** `fsw/apps/cf/.github/ISSUE_TEMPLATE/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bug_report.md`
 
-file--bug_report.md
-file--feature_request.md
+**경로:** `fsw/apps/cf/.github/ISSUE_TEMPLATE/bug_report.md`
+
+
+```markdown
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [ ] I performed a cursory search to see if the bug report is relevant, not redundant, nor in conflict with other tickets.
+
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+A clear and concise description of what you expected to happen.
+
+**Code snips**
+If applicable, add references to the software.
+
+**System observed on:**
+ - Hardware
+ - OS: [e.g. Linux 4.4]
+ - Versions [e.g. cFE 6.6, OSAL 4.2, PSP 1.3 for mcp750, any related apps]
+
+**Additional context**
+Add any other context about the problem here.
+
+**Reporter Info**
+Full name and company/organization if applicable
 ```
 
-## 항목
+### `feature_request.md`
 
-- [`fsw/apps/cf/.github/ISSUE_TEMPLATE/bug_report.md`](file--bug_report.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/.github/ISSUE_TEMPLATE/feature_request.md`](file--feature_request.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/cf/.github/ISSUE_TEMPLATE/feature_request.md`
+
+
+```markdown
+---
+name: Feature request
+about: Suggest an idea for this project
+title: ''
+labels: ''
+assignees: ''
+
+---
+
+**Checklist (Please check before submitting)**
+
+* [ ] I reviewed the [Contributing Guide](https://github.com/nasa/CF/blob/main/CONTRIBUTING.md).
+* [ ] I reviewed the [CF README.md file](https://github.com/nasa/CF/blob/main/README.md) to see if the feature is in the major future work.
+* [ ] I performed a cursory search to see if the feature request is relevant, not redundant, nor in conflict with other tickets.
+
+**Is your feature request related to a problem? Please describe.**
+A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+
+**Describe the solution you'd like**
+A clear and concise description of what you want to happen.
+
+**Describe alternatives you've considered**
+A clear and concise description of any alternative solutions or features you've considered.
+
+**Additional context**
+Add any other context about the feature request here.
+
+**Requester Info**
+Full name and company/organization if applicable
+```

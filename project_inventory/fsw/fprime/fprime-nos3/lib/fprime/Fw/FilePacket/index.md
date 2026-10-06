@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,28 +11,1095 @@
 docs/index
 GTest/index
 test/index
-file--CancelPacket.cpp
-file--CMakeLists.txt
-file--DataPacket.cpp
-file--EndPacket.cpp
-file--FilePacket.cpp
-file--FilePacket.hpp
-file--Header.cpp
-file--PathName.cpp
-file--StartPacket.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/GTest/`](GTest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/CancelPacket.cpp`](file--CancelPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/DataPacket.cpp`](file--DataPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/EndPacket.cpp`](file--EndPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/FilePacket.cpp`](file--FilePacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/FilePacket.hpp`](file--FilePacket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/Header.cpp`](file--Header.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/PathName.cpp`](file--PathName.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/StartPacket.cpp`](file--StartPacket.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CancelPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/CancelPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CancelPacket.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::CancelPacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+void FilePacket::CancelPacket ::initialize(const U32 sequenceIndex) {
+    this->m_header.initialize(FilePacket::T_CANCEL, sequenceIndex);
+}
+
+U32 FilePacket::CancelPacket ::bufferSize() const {
+    return this->m_header.bufferSize();
+}
+
+SerializeStatus FilePacket::CancelPacket ::toBuffer(Buffer& buffer) const {
+    SerialBuffer serialBuffer(buffer.getData(), buffer.getSize());
+    return this->m_header.toSerialBuffer(serialBuffer);
+}
+
+SerializeStatus FilePacket::CancelPacket ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    FW_ASSERT(this->m_header.m_type == T_CANCEL);
+
+    if (serialBuffer.getBuffLeft() != 0) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+}  // namespace Fw
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/CancelPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DataPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/EndPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FilePacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Header.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PathName.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StartPacket.cpp"
+)
+# Note: no autocoding files, so basic dependencies must be hard-coded
+set(MOD_DEPS
+  Fw/Types
+  CFDP/Checksum
+  Fw/Buffer
+)
+# For shared libraries, Os must exist in the module list
+if (BUILD_SHARED_LIBS)
+    list(APPEND MOD_DEPS "Os")
+endif()
+register_fprime_module()
+# Add GTest directory
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/GTest")
+
+set(UT_MOD_DEPS
+    Fw/FilePacket/GTest
+)
+
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/FilePacketMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `DataPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/DataPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DataPacket.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::DataPacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+void FilePacket::DataPacket ::initialize(const U32 sequenceIndex,
+                                         const U32 byteOffset,
+                                         const U16 dataSize,
+                                         const U8* const data) {
+    this->m_header.initialize(FilePacket::T_DATA, sequenceIndex);
+    this->m_byteOffset = byteOffset;
+    this->m_dataSize = dataSize;
+    this->m_data = data;
+}
+
+U32 FilePacket::DataPacket ::bufferSize() const {
+    return static_cast<U32>(this->m_header.bufferSize() + sizeof(this->m_byteOffset) + sizeof(this->m_dataSize) +
+                            this->m_dataSize);
+}
+
+SerializeStatus FilePacket::DataPacket ::toBuffer(Buffer& buffer) const {
+    SerialBuffer serialBuffer(buffer.getData(), buffer.getSize());
+    return this->toSerialBuffer(serialBuffer);
+}
+
+SerializeStatus FilePacket::DataPacket ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    FW_ASSERT(this->m_header.m_type == T_DATA);
+
+    SerializeStatus status = serialBuffer.deserialize(this->m_byteOffset);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.deserialize(this->m_dataSize);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    if (serialBuffer.getBuffLeft() != this->m_dataSize) {
+        return FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+
+    U8* const addr = serialBuffer.getBuffAddr();
+    this->m_data = &addr[this->fixedLengthSize()];
+
+    return FW_SERIALIZE_OK;
+}
+
+U32 FilePacket::DataPacket ::fixedLengthSize() const {
+    return static_cast<U32>(this->m_header.bufferSize() + sizeof(this->m_byteOffset) + sizeof(this->m_dataSize));
+}
+
+SerializeStatus FilePacket::DataPacket ::toSerialBuffer(SerialBuffer& serialBuffer) const {
+    FW_ASSERT(this->m_header.m_type == T_DATA);
+
+    SerializeStatus status;
+
+    status = this->m_header.toSerialBuffer(serialBuffer);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.serialize(this->m_byteOffset);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.serialize(this->m_dataSize);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.pushBytes(this->m_data, this->m_dataSize);
+
+    return status;
+}
+
+}  // namespace Fw
+```
+
+### `EndPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/EndPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  EndPacket.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::EndPacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <cstring>
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+void FilePacket::EndPacket ::initialize(const U32 sequenceIndex, const CFDP::Checksum& checksum) {
+    this->m_header.initialize(FilePacket::T_END, sequenceIndex);
+    this->setChecksum(checksum);
+}
+
+U32 FilePacket::EndPacket ::bufferSize() const {
+    return static_cast<U32>(this->m_header.bufferSize() + sizeof(this->m_checksumValue));
+}
+
+SerializeStatus FilePacket::EndPacket ::toBuffer(Buffer& buffer) const {
+    SerialBuffer serialBuffer(buffer.getData(), buffer.getSize());
+    return this->toSerialBuffer(serialBuffer);
+}
+
+void FilePacket::EndPacket ::setChecksum(const CFDP::Checksum& checksum) {
+    this->m_checksumValue = checksum.getValue();
+}
+
+void FilePacket::EndPacket ::getChecksum(CFDP::Checksum& checksum) const {
+    CFDP::Checksum c(this->m_checksumValue);
+    checksum = c;
+}
+
+SerializeStatus FilePacket::EndPacket ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    FW_ASSERT(this->m_header.m_type == T_END);
+
+    const SerializeStatus status = serialBuffer.deserialize(this->m_checksumValue);
+
+    return status;
+}
+
+SerializeStatus FilePacket::EndPacket ::toSerialBuffer(SerialBuffer& serialBuffer) const {
+    FW_ASSERT(this->m_header.m_type == T_END);
+
+    SerializeStatus status;
+
+    status = this->m_header.toSerialBuffer(serialBuffer);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.serialize(this->m_checksumValue);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+}  // namespace Fw
+```
+
+### `FilePacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/FilePacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FilePacket.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/FilePacket/FilePacket.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Fw {
+
+// ----------------------------------------------------------------------
+// Public instance methods
+// ----------------------------------------------------------------------
+
+SerializeStatus FilePacket ::fromBuffer(const Buffer& buffer) {
+    SerialBuffer serialBuffer(const_cast<Buffer&>(buffer).getData(), const_cast<Buffer&>(buffer).getSize());
+    serialBuffer.fill();
+    const SerializeStatus status = this->fromSerialBuffer(serialBuffer);
+    return status;
+}
+
+const FilePacket::Header& FilePacket ::asHeader() const {
+    return this->m_header;
+}
+
+const FilePacket::StartPacket& FilePacket ::asStartPacket() const {
+    FW_ASSERT(this->m_header.m_type == T_START);
+    return this->m_startPacket;
+}
+
+const FilePacket::DataPacket& FilePacket ::asDataPacket() const {
+    FW_ASSERT(this->m_header.m_type == T_DATA);
+    return this->m_dataPacket;
+}
+
+const FilePacket::EndPacket& FilePacket ::asEndPacket() const {
+    FW_ASSERT(this->m_header.m_type == T_END);
+    return this->m_endPacket;
+}
+
+const FilePacket::CancelPacket& FilePacket ::asCancelPacket() const {
+    FW_ASSERT(this->m_header.m_type == T_CANCEL);
+    return this->m_cancelPacket;
+}
+
+void FilePacket ::fromStartPacket(const StartPacket& startPacket) {
+    this->m_startPacket = startPacket;
+    this->m_header.m_type = T_START;
+}
+
+void FilePacket ::fromDataPacket(const DataPacket& dataPacket) {
+    this->m_dataPacket = dataPacket;
+    this->m_header.m_type = T_DATA;
+}
+
+void FilePacket ::fromEndPacket(const EndPacket& endPacket) {
+    this->m_endPacket = endPacket;
+    this->m_header.m_type = T_END;
+}
+
+void FilePacket ::fromCancelPacket(const CancelPacket& cancelPacket) {
+    this->m_cancelPacket = cancelPacket;
+    this->m_header.m_type = T_CANCEL;
+}
+
+U32 FilePacket ::bufferSize() const {
+    switch (this->m_header.m_type) {
+        case T_START:
+            return this->m_startPacket.bufferSize();
+        case T_DATA:
+            return this->m_dataPacket.bufferSize();
+        case T_END:
+            return this->m_endPacket.bufferSize();
+        case T_CANCEL:
+            return this->m_cancelPacket.bufferSize();
+        case T_NONE:
+            return 0;
+        default:
+            FW_ASSERT(0);
+            return 0;
+    }
+}
+
+SerializeStatus FilePacket ::toBuffer(Buffer& buffer) const {
+    switch (this->m_header.m_type) {
+        case T_START:
+            return this->m_startPacket.toBuffer(buffer);
+        case T_DATA:
+            return this->m_dataPacket.toBuffer(buffer);
+        case T_END:
+            return this->m_endPacket.toBuffer(buffer);
+        case T_CANCEL:
+            return this->m_cancelPacket.toBuffer(buffer);
+        default:
+            FW_ASSERT(0);
+            return static_cast<SerializeStatus>(0);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private instance methods
+// ----------------------------------------------------------------------
+
+SerializeStatus FilePacket ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    SerializeStatus status;
+    status = this->m_header.fromSerialBuffer(serialBuffer);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    switch (this->m_header.m_type) {
+        case T_START:
+            status = this->m_startPacket.fromSerialBuffer(serialBuffer);
+            break;
+        case T_DATA:
+            status = this->m_dataPacket.fromSerialBuffer(serialBuffer);
+            break;
+        case T_END:
+            status = this->m_endPacket.fromSerialBuffer(serialBuffer);
+            break;
+        case T_CANCEL:
+            status = this->m_cancelPacket.fromSerialBuffer(serialBuffer);
+            break;
+        case T_NONE:
+            status = FW_DESERIALIZE_TYPE_MISMATCH;
+            break;
+        default:
+            FW_ASSERT(0, status);
+            break;
+    }
+    return status;
+}
+
+}  // namespace Fw
+```
+
+### `FilePacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/FilePacket.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FilePacket.hpp
+// \author bocchino
+// \brief  hpp file for FilePacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_FilePacket_HPP
+#define Fw_FilePacket_HPP
+
+#include <CFDP/Checksum/Checksum.hpp>
+#include <Fw/Buffer/Buffer.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerialBuffer.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+// Forward declaration for UTs
+namespace Svc {
+class FileUplinkTester;
+class FileDownlinkTester;
+}  // namespace Svc
+
+namespace Fw {
+
+//! \class FilePacket
+//! \brief A file packet
+//!
+union FilePacket {
+  public:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! Packet type
+    typedef enum { T_START = 0, T_DATA = 1, T_END = 2, T_CANCEL = 3, T_NONE = 255 } Type;
+
+    //! The type of a path name
+    class PathName {
+        friend union FilePacket;
+        friend class Svc::FileDownlinkTester;
+        friend class Svc::FileUplinkTester;
+
+      public:
+        //! The maximum length of a path name
+        enum { MAX_LENGTH = 255 };
+
+      private:
+        //! The length
+        U8 m_length;
+
+        //! Pointer to the path value
+        const char* m_value;
+
+      public:
+        //! Initialize a PathName
+        void initialize(const char* const value  //! The path value
+        );
+
+        //! Compute the buffer size needed to hold this PathName
+        U32 bufferSize() const;
+
+        //! Get the length of the path name value
+        U32 getLength(void) const { return this->m_length; };
+
+        //! Get the path name value
+        const char* getValue(void) const { return this->m_value; };
+
+      private:
+        //! Initialize this PathName from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+        //! Write this PathName to a SerialBuffer
+        SerializeStatus toSerialBuffer(SerialBuffer& serialBuffer) const;
+    };
+
+    //! The type of a packet header
+    class Header {
+        friend union FilePacket;
+        friend class FilePacketTester;
+        friend class Svc::FileDownlinkTester;
+        friend class Svc::FileUplinkTester;
+
+      private:
+        //! The packet type
+        Type m_type;
+
+        //! The sequence index
+        U32 m_sequenceIndex;
+
+      public:
+        //! Header size
+        enum { HEADERSIZE = sizeof(U8) + sizeof(U32) };
+
+      private:
+        //! Initialize a file packet header
+        void initialize(const Type type,         //!< The packet type
+                        const U32 sequenceIndex  //!< The sequence index
+        );
+
+        //! Compute the buffer size needed to hold this Header
+        U32 bufferSize() const;
+
+        //! Initialize this Header from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+        //! Write this Header to a SerialBuffer
+        SerializeStatus toSerialBuffer(SerialBuffer& serialBuffer) const;
+
+      public:
+        Type getType(void) const { return this->m_type; };
+
+        U32 getSequenceIndex(void) const { return this->m_sequenceIndex; };
+    };
+
+    //! The type of a start packet
+    struct StartPacket {
+        friend union FilePacket;
+
+      private:
+        //! The packet header
+        Header m_header;
+
+        //! The file size
+        U32 m_fileSize;
+
+        //! The source path
+        PathName m_sourcePath;
+
+        //! The destination path
+        PathName m_destinationPath;
+
+      public:
+        //! Initialize a StartPacket with sequence number 0
+        void initialize(const U32 fileSize,                //!< The file size
+                        const char* const sourcePath,      //!< The source path
+                        const char* const destinationPath  //!< The destination path
+        );
+
+        //! Compute the buffer size needed to hold this StartPacket
+        U32 bufferSize() const;
+
+        //! Convert this StartPacket to a Buffer
+        SerializeStatus toBuffer(Buffer& buffer) const;
+
+        //! Get this as a Header
+        const FilePacket::Header& asHeader() const { return this->m_header; };
+
+        //! Get the destination path
+        const PathName& getDestinationPath() const { return this->m_destinationPath; };
+
+        //! Get the source path
+        const PathName& getSourcePath() const { return this->m_sourcePath; };
+
+        //! Get the file size
+        U32 getFileSize() const { return this->m_fileSize; };
+
+      private:
+        //! Initialize this StartPacket from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+        //! Write this StartPacket to a SerialBuffer
+        SerializeStatus toSerialBuffer(SerialBuffer& serialBuffer) const;
+    };
+
+    //! The type of a data packet
+    class DataPacket {
+        friend union FilePacket;
+        friend class Svc::FileDownlinkTester;
+        friend class Svc::FileUplinkTester;
+
+      private:
+        //! The packet header
+        Header m_header;
+
+        //! The byte offset of the packet data into the destination file
+        U32 m_byteOffset;
+
+        //! The size of the file data in the packet
+        U16 m_dataSize;
+
+        //! Pointer to the file data
+        const U8* m_data;
+
+      public:
+        //! header size
+        enum { HEADERSIZE = Header::HEADERSIZE + sizeof(U32) + sizeof(U16) };
+
+        //! Initialize a data packet
+        void initialize(const U32 sequenceIndex,  //!< The sequence index
+                        const U32 byteOffset,     //!< The byte offset
+                        const U16 dataSize,       //!< The data size
+                        const U8* const data      //!< The file data
+        );
+
+        //! Compute the buffer size needed to hold this DataPacket
+        U32 bufferSize() const;
+
+        //! Convert this DataPacket to a Buffer
+        SerializeStatus toBuffer(Buffer& buffer) const;
+
+        //! Get this as a Header
+        const FilePacket::Header& asHeader() const { return this->m_header; };
+
+        //! Get the byte offset
+        U32 getByteOffset() const { return this->m_byteOffset; };
+
+        //! Get the data size
+        U32 getDataSize() const { return this->m_dataSize; };
+
+        //! Get the data
+        const U8* getData() const { return this->m_data; };
+
+      private:
+        //! Initialize this DataPacket from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+        //! Compute the fixed-length data size of a StartPacket
+        U32 fixedLengthSize() const;
+
+        //! Write this DataPacket to a SerialBuffer
+        SerializeStatus toSerialBuffer(SerialBuffer& serialBuffer) const;
+    };
+
+    //! The type of an end packet
+    class EndPacket {
+        friend union FilePacket;
+        friend class Svc::FileDownlinkTester;
+        friend class Svc::FileUplinkTester;
+
+      private:
+        //! The packet header
+        Header m_header;
+
+      public:
+        //! Set the checksum
+        void setChecksum(const CFDP::Checksum& checksum);
+
+        //! Get the checksum
+        void getChecksum(CFDP::Checksum& checksum) const;
+
+        //! Compute the buffer size needed to hold this EndPacket
+        U32 bufferSize() const;
+
+        //! Convert this EndPacket to a Buffer
+        SerializeStatus toBuffer(Buffer& buffer) const;
+
+        //! Get this as a Header
+        const FilePacket::Header& asHeader() const { return this->m_header; };
+
+      public:
+        //! Initialize an end packet
+        void initialize(const U32 sequenceIndex,        //!< The sequence index
+                        const CFDP::Checksum& checksum  //!< The checksum
+        );
+
+      private:
+        //! The checksum
+        U32 m_checksumValue;
+
+        //! Initialize this EndPacket from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+        //! Write this EndPacket to a SerialBuffer
+        SerializeStatus toSerialBuffer(SerialBuffer& serialBuffer) const;
+    };
+
+    //! The type of a cancel packet
+    class CancelPacket {
+        friend union FilePacket;
+        friend class Svc::FileDownlinkTester;
+        friend class Svc::FileUplinkTester;
+
+      private:
+        //! The packet header
+        Header m_header;
+
+      public:
+        //! Initialize a cancel packet
+        void initialize(const U32 sequenceIndex  //!< The sequence index
+        );
+
+        //! Compute the buffer size needed to hold this CancelPacket
+        U32 bufferSize() const;
+
+        //! Convert this CancelPacket to a Buffer
+        SerializeStatus toBuffer(Buffer& buffer) const;
+
+        //! Get this as a Header
+        const FilePacket::Header& asHeader() const { return this->m_header; };
+
+      private:
+        //! Initialize this CancelPacket from a SerialBuffer
+        SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructor
+    // ----------------------------------------------------------------------
+
+    FilePacket() { this->m_header.m_type = T_NONE; }
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public instance methods
+    // ----------------------------------------------------------------------
+
+    //! Initialize this from a Buffer
+    //!
+    SerializeStatus fromBuffer(const Buffer& buffer);
+
+    //! Get this as a Header
+    //!
+    const Header& asHeader() const;
+
+    //! Get this as a StartPacket
+    //!
+    const StartPacket& asStartPacket() const;
+
+    //! Get this as a DataPacket
+    //!
+    const DataPacket& asDataPacket() const;
+
+    //! Get this as an EndPacket
+    //!
+    const EndPacket& asEndPacket() const;
+
+    //! Get this as a CancelPacket
+    //!
+    const CancelPacket& asCancelPacket() const;
+
+    //! Initialize this with a StartPacket
+    //!
+    void fromStartPacket(const StartPacket& startPacket);
+
+    //! Initialize this with a DataPacket
+    //!
+    void fromDataPacket(const DataPacket& dataPacket);
+
+    //! Initialize this with an EndPacket
+    //!
+    void fromEndPacket(const EndPacket& endPacket);
+
+    //! Initialize this with a CancelPacket
+    //!
+    void fromCancelPacket(const CancelPacket& cancelPacket);
+
+    //! Get the buffer size needed to hold this FilePacket
+    //!
+    U32 bufferSize() const;
+
+    //! Convert this FilePacket to a Buffer
+    //!
+    SerializeStatus toBuffer(Buffer& buffer) const;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private methods
+    // ----------------------------------------------------------------------
+
+    //! Initialize this from a SerialBuffer
+    //!
+    SerializeStatus fromSerialBuffer(SerialBuffer& serialBuffer);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private data
+    // ----------------------------------------------------------------------
+
+    //! this, seen as a header
+    //!
+    Header m_header;
+
+    //! this, seen as a Start packet
+    //!
+    StartPacket m_startPacket;
+
+    //! this, seen as a Data packet
+    //!
+    DataPacket m_dataPacket;
+
+    //! this, seen as an End packet
+    //!
+    EndPacket m_endPacket;
+
+    //! this, seen as a Cancel packet
+    //!
+    CancelPacket m_cancelPacket;
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `Header.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/Header.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Header.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::Header
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+void FilePacket::Header ::initialize(const Type type, const U32 sequenceIndex) {
+    this->m_type = type;
+    this->m_sequenceIndex = sequenceIndex;
+}
+
+U32 FilePacket::Header ::bufferSize() const {
+    return sizeof(U8) + sizeof(this->m_sequenceIndex);
+}
+
+SerializeStatus FilePacket::Header ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    U8 new_type;
+    SerializeStatus status;
+
+    status = serialBuffer.deserialize(new_type);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+    this->m_type = static_cast<Type>(new_type);
+
+    status = serialBuffer.deserialize(this->m_sequenceIndex);
+
+    return status;
+}
+
+SerializeStatus FilePacket::Header ::toSerialBuffer(SerialBuffer& serialBuffer) const {
+    const U8 type_casted = static_cast<U8>(this->m_type);
+    SerializeStatus status;
+
+    status = serialBuffer.serialize(type_casted);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    status = serialBuffer.serialize(this->m_sequenceIndex);
+    if (status != FW_SERIALIZE_OK) {
+        return status;
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+}  // namespace Fw
+```
+
+### `PathName.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/PathName.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PathName.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::PathName
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <cstring>
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+
+namespace Fw {
+
+void FilePacket::PathName ::initialize(const char* const value) {
+    const U8 length = static_cast<U8>(StringUtils::string_length(value, static_cast<FwSizeType>(MAX_LENGTH)));
+    this->m_length = length;
+    this->m_value = value;
+}
+
+U32 FilePacket::PathName ::bufferSize() const {
+    return static_cast<U32>(sizeof(this->m_length) + this->m_length);
+}
+
+SerializeStatus FilePacket::PathName ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    {
+        const SerializeStatus status = serialBuffer.deserialize(this->m_length);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const U8* addrLeft = serialBuffer.getBuffAddrLeft();
+        U8 bytes[MAX_LENGTH];
+        const SerializeStatus status = serialBuffer.popBytes(bytes, this->m_length);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+
+        this->m_value = reinterpret_cast<const char*>(addrLeft);
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus FilePacket::PathName ::toSerialBuffer(SerialBuffer& serialBuffer) const {
+    {
+        const SerializeStatus status = serialBuffer.serialize(this->m_length);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status =
+            serialBuffer.pushBytes(reinterpret_cast<const U8*>(this->m_value), this->m_length);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+}  // namespace Fw
+```
+
+### `StartPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/FilePacket/StartPacket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  StartPacket.cpp
+// \author bocchino
+// \brief  cpp file for FilePacket::StartPacket
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FilePacket/FilePacket.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+void FilePacket::StartPacket ::initialize(const U32 fileSize,
+                                          const char* const sourcePath,
+                                          const char* const destinationPath) {
+    this->m_header.initialize(FilePacket::T_START, 0);
+    this->m_fileSize = fileSize;
+    this->m_sourcePath.initialize(sourcePath);
+    this->m_destinationPath.initialize(destinationPath);
+}
+
+U32 FilePacket::StartPacket ::bufferSize() const {
+    return static_cast<U32>(this->m_header.bufferSize() + sizeof(this->m_fileSize) + this->m_sourcePath.bufferSize() +
+                            this->m_destinationPath.bufferSize());
+}
+
+SerializeStatus FilePacket::StartPacket ::toBuffer(Buffer& buffer) const {
+    SerialBuffer serialBuffer(buffer.getData(), buffer.getSize());
+    return this->toSerialBuffer(serialBuffer);
+}
+
+SerializeStatus FilePacket::StartPacket ::fromSerialBuffer(SerialBuffer& serialBuffer) {
+    FW_ASSERT(this->m_header.m_type == T_START);
+
+    {
+        const SerializeStatus status = serialBuffer.deserialize(this->m_fileSize);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status = this->m_sourcePath.fromSerialBuffer(serialBuffer);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status = this->m_destinationPath.fromSerialBuffer(serialBuffer);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+SerializeStatus FilePacket::StartPacket ::toSerialBuffer(SerialBuffer& serialBuffer) const {
+    FW_ASSERT(this->m_header.m_type == T_START);
+
+    {
+        const SerializeStatus status = this->m_header.toSerialBuffer(serialBuffer);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status = serialBuffer.serialize(this->m_fileSize);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status = this->m_sourcePath.toSerialBuffer(serialBuffer);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    {
+        const SerializeStatus status = this->m_destinationPath.toSerialBuffer(serialBuffer);
+
+        if (status != FW_SERIALIZE_OK) {
+            return status;
+        }
+    }
+
+    return FW_SERIALIZE_OK;
+}
+
+}  // namespace Fw
+```

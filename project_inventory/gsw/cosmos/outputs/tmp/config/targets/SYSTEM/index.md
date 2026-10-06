@@ -3,16 +3,42 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/SYSTEM/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/outputs/tmp/config/targets/SYSTEM/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/targets/SYSTEM/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/SYSTEM/target.txt`
+
+
+```text
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+
+IGNORE_PARAMETER PKTID
+IGNORE_PARAMETER CONFIG
+IGNORE_PARAMETER COSMOS_VERSION
+IGNORE_PARAMETER USER_VERSION
+IGNORE_PARAMETER RUBY_VERSION
+
+# Ignored Items
+IGNORE_ITEM PKTID
+IGNORE_ITEM RECEIVED_COUNT
+IGNORE_ITEM RECEIVED_TIMESECONDS
+IGNORE_ITEM RECEIVED_TIMEFORMATTED
+```

@@ -3,16 +3,103 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-packet-query-dialog.component.html`
 
-file--create-packet-query-dialog.component.html
-file--create-packet-query-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/create-packet-query-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Save query</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Query name">
+      <input formControlName="queryName" type="text" />
+    </ya-field>
+
+    <ya-field label="Query">
+      <ya-filter-textarea formControlName="filter" />
+    </ya-field>
+
+    <ya-field label="Packet name">
+      <ya-select formControlName="name" [options]="data.nameOptions" emptyOption="Any name" />
+    </ya-field>
+
+    <ya-field label="Link">
+      <ya-select formControlName="link" [options]="data.linkOptions" emptyOption="Any link" />
+    </ya-field>
+
+    <ya-field label="Share with other users">
+      <mat-slide-toggle formControlName="shared" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-packet-query-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/create-packet-query-dialog.component.html`](file--create-packet-query-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/create-packet-query-dialog.component.ts`](file--create-packet-query-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/create-packet-query-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-packet-query-dialog',
+  templateUrl: './create-packet-query-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreatePacketQueryDialogComponent {
+  form = new FormGroup({
+    queryName: new FormControl<string>('', Validators.required),
+    name: new FormControl<string>(''),
+    link: new FormControl<string>(''),
+    filter: new FormControl<string>(''),
+    shared: new FormControl<boolean>(false, Validators.required),
+  });
+
+  constructor(
+    private dialogRef: MatDialogRef<CreatePacketQueryDialogComponent>,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form.patchValue({
+      name: data.name,
+      link: data.link,
+      filter: data.filter || undefined,
+    });
+  }
+
+  save() {
+    const { value: fv } = this.form;
+    this.yamcs.yamcsClient
+      .createQuery(this.yamcs.instance!, 'packets', {
+        name: fv.queryName!,
+        shared: fv.shared ?? false,
+        query: {
+          name: fv.name !== 'ANY' ? fv.name : undefined,
+          link: fv.link !== 'ANY' ? fv.link : undefined,
+          filter: fv.filter ?? undefined,
+        },
+      })
+      .then((query) => this.dialogRef.close(query))
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

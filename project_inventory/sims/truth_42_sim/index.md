@@ -3,22 +3,73 @@
 
 **경로:** `sims/truth_42_sim/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--.git
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/truth_42_sim/inc/`](inc/index) — 폴더
-- [`sims/truth_42_sim/src/`](src/index) — 폴더
-- [`sims/truth_42_sim/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`sims/truth_42_sim/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`sims/truth_42_sim/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `sims/truth_42_sim/.git`
+
+
+```text
+gitdir: ../../.git/modules/sims/truth_42_sim
+```
+
+### `CMakeLists.txt`
+
+**경로:** `sims/truth_42_sim/CMakeLists.txt`
+
+
+```cmake
+project(truth_42_sim)
+
+find_package(ITC_Common REQUIRED QUIET COMPONENTS itc_logger)
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common client)
+
+include_directories(inc
+                    ${sim_common_SOURCE_DIR}/inc
+                    ${ITC_Common_INCLUDE_DIRS}
+                    ${NOSENGINE_INCLUDE_DIRS}
+                    )
+
+set(truth_42_sim_src
+    src/truth_42_hardware_model.cpp
+    src/truth_42_data_provider.cpp
+    src/truth_42_data_point.cpp
+)
+
+# For Code::Blocks and other IDEs
+file(GLOB truth_42_sim_inc inc/*.hpp)
+
+set(truth_42_sim_libs
+    sim_common
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:$ORIGIN/../lib") # Pick up .so in install directory
+
+add_library(truth_42_sim SHARED ${truth_42_sim_src} ${truth_42_sim_inc})
+target_link_libraries(truth_42_sim ${truth_42_sim_libs})
+install(TARGETS truth_42_sim LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+```
+
+### `README.md`
+
+**경로:** `sims/truth_42_sim/README.md`
+
+
+```markdown
+# TRUTH_42_SIM - Simulator to Provide 42 Truth Data
+
+Simple simulator to connect to 42 and provide packed telemetry to COSMOS.  This is not a NOS3 simulator in the traditional sense, since it does not simulate hardware connected to the CPU.  It is provided as a convenience to be able to stream and read 42 data in COSMOS.
+
+```

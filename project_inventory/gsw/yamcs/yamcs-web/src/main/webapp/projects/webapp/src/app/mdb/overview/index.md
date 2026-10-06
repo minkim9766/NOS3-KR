@@ -3,16 +3,84 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/overview/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `overview-component.html`
 
-file--overview-component.html
-file--overview-component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/overview/overview-component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Mission database" />
+
+  <ya-panel>
+    @if (mdb$ | async; as mdb) {
+      <dl class="dl-horizontal no-lead">
+        <dt>Parameters:</dt>
+        <dd>
+          <a class="ya-link" routerLink="/mdb/parameters" [queryParams]="{ c: yamcs.context }">
+            {{ mdb.parameterCount }}
+          </a>
+        </dd>
+        <dt>Parameter types:</dt>
+        <dd>
+          <a class="ya-link" routerLink="/mdb/parameter-types" [queryParams]="{ c: yamcs.context }">
+            {{ mdb.parameterTypeCount }}
+          </a>
+        </dd>
+        <dt>Containers:</dt>
+        <dd>
+          <a class="ya-link" routerLink="/mdb/containers" [queryParams]="{ c: yamcs.context }">
+            {{ mdb.containerCount }}
+          </a>
+        </dd>
+        <dt>Commands:</dt>
+        <dd>
+          <a class="ya-link" routerLink="/mdb/commands" [queryParams]="{ c: yamcs.context }">
+            {{ mdb.commandCount }}
+          </a>
+        </dd>
+        <dt>Algorithms:</dt>
+        <dd>
+          <a class="ya-link" routerLink="/mdb/algorithms" [queryParams]="{ c: yamcs.context }">
+            {{ mdb.algorithmCount }}
+          </a>
+        </dd>
+      </dl>
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `overview-component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/overview/overview-component.html`](file--overview-component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/overview/overview-component.ts`](file--overview-component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/overview/overview-component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  MissionDatabase,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './overview-component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class OverviewComponent {
+  mdb$: Promise<MissionDatabase>;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+  ) {
+    title.setTitle('Mission database');
+    this.mdb$ = yamcs.yamcsClient.getMissionDatabase(yamcs.instance!);
+  }
+}
+```

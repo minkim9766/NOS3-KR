@@ -3,30 +3,949 @@
 
 **경로:** `fsw/osal/src/unit-tests/osloader-test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ut_module.c
-file--ut_osloader_module_test.c
-file--ut_osloader_module_test.h
-file--ut_osloader_symtable_test.c
-file--ut_osloader_symtable_test.h
-file--ut_osloader_test.c
-file--ut_osloader_test.h
-file--ut_osloader_test_platforms.h
+**경로:** `fsw/osal/src/unit-tests/osloader-test/CMakeLists.txt`
+
+
+```cmake
+# CMake snippet for OSAL core test
+
+set(TEST_MODULE_FILES 
+  ut_osloader_module_test.c
+  ut_osloader_symtable_test.c    
+  ut_osloader_test.c)
+
+add_osal_ut_exe(osal_loader_UT ${TEST_MODULE_FILES})
+
+# build many copies of the test module
+# we need to have unique modules to load up to OS_MAX_MODULES
+# This will cover up to $OSAL_CONFIG_MAX_MODULES + 1.  If needed
+# this can be increased by increasing $OSAL_CONFIG_MAX_MODULES.
+math(EXPR MOD "${OSAL_CONFIG_MAX_MODULES} + 1")
+while(MOD GREATER 0)
+  math(EXPR MOD "${MOD} - 1")
+  add_library(MODULE${MOD} SHARED ut_module.c)
+  set_target_properties(MODULE${MOD} PROPERTIES 
+    COMPILE_DEFINITIONS "MODULE_NAME=module${MOD}" 
+    PREFIX ""
+    LIBRARY_OUTPUT_DIRECTORY utmod)
+  add_dependencies(osal_loader_UT MODULE${MOD})
+  foreach(TGT ${INSTALL_TARGET_LIST})
+    install(TARGETS MODULE${MOD} DESTINATION ${TGT}/${UT_INSTALL_SUBDIR}/utmod)
+  endforeach()
+endwhile(MOD GREATER 0)
 ```
 
-## 항목
+### `ut_module.c`
 
-- [`fsw/osal/src/unit-tests/osloader-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_module.c`](file--ut_module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_module_test.c`](file--ut_osloader_module_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_module_test.h`](file--ut_osloader_module_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_symtable_test.c`](file--ut_osloader_symtable_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_symtable_test.h`](file--ut_osloader_symtable_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_test.c`](file--ut_osloader_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_test.h`](file--ut_osloader_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-tests/osloader-test/ut_osloader_test_platforms.h`](file--ut_osloader_test_platforms.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+void MODULE_NAME(void)
+{
+    volatile int i;
+    i = 1;
+    i = i + 1; /* squelch set-but-not-used compiler warning */
+    (void)i;
+}
+```
+
+### `ut_osloader_module_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_module_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_osloader_module_test.c
+** Owner: Tam Ngo
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_osloader_module_test.h"
+#include "ut_osloader_test_platforms.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_ModuleLoad
+** Purpose: Loads the new ELF object module into the RTOS
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERR_NO_FREE_IDS if the module table is full
+**          OS_ERR_NAME_TAKEN if the module name has already been used
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_module_load_test()
+{
+    int       i;
+    osal_id_t module_id  = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t module_id2 = OS_OBJECT_ID_UNDEFINED;
+    char      module_name[UT_OS_NAME_BUFF_SIZE];
+    char      module_file_name[UT_OS_PATH_BUFF_SIZE];
+
+    /*-----------------------------------------------------*/
+    /* API Not implemented */
+
+    if (!UT_IMPL(OS_ModuleLoad(0, "TestModule", UT_OS_GENERIC_MODULE_NAME1, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #1 Null-pointer-arg-1 */
+
+    UT_RETVAL(OS_ModuleLoad(0, "TestModule", UT_OS_GENERIC_MODULE_NAME1, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+              OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Null-pointer-arg-2 */
+
+    UT_RETVAL(OS_ModuleLoad(&module_id, 0, UT_OS_GENERIC_MODULE_NAME1, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+              OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #3 Null-pointer-arg-3 */
+
+    UT_RETVAL(OS_ModuleLoad(&module_id, "TestModule", 0, OS_MODULE_FLAG_LOCAL_SYMBOLS), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* Name too long */
+
+    memset(module_name, 'x', sizeof(module_name) - 1);
+    module_name[sizeof(module_name) - 1] = 0;
+    UT_RETVAL(OS_ModuleLoad(&module_id, module_name, UT_OS_GENERIC_MODULE_NAME1, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+              OS_ERR_NAME_TOO_LONG);
+
+    /*-----------------------------------------------------*/
+    /* Path invalid */
+
+    memset(module_file_name, 'x', OS_MAX_PATH_LEN - 1);
+    module_file_name[OS_MAX_PATH_LEN - 1] = 0;
+    UT_RETVAL(OS_ModuleLoad(&module_id, "TestModule", module_file_name, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+              OS_FS_ERR_PATH_INVALID);
+
+    /*-----------------------------------------------------*/
+    /* #4 No-free-IDs */
+
+    for (i = 0; i <= OS_MAX_MODULES; i++)
+    {
+        snprintf(module_name, sizeof(module_name), UT_OS_GENERIC_MODULE_NAME_TEMPLATE, i);
+        snprintf(module_file_name, sizeof(module_file_name), UT_OS_GENERIC_MODULE_FILE_TEMPLATE, i);
+
+        if (i == OS_MAX_MODULES)
+        {
+            UT_RETVAL(OS_ModuleLoad(&module_id, module_name, module_file_name, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+                      OS_ERR_NO_FREE_IDS);
+        }
+        else if (!UT_SETUP(OS_ModuleLoad(&module_id, module_name, module_file_name, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+        {
+            break;
+        }
+    }
+
+    /* Reset test environment */
+    OS_DeleteAllObjects();
+
+    /*-----------------------------------------------------*/
+    /* #5 Duplicate-name */
+
+    /* Setup */
+    if (UT_SETUP(OS_ModuleLoad(&module_id2, "DUPLICATE", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        UT_RETVAL(OS_ModuleLoad(&module_id, "DUPLICATE", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS),
+                  OS_ERR_NAME_TAKEN);
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_ModuleUnload(module_id2));
+    }
+
+    /*-----------------------------------------------------*/
+    /* #6 OS-call-failure */
+
+    /*-----------------------------------------------------*/
+    /* #7 Nominal */
+
+    UT_NOMINAL(OS_ModuleLoad(&module_id, "Good", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS));
+
+    /* Reset test environment */
+    UT_TEARDOWN(OS_ModuleUnload(module_id));
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_ModuleUnload
+** Purpose: Unloads the module from the running RTOS
+** Parameters: To-be-filled-in
+** Returns: OS_ERR_INVALID_ID if the id passed in is not a valid module id
+**          OS_ERROR if the OS call failed
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_module_unload_test()
+{
+    osal_id_t module_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* API Not implemented */
+
+    if (!UT_IMPL(OS_ModuleUnload(OS_OBJECT_ID_UNDEFINED)))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-ID-arg */
+
+    UT_RETVAL(OS_ModuleUnload(UT_OBJID_INCORRECT), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_ModuleUnload(OS_OBJECT_ID_UNDEFINED), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #2 OS-call-failure */
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_ModuleLoad(&module_id, "Good", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        UT_NOMINAL(OS_ModuleUnload(module_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_ModuleInfo
+** Purpose: Returns module information about a given module id
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_ERR_INVALID_ID if the id passed in is not a valid module id
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_module_info_test()
+{
+    osal_id_t        module_id = OS_OBJECT_ID_UNDEFINED;
+    OS_module_prop_t module_info;
+
+    /*-----------------------------------------------------*/
+    /* API Not implemented */
+
+    if (!UT_IMPL(OS_ModuleInfo(OS_OBJECT_ID_UNDEFINED, &module_info)))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-ID-arg */
+
+    UT_RETVAL(OS_ModuleInfo(UT_OBJID_INCORRECT, &module_info), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_ModuleInfo(OS_OBJECT_ID_UNDEFINED, &module_info), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    /* Setup */
+    if (UT_SETUP(OS_ModuleLoad(&module_id, "Good", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        /* Invalid-pointer-arg */
+        UT_RETVAL(OS_ModuleInfo(module_id, NULL), OS_INVALID_POINTER);
+
+        /* Nominal */
+        UT_NOMINAL(OS_ModuleInfo(module_id, &module_info));
+
+        UT_TEARDOWN(OS_ModuleUnload(module_id));
+    }
+}
+
+/*================================================================================*
+** End of File: ut_osloader_module_test.c
+**================================================================================*/
+```
+
+### `ut_osloader_module_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_module_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSLOADER_MODULE_TEST_H
+#define UT_OSLOADER_MODULE_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_module_load_test(void);
+void UT_os_module_unload_test(void);
+void UT_os_module_info_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSLOADER_MODULE_TEST_H */
+```
+
+### `ut_osloader_symtable_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_symtable_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_osloader_symtable_test.c
+** Owner: Tam Ngo
+** Date:  April 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_osloader_symtable_test.h"
+#include "ut_osloader_test_platforms.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/**
+ * The size limit to pass for OS_SymbolTableDump nominal test
+ *
+ * This must be large enough to actually accommodate all of the symbols
+ * in the target system.
+ */
+#define UT_SYMTABLE_SIZE_LIMIT 1048576
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_SymbolLookup
+** Purpose: Returns the memory address of a symbol
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERROR if the symbol name is not found
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+
+void UT_os_symbol_lookup_test()
+{
+    cpuaddr   symbol_addr;
+    osal_id_t module_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* API Not implemented */
+
+    if (!UT_IMPL(OS_SymbolLookup(&symbol_addr, "main")))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg-1 */
+
+    UT_RETVAL(OS_SymbolLookup(0, "Sym"), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-pointer-arg-2 */
+
+    UT_RETVAL(OS_SymbolLookup(&symbol_addr, 0), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* Setup for global symbol test */
+    if (UT_SETUP(OS_ModuleLoad(&module_id, "Mod1", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_GLOBAL_SYMBOLS)))
+    {
+        /*-----------------------------------------------------*/
+        /* #3 Symbol-not-found */
+
+        UT_RETVAL(OS_SymbolLookup(&symbol_addr, "NotFound"), OS_ERROR);
+
+        /*-----------------------------------------------------*/
+        /* #4 Nominal, Global Symbols */
+
+        UT_NOMINAL(OS_SymbolLookup(&symbol_addr, "module1"));
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_ModuleUnload(module_id));
+    }
+
+    /*-----------------------------------------------------*/
+    /* Setup for local symbol test */
+    if (UT_SETUP(OS_ModuleLoad(&module_id, "Mod1", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        /*-----------------------------------------------------*/
+        /* #5 Nominal, Local Symbols */
+
+        UT_NOMINAL(OS_SymbolLookup(&symbol_addr, "module1"));
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_ModuleUnload(module_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_ModuleSymbolLookup
+** Purpose: Returns the memory address of a symbol
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if any of the pointers passed in is null
+**          OS_ERROR if the symbol name is not found
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+
+void UT_os_module_symbol_lookup_test()
+{
+    cpuaddr   symbol_addr;
+    osal_id_t module_id = OS_OBJECT_ID_UNDEFINED;
+
+    /*-----------------------------------------------------*/
+    /* API Not implemented */
+
+    if (!UT_IMPL(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symbol_addr, "main")))
+    {
+        return;
+    }
+
+    /*-----------------------------------------------------*/
+    /* Invalid object ID */
+
+    UT_RETVAL(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symbol_addr, "Sym"), OS_ERR_INVALID_ID);
+    UT_RETVAL(OS_ModuleSymbolLookup(UT_OBJID_INCORRECT, &symbol_addr, "Sym"), OS_ERR_INVALID_ID);
+
+    /*-----------------------------------------------------*/
+    /* Setup for remainder of tests */
+    if (UT_SETUP(OS_ModuleLoad(&module_id, "Mod1", UT_OS_GENERIC_MODULE_NAME2, OS_MODULE_FLAG_LOCAL_SYMBOLS)))
+    {
+        /*-----------------------------------------------------*/
+        /* #1 Invalid-pointer-arg */
+
+        UT_RETVAL(OS_ModuleSymbolLookup(module_id, NULL, "Sym"), OS_INVALID_POINTER);
+        UT_RETVAL(OS_ModuleSymbolLookup(module_id, &symbol_addr, NULL), OS_INVALID_POINTER);
+
+        /*-----------------------------------------------------*/
+        /* #3 Symbol-not-found */
+        UT_RETVAL(OS_ModuleSymbolLookup(module_id, &symbol_addr, "NotFound"), OS_ERROR);
+
+        /*-----------------------------------------------------*/
+        /* #4 Nominal, Local Symbols */
+
+        UT_NOMINAL(OS_ModuleSymbolLookup(module_id, &symbol_addr, "module1"));
+
+        /* Reset test environment */
+        UT_TEARDOWN(OS_ModuleUnload(module_id));
+    }
+}
+
+/*--------------------------------------------------------------------------------*
+** Syntax: OS_SymbolTableDump
+** Purpose: Dumps the system symbol table to the given filename
+** Parameters: To-be-filled-in
+** Returns: OS_INVALID_POINTER if the pointer passed in is null
+**          OS_FS_ERR_PATH_INVALID if the filename is invalid
+**          OS_ERROR if there was any problem writing the symbol table to the file
+**          OS_SUCCESS if succeeded
+**--------------------------------------------------------------------------------*/
+void UT_os_symbol_table_dump_test()
+{
+    int32 status;
+    /*
+     * Note that even if the functionality is not implemented,
+     * the API still validates the input pointers (not null) and
+     * the validity of the file name.
+     */
+
+    /*-----------------------------------------------------*/
+    /* #1 Invalid-pointer-arg */
+
+    UT_RETVAL(OS_SymbolTableDump(0, 10000), OS_INVALID_POINTER);
+
+    /*-----------------------------------------------------*/
+    /* #2 Invalid-path */
+
+    UT_RETVAL(OS_SymbolTableDump("/this/path/is/invalid.dat", 10000), OS_FS_ERR_PATH_INVALID);
+
+    /*-----------------------------------------------------*/
+    /* #3 Nominal */
+
+    status = OS_SymbolTableDump(UT_OS_GENERIC_MODULE_DIR "SymbolReal.dat", UT_SYMTABLE_SIZE_LIMIT);
+    if (status == OS_ERR_NOT_IMPLEMENTED)
+    {
+        UtAssert_NA("OS_SymbolTableDump API not implemented");
+    }
+    else if (status == OS_ERR_OUTPUT_TOO_LARGE)
+    {
+        UtAssert_MIR("UT_SYMTABLE_SIZE_LIMIT too small for OS_SymbolTableDump");
+    }
+    else if (status == OS_ERR_NAME_TOO_LONG)
+    {
+        UtAssert_MIR("OSAL_CONFIG_MAX_SYM_LEN too small for OS_SymbolTableDump");
+    }
+    else
+    {
+        UtAssert_True(status == OS_SUCCESS, "status after 128k OS_SymbolTableDump = %d", (int)status);
+    }
+
+    if (status == OS_SUCCESS)
+    {
+        UT_RETVAL(OS_SymbolTableDump(UT_OS_GENERIC_MODULE_DIR "SymbolZero.dat", 0), OS_ERR_OUTPUT_TOO_LARGE);
+    }
+}
+
+/*================================================================================*
+** End of File: ut_osloader_symtable_test.c
+**================================================================================*/
+```
+
+### `ut_osloader_symtable_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_symtable_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo
+ * Date:  April 2013
+ */
+
+#ifndef UT_OSLOADER_SYMTABLE_TEST_H
+#define UT_OSLOADER_SYMTABLE_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+void UT_os_symbol_lookup_test(void);
+void UT_os_module_symbol_lookup_test(void);
+void UT_os_symbol_table_dump_test(void);
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSLOADER_SYMTABLE_TEST_H */
+```
+
+### `ut_osloader_test.c`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_test.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*================================================================================*
+** File:  ut_osloader_test.c
+** Owner: Tam Ngo
+** Date:  May 2013
+**================================================================================*/
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_osloader_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Local function definitions
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Main
+**--------------------------------------------------------------------------------*/
+
+void UtTest_Setup(void)
+{
+    osal_id_t fs_id;
+
+    if (OS_API_Init() != OS_SUCCESS)
+    {
+        UtAssert_Abort("OS_API_Init() failed");
+    }
+
+    /* the test should call OS_API_Teardown() before exiting */
+    UtTest_AddTeardown(OS_API_Teardown, "Cleanup");
+
+    /*
+     * This test needs to load the modules from the filesystem, so
+     * there must be a virtual path corresponding to the path where
+     * the module files reside.  This UT-specific mapping should be
+     * independent of the volume tables provided by the BSP.
+     */
+    if (OS_FileSysAddFixedMap(&fs_id, "./utmod", "/utmod") != OS_SUCCESS)
+    {
+        UtAssert_Abort("OS_FileSysAddFixedMap() failed");
+    }
+
+    UtTest_Add(UT_os_module_load_test, NULL, NULL, "OS_ModuleLoad");
+    UtTest_Add(UT_os_module_unload_test, NULL, NULL, "OS_ModuleUnload");
+    UtTest_Add(UT_os_module_info_test, NULL, NULL, "OS_ModuleInfo");
+
+    UtTest_Add(UT_os_module_symbol_lookup_test, NULL, NULL, "OS_ModuleSymbolLookup");
+    UtTest_Add(UT_os_symbol_lookup_test, NULL, NULL, "OS_SymbolLookup");
+    UtTest_Add(UT_os_symbol_table_dump_test, NULL, NULL, "OS_SymbolTableDump");
+}
+
+/*================================================================================*
+** End of File: ut_osloader_test.c
+**================================================================================*/
+```
+
+### `ut_osloader_test.h`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_test.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo
+ * Date:  May 2013
+ */
+
+#ifndef UT_OSLOADER_TEST_H
+#define UT_OSLOADER_TEST_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+#include "ut_os_support.h"
+#include "ut_osloader_symtable_test.h"
+#include "ut_osloader_module_test.h"
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSLOADER_TEST_H */
+```
+
+### `ut_osloader_test_platforms.h`
+
+**경로:** `fsw/osal/src/unit-tests/osloader-test/ut_osloader_test_platforms.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Owner: Tam Ngo
+ * Date:  November 2014
+ */
+
+#ifndef UT_OSLOADER_TEST_PLATFORMS_H
+#define UT_OSLOADER_TEST_PLATFORMS_H
+
+/*--------------------------------------------------------------------------------*
+** Includes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Macros
+**--------------------------------------------------------------------------------*/
+
+#define UT_OS_GENERIC_MODULE_DIR      "/utmod/"
+#define UT_OS_GENERIC_MODULE_BASENAME "MODULE"
+
+#define UT_OS_GENERIC_MODULE_NAME1 UT_OS_GENERIC_MODULE_DIR UT_OS_GENERIC_MODULE_BASENAME "0" OS_MODULE_FILE_EXTENSION
+#define UT_OS_GENERIC_MODULE_NAME2 UT_OS_GENERIC_MODULE_DIR UT_OS_GENERIC_MODULE_BASENAME "1" OS_MODULE_FILE_EXTENSION
+
+#define UT_OS_GENERIC_MODULE_NAME_TEMPLATE UT_OS_GENERIC_MODULE_BASENAME "%d"
+#define UT_OS_GENERIC_MODULE_FILE_TEMPLATE \
+    UT_OS_GENERIC_MODULE_DIR UT_OS_GENERIC_MODULE_NAME_TEMPLATE OS_MODULE_FILE_EXTENSION
+
+/*--------------------------------------------------------------------------------*
+** Data types
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** External global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Global variables
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*
+** Function prototypes
+**--------------------------------------------------------------------------------*/
+
+/*--------------------------------------------------------------------------------*/
+
+#endif /* UT_OSLOADER_TEST_PLATFORMS_H */
+```

@@ -3,24 +3,1309 @@
 
 **경로:** `fsw/psp/fsw/pc-rtems/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_psp_exception.c`
 
-file--cfe_psp_exception.c
-file--cfe_psp_memory.c
-file--cfe_psp_ssr.c
-file--cfe_psp_start.c
-file--cfe_psp_support.c
-file--cfe_psp_watchdog.c
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_exception.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+**
+** File:  cfe_psp_exception.c
+**
+**      m5235bcc Coldfire RTEMS Version
+**
+** Purpose:
+**   cFE BSP Exception related functions.
+**
+** History:
+**   2007/09/23  A. Cudmore      | RTEMS Coldfire m5235bcc version
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_memory.h"
+#include "cfe_psp_exceptionstorage_types.h"
+#include "cfe_psp_exceptionstorage_api.h"
+
+/*
+**
+** LOCAL FUNCTION PROTOTYPES
+**
+*/
+
+/***************************************************************************
+ **                        FUNCTIONS DEFINITIONS
+ ***************************************************************************/
+
+/*
+**
+**   Purpose: No-op on this platform, implemented for API compatibility.
+**
+*/
+void CFE_PSP_AttachExceptions(void)
+{
+    OS_printf("CFE_PSP: CFE_PSP_AttachExceptions Called\n");
+    CFE_PSP_Exception_Reset();
+}
+
+/*
+ * Purpose: Translate a stored exception log entry into a summary string
+ */
+int32 CFE_PSP_ExceptionGetSummary_Impl(const CFE_PSP_Exception_LogData_t *Buffer, char *ReasonBuf, uint32 ReasonSize)
+{
+    /* exceptions are not yet implemented on this platform */
+    return CFE_PSP_ERROR_NOT_IMPLEMENTED;
+}
+
+/*
+**
+**   Purpose: This function sets a default exception environment that can be used
+**
+**   Notes: The exception environment is local to each task Therefore this must be
+**          called for each task that that wants to do floating point and catch exceptions
+*/
+void CFE_PSP_SetDefaultExceptionEnvironment(void) {}
 ```
 
-## 항목
+### `cfe_psp_memory.c`
 
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_exception.c`](file--cfe_psp_exception.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_memory.c`](file--cfe_psp_memory.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_ssr.c`](file--cfe_psp_ssr.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_start.c`](file--cfe_psp_start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_support.c`](file--cfe_psp_support.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/pc-rtems/src/cfe_psp_watchdog.c`](file--cfe_psp_watchdog.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_memory.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_memory.c
+**
+**      mcf5235 Coldfire RTEMS version
+**
+** Purpose:
+**   cFE PSP Memory related functions. This is the implementation of the cFE
+**   memory areas that have to be preserved, and the API that is designed to allow
+**   access to them. It also contains memory related routines to return the
+**   address of the kernel code used in the cFE checksum.
+**
+** History:
+**   2007/09/23  A. Cudmore      | m5235bcc Coldfire RTEMS version
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+#include "cfe_psp_config.h"
+
+/*
+** Macro Definitions
+*/
+#include "target_config.h"
+
+/*
+ * Define the PSP-supported capacities to be the maximum allowed,
+ * (since the PC-linux PSP has the advantage of abundant disk space to hold this)
+ */
+#define CFE_PSP_CDS_SIZE             (GLOBAL_CONFIGDATA.CfeConfig->CdsSize)
+#define CFE_PSP_RESET_AREA_SIZE      (GLOBAL_CONFIGDATA.CfeConfig->ResetAreaSize)
+#define CFE_PSP_USER_RESERVED_SIZE   (GLOBAL_CONFIGDATA.CfeConfig->UserReservedSize)
+#define CFE_PSP_RAM_DISK_SECTOR_SIZE (GLOBAL_CONFIGDATA.CfeConfig->RamDiskSectorSize)
+#define CFE_PSP_RAM_DISK_NUM_SECTORS (GLOBAL_CONFIGDATA.CfeConfig->RamDiskTotalSectors)
+
+typedef struct
+{
+    CFE_PSP_ReservedMemoryBootRecord_t BootRecord;
+    CFE_PSP_ExceptionStorage_t         ExceptionStorage;
+} CFE_PSP_RtemsReservedAreaFixedLayout_t;
+
+/*
+**  External Declarations
+*/
+
+/*
+** Global variables
+*/
+
+/*
+** Dynamic map of the reserved memory area
+*/
+CFE_PSP_ReservedMemoryMap_t CFE_PSP_ReservedMemoryMap = {0};
+
+CFE_PSP_MemoryBlock_t PcRtems_ReservedMemBlock;
+
+/*
+*********************************************************************************
+** CDS related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function fetches the size of the OS Critical Data Store area.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_GetCDSSize(uint32 *SizeOfCDS)
+{
+    int32 return_code;
+
+    if (SizeOfCDS == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        *SizeOfCDS  = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize;
+        return_code = OS_SUCCESS;
+    }
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function writes to the CDS Block.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_WriteToCDS(const void *PtrToDataToWrite, uint32 CDSOffset, uint32 NumBytes)
+{
+    uint8 *CopyPtr;
+    int32  return_code;
+
+    if (PtrToDataToWrite == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        if ((CDSOffset < CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize) &&
+            ((CDSOffset + NumBytes) <= CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize))
+        {
+            CopyPtr = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr;
+            CopyPtr += CDSOffset;
+            memcpy((char *)CopyPtr, (char *)PtrToDataToWrite, NumBytes);
+
+            return_code = OS_SUCCESS;
+        }
+        else
+        {
+            return_code = OS_ERROR;
+        }
+
+    } /* end if PtrToDataToWrite == NULL */
+
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**   This function reads from the CDS Block
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_ReadFromCDS(void *PtrToDataToRead, uint32 CDSOffset, uint32 NumBytes)
+{
+    uint8 *CopyPtr;
+    int32  return_code;
+
+    if (PtrToDataToRead == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        if ((CDSOffset < CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize) &&
+            ((CDSOffset + NumBytes) <= CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize))
+        {
+            CopyPtr = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr;
+            CopyPtr += CDSOffset;
+            memcpy((char *)PtrToDataToRead, (char *)CopyPtr, NumBytes);
+
+            return_code = OS_SUCCESS;
+        }
+        else
+        {
+            return_code = OS_ERROR;
+        }
+
+    } /* end if PtrToDataToWrite == NULL */
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES Reset Area related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**     This function returns the location and size of the ES Reset information area.
+**     This area is preserved during a processor reset and is used to store the
+**     ER Log, System Log and reset related variables
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetResetArea(cpuaddr *PtrToResetArea, uint32 *SizeOfResetArea)
+{
+    int32 return_code;
+
+    if (SizeOfResetArea == NULL || PtrToResetArea == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        *PtrToResetArea  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.ResetMemory.BlockPtr);
+        *SizeOfResetArea = CFE_PSP_ReservedMemoryMap.ResetMemory.BlockSize;
+        return_code      = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES User Reserved Area related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the location and size of the memory used for the cFE
+**     User reserved area.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetUserReservedArea(cpuaddr *PtrToUserArea, uint32 *SizeOfUserArea)
+{
+    int32 return_code;
+
+    if (SizeOfUserArea == NULL || PtrToUserArea == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        *PtrToUserArea  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockPtr);
+        *SizeOfUserArea = CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockSize;
+        return_code     = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES Volatile disk memory related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the location and size of the memory used for the cFE
+**     volatile disk.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetVolatileDiskMem(cpuaddr *PtrToVolDisk, uint32 *SizeOfVolDisk)
+{
+    int32 return_code;
+
+    if (SizeOfVolDisk == NULL || PtrToVolDisk == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        *PtrToVolDisk  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockPtr);
+        *SizeOfVolDisk = CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockSize;
+        return_code    = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES BSP Top Level Reserved memory initialization
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function performs the top level reserved memory initialization.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_SetupReservedMemoryMap(void)
+{
+    CFE_PSP_RtemsReservedAreaFixedLayout_t *FixedPtr;
+    cpuaddr                                 ReservedMemoryAddr;
+    size_t                                  FixedSize;
+    size_t                                  ResetSize;
+    size_t                                  CDSSize;
+    size_t                                  UserReservedSize;
+    size_t                                  VolatileDiskSize;
+    size_t                                  RequiredSize;
+
+    /*
+    ** Allocate memory for the cFE memory. Note that this is malloced on
+    ** the COTS board, but will be a static location in the ETU.
+    */
+    FixedSize        = sizeof(CFE_PSP_RtemsReservedAreaFixedLayout_t);
+    ResetSize        = CFE_PSP_RESET_AREA_SIZE;
+    VolatileDiskSize = (CFE_PSP_RAM_DISK_SECTOR_SIZE * CFE_PSP_RAM_DISK_NUM_SECTORS);
+    CDSSize          = CFE_PSP_CDS_SIZE;
+    UserReservedSize = CFE_PSP_USER_RESERVED_SIZE;
+
+    FixedSize        = (FixedSize + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+    ResetSize        = (ResetSize + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+    CDSSize          = (CDSSize + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+    VolatileDiskSize = (VolatileDiskSize + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+    UserReservedSize = (UserReservedSize + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    /*  Calculate the required size, adding padding so that each element is aligned */
+    RequiredSize = FixedSize;
+    RequiredSize += ResetSize;
+    RequiredSize += VolatileDiskSize;
+    RequiredSize += CDSSize;
+    RequiredSize += UserReservedSize;
+
+    OS_printf("Size of BSP reserved memory = %u bytes\n", (unsigned int)RequiredSize);
+
+    PcRtems_ReservedMemBlock.BlockPtr = malloc(RequiredSize);
+
+    if (PcRtems_ReservedMemBlock.BlockPtr == NULL)
+    {
+        OS_printf("CFE_PSP: Error: Cannot malloc BSP reserved memory!\n");
+        abort();
+    }
+
+    PcRtems_ReservedMemBlock.BlockSize = RequiredSize;
+    ReservedMemoryAddr                 = (cpuaddr)PcRtems_ReservedMemBlock.BlockPtr;
+
+    OS_printf("CFE_PSP: Allocated %u bytes for PSP reserved memory at: 0x%08lX\n", (unsigned int)RequiredSize,
+              (unsigned long)ReservedMemoryAddr);
+
+    FixedPtr = (CFE_PSP_RtemsReservedAreaFixedLayout_t *)ReservedMemoryAddr;
+
+    CFE_PSP_ReservedMemoryMap.BootPtr             = &FixedPtr->BootRecord;
+    CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr = &FixedPtr->ExceptionStorage;
+    ReservedMemoryAddr += FixedSize;
+
+    CFE_PSP_ReservedMemoryMap.ResetMemory.BlockPtr  = (void *)ReservedMemoryAddr;
+    CFE_PSP_ReservedMemoryMap.ResetMemory.BlockSize = CFE_PSP_RESET_AREA_SIZE;
+    ReservedMemoryAddr += ResetSize;
+
+    CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockPtr = (void *)ReservedMemoryAddr;
+    CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockSize =
+        (CFE_PSP_RAM_DISK_SECTOR_SIZE * CFE_PSP_RAM_DISK_NUM_SECTORS);
+    ReservedMemoryAddr += VolatileDiskSize;
+
+    CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr  = (void *)ReservedMemoryAddr;
+    CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize = CFE_PSP_CDS_SIZE;
+    ReservedMemoryAddr += CDSSize;
+
+    CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockPtr  = (void *)ReservedMemoryAddr;
+    CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockSize = CFE_PSP_USER_RESERVED_SIZE;
+    ReservedMemoryAddr += UserReservedSize;
+
+    /*
+     * displaying the final address shows how much was actually used,
+     * and additionally avoids a warning about the result of the final increment not being used.
+     * (prefer this over removing the increment, as it is safer if another block is added)
+     */
+    OS_printf("CFE_PSP: PSP reserved memory ends at: 0x%08lX\n", (unsigned long)ReservedMemoryAddr);
+
+    /*
+     * Set up the "RAM" entry in the memory table.
+     * On RTEMS this just encompasses the entire memory space, but an entry needs
+     * to exist so that CFE_PSP_ValidateMemRange() works as intended.
+     */
+    CFE_PSP_MemRangeSet(0, CFE_PSP_MEM_RAM, 0, SIZE_MAX, CFE_PSP_MEM_SIZE_DWORD, CFE_PSP_MEM_ATTR_READWRITE);
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function performs the top level reserved memory initialization.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_InitProcessorReservedMemory(uint32 RestartType)
+{
+    OS_printf("CFE_PSP: Clearing Processor Reserved Memory.\n");
+    memset(PcRtems_ReservedMemBlock.BlockPtr, 0, PcRtems_ReservedMemBlock.BlockSize);
+    return CFE_PSP_SUCCESS;
+}
+
+/*
+*********************************************************************************
+** ES BSP kernel memory segment functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the start and end address of the kernel text segment.
+**     It may not be implemented on all architectures.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetKernelTextSegmentInfo(cpuaddr *PtrToKernelSegment, uint32 *SizeOfKernelSegment)
+{
+    int32   return_code;
+    cpuaddr StartAddress;
+    cpuaddr EndAddress;
+
+    if (SizeOfKernelSegment == NULL || PtrToKernelSegment == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+        ** Get the kernel start and end
+        ** addresses from the BSP, because the
+        ** symbol table does not contain the symbols we need for this
+        */
+        StartAddress = (cpuaddr)0x0;
+        EndAddress   = (cpuaddr)0x1024;
+
+        *PtrToKernelSegment  = StartAddress;
+        *SizeOfKernelSegment = (uint32)(EndAddress - StartAddress);
+
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the start and end address of the CFE text segment.
+**     It may not be implemented on all architectures.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetCFETextSegmentInfo(cpuaddr *PtrToCFESegment, uint32 *SizeOfCFESegment)
+{
+    int32   return_code;
+    cpuaddr StartAddress;
+    cpuaddr EndAddress;
+
+    if (SizeOfCFESegment == NULL)
+    {
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        /*
+        ** Get the kernel start and end
+        ** addresses from the BSP, because the
+        ** symbol table does not contain the symbols we need for this
+        */
+        StartAddress = (cpuaddr)0x0;
+        EndAddress   = (cpuaddr)0x1024;
+
+        *PtrToCFESegment  = StartAddress;
+        *SizeOfCFESegment = (uint32)(EndAddress - StartAddress);
+
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+```
+
+### `cfe_psp_ssr.c`
+
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_ssr.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_ssr.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  Alan Cudmore    | Initial version,
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/******************************************************************************
+**
+**  Purpose:
+**    Initializes the Solid State Recorder device. Dummy function for this
+**    platform.
+**
+**
+**  Arguments:
+**    bus, device, device name
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_InitSSR(uint32 bus, uint32 device, char *DeviceName)
+{
+    int32 ReturnCode;
+
+    ReturnCode = CFE_PSP_SUCCESS;
+
+    return ReturnCode;
+}
+```
+
+### `cfe_psp_start.c`
+
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_start.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_start.c
+**
+** Purpose:
+**   cFE BSP main entry point.
+**
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <rtems.h>
+#include <rtems/rtems_bsdnet.h>
+#include <rtems/rtems_dhcp_failsafe.h>
+#include <bsp.h>
+
+extern int rtems_fxp_attach(struct rtems_bsdnet_ifconfig *config, int attaching);
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+#include "cfe_psp_module.h"
+
+/*
+ * The preferred way to obtain the CFE tunable values at runtime is via
+ * the dynamically generated configuration object.  This allows a single build
+ * of the PSP to be completely CFE-independent.
+ */
+#include "target_config.h"
+
+#define CFE_PSP_MAIN_FUNCTION       (*GLOBAL_CONFIGDATA.CfeConfig->SystemMain)
+#define CFE_PSP_NONVOL_STARTUP_FILE (GLOBAL_CONFIGDATA.CfeConfig->NonvolStartupFile)
+
+/*
+** Global variables
+*/
+
+rtems_id RtemsTimerId;
+
+static unsigned char ethernet_address[6] = {0x00, 0x04, 0x9F, 0x00, 0x27, 0x61};
+static char          net_name_str[]      = "fxp1";
+static char          ip_addr_str[]       = "10.0.2.17";
+static char          ip_netmask_str[]    = "255.255.255.0";
+
+static struct rtems_bsdnet_ifconfig netdriver_config = {
+    .name             = net_name_str,
+    .attach           = rtems_fxp_attach,
+    .next             = NULL,
+    .ip_address       = ip_addr_str,
+    .ip_netmask       = ip_netmask_str,
+    .hardware_address = ethernet_address
+    /* more options can follow */
+};
+
+struct rtems_bsdnet_config rtems_bsdnet_config = {
+    .ifconfig = &netdriver_config, .bootp = rtems_bsdnet_do_dhcp_failsafe, /* fill if DHCP is used*/
+};
+
+/*
+** 1 HZ Timer "ISR"
+*/
+int timer_count = 0;
+
+/******************************************************************************
+**
+**  Purpose:
+**    Perform initial setup.
+**
+**    This function is invoked before OSAL is initialized.
+**      NO OSAL CALLS SHOULD BE USED YET.
+**
+**    The root file system is created, and mount points are created and mounted:
+**     - /ram as ramdisk (RFS), read-write
+**     - /boot from /dev/hda1, read-only, contain the boot executable(s) (CFE core)
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    OS error code.  RTEMS_SUCCESSFUL if everything worked.
+**
+**  Note:
+**    If this fails then CFE will not run properly, so a non-success here should
+**    stop the boot so the issue can be fixed.  Trying to continue booting usually
+**    just obfuscates the issue when something does not work later on.
+*/
+int CFE_PSP_Setup(void)
+{
+    rtems_status_code status;
+
+    /*
+     * Initialize the network.  This is also optional and only
+     * works if an appropriate network device is present.
+     */
+    status = rtems_bsdnet_initialize_network();
+    if (status != RTEMS_SUCCESSFUL)
+    {
+        printf("Network init not successful: %s / %s (continuing)\n", rtems_status_text(status), strerror(errno));
+    }
+
+    return RTEMS_SUCCESSFUL;
+}
+
+/*
+** A simple entry point to start from the BSP loader
+**
+** This entry point is used when building an RTEMS+CFE monolithic
+** image, which is a single executable containing the RTEMS
+** kernel and Core Flight Executive in one file.  In this mode
+** the RTEMS BSP invokes the "Init" function directly.
+**
+** This sets up the root fs and the shell prior to invoking CFE via
+** the CFE_PSP_Main() routine.
+**
+** In a future version this code may be moved into a separate bsp
+** integration unit to be more symmetric with the VxWorks implementation.
+*/
+void OS_Application_Startup(void)
+{
+    if (CFE_PSP_Setup() != RTEMS_SUCCESSFUL)
+    {
+        CFE_PSP_Panic(CFE_PSP_ERROR);
+    }
+
+    /*
+    ** Run the PSP Main - this will return when init is complete
+    */
+    CFE_PSP_Main();
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Application entry point.
+**
+**    The basic RTEMS system including the root FS and shell (if used) should
+**    be running prior to invoking this function.
+**
+**    This entry point is used when building a separate RTEMS kernel/platform
+**    boot image and Core Flight Executive image.  This is the type of deployment
+**    used on e.g. VxWorks platforms.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_Main(void)
+{
+    uint32    reset_type;
+    uint32    reset_subtype;
+    osal_id_t fs_id;
+    int32     Status;
+
+    /*
+    ** Initialize the OS API
+    */
+    Status = OS_API_Init();
+    if (Status != OS_SUCCESS)
+    {
+        /* irrecoverable error if OS_API_Init() fails. */
+        /* note: use printf here, as OS_printf may not work */
+        printf("CFE_PSP: OS_API_Init() failure\n");
+        CFE_PSP_Panic(Status);
+    }
+
+    /*
+     * Initialize the CFE reserved memory map
+     */
+    CFE_PSP_SetupReservedMemoryMap();
+
+    /*
+    ** Set up the virtual FS mapping for the "/cf" directory
+    */
+    Status = OS_FileSysAddFixedMap(&fs_id, "/mnt/eeprom", "/cf");
+    if (Status != OS_SUCCESS)
+    {
+        /* Print for informational purposes --
+         * startup can continue, but loads may fail later, depending on config. */
+        OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+    }
+
+    /*
+    ** Initialize the statically linked modules (if any)
+    */
+    CFE_PSP_ModuleInit();
+
+    /*
+    ** Determine Reset type by reading the hardware reset register.
+    */
+    reset_type    = CFE_PSP_RST_TYPE_POWERON;
+    reset_subtype = CFE_PSP_RST_SUBTYPE_POWER_CYCLE;
+
+    /*
+    ** Initialize the reserved memory
+    */
+    CFE_PSP_InitProcessorReservedMemory(reset_type);
+
+    /*
+    ** Call cFE entry point. This will return when cFE startup
+    ** is complete.
+    */
+    CFE_PSP_MAIN_FUNCTION(reset_type, reset_subtype, 1, CFE_PSP_NONVOL_STARTUP_FILE);
+}
+```
+
+### `cfe_psp_support.c`
+
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_support.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_support.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  Alan Cudmore    | Initial version,
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/*
+ * The preferred way to obtain the CFE tunable values at runtime is via
+ * the dynamically generated configuration object.  This allows a single build
+ * of the PSP to be completely CFE-independent.
+ */
+#include "target_config.h"
+
+#define CFE_PSP_CPU_ID        (GLOBAL_CONFIGDATA.Default_CpuId)
+#define CFE_PSP_CPU_NAME      (GLOBAL_CONFIGDATA.Default_CpuName)
+#define CFE_PSP_SPACECRAFT_ID (GLOBAL_CONFIGDATA.Default_SpacecraftId)
+
+/*
+ * Track the overall "reserved memory block" at the start of RAM.
+ * This single large block is then subdivided into separate areas for CFE use.
+ */
+extern CFE_PSP_MemoryBlock_t PcRtems_ReservedMemBlock;
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to the processor reset.
+**
+**  Arguments:
+**    reset_type  : Type of reset.
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_Restart(uint32 reset_type)
+{
+    CFE_PSP_FlushCaches(1, PcRtems_ReservedMemBlock.BlockPtr, PcRtems_ReservedMemBlock.BlockSize);
+    OS_printf("CFE_PSP_Restart is not implemented on this platform ( yet ! )\n");
+    exit(-1);
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to abort the cFE startup process and return
+**    back to the OS.
+**
+**  Arguments:
+**    ErrorCode  : Reason for Exiting.
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_Panic(int32 ErrorCode)
+{
+    printf("CFE_PSP_Panic Called with error code = 0x%08X. Exiting.\n", (unsigned int)ErrorCode);
+    OS_ApplicationExit(ErrorCode);
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to flush the processor caches. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_FlushCaches(uint32 type, void *address, uint32 size)
+{
+    if (type == 1)
+    {
+        /* cacheTextUpdate((void *)address, size); */
+    }
+}
+
+/*
+**
+** Purpose:
+**         return the processor ID.
+**
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+**
+** Return Values: Processor ID
+*/
+uint32 CFE_PSP_GetProcessorId(void)
+{
+    return CFE_PSP_CPU_ID;
+}
+
+/*
+**
+** Purpose:
+**         return the spacecraft ID.
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: Spacecraft ID
+*/
+uint32 CFE_PSP_GetSpacecraftId(void)
+{
+    return CFE_PSP_SPACECRAFT_ID;
+}
+
+/*
+**
+** Purpose:
+**         return the processor name.
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: Processor name
+*/
+const char *CFE_PSP_GetProcessorName(void)
+{
+    return CFE_PSP_CPU_NAME;
+}
+```
+
+### `cfe_psp_watchdog.c`
+
+**경로:** `fsw/psp/fsw/pc-rtems/src/cfe_psp_watchdog.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/************************************************************************************************
+** File:  cfe_psp_watchdog.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2009/07/20  A. Cudmore    | Initial version,
+**
+*************************************************************************************************/
+
+/*
+**  Include Files
+*/
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+**  System Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+
+/*
+** Global data
+*/
+
+/*
+** The watchdog time in milliseconds
+*/
+uint32 CFE_PSP_WatchdogValue = 0;
+
+/*
+**
+**  Purpose:
+**    To setup the timer resolution and/or other settings custom to this platform.
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogInit(void)
+{
+    /*
+    ** Just set it to a value right now
+    ** The pc-linux desktop platform does not actually implement a watchdog
+    ** timeout ( but could with a signal )
+    */
+    CFE_PSP_WatchdogValue = CFE_PSP_WATCHDOG_MAX;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Enable the watchdog timer
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogEnable(void) {}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Disable the watchdog timer
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogDisable(void) {}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Load the watchdog timer with a count that corresponds to the millisecond
+**    time given in the parameter.
+**
+**  Arguments:
+**    None.
+**
+**  Return:
+**    None
+**
+**  Notes:
+**
+*/
+void CFE_PSP_WatchdogService(void) {}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Get the current watchdog value.
+**
+**  Arguments:
+**    none
+**
+**  Return:
+**    the current watchdog value
+**
+**  Notes:
+**
+*/
+uint32 CFE_PSP_WatchdogGet(void)
+{
+    return CFE_PSP_WatchdogValue;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Get the current watchdog value.
+**
+**  Arguments:
+**    The new watchdog value
+**
+**  Return:
+**    nothing
+**
+**  Notes:
+**
+*/
+void CFE_PSP_WatchdogSet(uint32 WatchdogValue)
+{
+    CFE_PSP_WatchdogValue = WatchdogValue;
+}
+```

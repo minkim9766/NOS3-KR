@@ -3,18 +3,320 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BufferRepeaterTester.cpp`
 
-file--BufferRepeaterTester.cpp
-file--BufferRepeaterTester.hpp
-file--BufferRepeaterTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferRepeater.hpp
+// \author lestarch
+// \brief  cpp file for BufferRepeater test harness implementation class
+// ======================================================================
+
+#include "BufferRepeaterTester.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 10
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+BufferRepeaterTester ::BufferRepeaterTester()
+    : BufferRepeaterGTestBase("Tester", MAX_HISTORY_SIZE),
+      component("BufferRepeater"),
+      m_port_index_history(MAX_HISTORY_SIZE),
+      m_initial_buffer(),
+      m_failure(false) {
+    this->initComponents();
+    this->connectPorts();
+}
+
+BufferRepeaterTester ::~BufferRepeaterTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BufferRepeaterTester ::testRepeater() {
+    this->component.configure(BufferRepeater::FATAL_ON_OUT_OF_MEMORY);
+    m_initial_buffer.setSize(1024);
+    m_initial_buffer.setData(new U8[1024]);
+    for (U32 i = 0; i < m_initial_buffer.getSize(); i++) {
+        m_initial_buffer.getData()[i] = static_cast<U8>(i);
+    }
+
+    invoke_to_portIn(0, m_initial_buffer);
+    ASSERT_EVENTS_AllocationHardFailure_SIZE(0);
+    ASSERT_EVENTS_AllocationSoftFailure_SIZE(0);
+    ASSERT_from_portOut_SIZE(this->component.getNum_portOut_OutputPorts());
+    ASSERT_EQ(fromPortHistory_portOut->size(), this->m_port_index_history.size());
+    for (FwIndexType i = 0; i < this->component.getNum_portOut_OutputPorts(); i++) {
+        FwIndexType port_index = this->m_port_index_history.at(i);
+        ASSERT_EQ(i, port_index);
+        Fw::Buffer buffer_under_test = this->fromPortHistory_portOut->at(i).fwBuffer;
+        ASSERT_EQ(buffer_under_test.getSize(), m_initial_buffer.getSize());
+        for (U32 j = 0; j < FW_MIN(buffer_under_test.getSize(), m_initial_buffer.getSize()); j++) {
+            ASSERT_EQ(buffer_under_test.getData()[j], m_initial_buffer.getData()[j])
+                << "Data not copied correctly at offset: " << j;
+        }
+        // Deallocate allocated data
+        if (buffer_under_test.getData() != nullptr) {
+            delete[] buffer_under_test.getData();
+        }
+    }
+    // Check proper deallocation
+    ASSERT_from_deallocate_SIZE(1);
+    ASSERT_EQ(m_initial_buffer.getData(), fromPortHistory_deallocate->at(0).fwBuffer.getData());
+    ASSERT_EQ(m_initial_buffer.getSize(), fromPortHistory_deallocate->at(0).fwBuffer.getSize());
+    delete[] m_initial_buffer.getData();
+    m_initial_buffer.setData(nullptr);
+}
+
+void BufferRepeaterTester ::testFailure(BufferRepeater::BufferRepeaterFailureOption failure_option) {
+    this->m_failure = true;
+    this->component.configure(failure_option);
+    m_initial_buffer.setSize(1024);
+    m_initial_buffer.setData(new U8[1024]);
+
+    invoke_to_portIn(0, m_initial_buffer);
+    switch (failure_option) {
+        case BufferRepeater::WARNING_ON_OUT_OF_MEMORY:
+            ASSERT_EVENTS_AllocationHardFailure_SIZE(0);
+            ASSERT_EVENTS_AllocationSoftFailure_SIZE(this->component.getNum_portOut_OutputPorts());
+            break;
+        case BufferRepeater::FATAL_ON_OUT_OF_MEMORY:
+            ASSERT_EVENTS_AllocationHardFailure_SIZE(this->component.getNum_portOut_OutputPorts());
+            ASSERT_EVENTS_AllocationSoftFailure_SIZE(0);
+            break;
+        // Cascade intended
+        case BufferRepeater::NO_RESPONSE_ON_OUT_OF_MEMORY:
+        case BufferRepeater::NUM_BUFFER_REPEATER_FAILURE_OPTIONS:
+            ASSERT_EVENTS_AllocationHardFailure_SIZE(0);
+            ASSERT_EVENTS_AllocationSoftFailure_SIZE(0);
+            break;
+    }
+
+    ASSERT_from_portOut_SIZE(0);
+
+    // Check proper deallocation
+    ASSERT_from_deallocate_SIZE(1);
+    ASSERT_EQ(m_initial_buffer.getData(), fromPortHistory_deallocate->at(0).fwBuffer.getData());
+    ASSERT_EQ(m_initial_buffer.getSize(), fromPortHistory_deallocate->at(0).fwBuffer.getSize());
+    delete[] m_initial_buffer.getData();
+    m_initial_buffer.setData(nullptr);
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+Fw::Buffer BufferRepeaterTester ::from_allocate_handler(const FwIndexType portNum, FwSizeType size) {
+    this->pushFromPortEntry_allocate(size);
+    Fw::Buffer new_buffer;
+
+    if (m_failure) {
+        new_buffer.setSize(0);
+        new_buffer.setData(nullptr);
+    } else {
+        new_buffer.setSize(size);
+        new_buffer.setData(new U8[size]);
+    }
+    return new_buffer;
+}
+
+void BufferRepeaterTester ::from_deallocate_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->pushFromPortEntry_deallocate(fwBuffer);
+    EXPECT_EQ(fwBuffer.getData(), m_initial_buffer.getData()) << "Deallocated non-initial buffer";
+}
+
+void BufferRepeaterTester ::from_portOut_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->m_port_index_history.push_back(portNum);
+    this->pushFromPortEntry_portOut(fwBuffer);
+    EXPECT_NE(fwBuffer.getData(), nullptr) << "Passed invalid buffer out port";
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void BufferRepeaterTester ::connectPorts() {
+    // portIn
+    this->connect_to_portIn(0, this->component.get_portIn_InputPort(0));
+
+    // Log
+    this->component.set_Log_OutputPort(0, this->get_from_Log(0));
+
+    // LogText
+    this->component.set_LogText_OutputPort(0, this->get_from_LogText(0));
+
+    // Time
+    this->component.set_Time_OutputPort(0, this->get_from_Time(0));
+
+    // allocate
+    this->component.set_allocate_OutputPort(0, this->get_from_allocate(0));
+
+    // deallocate
+    this->component.set_deallocate_OutputPort(0, this->get_from_deallocate(0));
+
+    // portOut
+    for (FwIndexType i = 0; i < this->component.getNum_portOut_OutputPorts(); ++i) {
+        this->component.set_portOut_OutputPort(i, this->get_from_portOut(i));
+    }
+}
+
+void BufferRepeaterTester ::initComponents() {
+    this->init();
+    this->component.init(INSTANCE);
+}
+
+}  // end namespace Svc
 ```
 
-## 항목
+### `BufferRepeaterTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTester.cpp`](file--BufferRepeaterTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTester.hpp`](file--BufferRepeaterTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTestMain.cpp`](file--BufferRepeaterTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferRepeater/test/ut/Tester.hpp
+// \author lestarch
+// \brief  hpp file for GenericRepeater test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "BufferRepeaterGTestBase.hpp"
+#include "Svc/BufferRepeater/BufferRepeater.hpp"
+
+namespace Svc {
+
+class BufferRepeaterTester : public BufferRepeaterGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object BufferRepeaterTester
+    //!
+    BufferRepeaterTester();
+
+    //! Destroy object BufferRepeaterTester
+    //!
+    ~BufferRepeaterTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test the repeating capability of the buffer
+    //!
+    void testRepeater();
+
+    //! Test the repeating capability of the buffer
+    //!
+    void testFailure(BufferRepeater::BufferRepeaterFailureOption failure_option);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for serial from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_allocate
+    //!
+    Fw::Buffer from_allocate_handler(const FwIndexType portNum, /*!< The port number*/
+                                     FwSizeType size);
+
+    //! Handler for from_deallocate
+    //!
+    void from_deallocate_handler(const FwIndexType portNum, /*!< The port number*/
+                                 Fw::Buffer& fwBuffer);
+
+    //! Handler for from_portOut
+    //!
+    void from_portOut_handler(const FwIndexType portNum, /*!< The port number*/
+                              Fw::Buffer& fwBuffer);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    BufferRepeater component;
+    History<U64> m_port_index_history;
+    Fw::Buffer m_initial_buffer;
+    bool m_failure;
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `BufferRepeaterTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferRepeater/test/ut/BufferRepeaterTestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "BufferRepeaterTester.hpp"
+
+TEST(Nominal, TestRepeater) {
+    Svc::BufferRepeaterTester tester;
+    tester.testRepeater();
+}
+
+TEST(OffNominal, NoMemoryResponse) {
+    Svc::BufferRepeaterTester tester;
+    tester.testFailure(Svc::BufferRepeater::NO_RESPONSE_ON_OUT_OF_MEMORY);
+}
+
+TEST(OffNominal, WarningMemoryResponse) {
+    Svc::BufferRepeaterTester tester;
+    tester.testFailure(Svc::BufferRepeater::WARNING_ON_OUT_OF_MEMORY);
+}
+
+TEST(OffNominal, FatalMemoryResponse) {
+    Svc::BufferRepeaterTester tester;
+    tester.testFailure(Svc::BufferRepeater::FATAL_ON_OUT_OF_MEMORY);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

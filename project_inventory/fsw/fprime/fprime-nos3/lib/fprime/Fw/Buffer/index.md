@@ -3,24 +3,474 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--Buffer.cpp
-file--Buffer.fpp
-file--Buffer.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.cpp`](file--Buffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.fpp`](file--Buffer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.hpp`](file--Buffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `Buffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Buffer.cpp
+// \author mstarch
+// \brief  cpp file for Fw::Buffer implementation
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <Fw/Buffer/Buffer.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+
+#if FW_SERIALIZABLE_TO_STRING
+#include <Fw/Types/String.hpp>
+#endif
+#include <cstring>
+
+namespace Fw {
+
+Buffer::Buffer() : Serializable(), m_serialize_repr(), m_bufferData(nullptr), m_size(0), m_context(0xFFFFFFFF) {}
+
+Buffer::Buffer(const Buffer& src)
+    : Serializable(), m_serialize_repr(), m_bufferData(src.m_bufferData), m_size(src.m_size), m_context(src.m_context) {
+    if (src.m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(src.m_bufferData, src.m_size);
+    }
+}
+
+Buffer::Buffer(U8* data, FwSizeType size, U32 context)
+    : Serializable(), m_serialize_repr(), m_bufferData(data), m_size(size), m_context(context) {
+    if (m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(this->m_bufferData, this->m_size);
+    }
+}
+
+Buffer& Buffer::operator=(const Buffer& src) {
+    // Ward against self-assignment
+    if (this != &src) {
+        this->set(src.m_bufferData, src.m_size, src.m_context);
+    }
+    return *this;
+}
+
+bool Buffer::operator==(const Buffer& src) const {
+    return (this->m_bufferData == src.m_bufferData) && (this->m_size == src.m_size) &&
+           (this->m_context == src.m_context);
+}
+
+bool Buffer::isValid() const {
+    return (this->m_bufferData != nullptr) && (this->m_size > 0);
+}
+
+U8* Buffer::getData() const {
+    return this->m_bufferData;
+}
+
+FwSizeType Buffer::getSize() const {
+    return this->m_size;
+}
+
+U32 Buffer::getContext() const {
+    return this->m_context;
+}
+
+void Buffer::setData(U8* const data) {
+    this->m_bufferData = data;
+    if (m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(this->m_bufferData, this->m_size);
+    }
+}
+
+void Buffer::setSize(const FwSizeType size) {
+    this->m_size = size;
+    if (m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(this->m_bufferData, this->m_size);
+    }
+}
+
+void Buffer::setContext(const U32 context) {
+    this->m_context = context;
+}
+
+void Buffer::set(U8* const data, const FwSizeType size, const U32 context) {
+    this->m_bufferData = data;
+    this->m_size = size;
+    if (m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(this->m_bufferData, this->m_size);
+    }
+    this->m_context = context;
+}
+
+Fw::ExternalSerializeBufferWithMemberCopy Buffer::getSerializer() {
+    if (this->isValid()) {
+        Fw::ExternalSerializeBufferWithMemberCopy esb(this->m_bufferData, this->m_size);
+        esb.resetSer();
+        return esb;
+    } else {
+        return ExternalSerializeBufferWithMemberCopy();
+    }
+}
+
+Fw::ExternalSerializeBufferWithMemberCopy Buffer::getDeserializer() {
+    if (this->isValid()) {
+        Fw::ExternalSerializeBufferWithMemberCopy esb(this->m_bufferData, this->m_size);
+        Fw::SerializeStatus stat = esb.setBuffLen(this->m_size);
+        FW_ASSERT(stat == Fw::FW_SERIALIZE_OK);
+        return esb;
+    } else {
+        return ExternalSerializeBufferWithMemberCopy();
+    }
+}
+
+Fw::SerializeStatus Buffer::serializeTo(Fw::SerializeBufferBase& buffer) const {
+    Fw::SerializeStatus stat;
+#if FW_SERIALIZATION_TYPE_ID
+    stat = buffer.serializeFrom(static_cast<U32>(Buffer::TYPE_ID));
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+#endif
+    stat = buffer.serializeFrom(reinterpret_cast<PlatformPointerCastType>(this->m_bufferData));
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    stat = buffer.serializeFrom(this->m_size);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    stat = buffer.serializeFrom(this->m_context);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    return stat;
+}
+
+Fw::SerializeStatus Buffer::deserializeFrom(Fw::SerializeBufferBase& buffer) {
+    Fw::SerializeStatus stat;
+
+#if FW_SERIALIZATION_TYPE_ID
+    U32 typeId;
+
+    stat = buffer.deserializeTo(typeId);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    if (typeId != Buffer::TYPE_ID) {
+        return Fw::FW_DESERIALIZE_TYPE_MISMATCH;
+    }
+#endif
+    PlatformPointerCastType pointer;
+    stat = buffer.deserializeTo(pointer);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    this->m_bufferData = reinterpret_cast<U8*>(pointer);
+
+    stat = buffer.deserializeTo(this->m_size);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    stat = buffer.deserializeTo(this->m_context);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    if (this->m_bufferData != nullptr) {
+        this->m_serialize_repr.setExtBuffer(this->m_bufferData, this->m_size);
+    }
+    return stat;
+}
+
+#if FW_SERIALIZABLE_TO_STRING
+void Buffer::toString(Fw::StringBase& text) const {
+    static const char* formatString = "(data = %p, size = %u, context = %u)";
+    text.format(formatString, this->m_bufferData, this->m_size, this->m_context);
+}
+#endif
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const Buffer& obj) {
+    Fw::String str;
+    obj.toString(str);
+    os << str.toChar();
+    return os;
+}
+#endif
+
+}  // end namespace Fw
+```
+
+### `Buffer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.fpp`
+
+
+```fpp
+module Fw {
+
+  @ The buffer type
+  type Buffer
+
+  @ Port for sending a buffer
+  port BufferSend(
+                   @ The buffer
+                   ref fwBuffer: Fw.Buffer
+                 )
+
+  @ Port for getting a buffer
+  @ Returns the buffer
+  port BufferGet(
+                  @ The requested size
+                  $size: FwSizeType
+                ) -> Fw.Buffer
+
+}
+```
+
+### `Buffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/Buffer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Buffer.hpp
+// \author mstarch
+// \brief  hpp file for Fw::Buffer definition
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef BUFFER_HPP_
+#define BUFFER_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+#if FW_SERIALIZABLE_TO_STRING
+#include <Fw/Types/StringType.hpp>
+#ifdef BUILD_UT
+#include <Fw/Types/String.hpp>
+#include <iostream>
+#endif
+#endif
+
+// Forward declaration for UTs
+namespace Fw {
+class BufferTester;
+}
+
+namespace Fw {
+
+//! Buffer used for wrapping pointer to data for efficient transmission
+//!
+//! Fw::Buffer is a wrapper for a pointer to data. It allows for data to be passed around the system without a copy of
+//! the data itself. However, it comes with the expectation that the user maintain and protect this memory as it moves
+//! about the system until such a time as it is returned.
+//!
+//! Fw::Buffer is composed of several elements: a U8* pointer to the data, a U32 size of that data, and a U32 context
+//! describing the origin of that data, such that it may be freed at some later point. The default context of 0xFFFFFFFF
+//! should not be used for tracking purposes, as it represents a context-free buffer.
+//!
+//! Fw::Buffer also comes with functions to return a representation of the data as a SerializeBufferBase. These two
+//! functions allow easy access to the data as if it were a serialize or deserialize buffer. This can aid in writing and
+//! reading the wrapped data whereas the standard serialize and deserialize methods treat the data as a pointer to
+//! prevent excessive copying.
+//!
+class Buffer : public Fw::Serializable {
+    friend class Fw::BufferTester;
+
+  public:
+    //! The size type for a buffer - for backwards compatibility
+    using SizeType = FwSizeType;
+
+    enum {
+        SERIALIZED_SIZE = sizeof(SizeType) + sizeof(U32) + sizeof(U8*),  //!< Size of Fw::Buffer when serialized
+        NO_CONTEXT = 0xFFFFFFFF                                          //!< Value representing no context
+    };
+
+    //! Construct a buffer with no context nor data
+    //!
+    //! Constructs a buffer setting the context to the default no-context value of 0xffffffff. In addition, the size
+    //! and data pointers are zeroed-out.
+    Buffer();
+
+    //! Construct a buffer by copying members from a reference to another buffer. Does not copy wrapped data.
+    //!
+    Buffer(const Buffer& src);
+
+    //! Construct a buffer to wrap the given data pointer of given size
+    //!
+    //! Wraps the given data pointer with given size in a buffer. The context by default is set to NO_CONTEXT but can
+    //! be set to specify a specific context.
+    //! \param data: data pointer to wrap
+    //! \param size: size of data located at data pointer
+    //! \param context: user-specified context to track creation. Default: no context
+    Buffer(U8* data, FwSizeType size, U32 context = NO_CONTEXT);
+
+    //! Assignment operator to set given buffer's members from another without copying wrapped data
+    //!
+    Buffer& operator=(const Buffer& src);
+
+    //! Equality operator returning true when buffers are equivalent
+    //!
+    //! Buffers are deemed equivalent if they contain a pointer to the same data, with the same size, and the same
+    //! context. The representation of that buffer for use with serialization and deserialization need not be
+    //! equivalent.
+    //! \param src: buffer to test against
+    //! \return: true if equivalent, false otherwise
+    bool operator==(const Buffer& src) const;
+
+    // ----------------------------------------------------------------------
+    // Serialization functions
+    // ----------------------------------------------------------------------
+
+    //! Returns a SerializeBufferBase representation of the wrapped data for serializing
+    //!
+    //! Returns a SerializeBufferBase representation of the wrapped data allowing for serializing other types of data
+    //! to the wrapped buffer. Once obtained the user should call one of two functions: `sbb.resetSer();` to setup for
+    //! serialization, or `sbb.setBuffLen(buffer.getSize());` to setup for deserializing.
+    //! \return representation of the wrapped data to aid in serializing to it
+    DEPRECATED(SerializeBufferBase& getSerializeRepr(), "Switch to .getSerializer() and .getDeserializer()");
+
+    //! Returns a ExternalSerializeBufferWithMemberCopy representation of the wrapped data for serializing
+    //!
+    //! \warning The serialization pointer of the returned ExternalSerializeBufferWithMemberCopy object is set to zero
+    //! \warning so that serialization will start at the beginning of the memory pointed to by the Fw::Buffer. If that
+    //! \warning behavior is not desired the caller may manipulate the serialization offsets with moveSerToOffset
+    //! \warning and serializeSkip methods prior to serialization.
+    //!
+    //! \return representation of the wrapped data to aid in serializing to it
+    ExternalSerializeBufferWithMemberCopy getSerializer();
+
+    //! Returns a ExternalSerializeBufferWithMemberCopy representation of the wrapped data for deserializing
+    //!
+    //! \warning The entire buffer (up to getSize) is available for deserialization.
+    //!
+    //! \return representation of the wrapped data to aid in deserializing to it
+    ExternalSerializeBufferWithMemberCopy getDeserializer();
+
+    //! Serializes this buffer to a SerializeBufferBase
+    //!
+    //! This serializes the buffer to a SerializeBufferBase, however, it DOES NOT serialize the wrapped data. It only
+    //! serializes the pointer to said data, the size, and context. This is done for efficiency in moving around data,
+    //! and is the primary usage of Fw::Buffer. To serialize the wrapped data, use either the data pointer accessor
+    //! or the serialize buffer base representation and serialize from that.
+    //! \param serialBuffer: serialize buffer to write data into
+    //! \return: status of serialization
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& serialBuffer) const;
+
+    //! Deserializes this buffer from a SerializeBufferBase
+    //!
+    //! This deserializes the buffer from a SerializeBufferBase, however, it DOES NOT handle serialized data. It only
+    //! deserializes the pointer to said data, the size, and context. This is done for efficiency in moving around data,
+    //! and is the primary usage of Fw::Buffer. To deserialize the wrapped data, use either the data pointer accessor
+    //! or the serialize buffer base representation and deserialize from that.
+    //! \param buffer: serialize buffer to read data into
+    //! \return: status of serialization
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer);
+
+    // ----------------------------------------------------------------------
+    // Accessor functions
+    // ----------------------------------------------------------------------
+
+    //! Returns true if the buffer is valid (data pointer != nullptr and size > 0)
+    //!
+    bool isValid() const;
+
+    //! Returns wrapped data pointer
+    //!
+    U8* getData() const;
+
+    //! Returns size of wrapped data
+    //!
+    FwSizeType getSize() const;
+
+    //! Returns creation context
+    //!
+    U32 getContext() const;
+
+    //! Sets pointer to wrapped data and the size of the given data
+    //!
+    void setData(U8* data);
+
+    //! Sets pointer to wrapped data and the size of the given data
+    //!
+    void setSize(FwSizeType size);
+
+    //! Sets creation context
+    //!
+    void setContext(U32 context);
+
+    //! Sets all values
+    //! \param data: data pointer to wrap
+    //! \param size: size of data located at data pointer
+    //! \param context: user-specified context to track creation. Default: no context
+    void set(U8* data, FwSizeType size, U32 context = NO_CONTEXT);
+
+#if FW_SERIALIZABLE_TO_STRING || BUILD_UT
+    //! Supports writing this buffer to a string representation
+    void toString(Fw::StringBase& text) const;
+#endif
+
+#ifdef BUILD_UT
+    //! Supports GTest framework for outputting this type to a stream
+    //!
+    friend std::ostream& operator<<(std::ostream& os, const Buffer& obj);
+#endif
+
+  private:
+    Fw::ExternalSerializeBuffer m_serialize_repr;  //<! Representation for serialization and deserialization functions
+    U8* m_bufferData;                              //<! data - A pointer to the data
+    FwSizeType m_size;                             //<! size - The data size in bytes
+    U32 m_context;                                 //!< Creation context for disposal
+};
+}  // end namespace Fw
+#endif /* BUFFER_HPP_ */
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Buffer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Buffer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Buffer.cpp"
+)
+
+set(MOD_DEPS
+    Fw/Types
+)
+
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestBuffer.cpp"
+)
+register_fprime_ut()
+```

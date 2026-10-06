@@ -3,24 +3,130 @@
 
 **경로:** `fsw/apps/lc/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build-documentation.yml`
 
-file--build-documentation.yml
-file--build-run-app.yml
-file--codeql-build.yml
-file--format-check.yml
-file--static-analysis.yml
-file--unit-test-coverage.yml
+**경로:** `fsw/apps/lc/.github/workflows/build-documentation.yml`
+
+
+```yaml
+name: Build and Deploy Documentation
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-documentation:
+    name: Build and deploy cFS documents
+    uses: nasa/cFS/.github/workflows/build-deploy-doc.yml@main
+    with:
+      target: "[\"lc-usersguide\"]"
+      app-name: lc
+      buildpdf: ${{ github.event_name == 'push' && contains(github.ref, 'main')}}
+      deploy: ${{ github.event_name == 'push' && contains(github.ref, 'main')}}
 ```
 
-## 항목
+### `build-run-app.yml`
 
-- [`fsw/apps/lc/.github/workflows/build-documentation.yml`](file--build-documentation.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/.github/workflows/build-run-app.yml`](file--build-run-app.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/.github/workflows/codeql-build.yml`](file--codeql-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/.github/workflows/unit-test-coverage.yml`](file--unit-test-coverage.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/lc/.github/workflows/build-run-app.yml`
+
+
+```yaml
+name: Build and Run
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-run:
+    name: Build and run with startup msg verification
+    uses: nasa/cFS/.github/workflows/build-run-app.yml@main
+```
+
+### `codeql-build.yml`
+
+**경로:** `fsw/apps/lc/.github/workflows/codeql-build.yml`
+
+
+```yaml
+name: CodeQl Analysis
+
+on:
+  push:
+  pull_request:
+  
+
+jobs:
+  codeql:
+    name: Codeql Analysis
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with:
+      component-path: apps/lc 
+      prep: 'make prep; make -C build/tools/elf2cfetbl'
+      make: 'make -C build/native/default_cpu1/apps/lc'
+      setup: |
+        cp ./cfe/cmake/Makefile.sample Makefile && cp -r ./cfe/cmake/sample_defs sample_defs
+        sed -i "/list(APPEND MISSION_GLOBAL_APPLIST/a list(APPEND MISSION_GLOBAL_APPLIST lc)" sample_defs/targets.cmake
+```
+
+### `format-check.yml`
+
+**경로:** `fsw/apps/lc/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+    
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/apps/lc/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Static Analysis
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-analysis:
+    name: Run cppcheck
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+    with:
+      strict-dir-list: './fsw'    
+```
+
+### `unit-test-coverage.yml`
+
+**경로:** `fsw/apps/lc/.github/workflows/unit-test-coverage.yml`
+
+
+```yaml
+name: Unit Test and Coverage
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  unit-test-coverage:
+    name: Run unit test and coverage
+    uses: nasa/cFS/.github/workflows/unit-test-coverage.yml@main
+```

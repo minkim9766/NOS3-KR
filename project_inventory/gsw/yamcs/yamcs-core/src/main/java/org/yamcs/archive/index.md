@@ -3,58 +3,3613 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AlarmRecorder.java`
 
-file--AlarmRecorder.java
-file--CcsdsTmIndex.java
-file--CommandHistoryRecorder.java
-file--CommandHistoryReplayHandler.java
-file--EventRecorder.java
-file--EventReplayHandler.java
-file--GPBHelper.java
-file--IndexIterator.java
-file--IndexRequest.java
-file--IndexRequestListener.java
-file--IndexRequestProcessor.java
-file--ParameterRecorder.java
-file--ParameterReplayHandler.java
-file--ReplayHandler.java
-file--ReplayListener.java
-file--ReplayOptions.java
-file--ReplayServer.java
-file--SpeedSpec.java
-file--TmIndexService.java
-file--Utils.java
-file--XtceTmRecorder.java
-file--XtceTmReplayHandler.java
-file--YarchReplay.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/AlarmRecorder.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.List;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.YConfiguration;
+import org.yamcs.alarms.EventAlarmStreamer;
+import org.yamcs.alarms.ParameterAlarmStreamer;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+import static org.yamcs.alarms.AlarmStreamer.CNAME_TRIGGER_TIME;
+/**
+ * Records alarms. Uses a 'simple' upsert_append solution for now.
+ */
+public class AlarmRecorder extends AbstractYamcsService {
+
+    public static final String PARAMETER_ALARM_TABLE_NAME = "alarms";
+    public static final String EVENT_ALARM_TABLE_NAME = "event_alarms";
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            var timePart = ydb.getTimePartitioningSchema(config);
+
+            var partitionBy = timePart == null ? ""
+                    : "partition by time(" + CNAME_TRIGGER_TIME + "('" + timePart.getName() + "'))";
+
+            if (ydb.getTable(PARAMETER_ALARM_TABLE_NAME) == null) {
+
+                String cols = StandardTupleDefinitions.PARAMETER_ALARM.getStringDefinition1();
+                String query = "create table " + PARAMETER_ALARM_TABLE_NAME + "(" + cols
+                        + ", primary key(" + CNAME_TRIGGER_TIME + ", parameter, seqNum)) " + partitionBy
+                        + " table_format=compressed";
+                ydb.execute(query);
+            }
+            setupRecording(yamcsInstance, PARAMETER_ALARM_TABLE_NAME, StandardStreamType.PARAMETER_ALARM,
+                    ParameterAlarmStreamer.CNAME_LAST_EVENT);
+
+            if (ydb.getTable(EVENT_ALARM_TABLE_NAME) == null) {
+                String cols = StandardTupleDefinitions.EVENT_ALARM.getStringDefinition1();
+                String query = "create table " + EVENT_ALARM_TABLE_NAME + "(" + cols
+                        + ", primary key(" + CNAME_TRIGGER_TIME + ", eventSource, seqNum)) " + partitionBy
+                        + " table_format=compressed";
+                ydb.execute(query);
+            }
+
+            setupRecording(yamcsInstance, EVENT_ALARM_TABLE_NAME, StandardStreamType.EVENT_ALARM,
+                    EventAlarmStreamer.CNAME_LAST_EVENT);
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+    }
+
+    private void setupRecording(String yamcsInstance, String tblName, StandardStreamType stype, String colNameLastEvent)
+            throws StreamSqlException, ParseException {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+        List<StreamConfigEntry> sceList = sc.getEntries(stype);
+        for (StreamConfigEntry sce : sceList) {
+            Stream inputStream = ydb.getStream(sce.getName());
+            if (inputStream == null) {
+                throw new ConfigurationException("Cannot find stream '" + sce.getName() + "'");
+            }
+            ydb.execute(
+                    "upsert_append into " + tblName + " select * from " + sce.getName()
+                            + " where " + colNameLastEvent + " != 'VALUE_UPDATED' and pending is null");
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+}
 ```
 
-## 항목
+### `CcsdsTmIndex.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/AlarmRecorder.java`](file--AlarmRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CcsdsTmIndex.java`](file--CcsdsTmIndex.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CommandHistoryRecorder.java`](file--CommandHistoryRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CommandHistoryReplayHandler.java`](file--CommandHistoryReplayHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/EventRecorder.java`](file--EventRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/EventReplayHandler.java`](file--EventReplayHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/GPBHelper.java`](file--GPBHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexIterator.java`](file--IndexIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequest.java`](file--IndexRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequestListener.java`](file--IndexRequestListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequestProcessor.java`](file--IndexRequestProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ParameterRecorder.java`](file--ParameterRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ParameterReplayHandler.java`](file--ParameterReplayHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayHandler.java`](file--ReplayHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayListener.java`](file--ReplayListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayOptions.java`](file--ReplayOptions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayServer.java`](file--ReplayServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/SpeedSpec.java`](file--SpeedSpec.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/TmIndexService.java`](file--TmIndexService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/Utils.java`](file--Utils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/XtceTmRecorder.java`](file--XtceTmRecorder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/XtceTmReplayHandler.java`](file--XtceTmReplayHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/YarchReplay.java`](file--YarchReplay.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CcsdsTmIndex.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import javax.naming.ConfigurationException;
+
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.NotThreadSafe;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.ThreadSafe;
+import org.yamcs.YConfiguration;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tctm.CcsdsPacket;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.HistogramSegment;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.rocksdb.AscendingRangeIterator;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.YRDB;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace.TablespaceRecord.Type;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Completeness index of CCSDS telemetry. The structure of the rocksdb records:
+ *
+ * <pre>
+ * key: tbsIndex[4 bytes], apid[2bytes], start time[8 bytes], start seq count[2 bytes]
+ * value: end time[8bytes], end seq count[2 bytes], num packets [4 bytes]
+ * </pre>
+ *
+ * FIXME: because the sequence count wraps around, there is a bug in case packets with the same timestamp and wrapped
+ * around sequence counts are received - see testApidIndexSameTimeAndWraparound for failing test. the old TokyoCabinet
+ * based indexer didn't use the sequence count as part of the key but allowed multiple records with the same key. To
+ * replicate this in RocksDB, one would need to have the RocksDB entries composed of all records with the same startime
+ *
+ */
+@ThreadSafe
+public class CcsdsTmIndex extends AbstractYamcsService implements TmIndexService {
+    static final String TM_INDEX_NAME = "CCSDS";
+
+    // if time between two packets with the same apid is more than one hour,
+    // make two records even if they packets are in sequence (because maybe there is a wrap around involved)
+    static long maxApidInterval = 3600 * 1000l;
+    private static AtomicInteger streamCounter = new AtomicInteger();
+    protected Tablespace tablespace;
+    int tbsIndex;
+    List<String> streamNames;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration args) throws InitException {
+        super.init(yamcsInstance, serviceName, args);
+        if (config.containsKey("streams")) {
+            streamNames = config.getList("streams");
+        } else {
+            streamNames = StreamConfig.getInstance(yamcsInstance)
+                    .getEntries(StandardStreamType.TM)
+                    .stream()
+                    .map(sce -> sce.getName())
+                    .collect(Collectors.toList());
+        }
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        tablespace = RdbStorageEngine.getInstance().getTablespace(ydb);
+        try {
+            openDb();
+        } catch (RocksDBException e) {
+            throw new InitException("Failed to open rocksdb", e);
+        }
+        log.debug("Listening to streams {}", streamNames);
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        for (String s : streamNames) {
+            Stream stream = ydb.getStream(s);
+            if (stream == null) {
+                notifyFailed(new ConfigurationException("Stream " + s + " does not exist"));
+                return;
+            }
+            stream.addSubscriber(this);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        for (String s : streamNames) {
+            Stream stream = ydb.getStream(s);
+            if (stream != null) {
+                stream.removeSubscriber(this);
+            }
+        }
+        notifyStopped();
+    }
+
+    private void openDb() throws RocksDBException {
+        List<TablespaceRecord> l = tablespace.filter(Type.TM_INDEX, yamcsInstance,
+                tr -> !tr.hasTmIndexName() || TM_INDEX_NAME.equals(tr.getTmIndexName()));
+        TablespaceRecord tbr;
+        if (l.isEmpty()) {
+            tbr = tablespace.createMetadataRecord(yamcsInstance,
+                    TablespaceRecord.newBuilder().setType(Type.TM_INDEX).setTmIndexName(TM_INDEX_NAME));
+            // add a record at the beginning and at the end to make sure the cursor doesn't run out
+            YRDB db = tablespace.getRdb();
+            byte[] v = new byte[Record.VAL_SIZE];
+            db.put(firstKey(tbr.getTbsIndex()), v);
+            db.put(lastKey(tbr.getTbsIndex()), v);
+        } else {
+            tbr = l.get(0);
+        }
+        tbsIndex = tbr.getTbsIndex();
+    }
+
+    private static byte[] firstKey(int tbsIndex) {
+        return Record.key(tbsIndex, (short) 0, (long) 0, (short) 0);
+    }
+
+    private static byte[] lastKey(int tbsIndex) {
+        return Record.key(tbsIndex, Short.MAX_VALUE, Long.MAX_VALUE, Short.MAX_VALUE);
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+
+        byte[] packet = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+        if (packet.length < 7) {
+            log.warn("Short packet (size : {}) received by the CcsdsTmIndex Ignored.", packet.length);
+            return;
+        }
+        long time = getTime(tuple);
+        short apid = CcsdsPacket.getAPID(packet);
+        short seq = (short) CcsdsPacket.getSequenceCount(packet);
+        try {
+            addPacket(apid, time, seq);
+        } catch (RocksDBException e) {
+            log.error("got exception while saving the packet into index", e);
+        }
+    }
+
+    /**
+     * Get the generation time for use in the index key.
+     * <p>
+     * The default implementations returns the value of the <code>gentime</code> column from the tuple (set by the data
+     * link preprocessor).
+     */
+    protected long getTime(Tuple tuple) {
+        return (Long) tuple.getColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+    }
+
+    synchronized void addPacket(short apid, long instant, short seq) throws RocksDBException {
+        YRDB db = tablespace.getRdb();
+        RocksIterator it = tablespace.getRdb().newIterator();
+        try {
+            it.seek(Record.key(tbsIndex, apid, instant, seq));
+
+            // go to the right till we find a record bigger than the packet
+            int cright, cleft;
+            Record rright, rleft;
+            while (true) {
+                assert (it.isValid());
+                rright = new Record(it.key(), it.value());
+                cright = compare(apid, instant, seq, rright);
+                if (cright == 0) { // duplicate packet
+                    if (log.isTraceEnabled()) {
+                        log.trace("ignored duplicate packet: apid={} time={} seq={}", apid,
+                                TimeEncoding.toOrdinalDateTime(instant), seq);
+                    }
+                    return;
+                } else if (cright < 0) {
+                    break;
+                } else {
+                    it.next();
+                }
+            }
+
+            it.prev();
+            rleft = new Record(it.key(), it.value());
+
+            cleft = compare(apid, instant, seq, rleft);
+            if (cleft == 0) {// duplicate packet
+                if (log.isTraceEnabled()) {
+                    log.trace("ignored duplicate packet: apid={} time={} seq={}", apid,
+                            TimeEncoding.toOrdinalDateTime(instant), seq);
+                }
+                return;
+            }
+            // the cursor is located on the left record and we have a few cases to examine
+            if ((cleft == 1) && (cright == -1)) { // left and right have to be merged
+                rleft.seqLast = rright.seqLast;
+                rleft.lastTime = rright.lastTime;
+                rleft.numPackets += rright.numPackets + 1;
+                db.put(rleft.key(tbsIndex), rleft.val());
+                db.delete(rright.key(tbsIndex)); // remove the right record
+            } else if (cleft == 1) {// attach to left
+                rleft.seqLast = seq;
+                rleft.lastTime = instant;
+                rleft.numPackets++;
+                db.put(rleft.key(tbsIndex), rleft.val());
+            } else if (cright == -1) {// attach to right
+                db.delete(rright.key(tbsIndex));
+                rright.seqFirst = seq;
+                rright.firstTime = instant;
+                rright.numPackets++;
+                db.put(rright.key(tbsIndex), rright.val());
+            } else { // create a new record
+                Record r = new Record(apid, instant, seq, 1);
+                db.put(r.key(tbsIndex), r.val());
+            }
+        } finally {
+            it.close();
+        }
+    }
+
+    /**
+     * compare the packet with the record. returns:
+     * <ul>
+     * <li>&lt;-1 packet fits at the right and is not attached
+     * <li>-1 packet fits at the right and is attached
+     * <li>0 packet fits inside
+     * <li>1 packet fits at the left and is attached
+     * <li>&gt;1 packet fits at the right and is not attached
+     * </ul>
+     */
+    private static int compare(short apid, long time, short seq, Record ar) {
+        short arapid = ar.apid();
+        if (apid != arapid) {
+            return 0x3FFF * Integer.signum(apid - arapid);
+        }
+        int c = compare(time, seq, ar.firstTime(), ar.firstSeq());
+        if (c <= 0) {
+            return c;
+        }
+        c = compare(time, seq, ar.lastTime(), ar.lastSeq());
+        if (c >= 0) {
+            return c;
+        }
+        return 0;
+    }
+
+    /**
+     * Compares two packets (assuming apid is the same) and returns the same thing like the function above
+     *
+     * @param time1
+     * @param seq1
+     * @param time2
+     * @param seq2
+     * @return
+     */
+    static int compare(long time1, short seq1, long time2, short seq2) {
+        if (time1 < time2) {
+            if (((time2 - time1) <= maxApidInterval) && (((seq2 - seq1) & 0x3FFF) == 1)) {
+                return -1;
+            } else {
+                return -0x3FFF;
+            }
+        } else if (time1 == time2) {
+            int d = (seq1 - seq2) & 0x3FFF;
+            if (d < 0x2000) {
+                return d;
+            }
+            return d - 0x4000;
+        } else {
+            if (((time1 - time2) <= maxApidInterval) && (((seq1 - seq2) & 0x3FFF) == 1)) {
+                return 1;
+            } else {
+                return 0x3FFF;
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.yamcs.yarch.usoc.TmIndex#deleteRecords(long, long)
+     */
+    @Override
+    public synchronized void deleteRecords(long start, long stop) {
+        try {
+            deleteRecords(new TimeInterval(start, stop));
+        } catch (RocksDBException e) {
+            log.error("Error when deleting records from the ccsdstmindex", e);
+        }
+    }
+
+    public static List<Short> getApids(CcsdsTmIndex ccsdsTmIndex) throws RocksDBException {
+        List<Short> apids = new ArrayList<>();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(ccsdsTmIndex.getYamcsInstance());
+        Tablespace tablespace = RdbStorageEngine.getInstance().getTablespace(ydb);
+        try (RocksIterator cur = tablespace.getRdb().newIterator()) {
+            Record ar;
+            short apid = 0;
+            while (true) {
+                cur.seek(Record.key(ccsdsTmIndex.tbsIndex, apid, Long.MAX_VALUE, Short.MAX_VALUE));
+                ar = new Record(cur.key(), cur.value());
+                apid = ar.apid();
+                if (apid == Short.MAX_VALUE) {
+                    break;
+                }
+                apids.add(apid);
+            }
+        }
+        return apids;
+    }
+
+    class CcsdsIndexIteratorAdapter implements IndexIterator {
+        CcsdsIndexIterator iterator;
+        final Set<Short> apids;
+
+        CcsdsIndexIteratorAdapter(Set<Short> apids, long start, long stop) {
+            this.apids = apids;
+            iterator = new CcsdsIndexIterator((short) -1, start, stop);
+        }
+
+        @Override
+        public void close() {
+            iterator.close();
+        }
+
+        @Override
+        public ArchiveRecord getNextRecord() {
+            while (true) {
+                Record r = iterator.getNextRecord();
+                if (r == null) {
+                    return null;
+                }
+
+                short apid = r.apid;
+                if ((apids == null) || (apids.contains(apid))) {
+                    String pn = "apid_" + apid;
+                    NamedObjectId id = NamedObjectId.newBuilder().setName(pn).build();
+                    ArchiveRecord.Builder arb = ArchiveRecord.newBuilder().setId(id).setNum(r.numPackets)
+                            .setFirst(TimeEncoding.toProtobufTimestamp(r.firstTime()))
+                            .setLast(TimeEncoding.toProtobufTimestamp(r.lastTime))
+                            .setSeqFirst(r.seqFirst)
+                            .setSeqLast(r.seqLast);
+                    return arb.build();
+                }
+            }
+        }
+    }
+
+    @NotThreadSafe
+    class CcsdsIndexIterator {
+        long start, stop;
+        AscendingRangeIterator rangeIt;
+        short apid, curApid;
+        Record curr;
+
+        public CcsdsIndexIterator(short apid, long start, long stop) {
+            if (start < 0) {
+                start = 0;
+            }
+            if (stop < 0) {
+                stop = Long.MAX_VALUE;
+            }
+            this.apid = apid;
+            this.start = start;
+            this.stop = stop;
+        }
+
+        // jumps to the beginning of the curApid returning true if there is any record matching the start criteria
+        // and false otherwise
+        boolean jumpAtApid() throws RocksDBException {
+            byte[] kstart = Record.key(tbsIndex, curApid, start, (short) 0);
+            byte[] kend = Record.key(tbsIndex, curApid, stop, (short) 0xFFFF);
+            if (rangeIt != null) {
+                rangeIt.close();
+            }
+            rangeIt = new AscendingRangeIterator(tablespace.getRdb().newIterator(), kstart, kend);
+            return rangeIt.isValid();
+        }
+
+        // sets the position of the acur at the beginning of the next apid which matches the start criteria
+        boolean nextApid() throws RocksDBException {
+            if (curApid == -1) { // init
+                if (apid != -1) {
+                    curApid = apid;
+                    return jumpAtApid();
+                } else {
+                    curApid = 0;
+                }
+            }
+            if (apid != -1) {
+                return false;
+            }
+
+            while (true) {
+                try (RocksIterator it = tablespace.getRdb().newIterator()) {
+                    it.seek(Record.key(tbsIndex, curApid, Long.MAX_VALUE, Short.MAX_VALUE));
+                    if (!it.isValid()) {
+                        return false;
+                    }
+                    Record ar = new Record(it.key(), it.value());
+                    curApid = ar.apid();
+                    if (curApid == Short.MAX_VALUE) {
+                        return false;
+                    }
+                    if (jumpAtApid()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        public Record getNextRecord() {
+            if (rangeIt == null || !rangeIt.isValid()) {
+                try {
+                    if (!nextApid()) {
+                        return null;
+                    }
+                } catch (RocksDBException e) {
+                    throw new UncheckedIOException(new IOException(e));
+                }
+            }
+
+            Record r = new Record(rangeIt.key(), rangeIt.value());
+            rangeIt.next();
+            return r;
+        }
+
+        public void close() {
+            if (rangeIt != null) {
+                rangeIt.close();
+            }
+        }
+    }
+
+    @Override
+    public IndexIterator getIterator(List<NamedObjectId> names, long start, long stop) {
+        if (names == null) {
+            return new CcsdsIndexIteratorAdapter(null, start, stop);
+        } else {
+            Set<Short> apids = names.stream()
+                    .filter(name -> name.getName().startsWith("apid_"))
+                    .map(name -> Short.valueOf(name.getName().substring(5)))
+                    .collect(Collectors.toSet());
+            return new CcsdsIndexIteratorAdapter(apids, start, stop);
+        }
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        log.warn("Stream {} closed", stream.getName());
+        streamNames.remove(stream.getName());
+        if (streamNames.isEmpty()) {
+            // if all the streams we are subscribed to are closed we fail the service
+            log.warn("No stream left");
+            notifyFailed(new Exception("stream clsed"));
+        }
+    }
+
+    public synchronized CompletableFuture<Void> rebuild(TimeInterval interval) throws YarchException {
+        CompletableFuture<Void> cf = new CompletableFuture<>();
+
+        if (interval.hasStart() || interval.hasEnd()) {
+            log.info("{}: Rebuilding the CCSDS tm index for time interval: {}", yamcsInstance,
+                    interval.toStringEncoded());
+            try {
+                deleteRecords(interval);
+            } catch (Exception e) {
+                log.error("Error when removing the existing CCSDS tm index", e);
+                cf.completeExceptionally(e);
+                return cf;
+            }
+
+        } else {
+            log.info("{} Rebuilding the CCSDS tm index from scratch", yamcsInstance);
+            try {
+                tablespace.removeTbsIndex(Type.TM_INDEX, tbsIndex);
+                openDb();
+            } catch (Exception e) {
+                log.error("Error when removing existing tm index", e);
+                cf.completeExceptionally(e);
+                return cf;
+            }
+        }
+
+        String timeColumnName = StandardTupleDefinitions.GENTIME_COLUMN;
+        String streamName = "histo_rebuild_" + streamCounter.incrementAndGet();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            ydb.execute("create stream " + streamName + " as select * from tm "
+                    + getWhereCondition(timeColumnName, interval));
+        } catch (StreamSqlException | ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        Stream stream = ydb.getStream(streamName);
+        stream.addSubscriber(new StreamSubscriber() {
+            @Override
+            public void streamClosed(Stream stream) {
+                cf.complete(null);
+            }
+
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                CcsdsTmIndex.this.onTuple(stream, tuple);
+            }
+        });
+        stream.start();
+
+        return cf;
+    }
+
+    private synchronized void deleteRecords(TimeInterval interval) throws RocksDBException {
+        YRDB db = tablespace.getRdb();
+        try (RocksIterator it = db.newIterator()) {
+            it.seek(firstKey(tbsIndex)); // header
+            it.next();
+            while (it.isValid()) {
+                Record r = new Record(it.key(), it.value());
+                if (r.apid == Short.MAX_VALUE) {
+                    break;
+                }
+                byte[] keyStart = Record.key(tbsIndex, r.apid, interval.hasStart() ? interval.getStart() : 0,
+                        (short) 0);
+                byte[] keyEnd;
+                if (interval.hasEnd()) {
+                    keyEnd = Record.key(tbsIndex, r.apid, interval.getEnd(), (short) 0);
+                } else {
+                    keyEnd = Record.key(tbsIndex, r.apid, Long.MAX_VALUE, (short) 0);
+                }
+
+                it.seek(keyEnd);
+                db.getDb().deleteRange(keyStart, keyEnd);
+            }
+        }
+    }
+
+    public static String getWhereCondition(String timeColumnName, TimeInterval interval) {
+        if (!interval.hasStart() && !interval.hasEnd()) {
+            return "";
+        }
+        StringBuilder whereCnd = new StringBuilder();
+        whereCnd.append(" where ");
+        if (interval.hasStart()) {
+            long start = HistogramSegment.GROUPING_FACTOR * (interval.getStart() / HistogramSegment.GROUPING_FACTOR);
+            whereCnd.append(timeColumnName + " >= " + start);
+            if (interval.hasEnd()) {
+                whereCnd.append(" and ");
+            }
+        }
+        if (interval.hasEnd()) {
+            long stop = HistogramSegment.GROUPING_FACTOR * (1 + interval.getEnd() / HistogramSegment.GROUPING_FACTOR);
+            whereCnd.append(timeColumnName + " < " + stop);
+        }
+
+        return whereCnd.toString();
+    }
+
+}
+
+class Record {
+    long firstTime, lastTime;
+    short apid;
+    short seqFirst, seqLast;
+    int numPackets;
+    static final int KEY_SIZE = 16;
+    static final int VAL_SIZE = 14;
+
+    public Record(byte[] key, byte[] val) {
+        ByteBuffer keyb = ByteBuffer.wrap(key);
+        ByteBuffer valb = ByteBuffer.wrap(val);
+        keyb.getInt();// tbsIndex
+        apid = keyb.getShort();
+        firstTime = keyb.getLong();
+        seqFirst = keyb.getShort();
+
+        lastTime = valb.getLong();
+        seqLast = valb.getShort();
+        numPackets = valb.getInt();
+    }
+
+    public Record(short apid, long time, short seq, int numPackets) {
+        this.apid = apid;
+        this.firstTime = time;
+        this.lastTime = time;
+        this.seqFirst = seq;
+        this.seqLast = seq;
+        this.numPackets = numPackets;
+    }
+
+    static byte[] key(int tbsIndex, short apid, long start, short seqFirst) {
+        ByteBuffer bbk = ByteBuffer.allocate(KEY_SIZE);
+        bbk.putInt(tbsIndex);
+        bbk.putShort(apid);
+        bbk.putLong(start);
+        bbk.putShort(seqFirst);
+
+        return bbk.array();
+    }
+
+    public long firstTime() {
+        return firstTime;
+    }
+
+    public long lastTime() {
+        return lastTime;
+    }
+
+    public short apid() {
+        return apid;
+    }
+
+    public short firstSeq() {
+        return seqFirst;
+    }
+
+    public short lastSeq() {
+        return seqLast;
+    }
+
+    byte[] key(int tbsIndex) {
+        return key(tbsIndex, apid, firstTime, seqFirst);
+    }
+
+    byte[] val() {
+        ByteBuffer bbv = ByteBuffer.allocate(VAL_SIZE);
+        bbv.putLong(lastTime);
+        bbv.putShort(seqLast);
+        bbv.putInt(numPackets);
+        return bbv.array();
+    }
+
+    @Override
+    public String toString() {
+        return "apid=" + apid() + " time: (" + firstTime + "," + lastTime + ") seq:(" + firstSeq() + "," + lastSeq()
+                + ")";
+    }
+
+    public int numPackets() {
+        return numPackets;
+    }
+}
+```
+
+### `CommandHistoryRecorder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CommandHistoryRecorder.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Records command history the key is formed by generation time, origin and sequence number the value is formed by a
+ * arbitrary number of attributes
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class CommandHistoryRecorder extends AbstractYamcsService {
+
+    public static final String TABLE_NAME = "cmdhist";
+
+    static TupleDefinition eventTpdef;
+    List<String> streamNames;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        String keycols = StandardTupleDefinitions.TC.getStringDefinition1();
+        try {
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var timePart = ydb.getTimePartitioningSchema(config);
+
+                var partitionBy = timePart == null ? ""
+                        : "partition by time(gentime('" + timePart.getName() + "'))";
+
+                String q = "create table "+TABLE_NAME+" (" + keycols
+                        + ", PRIMARY KEY(gentime, origin, seqNum)) histogram(cmdName) " + partitionBy
+                        + " table_format=compressed";
+                ydb.execute(q);
+            }
+            if (config.containsKey("streams")) {
+                streamNames = config.getList("streams");
+            } else {
+                streamNames = StreamConfig.getInstance(yamcsInstance)
+                    .getEntries(StandardStreamType.CMD_HIST).stream().map(sce -> sce.getName()).collect(Collectors.toList());
+            }
+            if (streamNames.isEmpty()) {
+                notifyFailed(new ConfigurationException(
+                        "No command history streams have been configured. Please remove this service if the command history is not used."));
+                return;
+            }
+            
+            for (String sn: streamNames) {
+                Stream stream = ydb.getStream(sn);
+                if (stream == null) {
+                    log.warn("The stream {} has not been found", sn);
+                    notifyFailed(new ConfigurationException("The stream " + sn + " has not been found"));
+                    return;
+                }
+                ydb.execute("upsert_append into " + TABLE_NAME + " select * from "+sn);
+            }
+        } catch (Exception e) {
+            log.error("Failed to setup the recording", e);
+            notifyFailed(e);
+            return;
+        }
+
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        Utils.closeTableWriters(ydb, StreamConfig.getInstance(yamcsInstance)
+                .getEntries(StandardStreamType.CMD_HIST).stream().map(sce -> sce.getName())
+                .collect(Collectors.toList()));
+        notifyStopped();
+    }
+}
+```
+
+### `CommandHistoryReplayHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/CommandHistoryReplayHandler.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.mdb.Mdb;
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+import com.google.protobuf.MessageLite;
+
+/**
+ * Performs replays for command history
+ * 
+ * @author nm
+ *
+ */
+public class CommandHistoryReplayHandler implements ReplayHandler {
+    private ReplayOptions repl;
+    private Mdb mdb;
+
+    public CommandHistoryReplayHandler(String instance, Mdb mdb) {
+        this.mdb = mdb;
+    }
+
+    @Override
+    public void setRequest(ReplayOptions newRequest) {
+        this.repl = newRequest;
+    }
+
+    @Override
+    public SqlBuilder getSelectCmd() {
+        SqlBuilder sqlb = ReplayHandler.init(CommandHistoryRecorder.TABLE_NAME, ProtoDataType.CMD_HISTORY, repl);
+
+        CommandHistoryReplayRequest cmdHistReq = repl.getCommandHistoryRequest();
+        if (cmdHistReq.getNameFilterCount() > 0) {
+            // TODO - do something with the namespace
+            List<String> cmdNames = cmdHistReq.getNameFilterList().stream().map(id -> id.getName())
+                    .collect(Collectors.toList());
+            sqlb.whereColIn("cmdName", cmdNames);
+        }
+
+        return sqlb;
+    }
+
+    @Override
+    public MessageLite transform(Tuple t) {
+        return GPBHelper.tupleToCommandHistoryEntry(t, mdb);
+    }
+}
+```
+
+### `EventRecorder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/EventRecorder.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.stream.Collectors;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Sets up the archiving of the events coming on events_realtime and events_dump streams into the yarch table events.
+ *
+ */
+public class EventRecorder extends AbstractYamcsService {
+
+    public static final String TABLE_NAME = "events";
+    public static final String REALTIME_EVENT_STREAM_NAME = "events_realtime";
+    public static final String DUMP_EVENT_STREAM_NAME = "events_dump";
+    public static final String CF_NAME = XtceTmRecorder.CF_NAME;
+    
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        try {
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var timePart = ydb.getTimePartitioningSchema(config);
+
+                var partitionBy = timePart == null ? ""
+                        : "partition by time(gentime('" + timePart.getName() + "'))";
+
+                ydb.execute("create table " + TABLE_NAME
+                        + "(gentime timestamp, source enum, seqNum int, body PROTOBUF('" + Event.class.getName()
+                        + "'), primary key(gentime, source, seqNum)) histogram(source) " + partitionBy
+                        + " table_format=compressed,column_family:"+CF_NAME);
+            }
+
+            StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+            for (StreamConfigEntry sce : sc.getEntries()) {
+                if (sce.getType() == StreamConfig.StandardStreamType.EVENT) {
+                    ydb.execute("insert into " + TABLE_NAME + " select * from " + sce.getName());
+                }
+            }
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+
+        Utils.closeTableWriters(ydb, sc.getEntries().stream().map(sce -> sce.getName()).collect(Collectors.toList()));
+
+        notifyStopped();
+    }
+}
+```
+
+### `EventReplayHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/EventReplayHandler.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+import com.google.protobuf.MessageLite;
+
+public class EventReplayHandler implements ReplayHandler {
+    ReplayOptions request;
+
+    @Override
+    public void setRequest(ReplayOptions newRequest) {
+        this.request = newRequest;
+    }
+
+    @Override
+    public SqlBuilder getSelectCmd() {
+        SqlBuilder sqlb = ReplayHandler.init(EventRecorder.TABLE_NAME, ProtoDataType.EVENT, request);
+
+        return sqlb;
+    }
+
+    @Override
+    public MessageLite transform(Tuple t) {
+        return (Event) t.getColumn("body");
+    }
+}
+```
+
+### `GPBHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/GPBHelper.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.cmdhistory.protobuf.Cmdhistory.Assignment;
+import org.yamcs.cmdhistory.protobuf.Cmdhistory.AssignmentInfo;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.protobuf.Commanding.CommandAssignment;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandHistoryEntry;
+import org.yamcs.protobuf.TmPacketData;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.Tuple;
+
+import com.google.protobuf.ByteString;
+
+/**
+ * Maps archived tuples to GPB
+ */
+public final class GPBHelper {
+
+    public static TmPacketData tupleToTmPacketData(Tuple tuple) {
+        long recTime = (Long) tuple.getColumn(StandardTupleDefinitions.TM_RECTIME_COLUMN);
+        byte[] pbody = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+        long genTime = (Long) tuple.getColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+        int seqNum = (Integer) tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+        String pname = (String) tuple.getColumn(XtceTmRecorder.PNAME_COLUMN);
+        var b = TmPacketData.newBuilder()
+                .setReceptionTime(TimeEncoding.toProtobufTimestamp(recTime))
+                .setPacket(ByteString.copyFrom(pbody))
+                .setSize(pbody.length)
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(genTime))
+                .setSequenceNumber(seqNum)
+                .setId(NamedObjectId.newBuilder().setName(pname).build());
+        if (tuple.hasColumn(StandardTupleDefinitions.TM_ERTIME_COLUMN)) {
+            long erTime = ((Instant) tuple.getColumn(StandardTupleDefinitions.TM_ERTIME_COLUMN)).getMillis();
+            b.setEarthReceptionTime(TimeEncoding.toProtobufTimestamp(erTime));
+        }
+        if (tuple.hasColumn(StandardTupleDefinitions.TM_LINK_COLUMN)) {
+            b.setLink(tuple.getColumn(StandardTupleDefinitions.TM_LINK_COLUMN));
+        }
+        return b.build();
+    }
+
+    public static CommandHistoryEntry tupleToCommandHistoryEntry(Tuple tuple, Mdb mdb) {
+        long gentime = (Long) tuple.getColumn(PreparedCommand.CNAME_GENTIME);
+        String origin = (String) tuple.getColumn(PreparedCommand.CNAME_ORIGIN);
+        int sequenceNumber = (Integer) tuple.getColumn(PreparedCommand.CNAME_SEQNUM);
+        String id = gentime + "-" + origin + "-" + sequenceNumber;
+        var commandName = (String) tuple.getColumn(PreparedCommand.CNAME_CMDNAME);
+
+        CommandHistoryEntry.Builder che = CommandHistoryEntry.newBuilder()
+                .setId(id)
+                .setOrigin(origin)
+                .setSequenceNumber(sequenceNumber)
+                .setCommandName(commandName)
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(gentime))
+                .setCommandId(PreparedCommand.getCommandId(tuple));
+
+        // Best effort, not a problem if the command no longer exists
+        var command = mdb.getMetaCommand(commandName);
+        if (command != null && command.getAliasSet() != null) {
+            var aliasSet = command.getAliasSet();
+            che.putAllAliases(aliasSet.getAliases());
+        }
+
+        for (int i = 1; i < tuple.size(); i++) { // first column is constant ProtoDataType.CMD_HISTORY.getNumber()
+            ColumnDefinition cd = tuple.getColumnDefinition(i);
+            String name = cd.getName();
+            if (PreparedCommand.CNAME_GENTIME.equals(name)
+                    || PreparedCommand.CNAME_ORIGIN.equals(name)
+                    || PreparedCommand.CNAME_SEQNUM.equals(name)
+                    || PreparedCommand.CNAME_CMDNAME.equals(name)) {
+                continue;
+            } else if (PreparedCommand.CNAME_ASSIGNMENTS.equals(name)) {
+                Object assignmentProto = tuple.getColumn(i);
+                if (assignmentProto != null) {
+                    AssignmentInfo assignmentInfo = (AssignmentInfo) assignmentProto;
+                    for (Assignment assignment : assignmentInfo.getAssignmentList()) {
+                        CommandAssignment commandAssignment = CommandAssignment.newBuilder()
+                                .setName(assignment.getName())
+                                .setValue(assignment.getValue())
+                                .setUserInput(assignment.hasUserInput() && assignment.getUserInput())
+                                .build();
+                        che.addAssignments(commandAssignment);
+                    }
+                }
+            } else {
+                che.addAttr(CommandHistoryAttribute.newBuilder()
+                        .setName(name)
+                        .setValue(ValueUtility.toGbp(ValueUtility.getColumnValue(cd, tuple.getColumn(i))))
+                        .build());
+            }
+        }
+        return che.build();
+    }
+}
+```
+
+### `IndexIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexIterator.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+
+public interface IndexIterator {
+
+    public abstract ArchiveRecord getNextRecord();
+
+    public abstract void close();
+}
+```
+
+### `IndexRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequest.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Request index (histogram) information about tm packets, pp groups and commands
+ */
+public class IndexRequest {
+
+    private String instance;
+    private long start = TimeEncoding.INVALID_INSTANT;
+    private long stop = TimeEncoding.INVALID_INSTANT;
+
+    // namespace to use when sending all tm, pp or cmd (when using a filter, the namespace specified in the filter will
+    // be used)
+    // if not specified, the fully qualified canonical names will be sent
+    private String defaultNamespace;
+
+    // if true, all tm packets are sent, otherwise those in the tmPacket list (which can be empty)
+    private boolean sendAllTm;
+    private List<NamedObjectId> tmPackets = new ArrayList<>();
+
+    // if true, all PP groups are sent, otherwise those in the ppGroup list (which can be empty)
+    private boolean sendAllPp;
+    private List<NamedObjectId> ppGroups = new ArrayList<>();
+
+    // if true, all completeness groups are sent, otherwise those in the completenessGroups list (which can be empty)
+    private boolean sendCompletenessIndex;
+    private List<NamedObjectId> completenessGroups = new ArrayList<>();
+
+    // if true, all command names are sent, otherwise those in the cmdName list (which can be empty)
+    private boolean sendAllCmd;
+    private List<NamedObjectId> commandNames = new ArrayList<>();
+
+    // if true, all events are sent, otherwise those in the eventSource list (which can be empty)
+    private boolean sendAllEvent;
+    private List<NamedObjectId> eventSources = new ArrayList<>();
+
+    private int mergeTime = -1;
+
+    public IndexRequest(String instance) {
+        this.instance = instance;
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setStart(long start) {
+        this.start = start;
+    }
+
+    public long getStop() {
+        return stop;
+    }
+
+    public void setStop(long stop) {
+        this.stop = stop;
+    }
+
+    public int getMergeTime() {
+        return mergeTime;
+    }
+
+    public void setMergeTime(int mergeTime) {
+        this.mergeTime = mergeTime;
+    }
+
+    public String getDefaultNamespace() {
+        return defaultNamespace;
+    }
+
+    public boolean isSendAllTm() {
+        return sendAllTm;
+    }
+
+    public void setSendAllTm(boolean sendAllTm) {
+        this.sendAllTm = sendAllTm;
+    }
+
+    public List<NamedObjectId> getTmPackets() {
+        return tmPackets;
+    }
+
+    public boolean isSendAllPp() {
+        return sendAllPp;
+    }
+
+    public void setSendAllPp(boolean sendAllPp) {
+        this.sendAllPp = sendAllPp;
+    }
+
+    public List<NamedObjectId> getPpGroups() {
+        return ppGroups;
+    }
+
+    public boolean isSendCompletenessIndex() {
+        return sendCompletenessIndex;
+    }
+
+    public void setSendCompletenessIndex(boolean sendCompletenessIndex) {
+        this.sendCompletenessIndex = sendCompletenessIndex;
+    }
+
+    public List<NamedObjectId> getCompletenessGroups() {
+        return completenessGroups;
+    }
+
+    public boolean isSendAllCmd() {
+        return sendAllCmd;
+    }
+
+    public void setSendAllCmd(boolean sendAllCmd) {
+        this.sendAllCmd = sendAllCmd;
+    }
+
+    public List<NamedObjectId> getCommandNames() {
+        return commandNames;
+    }
+
+    public boolean isSendAllEvent() {
+        return sendAllEvent;
+    }
+
+    public void setSendAllEvent(boolean sendAllEvent) {
+        this.sendAllEvent = sendAllEvent;
+    }
+
+    public List<NamedObjectId> getEventSources() {
+        return eventSources;
+    }
+}
+```
+
+### `IndexRequestListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequestListener.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+
+/**
+ * Used by {@link IndexRequestProcessor}
+ */
+public interface IndexRequestListener {
+    enum IndexType {HISTOGRAM, COMPLETENESS};
+    /**
+     * Called at the beginning or when the table/type changes in case multiple indices are sent.
+     * If only one type of index is requested, it can be ignored
+     */
+    default void begin(IndexType type, String tblName) {};
+    
+    /**
+     * Called with new data
+     * @param ar
+     */
+    void processData( ArchiveRecord ar);
+    
+    /**
+     * Called right after the processing ended, either successfully or through
+     * error.
+     * 
+     * If a paged request has been performed, the token can be used to retrieve the next chunk
+     */
+    void finished(String token, boolean success);
+}
+```
+
+### `IndexRequestProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/IndexRequestProcessor.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.archive.IndexRequestListener.IndexType;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.Yamcs.ArchiveRecord;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.HistogramIterator;
+import org.yamcs.yarch.HistogramRecord;
+import org.yamcs.yarch.TableDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.protobuf.util.Durations;
+import com.google.protobuf.util.Timestamps;
+
+/**
+ * Performs histogram and completeness index retrievals.
+ * 
+ * @author nm
+ *
+ */
+public class IndexRequestProcessor implements Runnable {
+    static final SecureRandom random = new SecureRandom();
+
+    final String yamcsInstance;
+    final static AtomicInteger counter = new AtomicInteger();
+    static Logger log = LoggerFactory.getLogger(IndexRequestProcessor.class.getName());
+    final IndexRequest req;
+    TmIndexService tmIndexer;
+    IndexRequestListener indexRequestListener;
+
+    private static Cache<String, TokenData> tokenCache = CacheBuilder.newBuilder()
+            .expireAfterAccess(10, TimeUnit.SECONDS).maximumSize(1000).build();
+
+    // these maps contains the names with which the records will be sent to the client
+    Map<String, NamedObjectId> tmpackets;
+    Map<String, NamedObjectId> eventSources;
+    Map<String, NamedObjectId> commands;
+    Map<String, NamedObjectId> ppGroups;
+    Map<String, NamedObjectId> completenessGroups;
+
+    boolean sendTms;
+    int batchSize = 500;
+    int limit = -1;
+
+    String token;
+    TokenData tokenData = null;
+    int count = 0;
+    HistoRequest[] hreq = new HistoRequest[5];
+    MergingResult mergingResult;
+
+    public IndexRequestProcessor(TmIndexService tmIndexer, IndexRequest req, int limit, String recToken,
+            IndexRequestListener l) {
+        log.debug("new index request: {}", req);
+        this.yamcsInstance = req.getInstance();
+        this.req = req;
+        this.tmIndexer = tmIndexer;
+        this.indexRequestListener = l;
+        this.limit = limit;
+
+        if (recToken != null) {
+            tokenData = tokenCache.getIfPresent(recToken);
+            if (tokenData == null) {
+                throw new InvalidTokenException();
+            }
+            tokenCache.invalidate(recToken);
+            this.token = recToken;
+        }
+
+        if (req.isSendAllTm() || req.getTmPackets().size() > 0) {
+            sendTms = true;
+            Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+
+            if (req.isSendAllTm()) {
+                if (req.getDefaultNamespace() != null) {
+                    String defaultns = req.getDefaultNamespace();
+                    tmpackets = new HashMap<>();
+                    for (SequenceContainer sc : mdb.getSequenceContainers()) {
+                        if (sc.getAlias(defaultns) != null) {
+                            tmpackets.put(sc.getQualifiedName(), NamedObjectId.newBuilder()
+                                    .setName(sc.getAlias(defaultns)).setNamespace(defaultns).build());
+                        }
+                    }
+                }
+            } else {
+                tmpackets = new HashMap<>();
+                for (NamedObjectId id : req.getTmPackets()) {
+                    SequenceContainer sc = mdb.getSequenceContainer(id);
+                    if (sc != null) {
+                        tmpackets.put(sc.getQualifiedName(), id);
+                    }
+                }
+            }
+            int mergeTime = (req.getMergeTime() > 0 ? req.getMergeTime() : 2000);
+            hreq[0] = new HistoRequest(XtceTmRecorder.TABLE_NAME, XtceTmRecorder.PNAME_COLUMN, mergeTime,
+                    tmpackets);
+        }
+
+        if (req.isSendAllEvent() || req.getEventSources().size() > 0) {
+            eventSources = new HashMap<>();
+            for (NamedObjectId id : req.getEventSources()) {
+                eventSources.put(id.getName(), id);
+            }
+            int mergeTime = (req.getMergeTime() > 0 ? req.getMergeTime() : 2000);
+            hreq[1] = new HistoRequest(EventRecorder.TABLE_NAME, "source", mergeTime, eventSources);
+        }
+
+        if (req.isSendAllCmd() || req.getCommandNames().size() > 0) {
+            commands = new HashMap<>();
+            for (NamedObjectId id : req.getCommandNames()) {
+                commands.put(id.getName(), id);
+            }
+            int mergeTime = (req.getMergeTime() > 0 ? req.getMergeTime() : 2000);
+            hreq[2] = new HistoRequest(CommandHistoryRecorder.TABLE_NAME,
+                    StandardTupleDefinitions.CMDHIST_TUPLE_COL_CMDNAME, mergeTime, commands);
+        }
+
+        if (req.isSendAllPp() || req.getPpGroups().size() > 0) {
+            ppGroups = new HashMap<>();
+            for (NamedObjectId id : req.getPpGroups()) {
+                ppGroups.put(id.getName(), id);
+            }
+            // use 20 sec for the PP to avoid millions of records
+            int mergeTime = (req.getMergeTime() > 0 ? req.getMergeTime() : 20000);
+            hreq[3] = new HistoRequest(ParameterRecorder.TABLE_NAME,
+                    StandardTupleDefinitions.PARAMETER_COL_GROUP, mergeTime, ppGroups);
+        }
+
+        if (req.isSendCompletenessIndex() || req.getCompletenessGroups().size() > 0) {
+            if (tmIndexer == null) {
+                throw new IllegalArgumentException("TmIndexer cannot be null if completeness is requested");
+            }
+            completenessGroups = new HashMap<>();
+            for (NamedObjectId id : req.getCompletenessGroups()) {
+                completenessGroups.put(id.getName(), id);
+            }
+            int mergeTime = (req.getMergeTime() > 0 ? req.getMergeTime() : -1);
+            hreq[4] = new HistoRequest(null, null, mergeTime, completenessGroups);
+        }
+
+        if (tokenData != null) {
+            for (int i = 0; i < tokenData.lastHistoId; i++) {
+                hreq[i] = null;
+            }
+            HistoRequest hr = hreq[tokenData.lastHistoId];
+            if (hr != null) {
+                hr.seekTime = tokenData.lastTime + 1;
+                hr.seekValue = tokenData.lastName;
+                hr.seekId = tokenData.lastId;
+            }
+            token = getRandomToken();
+            tokenCache.put(token, tokenData);
+        } else if (limit > 0) {
+            tokenData = new TokenData();
+            token = getRandomToken();
+            tokenCache.put(token, tokenData);
+        }
+
+    }
+
+    private static String getRandomToken() {
+        byte[] b = new byte[16];
+        random.nextBytes(b);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(b);
+    }
+
+    @Override
+    public void run() {
+        boolean ok = true;
+        boolean cont = true;
+        try {
+            if (tokenData != null) {
+                mergingResult = tokenData.mergingResult;
+            } else {
+                mergingResult = new MergingResult();
+            }
+
+            for (int i = 0; i < 5; i++) {
+                if (cont && hreq[i] != null) {
+                    if (tokenData != null) {
+                        tokenData.lastHistoId = i;
+                    }
+                    if (i < 4) {
+                        indexRequestListener.begin(IndexType.HISTOGRAM, hreq[i].tblName);
+                        cont = sendHistogramData(hreq[i]);
+                    } else {
+                        indexRequestListener.begin(IndexType.COMPLETENESS, null);
+                        cont = sendCompletenessIndex(hreq[4]);
+                    }
+                    if (cont) {
+                        cont = flushMergingResult();
+                        mergingResult = new MergingResult();
+                        if (tokenData != null) {
+                            tokenData.mergingResult = mergingResult;
+                        }
+                    }
+                }
+            }
+            if (cont) {
+                token = null;
+            }
+        } catch (Exception e) {
+            log.warn("got exception while sending the response", e);
+            ok = false;
+        } finally {
+            try {
+                indexRequestListener.finished(ok ? token : null, ok);
+            } catch (Exception e) {
+                log.warn("Error when sending finished signal ", e);
+            }
+        }
+    }
+
+    private boolean flushMergingResult() {
+        for (ArchiveRecord ar : mergingResult.res.values()) {
+            indexRequestListener.processData(ar);
+            count++;
+            if (limit > 0 && count >= limit) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    boolean sendHistogramData(HistoRequest hreq) {
+        log.debug("Sending histogram data for table {} column {}", hreq.tblName, hreq.columnName);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        TableDefinition tblDef = ydb.getTable(hreq.tblName);
+        if (tblDef == null) {
+            log.warn("Histogram from table '{}' requested, but table does not exist.", hreq.tblName);
+            return true;
+        }
+        ColumnSerializer<String> histoColumnSerializer = tblDef.getColumnSerializer(hreq.columnName);
+        ColumnDefinition histoColumnDefinition = tblDef.getColumnDefinition(hreq.columnName);
+        TimeInterval interval = getTimeInterval(req);
+
+        try (HistogramIterator iter = ydb.getStorageEngine(tblDef).getHistogramIterator(ydb, tblDef, hreq.columnName,
+                interval)) {
+            if (hreq.seekValue != null) {
+                iter.seek(hreq.seekValue, hreq.seekTime);
+            }
+
+            while (iter.hasNext()) {
+                HistogramRecord hr = iter.next();
+                String name = histoColumnSerializer.fromByteArray(hr.getColumnv(), histoColumnDefinition);
+                NamedObjectId id;
+                if (hreq.name2id != null && !hreq.name2id.isEmpty()) {
+                    id = hreq.name2id.get(name);
+                    if (id == null) {
+                        log.debug("Not sending {} because no id for it", name);
+                        continue;
+                    }
+                } else {
+                    id = NamedObjectId.newBuilder().setName(name).build();
+                }
+                if (tokenData != null) {
+                    tokenData.lastName = hr.getColumnv();
+                    tokenData.lastTime = hr.getStop();
+                }
+
+                ArchiveRecord ar = ArchiveRecord.newBuilder().setId(id)
+                        .setFirst(TimeEncoding.toProtobufTimestamp(hr.getStart()))
+                        .setLast(TimeEncoding.toProtobufTimestamp(hr.getStop()))
+                        .setNum(hr.getNumTuples()).build();
+                sendData(ar);
+                if (limit > 0 && count >= limit) {
+                    return false;
+                }
+            }
+
+        } catch (Exception e) {
+            log.error("got exception while reading histogram data", e);
+            return false;
+        }
+
+        return true;
+    }
+
+    private TimeInterval getTimeInterval(IndexRequest req) {
+        TimeInterval r = new TimeInterval();
+        if (req.getStart() != TimeEncoding.INVALID_INSTANT) {
+            r.setStart(req.getStart());
+        }
+        if (req.getStop() != TimeEncoding.INVALID_INSTANT) {
+            r.setEnd(req.getStop());
+        }
+        return r;
+    }
+
+    private boolean sendCompletenessIndex(HistoRequest hreq) {
+        long start = req.getStart();
+        long stop = req.getStop();
+
+        if (hreq.seekId != null) {
+            start = hreq.seekTime;
+        }
+        IndexIterator it;
+
+        if (hreq.name2id == null || hreq.name2id.isEmpty()) {
+            it = tmIndexer.getIterator(null, start, stop);
+        } else {
+            List<NamedObjectId> names = new ArrayList<>(hreq.name2id.values());
+            it = tmIndexer.getIterator(names, start, stop);
+        }
+        try {
+            ArchiveRecord ar;
+            while ((ar = it.getNextRecord()) != null) {
+                sendData(ar);
+                if (tokenData != null) {
+                    tokenData.lastId = ar.getId();
+                    tokenData.lastTime = TimeEncoding.fromProtobufTimestamp(ar.getLast());
+                }
+                if (limit > 0 && count >= limit) {
+                    return false;
+                }
+            }
+            return true;
+        } finally {
+            it.close();
+        }
+    }
+
+    void sendData(ArchiveRecord ar) {
+        if (req.getMergeTime() > 0) {
+            ArchiveRecord ar1 = mergingResult.add(ar, req.getMergeTime());
+            if (ar1 != null) {
+                count++;
+                indexRequestListener.processData(ar1);
+            }
+        } else {
+            count++;
+            indexRequestListener.processData(ar);
+        }
+    }
+
+    static class MergingResult {
+        Map<NamedObjectId, ArchiveRecord> res = new HashMap<>();
+
+        public ArchiveRecord add(ArchiveRecord ar, int mergeTime) {
+            ArchiveRecord ar1 = res.get(ar.getId());
+            if (ar1 == null) {
+                res.put(ar.getId(), ar);
+                return null;
+            }
+
+            long tdelta = Math.abs(Durations.toMillis(Timestamps.between(ar.getFirst(), ar1.getLast())));
+            if (tdelta < mergeTime) {
+                ArchiveRecord ar2 = ArchiveRecord.newBuilder().setFirst(ar1.getFirst())
+                        .setLast(ar.getLast()).setNum(ar1.getNum() + ar.getNum())
+                        .setId(ar.getId()).build();
+                res.put(ar.getId(), ar2);
+                return null;
+            } else {
+                res.put(ar.getId(), ar);
+                return ar1;
+            }
+        }
+    }
+
+    static class TokenData {
+        int lastHistoId = 0;
+        byte[] lastName;
+        NamedObjectId lastId;
+
+        long lastTime;
+        MergingResult mergingResult = new MergingResult();
+
+        @Override
+        public String toString() {
+            return "TokenData [lastHistoId=" + lastHistoId
+                    + (lastName == null ? "" : ", lastName=" + StringConverter.arrayToHexString(lastName))
+                    + (lastId == null ? "" : ", lastId=" + lastId.getName())
+                    + ", lastTime=" + TimeEncoding.toString(lastTime) + "]";
+        }
+    }
+
+    static class HistoRequest {
+        final String tblName;
+        final String columnName;
+        final long mergeTime;
+        final Map<String, NamedObjectId> name2id;
+        byte[] seekValue;
+        NamedObjectId seekId;
+        long seekTime;
+
+        public HistoRequest(String tableName, String columnName, int mergeTime,
+                Map<String, NamedObjectId> name2id) {
+            this.tblName = tableName;
+            this.columnName = columnName;
+            this.mergeTime = mergeTime;
+            this.name2id = name2id;
+        }
+    }
+
+    @SuppressWarnings("serial")
+    static public class InvalidTokenException extends RuntimeException {
+    }
+}
+```
+
+### `ParameterRecorder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ParameterRecorder.java`
+
+
+```java
+package org.yamcs.archive;
+
+import static org.yamcs.StandardTupleDefinitions.PARAMETER;
+import static org.yamcs.StandardTupleDefinitions.PARAMETER_COL_GROUP;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.StandardStreamType;
+import org.yamcs.StreamConfig.StreamConfigEntry;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * ParameterRecorder Records (processed) Parameters
+ * <p>
+ * This records parameters as tuples - good for realtime recording but not very efficient for retrieval of a few
+ * parameters over long time periods.
+ * <p>
+ * The {@link org.yamcs.parameterarchive} records parameters in a columnar fashion - not good for realtime but much more
+ * efficient for retrieval especially retrieval of few parameters over long time periods.
+ *
+ */
+public class ParameterRecorder extends AbstractYamcsService {
+
+    public static final String TABLE_NAME = "pp";
+    public static final String CF_NAME = XtceTmRecorder.CF_NAME;
+    
+    Stream realtimeStream;
+    Stream dumpStream;
+
+    List<String> streams = new ArrayList<>();
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            String cols = PARAMETER.getStringDefinition1();
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var timePart = ydb.getTimePartitioningSchema(config);
+
+                var partitionBy = timePart == null ? "partition by value(group)"
+                        : "partition by time_and_value(gentime('" + timePart.getName() + "'), group)";
+
+                String query = "create table " + TABLE_NAME + "(" + cols + ", primary key(gentime, seqNum)) histogram("
+                        + PARAMETER_COL_GROUP + ") " + partitionBy
+                        + " table_format=compressed,column_family:" + CF_NAME;
+                ydb.execute(query);
+            }
+
+            StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+            if (!config.containsKey("streams")) {
+                List<StreamConfigEntry> sceList = sc.getEntries(StandardStreamType.PARAM);
+                for (StreamConfigEntry sce : sceList) {
+                    streams.add(sce.getName());
+                    ydb.execute("insert_append into " + TABLE_NAME + " select * from " + sce.getName());
+                }
+            } else if (config.containsKey("streams")) {
+                List<String> streamNames = config.getList("streams");
+                for (String sn : streamNames) {
+                    StreamConfigEntry sce = sc.getEntry(StandardStreamType.PARAM, sn);
+                    if (sce == null) {
+                        throw new ConfigurationException("No stream config found for '" + sn + "'");
+                    }
+                    streams.add(sce.getName());
+                    ydb.execute("insert_append into " + TABLE_NAME + " select * from " + sce.getName());
+                }
+            }
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException("Exception when creating parameter input stream", e);
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        Utils.closeTableWriters(ydb, streams);
+        notifyStopped();
+    }
+
+}
+```
+
+### `ParameterReplayHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ParameterReplayHandler.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+/**
+ * Replays parameters from tables recorded by the {@link org.yamcs.archive.ParameterRecorder}
+ * 
+ * @author nm
+ *
+ */
+public class ParameterReplayHandler implements ReplayHandler {
+    Set<String> includeGroups = new HashSet<>();
+    Set<String> excludeGroups = new HashSet<>();
+    final Mdb mdb;
+    ReplayOptions request;
+    static final Logger log = LoggerFactory.getLogger(ParameterReplayHandler.class);
+    boolean emptyReplay;
+
+    public ParameterReplayHandler(Mdb mdb) {
+        this.mdb = mdb;
+    }
+
+    @Override
+    public void setRequest(ReplayOptions newRequest) {
+        this.request = newRequest;
+        includeGroups.clear();
+        excludeGroups.clear();
+
+        includeGroups.addAll(newRequest.getPpRequest().getGroupNameFilterList());
+        excludeGroups.addAll(newRequest.getPpRequest().getGroupNameExcludeList());
+        emptyReplay = false;
+        if (!includeGroups.isEmpty() && !excludeGroups.isEmpty()) {
+            includeGroups.removeAll(excludeGroups);
+            if (includeGroups.isEmpty()) {
+                log.info("No group remaining after removing the exclusion, this is an empty replay");
+                emptyReplay = true;
+            }
+        }
+    }
+
+    /**
+     * Provides a select statement like this:
+     * 
+     * <pre>
+     *  select n,* from pp
+     *  where group in (grp1, grp2,...)
+     *  and gentime&gt;x and gentime&lt;y
+     * </pre>
+     * 
+     * The definition of the PP table is in {@link ParameterRecorder}
+     */
+    @Override
+    public SqlBuilder getSelectCmd() {
+        if (emptyReplay) {
+            return null;
+        }
+
+        SqlBuilder sqlb = ReplayHandler.init(ParameterRecorder.TABLE_NAME, ProtoDataType.PP, request);
+
+        if (!includeGroups.isEmpty()) {
+            sqlb.whereColIn("group", includeGroups);
+        } else if (!excludeGroups.isEmpty()) {
+            sqlb.whereColNotIn("group", excludeGroups);
+        }
+        return sqlb;
+    }
+
+    @Override
+    public List<ParameterValue> transform(Tuple t) {
+        // loop through all the columns containing values
+        // the first column is the ProtoDataType.PP (from the select above),
+        // then are the fixed ones from PP_TUPLE_DEFINITION
+        List<ParameterValue> pvlist = new ArrayList<>();
+        for (int i = StandardTupleDefinitions.PARAMETER.size() + 1; i < t.size(); i++) {
+            String colName = t.getColumnDefinition(i).getName();
+            Object o = t.getColumn(i);
+            ParameterValue pv;
+            if (o instanceof ParameterValue) {
+                pv = (ParameterValue) o;
+            } else if (o instanceof org.yamcs.protobuf.Pvalue.ParameterValue) {
+                pv = BasicParameterValue.fromGpb(t.getColumnDefinition(i).getName(),
+                        (org.yamcs.protobuf.Pvalue.ParameterValue) o);
+            } else {
+                log.warn("got unexpected value for column {}: {}", colName, o);
+                continue;
+            }
+            Parameter p = mdb.getParameter(pv.getParameterQualifiedName());
+            if (p == null) {
+                if (Mdb.isSystemParameter(pv.getParameterQualifiedName())) {
+                    p = SystemParametersService.createSystemParameter(mdb, pv.getParameterQualifiedName(),
+                            pv.getEngValue());
+                } else {
+                    log.info("Cannot find a parameter with fqn {}", pv.getParameterQualifiedName());
+                    continue;
+                }
+            }
+            pv.setParameter(p);
+            pvlist.add(pv);
+        }
+        return pvlist;
+    }
+}
+```
+
+### `ReplayHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayHandler.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.YamcsException;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+public interface ReplayHandler {
+
+    void setRequest(ReplayOptions req) throws YamcsException;
+
+    SqlBuilder getSelectCmd();
+
+    Object transform(Tuple t);
+
+    static SqlBuilder init(String tableName, ProtoDataType type, ReplayOptions request) {
+        SqlBuilder sqlb = new SqlBuilder(tableName);
+        sqlb.select(Integer.toString(type.getNumber()), "*");
+
+        long afterOrEqual = request.getRangeStart();
+        if (!request.isReverse()) {
+            afterOrEqual = maxTime(afterOrEqual, request.getPlayFrom());
+        }
+        if (afterOrEqual != TimeEncoding.INVALID_INSTANT) {
+            sqlb.whereColAfterOrEqual("gentime", afterOrEqual);
+        }
+
+        long before = request.getRangeStop();
+        if (request.isReverse()) {
+            before = minTime(before, request.getPlayFrom());
+        }
+
+        if (before != TimeEncoding.INVALID_INSTANT) {
+            sqlb.whereColBefore("gentime", before);
+        }
+
+        sqlb.descend(request.isReverse());
+        return sqlb;
+    }
+
+    private static long maxTime(long a, long b) {
+        if (a == TimeEncoding.INVALID_INSTANT) {
+            return b;
+        } else if (b == TimeEncoding.INVALID_INSTANT) {
+            return a;
+        } else {
+            return Math.max(a, b);
+        }
+    }
+
+    private static long minTime(long a, long b) {
+        if (a == TimeEncoding.INVALID_INSTANT) {
+            return b;
+        } else if (b == TimeEncoding.INVALID_INSTANT) {
+            return a;
+        } else {
+            return Math.min(a, b);
+        }
+    }
+}
+```
+
+### `ReplayListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayListener.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.protobuf.Yamcs.ReplayStatus;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+public interface ReplayListener {
+
+    void newData(ProtoDataType type, Object data);
+
+    void stateChanged(ReplayStatus rs);
+}
+```
+
+### `ReplayOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayOptions.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.protobuf.Yamcs.CommandHistoryReplayRequest;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.EventReplayRequest;
+import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.protobuf.Yamcs.ParameterReplayRequest;
+import org.yamcs.protobuf.Yamcs.PpReplayRequest;
+import org.yamcs.protobuf.Yamcs.ReplayRequest;
+import org.yamcs.utils.TimeEncoding;
+
+public class ReplayOptions {
+    long rangeStart = TimeEncoding.INVALID_INSTANT;
+    long rangeStop = TimeEncoding.INVALID_INSTANT;
+    long playFrom = TimeEncoding.INVALID_INSTANT;
+    EndAction endAction;
+    SpeedSpec speed;
+    boolean reverse;
+    boolean autostart = true;
+
+    // if all request objects are null -> replay all
+    // if at least one of them is not null -> replay that type
+    // if not null but empty -> means replay all of that type (e.g. all PP)
+    // if not null and not empty -> use it as a filter
+    private PpReplayRequest ppRequest;
+    private PacketReplayRequest packetReplayRequest;
+    private ParameterReplayRequest parameterReplayRequest;
+    private CommandHistoryReplayRequest commandHistoryReplayRequest;
+    private EventReplayRequest eventReplayRequest;
+
+    public ReplayOptions(ReplayRequest protoRequest) {
+        if (protoRequest.hasStart()) {
+            rangeStart = TimeEncoding.fromProtobufTimestamp(protoRequest.getStart());
+        }
+        if (protoRequest.hasStop()) {
+            rangeStop = TimeEncoding.fromProtobufTimestamp(protoRequest.getStop());
+        }
+        endAction = protoRequest.getEndAction();
+        if (protoRequest.hasSpeed()) {
+            speed = SpeedSpec.fromProtobuf(protoRequest.getSpeed());
+        } else {
+            speed = new SpeedSpec(SpeedSpec.Type.ORIGINAL, 1);
+        }
+        reverse = protoRequest.hasReverse() && protoRequest.getReverse();
+
+        if (protoRequest.hasPacketRequest()) {
+            this.packetReplayRequest = protoRequest.getPacketRequest();
+        }
+
+        if (protoRequest.hasPpRequest()) {
+            this.ppRequest = protoRequest.getPpRequest();
+        }
+        autostart = protoRequest.getAutostart();
+        this.playFrom = reverse ? this.rangeStop : this.rangeStart;
+    }
+
+    public ReplayOptions(long start, long stop, boolean reverse) {
+        if (stop != TimeEncoding.INVALID_INSTANT && start != TimeEncoding.INVALID_INSTANT && start < start) {
+            throw new IllegalArgumentException("stop cannot be smaller than start");
+        }
+        this.rangeStart = start;
+        this.rangeStop = stop;
+        this.reverse = reverse;
+        this.playFrom = reverse ? this.rangeStop : this.rangeStart;
+    }
+
+    public ReplayOptions() {
+    }
+
+    public ReplayOptions(ReplayOptions other) {
+        this.rangeStart = other.rangeStart;
+        this.rangeStop = other.rangeStop;
+        this.speed = other.speed;
+        this.endAction = other.endAction;
+        this.reverse = other.reverse;
+        this.autostart = other.autostart;
+        this.playFrom = other.playFrom;
+
+        this.packetReplayRequest = other.packetReplayRequest;
+        this.ppRequest = other.ppRequest;
+        this.parameterReplayRequest = other.parameterReplayRequest;
+        this.commandHistoryReplayRequest = other.commandHistoryReplayRequest;
+        this.eventReplayRequest = other.eventReplayRequest;
+    }
+
+    public static ReplayOptions getAfapReplay(long start, long stop, boolean reverse) {
+        ReplayOptions repl = new ReplayOptions(start, stop, reverse);
+        repl.setSpeed(new SpeedSpec(SpeedSpec.Type.AFAP));
+        repl.setEndAction(EndAction.QUIT);
+        return repl;
+    }
+
+    public static ReplayOptions getAfapReplay() {
+        ReplayOptions repl = new ReplayOptions();
+        repl.setSpeed(new SpeedSpec(SpeedSpec.Type.AFAP));
+        repl.setEndAction(EndAction.QUIT);
+        return repl;
+    }
+
+    public void setSpeed(SpeedSpec speed) {
+        this.speed = speed;
+    }
+
+    public void setRangeStart(long start) {
+        this.rangeStart = start;
+    }
+
+    public void setRangeStop(long stop) {
+        this.rangeStop = stop;
+    }
+
+    public void setPlayFrom(long playFrom) {
+        this.playFrom = playFrom;
+    }
+
+    public SpeedSpec getSpeed() {
+        return speed;
+    }
+
+    public long getPlayFrom() {
+        return playFrom;
+    }
+
+    public boolean isReverse() {
+        return reverse;
+    }
+
+    public ReplayRequest toProtobuf() {
+        ReplayRequest.Builder rr = ReplayRequest.newBuilder();
+        if (rangeStart != TimeEncoding.INVALID_INSTANT) {
+            rr.setStart(TimeEncoding.toProtobufTimestamp(rangeStart));
+        }
+        if (rangeStop != TimeEncoding.INVALID_INSTANT) {
+            rr.setStop(TimeEncoding.toProtobufTimestamp(rangeStop));
+        }
+        rr.setSpeed(speed.toProtobuf());
+        rr.setEndAction(endAction);
+        rr.setReverse(reverse);
+        rr.setAutostart(autostart);
+        if (packetReplayRequest != null) {
+            rr.setPacketRequest(packetReplayRequest);
+        }
+        if (ppRequest != null) {
+            rr.setPpRequest(ppRequest);
+        }
+        if (parameterReplayRequest != null) {
+            rr.setParameterRequest(parameterReplayRequest);
+        }
+
+        if (commandHistoryReplayRequest != null) {
+            rr.setCommandHistoryRequest(commandHistoryReplayRequest);
+        }
+
+        if (eventReplayRequest != null) {
+            rr.setEventRequest(eventReplayRequest);
+        }
+
+        return rr.build();
+    }
+
+    public boolean isAutostart() {
+        return autostart;
+    }
+
+    public EndAction getEndAction() {
+        return endAction;
+    }
+
+    public boolean hasCommandHistoryRequest() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    public boolean hasPpRequest() {
+        return ppRequest != null;
+    }
+
+    public boolean hasEventRequest() {
+        return false;
+    }
+
+    public long getRangeStart() {
+        return rangeStart;
+    }
+
+    public long getRangeStop() {
+        return rangeStop;
+    }
+
+    public boolean hasPlayFrom() {
+        return playFrom != TimeEncoding.INVALID_INSTANT;
+    }
+
+    public boolean hasRangeStart() {
+        return rangeStart != TimeEncoding.INVALID_INSTANT;
+    }
+
+    public boolean hasRangeStop() {
+        return rangeStop != TimeEncoding.INVALID_INSTANT;
+    }
+
+    public void setEndAction(EndAction endAction) {
+        this.endAction = endAction;
+    }
+
+    public PpReplayRequest getPpRequest() {
+        return ppRequest == null ? PpReplayRequest.getDefaultInstance() : ppRequest;
+    }
+
+    public void setPpRequest(PpReplayRequest ppRequest) {
+        this.ppRequest = ppRequest;
+    }
+
+    public PacketReplayRequest getPacketRequest() {
+        return packetReplayRequest == null ? PacketReplayRequest.getDefaultInstance() : packetReplayRequest;
+    }
+
+    public boolean hasPacketRequest() {
+        return packetReplayRequest != null;
+    }
+
+    public void setPacketRequest(PacketReplayRequest packetReplayRequest) {
+        this.packetReplayRequest = packetReplayRequest;
+    }
+
+    public ParameterReplayRequest getParameterRequest() {
+        return parameterReplayRequest == null ? ParameterReplayRequest.getDefaultInstance() : parameterReplayRequest;
+    }
+
+    public void setParameterRequest(ParameterReplayRequest parameterReplayRequest) {
+        this.parameterReplayRequest = parameterReplayRequest;
+    }
+
+    public boolean hasParameterRequest() {
+        return parameterReplayRequest != null;
+    }
+
+    public void clearParameterRequest() {
+        this.parameterReplayRequest = null;
+    }
+
+    public void setAutostart(boolean autostart) {
+        this.autostart = autostart;
+    }
+
+    public CommandHistoryReplayRequest getCommandHistoryRequest() {
+        return commandHistoryReplayRequest == null ? CommandHistoryReplayRequest.getDefaultInstance()
+                : commandHistoryReplayRequest;
+    }
+
+    public void setCommandHistoryRequest(CommandHistoryReplayRequest commandHistoryReplayRequest) {
+        this.commandHistoryReplayRequest = commandHistoryReplayRequest;
+    }
+
+    public EventReplayRequest getEventRequest() {
+        return eventReplayRequest == null ? EventReplayRequest.getDefaultInstance() : eventReplayRequest;
+    }
+
+    public void setEventRequest(EventReplayRequest eventReplayRequest) {
+        this.eventReplayRequest = eventReplayRequest;
+    }
+
+    public boolean isReplayAll() {
+        // As described in yamcs.proto, by default everything is replayed unless
+        // at least one filter is specified.
+        return ppRequest == null && packetReplayRequest == null && parameterReplayRequest == null
+                && commandHistoryReplayRequest == null && eventReplayRequest == null;
+    }
+
+    public boolean isReplayAllParameters() {
+        return isReplayAll() || (parameterReplayRequest != null && parameterReplayRequest.getNameFilterCount() == 0);
+    }
+}
+```
+
+### `ReplayServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/ReplayServer.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.YamcsException;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+
+/**
+ * Yarch replay server
+ *
+ * A note about terminology: we call this replay because it provides capability to speed control/pause/resume. However,
+ * it is not replay in terms of reprocessing the data - the data is sent as recorded in the streams.
+ *
+ */
+public class ReplayServer extends AbstractYamcsService {
+
+    final int MAX_REPLAYS = 200;
+
+    AtomicInteger replayCount = new AtomicInteger();
+
+    /**
+     * create a new packet replay object
+     * 
+     * @return a replay object
+     */
+    public YarchReplay createReplay(ReplayOptions replayRequest, ReplayListener replayListener)
+            throws YamcsException {
+        if (replayCount.get() >= MAX_REPLAYS) {
+            throw new YamcsException("maximum number of replays reached");
+        }
+
+        try {
+            Mdb mdb = MdbFactory.getInstance(yamcsInstance);
+            YarchReplay yr = new YarchReplay(this, replayRequest, replayListener, mdb);
+            replayCount.incrementAndGet();
+            return yr;
+        } catch (YamcsException e) {
+            log.warn("Got YamcsException when creating a replay object", e);
+            throw e;
+        } catch (Exception e) {
+            log.warn("Got exception when creating a replay object", e);
+            throw new YamcsException("Got exception when creating a replay. " + e.getMessage(), e);
+        }
+    }
+
+    public void replayFinished() {
+        replayCount.decrementAndGet();
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        notifyStopped();
+    }
+}
+```
+
+### `SpeedSpec.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/SpeedSpec.java`
+
+
+```java
+package org.yamcs.archive;
+
+import org.yamcs.protobuf.Yamcs.ReplaySpeed;
+import org.yamcs.protobuf.Yamcs.ReplaySpeed.ReplaySpeedType;
+
+public class SpeedSpec {
+    public enum Type {
+        AFAP, FIXED_DELAY, ORIGINAL, STEP_BY_STEP
+    }
+
+    private Type type;
+    private float multiplier = 1; // speed multiplier (for ORIGINAL)
+    private int x = 1000; // DELAY in ms for FIXED_DELAY and STEP_BY_STEP
+    String column; // for type=ORIGINAL
+
+    public SpeedSpec(Type type) {
+        this.type = type;
+    }
+
+    public SpeedSpec(Type type, int x) {
+        this.type = type;
+        this.x = x;
+    }
+
+    public SpeedSpec(Type type, String column, float multiplier) {
+        this.type = type;
+        this.column = column;
+        this.multiplier = multiplier;
+    }
+
+    public long getFixedDelay() {
+        return x;
+    }
+
+    public float getMultiplier() {
+        return multiplier;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    @Override
+    public String toString() {
+        return "SpeedSpec(type: " + type + " multiplier: " + multiplier + " delay: " + x + ")";
+    }
+
+    public ReplaySpeed toProtobuf() {
+        ReplaySpeed.Builder rsb = ReplaySpeed.newBuilder();
+        switch (type) {
+        case AFAP:
+            rsb.setType(ReplaySpeedType.AFAP);
+            break;
+        case FIXED_DELAY:
+            rsb.setType(ReplaySpeedType.FIXED_DELAY);
+            rsb.setParam(x);
+            break;
+        case ORIGINAL:
+            rsb.setType(ReplaySpeedType.REALTIME);
+            rsb.setParam(multiplier);
+            break;
+        case STEP_BY_STEP:
+            rsb.setType(ReplaySpeedType.STEP_BY_STEP);
+            break;
+        }
+
+        return rsb.build();
+    }
+
+    public static SpeedSpec fromProtobuf(ReplaySpeed speed) {
+        SpeedSpec ss;
+        switch (speed.getType()) {
+        case AFAP:
+        case STEP_BY_STEP: // Step advancing is controlled from within this class
+            ss = new SpeedSpec(SpeedSpec.Type.AFAP);
+            break;
+        case FIXED_DELAY:
+            ss = new SpeedSpec(SpeedSpec.Type.FIXED_DELAY, (int) speed.getParam());
+            break;
+        case REALTIME:
+            ss = new SpeedSpec(SpeedSpec.Type.ORIGINAL, "gentime", speed.getParam());
+            break;
+        default:
+            throw new IllegalArgumentException("Unknown speed type " + speed.getType());
+        }
+        return ss;
+    }
+}
+```
+
+### `TmIndexService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/TmIndexService.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.List;
+
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.YamcsService;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+/**
+ * Interface for (completeness) TmIndex.
+ * All the implementing classes have to provide a constructor(String archiveInstance, boolean readonly)
+ * 
+ * @author nm
+ *
+ */
+public interface TmIndexService extends StreamSubscriber, YamcsService {
+
+    public abstract void deleteRecords(long start, long stop);
+    
+    /**
+     * return an iterator that provides all the index entries between start and stop
+     * 
+     * @param names can be used to filter which entries are returned. If null, everything is returned. 
+     * @param start
+     * @param stop
+     * @return
+     */
+    public abstract IndexIterator getIterator(List<NamedObjectId> names, long start, long stop);
+
+}
+```
+
+### `Utils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/Utils.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.Collection;
+
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.TableWriter;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+public class Utils {
+    /**
+     * close all table writers subscribed to any of the stream in the list
+     * 
+     * @param ydb
+     * @param streamNames
+     */
+    static public void closeTableWriters(YarchDatabaseInstance ydb, Collection<String> streamNames) {
+        for(String streamName: streamNames) {
+            Stream s = ydb.getStream(streamName);
+            if(s!=null) {
+                for(StreamSubscriber ss:s.getSubscribers()) {
+                    if(ss instanceof TableWriter) {
+                        s.removeSubscriber(ss);
+                        ((TableWriter)ss).close();
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+### `XtceTmRecorder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/XtceTmRecorder.java`
+
+
+```java
+package org.yamcs.archive;
+
+import static org.yamcs.StandardTupleDefinitions.TM_ROOT_CONTAINER_COLUMN;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.InitException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.StreamConfig;
+import org.yamcs.StreamConfig.TmStreamConfigEntry;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.mdb.ContainerProcessingResult;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.ProcessorData;
+import org.yamcs.mdb.XtceTmExtractor;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Records XTCE TM sequence containers.
+ * <p>
+ * The main job of this class is to populate the "pname" column of the tm table. The other columns are copied verbatim
+ * from the TM input streams. It does that by creating a {@link XtceTmExtractor} and subscribing to all sequence
+ * containers having the flag {@link SequenceContainer#useAsArchivePartition()} set. The pname is the qualified name of
+ * the most specific (lowest in the XTCE hierarchy) container matching the telemetry packet.
+ * 
+ * <p>
+ * It subscribes to all the streams configured with the "streams" config key or, if not present, to all TM streams
+ * defined in the instance (streamConfig section of the instance configuration).
+ * 
+ */
+public class XtceTmRecorder extends AbstractYamcsService {
+    public static final String REC_STREAM_NAME = "xtce_tm_recorder_stream";
+    public static final String TABLE_NAME = "tm";
+    public static final String PNAME_COLUMN = "pname";
+    public static final String CF_NAME = "rt_data";
+
+    public static final TupleDefinition RECORDED_TM_TUPLE_DEFINITION;
+    static {
+        RECORDED_TM_TUPLE_DEFINITION = StandardTupleDefinitions.TM.copy();
+        RECORDED_TM_TUPLE_DEFINITION.removeColumn(TM_ROOT_CONTAINER_COLUMN);
+        RECORDED_TM_TUPLE_DEFINITION.addColumn(PNAME_COLUMN, DataType.ENUM); // container name (XTCE qualified name)
+    }
+
+    private long totalNumPackets;
+
+    final Tuple END_MARK = new Tuple(StandardTupleDefinitions.TM,
+            new Object[] { null, null, null, null, null, null, null, null, null });
+
+    Mdb mdb;
+
+    private final List<StreamRecorder> recorders = new ArrayList<>();
+
+    TimeService timeService;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        var timePart = ydb.getTimePartitioningSchema(config);
+
+        var partitionBy = timePart == null ? "partition by value(pname)"
+                : "partition by time_and_value(gentime('" + timePart.getName() + "'), pname)";
+        try {
+            if (ydb.getTable(TABLE_NAME) == null) {
+                String query = "create table " + TABLE_NAME + "(" + RECORDED_TM_TUPLE_DEFINITION.getStringDefinition1()
+                        + ", primary key(gentime, seqNum)) histogram(pname) " + partitionBy
+                        + " table_format=compressed,column_family:" + CF_NAME;
+                ydb.execute(query);
+            }
+            ydb.execute("create stream " + REC_STREAM_NAME + RECORDED_TM_TUPLE_DEFINITION.getStringDefinition());
+            ydb.execute("insert into " + TABLE_NAME + " select * from " + REC_STREAM_NAME);
+        } catch (ParseException | StreamSqlException e) {
+            throw new InitException(e);
+        }
+        mdb = MdbFactory.getInstance(yamcsInstance);
+
+        StreamConfig sc = StreamConfig.getInstance(yamcsInstance);
+        if (config.containsKey("streams")) {
+            List<String> streamNames = config.getList("streams");
+            for (String sn : streamNames) {
+                TmStreamConfigEntry sce = sc.getTmEntry(sn);
+                if (sce == null) {
+                    throw new ConfigurationException("No stream config found for '" + sn + "'");
+                }
+                createRecorder(sce);
+            }
+        } else {
+            List<TmStreamConfigEntry> sceList = sc.getTmEntries();
+            for (TmStreamConfigEntry sce : sceList) {
+                createRecorder(sce);
+            }
+        }
+
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    private void createRecorder(TmStreamConfigEntry streamConf) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        SequenceContainer rootsc = streamConf.getRootContainer();
+        if (rootsc == null) {
+            rootsc = mdb.getRootSequenceContainer();
+        }
+        if (rootsc == null) {
+            throw new ConfigurationException(
+                    "MDB does not have a root sequence container and no container was specified for decoding packets from "
+                            + streamConf.getName() + " stream");
+        }
+
+        Stream inputStream = ydb.getStream(streamConf.getName());
+
+        if (inputStream == null) {
+            throw new ConfigurationException("Cannot find stream '" + streamConf.getName() + "'");
+        }
+        Stream stream = ydb.getStream(REC_STREAM_NAME);
+        StreamRecorder recorder = new StreamRecorder(inputStream, stream, rootsc, streamConf.isAsync());
+        recorders.add(recorder);
+    }
+
+    @Override
+    protected void doStart() {
+        for (StreamRecorder sr : recorders) {
+            sr.inputStream.addSubscriber(sr);
+            if (sr.async) {
+                new Thread(sr).start();
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        for (StreamRecorder sr : recorders) {
+            sr.quit();
+            sr.inputStream.removeSubscriber(sr);
+        }
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        Stream s = ydb.getStream(REC_STREAM_NAME);
+        s.close();
+        Utils.closeTableWriters(ydb, Arrays.asList(REC_STREAM_NAME));
+        notifyStopped();
+    }
+
+    public long getNumProcessedPackets() {
+        return totalNumPackets;
+    }
+
+    /**
+     * Records telemetry from one stream. The decoding starts with the specified sequence container
+     * 
+     * If async is set to true, the tuples are put in a queue and processed from a different thread.
+     * 
+     * @author nm
+     *
+     */
+    class StreamRecorder implements StreamSubscriber, Runnable {
+        SequenceContainer rootSequenceContainer;
+        boolean async;
+        Stream inputStream;
+        Stream outputStream;
+
+        LinkedBlockingQueue<Tuple> tmQueue;
+        XtceTmExtractor tmExtractor;
+
+        StreamRecorder(Stream inputStream, Stream outputStream, SequenceContainer sc, boolean async) {
+            this.outputStream = outputStream;
+            this.inputStream = inputStream;
+            this.rootSequenceContainer = sc;
+            this.async = async;
+            if (async) {
+                tmQueue = new LinkedBlockingQueue<>(100000);
+            }
+            var pdata = new ProcessorData(yamcsInstance, "XTCEPROC", mdb, new ProcessorConfig(),
+                    Collections.emptyMap());
+            tmExtractor = new XtceTmExtractor(mdb, pdata);
+
+            // we do not want to get the containers which are included via container entry
+            // we only want the inherited from the root
+            tmExtractor.getOptions().setSubcontainerPartOfResult(false);
+
+            subscribeContainers(rootSequenceContainer);
+        }
+
+        /**
+         * Only called if running in async mode, otherwise tuples are saved directly
+         */
+        @Override
+        public void run() {
+            Thread.currentThread().setName(this.getClass().getSimpleName() + "[" + yamcsInstance + "]");
+            try {
+                Tuple t;
+                while (true) {
+                    t = tmQueue.take();
+                    if (t == END_MARK) {
+                        break;
+                    }
+                    saveTuple(t);
+                }
+            } catch (InterruptedException e) {
+                log.warn("Got InteruptedException when waiting for the next tuple ", e);
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // subscribe all containers that have useAsArchivePartition set
+        private void subscribeContainers(SequenceContainer sc) {
+            if (sc == null) {
+                return;
+            }
+
+            if (sc.useAsArchivePartition()) {
+                tmExtractor.startProviding(sc);
+            }
+
+            if (mdb.getInheritingContainers(sc) != null) {
+                for (SequenceContainer sc1 : mdb.getInheritingContainers(sc)) {
+                    subscribeContainers(sc1);
+                }
+            }
+        }
+
+        @Override
+        public void onTuple(Stream istream, Tuple t) {
+            int status = (Integer) t.getColumn(3);
+            if ((status & TmPacket.STATUS_MASK_DO_NOT_ARCHIVE) != 0) {
+                log.trace("Dropping tm tuple {} because the no archive flag is set", t);
+                return;
+            }
+            try {
+                if (async) {
+                    tmQueue.put(t);
+                } else {
+                    synchronized (this) {
+                        saveTuple(t);
+                    }
+                }
+            } catch (InterruptedException e) {
+                log.warn("Got interrupted exception while putting data in the queue");
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        @Override
+        public void streamClosed(Stream istream) {
+            // shouldn't happen
+            log.error("stream {} closed", istream);
+        }
+
+        public void quit() {
+            if (!async) {
+                return;
+            }
+
+            try {
+                tmQueue.put(END_MARK);
+            } catch (InterruptedException e) {
+                log.warn("got interrupted while putting the empty buffer in the queue");
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        /**
+         * saves a TM tuple. The definition is in {@link StandardTupleDefinitions#TM}
+         * 
+         * it finds the XTCE names and puts them inside the recording
+         * 
+         * @param t
+         */
+        protected void saveTuple(Tuple t) {
+            long gentime = (Long) t.getColumn(0);
+            byte[] packet = (byte[]) t.getColumn(4);
+            int seqCount = (Integer) t.getColumn(1);
+
+            totalNumPackets++;
+
+            ContainerProcessingResult cpr = tmExtractor.processPacket(packet, gentime, timeService.getMissionTime(),
+                    seqCount, rootSequenceContainer);
+
+            String pname = deriveArchivePartition(cpr);
+
+            try {
+                List<?> c = t.getColumns();
+                List<Object> columns = new ArrayList<>(c.size() + 1);
+                columns.addAll(c);
+
+                columns.add(c.size(), pname);
+                TupleDefinition tdef = t.getDefinition().copy();
+                tdef.addColumn(PNAME_COLUMN, DataType.ENUM);
+
+                Tuple tp = new Tuple(tdef, columns);
+
+                // If provided on the tuple (set by a preprocessor), this has more priority
+                // in determining the pname.
+                String rootContainer = tp.removeColumn(TM_ROOT_CONTAINER_COLUMN);
+                if (rootContainer != null) {
+                    tp.setColumn(PNAME_COLUMN, rootContainer);
+                }
+
+                outputStream.emitTuple(tp);
+            } catch (Exception e) {
+                log.error("got exception when saving packet ", e);
+            }
+        }
+    }
+
+    static public String deriveArchivePartition(ContainerProcessingResult cpr) {
+        List<ContainerExtractionResult> cerList = cpr.getContainerResult();
+        ContainerExtractionResult root = cerList.get(0);
+
+        String pname = null;
+        // Derives the archive partition; the first container is the root container.
+        // We take the name of the most specific one derived directly from the root,
+        // with the archive partition flag set
+        for (int i = cerList.size() - 1; i >= 0; i--) {
+            ContainerExtractionResult cer = cerList.get(i);
+            if (cer.isDerivedFromRoot()) {
+                SequenceContainer sc = cer.getContainer();
+                if (sc.useAsArchivePartition()) {
+                    pname = sc.getQualifiedName();
+                    break;
+                }
+            }
+        }
+        // if none has the archive partition flag set, we take the name of the root
+        if (pname == null) {
+            pname = root.getContainer().getQualifiedName();
+        }
+
+        return pname;
+    }
+
+}
+```
+
+### `XtceTmReplayHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/XtceTmReplayHandler.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.YamcsException;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+
+/**
+ * Provides replay of the telemetry recorded by XtceTmRecorder
+ * 
+ * @author nm
+ *
+ */
+public class XtceTmReplayHandler implements ReplayHandler {
+    Set<String> partitions;
+    final Mdb mdb;
+    static Logger log = LoggerFactory.getLogger(XtceTmReplayHandler.class);
+    ReplayOptions request;
+
+    public XtceTmReplayHandler(Mdb mdb) {
+        this.mdb = mdb;
+    }
+
+    @Override
+    public void setRequest(ReplayOptions newRequest) throws YamcsException {
+        this.request = newRequest;
+        if (newRequest.getPacketRequest().getNameFilterList().isEmpty()) {
+            partitions = null; // retrieve all
+            return;
+        }
+        partitions = new HashSet<>();
+        addPartitions(newRequest.getPacketRequest().getNameFilterList());
+    }
+
+    private void addPartitions(List<NamedObjectId> pnois) throws YamcsException {
+        for (NamedObjectId pnoi : pnois) {
+            SequenceContainer sc = mdb.getSequenceContainer(pnoi);
+            if (sc == null) {
+                throw new YamcsException("Cannot find any sequence container for " + pnoi);
+            }
+
+            // go up in the XTCE hierarchy to find a container with the useAsArchivePartition flag set
+            while (sc != null) {
+                if (sc.useAsArchivePartition() || sc.getBaseContainer() == null) {
+                    partitions.add(sc.getQualifiedName());
+                    break;
+                }
+                sc = sc.getBaseContainer();
+            }
+        }
+    }
+
+    @Override
+    public SqlBuilder getSelectCmd() {
+        SqlBuilder sqlb = ReplayHandler.init(XtceTmRecorder.TABLE_NAME, ProtoDataType.TM_PACKET, request);
+
+        if (partitions != null) {
+            if (partitions.isEmpty()) {
+                return null;
+            }
+            sqlb.whereColIn("pname", partitions);
+        }
+
+        if (request.getPacketRequest().getTmLinksCount() > 0) {
+            sqlb.whereColIn("link", request.getPacketRequest().getTmLinksList());
+        }
+
+        return sqlb;
+    }
+
+    @Override
+    public ReplayPacket transform(Tuple tuple) {
+        long recTime = (Long) tuple.getColumn(StandardTupleDefinitions.TM_RECTIME_COLUMN);
+        byte[] pbody = (byte[]) tuple.getColumn(StandardTupleDefinitions.TM_PACKET_COLUMN);
+        long genTime = (Long) tuple.getColumn(StandardTupleDefinitions.GENTIME_COLUMN);
+        int seqNum = (Integer) tuple.getColumn(StandardTupleDefinitions.SEQNUM_COLUMN);
+        String pname = (String) tuple.getColumn(XtceTmRecorder.PNAME_COLUMN);
+        return new ReplayPacket(pname, recTime, genTime, seqNum, pbody);
+    }
+
+    public static class ReplayPacket {
+        final String pname;
+        final long recTime;
+        final long genTime;
+        final int seqNum;
+        final byte[] packet;
+
+        public ReplayPacket(String pname, long recTime, long genTime, int seqNum, byte[] packet) {
+            this.pname = pname;
+            this.recTime = recTime;
+            this.genTime = genTime;
+            this.seqNum = seqNum;
+            this.packet = packet;
+        }
+
+        public long getGenerationTime() {
+            return genTime;
+        }
+
+        public long getReceptionTime() {
+            return recTime;
+        }
+
+        public int getSequenceNumber() {
+            return seqNum;
+        }
+
+        public byte[] getPacket() {
+            return packet;
+        }
+
+        /**
+         * 
+         * @return the name used when recording the packet
+         */
+        public String getQualifiedName() {
+            return pname;
+        }
+    }
+}
+```
+
+### `YarchReplay.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/archive/YarchReplay.java`
+
+
+```java
+package org.yamcs.archive;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YamcsException;
+import org.yamcs.archive.SpeedSpec.Type;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.protobuf.Yamcs.EndAction;
+import org.yamcs.protobuf.Yamcs.ReplayStatus;
+import org.yamcs.protobuf.Yamcs.ReplayStatus.ReplayState;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.protobuf.Db.ProtoDataType;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Performs a replay from Yarch So far supported are: TM packets, PP groups, Events, Parameters and Command History.
+ * <p>
+ * It relies on handlers for each data type. Each handler creates a stream, the streams are merged and the output is
+ * sent to the listener
+ * <p>
+ * This class can also handle pause/resume: simply stop sending data
+ * <p>
+ * seek: closes the streams and creates new ones with a different starting time.
+ * 
+ */
+public class YarchReplay implements StreamSubscriber {
+    /**
+     * maximum time to wait if SPEED is ORIGINAL meaning that if there is a gap in the data longer than this, we
+     * continue)
+     */
+    public final static long MAX_WAIT_TIME = 10000;
+
+    ReplayServer replayServer;
+    volatile String streamName;
+    volatile boolean quitting = false;
+    private volatile ReplayState state = ReplayState.INITIALIZATION;
+    static Logger log = LoggerFactory.getLogger(YarchReplay.class.getName());
+    private volatile String errorString = "";
+    final String instance;
+    static AtomicInteger counter = new AtomicInteger();
+    Mdb mdb;
+
+    volatile ReplayOptions currentRequest;
+
+    Map<ProtoDataType, ReplayHandler> handlers;
+
+    private long lastDataSentTime = -1; // time when the last data has been sent
+    private long lastDataTime; // time of the last data
+
+    private Semaphore semaphore = new Semaphore(0);
+    boolean dropTuple = false; // set to true when jumping to a different time
+    volatile boolean ignoreClose;
+    volatile boolean sleeping;
+    ReplayListener listener;
+    volatile long replayTime;
+    final YarchDatabaseInstance ydb;
+
+    public YarchReplay(ReplayServer replayServer, ReplayOptions rr, ReplayListener listener, Mdb mdb)
+            throws YamcsException {
+        this.listener = listener;
+        this.replayServer = replayServer;
+        this.mdb = mdb;
+        this.instance = replayServer.getYamcsInstance();
+        ydb = YarchDatabase.getInstance(instance);
+        setRequest(rr);
+    }
+
+    private void setRequest(ReplayOptions req) throws YamcsException {
+        if (state != ReplayState.INITIALIZATION && state != ReplayState.STOPPED) {
+            throw new YamcsException("changing the request only supported in the INITIALIZATION and STOPPED states");
+        }
+
+        if (log.isDebugEnabled()) {
+            log.debug("Replay request for time: [{}, {}]",
+                    (req.hasRangeStart() ? TimeEncoding.toString(req.getRangeStart()) : "-"),
+                    (req.hasRangeStop() ? TimeEncoding.toString(req.getRangeStop()) : "-"));
+        }
+
+        if (req.hasRangeStart() && req.hasRangeStop() && req.getRangeStart() > req.getRangeStop()) {
+            log.warn("throwing new packetexception: stop time has to be greater than start time");
+            throw new YamcsException("stop has to be greater than start");
+        }
+
+        currentRequest = req;
+
+        handlers = new HashMap<>();
+
+        if (currentRequest.hasParameterRequest()) {
+            throw new YamcsException(
+                    "The replay cannot handle directly parameters. Please create a replay processor for that");
+        }
+
+        if (currentRequest.hasEventRequest()) {
+            handlers.put(ProtoDataType.EVENT, new EventReplayHandler());
+        }
+        if (currentRequest.hasPacketRequest()) {
+            if (ydb.getTable(XtceTmRecorder.TABLE_NAME) == null) {
+                log.debug("TM packet replay is requested but the table {} is not available, skipping",
+                        XtceTmRecorder.TABLE_NAME);
+            } else {
+                handlers.put(ProtoDataType.TM_PACKET, new XtceTmReplayHandler(mdb));
+            }
+        }
+        if (currentRequest.hasPpRequest()) {
+            if (ydb.getTable(ParameterRecorder.TABLE_NAME) == null) {
+                log.debug("Parameter replay is requested but the  table {} is not available, skipping",
+                        ParameterRecorder.TABLE_NAME);
+            } else {
+                handlers.put(ProtoDataType.PP, new ParameterReplayHandler(mdb));
+            }
+        }
+        if (currentRequest.hasCommandHistoryRequest()) {
+            if (ydb.getTable(CommandHistoryRecorder.TABLE_NAME) == null) {
+                log.debug("Command history replay is requested but the  table {} is not available, skipping",
+                        CommandHistoryRecorder.TABLE_NAME);
+            } else {
+                handlers.put(ProtoDataType.CMD_HISTORY, new CommandHistoryReplayHandler(instance, mdb));
+            }
+        }
+
+        for (ReplayHandler rh : handlers.values()) {
+            rh.setRequest(req);
+        }
+    }
+
+    public ReplayState getState() {
+        return state;
+    }
+
+    public synchronized void start() {
+        switch (state) {
+        case RUNNING:
+            log.warn("start called when already running, call ignored");
+            return;
+        case INITIALIZATION:
+        case STOPPED:
+            try {
+                initReplay();
+                state = ReplayState.RUNNING;
+            } catch (Exception e) {
+                log.error("Got exception when creating the stream: ", e);
+                errorString = e.toString();
+                state = ReplayState.ERROR;
+            }
+            break;
+        case PAUSED:
+            state = ReplayState.RUNNING;
+            break;
+        case ERROR:
+        case CLOSED:
+            // do nothing?
+        }
+    }
+
+    private void initReplay() throws StreamSqlException, ParseException {
+        streamName = "replay_stream" + counter.incrementAndGet();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("CREATE STREAM " + streamName + " AS ");
+
+        if (handlers.size() > 1) {
+            sb.append("MERGE ");
+        }
+        List<Object> args = new ArrayList<>();
+
+        boolean first = true;
+        for (ReplayHandler rh : handlers.values()) {
+            SqlBuilder selectCmd = rh.getSelectCmd();
+
+            if (selectCmd != null) {
+                args.addAll(selectCmd.getQueryArguments());
+                if (first) {
+                    first = false;
+                } else {
+                    sb.append(", ");
+                }
+                if (handlers.size() > 1) {
+                    sb.append("(");
+                }
+                sb.append(selectCmd.toString());
+                if (handlers.size() > 1) {
+                    sb.append(")");
+                }
+            }
+        }
+
+        if (first) {
+            if (currentRequest.getEndAction() == EndAction.QUIT) {
+                signalStateChange();
+            }
+            return;
+        }
+
+        if (handlers.size() > 1) {
+            sb.append(" USING gentime");
+        }
+
+        if (handlers.size() > 1 && currentRequest.isReverse()) {
+            sb.append(" ORDER DESC");
+        }
+
+        String query = sb.toString();
+        log.debug("running query {} with args {} ", query, args);
+
+        ydb.execute(query, args.toArray());
+        Stream s = ydb.getStream(streamName);
+
+        s.addSubscriber(this);
+
+        lastDataTime = replayTime = currentRequest.playFrom;
+
+        s.start();
+    }
+
+    public void seek(long newReplayTime, boolean autostart) throws YamcsException {
+        if (newReplayTime < currentRequest.rangeStart) {
+            newReplayTime = currentRequest.rangeStart;
+        }
+        log.debug("Seek at {} autostart: {}", TimeEncoding.toString(newReplayTime), autostart);
+        closeExistingStream();
+        lastDataSentTime = -1;
+        lastDataTime = newReplayTime;
+
+        currentRequest.setPlayFrom(newReplayTime);
+        for (ReplayHandler rh : handlers.values()) {
+            rh.setRequest(currentRequest);
+        }
+        if (autostart) {
+            start();
+        }
+    }
+
+    public void changeRange(long start, long stop) throws YamcsException {
+        YarchDatabaseInstance db = YarchDatabase.getInstance(instance);
+        Stream stream = db.getStream(streamName);
+        if (stream != null && !stream.isClosed()) {
+            closeExistingStream();
+        }
+
+        currentRequest.setRangeStart(start);
+        currentRequest.setRangeStop(stop);
+        for (ReplayHandler rh : handlers.values()) {
+            rh.setRequest(currentRequest);
+        }
+    }
+
+    private void closeExistingStream() {
+        if (state != ReplayState.INITIALIZATION) {
+            state = ReplayState.INITIALIZATION;
+            YarchDatabaseInstance db = YarchDatabase.getInstance(instance);
+            Stream s = db.getStream(streamName);
+            if (s != null) {
+                s.removeSubscriber(this);
+                String query = "CLOSE STREAM " + streamName;
+                log.debug("running query: {}", query);
+                try {
+                    db.executeDiscardingResult(query);
+                } catch (StreamSqlException | ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            // if paused, there is a tuple already emitted and ready to be processed in the onTuple method.
+            // we want to get rid of it
+            if (sleeping) {
+                dropTuple = true;
+                log.debug("Releasing semaphore");
+                semaphore.release();
+            }
+        }
+    }
+
+    public void changeSpeed(SpeedSpec newSpeed) {
+        log.debug("Changing speed to {}", newSpeed);
+        currentRequest.setSpeed(newSpeed);
+    }
+
+    public void changeEndAction(EndAction endAction) {
+        log.debug("Changing end action to {}", endAction);
+        currentRequest.setEndAction(endAction);
+    }
+
+    public void pause() {
+        state = ReplayState.PAUSED;
+    }
+
+    public synchronized void quit() {
+        if (quitting) {
+            return;
+        }
+        quitting = true;
+        log.debug("Replay quitting");
+
+        try {
+            YarchDatabaseInstance db = YarchDatabase.getInstance(instance);
+            if (db.getStream(streamName) != null) {
+                db.execute("close stream " + streamName);
+            }
+        } catch (Exception e) {
+            log.error("Exception while quitting", e);
+        }
+        replayServer.replayFinished();
+    }
+
+    @Override
+    public void onTuple(Stream s, Tuple t) {
+        if (quitting) {
+            return;
+        }
+        long time = t.getTimestampColumn("gentime");
+
+        try {
+            sleepUntilTime(time);
+
+            if (dropTuple) {
+                dropTuple = false;
+                return;
+            }
+
+            replayTime = time;
+
+            ProtoDataType type = ProtoDataType.forNumber((Integer) t.getColumn(0));
+            Object data = handlers.get(type).transform(t);
+            if (data != null) {
+                listener.newData(type, data);
+            }
+            lastDataSentTime = System.currentTimeMillis();
+            lastDataTime = time;
+
+            if (currentRequest.getSpeed().getType() == Type.STEP_BY_STEP) {
+                // Force user to trigger next step.
+                state = ReplayState.PAUSED;
+                signalStateChange();
+            }
+        } catch (InterruptedException e) {
+            // this is caught when the stream is closed (either due to quit or seek)
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void sleepUntilTime(long time) throws InterruptedException {
+        long waitTime = 0;
+        SpeedSpec speed = currentRequest.getSpeed();
+        switch (speed.getType()) {
+        case AFAP:
+            break;
+        case FIXED_DELAY:
+            long ctime = System.currentTimeMillis();
+            if (lastDataSentTime != -1) {
+                waitTime = (long) (speed.getFixedDelay() - (ctime - lastDataSentTime));
+            }
+            break;
+        case ORIGINAL:
+            waitTime = (long) ((time - lastDataTime) / speed.getMultiplier());
+            if (waitTime > MAX_WAIT_TIME) {
+                waitTime = MAX_WAIT_TIME;
+            }
+            break;
+        case STEP_BY_STEP:
+            break;
+        }
+
+        if (waitTime > 0) {
+            sleeping = true;
+
+            double d = (time - lastDataTime) / (double) waitTime;
+
+            // update the replay time every second
+            while (true) {
+                long sleepTime = Math.min(waitTime, 1000);
+
+                if (semaphore.tryAcquire(sleepTime, TimeUnit.MILLISECONDS)) {
+                    break;
+                }
+                if (state == ReplayState.PAUSED) {
+                    continue;
+                }
+                waitTime -= sleepTime;
+                if (waitTime > 0) {
+                    replayTime += d * sleepTime;
+                } else {
+                    break;
+                }
+            }
+        }
+        sleeping = false;
+    }
+
+    @Override
+    public synchronized void streamClosed(Stream stream) {
+        if (ignoreClose) { // this happens when we close the stream to reopen
+                           // another one
+            ignoreClose = false;
+            return;
+        }
+        if (quitting) {
+            return;
+        }
+
+        if (currentRequest.getEndAction() == EndAction.QUIT) {
+            state = ReplayState.CLOSED;
+            signalStateChange();
+            quit();
+        } else if (currentRequest.getEndAction() == EndAction.STOP) {
+            state = ReplayState.STOPPED;
+            signalStateChange();
+        } else if (currentRequest.getEndAction() == EndAction.LOOP) {
+            if (stream.getDataCount() == 0) {
+                state = ReplayState.STOPPED; // there is no data in this stream
+                signalStateChange();
+            } else {
+                state = ReplayState.INITIALIZATION;
+                currentRequest.setPlayFrom(currentRequest.getRangeStart());
+                start();
+            }
+        }
+    }
+
+    private void signalStateChange() {
+        try {
+            if (quitting) {
+                return;
+            }
+            ReplayStatus.Builder rsb = ReplayStatus.newBuilder().setState(state);
+            if (state == ReplayState.ERROR) {
+                rsb.setErrorMessage(errorString);
+            }
+            ReplayStatus rs = rsb.build();
+            listener.stateChanged(rs);
+
+        } catch (Exception e) {
+            log.warn("got exception while signaling the state change: ", e);
+        }
+    }
+
+    public ReplayOptions getCurrentReplayRequest() {
+        return currentRequest;
+    }
+
+    public long getReplayTime() {
+        return replayTime;
+    }
+}
+```

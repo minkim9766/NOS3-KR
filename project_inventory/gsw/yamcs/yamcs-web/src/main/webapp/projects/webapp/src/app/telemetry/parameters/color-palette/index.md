@@ -3,18 +3,122 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `color-palette.component.css`
 
-file--color-palette.component.css
-file--color-palette.component.html
-file--color-palette.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.css`
+
+
+```css
+.box {
+  float: left;
+  width: 20px;
+  height: 20px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.box:hover {
+  border: 1px solid black;
+}
+
+.box.selected {
+  border: 2px solid black;
+}
 ```
 
-## 항목
+### `color-palette.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.css`](file--color-palette.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.html`](file--color-palette.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.ts`](file--color-palette.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.html`
+
+
+```html
+@for (color of colors; track color; let i = $index) {
+  <div
+    class="box"
+    [class.selected]="color === selectedColor"
+    [style.backgroundColor]="color"
+    (click)="doSelect(color)"></div>
+  @if ((i + 1) % 10 === 0) {
+    <div style="clear: both"></div>
+  }
+}
+<div style="clear: both"></div>
+```
+
+### `color-palette.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/color-palette/color-palette.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+// Generated with node:
+//
+// palette = require('google-palette');
+// palette('mpn65', 30);
+export const PALETTE = [
+  '#ff0029',
+  '#377eb8',
+  '#66a61e',
+  '#984ea3',
+  '#00d2d5',
+  '#ff7f00',
+  '#af8d00',
+  '#7f80cd',
+  '#b3e900',
+  '#c42e60',
+  '#a65628',
+  '#f781bf',
+  '#8dd3c7',
+  '#bebada',
+  '#fb8072',
+  '#80b1d3',
+  '#fdb462',
+  '#fccde5',
+  '#bc80bd',
+  '#ffed6f',
+  '#c4eaff',
+  '#cf8c00',
+  '#1b9e77',
+  '#d95f02',
+  '#e7298a',
+  '#e6ab02',
+  '#a6761d',
+  '#0097ff',
+  '#00d067',
+  '#000000',
+];
+
+@Component({
+  selector: 'app-color-palette',
+  templateUrl: './color-palette.component.html',
+  styleUrl: './color-palette.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ColorPaletteComponent {
+  @Input()
+  selectedColor = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+
+  @Output()
+  select = new EventEmitter<string>();
+
+  // Expose to template
+  colors = PALETTE;
+
+  doSelect(color: string) {
+    this.select.emit(color);
+    this.selectedColor = color;
+  }
+}
+```

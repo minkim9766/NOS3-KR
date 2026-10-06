@@ -3,34 +3,3204 @@
 
 **경로:** `fsw/apps/to/fsw/unit_test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ut-assert/index
-file--.gitignore
-file--makefile
-file--out
-file--Readme.txt
-file--to_mission_cfg.h
-file--to_platform_cfg.h
-file--to_stubs.c
-file--to_stubs.h
-file--to_testcase.c
-file--to_testrunner.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/to/fsw/unit_test/ut-assert/`](ut-assert/index) — 폴더
-- [`fsw/apps/to/fsw/unit_test/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/out`](file--out) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/Readme.txt`](file--Readme.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_mission_cfg.h`](file--to_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_platform_cfg.h`](file--to_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_stubs.c`](file--to_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_stubs.h`](file--to_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_testcase.c`](file--to_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/unit_test/to_testrunner.c`](file--to_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/apps/to/fsw/unit_test/.gitignore`
+
+
+```text
+*.o
+*.exe
+*.gcov
+*.out
+*.gcno
+```
+
+### `makefile`
+
+**경로:** `fsw/apps/to/fsw/unit_test/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=to
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../src
+VPATH += ./ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../src
+INCLUDES += -I../tables
+INCLUDES += -I../mission_inc
+INCLUDES += -I../platform_inc
+INCLUDES += -I../../../inc
+#INCLUDES += -I../../../io_lib/fsw/public_inc
+INCLUDES += -I./ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+UT_OBJS += $(APP)_stubs.o
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := $(APP)_app.o $(APP)_utils.o $(APP)_cmds.o 
+
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_
+#COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
+```
+
+### `out`
+
+**경로:** `fsw/apps/to/fsw/unit_test/out`
+
+
+```text
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc to_testrunner.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_osapi_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_osfileapi_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_psp_memutils_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_sb_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_sb_hooks.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_es_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_es_hooks.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_evs_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_evs_hooks.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_tbl_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_tbl_hooks.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/ut_cfe_fs_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/utassert.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/utlist.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/uttest.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ./ut-assert/src/uttools.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc to_testcase.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc to_stubs.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ../src/to_app.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ../src/to_utils.c
+gcc -c -Wall -Wstrict-prototypes -g -fprofile-arcs -ftest-coverage -pg -p -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_ -I. -I.. -I../src -I../tables -I../platform_inc -I../mission_inc -I../../../inc -I../../../io_lib/fsw/public_inc -I./ut-assert/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/os/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/time -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/sb -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/es -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/evs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/fs -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/src/tbl -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../mission_inc -I/home/gdecaruf/cfs/COP_CFS/cfe/fsw/cfe-core/../platform_inc/cpu1 -I/home/gdecaruf/cfs/COP_CFS/osal/src/os/inc -I/home/gdecaruf/cfs/COP_CFS/osal/build/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/inc -I/home/gdecaruf/cfs/COP_CFS/psp/fsw/pc-linux/inc ../src/to_cmds.c
+gcc -pg -p -fprofile-arcs -ftest-coverage -lgcov to_testrunner.o ut_osapi_stubs.o ut_osfileapi_stubs.o ut_cfe_psp_memutils_stubs.o ut_cfe_sb_stubs.o ut_cfe_sb_hooks.o ut_cfe_es_stubs.o ut_cfe_es_hooks.o ut_cfe_evs_stubs.o ut_cfe_evs_hooks.o ut_cfe_tbl_stubs.o ut_cfe_tbl_hooks.o ut_cfe_fs_stubs.o utassert.o utlist.o uttest.o uttools.o to_testcase.o to_stubs.o to_app.o to_utils.o to_cmds.o -o to_testrunner.exe
+```
+
+### `Readme.txt`
+
+**경로:** `fsw/apps/to/fsw/unit_test/Readme.txt`
+
+
+```text
+This directory holds the unit tests for the TO application.
+
+To build and run the unit tests:
+1. Be sure an appropriate *_to_types.h is in the apps/inc directory by:
+  a. cd ../examples
+  b. ./setup.sh -m CFS_TST udp     (see below)
+  c. cd ../unit_test
+2. make clean
+3. make
+4. make run
+5. make gcov
+
+Background:
+The unit tests also expect (like the apps) to find the 
+ apps/inc/CFS_TST_ci_types.h
+ apps/inc/CFS_TST_to_types.h
+where the mission name, CFS_TST, is assumed by default.
+
+These are put into place by the [ci/to]/fsw/examples/setup.py scripts.
+Choose the appropriate name for your code to compile if you aren't 
+using "CFS_TST".
+```
+
+### `to_mission_cfg.h`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_mission_cfg.h`
+
+
+```c
+/******************************************************************************/
+/** \file  to_mission_cfg.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Mission Configuration Header File for TO Application
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - All Mission configuration files should be defined in apps/inc folder.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2016-05-11 | Allen Brown | Updated headers
+*******************************************************************************/ 
+#ifndef _TO_MISSION_CFG_H_
+#define _TO_MISSION_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+
+#include "to_perf_ids.h"
+#include "to_msgids.h"
+#include "to_msgdefs.h"
+
+
+/* Define enable / disable commands. */ 
+typedef struct
+{
+   uint8	CmdHeader[sizeof(CFE_MSG_CommandHeader_t)];
+   uint16   usRouteMask;                      /**< Route Mask to enable    */
+} TO_EnableOutputCmd_t;
+
+
+typedef struct
+{
+   uint8	CmdHeader[sizeof(CFE_MSG_CommandHeader_t)];
+   uint16   usRouteMask;                      /**< Route Mask to enable    */
+} TO_DisableOutputCmd_t;
+
+
+typedef struct
+{
+    uint8   ucTlmHeader[sizeof(CFE_MSG_TelemetryHeader_t)];
+    uint32  uiCounter;
+} TO_OutData_t;
+
+
+typedef struct
+{
+    uint8   ucTlmHeader[sizeof(CFE_MSG_TelemetryHeader_t)];
+    uint16  usCmdCnt;           /**< Count of all commands received           */
+    uint16  usCmdErrCnt;        /**< Count of command errors                  */
+    uint16  usMsgSubCnt;        /**< Count of subscribed messages by all 
+                                     telemetry pipe.                          */
+    uint16  usMsgSubErrCnt;     /**< Count of subscription errors             */
+    uint16  usTblUpdateCnt;     /**< Count of table updates through CFE_TBL   */
+    uint16  usTblErrCnt;        /**< Count of table update errors             */
+    uint16  usConfigRoutes;     /**< Current mask of configured routes        */
+    uint16  usEnabledRoutes;    /**< Current mask of enabled routes           */
+    uint16  usPktCnt;           /**< Count of packet sent                     */
+    uint16  usPktErrCnt;        /**< Count of packet processing errors        */
+    uint16  usFrameErrCnt;      /**< Count of frame errors                    */
+} TO_HkTlm_t;
+
+
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _TO_MISSION_CFG_H_ */
+
+/*==============================================================================
+** End of file to_mission_cfg.h
+**============================================================================*/
+    
+```
+
+### `to_platform_cfg.h`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_platform_cfg.h`
+
+
+```c
+/*
+ * File: to_platform_config.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Platform config for unit test. 
+ *
+ * History:
+ *   Feb 2, 2016  G. de Carufel
+ *    *
+ */
+
+#ifndef _Ut_TO_PLATFORM_CONFIG_H_
+#define _Ut_TO_PLATFORM_CONFIG_H_
+
+/* Overwrite settings */
+#define TO_MAX_TBL_ENTRIES      5 
+#define TO_NUM_CRITICAL_MIDS    3
+#define TO_MAX_WAKEUP_COUNT     3
+#define TO_FRAMING_ENABLED 
+
+
+#endif
+```
+
+### `to_stubs.c`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_stubs.c`
+
+
+```c
+/*
+ * File: to_stubs.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Stub out various functions not stubbed out by the UT-Assert code
+ */
+
+#include <sys/socket.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "cfe.h"
+
+#include "to_stubs.h"
+#include "to_app.h"
+#include "to_cmds.h"
+
+extern TO_AppData_t  g_TO_AppData;
+extern void TO_SendDataTypePktCmd(CFE_MSG_Message_t *);
+int32 Ut_OS_CountSemGetInfoHook(uint32 sem_id, OS_count_sem_prop_t *count_prop);
+
+Ut_TO_ReturnCodeTable_t     Ut_TO_ReturnCodeTable[UT_TO_MAX_INDEX];
+
+void Ut_TO_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_TO_MAX_INDEX) {
+        Ut_TO_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_TO_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+
+bool Ut_TO_UseReturnCode(uint32 Index)
+{
+    if (Ut_TO_ReturnCodeTable[Index].Count > 0) {
+        Ut_TO_ReturnCodeTable[Index].Count--;
+        if (Ut_TO_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+
+
+/* Functions normally declared in Custom File (to_custom.c) */
+int32 TO_CustomInit(void)
+{
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMINIT_INDEX))
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMINIT_INDEX].Value;
+
+    /* Set Critical Message Ids which must always be in config table. */
+    g_TO_AppData.criticalMid[0] = TO_HK_TLM_MID;
+    
+    /* Route 0: Udp. Linked to CF Channel Index 0. */
+    g_TO_AppData.routes[0].usExists = 1;
+    g_TO_AppData.routes[0].sCfChnlIdx = 0;
+    
+    return TO_SUCCESS;
+}
+
+
+int32 TO_CustomAppCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    uint32 uiCmdCode = CFE_MSG_GetFcnCode(pCmdMsg, CFE_MSG_FcnCode_t *FcnCode);
+
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMAPPCMDS_INDEX))
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMAPPCMDS_INDEX].Value;
+
+    switch (uiCmdCode)
+    {
+        case TO_SEND_DATA_TYPE_CC:
+            TO_SendDataTypePktCmd(pCmdMsg);
+            break;
+        
+        default:
+            g_TO_AppData.HkTlm.usCmdCnt++;
+            CFE_EVS_SendEvent(TO_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Received Custom Cmd (%d)",
+                              uiCmdCode);
+            break;
+    }
+
+    return TO_SUCCESS;
+}
+
+
+/* This implementation simply outputs packet to console by default. */
+int32   TO_CustomProcessData(CFE_MSG_Message_t * pTlmMsg, int32 size, int32 tblIdx,
+                             uint16 usRouteId)
+{
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMPROCESSDATA_INDEX))
+    {
+        g_TO_AppData.HkTlm.usPktErrCnt++;
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMPROCESSDATA_INDEX].Value;
+    }
+
+    g_TO_AppData.HkTlm.usPktCnt++;
+    UtPrintf("Packet added to frame %u: ", usRouteId);
+    UtPrintx(pTlmMsg, size);
+
+    return TO_SUCCESS;
+}
+
+int32 TO_CustomFrameStart(uint16 usRouteId)
+{
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMFRAMESTART_INDEX))
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMFRAMESTART_INDEX].Value;
+    
+    return TO_SUCCESS;
+}
+
+
+int32 TO_CustomFrameSend(uint16 usRouteId, int32 iStatus)
+{
+    if (iStatus == TO_ERROR)
+    {
+        g_TO_AppData.HkTlm.usFrameErrCnt++;
+        return iStatus;
+    }
+    
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMFRAMESEND_INDEX))
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMFRAMESEND_INDEX].Value;
+    
+    printf("Frame Sent on route %u.\n", usRouteId);
+    
+    return TO_SUCCESS;
+}
+
+
+
+void TO_CustomCleanup(void)
+{
+    return;
+}
+
+/* Simple set whichever route is received as configured */
+int32 TO_CustomEnableOutputCmd(CFE_MSG_Message_t * pCmdMsg)
+{
+    TO_EnableOutputCmd_t * pCustomCmd = (TO_EnableOutputCmd_t *) pCmdMsg;
+    int32 routeMask = TO_ERROR;
+    
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX))
+        return Ut_TO_ReturnCodeTable[UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX].Value;
+    
+    if (pCustomCmd->usRouteMask & (1<<0))
+    {
+        routeMask |= (1<<0);
+        TO_SetRouteAsConfigured(0);
+    }
+    if (pCustomCmd->usRouteMask & (1<<1))
+    {
+        routeMask |= (1<<1);
+        TO_SetRouteAsConfigured(1);
+    }
+
+    return routeMask;
+}
+
+int32 TO_CustomDisableOutputCmd(CFE_MSG_Message_t *pCmdMsg)
+{
+    TO_DisableOutputCmd_t *pCmd = (TO_DisableOutputCmd_t *) pCmdMsg;
+    
+    int32 value;
+    if (Ut_TO_UseReturnCode(UT_TO_CUSTOMDISABLEOUTPUTCMD_INDEX))
+    {
+        value = Ut_TO_ReturnCodeTable[UT_TO_CUSTOMDISABLEOUTPUTCMD_INDEX].Value;
+        if (value < 0)
+        {
+            g_TO_AppData.HkTlm.usCmdErrCnt++;
+        }
+        return value;
+    }
+    
+    g_TO_AppData.usOutputEnabled = 0;
+
+    return pCmd->usRouteMask;
+}
+
+int32 Ut_OS_CountSemGetInfoHook(uint32 sem_id, OS_count_sem_prop_t *count_prop)
+{
+    (void) sem_id;
+    
+    count_prop->value = 0;
+    return OS_SUCCESS;
+}
+
+```
+
+### `to_stubs.h`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_stubs.h`
+
+
+```c
+/*
+ * File: to_stubs.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide stubs for unit testing TO
+ *
+ * History:
+ *   Feb 2, 2016  G. de Carufel
+ *    *
+ */
+
+#ifndef _Ut_TO_STUBS_H_
+#define _Ut_TO_STUBS_H_
+
+#include "uttools.h"
+
+typedef enum
+{
+    UT_TO_CUSTOMINIT_INDEX,
+    UT_TO_CUSTOMAPPCMDS_INDEX,
+    UT_TO_CUSTOMPROCESSDATA_INDEX,
+    UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX,
+    UT_TO_CUSTOMDISABLEOUTPUTCMD_INDEX,
+    UT_TO_CUSTOMFRAMESTART_INDEX,
+    UT_TO_CUSTOMFRAMESEND_INDEX,
+    UT_TO_MAX_INDEX
+} Ut_TO_INDEX_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_TO_ReturnCodeTable_t;
+
+
+void Ut_TO_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+bool Ut_TO_UseReturnCode(uint32 Index);
+
+
+#endif
+```
+
+### `to_testcase.c`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_testcase.c`
+
+
+```c
+/*
+ * Filename: to_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains unit test cases for the ci application
+ * 
+ */
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "cfe_tbl_msg.h"
+
+#include "to_stubs.h"
+#include "to_app.h"
+#include "to_grpids.h"
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_osapi_stubs.h"
+#include "ut_osfileapi_stubs.h"
+#include "ut_cfe_fs_stubs.h"
+#include <errno.h>
+
+extern TO_AppData_t  g_TO_AppData;
+
+
+TO_ConfigTable_t to_ConfigTable =
+{
+   {
+       {TO_HK_TLM_MID,                {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {TO_OUT_DATA_MID,              {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {TO_DATA_TYPE_MID,             {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0}
+    }
+};
+
+
+extern void TO_SendDataTypePktCmd(CFE_MSG_Message_t * pMsg);
+extern int32 Ut_OS_CountSemGetInfoHook(uint32 sem_id, OS_count_sem_prop_t *count_prop);
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+/*******************************************************************************
+**
+**  TO_InitEvent Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_InitEvent_RegisterFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR;
+    int32 actual = 0;
+    Ut_CFE_EVS_SetReturnCode(UT_CFE_EVS_REGISTER_INDEX, 
+                            CFE_EVS_UNKNOWN_FILTER, 1);
+
+    /* Execute Test */
+    actual = TO_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitEvent - Event Register Fail");
+}
+
+void Test_TO_InitEvent(void)
+{
+    /* Setup Inputs */
+    int32 expected = CFE_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = TO_InitEvent();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitEvent - Nominal");
+}
+
+
+/*******************************************************************************
+**
+**  TO_InitData Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_InitData(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = TO_InitData();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitData - Nominal");
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == TO_WAKEUP_TIMEOUT,
+                  "Side effect test.");
+}
+
+
+
+/*******************************************************************************
+**
+**  TO_InitCustom Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_CustomInit_Fail(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR;
+    int32 actual = 0;
+
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMINIT_INDEX, 
+                        TO_ERROR, 1);
+
+    /* Execute Test */
+    actual = TO_CustomInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "CustomInit - Fail");
+}
+
+
+/*******************************************************************************
+**
+**  TO_InitTable Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_InitTable_RegisterFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -1; 
+    int32 actual = 0;
+    
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_REGISTER_INDEX, 
+                             -1, 1);
+
+    /* Execute Test */
+    actual = TO_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - RegisterFail");
+}
+
+
+void Test_TO_InitTable_LoadFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -1; 
+    int32 actual = 0;
+
+    g_TO_AppData.tableHandle = -1;
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_LOAD_INDEX, 
+                             -1, 1);
+
+    /* Execute Test */
+    actual = TO_InitTable();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - LoadFail");
+    UtAssert_True(g_TO_AppData.tableHandle == 0, "Side effect test.");
+}
+
+
+void Test_TO_InitTable_ManageFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -2; 
+    int32 actual = 0;
+
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_MANAGE_INDEX, 
+                             expected, 1);
+
+    /* Execute Test */
+    actual = TO_InitTable();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - ManageFail");
+}
+
+
+void Test_TO_InitTable_GetAddressFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -3; 
+    int32 actual = 0;
+
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_GETADDRESS_INDEX, 
+                             expected, 1);
+
+    /* Execute Test */
+    actual = TO_InitTable();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - GetAddressFail");
+}
+
+
+void Test_TO_InitTable_NotifyByMessageFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -4; 
+    int32 actual = 0;
+
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_NOTIFYBYMESSAGE_INDEX, 
+                             expected, 1);
+
+    /* Execute Test */
+    actual = TO_InitTable();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - NotifyByMessageFail");
+}
+
+
+void Test_TO_InitTable(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_SUCCESS; 
+    int32 actual = 0;
+
+
+    /* Execute Test */
+    actual = TO_InitTable();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitTable - Nominal");
+}
+
+/*******************************************************************************
+**
+**  TO_InitPipe Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_InitPipe_CreatePipeFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR;
+    int32 actual = 0;
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 1);
+
+    /* Execute Test */
+    actual = TO_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - SCH CreatePipe Fail");
+
+    expected = CFE_SB_BAD_ARGUMENT;
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 2);
+    
+    /* Execute Test */
+    actual = TO_InitPipe();
+    
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - CMD CreatePipe Fail");
+    UtAssert_True(g_TO_AppData.usCmdPipeDepth == TO_CMD_PIPE_DEPTH, 
+                  "Side effect test.");
+    
+    expected = CFE_SB_BAD_ARGUMENT;
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 3);
+    
+    /* Execute Test */
+    actual = TO_InitPipe();
+    
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - Route 0 TlmPipe CreatePipe Fail");
+}
+
+void Test_TO_InitPipe_CfChnlIdxFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR;
+    int32 actual = 0;
+
+    g_TO_AppData.routes[0].sCfChnlIdx = TO_NUM_CF_CHANNELS;
+
+    /* Execute Test */
+    actual = TO_InitPipe();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - sCFChnlIdx Invalid");
+}
+
+
+void Test_TO_InitPipe_CfCountSemCreateFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = OS_ERROR;
+    int32 actual = 0;
+
+    g_TO_AppData.routes[0].sCfChnlIdx = 0;
+    Ut_OSAPI_SetReturnCode(UT_OSAPI_COUNTSEMCREATE_INDEX, 
+                           OS_ERROR, 1);
+
+    /* Execute Test */
+    actual = TO_InitPipe();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - CF CountSemCreate Fail");
+}
+    
+
+void Test_TO_InitPipe_SubscribeMsgFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = -1;
+    int32 actual = 0;
+
+    g_TO_AppData.pConfigTable = NULL;
+    
+    /* Execute Test */
+    actual = TO_InitPipe();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - Tlm message Subscribe Fail");
+}
+
+
+void Test_TO_InitPipe(void)
+{
+    /* Setup Inputs */
+    int32 expected = CFE_SUCCESS; 
+    int32 actual = 0;
+    
+    /* Prepare table first */
+    TO_InitTable();
+
+    /* Execute Test */
+    actual = TO_InitPipe();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "Init Pipe - Nominal");
+}
+
+/*******************************************************************************
+**
+**  TO_AppInit Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_AppInit(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = TO_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "AppInit - Nominal");
+}
+
+
+/*******************************************************************************
+**
+**  TO_ValidateTable Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_ValidateTable_Gap(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR; 
+    int32 actual = 0;
+
+    to_ConfigTable.entries[0].usMsgId = TO_UNUSED_ENTRY; 
+    
+    /* Execute Test */
+    actual = TO_ValidateTable(&to_ConfigTable);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "ValidateTable - Gap Error");
+}
+
+
+void Test_TO_ValidateTable_Duplicate(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR; 
+    int32 actual = 0;
+
+    to_ConfigTable.entries[0].usMsgId = TO_DATA_TYPE_MID;
+    
+    /* Execute Test */
+    actual = TO_ValidateTable(&to_ConfigTable);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "ValidateTable - Duplicate Error");
+}
+
+
+void Test_TO_ValidateTable_CriticalMid(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_ERROR; 
+    int32 actual = 0;
+
+    to_ConfigTable.entries[0].usMsgId = TO_HK_TLM_MID;
+    g_TO_AppData.criticalMid[1] = CFE_EVS_EVENT_MSG_MID;
+    
+    /* Execute Test */
+    actual = TO_ValidateTable(&to_ConfigTable);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "ValidateTable - CriticalMid Error");
+}
+
+void Test_TO_ValidateTable(void)
+{
+    /* Setup Inputs */
+    int32 expected = TO_SUCCESS;
+    int32 actual = 0;
+
+    g_TO_AppData.criticalMid[1] = 0;
+    
+    /* Execute Test */
+    actual = TO_ValidateTable(&to_ConfigTable);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "ValidateTable - Nominal");
+}
+
+/*******************************************************************************
+**
+**  TO_AppMain Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_AppMain_RegisterFail(void)
+{
+    g_TO_AppData.uiWakeupTimeout = 0;
+    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_REGISTERAPP_INDEX, 
+                            -1, 1);
+    
+    /* Execute Test */
+    TO_AppMain();
+
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == 0,
+                  "AppMain - RegisterApp Fail");
+}
+
+
+void Test_TO_AppMain_InitFail(void)
+{
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMINIT_INDEX, 
+                        TO_ERROR, 1);
+
+    TO_AppMain();
+    
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == TO_WAKEUP_TIMEOUT,
+                  "AppMain - AppInit Fail");
+    
+}
+
+void Test_TO_AppMain_RcvMsgFail(void)
+{
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_RCVMSG_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 1);
+    
+    TO_AppMain();
+    
+    UtAssert_True(g_TO_AppData.uiRunStatus == CFE_ES_RunStatus_APP_ERROR,
+                  "AppMain - RcvMsg Fail");
+
+    /* For code coverage */
+    TO_CleanupCallback();                  
+}
+
+
+/*******************************************************************************
+**
+** TO_RcvMsg Test
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_RcvMsg_NoMsgError(void)
+{
+    int32 actual;
+    int32 expected = CFE_SB_NO_MESSAGE;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    actual = TO_RcvMsg(CFE_SB_POLL);
+    UtAssert_True(actual == expected, "RcvMsg - NoMsgError");
+}
+
+void Test_TO_RcvMsg_BadMsg(void)
+{
+    int32 actual;
+    int32 expected = CFE_SUCCESS;
+    CFE_MSG_Message_t msg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &msg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, 0);
+    CFE_MSG_SetSize(pMsg,  sizeof(msg));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.SchPipeId);
+
+    actual = TO_RcvMsg(CFE_SB_PEND_FOREVER);
+    UtAssert_True(actual == expected, "RcvMsg - Bad MID");
+}
+
+void Test_TO_RcvMsg_Wakeup(void)
+{
+    int32 actual;
+    int32 expected = CFE_SUCCESS;
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, TO_WAKEUP_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(cmdMsg));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.SchPipeId);
+
+    actual = TO_RcvMsg(CFE_SB_PEND_FOREVER);
+    UtAssert_True(actual == expected, "RcvMsg - Wakeup MID");
+}
+
+void Test_TO_RcvMsg_Timeout(void)
+{
+    int32 actual;
+    int32 expected = CFE_SB_TIME_OUT;
+    
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    actual = TO_RcvMsg(10);
+    UtAssert_True(actual == expected, "RcvMsg - timeout");
+}
+    
+
+/*******************************************************************************
+**
+** TO_ProcessTlmPipes Test 
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_ProcessTlmPipes(void)
+{
+    TO_AppInit();
+    
+    g_TO_AppData.routes[0].usWakePeriod = 3;
+
+    TO_ProcessTlmPipes();
+    UtAssert_True(g_TO_AppData.usWakeupCount == 1, "ProcessTlmPipes - Nominal");
+
+    TO_ProcessTlmPipes();
+    TO_ProcessTlmPipes();
+    UtAssert_True(g_TO_AppData.usWakeupCount == 0, "ProcessTlmPipes - Rollover");
+}
+
+
+/*******************************************************************************
+**
+** TO_ProcessNewData Test
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_ProcessNewData_FrameError(void)
+{
+    TO_AppInit();
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 1;
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMFRAMESTART_INDEX, 
+                        TO_ERROR, 1);
+
+    TO_ProcessNewData(&g_TO_AppData.tlmPipes[0], 0);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usFrameErrCnt == 1, 
+                  "ProcessNewData - Framing Fail");
+}
+
+
+void Test_TO_ProcessNewData_BadMsg(void)
+{
+    TO_OutData_t    msg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &msg;
+    
+    TO_AppInit();
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 1;
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+
+    /* Send a Bad Message */
+    CFE_MSG_SetMsgId(pMsg, 0);
+    CFE_MSG_SetSize(pMsg,  sizeof(msg));
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.tlmPipes[0].cfePipeId);
+
+    TO_ProcessNewData(&g_TO_AppData.tlmPipes[0], 0);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usPktCnt == 0, "ProcessNewData - Bad Msg");
+}
+
+
+void Test_TO_ProcessNewData_CustomProcessError(void)
+{
+    TO_OutData_t    msg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &msg;
+    
+    TO_AppInit();
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 1;
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+
+    /* Send a Bad Message */
+    CFE_MSG_SetMsgId(pMsg, TO_OUT_DATA_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(msg));
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.tlmPipes[0].cfePipeId);
+
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMPROCESSDATA_INDEX, 
+                        TO_ERROR, 1);
+
+    TO_ProcessNewData(&g_TO_AppData.tlmPipes[0], 0);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usPktErrCnt == 1, 
+                  "ProcessNewData - CustomProcessData Fail");
+}
+
+
+void Test_TO_ProcessNewData(void)
+{
+    TO_OutData_t    msg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &msg;
+    
+    TO_AppInit();
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 1;
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+
+    /* Send a good Message */
+    CFE_MSG_SetMsgId(pMsg, TO_OUT_DATA_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(msg));
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.tlmPipes[0].cfePipeId);
+
+    Ut_OSAPI_SetFunctionHook(UT_OSAPI_COUNTSEMGETINFO_INDEX,
+                             Ut_OS_CountSemGetInfoHook); 
+
+    TO_ProcessNewData(&g_TO_AppData.tlmPipes[0], 0);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usPktCnt == 1, 
+                  "ProcessNewData - Nominal");
+}
+
+/*******************************************************************************
+**
+** TO_ProcessNewCmds Test 
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_ProcessNewCmds_BadMsg(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    /* Send a Bad Command */
+    CFE_MSG_SetMsgId(pMsg, 0);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.CmdPipeId);
+
+    TO_ProcessNewCmds();
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewCmds - Bad Msg");
+}
+
+
+void Test_TO_ProcessNewCmds_AppCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    TO_InitPipe();
+
+    /* Send Noop Cmd Command */
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_NOOP_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));                      
+
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.CmdPipeId);
+
+    TO_ProcessNewCmds();
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewCmds - AppCmd Msg");
+}
+    
+
+void Test_TO_ProcessNewCmds_SendHk(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    TO_InitData();
+    TO_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, TO_SEND_HK_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));                      
+
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_TO_AppData.CmdPipeId);
+
+    TO_ProcessNewCmds();
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 0,
+                  "ProcessNewCmds - SendHk Msg");
+}
+
+
+
+
+/*******************************************************************************
+**
+** TO_ProcessNewAppCmds Test 
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_TO_ProcessNewAppCmds_Noop(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_NOOP_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - NOOP_CC - Invalid Len.");
+    
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewAppCmds - NOOP_CC");
+}
+
+
+void Test_TO_ProcessNewAppCmds_Reset(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_RESET_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - RESET_CC - Invalid Len.");
+    
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 0,
+                  "ProcessNewAppCmds - RESET_CC");
+}
+
+
+void Test_TO_ProcessNewAppCmds_Custom(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Send Noop Cmd Command */
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  40);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));                      
+    
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMAPPCMDS_INDEX,
+                        TO_ERROR, 1);
+
+    TO_ProcessNewAppCmds(pMsg);
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewCmds - Bad Custom Command");
+
+    TO_ProcessNewAppCmds(pMsg);
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewCmds - Custom Command");
+
+}
+
+
+/*******************************************************************************
+**
+** TO_EnableOutputCmd Test
+**
+*******************************************************************************/
+void Test_TO_EnableOutputCmd_MsgLength(void)
+{
+    TO_EnableOutputCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ENABLE_OUTPUT_CC - Invalid Len.");
+}
+
+
+void Test_TO_EnableOutputCmd(void)
+{
+    TO_EnableOutputCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    int32 expected = 1;   
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_EnableOutputCmd_t));
+
+    /* Setup */
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX, 
+                        TO_ERROR, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                              "EnableOutputCmd - Custom fail.");
+    
+    /* Setup */
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX, 
+                        0xffffff, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "EnableOutputCmd - RouteMask exceeds TO_MAX_ROUTE_MASK.");
+    
+
+    /* Setup */
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX, 
+                        0xffff, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+    
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "EnableOutputCmd - RouteMask includes un-configured routes");
+    
+    /* Setup */
+    g_TO_AppData.routes[0].usExists = 1;
+    TO_SetRouteAsConfigured(0);
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMENABLEOUTPUTCMD_INDEX, 
+                        0x0001, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.usOutputEnabled == 1 && 
+                  g_TO_AppData.routes[0].usIsEnabled == 1,
+                  "EnableOutputCmd - Nominal.");
+}
+
+
+/*******************************************************************************
+**
+** TO_DisableOutputCmd Test 
+**
+*******************************************************************************/
+void Test_TO_DisableOutputCmd_MsgLength(void)
+{
+    TO_DisableOutputCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "DISABLE_OUTPUT_CC - Invalid Len.");
+}
+
+
+
+void Test_TO_DisableOutputCmd(void)
+{
+    int32 expected = 1;
+    TO_DisableOutputCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_DisableOutputCmd_t));
+    
+    /* Setup */
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMDISABLEOUTPUTCMD_INDEX, 
+                        TO_ERROR, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                              "DisableOutputCmd - Custom fail.");
+    
+    /* Setup */
+    Ut_TO_SetReturnCode(UT_TO_CUSTOMDISABLEOUTPUTCMD_INDEX, 
+                        0xffffff, 1);
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+    
+    
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "DisableOutputCmd - RouteMask exceeds TO_MAX_ROUTE_MASK.");
+    
+   
+    /* Setup */
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+    cmdMsg.usRouteMask = 0x0000;
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+    
+    UtAssert_True(g_TO_AppData.usOutputEnabled == 0 &&
+                  g_TO_AppData.routes[0].usIsEnabled == 1,
+                  "DisableOutputCmd - Nominal no routeMask.");
+    
+    /* Setup */
+    g_TO_AppData.routes[0].usExists = 1;
+    TO_SetRouteAsConfigured(0);
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+    g_TO_AppData.usOutputEnabled = 1;
+    cmdMsg.usRouteMask = 0x0001;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.usOutputEnabled == 0 && 
+                  g_TO_AppData.routes[0].usIsEnabled == 0,
+                  "DisableOutputCmd - Nominal with routeMask.");
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.usOutputEnabled == 0 && 
+                  g_TO_AppData.routes[0].usIsEnabled == 0,
+                  "DisableOutputCmd - Second call ignored.");
+}
+
+/*******************************************************************************
+**
+** TO_ActivateRoutesCmd Test 
+**
+*******************************************************************************/
+void Test_TO_ActivateRoutesCmd_MsgLength(void)
+{
+    TO_RouteMaskArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ACTIVATE_ROUTES_CC - Invalid Len.");
+}
+
+
+void Test_TO_ActivateRoutesCmd(void)
+{
+    TO_RouteMaskArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ACTIVATE_ROUTES_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_RouteMaskArgCmd_t));
+
+    cmdMsg.usRouteMask = 0x0001;
+    
+    TO_SetRouteAsUnconfigured(0);
+    g_TO_AppData.routes[0].usIsEnabled = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ACTIVATE_ROUTES_CC - Non-configured routeMask");
+
+    
+    g_TO_AppData.routes[0].usExists = 1;
+    TO_SetRouteAsConfigured(0);
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.routes[0].usIsEnabled == 1,
+                  "ACTIVATE_ROUTES_CC - Route Already Enabled");
+
+    cmdMsg.usRouteMask = 0x0000;
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usEnabledRoutes == 0x0001,
+                  "ACTIVATE_ROUTES_CC - Empty routeMask check");
+}
+
+
+/*******************************************************************************
+**
+** TO_DeactivateRoutesCmd Test 
+**
+*******************************************************************************/
+void Test_TO_DeactivateRoutesCmd_MsgLength(void)
+{
+    TO_RouteMaskArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DEACTIVATE_ROUTES_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "DEACTIVATE_ROUTES_CC - Invalid Len.");
+}
+
+
+void Test_TO_DeactivateRoutesCmd(void)
+{
+    TO_RouteMaskArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DEACTIVATE_ROUTES_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_RouteMaskArgCmd_t));
+
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+    g_TO_AppData.routes[1].usIsEnabled = 1;
+    g_TO_AppData.HkTlm.usEnabledRoutes = 0x0003;
+    cmdMsg.usRouteMask = 0x0001;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.routes[0].usIsEnabled == 0 &&
+                  g_TO_AppData.routes[1].usIsEnabled == 1 &&
+                  g_TO_AppData.HkTlm.usEnabledRoutes == 0x0002,
+                  "DEACTIVATE_ROUTES_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_PauseOutputCmd Test 
+**
+*******************************************************************************/
+void Test_TO_PauseOutputCmd_MsgLength(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_PAUSE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "PAUSE_OUTPUT_CC - Invalid Len.");
+}
+
+
+void Test_TO_PauseOutputCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_PAUSE_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+
+    g_TO_AppData.usOutputEnabled = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "PAUSE_OUTPUT_CC - Output Disabled, can't pause.");
+    
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 1;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.usOutputActive == 0,
+                  "PAUSE_OUTPUT_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_ResumeOutputCmd Test 
+**
+*******************************************************************************/
+void Test_TO_ResumeOutputCmd_MsgLength(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_RESUME_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "RESUME_OUTPUT_CC - Invalid Len.");
+}
+
+
+void Test_TO_ResumeOutputCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_RESUME_OUTPUT_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+
+    g_TO_AppData.usOutputEnabled = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "RESUME_OUTPUT_CC - Output Disabled, can't resume.");
+    
+    g_TO_AppData.usOutputEnabled = 1;
+    g_TO_AppData.usOutputActive = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.usOutputActive == 1,
+                  "RESUME_OUTPUT_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_AddTblEntryCmd Test 
+**
+*******************************************************************************/
+void Test_TO_AddTblEntryCmd_MsgLength(void)
+{
+    TO_AddTblEntryCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ADD_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ADD_TBL_ENTRY_CC - Invalid Len.");
+}
+
+
+void Test_TO_AddTblEntryCmd(void)
+{
+    int32 expected = 1;
+    TO_AddTblEntryCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ADD_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_AddTblEntryCmd_t));
+
+    cmdMsg.usMsgId = TO_UNUSED_ENTRY;
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ADD_TBL_ENTRY_CC - Bad MID Arg.");
+    
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+
+    g_TO_AppData.pConfigTable->entries[3].usMsgId = TO_HK_TLM_MID;
+    g_TO_AppData.pConfigTable->entries[4].usMsgId = TO_HK_TLM_MID;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ADD_TBL_ENTRY_CC - Table Full");
+    
+    cmdMsg.usMsgId = TO_HK_TLM_MID;
+    
+    g_TO_AppData.pConfigTable->entries[3].usMsgId = TO_UNUSED_ENTRY;
+    g_TO_AppData.pConfigTable->entries[4].usMsgId = TO_UNUSED_ENTRY;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ADD_TBL_ENTRY_CC - Duplicate MID entries");
+    
+    g_TO_AppData.routes[0].usExists = 1;
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+    cmdMsg.usRouteMask = 0x0001;
+
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_SUBSCRIBEEX_INDEX, 
+                            -1, 1);
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                             "ADD_TBL_ENTRY_CC - Subscription Failed");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[3].usMsgId == CFE_EVS_EVENT_MSG_MID,
+                  "ADD_TBL_ENTRY_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_RemoveTblEntryCmd - Test
+**
+*******************************************************************************/
+void Test_TO_RemoveTblEntryCmd_MsgLength(void)
+{
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_REMOVE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "REMOVE_TBL_ENTRY_CC - Invalid Len.");
+}
+
+
+void Test_TO_RemoveTblEntryCmd(void)
+{
+    int32 expected = 1;
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_REMOVE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_MidArgCmd_t));
+
+    cmdMsg.usMsgId = TO_UNUSED_ENTRY;
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "REMOVE_TBL_ENTRY_CC - Bad MID Arg.");
+    
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "REMOVE_TBL_ENTRY_CC - MID not found.");
+    
+    cmdMsg.usMsgId = TO_HK_TLM_MID;
+    g_TO_AppData.routes[0].usExists = 1;
+
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_UNSUBSCRIBE_INDEX, 
+                            -1, 1);
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                             "REMOVE_TBL_ENTRY_CC - Unsubscription Failed");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usMsgId == TO_REMOVED_ENTRY,
+                  "REMOVE_TBL_ENTRY_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_EnableTblEntryCmd - Test
+**
+*******************************************************************************/
+void Test_TO_EnableTblEntryCmd_MsgLength(void)
+{
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ENABLE_TBL_ENTRY_CC - Invalid Len.");
+}
+
+
+void Test_TO_EnableTblEntryCmd(void)
+{
+    int32 expected = 1;
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_MidArgCmd_t));
+
+    cmdMsg.usMsgId = TO_UNUSED_ENTRY;
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ENABLE_TBL_ENTRY_CC - Bad MID Arg.");
+    
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ENABLE_TBL_ENTRY_CC - MID not found.");
+    
+    cmdMsg.usMsgId = TO_HK_TLM_MID;
+    g_TO_AppData.pConfigTable->entries[0].usState = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                             "ENABLE_TBL_ENTRY_CC - Nominal");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                  "ENABLE_TBL_ENTRY_CC - Second call ignored");
+}
+
+
+/*******************************************************************************
+**
+** TO_DisableTblEntryCmd - Test
+**
+*******************************************************************************/
+void Test_TO_DisableTblEntryCmd_MsgLength(void)
+{
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "DISABLE_TBL_ENTRY_CC - Invalid Len.");
+}
+
+
+void Test_TO_DisableTblEntryCmd(void)
+{
+    int32 expected = 1;
+    TO_MidArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_TBL_ENTRY_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_MidArgCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    cmdMsg.usMsgId = TO_UNUSED_ENTRY;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "DISABLE_TBL_ENTRY_CC - Bad MID Arg.");
+    
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "DISABLE_TBL_ENTRY_CC - MID not found.");
+    
+    cmdMsg.usMsgId = TO_HK_TLM_MID;
+    g_TO_AppData.pConfigTable->entries[0].usState = 1;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                             "DISABLE_TBL_ENTRY_CC - Nominal");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                  "DISABLE_TBL_ENTRY_CC - Second call ignored");
+}
+
+/*******************************************************************************
+**
+** TO_EnableGroupCmd - Test
+**
+*******************************************************************************/
+void Test_TO_EnableGroupCmd_MsgLength(void)
+{
+    TO_GroupArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ENABLE_GROUP_CC - Invalid Len.");
+}
+
+void Test_TO_EnableGroupCmd(void)
+{
+    int32 expected = 1;
+    TO_GroupArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_GroupArgCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    cmdMsg.uiGroupData = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ENABLE_GROUP_CC - Bad Group Arg.");
+    
+    cmdMsg.uiGroupData = TO_MGROUP_TWO;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "ENABLE_GROUP_CC - Group not found.");
+    
+    cmdMsg.uiGroupData = TO_MGROUP_ONE;
+
+    g_TO_AppData.pConfigTable->entries[0].usState = 0;
+    g_TO_AppData.pConfigTable->entries[1].usState = 0;
+    g_TO_AppData.pConfigTable->entries[2].usState = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                             "ENABLE_GROUP_CC - Nominal");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                  "ENABLE_GROUP_CC - Second call ignored");
+}
+
+
+/*******************************************************************************
+**
+** TO_DisableGroupCmd - Test
+**
+*******************************************************************************/
+void Test_TO_DisableGroupCmd_MsgLength(void)
+{
+    TO_GroupArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "DISABLE_GROUP_CC - Invalid Len.");
+}
+
+void Test_TO_DisableGroupCmd(void)
+{
+    int32 expected = 1;
+    TO_GroupArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_GroupArgCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    cmdMsg.uiGroupData = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "DISABLE_GROUP_CC - Bad Group Arg.");
+    
+    cmdMsg.uiGroupData = TO_MGROUP_TWO;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "DISABLE_GROUP_CC - Group not found.");
+    
+    cmdMsg.uiGroupData = TO_MGROUP_ONE;
+
+    g_TO_AppData.pConfigTable->entries[0].usState = 1;
+    g_TO_AppData.pConfigTable->entries[1].usState = 1;
+    g_TO_AppData.pConfigTable->entries[2].usState = 1;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                             "DISABLE_GROUP_CC - Nominal");
+    
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                  "DISABLE_GROUP_CC - Second call ignored");
+}
+
+/*******************************************************************************
+**
+** TO_EnableAllCmd - Test
+**
+*******************************************************************************/
+void Test_TO_EnableAllCmd_MsgLength(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_ALL_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ENABLE_ALL_CC - Invalid Len.");
+}
+
+void Test_TO_EnableAllCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_ENABLE_ALL_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    g_TO_AppData.pConfigTable->entries[0].usState = 0;
+    g_TO_AppData.pConfigTable->entries[1].usState = 0;
+    g_TO_AppData.pConfigTable->entries[2].usState = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                             "ENABLE_ALL_CC - Nominal");
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 1,
+                             "ENABLE_ALL_CC - Second call ignored.");
+}
+
+/*******************************************************************************
+**
+** TO_DisableAllCmd - Test
+**
+*******************************************************************************/
+void Test_TO_DisableAllCmd_MsgLength(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_ALL_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "DISABLE_ALL_CC - Invalid Len.");
+}
+
+void Test_TO_DisableAllCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_DISABLE_ALL_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    g_TO_AppData.pConfigTable->entries[0].usState = 1;
+    g_TO_AppData.pConfigTable->entries[1].usState = 1;
+    g_TO_AppData.pConfigTable->entries[2].usState = 1;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                             "DISABLE_ALL_CC - Nominal");
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usState == 0,
+                             "DISABLE_ALL_CC - Second call ignored.");
+}
+
+/*******************************************************************************
+**
+** TO_SetRouteByMidCmd - Test
+**
+*******************************************************************************/
+void Test_TO_SetRouteByMidCmd_MsgLength(void)
+{
+    TO_SetRouteByMidCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_BY_MID_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "SET_ROUTE_BY_MID_CC - Invalid Len.");
+}
+
+void Test_TO_SetRouteByMidCmd(void)
+{
+    int32 expected = 1;
+    TO_SetRouteByMidCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_BY_MID_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_SetRouteByMidCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    cmdMsg.usMsgId = TO_UNUSED_ENTRY;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_BY_MID_CC - Bad MID Arg.");
+
+    
+    cmdMsg.usMsgId = CFE_EVS_EVENT_MSG_MID;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_BY_MID_CC - MID not found.");
+    
+    cmdMsg.usMsgId = TO_HK_TLM_MID;
+    cmdMsg.usRouteMask = 0x0003; 
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[0].usRouteMask == 0x0003,
+                             "SET_ROUTE_BY_MID_CC - Nominal");
+}
+
+/*******************************************************************************
+**
+** TO_SetRouteByGroupCmd - Test
+**
+*******************************************************************************/
+void Test_TO_SetRouteByGroupCmd_MsgLength(void)
+{
+    TO_SetRouteByGroupCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_BY_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "SET_ROUTE_BY_GROUP_CC - Invalid Len.");
+}
+
+void Test_TO_SetRouteByGroupCmd(void)
+{
+    int32 expected = 1;
+    TO_SetRouteByGroupCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_BY_GROUP_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_SetRouteByGroupCmd_t));
+
+    /* Initialize Table */
+    TO_InitTable();
+
+    cmdMsg.uiGroupData = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_BY_GROUP_CC - Bad Group Arg.");
+
+    
+    cmdMsg.uiGroupData = TO_MGROUP_TWO;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_BY_GROUP_CC - Group not found.");
+    
+    
+    cmdMsg.uiGroupData = TO_MGROUP_ONE;
+    cmdMsg.usRouteMask = 0x0003; 
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[1].usRouteMask == 0x0003,
+                             "SET_ROUTE_BY_GROUP_CC - Nominal");
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.pConfigTable->entries[1].usRouteMask == 0x0003,
+                             "SET_ROUTE_BY_GROUP_CC - Second call ignored");
+}
+
+
+/*******************************************************************************
+**
+** TO_ManageTableCmd Test
+**
+*******************************************************************************/
+void Test_TO_ManageTableCmd_MsgLength(void)
+{
+    CFE_TBL_NotifyCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_MANAGE_TABLE_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "MANAGE_TABLE_CC - Invalid Len.");
+}
+
+
+void Test_TO_ManageTableCmd(void)
+{
+    int32 expected = 1;
+    CFE_TBL_NotifyCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_MANAGE_TABLE_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(cmdMsg));
+
+    TO_InitTable();
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_RELEASEADDRESS_INDEX, -1, 1);
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "MANAGE_TABLE_CC - ReleaseAddress fail.");
+
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_MANAGE_INDEX, -1, 1);
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "MANAGE_TABLE_CC - Manage fail.");
+    
+    Ut_CFE_TBL_SetReturnCode(UT_CFE_TBL_GETADDRESS_INDEX, -1, 1);
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "MANAGE_TABLE_CC - GetAddress fail.");
+    
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_UNSUBSCRIBE_INDEX, -1, 1);
+    CFE_TBL_Load(g_TO_AppData.tableHandle, CFE_TBL_SRC_ADDRESS, TO_CONFIG_FILENAME); 
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "MANAGE_TABLE_CC - Unsubscribe fail.");
+
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_SUBSCRIBEEX_INDEX, -1, 1);
+    CFE_TBL_Load(g_TO_AppData.tableHandle, CFE_TBL_SRC_ADDRESS, TO_CONFIG_FILENAME); 
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "MANAGE_TABLE_CC - Subscribe fail.");
+    
+    CFE_TBL_Load(g_TO_AppData.tableHandle, CFE_TBL_SRC_ADDRESS, TO_CONFIG_FILENAME); 
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usTblUpdateCnt == 1,
+                  "MANAGE_TABLE_CC - Nominal.");
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usTblUpdateCnt == 1,
+                  "MANAGE_TABLE_CC - Second call ingored.");
+}
+
+/*******************************************************************************
+**
+** TO_SetRoutePeriodCmd - Test
+**
+*******************************************************************************/
+void Test_TO_SetRoutePeriodCmd_MsgLength(void)
+{
+    TO_SetRoutePeriodCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_PERIOD_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "SET_ROUTE_PERIOD_CC - Invalid Len.");
+}
+
+void Test_TO_SetRoutePeriodCmd(void)
+{
+    int32 expected = 1;
+    TO_SetRoutePeriodCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_ROUTE_PERIOD_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_SetRoutePeriodCmd_t));
+
+    g_TO_AppData.routes[0].usExists = 0;
+    cmdMsg.usRouteMask = 0x0001;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_PERIOD_CC - Route does not exist.");
+
+    g_TO_AppData.routes[0].usExists = 1;
+    cmdMsg.usWakePeriod = TO_MAX_WAKEUP_COUNT + 1; 
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_PERIOD_CC - WakePeriod to large.");
+    
+    cmdMsg.usWakePeriod = TO_MAX_WAKEUP_COUNT - 1; 
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_ROUTE_PERIOD_CC - WakePeriod invalid.");
+    
+    cmdMsg.usWakePeriod = TO_MAX_WAKEUP_COUNT; 
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.routes[0].usWakePeriod = TO_MAX_WAKEUP_COUNT,
+                             "SET_ROUTE_PERIOD_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** TO_SetWakeupTimeoutCmd - Test
+**
+*******************************************************************************/
+void Test_TO_SetWakeupTimeoutCmd_MsgLength(void)
+{
+    TO_SetWakeupTimeoutCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_WAKEUP_TIMEOUT_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "SET_WAKEUP_TIMEOUT_CC - Invalid Len.");
+}
+
+void Test_TO_SetWakeupTimeoutCmd(void)
+{
+    int32 expected = 1;
+    TO_SetWakeupTimeoutCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SET_WAKEUP_TIMEOUT_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_SetWakeupTimeoutCmd_t));
+
+    cmdMsg.uiWakeupTimeout = 0;
+
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    expected += UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == expected,
+                  "SET_WAKEUP_TIMEOUT_CC - WakeupTimeout too small.");
+
+    cmdMsg.uiWakeupTimeout = CFE_SB_PEND_FOREVER;
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == CFE_SB_PEND_FOREVER,
+                             "SET_WAKEUP_TIMEOUT_CC - Nominal (Pend forever)");
+    
+    cmdMsg.uiWakeupTimeout = TO_MIN_WAKEUP_TIMEOUT;
+    
+    /* Execute test */
+    TO_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == TO_MIN_WAKEUP_TIMEOUT,
+                             "SET_WAKEUP_TIMEOUT_CC - Nominal");
+}
+
+/*******************************************************************************
+**
+** TO_SendDataTypePktCmd - Test
+**
+*******************************************************************************/
+void Test_TO_SendDataTypePktCmd_MsgLength(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SEND_DATA_TYPE_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    TO_SendDataTypePktCmd(pMsg);
+   
+    UtAssert_True(g_TO_AppData.HkTlm.usCmdErrCnt == 1,
+                  "SEND_DATA_TYPE_CC - Invalid Len.");
+}
+
+void Test_TO_SendDataTypePktCmd(void)
+{
+    TO_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, TO_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  TO_SEND_DATA_TYPE_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(TO_NoArgCmd_t));
+
+    /* Execute test */
+    TO_SendDataTypePktCmd(pMsg);
+
+    UtAssert_True(g_TO_AppData.uiWakeupTimeout == TO_MIN_WAKEUP_TIMEOUT,
+                             "SEND_DATA_TYPE_CC - Nominal");
+}
+
+
+/*******************************************************************************
+**
+** Utilities - Tests
+**
+*******************************************************************************/
+void Test_TO_DisableRoute(void)
+{
+    g_TO_AppData.routes[0].usIsEnabled = 1;
+
+    /* Execute test */
+    TO_DisableRoute(0);
+
+    UtAssert_True(g_TO_AppData.routes[0].usIsEnabled == 0,
+                  "TO_DisableRoute - Nominal");
+}
+
+
+void Test_TO_GetRouteMask(void)
+{
+    uint16 routeMask;
+
+    TO_InitTable();
+
+    /* Execute test */
+    routeMask = TO_GetRouteMask(TO_MAX_TBL_ENTRIES);
+
+    UtAssert_True(routeMask == 0x0000,
+                  "TO_DisableRoute - Large table index");
+
+
+    g_TO_AppData.pConfigTable->entries[0].usRouteMask = 0x0005;
+    routeMask = TO_GetRouteMask(0);
+
+    UtAssert_True(routeMask == 0x0005,
+                  "TO_DisableRoute - Nominal");
+}
+
+
+void Test_TO_GetMessageID(void)
+{
+    CFE_SB_MsgId_t mid;
+
+    TO_InitTable();
+
+    /* Execute test */
+    mid = TO_GetMessageID(TO_MAX_TBL_ENTRIES);
+
+    UtAssert_True(mid == 0,
+                  "TO_GetMessageID - Large table index");
+
+
+    mid = TO_GetMessageID(0);
+
+    UtAssert_True(mid == TO_HK_TLM_MID,
+                  "TO_GetMessageID - Nominal");
+}
+    
+
+void Test_TO_SubscribeAllMsgs(void)
+{
+    int32 actual;
+    
+    TO_InitTable();
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_SUBSCRIBEEX_INDEX,
+                            -1, 1);
+
+    /* Execute test */
+    actual = TO_SubscribeAllMsgs(); 
+
+    UtAssert_True(actual == TO_ERROR,
+                  "TO_SubscribeAllMsgs - Subscribe Error");
+}
+
+
+void Test_TO_SubscribeMsg(void)
+{
+    /* Execute test */
+    int32 actual = TO_SubscribeMsg(NULL); 
+
+    UtAssert_True(actual == TO_BAD_ARG_ERR,
+                  "TO_SubscribeMsg - NULL input arg.");
+}
+
+
+void Test_TO_UnsubscribeAllMsgs(void)
+{
+    int32 actual;
+
+    /* Execute test */
+    actual = TO_UnsubscribeAllMsgs(NULL); 
+    
+    UtAssert_True(actual == TO_BAD_ARG_ERR,
+                  "TO_UnsubscribeAllMsgs - NULL input arg.");
+    
+    TO_InitTable();
+
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_UNSUBSCRIBE_INDEX,
+                            -1, 1);
+    
+    /* Execute test */
+    actual = TO_UnsubscribeAllMsgs(g_TO_AppData.pConfigTable); 
+
+    UtAssert_True(actual == TO_ERROR,
+                  "TO_UnsubscribeAllMsgs - Unsubscribe fail.");
+
+    
+    /* Execute test */
+    actual = TO_UnsubscribeAllMsgs(g_TO_AppData.pConfigTable); 
+
+    UtAssert_True(actual == TO_SUCCESS,
+                  "TO_UnsubscribeAllMsgs - Nominal.");
+}
+
+
+void Test_TO_UnsubscribeMsg(void)
+{
+    /* Execute test */
+    int32 actual = TO_UnsubscribeMsg(NULL); 
+
+    UtAssert_True(actual == TO_BAD_ARG_ERR,
+                  "TO_UnsubscribeMsg - NULL input arg.");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+
+/*
+ * TO_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void TO_Setup(void)
+{  
+    Ut_OSAPI_Reset();
+    Ut_CFE_SB_Reset();
+    Ut_CFE_ES_Reset();
+    Ut_CFE_EVS_Reset();
+    Ut_CFE_TBL_Reset();
+
+    Ut_CFE_TBL_AddTable(TO_CONFIG_FILENAME, (void *) &to_ConfigTable);
+}
+
+/*
+ * TO_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void TO_TearDown(void)
+{
+    CFE_PSP_MemSet((void*)&g_TO_AppData.HkTlm, 0x00, 
+                   sizeof(g_TO_AppData.HkTlm));
+    Ut_CFE_SB_ClearPipes();
+}
+
+
+/* TO_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void TO_AddTestCase(void)
+{
+    /* TO_AppInit Tests */
+    UtTest_Add(Test_TO_InitEvent_RegisterFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitEvent_RegisterFail");
+    UtTest_Add(Test_TO_InitEvent,  TO_Setup, TO_TearDown,
+              "Test_TO_InitEvent");
+    UtTest_Add(Test_TO_InitData,  TO_Setup, TO_TearDown,
+              "Test_TO_InitData");
+    UtTest_Add(Test_TO_CustomInit_Fail,  TO_Setup, TO_TearDown,
+              "Test_TO_CustomInit_Fail");
+    UtTest_Add(Test_TO_InitTable_RegisterFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable_RegisterFail");
+    UtTest_Add(Test_TO_InitTable_LoadFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable_LoadFail");
+    UtTest_Add(Test_TO_InitTable_ManageFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable_ManageFail");
+    UtTest_Add(Test_TO_InitTable_GetAddressFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable_GetAddressFail");
+    UtTest_Add(Test_TO_InitTable_NotifyByMessageFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable_NotifyByMessageFail");
+    UtTest_Add(Test_TO_InitTable,  TO_Setup, TO_TearDown,
+              "Test_TO_InitTable");
+    UtTest_Add(Test_TO_InitPipe_CreatePipeFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitPipe_CreatePipeFail");
+    UtTest_Add(Test_TO_InitPipe_CfChnlIdxFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitPipe_CfChnlIdxFail");
+    UtTest_Add(Test_TO_InitPipe_CfCountSemCreateFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitPipe_CfCountSemCreateFail");
+    UtTest_Add(Test_TO_InitPipe_SubscribeMsgFail,  TO_Setup, TO_TearDown,
+              "Test_TO_InitPipe_SubscribeMsgFail");
+    UtTest_Add(Test_TO_InitPipe,  TO_Setup, TO_TearDown,
+              "Test_TO_InitPipe");
+    UtTest_Add(Test_TO_AppInit,  TO_Setup, TO_TearDown,
+              "Test_TO_AppInit");
+    
+    /* TO_ValidateTable */
+    UtTest_Add(Test_TO_ValidateTable_Gap,  TO_Setup, TO_TearDown,
+              "Test_TO_ValidateTable_Gap");
+    UtTest_Add(Test_TO_ValidateTable_Duplicate,  TO_Setup, TO_TearDown,
+              "Test_TO_ValidateTable_Duplicate");
+    UtTest_Add(Test_TO_ValidateTable_CriticalMid,  TO_Setup, TO_TearDown,
+              "Test_TO_ValidateTable_CriticalMid");
+    UtTest_Add(Test_TO_ValidateTable,  TO_Setup, TO_TearDown,
+              "Test_TO_ValidateTable");
+
+    /* TO_AppMain */
+    UtTest_Add(Test_TO_AppMain_RegisterFail, TO_Setup, TO_TearDown,
+               "Test_TO_AppMain_Registerfail");
+    UtTest_Add(Test_TO_AppMain_InitFail, TO_Setup, TO_TearDown,
+               "Test_TO_AppMain_Initfail");
+    UtTest_Add(Test_TO_AppMain_RcvMsgFail, TO_Setup, TO_TearDown,
+               "Test_TO_AppMain_RcvMsgfail");
+
+    /* TO_RcvMsg */
+    UtTest_Add(Test_TO_RcvMsg_NoMsgError,  TO_Setup, TO_TearDown,
+              "Test_TO_RcvMsg_NoMsgError");
+    UtTest_Add(Test_TO_RcvMsg_BadMsg,  TO_Setup, TO_TearDown,
+              "Test_TO_RcvMsg_BadMsg");
+    UtTest_Add(Test_TO_RcvMsg_Wakeup,  TO_Setup, TO_TearDown,
+              "Test_TO_RcvMsg_Wakeup");
+    UtTest_Add(Test_TO_RcvMsg_Timeout,  TO_Setup, TO_TearDown,
+              "Test_TO_RcvMsg_Timeout");
+
+    /* TO_ProcessTlmPipes */
+    UtTest_Add(Test_TO_ProcessTlmPipes,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessTlmPipes");
+    
+    /* TO_ProcessNewData */
+    UtTest_Add(Test_TO_ProcessNewData_FrameError,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessNewData_FrameError");
+    UtTest_Add(Test_TO_ProcessNewData_BadMsg,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessNewData_BadMsg");
+    UtTest_Add(Test_TO_ProcessNewData_CustomProcessError,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessNewData_CustomProcessError");
+    UtTest_Add(Test_TO_ProcessNewData,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessNewData");
+
+    /* TO_ProcessNewCmds */
+    UtTest_Add(Test_TO_ProcessNewCmds_BadMsg,  TO_Setup, TO_TearDown,
+               "Test_TO_ProcessNewCmds_BadMsg");
+    UtTest_Add(Test_TO_ProcessNewCmds_AppCmd,  TO_Setup, TO_TearDown,
+               "Test_TO_ProcessNewCmds_AppCmd");
+    UtTest_Add(Test_TO_ProcessNewCmds_SendHk,  TO_Setup, TO_TearDown,
+               "Test_TO_ProcessNewCmds_SendHk");
+
+    /* TO_ProcessNewAppCmds */
+    UtTest_Add(Test_TO_ProcessNewAppCmds_Noop,  TO_Setup, TO_TearDown,
+               "Test_TO_ProcessNewAppCmds_Noop");
+    UtTest_Add(Test_TO_ProcessNewAppCmds_Reset,  TO_Setup, TO_TearDown,
+               "Test_TO_ProcessNewAppCmds_Reset");
+    UtTest_Add(Test_TO_ProcessNewAppCmds_Custom,  TO_Setup, TO_TearDown,
+              "Test_TO_ProcessNewAppCmds_Custom");
+   
+    /* Commands */
+    UtTest_Add(Test_TO_EnableOutputCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableOutputCmd_MsgLength");
+    UtTest_Add(Test_TO_EnableOutputCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableOutputCmd");
+    
+    UtTest_Add(Test_TO_DisableOutputCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableOutputCmd_MsgLength");
+    UtTest_Add(Test_TO_DisableOutputCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableOutputCmd");
+    
+    UtTest_Add(Test_TO_ActivateRoutesCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_ActivateRoutesCmd_MsgLength");
+    UtTest_Add(Test_TO_ActivateRoutesCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_ActivateRoutesCmd");
+    
+    UtTest_Add(Test_TO_DeactivateRoutesCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_DeactivateRoutesCmd_MsgLength");
+    UtTest_Add(Test_TO_DeactivateRoutesCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_DeactivateRoutesCmd");
+    
+    UtTest_Add(Test_TO_PauseOutputCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_PauseOutputCmd_MsgLength");
+    UtTest_Add(Test_TO_PauseOutputCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_PauseOutputCmd");
+    
+    UtTest_Add(Test_TO_ResumeOutputCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_ResumeOutputCmd_MsgLength");
+    UtTest_Add(Test_TO_ResumeOutputCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_ResumeOutputCmd");
+    
+    UtTest_Add(Test_TO_AddTblEntryCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_AddTblEntryCmd_MsgLength");
+    UtTest_Add(Test_TO_AddTblEntryCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_AddTblEntryCmd");
+    
+    UtTest_Add(Test_TO_RemoveTblEntryCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_RemoveTblEntryCmd_MsgLength");
+    UtTest_Add(Test_TO_RemoveTblEntryCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_RemoveTblEntryCmd");
+
+    UtTest_Add(Test_TO_EnableTblEntryCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableTblEntryCmd_MsgLength");
+    UtTest_Add(Test_TO_EnableTblEntryCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableTblEntryCmd");
+
+    UtTest_Add(Test_TO_DisableTblEntryCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableTblEntryCmd_MsgLength");
+    UtTest_Add(Test_TO_DisableTblEntryCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableTblEntryCmd");
+
+    UtTest_Add(Test_TO_EnableGroupCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableGroupCmd_MsgLength");
+    UtTest_Add(Test_TO_EnableGroupCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableGroupCmd");
+    
+    UtTest_Add(Test_TO_DisableGroupCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableGroupCmd_MsgLength");
+    UtTest_Add(Test_TO_DisableGroupCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableGroupCmd");
+    
+    UtTest_Add(Test_TO_EnableAllCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableAllCmd_MsgLength");
+    UtTest_Add(Test_TO_EnableAllCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_EnableAllCmd");
+    
+    UtTest_Add(Test_TO_DisableAllCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableAllCmd_MsgLength");
+    UtTest_Add(Test_TO_DisableAllCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableAllCmd");
+    
+    UtTest_Add(Test_TO_SetRouteByMidCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRouteByMidCmd_MsgLength");
+    UtTest_Add(Test_TO_SetRouteByMidCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRouteByMidCmd");
+    
+    UtTest_Add(Test_TO_SetRouteByGroupCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRouteByGroupCmd_MsgLength");
+    UtTest_Add(Test_TO_SetRouteByGroupCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRouteByGroupCmd");
+    
+    UtTest_Add(Test_TO_ManageTableCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_ManageTableCmd_MsgLength");
+    UtTest_Add(Test_TO_ManageTableCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_ManageTableCmd");
+    
+    UtTest_Add(Test_TO_SetRoutePeriodCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRoutePeriodCmd_MsgLength");
+    UtTest_Add(Test_TO_SetRoutePeriodCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_SetRoutePeriodCmd");
+    
+    UtTest_Add(Test_TO_SetWakeupTimeoutCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_SetWakeupTimeoutCmd_MsgLength");
+    UtTest_Add(Test_TO_SetWakeupTimeoutCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_SetWakeupTimeoutCmd");
+    
+    UtTest_Add(Test_TO_SendDataTypePktCmd_MsgLength,  TO_Setup, TO_TearDown,
+              "Test_TO_SendDataTypePktCmd_MsgLength");
+    UtTest_Add(Test_TO_SendDataTypePktCmd,  TO_Setup, TO_TearDown,
+              "Test_TO_SendDataTypePktCmd");
+
+
+    /* Utilities */
+    UtTest_Add(Test_TO_DisableRoute,  TO_Setup, TO_TearDown,
+              "Test_TO_DisableRoute");
+    UtTest_Add(Test_TO_GetRouteMask,  TO_Setup, TO_TearDown,
+              "Test_TO_GetRouteMask");
+    UtTest_Add(Test_TO_GetMessageID,  TO_Setup, TO_TearDown,
+              "Test_TO_GetMessageID");
+    UtTest_Add(Test_TO_SubscribeAllMsgs,  TO_Setup, TO_TearDown,
+              "Test_TO_SubscribeAllMsgs");
+    UtTest_Add(Test_TO_SubscribeMsg,  TO_Setup, TO_TearDown,
+              "Test_TO_SubscribeMsg");
+    UtTest_Add(Test_TO_UnsubscribeAllMsgs,  TO_Setup, TO_TearDown,
+              "Test_TO_UnsubscribeAllMsgs");
+    UtTest_Add(Test_TO_UnsubscribeMsg,  TO_Setup, TO_TearDown,
+              "Test_TO_UnsubscribeMsg");
+}
+```
+
+### `to_testrunner.c`
+
+**경로:** `fsw/apps/to/fsw/unit_test/to_testrunner.c`
+
+
+```c
+
+void TO_AddTestCase(void);
+
+/*
+ * Filename: to_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for the CI Application.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    TO_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

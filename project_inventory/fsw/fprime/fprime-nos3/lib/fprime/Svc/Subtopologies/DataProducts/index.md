@@ -3,22 +3,164 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 DataProductsConfig/index
-file--CMakeLists.txt
-file--DataProducts.fpp
-file--PingEntries.hpp
-file--SubtopologyTopologyDefs.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/`](DataProductsConfig/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProducts.fpp`](file--DataProducts.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/PingEntries.hpp`](file--PingEntries.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp`](file--SubtopologyTopologyDefs.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DataProductsConfig/")
+
+register_fprime_module(
+    EXCLUDE_FROM_ALL
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/DataProducts.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/SubtopologyTopologyDefs.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PingEntries.hpp"
+    DEPENDS
+        Svc_Subtopologies_DataProducts_DataProductsConfig
+    INTERFACE
+)
+```
+
+### `DataProducts.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProducts.fpp`
+
+
+```fpp
+module DataProducts{
+
+    # ----------------------------------------------------------------------
+    # Active Components
+    # ----------------------------------------------------------------------
+    
+    instance dpCat: Svc.DpCatalog base id DataProductsConfig.BASE_ID + 0x00000 \
+        queue size DataProductsConfig.QueueSizes.dpCat \
+        stack size DataProductsConfig.StackSizes.dpCat \
+        priority DataProductsConfig.Priorities.dpCat \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+            Fw::FileNameString dpDir(DataProductsConfig::Paths::dpDir);
+            Fw::FileNameString dpState(DataProductsConfig::Paths::dpState);
+            Os::FileSystem::createDirectory(dpDir.toChar());
+            DataProducts::dpCat.configure(&dpDir,1,dpState,0, DataProducts::Allocation::memAllocator);
+        """
+    }
+
+    instance dpMgr: Svc.DpManager base id DataProductsConfig.BASE_ID + 0x01000 \
+        queue size DataProductsConfig.QueueSizes.dpMgr \
+        stack size DataProductsConfig.StackSizes.dpMgr \
+        priority DataProductsConfig.Priorities.dpMgr
+
+    instance dpWriter: Svc.DpWriter base id DataProductsConfig.BASE_ID + 0x02000 \
+        queue size DataProductsConfig.QueueSizes.dpWriter \
+        stack size DataProductsConfig.StackSizes.dpWriter \
+        priority DataProductsConfig.Priorities.dpWriter \
+    {
+        phase Fpp.ToCpp.Phases.configComponents """
+            DataProducts::dpWriter.configure(dpDir);
+        """
+    }
+    
+    # ----------------------------------------------------------------------
+    # Passive Components
+    # ----------------------------------------------------------------------
+    
+    instance dpBufferManager: Svc.BufferManager base id DataProductsConfig.BASE_ID + 0x03000 \ 
+    {
+        phase Fpp.ToCpp.Phases.configObjects """
+        Svc::BufferManager::BufferBins bins;
+        """
+        phase Fpp.ToCpp.Phases.configComponents """
+        memset(&ConfigObjects::DataProducts_dpBufferManager::bins, 0, sizeof(ConfigObjects::DataProducts_dpBufferManager::bins));
+        ConfigObjects::DataProducts_dpBufferManager::bins.bins[0].bufferSize = DataProductsConfig::BuffMgr::dpBufferStoreSize;
+        ConfigObjects::DataProducts_dpBufferManager::bins.bins[0].numBuffers = DataProductsConfig::BuffMgr::dpBufferStoreCount;
+        DataProducts::dpBufferManager.setup(
+            DataProductsConfig::BuffMgr::dpBufferManagerId,
+            0,
+            DataProducts::Allocation::memAllocator,
+            ConfigObjects::DataProducts_dpBufferManager::bins
+        );
+        """
+        phase Fpp.ToCpp.Phases.tearDownComponents """
+        DataProducts::dpCat.shutdown();
+        DataProducts::dpBufferManager.cleanup();
+        """
+    }
+    topology Subtopology {
+        #Active Components
+        instance dpCat
+        instance dpMgr
+        instance dpWriter
+
+        #Passive Components
+        instance dpBufferManager
+
+        connections DataProducts {
+            # DpMgr and DpWriter connections. Have explicit port indexes for demo
+            dpMgr.bufferGetOut[0] -> dpBufferManager.bufferGetCallee
+            dpMgr.productSendOut[0] -> dpWriter.bufferSendIn
+            dpWriter.deallocBufferSendOut -> dpBufferManager.bufferSendIn
+        }
+    } # end topology
+} # end DataProducts Subtopology
+```
+
+### `PingEntries.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/PingEntries.hpp`
+
+
+```cpp
+#ifndef DATAPRODUCTS_PINGENTRIES_HPP
+#define DATAPRODUCTS_PINGENTRIES_HPP
+
+namespace PingEntries {
+namespace DataProducts_dpCat {
+enum { WARN = 3, FATAL = 5 };
+}
+}  // namespace PingEntries
+
+#endif
+```
+
+### `SubtopologyTopologyDefs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp`
+
+
+```cpp
+#ifndef DATAPRODUCTSSUBTOPOLOGY_DEFS_HPP
+#define DATAPRODUCTSSUBTOPOLOGY_DEFS_HPP
+
+#include <Fw/Types/MallocAllocator.hpp>
+#include <Os/FileSystem.hpp>
+#include <Svc/BufferManager/BufferManager.hpp>
+#include "DataProductsConfig/DataProductsSubtopologyConfig.hpp"
+#include "Svc/Subtopologies/DataProducts/DataProductsConfig/FppConstantsAc.hpp"
+
+namespace DataProducts {
+// State for topology construction
+struct SubtopologyState {
+    // Empty - no external state needed for DataProducts subtopology
+};
+
+struct TopologyState {
+    SubtopologyState dataProducts;
+};
+}  // namespace DataProducts
+
+#endif
+```

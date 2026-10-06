@@ -3,14 +3,10 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/ai_plugin_abstract/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_AI_plugin_core.py`
 
-file--test_AI_plugin_core.py
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/ai_plugin_abstract/test_AI_plugin_core.py`
 
-## 항목
-
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/ai_plugin_abstract/test_AI_plugin_core.py`](file--test_AI_plugin_core.py) — 빌드 산출물 (경로만)
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

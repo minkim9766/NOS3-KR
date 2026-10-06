@@ -3,26 +3,1056 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AuthHandler.java`
 
-file--AuthHandler.java
-file--FormData.java
-file--JwtHelper.java
-file--JwtToken.java
-file--LoginRequest.java
-file--OpenIDAuthenticationRequest.java
-file--TokenStore.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/AuthHandler.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.BodyHandler;
+import org.yamcs.http.HandlerContext;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.UnauthorizedException;
+import org.yamcs.http.api.IamApi;
+import org.yamcs.http.auth.TokenStore.RefreshResult;
+import org.yamcs.protobuf.AuthInfo;
+import org.yamcs.protobuf.OpenIDConnectInfo;
+import org.yamcs.protobuf.TokenResponse;
+import org.yamcs.security.ApplicationCredentials;
+import org.yamcs.security.AuthModule;
+import org.yamcs.security.AuthenticationException;
+import org.yamcs.security.AuthenticationInfo;
+import org.yamcs.security.AuthenticationToken;
+import org.yamcs.security.AuthorizationException;
+import org.yamcs.security.Directory;
+import org.yamcs.security.OpenIDAuthModule;
+import org.yamcs.security.SecurityStore;
+import org.yamcs.security.SessionManager;
+import org.yamcs.security.SpnegoAuthModule;
+import org.yamcs.security.ThirdPartyAuthorizationCode;
+import org.yamcs.security.User;
+import org.yamcs.security.UserSession;
+import org.yamcs.security.UsernamePasswordToken;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.QueryStringEncoder;
+
+/**
+ * Adds servers-side support for OAuth 2 authorization flows for obtaining limited access to API functionality. The
+ * resource server is assumed to be the same server as the authentication server.
+ * <p>
+ * Currently only one flow is supported:
+ * <dl>
+ * <dt>Resource Owner Password Credentials</dt>
+ * <dd>User credentials are directly exchanged for access tokens.</dd>
+ * </dl>
+ */
+public class AuthHandler extends BodyHandler {
+
+    private static final SecureRandom RNG = new SecureRandom();
+
+    // Cache for temporary authorization codes. This is an indermediate format provided
+    // to browsers so that they can provide it to a server-side web application that
+    // will exchange it for their id_token on our token endpoint.
+    private static Cache<String, AuthenticationInfo> CODE_CACHE = CacheBuilder.newBuilder()
+            .expireAfterWrite(60, TimeUnit.SECONDS).build();
+
+    private TokenStore tokenStore;
+
+    public AuthHandler(HttpServer httpServer) {
+        tokenStore = httpServer.getTokenStore();
+    }
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        String path = ctx.getPathWithoutContext();
+        if (path.equals("/auth")) {
+            handleAuthInfoRequest(ctx);
+            return;
+        } else if (path.equals("/auth/assets/auth.css")) {
+            ctx.sendResource("/auth/static/auth.css");
+            return;
+        } else if (path.equals("/auth/assets/yamcs300.png")) {
+            ctx.sendResource("/auth/static/yamcs300.png");
+            return;
+        } else if (path.equals("/auth/authorize")) {
+            handleAuthorize(ctx);
+            return;
+        } else if (path.equals("/auth/token")) {
+            handleToken(ctx);
+            return;
+        } else if (path.equals("/auth/spnego")) {
+            var spnegoAuthModule = getSecurityStore().getAuthModule(SpnegoAuthModule.class);
+            if (spnegoAuthModule != null) {
+                spnegoAuthModule.handle(ctx);
+                return;
+            }
+        } else if (path.equals("/auth/actions/login")) {
+            handleLoginAction(ctx);
+            return;
+        }
+
+        throw new NotFoundException();
+    }
+
+    /**
+     * Provides general auth information. This path is not secured because it's primary intended use is exactly to
+     * determine whether Yamcs is secured or not (e.g. in order to detect if a login screen should be shown to the
+     * user).
+     */
+    private void handleAuthInfoRequest(HandlerContext ctx) {
+        ctx.requireGET();
+        ctx.sendOK(createAuthInfo());
+    }
+
+    private void handleAuthorize(HandlerContext ctx) {
+        ctx.requireMethod(HttpMethod.GET, HttpMethod.POST);
+        OpenIDAuthenticationRequest request = new OpenIDAuthenticationRequest(ctx);
+        showLoginForm(ctx, request);
+    }
+
+    private void handleLoginAction(HandlerContext ctx) {
+        ctx.requirePOST();
+        ctx.requireFormEncoding();
+
+        LoginRequest request = new LoginRequest(ctx);
+
+        AuthenticationToken token = request.getUsernamePasswordToken();
+        getSecurityStore().login(token).whenComplete((info, err) -> {
+            if (err != null) {
+                if (err instanceof AuthenticationException || err instanceof AuthorizationException) {
+                    log.info("Denying access to '" + request.getUsername() + "': " + err.getMessage());
+                    showLoginError(ctx, request, "Invalid username or password");
+                } else {
+                    log.error("Unexpected error while attempting user login", err);
+                    showLoginError(ctx, request, "Server Error");
+                }
+            } else {
+                redirectWithCode(ctx, info, request);
+            }
+        });
+    }
+
+    public static AuthInfo createAuthInfo() {
+        AuthInfo.Builder infob = AuthInfo.newBuilder();
+        infob.setRequireAuthentication(!getSecurityStore().getGuestUser().isActive());
+        for (AuthModule authModule : getSecurityStore().getAuthModules()) {
+            if (authModule instanceof SpnegoAuthModule) {
+                infob.setSpnego(true);
+            }
+            if (authModule instanceof OpenIDAuthModule) {
+                OpenIDConnectInfo.Builder openidb = OpenIDConnectInfo.newBuilder();
+                String clientId = ((OpenIDAuthModule) authModule).getClientId();
+                openidb.setClientId(clientId);
+                String authorizationEndpoint = ((OpenIDAuthModule) authModule).getAuthorizationEndpoint();
+                openidb.setAuthorizationEndpoint(authorizationEndpoint);
+                String scope = ((OpenIDAuthModule) authModule).getScope();
+                openidb.setScope(scope);
+
+                infob.setOpenid(openidb.build());
+            }
+        }
+        return infob.build();
+    }
+
+    private void showLoginForm(HandlerContext ctx, OpenIDAuthenticationRequest request) {
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("contextPath", ctx.getContextPath());
+        vars.put("request", request.getMap());
+        ctx.render(HttpResponseStatus.OK, "/auth/templates/authorize.html", vars);
+    }
+
+    private void showLoginError(HandlerContext ctx, LoginRequest request, String errorMessage) {
+        Map<String, Object> vars = new HashMap<>();
+        vars.put("contextPath", ctx.getContextPath());
+        vars.put("request", request.getMap());
+        if (errorMessage != null) {
+            vars.put("errorMessage", errorMessage);
+        }
+        ctx.render(HttpResponseStatus.OK, "/auth/templates/authorize.html", vars);
+    }
+
+    private void redirectWithCode(HandlerContext ctx, AuthenticationInfo info, LoginRequest request) {
+        String code = generateUrlSafeCode();
+        CODE_CACHE.put(code, info);
+
+        QueryStringEncoder qsEncoder = new QueryStringEncoder(request.getRedirectURI());
+        qsEncoder.addParam("code", code);
+
+        String state = request.getState();
+        if (state != null) {
+            qsEncoder.addParam("state", state);
+        }
+
+        log.info("Redirecting to " + qsEncoder.toString());
+        ctx.sendRedirect(qsEncoder.toString());
+    }
+
+    /**
+     * Issues time-limited access tokens based on different grant types. Depending on the type of grant, this endpoint
+     * may also issue rotating refresh tokens that can be used on the client to establish user sessions that last longer
+     * than a single access token, without the user needing to re-login.
+     * 
+     * TODO ignore global CORS settings on this endpoint (?). We should not encourage passing password credentials
+     * directly from a browser context, unless for official clients.
+     */
+    private void handleToken(HandlerContext ctx) {
+        ctx.requireFormEncoding();
+        String grantType = ctx.requireFormParameter("grant_type");
+
+        log.info("Access token request using grant_type '{}'", grantType);
+        switch (grantType) {
+        case "password":
+            handleTokenRequestWithPasswordGrant(ctx);
+            break;
+        case "authorization_code":
+            handleTokenRequestWithAuthorizationCode(ctx);
+            break;
+        case "refresh_token":
+            handleTokenRequestWithRefreshToken(ctx);
+            break;
+        case "client_credentials":
+            handleTokenRequestWithClientCredentials(ctx);
+            break;
+        default:
+            throw new BadRequestException("Unsupported grant_type '" + grantType + "'");
+        }
+    }
+
+    private void handleTokenRequestWithPasswordGrant(HandlerContext ctx) {
+        String username = ctx.requireFormParameter("username");
+        String password = ctx.requireFormParameter("password");
+
+        AuthenticationToken token = new UsernamePasswordToken(username, password.toCharArray());
+        try {
+            AuthenticationInfo authenticationInfo = getSecurityStore().login(token).get();
+            UserSession session = createSession(ctx, authenticationInfo);
+            String refreshToken = tokenStore.generateRefreshToken(session);
+            sendNewAccessToken(ctx, authenticationInfo, refreshToken);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof AuthenticationException || cause instanceof AuthorizationException) {
+                log.info("Denying access to '" + username + "': " + cause.getMessage());
+                throw new UnauthorizedException();
+            } else {
+                log.error("Unexpected error while attempting user login", cause);
+                throw new InternalServerErrorException(cause);
+            }
+        }
+    }
+
+    private void handleTokenRequestWithAuthorizationCode(HandlerContext ctx) {
+        String authcode = ctx.requireFormParameter("code");
+
+        AuthenticationInfo authenticationInfo = CODE_CACHE.getIfPresent(authcode);
+
+        // Maybe it's a code coming from one of the AuthModules
+        if (authenticationInfo == null) {
+            try {
+                authenticationInfo = getSecurityStore()
+                        .login(new ThirdPartyAuthorizationCode(authcode)).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            } catch (ExecutionException e) {
+                Throwable cause = e.getCause();
+                if (cause instanceof AuthenticationException || cause instanceof AuthorizationException) {
+                    log.info("Denying access: " + cause.getMessage());
+                    throw new UnauthorizedException();
+                } else {
+                    log.error("Unexpected error while attempting user login", cause);
+                    throw new InternalServerErrorException(cause);
+                }
+            }
+        }
+
+        UserSession session = createSession(ctx, authenticationInfo);
+
+        // Don't support refresh on SPNEGO-backed sessions. Yamcs knows only about a SPNEGO ticket and cannot check
+        // the lifetime of the client's TGT. Clients are required to be smart and fetch another authorization token
+        // using the /auth/spnego route (= alternative refresh).
+        String refreshToken = null;
+        if (authenticationInfo.getAuthenticator() instanceof SpnegoAuthModule) {
+            // We don't know the underlying expiration time. To be reconsidered when
+            // OP and RP are split (then spnego occurs only on the OP).
+            long lifespan = getSecurityStore().getAccessTokenLifespan();
+            session.setLifespan(lifespan);
+        } else {
+            refreshToken = tokenStore.generateRefreshToken(session);
+        }
+        sendNewAccessToken(ctx, authenticationInfo, refreshToken);
+    }
+
+    private UserSession createSession(HandlerContext ctx, AuthenticationInfo authenticationInfo) {
+        String ipAddress = ctx.getOriginalHostAddress();
+        String hostname = ctx.getOriginalHostName();
+        SecurityStore securityStore = YamcsServer.getServer().getSecurityStore();
+        SessionManager sessionManager = securityStore.getSessionManager();
+        UserSession session = sessionManager.createSession(authenticationInfo, ipAddress, hostname);
+
+        String userAgent = ctx.getHeader(HttpHeaderNames.USER_AGENT);
+        if (userAgent != null) {
+            session.getClients().add(userAgent);
+        }
+
+        return session;
+    }
+
+    /**
+     * Issues a new access token after verifying the provided refresh token. This will also output a new refresh token,
+     * thereby enforcing single use of a refresh token.
+     */
+    private void handleTokenRequestWithRefreshToken(HandlerContext ctx) {
+        String refreshToken = ctx.getFormParameter("refresh_token");
+        RefreshResult result = tokenStore.verifyRefreshToken(refreshToken);
+        if (result == null) {
+            throw new UnauthorizedException("Invalid refresh token");
+        } else {
+            var authenticationInfo = result.session.getAuthenticationInfo();
+            var valid = getSecurityStore().verifyValidity(authenticationInfo);
+            if (!valid) {
+                throw new UnauthorizedException("Identity became invalid");
+            }
+            sendNewAccessToken(ctx, result.session.getAuthenticationInfo(), result.refreshToken);
+        }
+    }
+
+    private void handleTokenRequestWithClientCredentials(HandlerContext ctx) {
+        String clientId = null;
+        String clientSecret = null;
+
+        String[] basicAuth = ctx.getBasicCredentials();
+        if (basicAuth != null) {
+            clientId = basicAuth[0];
+            clientSecret = basicAuth[1];
+        } else {
+            clientId = ctx.getFormParameter("client_id");
+            clientSecret = ctx.getFormParameter("client_secret");
+        }
+        if (clientId == null || clientSecret == null) {
+            throw new BadRequestException("Missing client id or secret");
+        }
+
+        ApplicationCredentials token = new ApplicationCredentials(clientId, clientSecret);
+        token.setBecome(ctx.getFormParameter("become"));
+
+        try {
+            AuthenticationInfo authenticationInfo = getSecurityStore().login(token).get();
+            sendNewAccessToken(ctx, authenticationInfo, null /* no refresh needed, client secret is sufficient */);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof AuthenticationException || cause instanceof AuthorizationException) {
+                log.info("Denying access to '" + clientId + "': " + cause.getMessage());
+                throw new UnauthorizedException();
+            } else {
+                log.error("Unexpected error while attempting user login", cause);
+                throw new InternalServerErrorException(cause);
+            }
+        }
+    }
+
+    private void sendNewAccessToken(HandlerContext ctx, AuthenticationInfo authenticationInfo, String refreshToken) {
+        try {
+            User user = getSecurityStore().getUserFromCache(authenticationInfo.getUsername());
+            TokenResponse response = generateTokenResponse(user, refreshToken);
+            tokenStore.registerAccessToken(response.getAccessToken(), authenticationInfo);
+            ctx.sendOK(response);
+        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
+            throw new InternalServerErrorException(e);
+        }
+    }
+
+    /**
+     * Generates a short-term access token, accompanied by an optional indeterminate refresh token.
+     * <p>
+     * The refresh token can be used one single time get a new access token (and optional new refresh token).
+     */
+    private TokenResponse generateTokenResponse(User user, String refreshToken)
+            throws InvalidKeyException, NoSuchAlgorithmException {
+        int ttl = getSecurityStore().getAccessTokenLifespan() / 1000; // convert to seconds
+        String jwt = JwtHelper.generateHS256Token("Yamcs", user.getName(), YamcsServer.getServer().getSecretKey(), ttl);
+
+        TokenResponse.Builder responseb = TokenResponse.newBuilder();
+        responseb.setTokenType("bearer");
+        responseb.setAccessToken(jwt);
+        responseb.setExpiresIn(ttl);
+        responseb.setUser(IamApi.toUserInfo(user, true, getDirectory()));
+
+        if (refreshToken != null) {
+            responseb.setRefreshToken(refreshToken);
+        }
+
+        return responseb.build();
+    }
+
+    private static String generateUrlSafeCode() {
+        byte[] bytes = new byte[10];
+        RNG.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    public static SecurityStore getSecurityStore() {
+        return YamcsServer.getServer().getSecurityStore();
+    }
+
+    private static Directory getDirectory() {
+        return getSecurityStore().getDirectory();
+    }
+}
 ```
 
-## 항목
+### `FormData.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/AuthHandler.java`](file--AuthHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/FormData.java`](file--FormData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/JwtHelper.java`](file--JwtHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/JwtToken.java`](file--JwtToken.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/LoginRequest.java`](file--LoginRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/OpenIDAuthenticationRequest.java`](file--OpenIDAuthenticationRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/TokenStore.java`](file--TokenStore.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/FormData.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.yamcs.http.HandlerContext;
+
+public abstract class FormData {
+
+    protected HandlerContext ctx;
+    protected Map<String, String> parameters = new HashMap<>();
+
+    public FormData(HandlerContext ctx) {
+        this.ctx = ctx;
+    }
+
+    protected void requireParameters(String... parameters) {
+        for (String parameter : parameters) {
+            requireParameter(parameter);
+        }
+    }
+
+    protected void requireParameter(String parameter) {
+        if (ctx.isFormEncoded()) {
+            parameters.put(parameter, ctx.requireFormParameter(parameter));
+        } else {
+            parameters.put(parameter, ctx.requireQueryParameter(parameter));
+        }
+    }
+
+    protected void acceptParameters(String... parameters) {
+        for (String parameter : parameters) {
+            acceptParameter(parameter);
+        }
+    }
+
+    protected void acceptParameter(String parameter) {
+        String value;
+        if (ctx.isFormEncoded()) {
+            value = ctx.getFormParameter(parameter);
+        } else {
+            value = ctx.getQueryParameter(parameter);
+        }
+        if (value != null) {
+            parameters.put(parameter, value);
+        }
+    }
+
+    public Map<String, String> getMap() {
+        return parameters;
+    }
+}
+```
+
+### `JwtHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/JwtHelper.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
+
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+
+public class JwtHelper {
+
+    private static final String NO_ALG_HEADER = Base64.getUrlEncoder().withoutPadding()
+            .encodeToString("{\"alg\":\"none\"}".getBytes());
+
+    private static final String HS256_HEADER = Base64.getUrlEncoder().withoutPadding()
+            .encodeToString("{\"alg\":\"HS256\"}".getBytes());
+
+    /**
+     * Generates an unsigned JSON Web Token using default claims iss, sub, iat and exp
+     */
+    public static String generateUnsignedToken(String issuer, String subject, int ttl) {
+        JsonObject claims = generateDefaultClaims(issuer, subject, ttl);
+        return generateUnsignedToken(claims);
+    }
+
+    /**
+     * Generates an unsigned JSON Web Token using fully custom claims.
+     */
+    public static String generateUnsignedToken(JsonObject claims) {
+        String joseHeader = NO_ALG_HEADER;
+        String payload = Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(claims.toString().getBytes(StandardCharsets.UTF_8));
+        return joseHeader + "." + payload + ".";
+    }
+
+    /**
+     * Generates a signed JSON Web Token appended with a signature which can be used to validate the JWT by whoever
+     * knows the specified secret.
+     */
+    public static String generateHS256Token(String issuer, String subject, byte[] secret, int ttl)
+            throws InvalidKeyException, NoSuchAlgorithmException {
+        JsonObject claims = generateDefaultClaims(issuer, subject, ttl);
+        return generateHS256Token(claims, secret);
+    }
+
+    /**
+     * Generates a signed JSON Web Token appended with a signature which can be used to validate the JWT by whoever
+     * knows the specified secret.
+     */
+    public static String generateHS256Token(JsonObject claims, byte[] secret)
+            throws InvalidKeyException, NoSuchAlgorithmException {
+        String joseHeader = HS256_HEADER;
+        String payload = Base64.getUrlEncoder().withoutPadding()
+                .encodeToString(claims.toString().getBytes(StandardCharsets.UTF_8));
+        String unsignedToken = joseHeader + "." + payload; // Without trailing period
+
+        String signature = hmacSha256(secret, unsignedToken);
+        return joseHeader + "." + payload + "." + signature;
+    }
+
+    private static JsonObject generateDefaultClaims(String issuer, String subject, int ttl) {
+        JsonObject claims = new JsonObject();
+
+        // Standard JWT props (aka Registered Claims)
+        claims.addProperty("iss", issuer); // Issuer of the JWT token
+        claims.addProperty("sub", subject); // Subject
+        long now = System.currentTimeMillis() / 1000;
+        claims.addProperty("iat", now); // Issued at (Time at issuer)
+        if (ttl >= 0) {
+            claims.addProperty("exp", now + ttl); // Expires at (Time at issuer)
+        }
+        return claims;
+    }
+
+    private static String hmacSha256(byte[] secret, String data) throws NoSuchAlgorithmException, InvalidKeyException {
+        Mac hmac = Mac.getInstance("HmacSHA256");
+        hmac.init(new SecretKeySpec(secret, "HmacSHA256"));
+        byte[] macResult = hmac.doFinal(data.getBytes());
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(macResult);
+    }
+
+    public static JsonObject decodeUnverified(String token) throws JwtDecodeException {
+        String parts[] = token.split("\\.");
+
+        byte[] decodedClaims;
+        try {
+            decodedClaims = Base64.getUrlDecoder().decode(parts[1].getBytes());
+        } catch (IllegalArgumentException e) {
+            throw new JwtDecodeException("Could not decode JWT Payload as Base 64 URL-encoded String", e);
+        }
+
+        try {
+            return JsonParser.parseString(new String(decodedClaims, StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (JsonSyntaxException e) {
+            throw new JwtDecodeException("Could not decode JWT Payload as JSON");
+        } catch (IllegalStateException e) {
+            throw new JwtDecodeException("Decoded JWT Payload is not a valid JSON Object");
+        }
+    }
+
+    public static JsonObject decode(String token, byte[] secret)
+            throws JwtDecodeException, InvalidKeyException, NoSuchAlgorithmException {
+        String parts[] = token.split("\\.");
+        if (parts.length < 2) {
+            throw new JwtDecodeException("JWT should consist of three sections separated by dots");
+        }
+
+        String unsignedToken = parts[0] + "." + parts[1];
+        byte[] expectedSignature = hmacSha256(secret, unsignedToken).getBytes();
+        if (parts.length < 3) {
+            throw new JwtDecodeException("Signature missing");
+        }
+        byte[] actualSignature = parts[2].getBytes();
+        if (!Arrays.equals(expectedSignature, actualSignature)) {
+            throw new JwtDecodeException("Invalid signature");
+        }
+
+        byte[] decodedClaims;
+        try {
+            decodedClaims = Base64.getUrlDecoder().decode(parts[1].getBytes());
+        } catch (IllegalArgumentException e) {
+            throw new JwtDecodeException("Could not decode JWT Payload as Base 64 URL-encoded UTF-8 String", e);
+        }
+
+        try {
+            return JsonParser.parseString(new String(decodedClaims, StandardCharsets.UTF_8)).getAsJsonObject();
+        } catch (JsonSyntaxException e) {
+            throw new JwtDecodeException("Could not decode JWT Payload as JSON");
+        } catch (IllegalStateException e) {
+            throw new JwtDecodeException("Decoded JWT Payload is not a valid JSON Object");
+        }
+    }
+
+    @SuppressWarnings("serial")
+    public static final class JwtDecodeException extends Exception {
+
+        public JwtDecodeException(String message) {
+            super(message);
+        }
+
+        public JwtDecodeException(String message, Throwable e) {
+            super(message, e);
+        }
+    }
+}
+```
+
+### `JwtToken.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/JwtToken.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import org.yamcs.http.auth.JwtHelper.JwtDecodeException;
+
+import com.google.gson.JsonObject;
+
+/**
+ * Identifies a user that was authenticated via a JWT bearer token
+ */
+public class JwtToken {
+
+    private JsonObject claims;
+
+    public JwtToken(String jwt, byte[] secretKey) throws JwtDecodeException {
+        try {
+            this.claims = JwtHelper.decode(jwt, secretKey);
+        } catch (InvalidKeyException | NoSuchAlgorithmException e) {
+            throw new AssertionError(e);
+        }
+    }
+
+    public String getSubject() {
+        return claims.get("sub").getAsString();
+    }
+
+    public boolean isExpired() {
+        if (!claims.has("exp")) {
+            return false;
+        }
+        long expTimeInSeconds = claims.get("exp").getAsLong();
+        return expTimeInSeconds < System.currentTimeMillis() / 1000;
+    }
+
+    @Override
+    public String toString() {
+        return getSubject();
+    }
+}
+```
+
+### `LoginRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/LoginRequest.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.HandlerContext;
+import org.yamcs.security.AuthenticationToken;
+import org.yamcs.security.UsernamePasswordToken;
+
+public class LoginRequest extends FormData {
+
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String CLIENT_ID = "client_id";
+    public static final String REDIRECT_URI = "redirect_uri";
+    public static final String STATE = "state";
+
+    public LoginRequest(HandlerContext ctx) throws BadRequestException {
+        super(ctx);
+        requireParameters(USERNAME, PASSWORD, CLIENT_ID, REDIRECT_URI);
+        acceptParameter(STATE);
+    }
+
+    public String getRedirectURI() {
+        return parameters.get(REDIRECT_URI);
+    }
+
+    public String getUsername() {
+        return parameters.get(USERNAME);
+    }
+
+    public String getClientID() {
+        return parameters.get(CLIENT_ID);
+    }
+
+    public AuthenticationToken getUsernamePasswordToken() {
+        return new UsernamePasswordToken(parameters.get(USERNAME), parameters.get(PASSWORD).toCharArray());
+    }
+
+    public String getState() {
+        return parameters.get(STATE);
+    }
+}
+```
+
+### `OpenIDAuthenticationRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/OpenIDAuthenticationRequest.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.HandlerContext;
+
+/**
+ * An Authentication Request is an OAuth 2.0 Authorization Request that requests that the End-User be authenticated by
+ * the Authorization Server.
+ * <p>
+ * Authorization Servers MUST support the use of the HTTP GET and POST methods
+ */
+public class OpenIDAuthenticationRequest extends FormData {
+
+    /**
+     * REQUIRED. OpenID Connect requests MUST contain the openid scope value. If the openid scope value is not present,
+     * the behavior is entirely unspecified. Other scope values MAY be present. Scope values used that are not
+     * understood by an implementation SHOULD be ignored
+     */
+    private static final String SCOPE = "scope";
+
+    /**
+     * REQUIRED. OAuth 2.0 Response Type value that determines the authorization processing flow to be used, including
+     * what parameters are returned from the endpoints used. When using the Authorization Code Flow, this value is code.
+     */
+    private static final String RESPONSE_TYPE = "response_type";
+
+    /**
+     * REQUIRED. OAuth 2.0 Client Identifier valid at the Authorization Server.
+     */
+    private static final String CLIENT_ID = "client_id";
+
+    /**
+     * REQUIRED. Redirection URI to which the response will be sent. This URI MUST exactly match one of the Redirection
+     * URI values for the Client pre-registered at the OpenID Provider.
+     */
+    private static final String REDIRECT_URI = "redirect_uri";
+
+    /**
+     * RECOMMENDED. Opaque value used to maintain state between the request and the callback. Typically, Cross-Site
+     * Request Forgery (CSRF, XSRF) mitigation is done by cryptographically binding the value of this parameter with a
+     * browser cookie.
+     */
+    private static final String STATE = "state";
+
+    public OpenIDAuthenticationRequest(HandlerContext ctx) throws BadRequestException {
+        super(ctx);
+        requireParameters(SCOPE, RESPONSE_TYPE, CLIENT_ID, REDIRECT_URI);
+        acceptParameter(STATE);
+    }
+
+    public String getScope() {
+        return parameters.get(SCOPE);
+    }
+
+    public String getResponseType() {
+        return parameters.get(RESPONSE_TYPE);
+    }
+
+    public String getClientID() {
+        return parameters.get(CLIENT_ID);
+    }
+
+    public String getRedirectURI() {
+        return parameters.get(REDIRECT_URI);
+    }
+
+    public String getState() {
+        return parameters.get(STATE);
+    }
+}
+```
+
+### `TokenStore.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/http/auth/TokenStore.java`
+
+
+```java
+package org.yamcs.http.auth;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.http.AbstractHttpService;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.UnauthorizedException;
+import org.yamcs.http.auth.JwtHelper.JwtDecodeException;
+import org.yamcs.security.AuthenticationInfo;
+import org.yamcs.security.CryptoUtils;
+import org.yamcs.security.SessionExpiredException;
+import org.yamcs.security.SessionListener;
+import org.yamcs.security.SessionManager;
+import org.yamcs.security.UserSession;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+/**
+ * Store capable of generating a chain of refresh tokens. When a token is exchanged for a new token, the old token
+ * remains valid for a limited lifetime. This property is useful do deal with a burst of identical refresh requests.
+ * <p>
+ * This class maintains a cache from a JWT bearer token to the original authentication info. This allows skipping the
+ * login process as long as the bearer is valid.
+ */
+public class TokenStore extends AbstractHttpService implements SessionListener {
+
+    private final ConcurrentMap<String, AuthenticationInfo> accessTokens = new ConcurrentHashMap<>();
+    private int cleaningCounter = 0;
+
+    private Map<Hmac, UserSession> refreshTokens = new HashMap<>();
+    private Cache<Hmac, RefreshResult> refreshCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(5, TimeUnit.SECONDS)
+            .build();
+
+    private SessionManager sessionManager;
+
+    @Override
+    public void init(HttpServer httpServer) throws InitException {
+    }
+
+    @Override
+    protected void doStart() {
+        var securityStore = YamcsServer.getServer().getSecurityStore();
+        sessionManager = securityStore.getSessionManager();
+        sessionManager.addSessionListener(this);
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        sessionManager.removeSessionListener(this);
+        accessTokens.clear();
+        refreshTokens.clear();
+        refreshCache.invalidateAll();
+        cleaningCounter = 0;
+        notifyStopped();
+    }
+
+    public void registerAccessToken(String accessToken, AuthenticationInfo authenticationInfo) {
+        accessTokens.put(accessToken, authenticationInfo);
+    }
+
+    public void revokeAccessToken(String accessToken) {
+        accessTokens.remove(accessToken);
+    }
+
+    public AuthenticationInfo verifyAccessToken(String accessToken) throws UnauthorizedException {
+        cleaningCounter++;
+        if (cleaningCounter > 1000) {
+            cleaningCounter = 0;
+            forgetExpiredAccessTokens();
+        }
+        try {
+            JwtToken jwtToken = new JwtToken(accessToken, YamcsServer.getServer().getSecretKey());
+            if (jwtToken.isExpired()) {
+                accessTokens.remove(accessToken);
+                throw new UnauthorizedException("Token expired");
+            }
+            AuthenticationInfo authenticationInfo = accessTokens.get(accessToken);
+            if (authenticationInfo == null) {
+                throw new UnauthorizedException("Invalid access token");
+            }
+
+            return authenticationInfo;
+        } catch (JwtDecodeException e) {
+            throw new UnauthorizedException("Failed to decode JWT: " + e.getMessage());
+        }
+    }
+
+    private void forgetExpiredAccessTokens() {
+        accessTokens.entrySet().removeIf(entry -> {
+            try {
+                JwtToken jwtToken = new JwtToken(entry.getKey(), YamcsServer.getServer().getSecretKey());
+                return jwtToken.isExpired();
+            } catch (JwtDecodeException e) {
+                return true;
+            }
+        });
+    }
+
+    public synchronized void forgetUser(String username) {
+        refreshTokens.entrySet().removeIf(entry -> {
+            var authenticationInfo = entry.getValue().getAuthenticationInfo();
+            return username.equals(authenticationInfo.getUsername());
+        });
+        accessTokens.entrySet().removeIf(entry -> {
+            return username.equals(entry.getValue().getUsername());
+        });
+    }
+
+    public synchronized String generateRefreshToken(UserSession session) {
+        var refreshToken = UUID.randomUUID().toString();
+        var hmac = new Hmac(refreshToken);
+        refreshTokens.put(hmac, session);
+        return refreshToken;
+    }
+
+    /**
+     * Validate the provided refresh token, and exchange it for a new one. The provided refresh token is invalidated,
+     * and will stop working after a certain time.
+     * <p>
+     * Attempts to exchange a previously exchanged token will always return the same result, as long as it has not
+     * expired yet.
+     * 
+     * @return a new refresh token, or null if the token could not be exchanged.
+     */
+    public synchronized RefreshResult verifyRefreshToken(String refreshToken) {
+        var hmac = new Hmac(refreshToken);
+        var session = refreshTokens.get(hmac);
+        if (session != null) { // Token valid, generate new token (once only)
+            String nextToken = generateRefreshToken(session);
+            try {
+                renewSession(session);
+            } catch (SessionExpiredException e) {
+                throw new UnauthorizedException("Token expired");
+            }
+            var result = new RefreshResult(session, nextToken);
+            refreshCache.put(hmac, result);
+            refreshTokens.remove(hmac);
+            return result;
+        } else { // Maybe an old token, attempt to upgrade it based on previous token exchanges
+            RefreshResult result = null;
+            RefreshResult candidate = refreshCache.getIfPresent(hmac);
+            while (candidate != null) {
+                result = candidate;
+                candidate = refreshCache.getIfPresent(new Hmac(candidate.refreshToken));
+            }
+            return result;
+        }
+    }
+
+    private void renewSession(UserSession userSession) throws SessionExpiredException {
+        sessionManager.renewSession(userSession.getId());
+    }
+
+    public synchronized void revokeRefreshToken(String refreshToken) {
+        Hmac hmac = new Hmac(refreshToken);
+        refreshTokens.remove(hmac);
+        refreshCache.invalidate(hmac);
+    }
+
+    /**
+     * byte[] wrapper that allows value comparison in HashMap
+     */
+    private static final class Hmac {
+
+        private byte[] hmac;
+
+        Hmac(String refreshToken) {
+            hmac = CryptoUtils.calculateHmac(refreshToken, YamcsServer.getServer().getSecretKey());
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof Hmac)) {
+                return false;
+            }
+            return Arrays.equals(hmac, ((Hmac) obj).hmac);
+        }
+
+        @Override
+        public int hashCode() {
+            return Arrays.hashCode(hmac);
+        }
+    }
+
+    static final class RefreshResult {
+        UserSession session;
+        String refreshToken;
+
+        RefreshResult(UserSession session, String refreshToken) {
+            this.session = session;
+            this.refreshToken = refreshToken;
+        }
+    }
+
+    @Override
+    public void onCreated(UserSession session) {
+        // NOP
+    }
+
+    @Override
+    public void onExpired(UserSession session) {
+        // NOP
+    }
+
+    @Override
+    public void onInvalidated(UserSession session) {
+        accessTokens.entrySet().removeIf(entry -> {
+            return entry.getValue().equals(session.getAuthenticationInfo());
+        });
+    }
+}
+```

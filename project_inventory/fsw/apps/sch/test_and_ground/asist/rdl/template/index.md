@@ -3,22 +3,317 @@
 
 **경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `template_cmd_SCH_GND_CMD.rdl`
 
-file--template_cmd_SCH_GND_CMD.rdl
-file--template_table_SCH_MDEF_TBL.rdl
-file--template_table_SCH_SDEF_TBL.rdl
-file--template_tlm_SCH_DIAG_TLM.rdl
-file--template_tlm_SCH_HK_TLM.rdl
+**경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/template_cmd_SCH_GND_CMD.rdl`
+
+
+```text
+!==============================================================================
+!                Originator:      E. Uzo-Okoro
+!                Responsible SC:  Barbie Medina
+!                Responsible CSE: ??
+!
+!                  $sc $cpu SCH Command Packet xxxx
+!                  ================================
+!
+!       Packet Application ID: nnnn (Hex 'xxxx')
+!       Packet Title:$sc $cpu Scheduler App Commands
+!       Packet Source:
+!
+!       HISTORY:
+!
+!  12NOV08     EUO           : Initial
+!
+!=============================================================================
+!
+#include "osconfig.h"
+#include "cfe_mission_cfg.h"
+!
+CLASS Pxxxx APID=nnnn, DESC="$sc $cpu Scheduler App Commands"
+!
+  CMD  $sc_$cpu_SCH_NOOP        	FCTN=0, DESC="$sc $cpu SCH no-op command code"
+!
+  CMD  $sc_$cpu_SCH_RESETCTRS    	FCTN=1, DESC="$sc $cpu SCH reset counters command code"
+!
+  CMDS $sc_$cpu_SCH_ENABLEENTRY         FCTN=2, DESC="$sc $cpu SCH enable schedule table entry command code"
+      UI SlotNumber  DESC="Slot Number of Activity whose state is to change"
+      UI EntryNumber   DESC="Entry Number of Activity whose state is to change"
+  END
+!
+  CMDS $sc_$cpu_SCH_DISABLEENTRY         FCTN=3, DESC="$sc $cpu SCH disable schedule table entry command code"
+      UI SlotNumber  DESC="Slot Number of Activity whose state is to change"
+      UI EntryNumber   DESC="Entry Number of Activity whose state is to change"
+  END
+!
+  CMDS $sc_$cpu_SCH_ENABLEGROUP      FCTN=4, DESC="$sc $cpu SCH enable group of entries command code"
+      ULI GroupData  DESC="Group and Multi-Group Identifiers"
+  END
+!
+  CMDS $sc_$cpu_SCH_DISABLEGROUP      FCTN=5, DESC="$sc $cpu SCH disable group of entries command code"
+      ULI GroupData  DESC="Group and Multi-Group Identifiers"
+  END
+!
+  CMD  $sc_$cpu_SCH_ENABLESYNC        	FCTN=6, DESC="$sc $cpu SCH enable major frame synchronization command code"
+!
+  CMD  $sc_$cpu_SCH_SENDDIAG    	FCTN=7, DESC="$sc $cpu SCH sends diagnostic message packet command code"
+!
+END       !END PACKET
+!
+!=============================================================================
 ```
 
-## 항목
+### `template_table_SCH_MDEF_TBL.rdl`
 
-- [`fsw/apps/sch/test_and_ground/asist/rdl/template/template_cmd_SCH_GND_CMD.rdl`](file--template_cmd_SCH_GND_CMD.rdl) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/test_and_ground/asist/rdl/template/template_table_SCH_MDEF_TBL.rdl`](file--template_table_SCH_MDEF_TBL.rdl) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/test_and_ground/asist/rdl/template/template_table_SCH_SDEF_TBL.rdl`](file--template_table_SCH_SDEF_TBL.rdl) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/test_and_ground/asist/rdl/template/template_tlm_SCH_DIAG_TLM.rdl`](file--template_tlm_SCH_DIAG_TLM.rdl) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/test_and_ground/asist/rdl/template/template_tlm_SCH_HK_TLM.rdl`](file--template_tlm_SCH_HK_TLM.rdl) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/template_table_SCH_MDEF_TBL.rdl`
+
+
+```text
+!==============================================================================
+!                Originator:      E. Uzo-Okoro
+!                Responsible SC:  Barbie Medina
+!                Responsible CSE: ??
+!                Rev: 
+!
+!                    Telemetry Packet # nnnn (dec)
+!                 =================================
+!
+!       Packet Application ID: nnnn (Hex 'xxxx')
+!       Packet Title:  $sc $cpu SCH Message Definition table
+!       Packet Length:  ?? Bytes (Including ?? Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY:
+!       2010/11/08 EUO  : Initial implementation
+!       2012/01/04 WFM  : Removed VARYING from Packet definition
+!
+!=============================================================================
+!
+#include "sch_platform_cfg.h"
+!
+TYPES
+   RECORD $sc_$cpu_SCH_MessageEntry_t  DESC="$sc $cpu SCH Message definition table entry Type"
+      UI MessageBuffer[SCH_MAX_MSG_WORDS] 	DESC="Packed Messages"
+   END
+END_TYPES
+
+PACKET Pxxxx APID=nnnn, DESC="$sc $cpu SCH Message Definition Table"
+!
+#include "cfe_file_header.rdl"
+#include "cfe_tbl_header.rdl" 
+!
+$sc_$cpu_SCH_MessageEntry_t $sc_$cpu_SCH_DefaultMessageTable[0 .. SCH_MAX_MESSAGES-1]  DESC="$sc $cpu SCH Message Definition Table"
+!
+END
+```
+
+### `template_table_SCH_SDEF_TBL.rdl`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/template_table_SCH_SDEF_TBL.rdl`
+
+
+```text
+!==============================================================================
+!                Originator:      E. Uzo-Okoro
+!                Responsible SC:  Barbie Medina
+!                Responsible CSE: ??
+!                Rev:  Last Change: Nov 12, 2008  
+!
+!                    Telemetry Packet # nnnn (dec)
+!                 =================================
+!
+!       Packet Application ID: nnnn (Hex 'xxxx')
+!       Packet Title:  $sc $cpu SCH Schedule Definition table
+!       Packet Length:  ?? Bytes (Including ?? Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY:
+!       2010/11/08 EUO  : Initial implementation
+!       2012/01/04 WFM  : Removed VARYING from Packet definition
+!
+!=============================================================================
+!
+#include "sch_msgdefs.h"
+#include "sch_platform_cfg.h"
+!
+TYPES
+   RECORD $sc_$cpu_SCH_ScheduleEntry_t  DESC="$sc $cpu Schedule definition table entry Type"
+      UB  EnableState		DESC="The State of this table entry",DISCRETE,
+                        	DRANGE=(0,1,2),DLABEL=("Unused","Enabled","Disabled")
+      UB  SE_Type			DESC="The Activity Type of this table entry",DISCRETE,
+                        	DRANGE=(0,1),DLABEL=("None","Send_Msg")
+      UI  SE_Frequency		DESC="Number of seconds between Activity execution"
+      UI  Remainder		DESC="Seconds offset to perform Activity"
+      UI  MessageIndex		DESC="Byte index into Message Definition Table"
+      ULI GroupData		DESC="Group and Multi-Group membership definitions"
+   END
+END_TYPES
+
+PACKET Pxxxx APID=nnnn, DESC="$sc $cpu SCH Schedule Definition Table"
+!
+#include "cfe_file_header.rdl"
+#include "cfe_tbl_header.rdl" 
+!
+$sc_$cpu_SCH_ScheduleEntry_t $sc_$cpu_SCH_DefaultScheduleTable[0 .. SCH_TABLE_ENTRIES-1]  DESC="$sc $cpu SCH Schedule Definition Table"
+!
+END
+```
+
+### `template_tlm_SCH_DIAG_TLM.rdl`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/template_tlm_SCH_DIAG_TLM.rdl`
+
+
+```text
+!==============================================================================
+!                Originator:      E. Uzo-Okoro
+!                Responsible SC:  Barbie Medina
+!                Responsible CSE: ??
+!                Rev:  Last Change: Nov 12, 2008  
+!
+!                    Telemetry Packet # nnnn (dec)
+!                 =================================
+!
+!       Packet Application ID: nnnn (Hex 'xxxx')
+!       Packet Title:  $sc $cpu SCH Diagnostic Telemetry Data Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY:
+!
+!  07NOV08     EUO           : Initial
+!
+!=============================================================================
+!
+#include "osconfig.h"
+#include "sch_platform_cfg.h"
+#include "sch_msgdefs.h"
+
+TYPES
+    UNION $sc_$cpu_SCH_State	DESC=""
+	UB StateAll	DESC="",mask=%xFF
+	UB State1	DESC="",mask=%xC0, DISCRETE, DRANGE=(0,1,2),
+			DLABEL=("Unused","Enabled","Disabled")
+	UB State2	DESC="",mask=%x30, DISCRETE, DRANGE=(0,1,2),
+			DLABEL=("Unused","Enabled","Disabled")
+	UB State3	DESC="",mask=%x0C, DISCRETE, DRANGE=(0,1,2),
+			DLABEL=("Unused","Enabled","Disabled")
+	UB State4	DESC="",mask=%x03, DISCRETE, DRANGE=(0,1,2),
+			DLABEL=("Unused","Enabled","Disabled")
+    END
+END_TYPES
+
+!
+PACKET Pxxxx APID=nnnn, DESC="$sc $cpu SCH Diagnostic Telemetry Data Packet",
+                        STALE = 36
+#include "ccsds_header.rdl"
+!
+  $sc_$cpu_SCH_State	$sc_$cpu_SCH_ENTRYSTATES[SCH_NUM_STATUS_BYTES_REQD] DESC="SCH Entry State consists of 2 bits for each entry"
+!
+  UI $sc_$cpu_SCH_MSGIDS[SCH_TABLE_ENTRIES] DESC="$sc $cpu SCH Message ID of msg associated with each entry"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END
+```
+
+### `template_tlm_SCH_HK_TLM.rdl`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/rdl/template/template_tlm_SCH_HK_TLM.rdl`
+
+
+```text
+!==============================================================================
+!                Originator:      E. Uzo-Okoro
+!                Responsible SC:  Barbie Medina
+!                Responsible CSE: ??
+!                Rev:  Last Change: Nov 12, 2008  
+!
+!                    Telemetry Packet # nnnn (dec)
+!                 =================================
+!
+!       Packet Application ID: nnnn (Hex 'xxxx')
+!       Packet Title:  $sc $cpu SCH Telemetry Data Packet
+!       Packet Length:  ?? Bytes (Including 12 Bytes Of Header)
+!	Collect             Frequency:         SEC
+!
+!       REFERENCES:
+!
+!       NOTES:
+!
+!       HISTORY:
+!
+!  05NOV08     EUO           : Initial
+!
+!=============================================================================
+!
+#include "osconfig.h"
+!
+PACKET Pxxxx APID=nnnn, DESC="$sc $cpu SCH Telemetry Data Packet",
+                        STALE = 36
+#include "ccsds_header.rdl"
+!
+  UB   $sc_$cpu_SCH_CMDPC       	DESC="$sc $cpu SCH Command Processed Counter",
+                               		UNITS=Counts
+!
+  UB   $sc_$cpu_SCH_CMDEC 		DESC="$sc $cpu SCH Command Error Counter",
+                               		UNITS=Counts
+!
+  UB  $sc_$cpu_SCH_SYNCTOMET 		DESC="$sc $cpu SCH Status indicating whether slots are synched to MET"
+!
+  UB  $sc_$cpu_SCH_MAJORFRAMESOURCE 	DESC="$sc $cpu SCH Major Frame Signal source identifier"
+!
+  ULI  $sc_$cpu_SCH_ACTSUCCESSCTR	DESC="$sc $cpu SCH Number of successfully performed activities"
+!
+  ULI  $sc_$cpu_SCH_ACTFAILURECTR	DESC="$sc $cpu SCH Number of unsuccessful activities attempted"
+!
+  ULI  $sc_$cpu_SCH_SLOTPROCCTR 		DESC="$sc $cpu SCH Total # of Schedule Slots (Minor Frames) Processed"
+!
+  UI  $sc_$cpu_SCH_SKIPSLOTCTR		DESC="$sc $cpu SCH Number of times that a slot (minor frame) was skipped"
+!
+  UI  $sc_$cpu_SCH_MULTSLOTCTR		DESC="$sc $cpu SCH Number of times that multiple slots (minor frames) were processed in the same minor frame"
+!
+  UI  $sc_$cpu_SCH_SAMESLOTCTR		DESC="$sc $cpu SCH Number of times SCH woke up in the same slot as last time"
+!
+  UI  $sc_$cpu_SCH_BADTBLDATACTR	DESC="$sc $cpu SCH Number of times corrupted table entries were processed"
+!
+  UI  $sc_$cpu_SCH_TBLPASSVERIFYCTR	DESC="$sc $cpu SCH Number of times table loads successfully verified"
+!
+  UI  $sc_$cpu_SCH_TBLFAILVERIFYCTR	DESC="$sc $cpu SCH Number of times table loads unsuccessfully verified"
+!
+  ULI  $sc_$cpu_SCH_TBLPROCCTR 		DESC="$sc $cpu SCH Number of times Schedule Table has been processed"
+!
+  ULI  $sc_$cpu_SCH_VALIDMFCTR 		DESC="$sc $cpu SCH Number of valid Major Frame tones received"
+!
+  ULI  $sc_$cpu_SCH_MISSMFCTR 		DESC="$sc $cpu SCH Number of missing Major Frame tones"
+!
+  ULI  $sc_$cpu_SCH_UNEXPCTDMFCTR 	DESC="$sc $cpu SCH Number of unexpected Major Frame tones"
+!
+  UI  $sc_$cpu_SCH_MINORSINCETONE 	DESC="$sc $cpu SCH Number of Minor Frames since last Major Frame tone"
+!
+  UI  $sc_$cpu_SCH_NEXTSLOT 		DESC="$sc $cpu SCH Next Minor Frame to be processed"
+!
+  UI  $sc_$cpu_SCH_LASTSYNCMETSLOT	DESC="$sc $cpu SCH Slot number where Time Sync last occurred"
+!
+  UB  $sc_$cpu_SCH_IGNOREMF 		DESC="$sc $cpu SCH Major Frame too noisy to trust"
+!
+  UB  $sc_$cpu_SCH_UNEXPCTDMAJORFRAME DESC="$sc $cpu SCH Most Recent Major Frame signal was unexpected"
+!
+!  END                !END APPEND RECORD FUNCTION
+!
+END
+```

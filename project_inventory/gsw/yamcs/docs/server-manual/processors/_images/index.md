@@ -3,18 +3,22 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/processors/_images/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alarm-states.png`
 
-file--alarm-states.png
-file--command-processing.png
-file--tm-processing.png
-```
+**경로:** `gsw/yamcs/docs/server-manual/processors/_images/alarm-states.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`gsw/yamcs/docs/server-manual/processors/_images/alarm-states.png`](file--alarm-states.png) — 바이너리 (경로만)
-- [`gsw/yamcs/docs/server-manual/processors/_images/command-processing.png`](file--command-processing.png) — 바이너리 (경로만)
-- [`gsw/yamcs/docs/server-manual/processors/_images/tm-processing.png`](file--tm-processing.png) — 바이너리 (경로만)
+### `command-processing.png`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/_images/command-processing.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `tm-processing.png`
+
+**경로:** `gsw/yamcs/docs/server-manual/processors/_images/tm-processing.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

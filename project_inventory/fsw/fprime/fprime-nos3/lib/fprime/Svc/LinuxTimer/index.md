@@ -3,26 +3,291 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--LinuxTimer.fpp
-file--LinuxTimer.hpp
-file--LinuxTimerCommon.cpp
-file--LinuxTimerFd.cpp
-file--LinuxTimerTaskDelay.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimer.fpp`](file--LinuxTimer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimer.hpp`](file--LinuxTimer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerCommon.cpp`](file--LinuxTimerCommon.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerFd.cpp`](file--LinuxTimerFd.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerTaskDelay.cpp`](file--LinuxTimerTaskDelay.cpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Linux Darwin)
+
+
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
+	set(SOURCE_FILES
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimer.fpp"
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimerTaskDelay.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimerCommon.cpp"
+	)
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	set(SOURCE_FILES
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimer.fpp"
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimerFd.cpp"
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimerCommon.cpp"
+	)
+else()
+	set(SOURCE_FILES
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimer.fpp"
+		"${CMAKE_CURRENT_LIST_DIR}/LinuxTimerCommon.cpp"
+	)
+endif()
+
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+	"${CMAKE_CURRENT_LIST_DIR}/LinuxTimer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/LinuxTimerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/main.cpp"
+)
+
+register_fprime_ut()
+```
+
+### `LinuxTimer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimer.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A Linux interval timer
+  passive component LinuxTimer {
+
+    @ implement tick interface
+    import Drv.Tick
+
+  }
+
+}
+```
+
+### `LinuxTimer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimerImpl.hpp
+// \author tim
+// \brief  hpp file for LinuxTimer component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef LinuxTimer_HPP
+#define LinuxTimer_HPP
+
+#include "Os/Mutex.hpp"
+#include "Os/RawTime.hpp"
+#include "Svc/LinuxTimer/LinuxTimerComponentAc.hpp"
+
+namespace Svc {
+
+class LinuxTimer final : public LinuxTimerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object LinuxTimer
+    //!
+    LinuxTimer(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object LinuxTimer
+    //!
+    ~LinuxTimer();
+
+    //! Start timer
+    void startTimer(FwSizeType interval);  //!< interval in milliseconds
+
+    //! Quit timer
+    void quit();
+
+  private:
+    Os::Mutex m_mutex;  //!< mutex for quit flag
+
+    volatile bool m_quit;  //!< flag to quit
+
+    Os::RawTime m_rawTime;  //!< timestamp to pass to CycleOut port calls
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `LinuxTimerCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerCommon.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimerImpl.cpp
+// \author tim
+// \brief  cpp file for LinuxTimer component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Svc/LinuxTimer/LinuxTimer.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+LinuxTimer ::LinuxTimer(const char* const compName) : LinuxTimerComponentBase(compName), m_quit(false) {}
+
+LinuxTimer ::~LinuxTimer() {}
+
+void LinuxTimer::quit() {
+    this->m_mutex.lock();
+    this->m_quit = true;
+    this->m_mutex.unLock();
+}
+
+}  // end namespace Svc
+```
+
+### `LinuxTimerFd.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerFd.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimerImpl.cpp
+// \author tim
+// \brief  cpp file for LinuxTimer component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <sys/timerfd.h>
+#include <unistd.h>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Svc/LinuxTimer/LinuxTimer.hpp>
+#include <cerrno>
+#include <cstring>
+
+namespace Svc {
+
+void LinuxTimer::startTimer(FwSizeType interval) {
+    int fd;
+    struct itimerspec itval;
+
+    /* Create the timer */
+    fd = timerfd_create(CLOCK_MONOTONIC, 0);
+    const FwSizeType interval_secs = interval / 1000;
+    FW_ASSERT(static_cast<FwSizeType>(std::numeric_limits<I32>::max()) >= interval_secs,
+              static_cast<FwAssertArgType>(interval));
+    itval.it_interval.tv_sec = static_cast<I32>(interval_secs);
+    itval.it_interval.tv_nsec = static_cast<I32>((interval * 1000000) % 1000000000);
+    itval.it_value.tv_sec = static_cast<I32>(interval_secs);
+    itval.it_value.tv_nsec = static_cast<I32>((interval * 1000000) % 1000000000);
+
+    timerfd_settime(fd, 0, &itval, nullptr);
+
+    while (true) {
+        unsigned long long missed;
+        int ret = static_cast<int>(read(fd, &missed, sizeof(missed)));
+        if (-1 == ret) {
+            Fw::Logger::log("timer read error: %s\n", strerror(errno));
+        }
+        this->m_mutex.lock();
+        bool quit = this->m_quit;
+        this->m_mutex.unLock();
+        if (quit) {
+            itval.it_interval.tv_sec = 0;
+            itval.it_interval.tv_nsec = 0;
+            itval.it_value.tv_sec = 0;
+            itval.it_value.tv_nsec = 0;
+
+            timerfd_settime(fd, 0, &itval, nullptr);
+            return;
+        }
+        this->m_rawTime.now();
+        this->CycleOut_out(0, this->m_rawTime);
+    }
+}
+
+}  // end namespace Svc
+```
+
+### `LinuxTimerTaskDelay.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/LinuxTimer/LinuxTimerTaskDelay.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxTimerImpl.cpp
+// \author tim
+// \brief  cpp file for LinuxTimer component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Task.hpp>
+#include <Svc/LinuxTimer/LinuxTimer.hpp>
+
+namespace Svc {
+
+void LinuxTimer::startTimer(FwSizeType interval) {
+    FW_ASSERT(std::numeric_limits<U32>::max() / 1000 >= interval);  // Overflow
+    while (true) {
+        Os::Task::delay(
+            Fw::TimeInterval(static_cast<U32>(interval / 1000), static_cast<U32>((interval % 1000) * 1000)));
+        this->m_mutex.lock();
+        bool quit = this->m_quit;
+        this->m_mutex.unLock();
+        if (quit) {
+            return;
+        }
+        this->m_rawTime.now();
+        this->CycleOut_out(0, this->m_rawTime);
+    }
+}
+
+}  // end namespace Svc
+```

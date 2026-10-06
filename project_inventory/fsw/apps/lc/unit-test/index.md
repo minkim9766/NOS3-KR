@@ -3,30 +3,9306 @@
 
 **경로:** `fsw/apps/lc/unit-test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 stubs/index
 utilities/index
-file--CMakeLists.txt
-file--lc_action_tests.c
-file--lc_app_tests.c
-file--lc_cmds_tests.c
-file--lc_custom_tests.c
-file--lc_utils_tests.c
-file--lc_watch_tests.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/lc/unit-test/stubs/`](stubs/index) — 폴더
-- [`fsw/apps/lc/unit-test/utilities/`](utilities/index) — 폴더
-- [`fsw/apps/lc/unit-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_action_tests.c`](file--lc_action_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_app_tests.c`](file--lc_app_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_cmds_tests.c`](file--lc_cmds_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_custom_tests.c`](file--lc_custom_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_utils_tests.c`](file--lc_utils_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/lc_watch_tests.c`](file--lc_watch_tests.c) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/lc/unit-test/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# Unit Test build recipe
+#
+# This CMake file contains the recipe for building cFS app unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+##################################################################
+
+add_cfe_coverage_stubs("lc_internal"
+  utilities/lc_test_utils.c
+  stubs/lc_app_stubs.c
+  stubs/lc_cmds_stubs.c
+  stubs/lc_action_stubs.c
+  stubs/lc_custom_stubs.c
+  stubs/lc_utils_stubs.c
+  stubs/lc_watch_stubs.c
+)
+
+# Link with the cfe core stubs and unit test assert libs
+target_link_libraries(coverage-lc_internal-stubs ut_core_api_stubs ut_assert)
+
+# Include and expose unit test utilities, fsw/inc, and fsw/src includes
+target_include_directories(coverage-lc_internal-stubs PUBLIC utilities)
+target_include_directories(coverage-lc_internal-stubs PUBLIC ../fsw/inc)
+target_include_directories(coverage-lc_internal-stubs PUBLIC ../fsw/src)
+
+# Generate a dedicated "testrunner" executable for each test file
+# Accomplish this by cycling through all the app's source files, there must be
+# a *_tests file for each
+foreach(SRCFILE ${APP_SRC_FILES})
+    
+    # Get the base sourcefile name as a module name without path or the  
+    # extension, this will be used as the base name of the unit test file.
+    get_filename_component(UNIT_NAME "${SRCFILE}" NAME_WE)
+
+    # Use the module name to make the test name by adding _tests to the end
+    set(TESTS_NAME "${UNIT_NAME}_tests")
+    
+    # Make the test sourcefile name with unit test path and extension
+    set(TESTS_SOURCE_FILE "${PROJECT_SOURCE_DIR}/unit-test/${TESTS_NAME}.c")
+
+    add_cfe_coverage_test(lc "${UNIT_NAME}" "${TESTS_SOURCE_FILE}" "${CFS_LC_SOURCE_DIR}/${SRCFILE}")
+
+    add_cfe_coverage_dependency(lc "${UNIT_NAME}" lc_internal)
+
+endforeach()
+```
+
+### `lc_action_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_action_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test cases for the functions contained in the file lc_app.c
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_action.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+#include "lc_utils.h"
+#include "lc_custom.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+void LC_SampleAPs_Test_SingleActionPointNominal(void)
+{
+    uint16 StartIndex = 0;
+    uint16 EndIndex   = 0;
+
+    LC_OperData.ARTPtr[StartIndex].CurrentState = 99;
+
+    /* Execute the function being tested */
+    LC_SampleAPs(StartIndex, EndIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SampleAPs_Test_SingleActionPointError(void)
+{
+    uint16 StartIndex = 0;
+    uint16 EndIndex   = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Sample AP error, invalid current AP state: AP = %%d, State = %%d");
+
+    LC_OperData.ARTPtr[StartIndex].CurrentState = LC_ACTION_NOT_USED;
+
+    /* Execute the function being tested */
+    LC_SampleAPs(StartIndex, EndIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleAPs_Test_MultiActionPointNominal(void)
+{
+    uint16 StartIndex = 0;
+    uint16 EndIndex   = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPs(StartIndex, EndIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SampleAPs_Test_SingleActionPointPermOff(void)
+{
+    uint16 StartIndex = 0;
+    uint16 EndIndex   = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Sample AP error, invalid current AP state: AP = %%d, State = %%d");
+
+    LC_OperData.ARTPtr[StartIndex].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SampleAPs(StartIndex, EndIndex);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleSingleAP_Test_StateChangePassToFail(void)
+{
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "AP state change from PASS to FAIL: AP = %%d");
+
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_PASS;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents       = 100;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_FAIL,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_FAIL");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeFailCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeFailCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].PassToFailCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].PassToFailCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_AP_PASSTOFAIL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_SampleSingleAP_Test_StateChangePassToFailMaxChange(void)
+{
+    uint16 APNumber = 0;
+
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_PASS;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+    LC_OperData.ARTPtr[APNumber].PassToFailCount         = 11;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents       = 10;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS    = 5;
+    LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = 0;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_FAIL,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_FAIL");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeFailCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeFailCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].PassToFailCount == 12,
+                  "LC_OperData.ARTPtr[APNumber].PassToFailCount == 12");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+
+    /* Generates 1 event message we don't care about in this test */
+
+    UtAssert_True(LC_AppData.RTSExecCount == 0, "LC_AppData.RTSExecCount == 0");
+}
+
+void LC_SampleSingleAP_Test_ActiveRequestRTS(void)
+{
+    uint16 APNumber = 0;
+
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_FAIL;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents       = 100;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    LC_OperData.ADTPtr[APNumber].EventID   = 1;
+    LC_OperData.ADTPtr[APNumber].EventType = 2;
+
+    LC_AppData.CurrentLCState = LC_STATE_ACTIVE;
+
+    LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS    = 5;
+    LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS;
+    strncpy(LC_OperData.ADTPtr[APNumber].EventText, "Event Message", sizeof(LC_OperData.ADTPtr[APNumber].EventText));
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[APNumber].CurrentState == LC_APSTATE_PASSIVE");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeRTSExecCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeRTSExecCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1");
+    UtAssert_True(LC_AppData.RTSExecCount == 1, "LC_AppData.RTSExecCount == 1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_OperData.ADTPtr[APNumber].EventID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, LC_OperData.ADTPtr[APNumber].EventType);
+}
+
+void LC_SampleSingleAP_Test_APFailWhileLCStatePassive(void)
+{
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "AP failed while LC App passive: AP = %%d, FailCount = %%d, RTS = %%d");
+
+    LC_OperData.ARTPtr[APNumber].CurrentState      = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult      = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents = 100;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    LC_OperData.ADTPtr[APNumber].EventID   = 1;
+    LC_OperData.ADTPtr[APNumber].EventType = 2;
+
+    LC_AppData.CurrentLCState = LC_STATE_PASSIVE;
+
+    LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS    = 5;
+    LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS;
+    strncpy(LC_OperData.ADTPtr[APNumber].EventText, "Event Message", sizeof(LC_OperData.ADTPtr[APNumber].EventText));
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[APNumber].CurrentState == LC_APSTATE_PASSIVE");
+    UtAssert_True(LC_AppData.PassiveRTSExecCount == 1, "LC_AppData.PassiveRTSExecCount == 1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_PASSIVE_FAIL_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleSingleAP_Test_APFailWhilePassive(void)
+{
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "AP failed while passive: AP = %%d, FailCount = %%d, RTS = %%d");
+
+    LC_AppData.CurrentLCState                            = LC_STATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_PASSIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents       = 100;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    LC_OperData.ADTPtr[APNumber].EventID   = 1;
+    LC_OperData.ADTPtr[APNumber].EventType = 2;
+
+    LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS    = 5;
+    LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS;
+    strncpy(LC_OperData.ADTPtr[APNumber].EventText, "Event Message", sizeof(LC_OperData.ADTPtr[APNumber].EventText));
+
+    LC_OperData.ADTPtr[APNumber].MaxPassiveEvents = 5;
+    LC_OperData.ARTPtr[APNumber].PassiveAPCount   = LC_OperData.ADTPtr[APNumber].MaxPassiveEvents - 1;
+
+    LC_AppData.PassiveRTSExecCount = 0;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].PassiveAPCount == 5, "LC_OperData.ARTPtr[APNumber].PassiveAPCount == 5");
+    UtAssert_True(LC_AppData.PassiveRTSExecCount == 1, "LC_OperData.ARTPtr[APNumber].PassiveAPCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_AP_PASSIVE_FAIL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleSingleAP_Test_APFailWhilePassiveNoEvent(void)
+{
+    uint16 APNumber = 0;
+
+    LC_AppData.CurrentLCState                            = LC_STATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_PASSIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxPassFailEvents       = 100;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    LC_OperData.ADTPtr[APNumber].EventID   = 1;
+    LC_OperData.ADTPtr[APNumber].EventType = 2;
+
+    LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS    = 5;
+    LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS;
+    strncpy(LC_OperData.ADTPtr[APNumber].EventText, "Event Message", sizeof(LC_OperData.ADTPtr[APNumber].EventText));
+
+    LC_OperData.ADTPtr[APNumber].MaxPassiveEvents = 5;
+    LC_OperData.ARTPtr[APNumber].PassiveAPCount   = LC_OperData.ADTPtr[APNumber].MaxPassiveEvents + 1;
+
+    LC_AppData.PassiveRTSExecCount = 0;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].PassiveAPCount == 7, "LC_OperData.ARTPtr[APNumber].PassiveAPCount == 7");
+    UtAssert_True(LC_AppData.PassiveRTSExecCount == 1, "LC_OperData.ARTPtr[APNumber].PassiveAPCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SampleSingleAP_Test_StateChangeFailToPass(void)
+{
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "AP state change from FAIL to PASS: AP = %%d");
+
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents       = 1;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_FALSE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].FailToPassCount == 1,
+                  "LC_OperData.ARTPtr[APNumber].FailToPassCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 1");
+
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_AP_FAILTOPASS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleSingleAP_Test_StateChangeFailToPassNoEvent(void)
+{
+    uint16 APNumber                                      = 0;
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents       = 1;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.ARTPtr[APNumber].FailToPassCount   = 6;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents = 4;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_FALSE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].FailToPassCount == 7,
+                  "LC_OperData.ARTPtr[APNumber].FailToPassCount == 7");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0");
+
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SampleSingleAP_Test_ActionStale(void)
+{
+    uint16 APNumber = 0;
+
+    LC_OperData.ARTPtr[APNumber].CurrentState      = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult      = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents = 1;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_STALE,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_STALE");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SampleSingleAP_Test_ActionError(void)
+{
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "AP evaluated to error: AP = %%d, Result = %%d");
+
+    LC_OperData.ARTPtr[APNumber].CurrentState      = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult      = LC_ACTION_FAIL;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents = 1;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_ERROR,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ACTION_ERROR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleSingleAP_Test_ConsecutivePass(void)
+{
+    uint16 APNumber = 0;
+
+    LC_OperData.ARTPtr[APNumber].CurrentState            = LC_APSTATE_ACTIVE;
+    LC_OperData.ARTPtr[APNumber].ActionResult            = LC_ACTION_PASS;
+    LC_OperData.ADTPtr[APNumber].MaxFailPassEvents       = 1;
+    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_FALSE;
+
+    /* Execute the function being tested */
+    LC_SampleSingleAP(APNumber);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.APSampleCount == 1, "LC_AppData.APSampleCount == 1");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS,
+                  "LC_OperData.ARTPtr[APNumber].ActionResult == LC_ACTION_PASS");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].FailToPassCount == 0,
+                  "LC_OperData.ARTPtr[APNumber].FailToPassCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0,
+                  "LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent == 0");
+
+    UtAssert_True(LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount == 0");
+}
+
+void LC_EvaluateRPN_Test_AndWatchFalseOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 0;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_FALSE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_PASS, "Result == LC_ACTION_PASS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndWatchFalseOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_FALSE;
+    LC_OperData.WRTPtr[1].WatchResult = 0;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_PASS, "Result == LC_ACTION_PASS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrWatchTrueOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 0;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_TRUE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_FAIL, "Result == LC_ACTION_FAIL");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrWatchTrueOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+    LC_OperData.WRTPtr[1].WatchResult = 0;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_FAIL, "Result == LC_ACTION_FAIL");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndWatchErrorOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndWatchErrorOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_ERROR;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrWatchErrorOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrWatchErrorOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_ERROR;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_XorWatchErrorOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_XorWatchErrorOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_ERROR;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_NotWatchError(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_NOT;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndStaleOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndStaleOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_STALE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrStaleOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrStaleOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_STALE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_XorStaleOp1(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_XorStaleOp2(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 99;
+    LC_OperData.WRTPtr[1].WatchResult = LC_WATCH_STALE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_NotStale(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_NOT;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_STALE, "Result == LC_ACTION_STALE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_AndNominal(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_FAIL, "Result == LC_ACTION_FAIL");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_OrNominal(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_PASS, "Result == LC_ACTION_PASS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_XorNominal(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 1;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[3] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+    LC_OperData.WRTPtr[1].WatchResult = 99;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_NotNominal(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_NOT;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_Equal(void)
+{
+    uint16 APNumber = 0;
+
+    /* Pass */
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_FALSE;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(APNumber), LC_ACTION_PASS);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* Fail */
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_TRUE;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(APNumber), LC_ACTION_FAIL);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* LC_WATCH_ERROR */
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_ERROR;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(APNumber), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* LC_WATCH_STALE */
+    LC_OperData.WRTPtr[0].WatchResult = LC_WATCH_STALE;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(APNumber), LC_ACTION_STALE);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* Fail empty stack pointer check */
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[2] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(APNumber), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void LC_EvaluateRPN_Test_WatchpointNumberNominal(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[APNumber].RPNEquation[1] = LC_RPN_EQUAL;
+
+    LC_OperData.WRTPtr[0].WatchResult = 77;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == 77, "Result == 77");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_EvaluateRPN_Test_DefaultIllegalRPN(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "AP has illegal RPN expression: AP = %%d, LastOperand = %%d, StackPtr = %%d");
+
+    LC_OperData.ADTPtr[APNumber].RPNEquation[0] = LC_MAX_WATCHPOINTS;
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_EvaluateRPN_Test_EndOfBufferWhenNotDone(void)
+{
+    uint8  Result;
+    uint16 APNumber = 0;
+    uint32 i;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "AP has illegal RPN expression: AP = %%d, LastOperand = %%d, StackPtr = %%d");
+
+    for (i = 0; i < (sizeof(LC_OperData.ADTPtr[0].RPNEquation) / sizeof(LC_OperData.ADTPtr[0].RPNEquation[0])); i++)
+    {
+        LC_OperData.ADTPtr[APNumber].RPNEquation[i] = 0;
+    }
+    for (i = 0; i < (sizeof(WRTable) / sizeof(WRTable[0])); i++)
+    {
+        LC_OperData.WRTPtr[i].WatchResult = 77;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_EvaluateRPN(APNumber);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ACTION_ERROR, "Result == LC_ACTION_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_EvaluateRPN_Test_PushPopFail(void)
+{
+    /* Fail LC_RPN_AND pop 2 */
+    LC_OperData.ADTPtr[0].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_RPN_AND;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_AND pop 1 */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_AND;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_OR pop 2 */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_RPN_OR;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_OR pop 1 */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_OR;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_XOR pop 2 */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = 0;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_RPN_XOR;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_XOR pop 1 */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_XOR;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_NOT pop */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_NOT;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    /* Fail LC_RPN_EQUAL pop */
+    UT_ResetState(0);
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_EQUAL;
+
+    UtAssert_UINT32_EQ(LC_EvaluateRPN(0), LC_ACTION_ERROR);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_INVALID_RPN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void LC_ValidateADT_Test_ActionNotUsed(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState = LC_ACTION_NOT_USED;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateADT_Test_InvalidDefaultState(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char   ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify err: AP = %%d, Err = %%d, State = %%d, RTS = %%d, FailCnt = %%d, EvtType = %%d");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = 99;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 88;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 77;
+        LC_OperData.ADTPtr[TableIndex].EventType         = 66;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_DEFSTATE, "Result == LC_ADTVAL_ERR_DEFSTATE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateADT_Test_BadRtsID(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char   ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify err: AP = %%d, Err = %%d, State = %%d, RTS = %%d, FailCnt = %%d, EvtType = %%d");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_APSTATE_ACTIVE;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = LC_MAX_VALID_ADT_RTSID + 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 77;
+        LC_OperData.ADTPtr[TableIndex].EventType         = 66;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RTSID, "Result == LC_ADTVAL_ERR_RTSID");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateADT_Test_BadFailCount(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char   ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify err: AP = %%d, Err = %%d, State = %%d, RTS = %%d, FailCnt = %%d, EvtType = %%d");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_APSTATE_ACTIVE;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 0;
+        LC_OperData.ADTPtr[TableIndex].EventType         = 66;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_FAILCNT, "Result == LC_ADTVAL_ERR_FAILCNT");
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateADT_Test_InvalidEventType(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char   ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify err: AP = %%d, Err = %%d, State = %%d, RTS = %%d, FailCnt = %%d, EvtType = %%d");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_APSTATE_ACTIVE;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 88;
+        LC_OperData.ADTPtr[TableIndex].EventType         = 99;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_EVTTYPE, "Result == LC_ADTVAL_ERR_EVTTYPE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateADT_Test_ValidateRpnAdtValError(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char   ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify RPN err: AP = %%d, Index = %%d, StackDepth = %%d");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_APSTATE_ACTIVE;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 88;
+        LC_OperData.ADTPtr[TableIndex].EventType         = CFE_EVS_EventType_DEBUG;
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[0]    = 999;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RPN, "Result == LC_ADTVAL_ERR_RPN");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_RPNERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateADT_Test_ValidateRpnAdtValNoError(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_APSTATE_ACTIVE;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 88;
+        LC_OperData.ADTPtr[TableIndex].EventType         = CFE_EVS_EventType_DEBUG;
+
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[1] = LC_RPN_NOT;
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[2] = LC_RPN_EQUAL;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateADT_Test_Nominal(void)
+{
+    uint8  Result;
+    uint32 TableIndex;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "ADT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ADTPtr[TableIndex].DefaultState      = LC_ACTION_NOT_USED;
+        LC_OperData.ADTPtr[TableIndex].RTSId             = 1;
+        LC_OperData.ADTPtr[TableIndex].MaxFailsBeforeRTS = 1;
+        LC_OperData.ADTPtr[TableIndex].EventType         = CFE_EVS_EventType_DEBUG;
+
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[1] = LC_RPN_NOT;
+        LC_OperData.ADTPtr[TableIndex].RPNEquation[2] = LC_RPN_EQUAL;
+    }
+
+    LC_OperData.ADTPtr[0].DefaultState = LC_APSTATE_ACTIVE;
+    LC_OperData.ADTPtr[1].DefaultState = LC_APSTATE_PASSIVE;
+    LC_OperData.ADTPtr[2].DefaultState = LC_APSTATE_DISABLED;
+    LC_OperData.ADTPtr[3].DefaultState = LC_APSTATE_PERMOFF;
+
+    LC_OperData.ADTPtr[0].EventType = CFE_EVS_EventType_DEBUG;
+    LC_OperData.ADTPtr[1].EventType = CFE_EVS_EventType_INFORMATION;
+    LC_OperData.ADTPtr[2].EventType = CFE_EVS_EventType_ERROR;
+    LC_OperData.ADTPtr[3].EventType = CFE_EVS_EventType_CRITICAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateADT(LC_OperData.ADTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateRPN_Test_RpnAnd(void)
+{
+    uint8 Result;
+
+    int32 IndexValue, StackDepthValue;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_MAX_WATCHPOINTS - 2;
+    LC_OperData.ADTPtr[0].RPNEquation[2] = LC_RPN_AND;
+    LC_OperData.ADTPtr[0].RPNEquation[3] = LC_RPN_EQUAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_RpnOr(void)
+{
+    uint8 Result;
+
+    int32 IndexValue, StackDepthValue;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_MAX_WATCHPOINTS - 2;
+    LC_OperData.ADTPtr[0].RPNEquation[2] = LC_RPN_OR;
+    LC_OperData.ADTPtr[0].RPNEquation[3] = LC_RPN_EQUAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_RpnXor(void)
+{
+    uint8 Result;
+
+    int32 IndexValue, StackDepthValue;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_MAX_WATCHPOINTS - 2;
+    LC_OperData.ADTPtr[0].RPNEquation[2] = LC_RPN_XOR;
+    LC_OperData.ADTPtr[0].RPNEquation[3] = LC_RPN_EQUAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_RpnNot(void)
+{
+    uint8 Result;
+
+    int32 IndexValue, StackDepthValue;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_MAX_WATCHPOINTS - 1;
+    LC_OperData.ADTPtr[0].RPNEquation[1] = LC_RPN_NOT;
+    LC_OperData.ADTPtr[0].RPNEquation[2] = LC_RPN_EQUAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_NO_ERR, "Result == LC_ADTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_StackDepthZero(void)
+{
+    uint8 Result;
+
+    int32 IndexValue      = 0;
+    int32 StackDepthValue = 0;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_NOT;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RPN, "Result == LC_ADTVAL_ERR_RPN");
+    UtAssert_True(IndexValue == 0, "IndexValue == 0");
+    UtAssert_True(StackDepthValue == 0, "StackDepthValue == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_StackDepthZero2(void)
+{
+    uint8 Result;
+
+    int32 IndexValue      = 0;
+    int32 StackDepthValue = 0;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_RPN_EQUAL;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RPN, "Result == LC_ADTVAL_ERR_RPN");
+    UtAssert_True(IndexValue == 0, "IndexValue == 0");
+    UtAssert_True(StackDepthValue == 0, "StackDepthValue == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_MaxRPNSize(void)
+{
+    uint8 Result;
+
+    int32 IndexValue      = 0;
+    int32 StackDepthValue = 0;
+
+    for (int i = 0; i < LC_MAX_RPN_EQU_SIZE; i++)
+    {
+        LC_OperData.ADTPtr[0].RPNEquation[i] = LC_MAX_WATCHPOINTS - 1;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RPN, "Result == LC_ADTVAL_ERR_RPN");
+    UtAssert_True(IndexValue == LC_MAX_RPN_EQU_SIZE, "IndexValue == LC_MAX_RPN_EQU_SIZE");
+    UtAssert_True(StackDepthValue == LC_MAX_RPN_EQU_SIZE, "StackDepthValue == LC_MAX_RPN_EQU_SIZE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ValidateRPN_Test_InvalidBufferItem(void)
+{
+    uint8 Result;
+
+    int32 IndexValue      = 0;
+    int32 StackDepthValue = 0;
+
+    LC_OperData.ADTPtr[0].RPNEquation[0] = LC_MAX_WATCHPOINTS;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateRPN(LC_OperData.ADTPtr[0].RPNEquation, &IndexValue, &StackDepthValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_ADTVAL_ERR_RPN, "Result == LC_ADTVAL_ERR_RPN");
+    UtAssert_True(IndexValue == 0, "IndexValue == 0");
+    UtAssert_True(StackDepthValue == 0, "StackDepthValue == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_SampleAPs_Test_SingleActionPointNominal, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPs_Test_SingleActionPointNominal");
+    UtTest_Add(LC_SampleAPs_Test_SingleActionPointError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPs_Test_SingleActionPointError");
+
+    UtTest_Add(LC_SampleAPs_Test_SingleActionPointPermOff, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPs_Test_SingleActionPointPermOff");
+    UtTest_Add(LC_SampleAPs_Test_MultiActionPointNominal, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPs_Test_MultiActionPointNominal");
+
+    UtTest_Add(LC_SampleSingleAP_Test_StateChangePassToFail, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_StateChangePassToFail");
+
+    UtTest_Add(LC_SampleSingleAP_Test_StateChangePassToFailMaxChange, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_StateChangePassToFailMaxChange");
+    UtTest_Add(LC_SampleSingleAP_Test_ActiveRequestRTS, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_ActiveRequestRTS");
+    UtTest_Add(LC_SampleSingleAP_Test_APFailWhileLCStatePassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_APFailWhileLCStatePassive");
+    UtTest_Add(LC_SampleSingleAP_Test_APFailWhilePassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_APFailWhilePassive");
+    UtTest_Add(LC_SampleSingleAP_Test_APFailWhilePassiveNoEvent, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_APFailWhilePassiveNoEvent");
+    UtTest_Add(LC_SampleSingleAP_Test_StateChangeFailToPass, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_StateChangeFailToPass");
+
+    UtTest_Add(LC_SampleSingleAP_Test_StateChangeFailToPassNoEvent, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_StateChangeFailToPassNoEvent");
+    UtTest_Add(LC_SampleSingleAP_Test_ActionStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_ActionStale");
+    UtTest_Add(LC_SampleSingleAP_Test_ActionError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_ActionError");
+    UtTest_Add(LC_SampleSingleAP_Test_ConsecutivePass, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleSingleAP_Test_ConsecutivePass");
+
+    UtTest_Add(LC_EvaluateRPN_Test_AndWatchFalseOp1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_AndWatchFalseOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_AndWatchFalseOp2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_AndWatchFalseOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_OrWatchTrueOp1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_OrWatchTrueOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_OrWatchTrueOp2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_OrWatchTrueOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_AndWatchErrorOp1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_AndWatchErrorOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_AndWatchErrorOp2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_AndWatchErrorOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_OrWatchErrorOp1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_OrWatchErrorOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_OrWatchErrorOp2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_OrWatchErrorOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_XorWatchErrorOp1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_XorWatchErrorOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_XorWatchErrorOp2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_XorWatchErrorOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_NotWatchError, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_NotWatchError");
+    UtTest_Add(LC_EvaluateRPN_Test_AndStaleOp1, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_AndStaleOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_AndStaleOp2, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_AndStaleOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_OrStaleOp1, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_OrStaleOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_OrStaleOp2, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_OrStaleOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_XorStaleOp1, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_XorStaleOp1");
+    UtTest_Add(LC_EvaluateRPN_Test_XorStaleOp2, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_XorStaleOp2");
+    UtTest_Add(LC_EvaluateRPN_Test_NotStale, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_NotStale");
+    UtTest_Add(LC_EvaluateRPN_Test_AndNominal, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_AndNominal");
+    UtTest_Add(LC_EvaluateRPN_Test_OrNominal, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_OrNominal");
+    UtTest_Add(LC_EvaluateRPN_Test_XorNominal, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_XorNominal");
+    UtTest_Add(LC_EvaluateRPN_Test_NotNominal, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_NotNominal");
+    UtTest_Add(LC_EvaluateRPN_Test_Equal, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_Equal");
+    UtTest_Add(LC_EvaluateRPN_Test_WatchpointNumberNominal, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_WatchpointNumberNominal");
+    UtTest_Add(LC_EvaluateRPN_Test_DefaultIllegalRPN, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_DefaultIllegalRPN");
+    UtTest_Add(LC_EvaluateRPN_Test_EndOfBufferWhenNotDone, LC_Test_Setup, LC_Test_TearDown,
+               "LC_EvaluateRPN_Test_EndOfBufferWhenNotDone");
+    UtTest_Add(LC_EvaluateRPN_Test_PushPopFail, LC_Test_Setup, LC_Test_TearDown, "LC_EvaluateRPN_Test_PushPopFail");
+
+    UtTest_Add(LC_ValidateADT_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateADT_Test_Nominal");
+    UtTest_Add(LC_ValidateADT_Test_ActionNotUsed, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateADT_Test_ActionNotUsed");
+    UtTest_Add(LC_ValidateADT_Test_InvalidDefaultState, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateADT_Test_InvalidDefaultState");
+    UtTest_Add(LC_ValidateADT_Test_BadRtsID, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateADT_Test_BadRtsID");
+    UtTest_Add(LC_ValidateADT_Test_BadFailCount, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateADT_Test_BadFailCount");
+    UtTest_Add(LC_ValidateADT_Test_InvalidEventType, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateADT_Test_InvalidEventType");
+    UtTest_Add(LC_ValidateADT_Test_ValidateRpnAdtValError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateADT_Test_ValidateRpnAdtValError");
+    UtTest_Add(LC_ValidateADT_Test_ValidateRpnAdtValNoError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateADT_Test_ValidateRpnAdtValNoError");
+
+    UtTest_Add(LC_ValidateRPN_Test_RpnAnd, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateRPN_Test_RpnAnd");
+    UtTest_Add(LC_ValidateRPN_Test_RpnOr, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateRPN_Test_RpnOr");
+    UtTest_Add(LC_ValidateRPN_Test_RpnXor, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateRPN_Test_RpnXor");
+    UtTest_Add(LC_ValidateRPN_Test_RpnNot, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateRPN_Test_RpnNot");
+    UtTest_Add(LC_ValidateRPN_Test_StackDepthZero, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateRPN_Test_StackDepthZero");
+    UtTest_Add(LC_ValidateRPN_Test_StackDepthZero2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateRPN_Test_StackDepthZero2");
+    UtTest_Add(LC_ValidateRPN_Test_MaxRPNSize, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateRPN_Test_MaxRPNSize");
+
+    UtTest_Add(LC_ValidateRPN_Test_InvalidBufferItem, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateRPN_Test_InvalidBufferItem");
+}
+```
+
+### `lc_app_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_app_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test cases for the functions contained in the file lc_app.c
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_utils.h"
+#include "lc_test_utils.h"
+#include "lc_cmds.h"
+
+#include "cfe.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+/*
+ * Function Definitions
+ */
+
+uint16 LC_APP_TEST_CFE_TBL_RegisterHookCount;
+int32  LC_APP_TEST_CFE_TBL_RegisterHook1(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                         const UT_StubContext_t *Context)
+{
+    LC_APP_TEST_CFE_TBL_RegisterHookCount++;
+
+    if (LC_APP_TEST_CFE_TBL_RegisterHookCount == 1)
+        return 99;
+    else
+        return CFE_TBL_INFO_RECOVERED_TBL;
+}
+
+int32 LC_APP_TEST_CFE_TBL_RegisterHook2(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                        const UT_StubContext_t *Context)
+{
+    LC_APP_TEST_CFE_TBL_RegisterHookCount++;
+
+    if (LC_APP_TEST_CFE_TBL_RegisterHookCount == 2)
+        return 99;
+    else
+        return CFE_TBL_INFO_RECOVERED_TBL;
+}
+
+int32 LC_APP_TEST_CFE_TBL_RegisterHook3(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                        const UT_StubContext_t *Context)
+{
+    LC_APP_TEST_CFE_TBL_RegisterHookCount++;
+
+    if (LC_APP_TEST_CFE_TBL_RegisterHookCount == 1)
+        return CFE_TBL_INFO_RECOVERED_TBL;
+    else
+        return CFE_SUCCESS;
+}
+
+int32 LC_APP_TEST_CFE_TBL_RegisterHook4(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                        const UT_StubContext_t *Context)
+{
+    LC_APP_TEST_CFE_TBL_RegisterHookCount++;
+
+    if (LC_APP_TEST_CFE_TBL_RegisterHookCount == 1)
+        return CFE_TBL_INFO_RECOVERED_TBL;
+    if (LC_APP_TEST_CFE_TBL_RegisterHookCount == 2)
+        return CFE_SUCCESS;
+    else
+        return -1;
+}
+
+/* Hook used to override CDS settings */
+static void UT_Handler_CFE_ES_RunLoop(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint16 CallCount;
+    bool   Status = false;
+
+    CallCount = UT_GetStubCount(FuncKey);
+
+    /* Exercise each option for coverage */
+    if (CallCount == 1)
+    {
+        LC_OperData.HaveActiveCDS = false;
+        LC_AppData.CDSSavedOnExit = 0;
+    }
+    else if (CallCount == 2)
+    {
+        LC_OperData.HaveActiveCDS = true;
+        LC_AppData.CDSSavedOnExit = 0;
+    }
+    else
+    {
+        LC_OperData.HaveActiveCDS = true;
+        LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+    }
+
+    /* Always return false */
+    UT_Stub_SetReturnValue(FuncKey, Status);
+}
+
+void LC_AppMain_Test_Nominal(void)
+{
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, false);
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_AppPipe), CFE_SUCCESS);
+
+    LC_AppMain();
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    /* generates 2 messages we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_AppPipe)), 1);
+}
+
+void LC_AppMain_Test_NominalCDSSave(void)
+{
+    /* Handler forces CDS conditions based on call count */
+    UT_SetHandlerFunction(UT_KEY(CFE_ES_RunLoop), &UT_Handler_CFE_ES_RunLoop, NULL);
+
+    /* Cycle through all conditions forced by handler */
+    LC_AppMain();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_UpdateTaskCDS)), 0);
+
+    /* Reset SendEvent to avoid filling buffer */
+    UT_ResetState(UT_KEY(CFE_EVS_SendEvent));
+    LC_AppMain();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_UpdateTaskCDS)), 0);
+
+    UT_ResetState(UT_KEY(CFE_EVS_SendEvent));
+    LC_AppMain();
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_UpdateTaskCDS)), 1);
+}
+
+void LC_AppMain_Test_NominalCDSNoSave(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+    LC_AppData.CDSSavedOnExit = LC_CDS_NOT_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, false);
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_AppPipe), CFE_SUCCESS);
+
+    LC_AppMain();
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    /* generates 2 messages we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_AppPipe)), 1);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_UpdateTaskCDS)), 0);
+}
+
+void LC_AppMain_Test_AppInitFail(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Task terminating, err = 0x%%08X");
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), -1);
+
+    LC_AppMain();
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    /* generates one message we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_TASK_EXIT_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_CRITICAL);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_AppMain_Test_SbError(void)
+{
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Task terminating, err = 0x%%08X");
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, false);
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_PerformMaintenance), CFE_SUCCESS);
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, -1);
+
+    LC_AppMain();
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    /* generates 2 messages we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 3);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventID, LC_TASK_EXIT_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[2].EventType, CFE_EVS_EventType_CRITICAL);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[2].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[2].Spec);
+}
+
+void LC_AppMain_Test_SbTimeout(void)
+{
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, false);
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_PerformMaintenance), CFE_SUCCESS);
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, CFE_SB_TIME_OUT);
+
+    LC_AppMain();
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_ES_ExitApp)), 1);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(LC_PerformMaintenance)), 1);
+}
+
+void LC_AppInit_Test_Nominal(void)
+{
+    int32 Result;
+    char  Message[125];
+
+    memset(&LC_OperData, 1, sizeof(LC_OperData));
+    memset(&LC_AppData, 1, sizeof(LC_AppData));
+
+    /* Set to prevent errors when initializing tables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_AppInit();
+
+    /* Verify results */
+    sprintf(Message, "LC Initialized. Version %d.%d.%d.%d", LC_MAJOR_VERSION, LC_MINOR_VERSION, LC_REVISION,
+            LC_MISSION_REV);
+    /*    UtAssert_True (Ut_CFE_EVS_EventSent(LC_INIT_INF_EID, CFE_EVS_INFORMATION, Message), Message); */
+
+    UtAssert_INT32_EQ(Result, CFE_SUCCESS);
+
+    UtAssert_BOOL_FALSE(CFE_RESOURCEID_TEST_DEFINED(LC_OperData.CmdPipe));
+    /* Note: not testing LC_OperData.WDTPtr == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.ADTPtr == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.WRTPtr == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.ARTPtr == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.WDTHandle == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.ADTHandle == 0, because it is modified by a subfunction */
+    UtAssert_INT32_EQ(LC_OperData.WRTHandle, 0);
+    /* Note: not testing LC_OperData.ARTHandle == 0, because it is modified by a subfunction */
+    UtAssert_BOOL_FALSE(CFE_RESOURCEID_TEST_DEFINED(LC_OperData.WRTDataCDSHandle));
+    UtAssert_BOOL_FALSE(CFE_RESOURCEID_TEST_DEFINED(LC_OperData.ARTDataCDSHandle));
+    UtAssert_BOOL_FALSE(CFE_RESOURCEID_TEST_DEFINED(LC_OperData.AppDataCDSHandle));
+    /* Note: not testing LC_OperData.WatchpointCount == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.MessageIDsCount == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.HkPacket == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.TableResults == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.HashTable == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.MessageLinks == 0, because it is modified by a subfunction */
+    /* Note: not testing LC_OperData.WatchPtLinks == 0, because it is modified by a subfunction */
+    UtAssert_INT32_EQ(LC_OperData.HaveActiveCDS, 0);
+
+    UtAssert_INT32_EQ(LC_AppData.CmdCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.CmdErrCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.APSampleCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.MonitoredMsgCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.RTSExecCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.PassiveRTSExecCount, 0);
+    UtAssert_INT32_EQ(LC_AppData.CDSSavedOnExit, 0);
+    /* Note: not testing LC_AppData.CurrentLCState == 0, because it is modified by a subfunction */
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+#ifndef LC_SAVE_TO_CDS /* When this is not defined EVENT ID=23 is always issued (LC use of Critical Data Store \
+                          disabled) */
+    /* Generates 3 event message we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 2);
+#else /* Alt confg unit tests */
+    /* Generates 2 event message we don't care about in this test */
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+#endif
+}
+
+void LC_AppInit_Test_EVSInitError(void)
+{
+    int32 Result;
+
+    /* Set to prevent errors when initializing tables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to cause LC_EvsInit to return -1, in order to satisfy subsequent condition "Status != CFE_SUCCESS" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), -1);
+
+    /* Execute the function being tested */
+    Result = LC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_AppInit_Test_SBInitError(void)
+{
+    int32 Result;
+
+    /* Set to prevent errors when initializing tables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to cause LC_SbInit to return -1, in order to satisfy subsequent condition "Status != CFE_SUCCESS" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), -1);
+
+    /* Execute the function being tested */
+    Result = LC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    /* Generates one event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_AppInit_Test_TableInitError(void)
+{
+    int32 Result;
+
+    /* Set to cause LC_TableInit to return -1, in order to satisfy subsequent condition "Status != CFE_SUCCESS" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), -1);
+
+    /* Execute the function being tested */
+    Result = LC_AppInit();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    /* Generates one event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_EvsInit_Test_Nominal(void)
+{
+    int32 Result;
+
+    /* Execute the function being tested */
+    Result = LC_EvsInit();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_EvsInit_Test_EVSRegisterError(void)
+{
+    int32 Result;
+
+    /* Set to generate system log message "LC App: Error Registering For Event Services" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), -1);
+
+    /* Execute the function being tested */
+    Result = LC_EvsInit();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    /*    UtAssert_True
+            (Ut_CFE_ES_SysLogWritten("LC App: Error Registering For Event Services, RC = 0xFFFFFFFF\n"),
+            "LC App: Error Registering For Event Services, RC = 0xFFFFFFFF");*/
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SbInit_Test_Nominal(void)
+{
+    int32 Result;
+
+    /* Execute the function being tested */
+    Result = LC_SbInit();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SbInit_Test_CreatePipeError(void)
+{
+    int32 Result;
+
+    /* Set to generate error message LC_CR_PIPE_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), -1);
+
+    /* Execute the function being tested */
+    Result = LC_SbInit();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_CR_PIPE_ERR_EID, CFE_EVS_ERROR, "Error Creating LC Pipe, RC=0xFFFFFFFF"),
+            "Error Creating LC Pipe, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_SbInit_Test_SubscribeHKReqError(void)
+{
+    int32 Result;
+
+    /* Set to generate error message LC_SUB_HK_REQ_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), -1);
+
+    /* Execute the function being tested */
+    Result = LC_SbInit();
+
+    /* Verify results */
+    /*   UtAssert_True
+           (Ut_CFE_EVS_EventSent(LC_SUB_HK_REQ_ERR_EID, CFE_EVS_ERROR, "Error Subscribing to HK Request, MID=0x18A5,
+       RC=0xFFFFFFFF"), "Error Subscribing to HK Request, MID=0x18A5, RC=0xFFFFFFFF");
+   */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_SbInit_Test_SubscribeGndCmdError(void)
+{
+    int32 Result;
+
+    /* Set to generate error message LC_SUB_GND_CMD_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 2, -1);
+
+    /* Execute the function being tested */
+    Result = LC_SbInit();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_SUB_GND_CMD_ERR_EID, CFE_EVS_ERROR, "Error Subscribing to GND CMD, MID=0x18A4,
+       RC=0xFFFFFFFF"), "Error Subscribing to GND CMD, MID=0x18A4, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_SbInit_Test_SubscribeSampleCmdError(void)
+{
+    int32 Result;
+
+    /* Set to generate error message LC_SUB_SAMPLE_CMD_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Subscribe), 3, -1);
+
+    /* Execute the function being tested */
+    Result = LC_SbInit();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_SUB_SAMPLE_CMD_ERR_EID, CFE_EVS_ERROR, "Error Subscribing to Sample CMD,
+       MID=0x18A6, RC=0xFFFFFFFF"), "Error Subscribing to Sample CMD, MID=0x18A6, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_TableInit_Test_CreateResultsTablesError(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* force LC_CreateResultTables to fail */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), -1);
+
+    UtAssert_INT32_EQ(LC_TableInit(), -1);
+}
+
+void LC_TableInit_Test_CreateDefinitionTablesError(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* force LC_CreateDefinitionTables to fail (but allow LC_CreateResultsTables
+     * to succeed) */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 3, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, -1);
+
+    UtAssert_INT32_EQ(LC_TableInit(), -1);
+}
+
+/* Hits the uncovered branches related to LoadDefaultTables */
+void LC_TableInit_Test_LoadDefaultTables(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Only recover WDT */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 3, CFE_TBL_INFO_RECOVERED_TBL);
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    /* Hit table info updated case for LC_LoadDefaultTables */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 4, CFE_TBL_INFO_UPDATED);
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_UPDATED_INF_EID);
+
+    /* Reset SendEvent and don't recover WDT */
+    UT_ResetState(UT_KEY(CFE_EVS_SendEvent));
+    LC_OperData.TableResults = 0;
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_UPDATED_INF_EID);
+
+    /* Reset all states and only restore WRT and ART CDS */
+    UT_ResetState(0);
+    LC_OperData.TableResults = 0;
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 1, CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 1, CFE_ES_CDS_ALREADY_EXISTS);
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_UPDATED_INF_EID);
+
+    /* Reset all states and only restore WRT */
+    UT_ResetState(0);
+    LC_OperData.TableResults = 0;
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 1, CFE_ES_CDS_ALREADY_EXISTS);
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_NEQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_UPDATED_INF_EID);
+}
+
+void LC_TableInit_Test_GetWDTAddressError(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Recover all but the first two tables so LC_CreateResultTables will succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_TBL_INFO_RECOVERED_TBL);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 3, -1);
+
+    UtAssert_INT32_EQ(LC_TableInit(), -1);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDT_GETADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void LC_TableInit_Test_GetWDTAddressUpdated(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Recover all but the first two tables so LC_CreateResultTables will succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_TBL_INFO_RECOVERED_TBL);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 3, CFE_TBL_INFO_UPDATED);
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_RESTORED_INF_EID);
+}
+
+void LC_TableInit_Test_GetADTAddressError(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Recover all but the first two tables so LC_CreateResultTables will succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_TBL_INFO_RECOVERED_TBL);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 4, -1);
+
+    UtAssert_INT32_EQ(LC_TableInit(), -1);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADT_GETADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void LC_TableInit_Test_GetADTAddressUpdated(void)
+{
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Recover all but the first two tables so LC_CreateResultTables will succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_TBL_INFO_RECOVERED_TBL);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_SUCCESS);
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 4, CFE_TBL_INFO_UPDATED);
+
+    UtAssert_INT32_EQ(LC_TableInit(), CFE_SUCCESS);
+
+    /* Ensure correct table state */
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WRT_CDS_RESTORED, LC_WRT_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ART_CDS_RESTORED, LC_ART_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_APP_CDS_RESTORED, LC_APP_CDS_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_WDT_TBL_RESTORED, LC_WDT_TBL_RESTORED);
+    UtAssert_UINT32_EQ(LC_OperData.TableResults & LC_ADT_TBL_RESTORED, LC_ADT_TBL_RESTORED);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CDS_RESTORED_INF_EID);
+}
+
+void LC_TableInit_Test_CreateTaskCDSError(void)
+{
+    int32 Result;
+    LC_OperData.HaveActiveCDS = true;
+
+    /* force LC_CreateTaskCDS to fail */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), -1);
+
+    Result = LC_TableInit();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.HaveActiveCDS == false, "LC_OperData.HaveActiveCDS == false");
+}
+
+void LC_TableInit_Test_Nominal(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Setup LC_CreateTaskCDS to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 3, CFE_TBL_INFO_RECOVERED_TBL);
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 1, CFE_TBL_INFO_RECOVERED_TBL);
+
+    Result = LC_TableInit();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_CREATED) == LC_WRT_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_CREATED == LC_WRT_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_CREATED) == LC_ART_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_ART_CDS_CREATED == LC_ART_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_CREATED) == LC_APP_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_APP_CDS_CREATED == LC_APP_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_RESTORED) == LC_WRT_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_RESTORED == LC_WRT_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_RESTORED) == LC_ART_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_ART_CDS_RESTORED == LC_ART_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_RESTORED) == LC_APP_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_APP_CDS_RESTORED == LC_APP_CDS_RESTORED");
+}
+
+void LC_CreateResultTables_Test_Nominal(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults = 0;
+
+    /* Execute the function being tested */
+    Result = LC_CreateResultTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.TableResults == (LC_WRT_TBL_CREATED | LC_ART_TBL_CREATED),
+                  "LC_OperData.TableResults == (LC_WRT_TBL_CREATED | LC_ART_TBL_CREATED)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_CreateResultTables_Test_WRTRegisterError(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults = 0;
+
+    /* Set to generate error message LC_WRT_REGISTER_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), -1);
+
+    /* Execute the function being tested */
+    Result = LC_CreateResultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_WRT_REGISTER_ERR_EID, CFE_EVS_ERROR, "Error registering WRT, RC=0xFFFFFFFF"),
+            "Error registering WRT, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(LC_OperData.TableResults == 0, "LC_OperData.TableResults == 0");
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_CreateResultTables_Test_WRTGetAddressError(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults = 0;
+
+    /* Set to generate error message LC_WRT_GETADDR_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), -1);
+
+    /* Execute the function being tested */
+    Result = LC_CreateResultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_WRT_GETADDR_ERR_EID, CFE_EVS_ERROR, "Error getting WRT address, RC=0xFFFFFFFF"),
+            "Error getting WRT address, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(LC_OperData.TableResults == 0, "LC_OperData.TableResults == 0");
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_CreateResultTables_Test_ARTRegisterError(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults = 0;
+
+    /* Set to generate error message LC_ART_REGISTER_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 2, -1);
+
+    /* Execute the function being tested */
+    Result = LC_CreateResultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_ART_REGISTER_ERR_EID, CFE_EVS_ERROR, "Error registering ART, RC=0xFFFFFFFF"),
+            "Error registering ART, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(LC_OperData.TableResults == LC_WRT_TBL_CREATED, "LC_OperData.TableResults == LC_WRT_TBL_CREATED");
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_CreateResultTables_Test_ARTGetAddressError(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults = 0;
+
+    /* Set to generate error message LC_ART_GETADDR_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 2, -1);
+
+    /* Execute the function being tested */
+    Result = LC_CreateResultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_ART_GETADDR_ERR_EID, CFE_EVS_ERROR, "Error getting ART address, RC=0xFFFFFFFF"),
+            "Error getting ART address, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(LC_OperData.TableResults == LC_WRT_TBL_CREATED, "LC_OperData.TableResults == LC_WRT_TBL_CREATED");
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_CreateDefinitionTables_Test_NominalCDSActive(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Set to reach all nominal code branches */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_CreateDefinitionTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_ADT_CRITICAL_TBL),
+                  "LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_ADT_CRITICAL_TBL)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_CreateDefinitionTables_Test_NominalCDSInactive(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to reach all nominal code branches */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_CreateDefinitionTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_NOT_CRITICAL | LC_ADT_NOT_CRITICAL),
+                  "LC_OperData.TableResults == (LC_WDT_NOT_CRITICAL | LC_ADT_NOT_CRITICAL)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_CreateDefinitionTables_Test_WDTReRegisterThenInfoRecovered(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Error registering WDT as critical table, retrying with default options, RC=0x%%08X");
+
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Satisfies condition "(LC_OperData.HaveActiveCDS) && ((Result != CFE_TBL_INFO_RECOVERED_TBL) && (Result !=
+       CFE_SUCCESS))" and then satisfies condition "Result == CFE_TBL_INFO_RECOVERED_TBL" */
+    LC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), &LC_APP_TEST_CFE_TBL_RegisterHook1, NULL);
+
+    /* Execute the function being tested */
+    Result = LC_CreateDefinitionTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.HaveActiveCDS == false, "LC_OperData.HaveActiveCDS == false");
+    UtAssert_True(LC_OperData.TableResults ==
+                      (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_CRITICAL_TBL | LC_ADT_TBL_RESTORED),
+                  "LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_CRITICAL_TBL | "
+                  "LC_ADT_TBL_RESTORED)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDT_REGISTER_CRIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CreateDefinitionTables_Test_ADTReRegisterThenInfoRecovered(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Error registering ADT as critical table, retrying with default options, RC=0x%%08X");
+
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Satisfies condition "(LC_OperData.HaveActiveCDS) && ((Result != CFE_TBL_INFO_RECOVERED_TBL) && (Result !=
+       CFE_SUCCESS))" and then satisfies condition "Result == CFE_TBL_INFO_RECOVERED_TBL" */
+    LC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), &LC_APP_TEST_CFE_TBL_RegisterHook2, NULL);
+
+    /* Execute the function being tested */
+    Result = LC_CreateDefinitionTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.HaveActiveCDS == false, "LC_OperData.HaveActiveCDS == false");
+    UtAssert_True(LC_OperData.TableResults ==
+                      (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_CRITICAL_TBL | LC_ADT_TBL_RESTORED),
+                  "LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_CRITICAL_TBL | "
+                  "LC_ADT_TBL_RESTORED)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADT_REGISTER_CRIT_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CreateDefinitionTables_Test_WDTCriticalADTNoncritical(void)
+{
+    int32 Result;
+
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Satisfies condition "((LC_OperData.TableResults & LC_WDT_CRITICAL_TBL) == LC_WDT_CRITICAL_TBL) &&
+       ((LC_OperData.TableResults & LC_ADT_NOT_CRITICAL) == LC_ADT_NOT_CRITICAL)" */
+    LC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), &LC_APP_TEST_CFE_TBL_RegisterHook3, NULL);
+
+    /* Execute the function being tested */
+    Result = LC_CreateDefinitionTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_OperData.TableResults ==
+                      (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_NOT_CRITICAL | LC_WDT_NOT_CRITICAL),
+                  "LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_NOT_CRITICAL | "
+                  "LC_WDT_NOT_CRITICAL)");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_CreateDefinitionTables_Test_WDTReRegisterError(void)
+{
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Satisfies condition "((LC_OperData.TableResults & LC_WDT_CRITICAL_TBL) == LC_WDT_CRITICAL_TBL) &&
+       ((LC_OperData.TableResults & LC_ADT_NOT_CRITICAL) == LC_ADT_NOT_CRITICAL)"
+       and then FAILS condition "Result == CFE_SUCCESS", in order to generate error message LC_WDT_REREGISTER_ERR_EID */
+    LC_APP_TEST_CFE_TBL_RegisterHookCount = 0;
+    UT_SetHookFunction(UT_KEY(CFE_TBL_Register), &LC_APP_TEST_CFE_TBL_RegisterHook4, NULL);
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(LC_CreateDefinitionTables(), -1);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_NOT_CRITICAL),
+                  "LC_OperData.TableResults == (LC_WDT_CRITICAL_TBL | LC_WDT_TBL_RESTORED | LC_ADT_NOT_CRITICAL)");
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDT_REREGISTER_ERR_EID);
+}
+
+void LC_CreateDefinitionTables_Test_WDTRegisterError(void)
+{
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to generate error message LC_WDT_REGISTER_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), -1);
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(LC_CreateDefinitionTables(), -1);
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDT_REGISTER_ERR_EID);
+}
+
+void LC_CreateDefinitionTables_Test_ADTRegisterError(void)
+{
+    LC_OperData.TableResults  = 0;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to generate error message LC_ADT_REGISTER_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Register), 2, -1);
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(LC_CreateDefinitionTables(), -1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADT_REGISTER_ERR_EID);
+}
+
+void LC_LoadDefaultTables_Test_NominalActiveCDS(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_GetAddress */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA |
+                                               LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA | LC_CDS_UPDATED),
+                  "LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA | "
+                  "LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA | LC_CDS_UPDATED)");
+
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET,
+                  "LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_LoadDefaultTables_Test_ActiveCDSNotSuccess(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_GetAddress */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Set to make subfunction LC_UpdateTaskCDS return -1, in order to satisfy condition "LC_UpdateTaskCDS() ==
+     * CFE_SUCCESS" */
+    UT_SetDefaultReturnValue(UT_KEY(LC_UpdateTaskCDS), -1);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    UtAssert_INT32_EQ(Result, CFE_SUCCESS);
+
+    UtAssert_INT32_EQ(LC_OperData.TableResults, (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA |
+                                                 LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA));
+
+    UtAssert_INT32_EQ(LC_AppData.CurrentLCState, LC_STATE_POWER_ON_RESET);
+
+    UtAssert_INT32_EQ(LC_OperData.HaveActiveCDS, false);
+
+    /* Generates one event message we don't care about in this test */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_LoadDefaultTables_Test_NominalInactiveCDS(void)
+{
+    int32 Result;
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_GetAddress */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA |
+                                               LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA),
+                  "LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA | "
+                  "LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA)");
+
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET,
+                  "LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_LoadDefaultTables_Test_LoadWDTError(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to generate error message LC_WDT_LOAD_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), -1);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_WDT_LOAD_ERR_EID, CFE_EVS_ERROR, "Error (RC=0xFFFFFFFF) Loading WDT with '"
+       LC_WDT_FILENAME "'"), "Error (RC=0xFFFFFFFF) Loading WDT with '" LC_WDT_FILENAME "'");
+    */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_LoadDefaultTables_Test_GetWDTAddressError(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to generate error message LC_WDT_GETADDR_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), -1);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    /*    UtAssert_True
+            (Ut_CFE_EVS_EventSent(LC_WDT_GETADDR_ERR_EID, CFE_EVS_ERROR, "Error getting WDT address, RC=0xFFFFFFFF"),
+            "Error getting WDT address, RC=0xFFFFFFFF");
+    */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_LoadDefaultTables_Test_LoadADTError(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to satisfy condition "Result == CFE_SUCCESS" after first call to CFE_TBL_Load */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_Load), 2, -1);
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_GetAddress */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    /*UtAssert_True
+        (Ut_CFE_EVS_EventSent(LC_ADT_LOAD_ERR_EID, CFE_EVS_ERROR, "Error (RC=0xCC000013) Loading ADT with '"
+       LC_ADT_FILENAME "'"), "Error (RC=0xCC000013) Loading ADT with '" LC_ADT_FILENAME "'");
+*/
+    UtAssert_INT32_EQ(Result, -1);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+}
+
+void LC_LoadDefaultTables_Test_GetADTAddressError(void)
+{
+    LC_OperData.HaveActiveCDS = false;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to satisfy condition "Result == CFE_SUCCESS" after first call to CFE_TBL_GetAddress */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 2, -1);
+
+    /* Execute the function being tested */
+    UtAssert_INT32_EQ(LC_LoadDefaultTables(), -1);
+
+    /* Verify results */
+    /*UtAssert_True
+        (Ut_CFE_EVS_EventSent(LC_ADT_GETADDR_ERR_EID, CFE_EVS_ERROR, "Error getting ADT address, RC=0xCC000001"),
+        "Error getting ADT address, RC=0xCC000001");
+*/
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void LC_LoadDefaultTables_Test_InfoUpdated(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_Load */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), CFE_SUCCESS);
+
+    /* Set to satisfy all instances of condition "Result == CFE_SUCCESS" after calls to CFE_TBL_GetAddress */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    Result = LC_LoadDefaultTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_TBL_INFO_UPDATED, "Result == CFE_TBL_INFO_UPDATED");
+
+    UtAssert_True(LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA |
+                                               LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA | LC_CDS_UPDATED),
+                  "LC_OperData.TableResults == (LC_WDT_DEFAULT_TBL | LC_ADT_DEFAULT_TBL | LC_WRT_DEFAULT_DATA | "
+                  "LC_ART_DEFAULT_DATA | LC_APP_DEFAULT_DATA | LC_CDS_UPDATED)");
+
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET,
+                  "LC_AppData.CurrentLCState == LC_STATE_POWER_ON_RESET");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_CreateTaskCDS_Test_Nominal(void)
+{
+    int32 Result;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_SUCCESS);
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_CREATED) == LC_WRT_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_CREATED == LC_WRT_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_CREATED) == LC_ART_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_ART_CDS_CREATED == LC_ART_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_CREATED) == LC_APP_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_APP_CDS_CREATED == LC_APP_CDS_CREATED");
+}
+
+void LC_CreateTaskCDS_Test_WRTRegisterCDSError(void)
+{
+    int32 Result;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 1, -1);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Error registering WRT CDS Area, RC=0x%%08X");
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == -1, "Result == -1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WRT_CDS_REGISTER_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CreateTaskCDS_Test_ARTRegisterCDSError(void)
+{
+    int32 Result;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 2, -1);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Error registering ART CDS Area, RC=0x%%08X");
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == -1, "Result == -1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ART_CDS_REGISTER_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CreateTaskCDS_Test_AppDataRegisterCDSError(void)
+{
+    int32 Result;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RegisterCDS), 3, -1);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Error registering application data CDS Area, RC=0x%%08X");
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == -1, "Result == -1");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APP_CDS_REGISTER_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CreateTaskCDS_Test_RestoreSuccess(void)
+{
+    int32 Result;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_CREATED) == LC_WRT_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_CREATED == LC_WRT_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_CREATED) == LC_ART_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_ART_CDS_CREATED == LC_ART_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_CREATED) == LC_APP_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_APP_CDS_CREATED == LC_APP_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_RESTORED) == LC_WRT_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_RESTORED == LC_WRT_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_RESTORED) == LC_ART_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_ART_CDS_RESTORED == LC_ART_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_RESTORED) == LC_APP_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_APP_CDS_RESTORED == LC_APP_CDS_RESTORED");
+}
+
+void LC_CreateTaskCDS_Test_RestoreSuccessCDSNotSaved(void)
+{
+    int32 Result;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), CFE_SUCCESS);
+
+    LC_AppData.CDSSavedOnExit = !LC_CDS_SAVED;
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_CREATED) == LC_WRT_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_CREATED == LC_WRT_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_CREATED) == LC_ART_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_ART_CDS_CREATED == LC_ART_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_CREATED) == LC_APP_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_APP_CDS_CREATED == LC_APP_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_RESTORED) == LC_WRT_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_RESTORED == LC_WRT_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_RESTORED) == LC_ART_CDS_RESTORED),
+                  "LC_OperData.TableResult & LC_ART_CDS_RESTORED == LC_ART_CDS_RESTORED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_RESTORED) == 0),
+                  "LC_OperData.TableResult & LC_APP_CDS_RESTORED == 0");
+}
+
+void LC_CreateTaskCDS_Test_RestoreFail(void)
+{
+    int32 Result;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RegisterCDS), CFE_ES_CDS_ALREADY_EXISTS);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RestoreFromCDS), -1);
+
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    Result = LC_CreateTaskCDS();
+
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_CREATED) == LC_WRT_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_WRT_CDS_CREATED == LC_WRT_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_CREATED) == LC_ART_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_ART_CDS_CREATED == LC_ART_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_CREATED) == LC_APP_CDS_CREATED),
+                  "LC_OperData.TableResult & LC_APP_CDS_CREATED == LC_APP_CDS_CREATED");
+    UtAssert_True(((LC_OperData.TableResults & LC_WRT_CDS_RESTORED) == 0),
+                  "LC_OperData.TableResult & LC_WRT_CDS_RESTORED == 0");
+    UtAssert_True(((LC_OperData.TableResults & LC_ART_CDS_RESTORED) == 0),
+                  "LC_OperData.TableResult & LC_ART_CDS_RESTORED == 0");
+    UtAssert_True(((LC_OperData.TableResults & LC_APP_CDS_RESTORED) == 0),
+                  "LC_OperData.TableResult & LC_APP_CDS_RESTORED == 0");
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_AppMain_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_Nominal");
+
+    UtTest_Add(LC_AppMain_Test_NominalCDSSave, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_NominalCDSSave");
+    UtTest_Add(LC_AppMain_Test_NominalCDSNoSave, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_NominalCDSNoSave");
+
+    UtTest_Add(LC_AppMain_Test_AppInitFail, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_AppInitFail");
+    UtTest_Add(LC_AppMain_Test_SbError, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_SbError");
+
+    UtTest_Add(LC_AppMain_Test_SbTimeout, LC_Test_Setup, LC_Test_TearDown, "LC_AppMain_Test_SbTimeout");
+
+#ifndef LC_SAVE_TO_CDS /* default config unit test */
+    UtTest_Add(LC_AppInit_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_AppInit_Test_Nominal");
+#endif
+
+    UtTest_Add(LC_AppInit_Test_EVSInitError, LC_Test_Setup, LC_Test_TearDown, "LC_AppInit_Test_EVSInitError");
+    UtTest_Add(LC_AppInit_Test_SBInitError, LC_Test_Setup, LC_Test_TearDown, "LC_AppInit_Test_SBInitError");
+    UtTest_Add(LC_AppInit_Test_TableInitError, LC_Test_Setup, LC_Test_TearDown, "LC_AppInit_Test_TableInitError");
+
+    UtTest_Add(LC_EvsInit_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_EvsInit_Test_Nominal");
+    UtTest_Add(LC_EvsInit_Test_EVSRegisterError, LC_Test_Setup, LC_Test_TearDown, "LC_EvsInit_Test_EVSRegisterError");
+
+    UtTest_Add(LC_SbInit_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_SbInit_Test_Nominal");
+    UtTest_Add(LC_SbInit_Test_CreatePipeError, LC_Test_Setup, LC_Test_TearDown, "LC_SbInit_Test_CreatePipeError");
+    UtTest_Add(LC_SbInit_Test_SubscribeHKReqError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SbInit_Test_SubscribeHKReqError");
+    UtTest_Add(LC_SbInit_Test_SubscribeGndCmdError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SbInit_Test_SubscribeGndCmdError");
+    UtTest_Add(LC_SbInit_Test_SubscribeSampleCmdError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SbInit_Test_SubscribeSampleCmdError");
+
+    UtTest_Add(LC_TableInit_Test_CreateTaskCDSError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_CreateTaskCDSError");
+    /* UtTest_Add(LC_TableInit_Test_CDSRestored, LC_Test_Setup, LC_Test_TearDown, "LC_TableInit_Test_CDSRestored"); */
+    /* UtTest_Add(LC_TableInit_Test_CDSUpdated, LC_Test_Setup, LC_Test_TearDown, "LC_TableInit_Test_CDSUpdated"); */
+    UtTest_Add(LC_TableInit_Test_CreateResultsTablesError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_CreateResultsTablesError");
+    UtTest_Add(LC_TableInit_Test_CreateDefinitionTablesError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_CreateDefinitionTablesError");
+
+    UtTest_Add(LC_TableInit_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_TableInit_Test_Nominal");
+    UtTest_Add(LC_TableInit_Test_LoadDefaultTables, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_LoadDefaultTables");
+    UtTest_Add(LC_TableInit_Test_GetWDTAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_GetWDTAddressError");
+    UtTest_Add(LC_TableInit_Test_GetWDTAddressUpdated, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_GetWDTAddressUpdated");
+    UtTest_Add(LC_TableInit_Test_GetADTAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_GetADTAddressError");
+    UtTest_Add(LC_TableInit_Test_GetADTAddressUpdated, LC_Test_Setup, LC_Test_TearDown,
+               "LC_TableInit_Test_GetADTAddressUpdated");
+
+    UtTest_Add(LC_CreateResultTables_Test_Nominal, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateResultTables_Test_Nominal");
+    UtTest_Add(LC_CreateResultTables_Test_WRTRegisterError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateResultTables_Test_WRTRegisterError");
+    UtTest_Add(LC_CreateResultTables_Test_WRTGetAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateResultTables_Test_WRTGetAddressError");
+    UtTest_Add(LC_CreateResultTables_Test_ARTRegisterError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateResultTables_Test_ARTRegisterError");
+    UtTest_Add(LC_CreateResultTables_Test_ARTGetAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateResultTables_Test_ARTGetAddressError");
+
+    UtTest_Add(LC_CreateDefinitionTables_Test_NominalCDSActive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_NominalCDSActive");
+    UtTest_Add(LC_CreateDefinitionTables_Test_NominalCDSInactive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_NominalCDSInactive");
+    UtTest_Add(LC_CreateDefinitionTables_Test_WDTReRegisterThenInfoRecovered, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_WDTReRegisterThenInfoRecovered");
+    UtTest_Add(LC_CreateDefinitionTables_Test_ADTReRegisterThenInfoRecovered, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_ADTReRegisterThenInfoRecovered");
+    UtTest_Add(LC_CreateDefinitionTables_Test_WDTReRegisterError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_WDTReRegisterError");
+    UtTest_Add(LC_CreateDefinitionTables_Test_WDTCriticalADTNoncritical, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_WDTCriticalADTNoncritical");
+    UtTest_Add(LC_CreateDefinitionTables_Test_WDTRegisterError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_WDTRegisterError");
+    UtTest_Add(LC_CreateDefinitionTables_Test_ADTRegisterError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateDefinitionTables_Test_ADTRegisterError");
+
+    UtTest_Add(LC_LoadDefaultTables_Test_NominalActiveCDS, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_NominalActiveCDS");
+    UtTest_Add(LC_LoadDefaultTables_Test_ActiveCDSNotSuccess, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_ActiveCDSNotSuccess");
+    UtTest_Add(LC_LoadDefaultTables_Test_NominalInactiveCDS, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_NominalInactiveCDS");
+    UtTest_Add(LC_LoadDefaultTables_Test_LoadWDTError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_LoadWDTError");
+    UtTest_Add(LC_LoadDefaultTables_Test_GetWDTAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_GetWDTAddressError");
+    UtTest_Add(LC_LoadDefaultTables_Test_LoadADTError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_LoadADTError");
+    UtTest_Add(LC_LoadDefaultTables_Test_GetADTAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_GetADTAddressError");
+    UtTest_Add(LC_LoadDefaultTables_Test_InfoUpdated, LC_Test_Setup, LC_Test_TearDown,
+               "LC_LoadDefaultTables_Test_InfoUpdated");
+
+    UtTest_Add(LC_CreateTaskCDS_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_CreateTaskCDS_Test_Nominal");
+    UtTest_Add(LC_CreateTaskCDS_Test_WRTRegisterCDSError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateTaskCDS_Test_WRTRegisterCDSError");
+    UtTest_Add(LC_CreateTaskCDS_Test_ARTRegisterCDSError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateTaskCDS_Test_ARTRegisterCDSError");
+    UtTest_Add(LC_CreateTaskCDS_Test_AppDataRegisterCDSError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateTaskCDS_Test_AppDataRegisterCDSError");
+    UtTest_Add(LC_CreateTaskCDS_Test_RestoreSuccess, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateTaskCDS_Test_RestoreSuccess");
+    UtTest_Add(LC_CreateTaskCDS_Test_RestoreSuccessCDSNotSaved, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CreateTaskCDS_Test_RestoreSuccessCDSNotSaved");
+    UtTest_Add(LC_CreateTaskCDS_Test_RestoreFail, LC_Test_Setup, LC_Test_TearDown, "LC_CreateTaskCDS_Test_RestoreFail");
+}
+```
+
+### `lc_cmds_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_cmds_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test cases for the functions contained in the file lc_app.c
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_cmds.h"
+#include "lc_app.h"
+#include "lc_utils.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+#include "lc_watch.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+void LC_AppPipe_Test_SampleAPRequest(void)
+{
+    int32          Result;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+}
+
+void LC_AppPipe_Test_HousekeepingRequest(void)
+{
+    int32          Result;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    /* Set to prevent unintended error messages in subfunctions */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+
+    uint8 call_count_LC_PerformMaintenance = UT_GetStubCount(UT_KEY(LC_PerformMaintenance));
+    UtAssert_INT32_EQ(call_count_LC_PerformMaintenance, 1);
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_Noop(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "No-op command: Version %%d.%%d.%%d.%%d");
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_NOOP_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    /* Note: this event message is generated in a subfunction, but is tested anyway to verify that the correct code path
+     * has been reached */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_NOOP_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_AppPipe_Test_Reset(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset counters command");
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_RESET_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    /* Note: this event message is generated in a subfunction, but is tested anyway to verify that the correct code path
+     * has been reached */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_RESET_DBG_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_DEBUG);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_AppPipe_Test_SetLCState(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_SET_LC_STATE_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_SetAPState(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_SET_AP_STATE_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_SetAPPermoff(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_SET_AP_PERMOFF_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_ResetAPStats(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_RESET_AP_STATS_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_ResetWPStats(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = LC_RESET_WP_STATS_CC;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_AppPipe_Test_InvalidCommandCode(void)
+{
+    int32             Result;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    FcnCode   = 99;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Invalid command code: ID = 0x%%08lX, CC = %%d");
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CC_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_AppPipe_Test_MonitorPacket(void)
+{
+    int32          Result;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = LC_UT_MID_1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    /* Execute the function being tested */
+    Result = LC_AppPipe(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+
+    uint8 call_count_LC_CheckMsgForWPs = UT_GetStubCount(UT_KEY(LC_CheckMsgForWPs));
+    UtAssert_INT32_EQ(call_count_LC_CheckMsgForWPs, 1);
+}
+
+void LC_SampleAPReq_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+}
+
+void LC_SampleAPReq_Test_StateDisabled(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState = LC_STATE_DISABLED;
+
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+}
+
+void LC_SampleAPReq_Test_AllowSampleAllWatchStale(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 1;
+    LC_OperData.WRTPtr[0].CountdownToStale = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[0].WatchResult == LC_WATCH_STALE,
+                  "LC_OperData.WRTPtr[0].WatchResult == LC_WATCH_STALE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SampleAPReq_Test_AllowSampleAllWatchNotStale(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 1;
+    LC_OperData.WRTPtr[0].CountdownToStale = 2;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SampleAPReq_Test_StartLessOrEqualToEndAndEndWithinArrayWatchStale(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = LC_MAX_ACTIONPOINTS - 1;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = LC_MAX_ACTIONPOINTS - 1;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 1;
+    LC_OperData.WRTPtr[0].CountdownToStale = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[0].WatchResult == LC_WATCH_STALE,
+                  "LC_OperData.WRTPtr[0].WatchResult == LC_WATCH_STALE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SampleAPReq_Test_ArrayIndexOutOfRange(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState        = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex = 2;
+    UT_CmdBuf.SampleAPCmd.EndIndex   = 1;
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Sample AP error: invalid AP number, start = %%d, end = %%d");
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleAPReq_Test_BadSampleAllArgs(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Sample AP error: invalid AP number, start = %%d, end = %%d");
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = 1;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 1;
+    LC_OperData.WRTPtr[0].CountdownToStale = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleAPReq_Test_ArrayEndIndexTooHigh(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Sample AP error: invalid AP number, start = %%d, end = %%d");
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = 1;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = LC_MAX_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 1;
+    LC_OperData.WRTPtr[0].CountdownToStale = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SampleAPReq_Test_SampleAllUpdateAgeZero(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_AppData.CurrentLCState              = 99;
+    UT_CmdBuf.SampleAPCmd.StartIndex       = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.EndIndex         = LC_ALL_ACTIONPOINTS;
+    UT_CmdBuf.SampleAPCmd.UpdateAge        = 0;
+    LC_OperData.WRTPtr[0].CountdownToStale = 1;
+
+    /* Execute the function being tested */
+    LC_SampleAPReq(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_WatchStale(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult = LC_WATCH_STALE;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKWR_STALE << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_STALE << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_STALE << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKWR_STALE);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_WATCHPOINTS / 2) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_WATCHPOINTS - 1) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_WatchFalse(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult = LC_WATCH_FALSE;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKWR_FALSE << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_FALSE << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_FALSE << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKWR_FALSE);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_WATCHPOINTS / 2) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_WATCHPOINTS - 1) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_WatchTrue(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult = LC_WATCH_TRUE;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKWR_TRUE << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_TRUE << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_TRUE << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKWR_TRUE);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_WATCHPOINTS / 2) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_WATCHPOINTS - 1) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_WatchError(void)
+{
+    int32  Result;
+    uint16 TableIndex;
+    uint16 HKIndex;
+    uint8  ExpectedByteData;
+
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult = LC_WATCH_ERROR;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKWR_ERROR << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_ERROR << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_ERROR << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKWR_ERROR);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_WATCHPOINTS / 2) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_WATCHPOINTS - 1) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_DefaultWatchResult(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult = 99;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKWR_ERROR << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_ERROR << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKWR_ERROR << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKWR_ERROR);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_WATCHPOINTS / 2) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_WATCHPOINTS - 1) / 4;
+    UtAssert_True(LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.WPResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_ActionNotUsedStale(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = LC_ACTION_NOT_USED;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_STALE;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_NOT_USED << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STALE << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_NOT_USED << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_STALE);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_APStateActiveActionPass(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = LC_APSTATE_ACTIVE;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_PASS;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_ACTIVE << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_PASS << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_ACTIVE << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_PASS);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    UtAssert_True(LC_OperData.HkPacket.ActiveAPs == LC_MAX_ACTIONPOINTS,
+                  "LC_OperData.HkPacket.ActiveAPs = LC_MAX_ACTIONPOINTS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_APStatePassiveActionFail(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = LC_APSTATE_PASSIVE;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_FAIL;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_PASSIVE << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_FAIL << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_PASSIVE << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_FAIL);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_APStateDisabledActionError(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = LC_APSTATE_DISABLED;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_ERROR;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_DISABLED << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_ERROR << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_DISABLED << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_ERROR);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_APStatePermOffActionError(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = LC_APSTATE_PERMOFF;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_ERROR;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_NOT_USED << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_ERROR << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_NOT_USED << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_ERROR);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_DefaultCurrentStateAndActionResult(void)
+{
+    int32          Result;
+    uint16         TableIndex;
+    uint16         HKIndex;
+    uint8          ExpectedByteData;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+        LC_OperData.ARTPtr[TableIndex].ActionResult = 99;
+    }
+
+    /* Set to prevent an unintended error message in subfunction LC_ManageTables */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    ExpectedByteData = LC_HKAR_STATE_NOT_USED << 6;
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_ERROR << 4));
+    ExpectedByteData = (ExpectedByteData | (LC_HKAR_STATE_NOT_USED << 2));
+    ExpectedByteData = (ExpectedByteData | LC_HKAR_ERROR);
+
+    /* Checks for first index: */
+    HKIndex = 0;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for middle index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS / 2) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    /* Checks for last index: */
+    HKIndex = (LC_MAX_ACTIONPOINTS - 1) / 2;
+    UtAssert_True(LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData,
+                  "LC_OperData.HkPacket.APResults[HKIndex] == ExpectedByteData");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_HousekeepingReq_Test_ManageTablesError(void)
+{
+    int32          Result;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_PerformMaintenance), -1);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    /* Set to satisfy condition "(Result = LC_ManageTables()) != CFE_SUCCESS" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), -1);
+
+    /* Execute the function being tested */
+    Result = LC_HousekeepingReq(&UT_CmdBuf.NoArgsCmd.CmdHeader);
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_NoopCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_NoopCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ResetCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_ResetCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ResetCounters_Test(void)
+{
+    LC_AppData.CmdCount    = 1;
+    LC_AppData.CmdErrCount = 2;
+
+    LC_AppData.APSampleCount       = 3;
+    LC_AppData.MonitoredMsgCount   = 4;
+    LC_AppData.RTSExecCount        = 5;
+    LC_AppData.PassiveRTSExecCount = 6;
+
+    /* Execute the function being tested */
+    LC_ResetCounters();
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdCount == 0, "LC_AppData.CmdCount == 0");
+    UtAssert_True(LC_AppData.CmdErrCount == 0, "LC_AppData.CmdErrCount == 0");
+    UtAssert_True(LC_AppData.APSampleCount == 0, "LC_AppData.APSampleCount == 0");
+    UtAssert_True(LC_AppData.MonitoredMsgCount == 0, "LC_AppData.MonitoredMsgCount == 0");
+    UtAssert_True(LC_AppData.RTSExecCount == 0, "LC_AppData.RTSExecCount == 0");
+    UtAssert_True(LC_AppData.PassiveRTSExecCount == 0, "LC_AppData.PassiveRTSExecCount == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_SetLCStateCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_SetLCStateCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SetLCStateCmd_Test_Active(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set LC state command: new state = %%d");
+
+    UT_CmdBuf.SetLCStateCmd.NewLCState = LC_STATE_ACTIVE;
+
+    /* Execute the function being tested */
+    LC_SetLCStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_ACTIVE, "LC_AppData.CurrentLCState == LC_STATE_ACTIVE");
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_LCSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetLCStateCmd_Test_Passive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set LC state command: new state = %%d");
+
+    UT_CmdBuf.SetLCStateCmd.NewLCState = LC_STATE_PASSIVE;
+
+    /* Execute the function being tested */
+    LC_SetLCStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_PASSIVE, "LC_AppData.CurrentLCState == LC_STATE_PASSIVE");
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_LCSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetLCStateCmd_Test_Disabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set LC state command: new state = %%d");
+
+    UT_CmdBuf.SetLCStateCmd.NewLCState = LC_STATE_DISABLED;
+
+    /* Execute the function being tested */
+    LC_SetLCStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CurrentLCState == LC_STATE_DISABLED, "LC_AppData.CurrentLCState == LC_STATE_DISABLED");
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_LCSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetLCStateCmd_Test_Default(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set LC state error: invalid state = %%d");
+
+    UT_CmdBuf.SetLCStateCmd.NewLCState = 99;
+
+    /* Execute the function being tested */
+    LC_SetLCStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_LCSTATE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SetAPStateCmd_Test_Default(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state error: AP = %%d, Invalid new state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.APNumber   = 1;
+    UT_CmdBuf.SetAPStateCmd.NewAPState = 99;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_NEW_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_SetAllActionPointsActive(void)
+{
+    uint16         TableIndex;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_ALL_ACTIONPOINTS;
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+    }
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = 0;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    /* Checks for middle index: */
+    TableIndex = LC_MAX_ACTIONPOINTS / 2;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    /* Checks for last index: */
+    TableIndex = LC_MAX_ACTIONPOINTS - 1;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_SetAllActionPointsActiveOneNotUsed(void)
+{
+    uint16         TableIndex;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_ALL_ACTIONPOINTS;
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+    }
+    LC_OperData.ARTPtr[0].CurrentState = LC_ACTION_NOT_USED;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = 0;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_ACTION_NOT_USED,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_ACTION_NOT_USED");
+
+    /* Checks for middle index: */
+    TableIndex = LC_MAX_ACTIONPOINTS / 2;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    /* Checks for last index: */
+    TableIndex = LC_MAX_ACTIONPOINTS - 1;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_SetAllActionPointsActiveOnePermOff(void)
+{
+    uint16         TableIndex;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_ALL_ACTIONPOINTS;
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+    }
+    LC_OperData.ARTPtr[0].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = 0;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PERMOFF,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PERMOFF");
+
+    /* Checks for middle index: */
+    TableIndex = LC_MAX_ACTIONPOINTS / 2;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    /* Checks for last index: */
+    TableIndex = LC_MAX_ACTIONPOINTS - 1;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_ACTIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_SetAllActionPointsPassive(void)
+{
+    uint16         TableIndex;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_PASSIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_ALL_ACTIONPOINTS;
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+    }
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = 0;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE");
+
+    /* Checks for middle index: */
+    TableIndex = LC_MAX_ACTIONPOINTS / 2;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE");
+
+    /* Checks for last index: */
+    TableIndex = LC_MAX_ACTIONPOINTS - 1;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_PASSIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_SetAllActionPointsDisabled(void)
+{
+    uint16         TableIndex;
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_DISABLED;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_ALL_ACTIONPOINTS;
+
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+    }
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = 0;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED");
+
+    /* Checks for middle index: */
+    TableIndex = LC_MAX_ACTIONPOINTS / 2;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED");
+
+    /* Checks for last index: */
+    TableIndex = LC_MAX_ACTIONPOINTS - 1;
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED,
+                  "LC_OperData.ARTPtr[TableIndex].CurrentState == LC_APSTATE_DISABLED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_UpdateSingleActionPointActive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = 99;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_ACTIVE,
+                  "LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_ACTIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_UpdateSingleActionPointNotUsed(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state error: AP = %%d, Invalid current AP state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = 0;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_ACTION_NOT_USED;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_ACTION_NOT_USED,
+                  "LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_ACTION_NOT_USED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_UpdateSingleActionPointPassive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_PASSIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = 99;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_PASSIVE,
+                  "LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_PASSIVE");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_UpdateSingleActionPointDisabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state command: AP = %%d, New state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_DISABLED;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = 99;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_DISABLED,
+                  "LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState == LC_APSTATE_DISABLED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidCurrentAPStateActive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state error: AP = %%d, Invalid current AP state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidCurrentAPStatePassive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state error: AP = %%d, Invalid current AP state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_PASSIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidCurrentAPStateDisabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP state error: AP = %%d, Invalid current AP state = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_DISABLED;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS - 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidAPNumberActive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP state error: Invalid AP number = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_ACTIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidAPNumberPassive(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP state error: Invalid AP number = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_PASSIVE;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPStateCmd_Test_InvalidAPNumberDisabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP state error: Invalid AP number = %%d");
+
+    UT_CmdBuf.SetAPStateCmd.NewAPState = LC_APSTATE_DISABLED;
+    UT_CmdBuf.SetAPStateCmd.APNumber   = LC_MAX_ACTIONPOINTS;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPStateCmd.APNumber].CurrentState = LC_APSTATE_PERMOFF;
+
+    /* Execute the function being tested */
+    LC_SetAPStateCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATE_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPPermOffCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_SetAPPermOffCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_SetAPPermOffCmd_Test_InvalidAPNumberMaxActionpoints(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP perm off error: Invalid AP number = %%d");
+
+    UT_CmdBuf.SetAPPermOffCmd.APNumber = LC_MAX_ACTIONPOINTS;
+
+    /* Execute the function being tested */
+    LC_SetAPPermOffCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APOFF_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPPermOffCmd_Test_InvalidAPNumberAllActionpoints(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP perm off error: Invalid AP number = %%d");
+
+    UT_CmdBuf.SetAPPermOffCmd.APNumber = LC_ALL_ACTIONPOINTS;
+
+    /* Execute the function being tested */
+    LC_SetAPPermOffCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APOFF_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPPermOffCmd_Test_APNotDisabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Set AP perm off error, AP NOT Disabled: AP = %%d, Current state = %%d");
+
+    UT_CmdBuf.SetAPPermOffCmd.APNumber = 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPPermOffCmd.APNumber].CurrentState = 99;
+
+    /* Execute the function being tested */
+    LC_SetAPPermOffCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APOFF_CURR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SetAPPermOffCmd_Test_Nominal(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Set AP permanently off command: AP = %%d");
+
+    UT_CmdBuf.SetAPPermOffCmd.APNumber = 1;
+
+    LC_OperData.ARTPtr[UT_CmdBuf.SetAPPermOffCmd.APNumber].CurrentState = LC_APSTATE_DISABLED;
+
+    /* Execute the function being tested */
+    LC_SetAPPermOffCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.ARTPtr[UT_CmdBuf.SetAPPermOffCmd.APNumber].CurrentState == 4,
+                  "LC_OperData.ARTPtr[UT_CmdBuf.SetAPPermOffCmd.APNumber].CurrentState == 4");
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APOFF_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetAPStatsCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_ResetAPStatsCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ResetAPStatsCmd_Test_AllActionPoints(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset AP stats command: AP = %%d");
+
+    UT_CmdBuf.ResetAPStatsCmd.APNumber = LC_ALL_ACTIONPOINTS;
+
+    /* Execute the function being tested */
+    LC_ResetAPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetAPStatsCmd_Test_SingleActionPoint(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset AP stats command: AP = %%d");
+
+    UT_CmdBuf.ResetAPStatsCmd.APNumber = LC_MAX_ACTIONPOINTS - 1;
+
+    /* Execute the function being tested */
+    LC_ResetAPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetAPStatsCmd_Test_InvalidAPNumber(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset AP stats error: invalid AP number = %%d");
+
+    UT_CmdBuf.ResetAPStatsCmd.APNumber = LC_MAX_ACTIONPOINTS;
+
+    /* Execute the function being tested */
+    LC_ResetAPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSTATS_APNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetResultsAP_Test(void)
+{
+    uint32 TableIndex;
+    uint32 StartIndex    = 0;
+    uint32 EndIndex      = 5;
+    bool   ResetStatsCmd = false;
+
+    for (TableIndex = StartIndex; TableIndex <= EndIndex; TableIndex++)
+    {
+        LC_OperData.ARTPtr[TableIndex].ActionResult = 99;
+        LC_OperData.ARTPtr[TableIndex].CurrentState = 99;
+
+        LC_OperData.ARTPtr[TableIndex].PassiveAPCount  = 99;
+        LC_OperData.ARTPtr[TableIndex].FailToPassCount = 99;
+        LC_OperData.ARTPtr[TableIndex].PassToFailCount = 99;
+
+        LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount    = 99;
+        LC_OperData.ARTPtr[TableIndex].CumulativeFailCount     = 99;
+        LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount  = 99;
+        LC_OperData.ARTPtr[TableIndex].CumulativeEventMsgsSent = 99;
+
+        LC_OperData.ADTPtr[TableIndex].DefaultState = 1;
+    }
+
+    /* Execute the function being tested */
+    LC_ResetResultsAP(StartIndex, EndIndex, ResetStatsCmd);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = StartIndex;
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE,
+                  "LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == 1, "LC_OperData.ARTPtr[TableIndex].CurrentState == 1");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeEventMsgsSent == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeEventMsgsSent == 0");
+
+    /* Checks for middle index: */
+    TableIndex = (StartIndex + EndIndex) / 2;
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE,
+                  "LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == 1, "LC_OperData.ARTPtr[TableIndex].CurrentState == 1");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0");
+
+    /* Checks for last index: */
+    TableIndex = EndIndex;
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE,
+                  "LC_OperData.ARTPtr[TableIndex].ActionResult == LC_ACTION_STALE");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CurrentState == 1, "LC_OperData.ARTPtr[TableIndex].CurrentState == 1");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassiveAPCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].FailToPassCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].PassToFailCount == 0");
+
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeFailCount == 0");
+    UtAssert_True(LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0,
+                  "LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_ResetWPStatsCmd_Test_BadLength(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), false);
+
+    LC_ResetWPStatsCmd(&UT_CmdBuf.Buf);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ResetWPStatsCmd_Test_AllWatchPoints(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset WP stats command: WP = %%d");
+
+    UT_CmdBuf.ResetWPStatsCmd.WPNumber = LC_ALL_WATCHPOINTS;
+
+    /* Execute the function being tested */
+    LC_ResetWPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WPSTATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetWPStatsCmd_Test_SingleWatchPoint(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset WP stats command: WP = %%d");
+
+    UT_CmdBuf.ResetWPStatsCmd.WPNumber = LC_MAX_WATCHPOINTS - 1;
+
+    /* Execute the function being tested */
+    LC_ResetWPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdCount == 1, "LC_AppData.CmdCount == 1");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WPSTATS_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetWPStatsCmd_Test_InvalidWPNumber(void)
+{
+    CFE_SB_MsgId_t TestMsgId;
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_CMD_MID);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Reset WP stats error: invalid WP number = %%d");
+
+    UT_CmdBuf.ResetWPStatsCmd.WPNumber = LC_MAX_WATCHPOINTS;
+
+    /* Execute the function being tested */
+    LC_ResetWPStatsCmd(&UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WPSTATS_WPNUM_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ResetResultsWP_Test(void)
+{
+    uint32 TableIndex;
+    uint32 StartIndex    = 0;
+    uint32 EndIndex      = 5;
+    bool   ResetStatsCmd = false;
+
+    for (TableIndex = StartIndex; TableIndex <= EndIndex; TableIndex++)
+    {
+        LC_OperData.WRTPtr[TableIndex].WatchResult      = 99;
+        LC_OperData.WRTPtr[TableIndex].CountdownToStale = 99;
+
+        LC_OperData.WRTPtr[TableIndex].EvaluationCount      = 99;
+        LC_OperData.WRTPtr[TableIndex].FalseToTrueCount     = 99;
+        LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount = 99;
+        LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount  = 99;
+
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value                = 99;
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds    = 99;
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds = 99;
+
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value                = 99;
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds    = 99;
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds = 99;
+    }
+
+    /* Execute the function being tested */
+    LC_ResetResultsWP(StartIndex, EndIndex, ResetStatsCmd);
+
+    /* Verify results */
+
+    /* Checks for first index: */
+    TableIndex = StartIndex;
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE,
+                  "LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0");
+
+    /* Checks for middle index: */
+    TableIndex = (StartIndex + EndIndex) / 2;
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE,
+                  "LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0");
+
+    /* Checks for last index: */
+    TableIndex = EndIndex;
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE,
+                  "LC_OperData.WRTPtr[TableIndex].WatchResult == LC_WATCH_STALE");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CountdownToStale == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].EvaluationCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].FalseToTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0,
+                  "LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds == 0");
+
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds == 0");
+    UtAssert_True(LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0,
+                  "LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds == 0");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_AppPipe_Test_SampleAPRequest, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_SampleAPRequest");
+    UtTest_Add(LC_AppPipe_Test_HousekeepingRequest, LC_Test_Setup, LC_Test_TearDown,
+               "LC_AppPipe_Test_HousekeepingRequest");
+    UtTest_Add(LC_AppPipe_Test_Noop, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_Noop");
+    UtTest_Add(LC_AppPipe_Test_Reset, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_Reset");
+    UtTest_Add(LC_AppPipe_Test_SetLCState, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_SetLCState");
+    UtTest_Add(LC_AppPipe_Test_SetAPState, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_SetAPState");
+    UtTest_Add(LC_AppPipe_Test_SetAPPermoff, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_SetAPPermoff");
+    UtTest_Add(LC_AppPipe_Test_ResetAPStats, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_ResetAPStats");
+    UtTest_Add(LC_AppPipe_Test_ResetWPStats, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_ResetWPStats");
+    UtTest_Add(LC_AppPipe_Test_InvalidCommandCode, LC_Test_Setup, LC_Test_TearDown,
+               "LC_AppPipe_Test_InvalidCommandCode");
+    UtTest_Add(LC_AppPipe_Test_MonitorPacket, LC_Test_Setup, LC_Test_TearDown, "LC_AppPipe_Test_MonitorPacket");
+    UtTest_Add(LC_SampleAPReq_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_SampleAPReq_Test_BadLength");
+    UtTest_Add(LC_SampleAPReq_Test_AllowSampleAllWatchStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_AllowSampleAllWatchStale");
+    UtTest_Add(LC_SampleAPReq_Test_AllowSampleAllWatchNotStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_AllowSampleAllWatchNotStale");
+
+    UtTest_Add(LC_SampleAPReq_Test_StartLessOrEqualToEndAndEndWithinArrayWatchStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_StartLessOrEqualToEndAndEndWithinArrayWatchStale");
+    UtTest_Add(LC_SampleAPReq_Test_ArrayIndexOutOfRange, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_ArrayIndexOutOfRange");
+    UtTest_Add(LC_SampleAPReq_Test_StateDisabled, LC_Test_Setup, LC_Test_TearDown, "LC_SampleAPReq_Test_StateDisabled");
+    UtTest_Add(LC_SampleAPReq_Test_ArrayEndIndexTooHigh, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_ArrayEndIndexTooHigh");
+    UtTest_Add(LC_SampleAPReq_Test_SampleAllUpdateAgeZero, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_SampleAllUpdateAgeZero");
+    UtTest_Add(LC_SampleAPReq_Test_BadSampleAllArgs, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SampleAPReq_Test_BadSampleAllArgs");
+
+    UtTest_Add(LC_HousekeepingReq_Test_WatchStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_WatchStale");
+    UtTest_Add(LC_HousekeepingReq_Test_WatchFalse, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_WatchFalse");
+    UtTest_Add(LC_HousekeepingReq_Test_WatchTrue, LC_Test_Setup, LC_Test_TearDown, "LC_HousekeepingReq_Test_WatchTrue");
+    UtTest_Add(LC_HousekeepingReq_Test_WatchError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_WatchError");
+    UtTest_Add(LC_HousekeepingReq_Test_DefaultWatchResult, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_DefaultWatchResult");
+    UtTest_Add(LC_HousekeepingReq_Test_ActionNotUsedStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_ActionNotUsedStale");
+    UtTest_Add(LC_HousekeepingReq_Test_APStateActiveActionPass, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_APStateActiveActionPass");
+    UtTest_Add(LC_HousekeepingReq_Test_APStatePassiveActionFail, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_APStatePassiveActionFail");
+    UtTest_Add(LC_HousekeepingReq_Test_APStateDisabledActionError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_APStateDisabledActionError");
+    UtTest_Add(LC_HousekeepingReq_Test_APStatePermOffActionError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_APStatePermOffActionError");
+    UtTest_Add(LC_HousekeepingReq_Test_DefaultCurrentStateAndActionResult, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_DefaultCurrentStateAndActionResult");
+    UtTest_Add(LC_HousekeepingReq_Test_ManageTablesError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_HousekeepingReq_Test_ManageTablesError");
+
+    UtTest_Add(LC_NoopCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_NoopCmd_Test_BadLength");
+    UtTest_Add(LC_ResetCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_ResetCmd_Test_BadLength");
+
+    UtTest_Add(LC_ResetCounters_Test, LC_Test_Setup, LC_Test_TearDown, "LC_ResetCounters_Test");
+
+    UtTest_Add(LC_SetLCStateCmd_Test_Active, LC_Test_Setup, LC_Test_TearDown, "LC_SetLCStateCmd_Test_Active");
+    UtTest_Add(LC_SetLCStateCmd_Test_Passive, LC_Test_Setup, LC_Test_TearDown, "LC_SetLCStateCmd_Test_Passive");
+    UtTest_Add(LC_SetLCStateCmd_Test_Disabled, LC_Test_Setup, LC_Test_TearDown, "LC_SetLCStateCmd_Test_Disabled");
+    UtTest_Add(LC_SetLCStateCmd_Test_Default, LC_Test_Setup, LC_Test_TearDown, "LC_SetLCStateCmd_Test_Default");
+    UtTest_Add(LC_SetLCStateCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_SetLCStateCmd_Test_BadLength");
+
+    UtTest_Add(LC_SetAPStateCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_SetAPStateCmd_Test_BadLength");
+    UtTest_Add(LC_SetAPStateCmd_Test_Default, LC_Test_Setup, LC_Test_TearDown, "LC_SetAPStateCmd_Test_Default");
+    UtTest_Add(LC_SetAPStateCmd_Test_SetAllActionPointsActive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_SetAllActionPointsActive");
+    UtTest_Add(LC_SetAPStateCmd_Test_SetAllActionPointsPassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_SetAllActionPointsPassive");
+    UtTest_Add(LC_SetAPStateCmd_Test_SetAllActionPointsDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_SetAllActionPointsDisabled");
+    UtTest_Add(LC_SetAPStateCmd_Test_UpdateSingleActionPointActive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_UpdateSingleActionPointActive");
+    UtTest_Add(LC_SetAPStateCmd_Test_UpdateSingleActionPointNotUsed, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_UpdateSingleActionPointNotUsed");
+
+    UtTest_Add(LC_SetAPStateCmd_Test_UpdateSingleActionPointPassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_UpdateSingleActionPointPassive");
+    UtTest_Add(LC_SetAPStateCmd_Test_UpdateSingleActionPointDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_UpdateSingleActionPointDisabled");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidCurrentAPStateActive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidCurrentAPStateActive");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidCurrentAPStatePassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidCurrentAPStatePassive");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidCurrentAPStateDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidCurrentAPStateDisabled");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidAPNumberActive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidAPNumberActive");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidAPNumberPassive, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidAPNumberPassive");
+    UtTest_Add(LC_SetAPStateCmd_Test_InvalidAPNumberDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_InvalidAPNumberDisabled");
+
+    UtTest_Add(LC_SetAPPermOffCmd_Test_InvalidAPNumberMaxActionpoints, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPPermOffCmd_Test_InvalidAPNumberMaxActionpoints");
+    UtTest_Add(LC_SetAPPermOffCmd_Test_InvalidAPNumberAllActionpoints, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPPermOffCmd_Test_InvalidAPNumberAllActionpoints");
+    UtTest_Add(LC_SetAPPermOffCmd_Test_APNotDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPPermOffCmd_Test_APNotDisabled");
+    UtTest_Add(LC_SetAPPermOffCmd_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_SetAPPermOffCmd_Test_Nominal");
+    UtTest_Add(LC_SetAPPermOffCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_SetAPPermOffCmd_Test_BadLength");
+    UtTest_Add(LC_SetAPStateCmd_Test_SetAllActionPointsActiveOneNotUsed, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_SetAllActionPointsActiveOneNotUsed");
+    UtTest_Add(LC_SetAPStateCmd_Test_SetAllActionPointsActiveOnePermOff, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SetAPStateCmd_Test_SetAllActionPointsActiveOnePermOff");
+
+    UtTest_Add(LC_ResetAPStatsCmd_Test_AllActionPoints, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetAPStatsCmd_Test_AllActionPoints");
+    UtTest_Add(LC_ResetAPStatsCmd_Test_SingleActionPoint, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetAPStatsCmd_Test_SingleActionPoint");
+    UtTest_Add(LC_ResetAPStatsCmd_Test_InvalidAPNumber, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetAPStatsCmd_Test_InvalidAPNumber");
+    UtTest_Add(LC_ResetAPStatsCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_ResetAPStatsCmd_Test_BadLength");
+    UtTest_Add(LC_ResetResultsAP_Test, LC_Test_Setup, LC_Test_TearDown, "LC_ResetResultsAP_Test");
+
+    UtTest_Add(LC_ResetWPStatsCmd_Test_AllWatchPoints, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetWPStatsCmd_Test_AllWatchPoints");
+    UtTest_Add(LC_ResetWPStatsCmd_Test_SingleWatchPoint, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetWPStatsCmd_Test_SingleWatchPoint");
+    UtTest_Add(LC_ResetWPStatsCmd_Test_InvalidWPNumber, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ResetWPStatsCmd_Test_InvalidWPNumber");
+
+    UtTest_Add(LC_ResetWPStatsCmd_Test_BadLength, LC_Test_Setup, LC_Test_TearDown, "LC_ResetWPStatsCmd_Test_BadLength");
+    UtTest_Add(LC_ResetResultsWP_Test, LC_Test_Setup, LC_Test_TearDown, "LC_ResetResultsWP_Test");
+}
+```
+
+### `lc_custom_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_custom_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test cases for the functions contained in the file lc_app.c
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_custom.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+void LC_ExecuteRTS_Test(void)
+{
+    uint16 RTSId = 1;
+
+    /* Execute the function being tested */
+    LC_ExecuteRTS(RTSId);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_CustomFunction_Test_WatchIndex0(void)
+{
+    uint8  Result;
+    uint16 WatchIndex = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Unexpected LC_CustomFunction call: WP = %%d");
+
+    /* Execute the function being tested */
+    Result = LC_CustomFunction(WatchIndex, 0, 0, 0);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_FALSE, "Result == LC_WATCH_FALSE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CFCALL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_CustomFunction_Test_WatchIndex1(void)
+{
+    uint8  Result;
+    uint16 WatchIndex = 1;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Unexpected LC_CustomFunction call: WP = %%d");
+
+    /* Execute the function being tested */
+    Result = LC_CustomFunction(WatchIndex, 0, 0, 0);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_FALSE, "Result == LC_WATCH_FALSE");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_CFCALL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_ExecuteRTS_Test, LC_Test_Setup, LC_Test_TearDown, "LC_ExecuteRTS_Test");
+    UtTest_Add(LC_CustomFunction_Test_WatchIndex0, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CustomFunction_Test_WatchIndex0");
+    UtTest_Add(LC_CustomFunction_Test_WatchIndex1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CustomFunction_Test_WatchIndex1");
+}
+```
+
+### `lc_utils_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_utils_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#include "lc_cmds.h"
+#include "lc_utils.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+void LC_VerifyMsgLength_Test_HKRequestLengthError(void)
+{
+    bool              Result;
+    LC_NoArgsCmd_t    CmdPacket;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    size_t            MsgSize;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid HK request msg length: ID = 0x%%08lX, CC = %%d, Len = %%d, Expected = %%d");
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SEND_HK_MID);
+    FcnCode   = LC_NOOP_CC;
+    MsgSize   = sizeof(LC_NoArgsCmd_t) + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = LC_VerifyMsgLength((CFE_MSG_Message_t *)(&CmdPacket), sizeof(CmdPacket));
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_HKREQ_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_VerifyMsgLength_Test_APSampleLengthError(void)
+{
+    bool              Result;
+    LC_NoArgsCmd_t    CmdPacket;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    size_t            MsgSize;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid AP sample msg length: ID = 0x%%08lX, CC = %%d, Len = %%d, Expected = %%d");
+
+    TestMsgId = CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID);
+    FcnCode   = LC_NOOP_CC;
+    MsgSize   = sizeof(CmdPacket) + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = LC_VerifyMsgLength((CFE_MSG_Message_t *)(&CmdPacket), sizeof(CmdPacket));
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APSAMPLE_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_VerifyMsgLength_Test_GenericLengthError(void)
+{
+    bool              Result;
+    LC_NoArgsCmd_t    CmdPacket;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    size_t            MsgSize;
+    int32             strCmpResult;
+    char              ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Invalid msg length: ID = 0x%%08lX, CC = %%d, Len = %%d, Expected = %%d");
+
+    TestMsgId = LC_UT_MID_1;
+    FcnCode   = LC_NOOP_CC;
+    MsgSize   = sizeof(CmdPacket) + 1;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = LC_VerifyMsgLength((CFE_MSG_Message_t *)(&CmdPacket), sizeof(CmdPacket));
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(LC_AppData.CmdErrCount == 1, "LC_AppData.CmdErrCount == 1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_LEN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_VerifyMsgLength_Test_Nominal(void)
+{
+    bool              Result;
+    LC_NoArgsCmd_t    CmdPacket;
+    CFE_SB_MsgId_t    TestMsgId;
+    CFE_MSG_FcnCode_t FcnCode;
+    size_t            MsgSize;
+
+    TestMsgId = LC_UT_MID_1;
+    FcnCode   = LC_NOOP_CC;
+    MsgSize   = sizeof(LC_NoArgsCmd_t);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &FcnCode, sizeof(FcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    /* Execute the function being tested */
+    Result = LC_VerifyMsgLength((CFE_MSG_Message_t *)(&CmdPacket), sizeof(CmdPacket));
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_ManageTables_Test_Nominal(void)
+{
+    int32 Result;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_ManageTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+
+    uint8 call_count_LC_ResetResultsWP = UT_GetStubCount(UT_KEY(LC_ResetResultsWP));
+    uint8 call_count_LC_ResetResultsAP = UT_GetStubCount(UT_KEY(LC_ResetResultsAP));
+
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsWP, 0);
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsAP, 0);
+}
+
+void LC_ManageTables_Test_InfoUpdated(void)
+{
+    int32 Result;
+
+    /* Set to satisfy all instances of condition "Result == CFE_TBL_INFO_UPDATED" */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
+
+    /* Execute the function being tested */
+    Result = LC_ManageTables();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+
+    uint8 call_count_LC_ResetResultsWP = UT_GetStubCount(UT_KEY(LC_ResetResultsWP));
+    uint8 call_count_LC_ResetResultsAP = UT_GetStubCount(UT_KEY(LC_ResetResultsAP));
+
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsWP, 1);
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsAP, 1);
+}
+
+void LC_ManageTables_Test_WDTGetAddressError(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Error getting WDT address, RC=0x%%08X");
+
+    /* Set to generate event message LC_WDT_GETADDR_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), -1);
+
+    /* Execute the function being tested */
+    Result = LC_ManageTables();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDT_GETADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    uint8 call_count_LC_ResetResultsWP = UT_GetStubCount(UT_KEY(LC_ResetResultsWP));
+    uint8 call_count_LC_ResetResultsAP = UT_GetStubCount(UT_KEY(LC_ResetResultsAP));
+
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsWP, 0);
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsAP, 0);
+}
+
+void LC_ManageTables_Test_ADTGetAddressError(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "Error getting ADT address, RC=0x%%08X");
+
+    /* Generates event message LC_ADT_GETADDR_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_TBL_GetAddress), 2, -1);
+
+    /* Execute the function being tested */
+    Result = LC_ManageTables();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ADT_GETADDR_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    uint8 call_count_LC_ResetResultsAP = UT_GetStubCount(UT_KEY(LC_ResetResultsAP));
+
+    UtAssert_INT32_EQ(call_count_LC_ResetResultsAP, 0);
+}
+
+void LC_UpdateTaskCDS_Test_UpdateWatchpointError(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Unable to update watchpoint results in CDS, RC=0x%%08X");
+
+    /* Set to generate error message LC_WRT_NO_SAVE_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_CopyToCDS), -1);
+
+    /* Execute the function being tested */
+    Result = LC_UpdateTaskCDS();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WRT_NO_SAVE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_UpdateTaskCDS_Test_UpdateActionpointError(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Unable to update actionpoint results in CDS, RC=0x%%08X");
+
+    /* Set to generate error message LC_ART_NO_SAVE_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_CopyToCDS), 2, -1);
+
+    /* Execute the function being tested */
+    Result = LC_UpdateTaskCDS();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_ART_NO_SAVE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_UpdateTaskCDS_Test_UpdateAppDataError(void)
+{
+    int32 Result;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Unable to update application data in CDS, RC=0x%%08X");
+
+    /* Set to generate error message LC_APP_NO_SAVE_START_ERR_EID */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_CopyToCDS), 3, -1);
+
+    /* Execute the function being tested */
+    Result = LC_UpdateTaskCDS();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+    UtAssert_True(LC_AppData.CDSSavedOnExit == LC_CDS_SAVED, "LC_AppData.CDSSavedOnExit == LC_CDS_SAVED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_APP_NO_SAVE_START_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_UpdateTaskCDS_Test_Nominal(void)
+{
+    int32 Result;
+
+    /* Execute the function being tested */
+    Result = LC_UpdateTaskCDS();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+    UtAssert_True(LC_AppData.CDSSavedOnExit == LC_CDS_SAVED, "LC_AppData.CDSSavedOnExit == LC_CDS_SAVED");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_PerformMaintenance_Test_NominalNoCDS(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = false;
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_PerformMaintenance();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_PerformMaintenance_Test_NominalCDS(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* Execute the function being tested */
+    Result = LC_PerformMaintenance();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    call_count_CFE_EVS_SendEvent = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+    UtAssert_INT32_EQ(call_count_CFE_EVS_SendEvent, 0);
+}
+
+void LC_PerformMaintenance_Test_UpdateCDSFail(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = true;
+
+    /* force LC_ManageTables to succeed */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_SUCCESS);
+
+    /* force LC_UpdateTaskCDS to fail */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_CopyToCDS), -1);
+
+    /* Execute the function being tested */
+    Result = LC_PerformMaintenance();
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_True(LC_OperData.HaveActiveCDS == false, "LC_OperData.HaveActiveCDS == false");
+}
+
+void LC_PerformMaintenance_Test_ManageTablesFail(void)
+{
+    int32 Result;
+
+    LC_OperData.HaveActiveCDS = false;
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), -1);
+
+    /* Execute the function being tested */
+    Result = LC_PerformMaintenance();
+
+    /* Verify results */
+    UtAssert_True(Result == -1, "Result == -1");
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_VerifyMsgLength_Test_HKRequestLengthError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_VerifyMsgLength_Test_HKRequestLengthError");
+    UtTest_Add(LC_VerifyMsgLength_Test_APSampleLengthError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_VerifyMsgLength_Test_APSampleLengthError");
+    UtTest_Add(LC_VerifyMsgLength_Test_GenericLengthError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_VerifyMsgLength_Test_GenericLengthError");
+    UtTest_Add(LC_VerifyMsgLength_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_VerifyMsgLength_Test_Nominal");
+
+    UtTest_Add(LC_ManageTables_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_ManageTables_Test_Nominal");
+    UtTest_Add(LC_ManageTables_Test_InfoUpdated, LC_Test_Setup, LC_Test_TearDown, "LC_ManageTables_Test_InfoUpdated");
+    UtTest_Add(LC_ManageTables_Test_WDTGetAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ManageTables_Test_WDTGetAddressError");
+    UtTest_Add(LC_ManageTables_Test_ADTGetAddressError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ManageTables_Test_ADTGetAddressError");
+
+    UtTest_Add(LC_UpdateTaskCDS_Test_UpdateWatchpointError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_UpdateTaskCDS_Test_UpdateWatchpointError");
+    UtTest_Add(LC_UpdateTaskCDS_Test_UpdateActionpointError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_UpdateTaskCDS_Test_UpdateActionpointError");
+    UtTest_Add(LC_UpdateTaskCDS_Test_UpdateAppDataError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_UpdateTaskCDS_Test_UpdateAppDataError");
+    UtTest_Add(LC_UpdateTaskCDS_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_UpdateTaskCDS_Test_Nominal");
+
+    UtTest_Add(LC_PerformMaintenance_Test_NominalNoCDS, LC_Test_Setup, LC_Test_TearDown,
+               "LC_PerfomMaintenance_Test_NominalNoCDS");
+    UtTest_Add(LC_PerformMaintenance_Test_NominalCDS, LC_Test_Setup, LC_Test_TearDown,
+               "LC_PerfomMaintenance_Test_NominalCDS");
+    UtTest_Add(LC_PerformMaintenance_Test_UpdateCDSFail, LC_Test_Setup, LC_Test_TearDown,
+               "LC_PerfomMaintenance_Test_UpdateCDSFail");
+    UtTest_Add(LC_PerformMaintenance_Test_ManageTablesFail, LC_Test_Setup, LC_Test_TearDown,
+               "LC_PerfomMaintenance_Test_ManageTablesFail");
+}
+```
+
+### `lc_watch_tests.c`
+
+**경로:** `fsw/apps/lc/unit-test/lc_watch_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test cases for the functions contained in the file lc_app.c
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_watch.h"
+#include "lc_app.h"
+#include "lc_msg.h"
+#include "lc_msgdefs.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_test_utils.h"
+#include "lc_utils.h"
+#include "lc_custom.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+#include <unistd.h>
+#include <stdlib.h>
+
+uint8 call_count_CFE_EVS_SendEvent;
+
+void LC_CreateHashTable_Test(void)
+{
+    uint32 i;
+
+    /* One valid and one invalid unsubscribe */
+    LC_OperData.MessageIDsCount = 2;
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_Unsubscribe), 1, -1);
+
+    /* Default entries to unused */
+    for (i = 0; i < LC_MAX_WATCHPOINTS; i++)
+    {
+        LC_OperData.WDTPtr[i].DataType = LC_WATCH_NOT_USED;
+    }
+
+    /* Match MsgID but null watch point list */
+    LC_OperData.WDTPtr[0].DataType  = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[0].MessageID = CFE_SB_INVALID_MSG_ID;
+
+    /* MsgID mismatch */
+    LC_OperData.WDTPtr[1].DataType  = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[1].MessageID = LC_UT_MID_1;
+
+    /* Match MsgID and non-NULL WatchPLink */
+    LC_OperData.WDTPtr[2].DataType  = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[2].MessageID = LC_UT_MID_1;
+
+    /* Execute the function being tested */
+    LC_CreateHashTable();
+
+    UtAssert_UINT32_EQ(LC_OperData.WatchpointCount, 3);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_UNSUB_WP_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+}
+
+void LC_AddWatchpoint_Test_HashTableAndWatchPtListNullPointersNominal(void)
+{
+    CFE_SB_MsgId_t MessageID = LC_UT_MID_1;
+    uint32         HashIndex;
+
+    HashIndex = LC_GetHashTableIndex(MessageID);
+
+    /* Execute the function being tested */
+    UtAssert_ADDRESS_EQ(LC_AddWatchpoint(MessageID), &LC_OperData.WatchPtLinks[0]);
+
+    /* Verify results */
+    UtAssert_ADDRESS_EQ(LC_OperData.HashTable[HashIndex], &LC_OperData.MessageLinks[0]);
+    UtAssert_BOOL_TRUE(CFE_SB_MsgId_Equal(LC_OperData.MessageLinks[0].MessageID, MessageID));
+    UtAssert_ADDRESS_EQ(LC_OperData.MessageLinks[0].WatchPtList, &LC_OperData.WatchPtLinks[0]);
+    UtAssert_UINT16_EQ(LC_OperData.MessageIDsCount, 1);
+    UtAssert_UINT16_EQ(LC_OperData.WatchpointCount, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void LC_AddWatchpoint_Test_HashTableAndWatchPtListNotNullPointerTwoMsgLinksMIDFound(void)
+{
+    CFE_SB_MsgId_t MessageID = LC_UT_MID_1;
+
+    /* Mark number of used elements set below */
+    LC_OperData.WatchpointCount = 2;
+    LC_OperData.MessageIDsCount = 2;
+
+    /* Point hash to MessageLink 1 */
+    LC_OperData.HashTable[LC_GetHashTableIndex(MessageID)] = &LC_OperData.MessageLinks[0];
+
+    /* No match on first message link */
+    LC_OperData.MessageLinks[0].MessageID = LC_UT_MID_2;
+    LC_OperData.MessageLinks[0].Next      = &LC_OperData.MessageLinks[1];
+
+    /* Match on second with a non-null watchpoint list */
+    LC_OperData.MessageLinks[1].MessageID   = MessageID;
+    LC_OperData.MessageLinks[1].WatchPtList = &LC_OperData.WatchPtLinks[0];
+    LC_OperData.WatchPtLinks[0].Next        = &LC_OperData.WatchPtLinks[1];
+
+    /* Execute the function being tested */
+    UtAssert_ADDRESS_EQ(LC_AddWatchpoint(MessageID), &LC_OperData.WatchPtLinks[2]);
+
+    /* Verify additional used watchpoint */
+    UtAssert_UINT16_EQ(LC_OperData.WatchpointCount, 3);
+    UtAssert_ADDRESS_EQ(LC_OperData.WatchPtLinks[1].Next, &LC_OperData.WatchPtLinks[2]);
+
+    /* Verify no new message id used */
+    UtAssert_UINT16_EQ(LC_OperData.MessageIDsCount, 2);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void LC_AddWatchpoint_Test_NullPointersErrorSubscribingWatchpoint(void)
+{
+    CFE_SB_MsgId_t MessageID = LC_UT_MID_1;
+    int32          strCmpResult;
+    char           ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    uint32         HashIndex;
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Error subscribing watchpoint: MID=0x%%08lX, RC=0x%%08X");
+
+    HashIndex = LC_GetHashTableIndex(MessageID);
+
+    /* Set to generate error message LC_SUB_WP_ERR_EID */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), -1);
+
+    /* Execute the function being tested */
+    UtAssert_ADDRESS_EQ(LC_AddWatchpoint(MessageID), &LC_OperData.WatchPtLinks[0]);
+
+    /* Verify results */
+    UtAssert_ADDRESS_EQ(LC_OperData.HashTable[HashIndex], &LC_OperData.MessageLinks[0]);
+    UtAssert_BOOL_TRUE(CFE_SB_MsgId_Equal(LC_OperData.MessageLinks[0].MessageID, MessageID));
+    UtAssert_ADDRESS_EQ(LC_OperData.MessageLinks[0].WatchPtList, &LC_OperData.WatchPtLinks[0]);
+    UtAssert_UINT16_EQ(LC_OperData.MessageIDsCount, 1);
+    UtAssert_UINT16_EQ(LC_OperData.WatchpointCount, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_SUB_WP_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_AddWatchpoint_Test_NonNullMessageList(void)
+{
+    CFE_SB_MsgId_t MessageID = LC_UT_MID_1;
+    uint16         HashIndex;
+
+    HashIndex = LC_GetHashTableIndex(MessageID);
+
+    /* Point to first element */
+    LC_OperData.HashTable[HashIndex] = &LC_OperData.MessageLinks[0];
+
+    /* List without a match */
+    LC_OperData.MessageIDsCount           = 1;
+    LC_OperData.MessageLinks[0].MessageID = LC_UT_MID_2;
+
+    /* Execute the function being tested */
+    UtAssert_ADDRESS_EQ(LC_AddWatchpoint(MessageID), &LC_OperData.WatchPtLinks[0]);
+
+    /* Verify results */
+    UtAssert_ADDRESS_EQ(LC_OperData.HashTable[HashIndex], &LC_OperData.MessageLinks[0]);
+    UtAssert_ADDRESS_EQ(LC_OperData.MessageLinks[0].Next, &LC_OperData.MessageLinks[1]);
+    UtAssert_BOOL_TRUE(CFE_SB_MsgId_Equal(LC_OperData.MessageLinks[1].MessageID, MessageID));
+    UtAssert_ADDRESS_EQ(LC_OperData.MessageLinks[1].WatchPtList, &LC_OperData.WatchPtLinks[0]);
+    UtAssert_UINT16_EQ(LC_OperData.MessageIDsCount, 2);
+    UtAssert_UINT16_EQ(LC_OperData.WatchpointCount, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void LC_CheckMsgForWPs_Test_Nominal(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_SB_MsgId_t     TestMsgId  = LC_UT_MID_1;
+    size_t             MsgSize    = sizeof(UT_CmdBuf.NoArgsCmd);
+    CFE_TIME_SysTime_t Timestamp  = {.Seconds = 0, .Subseconds = 0};
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &Timestamp, sizeof(Timestamp), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    LC_OperData.HashTable[LC_GetHashTableIndex(TestMsgId)] = &LC_OperData.MessageLinks[0];
+
+    /* Not disabled */
+    LC_AppData.CurrentLCState = LC_STATE_ACTIVE;
+
+    /* Miss on first, match on next */
+    LC_OperData.MessageLinks[0].MessageID   = LC_UT_MID_2;
+    LC_OperData.MessageLinks[0].Next        = &LC_OperData.MessageLinks[1];
+    LC_OperData.MessageLinks[1].MessageID   = TestMsgId;
+    LC_OperData.MessageLinks[1].WatchPtList = &LC_OperData.WatchPtLinks[0];
+
+    LC_OperData.WatchPtLinks[0].WatchIndex          = WatchIndex;
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID       = LC_OPER_CUSTOM;
+
+    /* Execute the function being tested */
+    LC_CheckMsgForWPs(TestMsgId, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(LC_AppData.MonitoredMsgCount, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_TIME_GetTime, 1);
+}
+
+void LC_CheckMsgForWPs_Test_NominalMsgTime1(void)
+{
+    CFE_SB_MsgId_t     TestMsgId = LC_UT_MID_1;
+    size_t             MsgSize   = sizeof(UT_CmdBuf.NoArgsCmd);
+    CFE_TIME_SysTime_t Timestamp = {.Seconds = 1, .Subseconds = 0};
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &Timestamp, sizeof(Timestamp), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    LC_OperData.HashTable[LC_GetHashTableIndex(TestMsgId)] = &LC_OperData.MessageLinks[0];
+
+    /* Not disabled */
+    LC_AppData.CurrentLCState = LC_STATE_ACTIVE;
+
+    /* Match on first, Null message list */
+    LC_OperData.MessageLinks[0].MessageID = TestMsgId;
+
+    /* Execute the function being tested */
+    LC_CheckMsgForWPs(TestMsgId, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(LC_AppData.MonitoredMsgCount, 0);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_MID_INF_EID);
+    UtAssert_STUB_COUNT(CFE_TIME_GetTime, 0);
+}
+
+void LC_CheckMsgForWPs_Test_NominalMsgTime2(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_SB_MsgId_t     TestMsgId  = LC_UT_MID_1;
+    size_t             MsgSize    = sizeof(UT_CmdBuf.NoArgsCmd);
+    CFE_TIME_SysTime_t Timestamp  = {.Seconds = 0, .Subseconds = 1};
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &Timestamp, sizeof(Timestamp), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    LC_OperData.HashTable[LC_GetHashTableIndex(TestMsgId)] = &LC_OperData.MessageLinks[0];
+
+    /* Not disabled */
+    LC_AppData.CurrentLCState = LC_STATE_ACTIVE;
+
+    /* Miss on first */
+    LC_OperData.MessageLinks[0].MessageID   = TestMsgId;
+    LC_OperData.MessageLinks[0].WatchPtList = &LC_OperData.WatchPtLinks[0];
+    LC_OperData.WatchPtLinks[0].WatchIndex  = WatchIndex;
+
+    /* Bad offset */
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = MsgSize + 1;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID       = LC_OPER_CUSTOM;
+
+    /* Execute the function being tested */
+    LC_CheckMsgForWPs(TestMsgId, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(LC_AppData.MonitoredMsgCount, 1);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_OFFSET_ERR_EID);
+    UtAssert_STUB_COUNT(CFE_TIME_GetTime, 0);
+}
+
+void LC_CheckMsgForWPs_Test_NominalDisabled(void)
+{
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    LC_AppData.CurrentLCState = LC_STATE_DISABLED;
+
+    /* Execute the function being tested */
+    LC_CheckMsgForWPs(TestMsgId, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_UINT32_EQ(LC_AppData.MonitoredMsgCount, 0);
+
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_TIME_GetTime, 0);
+}
+
+void LC_CheckMsgForWPs_Test_UnreferencedMessageID(void)
+{
+    CFE_SB_MsgId_t     TestMsgId = LC_UT_MID_1;
+    CFE_TIME_SysTime_t Timestamp = {.Seconds = 0, .Subseconds = 0};
+    int32              strCmpResult;
+    char               ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "Msg with unreferenced message ID rcvd: ID = 0x%%08lX");
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgTime), &Timestamp, sizeof(Timestamp), false);
+
+    /* Execute the function being tested */
+    LC_CheckMsgForWPs(TestMsgId, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_MID_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ProcessWP_Test_CustomFunctionWatchFalse(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+    CFE_SB_MsgId_t     TestMsgId = LC_UT_MID_1;
+
+    memset(&Timestamp, 0, sizeof(Timestamp));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType           = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID         = LC_OPER_CUSTOM;
+    LC_OperData.WDTPtr[WatchIndex].CustomFuncArgument = 0;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale = 1;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    /* Note: this event message is generated in a subfunction, but is tested anyway to verify that the correct code path
+     * has been reached */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 0);
+}
+
+void LC_ProcessWP_Test_OperatorCompareError(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+    CFE_SB_MsgId_t     TestMsgId = LC_UT_MID_1;
+
+    memset(&Timestamp, 0, sizeof(Timestamp));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType        = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID      = 99;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    /* Generates 1 event message we don't care about in this test */
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchTruePreviousStale(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds        = 3;
+    Timestamp.Subseconds     = 5;
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Seconds == 3,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Seconds == 3");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Subseconds == 5,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Subseconds == 5");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchTruePreviousFalse(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds        = 3;
+    Timestamp.Subseconds     = 5;
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_FALSE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Seconds == 3,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Seconds == 3");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Subseconds == 5,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Subseconds == 5");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousStale(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds    = 3;
+    Timestamp.Subseconds = 5;
+
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_GE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Seconds == 3,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Seconds == 3");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Subseconds == 5,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Subseconds == 5");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousTrue(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds    = 3;
+    Timestamp.Subseconds = 5;
+
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_GE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_TRUE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Seconds == 3,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Seconds == 3");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Subseconds == 5,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Subseconds == 5");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_ProcessWP_Test_BadSize(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+    CFE_SB_MsgId_t     TestMsgId = LC_UT_MID_1;
+
+    memset(&Timestamp, 0, sizeof(Timestamp));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType           = 99;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID         = LC_OPER_CUSTOM;
+    LC_OperData.WDTPtr[WatchIndex].CustomFuncArgument = 0;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale = 1;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+
+    /* this generates 1 event message in a subfunction */
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchTruePreviousTrue(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds        = 3;
+    Timestamp.Subseconds     = 5;
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_TRUE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_TRUE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 1");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value == 0");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousFalse(void)
+{
+    uint16             WatchIndex = 0;
+    CFE_TIME_SysTime_t Timestamp;
+
+    Timestamp.Seconds    = 3;
+    Timestamp.Subseconds = 5;
+
+    CFE_SB_MsgId_t TestMsgId = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_GE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_FALSE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    LC_ProcessWP(WatchIndex, &UT_CmdBuf.Buf, Timestamp);
+
+    /* Verify results */
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_FALSE");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].EvaluationCount == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount == 0");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 1");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value == 0");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataByte(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataWordLE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                 = LC_DATA_WORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID               = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult              = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale       = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                  = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed16 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount          = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataDWordLE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                 = LC_DATA_DWORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID               = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult              = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale       = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                  = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Signed32 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount          = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataUByte(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                  = LC_DATA_UBYTE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID                = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult               = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale        = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                   = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Unsigned8 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount           = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataUWordLE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                   = LC_DATA_UWORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID                 = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult                = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale         = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                    = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Unsigned16 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount            = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataUDWordLE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                   = LC_DATA_UDWORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID                 = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult                = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale         = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                    = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Unsigned32 = 1;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount            = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataFloatLE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = LC_DATA_FLOAT_LE;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Float32 = 1.0;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_OperatorCompare_Test_DataTypeError(void)
+{
+    uint8  Result;
+    uint16 WatchIndex      = 0;
+    uint32 ProcessedWPData = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType                = 99;
+    LC_OperData.WDTPtr[WatchIndex].OperatorID              = LC_OPER_LE;
+    LC_OperData.WRTPtr[WatchIndex].WatchResult             = LC_WATCH_STALE;
+    LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale      = 1;
+    LC_OperData.WDTPtr[WatchIndex].BitMask                 = 0;
+    LC_OperData.WDTPtr[WatchIndex].ComparisonValue.Float32 = 1.0;
+    LC_OperData.WRTPtr[WatchIndex].EvaluationCount         = 0;
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has undefined data type: WP = %%d, DataType = %%d");
+
+    /* Execute the function being tested */
+    Result = LC_OperatorCompare(WatchIndex, ProcessedWPData);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_ERROR, "Result == LC_WATCH_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_DATATYPE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_SignedCompare_Test_LE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LE;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_LT(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LT;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_EQ(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_EQ;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_NE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_NE;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_GT(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GT;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_GE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GE;
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_SignedCompare_Test_InvalidOperatorID(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = 99;
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has invalid operator ID: WP = %%d, OperID = %%d");
+
+    /* Execute the function being tested */
+    Result = LC_SignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_ERROR, "Result == LC_WATCH_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_OPERID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_UnsignedCompare_Test_LE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LE;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_LT(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LT;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_EQ(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_EQ;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_NE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 0;
+    int32  CompareValue = 1;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_NE;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_GT(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GT;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_GE(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GE;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_UnsignedCompare_Test_InvalidOperatorID(void)
+{
+    uint8  Result;
+    uint16 WatchIndex   = 0;
+    int32  WPValue      = 1;
+    int32  CompareValue = 0;
+    int32  strCmpResult;
+    char   ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has invalid operator ID: WP = %%d, OperID = %%d");
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = 99;
+
+    /* Execute the function being tested */
+    Result = LC_UnsignedCompare(WatchIndex, WPValue, CompareValue);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_ERROR, "Result == LC_WATCH_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_OPERID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_FloatCompare_Test_LE(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 0.0;
+    CompareMultiType.Float32 = 1.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LE;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_LT(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 0.0;
+    CompareMultiType.Float32 = 1.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_LT;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_EQ(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 1.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_EQ;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_EQFail(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 2.0;
+    CompareMultiType.Float32 = 1.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_EQ;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_FALSE, "Result == LC_WATCH_FALSE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_NE(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 0.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_NE;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_NEFail(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 1.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_NE;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_FALSE, "Result == LC_WATCH_FALSE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_GT(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 0.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GT;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_GE(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 0.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = LC_OPER_GE;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_TRUE, "Result == LC_WATCH_TRUE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_FloatCompare_Test_InvalidOperatorID(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    CompareMultiType.Float32 = 0.0;
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = 99;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has invalid operator ID: WP = %%d, OperID = %%d");
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_ERROR, "Result == LC_WATCH_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_OPERID_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_FloatCompare_Test_NaN(void)
+{
+    uint8          Result;
+    uint16         WatchIndex = 0;
+    LC_MultiType_t WPMultiType;
+    LC_MultiType_t CompareMultiType;
+
+    WPMultiType.Float32      = 1.0;
+    WPMultiType.Unsigned32   = 0x7F8FFFFF;
+    CompareMultiType.Float32 = 0.0;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP data value is a float NAN: WP = %%d, Value = 0x%%08X");
+
+    LC_OperData.WDTPtr[WatchIndex].OperatorID = 99;
+
+    /* Execute the function being tested */
+    Result = LC_FloatCompare(WatchIndex, &WPMultiType, &CompareMultiType);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WATCH_ERROR, "Result == LC_WATCH_ERROR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_NAN_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_WPOffsetValid_Test_DataUByte(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    size_t MsgSize = 16;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_UBYTE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_WPOffsetValid_Test_UWordLE(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    size_t MsgSize = 16;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_UWORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_WPOffsetValid_Test_UDWordLE(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    size_t MsgSize = 16;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_UDWORD_LE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_WPOffsetValid_Test_FloatLE(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    size_t MsgSize = 16;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_FLOAT_LE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_WPOffsetValid_Test_DataTypeError(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has undefined data type: WP = %%d, DataType = %%d");
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = 99;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = 0;
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_DATATYPE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_WPOffsetValid_Test_OffsetError(void)
+{
+    bool           Result;
+    uint16         WatchIndex = 0;
+    CFE_SB_MsgId_t TestMsgId  = LC_UT_MID_1;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &TestMsgId, sizeof(TestMsgId), false);
+    size_t MsgSize = 0;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &MsgSize, sizeof(MsgSize), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(LC_VerifyMsgLength), true);
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP offset error: MID = 0x%%08lX, WP = %%d, Offset = %%d, DataSize = %%d, MsgLen = %%d");
+
+    LC_OperData.WDTPtr[WatchIndex].DataType         = LC_DATA_UBYTE;
+    LC_OperData.WDTPtr[WatchIndex].WatchpointOffset = sizeof(LC_NoArgsCmd_t);
+
+    /* Execute the function being tested */
+    Result = LC_WPOffsetValid(WatchIndex, &UT_CmdBuf.Buf);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_OFFSET_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_GetSizedWPData_Test_DataByte(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_BYTE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 1, "SizedData == 1");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataUByte(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_UBYTE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 1, "SizedData == 1");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataWordBELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_WORD_BE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x0102, "SizedData == 0x0102");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataWordLELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_WORD_LE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x0201, "SizedData == 0x0201");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataUWordBELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_UWORD_BE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x0102, "SizedData == 0x0102");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataUWordLELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_UWORD_LE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x0201, "SizedData == 0x0201");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataFloatBELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_FLOAT_BE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x01020304, "SizedData == 0x01020304");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataFloatLELittleEndian(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData = 0;
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = LC_DATA_FLOAT_LE;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+    UtAssert_True(SizedData == 0x04030201, "SizedData == 0x04030201");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_GetSizedWPData_Test_DataTypeError(void)
+{
+    bool   Result;
+    uint16 WatchIndex = 0;
+    uint8  WPData[4];
+    uint32 SizedData;
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WP has undefined data type: WP = %%d, DataType = %%d");
+
+    WPData[0] = 1;
+    WPData[1] = 2;
+    WPData[2] = 3;
+    WPData[3] = 4;
+
+    LC_OperData.WDTPtr[WatchIndex].DataType = 99;
+
+    /* Execute the function being tested */
+    Result = LC_GetSizedWPData(WatchIndex, WPData, &SizedData);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR,
+                  "LC_OperData.WRTPtr[WatchIndex].WatchResult == LC_WATCH_ERROR");
+    UtAssert_True(LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0,
+                  "LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WP_DATATYPE_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateWDT_Test_UnusedTableEntry(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType = LC_WATCH_NOT_USED;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == CFE_SUCCESS, "Result == CFE_SUCCESS");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateWDT_Test_AllDataTypes(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify err: WP = %%d, Err = %%d, DType = %%d, Oper = %%d, MID = 0x%%08lX");
+
+    char ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType = LC_WATCH_NOT_USED;
+    }
+
+    /* Add an entry for each data type */
+    LC_OperData.WDTPtr[0].DataType  = LC_DATA_BYTE;
+    LC_OperData.WDTPtr[1].DataType  = LC_DATA_UBYTE;
+    LC_OperData.WDTPtr[2].DataType  = LC_DATA_WORD_BE;
+    LC_OperData.WDTPtr[3].DataType  = LC_DATA_WORD_LE;
+    LC_OperData.WDTPtr[4].DataType  = LC_DATA_UWORD_BE;
+    LC_OperData.WDTPtr[5].DataType  = LC_DATA_UWORD_LE;
+    LC_OperData.WDTPtr[6].DataType  = LC_DATA_DWORD_BE;
+    LC_OperData.WDTPtr[7].DataType  = LC_DATA_DWORD_LE;
+    LC_OperData.WDTPtr[8].DataType  = LC_DATA_UDWORD_BE;
+    LC_OperData.WDTPtr[9].DataType  = LC_DATA_UDWORD_LE;
+    LC_OperData.WDTPtr[10].DataType = LC_DATA_FLOAT_BE;
+    LC_OperData.WDTPtr[11].DataType = LC_DATA_FLOAT_LE;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(Result, LC_WDTVAL_ERR_OPER);
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string 1 matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string 2 matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_AllOperatorIDs(void)
+{
+    int32 Result;
+    int32 TableIndex;
+
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify err: WP = %%d, Err = %%d, DType = %%d, Oper = %%d, MID = 0x%%08lX");
+
+    char ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType  = LC_DATA_BYTE;
+        LC_OperData.WDTPtr[TableIndex].MessageID = LC_UT_MID_1;
+    }
+
+    /* Add an entry for each data type */
+    LC_OperData.WDTPtr[0].OperatorID = LC_OPER_LT;
+    LC_OperData.WDTPtr[1].OperatorID = LC_OPER_LE;
+    LC_OperData.WDTPtr[2].OperatorID = LC_OPER_NE;
+    LC_OperData.WDTPtr[3].OperatorID = LC_OPER_EQ;
+    LC_OperData.WDTPtr[4].OperatorID = LC_OPER_GE;
+    LC_OperData.WDTPtr[5].OperatorID = LC_OPER_GT;
+    LC_OperData.WDTPtr[6].OperatorID = LC_OPER_CUSTOM;
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_INT32_EQ(Result, LC_WDTVAL_ERR_OPER);
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 2);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string 1 matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string 2 matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_InvalidDataType(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify err: WP = %%d, Err = %%d, DType = %%d, Oper = %%d, MID = 0x%%08lX");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = 99;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = 1;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_2;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 3;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_ERR_DATATYPE, "Result == LC_WDTVAL_ERR_DATATYPE");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_InvalidOperator(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify err: WP = %%d, Err = %%d, DType = %%d, Oper = %%d, MID = 0x%%08lX");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_BYTE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = 99;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_2;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 3;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_ERR_OPER, "Result == LC_WDTVAL_ERR_OPER");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_BadMessageID(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify err: WP = %%d, Err = %%d, DType = %%d, Oper = %%d, MID = 0x%%08lX");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_BYTE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = CFE_SB_INVALID_MSG_ID;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 3;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_ERR_MID, "Result == LC_WDTVAL_ERR_MID");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_ERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_NaN(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify float err: WP = %%d, Err = %%d, ComparisonValue = 0x%%08X");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_FLOAT_LE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_1;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 0x7F8FFFFF;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_ERR_FPNAN, "Result == LC_WDTVAL_ERR_FPNAN");
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_FPERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_Inf(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString1[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    char  ExpectedEventString2[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+    snprintf(ExpectedEventString1, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify float err: WP = %%d, Err = %%d, ComparisonValue = 0x%%08X");
+    snprintf(ExpectedEventString2, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_FLOAT_LE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_1;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 0x7F800000;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_ERR_FPINF, "Result == LC_WDTVAL_ERR_FPINF");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 2");
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_FPERR_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_ERROR);
+
+    strCmpResult = strncmp(ExpectedEventString1, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[1].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString2, context_CFE_EVS_SendEvent[1].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[1].Spec);
+}
+
+void LC_ValidateWDT_Test_FloatingPointPassed(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_FLOAT_LE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_1;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 1;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_NO_ERR, "Result == LC_WDTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateWDT_Test_NonFloatingPointPassed(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_BYTE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_1;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 1;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_NO_ERR, "Result == LC_WDTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_ValidateWDT_Test_FloatBE(void)
+{
+    int32 Result;
+    int32 TableIndex;
+    int32 strCmpResult;
+    char  ExpectedEventString[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    snprintf(ExpectedEventString, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH,
+             "WDT verify results: good = %%d, bad = %%d, unused = %%d");
+
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        LC_OperData.WDTPtr[TableIndex].DataType                   = LC_DATA_FLOAT_BE;
+        LC_OperData.WDTPtr[TableIndex].OperatorID                 = LC_OPER_LT;
+        LC_OperData.WDTPtr[TableIndex].MessageID                  = LC_UT_MID_1;
+        LC_OperData.WDTPtr[TableIndex].ComparisonValue.Unsigned32 = 1;
+    }
+
+    /* Execute the function being tested */
+    Result = LC_ValidateWDT(LC_OperData.WDTPtr);
+
+    /* Verify results */
+    UtAssert_True(Result == LC_WDTVAL_NO_ERR, "Result == LC_WDTVAL_NO_ERR");
+
+    UtAssert_INT32_EQ(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)), 1);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventID, LC_WDTVAL_INF_EID);
+    UtAssert_INT32_EQ(context_CFE_EVS_SendEvent[0].EventType, CFE_EVS_EventType_INFORMATION);
+
+    strCmpResult = strncmp(ExpectedEventString, context_CFE_EVS_SendEvent[0].Spec, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+
+    UtAssert_True(strCmpResult == 0, "Event string matched expected result, '%s'", context_CFE_EVS_SendEvent[0].Spec);
+}
+
+void LC_Uint32IsNAN_Test_True(void)
+{
+    bool Result;
+
+    /* Execute the function being tested */
+    Result = LC_Uint32IsNAN(0x7F8FFFFF);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_Uint32IsNAN_Test_False(void)
+{
+    bool Result;
+
+    /* Execute the function being tested */
+    Result = LC_Uint32IsNAN(0x10000000);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_Uint32IsInfinite_Test_True(void)
+{
+    bool Result;
+
+    /* Execute the function being tested */
+    Result = LC_Uint32IsInfinite(0x7F800000);
+
+    /* Verify results */
+    UtAssert_True(Result == true, "Result == true");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_Uint32IsInfinite_Test_False(void)
+{
+    bool Result;
+
+    /* Execute the function being tested */
+    Result = LC_Uint32IsInfinite(0x10000000);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void LC_Uint32IsInfinite_Test_False2(void)
+{
+    bool Result;
+
+    /* Execute the function being tested */
+    Result = LC_Uint32IsInfinite(0x7F800002);
+
+    /* Verify results */
+    UtAssert_True(Result == false, "Result == false");
+
+    UtAssert_True(UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0, "UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent)) == 0");
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(LC_CreateHashTable_Test, LC_Test_Setup, LC_Test_TearDown, "LC_CreateHashTable_Test");
+
+    UtTest_Add(LC_AddWatchpoint_Test_HashTableAndWatchPtListNullPointersNominal, LC_Test_Setup, LC_Test_TearDown,
+               "LC_AddWatchpoint_Test_HashTableAndWatchPtListNullPointersNominal");
+    UtTest_Add(LC_AddWatchpoint_Test_HashTableAndWatchPtListNotNullPointerTwoMsgLinksMIDFound, LC_Test_Setup,
+               LC_Test_TearDown, "LC_AddWatchpoint_Test_HashTableAndWatchPtListNotNullPointerTwoMsgLinksMIDFound");
+    UtTest_Add(LC_AddWatchpoint_Test_NullPointersErrorSubscribingWatchpoint, LC_Test_Setup, LC_Test_TearDown,
+               "LC_AddWatchpoint_Test_NullPointersErrorSubscribingWatchpoint");
+    UtTest_Add(LC_AddWatchpoint_Test_NonNullMessageList, LC_Test_Setup, LC_Test_TearDown,
+               "LC_AddWatchpoint_Test_NonNullMessageList");
+
+    UtTest_Add(LC_CheckMsgForWPs_Test_Nominal, LC_Test_Setup, LC_Test_TearDown, "LC_CheckMsgForWPs_Test_Nominal");
+    UtTest_Add(LC_CheckMsgForWPs_Test_NominalMsgTime1, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CheckMsgForWPs_Test_NominalMsgTime1");
+    UtTest_Add(LC_CheckMsgForWPs_Test_NominalMsgTime2, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CheckMsgForWPs_Test_NominalMsgTime2");
+    UtTest_Add(LC_CheckMsgForWPs_Test_NominalDisabled, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CheckMsgForWPs_Test_NominalDisabled");
+    UtTest_Add(LC_CheckMsgForWPs_Test_UnreferencedMessageID, LC_Test_Setup, LC_Test_TearDown,
+               "LC_CheckMsgForWPs_Test_UnreferencedMessageID");
+
+    UtTest_Add(LC_ProcessWP_Test_CustomFunctionWatchFalse, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_CustomFunctionWatchFalse");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareError");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchTruePreviousStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchTruePreviousStale");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchTruePreviousFalse, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchTruePreviousFalse");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousStale, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousStale");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousTrue, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousTrue");
+
+    UtTest_Add(LC_ProcessWP_Test_BadSize, LC_Test_Setup, LC_Test_TearDown, "LC_ProcessWP_Test_BadSize");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchTruePreviousTrue, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchTruePreviousTrue");
+    UtTest_Add(LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousFalse, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ProcessWP_Test_OperatorCompareWatchFalsePreviousFalse");
+
+    /* Note: Only testing little-ending (LE) cases.  Not testing big-endian (BE) cases. */
+    UtTest_Add(LC_OperatorCompare_Test_DataByte, LC_Test_Setup, LC_Test_TearDown, "LC_OperatorCompare_Test_DataByte");
+    UtTest_Add(LC_OperatorCompare_Test_DataWordLE, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataWordLE");
+    UtTest_Add(LC_OperatorCompare_Test_DataDWordLE, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataDWordLE");
+    UtTest_Add(LC_OperatorCompare_Test_DataUByte, LC_Test_Setup, LC_Test_TearDown, "LC_OperatorCompare_Test_DataUByte");
+    UtTest_Add(LC_OperatorCompare_Test_DataUWordLE, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataUWordLE");
+    UtTest_Add(LC_OperatorCompare_Test_DataUDWordLE, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataUDWordLE");
+    UtTest_Add(LC_OperatorCompare_Test_DataFloatLE, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataFloatLE");
+    UtTest_Add(LC_OperatorCompare_Test_DataTypeError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_OperatorCompare_Test_DataTypeError");
+
+    UtTest_Add(LC_SignedCompare_Test_LE, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_LE");
+    UtTest_Add(LC_SignedCompare_Test_LT, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_LT");
+    UtTest_Add(LC_SignedCompare_Test_EQ, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_EQ");
+    UtTest_Add(LC_SignedCompare_Test_NE, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_NE");
+    UtTest_Add(LC_SignedCompare_Test_GT, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_GT");
+    UtTest_Add(LC_SignedCompare_Test_GE, LC_Test_Setup, LC_Test_TearDown, "LC_SignedCompare_Test_GE");
+    UtTest_Add(LC_SignedCompare_Test_InvalidOperatorID, LC_Test_Setup, LC_Test_TearDown,
+               "LC_SignedCompare_Test_InvalidOperatorID");
+
+    UtTest_Add(LC_UnsignedCompare_Test_LE, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_LE");
+    UtTest_Add(LC_UnsignedCompare_Test_LT, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_LT");
+    UtTest_Add(LC_UnsignedCompare_Test_EQ, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_EQ");
+    UtTest_Add(LC_UnsignedCompare_Test_NE, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_NE");
+    UtTest_Add(LC_UnsignedCompare_Test_GT, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_GT");
+    UtTest_Add(LC_UnsignedCompare_Test_GE, LC_Test_Setup, LC_Test_TearDown, "LC_UnsignedCompare_Test_GE");
+    UtTest_Add(LC_UnsignedCompare_Test_InvalidOperatorID, LC_Test_Setup, LC_Test_TearDown,
+               "LC_UnsignedCompare_Test_InvalidOperatorID");
+
+    UtTest_Add(LC_FloatCompare_Test_LE, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_LE");
+    UtTest_Add(LC_FloatCompare_Test_LT, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_LT");
+    UtTest_Add(LC_FloatCompare_Test_EQ, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_EQ");
+    UtTest_Add(LC_FloatCompare_Test_EQFail, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_EQFail");
+    UtTest_Add(LC_FloatCompare_Test_NE, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_NE");
+    UtTest_Add(LC_FloatCompare_Test_NEFail, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_NEFail");
+    UtTest_Add(LC_FloatCompare_Test_GT, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_GT");
+    UtTest_Add(LC_FloatCompare_Test_GE, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_GE");
+    UtTest_Add(LC_FloatCompare_Test_InvalidOperatorID, LC_Test_Setup, LC_Test_TearDown,
+               "LC_FloatCompare_Test_InvalidOperatorID");
+    UtTest_Add(LC_FloatCompare_Test_NaN, LC_Test_Setup, LC_Test_TearDown, "LC_FloatCompare_Test_NaN");
+
+    UtTest_Add(LC_WPOffsetValid_Test_DataUByte, LC_Test_Setup, LC_Test_TearDown, "LC_WPOffsetValid_Test_DataUByte");
+    UtTest_Add(LC_WPOffsetValid_Test_UWordLE, LC_Test_Setup, LC_Test_TearDown, "LC_WPOffsetValid_Test_UWordLE");
+    UtTest_Add(LC_WPOffsetValid_Test_UDWordLE, LC_Test_Setup, LC_Test_TearDown, "LC_WPOffsetValid_Test_UDWordLE");
+    UtTest_Add(LC_WPOffsetValid_Test_FloatLE, LC_Test_Setup, LC_Test_TearDown, "LC_WPOffsetValid_Test_FloatLE");
+    UtTest_Add(LC_WPOffsetValid_Test_DataTypeError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_WPOffsetValid_Test_DataTypeError");
+    UtTest_Add(LC_WPOffsetValid_Test_OffsetError, LC_Test_Setup, LC_Test_TearDown, "LC_WPOffsetValid_Test_OffsetError");
+
+    UtTest_Add(LC_GetSizedWPData_Test_DataByte, LC_Test_Setup, LC_Test_TearDown, "LC_GetSizedWPData_Test_DataByte");
+    UtTest_Add(LC_GetSizedWPData_Test_DataUByte, LC_Test_Setup, LC_Test_TearDown, "LC_GetSizedWPData_Test_DataUByte");
+    UtTest_Add(LC_GetSizedWPData_Test_DataWordBELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataWordBELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataWordLELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataWordLELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataUWordBELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataUWordBELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataUWordLELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataUWordLELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataFloatBELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataFloatBELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataFloatLELittleEndian, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataFloatLELittleEndian");
+    UtTest_Add(LC_GetSizedWPData_Test_DataTypeError, LC_Test_Setup, LC_Test_TearDown,
+               "LC_GetSizedWPData_Test_DataTypeError");
+
+    UtTest_Add(LC_ValidateWDT_Test_UnusedTableEntry, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_UnusedTableEntry");
+    UtTest_Add(LC_ValidateWDT_Test_InvalidDataType, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_InvalidDataType");
+    UtTest_Add(LC_ValidateWDT_Test_InvalidOperator, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_InvalidOperator");
+    UtTest_Add(LC_ValidateWDT_Test_BadMessageID, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateWDT_Test_BadMessageID");
+    UtTest_Add(LC_ValidateWDT_Test_NaN, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateWDT_Test_NaN");
+    UtTest_Add(LC_ValidateWDT_Test_Inf, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateWDT_Test_Inf");
+    UtTest_Add(LC_ValidateWDT_Test_FloatingPointPassed, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_FloatingPointPassed");
+    UtTest_Add(LC_ValidateWDT_Test_NonFloatingPointPassed, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_NonFloatingPointPassed");
+
+    UtTest_Add(LC_ValidateWDT_Test_AllDataTypes, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateWDT_Test_AllDataTypes");
+    UtTest_Add(LC_ValidateWDT_Test_AllOperatorIDs, LC_Test_Setup, LC_Test_TearDown,
+               "LC_ValidateWDT_Test_AllOperatorIDs");
+
+    UtTest_Add(LC_ValidateWDT_Test_FloatBE, LC_Test_Setup, LC_Test_TearDown, "LC_ValidateWDT_Test_FloatBE");
+
+    UtTest_Add(LC_Uint32IsNAN_Test_True, LC_Test_Setup, LC_Test_TearDown, "LC_Uint32IsNAN_Test_True");
+    UtTest_Add(LC_Uint32IsNAN_Test_False, LC_Test_Setup, LC_Test_TearDown, "LC_Uint32IsNAN_Test_False");
+
+    UtTest_Add(LC_Uint32IsInfinite_Test_True, LC_Test_Setup, LC_Test_TearDown, "LC_Uint32IsInfinite_Test_True");
+    UtTest_Add(LC_Uint32IsInfinite_Test_False, LC_Test_Setup, LC_Test_TearDown, "LC_Uint32IsInfinite_Test_False");
+
+    UtTest_Add(LC_Uint32IsInfinite_Test_False2, LC_Test_Setup, LC_Test_TearDown, "LC_Uint32IsInfinite_Test_False2");
+}
+```

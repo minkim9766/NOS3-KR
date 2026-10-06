@@ -3,16 +3,47 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PriorityQueueTests.cpp`
 
-file--PriorityQueueTests.cpp
-file--QueueRulesDefinitions.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/ut/PriorityQueueTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Generic/test/ut/PriorityQueueTests.cpp
+// \brief tests using generic priority implementation for Os::Queue interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Generic/PriorityQueue.hpp"
+#include "STest/Random/Random.hpp"
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `QueueRulesDefinitions.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/ut/PriorityQueueTests.cpp`](file--PriorityQueueTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/ut/QueueRulesDefinitions.hpp`](file--QueueRulesDefinitions.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Generic/test/ut/QueueRulesDefinitions.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Generic/test/ut/QueueRulesDefinitions.hpp
+// \brief definitions for queue testing
+// ======================================================================
+#ifndef OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
+#define OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
+#include <deque>
+#include <queue>
+#include "Fw/FPrimeBasicTypes.hpp"
+using PriorityCompare = std::less<FwQueuePriorityType>;
+constexpr FwSizeType QUEUE_MESSAGE_SIZE_UPPER_BOUND = 1024;
+constexpr FwSizeType QUEUE_DEPTH_UPPER_BOUND = 100;
+constexpr bool TESTS_SUPPORT_BLOCKING = true;
+#endif  // OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
+```

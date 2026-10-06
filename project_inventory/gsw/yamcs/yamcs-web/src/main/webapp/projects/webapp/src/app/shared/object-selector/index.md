@@ -3,18 +3,371 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `object-selector.component.css`
 
-file--object-selector.component.css
-file--object-selector.component.html
-file--object-selector.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.css`
+
+
+```css
+table {
+  cursor: pointer;
+}
+
+.folder:hover {
+  text-decoration: underline;
+}
+
+::ng-deep .parent-row td {
+  font-size: 12px;
+  line-height: 16px;
+  color: rgba(0, 0, 0, 0.654);
+  padding: 7px 8px 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.hide {
+  display: none;
+}
+
+.disabled {
+  color: LightGrey;
+}
+
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
 ```
 
-## 항목
+### `object-selector.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.css`](file--object-selector.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.html`](file--object-selector.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.ts`](file--object-selector.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.html`
+
+
+```html
+@if (dataSource) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    [class.no-frame]="noFrame"
+    [class.no-select]="noSelect">
+    <ng-container cdkColumnDef="name">
+      <th mat-header-cell *cdkHeaderCellDef style="width: 400px">Name</th>
+      <td mat-cell *cdkCellDef="let item">
+        @if (item.folder) {
+          <mat-icon class="icon12" style="vertical-align: middle">folder</mat-icon>
+          {{ item.name | filename }}
+        } @else {
+          <mat-icon class="icon12" style="vertical-align: middle">description</mat-icon>
+          <span [ngClass]="foldersOnly ? 'disabled' : ''">{{ item.name | filename }}</span>
+        }
+      </td>
+    </ng-container>
+    <ng-container cdkColumnDef="modified">
+      <th mat-header-cell *cdkHeaderCellDef style="width: 200px">Date modified</th>
+      <td mat-cell *cdkCellDef="let item">
+        <span [ngClass]="!item.folder && foldersOnly ? 'disabled' : ''">
+          {{ (item.modified | datetime) || "-" }}
+        </span>
+      </td>
+    </ng-container>
+    <ng-container cdkColumnDef="size">
+      <th mat-header-cell *cdkHeaderCellDef style="width: 70px">Size</th>
+      <td mat-cell *cdkCellDef="let item">
+        <span [ngClass]="!item.folder && foldersOnly ? 'disabled' : ''">
+          {{ (item.size | formatBytes) || "-" }}
+        </span>
+      </td>
+    </ng-container>
+    <ng-container cdkColumnDef="parent">
+      <td mat-header-cell *cdkHeaderCellDef [attr.colspan]="displayedColumns.length">
+        <mat-icon class="icon12" style="vertical-align: middle; visibility: hidden">
+          description
+        </mat-icon>
+        ..
+      </td>
+    </ng-container>
+    <tr mat-header-row *cdkHeaderRowDef="displayedColumns" (click)="clearSelection()"></tr>
+    <tr
+      mat-row
+      *cdkHeaderRowDef="['parent']"
+      class="parent-row"
+      [class.hide]="!(currentPrefix$ | async)"
+      (click)="selectParent()"></tr>
+    <tr
+      mat-row
+      *cdkRowDef="let row; columns: displayedColumns"
+      [class.selected]="isSelected(row)"
+      (click)="selectFile($event, row)"></tr>
+  </table>
+}
+```
+
+### `object-selector.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/object-selector/object-selector.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  Bucket,
+  ListObjectsOptions,
+  ListObjectsResponse,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-object-selector',
+  templateUrl: './object-selector.component.html',
+  styleUrl: './object-selector.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => ObjectSelector),
+      multi: true,
+    },
+  ],
+  imports: [WebappSdkModule],
+})
+export class ObjectSelector
+  implements ControlValueAccessor, OnChanges, OnDestroy
+{
+  @Input()
+  bucket: Bucket;
+
+  @Input()
+  isMultiSelect: boolean;
+
+  @Input()
+  foldersOnly: boolean;
+
+  @Input()
+  noFrame: boolean = false;
+
+  @Input()
+  path: string;
+
+  @Input()
+  noSelect = false;
+
+  @Input()
+  allowFolderSelection = false;
+
+  @Output()
+  prefixChange = new EventEmitter<string | null>();
+
+  displayedColumns = ['name', 'size', 'modified'];
+  dataSource = new MatTableDataSource<BrowseItem>([]);
+
+  currentPrefix$ = new BehaviorSubject<string | null>(null);
+
+  private storageClient: StorageClient;
+  private selectedFileNames: Set<string> = new Set();
+  private lastSelected: BrowseItem;
+
+  private onChange = (_: string | null) => {};
+  private onTouched = () => {};
+
+  private selectionSubscription: Subscription;
+
+  constructor(
+    yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+  ) {
+    this.storageClient = yamcs.createStorageClient();
+  }
+
+  ngOnChanges() {
+    if (this.bucket) {
+      this.loadCurrentFolder();
+    }
+  }
+
+  changePrefix(prefix: string) {
+    this.loadCurrentFolder(prefix);
+  }
+
+  private loadCurrentFolder(prefix?: string) {
+    const options: ListObjectsOptions = {
+      delimiter: '/',
+    };
+    if (prefix) {
+      options.prefix = prefix;
+    }
+
+    this.storageClient.listObjects(this.bucket.name, options).then((dir) => {
+      this.changedir(dir);
+      const newPrefix = prefix || null;
+      if (newPrefix !== this.currentPrefix$.value) {
+        this.currentPrefix$.next(newPrefix);
+        this.prefixChange.emit(newPrefix);
+      }
+    });
+  }
+
+  private changedir(dir: ListObjectsResponse) {
+    this.selectedFileNames.clear();
+    this.updateFileNames();
+    const items: BrowseItem[] = [];
+    for (const prefix of dir.prefixes || []) {
+      items.push({
+        folder: true,
+        name: prefix,
+      });
+    }
+    for (const object of dir.objects || []) {
+      // Ignore fake objects that represent an empty directory
+      if (object.name.endsWith('/')) {
+        continue;
+      }
+      items.push({
+        folder: false,
+        name: object.name,
+        modified: object.created,
+        size: object.size,
+        objectUrl: this.storageClient.getObjectURL(
+          this.bucket.name,
+          object.name,
+        ),
+      });
+    }
+    this.dataSource.data = items;
+    this.changeDetection.detectChanges();
+  }
+
+  // Called from html when a row is selected
+  selectFile(event: MouseEvent, row: BrowseItem) {
+    if (row.folder) {
+      if (this.allowFolderSelection && event.ctrlKey && event.shiftKey) {
+        this.flipRowSelection(row);
+      } else {
+        this.loadCurrentFolder(row.name);
+      }
+    } else if (!this.foldersOnly) {
+      if (this.isMultiSelect && event.ctrlKey) {
+        this.flipRowSelection(row);
+      } else if (this.isMultiSelect && event.shiftKey) {
+        if (
+          this.selectedFileNames.size == 0 ||
+          !this.lastSelected ||
+          this.lastSelected.name === row.name
+        ) {
+          this.flipRowSelection(row);
+        } else {
+          let select = false;
+          for (const candidate of this.dataSource.data) {
+            if (
+              candidate.name === row.name ||
+              candidate.name === this.lastSelected.name
+            ) {
+              select = !select;
+            }
+            if (select) {
+              this.selectedFileNames.add(candidate.name);
+            }
+          }
+          this.selectedFileNames.add(row.name);
+        }
+      } else {
+        if (
+          this.selectedFileNames.size == 1 &&
+          this.selectedFileNames.has(row.name)
+        ) {
+          this.selectedFileNames.clear();
+        } else {
+          this.selectedFileNames.clear();
+          this.selectedFileNames.add(row.name);
+        }
+      }
+
+      if (this.selectedFileNames.has(row.name)) {
+        this.lastSelected = row;
+      }
+    }
+
+    this.updateFileNames();
+  }
+
+  private flipRowSelection(row: BrowseItem) {
+    if (this.selectedFileNames.has(row.name)) {
+      this.selectedFileNames.delete(row.name);
+    } else {
+      this.selectedFileNames.add(row.name);
+    }
+  }
+
+  private updateFileNames() {
+    this.onChange(Array.from(this.selectedFileNames).join('|'));
+  }
+
+  isSelected(row: BrowseItem) {
+    return this.selectedFileNames.has(row.name);
+  }
+
+  selectParent() {
+    const currentPrefix = this.currentPrefix$.value;
+    if (currentPrefix) {
+      const withoutTrailingSlash = currentPrefix.slice(0, -1);
+      const idx = withoutTrailingSlash.lastIndexOf('/');
+      if (idx) {
+        const parentPrefix = withoutTrailingSlash.substring(0, idx + 1);
+        this.selectedFileNames.clear();
+        this.updateFileNames();
+        this.loadCurrentFolder(parentPrefix);
+      }
+    }
+  }
+
+  writeValue(value: any) {
+    this.path = value;
+  }
+
+  clearSelection() {
+    this.selectedFileNames.clear();
+    this.updateFileNames();
+    this.changeDetection.detectChanges();
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {
+    this.onTouched = fn;
+  }
+
+  ngOnDestroy() {
+    if (this.selectionSubscription) {
+      this.selectionSubscription.unsubscribe();
+    }
+  }
+}
+
+export class BrowseItem {
+  folder: boolean;
+  name: string;
+  modified?: string;
+  objectUrl?: string;
+  size?: number;
+}
+```

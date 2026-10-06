@@ -3,20 +3,629 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--TypeDemo.cpp
-file--TypeDemo.fpp
-file--TypeDemo.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_compile_options(
+  -Wno-double-promotion
+)
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/TypeDemo.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TypeDemo.cpp"
+)
+set(MOD_DEPS
+    Os
+)
+register_fprime_module()
 ```
 
-## 항목
+### `TypeDemo.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.cpp`](file--TypeDemo.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.fpp`](file--TypeDemo.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.hpp`](file--TypeDemo.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TypeDemo.cpp
+// \author mstarch
+// \brief  cpp file for TypeDemo component implementation class
+// ======================================================================
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Ref/TypeDemo/TypeDemo.hpp>
+#include <limits>
+
+namespace Ref {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+TypeDemo ::TypeDemo(const char* const compName) : TypeDemoComponentBase(compName) {}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void TypeDemo ::CHOICE_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::Choice choice) {
+    this->tlmWrite_ChoiceCh(choice);
+    this->log_ACTIVITY_HI_ChoiceEv(choice);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::CHOICES_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::ManyChoices choices) {
+    this->tlmWrite_ChoicesCh(choices);
+    this->log_ACTIVITY_HI_ChoicesEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::CHOICES_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,
+                                                const U32 cmdSeq,
+                                                U8 repeat,
+                                                Ref::ManyChoices choices,
+                                                U8 repeat_max) {
+    for (U32 i = 0; (i < repeat) && (i < std::numeric_limits<U8>::max()) && (i < repeat_max); i++) {
+        this->tlmWrite_ChoicesCh(choices);
+    }
+    this->log_ACTIVITY_HI_ChoicesEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::EXTRA_CHOICES_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::TooManyChoices choices) {
+    this->tlmWrite_ExtraChoicesCh(choices);
+    this->log_ACTIVITY_HI_ExtraChoicesEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::EXTRA_CHOICES_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,
+                                                      const U32 cmdSeq,
+                                                      U8 repeat,
+                                                      Ref::TooManyChoices choices,
+                                                      U8 repeat_max) {
+    for (U32 i = 0; (i < repeat) && (i < std::numeric_limits<U8>::max()) && (i < repeat_max); i++) {
+        this->tlmWrite_ExtraChoicesCh(choices);
+    }
+    this->log_ACTIVITY_HI_ExtraChoicesEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::CHOICE_PAIR_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::ChoicePair choices) {
+    this->tlmWrite_ChoicePairCh(choices);
+    this->log_ACTIVITY_HI_ChoicePairEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::CHOICE_PAIR_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,
+                                                    const U32 cmdSeq,
+                                                    U8 repeat,
+                                                    Ref::ChoicePair choices,
+                                                    U8 repeat_max) {
+    for (U32 i = 0; (i < repeat) && (i < std::numeric_limits<U8>::max()) && (i < repeat_max); i++) {
+        this->tlmWrite_ChoicePairCh(choices);
+    }
+    this->log_ACTIVITY_HI_ChoicePairEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::GLUTTON_OF_CHOICE_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::ChoiceSlurry choices) {
+    this->tlmWrite_ChoiceSlurryCh(choices);
+    this->log_ACTIVITY_HI_ChoiceSlurryEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::GLUTTON_OF_CHOICE_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,
+                                                          const U32 cmdSeq,
+                                                          U8 repeat,
+                                                          Ref::ChoiceSlurry choices,
+                                                          U8 repeat_max) {
+    for (U32 i = 0; (i < repeat) && (i < std::numeric_limits<U8>::max()) && (i < repeat_max); i++) {
+        this->tlmWrite_ChoiceSlurryCh(choices);
+    }
+    this->log_ACTIVITY_HI_ChoiceSlurryEv(choices);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::DUMP_TYPED_PARAMETERS_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    Fw::ParamValid validity;
+
+    Ref::Choice choice = this->paramGet_CHOICE_PRM(validity);
+    this->log_ACTIVITY_HI_ChoicePrmEv(choice, validity);
+
+    Ref::ManyChoices choices = this->paramGet_CHOICES_PRM(validity);
+    this->log_ACTIVITY_HI_ChoicesPrmEv(choices, validity);
+
+    Ref::TooManyChoices tooManyChoices = this->paramGet_EXTRA_CHOICES_PRM(validity);
+    this->log_ACTIVITY_HI_ExtraChoicesPrmEv(tooManyChoices, validity);
+
+    Ref::ChoicePair choicePair = this->paramGet_CHOICE_PAIR_PRM(validity);
+    this->log_ACTIVITY_HI_ChoicePairPrmEv(choicePair, validity);
+
+    Ref::ChoiceSlurry choiceSlurry = this->paramGet_GLUTTON_OF_CHOICE_PRM(validity);
+    this->log_ACTIVITY_HI_ChoiceSlurryPrmEv(choiceSlurry, validity);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::DUMP_FLOATS_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    Ref::FloatSet invalid;
+    invalid[0] = std::numeric_limits<float>::infinity();
+    invalid[1] = -1 * std::numeric_limits<float>::infinity();
+    invalid[2] = (std::numeric_limits<float>::has_quiet_NaN) ? std::numeric_limits<float>::quiet_NaN() : 0.0f;
+    this->log_ACTIVITY_HI_FloatEv(invalid[0], invalid[1], invalid[2], invalid);
+    this->tlmWrite_Float1Ch(invalid[0]);
+    this->tlmWrite_Float2Ch(invalid[1]);
+    this->tlmWrite_Float3Ch(invalid[2]);
+    this->tlmWrite_FloatSet(invalid);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void TypeDemo ::SEND_SCALARS_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, Ref::ScalarStruct scalar_input) {
+    this->log_ACTIVITY_HI_ScalarStructEv(scalar_input);
+    this->tlmWrite_ScalarStructCh(scalar_input);
+    this->tlmWrite_ScalarU8Ch(scalar_input.get_u8());
+    this->tlmWrite_ScalarU16Ch(scalar_input.get_u16());
+    this->tlmWrite_ScalarU32Ch(scalar_input.get_u32());
+    this->tlmWrite_ScalarU64Ch(scalar_input.get_u64());
+    this->tlmWrite_ScalarI8Ch(scalar_input.get_i8());
+    this->tlmWrite_ScalarI16Ch(scalar_input.get_i16());
+    this->tlmWrite_ScalarI32Ch(scalar_input.get_i32());
+    this->tlmWrite_ScalarI64Ch(scalar_input.get_i64());
+    this->tlmWrite_ScalarF32Ch(scalar_input.get_f32());
+    this->tlmWrite_ScalarF64Ch(scalar_input.get_f64());
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+}  // end namespace Ref
+```
+
+### `TypeDemo.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.fpp`
+
+
+```fpp
+module Ref {
+    constant dimension = 2
+
+    @ Enumeration type for use later
+    enum Choice {
+        ONE
+        TWO
+        RED
+        BLUE
+    }
+
+    @ Enumeration array
+    array ManyChoices = [dimension] Choice
+
+    @ Array of array
+    array TooManyChoices = [dimension] ManyChoices
+
+    @ Structure of enums
+    struct ChoicePair {
+        @ The first choice to make
+        firstChoice: Choice,
+        @ The second choice to make
+        secondChoice: Choice
+    }
+
+    @ Structure of enums (with an multi-dimensional array and structure)
+    struct ChoiceSlurry {
+        @ A large set of disorganized choices
+        tooManyChoices: TooManyChoices,
+        @ A singular choice
+        separateChoice: Choice
+        @ A pair of choices
+        choicePair: ChoicePair
+        @ An array of choices defined as member array
+        choiceAsMemberArray: [dimension] U8
+    }
+
+    @ Set of floating points to emit
+    array FloatSet = [3] F32;
+
+    @ All scalar inputs
+    struct ScalarStruct {
+        i8: I8,
+        i16: I16,
+        i32: I32,
+        i64: I64,
+        u8: U8,
+        u16: U16,
+        u32: U32,
+        u64: U64,
+        f32: F32,
+        f64: F64
+    }
+
+    @ Component to demonstrate multiple type configurations
+    passive component TypeDemo {
+        #####
+        # Variations on a single enumeration input
+        #####
+        @ Single choice command
+        sync command CHOICE(
+            @ A single choice
+            $choice: Choice
+        )
+
+        @ Single choice channel
+        telemetry ChoiceCh: Choice
+
+        @ Single choice event
+        event ChoiceEv($choice: Choice) severity activity high format "Choice: {}"
+
+        @ Single enumeration parameter
+        param CHOICE_PRM: Choice
+
+        #####
+        # Variations on a one-dimensional array of enumeration input
+        #####
+        @ Multiple choice command via Array
+        sync command CHOICES(
+            @ A set of choices
+            choices: ManyChoices
+        )
+
+        @ Multiple choice command via Array with a preceding and following argument
+        sync command CHOICES_WITH_FRIENDS(
+            @ Number of times to repeat the choices
+            repeat: U8,
+            @ A set of choices
+            choices: ManyChoices,
+            @ Limit to the number of repetitions
+            repeat_max: U8
+        )
+
+        @ Multiple choice channel via Array
+        telemetry ChoicesCh: ManyChoices
+
+        @ Multiple choice event via Array
+        event ChoicesEv(choices: ManyChoices) severity activity high format "Choices: {}"
+
+        @ Multiple enumeration parameter via Array
+        param CHOICES_PRM: ManyChoices
+
+        #####
+        # Variations on a multi-dimensional array of enumeration input
+        #####
+        @ Too many choice command via Array
+        sync command EXTRA_CHOICES(
+            @ Way to many choices to make
+            choices: TooManyChoices
+        )
+
+        @ Too many choices command via Array with a preceding and following argument
+        sync command EXTRA_CHOICES_WITH_FRIENDS(
+            @ Number of times to repeat the choices
+            repeat: U8,
+            @ Way to many choices to make
+            choices: TooManyChoices,
+            @ Limit to the number of repetitions
+            repeat_max: U8
+        )
+
+        @ Too many choice channel via Array
+        telemetry ExtraChoicesCh: TooManyChoices
+
+        @ Too many choice event via Array
+        event ExtraChoicesEv(choices: TooManyChoices) severity activity high format "Choices: {}"
+
+        @ Too many enumeration parameter via Array
+        param EXTRA_CHOICES_PRM: ManyChoices
+
+        #####
+        # Variations on a basic structure
+        #####
+        @ Multiple choice command via Structure
+        sync command CHOICE_PAIR(
+            @ A pair of choices
+            choices: ChoicePair
+        )
+
+        @ Multiple choices command via Structure with a preceding and following argument
+        sync command CHOICE_PAIR_WITH_FRIENDS(
+            @ Number of times to repeat the choices
+            repeat: U8,
+            @ A pair of choices
+            choices: ChoicePair,
+            @ Limit to the number of repetitions
+            repeat_max: U8
+        )
+
+        @ Multiple choice channel via Structure
+        telemetry ChoicePairCh: ChoicePair
+
+        @ Multiple choice event via Structure
+        event ChoicePairEv(choices: ChoicePair) severity activity high format "Choices: {}"
+
+        @ Multiple enumeration parameter via Structure
+        param CHOICE_PAIR_PRM: ChoicePair
+
+        #####
+        # Variations on a complex structure
+        #####
+        @ Multiple choice command via Complex Structure
+        sync command GLUTTON_OF_CHOICE(
+            @ A phenomenal amount of choice
+            choices: ChoiceSlurry
+        )
+
+        @ Multiple choices command via Complex Structure with a preceding and following argument
+        sync command GLUTTON_OF_CHOICE_WITH_FRIENDS(
+            @ Number of times to repeat the choices
+            repeat: U8,
+            @ A phenomenal amount of choice
+            choices: ChoiceSlurry,
+            @ Limit to the number of repetitions
+            repeat_max: U8
+        )
+
+        @ Multiple choice channel via Complex Structure
+        telemetry ChoiceSlurryCh: ChoiceSlurry
+
+        @ Multiple choice event via Complex Structure
+        event ChoiceSlurryEv(choices: ChoiceSlurry) severity activity high format "Choices: {}"
+
+        @ Multiple enumeration parameter via Complex Structure
+        param GLUTTON_OF_CHOICE_PRM: ChoiceSlurry
+
+        #####
+        # Parameter control: events and a dump command
+        #####
+
+        @ Single choice parameter event
+        event ChoicePrmEv($choice: Choice, validity: Fw.ParamValid) severity activity high \
+            format "CHOICE_PRM: {} with validity: {}"
+
+        @ Multiple choice parameter event via Array
+        event ChoicesPrmEv(choices: ManyChoices, validity: Fw.ParamValid) severity activity high \
+            format "CHOICES_PRM: {} with validity: {}"
+
+        @ Too many choice parameter event via Array
+        event ExtraChoicesPrmEv(choices: TooManyChoices, validity: Fw.ParamValid) severity activity high \
+            format "EXTRA_CHOICES_PRM: {} with validity: {}"
+
+        @ Multiple choice parameter event via Structure
+        event ChoicePairPrmEv(choices: ChoicePair, validity: Fw.ParamValid) severity activity high \
+            format "CHOICE_PAIR_PRM: {} with validity: {}"
+
+        @ Multiple choice parameter event via Complex Structure
+        event ChoiceSlurryPrmEv(choices: ChoiceSlurry, validity: Fw.ParamValid) severity activity high \
+            format "GLUTTON_OF_CHOICE_PRM: {} with validity: {}"
+
+        @ Dump the typed parameters
+        sync command DUMP_TYPED_PARAMETERS()
+
+        #####
+        # FloatSet outputs
+        #####
+        @ A set of floats in an event
+        event FloatEv(float1: F32, float2: F32, float3: F32, floats: FloatSet) severity activity high \
+            format "Floats: {} {} {} as a set: {}"
+
+        @ Float output channel 1
+        telemetry Float1Ch: F32
+
+        @ Float output channel 2
+        telemetry Float2Ch: F32
+
+        @ Float output channel 3
+        telemetry Float3Ch: F32
+
+        @ Float set output channel
+        telemetry FloatSet: FloatSet
+
+        @ Dump the float values
+        sync command DUMP_FLOATS()
+
+        @ Send scalars
+        sync command SEND_SCALARS(scalar_input: ScalarStruct)
+
+        @ Event for scalar struct
+        event ScalarStructEv(scalar_argument: ScalarStruct) severity activity high \
+            format "ScalarStruct: {}"
+
+        @ Scalar struct channel
+        telemetry ScalarStructCh: ScalarStruct
+
+        @ Scalar U8 channel
+        telemetry ScalarU8Ch: U8
+
+        @ Scalar U16 channel
+        telemetry ScalarU16Ch: U16
+
+        @ Scalar U32 channel
+        telemetry ScalarU32Ch: U32
+
+        @ Scalar U64 channel
+        telemetry ScalarU64Ch: U64
+
+        @ Scalar I8 channel
+        telemetry ScalarI8Ch: I8
+
+        @ Scalar I16 channel
+        telemetry ScalarI16Ch: I16
+
+        @ Scalar I32 channel
+        telemetry ScalarI32Ch: I32
+
+        @ Scalar I64 channel
+        telemetry ScalarI64Ch: I64
+
+        @ Scalar F32 channel
+        telemetry ScalarF32Ch: F32
+
+        @ Scalar F64 channel
+        telemetry ScalarF64Ch: F64
+
+
+        # ----------------------------------------------------------------------
+        # Special ports
+        # ----------------------------------------------------------------------
+        @ Time get port
+        time get port timeCaller
+
+        @ Command registration port
+        command reg port cmdRegOut
+
+        @ Command received port
+        command recv port cmdIn
+
+        @ Command response port
+        command resp port cmdResponseOut
+
+        @ Text event port
+        text event port logTextOut
+
+        @ Event port
+        event port logOut
+
+        @ Telemetry port
+        telemetry port tlmOut
+
+        @ Parameter get
+        param get port prmGetOut
+
+        @ Parameter set
+        param set port prmSetOut
+    }
+}
+```
+
+### `TypeDemo.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/TypeDemo.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TypeDemo.hpp
+// \author mstarch
+// \brief  hpp file for TypeDemo component implementation class
+// ======================================================================
+
+#ifndef TypeDemo_HPP
+#define TypeDemo_HPP
+
+#include "Ref/TypeDemo/TypeDemoComponentAc.hpp"
+
+namespace Ref {
+
+class TypeDemo : public TypeDemoComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object TypeDemo
+    //!
+    TypeDemo(const char* const compName  //!< The component name
+    );
+
+    //! Destroy object TypeDemo
+    //!
+    ~TypeDemo() = default;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for CHOICE command handler
+    //! Single choice command
+    void CHOICE_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                           const U32 cmdSeq,           //!< The command sequence number
+                           Ref::Choice choice);
+
+    //! Implementation for CHOICES command handler
+    //! Multiple choice command via Array
+    void CHOICES_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                            const U32 cmdSeq,           //!< The command sequence number
+                            Ref::ManyChoices choices);
+
+    //! Implementation for CHOICES_WITH_FRIENDS command handler
+    //! Multiple choice command via Array with a preceding and following argument
+    void CHOICES_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                         const U32 cmdSeq,           //!< The command sequence number
+                                         U8 repeat,
+                                         Ref::ManyChoices choices,
+                                         U8 repeat_max);
+
+    //! Implementation for EXTRA_CHOICES command handler
+    //! Multiple choice command via Array
+    void EXTRA_CHOICES_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                  const U32 cmdSeq,           //!< The command sequence number
+                                  Ref::TooManyChoices choices);
+
+    //! Implementation for EXTRA_CHOICES_WITH_FRIENDS command handler
+    //! Too many choices command via Array with a preceding and following argument
+    void EXTRA_CHOICES_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                               const U32 cmdSeq,           //!< The command sequence number
+                                               U8 repeat,
+                                               Ref::TooManyChoices choices,
+                                               U8 repeat_max);
+    //! Implementation for CHOICE_PAIR command handler
+    //! Multiple choice command via Structure
+    void CHOICE_PAIR_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                const U32 cmdSeq,           //!< The command sequence number
+                                Ref::ChoicePair choices);
+
+    //! Implementation for CHOICE_PAIR_WITH_FRIENDS command handler
+    //! Multiple choices command via Structure with a preceding and following argument
+    void CHOICE_PAIR_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                             const U32 cmdSeq,           //!< The command sequence number
+                                             U8 repeat,
+                                             Ref::ChoicePair choices,
+                                             U8 repeat_max);
+    //! Implementation for GLUTTON_OF_CHOICE command handler
+    //! Multiple choice command via Complex Structure
+    void GLUTTON_OF_CHOICE_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                      const U32 cmdSeq,           //!< The command sequence number
+                                      Ref::ChoiceSlurry choices   //!< A phenomenal amount of choice
+    );
+
+    //! Implementation for GLUTTON_OF_CHOICE_WITH_FRIENDS command handler
+    //! Multiple choices command via Complex Structure with a preceding and following argument
+    void GLUTTON_OF_CHOICE_WITH_FRIENDS_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                                   const U32 cmdSeq,           //!< The command sequence number
+                                                   U8 repeat,  //!< Number of times to repeat the choices
+                                                   Ref::ChoiceSlurry choices,  //!< A phenomenal amount of choice
+                                                   U8 repeat_max               //!< Limit to the number of repetitions
+    );
+
+    //! Implementation for DUMP_TYPED_PARAMETERS command handler
+    //! Dump the typed parameters
+    void DUMP_TYPED_PARAMETERS_cmdHandler(const FwOpcodeType opCode,  //!< The opcode
+                                          const U32 cmdSeq            //!< The command sequence number
+    );
+
+    //! Implementation for DUMP_FLOATS command handler
+    //!
+    void DUMP_FLOATS_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+    //! Implementation for SEND_SCALARS command handler
+    //! Send scalars
+    void SEND_SCALARS_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                 const U32 cmdSeq,          /*!< The command sequence number*/
+                                 Ref::ScalarStruct scalar_input);
+};
+
+}  // end namespace Ref
+
+#endif
+```

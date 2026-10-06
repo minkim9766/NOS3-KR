@@ -3,94 +3,917 @@
 
 **경로:** `gsw/cosmos/tools/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mac/index
-file--CmdExtractor
-file--CmdExtractor.bat
-file--CmdSender
-file--CmdSender.bat
-file--CmdSequence
-file--CmdSequence.bat
-file--CmdTlmServer
-file--CmdTlmServer.bat
-file--ConfigEditor
-file--ConfigEditor.bat
-file--Dart
-file--Dart.bat
-file--DataViewer
-file--DataViewer.bat
-file--HandbookCreator
-file--HandbookCreator.bat
-file--Launcher
-file--Launcher.bat
-file--LimitsMonitor
-file--LimitsMonitor.bat
-file--OpenGLBuilder
-file--OpenGLBuilder.bat
-file--PacketViewer
-file--PacketViewer.bat
-file--Replay
-file--Replay.bat
-file--ScriptRunner
-file--ScriptRunner.bat
-file--TableManager
-file--TableManager.bat
-file--TestRunner
-file--TestRunner.bat
-file--TlmExtractor
-file--TlmExtractor.bat
-file--TlmGrapher
-file--TlmGrapher.bat
-file--TlmViewer
-file--TlmViewer.bat
-file--tool_launch.rb
-file--ToolLaunch.bat
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/tools/mac/`](mac/index) — 폴더
-- [`gsw/cosmos/tools/CmdExtractor`](file--CmdExtractor) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdExtractor.bat`](file--CmdExtractor.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdSender`](file--CmdSender) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdSender.bat`](file--CmdSender.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdSequence`](file--CmdSequence) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdSequence.bat`](file--CmdSequence.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdTlmServer`](file--CmdTlmServer) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/CmdTlmServer.bat`](file--CmdTlmServer.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/ConfigEditor`](file--ConfigEditor) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/ConfigEditor.bat`](file--ConfigEditor.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Dart`](file--Dart) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Dart.bat`](file--Dart.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/DataViewer`](file--DataViewer) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/DataViewer.bat`](file--DataViewer.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/HandbookCreator`](file--HandbookCreator) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/HandbookCreator.bat`](file--HandbookCreator.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Launcher`](file--Launcher) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Launcher.bat`](file--Launcher.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/LimitsMonitor`](file--LimitsMonitor) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/LimitsMonitor.bat`](file--LimitsMonitor.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/OpenGLBuilder`](file--OpenGLBuilder) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/OpenGLBuilder.bat`](file--OpenGLBuilder.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/PacketViewer`](file--PacketViewer) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/PacketViewer.bat`](file--PacketViewer.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Replay`](file--Replay) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/Replay.bat`](file--Replay.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/ScriptRunner`](file--ScriptRunner) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/ScriptRunner.bat`](file--ScriptRunner.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TableManager`](file--TableManager) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TableManager.bat`](file--TableManager.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TestRunner`](file--TestRunner) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TestRunner.bat`](file--TestRunner.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmExtractor`](file--TlmExtractor) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmExtractor.bat`](file--TlmExtractor.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmGrapher`](file--TlmGrapher) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmGrapher.bat`](file--TlmGrapher.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmViewer`](file--TlmViewer) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/TlmViewer.bat`](file--TlmViewer.bat) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/tool_launch.rb`](file--tool_launch.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/tools/ToolLaunch.bat`](file--ToolLaunch.bat) — UTF-8 텍스트 파일 본문 포함
+### `CmdExtractor`
+
+**경로:** `gsw/cosmos/tools/CmdExtractor`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/cmd_extractor/cmd_extractor'
+  Cosmos::CmdExtractor.run
+end
+```
+
+### `CmdExtractor.bat`
+
+**경로:** `gsw/cosmos/tools/CmdExtractor.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `CmdSender`
+
+**경로:** `gsw/cosmos/tools/CmdSender`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/cmd_sender/cmd_sender'
+  Cosmos::CmdSender.run
+end
+```
+
+### `CmdSender.bat`
+
+**경로:** `gsw/cosmos/tools/CmdSender.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `CmdSequence`
+
+**경로:** `gsw/cosmos/tools/CmdSequence`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/cmd_sequence/cmd_sequence'
+  Cosmos::CmdSequence.run
+end
+```
+
+### `CmdSequence.bat`
+
+**경로:** `gsw/cosmos/tools/CmdSequence.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `CmdTlmServer`
+
+**경로:** `gsw/cosmos/tools/CmdTlmServer`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui'
+  Cosmos::CmdTlmServerGui.run
+end
+```
+
+### `CmdTlmServer.bat`
+
+**경로:** `gsw/cosmos/tools/CmdTlmServer.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `ConfigEditor`
+
+**경로:** `gsw/cosmos/tools/ConfigEditor`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/config_editor/config_editor'
+  Cosmos::ConfigEditor.run
+end
+```
+
+### `ConfigEditor.bat`
+
+**경로:** `gsw/cosmos/tools/ConfigEditor.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `Dart`
+
+**경로:** `gsw/cosmos/tools/Dart`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/dart/processes/dart'
+  Dart.run
+end
+```
+
+### `Dart.bat`
+
+**경로:** `gsw/cosmos/tools/Dart.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" ruby.exe %~n0 %*
+```
+
+### `DataViewer`
+
+**경로:** `gsw/cosmos/tools/DataViewer`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/data_viewer/data_viewer'
+  Cosmos::DataViewer.run
+end
+```
+
+### `DataViewer.bat`
+
+**경로:** `gsw/cosmos/tools/DataViewer.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `HandbookCreator`
+
+**경로:** `gsw/cosmos/tools/HandbookCreator`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/handbook_creator/handbook_creator'
+  Cosmos::HandbookCreator.run
+end
+```
+
+### `HandbookCreator.bat`
+
+**경로:** `gsw/cosmos/tools/HandbookCreator.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `Launcher`
+
+**경로:** `gsw/cosmos/tools/Launcher`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/launcher/launcher'
+  Cosmos::Launcher.run
+end
+```
+
+### `Launcher.bat`
+
+**경로:** `gsw/cosmos/tools/Launcher.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `LimitsMonitor`
+
+**경로:** `gsw/cosmos/tools/LimitsMonitor`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/limits_monitor/limits_monitor'
+  Cosmos::LimitsMonitor.run
+end
+```
+
+### `LimitsMonitor.bat`
+
+**경로:** `gsw/cosmos/tools/LimitsMonitor.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `OpenGLBuilder`
+
+**경로:** `gsw/cosmos/tools/OpenGLBuilder`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/opengl_builder/opengl_builder'
+  Cosmos::OpenGLBuilder.run
+end
+```
+
+### `OpenGLBuilder.bat`
+
+**경로:** `gsw/cosmos/tools/OpenGLBuilder.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `PacketViewer`
+
+**경로:** `gsw/cosmos/tools/PacketViewer`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/packet_viewer/packet_viewer'
+  Cosmos::PacketViewer.run
+end
+```
+
+### `PacketViewer.bat`
+
+**경로:** `gsw/cosmos/tools/PacketViewer.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `Replay`
+
+**경로:** `gsw/cosmos/tools/Replay`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/replay/replay'
+  Cosmos::Replay.run
+end
+```
+
+### `Replay.bat`
+
+**경로:** `gsw/cosmos/tools/Replay.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `ScriptRunner`
+
+**경로:** `gsw/cosmos/tools/ScriptRunner`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/script_runner/script_runner'
+  Cosmos::ScriptRunner.run
+end
+```
+
+### `ScriptRunner.bat`
+
+**경로:** `gsw/cosmos/tools/ScriptRunner.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `TableManager`
+
+**경로:** `gsw/cosmos/tools/TableManager`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/table_manager/table_manager'
+  Cosmos::TableManager.run
+end
+```
+
+### `TableManager.bat`
+
+**경로:** `gsw/cosmos/tools/TableManager.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `TestRunner`
+
+**경로:** `gsw/cosmos/tools/TestRunner`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/test_runner/test_runner'
+  Cosmos::TestRunner.run
+end
+```
+
+### `TestRunner.bat`
+
+**경로:** `gsw/cosmos/tools/TestRunner.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `TlmExtractor`
+
+**경로:** `gsw/cosmos/tools/TlmExtractor`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/tlm_extractor/tlm_extractor'
+  Cosmos::TlmExtractor.run
+end
+```
+
+### `TlmExtractor.bat`
+
+**경로:** `gsw/cosmos/tools/TlmExtractor.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `TlmGrapher`
+
+**경로:** `gsw/cosmos/tools/TlmGrapher`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/tlm_grapher/tlm_grapher'
+  Cosmos::TlmGrapher.run
+end
+```
+
+### `TlmGrapher.bat`
+
+**경로:** `gsw/cosmos/tools/TlmGrapher.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `TlmViewer`
+
+**경로:** `gsw/cosmos/tools/TlmViewer`
+
+
+```text
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+require_relative 'tool_launch'
+tool_launch do
+  require 'cosmos/tools/tlm_viewer/tlm_viewer'
+  Cosmos::TlmViewer.run
+end
+```
+
+### `TlmViewer.bat`
+
+**경로:** `gsw/cosmos/tools/TlmViewer.bat`
+
+
+```text
+@ECHO OFF
+
+IF NOT EXIST "%~dp0ToolLaunch.bat" (
+  echo "%~dp0ToolLaunch.bat" does not exist
+  pause
+  exit /b
+)
+
+call "%~dp0ToolLaunch.bat" rubyw.exe %~n0 %*
+```
+
+### `tool_launch.rb`
+
+**경로:** `gsw/cosmos/tools/tool_launch.rb`
+
+
+```ruby
+#!/usr/bin/env ruby
+# encoding: ascii-8bit
+
+# Copyright 2015 Ball Aerospace & Technologies Corp.
+# All Rights Reserved.
+#
+# This program is free software; you can modify and/or redistribute it
+# under the terms of the GNU General Public License
+# as published by the Free Software Foundation; version 3 with
+# attribution addendums as found in the LICENSE.txt
+
+def tool_launch
+  begin
+    require 'bundler/setup'
+    require 'cosmos'
+    yield
+  rescue Exception => error
+    popup_error = error; popup_error = $cosmos_fatal_exception if defined? $cosmos_fatal_exception
+    begin
+      raise error if STDIN.isatty # Have a console
+      raise error unless defined? $cosmos_fatal_exception or (error.class != SystemExit and error.class != Interrupt)
+      case RUBY_PLATFORM
+      when /mingw32/
+        require 'fiddle'
+        Fiddle::Function.new(Fiddle.dlopen('user32')['MessageBox'], [Fiddle::TYPE_LONG, Fiddle::TYPE_VOIDP, Fiddle::TYPE_VOIDP, Fiddle::TYPE_LONG], Fiddle::TYPE_LONG).call(0, "#{popup_error.class}:#{popup_error.message}\n\n#{popup_error.backtrace.join("\n")}\n\nNote: Ctrl-C will copy this information to the clipboard.", "Error Starting COSMOS Tool", 0x50030)
+      when /darwin/
+        system("osascript -e 'display notification \"#{popup_error.class}:#{popup_error.message}:#{popup_error.backtrace[0].tr("'\"`<>", '')}\" with title \"Error Starting COSMOS Tool\"'")
+      else
+        message = "#{popup_error.class}:#{popup_error.message}\\n\\n#{popup_error.backtrace.join("\\n").tr("'\"`<>", '')}"
+        command = "zenity --info --text=\"#{message}\" --title=\"Error Starting COSMOS Tool\""
+        success = system(command)
+        system("notify-send \"Error Starting COSMOS Tool\" \"#{message}\"") unless success
+      end
+    ensure
+      raise error
+    end
+  end
+end
+```
+
+### `ToolLaunch.bat`
+
+**경로:** `gsw/cosmos/tools/ToolLaunch.bat`
+
+
+```text
+@ECHO OFF
+SETLOCAL ENABLEEXTENSIONS ENABLEDELAYEDEXPANSION
+
+SET RUBYEXE=%1
+SET TOOL=%~dp0%2
+
+IF NOT EXIST !TOOL! (
+  echo !TOOL! does not exist
+  pause
+  exit /b
+)
+
+IF NOT EXIST "%~dp0tool_launch.rb" (
+  echo "%~dp0tool_launch.rb" does not exist
+  pause
+  exit /b
+)
+
+SET "DESTINATION_DIR=%~dp0..\"
+:: First look one directories up
+IF NOT EXIST "!DESTINATION_DIR!Vendor\Ruby" (
+  :: Then look two directories up
+  SET "DESTINATION_DIR=%~dp0..\..\"
+  IF NOT EXIST "!DESTINATION_DIR!Vendor\Ruby" (
+    :: Then check COSMOS_DIR environment variable
+    IF NOT "!COSMOS_DIR!"=="" (
+      SET "DESTINATION_DIR=!COSMOS_DIR!\"
+    )
+  )
+)
+
+:: Get just the parameters for the tool
+shift
+shift
+set PARAMS=%1
+:loop
+shift
+if [%1]==[] goto afterloop
+set PARAMS=!PARAMS! %1
+goto loop
+:afterloop
+
+IF EXIST "!DESTINATION_DIR!Vendor\Ruby" (
+  :: Convert DESTINATION_DIR to absolute path
+  pushd !DESTINATION_DIR!
+  SET "DESTINATION_DIR=!CD!\"
+  popd
+
+  :: Set environmental variables
+  for /f "delims=" %%a in ('dir "!DESTINATION_DIR!Vendor\Ruby\lib\ruby\gems\2*" /on /ad /b') do set RUBY_ABI=%%a
+  SET "GEM_HOME=!DESTINATION_DIR!Vendor\Ruby\lib\ruby\gems\!RUBY_ABI!"
+  SET "GEM_PATH=!GEM_HOME!"
+  SET "GEMRC=!DESTINATION_DIR!Vendor\Ruby\lib\ruby\gems\etc\gemrc"
+
+  :: Prepend embedded bin to PATH so we prefer those binaries
+  SET "RI_DEVKIT=!DESTINATION_DIR!Vendor\Devkit\"
+  SET "PATH=!DESTINATION_DIR!Vendor\Ruby\bin;!RI_DEVKIT!bin;!RI_DEVKIT!mingw\bin;!DESTINATION_DIR!Vendor\wkhtmltopdf;!PATH!"
+
+  :: Remove RUBYOPT and RUBYLIB, which can cause serious problems.
+  SET RUBYOPT=
+  SET RUBYLIB=
+
+  :: Run tool using Installer Ruby
+  ECHO Starting tool using installer ruby in "!DESTINATION_DIR!"
+  START "COSMOS" "!DESTINATION_DIR!Vendor\Ruby\bin\!RUBYEXE!" "!TOOL!" !PARAMS!
+) else (
+  :: Use System Ruby and Environment
+  ECHO Starting tool using system ruby and environment
+  START "COSMOS" "!RUBYEXE!" "!TOOL!" !PARAMS!
+)
+
+ENDLOCAL
+```

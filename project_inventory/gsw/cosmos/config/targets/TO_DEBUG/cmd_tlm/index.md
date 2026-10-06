@@ -3,16 +3,55 @@
 
 **경로:** `gsw/cosmos/config/targets/TO_DEBUG/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `TO_DEBUG_CMD.txt`
 
-file--TO_DEBUG_CMD.txt
-file--TO_DEBUG_TLM.txt
+**경로:** `gsw/cosmos/config/targets/TO_DEBUG/cmd_tlm/TO_DEBUG_CMD.txt`
+
+
+```text
+COMMAND CFS TO_DEBUG_NOOP_CC BIG_ENDIAN "NOOP Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18E8 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+  
+COMMAND CFS TO_DEBUG_ENABLE_OUTPUT_CC BIG_ENDIAN "Enable Output Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18E8 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 19     "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 2        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+  APPEND_PARAMETER DEST_IP             128 STRING "cosmos"                  "Destination IP"
+  APPEND_PARAMETER DEST_PORT           16 UINT MIN_UINT16 MAX_UINT16 5013   "Destination Port" LITTLE_ENDIAN
+
+COMMAND CFS TO_DEBUG_REMOVE_ALL_PKT_CC BIG_ENDIAN "Remove all packets"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x18E8 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 19     "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 5        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+  APPEND_PARAMETER DEST_IP             128 STRING "cosmos"                  "Destination IP"
+  APPEND_PARAMETER DEST_PORT           16 UINT MIN_UINT16 MAX_UINT16 5013   "Destination Port" LITTLE_ENDIAN
+  
 ```
 
-## 항목
+### `TO_DEBUG_TLM.txt`
 
-- [`gsw/cosmos/config/targets/TO_DEBUG/cmd_tlm/TO_DEBUG_CMD.txt`](file--TO_DEBUG_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/TO_DEBUG/cmd_tlm/TO_DEBUG_TLM.txt`](file--TO_DEBUG_TLM.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/targets/TO_DEBUG/cmd_tlm/TO_DEBUG_TLM.txt`
+
+
+```text
+TELEMETRY CFS TO_DEBUG_HKPACKET LITTLE_ENDIAN "Housekeeping Packet Structure"
+  APPEND_ID_ITEM CCSDS_STREAMID 16 UINT 0x08E8 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM CCSDS_SEQUENCE    16 UINT "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM CCSDS_LENGTH      16 UINT "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM CCSDS_SECONDS     32 UINT "CCSDS Telemetry Secondary Header (seconds)"
+  APPEND_ITEM CCSDS_SUBSECS     16 UINT "CCSDS Telemetry Secondary Header (subseconds)"
+  APPEND_ITEM CMDCOUNTER         8 UINT "Count of all commands received."
+  APPEND_ITEM ERRCOUNTER         8 UINT "Count of command errors."
+  APPEND_ITEM SPARE_0            8 UINT ""
+  APPEND_ITEM SPARE_1            8 UINT ""
+```

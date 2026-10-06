@@ -3,18 +3,160 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bucket-properties.component.css`
 
-file--bucket-properties.component.css
-file--bucket-properties.component.html
-file--bucket-properties.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.css`
+
+
+```css
+/*
+ * Implementation note:
+ * This is a little tricky because the label should appear on top of the fill.
+ */
+.progress {
+  display: inline-block;
+  width: 100px;
+  position: relative;
+  text-align: center;
+  margin-right: 5px;
+  background-color: #eee;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 30%;
+  background-color: #009e87;
+  background: linear-gradient(to bottom, #009e87, #bce3dd 50%, #009e87);
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
 ```
 
-## 항목
+### `bucket-properties.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.css`](file--bucket-properties.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.html`](file--bucket-properties.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.ts`](file--bucket-properties.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.html`
+
+
+```html
+<app-storage-page>
+  <app-storage-toolbar>
+    <ng-template app-storage-toolbar-label>
+      <ya-page-icon-button routerLink="/storage/buckets" icon="arrow_back" />
+      {{ name }}
+    </ng-template>
+  </app-storage-toolbar>
+
+  <ya-panel>
+    <app-bucket-page-tabs [bucket]="name" />
+    @if (bucket$ | async; as bucket) {
+      <div class="small" style="margin-top: 16px">
+        <dl class="dl-horizontal">
+          <dt>Created</dt>
+          <dd>{{ bucket.created | datetime | nvl: "-" }}</dd>
+          <dt>Location</dt>
+          <dd>{{ bucket.location.description }}</dd>
+          @if (bucket.directory) {
+            <dt>Directory</dt>
+            <dd>{{ bucket.directory }}</dd>
+          }
+        </dl>
+        <h3>Bucket size</h3>
+        <dl class="dl-horizontal">
+          <dt>Limit</dt>
+          <dd>{{ bucket.maxSize | formatBytes | nvl: "-" }}</dd>
+          <dt>Used</dt>
+          <dd>{{ bucket.size | formatBytes | nvl: "-" }}</dd>
+          <dt>Available</dt>
+          <dd>{{ zeroOrMore(bucket.maxSize - bucket.size) | formatBytes }}</dd>
+        </dl>
+        <h3>Object count</h3>
+        <dl class="dl-horizontal">
+          <dt>Limit</dt>
+          <dd>{{ bucket.maxObjects | nvl: "-" }}</dd>
+          <dt>Used</dt>
+          <dd>{{ bucket.numObjects | nvl: "-" }}</dd>
+          <dt>Available</dt>
+          <dd>{{ zeroOrMore(bucket.maxObjects - bucket.numObjects) }}</dd>
+        </dl>
+      </div>
+    }
+  </ya-panel>
+</app-storage-page>
+```
+
+### `bucket-properties.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-properties/bucket-properties.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  Bucket,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { StoragePageTemplateComponent } from '../../storage-page-template/storage-page-template.component';
+import { AppStorageToolbarLabel } from '../../storage-toolbar/storage-toolbar-label.directive';
+import { AppStorageToolbar } from '../../storage-toolbar/storage-toolbar.component';
+import { BucketPageTabsComponent } from '../bucket-page-tabs/bucket-page-tabs.component';
+
+@Component({
+  templateUrl: './bucket-properties.component.html',
+  styleUrl: './bucket-properties.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AppStorageToolbar,
+    AppStorageToolbarLabel,
+    BucketPageTabsComponent,
+    StoragePageTemplateComponent,
+    WebappSdkModule,
+  ],
+})
+export class BucketPropertiesComponent {
+  name: string;
+
+  bucket$ = new BehaviorSubject<Bucket | null>(null);
+  private storageClient: StorageClient;
+
+  constructor(route: ActivatedRoute, yamcs: YamcsService, title: Title) {
+    this.name = route.snapshot.parent!.paramMap.get('name')!;
+    title.setTitle(this.name + ': Properties');
+    this.storageClient = yamcs.createStorageClient();
+    this.storageClient.getBucket(this.name).then((bucket) => {
+      this.bucket$.next(bucket);
+    });
+  }
+
+  bucketSizePercentage(bucket: Bucket, ceil = false) {
+    var pct = (100 * bucket.size) / bucket.maxSize;
+    return ceil ? Math.min(100, pct) : pct;
+  }
+
+  objectCountPercentage(bucket: Bucket, ceil = false) {
+    var pct = (100 * bucket.numObjects) / bucket.maxObjects;
+    return ceil ? Math.min(100, pct) : pct;
+  }
+
+  zeroOrMore(value: number) {
+    return Math.max(0, value);
+  }
+}
+```

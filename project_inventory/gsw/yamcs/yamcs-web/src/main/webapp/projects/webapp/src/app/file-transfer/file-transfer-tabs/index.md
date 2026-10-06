@@ -3,18 +3,71 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `file-transfer-tabs.component.css`
 
-file--file-transfer-tabs.component.css
-file--file-transfer-tabs.component.html
-file--file-transfer-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.css`
+
+
+```css
+.mat-mdc-tab-link {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
 ```
 
-## 항목
+### `file-transfer-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.css`](file--file-transfer-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.html`](file--file-transfer-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.ts`](file--file-transfer-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    routerLink="/file-transfer"
+    routerLinkActive
+    [routerLinkActiveOptions]="{ matrixParams: 'exact', paths: 'exact', queryParams: 'ignored' }"
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive"
+    [queryParams]="{ c: yamcs.context, service: service()?.name }">
+    Transfers
+  </a>
+  <a
+    routerLink="/file-transfer/log"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive"
+    [queryParams]="{ c: yamcs.context, service: service()?.name }">
+    Action log
+  </a>
+</ya-page-tabs>
+```
+
+### `file-transfer-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/file-transfer-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  FileTransferService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-file-transfer-tabs',
+  templateUrl: './file-transfer-tabs.component.html',
+  styleUrl: './file-transfer-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class FileTransferTabsComponent {
+  service = input<FileTransferService>();
+
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

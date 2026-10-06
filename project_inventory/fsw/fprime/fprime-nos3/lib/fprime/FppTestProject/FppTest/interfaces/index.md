@@ -3,26 +3,270 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--output_ports.fpp
-file--serial_ports.fpp
-file--serial_ports_async.fpp
-file--special_ports.fpp
-file--typed_ports.fpp
-file--typed_ports_async.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+register_fprime_module(
+    FppTest_interfaces
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/output_ports.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/serial_ports_async.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/serial_ports.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/special_ports.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/typed_ports_async.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/typed_ports.fpp"
+  INTERFACE
+)
 ```
 
-## 항목
+### `output_ports.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/output_ports.fpp`](file--output_ports.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/serial_ports.fpp`](file--serial_ports.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/serial_ports_async.fpp`](file--serial_ports_async.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/special_ports.fpp`](file--special_ports.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/typed_ports.fpp`](file--typed_ports.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/typed_ports_async.fpp`](file--typed_ports_async.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/output_ports.fpp`
+
+
+```fpp
+module FppTest {
+    interface OutputPorts {
+        output port enumArgsHookOverflowed: [2] EnumArgs
+    }
+}
+```
+
+### `serial_ports.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/serial_ports.fpp`
+
+
+```fpp
+module FppTest {
+    interface SerialPorts {
+        @ A serial sync input port
+        sync input port serialSync: [6] serial
+
+        @ A serial guarded input
+        guarded input port serialGuarded: [6] serial
+
+        @ A serial output port
+        output port serialOut: [6] serial
+    }
+}
+```
+
+### `serial_ports_async.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/serial_ports_async.fpp`
+
+
+```fpp
+module FppTest {
+    interface SerialPortsAsync {
+        @ A serial async input port
+        async input port serialAsync: [3] serial
+
+        @ A serial async input port with queue full behavior and priority
+        async input port serialAsyncAssert: serial assert
+
+        @ A serial async input port with queue full behavior and priority
+        async input port serialAsyncBlockPriority: serial priority 10 block
+
+        @ A serial async input port with queue full behavior and priority
+        async input port serialAsyncDropPriority: serial priority 5 drop
+    }
+}
+```
+
+### `special_ports.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/special_ports.fpp`
+
+
+```fpp
+module FppTest {
+    interface SpecialPorts {
+        @ A port for receiving commands
+        command recv port cmdIn
+
+        @ A port for sending command registration requests
+        command reg port cmdRegOut
+
+        @ A port for sending command responses
+        command resp port cmdResponseOut
+
+        @ A port for emitting events
+        event port eventOut
+
+        @ A port for emitting text events
+        text event port textEventOut
+
+        @ A port for emitting telemetry
+        telemetry port tlmOut
+
+        @ A port for getting parameter values
+        param get port prmGetOut
+
+        @ A port for setting parameter values
+        param set port prmSetOut
+
+        @ A port for getting the time
+        time get port timeGetOut
+    }
+}
+```
+
+### `typed_ports.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/typed_ports.fpp`
+
+
+```fpp
+module FppTest {
+    interface TypedPorts {
+        # ----------------------------------------------------------------------
+        # Typed input ports with no return type
+        # ----------------------------------------------------------------------
+
+        sync input port noArgsSync: [2] NoArgs
+
+        guarded input port noArgsGuarded: [2] NoArgs
+
+        sync input port primitiveArgsSync: [2] PrimitiveArgs
+
+        guarded input port primitiveArgsGuarded: [2] PrimitiveArgs
+
+        sync input port stringArgsSync: [2] StringArgs
+
+        guarded input port stringArgsGuarded: [2] StringArgs
+
+        sync input port enumArgsSync: [2] EnumArgs
+
+        guarded input port enumArgsGuarded: [2] EnumArgs
+
+        sync input port arrayArgsSync: [2] ArrayArgs
+
+        guarded input port arrayArgsGuarded: [2] ArrayArgs
+
+        sync input port structArgsSync: [2] StructArgs
+
+        guarded input port structArgsGuarded: [2] StructArgs
+
+        # ----------------------------------------------------------------------
+        # Typed output ports with no return type
+        # ----------------------------------------------------------------------
+
+        output port noArgsOut: [2] NoArgs
+
+        output port primitiveArgsOut: [2] PrimitiveArgs
+
+        output port stringArgsOut: [2] StringArgs
+
+        output port enumArgsOut: [2] EnumArgs
+
+        output port arrayArgsOut: [2] ArrayArgs
+
+        output port structArgsOut: [2] StructArgs
+
+        # ----------------------------------------------------------------------
+        # Typed input ports with return type
+        # ----------------------------------------------------------------------
+
+        sync input port noArgsReturnSync: NoArgsReturn
+
+        guarded input port noArgsReturnGuarded: NoArgsReturn
+
+        sync input port primitiveReturnSync: PrimitiveReturn
+
+        guarded input port primitiveReturnGuarded: PrimitiveReturn
+
+        sync input port stringReturnSync: StringReturn
+        
+        guarded input port stringReturnGuarded: StringReturn
+
+        sync input port stringAliasReturnSync: StringAliasReturn
+        
+        guarded input port stringAliasReturnGuarded: StringAliasReturn
+
+        sync input port enumReturnSync: EnumReturn
+
+        guarded input port enumReturnGuarded: EnumReturn
+
+        sync input port arrayReturnSync: ArrayReturn
+
+        guarded input port arrayReturnGuarded: ArrayReturn
+
+        sync input port arrayStringAliasReturnSync: ArrayStringAliasReturn
+
+        guarded input port arrayStringAliasReturnGuarded: ArrayStringAliasReturn
+
+        sync input port structReturnSync: StructReturn
+
+        guarded input port structReturnGuarded: StructReturn
+
+        # ----------------------------------------------------------------------
+        # Typed output ports with return type
+        # ----------------------------------------------------------------------
+
+        output port noArgsReturnOut: NoArgsReturn
+
+        output port primitiveReturnOut: PrimitiveReturn
+
+        output port stringReturnOut: StringReturn
+
+        output port stringAliasReturnOut: StringAliasReturn
+
+        output port enumReturnOut: EnumReturn
+
+        output port arrayReturnOut: ArrayReturn
+
+        output port arrayStringAliasReturnOut: ArrayStringAliasReturn
+
+        output port structReturnOut: StructReturn
+
+        # ----------------------------------------------------------------------
+        # Ports for testing special ports
+        # ----------------------------------------------------------------------
+
+        output port prmGetIn: Fw.PrmGet
+
+        output port prmSetIn: Fw.PrmSet
+
+    }
+}
+```
+
+### `typed_ports_async.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/interfaces/typed_ports_async.fpp`
+
+
+```fpp
+module FppTest {
+    interface TypedPortsAsync {
+        async input port noArgsAsync: [2] NoArgs
+
+        async input port primitiveArgsAsync: [2] PrimitiveArgs
+
+        async input port stringArgsAsync: [2] StringArgs
+
+        async input port enumArgsAsync: [2] EnumArgs assert
+
+        async input port arrayArgsAsync: [2] ArrayArgs priority 10 block
+
+        async input port structArgsAsync: [2] StructArgs priority 5 drop
+
+        async input port enumArgsHook: [2] EnumArgs hook
+
+    }
+}
+```

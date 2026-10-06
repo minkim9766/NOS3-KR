@@ -3,20 +3,213 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_build_autocoder.cmake`
 
-file--test_build_autocoder.cmake
-file--test_chained_autocoder.cmake
-file--test_header_autocoder.cmake
-file--test_target_autocoder.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_build_autocoder.cmake`
+
+
+```cmake
+####
+# autocoder/test_build_autocoder.cmake:
+#
+# Tests that a build-triggered autocoder runs as expected.
+####
+include_guard()
+include(autocoder/helpers)
+
+autocoder_setup_for_multiple_sources()
+
+####
+# Function `test_build_autocoder_is_supported`:
+#
+# Support all files with the ".test-build.cpp" suffix 
+####
+function(test_build_autocoder_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".test-build.cpp" "${AC_INPUT_FILE}" TRUE)
+endfunction(test_build_autocoder_is_supported)
+
+####
+# Function `test_build_autocoder_setup_autocode`:
+#
+# Sets up the steps to run the autocoder and produce the files during the build.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(test_build_autocoder_setup_autocode MODULE_NAME AC_INPUT_FILES)
+    # Set up generated sources list
+    set(GENERATED_SOURCES)
+    foreach(AC_INPUT IN LISTS AC_INPUT_FILES)
+        get_filename_component(BASENAME "${AC_INPUT}" NAME)
+        list(APPEND GENERATED_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}")
+    endforeach()
+
+    # This autocoder just touches files
+    add_custom_command(
+        OUTPUT ${GENERATED_SOURCES}
+        COMMAND "${CMAKE_COMMAND}" -E copy ${AC_INPUT_FILES} "${CMAKE_CURRENT_BINARY_DIR}"
+    )
+
+    # Generate files, mark them as build sources
+    set(AUTOCODER_GENERATED_BUILD_SOURCES "${GENERATED_SOURCES}" PARENT_SCOPE)
+endfunction(test_build_autocoder_setup_autocode)
 ```
 
-## 항목
+### `test_chained_autocoder.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_build_autocoder.cmake`](file--test_build_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_chained_autocoder.cmake`](file--test_chained_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_header_autocoder.cmake`](file--test_header_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_target_autocoder.cmake`](file--test_target_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_chained_autocoder.cmake`
+
+
+```cmake
+####
+# autocoder/test_chained_autocoder.cmake:
+#
+# Tests that a chained autocoder runs as expected - takes output from test_target_autocoder
+# and creates chained files from them.
+####
+include_guard()
+include(autocoder/helpers)
+
+autocoder_setup_for_individual_sources()
+
+####
+# Function `test_chained_autocoder_is_supported`:
+#
+# Support all files with the ".test-target.generated.txt" suffix (output from test_target_autocoder)
+####
+function(test_chained_autocoder_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".test-target.generated.txt" "${AC_INPUT_FILE}" TRUE)
+endfunction(test_chained_autocoder_is_supported)
+
+####
+# Function `test_chained_autocoder_setup_autocode`:
+#
+# Sets up the steps to run the chained autocoder and produce chained files during the build.
+# Takes .test-target.generated.txt files and creates .chained.txt files from them.
+#
+# AC_INPUT_FILES: list of supported autocoder input files (.test-target.generated.txt files)
+####
+function(test_chained_autocoder_setup_autocode MODULE_NAME AC_INPUT_FILE)
+    # Set up generated sources list - convert .test-target.generated.txt to .chained.txt
+    get_filename_component(BASENAME "${AC_INPUT_FILE}" NAME_WE)
+    # Remove the .test-target.generated part to get the base name
+    string(REPLACE ".test-target.generated" "" BASE_NAME "${BASENAME}")
+    set(GENERATED_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/${BASE_NAME}.chained.txt")
+
+    # This chained autocoder processes the .test-target.generated.txt file and creates a .chained.txt file
+    add_custom_command(
+        OUTPUT ${GENERATED_SOURCE}
+        COMMAND "${CMAKE_COMMAND}" -E echo "Chained from: ${AC_INPUT_FILE}" > "${GENERATED_SOURCE}"
+        COMMAND "${CMAKE_COMMAND}" -E echo "Generated at: $(date)" >> "${GENERATED_SOURCE}"
+        DEPENDS ${AC_INPUT_FILE}
+        COMMENT "Creating chained file from ${AC_INPUT_FILE}"
+    )
+
+    # Generate files, mark them as other generated files
+    set(AUTOCODER_GENERATED_OTHER "${GENERATED_SOURCE}" PARENT_SCOPE)
+endfunction(test_chained_autocoder_setup_autocode)
+```
+
+### `test_header_autocoder.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_header_autocoder.cmake`
+
+
+```cmake
+####
+# autocoder/test_build_autocoder.cmake:
+#
+# Tests that a build-triggered autocoder runs as expected.
+####
+include_guard()
+include(autocoder/helpers)
+
+autocoder_setup_for_multiple_sources()
+
+####
+# Function `test_header_autocoder_is_supported`:
+#
+# Support all files with the ".test-build.hpp" suffix 
+####
+function(test_header_autocoder_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".test-build.hpp" "${AC_INPUT_FILE}" TRUE)
+endfunction(test_header_autocoder_is_supported)
+
+####
+# Function `test_header_autocoder_setup_autocode`:
+#
+# Sets up the steps to run the autocoder and produce the files during the build.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(test_header_autocoder_setup_autocode MODULE_NAME AC_INPUT_FILES)
+    # Set up generated sources list
+    set(GENERATED_SOURCES)
+    foreach(AC_INPUT IN LISTS AC_INPUT_FILES)
+        get_filename_component(BASENAME "${AC_INPUT}" NAME)
+        list(APPEND GENERATED_SOURCES "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}")
+    endforeach()
+
+    # This autocoder just touches files
+    add_custom_command(
+        OUTPUT ${GENERATED_SOURCES}
+        COMMAND "${CMAKE_COMMAND}" -E make_directory "${CMAKE_CURRENT_BINARY_DIR}/header-dir"
+        COMMAND "${CMAKE_COMMAND}" -E copy ${AC_INPUT_FILES} "${CMAKE_CURRENT_BINARY_DIR}/header-dir"
+    )
+
+    # Generate files, mark them as build sources
+    set(AUTOCODER_GENERATED_BUILD_SOURCES "${GENERATED_SOURCES}" PARENT_SCOPE)
+endfunction(test_header_autocoder_setup_autocode)
+```
+
+### `test_target_autocoder.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/autocoder/test_target_autocoder.cmake`
+
+
+```cmake
+####
+# autocoder/test_target_autocoder.cmake:
+#
+# Tests that a target-triggered autocoder runs as expected.
+####
+include_guard()
+include(autocoder/helpers)
+
+autocoder_setup_for_individual_sources()
+
+####
+# Function `test_target_autocoder_is_supported`:
+#
+# Support all files with the ".test-build.txt" suffix 
+####
+function(test_target_autocoder_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".test-target.txt" "${AC_INPUT_FILE}" TRUE)
+endfunction(test_target_autocoder_is_supported)
+
+####
+# Function `test_target_autocoder_setup_autocode`:
+#
+# Sets up the steps to run the autocoder and produce the files during the build.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(test_target_autocoder_setup_autocode MODULE_NAME AC_INPUT_FILE)
+    # Set up generated sources list - add .generated suffix to avoid name collision
+    get_filename_component(BASENAME "${AC_INPUT_FILE}" NAME_WE)
+    set(GENERATED_SOURCE "${CMAKE_CURRENT_BINARY_DIR}/${BASENAME}.test-target.generated.txt")
+
+    # This autocoder copies the input file and adds .generated suffix
+    add_custom_command(
+        OUTPUT ${GENERATED_SOURCE}
+        COMMAND "${CMAKE_COMMAND}" -E copy ${AC_INPUT_FILE} "${GENERATED_SOURCE}"
+        DEPENDS ${AC_INPUT_FILE}
+        COMMENT "Generating target file from ${AC_INPUT_FILE}"
+    )
+
+    # Generate files, mark them as build sources
+    set(AUTOCODER_GENERATED_OTHER "${GENERATED_SOURCE}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_AUTOCODER_INPUTS "${GENERATED_SOURCE}" PARENT_SCOPE)
+endfunction(test_target_autocoder_setup_autocode)
+```

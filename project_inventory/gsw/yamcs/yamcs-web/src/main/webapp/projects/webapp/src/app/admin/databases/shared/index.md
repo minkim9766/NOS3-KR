@@ -3,14 +3,34 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `column-value.pipe.ts`
 
-file--column-value.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/shared/column-value.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { ColumnData, Value } from '@yamcs/webapp-sdk';
+
+@Pipe({
+  name: 'columnValue',
+})
+export class ColumnValuePipe implements PipeTransform {
+  transform(
+    columnData: ColumnData[] | null | undefined,
+    name: string,
+  ): Value | null {
+    if (!columnData || columnData.length === 0) {
+      return null;
+    }
+    for (const item of columnData) {
+      if (item.name === name) {
+        return item.value;
+      }
+    }
+    return null;
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/shared/column-value.pipe.ts`](file--column-value.pipe.ts) — UTF-8 텍스트 파일 본문 포함

@@ -3,16 +3,40 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/cmake/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `gmock.pc.in`
 
-file--gmock.pc.in
-file--gmock_main.pc.in
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/cmake/gmock.pc.in`
+
+
+```text
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: gmock
+Description: GoogleMock (without main() function)
+Version: @PROJECT_VERSION@
+URL: https://github.com/google/googletest
+Requires: gtest = @PROJECT_VERSION@
+Libs: -L${libdir} -lgmock @CMAKE_THREAD_LIBS_INIT@
+Cflags: -I${includedir} @GTEST_HAS_PTHREAD_MACRO@
 ```
 
-## 항목
+### `gmock_main.pc.in`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/cmake/gmock.pc.in`](file--gmock.pc.in) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/cmake/gmock_main.pc.in`](file--gmock_main.pc.in) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/cmake/gmock_main.pc.in`
+
+
+```text
+libdir=@CMAKE_INSTALL_FULL_LIBDIR@
+includedir=@CMAKE_INSTALL_FULL_INCLUDEDIR@
+
+Name: gmock_main
+Description: GoogleMock (with main() function)
+Version: @PROJECT_VERSION@
+URL: https://github.com/google/googletest
+Requires: gmock = @PROJECT_VERSION@
+Libs: -L${libdir} -lgmock_main @CMAKE_THREAD_LIBS_INIT@
+Cflags: -I${includedir} @GTEST_HAS_PTHREAD_MACRO@
+```

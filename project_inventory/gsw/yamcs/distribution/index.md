@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/distribution/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,30 +11,674 @@
 etc/index
 rpm/index
 systemd/index
-file--packet-viewer.descriptor.xml
-file--pom.xml
-file--release.sh
-file--rocksdbjni-java.descriptor.xml
-file--yamcs-linux-aarch64.descriptor.xml
-file--yamcs-linux-x86_64.descriptor.xml
-file--yamcs-osx-aarch64.descriptor.xml
-file--yamcs-osx-x86_64.descriptor.xml
-file--yamcs-win64.descriptor.xml
-file--yamcs.component.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/distribution/etc/`](etc/index) — 폴더
-- [`gsw/yamcs/distribution/rpm/`](rpm/index) — 폴더
-- [`gsw/yamcs/distribution/systemd/`](systemd/index) — 폴더
-- [`gsw/yamcs/distribution/packet-viewer.descriptor.xml`](file--packet-viewer.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/release.sh`](file--release.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/rocksdbjni-java.descriptor.xml`](file--rocksdbjni-java.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs-linux-aarch64.descriptor.xml`](file--yamcs-linux-aarch64.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs-linux-x86_64.descriptor.xml`](file--yamcs-linux-x86_64.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs-osx-aarch64.descriptor.xml`](file--yamcs-osx-aarch64.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs-osx-x86_64.descriptor.xml`](file--yamcs-osx-x86_64.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs-win64.descriptor.xml`](file--yamcs-win64.descriptor.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/distribution/yamcs.component.xml`](file--yamcs.component.xml) — UTF-8 텍스트 파일 본문 포함
+### `packet-viewer.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/packet-viewer.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>packet-viewer</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <includes>
+        <include>org.yamcs:packet-viewer</include>
+        <include>org.yamcs:yamcs-api</include>
+        <include>org.yamcs:yamcs-core</include>
+        <include>org.yamcs:yamcs-xtce</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+
+  <fileSets>
+    <fileSet>
+      <directory>../packet-viewer/bin</directory>
+      <outputDirectory>bin</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>../packet-viewer/etc-packaged</directory>
+      <outputDirectory>etc</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>../packet-viewer/mdb-packaged</directory>
+      <outputDirectory>mdb</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>../packet-viewer/tm-data</directory>
+      <outputDirectory>tm-data</outputDirectory>
+    </fileSet>
+
+  </fileSets>
+</assembly>
+```
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/distribution/pom.xml`
+
+
+```xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>distribution</artifactId>
+  <packaging>pom</packaging>
+  <name>Yamcs :: Distribution</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-rocksdb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>packet-viewer</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-tse</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-xtce</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+
+  <!-- 
+    Conditional, to save on build time during regular development. To activate
+    outside of a release, use the profile: mvn install -Pbuild-distribution
+   -->
+  <profiles>
+    <profile>
+      <id>build-distribution</id>
+      <activation>
+        <property>
+          <name>release</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <!-- Unpack rocksdbjni fat jar.
+                   This effectively excludes the jar as a
+                   Maven dependency too, so its automatically
+                   gets excluded from maven assemblies. -->
+              <execution>
+                <id>unpack-rocksdbjni</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>unpack</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.yamcs</groupId>
+                      <artifactId>yamcs-rocksdb</artifactId>
+                      <outputDirectory>target/rocksdbjni-${rocksdbVersion}</outputDirectory>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <!--
+                Create a rocksdbjni jar that excludes
+                classpath native libraries.
+               -->
+              <execution>
+                <id>pack-rocksdbjni-java</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>rocksdbjni-java.descriptor.xml</descriptor>
+                  </descriptors>
+                  <finalName>rocksdbjni-${rocksdbVersion}</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+              </execution>
+              <!--
+                Make OS-specific Yamcs distributions, each
+                containing only the applicable rocksdbjni
+                native library.
+
+                The library is deployed to lib (must be added to
+                java.library.path, and is loaded by a static
+                initializer in the RocksDB class using the call
+                System.loadLibrary("rocksdbjni");
+               -->
+              <execution>
+                <id>yamcs-assembly</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>yamcs-linux-aarch64.descriptor.xml</descriptor>
+                    <descriptor>yamcs-linux-x86_64.descriptor.xml</descriptor>
+                    <descriptor>yamcs-osx-aarch64.descriptor.xml</descriptor>
+                    <descriptor>yamcs-osx-x86_64.descriptor.xml</descriptor>
+                    <descriptor>yamcs-win64.descriptor.xml</descriptor>
+                  </descriptors>
+                  <finalName>yamcs-${project.version}</finalName>
+                  <appendAssemblyId>true</appendAssemblyId>
+                </configuration>
+              </execution>
+              <execution>
+                <id>packet-viewer-assembly</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>packet-viewer.descriptor.xml</descriptor>
+                  </descriptors>
+                  <finalName>packet-viewer-${project.version}</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+              </execution>
+            </executions>
+            <configuration>
+              <tarLongFileMode>posix</tarLongFileMode>
+              <attach>false</attach>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+```
+
+### `release.sh`
+
+**경로:** `gsw/yamcs/distribution/release.sh`
+
+
+```bash
+#!/bin/bash
+set -e
+
+GPG_KEY=yamcs@spaceapplications.com
+
+cd `dirname $0`/..
+yamcshome=`pwd`
+
+if [[ -n $(git status -s) ]]; then
+    read -p 'Your workspace contains dirty or untracked files. These will not be part of your release. Continue? [Y/n] ' yesNo
+    if [[ -n $yesNo ]] && [[ $yesNo == 'n' ]]; then
+        exit 0
+    fi
+fi
+
+pomversion=`mvn -q help:evaluate -Dexpression=project.version -DforceStdout`
+read -p "Enter the new version to set [$pomversion] " newVersion
+if [[ -n $newVersion ]]; then
+    pomversion=$newVersion
+    mvn versions:set -DnewVersion=$newVersion versions:commit
+fi
+
+if [[ $pomversion == *-SNAPSHOT ]]; then
+    snapshot=1
+    version=${pomversion/-SNAPSHOT/}
+    release="0.$(date '+%Y%m%d%H%M%S')"  # Generate unique sortable releases (for upgrade reasons)
+else
+    snapshot=0
+    version=$pomversion
+    release=1  # Incremental release number for a specific version
+fi
+
+if [[ -n $(git status -s) ]]; then
+    git commit . -v -em"Prepare release yamcs-${version}" || :
+    if [ $snapshot -eq 0 ]; then
+        git tag yamcs-$version
+    fi
+fi
+
+mvn -q clean
+
+clonedir=$yamcshome/distribution/target/yamcs-clone
+
+mkdir -p $clonedir
+git clone . $clonedir
+rm -rf $clonedir/.git
+
+cd $clonedir
+
+cd yamcs-web/src/main/webapp
+npm install
+npm run build
+rm -rf node_modules
+cd -
+
+mvn package -Drelease -DskipTests
+
+rpmtopdir="$yamcshome/distribution/target/rpmbuild"
+mkdir -p $rpmtopdir/{RPMS,BUILD,SPECS,tmp}
+
+cp distribution/target/yamcs-$pomversion-* $yamcshome/distribution/target
+
+# Build Yamcs RPM
+rpmbuilddir="$rpmtopdir/BUILD/yamcs-$version-$release"
+
+mkdir -p "$rpmbuilddir/opt/yamcs"
+tar -xzf distribution/target/yamcs-$pomversion-linux-x86_64.tar.gz --strip-components=1 -C "$rpmbuilddir/opt/yamcs"
+
+mkdir -p "$rpmbuilddir/usr/lib/systemd/system"
+cp -a distribution/systemd/* "$rpmbuilddir/usr/lib/systemd/system"
+cat distribution/rpm/yamcs.spec | sed -e "s/@@VERSION@@/$version/" | sed -e "s/@@RELEASE@@/$release/" > $rpmtopdir/SPECS/yamcs.spec
+
+rpmbuild --define="_topdir $rpmtopdir" -bb "$rpmtopdir/SPECS/yamcs.spec"
+
+# Packet Viewer RPM
+cp distribution/target/packet-viewer-$pomversion.tar.gz $yamcshome/distribution/target
+rpmbuilddir="$rpmtopdir/BUILD/packet-viewer-$version-$release"
+mkdir -p "$rpmbuilddir/opt/packet-viewer"
+tar -xzf distribution/target/packet-viewer-$pomversion.tar.gz --strip-components=1 -C "$rpmbuilddir/opt/packet-viewer"
+cat distribution/rpm/packet-viewer.spec | sed -e "s/@@VERSION@@/$version/" | sed -e "s/@@RELEASE@@/$release/" > $rpmtopdir/SPECS/packet-viewer.spec
+rpmbuild --define="_topdir $rpmtopdir" -bb "$rpmtopdir/SPECS/packet-viewer.spec"
+
+cd "$yamcshome"
+mv distribution/target/rpmbuild/RPMS/*/* distribution/target/
+
+if [ $snapshot -eq 0 ]; then
+    rpmsign --key-id $GPG_KEY --addsign distribution/target/*.rpm
+fi
+
+echo
+echo 'All done. Generated assets:'
+ls -lh `find distribution/target -maxdepth 1 -type f`
+echo
+
+excluded_modules=$(cd $clonedir/examples && for d in */; do echo -n "!examples/${d%/},"; done)
+excluded_modules="!examples,${excluded_modules%,}"
+
+
+if [ $snapshot -eq 0 ]; then
+    read -p "Do you want to stage $pomversion maven artifacts to Maven Central? [y/N] " yesNo
+    if [[ $yesNo == 'y' ]]; then
+        mvn -f $clonedir -Drelease -DskipTests -pl "$excluded_modules" -am deploy
+        echo 'Release the staging repository at https://central.sonatype.com'
+    fi
+else
+    read -p "Do you want to publish $pomversion maven artifacts to Sonatype Snapshots? [y/N] " yesNo
+    if [[ $yesNo == 'y' ]]; then
+        mvn -f $clonedir -Drelease -DskipTests -DskipStaging -pl "$excluded_modules" -am deploy
+    fi
+fi
+
+rm -rf $clonedir $rpmtopdir
+
+# Upgrade version in pom.xml files
+# For example: 1.2.3 --> 1.2.4-SNAPSHOT
+if [ $snapshot -eq 0 ]; then
+    if [[ $version =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+        developmentVersion=${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))-SNAPSHOT
+        mvn versions:set -DnewVersion=$developmentVersion versions:commit
+        git commit . -v -em"Prepare next development iteration"
+    else
+        echo 'Failed to set development version'
+        exit 1
+    fi
+fi
+```
+
+### `rocksdbjni-java.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/rocksdbjni-java.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>rocksdbjni-java</id>
+
+  <formats>
+    <format>jar</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <fileSet>
+      <directory>target/rocksdbjni-${rocksdbVersion}</directory>
+      <excludes>
+        <exclude>*.dll</exclude>
+        <exclude>*.jnilib</exclude>
+        <exclude>*.so</exclude>
+      </excludes>
+      <outputDirectory></outputDirectory>
+    </fileSet>
+  </fileSets>
+</assembly>
+```
+
+### `yamcs-linux-aarch64.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs-linux-aarch64.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>linux-aarch64</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <componentDescriptors>
+    <componentDescriptor>yamcs.component.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>../yamcs-core/wrappers</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>yamcsadmin</include>
+        <include>yamcsd</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>target/rocksdbjni-${rocksdbVersion}/librocksdbjni-linux-aarch64.so</source>
+      <outputDirectory>lib</outputDirectory>
+      <!--
+        Named so that System.loadLibrary("rocksdbjni") can find it when lib
+        is added to java.library.path.
+      -->
+      <destName>librocksdbjni.so</destName>
+    </file>
+  </files>
+</assembly>
+```
+
+### `yamcs-linux-x86_64.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs-linux-x86_64.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>linux-x86_64</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <componentDescriptors>
+    <componentDescriptor>yamcs.component.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>../yamcs-core/wrappers</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>yamcsadmin</include>
+        <include>yamcsd</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>target/rocksdbjni-${rocksdbVersion}/librocksdbjni-linux64.so</source>
+      <outputDirectory>lib</outputDirectory>
+      <!--
+        Named so that System.loadLibrary("rocksdbjni") can find it when lib
+        is added to java.library.path.
+      -->
+      <destName>librocksdbjni.so</destName>
+    </file>
+  </files>
+</assembly>
+```
+
+### `yamcs-osx-aarch64.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs-osx-aarch64.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>osx-aarch64</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <componentDescriptors>
+    <componentDescriptor>yamcs.component.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>../yamcs-core/wrappers</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>yamcsadmin</include>
+        <include>yamcsd</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>target/rocksdbjni-${rocksdbVersion}/librocksdbjni-osx-arm64.jnilib</source>
+      <outputDirectory>lib</outputDirectory>
+      <!--
+        Named so that System.loadLibrary("rocksdbjni") can find it when lib
+        is added to java.library.path.
+      -->
+      <destName>librocksdbjni.dylib</destName>
+    </file>
+  </files>
+</assembly>
+```
+
+### `yamcs-osx-x86_64.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs-osx-x86_64.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>osx-x86_64</id>
+
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+
+  <componentDescriptors>
+    <componentDescriptor>yamcs.component.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>../yamcs-core/wrappers</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>yamcsadmin</include>
+        <include>yamcsd</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>target/rocksdbjni-${rocksdbVersion}/librocksdbjni-osx-x86_64.jnilib</source>
+      <outputDirectory>lib</outputDirectory>
+      <!--
+        Named so that System.loadLibrary("rocksdbjni") can find it when lib
+        is added to java.library.path.
+      -->
+      <destName>librocksdbjni.dylib</destName>
+    </file>
+  </files>
+</assembly>
+```
+
+### `yamcs-win64.descriptor.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs-win64.descriptor.xml`
+
+
+```xml
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.0.0 http://maven.apache.org/xsd/assembly-2.0.0.xsd">
+  <id>win64</id>
+
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <componentDescriptors>
+    <componentDescriptor>yamcs.component.xml</componentDescriptor>
+  </componentDescriptors>
+
+  <fileSets>
+    <fileSet>
+      <directory>../yamcs-core/wrappers</directory>
+      <outputDirectory>bin</outputDirectory>
+      <includes>
+        <include>yamcsadmin.cmd</include>
+        <include>yamcsd.cmd</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+
+  <files>
+    <file>
+      <source>target/rocksdbjni-${rocksdbVersion}/librocksdbjni-win64.dll</source>
+      <outputDirectory>lib</outputDirectory>
+      <!--
+        Named so that System.loadLibrary("rocksdbjni") can find it when lib
+        is added to java.library.path.
+      -->
+      <destName>rocksdbjni.dll</destName>
+    </file>
+  </files>
+</assembly>
+```
+
+### `yamcs.component.xml`
+
+**경로:** `gsw/yamcs/distribution/yamcs.component.xml`
+
+
+```xml
+<component xmlns="http://maven.apache.org/ASSEMBLY-COMPONENT/2.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/ASSEMBLY-COMPONENT/2.0.0 http://maven.apache.org/xsd/assembly-component-2.0.0.xsd">
+
+  <!--
+    This component description specifies the architecture-independent parts of a Yamcs distribution.
+    (without a specific rocksdbjni library).
+  -->
+
+  <dependencySets>
+    <dependencySet>
+      <outputDirectory>lib</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <useTransitiveDependencies>true</useTransitiveDependencies>
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <includes>
+        <include>org.yamcs:yamcs-api</include>
+        <include>org.yamcs:yamcs-core</include>
+        <include>org.yamcs:yamcs-tse</include>
+        <include>org.yamcs:yamcs-web</include>
+        <include>org.yamcs:yamcs-xtce</include>
+      </includes>
+    </dependencySet>
+  </dependencySets>
+
+  <fileSets>
+    <fileSet>
+      <directory>etc</directory>
+      <outputDirectory>etc</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target</directory>
+      <outputDirectory>lib</outputDirectory>
+      <includes>
+        <include>rocksdbjni-${rocksdbVersion}.jar</include>
+      </includes>
+    </fileSet>
+
+    <!-- Tricks to add empty directories... -->
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>cache</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>lib/ext</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>log</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+    <fileSet>
+      <directory>.</directory>
+      <outputDirectory>mdb</outputDirectory>
+      <excludes>
+        <exclude>*/**</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+</component>
+```

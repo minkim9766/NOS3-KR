@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ pus/index
 tests/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/`](algorithms/index) — 폴더
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/client/`](client/index) — 폴더
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/mdb/`](mdb/index) — 폴더
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/tests/`](tests/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

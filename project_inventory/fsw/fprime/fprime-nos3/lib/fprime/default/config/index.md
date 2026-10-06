@@ -3,62 +3,1317 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AcConstants.fpp`
 
-file--AcConstants.fpp
-file--ActiveRateGroupCfg.hpp
-file--BufferManagerComponentImplCfg.hpp
-file--CMakeLists.txt
-file--ComCfg.fpp
-file--CommandDispatcherImplCfg.hpp
-file--CRCCheckerConfig.hpp
-file--DpCatalogCfg.hpp
-file--DpCfg.fpp
-file--DpCfg.hpp
-file--EventManagerCfg.hpp
-file--FileDownlinkCfg.hpp
-file--FpConfig.fpp
-file--FpConfig.h
-file--FpConfig.hpp
-file--FPrimeNumericalConfig.h
-file--FpySequencerCfg.fpp
-file--IpCfg.hpp
-file--PolyDbCfg.fpp
-file--PrmDbImplCfg.hpp
-file--PrmDbImplTesterCfg.hpp
-file--StaticMemoryConfig.hpp
-file--TlmChanImplCfg.hpp
-file--TlmPacketizerCfg.hpp
-file--VersionCfg.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/AcConstants.fpp`
+
+
+```fpp
+# ======================================================================
+# AcConstants.fpp
+# F Prime configuration constants
+# ======================================================================
+
+@ Number of rate group member output ports for ActiveRateGroup
+constant ActiveRateGroupOutputPorts = 30
+
+@ Number of rate group member output ports for PassiveRateGroup
+constant PassiveRateGroupOutputPorts = 10
+
+@ Used to drive rate groups
+constant RateGroupDriverRateGroupPorts = 4
+
+@ Used for command and registration ports
+constant CmdDispatcherComponentCommandPorts = 30
+
+@ Used for uplink/sequencer buffer/response ports
+constant CmdDispatcherSequencePorts = 5
+
+@ Used for dispatching sequences to command sequencers
+constant SeqDispatcherSequencerPorts = 2
+
+@ Used for sizing the command splitter input arrays
+constant CmdSplitterPorts = CmdDispatcherSequencePorts
+
+@ Number of static memory allocations
+constant StaticMemoryAllocations = 4
+
+@ Used to ping active components
+constant HealthPingPorts = 25
+
+@ Used for broadcasting completed file downlinks
+constant FileDownCompletePorts = 1
+
+@ Used for number of Fw::Com type ports supported by Svc::ComQueue
+constant ComQueueComPorts = 2
+
+@ Used for number of Fw::Buffer type ports supported by Svc::ComQueue
+constant ComQueueBufferPorts = 1
+
+@ Used for maximum number of connected buffer repeater consumers
+constant BufferRepeaterOutputPorts = 10
+
+@ Size of port array for DpManager
+constant DpManagerNumPorts = 5
+
+@ Size of processing port array for DpWriter
+constant DpWriterNumProcPorts = 5
+
+@ The size of a file name string
+constant FileNameStringSize = 200
+
+@ The size of an assert text string
+constant FwAssertTextSize = 256
+
+@ The size of a file name in an AssertFatalAdapter event
+@ Note: File names in assertion failures are also truncated by
+@ the constants FW_ASSERT_TEXT_SIZE and FW_LOG_STRING_MAX_SIZE, set
+@ in FpConfig.h.
+constant AssertFatalAdapterEventFileSize = FileNameStringSize
+
+# ----------------------------------------------------------------------
+# Hub connections. Connections on all deployments should mirror these settings.
+# ----------------------------------------------------------------------
+
+constant GenericHubInputPorts = 10
+constant GenericHubOutputPorts = 10
+constant GenericHubInputBuffers = 10
+constant GenericHubOutputBuffers = 10
 ```
 
-## 항목
+### `ActiveRateGroupCfg.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/AcConstants.fpp`](file--AcConstants.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/ActiveRateGroupCfg.hpp`](file--ActiveRateGroupCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/BufferManagerComponentImplCfg.hpp`](file--BufferManagerComponentImplCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/ComCfg.fpp`](file--ComCfg.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/CommandDispatcherImplCfg.hpp`](file--CommandDispatcherImplCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/CRCCheckerConfig.hpp`](file--CRCCheckerConfig.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCatalogCfg.hpp`](file--DpCatalogCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.fpp`](file--DpCfg.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.hpp`](file--DpCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/EventManagerCfg.hpp`](file--EventManagerCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FileDownlinkCfg.hpp`](file--FileDownlinkCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.fpp`](file--FpConfig.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.h`](file--FpConfig.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.hpp`](file--FpConfig.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FPrimeNumericalConfig.h`](file--FPrimeNumericalConfig.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/FpySequencerCfg.fpp`](file--FpySequencerCfg.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/IpCfg.hpp`](file--IpCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/PolyDbCfg.fpp`](file--PolyDbCfg.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplCfg.hpp`](file--PrmDbImplCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplTesterCfg.hpp`](file--PrmDbImplTesterCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/StaticMemoryConfig.hpp`](file--StaticMemoryConfig.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmChanImplCfg.hpp`](file--TlmChanImplCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmPacketizerCfg.hpp`](file--TlmPacketizerCfg.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/default/config/VersionCfg.fpp`](file--VersionCfg.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/ActiveRateGroupCfg.hpp`
+
+
+```cpp
+/*
+* \author: Tim Canham
+* \file:
+* \brief
+*
+* This file has configuration settings for the ActiveRateGroup component.
+*
+*
+*   Copyright 2014-2015, by the California Institute of Technology.
+*   ALL RIGHTS RESERVED. United States Government Sponsorship
+*   acknowledged.
+*
+*/
+
+#ifndef ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_
+#define ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_
+
+namespace Svc {
+
+    enum {
+        //! Number of overruns allowed before overrun event is throttled
+        ACTIVE_RATE_GROUP_OVERRUN_THROTTLE = 5,
+    };
+
+}
+
+
+
+#endif /* ACTIVERATEGROUP_ACTIVERATEGROUPCFG_HPP_ */
+```
+
+### `BufferManagerComponentImplCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/BufferManagerComponentImplCfg.hpp`
+
+
+```cpp
+#ifndef __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+#define __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Svc {
+    static const U16 BUFFERMGR_MAX_NUM_BINS = 10;
+}
+
+
+#endif // __BUFFERMANAGERCOMPONENTIMPLCFG_HPP__
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/CMakeLists.txt`
+
+
+```cmake
+####
+# default/config/CMakeLists.txt:
+#
+# Sets a list of source files for cmake to process as part of autocoding.
+####
+register_fprime_config(
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/AcConstants.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ComCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpySequencerCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PolyDbCfg.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/VersionCfg.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/EventManagerCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/ActiveRateGroupCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/BufferManagerComponentImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/CommandDispatcherImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCatalogCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/DpCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FileDownlinkCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.h"
+        "${CMAKE_CURRENT_LIST_DIR}/FpConfig.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/FPrimeNumericalConfig.h"
+        "${CMAKE_CURRENT_LIST_DIR}/IpCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PrmDbImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/PrmDbImplTesterCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/StaticMemoryConfig.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TlmChanImplCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/TlmPacketizerCfg.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/CRCCheckerConfig.hpp"
+    BASE_CONFIG
+)
+```
+
+### `ComCfg.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/ComCfg.fpp`
+
+
+```fpp
+# ======================================================================
+# FPP file for configuration of the communications stack
+#
+# The only reason to modify these definitions is if you are writing your own
+# Framer/Deframer implementations and need more contextual data than what is
+# defined
+# ======================================================================
+
+module ComCfg {
+
+    # Needed in dictionary:
+    # - spacecraftId
+    # - TmFrameFixedSize
+    # - potentially APID enum ?
+    constant SpacecraftId = 0x0044    # Spacecraft ID (10 bits)
+    constant TmFrameFixedSize = 1024  # Needs to be at least COM_BUFFER_MAX_SIZE + (2 * SpacePacketHeaderSize) + 1
+
+    @ APIDs are 11 bits in the Space Packet protocol, so we use U16. Max value 7FF
+    enum APID : U16 {
+        # APIDs prefixed with FW are reserved for F Prime and need to be present
+        # in the enumeration. Their values can be changed
+        FW_PACKET_COMMAND        = 0x0000  @< Command packet type - incoming
+        FW_PACKET_TELEM          = 0x0001  @< Telemetry packet type - outgoing
+        FW_PACKET_LOG            = 0x0002  @< Log type - outgoing
+        FW_PACKET_FILE           = 0x0003  @< File type - incoming and outgoing
+        FW_PACKET_PACKETIZED_TLM = 0x0004  @< Packetized telemetry packet type
+        FW_PACKET_DP             = 0x0005  @< Data Product packet type
+        FW_PACKET_IDLE           = 0x0006  @< F Prime idle
+        FW_PACKET_HAND           = 0x00FE  @< F Prime handshake
+        FW_PACKET_UNKNOWN        = 0x00FF  @< F Prime unknown packet
+        SPP_IDLE_PACKET          = 0x07FF  @< Per Space Packet Standard, all 1s (11bits) is reserved for Idle Packets
+        INVALID_UNINITIALIZED    = 0x0800  @< Anything equal or higher value is invalid and should not be used
+    } default INVALID_UNINITIALIZED
+
+    @ Type used to pass context info between components during framing/deframing
+    struct FrameContext {
+        comQueueIndex: FwIndexType  @< Queue Index used by the ComQueue, other components shall not modify
+        apid: APID                  @< 11 bits APID in CCSDS
+        sequenceCount: U16          @< 14 bit Sequence count - sequence count is incremented per APID
+        vcId: U8                    @< 6 bit Virtual Channel ID - used for TC and TM
+    } default {
+        comQueueIndex = 0
+        apid = APID.FW_PACKET_UNKNOWN
+        sequenceCount = 0
+        vcId = 1
+    }
+
+}
+```
+
+### `CommandDispatcherImplCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/CommandDispatcherImplCfg.hpp`
+
+
+```cpp
+/*
+ * CmdDispatcherImplCfg.hpp
+ *
+ *  Created on: May 6, 2015
+ *      Author: tcanham
+ */
+
+#ifndef CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_
+#define CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_
+
+// Define configuration values for dispatcher
+
+enum {
+    CMD_DISPATCHER_DISPATCH_TABLE_SIZE = 200, // !< The size of the table holding opcodes to dispatch
+    CMD_DISPATCHER_SEQUENCER_TABLE_SIZE = 50, // !< The size of the table holding commands in progress
+};
+
+
+
+#endif /* CMDDISPATCHER_COMMANDDISPATCHERIMPLCFG_HPP_ */
+```
+
+### `CRCCheckerConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/CRCCheckerConfig.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCCheckerConfig.hpp
+// \brief  Configuration file for CRCChecker module
+// ======================================================================
+
+#ifndef CONFIG_CRC_CHECKER_CONFIG_HPP
+#define CONFIG_CRC_CHECKER_CONFIG_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>  
+
+
+// Default block size used when reading files for CRC calculation
+constexpr FwSignedSizeType CONFIG_CRC_FILE_READ_BLOCK = 2048;
+
+#endif 
+```
+
+### `DpCatalogCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCatalogCfg.hpp`
+
+
+```cpp
+/*
+ * FileDownlinkCfg.hpp:
+ *
+ * Configuration settings for file downlink component.
+ */
+
+#ifndef SVC_DPCATALOG_CONFIG_HPP_
+#define SVC_DPCATALOG_CONFIG_HPP_
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Svc {
+    // Sets the maximum number of directories where
+    // data products can be stored. The array passed
+    // to the initializer for DpCatalog cannot exceed
+    // this size.
+    static const FwIndexType DP_MAX_DIRECTORIES = 2;
+    static const FwIndexType DP_MAX_FILES = 127;
+}
+
+#endif /* SVC_DPCATALOG_CONFIG_HPP_ */
+```
+
+### `DpCfg.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.fpp`
+
+
+```fpp
+# ======================================================================
+# FPP file for data products configuration
+# ======================================================================
+
+module Fw {
+
+  module DpCfg {
+
+    @ The size in bytes of the user-configurable data in the container
+    @ packet header
+    constant CONTAINER_USER_DATA_SIZE = 32;
+
+    @ A bit mask for selecting the type of processing to perform on
+    @ a container before writing it to disk.
+    enum ProcType: U8 {
+      @ Processing type 0
+      PROC_TYPE_ZERO = 0x01
+      @ Processing type 1
+      PROC_TYPE_ONE = 0x02
+      @ Processing type 2
+      PROC_TYPE_TWO = 0x04
+    }
+
+  }
+
+}
+```
+
+### `DpCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/DpCfg.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpCfg.hpp
+// \author bocchino
+// \brief  hpp file for data product configuration
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef DPCFG_HPP
+#define DPCFG_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+// The format string for a file name
+// The format arguments are base directory, container ID, time seconds, and time microseconds
+#define DP_EXT ".fdp"
+constexpr const char *DP_FILENAME_FORMAT = "%s/Dp_%08" PRI_FwDpIdType "_%08" PRIu32 "_%08" PRIu32 DP_EXT;
+
+#endif
+```
+
+### `EventManagerCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/EventManagerCfg.hpp`
+
+
+```cpp
+/*
+ * EventManagerCfg.hpp
+ *
+ *  Created on: Apr 16, 2015
+ *      Author: tcanham
+ */
+
+#ifndef Config_EventManagerCfg_HPP_
+#define Config_EventManagerCfg_HPP_
+
+// set default filters
+
+enum {
+    FILTER_WARNING_HI_DEFAULT = true, //!< WARNING HI events are filtered at input
+    FILTER_WARNING_LO_DEFAULT = true, //!< WARNING LO events are filtered at input
+    FILTER_COMMAND_DEFAULT = true, //!< COMMAND events are filtered at input
+    FILTER_ACTIVITY_HI_DEFAULT = true, //!< ACTIVITY HI events are filtered at input
+    FILTER_ACTIVITY_LO_DEFAULT = true, //!< ACTIVITY LO  events are filtered at input
+    FILTER_DIAGNOSTIC_DEFAULT = false, //!< DIAGNOSTIC events are filtered at input
+};
+
+
+enum {
+    TELEM_ID_FILTER_SIZE = 25, //!< Size of telemetry ID filter
+};
+
+#endif /* Config_EventManagerCfg_HPP_ */
+```
+
+### `FileDownlinkCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FileDownlinkCfg.hpp`
+
+
+```cpp
+/*
+ * FileDownlinkCfg.hpp:
+ *
+ * Configuration settings for file downlink component.
+ */
+
+#ifndef SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_
+#define SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Svc {
+    // If this is set to true, the run handler will look to
+    // see if a packet is ready. If it is false, the next packet
+    // will be sent as soon as the previous is complete.
+    static const bool FILEDOWNLINK_PACKETS_BY_RUN = false;
+    // If this is set, errors that would cause FileDownlink to return an error response, such as a
+    // missing file or attempting to send a partial chunk past the end of the file will instead
+    // return success. This is recommended to avoid a non-serious FileDownlink error aborting a
+    // sequence early. These errors will still be logged as events.
+    static const bool FILEDOWNLINK_COMMAND_FAILURES_DISABLED = true;
+    // Size of the internal file downlink buffer. This must now be static as
+    // file down maintains its own internal buffer.
+    static const U32 FILEDOWNLINK_INTERNAL_BUFFER_SIZE = FW_FILE_BUFFER_MAX_SIZE;
+}
+
+#endif /* SVC_FILEDOWNLINK_FILEDOWNLINKCFG_HPP_ */
+```
+
+### `FpConfig.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.fpp`
+
+
+```fpp
+# ======================================================================
+# \title  config/FpConfig.fpp
+# \author mstarch
+# \brief  FPP alias configuration file
+#
+# \copyright
+# Copyright 2025, by the California Institute of Technology.
+# ALL RIGHTS RESERVED.  United States Government Sponsorship
+# acknowledged.
+#
+# FPrime uses FPP to define a set of type aliases for various named types
+# used throughout the system. This file is used to configure those types.
+# ======================================================================
+
+####
+# Integer type aliases:
+# Used for the project to override types supplied by the platform for things like sizes, indices, etc.
+####
+
+@ The unsigned type of larger sizes internal to the software,
+@ e.g., memory buffer sizes, file sizes. Must be unsigned.
+type FwSizeType = PlatformSizeType
+
+@ The signed type of larger sizes internal to the software, used
+@ for signed offsets, e.g., file seek offsets. Must be signed.
+type FwSignedSizeType = PlatformSignedSizeType
+
+@ The type of smaller indices internal to the software, used
+@ for array indices, e.g., port indices. Must be signed.
+type FwIndexType = PlatformIndexType
+
+@ The type of arguments to assert functions.
+type FwAssertArgType = PlatformAssertArgType
+
+@ The type of task priorities used.
+type FwTaskPriorityType = PlatformTaskPriorityType
+
+@ The type of queue priorities used.
+type FwQueuePriorityType = PlatformQueuePriorityType
+
+@ The id type.
+type FwIdType = U32
+
+@ The type of task priorities used.
+type FwTaskIdType = PlatformTaskIdType
+
+####
+# GDS type aliases:
+# Used for the project to override types shared with GDSes and other remote systems.
+####
+
+@ The type of a telemetry channel identifier
+type FwChanIdType = FwIdType
+
+@ The type of a data product identifier
+type FwDpIdType = FwIdType
+
+@ The type of a data product priority
+type FwDpPriorityType = U32
+
+@ The type of an event identifier
+type FwEventIdType = FwIdType
+
+@ The type of a command opcode
+type FwOpcodeType = FwIdType
+
+@ The type of a com packet descriptor
+type FwPacketDescriptorType = FwIdType
+
+@ The type of a parameter identifier
+type FwPrmIdType = FwIdType
+
+@ The type used to serialize a size value
+type FwSizeStoreType = U16
+
+
+@ The type used to serialize a time context value
+type FwTimeContextStoreType = U8
+
+@ The type of a telemetry packet identifier
+type FwTlmPacketizeIdType = U16
+
+@ The type of a trace identifier
+type FwTraceIdType = U32
+
+@ The type used to serialize a C++ enumeration constant
+@ FPP enumerations are serialized according to their representation types
+type FwEnumStoreType = I32
+
+
+@ The type used to serialize a time base value
+type FwTimeBaseStoreType = U16
+
+@ Define enumeration for Time base types
+enum TimeBase : FwTimeBaseStoreType {
+    TB_NONE = 0              @< No time base has been established (Required)
+    TB_PROC_TIME = 1         @< Indicates time is processor cycle time. Not tied to external time
+    TB_WORKSTATION_TIME = 2  @< Time as reported on workstation where software is running. For testing. (Required)
+    TB_DONT_CARE = 0xFFFF    @< Don't care value for sequences. If FwTimeBaseStoreType is changed, value should be changed (Required)
+} default TB_NONE;
+```
+
+### `FpConfig.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.h`
+
+
+```c
+/**
+ * \file: FpConfig.h
+ * \author T. Canham, mstarch
+ * \brief C-compatible configuration header for fprime configuration
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ */
+#ifndef FPCONFIG_H_
+#define FPCONFIG_H_
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+#include <Platform/PlatformTypes.h>
+#include <Fw/Types/BasicTypes.h>
+
+#define FW_ASSERT_LEVEL FW_FILENAME_ASSERT
+// ----------------------------------------------------------------------
+// Type aliases
+// ----------------------------------------------------------------------
+#define FW_CONTEXT_DONT_CARE 0xFF  //!< Don't care value for time contexts in sequences
+
+// ----------------------------------------------------------------------
+// Configuration switches
+// ----------------------------------------------------------------------
+
+// Boolean values for serialization
+#ifndef FW_SERIALIZE_TRUE_VALUE
+#define FW_SERIALIZE_TRUE_VALUE (0xFF)  //!< Value encoded during serialization for boolean true
+#endif
+
+#ifndef FW_SERIALIZE_FALSE_VALUE
+#define FW_SERIALIZE_FALSE_VALUE (0x00)  //!< Value encoded during serialization for boolean false
+#endif
+
+// Allow objects to have names. Allocates storage for each instance
+#ifndef FW_OBJECT_NAMES
+#define FW_OBJECT_NAMES \
+    1  //!< Indicates whether or not object names are stored (more memory, can be used for tracking objects)
+#endif
+
+// To reduce binary size, FW_OPTIONAL_NAME(<string>) can be used to substitute strings with an empty string
+// when running with FW_OBJECT_NAMES disabled
+#if FW_OBJECT_NAMES == 1
+#define FW_OPTIONAL_NAME(name) name
+#else
+#define FW_OPTIONAL_NAME(name) ""
+#endif
+
+// Add methods to query an object about its name. Can be overridden by derived classes
+// For FW_OBJECT_TO_STRING to work, FW_OBJECT_NAMES must be enabled
+#if FW_OBJECT_NAMES == 1
+#ifndef FW_OBJECT_TO_STRING
+#define FW_OBJECT_TO_STRING \
+    1  //!< Indicates whether or not generated objects have toString() methods to dump internals (more code)
+#endif
+#else
+#define FW_OBJECT_TO_STRING 0
+#endif
+
+// Adds the ability for all component related objects to register
+// centrally.
+#ifndef FW_OBJECT_REGISTRATION
+#define FW_OBJECT_REGISTRATION \
+    1  //!< Indicates whether or not objects can register themselves (more code, more object tracking)
+#endif
+
+#ifndef FW_QUEUE_REGISTRATION
+#define FW_QUEUE_REGISTRATION 1  //!< Indicates whether or not queue registration is used
+#endif
+
+// On some systems, use of *printf family functions (snprintf, printf, etc) require a prohibitive amount of program
+// space. Setting this to `0` indicates that the Fw/String methods should stop using these functions to conserve
+// program size. However, this comes at the expense of discarding format parameters. i.e. the format string is returned
+// unchanged.
+#ifndef FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING
+#define FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING 1
+#endif
+
+// Port Facilities
+
+// This allows tracing calls through ports for debugging
+#ifndef FW_PORT_TRACING
+#define FW_PORT_TRACING 1  //!< Indicates whether port calls are traced (more code, more visibility into execution)
+#endif
+
+// This generates code to connect to serialized ports
+#ifndef FW_PORT_SERIALIZATION
+#define FW_PORT_SERIALIZATION \
+    1  //!< Indicates whether there is code in ports to serialize the call (more code, but ability to serialize calls
+       //!< for multi-note systems)
+#endif
+
+// Component Facilities
+
+// Serialization
+
+// Add a type id when serialization is done. More storage,
+// but better detection of errors
+// TODO: Not working yet
+
+#ifndef FW_SERIALIZATION_TYPE_ID
+#define FW_SERIALIZATION_TYPE_ID \
+    0  //!< Indicates if type id is stored when type is serialized. (More storage, but more type safety)
+#endif
+
+// Number of bytes to use for serialization IDs. More
+// bytes is more storage, but greater number of IDs
+#if FW_SERIALIZATION_TYPE_ID
+#ifndef FW_SERIALIZATION_TYPE_ID_BYTES
+#define FW_SERIALIZATION_TYPE_ID_BYTES 4  //!< Number of bytes used to represent type id - more bytes, more ids
+#endif
+#endif
+
+// Set assertion form. Options:
+//   1. FW_NO_ASSERT: assertions are compiled out, side effects are kept
+//   2. FW_FILEID_ASSERT: asserts report a file CRC and line number
+//   3. FW_FILENAME_ASSERT: asserts report a file path (__FILE__) and line number
+//   4. FW_RELATIVE_PATH_ASSERT: asserts report a relative path within F´ or F´ library and line number
+//
+// Note: users who want alternate asserts should set assert level to FW_NO_ASSERT and define FW_ASSERT in this header
+// #ifndef FW_ASSERT_LEVEL
+// #define FW_ASSERT_LEVEL FW_FILENAME_ASSERT  //!< Defines the type of assert used
+// #endif
+
+// Adjust various configuration parameters in the architecture. Some of the above enables may disable some of the values
+
+// The size of the object name stored in the object base class. Larger names will be truncated.
+#if FW_OBJECT_NAMES
+#ifndef FW_OBJ_NAME_BUFFER_SIZE
+#define FW_OBJ_NAME_BUFFER_SIZE \
+    80  //!< Size of object name (if object names enabled). AC Limits to 80, truncation occurs above 80.
+#endif
+#endif
+
+#if FW_OBJECT_REGISTRATION
+// For the simple object registry provided with the framework, this specifies how many objects the registry will store.
+#ifndef FW_OBJ_SIMPLE_REG_ENTRIES
+#define FW_OBJ_SIMPLE_REG_ENTRIES 500  //!< Number of objects stored in simple object registry
+#endif
+// When dumping the contents of the registry, this specifies the size of the buffer used to store object names. Should
+// be >= FW_OBJ_NAME_BUFFER_SIZE.
+#ifndef FW_OBJ_SIMPLE_REG_BUFF_SIZE
+#define FW_OBJ_SIMPLE_REG_BUFF_SIZE 255  //!< Size of object registry dump string
+#endif
+#endif
+
+#if FW_QUEUE_REGISTRATION
+// For the simple queue registry provided with the framework, this specifies how many queues the registry will store.
+#ifndef FW_QUEUE_SIMPLE_QUEUE_ENTRIES
+#define FW_QUEUE_SIMPLE_QUEUE_ENTRIES 100  //!< Number of queues stored in simple queue registry
+#endif
+#endif
+
+// Specifies the size of the string holding the queue name for queues
+#ifndef FW_QUEUE_NAME_BUFFER_SIZE
+#define FW_QUEUE_NAME_BUFFER_SIZE 80  //!< Max size of message queue name
+#endif
+
+// Specifies the size of the string holding the task name for active components and tasks
+#ifndef FW_TASK_NAME_BUFFER_SIZE
+#define FW_TASK_NAME_BUFFER_SIZE 80  //!< Max size of task name
+#endif
+
+// Specifies the size of the buffer that contains a communications packet.
+#ifndef FW_COM_BUFFER_MAX_SIZE
+#define FW_COM_BUFFER_MAX_SIZE 512
+#endif
+
+// Specifies the size of the buffer attached to state machine signals.
+#ifndef FW_SM_SIGNAL_BUFFER_MAX_SIZE
+#define FW_SM_SIGNAL_BUFFER_MAX_SIZE 128  // Not to exceed max value of FwSizeType
+#endif
+
+// Specifies the size of the buffer that contains the serialized command arguments.
+
+#ifndef FW_CMD_ARG_BUFFER_MAX_SIZE
+#define FW_CMD_ARG_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwOpcodeType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a command argument
+#ifndef FW_CMD_STRING_MAX_SIZE
+#define FW_CMD_STRING_MAX_SIZE 40  //!< Max character size of command string arguments
+#endif
+
+// Normally when a command is deserialized, the handler checks to see if there are any leftover
+// bytes in the buffer. If there are, it assumes that the command was corrupted somehow since
+// the serialized size should match the serialized size of the argument list. In some cases,
+// command buffers are padded so the data can be larger than the serialized size of the command.
+// Setting the below to zero will disable the check at the cost of not detecting commands that
+// are too large.
+#ifndef FW_CMD_CHECK_RESIDUAL
+#define FW_CMD_CHECK_RESIDUAL 1  //!< Check for leftover command bytes
+#endif
+
+// Specifies the size of the buffer that contains the serialized log arguments.
+#ifndef FW_LOG_BUFFER_MAX_SIZE
+#define FW_LOG_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwEventIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a log event
+// Note: This constant truncates file names in assertion failure event reports
+#ifndef FW_LOG_STRING_MAX_SIZE
+#define FW_LOG_STRING_MAX_SIZE 200  //!< Max size of log string parameter type
+#endif
+
+// Specifies the size of the buffer that contains the serialized telemetry value.
+#ifndef FW_TLM_BUFFER_MAX_SIZE
+#define FW_TLM_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwChanIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the size of the buffer that contains statement args for the FpySequencer
+#ifndef FW_STATEMENT_ARG_BUFFER_MAX_SIZE
+#define FW_STATEMENT_ARG_BUFFER_MAX_SIZE (FW_CMD_ARG_BUFFER_MAX_SIZE)
+#endif
+
+// Specifies the maximum size of a string in a telemetry channel
+#ifndef FW_TLM_STRING_MAX_SIZE
+#define FW_TLM_STRING_MAX_SIZE 40  //!< Max size of channelized telemetry string type
+#endif
+
+// Specifies the size of the buffer that contains the serialized parameter value.
+#ifndef FW_PARAM_BUFFER_MAX_SIZE
+#define FW_PARAM_BUFFER_MAX_SIZE (FW_COM_BUFFER_MAX_SIZE - sizeof(FwPrmIdType) - sizeof(FwPacketDescriptorType))
+#endif
+
+// Specifies the maximum size of a string in a parameter
+#ifndef FW_PARAM_STRING_MAX_SIZE
+#define FW_PARAM_STRING_MAX_SIZE 40  //!< Max size of parameter string type
+#endif
+
+// Specifies the maximum size of a file downlink chunk
+#ifndef FW_FILE_BUFFER_MAX_SIZE
+#define FW_FILE_BUFFER_MAX_SIZE FW_COM_BUFFER_MAX_SIZE  //!< Max size of file buffer (i.e. chunk of file)
+#endif
+
+// Specifies the maximum size of a string in an interface call
+#ifndef FW_INTERNAL_INTERFACE_STRING_MAX_SIZE
+#define FW_INTERNAL_INTERFACE_STRING_MAX_SIZE 256  //!< Max size of interface string parameter type
+#endif
+
+// Enables text logging of events as well as data logging. Adds a second logging port for text output.
+// In order to set this to 0, FPRIME_ENABLE_TEXT_LOGGERS must be set to OFF.
+#ifndef FW_ENABLE_TEXT_LOGGING
+#define FW_ENABLE_TEXT_LOGGING 1  //!< Indicates whether text logging is turned on
+#endif
+
+// Define the size of the text log string buffer. Should be large enough for format string and arguments
+#ifndef FW_LOG_TEXT_BUFFER_SIZE
+#define FW_LOG_TEXT_BUFFER_SIZE 256  //!< Max size of string for text log message
+#endif
+
+// Define if serializables have toString() method. Turning off will save code space and
+// string constants. Must be enabled if text logging enabled
+#ifndef FW_SERIALIZABLE_TO_STRING
+#define FW_SERIALIZABLE_TO_STRING 1  //!< Indicates if autocoded serializables have toString() methods
+#endif
+
+// Some settings to enable AMPCS compatibility. This breaks regular ISF GUI compatibility
+#ifndef FW_AMPCS_COMPATIBLE
+#define FW_AMPCS_COMPATIBLE 0  //!< Whether or not JPL AMPCS ground system support is enabled.
+#endif
+
+// Configuration for Fw::String
+#ifndef FW_FIXED_LENGTH_STRING_SIZE
+#define FW_FIXED_LENGTH_STRING_SIZE 256  //!< Character array size for Fw::String
+#endif
+
+// OS configuration
+#ifndef FW_CONSOLE_HANDLE_MAX_SIZE
+#define FW_CONSOLE_HANDLE_MAX_SIZE 24  //!< Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_TASK_HANDLE_MAX_SIZE
+#define FW_TASK_HANDLE_MAX_SIZE 24  //!< Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_FILE_HANDLE_MAX_SIZE
+#define FW_FILE_HANDLE_MAX_SIZE 16  //!< Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_MUTEX_HANDLE_MAX_SIZE
+#define FW_MUTEX_HANDLE_MAX_SIZE 72  //!< Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_QUEUE_HANDLE_MAX_SIZE
+#define FW_QUEUE_HANDLE_MAX_SIZE 352  //!< Maximum size of a handle for OS queues
+#endif
+
+#ifndef FW_DIRECTORY_HANDLE_MAX_SIZE
+#define FW_DIRECTORY_HANDLE_MAX_SIZE 16  //!< Maximum size of a handle for OS resources (files, queues, locks, etc.)
+#endif
+
+#ifndef FW_FILESYSTEM_HANDLE_MAX_SIZE
+#define FW_FILESYSTEM_HANDLE_MAX_SIZE 16  //!< Maximum size of a handle for OS resources (files, queues, locks, etc.)
+#endif
+
+#ifndef FW_RAW_TIME_HANDLE_MAX_SIZE
+#define FW_RAW_TIME_HANDLE_MAX_SIZE 56  //!< Maximum size of a handle for OS::RawTime objects
+#endif
+
+#ifndef FW_RAW_TIME_SERIALIZATION_MAX_SIZE
+#define FW_RAW_TIME_SERIALIZATION_MAX_SIZE 8  //!< Maximum allowed serialization size for Os::RawTime objects
+#endif
+
+#ifndef FW_CONDITION_VARIABLE_HANDLE_MAX_SIZE
+#define FW_CONDITION_VARIABLE_HANDLE_MAX_SIZE 56  //!< Maximum size of a handle for OS condition variables
+#endif
+
+#ifndef FW_CPU_HANDLE_MAX_SIZE
+#define FW_CPU_HANDLE_MAX_SIZE 16  //!< Maximum size of a handle for OS cpu
+#endif
+
+#ifndef FW_MEMORY_HANDLE_MAX_SIZE
+#define FW_MEMORY_HANDLE_MAX_SIZE 16  //!< Maximum size of a handle for OS memory
+#endif
+
+#ifndef FW_HANDLE_ALIGNMENT
+#define FW_HANDLE_ALIGNMENT 8  //!< Alignment of handle storage
+#endif
+
+// Note: One buffer of this size will be stack-allocated during certain OSAL operations e.g. when copying a file
+#ifndef FW_FILE_CHUNK_SIZE
+#define FW_FILE_CHUNK_SIZE 512  //!< Chunk size for working with files in the OSAL layer
+#endif
+
+// *** NOTE configuration checks are in Fw/Cfg/ConfigCheck.cpp in order to have
+// the type definitions in Fw/Types/BasicTypes available.
+#ifdef  __cplusplus
+}
+#endif
+
+#endif
+```
+
+### `FpConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FpConfig.hpp`
+
+
+```cpp
+/**
+ * \file: FpConfig.hpp
+ * \author T. Canham, mstarch
+ * \brief C++-compatible configuration header for fprime configuration
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ */
+// #include <Fw/Types/BasicTypes.hpp>
+// #include <FppConstantsAc.hpp>
+extern "C" {
+#include <config/FpConfig.h>
+}
+
+// // Define max length of assert string
+// // Note: This constant truncates file names in assertion failure event reports
+// #ifndef FW_ASSERT_TEXT_SIZE
+// #define FW_ASSERT_TEXT_SIZE FwAssertTextSize  //!< Size of string used to store assert description
+```
+
+### `FPrimeNumericalConfig.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FPrimeNumericalConfig.h`
+
+
+```c
+// ======================================================================
+// \title  FPrimeNumericalConfig.hpp
+// \author mstarch
+// \brief  hpp file for FPrime integer configuration
+//
+// \copyright
+// Copyright 2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// FPrime projects are allowed to turn on or off the use of 16, 32, and 64
+// bit integers. This is done to allow projects to disable support for types
+// that are not supported by the target platform, or perform inefficient
+// computations to synthesize these types.
+//
+// Users should set the properties in this file to 1 or 0 to enable or disable
+// the feature.
+//
+// This header is intended to be C-compatible.
+//
+// ======================================================================
+
+#ifndef FPRIME_INTEGER_CONFIG_H
+#define FPRIME_INTEGER_CONFIG_H
+#ifdef  __cplusplus
+extern "C" {
+#endif
+
+#define FW_HAS_64_BIT 1                   //!< Architecture supports 64 bit integers
+#define FW_HAS_32_BIT 1                   //!< Architecture supports 32 bit integers
+#define FW_HAS_16_BIT 1                   //!< Architecture supports 16 bit integers
+#define SKIP_FLOAT_IEEE_754_COMPLIANCE 0  //!<  Check IEEE 754 compliance of floating point arithmetic
+
+#ifdef  __cplusplus
+}
+#endif
+#endif  // FPRIME_INTEGER_CONFIG_H
+
+```
+
+### `FpySequencerCfg.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/FpySequencerCfg.fpp`
+
+
+```fpp
+module Svc {
+    module Fpy {
+        @ The maximum number of arguments a sequence can have
+        constant MAX_SEQUENCE_ARG_COUNT = 16
+        @ The maximum number of statements a sequence can have
+        constant MAX_SEQUENCE_STATEMENT_COUNT = 1024
+        @ The maximum number of serializable registers a sequence can have
+        constant NUM_SERIALIZABLE_REGISTERS = 16
+        @ The maximum size a serializable register's buffer can be
+        # FW_COM_BUFFER_MAX_SIZE - sizeof(FwChanIdType) - sizeof(FwPacketDescriptorType)
+        constant MAX_SERIALIZABLE_REGISTER_SIZE = 512 - 4 - 4
+
+        @ The number of registers available to a sequence
+        constant NUM_REGISTERS = 128
+    }
+}
+```
+
+### `IpCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/IpCfg.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  IpCfg.hpp
+// \author mstarch
+// \brief  hpp file for SocketIpDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <Fw/Time/TimeInterval.hpp>
+#ifndef REF_IPCFG_HPP
+#define REF_IPCFG_HPP
+
+enum IpCfg {
+    SOCKET_SEND_TIMEOUT_SECONDS = 1,       // Seconds component of timeout to an individual send
+    SOCKET_SEND_TIMEOUT_MICROSECONDS = 0,  // Milliseconds component of timeout to an individual send
+    SOCKET_IP_SEND_FLAGS = 0,              // send, sendto FLAGS argument
+    SOCKET_IP_RECV_FLAGS = 0,              // recv FLAGS argument
+    SOCKET_MAX_ITERATIONS = 0xFFFF,        // Maximum send/recv attempts before an error is returned
+    SOCKET_MAX_HOSTNAME_SIZE = 256         // Maximum stored hostname
+};
+static const Fw::TimeInterval SOCKET_RETRY_INTERVAL = Fw::TimeInterval(1, 0);
+
+
+#endif //REF_IPCFG_HPP
+```
+
+### `PolyDbCfg.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/PolyDbCfg.fpp`
+
+
+```fpp
+# ======================================================================
+# FPP file for PolyDb configuration
+# ======================================================================
+
+module Svc {
+
+  module PolyDbCfg {
+
+    @ Define a set of PolyDb entries on a project-specific
+    @ basis. 
+    enum PolyDbEntry: U32 {
+      @ Entry 0
+      POLYDB_ENTRY_00
+      @ Entry 1
+      POLYDB_ENTRY_01
+      @ Entry 2
+      POLYDB_ENTRY_03
+      @ Entry 4
+      POLYDB_ENTRY_04
+      @ Entry 5
+      POLYDB_ENTRY_05
+      @ Entry 6
+      POLYDB_ENTRY_06
+      @ Entry 7
+      POLYDB_ENTRY_07
+      @ Entry 8
+      POLYDB_ENTRY_08
+      @ Entry 9
+      POLYDB_ENTRY_09
+    }
+
+  }
+
+}
+```
+
+### `PrmDbImplCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplCfg.hpp`
+
+
+```cpp
+/*
+ * PrmDblImplCfg.hpp
+ *
+ *  Created on: Mar 13, 2015
+ *      Author: tcanham
+ */
+
+#ifndef PRMDB_PRMDBLIMPLCFG_HPP_
+#define PRMDB_PRMDBLIMPLCFG_HPP_
+
+// Anonymous namespace for configuration parameters
+namespace {
+
+    enum {
+        PRMDB_NUM_DB_ENTRIES = 25, // !< Number of entries in the parameter database
+        PRMDB_ENTRY_DELIMITER = 0xA5 // !< Byte value that should precede each parameter in file; sanity check against file integrity. Should match ground system.
+    };
+
+}
+
+
+
+#endif /* PRMDB_PRMDBLIMPLCFG_HPP_ */
+```
+
+### `PrmDbImplTesterCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/PrmDbImplTesterCfg.hpp`
+
+
+```cpp
+/*
+ * PrmDbImplTesterCfg.hpp
+ *
+ *  Created on: Sep 30, 2015
+ *      Author: tcanham
+ */
+
+#ifndef PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_
+#define PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_
+
+enum {
+    PRMDB_IMPL_TESTER_MAX_READ_BUFFER = 256
+};
+
+
+
+#endif /* PRMDB_TEST_UT_PRMDBIMPLTESTERCFG_HPP_ */
+```
+
+### `StaticMemoryConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/StaticMemoryConfig.hpp`
+
+
+```cpp
+/*
+ * StaticMemoryCfg.hpp:
+ *
+ * Configuration settings for the static memory component.
+ */
+
+#ifndef SVC_STATIC_MEMORY_CFG_HPP_
+#define SVC_STATIC_MEMORY_CFG_HPP_
+
+namespace Svc {
+    enum StaticMemoryConfig {
+        STATIC_MEMORY_ALLOCATION_SIZE = 2048
+    };
+}
+
+#endif
+
+```
+
+### `TlmChanImplCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmChanImplCfg.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief Configuration file for Telemetry Channel component
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+
+#ifndef TLMCHANIMPLCFG_HPP_
+#define TLMCHANIMPLCFG_HPP_
+
+// Anonymous namespace for configuration parameters
+
+
+// The parameters below provide for tuning of the hash function used to
+// write and read entries in the database. The has function is very simple;
+// It first takes the telemetry ID and does a modulo computation with
+// TLMCHAN_HASH_MOD_VALUE. It then does a second modulo with the number
+// of slots to make sure the value lands in the provided slots.
+// The values can be experimented with to try and balance the number
+// of slots versus the number of buckets.
+// To test the set of telemetry ID in the system to see if the hash is
+// balanced, do the following:
+//  1) From the deployment directory (e.g Ref), do a full build then type:
+//      "make comp_report_gen"
+//     This will generate a list in "<deployment dir>/ComponentReport.txt"
+//     with all the telemetry IDs in the deployment.
+//  2) Cut and paste the ID list to the array declared in the TlmChan unit test
+//     file TelemChanImplTester.cpp in the runMultiChannel() method.
+//  3) Run the unit test ("make ut run_ut")
+//  4) After writing all the telemetry IDs to the component, the
+//     unit test will dump the hash table. The output looks like the following:
+//        Slot: <n> - slot number
+//        Entry - a bucket assigned to the slot
+//        ... (Other buckets in the slot)
+//     The number of buckets assigned to each slot can be checked for balance.
+
+namespace {
+
+    enum {
+        TLMCHAN_NUM_TLM_HASH_SLOTS = 30, // !< Number of slots in the hash table.
+                                        // Works best when set to about twice the number of components producing telemetry
+        TLMCHAN_HASH_MOD_VALUE = 99,    // !< The modulo value of the hashing function.
+                                        // Should be set to a little below the ID gaps to spread the entries around
+
+        TLMCHAN_HASH_BUCKETS = 800       // !< Buckets assignable to a hash slot.
+                                        // Buckets must be >= number of telemetry channels in system
+    };
+
+
+}
+
+#endif /* TLMCHANIMPLCFG_HPP_ */
+```
+
+### `TlmPacketizerCfg.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/TlmPacketizerCfg.hpp`
+
+
+```cpp
+/*
+ * TlmPacketizerComponentImplCfg.hpp
+ *
+ *  Created on: Dec 10, 2017
+ *      Author: tim
+ */
+
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_
+#define SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Svc {
+static const FwChanIdType MAX_PACKETIZER_PACKETS = 200;
+static const FwChanIdType TLMPACKETIZER_NUM_TLM_HASH_SLOTS =
+    15;  // !< Number of slots in the hash table.
+         // Works best when set to about twice the number of components producing telemetry
+static const FwChanIdType TLMPACKETIZER_HASH_MOD_VALUE =
+    99;  // !< The modulo value of the hashing function.
+         // Should be set to a little below the ID gaps to spread the entries around
+
+static const FwChanIdType TLMPACKETIZER_HASH_BUCKETS =
+    1000;  // !< Buckets assignable to a hash slot.
+           // Buckets must be >= number of telemetry channels in system
+static const FwChanIdType TLMPACKETIZER_MAX_MISSING_TLM_CHECK =
+    25;  // !< Maximum number of missing telemetry channel checks
+
+// packet update mode
+enum PacketUpdateMode {
+    PACKET_UPDATE_ALWAYS,              // Always send packets, even if no changes to channel data
+    PACKET_UPDATE_ON_CHANGE,           // Only send packets if any of the channels updates
+    PACKET_UPDATE_AFTER_FIRST_CHANGE,  // Always send packets, but only after first channel has been updated
+};
+
+static const PacketUpdateMode PACKET_UPDATE_MODE = PACKET_UPDATE_ON_CHANGE;
+}  // namespace Svc
+
+#endif /* SVC_TLMPACKETIZER_TLMPACKETIZERCOMPONENTIMPLCFG_HPP_ */
+```
+
+### `VersionCfg.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/default/config/VersionCfg.fpp`
+
+
+```fpp
+# ======================================================================
+# FPP file for Version configuration
+# ======================================================================
+
+module Svc {
+
+  module VersionCfg {
+
+    @ Define a set of Version entries on a project-specific
+    @ basis. 
+    enum VersionEnum: U32 {
+      @ Entry 0
+      PROJECT_VERSION_00
+      @ Entry 1
+      PROJECT_VERSION_01
+      @ Entry 2
+      PROJECT_VERSION_02
+      @ Entry 3
+      PROJECT_VERSION_03
+      @ Entry 4
+      PROJECT_VERSION_04
+      @ Entry 5
+      PROJECT_VERSION_05
+      @ Entry 6
+      PROJECT_VERSION_06
+      @ Entry 7
+      PROJECT_VERSION_07
+      @ Entry 8
+      PROJECT_VERSION_08
+      @ Entry 9
+      PROJECT_VERSION_09
+    }
+
+  }
+
+}
+```

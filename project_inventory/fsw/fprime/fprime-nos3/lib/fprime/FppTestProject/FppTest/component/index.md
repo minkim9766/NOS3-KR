@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,19 +16,48 @@ passive/index
 queued/index
 tests/index
 types/index
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/active/`](active/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/`](common/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/`](empty/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/`](include/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/passive/`](passive/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/queued/`](queued/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/tests/`](tests/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/`](types/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/CMakeLists.txt`
+
+
+```cmake
+# ====================================================================== 
+# CMakeLists.txt
+# ====================================================================== 
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/empty/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/active/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/queued/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/passive/")
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/README.md`
+
+
+```markdown
+# FppTest/component
+
+This directory contains unit tests for the FPP component code generator.
+
+To use this directory, you must have installed F Prime, and you must be inside 
+the F Prime Python virtual environment.
+
+The following subdirectories contain tests that you can run:
+
+* `active`: Active component tests
+* `passive`: Passive component tests
+* `queued`: Queued component tests
+* `empty`: Basic tests of an empty component
+
+In any of these directories, you can do the following:
+
+* To build the tests, run `fprime-util build --ut`.
+* To run the tests, run `fprime-util check`.
+```

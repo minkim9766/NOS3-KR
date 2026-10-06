@@ -3,18 +3,72 @@
 
 **경로:** `gsw/yamcs/examples/cascading/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/cascading/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/cascading/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/cascading/README`](file--README) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/cascading/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>cascading</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Yamcs :: Examples :: Cascading</name>
+  <description>
+    Example demonstrating the use of cascading
+  </description>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README`
+
+**경로:** `gsw/yamcs/examples/cascading/README`
+
+
+```text
+This contains an example with a Yamcs server with two instances downstream and upstream with the downstream connected to upstream as a yamcs client.
+
+The TM packet definitions are identical between the upstream and the downstream.
+
+The TC definitions are mapped using several supported configurations, as per yamcs.upstream.yaml, commandMapping section.
+```

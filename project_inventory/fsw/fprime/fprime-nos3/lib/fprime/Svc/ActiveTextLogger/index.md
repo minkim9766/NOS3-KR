@@ -3,28 +3,509 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--ActiveTextLogger.cpp
-file--ActiveTextLogger.fpp
-file--ActiveTextLogger.hpp
-file--CMakeLists.txt
-file--LogFile.cpp
-file--LogFile.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.cpp`](file--ActiveTextLogger.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.fpp`](file--ActiveTextLogger.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.hpp`](file--ActiveTextLogger.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/LogFile.cpp`](file--LogFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/LogFile.hpp`](file--LogFile.hpp) — UTF-8 텍스트 파일 본문 포함
+### `ActiveTextLogger.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.cpp`
+
+
+```cpp
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Svc/ActiveTextLogger/ActiveTextLogger.hpp>
+#include <ctime>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Initialization/Exiting
+// ----------------------------------------------------------------------
+
+ActiveTextLogger::ActiveTextLogger(const char* name) : ActiveTextLoggerComponentBase(name), m_log_file() {}
+
+ActiveTextLogger::~ActiveTextLogger() {}
+
+// ----------------------------------------------------------------------
+// Handlers to implement for typed input ports
+// ----------------------------------------------------------------------
+
+void ActiveTextLogger::TextLogger_handler(FwIndexType portNum,
+                                          FwEventIdType id,
+                                          Fw::Time& timeTag,
+                                          const Fw::LogSeverity& severity,
+                                          Fw::TextLogString& text) {
+    // Currently not doing any input filtering
+    // TKC - 5/3/2018 - remove diagnostic
+    if (Fw::LogSeverity::DIAGNOSTIC == severity.e) {
+        return;
+    }
+
+    // Format the string here, so that it is done in the task context
+    // of the caller.  Format doc borrowed from PassiveTextLogger.
+    const char* severityString = nullptr;
+    switch (severity.e) {
+        case Fw::LogSeverity::FATAL:
+            severityString = "FATAL";
+            break;
+        case Fw::LogSeverity::WARNING_HI:
+            severityString = "WARNING_HI";
+            break;
+        case Fw::LogSeverity::WARNING_LO:
+            severityString = "WARNING_LO";
+            break;
+        case Fw::LogSeverity::COMMAND:
+            severityString = "COMMAND";
+            break;
+        case Fw::LogSeverity::ACTIVITY_HI:
+            severityString = "ACTIVITY_HI";
+            break;
+        case Fw::LogSeverity::ACTIVITY_LO:
+            severityString = "ACTIVITY_LO";
+            break;
+        case Fw::LogSeverity::DIAGNOSTIC:
+            severityString = "DIAGNOSTIC";
+            break;
+        default:
+            severityString = "SEVERITY ERROR";
+            break;
+    }
+    // Overflow is allowed and truncation accepted
+    Fw::InternalInterfaceString intText;
+    (void)intText.format("EVENT: (%" PRI_FwEventIdType ") (%" PRI_FwTimeBaseStoreType ":%" PRIu32 ",%" PRIu32
+                         ") %s: %s\n",
+                         id, static_cast<FwTimeBaseStoreType>(timeTag.getTimeBase()), timeTag.getSeconds(),
+                         timeTag.getUSeconds(), severityString, text.toChar());
+
+    // Call internal interface so that everything else is done on component thread,
+    // this helps ensure consistent ordering of the printed text:
+    this->TextQueue_internalInterfaceInvoke(intText);
+}
+
+// ----------------------------------------------------------------------
+// Internal interface handlers
+// ----------------------------------------------------------------------
+
+void ActiveTextLogger::TextQueue_internalInterfaceHandler(const Fw::InternalInterfaceString& text) {
+    // Print to console:
+    Fw::Logger::log(text);
+
+    // Print to file if there is one:
+    (void)this->m_log_file.write_to_log(text.toChar(), text.length());  // Ignoring return status
+}
+
+// ----------------------------------------------------------------------
+// Helper Methods
+// ----------------------------------------------------------------------
+
+bool ActiveTextLogger::set_log_file(const char* fileName, const U32 maxSize, const U32 maxBackups) {
+    FW_ASSERT(fileName != nullptr);
+
+    return this->m_log_file.set_log_file(fileName, maxSize, maxBackups);
+}
+
+}  // namespace Svc
+```
+
+### `ActiveTextLogger.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for printing text logs to the console and optionally a file
+  active component ActiveTextLogger {
+
+    @ Logging port
+    sync input port TextLogger: Fw.LogText
+
+    @ Internal interface to send log text messages to component thread
+    internal port TextQueue(
+                             $text: string size 256 @< The text string
+                           ) \
+      priority 1 \
+      drop
+
+  }
+
+}
+```
+
+### `ActiveTextLogger.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/ActiveTextLogger.hpp`
+
+
+```cpp
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef ACTIVETEXTLOGGERIMPL_HPP_
+#define ACTIVETEXTLOGGERIMPL_HPP_
+
+#include <Svc/ActiveTextLogger/ActiveTextLoggerComponentAc.hpp>
+#include <Svc/ActiveTextLogger/LogFile.hpp>
+
+namespace Svc {
+
+//! \class ActiveTextLoggerComponent
+//! \brief Active text logger component class
+//!
+//! Similarly to the PassiveTextLogger, this component takes log texts
+//! and prints them to the console, but does so from a thread to keep
+//! consistent ordering.  It also provides the option to write the text
+//! to a file as well.
+
+class ActiveTextLogger final : public ActiveTextLoggerComponentBase {
+    friend class ActiveTextLoggerTester;
+
+  public:
+    //!  \brief Component constructor
+    //!
+    //!  The constructor initializes the state of the component.
+    //!
+    //!  Note: Making constructor explicit to prevent implicit
+    //!  type conversion.
+    //!
+    //!  \param compName the component instance name
+    explicit ActiveTextLogger(const char* compName);
+
+    //!  \brief Component destructor
+    //!
+    virtual ~ActiveTextLogger();  //!< destructor
+
+    //!  \brief Set log file and max size
+    //!
+    //!  This is to create an optional log file to write all the messages to.
+    //!  The file will not be written to once the max size is hit.
+    //!
+    //!  \param fileName The name of the file to create.  Must be less than 80 characters.
+    //!  \param maxSize The max size of the file
+    //!  \param maxBackups The maximum backups of the log file. Default: 10
+    //!
+    //!  \return true if creating the file was successful, false otherwise
+    bool set_log_file(const char* fileName, const U32 maxSize, const U32 maxBackups = 10);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Prohibit Copying
+    // ----------------------------------------------------------------------
+
+    /*! \brief Copy constructor
+     *
+     */
+    ActiveTextLogger(const ActiveTextLogger&);
+
+    /*! \brief Copy assignment operator
+     *
+     */
+    ActiveTextLogger& operator=(const ActiveTextLogger&);
+
+    // ----------------------------------------------------------------------
+    // Constants/Types
+    // ----------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------
+    // Member Functions
+    // ----------------------------------------------------------------------
+
+    // ----------------------------------------------------------------------
+    // Handlers to implement for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for input port TextLogger
+    //
+    virtual void TextLogger_handler(FwIndexType portNum,             /*!< The port number*/
+                                    FwEventIdType id,                /*!< Log ID*/
+                                    Fw::Time& timeTag,               /*!< Time Tag*/
+                                    const Fw::LogSeverity& severity, /*!< The severity argument*/
+                                    Fw::TextLogString& text          /*!< Text of log message*/
+    );
+
+    // ----------------------------------------------------------------------
+    // Internal interface handlers
+    // ----------------------------------------------------------------------
+
+    //! Internal Interface handler for TextQueue
+    //!
+    virtual void TextQueue_internalInterfaceHandler(const Fw::InternalInterfaceString& text /*!< The text string*/
+    );
+
+    // ----------------------------------------------------------------------
+    // Member Variables
+    // ----------------------------------------------------------------------
+
+    // The optional file to text logs to:
+    LogFile m_log_file;
+};
+
+}  // namespace Svc
+#endif /* ACTIVETEXTLOGGERIMPL_HPP_ */
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveTextLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ActiveTextLogger.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/LogFile.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/ActiveTextLogger/ActiveTextLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ActiveTextLoggerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ActiveTextLoggerTestMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `LogFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/LogFile.cpp`
+
+
+```cpp
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+#include <Svc/ActiveTextLogger/LogFile.hpp>
+#include <cstdio>
+#include <cstring>
+#include <limits>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Initialization/Exiting
+// ----------------------------------------------------------------------
+
+LogFile::LogFile() : m_fileName(), m_file(), m_maxFileSize(0), m_openFile(false), m_currentFileSize(0) {}
+
+LogFile::~LogFile() {
+    // Close the file if needed:
+    if (this->m_openFile) {
+        this->m_file.close();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Member Functions
+// ----------------------------------------------------------------------
+
+bool LogFile::write_to_log(const char* const buf, const FwSizeType size) {
+    FW_ASSERT(buf != nullptr);
+
+    bool status = true;
+
+    // Print to file if there is one, and given a valid size:
+    if (this->m_openFile && size > 0) {
+        // Make sure we won't exceed the maximum size:
+        // Note: second condition in if statement is true if there is overflow
+        // in the addition below
+        FwSizeType projectedSize = this->m_currentFileSize + size;
+        if (projectedSize > this->m_maxFileSize ||
+            (this->m_currentFileSize > (std::numeric_limits<FwSizeType>::max() - size))) {
+            status = false;
+            this->m_openFile = false;
+            this->m_file.close();
+        }
+        // Won't exceed max size, so write to file:
+        else {
+            FwSizeType writeSize = size;
+            Os::File::Status stat = this->m_file.write(reinterpret_cast<const U8*>(buf), writeSize, Os::File::WAIT);
+
+            // Assert that we are not trying to write to a file we never opened:
+            FW_ASSERT(stat != Os::File::NOT_OPENED);
+
+            // Only return a good status if the write was valid
+            status = (stat == Os::File::OP_OK) && (static_cast<FwSizeType>(writeSize) == size);
+
+            this->m_currentFileSize += static_cast<FwSizeType>(writeSize);
+        }
+    }
+
+    return status;
+}
+
+bool LogFile::set_log_file(const char* fileName, const FwSizeType maxSize, const FwSizeType maxBackups) {
+    FW_ASSERT(fileName != nullptr);
+
+    // If there is already a previously open file then close it:
+    if (this->m_openFile) {
+        this->m_openFile = false;
+        this->m_file.close();
+    }
+    Fw::FileNameString searchFilename;
+    Fw::FormatStatus formatStatus = searchFilename.format("%s", fileName);
+
+    // If file name is too large, return failure:
+    if (formatStatus != Fw::FormatStatus::SUCCESS) {
+        return false;
+    }
+
+    // Check if file already exists, and if it does try to tack on a suffix.
+    // Quit after maxBackups suffix addition tries (first try is w/ the original name).
+    U32 suffix = 0;
+    bool failedSuffix = false;
+    FwSizeType fileSize = 0;
+    while (Os::FileSystem::getFileSize(searchFilename.toChar(), fileSize) == Os::FileSystem::OP_OK) {
+        // Not able to create a new non-existing file in maxBackups tries, then mark that it failed:
+        if (suffix >= maxBackups) {
+            failedSuffix = true;
+            break;
+        }
+        // Format and check for error and overflows
+        formatStatus = searchFilename.format("%s%" PRIu32, fileName, suffix);
+        if (formatStatus != Fw::FormatStatus::SUCCESS) {
+            return false;
+        }
+        ++suffix;
+    }
+
+    // If failed trying to make a new file, just use the original file
+    if (failedSuffix) {
+        searchFilename = fileName;
+    }
+
+    // Open the file (using CREATE so that it truncates an already existing file):
+    Os::File::Status stat =
+        this->m_file.open(searchFilename.toChar(), Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE);
+
+    // Bad status when trying to open the file:
+    if (stat != Os::File::OP_OK) {
+        return false;
+    }
+
+    this->m_currentFileSize = 0;
+    this->m_maxFileSize = maxSize;
+    this->m_fileName = searchFilename;
+    this->m_openFile = true;
+
+    return true;
+}
+
+}  // namespace Svc
+```
+
+### `LogFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveTextLogger/LogFile.hpp`
+
+
+```cpp
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef SVCLOGFILE_HPP_
+#define SVCLOGFILE_HPP_
+
+#include <Fw/Types/FileNameString.hpp>
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+
+namespace Svc {
+
+//! \class LogFile
+//! \brief LogFile struct
+//!
+//! The object is used for writing to a log file.  Making it a struct so all
+//! members are public, for ease of use in object composition.
+
+struct LogFile {
+    //!  \brief Constructor
+    //!
+    LogFile();
+
+    //!  \brief Destructor
+    //!
+    ~LogFile();
+
+    // ----------------------------------------------------------------------
+    // Member Functions
+    // ----------------------------------------------------------------------
+
+    //!  \brief Set log file and max size
+    //!
+    //!  \param fileName The name of the file to create.  Must be less than 80 characters.
+    //!  \param maxSize The max size of the file
+    //!  \param maxBackups The max backups for the file. Default: 10
+    //!
+    //!  \return true if creating the file was successful, false otherwise
+    bool set_log_file(const char* fileName, const FwSizeType maxSize, const FwSizeType maxBackups = 10);
+
+    //!  \brief Write the passed buf to the log if possible
+    //!
+    //!  \param buf The buffer of data to write
+    //!  \param size The size of buf
+    //!
+    //!  \return true if writing to the file was successful, false otherwise
+    bool write_to_log(const char* const buf, const FwSizeType size);
+
+    // ----------------------------------------------------------------------
+    // Member Variables
+    // ----------------------------------------------------------------------
+
+    // The name of the file to text logs to:
+    Fw::FileNameString m_fileName;
+
+    // The file to write text logs to:
+    Os::File m_file;
+
+    // The max size of the text log file:
+    FwSizeType m_maxFileSize;
+
+    // True if there is currently an open file to write text logs to:
+    bool m_openFile;
+
+    // Current size of the file:
+    FwSizeType m_currentFileSize;
+};
+
+}  // namespace Svc
+#endif /* SVCLOGFILEL_HPP_ */
+```

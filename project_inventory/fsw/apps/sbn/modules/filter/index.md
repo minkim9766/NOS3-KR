@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/modules/filter/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ remap/index
 test/index
 ```
 
-## 항목
-
-- [`fsw/apps/sbn/modules/filter/ccsds_end/`](ccsds_end/index) — 폴더
-- [`fsw/apps/sbn/modules/filter/remap/`](remap/index) — 폴더
-- [`fsw/apps/sbn/modules/filter/test/`](test/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,28 +3,623 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--Time.cpp
-file--Time.fpp
-file--Time.hpp
-file--TimeInterval.cpp
-file--TimeInterval.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.cpp`](file--Time.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.fpp`](file--Time.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.hpp`](file--Time.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/TimeInterval.cpp`](file--TimeInterval.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/TimeInterval.hpp`](file--TimeInterval.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Time.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Time.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/TimeInterval.cpp"
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TimeTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TimeTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TimeIntervalTester.cpp"
+)
+set(UT_MOD_DEPS
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Time"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Types"
+)
+register_fprime_ut()
+```
+
+### `Time.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/Time.hpp>
+
+namespace Fw {
+const Time ZERO_TIME = Time();
+
+Time::Time() : m_val() {
+    m_val.set_timeBase(TimeBase::TB_NONE);
+    m_val.set_timeContext(0);
+    m_val.set_seconds(0);
+    m_val.set_useconds(0);
+}
+
+Time::~Time() {}
+
+Time::Time(const Time& other) : Serializable() {
+    this->set(other.m_val.get_timeBase(), other.m_val.get_timeContext(), other.m_val.get_seconds(),
+              other.m_val.get_useconds());
+}
+
+Time::Time(U32 seconds, U32 useconds) {
+    this->set(TimeBase::TB_NONE, 0, seconds, useconds);
+}
+
+Time::Time(TimeBase timeBase, U32 seconds, U32 useconds) {
+    this->set(timeBase, 0, seconds, useconds);
+}
+
+void Time::set(U32 seconds, U32 useconds) {
+    this->set(this->m_val.get_timeBase(), this->m_val.get_timeContext(), seconds, useconds);
+}
+
+void Time::set(TimeBase timeBase, U32 seconds, U32 useconds) {
+    this->set(timeBase, this->m_val.get_timeContext(), seconds, useconds);
+}
+
+Time::Time(TimeBase timeBase, FwTimeContextStoreType context, U32 seconds, U32 useconds) {
+    this->set(timeBase, context, seconds, useconds);
+}
+
+void Time::set(TimeBase timeBase, FwTimeContextStoreType context, U32 seconds, U32 useconds) {
+    this->m_val.set(timeBase, context, seconds, useconds);
+}
+
+Time& Time::operator=(const Time& other) {
+    if (this != &other) {
+        this->m_val = other.m_val;
+    }
+    return *this;
+}
+
+bool Time::operator==(const Time& other) const {
+    return (Time::compare(*this, other) == EQ);
+}
+
+bool Time::operator!=(const Time& other) const {
+    return (Time::compare(*this, other) != EQ);
+}
+
+bool Time::operator>(const Time& other) const {
+    return (Time::compare(*this, other) == GT);
+}
+
+bool Time::operator<(const Time& other) const {
+    return (Time::compare(*this, other) == LT);
+}
+
+bool Time::operator>=(const Time& other) const {
+    Time::Comparison c = Time::compare(*this, other);
+    return ((GT == c) or (EQ == c));
+}
+
+bool Time::operator<=(const Time& other) const {
+    Time::Comparison c = Time::compare(*this, other);
+    return ((LT == c) or (EQ == c));
+}
+
+SerializeStatus Time::serializeTo(SerializeBufferBase& buffer) const {
+    return this->m_val.serializeTo(buffer);
+}
+
+SerializeStatus Time::deserializeFrom(SerializeBufferBase& buffer) {
+    return this->m_val.deserializeFrom(buffer);
+}
+
+U32 Time::getSeconds() const {
+    return this->m_val.get_seconds();
+}
+
+U32 Time::getUSeconds() const {
+    return this->m_val.get_useconds();
+}
+
+TimeBase Time::getTimeBase() const {
+    return this->m_val.get_timeBase();
+}
+
+FwTimeContextStoreType Time::getContext() const {
+    return this->m_val.get_timeContext();
+}
+
+Time Time ::zero(TimeBase timeBase) {
+    Time time(timeBase, 0, 0, 0);
+    return time;
+}
+
+Time::Comparison Time ::compare(const Time& time1, const Time& time2) {
+    if (time1.getTimeBase() != time2.getTimeBase()) {
+        return INCOMPARABLE;
+    }
+
+    // Do not compare time context
+
+    const U32 s1 = time1.getSeconds();
+    const U32 s2 = time2.getSeconds();
+    const U32 us1 = time1.getUSeconds();
+    const U32 us2 = time2.getUSeconds();
+
+    if (s1 < s2) {
+        return LT;
+    } else if (s1 > s2) {
+        return GT;
+    } else if (us1 < us2) {
+        return LT;
+    } else if (us1 > us2) {
+        return GT;
+    } else {
+        return EQ;
+    }
+}
+
+Time Time ::add(const Time& a, const Time& b) {
+    FW_ASSERT(a.getTimeBase() == b.getTimeBase(), static_cast<FwAssertArgType>(a.getTimeBase()),
+              static_cast<FwAssertArgType>(b.getTimeBase()));
+    // Do not assert on time context match
+
+    U32 seconds = a.getSeconds() + b.getSeconds();
+    U32 uSeconds = a.getUSeconds() + b.getUSeconds();
+    FW_ASSERT(uSeconds < 1999999);
+    if (uSeconds >= 1000000) {
+        ++seconds;
+        uSeconds -= 1000000;
+    }
+
+    // Return a time context of 0 if they do not match
+    FwTimeContextStoreType context = a.getContext();
+    if (a.getContext() != b.getContext()) {
+        context = 0;
+    }
+
+    Time c(a.getTimeBase(), context, seconds, uSeconds);
+    return c;
+}
+
+Time Time ::sub(const Time& minuend,    //!< Time minuend
+                const Time& subtrahend  //!< Time subtrahend
+) {
+    FW_ASSERT(minuend.getTimeBase() == subtrahend.getTimeBase(), static_cast<FwAssertArgType>(minuend.getTimeBase()),
+              static_cast<FwAssertArgType>(subtrahend.getTimeBase()));
+    // Do not assert on time context match
+    // Assert minuend is greater than subtrahend
+    FW_ASSERT(minuend >= subtrahend);
+
+    U32 seconds = minuend.getSeconds() - subtrahend.getSeconds();
+    U32 uSeconds;
+    if (subtrahend.getUSeconds() > minuend.getUSeconds()) {
+        seconds--;
+        uSeconds = minuend.getUSeconds() + 1000000 - subtrahend.getUSeconds();
+    } else {
+        uSeconds = minuend.getUSeconds() - subtrahend.getUSeconds();
+    }
+
+    // Return a time context of 0 if they do not match
+    FwTimeContextStoreType context = minuend.getContext();
+    if (minuend.getContext() != subtrahend.getContext()) {
+        context = 0;
+    }
+
+    return Time(minuend.getTimeBase(), context, seconds, static_cast<U32>(uSeconds));
+}
+
+void Time::add(U32 seconds, U32 useconds) {
+    U32 newSeconds = this->m_val.get_seconds() + seconds;
+    U32 newUSeconds = this->m_val.get_useconds() + useconds;
+    FW_ASSERT(newUSeconds < 1999999, static_cast<FwAssertArgType>(newUSeconds));
+    if (newUSeconds >= 1000000) {
+        newSeconds += 1;
+        newUSeconds -= 1000000;
+    }
+    this->set(newSeconds, newUSeconds);
+}
+
+void Time::setTimeBase(TimeBase timeBase) {
+    this->m_val.set_timeBase(timeBase);
+}
+
+void Time::setTimeContext(FwTimeContextStoreType context) {
+    this->m_val.set_timeContext(context);
+}
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const Time& val) {
+    os << "(" << val.getTimeBase() << "," << val.getUSeconds() << "," << val.getSeconds() << ")";
+    return os;
+}
+#endif
+
+}  // namespace Fw
+```
+
+### `Time.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.fpp`
+
+
+```fpp
+module Fw {
+  
+  @ Data structure for Time 
+  struct TimeValue {
+    timeBase: TimeBase  @< basis of time (defined by system)
+    timeContext: FwTimeContextStoreType  @< user settable value. Could be reboot count, node, etc
+    seconds: U32  @< seconds portion of Time
+    useconds: U32  @< microseconds portion of Time
+  }
+
+  type Time
+
+  @ Time port
+  port Time(
+    ref $time: Fw.Time @< Reference to Time object
+  )
+
+  @ Data structure for Time Interval
+  struct TimeIntervalValue {
+    seconds: U32  @< seconds portion of TimeInterval
+    useconds: U32  @< microseconds portion of TimeInterval
+  }
+
+  type TimeInterval
+
+  @ Time interval port
+  port TimeInterval(
+    ref timeInterval: Fw.TimeInterval @< Reference to TimeInterval object
+  )
+
+}
+```
+
+### `Time.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/Time.hpp`
+
+
+```cpp
+#ifndef FW_TIME_HPP
+#define FW_TIME_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/TimeValueSerializableAc.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <config/TimeBaseEnumAc.hpp>
+
+namespace Fw {
+class Time : public Serializable {
+    friend class TimeTester;
+
+  public:
+    enum { SERIALIZED_SIZE = sizeof(FwTimeBaseStoreType) + sizeof(FwTimeContextStoreType) + sizeof(U32) + sizeof(U32) };
+
+    Time();                                              // !< Default constructor
+    Time(const Time& other);                             // !< Copy constructor
+    Time(U32 seconds, U32 useconds);                     // !< Constructor with member values as arguments
+    Time(TimeBase timeBase, U32 seconds, U32 useconds);  // !< Constructor with member values as arguments
+    Time(TimeBase timeBase,
+         FwTimeContextStoreType context,
+         U32 seconds,
+         U32 useconds);                                      // !< Constructor with member values as arguments
+    virtual ~Time();                                         // !< Destructor
+    void set(U32 seconds, U32 useconds);                     // !< Sets value of time stored
+    void set(TimeBase timeBase, U32 seconds, U32 useconds);  // !< Sets value of time stored
+    void set(TimeBase timeBase,
+             FwTimeContextStoreType context,
+             U32 seconds,
+             U32 useconds);  // !< Sets value of time stored
+    void setTimeBase(TimeBase timeBase);
+    void setTimeContext(FwTimeContextStoreType context);
+    U32 getSeconds() const;   // !< Gets seconds part of time
+    U32 getUSeconds() const;  // !< Gets microseconds part of time
+    TimeBase getTimeBase()
+        const;  // !< Time base of time. This is project specific and is meant for indicating different sources of time
+    FwTimeContextStoreType getContext() const;                                // !< get the context value
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;  // !< Serialize method
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;    // !< Deserialize method
+    bool operator==(const Time& other) const;
+    bool operator!=(const Time& other) const;
+    bool operator>(const Time& other) const;
+    bool operator<(const Time& other) const;
+    bool operator>=(const Time& other) const;
+    bool operator<=(const Time& other) const;
+    Time& operator=(const Time& other);
+
+    // Static methods:
+    //! The type of a comparison result
+    typedef enum { LT = -1, EQ = 0, GT = 1, INCOMPARABLE = 2 } Comparison;
+
+    //! \return time zero
+    static Time zero(TimeBase timeBase = TimeBase::TB_NONE);
+
+    //! Compare two times
+    //! \return The result
+    static Comparison compare(const Time& time1,  //!< Time 1
+                              const Time& time2   //!< Time 2
+    );
+
+    //! Add two times
+    //! \return The result
+    static Time add(const Time& a,  //!< Time a
+                    const Time& b   //!< Time b
+    );
+
+    //! Subtract subtrahend from minuend
+    //! \return The result
+    static Time sub(const Time& minuend,    //!< Value being subtracted from
+                    const Time& subtrahend  //!< Value being subtracted
+    );
+
+    // add seconds and microseconds to existing time
+    void add(U32 seconds, U32 mseconds);
+
+#ifdef BUILD_UT  // Stream operators to support Googletest
+    friend std::ostream& operator<<(std::ostream& os, const Time& val);
+#endif
+  private:
+    TimeValue m_val;  // !< Time value
+};
+extern const Time ZERO_TIME;
+
+}  // namespace Fw
+
+#endif
+```
+
+### `TimeInterval.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/TimeInterval.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/TimeInterval.hpp>
+
+namespace Fw {
+TimeInterval::TimeInterval(const TimeInterval& other) : Serializable() {
+    this->m_val = other.m_val;
+}
+
+TimeInterval::TimeInterval(U32 seconds, U32 useconds) : Serializable() {
+    this->set(seconds, useconds);
+}
+
+void TimeInterval::set(U32 seconds, U32 useconds) {
+    this->m_val.set(seconds, useconds);
+}
+
+TimeInterval& TimeInterval::operator=(const TimeInterval& other) {
+    if (this != &other) {
+        this->m_val = other.m_val;
+    }
+    return *this;
+}
+
+bool TimeInterval::operator==(const TimeInterval& other) const {
+    return (TimeInterval::compare(*this, other) == EQ);
+}
+
+bool TimeInterval::operator!=(const TimeInterval& other) const {
+    return (TimeInterval::compare(*this, other) != EQ);
+}
+
+bool TimeInterval::operator>(const TimeInterval& other) const {
+    return (TimeInterval::compare(*this, other) == GT);
+}
+
+bool TimeInterval::operator<(const TimeInterval& other) const {
+    return (TimeInterval::compare(*this, other) == LT);
+}
+
+bool TimeInterval::operator>=(const TimeInterval& other) const {
+    TimeInterval::Comparison c = TimeInterval::compare(*this, other);
+    return ((GT == c) or (EQ == c));
+}
+
+bool TimeInterval::operator<=(const TimeInterval& other) const {
+    TimeInterval::Comparison c = TimeInterval::compare(*this, other);
+    return ((LT == c) or (EQ == c));
+}
+
+SerializeStatus TimeInterval::serializeTo(SerializeBufferBase& buffer) const {
+    // Use TimeIntervalValue's built-in serialization
+    return this->m_val.serializeTo(buffer);
+}
+
+SerializeStatus TimeInterval::deserializeFrom(SerializeBufferBase& buffer) {
+    // Use TimeIntervalValue's built-in deserialization
+    return this->m_val.deserializeFrom(buffer);
+}
+
+U32 TimeInterval::getSeconds() const {
+    return this->m_val.get_seconds();
+}
+
+U32 TimeInterval::getUSeconds() const {
+    return this->m_val.get_useconds();
+}
+
+TimeInterval::Comparison TimeInterval ::compare(const TimeInterval& time1, const TimeInterval& time2) {
+    const U32 s1 = time1.getSeconds();
+    const U32 s2 = time2.getSeconds();
+    const U32 us1 = time1.getUSeconds();
+    const U32 us2 = time2.getUSeconds();
+
+    if (s1 < s2) {
+        return LT;
+    } else if (s1 > s2) {
+        return GT;
+    } else if (us1 < us2) {
+        return LT;
+    } else if (us1 > us2) {
+        return GT;
+    } else {
+        return EQ;
+    }
+}
+
+TimeInterval TimeInterval ::add(const TimeInterval& a, const TimeInterval& b) {
+    U32 seconds = a.getSeconds() + b.getSeconds();
+    U32 uSeconds = a.getUSeconds() + b.getUSeconds();
+    FW_ASSERT(uSeconds < 1999999);
+    if (uSeconds >= 1000000) {
+        ++seconds;
+        uSeconds -= 1000000;
+    }
+    TimeInterval c(seconds, uSeconds);
+    return c;
+}
+
+TimeInterval TimeInterval ::sub(const TimeInterval& t1,  //!< TimeInterval t1
+                                const TimeInterval& t2   //!< TimeInterval t2
+) {
+    const TimeInterval& minuend = (t1 > t2) ? t1 : t2;
+    const TimeInterval& subtrahend = (t1 > t2) ? t2 : t1;
+
+    U32 seconds = minuend.getSeconds() - subtrahend.getSeconds();
+    U32 uSeconds;
+    if (subtrahend.getUSeconds() > minuend.getUSeconds()) {
+        seconds--;
+        uSeconds = minuend.getUSeconds() + 1000000 - subtrahend.getUSeconds();
+    } else {
+        uSeconds = minuend.getUSeconds() - subtrahend.getUSeconds();
+    }
+    return TimeInterval(seconds, static_cast<U32>(uSeconds));
+}
+
+void TimeInterval::add(U32 seconds, U32 useconds) {
+    U32 newSeconds = this->m_val.get_seconds() + seconds;
+    U32 newUSeconds = this->m_val.get_useconds() + useconds;
+    FW_ASSERT(newUSeconds < 1999999, static_cast<FwAssertArgType>(newUSeconds));
+    if (newUSeconds >= 1000000) {
+        newSeconds += 1;
+        newUSeconds -= 1000000;
+    }
+    this->m_val.set(newSeconds, newUSeconds);
+}
+
+#ifdef BUILD_UT
+std::ostream& operator<<(std::ostream& os, const TimeInterval& val) {
+    os << "(" << val.getSeconds() << "s," << val.getUSeconds() << "us)";
+    return os;
+}
+#endif
+
+}  // namespace Fw
+```
+
+### `TimeInterval.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/TimeInterval.hpp`
+
+
+```cpp
+#ifndef FW_TIME_INTERVAL_HPP
+#define FW_TIME_INTERVAL_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Time/TimeIntervalValueSerializableAc.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+//!
+//! @class TimeInterval
+//! @brief A class to represent a time interval holding two U32 seconds and microseconds values.
+//!
+//! The TimeInterval class is designed to hold a time interval and provides various methods
+//! to manipulate and compare time intervals. It supports serialization and deserialization
+//! for easy storage and transmission.
+//!
+namespace Fw {
+
+class TimeInterval : public Serializable {
+  public:
+    enum { SERIALIZED_SIZE = sizeof(U32) * 2 };
+
+    TimeInterval() = default;                 // !< Default constructor
+    ~TimeInterval() = default;                // !< Default destructor
+    TimeInterval(const TimeInterval& other);  // !< Copy constructor
+    TimeInterval(U32 seconds, U32 useconds);  // !< Constructor with member values as arguments
+    void set(U32 seconds, U32 useconds);      // !< Sets value of time stored
+    U32 getSeconds() const;                   // !< Gets seconds part of time
+    U32 getUSeconds() const;                  // !< Gets microseconds part of time
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;  // !< Serialize method
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;    // !< Deserialize method
+    void add(U32 seconds, U32 mseconds);  // !< Add seconds and microseconds to existing time interval
+    bool operator==(const TimeInterval& other) const;
+    bool operator!=(const TimeInterval& other) const;
+    bool operator>(const TimeInterval& other) const;
+    bool operator<(const TimeInterval& other) const;
+    bool operator>=(const TimeInterval& other) const;
+    bool operator<=(const TimeInterval& other) const;
+    TimeInterval& operator=(const TimeInterval& other);
+
+    //! The type of a comparison result
+    typedef enum { LT = -1, EQ = 0, GT = 1, INCOMPARABLE = 2 } Comparison;
+
+    //! Compare two time intervals
+    //! A time interval is considered greater than another if it spans a longer duration
+    //! The comparison is done on the seconds first, then the microseconds if the seconds are equal
+    //! \return TimeInterval result
+    static Comparison compare(const TimeInterval& time1,  //!< TimeInterval 1
+                              const TimeInterval& time2   //!< TimeInterval 2
+    );
+
+    //! Add two time intervals
+    //! Adds the seconds and microseconds fields of two time intervals together
+    //! \return TimeInterval result
+    static TimeInterval add(const TimeInterval& a,  //!< TimeInterval a
+                            const TimeInterval& b   //!< TimeInterval b
+    );
+
+    //! Subtract two time intervals
+    //! This computes the absolute value of the difference between two time intervals
+    //! For example if t1=(0s, 5us) and t2=(0s, 3us), the result is (0s, 2us).
+    //! This operation is commutative, i.e. the result is the same regardless of the order of the arguments.
+    //! \return TimeInterval result
+    static TimeInterval sub(const TimeInterval& t1,  //!< TimeInterval 1
+                            const TimeInterval& t2   //!< TimeInterval 2
+    );
+
+#ifdef BUILD_UT  // Stream operators to support Googletest
+    friend std::ostream& operator<<(std::ostream& os, const TimeInterval& val);
+#endif
+  private:
+    TimeIntervalValue m_val;  // !< TimeInterval value
+};
+
+}  // namespace Fw
+
+#endif
+```

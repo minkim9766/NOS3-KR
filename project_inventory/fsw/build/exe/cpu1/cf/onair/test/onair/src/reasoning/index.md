@@ -3,18 +3,22 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_agent.py`
 
-file--test_agent.py
-file--test_complex_resoning_interface.py
-file--test_diagnosis.py
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_agent.py`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_agent.py`](file--test_agent.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_complex_resoning_interface.py`](file--test_complex_resoning_interface.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_diagnosis.py`](file--test_diagnosis.py) — 빌드 산출물 (경로만)
+### `test_complex_resoning_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_complex_resoning_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `test_diagnosis.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/reasoning/test_diagnosis.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

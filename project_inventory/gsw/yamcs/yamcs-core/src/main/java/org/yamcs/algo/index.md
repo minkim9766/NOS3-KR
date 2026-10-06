@@ -3,34 +3,690 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BitMaskBooleanDecoder.java`
 
-file--BitMaskBooleanDecoder.java
-file--HexStringDecoder.java
-file--LeadingSizeBinaryDecoder.java
-file--LeadingSizeBinaryEncoder.java
-file--README.md
-file--RemainingBinaryDecoder.java
-file--ReverseBinaryDecoder.java
-file--ReverseBinaryEncoder.java
-file--TcoCalibrator.java
-file--TimeBinaryDecoder.java
-file--TimeBinaryEncoder.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/BitMaskBooleanDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * Decoder that returns a <em>boolean</em> true if the read bytes has all bits set of the provided bit mask.
+ */
+public class BitMaskBooleanDecoder extends AbstractDataDecoder {
+
+    private long mask;
+
+    public BitMaskBooleanDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, byte mask) {
+        this.mask = mask;
+    }
+
+    public BitMaskBooleanDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, short mask) {
+        this.mask = mask;
+    }
+
+    public BitMaskBooleanDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, int mask) {
+        this.mask = mask;
+    }
+
+    public BitMaskBooleanDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, long mask) {
+        this.mask = mask;
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buffer) {
+        var sizeInBits = de.getSizeInBits();
+        if (sizeInBits < 0) {
+            throw new IllegalArgumentException("Cannot decode boolean parameter. Size is not fixed");
+        }
+
+        if (sizeInBits % 8 != 0) {
+            throw new IllegalArgumentException("Cannot decode boolean parameter. Bit size should be multiple of 8");
+        }
+
+        var sizeInBytes = sizeInBits / 8;
+        if (sizeInBytes > Long.BYTES) {
+            throw new IndexOutOfBoundsException("Cannot decode boolean parameter of size " + sizeInBytes
+                    + ". Masking only supports up to 8 bytes");
+        }
+
+        if (sizeInBytes > buffer.remainingBytes()) {
+            throw new IndexOutOfBoundsException("Cannot decode boolean parameter of size " + sizeInBytes
+                    + ". Remaining in the buffer: " + buffer.remainingBytes());
+        }
+
+        var bytes = new byte[sizeInBytes];
+        buffer.getByteArray(bytes);
+
+        long value = 0;
+        for (byte b : bytes) {
+            value = (value << 8) + (b & 0xFF);
+        }
+
+        var booleanValue = (mask & value) == mask;
+        return ValueUtility.getBooleanValue(booleanValue);
+    }
+}
 ```
 
-## 항목
+### `HexStringDecoder.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/BitMaskBooleanDecoder.java`](file--BitMaskBooleanDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/HexStringDecoder.java`](file--HexStringDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/LeadingSizeBinaryDecoder.java`](file--LeadingSizeBinaryDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/LeadingSizeBinaryEncoder.java`](file--LeadingSizeBinaryEncoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/RemainingBinaryDecoder.java`](file--RemainingBinaryDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/ReverseBinaryDecoder.java`](file--ReverseBinaryDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/ReverseBinaryEncoder.java`](file--ReverseBinaryEncoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TcoCalibrator.java`](file--TcoCalibrator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TimeBinaryDecoder.java`](file--TimeBinaryDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TimeBinaryEncoder.java`](file--TimeBinaryEncoder.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/HexStringDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.BinaryDataEncoding;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * Decoder that returns the <em>string</em> value in hex format of read bytes. This is intended to be used for special
+ * use cases where the hex value represents the actual string value.
+ * <p>
+ * This is intended to be used with a custom transformation for the {@link BinaryDataEncoding} of a string parameter.
+ * <p>
+ * The implementation assumes a fixed-size encoding.
+ * <p>
+ * The following XTCE snippet illustrates intended usage.
+ * 
+ * <pre>
+ * &lt;StringParameterType name="gitHash"&gt;
+ *   &lt;BinaryDataEncoding&gt;
+ *     &lt;SizeInBits&gt;
+ *       &lt;FixedValue&gt;160&lt;/FixedValue&gt;
+ *     &lt;/SizeInBits&gt;
+ *     &lt;FromBinaryTransformAlgorithm name="org_yamcs_algo_HexStringDecoder"&gt;
+ *       &lt;AlgorithmText language="java"&gt;org.yamcs.algo.HexStringDecoder&lt;/AlgorithmText&gt;
+ *     &lt;/FromBinaryTransformAlgorithm&gt;
+ *   &lt;/BinaryDataEncoding&gt;
+ * &lt;/StringParameterType&gt;
+ * </pre>
+ */
+public class HexStringDecoder extends AbstractDataDecoder {
+
+    public HexStringDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx) {
+        // Constructor required
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buffer) {
+        var sizeInBits = de.getSizeInBits();
+        if (sizeInBits < 0) {
+            throw new IllegalArgumentException("Cannot decode string parameter. Size is not fixed");
+        }
+
+        if (sizeInBits % 8 != 0) {
+            throw new IllegalArgumentException("Cannot decode string parameter. Bit size should be multiple of 8");
+        }
+
+        var sizeInBytes = sizeInBits / 8;
+        if (sizeInBytes > buffer.remainingBytes()) {
+            throw new IndexOutOfBoundsException("Cannot decode string parameter of size " + sizeInBytes
+                    + ". Remaining in the buffer: " + buffer.remainingBytes());
+        }
+
+        var barr = new byte[sizeInBytes];
+        buffer.getByteArray(barr);
+
+        var hex = StringConverter.arrayToHexString(barr).toLowerCase();
+        return ValueUtility.getStringValue(hex);
+    }
+}
+```
+
+### `LeadingSizeBinaryDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/LeadingSizeBinaryDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+public class LeadingSizeBinaryDecoder extends AbstractDataDecoder {
+
+    int sizeInBitsOfSizeTag = 16;
+
+    public LeadingSizeBinaryDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, Integer sizeInBitsOfSizeTag) {
+        this.sizeInBitsOfSizeTag = sizeInBitsOfSizeTag;
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buffer) {
+        int sizeInBytes = (int) buffer.getBits(sizeInBitsOfSizeTag);
+
+        if (sizeInBytes > buffer.remainingBytes()) {
+            throw new IndexOutOfBoundsException("Cannot extract binary parameter of size " + sizeInBytes
+                    + ". Remaining in the buffer: " + buffer.remainingBytes());
+        }
+        byte[] b = new byte[sizeInBytes];
+        buffer.getByteArray(b);
+        return ValueUtility.getBinaryValue(b);
+    }
+}
+```
+
+### `LeadingSizeBinaryEncoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/LeadingSizeBinaryEncoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataEncoder;
+import org.yamcs.mdb.TcProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+public class LeadingSizeBinaryEncoder extends AbstractDataEncoder {
+
+    int sizeInBitsOfSizeTag = 16;
+
+    public LeadingSizeBinaryEncoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, Integer sizeInBitsOfSizeTag) {
+        this.sizeInBitsOfSizeTag = sizeInBitsOfSizeTag;
+    }
+
+    @Override
+    public void encodeRaw(DataEncoding de, Value rawValue, BitBuffer bitbuf, TcProcessingContext ctx) {
+        byte[] b = rawValue.getBinaryValue();
+        bitbuf.putBits(b.length, sizeInBitsOfSizeTag);
+        bitbuf.put(b);
+    }
+}
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/README.md`
+
+
+```markdown
+this package contains algorithms which can be used in the MDB definition
+```
+
+### `RemainingBinaryDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/RemainingBinaryDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * A decoder that returns a binary value containing all of the remaining bytes.
+ * <p>
+ * An example where this may be useful is a packet that contains an arbitrarily sized blob of data with no length
+ * indication.
+ * <p>
+ * The following XTCE snippet illustrates intended usage.
+ * 
+ * <pre>
+ * &lt;BinaryParameterType name="outputData"&gt;
+ *   &lt;BinaryDataEncoding&gt;
+ *     &lt;SizeInBits&gt;
+ *       &lt;DynamicValue&gt;
+ *         &lt;ParameterInstanceRef parameterRef="_yamcs_ignore"/&gt;
+ *       &lt;/DynamicValue&gt;
+ *     &lt;/SizeInBits&gt;
+ *     &lt;FromBinaryTransformAlgorithm name="org_yamcs_algo_RemainingBinaryDecoder"&gt;
+ *       &lt;AlgorithmText language="java"&gt;org.yamcs.algo.RemainingBinaryDecoder&lt;/AlgorithmText&gt;
+ *     &lt;/FromBinaryTransformAlgorithm&gt;
+ *   &lt;/BinaryDataEncoding&gt;
+ * &lt;/BinaryParameterType&gt;
+ * </pre>
+ */
+public class RemainingBinaryDecoder extends AbstractDataDecoder {
+
+    public RemainingBinaryDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx) {
+        // Constructor required
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buffer) {
+        var b = new byte[buffer.remainingBytes()];
+        buffer.getByteArray(b);
+        return ValueUtility.getBinaryValue(b);
+    }
+}
+```
+
+### `ReverseBinaryDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/ReverseBinaryDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.BinaryDataEncoding;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * A custom data decoder that returns a binary value that has all the bytes reversed from the encoded binary.
+ * <p>
+ * This is intended to be used with a custom transformation for the {@link BinaryDataEncoding} of a binary parameter.
+ * <p>
+ * The implementation assumes a fixed-size encoding.
+ */
+public class ReverseBinaryDecoder extends AbstractDataDecoder {
+
+    public ReverseBinaryDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx) {
+        // Constructor required
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buffer) {
+        var sizeInBits = de.getSizeInBits();
+        if (sizeInBits < 0) {
+            throw new IllegalArgumentException("Cannot decode binary parameter. Size is not fixed");
+        }
+
+        if (sizeInBits % 8 != 0) {
+            throw new IllegalArgumentException("Cannot decode binary parameter. Bit size should be multiple of 8");
+        }
+
+        var sizeInBytes = sizeInBits / 8;
+        if (sizeInBytes > buffer.remainingBytes()) {
+            throw new IndexOutOfBoundsException("Cannot decode binary parameter of size " + sizeInBytes
+                    + ". Remaining in the buffer: " + buffer.remainingBytes());
+        }
+
+        var bytes = new byte[sizeInBytes];
+        buffer.getByteArray(bytes);
+
+        // Reverse in-place
+        for (int i = 0; i < bytes.length / 2; i++) {
+            var temp = bytes[i];
+            bytes[i] = bytes[bytes.length - i - 1];
+            bytes[bytes.length - i - 1] = temp;
+        }
+
+        return ValueUtility.getBinaryValue(bytes);
+    }
+}
+```
+
+### `ReverseBinaryEncoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/ReverseBinaryEncoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataEncoder;
+import org.yamcs.mdb.TcProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * A custom data encoder that converts provided binary to encoded binary in the reverse byte order.
+ */
+public class ReverseBinaryEncoder extends AbstractDataEncoder {
+
+    public ReverseBinaryEncoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx) {
+        // Constructor required
+    }
+
+    @Override
+    public void encodeRaw(DataEncoding de, Value rawValue, BitBuffer buffer, TcProcessingContext ctx) {
+        var bytes = rawValue.getBinaryValue();
+
+        var reversedCopy = new byte[bytes.length];
+        for (int i = 0, j = bytes.length - 1; i < bytes.length; i++, j--) {
+            reversedCopy[i] = bytes[j];
+        }
+
+        buffer.put(reversedCopy);
+    }
+}
+```
+
+### `TcoCalibrator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TcoCalibrator.java`
+
+
+```java
+package org.yamcs.algo;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AlgorithmCalibratorProc;
+import org.yamcs.mdb.DataEncodingUtils;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.XtceProcessingException;
+import org.yamcs.parameter.SInt32Value;
+import org.yamcs.parameter.SInt64Value;
+import org.yamcs.parameter.TimestampValue;
+import org.yamcs.parameter.UInt32Value;
+import org.yamcs.parameter.UInt64Value;
+import org.yamcs.parameter.Value;
+import org.yamcs.time.Instant;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.IntegerDataEncoding;
+
+/**
+ * Calibrator that converts Absolute Times to/from integer using a time correlation service.
+ * <p>
+ * Works both in calibration (integer to timestamp) for parameters and decalibration (timestamp to integer) for command
+ * arguments.
+ * <p>
+ * There is configuration parameter shiftBits that allows shifting the raw value to the left by that number of bits when
+ * converting to the obt that is then passed to the time correlation service. Reversely the obt retrieved from the time
+ * correlation service is shifted to the right to get the raw value.
+ * <p>
+ * The reason for the shiftBits is that it has been observed in some ESA missions that the time correlation service
+ * works with higher precision than the timestamps used in TM and TC.
+ * 
+ */
+public class TcoCalibrator implements AlgorithmCalibratorProc {
+    TimeCorrelationService tcoService;
+    AlgorithmExecutionContext ctx;
+    IntegerDataEncoding dataEncoding;
+    int shiftBits;
+
+    public void init(CustomAlgorithm alg, AlgorithmExecutionContext ctx, YConfiguration conf,
+            BaseDataType dtype) {
+        this.ctx = ctx;
+        if (dtype.getEncoding() instanceof IntegerDataEncoding ide) {
+            this.dataEncoding = ide;
+        } else {
+            throw new XtceProcessingException(
+                    "Cannot use the TimeIntegerCalibrator for data encoding " + dtype.getEncoding());
+        }
+
+        String tcoServiceName = conf.getString("tcoService");
+        String yamcsInstance = ctx.getProcessorData().getYamcsInstance();
+        tcoService = YamcsServer.getServer().getInstance(yamcsInstance)
+                .getService(TimeCorrelationService.class, tcoServiceName);
+        if (tcoService == null) {
+            throw new ConfigurationException(
+                    "Cannot find a time correlation service with name " + tcoServiceName);
+        }
+        shiftBits = conf.getInt("shiftBits", 0);
+    }
+
+    @Override
+    public Value calibrate(Value rawValue, ProcessingContext pctx) throws XtceProcessingException {
+        if (rawValue instanceof UInt32Value) {
+            return calibrate(rawValue.getUint32Value(), pctx);
+        } else if (rawValue instanceof UInt64Value) {
+            return calibrate(rawValue.getUint64Value(), pctx);
+        } else if (rawValue instanceof SInt32Value) {
+            return calibrate(rawValue.getSint32Value(), pctx);
+        } else if (rawValue instanceof SInt64Value) {
+            return calibrate(rawValue.getSint64Value(), pctx);
+        } else {
+            throw new XtceProcessingException("Cannot calibrate/decalibrate values of type " + rawValue.getClass());
+        }
+    }
+
+    @Override
+    public Value decalibrate(Value rawValue, ProcessingContext pctx) {
+        if (rawValue instanceof TimestampValue) {
+            long obt = tcoService.getObt(rawValue.getTimestampValue());
+            obt >>= shiftBits;
+            return DataEncodingUtils.getRawIntegerValue(dataEncoding, obt);
+        } else {
+            throw new XtceProcessingException("Cannot calibrate/decalibrate values of type " + rawValue.getClass());
+        }
+    }
+
+    private Value calibrate(long obt, ProcessingContext pctx) {
+        obt <<= shiftBits;
+        Instant t = tcoService.getHistoricalTime(Instant.get(pctx.getGenerationTime()), obt);
+        return new TimestampValue(t.getMillis(), t.getPicos());
+    }
+}
+```
+
+### `TimeBinaryDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TimeBinaryDecoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataDecoder;
+import org.yamcs.mdb.ContainerProcessingContext;
+import org.yamcs.parameter.Value;
+import org.yamcs.tctm.AbstractPacketPreprocessor.TimeDecoderType;
+import org.yamcs.tctm.AbstractPacketPreprocessor.TimeEpochs;
+import org.yamcs.tctm.ccsds.time.CucTimeDecoder;
+import org.yamcs.time.Instant;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.utils.ByteSupplier;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * Can be used in BinaryParameterEncoding to decode binary data directly to absolute times
+ * <p>
+ * Unlike the pure XTCE based decoder, this one can use a time correlation service to convert between an on-board time
+ * and Yamcs time.
+ */
+public class TimeBinaryDecoder extends AbstractDataDecoder {
+
+    final CucTimeDecoder timeDecoder;
+    final protected TimeEpochs timeEpoch;
+    final TimeCorrelationService tcoService;
+    final AlgorithmExecutionContext ctx;
+
+    public TimeBinaryDecoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, Map<String, Object> conf) {
+        YConfiguration yc = YConfiguration.wrap(conf);
+        this.ctx = ctx;
+        TimeDecoderType type = yc.getEnum("type", TimeDecoderType.class, TimeDecoderType.CUC);
+
+        timeDecoder = switch (type) {
+        case CUC -> {
+            int implicitPField = yc.getInt("implicitPField", -1);
+            int implicitPFieldCont = yc.getInt("implicitPFieldCont", -1);
+            yield new CucTimeDecoder(implicitPField, implicitPFieldCont);
+        }
+        default -> {
+            throw new UnsupportedOperationException("unknown time decoder type " + type);
+        }
+        };
+        timeEpoch = yc.getEnum("epoch", TimeEpochs.class, TimeEpochs.GPS);
+        if (yc.containsKey("tcoService")) {
+            String tcoServiceName = yc.getString("tcoService");
+            String yamcsInstance = ctx.getProcessorData().getYamcsInstance();
+            tcoService = YamcsServer.getServer().getInstance(yamcsInstance)
+                    .getService(TimeCorrelationService.class, tcoServiceName);
+            if (tcoService == null) {
+                throw new ConfigurationException(
+                        "Cannot find a time correlation service with name " + tcoServiceName);
+            }
+        } else {
+            tcoService = null;
+        }
+    }
+
+    @Override
+    public Value extractRaw(DataEncoding de, ContainerProcessingContext pcontext, BitBuffer buf) {
+        var suppl = new ByteSupplier() {
+            @Override
+            public byte getAsByte() {
+                return buf.getByte();
+            }
+        };
+
+        long t;
+        if (tcoService != null) {
+            long obt = timeDecoder.decodeRaw(suppl);
+            long genTime = pcontext.getGenerationTime();
+            t = tcoService.getHistoricalTime(Instant.get(genTime), obt).getMillis();
+        } else {
+            t = timeDecoder.decode(suppl);
+        }
+
+        return ValueUtility.getTimestampValue(t);
+    }
+}
+```
+
+### `TimeBinaryEncoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/algo/TimeBinaryEncoder.java`
+
+
+```java
+package org.yamcs.algo;
+
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.algorithms.AlgorithmExecutionContext;
+import org.yamcs.mdb.AbstractDataEncoder;
+import org.yamcs.mdb.CommandEncodingException;
+import org.yamcs.mdb.TcProcessingContext;
+import org.yamcs.parameter.TimestampValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.tctm.AbstractPacketPreprocessor.TimeDecoderType;
+import org.yamcs.tctm.AbstractPacketPreprocessor.TimeEpochs;
+import org.yamcs.tctm.ccsds.time.CucTimeEncoder;
+import org.yamcs.time.TimeCorrelationService;
+import org.yamcs.utils.BitBuffer;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.DataEncoding;
+
+/**
+ * Can be used in BinaryArgumetEncoding to encode absolute times directoy to binary data
+ * <p>
+ * Unlike the pure XTCE based encoder, this one can use a time correlation service to convert a Yamcs time to an
+ * on-board time.
+ */
+public class TimeBinaryEncoder extends AbstractDataEncoder {
+
+    final CucTimeEncoder timeEncoder;
+    final protected TimeEpochs timeEpoch;
+    final TimeCorrelationService tcoService;
+    final AlgorithmExecutionContext ctx;
+
+    public TimeBinaryEncoder(CustomAlgorithm alg, AlgorithmExecutionContext ctx, Map<String, Object> conf) {
+        YConfiguration yc = YConfiguration.wrap(conf);
+        this.ctx = ctx;
+        TimeDecoderType type = yc.getEnum("type", TimeDecoderType.class, TimeDecoderType.CUC);
+
+        timeEncoder = switch (type) {
+        case CUC -> {
+            boolean implicitPfield = yc.getBoolean("implicitPfield", true);
+            int pfield1 = yc.getInt("pfield");
+            int pfield2 = yc.getInt("pfieldCont", -1);
+
+            yield new CucTimeEncoder(pfield1, pfield2, implicitPfield);
+        }
+        default -> {
+            throw new UnsupportedOperationException("unknown time encoder type " + type);
+        }
+        };
+        timeEpoch = yc.getEnum("epoch", TimeEpochs.class, TimeEpochs.GPS);
+        if (yc.containsKey("tcoService")) {
+            String tcoServiceName = yc.getString("tcoService");
+            String yamcsInstance = ctx.getProcessorData().getYamcsInstance();
+            tcoService = YamcsServer.getServer().getInstance(yamcsInstance)
+                    .getService(TimeCorrelationService.class, tcoServiceName);
+            if (tcoService == null) {
+                throw new ConfigurationException(
+                        "Cannot find a time correlation service with name " + tcoServiceName);
+            }
+        } else {
+            tcoService = null;
+        }
+    }
+
+
+    @Override
+    public void encodeRaw(DataEncoding de, Value rawValue, BitBuffer buffer, TcProcessingContext ctx) {
+        if (rawValue instanceof TimestampValue tv) {
+            long t = tv.getTimestampValue();
+
+            if (tcoService == null) {
+                if(buffer.getPosition() %8 !=0) {
+                    throw new CommandEncodingException(ctx, "Can only encode times at byte boundaries");
+                }
+                int length = timeEncoder.encode(t, buffer.array(), buffer.offset() + buffer.getPosition() / 8);
+                buffer.setPosition(buffer.getPosition() + 8 * length);
+            } else {
+                long obt = tcoService.getObt(t);
+                if (obt == Long.MIN_VALUE) {
+                    throw new CommandEncodingException(ctx, "Time correlation coefficients not available");
+                }
+                int length = timeEncoder.encodeRaw(obt, buffer.array(), buffer.offset() + buffer.getPosition() / 8);
+                buffer.setPosition(buffer.getPosition() + 8 * length);
+            }
+        } else {
+            throw new CommandEncodingException(ctx, "Cannot encode values of type " + rawValue.getType());
+        }
+
+    }
+}
+```

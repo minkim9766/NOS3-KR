@@ -3,24 +3,97 @@
 
 **경로:** `gsw/yamcs/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 http-api/index
 server-manual/index
-file--.editorconfig
-file--.gitignore
-file--Releasing.md
-file--requirements.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/http-api/`](http-api/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/`](server-manual/index) — 폴더
-- [`gsw/yamcs/docs/.editorconfig`](file--.editorconfig) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/Releasing.md`](file--Releasing.md) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/requirements.txt`](file--requirements.txt) — UTF-8 텍스트 파일 본문 포함
+### `.editorconfig`
+
+**경로:** `gsw/yamcs/docs/.editorconfig`
+
+
+```text
+root = true
+
+[*.rst]
+indent_style = space
+indent_size = 4
+```
+
+### `.gitignore`
+
+**경로:** `gsw/yamcs/docs/.gitignore`
+
+
+```text
+__pycache__/
+_build/
+```
+
+### `Releasing.md`
+
+**경로:** `gsw/yamcs/docs/Releasing.md`
+
+
+````markdown
+In order to be able to release, the following is required:
+
+- An account at [Sonatype Central Portal](https://central.sonatype.com) with rights to the `org.yamcs` namespace.
+- PGP key `yamcs@spaceapplications.com`
+
+Credentials are configured in `~/.m2/settings.xml`:
+
+```xml
+<settings>
+  <servers>
+    <server>
+      <id>central</id>
+      <username>XXXX</username>
+      <password>YYYY</password>
+    </server>
+  </servers>
+</settings>
+```
+
+The GPG invocation should bring up a popup from the GPG agent asking for the passphrase (or it could also be automatically added to the agent at login). Alternatively, the passphrase can be configured using the `gpg.passphrase` and `gpg.keyname` properties in `settings.xml`.
+
+Once all artifacts have been uploaded to Sonatype, the actual publishing of a new release is a manual step to be performed at https://central.sonatype.com.
+
+## Snapshot builds
+
+Snapshot builds do not require a manual publish step. They are immediately deployed to the Central Portal Snapshot Repository, where they are automatically removed after 90 days. Snapshot builds are not available from the central Maven repository, instead you can use them by adding this to a project's `pom.xml`:
+
+```xml
+<repositories>
+  <repository>
+    <name>Central Portal Snapshots</name>
+    <id>central-portal-snapshots</id>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
+    <releases>
+      <enabled>false</enabled>
+    </releases>
+    <snapshots>
+      <enabled>true</enabled>
+    </snapshots>
+  </repository>
+</repositories>
+```
+````
+
+### `requirements.txt`
+
+**경로:** `gsw/yamcs/docs/requirements.txt`
+
+
+```text
+Sphinx
+sphinxcontrib-fulltoc
+sphinxcontrib-yamcs
+```

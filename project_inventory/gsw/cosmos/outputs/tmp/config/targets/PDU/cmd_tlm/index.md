@@ -3,16 +3,41 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/PDU/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `pdu_cmd.txt`
 
-file--pdu_cmd.txt
-file--pdu_tlm.txt
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/PDU/cmd_tlm/pdu_cmd.txt`
+
+
+```text
+COMMAND PDU CF_GND_TO_SPACE_PDU LITTLE_ENDIAN ""
+  APPEND_ID_PARAMETER CCSDS_STREAMID 16 UINT MIN_UINT16 MAX_UINT16 8189 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_SEQUENCE 16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_LENGTH 16 UINT MIN_UINT16 MAX_UINT16 6 "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_PARAMETER CCSDS_FC 8 UINT MIN_UINT8 MAX_UINT8 0 "CCSDS Command Function Code"
+  APPEND_PARAMETER CCSDS_CHECKSUM 8 UINT MIN_UINT8 MAX_UINT8 0 "CCSDS Command Checksum"
+  APPEND_PARAMETER PAYLOAD 0 BLOCK "" "Binary Data"
+  DISABLE_MESSAGES
 ```
 
-## 항목
+### `pdu_tlm.txt`
 
-- [`gsw/cosmos/outputs/tmp/config/targets/PDU/cmd_tlm/pdu_cmd.txt`](file--pdu_cmd.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/tmp/config/targets/PDU/cmd_tlm/pdu_tlm.txt`](file--pdu_tlm.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/PDU/cmd_tlm/pdu_tlm.txt`
+
+
+```text
+TELEMETRY PDU CF_SPACE_TO_GND_PDU LITTLE_ENDIAN "CF Application housekeeping Packet"
+  APPEND_ID_ITEM CCSDS_STREAMID 16 UINT 4093 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM CCSDS_SEQUENCE 16 UINT "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM CCSDS_LENGTH 16 UINT "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM CCSDS_SECONDS 32 UINT "CCSDS Telemetry Secondary Header (seconds)"
+  APPEND_ITEM CCSDS_SUBSECS 16 UINT "CCSDS Telemetry Secondary Header (subseconds)"
+  APPEND_ITEM CCSDS_SPARE 32 UINT ""
+  APPEND_ITEM PAYLOAD 0 BLOCK "" BIG_ENDIAN
+
+#TELEMETRY PDU PDU_ZEROS BIG_ENDIAN "PDU Disaptcher Zeros"
+#  APPEND_ID_ITEM CCSDS_STREAMID       16 UINT 0x0000 "CCSDS Packet Identification" BIG_ENDIAN
+#  APPEND_ITEM    RESERVED_2           32 UINT "Reserved 2"
+#  APPEND_ITEM    RESERVED_3            8 UINT "Reserved 3"
+```

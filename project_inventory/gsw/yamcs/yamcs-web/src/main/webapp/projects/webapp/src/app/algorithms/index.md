@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,77 @@ algorithm-list/index
 algorithm-status/index
 algorithm-summary-tab/index
 algorithm-trace-tab/index
-file--algorithms.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm/`](algorithm/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/`](algorithm-detail/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-list/`](algorithm-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/`](algorithm-status/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-summary-tab/`](algorithm-summary-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/`](algorithm-trace-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithms.routes.ts`](file--algorithms.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `algorithms.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithms.routes.ts`
+
+
+```typescript
+import { Routes, UrlMatcher, UrlSegment } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { AlgorithmListComponent } from './algorithm-list/algorithm-list.component';
+import { AlgorithmSummaryTabComponent } from './algorithm-summary-tab/algorithm-summary-tab.component';
+import { AlgorithmTraceTabComponent } from './algorithm-trace-tab/algorithm-trace-tab.component';
+import { AlgorithmComponent } from './algorithm/algorithm.component';
+
+const algorithmMatcher: UrlMatcher = (url) => {
+  let consumed = url;
+
+  // Stop consuming at /-/
+  // (handled by Angular again)
+  const idx = url.findIndex((segment) => segment.path === '-');
+  if (idx !== -1) {
+    consumed = url.slice(0, idx);
+  }
+
+  const algorithm = '/' + consumed.map((segment) => segment.path).join('/');
+  return {
+    consumed,
+    posParams: {
+      algorithm: new UrlSegment(algorithm, {}),
+    },
+  };
+};
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: AlgorithmListComponent,
+      },
+      {
+        matcher: algorithmMatcher,
+        component: AlgorithmComponent,
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: '-/summary',
+          },
+          {
+            path: '-/summary',
+            component: AlgorithmSummaryTabComponent,
+          },
+          {
+            path: '-/trace',
+            component: AlgorithmTraceTabComponent,
+          },
+        ],
+      },
+    ],
+  },
+];
+```

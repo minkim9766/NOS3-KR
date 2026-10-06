@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/fsw/modules/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -24,19 +24,4 @@ timebase_vxworks/index
 vxworks_sysmon/index
 ```
 
-## 항목
-
-- [`fsw/psp/fsw/modules/eeprom_direct/`](eeprom_direct/index) — 폴더
-- [`fsw/psp/fsw/modules/eeprom_mmap_file/`](eeprom_mmap_file/index) — 폴더
-- [`fsw/psp/fsw/modules/eeprom_notimpl/`](eeprom_notimpl/index) — 폴더
-- [`fsw/psp/fsw/modules/iodriver/`](iodriver/index) — 폴더
-- [`fsw/psp/fsw/modules/linux_sysmon/`](linux_sysmon/index) — 폴더
-- [`fsw/psp/fsw/modules/port_direct/`](port_direct/index) — 폴더
-- [`fsw/psp/fsw/modules/port_notimpl/`](port_notimpl/index) — 폴더
-- [`fsw/psp/fsw/modules/ram_direct/`](ram_direct/index) — 폴더
-- [`fsw/psp/fsw/modules/ram_notimpl/`](ram_notimpl/index) — 폴더
-- [`fsw/psp/fsw/modules/rtems_sysmon/`](rtems_sysmon/index) — 폴더
-- [`fsw/psp/fsw/modules/soft_timebase/`](soft_timebase/index) — 폴더
-- [`fsw/psp/fsw/modules/timebase_posix_clock/`](timebase_posix_clock/index) — 폴더
-- [`fsw/psp/fsw/modules/timebase_vxworks/`](timebase_vxworks/index) — 폴더
-- [`fsw/psp/fsw/modules/vxworks_sysmon/`](vxworks_sysmon/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

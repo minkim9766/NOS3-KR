@@ -3,38 +3,523 @@
 
 **경로:** `gsw/cosmos/config/tools/handbook_creator/templates/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command_packets.html.erb`
 
-file--command_packets.html.erb
-file--command_toc.html.erb
-file--footer.html.erb
-file--header.html.erb
-file--limits_groups.html.erb
-file--nav.html.erb
-file--overview.html.erb
-file--pdf_cover.html.erb
-file--pdf_footer.html.erb
-file--pdf_header.html.erb
-file--telemetry_packets.html.erb
-file--telemetry_toc.html.erb
-file--title.html.erb
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/command_packets.html.erb`
+
+
+```text
+<h1 style="background:#555555;color:white;padding:10px;">Commands</h1>
+<% packets.each do |packet| %>
+  <div id="<%= "cmd_#{packet.target_name}_#{packet.packet_name}" %>">
+    <h2><%= "#{packet.target_name} #{packet.packet_name}" %></h2>
+    <div><span style="font-size:18px;background:#555555;color:white;"><%= packet.hazardous ? 'Hazardous' : '' %></span></div>
+    <div><%= packet.description %></div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Description</th>
+          <th class="text-center">Min</th>
+          <th class="text-center">Max</th>
+          <th class="text-center">Default</th>
+          <th class="text-center">Bit Offset</th>
+          <th class="text-center">Bit Size</th>
+          <th class="text-center">Data Type</th>
+          <th class="text-center">Units</th>
+        </tr>
+      <thead>
+      <tbody>
+        <% packet.sorted_items.each do |item| %>
+          <tr>
+            <td>
+              <%= item.name %>
+              <% if item.required %>
+                <div><strong>Required</strong></div>
+              <% end %>
+            </td>
+            <td>
+              <%= item.description %>
+              <% if item.id_value %>
+                <div><strong>Id Value: <%= item.id_value %></strong></div>
+              <% end %>
+              <% if item.states %>
+                <table class="table table-striped table-bordered table-condensed" style="margin-top:10px">
+                  <thead>
+                    <tr><th>State</th><th>Value</th></tr>
+                  </thead>
+                  <tbody>
+                    <% item.states.each do |key, value| %>
+                      <tr>
+                        <td>
+                          <%= key %>
+                          <% if item.hazardous && item.hazardous[key] %>
+                            <div><span style="font-size:18px;background:#555555;color:white;">Hazardous<br/><%= item.hazardous[key] %></span></div>
+                          <% end %>
+                        </td>
+                        <td><%= value %></td>
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+              <% if item.array_size or item.read_conversion or item.write_conversion %>
+                <table class="table table-striped table-bordered table-condensed" style="margin-top:10px">
+                  <tbody>
+                  <% if item.array_size %>
+                    <tr><td>Array Bit Size:</td><td><%= item.array_size %></td></tr>
+                  <% end %>
+                  <% if item.read_conversion %>
+                    <tr><td>Read Conversion:</td><td><%= item.read_conversion.to_s.gsub("\n", "<br/>") %></td></tr>
+                  <% end %>
+                  <% if item.write_conversion %>
+                    <tr><td>Write Conversion:</td><td><%= item.write_conversion.to_s.gsub("\n", "<br/>") %></td></tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+            </td>
+            <td class="text-center" style="white-space: nowrap;"><%= item.range.first if item.range %></td>
+            <td class="text-center" style="white-space: nowrap;"><%= item.range.last if item.range %></td>
+            <td class="text-center" style="white-space: nowrap;">
+              <%= item.default %>
+            </td>
+            <td class="text-center"><%= item.bit_offset %></td>
+            <td class="text-center"><%= item.bit_size %></td>
+            <td class="text-center"><%= item.data_type %></td>
+            <td class="text-center"><%= item.units %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <hr></hr>
+<% end %>
 ```
 
-## 항목
+### `command_toc.html.erb`
 
-- [`gsw/cosmos/config/tools/handbook_creator/templates/command_packets.html.erb`](file--command_packets.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/command_toc.html.erb`](file--command_toc.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/footer.html.erb`](file--footer.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/header.html.erb`](file--header.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/limits_groups.html.erb`](file--limits_groups.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/nav.html.erb`](file--nav.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/overview.html.erb`](file--overview.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/pdf_cover.html.erb`](file--pdf_cover.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/pdf_footer.html.erb`](file--pdf_footer.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/pdf_header.html.erb`](file--pdf_header.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/telemetry_packets.html.erb`](file--telemetry_packets.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/telemetry_toc.html.erb`](file--telemetry_toc.html.erb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/templates/title.html.erb`](file--title.html.erb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/command_toc.html.erb`
+
+
+```text
+<% packet_count = packets.length %>
+<% column_1_packet_count = packet_count / 3 %>
+<% column_2_packet_count = packet_count / 3 %>
+<% column_3_packet_count = packet_count / 3 %>
+<% column_1_packet_count += 1 if ((packet_count % 3) != 0) %>
+<% column_2_packet_count += 1 if ((packet_count % 3) == 2) %>
+
+<% if title.empty? %>
+  <h2>Table of Contents</h2>
+<% else %>
+  <h2><%= title.split[1..-1].join(' ') %></h2>
+<% end %>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[0..(column_1_packet_count - 1)].each do |packet| %>
+      <li><a href="#<%= "cmd_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[column_1_packet_count..(column_1_packet_count + column_2_packet_count - 1)].each do |packet| %>
+      <li><a href="#<%= "cmd_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[(column_1_packet_count + column_2_packet_count)..-1].each do |packet| %>
+      <li><a href="#<%= "cmd_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="clearfix"></div>
+```
+
+### `footer.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/footer.html.erb`
+
+
+```text
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="<%= File.join('assets', 'js', 'jquery-1.10.2.min.js') %>"></script>
+    <script src="<%= File.join('assets', 'js', 'bootstrap.min.js') %>"></script>
+  </body>
+</html>
+```
+
+### `header.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/header.html.erb`
+
+
+```text
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="<%= File.join('assets', 'css', 'bootstrap.min.css') %>" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="<%= File.join('assets', 'css', 'bootstrap-theme.min.css') %>" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="<%= File.join('assets', 'js', 'html5shiv.js') %>"></script>
+      <script src="<%= File.join('assets', 'js', 'respond.min.js') %>"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="container">
+```
+
+### `limits_groups.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/limits_groups.html.erb`
+
+
+```text
+<% if System.limits.groups.length > 0 %>
+  <h1 style="background:#555555;color:white;padding:10px;">Limits Groups</h1>
+
+  <% System.limits.groups.each do |limits_group_name, limits_group| %>
+    <h2><%= limits_group_name %></h2>
+    <ul>
+    <% limits_group.each do |target_name, packet_name, item_name| %>
+      <li><%= "#{target_name} #{packet_name} #{item_name}" %></li>
+    <% end %>
+    </ul>
+    <hr></hr>
+  <% end %>
+<% end %>
+```
+
+### `nav.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/nav.html.erb`
+
+
+```text
+<div class="navbar navbar-default" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="index.html">Command and Telemetry Handbook</a>
+  </div>
+  <div class="navbar-collapse collapse">
+    <ul class="nav navbar-nav">
+      <li><a href="command_handbook.html">All Commands</a></li>
+      <li><a href="telemetry_handbook.html">All Telemetry</a></li>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Targets <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <% target_names = System.commands.target_names | System.telemetry.target_names %>
+          <% target_names.delete('UNKNOWN') %>
+          <% target_names.each do |target_name| %>
+            <li><a href="<%= target_name.downcase %>_cmd_tlm.html"><%= target_name %></a></li>
+          <% end %>
+        </ul>
+      </li>
+    </ul>
+  </div><!--/.nav-collapse -->
+</div>
+```
+
+### `overview.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/overview.html.erb`
+
+
+```text
+This is the Command and Telemetry Handbook for the Demo COSMOS Configuration.   Navigate using the menu above to view All Commands, All Telemetry, or both for each Target.
+```
+
+### `pdf_cover.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/pdf_cover.html.erb`
+
+
+```text
+<html>
+  <head>
+  </head>
+  <body style="">
+    <div style="border-bottom: 1px solid black; width: 100%">
+      <div id="left" style="float:left;text-align:left;">
+        <img width=50 src="file:///<%= File.join(System.paths['HANDBOOKS'], 'assets', 'img', 'ball_logo.jpg') %>"></img>
+      </div>
+      <div id="right" style="float:right;text-align:right;">
+        <div>Document No.: XXXXXXX</div>
+        <div>Revision: TBD</div>
+        <div>Date: TBD</div>
+      </div>
+      <div id="center" style="width:500px;margin:0px auto;text-align:center;">
+        Copies are Uncontrolled
+      </div>
+      <div style="clear:both;"></div>
+    </div>
+
+    <h1 style="text-align:center;margin-top:100px;"><%= title %></h1>
+    <h3 style="text-align:center;">For the COSMOS Demo Project</h3>
+  </body>
+</html>
+```
+
+### `pdf_footer.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/pdf_footer.html.erb`
+
+
+```text
+<html><head><script>
+function subst() {
+  var vars={};
+  var x=document.location.search.substring(1).split('&');
+  for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+  var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+  for (var i in x) {
+    var y = document.getElementsByClassName(x[i]);
+    for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+  }
+}
+</script></head><body style="border:0; margin: 0;" onload="subst()">
+
+<!--
+ * [page]       Replaced by the number of the pages currently being printed
+ * [frompage]   Replaced by the number of the first page to be printed
+ * [topage]     Replaced by the number of the last page to be printed
+ * [webpage]    Replaced by the URL of the page being printed
+ * [section]    Replaced by the name of the current section
+ * [subsection] Replaced by the name of the current subsection
+ * [title]      Replaced by the title of the of the current page object
+ * [doctitle]   Replaced by the title of the output document
+-->
+
+<table style="width: 100%">
+  <tr>
+    <td style="text-align:center">
+      Page <span class="page"></span> of <span class="topage"></span>
+    </td>
+  </tr>
+</table>
+</body></html>
+
+```
+
+### `pdf_header.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/pdf_header.html.erb`
+
+
+```text
+<html><head><script>
+function subst() {
+  var vars={};
+  var x=document.location.search.substring(1).split('&');
+  for (var i in x) {var z=x[i].split('=',2);vars[z[0]] = unescape(z[1]);}
+  var x=['frompage','topage','page','webpage','section','subsection','subsubsection'];
+  for (var i in x) {
+    var y = document.getElementsByClassName(x[i]);
+    for (var j=0; j<y.length; ++j) y[j].textContent = vars[x[i]];
+  }
+}
+</script></head><body style="border:0; margin: 0;" onload="subst()">
+
+<!--
+ * [page]       Replaced by the number of the pages currently being printed
+ * [frompage]   Replaced by the number of the first page to be printed
+ * [topage]     Replaced by the number of the last page to be printed
+ * [webpage]    Replaced by the URL of the page being printed
+ * [section]    Replaced by the name of the current section
+ * [subsection] Replaced by the name of the current subsection
+ * [date]       Replaced by the current date in system local format
+ * [time]       Replaced by the current time in system local format
+ * [title]      Replaced by the title of the of the current page object
+ * [doctitle]   Replaced by the title of the output document
+-->
+
+<div style="border-bottom: 1px solid black; width: 100%">
+  <div id="left" style="float:left;text-align:left;">
+    <img width=50 src="file:///<%= File.join(System.paths['HANDBOOKS'], 'assets', 'img', 'ball_logo.jpg') %>"></img>
+  </div>
+  <div id="right" style="float:right;text-align:right;">
+    <div>Document No.: XXXXXXX</div>
+    <div>Revision: TBD</div>
+    <div>Date: TBD</div>
+  </div>
+  <div id="center" style="width:500px;margin:0px auto;text-align:center;">
+    Copies are Uncontrolled
+  </div>
+  <div style="clear:both;"></div>
+</div>
+</body></html>
+```
+
+### `telemetry_packets.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/telemetry_packets.html.erb`
+
+
+```text
+<h1 style="background:#555555;color:white;padding:10px;">Telemetry Packets</h1>
+<% packets.each do |packet| %>
+  <div id="tlm_<%= "#{packet.target_name}_#{packet.packet_name}" %>">
+    <h2><%= "#{packet.target_name} #{packet.packet_name}" %></h2>
+    <div><%= packet.description %></div>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Item Name</th>
+          <th>Description</th>
+          <th class="text-center">Bit Offset</th>
+          <th class="text-center">Bit Size</th>
+          <th class="text-center">Data Type</th>
+          <th class="text-center">Units</th>
+          <th class="text-center">Format</th>
+        </tr>
+      <thead>
+      <tbody>
+        <% packet.sorted_items.each do |item| %>
+          <tr>
+            <td><%= item.name %></td>
+            <td>
+              <%= item.description %>
+              <% if item.id_value %>
+                <div><strong>Id Value: <%= item.id_value %></strong></div>
+              <% end %>
+              <% if item.states %>
+                <table class="table table-bordered table-condensed" style="margin-top:10px">
+                  <thead>
+                    <tr><th>State</th><th>Value</th></tr>
+                  </thead>
+                  <tbody>
+                    <% item.states.each do |key, value| %>
+                      <% if item.state_colors[key] == :RED %>
+                        <tr style="background:pink"><td><%= key %> (<%= item.state_colors[key] %>)</td><td><%= value %></td>
+                      <% elsif item.state_colors[key] %>
+                        <tr style="background:light<%= item.state_colors[key].downcase %>;"><td><%= key %> (<%= item.state_colors[key] %>)</td><td><%= value %></td>
+                      <% else %>
+                        <tr><td><%= key %></td><td><%= value %></td>
+                      <% end %>
+                    <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+              <% if item.array_size or item.read_conversion or item.write_conversion or item.limits.values or item.limits.response %>
+                <table class="table table-striped table-bordered table-condensed" style="margin-top:10px">
+                  <tbody>
+                  <% if item.array_size %>
+                    <tr><td>Array Bit Size:</td><td><%= item.array_size %></td></tr>
+                  <% end %>
+                  <% if item.read_conversion %>
+                    <tr><td>Read Conversion:</td><td><%= item.read_conversion.to_s.gsub("\n", "<br/>") %></td></tr>
+                  <% end %>
+                  <% if item.write_conversion %>
+                    <tr><td>Write Conversion:</td><td><%= item.write_conversion.to_s.gsub("\n", "<br/>") %></td></tr>
+                  <% end %>
+                  <% if item.limits.values %>
+                    <% item.limits.values.each do |limits_set, values| %>
+                    <tr><td>Limits [<%= limits_set %>]:</td><td><%= "<span style=\"color:red\">RL/#{values[0]}</span> <span style=\"color:goldenrod\">YL/#{values[1]}</span> <span style=\"color:goldenrod\">YH/#{values[2]}</span> <span style=\"color:red\">RH/#{values[3]}</span>#{values[4] ? " <span style=\"color:green\">GL/#{values[4]}</span>": ''}#{values[5] ? " <span style=\"color:green\">GH/#{values[5]}</span>": ''}" %></td></tr>
+                    <% end %>
+                  <% end %>
+                  <% if item.limits.response %>
+                    <tr><td>Limits Response:</td><td><%= item.limits.response.to_s.gsub("\n", "<br/>") %></td></tr>
+                  <% end %>
+                  </tbody>
+                </table>
+              <% end %>
+            </td>
+            <td class="text-center"><%= item.bit_offset %></td>
+            <td class="text-center"><%= item.bit_size %></td>
+            <td class="text-center"><%= item.data_type %></td>
+            <td class="text-center"><%= item.units %></td>
+            <td class="text-center"><%= item.format_string %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <hr></hr>
+<% end %>
+```
+
+### `telemetry_toc.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/telemetry_toc.html.erb`
+
+
+```text
+<% packet_count = packets.length %>
+<% column_1_packet_count = packet_count / 3 %>
+<% column_2_packet_count = packet_count / 3 %>
+<% column_3_packet_count = packet_count / 3 %>
+<% column_1_packet_count += 1 if ((packet_count % 3) != 0) %>
+<% column_2_packet_count += 1 if ((packet_count % 3) == 2) %>
+
+<% if title.empty? %>
+  <h2>Table of Contents</h2>
+<% else %>
+  <h2><%= title.split[1..-1].join(' ') %></h2>
+<% end %>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[0..(column_1_packet_count - 1)].each do |packet| %>
+      <li><a href="#<%= "tlm_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[column_1_packet_count..(column_1_packet_count + column_2_packet_count - 1)].each do |packet| %>
+      <li><a href="#<%= "tlm_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="col-md-4">
+  <ul class="list-unstyled">
+    <% packets[(column_1_packet_count + column_2_packet_count)..-1].each do |packet| %>
+      <li><a href="#<%= "tlm_#{packet.target_name}_#{packet.packet_name}" %>"><%= "#{packet.target_name} #{packet.packet_name}" %></a></li>
+    <% end %>
+  </ul>
+</div>
+
+<div class="clearfix"></div>
+```
+
+### `title.html.erb`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/templates/title.html.erb`
+
+
+```text
+<h1><%= title %></h1>
+```

@@ -3,22 +3,152 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tse/index
-file--downstream-direct.xml
-file--downstream-embedded.xml
-file--landing.xls
-file--simulator-ccsds.xls
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/tse/`](tse/index) — 폴더
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/downstream-direct.xml`](file--downstream-direct.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/downstream-embedded.xml`](file--downstream-embedded.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/landing.xls`](file--landing.xls) — 바이너리 (경로만)
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/mdb/simulator-ccsds.xls`](file--simulator-ccsds.xls) — 바이너리 (경로만)
+### `downstream-direct.xml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/downstream-direct.xml`
+
+
+```xml
+<SpaceSystem name="DOWNSTREAM_DIRECT">
+    <Header validationStatus="Unknown" version="1.3" date="2023-07-10T11:16:59Z"/>
+   
+    <CommandMetaData>
+        <ArgumentTypeSet>            
+            <IntegerArgumentType sizeInBits="8" signed="false" name="uint8">
+                <UnitSet/>
+                <IntegerDataEncoding encoding="unsigned" sizeInBits="8"/>
+            </IntegerArgumentType>            
+        </ArgumentTypeSet>
+        <MetaCommandSet>
+            <MetaCommand abstract="true" name="DOWNSTREAM_CMD">
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="onoff"/>
+                </ArgumentList>
+                <CommandContainer name="DOWNSTREAM_CMD">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="onoff"/>
+                    </EntryList>
+                </CommandContainer>
+            </MetaCommand>
+            <MetaCommand name="SWITCH_VOLTAGE_ON">
+                <BaseMetaCommand metaCommandRef="DOWNSTREAM_CMD">
+                    <ArgumentAssignmentList>
+                        <ArgumentAssignment argumentName="onoff" argumentValue="1"/>
+                    </ArgumentAssignmentList>
+                </BaseMetaCommand>
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="voltage_num"/>
+                </ArgumentList>
+                <CommandContainer name="voltage-on-packet">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="voltage_num"/>
+                    </EntryList>
+                    <BaseContainer containerRef="DOWNSTREAM_CMD"/>
+                </CommandContainer>
+            </MetaCommand>
+            <MetaCommand name="SWITCH_VOLTAGE_OFF_WITH_DIFFERENT_NAME">
+                <BaseMetaCommand metaCommandRef="DOWNSTREAM_CMD">
+                    <ArgumentAssignmentList>
+                        <ArgumentAssignment argumentName="onoff" argumentValue="2"/>
+                    </ArgumentAssignmentList>
+                </BaseMetaCommand>
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="voltage_num"/>
+                </ArgumentList>
+                <CommandContainer name="voltage-off-packet">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="voltage_num"/>
+                    </EntryList>
+                    <BaseContainer containerRef="DOWNSTREAM_CMD"/>
+                </CommandContainer>
+            </MetaCommand>
+        </MetaCommandSet>
+    </CommandMetaData>
+</SpaceSystem>
+```
+
+### `downstream-embedded.xml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/downstream-embedded.xml`
+
+
+```xml
+<SpaceSystem name="DOWNSTREAM_EMBEDDED">
+    <Header validationStatus="Unknown" version="1.3" date="2023-07-10T11:16:59Z"/>
+   
+    <CommandMetaData>
+        <ArgumentTypeSet>            
+            <IntegerArgumentType sizeInBits="8" signed="false" name="uint8">
+                <UnitSet/>
+                <IntegerDataEncoding encoding="unsigned" sizeInBits="8"/>
+            </IntegerArgumentType>            
+        </ArgumentTypeSet>
+        <MetaCommandSet>
+            <MetaCommand abstract="true" name="DOWNSTREAM_CMD">
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="onoff"/>
+                </ArgumentList>
+                <CommandContainer name="DOWNSTREAM_CMD">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="onoff"/>
+                    </EntryList>
+                </CommandContainer>
+            </MetaCommand>
+            <MetaCommand name="SWITCH_VOLTAGE_ON">
+                <BaseMetaCommand metaCommandRef="DOWNSTREAM_CMD">
+                    <ArgumentAssignmentList>
+                        <ArgumentAssignment argumentName="onoff" argumentValue="1"/>
+                    </ArgumentAssignmentList>
+                </BaseMetaCommand>
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="voltage_num"/>
+                </ArgumentList>
+                <CommandContainer name="voltage-on-packet">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="voltage_num"/>
+                    </EntryList>
+                    <BaseContainer containerRef="DOWNSTREAM_CMD"/>
+                </CommandContainer>
+            </MetaCommand>
+            <MetaCommand name="SWITCH_VOLTAGE_OFF">
+                <BaseMetaCommand metaCommandRef="DOWNSTREAM_CMD">
+                    <ArgumentAssignmentList>
+                        <ArgumentAssignment argumentName="onoff" argumentValue="2"/>
+                    </ArgumentAssignmentList>
+                </BaseMetaCommand>
+                <ArgumentList>
+                    <Argument argumentTypeRef="uint8" name="voltage_num"/>
+                </ArgumentList>
+                <CommandContainer name="voltage-off-packet">
+                    <EntryList>
+                        <ArgumentRefEntry argumentRef="voltage_num"/>
+                    </EntryList>
+                    <BaseContainer containerRef="DOWNSTREAM_CMD"/>
+                </CommandContainer>
+            </MetaCommand>
+        </MetaCommandSet>
+    </CommandMetaData>
+</SpaceSystem>
+```
+
+### `landing.xls`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/landing.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `simulator-ccsds.xls`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/mdb/simulator-ccsds.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.

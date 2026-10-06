@@ -3,18 +3,368 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-type-list.component.html`
 
-file--parameter-type-list.component.html
-file--parameter-type-list.component.ts
-file--parameter-types.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-type-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Parameter types" />
+  <span #top></span>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter
+        [formControl]="filterControl"
+        placeholder="Filter parameter types"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="mdb-parameter-types" />
+    </ya-filter-bar>
+
+    @if (dataSource) {
+      <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let ptype">
+            <a
+              [routerLink]="['/mdb/parameter-types', ptype.qualifiedName]"
+              [queryParams]="{ c: yamcs.context }">
+              <ya-highlight
+                [text]="shortName ? ptype.name : ptype.qualifiedName"
+                [term]="filterControl.value" />
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let ptype">
+            @if (ptype.engType; as engType) {
+              <span class="mono">
+                {{ engType }}
+              </span>
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="units">
+          <th mat-header-cell *matHeaderCellDef>Units</th>
+          <td mat-cell *matCellDef="let ptype">
+            {{ (ptype?.unitSet | units) || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let ptype" class="wrap200">
+            @if (ptype.shortDescription; as desc) {
+              <ya-highlight [text]="desc" [term]="filterControl.value" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+
+        @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+          <ng-container [matColumnDef]="aliasColumn.id">
+            <th mat-header-cell *matHeaderCellDef>
+              {{ aliasColumn.label }}
+            </th>
+            <td mat-cell *matCellDef="let ptype">
+              @if (ptype | alias: aliasColumn.id; as name) {
+                <ya-highlight [text]="name" [term]="filterControl.value" />
+              } @else {
+                -
+              }
+            </td>
+          </ng-container>
+        }
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          [class.selected]="selection.isSelected(row)"></tr>
+      </table>
+    }
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+</ya-instance-page>
+
+<ng-template #empty>
+  <ya-panel>
+    The Mission Database for
+    <i>{{ yamcs.instance }}</i>
+    does not define any parameter types.
+  </ya-panel>
+</ng-template>
 ```
 
-## 항목
+### `parameter-type-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-type-list.component.html`](file--parameter-type-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-type-list.component.ts`](file--parameter-type-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-types.datasource.ts`](file--parameter-types.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-type-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  GetParameterTypesOptions,
+  MessageService,
+  ParameterType,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ParameterTypesDataSource } from './parameter-types.datasource';
+
+@Component({
+  templateUrl: './parameter-type-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterTypesComponent implements AfterViewInit {
+  shortName = false;
+  pageSize = 100;
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: ParameterTypesDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'units', label: 'Units', visible: true },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual parameter types.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  selection = new SelectionModel<ParameterType>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Parameter types');
+    this.dataSource = new ParameterTypesDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.filterControl.setValue(queryParams.get('filter'));
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+
+    if (queryParams.has('page')) {
+      this.paginator.pageIndex = Number(queryParams.get('page'));
+    }
+    this.updateDataSource();
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetParameterTypesOptions = {
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+      fields: [
+        'name',
+        'qualifiedName',
+        'engType',
+        'unitSet',
+        'alias',
+        'shortDescription',
+      ],
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource
+      .loadParameterTypes(options)
+      .then(() => {
+        this.selection.clear();
+
+        // Reset alias columns
+        for (const aliasColumn of this.aliasColumns$.value) {
+          const idx = this.columns.indexOf(aliasColumn);
+          if (idx !== -1) {
+            this.columns.splice(idx, 1);
+          }
+        }
+        const aliasColumns = [];
+        for (const namespace of this.dataSource.getAliasNamespaces()) {
+          const aliasColumn = {
+            id: namespace,
+            label: namespace,
+            alwaysVisible: true,
+          };
+          aliasColumns.push(aliasColumn);
+        }
+        this.columns.splice(1, 0, ...aliasColumns); // Insert after name column
+        this.aliasColumns$.next(aliasColumns);
+        this.columnChooser.recalculate(this.columns);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.parameterTypes$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.parameterTypes$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.parameterTypes$.value;
+      if (items.indexOf(item) !== -1) {
+        this.router.navigate(['/mdb/parameter-types', item.qualifiedName], {
+          queryParams: { c: this.yamcs.context },
+        });
+      }
+    }
+  }
+}
+```
+
+### `parameter-types.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-list/parameter-types.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  GetParameterTypesOptions,
+  ParameterType,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ParameterTypesDataSource extends DataSource<ParameterType> {
+  parameterTypes$ = new BehaviorSubject<ParameterType[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.parameterTypes$;
+  }
+
+  loadParameterTypes(options: GetParameterTypesOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getParameterTypes(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        this.parameterTypes$.next(page.parameterTypes || []);
+      });
+  }
+
+  getAliasNamespaces() {
+    const namespaces: string[] = [];
+    for (const parameterType of this.parameterTypes$.value) {
+      if (parameterType.alias) {
+        for (const alias of parameterType.alias) {
+          if (alias.namespace && namespaces.indexOf(alias.namespace) === -1) {
+            namespaces.push(alias.namespace);
+          }
+        }
+      }
+    }
+    return namespaces.sort();
+  }
+
+  disconnect() {
+    this.parameterTypes$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

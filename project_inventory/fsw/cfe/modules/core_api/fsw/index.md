@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/core_api/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 inc/index
 ```
 
-## 항목
-
-- [`fsw/cfe/modules/core_api/fsw/inc/`](inc/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

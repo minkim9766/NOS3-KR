@@ -3,24 +3,604 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fakedevice`
 
-file--fakedevice
-file--makefile
-file--rs422_stubs.c
-file--rs422_stubs.h
-file--rs422_testcase.c
-file--rs422_testrunner.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/fakedevice`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `makefile`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=rs422
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../../src/services
+VPATH += ../ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../../src
+INCLUDES += -I../../public_inc
+INCLUDES += -I../ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := trans_rs422.o
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_time_stubs.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT := $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -D_LINUX_OS_
+COPT += -DUT_VERBOSE 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(UT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov -b $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
 ```
 
-## 항목
+### `rs422_stubs.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/fakedevice`](file--fakedevice) — 바이너리 (경로만)
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_stubs.c`](file--rs422_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_stubs.h`](file--rs422_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_testcase.c`](file--rs422_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_testrunner.c`](file--rs422_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_stubs.c`
+
+
+```c
+/*
+ * File: rs422_stubs.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Stub out various functions not stubbed out by the UT-Assert code
+ *
+ */
+
+#include <termios.h>
+#include <string.h>
+#include <stdio.h>
+#include "cfe.h"
+#include "rs422_stubs.h"
+
+
+/* Global */
+struct termios test_term;
+
+RS422_ReturnCodeTable_t     RS422_ReturnCodeTable[RS422_MAX_INDEX];
+
+void RS422_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < RS422_MAX_INDEX) {
+        RS422_ReturnCodeTable[Index].Value = RtnVal;
+        RS422_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+
+bool RS422_UseReturnCode(uint32 Index)
+{
+    if (RS422_ReturnCodeTable[Index].Count > 0) {
+        RS422_ReturnCodeTable[Index].Count--;
+        if (RS422_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+//int open(const char *path, int oflags)
+//{
+//    if (RS422_UseReturnCode(RS422_OPEN_INDEX))
+//    {
+//        return RS422_ReturnCodeTable[RS422_OPEN_INDEX].Value;
+//    }
+//
+//    return -1;
+//}
+
+int tcsetattr(int fd, int flag, const struct termios *termios_p)
+{
+    memcpy((void *) &test_term, (void *) termios_p, sizeof(struct termios));
+    return 0;
+}
+
+int tcgetattr(int fd, struct termios *termios_p)
+{
+    if (RS422_UseReturnCode(RS422_GETATTR_INDEX))
+    {
+        bzero((void *)&test_term, sizeof(test_term));
+        return RS422_ReturnCodeTable[RS422_GETATTR_INDEX].Value;
+    }
+
+    memcpy((void *) termios_p, (void *) &test_term, sizeof(struct termios));
+    return 0;
+}
+
+//int select(int a, fd_set *set, fd_set *except, struct timeval *timeout)
+//{
+//    if (RS422_UseReturnCode(RS422_SELECT_INDEX))
+//    {
+//        return RS422_ReturnCodeTable[RS422_SELECT_INDEX].Value;
+//    }
+//    
+//    return 10;
+//}
+
+//int read(int fd, void * buffer, size_t nbytes)
+//{
+//    if (RS422_UseReturnCode(RS422_READ_INDEX))
+//    {
+//        return RS422_ReturnCodeTable[RS422_READ_INDEX].Value;
+//    }
+//
+//    return nbytes;
+//}
+
+//int write(int fd, void * buffer, size_t nbytes)
+//{
+//    if (RS422_UseReturnCode(RS422_WRITE_INDEX))
+//    {
+//        return RS422_ReturnCodeTable[RS422_WRITE_INDEX].Value;
+//    }
+//
+//    return nbytes;
+//}
+```
+
+### `rs422_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_stubs.h`
+
+
+```c
+/*
+ * File: rs422_stubs.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide stubs for unit testing transfer frames
+ *
+ * History:
+ *   04/16/2015  G. de Carufel
+ *    * Created
+ */
+
+#ifndef _RS422_STUBS_H_
+#define _RS422_STUBS_H_
+
+#include "uttools.h"
+
+typedef enum
+{
+    RS422_GETATTR_INDEX,
+    RS422_SELECT_INDEX,
+    RS422_READ_INDEX,
+    RS422_WRITE_INDEX,
+    RS422_MAX_INDEX
+} RS422_INDEX_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} RS422_ReturnCodeTable_t;
+
+
+void RS422_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+bool RS422_UseReturnCode(uint32 Index);
+
+#endif
+```
+
+### `rs422_testcase.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_testcase.c`
+
+
+```c
+/*
+ * Filename: rs422_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test cases for transfer frames
+ *
+ */
+
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_osapi_stubs.h"
+
+#include "rs422_stubs.h"
+
+#include <errno.h>
+#include <stdio.h>
+#include <termios.h>
+#include <string.h>
+#include "trans_rs422.h"
+
+/* Global File descriptor */
+int32 fd;
+
+/* Prototypes for non-exported functions */
+void Test_TransRS422GetBaudRateMacro(void);
+
+
+extern speed_t IO_TransRS422GetBaudRateMacro(int32 bps);
+
+/* -------------------- Special Test Case Variables ------------------------- */
+
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+/*******************************************************************************
+**
+**  RS422_TransRS422GetBaudRateMacro Tests
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TransRS422GetBaudRateMacro(void)
+{
+    speed_t baud;
+
+    /* Execute Test */
+    baud = IO_TransRS422GetBaudRateMacro(19200);
+    UtAssert_True(baud == B19200, "Test B19200");
+    baud = IO_TransRS422GetBaudRateMacro(38400);
+    UtAssert_True(baud == B38400, "Test B38400");
+    baud = IO_TransRS422GetBaudRateMacro(57600);
+    UtAssert_True(baud == B57600, "Test B57600");
+    baud = IO_TransRS422GetBaudRateMacro(115200);
+    UtAssert_True(baud == B115200, "Test B115200");
+    baud = IO_TransRS422GetBaudRateMacro(230400);
+    UtAssert_True(baud == B230400, "Test B230400");
+    baud = IO_TransRS422GetBaudRateMacro(460800);
+    UtAssert_True(baud == B460800, "Test B460800");
+    baud = IO_TransRS422GetBaudRateMacro(921600);
+    UtAssert_True(baud == B921600, "Test B921600");
+    baud = IO_TransRS422GetBaudRateMacro(0);
+    UtAssert_True(baud == -1, "Test Wrong Input");
+}
+
+
+void Test_TransRS422Init(void)
+{
+    int32 expected = 0;
+    IO_TransRS422Config_t config;
+
+    memset(&config, 0x0, sizeof(config));
+
+    /*************************/
+    fd = IO_TransRS422Init(NULL);
+    expected = IO_TRANS_RS422_BADINPUT_ERR;
+    UtAssert_True(fd == expected, "Test Null Input");
+
+    /*************************/
+    config.baudRate = 19200;
+    strcpy(config.device, "");
+
+    fd = IO_TransRS422Init(&config);
+    expected = IO_TRANS_RS422_BADDEVICE_ERR;
+    UtAssert_True(fd == expected, "Test Bad Device Name");
+    
+    /*************************/
+    strcpy(config.device, "junk");
+    config.baudRate = 0;
+
+    fd = IO_TransRS422Init(&config);
+    expected = IO_TRANS_RS422_BAUDRATE_ERR;
+    UtAssert_True(fd == expected, "Test Bad BaudRate");
+
+    /*************************/
+    strcpy(config.device, "junk");
+    config.baudRate = 19200;
+
+    fd = IO_TransRS422Init(&config);
+    expected = IO_TRANS_RS422_OPEN_ERR;
+    UtAssert_True(fd == expected, "Test Open Error");
+    
+    /*************************/
+    strcpy(config.device, "fakedevice");
+    config.baudRate = 19200;
+    config.timeout = 0;
+
+    RS422_SetReturnCode(RS422_GETATTR_INDEX, -1, 2);
+
+    fd = IO_TransRS422Init(&config);
+    expected = IO_TRANS_RS422_SETATTR_ERR;
+    UtAssert_True(fd == expected, "Test SetAttr Error");
+    
+    /*************************/
+    strcpy(config.device, "fakedevice");
+    config.baudRate = 19200;
+    config.timeout = 0;
+
+    RS422_SetReturnCode(RS422_GETATTR_INDEX, 0, 1);
+    
+    fd = IO_TransRS422Init(&config);
+    expected = 0;
+    UtAssert_True(fd > expected, "Test Succesful Init");
+}
+
+
+void Test_TransRS422Close(void)
+{
+    UtAssert_True(IO_TransRS422Close(fd) == 0, "Test close");
+}
+
+void Test_TransRS422ReadTimeout(void)
+{
+    int32 expected = 0;
+    int32 size = 0;
+    uint8 buf[2];
+    
+    size = IO_TransRS422ReadTimeout(-3, NULL, 0, IO_TRANS_PEND_FOREVER);
+    expected = -1;
+    UtAssert_True(size == expected, "Test Select Error");
+
+    fd = open("fakedevice", O_RDWR);
+    write(fd, ".", 1);
+
+    size = IO_TransRS422ReadTimeout(fd, &buf[0], 1, IO_TRANS_PEND_FOREVER);
+    expected = 1;
+    UtAssert_True(size == expected, "Test Pend Forever");
+    
+    size = IO_TransRS422ReadTimeout(fd, &buf[0], 1, 0);
+    expected = 0;
+    UtAssert_True(size == expected, "Test No pend");
+}
+
+
+void Test_TransRS422Write(void)
+{
+    int32 expected = 0;
+    int32 size = 0;
+    uint16 buf = 0x01;
+    
+    size = IO_TransRS422Write(-3, NULL, 0);
+    expected = IO_TRANS_RS422_BADDEVICE_ERR;
+    UtAssert_True(size == expected, "Test Bad Device");
+
+    fd = open("fakedevice", O_RDWR);
+    
+    size = IO_TransRS422Write(fd, NULL, 1);
+    expected = IO_TRANS_RS422_ERROR;
+    UtAssert_True(size == expected, "Test null data");
+    
+    size = IO_TransRS422Write(fd, (uint8 *) &buf, 2);
+    expected = 2;
+    UtAssert_True(size == expected, "Test Write");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+/*
+ * RS422_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void RS422_Setup(void)
+{
+    Ut_OSAPI_Reset();
+    Ut_CFE_EVS_Reset();
+}
+
+/*
+ * RS422_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void RS422_TearDown(void)
+{
+
+}
+
+
+#define ADD_TEST(test,setup,teardown) UtTest_Add((test), (setup), (teardown), #test)
+
+/* RS422_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void RS422_AddTestCase(void)
+{
+    /* RS422_GetVersion Tests */
+    ADD_TEST(Test_TransRS422GetBaudRateMacro, RS422_Setup, RS422_TearDown);
+    ADD_TEST(Test_TransRS422Init,             RS422_Setup, RS422_TearDown);
+    ADD_TEST(Test_TransRS422Close,            RS422_Setup, RS422_TearDown);
+    ADD_TEST(Test_TransRS422ReadTimeout,      RS422_Setup, RS422_TearDown);
+    ADD_TEST(Test_TransRS422Write,            RS422_Setup, RS422_TearDown);
+}
+```
+
+### `rs422_testrunner.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_rs422/rs422_testrunner.c`
+
+
+```c
+
+void RS422_AddTestCase(void);
+
+/*
+ * Filename: rs422_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for RS422 Transport protocol.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    RS422_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

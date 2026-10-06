@@ -3,42 +3,4261 @@
 
 **경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 filter/index
-file--AuthType.java
-file--ConnectData.java
-file--ConnectDialog.java
-file--FileFormat.java
-file--FindParameterBar.java
-file--GoToPacketDialog.java
-file--ImageIconButton.java
-file--ListPacket.java
-file--OpenFileDialog.java
-file--PacketsTable.java
-file--PacketsTableModel.java
-file--PacketViewer.java
-file--ParametersTable.java
-file--ParametersTableModel.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/filter/`](filter/index) — 폴더
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/AuthType.java`](file--AuthType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ConnectData.java`](file--ConnectData.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ConnectDialog.java`](file--ConnectDialog.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/FileFormat.java`](file--FileFormat.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/FindParameterBar.java`](file--FindParameterBar.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/GoToPacketDialog.java`](file--GoToPacketDialog.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ImageIconButton.java`](file--ImageIconButton.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ListPacket.java`](file--ListPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/OpenFileDialog.java`](file--OpenFileDialog.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketsTable.java`](file--PacketsTable.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketsTableModel.java`](file--PacketsTableModel.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketViewer.java`](file--PacketViewer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ParametersTable.java`](file--ParametersTable.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ParametersTableModel.java`](file--ParametersTableModel.java) — UTF-8 텍스트 파일 본문 포함
+### `AuthType.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/AuthType.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+public enum AuthType {
+
+    STANDARD("Standard"),
+    KERBEROS("Kerberos"),
+    BASIC_AUTH("Basic Auth");
+
+    private String prettyName;
+
+    AuthType(String prettyName) {
+        this.prettyName = prettyName;
+    }
+
+    @Override
+    public String toString() {
+        return prettyName;
+    }
+}
+```
+
+### `ConnectData.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ConnectData.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+public class ConnectData {
+    AuthType authType;
+    String serverUrl;
+    String username;
+    char[] password;
+
+    boolean useServerMdb;
+    String localMdbConfig;
+    String streamName;
+    String instance;
+}
+```
+
+### `ConnectDialog.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ConnectDialog.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Label;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.List;
+import java.util.Properties;
+import java.util.prefs.Preferences;
+
+import javax.naming.ConfigurationException;
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JRootPane;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.SwingConstants;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.client.BasicAuthCredentials;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.ServerURL;
+import org.yamcs.protobuf.YamcsInstance;
+
+/**
+ * Dialog for entering yamcs connection parameters.
+ * 
+ * @author nm
+ *
+ */
+public class ConnectDialog extends JDialog implements ActionListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final String PREF_FILENAME = "YamcsConnectionProperties"; // relative to the <home>/.yamcs directory
+
+    private String PREF_AUTH_TYPE = "authType";
+    private String PREF_HOST = "host";
+    private String PREF_PORT = "port";
+    private String PREF_TLS = "tls";
+    private String PREF_CONTEXT_PATH = "contextPath";
+    private String PREF_USERNAME = "username";
+    private String PREF_INSTANCE = "instance";
+
+    private String serverUrl;
+    private AuthType authType = AuthType.STANDARD;
+    private String username;
+    private String password;
+    private String instance;
+
+    private JTextField serverUrlTextField;
+
+    private JComboBox<AuthType> authTypeCombo;
+    private JLabel usernameLabel;
+    private JTextField usernameTextField;
+    private JLabel passwordLabel;
+    private JPasswordField passwordTextField;
+
+    private JComboBox<String> instanceCombo;
+    private JComboBox<String> localMdbConfigCombo;
+    boolean getInstance = false;
+    boolean getStreamName = false;
+
+    String dbConfig;
+    boolean isDbConfigLocal;
+    int returnValue;
+    Preferences prefs;
+    boolean useServerMdb;
+    JTextField streamName;
+
+    /**
+     * Return value if cancel is chosen.
+     */
+    public static final int CANCEL_OPTION = 1;
+
+    /**
+     * Return value if approve (yes, ok) is chosen.
+     */
+    public static final int APPROVE_OPTION = 0;
+
+    private void loadConnectionPreferences() throws FileNotFoundException, IOException {
+        String home = System.getProperty("user.home") + "/.yamcs";
+        Properties prefs = new Properties();
+        try (InputStream in = new FileInputStream(new File(home, PREF_FILENAME))) {
+            prefs.load(in);
+        }
+
+        String authTypeName = prefs.getProperty(PREF_AUTH_TYPE);
+        if (authTypeName != null) {
+            authType = AuthType.valueOf(authTypeName);
+        } else {
+            authType = AuthType.STANDARD;
+        }
+
+        String host = prefs.getProperty(PREF_HOST);
+        Integer port = null;
+        try {
+            port = Integer.parseInt(prefs.getProperty(PREF_PORT));
+        } catch (NumberFormatException e) {
+        }
+
+        String contextPath = prefs.getProperty(PREF_CONTEXT_PATH, null);
+        boolean tls = Boolean.parseBoolean(prefs.getProperty("tls", "false"));
+
+        if (host != null) {
+            String serverUrl = tls ? "https://" : "http://";
+            serverUrl += host;
+            // 8090 was the default if the port text field was empty
+            // (before the transition of url components to url)
+            serverUrl += ":" + (port == null ? 8090 : port);
+            if (contextPath != null && !contextPath.isBlank()) {
+                serverUrl += "/" + contextPath;
+            }
+            try {
+                this.serverUrl = ServerURL.parse(serverUrl).toString();
+            } catch (IllegalArgumentException e) {
+                // Ignore, just ignore prefs
+            }
+        }
+
+        instance = prefs.getProperty(PREF_INSTANCE);
+        if (prefs.containsKey(PREF_USERNAME)) {
+            username = prefs.getProperty(PREF_USERNAME);
+            password = null;
+        }
+    }
+
+    private void saveConnectionPreferences() {
+        String home = System.getProperty("user.home") + "/.yamcs";
+        new File(home).mkdirs();
+        Properties prefs = new Properties();
+        if (this.serverUrl != null) {
+            ServerURL serverUrl = ServerURL.parse(this.serverUrl);
+            prefs.setProperty(PREF_HOST, serverUrl.getHost());
+            prefs.setProperty(PREF_PORT, Integer.toString(serverUrl.getPort()));
+            prefs.setProperty(PREF_TLS, Boolean.toString(serverUrl.isTLS()));
+            if (serverUrl.getContext() == null) {
+                prefs.remove(PREF_CONTEXT_PATH);
+            } else {
+                prefs.setProperty(PREF_CONTEXT_PATH, serverUrl.getContext());
+            }
+        }
+        prefs.setProperty(PREF_AUTH_TYPE, authType.name());
+        if (instance != null) {
+            prefs.setProperty(PREF_INSTANCE, instance);
+        }
+        if (username != null) {
+            prefs.setProperty(PREF_USERNAME, username);
+        }
+
+        try (OutputStream out = new FileOutputStream(home + "/" + PREF_FILENAME)) {
+            prefs.store(out, null);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    ConnectDialog(JFrame parent, boolean getInstance, boolean getStreamName, boolean getDbConfig) {
+        super(parent, "Connect to Yamcs", true);
+        this.getInstance = getInstance;
+        this.getStreamName = getStreamName;
+        installActions();
+
+        try {
+            loadConnectionPreferences();
+        } catch (IOException e) {
+            // ignore
+        }
+        prefs = Preferences.userNodeForPackage(this.getClass());
+
+        JPanel inputPanel, buttonPanel;
+        JLabel lab;
+        JButton button;
+
+        // input panel
+
+        inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints ceast = new GridBagConstraints();
+        ceast.anchor = GridBagConstraints.EAST;
+        GridBagConstraints cwest = new GridBagConstraints();
+        cwest.weightx = 1;
+        cwest.fill = GridBagConstraints.HORIZONTAL;
+
+        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 5, 10));
+        getContentPane().add(inputPanel, BorderLayout.CENTER);
+
+        lab = new JLabel("Server URL: ");
+        lab.setHorizontalAlignment(SwingConstants.RIGHT);
+        ceast.gridy = 1;
+        inputPanel.add(lab, ceast);
+        serverUrlTextField = new JTextField(serverUrl);
+        serverUrlTextField.setPreferredSize(new Dimension(300, serverUrlTextField.getPreferredSize().height));
+        cwest.gridy = 1;
+        inputPanel.add(serverUrlTextField, cwest);
+
+        ceast.gridy++;
+        cwest.gridy++;
+        lab = new JLabel("Auth Type: ");
+        lab.setHorizontalAlignment(SwingConstants.RIGHT);
+        inputPanel.add(lab, ceast);
+        authTypeCombo = new JComboBox<>(AuthType.values());
+        authTypeCombo.setSelectedItem(authType);
+        authTypeCombo.setPreferredSize(new Dimension(300, authTypeCombo.getPreferredSize().height));
+        authTypeCombo.setEditable(false);
+        authTypeCombo.setActionCommand("authType");
+        authTypeCombo.addActionListener(this);
+        inputPanel.add(authTypeCombo, cwest);
+
+        ceast.gridy++;
+        cwest.gridy++;
+        usernameLabel = new JLabel("Username: ");
+        usernameLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        inputPanel.add(usernameLabel, ceast);
+        usernameTextField = new JTextField(username);
+        usernameTextField.setPreferredSize(new Dimension(300, usernameTextField.getPreferredSize().height));
+        inputPanel.add(usernameTextField, cwest);
+
+        ceast.gridy++;
+        cwest.gridy++;
+        passwordLabel = new JLabel("Password: ");
+        passwordLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        inputPanel.add(passwordLabel, ceast);
+        passwordTextField = new JPasswordField();
+        passwordTextField.setPreferredSize(new Dimension(300, passwordTextField.getPreferredSize().height));
+        inputPanel.add(passwordTextField, cwest);
+        if (authType == AuthType.KERBEROS) {
+            passwordLabel.setEnabled(false);
+            passwordTextField.setEnabled(false);
+            usernameLabel.setEnabled(false);
+            usernameTextField.setEnabled(false);
+            usernameTextField.setText(System.getProperty("user.name"));
+        }
+
+        if (getInstance) {
+            lab = new JLabel("Instance: ");
+            lab.setHorizontalAlignment(SwingConstants.RIGHT);
+
+            ceast.gridy++;
+            cwest.gridy++;
+
+            inputPanel.add(lab, ceast);
+            instanceCombo = new JComboBox<>(new String[] { instance });
+            instanceCombo.setPreferredSize(new Dimension(300, instanceCombo.getPreferredSize().height));
+            instanceCombo.setEditable(true);
+
+            inputPanel.add(instanceCombo, cwest);
+            button = new JButton("Update");
+            button.setActionCommand("getInstances");
+            button.addActionListener(this);
+            inputPanel.add(button, ceast);
+        }
+
+        if (getStreamName) {
+            ceast.gridy++;
+            cwest.gridy++;
+
+            lab = new JLabel("Stream: ");
+
+            lab.setHorizontalAlignment(SwingConstants.RIGHT);
+            inputPanel.add(lab, ceast);
+
+            String name = prefs.get("streamName", "tm_realtime");
+            streamName = new JTextField(name);
+            streamName.setEditable(true);
+
+            inputPanel.add(streamName, cwest);
+        }
+
+        if (getDbConfig) {
+            ceast.gridy++;
+            cwest.gridy++;
+
+            useServerMdb = prefs.getBoolean("useServerMdb", true);
+
+            ButtonGroup bgroup = new ButtonGroup();
+            JRadioButton jrb = new JRadioButton("Server MDB");
+            if (useServerMdb) {
+                jrb.setSelected(true);
+            }
+            jrb.setActionCommand("use-server-mdb");
+            jrb.addActionListener(this);
+            bgroup.add(jrb);
+            // lab = new JLabel("Server MDB: ");
+            // lab.setHorizontalAlignment(SwingConstants.RIGHT);
+            GridBagConstraints c = new GridBagConstraints();
+            c.gridy = ceast.gridy;
+            c.anchor = GridBagConstraints.WEST;
+            inputPanel.add(jrb, c);
+
+            inputPanel.add(new Label(), cwest);
+            inputPanel.add(new Label(), ceast);
+
+            ceast.gridy++;
+            cwest.gridy++;
+            jrb = new JRadioButton("Local MDB: ");
+            jrb.setActionCommand("use-local-mdb");
+            jrb.addActionListener(this);
+            if (!useServerMdb) {
+                jrb.setSelected(true);
+            }
+            bgroup.add(jrb);
+            // lab = new JLabel("Local MDB: ");
+            // lab.setHorizontalAlignment(SwingConstants.RIGHT);
+            c.gridy = ceast.gridy;
+            inputPanel.add(jrb, c);
+            String[] dbconfigs;
+            try {
+                dbconfigs = getLocalDbConfigs();
+            } catch (ConfigurationException e) {
+                JOptionPane.showMessageDialog(parent, "Cannot load local MDB configurations: " + e.getMessage(),
+                        "Cannot load local MDB configs", JOptionPane.ERROR_MESSAGE);
+                dbconfigs = new String[0];
+            }
+
+            if (dbconfigs.length > 0) {
+                localMdbConfigCombo = new JComboBox<>(dbconfigs);
+                localMdbConfigCombo.setPreferredSize(serverUrlTextField.getPreferredSize());
+                localMdbConfigCombo.setEditable(false);
+
+                String selectedLocalMdbConfig = prefs.get("selectedLocalMdbConfig",
+                        dbconfigs.length > 0 ? dbconfigs[0] : null);
+                localMdbConfigCombo.setSelectedItem(selectedLocalMdbConfig);
+                inputPanel.add(localMdbConfigCombo, cwest);
+                if (useServerMdb) {
+                    localMdbConfigCombo.setEnabled(false);
+                }
+            } else {
+                localMdbConfigCombo = new JComboBox<>(new String[] { "unavailable" });
+                localMdbConfigCombo.setPreferredSize(serverUrlTextField.getPreferredSize());
+                localMdbConfigCombo.setEnabled(false);
+                localMdbConfigCombo.setSelectedItem("unavailable");
+                inputPanel.add(localMdbConfigCombo, cwest);
+                jrb.setSelected(false);
+                jrb.setEnabled(false);
+            }
+        }
+
+        // button panel
+
+        buttonPanel = new JPanel();
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
+        button = new JButton("Connect");
+        button.setActionCommand("connect");
+        button.addActionListener(this);
+        getRootPane().setDefaultButton(button);
+        buttonPanel.add(button);
+
+        button = new JButton("Cancel");
+        button.setActionCommand("cancel");
+        button.addActionListener(this);
+        buttonPanel.add(button);
+
+        setMinimumSize(new Dimension(350, 100));
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        pack();
+        setLocationRelativeTo(parent);
+    }
+
+    private void installActions() {
+        JRootPane root = getRootPane();
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                "closeDialog");
+        root.getActionMap().put("closeDialog", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispatchEvent(new WindowEvent(ConnectDialog.this, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+    }
+
+    private String[] getLocalDbConfigs() throws ConfigurationException {
+        if (YConfiguration.isDefined("mdb")) {
+            YConfiguration conf = YConfiguration.getConfiguration("mdb");
+            return conf.getKeys().toArray(new String[0]);
+        } else {
+            return new String[0];
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if ("connect".equals(cmd)) {
+            authType = (AuthType) authTypeCombo.getSelectedItem();
+            serverUrl = serverUrlTextField.getText();
+            try {
+                ServerURL.parse(serverUrl);
+            } catch (IllegalArgumentException x) {
+                JOptionPane.showMessageDialog(this, x.getMessage(), "Invalid Server URL",
+                        JOptionPane.ERROR_MESSAGE);
+                return; // do not close the dialog
+            }
+
+            if (!usernameTextField.getText().isEmpty()) {
+                username = usernameTextField.getText();
+                password = new String(passwordTextField.getPassword());
+            } else {
+                // If not authenticating, don't use last credentials
+                username = null;
+                password = null;
+            }
+
+            instance = (String) instanceCombo.getSelectedItem();
+            if (instance == null) {
+                JOptionPane.showMessageDialog(this, "You must specify an instance", "Missing instance",
+                        JOptionPane.ERROR_MESSAGE);
+                return; // do not close the dialog
+            }
+
+            // Verify the instance
+            YamcsClient client = null;
+            try {
+                client = createClientForUseInDialogOnly();
+                client.getInstance(instance).get();
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(this, "Cannot verify instance: " + e1.getMessage(),
+                        e1.getMessage(), JOptionPane.WARNING_MESSAGE);
+                return;
+            } finally {
+                if (client != null) {
+                    client.close();
+                }
+            }
+
+            passwordTextField.setText("");
+            saveConnectionPreferences();
+
+            prefs.putBoolean("useServerMdb", useServerMdb);
+            if (!useServerMdb) {
+                prefs.put("selectedLocalMdbConfig", (String) localMdbConfigCombo.getSelectedItem());
+            }
+
+            if (getStreamName) {
+                prefs.put("streamName", streamName.getText());
+            }
+            returnValue = APPROVE_OPTION;
+            setVisible(false);
+        } else if ("cancel".equals(cmd)) {
+            returnValue = CANCEL_OPTION;
+            setVisible(false);
+        } else if ("authType".equals(cmd)) {
+            var isKerberos = authTypeCombo.getSelectedItem() == AuthType.KERBEROS;
+            usernameLabel.setEnabled(!isKerberos);
+            if (isKerberos) {
+                usernameTextField.setText(System.getProperty("user.name"));
+            }
+            usernameTextField.setEnabled(!isKerberos);
+            passwordLabel.setEnabled(!isKerberos);
+            passwordTextField.setText(null);
+            passwordTextField.setEnabled(!isKerberos);
+        } else if ("getInstances".equals(cmd)) {
+            try {
+                YamcsClient client = null;
+                try {
+                    client = createClientForUseInDialogOnly();
+                    List<YamcsInstance> list = client.listInstances().get();
+                    instanceCombo.removeAllItems();
+                    for (YamcsInstance instance : list) {
+                        if (getInstance) {
+                            instanceCombo.addItem(instance.getName());
+                        }
+                    }
+                } finally {
+                    if (client != null) {
+                        client.close();
+                    }
+                }
+            } catch (NumberFormatException x) {
+                JOptionPane.showMessageDialog(this, "Enter a valid port number", x.getMessage(),
+                        JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e1) {
+                JOptionPane.showMessageDialog(this, "Cannot retrieve instances: " + e1.getMessage(),
+                        e1.getMessage(), JOptionPane.WARNING_MESSAGE);
+            }
+        } else if ("use-server-mdb".equals(cmd)) {
+            useServerMdb = true;
+            localMdbConfigCombo.setEnabled(false);
+        } else if ("use-local-mdb".equals(cmd)) {
+            useServerMdb = false;
+            localMdbConfigCombo.setEnabled(true);
+        }
+    }
+
+    private YamcsClient createClientForUseInDialogOnly() throws ClientException {
+        var clientBuilder = YamcsClient.newBuilder(serverUrlTextField.getText())
+                .withUserAgent("PacketViewer")
+                .withVerifyTls(false);
+
+        var authType = (AuthType) authTypeCombo.getSelectedItem();
+        if (authType == AuthType.BASIC_AUTH && !usernameTextField.getText().isEmpty()) {
+            clientBuilder.withCredentials(
+                    new BasicAuthCredentials(usernameTextField.getText(), passwordTextField.getPassword()));
+        }
+
+        var client = clientBuilder.build();
+
+        if (usernameTextField.getText().isEmpty()) {
+            client.pollServer();
+        } else {
+            if (authType == AuthType.STANDARD) {
+                client.login(usernameTextField.getText(), passwordTextField.getPassword());
+            } else if (authType == AuthType.KERBEROS) {
+                client.loginWithKerberos(usernameTextField.getText());
+            }
+        }
+
+        return client;
+    }
+
+    public ConnectData getConnectData() {
+        ConnectData data = new ConnectData();
+        data.authType = authType;
+        data.serverUrl = serverUrl;
+        if (username != null) {
+            data.username = username;
+            data.password = password.toCharArray();
+        }
+        data.useServerMdb = useServerMdb;
+        data.localMdbConfig = (String) localMdbConfigCombo.getSelectedItem();
+        data.streamName = streamName.getText();
+        data.instance = instance;
+        return data;
+    }
+
+    public int showDialog() {
+        // Prevent caching of last returnValue
+        returnValue = CANCEL_OPTION;
+        setVisible(true);
+        return returnValue;
+    }
+
+    public static void main(String[] args) {
+        ConnectDialog ycd = new ConnectDialog(null, true, true, true);
+        ycd.showDialog();
+    }
+}
+```
+
+### `FileFormat.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/FileFormat.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.PacketInputStream;
+import org.yamcs.tctm.PacketPreprocessor;
+import org.yamcs.utils.YObjectLoader;
+
+public class FileFormat {
+
+    private String name;
+
+    private String packetInputStreamClassName;
+    private YConfiguration packetInputStreamArgs;
+
+    private PacketPreprocessor packetPreprocessor;
+
+    private String rootContainer;
+
+    public FileFormat(String name, String packetInputStreamClassName, YConfiguration packetInputStreamArgs,
+            PacketPreprocessor packetPreprocessor) {
+        this.name = name;
+        this.packetInputStreamClassName = packetInputStreamClassName;
+        this.packetInputStreamArgs = packetInputStreamArgs;
+        this.packetPreprocessor = packetPreprocessor;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getRootContainer() {
+        return rootContainer;
+    }
+
+    public void setRootContainer(String rootContainer) {
+        this.rootContainer = rootContainer;
+    }
+
+    public PacketInputStream newPacketInputStream(InputStream inputStream) throws IOException {
+        PacketInputStream packetInputStream = YObjectLoader.loadObject(packetInputStreamClassName);
+        packetInputStream.init(inputStream, packetInputStreamArgs);
+        return packetInputStream;
+    }
+
+    public PacketPreprocessor getPacketPreprocessor() {
+        return packetPreprocessor;
+    }
+}
+```
+
+### `FindParameterBar.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/FindParameterBar.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+
+import org.yamcs.ui.packetviewer.ParametersTable.SearchStats;
+
+public class FindParameterBar extends JPanel {
+    private static final long serialVersionUID = 1L;
+    private static final ImageIcon ICON_DOWN = new ImageIcon(
+            PacketViewer.class.getResource("/org/yamcs/images/down.png"));
+    private static final ImageIcon ICON_UP = new ImageIcon(PacketViewer.class.getResource("/org/yamcs/images/up.png"));
+    private static final ImageIcon ICON_CLOSE = new ImageIcon(
+            PacketViewer.class.getResource("/org/yamcs/images/close.png"));
+
+    public static final String OPEN_ACTION = "open-find-bar";
+    public static final String CLOSE_ACTION = "close-find-bar";
+
+    private JTextField searchField;
+    private JLabel statsLabel;
+    private ParametersTable parametersTable;
+
+    public FindParameterBar(final ParametersTable parametersTable) {
+        super(new BorderLayout());
+        this.parametersTable = parametersTable;
+        searchField = new JTextField(25);
+        ImageIconButton downButton = new ImageIconButton(ICON_DOWN);
+
+        ActionListener searchListener = e -> {
+            String searchTerm = searchField.getText();
+            if (searchTerm != null && !searchTerm.trim().equals("")) {
+                SearchStats stats = parametersTable.nextSearchResult(searchTerm.toLowerCase());
+                processStats(stats);
+            }
+        };
+
+        searchField.addActionListener(searchListener);
+        downButton.addActionListener(searchListener);
+
+        ImageIconButton upButton = new ImageIconButton(ICON_UP);
+        upButton.addActionListener(e -> {
+            String searchTerm = searchField.getText();
+            if (searchTerm != null && !searchTerm.trim().equals("")) {
+                SearchStats stats = parametersTable.previousSearchResult(searchTerm.toLowerCase());
+                processStats(stats);
+            }
+        });
+
+        searchField.setPreferredSize(downButton.getPreferredSize());
+
+        JPanel findBar_left = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        findBar_left.add(new JLabel("Find:"));
+        findBar_left.add(searchField);
+        findBar_left.add(downButton);
+        findBar_left.add(upButton);
+
+        statsLabel = new JLabel("");
+        statsLabel.setFont(statsLabel.getFont().deriveFont(~Font.BOLD));
+
+        ImageIconButton closeFindBarButton = new ImageIconButton(ICON_CLOSE);
+        closeFindBarButton.addActionListener(e -> {
+            setVisible(false);
+            parametersTable.clearSearchResults();
+            parametersTable.requestFocusInWindow();
+        });
+
+        // GridBag, just for the vertical alignment..
+        JPanel findBar_right = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = GridBagConstraints.RELATIVE;
+        gbc.ipadx = 5;
+        findBar_right.add(statsLabel, gbc);
+
+        gbc.gridx = 2;
+        findBar_right.add(closeFindBarButton, gbc);
+
+        add(findBar_left, BorderLayout.CENTER);
+        add(findBar_right, BorderLayout.EAST);
+
+        installActions();
+        setVisible(false);
+    }
+
+    private void installActions() {
+        //
+        // Close find bar by pressing escape
+        searchField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), CLOSE_ACTION);
+        searchField.getActionMap().put(CLOSE_ACTION, new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(false);
+                revertToDefaults();
+                parametersTable.clearSearchResults();
+                parametersTable.requestFocusInWindow();
+            }
+        });
+
+        //
+        // Open the find bar
+        Action openAction = new AbstractAction("Find Parameter...") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setVisible(true);
+                searchField.selectAll();
+                searchField.requestFocusInWindow();
+            }
+        };
+        openAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_F);
+        openAction.putValue(Action.ACCELERATOR_KEY,
+                KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx()));
+        getActionMap().put(OPEN_ACTION, openAction);
+    }
+
+    private void processStats(SearchStats stats) {
+        if (stats != null) {
+            revertToDefaults();
+            statsLabel.setText(String.format("%s of %s", stats.selectedMatch, stats.totalMatching));
+        } else {
+            statsLabel.setText("Parameter not found");
+            searchField.setBackground(PacketViewer.ERROR_FAINT_BG);
+            searchField.setForeground(PacketViewer.ERROR_FAINT_FG);
+            searchField.setBorder(PacketViewer.ERROR_BORDER);
+        }
+    }
+
+    /**
+     * Reverts the search field and the label to its defaults
+     */
+    private void revertToDefaults() {
+        if (searchField.getBackground().equals(PacketViewer.ERROR_FAINT_BG)) {
+            JTextField dummy = new JTextField();
+            searchField.setBackground(dummy.getBackground());
+            searchField.setForeground(dummy.getForeground());
+            searchField.setBorder(dummy.getBorder());
+        }
+        statsLabel.setText("");
+    }
+}
+```
+
+### `GoToPacketDialog.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/GoToPacketDialog.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+
+
+/**
+ * Dialog for jumping to a specific packet in the packet table.
+ */
+public class GoToPacketDialog extends JDialog implements ActionListener {
+    private static final long serialVersionUID = 1L;
+    private static final KeyStroke KEY_ESC = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
+    /**
+     * Return value if cancel is chosen.
+     */
+    public static final int CANCEL_OPTION = 1;
+
+    /**
+     * Return value if approve (yes, ok) is chosen.
+     */
+    public static final int APPROVE_OPTION = 0;
+
+    private JTextField lineNumberField;
+    private int returnValue;
+    private int lineNumber;
+
+    private PacketsTable packetsTable; 
+
+    public GoToPacketDialog(PacketsTable packetsTable) {
+        super(getJFrameContainer(packetsTable), "Go to Packet", true);
+
+        this.packetsTable = packetsTable;
+
+        JPanel inputPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        inputPanel.add(new JLabel("Packet number: "), gbc);
+
+        lineNumberField = new JTextField(10);
+        inputPanel.add(lineNumberField, gbc);
+
+        JPanel buttonPanel = new JPanel();
+
+        JButton button = new JButton("Go");
+        button.setActionCommand("go");
+        button.addActionListener(this);
+        getRootPane().setDefaultButton(button);
+        buttonPanel.add(button, gbc);
+
+        button = new JButton("Cancel");
+        button.setActionCommand("cancel");
+        button.addActionListener(this);
+        buttonPanel.add(button, gbc);
+
+        getContentPane().add(inputPanel, BorderLayout.CENTER);
+        getContentPane().add(buttonPanel, BorderLayout.SOUTH);
+
+        setMinimumSize(new Dimension(350, 150));
+        installActions();
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    }
+
+    private static JFrame getJFrameContainer(JComponent component) {
+        Container parent = component.getParent();
+        if (parent instanceof JFrame)
+            return (JFrame) parent;
+        else
+            return getJFrameContainer((JComponent) parent);
+    }
+
+    private void installActions() {
+        // Close dialog with escape
+        getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KEY_ESC, "close-dialog");
+
+        getRootPane().getActionMap().put("close-dialog", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispatchEvent(new WindowEvent(GoToPacketDialog.this,
+                        WindowEvent.WINDOW_CLOSING));
+            }
+        });
+    }
+
+    public int showDialog() {
+        // Prevent caching of last returnValue
+        returnValue = CANCEL_OPTION;
+        lineNumberField.selectAll();
+        setLocationRelativeTo(getParent());
+        setVisible(true);
+        return returnValue;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if ("go".equals(cmd)) { 
+            try {
+                lineNumber = Integer.parseInt(lineNumberField.getText());
+            } catch (NumberFormatException x) {
+                JOptionPane.showMessageDialog(this, "Cannot parse packet number", "Invalid number", JOptionPane.ERROR_MESSAGE);
+                lineNumberField.selectAll();
+                return; // do not close the dialogue
+            }
+
+            int[] packetRange = packetsTable.getPacketNumberRange();
+            if (lineNumber < packetRange[0] || lineNumber > packetRange[1]) {
+                JOptionPane.showMessageDialog(this, "There is no packet number " + lineNumber, "Out of Range", JOptionPane.ERROR_MESSAGE);
+                lineNumberField.selectAll();
+                return; // do not close the dialogue
+            }
+            returnValue = APPROVE_OPTION;
+            setVisible(false);
+        } else if ("cancel".equals(cmd)) {
+            returnValue = CANCEL_OPTION;
+            setVisible(false);
+        }
+    }
+}
+```
+
+### `ImageIconButton.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ImageIconButton.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JLabel;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+
+/**
+ * Image that looks and acts like a button, but only when mouse events are
+ * performed.
+ */
+public class ImageIconButton extends JLabel implements MouseListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(2, 2, 2, 2);
+    private static final Border HOVER_BORDER = BorderFactory.createEtchedBorder(EtchedBorder.LOWERED);
+    private static final Border PRESSED_BORDER = BorderFactory.createEtchedBorder(EtchedBorder.RAISED);
+    private Set<ActionListener> actionListeners = new HashSet<ActionListener>();
+
+    public ImageIconButton(Icon image) {
+        super(image);
+        setBorder(EMPTY_BORDER);
+        addMouseListener(this);
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        setBorder(HOVER_BORDER);
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        setBorder(EMPTY_BORDER);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        setBorder(EMPTY_BORDER);
+        if (contains(e.getPoint())) {
+            for (ActionListener al : actionListeners) {
+                al.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        setBorder(PRESSED_BORDER);
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // Ignore, because this does not register clicks when pressing and
+        // releasing in the same component, but on a different location
+    }
+
+    public void addActionListener(ActionListener al) {
+        actionListeners.add(al);
+    }
+
+    public void removeActionListener(ActionListener al) {
+        actionListeners.remove(al);
+    }
+}
+```
+
+### `ListPacket.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ListPacket.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+
+import javax.swing.text.BadLocationException;
+import javax.swing.text.StyledDocument;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * A packet appearing in the packet viewer list. Can be only partially loaded (i.e. the header only).
+ */
+public class ListPacket {
+    private static final String HEX_CHARS = "0123456789abcdef";
+
+    private int id;
+    private String name;
+    private long fileOffset;
+    byte[] buf;
+    int length;
+    boolean incomplete = false;
+    long generationTime;
+
+    // these are the parameters that are shown in the left bar (in fact all parameters extracted by the extractor,so
+    // could be more than what is shown)
+    private ParameterValueList columnParameters;
+
+    public ListPacket(byte[] b, int length) {
+        buf = b.clone();
+        this.length = length;
+    }
+
+    ListPacket(byte[] buf, int length, long fileOffset) {
+        this(buf, length);
+        this.fileOffset = fileOffset;
+        this.incomplete = true;
+    }
+
+    public void setIdentifier(int id) {
+        this.id = id;
+    }
+
+    public int getIdentifier() {
+        return id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    void load(File srcFile) throws IOException {
+        if (incomplete) {
+            try (FileInputStream reader = new FileInputStream(srcFile)) {
+                byte[] data = new byte[length];
+                long n = fileOffset + buf.length;
+                if (reader.skip(n) != n) {
+                    throw new IOException("packet outside the file!? (cannot skip to offset " + n + ")");
+                }
+
+                int remaining = length - buf.length;
+                int res = reader.read(data, 16, remaining);
+                if (res != remaining) {
+                    throw new IOException("short read, expected " + remaining + ", got " + res);
+                }
+                System.arraycopy(buf, 0, data, 0, buf.length);
+                buf = data;
+            }
+            incomplete = false;
+        }
+    }
+
+    void hexdump(StyledDocument hexDoc) {
+        try {
+            hexDoc.remove(0, hexDoc.getLength());
+
+            for (int i = 0; i < buf.length;) {
+                // build one row of hexdump: offset, hex bytes, ascii bytes
+                StringBuilder offsetBuf = new StringBuilder();
+                offsetBuf.append(HEX_CHARS.charAt(i >> 12));
+                offsetBuf.append(HEX_CHARS.charAt((i >> 8) & 0x0f));
+                offsetBuf.append(HEX_CHARS.charAt((i >> 4) & 0x0f));
+                offsetBuf.append(HEX_CHARS.charAt(i & 0x0f));
+                offsetBuf.append(' ');
+                hexDoc.insertString(hexDoc.getLength(), offsetBuf.toString(), hexDoc.getStyle("offset"));
+
+                StringBuilder hexBuf = new StringBuilder();
+                StringBuilder asciiBuf = new StringBuilder();
+                for (int j = 0; j < 16; ++j, ++i) {
+                    if (i < buf.length) {
+                        byte b = buf[i];
+                        hexBuf.append(HEX_CHARS.charAt((b >> 4) & 0x0f));
+                        hexBuf.append(HEX_CHARS.charAt(b & 0x0f));
+                        if ((j & 1) == 1) {
+                            hexBuf.append(' ');
+                        }
+                        char c = (b < 32) || (b > 126) ? '.' : (char) b;
+                        asciiBuf.append(c);
+                    } else {
+                        hexBuf.append((j & 1) == 1 ? "   " : "  ");
+                        asciiBuf.append(' ');
+                    }
+                }
+
+                hexBuf.append(asciiBuf);
+                hexBuf.append('\n');
+                hexDoc.insertString(hexDoc.getLength(), hexBuf.toString(), hexDoc.getStyle("fixed"));
+            }
+        } catch (BadLocationException x) {
+            System.err.println("cannot format hexdump of " + name + ": " + x.getMessage());
+        }
+    }
+
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public byte[] getBuffer() {
+        return buf;
+    }
+
+    public void setColumnParameters(ParameterValueList pvlist) {
+        this.columnParameters = pvlist;
+    }
+
+    public ParameterValue getParameterColumn(Parameter p) {
+        return columnParameters.getLastInserted(p);
+    }
+
+    /**
+     * Returns the first parameter within the packet that matches a short name
+     */
+    public Parameter getParameterForShortName(String name) {
+        for (ParameterValue pval : columnParameters) {
+            if (pval.getParameter().getName().equals(name)) {
+                return pval.getParameter();
+            }
+        }
+        return null;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setGenerationTime(long generationTime) {
+        this.generationTime = generationTime;
+    }
+}
+```
+
+### `OpenFileDialog.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/OpenFileDialog.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JSeparator;
+import javax.swing.KeyStroke;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+/**
+ * Select a filename and a XTCE db config version to be used in the standalone packet viewer
+ */
+public class OpenFileDialog extends JDialog implements ActionListener {
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Return value if cancel is chosen
+     */
+    public static final int CANCEL_OPTION = 1;
+
+    /**
+     * Return value if approve (yes, ok) is chosen
+     */
+    public static final int APPROVE_OPTION = 0;
+
+    private Map<String, FileFormat> fileFormats;
+    private JComboBox<String> fileFormatCombo;
+    private JComboBox<String> dbConfigCombo;
+    private JFileChooser fileChooser;
+    private Preferences prefs;
+    private int returnValue;
+
+    public OpenFileDialog(Map<String, FileFormat> fileFormats) throws ConfigurationException {
+        this.fileFormats = fileFormats;
+        String[] dbconfigs = new String[0];
+        if (YConfiguration.isDefined("mdb")) {
+            YConfiguration c = YConfiguration.getConfiguration("mdb");
+            dbconfigs = c.getKeys().toArray(new String[0]);
+        }
+        Arrays.sort(dbconfigs);
+        prefs = Preferences.userNodeForPackage(PacketViewer.class);
+
+        String[] fileFormatNames = fileFormats.values().stream()
+                .map(FileFormat::getName)
+                .collect(Collectors.toList())
+                .toArray(new String[0]);
+
+        JPanel fields = new JPanel(new GridLayout(0, 1));
+        fileFormatCombo = new JComboBox<>(fileFormatNames);
+        fileFormatCombo.setSelectedIndex(0);
+        fields.add(fileFormatCombo);
+
+        dbConfigCombo = new JComboBox<>(dbconfigs);
+        dbConfigCombo.setSelectedItem(prefs.get("LastUsedDbConfig", null));
+        fields.add(dbConfigCombo);
+
+        JPanel xtcePanel = new JPanel();
+        xtcePanel.setLayout(new BoxLayout(xtcePanel, BoxLayout.Y_AXIS));
+
+        JPanel opts = new JPanel(new BorderLayout());
+        opts.setBorder(BorderFactory.createEmptyBorder(12, 12, 11, 11));
+
+        JPanel labels = new JPanel(new GridLayout(0, 1));
+
+        JLabel fileFormatLbl = new JLabel("File Format: ");
+        fileFormatLbl.setDisplayedMnemonic(KeyEvent.VK_F);
+        fileFormatLbl.setLabelFor(fileFormatCombo);
+        labels.add(fileFormatLbl);
+
+        JLabel xtceDbLbl = new JLabel("XTCE DB: ");
+        xtceDbLbl.setDisplayedMnemonic(KeyEvent.VK_D);
+        xtceDbLbl.setLabelFor(dbConfigCombo);
+        labels.add(xtceDbLbl);
+
+        opts.add(labels, BorderLayout.WEST);
+        opts.add(fields, BorderLayout.CENTER);
+
+        xtcePanel.add(opts);
+        xtcePanel.add(new JSeparator());
+
+        getContentPane().add(xtcePanel, BorderLayout.NORTH);
+
+        String oldDir = prefs.get("LastUsedDirectory", null);
+        fileChooser = new JFileChooser(oldDir);
+        fileChooser.setDialogTitle("Open File");
+        fileChooser.addActionListener(this);
+
+        getContentPane().add(fileChooser, BorderLayout.CENTER);
+
+        setMinimumSize(new Dimension(500, 400));
+        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setTitle("Open File");
+        setModal(true);
+        installActions();
+    }
+
+    private void installActions() {
+        JRootPane root = getRootPane();
+        root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                "closeDialog");
+        root.getActionMap().put("closeDialog", new AbstractAction() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispatchEvent(new WindowEvent(OpenFileDialog.this, WindowEvent.WINDOW_CLOSING));
+            }
+        });
+    }
+
+    public int showDialog(Component parent) {
+        returnValue = CANCEL_OPTION;
+        setLocationRelativeTo(parent);
+        setVisible(true);
+        return returnValue;
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if (cmd.equals(JFileChooser.APPROVE_SELECTION)) {
+            prefs.put("LastUsedDirectory", fileChooser.getSelectedFile().getParent());
+            prefs.put("LastUsedDbConfig", "" + dbConfigCombo.getSelectedItem());
+            returnValue = APPROVE_OPTION;
+            setVisible(false);
+        } else if (cmd.equals(JFileChooser.CANCEL_SELECTION)) {
+            returnValue = CANCEL_OPTION;
+            setVisible(false);
+        }
+    }
+
+    public File getSelectedFile() {
+        return fileChooser.getSelectedFile();
+    }
+
+    public FileFormat getSelectedFileFormat() {
+        return fileFormats.get((String) fileFormatCombo.getSelectedItem());
+    }
+
+    public String getSelectedDbConfig() {
+        return (String) dbConfigCombo.getSelectedItem();
+    }
+}
+```
+
+### `PacketsTable.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketsTable.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
+import javax.swing.JTable;
+import javax.swing.KeyStroke;
+import javax.swing.ListSelectionModel;
+import javax.swing.RowFilter;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
+
+import org.yamcs.ContainerExtractionResult;
+import org.yamcs.TmPacket;
+import org.yamcs.mdb.ContainerProcessingResult;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.XtceTmExtractor;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.ui.packetviewer.filter.PacketFilter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueComparator;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonWriter;
+
+public class PacketsTable extends JTable implements ListSelectionListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final String MARK_PACKET = "Mark Packet";
+    private static final String UNMARK_PACKET = "Unmark Packet";
+    private static final Color LIGHT_GRAY = new Color(216, 216, 216);
+
+    // Expose action keys (for easier installing in JMenuBar)
+    public static final String TOGGLE_MARK_ACTION_KEY = "toggle-mark";
+    public static final String GO_TO_PACKET_ACTION_KEY = "go-to-packet";
+    public static final String BACK_ACTION_KEY = "back";
+    public static final String FORWARD_ACTION_KEY = "forward";
+    public static final String UP_ACTION_KEY = "up";
+    public static final String DOWN_ACTION_KEY = "down";
+
+    public static final String PREF_COLNAMES = "columns";
+
+    private PacketsTableModel tableModel;
+    private TableRowSorter<PacketsTableModel> rowSorter;
+    private PacketFilter packetFilter;
+
+    private PacketViewer packetViewer;
+    private JPopupMenu popup;
+    private JMenuItem markPacketMenuItem;
+    private int maxLines = 1000;
+
+    private Set<Integer> markedPacketNrs = new HashSet<>(2);
+
+    // Store history of previously visited packet numbers
+    private List<Integer> history = new ArrayList<>();
+    private int historyPosition = -1;
+
+    // used for extracting parameters shown on the left overview table
+    XtceTmExtractor tmExtractor;
+
+    LinkedHashSet<String> columnParaNames;
+
+    public PacketsTable(PacketViewer packetViewer) {
+        super();
+        this.packetViewer = packetViewer;
+        readColumnsFromPreference();
+        tableModel = new PacketsTableModel();
+        setModel(tableModel);
+
+        setPreferredScrollableViewportSize(new Dimension(400, 400));
+        setFillsViewportHeight(true);
+        getColumnModel().getColumn(0).setPreferredWidth(50);
+        getColumnModel().getColumn(1).setPreferredWidth(160);
+
+        setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        setShowHorizontalLines(false);
+        setGridColor(new Color(216, 216, 216));
+        setIntercellSpacing(new Dimension(0, 0));
+        setRowHeight(getRowHeight() + 2);
+
+        rowSorter = new TableRowSorter<>(tableModel);
+        setRowSorter(rowSorter);
+        configureRowSorting();
+
+        // Swing highlights the selected cell with an annoying blue border.
+        // Disable this behaviour by using a custom cell renderer
+        setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
+                return super.getTableCellRendererComponent(table, value,
+                        isSelected, false /* disable focus ! */, row, column);
+            }
+        });
+
+        DefaultTableCellRenderer numberRenderer = new DefaultTableCellRenderer() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
+                return super.getTableCellRendererComponent(table, value,
+                        isSelected, false /* disable focus ! */, row, column);
+            }
+        };
+        numberRenderer.setHorizontalAlignment(SwingConstants.RIGHT);
+        setDefaultRenderer(Number.class, numberRenderer);
+
+        createActions();
+        installPopupMenus();
+    }
+
+    // It seems like this needs to be re-done after every model restructuring
+    public void configureRowSorting() {
+        rowSorter.setComparator(2, (ListPacket o1, ListPacket o2) -> {
+            return o1.getName().compareTo(o2.getName());
+        });
+        for (int i = 3; i < getColumnCount(); i++) {
+            rowSorter.setComparator(i, new ValueComparator());
+        }
+    }
+
+    public void configureRowFilter(PacketFilter packetFilter) {
+        this.packetFilter = packetFilter;
+        RowFilter<PacketsTableModel, Object> rf = null;
+        if (packetFilter != null) {
+            rf = new RowFilter<>() {
+                @Override
+                public boolean include(Entry<? extends PacketsTableModel, ? extends Object> entry) {
+                    ListPacket packet = (ListPacket) entry.getValue(2);
+                    return packetFilter.matches(packet);
+                }
+            };
+            for (Parameter parameter : packetFilter.getParameters()) {
+                tmExtractor.startProviding(parameter);
+            }
+        }
+        rowSorter.setRowFilter(rf);
+    }
+
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        Component component = super.prepareRenderer(renderer, row, column);
+        if (popup.isShowing() && isCellSelected(row, column)) {
+            component.setBackground(LIGHT_GRAY);
+        } else if (!isCellSelected(row, column)) {
+            row = convertRowIndexToModel(row);
+            int packetNr = (Integer) tableModel.getValueAt(row, 0);
+            if (markedPacketNrs.contains(packetNr)) {
+                component.setBackground(Color.YELLOW);
+            } else {
+                component.setBackground(Color.WHITE);
+            }
+        }
+        return component;
+    }
+
+    public void clear() {
+        clearSelection();
+        tableModel.clear();
+        markedPacketNrs.clear();
+        history.clear();
+        historyPosition = -1;
+        updateActionStates();
+    }
+
+    public void setMaxLines(int maxLines) {
+        this.maxLines = maxLines;
+    }
+
+    /**
+     * Goes back to the previously selected packet
+     */
+    public void goBack() {
+        if (historyPosition > 0) {
+            historyPosition--;
+            goToPacket(history.get(historyPosition));
+        }
+    }
+
+    /**
+     * Goes forward to the packet that was selected before the {@code goBack()} was used.
+     */
+    public void goForward() {
+        if (historyPosition < history.size() - 1) {
+            historyPosition++;
+            goToPacket(history.get(historyPosition));
+        }
+    }
+
+    /**
+     * Goes to the packet that visually succeeds the currently selected packet
+     */
+    public void goUp() {
+        int rowIndex = getSelectedRow();
+        if (rowIndex != -1) {
+            if (rowIndex > 0) {
+                rowIndex = rowIndex - 1;
+                setRowSelectionInterval(rowIndex, rowIndex);
+                scrollRectToVisible(getCellRect(rowIndex, 0, true));
+            }
+        } else if (getRowCount() > 0) {
+            setRowSelectionInterval(0, 0);
+            scrollRectToVisible(getCellRect(0, 0, true));
+        }
+    }
+
+    /**
+     * Goes to the packet that visually succeeds the currently selected packet
+     */
+    public void goDown() {
+        int rowIndex = getSelectedRow();
+        if (rowIndex != -1) {
+            if (rowIndex < getRowCount() - 1) {
+                rowIndex = rowIndex + 1;
+                setRowSelectionInterval(rowIndex, rowIndex);
+                scrollRectToVisible(getCellRect(rowIndex, 0, true));
+            }
+        } else if (getRowCount() > 0) {
+            setRowSelectionInterval(0, 0);
+            scrollRectToVisible(getCellRect(0, 0, true));
+        }
+    }
+
+    /**
+     * Jumps to the specified packet number. Note that packet numbers do not necessarily start at 1. When connecting to
+     * a Yamcs instance, only the latest 1000 packets are displayed.
+     */
+    public void goToPacket(int packetNumber) {
+        int firstPacketNumber = getPacketNumberRange()[0];
+        packetNumber = packetNumber - firstPacketNumber;
+        int rowIndex = convertRowIndexToView(packetNumber);
+        setRowSelectionInterval(rowIndex, rowIndex);
+        scrollRectToVisible(getCellRect(rowIndex, 0, true));
+    }
+
+    public int[] getPacketNumberRange() {
+        int lo = (Integer) getModel().getValueAt(0, 0);
+        int hi = lo + getRowCount() - 1;
+        return new int[] { lo, hi };
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
+    private void createActions() {
+        // Ctrl on win/linux, Command on mac
+        int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+
+        //
+        // GO TO PACKET
+        Action goToPacketAction = new AbstractAction("Go to Packet...") {
+            private static final long serialVersionUID = 1L;
+            private GoToPacketDialog goToPacketDialog;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (goToPacketDialog == null) {
+                    goToPacketDialog = new GoToPacketDialog(PacketsTable.this);
+                }
+                int ret = goToPacketDialog.showDialog();
+                if (ret == GoToPacketDialog.APPROVE_OPTION) {
+                    goToPacket(goToPacketDialog.getLineNumber());
+                }
+            }
+        };
+        goToPacketAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+        goToPacketAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_G, menuKey));
+        getActionMap().put(GO_TO_PACKET_ACTION_KEY, goToPacketAction);
+
+        //
+        // BACK
+        Action backAction = new AbstractAction("Back") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goBack();
+            }
+        };
+        backAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_B);
+        backAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, ActionEvent.ALT_MASK));
+        getActionMap().put(BACK_ACTION_KEY, backAction);
+
+        //
+        // FORWARD
+        Action forwardAction = new AbstractAction("Forward") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goForward();
+            }
+        };
+        forwardAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_F);
+        forwardAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, ActionEvent.ALT_MASK));
+        getActionMap().put(FORWARD_ACTION_KEY, forwardAction);
+
+        //
+        // UP
+        Action upAction = new AbstractAction("Previous Packet") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goUp();
+            }
+        };
+        upAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_P);
+        upAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_UP, ActionEvent.ALT_MASK));
+        getActionMap().put(UP_ACTION_KEY, upAction);
+
+        //
+        // DOWN
+        Action downAction = new AbstractAction("Next Packet") {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                goDown();
+            }
+        };
+        downAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
+        downAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, ActionEvent.ALT_MASK));
+        getActionMap().put(DOWN_ACTION_KEY, downAction);
+
+        //
+        // TOGGLE MARK
+        Action toggleMarkAction = new AbstractAction(MARK_PACKET) {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rowIndex = getSelectedRow();
+                if (rowIndex != -1) {
+                    rowIndex = convertRowIndexToModel(rowIndex);
+                    int packetNr = (Integer) getModel().getValueAt(rowIndex, 0);
+                    if (markedPacketNrs.contains(packetNr)) {
+                        markedPacketNrs.remove(packetNr);
+                    } else {
+                        markedPacketNrs.add(packetNr);
+                    }
+                }
+            }
+        };
+        toggleMarkAction.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_M);
+        toggleMarkAction.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_M, menuKey));
+        getActionMap().put(TOGGLE_MARK_ACTION_KEY, toggleMarkAction);
+
+        updateActionStates();
+    }
+
+    private void installPopupMenus() {
+        // Header
+        getTableHeader().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                maybeShowPopup(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                maybeShowPopup(e);
+            }
+
+            private void maybeShowPopup(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    int columnIndex = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
+                    if (columnIndex >= 0) {
+                        ColumnHeaderPopUp menu = new ColumnHeaderPopUp(columnIndex);
+                        menu.show(e.getComponent(), e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+
+        // Content
+        popup = new JPopupMenu();
+        markPacketMenuItem = new JMenuItem(getActionMap().get(TOGGLE_MARK_ACTION_KEY));
+        popup.add(markPacketMenuItem);
+        popup.addPopupMenuListener(new PopupMenuListener() {
+            @Override
+            public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+                // Make sure selection background of entire row is updated
+                // Not just the parts that were covered by the popup.
+                repaint();
+            }
+
+            @Override
+            public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            }
+
+            @Override
+            public void popupMenuCanceled(PopupMenuEvent e) {
+            }
+        });
+
+        addMouseListener(new PopupListener());
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        super.valueChanged(e);
+        if (!e.getValueIsAdjusting()) {
+            int rowIndex = getSelectedRow();
+            if (rowIndex != -1) {
+                rowIndex = convertRowIndexToModel(rowIndex);
+
+                packetViewer.setSelectedPacket((ListPacket) getModel().getValueAt(rowIndex, 2));
+                int packetNumber = (Integer) getModel().getValueAt(rowIndex, 0);
+                if (history.isEmpty() || history.get(historyPosition) != packetNumber) {
+                    historyPosition++;
+                    history.add(historyPosition, packetNumber);
+
+                    // Clear Forward history (if any)
+                    for (int i = history.size() - 1; i > historyPosition; i--) {
+                        history.remove(i);
+                    }
+
+                    // Limit total history size to 10
+                    if (history.size() > 10) {
+                        history.remove(0);
+                        historyPosition--;
+                    }
+                }
+            }
+            updateActionStates();
+        }
+    }
+
+    private void updateActionStates() {
+        // Reflect selection to mark/unmark actions
+        int rowIndex = getSelectedRow();
+        Action toggleMark = getActionMap().get(TOGGLE_MARK_ACTION_KEY);
+        if (rowIndex == -1) {
+            toggleMark.putValue(Action.NAME, MARK_PACKET);
+            toggleMark.setEnabled(false);
+        } else {
+            toggleMark.setEnabled(true);
+            rowIndex = convertRowIndexToModel(rowIndex);
+            int packetNr = (Integer) getModel().getValueAt(rowIndex, 0);
+            if (markedPacketNrs.contains(packetNr)) {
+                toggleMark.putValue(Action.NAME, UNMARK_PACKET);
+            } else {
+                toggleMark.putValue(Action.NAME, MARK_PACKET);
+            }
+        }
+
+        // Activate "Go to Packet" only for non-empty packet table
+        Action goToPacket = getActionMap().get(GO_TO_PACKET_ACTION_KEY);
+        goToPacket.setEnabled(getRowCount() > 0);
+
+        // Update enabled-state of Back-action
+        Action back = getActionMap().get(BACK_ACTION_KEY);
+        back.setEnabled(historyPosition > 0);
+
+        // Update enabled-state of Forward-action
+        Action forward = getActionMap().get(FORWARD_ACTION_KEY);
+        forward.setEnabled(historyPosition < history.size() - 1);
+
+        // Update enabled-state of Up-action
+        Action up = getActionMap().get(UP_ACTION_KEY);
+        up.setEnabled(getRowCount() > 0);
+
+        // Update enabled-state of Down-action
+        Action down = getActionMap().get(DOWN_ACTION_KEY);
+        down.setEnabled(getRowCount() > 0);
+    }
+
+    /**
+     * @param rowIndex
+     *            row index in model, not in view
+     */
+    private void removeRow(int rowIndex) {
+        int packetNr = (Integer) tableModel.getValueAt(rowIndex, 0);
+        markedPacketNrs.remove(packetNr);
+
+        int historyIndex = history.indexOf(packetNr);
+        if (historyIndex != -1) {
+            history.remove(historyIndex);
+            if (historyIndex <= historyPosition) {
+                historyPosition--;
+            }
+        }
+
+        tableModel.removeRow(0);
+    }
+
+    public void packetReceived(TmPacket data) {
+        byte[] buf = data.getPacket();
+        int len = buf.length;
+        final ListPacket packet = new ListPacket(buf, len);
+        long gentime = data.getGenerationTime();
+        packet.setGenerationTime(gentime);
+        SequenceContainer rootContainer = packetViewer.getCurrentRootContainer();
+        ContainerProcessingResult cpr = tmExtractor.processPacket(buf, gentime, TimeEncoding.getWallclockTime(),
+                data.getSeqCount(), rootContainer);
+        ParameterValueList pvlist = cpr.getParameterResult();
+        packet.setColumnParameters(pvlist);
+
+        List<ContainerExtractionResult> containers = cpr.getContainerResult();
+        SequenceContainer sc = null;
+
+        for (ContainerExtractionResult cer : containers) {
+            if (cer.getOffset() > 0) {
+                continue;
+            }
+            sc = cer.getContainer();
+        }
+
+        String name;
+        if (sc == null) {
+            name = "unknown";
+        } else {
+            String alias = packetViewer.getDefaultNamespace() == null ? null
+                    : sc.getAlias(packetViewer.getDefaultNamespace());
+            name = alias == null ? sc.getQualifiedName() : alias;
+        }
+
+        packet.setName(name);
+        SwingUtilities.invokeLater(() -> {
+            tableModel.addPacket(packet);
+            if (getRowCount() == 1) {
+                updateActionStates();
+            }
+            if (maxLines > 0) {
+                while (tableModel.getRowCount() > maxLines) {
+                    removeRow(0);
+                }
+            }
+
+            if (packetViewer.miAutoScroll.isSelected() && getRowCount() > 0) {
+                int rowNum = convertRowIndexToModel(getRowCount() - 1);
+                Rectangle rect = getCellRect(rowNum, 0, true);
+                scrollRectToVisible(rect);
+            }
+            if (packetViewer.miAutoSelect.isSelected() && getRowCount() > 0) {
+                int rowNum = getRowCount() - 1;
+                getSelectionModel().setSelectionInterval(rowNum, rowNum);
+            }
+        });
+    }
+
+    // reads from the preferences the columns (parameters) that have to be shown in the left table
+    private void readColumnsFromPreference() {
+        columnParaNames = new LinkedHashSet<>();
+        String json = packetViewer.uiPrefs.get(PREF_COLNAMES, null);
+        if (json == null) {
+            log("No columns definition found in ui preferences");
+            return;
+        }
+        try {
+            JsonArray arr = JsonParser.parseString(json).getAsJsonArray();
+            for (JsonElement name : arr) {
+                columnParaNames.add(name.getAsString());
+            }
+        } catch (Exception e) {
+            log("Failed to read parameter columns from preferences");
+            e.printStackTrace();
+        }
+    }
+
+    private void saveColumnsToPreference() {
+        try {
+            StringWriter sw = new StringWriter();
+            try (JsonWriter writer = new JsonWriter(sw)) {
+                writer.beginArray();
+                for (String s : columnParaNames) {
+                    writer.value(s);
+                }
+                writer.endArray();
+            }
+            packetViewer.uiPrefs.put(PREF_COLNAMES, sw.toString());
+        } catch (Exception e) {
+            log("Failed to write parameter columns to preferences");
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * adds columns corresponding to existing parameters in XtceDB also creates the tmExtractor and subscribes to those
+     * parameters
+     * 
+     */
+    void setupParameterColumns() {
+        Mdb mdb = packetViewer.mdb;
+
+        tmExtractor = new XtceTmExtractor(mdb);
+        resetDynamicColumns();
+        for (String pn : columnParaNames) {
+            Parameter p = packetViewer.mdb.getParameter(pn);
+            if (p == null) {
+                // log("Cannot find a parameter with name " + pn + " in XtceDB, ignoring");
+            } else {
+                tableModel.addParameterColumn(p);
+                configureRowSorting();
+                tmExtractor.startProviding(p);
+            }
+        }
+        if (packetFilter != null) {
+            for (Parameter parameter : packetFilter.getParameters()) {
+                tmExtractor.startProviding(parameter);
+            }
+        }
+
+        SequenceContainer rootsc = mdb.getRootSequenceContainer();
+        if (mdb.getInheritingContainers(rootsc) == null) {
+            tmExtractor.startProviding(rootsc);
+        } else {
+            for (SequenceContainer sc : mdb.getInheritingContainers(rootsc)) {
+                tmExtractor.startProviding(sc);
+            }
+        }
+    }
+
+    void addParameterColumn(Parameter p) {
+        if (columnParaNames.add(p.getQualifiedName())) {
+            saveColumnsToPreference();
+            tableModel.addParameterColumn(p);
+            configureRowSorting();
+            tmExtractor.startProviding(p);
+        }
+    }
+
+    /**
+     * Doesn't remove columns from preferences, but resets GUI. Used on start-up, and when changing connections.
+     */
+    void resetDynamicColumns() {
+        List<TableColumn> toDelete = new ArrayList<>();
+        for (int i = tableModel.getFixedColumnsSize(); i < tableModel.getColumnCount(); i++) {
+            toDelete.add(getColumnModel().getColumn(i));
+        }
+        toDelete.forEach(c -> getColumnModel().removeColumn(c));
+        tableModel.resetParameterColumns();
+        configureRowSorting();
+    }
+
+    // index in model
+    void hideParameterColumn(int columnIndex) {
+        TableColumn tableColumn = getColumnModel().getColumn(columnIndex);
+        getColumnModel().removeColumn(tableColumn);
+        Parameter p = tableModel.getParameter(columnIndex);
+        columnParaNames.remove(p.getQualifiedName());
+        tableModel.removeColumn(columnIndex);
+        saveColumnsToPreference();
+        configureRowSorting();
+    }
+
+    public void exception(final Exception e) {
+        packetViewer.log(e.toString());
+    }
+
+    private class PopupListener extends MouseAdapter {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                int row = rowAtPoint(e.getPoint());
+                if (row >= 0 && row < getRowCount()) {
+                    setRowSelectionInterval(row, row);
+                } else {
+                    clearSelection();
+                }
+
+                if (getSelectedRow() < 0) {
+                    return;
+                }
+                if (e.isPopupTrigger() && e.getComponent() instanceof JTable) {
+                    popup.show(e.getComponent(), e.getX(), e.getY());
+                    repaint(); // !
+                }
+            }
+        }
+    }
+
+    private class ColumnHeaderPopUp extends JPopupMenu {
+        private static final long serialVersionUID = 1L;
+
+        public ColumnHeaderPopUp(int column) {
+            JMenuItem hideColumnItem = new JMenuItem("Hide Column");
+            hideColumnItem.addActionListener(e -> {
+                hideParameterColumn(column);
+            });
+            hideColumnItem.setEnabled(column >= tableModel.getFixedColumnsSize());
+            add(hideColumnItem);
+        }
+    }
+
+    public void log(final String s) {
+        packetViewer.log(s);
+    }
+}
+```
+
+### `PacketsTableModel.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketsTableModel.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import javax.swing.table.DefaultTableModel;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+
+public class PacketsTableModel extends DefaultTableModel {
+
+    private static final long serialVersionUID = 1L;
+    private static final String[] FIXED_COLUMNS = { "#", "Generation Time", "Packet Name", "Length" };
+
+    private int continuousRowCount = 0; // Always increases, even when rows were removed
+    private List<Parameter> shownColumnParameters = new ArrayList<>();
+
+    public PacketsTableModel() {
+        super(FIXED_COLUMNS, 0);
+    }
+
+    @Override
+    public Class<?> getColumnClass(int column) {
+        if (column == 0) {
+            return Integer.class;
+        } else if (column == 1) {
+            return Long.class;
+        } else if (column == 2) {
+            return ListPacket.class;
+        } else if (column == 3) {
+            return Integer.class;
+        } else {
+            return Object.class;
+        }
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        if (column < FIXED_COLUMNS.length) {
+            return FIXED_COLUMNS[column];
+        } else {
+            return shownColumnParameters.get(column - FIXED_COLUMNS.length).getName();
+        }
+    }
+
+    public int getFixedColumnsSize() {
+        return FIXED_COLUMNS.length;
+    }
+
+    public void addParameterColumn(Parameter p) {
+        shownColumnParameters.add(p);
+        addColumn(p.getName());
+    }
+
+    public Parameter getParameter(int column) {
+        if (column < FIXED_COLUMNS.length) {
+            return null;
+        } else {
+            return shownColumnParameters.get(column - FIXED_COLUMNS.length);
+        }
+    }
+
+    public void resetParameterColumns() {
+        shownColumnParameters = new ArrayList<>();
+        setColumnCount(FIXED_COLUMNS.length);
+        fireTableStructureChanged();
+    }
+
+    public void addPacket(ListPacket packet) {
+        packet.setIdentifier(++continuousRowCount);
+        List<Object> row = new ArrayList<>();
+        row.add(packet.getIdentifier());
+        row.add(TimeEncoding.toCombinedFormat(packet.getGenerationTime()));
+        row.add(packet);
+        row.add(packet.length);
+        for (Parameter p : shownColumnParameters) {
+            ParameterValue pv = packet.getParameterColumn(p);
+            if (pv != null) {
+                row.add(getValue(pv));
+            } else {
+                row.add(null);
+            }
+        }
+        addRow(row.toArray());
+    }
+
+    private Object getValue(ParameterValue pv) {
+        Value v = pv.getEngValue();
+
+        if (v == null) {
+            return getValue(pv.getRawValue());
+        } else {
+            return v.toString();
+        }
+    }
+
+    private Object getValue(Value v) {
+        return ValueUtility.getYarchValue(v);
+    }
+
+    public void clear() {
+        setRowCount(0);
+        continuousRowCount = 0;
+    }
+
+    public void removeColumn(int column) {
+        if (column < FIXED_COLUMNS.length) {
+            // FIXME, shouldn't have the concept of fixed columns other than #
+            throw new IllegalArgumentException("Can't remove fixed columns");
+        }
+
+        shownColumnParameters.remove(column - FIXED_COLUMNS.length);
+        for (Object o : getDataVector()) {
+            Vector<?> row = (Vector<?>) o;
+            if (row.size() > column) {
+                row.removeElementAt(column);
+            }
+        }
+        columnIdentifiers.removeElementAt(column);
+        fireTableStructureChanged();
+    }
+}
+```
+
+### `PacketViewer.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/PacketViewer.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowEvent;
+import java.io.ByteArrayInputStream;
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.prefs.Preferences;
+import java.util.stream.Collectors;
+
+import javax.swing.AbstractAction;
+import javax.swing.Action;
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.JTree;
+import javax.swing.KeyStroke;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingWorker;
+import javax.swing.UIManager;
+import javax.swing.border.Border;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.plaf.SplitPaneUI;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
+import javax.swing.text.StyledDocument;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
+
+import org.jdesktop.swingx.prompt.PromptSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.BasicAuthCredentials;
+import org.yamcs.client.ClientException;
+import org.yamcs.client.ConnectionListener;
+import org.yamcs.client.MessageListener;
+import org.yamcs.client.PacketSubscription;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.base.ServerURL;
+import org.yamcs.mdb.DatabaseLoadException;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.XtceTmProcessor;
+import org.yamcs.parameter.ContainerParameterValue;
+import org.yamcs.parameter.ParameterProcessor;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.protobuf.SubscribePacketsRequest;
+import org.yamcs.protobuf.TmPacketData;
+import org.yamcs.tctm.CcsdsPacketInputStream;
+import org.yamcs.tctm.IssPacketPreprocessor;
+import org.yamcs.tctm.PacketInputStream;
+import org.yamcs.tctm.PacketPreprocessor;
+import org.yamcs.ui.PrefsObject;
+import org.yamcs.ui.packetviewer.filter.PacketFilter;
+import org.yamcs.ui.packetviewer.filter.ParseException;
+import org.yamcs.ui.packetviewer.filter.TokenMgrError;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+
+import com.google.common.io.CountingInputStream;
+
+public class PacketViewer extends JFrame implements ActionListener,
+        TreeSelectionListener, ParameterProcessor, ConnectionListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final Logger log = LoggerFactory.getLogger(PacketViewer.class);
+    public static final Color ERROR_FAINT_BG = new Color(255, 221, 221);
+    public static final Color ERROR_FAINT_FG = new Color(255, 0, 0);
+    public static final Border ERROR_BORDER = BorderFactory.createLineBorder(new Color(205, 87, 40));
+    private static PacketViewer theApp;
+    private static int maxLines = -1;
+    Mdb mdb;
+
+    private File lastFile;
+    private JSplitPane hexSplit;
+    private JTextPane hexText;
+    private StyledDocument hexDoc;
+    private Style fixedStyle;
+    private Style highlightedStyle;
+    private Style offsetStyle;
+    private JMenu fileMenu;
+    private List<JMenuItem> miRecentFiles;
+    JMenuItem miAutoScroll;
+    JMenuItem miAutoSelect;
+    JComboBox<String> filterField;
+    private JTextArea logText;
+    private JScrollPane logScrollpane;
+    private PacketsTable packetsTable;
+    private ParametersTable parametersTable;
+    private JTree structureTree;
+    private DefaultMutableTreeNode structureRoot;
+    private DefaultTreeModel structureModel;
+    private JSplitPane mainsplit;
+    private FindParameterBar findBar;
+    private ListPacket currentPacket;
+    private OpenFileDialog openFileDialog;
+    private YamcsClient client;
+    private ConnectDialog connectDialog;
+    private ConnectData connectData;
+    private JMenuItem copyHexItem;
+    Preferences uiPrefs;
+
+    // used for decoding full packets
+    private XtceTmProcessor tmProcessor;
+
+    private String defaultNamespace;
+    private PacketPreprocessor realtimePacketPreprocessor;
+
+    private Map<String, FileFormat> fileFormats = new LinkedHashMap<>();
+    private FileFormat currentFileFormat; // null if listening to server
+
+    final static String CFG_PREPRO_CLASS = "packetPreprocessorClassName";
+
+    @SuppressWarnings("serial")
+    public PacketViewer(int maxLines) throws ConfigurationException {
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setPreferredSize(new Dimension(1440, 1080));
+
+        uiPrefs = Preferences.userNodeForPackage(PacketViewer.class);
+
+        YConfiguration config = null;
+        if (YConfiguration.isDefined("packet-viewer")) {
+            config = YConfiguration.getConfiguration("packet-viewer");
+        }
+        if (config != null) {
+            defaultNamespace = config.getString("defaultNamespace", null);
+            readConfig(null, config);
+        } else {
+            realtimePacketPreprocessor = new IssPacketPreprocessor(null);
+            realtimePacketPreprocessor.checkForSequenceDiscontinuity(false);
+            FileFormat fileFormat = new FileFormat("CCSDS Packets", CcsdsPacketInputStream.class.getName(),
+                    YConfiguration.emptyConfig(), realtimePacketPreprocessor);
+            fileFormats.put(fileFormat.getName(), fileFormat);
+        }
+
+        // table to the left which shows one row per packet
+        packetsTable = new PacketsTable(this);
+        packetsTable.setMaxLines(maxLines);
+        JScrollPane packetScrollpane = new JScrollPane(packetsTable);
+
+        // table to the right which shows one row per parameter in the selected packet
+
+        parametersTable = new ParametersTable(this);
+        JScrollPane tableScrollpane = new JScrollPane(parametersTable);
+        tableScrollpane.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                if (e.getComponent().getWidth() < parametersTable.getPreferredSize().getWidth()) {
+                    parametersTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+                } else {
+                    parametersTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+                }
+            }
+        });
+
+        // tree to the right which shows the container structure of the selected packet
+
+        structureRoot = new DefaultMutableTreeNode();
+        structureModel = new DefaultTreeModel(structureRoot);
+        structureTree = new JTree(structureModel);
+        structureTree.setEditable(false);
+        structureTree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        structureTree.addTreeSelectionListener(this);
+        JScrollPane treeScrollpane = new JScrollPane(structureTree);
+
+        Insets oldInsets = UIManager.getInsets("TabbedPane.contentBorderInsets");
+        UIManager.put("TabbedPane.contentBorderInsets", new Insets(0, 0, 0, 0));
+
+        JTabbedPane tabpane = new JTabbedPane();
+        UIManager.put("TabbedPane.contentBorderInsets", oldInsets);
+        tabpane.add("Parameters", tableScrollpane);
+        tabpane.add("Structure", treeScrollpane);
+
+        findBar = new FindParameterBar(parametersTable);
+
+        JPanel parameterPanel = new JPanel(new BorderLayout());
+        parameterPanel.add(tabpane, BorderLayout.CENTER);
+        parameterPanel.add(findBar, BorderLayout.SOUTH);
+
+        // hexdump panel
+
+        hexText = new JTextPane() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public boolean getScrollableTracksViewportWidth() {
+                return false; // disable line wrap
+            }
+        };
+        hexDoc = hexText.getStyledDocument();
+        final Style defStyle = StyleContext.getDefaultStyleContext().getStyle(StyleContext.DEFAULT_STYLE);
+        fixedStyle = hexDoc.addStyle("fixed", defStyle);
+        StyleConstants.setFontFamily(fixedStyle, Font.MONOSPACED);
+        highlightedStyle = hexDoc.addStyle("highlighted", fixedStyle);
+        StyleConstants.setBackground(highlightedStyle, parametersTable.getSelectionBackground());
+        StyleConstants.setForeground(highlightedStyle, parametersTable.getSelectionForeground());
+        offsetStyle = hexDoc.addStyle("offset", fixedStyle);
+        StyleConstants.setForeground(offsetStyle, Color.GRAY);
+        hexText.setEditable(false);
+
+        JPopupMenu hexPopup = new JPopupMenu();
+        copyHexItem = new JMenuItem("Copy hex");
+        copyHexItem.setEnabled(false);
+        hexPopup.add(copyHexItem);
+        copyHexItem.addActionListener(e -> {
+            if (currentPacket != null) {
+                var hex = StringConverter.arrayToHexString(currentPacket.buf);
+                Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+                StringSelection stringSelection = new StringSelection(hex);
+                clipboard.setContents(stringSelection, null);
+            }
+        });
+        hexText.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                if (e.isPopupTrigger()) {
+                    showPopupMenu(e);
+                }
+            }
+
+            private void showPopupMenu(MouseEvent e) {
+                hexPopup.show(e.getComponent(), e.getX(), e.getY());
+            }
+        });
+
+        JScrollPane hexScrollpane = new JScrollPane(hexText);
+        hexScrollpane.getViewport().setBackground(hexText.getBackground());
+        hexSplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true, parameterPanel, hexScrollpane);
+        removeBorders(hexSplit);
+        hexSplit.setResizeWeight(0.7);
+
+        mainsplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, packetScrollpane, hexSplit);
+        removeBorders(mainsplit);
+        mainsplit.setResizeWeight(0.0);
+
+        // log text
+
+        logText = new JTextArea(3, 20);
+        logText.setEditable(false);
+        logScrollpane = new JScrollPane(logText);
+        JSplitPane logsplit = new JSplitPane(JSplitPane.VERTICAL_SPLIT, mainsplit, logScrollpane);
+        removeBorders(logsplit);
+        logsplit.setResizeWeight(1.0);
+        logsplit.setContinuousLayout(true);
+
+        installMenubar();
+
+        JPanel filterBar = new JPanel();
+        filterBar.setLayout(new BorderLayout());
+
+        filterField = new JComboBox<>();
+        filterField.setEditable(true);
+        filterBar.add(filterField, BorderLayout.CENTER);
+
+        JPanel eastPanel = new JPanel();
+        eastPanel.setLayout(new BoxLayout(eastPanel, BoxLayout.X_AXIS));
+        eastPanel.setAlignmentY(CENTER_ALIGNMENT);
+        JButton clearButton = new JButton();
+        clearButton.setAction(new AbstractAction("Clear") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                filterField.setSelectedIndex(-1);
+            }
+        });
+        eastPanel.add(clearButton);
+        filterBar.add(eastPanel, BorderLayout.EAST);
+
+        JTextField filterEditor = (JTextField) filterField.getEditor().getEditorComponent();
+
+        filterEditor.getDocument().addDocumentListener(new DocumentListener() {
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                changedUpdate(e);
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                String selectedItem = filterEditor.getText();
+
+                if (selectedItem != null && !selectedItem.isEmpty() && mdb != null) {
+                    clearButton.setEnabled(true);
+                    try {
+                        new PacketFilter(selectedItem, mdb);
+                        JTextField dummy = new JTextField();
+                        filterEditor.setBackground(dummy.getBackground());
+                        filterEditor.setForeground(dummy.getForeground());
+                    } catch (ParseException | TokenMgrError e1) {
+                        filterEditor.setBackground(ERROR_FAINT_BG);
+                        filterEditor.setForeground(ERROR_FAINT_FG);
+                    }
+                } else {
+                    clearButton.setEnabled(false);
+                    JTextField dummy = new JTextField();
+                    filterEditor.setBackground(dummy.getBackground());
+                    filterEditor.setForeground(dummy.getForeground());
+                }
+
+            }
+        });
+
+        for (String item : getFilterHistory()) {
+            filterField.addItem(item);
+        }
+        filterField.setSelectedIndex(-1);
+
+        filterField.addActionListener(e -> {
+            try {
+                String selectedItem = (String) filterField.getSelectedItem();
+                if (selectedItem != null && !selectedItem.trim().isEmpty()) {
+                    PacketFilter filter = new PacketFilter(selectedItem, mdb);
+                    packetsTable.configureRowFilter(filter);
+                    updateFilterHistory(selectedItem);
+                    filterField.removeAllItems();
+                    for (String item : getFilterHistory()) {
+                        filterField.addItem(item);
+                    }
+                } else {
+                    packetsTable.configureRowFilter(null);
+                }
+            } catch (ParseException | TokenMgrError e1) {
+                packetsTable.configureRowFilter(null);
+            }
+        });
+        PromptSupport.setPrompt("Display Filter (e.g. my-parameter == 123)", filterEditor);
+
+        getContentPane().add(filterBar, BorderLayout.NORTH);
+        getContentPane().add(logsplit, BorderLayout.CENTER);
+
+        clearWindow();
+        updateTitle();
+        pack();
+        setLocationRelativeTo(null); // Center on primary monitor
+
+        packetsTable.requestFocusInWindow(); // Take focus away from search box
+        setVisible(true);
+    }
+
+    private void installMenubar() {
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+
+        fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        menuBar.add(fileMenu);
+
+        // Ctrl on win/linux, Command on mac
+        int menuKey = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+
+        JMenuItem menuitem = new JMenuItem("Open...", KeyEvent.VK_O);
+        menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, menuKey));
+        menuitem.setActionCommand("open file");
+        menuitem.addActionListener(this);
+        fileMenu.add(menuitem);
+
+        menuitem = new JMenuItem("Connect to Yamcs...");
+        menuitem.setMnemonic(KeyEvent.VK_C);
+        menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Y, menuKey));
+        menuitem.setActionCommand("connect-yamcs");
+        menuitem.addActionListener(this);
+        fileMenu.add(menuitem);
+
+        fileMenu.addSeparator();
+
+        miRecentFiles = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            menuitem = new JMenuItem();
+            menuitem.setMnemonic(KeyEvent.VK_1 + i);
+            menuitem.setActionCommand("recent-file-" + i);
+            menuitem.addActionListener(this);
+            fileMenu.add(menuitem);
+            miRecentFiles.add(menuitem);
+        }
+
+        updateMenuWithRecentFiles();
+        if (!getRecentFiles().isEmpty()) {
+            fileMenu.addSeparator();
+        }
+
+        /*
+         * menuitem = new JMenuItem("Preferences", KeyEvent.VK_COMMA);
+         * menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, menuKey));
+         * menu.add(menuitem);
+         * menu.addSeparator();
+         */
+
+        menuitem = new JMenuItem("Quit", KeyEvent.VK_Q);
+        menuitem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, menuKey));
+        menuitem.setActionCommand("quit");
+        menuitem.addActionListener(this);
+        fileMenu.add(menuitem);
+
+        JMenu menu = new JMenu("Edit");
+        menu.setMnemonic(KeyEvent.VK_E);
+        menuBar.add(menu);
+
+        Action openFindBarAction = findBar.getActionMap().get(FindParameterBar.OPEN_ACTION);
+        menu.add(new JMenuItem(openFindBarAction));
+
+        menu.addSeparator();
+
+        Action toggleMarkAction = packetsTable.getActionMap().get(PacketsTable.TOGGLE_MARK_ACTION_KEY);
+        menu.add(new JMenuItem(toggleMarkAction));
+
+        menu = new JMenu("Navigate");
+        menu.setMnemonic(KeyEvent.VK_N);
+        menuBar.add(menu);
+
+        Action goToPacketAction = packetsTable.getActionMap().get(PacketsTable.GO_TO_PACKET_ACTION_KEY);
+        menu.add(new JMenuItem(goToPacketAction));
+
+        menu.addSeparator();
+
+        Action backAction = packetsTable.getActionMap().get(PacketsTable.BACK_ACTION_KEY);
+        menu.add(new JMenuItem(backAction));
+
+        Action forwardAction = packetsTable.getActionMap().get(PacketsTable.FORWARD_ACTION_KEY);
+        menu.add(new JMenuItem(forwardAction));
+
+        menu.addSeparator();
+
+        Action upAction = packetsTable.getActionMap().get(PacketsTable.UP_ACTION_KEY);
+        menu.add(new JMenuItem(upAction));
+
+        Action downAction = packetsTable.getActionMap().get(PacketsTable.DOWN_ACTION_KEY);
+        menu.add(new JMenuItem(downAction));
+
+        menu = new JMenu("View");
+        menu.setMnemonic(KeyEvent.VK_V);
+        menuBar.add(menu);
+
+        miAutoScroll = new JCheckBoxMenuItem("Auto-Scroll To Last Packet");
+        miAutoScroll.setSelected(true);
+        menu.add(miAutoScroll);
+
+        miAutoSelect = new JCheckBoxMenuItem("Auto-Select Last Packet");
+        miAutoSelect.setSelected(false);
+        menu.add(miAutoSelect);
+
+        menu.addSeparator();
+
+        menuitem = new JMenuItem("Clear", KeyEvent.VK_C);
+        menuitem.setActionCommand("clear");
+        menuitem.addActionListener(this);
+        menu.add(menuitem);
+    }
+
+    void updateTitle() {
+        SwingUtilities.invokeLater(() -> {
+            StringBuilder title = new StringBuilder("Yamcs Packet Viewer");
+            if (client != null && client.getWebSocketClient().isConnected()) {
+                title.append(" [").append(client.getUrl()).append("]");
+            } else if (lastFile != null) {
+                title.append(" - ");
+                title.append(lastFile.getName());
+            } else {
+                title.append(" (no file loaded)");
+            }
+            setTitle(title.toString());
+        });
+    }
+
+    void updateMenuWithRecentFiles() {
+        List<String[]> recentFiles = getRecentFiles();
+        int i;
+        for (i = 0; i < recentFiles.size() && i < miRecentFiles.size(); i++) {
+            String fileRef = recentFiles.get(i)[0];
+            int maxChars = 30;
+            if (fileRef.length() > maxChars) {
+                // Search first slash from right to left
+                int slashIndex = fileRef.lastIndexOf(File.separatorChar);
+                if (fileRef.length() - slashIndex > maxChars - 3) {
+                    // Chop off the end of the string of the last path segment
+                    fileRef = "..." + fileRef.substring(slashIndex, slashIndex + maxChars - 2 * 3) + "...";
+                } else {
+                    // Output the complete filename, and fill up with initial path segments
+                    fileRef = fileRef.substring(0, maxChars - 3 - (fileRef.length() - slashIndex))
+                            + "..." + fileRef.substring(slashIndex);
+                }
+            }
+
+            JMenuItem mi = miRecentFiles.get(i);
+            mi.setVisible(true);
+            mi.setText((i + 1) + " " + fileRef);
+            mi.setToolTipText(recentFiles.get(i)[0]);
+        }
+
+        for (; i < miRecentFiles.size(); i++) {
+            miRecentFiles.get(i).setVisible(false);
+        }
+    }
+
+    static void debugLogComponent(String name, JComponent c) {
+        Insets in = c.getInsets();
+        System.out.println("component " + name + ": "
+                + "min(" + c.getMinimumSize().width + "," + c.getMinimumSize().height + ") "
+                + "pref(" + c.getPreferredSize().width + "," + c.getPreferredSize().height + ") "
+                + "max(" + c.getMaximumSize().width + "," + c.getMaximumSize().height + ") "
+                + "size(" + c.getSize().width + "," + c.getSize().height + ") "
+                + "insets(" + in.top + "," + in.left + "," + in.bottom + "," + in.right + ")");
+    }
+
+    @Override
+    public void log(final String s) {
+        SwingUtilities.invokeLater(() -> {
+            if (logText != null) {
+                logText.append(s + "\n");
+                logScrollpane.getVerticalScrollBar().setValue(logScrollpane.getVerticalScrollBar().getMaximum());
+            } else {
+                System.err.println(s);
+            }
+        });
+    }
+
+    void showMessage(String msg) {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.PLAIN_MESSAGE);
+        });
+    }
+
+    void showError(String msg) {
+        SwingUtilities.invokeLater(() -> {
+            JOptionPane.showMessageDialog(this, msg, getTitle(), JOptionPane.ERROR_MESSAGE);
+        });
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        String cmd = ae.getActionCommand();
+        if (cmd.equals("quit")) {
+            processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+        } else if (cmd.equals("clear")) {
+            clearWindow();
+        } else if (cmd.equals("open file")) {
+            if (openFileDialog == null) {
+                try {
+                    openFileDialog = new OpenFileDialog(fileFormats);
+                } catch (ConfigurationException e) {
+                    showError("Cannot load local mdb config: " + e.getMessage());
+                    return;
+                }
+            }
+            int returnVal = openFileDialog.showDialog(this);
+            if (returnVal == OpenFileDialog.APPROVE_OPTION) {
+                FileFormat fileFormat = openFileDialog.getSelectedFileFormat();
+                openFile(openFileDialog.getSelectedFile(), fileFormat, openFileDialog.getSelectedDbConfig());
+            }
+        } else if (cmd.equals("connect-yamcs")) {
+            if (connectDialog == null) {
+                connectDialog = new ConnectDialog(this, true, true, true);
+            }
+            int ret = connectDialog.showDialog();
+            if (ret == ConnectDialog.APPROVE_OPTION) {
+                var connectData = connectDialog.getConnectData();
+                connectYamcs(connectData);
+            }
+        } else if (cmd.startsWith("recent-file-")) {
+            JMenuItem mi = (JMenuItem) ae.getSource();
+            for (String[] recentFile : getRecentFiles()) {
+                if (recentFile[0].equals(mi.getToolTipText())) {
+                    if (recentFile.length == 3) {
+                        FileFormat fileFormat = fileFormats.get(recentFile[2]);
+                        if (fileFormat != null) {
+                            openFile(new File(recentFile[0]), fileFormat, recentFile[1]);
+                            break;
+                        }
+                    }
+
+                    FileFormat fileFormat = fileFormats.values().iterator().next();
+                    openFile(new File(recentFile[0]), fileFormat, recentFile[1]);
+                    break;
+                }
+            }
+        }
+    }
+
+    private void openFile(File file, FileFormat fileFormat, String xtceDb) {
+        if (!file.exists() || !file.isFile()) {
+            JOptionPane.showMessageDialog(null, "File not found: " + file, "File not found", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        disconnect();
+        lastFile = file;
+        if (loadLocalXtcedb(xtceDb)) {
+            loadFile(fileFormat);
+        }
+        updateRecentFiles(lastFile, fileFormat, xtceDb);
+        currentFileFormat = fileFormat;
+    }
+
+    private boolean loadLocalXtcedb(String configName) {
+        if (tmProcessor != null) {
+            tmProcessor.stopAsync();
+        }
+        log("Loading local XTCE db " + configName);
+        try {
+            mdb = MdbFactory.createInstanceByConfig(configName);
+        } catch (ConfigurationException | DatabaseLoadException e) {
+            log.error(e.toString(), e);
+            showError(e.getMessage());
+            return false;
+        }
+
+        tmProcessor = new XtceTmProcessor(mdb, getProcessorConfig());
+
+        tmProcessor.setParameterProcessor(this);
+        tmProcessor.startProvidingAll();
+        tmProcessor.startAsync();
+        log(String.format("Loaded definition of %d sequence container%s and %d parameter%s",
+                mdb.getSequenceContainers().size(), (mdb.getSequenceContainers().size() != 1 ? "s" : ""),
+                mdb.getParameterNames().size(), (mdb.getParameterNames().size() != 1 ? "s" : "")));
+
+        packetsTable.setupParameterColumns();
+        return true;
+    }
+
+    private boolean loadRemoteMissionDatabase(String configName) {
+        if (tmProcessor != null) {
+            tmProcessor.stopAsync();
+        }
+        String instance = connectData.instance;
+        log("Loading remote mission database for Yamcs instance " + instance);
+        try {
+            byte[] serializedMdb = client.createMissionDatabaseClient(instance).getSerializedJavaDump().get();
+            try (ObjectInputStream ois = new ObjectInputStream(new ByteArrayInputStream(serializedMdb))) {
+                Object o = ois.readObject();
+                mdb = (Mdb) o;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            showError(e.getMessage());
+            return false;
+        }
+
+        tmProcessor = new XtceTmProcessor(mdb, getProcessorConfig());
+        tmProcessor.setParameterProcessor(this);
+        tmProcessor.startProvidingAll();
+        tmProcessor.startAsync();
+        packetsTable.setupParameterColumns();
+
+        log("Loaded " + mdb.getSequenceContainers().size() + " sequence containers and "
+                + mdb.getParameterNames().size() + " parameters");
+
+        return true;
+    }
+
+    private ProcessorConfig getProcessorConfig() {
+        return new ProcessorConfig();
+    }
+
+    void loadFile(FileFormat fileFormat) {
+        new SwingWorker<Void, TmPacket>() {
+            ProgressMonitor progress;
+            int packetCount = 0;
+
+            @Override
+            protected Void doInBackground() throws Exception {
+                try (CountingInputStream reader = new CountingInputStream(new FileInputStream(lastFile))) {
+                    PacketInputStream packetInputStream = fileFormat.newPacketInputStream(reader);
+                    TmPacket packet;
+
+                    clearWindow();
+                    int progressMax = (maxLines == -1) ? (int) (lastFile.length() >> 10) : maxLines;
+                    progress = new ProgressMonitor(theApp, String.format("Loading %s", lastFile.getName()), null, 0,
+                            progressMax);
+
+                    while (!progress.isCanceled()) {
+                        byte[] p = packetInputStream.readPacket();
+                        if (p == null) {
+                            break;
+                        }
+                        PacketPreprocessor packetPreprocessor = fileFormat.getPacketPreprocessor();
+                        packet = packetPreprocessor.process(new TmPacket(TimeEncoding.getWallclockTime(), p));
+
+                        if (packet != null) {
+                            publish(packet);
+                            packetCount++;
+                            if (packetCount == maxLines) {
+                                break;
+                            }
+                        } else {
+                            log("preprocessor returned null packet");
+                        }
+                        progress.setProgress((maxLines == -1) ? (int) (reader.getCount() >> 10) : packetCount);
+                    }
+                    reader.close();
+                } catch (EOFException x) {
+                    final String msg = String.format("Encountered end of file while loading %s", lastFile.getName());
+                    log(msg);
+                } catch (Exception x) {
+                    x.printStackTrace();
+                    final String msg = String.format("Error while loading %s: %s", lastFile.getName(), x.getMessage());
+                    log(msg);
+                    showError(msg);
+                    clearWindow();
+                    lastFile = null;
+                }
+                return null;
+            }
+
+            @Override
+            protected void process(final List<TmPacket> chunks) {
+                for (TmPacket packet : chunks) {
+                    packetsTable.packetReceived(packet);
+                }
+            }
+
+            @Override
+            protected void done() {
+                if (progress != null) {
+                    if (lastFile != null) {
+                        if (progress.isCanceled()) {
+                            clearWindow();
+                            log(String.format("Cancelled loading %s", lastFile.getName()));
+                        } else {
+                            log(String.format("Loaded %d packet%s from \"%s\"",
+                                    packetCount,
+                                    packetCount != 1 ? "s" : "", lastFile.getPath()));
+                        }
+                    }
+                    progress.close();
+                }
+                updateTitle();
+            }
+        }.execute();
+    }
+
+    void clearWindow() {
+        SwingUtilities.invokeLater(() -> {
+            packetsTable.clear();
+            parametersTable.clear();
+            hexText.setText(null);
+            packetsTable.revalidate();
+            parametersTable.revalidate();
+            structureRoot.removeAllChildren();
+            structureTree.setRootVisible(false);
+        });
+    }
+
+    void highlightBitRanges(Range[] highlightBits) {
+        final int linesize = 5 + 5 * 8 + 16 + 1;
+        int n, tmp, textoffset, binHighStart, binHighStop, ascHighStart, ascHighStop;
+
+        // reset styles throughout the document
+        hexDoc.setCharacterAttributes(0, hexDoc.getLength(), fixedStyle, true);
+        for (int i = 0; i < hexDoc.getLength(); i += linesize) {
+            hexDoc.setCharacterAttributes(i, 4, offsetStyle, true);
+        }
+
+        // apply style for highlighted parts
+        for (Range bitRange : highlightBits) {
+            if (bitRange == null || bitRange.size == 0) {
+                continue;
+            }
+            final int highlightStartNibble = bitRange.offset / 4;
+            final int highlightStopNibble = (bitRange.offset + bitRange.size + 3) / 4;
+            for (n = highlightStartNibble / 32 * 32; n < highlightStopNibble; n += 32) {
+
+                binHighStart = 5;
+                ascHighStart = 5 + 5 * 8;
+                tmp = highlightStartNibble - n;
+                if (tmp > 0) {
+                    binHighStart += tmp + (tmp / 4);
+                    ascHighStart += tmp / 2;
+                }
+
+                binHighStop = 5 + 5 * 8 - 1;
+                ascHighStop = 5 + 5 * 8 + 16;
+                tmp = n + 32 - highlightStopNibble;
+                if (tmp > 0) {
+                    binHighStop -= tmp + (tmp / 4);
+                    ascHighStop -= tmp / 2;
+                }
+
+                textoffset = linesize * (n / 32);
+                // System.out.println(String.format("setCharacterAttributes %d/%d %d %d %d/%d %d/%d",
+                // highlightStartNibble, highlightStopNibble, n, textoffset, binHighStart, binHighStop, ascHighStart,
+                // ascHighStop));
+                hexDoc.setCharacterAttributes(textoffset + binHighStart, binHighStop - binHighStart, highlightedStyle,
+                        true);
+                hexDoc.setCharacterAttributes(textoffset + ascHighStart, ascHighStop - ascHighStart, highlightedStyle,
+                        true);
+            }
+        }
+
+        // put the caret into the position of the first item (caret makes itself visible by default)
+        final int hexScrollPos = (highlightBits.length == 0 || highlightBits[0] == null) ? 0
+                : (linesize * (highlightBits[0].offset / 128));
+        hexText.setCaretPosition(hexScrollPos);
+    }
+
+    void connectYamcs(ConnectData connectData) {
+        disconnect();
+        this.connectData = connectData;
+        var clientBuilder = YamcsClient.newBuilder(connectData.serverUrl)
+                .withConnectionAttempts(10)
+                .withUserAgent("PacketViewer")
+                .withVerifyTls(false)
+                .withMaxResponseLength(50 * 1024 * 1024);
+
+        if (connectData.authType == AuthType.BASIC_AUTH && connectData.username != null) {
+            clientBuilder.withCredentials(new BasicAuthCredentials(connectData.username, connectData.password));
+        }
+
+        client = clientBuilder.build();
+        client.addConnectionListener(this);
+        try {
+            if (connectData.username != null) {
+                if (connectData.authType == AuthType.STANDARD) {
+                    client.login(connectData.username, connectData.password);
+                } else if (connectData.authType == AuthType.KERBEROS) {
+                    client.loginWithKerberos(connectData.username);
+                }
+            }
+            client.connectWebSocket();
+        } catch (ClientException e) {
+            log.error("Error while connecting", e);
+        }
+
+        currentFileFormat = null;
+        updateTitle();
+    }
+
+    void disconnect() {
+        if (client != null) {
+            client.close();
+        }
+        updateTitle();
+    }
+
+    @Override
+    public void valueChanged(TreeSelectionEvent e) {
+        TreePath[] paths = structureTree.getSelectionPaths();
+        Range[] bits = null;
+        if (paths == null) {
+            bits = new Range[0];
+        } else {
+            bits = new Range[paths.length];
+            for (int i = 0; i < paths.length; ++i) {
+                Object last = paths[i].getLastPathComponent();
+                if (last instanceof TreeEntry) {
+                    TreeEntry te = (TreeEntry) last;
+                    bits[i] = new Range(te.bitOffset, te.bitSize);
+                } else {
+                    bits[i] = null;
+                }
+            }
+        }
+        highlightBitRanges(bits);
+    }
+
+    @Override
+    public void process(final ProcessingContext processingCtx) {
+        ParameterValueList params = processingCtx.getTmParams();
+        SwingUtilities.invokeLater(new Runnable() {
+            Hashtable<String, TreeContainer> containers = new Hashtable<>();
+
+            DefaultMutableTreeNode getTreeNode(int startOffset, SequenceContainer sc) {
+                String sckey = startOffset + ":" + getOpsName(sc);
+
+                if (sc.getBaseContainer() == null) {
+                    if (startOffset == 0) {
+                        return structureRoot;
+                    } else {
+
+                        return containers.computeIfAbsent(sckey, k -> {
+                            TreeContainer tc1 = new TreeContainer(sc);
+                            structureRoot.add(tc1);
+                            return tc1;
+                        });
+                    }
+                }
+                TreeContainer tc = containers.computeIfAbsent(sckey, key -> new TreeContainer(sc));
+
+                getTreeNode(startOffset, sc.getBaseContainer()).add(tc);
+                return tc;
+            }
+
+            @Override
+            public void run() {
+                parametersTable.clear();
+                structureRoot.removeAllChildren();
+
+                for (ParameterValue value : params) {
+                    // add new leaf to the structure tree
+                    // parameters become leaves, and sequence containers become nodes recursively
+                    if (value instanceof ContainerParameterValue) {
+                        ContainerParameterValue cpv = (ContainerParameterValue) value;
+                        getTreeNode(cpv.getContainerStartOffset(), cpv.getSequenceEntry().getSequenceContainer())
+                                .add(new TreeEntry(cpv));
+                    }
+                    parametersTable.parametersTableModel.addRow(value);
+                }
+
+                structureRoot.setUserObject(currentPacket);
+                structureModel.nodeStructureChanged(structureRoot);
+                structureTree.setRootVisible(true);
+
+                // expand all nodes
+                for (TreeContainer tc : containers.values()) {
+                    structureTree.expandPath(new TreePath(tc.getPath()));
+                }
+
+                // build hexdump text
+                currentPacket.hexdump(hexDoc);
+                hexText.setCaretPosition(0);
+
+                // select first row
+                parametersTable.setRowSelectionInterval(0, 0);
+                parametersTable.parametersTableModel.fireTableDataChanged();
+            }
+        });
+    }
+
+    public void setSelectedPacket(ListPacket listPacket) {
+        currentPacket = listPacket;
+        try {
+            currentPacket.load(lastFile);
+            TmPacket packet = new TmPacket(TimeEncoding.getWallclockTime(), listPacket.buf);
+            PacketPreprocessor packetPreprocessor = getCurrentPacketPreprocessor();
+            SequenceContainer rootContainer = getCurrentRootContainer();
+            tmProcessor.processPacket(packetPreprocessor.process(packet), rootContainer);
+        } catch (IOException x) {
+            String msg = String.format("Error while loading %s: %s", lastFile.getName(), x.getMessage());
+            log(msg);
+            showError(msg);
+        }
+
+        copyHexItem.setEnabled(currentPacket != null);
+    }
+
+    SequenceContainer getCurrentRootContainer() {
+        SequenceContainer rootContainer;
+        if (currentFileFormat != null && currentFileFormat.getRootContainer() != null) {
+            rootContainer = mdb.getSequenceContainer(currentFileFormat.getRootContainer());
+        } else {
+            rootContainer = mdb.getRootSequenceContainer();
+        }
+        if (rootContainer.getBaseContainer() != null) {
+            log(rootContainer.getQualifiedName() +
+                    " is not a proper root container: it extends " +
+                    rootContainer.getBaseContainer().getQualifiedName());
+        }
+        return rootContainer;
+    }
+
+    private PacketPreprocessor getCurrentPacketPreprocessor() {
+        if (currentFileFormat != null) {
+            return currentFileFormat.getPacketPreprocessor();
+        } else {
+            return realtimePacketPreprocessor;
+        }
+    }
+
+    @SuppressWarnings("serial")
+    class TreeContainer extends DefaultMutableTreeNode {
+        TreeContainer(SequenceContainer sc) {
+            super(getOpsName(sc), true);
+        }
+    }
+
+    @SuppressWarnings("serial")
+    class TreeEntry extends DefaultMutableTreeNode {
+        int bitOffset, bitSize;
+
+        TreeEntry(ContainerParameterValue value) {
+            super(String.format("%d/%d %s", value.getAbsoluteBitOffset(), value.getBitSize(),
+                    getOpsName(value.getParameter())), false);
+            bitOffset = value.getAbsoluteBitOffset();
+            bitSize = value.getBitSize();
+        }
+    }
+
+    protected class Range {
+        int offset, size;
+
+        Range(int offset, int size) {
+            this.offset = offset;
+            this.size = size;
+        }
+    }
+
+    @Override
+    public void connected() {
+        try {
+            log("connected to " + client.getHost() + ":" + client.getPort());
+            if (connectData.useServerMdb) {
+                if (!loadRemoteMissionDatabase(connectData.instance)) {
+                    return;
+                }
+            } else {
+                if (!loadLocalXtcedb(connectData.localMdbConfig)) {
+                    return;
+                }
+            }
+
+            PacketSubscription subscription = client.createPacketSubscription();
+            subscription.addMessageListener(new MessageListener<TmPacketData>() {
+
+                @Override
+                public void onMessage(TmPacketData message) {
+                    TmPacket pwt = new TmPacket(TimeEncoding.fromProtobufTimestamp(message.getReceptionTime()),
+                            TimeEncoding.fromProtobufTimestamp(message.getGenerationTime()),
+                            message.getSequenceNumber(), message.getPacket().toByteArray());
+                    packetsTable.packetReceived(pwt);
+                }
+
+                @Override
+                public void onError(Throwable t) {
+                    showError("Error subscribing: " + t.getMessage());
+                }
+            });
+
+            subscription.sendMessage(SubscribePacketsRequest.newBuilder()
+                    .setInstance(connectData.instance)
+                    .setStream(connectData.streamName)
+                    .build());
+        } catch (Exception e) {
+            log(e.toString());
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void connecting() {
+        log("connecting to " + client.getHost() + ":" + client.getPort());
+    }
+
+    @Override
+    public void connectionFailed(Throwable cause) {
+        log("connection to " + client.getHost() + ":" + client.getPort() + " failed: " + cause);
+    }
+
+    @Override
+    public void disconnected() {
+        log("disconnected");
+    }
+
+    /**
+     * Returns the recently opened files from preferences Each entry is a String array with the filename on index 0, and
+     * the last used XTCE DB for that file on index 1.
+     */
+    @SuppressWarnings("unchecked")
+    public List<String[]> getRecentFiles() {
+        List<String[]> recentFiles = new ArrayList<>();
+        Object obj = PrefsObject.getObject(uiPrefs, "RecentlyOpened");
+        if (obj instanceof ArrayList) {
+            recentFiles.addAll((ArrayList<String[]>) obj);
+        }
+
+        // Remove outdated entries
+        return recentFiles.stream()
+                .filter(f -> f.length == 3)
+                .filter(f -> fileFormats.get(f[2]) != null)
+                .collect(Collectors.toList());
+    }
+
+    private void updateRecentFiles(File file, FileFormat fileFormat, String xtceDb) {
+        String filename = file.getAbsolutePath();
+        List<String[]> recentFiles = getRecentFiles();
+        boolean exists = false;
+        for (int i = 0; i < recentFiles.size(); i++) {
+            String[] entry = recentFiles.get(i);
+            if (entry[0].equals(filename)) {
+                entry[1] = xtceDb;
+                entry[2] = fileFormat.getName();
+                recentFiles.add(0, recentFiles.remove(i));
+                exists = true;
+            }
+        }
+        if (!exists) {
+            recentFiles.add(0, new String[] { filename, xtceDb, fileFormat.getName() });
+        }
+        PrefsObject.putObject(uiPrefs, "RecentlyOpened", recentFiles);
+
+        // Also update JMenu accordingly
+        updateMenuWithRecentFiles();
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<String> getFilterHistory() {
+        List<String> history = null;
+        Object obj = PrefsObject.getObject(uiPrefs, "FilterHistory");
+        if (obj instanceof ArrayList) {
+            history = (ArrayList<String>) obj;
+        }
+        return (history != null) ? history : new ArrayList<>();
+    }
+
+    private void updateFilterHistory(String filter) {
+        if (filter == null || filter.trim().isEmpty()) {
+            return;
+        }
+
+        List<String> history = getFilterHistory();
+        boolean exists = false;
+        for (int i = 0; i < history.size(); i++) {
+            String entry = history.get(i);
+            if (entry.equals(filter)) {
+                history.add(0, history.remove(i));
+                exists = true;
+            }
+        }
+        if (!exists) {
+            history.add(0, filter);
+        }
+        if (history.size() > 10) {
+            history = new ArrayList<>(history.subList(0, 10));
+        }
+        PrefsObject.putObject(uiPrefs, "FilterHistory", history);
+    }
+
+    private void removeBorders(JSplitPane splitPane) {
+        SplitPaneUI ui = splitPane.getUI();
+        if (ui instanceof BasicSplitPaneUI) { // We don't want to mess with other L&Fs
+            ((BasicSplitPaneUI) ui).getDivider().setBorder(null);
+            splitPane.setBorder(BorderFactory.createEmptyBorder());
+        }
+    }
+
+    private static void printUsageAndExit(boolean full) {
+        System.err.println("usage: packet-viewer [-h] [-l n] -x MDB FILE");
+        System.err.println("   or: packet-viewer [-h] [-l n] [-x MDB] -i INSTANCE [-s STREAM] URL");
+        if (full) {
+            System.err.println();
+            System.err.println("    FILE         The file to open at startup. Requires the use of -x");
+            System.err.println();
+            System.err.println("    URL          Connect at startup to the given url. Requires the use of -i");
+            System.err.println();
+            System.err.println("OPTIONS");
+            System.err.println("    -h           Print a help message and exit");
+            System.err.println();
+            System.err.println("    -l n         Limit the view to n packets only. If the Packet Viewer is");
+            System.err.println("                 connected to a live instance, only the last n packets will");
+            System.err.println("                 be visible. For offline file consulting, only the first n");
+            System.err.println("                 packets of the file will be displayed.");
+            System.err.println("                 Defaults to 1000 for realtime connections. There is no");
+            System.err.println("                 default limitation for viewing offline files.");
+            System.err.println();
+            System.err.println("    -x MDB       Name of the applicable MDB as specified in the");
+            System.err.println("                 mdb.yaml configuration file.");
+            System.err.println();
+            System.err.println("    -i INSTANCE  Yamcs instance name.");
+            System.err.println();
+            System.err.println("    -s STREAM    Yamcs stream name. Default: tm_realtime.");
+            System.err.println();
+            System.err.println("EXAMPLES");
+            System.err.println("        packet-viewer -l 50 -x my-db packet-file");
+            System.err.println("        packet-viewer -l 50 -i simulator http://localhost:8090");
+        }
+        System.exit(1);
+    }
+
+    private static void printArgsError(String message) {
+        System.err.println(message);
+        printUsageAndExit(false);
+    }
+
+    public static void main(String[] args) throws ConfigurationException, URISyntaxException {
+        // Scan args
+        String fileOrURL = null;
+        Map<String, String> options = new HashMap<>();
+        for (int i = 0; i < args.length; i++) {
+            if ("-h".equals(args[i])) {
+                printUsageAndExit(true);
+            } else if ("-l".equals(args[i])) {
+                if (i + 1 < args.length) {
+                    options.put(args[i], args[++i]);
+                } else {
+                    printArgsError("Number of lines not specified for -l option");
+                }
+            } else if ("-x".equals(args[i])) {
+                if (i + 1 < args.length) {
+                    options.put(args[i], args[++i]);
+                } else {
+                    printArgsError("Name of MDB not specified for -x option");
+                }
+            } else if ("-i".equals(args[i])) {
+                if (i + 1 < args.length) {
+                    options.put(args[i], args[++i]);
+                } else {
+                    printArgsError("Name of the instance not specified for -i option");
+                }
+            } else if ("-s".equals(args[i])) {
+                if (i + 1 < args.length) {
+                    options.put(args[i], args[++i]);
+                } else {
+                    printArgsError("Name of the stream not specified for -s option");
+                }
+            } else if ("--etc-dir".equals(args[i])) {
+                if (i + 1 < args.length) {
+                    options.put(args[i], args[++i]);
+                } else {
+                    printArgsError("Directory not specified for --etc-dir option");
+                }
+            } else if (args[i].startsWith("-")) {
+                printArgsError("Unknown option: " + args[i]);
+            } else { // i should now be positioned at [file|url]
+                if (i == args.length - 1) {
+                    fileOrURL = args[i];
+                } else {
+                    printArgsError("Too many arguments. Only one file can be opened at a time");
+                }
+            }
+        }
+
+        // Do some more preparatory stuff
+        if (options.containsKey("-l")) {
+            try {
+                maxLines = Integer.parseInt((String) options.get("-l"));
+            } catch (NumberFormatException e) {
+                printArgsError("-l argument must be integer. Got: " + options.get("-l"));
+            }
+        }
+        boolean isURL = fileOrURL != null && (fileOrURL.startsWith("http://") || fileOrURL.startsWith("https://"));
+        if (fileOrURL != null) {
+            if (isURL) {
+                if (!options.containsKey("-l")) {
+                    maxLines = 1000; // Default for realtime connections
+                }
+                if (!options.containsKey("-i")) {
+                    printArgsError("-i argument must be specified when opening a URL");
+                }
+            } else { // File
+                if (!options.containsKey("-x")) {
+                    printArgsError("-x argument must be specified when opening a file");
+                }
+            }
+        }
+
+        if (options.containsKey("--etc-dir")) {
+            Path etcDir = Path.of(options.get("--etc-dir"));
+            YConfiguration.setupTool(etcDir.toFile());
+        } else {
+            YConfiguration.setupTool();
+        }
+
+        // Use XDG convention
+        var cacheDir = Path.of(System.getProperty("user.home"), ".cache", "packet-viewer");
+        MdbFactory.setupTool(cacheDir);
+
+        // Okay, launch the GUI now
+        theApp = new PacketViewer(maxLines);
+        if (fileOrURL != null) {
+            if (isURL) {
+                var serverURL = ServerURL.parse(fileOrURL);
+                var connectData = new ConnectData();
+                connectData.authType = AuthType.STANDARD;
+                connectData.serverUrl = serverURL.toString();
+                connectData.instance = options.get("-i");
+                connectData.streamName = options.getOrDefault("-s", "tm_realtime");
+                if (options.containsKey("-x")) {
+                    connectData.useServerMdb = false;
+                    connectData.localMdbConfig = options.get("-x");
+                } else {
+                    connectData.useServerMdb = true;
+                }
+                theApp.connectYamcs(connectData);
+            } else { // File
+                var fileFormat = theApp.fileFormats.values().iterator().next();
+                theApp.openFile(new File(fileOrURL), fileFormat, options.get("-x"));
+            }
+        }
+    }
+
+    public void addParameterToTheLeftTable(Parameter selectedParameter) {
+        packetsTable.addParameterColumn(selectedParameter);
+    }
+
+    public String getDefaultNamespace() {
+        return defaultNamespace;
+    }
+
+    private PacketPreprocessor loadPacketPreprocessor(String instance, YConfiguration config) {
+        String packetPreprocessorClassName = config.getString(CFG_PREPRO_CLASS, IssPacketPreprocessor.class.getName());
+        try {
+            if (config.containsKey("packetPreprocessorArgs")) {
+                YConfiguration packetPreprocessorArgs = config.getConfig("packetPreprocessorArgs");
+                PacketPreprocessor preprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance,
+                        packetPreprocessorArgs);
+                preprocessor.checkForSequenceDiscontinuity(false);
+                return preprocessor;
+            } else {
+                PacketPreprocessor preprocessor = YObjectLoader.loadObject(packetPreprocessorClassName, instance);
+                preprocessor.checkForSequenceDiscontinuity(false);
+                return preprocessor;
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packet preprocessor", e);
+            throw e;
+        }
+    }
+
+    protected void readConfig(String instance, YConfiguration config) {
+        realtimePacketPreprocessor = loadPacketPreprocessor(instance, config);
+
+        if (config.containsKey("fileFormats")) {
+            List<YConfiguration> fileFormatsConfig = config.getConfigList("fileFormats");
+            for (YConfiguration fileFormatConfig : fileFormatsConfig) {
+                String name = fileFormatConfig.getString("name");
+                String packetInputStreamClassName = fileFormatConfig.getString("packetInputStreamClassName");
+                YConfiguration packetInputStreamArgs = fileFormatConfig.getConfigOrEmpty("packetInputStreamArgs");
+
+                PacketPreprocessor filePacketPreprocessor = realtimePacketPreprocessor;
+                if (fileFormatConfig.containsKey(CFG_PREPRO_CLASS)) {
+                    filePacketPreprocessor = loadPacketPreprocessor(instance, fileFormatConfig);
+                }
+
+                FileFormat fileFormat = new FileFormat(name, packetInputStreamClassName, packetInputStreamArgs,
+                        filePacketPreprocessor);
+                fileFormat.setRootContainer(fileFormatConfig.getString("rootContainer", null));
+                fileFormats.put(name, fileFormat);
+            }
+        } else {
+            String defaultFormatName = "CCSDS Packets";
+            String defaultPacketInputStreamClassName = CcsdsPacketInputStream.class.getName();
+            YConfiguration defaultPacketInputStreamArgs = YConfiguration.emptyConfig();
+
+            // Legacy. Over time exclusive use of fileFormats is preferred
+            if (config.containsKey("packetInputStreamClassName")) {
+                defaultFormatName = "Default";
+                defaultPacketInputStreamClassName = config.getString("packetInputStreamClassName");
+                defaultPacketInputStreamArgs = config.getConfigOrEmpty("packetInputStreamArgs");
+            }
+
+            fileFormats.put(defaultFormatName, new FileFormat(
+                    defaultFormatName, defaultPacketInputStreamClassName, defaultPacketInputStreamArgs,
+                    realtimePacketPreprocessor));
+        }
+    }
+
+    /**
+     * OPS name, in XTCE defined as alias for namespace "MDB:OPS Name"
+     *
+     * @return OPS Name alias if defined, otherwise name in the default namespace
+     */
+    private String getOpsName(NameDescription nameDescription) {
+        String alias = nameDescription.getOpsName();
+        if (alias != null) {
+            return alias;
+        }
+        return nameDescription.getName();
+    }
+}
+```
+
+### `ParametersTable.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ParametersTable.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.ui.packetviewer.PacketViewer.Range;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ValueEnumeration;
+
+public class ParametersTable extends JTable implements ListSelectionListener {
+
+    private static final long serialVersionUID = 1L;
+    private static final Color GRAYISH_COLOR = new Color(235, 235, 235);
+
+    private List<Integer> rowsWithSearchResults = new ArrayList<>();
+
+    private PacketViewer packetViewer;
+    private String lastSearchTerm;
+
+    private RightClickMenu rightClickMenu = new RightClickMenu();
+    ParametersTableModel parametersTableModel = new ParametersTableModel();
+
+    public ParametersTable(PacketViewer packetViewer) {
+        this.packetViewer = packetViewer;
+        setModel(parametersTableModel);
+
+        setPreferredScrollableViewportSize(new Dimension(600, 400));
+        setFillsViewportHeight(true);
+        getSelectionModel().addListSelectionListener(this);
+        setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+
+        MouseListener linkListener = new MouseListener();
+        addMouseListener(linkListener);
+        addMouseMotionListener(linkListener);
+
+        for (String colname : ParametersTableModel.COLUMNS) {
+            getColumn(colname).setPreferredWidth(85);
+        }
+        getColumnModel().getColumn(0).setPreferredWidth(300);
+        setAutoResizeMode(AUTO_RESIZE_OFF);
+
+        // Disable Grid
+        setShowGrid(false);
+        setIntercellSpacing(new Dimension(0, 0));
+
+        // Swing highlights the selected cell with an annoying blue border.
+        // Disable this behaviour by using a custom cell renderer
+        setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column) {
+
+                Component c;
+                if (value instanceof EnumeratedParameterType) {
+                    String name = ((EnumeratedParameterType) value).getName();
+                    String link = String.format("<html><a href=\"#\">%s</a></html>", name);
+                    c = super.getTableCellRendererComponent(table, link, isSelected, false /* disable focus ! */, row,
+                            column);
+                } else if (value instanceof Parameter) {
+                    c = super.getTableCellRendererComponent(table, ((Parameter) value).getName(), isSelected,
+                            false /* disable focus ! */, row, column);
+                } else {
+                    c = super.getTableCellRendererComponent(table, value, isSelected, false /* disable focus ! */, row,
+                            column);
+                }
+
+                // Highlight search results
+                if (!rowsWithSearchResults.isEmpty()) {
+                    int rowIndex = convertRowIndexToModel(row);
+                    if (rowsWithSearchResults.contains(rowIndex)) {
+                        c.setFont(c.getFont().deriveFont(Font.BOLD));
+                    }
+                }
+
+                return c;
+            }
+        });
+    }
+
+    public void clear() {
+        parametersTableModel.clear();
+        clearSearchResults();
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
+    @Override
+    public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+        Component component = super.prepareRenderer(renderer, row, column);
+        if (!isCellSelected(row, column)) {
+            if (row % 2 == 0) {
+                component.setBackground(GRAYISH_COLOR);
+            } else {
+                component.setBackground(Color.WHITE);
+            }
+        }
+        return component;
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent e) {
+        super.valueChanged(e);
+        if (e.getSource() == getSelectionModel()) {
+            int[] rows = getSelectedRows();
+            Range[] bits = new Range[rows.length];
+            for (int i = 0; i < rows.length; ++i) {
+                bits[i] = packetViewer.new Range(Integer.parseInt((String) getModel().getValueAt(rows[i], 7)),
+                        Integer.parseInt((String) getModel().getValueAt(rows[i], 8)));
+            }
+            packetViewer.highlightBitRanges(bits);
+        }
+    }
+
+    public SearchStats nextSearchResult(String searchTerm) {
+        updateMatchingRows(searchTerm);
+
+        SearchStats stats = null;
+        if (!rowsWithSearchResults.isEmpty()) {
+            // Always search up/down relative to current selected row
+            int relpos = getSelectedRow();
+
+            // First, set a reasonable default for nextIndex
+            int nextIndex = rowsWithSearchResults.get(0);
+            for (int index : rowsWithSearchResults) {
+                if (index > relpos) {
+                    nextIndex = index;
+                    break;
+                }
+            }
+
+            // Now finetune it
+            if (rowsWithSearchResults.contains(relpos)) {
+                int x = rowsWithSearchResults.indexOf(relpos);
+                if (x < rowsWithSearchResults.size() - 1) {
+                    nextIndex = rowsWithSearchResults.get(x + 1);
+                } else if (x == rowsWithSearchResults.size() - 1) {
+                    nextIndex = rowsWithSearchResults.get(0); // Circulate
+                }
+            }
+
+            if (nextIndex != relpos) {
+                setRowSelectionInterval(nextIndex, nextIndex);
+                scrollRectToVisible(getCellRect(nextIndex, 0, true));
+
+                stats = new SearchStats();
+                stats.totalMatching = rowsWithSearchResults.size();
+                stats.selectedMatch = rowsWithSearchResults.indexOf(nextIndex) + 1;
+            }
+        }
+
+        lastSearchTerm = searchTerm;
+        repaint();
+        return (stats != null) ? stats : null;
+    }
+
+    public SearchStats previousSearchResult(String searchTerm) {
+        updateMatchingRows(searchTerm);
+
+        SearchStats stats = null;
+        if (!rowsWithSearchResults.isEmpty()) {
+
+            // Always search up/down relative to current selected row
+            int relpos = getSelectedRow();
+
+            // First, set a reasonable default for prevIndex
+            int prevIndex = rowsWithSearchResults.get(0);
+            for (int i = rowsWithSearchResults.size() - 1; i >= 0; i--) {
+                int index = rowsWithSearchResults.get(i);
+                if (index < relpos) {
+                    prevIndex = index;
+                    break;
+                }
+            }
+
+            // Now finetune it
+            if (rowsWithSearchResults.contains(relpos)) {
+                int x = rowsWithSearchResults.indexOf(relpos);
+                if (x > 0) {
+                    prevIndex = rowsWithSearchResults.get(x - 1);
+                } else if (x == 0) {
+                    prevIndex = rowsWithSearchResults.get(rowsWithSearchResults.size() - 1); // Circulate
+                }
+            }
+
+            if (prevIndex != relpos) {
+                setRowSelectionInterval(prevIndex, prevIndex);
+                scrollRectToVisible(getCellRect(prevIndex, 0, true));
+
+                stats = new SearchStats();
+                stats.totalMatching = rowsWithSearchResults.size();
+                stats.selectedMatch = rowsWithSearchResults.indexOf(prevIndex) + 1;
+            }
+        }
+
+        lastSearchTerm = searchTerm;
+        repaint();
+        return (stats != null) ? stats : null;
+    }
+
+    private void updateMatchingRows(String searchTerm) {
+        if (!searchTerm.equals(lastSearchTerm)) {
+            rowsWithSearchResults.clear();
+            for (int i = 0; i < parametersTableModel.pvList.size(); i++) {
+                ParameterValue pval = parametersTableModel.pvList.get(i);
+                String opsName = pval.getParameter().getName();
+                if (opsName.toLowerCase().contains(searchTerm)) {
+                    rowsWithSearchResults.add(i);
+                }
+            }
+        }
+
+        lastSearchTerm = searchTerm;
+    }
+
+    public void clearSearchResults() {
+        rowsWithSearchResults.clear();
+        lastSearchTerm = null;
+    }
+
+    private class MouseListener extends MouseAdapter {
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            int column = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
+            int row = rowAtPoint(e.getPoint());
+            maybeShowPopup(e);
+            if (column == 9 && row != -1) {
+                Object val = getModel().getValueAt(row, column);
+                if (val instanceof EnumeratedParameterType) {
+                    EnumeratedParameterType type = (EnumeratedParameterType) val;
+
+                    JPanel msgPanel = new JPanel(new GridLayout(0, 2));
+                    for (ValueEnumeration v : type.getValueEnumerationList()) {
+                        msgPanel.add(new JLabel("" + v.getValue()));
+                        msgPanel.add(new JLabel(v.getLabel()));
+                    }
+
+                    int rawValue = Integer.valueOf((String) getModel().getValueAt(row, 2));
+
+                    Object[][] rowData = new Object[type.getValueEnumerationList().size()][2];
+                    int i = 0;
+                    int preselectedRow = -1;
+                    for (ValueEnumeration v : type.getValueEnumerationList()) {
+                        rowData[i][0] = v.getValue();
+                        rowData[i][1] = v.getLabel();
+                        if ((Long) rowData[i][0] == rawValue) {
+                            preselectedRow = i;
+                        }
+                        i++;
+                    }
+
+                    JTable lov = new JTable(rowData, new String[] { "#", "Label" });
+                    lov.setFillsViewportHeight(true);
+                    lov.setShowVerticalLines(false);
+                    lov.setIntercellSpacing(new Dimension(0, 0));
+                    lov.setGridColor(new Color(216, 216, 216));
+                    lov.getColumnModel().getColumn(0).setPreferredWidth(40);
+
+                    // Set preferred width of label column according to largest content
+                    int width = 0;
+                    for (i = 0; i < lov.getRowCount(); i++) {
+                        TableCellRenderer renderer = lov.getCellRenderer(i, 1);
+                        Component c = lov.prepareRenderer(renderer, i, 1);
+                        width = Math.max(c.getPreferredSize().width, width);
+                    }
+                    lov.getColumnModel().getColumn(1).setPreferredWidth(Math.max(width, 200));
+                    lov.getTableHeader().setReorderingAllowed(false);
+                    lov.setEnabled(false);
+
+                    if (preselectedRow != -1) {
+                        lov.setRowSelectionInterval(preselectedRow, preselectedRow);
+                    }
+
+                    JScrollPane msgPanelScroll = new JScrollPane(lov);
+                    int preferredWidth = Math.min(lov.getPreferredSize().width + 20, 600);
+                    int preferredHeight = lov.getRowHeight() * Math.min(lov.getRowCount(), 20);
+                    lov.setPreferredScrollableViewportSize(new Dimension(preferredWidth, preferredHeight));
+
+                    String title = "List of Values · " + type.getName();
+                    setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                    JOptionPane.showMessageDialog(getJFrameContainer(ParametersTable.this), msgPanelScroll, title,
+                            JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            maybeShowPopup(e);
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+            int column = convertColumnIndexToModel(columnAtPoint(e.getPoint()));
+            int row = rowAtPoint(e.getPoint());
+            if (column == 9 && row != -1) {
+                Object val = getModel().getValueAt(row, column);
+                if (val instanceof EnumeratedParameterType) {
+                    // It's an enumeration displayed as a link. Give a visual clue to the user
+                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    return;
+                }
+            }
+            setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        }
+
+        private JFrame getJFrameContainer(JComponent component) {
+            Container parent = component.getParent();
+            if (parent instanceof JFrame) {
+                return (JFrame) parent;
+            } else {
+                return getJFrameContainer((JComponent) parent);
+            }
+        }
+
+        private void maybeShowPopup(MouseEvent e) {
+            if (e.isPopupTrigger()) {
+                int row = rowAtPoint(e.getPoint());
+                if (row != -1) {
+                    setRowSelectionInterval(row, row);
+                    rightClickMenu.selectedParameter = parametersTableModel.getParameterValue(row);
+                    rightClickMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        }
+
+    }
+
+    static class SearchStats {
+        /**
+         * row index of selected match (as visible to user)
+         */
+        int selectedMatch;
+
+        /**
+         * total matching search results
+         */
+        int totalMatching;
+    }
+
+    @SuppressWarnings("serial")
+    private class RightClickMenu extends JPopupMenu {
+        ParameterValue selectedParameter;
+
+        public RightClickMenu() {
+            add(new AbstractAction("Apply as Left Column") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    packetViewer.addParameterToTheLeftTable(selectedParameter.getParameter());
+                }
+            });
+
+            JMenu applyFilterMenu = new JMenu("Apply as Filter");
+            applyFilterMenu.add(new AbstractAction("Selected") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String expression = String.format("%s == %s",
+                            selectedParameter.getParameter().getName(),
+                            selectedParameter.getEngValue());
+                    packetViewer.filterField.setSelectedItem(expression);
+                }
+            });
+            applyFilterMenu.add(new AbstractAction("Not Selected") {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Use !(x == x) instead of !=, because the latter would only
+                    // filter on only packets that include this parameter.
+                    String expression = String.format("!(%s == %s)",
+                            selectedParameter.getParameter().getName(),
+                            selectedParameter.getEngValue());
+                    packetViewer.filterField.setSelectedItem(expression);
+                }
+            });
+
+            add(applyFilterMenu);
+        }
+    }
+}
+```
+
+### `ParametersTableModel.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/ParametersTableModel.java`
+
+
+```java
+package org.yamcs.ui.packetviewer;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.table.AbstractTableModel;
+
+import org.yamcs.parameter.ContainerParameterValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.xtce.BaseDataType;
+import org.yamcs.xtce.Calibrator;
+import org.yamcs.xtce.DataEncoding;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.FloatDataEncoding;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.ParameterType;
+
+@SuppressWarnings("serial")
+public class ParametersTableModel extends AbstractTableModel {
+
+    List<ParameterValue> pvList = new ArrayList<>();
+    static final String[] COLUMNS = { "Name", "Eng Value",
+            "Raw Value", "Nominal Low", "Nominal High", "Danger Low",
+            "Danger High", "Bit Offset", "Bit Size", "Calibration" };
+
+    @Override
+    public int getRowCount() {
+        return pvList.size();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return COLUMNS.length;
+    }
+
+    @Override
+    public String getColumnName(int columnIndex) {
+        return COLUMNS[columnIndex];
+    }
+
+    public ParameterValue getParameterValue(int rowIndex) {
+        return pvList.get(rowIndex);
+    }
+
+    @Override
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        ParameterValue pv = pvList.get(rowIndex);
+        switch (columnIndex) {
+        case 0:
+            return pv.getParameter();
+        case 1:
+            return (pv.getEngValue() != null) ? pv.getEngValue().toString() : null;
+        case 2:
+            return (pv.getRawValue() != null) ? pv.getRawValue().toString() : null;
+        case 3:
+            return pv.getWarningRange() == null ? "" : Double.toString(pv.getWarningRange().getMin());
+        case 4:
+            return pv.getWarningRange() == null ? "" : Double.toString(pv.getWarningRange().getMax());
+        case 5:
+            return pv.getCriticalRange() == null ? "" : Double.toString(pv.getCriticalRange().getMin());
+        case 6:
+            return pv.getCriticalRange() == null ? "" : Double.toString(pv.getCriticalRange().getMax());
+        case 7:
+            return (pv instanceof ContainerParameterValue)
+                    ? String.valueOf(((ContainerParameterValue) pv).getAbsoluteBitOffset())
+                    : null;
+        case 8:
+            return (pv instanceof ContainerParameterValue) ? String.valueOf(((ContainerParameterValue) pv).getBitSize())
+                    : null;
+        case 9:
+            ParameterType paramtype = pv.getParameter().getParameterType();
+            if (paramtype instanceof EnumeratedParameterType) {
+                return paramtype;
+            } else if (paramtype instanceof BaseDataType) {
+                DataEncoding encoding = ((BaseDataType) paramtype).getEncoding();
+                Calibrator calib = null;
+                if (encoding instanceof IntegerDataEncoding) {
+                    calib = ((IntegerDataEncoding) encoding).getDefaultCalibrator();
+                } else if (encoding instanceof FloatDataEncoding) {
+                    calib = ((FloatDataEncoding) encoding).getDefaultCalibrator();
+                }
+                return calib == null ? "" : calib.toString();
+            } else {
+                return null;
+            }
+        default:
+            return null;
+        }
+    }
+
+    public void clear() {
+        pvList.clear();
+    }
+
+    public void addRow(ParameterValue pv) {
+        pvList.add(pv);
+    }
+}
+```

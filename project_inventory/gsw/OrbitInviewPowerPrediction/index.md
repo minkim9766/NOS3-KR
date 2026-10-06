@@ -3,7 +3,7 @@
 
 **경로:** `gsw/OrbitInviewPowerPrediction/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,16 +11,218 @@
 config/index
 example_output/index
 scripts/index
-file--.git
-file--crontab
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/OrbitInviewPowerPrediction/config/`](config/index) — 폴더
-- [`gsw/OrbitInviewPowerPrediction/example_output/`](example_output/index) — 폴더
-- [`gsw/OrbitInviewPowerPrediction/scripts/`](scripts/index) — 폴더
-- [`gsw/OrbitInviewPowerPrediction/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/crontab`](file--crontab) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/OrbitInviewPowerPrediction/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/.git`
+
+
+```text
+gitdir: ../../.git/modules/gsw/OrbitInviewPowerPrediction
+```
+
+### `crontab`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/crontab`
+
+
+```text
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+# STF-1 
+00 00 * * * stamp=$(date --rfc-3339=date); mkdir /var/www/html/stf1/${stamp}
+01 00 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/retrieve_spacetrack_tles.sh /var/www/html/stf1/${stamp}/electrontles-${stamp}.tle user pwd 43849 43862
+02 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/stf1/${stamp}/electrontles-${stamp}.tle" "/var/www/html/stf1/stf1/electrontles.tle"
+03 00 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/stf1_html_report.config
+30 13 * * 5 stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/stf1_html_report.config
+08 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/stf1/${stamp}/${stamp}.html" "/var/www/html/stf1/stf1/stf1.html"
+08 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/stf1/${stamp}/aer-day0-gs0.html" "/var/www/html/stf1/stf1/aer-day0-gs0.html"
+08 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/stf1/${stamp}/aer-day0-gs1.html" "/var/www/html/stf1/stf1/aer-day0-gs1.html"
+10 00 * * * /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/stf1-over-wv.config
+12 00 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/stf1_gbo_html_report.config
+17 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/stf1_gbo/${stamp}/${stamp}.html" "/var/www/html/stf1_gbo/stf1/stf1.html"
+# Wallops to Dellingr, CubeRRT, TempestD, HaloSat, Add in objects from Rocket Lab launch on 2016-12-16 06:33 UTC
+30 00 * * * stamp=$(date --rfc-3339=date); mkdir /var/www/html/wallops/${stamp}
+31 00 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/retrieve_spacetrack_tles.sh /var/www/html/wallops/${stamp}/electrontles-${stamp}.tle user pwd 43849 43862
+32 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/wallops/${stamp}/electrontles-${stamp}.tle" "/var/www/html/wallops/wallops/electrontles.tle"
+33 00 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/wallops_html_report.config
+38 00 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/wallops/${stamp}/${stamp}.html" "/var/www/html/wallops/wallops/wallops.html"
+# NOAA weather satellites
+00 01 * * * stamp=$(date --rfc-3339=date); mkdir /var/www/html/noaa/${stamp}
+01 01 * * * stamp=$(date --rfc-3339=date); curl -s http://celestrak.com/NORAD/elements/weather.txt > "/var/www/html/noaa/${stamp}/${stamp}.tle"
+02 01 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/noaa_html_report.config
+30 01 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/noaa/${stamp}/${stamp}.html" "/var/www/html/noaa/noaa/noaa.html"
+# amateur satellites
+30 01 * * * stamp=$(date --rfc-3339=date); mkdir /var/www/html/amsat/${stamp}
+32 01 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/amsat_html_report.config
+55 01 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/amsat/${stamp}/${stamp}.html" "/var/www/html/amsat/amsat/amsat.html"
+# ISS
+00 02 * * * stamp=$(date --rfc-3339=date); mkdir /var/www/html/iss/${stamp}
+01 02 * * * stamp=$(date --rfc-3339=date); curl -s http://celestrak.com/NORAD/elements/stations.txt | grep 25544 > "/var/www/html/iss/${stamp}/${stamp}.tle"
+02 02 * * * stamp=$(date --rfc-3339=date); /usr/lib/cgi-bin/scripts/generate_html_report.py /usr/lib/cgi-bin/config/iss_html_report.config
+30 02 * * * stamp=$(date --rfc-3339=date); ln -s -f "/var/www/html/iss/${stamp}/${stamp}.html" "/var/www/html/iss/iss/iss.html"
+# Bright satellites for the day for home tracking
+30 07 * * * /usr/lib/cgi-bin/scripts/visible_satellite.py > "/var/www/html/bright/bright.html"
+# Rsync/copy data from google drive to external drive nightly
+00 02 * * * /home/mark/mount_drive.sh
+02 02 * * * /usr/bin/rsync -av /home/mark/googledrive/.shared/STF1/ /media/external/STF1
+```
+
+### `README.md`
+
+**경로:** `gsw/OrbitInviewPowerPrediction/README.md`
+
+
+```markdown
+# OrbitInviewPowerPrediction
+Orbit Inview and Power Prediction Tool for NOS3
+
+
+CAVEAT EMPTOR:  This readme is by now getting really old and hysterical (historical?)... the general ideas are here and some of the prerequisite packages needed, but for the latest on what OIPP does and how to run parts of it, you will need to read the code :-(
+
+Quick Start:  
+============
+Run "scripts/generate_html_report.py".
+
+More details:
+========================================================================================
+This directory contains a collection of Python scripts and config files (and example outputs) to support Orbit, Inview, and Power Prediction processing.
+
+Basically, this just means they can produce information for a satellite and one or more ground stations or a ground station and one or more satellites that describes when the satellite is inview of the ground station and when the satellite is in sunlight and in shadow.
+
+Prerequisites:
+--------------
+To run these scripts, you need:
+- Python 2
+- Additional Python Modules:
+-- Geocoder - https://pypi.python.org/pypi/geocoder
+-- Numpy - http://www.numpy.org/ (used by Pyorbital)
+-- Pyorbital - https://pypi.python.org/pypi/pyorbital
+-- Pytz - http://pytz.sourceforge.net/
+
+Running:
+--------
+-Example output file from a previous run of "scripts/generate_html_report.py" is at "example_outputs/sat_html_report.html"
+-Example output file from a previous run of "scripts/generate_html_report.py config/wallops_html_report.config" is at "example_outputs/wallops_html_report.html"
+
+If all is well, to run just fire up Python and try running:
+    
+    - "scripts/generate_html_report.py"  <==== IMPORTANT LINE HERE
+    or
+    - "scripts/generate_html_report.py config/wallops_html_report.config"  <==== IMPORTANT LINE HERE (or specify any other config file in the config directory)
+    
+    - You should get HTML text written to standard output... you can copy or redirect this to a text file... slap the extension ".html" on the end, and if you look at it in a web browser it should look something like the example HTML output files that are in the example_outputs directory.
+Else
+    - Let me know... I'll figure out what I have wrong
+    
+- If you want to automate this on a Linux/Unix system, see the "crontab" file in the current directory; I have been using that "crontab" on a machine for over a year to generate daily reports (as of 11/27/2016)... you will need to know a little about cron and Apache to make this all work, but it's not too bad.
+
+Configuring:
+------------
+Satellite HTML report: (one satellite, multiple ground stations, satellite sun times can be shown)
+----------------------
+Copy "config/sat_html_report.config" to another config file name
+Open your new config file.
+- Make sure the "report_type" is "Satellite HTML"
+- Alter the "timezone" (timezone for the report bars), "inviews" (True is generate them, False is do not generate them), "insun" (similar to "inviews"), "start_day" (0 means today, -1 means yesterday, 1 means tomorrow, 7 means seven days from now, etc.), "end_day" (similar to "start_day").
+- Alter the satellite information.
+  -- Change the satellite "number" to the NORAD Spacecraft Number of your favorite satellite to get info for a different satellite.  See http://celestrak.com/ for information on NORAD Spacecraft Numbers, Two Line Element Sets (TLEs), etc.
+  -- The "number" listed must exist in the file at the "url" listed... Celestrak has other TLE files such as "cubesat.txt", "tle_new.txt", and "stations.txt".
+  -- List a "name" if you like... if none is specified, the program will attempt to retrieve the name from the TLE file.
+- Alter the ground stations list.  You can add or take out {}, blocks as desired to add or remove ground stations from the list.
+  -- There are several predefined ground stations, see the file "config/sat_html_report.config" for which ones (search for "predefined")
+  -- Otherwise, you can specify latitude, longitude, elevation, name, time zone, min elevation angle for inview, and operation times (relative to the specified time zone)
+
+Ground Station HTML report: (one ground station, multiple satellites)
+---------------------------
+Copy "config/wallops_html_report.config" to another config file name
+Open your new config file 
+- Make sure the "report_type" is "Ground Station HTML"
+- Alterations similar to those for "Satellite HTML report" can be made... only now there is only one ground station and multiple satellites
+  
+Caveats:
+--------
+1.  Satellite ephemeris is generated using Two Line Element sets (TLEs) and SGP4.  The outputs will only be as good as those algorithms and input data.  You can ask for data from start day = -180 to end day = +365, but you may not want to trust it :-)
+2.  This program may not work or may not work correctly.  I did my best and want to improve it.  I have checked Firefly inviews to Wallops against results from AGI's Systems Toolkit (STK) a couple of times and the agreement is very good (to the second), I have also checked Wallops to IceCube, Dellingr, and Mirata and the agreement is pretty good (couple of seconds).  I have checked the sun times against AGI's STK a couple of times and the agreement is so-so.
+3.  Those are pretty much the major caveats.  If you have any other feedback, please let me know.
+
+More Description:
+-----------------
+Heavy Lifting::::
+Most of the heavy lifting (real calculations) in this script are done by packages that lots of great people have already put together.
+
+In particular, Pyorbital is providing the SGP4 ephemeris propagation of TLE data for the requested satellite.  They are also providing much of the inview calculations.  Speaking of Two Line Element sets, they are automatically retrieved over the internet (if possible... there is a file input capability) from http://celestrak.com/.  That ensures that the most recent TLE available (on CelesTrak) is retrieved.
+
+Geocoder and Pytz are used to do some nifty things on the ground like figure out the latitude and longitude of a particular address, what time zone things are in, and how to convert between time zones.
+
+Pyorbital and reused code from it provides sun position in a usable coordinate frame.  You can read the code if you are interested.
+
+Numpy:  Pyorbital relies on this and I used it one place where I reused some Pyorbital code.
+
+Other Main Scripts::::
+generate_html_report.py (already described)
+generate_stf1_html_report.py (shows how to use a file instead of a URL for the TLEs)
+get_iss_ephemeris_now.py
+get_iss_ephemeris_today.py
+get_iss_lonlatalt_today.py
+get_iss_suntimes_today.py
+get_icecube_lonlatalt_today.py
+get_stf1-like_lonlatalt_today.py
+iss_inviews.py
+
+Helper Scripts:::
+ground_station.py - Create ground station objects based on either an address or a lat/lon/alt/time zone/minimum elevation angle, and pass back data to users of a ground station.  Also create a few specific ground stations.
+satellite_tle.py - Create a satellite object based on a NORAD Satellite Number.  Looks up the TLE automatically from CelesTrak if possible.  Performs propagation and inview determination as needed.
+inview_calculator.py - Puts together data from a ground station and a satellite to get inviews.
+satellite_html_report_generator.py - Takes some configuration info regarding what satellite, what ground stations, what time period, and what output timelines are desired.  Uses the above helper scripts to do the computations.  Then uses the Google timeline JavaScript API to generate the timelines that are displayed.
+ground_station_html_report_generator.py - Takes some configuration info regarding what groud station, what satellites, what time period, and what output timelines are desired.  Uses the above helper scripts to do the computations.  Then uses the Google timeline JavaScript API to generate the timelines that are displayed.
+
+Improvements:::
+Inview and sun computations are both done by stepping through the ephemeris minute by minute looking for transitions... which are then refined by stepping backwards second by second to find the exact second of transition.  This is easy to code; but has at least two downfalls:  1. it is not as efficient as it could be... binary searching for the seconds would be quicker; 2.  it could miss transitions that occur within a minute... I don't think I'll worry about that for now based on our typical use cases.
+
+Probably lots more I have not thought of!
+
+Prereqs on Ubuntu Trusty 64 (14.04 LTS) (One way to do it):
+-----------------------------------------------------------
+sudo apt-get update
+sudo apt-get install -y python-numpy
+sudo apt-get install -y python-setuptools
+sudo easy_install --upgrade pyorbital
+sudo easy_install --upgrade geocoder
+sudo easy_install --upgrade pytz
+
+Cron and Apache on Ubuntu Trusty 64 (14.04 LTS) (One way to do it):
+-------------------------------------------------------------------
+sudo apt-get install apache2
+sudo tar -xzvf <dir>/OrbitInviewPowerPrediction.tgz --strip 1 -C /usr/lib/cgi-bin # fill in <dir> with where to find the .tgz file
+sudo mkdir -p /var/www/html/icecube/icecube
+sudo mkdir -p /var/www/html/dellingr/dellingr
+sudo mkdir -p /var/www/html/iss/iss
+sudo mkdir -p /var/www/html/stf1-like/stf1-like
+sudo mkdir -p /var/www/html/wallops/wallops
+sudo chown -R <user>:<group> /var/www/html/* # fill in the user/group that you run the crontab command below as
+crontab /usr/lib/cgi-bin/crontab
+```

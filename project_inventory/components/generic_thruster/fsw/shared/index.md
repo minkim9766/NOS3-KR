@@ -3,16 +3,112 @@
 
 **경로:** `components/generic_thruster/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_thruster_device.c`
 
-file--generic_thruster_device.c
-file--generic_thruster_device.h
+**경로:** `components/generic_thruster/fsw/shared/generic_thruster_device.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_thruster_device.c
+**
+** Purpose:
+**   This file contains the source code for the GENERIC_THRUSTER device.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_thruster_device.h"
+
+int32_t GENERIC_THRUSTER_SetPercentage(uart_info_t *device, uint8_t thruster_number, uint8_t percentage,
+                                       uint8_t data_length)
+{
+    int32_t  status;
+    uint32_t response;
+    uint8_t  request[6];
+
+    request[0] = GENERIC_THRUSTER_DEVICE_HDR_0;
+    request[1] = GENERIC_THRUSTER_DEVICE_HDR_1;
+    request[2] = thruster_number;
+    request[3] = percentage;
+    request[4] = GENERIC_THRUSTER_DEVICE_TRAILER_0;
+    request[5] = GENERIC_THRUSTER_DEVICE_TRAILER_1;
+    /* Flush any prior data */
+    status = uart_flush(device);
+    if (status == UART_SUCCESS)
+    {
+        /* Write data */
+        response = uart_write_port(device, request, GENERIC_THRUSTER_DEVICE_CMD_SIZE);
+#ifdef GENERIC_THRUSTER_CFG_DEBUG
+        OS_printf("  GENERIC_THRUSTER_SetPercentage[%d] = ", status);
+        for (uint32_t i = 0; i < GENERIC_THRUSTER_DEVICE_CMD_SIZE; i++)
+        {
+            OS_printf("%02x", request[i]);
+        }
+        OS_printf("\n");
+#endif
+
+        if (response != GENERIC_THRUSTER_DEVICE_CMD_SIZE)
+        {
+            status = OS_ERROR;
+        }
+        else
+        {
+            status = OS_SUCCESS;
+        }
+    } /* uart_flush*/
+
+    return status;
+}
 ```
 
-## 항목
+### `generic_thruster_device.h`
 
-- [`components/generic_thruster/fsw/shared/generic_thruster_device.c`](file--generic_thruster_device.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_thruster/fsw/shared/generic_thruster_device.h`](file--generic_thruster_device.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_thruster/fsw/shared/generic_thruster_device.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_thruster_device.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_THRUSTER device.
+**
+*******************************************************************************/
+#ifndef _GENERIC_THRUSTER_DEVICE_H_
+#define _GENERIC_THRUSTER_DEVICE_H_
+
+/*
+** Required header files.
+*/
+#include "device_cfg.h"
+#include "hwlib.h"
+#include "generic_thruster_platform_cfg.h"
+
+/*
+** Type definitions
+** TODO: Make specific to your application
+*/
+#define GENERIC_THRUSTER_DEVICE_HDR   0xDEAD
+#define GENERIC_THRUSTER_DEVICE_HDR_0 0xDE
+#define GENERIC_THRUSTER_DEVICE_HDR_1 0xAD
+
+#define GENERIC_THRUSTER_DEVICE_TRAILER   0xBEEF
+#define GENERIC_THRUSTER_DEVICE_TRAILER_0 0xBE
+#define GENERIC_THRUSTER_DEVICE_TRAILER_1 0xEF
+
+#define GENERIC_THRUSTER_DEVICE_HDR_TRL_LEN 4
+#define GENERIC_THRUSTER_DEVICE_CMD_SIZE    6
+
+/*
+** Prototypes
+*/
+int32_t GENERIC_THRUSTER_SetPercentage(uart_info_t *device, uint8_t thruster_number, uint8_t percentage,
+                                       uint8_t data_length);
+
+#endif /* _GENERIC_THRUSTER_DEVICE_H_ */
+```

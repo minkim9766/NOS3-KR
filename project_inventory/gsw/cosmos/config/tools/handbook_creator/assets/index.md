@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/config/tools/handbook_creator/assets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ img/index
 js/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/config/tools/handbook_creator/assets/css/`](css/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/assets/fonts/`](fonts/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/assets/img/`](img/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/assets/js/`](js/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

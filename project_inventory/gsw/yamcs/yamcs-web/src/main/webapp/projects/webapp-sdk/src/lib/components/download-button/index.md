@@ -3,16 +3,52 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-button/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `download-button.component.html`
 
-file--download-button.component.html
-file--download-button.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-button/download-button.component.html`
+
+
+```html
+<ya-button [appearance]="appearance()" [disabled]="disabled()" (click)="triggerDownload()">
+  <ng-content />
+</ya-button>
+<a #hiddenLink [href]="link()" style="display: none" download></a>
 ```
 
-## 항목
+### `download-button.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-button/download-button.component.html`](file--download-button.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-button/download-button.component.ts`](file--download-button.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/download-button/download-button.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  Component,
+  ElementRef,
+  input,
+  ViewChild,
+} from '@angular/core';
+import { YaButton, YaButtonAppearance } from '../button/button.component';
+
+@Component({
+  selector: 'ya-download-button',
+  templateUrl: './download-button.component.html',
+  imports: [YaButton],
+})
+export class YaDownloadButton {
+  link = input.required<string>();
+  disabled = input(false, { transform: booleanAttribute });
+  appearance = input<YaButtonAppearance>('basic');
+
+  @ViewChild('hiddenLink', { static: true })
+  private hiddenLink: ElementRef;
+
+  triggerDownload() {
+    if (!this.disabled()) {
+      this.hiddenLink.nativeElement.click();
+    }
+  }
+}
+```

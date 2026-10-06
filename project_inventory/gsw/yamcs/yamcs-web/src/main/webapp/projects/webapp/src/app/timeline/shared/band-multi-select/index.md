@@ -3,18 +3,314 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `band-multi-select.component.css`
 
-file--band-multi-select.component.css
-file--band-multi-select.component.html
-file--band-multi-select.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.css`
+
+
+```css
+.bands-from,
+.bands-to {
+  border: 1px solid #d3d3d3;
+  flex: 1 1 0;
+}
+
+.bands-from th,
+.bands-to th {
+  text-align: center;
+}
+
+.bands-from td,
+.bands-to td {
+  cursor: pointer;
+}
+
+.bands-from table,
+.bands-to table {
+  border-left: none;
+  border-right: none;
+}
+
+.bands-from th,
+.bands-to th {
+  border-top: none;
+}
+
+.bands-from tr:last-of-type td,
+.bands-to tr:last-of-type {
+  border-bottom: none;
+}
+
+div.shared-actions {
+  align-self: center;
+  display: inline-flex;
+  flex-direction: column;
+  row-gap: 2px;
+  margin: 1em;
+}
+
+div.bottom-actions {
+  display: flex;
+  column-gap: 2px;
+  margin-top: 2px;
+}
 ```
 
-## 항목
+### `band-multi-select.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.css`](file--band-multi-select.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.html`](file--band-multi-select.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.ts`](file--band-multi-select.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.html`
+
+
+```html
+<div style="display: flex">
+  <div class="bands-from">
+    <table
+      mat-table
+      [dataSource]="availableDataSource"
+      class="ya-data-table no-frame"
+      style="width: 100%">
+      <ng-container cdkColumnDef="name">
+        <th mat-header-cell *cdkHeaderCellDef>Available</th>
+        <td mat-cell *cdkCellDef="let item">
+          @if (item.name) {
+            {{ item.name }}
+          } @else {
+            <i>(no name)</i>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *cdkRowDef="let row; columns: displayedColumns"
+        [class.selected]="isLeftSelected(row)"
+        (click)="selectBand(row)"></tr>
+    </table>
+  </div>
+
+  <div class="shared-actions">
+    <ya-button [rightAlign]="true" [disabled]="!isAnyLeftSelected()" (click)="moveRight()">
+      Add
+      <mat-icon class="icon12">chevron_right</mat-icon>
+    </ya-button>
+    <ya-button [disabled]="!isAnyRightSelected()" (click)="moveLeft()">
+      <mat-icon class="icon12">chevron_left</mat-icon>
+      Remove
+    </ya-button>
+  </div>
+
+  <div class="bands-to">
+    <table
+      mat-table
+      [dataSource]="selectedDataSource"
+      class="ya-data-table no-frame"
+      style="width: 100%">
+      <ng-container cdkColumnDef="name">
+        <th mat-header-cell *cdkHeaderCellDef>Selected</th>
+        <td mat-cell *cdkCellDef="let item">
+          @if (item.name) {
+            {{ item.name }}
+          } @else {
+            <i>(no name)</i>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *cdkRowDef="let row; columns: displayedColumns"
+        [class.selected]="isRightSelected(row)"
+        (click)="selectBand(row)"></tr>
+    </table>
+  </div>
+</div>
+<div class="bottom-actions">
+  <div style="flex: 1 1 auto"></div>
+  <ya-icon-button
+    [disabled]="!isAnyRightSelected()"
+    (click)="moveDown()"
+    icon="keyboard_arrow_down" />
+  <ya-icon-button [disabled]="!isAnyRightSelected()" (click)="moveUp()" icon="keyboard_arrow_up" />
+</div>
+```
+
+### `band-multi-select.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/band-multi-select.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, forwardRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  TimelineBand,
+  TimelineBandsPage,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-band-multi-select',
+  templateUrl: './band-multi-select.component.html',
+  styleUrl: './band-multi-select.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BandMultiSelectComponent),
+      multi: true,
+    },
+  ],
+  imports: [WebappSdkModule],
+})
+export class BandMultiSelectComponent implements ControlValueAccessor {
+  displayedColumns = ['name'];
+
+  availableDataSource = new MatTableDataSource<TimelineBand>([]);
+  selectedDataSource = new MatTableDataSource<TimelineBand>([]);
+  selectedBand: TimelineBand;
+
+  bands$: Promise<TimelineBandsPage>;
+
+  private onChange = (_: TimelineBand[]) => {};
+
+  constructor(yamcs: YamcsService) {
+    this.bands$ = yamcs.yamcsClient.getTimelineBands(yamcs.instance!);
+    this.bands$.then((page) => {
+      this.availableDataSource.data = page.bands || [];
+    });
+  }
+
+  writeValue(value: any) {
+    this.bands$.then((page) => {
+      // Make sure bands are loaded
+      const allBands = page.bands || [];
+      if (value) {
+        const selectedIds: string[] = value.map(
+          (band: TimelineBand) => band.id,
+        );
+        const leftBands: TimelineBand[] = [];
+        const rightBands: TimelineBand[] = [];
+        for (const band of allBands) {
+          if (selectedIds.indexOf(band.id) === -1) {
+            leftBands.push(band);
+          }
+        }
+        // Another loop, because we really want the right table
+        // to preserve order within the view.
+        for (const id of selectedIds) {
+          for (const band of allBands) {
+            if (band.id === id) {
+              rightBands.push(band);
+            }
+          }
+        }
+        this.availableDataSource.data = leftBands;
+        this.selectedDataSource.data = rightBands;
+      } else {
+        this.availableDataSource.data = [...allBands];
+        this.selectedDataSource.data = [];
+      }
+    });
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  selectBand(row: TimelineBand) {
+    this.selectedBand = row;
+  }
+
+  isLeftSelected(row: TimelineBand) {
+    return (
+      row === this.selectedBand &&
+      this.availableDataSource.data.indexOf(row) !== -1
+    );
+  }
+
+  isAnyLeftSelected() {
+    return (
+      this.selectedBand &&
+      this.availableDataSource.data.indexOf(this.selectedBand) !== -1
+    );
+  }
+
+  isRightSelected(row: TimelineBand) {
+    return (
+      row === this.selectedBand &&
+      this.selectedDataSource.data.indexOf(row) !== -1
+    );
+  }
+
+  isAnyRightSelected() {
+    return (
+      this.selectedBand &&
+      this.selectedDataSource.data.indexOf(this.selectedBand) !== -1
+    );
+  }
+
+  moveRight() {
+    const row = this.selectedBand;
+    const leftData = [...this.availableDataSource.data];
+    const rightData = [...this.selectedDataSource.data];
+    const leftIndex = leftData.indexOf(row);
+    if (leftIndex !== -1) {
+      leftData.splice(leftIndex, 1);
+    }
+    if (rightData.indexOf(row) === -1) {
+      rightData.push(row);
+    }
+    this.availableDataSource.data = leftData;
+    this.selectedDataSource.data = rightData;
+    this.onChange(rightData);
+  }
+
+  moveLeft() {
+    const row = this.selectedBand;
+    const leftData = [...this.availableDataSource.data];
+    const rightData = [...this.selectedDataSource.data];
+    const rightIndex = rightData.indexOf(row);
+    if (rightIndex !== -1) {
+      rightData.splice(rightIndex, 1);
+    }
+    if (leftData.indexOf(row) === -1) {
+      leftData.push(row);
+    }
+    this.availableDataSource.data = leftData;
+    this.selectedDataSource.data = rightData;
+    this.onChange(rightData);
+  }
+
+  moveUp() {
+    const x = this.selectedBand;
+    const data = [...this.selectedDataSource.data];
+    const index = data.indexOf(x);
+    if (index !== 0) {
+      data[index] = data[index - 1];
+      data[index - 1] = x;
+    }
+    this.selectedDataSource.data = data;
+    this.onChange(data);
+  }
+
+  moveDown() {
+    const x = this.selectedBand;
+    const data = [...this.selectedDataSource.data];
+    const index = data.indexOf(x);
+    if (index !== data.length - 1) {
+      data[index] = data[index + 1];
+      data[index + 1] = x;
+    }
+    this.selectedDataSource.data = data;
+    this.onChange(data);
+  }
+}
+```

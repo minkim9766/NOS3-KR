@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,13 +12,76 @@ buckets/index
 storage-page/index
 storage-page-template/index
 storage-toolbar/index
-file--storage.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/`](buckets/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/`](storage-page/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page-template/`](storage-page-template/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/`](storage-toolbar/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage.routes.ts`](file--storage.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `storage.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { clearContextGuardFn } from '../core/guards/ClearContextGuard';
+import { BucketListComponent } from './buckets/bucket-list/bucket-list.component';
+import { BucketObjectListComponent } from './buckets/bucket-object-list/bucket-object-list.component';
+import { BucketPlaceholderComponent } from './buckets/bucket-placeholder/bucket-placeholder.component';
+import { BucketPropertiesComponent } from './buckets/bucket-properties/bucket-properties.component';
+import { StoragePageComponent } from './storage-page/storage-page.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, clearContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: StoragePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'buckets',
+      },
+      {
+        path: 'buckets',
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: BucketListComponent,
+            data: { hasSidebar: false },
+          },
+          {
+            path: ':name',
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'objects',
+              },
+              {
+                path: 'objects',
+                component: BucketPlaceholderComponent,
+                children: [
+                  {
+                    path: '**',
+                    component: BucketObjectListComponent,
+                    data: { hasSidebar: false },
+                  },
+                ],
+              },
+              {
+                path: 'properties',
+                component: BucketPropertiesComponent,
+                data: { hasSidebar: false },
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+```

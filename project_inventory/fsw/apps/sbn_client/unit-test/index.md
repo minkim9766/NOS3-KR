@@ -3,34 +3,3205 @@
 
 **경로:** `fsw/apps/sbn_client/unit-test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 helpers/index
 stubs/index
-file--CMakeLists.txt
-file--sbn_client_ingest_tests.c
-file--sbn_client_init_tests.c
-file--sbn_client_logger_tests.c
-file--sbn_client_minders_tests.c
-file--sbn_client_tests.c
-file--sbn_client_tests_includes.h
-file--sbn_client_utils_tests.c
-file--sbn_client_wrappers_tests.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn_client/unit-test/helpers/`](helpers/index) — 폴더
-- [`fsw/apps/sbn_client/unit-test/stubs/`](stubs/index) — 폴더
-- [`fsw/apps/sbn_client/unit-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_ingest_tests.c`](file--sbn_client_ingest_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_init_tests.c`](file--sbn_client_init_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_logger_tests.c`](file--sbn_client_logger_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_minders_tests.c`](file--sbn_client_minders_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_tests.c`](file--sbn_client_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_tests_includes.h`](file--sbn_client_tests_includes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_utils_tests.c`](file--sbn_client_utils_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/unit-test/sbn_client_wrappers_tests.c`](file--sbn_client_wrappers_tests.c) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn_client/unit-test/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# Coverage Unit Test build recipe
+#
+# This CMake file contains the recipe for building the sample unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+##################################################################
+
+#
+#
+# NOTE on the subdirectory structures here:
+#
+# - "inc" provides local header files shared between the coveragetest,
+#    wrappers, and overrides source code units
+# - "coveragetest" contains source code for the actual unit test cases
+#    The primary objective is to get line/path coverage on the FSW 
+#    code units.
+# - "wrappers" contains wrappers for the FSW code.  The wrapper adds
+#    any UT-specific scaffolding to facilitate the coverage test, and
+#    includes the unmodified FSW source file.
+#
+ 
+set(UT_NAME sbn_client) # UT_NAME is used in severl locations later in this file
+
+# Use the UT assert public API, and allow direct
+# inclusion of source files that are normally private
+include_directories(${osal_MISSION_DIR}/ut_assert/inc)  #osal_MISSION_DIR = ${MISSION_SOURCE_DIR}/osal, UT source files for ut_assert
+include_directories(${PROJECT_SOURCE_DIR}/fsw/src)      # PROJECT_SOURCE_DIR is set by the last call to project() command, sample_app?
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)    # CMAKE_CURRENT_SOURCE_DIR Path to the current source directory being processed, sample_app/unit_test?
+include_directories(${PROJECT_SOURCE_DIR}/unit-test/helpers)
+include_directories(${PROJECT_SOURCE_DIR}/unit-test/stubs)
+include_directories(${PROJECT_SOURCE_DIR}/unit-test)
+
+# Setting wrappers for how things are done currently.
+set(WRAPS -Wl)
+set(WRAPS "${WRAPS},-wrap,CFE_SB_CreatePipe")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_DeletePipe")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_Subscribe")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_SubscribeEx")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_SubscribeLocal")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_Unsubscribe")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_UnsubscribeLocal")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_TransmitMsg")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_ReceiveBuffer")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_ZeroCopySend")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_CreatePipe")
+set(WRAPS "${WRAPS},-wrap,CFE_SB_Subscribe")
+set(WRAPS "${WRAPS},-wrap,socket")
+set(WRAPS "${WRAPS},-wrap,htons")
+set(WRAPS "${WRAPS},-wrap,inet_pton")
+set(WRAPS "${WRAPS},-wrap,connect")
+set(WRAPS "${WRAPS},-wrap,read")
+set(WRAPS "${WRAPS},-wrap,sleep")
+set(WRAPS "${WRAPS},-wrap,perror")
+set(WRAPS "${WRAPS},-wrap,pthread_create")
+set(WRAPS "${WRAPS},-wrap,connect_to_server")
+set(WRAPS "${WRAPS},-wrap,CFE_SBN_Client_InitPipeTbl")
+set(WRAPS "${WRAPS},-wrap,check_pthread_create_status")
+set(WRAPS "${WRAPS},-wrap,send_heartbeat")
+set(WRAPS "${WRAPS},-wrap,recv_msg")
+set(WRAPS "${WRAPS},-wrap,CFE_SBN_CLIENT_ReadBytes")
+set(WRAPS "${WRAPS},-wrap,pthread_mutex_lock")
+set(WRAPS "${WRAPS},-wrap,pthread_mutex_unlock")
+set(WRAPS "${WRAPS},-wrap,pthread_cond_signal")
+set(WRAPS "${WRAPS},-wrap,CFE_SBN_Client_GetMsgId")
+set(WRAPS "${WRAPS},-wrap,CFE_SBN_Client_GetPipeIdx")
+set(WRAPS "${WRAPS},-wrap,pthread_cond_timedwait")
+set(WRAPS "${WRAPS},-wrap,pthread_cond_wait")
+
+
+# Get the files in the source subdirectory
+set(source_files)
+aux_source_directory("${PROJECT_SOURCE_DIR}/fsw/src" source_files)
+
+set(source_file_names)
+foreach(SOURCE_FILE ${source_files})
+    get_filename_component(SOURCE_NAME "${SOURCE_FILE}" NAME_WE)
+    add_library("${SOURCE_NAME}_object" OBJECT "${SOURCE_FILE}")
+    list(APPEND source_file_names "${SOURCE_NAME}_object")
+endforeach()
+    
+    
+add_library("logger_stub" OBJECT "${PROJECT_SOURCE_DIR}/unit-test/stubs/sbn_client_logger_stubs.c")
+
+
+# Get the files in the applications unit-test directory
+set(app_ut_helper_files)
+aux_source_directory("${PROJECT_SOURCE_DIR}/unit-test/helpers" app_ut_helper_files)
+# Have a variable hold the helper library names so they can be referenced later
+set(app_ut_helper_names)
+# Build all the test helpers and save the object names
+
+foreach(HELPER_FILE ${app_ut_helper_files})
+    get_filename_component(HELPER_NAME "${HELPER_FILE}" NAME_WE)
+    add_library("${HELPER_NAME}_object" OBJECT "${HELPER_FILE}")
+    list(APPEND app_ut_helper_names "${HELPER_NAME}_object")
+endforeach()
+    
+# Generate a dedicated "testrunner" executable that executes the tests for each FSW code unit
+# Cycle through all the app's source files, there will be a test file for each
+foreach(SRCFILE ${source_files})
+    # Get the base sourcfile name as a module name without path or the extension, 
+    # this will be used as the base name of the unit test file.
+    get_filename_component(MODULENAME "${SRCFILE}" NAME_WE)
+    
+    set(source_file_names_copy ${source_file_names})
+    
+    set(stub_names)
+    if(NOT MODULENAME MATCHES "sbn_client_logger")
+        # aux_source_directory("${PROJECT_SOURCE_DIR}/unit-test/stubs" stub_dir)
+        set(stub_names "logger_stub")
+        remove(source_file_names_copy "sbn_client_logger_object")
+    endif()
+    
+    remove(source_file_names_copy "${MODULENAME}_object")
+    
+    # Use the module name to find the testname, adding _tests to the end
+    set(TESTNAME "${MODULENAME}_tests")
+    
+    # Make the testcase sourcefile name with path and extension
+    set(TESTCASE_SOURCE_FILE    "${PROJECT_SOURCE_DIR}/unit-test/${TESTNAME}.c")
+    
+    set(TEST_SOURCE_OBJECT "ut_${TESTNAME}_object")
+    
+    # Compile the source unit under test as an OBJECT
+    add_library(${TEST_SOURCE_OBJECT} OBJECT
+        ${SRCFILE}
+    )
+    
+    # Apply the UT_C_FLAGS to the units under test
+    # This should enable coverage analysis on platforms that support this
+    set_target_properties(${TEST_SOURCE_OBJECT} PROPERTIES
+        COMPILE_FLAGS "${UT_C_FLAGS}")
+        
+    # Compile a test runner application, which contains the
+    # actual coverage test code (test cases) and the unit under test
+    # creates sample_app-sample_app-testrunner from coveragetest/coveragetest_sample_app.c
+    add_executable(${TESTNAME}-testrunner
+        ${TESTCASE_SOURCE_FILE}
+        $<TARGET_OBJECTS:${TEST_SOURCE_OBJECT}>
+    )
+    
+    # This also needs to be linked with WRAPS (for stubbing) and UT_C_FLAGS (for coverage)
+    set_target_properties(${TESTNAME}-testrunner PROPERTIES 
+    LINK_FLAGS "${WRAPS} ${UT_C_FLAGS}")
+    
+    # This is also linked with any other stub libraries needed,
+    # as well as the UT assert framework
+    # sbn_client needs referenced here, not sure how to remove it, maybe when there's stubs for sbn_client files?
+    target_link_libraries(${TESTNAME}-testrunner
+        ${source_file_names_copy}
+        ${app_ut_helper_names}
+        ${stub_names}
+        ut_cfe-core_stubs
+        ut_assert
+    )
+    
+    # Add it to the set of tests to run as part of "make test"
+    add_test(${TESTNAME} ${TESTNAME}-testrunner)
+    
+endforeach()
+
+```
+
+### `sbn_client_ingest_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_ingest_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+/*******************************************************************************
+**
+**  SBN_Client_Ingest_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Ingest_Setup(void)
+{
+    SBN_Client_Setup();
+}
+
+void SBN_Client_Ingest_Teardown(void)
+{
+    SBN_Client_Teardown();
+}
+
+
+/*******************************************************************************
+**
+**  ingest_app_message Tests
+**
+*******************************************************************************/
+
+void Test_ingest_app_message_ReadBytesFails(void)
+{
+    /* Arrange */ 
+    char err_msg[60];
+    int sockfd = Any_int();
+    int msgSize = rand() % CFE_SBN_CLIENT_MAX_MESSAGE_SIZE;
+    
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = Any_int32_Except(CFE_SUCCESS);
+    
+    snprintf(err_msg, 60,
+      "CFE_SBN_CLIENT_ReadBytes returned a bad status = 0x%08X\n", 
+      wrap_CFE_SBN_CLIENT_ReadBytes_return_value);
+    
+    log_message_expected_string = err_msg;
+    
+    /* Act */
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == false,
+      "pthread_mutex_lock should not have been called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == false,
+      "pthread_mutex_unlock should not have been called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == false,
+      "pthread_cond_signal should not have been called");
+}
+
+void Test_ingest_app_message_FailsWhenNoPipesInUse(void)
+{
+    /* Arrange */ 
+    char err_msg[60] = "SBN_CLIENT: No pipes are in use";
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int sockfd = Any_int();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = false;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+
+    log_message_expected_string = err_msg;
+
+    /* Act */
+    ingest_app_message(sockfd, msgSize);
+
+    /* Assert */
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock should not have been called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock should not have been called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == false,
+      "pthread_cond_signal should not have been called");
+}
+
+void Test_ingest_app_message_FailsOverflowWhenNumberOfMessagesIsFull(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    int num_msg = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    int msg_slot = read_msg + num_msg;
+    int sockfd = Any_int();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = false;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+    
+    PipeTbl[pipe_assigned].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_assigned].PipeId = pipe_assigned;
+    PipeTbl[pipe_assigned].SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    PipeTbl[pipe_assigned].NumberOfMessages = num_msg;
+    PipeTbl[pipe_assigned].ReadMessage = read_msg;
+    
+    if (msg_slot >= CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+    {
+        msg_slot = msg_slot - CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    } 
+    
+    /* Act */ 
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg, 
+      "PipeTbl[%d].NumberOfMessages %d should not increase and was %d", 
+      pipe_assigned, num_msg, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == read_msg, 
+      "PipeTbl[%d].ReadMessage should not have changed from %d and was %d", 
+      pipe_assigned, read_msg, PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock was called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == false,
+      "pthread_cond_signal should not have been called");
+}
+
+void Test_ingest_app_message_FailsWhenNoPipeLookingForMessageId(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;  
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    int num_msg = 0;
+    int msg_slot= read_msg + num_msg;
+    int sockfd = Any_int();
+    char err_msg[60] = "SBN_CLIENT: ERROR no subscription for this msgid";
+    
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = Any_int32_Except(CFE_SUCCESS);
+    
+    log_message_expected_string = err_msg;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = false;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+    
+    PipeTbl[pipe_assigned].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_assigned].PipeId = pipe_assigned;
+    PipeTbl[pipe_assigned].SubscribedMsgIds[msg_id_slot] = 0x0000;
+    PipeTbl[pipe_assigned].NumberOfMessages = num_msg;
+    PipeTbl[pipe_assigned].ReadMessage = read_msg;
+    
+    if (msg_slot >= CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+    {
+        msg_slot = msg_slot - CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    } 
+    
+    /* Act */ 
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == 0, 
+      "PipeTbl[%d].NumberOfMessages should = %d and was %d ", pipe_assigned, 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == read_msg, 
+      "PipeTbl[%d].ReadMessage should not have changed from %d and was %d", 
+      pipe_assigned, read_msg, PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock was called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == false,
+      "pthread_cond_signal should not have been called");
+}
+
+void Test_ingest_app_message_SuccessAllSlotsAvailable(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    int num_msg = 0;
+    int msg_slot = read_msg + num_msg;
+    int sockfd = Any_int();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = true;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+    
+    PipeTbl[pipe_assigned].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_assigned].PipeId = pipe_assigned;
+    PipeTbl[pipe_assigned].SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    PipeTbl[pipe_assigned].NumberOfMessages = num_msg;
+    PipeTbl[pipe_assigned].ReadMessage = read_msg;
+    
+    if (msg_slot >= CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+    {
+        msg_slot = msg_slot - CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    } 
+    
+    /* Act */ 
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    int i;
+    
+    for(i = 0; i < msgSize; i++)
+    {
+        UtAssert_True(PipeTbl[pipe_assigned].Messages[msg_slot][i] == msg[i], 
+          "PipeTbl[%d].Messages[%d][%d] should = %d and was %d", 
+          pipe_assigned, msg_slot, i, msg[i], 
+          PipeTbl[pipe_assigned].Messages[msg_slot][i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg + 1, 
+      "PipeTbl[%d].NumberOfMessages should increase by 1 to %d and was %d", 
+      pipe_assigned, num_msg + 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == read_msg, 
+      "PipeTbl[%d].ReadMessage should not have changed from %d and was %d", 
+      pipe_assigned, read_msg, PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock was called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == true,
+      "pthread_cond_signal was called");
+}
+
+void Test_ingest_app_message_SuccessAnyNumberOfSlotsAvailable(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    /* from 1 to CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH */
+    int num_msg = (rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1) + 1; 
+    int msg_slot = read_msg + num_msg;
+    int sockfd = Any_int();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = true;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+    
+    PipeTbl[pipe_assigned].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_assigned].PipeId = pipe_assigned;
+    PipeTbl[pipe_assigned].SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    PipeTbl[pipe_assigned].NumberOfMessages = num_msg;
+    PipeTbl[pipe_assigned].ReadMessage = read_msg;
+    
+    if (msg_slot >= CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+    {
+        msg_slot = msg_slot - CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    } 
+    
+    /* Act */ 
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    int i;
+    
+    for(i = 0; i < msgSize; i++)
+    {
+        UtAssert_True(PipeTbl[pipe_assigned].Messages[msg_slot][i] == msg[i], 
+          "PipeTbl[%d].Messages[%d][%d] should = %d and was %d", 
+          pipe_assigned, msg_slot, i, msg[i], 
+          PipeTbl[pipe_assigned].Messages[msg_slot][i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg + 1, 
+      "PipeTbl[%d].NumberOfMessages should increase by 1 to %d and was %d", 
+      pipe_assigned, num_msg + 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == read_msg, 
+      "PipeTbl[%d].ReadMessage should not have changed from %d and was %d", 
+      pipe_assigned, read_msg, PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock was called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == true,
+      "pthread_cond_signal was called");
+}
+
+void Test_ingest_app_message_SuccessWhenOnlyOneSlotLeft(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;  
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    int num_msg = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1; /* 1 slot left */
+    int msg_slot= read_msg + num_msg;
+    int sockfd = Any_int();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_signal_should_be_called = true;
+    use_wrap_CFE_SBN_Client_GetMsgId = true;
+    wrap_CFE_SBN_Client_GetMsgId_return_value = msg[0] << 8 | msg[1];
+    use_wrap_CFE_SBN_CLIENT_ReadBytes = true;
+    wrap_CFE_SBN_CLIENT_ReadBytes_return_value = CFE_SUCCESS;
+    wrap_CFE_SBN_CLIENT_ReadBytes_msg_buffer = msg;
+    
+    PipeTbl[pipe_assigned].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_assigned].PipeId = pipe_assigned;
+    PipeTbl[pipe_assigned].SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    PipeTbl[pipe_assigned].NumberOfMessages = num_msg;
+    PipeTbl[pipe_assigned].ReadMessage = read_msg;
+    
+    if (msg_slot >= CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH)
+    {
+        msg_slot = msg_slot - CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    } 
+    
+    /* Act */ 
+    ingest_app_message(sockfd, msgSize);
+    
+    /* Assert */
+    int i;
+    
+    for(i = 0; i < msgSize; i++)
+    {
+        UtAssert_True(PipeTbl[pipe_assigned].Messages[msg_slot][i] == msg[i], 
+          "PipeTbl[%d].Messages[%d][%d] should = %d and was %d ", 
+          pipe_assigned, msg_slot, i, msg[i], 
+          PipeTbl[pipe_assigned].Messages[msg_slot][i]);
+    }  
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH, 
+      "PipeTbl[%d].NumberOfMessages should = %d and was %d ", pipe_assigned, 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == read_msg, 
+      "PipeTbl[%d].ReadMessage should not have changed from %d and was %d", 
+      pipe_assigned, read_msg, PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called == true,
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called == true,
+      "pthread_mutex_unlock was called");
+    UtAssert_True(wrap_pthread_cond_signal_was_called == true,
+      "pthread_cond_signal was called");
+}
+
+//void Test_ingest_app_message_SuccessCausesPipeNumberOfMessagesToIncreaseBy1
+//void Test_ingest_app_message_FailsWhenNoPipesInUse
+/* end ingest_app_message Tests */
+
+
+
+void UtTest_Setup(void)
+{
+    /* ingest_app_message Tests */
+    UtTest_Add(
+      Test_ingest_app_message_ReadBytesFails, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_ReadBytesFails");
+    UtTest_Add(
+      Test_ingest_app_message_FailsWhenNoPipesInUse, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_FailsWhenNoPipesInUse");
+    UtTest_Add(
+      Test_ingest_app_message_FailsOverflowWhenNumberOfMessagesIsFull, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_FailsOverflowWhenNumberOfMessagesIsFull");
+    UtTest_Add(
+      Test_ingest_app_message_FailsWhenNoPipeLookingForMessageId, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_FailsWhenNoPipeLookingForMessageId");
+    UtTest_Add(
+      Test_ingest_app_message_SuccessAllSlotsAvailable, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_SuccessAllSlotsAvailable");
+    UtTest_Add(
+      Test_ingest_app_message_SuccessAnyNumberOfSlotsAvailable, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_SuccessAnyNumberOfSlotsAvailable");
+    UtTest_Add(
+      Test_ingest_app_message_SuccessWhenOnlyOneSlotLeft, 
+      SBN_Client_Ingest_Setup, SBN_Client_Ingest_Teardown, 
+      "Test_ingest_app_message_SuccessWhenOnlyOneSlotLeft");
+}
+```
+
+### `sbn_client_init_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_init_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+/*******************************************************************************
+**
+**  SBN_Client_Init_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Init_Setup(void)
+{
+    SBN_Client_Setup();
+}
+
+void SBN_Client_Init_Teardown(void)
+{
+    SBN_Client_Teardown();
+}
+
+/*******************************************************************************
+**
+**  SBN_Client_Init Tests
+**
+*******************************************************************************/
+
+void Test_SBN_Client_Init_FailsBecause_connect_to_server_Fails(void)
+{
+    /* Arrange */
+    int32 result;
+    int32 expected_result = SBN_CLIENT_BAD_SOCK_FD_EID;
+    /* connect_to_server call control */
+    use_wrap_connect_to_server = true;
+    wrap_connect_to_server_return_value = Any_Negative_int();
+
+    /* Act */ 
+    result = SBN_Client_Init();
+
+    /* Assert */
+    UtAssert_True(result == expected_result, 
+        "SBN_Client_Init result should be %d, but was %d", 
+        SBN_CLIENT_BAD_SOCK_FD_EID, result);
+}
+
+void Test_SBN_Client_Init_FailsBecauseCreateHeartThreadFails(void)
+{
+    /* Arrange */
+    int32 result;
+    int32 expected_result = SBN_CLIENT_HEART_THREAD_CREATE_EID;
+    /* connect_to_server call control */
+    use_wrap_connect_to_server = true;
+    wrap_connect_to_server_return_value = Any_Positive_int_Or_Zero();
+    
+    use_wrap_CFE_SBN_Client_InitPipeTbl = true;
+
+    /* set pthread_create error */
+    pthread_create_errors_on_call_number = FIRST_CALL;
+    pthread_create_error_value = Any_int_Except(0);
+    
+    /* set check_pthread_create_status return given error id */
+    use_wrap_check_pthread_create_status = true;
+    wrap_check_pthread_create_status_fail_call = true;
+    check_pthread_create_status_errors_on_call_number = FIRST_CALL;
+
+    /* Act */ 
+    result = SBN_Client_Init();
+
+    /* Assert */
+    UtAssert_True(result == expected_result, 
+        "SBN_Client_Init result should be %d, but was %d", 
+        SBN_CLIENT_HEART_THREAD_CREATE_EID, result);
+    UtAssert_True(sbn_client_sockfd == wrap_connect_to_server_return_value,
+      "SBN_Client_Init successful call to connect_to_server set "
+      "sbn_client_sockfd to the returned value");
+    UtAssert_True(sbn_client_cpuId == 2, "SBN_Client_Init set the "
+      "sbn_client_cpuId to 2");
+}
+
+void Test_SBN_Client_Init_FailsBecauseCreateReceiveThreadFails(void)
+{
+    /* Arrange */
+    int32 result;
+    int32 expected_result = SBN_CLIENT_RECEIVE_THREAD_CREATE_EID;
+    /* connect_to_server call control */
+    use_wrap_connect_to_server = true;
+    wrap_connect_to_server_return_value = Any_Positive_int_Or_Zero();
+    
+    use_wrap_CFE_SBN_Client_InitPipeTbl = true;
+
+    /* set pthread_create error */
+    pthread_create_errors_on_call_number = SECOND_CALL;
+    pthread_create_error_value = Any_int_Except(0);
+    
+    /* set check_pthread_create_status return given error id */
+    use_wrap_check_pthread_create_status = true;
+    wrap_check_pthread_create_status_fail_call = true;
+    check_pthread_create_status_errors_on_call_number = SECOND_CALL;
+
+    /* Act */ 
+    result = SBN_Client_Init();
+
+    /* Assert */
+    UtAssert_True(result == expected_result, 
+        "SBN_Client_Init result should be %d, but was %d", 
+        SBN_CLIENT_RECEIVE_THREAD_CREATE_EID, result);
+    UtAssert_True(sbn_client_sockfd == wrap_connect_to_server_return_value,
+      "SBN_Client_Init successful call to connect_to_server set "
+      "sbn_client_sockfd to the returned value");
+    UtAssert_True(sbn_client_cpuId == 2, "SBN_Client_Init set the "
+      "sbn_client_cpuId to 2");
+}
+
+void Test_SBN_Client_Init_Success(void)
+{
+    /* Arrange */
+    /* connect_to_server call control */
+    use_wrap_connect_to_server = true;
+    wrap_connect_to_server_return_value = Any_Positive_int_Or_Zero();
+    
+    use_wrap_CFE_SBN_Client_InitPipeTbl = true;
+
+    /* set pthread_create to NOT error */
+    pthread_create_errors_on_call_number = 0;
+    
+    /* set check_pthread_create_status return given error id */
+    use_wrap_check_pthread_create_status = true;
+    wrap_check_pthread_create_status_fail_call = false;
+    
+    /* Act */ 
+    int32 result = SBN_Client_Init();
+
+    /* Assert */
+    UtAssert_True(result == SBN_CLIENT_SUCCESS, 
+      "SBN_Client_Init result should be %d, but was %d", 
+      SBN_CLIENT_SUCCESS, result);
+    UtAssert_True(sbn_client_sockfd == wrap_connect_to_server_return_value,
+      "SBN_Client_Init successful call to connect_to_server set "
+      "sbn_client_sockfd to the returned value");
+    UtAssert_True(sbn_client_cpuId == 2, "SBN_Client_Init set the "
+      "sbn_client_cpuId to 2");
+}
+/* end SBN_Client_Init Tests */
+
+
+/*************************************************/
+
+void UtTest_Setup(void)
+{    
+    /* SBN_Client_Init Tests */
+    UtTest_Add(
+      Test_SBN_Client_Init_FailsBecause_connect_to_server_Fails, 
+      SBN_Client_Init_Setup, SBN_Client_Init_Teardown, 
+      "Test_SBN_Client_Init_FailsBecause_connect_to_server_Fails");
+    UtTest_Add(
+      Test_SBN_Client_Init_FailsBecauseCreateHeartThreadFails, 
+      SBN_Client_Init_Setup, SBN_Client_Init_Teardown, 
+      "Test_SBN_Client_Init_FailsBecauseCreateHeartThreadFails");
+    UtTest_Add(
+      Test_SBN_Client_Init_FailsBecauseCreateReceiveThreadFails, 
+      SBN_Client_Init_Setup, SBN_Client_Init_Teardown, 
+      "Test_SBN_Client_Init_FailsBecauseCreateReceiveThreadFails");
+    UtTest_Add(
+      Test_SBN_Client_Init_Success, 
+      SBN_Client_Init_Setup, SBN_Client_Init_Teardown, 
+      "Test_SBN_Client_Init_Success");
+}
+```
+
+### `sbn_client_logger_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_logger_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+extern const char *log_message_expected_string;
+extern bool log_message_was_called;
+extern const char *perror_expected_string;
+
+extern void (*wrap_log_message_call_func)(void);
+/*******************************************************************************
+**
+**  SBN_Client_Logger_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Logger_Tests_Setup(void)
+{
+    SBN_Client_Setup();
+}
+
+void SBN_Client_Logger_Tests_Teardown(void)
+{
+    SBN_Client_Teardown();
+    
+
+    log_message_expected_string = "";
+    log_message_was_called = false;
+    perror_expected_string = "";
+        
+
+    /* function pointers */
+    wrap_log_message_call_func = NULL;
+}
+
+/*******************************************************************************
+**
+**  log_message Tests
+**
+*******************************************************************************/
+
+void Test_log_message_WritesExpectedNumberOfCharacters(void)
+{
+    /* Arrange */
+    const char *test_message = "This is a test, %s %d %03f";
+    const char *test_string = "two numbers:";
+    int test_int = 5;
+    float test_float = 5.515000;
+    int32 result;
+    int32 expectedResult = 39;
+    
+    /* Act */
+    result = log_message(test_message, test_string, test_int, test_float);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+      "log_message wrote %d characters and should be %d", 
+      result, expectedResult);
+    
+}
+
+/* end log_message Tests */
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_log_message_WritesExpectedNumberOfCharacters,
+               SBN_Client_Logger_Tests_Setup, SBN_Client_Logger_Tests_Teardown, 
+              "Test_log_message_WritesExpectedNumberOfCharacters");
+}
+```
+
+### `sbn_client_minders_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_minders_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+
+
+/*******************************************************************************
+**
+**  SBN_Client_Minders_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Minders_Tests_Setup(void)
+{
+    SBN_Client_Setup();
+}
+
+void SBN_Client_Minders_Tests_Teardown(void)
+{
+    SBN_Client_Teardown();
+}
+
+void wrap_log_message_set_continue_recv_check_false(void)
+{
+    continue_receive_check = false;
+}
+
+void Test_SBN_Client_HeartbeatMinder_NoLoopContinueHeartbeatFalse(void)
+{
+    /* Arrange */
+    void * result;
+    
+    continue_heartbeat = false;
+    
+    /* Act */
+    result = SBN_Client_HeartbeatMinder(NULL);
+    
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL");
+}
+
+void Test_SBN_Client_HeartbeatMinder_HeartbeatWithSockfdZero(void)
+{
+    /* Arrange */
+    void * result;
+    sbn_client_sockfd = 0;
+    
+    wrap_sleep_call_func = &wrap_sleep_set_continue_heartbeat_false;
+
+    /* Act */
+    result = SBN_Client_HeartbeatMinder(NULL);
+
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL");
+}
+
+void Test_SBN_Client_HeartbeatMinder_RunsUntilContinueHeartbeatIsFalse(void)
+{
+    /* Arrange */
+    void * result;
+    sbn_client_sockfd = Any_Non_Zero_int();
+    
+    /* call number becomes from 1 to 255 */
+    send_heartbeat_discontinue_on_call_number = (rand() % UCHAR_MAX) + 1; 
+    
+    use_wrap_send_heartbeat = true;
+    wrap_send_heartbeat_return_value = Any_int();
+
+    /* Act */
+    result = SBN_Client_HeartbeatMinder(NULL);
+
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL");
+    UtAssert_True(send_hearbeat_call_number == 
+      send_heartbeat_discontinue_on_call_number,
+      "send_heartbeat was called the expected number of times");
+}
+
+void Test_SBN_Client_ReceiveMinder_NoLoopContinueReceiveCheckFalse(void)
+{
+    /* Arrange */
+    void * result;
+    
+    continue_receive_check = false;
+    
+    /* Act */
+    result = SBN_Client_ReceiveMinder(NULL);
+    
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL");
+
+}
+
+void Test_SBN_Client_ReceiveMinder_Outlog_messageError(void)
+{
+    /* Arrange */
+    char err_msg[50];
+    void * result;
+    
+    use_wrap_recv_msg = true;
+    
+    wrap_recv_msg_return_value = Any_int32_Except(CFE_SUCCESS);
+    snprintf(err_msg, 50, "Receive message returned error 0x%08X\n", 
+      wrap_recv_msg_return_value);
+    
+    log_message_expected_string = err_msg;
+    wrap_log_message_call_func = 
+      &wrap_log_message_set_continue_recv_check_false;
+    
+    /* Act */
+    result = SBN_Client_ReceiveMinder(NULL);
+    
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL"); 
+}
+
+void Test_SBN_Client_ReceiveMinder_RunsUntilContinueReceiveCheckIsFalse(void)
+{
+    /* Arrange */
+    void * result;
+    
+     /* call number becomes from 1 to 255 */
+    recv_msg_discontiue_on_call_number = (rand() % UCHAR_MAX) + 1;
+    
+    use_wrap_recv_msg = true;
+    wrap_recv_msg_return_value = CFE_SUCCESS;
+    
+    /* Act */
+    result = SBN_Client_ReceiveMinder(NULL);
+    
+    /* Assert */
+    UtAssert_True(result == NULL, "SBN_Client_HeartbeatMinder returned NULL"); 
+    UtAssert_True(recv_msg_call_number == recv_msg_discontiue_on_call_number,
+      "recv_msg was called the expected number of times");
+}
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(
+      Test_SBN_Client_HeartbeatMinder_NoLoopContinueHeartbeatFalse,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_HeartbeatMinder_NoLoopContinueHeartbeatFalse");
+    UtTest_Add(
+      Test_SBN_Client_HeartbeatMinder_HeartbeatWithSockfdZero,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_HeartbeatMinder_HeartbeatWithSockfdZero");
+    UtTest_Add(
+      Test_SBN_Client_HeartbeatMinder_RunsUntilContinueHeartbeatIsFalse,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_HeartbeatMinder_RunsUntilContinueHeartbeatIsFalse");
+
+    
+    
+    
+    UtTest_Add(
+      Test_SBN_Client_ReceiveMinder_NoLoopContinueReceiveCheckFalse,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_ReceiveMinder_NoLoopContinueReceiveCheckFalse");
+    UtTest_Add(
+      Test_SBN_Client_ReceiveMinder_Outlog_messageError,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_ReceiveMinder_Outlog_messageError");
+    UtTest_Add(
+      Test_SBN_Client_ReceiveMinder_RunsUntilContinueReceiveCheckIsFalse,
+      SBN_Client_Minders_Tests_Setup, SBN_Client_Minders_Tests_Teardown,
+      "Test_SBN_Client_ReceiveMinder_RunsUntilContinueReceiveCheckIsFalse");
+}
+```
+
+### `sbn_client_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+/*******************************************************************************
+**
+**  SBN_Client_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Tests_Setup(void)
+{
+    SBN_Client_Setup();
+} /* end SBN_Client_Tests_Setup */
+
+void SBN_Client_Tests_Teardown(void)
+{
+    SBN_Client_Teardown();
+} /* end SBN_Client_Tests_Setup */
+
+/*******************************************************************************
+**
+**  CFE_SBN_Client_InitPipeTbl Tests
+**
+*******************************************************************************/
+
+void Test_CFE_SBN_Client_InitPipeTblFullyInitializesPipes(void)
+{
+    /* Arrange */
+    int i, j;
+    
+    /* Act */ 
+    CFE_SBN_Client_InitPipeTbl();
+    
+    /* Assert */
+    for(i = 0; i < CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++)
+    {
+        CFE_SBN_Client_PipeD_t test_pipe = PipeTbl[i];
+        
+        UtAssert_True(test_pipe.InUse == CFE_SBN_CLIENT_NOT_IN_USE, 
+          "PipeTbl[%d].InUse should equal %d and was %d", i, 
+          CFE_SBN_CLIENT_NOT_IN_USE, test_pipe.InUse);
+        UtAssert_True(test_pipe.SysQueueId == CFE_SBN_CLIENT_UNUSED_QUEUE, 
+          "PipeTbl[%d].SysQueueId should equal %d and was %d", i, 
+          CFE_SBN_CLIENT_UNUSED_QUEUE, test_pipe.SysQueueId);
+        UtAssert_True(test_pipe.PipeId == CFE_SBN_CLIENT_INVALID_PIPE, 
+          "PipeTbl[%d].PipeId should equal %d and was %d", i, 
+          CFE_SBN_CLIENT_INVALID_PIPE, test_pipe.PipeId);
+        UtAssert_True(test_pipe.NumberOfMessages == 1, 
+          "PipeTbl[%d].NumberOfMessages should equal %d and was %d", i, 1, 
+          test_pipe.NumberOfMessages);
+        UtAssert_True(test_pipe.ReadMessage == 
+          (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1), 
+          "PipeTbl[%d].ReadMessage should equal %d and was %d", i, 
+          CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1, 
+          test_pipe.ReadMessage);
+        UtAssert_True(strcmp(test_pipe.PipeName, "") == 0, 
+          "PipeTbl[%d].PipeId should equal '' and was '%s'", i, 
+          test_pipe.PipeName);  
+    
+        for(j = 0; j < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; j++)
+        {
+            UtAssert_True(test_pipe.SubscribedMsgIds[j] == 
+              CFE_SBN_CLIENT_INVALID_MSG_ID, 
+              "PipeTbl[%d].SubscribedMsgIds[%d] should be %d and was %d", i, j, 
+              CFE_SBN_CLIENT_INVALID_MSG_ID, test_pipe.SubscribedMsgIds[j]);
+        }
+        
+    }
+
+} /* end Test_CFE_SBN_Client_InitPipeTblFullyInitializesPipes */
+
+/* end CFE_SBN_Client_InitPipeTbl Tests */
+
+/*******************************************************************************
+**
+**  add test group functions
+**
+*******************************************************************************/
+
+void add_CFE_SBN_Client_InitPipeTbl_tests(void)
+{
+    UtTest_Add(Test_CFE_SBN_Client_InitPipeTblFullyInitializesPipes, 
+      SBN_Client_Tests_Setup, SBN_Client_Tests_Teardown, 
+      "Test_CFE_SBN_Client_InitPipeTblFullyInitializesPipes");
+} /* end add_CFE_SBN_Client_InitPipeTbl_tests */
+
+/* end add test group functions */
+
+/*******************************************************************************
+**
+**  Required UtTest_Setup function for ut-assert framework
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    add_CFE_SBN_Client_InitPipeTbl_tests();
+} /* end UtTest_Setup */
+
+/* end Required UtTest_Setup function for ut-assert framework */
+```
+
+### `sbn_client_tests_includes.h`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_tests_includes.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_tests_includes_h_
+#define _sbn_client_tests_includes_h_
+
+/* Library includes */
+#include <arpa/inet.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <limits.h>
+#include <stdarg.h>
+#include <time.h>
+#include <unistd.h>
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+/* SBN_Client includes */
+#include "sbn_client_ingest.h"
+#include "sbn_client_init.h"
+#include "sbn_client_logger.h"
+#include "sbn_client_minders.h"
+#include "sbn_client_utils.h"
+#include "sbn_client_version.h"
+#include "sbn_client.h"
+
+/* SBN_Client test includes */
+#include "sbn_client_common_test_utils.h"
+#include "sbn_client_wrapped_functions.h"
+#include "sbn_client_logger_stubs.h"
+
+/* SBN_Client variable access */
+extern int sbn_client_sockfd;
+extern int sbn_client_cpuId;
+extern bool continue_heartbeat;
+extern bool continue_receive_check;
+extern CFE_SBN_Client_PipeD_t PipeTbl[CFE_PLATFORM_SBN_CLIENT_MAX_PIPES];
+extern const char *log_message_expected_string;
+extern bool log_message_was_called;
+
+#endif /* _sbn_client_tests_includes_h_ */
+```
+
+### `sbn_client_utils_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_utils_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+void add_connect_to_server_tests(void);
+
+/*******************************************************************************
+**
+**  SBN_Client_Utils_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Utils_Tests_Setup(void)
+{
+    SBN_Client_Setup();
+    
+    wrap_socket_return_value = (rand() % INT_MIN) * -1;
+    wrap_htons_return_value = 0;
+    wrap_inet_pton_return_value = 1;
+    wrap_connect_return_value = -1;
+    wrap_read_return_value = INT_MIN;
+}
+
+void SBN_Client_Utils_Tests_Teardown(void)
+{
+    SBN_Client_Teardown();
+}
+
+/*******************************************************************************
+**
+**  Helper Functions for check_pthread_create_status Tests
+**
+*******************************************************************************/
+
+void check_pthread_create_status_Outlog_messageCorrectError(int error, 
+       const char *error_name)
+{    
+    /* Arrange */ 
+    char p_e_s[50];
+    int status = error;
+    int32 errorId = rand() % INT_MIN;
+    
+    sprintf(p_e_s, "Create thread error = %s", error_name);
+    log_message_expected_string = p_e_s;
+    perror_expected_string = "pthread_create error";
+    
+    /* Act */
+    int32 result = check_pthread_create_status(status, errorId);
+    
+    /* Assert */
+    UtAssert_True(result == errorId, 
+        "check_pthread_create_status returned the errorId argument");
+}
+
+
+/*******************************************************************************
+**
+**  check_pthread_create_status Tests
+**
+*******************************************************************************/
+
+void Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EAGAIN(void)
+{
+    check_pthread_create_status_Outlog_messageCorrectError(EAGAIN, "EAGAIN");
+}
+
+void Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EINVAL(void)
+{    
+    check_pthread_create_status_Outlog_messageCorrectError(EINVAL, "EINVAL");
+}
+
+void Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EPERM(void)
+{    
+    check_pthread_create_status_Outlog_messageCorrectError(EPERM, "EPERM");
+}
+
+void Test_check_pthread_create_status_Is_errorId_WhenStatusIsNonZero(void)
+{
+    /* Arrange */ 
+    int status = rand() % INT_MIN;
+    int32 errorId = rand() % INT_MIN;
+    perror_expected_string = "pthread_create error";
+    
+    /* Act */
+    int32 result = check_pthread_create_status(status, errorId);
+    
+    /* Assert */
+    UtAssert_True(result == errorId, 
+        "check_pthread_create_status returned the errorId argument");
+}
+
+void Test_check_pthread_create_status_Is_SBN_CLIENT_SUCCESS_When0(void)
+{
+    /* Arrange */ 
+    int status = 0;
+    int32 errorId = rand() % INT_MIN;
+    
+    /* Act */
+    int32 result = check_pthread_create_status(status, errorId);
+    
+    /* Assert */
+    UtAssert_True(result == SBN_CLIENT_SUCCESS, 
+        "check_pthread_create_status returned SBN_CLIENT_SUCCESS");
+}
+
+/*******************************************************************************
+**
+**  Helper Functions for connect_to_server Tests
+**
+*******************************************************************************/
+
+void connect_to_server_socket_fail_check(int32 expected_error, 
+       const char *error_name)
+{
+    /* Arrange */
+    char p_e_s[50];
+    
+    wrap_socket_return_value = -1;
+    errno = expected_error;
+    sprintf(p_e_s, "socket err = %s", error_name);
+    log_message_expected_string = p_e_s;
+    perror_expected_string = "connect_to_server socket error";
+    const char * dummyIp = NULL;
+    uint16_t dummyPort = 0;
+
+    /* Act */ 
+    int result = connect_to_server(dummyIp, dummyPort);
+    
+    /* Assert */
+    UtAssert_True(result == SERVER_SOCKET_ERROR, 
+      "Error returned should have been %d and was %d", 
+      SERVER_SOCKET_ERROR, result);
+}
+
+void connect_to_server_connect_fail_check(int32 expected_error, 
+       const char *error_name)
+{
+    /* Arrange */
+    char p_e_s[50];
+    
+    wrap_socket_return_value = rand() % INT_MAX;
+    wrap_htons_return_value = 0;
+    wrap_inet_pton_return_value = 1;
+    wrap_connect_return_value = CONNECT_ERROR_VALUE;
+    errno = expected_error;
+    sprintf(p_e_s, "connect err = %s", error_name);
+    log_message_expected_string = p_e_s;
+    perror_expected_string = "connect_to_server connect error";
+    const char * dummyIp = NULL;
+    uint16_t dummyPort = 0;
+
+    /* Act */ 
+    int result = connect_to_server(dummyIp, dummyPort);
+
+    /* Assert */
+    UtAssert_True(result == SERVER_CONNECT_ERROR, 
+      "error returned should have been %d and was %d", 
+      SERVER_CONNECT_ERROR, result);
+}
+
+/*******************************************************************************
+**
+**  connect_to_server Tests
+**
+*******************************************************************************/
+
+void Test_connect_to_server_returns_sbn_client_sockfd_when_successful(void)
+{
+  /* Arrange */
+  wrap_socket_return_value = rand() % INT_MAX;
+  wrap_htons_return_value = 0;
+  wrap_inet_pton_return_value = 1;
+  wrap_connect_return_value = 0;
+  const char * dummyIp = NULL;
+  uint16_t dummyPort = 0;
+
+  /* Act */ 
+  int result = connect_to_server(dummyIp, dummyPort);
+  
+  /* Assert */
+  UtAssert_True(result == wrap_socket_return_value, 
+    "Sockfd returned should have been %d and was %d", 
+    wrap_socket_return_value, result);
+}
+
+void Test_connect_to_server_Outlog_message_EACCES_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(EACCES, "EACCES");
+}
+
+void Test_connect_to_server_Outlog_message_EAFNOSUPPORT_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(EAFNOSUPPORT, "EAFNOSUPPORT");
+}
+
+void Test_connect_to_server_Outlog_message_EINVAL_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(EINVAL, "EINVAL");
+}
+
+void Test_connect_to_server_Outlog_message_EMFILE_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(EMFILE, "EMFILE");
+}
+
+void Test_connect_to_server_Outlog_message_ENOBUFS_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(ENOBUFS, "ENOBUFS");
+}
+
+void Test_connect_to_server_Outlog_message_ENOMEM_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(ENOMEM, "ENOMEM");
+}
+
+void Test_connect_to_server_Outlog_message_EPROTONOSUPPORT_WhenSocketFails(void)
+{
+    connect_to_server_socket_fail_check(EPROTONOSUPPORT, "EPROTONOSUPPORT");
+}
+
+void Test_connect_to_server_Outlog_messageUnknownErrorWhenNoCaseMatches(void)
+{
+    /* Arrange */
+    wrap_socket_return_value = -1;
+    errno = 0xFFFF;
+    /* TODO: printf is being used not log_message, need a better way to check */
+    /* log_message_expected_string = "Unknown socket error = 65535"; */
+    perror_expected_string = "connect_to_server socket error";
+    const char * dummyIp = NULL;
+    uint16_t dummyPort = 0;
+
+    /* Act */ 
+    int result = connect_to_server(dummyIp, dummyPort);
+    
+    /* Assert */
+    UtAssert_True(result == SERVER_SOCKET_ERROR, 
+      "Error returned should have been %d and was %d", 
+      SERVER_SOCKET_ERROR, result);
+}
+
+void Test_connect_to_server_returns_error_when_inet_pton_src_is_invalid(void)
+{
+  /* Arrange */
+  /* once inet_pton fails CUT returns error */
+  wrap_socket_return_value = rand() % INT_MAX;
+  wrap_htons_return_value = 0;
+  wrap_inet_pton_return_value = 0;
+  errno = SERVER_INET_PTON_SRC_ERROR;
+  const char * dummyIp = NULL;
+  uint16_t dummyPort = 0;
+
+  /* Act */ 
+  int result = connect_to_server(dummyIp, dummyPort);
+  
+  /* Assert */
+  UtAssert_True(result == SERVER_INET_PTON_SRC_ERROR, 
+    "Error returned should have been %d and was %d", 
+    SERVER_INET_PTON_SRC_ERROR, result);
+}
+
+void Test_connect_to_server_returns_error_when_inet_pton_af_is_invalid(void)
+{
+  /* Arrange */
+  /* once inet_pton fails CUT returns error */
+  wrap_socket_return_value = rand() % INT_MAX;
+  wrap_htons_return_value = 0;
+  wrap_inet_pton_return_value = -1;
+  errno = SERVER_INET_PTON_INVALID_AF_ERROR;
+  const char * dummyIp = NULL;
+  uint16_t dummyPort = 0;
+
+  /* Act */ 
+  int result = connect_to_server(dummyIp, dummyPort);
+  
+  /* Assert */
+  UtAssert_True(result == SERVER_INET_PTON_INVALID_AF_ERROR, 
+    "Error returned should have been %d and was %d", 
+    SERVER_INET_PTON_INVALID_AF_ERROR, result);
+}
+
+void Test_connect_to_server_returns_error_WhenConnectFails(void)
+{
+    /* Arrange */
+    wrap_socket_return_value = rand() % INT_MAX;
+    wrap_htons_return_value = 0;
+    wrap_inet_pton_return_value = 1;
+    wrap_connect_return_value = CONNECT_ERROR_VALUE;
+    errno = -4;
+    const char * dummyIp = NULL;
+    uint16_t dummyPort = 0;
+
+    /* Act */ 
+    int result = connect_to_server(dummyIp, dummyPort);
+
+    /* Assert */
+    UtAssert_True(result == errno, 
+      "error returned should have been %d and was %d", 
+      errno, result);
+}
+
+void Test_connect_to_server_Outlog_message_EACCES_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EACCES, "EACCES");
+}
+
+void Test_connect_to_server_Outlog_message_EPERM_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EPERM, "EPERM");
+}
+
+void Test_connect_to_server_Outlog_message_EADDRINUSE_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EADDRINUSE, "EADDRINUSE");
+}
+
+void Test_connect_to_server_Outlog_message_EADDRNOTAVAIL_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EADDRNOTAVAIL, "EADDRNOTAVAIL");
+}
+
+void Test_connect_to_server_Outlog_message_EAFNOSUPPORT_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EAFNOSUPPORT, "EAFNOSUPPORT");
+}
+
+void Test_connect_to_server_Outlog_message_EAGAIN_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EAGAIN, "EAGAIN");
+}
+
+void Test_connect_to_server_Outlog_message_EALREADY_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EALREADY, "EALREADY");
+}
+
+void Test_connect_to_server_Outlog_message_EBADF_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EBADF, "EBADF");
+}
+
+void Test_connect_to_server_Outlog_message_ECONNREFUSED_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(ECONNREFUSED, "ECONNREFUSED");
+}
+
+void Test_connect_to_server_Outlog_message_EFAULT_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EFAULT, "EFAULT");
+}
+
+void Test_connect_to_server_Outlog_message_EINPROGRESS_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EINPROGRESS, "EINPROGRESS");
+}
+
+void Test_connect_to_server_Outlog_message_EINTR_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EINTR, "EINTR");
+}
+
+void Test_connect_to_server_Outlog_message_EISCONN_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EISCONN, "EISCONN");
+}
+
+void Test_connect_to_server_Outlog_message_ENETUNREACH_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(ENETUNREACH, "ENETUNREACH");
+}
+
+void Test_connect_to_server_Outlog_message_ENOTSOCK_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(ENOTSOCK, "ENOTSOCK");
+}
+
+void Test_connect_to_server_Outlog_message_EPROTOTYPE_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(EPROTOTYPE, "EPROTOTYPE");
+}
+
+void Test_connect_to_server_Outlog_message_ETIMEDOUT_errorFromConnectCall(void)
+{
+    connect_to_server_connect_fail_check(ETIMEDOUT, "ETIMEDOUT");
+}
+/* end connect_to_server Tests */
+
+/*******************************************************************************
+**
+**  CFE_SBN_Client_GetPipeIdx Tests
+**
+*******************************************************************************/
+
+void Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdEqualsPipeIdx(void)
+{
+    /* Arrange */
+    CFE_SB_PipeId_t pipe = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    PipeTbl[pipe].InUse = CFE_SBN_CLIENT_IN_USE;    
+    PipeTbl[pipe].PipeId = pipe;
+  
+    /* Act */ 
+    uint8 result = CFE_SBN_Client_GetPipeIdx(pipe);
+  
+    /* Assert */
+    UtAssert_True(result == pipe, 
+      "CFE_SBN_Client_GetPipeIdx should have returned %d and was %d", 
+      pipe, result);
+}
+
+/* NOTE:not sure if what happens in 
+ * Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdDoesNotEqualPipeIdx can really 
+ * ever occur during runtime */
+void Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdDoesNotEqualPipeIdx(void)  
+{
+    /* Arrange */
+    CFE_SB_PipeId_t pipe = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    PipeTbl[pipe].InUse = CFE_SBN_CLIENT_NOT_IN_USE;    
+    PipeTbl[pipe].PipeId = CFE_SBN_CLIENT_INVALID_PIPE;
+    uint8 tblIdx = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    
+    while (tblIdx == pipe) // get a pipe that is not the same as index
+    {
+      tblIdx = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    }
+    
+    PipeTbl[tblIdx].InUse = CFE_SBN_CLIENT_IN_USE;    
+    PipeTbl[tblIdx].PipeId = pipe;
+    
+    /* Act */ 
+    uint8 result = CFE_SBN_Client_GetPipeIdx(pipe);
+  
+    /* Assert */
+    UtAssert_True(result == tblIdx, 
+      "CFE_SBN_Client_GetPipeIdx for pipeId %d should have been %d and was %d", 
+      pipe, tblIdx, result);
+}
+/* end CFE_SBN_Client_GetPipeIdx Tests */
+
+
+
+/* CFE_SBN_CLIENT_ReadBytes Tests*/
+void Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeBroken(void)
+{
+    /* Arrange */
+    int sock_fd = (rand() % 10) + 1; /* 1 to 10 */
+    size_t MsgSz = 8; /* TODO: random size generation? */
+    unsigned char msg_buffer[MsgSz];
+    wrap_read_return_value = -1;
+    int result;
+    
+    /* Act */ 
+    result = CFE_SBN_CLIENT_ReadBytes(sock_fd, msg_buffer, MsgSz);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SBN_CLIENT_PIPE_BROKEN_ERR, 
+      "CFE_SBN_CLIENT_ReadBytes should return CFE_SBN_CLIENT_PIPE_BROKEN_ERR");
+} /* end Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeBroken */
+
+void Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeClosed(void)
+{
+    /* Arrange */
+    int sock_fd = (rand() % 10) + 1; /* 1 to 10 */
+    size_t MsgSz = 8; /* TODO: random size generation? */
+    unsigned char msg_buffer[MsgSz];
+    wrap_read_return_value = 0;
+    int result;
+    
+    /* Act */ 
+    result = CFE_SBN_CLIENT_ReadBytes(sock_fd, msg_buffer, MsgSz);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SBN_CLIENT_PIPE_CLOSED_ERR, 
+        "CFE_SBN_CLIENT_ReadBytes returned CFE_SBN_CLIENT_PIPE_CLOSED_ERR");
+}
+
+void Test_CFE_SBN_CLIENT_ReadBytes_ReturnsCfeSuccessWhenAllBytesReceived(void)
+{
+    /* Arrange */
+    int sock_fd = (rand() % 10) + 1; /* 1 to 10 */
+    size_t MsgSz = 8; /* TODO: random size generation? */
+    unsigned char msg_buffer[MsgSz];
+    wrap_read_return_value = 8;
+    int result;
+    
+    /* Act */ 
+    result = CFE_SBN_CLIENT_ReadBytes(sock_fd, msg_buffer, MsgSz);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+        "CFE_SBN_CLIENT_ReadBytes returned CFE_SUCCESS");
+}
+/* end CFE_SBN_CLIENT_ReadBytes Tests*/
+
+/*************************************************/
+
+void Test_CFE_SBN_Client_GetMessageSubscribeIndex_FailsMaxMessagesHit(CFE_SB_PipeId_t PipeId)
+{
+    /* Arrange */
+    CFE_SB_PipeId_t testPipeId = 0;
+    int32 expectedResult = CFE_SBN_CLIENT_MAX_MSG_IDS_MET;
+    int32 result;
+    int i=0;
+    
+    for (i = 0; i < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; ++i)
+    {
+        PipeTbl[testPipeId].SubscribedMsgIds[i] = i + 1;
+    }
+    
+    /* Act */
+    result = CFE_SBN_Client_GetMessageSubscribeIndex(testPipeId);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, "Expected 0x%08X got 0x%08X", expectedResult, result);
+    
+}
+
+void UtTest_Setup(void)
+{
+    // UtGroupSetup_Add(Test_Group_Setup);
+    // UtGroupTeardown_Add(Test_Group_Teardown);
+    // 
+    /* check_pthread_create_status Tests */
+    UtTest_Add(
+      Test_CFE_SBN_Client_GetMessageSubscribeIndex_FailsMaxMessagesHit,
+       SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+       "Test_CFE_SBN_Client_GetMessageSubscribeIndex_FailsMaxMessagesHit");
+    
+    UtTest_Add(
+      Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EAGAIN,
+       SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+       "Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EAGAIN");
+    UtTest_Add(
+      Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EINVAL,
+       SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+       "Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EINVAL");
+    UtTest_Add(
+      Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EPERM, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_check_pthread_create_status_Outlog_messageErrorWhenStatusIs_EPERM");
+    UtTest_Add(
+      Test_check_pthread_create_status_Is_errorId_WhenStatusIsNonZero, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_check_pthread_create_status_Is_errorId_WhenStatusIsNonZero");
+    UtTest_Add(
+      Test_check_pthread_create_status_Is_SBN_CLIENT_SUCCESS_When0, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_check_pthread_create_status_Is_SBN_CLIENT_SUCCESS_When0");
+    
+    /* connect_to_server Tests */
+    add_connect_to_server_tests();
+    
+    /* CFE_SBN_Client_GetPipeIdx Tests */
+    UtTest_Add(
+      Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdEqualsPipeIdx, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdEqualsPipeIdx");
+    UtTest_Add(
+      Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdDoesNotEqualPipeIdx, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_CFE_SBN_Client_GetPipeIdxSuccessPipeIdDoesNotEqualPipeIdx");
+    
+    /* CFE_SBN_CLIENT_ReadBytes Tests*/
+    UtTest_Add(
+      Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeBroken, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeBroken");
+    UtTest_Add(
+      Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeClosed, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_CFE_SBN_CLIENT_ReadBytes_ReturnsErrorWhenPipeClosed");
+    UtTest_Add(
+      Test_CFE_SBN_CLIENT_ReadBytes_ReturnsCfeSuccessWhenAllBytesReceived, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_CFE_SBN_CLIENT_ReadBytes_ReturnsCfeSuccessWhenAllBytesReceived");
+
+}
+
+/* Helper Functions */
+
+void add_connect_to_server_tests(void)
+{
+    UtTest_Add(
+      Test_connect_to_server_returns_sbn_client_sockfd_when_successful, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_returns_sbn_client_sockfd_when_successful");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EACCES_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EACCES_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EAFNOSUPPORT_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EAFNOSUPPORT_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EINVAL_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EINVAL_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EMFILE_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EMFILE_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ENOBUFS_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ENOBUFS_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ENOMEM_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ENOMEM_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EPROTONOSUPPORT_WhenSocketFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EPROTONOSUPPORT_WhenSocketFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_messageUnknownErrorWhenNoCaseMatches, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_messageUnknownErrorWhenNoCaseMatches");
+    UtTest_Add(
+      Test_connect_to_server_returns_error_when_inet_pton_src_is_invalid, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_returns_error_when_inet_pton_src_is_invalid");
+    UtTest_Add(
+      Test_connect_to_server_returns_error_when_inet_pton_af_is_invalid, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_returns_error_when_inet_pton_af_is_invalid");
+    UtTest_Add(
+      Test_connect_to_server_returns_error_WhenConnectFails, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_returns_error_WhenConnectFails");
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EACCES_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EACCES_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EPERM_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EPERM_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EADDRINUSE_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EADDRINUSE_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EADDRNOTAVAIL_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EADDRNOTAVAIL_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EAFNOSUPPORT_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EAFNOSUPPORT_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EAGAIN_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EAGAIN_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EALREADY_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EALREADY_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EBADF_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EBADF_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ECONNREFUSED_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ECONNREFUSED_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EFAULT_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EFAULT_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EINPROGRESS_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EINPROGRESS_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EINTR_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EINTR_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EISCONN_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EISCONN_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ENETUNREACH_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ENETUNREACH_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ENOTSOCK_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ENOTSOCK_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_EPROTOTYPE_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_EPROTOTYPE_errorFromConnectCall");  
+    UtTest_Add(
+      Test_connect_to_server_Outlog_message_ETIMEDOUT_errorFromConnectCall, 
+      SBN_Client_Utils_Tests_Setup, SBN_Client_Utils_Tests_Teardown, 
+      "Test_connect_to_server_Outlog_message_ETIMEDOUT_errorFromConnectCall");  
+}
+```
+
+### `sbn_client_wrappers_tests.c`
+
+**경로:** `fsw/apps/sbn_client/unit-test/sbn_client_wrappers_tests.c`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#include "sbn_client_tests_includes.h"
+
+CFE_SB_PipeId_t pipePtr;
+uint16 pipe_depth = 5;
+const char *pipeName = "TestPipe";
+
+/*******************************************************************************
+**
+**  SBN_Client_Wrappers_Tests Setup and Teardown
+**
+*******************************************************************************/
+
+void SBN_Client_Wrappers_Tests_Setup(void)
+{
+    SBN_Client_Setup();
+} /* end SBN_Client_Wrappers_Tests_Setup */
+
+void SBN_Client_Wrappers_Tests_Teardown(void)
+{
+    SBN_Client_Teardown();  
+    
+    pipePtr = 0;
+    pipe_depth = 5;
+} /* end SBN_Client_Wrappers_Tests_Teardown */
+
+/*******************************************************************************
+**
+**  __wrap_CFE_SB_CreatePipe Tests
+**
+*******************************************************************************/
+
+void Test__wrap_CFE_SB_CreatePipe_Results_In_CFE_SUCCESS(void)
+{
+  /* Arrange - none required */
+  /* Act */ 
+  int32 result = CFE_SB_CreatePipe(&pipePtr, pipe_depth, pipeName);
+  
+  /* Assert */
+  UtAssert_True(result == CFE_SUCCESS, 
+    "Pipe creation should have succeeded with (= %d), the result was (= %d)", 
+    CFE_SUCCESS, result);
+} /* end Test__wrap_CFE_SB_CreatePipe_Results_In_CFE_SUCCESS */
+
+void Test__wrap_CFE_SB_CreatePipe_InitializesPipeCorrectly(void)
+{
+  /* Arrange - none required */
+  /* Act */ 
+  CFE_SB_CreatePipe(&pipePtr, pipe_depth, pipeName);
+  
+  /* Assert */
+  UtAssert_True(pipePtr == 0, 
+    "PipePtr should point to pipe 0 (initial pipe) and points to pipe %d.", 
+    pipePtr);
+  UtAssert_True(PipeTbl[0].InUse == CFE_SBN_CLIENT_IN_USE, 
+    "PipeTbl[0].InUse should be %d and was %d", CFE_SBN_CLIENT_IN_USE, 
+    PipeTbl[0].InUse);
+  UtAssert_True(PipeTbl[0].PipeId == 0, 
+    "PipeTbl[0].PipeID should be %d and was %d", 0, PipeTbl[0].PipeId);
+  UtAssert_True(PipeTbl[0].SendErrors == 0, 
+    "PipeTbl[0].SendErrors should be %d and was %d", 0, PipeTbl[0].SendErrors);
+  UtAssert_True(strcmp(&PipeTbl[0].PipeName[0], pipeName) == 0, 
+  "PipeTbl[0].PipeName should be %s and was %s", pipeName, 
+    PipeTbl[0].PipeName);
+  UtAssert_True(PipeTbl[0].NumberOfMessages == 0, 
+    "PipeTbl[0].NumberOfMessages should be %d and was %d", 0, 
+    PipeTbl[0].NumberOfMessages);
+  UtAssert_True(PipeTbl[0].ReadMessage == 0, 
+    "PipeTbl[0].ReadMessage should be %d and was %d", 0, 
+    PipeTbl[0].ReadMessage);
+} /* end Test__wrap_CFE_SB_CreatePipe_InitializesPipeCorrectly */
+
+void Test__wrap_CFE_SB_CreatePipe_SendsMaxPipesErrorWhenPipesAreFull(void)
+{
+  /* Arrange */
+  int i;
+  //uint32 initial_event_q_depth = Ut_CFE_EVS_GetEventQueueDepth();
+  
+  for (i = 0; i < CFE_PLATFORM_SBN_CLIENT_MAX_PIPES; i++)
+  {
+    PipeTbl[i].InUse = CFE_SBN_CLIENT_IN_USE;
+  }
+  
+  /* Act */ 
+  int32 result = CFE_SB_CreatePipe(&pipePtr, pipe_depth, pipeName);
+  //uint32 current_event_q_depth = Ut_CFE_EVS_GetEventQueueDepth();
+  
+  /* Assert */
+  UtAssert_True(result == CFE_SBN_CLIENT_MAX_PIPES_MET, 
+    "Call to CFE_SB_CreatePipe result should be %d and was %d", 
+    CFE_SBN_CLIENT_MAX_PIPES_MET, result);
+  // TODO:set stubs to intercept wraps on CFE calls
+  // UtAssert_True(current_event_q_depth == initial_event_q_depth + 1, 
+  // "Event queue count should be %d, but was %d", initial_event_q_depth + 1, 
+  //  current_event_q_depth);
+  // UtAssert_EventSent(CFE_SBN_CLIENT_MAX_PIPES_MET, CFE_EVS_EventType_ERROR, expected_
+  //  error_msg, 
+  // "Error event as expected was not sent. Expected: Error = %d, ErrorType=%d, 
+  // Error Message = %s", CFE_SBN_CLIENT_MAX_PIPES_MET, CFE_EVS_EventType_ERROR, 
+  // expected_error_msg);
+} /* end Test__wrap_CFE_SB_CreatePipe_SendsMaxPipesErrorWhenPipesAreFull */
+
+/* end __wrap_CFE_SB_CreatePipe Tests */
+
+/*******************************************************************************
+**
+**  __wrap_CFE_SB_DeletePipe Tests
+**
+*******************************************************************************/
+
+void Test__wrap_CFE_SB_DeletePipeSuccessWhenPipeIdIsCorrectAndInUse(void)
+{
+  /* Arrange */
+  int pipeIdToDelete = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+  PipeTbl[pipeIdToDelete].PipeId = pipeIdToDelete;  
+  PipeTbl[pipeIdToDelete].InUse = CFE_SBN_CLIENT_IN_USE;
+  
+  /* Act */ 
+  int32 result = CFE_SB_DeletePipe(pipeIdToDelete);
+  
+  /* Assert */
+  UtAssert_True(result == CFE_SUCCESS, 
+    "Call to CFE_SB_DeletePipe to delete pipe#%d should be %d and was %d", 
+    pipeIdToDelete, CFE_SUCCESS, result);
+} /* end Test__wrap_CFE_SB_DeletePipeSuccessWhenPipeIdIsCorrectAndInUse */
+
+/* end __wrap_CFE_SB_DeletePipe Tests */
+
+/*******************************************************************************
+**
+**  __wrap_CFE_SB_Subscribe Tests
+**
+*******************************************************************************/
+
+void Test__wrap_CFE_SB_SubscribePipeIsValidMsgIdUnsubscribedNotAtMaxMsgIds(void)
+{
+    /* Arrange */
+    int i;
+    int num_msgIds_subscribed = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    int pipe_id = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id = 0x1800;
+    int other_msg_id = 0x1801;
+    PipeTbl[pipe_id].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_id].PipeId = pipe_id;
+    
+    for (i = 0; i < num_msgIds_subscribed; i++)
+    {
+        PipeTbl[pipe_id].SubscribedMsgIds[i] = other_msg_id + i;
+    }  
+      
+    for (i = num_msgIds_subscribed; i < (
+      CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE - num_msgIds_subscribed); i++)
+    {
+        PipeTbl[pipe_id].SubscribedMsgIds[i] = CFE_SBN_CLIENT_INVALID_MSG_ID;
+    }
+    
+    /* Act */ 
+    int32 result = CFE_SB_Subscribe(msg_id, pipe_id);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "Call to CFE_SB_Subscribe should return %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_True(PipeTbl[pipe_id].SubscribedMsgIds[num_msgIds_subscribed] == 
+      msg_id, "PipeTble[%d].SubscribedMsgIds[%d] should be %d and was %d", 
+      pipe_id, num_msgIds_subscribed, msg_id, 
+      PipeTbl[pipe_id].SubscribedMsgIds[num_msgIds_subscribed]);    
+}
+
+void Test__wrap_CFE_SB_SubscribeFailsWhenPipeIsInvalid(void)
+{
+    /* Arrange */
+    int pipe_id = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id = 0x1800;
+    PipeTbl[pipe_id].InUse = CFE_SBN_CLIENT_NOT_IN_USE;
+    PipeTbl[pipe_id].PipeId = CFE_SBN_CLIENT_INVALID_PIPE;
+    
+    /* Act */ 
+    int32 result = CFE_SB_Subscribe(msg_id, pipe_id);
+        
+    /* Assert */
+    UtAssert_True(result == CFE_SBN_CLIENT_BAD_ARGUMENT, 
+      "Call to CFE_SB_Subscribe with pipeId %d should be error %d and was %d", 
+      pipe_id, CFE_SBN_CLIENT_BAD_ARGUMENT, result);
+} /* end Test__wrap_CFE_SB_SubscribeFailsWhenPipeIsInvalid */
+
+void Test__wrap_CFE_SB_SubscribeFailsWhenNumberOfMessagesForPipeIsExceeded(void)
+{
+    /* Arrange */
+    int i;
+    int pipe_id = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    int msg_id = 0x1800;
+    int other_msg_id = 0x1801;
+    PipeTbl[pipe_id].InUse = CFE_SBN_CLIENT_IN_USE;
+    PipeTbl[pipe_id].PipeId = pipe_id;
+
+    for (i = 0; i < CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE; i++)
+    {
+        PipeTbl[pipe_id].SubscribedMsgIds[i] = other_msg_id + i;
+        // printf("PipeTbl[%d].SubscribedMsgIds[%d] = %d\n", pipe_id, i, 
+        //   PipeTbl[pipe_id].SubscribedMsgIds[i]);
+    }
+    
+    /* Act */ 
+    int32 result = CFE_SB_Subscribe(msg_id, pipe_id);
+        
+    /* Assert */
+    UtAssert_True(result == CFE_SBN_CLIENT_BAD_ARGUMENT, 
+      "Call to CFE_SB_Subscribe with pipeId %d should be error %d and was %d", 
+      pipe_id, CFE_SBN_CLIENT_BAD_ARGUMENT, result);
+} /* end Test__wrap_CFE_SB_SubscribeFailsWhenNumberOfMessagesForPipeIsExceeded */
+
+/* end __wrap_CFE_SB_Subscribe Tests */
+
+/*******************************************************************************
+**
+**  __wrap_CFE_SB_ReceiveBuffer Tests
+**
+*******************************************************************************/
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailsBufferPointerIsNull(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * *buffer_ptr = NULL;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = Any_Positive_int32();
+    int32 result;
+    
+    log_message_expected_string = "SBN_CLIENT: BUFFER POINTER IS NULL!";
+    
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)buffer_ptr,  pipe_assigned,  timeout);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SB_BAD_ARGUMENT,
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_BAD_ARGUMENT");
+    UtAssert_True(log_message_was_called, "log_message was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailsBufferPointerIsNull */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailsTimeoutLessThanNegativeOne(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = Any_Negative_int32_Except(CFE_SB_PEND_FOREVER);
+    int32 result;
+    
+    log_message_expected_string = "SBN_CLIENT: TIMEOUT IS LESS THAN -1!";
+    
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SB_BAD_ARGUMENT,
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_BAD_ARGUMENT");
+    UtAssert_True(log_message_was_called, "log_message was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailsTimeoutLessThanNegativeOne */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailsInvalidPipeIdx(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = Any_Positive_int32();
+    int32 result;
+    /* No control on clock_gettime; its value does not affect this test */
+    
+    use_wrap_CFE_SBN_Client_GetPipeIdx = true;
+    wrap_CFE_SBN_Client_GetPipeIdx_return_value = CFE_SBN_CLIENT_INVALID_PIPE;
+    
+    log_message_expected_string = "SBN_CLIENT: ERROR INVALID PIPE ERROR!";
+        
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SB_BAD_ARGUMENT, 
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_BAD_ARGUMENT");
+    UtAssert_True(log_message_was_called, "log_message was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailsInvalidPipeIdx */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailPthreadMutexLockFailure(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = CFE_SB_POLL;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 result;
+    
+    pipe->NumberOfMessages = 1;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_lock_return_value = Any_int_Except(0);
+    use_wrap_CFE_SBN_Client_GetPipeIdx = true;
+    wrap_CFE_SBN_Client_GetPipeIdx_return_value = pipe_assigned;
+    
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SB_PIPE_RD_ERR, 
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_PIPE_RD_ERR, mutex lock fail");
+    UtAssert_True(buffer == NULL, "__wrap_CFE_SB_ReceiveBuffer set *BufPtr to NULL");
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailPthreadMutexLockFailure */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_PollRequestReturnsWhenNoMessage(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = CFE_SB_POLL;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 result;
+    
+    pipe->NumberOfMessages = 1;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    use_wrap_CFE_SBN_Client_GetPipeIdx = true;
+    wrap_CFE_SBN_Client_GetPipeIdx_return_value = pipe_assigned;
+    
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+    
+    /* Assert */
+    UtAssert_True(result == CFE_SB_NO_MESSAGE, 
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_NO_MESSAGE, pipe empty, poll rqst");
+    UtAssert_True(buffer == NULL, "__wrap_CFE_SB_ReceiveBuffer set *BufPtr to NULL");
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_PollRequestReturnsWhenNoMessage */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailsPendWhenWaitReturnsError(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = CFE_SB_PEND_FOREVER;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 result;
+
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_wait_should_be_called = true;
+    use_wrap_pthread_cond_wait = true;
+    wrap_pthread_cond_timedwait_return_value = Any_int_Except(0);
+    use_wrap_CFE_SBN_Client_GetPipeIdx = true;
+    wrap_CFE_SBN_Client_GetPipeIdx_return_value = pipe_assigned;
+
+    pipe->NumberOfMessages = 1;
+
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SB_PIPE_RD_ERR, 
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_PIPE_RD_ERR, pipe empty, pend fail");
+    UtAssert_True(buffer == NULL, "__wrap_CFE_SB_ReceiveBuffer set *BufPtr to NULL");
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_cond_wait_was_called, 
+      "pthread_cond_wait was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailsPendWhenWaitReturnsError */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_TimeoutReturnsNoMessageAfterTimeoutExpires(void)
+{
+    /* Arrange */
+    CFE_MSG_Message_t * buffer;
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();
+    int32 timeout = Any_Positive_int32();
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 result;
+
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_cond_timedwait_should_be_called = true;
+    use_wrap_pthread_cond_timedwait = true;
+    wrap_pthread_cond_timedwait_return_value = ETIMEDOUT;
+    use_wrap_CFE_SBN_Client_GetPipeIdx = true;
+    wrap_CFE_SBN_Client_GetPipeIdx_return_value = pipe_assigned;
+
+    pipe->NumberOfMessages = 1;
+
+    /* Act */
+    result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SB_TIME_OUT, 
+      "__wrap_CFE_SB_ReceiveBuffer returned CFE_SB_TIME_OUT, pipe empty, timed out");
+    UtAssert_True(buffer == NULL, "__wrap_CFE_SB_ReceiveBuffer set *BufPtr to NULL");
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_cond_timedwait_was_called, 
+      "pthread_cond_timedwait was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_TimeoutReturnsNoMessageAfterTimeoutExpires */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessPollRequestHasMessageInPipe(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = rand() % 
+      (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1) + 2; /* 2 to MAX */
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = CFE_SB_POLL;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_MemCmp(buffer, msg, msgSize, "Message in buffer is as expected");    
+    UtAssert_True(
+      PipeTbl[pipe_assigned].NumberOfMessages == number_of_messages - 1, 
+      "PipeTbl[%d].NumberOfMessages should have decreased by 1 to %d and is %d", 
+      pipe_assigned, number_of_messages - 1, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+        "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessPollRequestHasMessageInPipe */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutPendMessageAlreadyInPipe(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = rand() % 
+      (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1) + 2; /* 2 to MAX */
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = CFE_SB_PEND_FOREVER;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_MemCmp(buffer, msg, msgSize, "Message in buffer is as expected"); 
+    UtAssert_True(
+      PipeTbl[pipe_assigned].NumberOfMessages == number_of_messages - 1, 
+      "PipeTbl[%d].NumberOfMessages should have decreased by 1 to %d and is %d", 
+      pipe_assigned, number_of_messages - 1, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(
+      PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutPendMessageAlreadyInPipe */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutValueMessageAlreadyInPipe(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = rand() % 
+      (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1) + 2; /* 2 to MAX */
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = Any_Positive_int32();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_MemCmp(buffer, msg, msgSize, "Message in buffer is as expected"); 
+    UtAssert_True(
+      PipeTbl[pipe_assigned].NumberOfMessages == number_of_messages - 1, 
+      "PipeTbl[%d].NumberOfMessages should have decreased by 1 to %d and is %d", 
+      pipe_assigned, number_of_messages - 1, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);      
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutValueMessageAlreadyInPipe */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageDuringWait(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = 1;
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = CFE_SB_PEND_FOREVER;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_cond_wait_should_be_called = true;
+    use_wrap_pthread_cond_wait = true;
+    wrap_pthread_cond_wait_return_value = 0;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_MemCmp(buffer, msg, msgSize, "Message in buffer is as expected"); 
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == 0, 
+      "PipeTbl[%d].NumberOfMessages should be 1", 
+      pipe_assigned, number_of_messages, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_cond_wait_was_called, 
+      "pthread_cond_wait was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageDuringWait */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageWithinTimeout(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = 1;
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = Any_Positive_int32();
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_cond_timedwait_should_be_called = true;
+    use_wrap_pthread_cond_timedwait = true;
+    wrap_pthread_cond_timedwait_return_value = 0;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    UtAssert_MemCmp(buffer, msg, msgSize, "Message in buffer is as expected"); 
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == 0, 
+      "PipeTbl[%d].NumberOfMessages should be 1", 
+      pipe_assigned, number_of_messages, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+    UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+      "pthread_mutex_lock was called");
+    UtAssert_True(wrap_pthread_cond_timedwait_was_called, 
+      "pthread_cond_timedwait was called");
+    UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+      "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageWithinTimeout */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_FailsPthreadMutexUnlockFailure(void)
+{
+    /* Arrange */
+    size_t msgSize = Any_Message_Size();
+    unsigned char *msg = Any_Pipe_Message(msgSize);
+    CFE_SB_PipeId_t pipe_assigned = Any_CFE_SB_PipeId_t();    
+    CFE_SB_MsgId_t msg_id_slot = Any_Message_Id_Slot();
+    uint32 previous_read_msg = Any_Pipe_Message_Location();
+    uint32 current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wraps to 0 if necessary */
+    uint32 number_of_messages = rand() % 
+      (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1) + 2; /* 2 to MAX */
+      
+    CFE_MSG_Message_t * buffer;
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    int32 timeout = CFE_SB_POLL;
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+    wrap_pthread_mutex_unlock_return_value = Any_int_Except(0);
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = msg[0] << 8 | msg[1];
+    pipe->NumberOfMessages = number_of_messages;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  timeout);
+
+    /* Assert */
+    UtAssert_True(result == CFE_SB_PIPE_RD_ERR, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SB_PIPE_RD_ERR, 
+      result);
+    UtAssert_True(buffer == NULL, "Buffer returned points to NULL");    
+    UtAssert_True(
+      PipeTbl[pipe_assigned].NumberOfMessages == number_of_messages - 1, 
+      "PipeTbl[%d].NumberOfMessages should have decreased by 1 to %d and is %d", 
+      pipe_assigned, number_of_messages - 1, 
+      PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+      UtAssert_True(wrap_pthread_mutex_lock_was_called, 
+        "pthread_mutex_lock was called");
+      UtAssert_True(wrap_pthread_mutex_unlock_was_called, 
+        "pthread_mutex_unlock was called");
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_FailsPthreadMutexUnlockFailure */
+
+void Test__wrap_CFE_SB_ReceiveBuffer_SuccessPipeIsFull(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+
+    int previous_read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+
+    int current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wrap to 0 if necessary */
+
+    int num_msg = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; 
+
+    CFE_MSG_Message_t * buffer;
+
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = 0x1881;
+    pipe->NumberOfMessages = num_msg;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  5000);
+
+    /* Assert */
+    int i = 0;
+    
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer result should be %d and was %d", CFE_SUCCESS, 
+      result);
+    for(i = 0; i < msgSize; i++)
+    {
+      UtAssert_True(((unsigned char *)buffer)[i] == PipeTbl[pipe_assigned].
+        Messages[current_read_msg][i], "buffer[%d] should = %d and was %d", i, 
+        PipeTbl[pipe_assigned].Messages[current_read_msg][i], 
+        ((unsigned char *)buffer)[i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg - 1, 
+      "PipeTbl[%d].NumberOfMessages should have decreased by 1 to %d and is %d", 
+      pipe_assigned, num_msg - 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should have progressed to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+} /* end Test__wrap_CFE_SB_ReceiveBuffer_SuccessPipeIsFull */
+
+void Test__wrap_CFE_SB_ReceiveBufferSuccessAtLeastTwoMessagesInPipe(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    //printf("pipe_assigned = %d\n", pipe_assigned);
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    //printf("msg_id_slot = %d\n", msg_id_slot);
+    int previous_read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    //printf("previous_read_msg = %d\n", previous_read_msg);
+    int current_read_msg = (previous_read_msg + 1) % 
+      CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wrap to 0 if necessary */
+    //printf("current_read_msg = %d\n", current_read_msg);
+    int num_msg = (rand() % (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1)) + 2; 
+    //printf("num_msg = %d\n", num_msg);
+    CFE_MSG_Message_t * buffer;
+
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+    
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = 0x1881;
+    pipe->NumberOfMessages = num_msg;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  5000);
+
+    /* Assert */
+    int i = 0;
+    
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer did not succeed, result should be %d, but was %d", 
+      CFE_SUCCESS, result);
+    for(i = 0; i < msgSize; i++)
+    {
+      UtAssert_True(((unsigned char *)buffer)[i] == PipeTbl[pipe_assigned].
+        Messages[current_read_msg][i], "buffer[%d] should = %d and was %d", i, 
+        PipeTbl[pipe_assigned].Messages[current_read_msg][i], 
+        ((unsigned char *)buffer)[i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg - 1, 
+      "PipeTbl[%d].NumberOfMessages should decrease by 1 to %d and is %d", 
+      pipe_assigned, num_msg - 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should progress to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+} /* end Test__wrap_CFE_SB_ReceiveBufferSuccessAtLeastTwoMessagesInPipe */
+
+void Test__wrap_CFE_SB_ReceiveBufferSuccessTwoMessagesInPipe(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    //printf("pipe_assigned = %d\n", pipe_assigned);
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    //printf("msg_id_slot = %d\n", msg_id_slot);
+    int previous_read_msg = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH;
+    //printf("previous_read_msg = %d\n", previous_read_msg);
+    int current_read_msg = (previous_read_msg + 1) % 
+    CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH; /* auto wrap to 0 if necessary */
+    //printf("current_read_msg = %d\n", current_read_msg);
+    int num_msg = 2; 
+    //printf("num_msg = %d\n", num_msg);
+    CFE_MSG_Message_t * buffer;
+
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = 0x1881;
+    pipe->NumberOfMessages = num_msg;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  5000);
+
+    /* Assert */
+    int i = 0;
+    
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer did not succeed, result should be %d, but was %d", 
+      CFE_SUCCESS, result);
+    for(i = 0; i < msgSize; i++)
+    {
+      UtAssert_True(((unsigned char *)buffer)[i] == PipeTbl[pipe_assigned].
+        Messages[current_read_msg][i], 
+        "buffer[%d] should = %d and was %d", i, 
+        PipeTbl[pipe_assigned].Messages[current_read_msg][i], 
+        ((unsigned char *)buffer)[i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg - 1, 
+      "PipeTbl[%d].NumberOfMessages should decrease by 1 to %d and is %d", 
+      pipe_assigned, num_msg - 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should progress to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+} /* end Test__wrap_CFE_SB_ReceiveBufferSuccessTwoMessagesInPipe */
+
+void Test__wrap_CFE_SB_ReceiveBufferSuccessPreviousMessageIsAtEndOfPipe(void)
+{
+    /* Arrange */
+    unsigned char msg[8] = {0x18, 0x81, 0xC0, 0x00, 0x00, 0x01, 0x00, 0x00};
+    int msgSize = sizeof(msg);
+    int pipe_assigned = rand() % CFE_PLATFORM_SBN_CLIENT_MAX_PIPES;
+    //printf("pipe_assigned = %d\n", pipe_assigned);
+    int msg_id_slot = rand() % CFE_SBN_CLIENT_MAX_MSG_IDS_PER_PIPE;
+    //printf("msg_id_slot = %d\n", msg_id_slot);
+    int previous_read_msg = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1;
+    //printf("previous_read_msg = %d\n", previous_read_msg);
+    int current_read_msg = 0; /* auto wrap to 0 if necessary */
+    //printf("current_read_msg = %d\n", current_read_msg);
+    int num_msg = (rand() % (CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH - 1)) + 2; 
+    //printf("num_msg = %d\n", num_msg);
+    CFE_MSG_Message_t * buffer;
+
+    CFE_SBN_Client_PipeD_t *pipe = &PipeTbl[pipe_assigned];
+
+    wrap_pthread_mutex_lock_should_be_called = true;
+    wrap_pthread_mutex_unlock_should_be_called = true;
+
+    pipe->InUse = CFE_SBN_CLIENT_IN_USE;
+    pipe->PipeId = pipe_assigned;
+    pipe->SubscribedMsgIds[msg_id_slot] = 0x1881;
+    pipe->NumberOfMessages = num_msg;
+    pipe->ReadMessage = previous_read_msg;
+    
+    memcpy(pipe->Messages[current_read_msg], msg, msgSize);
+    
+    /* Act */ 
+    int32 result = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&buffer,  pipe_assigned,  5000);
+
+    /* Assert */
+    int i = 0;
+    
+    UtAssert_True(result == CFE_SUCCESS, 
+      "__wrap_CFE_SB_ReceiveBuffer did not succeed, result should be %d, but was %d", 
+      CFE_SUCCESS, result);
+    for(i = 0; i < msgSize; i++)
+    {
+      UtAssert_True(((unsigned char *)buffer)[i] == PipeTbl[pipe_assigned].
+        Messages[current_read_msg][i], "buffer[%d] should = %d and was %d", i, 
+        PipeTbl[pipe_assigned].Messages[current_read_msg][i], 
+        ((unsigned char *)buffer)[i]);
+    }
+    UtAssert_True(PipeTbl[pipe_assigned].NumberOfMessages == num_msg - 1, 
+      "PipeTbl[%d].NumberOfMessages should decrease by 1 to %d and is %d", 
+      pipe_assigned, num_msg - 1, PipeTbl[pipe_assigned].NumberOfMessages);
+    UtAssert_True(PipeTbl[pipe_assigned].ReadMessage == current_read_msg, 
+      "PipeTbl[%d].ReadMessage should progress to %d from %d and is %d", 
+      pipe_assigned, current_read_msg, previous_read_msg, 
+      PipeTbl[pipe_assigned].ReadMessage);
+} /* end Test__wrap_CFE_SB_ReceiveBufferSuccessPreviousMessageIsAtEndOfPipe */
+
+/* TODO: Test__wrap_CFE_SB_ReceiveBufferSuccess when num messages = 1
+ * TODO: Test__wrap_CFE_SB_ReceiveBufferSuccess when num messages = CFE_PLATFORM_SBN_CLIENT_MAX_PIPE_DEPTH
+ * TODO: Test__wrap_CFE_SB_ReceiveBufferFail when num messages = 0
+ * end __wrap_CFE_SB_ReceiveBuffer Tests */
+
+
+void Test__wrap_CFE_SB_SubscribeEx_AlwaysFails(void)
+{
+    /* Arrange */
+    int32 expectedResult = -1;
+    CFE_SB_MsgId_t dummyMsgId = NULL;
+    CFE_SB_PipeId_t dummyPipeId = NULL;
+    CFE_SB_Qos_t dummyQuality;
+    uint16 dummyMsgLim = 0;
+    
+    /* Act */ 
+    int32 result = CFE_SB_SubscribeEx(dummyMsgId, dummyPipeId, 
+      dummyQuality, dummyMsgLim);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+        "__wrap_CFE_SB_SubscribeEx failed and returned -1");
+} /* end Test__wrap_CFE_SB_SubscribeEx_AlwaysFails */
+
+void Test__wrap_CFE_SB_SubscribeLocal_AlwaysFails(void)
+{
+    /* Arrange */
+    int32 expectedResult = -1;
+    CFE_SB_MsgId_t dummyMsgId = NULL;
+    CFE_SB_PipeId_t dummyPipeId = NULL;
+    uint16 dummyMsgLim = 0;
+    
+    /* Act */ 
+    int32 result = CFE_SB_SubscribeLocal(dummyMsgId, dummyPipeId,
+      dummyMsgLim);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+        "__wrap_CFE_SB_SubscribeLocal failed and returned -1");
+} /* end Test__wrap_CFE_SB_SubscribeLocal_AlwaysFails */
+
+void Test__wrap_CFE_SB_Unsubscribe_AlwaysFails(void)
+{
+    /* Arrange */
+    int32 expectedResult = -1;
+    CFE_SB_MsgId_t dummyMsgId = NULL;
+    CFE_SB_PipeId_t dummyPipeId = NULL;
+    
+    /* Act */ 
+    int32 result = CFE_SB_Unsubscribe(dummyMsgId, dummyPipeId);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+        "__wrap_CFE_SB_Unsubscribe failed and returned -1");
+} /* end Test__wrap_CFE_SB_Unsubscribe_AlwaysFails */
+
+void Test__wrap_CFE_SB_UnsubscribeLocal_AlwaysFails(void)
+{
+    /* Arrange */
+    int32 expectedResult = -1;
+    CFE_SB_MsgId_t dummyMsgId = NULL;
+    CFE_SB_PipeId_t dummyPipeId = NULL;
+    
+    /* Act */ 
+    int32 result = CFE_SB_UnsubscribeLocal(dummyMsgId, dummyPipeId);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+        "__wrap_CFE_SB_UnsubscribeLocal failed and returned -1");
+} /* end Test__wrap_CFE_SB_UnsubscribeLocal_AlwaysFails */
+
+void Test__wrap_CFE_SB_ZeroCopySend_AlwaysFails(void)
+{
+    /* Arrange */
+    int32 expectedResult = -1;
+    CFE_MSG_Message_t *dummyMsg = NULL;
+    CFE_SB_ZeroCopyHandle_t dummyHandle = NULL;
+    
+    /* Act */ 
+    int32 result = CFE_SB_ZeroCopySend(dummyMsg, dummyHandle);
+    
+    /* Assert */
+    UtAssert_True(result == expectedResult, 
+        "__wrap_CFE_SB_ZeroCopySend failed and returned -1");
+} /* end Test__wrap_CFE_SB_ZeroCopySend_AlwaysFails */
+
+/* end __wrap_CFE_SB_ReceiveBuffer Tests */
+
+/*******************************************************************************
+**
+**  add test group functions
+**
+*******************************************************************************/
+
+void add__wrap_CFE_SB_CreatePipe_tests(void)
+{
+  /* create pipe tests will not run with SBN_Client_Init enabled, 
+     * needs more setup */
+    UtTest_Add(
+      Test__wrap_CFE_SB_CreatePipe_Results_In_CFE_SUCCESS, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_CreatePipe_Results_In_CFE_SUCCESS");
+    UtTest_Add(
+      Test__wrap_CFE_SB_CreatePipe_InitializesPipeCorrectly, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_CreatePipe_InitializesPipeCorrectly");
+    UtTest_Add(
+      Test__wrap_CFE_SB_CreatePipe_SendsMaxPipesErrorWhenPipesAreFull, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_CreatePipe_SendsMaxPipesErrorWhenPipesAreFull");
+} /* end add__wrap_CFE_SB_CreatePipe_tests */
+
+void add__wrap_CFE_SB_DeletePipe_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_DeletePipeSuccessWhenPipeIdIsCorrectAndInUse, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_DeletePipeSuccessWhenPipeIdIsCorrectAndInUse");
+} /* end add__wrap_CFE_SB_DeletePipe_tests */
+
+void add__wrap_CFE_SB_Subscribe(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_SubscribePipeIsValidMsgIdUnsubscribedNotAtMaxMsgIds, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_SubscribePipeIsValidMsgIdUnsubscribedNotAtMaxMsgIds");
+    UtTest_Add(
+      Test__wrap_CFE_SB_SubscribeFailsWhenPipeIsInvalid, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_SubscribeFailsWhenPipeIsInvalid");
+    UtTest_Add(
+      Test__wrap_CFE_SB_SubscribeFailsWhenNumberOfMessagesForPipeIsExceeded, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_SubscribeFailsWhenNumberOfMessagesForPipeIsExceeded");
+} /* end add__wrap_CFE_SB_Subscribe */
+
+void add__wrap_CFE_SB_ReceiveBuffer_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailsBufferPointerIsNull, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailsBufferPointerIsNull");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailsTimeoutLessThanNegativeOne, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailsTimeoutLessThanNegativeOne");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailsInvalidPipeIdx, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailsInvalidPipeIdx");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailPthreadMutexLockFailure, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailPthreadMutexLockFailure");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_PollRequestReturnsWhenNoMessage, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_PollRequestReturnsWhenNoMessage");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailsPendWhenWaitReturnsError, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailsPendWhenWaitReturnsError");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_TimeoutReturnsNoMessageAfterTimeoutExpires, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_TimeoutReturnsNoMessageAfterTimeoutExpires");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_SuccessPollRequestHasMessageInPipe, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_SuccessPollRequestHasMessageInPipe");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutPendMessageAlreadyInPipe, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutPendMessageAlreadyInPipe");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutValueMessageAlreadyInPipe, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_SuccessTimeoutValueMessageAlreadyInPipe");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageDuringWait, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageDuringWait");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageWithinTimeout, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_SuccessReceivesMessageWithinTimeout");
+    UtTest_Add(
+      Test__wrap_CFE_SB_ReceiveBuffer_FailsPthreadMutexUnlockFailure, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ReceiveBuffer_FailsPthreadMutexUnlockFailure");
+    // UtTest_Add(
+    //   Test__wrap_CFE_SB_ReceiveBuffer_SuccessPipeIsFull, 
+    //   SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+    //   "Test__wrap_CFE_SB_ReceiveBuffer_SuccessPipeIsFull");
+    // UtTest_Add(
+    //   Test__wrap_CFE_SB_ReceiveBufferSuccessAtLeastTwoMessagesInPipe, 
+    //   SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+    //   "Test__wrap_CFE_SB_ReceiveBufferSuccessAtLeastTwoMessagesInPipe");
+    // UtTest_Add(
+    //   Test__wrap_CFE_SB_ReceiveBufferSuccessTwoMessagesInPipe, 
+    //   SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+    //   "Test__wrap_CFE_SB_ReceiveBufferSuccessTwoMessagesInPipe");
+    // UtTest_Add(
+    //   Test__wrap_CFE_SB_ReceiveBufferSuccessPreviousMessageIsAtEndOfPipe, 
+    //   SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+    //   "Test__wrap_CFE_SB_ReceiveBufferSuccessPreviousMessageIsAtEndOfPipe");
+} /* end add__wrap_CFE_SB_ReceiveBuffer_tests */
+
+void add__wrap_CFE_SB_SubscribeEx_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_SubscribeEx_AlwaysFails, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_SubscribeEx_AlwaysFails");
+} /* end add__wrap_CFE_SB_SubscribeEx_tests */
+
+void add__wrap_CFE_SB_SubscribeLocal_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_SubscribeLocal_AlwaysFails, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_SubscribeLocal_AlwaysFails");
+} /* end add__wrap_CFE_SB_SubscribeLocal_tests */
+
+void add__wrap_CFE_SB_Unsubscribe_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_Unsubscribe_AlwaysFails, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_Unsubscribe_AlwaysFails");
+} /* end add__wrap_CFE_SB_Unsubscribe_tests */
+
+void add__wrap_CFE_SB_UnsubscribeLocal_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_UnsubscribeLocal_AlwaysFails,
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_UnsubscribeLocal_AlwaysFails");
+} /* end add__wrap_CFE_SB_UnsubscribeLocal_tests */
+
+void add__wrap_CFE_SB_ZeroCopySend_tests(void)
+{
+    UtTest_Add(
+      Test__wrap_CFE_SB_ZeroCopySend_AlwaysFails, 
+      SBN_Client_Wrappers_Tests_Setup, SBN_Client_Wrappers_Tests_Teardown, 
+      "Test__wrap_CFE_SB_ZeroCopySend_AlwaysFails");
+} /* end add__wrap_CFE_SB_ZeroCopySend_tests */
+
+/* end add test group functions */
+
+/*******************************************************************************
+**
+**  Required UtTest_Setup function for ut-assert framework
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    add__wrap_CFE_SB_CreatePipe_tests();
+    
+    add__wrap_CFE_SB_DeletePipe_tests();
+    
+    add__wrap_CFE_SB_Subscribe();
+    
+    add__wrap_CFE_SB_ReceiveBuffer_tests();
+    
+    add__wrap_CFE_SB_SubscribeEx_tests();
+    
+    add__wrap_CFE_SB_SubscribeLocal_tests();
+    
+    add__wrap_CFE_SB_Unsubscribe_tests();
+    
+    add__wrap_CFE_SB_UnsubscribeLocal_tests();
+    
+    add__wrap_CFE_SB_ZeroCopySend_tests();
+} /* end UtTest_Setup */
+
+/* end Required UtTest_Setup function for ut-assert framework */
+```

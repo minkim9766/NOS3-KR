@@ -3,30 +3,730 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CreateStreamQueryBuilder.java`
 
-file--CreateStreamQueryBuilder.java
-file--CreateTableQueryBuilder.java
-file--DeleteFromTableQueryBuilder.java
-file--InsertIntoTableQueryBuilder.java
-file--Query.java
-file--QueryBuilder.java
-file--SelectStreamQueryBuilder.java
-file--SelectTableQueryBuilder.java
-file--UpdateTableQueryBuilder.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/CreateStreamQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ArrayDataType;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ProtobufDataType;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class CreateStreamQueryBuilder implements QueryBuilder {
+
+    private String stream;
+    private List<ColumnInfo> columns = new ArrayList<>();
+
+    public CreateStreamQueryBuilder(String stream) {
+        this.stream = stream;
+    }
+
+    public CreateStreamQueryBuilder withColumn(String name, DataType dataType) {
+        columns.add(new ColumnInfo(name, dataType));
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("CREATE STREAM ").append(stream).append("(");
+
+        var first = true;
+        for (var columnInfo : columns) {
+            if (!first) {
+                buf.append(", ");
+            }
+            buf.append("\"").append(columnInfo.name).append("\" ");
+            if (columnInfo.dataType instanceof ProtobufDataType) {
+                var dataType = (ProtobufDataType) columnInfo.dataType;
+                buf.append(String.format("PROTOBUF('%s')", dataType.getClassName()));
+            } else if (columnInfo.dataType instanceof ArrayDataType) {
+                var dataType = (ArrayDataType) columnInfo.dataType;
+                buf.append(String.format("%s[]", dataType.getElementType()));
+            } else {
+                buf.append(columnInfo.dataType);
+            }
+            first = false;
+        }
+
+        buf.append(")");
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() throws ParseException, StreamSqlException {
+        var query = toSQL();
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+
+    private static class ColumnInfo {
+        String name;
+        DataType dataType;
+
+        ColumnInfo(String name, DataType dataType) {
+            this.name = name;
+            this.dataType = dataType;
+        }
+    }
+}
 ```
 
-## 항목
+### `CreateTableQueryBuilder.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/CreateStreamQueryBuilder.java`](file--CreateStreamQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/CreateTableQueryBuilder.java`](file--CreateTableQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/DeleteFromTableQueryBuilder.java`](file--DeleteFromTableQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/InsertIntoTableQueryBuilder.java`](file--InsertIntoTableQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/Query.java`](file--Query.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/QueryBuilder.java`](file--QueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/SelectStreamQueryBuilder.java`](file--SelectStreamQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/SelectTableQueryBuilder.java`](file--SelectTableQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/UpdateTableQueryBuilder.java`](file--UpdateTableQueryBuilder.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/CreateTableQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.ArrayDataType;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.ProtobufDataType;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class CreateTableQueryBuilder implements QueryBuilder {
+
+    private String table;
+    private List<ColumnInfo> columns = new ArrayList<>();
+    private String[] primaryKey;
+    private String[] secondaryKey;
+
+    public CreateTableQueryBuilder(String table) {
+        this.table = table;
+    }
+
+    public CreateTableQueryBuilder withColumn(String name, DataType dataType) {
+        columns.add(new ColumnInfo(name, dataType));
+        return this;
+    }
+
+    public CreateTableQueryBuilder autoIncrement(String column) {
+        var columnInfo = requireColumn(column);
+        columnInfo.autoIncrement = true;
+        return this;
+    }
+
+    public CreateTableQueryBuilder primaryKey(String... columns) {
+        primaryKey = columns;
+        return this;
+    }
+
+    public CreateTableQueryBuilder index(String... columns) {
+        secondaryKey = columns;
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("CREATE TABLE ").append(table).append("(");
+
+        var first = true;
+        for (var columnInfo : columns) {
+            if (!first) {
+                buf.append(", ");
+            }
+            buf.append("\"").append(columnInfo.name).append("\" ");
+            if (columnInfo.dataType instanceof ProtobufDataType) {
+                var dataType = (ProtobufDataType) columnInfo.dataType;
+                buf.append(String.format("PROTOBUF('%s')", dataType.getClassName()));
+            } else if (columnInfo.dataType instanceof ArrayDataType) {
+                var dataType = (ArrayDataType) columnInfo.dataType;
+                buf.append(String.format("%s[]", dataType.getElementType()));
+            } else {
+                buf.append(columnInfo.dataType);
+            }
+            if (columnInfo.autoIncrement) {
+                buf.append(" AUTO_INCREMENT");
+            }
+            first = false;
+        }
+
+        if (primaryKey != null) {
+            buf.append(", PRIMARY KEY(\"");
+            buf.append(String.join("\", \"", primaryKey));
+            buf.append("\")");
+        }
+        if (secondaryKey != null) {
+            buf.append(", INDEX(\"");
+            buf.append(String.join("\", \"", secondaryKey));
+            buf.append("\")");
+        }
+
+        buf.append(")");
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() throws ParseException, StreamSqlException {
+        var query = toSQL();
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+
+    private ColumnInfo requireColumn(String column) {
+        var match = columns.stream().filter(c -> c.name.equals(column)).findFirst();
+        if (match.isPresent()) {
+            return match.get();
+        } else {
+            throw new IllegalArgumentException("No column '" + column + "'");
+        }
+    }
+
+    static class ColumnInfo {
+        String name;
+        DataType dataType;
+        boolean autoIncrement;
+
+        ColumnInfo(String name, DataType dataType) {
+            this.name = name;
+            this.dataType = dataType;
+            this.autoIncrement = false;
+        }
+    }
+}
+```
+
+### `DeleteFromTableQueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/DeleteFromTableQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class DeleteFromTableQueryBuilder implements QueryBuilder {
+
+    private String table;
+    private String whereClause;
+    private Object whereParameter;
+
+    public DeleteFromTableQueryBuilder(String table) {
+        this.table = table;
+    }
+
+    public DeleteFromTableQueryBuilder where(String column, Object value) {
+        whereClause = "\"" + column + "\" = ?";
+        whereParameter = sanitizeValue(value);
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("DELETE FROM ").append(table);
+
+        if (whereClause != null) {
+            buf.append(" WHERE ").append(whereClause);
+        }
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() {
+        var query = toSQL();
+        var args = new Object[] { whereParameter };
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        parser.setArgs(args);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new YarchException(new ParseException(e.getMessage()));
+        } catch (StreamSqlException | ParseException e) {
+            throw new YarchException(e);
+        }
+    }
+}
+```
+
+### `InsertIntoTableQueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/InsertIntoTableQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class InsertIntoTableQueryBuilder implements QueryBuilder {
+
+    private InsertMode insertMode = InsertMode.INSERT;
+    private String table;
+    private String[] columns;
+
+    private String query;
+    private Object[] values;
+
+    public InsertIntoTableQueryBuilder(String table, String... columns) {
+        this.table = table;
+        this.columns = columns;
+    }
+
+    public InsertIntoTableQueryBuilder(String table, Tuple tuple) {
+        this.table = table;
+        columns = new String[tuple.size()];
+        values = new Object[tuple.size()];
+        for (int i = 0; i < tuple.size(); i++) {
+            var cdef = tuple.getColumnDefinition(i);
+            columns[i] = cdef.getName();
+            values[i] = sanitizeValue(tuple.getColumn(i));
+        }
+    }
+
+    public InsertIntoTableQueryBuilder insertMode(InsertMode insertMode) {
+        this.insertMode = insertMode;
+        return this;
+    }
+
+    public InsertIntoTableQueryBuilder values(Object... values) {
+        if (query != null) {
+            throw new IllegalArgumentException("Cannot insert values when a query is already specified");
+        }
+        this.values = new Object[columns.length];
+        for (var i = 0; i < columns.length; i++) {
+            this.values[i] = sanitizeValue(values[i]);
+        }
+        return this;
+    }
+
+    public InsertIntoTableQueryBuilder query(String query) {
+        if (values != null) {
+            throw new IllegalArgumentException("Cannot insert query when values are already specified");
+        }
+        this.query = query;
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder(insertMode.name())
+                .append(" INTO ")
+                .append(table);
+
+        if (values != null) {
+            buf.append("(");
+
+            if (columns.length > 0) {
+                buf.append("\"").append(String.join("\", \"", columns)).append("\"");
+            }
+
+            buf.append(") VALUES (");
+
+            for (var i = 0; i < values.length; i++) {
+                buf.append(i == 0 ? "?" : ", ?");
+            }
+
+            buf.append(")");
+        } else if (query != null) {
+            buf.append(" ").append(query);
+        } else {
+            throw new IllegalStateException("Nothing to insert");
+        }
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() throws ParseException, StreamSqlException {
+        var query = toSQL();
+        var parser = new StreamSqlParser(new StringReader(query));
+        parser.setArgs(values);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+}
+```
+
+### `Query.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/Query.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import org.yamcs.yarch.TableWriter.InsertMode;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+
+/**
+ * Helper class to programmatically build SQL queries.
+ */
+public class Query {
+
+    public static CreateTableQueryBuilder createTable(String table) {
+        return new CreateTableQueryBuilder(table);
+    }
+
+    public static CreateTableQueryBuilder createTable(String table, TupleDefinition tdef) {
+        var b = new CreateTableQueryBuilder(table);
+        for (var cdef : tdef.getColumnDefinitions()) {
+            b.withColumn(cdef.getName(), cdef.getType());
+        }
+        return b;
+    }
+
+    public static CreateStreamQueryBuilder createStream(String stream) {
+        return new CreateStreamQueryBuilder(stream);
+    }
+
+    public static CreateStreamQueryBuilder createStream(String stream, TupleDefinition tdef) {
+        var b = new CreateStreamQueryBuilder(stream);
+        for (var cdef : tdef.getColumnDefinitions()) {
+            b.withColumn(cdef.getName(), cdef.getType());
+        }
+        return b;
+    }
+
+    public static SelectTableQueryBuilder selectTable(String table) {
+        return new SelectTableQueryBuilder(table);
+    }
+
+    public static SelectStreamQueryBuilder selectStream(String stream) {
+        return new SelectStreamQueryBuilder(stream);
+    }
+
+    public static InsertIntoTableQueryBuilder insertIntoTable(String table, String... columns) {
+        return new InsertIntoTableQueryBuilder(table, columns);
+    }
+
+    public static InsertIntoTableQueryBuilder insertIntoTable(String table, Tuple tuple) {
+        return new InsertIntoTableQueryBuilder(table, tuple);
+    }
+
+    public static InsertIntoTableQueryBuilder insertAppendIntoTable(String table, String... columns) {
+        return new InsertIntoTableQueryBuilder(table, columns)
+                .insertMode(InsertMode.INSERT_APPEND);
+    }
+
+    public static InsertIntoTableQueryBuilder insertAppendIntoTable(String table, Tuple tuple) {
+        return new InsertIntoTableQueryBuilder(table, tuple)
+                .insertMode(InsertMode.INSERT_APPEND);
+    }
+
+    public static InsertIntoTableQueryBuilder upsertIntoTable(String table, String... columns) {
+        return new InsertIntoTableQueryBuilder(table, columns)
+                .insertMode(InsertMode.UPSERT);
+    }
+
+    public static InsertIntoTableQueryBuilder upsertIntoTable(String table, Tuple tuple) {
+        return new InsertIntoTableQueryBuilder(table, tuple)
+                .insertMode(InsertMode.UPSERT);
+    }
+
+    public static InsertIntoTableQueryBuilder upsertAppendIntoTable(String table, String... columns) {
+        return new InsertIntoTableQueryBuilder(table, columns)
+                .insertMode(InsertMode.UPSERT_APPEND);
+    }
+
+    public static InsertIntoTableQueryBuilder upsertAppendIntoTable(String table, Tuple tuple) {
+        return new InsertIntoTableQueryBuilder(table, tuple)
+                .insertMode(InsertMode.UPSERT_APPEND);
+    }
+
+    public static UpdateTableQueryBuilder updateTable(String table) {
+        return new UpdateTableQueryBuilder(table);
+    }
+
+    public static DeleteFromTableQueryBuilder deleteFromTable(String table) {
+        return new DeleteFromTableQueryBuilder(table);
+    }
+}
+```
+
+### `QueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/QueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.util.List;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+
+public interface QueryBuilder {
+
+    String toSQL();
+
+    StreamSqlStatement toStatement() throws ParseException, StreamSqlException;
+
+    default Object sanitizeValue(Object value) {
+        // Yamcs DB does not like empty arrays
+        if (value instanceof List && ((List<?>) value).isEmpty()) {
+            return null;
+        } else {
+            return value;
+        }
+    }
+}
+```
+
+### `SelectStreamQueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/SelectStreamQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class SelectStreamQueryBuilder implements QueryBuilder {
+
+    private String stream;
+    private String whereClause;
+    private Object whereParameter;
+
+    public SelectStreamQueryBuilder(String stream) {
+        this.stream = stream;
+    }
+
+    public SelectStreamQueryBuilder where(String column, Object value) {
+        whereClause = "\"" + column + "\" = ?";
+        whereParameter = sanitizeValue(value);
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("SELECT * FROM ").append(stream);
+
+        if (whereClause != null) {
+            buf.append(" WHERE ").append(whereClause);
+        }
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() throws ParseException, StreamSqlException {
+        var query = toSQL();
+        var args = new Object[] { whereParameter };
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        parser.setArgs(args);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+}
+```
+
+### `SelectTableQueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/SelectTableQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.YarchException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class SelectTableQueryBuilder implements QueryBuilder {
+
+    private String table;
+    private String whereClause;
+    private Object whereParameter;
+
+    public SelectTableQueryBuilder(String table) {
+        this.table = table;
+    }
+
+    public SelectTableQueryBuilder where(String column, Object value) {
+        whereClause = "\"" + column + "\" = ?";
+        whereParameter = sanitizeValue(value);
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("SELECT * FROM ").append(table);
+
+        if (whereClause != null) {
+            buf.append(" WHERE ").append(whereClause);
+        }
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() {
+        var query = toSQL();
+        var args = new Object[] { whereParameter };
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        parser.setArgs(args);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new YarchException(new ParseException(e.getMessage()));
+        } catch (StreamSqlException | ParseException e) {
+            throw new YarchException(e);
+        }
+    }
+}
+```
+
+### `UpdateTableQueryBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/UpdateTableQueryBuilder.java`
+
+
+```java
+package org.yamcs.yarch.query;
+
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+
+public class UpdateTableQueryBuilder implements QueryBuilder {
+
+    private String table;
+    private List<String> setClauses = new ArrayList<>();
+    private List<Object> setParameters = new ArrayList<>();
+    private String whereClause;
+    private List<Object> whereParameters = new ArrayList<>();
+
+    public UpdateTableQueryBuilder(String table) {
+        this.table = table;
+    }
+
+    public UpdateTableQueryBuilder set(String column, Object value) {
+        setClauses.add("\"" + column + "\" = ?");
+        setParameters.add(sanitizeValue(value));
+        return this;
+    }
+
+    public UpdateTableQueryBuilder set(Tuple tuple) {
+        for (int i = 0; i < tuple.size(); i++) {
+            var cdef = tuple.getColumnDefinition(i);
+            set(cdef.getName(), tuple.getColumn(i));
+        }
+        return this;
+    }
+
+    public UpdateTableQueryBuilder where(String column, Object value) {
+        value = sanitizeValue(value);
+
+        if (value == null) {
+            whereClause = "\"" + column + "\" IS NULL";
+        } else {
+            whereClause = "\"" + column + "\" = ?";
+            whereParameters.add(value);
+        }
+
+        return this;
+    }
+
+    @Override
+    public String toSQL() {
+        var buf = new StringBuilder("UPDATE ").append(table);
+
+        if (!setClauses.isEmpty()) {
+            buf.append(" SET ").append(String.join(", ", setClauses));
+        }
+
+        if (whereClause != null) {
+            buf.append(" WHERE ").append(whereClause);
+        }
+
+        return buf.toString();
+    }
+
+    @Override
+    public StreamSqlStatement toStatement() throws ParseException, StreamSqlException {
+        var query = toSQL();
+        var args = Stream.concat(setParameters.stream(), whereParameters.stream()).toArray();
+
+        var parser = new StreamSqlParser(new StringReader(query));
+        parser.setArgs(args);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+}
+```

@@ -3,16 +3,107 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-stack-dialog.component.html`
 
-file--create-stack-dialog.component.html
-file--create-stack-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/create-stack-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Create stack</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="filenameForm" class="ya-form">
+    <ya-field label="Name" [class.invalid]="filenameForm.get('name')?.invalid">
+      <input #filename type="text" formControlName="name" />
+    </ya-field>
+    <ya-field label="Format">
+      <select formControlName="format">
+        <option value="ycs">YCS</option>
+        <option value="xml">XML (deprecated)</option>
+      </select>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!filenameForm.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-stack-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/create-stack-dialog.component.html`](file--create-stack-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/create-stack-dialog.component.ts`](file--create-stack-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/create-stack-dialog/create-stack-dialog.component.ts`
+
+
+```typescript
+import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  ConfigService,
+  StackFormatter,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-stack-dialog',
+  templateUrl: './create-stack-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class CreateStackDialogComponent {
+  filenameForm: UntypedFormGroup;
+
+  @ViewChild('filename')
+  filenameInput: ElementRef;
+
+  private storageClient: StorageClient;
+  private bucket: string;
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateStackDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    yamcs: YamcsService,
+    configService: ConfigService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.bucket = configService.getStackBucket();
+    this.storageClient = yamcs.createStorageClient();
+    this.filenameForm = formBuilder.group({
+      name: ['', [Validators.required]],
+      format: ['ycs', [Validators.required]],
+    });
+  }
+
+  save() {
+    const format: 'ycs' | 'xml' = this.filenameForm.get('format')!.value;
+    const name: string =
+      this.filenameForm.get('name')!.value.trim() + '.' + format;
+
+    let path = this.data.path;
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+    const fullPath = path ? path + '/' + name : name;
+    const objectName = this.data.prefix + fullPath;
+
+    const file =
+      format === 'xml'
+        ? new StackFormatter([], {}).toXML()
+        : new StackFormatter([], {}).toJSON();
+    const type = format === 'xml' ? 'application/xml' : 'application/json';
+    const b = new Blob([file], { type });
+    this.storageClient.uploadObject(this.bucket, objectName, b).then(() => {
+      this.dialogRef.close(fullPath);
+    });
+  }
+}
+```

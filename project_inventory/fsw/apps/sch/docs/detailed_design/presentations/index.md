@@ -3,14 +3,10 @@
 
 **경로:** `fsw/apps/sch/docs/detailed_design/presentations/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CFS_SCH_Design.ppt`
 
-file--CFS_SCH_Design.ppt
-```
+**경로:** `fsw/apps/sch/docs/detailed_design/presentations/CFS_SCH_Design.ppt`
 
-## 항목
-
-- [`fsw/apps/sch/docs/detailed_design/presentations/CFS_SCH_Design.ppt`](file--CFS_SCH_Design.ppt) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

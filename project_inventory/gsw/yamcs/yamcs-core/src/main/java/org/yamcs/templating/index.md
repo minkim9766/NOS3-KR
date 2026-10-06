@@ -3,48 +3,3343 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `EscapeFilter.java`
 
-file--EscapeFilter.java
-file--IfStatement.java
-file--ParseException.java
-file--SimpleCharStream.java
-file--Statement.java
-file--Template.java
-file--TemplateBody.java
-file--TemplateParser.java
-file--TemplateParser.jj
-file--TemplateParserConstants.java
-file--TemplateParserTokenManager.java
-file--TemplateProcessor.java
-file--TextStatement.java
-file--Token.java
-file--TokenMgrError.java
-file--Variable.java
-file--VariableFilter.java
-file--VarStatement.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/EscapeFilter.java`
+
+
+```java
+package org.yamcs.templating;
+
+/**
+ * Escapes HTML in a string.
+ */
+public class EscapeFilter implements VariableFilter {
+
+    @Override
+    public Object applyFilter(Object variable) {
+        if (variable instanceof String) {
+            return ((String) variable)
+                    .replace("&", "&amp;")
+                    .replace("<", "&lt;")
+                    .replace(">", "&gt;")
+                    .replace("'", "&#x27;")
+                    .replace("\"", "&quot;");
+        }
+
+        return variable;
+    }
+}
 ```
 
-## 항목
+### `IfStatement.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/EscapeFilter.java`](file--EscapeFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/IfStatement.java`](file--IfStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/ParseException.java`](file--ParseException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/SimpleCharStream.java`](file--SimpleCharStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Statement.java`](file--Statement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Template.java`](file--Template.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateBody.java`](file--TemplateBody.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParser.java`](file--TemplateParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParser.jj`](file--TemplateParser.jj) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParserConstants.java`](file--TemplateParserConstants.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParserTokenManager.java`](file--TemplateParserTokenManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateProcessor.java`](file--TemplateProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TextStatement.java`](file--TextStatement.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Token.java`](file--Token.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TokenMgrError.java`](file--TokenMgrError.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Variable.java`](file--Variable.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/VariableFilter.java`](file--VariableFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/VarStatement.java`](file--VarStatement.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/IfStatement.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class IfStatement implements Statement {
+
+    private String identifier;
+    private TemplateBody ifBody;
+    private LinkedHashMap<String, TemplateBody> elifConditions;
+    private TemplateBody elseBody;
+
+    public IfStatement(String identifier, TemplateBody ifBody, LinkedHashMap<String, TemplateBody> elifConditions,
+            TemplateBody elseBody) {
+        this.identifier = identifier;
+        this.ifBody = ifBody;
+        this.elifConditions = elifConditions;
+        this.elseBody = elseBody;
+    }
+
+    @Override
+    public void render(StringBuilder buf, Map<String, Object> vars, Map<String, VariableFilter> filters) {
+        var value = getValue(identifier, vars);
+        if (isTruthy(value)) {
+            buf.append(ifBody.render(vars, filters));
+            return;
+        }
+        for (var entry : elifConditions.entrySet()) {
+            value = getValue(entry.getKey(), vars);
+            if (isTruthy(value)) {
+                buf.append(entry.getValue().render(vars, filters));
+                return;
+            }
+        }
+        if (elseBody != null) {
+            buf.append(elseBody.render(vars, filters));
+        }
+    }
+
+    private Object getValue(String name, Map<String, Object> args) {
+        return getValue(name, args, "");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object getValue(String name, Map<String, Object> args, String nameContext) {
+        int dotIndex = name.indexOf('.');
+        if (dotIndex == -1) {
+            return args.get(name);
+        } else {
+            String parentName = name.substring(0, dotIndex);
+            Object parentValue = args.get(parentName);
+            if (parentValue == null) {
+                throw new IllegalArgumentException(String.format(
+                        "Variable '%s%s' is not set", nameContext, parentName));
+            }
+            if (!(parentValue instanceof Map)) {
+                throw new IllegalArgumentException(String.format(
+                        "Variable '%s%s' is not a map", nameContext, parentName));
+            }
+            Map<String, Object> parentArgs = (Map<String, Object>) parentValue;
+            return getValue(name.substring(dotIndex + 1), parentArgs);
+        }
+    }
+
+    private boolean isTruthy(Object value) {
+        return !isFalsy(value);
+    }
+
+    private boolean isFalsy(Object value) {
+        if (value == null) {
+            return true;
+        }
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        if (value instanceof String) {
+            return ((String) value).trim().isEmpty();
+        }
+        if (value instanceof Collection) {
+            return ((Collection<?>) value).isEmpty();
+        }
+        if (value.getClass().isArray()) {
+            return ((Object[]) value).length == 0;
+        }
+        return false;
+    }
+}
+```
+
+### `ParseException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/ParseException.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. ParseException.java Version 5.0 */
+/* JavaCCOptions:KEEP_LINE_COL=null */
+package org.yamcs.templating;
+
+/**
+ * This exception is thrown when parse errors are encountered.
+ * You can explicitly create objects of this exception type by
+ * calling the method generateParseException in the generated
+ * parser.
+ *
+ * You can modify this class to customize your error reporting
+ * mechanisms so long as you retain the public fields.
+ */
+public class ParseException extends Exception {
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * This constructor is used by the method "generateParseException"
+   * in the generated parser.  Calling this constructor generates
+   * a new object of this type with the fields "currentToken",
+   * "expectedTokenSequences", and "tokenImage" set.
+   */
+  public ParseException(Token currentTokenVal,
+                        int[][] expectedTokenSequencesVal,
+                        String[] tokenImageVal
+                       )
+  {
+    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
+    currentToken = currentTokenVal;
+    expectedTokenSequences = expectedTokenSequencesVal;
+    tokenImage = tokenImageVal;
+  }
+
+  /**
+   * The following constructors are for use by you for whatever
+   * purpose you can think of.  Constructing the exception in this
+   * manner makes the exception behave in the normal way - i.e., as
+   * documented in the class "Throwable".  The fields "errorToken",
+   * "expectedTokenSequences", and "tokenImage" do not contain
+   * relevant information.  The JavaCC generated code does not use
+   * these constructors.
+   */
+
+  public ParseException() {
+    super();
+  }
+
+  /** Constructor with message. */
+  public ParseException(String message) {
+    super(message);
+  }
+
+
+  /**
+   * This is the last token that has been consumed successfully.  If
+   * this object has been created due to a parse error, the token
+   * followng this token will (therefore) be the first error token.
+   */
+  public Token currentToken;
+
+  /**
+   * Each entry in this array is an array of integers.  Each array
+   * of integers represents a sequence of tokens (by their ordinal
+   * values) that is expected at this point of the parse.
+   */
+  public int[][] expectedTokenSequences;
+
+  /**
+   * This is a reference to the "tokenImage" array of the generated
+   * parser within which the parse error occurred.  This array is
+   * defined in the generated ...Constants interface.
+   */
+  public String[] tokenImage;
+
+  /**
+   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
+   * error message and returns it.  If this object has been created
+   * due to a parse error, and you do not catch it (it gets thrown
+   * from the parser) the correct error message
+   * gets displayed.
+   */
+  private static String initialise(Token currentToken,
+                           int[][] expectedTokenSequences,
+                           String[] tokenImage) {
+    String eol = System.getProperty("line.separator", "\n");
+    StringBuffer expected = new StringBuffer();
+    int maxSize = 0;
+    for (int i = 0; i < expectedTokenSequences.length; i++) {
+      if (maxSize < expectedTokenSequences[i].length) {
+        maxSize = expectedTokenSequences[i].length;
+      }
+      for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+        expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
+      }
+      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
+        expected.append("...");
+      }
+      expected.append(eol).append("    ");
+    }
+    String retval = "Encountered \"";
+    Token tok = currentToken.next;
+    for (int i = 0; i < maxSize; i++) {
+      if (i != 0) retval += " ";
+      if (tok.kind == 0) {
+        retval += tokenImage[0];
+        break;
+      }
+      retval += " " + tokenImage[tok.kind];
+      retval += " \"";
+      retval += add_escapes(tok.image);
+      retval += " \"";
+      tok = tok.next;
+    }
+    retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
+    retval += "." + eol;
+    if (expectedTokenSequences.length == 1) {
+      retval += "Was expecting:" + eol + "    ";
+    } else {
+      retval += "Was expecting one of:" + eol + "    ";
+    }
+    retval += expected.toString();
+    return retval;
+  }
+
+  /**
+   * The end of line string for this machine.
+   */
+  protected String eol = System.getProperty("line.separator", "\n");
+
+  /**
+   * Used to convert raw characters to their escaped version
+   * when these raw version cannot be used as part of an ASCII
+   * string literal.
+   */
+  static String add_escapes(String str) {
+      StringBuffer retval = new StringBuffer();
+      char ch;
+      for (int i = 0; i < str.length(); i++) {
+        switch (str.charAt(i))
+        {
+           case 0 :
+              continue;
+           case '\b':
+              retval.append("\\b");
+              continue;
+           case '\t':
+              retval.append("\\t");
+              continue;
+           case '\n':
+              retval.append("\\n");
+              continue;
+           case '\f':
+              retval.append("\\f");
+              continue;
+           case '\r':
+              retval.append("\\r");
+              continue;
+           case '\"':
+              retval.append("\\\"");
+              continue;
+           case '\'':
+              retval.append("\\\'");
+              continue;
+           case '\\':
+              retval.append("\\\\");
+              continue;
+           default:
+              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+                 String s = "0000" + Integer.toString(ch, 16);
+                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+              } else {
+                 retval.append(ch);
+              }
+              continue;
+        }
+      }
+      return retval.toString();
+   }
+
+}
+/* JavaCC - OriginalChecksum=a163c00635f98823e7ef02fbad41fe2c (do not edit this line) */
+```
+
+### `SimpleCharStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/SimpleCharStream.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. SimpleCharStream.java Version 5.0 */
+/* JavaCCOptions:STATIC=false,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
+package org.yamcs.templating;
+
+/**
+ * An implementation of interface CharStream, where the stream is assumed to
+ * contain only ASCII characters (without unicode processing).
+ */
+
+public class SimpleCharStream
+{
+/** Whether parser is static. */
+  public static final boolean staticFlag = false;
+  int bufsize;
+  int available;
+  int tokenBegin;
+/** Position in buffer. */
+  public int bufpos = -1;
+  protected int bufline[];
+  protected int bufcolumn[];
+
+  protected int column = 0;
+  protected int line = 1;
+
+  protected boolean prevCharIsCR = false;
+  protected boolean prevCharIsLF = false;
+
+  protected java.io.Reader inputStream;
+
+  protected char[] buffer;
+  protected int maxNextCharInd = 0;
+  protected int inBuf = 0;
+  protected int tabSize = 8;
+
+  protected void setTabSize(int i) { tabSize = i; }
+  protected int getTabSize(int i) { return tabSize; }
+
+
+  protected void ExpandBuff(boolean wrapAround)
+  {
+    char[] newbuffer = new char[bufsize + 2048];
+    int newbufline[] = new int[bufsize + 2048];
+    int newbufcolumn[] = new int[bufsize + 2048];
+
+    try
+    {
+      if (wrapAround)
+      {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        System.arraycopy(buffer, 0, newbuffer, bufsize - tokenBegin, bufpos);
+        buffer = newbuffer;
+
+        System.arraycopy(bufline, tokenBegin, newbufline, 0, bufsize - tokenBegin);
+        System.arraycopy(bufline, 0, newbufline, bufsize - tokenBegin, bufpos);
+        bufline = newbufline;
+
+        System.arraycopy(bufcolumn, tokenBegin, newbufcolumn, 0, bufsize - tokenBegin);
+        System.arraycopy(bufcolumn, 0, newbufcolumn, bufsize - tokenBegin, bufpos);
+        bufcolumn = newbufcolumn;
+
+        maxNextCharInd = (bufpos += (bufsize - tokenBegin));
+      }
+      else
+      {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        buffer = newbuffer;
+
+        System.arraycopy(bufline, tokenBegin, newbufline, 0, bufsize - tokenBegin);
+        bufline = newbufline;
+
+        System.arraycopy(bufcolumn, tokenBegin, newbufcolumn, 0, bufsize - tokenBegin);
+        bufcolumn = newbufcolumn;
+
+        maxNextCharInd = (bufpos -= tokenBegin);
+      }
+    }
+    catch (Throwable t)
+    {
+      throw new Error(t.getMessage());
+    }
+
+
+    bufsize += 2048;
+    available = bufsize;
+    tokenBegin = 0;
+  }
+
+  protected void FillBuff() throws java.io.IOException
+  {
+    if (maxNextCharInd == available)
+    {
+      if (available == bufsize)
+      {
+        if (tokenBegin > 2048)
+        {
+          bufpos = maxNextCharInd = 0;
+          available = tokenBegin;
+        }
+        else if (tokenBegin < 0)
+          bufpos = maxNextCharInd = 0;
+        else
+          ExpandBuff(false);
+      }
+      else if (available > tokenBegin)
+        available = bufsize;
+      else if ((tokenBegin - available) < 2048)
+        ExpandBuff(true);
+      else
+        available = tokenBegin;
+    }
+
+    int i;
+    try {
+      if ((i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1)
+      {
+        inputStream.close();
+        throw new java.io.IOException();
+      }
+      else
+        maxNextCharInd += i;
+      return;
+    }
+    catch(java.io.IOException e) {
+      --bufpos;
+      backup(0);
+      if (tokenBegin == -1)
+        tokenBegin = bufpos;
+      throw e;
+    }
+  }
+
+/** Start. */
+  public char BeginToken() throws java.io.IOException
+  {
+    tokenBegin = -1;
+    char c = readChar();
+    tokenBegin = bufpos;
+
+    return c;
+  }
+
+  protected void UpdateLineColumn(char c)
+  {
+    column++;
+
+    if (prevCharIsLF)
+    {
+      prevCharIsLF = false;
+      line += (column = 1);
+    }
+    else if (prevCharIsCR)
+    {
+      prevCharIsCR = false;
+      if (c == '\n')
+      {
+        prevCharIsLF = true;
+      }
+      else
+        line += (column = 1);
+    }
+
+    switch (c)
+    {
+      case '\r' :
+        prevCharIsCR = true;
+        break;
+      case '\n' :
+        prevCharIsLF = true;
+        break;
+      case '\t' :
+        column--;
+        column += (tabSize - (column % tabSize));
+        break;
+      default :
+        break;
+    }
+
+    bufline[bufpos] = line;
+    bufcolumn[bufpos] = column;
+  }
+
+/** Read a character. */
+  public char readChar() throws java.io.IOException
+  {
+    if (inBuf > 0)
+    {
+      --inBuf;
+
+      if (++bufpos == bufsize)
+        bufpos = 0;
+
+      return buffer[bufpos];
+    }
+
+    if (++bufpos >= maxNextCharInd)
+      FillBuff();
+
+    char c = buffer[bufpos];
+
+    UpdateLineColumn(c);
+    return c;
+  }
+
+  @Deprecated
+  /**
+   * @deprecated
+   * @see #getEndColumn
+   */
+
+  public int getColumn() {
+    return bufcolumn[bufpos];
+  }
+
+  @Deprecated
+  /**
+   * @deprecated
+   * @see #getEndLine
+   */
+
+  public int getLine() {
+    return bufline[bufpos];
+  }
+
+  /** Get token end column number. */
+  public int getEndColumn() {
+    return bufcolumn[bufpos];
+  }
+
+  /** Get token end line number. */
+  public int getEndLine() {
+     return bufline[bufpos];
+  }
+
+  /** Get token beginning column number. */
+  public int getBeginColumn() {
+    return bufcolumn[tokenBegin];
+  }
+
+  /** Get token beginning line number. */
+  public int getBeginLine() {
+    return bufline[tokenBegin];
+  }
+
+/** Backup a number of characters. */
+  public void backup(int amount) {
+
+    inBuf += amount;
+    if ((bufpos -= amount) < 0)
+      bufpos += bufsize;
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    inputStream = dstream;
+    line = startline;
+    column = startcolumn - 1;
+
+    available = bufsize = buffersize;
+    buffer = new char[buffersize];
+    bufline = new int[buffersize];
+    bufcolumn = new int[buffersize];
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream, int startline,
+                          int startcolumn)
+  {
+    this(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream)
+  {
+    this(dstream, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    inputStream = dstream;
+    line = startline;
+    column = startcolumn - 1;
+
+    if (buffer == null || buffersize != buffer.length)
+    {
+      available = bufsize = buffersize;
+      buffer = new char[buffersize];
+      bufline = new int[buffersize];
+      bufcolumn = new int[buffersize];
+    }
+    prevCharIsLF = prevCharIsCR = false;
+    tokenBegin = inBuf = maxNextCharInd = 0;
+    bufpos = -1;
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream, int startline,
+                     int startcolumn)
+  {
+    ReInit(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream)
+  {
+    ReInit(dstream, 1, 1, 4096);
+  }
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
+  int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
+  {
+    this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    this(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
+                          int startcolumn) throws java.io.UnsupportedEncodingException
+  {
+    this(dstream, encoding, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, int startline,
+                          int startcolumn)
+  {
+    this(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
+  {
+    this(dstream, encoding, 1, 1, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream)
+  {
+    this(dstream, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding, int startline,
+                          int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, int startline,
+                          int startcolumn, int buffersize)
+  {
+    ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(dstream, encoding, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream)
+  {
+    ReInit(dstream, 1, 1, 4096);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding, int startline,
+                     int startcolumn) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(dstream, encoding, startline, startcolumn, 4096);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, int startline,
+                     int startcolumn)
+  {
+    ReInit(dstream, startline, startcolumn, 4096);
+  }
+  /** Get token literal value. */
+  public String GetImage()
+  {
+    if (bufpos >= tokenBegin)
+      return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
+    else
+      return new String(buffer, tokenBegin, bufsize - tokenBegin) +
+                            new String(buffer, 0, bufpos + 1);
+  }
+
+  /** Get the suffix. */
+  public char[] GetSuffix(int len)
+  {
+    char[] ret = new char[len];
+
+    if ((bufpos + 1) >= len)
+      System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
+    else
+    {
+      System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0,
+                                                        len - bufpos - 1);
+      System.arraycopy(buffer, 0, ret, len - bufpos - 1, bufpos + 1);
+    }
+
+    return ret;
+  }
+
+  /** Reset buffer when finished. */
+  public void Done()
+  {
+    buffer = null;
+    bufline = null;
+    bufcolumn = null;
+  }
+
+  /**
+   * Method to adjust line and column numbers for the start of a token.
+   */
+  public void adjustBeginLineColumn(int newLine, int newCol)
+  {
+    int start = tokenBegin;
+    int len;
+
+    if (bufpos >= tokenBegin)
+    {
+      len = bufpos - tokenBegin + inBuf + 1;
+    }
+    else
+    {
+      len = bufsize - tokenBegin + bufpos + 1 + inBuf;
+    }
+
+    int i = 0, j = 0, k = 0;
+    int nextColDiff = 0, columnDiff = 0;
+
+    while (i < len && bufline[j = start % bufsize] == bufline[k = ++start % bufsize])
+    {
+      bufline[j] = newLine;
+      nextColDiff = columnDiff + bufcolumn[k] - bufcolumn[j];
+      bufcolumn[j] = newCol + columnDiff;
+      columnDiff = nextColDiff;
+      i++;
+    }
+
+    if (i < len)
+    {
+      bufline[j] = newLine++;
+      bufcolumn[j] = newCol + columnDiff;
+
+      while (i++ < len)
+      {
+        if (bufline[j = start % bufsize] != bufline[++start % bufsize])
+          bufline[j] = newLine++;
+        else
+          bufline[j] = newLine;
+      }
+    }
+
+    line = bufline[j];
+    column = bufcolumn[j];
+  }
+
+}
+/* JavaCC - OriginalChecksum=4a49894f383301fe9c8f7c99df86cd9d (do not edit this line) */
+```
+
+### `Statement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Statement.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.Map;
+
+public interface Statement {
+
+    void render(StringBuilder buf, Map<String, Object> vars, Map<String, VariableFilter> filters);
+}
+```
+
+### `Template.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Template.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class Template {
+
+    private String name;
+    private String source;
+    private String description;
+    private Map<String, Variable> variables = new LinkedHashMap<>(); // Ordered
+
+    private TemplateProcessor templateProcessor;
+
+    public Template(String name, String source) throws ParseException {
+        this.name = name;
+        this.source = source;
+        templateProcessor = new TemplateProcessor(source);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Collection<Variable> getVariables() {
+        return variables.values();
+    }
+
+    public void addVariable(Variable variable) {
+        variables.put(variable.getName(), variable);
+    }
+
+    public String process(Map<String, Object> args) {
+        return templateProcessor.process(args);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+### `TemplateBody.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateBody.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class TemplateBody {
+
+    private List<Statement> statements = new ArrayList<>();
+
+    public void addStatement(Statement statement) {
+        statements.add(statement);
+    }
+
+    public String render(Map<String, Object> vars, Map<String, VariableFilter> filters) {
+        var buf = new StringBuilder();
+        for (var statement : statements) {
+            statement.render(buf, vars, filters);
+        }
+        return buf.toString();
+    }
+}
+```
+
+### `TemplateParser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParser.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. TemplateParser.java */
+package org.yamcs.templating;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class TemplateParser implements TemplateParserConstants {
+
+  final public TemplateBody parse() throws ParseException {
+TemplateBody r;
+    r = body();
+    jj_consume_token(0);
+        {if (true) return r;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public TemplateBody body() throws ParseException {
+TemplateBody result = new TemplateBody();
+Statement stmt;
+    label_1:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_VAR:
+      case OPEN_IF_TAG:
+      case TEXT:
+        ;
+        break;
+      default:
+        jj_la1[0] = jj_gen;
+        break label_1;
+      }
+      stmt = statement();
+                             result.addStatement(stmt);
+    }
+        {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Statement statement() throws ParseException {
+Statement stmt;
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case OPEN_VAR:
+      stmt = varStatement();
+      break;
+    case TEXT:
+      stmt = textStatement();
+      break;
+    case OPEN_IF_TAG:
+      stmt = ifStatement();
+      break;
+    default:
+      jj_la1[1] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+        {if (true) return stmt;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public VarStatement varStatement() throws ParseException {
+String id;
+String filter;
+List filters = new ArrayList();
+    jj_consume_token(OPEN_VAR);
+    id = identifier();
+    label_2:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case PIPE:
+        ;
+        break;
+      default:
+        jj_la1[2] = jj_gen;
+        break label_2;
+      }
+      jj_consume_token(PIPE);
+      filter = identifier();
+                                                              filters.add(filter);
+    }
+    jj_consume_token(CLOSE_VAR);
+        {if (true) return new VarStatement(id, filters);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String identifier() throws ParseException {
+    jj_consume_token(VAR);
+        {if (true) return token.image;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public TextStatement textStatement() throws ParseException {
+    jj_consume_token(TEXT);
+        {if (true) return new TextStatement(token.image);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public IfStatement ifStatement() throws ParseException {
+String condition;
+TemplateBody ifBody;
+String elifCondition = null;
+TemplateBody elifBody = null;
+LinkedHashMap<String, TemplateBody> elifConditions = new LinkedHashMap<String, TemplateBody>();
+TemplateBody elseBody = null;
+    jj_consume_token(OPEN_IF_TAG);
+    condition = identifier();
+    jj_consume_token(CLOSE_IF_ELIF_TAG);
+    ifBody = body();
+    label_3:
+    while (true) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case OPEN_ELIF_TAG:
+        ;
+        break;
+      default:
+        jj_la1[3] = jj_gen;
+        break label_3;
+      }
+      jj_consume_token(OPEN_ELIF_TAG);
+      elifCondition = identifier();
+      jj_consume_token(CLOSE_IF_ELIF_TAG);
+      elifBody = body();
+            elifConditions.put(elifCondition, elifBody);
+    }
+    if (jj_2_1(2)) {
+      jj_consume_token(OPEN_TAG);
+      jj_consume_token(ELSE);
+      jj_consume_token(CLOSE_TAG);
+      elseBody = body();
+    } else {
+      ;
+    }
+    jj_consume_token(OPEN_TAG);
+    jj_consume_token(ENDIF);
+    jj_consume_token(CLOSE_TAG);
+        {if (true) return new IfStatement(condition, ifBody, elifConditions, elseBody);}
+    throw new Error("Missing return statement in function");
+  }
+
+  private boolean jj_2_1(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_1(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  private boolean jj_3_1() {
+    if (jj_scan_token(OPEN_TAG)) return true;
+    if (jj_scan_token(ELSE)) return true;
+    return false;
+  }
+
+  /** Generated Token Manager. */
+  public TemplateParserTokenManager token_source;
+  SimpleCharStream jj_input_stream;
+  /** Current token. */
+  public Token token;
+  /** Next token. */
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[4];
+  static private int[] jj_la1_0;
+  static {
+      jj_la1_init_0();
+   }
+   private static void jj_la1_init_0() {
+      jj_la1_0 = new int[] {0x580,0x580,0x8000,0x200,};
+   }
+  final private JJCalls[] jj_2_rtns = new JJCalls[1];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
+
+  /** Constructor with InputStream. */
+  public TemplateParser(java.io.InputStream stream) {
+     this(stream, null);
+  }
+  /** Constructor with InputStream and supplied encoding */
+  public TemplateParser(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source = new TemplateParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream) {
+     ReInit(stream, null);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor. */
+  public TemplateParser(java.io.Reader stream) {
+    jj_input_stream = new SimpleCharStream(stream, 1, 1);
+    token_source = new TemplateParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader stream) {
+    jj_input_stream.ReInit(stream, 1, 1);
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor with generated Token Manager. */
+  public TemplateParser(TemplateParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(TemplateParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 4; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  private Token jj_consume_token(int kind) throws ParseException {
+    Token oldToken;
+    if ((oldToken = token).next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    if (token.kind == kind) {
+      jj_gen++;
+      if (++jj_gc > 100) {
+        jj_gc = 0;
+        for (int i = 0; i < jj_2_rtns.length; i++) {
+          JJCalls c = jj_2_rtns[i];
+          while (c != null) {
+            if (c.gen < jj_gen) c.first = null;
+            c = c.next;
+          }
+        }
+      }
+      return token;
+    }
+    token = oldToken;
+    jj_kind = kind;
+    throw generateParseException();
+  }
+
+  static private final class LookaheadSuccess extends java.lang.Error { }
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
+    if (jj_scanpos == jj_lastpos) {
+      jj_la--;
+      if (jj_scanpos.next == null) {
+        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+      } else {
+        jj_lastpos = jj_scanpos = jj_scanpos.next;
+      }
+    } else {
+      jj_scanpos = jj_scanpos.next;
+    }
+    if (jj_rescan) {
+      int i = 0; Token tok = token;
+      while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+      if (tok != null) jj_add_error_token(kind, i);
+    }
+    if (jj_scanpos.kind != kind) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+    return false;
+  }
+
+
+/** Get the next Token. */
+  final public Token getNextToken() {
+    if (token.next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    jj_gen++;
+    return token;
+  }
+
+/** Get the specific Token. */
+  final public Token getToken(int index) {
+    Token t = token;
+    for (int i = 0; i < index; i++) {
+      if (t.next != null) t = t.next;
+      else t = t.next = token_source.getNextToken();
+    }
+    return t;
+  }
+
+  private int jj_ntk() {
+    if ((jj_nt=token.next) == null)
+      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+    else
+      return (jj_ntk = jj_nt.kind);
+  }
+
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
+
+  private void jj_add_error_token(int kind, int pos) {
+    if (pos >= 100) return;
+    if (pos == jj_endpos + 1) {
+      jj_lasttokens[jj_endpos++] = kind;
+    } else if (jj_endpos != 0) {
+      jj_expentry = new int[jj_endpos];
+      for (int i = 0; i < jj_endpos; i++) {
+        jj_expentry[i] = jj_lasttokens[i];
+      }
+      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        int[] oldentry = (int[])(it.next());
+        if (oldentry.length == jj_expentry.length) {
+          for (int i = 0; i < jj_expentry.length; i++) {
+            if (oldentry[i] != jj_expentry[i]) {
+              continue jj_entries_loop;
+            }
+          }
+          jj_expentries.add(jj_expentry);
+          break jj_entries_loop;
+        }
+      }
+      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+    }
+  }
+
+  /** Generate ParseException. */
+  public ParseException generateParseException() {
+    jj_expentries.clear();
+    boolean[] la1tokens = new boolean[18];
+    if (jj_kind >= 0) {
+      la1tokens[jj_kind] = true;
+      jj_kind = -1;
+    }
+    for (int i = 0; i < 4; i++) {
+      if (jj_la1[i] == jj_gen) {
+        for (int j = 0; j < 32; j++) {
+          if ((jj_la1_0[i] & (1<<j)) != 0) {
+            la1tokens[j] = true;
+          }
+        }
+      }
+    }
+    for (int i = 0; i < 18; i++) {
+      if (la1tokens[i]) {
+        jj_expentry = new int[1];
+        jj_expentry[0] = i;
+        jj_expentries.add(jj_expentry);
+      }
+    }
+    jj_endpos = 0;
+    jj_rescan_token();
+    jj_add_error_token(0, 0);
+    int[][] exptokseq = new int[jj_expentries.size()][];
+    for (int i = 0; i < jj_expentries.size(); i++) {
+      exptokseq[i] = jj_expentries.get(i);
+    }
+    return new ParseException(token, exptokseq, tokenImage);
+  }
+
+  /** Enable tracing. */
+  final public void enable_tracing() {
+  }
+
+  /** Disable tracing. */
+  final public void disable_tracing() {
+  }
+
+  private void jj_rescan_token() {
+    jj_rescan = true;
+    for (int i = 0; i < 1; i++) {
+    try {
+      JJCalls p = jj_2_rtns[i];
+      do {
+        if (p.gen > jj_gen) {
+          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+          switch (i) {
+            case 0: jj_3_1(); break;
+          }
+        }
+        p = p.next;
+      } while (p != null);
+      } catch(LookaheadSuccess ls) { }
+    }
+    jj_rescan = false;
+  }
+
+  private void jj_save(int index, int xla) {
+    JJCalls p = jj_2_rtns[index];
+    while (p.gen > jj_gen) {
+      if (p.next == null) { p = p.next = new JJCalls(); break; }
+      p = p.next;
+    }
+    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+  }
+
+  static final class JJCalls {
+    int gen;
+    Token first;
+    int arg;
+    JJCalls next;
+  }
+
+}
+```
+
+### `TemplateParser.jj`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParser.jj`
+
+
+```text
+options {
+    STATIC = false;
+    IGNORE_CASE = false;
+}
+
+PARSER_BEGIN(TemplateParser)
+package org.yamcs.templating;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class TemplateParser {
+}
+
+PARSER_END(TemplateParser)
+
+< DEFAULT > SKIP: {
+    "{% comment %}": IN_COMMENT
+}
+
+< DEFAULT > TOKEN: {
+    < OPEN_TAG: "{%" (" ")? >
+ |  < CLOSE_TAG: (" ")? "%}" >
+ |  < ELIF: "elif" >
+ |  < ENDIF: "endif" >
+ |  < ELSE: "else" >
+}
+
+< DEFAULT > TOKEN: {
+    < OPEN_VAR: "{{" (" ")? > : IN_VAR
+}
+
+< DEFAULT > TOKEN: {
+    < OPEN_IF_TAG: "{% if " > : IN_CONDITION
+ |  < OPEN_ELIF_TAG: "{% elif " > : IN_CONDITION
+}
+
+< DEFAULT > TOKEN: {
+    < TEXT: ~[] >
+}
+
+<IN_COMMENT> SKIP: {
+    "{% endcomment %}" : DEFAULT
+}
+
+<IN_COMMENT> MORE: {
+    < ~[] >
+}
+
+<IN_VAR, IN_CONDITION> TOKEN: {
+    < VAR: (["a"-"z","A"-"Z","0"-"9","_","."])+ > 
+}
+
+<IN_VAR> SKIP: {
+    " "
+}
+
+<IN_VAR> TOKEN: {
+    < PIPE: "|" >
+ |  < CLOSE_VAR: "}}" > : DEFAULT
+}
+
+<IN_CONDITION> TOKEN: {
+    < CLOSE_IF_ELIF_TAG: (" ")? "%}" > : DEFAULT
+}
+
+public TemplateBody parse():
+{
+TemplateBody r;
+}
+{
+    r = body() <EOF>
+    {
+        return r;
+    }
+}
+
+TemplateBody body():
+{
+TemplateBody result = new TemplateBody();
+Statement stmt;
+}
+{
+    (
+        stmt = statement() { result.addStatement(stmt); }
+    )*
+    {
+        return result;
+    }
+}
+
+Statement statement():
+{
+Statement stmt;
+}
+{
+    (
+        stmt = varStatement()
+      | stmt = textStatement()
+      | stmt = ifStatement()
+    )
+    {
+        return stmt;
+    }
+}
+
+VarStatement varStatement():
+{
+String id;
+String filter;
+List filters = new ArrayList();
+}
+{
+    <OPEN_VAR> id=identifier() ( <PIPE> filter=identifier() { filters.add(filter); } )* <CLOSE_VAR> {
+        return new VarStatement(id, filters);
+    }
+}
+
+String identifier():
+{}
+{
+    <VAR> {
+        return token.image;
+    }
+}
+
+TextStatement textStatement():
+{}
+{
+    <TEXT> {
+        return new TextStatement(token.image);
+    }
+}
+
+IfStatement ifStatement():
+{
+String condition;
+TemplateBody ifBody;
+String elifCondition = null;
+TemplateBody elifBody = null;
+LinkedHashMap<String, TemplateBody> elifConditions = new LinkedHashMap<String, TemplateBody>();
+TemplateBody elseBody = null;
+}
+{
+    <OPEN_IF_TAG> condition=identifier() <CLOSE_IF_ELIF_TAG>
+    ifBody = body()
+    (
+        <OPEN_ELIF_TAG> elifCondition=identifier() <CLOSE_IF_ELIF_TAG>
+        elifBody=body()
+        {
+            elifConditions.put(elifCondition, elifBody);
+        }
+    )*
+    (
+        LOOKAHEAD(2)
+        <OPEN_TAG> <ELSE> <CLOSE_TAG>
+        elseBody = body()    
+    )?
+    <OPEN_TAG> <ENDIF> <CLOSE_TAG>
+    {
+        return new IfStatement(condition, ifBody, elifConditions, elseBody);
+    }
+}
+```
+
+### `TemplateParserConstants.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParserConstants.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. TemplateParserConstants.java */
+package org.yamcs.templating;
+
+
+/**
+ * Token literal values and constants.
+ * Generated by org.javacc.parser.OtherFilesGen#start()
+ */
+public interface TemplateParserConstants {
+
+  /** End of File. */
+  int EOF = 0;
+  /** RegularExpression Id. */
+  int OPEN_TAG = 2;
+  /** RegularExpression Id. */
+  int CLOSE_TAG = 3;
+  /** RegularExpression Id. */
+  int ELIF = 4;
+  /** RegularExpression Id. */
+  int ENDIF = 5;
+  /** RegularExpression Id. */
+  int ELSE = 6;
+  /** RegularExpression Id. */
+  int OPEN_VAR = 7;
+  /** RegularExpression Id. */
+  int OPEN_IF_TAG = 8;
+  /** RegularExpression Id. */
+  int OPEN_ELIF_TAG = 9;
+  /** RegularExpression Id. */
+  int TEXT = 10;
+  /** RegularExpression Id. */
+  int VAR = 13;
+  /** RegularExpression Id. */
+  int PIPE = 15;
+  /** RegularExpression Id. */
+  int CLOSE_VAR = 16;
+  /** RegularExpression Id. */
+  int CLOSE_IF_ELIF_TAG = 17;
+
+  /** Lexical state. */
+  int DEFAULT = 0;
+  /** Lexical state. */
+  int IN_COMMENT = 1;
+  /** Lexical state. */
+  int IN_VAR = 2;
+  /** Lexical state. */
+  int IN_CONDITION = 3;
+
+  /** Literal token values. */
+  String[] tokenImage = {
+    "<EOF>",
+    "\"{% comment %}\"",
+    "<OPEN_TAG>",
+    "<CLOSE_TAG>",
+    "\"elif\"",
+    "\"endif\"",
+    "\"else\"",
+    "<OPEN_VAR>",
+    "\"{% if \"",
+    "\"{% elif \"",
+    "<TEXT>",
+    "\"{% endcomment %}\"",
+    "<token of kind 12>",
+    "<VAR>",
+    "\" \"",
+    "\"|\"",
+    "\"}}\"",
+    "<CLOSE_IF_ELIF_TAG>",
+  };
+
+}
+```
+
+### `TemplateParserTokenManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateParserTokenManager.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. TemplateParserTokenManager.java */
+package org.yamcs.templating;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+/** Token Manager. */
+public class TemplateParserTokenManager implements TemplateParserConstants
+{
+
+  /** Debug output. */
+  public  java.io.PrintStream debugStream = System.out;
+  /** Set debug output. */
+  public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
+private final int jjStopStringLiteralDfa_0(int pos, long active0)
+{
+   switch (pos)
+   {
+      case 0:
+         if ((active0 & 0x302L) != 0L)
+            return 4;
+         return -1;
+      case 1:
+         if ((active0 & 0x302L) != 0L)
+         {
+            jjmatchedKind = 2;
+            jjmatchedPos = 1;
+            return 5;
+         }
+         return -1;
+      case 2:
+         if ((active0 & 0x302L) != 0L)
+         {
+            jjmatchedKind = 2;
+            jjmatchedPos = 2;
+            return -1;
+         }
+         return -1;
+      case 3:
+         if ((active0 & 0x302L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 4:
+         if ((active0 & 0x302L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 5:
+         if ((active0 & 0x302L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 6:
+         if ((active0 & 0x202L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 7:
+         if ((active0 & 0x202L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 8:
+         if ((active0 & 0x2L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 9:
+         if ((active0 & 0x2L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 10:
+         if ((active0 & 0x2L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      case 11:
+         if ((active0 & 0x2L) != 0L)
+         {
+            if (jjmatchedPos < 2)
+            {
+               jjmatchedKind = 2;
+               jjmatchedPos = 2;
+            }
+            return -1;
+         }
+         return -1;
+      default :
+         return -1;
+   }
+}
+private final int jjStartNfa_0(int pos, long active0)
+{
+   return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
+}
+private int jjStopAtPos(int pos, int kind)
+{
+   jjmatchedKind = kind;
+   jjmatchedPos = pos;
+   return pos + 1;
+}
+private int jjMoveStringLiteralDfa0_0()
+{
+   switch(curChar)
+   {
+      case 101:
+         return jjMoveStringLiteralDfa1_0(0x70L);
+      case 123:
+         return jjMoveStringLiteralDfa1_0(0x302L);
+      default :
+         return jjMoveNfa_0(0, 0);
+   }
+}
+private int jjMoveStringLiteralDfa1_0(long active0)
+{
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(0, active0);
+      return 1;
+   }
+   switch(curChar)
+   {
+      case 37:
+         return jjMoveStringLiteralDfa2_0(active0, 0x302L);
+      case 108:
+         return jjMoveStringLiteralDfa2_0(active0, 0x50L);
+      case 110:
+         return jjMoveStringLiteralDfa2_0(active0, 0x20L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(0, active0);
+}
+private int jjMoveStringLiteralDfa2_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(0, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(1, active0);
+      return 2;
+   }
+   switch(curChar)
+   {
+      case 32:
+         return jjMoveStringLiteralDfa3_0(active0, 0x302L);
+      case 100:
+         return jjMoveStringLiteralDfa3_0(active0, 0x20L);
+      case 105:
+         return jjMoveStringLiteralDfa3_0(active0, 0x10L);
+      case 115:
+         return jjMoveStringLiteralDfa3_0(active0, 0x40L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(1, active0);
+}
+private int jjMoveStringLiteralDfa3_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(1, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(2, active0);
+      return 3;
+   }
+   switch(curChar)
+   {
+      case 99:
+         return jjMoveStringLiteralDfa4_0(active0, 0x2L);
+      case 101:
+         if ((active0 & 0x40L) != 0L)
+            return jjStopAtPos(3, 6);
+         return jjMoveStringLiteralDfa4_0(active0, 0x200L);
+      case 102:
+         if ((active0 & 0x10L) != 0L)
+            return jjStopAtPos(3, 4);
+         break;
+      case 105:
+         return jjMoveStringLiteralDfa4_0(active0, 0x120L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(2, active0);
+}
+private int jjMoveStringLiteralDfa4_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(2, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(3, active0);
+      return 4;
+   }
+   switch(curChar)
+   {
+      case 102:
+         if ((active0 & 0x20L) != 0L)
+            return jjStopAtPos(4, 5);
+         return jjMoveStringLiteralDfa5_0(active0, 0x100L);
+      case 108:
+         return jjMoveStringLiteralDfa5_0(active0, 0x200L);
+      case 111:
+         return jjMoveStringLiteralDfa5_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(3, active0);
+}
+private int jjMoveStringLiteralDfa5_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(3, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(4, active0);
+      return 5;
+   }
+   switch(curChar)
+   {
+      case 32:
+         if ((active0 & 0x100L) != 0L)
+            return jjStopAtPos(5, 8);
+         break;
+      case 105:
+         return jjMoveStringLiteralDfa6_0(active0, 0x200L);
+      case 109:
+         return jjMoveStringLiteralDfa6_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(4, active0);
+}
+private int jjMoveStringLiteralDfa6_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(4, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(5, active0);
+      return 6;
+   }
+   switch(curChar)
+   {
+      case 102:
+         return jjMoveStringLiteralDfa7_0(active0, 0x200L);
+      case 109:
+         return jjMoveStringLiteralDfa7_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(5, active0);
+}
+private int jjMoveStringLiteralDfa7_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(5, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(6, active0);
+      return 7;
+   }
+   switch(curChar)
+   {
+      case 32:
+         if ((active0 & 0x200L) != 0L)
+            return jjStopAtPos(7, 9);
+         break;
+      case 101:
+         return jjMoveStringLiteralDfa8_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(6, active0);
+}
+private int jjMoveStringLiteralDfa8_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(6, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(7, active0);
+      return 8;
+   }
+   switch(curChar)
+   {
+      case 110:
+         return jjMoveStringLiteralDfa9_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(7, active0);
+}
+private int jjMoveStringLiteralDfa9_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(7, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(8, active0);
+      return 9;
+   }
+   switch(curChar)
+   {
+      case 116:
+         return jjMoveStringLiteralDfa10_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(8, active0);
+}
+private int jjMoveStringLiteralDfa10_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(8, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(9, active0);
+      return 10;
+   }
+   switch(curChar)
+   {
+      case 32:
+         return jjMoveStringLiteralDfa11_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(9, active0);
+}
+private int jjMoveStringLiteralDfa11_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(9, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(10, active0);
+      return 11;
+   }
+   switch(curChar)
+   {
+      case 37:
+         return jjMoveStringLiteralDfa12_0(active0, 0x2L);
+      default :
+         break;
+   }
+   return jjStartNfa_0(10, active0);
+}
+private int jjMoveStringLiteralDfa12_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(10, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(11, active0);
+      return 12;
+   }
+   switch(curChar)
+   {
+      case 125:
+         if ((active0 & 0x2L) != 0L)
+            return jjStopAtPos(12, 1);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(11, active0);
+}
+private int jjMoveNfa_0(int startState, int curPos)
+{
+   int startsAt = 0;
+   jjnewStateCnt = 8;
+   int i = 1;
+   jjstateSet[0] = startState;
+   int kind = 0x7fffffff;
+   for (;;)
+   {
+      if (++jjround == 0x7fffffff)
+         ReInitRounds();
+      if (curChar < 64)
+      {
+         long l = 1L << curChar;
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 0:
+                  if (curChar == 37)
+                     jjstateSet[jjnewStateCnt++] = 1;
+                  else if (curChar == 32)
+                     jjstateSet[jjnewStateCnt++] = 2;
+                  break;
+               case 4:
+                  if (curChar != 37)
+                     break;
+                  if (kind > 2)
+                     kind = 2;
+                  jjstateSet[jjnewStateCnt++] = 5;
+                  break;
+               case 2:
+                  if (curChar == 37)
+                     jjstateSet[jjnewStateCnt++] = 1;
+                  break;
+               case 5:
+                  if (curChar == 32 && kind > 2)
+                     kind = 2;
+                  break;
+               case 7:
+                  if (curChar == 32 && kind > 7)
+                     kind = 7;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else if (curChar < 128)
+      {
+         long l = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 0:
+                  if (curChar == 123)
+                     jjAddStates(0, 1);
+                  break;
+               case 4:
+                  if (curChar != 123)
+                     break;
+                  if (kind > 7)
+                     kind = 7;
+                  jjstateSet[jjnewStateCnt++] = 7;
+                  break;
+               case 1:
+                  if (curChar == 125)
+                     kind = 3;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else
+      {
+         int i2 = (curChar & 0xff) >> 6;
+         long l2 = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      if (kind != 0x7fffffff)
+      {
+         jjmatchedKind = kind;
+         jjmatchedPos = curPos;
+         kind = 0x7fffffff;
+      }
+      ++curPos;
+      if ((i = jjnewStateCnt) == (startsAt = 8 - (jjnewStateCnt = startsAt)))
+         return curPos;
+      try { curChar = input_stream.readChar(); }
+      catch(java.io.IOException e) { return curPos; }
+   }
+}
+private final int jjStopStringLiteralDfa_2(int pos, long active0)
+{
+   switch (pos)
+   {
+      default :
+         return -1;
+   }
+}
+private final int jjStartNfa_2(int pos, long active0)
+{
+   return jjMoveNfa_2(jjStopStringLiteralDfa_2(pos, active0), pos + 1);
+}
+private int jjMoveStringLiteralDfa0_2()
+{
+   switch(curChar)
+   {
+      case 124:
+         return jjStopAtPos(0, 15);
+      case 125:
+         return jjMoveStringLiteralDfa1_2(0x10000L);
+      default :
+         return jjMoveNfa_2(0, 0);
+   }
+}
+private int jjMoveStringLiteralDfa1_2(long active0)
+{
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_2(0, active0);
+      return 1;
+   }
+   switch(curChar)
+   {
+      case 125:
+         if ((active0 & 0x10000L) != 0L)
+            return jjStopAtPos(1, 16);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_2(0, active0);
+}
+private int jjMoveNfa_2(int startState, int curPos)
+{
+   int startsAt = 0;
+   jjnewStateCnt = 1;
+   int i = 1;
+   jjstateSet[0] = startState;
+   int kind = 0x7fffffff;
+   for (;;)
+   {
+      if (++jjround == 0x7fffffff)
+         ReInitRounds();
+      if (curChar < 64)
+      {
+         long l = 1L << curChar;
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 0:
+                  if ((0x3ff400000000000L & l) == 0L)
+                     break;
+                  kind = 13;
+                  jjstateSet[jjnewStateCnt++] = 0;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else if (curChar < 128)
+      {
+         long l = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 0:
+                  if ((0x7fffffe87fffffeL & l) == 0L)
+                     break;
+                  kind = 13;
+                  jjstateSet[jjnewStateCnt++] = 0;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else
+      {
+         int i2 = (curChar & 0xff) >> 6;
+         long l2 = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      if (kind != 0x7fffffff)
+      {
+         jjmatchedKind = kind;
+         jjmatchedPos = curPos;
+         kind = 0x7fffffff;
+      }
+      ++curPos;
+      if ((i = jjnewStateCnt) == (startsAt = 1 - (jjnewStateCnt = startsAt)))
+         return curPos;
+      try { curChar = input_stream.readChar(); }
+      catch(java.io.IOException e) { return curPos; }
+   }
+}
+private int jjMoveStringLiteralDfa0_3()
+{
+   return jjMoveNfa_3(1, 0);
+}
+private int jjMoveNfa_3(int startState, int curPos)
+{
+   int startsAt = 0;
+   jjnewStateCnt = 4;
+   int i = 1;
+   jjstateSet[0] = startState;
+   int kind = 0x7fffffff;
+   for (;;)
+   {
+      if (++jjround == 0x7fffffff)
+         ReInitRounds();
+      if (curChar < 64)
+      {
+         long l = 1L << curChar;
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 1:
+                  if ((0x3ff400000000000L & l) != 0L)
+                  {
+                     if (kind > 13)
+                        kind = 13;
+                     jjCheckNAdd(0);
+                  }
+                  else if (curChar == 37)
+                     jjstateSet[jjnewStateCnt++] = 2;
+                  else if (curChar == 32)
+                     jjstateSet[jjnewStateCnt++] = 3;
+                  break;
+               case 0:
+                  if ((0x3ff400000000000L & l) == 0L)
+                     break;
+                  kind = 13;
+                  jjCheckNAdd(0);
+                  break;
+               case 3:
+                  if (curChar == 37)
+                     jjstateSet[jjnewStateCnt++] = 2;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else if (curChar < 128)
+      {
+         long l = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 1:
+               case 0:
+                  if ((0x7fffffe87fffffeL & l) == 0L)
+                     break;
+                  kind = 13;
+                  jjCheckNAdd(0);
+                  break;
+               case 2:
+                  if (curChar == 125)
+                     kind = 17;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else
+      {
+         int i2 = (curChar & 0xff) >> 6;
+         long l2 = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      if (kind != 0x7fffffff)
+      {
+         jjmatchedKind = kind;
+         jjmatchedPos = curPos;
+         kind = 0x7fffffff;
+      }
+      ++curPos;
+      if ((i = jjnewStateCnt) == (startsAt = 4 - (jjnewStateCnt = startsAt)))
+         return curPos;
+      try { curChar = input_stream.readChar(); }
+      catch(java.io.IOException e) { return curPos; }
+   }
+}
+private int jjMoveStringLiteralDfa0_1()
+{
+   switch(curChar)
+   {
+      case 123:
+         return jjMoveStringLiteralDfa1_1(0x800L);
+      default :
+         return 1;
+   }
+}
+private int jjMoveStringLiteralDfa1_1(long active0)
+{
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 1;
+   }
+   switch(curChar)
+   {
+      case 37:
+         return jjMoveStringLiteralDfa2_1(active0, 0x800L);
+      default :
+         return 2;
+   }
+}
+private int jjMoveStringLiteralDfa2_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 2;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 2;
+   }
+   switch(curChar)
+   {
+      case 32:
+         return jjMoveStringLiteralDfa3_1(active0, 0x800L);
+      default :
+         return 3;
+   }
+}
+private int jjMoveStringLiteralDfa3_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 3;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 3;
+   }
+   switch(curChar)
+   {
+      case 101:
+         return jjMoveStringLiteralDfa4_1(active0, 0x800L);
+      default :
+         return 4;
+   }
+}
+private int jjMoveStringLiteralDfa4_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 4;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 4;
+   }
+   switch(curChar)
+   {
+      case 110:
+         return jjMoveStringLiteralDfa5_1(active0, 0x800L);
+      default :
+         return 5;
+   }
+}
+private int jjMoveStringLiteralDfa5_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 5;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 5;
+   }
+   switch(curChar)
+   {
+      case 100:
+         return jjMoveStringLiteralDfa6_1(active0, 0x800L);
+      default :
+         return 6;
+   }
+}
+private int jjMoveStringLiteralDfa6_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 6;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 6;
+   }
+   switch(curChar)
+   {
+      case 99:
+         return jjMoveStringLiteralDfa7_1(active0, 0x800L);
+      default :
+         return 7;
+   }
+}
+private int jjMoveStringLiteralDfa7_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 7;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 7;
+   }
+   switch(curChar)
+   {
+      case 111:
+         return jjMoveStringLiteralDfa8_1(active0, 0x800L);
+      default :
+         return 8;
+   }
+}
+private int jjMoveStringLiteralDfa8_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 8;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 8;
+   }
+   switch(curChar)
+   {
+      case 109:
+         return jjMoveStringLiteralDfa9_1(active0, 0x800L);
+      default :
+         return 9;
+   }
+}
+private int jjMoveStringLiteralDfa9_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 9;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 9;
+   }
+   switch(curChar)
+   {
+      case 109:
+         return jjMoveStringLiteralDfa10_1(active0, 0x800L);
+      default :
+         return 10;
+   }
+}
+private int jjMoveStringLiteralDfa10_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 10;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 10;
+   }
+   switch(curChar)
+   {
+      case 101:
+         return jjMoveStringLiteralDfa11_1(active0, 0x800L);
+      default :
+         return 11;
+   }
+}
+private int jjMoveStringLiteralDfa11_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 11;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 11;
+   }
+   switch(curChar)
+   {
+      case 110:
+         return jjMoveStringLiteralDfa12_1(active0, 0x800L);
+      default :
+         return 12;
+   }
+}
+private int jjMoveStringLiteralDfa12_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 12;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 12;
+   }
+   switch(curChar)
+   {
+      case 116:
+         return jjMoveStringLiteralDfa13_1(active0, 0x800L);
+      default :
+         return 13;
+   }
+}
+private int jjMoveStringLiteralDfa13_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 13;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 13;
+   }
+   switch(curChar)
+   {
+      case 32:
+         return jjMoveStringLiteralDfa14_1(active0, 0x800L);
+      default :
+         return 14;
+   }
+}
+private int jjMoveStringLiteralDfa14_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 14;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 14;
+   }
+   switch(curChar)
+   {
+      case 37:
+         return jjMoveStringLiteralDfa15_1(active0, 0x800L);
+      default :
+         return 15;
+   }
+}
+private int jjMoveStringLiteralDfa15_1(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return 15;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      return 15;
+   }
+   switch(curChar)
+   {
+      case 125:
+         if ((active0 & 0x800L) != 0L)
+            return jjStopAtPos(15, 11);
+         break;
+      default :
+         return 16;
+   }
+   return 16;
+}
+static final int[] jjnextStates = {
+   4, 6, 
+};
+
+/** Token literal values. */
+public static final String[] jjstrLiteralImages = {
+"", null, null, null, "\145\154\151\146", "\145\156\144\151\146", 
+"\145\154\163\145", null, "\173\45\40\151\146\40", "\173\45\40\145\154\151\146\40", null, null, 
+null, null, null, "\174", "\175\175", null, };
+
+/** Lexer state names. */
+public static final String[] lexStateNames = {
+   "DEFAULT",
+   "IN_COMMENT",
+   "IN_VAR",
+   "IN_CONDITION",
+};
+
+/** Lex State array. */
+public static final int[] jjnewLexState = {
+   -1, 1, -1, -1, -1, -1, -1, 2, 3, 3, -1, 0, -1, -1, -1, -1, 0, 0, 
+};
+static final long[] jjtoToken = {
+   0x3a7fdL, 
+};
+static final long[] jjtoSkip = {
+   0x4802L, 
+};
+static final long[] jjtoMore = {
+   0x1000L, 
+};
+protected SimpleCharStream input_stream;
+private final int[] jjrounds = new int[8];
+private final int[] jjstateSet = new int[16];
+protected char curChar;
+/** Constructor. */
+public TemplateParserTokenManager(SimpleCharStream stream){
+   if (SimpleCharStream.staticFlag)
+      throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+   input_stream = stream;
+}
+
+/** Constructor. */
+public TemplateParserTokenManager(SimpleCharStream stream, int lexState){
+   this(stream);
+   SwitchTo(lexState);
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream)
+{
+   jjmatchedPos = jjnewStateCnt = 0;
+   curLexState = defaultLexState;
+   input_stream = stream;
+   ReInitRounds();
+}
+private void ReInitRounds()
+{
+   int i;
+   jjround = 0x80000001;
+   for (i = 8; i-- > 0;)
+      jjrounds[i] = 0x80000000;
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream, int lexState)
+{
+   ReInit(stream);
+   SwitchTo(lexState);
+}
+
+/** Switch to specified lex state. */
+public void SwitchTo(int lexState)
+{
+   if (lexState >= 4 || lexState < 0)
+      throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
+   else
+      curLexState = lexState;
+}
+
+protected Token jjFillToken()
+{
+   final Token t;
+   final String curTokenImage;
+   final int beginLine;
+   final int endLine;
+   final int beginColumn;
+   final int endColumn;
+   String im = jjstrLiteralImages[jjmatchedKind];
+   curTokenImage = (im == null) ? input_stream.GetImage() : im;
+   beginLine = input_stream.getBeginLine();
+   beginColumn = input_stream.getBeginColumn();
+   endLine = input_stream.getEndLine();
+   endColumn = input_stream.getEndColumn();
+   t = Token.newToken(jjmatchedKind, curTokenImage);
+
+   t.beginLine = beginLine;
+   t.endLine = endLine;
+   t.beginColumn = beginColumn;
+   t.endColumn = endColumn;
+
+   return t;
+}
+
+int curLexState = 0;
+int defaultLexState = 0;
+int jjnewStateCnt;
+int jjround;
+int jjmatchedPos;
+int jjmatchedKind;
+
+/** Get the next Token. */
+public Token getNextToken() 
+{
+  Token matchedToken;
+  int curPos = 0;
+
+  EOFLoop :
+  for (;;)
+  {
+   try
+   {
+      curChar = input_stream.BeginToken();
+   }
+   catch(java.io.IOException e)
+   {
+      jjmatchedKind = 0;
+      matchedToken = jjFillToken();
+      return matchedToken;
+   }
+
+   for (;;)
+   {
+     switch(curLexState)
+     {
+       case 0:
+         jjmatchedKind = 0x7fffffff;
+         jjmatchedPos = 0;
+         curPos = jjMoveStringLiteralDfa0_0();
+         if (jjmatchedPos == 0 && jjmatchedKind > 10)
+         {
+            jjmatchedKind = 10;
+         }
+         break;
+       case 1:
+         jjmatchedKind = 0x7fffffff;
+         jjmatchedPos = 0;
+         curPos = jjMoveStringLiteralDfa0_1();
+         if (jjmatchedPos == 0 && jjmatchedKind > 12)
+         {
+            jjmatchedKind = 12;
+         }
+         break;
+       case 2:
+         try { input_stream.backup(0);
+            while (curChar <= 32 && (0x100000000L & (1L << curChar)) != 0L)
+               curChar = input_stream.BeginToken();
+         }
+         catch (java.io.IOException e1) { continue EOFLoop; }
+         jjmatchedKind = 0x7fffffff;
+         jjmatchedPos = 0;
+         curPos = jjMoveStringLiteralDfa0_2();
+         break;
+       case 3:
+         jjmatchedKind = 0x7fffffff;
+         jjmatchedPos = 0;
+         curPos = jjMoveStringLiteralDfa0_3();
+         break;
+     }
+     if (jjmatchedKind != 0x7fffffff)
+     {
+        if (jjmatchedPos + 1 < curPos)
+           input_stream.backup(curPos - jjmatchedPos - 1);
+        if ((jjtoToken[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+        {
+           matchedToken = jjFillToken();
+       if (jjnewLexState[jjmatchedKind] != -1)
+         curLexState = jjnewLexState[jjmatchedKind];
+           return matchedToken;
+        }
+        else if ((jjtoSkip[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+        {
+         if (jjnewLexState[jjmatchedKind] != -1)
+           curLexState = jjnewLexState[jjmatchedKind];
+           continue EOFLoop;
+        }
+      if (jjnewLexState[jjmatchedKind] != -1)
+        curLexState = jjnewLexState[jjmatchedKind];
+        curPos = 0;
+        jjmatchedKind = 0x7fffffff;
+        try {
+           curChar = input_stream.readChar();
+           continue;
+        }
+        catch (java.io.IOException e1) { }
+     }
+     int error_line = input_stream.getEndLine();
+     int error_column = input_stream.getEndColumn();
+     String error_after = null;
+     boolean EOFSeen = false;
+     try { input_stream.readChar(); input_stream.backup(1); }
+     catch (java.io.IOException e1) {
+        EOFSeen = true;
+        error_after = curPos <= 1 ? "" : input_stream.GetImage();
+        if (curChar == '\n' || curChar == '\r') {
+           error_line++;
+           error_column = 0;
+        }
+        else
+           error_column++;
+     }
+     if (!EOFSeen) {
+        input_stream.backup(1);
+        error_after = curPos <= 1 ? "" : input_stream.GetImage();
+     }
+     throw new TokenMgrError(EOFSeen, curLexState, error_line, error_column, error_after, curChar, TokenMgrError.LEXICAL_ERROR);
+   }
+  }
+}
+
+private void jjCheckNAdd(int state)
+{
+   if (jjrounds[state] != jjround)
+   {
+      jjstateSet[jjnewStateCnt++] = state;
+      jjrounds[state] = jjround;
+   }
+}
+private void jjAddStates(int start, int end)
+{
+   do {
+      jjstateSet[jjnewStateCnt++] = jjnextStates[start];
+   } while (start++ != end);
+}
+private void jjCheckNAddTwoStates(int state1, int state2)
+{
+   jjCheckNAdd(state1);
+   jjCheckNAdd(state2);
+}
+
+}
+```
+
+### `TemplateProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TemplateProcessor.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Processes a template source. Supported features:
+ * 
+ * <ul>
+ * <li><code>{{ var }}</code> references are substituted with the provided args.
+ * <li><code>{{ var | escape }}</code> a value is filtered through an 'escape' filter.
+ * <li><code>{% if var %} ... {% else %} ... {% endif %}</code> blocks are only included if the provided var is set.
+ * <li><code>{% comment %} ... {% endcomment %}</code> blocks are discarded.
+ * </ul>
+ */
+public class TemplateProcessor {
+
+    private TemplateBody compiledTemplate;
+
+    private Map<String, VariableFilter> filters = new HashMap<>();
+
+    public TemplateProcessor(String template) throws ParseException {
+        try (var reader = new StringReader(template)) {
+            var parser = new TemplateParser(new StringReader(template));
+            compiledTemplate = parser.parse();
+        }
+
+        addFilter("escape", new EscapeFilter());
+    }
+
+    public static String process(String template, Map<String, Object> args) throws ParseException {
+        return new TemplateProcessor(template).process(args);
+    }
+
+    public void addFilter(String name, VariableFilter filter) {
+        filters.put(name, filter);
+    }
+
+    public String process(Map<String, Object> args) {
+        return compiledTemplate.render(args, filters);
+    }
+}
+```
+
+### `TextStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TextStatement.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.Map;
+
+public class TextStatement implements Statement {
+
+    private String text;
+
+    public TextStatement(String text) {
+        this.text = text;
+    }
+
+    @Override
+    public void render(StringBuilder buf, Map<String, Object> vars, Map<String, VariableFilter> filters) {
+        buf.append(text);
+    }
+}
+```
+
+### `Token.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Token.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. Token.java Version 5.0 */
+/* JavaCCOptions:TOKEN_EXTENDS=,KEEP_LINE_COL=null,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
+package org.yamcs.templating;
+
+/**
+ * Describes the input token stream.
+ */
+
+public class Token implements java.io.Serializable {
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * An integer that describes the kind of this token.  This numbering
+   * system is determined by JavaCCParser, and a table of these numbers is
+   * stored in the file ...Constants.java.
+   */
+  public int kind;
+
+  /** The line number of the first character of this Token. */
+  public int beginLine;
+  /** The column number of the first character of this Token. */
+  public int beginColumn;
+  /** The line number of the last character of this Token. */
+  public int endLine;
+  /** The column number of the last character of this Token. */
+  public int endColumn;
+
+  /**
+   * The string image of the token.
+   */
+  public String image;
+
+  /**
+   * A reference to the next regular (non-special) token from the input
+   * stream.  If this is the last token from the input stream, or if the
+   * token manager has not read tokens beyond this one, this field is
+   * set to null.  This is true only if this token is also a regular
+   * token.  Otherwise, see below for a description of the contents of
+   * this field.
+   */
+  public Token next;
+
+  /**
+   * This field is used to access special tokens that occur prior to this
+   * token, but after the immediately preceding regular (non-special) token.
+   * If there are no such special tokens, this field is set to null.
+   * When there are more than one such special token, this field refers
+   * to the last of these special tokens, which in turn refers to the next
+   * previous special token through its specialToken field, and so on
+   * until the first special token (whose specialToken field is null).
+   * The next fields of special tokens refer to other special tokens that
+   * immediately follow it (without an intervening regular token).  If there
+   * is no such token, this field is null.
+   */
+  public Token specialToken;
+
+  /**
+   * An optional attribute value of the Token.
+   * Tokens which are not used as syntactic sugar will often contain
+   * meaningful values that will be used later on by the compiler or
+   * interpreter. This attribute value is often different from the image.
+   * Any subclass of Token that actually wants to return a non-null value can
+   * override this method as appropriate.
+   */
+  public Object getValue() {
+    return null;
+  }
+
+  /**
+   * No-argument constructor
+   */
+  public Token() {}
+
+  /**
+   * Constructs a new token for the specified Image.
+   */
+  public Token(int kind)
+  {
+    this(kind, null);
+  }
+
+  /**
+   * Constructs a new token for the specified Image and Kind.
+   */
+  public Token(int kind, String image)
+  {
+    this.kind = kind;
+    this.image = image;
+  }
+
+  /**
+   * Returns the image.
+   */
+  public String toString()
+  {
+    return image;
+  }
+
+  /**
+   * Returns a new Token object, by default. However, if you want, you
+   * can create and return subclass objects based on the value of ofKind.
+   * Simply add the cases to the switch for all those special cases.
+   * For example, if you have a subclass of Token called IDToken that
+   * you want to create if ofKind is ID, simply add something like :
+   *
+   *    case MyParserConstants.ID : return new IDToken(ofKind, image);
+   *
+   * to the following switch statement. Then you can cast matchedToken
+   * variable to the appropriate type and use sit in your lexical actions.
+   */
+  public static Token newToken(int ofKind, String image)
+  {
+    switch(ofKind)
+    {
+      default : return new Token(ofKind, image);
+    }
+  }
+
+  public static Token newToken(int ofKind)
+  {
+    return newToken(ofKind, null);
+  }
+
+}
+/* JavaCC - OriginalChecksum=38b721ced2904af8d7b5bafe6af2a18e (do not edit this line) */
+```
+
+### `TokenMgrError.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/TokenMgrError.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. TokenMgrError.java Version 5.0 */
+/* JavaCCOptions: */
+package org.yamcs.templating;
+
+/** Token Manager Error. */
+public class TokenMgrError extends Error
+{
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /*
+   * Ordinals for various reasons why an Error of this type can be thrown.
+   */
+
+  /**
+   * Lexical error occurred.
+   */
+  static final int LEXICAL_ERROR = 0;
+
+  /**
+   * An attempt was made to create a second instance of a static token manager.
+   */
+  static final int STATIC_LEXER_ERROR = 1;
+
+  /**
+   * Tried to change to an invalid lexical state.
+   */
+  static final int INVALID_LEXICAL_STATE = 2;
+
+  /**
+   * Detected (and bailed out of) an infinite loop in the token manager.
+   */
+  static final int LOOP_DETECTED = 3;
+
+  /**
+   * Indicates the reason why the exception is thrown. It will have
+   * one of the above 4 values.
+   */
+  int errorCode;
+
+  /**
+   * Replaces unprintable characters by their escaped (or unicode escaped)
+   * equivalents in the given string
+   */
+  protected static final String addEscapes(String str) {
+    StringBuffer retval = new StringBuffer();
+    char ch;
+    for (int i = 0; i < str.length(); i++) {
+      switch (str.charAt(i))
+      {
+        case 0 :
+          continue;
+        case '\b':
+          retval.append("\\b");
+          continue;
+        case '\t':
+          retval.append("\\t");
+          continue;
+        case '\n':
+          retval.append("\\n");
+          continue;
+        case '\f':
+          retval.append("\\f");
+          continue;
+        case '\r':
+          retval.append("\\r");
+          continue;
+        case '\"':
+          retval.append("\\\"");
+          continue;
+        case '\'':
+          retval.append("\\\'");
+          continue;
+        case '\\':
+          retval.append("\\\\");
+          continue;
+        default:
+          if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+            String s = "0000" + Integer.toString(ch, 16);
+            retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+          } else {
+            retval.append(ch);
+          }
+          continue;
+      }
+    }
+    return retval.toString();
+  }
+
+  /**
+   * Returns a detailed message for the Error when it is thrown by the
+   * token manager to indicate a lexical error.
+   * Parameters :
+   *    EOFSeen     : indicates if EOF caused the lexical error
+   *    curLexState : lexical state in which this error occurred
+   *    errorLine   : line number when the error occurred
+   *    errorColumn : column number when the error occurred
+   *    errorAfter  : prefix that was seen before this error occurred
+   *    curchar     : the offending character
+   * Note: You can customize the lexical error message by modifying this method.
+   */
+  protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar) {
+    return("Lexical error at line " +
+          errorLine + ", column " +
+          errorColumn + ".  Encountered: " +
+          (EOFSeen ? "<EOF> " : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int)curChar + "), ") +
+          "after : \"" + addEscapes(errorAfter) + "\"");
+  }
+
+  /**
+   * You can also modify the body of this method to customize your error messages.
+   * For example, cases like LOOP_DETECTED and INVALID_LEXICAL_STATE are not
+   * of end-users concern, so you can return something like :
+   *
+   *     "Internal Error : Please file a bug report .... "
+   *
+   * from this method for such cases in the release version of your parser.
+   */
+  public String getMessage() {
+    return super.getMessage();
+  }
+
+  /*
+   * Constructors of various flavors follow.
+   */
+
+  /** No arg constructor. */
+  public TokenMgrError() {
+  }
+
+  /** Constructor with message and reason. */
+  public TokenMgrError(String message, int reason) {
+    super(message);
+    errorCode = reason;
+  }
+
+  /** Full Constructor. */
+  public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar, int reason) {
+    this(LexicalError(EOFSeen, lexState, errorLine, errorColumn, errorAfter, curChar), reason);
+  }
+}
+/* JavaCC - OriginalChecksum=7d4e805f4e33f816b26f39a013feba1e (do not edit this line) */
+```
+
+### `Variable.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/Variable.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.List;
+
+public class Variable {
+
+    private String name;
+    private String label;
+    private boolean required;
+    private String help;
+    private String initial;
+    private List<String> choices;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public String getHelp() {
+        return help;
+    }
+
+    public void setHelp(String help) {
+        this.help = help;
+    }
+
+    public String getInitial() {
+        return initial;
+    }
+
+    public void setInitial(String initial) {
+        this.initial = initial;
+    }
+
+    /**
+     * Different choices. If a non-null result is returned, this variable should be chosen from a dropdown input. This
+     * is evaluated each time a user is about to create an instance.
+     */
+    public List<String> getChoices() {
+        return choices;
+    }
+
+    public void setChoices(List<String> choices) {
+        this.choices = choices;
+    }
+}
+```
+
+### `VariableFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/VariableFilter.java`
+
+
+```java
+package org.yamcs.templating;
+
+public interface VariableFilter {
+
+    Object applyFilter(Object variable);
+}
+```
+
+### `VarStatement.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/templating/VarStatement.java`
+
+
+```java
+package org.yamcs.templating;
+
+import java.util.List;
+import java.util.Map;
+
+public class VarStatement implements Statement {
+
+    private String identifier;
+    private List<String> filterIdentifiers;
+
+    public VarStatement(String identifier, List<String> filterIdentifiers) {
+        this.identifier = identifier;
+        this.filterIdentifiers = filterIdentifiers;
+    }
+
+    @Override
+    public void render(StringBuilder buf, Map<String, Object> vars, Map<String, VariableFilter> filters) {
+        var value = getValue(identifier, vars);
+        for (var filterIdentifier : filterIdentifiers) {
+            var filter = filters.get(filterIdentifier);
+            if (filter == null) {
+                throw new IllegalArgumentException(String.format("Unknown filter '%s'", filterIdentifier));
+            }
+            value = filter.applyFilter(value);
+        }
+        if (value == null) {
+            throw new IllegalArgumentException(String.format("Variable '%s' is not set", identifier));
+        }
+        buf.append(value);
+    }
+
+    private Object getValue(String name, Map<String, Object> args) {
+        return getValue(name, args, "");
+    }
+
+    @SuppressWarnings("unchecked")
+    private Object getValue(String name, Map<String, Object> args, String nameContext) {
+        int dotIndex = name.indexOf('.');
+        if (dotIndex == -1) {
+            return args.get(name);
+        } else {
+            String parentName = name.substring(0, dotIndex);
+            Object parentValue = args.get(parentName);
+            if (parentValue == null) {
+                throw new IllegalArgumentException(String.format(
+                        "Variable '%s%s' is not set", nameContext, parentName));
+            }
+            if (!(parentValue instanceof Map)) {
+                throw new IllegalArgumentException(String.format(
+                        "Variable '%s%s' is not a map", nameContext, parentName));
+            }
+            Map<String, Object> parentArgs = (Map<String, Object>) parentValue;
+            return getValue(name.substring(dotIndex + 1), parentArgs);
+        }
+    }
+}
+```

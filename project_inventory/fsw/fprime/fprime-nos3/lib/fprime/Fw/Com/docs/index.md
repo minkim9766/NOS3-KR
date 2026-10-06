@@ -3,18 +3,64 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--.gitignore
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/.gitignore`
+
+
+```text
+*.html
+```
+
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/sdd.md`
+
+
+```markdown
+# Fw::Com Port
+
+## 1. Introduction
+
+The `Fw::Com` port is used to pass binary data to a service for transporting data out of the system. 
+Incoming and outgoing packets are serialized into these buffers.
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The `Fw::Com` port has the following port diagram:
+
+![Fw::Com Diagram](img/FwComBDD.jpg "Fw::Com Port")
+
+#### 2.1.2 Serializables
+
+##### 2.1.2.1 Fw::ComPacket 
+
+The `Fw::ComPacket` class is a base class for other packet classes. It provides type identification for packet subtypes.
+
+##### 2.1.2.2 Fw::ComBuffer
+
+The `Fw::ComBuffer` class represents a buffer to store data for transmission. It is used as a destination buffer for serialization of `Fw::ComPacket` subtypes.
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+6/22/2015 |  Initial Version
+
+
+
+```

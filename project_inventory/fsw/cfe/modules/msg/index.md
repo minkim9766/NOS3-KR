@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/msg/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,118 @@
 fsw/index
 option_inc/index
 ut-coverage/index
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/msg/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/msg/option_inc/`](option_inc/index) — 폴더
-- [`fsw/cfe/modules/msg/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/msg/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/msg/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE message module CMake build recipe
+#
+# This CMakeLists.txt adds source files for
+# message module included in the cFE distribution.  Selected
+# files are built into a static library that in turn
+# is linked into the final executable.
+#
+# Note this is different than applications which are dynamically
+# linked to support runtime loading.  The core applications all
+# use static linkage.
+#
+##################################################################
+
+# Add the basic set of files which are always built
+# Defined as absolute so this list can also be used to build unit tests
+set(${DEP}_SRC
+    fsw/src/cfe_msg_ccsdspri.c
+    fsw/src/cfe_msg_init.c
+    fsw/src/cfe_msg_verify.c
+    fsw/src/cfe_msg_msgid_shared.c
+    fsw/src/cfe_msg_sechdr_checksum.c
+    fsw/src/cfe_msg_sechdr_fc.c
+    fsw/src/cfe_msg_sechdr_time.c
+)
+
+# Source selection for if CCSDS extended header is included, and MsgId version use
+if (MISSION_INCLUDE_CCSDSEXT_HEADER)
+    message(STATUS "CCSDS primary and extended header included in message header")
+    list(APPEND ${DEP}_SRC
+        fsw/src/cfe_msg_ccsdsext.c
+        fsw/src/cfe_msg_initdefaulthdr_priext.c)
+    if (MISSION_MSGID_V2)  # MsgId v2 or v1 can be used with extended headers
+      message(STATUS "Message Id version 2 in use (MsgId V2)")
+      list(APPEND ${DEP}_SRC
+           fsw/src/cfe_msg_msgid_v2.c)
+    else (MISSION_MSGID_V2)
+      message(STATUS "Message Id version 1 in use (MsgId V1)")
+      list(APPEND ${DEP}_SRC
+           fsw/src/cfe_msg_msgid_v1.c)
+    endif (MISSION_MSGID_V2)
+else (MISSION_INCLUDE_CCSDSEXT_HEADER)
+    message(STATUS "CCSDS primary header included in message header (not including CCSDS extended header)")
+    message(STATUS "Message Id version 1 in use (MsgId V1)")
+    list(APPEND ${DEP}_SRC
+        fsw/src/cfe_msg_initdefaulthdr_pri.c
+        fsw/src/cfe_msg_msgid_v1.c)
+    if (MISSION_MSGID_V2)
+        message(FATAL_ERROR "Message Id (MsgId) version 2 can only be used if MISSION_INCLUDE_CCSDSEXT_HEADER is set")
+    endif (MISSION_MSGID_V2)
+endif (MISSION_INCLUDE_CCSDSEXT_HEADER)
+
+# Module library
+add_library(${DEP} STATIC ${${DEP}_SRC})
+
+target_include_directories(${DEP} PUBLIC fsw/inc)
+
+target_link_libraries(${DEP} PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(${DEP}
+    ccsds_hdr.h
+    cfe_msg_api_typedefs.h
+)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/msg/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# MSG mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# Extended header inclusion selection
+if (MISSION_INCLUDE_CCSDSEXT_HEADER)
+  set(MSG_HDR_FILE "default_cfe_msg_hdr_priext.h")
+else (MISSION_INCLUDE_CCSDSEXT_HEADER)
+  set(MSG_HDR_FILE "default_cfe_msg_hdr_pri.h")
+endif (MISSION_INCLUDE_CCSDSEXT_HEADER)
+
+# Generate the header definition files, use local default for this module)
+generate_config_includefile(
+    FILE_NAME           "cfe_msg_hdr.h"
+    FALLBACK_FILE       "${CMAKE_CURRENT_LIST_DIR}/option_inc/${MSG_HDR_FILE}"
+)
+
+generate_config_includefile(
+    FILE_NAME           "cfe_msg_sechdr.h"
+    FALLBACK_FILE       "${CMAKE_CURRENT_LIST_DIR}/option_inc/default_cfe_msg_sechdr.h"
+)
+```

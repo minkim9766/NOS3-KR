@@ -3,20 +3,770 @@
 
 **경로:** `fsw/cfe/modules/cfe_assert/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_assert_init.c`
 
-file--cfe_assert_init.c
-file--cfe_assert_io.c
-file--cfe_assert_priv.h
-file--cfe_assert_runner.c
+**경로:** `fsw/cfe/modules/cfe_assert/src/cfe_assert_init.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Implementation of the CFE assert (UT assert wrapper) functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe.h"
+
+#include "cfe_assert_priv.h"
+
+#include "uttest.h"
+#include "utbsp.h"
+
+/*
+ * Allows the test reports to be redirected to another destination
+ */
+void CFE_Assert_RegisterCallback(CFE_Assert_StatusCallback_t Callback)
+{
+    CFE_Assert_Global.StatusCallback = Callback;
+}
+
+/*
+ * Opens a log file to "tee" the test output to
+ */
+int32 CFE_Assert_OpenLogFile(const char *Filename)
+{
+    int32  OsStatus;
+    char * Ext;
+    size_t NameLen;
+
+    strncpy(CFE_Assert_Global.LogFileFinal, Filename, sizeof(CFE_Assert_Global.LogFileFinal) - 1);
+    CFE_Assert_Global.LogFileFinal[sizeof(CFE_Assert_Global.LogFileFinal) - 1] = 0;
+
+    strncpy(CFE_Assert_Global.LogFileTemp, Filename, sizeof(CFE_Assert_Global.LogFileTemp) - 1);
+    CFE_Assert_Global.LogFileTemp[sizeof(CFE_Assert_Global.LogFileTemp) - 1] = 0;
+
+    Ext = strrchr(CFE_Assert_Global.LogFileTemp, '.');
+    if (Ext == NULL)
+    {
+        NameLen = strlen(CFE_Assert_Global.LogFileTemp);
+    }
+    else
+    {
+        NameLen = Ext - CFE_Assert_Global.LogFileTemp;
+    }
+
+    /* Use a ".tmp" file while actively writing, will rename at the end */
+    if (NameLen > (sizeof(CFE_Assert_Global.LogFileTemp) - 5))
+    {
+        NameLen = sizeof(CFE_Assert_Global.LogFileTemp) - 5;
+    }
+    strcpy(&CFE_Assert_Global.LogFileTemp[NameLen], ".tmp");
+
+    OsStatus = OS_OpenCreate(&CFE_Assert_Global.LogFileDesc, CFE_Assert_Global.LogFileTemp,
+                             OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Failed to open %s, rc=%ld\n", __func__, CFE_Assert_Global.LogFileTemp,
+                             (long)OsStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*
+ * Closes the log file
+ * This also renames the intermediate log file to its final name
+ */
+void CFE_Assert_CloseLogFile(void)
+{
+    if (OS_ObjectIdDefined(CFE_Assert_Global.LogFileDesc))
+    {
+        OS_close(CFE_Assert_Global.LogFileDesc);
+        OS_rename(CFE_Assert_Global.LogFileTemp, CFE_Assert_Global.LogFileFinal);
+    }
+
+    CFE_Assert_Global.LogFileDesc     = OS_OBJECT_ID_UNDEFINED;
+    CFE_Assert_Global.LogFileTemp[0]  = 0;
+    CFE_Assert_Global.LogFileFinal[0] = 0;
+}
+
+/*
+ * Initialization Function for this library
+ */
+int32 CFE_Assert_LibInit(CFE_ES_LibId_t LibId)
+{
+    int32 OsStatus;
+
+    memset(&CFE_Assert_Global, 0, sizeof(CFE_Assert_Global));
+
+    UtTest_EarlyInit();
+    UT_BSP_Setup();
+
+    OsStatus = OS_MutSemCreate(&CFE_Assert_Global.AccessMutex, "CFE_Assert", 0);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: OS_MutSemCreate failed, rc=%ld\n", __func__, (long)OsStatus);
+        return CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+    }
+
+    /*
+     * Start a test case for all startup logic.
+     *
+     * Test libs may use assert statements within their init function and these
+     * will be reported as a "startup" test case.
+     */
+    UtAssert_BeginTest("CFE-STARTUP");
+
+    return CFE_SUCCESS;
+}
 ```
 
-## 항목
+### `cfe_assert_io.c`
 
-- [`fsw/cfe/modules/cfe_assert/src/cfe_assert_init.c`](file--cfe_assert_init.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_assert/src/cfe_assert_io.c`](file--cfe_assert_io.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_assert/src/cfe_assert_priv.h`](file--cfe_assert_priv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_assert/src/cfe_assert_runner.c`](file--cfe_assert_runner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/cfe_assert/src/cfe_assert_io.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Implementation of the CFE assert (UT assert wrapper) functions.
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+#include "cfe.h"
+#include "cfe_assert_priv.h"
+
+#include "utbsp.h"
+#include "uttest.h"
+
+CFE_Assert_Global_t CFE_Assert_Global;
+
+void UT_BSP_Lock(void)
+{
+    int32 OsStatus;
+
+    OsStatus = OS_MutSemTake(CFE_Assert_Global.AccessMutex);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s(): Error from OS_MutSemTake(): %ld\n", __func__, (long)OsStatus);
+    }
+}
+
+void UT_BSP_Unlock(void)
+{
+    int32 OsStatus;
+
+    OsStatus = OS_MutSemGive(CFE_Assert_Global.AccessMutex);
+    if (OsStatus != OS_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s(): Error from OS_MutSemGive(): %ld\n", __func__, (long)OsStatus);
+    }
+}
+
+void UT_BSP_Setup(void)
+{
+    CFE_Assert_Global.CurrVerbosity = (2 << UTASSERT_CASETYPE_PASS) - 1;
+    UT_BSP_DoText(UTASSERT_CASETYPE_BEGIN, "CFE FUNCTIONAL TEST");
+}
+
+void UT_BSP_StartTestSegment(uint32 SegmentNumber, const char *SegmentName)
+{
+    char ReportBuffer[128];
+
+    snprintf(ReportBuffer, sizeof(ReportBuffer), "%02u %s", (unsigned int)SegmentNumber, SegmentName);
+    UT_BSP_DoText(UTASSERT_CASETYPE_BEGIN, ReportBuffer);
+}
+
+void UT_BSP_SysLogStatusReport(uint8 MessageType, const char *Prefix, const char *OutputMessage)
+{
+    uint32 MsgEnabled = CFE_Assert_Global.CurrVerbosity >> MessageType;
+
+    if (MsgEnabled & 1)
+    {
+        CFE_ES_WriteToSysLog("[%5s] %s\n", Prefix, OutputMessage);
+    }
+}
+
+void UT_BSP_WriteLogFile(osal_id_t FileDesc, uint8 MessageType, const char *Prefix, const char *OutputMessage)
+{
+    char   LogFileBuffer[CFE_ASSERT_MAX_LOG_LINE_LENGTH];
+    uint32 MsgEnabled = CFE_Assert_Global.CurrVerbosity >> MessageType;
+
+    if (MsgEnabled & 1)
+    {
+        snprintf(LogFileBuffer, sizeof(LogFileBuffer), "[%5s] %s\n", Prefix, OutputMessage);
+        OS_write(FileDesc, LogFileBuffer, strlen(LogFileBuffer));
+    }
+}
+
+void UT_BSP_DoText(uint8 MessageType, const char *OutputMessage)
+{
+    const char *                Prefix;
+    CFE_Assert_StatusCallback_t StatusCallback;
+
+    Prefix = UtAssert_GetCaseTypeAbbrev(MessageType);
+
+    StatusCallback = CFE_Assert_Global.StatusCallback;
+
+    /* If not set, report status to CFE ES Syslog facility */
+    if (StatusCallback == NULL)
+    {
+        StatusCallback = UT_BSP_SysLogStatusReport;
+    }
+
+    StatusCallback(MessageType, Prefix, OutputMessage);
+
+    if (OS_ObjectIdDefined(CFE_Assert_Global.LogFileDesc))
+    {
+        UT_BSP_WriteLogFile(CFE_Assert_Global.LogFileDesc, MessageType, Prefix, OutputMessage);
+    }
+
+    /*
+     * If any ABORT (major failure) message is thrown,
+     * then call a BSP-provided routine to stop the test and possibly dump a core
+     */
+    if (MessageType == UTASSERT_CASETYPE_ABORT)
+    {
+        OS_TaskExit();
+    }
+}
+
+void UT_BSP_EndTest(const UtAssert_TestCounter_t *TestCounters)
+{
+
+    CFE_ES_WriteToSysLog("TEST COMPLETE: %u tests Segment(s) executed\n\n",
+                         (unsigned int)TestCounters->TestSegmentCount);
+
+    /*
+     * Only output a "summary" if there is more than one test Segment.
+     * Otherwise it is a duplicate of the report already given.
+     */
+    if (TestCounters->TestSegmentCount > 1)
+    {
+        UtAssert_DoTestSegmentReport("SUMMARY", TestCounters);
+    }
+}
+```
+
+### `cfe_assert_priv.h`
+
+**경로:** `fsw/cfe/modules/cfe_assert/src/cfe_assert_priv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Internal Declarations and prototypes for cfe_assert module
+ */
+
+#ifndef CFE_ASSERT_PRIV_H
+#define CFE_ASSERT_PRIV_H
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "common_types.h"
+#include "cfe_assert.h"
+#include "osconfig.h"
+#include "cfe_mission_cfg.h"
+
+/**
+ * Maximum length of a single line in the test log file
+ *
+ * Note this only applies to the log file.  The user callback
+ * may have other limitations.
+ */
+#define CFE_ASSERT_MAX_LOG_LINE_LENGTH 512
+
+/**
+ * State of the CFE assert library.
+ *
+ * Note that typically tests need to be deferred until the CFE system
+ * reaches "operational" state. CFE assert has its own internal state
+ * that needs to be managed as well.
+ */
+typedef enum
+{
+    CFE_Assert_State_INIT,    /**< Initial state prior to CFE_Assert_LibInit() */
+    CFE_Assert_State_STARTUP, /**< cFE starting: successful CFE_Assert_LibInit(), but no tests run yet. */
+    CFE_Assert_State_ACTIVE   /**< cFE operational: Normal test applications are allowed to run */
+} CFE_Assert_State_Enum_t;
+
+/************************************************************************
+** Type Definitions
+*************************************************************************/
+
+typedef struct
+{
+    CFE_Assert_State_Enum_t LibState;
+
+    /**
+     * Verbosity of default (syslog) output
+     *
+     * This controls the type(s) of assert messages that will be written to syslog.
+     * This only applies for default syslog output.  Use of a status callback
+     * function overrides this.
+     */
+    uint32 CurrVerbosity;
+
+    /**
+     * Function to invoke to report test status
+     */
+    CFE_Assert_StatusCallback_t StatusCallback;
+
+    /**
+     * Name of final log file for test results
+     *
+     * The temporary file will be renamed to this at the end of testing
+     */
+    char LogFileFinal[OS_MAX_PATH_LEN];
+
+    /**
+     * Name of temporary log file for test results
+     *
+     * This is the file name that is actively written during the test
+     */
+    char LogFileTemp[OS_MAX_PATH_LEN];
+
+    /**
+     * Log File descriptor
+     *
+     * Should be set to OS_OBJECT_ID_UNDEFINED if no log file is open
+     */
+    osal_id_t LogFileDesc;
+
+    /**
+     * Mutex to control access to UtAssert structures.
+     *
+     * The UtAssert library is designed for single-threaded testing.  To use it
+     * in a multi-threaded environment like CFE, it requires synchronization between
+     * apps, such that only one test app registers/runs tests at a time.
+     */
+    osal_id_t AccessMutex;
+
+    /**
+     * AppID of the current UtAssert resource owner.
+     *
+     * Only one test application may use UtAssert facilities at a given time.
+     * This records the AppID of the current owner.  It is set when AccessMutex
+     * is first acquired, and cleared once the tests have executed and the
+     * resource becomes available to another app.
+     */
+    CFE_ES_AppId_t OwnerAppId;
+
+    /**
+     * Name of current test set being prepared/executed.
+     *
+     * This is set when the AccessMutex is first acquired, and cleared when
+     * the mutex is released.  It is a free-form string to indicate the owner,
+     * and may or may not match the app name (i.e. test apps may implement
+     * more than one test set).
+     */
+    char CurrentTestName[CFE_MISSION_MAX_API_LEN];
+
+    /* The following members support the "Deferred" assert feature */
+
+    /**
+     * Actual CFE status value from a previous function call
+     */
+    CFE_Status_t StoredStatus;
+
+    /**
+     * Full text of previous function call that produced "StoredStatus"
+     */
+    char StoredText[CFE_ASSERT_MAX_LOG_LINE_LENGTH];
+
+    /**
+     * File name of source file that produced "StoredStatus"
+     */
+    char StoredFile[CFE_MISSION_MAX_PATH_LEN];
+
+    /**
+     * Line number of source file that produced "StoredStatus"
+     */
+    uint32 StoredLine;
+} CFE_Assert_Global_t;
+
+extern CFE_Assert_Global_t CFE_Assert_Global;
+
+#endif /* CFE_ASSERT_PRIV_H */
+```
+
+### `cfe_assert_runner.c`
+
+**경로:** `fsw/cfe/modules/cfe_assert/src/cfe_assert_runner.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *   Implementation of the CFE testrunner (UT testrunner wrapper) functions.
+ */
+
+/*
+ * Includes
+ */
+
+#include "cfe.h"
+
+#include "cfe_assert_priv.h"
+
+#include "uttest.h"
+#include "utbsp.h"
+
+/*
+ * The maximum amount of time that the application will delay to
+ * wait for other apps to complete startup before running the tests.
+ *
+ * The value is in milliseconds.  Normally this shouldn't be more than
+ * a second or two for apps to all reach their respective main loop(s).
+ */
+#define CFE_TESTRUNNER_MAX_STARTUP_WAIT 30000
+
+/*
+ * Small Extra delay before starting tests.
+ *
+ * This is not strictly necessary, but it does give a bit of time for other apps
+ * to settle their final syslog writes/events such that they will not be intermixed
+ * with test messages in the syslog.
+ *
+ * The value is in milliseconds.
+ */
+#define CFE_TESTRUNNER_START_DELAY 1000
+
+/*
+ * This uses the message type as the event ID, because these are already
+ * sequential integers, and there is no need to redefine - this app has no other events.
+ */
+static CFE_EVS_BinFilter_t CFE_TR_EventFilters[] = {
+    {UTASSERT_CASETYPE_ABORT, CFE_EVS_NO_FILTER}, {UTASSERT_CASETYPE_FAILURE, CFE_EVS_NO_FILTER},
+    {UTASSERT_CASETYPE_TSF, CFE_EVS_NO_FILTER},   {UTASSERT_CASETYPE_TTF, CFE_EVS_NO_FILTER},
+    {UTASSERT_CASETYPE_MIR, CFE_EVS_NO_FILTER},   {UTASSERT_CASETYPE_NA, CFE_EVS_NO_FILTER},
+    {UTASSERT_CASETYPE_BEGIN, CFE_EVS_NO_FILTER}, {UTASSERT_CASETYPE_END, CFE_EVS_NO_FILTER},
+    {UTASSERT_CASETYPE_INFO, CFE_EVS_NO_FILTER},  {UTASSERT_CASETYPE_PASS, CFE_EVS_NO_FILTER},
+    {UTASSERT_CASETYPE_DEBUG, CFE_EVS_NO_FILTER},
+};
+
+bool CFE_Assert_StatusCheck(CFE_Status_t Status, bool ExpectSuccess, UtAssert_CaseType_t CaseType, const char *File,
+                            uint32 Line, const char *Text)
+{
+    bool        Result = (Status >= CFE_SUCCESS);
+    const char *MatchText;
+
+    if (ExpectSuccess)
+    {
+        MatchText = "OK";
+    }
+    else
+    {
+        /* expecting non-success; result should be inverted */
+        Result    = !Result;
+        MatchText = "ERROR";
+    }
+
+    return UtAssertEx(Result, CaseType, File, Line, "%s (0x%lx) is %s", Text, (unsigned long)Status, MatchText);
+}
+
+CFE_Status_t CFE_Assert_Status_Store(CFE_Status_t Status, const char *File, uint32 Line, const char *Text)
+{
+    const char *BaseName;
+
+    /* All this needs to do is save the code+text, will assert later */
+    CFE_Assert_Global.StoredStatus = Status;
+    strncpy(CFE_Assert_Global.StoredText, Text, sizeof(CFE_Assert_Global.StoredText) - 1);
+    CFE_Assert_Global.StoredText[sizeof(CFE_Assert_Global.StoredText) - 1] = 0;
+
+    BaseName = strrchr(File, '/');
+    if (BaseName == NULL)
+    {
+        BaseName = File;
+    }
+    else
+    {
+        ++BaseName;
+    }
+    strncpy(CFE_Assert_Global.StoredFile, BaseName, sizeof(CFE_Assert_Global.StoredFile) - 1);
+    CFE_Assert_Global.StoredFile[sizeof(CFE_Assert_Global.StoredFile) - 1] = 0;
+    CFE_Assert_Global.StoredLine                                           = Line;
+
+    /* Status code is just passed thru so the test case can check it however it needs to */
+    return Status;
+}
+
+bool CFE_Assert_Status_DeferredCheck(CFE_Status_t Status, UtAssert_CaseType_t CaseType, const char *File, uint32 Line,
+                                     const char *Text)
+{
+    bool        Result;
+    const char *ExtraTag;
+
+    if (CFE_Assert_Global.StoredText[0] == 0)
+    {
+        /* If no status was stored, then this is a bug in the test program (need to store a result first) */
+        UtAssertEx(false, UTASSERT_CASETYPE_FAILURE, File, Line, "TEST BUG: No stored status to assert (%s)", Text);
+        Result = false;
+    }
+    else
+    {
+        Result = (Status == CFE_Assert_Global.StoredStatus);
+        if (Result)
+        {
+            /* no extra tag added to "true" conditions */
+            ExtraTag = "";
+        }
+        else
+        {
+            /* if condition was false add an exta marker so user does not necessarily need to decode the string */
+            ExtraTag = " [false]";
+        }
+
+        /* This produces a log message similar to what UtAssert_INT32_EQ would produce.
+         * Note the file/line will reflect where the call was made, not where this assertion was done */
+        Result = UtAssertEx(Result, CaseType, CFE_Assert_Global.StoredFile, CFE_Assert_Global.StoredLine,
+                            "%s (%ld) == %s (%ld)%s", CFE_Assert_Global.StoredText,
+                            (long)CFE_Assert_Global.StoredStatus, Text, (long)Status, ExtraTag);
+    }
+
+    return Result;
+}
+
+void CFE_Assert_StatusReport(uint8 MessageType, const char *Prefix, const char *OutputMessage)
+{
+    uint16 EventType;
+
+    switch (MessageType)
+    {
+        case UTASSERT_CASETYPE_ABORT:
+            EventType = CFE_EVS_EventType_CRITICAL;
+            break;
+        case UTASSERT_CASETYPE_FAILURE:
+        case UTASSERT_CASETYPE_TSF:
+        case UTASSERT_CASETYPE_TTF:
+            EventType = CFE_EVS_EventType_ERROR;
+            break;
+        case UTASSERT_CASETYPE_BEGIN:
+        case UTASSERT_CASETYPE_END:
+        case UTASSERT_CASETYPE_INFO:
+        case UTASSERT_CASETYPE_MIR:
+            EventType = CFE_EVS_EventType_INFORMATION;
+            break;
+        case UTASSERT_CASETYPE_NA:
+        case UTASSERT_CASETYPE_PASS:
+        case UTASSERT_CASETYPE_DEBUG:
+        default:
+            EventType = CFE_EVS_EventType_DEBUG;
+            break;
+    }
+
+    CFE_EVS_SendEvent(MessageType, EventType, "[%5s] %s", Prefix, OutputMessage);
+}
+
+int32 CFE_Assert_RegisterTest(const char *TestName)
+{
+    int32          rc;
+    char           SetupSegmentName[64];
+    CFE_ES_AppId_t SelfId;
+
+    rc = CFE_EVS_Register(CFE_TR_EventFilters, sizeof(CFE_TR_EventFilters) / sizeof(CFE_EVS_BinFilter_t),
+                          CFE_EVS_EventFilter_BINARY);
+    if (rc != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error from CFE_EVS_Register: %08lx\n", __func__, (unsigned long)rc);
+        return rc;
+    }
+
+    /*
+     * Delay until the system reaches "operational" state -- this is when all libs have initialized
+     * and all apps have reached their RunLoop.
+     *
+     * If already operational then this should return immediately.  This may be the case if/when
+     * test apps are started via ES command.
+     */
+    rc = CFE_ES_WaitForSystemState(CFE_ES_SystemState_OPERATIONAL, CFE_TESTRUNNER_MAX_STARTUP_WAIT);
+    if (rc != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Error while waiting for OPERATIONAL state: %08lx\n", __func__, (unsigned long)rc);
+        return rc;
+    }
+
+    rc = CFE_ES_GetAppID(&SelfId);
+    if (rc != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s(): Error from CFE_ES_GetAppId(): %08x\n", __func__, (unsigned int)rc);
+        return rc;
+    }
+
+    /*
+     * Acquire the mutex.  This is needed because UtAssert and its data structures are not thread-safe.
+     * Only one test app should use UtAssert facilities at a given time.
+     */
+    UT_BSP_Lock();
+
+    /*
+     * Wait here until "OwnerAppId" is available/undefined
+     */
+    while (CFE_RESOURCEID_TEST_DEFINED(CFE_Assert_Global.OwnerAppId))
+    {
+        UT_BSP_Unlock();
+        OS_TaskDelay(100);
+        UT_BSP_Lock();
+    }
+
+    /*
+     * After acquiring mutex, record the fact that this app now owns the assert functions
+     */
+    CFE_Assert_Global.OwnerAppId = SelfId;
+
+    UT_BSP_Unlock();
+
+    /*
+     * This means the system is operational and at least one app needs to run tests.
+     * Update library state accordingly.  The first test app that gets to this point
+     * will handle this.
+     */
+    if (CFE_Assert_Global.LibState != CFE_Assert_State_ACTIVE)
+    {
+        UtAssert_EndTest();
+        CFE_Assert_Global.LibState = CFE_Assert_State_ACTIVE;
+
+        OS_TaskDelay(CFE_TESTRUNNER_START_DELAY);
+    }
+
+    /*
+     * This resets the underlying UtAssert test list to a clean slate
+     *
+     * NOTE: this is not the ideal API here; UtAssert was originally designed to
+     * run one set of tests and then exit.  In this environment it might be used
+     * repeatedly by different apps.  The "EarlyInit" will wipe and reset the
+     * internal global, which works, but is heavy handed and doesn't account for
+     * the possibility that tests have been added without running.
+     */
+    UtTest_EarlyInit();
+
+    strncpy(CFE_Assert_Global.CurrentTestName, TestName, sizeof(CFE_Assert_Global.CurrentTestName) - 1);
+    CFE_Assert_Global.CurrentTestName[sizeof(CFE_Assert_Global.CurrentTestName) - 1] = 0;
+
+    /* Use the local status report function for the remainder of tests */
+    CFE_Assert_RegisterCallback(CFE_Assert_StatusReport);
+
+    /* Start a test group in case UtAssert is used during setup phase */
+    snprintf(SetupSegmentName, sizeof(SetupSegmentName), "%s TEST SETUP", TestName);
+    UtAssert_BeginTest(SetupSegmentName);
+
+    return CFE_SUCCESS;
+}
+
+void CFE_Assert_ExecuteTest(void)
+{
+    int32          rc;
+    CFE_ES_AppId_t AppId;
+
+    /*
+     * Sanity check - This should only be called from the same app after CFE_Assert_RegisterTest()
+     */
+    rc = CFE_ES_GetAppID(&AppId);
+    if (rc != CFE_SUCCESS || !CFE_RESOURCEID_TEST_EQUAL(AppId, CFE_Assert_Global.OwnerAppId))
+    {
+        CFE_ES_WriteToSysLog("%s: Invalid calling context, CFE_ES_GetAppId() rc=%08x AppId=%lx, OwnerAppId=%lx\n",
+                             __func__, (unsigned int)rc, CFE_RESOURCEID_TO_ULONG(AppId),
+                             CFE_RESOURCEID_TO_ULONG(CFE_Assert_Global.OwnerAppId));
+        return;
+    }
+
+    UtAssert_EndTest();
+
+    OS_TaskDelay(CFE_TESTRUNNER_START_DELAY);
+
+    /* Run all registered test cases. */
+    UtTest_Run();
+
+    /* unregister the callback and unset the appid */
+    UT_BSP_Lock();
+    CFE_Assert_RegisterCallback(NULL);
+    CFE_Assert_CloseLogFile();
+    CFE_Assert_Global.OwnerAppId = CFE_ES_APPID_UNDEFINED;
+    UT_BSP_Unlock();
+}
+```

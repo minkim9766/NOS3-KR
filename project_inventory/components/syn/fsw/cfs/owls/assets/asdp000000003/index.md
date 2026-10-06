@@ -3,7 +3,7 @@
 
 **경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,89 @@
 asdp/index
 predict/index
 validate/index
-file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_manifest.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/`](asdp/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/predict/`](predict/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/validate/`](validate/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_manifest.json`](file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_manifest.json) — UTF-8 텍스트 파일 본문 포함
+### `2021_03_03_dhm_true_med_bsub_grayscale_lab_13_manifest.json`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_manifest.json`
+
+
+```json
+{
+  "type": "helm",
+  "priority_bin": 2,
+  "root_directory": "/data/MLIA_active_data/data_OWLS/WORK_DIR/wronk/publish_v3_processed/dhm/2021_03_03_dhm_true_med_bsub_grayscale_lab_13",
+  "total_size": 4933844,
+  "entries": [
+    {
+      "name": "processing_report",
+      "category": "validate",
+      "filesize": 950,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_processing_report.txt"
+    },
+    {
+      "name": "timestats_density",
+      "category": "validate",
+      "filesize": 2035,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_timestats_density.csv"
+    },
+    {
+      "name": "timestats_mean_intensity",
+      "category": "validate",
+      "filesize": 4417,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_timestats_mean_intensity.csv"
+    },
+    {
+      "name": "timestats_max_intensity",
+      "category": "validate",
+      "filesize": 2616,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_timestats_max_intensity.csv"
+    },
+    {
+      "name": "timestats_pixeldiff",
+      "category": "validate",
+      "filesize": 4122,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_timestats_pixeldiff.csv"
+    },
+    {
+      "name": "mhi_image_info",
+      "category": "validate",
+      "filesize": 339451,
+      "relative_path": "validate/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_mhi.jpg"
+    },
+    {
+      "name": "predicted_tracks",
+      "category": "predict",
+      "filesize": 4103158,
+      "relative_path": "predict"
+    },
+    {
+      "name": "track_mugshots",
+      "category": "asdp",
+      "filesize": 476670,
+      "relative_path": "asdp/mugshots"
+    },
+    {
+      "name": "diversity_descriptor",
+      "category": "metadata",
+      "filesize": 374,
+      "relative_path": "asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv"
+    },
+    {
+      "name": "science_utility",
+      "category": "metadata",
+      "filesize": 26,
+      "relative_path": "asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv"
+    },
+    {
+      "name": "data_quality",
+      "category": "metadata",
+      "filesize": 25,
+      "relative_path": "asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv"
+    }
+  ],
+  "metadata": {}
+}
+```

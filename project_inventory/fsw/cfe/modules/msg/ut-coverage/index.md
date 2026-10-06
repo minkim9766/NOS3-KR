@@ -3,66 +3,2760 @@
 
 **경로:** `fsw/cfe/modules/msg/ut-coverage/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--msg_UT.c
-file--test_cfe_msg_ccsdsext.c
-file--test_cfe_msg_ccsdsext.h
-file--test_cfe_msg_ccsdspri.c
-file--test_cfe_msg_ccsdspri.h
-file--test_cfe_msg_checksum.c
-file--test_cfe_msg_checksum.h
-file--test_cfe_msg_fc.c
-file--test_cfe_msg_fc.h
-file--test_cfe_msg_init.c
-file--test_cfe_msg_init.h
-file--test_cfe_msg_msgid.h
-file--test_cfe_msg_msgid_shared.c
-file--test_cfe_msg_msgid_shared.h
-file--test_cfe_msg_msgid_v1.c
-file--test_cfe_msg_msgid_v2.c
-file--test_cfe_msg_time.c
-file--test_cfe_msg_time.h
-file--test_cfe_msg_verify.c
-file--test_cfe_msg_verify.h
-file--test_msg_ext_not.c
-file--test_msg_not.c
-file--test_msg_not.h
-file--test_msg_pri_not.c
-file--test_msg_prionly.c
-file--test_msg_utils.h
+**경로:** `fsw/cfe/modules/msg/ut-coverage/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE unit test build recipe
+#
+# This CMake file contains the recipe for building the cFE unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+##################################################################
+
+set(UNIT_SRCS)
+foreach(SRC ${${DEP}_SRC})
+    get_filename_component(UNITNAME "${SRC}" NAME)
+    list(APPEND UNIT_SRCS "../${SRC}")
+endforeach()
+
+set (ut_${DEP}_tests
+    msg_UT.c
+    test_msg_not.c
+    test_msg_pri_not.c
+    test_cfe_msg_init.c
+    test_cfe_msg_verify.c
+    test_cfe_msg_ccsdspri.c
+    test_cfe_msg_msgid_shared.c
+    test_cfe_msg_checksum.c
+    test_cfe_msg_fc.c
+    test_cfe_msg_time.c)
+
+# Add extended header tests if appropriate
+if (MISSION_INCLUDE_CCSDSEXT_HEADER)
+    list(APPEND ut_${DEP}_tests
+        test_msg_ext_not.c
+        test_cfe_msg_ccsdsext.c)
+else (MISSION_INCLUDE_CCSDSEXT_HEADER)
+    list(APPEND ut_${DEP}_tests
+        test_msg_prionly.c)
+endif (MISSION_INCLUDE_CCSDSEXT_HEADER)
+
+# Add the correct message id test
+if (MISSION_MSGID_V2)
+    list(APPEND ut_${DEP}_tests
+        test_cfe_msg_msgid_v2.c)
+else (MISSION_MSGID_V2)
+    list(APPEND ut_${DEP}_tests
+        test_cfe_msg_msgid_v1.c)
+endif (MISSION_MSGID_V2)
+
+
+add_cfe_coverage_test(${DEP} ALL
+    "msg_UT.c;${ut_${DEP}_tests}"  # This list needs to be passed as a single argument
+    "${UNIT_SRCS}"
+)
+
+# This permits UT test cases to directly access private headers in the fsw/src dir
+target_include_directories(coverage-${DEP}-ALL-testrunner PRIVATE
+    ../fsw/src
+)
+
+target_link_libraries(coverage-${DEP}-ALL-testrunner ut_core_private_stubs)
 ```
 
-## 항목
+### `msg_UT.c`
 
-- [`fsw/cfe/modules/msg/ut-coverage/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/msg_UT.c`](file--msg_UT.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdsext.c`](file--test_cfe_msg_ccsdsext.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdsext.h`](file--test_cfe_msg_ccsdsext.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdspri.c`](file--test_cfe_msg_ccsdspri.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdspri.h`](file--test_cfe_msg_ccsdspri.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_checksum.c`](file--test_cfe_msg_checksum.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_checksum.h`](file--test_cfe_msg_checksum.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_fc.c`](file--test_cfe_msg_fc.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_fc.h`](file--test_cfe_msg_fc.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_init.c`](file--test_cfe_msg_init.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_init.h`](file--test_cfe_msg_init.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid.h`](file--test_cfe_msg_msgid.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_shared.c`](file--test_cfe_msg_msgid_shared.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_shared.h`](file--test_cfe_msg_msgid_shared.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_v1.c`](file--test_cfe_msg_msgid_v1.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_v2.c`](file--test_cfe_msg_msgid_v2.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_time.c`](file--test_cfe_msg_time.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_time.h`](file--test_cfe_msg_time.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_verify.c`](file--test_cfe_msg_verify.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_verify.h`](file--test_cfe_msg_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_ext_not.c`](file--test_msg_ext_not.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_not.c`](file--test_msg_not.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_not.h`](file--test_msg_not.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_pri_not.c`](file--test_msg_pri_not.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_prionly.c`](file--test_msg_prionly.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/ut-coverage/test_msg_utils.h`](file--test_msg_utils.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/msg/ut-coverage/msg_UT.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Message header unit tests
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "test_cfe_msg_init.h"
+#include "test_cfe_msg_ccsdspri.h"
+#include "test_cfe_msg_ccsdsext.h"
+#include "test_cfe_msg_verify.h"
+#include "test_cfe_msg_msgid_shared.h"
+#include "test_cfe_msg_msgid.h"
+#include "test_cfe_msg_fc.h"
+#include "test_cfe_msg_checksum.h"
+#include "test_cfe_msg_time.h"
+
+/*
+ * Functions
+ */
+void UtTest_Setup(void)
+{
+    UT_Init("msg");
+    UtPrintf("Message header coverage test...");
+
+    UT_ADD_TEST(Test_MSG_Init);
+    UT_ADD_TEST(Test_MSG_UpdateHeader);
+    Test_MSG_CCSDSPri();
+    Test_MSG_CCSDSExt();
+    Test_MSG_MsgId_Shared();
+    UT_ADD_TEST(Test_MSG_Verify);
+    UT_ADD_TEST(Test_MSG_MsgId);
+    UT_ADD_TEST(Test_MSG_Checksum);
+    UT_ADD_TEST(Test_MSG_FcnCode);
+    UT_ADD_TEST(Test_MSG_Time);
+}
+```
+
+### `test_cfe_msg_ccsdsext.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdsext.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test CCSDS Extended header accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "test_cfe_msg_ccsdsext.h"
+#include "cfe_error.h"
+#include "cfe_mission_cfg.h"
+#include "cfe_platform_cfg.h"
+#include "cfe_msg_defaults.h"
+#include <string.h>
+
+/*
+ * Defines
+ */
+#define TEST_EDSVER_MAX 0x1F   /* Maximum value for EDS Version field */
+#define TEST_SUBSYS_MAX 0x1FF  /* Maximum value for Subsystem field */
+#define TEST_SYSTEM_MAX 0xFFFF /* Maximum value for System field */
+
+#define TEST_DEFAULT_SUBSYS_MASK 0x100 /* Bits that can be set by default subsys if msgid V2 */
+
+/* Extended header initialization specific coverage */
+void Test_MSG_Init_Ext(void)
+{
+    CFE_MSG_Message_t    msg;
+    CFE_SB_MsgId_Atom_t  msgidval_exp;
+    CFE_MSG_Subsystem_t  subsys;
+    CFE_MSG_EDSVersion_t edsver;
+    CFE_MSG_System_t     system;
+    CFE_MSG_Endian_t     endian;
+    bool                 hassec;
+    bool                 is_v1;
+    int                  sc_id = 0xab;
+
+    /* Get msgid version by checking if msgid sets "has secondary" field*/
+    memset(&msg, 0xFF, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_INVALID_MSG_ID));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &hassec));
+    is_v1 = !hassec;
+
+    /* Set up return */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_PSP_GetSpacecraftId), sc_id);
+
+    UtPrintf("Set to all F's, msgid value = 0");
+    memset(&msg, 0xFF, sizeof(msg));
+    msgidval_exp = 0;
+    CFE_UtAssert_SUCCESS(CFE_MSG_Init(&msg, CFE_SB_ValueToMsgId(msgidval_exp), sizeof(msg)));
+    UT_DisplayPkt(&msg, 0);
+
+    /* Default EDS version check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &edsver));
+    UtAssert_INT32_EQ(edsver, CFE_PLATFORM_EDSVER);
+
+    /* Default subsystem check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &subsys));
+    if (is_v1)
+        UtAssert_INT32_EQ(subsys, CFE_PLATFORM_DEFAULT_SUBSYS);
+    else
+        UtAssert_INT32_EQ(subsys, CFE_PLATFORM_DEFAULT_SUBSYS & TEST_DEFAULT_SUBSYS_MASK);
+
+    /* Default system check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &system));
+    UtAssert_INT32_EQ(system, sc_id);
+
+    /* Default endian check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &endian));
+#if (CFE_PLATFORM_ENDIAN == CCSDS_LITTLE_ENDIAN)
+    UtAssert_INT32_EQ(endian, CFE_MSG_Endian_Little);
+#else
+    UtAssert_INT32_EQ(endian, CFE_MSG_Endian_Big);
+#endif
+
+    /* Confirm the rest of the fields not already explicitly checked */
+    UtAssert_INT32_EQ(
+        Test_MSG_Ext_NotZero(&msg) & ~(MSG_EDSVER_FLAG | MSG_ENDIAN_FLAG | MSG_SUBSYS_FLAG | MSG_SYSTEM_FLAG), 0);
+
+    UtPrintf("Set to all 0, max msgid value");
+    memset(&msg, 0, sizeof(msg));
+    msgidval_exp = CFE_PLATFORM_SB_HIGHEST_VALID_MSGID;
+    CFE_UtAssert_SUCCESS(CFE_MSG_Init(&msg, CFE_SB_ValueToMsgId(msgidval_exp), sizeof(msg)));
+    UT_DisplayPkt(&msg, 0);
+
+    /* Default EDS version check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &edsver));
+    UtAssert_INT32_EQ(edsver, CFE_PLATFORM_EDSVER);
+
+    /* Default system check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &system));
+    UtAssert_INT32_EQ(system, sc_id);
+
+    /* Default endian check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &endian));
+#if (CFE_PLATFORM_ENDIAN == CCSDS_LITTLE_ENDIAN)
+    UtAssert_INT32_EQ(endian, CFE_MSG_Endian_Little);
+#else
+    UtAssert_INT32_EQ(endian, CFE_MSG_Endian_Big);
+#endif
+
+    /* Default subsystem check */
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &subsys));
+    if (is_v1)
+        UtAssert_INT32_EQ(subsys, CFE_PLATFORM_DEFAULT_SUBSYS);
+    else
+        UtAssert_INT32_EQ(subsys, CFE_PLATFORM_DEFAULT_SUBSYS | ((msgidval_exp >> 8) & 0xFF));
+
+    /* Confirm the rest of the fields not already explicitly checked */
+    UtAssert_INT32_EQ(
+        Test_MSG_Ext_NotZero(&msg) & ~(MSG_EDSVER_FLAG | MSG_ENDIAN_FLAG | MSG_SUBSYS_FLAG | MSG_SYSTEM_FLAG), 0);
+}
+
+void Test_MSG_EDSVersion(void)
+{
+    CFE_MSG_Message_t    msg;
+    CFE_MSG_EDSVersion_t input[] = {0, TEST_EDSVER_MAX / 2, TEST_EDSVER_MAX};
+    CFE_MSG_EDSVersion_t actual  = TEST_EDSVER_MAX;
+    int                  i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetEDSVersion(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_EDSVER_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetEDSVersion(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetEDSVersion(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetEDSVersion(&msg, TEST_EDSVER_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetEDSVersion(&msg, 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_EDSVER_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetEDSVersion(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_EDSVER_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_EDSVER_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetEDSVersion(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEDSVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_EDSVER_FLAG);
+        }
+    }
+}
+
+void Test_MSG_Endian(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_MSG_Endian_t  input[] = {CFE_MSG_Endian_Big, CFE_MSG_Endian_Little};
+    CFE_MSG_Endian_t  actual  = 0;
+    int               i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (CFE_MSG_Endian_Invalid, CFE_MSG_Endian_Little + 1");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetEndian(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetEndian(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetEndian(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetEndian(&msg, CFE_MSG_Endian_Invalid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetEndian(&msg, CFE_MSG_Endian_Little + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_Endian_Little);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetEndian(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_Endian_Little)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_ENDIAN_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_Endian_Big);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetEndian(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetEndian(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_Endian_Big)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_ENDIAN_FLAG);
+        }
+    }
+}
+
+void Test_MSG_PlaybackFlag(void)
+{
+    CFE_MSG_Message_t      msg;
+    CFE_MSG_PlaybackFlag_t input[] = {CFE_MSG_PlayFlag_Original, CFE_MSG_PlayFlag_Playback};
+    CFE_MSG_PlaybackFlag_t actual  = 0;
+    int                    i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (CFE_MSG_PlayFlag_Invalid, CFE_MSG_PlayFlag_Playback + 1");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetPlaybackFlag(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetPlaybackFlag(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetPlaybackFlag(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetPlaybackFlag(&msg, CFE_MSG_PlayFlag_Invalid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetPlaybackFlag(&msg, CFE_MSG_PlayFlag_Playback + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetPlaybackFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_PlayFlag_Playback);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetPlaybackFlag(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetPlaybackFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_PlayFlag_Playback)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_PBACK_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetPlaybackFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_PlayFlag_Original);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetPlaybackFlag(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetPlaybackFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_PlayFlag_Original)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_PBACK_FLAG);
+        }
+    }
+}
+
+void Test_MSG_Subsystem(void)
+{
+    CFE_MSG_Message_t   msg;
+    CFE_MSG_Subsystem_t input[] = {0, TEST_SUBSYS_MAX / 2, TEST_SUBSYS_MAX};
+    CFE_MSG_Subsystem_t actual  = TEST_SUBSYS_MAX;
+    int                 i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetSubsystem(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_SUBSYS_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetSubsystem(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSubsystem(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSubsystem(&msg, TEST_SUBSYS_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSubsystem(&msg, 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_SUBSYS_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSubsystem(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_SUBSYS_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_SUBSYS_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSubsystem(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSubsystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_SUBSYS_FLAG);
+        }
+    }
+}
+
+void Test_MSG_System(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_MSG_ApId_t    input[] = {0, TEST_SYSTEM_MAX / 2, TEST_SYSTEM_MAX};
+    CFE_MSG_ApId_t    actual  = TEST_SYSTEM_MAX;
+    int               i;
+
+    UtPrintf("Bad parameter tests, Null pointers");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetSystem(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_SYSTEM_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetSystem(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSystem(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_SYSTEM_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSystem(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_SYSTEM_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_SYSTEM_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSystem(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSystem(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_SYSTEM_FLAG);
+        }
+    }
+}
+
+/*
+ * Test MSG ccsdsext
+ */
+void Test_MSG_CCSDSExt(void)
+{
+    MSG_UT_ADD_SUBTEST(Test_MSG_Init_Ext);
+    MSG_UT_ADD_SUBTEST(Test_MSG_EDSVersion);
+    MSG_UT_ADD_SUBTEST(Test_MSG_Endian);
+    MSG_UT_ADD_SUBTEST(Test_MSG_PlaybackFlag);
+    MSG_UT_ADD_SUBTEST(Test_MSG_Subsystem);
+    MSG_UT_ADD_SUBTEST(Test_MSG_System);
+}
+```
+
+### `test_cfe_msg_ccsdsext.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdsext.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_ccsdsext test header
+ */
+#ifndef TEST_CFE_MSG_CCSDSEXT_H
+#define TEST_CFE_MSG_CCSDSEXT_H
+
+/*
+ * Defines
+ */
+
+/*
+ * Functions
+ */
+/* Test CCSDS Extended header accessor functions */
+void Test_MSG_CCSDSExt(void);
+
+#endif /* TEST_CFE_MSG_CCSDSEXT_H */
+```
+
+### `test_cfe_msg_ccsdspri.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdspri.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test CCSDS Primary header accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "test_cfe_msg_ccsdspri.h"
+#include "cfe_error.h"
+#include <string.h>
+
+/*
+ * Defines
+ */
+#define TEST_CCSDSVER_MAX 7      /* Maximum value for CCSDS Version field */
+#define TEST_APID_MAX     0x7FF  /* Maximum value for CCSDS ApId field */
+#define TEST_SEQUENCE_MAX 0x3FFF /* Maximum value for CCSDS Sequence field */
+
+void Test_MSG_Size(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_MSG_Size_t    input[] = {TEST_MSG_SIZE_OFFSET, 0x8000, 0xFFFF, 0xFFFF + TEST_MSG_SIZE_OFFSET};
+    CFE_MSG_Size_t    actual  = 0;
+    int               i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (0, min valid - 1, max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetSize(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetSize(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(&msg, 0), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(&msg, TEST_MSG_SIZE_OFFSET - 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(&msg, 0xFFFF + TEST_MSG_SIZE_OFFSET + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSize(&msg, 0xFFFFFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0xFFFF + TEST_MSG_SIZE_OFFSET);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSize(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0xFFFF + TEST_MSG_SIZE_OFFSET)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_LENGTH_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_MSG_SIZE_OFFSET);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSize(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_MSG_SIZE_OFFSET)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_LENGTH_FLAG);
+        }
+    }
+}
+
+void Test_MSG_Type(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_MSG_Type_t    input[] = {CFE_MSG_Type_Cmd, CFE_MSG_Type_Tlm};
+    CFE_MSG_Type_t    actual  = 0;
+    int               i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (CFE_MSG_Type_Invalid, CFE_MSG_Type_Tlm + 1");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetType(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetType(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(&msg, CFE_MSG_Type_Invalid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetType(&msg, CFE_MSG_Type_Tlm + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_Type_Cmd);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_Type_Cmd)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_TYPE_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_Type_Tlm);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_Type_Tlm)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_TYPE_FLAG);
+        }
+    }
+}
+
+void Test_MSG_HeaderVersion(void)
+{
+    CFE_MSG_Message_t       msg;
+    CFE_MSG_HeaderVersion_t input[] = {0, TEST_CCSDSVER_MAX / 2, TEST_CCSDSVER_MAX};
+    CFE_MSG_HeaderVersion_t actual  = TEST_CCSDSVER_MAX;
+    int                     i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_CCSDSVER_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetHeaderVersion(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(&msg, TEST_CCSDSVER_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetHeaderVersion(&msg, 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_CCSDSVER_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetHeaderVersion(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_CCSDSVER_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_HDRVER_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetHeaderVersion(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_HDRVER_FLAG);
+        }
+    }
+}
+
+void Test_MSG_HasSecondaryHeader(void)
+{
+    CFE_MSG_Message_t msg;
+    bool              actual = true;
+
+    UtPrintf("Bad parameter tests, Null pointers");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetHasSecondaryHeader(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(CFE_MSG_GetHasSecondaryHeader(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetHasSecondaryHeader(NULL, false), CFE_MSG_BAD_ARGUMENT);
+
+    UtPrintf("Set to all F's, true and false inputs");
+    memset(&msg, 0xFF, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_TRUE(actual);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(&msg, true));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(&msg, false));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_FALSE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_HASSEC_FLAG);
+
+    UtPrintf("Set to all 0, true and false inputs");
+    memset(&msg, 0, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_FALSE(actual);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(&msg, false));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_FALSE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(&msg, true));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &actual));
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_HASSEC_FLAG);
+}
+
+void Test_MSG_ApId(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_MSG_ApId_t    input[] = {0, TEST_APID_MAX / 2, TEST_APID_MAX};
+    CFE_MSG_ApId_t    actual  = TEST_APID_MAX;
+    int               i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetApId(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_APID_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetApId(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(&msg, TEST_APID_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetApId(&msg, 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_APID_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetApId(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_APID_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_APID_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetApId(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_APID_FLAG);
+        }
+    }
+}
+
+void Test_MSG_SegmentationFlag(void)
+{
+    CFE_MSG_Message_t          msg;
+    CFE_MSG_SegmentationFlag_t input[] = {CFE_MSG_SegFlag_Continue, CFE_MSG_SegFlag_First, CFE_MSG_SegFlag_Last,
+                                          CFE_MSG_SegFlag_Unsegmented};
+    CFE_MSG_SegmentationFlag_t actual  = CFE_MSG_SegFlag_Invalid;
+    int                        i;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (*_Invalid, max valid + 1");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetSegmentationFlag(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, CFE_MSG_SegFlag_Invalid);
+    UtAssert_INT32_EQ(CFE_MSG_GetSegmentationFlag(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(&msg, CFE_MSG_SegFlag_Invalid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSegmentationFlag(&msg, CFE_MSG_SegFlag_Unsegmented + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_SegFlag_Unsegmented);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSegmentationFlag(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_SegFlag_Unsegmented)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_SEGMENT_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, CFE_MSG_SegFlag_Continue);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSegmentationFlag(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == CFE_MSG_SegFlag_Continue)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_SEGMENT_FLAG);
+        }
+    }
+}
+
+void Test_MSG_SequenceCount(void)
+{
+    CFE_MSG_Message_t             msg;
+    const CFE_MSG_SequenceCount_t input[] = {0, TEST_SEQUENCE_MAX / 2, TEST_SEQUENCE_MAX};
+    CFE_MSG_SequenceCount_t       actual  = TEST_SEQUENCE_MAX;
+    CFE_MSG_SequenceCount_t       maxsc;
+    int                           i;
+
+    memset(&maxsc, 0xFF, sizeof(maxsc));
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1, max)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_SEQUENCE_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetSequenceCount(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&msg, TEST_SEQUENCE_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetSequenceCount(&msg, maxsc), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0xFF, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSequenceCount(&msg, &actual));
+        UtAssert_INT32_EQ(actual, TEST_SEQUENCE_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSequenceCount(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSequenceCount(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == TEST_SEQUENCE_MAX)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_SEQUENCE_FLAG);
+        }
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&msg, 0, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSequenceCount(&msg, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetSequenceCount(&msg, input[i]));
+        UT_DisplayPkt(&msg, sizeof(msg));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetSequenceCount(&msg, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        if (input[i] == 0)
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+        }
+        else
+        {
+            UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_SEQUENCE_FLAG);
+        }
+    }
+
+    UtPrintf("Fully exercise getting next sequence count");
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(0), 1);
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(TEST_SEQUENCE_MAX / 2), (TEST_SEQUENCE_MAX / 2) + 1);
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(TEST_SEQUENCE_MAX), 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetNextSequenceCount(maxsc), 0);
+}
+
+/*
+ * Test MSG ccsdspri
+ */
+void Test_MSG_CCSDSPri(void)
+{
+    MSG_UT_ADD_SUBTEST(Test_MSG_Size);
+    MSG_UT_ADD_SUBTEST(Test_MSG_Type);
+    MSG_UT_ADD_SUBTEST(Test_MSG_HeaderVersion);
+    MSG_UT_ADD_SUBTEST(Test_MSG_HasSecondaryHeader);
+    MSG_UT_ADD_SUBTEST(Test_MSG_ApId);
+    MSG_UT_ADD_SUBTEST(Test_MSG_SegmentationFlag);
+    MSG_UT_ADD_SUBTEST(Test_MSG_SequenceCount);
+}
+```
+
+### `test_cfe_msg_ccsdspri.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_ccsdspri.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_ccsdspri test header
+ */
+
+#ifndef TEST_CFE_MSG_CCSDSPRI_H
+#define TEST_CFE_MSG_CCSDSPRI_H
+
+/*
+ * Defines
+ */
+
+#define TEST_MSG_SIZE_OFFSET 7 /* CCSDS Message length offset */
+
+/*
+ * Functions
+ */
+/* Test CCSDS Primary header accessor functions */
+void Test_MSG_CCSDSPri(void);
+
+#endif /* TEST_CFE_MSG_CCSDSPRI_H */
+```
+
+### `test_cfe_msg_checksum.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_checksum.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test checksum accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "cfe_msg.h"
+#include "test_cfe_msg_checksum.h"
+#include "cfe_error.h"
+#include <string.h>
+
+void Test_MSG_Checksum(void)
+{
+    CFE_MSG_CommandHeader_t cmd;
+    CFE_MSG_Message_t *     msgptr = CFE_MSG_PTR(cmd);
+    bool                    actual;
+
+    UtPrintf("Bad parameter tests, Null pointers");
+    memset(&cmd, 0, sizeof(cmd));
+    actual = true;
+    UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(msgptr, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+
+    UtPrintf("Bad message, no secondary header");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Cmd));
+    UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(msgptr), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_TYPE_FLAG);
+
+    UtPrintf("Bad message, wrong type (telemetry)");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Tlm));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(msgptr, true));
+    UtAssert_INT32_EQ(CFE_MSG_ValidateChecksum(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(CFE_MSG_GenerateChecksum(msgptr), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_HASSEC_FLAG);
+
+    UtPrintf("Set to all F's, validate/generate/validate");
+    memset(&cmd, 0xFF, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetSize(msgptr, sizeof(cmd)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_ValidateChecksum(msgptr, &actual));
+    UtAssert_BOOL_FALSE(actual);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GenerateChecksum(msgptr));
+    UT_DisplayPkt(msgptr, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_ValidateChecksum(msgptr, &actual));
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotF(msgptr), MSG_LENGTH_FLAG);
+
+    UtPrintf("Set to all 0 except secheader and type, validate/generate/validate");
+    memset(&cmd, 0, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetSize(msgptr, sizeof(cmd)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(msgptr, true));
+    CFE_UtAssert_SUCCESS(CFE_MSG_ValidateChecksum(msgptr, &actual));
+    UtAssert_BOOL_FALSE(actual);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GenerateChecksum(msgptr));
+    UT_DisplayPkt(msgptr, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_ValidateChecksum(msgptr, &actual));
+    UtAssert_BOOL_TRUE(actual);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_LENGTH_FLAG | MSG_HASSEC_FLAG | MSG_TYPE_FLAG);
+}
+```
+
+### `test_cfe_msg_checksum.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_checksum.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_checksum test header
+ */
+#ifndef TEST_CFE_MSG_CHECKSUM_H
+#define TEST_CFE_MSG_CHECKSUM_H
+
+/*
+ * Functions
+ */
+/* Test checksum accessor functions */
+void Test_MSG_Checksum(void);
+
+#endif /* TEST_CFE_MSG_CHECKSUM_H */
+```
+
+### `test_cfe_msg_fc.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_fc.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test function code accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "cfe_msg.h"
+#include "test_cfe_msg_fc.h"
+#include "cfe_error.h"
+#include <string.h>
+
+/*
+ * Defines
+ */
+#define TEST_FCNCODE_MAX 0x7F /* Maximum value for fc field */
+
+void Test_MSG_FcnCode(void)
+{
+    CFE_MSG_CommandHeader_t cmd;
+    CFE_MSG_Message_t *     msgptr  = CFE_MSG_PTR(cmd);
+    CFE_MSG_FcnCode_t       input[] = {0, TEST_FCNCODE_MAX / 2, TEST_FCNCODE_MAX};
+    CFE_MSG_FcnCode_t       actual  = TEST_FCNCODE_MAX;
+    int                     i;
+
+    UtPrintf("Bad parameter tests, Null pointers, invalid (max valid + 1, max)");
+    memset(&cmd, 0, sizeof(cmd));
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual, TEST_FCNCODE_MAX);
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(msgptr, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(msgptr, TEST_FCNCODE_MAX + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(msgptr, 0xFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+
+    UtPrintf("Bad message, no secondary header");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Cmd));
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(msgptr, 0), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_TYPE_FLAG);
+
+    UtPrintf("Bad message, wrong type (telemetry)");
+    memset(&cmd, 0, sizeof(cmd));
+    actual = TEST_FCNCODE_MAX;
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(msgptr, true));
+    UtAssert_INT32_EQ(CFE_MSG_GetFcnCode(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(actual, 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetFcnCode(msgptr, 0), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_HASSEC_FLAG);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&cmd, 0xFF, sizeof(cmd));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetFcnCode(msgptr, &actual));
+        UtAssert_INT32_EQ(actual, TEST_FCNCODE_MAX);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetFcnCode(msgptr, input[i]));
+        UT_DisplayPkt(msgptr, sizeof(cmd));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetFcnCode(msgptr, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        UtAssert_INT32_EQ(Test_MSG_NotF(msgptr), 0);
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&cmd, 0, sizeof(cmd));
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Cmd));
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(msgptr, true));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetFcnCode(msgptr, &actual));
+        UtAssert_INT32_EQ(actual, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetFcnCode(msgptr, input[i]));
+        UT_DisplayPkt(msgptr, sizeof(cmd));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetFcnCode(msgptr, &actual));
+        UtAssert_INT32_EQ(actual, input[i]);
+        UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_HASSEC_FLAG | MSG_TYPE_FLAG);
+    }
+}
+```
+
+### `test_cfe_msg_fc.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_fc.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_fc test header
+ */
+#ifndef TEST_CFE_MSG_FC_H
+#define TEST_CFE_MSG_FC_H
+
+/*
+ * Functions
+ */
+/* Test function code accessor functions */
+void Test_MSG_FcnCode(void);
+
+#endif /* TEST_CFE_MSG_FC_H */
+```
+
+### `test_cfe_msg_init.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_init.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test message init
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "cfe_msg.h"
+#include "test_cfe_msg_init.h"
+#include "cfe_error.h"
+#include "cfe_msg_defaults.h"
+#include <string.h>
+
+#define TEST_DEFAULT_APID_MASK 0x780 /* Bits that can be set by default apid if msgid V2 */
+
+/*
+ * Test MSG Init
+ */
+void Test_MSG_Init(void)
+{
+    CFE_MSG_CommandHeader_t    cmd;
+    CFE_MSG_Size_t             size;
+    CFE_SB_MsgId_Atom_t        msgidval_exp;
+    CFE_SB_MsgId_t             msgid_act;
+    CFE_MSG_HeaderVersion_t    hdrver;
+    CFE_MSG_ApId_t             apid;
+    CFE_MSG_SegmentationFlag_t segflag;
+    bool                       hassec;
+    bool                       is_v1;
+
+    UtPrintf("Bad parameter tests, Null pointer, invalid size, invalid msgid");
+    UtAssert_INT32_EQ(CFE_MSG_Init(NULL, CFE_SB_INVALID_MSG_ID, sizeof(cmd)), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_INVALID_MSG_ID, 0), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(
+        CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(CFE_PLATFORM_SB_HIGHEST_VALID_MSGID + 1), sizeof(cmd)),
+        CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(-1), sizeof(cmd)), CFE_MSG_BAD_ARGUMENT);
+
+    UtPrintf("Set to all F's, msgid value = 0");
+    memset(&cmd, 0xFF, sizeof(cmd));
+    msgidval_exp = 0;
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(msgidval_exp), sizeof(cmd)));
+    UT_DisplayPkt(CFE_MSG_PTR(cmd), 0);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(CFE_MSG_PTR(cmd), &msgid_act));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid_act), msgidval_exp);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(CFE_MSG_PTR(cmd), &size));
+    UtAssert_EQ(size_t, size, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(CFE_MSG_PTR(cmd), &segflag));
+    UtAssert_INT32_EQ(segflag, CFE_MSG_SegFlag_Unsegmented);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(CFE_MSG_PTR(cmd), &apid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(CFE_MSG_PTR(cmd), &hdrver));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(CFE_MSG_PTR(cmd), &hassec));
+
+    /* A zero msgid will set hassec to false for v1 */
+    is_v1 = !hassec;
+
+    if (!is_v1)
+    {
+        UtAssert_INT32_EQ(apid, CFE_PLATFORM_DEFAULT_APID & TEST_DEFAULT_APID_MASK);
+        UtAssert_INT32_EQ(hdrver, CFE_MISSION_CCSDSVER);
+    }
+    else
+    {
+        UtAssert_INT32_EQ(apid, 0);
+        UtAssert_INT32_EQ(hdrver, 0);
+    }
+
+    /* Confirm the rest of the fields not already explicitly checked */
+    UtAssert_UINT32_EQ(Test_MSG_Pri_NotZero(CFE_MSG_PTR(cmd)) & ~(MSG_APID_FLAG | MSG_HDRVER_FLAG | MSG_HASSEC_FLAG),
+                       MSG_LENGTH_FLAG | MSG_SEGMENT_FLAG);
+
+    UtPrintf("Set to all 0, max msgid value");
+    memset(&cmd, 0, sizeof(cmd));
+    msgidval_exp = CFE_PLATFORM_SB_HIGHEST_VALID_MSGID;
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_Init(CFE_MSG_PTR(cmd), CFE_SB_ValueToMsgId(msgidval_exp), sizeof(cmd)));
+    UT_DisplayPkt(CFE_MSG_PTR(cmd), 0);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(CFE_MSG_PTR(cmd), &msgid_act));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid_act), msgidval_exp);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSize(CFE_MSG_PTR(cmd), &size));
+    UtAssert_INT32_EQ(size, sizeof(cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetSegmentationFlag(CFE_MSG_PTR(cmd), &segflag));
+    UtAssert_INT32_EQ(segflag, CFE_MSG_SegFlag_Unsegmented);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(CFE_MSG_PTR(cmd), &apid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHeaderVersion(CFE_MSG_PTR(cmd), &hdrver));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(CFE_MSG_PTR(cmd), &hassec));
+    UtAssert_BOOL_TRUE(hassec);
+    if (!is_v1)
+    {
+        UtAssert_INT32_EQ(apid & TEST_DEFAULT_APID_MASK, CFE_PLATFORM_DEFAULT_APID & TEST_DEFAULT_APID_MASK);
+        UtAssert_INT32_EQ(hdrver, CFE_MISSION_CCSDSVER);
+    }
+    else
+    {
+        UtAssert_INT32_EQ(apid, 0x7FF);
+        UtAssert_INT32_EQ(hdrver, 0);
+    }
+
+    UtAssert_UINT32_EQ(Test_MSG_Pri_NotZero(CFE_MSG_PTR(cmd)) & ~MSG_HDRVER_FLAG,
+                       MSG_APID_FLAG | MSG_HASSEC_FLAG | MSG_TYPE_FLAG | MSG_LENGTH_FLAG | MSG_SEGMENT_FLAG);
+}
+
+/*
+ * Test MSG Update Header
+ */
+void Test_MSG_UpdateHeader(void)
+{
+    union
+    {
+        CFE_MSG_Message_t         msg;
+        CFE_MSG_CommandHeader_t   cmd;
+        CFE_MSG_TelemetryHeader_t tlm;
+
+    } LocalBuf;
+    CFE_MSG_SequenceCount_t SeqCnt;
+    CFE_MSG_SequenceCount_t CheckCnt;
+
+    memset(&LocalBuf, 0, sizeof(LocalBuf));
+    SeqCnt   = 1;
+    CheckCnt = 0;
+
+    /* bad buffer */
+    UtAssert_INT32_EQ(CFE_MSG_UpdateHeader(NULL, SeqCnt), CFE_MSG_BAD_ARGUMENT);
+
+    /* nominal, cmd */
+    CFE_MSG_SetType(&LocalBuf.msg, CFE_MSG_Type_Cmd);
+    CFE_UtAssert_SUCCESS(CFE_MSG_UpdateHeader(&LocalBuf.msg, SeqCnt));
+    CFE_MSG_GetSequenceCount(&LocalBuf.msg, &CheckCnt);
+    UtAssert_UINT32_EQ(CheckCnt, SeqCnt);
+    ++SeqCnt;
+
+    /* nominal, tlm */
+    CFE_MSG_SetType(&LocalBuf.msg, CFE_MSG_Type_Tlm);
+    CFE_UtAssert_SUCCESS(CFE_MSG_UpdateHeader(&LocalBuf.msg, SeqCnt));
+    CFE_MSG_GetSequenceCount(&LocalBuf.msg, &CheckCnt);
+    UtAssert_UINT32_EQ(CheckCnt, SeqCnt);
+    ++SeqCnt;
+}
+```
+
+### `test_cfe_msg_init.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_init.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_init test header
+ */
+#ifndef TEST_CFE_MSG_INIT_H
+#define TEST_CFE_MSG_INIT_H
+
+/*
+ * Includes
+ */
+
+/*
+ * Functions
+ */
+/* Test extended header mission functionality */
+void Test_MSG_Init(void);
+void Test_MSG_UpdateHeader(void);
+
+#endif /* TEST_CFE_MSG_INIT_H */
+```
+
+### `test_cfe_msg_msgid.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Message ID V2 accessor function test header
+ */
+#ifndef TEST_CFE_MSG_MSGID_H
+#define TEST_CFE_MSG_MSGID_H
+
+/*
+ * Functions
+ */
+/* Test msgid accessor functions */
+void Test_MSG_MsgId(void);
+
+#endif /* TEST_CFE_MSG_MSGID_H */
+```
+
+### `test_cfe_msg_msgid_shared.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_shared.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test MsgId shared accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "test_cfe_msg_msgid_shared.h"
+#include "cfe_error.h"
+#include <string.h>
+
+void Test_MSG_GetTypeFromMsgId(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_SB_MsgId_t    msgid  = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_Type_t    actual = CFE_MSG_Type_Invalid;
+
+    UtPrintf("Bad parameter tests, Null pointer");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetTypeFromMsgId(msgid, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Bad parameter tests, Invalid message ID");
+    UtAssert_INT32_EQ(CFE_MSG_GetTypeFromMsgId(CFE_SB_ValueToMsgId(-1), &actual), CFE_MSG_BAD_ARGUMENT);
+
+    UtPrintf("Set to all F's, test cmd and tlm");
+    memset(&msg, 0xFF, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(CFE_PLATFORM_SB_HIGHEST_VALID_MSGID)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, CFE_MSG_Type_Tlm));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetTypeFromMsgId(msgid, &actual));
+    UtAssert_INT32_EQ(actual, CFE_MSG_Type_Tlm);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, CFE_MSG_Type_Cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetTypeFromMsgId(msgid, &actual));
+    UtAssert_INT32_EQ(actual, CFE_MSG_Type_Cmd);
+
+    UtPrintf("Set to all 0, test cmd and tlm");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, CFE_MSG_Type_Cmd));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetTypeFromMsgId(msgid, &actual));
+    UtAssert_INT32_EQ(actual, CFE_MSG_Type_Cmd);
+
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(&msg, CFE_MSG_Type_Tlm));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetTypeFromMsgId(msgid, &actual));
+    UtAssert_INT32_EQ(actual, CFE_MSG_Type_Tlm);
+}
+
+/*
+ * Test MSG MsgId Shared
+ */
+void Test_MSG_MsgId_Shared(void)
+{
+    MSG_UT_ADD_SUBTEST(Test_MSG_GetTypeFromMsgId);
+}
+```
+
+### `test_cfe_msg_msgid_shared.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_shared.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_msgid_shared test header
+ */
+#ifndef TEST_CFE_MSG_MSGID_SHARED_H
+#define TEST_CFE_MSG_MSGID_SHARED_H
+
+/*
+ * Functions
+ */
+/* Test msgid shared accessor functions */
+void Test_MSG_MsgId_Shared(void);
+
+#endif /* TEST_CFE_MSG_MSGID_SHARED_H */
+```
+
+### `test_cfe_msg_msgid_v1.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_v1.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test MsgId V1 accessors
+ */
+
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "test_cfe_msg_msgid.h"
+#include "cfe_error.h"
+#include <string.h>
+
+#define TEST_MAX_APID 0x7FF
+
+void Test_MSG_MsgId(void)
+{
+    CFE_MSG_Message_t msg;
+    CFE_SB_MsgId_t    msgid = CFE_SB_ValueToMsgId(1);
+    CFE_MSG_Type_t    type;
+    CFE_MSG_ApId_t    apid;
+    bool              hassec;
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(NULL, &msgid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 1);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(NULL, msgid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(-1)), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(CFE_PLATFORM_SB_HIGHEST_VALID_MSGID + 1)),
+                      CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0xFFFF)), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set msg to all F's, set msgid to 1 and verify");
+    memset(&msg, 0xFF, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 0xFFFF);
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(1)));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 1);
+    UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_HDRVER_FLAG | MSG_APID_FLAG | MSG_TYPE_FLAG | MSG_HASSEC_FLAG);
+
+    UtPrintf("Set msg to all 0, set msgid to max and verify");
+    memset(&msg, 0, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 0);
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(CFE_PLATFORM_SB_HIGHEST_VALID_MSGID)));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), CFE_PLATFORM_SB_HIGHEST_VALID_MSGID);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_APID_FLAG | MSG_TYPE_FLAG | MSG_HASSEC_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &apid));
+    UtAssert_INT32_EQ(apid, TEST_MAX_APID);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &type));
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Cmd);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &hassec));
+    UtAssert_BOOL_TRUE(hassec);
+
+    UtPrintf("Set ApId msgid bits only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(TEST_MAX_APID)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_APID_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &apid));
+    UtAssert_INT32_EQ(apid, TEST_MAX_APID);
+
+    UtPrintf("Set has secondary header bit only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0x0800)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_HASSEC_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetHasSecondaryHeader(&msg, &hassec));
+    UtAssert_BOOL_TRUE(hassec);
+
+    UtPrintf("Set type msgid bit only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0x1000)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_TYPE_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &type));
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Cmd);
+}
+```
+
+### `test_cfe_msg_msgid_v2.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_msgid_v2.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test MsgId V2 accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "test_cfe_msg_msgid.h"
+#include "cfe_error.h"
+#include <string.h>
+
+void Test_MSG_MsgId(void)
+{
+    CFE_MSG_Message_t   msg;
+    CFE_SB_MsgId_t      msgid = CFE_SB_ValueToMsgId(1);
+    CFE_MSG_Type_t      type;
+    CFE_MSG_ApId_t      apid;
+    CFE_MSG_Subsystem_t subsystem;
+    int                 local_subsys_flag = 0;
+
+    /* Check if subsystem accessor functions are implemented */
+    if (CFE_MSG_GetSubsystem(&msg, &subsystem) != CFE_MSG_NOT_IMPLEMENTED)
+    {
+        local_subsys_flag = MSG_SUBSYS_FLAG;
+    }
+
+    UtPrintf("Bad parameter tests, Null pointers and invalid (max valid + 1)");
+    memset(&msg, 0, sizeof(msg));
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(NULL, &msgid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 1);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgId(&msg, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(NULL, msgid), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_SB_INVALID_MSG_ID), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, CFE_PLATFORM_SB_HIGHEST_VALID_MSGID + 1), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgId(&msg, 0xFFFFFFFF), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), 0);
+
+    UtPrintf("Set msg to all F's, set msgid to 0 and verify");
+    memset(&msg, 0xFF, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 0xFFFF);
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, 0));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 0);
+    UtAssert_INT32_EQ(Test_MSG_NotF(&msg), MSG_APID_FLAG | MSG_TYPE_FLAG | local_subsys_flag);
+
+    UtPrintf("Set msg to all 0, set msgid to max and verify");
+    memset(&msg, 0, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), 0);
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_PLATFORM_SB_HIGHEST_VALID_MSGID));
+    UT_DisplayPkt(&msg, sizeof(msg));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(CFE_SB_MsgIdToValue(msgid), CFE_PLATFORM_SB_HIGHEST_VALID_MSGID);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_APID_FLAG | MSG_TYPE_FLAG | local_subsys_flag);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &apid));
+    UtAssert_INT32_EQ(apid, 0x7F);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &type));
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Cmd);
+    if (CFE_MSG_GetSubsystem(&msg, &subsystem) != CFE_MSG_NOT_IMPLEMENTED)
+    {
+        UtAssert_INT32_EQ(subsystem, CFE_PLATFORM_SB_HIGHEST_VALID_MSGID >> 8);
+    }
+
+    UtPrintf("Set ApId msgid bits only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0x007F)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_APID_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetApId(&msg, &apid));
+    UtAssert_INT32_EQ(apid, 0x007F);
+
+    UtPrintf("Set type msgid bit only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0x0080)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), MSG_TYPE_FLAG);
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetType(&msg, &type));
+    UtAssert_INT32_EQ(type, CFE_MSG_Type_Cmd);
+
+    UtPrintf("Set subsystem msgid bits only and verify");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgId(&msg, CFE_SB_ValueToMsgId(0xFF00 & CFE_PLATFORM_SB_HIGHEST_VALID_MSGID)));
+    CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgId(&msg, &msgid));
+    UtAssert_INT32_EQ(Test_MSG_NotZero(&msg), local_subsys_flag);
+    if (CFE_MSG_GetSubsystem(&msg, &subsystem) != CFE_MSG_NOT_IMPLEMENTED)
+    {
+        UtAssert_INT32_EQ(subsystem, CFE_PLATFORM_SB_HIGHEST_VALID_MSGID >> 8);
+    }
+}
+```
+
+### `test_cfe_msg_time.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_time.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test time accessors
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "test_msg_not.h"
+#include "test_msg_utils.h"
+#include "cfe_msg.h"
+#include "test_cfe_msg_time.h"
+#include "cfe_error.h"
+#include <string.h>
+
+void Test_MSG_Time(void)
+{
+    CFE_MSG_TelemetryHeader_t tlm;
+    CFE_MSG_Message_t *       msgptr  = CFE_MSG_PTR(tlm);
+    CFE_TIME_SysTime_t        input[] = {{0, 0}, {0x12345678, 0xABCDEF12}, {0xFFFFFFFF, 0xFFFFFFFF}};
+    CFE_TIME_SysTime_t        actual  = {0xFFFFFFFF, 0xFFFFFFFF};
+    int                       i;
+
+    UtPrintf("Bad parameter tests, Null pointers, no secondary header");
+    memset(&tlm, 0, sizeof(tlm));
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(NULL, &actual), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(actual.Seconds, 0xFFFFFFFF);
+    UtAssert_INT32_EQ(actual.Subseconds, 0xFFFFFFFF);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(msgptr, NULL), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgTime(NULL, input[0]), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgTime(msgptr, actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), 0);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(actual.Seconds, 0);
+    UtAssert_INT32_EQ(actual.Subseconds, 0);
+
+    UtPrintf("Bad <F2>message, wrong type (command)");
+    CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Cmd));
+    UtAssert_INT32_EQ(CFE_MSG_SetMsgTime(msgptr, actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_TYPE_FLAG);
+    UtAssert_INT32_EQ(CFE_MSG_GetMsgTime(msgptr, &actual), CFE_MSG_WRONG_MSG_TYPE);
+    UtAssert_INT32_EQ(actual.Seconds, 0);
+    UtAssert_INT32_EQ(actual.Subseconds, 0);
+
+    UtPrintf("Set to all F's, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&tlm, 0xFF, sizeof(tlm));
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetType(msgptr, CFE_MSG_Type_Tlm));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgTime(msgptr, &actual));
+        UtAssert_INT32_EQ(actual.Seconds, 0xFFFFFFFF);
+        UtAssert_INT32_EQ(actual.Subseconds, 0xFFFF0000);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgTime(msgptr, input[i]));
+        UT_DisplayPkt(msgptr, sizeof(tlm));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgTime(msgptr, &actual));
+        UtAssert_INT32_EQ(actual.Seconds, input[i].Seconds);
+        UtAssert_INT32_EQ(actual.Subseconds, input[i].Subseconds & 0xFFFF0000);
+        UtAssert_INT32_EQ(Test_MSG_NotF(msgptr), MSG_TYPE_FLAG);
+    }
+
+    UtPrintf("Set to all 0, various valid inputs");
+    for (i = 0; i < sizeof(input) / sizeof(input[0]); i++)
+    {
+        memset(&tlm, 0, sizeof(tlm));
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetHasSecondaryHeader(msgptr, true));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgTime(msgptr, &actual));
+        UtAssert_INT32_EQ(actual.Seconds, 0);
+        UtAssert_INT32_EQ(actual.Subseconds, 0);
+        CFE_UtAssert_SUCCESS(CFE_MSG_SetMsgTime(msgptr, input[i]));
+        UT_DisplayPkt(msgptr, sizeof(tlm));
+        CFE_UtAssert_SUCCESS(CFE_MSG_GetMsgTime(msgptr, &actual));
+        UtAssert_INT32_EQ(actual.Seconds, input[i].Seconds);
+        UtAssert_INT32_EQ(actual.Subseconds, input[i].Subseconds & 0xFFFF0000);
+        UtAssert_INT32_EQ(Test_MSG_NotZero(msgptr), MSG_HASSEC_FLAG);
+    }
+}
+```
+
+### `test_cfe_msg_time.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_time.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_time test header
+ */
+#ifndef TEST_CFE_MSG_TIME_H
+#define TEST_CFE_MSG_TIME_H
+
+/*
+ * Functions
+ */
+/* Test time accessor functions */
+void Test_MSG_Time(void);
+
+#endif /* TEST_CFE_MSG_TIME_H */
+```
+
+### `test_cfe_msg_verify.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_verify.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Test message verify
+ */
+
+/*
+ * Includes
+ */
+#include "utassert.h"
+#include "ut_support.h"
+#include "cfe_msg.h"
+#include "test_cfe_msg_verify.h"
+#include "cfe_error.h"
+#include "cfe_msg_defaults.h"
+
+#include <string.h>
+
+/*
+ * Test MSG Verify
+ */
+void Test_MSG_Verify(void)
+{
+    union
+    {
+        CFE_MSG_Message_t         msg;
+        CFE_MSG_CommandHeader_t   cmd;
+        CFE_MSG_TelemetryHeader_t tlm;
+    } LocalBuf;
+    bool Result;
+
+    memset(&LocalBuf, 0, sizeof(LocalBuf));
+    Result = false;
+
+    /* bad buffer */
+    UtAssert_INT32_EQ(CFE_MSG_Verify(NULL, &Result), CFE_MSG_BAD_ARGUMENT);
+    UtAssert_INT32_EQ(CFE_MSG_Verify(&LocalBuf.msg, NULL), CFE_MSG_BAD_ARGUMENT);
+
+    /* nominal */
+    Result = false;
+    CFE_UtAssert_SUCCESS(CFE_MSG_Verify(&LocalBuf.msg, &Result));
+    UtAssert_BOOL_TRUE(Result);
+}
+```
+
+### `test_cfe_msg_verify.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_cfe_msg_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * cfe_msg_verify test header
+ */
+#ifndef TEST_CFE_MSG_VERIFY_H
+#define TEST_CFE_MSG_VERIFY_H
+
+/*
+ * Includes
+ */
+
+/*
+ * Functions
+ */
+void Test_MSG_Verify(void);
+
+#endif /* TEST_CFE_MSG_VERIFY_H */
+```
+
+### `test_msg_ext_not.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_ext_not.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Extended message header field not Zero or F
+ */
+
+/*
+ * Includes
+ */
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+
+unsigned int Test_MSG_Ext_NotZero(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int           bits = 0;
+    CFE_MSG_EDSVersion_t   edsver;
+    CFE_MSG_Endian_t       endian;
+    CFE_MSG_PlaybackFlag_t playflag;
+    CFE_MSG_Subsystem_t    subsystem;
+    CFE_MSG_System_t       system;
+
+    CFE_MSG_GetEDSVersion(MsgPtr, &edsver);
+    if (edsver != 0)
+        bits |= MSG_EDSVER_FLAG;
+    CFE_MSG_GetEndian(MsgPtr, &endian);
+    if (endian != CFE_MSG_Endian_Big)
+        bits |= MSG_ENDIAN_FLAG;
+    CFE_MSG_GetPlaybackFlag(MsgPtr, &playflag);
+    if (playflag != CFE_MSG_PlayFlag_Original)
+        bits |= MSG_PBACK_FLAG;
+    CFE_MSG_GetSubsystem(MsgPtr, &subsystem);
+    if (subsystem != 0)
+        bits |= MSG_SUBSYS_FLAG;
+    CFE_MSG_GetSystem(MsgPtr, &system);
+    if (system != 0)
+        bits |= MSG_SYSTEM_FLAG;
+
+    return bits;
+}
+
+unsigned int Test_MSG_Ext_NotF(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int           bits = 0;
+    CFE_MSG_EDSVersion_t   edsver;
+    CFE_MSG_Endian_t       endian;
+    CFE_MSG_PlaybackFlag_t playflag;
+    CFE_MSG_Subsystem_t    subsystem;
+    CFE_MSG_System_t       system;
+
+    CFE_MSG_GetEDSVersion(MsgPtr, &edsver);
+    if (edsver != 0x1F)
+        bits |= MSG_EDSVER_FLAG;
+    CFE_MSG_GetEndian(MsgPtr, &endian);
+    if (endian != CFE_MSG_Endian_Little)
+        bits |= MSG_ENDIAN_FLAG;
+    CFE_MSG_GetPlaybackFlag(MsgPtr, &playflag);
+    if (playflag != CFE_MSG_PlayFlag_Playback)
+        bits |= MSG_PBACK_FLAG;
+    CFE_MSG_GetSubsystem(MsgPtr, &subsystem);
+    if (subsystem != 0x1FF)
+        bits |= MSG_SUBSYS_FLAG;
+    CFE_MSG_GetSystem(MsgPtr, &system);
+    if (system != 0xFFFF)
+        bits |= MSG_SYSTEM_FLAG;
+
+    return bits;
+}
+```
+
+### `test_msg_not.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_not.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Message header field not Zero or F
+ */
+
+/*
+ * Includes
+ */
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+
+unsigned int Test_MSG_NotZero(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int bits = 0;
+
+    /* Primary */
+    bits |= Test_MSG_Pri_NotZero(MsgPtr);
+
+    /* Extended */
+    bits |= Test_MSG_Ext_NotZero(MsgPtr);
+
+    return bits;
+}
+
+unsigned int Test_MSG_NotF(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int bits = 0;
+
+    /* Primary */
+    bits |= Test_MSG_Pri_NotF(MsgPtr);
+
+    /* Extended */
+    bits |= Test_MSG_Ext_NotF(MsgPtr);
+
+    return bits;
+}
+```
+
+### `test_msg_not.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_not.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Message header fields not (Zero or F's)
+ */
+
+#ifndef TEST_MSG_NOT_H
+#define TEST_MSG_NOT_H
+
+/*
+ * Defines
+ */
+
+/* Field flags */
+/* CCSDS Primary */
+#define MSG_HDRVER_FLAG   0x00001
+#define MSG_TYPE_FLAG     0x00002
+#define MSG_HASSEC_FLAG   0x00004
+#define MSG_APID_FLAG     0x00008
+#define MSG_SEGMENT_FLAG  0x00010
+#define MSG_SEQUENCE_FLAG 0x00020
+#define MSG_LENGTH_FLAG   0x00040
+
+/* Extended */
+#define MSG_EDSVER_FLAG 0x00080
+#define MSG_ENDIAN_FLAG 0x00100
+#define MSG_PBACK_FLAG  0x00200
+#define MSG_SUBSYS_FLAG 0x00400
+#define MSG_SYSTEM_FLAG 0x00800
+
+/* Secondary */
+#define MSG_CKSUM_FLAG   0x01000
+#define MSG_FCNCODE_FLAG 0x02000
+#define MSG_TIME_FLAG    0x04000
+
+/*
+ * Prototypes
+ */
+
+/* Returns flags for fields that are 0 */
+unsigned int Test_MSG_NotZero(const CFE_MSG_Message_t *MsgPtr);
+unsigned int Test_MSG_Pri_NotZero(const CFE_MSG_Message_t *MsgPtr);
+unsigned int Test_MSG_Ext_NotZero(const CFE_MSG_Message_t *MsgPtr);
+
+/* Returns flags for fields that are fully set (aka all F's */
+unsigned int Test_MSG_NotF(const CFE_MSG_Message_t *MsgPtr);
+unsigned int Test_MSG_Pri_NotF(const CFE_MSG_Message_t *MsgPtr);
+unsigned int Test_MSG_Ext_NotF(const CFE_MSG_Message_t *MsgPtr);
+
+#endif /* TEST_MSG_NOT_H */
+```
+
+### `test_msg_pri_not.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_pri_not.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Primary message header field not Zero or F
+ */
+
+/*
+ * Includes
+ */
+#include "test_cfe_msg_ccsdspri.h" /* For TEST_MSG_SIZE_OFFSET */
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+
+unsigned int Test_MSG_Pri_NotZero(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int               bits    = 0;
+    CFE_MSG_HeaderVersion_t    hdrver  = 0;
+    bool                       hassec  = false;
+    CFE_MSG_Type_t             type    = 0;
+    CFE_MSG_ApId_t             apid    = 0;
+    CFE_MSG_SegmentationFlag_t segflag = 0;
+    CFE_MSG_SequenceCount_t    seqcnt  = 0;
+    CFE_MSG_Size_t             size    = 0;
+
+    CFE_MSG_GetHeaderVersion(MsgPtr, &hdrver);
+    if (hdrver != 0)
+        bits |= MSG_HDRVER_FLAG;
+    CFE_MSG_GetType(MsgPtr, &type);
+    if (type != CFE_MSG_Type_Tlm)
+        bits |= MSG_TYPE_FLAG;
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassec);
+    if (hassec)
+        bits |= MSG_HASSEC_FLAG;
+    CFE_MSG_GetApId(MsgPtr, &apid);
+    if (apid != 0)
+        bits |= MSG_APID_FLAG;
+    CFE_MSG_GetSegmentationFlag(MsgPtr, &segflag);
+    if (segflag != CFE_MSG_SegFlag_Continue)
+        bits |= MSG_SEGMENT_FLAG;
+    CFE_MSG_GetSequenceCount(MsgPtr, &seqcnt);
+    if (seqcnt != 0)
+        bits |= MSG_SEQUENCE_FLAG;
+    CFE_MSG_GetSize(MsgPtr, &size);
+    if (size != TEST_MSG_SIZE_OFFSET)
+        bits |= MSG_LENGTH_FLAG;
+
+    return bits;
+}
+
+unsigned int Test_MSG_Pri_NotF(const CFE_MSG_Message_t *MsgPtr)
+{
+    unsigned int               bits    = 0;
+    CFE_MSG_HeaderVersion_t    hdrver  = 0;
+    bool                       hassec  = false;
+    CFE_MSG_Type_t             type    = 0;
+    CFE_MSG_ApId_t             apid    = 0;
+    CFE_MSG_SegmentationFlag_t segflag = 0;
+    CFE_MSG_SequenceCount_t    seqcnt  = 0;
+    CFE_MSG_Size_t             size    = 0;
+
+    CFE_MSG_GetHeaderVersion(MsgPtr, &hdrver);
+    if (hdrver != 0x7)
+        bits |= MSG_HDRVER_FLAG;
+    CFE_MSG_GetType(MsgPtr, &type);
+    if (type != CFE_MSG_Type_Cmd)
+        bits |= MSG_TYPE_FLAG;
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassec);
+    if (!hassec)
+        bits |= MSG_HASSEC_FLAG;
+    CFE_MSG_GetApId(MsgPtr, &apid);
+    if (apid != 0x7FF)
+        bits |= MSG_APID_FLAG;
+    CFE_MSG_GetSegmentationFlag(MsgPtr, &segflag);
+    if (segflag != CFE_MSG_SegFlag_Unsegmented)
+        bits |= MSG_SEGMENT_FLAG;
+    CFE_MSG_GetSequenceCount(MsgPtr, &seqcnt);
+    if (seqcnt != 0x3FFF)
+        bits |= MSG_SEQUENCE_FLAG;
+    CFE_MSG_GetSize(MsgPtr, &size);
+    if (size != 0xFFFF + TEST_MSG_SIZE_OFFSET)
+        bits |= MSG_LENGTH_FLAG;
+
+    return bits;
+}
+```
+
+### `test_msg_prionly.c`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_prionly.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+ * Extended header stubbed out, use when no extended header is defined
+ */
+
+/*
+ * Includes
+ */
+#include "cfe_msg.h"
+#include "test_msg_not.h"
+#include "test_cfe_msg_ccsdsext.h"
+
+unsigned int Test_MSG_Ext_NotZero(const CFE_MSG_Message_t *MsgPtr)
+{
+    return 0;
+}
+
+unsigned int Test_MSG_Ext_NotF(const CFE_MSG_Message_t *MsgPtr)
+{
+    return 0;
+}
+
+void Test_MSG_CCSDSExt(void) {}
+```
+
+### `test_msg_utils.h`
+
+**경로:** `fsw/cfe/modules/msg/ut-coverage/test_msg_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Message header test utilities
+ */
+
+#ifndef TEST_MSG_UTILS_H
+#define TEST_MSG_UTILS_H
+
+/*
+ * Includes
+ */
+#include "cfe_msg_api_typedefs.h"
+
+/*
+ * Defines
+ */
+
+/* Subtest macro */
+#define MSG_UT_ADD_SUBTEST(Func) UtTest_AddSubTest(Func, NULL, NULL, __func__, #Func)
+
+#endif /* TEST_MSG_UTILS_H */
+```

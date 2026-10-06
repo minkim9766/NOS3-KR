@@ -3,18 +3,22 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `DatabaseScenario.jpg`
 
-file--DatabaseScenario.jpg
-file--ExternalUserScenario.jpg
-file--TlmChanBDD.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/DatabaseScenario.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/DatabaseScenario.jpg`](file--DatabaseScenario.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/ExternalUserScenario.jpg`](file--ExternalUserScenario.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/TlmChanBDD.jpg`](file--TlmChanBDD.jpg) — 바이너리 (경로만)
+### `ExternalUserScenario.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/ExternalUserScenario.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `TlmChanBDD.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/TlmChan/docs/img/TlmChanBDD.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

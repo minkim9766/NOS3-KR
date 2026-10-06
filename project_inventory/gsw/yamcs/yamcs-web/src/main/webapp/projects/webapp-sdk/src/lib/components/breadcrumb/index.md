@@ -3,24 +3,152 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `breadcrumb-trail.component.css`
 
-file--breadcrumb-trail.component.css
-file--breadcrumb-trail.component.html
-file--breadcrumb-trail.component.ts
-file--breadcrumb.component.css
-file--breadcrumb.component.html
-file--breadcrumb.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.css`
+
+
+```css
+.trail {
+  height: 24px;
+  font:
+    400 12px / 24px Roboto,
+    sans-serif;
+}
+
+.showMargin {
+  margin-bottom: 12px;
+}
 ```
 
-## 항목
+### `breadcrumb-trail.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.css`](file--breadcrumb-trail.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.html`](file--breadcrumb-trail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.ts`](file--breadcrumb-trail.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.css`](file--breadcrumb.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.html`](file--breadcrumb.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.ts`](file--breadcrumb.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.html`
+
+
+```html
+<div class="trail" [class.showMargin]="showMargin">
+  <ng-content />
+</div>
+```
+
+### `breadcrumb-trail.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb-trail.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+
+@Component({
+  selector: 'ya-breadcrumb-trail',
+  templateUrl: './breadcrumb-trail.component.html',
+  styleUrl: './breadcrumb-trail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaBreadcrumbTrail {
+  @Input()
+  showMargin = true;
+}
+```
+
+### `breadcrumb.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.css`
+
+
+```css
+.item.with-label {
+  margin-right: 5px;
+}
+
+.sep {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.mat-icon {
+  vertical-align: middle;
+  font-size: 12px !important;
+  height: 12px !important;
+  width: 12px !important;
+}
+
+.action {
+  cursor: pointer;
+}
+```
+
+### `breadcrumb.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.html`
+
+
+```html
+@if (link) {
+  <a class="ya-link" [yaHref]="link" [queryParams]="queryParams">
+    @if (icon) {
+      <mat-icon class="item" [class.with-label]="label">
+        {{ icon }}
+      </mat-icon>
+    }
+    @if (label) {
+      {{ label }}
+    }
+  </a>
+  <mat-icon class="sep">navigate_next</mat-icon>
+} @else if (action) {
+  <a class="ya-link action">
+    @if (icon) {
+      <mat-icon class="item" [class.with-label]="label">
+        {{ icon }}
+      </mat-icon>
+    }
+    @if (label) {
+      {{ label }}
+    }
+  </a>
+  <mat-icon class="sep">navigate_next</mat-icon>
+} @else {
+  {{ label }}
+}
+```
+
+### `breadcrumb.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/breadcrumb/breadcrumb.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { YaHref } from '../href/href.directive';
+
+@Component({
+  selector: 'ya-breadcrumb',
+  templateUrl: './breadcrumb.component.html',
+  styleUrl: './breadcrumb.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon, YaHref],
+})
+export class YaBreadcrumb {
+  @Input()
+  icon: string;
+
+  @Input()
+  label: string;
+
+  @Input()
+  link?: any[] | string;
+
+  @Input()
+  action = false;
+
+  @Input()
+  queryParams: {
+    [k: string]: any;
+  };
+}
+```

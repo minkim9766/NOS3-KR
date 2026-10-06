@@ -3,22 +3,284 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ArchiveRecordGroup.ts`
 
-file--ArchiveRecordGroup.ts
-file--IndexGroupBand.ts
-file--ReplayOverlay.ts
-file--RGB.ts
-file--TitleBand.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/ArchiveRecordGroup.ts`
+
+
+```typescript
+import { ArchiveRecord } from '@yamcs/webapp-sdk';
+
+export interface ArchiveRecordGroup {
+  name: string;
+  records: ArchiveRecord[];
+}
 ```
 
-## 항목
+### `IndexGroupBand.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/ArchiveRecordGroup.ts`](file--ArchiveRecordGroup.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/IndexGroupBand.ts`](file--IndexGroupBand.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/ReplayOverlay.ts`](file--ReplayOverlay.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/RGB.ts`](file--RGB.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/TitleBand.ts`](file--TitleBand.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/IndexGroupBand.ts`
+
+
+```typescript
+import { DefaultSidebar, Item, ItemBand, Timeline } from '@fqqb/timeline';
+import { Formatter, utils } from '@yamcs/webapp-sdk';
+import { TimelineTooltipComponent } from '../timeline-tooltip/timeline-tooltip.component';
+import { ArchiveRecordGroup } from './ArchiveRecordGroup';
+import { RGB } from './RGB';
+
+export const PADDING_TB = 2;
+
+export class IndexGroupBand extends ItemBand {
+  private backgroundRGB: RGB;
+  private foregroundRGB: RGB;
+  private formatter: Formatter;
+
+  constructor(
+    timeline: Timeline,
+    label: string,
+    backgroundColor: RGB,
+    foregroundColor: RGB,
+    formatter: Formatter,
+  ) {
+    super(timeline);
+    this.label = label;
+    this.borderWidth = 0;
+    this.multiline = false;
+    this.itemBorderColor = 'rgba(0, 0, 0, 0.1)';
+    this.itemBorderWidth = 1;
+    this.itemCornerRadius = 0;
+    this.itemTextOverflow = 'hide';
+    this.itemTextSize = 10;
+    this.itemHeight = 14;
+    this.paddingBottom = PADDING_TB;
+    this.paddingTop = PADDING_TB;
+    this.backgroundRGB = backgroundColor;
+    this.itemBackground = this.backgroundRGB.toCssString();
+    this.foregroundRGB = foregroundColor;
+    this.itemTextColor = this.foregroundRGB.toCssString();
+    this.formatter = formatter;
+    this.background = 'white';
+
+    this.addHeaderMouseEnterListener((ev) => {
+      this.background = (timeline.sidebar! as DefaultSidebar).hoverOverlayColor;
+    });
+    this.addHeaderMouseLeaveListener((ev) => {
+      this.background = 'white';
+    });
+
+    this.addItemClickListener((clickEvent) => {
+      const { start, stop } = clickEvent.item;
+      if (start && stop) {
+        this.timeline.setSelection(start, stop);
+      } else {
+        this.timeline.clearSelection();
+      }
+    });
+  }
+
+  setupTooltip(tooltipInstance: TimelineTooltipComponent) {
+    this.addItemMouseMoveListener((evt) => {
+      const { start, stop, data } = evt.item;
+      let ttText = data.name + '\n';
+      ttText += `Start: ${this.formatter.formatDateTime(start, true)}\n`;
+      ttText += `Stop : ${this.formatter.formatDateTime(stop!, true)}\n`;
+      if (data.count >= 0) {
+        const sec = (stop! - start) / 1000;
+        ttText += `Count: ${data.count}`;
+        const hz = data.count / sec;
+        if (hz >= 1000) {
+          ttText += ` (${(hz / 1000).toFixed(3)} kHz)`;
+        } else if (hz > 1) {
+          ttText += ` (${hz.toFixed(3)} Hz)`;
+        }
+      } else if (data.description) {
+        ttText += data.description;
+      }
+      tooltipInstance.show(ttText, evt.clientX, evt.clientY);
+    });
+
+    this.addItemMouseLeaveListener((evt) => {
+      tooltipInstance.hide();
+    });
+  }
+
+  loadData(group: ArchiveRecordGroup) {
+    const items: Item[] = [];
+    for (const record of group.records) {
+      const start = utils.toDate(record.first).getTime();
+      const stop = utils.toDate(record.last).getTime();
+      const item: Item = {
+        start,
+        stop,
+        data: {
+          name: group.name,
+          count: record.num,
+        },
+      };
+      if (record.num > 1) {
+        const sec = (stop - start) / 1000;
+        const hz = record.num / sec;
+        if (hz >= 1000) {
+          item.label = `${(hz / 1000).toFixed(1)} kHz`;
+        } else if (hz >= 0.1) {
+          item.label = `${hz.toFixed(1)} Hz`;
+        } else {
+          item.label = '< 0.1 Hz';
+        }
+
+        if (hz >= 1) {
+          item.background = this.backgroundRGB.toCssString(1);
+        } else if (hz >= 0.3) {
+          item.background = this.backgroundRGB.toCssString(hz);
+        } else {
+          item.background = this.backgroundRGB.toCssString(0.3);
+        }
+      }
+
+      items.push(item);
+    }
+    this.items = items;
+  }
+}
+```
+
+### `ReplayOverlay.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/ReplayOverlay.ts`
+
+
+```typescript
+import { Drawable, Graphics, Path, Timeline } from '@fqqb/timeline';
+import { ReplayRequest } from '@yamcs/webapp-sdk';
+
+export class ReplayOverlay extends Drawable {
+  private pattern;
+
+  private _replayRequest?: ReplayRequest;
+
+  constructor(timeline: Timeline) {
+    super(timeline);
+
+    const offscreen = document.createElement('canvas');
+    offscreen.width = 30;
+    offscreen.height = 30;
+    const ctx = offscreen.getContext('2d')!;
+
+    ctx.fillStyle = 'rgba(148, 0, 211, 0.07)';
+    ctx.fillRect(0, 0, 30, 30);
+
+    ctx.beginPath();
+    ctx.moveTo(30, 0);
+    ctx.lineTo(0, 30);
+    ctx.strokeStyle = 'rgba(221, 221, 221, 0.2)';
+    ctx.stroke();
+
+    this.pattern = ctx.createPattern(offscreen, 'repeat')!;
+  }
+
+  override drawOverlay(g: Graphics) {
+    if (!this.replayRequest) {
+      return;
+    }
+
+    const { start, stop, endAction } = this.replayRequest;
+
+    if (start && stop) {
+      const x1 = Math.round(
+        this.timeline.positionTime(new Date(start).getTime()),
+      );
+      const x2 = Math.round(
+        this.timeline.positionTime(new Date(stop).getTime()),
+      );
+      g.fillRect({
+        x: x1 + 0.5,
+        y: 0,
+        width: x2 - x1,
+        height: g.ctx.canvas.height,
+        fill: this.pattern,
+      });
+
+      g.strokePath({
+        color: 'rgba(148, 0, 211, 0.3)',
+        lineWidth: 1,
+        path: new Path(x1 + 0.5, 0).lineTo(x1 + 0.5, g.ctx.canvas.height),
+      });
+
+      g.strokePath({
+        color: 'rgba(148, 0, 211, 0.3)',
+        lineWidth: 1,
+        path: new Path(x2 + 0.5, 0).lineTo(x2 + 0.5, g.ctx.canvas.height),
+      });
+
+      if (endAction === 'LOOP') {
+        const { fontFamily, textSize } = this.timeline;
+        g.fillText({
+          x: x2 - 3,
+          y: 0,
+          align: 'right',
+          baseline: 'top',
+          text: '∞',
+          color: 'darkviolet',
+          font: `${textSize}px ${fontFamily}`,
+        });
+      }
+    }
+  }
+
+  get replayRequest() {
+    return this._replayRequest;
+  }
+  set replayRequest(replayRequest) {
+    this._replayRequest = replayRequest;
+    this.reportMutation();
+  }
+}
+```
+
+### `RGB.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/RGB.ts`
+
+
+```typescript
+export class RGB {
+  constructor(
+    readonly r: number,
+    readonly g: number,
+    readonly b: number,
+  ) {}
+
+  toCssString(opacity?: number) {
+    if (opacity === undefined) {
+      return `rgb(${this.r},${this.g},${this.b})`;
+    } else {
+      // Make a non-transparent equivalent color
+      const r = 255 - opacity * (255 - this.r);
+      const g = 255 - opacity * (255 - this.g);
+      const b = 255 - opacity * (255 - this.b);
+      return `rgb(${r},${g},${b})`;
+    }
+  }
+}
+```
+
+### `TitleBand.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/model/TitleBand.ts`
+
+
+```typescript
+import { Banner, Timeline } from '@fqqb/timeline';
+
+export class TitleBand extends Banner {
+  constructor(timeline: Timeline, label: string) {
+    super(timeline);
+    this.label = label;
+    this.background = '#f5f5f5';
+    this.contentHeight = 20;
+  }
+}
+```

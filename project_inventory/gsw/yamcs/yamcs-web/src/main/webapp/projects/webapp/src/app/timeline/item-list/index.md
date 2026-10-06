@@ -3,16 +3,251 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `item-list.component.html`
 
-file--item-list.component.html
-file--item-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/item-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Items">
+    <ya-page-button [matMenuTriggerFor]="itemMenu" icon="add_box">Create item</ya-page-button>
+    <mat-menu #itemMenu="matMenu" class="ya-menu" [overlapTrigger]="false">
+      <button
+        mat-menu-item
+        (click)="openCreateItemDialog('EVENT')"
+        matTooltipShowDelay="1000"
+        matTooltip="Events are items that simply appear on the timeline">
+        Event item
+      </button>
+      <button
+        mat-menu-item
+        (click)="openCreateItemDialog('ACTIVITY')"
+        matTooltipShowDelay="1000"
+        matTooltip="Activities are like events, but in addition have an execution status">
+        Activity item
+      </button>
+    </mat-menu>
+    <ya-page-button
+      [disabled]="!isGroupDeleteEnabled()"
+      (clicked)="deleteSelectedItems()"
+      icon="close">
+      Delete
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    @if (dataSource) {
+      <table
+        mat-table
+        class="ya-data-table expand"
+        [dataSource]="dataSource"
+        [trackBy]="tableTrackerFn"
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        matSortDisableClear>
+        <ng-container cdkColumnDef="select">
+          <th
+            mat-header-cell
+            *cdkHeaderCellDef
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+          </th>
+          <td
+            mat-cell
+            *cdkCellDef="let item"
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox
+              #cb
+              [dataSource]="dataSource"
+              [selection]="selection"
+              [item]="item" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
+          <td mat-cell *matCellDef="let item">
+            <a [routerLink]="item.id" [queryParams]="{ c: yamcs.context }">
+              @if (item.name) {
+                {{ item.name }}
+              }
+              @if (!item.name) {
+                <i>(none)</i>
+              }
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="tags">
+          <th mat-header-cell *cdkHeaderCellDef mat-sort-header>Tags</th>
+          <td mat-cell *cdkCellDef="let row">
+            @for (tag of row.tags || []; track tag) {
+              <ya-label>{{ tag }}</ya-label>
+            }
+            @if (!row.tags) {
+              -
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="start">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Start</th>
+          <td mat-cell *matCellDef="let item">
+            {{ (item.start | datetime) || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="duration">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.duration }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let item">
+            {{ item.type }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let item"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.selected]="selection.isSelected(row)"
+          (click)="toggleOne(row)"></tr>
+      </table>
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `item-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/item-list.component.html`](file--item-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/item-list.component.ts`](file--item-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/item-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  MessageService,
+  TimelineItem,
+  TrackBySelectionModel,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { CreateItemDialogComponent } from '../create-item-dialog/create-item-dialog.component';
+
+@Component({
+  templateUrl: './item-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ItemListComponent implements AfterViewInit {
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  displayedColumns = [
+    'select',
+    'name',
+    'tags',
+    'start',
+    'duration',
+    'type',
+    'actions',
+  ];
+
+  tableTrackerFn = (index: number, item: TimelineItem) => item.id;
+
+  dataSource = new MatTableDataSource<TimelineItem>();
+  selection = new TrackBySelectionModel<TimelineItem>(
+    this.tableTrackerFn,
+    true,
+    [],
+  );
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+  ) {
+    title.setTitle('Timeline items');
+    this.refreshData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  toggleOne(row: TimelineItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  deleteSelectedItems() {
+    if (confirm('Are you sure you want to delete the selected items?')) {
+      for (const item of this.selection.selected) {
+        this.deleteItem(item.id, false);
+      }
+    }
+  }
+
+  deleteItem(id: string, prompt = true) {
+    if (
+      !prompt ||
+      confirm('Are you sure you want to delete the selected item?')
+    )
+      this.yamcs.yamcsClient
+        .deleteTimelineItem(this.yamcs.instance!, id)
+        .then(() => this.refreshData())
+        .catch((err) => this.messageService.showError(err));
+  }
+
+  isGroupDeleteEnabled() {
+    return !this.selection.isEmpty();
+  }
+
+  openCreateItemDialog(type: string) {
+    const dialogRef = this.dialog.open(CreateItemDialogComponent, {
+      width: '600px',
+      panelClass: 'dialog-force-no-scrollbar',
+      data: { type },
+    });
+    dialogRef.afterClosed().subscribe(() => this.refreshData());
+  }
+
+  private refreshData() {
+    this.yamcs.yamcsClient
+      .getTimelineItems(this.yamcs.instance!, { source: 'rdb' })
+      .then((page) => {
+        this.selection.matchNewValues(page.items || []);
+        this.dataSource.data = page.items || [];
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

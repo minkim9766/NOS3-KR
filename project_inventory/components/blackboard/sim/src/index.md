@@ -3,18 +3,436 @@
 
 **경로:** `components/blackboard/sim/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `blackboard_42_data_provider.cpp`
 
-file--blackboard_42_data_provider.cpp
-file--blackboard_data_point.cpp
-file--blackboard_hardware_model.cpp
+**경로:** `components/blackboard/sim/src/blackboard_42_data_provider.cpp`
+
+
+```cpp
+#include <blackboard_42_data_provider.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(Blackboard42DataProvider,"BLACKBOARD_42_PROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    Blackboard42DataProvider::Blackboard42DataProvider(const boost::property_tree::ptree& config) : SimData42SocketProvider(config)
+    {
+        sim_logger->trace("Blackboard42DataProvider::Blackboard42DataProvider:  Constructor executed");
+
+        connect_reader_thread_as_42_socket_client(
+            config.get("simulator.hardware-model.data-provider.hostname", "localhost"),
+            config.get("simulator.hardware-model.data-provider.port", 4242) );
+
+        _sc = config.get("simulator.hardware-model.data-provider.spacecraft", 0);
+    }
+
+    boost::shared_ptr<SimIDataPoint> Blackboard42DataProvider::get_data_point(void) const
+    {
+        sim_logger->trace("Blackboard42DataProvider::get_data_point:  Executed");
+
+        /* Get the 42 data */
+        const boost::shared_ptr<Sim42DataPoint> dp42 = boost::dynamic_pointer_cast<Sim42DataPoint>(SimData42SocketProvider::get_data_point());
+
+        /* Prepare the specific data */
+        SimIDataPoint *dp = new BlackboardDataPoint(_sc, dp42);
+
+        return boost::shared_ptr<SimIDataPoint>(dp);
+    }
+}
 ```
 
-## 항목
+### `blackboard_data_point.cpp`
 
-- [`components/blackboard/sim/src/blackboard_42_data_provider.cpp`](file--blackboard_42_data_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/blackboard/sim/src/blackboard_data_point.cpp`](file--blackboard_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/blackboard/sim/src/blackboard_hardware_model.cpp`](file--blackboard_hardware_model.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/blackboard/sim/src/blackboard_data_point.cpp`
+
+
+```cpp
+#include <ItcLogger/Logger.hpp>
+#include <blackboard_data_point.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    BlackboardDataPoint::BlackboardDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp) : _dp(*dp), _sc(spacecraft), _not_parsed(true)
+    {
+        sim_logger->trace("BlackboardDataPoint::BlackboardDataPoint:  42 Constructor executed");
+
+        /* Initialize data */
+    }
+    
+    void BlackboardDataPoint::do_parsing(void) const
+    {
+        try {
+            /*
+            ** Declare 42 telemetry string prefix
+            ** 42 variables defined in `42/Include/42types.h`
+            ** 42 data stream defined in `42/Source/IPC/SimWriteToSocket.c`
+            */
+            std::string key;
+            std::string values;
+            std::vector<double> data;
+            data.reserve(6);
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].svb"); // SC[N].svb
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _svb[0] = data[0];
+            _svb[1] = data[1];
+            _svb[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].bvb"); // SC[N].bvb
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _bvb[0] = data[0];
+            _bvb[1] = data[1];
+            _bvb[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Hvb"); // SC[N].Hvb
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _Hvb[0] = data[0];
+            _Hvb[1] = data[1];
+            _Hvb[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Gyro[0].TrueRate"); // SC[N].Gyro[0].TrueRate
+            _GyroRate[0] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Gyro[1].TrueRate"); // SC[N].Gyro[1].TrueRate
+            _GyroRate[1] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Gyro[2].TrueRate"); // SC[N].Gyro[2].TrueRate
+            _GyroRate[2] = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[0].Valid"); // SC[N].CSS[0].Valid
+            _CSSValid[0] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[1].Valid"); // SC[N].CSS[1].Valid
+            _CSSValid[1] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[2].Valid"); // SC[N].CSS[2].Valid
+            _CSSValid[2] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[3].Valid"); // SC[N].CSS[3].Valid
+            _CSSValid[3] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[4].Valid"); // SC[N].CSS[4].Valid
+            _CSSValid[4] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[5].Valid"); // SC[N].CSS[5].Valid
+            _CSSValid[5] = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[0].Illum"); // SC[N].CSS[0].Illum
+            _CSSIllum[0] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[1].Illum"); // SC[N].CSS[1].Illum
+            _CSSIllum[1] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[2].Illum"); // SC[N].CSS[2].Illum
+            _CSSIllum[2] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[3].Illum"); // SC[N].CSS[3].Illum
+            _CSSIllum[3] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[4].Illum"); // SC[N].CSS[4].Illum
+            _CSSIllum[4] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].CSS[5].Illum"); // SC[N].CSS[5].Illum
+            _CSSIllum[5] = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].FSS[0].Valid"); // SC[N].FSS[0].Valid
+            _FSSValid = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].FSS[0].SunAng"); // SC[N].FSS[0].SunAng
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _FSSSunAng[0] = data[0];
+            _FSSSunAng[1] = data[1];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].ST[0].Valid"); // SC[N].ST[0].Valid
+            _STValid = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].ST[0].qn"); // SC[N].ST[0].qn
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _STqn[0] = data[0];
+            _STqn[1] = data[1];
+            _STqn[2] = data[2];
+            _STqn[3] = data[3];
+
+            _AbsTime = std::stod(_dp.get_value_for_key("ABSTIME"));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].Week"); // SC[N].GPS[0].Week
+            _GPSWeek = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].Sec"); // SC[N].GPS[0].GPSSec
+            float seconds = std::stof(_dp.get_value_for_key(key));
+            _GPSSec = seconds;
+            _GPSFracSec = seconds - _GPSSec;
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].PosN"); // SC[N].GPS[0].PosN
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _GPSPosN[0] = data[0];
+            _GPSPosN[1] = data[1];
+            _GPSPosN[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].VelN"); // SC[N].GPS[0].VelN
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _GPSVelN[0] = data[0];
+            _GPSVelN[1] = data[1];
+            _GPSVelN[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].PosW"); // SC[N].GPS[0].PosW
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _GPSPosW[0] = data[0];
+            _GPSPosW[1] = data[1];
+            _GPSPosW[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].GPS[0].VelW"); // SC[N].GPS[0].VelW
+            parse_double_vector(_dp.get_value_for_key(key), data);
+            _GPSVelW[0] = data[0];
+            _GPSVelW[1] = data[1];
+            _GPSVelW[2] = data[2];
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Accel[0].TrueAcc"); // SC[N].Accel[0].TrueAcc
+            _AccelAcc[0] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Accel[1].TrueAcc"); // SC[N].Accel[1].TrueAcc
+            _AccelAcc[1] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Accel[2].TrueAcc"); // SC[N].Accel[2].TrueAcc
+            _AccelAcc[2] = std::stof(_dp.get_value_for_key(key));
+
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Whl[0].H"); // SC[N].Whl[0].H
+            _WhlH[0] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Whl[1].H"); // SC[N].Whl[1].H
+            _WhlH[1] = std::stof(_dp.get_value_for_key(key));
+            key = "";
+            key.append("SC[").append(std::to_string(_sc)).append("].Whl[2].H"); // SC[N].Whl[2].H
+            _WhlH[2] = std::stof(_dp.get_value_for_key(key));
+
+
+            _not_parsed = false;
+
+            /* Debug print */
+            sim_logger->trace("BlackboardDataPoint::BlackboardDataPoint:  Parsed point = ");
+        } catch (const std::exception &e) {
+            sim_logger->error("BlackboardDataPoint::BlackboardDataPoint:  Error parsing point.  Error=%s.  Data=%s", e.what(), to_string().c_str());
+        }
+    }
+
+    /* Used for printing a representation of the data point */
+    std::string BlackboardDataPoint::to_string(void) const
+    {
+        sim_logger->trace("BlackboardDataPoint::to_string:  Executed");
+        
+        std::stringstream ss;
+
+        ss << std::fixed << std::setfill(' ');
+        ss << "Blackboard Data Point: ";
+        ss << std::setprecision(std::numeric_limits<double>::digits10); /* Full double precision */
+        ss << " Blackboard Data: ";
+        std::vector<std::string> lines = get_lines();
+        for (std::vector<std::string>::iterator it = lines.begin(); it != lines.end(); it++) {
+            ss << *it;
+        }
+
+        return ss.str();
+    }
+} /* namespace Nos3 */
+```
+
+### `blackboard_hardware_model.cpp`
+
+**경로:** `components/blackboard/sim/src/blackboard_hardware_model.cpp`
+
+
+```cpp
+#include <boost/thread.hpp>
+#include <blackboard_hardware_model.hpp>
+
+namespace Nos3
+{
+
+    REGISTER_HARDWARE_MODEL(BlackboardHardwareModel,"BLACKBOARD");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    BlackboardHardwareModel::BlackboardHardwareModel(const boost::property_tree::ptree& config) : SimIHardwareModel(config), 
+    _enabled(BLACKBOARD_SIM_SUCCESS)
+    {
+        /* Get the NOS engine connection string */
+        std::string connection_string = config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"); 
+        sim_logger->info("BlackboardHardwareModel::BlackboardHardwareModel:  NOS Engine connection string: %s.", connection_string.c_str());
+
+        /* Get a data provider */
+        std::string dp_name = config.get("simulator.hardware-model.data-provider.type", "BLACKBOARD_PROVIDER");
+        _blackboard_dp = SimDataProviderFactory::Instance().Create(dp_name, config);
+        sim_logger->info("BlackboardHardwareModel::BlackboardHardwareModel:  Data provider %s created.", dp_name.c_str());
+
+        /* Get on the command bus*/
+        std::string time_bus_name = "command";
+        if (config.get_child_optional("hardware-model.connections")) 
+        {
+            /* Loop through the connections for the hardware model */
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("hardware-model.connections"))
+            {
+                /* v.first is the name of the child */
+                /* v.second is the child tree */
+                if (v.second.get("type", "").compare("time") == 0) // 
+                {
+                    time_bus_name = v.second.get("bus-name", "command");
+                    /* Found it... don't need to go through any more items*/
+                    break; 
+                }
+            }
+        }
+        _ticks_between_shmem_saves = config.get("simulator.hardware-model.ticks-between-shmem-saves", 10);
+        _ticks_to_wait_at_startup = config.get("simulator.hardware-model.ticks-to-wait-at-startup", 1000);
+        _time_bus.reset(new NosEngine::Client::Bus(_hub, connection_string, time_bus_name));
+        _time_bus->add_time_tick_callback(std::bind(&BlackboardHardwareModel::send_periodic_data_to_shmem, this, std::placeholders::_1));
+        sim_logger->info("BlackboardHardwareModel::BlackboardHardwareModel:  Now on time bus named %s.", time_bus_name.c_str());
+
+        _shm_name = config.get("simulator.hardware-model.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, _shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't let this go out of scope/get destroyed
+        _blackboard_data = static_cast<BlackboardData*>(_shm_region.get_address());
+
+        /* Construction complete */
+        sim_logger->info("BlackboardHardwareModel::BlackboardHardwareModel:  Construction complete.");
+    }
+
+
+    BlackboardHardwareModel::~BlackboardHardwareModel(void)
+    {        
+        bip::shared_memory_object::remove(_shm_name.c_str());
+        /* Clean up the data provider */
+        delete _blackboard_dp;
+        _blackboard_dp = nullptr;
+
+        /* The bus will clean up the time node */
+    }
+
+
+    /* Automagically set up by the base class to be called */
+    void BlackboardHardwareModel::command_callback(NosEngine::Common::Message msg)
+    {
+        /* Get the data out of the message */
+        NosEngine::Common::DataBufferOverlay dbf(const_cast<NosEngine::Utility::Buffer&>(msg.buffer));
+        sim_logger->info("BlackboardHardwareModel::command_callback:  Received command: %s.", dbf.data);
+
+        /* Do something with the data */
+        std::string command = dbf.data;
+        std::string response = "BlackboardHardwareModel::command_callback:  INVALID COMMAND! (Try HELP)";
+        boost::to_upper(command);
+        if (command.compare("HELP") == 0) 
+        {
+            response = "BlackboardHardwareModel::command_callback: Valid commands are HELP, ENABLE, DISABLE, STATUS=X, or STOP";
+        }
+        else if (command.compare(0,6,"ENABLE") == 0) 
+        {
+            _enabled = BLACKBOARD_SIM_SUCCESS;
+            response = "BlackboardHardwareModel::command_callback:  Enabled\n";
+        }
+        else if (command.compare(0,7,"DISABLE") == 0) 
+        {
+            _enabled = BLACKBOARD_SIM_ERROR;
+            response = "BlackboardHardwareModel::command_callback:  Disabled";
+        }
+        else if (command.compare(0,4,"STOP") == 0) 
+        {
+            _keep_running = false;
+            response = "BlackboardHardwareModel::command_callback:  Stopping";
+        }
+        /* TODO: Add anything additional commands here */
+
+        /* Send a reply */
+        sim_logger->info("BlackboardHardwareModel::command_callback:  Sending reply: %s", response.c_str());
+        _command_node->send_reply_message_async(msg, response.size(), response.c_str());
+    }
+
+    void BlackboardHardwareModel::send_periodic_data_to_shmem(NosEngine::Common::SimTime time)
+    {
+        if ((time > _ticks_to_wait_at_startup) && ((time % _ticks_between_shmem_saves) == 0)) {
+            const boost::shared_ptr<BlackboardDataPoint> data_point =
+                boost::dynamic_pointer_cast<BlackboardDataPoint>(_blackboard_dp->get_data_point());
+            _blackboard_data->svb[0]       = data_point->get_svb_x();
+            _blackboard_data->svb[1]       = data_point->get_svb_y();
+            _blackboard_data->svb[2]       = data_point->get_svb_z();
+            _blackboard_data->bvb[0]       = data_point->get_bvb_x();
+            _blackboard_data->bvb[1]       = data_point->get_bvb_y();
+            _blackboard_data->bvb[2]       = data_point->get_bvb_z();
+            _blackboard_data->Hvb[0]       = data_point->get_Hvb_x();
+            _blackboard_data->Hvb[1]       = data_point->get_Hvb_y();
+            _blackboard_data->Hvb[2]       = data_point->get_Hvb_z();
+            _blackboard_data->GyroRate[0]  = data_point->get_GyroRate_x();
+            _blackboard_data->GyroRate[1]  = data_point->get_GyroRate_y();
+            _blackboard_data->GyroRate[2]  = data_point->get_GyroRate_z();
+            _blackboard_data->CSSValid[0]  = data_point->get_CSSValid_0();
+            _blackboard_data->CSSValid[1]  = data_point->get_CSSValid_1();
+            _blackboard_data->CSSValid[2]  = data_point->get_CSSValid_2();
+            _blackboard_data->CSSValid[3]  = data_point->get_CSSValid_3();
+            _blackboard_data->CSSValid[4]  = data_point->get_CSSValid_4();
+            _blackboard_data->CSSValid[5]  = data_point->get_CSSValid_5();
+            _blackboard_data->CSSIllum[0]  = data_point->get_CSSIllum_0();
+            _blackboard_data->CSSIllum[1]  = data_point->get_CSSIllum_1();
+            _blackboard_data->CSSIllum[2]  = data_point->get_CSSIllum_2();
+            _blackboard_data->CSSIllum[3]  = data_point->get_CSSIllum_3();
+            _blackboard_data->CSSIllum[4]  = data_point->get_CSSIllum_4();
+            _blackboard_data->CSSIllum[5]  = data_point->get_CSSIllum_5();
+            _blackboard_data->FSSValid     = data_point->get_FSSValid();
+            _blackboard_data->FSSSunAng[0] = data_point->get_FSSSunAng_alpha();
+            _blackboard_data->FSSSunAng[1] = data_point->get_FSSSunAng_beta();
+            _blackboard_data->STValid      = data_point->get_STValid();
+            _blackboard_data->STqn[0]      = data_point->get_STqn_0();
+            _blackboard_data->STqn[1]      = data_point->get_STqn_1();
+            _blackboard_data->STqn[2]      = data_point->get_STqn_2();
+            _blackboard_data->STqn[3]      = data_point->get_STqn_3();
+            _blackboard_data->AbsTime      = data_point->get_AbsTime();
+            _blackboard_data->GPSWeek      = data_point->get_GPSWeek();
+            _blackboard_data->GPSSec       = data_point->get_GPSSec();
+            _blackboard_data->GPSFracSec   = data_point->get_GPSFracSec();
+            _blackboard_data->GPSPosN[0]   = data_point->get_GPSPosN_x();
+            _blackboard_data->GPSPosN[1]   = data_point->get_GPSPosN_y();
+            _blackboard_data->GPSPosN[2]   = data_point->get_GPSPosN_z();
+            _blackboard_data->GPSVelN[0]   = data_point->get_GPSVelN_x();
+            _blackboard_data->GPSVelN[1]   = data_point->get_GPSVelN_y();
+            _blackboard_data->GPSVelN[2]   = data_point->get_GPSVelN_z();
+            _blackboard_data->GPSPosW[0]   = data_point->get_GPSPosW_x();
+            _blackboard_data->GPSPosW[1]   = data_point->get_GPSPosW_y();
+            _blackboard_data->GPSPosW[2]   = data_point->get_GPSPosW_z();
+            _blackboard_data->GPSVelW[0]   = data_point->get_GPSVelW_x();
+            _blackboard_data->GPSVelW[2]   = data_point->get_GPSVelW_y();
+            _blackboard_data->GPSVelW[1]   = data_point->get_GPSVelW_z();
+            _blackboard_data->AccelAcc[0]  = data_point->get_AccelAcc_x();
+            _blackboard_data->AccelAcc[1]  = data_point->get_AccelAcc_y();
+            _blackboard_data->AccelAcc[2]  = data_point->get_AccelAcc_z();
+            _blackboard_data->WhlH[0]      = data_point->get_WhlH_x();
+            _blackboard_data->WhlH[1]      = data_point->get_WhlH_y();
+            _blackboard_data->WhlH[2]      = data_point->get_WhlH_z();
+        }
+    }
+
+}
+```

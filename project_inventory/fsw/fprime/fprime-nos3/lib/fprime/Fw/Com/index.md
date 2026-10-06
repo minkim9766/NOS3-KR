@@ -3,26 +3,235 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Com.fpp
-file--ComBuffer.cpp
-file--ComBuffer.hpp
-file--ComPacket.cpp
-file--ComPacket.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/Com.fpp`](file--Com.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComBuffer.cpp`](file--ComBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComBuffer.hpp`](file--ComBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComPacket.cpp`](file--ComPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComPacket.hpp`](file--ComPacket.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Com.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ComPacket.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ComBuffer.cpp"
+)
+register_fprime_module()
+```
+
+### `Com.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/Com.fpp`
+
+
+```fpp
+module Fw {
+
+  type ComBuffer
+
+  @ Port for passing communication packet buffers
+  port Com(
+            ref data: ComBuffer @< Buffer containing packet data
+            context: U32 @< Call context value; meaning chosen by user
+          )
+
+}
+```
+
+### `ComBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComBuffer.cpp`
+
+
+```cpp
+#include <Fw/Com/ComBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+ComBuffer::ComBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+ComBuffer::ComBuffer() {}
+
+ComBuffer::~ComBuffer() {}
+
+ComBuffer::ComBuffer(const ComBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+ComBuffer& ComBuffer::operator=(const ComBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType ComBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* ComBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* ComBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `ComBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComBuffer.hpp`
+
+
+```cpp
+/*
+ * FwComBuffer.hpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: tcanham
+ */
+
+/*
+ * Description:
+ * This object contains the ComBuffer type, used for sending and receiving packets from the ground
+ */
+#ifndef FW_COM_BUFFER_HPP
+#define FW_COM_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class ComBuffer final : public SerializeBufferBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = 1010,
+        SERIALIZED_SIZE = FW_COM_BUFFER_MAX_SIZE + sizeof(FwBuffSizeType)  // size of buffer + storage of size word
+    };
+
+    ComBuffer(const U8* args, FwSizeType size);
+    ComBuffer();
+    ComBuffer(const ComBuffer& other);
+    virtual ~ComBuffer();
+    ComBuffer& operator=(const ComBuffer& other);
+
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_bufferData[FW_COM_BUFFER_MAX_SIZE];  // packet data buffer
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `ComPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComPacket.cpp`
+
+
+```cpp
+/*
+ * ComPacket.cpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#include <Fw/Com/ComPacket.hpp>
+
+namespace Fw {
+
+ComPacket::ComPacket() : m_type(ComPacketType::FW_PACKET_UNKNOWN) {}
+
+ComPacket::~ComPacket() {}
+
+SerializeStatus ComPacket::serializeBase(SerializeBufferBase& buffer) const {
+    return buffer.serializeFrom(static_cast<FwPacketDescriptorType>(this->m_type));
+}
+
+SerializeStatus ComPacket::deserializeBase(SerializeBufferBase& buffer) {
+    FwPacketDescriptorType serVal;
+    SerializeStatus stat = buffer.deserializeTo(serVal);
+    if (FW_SERIALIZE_OK == stat) {
+        this->m_type = static_cast<ComPacketType>(serVal);
+    }
+    return stat;
+}
+
+} /* namespace Fw */
+```
+
+### `ComPacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Com/ComPacket.hpp`
+
+
+```cpp
+/*
+ * ComPacket.hpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#ifndef COMPACKET_HPP_
+#define COMPACKET_HPP_
+
+#include <Fw/Types/Serializable.hpp>
+#include "config/APIDEnumAc.hpp"
+
+// Packet format:
+// |32-bit packet type|packet type-specific data|
+
+namespace Fw {
+
+// This type is defined in config/ComCfg.fpp
+using ComPacketType = ComCfg::APID::T;
+
+class ComPacket : public Serializable {
+  public:
+    ComPacket();
+    virtual ~ComPacket();
+
+  protected:
+    ComPacketType m_type;
+    SerializeStatus serializeBase(
+        SerializeBufferBase& buffer) const;  // called by derived classes to serialize common fields
+    SerializeStatus deserializeBase(
+        SerializeBufferBase& buffer);  // called by derived classes to deserialize common fields
+};
+
+} /* namespace Fw */
+
+#endif /* COMPACKET_HPP_ */
+```

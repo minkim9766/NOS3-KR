@@ -3,16 +3,175 @@
 
 **경로:** `components/generic_torquer/fsw/cfs/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_torquer_device_stubs.c`
 
-file--generic_torquer_device_stubs.c
-file--libtrq_stubs.c
+**경로:** `components/generic_torquer/fsw/cfs/unit-test/stubs/generic_torquer_device_stubs.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_torquer_device_stubs.c
+**
+** Purpose:
+**   This is the header file for the GENERIC_TORQUER device.
+**
+*******************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in generic_torquer_device header
+ */
+
+/* Use properly scoped include paths that will work with the build system */
+#include "generic_torquer_device.h"
+#include "libtrq.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_TORQUER_Config()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_TORQUER_Config(GENERIC_TORQUER_Device_tlm_t *trqHk, trq_info_t *trqDevice, uint8_t percent, uint8_t dir)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_TORQUER_Config, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_TORQUER_Config, GENERIC_TORQUER_Device_tlm_t *, trqHk);
+    UT_GenStub_AddParam(GENERIC_TORQUER_Config, trq_info_t *, trqDevice);
+    UT_GenStub_AddParam(GENERIC_TORQUER_Config, uint8_t, percent);
+    UT_GenStub_AddParam(GENERIC_TORQUER_Config, uint8_t, dir);
+
+    UT_GenStub_Execute(GENERIC_TORQUER_Config, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_TORQUER_Config, int32_t);
+}
 ```
 
-## 항목
+### `libtrq_stubs.c`
 
-- [`components/generic_torquer/fsw/cfs/unit-test/stubs/generic_torquer_device_stubs.c`](file--generic_torquer_device_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/cfs/unit-test/stubs/libtrq_stubs.c`](file--libtrq_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_torquer/fsw/cfs/unit-test/stubs/libtrq_stubs.c`
+
+
+```c
+/* Copyright (C) 2009 - 2020 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+Government. */
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in libtrq header
+ */
+
+#include "libtrq.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_close()
+ * ----------------------------------------------------
+ */
+void trq_close(trq_info_t *device)
+{
+    UT_GenStub_AddParam(trq_close, trq_info_t *, device);
+
+    UT_GenStub_Execute(trq_close, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_command()
+ * ----------------------------------------------------
+ */
+int32_t trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir)
+{
+    UT_GenStub_SetupReturnBuffer(trq_command, int32_t);
+
+    UT_GenStub_AddParam(trq_command, trq_info_t *, device);
+    UT_GenStub_AddParam(trq_command, uint8_t, percent_high);
+    UT_GenStub_AddParam(trq_command, bool, pos_dir);
+
+    UT_GenStub_Execute(trq_command, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(trq_command, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_dummy()
+ * ----------------------------------------------------
+ */
+void trq_dummy(void)
+{
+
+    UT_GenStub_Execute(trq_dummy, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_init()
+ * ----------------------------------------------------
+ */
+int32_t trq_init(trq_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(trq_init, int32_t);
+
+    UT_GenStub_AddParam(trq_init, trq_info_t *, device);
+
+    UT_GenStub_Execute(trq_init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(trq_init, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_set_direction()
+ * ----------------------------------------------------
+ */
+int32_t trq_set_direction(trq_info_t *device, bool direction)
+{
+    UT_GenStub_SetupReturnBuffer(trq_set_direction, int32_t);
+
+    UT_GenStub_AddParam(trq_set_direction, trq_info_t *, device);
+    UT_GenStub_AddParam(trq_set_direction, bool, direction);
+
+    UT_GenStub_Execute(trq_set_direction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(trq_set_direction, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_set_period()
+ * ----------------------------------------------------
+ */
+int32_t trq_set_period(trq_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(trq_set_period, int32_t);
+
+    UT_GenStub_AddParam(trq_set_period, trq_info_t *, device);
+
+    UT_GenStub_Execute(trq_set_period, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(trq_set_period, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for trq_set_time_high()
+ * ----------------------------------------------------
+ */
+int32_t trq_set_time_high(trq_info_t *device, uint32_t new_time)
+{
+    UT_GenStub_SetupReturnBuffer(trq_set_time_high, int32_t);
+
+    UT_GenStub_AddParam(trq_set_time_high, trq_info_t *, device);
+    UT_GenStub_AddParam(trq_set_time_high, uint32_t, new_time);
+
+    UT_GenStub_Execute(trq_set_time_high, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(trq_set_time_high, int32_t);
+}
+```

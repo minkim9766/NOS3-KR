@@ -3,24 +3,916 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
-file--tester.hpp
-file--typed.cpp
-file--typed.hpp
-file--typed_async.cpp
-file--typed_async.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/.gitignore`
+
+
+```text
+!*
 ```
 
-## 항목
+### `tester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/tester.hpp`](file--tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed.cpp`](file--typed.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed.hpp`](file--typed.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed_async.cpp`](file--typed_async.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed_async.hpp`](file--typed_async.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/tester.hpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+//! Handler for from_arrayArgsOut
+//!
+void from_arrayArgsOut_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef, //!< An array ref
+    const FormalAliasArray& b, //!< alias of an array
+    FormalAliasArray& bRef, //!< alias of array ref
+    const FormalAliasStringArray& c, //!< array of string aliases
+    FormalAliasStringArray& cRef //!< array of string aliases ref
+) final;
+
+//! Handler for from_arrayReturnOut
+//!
+FormalParamArray from_arrayReturnOut_handler(
+    const FwIndexType portNum, //!< The port number
+    const FormalParamArray& a,     //!< An array
+    FormalParamArray& aRef         //!< An array ref
+) final;
+
+//! Handler for from_enumArgsOut
+//!
+void from_enumArgsOut_handler(
+    const FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef, //!< An enum ref
+    const FormalAliasEnum& enA, //!< An enum alias
+    FormalAliasEnum& enARef //!< An enum alias ref
+) final;
+
+//! Handler for from_enumReturnOut
+//!
+FormalParamEnum from_enumReturnOut_handler(
+    const FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!<An enum
+    FormalParamEnum& enRef     //!< An enum ref
+) final;
+
+//! Handler base-class function for from_arrayStringAliasReturnOut
+FormalAliasStringArray from_arrayStringAliasReturnOut_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef //!< An array ref
+) final;
+
+//! Handler base-class function for from_arrayStringAliasReturnOut
+FormalAliasString from_stringAliasReturnOut_handler(
+    FwIndexType portNum, //!< The port number
+    const Fw::StringBase& str, //!< A string
+    Fw::StringBase& strRef //!< A string ref
+) final;
+
+//! Handler for from_stringArgsOut
+//!
+void from_stringArgsOut_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str80,
+    Fw::StringBase &str80Ref,
+    const Fw::StringBase &str100,
+    Fw::StringBase &str100Ref
+) final;
+
+//! Handler for from_stringReturnOut
+//!
+Fw::String from_stringReturnOut_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str,
+    Fw::StringBase &strRef
+) final;
+
+//! Handler for from_noArgsOut
+//!
+void from_noArgsOut_handler(
+    const FwIndexType portNum //!< The port number
+) final;
+
+//! Handler for from_noArgsReturnOut
+//!
+bool from_noArgsReturnOut_handler(
+    const FwIndexType portNum //!< The port number
+) final;
+
+//! Handler for from_primitiveArgsOut
+//!
+void from_primitiveArgsOut_handler(const FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) final;
+
+//! Handler for from_primitiveReturnOut
+//!
+U32 from_primitiveReturnOut_handler(const FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) final;
+
+//! Handler for from_prmGetIn
+//!
+Fw::ParamValid from_prmGetIn_handler(const FwIndexType portNum, //!< The port number
+    FwPrmIdType id, //!< Parameter ID
+    Fw::ParamBuffer& val //!< Buffer containing serialized parameter value
+) final;
+
+//! Handler for from_prmGetIn
+//!
+void from_prmSetIn_handler(const FwIndexType portNum, //!< The port number
+    FwPrmIdType id, //!< Parameter ID
+    Fw::ParamBuffer& val //!< Buffer containing serialized parameter value
+) final;
+
+//! Handler for from_structArgsOut
+//!
+void from_structArgsOut_handler(const FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) final;
+
+//! Handler for from_structReturnOut
+//!
+FormalParamStruct from_structReturnOut_handler(const FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) final;
+
+void from_enumArgsHookOverflowed_handler(const FwIndexType portNum,
+    const FormalParamEnum& en,
+    FormalParamEnum& enRef,
+    const FormalAliasEnum& enA,
+    FormalAliasEnum& enARef
+);
+
+```
+
+### `typed.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed.cpp`
+
+
+```cpp
+#ifndef TestComponentName
+#error "TestComponentName must be defined before typed.cpp is included"
+#endif
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+Fw::String TestComponentName ::stringReturnGuarded_handler(
+  FwIndexType portNum,
+  const Fw::StringBase& str,
+  Fw::StringBase& strRef
+) {
+  return this->stringReturnOut_out(portNum, str, strRef);
+}
+
+void TestComponentName :: enumArgsSync_handler(
+    const FwIndexType portNum,
+    const FormalParamEnum &en,
+    FormalParamEnum &enRef,
+    const FormalAliasEnum& enA,
+    FormalAliasEnum& enARef
+)
+{
+    this->enumArgsOut_out(portNum, en, enRef, enA, enARef);
+}
+
+Fw::String TestComponentName ::stringReturnSync_handler(
+  FwIndexType portNum,
+  const Fw::StringBase& str,
+  Fw::StringBase& strRef
+) {
+  return this->stringReturnOut_out(portNum, str, strRef);
+}
+
+FormalAliasString TestComponentName ::stringAliasReturnGuarded_handler(
+  FwIndexType portNum,
+  const Fw::StringBase& str,
+  Fw::StringBase& strRef
+) {
+  return this->stringAliasReturnOut_out(portNum, str, strRef);
+}
+
+FormalAliasString TestComponentName ::stringAliasReturnSync_handler(
+  FwIndexType portNum,
+  const Fw::StringBase& str,
+  Fw::StringBase& strRef
+) {
+  return this->stringAliasReturnOut_out(portNum, str, strRef);
+}
+
+void TestComponentName ::
+arrayArgsGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamArray &a,
+    FormalParamArray &aRef,
+    const FormalAliasArray& b,
+    FormalAliasArray& bRef,
+    const FormalAliasStringArray& c,
+    FormalAliasStringArray& cRef
+)
+{
+this->arrayArgsOut_out(portNum, a, aRef, b, bRef, c, cRef);
+}
+
+void TestComponentName ::
+arrayArgsSync_handler(
+    const FwIndexType portNum,
+    const FormalParamArray &a,
+    FormalParamArray &aRef,
+    const FormalAliasArray& b,
+    FormalAliasArray& bRef,
+    const FormalAliasStringArray& c,
+    FormalAliasStringArray& cRef
+)
+{
+    this->arrayArgsOut_out(portNum, a, aRef, b, bRef, c, cRef);
+}
+
+FormalParamArray TestComponentName ::
+arrayReturnGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamArray &a,
+    FormalParamArray &aRef
+)
+{
+    return this->arrayReturnOut_out(portNum, a, aRef);
+}
+
+FormalParamArray TestComponentName ::
+arrayReturnSync_handler(
+    const FwIndexType portNum,
+    const FormalParamArray &a,
+    FormalParamArray &aRef
+)
+{
+    return this->arrayReturnOut_out(portNum, a, aRef);
+}
+
+FormalAliasStringArray TestComponentName ::
+arrayStringAliasReturnGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamArray& a,
+    FormalParamArray& aRef
+)
+{
+    return this->arrayStringAliasReturnOut_out(portNum, a, aRef);
+}
+
+FormalAliasStringArray TestComponentName ::
+arrayStringAliasReturnSync_handler(
+    const FwIndexType portNum,
+    const FormalParamArray& a,
+    FormalParamArray& aRef
+)
+{
+    return this->arrayStringAliasReturnOut_out(portNum, a, aRef);
+}
+
+void TestComponentName ::
+enumArgsGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamEnum &en,
+    FormalParamEnum &enRef,
+    const FormalAliasEnum& enA,
+    FormalAliasEnum& enARef
+)
+{
+this->enumArgsOut_out(portNum, en, enRef, enA, enARef);
+}
+
+FormalParamEnum TestComponentName ::
+enumReturnGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamEnum &en,
+    FormalParamEnum &enRef
+)
+{
+return this->enumReturnOut_out(portNum, en, enRef);
+}
+
+FormalParamEnum TestComponentName ::
+enumReturnSync_handler(
+    const FwIndexType portNum,
+    const FormalParamEnum &en,
+    FormalParamEnum &enRef
+)
+{
+return this->enumReturnOut_out(portNum, en, enRef);
+}
+
+void TestComponentName ::
+noArgsGuarded_handler(
+    const FwIndexType portNum
+)
+{
+this->noArgsOut_out(portNum);
+}
+
+bool TestComponentName ::
+noArgsReturnGuarded_handler(
+    const FwIndexType portNum
+)
+{
+return this->noArgsReturnOut_out(portNum);
+}
+
+bool TestComponentName ::
+noArgsReturnSync_handler(
+    const FwIndexType portNum
+)
+{
+return this->noArgsReturnOut_out(portNum);
+}
+
+void TestComponentName ::
+noArgsSync_handler(
+    const FwIndexType portNum
+)
+{
+this->noArgsOut_out(portNum);
+}
+
+void TestComponentName ::
+primitiveArgsGuarded_handler(
+    const FwIndexType portNum,
+    U32 u32,
+    U32 &u32Ref,
+    F32 f32,
+    F32 &f32Ref,
+    bool b,
+    bool &bRef
+)
+{
+this->primitiveArgsOut_out(
+  portNum, 
+  u32, 
+  u32Ref, 
+  f32, 
+  f32Ref, 
+  b, 
+  bRef
+);
+}
+
+void TestComponentName ::
+primitiveArgsSync_handler(
+    const FwIndexType portNum,
+    U32 u32,
+    U32 &u32Ref,
+    F32 f32,
+    F32 &f32Ref,
+    bool b,
+    bool &bRef
+)
+{
+this->primitiveArgsOut_out(
+  portNum, 
+  u32, 
+  u32Ref, 
+  f32, 
+  f32Ref, 
+  b, 
+  bRef
+);
+}
+
+U32 TestComponentName ::
+primitiveReturnGuarded_handler(
+    const FwIndexType portNum,
+    U32 u32,
+    U32 &u32Ref,
+    F32 f32,
+    F32 &f32Ref,
+    bool b,
+    bool &bRef
+)
+{
+return this->primitiveReturnOut_out(
+  portNum, 
+  u32, 
+  u32Ref, 
+  f32, 
+  f32Ref, 
+  b, 
+  bRef
+);
+}
+
+U32 TestComponentName ::
+primitiveReturnSync_handler(
+    const FwIndexType portNum,
+    U32 u32,
+    U32 &u32Ref,
+    F32 f32,
+    F32 &f32Ref,
+    bool b,
+    bool &bRef
+)
+{
+return this->primitiveReturnOut_out(
+  portNum, 
+  u32, 
+  u32Ref, 
+  f32, 
+  f32Ref, 
+  b, 
+  bRef
+);
+}
+
+void TestComponentName ::
+stringArgsGuarded_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str80,
+    Fw::StringBase &str80Ref,
+    const Fw::StringBase &str100,
+    Fw::StringBase &str100Ref
+)
+{
+this->stringArgsOut_out(
+  portNum,
+  str80,
+  str80Ref,
+  str100,
+  str100Ref
+);
+}
+
+void TestComponentName ::
+stringArgsSync_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str80,
+    Fw::StringBase &str80Ref,
+    const Fw::StringBase &str100,
+    Fw::StringBase &str100Ref
+)
+{
+this->stringArgsOut_out(
+  portNum,
+  str80,
+  str80Ref,
+  str100,
+  str100Ref
+);
+}
+
+void TestComponentName ::
+structArgsGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamStruct &s,
+    FormalParamStruct &sRef
+)
+{
+this->structArgsOut_out(portNum, s, sRef);
+}
+
+void TestComponentName ::
+structArgsSync_handler(
+    const FwIndexType portNum,
+    const FormalParamStruct &s,
+    FormalParamStruct &sRef
+)
+{
+this->structArgsOut_out(portNum, s, sRef);
+}
+
+FormalParamStruct TestComponentName ::
+structReturnGuarded_handler(
+    const FwIndexType portNum,
+    const FormalParamStruct &s,
+    FormalParamStruct &sRef
+)
+{
+return this->structReturnOut_out(portNum, s, sRef);
+}
+
+FormalParamStruct TestComponentName ::
+structReturnSync_handler(
+    const FwIndexType portNum,
+    const FormalParamStruct &s,
+    FormalParamStruct &sRef
+)
+{
+return this->structReturnOut_out(portNum, s, sRef);
+}
+```
+
+### `typed.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed.hpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+//! Handler implementation for arrayArgsGuarded
+void arrayArgsGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef, //!< An array ref
+    const FormalAliasArray& b, //!< alias of an array
+    FormalAliasArray& bRef, //!< alias of array ref
+    const FormalAliasStringArray& c, //!< array of string aliases
+    FormalAliasStringArray& cRef //!< array of string aliases ref
+) override;
+
+//! Handler implementation for arrayArgsSync
+void arrayArgsSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef, //!< An array ref
+    const FormalAliasArray& b, //!< alias of an array
+    FormalAliasArray& bRef, //!< alias of array ref
+    const FormalAliasStringArray& c, //!< array of string aliases
+    FormalAliasStringArray& cRef //!< array of string aliases ref
+) override;
+
+//! Handler implementation for arrayReturnGuarded
+FormalParamArray arrayReturnGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef //!< An array ref
+) override;
+
+//! Handler implementation for arrayReturnSync
+FormalParamArray arrayReturnSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef //!< An array ref
+) override;
+
+//! Handler implementation for arrayReturnGuarded
+FormalAliasStringArray arrayStringAliasReturnGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< A string
+    FormalParamArray& aRef //!< A string ref
+) override;
+
+//! Handler implementation for arrayReturnSync
+FormalAliasStringArray arrayStringAliasReturnSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< A string
+    FormalParamArray& aRef //!< A string ref
+) override;
+
+//! Handler implementation for enumArgsGuarded
+void enumArgsGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef, //!< An enum ref
+    const FormalAliasEnum& enA, //!< An enum alias
+    FormalAliasEnum& enARef //!< An enum alias ref
+) override;
+
+//! Handler implementation for enumArgsSync
+void enumArgsSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef, //!< An enum ref
+    const FormalAliasEnum& enA, //!< An enum alias
+    FormalAliasEnum& enARef //!< An enum alias ref
+) override;
+
+//! Handler implementation for enumReturnGuarded
+FormalParamEnum enumReturnGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef //!< An enum ref
+) override;
+
+//! Handler implementation for enumReturnSync
+FormalParamEnum enumReturnSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef //!< An enum ref
+) override;
+
+//! Handler implementation for noArgsGuarded
+void noArgsGuarded_handler(
+    FwIndexType portNum //!< The port number
+) override;
+
+//! Handler implementation for noArgsReturnGuarded
+bool noArgsReturnGuarded_handler(
+    FwIndexType portNum //!< The port number
+) override;
+
+//! Handler implementation for noArgsReturnSync
+bool noArgsReturnSync_handler(
+    FwIndexType portNum //!< The port number
+) override;
+
+//! Handler implementation for noArgsSync
+void noArgsSync_handler(
+    FwIndexType portNum //!< The port number
+) override;
+
+//! Handler implementation for primitiveArgsGuarded
+void primitiveArgsGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) override;
+
+//! Handler implementation for primitiveArgsSync
+void primitiveArgsSync_handler(
+    FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) override;
+
+//! Handler implementation for primitiveReturnGuarded
+U32 primitiveReturnGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) override;
+
+//! Handler implementation for primitiveReturnSync
+U32 primitiveReturnSync_handler(
+    FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) override;
+
+//! Handler implementation for stringArgsGuarded
+void stringArgsGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const Fw::StringBase& str80, //!< A string of size 80
+    Fw::StringBase& str80Ref,
+    const Fw::StringBase& str100, //!< A string of size 100
+    Fw::StringBase& str100Ref
+) override;
+
+//! Handler implementation for stringArgsSync
+void stringArgsSync_handler(
+    FwIndexType portNum, //!< The port number
+    const Fw::StringBase& str80, //!< A string of size 80
+    Fw::StringBase& str80Ref,
+    const Fw::StringBase& str100, //!< A string of size 100
+    Fw::StringBase& str100Ref
+) override;
+
+//! Handler implementation for structArgsGuarded
+void structArgsGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) override;
+
+//! Handler implementation for stringReturnGuarded
+Fw::String stringReturnGuarded_handler(
+    FwIndexType portNum,          //!< The port number
+    const Fw::StringBase& str,    //!< A string
+    Fw::StringBase& strRef        //!< A string ref
+) override;
+
+//! Handler implementation for stringReturnSync
+Fw::String stringReturnSync_handler(
+    FwIndexType portNum,          //!< The port number
+    const Fw::StringBase& str,    //!< A string
+    Fw::StringBase& strRef        //!< A string ref
+) override;
+
+//! Handler implementation for stringAliasReturnGuarded
+FormalAliasString stringAliasReturnGuarded_handler(
+    FwIndexType portNum,          //!< The port number
+    const Fw::StringBase& str,    //!< A string
+    Fw::StringBase& strRef        //!< A string ref
+) override;
+
+//! Handler implementation for stringAliasReturnSync
+FormalAliasString stringAliasReturnSync_handler(
+    FwIndexType portNum,          //!< The port number
+    const Fw::StringBase& str,    //!< A string
+    Fw::StringBase& strRef        //!< A string ref
+) override;
+
+//! Handler implementation for structArgsSync
+void structArgsSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) override;
+
+//! Handler implementation for structReturnGuarded
+FormalParamStruct structReturnGuarded_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) override;
+
+//! Handler implementation for structReturnSync
+FormalParamStruct structReturnSync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) override;
+```
+
+### `typed_async.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed_async.cpp`
+
+
+```cpp
+void TestComponentName ::
+  arrayArgsAsync_handler(
+      const FwIndexType portNum,
+      const FormalParamArray &a,
+      FormalParamArray &aRef,
+      const FormalAliasArray& b,
+      FormalAliasArray& bRef,
+      const FormalAliasStringArray& c,
+      FormalAliasStringArray& cRef)
+{
+    this->arrayArgsOut_out(portNum, a, aRef, b, bRef, c, cRef);
+}
+
+void TestComponentName ::
+enumArgsAsync_handler(
+    const FwIndexType portNum,
+    const FormalParamEnum &en,
+    FormalParamEnum &enRef,
+    const FormalAliasEnum& enA,
+    FormalAliasEnum& enARef
+)
+{
+    this->enumArgsOut_out(portNum, en, enRef, enA, enARef);
+}
+
+void TestComponentName ::
+noArgsAsync_handler(
+    const FwIndexType portNum
+)
+{
+    this->noArgsOut_out(portNum);
+}
+
+void TestComponentName ::
+primitiveArgsAsync_handler(
+    const FwIndexType portNum,
+    U32 u32,
+    U32 &u32Ref,
+    F32 f32,
+    F32 &f32Ref,
+    bool b,
+    bool &bRef
+)
+{
+    this->primitiveArgsOut_out(
+    portNum, 
+    u32, 
+    u32Ref, 
+    f32, 
+    f32Ref, 
+    b, 
+    bRef
+    );
+}
+
+void TestComponentName ::
+structArgsAsync_handler(
+    const FwIndexType portNum,
+    const FormalParamStruct &s,
+    FormalParamStruct &sRef
+)
+{
+    this->structArgsOut_out(portNum, s, sRef);
+}
+
+void TestComponentName ::
+stringArgsAsync_handler(
+    const FwIndexType portNum,
+    const Fw::StringBase &str80,
+    Fw::StringBase &str80Ref,
+    const Fw::StringBase &str100,
+    Fw::StringBase &str100Ref
+)
+{
+    this->stringArgsOut_out(
+    portNum,
+    str80,
+    str80Ref,
+    str100,
+    str100Ref
+    );
+}
+
+void TestComponentName ::
+  enumArgsHook_handler(
+      const FwIndexType portNum,
+      const FormalParamEnum &en,
+      FormalParamEnum &enRef,
+      const FormalAliasEnum& enA,
+      FormalAliasEnum& enARef
+  ) {}
+```
+
+### `typed_async.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/common/typed_async.hpp`
+
+
+```cpp
+//! Handler implementation for arrayArgsAsync
+void arrayArgsAsync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamArray& a, //!< An array
+    FormalParamArray& aRef, //!< An array ref
+    const FormalAliasArray& b, //!< alias of an array
+    FormalAliasArray& bRef, //!< alias of array ref
+    const FormalAliasStringArray& c, //!< array of string aliases
+    FormalAliasStringArray& cRef //!< array of string aliases ref
+) override;
+
+//! Handler implementation for enumArgsAsync
+void enumArgsAsync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef, //!< An enum ref
+    const FormalAliasEnum& enA, //!< An enum alias
+    FormalAliasEnum& enARef //!< An enum alias ref
+) override;
+
+//! Handler implementation for noArgsAsync
+void noArgsAsync_handler(
+    FwIndexType portNum //!< The port number
+) override;
+
+//! Handler implementation for primitiveArgsAsync
+void primitiveArgsAsync_handler(
+    FwIndexType portNum, //!< The port number
+    U32 u32,
+    U32& u32Ref,
+    F32 f32,
+    F32& f32Ref,
+    bool b,
+    bool& bRef
+) override;
+
+//! Handler implementation for stringArgsAsync
+void stringArgsAsync_handler(
+    FwIndexType portNum, //!< The port number
+    const Fw::StringBase& str80, //!< A string of size 80
+    Fw::StringBase& str80Ref,
+    const Fw::StringBase& str100, //!< A string of size 100
+    Fw::StringBase& str100Ref
+) override;
+
+//! Handler implementation for structArgsAsync
+void structArgsAsync_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamStruct& s, //!< A struct
+    FormalParamStruct& sRef //!< A struct ref
+) override;
+
+//! Handler implementation for enumArgsOverflow
+void enumArgsHook_handler(
+    FwIndexType portNum, //!< The port number
+    const FormalParamEnum& en, //!< An enum
+    FormalParamEnum& enRef, //!< An enum ref
+    const FormalAliasEnum& enA, //!< An enum alias
+    FormalAliasEnum& enARef //!< An enum alias ref
+) override;
+```

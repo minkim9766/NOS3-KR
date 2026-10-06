@@ -3,18 +3,165 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `add-roles-dialog.component.css`
 
-file--add-roles-dialog.component.css
-file--add-roles-dialog.component.html
-file--add-roles-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.css`
+
+
+```css
+.selected {
+  background-color: #f0f4fd !important;
+}
+
+.mat-mdc-row {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `add-roles-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.css`](file--add-roles-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.html`](file--add-roles-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.ts`](file--add-roles-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Add roles</h2>
+
+<mat-dialog-content>
+  <ya-filter-bar>
+    <ya-search-filter
+      [formControl]="filterControl"
+      placeholder="Filter roles"
+      width="100%"
+      style="flex: 1 1 auto" />
+  </ya-filter-bar>
+  @if (dataSource) {
+    <table mat-table [dataSource]="dataSource" class="ya-data-table" style="width: 100%">
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef class="checkbox"></th>
+        <td
+          mat-cell
+          *cdkCellDef="let item"
+          class="checkbox"
+          (click)="cb.toggle(); $event.stopPropagation()">
+          <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" [item]="item" />
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Role</th>
+        <td mat-cell *matCellDef="let role">
+          {{ role.label }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        [class.selected]="selection.isSelected(row)"
+        (click)="toggleOne(row)"></tr>
+    </table>
+  }
+  @if (!dataSource.data.length) {
+    <ya-empty-message>No rows to display</ya-empty-message>
+  }
+
+  <mat-paginator [pageSize]="10" [hidePageSize]="true" [showFirstLastButtons]="false" />
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="selection.isEmpty()">ADD</ya-button>
+</mat-dialog-actions>
+```
+
+### `add-roles-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/add-roles-dialog/add-roles-dialog.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+import { RoleInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+export interface RoleItem {
+  label: string;
+  role?: RoleInfo;
+}
+
+@Component({
+  selector: 'app-add-roles-dialog',
+  templateUrl: './add-roles-dialog.component.html',
+  styleUrl: './add-roles-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AddRolesDialogComponent implements AfterViewInit {
+  displayedColumns = ['select', 'name'];
+
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  dataSource = new MatTableDataSource<RoleItem>();
+  selection = new SelectionModel<RoleItem>(true, []);
+
+  constructor(
+    private dialogRef: MatDialogRef<AddRolesDialogComponent>,
+    yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    const existingItems: RoleItem[] = data.items;
+    const existingRoles = existingItems
+      .filter((i) => i.role)
+      .map((i) => i.role!.name);
+    yamcs.yamcsClient.getRoles().then((roles) => {
+      const items = (roles || [])
+        .filter((role) => existingRoles.indexOf(role.name) === -1)
+        .map((role) => {
+          return {
+            label: role.name,
+            role,
+          };
+        });
+      this.dataSource.data = items;
+    });
+  }
+
+  ngAfterViewInit() {
+    this.filterControl.valueChanges.subscribe(() => {
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+    });
+    this.dataSource.filterPredicate = (member, filter) => {
+      return member.label.toLowerCase().indexOf(filter) >= 0;
+    };
+    this.dataSource.paginator = this.paginator;
+  }
+
+  toggleOne(row: RoleItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  save() {
+    this.dialogRef.close(this.selection.selected);
+  }
+}
+```

@@ -3,20 +3,74 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--TestComponent.cpp
-file--TestComponent.fpp
-file--TestComponent.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES "${CMAKE_CURRENT_LIST_DIR}/TestComponent.fpp" "${CMAKE_CURRENT_LIST_DIR}/TestComponent.cpp")
+register_fprime_module()
 ```
 
-## 항목
+### `TestComponent.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.cpp`](file--TestComponent.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.fpp`](file--TestComponent.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.hpp`](file--TestComponent.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.cpp`
+
+
+```cpp
+#include <TestLibrary/TestComponent/TestComponent.hpp>
+
+namespace TestLibrary {
+
+TestComponent ::TestComponent(const char* name) :
+    TestComponentComponentBase(name)
+{}
+
+TestComponent ::~TestComponent() {}
+
+void TestComponent ::schedIn_handler(FwIndexType portNum, U32 context) {}
+};
+```
+
+### `TestComponent.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.fpp`
+
+
+```fpp
+module TestLibrary {
+    @ Test component for our test library
+    passive component TestComponent {
+        sync input port schedIn: Svc.Sched
+    }
+}
+```
+
+### `TestComponent.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/TestLibrary/TestComponent/TestComponent.hpp`
+
+
+```cpp
+#ifndef TestLibrary_TestComponent_HPP
+#define TestLibrary_TestComponent_HPP
+
+#include <TestLibrary/TestComponent/TestComponentComponentAc.hpp>
+
+namespace TestLibrary {
+
+class TestComponent : public TestComponentComponentBase
+{
+  public:
+    TestComponent(const char* name);
+    ~TestComponent();
+  private:
+    void schedIn_handler(FwIndexType portNum, U32 context);
+};
+
+};
+#endif
+```

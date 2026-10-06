@@ -3,30 +3,467 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 libcrc/index
 openssl/index
-file--CMakeLists.txt
-file--Hash.hpp
-file--HashBuffer.hpp
-file--HashBufferCommon.cpp
-file--HashCommon.cpp
-file--HashConfig.hpp
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/libcrc/`](libcrc/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/openssl/`](openssl/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/Hash.hpp`](file--Hash.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashBuffer.hpp`](file--HashBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashBufferCommon.cpp`](file--HashBufferCommon.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashCommon.cpp`](file--HashCommon.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashConfig.hpp`](file--HashConfig.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/libcrc/CRC32.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/libcrc/lib_crc.c"
+  "${CMAKE_CURRENT_LIST_DIR}/HashBufferCommon.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/HashCommon.cpp"
+)
+set(MOD_DEPS
+  "Fw/Types"
+)
+register_fprime_module()
+```
+
+### `Hash.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/Hash.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Hash.hpp
+// \author dinkel
+// \brief  hpp file for Hash class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef UTILS_HASH_HPP
+#define UTILS_HASH_HPP
+
+#include "Fw/Types/StringType.hpp"
+#include <Utils/Hash/HashBuffer.hpp>
+
+namespace Utils {
+
+  //! \class Hash
+  //! \brief A generic interface for creating and comparing hash values
+  //!
+  class Hash {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Types
+      // ----------------------------------------------------------------------
+    public:
+
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct a Hash object
+      //!
+      Hash();
+
+      //! Destroy a Hash object
+      //!
+      ~Hash();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public static methods
+      // ----------------------------------------------------------------------
+
+      //! Create a hash value all at once from raw data
+      //! \param data: pointer to start of data
+      //! \param len: length of the data
+      //! \param buffer: filled with resulting hash value
+      static void hash(
+          const void *data,
+          const FwSizeType len,
+          HashBuffer& buffer
+      );
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public instance methods
+      // ----------------------------------------------------------------------
+
+      //! Initialize a Hash object for incremental hash computation
+      //!
+      void init();
+
+      //! Set hash value to specified value
+      //!
+      void setHashValue(
+          HashBuffer &value //! Hash value
+      );
+
+      //! Update an incremental computation with new data
+      //! \param data: pointer to start of data to add to hash calculation
+      //! \param len: length of data to add to hash calculation
+      void update(
+          const void *const data,
+          const FwSizeType len
+      );
+
+      //! Finalize an incremental computation and return the result
+      //!
+      void final(
+          HashBuffer& buffer //! The result
+      );
+
+      //! Finalize an incremental computation and return the result
+      //!
+      void final(U32 &hashvalue);
+
+      //! Get the file extension for the supported hash type
+      //! E.g., could return "SHA256"
+      //!
+      static const char* getFileExtensionString();
+
+      //! Add the extension for the supported hash type
+      //!
+      static void addFileExtension(
+          const Fw::StringBase& baseName, //!< The base name
+          Fw::StringBase& extendedName //!< The extended name
+      );
+
+      //! Get the length of the file extension string
+      //!
+      static FwSizeType getFileExtensionLength();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The hash handle
+      //!
+      HASH_HANDLE_TYPE hash_handle;
+
+  };
+
+}
+
+#endif
+```
+
+### `HashBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashBuffer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Hash.hpp
+// \author dinkel
+// \brief  hpp file for Hash class
+//
+// \copyright
+// Copyright 2009-2024, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef UTILS_HASH_BUFFER_HPP
+#define UTILS_HASH_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/Serializable.hpp>
+#include <Utils/Hash/HashConfig.hpp>
+
+namespace Utils {
+
+//! \class HashBuffer
+//! \brief A container class for holding a hash buffer
+//!
+class HashBuffer : public Fw::SerializeBufferBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct a HashBuffer object
+    //!
+    HashBuffer(const U8* args, FwSizeType size);
+    HashBuffer(const HashBuffer& other);
+    HashBuffer();
+
+    //! Destroy a HashBuffer object
+    //!
+    virtual ~HashBuffer();
+
+    // ----------------------------------------------------------------------
+    // Public instance methods
+    // ----------------------------------------------------------------------
+
+    //! Assign a hash buffer from another hash buffer
+    //!
+    HashBuffer& operator=(const HashBuffer& other);
+
+    //! Compare two hash buffers for equality
+    //!
+    bool operator==(const HashBuffer& other) const;
+
+    //! Compare two hash buffers for inequality
+    //!
+    bool operator!=(const HashBuffer& other) const;
+
+    //! Get the total buffer length of a hash buffer
+    //!
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+
+    //! Get a pointer to the buffer within the hash buffer
+    //!
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+    //! Convert bytes 0 through 3 of the hash data to a big-Endian U32 value
+    U32 asBigEndianU32() const;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The buffer which stores the hash digest
+    //!
+    U8 m_bufferData[HASH_DIGEST_LENGTH] = {};  // packet data buffer
+};
+}  // namespace Utils
+
+#endif
+```
+
+### `HashBufferCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashBufferCommon.cpp`
+
+
+```cpp
+#include <Utils/Hash/HashBuffer.hpp>
+#include <cstring>
+
+#include <algorithm>
+
+#include "Fw/Types/Serializable.hpp"
+
+namespace Utils {
+
+HashBuffer::HashBuffer() {}
+
+HashBuffer::HashBuffer(const U8* args, FwSizeType size) : Fw::SerializeBufferBase() {
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+HashBuffer::~HashBuffer() {}
+
+HashBuffer::HashBuffer(const HashBuffer& other) : Fw::SerializeBufferBase() {
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+HashBuffer& HashBuffer::operator=(const HashBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    Fw::SerializeStatus stat = Fw::SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(Fw::FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+bool HashBuffer::operator==(const HashBuffer& other) const {
+    if ((this->getBuffLength() == other.getBuffLength()) &&
+        (memcmp(this->getBuffAddr(), other.getBuffAddr(), static_cast<size_t>(this->getBuffLength())) != 0)) {
+        return false;
+    }
+    return true;
+}
+
+bool HashBuffer::operator!=(const HashBuffer& other) const {
+    return !(*this == other);
+}
+
+const U8* HashBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* HashBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+FwSizeType HashBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+U32 HashBuffer::asBigEndianU32() const {
+    U32 result = 0;
+    const FwSizeType bufferSize = sizeof this->m_bufferData;
+    const FwSizeType numBytes = std::min(bufferSize, static_cast<FwSizeType>(sizeof(U32)));
+    for (FwSizeType i = 0; i < numBytes; i++) {
+        result <<= 8;
+        FW_ASSERT(i < bufferSize, static_cast<FwAssertArgType>(i), static_cast<FwAssertArgType>(bufferSize));
+        result += this->m_bufferData[i];
+    }
+    return result;
+}
+}  // namespace Utils
+```
+
+### `HashCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashCommon.cpp`
+
+
+```cpp
+#include <Utils/Hash/Hash.hpp>
+
+namespace Utils {
+
+    const char* Hash ::
+        getFileExtensionString()
+    {
+        return HASH_EXTENSION_STRING;
+    }
+
+    void Hash ::
+      addFileExtension(
+          const Fw::StringBase& baseName,
+          Fw::StringBase& extendedName
+    ) {
+      extendedName.format("%s%s", baseName.toChar(), HASH_EXTENSION_STRING);
+    }
+
+    FwSizeType Hash ::
+        getFileExtensionLength()
+    {
+        // Size of returns the size including the '\0' character.
+        // We want to return just the size of the string.
+        return sizeof(HASH_EXTENSION_STRING) - 1;
+    }
+
+}
+```
+
+### `HashConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/HashConfig.hpp`
+
+
+```cpp
+#ifndef UTILS_HASH_CONFIG_HPP
+#define UTILS_HASH_CONFIG_HPP
+
+//! Choose the hash implementation that you want to use
+//! by including the implementation hash header that
+//! you are interested in. Ie. This could look like:
+//!
+//! #include <Utils/Hash/openssl/SHA256.hpp>
+//!
+#include <Utils/Hash/libcrc/CRC32.hpp>
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Utils/Hash/README.md`
+
+
+````markdown
+# Utils::Hash
+
+This directory contains a generic interface for creating hashes 
+of data. It provides a mechanism for selecting different implementations
+of the hash interface, which could be as simple as an 8 bit checksum or as
+complex as a 256 bit SHA256 hash.
+
+The generic interface to the hashing utility is included in `Utils/Hash/Hash.hpp`. 
+Its corresponding generic hash buffer class (which is used to hold a computed hash
+digest) can be found in `Utils/Hash/HashBuffer.hpp`. Some common implementation code 
+for each class is included in `Utils/Hash/HashCommon.cpp` and `Utils/Hash/HashBufferCommon.cpp`.
+
+Specific implementations of the hashing utility are stored in subdirectories in `Utils/Hash/`.
+Currently, one such implementation exists in `Utils/Hash/openssl/` which provides a SHA256
+hash using the openssl library. Another implementation is also provided which calculates a 
+32-bit CRC32, which depends on no external libraries.
+
+A specific implementation can be selected by modifying the `HashConfig.hpp` file.
+
+## Using `hash`
+
+The generic hash interface includes only 4 methods besides the constructor/destructor. A 
+description of each method is included below:
+
+`hash.init()` - This method initializes the hash object, priming it for computing a new hash. It 
+should be run before beginning to calculate each new hash. It resets any state remaining
+from a previously computed hash.
+
+`hash.update(data, len)` - This method updates the hash object with new data to hash. It can be run as many
+times as you like, allowing you to continue adding data to the hash state. In this way, a user can hash their data as they read it
+from a buffer, or from a file, in segments.
+
+`hash.final(buffer)` - This method returns a hash of all the data given to the hash object via `update` since
+the last `init` was run. It returns the hash in `buffer`, which is a `HashBuffer` object.
+
+`hash.hash(data, len, buffer)` - This method runs `init`, `update`, and `final` all in one shot. If you have already
+collected all the data that you want to hash into a buffer `data` with length `len`, you can use this static function
+to calculate the hash all at once. The computed hash is returned in `buffer`, which is a `HashBuffer` object.
+
+## Configuring `hash`
+
+To configure the `hash` utility to use a specific hashing implementation, modify `HashConfig.hpp` to include 
+the header file of the implementation you wish to use. For example, to use SHA256 hashing, your `HashConfig.hpp` 
+should look something like:
+
+```
+#ifndef UTILS_HASH_CONFIG_HPP
+#define UTILS_HASH_CONFIG_HPP
+
+#include <Utils/Hash/openssl/SHA256.hpp>
+
+#endif
+```
+
+## Building your own `hash` implementation
+
+The generic interface to `hash` can be implemented using many different hashing algorithms. To construct your own 
+please look at the SHA256 implementation as an example, found in the `openssl` subdirectory. Your implementation
+should include a few files:
+
+`YourImplementationHash.hpp` - This file must declare the following `#define` constants: `HASH_HANDLE_TYPE`, the handle type for computing the hash internally, `HASH_DIGEST_LENGTH`, the length of the hash digest in bytes, and `HASH_EXTENSION_STRING`, the file extension you would assign to the hash should it be stored into a file (ie. `.SHA256`).
+
+`YourImplementationHash.cpp` - The implementation file for the hashing algorithm. It should implement the methods declared
+in `Hash.hpp`, except for those included in `HashCommon.cpp`.
+
+`README.md` - So that those who come after you will understand how your implementation works and what it is used for ;)
+
+````

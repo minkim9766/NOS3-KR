@@ -3,44 +3,880 @@
 
 **경로:** `fsw/osal/src/os/rtems/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-binsem.h`
 
-file--os-impl-binsem.h
-file--os-impl-console.h
-file--os-impl-countsem.h
-file--os-impl-dirs.h
-file--os-impl-files.h
-file--os-impl-gettime.h
-file--os-impl-idmap.h
-file--os-impl-io.h
-file--os-impl-loader.h
-file--os-impl-mutex.h
-file--os-impl-queues.h
-file--os-impl-select.h
-file--os-impl-sockets.h
-file--os-impl-tasks.h
-file--os-impl-timebase.h
-file--os-rtems.h
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-binsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_BINSEM_H
+#define OS_IMPL_BINSEM_H
+
+#include "osconfig.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_binsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+#endif /* OS_IMPL_BINSEM_H */
 ```
 
-## 항목
+### `os-impl-console.h`
 
-- [`fsw/osal/src/os/rtems/inc/os-impl-binsem.h`](file--os-impl-binsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-console.h`](file--os-impl-console.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-countsem.h`](file--os-impl-countsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-dirs.h`](file--os-impl-dirs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-files.h`](file--os-impl-files.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-gettime.h`](file--os-impl-gettime.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-idmap.h`](file--os-impl-idmap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-io.h`](file--os-impl-io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-loader.h`](file--os-impl-loader.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-mutex.h`](file--os-impl-mutex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-queues.h`](file--os-impl-queues.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-select.h`](file--os-impl-select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-sockets.h`](file--os-impl-sockets.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-tasks.h`](file--os-impl-tasks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-impl-timebase.h`](file--os-impl-timebase.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/rtems/inc/os-rtems.h`](file--os-rtems.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-console.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_CONSOLE_H
+#define OS_IMPL_CONSOLE_H
+
+#include <stdbool.h>
+#include "osconfig.h"
+#include <unistd.h>
+#include <semaphore.h>
+
+/* Console device */
+typedef struct
+{
+    sem_t data_sem;
+} OS_impl_console_internal_record_t;
+
+extern OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+#endif /* OS_IMPL_CONSOLE_H */
+```
+
+### `os-impl-countsem.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-countsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_COUNTSEM_H
+#define OS_IMPL_COUNTSEM_H
+
+#include "osconfig.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_countsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+#endif /* OS_IMPL_COUNTSEM_H */
+```
+
+### `os-impl-dirs.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-dirs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_DIRS_H
+#define OS_IMPL_DIRS_H
+
+#include "osconfig.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+typedef struct
+{
+    DIR *dp;
+} OS_impl_dir_internal_record_t;
+
+/*
+ * The directory handle table.
+ */
+extern OS_impl_dir_internal_record_t OS_impl_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+#endif /* OS_IMPL_DIRS_H */
+```
+
+### `os-impl-files.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-files.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_FILES_H
+#define OS_IMPL_FILES_H
+
+#include "os-impl-io.h"
+
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+/*
+ * RTEMS does not have UID/GID so these are defined as 0.
+ */
+#define OS_IMPL_SELF_EUID 0
+#define OS_IMPL_SELF_EGID 0
+
+#define OS_IMPL_REGULAR_FILE_FLAGS 0
+
+#endif /* OS_IMPL_FILES_H */
+```
+
+### `os-impl-gettime.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-gettime.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_GETTIME_H
+#define OS_IMPL_GETTIME_H
+
+#include "osconfig.h"
+#include <time.h>
+
+/**
+ * \brief Identifies the clock ID for OSAL clock operations on RTEMS
+ *
+ * This is the POSIX clock ID that will be used to implement
+ * OS_GetLocalTime() and OS_SetLocalTime().
+ */
+#define OSAL_GETTIME_SOURCE_CLOCK CLOCK_REALTIME
+
+#endif /* OS_IMPL_GETTIME_H */
+```
+
+### `os-impl-idmap.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-idmap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_IDMAP_H
+#define OS_IMPL_IDMAP_H
+
+#include "osconfig.h"
+#include "osapi-idmap.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_objtype_lock_t;
+
+/* Tables where the lock state information is stored */
+extern OS_impl_objtype_lock_t *const OS_impl_objtype_lock_table[OS_OBJECT_TYPE_USER];
+
+#endif /* OS_IMPL_IDMAP_H */
+```
+
+### `os-impl-io.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-io.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_IO_H
+#define OS_IMPL_IO_H
+
+#include "osconfig.h"
+#include <stdbool.h>
+#include <unistd.h>
+
+typedef struct
+{
+    int  fd;
+    bool selectable;
+} OS_impl_file_internal_record_t;
+
+/*
+ * The global file handle table.
+ *
+ * This table is shared across multiple units (files, sockets, etc) and they will share
+ * the same file handle table from the basic file I/O.
+ */
+extern OS_impl_file_internal_record_t OS_impl_filehandle_table[OS_MAX_NUM_OPEN_FILES];
+
+#endif /* OS_IMPL_IO_H */
+```
+
+### `os-impl-loader.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-loader.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_LOADER_H
+#define OS_IMPL_LOADER_H
+
+#include "osconfig.h"
+#include <dlfcn.h>
+
+#include <rtems/rtl/rtl.h>
+#include <rtems/rtl/rtl-unresolved.h>
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/*
+ * A local lookup table for RTEMS-specific information.
+ * This is not directly visible to the outside world.
+ */
+typedef struct
+{
+    /* cppcheck-suppress unusedStructMember */
+    void *dl_handle;
+} OS_impl_module_internal_record_t;
+
+extern OS_impl_module_internal_record_t OS_impl_module_table[OS_MAX_MODULES];
+
+#endif /* OS_IMPL_LOADER_H */
+```
+
+### `os-impl-mutex.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-mutex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_MUTEX_H
+#define OS_IMPL_MUTEX_H
+
+#include "osconfig.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_mutex_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_mutex_internal_record_t OS_impl_mutex_table[OS_MAX_MUTEXES];
+
+#endif /* OS_IMPL_MUTEX_H */
+```
+
+### `os-impl-queues.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-queues.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_QUEUES_H
+#define OS_IMPL_QUEUES_H
+
+#include "osconfig.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_queue_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+#endif /* OS_IMPL_QUEUES_H */
+```
+
+### `os-impl-select.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_SELECT_H
+#define OS_IMPL_SELECT_H
+
+#include "os-impl-io.h"
+
+#include <sys/select.h>
+#include <sys/time.h>
+
+#endif /* OS_IMPL_SELECT_H */
+```
+
+### `os-impl-sockets.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-sockets.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_SOCKETS_H
+#define OS_IMPL_SOCKETS_H
+
+#include "os-impl-io.h"
+
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/select.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+
+/*
+ * Socket descriptors should be usable with the select() API
+ */
+#define OS_IMPL_SOCKET_SELECTABLE true
+
+/*
+ * A RTEMS socket I/O layer should support using
+ * nonblocking I/O calls in combination with select().
+ */
+#define OS_IMPL_SOCKET_FLAGS O_NONBLOCK
+
+#endif /* OS_IMPL_SOCKETS_H */
+```
+
+### `os-impl-tasks.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-tasks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_TASKS_H
+#define OS_IMPL_TASKS_H
+
+#include "osconfig.h"
+#include <rtems.h>
+
+typedef struct
+{
+    rtems_id id;
+} OS_impl_task_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+#endif /* OS_IMPL_TASKS_H */
+```
+
+### `os-impl-timebase.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-impl-timebase.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ */
+
+#ifndef OS_IMPL_TIMEBASE_H
+#define OS_IMPL_TIMEBASE_H
+
+#include "osconfig.h"
+#include <pthread.h>
+#include <signal.h>
+
+typedef struct
+{
+    pthread_t       handler_thread;
+    pthread_mutex_t handler_mutex;
+    timer_t         host_timerid;
+    int             assigned_signal;
+    sigset_t        sigset;
+    sig_atomic_t    reset_flag;
+    struct timespec softsleep;
+} OS_impl_timebase_internal_record_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+extern OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+#endif /* OS_IMPL_TIMEBASE_H */
+```
+
+### `os-rtems.h`
+
+**경로:** `fsw/osal/src/os/rtems/inc/os-rtems.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  rtems
+ *
+ * Purpose: This file contains definitions that are shared across the RTEMS
+ *          OSAL implementation.  This file is private to the RTEMS port and it
+ *          may contain RTEMS-specific definitions.
+ */
+
+#ifndef OS_RTEMS_H
+#define OS_RTEMS_H
+
+/****************************************************************************************
+                                    COMMON INCLUDE FILES
+ ***************************************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <errno.h>
+#include <signal.h>
+#include <sys/types.h>
+#include <rtems.h>
+#include <rtems/malloc.h>
+#include <rtems/rtems/intr.h>
+
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+/*
+ * Handle the data structure and API name changes between RTEMS 4.11 and RTEMS 5.1+
+ */
+#ifdef OS_RTEMS_4_DEPRECATED
+
+#define OSAL_HEAP_INFO_BLOCK    region_information_block
+#define OSAL_UNRESOLV_REC_TYPE  rtems_rtl_unresolv_rec_t
+#define OSAL_UNRESOLVED_SYMBOL  rtems_rtl_unresolved_name
+#define OSAL_UNRESOLVED_ITERATE rtems_rtl_unresolved_interate
+
+#else
+
+#define OSAL_HEAP_INFO_BLOCK    Heap_Information_block
+#define OSAL_UNRESOLV_REC_TYPE  rtems_rtl_unresolv_rec
+#define OSAL_UNRESOLVED_SYMBOL  rtems_rtl_unresolved_symbol
+#define OSAL_UNRESOLVED_ITERATE rtems_rtl_unresolved_iterate
+
+#endif
+
+/****************************************************************************************
+                                    TYPEDEFS
+ ***************************************************************************************/
+
+typedef struct
+{
+    uint32   ClockAccuracyNsec;
+    rtems_id IdleTaskId;
+} RTEMS_GlobalVars_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+extern RTEMS_GlobalVars_t RTEMS_GlobalVars;
+
+/****************************************************************************************
+                       RTEMS IMPLEMENTATION FUNCTION PROTOTYPES
+ ***************************************************************************************/
+
+int32 OS_Rtems_TaskAPI_Impl_Init(void);
+int32 OS_Rtems_QueueAPI_Impl_Init(void);
+int32 OS_Rtems_BinSemAPI_Impl_Init(void);
+int32 OS_Rtems_CountSemAPI_Impl_Init(void);
+int32 OS_Rtems_MutexAPI_Impl_Init(void);
+int32 OS_Rtems_TimeBaseAPI_Impl_Init(void);
+int32 OS_Rtems_ModuleAPI_Impl_Init(void);
+int32 OS_Rtems_StreamAPI_Impl_Init(void);
+int32 OS_Rtems_DirAPI_Impl_Init(void);
+int32 OS_Rtems_FileSysAPI_Impl_Init(void);
+
+int32 OS_Rtems_TableMutex_Init(osal_objtype_t idtype);
+
+#endif /* OS_RTEMS_H */
+```

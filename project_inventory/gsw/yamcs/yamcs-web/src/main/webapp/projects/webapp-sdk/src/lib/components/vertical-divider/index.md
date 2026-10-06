@@ -3,16 +3,39 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/vertical-divider/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `vertical-divider.component.css`
 
-file--vertical-divider.component.css
-file--vertical-divider.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/vertical-divider/vertical-divider.component.css`
+
+
+```css
+:host {
+  display: inline-block;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  height: 24px;
+  width: 1px;
+}
 ```
 
-## 항목
+### `vertical-divider.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/vertical-divider/vertical-divider.component.css`](file--vertical-divider.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/vertical-divider/vertical-divider.component.ts`](file--vertical-divider.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/vertical-divider/vertical-divider.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-vertical-divider',
+  template: '',
+  styleUrl: './vertical-divider.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-vertical-divider',
+    role: 'separator',
+  },
+})
+export class YaVerticalDivider {}
+```

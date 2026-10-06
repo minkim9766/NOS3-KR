@@ -3,18 +3,80 @@
 
 **경로:** `components/generic_torquer/sim/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Inp_torquer_IPC.txt`
 
-file--Inp_torquer_IPC.txt
-file--nos3-torquer-simulator.xml
-file--SC_torquer_NOS3.txt
+**경로:** `components/generic_torquer/sim/cfg/Inp_torquer_IPC.txt`
+
+
+```text
+**********************************  IPC 3   *****************************
+RX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+1                                       ! AC.ID for ACS mode
+"Torquer.Rx"                            ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+localhost      4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
 ```
 
-## 항목
+### `nos3-torquer-simulator.xml`
 
-- [`components/generic_torquer/sim/cfg/Inp_torquer_IPC.txt`](file--Inp_torquer_IPC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/sim/cfg/nos3-torquer-simulator.xml`](file--nos3-torquer-simulator.xml) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/sim/cfg/SC_torquer_NOS3.txt`](file--SC_torquer_NOS3.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_torquer/sim/cfg/nos3-torquer-simulator.xml`
+
+
+```xml
+        <simulator>
+            <name>generic_torquer_sim</name>
+            <active>true</active>
+            <library>libgeneric_torquer_sim.so</library>
+            <hardware-model>
+                <type>GENERIC_TORQUER</type>
+                <connections>
+                    <connection>
+                        <type>command</type>
+                        <bus-name>command</bus-name>
+                        <node-name>torquer-command</node-name>
+                    </connection>
+                </connections>
+                <data-provider>
+                    <command-port>4279</command-port>
+                    <max-connection-attempts>10</max-connection-attempts>
+                    <retry-wait-seconds>5</retry-wait-seconds>
+                </data-provider>
+                <params>
+                    <num-mtbs>3</num-mtbs>
+                <!-- Parameters from 42 file -->
+                    <!-- MTB Saturation (A-m^2) -->
+                    <max-trq-mtb-0>1.42</max-trq-mtb-0>
+                    <max-trq-mtb-1>1.42</max-trq-mtb-1>
+                    <max-trq-mtb-2>1.42</max-trq-mtb-2>
+                </params>
+            </hardware-model>
+        </simulator>
+```
+
+### `SC_torquer_NOS3.txt`
+
+**경로:** `components/generic_torquer/sim/cfg/SC_torquer_NOS3.txt`
+
+
+```text
+**************************** MTB Parameters ****************************
+3                             ! Number of MTBs
+==============================  MTB 0  =================================
+1.42                          ! Saturation (A-m^2)
+1.0   0.0   0.0               ! MTB Axis Components, [X, Y, Z]
+0                             ! Flex Node Index
+==============================  MTB 1  =================================
+1.42                          ! Saturation (A-m^2)
+0.0   1.0   0.0               ! MTB Axis Components, [X, Y, Z]
+0                             ! Flex Node Index
+==============================  MTB 2  =================================
+1.42                          ! Saturation (A-m^2)
+0.0   0.0   1.0               ! MTB Axis Components, [X, Y, Z]
+0                             ! Flex Node Index
+```

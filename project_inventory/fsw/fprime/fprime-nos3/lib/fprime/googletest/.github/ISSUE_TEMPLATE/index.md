@@ -3,18 +3,96 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `00-bug_report.md`
 
-file--00-bug_report.md
-file--10-feature_request.md
-file--config.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/00-bug_report.md`
+
+
+```markdown
+---
+name: Bug report
+about: Create a report to help us improve
+title: ''
+labels: 'bug'
+assignees: ''
+---
+
+**Describe the bug**
+
+Include a clear and concise description of what the problem is, including what
+you expected to happen, and what actually happened.
+
+**Steps to reproduce the bug**
+
+It's important that we are able to reproduce the problem that you are
+experiencing. Please provide all code and relevant steps to reproduce the
+problem, including your `BUILD`/`CMakeLists.txt` file and build commands. Links
+to a GitHub branch or [godbolt.org](https://godbolt.org/) that demonstrate the
+problem are also helpful.
+
+**Does the bug persist in the most recent commit?**
+
+We recommend using the latest commit in the master branch in your projects.
+
+**What operating system and version are you using?**
+
+If you are using a Linux distribution please include the name and version of the
+distribution as well.
+
+**What compiler and version are you using?**
+
+Please include the output of `gcc -v` or `clang -v`, or the equivalent for your
+compiler.
+
+**What build system are you using?**
+
+Please include the output of `bazel --version` or `cmake --version`, or the
+equivalent for your build system.
+
+**Additional context**
+
+Add any other context about the problem here.
 ```
 
-## 항목
+### `10-feature_request.md`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/00-bug_report.md`](file--00-bug_report.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/10-feature_request.md`](file--10-feature_request.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/config.yml`](file--config.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/10-feature_request.md`
+
+
+```markdown
+---
+name: Feature request
+about: Propose a new feature
+title: ''
+labels: 'enhancement'
+assignees: ''
+---
+
+**Does the feature exist in the most recent commit?**
+
+We recommend using the latest commit from GitHub in your projects.
+
+**Why do we need this feature?**
+
+Ideally, explain why a combination of existing features cannot be used instead.
+
+**Describe the proposal**
+
+Include a detailed description of the feature, with usage examples.
+
+**Is the feature specific to an operating system, compiler, or build system version?**
+
+If it is, please specify which versions.
+
+```
+
+### `config.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/ISSUE_TEMPLATE/config.yml`
+
+
+```yaml
+blank_issues_enabled: false
+```

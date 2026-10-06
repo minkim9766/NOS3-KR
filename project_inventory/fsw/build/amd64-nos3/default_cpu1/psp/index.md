@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/psp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,23 +14,36 @@ nos-linux-impl/index
 nos-linux-shared/index
 port_notimpl-nos-linux-impl/index
 ram_notimpl-nos-linux-impl/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--libpsp-nos-linux.a
-file--Makefile
-file--nos-linux_module_list.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/psp/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/eeprom_notimpl-nos-linux-impl/`](eeprom_notimpl-nos-linux-impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/nos-linux-impl/`](nos-linux-impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/nos-linux-shared/`](nos-linux-shared/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/port_notimpl-nos-linux-impl/`](port_notimpl-nos-linux-impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/ram_notimpl-nos-linux-impl/`](ram_notimpl-nos-linux-impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/psp/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/psp/libpsp-nos-linux.a`](file--libpsp-nos-linux.a) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/psp/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/psp/nos-linux_module_list.c`](file--nos-linux_module_list.c) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/psp/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/psp/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libpsp-nos-linux.a`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/psp/libpsp-nos-linux.a`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/psp/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos-linux_module_list.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/psp/nos-linux_module_list.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,26 +3,811 @@
 
 **경로:** `components/arducam/fsw/cfs/unit_test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cam_cmd_test.c`
 
-file--cam_cmd_test.c
-file--cam_cmd_test.h
-file--cam_init_test.c
-file--cam_init_test.h
-file--cam_test_utils.c
-file--cam_test_utils.h
-file--cam_testrunner.c
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_cmd_test.c`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_cmd_test.h"
+#include "cam_test_utils.h"
+
+#include <cam_app.h>
+#include <cam_msgids.h>
+#include <cam_platform_cfg.h>
+
+#include <uttest.h>
+#include <utassert.h>
+#include <ut_cfe_sb_hooks.h>
+#include <ut_cfe_sb_stubs.h>
+
+#include <stdio.h>
+
+/* test noop cmd */
+static void CAM_Cmd_Test_NOOP(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init noop cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_NOOP_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+}
+
+/* test reset counters cmd */
+static void CAM_Cmd_Test_RESET_COUNTERS(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init reset counters cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_RESET_COUNTERS_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 0, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 0, "cam cmd error count");
+}
+
+/* test stop cmd */
+static void CAM_Cmd_Test_STOP(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init stop cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_STOP_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.State == CAM_STOP, "cam stopped");
+}
+
+/* test pause cmd */
+static void CAM_Cmd_Test_PAUSE(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_STOP;
+
+    /* init pause cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_PAUSE_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.State == CAM_PAUSE, "cam paused");
+}
+
+/* test resume cmd */
+static void CAM_Cmd_Test_RESUME(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_STOP;
+
+    /* init resume cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_RESUME_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.State == CAM_RUN, "cam running");
+}
+
+/* test timeout cmd */
+static void CAM_Cmd_Test_TIMEOUT(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_RUN;
+
+    /* init timeout cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_TIMEOUT_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.State == CAM_TIME, "cam timed out");
+}
+
+/* test low voltage cmd */
+static void CAM_Cmd_Test_LOW_VOLTAGE(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_RUN;
+
+    /* init timeout cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_LOW_VOLTAGE_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.State == CAM_LOW_VOLTAGE, "cam low voltage");
+}
+
+/* test exp 1 cmd */
+static void CAM_Cmd_Test_EXP1(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_STOP;
+
+    /* init timeout cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_EXP1_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.Exp == 1, "cam exp1");
+    UtAssert_True(CAM_AppData.State == CAM_STOP, "cam stop");
+}
+
+/* test exp 2 cmd */
+static void CAM_Cmd_Test_EXP2(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_PAUSE;
+
+    /* init timeout cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_EXP2_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.Exp == 2, "cam exp 2");
+    UtAssert_True(CAM_AppData.State == CAM_PAUSE, "cam pause");
+}
+
+/* test exp 3 cmd */
+static void CAM_Cmd_Test_EXP3(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+    CAM_AppData.State                            = CAM_TIME;
+
+    /* init timeout cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_EXP3_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 11, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_True(CAM_AppData.Exp == 3, "cam exp 3");
+    UtAssert_True(CAM_AppData.State == CAM_TIME, "cam time");
+}
+
+/* test send HkTelemetryPkt cmd */
+static void CAM_Cmd_Test_HK(void)
+{
+    /* init data */
+    Ut_CFE_MSG_InitHook(&CAM_AppData.HkTelemetryPkt, CAM_HK_TLM_MID, CAM_HK_TLM_LNGTH, true);
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init HkTelemetryPkt cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_SEND_HK_MID, sizeof(CAM_NoArgsCmd_t), true);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 10, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 20, "cam cmd error count");
+
+    /* app data */
+    UtAssert_PacketSent(CAM_HK_TLM_MID, "cam HkTelemetryPkt sent");
+    CAM_Hk_tlm_t *HkTelemetryPkt = (CAM_Hk_tlm_t *)Ut_CFE_SB_FindPacket(CAM_HK_TLM_MID, 1);
+    UtAssert_True(HkTelemetryPkt != NULL, "cam HkTelemetryPkt packet");
+    if (HkTelemetryPkt)
+    {
+        UtAssert_True(HkTelemetryPkt->CommandCount == 10, "cam HkTelemetryPkt cmd error count");
+        UtAssert_True(HkTelemetryPkt->CommandErrorCount == 20, "cam HkTelemetryPkt cmd error count");
+    }
+}
+
+/* test invalid cmd code */
+static void CAM_Cmd_Test_INVALID_CC(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init invalid cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, 100);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 10, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 21, "cam cmd error count");
+
+    /* app data */
+}
+
+/* test invalid msg id */
+static void CAM_Cmd_Test_INVALID_MSG(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init invalid cmd */
+    CAM_NoArgsCmd_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, 50, sizeof(CAM_NoArgsCmd_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_NOOP_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 10, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 21, "cam cmd error count");
+
+    /* app data */
+}
+
+/* test invalid length */
+static void CAM_Cmd_Test_INVALID_LENGTH(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    /* init invalid cmd */
+    CAM_Exp_tlm_t cmd;
+    Ut_CFE_MSG_InitHook(&cmd, CAM_CMD_MID, sizeof(CAM_Exp_tlm_t), true);
+    Ut_CFE_SB_SetCmdCodeHook((CFE_MSG_Message_t *)&cmd, CAM_NOOP_CC);
+
+    /* process cmd */
+    CAM_AppData.MsgPtr = (CFE_MSG_Message_t *)&cmd;
+    CAM_ProcessCommandPacket();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 10, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 21, "cam cmd error count");
+}
+
+void CAM_Cmd_Test_AddTestCases(void)
+{
+    UtTest_Add(CAM_Cmd_Test_NOOP, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: NOOP");
+
+    UtTest_Add(CAM_Cmd_Test_RESET_COUNTERS, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: RESET COUNTERS");
+
+    UtTest_Add(CAM_Cmd_Test_STOP, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: STOP");
+
+    UtTest_Add(CAM_Cmd_Test_PAUSE, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: PAUSE");
+
+    UtTest_Add(CAM_Cmd_Test_RESUME, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: RESUME");
+
+    UtTest_Add(CAM_Cmd_Test_HK, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: HKTELEMETRY PKT");
+
+    UtTest_Add(CAM_Cmd_Test_TIMEOUT, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: TIMEOUT");
+
+    UtTest_Add(CAM_Cmd_Test_LOW_VOLTAGE, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: LOW VOLTAGE");
+
+    UtTest_Add(CAM_Cmd_Test_EXP1, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: EXP 1");
+
+    UtTest_Add(CAM_Cmd_Test_EXP2, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: EXP 2");
+
+    UtTest_Add(CAM_Cmd_Test_EXP3, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: EXP 3");
+
+    UtTest_Add(CAM_Cmd_Test_INVALID_CC, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: INVALID CMD CODE");
+
+    UtTest_Add(CAM_Cmd_Test_INVALID_MSG, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: INVALID MSG");
+
+    UtTest_Add(CAM_Cmd_Test_INVALID_LENGTH, CAM_Test_Setup, CAM_Test_TearDown, "Cam Ground Command: INVALID LENGTH");
+}
 ```
 
-## 항목
+### `cam_cmd_test.h`
 
-- [`components/arducam/fsw/cfs/unit_test/cam_cmd_test.c`](file--cam_cmd_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_cmd_test.h`](file--cam_cmd_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_init_test.c`](file--cam_init_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_init_test.h`](file--cam_init_test.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_test_utils.c`](file--cam_test_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_test_utils.h`](file--cam_test_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/cfs/unit_test/cam_testrunner.c`](file--cam_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_cmd_test.h`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+void CAM_Cmd_Test_AddTestCases(void);
+```
+
+### `cam_init_test.c`
+
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_init_test.c`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_init_test.h"
+#include "cam_test_utils.h"
+
+#include <cam_app.h>
+
+#include <uttest.h>
+#include <utassert.h>
+#include <ut_cfe_es_stubs.h>
+#include <ut_cfe_sb_stubs.h>
+#include <ut_osapi_stubs.h>
+#include <ut_ostimerapi_stubs.h>
+
+#include <stdio.h>
+
+extern void cam_Main(void);
+
+/* test init - nominal */
+static void CAM_Init_Test_Nominal(void)
+{
+    /* init data */
+    CAM_AppData.HkTelemetryPkt.CommandCount      = 10;
+    CAM_AppData.HkTelemetryPkt.CommandErrorCount = 20;
+
+    CAM_AppInit();
+
+    /* cmd counters */
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandCount == 0, "cam cmd count");
+    UtAssert_True(CAM_AppData.HkTelemetryPkt.CommandErrorCount == 0, "cam cmd error count");
+}
+
+/* test init - register app error */
+static void CAM_Init_Test_RegisterError(void)
+{
+    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_REGISTERAPP_INDEX, CFE_ES_ERR_APP_REGISTER, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+/* test init - create pipe error */
+static void CAM_Init_Test_PipeError(void)
+{
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, CFE_SB_PIPE_RD_ERR, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+/* test init - subscribe error */
+static void CAM_Init_Test_SubscribeError(void)
+{
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_SUBSCRIBE_INDEX, CFE_SB_INTERNAL_ERR, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_SUBSCRIBE_INDEX, CFE_SB_INTERNAL_ERR, 2);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+/* test init - create mutex error */
+static void CAM_Init_Test_MutexError(void)
+{
+    Ut_OSAPI_SetReturnCode(UT_OSAPI_MUTSEMCREATE_INDEX, OS_ERROR, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+/* test init - create semaphore error */
+static void CAM_Init_Test_BinSemError(void)
+{
+    Ut_OSAPI_SetReturnCode(UT_OSAPI_BINSEMCREATE_INDEX, OS_ERROR, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+/* test init - create child task error */
+static void CAM_Init_Test_ChildTaskError(void)
+{
+    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_CREATECHILDTASK_INDEX, CFE_ES_ERR_CHILD_TASK_CREATE, 1);
+    cam_Main();
+    UtAssert_True(CAM_AppData.RunStatus == CFE_ES_RunStatus_APP_ERROR, "cam run status");
+}
+
+void CAM_Init_Test_AddTestCases(void)
+{
+    UtTest_Add(CAM_Init_Test_Nominal, CAM_Test_Setup, CAM_Test_TearDown, "cam init: nominal");
+    // UtTest_Add(CAM_Init_Test_RegisterError, CAM_Test_Setup, CAM_Test_TearDown,
+    //            "cam init: app reg error");
+    UtTest_Add(CAM_Init_Test_PipeError, CAM_Test_Setup, CAM_Test_TearDown, "cam init: pipe error");
+    UtTest_Add(CAM_Init_Test_SubscribeError, CAM_Test_Setup, CAM_Test_TearDown, "cam init: subscribe error");
+    UtTest_Add(CAM_Init_Test_MutexError, CAM_Test_Setup, CAM_Test_TearDown, "cam init: mutex error");
+    UtTest_Add(CAM_Init_Test_BinSemError, CAM_Test_Setup, CAM_Test_TearDown, "cam init: bin sem error");
+    UtTest_Add(CAM_Init_Test_ChildTaskError, CAM_Test_Setup, CAM_Test_TearDown, "cam init: child task error");
+}
+```
+
+### `cam_init_test.h`
+
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_init_test.h`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+void CAM_Init_Test_AddTestCases(void);
+```
+
+### `cam_test_utils.c`
+
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_test_utils.c`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_test_utils.h"
+
+#include <cam_app.h>
+
+#include <i2c_hooks.h>
+
+#include <utassert.h>
+#include <ut_cfe_es_stubs.h>
+#include <ut_cfe_sb_stubs.h>
+#include <ut_osapi_stubs.h>
+
+#ifdef __linux__
+#include <sys/stat.h>
+#include <sys/types.h>
+#endif
+
+/* prototypes */
+static int i2c_transaction(int handle, uint8_t addr, void *txbuf, uint8_t txlen, void *rxbuf, uint8_t rxlen,
+                           uint16_t timeout);
+
+/* i2c data */
+i2c_data_t     i2c_data;
+static uint8_t i2c_read_index = 0;
+
+/* i2c hooks */
+static i2c_hooks_t i2c_hooks = {
+    .i2c_init_master_hook        = NULL,
+    .i2c_master_transaction_hook = i2c_transaction,
+};
+
+void CAM_Test_Setup(void)
+{
+    /* initialize services */
+    Ut_CFE_SB_Reset();
+    Ut_CFE_ES_Reset();
+    Ut_OSAPI_Reset();
+
+    /* initialize app data */
+    CFE_PSP_MemSet(&CAM_AppData, 0, sizeof(CAM_AppData_t));
+
+    /* set i2c hooks */
+    memset(&i2c_data, 0, sizeof(i2c_data_t));
+    i2c_read_index   = 0;
+    i2c_data.retcode = E_NO_ERR;
+    set_i2c_hooks(&i2c_hooks);
+}
+
+void CAM_Test_TearDown(void)
+{
+    set_i2c_hooks(NULL);
+}
+
+/* i2c transaction hook */
+static int i2c_transaction(int handle, uint8_t addr, void *txbuf, uint8_t txlen, void *rxbuf, uint8_t rxlen,
+                           uint16_t timeout)
+{
+    /* verify buffers */
+    if (txlen > 0)
+        UtAssert_True(txbuf != NULL, "i2c txbuf != NULL");
+    if (rxlen > 0)
+        UtAssert_True(rxbuf != NULL, "i2c rxbuf != NULL");
+
+    /* verify basic cam i2c params */
+    UtAssert_True(handle == CAM_I2C_HANDLE, "cam i2c handle");
+    UtAssert_True(addr == CAM_I2C_ADDRESS, "cam i2c address");
+
+    /* save tx data for testing */
+    if (txlen > 0)
+    {
+        uint16_t avail = CAM_I2C_BUF_MAX - i2c_data.txlen;
+        UtAssert_True(txlen <= avail, "i2c txbuf overflow");
+        uint16_t len = (txlen > avail) ? avail : txlen;
+        memcpy(i2c_data.txbuf + i2c_data.txlen, txbuf, len);
+        i2c_data.txlen += len;
+    }
+
+    /* only process on no error */
+    if (i2c_data.retcode == E_NO_ERR)
+    {
+        /* return rxbuf test data */
+        if (rxlen > 0)
+        {
+            uint16_t avail = i2c_data.rxlen - i2c_read_index;
+            // UtAssert_True(rxlen <= avail, "i2c rxbuf underflow");
+            uint16_t len = (rxlen > avail) ? avail : rxlen;
+            memcpy(rxbuf, i2c_data.rxbuf + i2c_read_index, len);
+            i2c_read_index += len;
+        }
+    }
+
+    return i2c_data.retcode;
+}
+```
+
+### `cam_test_utils.h`
+
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_test_utils.h`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+#include <stdint.h>
+#include <string.h>
+
+/* osal */
+#include <common_types.h>
+
+/* libutil */
+#include <util/error.h>
+
+/* cam i2c params */
+#define CAM_I2C_ADDRESS 0x30
+#define CAM_I2C_HANDLE  2
+#define CAM_I2C_BUF_MAX 128
+
+/* test setup/teardown */
+void CAM_Test_Setup(void);
+void CAM_Test_TearDown(void);
+void CAM_set_time(uint32 milliseconds);
+void CAM_write_nvram(uint8 *buf, uint16 len);
+
+/* i2c data */
+typedef struct
+{
+    uint16_t       txlen;
+    uint8_t        txbuf[CAM_I2C_BUF_MAX];
+    uint16_t       rxlen;
+    const uint8_t *rxbuf;
+    int            retcode;
+} i2c_data_t;
+
+/* test i2c data */
+extern i2c_data_t i2c_data;
+```
+
+### `cam_testrunner.c`
+
+**경로:** `components/arducam/fsw/cfs/unit_test/cam_testrunner.c`
+
+
+```c
+/*
+  Copyright (C) 2009 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S.
+  Government.
+
+  This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including,
+  but not limited to, any warranty that the software will conform to, specifications any implied warranties of
+  merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+  documentation will conform to the program, or any warranty that the software will be error free.
+
+  In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+  consequential damages, arising out of, resulting from, or in any way connected with the software or its documentation.
+  Whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained from, or arose
+  out of the results of, or use of, the software, documentation or services provided hereunder
+
+  ITC Team
+  NASA IV&V
+  ivv-itc@lists.nasa.gov
+*/
+
+#include "cam_cmd_test.h"
+#include "cam_init_test.h"
+#include <stf1_test.h>
+#include <uttest.h>
+
+STF1_TEST_RUNNER()
+{
+    /* add test cases */
+    CAM_Cmd_Test_AddTestCases();
+    CAM_Init_Test_AddTestCases();
+
+    /* run tests */
+    return (UtTest_Run());
+}
+```

@@ -3,16 +3,94 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-time-ruler.component.html`
 
-file--edit-time-ruler.component.html
-file--edit-time-ruler.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/edit-time-ruler.component.html`
+
+
+```html
+@if (formConfigured$ | async) {
+  <form [formGroup]="form">
+    <ya-field label="Label" hint="(required)">
+      <input type="text" formControlName="name" />
+    </ya-field>
+
+    <ya-field label="Description" hint="(optional)">
+      <textarea formControlName="description" rows="3"></textarea>
+    </ya-field>
+
+    <ng-container formGroupName="properties">
+      <ya-field label="Timezone">
+        <ya-timezone-select formControlName="timezone" />
+      </ya-field>
+    </ng-container>
+  </form>
+}
 ```
 
-## 항목
+### `edit-time-ruler.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/edit-time-ruler.component.html`](file--edit-time-ruler.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/edit-time-ruler.component.ts`](file--edit-time-ruler.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/edit-time-ruler.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
+import {
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { TimelineBand, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-edit-time-ruler',
+  templateUrl: './edit-time-ruler.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class EditTimeRulerComponent implements AfterViewInit {
+  @Input()
+  form: UntypedFormGroup;
+
+  @Input()
+  band: TimelineBand;
+
+  formConfigured$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+  ) {}
+
+  ngAfterViewInit() {
+    // Angular does not seem to have form.addGroup. So we get creative.
+    // The properties sub-group is set in the parent component, and here
+    // we append to it in a roundabout way.
+
+    const propConfig: any = {
+      timezone: [this.band.properties!['timezone'], [Validators.required]],
+    };
+
+    const propertiesGroup = this.form.get('properties') as UntypedFormGroup;
+    for (const controlName in propConfig) {
+      const config = propConfig[controlName];
+      propertiesGroup.addControl(
+        controlName,
+        new UntypedFormControl(config[0], config[1]),
+      );
+    }
+
+    this.formConfigured$.next(true);
+    this.changeDetection.detectChanges();
+  }
+}
+```

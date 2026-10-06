@@ -3,26 +3,43 @@
 
 **경로:** `sims/build/CMakeFiles/3.26.0/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CompilerIdC/index
 CompilerIdCXX/index
-file--CMakeCCompiler.cmake
-file--CMakeCXXCompiler.cmake
-file--CMakeDetermineCompilerABI_C.bin
-file--CMakeDetermineCompilerABI_CXX.bin
-file--CMakeSystem.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/CMakeFiles/3.26.0/CompilerIdC/`](CompilerIdC/index) — 폴더
-- [`sims/build/CMakeFiles/3.26.0/CompilerIdCXX/`](CompilerIdCXX/index) — 폴더
-- [`sims/build/CMakeFiles/3.26.0/CMakeCCompiler.cmake`](file--CMakeCCompiler.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/3.26.0/CMakeCXXCompiler.cmake`](file--CMakeCXXCompiler.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_C.bin`](file--CMakeDetermineCompilerABI_C.bin) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_CXX.bin`](file--CMakeDetermineCompilerABI_CXX.bin) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/3.26.0/CMakeSystem.cmake`](file--CMakeSystem.cmake) — 빌드 산출물 (경로만)
+### `CMakeCCompiler.cmake`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CMakeCCompiler.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCXXCompiler.cmake`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CMakeCXXCompiler.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeDetermineCompilerABI_C.bin`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_C.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeDetermineCompilerABI_CXX.bin`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CMakeDetermineCompilerABI_CXX.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeSystem.cmake`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CMakeSystem.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

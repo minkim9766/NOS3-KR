@@ -3,14 +3,71 @@
 
 **경로:** `components/generic_radio/sim/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `nos3-radio-simulator.xml`
 
-file--nos3-radio-simulator.xml
+**경로:** `components/generic_radio/sim/cfg/nos3-radio-simulator.xml`
+
+
+```xml
+<simulator>
+    <name>generic_radio_sim</name>
+    <active>true</active>
+    <library>libgeneric_radio_sim.so</library>
+    <hardware-model>
+        <type>GENERIC_RADIO</type>
+        <connections>
+            <connection>
+                <type>command</type>
+                <bus-name>command</bus-name>
+                <node-name>radio-sim-command-node</node-name>
+            </connection>
+            <connection>
+                <name>fsw</name>
+                <ip>0.0.0.0</ip>
+                <ci-port>5010</ci-port>
+                <to-port>5011</to-port>
+                <radio-port>5015</radio-port>
+            </connection>
+            <connection>
+                <name>radio</name>
+                <ip>0.0.0.0</ip>
+                <cmd-port>5014</cmd-port>
+            </connection>
+            <connection>
+                <name>gsw</name>
+                <ip>0.0.0.0</ip>
+                <cmd-port>6010</cmd-port>
+                <tlm-port>6011</tlm-port>
+            </connection>
+            <connection>
+                <name>prox</name>
+                <ip>0.0.0.0</ip>
+                <rcv-port>7012</rcv-port>
+                <fsw-port>7010</fsw-port>
+                <fwd-port>7011</fdw-port>
+                <dest-port>7013</dest-port>
+            </connection>
+        </connections>
+        <data-provider>
+            <type>GENERIC_RADIO_42_PROVIDER</type>
+            <hostname>fortytwo</hostname>
+            <port>4286</port>
+            <max-connection-attempts>30</max-connection-attempts>
+            <retry-wait-seconds>5</retry-wait-seconds>
+            <comm-uplink>0</comm-uplink>
+            <uplink-close-criteria>occulted</uplink-close-criteria><!-- "none", "occulted" or "cnr" -->
+            <uplink-cnr-limit>15</uplink-cnr-limit>
+            <uplink-delay-on>true</uplink-delay-on>
+            <comm-downlink>1</comm-downlink>
+            <downlink-close-criteria>occulted</downlink-close-criteria><!-- "none", "occulted" or "cnr" -->
+            <downlink-cnr-limit>15</downlink-cnr-limit>
+            <downlink-delay-on>true</downlink-delay-on>
+        </data-provider>
+        <!--<data-provider>               
+            <type>GENERIC_RADIO_PROVIDER</type>
+        </data-provider>-->
+    </hardware-model>
+</simulator>
 ```
-
-## 항목
-
-- [`components/generic_radio/sim/cfg/nos3-radio-simulator.xml`](file--nos3-radio-simulator.xml) — UTF-8 텍스트 파일 본문 포함

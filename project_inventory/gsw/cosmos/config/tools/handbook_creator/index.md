@@ -3,20 +3,137 @@
 
 **경로:** `gsw/cosmos/config/tools/handbook_creator/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 assets/index
 templates/index
-file--default_toc.xsl
-file--handbook_creator.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/tools/handbook_creator/assets/`](assets/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/templates/`](templates/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/default_toc.xsl`](file--default_toc.xsl) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/tools/handbook_creator/handbook_creator.txt`](file--handbook_creator.txt) — UTF-8 텍스트 파일 본문 포함
+### `default_toc.xsl`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/default_toc.xsl`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:outline="http://code.google.com/p/wkhtmltopdf/outline"
+                xmlns="http://www.w3.org/1999/xhtml">
+  <xsl:output doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN"
+              doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"
+              indent="yes" />
+  <xsl:template match="outline:outline">
+    <html>
+      <head>
+        <title>Table of Contents</title>
+        <style>
+          h1 {
+            text-align: center;
+            font-size: 20px;
+            font-family: arial;
+          }
+          div {border-bottom: 1px dashed rgb(200,200,200);}
+          span {float: right;}
+          li {list-style: none;}
+          ul {
+            font-size: 20px;
+            font-family: arial;
+          }
+          ul ul {font-size: 80%; }
+          ul {padding-left: 0em;}
+          ul ul {padding-left: 1em;}
+          a {text-decoration:none; color: black;}
+        </style>
+      </head>
+      <body>
+        <h1>Table of Contents</h1>
+        <ul><xsl:apply-templates select="outline:item/outline:item"/></ul>
+      </body>
+    </html>
+  </xsl:template>
+  <xsl:template match="outline:item">
+    <li>
+      <xsl:if test="@title!=''">
+        <div>
+          <a>
+            <xsl:if test="@link">
+              <xsl:attribute name="href"><xsl:value-of select="@link"/></xsl:attribute>
+            </xsl:if>
+            <xsl:if test="@backLink">
+              <xsl:attribute name="name"><xsl:value-of select="@backLink"/></xsl:attribute>
+            </xsl:if>
+            <xsl:value-of select="@title" /> 
+          </a>
+          <span> <xsl:value-of select="@page" /> </span>
+        </div>
+      </xsl:if>
+      <ul>
+        <xsl:apply-templates select="outline:item"/>
+      </ul>
+    </li>
+  </xsl:template>
+</xsl:stylesheet>
+```
+
+### `handbook_creator.txt`
+
+**경로:** `gsw/cosmos/config/tools/handbook_creator/handbook_creator.txt`
+
+
+```text
+PAGE index.html
+  NO_PDF
+  SECTION ALL header.html.erb 'Command and Telemetry Handbook'
+  SECTION HTML nav.html.erb
+  SECTION ALL title.html.erb 'Command and Telemetry Handbook'
+  SECTION ALL overview.html.erb
+  SECTION ALL footer.html.erb
+
+PAGE command_handbook.html
+  PDF_TOP_MARGIN 20
+  PDF_BOTTOM_MARGIN 15
+  PDF_SIDE_MARGIN 10
+  PDF_HEADER pdf_header.html.erb "Command Handbook"
+  PDF_FOOTER pdf_footer.html.erb "Command Handbook"
+  PDF_COVER pdf_cover.html.erb "Command Handbook"
+  PDF_TOC
+  SECTION ALL header.html.erb 'Command Handbook'
+  SECTION HTML nav.html.erb
+  SECTION HTML title.html.erb 'Command Handbook'
+  CMD_SECTION HTML command_toc.html.erb
+  CMD_SECTION ALL command_packets.html.erb
+  SECTION ALL footer.html.erb
+
+PAGE telemetry_handbook.html
+  PDF_HEADER pdf_header.html.erb "Telemetry Handbook"
+  PDF_FOOTER pdf_footer.html.erb "Telemetry Handbook"
+  PDF_COVER pdf_cover.html.erb "Telemetry Handbook"
+  PDF_TOC
+  SECTION ALL header.html.erb 'Telemetry Handbook'
+  SECTION HTML nav.html.erb
+  SECTION HTML title.html.erb 'Telemetry Handbook'
+  TLM_SECTION HTML telemetry_toc.html.erb
+  TLM_SECTION ALL telemetry_packets.html.erb
+  TLM_SECTION ALL limits_groups.html.erb
+  SECTION ALL footer.html.erb
+
+TARGET_PAGES _cmd_tlm.html
+  PDF_HEADER pdf_header.html.erb "Command and Telemetry Handbook"
+  PDF_FOOTER pdf_footer.html.erb "Command and Telemetry Handbook"
+  PDF_COVER pdf_cover.html.erb "Command and Telemetry Handbook"
+  PDF_TOC
+  SECTION ALL header.html.erb 'Command and Telemetry Handbook'
+  SECTION HTML nav.html.erb
+  SECTION HTML title.html.erb 'Command and Telemetry Handbook'
+  CMD_SECTION HTML command_toc.html.erb 'Commands'
+  TLM_SECTION HTML telemetry_toc.html.erb 'Telemetry'
+  CMD_SECTION ALL command_packets.html.erb
+  TLM_SECTION ALL telemetry_packets.html.erb
+  SECTION ALL footer.html.erb
+```

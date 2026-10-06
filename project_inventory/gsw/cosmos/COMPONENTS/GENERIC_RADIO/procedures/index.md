@@ -3,16 +3,71 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--generic_radio_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures/tests/`](tests/index) — 폴더
-- [`gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures/generic_radio_test.rb`](file--generic_radio_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `generic_radio_test.rb`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures/generic_radio_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_radio_lib.rb"
+
+class GENERIC_RADIO_Functional_Test < Cosmos::Test
+  def setup
+      safe_GENERIC_RADIO()
+  end
+
+  def test_application
+    start("tests/generic_radio_app_test.rb")
+  end
+
+  def test_device
+    start("tests/generic_radio_device_test.rb")
+  end
+
+  def teardown
+    safe_GENERIC_RADIO()
+  end
+end
+
+class GENERIC_RADIO_Scenario_Test < Cosmos::Test
+  def setup
+    safe_GENERIC_RADIO()
+  end
+
+  def test_AST
+    start("tests/generic_radio_ast_test.rb")
+  end
+
+  def teardown
+    safe_GENERIC_RADIO()
+  end
+end
+
+class Generic_radio_Test < Cosmos::TestSuite
+  def initialize
+      super()
+      add_test('GENERIC_RADIO_Functional_Test')
+      add_test('GENERIC_RADIO_Scenario_Test')
+  end
+
+  def setup
+    safe_GENERIC_RADIO()
+  end
+  
+  def teardown
+    safe_GENERIC_RADIO()
+  end
+end
+```

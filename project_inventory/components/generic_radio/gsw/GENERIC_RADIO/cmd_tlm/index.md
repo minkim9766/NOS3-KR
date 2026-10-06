@@ -3,16 +3,73 @@
 
 **경로:** `components/generic_radio/gsw/GENERIC_RADIO/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `GENERIC_RADIO_CMD.txt`
 
-file--GENERIC_RADIO_CMD.txt
-file--GENERIC_RADIO_TLM.txt
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO/cmd_tlm/GENERIC_RADIO_CMD.txt`
+
+
+```text
+COMMAND GENERIC_RADIO GENERIC_RADIO_NOOP_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Generic_radio NOOP Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1930 "CCSDS Packet Identification" BIG_ENDIAN 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_RADIO GENERIC_RADIO_RST_COUNTERS_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Generic_radio Reset Counters Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1930 "CCSDS Packet Identification" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+
+COMMAND GENERIC_RADIO GENERIC_RADIO_CONFIG_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Generic_radio Configuration Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1930 "CCSDS Packet Identification" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 5      "CCSDS Packet Data Length" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 2        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER DEVICE_CONFIG       32 UINT MIN_UINT32 MAX_UINT32 0      "Device Configuration"
+
+COMMAND GENERIC_RADIO GENERIC_RADIO_PROXIMITY_CC <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Generic_radio Proximity Forward Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1930 "CCSDS Packet Identification" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 67     "CCSDS Packet Data Length" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 3        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER SCID                16 UINT MIN_UINT16 MAX_UINT16 0      "SpaceCraft ID"
+  APPEND_PARAMETER PROX_DATA           512 BLOCK 0x1930C00000010000         "Proximity Data" LITTLE_ENDIAN
+
+COMMAND GENERIC_RADIO GENERIC_RADIO_REQ_HK <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "Generic_radio Request HK Packet Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1931 "CCSDS Packet Identification" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" BIG_ENDIAN  
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
 ```
 
-## 항목
+### `GENERIC_RADIO_TLM.txt`
 
-- [`components/generic_radio/gsw/GENERIC_RADIO/cmd_tlm/GENERIC_RADIO_CMD.txt`](file--GENERIC_RADIO_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/gsw/GENERIC_RADIO/cmd_tlm/GENERIC_RADIO_TLM.txt`](file--GENERIC_RADIO_TLM.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_radio/gsw/GENERIC_RADIO/cmd_tlm/GENERIC_RADIO_TLM.txt`
+
+
+```text
+TELEMETRY GENERIC_RADIO GENERIC_RADIO_HK_TLM <%= CosmosCfsConfig::PROCESSOR_ENDIAN %> "GENERIC_RADIO_Hk_tlm_t"
+  APPEND_ID_ITEM CCSDS_STREAMID       16 UINT 0x0930  "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE       16 UINT         "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH         16 UINT         "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS        32 UINT         "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS        16 UINT         "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE          32 UINT         ""
+  APPEND_ITEM    CMD_ERR_COUNT         8 UINT         "Command Error Count"
+  APPEND_ITEM    CMD_COUNT             8 UINT         "Command Count"
+  APPEND_ITEM    DEVICE_ERR_COUNT      8 UINT         "Device Command Error Count"
+  APPEND_ITEM    FORWARD_ERR_COUNT     8 UINT         "Proxmity Forward Error Count"
+  APPEND_ITEM    FORWARD_COUNT         8 UINT         "Proximity Forward Count"
+  # GENERIC_RADIO_Device_HK_tlm_t
+  APPEND_ITEM    DEVICE_COUNTER       32 UINT         "Reported Device Command Counter"
+  APPEND_ITEM    DEVICE_CONFIG        32 UINT         "Reported Device Configuration"
+  APPEND_ITEM    PROXIMITY_SIGNAL     32 UINT         "Proxmity Signal Strength"
+```

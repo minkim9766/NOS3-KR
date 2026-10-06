@@ -3,18 +3,111 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `message-bar.component.css`
 
-file--message-bar.component.css
-file--message-bar.component.html
-file--message-bar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.css`
+
+
+```css
+.message-bar {
+  background-color: var(--y-error-color) !important;
+  color: #fff !important;
+  overflow: hidden;
+  position: relative;
+  /* CDK overlay is at 1000, we want to be above it */
+  z-index: 2000;
+}
+
+.message-bar.warning {
+  background-color: var(--y-warning-color) !important;
+}
+
+.mat-toolbar-row {
+  height: 48px;
+}
+
+.mat-toolbar-multiple-rows {
+  min-height: 48px;
+}
+
+.actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: var(--y-error-color);
+  height: 48px;
+  line-height: 48px;
+}
+
+.actions button {
+  margin-top: 4px;
+  color: #fff;
+  margin-right: 11px;
+}
+
+.message-bar.warning .actions {
+  background-color: var(--y-warning-color) !important;
+}
 ```
 
-## 항목
+### `message-bar.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.css`](file--message-bar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.html`](file--message-bar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.ts`](file--message-bar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.html`
+
+
+```html
+@if (siteMessage$ | async; as siteMessage) {
+  <mat-toolbar class="message-bar" [class.warning]="siteMessage.level === 'WARNING'">
+    <mat-toolbar-row>
+      <span style="flex: 1 1 auto"></span>
+      <mat-icon>report_problem</mat-icon>
+      &nbsp; {{ siteMessage.message }}
+      <span style="flex: 1 1 auto"></span>
+      <div class="actions">
+        <button mat-icon-button (click)="dismiss()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
+}
+```
+
+### `message-bar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/message-bar/message-bar.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatIconButton } from '@angular/material/button';
+import { MatIcon } from '@angular/material/icon';
+import { MatToolbar, MatToolbarRow } from '@angular/material/toolbar';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { MessageService, SiteMessage } from '../../services/message.service';
+
+@Component({
+  selector: 'ya-message-bar',
+  templateUrl: './message-bar.component.html',
+  styleUrl: './message-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, MatIcon, MatIconButton, MatToolbar, MatToolbarRow],
+})
+export class YaMessageBar {
+  siteMessage$: Observable<SiteMessage | null>;
+  show$: Observable<boolean>;
+
+  constructor(private messageService: MessageService) {
+    this.siteMessage$ = messageService.siteMessage$;
+    this.show$ = this.siteMessage$.pipe(map((msg) => !!msg));
+  }
+
+  dismiss() {
+    this.messageService.dismiss();
+  }
+}
+```

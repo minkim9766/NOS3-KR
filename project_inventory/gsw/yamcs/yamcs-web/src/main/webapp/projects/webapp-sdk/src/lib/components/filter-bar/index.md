@@ -3,18 +3,53 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `filter-bar.component.css`
 
-file--filter-bar.component.css
-file--filter-bar.component.html
-file--filter-bar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  column-gap: 7px;
+  height: 24px;
+  margin-bottom: 12px;
+}
+
+@media print {
+  :host {
+    display: none !important;
+  }
+}
 ```
 
-## 항목
+### `filter-bar.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.css`](file--filter-bar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.html`](file--filter-bar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.ts`](file--filter-bar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.html`
+
+
+```html
+<ng-content />
+```
+
+### `filter-bar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/filter-bar/filter-bar.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-filter-bar',
+  templateUrl: './filter-bar.component.html',
+  styleUrl: './filter-bar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-filter-bar',
+  },
+})
+export class YaFilterBar {}
+```

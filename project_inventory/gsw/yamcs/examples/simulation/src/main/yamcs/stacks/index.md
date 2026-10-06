@@ -3,14 +3,61 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/stacks/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack.ycs`
 
-file--stack.ycs
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/stacks/stack.ycs`
+
+
+```text
+{
+  "$schema": "https://yamcs.org/schema/stack.schema.json",
+  "steps": [
+    {
+      "type": "command",
+      "name": "/YSS/SIMULATOR/SWITCH_VOLTAGE_ON",
+      "arguments": [
+        {
+          "name": "voltage_num",
+          "value": 1
+        }
+      ],
+      "comment": "Switch on battery 1 voltage"
+    },
+    {
+      "type": "check",
+      "parameters": [
+        {
+          "parameter": "/YSS/SIMULATOR/BatteryVoltage1"
+        },
+        {
+          "parameter": "/YSS/SIMULATOR/BatteryVoltage2"
+        },
+        {
+          "parameter": "/YSS/SIMULATOR/BatteryVoltage3"
+        }
+      ],
+      "comment": "Check the effect on observed telemetry"
+    },
+    {
+      "type": "command",
+      "name": "/YSS/SIMULATOR/SWITCH_VOLTAGE_OFF",
+      "arguments": [
+        {
+          "name": "voltage_num",
+          "value": 1
+        }
+      ]
+    },
+    {
+      "type": "check",
+      "parameters": [
+        {
+          "parameter": "/YSS/SIMULATOR/BatteryVoltage1"
+        }
+      ]
+    }
+  ]
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/stacks/stack.ycs`](file--stack.ycs) — UTF-8 텍스트 파일 본문 포함

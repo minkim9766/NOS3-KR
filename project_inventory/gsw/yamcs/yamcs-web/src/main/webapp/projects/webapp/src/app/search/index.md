@@ -3,18 +3,173 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `search.component.html`
 
-file--search.component.html
-file--search.component.ts
-file--search.routes.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Search results" />
+
+  <ya-panel>
+    @if (result$ | async; as result) {
+      <div style="margin-bottom: 1em">
+        Showing {{ result.resources.length }} of {{ result.totalSize }}
+        @if (result.totalSize !== 1) {
+          results
+        } @else {
+          result
+        }
+        for "{{ term$ | async }}".
+      </div>
+      @for (resource of result.resources; track resource) {
+        <div>
+          <mat-icon class="icon12" style="vertical-align: middle; margin-right: 4px">toll</mat-icon>
+          <a class="ya-link" [routerLink]="resource.link" [queryParams]="{ c: yamcs.context }">
+            {{ resource.label }}
+          </a>
+          <br />
+        </div>
+      }
+      @if (result.resources.length) {
+        <ya-toolbar appearance="bottom" align="center">
+          <ya-button [disabled]="!result.continuationToken" (click)="loadMoreData()">
+            Load more
+          </ya-button>
+        </ya-toolbar>
+      }
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `search.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.component.html`](file--search.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.component.ts`](file--search.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.routes.ts`](file--search.routes.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  MessageService,
+  Parameter,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+interface Result {
+  resources: Resource[];
+  totalSize: number;
+  continuationToken?: string;
+}
+
+interface Resource {
+  label: string;
+  type: string;
+  link: string[];
+}
+
+@Component({
+  templateUrl: './search.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SearchComponent {
+  term$ = new BehaviorSubject<string | null>(null);
+  result$ = new BehaviorSubject<Result | null>(null);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    route: ActivatedRoute,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Search');
+
+    route.queryParamMap.subscribe((snapshot) => {
+      const q = snapshot.get('q') ?? '';
+      this.fetchPage(q).then((page) => {
+        this.term$.next(q);
+        this.result$.next({
+          resources: this.toResources(page.parameters || []),
+          totalSize: page.totalSize,
+          continuationToken: page.continuationToken,
+        });
+      });
+    });
+  }
+
+  loadMoreData() {
+    const q = this.term$.value ?? '';
+    const continuationToken = this.result$.value?.continuationToken;
+    this.fetchPage(q, continuationToken).then((page) => {
+      const result = this.result$.value!;
+      result.resources = [
+        ...result.resources,
+        ...this.toResources(page.parameters || []),
+      ];
+      this.result$.next({
+        ...result,
+        continuationToken: page.continuationToken,
+      });
+    });
+  }
+
+  private toResources(parameters: Parameter[]): Resource[] {
+    return parameters.map((p) => {
+      return {
+        label: p.qualifiedName,
+        type: 'Parameter',
+        link: ['/telemetry/parameters' + p.qualifiedName],
+      };
+    });
+  }
+
+  private fetchPage(q: string, continuationToken?: string) {
+    const promise = this.yamcs.yamcsClient.getParameters(this.yamcs.instance!, {
+      q,
+      next: continuationToken,
+      limit: 50,
+      searchMembers: true,
+    });
+    promise.catch((err) => this.messageService.showError(err));
+    return promise;
+  }
+}
+```
+
+### `search.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/search/search.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { SearchComponent } from './search.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: SearchComponent,
+      },
+    ],
+  },
+];
+```

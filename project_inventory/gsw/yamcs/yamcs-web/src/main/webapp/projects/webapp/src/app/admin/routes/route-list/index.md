@@ -3,18 +3,213 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `route-list.component.css`
 
-file--route-list.component.css
-file--route-list.component.html
-file--route-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.css`
+
+
+```css
+.deprecated {
+  text-decoration: line-through;
+}
+
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.mat-mdc-row {
+  cursor: pointer;
+}
+
+.ya-data-table td {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `route-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.css`](file--route-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.html`](file--route-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.ts`](file--route-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="API routes">
+    <ya-page-button (clicked)="refresh()" icon="refresh">Refresh view</ya-page-button>
+  </app-admin-toolbar>
+
+  <ya-detail-pane>
+    @if (selectedRoute$ | async; as selectedItem) {
+      <ya-detail-toolbar>Route detail</ya-detail-toolbar>
+      <div style="padding: 0 16px">
+        <app-route-detail [route]="selectedItem" />
+      </div>
+    } @else {
+      <ya-detail-toolbar>Select a route</ya-detail-toolbar>
+    }
+  </ya-detail-pane>
+
+  <div class="table-wrapper">
+    <ya-panel>
+      <ya-filter-bar>
+        <ya-search-filter [formControl]="filterControl" placeholder="Filter routes" />
+      </ya-filter-bar>
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        class="ya-data-table expand"
+        matSort
+        matSortActive="requestCount"
+        matSortDirection="desc"
+        matSortDisableClear>
+        <ng-container matColumnDef="service">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Service</th>
+          <td mat-cell *matCellDef="let route">{{ route.service || "Other" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="method">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Method</th>
+          <td mat-cell *matCellDef="let route">{{ route.description || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="requestCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Requests</th>
+          <td mat-cell *matCellDef="let route">{{ route.requestCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="errorCount">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Errors</th>
+          <td mat-cell *matCellDef="let route">{{ route.errorCount }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="http">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>HTTP</th>
+          <td mat-cell *matCellDef="let route">{{ route.httpMethod }} {{ route.url }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          (click)="selectRoute(row)"
+          [ngClass]="{ selected: row === (selectedRoute$ | async) }"
+          [class.deprecated]="row.deprecated"></tr>
+      </table>
+    </ya-panel>
+  </div>
+</app-admin-page>
+```
+
+### `route-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/route-list/route-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import { BaseComponent, Route, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import { RouteDetailComponent } from '../route-detail/route-detail.component';
+
+@Component({
+  templateUrl: './route-list.component.html',
+  styleUrl: './route-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    RouteDetailComponent,
+    WebappSdkModule,
+  ],
+})
+export class RouteListComponent extends BaseComponent implements AfterViewInit {
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = [
+    // 'service',
+    'method',
+    'requestCount',
+    'errorCount',
+    'http',
+    'actions',
+  ];
+
+  dataSource = new MatTableDataSource<Route>();
+
+  selectedRoute$ = new BehaviorSubject<Route | null>(null);
+
+  constructor(private route: ActivatedRoute) {
+    super();
+    this.setTitle('API routes');
+    this.dataSource.filterPredicate = (rec, filter) => {
+      return (
+        rec.url.toLowerCase().indexOf(filter) >= 0 ||
+        rec.description.toLowerCase().indexOf(filter) >= 0
+      );
+    };
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+    });
+
+    this.refresh();
+
+    this.dataSource.sort = this.sort;
+  }
+
+  refresh() {
+    this.yamcs.yamcsClient.getRoutes().then((page) => {
+      this.dataSource.data = page.routes || [];
+    });
+  }
+
+  selectRoute(route: Route) {
+    this.selectedRoute$.next(route);
+    this.openDetailPane();
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+}
+```

@@ -3,26 +3,1292 @@
 
 **경로:** `components/novatel_oem615/fsw/cfs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `novatel_oem615_app.c`
 
-file--novatel_oem615_app.c
-file--novatel_oem615_app.h
-file--novatel_oem615_child.c
-file--novatel_oem615_child.h
-file--novatel_oem615_events.h
-file--novatel_oem615_msg.h
-file--novatel_oem615_version.h
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_app.c`
+
+
+```c
+/*******************************************************************************
+** File: novatel_oem615_app.c
+**
+** Purpose:
+**   This file contains the source code for the NOVATEL_OEM615 application.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "novatel_oem615_app.h"
+
+/*
+** Global Data
+*/
+NOVATEL_OEM615_AppData_t NOVATEL_OEM615_AppData;
+
+/*
+** Application entry point and main process loop
+*/
+void NOVATEL_AppMain(void)
+{
+    int32  status    = OS_SUCCESS;
+    uint32 local_run = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Create the first Performance Log entry
+    */
+    CFE_ES_PerfLogEntry(NOVATEL_OEM615_PERF_ID);
+
+    /*
+    ** Perform application initialization
+    */
+    status = NOVATEL_OEM615_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        NOVATEL_OEM615_SetRunStatus(CFE_ES_RunStatus_APP_ERROR);
+        local_run = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main loop
+    */
+    while (CFE_ES_RunLoop(&local_run) == true)
+    {
+        /*
+        ** Performance log exit stamp
+        */
+        CFE_ES_PerfLogExit(NOVATEL_OEM615_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message
+        ** Note that this is the standard, but timeouts are available
+        */
+        status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&NOVATEL_OEM615_AppData.MsgPtr,
+                                      NOVATEL_OEM615_AppData.CmdPipe, CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution.
+        */
+        CFE_ES_PerfLogEntry(NOVATEL_OEM615_PERF_ID);
+
+        /*
+        ** If the CFE_SB_ReceiveBuffer was successful, then continue to process the command packet
+        ** If not, then exit the application in error.
+        ** Note that a SB read error should not always result in an app quitting.
+        */
+        if (status == CFE_SUCCESS)
+        {
+            NOVATEL_OEM615_ProcessCommandPacket();
+        }
+        else
+        {
+            CFE_EVS_SendEvent(NOVATEL_OEM615_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: SB Pipe Read Error = %d", (int)status);
+            NOVATEL_OEM615_SetRunStatus(CFE_ES_RunStatus_APP_ERROR);
+        }
+
+        /*
+        ** Check run status
+        */
+        local_run = NOVATEL_OEM615_GetRunStatus();
+    }
+
+    /*
+    ** Disable component, which cleans up the interface, upon exit
+    */
+    NOVATEL_OEM615_Disable();
+
+    /*
+    ** Performance log exit stamp
+    */
+    CFE_ES_PerfLogExit(NOVATEL_OEM615_PERF_ID);
+
+    /*
+    ** Exit the application
+    */
+    CFE_ES_ExitApp(NOVATEL_OEM615_AppData.RunStatus);
+}
+
+/*
+** Initialize application
+*/
+int32 NOVATEL_OEM615_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    NOVATEL_OEM615_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Register the events
+    */
+    CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+
+    /*
+    ** Create the Software Bus command pipe
+    */
+    status = CFE_SB_CreatePipe(&NOVATEL_OEM615_AppData.CmdPipe, NOVATEL_OEM615_PIPE_DEPTH, "NAV_CMD_PIPE");
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Error Creating SB Pipe,RC=0x%08X",
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to ground commands
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(NOVATEL_OEM615_CMD_MID), NOVATEL_OEM615_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Gnd Cmds, MID=0x%04X, RC=0x%08X", NOVATEL_OEM615_CMD_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to housekeeping (hk) message requests
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(NOVATEL_OEM615_REQ_HK_MID), NOVATEL_OEM615_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Request, MID=0x%04X, RC=0x%08X", NOVATEL_OEM615_REQ_HK_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Initialize the published HK message - this HK message will contain the
+    ** telemetry that has been defined in the NOVATEL_OEM615_HkTelemetryPkt for this app.
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(NOVATEL_OEM615_AppData.HkTelemetryPkt.TlmHeader),
+                 CFE_SB_ValueToMsgId(NOVATEL_OEM615_HK_TLM_MID), NOVATEL_OEM615_HK_TLM_LNGTH);
+
+    /*
+    ** Initialize the device packet message
+    ** This packet is specific to your application
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(NOVATEL_OEM615_AppData.DevicePkt.TlmHeader),
+                 CFE_SB_ValueToMsgId(NOVATEL_OEM615_DEVICE_TLM_MID), NOVATEL_OEM615_DEVICE_TLM_LNGTH);
+
+    /*
+    ** Initialize hardware interface data
+    ** Note that other components provide examples for the different protocols available
+    */
+    NOVATEL_OEM615_AppData.Novatel_oem615Uart.deviceString  = NOVATEL_OEM615_CFG_STRING;
+    NOVATEL_OEM615_AppData.Novatel_oem615Uart.handle        = NOVATEL_OEM615_CFG_HANDLE;
+    NOVATEL_OEM615_AppData.Novatel_oem615Uart.isOpen        = PORT_CLOSED;
+    NOVATEL_OEM615_AppData.Novatel_oem615Uart.baud          = NOVATEL_OEM615_CFG_BAUDRATE_HZ;
+    NOVATEL_OEM615_AppData.Novatel_oem615Uart.access_option = uart_access_flag_RDWR;
+
+    /*
+    ** Initialize application data
+    ** Note that counters are excluded as they were reset in the previous code block
+    */
+    NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceEnabled = NOVATEL_OEM615_DEVICE_DISABLED;
+
+    /* Create hk data mutex */
+    status = OS_MutSemCreate(&NOVATEL_OEM615_AppData.HkDataMutex, NOVATEL_OEM615_HK_MUTEX_NAME, 0);
+    if (status != OS_SUCCESS)
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_CREATE_MUTEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Create hk mutex error %d", status);
+        return status;
+    }
+
+    /*
+    ** Create device task
+    */
+    status = CFE_ES_CreateChildTask(&NOVATEL_OEM615_AppData.DeviceID, NOVATEL_OEM615_CHILD_TASK_NAME,
+                                    NOVATEL_OEM615_ChildTask, 0, NOVATEL_OEM615_CHILD_TASK_STACK_SIZE,
+                                    NOVATEL_OEM615_CHILD_TASK_PRIORITY, 0);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_CHILDTASKINIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Create device task error %d", status);
+        return status;
+    }
+
+    /*
+    ** Always reset all counters during application initialization
+    */
+    NOVATEL_OEM615_ResetCounters();
+
+    /*
+     ** Send an information event that the app has initialized.
+     ** This is useful for debugging the loading of individual applications.
+     */
+    status = CFE_EVS_SendEvent(NOVATEL_OEM615_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                               "NOVATEL_OEM615 App Initialized. Version %d.%d.%d.%d", NOVATEL_OEM615_MAJOR_VERSION,
+                               NOVATEL_OEM615_MINOR_VERSION, NOVATEL_OEM615_REVISION, NOVATEL_OEM615_MISSION_REV);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("NOVATEL_OEM615: Error sending initialization event: 0x%08X\n", (unsigned int)status);
+    }
+    return status;
+}
+
+/*
+** Process packets received on the NOVATEL_OEM615 command pipe
+*/
+void NOVATEL_OEM615_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(NOVATEL_OEM615_AppData.MsgPtr, &MsgId);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the NOVATEL_OEM615_CMD_MID (Message ID)
+        */
+        case NOVATEL_OEM615_CMD_MID:
+            NOVATEL_OEM615_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        */
+        case NOVATEL_OEM615_REQ_HK_MID:
+            NOVATEL_OEM615_ProcessTelemetryRequest();
+            break;
+
+        /*
+        ** All other invalid messages that this app doesn't recognize,
+        ** increment the command error counter and log as an error event.
+        */
+        default:
+            NOVATEL_OEM615_IncrementCommandErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_PROCESS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: Invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+    return;
+}
+
+/*
+** Process ground commands
+*/
+void NOVATEL_OEM615_ProcessGroundCommand(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case
+    */
+    CFE_MSG_GetMsgId(NOVATEL_OEM615_AppData.MsgPtr, &MsgId);
+
+    /*
+    ** Ground Commands, by definition, have a command code (_CC) associated with them
+    ** Pull this command code from the message and then process
+    */
+    CFE_MSG_GetFcnCode(NOVATEL_OEM615_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case NOVATEL_OEM615_NOOP_CC:
+            /*
+            ** First, verify the command length immediately after CC identification
+            ** Note that VerifyCmdLength handles the command and command error counters
+            */
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+
+                /* Do any necessary checks, none for a NOOP */
+
+                /* Increment command success or error counter, NOOP can only be successful */
+                NOVATEL_OEM615_IncrementCommandCount();
+
+                /* Do the action, none for a NOOP */
+
+                /* Increment device success or error counter, none for NOOP as application only */
+
+                /* Send event success or failure to the console, NOOP can only be successful */
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: NOOP command received");
+            }
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case NOVATEL_OEM615_RESET_COUNTERS_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_ResetCounters();
+            }
+            break;
+
+        /*
+        ** Enable Command
+        */
+        case NOVATEL_OEM615_ENABLE_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_Enable();
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_ENABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Enable command received");
+            }
+            break;
+
+        /*
+        ** Disable Command
+        */
+        case NOVATEL_OEM615_DISABLE_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_Disable();
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_DISABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Disable command received");
+            }
+            break;
+
+        /*
+        ** Log Command
+        */
+        case NOVATEL_OEM615_LOG_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_Log_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_IncrementCommandCount();
+                NOVATEL_OEM615_SafeCommandDeviceCustom(
+                    NOVATEL_OEM615_LOG_CC, ((NOVATEL_OEM615_Log_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->LogType,
+                    ((NOVATEL_OEM615_Log_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->PeriodOption);
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_SERIALCONFIG_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Log command received - %d, %d",
+                                  ((NOVATEL_OEM615_Log_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->LogType,
+                                  ((NOVATEL_OEM615_Log_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->PeriodOption);
+            }
+            break;
+
+        /*
+        ** Unlog Command
+        */
+        case NOVATEL_OEM615_UNLOG_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_Unlog_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_IncrementCommandCount();
+                NOVATEL_OEM615_SafeCommandDeviceCustom(
+                    NOVATEL_OEM615_UNLOG_CC, ((NOVATEL_OEM615_Unlog_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->LogType,
+                    -1);
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_SERIALCONFIG_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Unlog command received - %d",
+                                  ((NOVATEL_OEM615_Unlog_cmd_t *)NOVATEL_OEM615_AppData.MsgPtr)->LogType);
+            }
+            break;
+
+        /*
+        ** Unlog All Command
+        */
+        case NOVATEL_OEM615_UNLOGALL_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_IncrementCommandCount();
+                NOVATEL_OEM615_SafeCommandDeviceCustom(NOVATEL_OEM615_UNLOGALL_CC, -1, -1);
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_SERIALCONFIG_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Unlog all command received");
+            }
+            break;
+
+        /*
+        ** Serial Config Command
+        */
+        case NOVATEL_OEM615_SERIALCONFIG_CC:
+            if (NOVATEL_OEM615_VerifyCmdLength(NOVATEL_OEM615_AppData.MsgPtr, sizeof(NOVATEL_OEM615_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                NOVATEL_OEM615_IncrementCommandCount();
+                NOVATEL_OEM615_SafeCommandDeviceCustom(NOVATEL_OEM615_SERIALCONFIG_CC, -1, -1);
+                CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_SERIALCONFIG_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "NOVATEL_OEM615: Serial config command received");
+            }
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            NOVATEL_OEM615_IncrementCommandErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Process Telemetry Request - Triggered in response to a telemetery request
+** TODO: Add additional telemetry required by the specific component
+*/
+void NOVATEL_OEM615_ProcessTelemetryRequest(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /* MsgId is only needed if the command code is not recognized. See default case */
+    CFE_MSG_GetMsgId(NOVATEL_OEM615_AppData.MsgPtr, &MsgId);
+
+    /* Pull this command code from the message and then process */
+    CFE_MSG_GetFcnCode(NOVATEL_OEM615_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        case NOVATEL_OEM615_REQ_HK_TLM:
+            NOVATEL_OEM615_ReportHousekeeping();
+            break;
+
+        case NOVATEL_OEM615_REQ_DATA_TLM:
+            NOVATEL_OEM615_ReportDeviceTelemetry();
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            NOVATEL_OEM615_IncrementCommandErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_DEVICE_TLM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Report Application Housekeeping
+*/
+void NOVATEL_OEM615_ReportHousekeeping(void)
+{
+    /* Time stamp and publish housekeeping telemetry */
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.HkTelemetryPkt, true);
+    return;
+}
+
+/*
+** Collect and Report Device Telemetry
+*/
+void NOVATEL_OEM615_ReportDeviceTelemetry(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is enabled */
+    if (NOVATEL_OEM615_GetDeviceEnabledStatus() == NOVATEL_OEM615_DEVICE_ENABLED)
+    {
+        status = NOVATEL_OEM615_SafeRequestData(
+            (NOVATEL_OEM615_Device_Data_tlm_t *)&NOVATEL_OEM615_AppData.DevicePkt.Novatel_oem615);
+        if (status == OS_SUCCESS)
+        {
+            NOVATEL_OEM615_IncrementDeviceCount();
+            /* Time stamp and publish data telemetry */
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.DevicePkt);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.DevicePkt, true);
+        }
+        else
+        {
+            NOVATEL_OEM615_IncrementDeviceErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_REQ_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: Request device data reported error %d", status);
+        }
+    }
+    /* Intentionally do not report errors if disabled */
+    return;
+}
+
+/*
+** Enable Component
+*/
+void NOVATEL_OEM615_Enable(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is disabled */
+    if (NOVATEL_OEM615_GetDeviceEnabledStatus() == NOVATEL_OEM615_DEVICE_DISABLED)
+    {
+        /* Increment command success counter */
+        NOVATEL_OEM615_IncrementCommandCount();
+
+        /* Open device specific protocols */
+        status = uart_init_port(&NOVATEL_OEM615_AppData.Novatel_oem615Uart);
+        if (status == OS_SUCCESS)
+        {
+            NOVATEL_OEM615_IncrementDeviceCount();
+            NOVATEL_OEM615_SetDeviceEnabledStatus(NOVATEL_OEM615_DEVICE_ENABLED);
+            CFE_EVS_SendEvent(NOVATEL_OEM615_ENABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "NOVATEL_OEM615: Device enabled");
+        }
+        else
+        {
+            NOVATEL_OEM615_IncrementDeviceErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_UART_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: UART port initialization error %d", status);
+        }
+    }
+    else
+    {
+        NOVATEL_OEM615_IncrementCommandErrorCount();
+        CFE_EVS_SendEvent(NOVATEL_OEM615_ENABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Device enable failed, already enabled");
+    }
+    return;
+}
+
+/*
+** Disable Component
+*/
+void NOVATEL_OEM615_Disable(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is enabled */
+    if (NOVATEL_OEM615_GetDeviceEnabledStatus() == NOVATEL_OEM615_DEVICE_ENABLED)
+    {
+        /* Increment command success counter */
+        NOVATEL_OEM615_IncrementCommandCount();
+
+        /* Open device specific protocols */
+        status = uart_close_port(&NOVATEL_OEM615_AppData.Novatel_oem615Uart);
+        if (status == OS_SUCCESS)
+        {
+            NOVATEL_OEM615_IncrementDeviceCount();
+            NOVATEL_OEM615_SetDeviceEnabledStatus(NOVATEL_OEM615_DEVICE_DISABLED);
+            CFE_EVS_SendEvent(NOVATEL_OEM615_DISABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "NOVATEL_OEM615: Device disabled");
+        }
+        else
+        {
+            NOVATEL_OEM615_IncrementDeviceErrorCount();
+            CFE_EVS_SendEvent(NOVATEL_OEM615_UART_CLOSE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "NOVATEL_OEM615: UART port close error %d", status);
+        }
+    }
+    else
+    {
+        NOVATEL_OEM615_IncrementCommandErrorCount();
+        CFE_EVS_SendEvent(NOVATEL_OEM615_DISABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Device disable failed, already disabled");
+    }
+    return;
+}
+
+/*
+** Verify command packet length matches expected
+*/
+int32 NOVATEL_OEM615_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length)
+{
+    int32             status        = OS_SUCCESS;
+    CFE_SB_MsgId_t    msg_id        = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t cmd_code      = 0;
+    size_t            actual_length = 0;
+
+    CFE_MSG_GetSize(msg, &actual_length);
+    if (expected_length != actual_length)
+    {
+        CFE_MSG_GetMsgId(msg, &msg_id);
+        CFE_MSG_GetFcnCode(msg, &cmd_code);
+
+        CFE_EVS_SendEvent(NOVATEL_OEM615_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X,  CC = %d, Len = %ld, Expected = %d",
+                          CFE_SB_MsgIdToValue(msg_id), cmd_code, actual_length, expected_length);
+
+        status = OS_ERROR;
+
+        /* Increment the command error counter upon receipt of an invalid command */
+        NOVATEL_OEM615_IncrementCommandErrorCount();
+    }
+    return status;
+}
+
+/*
+** Safely command device using NOVATEL-specific commands (LOG, UNLOG, UNLOGALL, SERIALCONFIG)
+*/
+int32 NOVATEL_OEM615_SafeCommandDeviceCustom(uint8_t cmd_code, int8_t log_type, int8_t period_option)
+{
+    uint32 status = OS_SUCCESS;
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        status =
+            NOVATEL_OEM615_CommandDevice(&NOVATEL_OEM615_AppData.Novatel_oem615Uart, cmd_code, log_type, period_option);
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        status = OS_ERROR;
+    }
+    return status;
+}
+
+/*
+** Safely request data
+*/
+int32 NOVATEL_OEM615_SafeRequestData(NOVATEL_OEM615_Device_Data_tlm_t *data)
+{
+    uint32 status = OS_SUCCESS;
+
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        status = NOVATEL_OEM615_RequestData(&NOVATEL_OEM615_AppData.Novatel_oem615Uart, data);
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_REQUEST_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Request device data reported error obtaining mutex");
+        status = OS_ERROR;
+    }
+    return status;
+}
+
+int32 NOVATEL_OEM615_ChildProcessRequestData(NOVATEL_OEM615_Device_Data_tlm_t *data)
+{
+    uint32 status = OS_SUCCESS;
+
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        status = NOVATEL_OEM615_ChildProcessReadData(&NOVATEL_OEM615_AppData.Novatel_oem615Uart, data);
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_REQUEST_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Request device data for child task reported error obtaining mutex");
+        status = OS_ERROR;
+    }
+    return status;
+}
+
+/*
+** Safely increment command counter
+*/
+void NOVATEL_OEM615_IncrementCommandCount(void)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.CommandCount++;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_INC_CMD_CNT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Increment command count reported error obtaining mutex");
+    }
+    return;
+}
+
+/*
+** Safely increment command error counter
+*/
+void NOVATEL_OEM615_IncrementCommandErrorCount(void)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.CommandErrorCount++;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_INC_CMD_ERR_CNT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Increment command error count reported error obtaining mutex");
+    }
+    return;
+}
+
+/*
+** Safely increment device counter
+*/
+void NOVATEL_OEM615_IncrementDeviceCount(void)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceCount++;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_INC_DEV_CNT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Increment device count reported error obtaining mutex");
+    }
+    return;
+}
+
+/*
+** Safely increment device error counter
+*/
+void NOVATEL_OEM615_IncrementDeviceErrorCount(void)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceErrorCount++;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_INC_DEV_ERR_CNT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Increment device error count reported error obtaining mutex");
+    }
+    return;
+}
+
+/*
+** Reset all global counter variables
+*/
+void NOVATEL_OEM615_ResetCounters(void)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.CommandCount      = 0;
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceErrorCount  = 0;
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceCount       = 0;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+        CFE_EVS_SendEvent(NOVATEL_OEM615_CMD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "NOVATEL_OEM615: RESET counters command received");
+    }
+    return;
+}
+
+/*
+** Safe Get Run Status
+*/
+int32 NOVATEL_OEM615_GetRunStatus(void)
+{
+    uint32 status;
+
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        status = NOVATEL_OEM615_AppData.RunStatus;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_GET_RUN_STATUS_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Get run status reported error obtaining mutex");
+        status = CFE_ES_RunStatus_APP_ERROR;
+    }
+    return status;
+}
+
+/*
+** Safe Set Run Status
+*/
+void NOVATEL_OEM615_SetRunStatus(uint32 status)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.RunStatus = status;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_SET_RUN_STATUS_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Set run status reported error obtaining mutex");
+    }
+    return;
+}
+
+/*
+** Safe Get Device Enable Status
+*/
+int32 NOVATEL_OEM615_GetDeviceEnabledStatus(void)
+{
+    uint32 status;
+
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        status = NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceEnabled;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_GET_DEV_ENABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Get device enabled status reported error obtaining mutex");
+        status = CFE_ES_RunStatus_APP_ERROR;
+    }
+    return status;
+}
+
+/*
+** Safe Set Device Enable Status
+*/
+void NOVATEL_OEM615_SetDeviceEnabledStatus(uint32 status)
+{
+    if (OS_MutSemTake(NOVATEL_OEM615_AppData.HkDataMutex) == OS_SUCCESS)
+    {
+        NOVATEL_OEM615_AppData.HkTelemetryPkt.DeviceEnabled = status;
+
+        OS_MutSemGive(NOVATEL_OEM615_AppData.HkDataMutex);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(NOVATEL_OEM615_MUT_SET_DEV_ENABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "NOVATEL_OEM615: Set device enabled status reported error obtaining mutex");
+    }
+    return;
+}
 ```
 
-## 항목
+### `novatel_oem615_app.h`
 
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_app.c`](file--novatel_oem615_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_app.h`](file--novatel_oem615_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_child.c`](file--novatel_oem615_child.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_child.h`](file--novatel_oem615_child.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_events.h`](file--novatel_oem615_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_msg.h`](file--novatel_oem615_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/src/novatel_oem615_version.h`](file--novatel_oem615_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_app.h`
+
+
+```c
+/*******************************************************************************
+** File: novatel_oem615_app.h
+**
+** Purpose:
+**   This is the main header file for the NOVATEL_OEM615 application.
+**
+*******************************************************************************/
+#ifndef _NOVATEL_OEM615_APP_H_
+#define _NOVATEL_OEM615_APP_H_
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "novatel_oem615_child.h"
+#include "novatel_oem615_device.h"
+#include "novatel_oem615_events.h"
+#include "novatel_oem615_platform_cfg.h"
+#include "novatel_oem615_perfids.h"
+#include "novatel_oem615_msg.h"
+#include "novatel_oem615_msgids.h"
+#include "novatel_oem615_version.h"
+#include "hwlib.h"
+
+/*
+** Specified pipe depth - how many messages will be queued in the pipe
+*/
+#define NOVATEL_OEM615_PIPE_DEPTH 32
+
+/*
+** Enabled and Disabled Definitions
+*/
+#define NOVATEL_OEM615_DEVICE_DISABLED 0
+#define NOVATEL_OEM615_DEVICE_ENABLED  1
+
+#define NOVATEL_OEM615_CHILD_TASK_NAME       "NAV_CHILD_TASK"
+#define NOVATEL_OEM615_CHILD_TASK_STACK_SIZE 2048
+#define NOVATEL_OEM615_CHILD_TASK_PRIORITY   162
+
+//#define NOVATEL_OEM615_MUTEX_NAME            "NOVATEL_OEM615_MUTEX"
+#define NOVATEL_OEM615_HK_MUTEX_NAME "NAV_HK_MUTEX"
+
+/*
+** NOVATEL_OEM615 global data structure
+** The cFE convention is to put all global app data in a single struct.
+** This struct is defined in the `novatel_oem615_app.h` file with one global instance
+** in the `.c` file.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet
+    ** Each app defines its own packet which contains its OWN telemetry
+    */
+    NOVATEL_OEM615_Hk_tlm_t HkTelemetryPkt; /* NOVATEL_OEM615 Housekeeping Telemetry Packet */
+
+    /*
+    ** Operational data  - not reported in housekeeping
+    */
+    CFE_MSG_Message_t *MsgPtr;      /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;     /* Pipe Id for HK command pipe */
+    uint32             RunStatus;   /* App run status for controlling the application state */
+    uint32             HkDataMutex; /* Locks all data */
+
+    /*
+     ** Device data
+     */
+    uint32                      DeviceID;  /* Device ID provided by CFS on initialization */
+    NOVATEL_OEM615_Device_tlm_t DevicePkt; /* Device specific data packet */
+
+    /*
+    ** Device protocol
+    */
+    uart_info_t Novatel_oem615Uart; /* Hardware protocol definition */
+
+} NOVATEL_OEM615_AppData_t;
+
+/*
+** Exported Data
+** Extern the global struct in the header for the Unit Test Framework (UTF).
+*/
+extern NOVATEL_OEM615_AppData_t NOVATEL_OEM615_AppData; /* NOVATEL_OEM615 App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (NOVATEL_AppMain), these
+**       functions are not called from any other source module.
+*/
+void  NOVATEL_AppMain(void);
+int32 NOVATEL_OEM615_AppInit(void);
+void  NOVATEL_OEM615_ProcessCommandPacket(void);
+void  NOVATEL_OEM615_ProcessGroundCommand(void);
+void  NOVATEL_OEM615_ProcessTelemetryRequest(void);
+void  NOVATEL_OEM615_ReportHousekeeping(void);
+void  NOVATEL_OEM615_ReportDeviceTelemetry(void);
+void  NOVATEL_OEM615_ResetCounters(void);
+void  NOVATEL_OEM615_Enable(void);
+void  NOVATEL_OEM615_Disable(void);
+int32 NOVATEL_OEM615_GetRunStatus(void);
+void  NOVATEL_OEM615_SetRunStatus(uint32 status);
+int32 NOVATEL_OEM615_GetDeviceEnabledStatus(void);
+void  NOVATEL_OEM615_SetDeviceEnabledStatus(uint32 status);
+void  NOVATEL_OEM615_IncrementDeviceCount(void);
+void  NOVATEL_OEM615_IncrementDeviceErrorCount(void);
+void  NOVATEL_OEM615_IncrementCommandCount(void);
+void  NOVATEL_OEM615_IncrementCommandErrorCount(void);
+int32 NOVATEL_OEM615_SafeCommandDeviceCustom(uint8_t cmd_code, int8_t log_type, int8_t period_option);
+int32 NOVATEL_OEM615_SafeRequestData(NOVATEL_OEM615_Device_Data_tlm_t *data);
+int32 NOVATEL_OEM615_ChildProcessRequestData(NOVATEL_OEM615_Device_Data_tlm_t *data);
+int32 NOVATEL_OEM615_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length);
+
+#endif /* _NOVATEL_OEM615_APP_H_ */
+```
+
+### `novatel_oem615_child.c`
+
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_child.c`
+
+
+```c
+/*******************************************************************************
+** File: novatel_oem615_child.c
+**
+** Purpose:
+**   This file contains the source code for the NOVATEL_OEM615 child task.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "novatel_oem615_child.h"
+
+/*
+** Global variables
+*/
+uint8_t error_max_count = NOVATEL_OEM615_CFG_DATA_ERROR_CNT;
+
+/*
+** Run child task until stopped
+*/
+void NOVATEL_OEM615_ChildTask(void)
+{
+    CFE_EVS_SendEvent(NOVATEL_OEM615_CHILDTASKINIT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "NOVATEL_OEM615: child task started, runStatus = %d", NOVATEL_OEM615_AppData.RunStatus);
+
+    while (NOVATEL_OEM615_GetRunStatus() == CFE_ES_RunStatus_APP_RUN)
+    {
+        NOVATEL_OEM615_ProcessData();
+    }
+
+    /* This call allows cFE to clean-up system resources */
+    CFE_EVS_SendEvent(NOVATEL_OEM615_CHILDTASKEXIT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "NOVATEL_OEM615 child task exit complete");
+    CFE_ES_ExitChildTask();
+}
+
+void NOVATEL_OEM615_ProcessData(void)
+{
+    const uint32 sleeptime = NOVATEL_OEM615_CFG_READ_TIMEOUT;
+    int32        status    = CFE_SUCCESS;
+    if (NOVATEL_OEM615_GetDeviceEnabledStatus() == NOVATEL_OEM615_DEVICE_ENABLED)
+    {
+        status = NOVATEL_OEM615_ChildProcessRequestData(
+            (NOVATEL_OEM615_Device_Data_tlm_t *)&NOVATEL_OEM615_AppData.DevicePkt.Novatel_oem615);
+        if (status == OS_SUCCESS)
+        {
+            NOVATEL_OEM615_IncrementDeviceCount();
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.DevicePkt);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&NOVATEL_OEM615_AppData.DevicePkt, true);
+            error_max_count = NOVATEL_OEM615_CFG_DATA_ERROR_CNT;
+        }
+        else
+        {
+            if (error_max_count == 0)
+            {
+                NOVATEL_OEM615_IncrementDeviceErrorCount();
+                CFE_EVS_SendEvent(NOVATEL_OEM615_UART_READ_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "(ChildTask) NOVATEL_OEM615_ProcessData: Device read error.  "
+                                  "NOVATEL_OEM615_ChildProcessRequestData returned %d.",
+                                  status);
+                error_max_count = NOVATEL_OEM615_CFG_DATA_ERROR_CNT;
+            }
+            else
+            {
+                error_max_count = error_max_count - 1;
+            }
+        }
+    }
+    OS_TaskDelay(sleeptime);
+}
+```
+
+### `novatel_oem615_child.h`
+
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_child.h`
+
+
+```c
+/*******************************************************************************
+** File: novatel_oem615_child.h
+**
+** Purpose:
+**   This is the header file for the NOVATEL_OEM615 child task.
+**
+*******************************************************************************/
+#ifndef _NOVATEL_OEM615_CHILD_H_
+#define _NOVATEL_OEM615_CHILD_H_
+
+#include "novatel_oem615_app.h"
+
+void NOVATEL_OEM615_ChildTask(void);
+void NOVATEL_OEM615_ProcessData(void);
+
+#endif
+```
+
+### `novatel_oem615_events.h`
+
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_events.h`
+
+
+```c
+/************************************************************************
+** File:
+**    novatel_oem615_events.h
+**
+** Purpose:
+**  Define NOVATEL_OEM615 application event IDs
+**
+*************************************************************************/
+
+#ifndef _NOVATEL_OEM615_EVENTS_H_
+#define _NOVATEL_OEM615_EVENTS_H_
+
+/* Standard app event IDs */
+#define NOVATEL_OEM615_RESERVED_EID        0
+#define NOVATEL_OEM615_STARTUP_INF_EID     1
+#define NOVATEL_OEM615_LEN_ERR_EID         2
+#define NOVATEL_OEM615_PIPE_ERR_EID        3
+#define NOVATEL_OEM615_SUB_CMD_ERR_EID     4
+#define NOVATEL_OEM615_SUB_REQ_HK_ERR_EID  5
+#define NOVATEL_OEM615_PROCESS_CMD_ERR_EID 6
+
+/* Standard command event IDs */
+#define NOVATEL_OEM615_CMD_ERR_EID         10
+#define NOVATEL_OEM615_CMD_NOOP_INF_EID    11
+#define NOVATEL_OEM615_CMD_RESET_INF_EID   12
+#define NOVATEL_OEM615_CMD_ENABLE_INF_EID  13
+#define NOVATEL_OEM615_ENABLE_INF_EID      14
+#define NOVATEL_OEM615_ENABLE_ERR_EID      15
+#define NOVATEL_OEM615_CMD_DISABLE_INF_EID 16
+#define NOVATEL_OEM615_DISABLE_INF_EID     17
+#define NOVATEL_OEM615_DISABLE_ERR_EID     18
+
+/* Device specific command event IDs */
+#define NOVATEL_OEM615_CMD_CONFIG_INF_EID 20
+#define NOVATEL_OEM615_CONFIG_INF_EID     21
+#define NOVATEL_OEM615_CONFIG_ERR_EID     22
+
+/* Standard telemetry event IDs */
+#define NOVATEL_OEM615_DEVICE_TLM_ERR_EID 30
+#define NOVATEL_OEM615_REQ_HK_ERR_EID     31
+
+/* Device specific telemetry event IDs */
+#define NOVATEL_OEM615_REQ_DATA_ERR_EID 32
+
+/* Hardware protocol event IDs */
+#define NOVATEL_OEM615_UART_INIT_ERR_EID    40
+#define NOVATEL_OEM615_UART_CLOSE_ERR_EID   41
+#define NOVATEL_OEM615_UART_READ_ERR_EID    42
+#define NOVATEL_OEM615_UART_WRITE_ERR_EID   43
+#define NOVATEL_OEM615_UART_TIMEOUT_ERR_EID 44
+
+/* Child task event IDs */
+#define NOVATEL_OEM615_CHILDTASKINIT_ERR_EID 45
+#define NOVATEL_OEM615_CHILDTASKINIT_INF_EID 46
+#define NOVATEL_OEM615_CHILDTASKEXIT_INF_EID 47
+#define NOVATEL_OEM615_CREATE_MUTEX_ERR_EID  48
+
+/* Failure to obtain mutex safely event IDs */
+#define NOVATEL_OEM615_MUT_CMD_DEVICE_ERR_EID      49
+#define NOVATEL_OEM615_MUT_REQUEST_HK_ERR_EID      50
+#define NOVATEL_OEM615_MUT_REQUEST_DATA_ERR_EID    51
+#define NOVATEL_OEM615_MUT_INC_CMD_CNT_ERR_EID     52
+#define NOVATEL_OEM615_MUT_INC_CMD_ERR_CNT_ERR_EID 53
+#define NOVATEL_OEM615_MUT_INC_DEV_CNT_ERR_EID     54
+#define NOVATEL_OEM615_MUT_INC_DEV_ERR_CNT_ERR_EID 55
+#define NOVATEL_OEM615_MUT_GET_RUN_STATUS_ERR_EID  56
+#define NOVATEL_OEM615_MUT_SET_RUN_STATUS_ERR_EID  57
+#define NOVATEL_OEM615_MUT_GET_DEV_ENABLE_ERR_EID  58
+#define NOVATEL_OEM615_MUT_SET_DEV_ENABLE_ERR_EID  59
+
+/* Novatel specific command event IDs */
+#define NOVATEL_OEM615_CMD_LOG_INF_EID          60
+#define NOVATEL_OEM615_CMD_UNLOG_INF_EID        61
+#define NOVATEL_OEM615_CMD_UNLOGALL_INF_EID     62
+#define NOVATEL_OEM615_CMD_SERIALCONFIG_INF_EID 63
+
+#endif /* _NOVATEL_OEM615_EVENTS_H_ */
+```
+
+### `novatel_oem615_msg.h`
+
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_msg.h`
+
+
+```c
+/*******************************************************************************
+** File:
+**   novatel_oem615_msg.h
+**
+** Purpose:
+**  Define NOVATEL_OEM615 application commands and telemetry messages
+**
+*******************************************************************************/
+#ifndef _NOVATEL_OEM615_MSG_H_
+#define _NOVATEL_OEM615_MSG_H_
+
+#include "cfe.h"
+#include "novatel_oem615_device.h"
+
+/*
+** Ground Command Codes
+** TODO: Add additional commands required by the specific component
+*/
+#define NOVATEL_OEM615_NOOP_CC           0
+#define NOVATEL_OEM615_RESET_COUNTERS_CC 1
+#define NOVATEL_OEM615_ENABLE_CC         2
+#define NOVATEL_OEM615_DISABLE_CC        3
+#define NOVATEL_OEM615_LOG_CC            4
+#define NOVATEL_OEM615_UNLOG_CC          5
+#define NOVATEL_OEM615_UNLOGALL_CC       6
+#define NOVATEL_OEM615_SERIALCONFIG_CC   7
+
+/*
+** Telemetry Request Command Codes
+** TODO: Add additional commands required by the specific component
+*/
+#define NOVATEL_OEM615_REQ_HK_TLM   0
+#define NOVATEL_OEM615_REQ_DATA_TLM 1
+
+/*
+** Generic "no arguments" command type definition
+*/
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} NOVATEL_OEM615_NoArgs_cmd_t;
+
+/*
+** NOVATEL_OEM615 write configuration command
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint32                  DeviceCfg;
+
+} NOVATEL_OEM615_Config_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   LogType;
+    uint8                   PeriodOption;
+
+} NOVATEL_OEM615_Log_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   LogType;
+
+} NOVATEL_OEM615_Unlog_cmd_t;
+
+/*
+** NOVATEL_OEM615 device telemetry definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t        TlmHeader;
+    NOVATEL_OEM615_Device_Data_tlm_t Novatel_oem615;
+
+} __attribute__((packed)) NOVATEL_OEM615_Device_tlm_t;
+#define NOVATEL_OEM615_DEVICE_TLM_LNGTH sizeof(NOVATEL_OEM615_Device_tlm_t)
+
+/*
+** NOVATEL_OEM615 housekeeping type definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     CommandErrorCount;
+    uint8                     CommandCount;
+    uint8                     DeviceErrorCount;
+    uint8                     DeviceCount;
+    uint8                     DeviceEnabled;
+
+} __attribute__((packed)) NOVATEL_OEM615_Hk_tlm_t;
+#define NOVATEL_OEM615_HK_TLM_LNGTH sizeof(NOVATEL_OEM615_Hk_tlm_t)
+
+#endif /* _NOVATEL_OEM615_MSG_H_ */
+```
+
+### `novatel_oem615_version.h`
+
+**경로:** `components/novatel_oem615/fsw/cfs/src/novatel_oem615_version.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: novatel_oem615_app_version.h  $
+**
+** Purpose:
+**  The Novatel_oem615 Application header file containing version number
+**
+*************************************************************************/
+
+/* The Novatel_oem615 Application header file containing version number */
+#ifndef _NOVATEL_OEM615_VERSION_H_
+#define _NOVATEL_OEM615_VERSION_H_
+
+#define NOVATEL_OEM615_MAJOR_VERSION 1
+#define NOVATEL_OEM615_MINOR_VERSION 0
+#define NOVATEL_OEM615_REVISION      0
+#define NOVATEL_OEM615_MISSION_REV   0
+
+#endif
+```

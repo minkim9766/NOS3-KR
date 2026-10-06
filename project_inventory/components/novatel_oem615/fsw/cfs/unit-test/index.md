@@ -3,18 +3,61 @@
 
 **경로:** `components/novatel_oem615/fsw/cfs/unit-test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 coveragetest/index
 inc/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/novatel_oem615/fsw/cfs/unit-test/coveragetest/`](coveragetest/index) — 폴더
-- [`components/novatel_oem615/fsw/cfs/unit-test/inc/`](inc/index) — 폴더
-- [`components/novatel_oem615/fsw/cfs/unit-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/novatel_oem615/fsw/cfs/unit-test/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# Coverage Unit Test build recipe
+#
+# This CMake file contains the recipe for building the novatel_oem615 unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+##################################################################
+
+#
+#
+# NOTE on the subdirectory structures here:
+#
+# - "inc" provides local header files shared between the coveragetest,
+#    wrappers, and overrides source code units
+# - "coveragetest" contains source code for the actual unit test cases
+#    The primary objective is to get line/path coverage on the FSW 
+#    code units.
+#
+
+# Use the UT assert public API, and allow direct
+# inclusion of source files that are normally private
+include_directories(${PROJECT_SOURCE_DIR}/fsw/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+include_directories(${hwlib_MISSION_DIR}/fsw/public_inc)
+include_directories(${PROJECT_SOURCE_DIR}/../../../../fsw/osal/ut_assert/inc)
+
+# Add a coverage test executable called "novatel_oem615-ALL" that 
+# covers all of the functions in novatel_oem615_app.  
+#
+# Also note in a more complex app/lib the coverage test can also
+# be broken down into smaller units (in which case one should use
+# a unique suffix other than "ALL" for each unit).  For example,
+# OSAL implements a separate coverage test per source unit.
+add_cfe_coverage_test(novatel_oem615 ALL 
+    "coveragetest/coveragetest_novatel_oem615_app.c"
+    "../src/novatel_oem615_app.c"
+    "../../shared/novatel_oem615_device.c"
+    "../../../../../fsw/apps/hwlib/fsw/stubs/libuart.c"
+)
+```

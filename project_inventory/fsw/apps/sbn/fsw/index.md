@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ src/index
 tables/index
 ```
 
-## 항목
-
-- [`fsw/apps/sbn/fsw/platform_inc/`](platform_inc/index) — 폴더
-- [`fsw/apps/sbn/fsw/src/`](src/index) — 폴더
-- [`fsw/apps/sbn/fsw/tables/`](tables/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

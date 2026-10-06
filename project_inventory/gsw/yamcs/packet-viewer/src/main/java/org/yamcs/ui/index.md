@@ -3,18 +3,125 @@
 
 **경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 packetviewer/index
-file--LogFormatter.java
-file--PrefsObject.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/packetviewer/`](packetviewer/index) — 폴더
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/LogFormatter.java`](file--LogFormatter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/PrefsObject.java`](file--PrefsObject.java) — UTF-8 텍스트 파일 본문 포함
+### `LogFormatter.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/LogFormatter.java`
+
+
+```java
+package org.yamcs.ui;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.logging.Formatter;
+import java.util.logging.LogRecord;
+
+public class LogFormatter extends Formatter {
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM dd HH:mm:ss.SSS");
+    Date d = new Date();
+
+    @Override
+    public String format(LogRecord r) {
+        StringBuilder sb = new StringBuilder();
+
+        d.setTime(r.getMillis());
+        sb.append(sdf.format(d)).append(" ");
+
+        String name = r.getLoggerName();
+        sb.append(name).append(" [").append(r.getThreadID()).append("] ");
+        sb.append("[").append(r.getLevel()).append("] ").append(r.getMessage());
+
+        Throwable t = r.getThrown();
+        if (t != null) {
+            sb.append(": ").append(t.toString()).append("\n");
+            addStack(sb, t);
+            Throwable cause = t.getCause();
+            while (cause != null && cause != t) {
+                sb.append("Caused by: ").append(cause.toString()).append("\n");
+                addStack(sb, cause);
+                cause = cause.getCause();
+            }
+        }
+        sb.append("\n");
+        return sb.toString();
+    }
+    
+    private void addStack(StringBuilder sb, Throwable t) {
+        for (StackTraceElement ste : t.getStackTrace()) {
+            sb.append("\t").append(ste.toString()).append("\n");
+        }
+    }
+}
+```
+
+### `PrefsObject.java`
+
+**경로:** `gsw/yamcs/packet-viewer/src/main/java/org/yamcs/ui/PrefsObject.java`
+
+
+```java
+package org.yamcs.ui;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.UncheckedIOException;
+import java.util.prefs.Preferences;
+
+public class PrefsObject {
+
+    public static void putObject(Preferences prefs, String key, Object o) {
+        byte[] raw;
+        raw = object2Bytes(o);
+        prefs.putByteArray(key, raw);
+    }
+
+    public static Object getObject(Preferences prefs, String key) {
+        byte[] raw = prefs.getByteArray(key, null);
+        if (raw == null) {
+            return null;
+        }
+        Object o = null;
+        try {
+            o = bytes2Object(raw);
+        } catch (ClassNotFoundException e) {
+            System.err.println("Failed to decode data for " + key + ": " + e.getMessage());
+        }
+        return o;
+    }
+
+    private static byte[] object2Bytes(Object o) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(o);
+            return baos.toByteArray();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    private static Object bytes2Object(byte[] raw) throws ClassNotFoundException {
+        try {
+            ByteArrayInputStream bais = new ByteArrayInputStream(raw);
+            ObjectInputStream ois = new ObjectInputStream(bais);
+            return ois.readObject();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+}
+```

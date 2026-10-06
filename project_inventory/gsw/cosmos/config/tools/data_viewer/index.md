@@ -3,14 +3,19 @@
 
 **경로:** `gsw/cosmos/config/tools/data_viewer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `data_viewer.txt`
 
-file--data_viewer.txt
+**경로:** `gsw/cosmos/config/tools/data_viewer/data_viewer.txt`
+
+
+```text
+AUTO_START
+
+COMPONENT "cfe_terminal" evs_terminal.rb
+    PACKET CFS CFE_EVS_PACKET
+
+#COMPONENT "Arducam_Exp" arducam_exp.rb
+#    PACKET ARDUCAM ARDUCAM_EXP_TLM_T
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/tools/data_viewer/data_viewer.txt`](file--data_viewer.txt) — UTF-8 텍스트 파일 본문 포함

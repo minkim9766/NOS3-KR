@@ -3,16 +3,16 @@
 
 **경로:** `fsw/apps/lc/docs/users_guide_historical/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CFS LC User Guide Doc No 582-2012-004 Source Files.zip`
 
-file--CFS%20LC%20User%20Guide%20Doc%20No%20582-2012-004%20Source%20Files.zip
-file--cFS%20LC%20User%20Guide%20Doc%20No%20582-2012-004%20Ver%201_1%202017_08-29.pdf
-```
+**경로:** `fsw/apps/lc/docs/users_guide_historical/CFS LC User Guide Doc No 582-2012-004 Source Files.zip`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/lc/docs/users_guide_historical/CFS LC User Guide Doc No 582-2012-004 Source Files.zip`](file--CFS%20LC%20User%20Guide%20Doc%20No%20582-2012-004%20Source%20Files.zip) — 바이너리 (경로만)
-- [`fsw/apps/lc/docs/users_guide_historical/cFS LC User Guide Doc No 582-2012-004 Ver 1_1 2017_08-29.pdf`](file--cFS%20LC%20User%20Guide%20Doc%20No%20582-2012-004%20Ver%201_1%202017_08-29.pdf) — 바이너리 (경로만)
+### `cFS LC User Guide Doc No 582-2012-004 Ver 1_1 2017_08-29.pdf`
+
+**경로:** `fsw/apps/lc/docs/users_guide_historical/cFS LC User Guide Doc No 582-2012-004 Ver 1_1 2017_08-29.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.

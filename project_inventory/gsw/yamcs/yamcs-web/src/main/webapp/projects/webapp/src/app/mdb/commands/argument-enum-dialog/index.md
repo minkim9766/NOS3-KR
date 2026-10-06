@@ -3,16 +3,52 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/argument-enum-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `argument-enum-dialog.component.html`
 
-file--argument-enum-dialog.component.html
-file--argument-enum-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/argument-enum-dialog/argument-enum-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Enum States</h2>
+
+<mat-dialog-content>
+  <table yaDataTable style="width: 100%">
+    <tr>
+      <th>Value</th>
+      <th>Label</th>
+    </tr>
+    @for (enumValue of data.argument.type.enumValue; track enumValue) {
+      <tr>
+        <td>{{ enumValue.value }}</td>
+        <td>{{ enumValue.label }}</td>
+      </tr>
+    }
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>Close</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `argument-enum-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/argument-enum-dialog/argument-enum-dialog.component.html`](file--argument-enum-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/argument-enum-dialog/argument-enum-dialog.component.ts`](file--argument-enum-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/commands/argument-enum-dialog/argument-enum-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-argument-enum-dialog',
+  templateUrl: './argument-enum-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class ArgumentEnumDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) readonly data: any) {}
+}
+```

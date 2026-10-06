@@ -3,40 +3,2199 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/portable/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `coveragetest-bsd-select.c`
 
-file--coveragetest-bsd-select.c
-file--coveragetest-bsd-sockets.c
-file--coveragetest-console-bsp.c
-file--coveragetest-no-condvar.c
-file--coveragetest-no-loader.c
-file--coveragetest-no-network.c
-file--coveragetest-no-shell.c
-file--coveragetest-no-sockets.c
-file--coveragetest-no-symtab.c
-file--coveragetest-posix-dirs.c
-file--coveragetest-posix-files.c
-file--coveragetest-posix-gettime.c
-file--coveragetest-posix-io.c
-file--os-portable-coveragetest.h
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-io.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_sys_select.h"
+#include "OCS_errno.h"
+
+void Test_OS_SelectSingle_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SelectSingle_Impl(uint32 stream_id, uint32 *SelectFlags, int32 msecs)
+     */
+    uint32              SelectFlags;
+    OS_object_token_t   token;
+    struct OCS_timespec nowtime;
+    struct OCS_timespec latertime;
+    struct OCS_timespec latertime2;
+
+    memset(&token, 0, sizeof(token));
+
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 0), OS_SUCCESS);
+
+    /* Cover FD_ISSET true branches and pend */
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, -1), OS_SUCCESS);
+
+    /* No flags and non-read/write flag branches */
+    SelectFlags = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 0), OS_SUCCESS);
+    SelectFlags = OS_STREAM_STATE_BOUND;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 0), OS_SUCCESS);
+
+    /* try a case where select() needs to be repeated to achieve the desired wait time */
+    UT_ResetState(UT_KEY(OCS_clock_gettime));
+    UT_ResetState(UT_KEY(OCS_select));
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), -1);
+    OCS_errno = OCS_EINTR;
+    UT_SetDeferredRetcode(UT_KEY(OCS_select), 2, 0);
+    SelectFlags        = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec     = 1;
+    nowtime.tv_nsec    = 0;
+    latertime.tv_sec   = 1;
+    latertime.tv_nsec  = 800000000;
+    latertime2.tv_sec  = 2;
+    latertime2.tv_nsec = 200000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime, sizeof(latertime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime2, sizeof(latertime2), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 1200), OS_ERROR_TIMEOUT);
+    UtAssert_STUB_COUNT(OCS_clock_gettime, 3);
+    UtAssert_STUB_COUNT(OCS_select, 2);
+
+    /* Repeated select with alternate branches */
+    OCS_errno          = OCS_EAGAIN;
+    SelectFlags        = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    latertime2.tv_nsec = 300000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime, sizeof(latertime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime2, sizeof(latertime2), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 1200), OS_ERROR_TIMEOUT);
+    UtAssert_STUB_COUNT(OCS_clock_gettime, 6);
+    UtAssert_STUB_COUNT(OCS_select, 3);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), 0);
+    SelectFlags       = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec    = 1;
+    nowtime.tv_nsec   = 500000000;
+    latertime.tv_sec  = 10;
+    latertime.tv_nsec = 0;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime, sizeof(latertime), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 999), OS_ERROR_TIMEOUT);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_select), -1);
+    OCS_errno         = OCS_ETIMEDOUT;
+    SelectFlags       = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    nowtime.tv_sec    = 1;
+    nowtime.tv_nsec   = 0;
+    latertime.tv_sec  = 2;
+    latertime.tv_nsec = 600000000;
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &nowtime, sizeof(nowtime), false);
+    UT_SetDataBuffer(UT_KEY(OCS_clock_gettime), &latertime, sizeof(latertime), false);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 2100), OS_ERROR);
+
+    /* Test cases where the FD exceeds FD_SETSIZE */
+    SelectFlags = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, OCS_FD_SETSIZE);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle_Impl, (&token, &SelectFlags, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+}
+
+void Test_OS_SelectMultiple_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+     */
+    OS_FdSet ReadSet;
+    OS_FdSet WriteSet;
+    int      i;
+
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, 0);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+
+    memset(&ReadSet, 0, sizeof(ReadSet));
+    memset(&WriteSet, 0, sizeof(WriteSet));
+    WriteSet.object_ids[0] = 1;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (NULL, &WriteSet, 0), OS_SUCCESS);
+    ReadSet.object_ids[0] = 1;
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, NULL, 0), OS_SUCCESS);
+
+    /* Branches for processing the set */
+    UT_SetDeferredRetcode(UT_KEY(OCS_FD_ISSET), 1, true);
+    WriteSet.object_ids[0] = 0x0D;
+    UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(2), -1);
+    UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(3), 0);
+    UT_PortablePosixIOTest_Set_Selectable(OSAL_INDEX_C(3), true);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 0), OS_SUCCESS);
+
+    memset(&ReadSet, 0, sizeof(ReadSet));
+    memset(&WriteSet, 0, sizeof(WriteSet));
+    ReadSet.object_ids[0] = 1;
+    UT_SetDeferredRetcode(UT_KEY(OCS_select), 1, 0);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 1), OS_ERROR_TIMEOUT);
+
+    /* Test where the FD set is empty */
+    memset(&ReadSet, 0, sizeof(ReadSet));
+    memset(&WriteSet, 0, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (NULL, NULL, 0), OS_ERR_INVALID_ID);
+
+    /* Test cases where the FD exceeds FD_SETSIZE in the read set */
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, OCS_FD_SETSIZE);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    memset(&ReadSet, 0xff, sizeof(ReadSet));
+    memset(&WriteSet, 0, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /* Test cases where the FD exceeds FD_SETSIZE in the write set */
+    memset(&ReadSet, 0, sizeof(ReadSet));
+    memset(&WriteSet, 0xff, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /* Test cases where additional bits are set in the OS_FdSet */
+    UT_PortablePosixIOTest_Set_FD(UT_INDEX_0, 0);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    memset(&ReadSet, 0xff, sizeof(ReadSet));
+    memset(&WriteSet, 0xff, sizeof(WriteSet));
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 0), OS_ERR_OPERATION_NOT_SUPPORTED);
+
+    /*
+     * Cover OS_FdSet_ConvertOut_Impl for id < OS_MAX_NUM_OPEN_FILES, requires no errors from in conversion
+     * NOTE - coverage only possible if OS_MAX_NUM_OPEN_FILES is not a multiple of 8 (exact fit)
+     */
+    for (i = 1; i < OS_MAX_NUM_OPEN_FILES; i++)
+    {
+        UT_PortablePosixIOTest_Set_FD(OSAL_INDEX_C(i), -1);
+    }
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple_Impl, (&ReadSet, &WriteSet, 0), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SelectSingle_Impl);
+    ADD_TEST(OS_SelectMultiple_Impl);
+}
 ```
 
-## 항목
+### `coveragetest-bsd-sockets.c`
 
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-select.c`](file--coveragetest-bsd-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-sockets.c`](file--coveragetest-bsd-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-console-bsp.c`](file--coveragetest-console-bsp.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-condvar.c`](file--coveragetest-no-condvar.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-loader.c`](file--coveragetest-no-loader.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-network.c`](file--coveragetest-no-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-shell.c`](file--coveragetest-no-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-sockets.c`](file--coveragetest-no-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-symtab.c`](file--coveragetest-no-symtab.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-dirs.c`](file--coveragetest-posix-dirs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-files.c`](file--coveragetest-posix-files.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-gettime.c`](file--coveragetest-posix-gettime.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-io.c`](file--coveragetest-posix-io.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/portable/src/os-portable-coveragetest.h`](file--os-portable-coveragetest.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-bsd-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no network implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-sockets.h"
+#include "os-shared-idmap.h"
+#include "os-shared-file.h"
+#include "os-shared-select.h"
+#include "os-impl-io.h"
+
+#include "OCS_sys_socket.h"
+#include "OCS_errno.h"
+#include "OCS_fcntl.h"
+#include "OCS_arpa_inet.h"
+
+#include "ut-adaptor-portable-posix-io.h"
+
+/* Unique error code for return testing */
+#define UT_ERR_UNIQUE 0xDEADBEEF
+
+/* Buffer size */
+#define UT_BUFFER_SIZE 16
+
+/* OS_SelectSingle_Impl hook to set SelectFlags per input */
+static int32 UT_Hook_OS_SelectSingle_Impl(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                          const UT_StubContext_t *Context)
+{
+    uint32 *SelectFlags;
+
+    SelectFlags = UT_Hook_GetArgValueByName(Context, "SelectFlags", uint32 *);
+
+    if (SelectFlags != NULL)
+    {
+        *SelectFlags = *((uint32 *)UserObj);
+    }
+
+    return 0;
+}
+
+/* OCS_getsockopt hook to set sockopt per input */
+static int32 UT_Hook_OCS_getsockopt(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    int *optval;
+
+    optval = UT_Hook_GetArgValueByName(Context, "optval", int *);
+
+    if (optval != NULL)
+    {
+        *optval = *((int *)UserObj);
+    }
+
+    return 0;
+}
+
+void Test_OS_SocketOpen_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+
+    /* Invalid socket type */
+    OS_stream_table[0].socket_type = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* Invalid domain type */
+    OS_stream_table[0].socket_type   = OS_SocketType_DATAGRAM;
+    OS_stream_table[0].socket_domain = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&token), OS_ERR_NOT_IMPLEMENTED);
+
+    /* Fail socket */
+    OS_stream_table[0].socket_domain = OS_SocketDomain_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_socket), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&token), OS_ERROR);
+
+    /* Success case */
+    OS_stream_table[0].socket_type   = OS_SocketType_STREAM;
+    OS_stream_table[0].socket_domain = OS_SocketDomain_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (&token), OS_SUCCESS);
+}
+
+void Test_OS_SetSocketDefaultFlags_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Failure in fcntl() GETFL */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UT_SetDeferredRetcode(UT_KEY(OCS_fcntl), 1, -1);
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 1);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+
+    /* Failure in fcntl() SETFL */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UT_SetDeferredRetcode(UT_KEY(OCS_fcntl), 2, -1);
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 2);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+
+    /* Nominal path */
+    UT_PortablePosixIOTest_ResetImpl(token.obj_idx);
+    UT_ResetState(UT_KEY(OCS_fcntl));
+    UtAssert_VOIDCALL(OS_SetSocketDefaultFlags_Impl(&token));
+    UtAssert_STUB_COUNT(OCS_fcntl, 2);
+    UtAssert_True(UT_PortablePosixIOTest_Get_Selectable(token.obj_idx), "Socket is selectable");
+}
+
+void Test_OS_SocketBindAddress_Impl(void)
+{
+    OS_object_token_t    token = {0};
+    OS_SockAddr_t        addr  = {0};
+    struct OCS_sockaddr *sa    = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Default family case */
+    sa->sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&token, &addr), OS_ERR_BAD_ADDRESS);
+
+    /* Note - not attempting to hit addrlen > OS_SOCKADDR_MAX_LEN at this point (NOT MC/DC)
+     * would require compiling with a small OS_SOCKADDR_MAX_LEN or bigger structure */
+
+    /* Fail bind */
+    sa->sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_bind), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&token, &addr), OS_ERROR);
+
+    /* Success with INET address */
+    sa->sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&token, &addr), OS_SUCCESS);
+
+    /* Success with INET6 address */
+    sa->sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (&token, &addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketListen_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Nominal Success */
+    OS_stream_table[0].socket_type = OS_SocketType_STREAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (&token), OS_SUCCESS);
+
+    /* Fail listen */
+    UT_SetDeferredRetcode(UT_KEY(OCS_listen), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (&token), OS_ERROR);
+}
+
+void Test_OS_SocketConnect_Impl(void)
+{
+    OS_object_token_t    token = {0};
+    OS_SockAddr_t        addr  = {0};
+    struct OCS_sockaddr *sa    = (struct OCS_sockaddr *)&addr.AddrData;
+    int32                selectflags;
+    int                  sockopt;
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Default family case */
+    sa->sa_family     = -1;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_ERR_BAD_ADDRESS);
+
+    /* Successful connect */
+    sa->sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_SUCCESS);
+
+    /* Fail connect, errno ! EINPROGRESS */
+    OCS_errno = ~OCS_EINPROGRESS;
+    UT_SetDefaultReturnValue(UT_KEY(OCS_connect), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_ERROR);
+
+    /* Fail OS_SelectSingle_Impl, errno == EINPROGRESS */
+    OCS_errno                              = OCS_EINPROGRESS;
+    sa->sa_family                          = OCS_AF_INET6;
+    addr.ActualLength                      = sizeof(struct OCS_sockaddr_in6);
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), UT_ERR_UNIQUE);
+
+    /* Timeout error by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Fail getsockopt status */
+    UT_SetDeferredRetcode(UT_KEY(OCS_getsockopt), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_ERROR);
+
+    /* Nonzero getsockopt sockopt */
+    sockopt = 1;
+    UT_SetHookFunction(UT_KEY(OCS_getsockopt), UT_Hook_OCS_getsockopt, &sockopt);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_ERROR);
+    UT_SetHookFunction(UT_KEY(OCS_getsockopt), NULL, NULL);
+
+    /* Success case with selectable */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_SUCCESS);
+
+    /* Success case with not selectable */
+    OS_impl_filehandle_table[0].selectable = false;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (&token, &addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketShutdown_Impl(void)
+{
+    OS_object_token_t token = {0};
+
+    /* Set up token for index 0 */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Check all 3 valid modes */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&token, OS_SocketShutdownMode_SHUT_READ), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&token, OS_SocketShutdownMode_SHUT_WRITE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&token, OS_SocketShutdownMode_SHUT_READWRITE), OS_SUCCESS);
+
+    /* Check OS call failure */
+    UT_SetDeferredRetcode(UT_KEY(OCS_shutdown), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (&token, OS_SocketShutdownMode_SHUT_READ), OS_ERROR);
+}
+
+void Test_OS_SocketAccept_Impl(void)
+{
+    OS_object_token_t sock_token = {0};
+    OS_object_token_t conn_token = {0};
+    OS_SockAddr_t     addr       = {0};
+    int32             selectflags;
+
+    /* Set up tokens */
+    sock_token.obj_idx = UT_INDEX_0;
+    conn_token.obj_idx = UT_INDEX_1;
+
+    /* Fail OS_SelectSingle_Impl with sock_token selectable */
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&sock_token, &conn_token, &addr, 0), UT_ERR_UNIQUE);
+
+    /* Timeout by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&sock_token, &conn_token, &addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Clear selectable and fail accept */
+    OS_impl_filehandle_table[0].selectable = false;
+    UT_SetDeferredRetcode(UT_KEY(OCS_accept), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&sock_token, &conn_token, &addr, 0), OS_ERROR);
+
+    /* Success case */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (&sock_token, &conn_token, &addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketRecvFrom_Impl(void)
+{
+    OS_object_token_t token = {0};
+    uint8             buffer[UT_BUFFER_SIZE];
+    OS_SockAddr_t     addr = {0};
+    int32             selectflags;
+
+    /* Set up token */
+    token.obj_idx = UT_INDEX_0;
+
+    /* NULL RemoteAddr, selectable, fail OS_SelectSingle_Impl */
+    OS_impl_filehandle_table[0].selectable = true;
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, UT_ERR_UNIQUE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), NULL, 0), UT_ERR_UNIQUE);
+
+    /* Timeout by clearing select flags with hook */
+    selectflags = 0;
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, &selectflags);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), &addr, 0), OS_ERROR_TIMEOUT);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+
+    /* Not selectable, 0 timeout, EAGAIN error from recvfrom error */
+    OS_impl_filehandle_table[0].selectable = false;
+    OCS_errno                              = OCS_EAGAIN;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), &addr, 0), OS_QUEUE_EMPTY);
+
+    /* With timeout, other error from recvfrom error */
+    OCS_errno = 0;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), &addr, 1), OS_ERROR);
+
+    /* With timeout, EWOULDBLOCK error from recvfrom error */
+    OCS_errno = OCS_EWOULDBLOCK;
+    UT_SetDeferredRetcode(UT_KEY(OCS_recvfrom), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), &addr, 1), OS_QUEUE_EMPTY);
+
+    /* Success with NULL RemoteAddr */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), NULL, 0), OS_SUCCESS);
+
+    /* Success with non-NULL RemoteAddr */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (&token, buffer, sizeof(buffer), &addr, 0), OS_SUCCESS);
+}
+
+void Test_OS_SocketSendTo_Impl(void)
+{
+    OS_object_token_t    token                  = {0};
+    const uint8          buffer[UT_BUFFER_SIZE] = {0};
+    OS_SockAddr_t        addr                   = {0};
+    struct OCS_sockaddr *sa                     = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Set up token */
+    token.obj_idx = UT_INDEX_0;
+
+    /* Bad address length */
+    sa->sa_family     = -1;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&token, buffer, sizeof(buffer), &addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET, failed sendto */
+    sa->sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_sendto), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&token, buffer, sizeof(buffer), &addr), OS_ERROR);
+
+    /* AF_INET6, success */
+    sa->sa_family     = OCS_AF_INET6;
+    addr.ActualLength = sizeof(struct OCS_sockaddr_in6);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (&token, buffer, sizeof(buffer), &addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketGetInfo_Impl(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo_Impl, (NULL, NULL), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrInit_Impl(void)
+{
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Unknown domain */
+    sa->sa_family     = -1;
+    addr.ActualLength = 5;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&addr, -1), OS_ERR_NOT_IMPLEMENTED);
+    UtAssert_INT32_EQ(sa->sa_family, 0);
+    UtAssert_INT32_EQ(addr.ActualLength, 0);
+
+    /* Note - not attempting to hit addrlen > OS_SOCKADDR_MAX_LEN at this point (NOT MC/DC)
+     * would require compiling with a small OS_SOCKADDR_MAX_LEN or bigger structure */
+
+    /* INET, success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&addr, OS_SocketDomain_INET), OS_SUCCESS);
+    UtAssert_INT32_EQ(sa->sa_family, OCS_AF_INET);
+    UtAssert_INT32_EQ(addr.ActualLength, sizeof(struct OCS_sockaddr_in));
+
+    /* AF_INET6, success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (&addr, OS_SocketDomain_INET6), OS_SUCCESS);
+    UtAssert_INT32_EQ(sa->sa_family, OCS_AF_INET6);
+    UtAssert_INT32_EQ(addr.ActualLength, sizeof(struct OCS_sockaddr_in6));
+}
+
+void Test_OS_SocketAddrToString_Impl(void)
+{
+    char                 buffer[UT_BUFFER_SIZE];
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Bad family */
+    sa->sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6 failed inet_ntop */
+    sa->sa_family = OCS_AF_INET6;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_ntop), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &addr), OS_ERROR);
+
+    /* AF_INET, success */
+    sa->sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (buffer, sizeof(buffer), &addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrFromString_Impl(void)
+{
+    const char           buffer[UT_BUFFER_SIZE] = "UT";
+    OS_SockAddr_t        addr                   = {0};
+    struct OCS_sockaddr *sa                     = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Bad family */
+    sa->sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&addr, buffer), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6 failed inet_ntop */
+    sa->sa_family = OCS_AF_INET6;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&addr, buffer), OS_ERROR);
+
+    /* AF_INET, unable to convert (note inet_pton returns 0 if it failed) */
+    sa->sa_family = OCS_AF_INET;
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, 0);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&addr, buffer), OS_ERROR);
+
+    /* AF_INET, success */
+    UT_SetDeferredRetcode(UT_KEY(OCS_inet_pton), 1, 1);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (&addr, buffer), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrGetPort_Impl(void)
+{
+    uint16               port;
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Bad family */
+    sa->sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&port, &addr), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6, success */
+    sa->sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&port, &addr), OS_SUCCESS);
+
+    /* AF_INET, success */
+    sa->sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (&port, &addr), OS_SUCCESS);
+}
+
+void Test_OS_SocketAddrSetPort_Impl(void)
+{
+    uint16               port = 1;
+    OS_SockAddr_t        addr = {0};
+    struct OCS_sockaddr *sa   = (struct OCS_sockaddr *)&addr.AddrData;
+
+    /* Bad family */
+    sa->sa_family = -1;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&addr, port), OS_ERR_BAD_ADDRESS);
+
+    /* AF_INET6, success */
+    sa->sa_family = OCS_AF_INET6;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&addr, port), OS_SUCCESS);
+
+    /* AF_INET, success */
+    sa->sa_family = OCS_AF_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (&addr, port), OS_SUCCESS);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SocketOpen_Impl);
+    ADD_TEST(OS_SetSocketDefaultFlags_Impl);
+    ADD_TEST(OS_SocketBindAddress_Impl);
+    ADD_TEST(OS_SocketListen_Impl);
+    ADD_TEST(OS_SocketConnect_Impl);
+    ADD_TEST(OS_SocketShutdown_Impl);
+    ADD_TEST(OS_SocketAccept_Impl);
+    ADD_TEST(OS_SocketRecvFrom_Impl);
+    ADD_TEST(OS_SocketSendTo_Impl);
+    ADD_TEST(OS_SocketGetInfo_Impl);
+    ADD_TEST(OS_SocketAddrInit_Impl);
+    ADD_TEST(OS_SocketAddrToString_Impl);
+    ADD_TEST(OS_SocketAddrFromString_Impl);
+    ADD_TEST(OS_SocketAddrGetPort_Impl);
+    ADD_TEST(OS_SocketAddrSetPort_Impl);
+}
+```
+
+### `coveragetest-console-bsp.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-console-bsp.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-printf.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdio.h"
+#include "OCS_bsp-impl.h"
+
+#define TEST_BUFFER_LEN 16
+
+const char TEST_BUF_INITIALIZER[1 + TEST_BUFFER_LEN] = "abcdefghijklmnop";
+
+void Test_OS_ConsoleOutput_Impl(void)
+{
+    char              TestConsoleBspBuffer[TEST_BUFFER_LEN];
+    char              TestOutputBuffer[32];
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    memcpy(TestConsoleBspBuffer, TEST_BUF_INITIALIZER, sizeof(TestConsoleBspBuffer));
+    memset(TestOutputBuffer, 0, sizeof(TestOutputBuffer));
+
+    OS_console_table[0].BufBase = TestConsoleBspBuffer;
+    OS_console_table[0].BufSize = sizeof(TestConsoleBspBuffer);
+
+    UT_SetDataBuffer(UT_KEY(OCS_OS_BSP_ConsoleOutput_Impl), TestOutputBuffer, sizeof(TestOutputBuffer), false);
+
+    OS_console_table[0].WritePos = 4;
+    OS_ConsoleOutput_Impl(&token);
+    UtAssert_True(strcmp(TestOutputBuffer, "abcd") == 0, "TestOutputBuffer (%s) == abcd", TestOutputBuffer);
+
+    OS_console_table[0].WritePos = 2;
+    OS_ConsoleOutput_Impl(&token);
+    UtAssert_True(strcmp(TestOutputBuffer, "abcdefghijklmnopab") == 0, "TestOutputBuffer (%s) == abcdefghijklmnopab",
+                  TestOutputBuffer);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_console_table, 0, sizeof(OS_console_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ConsoleOutput_Impl);
+}
+```
+
+### `coveragetest-no-condvar.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-condvar.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-condvar.h"
+
+void Test_OS_CondVarCreate_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarCreate_Impl(const OS_object_token_t *token, uint32 options)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate_Impl, (UT_INDEX_0, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarLock_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarLock_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarLock_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarUnlock_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarUnlock_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarUnlock_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarSignal_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarSignal_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarSignal_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarBroadcast_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarBroadcast_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarBroadcast_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarWait_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarWait_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarWait_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarTimedWait_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarTimedWait_Impl(const OS_object_token_t *token, const OS_time_t *abs_wakeup_time)
+     */
+    OS_time_t wakeup_time;
+
+    wakeup_time = OS_TimeAssembleFromMilliseconds(100, 100);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait_Impl, (UT_INDEX_0, &wakeup_time), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarDelete_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarDelete_Impl(const OS_object_token_t *token)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarDelete_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_CondVarGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_CondVarGetInfo_Impl(const OS_object_token_t *token, OS_condvar_prop_t *condvar_prop)
+     */
+    OS_condvar_prop_t cv_prop;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetInfo_Impl, (UT_INDEX_0, &cv_prop), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_CondVarCreate_Impl);
+    ADD_TEST(OS_CondVarLock_Impl);
+    ADD_TEST(OS_CondVarUnlock_Impl);
+    ADD_TEST(OS_CondVarSignal_Impl);
+    ADD_TEST(OS_CondVarBroadcast_Impl);
+    ADD_TEST(OS_CondVarWait_Impl);
+    ADD_TEST(OS_CondVarTimedWait_Impl);
+    ADD_TEST(OS_CondVarDelete_Impl);
+    ADD_TEST(OS_CondVarGetInfo_Impl);
+}
+```
+
+### `coveragetest-no-loader.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-loader.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-module.h"
+
+void Test_OS_ModuleLoad_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleLoad_Impl ( uint32 module_id, char *translated_path )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad_Impl, (UT_INDEX_0, "local"), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_ModuleUnload_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleUnload_Impl ( uint32 module_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload_Impl, (UT_INDEX_0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_ModuleGetInfo_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ModuleGetInfo_Impl ( uint32 module_id, OS_module_prop_t *module_prop )
+     */
+    OS_module_prop_t module_prop;
+
+    memset(&module_prop, 0, sizeof(module_prop));
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleGetInfo_Impl, (UT_INDEX_0, &module_prop), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ModuleLoad_Impl);
+    ADD_TEST(OS_ModuleUnload_Impl);
+    ADD_TEST(OS_ModuleGetInfo_Impl);
+}
+```
+
+### `coveragetest-no-network.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no network implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-network.h"
+
+void Test_No_Network(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Network);
+}
+```
+
+### `coveragetest-no-shell.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-shell.h"
+
+void Test_OS_ShellOutputToFile_Impl(void)
+{
+    /* Test Case For:
+     * int32 OS_ShellOutputToFile_Impl(uint32 stream_id, const char* Cmd)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ShellOutputToFile_Impl, (UT_INDEX_0, "ut"), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ShellOutputToFile_Impl);
+}
+```
+
+### `coveragetest-no-sockets.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no socket implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-sockets.h"
+
+void Test_No_Sockets(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen_Impl, (NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect_Impl, (NULL, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept_Impl, (NULL, NULL, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom_Impl, (NULL, NULL, 0, NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo_Impl, (NULL, NULL, 0, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo_Impl, (NULL, NULL), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString_Impl, (NULL, 0, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Sockets);
+}
+```
+
+### `coveragetest-no-symtab.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-no-symtab.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \brief Coverage test for no symtab implementation
+ * \ingroup  portable
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-module.h"
+
+void Test_No_Symtab(void)
+{
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup_Impl, (NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup_Impl, (NULL, NULL, NULL), OS_ERR_NOT_IMPLEMENTED);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolTableDump_Impl, (NULL, 0), OS_ERR_NOT_IMPLEMENTED);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(No_Symtab);
+}
+```
+
+### `coveragetest-posix-dirs.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-dirs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+
+#include "os-shared-dir.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_dirent.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_stat.h"
+#include "OCS_errno.h"
+
+void Test_OS_DirCreate_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirCreate_Impl(const char *local_path, uint32 access)
+     */
+    struct OCS_stat statbuf;
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_SUCCESS);
+
+    /* With errno other than EEXIST it should return OS_ERROR */
+    OCS_errno = OCS_EROFS;
+    UT_SetDefaultReturnValue(UT_KEY(OCS_mkdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+
+    /* If the errno is EEXIST it should return success */
+    OCS_errno = OCS_EEXIST;
+    memset(&statbuf, 0, sizeof(statbuf));
+    statbuf.st_mode = OCS_S_IFDIR;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &statbuf, sizeof(statbuf), false);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_mkdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_SUCCESS);
+
+    /* EEXIST but not a dir */
+    statbuf.st_mode = 0;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &statbuf, sizeof(statbuf), false);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+
+    /* stat failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_stat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirCreate_Impl, ("dir", 0), OS_ERROR);
+}
+
+void Test_OS_DirOpen_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirOpen_Impl(uint32 local_id, const char *local_path)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirOpen_Impl, (&token, "dir"), OS_SUCCESS);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_opendir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirOpen_Impl, (&token, "dir"), OS_ERROR);
+}
+
+void Test_OS_DirClose_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirClose_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirClose_Impl, (&token), OS_SUCCESS);
+}
+
+void Test_OS_DirRead_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRead_Impl(uint32 local_id, os_dirent_t *dirent)
+     */
+    os_dirent_t       dirent_buff;
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirRead_Impl, (&token, &dirent_buff), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_readdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirRead_Impl, (&token, &dirent_buff), OS_ERROR);
+}
+
+void Test_OS_DirRewind_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRewind_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirRewind_Impl, (&token), OS_SUCCESS);
+}
+
+void Test_OS_DirRemove_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirRemove_Impl(const char *local_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirRemove_Impl, ("dir"), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_rmdir), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_DirRemove_Impl, ("dir"), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_DirCreate_Impl);
+    ADD_TEST(OS_DirOpen_Impl);
+    ADD_TEST(OS_DirClose_Impl);
+    ADD_TEST(OS_DirRead_Impl);
+    ADD_TEST(OS_DirRewind_Impl);
+    ADD_TEST(OS_DirRemove_Impl);
+}
+```
+
+### `coveragetest-posix-files.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-files.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-files.h"
+
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_stdio.h"
+#include "OCS_stdlib.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_stat.h"
+#include "OCS_errno.h"
+
+void Test_OS_FileOpen_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileOpen_Impl(uint32 local_id, const char *local_path, int32 flags, int32 access_mode)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&token, "local", OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&token, "local", 0, OS_READ_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&token, "local", OS_FILE_FLAG_CREATE, OS_READ_WRITE), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&token, "local", 0, -1234), OS_ERROR);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_open), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpen_Impl, (&token, "local", 0, OS_READ_ONLY), OS_ERROR);
+}
+
+void Test_OS_FileStat_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileStat_Impl(const char *local_path, os_fstat_t *FileStats)
+     */
+    os_fstat_t      FileStats;
+    struct OCS_stat RefStat;
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_stat), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &FileStats), OS_ERROR);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_stat));
+
+    /* nominal, no permission bits */
+    memset(&FileStats, 0, sizeof(FileStats));
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &FileStats), OS_SUCCESS);
+    UtAssert_True(FileStats.FileModeBits == 0, "File Mode Bits unset");
+
+    /* all permission bits with uid/gid match */
+    RefStat.st_uid   = UT_PortablePosixFileTest_GetSelfEUID();
+    RefStat.st_gid   = UT_PortablePosixFileTest_GetSelfEGID();
+    RefStat.st_mode  = ~((OCS_mode_t)0);
+    RefStat.st_size  = 1234;
+    RefStat.st_mtime = 5678;
+    /* Also set the full resolution timespec */
+    RefStat.st_mtim.tv_sec  = 5678;
+    RefStat.st_mtim.tv_nsec = 3456;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &FileStats), OS_SUCCESS);
+
+    /* Test that the result checking macros work */
+    UtAssert_True(OS_FILESTAT_EXEC(FileStats), "File Exec Bit set");
+    UtAssert_True(OS_FILESTAT_WRITE(FileStats), "File Write Bit set");
+    UtAssert_True(OS_FILESTAT_READ(FileStats), "File Read Bit set");
+    UtAssert_True(OS_FILESTAT_ISDIR(FileStats), "Directory Bit set");
+    UtAssert_True(OS_FILESTAT_SIZE(FileStats) == 1234, "Size match");
+    UtAssert_True(OS_FILESTAT_TIME(FileStats) == 5678, "Time match (seconds)");
+
+    /* Repeat without matching uid/gid */
+    RefStat.st_uid = ~RefStat.st_uid;
+    RefStat.st_gid = ~RefStat.st_gid;
+    UT_SetDataBuffer(UT_KEY(OCS_stat), &RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileStat_Impl, ("local", &FileStats), OS_SUCCESS);
+}
+
+void Test_OS_FileChmod_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileChmod_Impl(const char *local_path, uint32 access_mode)
+     */
+    struct OCS_stat RefStat;
+
+    /* Read only fail, write succeeds */
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+
+    /* Both opens fail */
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    UT_SetDeferredRetcode(UT_KEY(OCS_open), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* failure mode 1 (fstat) */
+    UT_SetDeferredRetcode(UT_KEY(OCS_fstat), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* failure mode 2 (fchmod) */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_fchmod), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERROR);
+
+    /* non implemented error, e.g. such as DOS Filesystem with no perms  */
+    OCS_errno = OCS_ENOTSUP;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    OCS_errno = OCS_ENOSYS;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    OCS_errno = OCS_EROFS;
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_ERR_NOT_IMPLEMENTED);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_fchmod));
+
+    /* all permission bits with uid/gid match */
+    RefStat.st_uid   = UT_PortablePosixFileTest_GetSelfEUID();
+    RefStat.st_gid   = UT_PortablePosixFileTest_GetSelfEGID();
+    RefStat.st_mode  = ~((OCS_mode_t)0);
+    RefStat.st_size  = 1234;
+    RefStat.st_mtime = 5678;
+    /* Also set the full resolution timespec */
+    RefStat.st_mtim.tv_sec  = 5678;
+    RefStat.st_mtim.tv_nsec = 3456;
+    UT_SetDataBuffer(UT_KEY(OCS_fstat), &RefStat, sizeof(RefStat), false);
+
+    /* nominal 1 - full permissions with file owned by own uid/gid */
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+
+    /* nominal 2 - partial permissions */
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_ONLY), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_WRITE_ONLY), OS_SUCCESS);
+
+    /* nominal 3 - non-owned file */
+    ++RefStat.st_uid;
+    ++RefStat.st_gid;
+    UT_SetDataBuffer(UT_KEY(OCS_fstat), &RefStat, sizeof(RefStat), false);
+    OSAPI_TEST_FUNCTION_RC(OS_FileChmod_Impl, ("local", OS_READ_WRITE), OS_SUCCESS);
+}
+
+void Test_OS_FileRemove_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileRemove_Impl(const char *local_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileRemove_Impl, ("local"), OS_SUCCESS);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_remove), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileRemove_Impl, ("local"), OS_ERROR);
+}
+
+void Test_OS_FileRename_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileRename_Impl(const char *old_path, const char *new_path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileRename_Impl, ("old", "new"), OS_SUCCESS);
+
+    /* failure mode */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_rename), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileRename_Impl, ("old", "new"), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_FileOpen_Impl);
+    ADD_TEST(OS_FileStat_Impl);
+    ADD_TEST(OS_FileChmod_Impl);
+    ADD_TEST(OS_FileRemove_Impl);
+    ADD_TEST(OS_FileRename_Impl);
+}
+```
+
+### `coveragetest-posix-gettime.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-gettime.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "os-shared-clock.h"
+
+#include "OCS_time.h"
+
+void Test_OS_GetLocalTime_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+     */
+    OS_time_t timeval = {0};
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetLocalTime_Impl, (&timeval), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_clock_gettime), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GetLocalTime_Impl, (&timeval), OS_ERROR);
+}
+
+void Test_OS_SetLocalTime_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+     */
+    OS_time_t timeval = {0};
+
+    OSAPI_TEST_FUNCTION_RC(OS_SetLocalTime_Impl, (&timeval), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_clock_settime), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_SetLocalTime_Impl, (&timeval), OS_ERROR);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GetLocalTime_Impl);
+    ADD_TEST(OS_SetLocalTime_Impl);
+}
+```
+
+### `coveragetest-posix-io.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/coveragetest-posix-io.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  portable
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+#include "os-portable-coveragetest.h"
+#include "ut-adaptor-portable-posix-io.h"
+
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+#include "os-shared-select.h"
+
+#include "OCS_stdlib.h"
+#include "OCS_unistd.h"
+#include "OCS_fcntl.h"
+#include "OCS_errno.h"
+
+/* OS_SelectSingle_Impl hook to clear SelectFlags */
+static int32 UT_Hook_OS_SelectSingle_Impl(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                          const UT_StubContext_t *Context)
+{
+    uint32 *SelectFlags;
+
+    SelectFlags = UT_Hook_GetArgValueByName(Context, "SelectFlags", uint32 *);
+
+    if (SelectFlags != NULL)
+    {
+        *SelectFlags = 0;
+    }
+
+    return 0;
+}
+
+void Test_OS_GenericClose_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericClose_Impl(uint32 local_id)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OSAPI_TEST_FUNCTION_RC(OS_GenericClose_Impl, (&token), OS_SUCCESS);
+
+    /*
+     * Test path where underlying close() fails.
+     * Should still return success.
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_close), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericClose_Impl, (&token), OS_SUCCESS);
+}
+
+void Test_OS_GenericSeek_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericSeek_Impl (uint32 local_id, int32 offset, uint32 whence)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    /* note on success this wrapper returns the result of lseek(), not OS_SUCCESS */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 111);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, OS_SEEK_CUR), 111);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 222);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, OS_SEEK_SET), 222);
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), 333);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, OS_SEEK_END), 333);
+
+    /* bad whence */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, 1234), OS_ERROR);
+
+    /* generic failure of lseek() */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_lseek), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, OS_SEEK_END), OS_ERROR);
+
+    /* The seek implementation also checks for this specific pipe errno */
+    OCS_errno = OCS_ESPIPE;
+    OSAPI_TEST_FUNCTION_RC(OS_GenericSeek_Impl, (&token, 0, OS_SEEK_END), OS_ERR_OPERATION_NOT_SUPPORTED);
+}
+
+void Test_OS_GenericRead_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericRead_Impl (uint32 local_id, void *buffer, uint32 nbytes, int32 timeout)
+     */
+    char              SrcData[]                 = "ABCDEFGHIJK";
+    char              DestData[sizeof(SrcData)] = {0};
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    UT_SetDataBuffer(UT_KEY(OCS_read), SrcData, sizeof(SrcData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, sizeof(DestData), 0), sizeof(DestData));
+    UtAssert_MemCmp(SrcData, DestData, sizeof(SrcData), "read() data Valid");
+
+    /* test invocation of select() in nonblocking mode */
+    UT_ResetState(UT_KEY(OCS_read));
+    UT_SetDataBuffer(UT_KEY(OCS_read), SrcData, sizeof(SrcData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, sizeof(DestData), 0), sizeof(DestData));
+    UtAssert_True(UT_GetStubCount(UT_KEY(OS_SelectSingle_Impl)) == 1, "OS_SelectSingle() called");
+
+    /* Read 0 bytes */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, 0, 0), OS_SUCCESS);
+
+    /* read() failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_read), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, sizeof(DestData), 0), OS_ERROR);
+
+    /* Fail select */
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, OS_ERROR_TIMEOUT);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, sizeof(DestData), 0), OS_ERROR_TIMEOUT);
+
+    /* Not readable */
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericRead_Impl, (&token, DestData, sizeof(DestData), 0), OS_SUCCESS);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+}
+
+void Test_OS_GenericWrite_Impl(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GenericWrite_Impl(uint32 local_id, const void *buffer, uint32 nbytes, int32 timeout)
+     */
+    char              SrcData[]                 = "ABCDEFGHIJKL";
+    char              DestData[sizeof(SrcData)] = {0};
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    UT_SetDataBuffer(UT_KEY(OCS_write), DestData, sizeof(DestData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, false);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, SrcData, sizeof(SrcData), 0), sizeof(SrcData));
+    UtAssert_MemCmp(SrcData, DestData, sizeof(SrcData), "write() data valid");
+
+    /* test invocation of select() in nonblocking mode */
+    UT_ResetState(UT_KEY(OCS_write));
+    UT_SetDataBuffer(UT_KEY(OCS_write), DestData, sizeof(DestData), false);
+    UT_PortablePosixIOTest_Set_Selectable(UT_INDEX_0, true);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, SrcData, sizeof(SrcData), 0), sizeof(SrcData));
+    UtAssert_True(UT_GetStubCount(UT_KEY(OS_SelectSingle_Impl)) == 1, "OS_SelectSingle() called");
+
+    /* Fail select */
+    UT_SetDeferredRetcode(UT_KEY(OS_SelectSingle_Impl), 1, OS_ERROR_TIMEOUT);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, SrcData, sizeof(SrcData), 0), OS_ERROR_TIMEOUT);
+
+    /* Write 0 bytes */
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, SrcData, 0, 0), OS_SUCCESS);
+
+    /* write() failure */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_write), -1);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, DestData, sizeof(DestData), 0), OS_ERROR);
+
+    /* Not writeable */
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), UT_Hook_OS_SelectSingle_Impl, NULL);
+    OSAPI_TEST_FUNCTION_RC(OS_GenericWrite_Impl, (&token, SrcData, sizeof(SrcData), 0), OS_SUCCESS);
+    UT_SetHookFunction(UT_KEY(OS_SelectSingle_Impl), NULL, NULL);
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+    memset(OS_global_stream_table, 0, sizeof(OS_common_record_t) * OS_MAX_NUM_OPEN_FILES);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/* UtTest_Setup
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GenericClose_Impl);
+    ADD_TEST(OS_GenericSeek_Impl);
+    ADD_TEST(OS_GenericRead_Impl);
+    ADD_TEST(OS_GenericWrite_Impl);
+}
+```
+
+### `os-portable-coveragetest.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/portable/src/os-portable-coveragetest.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup portable
+ *
+ * Declarations and prototypes for os-portable-coveragetest
+ */
+
+#ifndef OS_PORTABLE_COVERAGETEST_H
+#define OS_PORTABLE_COVERAGETEST_H
+
+/*
+ * Includes
+ */
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utstubs.h"
+
+#include "os-shared-globaldefs.h"
+
+#define OSAPI_TEST_FUNCTION_RC(func, args, exp)                                                                \
+    {                                                                                                          \
+        int32 rcexp = exp;                                                                                     \
+        int32 rcact = func args;                                                                               \
+        UtAssert_True(rcact == rcexp, "%s%s (%ld) == %s (%ld)", #func, #args, (long)rcact, #exp, (long)rcexp); \
+    }
+
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+/*
+ * The default/primary table index used by most coverage tests.
+ */
+#define UT_INDEX_0 OSAL_INDEX_C(0)
+
+/*
+ * A secondary table index for coverage tests which require
+ * more than one entry
+ */
+#define UT_INDEX_1 OSAL_INDEX_C(1)
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void);
+void Osapi_Test_Teardown(void);
+
+#endif /* OS_PORTABLE_COVERAGETEST_H */
+```

@@ -3,96 +3,5720 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 error/index
 time/index
-file--AbstractTcFrameLink.java
-file--AbstractTmFrameLink.java
-file--AosFrameDecoder.java
-file--AosManagedParameters.java
-file--AosTransferFrame.java
-file--CcsdsFrameDecoder.java
-file--ClcwStreamHelper.java
-file--Cop1Monitor.java
-file--Cop1MonitorImpl.java
-file--Cop1TcPacketHandler.java
-file--CorruptedFrameException.java
-file--DownlinkManagedParameters.java
-file--DownlinkTransferFrame.java
-file--Fop1Exception.java
-file--FrameStreamHelper.java
-file--IdleFrameHandler.java
-file--MasterChannelFrameHandler.java
-file--MasterChannelFrameMultiplexer.java
-file--PacketDecoder.java
-file--Randomizer.java
-file--TcFrameFactory.java
-file--TcManagedParameters.java
-file--TcPacketHandler.java
-file--TcTransferFrame.java
-file--TmFrameDecoder.java
-file--TmManagedParameters.java
-file--TmTransferFrame.java
-file--TransferFrameDecoder.java
-file--UdpTcFrameLink.java
-file--UdpTmFrameLink.java
-file--UnsupportedPacketVersionException.java
-file--UplinkManagedParameters.java
-file--UslpFrameDecoder.java
-file--UslpManagedParameters.java
-file--UslpTransferFrame.java
-file--VcDownlinkHandler.java
-file--VcDownlinkManagedParameters.java
-file--VcTmPacketHandler.java
-file--VcUplinkHandler.java
-file--VcUplinkManagedParameters.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/error/`](error/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/time/`](time/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AbstractTcFrameLink.java`](file--AbstractTcFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AbstractTmFrameLink.java`](file--AbstractTmFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosFrameDecoder.java`](file--AosFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosManagedParameters.java`](file--AosManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosTransferFrame.java`](file--AosTransferFrame.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/CcsdsFrameDecoder.java`](file--CcsdsFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/ClcwStreamHelper.java`](file--ClcwStreamHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1Monitor.java`](file--Cop1Monitor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1MonitorImpl.java`](file--Cop1MonitorImpl.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1TcPacketHandler.java`](file--Cop1TcPacketHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/CorruptedFrameException.java`](file--CorruptedFrameException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/DownlinkManagedParameters.java`](file--DownlinkManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/DownlinkTransferFrame.java`](file--DownlinkTransferFrame.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Fop1Exception.java`](file--Fop1Exception.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/FrameStreamHelper.java`](file--FrameStreamHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/IdleFrameHandler.java`](file--IdleFrameHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/MasterChannelFrameHandler.java`](file--MasterChannelFrameHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/MasterChannelFrameMultiplexer.java`](file--MasterChannelFrameMultiplexer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/PacketDecoder.java`](file--PacketDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Randomizer.java`](file--Randomizer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcFrameFactory.java`](file--TcFrameFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcManagedParameters.java`](file--TcManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcPacketHandler.java`](file--TcPacketHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcTransferFrame.java`](file--TcTransferFrame.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmFrameDecoder.java`](file--TmFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmManagedParameters.java`](file--TmManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmTransferFrame.java`](file--TmTransferFrame.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TransferFrameDecoder.java`](file--TransferFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UdpTcFrameLink.java`](file--UdpTcFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UdpTmFrameLink.java`](file--UdpTmFrameLink.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UnsupportedPacketVersionException.java`](file--UnsupportedPacketVersionException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UplinkManagedParameters.java`](file--UplinkManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpFrameDecoder.java`](file--UslpFrameDecoder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpManagedParameters.java`](file--UslpManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpTransferFrame.java`](file--UslpTransferFrame.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcDownlinkHandler.java`](file--VcDownlinkHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcDownlinkManagedParameters.java`](file--VcDownlinkManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcTmPacketHandler.java`](file--VcTmPacketHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcUplinkHandler.java`](file--VcUplinkHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcUplinkManagedParameters.java`](file--VcUplinkManagedParameters.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractTcFrameLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AbstractTcFrameLink.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.Link;
+import org.yamcs.tctm.TcDataLink;
+import org.yamcs.tctm.ccsds.TcManagedParameters.PriorityScheme;
+import org.yamcs.tctm.ccsds.TransferFrameDecoder.CcsdsFrameType;
+import org.yamcs.tctm.ccsds.error.BchCltuGenerator;
+import org.yamcs.tctm.ccsds.error.CltuGenerator;
+import org.yamcs.tctm.ccsds.error.Ldpc256CltuGenerator;
+import org.yamcs.tctm.ccsds.error.Ldpc64CltuGenerator;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Sends TC as TC frames (CCSDS 232.0-B-3) or TC frames embedded in CLTU (CCSDS 231.0-B-3).
+ * 
+ */
+public abstract class AbstractTcFrameLink extends AbstractLink implements AggregatedDataLink, TcDataLink {
+    // all the TC frame links should move the TC frame config under this section, to allow having both TM and TC frame
+    // in the same link
+    final public static String TC_FRAME_CONFIG_SECTION = "tcFrameConfig";
+    protected int frameCount;
+    boolean sendCltu;
+    protected MasterChannelFrameMultiplexer multiplexer;
+    List<Link> subLinks;
+    boolean randomize;
+
+    // do not randomize the virtual channels from this array
+    IntArray skipRandomizationForVcs = null;
+
+    protected CommandHistoryPublisher commandHistoryPublisher;
+    protected CltuGenerator cltuGenerator;
+    final static String CLTU_START_SEQ_KEY = "cltuStartSequence";
+    final static String CLTU_TAIL_SEQ_KEY = "cltuTailSequence";
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();
+        spec = addDefaultOptions(spec);
+        return spec;
+    }
+
+    public static Spec addDefaultOptions(Spec spec) {
+        spec.addOption("frameType", OptionType.STRING).withChoices(CcsdsFrameType.class);
+        spec.addOption("clcwStream", OptionType.STRING);
+        spec.addOption("goodFrameStream", OptionType.STRING);
+        spec.addOption("badFrameStream", OptionType.STRING);
+
+        spec.addOption("spacecraftId", OptionType.INTEGER);
+        spec.addOption("physicalChannelName", OptionType.STRING);
+        spec.addOption("errorDetection", OptionType.STRING);
+
+        spec.addOption("frameLength", OptionType.INTEGER);
+        spec.addOption("insertZoneLength", OptionType.INTEGER);
+        spec.addOption("frameHeaderErrorControlPresent", OptionType.BOOLEAN);
+        spec.addOption("virtualChannels", OptionType.LIST).withElementType(OptionType.ANY);
+        spec.addOption("maxFrameLength", OptionType.INTEGER);
+        spec.addOption("minFrameLength", OptionType.INTEGER);
+        spec.addOption("priorityScheme", OptionType.STRING)
+                .withChoices(PriorityScheme.class)
+                .withDefault(PriorityScheme.FIFO);
+
+        spec.addOption("skipRandomizationForVcs", OptionType.LIST).withElementType(OptionType.INTEGER);
+        spec.addOption("cltuEncoding", OptionType.STRING);
+        spec.addOption(CLTU_START_SEQ_KEY, OptionType.STRING);
+        spec.addOption(CLTU_TAIL_SEQ_KEY, OptionType.STRING);
+        spec.addOption("randomizeCltu", OptionType.BOOLEAN);
+        spec.addOption("cltuGeneratorClassName", OptionType.STRING);
+        spec.addOption("cltuGeneratorArgs", OptionType.MAP).withSpec(Spec.ANY);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String linkName, YConfiguration config) {
+        super.init(yamcsInstance, linkName, config);
+        if (config.containsKey("skipRandomizationForVcs")) {
+            List<Integer> l = config.getList("skipRandomizationForVcs");
+            if (!l.isEmpty()) {
+                int[] a = l.stream().mapToInt(i -> i).toArray();
+                skipRandomizationForVcs = IntArray.wrap(a);
+                skipRandomizationForVcs.sort();
+            }
+        }
+        String cltuEncoding = config.getString("cltuEncoding", null);
+        if (cltuEncoding != null) {
+            if ("BCH".equals(cltuEncoding)) {
+                byte[] startSeq = config.getBinary(CLTU_START_SEQ_KEY, BchCltuGenerator.CCSDS_START_SEQ);
+                byte[] tailSeq = config.getBinary(CLTU_TAIL_SEQ_KEY, BchCltuGenerator.CCSDS_TAIL_SEQ);
+                this.randomize = config.getBoolean("randomizeCltu", false);
+                cltuGenerator = new BchCltuGenerator(startSeq, tailSeq);
+            } else if ("LDPC64".equals(cltuEncoding)) {
+                checkSuperfluosLdpcRandomizationOption(config);
+                byte[] startSeq = config.getBinary(CLTU_START_SEQ_KEY, Ldpc64CltuGenerator.CCSDS_START_SEQ);
+                byte[] tailSeq = config.getBinary(CLTU_TAIL_SEQ_KEY, CltuGenerator.EMPTY_SEQ);
+                cltuGenerator = new Ldpc64CltuGenerator(startSeq, tailSeq);
+                this.randomize = true;
+            } else if ("LDPC256".equals(cltuEncoding)) {
+                checkSuperfluosLdpcRandomizationOption(config);
+                byte[] startSeq = config.getBinary(CLTU_START_SEQ_KEY, Ldpc256CltuGenerator.CCSDS_START_SEQ);
+                byte[] tailSeq = config.getBinary(CLTU_TAIL_SEQ_KEY, CltuGenerator.EMPTY_SEQ);
+                cltuGenerator = new Ldpc256CltuGenerator(startSeq, tailSeq);
+                this.randomize = true;
+            } else if ("CUSTOM".equals(cltuEncoding)) {
+                String cltuGeneratorClassName = config.getString("cltuGeneratorClassName", null);
+                if (cltuGeneratorClassName == null) {
+                    throw new ConfigurationException("CUSTOM cltu generator requires value for cltuGeneratorClassName");
+                }
+                if (!config.containsKey("cltuGeneratorArgs")) {
+                    cltuGenerator = YObjectLoader.loadObject(cltuGeneratorClassName);
+                } else {
+                    YConfiguration args = config.getConfig("cltuGeneratorArgs");
+                    cltuGenerator = YObjectLoader.loadObject(cltuGeneratorClassName, args);
+                }
+                this.randomize = config.getBoolean("randomizeCltu", false);
+            } else {
+                throw new ConfigurationException(
+                        "Invalid value '" + cltuEncoding
+                                + " for cltu. Valid values are BCH, LDPC64, LDPC256, or CUSTOM");
+            }
+        }
+
+        multiplexer = new MasterChannelFrameMultiplexer(yamcsInstance, linkName, config);
+        subLinks = new ArrayList<>();
+        for (VcUplinkHandler vch : multiplexer.getVcHandlers()) {
+            if (vch instanceof Link) {
+                Link l = (Link) vch;
+                subLinks.add(l);
+                l.setParent(this);
+            }
+        }
+    }
+
+    static void checkSuperfluosLdpcRandomizationOption(YConfiguration config) {
+        if (!config.getBoolean("randomizeCltu", true)) {
+            throw new ConfigurationException(
+                    "CLTU randomization is always enabled for the LDPC codec, please remove the randomizeCltu option");
+        }
+    }
+
+    /**
+     * optionally encode the data to CLTU if the CLTU generator is configured.
+     * <p>
+     * Randomization will also be performed if configured.
+     */
+    protected byte[] encodeCltu(int vcId, byte[] data) {
+        if (cltuGenerator != null) {
+            boolean rand = randomize
+                    && (skipRandomizationForVcs == null || skipRandomizationForVcs.binarySearch(vcId) < 0);
+            return cltuGenerator.makeCltu(data, rand);
+        } else {
+            return data;
+        }
+
+    }
+
+    @Override
+    public List<Link> getSubLinks() {
+        return subLinks;
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistoryPublisher) {
+        this.commandHistoryPublisher = commandHistoryPublisher;
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand preparedCommand) {
+        throw new ConfigurationException(
+                "This class cannot send command directly, please remove the stream associated to the main link");
+    }
+
+    /**
+     * Ack the BD frames Note: the AD frames are acknowledged in the when the COP1 ack is received
+     * 
+     * @param tf
+     */
+    protected void ackBypassFrame(TcTransferFrame tf) {
+        if (tf.getCommands() != null) {
+            for (PreparedCommand pc : tf.getCommands()) {
+                commandHistoryPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.AcknowledgeSent_KEY,
+                        timeService.getMissionTime(), AckStatus.OK);
+            }
+        }
+    }
+
+    protected void failBypassFrame(TcTransferFrame tf, String reason) {
+        if (tf.getCommands() != null) {
+            for (PreparedCommand pc : tf.getCommands()) {
+                commandHistoryPublisher.publishAck(pc.getCommandId(), CommandHistoryPublisher.AcknowledgeSent_KEY,
+                        TimeEncoding.getWallclockTime(), AckStatus.NOK, reason);
+
+                commandHistoryPublisher.commandFailed(pc.getCommandId(), timeService.getMissionTime(), reason);
+            }
+        }
+    }
+
+}
+```
+
+### `AbstractTmFrameLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AbstractTmFrameLink.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractLink;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.Link;
+import org.yamcs.tctm.RawFrameDecoder;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.TransferFrameDecoder.CcsdsFrameType;
+import org.yamcs.time.Instant;
+
+public abstract class AbstractTmFrameLink extends AbstractLink implements AggregatedDataLink {
+    // all the TM frame links should move the TM frame config under this section, to allow having both TM and TC frame
+    // in the same link
+    final public static String TM_FRAME_CONFIG_SECTION = "tmFrameConfig";
+    
+    protected List<Link> subLinks;
+    protected MasterChannelFrameHandler frameHandler;
+    protected AtomicLong validFrameCount = new AtomicLong(0);
+    protected AtomicLong invalidFrameCount = new AtomicLong(0);
+
+    protected long errFrameCount;
+    protected RawFrameDecoder rawFrameDecoder;
+
+    @Override
+    public Spec getDefaultSpec() {
+        var spec = super.getDefaultSpec();
+        addDefaultOptions(spec);
+        return spec;
+    }
+
+    public static Spec addDefaultOptions(Spec spec) {
+        spec.addOption("frameType", OptionType.STRING).withChoices(CcsdsFrameType.class);
+        spec.addOption("clcwStream", OptionType.STRING);
+        spec.addOption("goodFrameStream", OptionType.STRING);
+        spec.addOption("badFrameStream", OptionType.STRING);
+
+        spec.addOption("spacecraftId", OptionType.INTEGER);
+        spec.addOption("physicalChannelName", OptionType.STRING);
+        spec.addOption("errorDetection", OptionType.STRING);
+
+        spec.addOption("frameLength", OptionType.INTEGER);
+        spec.addOption("insertZoneLength", OptionType.INTEGER);
+        spec.addOption("frameHeaderErrorControlPresent", OptionType.BOOLEAN);
+        spec.addOption("virtualChannels", OptionType.LIST).withElementType(OptionType.ANY);
+        spec.addOption("maxFrameLength", OptionType.INTEGER);
+        spec.addOption("minFrameLength", OptionType.INTEGER);
+
+        spec.addOption("rawFrameDecoder", OptionType.MAP).withSpec(Spec.ANY);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+        int dfl = -1;
+        if (config.containsKey("rawFrameDecoder")) {
+            YConfiguration rconfig = config.getConfig("rawFrameDecoder");
+            rawFrameDecoder = new CcsdsFrameDecoder(rconfig);
+            dfl = rawFrameDecoder.decodedFrameLength();
+        }
+
+        frameHandler = new MasterChannelFrameHandler(yamcsInstance, name, config);
+
+        if (dfl != -1) {
+            int mindfl = frameHandler.getMinFrameSize();
+            int maxdfl = frameHandler.getMinFrameSize();
+            if (dfl < mindfl || dfl > maxdfl) {
+                throw new ConfigurationException("Raw frame decoder output frame length " + dfl +
+                        " does not match the defined frame length "
+                        + (mindfl == maxdfl ? Integer.toString(mindfl) : "[" + mindfl + ", " + maxdfl + "]"));
+            }
+        }
+
+        subLinks = new ArrayList<>();
+        for (VcDownlinkHandler vch : frameHandler.getVcHandlers()) {
+            if (vch instanceof Link) {
+                Link l = (Link) vch;
+                subLinks.add(l);
+                l.setParent(this);
+            }
+        }
+    }
+
+    /**
+     * sends a frame to the multiplexer, after decoding and derandomizing it (if necessary)
+     * 
+     * @param ert
+     *            - earth reception time
+     * @param data
+     *            - buffer containing frame data
+     * @param offset
+     *            - offset in the buffer where the frame data starts
+     * @param length
+     *            - length of the frame data
+     */
+    protected void handleFrame(Instant ert, byte[] data, int offset, int length) {
+        try {
+            if (rawFrameDecoder != null) {
+                length = rawFrameDecoder.decodeFrame(data, offset, length);
+                if (length == -1) {
+                    log.debug("Error decoding frame");
+                    errFrameCount++;
+                    return;
+                }
+            }
+
+            if (length < frameHandler.getMinFrameSize()) {
+                eventProducer.sendWarning("Error processing frame: size " + length
+                        + " shorter than minimum allowed " + frameHandler.getMinFrameSize());
+                errFrameCount++;
+                return;
+            }
+            if (length > frameHandler.getMaxFrameSize()) {
+                eventProducer.sendWarning("Error processing frame: size " + length + " longer than maximum allowed "
+                        + frameHandler.getMaxFrameSize());
+                errFrameCount++;
+            }
+
+            frameHandler.handleFrame(ert, data, offset, length);
+
+            validFrameCount.getAndIncrement();
+        } catch (TcTmException e) {
+            eventProducer.sendWarning("Error processing frame: " + e.toString());
+            invalidFrameCount.getAndIncrement();
+        }
+    }
+
+    @Override
+    public List<Link> getSubLinks() {
+        return subLinks;
+    }
+
+    @Override
+    public void resetCounters() {
+        super.resetCounters();
+        validFrameCount.set(0);
+        invalidFrameCount.set(0);
+    }
+
+}
+```
+
+### `AosFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.rs.ReedSolomonException;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.AosManagedParameters.ServiceType;
+import org.yamcs.tctm.ccsds.DownlinkManagedParameters.FrameErrorDetection;
+import org.yamcs.tctm.ccsds.AosManagedParameters.AosVcManagedParameters;
+import org.yamcs.tctm.ccsds.error.AosFrameHeaderErrorCorr;
+import org.yamcs.tctm.ccsds.error.AosFrameHeaderErrorCorr.DecoderResult;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes frames as per CCSDS 732.0-B-3
+ * 
+ * @author nm
+ *
+ */
+public class AosFrameDecoder implements TransferFrameDecoder {
+    AosManagedParameters aosParams;
+    CrcCciitCalculator crc;
+    static Logger log = LoggerFactory.getLogger(AosFrameDecoder.class.getName());
+
+    public AosFrameDecoder(AosManagedParameters aosParams) {
+        this.aosParams = aosParams;
+        if (aosParams.errorDetection == FrameErrorDetection.CRC16) {
+            crc = new CrcCciitCalculator();
+        }
+    }
+
+    @Override
+    public AosTransferFrame decode(byte[] data, int offset, int length) throws TcTmException {
+        log.trace("decoding frame buf length: {}, dataOffset: {} , dataLength: {}", data.length, offset, length);
+
+        int version = (data[offset] & 0xFF) >> 6;
+        if(version != 1) {
+            throw new TcTmException("Bad frame version number " + version + "; expected 1 (AOS)");
+        }
+        
+        if (length != aosParams.frameLength) {
+            throw new TcTmException("Bad frame length " + length + "; expected " + aosParams.frameLength);
+        }
+        int dataEnd = offset + length;
+        
+
+        if (crc != null) {
+            dataEnd -= 2;
+            int c1 = crc.compute(data, offset, dataEnd - offset);
+            int c2 = ByteArrayUtils.decodeUnsignedShort(data, dataEnd);
+            if (c1 != c2) {
+                throw new CorruptedFrameException("Bad CRC computed: " + c1 + " in the frame: " + c2);
+            }
+        }
+        int gvcid;
+        int dataOffset = offset + 6;
+
+        if (aosParams.frameHeaderErrorControlPresent) {
+            try {
+                DecoderResult dr = AosFrameHeaderErrorCorr.decode(ByteArrayUtils.decodeUnsignedShort(data, offset),
+                        data[offset + 5], ByteArrayUtils.decodeUnsignedShort(data, offset + 6));
+                gvcid = dr.gvcid;
+            } catch (ReedSolomonException e) {
+                throw new CorruptedFrameException("Failed to Reed-Solomon verify/correct the AOS frame header fields");
+            }
+            dataOffset += 2;
+        } else {
+            gvcid = ByteArrayUtils.decodeUnsignedShort(data, offset);
+        }
+
+        int vn = gvcid >> 14;
+        if (vn != 1) {
+            throw new TcTmException("Invalid AOS frame version number " + vn + "; expected " + 1);
+        }
+        int spacecraftId = (gvcid >> 6)&0xFF;
+        int virtualChannelId = gvcid & 0x3F;
+
+        AosTransferFrame atf = new AosTransferFrame(data, spacecraftId, virtualChannelId);
+
+        AosVcManagedParameters vmp = aosParams.vcParams.get(virtualChannelId);
+        if (vmp == null) {
+            if (virtualChannelId == 63) {
+                atf.setServiceType(ServiceType.IDLE);
+                return atf;
+            }
+            throw new TcTmException("Received data for unknown VirtualChannel " + virtualChannelId);
+        }
+
+        dataOffset += aosParams.insertZoneLength;
+
+        atf.setVcFrameSeq(ByteArrayUtils.decodeUnsigned3Bytes(data, offset + 2));
+
+        if (vmp.ocfPresent) {
+            dataEnd -= 4;
+            atf.setOcf(ByteArrayUtils.decodeInt(data, dataEnd));
+        }
+
+        if (vmp.service == ServiceType.PACKET) {
+            int fhp = ByteArrayUtils.decodeUnsignedShort(data, dataOffset) & 0x7FF;
+            dataOffset += 2;
+            if (fhp == 0x7FF) {
+                fhp = -1;
+            } else {
+                fhp += dataOffset;
+                if (fhp > dataEnd) {
+                    throw new TcTmException("First header pointer in the M_PDU part of AOS frame is outside the data "
+                            + (fhp - dataOffset) + ">" + (dataEnd - dataOffset));
+                }
+            }
+            atf.setFirstHeaderPointer(fhp);
+        }
+
+        atf.setDataStart(dataOffset);
+        atf.setDataEnd(dataEnd);
+        return atf;
+    }
+
+}
+```
+
+### `AosManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+public class AosManagedParameters extends DownlinkManagedParameters {
+    enum ServiceType {
+        /** Multiplexing Protocol Data Unit */
+        PACKET,
+        /** Bitstream Protocol Data Unit */
+        // B_PDU,
+        /** Virtual Channel Access Service Data Unit */
+        VCA,
+        /** IDLE frames are those with vcId = 63 */
+        IDLE
+    };
+
+    final static int VCID_IDLE = 63;
+
+    int frameLength;
+
+    int insertZoneLength; // 0 means insert zone not present
+    Map<Integer, AosVcManagedParameters> vcParams = new HashMap<>();
+
+    public boolean frameHeaderErrorControlPresent;
+
+    public AosManagedParameters(YConfiguration config) {
+        super(config);
+        frameLength = config.getInt("frameLength");
+        if (frameLength < 8 || frameLength > 0xFFFF) {
+            throw new ConfigurationException("Invalid frame length " + frameLength);
+        }
+        if (errorDetection == FrameErrorDetection.CRC32) {
+            throw new ConfigurationException("CRC32 not supported for AOS");
+        }
+        insertZoneLength = config.getInt("insertZoneLength", 0);
+
+        if (insertZoneLength < 0 || insertZoneLength > frameLength - 6) {
+            throw new ConfigurationException("Invalid insert zone length " + insertZoneLength);
+        }
+
+        frameHeaderErrorControlPresent = config.getBoolean("frameHeaderErrorControlPresent");
+
+        List<YConfiguration> l = config.getConfigList("virtualChannels");
+        for (YConfiguration yc : l) {
+            AosVcManagedParameters vmp = new AosVcManagedParameters(yc);
+            if (vcParams.containsKey(vmp.vcId)) {
+                throw new ConfigurationException("duplicate configuration of vcId " + vmp.vcId);
+            }
+            vcParams.put(vmp.vcId, vmp);
+        }
+
+    }
+
+    @Override
+    public int getMaxFrameLength() {
+        return frameLength;
+    }
+
+    @Override
+    public int getMinFrameLength() {
+        return frameLength;
+    }
+
+    @Override
+    public Map<Integer, VcDownlinkHandler> createVcHandlers(String yamcsInstance, String linkName) {
+        Map<Integer, VcDownlinkHandler> m = new HashMap<>();
+        for (Map.Entry<Integer, AosVcManagedParameters> me : vcParams.entrySet()) {
+            AosVcManagedParameters vmp = me.getValue();
+            switch (vmp.service) {
+            case PACKET:
+                VcTmPacketHandler vcph = new VcTmPacketHandler(yamcsInstance,
+                        linkName + ".vc" + vmp.vcId, vmp);
+                m.put(vmp.vcId, vcph);
+                break;
+            case IDLE:
+                m.put(vmp.vcId, new IdleFrameHandler());
+                break;
+            case VCA:
+                m.put(vmp.vcId, createVcaHandler(yamcsInstance, linkName, vmp));
+                break;
+            default:
+                throw new UnsupportedOperationException(vmp.service + " not supported (TODO)");
+            }
+        }
+        return m;
+    }
+
+    static class AosVcManagedParameters extends VcDownlinkManagedParameters {
+        ServiceType service;
+        boolean ocfPresent;
+
+        public AosVcManagedParameters(YConfiguration config) {
+            super(config);
+
+            if (vcId < 0 || vcId > 63) {
+                throw new ConfigurationException("Invalid vcId: " + vcId + ". Allowed values are from 0 to 63.");
+            }
+            service = config.getEnum("service", ServiceType.class);
+            if (vcId == VCID_IDLE && service != ServiceType.IDLE) {
+                throw new ConfigurationException(
+                        "vcid " + VCID_IDLE + " is reserved for IDLE frames (please set service: IDLE)");
+            }
+
+            ocfPresent = config.getBoolean("ocfPresent");
+            if (service == ServiceType.PACKET) {
+                parsePacketConfig();
+            } else if (service == ServiceType.VCA) {
+                parseVcaConfig();
+            }
+        }
+
+        AosVcManagedParameters() {
+            super(YConfiguration.emptyConfig());
+        }
+    }
+
+    public VcDownlinkManagedParameters getVcParams(int vcId) {
+        return vcParams.get(vcId);
+    }
+
+}
+```
+
+### `AosTransferFrame.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/AosTransferFrame.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.ccsds.AosManagedParameters.ServiceType;
+
+/**
+ * AOS Transfer Frame as per
+ * CCSDS RECOMMENDED STANDARD FOR AOS SPACE DATA LINK PROTOCOL
+ * CCSDS 732.0-B-3 September 2015
+ * 
+ * Primary Header is composed of
+ * <ul>
+ * <li>Transfer frame version number (2 bits) - shall be set to 01</li>
+ * <li>Spacecraft id (8 bits)</li>
+ * <li>Virtual Channel id (6 bits)</li>
+ * <li>Virtual Channel frame count (24 bits)</li>
+ * <li>replay flag (1 bit)</li>
+ * <li>VC frame count usage flag (1 bit)</li>
+ * <li>spare (2 bits)</li>
+ * <li>VC frame count cycle</li>
+ * <li>frame header error control (optional)</li>
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public class AosTransferFrame extends DownlinkTransferFrame {
+    static final int MAX_FRAME_SEQ = 0xFFFFFF;
+
+    ServiceType serviceType;
+
+    public AosTransferFrame(byte[] data, int spacecraftId, int virtualChannelId) {
+        super(data, spacecraftId, virtualChannelId);
+    }
+
+    int signalingField;
+
+    boolean getReplayFlag() {
+        return (signalingField & 0x80) == 0x80;
+    }
+
+
+    @Override
+    public boolean containsOnlyIdleData() {
+        return serviceType == ServiceType.IDLE;
+    }
+
+    @Override
+    long getSeqCountWrapArround() {
+        return MAX_FRAME_SEQ;
+    }
+
+    @Override
+    int getSeqInterruptionDelta() {
+        return 0x1FFFFF;
+    }
+
+
+    public void setServiceType(ServiceType serviceType) {
+        this.serviceType=serviceType;
+    }
+
+}
+```
+
+### `CcsdsFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/CcsdsFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+
+import java.util.Arrays;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.rs.ReedSolomon;
+import org.yamcs.rs.ReedSolomonException;
+import org.yamcs.tctm.RawFrameDecoder;
+
+/**
+ * 
+ * decodes raw frame data according to according to CCSDS 131.0-B-3.
+ * <p>
+ * Only Reed-Solomon and de-randomization supported.
+ * 
+ */
+public class CcsdsFrameDecoder implements RawFrameDecoder {
+    boolean derandomize;
+    final ReedSolomon rs;
+    int interleavingDepth;
+    final int encodedFrameLength;
+    final int decodedFrameLength;
+
+    public CcsdsFrameDecoder(YConfiguration config) {
+        String codec = config.getString("codec", "NONE");
+        if ("RS".equalsIgnoreCase(codec)) {
+            int errcc = config.getInt("errorCorrectionCapability", 16);
+            if (errcc != 8 && errcc != 16) {
+                throw new ConfigurationException("Bad value for errorCorrectionCapability " + errcc
+                        + ". Valid values are 8 and 16");
+            }
+            interleavingDepth = config.getInt("interleavingDepth", 5);
+            if (Arrays.binarySearch(new int[] {1,2,3,4,5,8}, interleavingDepth)<0) {
+                throw new ConfigurationException("Bad value for interleavingDepth " + interleavingDepth +
+                        ". Valid values are 1,2,3,4, 5 and 8");
+            }
+
+            rs = new ReedSolomon(2 * errcc, 8, 112, 11, 0x187, 0);
+            encodedFrameLength = interleavingDepth * 255;
+            decodedFrameLength = interleavingDepth * (255 - rs.nroots());
+        } else if ("NONE".equalsIgnoreCase(codec)) {
+            rs = null;
+            encodedFrameLength = -1;
+            decodedFrameLength = -1;
+        } else {
+            throw new ConfigurationException("Invlid codec '" + codec + "' specified."
+                    + " Allowed are values are NONE and RS");
+        }
+        
+        derandomize = config.getBoolean("derandomize", false);
+    }
+
+    @Override
+    public int decodeFrame(byte[] data, int offset, int length) {
+
+        if (derandomize) {
+            Randomizer.randomizeTm(data, offset, length);
+        }
+        if (rs != null) {
+            if (length != encodedFrameLength) {
+                throw new IllegalArgumentException("Bad length " + length + " (expected " + encodedFrameLength + ")");
+            }
+            try {
+                int n = rs.blockSize();
+                int k = n - rs.nroots();
+                for (int i = 0; i < interleavingDepth; i++) {
+                    byte[] d = new byte[n];
+                    for (int j = 0; j < n; j++) {
+                        d[j] = data[offset + j * interleavingDepth + i];
+                    }
+                    rs.decode(d, null);
+                    for (int j = 0; j < k; j++) {
+                        data[offset + j * interleavingDepth + i] = d[j];
+                    }
+                }
+
+            } catch (ReedSolomonException e) {
+                return -1;
+            }
+            length -= rs.nroots() * interleavingDepth;
+        }
+
+        return length;
+    }
+
+    public int encodedFrameLength() {
+        return encodedFrameLength;
+    }
+
+    public int decodedFrameLength() {
+        return decodedFrameLength;
+    }
+}
+```
+
+### `ClcwStreamHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/ClcwStreamHelper.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.Arrays;
+import java.util.function.IntConsumer;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * A CLCW stream is a stream used to pass the CLCW (Command Link Control Word - see CCSDS 232.0-B-3) between the
+ * receiver and the FOP1 processor.
+ * <p>
+ * It is just a stream where the tuples have one column, an integer.
+ * <p>
+ * This class provides some methods to help create, publish and subscribe to such a stream.
+ * 
+ * @author nm
+ *
+ */
+public class ClcwStreamHelper {
+    Stream stream;
+    final static String CLCW_CNAME = "clcw";
+    static TupleDefinition tdef;
+    StreamSubscriber subscr;
+    static {
+        tdef = new TupleDefinition();
+        tdef.addColumn(new ColumnDefinition(CLCW_CNAME, DataType.INT));
+    }
+
+    /**
+     * Creates the stream with the given name in the given yamcs instance, if it does not already exist
+     * 
+     * @param yamcsInstance
+     * @param streamName
+     */
+    public ClcwStreamHelper(String yamcsInstance, String streamName) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        stream = ydb.getStream(streamName);
+        if (stream == null) {
+            try {
+                ydb.execute("create stream " + streamName + tdef.getStringDefinition());
+            } catch (Exception e) {
+                throw new ConfigurationException(e);
+            }
+            stream = ydb.getStream(streamName);
+        }
+    }
+
+    /**
+     * Sends the CLCW down the stream
+     * 
+     * @param clcw
+     */
+    public void sendClcw(int clcw) {
+        stream.emitTuple(new Tuple(tdef, Arrays.asList(clcw)));
+    }
+
+    /**
+     * Register a consumer to be called each time a new CLCW is received
+     * 
+     * @param c
+     */
+    public void onClcw(IntConsumer c) {
+        if (subscr != null) {
+            stream.removeSubscriber(subscr);
+        }
+
+        subscr = new StreamSubscriber() {
+            @Override
+            public void onTuple(Stream stream, Tuple tuple) {
+                int clcw = (Integer) tuple.getColumn(0);
+                c.accept(clcw);
+            }
+        };
+        stream.addSubscriber(subscr);
+    }
+
+    public void quit() {
+        if (subscr != null) {
+            stream.removeSubscriber(subscr);
+        }
+    }
+}
+```
+
+### `Cop1Monitor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1Monitor.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+
+public interface Cop1Monitor {
+    public enum AlertType {
+        LOCKOUT("Lockout detected"), //
+        SYNCH("Synchronization Lost"), CLCW("Invalid CLCW received"), //
+        LIMIT("Allowed number of transmissions exhausted for a AD Frame"), //
+        NNR("CLCW with invalid N(R) received"), //
+        T1("Timer expired and transmission limit has been reached"), //
+        TERM("A Terminate AD Service directive has been received"), //
+        LLIF("Lower Layer Interface problem");
+
+        String msg;
+
+        AlertType(String msg) {
+            this.msg = msg;
+        }
+
+        public String toString() {
+            return msg;
+        }
+    }
+    
+    /**
+     * Called when the operations have been suspended due to a timeout
+     * 
+     * @param suspendState
+     *            - the state of the FOP-1 when it has been suspended.
+     */
+    void suspended(int suspendState);
+
+    default void alert(AlertType alert) {};
+
+    /**
+     * Called each time when the state changes.
+     * 
+     * @param oldState
+     * @param newState 
+     */
+    void stateChanged(int oldState, int newState);
+    
+    /**
+     * Called when the COP1 has been disabled
+     */
+    void disabled();
+    
+    /**
+     * Called when a new CLCW has been received
+     */
+    default void clcwReceived(int clcw) {};
+    
+    /**
+     * Called when a new command has been added to the COP1 waiting queue 
+     */
+    default void tcQueued() {};
+    /**
+     * Called when a new AD frame has been sent queued for being sent upstream
+     */
+    default void tcSent() {};
+}
+```
+
+### `Cop1MonitorImpl.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1MonitorImpl.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+
+/**
+ * Sends events and websocket messages for FOP1 state changes and alerts
+ * 
+ * @author nm
+ *
+ */
+public class Cop1MonitorImpl implements Cop1Monitor {
+    EventProducer eventProducer;
+    static final String[] FOP1_STATE = new String[] { "",
+            "1(Active)",
+            "2(Retransmit without wait)",
+            "3(Retransmit with wait)",
+            "4(Initialising without BC Frame)",
+            "5(Initialising with BC Frame)",
+            "6(Initial)"
+    };
+
+    public Cop1MonitorImpl(String yamcsInstance, String linkName) {
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "COP1_" + linkName, 10000);
+    }
+
+    @Override
+    public void suspended(int suspendState) {
+        eventProducer.sendWarning("SUSPENDED", "FOP1 operation suspended due to timeout");
+    }
+
+    @Override
+    public void alert(AlertType alert) {
+        eventProducer.sendWarning("ALERT", alert.msg);
+    }
+
+    @Override
+    public void stateChanged(int oldState, int newState) {
+        eventProducer.sendInfo("STATE_CHANGE",
+                "state changed from " + FOP1_STATE[oldState] + " to " + FOP1_STATE[newState]);
+    }
+
+    @Override
+    public void disabled() {
+        eventProducer.sendInfo("DISABLED", "COP1 disabled");
+    }
+
+}
+```
+
+### `Cop1TcPacketHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Cop1TcPacketHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+
+import org.yamcs.CommandOption;
+import org.yamcs.CommandOption.CommandOptionType;
+import org.yamcs.YamcsServer;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SystemParametersService;
+import org.yamcs.protobuf.Clcw;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Cop1Config;
+import org.yamcs.protobuf.Cop1State;
+import org.yamcs.protobuf.Cop1Status;
+import org.yamcs.protobuf.TimeoutType;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.tctm.AbstractTcDataLink;
+import org.yamcs.tctm.ccsds.Cop1Monitor.AlertType;
+import org.yamcs.tctm.ccsds.TcManagedParameters.TcVcManagedParameters;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.EnumeratedDataType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Assembles TC packets into TC frames as per CCSDS 232.0-B-3 and sends them out via FOP1
+ * 
+ * <p>
+ * Implements the FOP (transmitter) part of the Communications Operations Procedure-1 CCSDS 232.1-B-2 September 2010
+ * <p>
+ * The FOP1 implementation is a little different than the standard: the "Initiate AD service with CLCW check" will wait
+ * for the first CLCW and immediately set the vS to the nR in the CLCW. The standard specifies that the vS has somehow
+ * to be set manually to an CLCW observed value before calling the "Initiate AD with CLCW check" directive.
+ * 
+ * @author nm
+ *
+ */
+public class Cop1TcPacketHandler extends AbstractTcDataLink implements VcUplinkHandler {
+    static final String[] STATE_NAMES = new String[] { "Invalid", "Active", "Retransmit without wait",
+            "Retransmit with wait", "Initialising without BC Frame", "Initialising with BC Frame", "Initial" };
+
+    public static final CommandOption OPTION_BYPASS = new CommandOption("cop1Bypass", "COP-1 Bypass",
+            CommandOptionType.BOOLEAN).withHelp("Use BD mode even if AD was initiated.");
+
+    static {
+        YamcsServer.getServer().addCommandOption(OPTION_BYPASS);
+    }
+
+    static final int OUT_QUEUE_SIZE = 20;
+
+    // the frames to be sent out are placed here
+    BlockingQueue<QueuedFrame> outQueue;
+
+    /**
+     * If this is true, we transform the BD packets to frames and put them directly on the outQueue
+     * <p>
+     * if it's false, we put the BD packets in the inQueue to be taken out in between AD packets
+     * <p>
+     * Note that if the fop1 state is 4,5 or 6 (i.e. initialising) then the BD packets are also put directly in the
+     * outQueue
+     */
+    boolean bdAbsolutePriority;
+
+    /**
+     * If this is false, all frames will be sent directly without passing through the FOP1 state machine
+     */
+    boolean cop1Active = true;
+    /**
+     * Used if cop1Active = false, if set all the TC packets will be sent in frames with the bypass flag set
+     */
+    boolean bypassAll = true;
+
+    TcVcManagedParameters vmp;
+    TcFrameFactory frameFactory;
+
+    // used to signal to the master channel when data is available on this VC
+    private Semaphore dataAvailableSemaphore;
+    final ScheduledThreadPoolExecutor executor;
+
+    protected ArrayDeque<PreparedCommand> waitQueue = new ArrayDeque<>();
+
+    static final int INVALID_CLCW = -1;
+    /**
+     * 1 - Active 2 - Retransmit without wait 3 - Retransmit with wait 4 - Initialising without BC Frame 5 -
+     * Initialising with BC Frame 6 - Initial
+     */
+    int state = 6;
+
+    // _state is seen by external threads
+    volatile int externalState = state;
+
+    // V(S) - Transmitter Frame Sequence Number;
+    int vS;
+
+    // Sent_Queue;
+    QueuedFrame[] sentQueue = new QueuedFrame[256];
+
+    boolean adOutReady = true;
+    boolean bcOutReady = true;
+
+    // NN(R) - Expected Acknowledgement Frame Sequence Number - the value of nR from the previous CLCW
+    int nnR;
+
+    // Timer_Initial_Value (also known as ‘T1_Initial’) in milliseconds
+    private long t1Initial;
+
+    // Transmission_Limit;
+    int txLimit = 3;
+
+    // Transmission_Count;
+    int txCount;
+
+    // FOP_Sliding_Window_Width (also known as ‘K’);
+    int slidingWindowWidth = 10;
+
+    // Timeout_Type (TT);
+    // 1-> SUSPEND, 0 -> go to uninitialized state
+    int timeoutType = 1;
+
+    // Suspend_State (SS).
+    // 0 = not suspended
+    // 1-4 = state in which has been suspended (see state above)
+    int suspendState;
+    AtomicInteger _clcw = new AtomicInteger(INVALID_CLCW);
+
+    // these are received in the CLCW
+    byte clcwLockout;
+    byte clcwWait;
+    byte clcwRetransmit;
+
+    // timestamp of the reception of the last clcw
+    long clcwTimestamp = TimeEncoding.INVALID_INSTANT;
+
+    // used at startup for the initial CLCW wait time
+    long initialClcwWait;
+
+    /** N(R) - The Next Expected Frame Sequence Number as received in the last CLCW */
+    int nR;
+
+    ScheduledFuture<?> timer;
+
+    private QueuedFrame pendingBCFrame;
+
+    CopyOnWriteArrayList<Cop1Monitor> monitors = new CopyOnWriteArrayList<>();
+
+    final int vcId;
+    String clcwStreamName;
+    ClcwStreamHelper clcwHelper;
+
+    protected Parameter spCop1Status;
+    private volatile ParameterValue cop1Status;
+
+    public Cop1TcPacketHandler(String yamcsInstance, String linkName,
+            TcVcManagedParameters vmp, ScheduledThreadPoolExecutor executor) {
+        super.init(yamcsInstance, linkName, vmp.config);
+
+        this.frameFactory = vmp.getFrameFactory();
+        this.executor = executor;
+        this.vmp = vmp;
+        this.vcId = vmp.vcId;
+        outQueue = new ArrayBlockingQueue<>(OUT_QUEUE_SIZE);
+        clcwStreamName = vmp.config.getString("clcwStream");
+        this.initialClcwWait = 1000 * vmp.config.getInt("initialClcwWait", -1);
+        this.t1Initial = 1000 * vmp.config.getInt("cop1T1", 3);
+        this.txLimit = vmp.config.getInt("cop1TxLimit", 3);
+        this.slidingWindowWidth = vmp.config.getInt("slidingWindowWidth", 10);
+        if (vmp.mapId >= 0) {
+            TcPacketHandler.addMapIdOption();
+        }
+    }
+
+    public void addMonitor(Cop1Monitor monitor) {
+        monitors.add(monitor);
+    }
+
+    public void removeMonitor(Cop1Monitor monitor) {
+        monitors.remove(monitor);
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand pc) {
+        boolean tcBypassFlag = isBypass(pc);
+        log.debug("state: {}; Received new TC: {}, cop1Bypass: {}, bypassAll: {}", strState(), pc.getLoggingId(),
+                tcBypassFlag,
+                bypassAll);
+        int framingLength = frameFactory.getFramingLength(vmp.vcId);
+        int pcLength = cmdPostProcessor.getBinaryLength(pc);
+        if (framingLength + pcLength > vmp.maxFrameLength) {
+            log.warn("Command {} does not fit into frame ({} + {} > {})", pc.getId(), framingLength, pcLength,
+                    vmp.maxFrameLength);
+            failedCommand(pc.getCommandId(),
+                    "Command too large to fit in a frame; cmd size: " + pcLength + "; max frame length: "
+                            + vmp.maxFrameLength + "; frame overhead: " + framingLength);
+            return true;
+        }
+
+        if (!cop1Active) {
+            sendSingleTc(pc, bypassAll || tcBypassFlag);
+        } else if ((vmp.bdAbsolutePriority || externalState >= 3) && tcBypassFlag) {
+            sendSingleTc(pc, true);
+        } else {
+            executor.submit(() -> {
+                queueTC(pc);
+            });
+        }
+        return true;
+    }
+
+    private String strState() {
+        return STATE_NAMES[externalState];
+    }
+
+    @Override
+    public TcTransferFrame getFrame() {
+        QueuedFrame qf = outQueue.poll();
+        if (qf == null) {
+            return null;
+        }
+        if (qf.cf != null) {
+            qf.cf.complete(null);
+        }
+        frameFactory.encodeFrame(qf.tf);
+        // BC frames contain no command but we still count it as one item out
+        var count = qf.tf.commands == null ? 1 : qf.tf.commands.size();
+        dataOut(count, qf.tf.getData().length);
+        return qf.tf;
+    }
+
+    private void sendSingleTc(PreparedCommand pc, boolean bypass) {
+        byte mapId = vmp.mapId;
+        if (mapId >= 0) {
+            var mapIdOverride = TcPacketHandler.getMapId(pc);
+            if (mapIdOverride != null) {
+                mapId = mapIdOverride;
+            }
+        }
+        TcTransferFrame tf = makeFrame(pc, bypass, mapId);
+        if (tf != null) {
+            boolean added = outQueue.offer(new QueuedFrame(tf));
+            if (!added) {
+                failedCommand(pc.getCommandId(), "OutQueue on link " + linkName + " full");
+            } else {
+                signalDataAvailable();
+            }
+        }
+    }
+
+    private TcTransferFrame makeFrame(PreparedCommand pc, boolean bypassFlag, byte mapId) {
+        byte[] binary = postprocess(pc);
+        if (binary == null) {
+            return null;
+        }
+
+        TcTransferFrame tf = frameFactory.makeDataFrame(binary.length, pc.getGenerationTime(), mapId);
+        tf.setCommands(Arrays.asList(pc));
+
+        byte[] data = tf.getData();
+        int offset = tf.getDataStart();
+        System.arraycopy(binary, 0, data, offset, binary.length);
+
+        tf.setBypass(bypassFlag);
+        return tf;
+    }
+
+    private boolean isBypass(PreparedCommand pc) {
+        CommandHistoryAttribute cha = pc.getAttribute(OPTION_BYPASS.getId());
+        if (cha == null) {
+            return false;
+        } else {
+            return cha.getValue().getBooleanValue();
+        }
+    }
+
+    /**
+     * Makes a frame from the packets in the {@link #waitQueue} or returns null if the queue is empty
+     * <p>
+     * All encountered byPass packets are put directly into the out queue
+     * 
+     * @return
+     */
+    private TcTransferFrame getNextQueuedDFrame() {
+        if (waitQueue.isEmpty()) {
+            return null;
+        }
+        PreparedCommand pc;
+
+        int framingLength = frameFactory.getFramingLength(vmp.vcId);
+        int dataLength = 0;
+        List<PreparedCommand> l = new ArrayList<>();
+        byte mapId = vmp.mapId;
+
+        while ((pc = waitQueue.poll()) != null) {
+            if (isBypass(pc)) {
+                sendSingleTc(pc, true);
+                continue;
+            }
+
+            int pcLength = cmdPostProcessor.getBinaryLength(pc);
+            if (framingLength + dataLength + pcLength <= vmp.maxFrameLength) {
+                if (mapId >= 0) {
+                    // MAP service for this VC. We need to check that all the commands are for the same MAP_ID
+                    var mapIdOverride = TcPacketHandler.getMapId(pc);
+                    if (mapIdOverride != null) {
+                        if (l.isEmpty()) {
+                            mapId = mapIdOverride;
+                        } else if (mapIdOverride != mapId) {
+                            // different MAP_ID -> new frame
+                            waitQueue.addFirst(pc);
+                            break;
+                        }
+                    }
+                }
+
+                l.add(pc);
+                dataLength += pcLength;
+                if (!vmp.multiplePacketsPerFrame) {
+                    break;
+                }
+            } else { // command doesn't fit into frame
+                waitQueue.addFirst(pc);
+                break;
+            }
+        }
+        if (l.isEmpty()) {
+            return null;
+        }
+
+        TcTransferFrame tf = frameFactory.makeDataFrame(dataLength, l.get(0).getGenerationTime(), mapId);
+        tf.setCommands(l);
+
+        byte[] data = tf.getData();
+        int offset = tf.getDataStart();
+        for (PreparedCommand pc1 : l) {
+            byte[] binary = postprocess(pc1);
+            if (binary == null) {
+                continue;
+            }
+
+            int length = binary.length;
+            if (offset + length > data.length) {
+                log.error("TC of length " + length + " does not fit into the frame of length " + data.length
+                        + " at offset " + offset);
+                if (length != cmdPostProcessor.getBinaryLength(pc1)) {
+                    log.error(
+                            "Command postprocessor {} getBinaryLength() returned {} but the binary command length returned by process() is {}",
+                            cmdPostProcessor.getClass().getName(), cmdPostProcessor.getBinaryLength(pc1), length);
+                }
+                return null;
+            }
+            System.arraycopy(binary, 0, data, offset, length);
+            offset += length;
+        }
+        return tf;
+    }
+
+    @Override
+    public long getFirstFrameTimestamp() {
+        QueuedFrame qf = outQueue.peek();
+        if (qf == null) {
+            return TimeEncoding.INVALID_INSTANT;
+        } else {
+            return qf.tf.getGenerationTime();
+        }
+
+    }
+
+    public CompletableFuture<Void> setVs(int vs) {
+        return doInExecutor(cf -> {// E35 Rev. B
+            traceEvent("E35 Rev. B");
+            if (state != 6) {
+                cf.completeExceptionally(
+                        new Fop1Exception("Invalid state " + state + " for this operation (should be in state 6)"));
+            } else {
+                if (suspendState == 0) {
+                    this.vS = vs;
+                    this.nnR = vs;
+                    cf.complete(null);
+                } else {
+                    cf.completeExceptionally(
+                            new Fop1Exception(
+                                    "Invalid state " + state + " for this operation (suspendState should be 0)"));
+                }
+            }
+        });
+    }
+
+    /**
+     * Initiate AD with or without CLCW check
+     * 
+     * The returned future will be completed when the operation has been initiated.
+     * 
+     * 
+     * @param clcwCheck
+     *            - if true, a CLCW will be expected from the remote system and used to initialise the vS. - If false,
+     *            the current value of vS will be used.
+     */
+    public CompletableFuture<Void> initiateAD(boolean clcwCheck, long waitMillisec) {
+        return doInExecutor(cf -> {
+            if (!preInitCheck(cf)) {
+                return;
+            }
+
+            log.info("VC {} state: {} Initiating AD {} CLCW check", vcId, state,
+                    clcwCheck ? "with " + (waitMillisec / 1000) + " seconds timeout" : "without");
+            if (!clcwCheck) {// E23
+                traceEvent("E23");
+                initialize();
+                changeState(1);
+            } else { // E24
+                traceEvent("E24");
+                initialize();
+                if (timer != null) {
+                    timer.cancel(true);
+                }
+                timer = executor.schedule(() -> onTimerExpiration(), waitMillisec, TimeUnit.MILLISECONDS);
+                changeState(4);
+            }
+            cf.complete(null);
+        });
+    }
+
+    public CompletableFuture<Void> initiateAD(boolean clcwCheck) {
+        return initiateAD(clcwCheck, t1Initial);
+    }
+
+    /**
+     * Initiate AD with set V(R). This will cause a BC frame to be sent to the remote system.
+     * <p>
+     * The returned future is completed as soon as a BC frame has been sent downstream (could be unsuccessful!).
+     * 
+     * @param vR
+     */
+    public CompletableFuture<Void> initiateADWithVR(int vR) {
+        if (vR < 0 || vR > 255) {
+            throw new IllegalArgumentException("vR has to be between 0 and 255 (inclusive)");
+        }
+        return doInExecutor(cf -> {
+            if (!preInitCheck(cf)) {
+                return;
+            }
+            log.info("VC {} state: {} Initiating AD with vR {}", vcId, state, vR);
+            if (bcOutReady) {// E27 Rev.B
+                traceEvent("E27 Rev.B");
+                initialize();
+                vS = vR;
+                nnR = vR;
+                TcTransferFrame ttf = frameFactory.makeCtrlFrame(3);
+                ttf.setBypass(true);
+                byte[] data = ttf.getData();
+                // CCSDS 232.0-B-3 September 2015, Page 4-9
+                int offset = ttf.getDataStart();
+                data[offset++] = (byte) 0x82;
+                data[offset++] = 0;
+                data[offset] = (byte) vR;
+                frameFactory.encodeFrame(ttf);
+
+                transmitBCFrame(ttf);
+                changeState(5);
+                cf.complete(null);
+            } else {// E28
+                traceEvent("E28");
+                cf.completeExceptionally(new Fop1Exception("BC out is not ready"));
+            }
+        });
+    }
+
+    /**
+     * Initiate AD with Unlock. This causes a BC Unlock frame to be sent to the remote system.
+     */
+    public CompletableFuture<Void> initiateADWithUnlock() {
+        return doInExecutor(cf -> {
+            if (!preInitCheck(cf)) {
+                return;
+            }
+            log.info("VC {} state: {} Initiating AD with Unlock", vcId, state);
+            if (bcOutReady) {// E25 Rev.B
+                traceEvent("E25 Rev.B");
+                initialize();
+                TcTransferFrame ttf = frameFactory.makeCtrlFrame(1);
+                ttf.setBypass(true);
+                byte[] data = ttf.getData();
+                // CCSDS 232.0-B-3 September 2015, Page 4-9
+                int offset = ttf.getDataStart();
+                data[offset] = 0;
+                frameFactory.encodeFrame(ttf);
+
+                transmitBCFrame(ttf);
+                changeState(5);
+                cf.complete(null);
+            } else {
+                cf.completeExceptionally(
+                        new Fop1Exception("Invalid state for this operation (BC out is not ready)"));
+            }
+        });
+    }
+
+    private boolean preInitCheck(CompletableFuture<Void> cf) {
+        if (cop1Active) {
+            if (state != 6) {
+                cf.completeExceptionally(new Fop1Exception("Invalid state for the init operation (state should be 6)"));
+                return false;
+            }
+        } else {
+            cop1Active = true;
+            state = 6;
+        }
+        return true;
+    }
+
+    /**
+     * Terminate the AD service
+     * 
+     * @return
+     */
+    public CompletableFuture<Void> terminateAD() {// E29
+        return doInExecutor(cf -> {
+            traceEvent("E29");
+            if (state != 6) {
+                log.info("VC {} state: {} Terminate AD service", vcId, state);
+                changeState(6);
+                alert(AlertType.TERM);
+            }
+            cf.complete(null);
+        });
+    }
+
+    /**
+     * Set the timeout type. It can take two values:
+     * <ul>
+     * <li><i>0:</i> when the timer expires and the transmission limit has been reached, then go to state 6 removing all
+     * commands from the queue.</li>
+     * <li><i>1:</i> when the timer expires and the transmission limit has been reached, then suspend the operation
+     * remembering the state. The operations can be resumed by invoking the resume method.</li>
+     * </ul>
+     * 
+     * @param tt
+     * @return
+     */
+    void setTimeoutType(int tt) {
+        if (tt != 0 && tt != 1) {
+            throw new IllegalArgumentException(
+                    "Timeout type has to be 0 (do not suspend in case of timeout) or 1 (suspend in case of timeout).");
+        }
+        traceEvent("E39");
+        this.timeoutType = tt;
+    }
+
+    /**
+     * Set the FOP sliding window with - that is the maximum number of commands that can be unacknoledged at one time.
+     * 
+     * @param K
+     * @return
+     */
+    public CompletableFuture<Void> setWindowWidth(int K) {
+        if (K < 1 || K > 255) {
+            throw new IllegalArgumentException(
+                    "Window with has to be between 1 and 255.");
+        }
+        return doInExecutor(cf -> {
+            traceEvent("E39");
+            this.slidingWindowWidth = K;
+            cf.complete(null);
+        });
+    }
+
+    private void transmitBCFrame(TcTransferFrame ttf) {
+        pendingBCFrame = new QueuedFrame(ttf);
+        txCount = 1;
+        sendBCDownstream();
+    }
+
+    /**
+     * Resume the AD service (if it is suspended)
+     * 
+     * @return
+     */
+    public CompletableFuture<Void> resume() {
+        return doInExecutor(cf -> {
+            if (suspendState == 0) {// E30
+                traceEvent("E30");
+                cf.completeExceptionally(
+                        new Fop1Exception("Invalid state for this operation (suspendState should not be 0)"));
+            } else if (suspendState <= 4) {// E31 Rev.B E32 Rev.B E33 Rev.B E34 Rev.B
+                traceEvent("E31 Rev.B E32 Rev.B E33 Rev.B E34 Rev.B");
+                if (state == 6) {
+                    int _ss = suspendState;
+                    doResume();
+                    changeState(_ss);
+                    cf.complete(null);
+                }
+            }
+        });
+    }
+
+    public void purgeSentQueue() {
+        for (int i = 0; i < 255; i++) {
+            sentQueue[i] = null;
+        }
+        nnR = vS;
+    }
+
+    public void purgeWaitQueue() {
+        waitQueue.clear();
+    }
+
+    private void queueTC(PreparedCommand pc) {
+        log.debug("Adding command {} to the waitQueue", pc.getLoggingId());
+        waitQueue.add(pc);
+        monitors.forEach(m -> m.tcQueued());
+        if (state <= 2) {
+            lookForFDU();
+        }
+
+    }
+
+    /**
+     * Set the value of the t1Initial - this is the value used to initialize the timer.
+     * 
+     * @param t1Initial
+     */
+    void setT1Initial(long t1Initial) {
+        this.t1Initial = t1Initial;
+    }
+
+    void setTransmissionLimit(int txLimit) {
+        this.txLimit = txLimit;
+    }
+
+    private void sendBCDownstream() {
+        bcOutReady = false;
+        startTimer();
+
+        queueForDownstream(pendingBCFrame).handleAsync((v, t) -> {
+            bcOutReady = true;
+            if (t == null) {// E43
+                traceEvent("E43");
+                if (state == 5) {
+                    lookForDirective();
+                }
+            } else if (!(t instanceof CancellationException)) { // E44
+                traceEvent("E44");
+                alert(AlertType.LLIF);
+                changeState(6);
+            }
+            return null;
+        }, executor);
+    }
+
+    private void sendADDownstream(QueuedFrame qf) {
+        adOutReady = false;
+        startTimer();
+        queueForDownstream(qf).handleAsync((v, t) -> {
+            if (t == null) {//// E41
+                traceEvent("E41");
+                adOutReady = true;
+                if (state <= 2) {
+                    lookForFDU();
+                }
+            } else if (!(t instanceof CancellationException)) { // E41
+                traceEvent("E41");
+                alert(AlertType.LLIF);
+                changeState(6);
+            }
+            return null;
+        }, executor);
+
+    }
+
+    /**
+     * Called when a new CLCW is received from the remote system
+     * 
+     * @param clcw
+     */
+    public void onCLCW(int clcw) {
+        int tmp = _clcw.getAndSet(clcw);
+        if (tmp == INVALID_CLCW) {
+            executor.execute(() -> {
+                _onCLCWUpdate();
+            });
+        } // else the previous CLCW has not been processed so this one will be processed instead
+    }
+
+    private CompletableFuture<Void> doInExecutor(Consumer<CompletableFuture<Void>> task) {
+        CompletableFuture<Void> cf = new CompletableFuture<>();
+        executor.execute(() -> {
+            task.accept(cf);
+        });
+        return cf;
+    }
+
+    private void initialize() {
+        purgeSentQueue();
+        purgeWaitQueue();
+        txCount = 1;
+        suspendState = 0;
+    }
+
+    private void doResume() {
+        startTimer();
+        suspendState = 0;
+    }
+
+    private void _onCLCWUpdate() {
+        final int clcwn = _clcw.getAndSet(INVALID_CLCW);
+        if (!parseCLCW(clcwn)) {
+            return;
+        }
+
+        if (state == 6) {
+            return;
+        }
+
+        if (clcwLockout == 1) {// E14
+            traceEvent("E14");
+            if (state <= 4) {
+                alert(AlertType.LOCKOUT);
+                changeState(6);
+            }
+            return;
+        }
+
+        if (nR == vS) {
+            if (clcwRetransmit == 0) { //
+                if (clcwWait == 0) {
+                    if (state == 4) {
+                        traceEvent("E1");
+                        timer.cancel(true);
+                        changeState(1);
+                    } else if (state == 5) {
+                        traceEvent("E1");
+                        timer.cancel(true);
+                        pendingBCFrame = null;
+                        changeState(1);
+                    } else {
+                        if (nR == nnR) {// E1
+                            traceEvent("E1");
+                            if (state == 2 || state == 3) {
+                                alert(AlertType.SYNCH);
+                                changeState(6);
+                            }
+                        } else {// nr != nnR // E2
+                            traceEvent("E2");
+                            if (state <= 3) {
+                                timer.cancel(false);
+                                removeAcknowlegedFramesFromSentQueue();
+                                lookForFDU();
+                                changeState(1);
+                            }
+                        }
+                    }
+                } else { // clcwWait = 1 // E3
+                    traceEvent("E3");
+                    if (state <= 5) {
+                        alert(AlertType.CLCW);
+                        changeState(6);
+                    }
+                }
+            } else { // clcwRetransmit = 1 // E4
+                traceEvent("E4");
+                if (state <= 4) {
+                    alert(AlertType.SYNCH);
+                    changeState(6);
+                }
+            }
+        } else if (checkNnrNrVsSeq()) {
+            if (clcwRetransmit == 0) {
+                if (clcwWait == 0) {
+                    if (nR == nnR) {// E5
+                        traceEvent("E5");
+                        if (state == 2 || state == 3) {
+                            alert(AlertType.SYNCH);
+                            changeState(6);
+                        }
+                    } else {// E6 Rev.B
+                        traceEvent("E6 Rev.B");
+                        if (state <= 3) {
+                            removeAcknowlegedFramesFromSentQueue();
+                            lookForFDU();
+                            changeState(1);
+                        }
+                    }
+                } else { // nR<vS, clcwRetransmit = 0, clcWait = 1 // E7 Rev.B
+                    traceEvent("E7 Rev.B");
+                    if (state <= 3) {
+                        alert(AlertType.CLCW);
+                        changeState(6);
+                    }
+                }
+            } else { // nR<vS, clcwRetransmit = 1
+                if (txLimit == 1) {
+                    traceEvent("E101 and E102");
+                    if (state <= 3) {
+                        removeAcknowlegedFramesFromSentQueue();
+                        alert(AlertType.LIMIT);
+                        changeState(6);
+                    }
+                } else { // clcwRetransmit = 1, txLimit > 1
+                    if (nR != nnR) {
+                        if (clcwWait == 0) {// E8 Rev.B
+                            traceEvent("E8 Rev.B");
+                            if (state <= 3) {
+                                removeAcknowlegedFramesFromSentQueue();
+                                initiateADRetransmission();
+                                lookForFDU();
+                                changeState(2);
+                            }
+                        } else {// clcwRetransmit = 1, txLimit > 1, nr!=nnR, clcWait = 1 // E9 Rev.B
+                            traceEvent("E9 Rev.B");
+                            if (state <= 3) {
+                                removeAcknowlegedFramesFromSentQueue();
+                                changeState(3);
+                            }
+                        }
+                    } else { // clcwRetransmit = 1, txLimit > 1, nr = nnR
+                        if (txCount < txLimit) {
+                            if (clcwWait == 0) {// clcwRetransmit = 1, txLimit > 1, nr = nnR, clcwWait = 0 // E10.
+                                                // Rev B
+                                traceEvent("E10. Rev B");
+                                if (state == 1 || state == 3) {
+                                    initiateADRetransmission();
+                                    lookForFDU();
+                                    changeState(2);
+                                }
+                            } else {// clcwRetransmit = 1, txLimit > 1, nr = nnR, clcwWait = 1 // E11. RevB
+                                traceEvent("E11. RevB");
+                                if (state < 3) {
+                                    changeState(3);
+                                }
+                            }
+                        } else {
+                            if (clcwWait == 0) {// clcwRetransmit = 1, txLimit>1, nr = nnR
+                                                // txCount = txLimit, clcWait = 0
+                                traceEvent("E12 Rev B");
+                                if (state == 1 || state == 3) {
+                                    changeState(2);
+                                }
+                            } else { // clcwRetransmit = 1, txLimit>1, nr = nnR, txCount = txLimit, clcWait = 1 //
+                                     // E103
+                                traceEvent("E103");
+                                if (state < 3) {
+                                    changeState(3);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {// nR not in between nnR and vS // E13
+            traceEvent("E13");
+            if (state <= 4) {
+                alert(AlertType.NNR);
+                changeState(6);
+            }
+        }
+
+        monitors.forEach(m -> m.clcwReceived(clcwn));
+    }
+
+    private void changeState(int newState) {
+        int oldState = state;
+
+        if (oldState != newState) {
+            state = newState;
+            externalState = state;
+            monitors.forEach(m -> m.stateChanged(oldState, newState));
+        }
+    }
+
+    private void lookForFDU() {
+        if (adOutReady) {
+            int i = nnR;
+            while (i != vS) {
+                QueuedFrame qf = sentQueue[i];
+                if (qf.toBeRetransmitted) {
+                    qf.toBeRetransmitted = false;
+                    sendADDownstream(qf);
+                    return;
+                }
+                i = incr(i);
+            }
+            if (sentQueueSize() < slidingWindowWidth) {
+                TcTransferFrame tf = getNextQueuedDFrame();
+                if (tf != null) {
+                    tf.setVcFrameSeq(vS);
+                    QueuedFrame qf = new QueuedFrame(tf);
+
+                    sentQueue[vS] = qf;
+                    if (nnR == vS) { /// queue empty
+                        txCount = 1;
+                    }
+                    vS = incr(vS);
+                    sendADDownstream(qf);
+                    monitors.forEach(m -> m.tcSent());
+                }
+            }
+        }
+    }
+
+    private void lookForDirective() {
+        if (bcOutReady && pendingBCFrame != null && pendingBCFrame.toBeRetransmitted) {
+            pendingBCFrame.toBeRetransmitted = false;
+            sendBCDownstream();
+        }
+    }
+
+    private void onTimerExpiration() {
+        log.debug("VC {} state: {}, txCount: {}, txLimit: {} timer expired", vcId, state, txCount, txLimit);
+
+        if (txCount < txLimit) {
+            if (timeoutType == 0) {// E16.Rev.B
+                traceEvent("E16.Rev.B");
+                if (state <= 2) {
+                    initiateADRetransmission();
+                    lookForFDU();
+                } else if (state == 4) {
+                    alert(AlertType.T1);
+                    changeState(6);
+                } else if (state == 5) {
+                    initiateBCRetransmission();
+                    lookForDirective();
+                }
+            } else {// timeoutType = 1 //E104
+                traceEvent("E104");
+                if (state <= 2) {
+                    initiateADRetransmission();
+                    lookForFDU();
+                } else if (state == 4) {
+                    suspendState = 4;
+                    monitors.forEach(m -> m.suspended(suspendState));
+                    changeState(6);
+                } else if (state == 5) {
+                    initiateBCRetransmission();
+                    lookForDirective();
+                }
+            }
+        } else {// txCount = txLimit
+            if (timeoutType == 0) {// E17. Rev.B
+                traceEvent("E17. Rev.B");
+                alert(AlertType.T1);
+                changeState(6);
+            } else {// E18. Rev.B
+                traceEvent("E18. Rev.B");
+                if (state <= 4) {
+                    log.debug("VC {} FOP-1 suspended", vcId);
+                    suspendState = state;
+                    monitors.forEach(m -> m.suspended(suspendState));
+                    changeState(6);
+                } else if (state == 5) {
+                    alert(AlertType.T1);
+                    changeState(6);
+                }
+            }
+        }
+    }
+
+    private void initiateBCRetransmission() {
+        txCount++;
+        pendingBCFrame.toBeRetransmitted = true;
+    }
+
+    private void initiateADRetransmission() {
+        txCount++;
+        int i = nnR;
+        while (i != vS) {
+            QueuedFrame qf = sentQueue[i];
+            qf.toBeRetransmitted = true;
+            log.debug("VC {} state: {}, retransmitting frame {}, txCount: {}, txLimit:{}", vcId, state, i, txCount,
+                    txLimit);
+            i = incr(i);
+        }
+    }
+
+    private void startTimer() {
+        log.trace("starting timer with {} millisec", t1Initial);
+        if (timer != null) {
+            timer.cancel(true);
+        }
+        timer = executor.schedule(() -> onTimerExpiration(), t1Initial, TimeUnit.MILLISECONDS);
+    }
+
+    private int sentQueueSize() {
+        return nnR <= vS ? vS - nnR : vS + 256 - nnR;
+    }
+
+    private int incr(int x) {
+        return (x + 1) & 0xFF;
+    }
+
+    private void removeAcknowlegedFramesFromSentQueue() {
+        while (nnR != nR) {
+            QueuedFrame qf = sentQueue[nnR];
+            qf.cf.complete(null);
+            ackFrame(qf.tf);
+
+            nnR = incr(nnR);
+        }
+        txCount = 1;
+    }
+
+    private void alert(AlertType alert) {
+        Fop1Exception e = new Fop1Exception(alert);
+        int i = nnR;
+        while (i != vS) {
+            QueuedFrame qf = sentQueue[i];
+            if (qf == null) {
+                log.error("VC {} Invalid state of the queue sentQueue[{}] is null", vcId, i);
+            } else {
+                qf.cf.completeExceptionally(e);
+                sentQueue[i] = null;
+            }
+            i = incr(i);
+        }
+        monitors.forEach(m -> m.alert(alert));
+    }
+
+    // check that nR is in between nnR and vS (modulo 256)
+    private boolean checkNnrNrVsSeq() {
+        if (nnR <= vS) {
+            return nnR <= nR && nR <= vS;
+        } else {
+            return nnR <= nR || nR <= vS;
+        }
+    }
+
+    private boolean parseCLCW(int clcwn) {
+        int rcvVcId = (clcwn >> 18) & 0x3F;
+
+        if (vcId != rcvVcId) {
+            log.debug("Ignoring CLCW for VC {}", rcvVcId);
+            return false;
+        }
+        clcwLockout = (byte) ((clcwn >> 13) & 1);
+        clcwWait = (byte) ((clcwn >> 12) & 1);
+        clcwRetransmit = (byte) ((clcwn >> 11) & 1);
+        nR = clcwn & 0xFF;
+        clcwTimestamp = TimeEncoding.getWallclockTime();
+
+        if (state == 4) {
+            vS = nR;
+            nnR = nR;
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("VC {} state {} received CLCW: lockout: {}, wait: {}, retransmit: {}, nR: {}", vcId, state,
+                    clcwLockout, clcwWait, clcwRetransmit, nR);
+        }
+        return true;
+    }
+
+    private CompletableFuture<Void> queueForDownstream(QueuedFrame qf) {
+        qf.cf = new CompletableFuture<>();
+        outQueue.add(qf);
+
+        signalDataAvailable();
+        return qf.cf;
+    }
+
+    private void signalDataAvailable() {
+        if (dataAvailableSemaphore != null) {
+            dataAvailableSemaphore.release();
+        }
+    }
+
+    private void traceEvent(String ev) {
+        if (log.isTraceEnabled()) {
+            log.trace("VC {} state: {}, nR:{}, nnR:{}, vS: {}, event: {}", vcId, state, nR, nnR, vS, ev);
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        clcwHelper = new ClcwStreamHelper(yamcsInstance, clcwStreamName);
+        clcwHelper.onClcw(clcw -> onCLCW(clcw));
+        if (initialClcwWait > 0) {
+            initiateAD(true, initialClcwWait);
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        clcwHelper.quit();
+        notifyStopped();
+    }
+
+    public Semaphore getDataAvailableSemaphore() {
+        return dataAvailableSemaphore;
+    }
+
+    public void disableCop1(boolean bypassAll) {
+        purgeSentQueue();
+        this.cop1Active = false;
+        this.bypassAll = bypassAll;
+        monitors.forEach(m -> m.disabled());
+    }
+
+    /**
+     * The semaphore will be used by the data link to signal when there is some data to be transmitted.
+     * <p>
+     * A permit will be released in these circumstances
+     * <ul>
+     * <li>a new AD telecommand has been placed into the incoming queue;</li>
+     * <li>a BC frame has been released</li>
+     * <li>a BD command has been released
+     * <li>
+     * </ul>
+     * 
+     * Note that if two commands are placed, two permits will be released but the commands might be put in the same
+     * frame. This means that the number of permits released is not exactly the same with the number of frames ready to
+     * be sent. However the semaphore is used by the master channel to avoid pooling each VC in turn even though no data
+     * is available.
+     * 
+     * @param dataAvailableSemaphore
+     */
+    @Override
+    public void setDataAvailableSemaphore(Semaphore dataAvailableSemaphore) {
+        this.dataAvailableSemaphore = dataAvailableSemaphore;
+    }
+
+    static class QueuedFrame {
+        final TcTransferFrame tf;
+        CompletableFuture<Void> cf;
+        boolean toBeRetransmitted;
+
+        public QueuedFrame(TcTransferFrame tf) {
+            this.tf = tf;
+        }
+    }
+
+    @Override
+    public VcUplinkManagedParameters getParameters() {
+        return vmp;
+    }
+
+    public CompletableFuture<Void> setConfig(Cop1Config config) {
+        return doInExecutor(cf -> {
+            if (config.hasBdAbsolutePriority()) {
+                bdAbsolutePriority = config.getBdAbsolutePriority();
+            }
+            if (config.hasTxLimit()) {
+                setTransmissionLimit(config.getTxLimit());
+            }
+            if (config.hasTimeoutType()) {
+                setTimeoutType(config.getTimeoutType().getNumber());
+            }
+            if (config.hasWindowWidth()) {
+                setWindowWidth(config.getWindowWidth());
+            }
+            if (config.hasT1()) {
+                setT1Initial(config.getT1());
+            }
+            cf.complete(null);
+        });
+    }
+
+    public CompletableFuture<Cop1Config> getCop1Config() {
+        CompletableFuture<Cop1Config> cf = new CompletableFuture<>();
+        executor.execute(() -> {
+            Cop1Config conf = Cop1Config.newBuilder().setBdAbsolutePriority(bdAbsolutePriority)
+                    .setT1(t1Initial).setTxLimit(txLimit).setVcId(vcId).setWindowWidth(slidingWindowWidth)
+                    .setTimeoutType(TimeoutType.forNumber(timeoutType)).build();
+            cf.complete(conf);
+        });
+
+        return cf;
+    }
+
+    public CompletableFuture<Cop1Status> getCop1Status() {
+        CompletableFuture<Cop1Status> cf = new CompletableFuture<>();
+        executor.execute(() -> {
+            cf.complete(_getCop1Status());
+        });
+
+        return cf;
+    }
+
+    private Cop1Status _getCop1Status() {
+        Cop1Status.Builder cb = Cop1Status.newBuilder().setCop1Active(cop1Active).setNnR(nnR)
+                .setTxCount(txCount).setWaitQueueNumTC(waitQueue.size())
+                .setSentQueueNumFrames(sentQueueSize()).setOutQueueNumFrames(outQueue.size())
+                .setVS(vS);
+        if (cop1Active) {
+            if (suspendState > 0) {
+                cb.setState(Cop1State.SUSPENDED);
+            } else {
+                cb.setState(Cop1State.forNumber(state));
+            }
+
+        } else {
+            cb.setSetBypassAll(bypassAll);
+        }
+        if (clcwTimestamp != TimeEncoding.INVALID_INSTANT) {
+            cb.setClcw(Clcw.newBuilder().setLockout(clcwLockout == 1).setNR(nR)
+                    .setReceptionTime(TimeEncoding.toProtobufTimestamp(clcwTimestamp)).setWait(clcwWait == 1)
+                    .build());
+        }
+
+        return cb.build();
+    }
+
+    private void ackFrame(TcTransferFrame tcf) {
+        for (PreparedCommand pc : tcf.commands) {
+            ackCommand(pc.getCommandId());
+        }
+    }
+
+    @Override
+    public void setupSystemParameters(SystemParametersService sysParamsService) {
+        super.setupSystemParameters(sysParamsService);
+
+        EnumeratedDataType stateType =
+                sysParamsService.createEnumeratedParameterType(Cop1State.class);
+        AggregateParameterType aggrType = new AggregateParameterType.Builder().setName("Cop1Status")
+                .addMember(new Member("cop1Active", sysParamsService.getBasicType(Type.BOOLEAN)))
+                .addMember(new Member("state", stateType))
+                .addMember(new Member("waitQueueNumTC", sysParamsService.getBasicType(Type.UINT32)))
+                .addMember(new Member("sentQueueNumFrames", sysParamsService.getBasicType(Type.UINT32)))
+                .addMember(new Member("vS", sysParamsService.getBasicType(Type.UINT32)))
+                .addMember(new Member("nnR", sysParamsService.getBasicType(Type.UINT32)))
+                .build();
+
+        spCop1Status = sysParamsService.createSystemParameter(LINK_NAMESPACE + linkName + "/cop1Status", aggrType,
+                "Status of the COP1 protocol");
+
+        addMonitor(new Cop1Monitor() {
+            int prevClcw = INVALID_CLCW;
+
+            @Override
+            public void suspended(int suspendState) {
+                updatePv();
+            }
+
+            @Override
+            public void stateChanged(int oldState, int newState) {
+                updatePv();
+            }
+
+            @Override
+            public void disabled() {
+                updatePv();
+            }
+
+            @Override
+            public void clcwReceived(int clcw) {
+                if (clcw != prevClcw) {
+                    updatePv();
+                    prevClcw = clcw;
+                }
+            };
+
+            @Override
+            public void tcQueued() {
+                updatePv();
+            };
+
+            @Override
+            public void tcSent() {
+                updatePv();
+            };
+
+            void updatePv() {
+                AggregateValue tmp = new AggregateValue(aggrType.getMemberNames());
+                tmp.setMemberValue("cop1Active", ValueUtility.getBooleanValue(cop1Active));
+                Cop1State c1state = suspendState > 0 ? Cop1State.SUSPENDED : Cop1State.forNumber(state);
+                tmp.setMemberValue("state", ValueUtility.getEnumeratedValue(c1state.getNumber(), c1state.name()));
+                tmp.setMemberValue("waitQueueNumTC", ValueUtility.getUint32Value(waitQueue.size()));
+                tmp.setMemberValue("sentQueueNumFrames", ValueUtility.getUint32Value(sentQueueSize()));
+                tmp.setMemberValue("vS", ValueUtility.getUint32Value(vS));
+                tmp.setMemberValue("nnR", ValueUtility.getUint32Value(nnR));
+
+                ParameterValue pv = new ParameterValue(spCop1Status);
+                pv.setGenerationTime(getCurrentTime());
+                pv.setEngValue(tmp);
+                cop1Status = pv;
+            }
+
+        });
+    }
+
+    @Override
+    protected void collectSystemParameters(long time, List<ParameterValue> list) {
+        super.collectSystemParameters(time, list);
+        if (cop1Status != null) {
+            list.add(cop1Status);
+            cop1Status = null;
+        }
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```
+
+### `CorruptedFrameException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/CorruptedFrameException.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.TcTmException;
+
+/**
+ * Exception indicating a frame is corrupted
+ * 
+ * @author nm
+ *
+ */
+@SuppressWarnings("serial")
+public class CorruptedFrameException extends TcTmException {
+
+    public CorruptedFrameException(String msg) {
+        super(msg);
+    }
+
+    public CorruptedFrameException(String message, Throwable cause) {
+        super(message, cause);
+    }
+}
+```
+
+### `DownlinkManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/DownlinkManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.Map;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.Link;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Stores configuration related to Master channels for downlink.
+ * 
+ * @author nm
+ *
+ */
+public abstract class DownlinkManagedParameters {
+    public enum FrameErrorDetection {
+        NONE, CRC16, CRC32
+    };
+
+    protected String physicalChannelName;
+    protected int spacecraftId;
+    protected FrameErrorDetection errorDetection;
+
+    public DownlinkManagedParameters(YConfiguration config) {
+        this.spacecraftId = config.getInt("spacecraftId");
+        this.physicalChannelName = config.getString("physicalChannelName", null);
+        errorDetection = config.getEnum("errorDetection", FrameErrorDetection.class);
+    }
+
+    abstract int getMaxFrameLength();
+
+    abstract int getMinFrameLength();
+
+    abstract public Map<Integer, VcDownlinkHandler> createVcHandlers(String yamcsInstance, String linkName);
+
+    protected VcDownlinkHandler createVcaHandler(String yamcsInstance, String linkName,
+            VcDownlinkManagedParameters vmp) {
+        VcDownlinkHandler handler = YObjectLoader.loadObject(vmp.vcaHandlerClassName);
+        if (handler instanceof Link) {
+            ((Link) handler).init(yamcsInstance, linkName + ".vc" + vmp.vcId, vmp.config);
+        }
+        return handler;
+    }
+}
+```
+
+### `DownlinkTransferFrame.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/DownlinkTransferFrame.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.time.Instant;
+
+/**
+ * Transfer frame is an interface covering the three CCSDS transfer frames types:
+ * <ul>
+ * <li>TM (CCSDS 132.0-B-2)</li>
+ * <li>AOS (CCSDS 732.0-B-3)</li>
+ * <li>UNIFIED ( 732.1-B-1)</li>
+ * </ul>
+ * <p>
+ * All three of them have the following structure:
+ * <ul>
+ * <li>Primary Header</li>
+ * <li>Insert Zone/Secondary Header</li>
+ * <li>Data Field</li>
+ * <li>Operational Control Field (OCF)</li>
+ * <li>Error Control Field</li>
+ * </ul>
+ * <p>
+ * Note that for USLP, the data field has also a header.
+ * <p>
+ * In the dataStart, and dataLength properties below, only the real data (i.e. excluding the data field header) is
+ * considered.
+ * <p>
+ * 
+ * The idea is that the {@link VcDownlinkHandler} that deals with the data, has to have all the information on how
+ * to interpret the data part.
+ * <p>
+ * For the purpose of packet extraction each frame has defined three offsets:<br>
+ * dataStart &lt;= firstSduStart &lt; dataEnd
+ * <p>
+ * firstSduStart refers to the first SDU that starts in this frame.
+ * <p>
+ * The data in between dataStart and firstSduStart is part of a previous packet and will be used only if there is no
+ * discontinuity in the frame sequence count.
+ * 
+ * @author nm
+ *
+ */
+public abstract class DownlinkTransferFrame {
+    final protected int spacecraftId;
+    final protected int virtualChannelId;
+    final protected byte[] data;
+    
+    long vcFrameSeq;
+    
+    int dataStart;
+    int dataEnd;
+    int ocf;
+    boolean ocfPresent = false;
+    
+    int firstHeaderPointer;
+    private Instant ertime = Instant.INVALID_INSTANT;
+    
+    public DownlinkTransferFrame(byte[] data, int spacecraftId, int virtualChannelId) {
+        this.data = data;
+        this.spacecraftId = spacecraftId;
+        this.virtualChannelId = virtualChannelId;
+    }
+    /**
+     * 
+     * @return master channel id
+     */
+    public int getSpacecraftId() {
+        return spacecraftId;
+    }
+    /**
+     * 
+     * @return virtual channel id
+     */
+    public int getVirtualChannelId() {
+        return virtualChannelId;
+    }
+    
+    /**
+     * Returns the number of frames lost from the previous sequence to this one.
+     * If no frame has been lost (i.e. if prevFrameSeq and getFrameSeq() are in order) then return 0.
+     * 
+     * -1 means that a number of lost frames could not be determined - if there is some indication that the stream has
+     * been reset
+     * 
+     * @param prevFrameSeq
+     * @return
+     */
+    public int lostFramesCount(long prevFrameSeq) {
+        if(vcFrameSeq == -1 ) {
+            return -1;
+        }
+
+        long delta = prevFrameSeq < vcFrameSeq
+                   ? vcFrameSeq - prevFrameSeq
+                   : vcFrameSeq + getSeqCountWrapArround() - prevFrameSeq + 1;
+        delta--;
+        if (delta > getSeqInterruptionDelta()) {
+            return -1;
+        } else {
+            return (int)delta;
+        }
+    }
+    /**
+     * Set the virtual channel frame count
+     * 
+     * @param seq
+     */
+    public void setVcFrameSeq(long seq) {
+        this.vcFrameSeq = seq;
+    }
+    /**
+     * 
+     * @return virtual channel frame count
+     */
+    public long getVcFrameSeq() {
+        return vcFrameSeq;
+    }
+    
+    
+    public byte[] getData() {
+        return data;
+    }
+
+    void setDataStart(int ds) {
+        this.dataStart = ds;
+    }
+    
+    /**
+     * Where in the byte array returned by {@link #getData} starts the data.
+     * 
+     * @return
+     */
+    public int getDataStart() {
+        return dataStart;
+    }
+
+
+    /**
+     * Where in the byte array returned by {@link #getData} starts the first packet (assuming this is a frame containing
+     * packets).
+     * 
+     * Returns -1 if there is no packet starting in this frame.
+     * 
+     * @return the offset of the first packet that starts in this frame or -1 if no packet starts in this frame
+     */
+    public int getFirstHeaderPointer() {
+        return firstHeaderPointer;
+    }
+
+    void setFirstHeaderPointer(int fhp) {
+        this.firstHeaderPointer = fhp;
+    }
+    
+    void setDataEnd(int offset) {
+        this.dataEnd = offset;
+    }
+
+    /**
+     * The offset in the buffer where the data ends.
+     * 
+     * @return data end
+     */
+    public int getDataEnd() {
+        return dataEnd;
+    }
+
+    public void setOcf(int ocf) {
+        ocfPresent = true;
+        this.ocf = ocf;
+    }
+    /**
+     * Get the 4 bytes operational control field. This has a meaningful value only if the {@link #hasOcf} returns
+     * true.
+     * 
+     * @return the Operational Control Field.
+     */
+    public int getOcf() {
+        return ocf;
+    }
+    /**
+     * 
+     * @return true if this frame has an Operation Control Field set.
+     */
+    public boolean hasOcf() {
+        return ocfPresent;
+    }
+    /**
+     * 
+     * @return the earth reception time of the frame
+     */
+    public Instant getEarthRceptionTime() {
+        return ertime;
+    }
+
+    public void setEearthRceptionTime(Instant ertime) {
+        this.ertime = ertime;
+    }
+    
+    abstract long getSeqCountWrapArround();
+    abstract int getSeqInterruptionDelta();
+    
+    /**
+     * 
+     * @return true if this frame contains only idle (fill) data.
+     */
+    abstract boolean containsOnlyIdleData();
+}
+```
+
+### `Fop1Exception.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Fop1Exception.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.ccsds.Cop1Monitor.AlertType;
+
+public class Fop1Exception extends Exception {
+    AlertType alert;
+    public Fop1Exception(String msg) {
+        super(msg);
+    }
+
+    public Fop1Exception(AlertType alert) {
+        super(alert.toString());
+        this.alert = alert;
+    }
+}
+```
+
+### `FrameStreamHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/FrameStreamHelper.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.Arrays;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * <p>
+ * Saves frames into streams.
+ * <p>
+ * Creates the streams if they don't already exist
+ * 
+ */
+public class FrameStreamHelper {
+
+    public final static String RECTIME_CNAME = "rectime";
+    public final static String SEQ_CNAME = "seq";
+
+    public final static String ERTIME_CNAME = "ertime";
+    public final static String SCID_CNAME = "scid";
+    public final static String VCID_CNAME = "vcid";
+    public final static String FRAME_SEQ_CNAME = "frameSeq";
+    public final static String DATA_CNAME = "data";
+    public final static String ERROR_CNAME = "error";
+
+    static TupleDefinition gftdef;
+    static TupleDefinition bftdef;
+
+    static {
+        gftdef = new TupleDefinition();
+        gftdef.addColumn(new ColumnDefinition(RECTIME_CNAME, DataType.TIMESTAMP));
+        gftdef.addColumn(new ColumnDefinition(SEQ_CNAME, DataType.INT));
+        gftdef.addColumn(new ColumnDefinition(ERTIME_CNAME, DataType.HRES_TIMESTAMP));
+        gftdef.addColumn(new ColumnDefinition(SCID_CNAME, DataType.INT));
+        gftdef.addColumn(new ColumnDefinition(VCID_CNAME, DataType.INT));
+        gftdef.addColumn(new ColumnDefinition(FRAME_SEQ_CNAME, DataType.LONG));
+        gftdef.addColumn(new ColumnDefinition(DATA_CNAME, DataType.BINARY));
+
+        bftdef = new TupleDefinition();
+        bftdef.addColumn(new ColumnDefinition(RECTIME_CNAME, DataType.TIMESTAMP));
+        bftdef.addColumn(new ColumnDefinition(SEQ_CNAME, DataType.INT));
+        bftdef.addColumn(new ColumnDefinition(ERTIME_CNAME, DataType.HRES_TIMESTAMP));
+        bftdef.addColumn(new ColumnDefinition(DATA_CNAME, DataType.BINARY));
+        bftdef.addColumn(new ColumnDefinition(ERROR_CNAME, DataType.STRING));
+
+    }
+    Stream goodFrameStream;
+    Stream badFrameStream;
+
+    public FrameStreamHelper(String yamcsInstance, String goodFrameStreamName, String badFrameStreamName) {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        if (goodFrameStreamName != null) {
+            goodFrameStream = getStream(ydb, goodFrameStreamName);
+        }
+        if (badFrameStreamName != null) {
+            badFrameStream = getStream(ydb, badFrameStreamName);
+        }
+    }
+
+    private static Stream getStream(YarchDatabaseInstance ydb, String streamName) {
+        Stream stream = ydb.getStream(streamName);
+        if (stream == null) {
+            try {
+                ydb.execute("create stream " + streamName + gftdef.getStringDefinition());
+            } catch (Exception e) {
+                throw new ConfigurationException(e);
+            }
+            stream = ydb.getStream(streamName);
+        }
+        return stream;
+    }
+
+    public void sendGoodFrame(int seq, DownlinkTransferFrame frame, byte[] data, int offset, int length) {
+        if (goodFrameStream == null) {
+            return;
+        }
+        long rectime = TimeEncoding.getWallclockTime();
+        goodFrameStream.emitTuple(new Tuple(gftdef, Arrays.asList(rectime, seq, frame.getEarthRceptionTime(),
+                frame.getSpacecraftId(), frame.getVirtualChannelId(), frame.getVcFrameSeq(),
+                getData(data, offset, length))));
+    }
+
+    public void sendBadFrame(int seq, Instant ertime, byte[] data, int offset, int length, String errMsg) {
+        if (badFrameStream == null) {
+            return;
+        }
+        long rectime = TimeEncoding.getWallclockTime();
+        badFrameStream.emitTuple(
+                new Tuple(bftdef, Arrays.asList(rectime, seq, ertime, getData(data, offset, length), errMsg)));
+    }
+
+    private byte[] getData(byte[] data, int offset, int length) {
+        if (offset == 0 && length == data.length) {
+            return data;
+        } else {
+            return Arrays.copyOfRange(data, offset, offset + length);
+        }
+    }
+}
+```
+
+### `IdleFrameHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/IdleFrameHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+/**
+ * Handles idle frames by ignoring them.
+ * @author nm
+ *
+ */
+public class IdleFrameHandler implements VcDownlinkHandler {
+
+    @Override
+    public void handle(DownlinkTransferFrame frame) {
+    //do nothing
+    }
+
+}
+```
+
+### `MasterChannelFrameHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/MasterChannelFrameHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.TransferFrameDecoder.CcsdsFrameType;
+import org.yamcs.time.Instant;
+
+/**
+ * Handles incoming TM frames by distributing them to different VirtualChannelHandlers
+ * 
+ * @author nm
+ *
+ */
+public class MasterChannelFrameHandler {
+    CcsdsFrameType frameType;
+    TransferFrameDecoder frameDecoder;
+    Map<Integer, VcDownlinkHandler> handlers = new HashMap<>();
+    int idleFrameCount;
+    int frameCount;
+    int badframeCount;
+    
+    DownlinkManagedParameters params;
+    final ClcwStreamHelper clcwHelper;
+    final FrameStreamHelper frameStreamHelper;
+
+    String yamcsInstance;
+    Log log;
+
+    /**
+     * Constructs based on the configuration
+     * 
+     * @param config
+     */
+    public MasterChannelFrameHandler(String yamcsInstance, String linkName, YConfiguration config) {
+        log = new Log(getClass(), yamcsInstance);
+        log.setContext(linkName);
+
+        frameType = config.getEnum("frameType", CcsdsFrameType.class);
+
+        String clcwStreamName = config.getString("clcwStream", null);
+        clcwHelper = clcwStreamName == null ? null : new ClcwStreamHelper(yamcsInstance, clcwStreamName);
+
+        String goodFrameStreamName = config.getString("goodFrameStream", null);
+        String badFrameStreamName = config.getString("badFrameStream", null);
+        
+        frameStreamHelper = new FrameStreamHelper(yamcsInstance, goodFrameStreamName, badFrameStreamName);
+
+        switch (frameType) {
+        case AOS:
+            AosManagedParameters amp = new AosManagedParameters(config);
+            frameDecoder = new AosFrameDecoder(amp);
+            params = amp;
+            break;
+        case TM:
+            TmManagedParameters tmp = new TmManagedParameters(config);
+            frameDecoder = new TmFrameDecoder(tmp);
+            params = tmp;
+            break;
+        case USLP:
+            UslpManagedParameters ump = new UslpManagedParameters(config);
+            frameDecoder = new UslpFrameDecoder(ump);
+            params = ump;
+            break;
+        default:
+            throw new ConfigurationException("Unsupported frame type '" + frameType + "'");
+        }
+        handlers = params.createVcHandlers(yamcsInstance, linkName);
+    }
+
+    public void handleFrame(Instant ertime, byte[] data, int offset, int length) throws TcTmException {
+        DownlinkTransferFrame frame = null;
+        try {
+            frame = frameDecoder.decode(data, offset, length);
+        } catch (TcTmException e) {
+            badframeCount++;
+            frameStreamHelper.sendBadFrame(badframeCount, ertime, data, offset, length, e.getMessage());
+            throw e;
+        }
+       
+       
+        if (frame.getSpacecraftId() != params.spacecraftId) {
+            log.warn("Ignoring frame with unexpected spacecraftId {} (expected {})", frame.getSpacecraftId(),
+                    params.spacecraftId);
+            badframeCount++;
+            frameStreamHelper.sendBadFrame(badframeCount, ertime, data, offset, length, "wrong spacecraft id");
+            return;
+        }
+        
+        frame.setEearthRceptionTime(ertime);
+        frameCount++;
+        
+        frameStreamHelper.sendGoodFrame(frameCount, frame, data, offset, length);
+        
+        if (frame.hasOcf() && clcwHelper != null) {
+            clcwHelper.sendClcw(frame.getOcf());
+        }
+
+        if (frame.containsOnlyIdleData()) {
+            idleFrameCount++;
+            return;
+        }
+
+        int vcid = frame.getVirtualChannelId();
+        VcDownlinkHandler vch = handlers.get(vcid);
+        if (vch == null) {
+            throw new TcTmException("No handler for vcId: " + vcid);
+        }
+        vch.handle(frame);
+    }
+
+    public int getMaxFrameSize() {
+        return params.getMaxFrameLength();
+    }
+
+    public int getMinFrameSize() {
+        return params.getMinFrameLength();
+    }
+
+    public Collection<VcDownlinkHandler> getVcHandlers() {
+        return handlers.values();
+    }
+
+    public int getSpacecraftId() {
+        return params.spacecraftId;
+    }
+
+    public CcsdsFrameType getFrameType() {
+        return frameType;
+    }
+
+}
+```
+
+### `MasterChannelFrameMultiplexer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/MasterChannelFrameMultiplexer.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+import org.yamcs.tctm.ccsds.TcManagedParameters.PriorityScheme;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Multiplexes TC frames from Virtual Channels based on priority schemes.
+ * <p>
+ * Three priorities schemes are implemented, inspired from CCSDS 912.3-B-3
+ * <ul>
+ * <li>FIFO - the frame with the earliest timestamp is selected.</li>
+ * <li>absolute priority - the frames are selected from the virtual channel with highest priority.</li>
+ * <li>polling vector - the virtual channels are checked in accordance with the entries in the polling vector.</li>
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public class MasterChannelFrameMultiplexer {
+    Semaphore dataAvailableSemaphore = new Semaphore(0);
+    volatile boolean quitting = false;
+    TcManagedParameters tcManagedParameters;
+    ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+    List<VcUplinkHandler> handlers;
+    int[] pollingVector;
+    int pvIdx;
+    int pvCnt;
+    Log log;
+
+    public MasterChannelFrameMultiplexer(String yamcsInstance, String linkName, YConfiguration config) {
+        tcManagedParameters = new TcManagedParameters(config);
+        handlers = tcManagedParameters.createVcHandlers(yamcsInstance, linkName, executor);
+        log = new Log(getClass(), yamcsInstance);
+        log.setContext(linkName);
+
+        for (VcUplinkHandler h : handlers) {
+            h.setDataAvailableSemaphore(dataAvailableSemaphore);
+        }
+        if (tcManagedParameters.priorityScheme == PriorityScheme.ABSOLUTE) {
+            Collections.sort(handlers, (h1, h2) -> {
+                return Integer.compare(h2.getParameters().getPriority(), h1.getParameters().getPriority());
+            });
+        } else if (tcManagedParameters.priorityScheme == PriorityScheme.POLLING_VECTOR) {
+            pollingVector = new int[handlers.size()];
+            for (int i = 0; i < pollingVector.length; i++) {
+                VcUplinkManagedParameters hp = handlers.get(i).getParameters();
+                if (hp.getPriority() < 1) {
+                    throw new ConfigurationException("Invalid priority " + hp.getPriority() + " for vc "
+                            + hp.getVirtualChannelId() + " and multiplexing scheme POLLING_VECTOR");
+                }
+                pollingVector[i] = hp.getPriority();
+            }
+        }
+    }
+
+    /**
+     * Get the next frame blocking until one is available or until {@link #quit()} is called.
+     * 
+     * @return next frame or null if the multiplexer has been closed or the thread interrupted
+     */
+    public TcTransferFrame getFrame() {
+        while (!quitting) {
+            TcTransferFrame tf = null;
+            if (tcManagedParameters.priorityScheme == PriorityScheme.ABSOLUTE) {
+                tf = getFrameAbsolutePriority();
+            } else if (tcManagedParameters.priorityScheme == PriorityScheme.FIFO) {
+                tf = getFrameFifo();
+            } else {
+                tf = getFramePollingVector();
+            }
+            if (tf != null) {
+                return tf;
+            }
+            try {
+                dataAvailableSemaphore.acquire();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private TcTransferFrame getFramePollingVector() {
+        int pvIdx0 = pvIdx;
+        do {
+            VcUplinkHandler h = handlers.get(pvIdx);
+            pvCnt++;
+            if (pvCnt == pollingVector[pvIdx]) {
+                pvCnt = 0;
+                pvIdx++;
+                if (pvIdx == pollingVector.length) {
+                    pvIdx = 0;
+                }
+            }
+            TcTransferFrame tf = h.getFrame();
+            if (tf != null) {
+                log.debug("PollingVectorPriority multiplexing: got frame {} from {}", tf, h);
+                return tf;
+            }
+        } while (pvIdx != pvIdx0);
+        return null;
+    }
+
+    private TcTransferFrame getFrameFifo() {
+        VcUplinkHandler hfirst = null;
+        long tfirst = Long.MAX_VALUE;
+
+        for (VcUplinkHandler h : handlers) {
+            long t = h.getFirstFrameTimestamp();
+            if (t != TimeEncoding.INVALID_INSTANT && t < tfirst) {
+                tfirst = t;
+                hfirst = h;
+            }
+        }
+        if (hfirst != null) {
+            TcTransferFrame tf = hfirst.getFrame();
+            if (tf != null) {
+                log.debug("FifoPriority multiplexing: got frame {} from {}", tf, hfirst);
+                return tf;
+            }
+        }
+        return null;
+    }
+
+    private TcTransferFrame getFrameAbsolutePriority() {
+        for (VcUplinkHandler h : handlers) {
+            TcTransferFrame tf = h.getFrame();
+            if (tf != null) {
+                log.debug("AbsolutePriority multiplexing: got frame {} from {}", tf, h);
+                return tf;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Stop producing frames and unblock the getFrame() operation
+     */
+    public void quit() {
+        quitting = true;
+        dataAvailableSemaphore.release();
+    }
+
+    public Collection<VcUplinkHandler> getVcHandlers() {
+        return handlers;
+    }
+
+}
+```
+
+### `PacketDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/PacketDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.function.Consumer;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.PacketTooLongException;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Receives data chunk by chunk and assembles it into packets. Two types of packets are supported:
+ * <p>
+ * <strong>Space Packet Protocol CCSDS 133.0-B-1 September 2003.</strong>
+ * <p>
+ * The first 3 bits of these packets are 000.
+ * <p>
+ * The header is 6 bytes and the last two bytes of the header represent the
+ * size of the packet (including the header) - 7.
+ * <p>
+ * The minimum packet length is 7 bytes.
+ * 
+ * <p>
+ * <strong>Encapsulation Service. CCSDS 133.1-B-2. October 2009.</strong>
+ * <p>
+ * The first 3 bits of these packets are 111.
+ * <p>
+ * The minimum packet length is 1 byte.
+ * <p>
+ * Depending on the last 2 bits of the first byte, the size of the header can be 1,2,4 or 8 bytes with the length of the
+ * packet read from the last 0,1,2 or 4 header bytes respectively
+ *
+ * <p>
+ * The two types can be both present on the same stream.
+ * 
+ * <p>
+ * The objects of this class can processes one "stream" at a time and they are not thread safe!
+ * 
+ * @author nm
+ *
+ */
+public class PacketDecoder {
+    private final int maxPacketLength;
+
+    // length of the encapsulated packet header based on the last 2 bits of the first byte
+    static final byte[] ENCAPSULATION_HEADER_LENGTH = { 1, 2, 4, 8 };
+
+    static final int PACKET_VERSION_CCSDS = 0;
+    static final int PACKET_VERSION_ENCAPSULATION = 7;
+
+    // the actual header length (valid when the headerOffset>0)
+    private int headerLength;
+    // max header length for the encapsulation packets is 8 bytes
+    final byte[] header = new byte[8];
+
+    private int headerOffset;
+
+    // the packetOffset and packet will be valid when the header is completely read (i.e.
+    // headerOffset==header.length==lengthFieldEndOffset)
+    private int packetOffset;
+    private byte[] packet;
+
+    final Consumer<byte[]> consumer;
+
+    private boolean skipIdlePackets = true;
+    private boolean stripEncapsulationHeader = false;
+
+    final static byte[] ZERO_BYTES = new byte[0];
+    static Logger log = LoggerFactory.getLogger(PacketDecoder.class.getName());
+
+    public PacketDecoder(int maxPacketLength, Consumer<byte[]> consumer) {
+        this.maxPacketLength = maxPacketLength;
+        this.consumer = consumer;
+    }
+
+    public void process(byte[] data, int offset, int length) throws TcTmException {
+        while (length > 0) {
+            if (headerOffset == 0) { // read the first byte of the header to know what kind of packet it is as well as
+                byte d0 = data[offset];
+                offset++;
+                length--;
+                headerLength = getHeaderLength(d0);
+                header[0] = d0;
+                if (headerLength == 1) {
+                    // special case, encapsulation packet of size 1, send the packet and reset the header
+                    if (stripEncapsulationHeader) {
+                        packet = ZERO_BYTES;
+                    } else {
+                        packet = new byte[] { d0 };
+                    }
+                    sendToConsumer();
+                    headerOffset = 0;
+                } else {
+                    headerOffset++;
+                }
+            } else if (headerOffset < headerLength) { // reading the header
+                int n = Math.min(length, headerLength - headerOffset);
+                System.arraycopy(data, offset, header, headerOffset, n);
+                offset += n;
+                headerOffset += n;
+                length -= n;
+                if (headerOffset == headerLength) {
+                    allocatePacket();
+                }
+            } else {// reading the packet
+                int n = Math.min(packet.length - packetOffset, length);
+                System.arraycopy(data, offset, packet, packetOffset, n);
+                offset += n;
+                packetOffset += n;
+                length -= n;
+                if (packetOffset == packet.length) {
+                    sendToConsumer();
+                    packet = null;
+                    headerOffset = 0;
+                }
+            }
+        }
+    }
+
+    private static boolean isIdle(byte[] header) {
+        int b0 = header[0] & 0xFF;
+        int pv = b0 >>> 5;
+
+        if (pv == PACKET_VERSION_CCSDS) {
+            return ((ByteArrayUtils.decodeUnsignedShort(header, 0) & 0x7FF) == 0x7FF);
+        } else {
+            return ((b0 & 0x1C) == 0);
+        }
+    }
+
+    private void sendToConsumer() {
+        if (!skipIdlePackets || !isIdle(header)) {
+            consumer.accept(packet);
+        } else {
+            log.trace("skiping idle packet of size {}", packet.length);
+        }
+    }
+
+    // get headerLength based on the first byte of the packet
+    private static int getHeaderLength(byte b0) throws UnsupportedPacketVersionException {
+        int pv = (b0 & 0xFF) >>> 5;
+        if (pv == PACKET_VERSION_CCSDS) {
+            return 6;
+        } else if (pv == PACKET_VERSION_ENCAPSULATION) {
+            return ENCAPSULATION_HEADER_LENGTH[b0 & 3];
+        } else {
+            throw new UnsupportedPacketVersionException(pv);
+        }
+    }
+
+    private void allocatePacket() throws TcTmException {
+        int packetLength = getPacketLength(header);
+        if (packetLength > maxPacketLength) {
+            throw new PacketTooLongException(maxPacketLength, packetLength);
+        } else if (packetLength < headerLength) {
+            throw new TcTmException(
+                    "Invalid packet length " + packetLength + " (it is smaller than the header length)");
+        }
+        if (stripEncapsulationHeader && isEncapsulation(header)) {
+            if (packetLength == headerLength) {
+                packet = ZERO_BYTES;
+                sendToConsumer();
+                headerOffset = 0;
+            } else {
+                packet = new byte[packetLength - headerLength];
+                packetOffset = 0;
+            }
+        } else {
+            packet = new byte[packetLength];
+            System.arraycopy(header, 0, packet, 0, headerLength);
+            if (packetLength == headerLength) {
+                sendToConsumer();
+                headerOffset = 0;
+            } else {
+                packetOffset = headerLength;
+            }
+        }
+    }
+
+    private static boolean isEncapsulation(byte[] header) {
+        int pv = (header[0] & 0xFF) >>> 5;
+        return (pv == PACKET_VERSION_ENCAPSULATION);
+    }
+
+    // decodes the packet length from the header
+    private static int getPacketLength(byte[] header) throws UnsupportedPacketVersionException {
+        int h0 = header[0] & 0xFF;
+        int pv = h0 >>> 5;
+        if (pv == PACKET_VERSION_CCSDS) {
+            return 7 + ByteArrayUtils.decodeUnsignedShort(header, 4);
+        } else if (pv == PACKET_VERSION_ENCAPSULATION) {
+            int l = h0 & 3;
+            if (l == 0) {
+                return 1;
+            } else if (l == 1) {
+                return header[1] & 0xFF;
+            } else if (l == 2) {
+                return ByteArrayUtils.decodeUnsignedShort(header, 2);
+            } else {
+                return ByteArrayUtils.decodeInt(header, 4);
+            }
+        } else {
+            throw new UnsupportedPacketVersionException(pv);
+        }
+    }
+
+    /**
+     * Removes a partial packet if any
+     */
+    public void reset() {
+        headerOffset = 0;
+        packet = null;
+    }
+
+    /**
+     * 
+     * @return true of the decoder is in the middle of a packet decoding
+     */
+    public boolean hasIncompletePacket() {
+        return (headerOffset > 0) && ((headerOffset < headerLength) || (packetOffset < packet.length));
+    }
+
+    /**
+     * 
+     * @return true of the idle packets are skipped (i.e. not sent to the consumer)
+     */
+    public boolean skipIdlePackets() {
+        return skipIdlePackets;
+    }
+
+    /**
+     * Skip or not the idle packets. If true (default), the idle packets are not sent to the consumer.
+     * 
+     * @param skipIdlePackets
+     */
+    public void skipIdlePackets(boolean skipIdlePackets) {
+        this.skipIdlePackets = skipIdlePackets;
+    }
+
+    /**
+     * 
+     * @return true if the header of the encapsulated packets will be stripped out.
+     */
+    public boolean stripEncapsulationHeader() {
+        return stripEncapsulationHeader;
+    }
+
+    /**
+     * If set to true, the encapsulation header will be stripped out. This means:
+     * <ul>
+     * <li>the Protocol ID information will be lost.</li>
+     * <li>an empty array buffer will be delivered for the one byte packets (or any other packet of size 0)</li>
+     * </ul>
+     * 
+     * @param stripEncapsulationHeader
+     */
+    public void stripEncapsulationHeader(boolean stripEncapsulationHeader) {
+        this.stripEncapsulationHeader = stripEncapsulationHeader;
+    }
+
+}
+```
+
+### `Randomizer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/Randomizer.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+/**
+ * CCSDS randomizer as per CCSDS 131.0-B-3(TM) and CCSDS 231.0-B-3 (TC)
+ */
+public class Randomizer {
+    static byte[] tmseq = new byte[255];
+    static byte[] tcseq = new byte[255];
+    static {
+        int lfsr = 0xFF;
+        int bit;
+
+        for (int i = 0; i < 255; i++) {
+            tmseq[i] = 0;
+            for (int j = 0; j < 8; j++) {
+                tmseq[i] = (byte) ((tmseq[i] << 1) | (lfsr & 1));
+                bit = ((lfsr >> 0) ^ (lfsr >> 3) ^ (lfsr >> 5) ^ (lfsr >> 7)) & 1;
+                lfsr = (lfsr >> 1) | (bit << 7);
+            }
+        }
+
+        lfsr = 0xFF;
+
+        for (int i = 0; i < 255; i++) {
+            tcseq[i] = 0;
+            for (int j = 0; j < 8; j++) {
+                tcseq[i] = (byte) ((tcseq[i] << 1) | (lfsr & 1));
+                bit = ((lfsr >> 0) ^ (lfsr >> 1) ^ (lfsr >> 2) ^ (lfsr >> 3) ^ (lfsr >> 4) ^ (lfsr >> 6)) & 1;
+                lfsr = (lfsr >> 1) | (bit << 7);
+            }
+        }
+    }
+
+    static void xor(byte[] buf, int offset, int length, byte[] seq) {
+        int j = 0;
+
+        for (int i = offset; i < offset + length; i++) {
+            buf[i] = (byte) (buf[i] ^ seq[j]);
+            j++;
+            if (j == 255)
+                j = 0;
+        }
+    }
+
+    /**
+     * Randomize the buffer according to CCSDS 131.0-B-3 pseudo-randomizer
+     * 
+     * @param buf
+     */
+    public static void randomizeTm(byte[] buf) {
+        xor(buf, 0, buf.length, tmseq);
+    }
+
+    public static void randomizeTm(byte[] buf, int offset, int length) {
+        xor(buf, offset, length, tmseq);
+    }
+
+    /**
+     * Randomize the buffer according to CCSDS 231.0-B-3 pseudo-randomizer
+     * 
+     */
+    public static void randomizeTc(byte[] buf) {
+        xor(buf, 0, buf.length, tcseq);
+    }
+
+    /**
+     * Randomize the buffer starting at offset for length bytes according to CCSDS 231.0-B-3 pseudo-randomizer
+     * 
+     */
+    public static void randomizeTc(byte[] buf, int offset, int length) {
+        xor(buf, offset, length, tcseq);
+    }
+}
+```
+
+### `TcFrameFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcFrameFactory.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.ccsds.TcManagedParameters.TcVcManagedParameters;
+import org.yamcs.tctm.ccsds.TcTransferFrame.SegmentHeader;
+import org.yamcs.tctm.ccsds.UplinkManagedParameters.FrameErrorDetection;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeEncoding;
+
+public class TcFrameFactory {
+    final private TcManagedParameters tcParams;
+    final private TcVcManagedParameters vcParams;
+    final CrcCciitCalculator crc;
+
+    public TcFrameFactory(TcVcManagedParameters vcParams) {
+        this.tcParams = vcParams.tcParams;
+        this.vcParams = vcParams;
+        FrameErrorDetection err = vcParams.getErrorDetection();
+        if (err == FrameErrorDetection.CRC16) {
+            crc = new CrcCciitCalculator();
+        } else {
+            crc = null;
+        }
+    }
+
+    /**
+     * Makes a new frame of the given length with the generation time set to the current wall clock time
+     * 
+     * @param dataLength
+     * @return
+     */
+    public TcTransferFrame makeCtrlFrame(int dataLength) {
+        return makeFrame(dataLength, true, TimeEncoding.getWallclockTime(), (byte) -1);
+    }
+
+    public TcTransferFrame makeDataFrame(int dataLength, long generationTime) {
+        return makeDataFrame(dataLength, generationTime, (byte) -1);
+    }
+
+    public TcTransferFrame makeDataFrame(int dataLength, long generationTime, byte mapId) {
+        if (vcParams.mapId >= 0) {
+            if (mapId < 0) {
+                mapId = vcParams.mapId;
+            }
+        } else if (mapId >= 0) {
+            throw new IllegalArgumentException(
+                    "mapId " + mapId + " specified but this virtual channel does not use the MAP service");
+        }
+
+        return makeFrame(dataLength, false, generationTime, mapId);
+    }
+
+    private TcTransferFrame makeFrame(int dataLength, boolean cmdControl, long generationTime, byte mapId) {
+        int dataStart = 5;
+        int length = dataLength + dataStart;
+        if (crc != null) {
+            length += 2;
+        }
+
+        if (!cmdControl && vcParams.mapId >= 0) {
+            length += 1;
+            dataStart += 1;
+        }
+
+        if (length > tcParams.getMaxFrameLength()) {
+            throw new IllegalArgumentException("Resulting frame length " + length + " is more than the maximum allowed "
+                    + tcParams.getMaxFrameLength());
+        }
+        byte[] data = new byte[length];
+
+        TcTransferFrame ttf = new TcTransferFrame(data, tcParams.spacecraftId, vcParams.vcId, cmdControl);
+        if (!cmdControl && mapId >= 0) {
+            ttf.setSegmentHeader(new SegmentHeader((byte) 3, mapId));
+        }
+
+        ttf.setDataStart(dataStart);
+        ttf.setDataEnd(dataStart + dataLength);
+
+        return ttf;
+    }
+
+    /**
+     * retrieves the headers size + CRC size
+     */
+    public int getFramingLength(int vcId) {
+        int length = 5;
+        if (crc != null) {
+            length += 2;
+        }
+        return length;
+    }
+
+    public byte[] encodeFrame(TcTransferFrame ttf) {
+
+        byte[] data = ttf.getData();
+        int w0 = tcParams.spacecraftId;
+        if (ttf.isBypass()) {
+            w0 += (1 << 13);
+        }
+        if (ttf.isCmdControl()) {
+            w0 += (1 << 12);
+        }
+        ByteArrayUtils.encodeUnsignedShort(w0, data, 0);
+        int w1 = (ttf.getVirtualChannelId() << 10) + (data.length - 1);
+        ByteArrayUtils.encodeUnsignedShort(w1, data, 2);
+        data[4] = (byte) ttf.getVcFrameSeq();
+        if (ttf.segmentHeader != null) {
+            data[5] = ttf.segmentHeader.get();
+        }
+        if (crc != null) {
+            int c = crc.compute(data, 0, data.length - 2);
+            ByteArrayUtils.encodeUnsignedShort(c, data, data.length - 2);
+        }
+        return data;
+    }
+}
+```
+
+### `TcManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+/**
+ * Configuration (managed parameters) used for generation of TC frames as per CCSDS 232.0-B-3
+ * 
+ */
+public class TcManagedParameters extends UplinkManagedParameters {
+    int maxFrameLength;
+
+    public enum PriorityScheme {
+        FIFO, ABSOLUTE, POLLING_VECTOR
+    };
+
+    PriorityScheme priorityScheme;
+
+    List<TcVcManagedParameters> vcParams = new ArrayList<>();
+
+    public TcManagedParameters(YConfiguration config) {
+        super(config);
+        maxFrameLength = config.getInt("maxFrameLength");
+
+        if (maxFrameLength < 8 || maxFrameLength > 0xFFFF) {
+            throw new ConfigurationException("Invalid frame length " + maxFrameLength);
+        }
+        if (errorDetection == FrameErrorDetection.CRC32) {
+            throw new ConfigurationException("CRC32 not supported for TC frames");
+        }
+
+        priorityScheme = config.getEnum("priorityScheme", PriorityScheme.class, PriorityScheme.FIFO);
+
+        List<YConfiguration> l = config.getConfigList("virtualChannels");
+        for (YConfiguration yc : l) {
+            TcVcManagedParameters vmp = new TcVcManagedParameters(yc, this);
+            if (vmp.useCop1 && vcParams.stream().anyMatch(p -> p.useCop1 && p.vcId == vmp.vcId)) {
+                throw new ConfigurationException(
+                        "Cannot have two data links for the same vcId " + vmp.vcId + " and both using COP1");
+            }
+            if (vmp.maxFrameLength == -1) {
+                vmp.maxFrameLength = maxFrameLength;
+            }
+            if (vmp.linkName == null) {
+                vmp.linkName = "vc" + vmp.vcId;
+                int c = 0;
+                while (vcParams.stream().anyMatch(p -> p.linkName.equals(vmp.linkName))) {
+                    c++;
+                    vmp.linkName = "vc" + vmp.vcId + "_" + c;
+                }
+            }
+
+            vcParams.add(vmp);
+        }
+    }
+
+    @Override
+    public int getMaxFrameLength() {
+        return maxFrameLength;
+    }
+
+    @Override
+    public List<VcUplinkHandler> createVcHandlers(String yamcsInstance, String parentLinkName,
+            ScheduledThreadPoolExecutor executor) {
+        List<VcUplinkHandler> l = new ArrayList<>();
+        for (TcVcManagedParameters vmp : vcParams) {
+            String linkName = parentLinkName + "." + vmp.linkName;
+            switch (vmp.service) {
+            case PACKET:
+                VcUplinkHandler vcph;
+                if (vmp.useCop1) {
+                    vcph = new Cop1TcPacketHandler(yamcsInstance, linkName, vmp, executor);
+                    ((Cop1TcPacketHandler) vcph).addMonitor(new Cop1MonitorImpl(yamcsInstance, linkName));
+                } else {
+                    vcph = new TcPacketHandler(yamcsInstance, linkName, vmp);
+                }
+                l.add(vcph);
+                break;
+            }
+        }
+        return l;
+    }
+
+    TcVcManagedParameters getVcParams(int vcId) {
+        for (var vcp : vcParams) {
+            if (vcp.vcId == vcId) {
+                return vcp;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get the frame error detection in use
+     */
+    public FrameErrorDetection getErrorDetection() {
+        return errorDetection;
+    }
+
+    /**
+     * Configuration for one Virtual Channel
+     *
+     */
+    static public class TcVcManagedParameters extends VcUplinkManagedParameters {
+        final TcManagedParameters tcParams;
+        /**
+         * Allows to enable/disable frame error detection at Virtual Channel level.
+         * <p>
+         * This is not according to CCSDS standard which specifies that this shall be done at the level of physical
+         * channel.
+         * <p>
+         * This can be null, unlike the field from {@link UplinkManagedParameters#errorDetection} which is none if no
+         * error detection is used. Null means that the error detection at link level is being used.
+         */
+        FrameErrorDetection errorDetection;
+
+        ServiceType service;
+        boolean useCop1;
+        int maxFrameLength = -1;
+        public boolean multiplePacketsPerFrame;
+        public boolean bdAbsolutePriority;
+
+        // if not negative, it contains the default MAP_ID to be used for this virtual channel
+        // if negative, this virtual channel does not use the MAP service
+        final byte mapId;
+
+        // this is used to compose the link name, if not set it will be vc<x>
+        String linkName;
+
+        public TcVcManagedParameters(YConfiguration config, TcManagedParameters tcParams) {
+            super(config);
+            this.tcParams = tcParams;
+            this.errorDetection = config.getEnum("errorDetection", FrameErrorDetection.class,
+                    null);
+
+            if (vcId < 0 || vcId > 63) {
+                throw new ConfigurationException("Invalid vcId: " + vcId + ". Allowed values are from 0 to 63.");
+            }
+            service = config.getEnum("service", ServiceType.class, ServiceType.PACKET);
+
+            maxFrameLength = config.getInt("maxFrameLength", tcParams.maxFrameLength);
+            if (maxFrameLength < 8) {
+                throw new ConfigurationException("Invalid frame length " + maxFrameLength);
+            }
+            if (maxFrameLength > tcParams.maxFrameLength) {
+                throw new ConfigurationException("Invalid frame length " + maxFrameLength
+                        + " has to be at most equal to the master channel max length " + tcParams.maxFrameLength);
+            }
+
+            this.bdAbsolutePriority = config.getBoolean("bdAbsolutePriority", false);
+            this.useCop1 = config.getBoolean("useCop1", false);
+            this.linkName = config.getString("linkName", null);
+            this.multiplePacketsPerFrame = config.getBoolean("multiplePacketsPerFrame", true);
+            this.mapId = (byte) config.getInt("mapId", -1);
+            if (mapId < -1 || mapId > 15) {
+                throw new ConfigurationException("Invalid mapId " + mapId
+                        + ". It has to be either -1 (meaning that the MAP service is not used) or between 0 and 15");
+            }
+        }
+
+        public TcFrameFactory getFrameFactory() {
+            return new TcFrameFactory(this);
+        }
+
+        /**
+         * Returns the error detection used for this virtual channel.
+         */
+        public FrameErrorDetection getErrorDetection() {
+            return errorDetection == null ? tcParams.getErrorDetection() : errorDetection;
+        }
+    }
+}
+```
+
+### `TcPacketHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcPacketHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Semaphore;
+
+import org.yamcs.CommandOption;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YamcsServer;
+import org.yamcs.CommandOption.CommandOptionType;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.tctm.AbstractTcDataLink;
+import org.yamcs.tctm.ccsds.TcManagedParameters.TcVcManagedParameters;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.AncillaryData;
+
+/**
+ * Assembles command packets into TC frames as per CCSDS 232.0-B-4.
+ * <p>
+ * All frames have the bypass flag set (i.e. they are BD frames).
+ * 
+ */
+public class TcPacketHandler extends AbstractTcDataLink implements VcUplinkHandler {
+    protected BlockingQueue<PreparedCommand> commandQueue;
+    final TcVcManagedParameters vmp;
+    private TcFrameFactory frameFactory;
+    boolean blockSenderOnQueueFull;
+    private Semaphore dataAvailableSemaphore;
+
+    public static final CommandOption OPTION_CCSDS_MAP_ID = new CommandOption("ccsdsMapId", "CCSDS MAP ID",
+            CommandOptionType.NUMBER).withHelp("Override for the default MAP ID to be used in the CCSDS TC frames");
+
+    public TcPacketHandler(String yamcsInstance, String linkName, TcVcManagedParameters vmp)
+            throws ConfigurationException {
+        super.init(yamcsInstance, linkName, vmp.config);
+        this.vmp = vmp;
+        this.frameFactory = vmp.getFrameFactory();
+
+        if (vmp.mapId >= 0) {
+            addMapIdOption();
+        }
+        int queueSize = vmp.config.getInt("tcQueueSize", 10);
+        blockSenderOnQueueFull = vmp.config.getBoolean("blockSenderOnQueueFull", false);
+        commandQueue = new ArrayBlockingQueue<>(queueSize);
+    }
+
+    @Override
+    public boolean sendCommand(PreparedCommand preparedCommand) {
+        int framingLength = frameFactory.getFramingLength(vmp.vcId);
+        int pcLength = cmdPostProcessor.getBinaryLength(preparedCommand);
+        if (framingLength + pcLength > vmp.maxFrameLength) {
+            log.warn("Command {} does not fit into frame ({} + {} > {})", preparedCommand.getLoggingId(), framingLength,
+                    pcLength, vmp.maxFrameLength);
+            failedCommand(preparedCommand.getCommandId(),
+                    "Command too large to fit in a frame; cmd size: " + pcLength + "; max frame length: "
+                            + vmp.maxFrameLength + "; frame overhead: " + framingLength);
+            return true;
+        }
+
+        if (blockSenderOnQueueFull) {
+            try {
+                commandQueue.put(preparedCommand);
+                dataAvailableSemaphore.release();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                failedCommand(preparedCommand.getCommandId(), "Interrupted");
+            }
+        } else {
+            if (commandQueue.offer(preparedCommand)) {
+                dataAvailableSemaphore.release();
+            } else {
+                failedCommand(preparedCommand.getCommandId(), "queue full");
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public TcTransferFrame getFrame() {
+
+        if (commandQueue.isEmpty()) {
+            return null;
+        }
+        int framingLength = frameFactory.getFramingLength(vmp.vcId);
+
+        int dataLength = 0;
+        List<PreparedCommand> l = new ArrayList<>();
+        PreparedCommand pc;
+        byte mapId = vmp.mapId;
+
+        while ((pc = commandQueue.peek()) != null) {
+            int pcLength = cmdPostProcessor.getBinaryLength(pc);
+            if (framingLength + dataLength + pcLength <= vmp.maxFrameLength) {
+                if (mapId >= 0) {
+                    // MAP service for this VC. We need to check that all the commands are for the same MAP_ID
+                    var mapIdOverride = getMapId(pc);
+                    if (mapIdOverride != null) {
+                        if (l.isEmpty()) {
+                            mapId = mapIdOverride;
+                        } else if (mapIdOverride != mapId) {
+                            // different MAP_ID -> new frame
+                            break;
+                        }
+                    }
+                }
+
+                pc = commandQueue.poll();
+                if (pc == null) {
+                    break;
+                }
+                l.add(pc);
+                dataLength += pcLength;
+                if (!vmp.multiplePacketsPerFrame) {
+                    break;
+                }
+            } else { // command doesn't fit into frame
+                break;
+            }
+        }
+
+        if (l.isEmpty()) {
+            return null;
+        }
+        TcTransferFrame tf = frameFactory.makeDataFrame(dataLength, l.get(0).getGenerationTime(), mapId);
+
+        tf.setBypass(true);
+        tf.setCommands(l);
+
+        byte[] data = tf.getData();
+        int offset = tf.getDataStart();
+        for (PreparedCommand pc1 : l) {
+            byte[] binary = postprocess(pc1);
+            if (binary == null) {
+                continue;
+            }
+            int length = binary.length;
+            System.arraycopy(binary, 0, data, offset, length);
+            offset += length;
+        }
+
+        frameFactory.encodeFrame(tf);
+        // BC frames contain no command but we still count it as one item out
+        var count = tf.commands == null ? 1 : tf.commands.size();
+        dataOut(count, tf.getData().length);
+        return tf;
+    }
+
+    @Override
+    public long getFirstFrameTimestamp() {
+        if (commandQueue.isEmpty()) {
+            return TimeEncoding.INVALID_INSTANT;
+        }
+        return commandQueue.peek().getGenerationTime();
+    }
+
+    @Override
+    public VcUplinkManagedParameters getParameters() {
+        return vmp;
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    @Override
+    public void setDataAvailableSemaphore(Semaphore dataAvailableSemaphore) {
+        this.dataAvailableSemaphore = dataAvailableSemaphore;
+
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+
+    /**
+     * returns MAP_ID override or null if not set
+     */
+    public static Byte getMapId(PreparedCommand pc) {
+        CommandHistoryAttribute cha = pc.getAttribute(OPTION_CCSDS_MAP_ID.getId());
+        if (cha == null) {
+            var adlist = pc.getMetaCommand().getAncillaryData();
+            if (adlist == null) {
+                return null;
+            }
+            return adlist.stream()
+                    .filter(ad -> AncillaryData.KEY_CCSDS_MAP_ID.equals(ad.getName()))
+                    .map(ad -> {
+                        try {
+                            return Byte.parseByte(ad.getValue());
+                        } catch (NumberFormatException e) {
+                            return null;
+                        }
+                    })
+                    .findFirst()
+                    .orElse(null);
+
+        } else {
+            return (byte) cha.getValue().getSint32Value();
+        }
+    }
+
+    public static void addMapIdOption() {
+        var yserver = YamcsServer.getServer();
+        if (yserver.getCommandOption(OPTION_CCSDS_MAP_ID.getId()) == null) {
+            YamcsServer.getServer().addCommandOption(OPTION_CCSDS_MAP_ID);
+        }
+    }
+
+}
+```
+
+### `TcTransferFrame.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TcTransferFrame.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.List;
+
+import org.yamcs.commanding.PreparedCommand;
+
+/**
+ * 
+ * TC Transfer Frame as per
+ * <p>
+ * CCSDS RECOMMENDED STANDARD FOR TC SPACE DATA LINK PROTOCOL CCSDS 232.0-B-4 October 2021
+ *
+ * <p>
+ * Frame structure:
+ * <ul>
+ * <li>Transfer Frame Primary Header (5 bytes mandatory)</li>
+ * <li>Transfer Frame Data Field (up to 1019 or 1017 bytes, mandatory)</li>
+ * <li>Frame Error Control Field (2 bytes, optional).</li>
+ * </ul>
+ * The Transfer Frame Primary Header structure:
+ * <ul>
+ * <li>Transfer Frame Version Number (2 bits, mandatory)</li>
+ * <li>Bypass Flag (1 bit, mandatory)</li>
+ * <li>Control Command Flag (1 bit, mandatory)</li>
+ * <li>Reserved Spare (2 bits, mandatory)</li>
+ * <li>Spacecraft Identifier (10 bits, mandatory)</li>
+ * <li>Virtual Channel Identifier (6 bits, mandatory)</li>
+ * <li>Frame Length (10 bits, mandatory)</li>
+ * <li>Frame Sequence Number (8 bits, mandatory)</li>
+ * </ul>
+ * Segment Header (optional):
+ * <ul>
+ * <li>Sequence flags (2 bits, mandatory)</li>
+ * <li>Multiplexer Access Point (MAP) Identifier (6 bits, mandatory)</li>
+ * </ul>
+ */
+public class TcTransferFrame {
+    final private boolean cmdControl;
+    private boolean bypass;
+    final protected int spacecraftId;
+    final protected int virtualChannelId;
+    int vcFrameSeq;
+    long genTime;
+
+    List<PreparedCommand> commands;
+    byte[] data;
+    int dataStart;
+    int dataEnd;
+
+    // can be null if the Segment Header is not present
+    SegmentHeader segmentHeader;
+
+    public TcTransferFrame(byte[] data, int spacecraftId, int virtualChannelId, boolean cmdControl) {
+        this.spacecraftId = spacecraftId;
+        this.virtualChannelId = virtualChannelId;
+        this.data = data;
+        this.cmdControl = cmdControl;
+    }
+
+    public boolean isCmdControl() {
+        return cmdControl;
+    }
+
+    public boolean isBypass() {
+        return bypass;
+    }
+
+    public void setBypass(boolean bypass) {
+        this.bypass = bypass;
+    }
+
+    public int bypassFlag() {
+        return bypass ? 1 : 0;
+    }
+
+    public int cmdControlFlag() {
+        return cmdControl ? 1 : 0;
+    }
+
+    /**
+     * 
+     * returns the data of the frame - that is frame header + frame data + optional checksum
+     * <p>
+     * The frame data starts and ends at the offsets returned by {@link #getDataStart()} and {@link #getDataEnd()}
+     * respectively
+     */
+    public byte[] getData() {
+        return data;
+    }
+
+    /**
+     * 
+     * returns the offset of the data start inside the frame
+     * <p>
+     * For CCSDS TC frames the offset is always 5
+     */
+    public int getDataStart() {
+        return dataStart;
+    }
+
+    /**
+     * 
+     * returns the offset of the data end inside the frame
+     * <p>
+     * For CCSDS TC frames this is the end of the frame or 2 bytes before depending whether error control is used or
+     * not.
+     */
+    public int getDataEnd() {
+        return dataEnd;
+    }
+
+    public void setVcFrameSeq(int vS) {
+        vcFrameSeq = vS;
+    }
+
+    public int getVcFrameSeq() {
+        return vcFrameSeq;
+    }
+
+
+    public void setDataStart(int start) {
+        this.dataStart = start;
+    }
+
+    public void setDataEnd(int end) {
+        this.dataEnd = end;
+    }
+
+    public int getVirtualChannelId() {
+        return virtualChannelId;
+    }
+
+    /**
+     * 
+     * @return the list of commands that compose this frame. It could be null (e.g. for BC frames)
+     */
+    public List<PreparedCommand> getCommands() {
+        return commands;
+    }
+
+    public void setCommands(List<PreparedCommand> commands) {
+        this.commands = commands;
+    }
+
+    public long getGenerationTime() {
+        return genTime;
+    }
+
+    public SegmentHeader getSegmentHeader() {
+        return segmentHeader;
+    }
+
+    public void setSegmentHeader(SegmentHeader segmentHeader) {
+        this.segmentHeader = segmentHeader;
+    }
+
+    @Override
+    public String toString() {
+        return "TcTransferFrame [masterChannelId=" + spacecraftId + ", virtualChannelId=" + virtualChannelId
+                + ", vcFrameSeq=" + vcFrameSeq + ", bypass=" + bypass + ", cmdControl=" + cmdControl
+                + ", numCommands: " + ((commands != null) ? commands.size() : 0) + "segmentHeader=" + segmentHeader
+                + "]";
+    }
+
+    public static record SegmentHeader(byte seqFlags, byte mapId) {
+        public byte get() {
+            return (byte) ((seqFlags << 6) | mapId);
+        }
+    }
+}
+```
+
+### `TmFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.DownlinkManagedParameters.FrameErrorDetection;
+import org.yamcs.tctm.ccsds.TmManagedParameters.ServiceType;
+import org.yamcs.tctm.ccsds.TmManagedParameters.TmVcManagedParameters;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes frames as per CCSDS 132.0-B-3
+ *
+ */
+public class TmFrameDecoder implements TransferFrameDecoder {
+    TmManagedParameters tmParams;
+    CrcCciitCalculator crc;
+    static Logger log = LoggerFactory.getLogger(TmFrameDecoder.class.getName());
+
+    public TmFrameDecoder(TmManagedParameters tmParams) {
+        this.tmParams = tmParams;
+        if (tmParams.errorDetection == FrameErrorDetection.CRC16) {
+            crc = new CrcCciitCalculator();
+        }
+    }
+
+    @Override
+    public TmTransferFrame decode(byte[] data, int offset, int length) throws TcTmException {
+        if (log.isTraceEnabled()) {
+            log.trace("decoding frame buf length: {}, dataOffset: {} , dataLength: {}", data.length, offset, length);
+        }
+
+        int version = (data[offset] & 0xFF) >> 6;
+        if (version != 0) {
+            throw new TcTmException("Bad frame version number " + version + "; expected 0 (TM)");
+        }
+
+        if (length != tmParams.frameLength) {
+            throw new TcTmException("Bad frame length " + length + "; expected " + tmParams.frameLength);
+        }
+        int dataEnd = offset + length;
+        if (crc != null) {
+            dataEnd -= 2;
+            int c1 = crc.compute(data, offset, dataEnd - offset);
+            int c2 = ByteArrayUtils.decodeUnsignedShort(data, dataEnd);
+            if (c1 != c2) {
+                throw new CorruptedFrameException("Bad CRC computed: " + c1 + " in the frame: " + c2);
+            }
+        }
+        int gvcid;
+        int dataOffset = offset + 6;
+        gvcid = ByteArrayUtils.decodeShort(data, offset) >> 1;
+
+        int vn = gvcid >> 13;
+        if (vn != 0) {
+            throw new TcTmException("Invalid TM frame version number " + vn + "; expected " + 0);
+        }
+        int spacecraftId = gvcid >> 3;
+        int virtualChannelId = gvcid & 0x7;
+
+        TmVcManagedParameters vmp = tmParams.vcParams.get(virtualChannelId);
+        if (vmp == null) {
+            throw new TcTmException("Received data for unknown VirtualChannel " + virtualChannelId);
+        }
+
+        TmTransferFrame ttf = new TmTransferFrame(data, spacecraftId, virtualChannelId);
+        ttf.setVcFrameSeq(data[3] & 0xFF);
+
+        boolean ocfPresent = (data[offset + 1] & 1) == 1;
+        if (ocfPresent) {
+            dataEnd -= 4;
+            ttf.setOcf(ByteArrayUtils.decodeInt(data, dataEnd));
+        }
+
+        int tfdfs = ByteArrayUtils.decodeShort(data, offset + 4);
+        boolean secHeaderPresent = (tfdfs & 0x8000) == 0x8000;
+        boolean syncFlag = (tfdfs & 0x4000) == 0x4000;
+
+        if (secHeaderPresent) {
+            int secHeaderLength = 1 + data[dataOffset] & 0x3F;
+            ttf.setShStart(dataOffset);
+            ttf.setShLength(secHeaderLength);
+            dataOffset += secHeaderLength;
+        }
+        if (vmp.service == ServiceType.PACKET) {
+            if (syncFlag) {
+                throw new TcTmException("VC " + virtualChannelId + " "
+                        + "Wrong syncFlag 1 for service type PACKET (expected 0) for VC (expected 0)"
+                        + virtualChannelId);
+            }
+            int fhp = tfdfs & 0x7FF;
+            if (fhp == 0x7FF) {
+                fhp = -1;
+            } else if (fhp == 0x7FE) {
+                ttf.setIdle(true);
+                fhp = -1;
+            } else {
+                fhp += dataOffset;
+                if (fhp > dataEnd) {
+                    throw new TcTmException("First header pointer in the PACKET part of TM frame is outside the data "
+                            + (fhp - dataOffset) + ">" + (dataEnd - dataOffset));
+                }
+            }
+            ttf.setFirstHeaderPointer(fhp);
+        }
+
+        ttf.setDataStart(dataOffset);
+        ttf.setDataEnd(dataEnd);
+        return ttf;
+    }
+}
+```
+
+### `TmManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+public class TmManagedParameters extends DownlinkManagedParameters {
+    int frameLength;
+    int fshLength; // 0 means not present
+
+    enum ServiceType {
+        PACKET,
+        /** Virtual Channel Access Service Data Unit */
+        VCA
+    };
+
+    Map<Integer, TmVcManagedParameters> vcParams = new HashMap<>();
+
+    public TmManagedParameters(YConfiguration config) {
+        super(config);
+
+        frameLength = config.getInt("frameLength");
+        if (frameLength < 8 || frameLength > 0xFFFF) {
+            throw new ConfigurationException("Invalid frame length " + frameLength);
+        }
+
+        if (errorDetection == FrameErrorDetection.CRC32) {
+            throw new ConfigurationException("CRC32 not supported for TM frames");
+        }
+
+        List<YConfiguration> l = config.getConfigList("virtualChannels");
+        for (YConfiguration yc : l) {
+            TmVcManagedParameters vmp = new TmVcManagedParameters(yc);
+            if (vcParams.containsKey(vmp.vcId)) {
+                throw new ConfigurationException("duplicate configuration of vcId " + vmp.vcId);
+            }
+            vcParams.put(vmp.vcId, vmp);
+        }
+    }
+
+    @Override
+    public int getMaxFrameLength() {
+        return frameLength;
+    }
+
+    @Override
+    public int getMinFrameLength() {
+        return frameLength;
+    }
+
+    @Override
+    public Map<Integer, VcDownlinkHandler> createVcHandlers(String yamcsInstance, String linkName) {
+        Map<Integer, VcDownlinkHandler> m = new HashMap<>();
+        for (Map.Entry<Integer, TmVcManagedParameters> me : vcParams.entrySet()) {
+            TmVcManagedParameters vmp = me.getValue();
+            switch (vmp.service) {
+            case PACKET:
+                VcTmPacketHandler vcph = new VcTmPacketHandler(yamcsInstance, linkName + ".vc" + vmp.vcId, vmp);
+                m.put(vmp.vcId, vcph);
+                break;
+            case VCA:
+                m.put(vmp.vcId, createVcaHandler(yamcsInstance, linkName, vmp));
+                break;
+            }
+        }
+        return m;
+    }
+
+    static class TmVcManagedParameters extends VcDownlinkManagedParameters {
+        ServiceType service;
+
+        public TmVcManagedParameters(YConfiguration config) {
+            super(config);
+
+            if (vcId < 0 || vcId > 7) {
+                throw new ConfigurationException("Invalid vcId: " + vcId + ". Allowed values are from 0 to 7.");
+            }
+            service = config.getEnum("service", ServiceType.class);
+            if (service == ServiceType.PACKET) {
+                parsePacketConfig();
+            } else if (service == ServiceType.VCA) {
+                parseVcaConfig();
+            }
+        }
+    }
+
+}
+```
+
+### `TmTransferFrame.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TmTransferFrame.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+/**
+ * 
+ * @author nm
+ * TM Transfer Frame as per 
+ * 
+ * CCSDS RECOMMENDED STANDARD FOR TM SPACE DATA LINK PROTOCOL 
+ * CCSDS 132.0-B-2 September 2015 
+ *
+ */
+public class TmTransferFrame extends DownlinkTransferFrame {
+    private int shStart = -1;
+    private int shLength =-1;
+    private boolean idle;
+    
+    public TmTransferFrame(byte[] data, int spacecraftId, int virtualChannelId) {
+        super(data, spacecraftId, virtualChannelId);
+    }
+
+    @Override
+    public boolean containsOnlyIdleData() {
+        return idle;
+    }
+
+    @Override
+    long getSeqCountWrapArround() {
+        return 0xFF;
+    }
+
+    @Override
+    int getSeqInterruptionDelta() {
+        return 100;
+    }
+    
+    /**
+     * 
+     * @return the start offset of the secondary header or -1 if the frame does not have a secondary header
+     */
+    public int getShStart() {
+        return shStart;
+    }
+    
+    /**
+     * Set secondary header start offset. Set to -1 if the frame does not contain a secondary header
+     * @param offset
+     */
+    public void setShStart(int offset) {
+        this.shStart = offset;
+    }
+
+    /**
+     * Return the length of the secondary header in bytes
+     * @return
+     */
+    public int getShLength() {
+        return shLength;
+    }
+    /**
+     * Set secondary header length in bytes
+     * @param length
+     */
+    public void setShLength(int length) {
+        this.shLength = length;
+    }
+
+    /**
+     * Set frame as idle
+     * @param idle - if the frame is idle or not
+     */
+    void setIdle(boolean idle) {
+        this.idle = idle;
+    }
+
+    @Override
+    public String toString() {
+        return "TmTransferFrame [shStart=" + shStart + ", shLength=" + shLength + ", idle=" + idle
+                + ", masterChannelId=" + spacecraftId + ", virtualChannelId=" + virtualChannelId + ", vcFrameSeq="
+                + vcFrameSeq + ", dataStart=" + dataStart + ", dataEnd=" + dataEnd + ", ocf=" + Integer.toHexString(ocf) + ", fps=" + firstHeaderPointer
+                + "]";
+    }
+    
+    
+}
+```
+
+### `TransferFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/TransferFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.TcTmException;
+
+/**
+ * Decodes raw frame data into a transfer frame of one of three CCSDS types AOS, TM or USLP
+ *
+ */
+public interface TransferFrameDecoder {
+    enum CcsdsFrameType {
+        /**
+         * CCSDS 732.0-B-3 
+         */
+        AOS(1),
+        /**
+         * CCSDS 132.0-B-2 
+         */
+        TM(0), 
+        /**
+         * CCSDS 732.1-B-1 
+         */
+        USLP(12); 
+    
+        private final int version;
+        CcsdsFrameType(int version) {
+            this.version = version;
+        }
+        public int getVersion() {
+            return version;
+        }
+    }
+    /**
+     * Parse frame data
+     * @param data - byte array representing the data
+     * @param offset - where in the byte array the frame data starts
+     * @param length - the length of the frame data in bytes
+     * @return
+     * @throws TcTmException
+     */
+    DownlinkTransferFrame decode(byte[] data, int offset, int length) throws TcTmException;
+}
+```
+
+### `UdpTcFrameLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UdpTcFrameLink.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.StringConverter;
+
+import com.google.common.util.concurrent.RateLimiter;
+
+/**
+ * Sends TC as TC frames (CCSDS 232.0-B-3) or TC frames embedded in CLTU (CCSDS 231.0-B-3).
+ * <p>
+ * This class implements rate limiting. args:
+ * <ul>
+ * <li>frameMaxRate: maximum number of command frames to send per second.</li>
+ * </ul>
+ * 
+ * @author nm
+ *
+ */
+public class UdpTcFrameLink extends AbstractTcFrameLink implements Runnable {
+    String host;
+    int port;
+    DatagramSocket socket;
+    InetAddress address;
+    Thread thread;
+    RateLimiter rateLimiter;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("host", OptionType.STRING);
+        spec.addOption("port", OptionType.INTEGER);
+        spec.addOption("frameMaxRate", OptionType.FLOAT);
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String name, YConfiguration config) {
+        super.init(yamcsInstance, name, config);
+        host = config.getString("host");
+        port = config.getInt("port");
+
+        try {
+            address = InetAddress.getByName(host);
+        } catch (UnknownHostException e) {
+            throw new ConfigurationException("Cannot resolve host '" + host + "'", e);
+        }
+        if (config.containsKey("frameMaxRate")) {
+            rateLimiter = RateLimiter.create(config.getDouble("frameMaxRate"), 1, TimeUnit.SECONDS);
+        }
+    }
+
+    @Override
+    public void run() {
+        while (isRunningAndEnabled()) {
+            if (rateLimiter != null) {
+                rateLimiter.acquire();
+            }
+            TcTransferFrame tf = multiplexer.getFrame();
+            if (tf != null) {
+                byte[] data = tf.getData();
+                if (log.isTraceEnabled()) {
+                    log.trace("Outgoing frame data: {}", StringConverter.arrayToHexString(data, true));
+                }
+
+                if (cltuGenerator != null) {
+                    data = encodeCltu(tf.getVirtualChannelId(), data);
+
+                    if (log.isTraceEnabled()) {
+                        log.trace("Outgoing CLTU: {}", StringConverter.arrayToHexString(data, true));
+                    }
+                }
+                DatagramPacket dtg = new DatagramPacket(data, data.length, address, port);
+                try {
+                    socket.send(dtg);
+                    dataOut(1, data.length);
+                } catch (IOException e) {
+                    log.warn("Error sending datagram", e);
+                    notifyFailed(e);
+                    return;
+                }
+
+                if (tf.isBypass()) {
+                    ackBypassFrame(tf);
+                }
+
+                frameCount++;
+            }
+        }
+    }
+
+    @Override
+    protected void doDisable() throws Exception {
+        if (thread != null) {
+            thread.interrupt();
+        }
+        if (socket != null) {
+            socket.close();
+            socket = null;
+        }
+    }
+
+    @Override
+    protected void doEnable() throws Exception {
+        socket = new DatagramSocket();
+        thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected void doStart() {
+        try {
+            doEnable();
+            notifyStarted();
+        } catch (Exception e) {
+            log.warn("Exception starting link", e);
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        try {
+            doDisable();
+            multiplexer.quit();
+            notifyStopped();
+        } catch (Exception e) {
+            log.warn("Exception stopping link", e);
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return String.format("DISABLED (should send to %s:%d)", host, port);
+        } else {
+            return String.format("OK, sending to %s:%d", host, port);
+        }
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```
+
+### `UdpTmFrameLink.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UdpTmFrameLink.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.StringConverter;
+
+/**
+ * Receives telemetry fames via UDP. One UDP datagram = one TM frame.
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class UdpTmFrameLink extends AbstractTmFrameLink implements Runnable {
+    private DatagramSocket tmSocket;
+    private int port;
+
+    DatagramPacket datagram;
+
+    @Override
+    public Spec getSpec() {
+        var spec = getDefaultSpec();
+        spec.addOption("port", OptionType.INTEGER);
+        return spec;
+    }
+
+    /**
+     * Creates a new UDP Frame Data Link
+     * 
+     * @throws ConfigurationException
+     *             if port is not defined in the configuration
+     */
+    @Override
+    public void init(String instance, String name, YConfiguration config) throws ConfigurationException {
+        super.init(instance, name, config);
+        port = config.getInt("port");
+        int maxLength = frameHandler.getMaxFrameSize();
+        datagram = new DatagramPacket(new byte[maxLength], maxLength);
+    }
+
+    @Override
+    public void doStart() {
+        if (!isDisabled()) {
+            try {
+                tmSocket = new DatagramSocket(port);
+                Thread thread = new Thread(this);
+                thread.setName(getClass().getSimpleName() + "-" + linkName);
+                thread.start();
+            } catch (SocketException e) {
+                notifyFailed(e);
+                return;
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        if (tmSocket != null) {
+            tmSocket.close();
+            tmSocket = null;
+        }
+        notifyStopped();
+    }
+
+    @Override
+    public void run() {
+        while (isRunningAndEnabled()) {
+            try {
+                tmSocket.receive(datagram);
+                if (log.isTraceEnabled()) {
+                    log.trace("Received datagram of length {}: {}", datagram.getLength(), StringConverter
+                            .arrayToHexString(datagram.getData(), datagram.getOffset(), datagram.getLength(), true));
+                }
+                dataIn(1, datagram.getLength());
+                handleFrame(timeService.getHresMissionTime(), datagram.getData(), datagram.getOffset(),
+                        datagram.getLength());
+
+            } catch (IOException e) {
+                if (!isRunningAndEnabled()) {
+                    break;
+                }
+                log.warn("exception {} thrown when reading from the UDP socket at port {}", port, e);
+            } catch (Exception e) {
+                log.error("Error processing frame", e);
+            }
+        }
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        if (isDisabled()) {
+            return "DISABLED (should receive on " + port + ")";
+        } else {
+            return "OK, receiving on " + port;
+        }
+    }
+
+    @Override
+    public Map<String, Object> getExtraInfo() {
+        var extra = new LinkedHashMap<String, Object>();
+        extra.put("Valid frames", validFrameCount.get());
+        extra.put("Invalid frames", invalidFrameCount.get());
+        return extra;
+    }
+
+    @Override
+    protected void doDisable() {
+        if (tmSocket != null) {
+            tmSocket.close();
+            tmSocket = null;
+        }
+    }
+
+    @Override
+    protected void doEnable() throws SocketException {
+        tmSocket = new DatagramSocket(port);
+        Thread thread = new Thread(this);
+        thread.setName(getClass().getSimpleName() + "-" + linkName);
+        thread.start();
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+}
+```
+
+### `UnsupportedPacketVersionException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UnsupportedPacketVersionException.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.TcTmException;
+
+@SuppressWarnings("serial")
+public class UnsupportedPacketVersionException extends TcTmException {
+
+    int packetVersion;
+
+    public UnsupportedPacketVersionException(int packetVersion) {
+        this.packetVersion = packetVersion;
+    }
+
+    @Override
+    public String toString() {
+        return "Unsupported packet type " + packetVersion;
+    }
+}
+```
+
+### `UplinkManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UplinkManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.List;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import org.yamcs.YConfiguration;
+
+/**
+ * Stores configuration related to Master channels for uplink.
+ * 
+ * @author nm
+ *
+ */
+public abstract class UplinkManagedParameters {
+    public enum FrameErrorDetection {NONE, CRC16, CRC32};
+   
+    public enum ServiceType {
+        PACKET
+    };
+    
+    
+    protected String physicalChannelName;
+    protected int spacecraftId;
+    protected FrameErrorDetection errorDetection;
+    
+    public UplinkManagedParameters(YConfiguration config) {
+        this.spacecraftId = config.getInt("spacecraftId");
+        this.physicalChannelName = config.getString("physicalChannelName",  null);
+        this.errorDetection = config.getEnum("errorDetection", FrameErrorDetection.class, FrameErrorDetection.CRC16);
+    }
+    
+    abstract int getMaxFrameLength();
+    
+    abstract public  List<VcUplinkHandler> createVcHandlers(String yamcsInstance, String linkName, ScheduledThreadPoolExecutor executor);
+}
+```
+
+### `UslpFrameDecoder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpFrameDecoder.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.tctm.ErrorDetectionWordCalculator;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.DownlinkManagedParameters.FrameErrorDetection;
+import org.yamcs.tctm.ccsds.UslpManagedParameters.ServiceType;
+import org.yamcs.tctm.ccsds.UslpManagedParameters.UslpVcManagedParameters;
+import org.yamcs.tctm.ccsds.error.CrcCciitCalculator;
+import org.yamcs.tctm.ccsds.error.ProximityCrc32;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Decodes frames as per CCSDS 732.1-B-1
+ * 
+ * @author nm
+ *
+ */
+public class UslpFrameDecoder implements TransferFrameDecoder {
+    UslpManagedParameters uslpParams;
+    ErrorDetectionWordCalculator crc;
+    static Logger log = LoggerFactory.getLogger(TransferFrameDecoder.class.getName());
+
+    public UslpFrameDecoder(UslpManagedParameters uslpParams) {
+        this.uslpParams = uslpParams;
+        if (uslpParams.errorDetection == FrameErrorDetection.CRC16) {
+            crc = new CrcCciitCalculator();
+        } else if (uslpParams.errorDetection == FrameErrorDetection.CRC32) {
+            crc = new ProximityCrc32();
+        }
+    }
+
+    @Override
+    public DownlinkTransferFrame decode(byte[] data, int offset, int length) throws TcTmException {
+        log.trace("decoding frame buf length: {}, dataOffset: {} , dataLength: {}", data.length, offset, length);
+
+        int version = (data[offset] & 0xFF) >> 4;
+        if(version != 12) {
+            throw new TcTmException("Bad frame version number " + version + "; expected 12 (USLP)");
+        }
+        
+        if (uslpParams.frameLength != -1) {
+            if (length != uslpParams.frameLength) {
+                throw new TcTmException("Bad frame length " + length + "; expected fixed length " + uslpParams.frameLength);
+            }
+        } else {
+            if (length < uslpParams.minFrameLength || length > uslpParams.maxFrameLength) {
+                throw new TcTmException("Bad frame length " + length + "; expected length between" + uslpParams.minFrameLength + " and " + uslpParams.maxFrameLength);
+            }
+        }
+
+        int dataEnd = offset + length;
+
+        if (uslpParams.errorDetection == FrameErrorDetection.CRC16) {
+            dataEnd -= 2;
+            int c1 = crc.compute(data, offset, dataEnd - offset);
+            int c2 = ByteArrayUtils.decodeUnsignedShort(data, dataEnd);
+            if (c1 != c2) {
+                throw new CorruptedFrameException("Bad CRC computed: " + c1 + " in the frame: " + c2);
+            }
+        } else if (uslpParams.errorDetection == FrameErrorDetection.CRC32) {
+            dataEnd -= 4;
+            int c1 = crc.compute(data, offset, dataEnd - offset);
+            int c2 = ByteArrayUtils.decodeInt(data, dataEnd);
+            if (c1 != c2) {
+                throw new CorruptedFrameException("Bad CRC computed: " + Integer.toUnsignedString(c1)
+                        + " in the frame: " + Integer.toUnsignedString(c2));
+            }
+        }
+
+        int f4b = ByteArrayUtils.decodeInt(data, offset);// first four bytes
+
+        int dataOffset = offset + 4;
+
+        int vn = f4b >>> 28;
+        if (vn != 12) {
+            throw new TcTmException("Invalid USLP frame version number " + vn + "; expected " + 12);
+        }
+        int spacecraftId = (f4b >>> 12)&0xFFFF;
+        int virtualChannelId = (f4b >> 5) & 0x3F;
+        int mapId = (f4b >> 1) & 0xF;
+        boolean truncatedFrame = (f4b & 1) == 1;
+
+        UslpTransferFrame utf = new UslpTransferFrame(data, spacecraftId, virtualChannelId);
+
+        UslpVcManagedParameters vmp = uslpParams.vcParams.get(virtualChannelId);
+        if (vmp == null) {
+            if (virtualChannelId == 63) {
+                utf.setServiceType(ServiceType.IDLE);
+                return utf;
+            } else {
+                throw new TcTmException("Received data for unknown VirtualChannel " + virtualChannelId);
+            }
+        }
+
+        long vcfFrameSeq;
+        if (truncatedFrame) {
+            if (length != vmp.truncatedTransferFrameLength) {
+                throw new TcTmException("Received truncated frame on VC " + virtualChannelId + " whose length ("
+                        + length + ") does not match the configured truncatedTranferFrameLength("
+                        + vmp.truncatedTransferFrameLength + ")");
+            }
+            vcfFrameSeq = -1;
+        } else {
+
+            int encodedFrameLength = ByteArrayUtils.decodeShort(data, dataOffset);
+            if (encodedFrameLength != length - 1) {
+                throw new TcTmException(
+                        "Encoded frame length does not match received data length: " + encodedFrameLength
+                                + " != (" + length + "-1)");
+            }
+            dataOffset += 2;
+
+            byte b6 = data[dataOffset];
+            // bit 48 Bypass/Sequence Control Flag - don't care for TM
+            // bit 49 Protocol Control Command Flag - don't care for TM
+            // bit 52 OCF flag
+            boolean ocfPresent = ((b6 >> 3) & 1) == 1;
+            if (ocfPresent) {
+                dataEnd -= 4;
+                utf.setOcf(ByteArrayUtils.decodeInt(data, dataEnd));
+            }
+            // bit2 53-55 - the length of the VCF count field
+            int vcfCountLength = b6 & 0x7;
+
+            dataOffset += 1;
+
+            if (vcfCountLength == 0) {
+                vcfFrameSeq = -1;
+            } else {
+                vcfFrameSeq = 0;
+                for (int i = 0; i < vcfCountLength; i++) {
+                    vcfFrameSeq = (vcfFrameSeq << 8) + (data[dataOffset++] & 0xFF);
+                }
+            }
+
+            dataOffset += uslpParams.insertZoneLength;
+        }
+
+        utf.setVcFrameSeq(vcfFrameSeq);
+        utf.setMapId(mapId);
+
+        byte dataHeader = data[dataOffset];
+        int constrRules = (dataHeader & 0xFF) >> 5;
+        int protId = dataHeader & 0x1F;
+        if (vmp.service == ServiceType.PACKET) {
+
+            if (protId != 0) {
+                throw new TcTmException("Invalid Protocol Id " + protId + " Expected 0 for packet data.");
+            }
+
+            if (constrRules == 0b000) {
+                // This construction rule logic is also valid for 0b010 and 0b001 (fixed size)
+                int fhp = ByteArrayUtils.decodeShort(data, dataOffset + 1);
+                dataOffset += 3;
+
+                if (fhp == 0xFFFF) {
+                    fhp = -1;
+                } else {
+                    fhp += dataOffset;
+                    if (fhp > dataEnd) {
+                        throw new TcTmException(
+                                "First header pointer in the date header part of USLP frame is outside the data "
+                                        + (fhp - dataOffset) + ">" + (dataEnd - dataOffset));
+                    }
+                }
+
+                utf.setFirstHeaderPointer(fhp);
+            } else if(constrRules == 0b111) {
+                // This construction rule logic is also valid for other TFDZ construction rules
+                // with variable length.
+                dataOffset += 1;
+                utf.setFirstHeaderPointer(dataOffset);   
+            } else {
+                throw new TcTmException(
+                        "Invalid TFDZ Construction Rule Value " + constrRules + " Expected 0 for packet data.");
+            }
+        }
+
+        utf.setDataStart(dataOffset);
+        utf.setDataEnd(dataEnd);
+        return utf;
+    }
+
+}
+```
+
+### `UslpManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+public class UslpManagedParameters extends DownlinkManagedParameters {
+
+    enum COPType {
+        COP_1, COP_P, NONE
+    };
+
+    enum ServiceType {
+        /** Multiplexing Protocol Data Unit */
+        PACKET,
+        /** IDLE frames are those with vcId = 63 */
+        IDLE,
+        /** Virtual Channel Access */
+        VCA
+    };
+
+    int frameLength; // frame length if fixed or -1 if not fixed
+    int maxFrameLength;
+    int minFrameLength;
+
+    int insertZoneLength; // 0 means not present
+    boolean generateOidFrame;
+
+    int fshLength; // 0 means not present
+    Map<Integer, UslpVcManagedParameters> vcParams = new HashMap<>();
+
+    public UslpManagedParameters(YConfiguration config) {
+        super(config);
+
+        frameLength = config.getInt("frameLength", -1);
+        if (frameLength < 0) {
+            maxFrameLength = config.getInt("maxFrameLength", 65535);
+            minFrameLength = config.getInt("minFrameLength", 6);
+        } else {
+            maxFrameLength = frameLength;
+            minFrameLength = frameLength;
+        }
+
+        List<YConfiguration> l = config.getConfigList("virtualChannels");
+        for (YConfiguration yc : l) {
+            UslpVcManagedParameters ump = new UslpVcManagedParameters(yc);
+            if (vcParams.containsKey(ump.vcId)) {
+                throw new ConfigurationException("duplicate configuration of vcId " + ump.vcId);
+            }
+            vcParams.put(ump.vcId, ump);
+        }
+
+        insertZoneLength = config.getInt("insertZoneLength", 0);
+        if (insertZoneLength < 0 || insertZoneLength > minFrameLength - 6) {
+            throw new ConfigurationException("Invalid insert zone length " + insertZoneLength);
+        }
+    }
+
+    static class UslpVcManagedParameters extends VcDownlinkManagedParameters {
+        ServiceType service;
+
+        COPType copInEffect;
+        boolean fixedLength; // or variable length
+        int vcCountLengthForSeqControlQos;
+        int vcCountLengthForExpeditedQos;
+        int truncatedTransferFrameLength;
+
+        public UslpVcManagedParameters(YConfiguration config) {
+            super(config);
+            service = config.getEnum("service", ServiceType.class);
+            if (service == ServiceType.PACKET) {
+                parsePacketConfig();
+            } else if (service == ServiceType.VCA) {
+                parseVcaConfig();
+            }
+        }
+
+    }
+
+    static class MapManagedParameters {
+        int mapId;
+        int maxPacketLength;
+    }
+
+    @Override
+    public int getMaxFrameLength() {
+        return maxFrameLength;
+    }
+
+    @Override
+    public int getMinFrameLength() {
+        return minFrameLength;
+    }
+
+    @Override
+    public Map<Integer, VcDownlinkHandler> createVcHandlers(String yamcsInstance, String linkName) {
+        Map<Integer, VcDownlinkHandler> m = new HashMap<>();
+        for (Map.Entry<Integer, UslpVcManagedParameters> me : vcParams.entrySet()) {
+            UslpVcManagedParameters vmp = me.getValue();
+            switch (vmp.service) {
+            case PACKET:
+                VcTmPacketHandler vcph = new VcTmPacketHandler(yamcsInstance,
+                        linkName + ".vc" + vmp.vcId, vmp);
+                m.put(vmp.vcId, vcph);
+                break;
+            case IDLE:
+                m.put(vmp.vcId, new IdleFrameHandler());
+                break;
+            case VCA:
+                m.put(vmp.vcId, createVcaHandler(yamcsInstance, linkName, vmp));
+                break;
+
+            default:
+                throw new UnsupportedOperationException(vmp.service + " not supported (TODO)");
+            }
+        }
+        return m;
+    }
+}
+```
+
+### `UslpTransferFrame.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/UslpTransferFrame.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.tctm.ccsds.UslpManagedParameters.ServiceType;
+
+/**
+ * Transfer Frames as per:
+ * 
+ * CCSDS RECOMMENDED STANDARD FOR UNIFIED SPACE DATA LINK PROTOCOL
+ * CCSDS 732.1-B-1 October 2018
+ * 
+ * 
+ * @author nm
+ * 
+ */
+public class UslpTransferFrame extends DownlinkTransferFrame {
+    private int mapId;
+    private long seqCountWrapArround;
+    ServiceType serviceType;
+
+    public UslpTransferFrame(byte[] data, int masterChannelId, int virtualChannelId) {
+        super(data, masterChannelId, virtualChannelId);
+    }
+
+    @Override
+    protected int getSeqInterruptionDelta() {
+        return (int) (seqCountWrapArround >> 2);
+    }
+
+    @Override
+    public boolean containsOnlyIdleData() {
+        return serviceType == ServiceType.IDLE;
+    }
+
+    /**
+     * Sets the max value for the frame count for this frame.
+     * 
+     * @param n
+     */
+    public void setSeqCountWrapArround(long n) {
+        this.seqCountWrapArround = n;
+    }
+
+    @Override
+    long getSeqCountWrapArround() {
+        return seqCountWrapArround;
+    }
+
+    public void setMapId(int mapId) {
+        this.mapId = mapId;
+    }
+
+    public int getMapId() {
+        return mapId;
+    }
+
+    public void setServiceType(ServiceType type) {
+        this.serviceType = type;
+    }
+}
+```
+
+### `VcDownlinkHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcDownlinkHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+/**
+ * Called from the {@link MasterChannelFrameHandler} to handle TM frames for a specific virtual channel.
+ * 
+ * @author nm
+ *
+ */
+public interface VcDownlinkHandler {
+
+    void handle(DownlinkTransferFrame frame);
+
+}
+```
+
+### `VcDownlinkManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcDownlinkManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+
+/**
+ * Stores configuration related to Virtual Channels
+ * @author nm
+ *
+ */
+public class VcDownlinkManagedParameters {
+    protected int vcId;
+    //if set to true, the encapsulation packets sent to the preprocessor will be without the encapsulation header(CCSDS 133.1-B-2)
+    boolean stripEncapsulationHeader;
+    
+
+    // if service = M_PDU
+    int maxPacketLength;
+    String packetPreprocessorClassName;
+    YConfiguration packetPreprocessorArgs;
+    final YConfiguration config;
+    protected String vcaHandlerClassName;
+    
+    public VcDownlinkManagedParameters(int vcId) {
+        this.vcId = vcId;
+        this.config = null;
+    }
+    
+    public VcDownlinkManagedParameters(YConfiguration config) {
+        this.config = config;
+        this.vcId = config.getInt("vcId");
+    }
+    
+    
+    protected void parsePacketConfig() {
+        maxPacketLength = config.getInt("maxPacketLength", 65536);
+        if (maxPacketLength < 7) {
+            throw new ConfigurationException("invalid maxPacketLength: " + maxPacketLength);
+        }
+
+        packetPreprocessorClassName = config.getString("packetPreprocessorClassName");
+        if (config.containsKey("packetPreprocessorArgs")) {
+            packetPreprocessorArgs = config.getConfig("packetPreprocessorArgs");
+        }
+        stripEncapsulationHeader = config.getBoolean("stripEncapsulationHeader", false);
+    }
+
+    protected void parseVcaConfig() {
+        this.vcaHandlerClassName = config.getString("vcaHandlerClassName");
+    }
+}
+```
+
+### `VcTmPacketHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcTmPacketHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.events.EventProducer;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.logging.Log;
+import org.yamcs.tctm.AggregatedDataLink;
+import org.yamcs.tctm.PacketPreprocessor;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.TmPacketDataLink;
+import org.yamcs.tctm.TmSink;
+import org.yamcs.time.Instant;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Handles packets from one Virtual Channel (VC)
+ *
+ */
+public class VcTmPacketHandler implements TmPacketDataLink, VcDownlinkHandler {
+    TmSink tmSink;
+    private long numPackets;
+    volatile boolean disabled = false;
+    long lastFrameSeq = -1;
+    EventProducer eventProducer;
+    int packetLostCount;
+    private final Log log;
+    PacketDecoder packetDecoder;
+    long idleFrameCount = 0;
+    PacketPreprocessor packetPreprocessor;
+    final String name;
+    final VcDownlinkManagedParameters vmp;
+
+    AggregatedDataLink parent;
+    private TimeService timeService;
+    private Instant ertime;
+
+    public VcTmPacketHandler(String yamcsInstance, String name, VcDownlinkManagedParameters vmp) {
+        this.vmp = vmp;
+        this.name = name;
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+
+        eventProducer = EventProducerFactory.getEventProducer(yamcsInstance, "VcTmPacketHandler[VC" + vmp.vcId + "]",
+                10000);
+        log = new Log(this.getClass(), yamcsInstance);
+        log.setContext(name);
+
+        packetDecoder = new PacketDecoder(vmp.maxPacketLength, p -> handlePacket(p));
+        packetDecoder.stripEncapsulationHeader(vmp.stripEncapsulationHeader);
+
+        try {
+            if (vmp.packetPreprocessorArgs != null) {
+                packetPreprocessor = YObjectLoader.loadObject(vmp.packetPreprocessorClassName, yamcsInstance,
+                        vmp.packetPreprocessorArgs);
+            } else {
+                packetPreprocessor = YObjectLoader.loadObject(vmp.packetPreprocessorClassName, yamcsInstance);
+            }
+        } catch (ConfigurationException e) {
+            log.error("Cannot instantiate the packet preprocessor", e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void handle(DownlinkTransferFrame frame) {
+        if (disabled) {
+            log.trace("Dropping frame for VC {} because the link is disabled", frame.getVirtualChannelId());
+            return;
+        }
+
+        if (frame.containsOnlyIdleData()) {
+            if (log.isTraceEnabled()) {
+                log.trace("Dropping idle frame for VC {}, SEQ {}", frame.getVirtualChannelId(), frame.getVcFrameSeq());
+            }
+            lastFrameSeq = frame.getVcFrameSeq();
+            idleFrameCount++;
+            return;
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("Processing frame VC {}, SEQ {}, FHP {}, DS {}, DE {}", frame.getVirtualChannelId(),
+                    frame.getVcFrameSeq(),
+                    frame.getFirstHeaderPointer(), frame.getDataStart(), frame.getDataEnd());
+        }
+        ertime = frame.getEarthRceptionTime();
+        int dataStart = frame.getDataStart();
+        int packetStart = frame.getFirstHeaderPointer();
+        int dataEnd = frame.getDataEnd();
+        byte[] data = frame.getData();
+
+        try {
+            int frameLoss = frame.lostFramesCount(lastFrameSeq);
+            lastFrameSeq = frame.getVcFrameSeq();
+
+            if (packetDecoder.hasIncompletePacket()) {
+                if (frameLoss != 0) {
+                    log.warn("Incomplete packet dropped because of frame loss ");
+                    packetDecoder.reset();
+                } else {
+                    if (packetStart != -1) {
+                        packetDecoder.process(data, dataStart, packetStart - dataStart);
+                    } else {
+                        packetDecoder.process(data, dataStart, dataEnd - dataStart);
+                    }
+                }
+            }
+            if (packetStart != -1) {
+                if (packetDecoder.hasIncompletePacket()) {
+                    eventProducer
+                            .sendWarning("Incomplete packet decoded when reaching the beginning of another packet");
+                    packetDecoder.reset();
+                }
+                packetDecoder.process(data, packetStart, dataEnd - packetStart);
+            }
+        } catch (TcTmException e) {
+            packetDecoder.reset();
+            eventProducer.sendWarning(e.toString());
+        }
+    }
+
+    private void handlePacket(byte[] p) {
+        if (log.isTraceEnabled()) {
+            log.trace("VC {}, SEQ {} decoded packet of length {}", vmp.vcId, lastFrameSeq, p.length);
+        }
+
+        numPackets++;
+        TmPacket pwt = new TmPacket(timeService.getMissionTime(), p);
+        pwt.setEarthReceptionTime(ertime);
+        pwt.setFrameSeqCount(lastFrameSeq);
+
+        pwt = packetPreprocessor.process(pwt);
+        if (pwt != null) {
+            tmSink.processPacket(pwt);
+        }
+    }
+
+    @Override
+    public Status getLinkStatus() {
+        return disabled ? Status.DISABLED : Status.OK;
+    }
+
+    @Override
+    public String getDetailedStatus() {
+        return null;
+    }
+
+    @Override
+    public void enable() {
+        this.disabled = false;
+    }
+
+    @Override
+    public void disable() {
+        this.disabled = true;
+    }
+
+    @Override
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    @Override
+    public long getDataInCount() {
+        return numPackets;
+    }
+
+    @Override
+    public long getDataOutCount() {
+        return 0;
+    }
+
+    @Override
+    public void resetCounters() {
+        numPackets = 0;
+    }
+
+    @Override
+    public void setTmSink(TmSink tmSink) {
+        this.tmSink = tmSink;
+    }
+
+    @Override
+    public YConfiguration getConfig() {
+        return vmp.config;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public AggregatedDataLink getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(AggregatedDataLink parent) {
+        this.parent = parent;
+    }
+}
+```
+
+### `VcUplinkHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcUplinkHandler.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import java.util.concurrent.Semaphore;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Handlers uplink data in a virtual channel
+ * 
+ */
+public interface VcUplinkHandler {
+    /**
+     * Retrieves the next frame in the Virtual Channel, or returns null if there is no frame available at the moment.
+     * 
+     * @return
+     */
+    TcTransferFrame getFrame();
+
+    /**
+     * Returns the timestamp of the first frame ready to be dispatched or {@link TimeEncoding#INVALID_INSTANT} if there
+     * is no frame.
+     * <p>
+     * The timestamp is used by the {@link MasterChannelFrameMultiplexer} to select the Virtual Channel from which the
+     * next frame is sent in case of FIFO priority scheme.
+     * 
+     * @return
+     */
+    long getFirstFrameTimestamp();
+
+    /**
+     * return the virtual channel parameters
+     * 
+     * @return
+     */
+    VcUplinkManagedParameters getParameters();
+
+    /**
+     * The semaphore will be used by the virtual channel to signal to {@link MasterChannelFrameMultiplexer} that data is
+     * available to be uplinked
+     * 
+     * @param dataAvailableSemaphore
+     */
+    void setDataAvailableSemaphore(Semaphore dataAvailableSemaphore);
+
+}
+```
+
+### `VcUplinkManagedParameters.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/ccsds/VcUplinkManagedParameters.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import org.yamcs.YConfiguration;
+
+/**
+ * Stores configuration related to Virtual Channels for uplink
+ * 
+ * @author nm
+ *
+ */
+public class VcUplinkManagedParameters {
+    protected int vcId;
+
+    String packetPostprocessorClassName;
+    YConfiguration packetPostprocessorArgs;
+    protected int priority;
+
+    final YConfiguration config;
+
+    public VcUplinkManagedParameters(int vcId) {
+        this.vcId = vcId;
+        this.config = null;
+    }
+
+    public VcUplinkManagedParameters(YConfiguration config) {
+        this.config = config;
+        this.vcId = config.getInt("vcId");
+        this.priority = config.getInt("priority", 1);
+    }
+
+    protected void parsePacketConfig() {
+        packetPostprocessorClassName = config.getString("packetPostrocessorClassName");
+        if (config.containsKey("packetPreprocessorArgs")) {
+            packetPostprocessorArgs = config.getConfig("packetPostprocessorArgs");
+        }
+    }
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public int getVirtualChannelId() {
+        return vcId;
+    }
+}
+```

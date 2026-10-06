@@ -3,18 +3,101 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `extension.component.html`
 
-file--extension.component.html
-file--extension.component.ts
-file--extension.matcher.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.component.html`
+
+
+```html
+<div #customElementHolder></div>
 ```
 
-## 항목
+### `extension.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.component.html`](file--extension.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.component.ts`](file--extension.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.matcher.ts`](file--extension.matcher.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  ViewChild,
+  inject,
+} from '@angular/core';
+import { ExtensionService, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './extension.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ExtensionComponent implements AfterViewInit, OnChanges {
+  private extensionService = inject(ExtensionService);
+
+  @Input()
+  extension: string;
+
+  @Input()
+  subroute: string;
+
+  @ViewChild('customElementHolder')
+  customElementHolder: ElementRef<HTMLDivElement>;
+
+  ngAfterViewInit() {
+    this.loadExtension(this.extension);
+  }
+
+  ngOnChanges() {
+    if (this.extension && this.customElementHolder) {
+      this.loadExtension(this.extension);
+    }
+  }
+
+  private loadExtension(extension: string) {
+    const { nativeElement: holder } = this.customElementHolder;
+    holder.innerHTML = `<${extension}></${extension}>`;
+
+    const extensionEl = holder.childNodes.item(0);
+    (extensionEl as any).subroute = this.subroute;
+    (extensionEl as any).extensionService = this.extensionService;
+  }
+}
+```
+
+### `extension.matcher.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/extension/extension.matcher.ts`
+
+
+```typescript
+import { UrlMatcher, UrlSegment } from '@angular/router';
+
+/**
+ * Route matcher that extracts the extension id and
+ * subroute.
+ */
+export const extensionMatcher: UrlMatcher = (url) => {
+  if (url.length == 0) {
+    return null;
+  }
+
+  const extensionId = url[0].path;
+  const subroute = url
+    .slice(1)
+    .map((segment) => segment.path)
+    .join('/');
+  return {
+    consumed: url,
+    posParams: {
+      extension: new UrlSegment(extensionId, {}),
+      subroute: new UrlSegment(subroute, {}),
+    },
+  };
+};
+```

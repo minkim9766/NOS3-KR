@@ -3,16 +3,85 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `rocksdb-database-list.component.html`
 
-file--rocksdb-database-list.component.html
-file--rocksdb-database-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database-list/rocksdb-database-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Open databases" />
+
+  <ya-panel>
+    <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+      <ng-container matColumnDef="tablespace">
+        <th mat-header-cell *matHeaderCellDef>Tablespace</th>
+        <td mat-cell *matCellDef="let database">{{ database.tablespace || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dataDir">
+        <th mat-header-cell *matHeaderCellDef>Data Dir</th>
+        <td mat-cell *matCellDef="let database">
+          <a [routerLink]="[database.tablespace, database.dbPath]">
+            {{ database.dataDir }}
+            @if (database.dbPath) {
+              /{{ database.dbPath }}
+            }
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dbPath">
+        <th mat-header-cell *matHeaderCellDef>DB Path</th>
+        <td mat-cell *matCellDef="let database">{{ database.dbPath || "(root)" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `rocksdb-database-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database-list/rocksdb-database-list.component.html`](file--rocksdb-database-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database-list/rocksdb-database-list.component.ts`](file--rocksdb-database-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/rocksdb-database-list/rocksdb-database-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  RocksDbDatabase,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './rocksdb-database-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class RocksDbDatabasesComponent {
+  displayedColumns = ['dataDir', 'tablespace', 'dbPath', 'actions'];
+
+  dataSource = new MatTableDataSource<RocksDbDatabase>();
+
+  constructor(yamcs: YamcsService, title: Title) {
+    title.setTitle('Open Databases');
+    yamcs.yamcsClient.getRocksDbDatabases().then((databases) => {
+      this.dataSource.data = databases;
+    });
+  }
+}
+```

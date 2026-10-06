@@ -3,18 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `trace-element.component.css`
 
-file--trace-element.component.css
-file--trace-element.component.html
-file--trace-element.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.css`
+
+
+```css
+:host {
+  display: inline-flex;
+}
+
+span {
+  vertical-align: baseline;
+  font-family: "Roboto Mono", monospace;
+}
+
+.jpackage {
+  color: #999;
+}
 ```
 
-## 항목
+### `trace-element.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.css`](file--trace-element.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.html`](file--trace-element.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.ts`](file--trace-element.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.html`
+
+
+```html
+<span class="jpackage">{{ classPackage }}.</span>
+<span class="jclass">{{ classShortName }}.</span>
+<span class="jmethod">{{ element().methodName }}</span>
+@if (element().lineNumber; as lineno) {
+  <span class="lineno">(line: {{ lineno }})</span>
+}
+```
+
+### `trace-element.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/trace-element/trace-element.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { TraceElementInfo } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-trace-element',
+  templateUrl: './trace-element.component.html',
+  styleUrl: './trace-element.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class TraceElementComponent {
+  element = input.required<TraceElementInfo>();
+
+  get classPackage() {
+    const { className } = this.element();
+
+    const idx = className.lastIndexOf('.');
+    if (idx === -1) {
+      return undefined;
+    } else {
+      return className.substring(0, idx);
+    }
+  }
+
+  get classShortName() {
+    const { className } = this.element();
+
+    const idx = className.lastIndexOf('.');
+    if (idx === -1) {
+      return className;
+    } else {
+      return className.substring(idx + 1);
+    }
+  }
+}
+```

@@ -3,20 +3,42 @@
 
 **경로:** `components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_dd.csv
-file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_dqe.csv
-file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/mugshots/`](mugshots/index) — 폴더
-- [`components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_dd.csv`](file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_dd.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_dqe.csv`](file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_dqe.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_sue.csv`](file--2021_04_15_dhm_true_low_wild_grayscale_newport_37_sue.csv) — UTF-8 텍스트 파일 본문 포함
+### `2021_04_15_dhm_true_low_wild_grayscale_newport_37_dd.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_dd.csv`
+
+
+```text
+bbox_area_min_pc10.0,bbox_area_min_pc50.0,bbox_area_min_pc90.0,disp_e2e_norm_pc10.0,disp_e2e_norm_pc50.0,disp_e2e_norm_pc90.0,speed_mean_pc10.0,speed_mean_pc50.0,speed_mean_pc90.0
+0.0020666666666666667,0.01944444444444444,0.1111111111111111,0.0016796562579265617,0.024577097042296586,0.1111111111111111,0.020117173258259367,0.039868638411298556,0.06526860304642995
+```
+
+### `2021_04_15_dhm_true_low_wild_grayscale_newport_37_dqe.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_dqe.csv`
+
+
+```text
+DQE
+0.9199999999999999
+```
+
+### `2021_04_15_dhm_true_low_wild_grayscale_newport_37_sue.csv`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000007/asdp/2021_04_15_dhm_true_low_wild_grayscale_newport_37_sue.csv`
+
+
+```text
+SUE
+0.20619716368939348
+```

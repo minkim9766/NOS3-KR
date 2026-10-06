@@ -3,24 +3,42 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--lc.so
-file--libtblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.a
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/lc.so`](file--lc.so) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/libtblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.a`](file--libtblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.a) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/lc/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `lc.so`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/lc.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libtblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.a`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/libtblobj_cpu1_lc.tbl92b6be9b068f1e3483de0fbb962fe79441ead86e.a`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/lc/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

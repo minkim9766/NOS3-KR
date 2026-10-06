@@ -3,18 +3,24 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 icons/index
-file--yamcs.png
-file--yamcs%402x.png
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/icons/`](icons/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/yamcs.png`](file--yamcs.png) — 바이너리 (경로만)
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/yamcs@2x.png`](file--yamcs%402x.png) — 바이너리 (경로만)
+### `yamcs.png`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/yamcs.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `yamcs@2x.png`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/assets/yamcs@2x.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

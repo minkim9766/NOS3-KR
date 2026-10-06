@@ -3,44 +3,5991 @@
 
 **경로:** `fsw/apps/sc/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc_app.c`
 
-file--sc_app.c
-file--sc_app.h
-file--sc_atsrq.c
-file--sc_atsrq.h
-file--sc_cmds.c
-file--sc_cmds.h
-file--sc_loads.c
-file--sc_loads.h
-file--sc_rtsrq.c
-file--sc_rtsrq.h
-file--sc_state.c
-file--sc_state.h
-file--sc_utils.c
-file--sc_utils.h
-file--sc_verify.h
-file--sc_version.h
+**경로:** `fsw/apps/sc/fsw/src/sc_app.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *     This file contains the Stored Command main event loop function. It also
+ *     contains the initialization function. The SC app handles the scheduling
+ *     of stored commands for the fsw. The main event loop handles the Software
+ *     Bus interface.
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_app.h"
+#include "sc_rts.h"
+#include "sc_cmds.h"
+#include "sc_loads.h"
+#include "sc_events.h"
+#include "sc_msgids.h"
+#include "sc_perfids.h"
+#include "sc_version.h"
+#include "sc_verify.h"
+#include <string.h>
+
+/**************************************************************************
+ **
+ ** Global variables
+ **
+ **************************************************************************/
+
+SC_AppData_t  SC_AppData;  /* SC Application Data */
+SC_OperData_t SC_OperData; /* SC Operational Data */
+
+/**************************************************************************
+ **
+ ** Functions
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  SC main process loop (task entry point)                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_AppMain(void)
+{
+    uint32           RunStatus = CFE_ES_RunStatus_APP_RUN;
+    CFE_Status_t     Result;
+    CFE_SB_Buffer_t *BufPtr = NULL;
+
+    /* Performance Log (start time counter) */
+    CFE_ES_PerfLogEntry(SC_APPMAIN_PERF_ID);
+
+    /* Startup initialization */
+    Result = SC_AppInit();
+
+    /* Check for start-up error */
+    if (Result != CFE_SUCCESS)
+    {
+        /* Set request to terminate main loop */
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /* Main process loop */
+    while (CFE_ES_RunLoop(&RunStatus))
+    {
+        /* Performance Log (stop time counter) */
+        CFE_ES_PerfLogExit(SC_APPMAIN_PERF_ID);
+
+        /* Pend on Software Bus for message */
+        Result = CFE_SB_ReceiveBuffer(&BufPtr, SC_OperData.CmdPipe, SC_SB_TIMEOUT);
+
+        /* Performance Log (start time counter) */
+        CFE_ES_PerfLogEntry(SC_APPMAIN_PERF_ID);
+
+        /* Check for Software Bus error */
+        if (Result == CFE_SUCCESS)
+        {
+            /* Invoke command handlers */
+            SC_ProcessRequest(BufPtr);
+        }
+        else if (Result == CFE_SB_TIME_OUT)
+        {
+            /* no action, but also no error */
+        }
+        else
+        {
+            /* Exit main process loop */
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    /* Check for "fatal" process error */
+    if (Result != CFE_SUCCESS)
+    {
+        /* Send event describing reason for termination */
+        CFE_EVS_SendEvent(SC_APP_EXIT_ERR_EID, CFE_EVS_EventType_ERROR, "App terminating, Result = 0x%08X",
+                          (unsigned int)Result);
+
+        /* In case cFE Event Services is not working */
+        CFE_ES_WriteToSysLog("SC App terminating, Result = 0x%08X\n", (unsigned int)Result);
+    }
+
+    /* Performance Log (stop time counter) */
+    CFE_ES_PerfLogExit(SC_APPMAIN_PERF_ID);
+
+    /* Let cFE kill the app */
+    CFE_ES_ExitApp(RunStatus);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Application startup initialization                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t SC_AppInit(void)
+{
+    CFE_Status_t Result;
+
+    /* Clear global data structures */
+    memset(&SC_OperData, 0, sizeof(SC_OperData));
+    memset(&SC_AppData, 0, sizeof(SC_AppData));
+
+    /* Number of ATS and RTS commands already executed this second */
+    SC_OperData.NumCmdsSec = 0;
+
+    /* Continue ATS execution if ATS command checksum fails */
+    SC_OperData.HkPacket.ContinueAtsOnFailureFlag = SC_CONT_ON_FAILURE_START;
+
+    /* Make sure nothing is running */
+    SC_AppData.NextProcNumber      = SC_NONE;
+    SC_AppData.NextCmdTime[SC_ATP] = SC_MAX_TIME;
+    SC_AppData.NextCmdTime[SC_RTP] = SC_MAX_TIME;
+
+    /* Initialize the SC housekeeping packet */
+    CFE_MSG_Init(&SC_OperData.HkPacket.TlmHeader.Msg, CFE_SB_ValueToMsgId(SC_HK_TLM_MID), sizeof(SC_HkTlm_t));
+
+    /* Select auto-exec RTS to start during first HK request */
+    if (CFE_ES_GetResetType(NULL) == CFE_PSP_RST_TYPE_POWERON)
+    {
+        SC_AppData.AutoStartRTS = RTS_ID_AUTO_POWER_ON;
+    }
+    else
+    {
+        SC_AppData.AutoStartRTS = RTS_ID_AUTO_PROCESSOR;
+    }
+
+    /* Must be able to register for events */
+    Result = CFE_EVS_Register(NULL, 0, CFE_EVS_NO_FILTER);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Event Services Register returned: 0x%08X\n", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Must be able to create Software Bus message pipe */
+    Result = CFE_SB_CreatePipe(&SC_OperData.CmdPipe, SC_PIPE_DEPTH, SC_CMD_PIPE_NAME);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SC_INIT_SB_CREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Software Bus Create Pipe returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Must be able to subscribe to HK request command */
+    Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SC_SEND_HK_MID), SC_OperData.CmdPipe);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SC_INIT_SB_SUBSCRIBE_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Software Bus subscribe to housekeeping returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Must be able to subscribe to 1Hz wakeup command */
+    Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SC_1HZ_WAKEUP_MID), SC_OperData.CmdPipe);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SC_INIT_SB_SUBSCRIBE_1HZ_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Software Bus subscribe to 1 Hz cycle returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Must be able to subscribe to SC commands */
+    Result = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SC_CMD_MID), SC_OperData.CmdPipe);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SC_INIT_SB_SUBSCRIBE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Software Bus subscribe to command returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Must be able to create and initialize tables */
+    Result = SC_InitTables();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    /* Send application startup event */
+    CFE_EVS_SendEvent(SC_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "SC Initialized. Version %d.%d.%d.%d",
+                      SC_MAJOR_VERSION, SC_MINOR_VERSION, SC_REVISION, SC_MISSION_REV);
+
+    return (CFE_SUCCESS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Create and initialize loadable and dump-only tables             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t SC_InitTables(void)
+{
+    CFE_Status_t Result;
+    int32        i;
+    int32        j;
+
+    /* Must be able to register all tables with cFE Table Services */
+    Result = SC_RegisterAllTables();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    /* Must be able to get dump only table pointers */
+    Result = SC_GetDumpTablePointers();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    /* ATP control block status table */
+    SC_OperData.AtsCtrlBlckAddr->AtpState  = SC_IDLE;
+    SC_OperData.AtsCtrlBlckAddr->AtsNumber = SC_NO_ATS;
+    SC_OperData.AtsCtrlBlckAddr->CmdNumber = SC_INVALID_CMD_NUMBER;
+
+    /* RTP control block status table */
+    SC_OperData.RtsCtrlBlckAddr->NumRtsActive = 0;
+    SC_OperData.RtsCtrlBlckAddr->RtsNumber    = SC_INVALID_RTS_NUMBER;
+
+    /* ATS command status table(s) */
+    for (i = 0; i < SC_NUMBER_OF_ATS; i++)
+    {
+        for (j = 0; j < SC_MAX_ATS_CMDS; j++)
+        {
+            SC_OperData.AtsCmdStatusTblAddr[i][j] = SC_EMPTY;
+        }
+    }
+
+    /* RTS information table */
+    for (i = 0; i < SC_NUMBER_OF_RTS; i++)
+    {
+        SC_OperData.RtsInfoTblAddr[i].NextCommandTime = SC_MAX_TIME;
+        SC_OperData.RtsInfoTblAddr[i].NextCommandPtr  = 0;
+        SC_OperData.RtsInfoTblAddr[i].RtsStatus       = SC_EMPTY;
+        SC_OperData.RtsInfoTblAddr[i].DisabledFlag    = true;
+    }
+
+    /* Load default RTS tables */
+    SC_LoadDefaultTables();
+
+    /* Must be able to get loadable table pointers */
+    Result = SC_GetLoadTablePointers();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    /* Register for table update notification commands */
+    SC_RegisterManageCmds();
+
+    return (CFE_SUCCESS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Register all SC tables with cFE Table Services                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t SC_RegisterAllTables(void)
+{
+    CFE_Status_t Result;
+
+    Result = SC_RegisterDumpOnlyTables();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    Result = SC_RegisterLoadableTables();
+    if (Result != CFE_SUCCESS)
+    {
+        return (Result);
+    }
+
+    return (CFE_SUCCESS);
+}
+
+CFE_Status_t SC_RegisterDumpOnlyTables(void)
+{
+    int          i;
+    CFE_Status_t Result;
+    char         TableName[CFE_MISSION_TBL_MAX_NAME_LENGTH];
+
+    CFE_TBL_Handle_t *TblHandlePtr[4] = {&SC_OperData.RtsInfoHandle, &SC_OperData.RtsCtrlBlckHandle,
+                                         &SC_OperData.AtsInfoHandle, &SC_OperData.AtsCtrlBlckHandle};
+    const char *      Name[4]         = {SC_RTSINFO_TABLE_NAME, SC_RTP_CTRL_TABLE_NAME, SC_ATSINFO_TABLE_NAME,
+                           SC_ATS_CTRL_TABLE_NAME};
+    int32             TableSize[4]    = {sizeof(SC_RtsInfoEntry_t) * SC_NUMBER_OF_RTS, sizeof(SC_RtpControlBlock_t),
+                          sizeof(SC_AtsInfoTable_t) * SC_NUMBER_OF_ATS, sizeof(SC_AtpControlBlock_t)};
+    uint16            EventID[4]      = {SC_REGISTER_RTS_INFO_TABLE_ERR_EID, SC_REGISTER_RTS_CTRL_BLK_TABLE_ERR_EID,
+                         SC_REGISTER_ATS_INFO_TABLE_ERR_EID, SC_REGISTER_ATS_CTRL_BLK_TABLE_ERR_EID};
+    const char *      Spec[4]         = {"RTS info", "RTS control block", "ATS Info", "ATS control block"};
+    uint16            TableOptions    = (CFE_TBL_OPT_DEFAULT | CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_DUMP_ONLY);
+
+    for (i = 0; i < 4; i++)
+    {
+        /* Register dump only table */
+        Result = CFE_TBL_Register(TblHandlePtr[i], Name[i], TableSize[i], TableOptions, NULL);
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(EventID[i], CFE_EVS_EventType_ERROR, "%s table register failed, returned: 0x%08X",
+                              Spec[i], (unsigned int)Result);
+            return (Result);
+        }
+    }
+
+    /* Register dump only ATS command status tables */
+    for (i = 0; i < SC_NUMBER_OF_ATS; i++)
+    {
+        snprintf(TableName, CFE_MISSION_TBL_MAX_NAME_LENGTH, "%s%d", SC_ATS_CMD_STAT_TABLE_NAME, i + 1);
+        Result = CFE_TBL_Register(&SC_OperData.AtsCmdStatusHandle[i], TableName, SC_MAX_ATS_CMDS * sizeof(uint32),
+                                  TableOptions, NULL);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(SC_REGISTER_ATS_CMD_STATUS_TABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS command status table register failed for ATS %d, returned: 0x%08X", i + 1,
+                              (unsigned int)Result);
+            return (Result);
+        }
+    }
+
+    return (CFE_SUCCESS);
+}
+
+CFE_Status_t SC_RegisterLoadableTables(void)
+{
+    int          i;
+    int          j;
+    CFE_Status_t Result;
+    char         TableName[CFE_MISSION_TBL_MAX_NAME_LENGTH];
+
+    uint16            NumTables[2]    = {SC_NUMBER_OF_RTS, SC_NUMBER_OF_ATS};
+    const char *      StrFormat[2]    = {"%s%03d", "%s%d"};
+    const char *      Name[2]         = {SC_RTS_TABLE_NAME, SC_ATS_TABLE_NAME};
+    CFE_TBL_Handle_t *TblHandlePtr[2] = {SC_OperData.RtsTblHandle, SC_OperData.AtsTblHandle};
+    int32             TableSize[2]    = {SC_RTS_BUFF_SIZE32 * SC_BYTES_IN_WORD, SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD};
+    uint16            TableOptions[2] = {(CFE_TBL_OPT_DEFAULT | CFE_TBL_OPT_SNGL_BUFFER), CFE_TBL_OPT_DBL_BUFFER};
+    uint16            EventID[2]      = {SC_REGISTER_RTS_TBL_ERR_EID, SC_REGISTER_ATS_TBL_ERR_EID};
+    const char *      Spec[2]         = {"RTS", "ATS"};
+    CFE_TBL_CallbackFuncPtr_t TblValidationFuncPtr[2] = {SC_ValidateRts, SC_ValidateAts};
+
+    for (i = 0; i < 2; i++)
+    {
+        for (j = 0; j < NumTables[i]; j++)
+        {
+            snprintf(TableName, CFE_MISSION_TBL_MAX_NAME_LENGTH, StrFormat[i], Name[i], j + 1);
+            Result = CFE_TBL_Register(&TblHandlePtr[i][j], TableName, TableSize[i], TableOptions[i],
+                                      TblValidationFuncPtr[i]);
+
+            if (Result != CFE_SUCCESS)
+            {
+                CFE_EVS_SendEvent(EventID[i], CFE_EVS_EventType_ERROR,
+                                  "Table Registration Failed for %s %d, returned: 0x%08X", Spec[i], j + 1,
+                                  (unsigned int)Result);
+                return (Result);
+            }
+        }
+    }
+
+    /* Register loadable Append ATS table */
+    Result = CFE_TBL_Register(&SC_OperData.AppendTblHandle, SC_APPEND_TABLE_NAME,
+                              SC_APPEND_BUFF_SIZE32 * SC_BYTES_IN_WORD, CFE_TBL_OPT_DBL_BUFFER, SC_ValidateAppend);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SC_REGISTER_APPEND_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Append ATS Table Registration Failed, returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    return (CFE_SUCCESS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get buffer pointers for dump only tables                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t SC_GetDumpTablePointers(void)
+{
+    int          i;
+    CFE_Status_t Result;
+
+    void **          TblAddr[4]   = {(void **)&SC_OperData.RtsInfoTblAddr, (void **)&SC_OperData.RtsCtrlBlckAddr,
+                         (void **)&SC_OperData.AtsInfoTblAddr, (void **)&SC_OperData.AtsCtrlBlckAddr};
+    CFE_TBL_Handle_t TblHandle[4] = {SC_OperData.RtsInfoHandle, SC_OperData.RtsCtrlBlckHandle,
+                                     SC_OperData.AtsInfoHandle, SC_OperData.AtsCtrlBlckHandle};
+    uint16           EventID[4]   = {SC_GET_ADDRESS_RTS_INFO_ERR_EID, SC_GET_ADDRESS_RTS_CTRL_BLCK_ERR_EID,
+                         SC_GET_ADDRESS_ATS_INFO_ERR_EID, SC_GET_ADDRESS_ATS_CTRL_BLCK_ERR_EID};
+
+    for (i = 0; i < 4; i++)
+    {
+        Result = CFE_TBL_GetAddress(TblAddr[i], TblHandle[i]);
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(EventID[i], CFE_EVS_EventType_ERROR, "Table failed Getting Address, returned: 0x%08X",
+                              (unsigned int)Result);
+            return (Result);
+        }
+    }
+
+    /* Get buffer address for dump only ATS command status tables */
+    for (i = 0; i < SC_NUMBER_OF_ATS; i++)
+    {
+        Result = CFE_TBL_GetAddress((void **)&SC_OperData.AtsCmdStatusTblAddr[i], SC_OperData.AtsCmdStatusHandle[i]);
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(SC_GET_ADDRESS_ATS_CMD_STAT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS Cmd Status table for ATS %d failed Getting Address, returned: 0x%08X", i + 1,
+                              (unsigned int)Result);
+            return (Result);
+        }
+    }
+
+    return (CFE_SUCCESS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get buffer pointers for loadable tables                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+CFE_Status_t SC_GetLoadTablePointers(void)
+{
+    int          i;
+    CFE_Status_t Result;
+
+    /* Get buffer address for loadable ATS tables */
+    for (i = 0; i < SC_NUMBER_OF_ATS; i++)
+    {
+        Result = CFE_TBL_GetAddress((void **)&SC_OperData.AtsTblAddr[i], SC_OperData.AtsTblHandle[i]);
+
+        if ((Result != CFE_TBL_ERR_NEVER_LOADED) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(SC_GET_ADDRESS_ATS_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS table %d failed Getting Address, returned: 0x%08X", i + 1, (unsigned int)Result);
+            return (Result);
+        }
+    }
+
+    /* Get buffer address for loadable ATS Append table */
+    Result = CFE_TBL_GetAddress((void **)&SC_OperData.AppendTblAddr, SC_OperData.AppendTblHandle);
+
+    if ((Result != CFE_TBL_ERR_NEVER_LOADED) && (Result != CFE_TBL_INFO_UPDATED))
+    {
+        CFE_EVS_SendEvent(SC_GET_ADDRESS_APPEND_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Append ATS table failed Getting Address, returned: 0x%08X", (unsigned int)Result);
+        return (Result);
+    }
+
+    /* Get buffer address for loadable RTS tables */
+    for (i = 0; i < SC_NUMBER_OF_RTS; i++)
+    {
+        Result = CFE_TBL_GetAddress((void **)&SC_OperData.RtsTblAddr[i], SC_OperData.RtsTblHandle[i]);
+
+        if ((Result != CFE_TBL_ERR_NEVER_LOADED) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(SC_GET_ADDRESS_RTS_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "RTS table %d failed Getting Address, returned: 0x%08X", i + 1, (unsigned int)Result);
+            return (Result);
+        }
+
+        /* Process new RTS table data */
+        if (Result == CFE_TBL_INFO_UPDATED)
+        {
+            SC_LoadRts(i);
+        }
+    }
+
+    return (CFE_SUCCESS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Load default startup tables from non-volatile memory            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_LoadDefaultTables(void)
+{
+    char      TableName[OS_MAX_PATH_LEN];
+    osal_id_t FileDesc = OS_OBJECT_ID_UNDEFINED;
+    int32     RtsIndex;
+    int32     NotLoadedCount = 0;
+    int32     Status         = OS_SUCCESS;
+
+    /*
+    ** Currently, only RTS tables are loaded during initialization.
+    **
+    ** ATS and ATS Append tables must be loaded by command.
+    */
+    for (RtsIndex = 0; RtsIndex < SC_NUMBER_OF_RTS; RtsIndex++)
+    {
+        /* Example filename: /cf/apps/sc_rts001.tbl */
+        snprintf(TableName, sizeof(TableName), "%s%03d.tbl", SC_RTS_FILE_NAME, (int)(RtsIndex + 1));
+        Status = OS_OpenCreate(&FileDesc, TableName, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+
+        if (Status == OS_SUCCESS)
+        {
+            OS_close(FileDesc);
+
+            /* Only try to load table files that can be opened */
+            Status = CFE_TBL_Load(SC_OperData.RtsTblHandle[RtsIndex], CFE_TBL_SRC_FILE, TableName);
+            if (Status != CFE_SUCCESS)
+            {
+                NotLoadedCount++;
+
+                /* send an event for each failed load */
+                CFE_EVS_SendEvent(SC_RTS_LOAD_FAIL_DBG_EID, CFE_EVS_EventType_DEBUG,
+                                  "RTS table %d failed to load, returned: 0x%08X", (int)RtsIndex, Status);
+            }
+        }
+        else
+        {
+            NotLoadedCount++;
+
+            /* send an event for each failed open */
+            CFE_EVS_SendEvent(SC_RTS_OPEN_FAIL_DBG_EID, CFE_EVS_EventType_DEBUG,
+                              "RTS table %d file open failed, returned: 0x%08X", (int)RtsIndex, Status);
+        }
+    }
+
+    /* Display startup RTS not loaded count */
+    CFE_EVS_SendEvent(SC_RTS_LOAD_FAIL_COUNT_INFO_EID, CFE_EVS_EventType_INFORMATION,
+                      "RTS table files not loaded at initialization = %d of %d", (int)NotLoadedCount, SC_NUMBER_OF_RTS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Register to receive cFE table manage request commands           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_RegisterManageCmds(void)
+{
+    int32 i;
+
+    CFE_TBL_Handle_t TblHandles[5] = {SC_OperData.RtsInfoHandle, SC_OperData.RtsCtrlBlckHandle,
+                                      SC_OperData.AtsInfoHandle, SC_OperData.AtsCtrlBlckHandle,
+                                      SC_OperData.AppendTblHandle};
+    uint32           params[5]     = {SC_TBL_ID_RTS_INFO, SC_TBL_ID_RTP_CTRL, SC_TBL_ID_ATS_INFO, SC_TBL_ID_ATP_CTRL,
+                        SC_TBL_ID_APPEND};
+
+    for (i = 0; i < 5; i++)
+    {
+        CFE_TBL_NotifyByMessage(TblHandles[i], CFE_SB_ValueToMsgId(SC_CMD_MID), SC_MANAGE_TABLE_CC, params[i]);
+    }
+
+    for (i = 0; i < SC_NUMBER_OF_ATS; i++)
+    {
+        /* Register for ATS cmd status table manage request commands */
+        CFE_TBL_NotifyByMessage(SC_OperData.AtsCmdStatusHandle[i], CFE_SB_ValueToMsgId(SC_CMD_MID), SC_MANAGE_TABLE_CC,
+                                SC_TBL_ID_ATS_CMD_0 + i);
+
+        /* Register for ATS table manage request commands */
+        CFE_TBL_NotifyByMessage(SC_OperData.AtsTblHandle[i], CFE_SB_ValueToMsgId(SC_CMD_MID), SC_MANAGE_TABLE_CC,
+                                SC_TBL_ID_ATS_0 + i);
+    }
+
+    for (i = 0; i < SC_NUMBER_OF_RTS; i++)
+    {
+        /* Register for RTS table manage request commands */
+        CFE_TBL_NotifyByMessage(SC_OperData.RtsTblHandle[i], CFE_SB_ValueToMsgId(SC_CMD_MID), SC_MANAGE_TABLE_CC,
+                                SC_TBL_ID_RTS_0 + i);
+    }
+}
 ```
 
-## 항목
+### `sc_app.h`
 
-- [`fsw/apps/sc/fsw/src/sc_app.c`](file--sc_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_app.h`](file--sc_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_atsrq.c`](file--sc_atsrq.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_atsrq.h`](file--sc_atsrq.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_cmds.c`](file--sc_cmds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_cmds.h`](file--sc_cmds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_loads.c`](file--sc_loads.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_loads.h`](file--sc_loads.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_rtsrq.c`](file--sc_rtsrq.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_rtsrq.h`](file--sc_rtsrq.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_state.c`](file--sc_state.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_state.h`](file--sc_state.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_utils.c`](file--sc_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_utils.h`](file--sc_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_verify.h`](file--sc_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/src/sc_version.h`](file--sc_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sc/fsw/src/sc_app.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the Stored Command main event loop header
+ */
+#ifndef SC_APP_H
+#define SC_APP_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+
+#include "cfe.h"
+#include "sc_platform_cfg.h"
+#include "sc_tbldefs.h"
+#include "sc_msgdefs.h"
+#include "sc_msg.h"
+
+/**
+ * \brief Wakeup for SC
+ *
+ * \par Description
+ *      Wakes up SC every 1 second for routine maintenance whether a
+ *      message was received or not.
+ */
+#define SC_SB_TIMEOUT 1000
+
+/**
+ * \brief Main loop for SC
+ *
+ *  \par Description
+ *       This function is the entry point and main loop for the Stored
+ *       Commands (SC) application.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_AppMain(void);
+
+/**
+ * \brief Initialize application
+ *
+ *  \par Description
+ *       This function initializes the SC application. The return value
+ *       is either CFE_SUCCESS or the error code from the failed cFE
+ *       function call. Note that all errors generate an identifying
+ *       event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t SC_AppInit(void);
+
+/**
+ * \brief Initialize application tables
+ *
+ *  \par Description
+ *       This function initializes the SC application tables. The
+ *       return value is either CFE_SUCCESS or the error code from the
+ *       failed cFE function call. Note that all errors generate an
+ *       identifying event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t SC_InitTables(void);
+
+/**
+ * \brief Register tables with cFE Table Services
+ *
+ *  \par Description
+ *       This function registers all SC tables with cFE Table Services.
+ *       The return value is either CFE_SUCCESS or the error code from
+ *       the failed cFE function call. Note that all errors generate an
+ *       identifying event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t SC_RegisterAllTables(void);
+
+CFE_Status_t SC_RegisterDumpOnlyTables(void);
+
+CFE_Status_t SC_RegisterLoadableTables(void);
+
+/**
+ * \brief Get dump only table buffer pointers
+ *
+ *  \par Description
+ *       This function acquires buffer pointers to the dump only tables.
+ *       The return value is either CFE_SUCCESS or the error code from
+ *       the failed cFE function call. Note that all errors generate an
+ *       identifying event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t SC_GetDumpTablePointers(void);
+
+/**
+ * \brief Get loadable table buffer pointers
+ *
+ *  \par Description
+ *       This function acquires buffer pointers to the loadable tables.
+ *       The return value is either CFE_SUCCESS or the error code from
+ *       the failed cFE function call. Note that all errors generate an
+ *       identifying event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+CFE_Status_t SC_GetLoadTablePointers(void);
+
+/**
+ * \brief Load default RTS tables
+ *
+ *  \par Description
+ *       This function loads the default RTS tables. The return value
+ *       is either CFE_SUCCESS or the error code from the failed cFE
+ *       function call. Note that all errors generate an identifying
+ *       event message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_LoadDefaultTables(void);
+
+/**
+ * \brief Register to receive cFE Table Services manage request commands
+ *
+ *  \par Description
+ *       This function provides cFE Table Services with the information
+ *       necessary to send a notification command when one of the SC dump
+ *       only tables has a dump pending, or when one of the SC loadable
+ *       tables has a load pending.  Upon receipt of the command, the
+ *       command handler will call the cFE Table Services API function
+ *       to manage the table.  This sequence of events ensures that dump
+ *       tables are not being updated by SC at the same moment that the
+ *       dump occurs, and likewise, that loadable tables are not being
+ *       referenced by SC at the moment that the update occurs.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \sa #SC_TableManageCmd
+ */
+void SC_RegisterManageCmds(void);
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+#define SC_BYTES_IN_WORD 4 /**< \brief Number of bytes in "word" used to define table lengths */
+
+#define SC_ATS_BUFF_SIZE32    (SC_ATS_BUFF_SIZE / 2)    /**< \brief ATS buffer number of 32-bit elements */
+#define SC_RTS_BUFF_SIZE32    (SC_RTS_BUFF_SIZE / 2)    /**< \brief RTS buffer number of 32-bit elements */
+#define SC_APPEND_BUFF_SIZE32 (SC_APPEND_BUFF_SIZE / 2) /**< \brief Append buffer number of 32-bit elements */
+
+#define SC_ERROR -1 /**< \brief SC error return value */
+
+#define SC_CMD_PIPE_NAME "SC_CMD_PIPE" /**< \brief Command pipe name */
+
+/** \brief ATS header + minimum packet size in "words" */
+#define SC_ATS_HDR_WORDS ((SC_ATS_HEADER_SIZE + SC_PACKET_MIN_SIZE) / SC_BYTES_IN_WORD)
+
+/** \brief ATS header only size in "words" */
+#define SC_ATS_HDR_NOPKT_WORDS (SC_ATS_HEADER_SIZE / SC_BYTES_IN_WORD)
+
+/** \brief RTS header + minimum packet size in "words" */
+#define SC_RTS_HDR_WORDS ((SC_RTS_HEADER_SIZE + SC_PACKET_MIN_SIZE) / SC_BYTES_IN_WORD)
+
+/** \brief RTS header only size in "words" */
+#define SC_RTS_HDR_NOPKT_WORDS (SC_RTS_HEADER_SIZE / SC_BYTES_IN_WORD)
+
+#define SC_DUP_TEST_UNUSED -1 /**< \brief Unused marking for duplicate test */
+
+#define SC_INVALID_CMD_NUMBER 0xFFFF /**< \brief Invalid command number */
+
+#define SC_ROUND_UP_BYTES 3 /**< \brief Round up to word length (in bytes) */
+
+#define SC_BYTES_IN_ATS_APPEND_ENTRY 2 /**< \brief Bytes in an ATS append table entry */
+
+#define SC_ATS_CMD_NUM_TO_INDEX(num)   ((num)-1)     /**< \brief Convert ATS command number to index */
+#define SC_ATS_CMD_INDEX_TO_NUM(index) ((index) + 1) /**< \brief Convert ATS command index to number */
+#define SC_ATS_NUM_TO_INDEX(num)       ((num)-1)     /**< \brief Convert ATS table number to index */
+#define SC_ATS_INDEX_TO_NUM(index)     ((index) + 1) /**< \brief Convert ATS table index to number */
+#define SC_ATS_ID_TO_INDEX(id)         ((id)-1)      /**< \brief Convert ATS ID to index */
+#define SC_RTS_NUM_TO_INDEX(num)       ((num)-1)     /**< \brief Convert RTS table number to index */
+#define SC_RTS_INDEX_TO_NUM(index)     ((index) + 1) /**< \brief Convert RTS table index to number */
+#define SC_RTS_ID_TO_INDEX(id)         ((id)-1)      /**< \brief Convert RTS ID to index */
+#define SC_RTS_INDEX_TO_ID(index)      ((index) + 1) /**< \brief Convert RTS table index to ID */
+
+/**
+ *  \brief SC Operational Data Structure
+ *
+ *  This structure contains addresses and handles for loadable and dump-only tables
+ *  along with storage for the housekeeping packet.
+ */
+typedef struct
+{
+    CFE_SB_PipeId_t CmdPipe; /**< \brief Command pipe ID */
+
+    CFE_TBL_Handle_t AtsTblHandle[SC_NUMBER_OF_ATS]; /**< \brief Table handles for all ATS tables    */
+    uint32 *         AtsTblAddr[SC_NUMBER_OF_ATS];   /**< \brief Table Addresses for all ATS tables  */
+
+    CFE_TBL_Handle_t AppendTblHandle; /**< \brief Table handle for Append ATS table   */
+    uint32 *         AppendTblAddr;   /**< \brief Table Address for Append ATS table  */
+
+    CFE_TBL_Handle_t RtsTblHandle[SC_NUMBER_OF_RTS]; /**< \brief Table handles for all RTS tables    */
+    uint32 *         RtsTblAddr[SC_NUMBER_OF_RTS];   /**< \brief Table addresses for all RTS tables  */
+
+    CFE_TBL_Handle_t   AtsInfoHandle;  /**< \brief Table handle the for ATS Info Table */
+    SC_AtsInfoTable_t *AtsInfoTblAddr; /**< \brief Table address for the ATS Info Table*/
+
+    CFE_TBL_Handle_t   RtsInfoHandle;  /**< \brief Table handle for RTS Info Table     */
+    SC_RtsInfoEntry_t *RtsInfoTblAddr; /**< \brief Table address for RTS INfo Table    */
+
+    CFE_TBL_Handle_t      RtsCtrlBlckHandle; /**< \brief Table handle for the RTP ctrl block */
+    SC_RtpControlBlock_t *RtsCtrlBlckAddr;   /**< \brief Table address for the RTP ctrl block*/
+
+    CFE_TBL_Handle_t      AtsCtrlBlckHandle; /**< \brief Table handle for the ATP ctrl block */
+    SC_AtpControlBlock_t *AtsCtrlBlckAddr;   /**< \brief Table address for the ATP ctrl block*/
+
+    CFE_TBL_Handle_t AtsCmdStatusHandle[SC_NUMBER_OF_ATS];  /**< \brief ATS Cmd Status table handle     */
+    uint32 *         AtsCmdStatusTblAddr[SC_NUMBER_OF_ATS]; /**< \brief ATS Cmd Status table address    */
+
+    int32 AtsDupTestArray[SC_MAX_ATS_CMDS]; /**< \brief ATS test for duplicate cmd numbers  */
+
+    uint16 NumCmdsSec; /**< \brief the num of cmds that have gone out in a one second period */
+
+    SC_HkTlm_t HkPacket; /**< \brief SC Housekeeping structure */
+} SC_OperData_t;
+
+/**
+ *  \brief SC Application Data Structure
+ *  This structure is used by the application to process time ordered commands.
+ */
+typedef struct
+{
+    uint16 AtsTimeIndexBuffer[SC_NUMBER_OF_ATS][SC_MAX_ATS_CMDS];
+    /**< \brief  This table is used to keep a time ordered listing
+         of ATS command indexes (0 based). The first entry
+         in this table holds the command index of the command that will execute
+         first, the second entry has the index of the 2nd cmd, etc.. */
+
+    int32 AtsCmdIndexBuffer[SC_NUMBER_OF_ATS][SC_MAX_ATS_CMDS];
+    /**< \brief  This table is used to keep a list of ATS table command offsets.
+         These offsets correspond to the addresses of ATS commands located in the ATS table.
+         The index used is the ATS command index with values from 0 to SC_MAX_ATS_CMDS-1 */
+
+    uint8           NextProcNumber;  /**< \brief the next command processor number */
+    SC_AbsTimeTag_t NextCmdTime[2];  /**< \brief The overall next command time  0 - ATP, 1- RTP*/
+    SC_AbsTimeTag_t CurrentTime;     /**< \brief this is the current time for SC */
+    uint16          Unused;          /**< \brief Unused */
+    uint16          AutoStartRTS;    /**< \brief Start selected auto-exec RTS after init */
+    uint16          AppendWordCount; /**< \brief Size of cmd entries in current Append ATS table */
+} SC_AppData_t;
+
+/************************************************************************
+ * Exported Data
+ ************************************************************************/
+extern SC_AppData_t  SC_AppData;
+extern SC_OperData_t SC_OperData;
+
+#endif
+```
+
+### `sc_atsrq.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_atsrq.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *     This file contains functions to handle all of the ATS
+ *     executive requests and internal reuqests to control
+ *     the ATP and ATSs.
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_atsrq.h"
+#include "sc_loads.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+
+/**************************************************************************
+ **
+ ** Functions
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Starts an ATS                                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StartAtsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    uint16 AtsId;    /* ATS ID */
+    uint16 AtsIndex; /* ATS array index */
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_StartAtsCmd_t)))
+    {
+        AtsId = ((SC_StartAtsCmd_t *)BufPtr)->AtsId;
+
+        /* validate ATS ID */
+        if ((AtsId > 0) && (AtsId <= SC_NUMBER_OF_ATS))
+        {
+            /* convert ATS ID to array index */
+            AtsIndex = SC_ATS_ID_TO_INDEX(AtsId);
+
+            /* make sure that there is no ATS running on the ATP */
+            if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_IDLE)
+            {
+                /* make sure the specified ATS is ready */
+                if (SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands > 0)
+                {
+                    /* start the ats */
+                    if (SC_BeginAts(AtsIndex, 0))
+                    {
+                        /* finish the ATP control block .. */
+                        SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+                        /* increment the command request counter */
+                        SC_OperData.HkPacket.CmdCtr++;
+
+                        CFE_EVS_SendEvent(SC_STARTATS_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                          "ATS %c Execution Started", (AtsIndex ? 'B' : 'A'));
+                    }
+                    else
+                    { /* could not start the ats, all commands were skipped */
+                        /* event message was sent from SC_BeginAts */
+                        /* increment the command request error counter */
+                        /* SC_OperData.AtsCtrlBlckAddr->AtpState is updated in SC_KillAts */
+                        SC_OperData.HkPacket.CmdErrCtr++;
+
+                    } /* end if */
+                }
+                else
+                { /* the ats didn't have any commands in it */
+
+                    CFE_EVS_SendEvent(SC_STARTATS_CMD_NOT_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Start ATS Rejected: ATS %c Not Loaded", (AtsIndex ? 'B' : 'A'));
+
+                    /* increment the command request error counter */
+                    SC_OperData.HkPacket.CmdErrCtr++;
+
+                } /* end if */
+            }
+            else
+            { /* the ATS is being used */
+
+                CFE_EVS_SendEvent(SC_STARTATS_CMD_NOT_IDLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Start ATS Rejected: ATP is not Idle");
+                /* increment the command request error counter */
+                SC_OperData.HkPacket.CmdErrCtr++;
+
+            } /* end if */
+        }
+        else
+        { /* the specified ATS id is not valid */
+
+            CFE_EVS_SendEvent(SC_STARTATS_CMD_INVLD_ID_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Start ATS %d Rejected: Invalid ATS ID", AtsId);
+
+            /* increment the command request error counter */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+        } /* end if */
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*   Stop the currently executing ATS                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StopAtsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    char  TempAtsChar = ' ';
+    int32 Result      = SC_ERROR;
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_NoArgsCmd_t)))
+    {
+        /*
+         ** Set the temp ATS ID if it is valid
+         */
+        if (SC_OperData.AtsCtrlBlckAddr->AtsNumber == SC_ATSA)
+        {
+            TempAtsChar = 'A';
+            Result      = CFE_SUCCESS;
+        }
+        else
+        {
+            if (SC_OperData.AtsCtrlBlckAddr->AtsNumber == SC_ATSB)
+            {
+                TempAtsChar = 'B';
+                Result      = CFE_SUCCESS;
+            }
+        }
+
+        if (Result == CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(SC_STOPATS_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "ATS %c stopped", TempAtsChar);
+        }
+        else
+        {
+            CFE_EVS_SendEvent(SC_STOPATS_NO_ATS_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "There is no ATS running to stop");
+        }
+
+        /* Stop the ATS from executing */
+        SC_KillAts();
+
+        /* clear the global switch pend flag */
+        SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+        SC_OperData.HkPacket.CmdCtr++;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Function for starting an ATS                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool SC_BeginAts(uint16 AtsIndex, uint16 TimeOffset)
+{
+    SC_AtsEntryHeader_t *Entry;           /* ATS table entry pointer */
+    int32                EntryIndex;      /* ATS entry location in table */
+    SC_AbsTimeTag_t      ListCmdTime = 0; /* list entry execution time */
+    int32                TimeIndex;       /* the current time buffer index */
+    int32                CmdIndex;        /* ATS command index (cmd num - 1) */
+    bool                 ReturnCode;
+    SC_AbsTimeTag_t      TimeToStartAts; /* the REAL time to start the ATS */
+    uint16               CmdsSkipped = 0;
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_BEGINATS_INVLD_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Begin ATS error: invalid ATS index %d", AtsIndex);
+        return false;
+    }
+
+    TimeToStartAts = SC_ComputeAbsTime(TimeOffset);
+
+    /*
+     ** Loop through the commands until a time tag is found that
+     ** has a time greater than or equal to the current time OR
+     ** all of the commands have been skipped
+     */
+    TimeIndex = 0; /* pointer into the time index table */
+
+    while (TimeIndex < SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands)
+    {
+        /* first get the cmd index at this list entry */
+        CmdIndex = SC_ATS_CMD_NUM_TO_INDEX(SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeIndex]);
+        /* then get the entry index from the cmd index table */
+        EntryIndex = SC_AppData.AtsCmdIndexBuffer[AtsIndex][CmdIndex];
+        /* then get a pointer to the ATS entry data */
+        Entry = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+        /* then get cmd execution time from the ATS entry */
+        ListCmdTime = SC_GetAtsEntryTime(Entry);
+
+        /* compare ATS start time to this list entry time */
+        if (SC_CompareAbsTime(TimeToStartAts, ListCmdTime))
+        {
+            /* start time is greater than this list entry time */
+
+            SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_SKIPPED;
+            CmdsSkipped++;
+            TimeIndex++;
+        }
+        else
+        {
+            /* start time is less than or equal to this list entry */
+            break;
+        }
+    }
+
+    /*
+     ** Check to see if the whole ATS was skipped
+     */
+    if (TimeIndex == SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands)
+    {
+        CFE_EVS_SendEvent(SC_ATS_SKP_ALL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "All ATS commands were skipped, ATS stopped");
+
+        /* stop the ats */
+        SC_KillAts();
+
+        ReturnCode = false;
+    }
+    else
+    { /* there is at least one command to execute */
+
+        /*
+         ** Initialize the ATP Control Block.
+         */
+        /* leave the atp state alone, it will be updated by the caller */
+        SC_OperData.AtsCtrlBlckAddr->AtsNumber    = SC_ATS_INDEX_TO_NUM(AtsIndex);
+        SC_OperData.AtsCtrlBlckAddr->CmdNumber    = SC_ATS_CMD_INDEX_TO_NUM(CmdIndex);
+        SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr = TimeIndex;
+
+        /* send an event for number of commands skipped */
+        CFE_EVS_SendEvent(SC_ATS_ERR_SKP_DBG_EID, CFE_EVS_EventType_DEBUG, "ATS started, skipped %d commands",
+                          CmdsSkipped);
+        /*
+         ** Set the next command time for the ATP
+         */
+        SC_AppData.NextCmdTime[SC_ATP] = ListCmdTime;
+
+        ReturnCode = true;
+
+    } /* end if */
+
+    return (ReturnCode);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Function for stopping the running ATS  & clearing data         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_KillAts(void)
+{
+    if (SC_OperData.AtsCtrlBlckAddr->AtpState != SC_IDLE)
+    {
+        /* Increment the ats use counter */
+        SC_OperData.AtsInfoTblAddr[SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber)].AtsUseCtr++;
+    }
+    /*
+     ** Reset the state in the atp control block
+     */
+    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_IDLE;
+
+    /* reset the time of the next ats command */
+    SC_AppData.NextCmdTime[SC_ATP] = SC_MAX_TIME;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process an ATS Switch                                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_GroundSwitchCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    uint16 NewAtsIndex; /* the index of the ats to switch to*/
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_NoArgsCmd_t)))
+    {
+        /* make sure that an ATS is running on the ATP */
+        if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING)
+        {
+            /* get the ATS to switch to */
+            NewAtsIndex = SC_ToggleAtsIndex();
+
+            /* Now check to see if the new ATS has commands in it */
+            if (SC_OperData.AtsInfoTblAddr[NewAtsIndex].NumberOfCommands > 0)
+            {
+                /* set the global switch pend flag */
+                SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = true;
+
+                /* update the command counter */
+                SC_OperData.HkPacket.CmdCtr++;
+
+                CFE_EVS_SendEvent(SC_SWITCH_ATS_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "Switch ATS is Pending");
+            }
+            else
+            { /* the other ATS does not have any commands in it */
+
+                CFE_EVS_SendEvent(SC_SWITCH_ATS_CMD_NOT_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Switch ATS Failure: Destination ATS Not Loaded");
+
+                /* update command error counter */
+                SC_OperData.HkPacket.CmdErrCtr++;
+
+                SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+            } /* end if */
+        }
+        else
+        { /* the ATP is not currently executing any commands */
+
+            CFE_EVS_SendEvent(SC_SWITCH_ATS_CMD_IDLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Switch ATS Rejected: ATP is idle");
+
+            /* update the command error counter */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+        } /* end if */
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Function for switching ATS's when each have commands in to      */
+/* execute in the same second.                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ServiceSwitchPend(void)
+{
+    uint16 NewAtsIndex; /* the ats index that we are switching to */
+    uint16 OldAtsIndex; /* the ats index we are switching from */
+
+    /*
+     **  See if it is time to switch the ATS
+     */
+    if (SC_CompareAbsTime(SC_AppData.NextCmdTime[SC_ATP], SC_AppData.CurrentTime))
+    {
+        /* make sure that an ATS is still running on the ATP */
+        if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING)
+        {
+            /* get the ATS number to switch to and from */
+            OldAtsIndex = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber);
+            NewAtsIndex = SC_ToggleAtsIndex();
+
+            /* Now check to see if the new ATS has commands in it */
+            if (SC_OperData.AtsInfoTblAddr[NewAtsIndex].NumberOfCommands > 0)
+            {
+                /* stop the current ATS */
+                SC_KillAts();
+
+                /*
+                 ** Start the new ATS: Notice that we are starting the new
+                 ** ATS with a one second offset from the current second,
+                 ** This prevents commands that were executed the same
+                 ** second that this command was received from being repeated.
+                 */
+                if (SC_BeginAts(NewAtsIndex, 1))
+                {
+                    SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+                    CFE_EVS_SendEvent(SC_ATS_SERVICE_SWTCH_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "ATS Switched from %c to %c", (OldAtsIndex ? 'B' : 'A'),
+                                      (NewAtsIndex ? 'B' : 'A'));
+
+                } /* end if */
+            }
+            else
+            { /* the other ATS does not have any commands in it */
+
+                CFE_EVS_SendEvent(SC_SERVICE_SWITCH_ATS_CMD_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Switch ATS Failure: Destination ATS is empty");
+            } /* end if */
+        }
+        else
+        { /* the ATP is not currently executing any commands */
+            /* this should only happen if the switch flag gets */
+            /* corrupted some how                              */
+
+            CFE_EVS_SendEvent(SC_ATS_SERVICE_SWITCH_IDLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Switch ATS Rejected: ATP is idle");
+        } /* end if */
+
+        /* in any case, this flag will need to be cleared */
+        SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+    } /* end if */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Switches from one ATS to the other when there are no commands   */
+/* to be executed in the same second of the switch                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool SC_InlineSwitch(void)
+{
+    uint16 NewAtsIndex; /* the index of the ats to switch to*/
+    uint16 OldAtsIndex; /* the index of the ats to switch from*/
+    bool   ReturnCode;  /* return code for function */
+
+    /* figure out which ATS to switch to */
+    NewAtsIndex = SC_ToggleAtsIndex();
+
+    /* Save the ATS number to switch FROM */
+    OldAtsIndex = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber);
+
+    /* Now check to see if the new ATS has commands in it */
+    if (SC_OperData.AtsInfoTblAddr[NewAtsIndex].NumberOfCommands > 0)
+    {
+        /*
+         ** Stop the current ATS
+         */
+        SC_KillAts();
+
+        /*
+         ** Start up the other ATS
+         */
+        if (SC_BeginAts(NewAtsIndex, 0))
+        {
+            SC_OperData.AtsCtrlBlckAddr->AtpState = SC_STARTING;
+
+            CFE_EVS_SendEvent(SC_ATS_INLINE_SWTCH_INF_EID, CFE_EVS_EventType_INFORMATION, "ATS Switched from %c to %c",
+                              (OldAtsIndex ? 'B' : 'A'), (NewAtsIndex ? 'B' : 'A'));
+
+            /*
+             **  Update the command counter and return code
+             */
+            SC_OperData.HkPacket.CmdCtr++;
+            ReturnCode = true;
+        }
+        else
+        { /* all of the commands in the new ats were skipped */
+
+            /*
+             ** update the command error counter
+             */
+            SC_OperData.HkPacket.CmdErrCtr++;
+            ReturnCode = false;
+
+        } /* end if */
+    }
+    else
+    { /* the other ATS does not have any commands in it */
+        CFE_EVS_SendEvent(SC_ATS_INLINE_SWTCH_NOT_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Switch ATS Failure: Destination ATS Not Loaded");
+        /*
+         ** update the ATS error counter
+         */
+        SC_OperData.HkPacket.CmdErrCtr++;
+        ReturnCode = false;
+
+    } /* end if */
+
+    /* clear out the global ground-switch pend flag */
+    SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+    return (ReturnCode);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Jump an ATS forward in time                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_JumpAtsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    SC_AtsEntryHeader_t *Entry;       /* ATS table entry pointer */
+    int32                EntryIndex;  /* ATS entry location in table */
+    SC_AbsTimeTag_t      JumpTime;    /* the time to jump to in the ATS */
+    SC_AbsTimeTag_t      ListCmdTime; /* list entry execution time */
+    uint16               AtsIndex;    /* index of the ATS that is running */
+    int32                TimeIndex;   /* the current time buffer index */
+    int32                CmdIndex;    /* ATS command index (cmd num - 1) */
+    char                 TimeBuffer[CFE_TIME_PRINTED_STRING_SIZE];
+    CFE_TIME_SysTime_t   NewTime;
+    uint16               NumSkipped;
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_JumpAtsCmd_t)))
+    {
+        if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING)
+        {
+            JumpTime = ((SC_JumpAtsCmd_t *)BufPtr)->NewTime;
+            AtsIndex = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber);
+
+            /*
+             ** Loop through the commands until a time tag is found
+             ** that has a time greater than or equal to the current time OR
+             ** all of the commands have been skipped
+             */
+            TimeIndex  = 0;
+            NumSkipped = 0;
+
+            while (TimeIndex < SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands)
+            {
+                /* first get the cmd index at this list entry */
+                CmdIndex = SC_ATS_CMD_NUM_TO_INDEX(SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeIndex]);
+                /* then get the entry index from the cmd index table */
+                EntryIndex = SC_AppData.AtsCmdIndexBuffer[AtsIndex][CmdIndex];
+                /* then get a pointer to the ATS entry data */
+                Entry = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+                /* then get cmd execution time from the ATS entry */
+                ListCmdTime = SC_GetAtsEntryTime(Entry);
+
+                /* compare ATS jump time to this list entry time */
+                if (SC_CompareAbsTime(JumpTime, ListCmdTime))
+                {
+                    /* jump time is greater than this list entry time */
+
+                    /*
+                    ** If the ATS command is loaded and ready to run, then
+                    **  mark the command as being skipped
+                    **  if the command has any other status, SC_SKIPPED, SC_EXECUTED,
+                    **   etc, then leave the status alone.
+                    */
+                    if (SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] == SC_LOADED)
+                    {
+                        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_SKIPPED;
+                        NumSkipped++;
+                    }
+
+                    TimeIndex++;
+                }
+                else
+                {
+                    /* jump time is less than or equal to this list entry */
+                    CFE_EVS_SendEvent(SC_JUMPATS_CMD_LIST_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "Jump Cmd: Jump time less than or equal to list entry %d", CmdIndex);
+                    break;
+                }
+            }
+
+            /*
+             ** Check to see if the whole ATS was skipped
+             */
+            if (TimeIndex == SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands)
+            {
+                CFE_EVS_SendEvent(SC_JUMPATS_CMD_STOPPED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Jump Cmd: All ATS commands were skipped, ATS stopped");
+
+                SC_OperData.HkPacket.CmdErrCtr++;
+
+                /* stop the ats */
+                SC_KillAts();
+            }
+            else
+            { /* there is at least one command to execute */
+
+                /*
+                 ** Update the ATP Control Block entries.
+                 */
+                SC_OperData.AtsCtrlBlckAddr->CmdNumber    = SC_ATS_CMD_INDEX_TO_NUM(CmdIndex);
+                SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr = TimeIndex;
+
+                /*
+                 ** Set the next command time for the ATP
+                 */
+                SC_AppData.NextCmdTime[SC_ATP] = ListCmdTime;
+
+                SC_OperData.HkPacket.CmdCtr++;
+
+                /* print out the date in a readable format */
+                NewTime.Seconds    = ListCmdTime;
+                NewTime.Subseconds = 0;
+
+                CFE_TIME_Print((char *)&TimeBuffer, NewTime);
+
+                CFE_EVS_SendEvent(SC_JUMP_ATS_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Next ATS command time in the ATP was set to %s", TimeBuffer);
+                if (NumSkipped > 0)
+                {
+                    /* We skipped come commands, but not all of them */
+                    CFE_EVS_SendEvent(SC_JUMP_ATS_SKIPPED_DBG_EID, CFE_EVS_EventType_DEBUG,
+                                      "Jump Cmd: Skipped %d ATS commands", NumSkipped);
+                }
+
+            } /* end if */
+        }
+        else
+        { /*  There is not a running ATS */
+
+            CFE_EVS_SendEvent(SC_JUMPATS_CMD_NOT_ACT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS Jump Failed: No active ATS");
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+        } /* end if */
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Continue ATS on Checksum Failure Cmd                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ContinueAtsOnFailureCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    uint16 State;
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_SetContinueAtsOnFailureCmd_t)))
+    {
+        State = ((SC_SetContinueAtsOnFailureCmd_t *)BufPtr)->ContinueState;
+
+        if (State != SC_CONTINUE_TRUE && State != SC_CONTINUE_FALSE)
+        {
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            CFE_EVS_SendEvent(SC_CONT_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Continue ATS On Failure command  failed, invalid state: %d", State);
+        }
+        else
+        {
+            SC_OperData.HkPacket.ContinueAtsOnFailureFlag = State;
+
+            SC_OperData.HkPacket.CmdCtr++;
+
+            CFE_EVS_SendEvent(SC_CONT_CMD_DEB_EID, CFE_EVS_EventType_DEBUG,
+                              "Continue-ATS-On-Failure command, State: %d", State);
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Append to selected ATS                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_AppendAtsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    SC_AppendAtsCmd_t *AppendCmd = (SC_AppendAtsCmd_t *)BufPtr;
+    uint16             AtsIndex; /* index (not ID) of target ATS */
+
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_AppendAtsCmd_t)))
+    {
+        if ((AppendCmd->AtsId == 0) || (AppendCmd->AtsId > SC_NUMBER_OF_ATS))
+        {
+            /* invalid target ATS selection */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            CFE_EVS_SendEvent(SC_APPEND_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Append ATS error: invalid ATS ID = %d", AppendCmd->AtsId);
+
+            return;
+        }
+
+        /* create base zero array index from base one ID value */
+        AtsIndex = SC_ATS_ID_TO_INDEX(AppendCmd->AtsId);
+
+        if (SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands == 0)
+        {
+            /* target ATS table is empty */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            CFE_EVS_SendEvent(SC_APPEND_CMD_TGT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Append ATS %c error: ATS table is empty", 'A' + AtsIndex);
+        }
+        else if (SC_OperData.HkPacket.AppendEntryCount == 0)
+        {
+            /* append table is empty */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            CFE_EVS_SendEvent(SC_APPEND_CMD_SRC_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Append ATS %c error: Append table is empty", 'A' + AtsIndex);
+        }
+        else if ((SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize + SC_AppData.AppendWordCount) > SC_ATS_BUFF_SIZE32)
+        {
+            /* not enough room in ATS buffer for Append table data */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+            CFE_EVS_SendEvent(SC_APPEND_CMD_FIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Append ATS %c error: ATS size = %d, Append size = %d, ATS buffer = %d", 'A' + AtsIndex,
+                              (int)SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize, SC_AppData.AppendWordCount,
+                              SC_ATS_BUFF_SIZE32);
+        }
+        else
+        {
+            /* store ATS selection from most recent ATS Append command */
+            SC_OperData.HkPacket.AppendCmdArg = AppendCmd->AtsId;
+
+            /* copy append data and re-calc timing data */
+            SC_ProcessAppend(AtsIndex);
+
+            /* increment command success counter */
+            SC_OperData.HkPacket.CmdCtr++;
+
+            CFE_EVS_SendEvent(SC_APPEND_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Append ATS %c command: %d ATS entries appended", 'A' + AtsIndex,
+                              SC_OperData.HkPacket.AppendEntryCount);
+        }
+    }
+}
+```
+
+### `sc_atsrq.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_atsrq.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains header for the functions to handle all of the ATS
+ *   executive requests and internal reuqests to control
+ *   the ATP and ATSs.
+ */
+#ifndef SC_ATSRQ_H
+#define SC_ATSRQ_H
+
+#include "cfe.h"
+
+/**
+ * \brief Starts an ATS
+ *
+ *  \par Description
+ *         This function starts an ATS by finding the first ATS command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] AtsIndex   The Ats to begin
+ *  \param[in] TimeOffset Where to start in the ATS
+ *
+ *  \return Boolean execution status
+ *  \retval true  ATS was started
+ *  \retval false ATS was NOT started
+ */
+bool SC_BeginAts(uint16 AtsIndex, uint16 TimeOffset);
+
+/**
+ * \brief  Start an ATS Command
+ *
+ *  \par Description
+ *         This function starts an ATS on the ATP. This routine does
+ *         not actually execute any commands, it simply sets up all
+ *         of the data structures to indicate that the specified ATS
+ *         is now running. This function also does all of the parameter
+ *         checking.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_START_ATS_CC
+ */
+void SC_StartAtsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Stop the executing ATS Command
+ *
+ *  \par Description
+ *            This routine stops an ATS from executing on the ATP.
+ *            This routine will execute even if an ATS is not currently
+ *            executing in the buffer.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_STOP_ATS_CC
+ */
+void SC_StopAtsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Stops an ATS & clears out data
+ *
+ *  \par Description
+ *         This is a generic routine that is used to clear out the
+ *            ATP information to stop an ATS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_KillAts(void);
+
+/**
+ * \brief  Switch the ATS Command
+ *
+ *  \par Description
+ *         This function initiates an ATS switch. An ATS switch cannot be
+ *         immediatly started when the command is received because of the
+ *         risk of sending out duplicate commands in the new buffer.
+ *         (if buffer A has executed 3 of the 5 commands for second N, and
+ *         the switch command is recvd at second N, the switch would
+ *         happen in the same second, causing buffer B to execute all
+ *         5 commands in second N , assuming that the buffers had
+ *         an overlap of duplicate commands.)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_SWITCH_ATS_CC
+ */
+void SC_GroundSwitchCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief
+ *
+ *  \par Description
+ *         This routine is called when the ATS IN-LINE request SWITCH
+ *         ATS is encountered. This routine stops the current ATS from
+ *         executing and starts the 'other' one. It is assumed that there
+ *         is an ATS running because this command is only valid as an
+ *         IN-LINE ATS request.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Boolean execution status
+ *  \retval true   Switch was successful
+ *  \retval false  Switch was NOT successful
+ */
+bool SC_InlineSwitch(void);
+
+/**
+ * \brief Switches ATS's at a safe time
+ *
+ *  \par Description
+ *       This function does the ATS switch when it is determined that
+ *       the switch is "safe". When the switch request was made, the
+ *       switch pend flag was set. After every scheduling of the SCP,
+ *       the switch pend flag is checked. If the switch pend flag is
+ *       set, this routine is called. This routine checks to see that
+ *       the current time is one second past the time to start the
+ *       new ATS. If it is the correct time, then the switch is performed.
+ *       All of this has the effect of creating a syncronized switch of
+ *       the ATS buffers, assuring that no duplicate commands are sent.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_ServiceSwitchPend(void);
+
+/**
+ * \brief Jump time in an ATS Command
+ *
+ *  \par Description
+ *         This command is used to jump to a specified time in the
+ *         currently running ATS. The jump command will effectively
+ *         restart the ATS at the time given in the command. Because
+ *         there is no restriction on the time given in the command,
+ *         the ATP may try to restart the ATS at any time before or
+ *         after the current time. In the case of the time tag being
+ *         before the current time, ( a backwards jump ) the ATP will
+ *         simply skip the commands that have been executed ( or failed
+ *         execution ) and end up at the same location as before. In the
+ *         case of the jump time being after the current time, the ATP
+ *         will skip all commands with time tags less than the jump time
+ *         and start executing the ATS at the time equal to the jump
+ *         time. If there are no commands with time tags equal to the
+ *         jump time, the ATP will set up the ATS to wait for the first
+ *         command after the jump time. When a command is skipped while
+ *         doing the jump, the command's status is marked as SKIPPED unless
+ *         it has already been marked as EXECUTED, FAILED_DISTRIBUTION,
+ *         or FAILED_CHECKSUM.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_JUMP_ATS_CC
+ */
+void SC_JumpAtsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Lets an ATS continue if a command failed the checksum
+ *
+ *  \par Description
+ *         This routine sets whether or not to let an ATS continue when
+ *         one of the commands in the ATS fails a checksum validation
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_CONTINUE_ATS_ON_FAILURE_CC
+ */
+void SC_ContinueAtsOnFailureCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief  Append to an ATS Command
+ *
+ *  \par Description
+ *         This function adds the contents of the Append ATS table to
+ *         the selected ATS.  The ATS is then re-sorted for command
+ *         execution order.  This command may target an ATS that is
+ *         currently active (executing).  This command will not change
+ *         the ATS execution state.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_APPEND_ATS_CC
+ */
+void SC_AppendAtsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+#endif
+```
+
+### `sc_cmds.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_cmds.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the functions to handle processing of ground
+ *   command requests, housekeeping requests, and table updates
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "cfe_tbl_msg.h"
+#include "sc_app.h"
+#include "sc_cmds.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_loads.h"
+#include "sc_utils.h"
+#include "sc_state.h"
+#include "sc_msgids.h"
+#include "sc_events.h"
+#include "sc_version.h"
+#include "sc_rts.h"
+
+/**************************************************************************
+ **
+ ** Functions
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Processes a command from the ATS                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ProcessAtpCmd(void)
+{
+    int32             EntryIndex; /* ATS entry location in table */
+    uint8             AtsIndex;   /* ATS selection index */
+    uint32            CmdIndex;   /* ATS command index */
+    char              TempAtsChar;
+    CFE_Status_t      Result;
+    bool              AbortATS = false;
+    SC_AtsEntry_t *   EntryPtr;
+    CFE_SB_MsgId_t    MessageID     = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode   = 0;
+    bool              ChecksumValid = 0;
+
+    /*
+     ** The following conditions must be met before the ATS command will be
+     ** executed:
+     ** 1.) The next time is <= the current time
+     ** 2.) The next processor number = ATP
+     ** 3.) The atp is currently EXECUTING
+     */
+
+    if ((!SC_CompareAbsTime(SC_AppData.NextCmdTime[SC_ATP], SC_AppData.CurrentTime)) &&
+        (SC_AppData.NextProcNumber == SC_ATP) && (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING))
+    {
+        /*
+         ** Get a pointer to the next ats command
+         */
+        AtsIndex   = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber); /* remember 0..1 */
+        CmdIndex   = SC_ATS_CMD_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->CmdNumber);
+        EntryIndex = SC_AppData.AtsCmdIndexBuffer[AtsIndex][CmdIndex];
+        EntryPtr   = (SC_AtsEntry_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+
+        /*
+         ** Make sure the command has not been executed, skipped or has any other bad status
+         */
+        if (SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] == SC_LOADED)
+        {
+            /*
+             ** Make sure the command number matches what the command
+             ** number is supposed to be
+             */
+            if (EntryPtr->Header.CmdNumber == (SC_ATS_CMD_INDEX_TO_NUM(CmdIndex)))
+            {
+                /*
+                 ** Check the checksum on the command
+                 **
+                 */
+                CFE_MSG_ValidateChecksum(&EntryPtr->Msg, &ChecksumValid);
+                if (true) //(ChecksumValid == true)
+                {
+                    /*
+                     ** Count the command for the rate limiter
+                     */
+                    SC_OperData.NumCmdsSec++;
+
+                    /*
+                     **  First check to see if the command is a switch command,
+                     **  if it is, then execute the command now instead of sending
+                     **  it out on the Software Bus (this is the only exception to
+                     **  way stored commands are sent out).
+                     **  A switch command located within an ATS is handled differently
+                     **  than a switch command by the ground controller. If the switch
+                     **  command is by the ground controller, SC waits until the next
+                     **  second to prevent overlapping of two ATSs from duplicating
+                     **  commands. If the Switch command is located within an ATS,
+                     **  SC immediately executes the switch command.
+                     */
+
+                    CFE_MSG_GetMsgId(&EntryPtr->Msg, &MessageID);
+                    CFE_MSG_GetFcnCode(&EntryPtr->Msg, &CommandCode);
+
+                    if (CFE_SB_MsgIdToValue(MessageID) == SC_CMD_MID && CommandCode == SC_SWITCH_ATS_CC)
+                    {
+                        /*
+                         ** call the ground switch module
+                         */
+                        if (SC_InlineSwitch())
+                        {
+                            /*
+                             ** Increment the counter and update the status for
+                             ** this command
+                             */
+                            SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_EXECUTED;
+                            SC_OperData.HkPacket.AtsCmdCtr++;
+                        }
+                        else
+                        { /* the switch failed for some reason */
+
+                            SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_FAILED_DISTRIB;
+                            SC_OperData.HkPacket.AtsCmdErrCtr++;
+                            SC_OperData.HkPacket.LastAtsErrSeq = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+                            SC_OperData.HkPacket.LastAtsErrCmd = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+
+                        } /* end if */
+                    }
+                    else
+                    {
+                        Result = CFE_SB_TransmitMsg(&EntryPtr->Msg, true);
+
+                        if (Result == CFE_SUCCESS)
+                        {
+                            /* The command sent OK */
+                            SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_EXECUTED;
+                            SC_OperData.HkPacket.AtsCmdCtr++;
+                        }
+                        else
+                        { /* the command had Software Bus problems */
+                            SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_FAILED_DISTRIB;
+                            SC_OperData.HkPacket.AtsCmdErrCtr++;
+                            SC_OperData.HkPacket.LastAtsErrSeq = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+                            SC_OperData.HkPacket.LastAtsErrCmd = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+
+                            CFE_EVS_SendEvent(SC_ATS_DIST_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "ATS Command Distribution Failed, Cmd Number: %d, SB returned: 0x%08X",
+                                              EntryPtr->Header.CmdNumber, (unsigned int)Result);
+
+                            /* Mark this ATS for abortion */
+                            AbortATS = true;
+                        }
+                    }
+                }
+                else
+                { /* the checksum failed */
+                    /*
+                     ** Send an event message to report the invalid command status
+                     */
+                    CFE_EVS_SendEvent(SC_ATS_CHKSUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "ATS Command Failed Checksum: Command #%d Skipped", EntryPtr->Header.CmdNumber);
+                    /*
+                     ** Increment the ATS error counter
+                     */
+                    SC_OperData.HkPacket.AtsCmdErrCtr++;
+
+                    /*
+                     ** Update the last ATS error information structure
+                     */
+                    SC_OperData.HkPacket.LastAtsErrSeq = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+                    SC_OperData.HkPacket.LastAtsErrCmd = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+
+                    /* update the command status index table */
+                    SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_FAILED_CHECKSUM;
+
+                    if (SC_OperData.HkPacket.ContinueAtsOnFailureFlag == false)
+                    {
+                        /* Mark this ATS for abortion */
+                        AbortATS = true;
+                    }
+                } /* end checksum test */
+            }
+            else
+            { /* the command number does not match */
+                /*
+                 ** Send an event message to report the invalid command status
+                 */
+
+                CFE_EVS_SendEvent(SC_ATS_MSMTCH_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "ATS Command Number Mismatch: Command Skipped, expected: %d received: %d",
+                                  (int)SC_ATS_CMD_INDEX_TO_NUM(CmdIndex), EntryPtr->Header.CmdNumber);
+                /*
+                 ** Increment the ATS error counter
+                 */
+                SC_OperData.HkPacket.AtsCmdErrCtr++;
+
+                /*
+                 ** Update the last ATS error information structure
+                 */
+                SC_OperData.HkPacket.LastAtsErrSeq = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+                SC_OperData.HkPacket.LastAtsErrCmd = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+
+                /* update the command status index table */
+                SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_SKIPPED;
+
+                /* Mark this ATS for abortion */
+                AbortATS = true;
+            } /* end if  the command number does not match */
+        }
+        else /* command isn't marked as loaded */
+        {
+            /*
+             ** Send an event message to report the invalid command status
+             */
+            CFE_EVS_SendEvent(SC_ATS_SKP_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid ATS Command Status: Command Skipped, Status: %d",
+                              SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex]);
+            /*
+             ** Increment the ATS error counter
+             */
+            SC_OperData.HkPacket.AtsCmdErrCtr++;
+
+            /*
+             ** Update the last ATS error information structure
+             */
+            SC_OperData.HkPacket.LastAtsErrSeq = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+            SC_OperData.HkPacket.LastAtsErrCmd = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+
+            /* Do Not Mark this ATS for abortion. The command could be marked as EXECUTED
+               if we alerady jumped back in time */
+
+        } /* end if */
+
+        if (AbortATS == true)
+        {
+            if (SC_OperData.AtsCtrlBlckAddr->AtsNumber == SC_ATSA)
+            {
+                TempAtsChar = 'A';
+            }
+            else
+            {
+                TempAtsChar = 'B';
+            }
+
+            CFE_EVS_SendEvent(SC_ATS_ABT_ERR_EID, CFE_EVS_EventType_ERROR, "ATS %c Aborted", TempAtsChar);
+
+            /* Stop the ATS from executing */
+            SC_KillAts();
+            SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+        }
+        else
+        {
+            /*
+            ** Get the next ATS command set up to execute
+            */
+            SC_GetNextAtsCommand();
+        }
+
+    } /* end if next ATS command time */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Processes a command from an RTS                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_ProcessRtpCommand(void)
+{
+    SC_RtsEntry_t *EntryPtr;  /* a pointer to an RTS entry header */
+    uint16         RtsIndex;  /* the RTS index for the cmd */
+    uint16         CmdOffset; /* the location of the cmd    */
+    CFE_Status_t   Result;
+    bool           ChecksumValid = false;
+
+    /*
+     ** The following conditions must be met before a RTS command is executed:
+     ** 1.) The next command time must be <= the current time
+     ** 2.) The next processor number must be SC_RTP
+     ** 3.) The RTS number in the RTP control block must be valid and
+     ** 4.) the RTS must be EXECUTING
+     */
+
+    if ((SC_AppData.NextCmdTime[SC_AppData.NextProcNumber] <= SC_AppData.CurrentTime) &&
+        (SC_AppData.NextProcNumber == SC_RTP) && (SC_OperData.RtsCtrlBlckAddr->RtsNumber > 0) &&
+        (SC_OperData.RtsCtrlBlckAddr->RtsNumber <= SC_NUMBER_OF_RTS) &&
+        (SC_OperData.RtsInfoTblAddr[SC_RTS_NUM_TO_INDEX(SC_OperData.RtsCtrlBlckAddr->RtsNumber)].RtsStatus ==
+         SC_EXECUTING))
+    {
+        /*
+         ** Count the command for the rate limiter
+         ** even if the command fails
+         */
+        SC_OperData.NumCmdsSec++;
+
+        /* convert the RTS number so that it can be directly indexed into the table*/
+        RtsIndex = SC_RTS_NUM_TO_INDEX(SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+
+        /*
+         ** Get the Command offset within the RTS
+         */
+        CmdOffset = SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr;
+
+        /*
+         ** Get a pointer to the RTS entry using the RTS number and the offset
+         */
+        EntryPtr = (SC_RtsEntry_t *)&SC_OperData.RtsTblAddr[RtsIndex][CmdOffset];
+
+        CFE_MSG_ValidateChecksum(&EntryPtr->Msg, &ChecksumValid);
+        if (true) // ChecksumValid == true)
+        {
+            /*
+             ** Try Sending the command on the Software Bus
+             */
+
+            Result = CFE_SB_TransmitMsg(&EntryPtr->Msg, true);
+
+            if (Result == CFE_SUCCESS)
+            {
+                /* the command was sent OK */
+                SC_OperData.HkPacket.RtsCmdCtr++;
+                SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr++;
+
+                /*
+                 ** Get the next command.
+                 */
+                SC_GetNextRtsCommand();
+            }
+            else
+            { /* the software bus return code was bad */
+
+                /*
+                 ** Send an event message to report the invalid command status
+                 */
+                CFE_EVS_SendEvent(SC_RTS_DIST_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "RTS %03d Command Distribution Failed: RTS Stopped. SB returned 0x%08X",
+                                  (int)SC_OperData.RtsCtrlBlckAddr->RtsNumber, (unsigned int)Result);
+
+                SC_OperData.HkPacket.RtsCmdErrCtr++;
+                SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr++;
+                SC_OperData.HkPacket.LastRtsErrSeq = SC_OperData.RtsCtrlBlckAddr->RtsNumber;
+                SC_OperData.HkPacket.LastRtsErrCmd = CmdOffset;
+
+                /*
+                 ** Stop the RTS from executing
+                 */
+                SC_KillRts(RtsIndex);
+
+            } /* end if */
+        }
+        else
+        { /* the checksum failed */
+
+            /*
+             ** Send an event message to report the invalid command status
+             */
+            CFE_EVS_SendEvent(SC_RTS_CHKSUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "RTS %03d Command Failed Checksum: RTS Stopped",
+                              (int)SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+            /*
+            ** Update the RTS command error counter and last RTS error info
+            */
+            SC_OperData.HkPacket.RtsCmdErrCtr++;
+            SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr++;
+            SC_OperData.HkPacket.LastRtsErrSeq = SC_OperData.RtsCtrlBlckAddr->RtsNumber;
+            SC_OperData.HkPacket.LastRtsErrCmd = CmdOffset;
+
+            /*
+             ** Stop the RTS from executing
+             */
+            SC_KillRts(RtsIndex);
+        } /* end if */
+    }     /* end if */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Sends Housekeeping Data                                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_SendHkPacket(void)
+{
+    uint16 i;
+
+    /*
+     ** fill in the free bytes in each ATS
+     */
+    SC_OperData.HkPacket.AtpFreeBytes[SC_ATS_NUM_TO_INDEX(SC_ATSA)] =
+        (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD) -
+        (SC_OperData.AtsInfoTblAddr[SC_ATS_NUM_TO_INDEX(SC_ATSA)].AtsSize * SC_BYTES_IN_WORD);
+    SC_OperData.HkPacket.AtpFreeBytes[SC_ATS_NUM_TO_INDEX(SC_ATSB)] =
+        (SC_ATS_BUFF_SIZE32 * SC_BYTES_IN_WORD) -
+        (SC_OperData.AtsInfoTblAddr[SC_ATS_NUM_TO_INDEX(SC_ATSB)].AtsSize * SC_BYTES_IN_WORD);
+
+    /*
+     **
+     ** fill in the ATP Control Block information
+     **
+     */
+
+    SC_OperData.HkPacket.AtsNumber = SC_OperData.AtsCtrlBlckAddr->AtsNumber;
+
+    SC_OperData.HkPacket.AtpState       = SC_OperData.AtsCtrlBlckAddr->AtpState;
+    SC_OperData.HkPacket.AtpCmdNumber   = SC_OperData.AtsCtrlBlckAddr->CmdNumber;
+    SC_OperData.HkPacket.SwitchPendFlag = SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag;
+
+    SC_OperData.HkPacket.NextAtsTime = SC_AppData.NextCmdTime[SC_ATP];
+
+    /*
+     ** Fill out the RTP control block information
+     */
+
+    SC_OperData.HkPacket.NumRtsActive = SC_OperData.RtsCtrlBlckAddr->NumRtsActive;
+    SC_OperData.HkPacket.RtsNumber    = SC_OperData.RtsCtrlBlckAddr->RtsNumber;
+    SC_OperData.HkPacket.NextRtsTime  = SC_AppData.NextCmdTime[SC_RTP];
+
+    /*
+     ** Fill out the RTS status bit mask
+     ** First clear out the status mask
+     */
+    for (i = 0; i < (SC_NUMBER_OF_RTS + (SC_NUMBER_OF_RTS_IN_UINT16 - 1)) / SC_NUMBER_OF_RTS_IN_UINT16; i++)
+    {
+        SC_OperData.HkPacket.RtsExecutingStatus[i] = 0;
+        SC_OperData.HkPacket.RtsDisabledStatus[i]  = 0;
+
+    } /* end for */
+
+    for (i = 0; i < SC_NUMBER_OF_RTS; i++)
+    {
+        if (SC_OperData.RtsInfoTblAddr[i].DisabledFlag == true)
+        {
+            SC_OperData.HkPacket.RtsDisabledStatus[i / SC_NUMBER_OF_RTS_IN_UINT16] |=
+                (1 << (i % SC_NUMBER_OF_RTS_IN_UINT16));
+        }
+        if (SC_OperData.RtsInfoTblAddr[i].RtsStatus == SC_EXECUTING)
+        {
+            SC_OperData.HkPacket.RtsExecutingStatus[i / SC_NUMBER_OF_RTS_IN_UINT16] |=
+                (1 << (i % SC_NUMBER_OF_RTS_IN_UINT16));
+        }
+    } /* end for */
+
+    /* send the status packet */
+    CFE_SB_TimeStampMsg(&SC_OperData.HkPacket.TlmHeader.Msg);
+    CFE_SB_TransmitMsg(&SC_OperData.HkPacket.TlmHeader.Msg, true);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset Counters Command                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_NoArgsCmd_t)))
+    {
+        CFE_EVS_SendEvent(SC_RESET_DEB_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
+
+        SC_OperData.HkPacket.CmdCtr          = 0;
+        SC_OperData.HkPacket.CmdErrCtr       = 0;
+        SC_OperData.HkPacket.AtsCmdCtr       = 0;
+        SC_OperData.HkPacket.AtsCmdErrCtr    = 0;
+        SC_OperData.HkPacket.RtsCmdCtr       = 0;
+        SC_OperData.HkPacket.RtsCmdErrCtr    = 0;
+        SC_OperData.HkPacket.RtsActiveCtr    = 0;
+        SC_OperData.HkPacket.RtsActiveErrCtr = 0;
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* No Op Command                                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_NoOpCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_NoArgsCmd_t)))
+    {
+        SC_OperData.HkPacket.CmdCtr++;
+        CFE_EVS_SendEvent(SC_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "No-op command. Version %d.%d.%d.%d",
+                          SC_MAJOR_VERSION, SC_MINOR_VERSION, SC_REVISION, SC_MISSION_REV);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Process Requests                                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ProcessRequest(const CFE_SB_Buffer_t *BufPtr)
+{
+    CFE_SB_MsgId_t MessageID                      = CFE_SB_INVALID_MSG_ID;
+    int8           IsThereAnotherCommandToExecute = false;
+
+    /* cast the packet header pointer on the packet buffer */
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+
+    /*
+     ** Get the current system time in the global SC_AppData.CurrentTime
+     */
+    SC_GetCurrentTime();
+
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        case SC_CMD_MID:
+            /* request from the ground */
+            SC_ProcessCommand(BufPtr);
+            break;
+
+        case SC_SEND_HK_MID:
+            if (SC_VerifyCmdLength(&BufPtr->Msg, sizeof(SC_NoArgsCmd_t)))
+            {
+                /* set during init to power on or processor reset auto-exec RTS */
+                if (SC_AppData.AutoStartRTS != 0)
+                {
+                    /* make sure the selected auto-exec RTS is enabled */
+                    if (SC_OperData.RtsInfoTblAddr[SC_RTS_NUM_TO_INDEX(SC_AppData.AutoStartRTS)].RtsStatus == SC_LOADED)
+                    {
+                        SC_OperData.RtsInfoTblAddr[SC_RTS_NUM_TO_INDEX(SC_AppData.AutoStartRTS)].DisabledFlag = false;
+                    }
+
+                    /* send ground cmd to have SC start the RTS */
+                    SC_AutoStartRts(SC_AppData.AutoStartRTS);
+
+                    /* only start it once */
+                    SC_AppData.AutoStartRTS = 0;
+                }
+
+                /* request from health and safety for housekeeping status */
+                SC_SendHkPacket();
+            }
+            break;
+
+        case SC_1HZ_WAKEUP_MID:
+            /*
+             ** Time to execute a command in the SC memory
+             */
+            do
+            {
+                /*
+                 **  Check to see if there is an ATS switch Pending, if so service it.
+                 */
+                if (SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag == true)
+                {
+                    SC_ServiceSwitchPend();
+                }
+
+                if (SC_AppData.NextProcNumber == SC_ATP)
+                {
+                    SC_ProcessAtpCmd();
+                }
+                else
+                {
+                    if (SC_AppData.NextProcNumber == SC_RTP)
+                    {
+                        SC_ProcessRtpCommand();
+                    }
+                }
+
+                SC_UpdateNextTime();
+                if ((SC_AppData.NextProcNumber == SC_NONE) ||
+                    (SC_AppData.NextCmdTime[SC_AppData.NextProcNumber] > SC_AppData.CurrentTime))
+                {
+                    SC_OperData.NumCmdsSec         = 0;
+                    IsThereAnotherCommandToExecute = false;
+                }
+                else /* Command needs to run immediately */
+                {
+                    if (SC_OperData.NumCmdsSec >= SC_MAX_CMDS_PER_SEC)
+                    {
+                        SC_OperData.NumCmdsSec         = 0;
+                        IsThereAnotherCommandToExecute = false;
+                    }
+                    else
+                    {
+                        IsThereAnotherCommandToExecute = true;
+                    }
+                }
+            } while (IsThereAnotherCommandToExecute);
+
+            break;
+
+        default:
+            CFE_EVS_SendEvent(SC_MID_ERR_EID, CFE_EVS_EventType_ERROR, "Invalid command pipe message ID: 0x%08lX",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
+
+            SC_OperData.HkPacket.CmdErrCtr++;
+            break;
+    } /* end switch */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Process a command                                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ProcessCommand(const CFE_SB_Buffer_t *BufPtr)
+{
+    CFE_MSG_FcnCode_t CommandCode = 0;
+    CFE_SB_MsgId_t    MessageID   = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+    CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
+
+    switch (CommandCode)
+    {
+        case SC_NOOP_CC:
+            SC_NoOpCmd(BufPtr);
+            break;
+
+        case SC_RESET_COUNTERS_CC:
+            SC_ResetCountersCmd(BufPtr);
+            break;
+
+        case SC_START_ATS_CC:
+            SC_StartAtsCmd(BufPtr);
+            break;
+
+        case SC_STOP_ATS_CC:
+            SC_StopAtsCmd(BufPtr);
+            break;
+
+        case SC_START_RTS_CC:
+            SC_StartRtsCmd(BufPtr);
+            break;
+
+        case SC_STOP_RTS_CC:
+            SC_StopRtsCmd(BufPtr);
+            break;
+
+        case SC_DISABLE_RTS_CC:
+            SC_DisableRtsCmd(BufPtr);
+            break;
+
+        case SC_ENABLE_RTS_CC:
+            SC_EnableRtsCmd(BufPtr);
+            break;
+
+        case SC_SWITCH_ATS_CC:
+            SC_GroundSwitchCmd(BufPtr);
+            break;
+
+        case SC_JUMP_ATS_CC:
+            SC_JumpAtsCmd(BufPtr);
+            break;
+
+        case SC_CONTINUE_ATS_ON_FAILURE_CC:
+            SC_ContinueAtsOnFailureCmd(BufPtr);
+            break;
+
+        case SC_APPEND_ATS_CC:
+            SC_AppendAtsCmd(BufPtr);
+            break;
+
+        case SC_MANAGE_TABLE_CC:
+            SC_TableManageCmd(BufPtr);
+            break;
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+
+        case SC_START_RTS_GRP_CC:
+            SC_StartRtsGrpCmd(BufPtr);
+            break;
+
+        case SC_STOP_RTS_GRP_CC:
+            SC_StopRtsGrpCmd(BufPtr);
+            break;
+
+        case SC_DISABLE_RTS_GRP_CC:
+            SC_DisableRtsGrpCmd(BufPtr);
+            break;
+
+        case SC_ENABLE_RTS_GRP_CC:
+            SC_EnableRtsGrpCmd(BufPtr);
+            break;
+#endif
+
+        default:
+            CFE_EVS_SendEvent(SC_INVLD_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Invalid Command Code: MID =  0x%08lX CC =  %d",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode);
+            SC_OperData.HkPacket.CmdErrCtr++;
+            break;
+    } /* end switch */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Table Manage Request Command (sent by cFE Table Services)       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_TableManageCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    int32 ArrayIndex;
+    int32 TableID = (int32)((CFE_TBL_NotifyCmd_t *)BufPtr)->Payload.Parameter;
+
+    /* Manage selected table as appropriate for each table type */
+    if ((TableID >= SC_TBL_ID_ATS_0) && (TableID < (SC_TBL_ID_ATS_0 + SC_NUMBER_OF_ATS)))
+    {
+        ArrayIndex = TableID - SC_TBL_ID_ATS_0;
+        SC_ManageAtsTable(ArrayIndex);
+    }
+    else if (TableID == SC_TBL_ID_APPEND)
+    {
+        SC_ManageTable(APPEND, -1);
+    }
+    else if ((TableID >= SC_TBL_ID_RTS_0) && (TableID < (SC_TBL_ID_RTS_0 + SC_NUMBER_OF_RTS)))
+    {
+        ArrayIndex = TableID - SC_TBL_ID_RTS_0;
+        SC_ManageRtsTable(ArrayIndex);
+    }
+    else if (TableID == SC_TBL_ID_RTS_INFO)
+    {
+        /* No need to release dump only table pointer */
+        CFE_TBL_Manage(SC_OperData.RtsInfoHandle);
+    }
+    else if (TableID == SC_TBL_ID_RTP_CTRL)
+    {
+        /* No need to release dump only table pointer */
+        CFE_TBL_Manage(SC_OperData.RtsCtrlBlckHandle);
+    }
+    else if (TableID == SC_TBL_ID_ATS_INFO)
+    {
+        /* No need to release dump only table pointer */
+        CFE_TBL_Manage(SC_OperData.AtsInfoHandle);
+    }
+    else if (TableID == SC_TBL_ID_ATP_CTRL)
+    {
+        /* No need to release dump only table pointer */
+        CFE_TBL_Manage(SC_OperData.AtsCtrlBlckHandle);
+    }
+    else if ((TableID >= SC_TBL_ID_ATS_CMD_0) && (TableID < (SC_TBL_ID_ATS_CMD_0 + SC_NUMBER_OF_ATS)))
+    {
+        /* No need to release dump only table pointer */
+        ArrayIndex = TableID - SC_TBL_ID_ATS_CMD_0;
+        CFE_TBL_Manage(SC_OperData.AtsCmdStatusHandle[ArrayIndex]);
+    }
+    else
+    {
+        /* Invalid table ID */
+        CFE_EVS_SendEvent(SC_TABLE_MANAGE_ID_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Table manage command packet error: table ID = %d", (int)TableID);
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Allow cFE Table Services to manage loadable RTS table           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_ManageRtsTable(int32 ArrayIndex)
+{
+    /* validate array index */
+    if (ArrayIndex >= SC_NUMBER_OF_RTS)
+    {
+        CFE_EVS_SendEvent(SC_TABLE_MANAGE_RTS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "RTS table manage error: invalid RTS index %d", ArrayIndex);
+        return;
+    }
+
+    SC_ManageTable(RTS, ArrayIndex);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Allow cFE Table Services to manage loadable ATS table           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_ManageAtsTable(int32 ArrayIndex)
+{
+    /* validate array index */
+    if (ArrayIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_TABLE_MANAGE_ATS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "ATS table manage error: invalid ATS index %d", ArrayIndex);
+        return;
+    }
+
+    SC_ManageTable(ATS, ArrayIndex);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Allow cFE Table Services to manage loadable table    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void SC_ManageTable(SC_TableType type, int32 ArrayIndex)
+{
+    CFE_Status_t     Result;
+    CFE_TBL_Handle_t TblHandle;
+    uint32 **        TblAddr;
+    void *           TblPtrNew;
+
+    switch (type)
+    {
+        case ATS:
+            TblHandle = SC_OperData.AtsTblHandle[ArrayIndex];
+            TblAddr   = &SC_OperData.AtsTblAddr[ArrayIndex];
+            break;
+        case RTS:
+            TblHandle = SC_OperData.RtsTblHandle[ArrayIndex];
+            TblAddr   = &SC_OperData.RtsTblAddr[ArrayIndex];
+            break;
+        case APPEND:
+        default:
+            TblHandle = SC_OperData.AppendTblHandle;
+            TblAddr   = &SC_OperData.AppendTblAddr;
+            break;
+    }
+
+    /* Release table data pointer */
+    CFE_TBL_ReleaseAddress(TblHandle);
+
+    /* Allow cFE to manage table */
+    CFE_TBL_Manage(TblHandle);
+
+    /* Re-acquire table data pointer */
+    Result   = CFE_TBL_GetAddress(&TblPtrNew, TblHandle);
+    *TblAddr = TblPtrNew; /* Note that CFE_TBL_GetAddress() sets this to NULL if it fails */
+    if (Result == CFE_TBL_INFO_UPDATED)
+    {
+        /* Process new table data */
+        if (type == ATS)
+        {
+            SC_LoadAts(ArrayIndex);
+        }
+        else if (type == RTS)
+        {
+            SC_LoadRts(ArrayIndex);
+        }
+        else
+        {
+            SC_UpdateAppend();
+        }
+    }
+    else if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_ERR_NEVER_LOADED))
+    {
+        /* Ignore successful dump or validate and cmds before first activate. */
+        if (type == ATS)
+        {
+            CFE_EVS_SendEvent(SC_TABLE_MANAGE_ATS_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS table manage process error: ATS = %d, Result = 0x%X",
+                              (int)SC_RTS_INDEX_TO_NUM(ArrayIndex), (unsigned int)Result);
+        }
+        else if (type == RTS)
+        {
+            CFE_EVS_SendEvent(SC_TABLE_MANAGE_RTS_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "RTS table manage process error: RTS = %d, Result = 0x%X",
+                              (int)SC_RTS_INDEX_TO_NUM(ArrayIndex), (unsigned int)Result);
+        }
+        else
+        {
+            CFE_EVS_SendEvent(SC_TABLE_MANAGE_APPEND_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ATS Append table manage process error: Result = 0x%X", (unsigned int)Result);
+        }
+    }
+
+} /* End SC_ManageTable() */
+```
+
+### `sc_cmds.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_cmds.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains functions to handle processing an RTS or ATS
+ *   command as well as the generic ground commands
+ */
+#ifndef SC_CMDS_H
+#define SC_CMDS_H
+
+#include "cfe.h"
+
+typedef enum
+{
+    ATS,
+    RTS,
+    APPEND
+} SC_TableType;
+
+/**
+ * \brief Table manage request command handler
+ *
+ *  \par Description
+ *       Handler for commands from cFE Table Service requesting that the
+ *       application call the cFE table manage API function for the table
+ *       indicated by the command packet argument.  Using this command
+ *       interface allows applications to call the table API functions
+ *       only when load or dump activity is pending.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_MANAGE_TABLE_CC
+ */
+void SC_TableManageCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Manage pending update to an RTS table
+ *
+ *  \par Description
+ *       This function is invoked in response to a command from cFE Table
+ *       Services indicating that an RTS table has a pending update.  The
+ *       function will release the data pointer for the specified table,
+ *       allow cFE Table Services to update the table data and re-acquire
+ *       the table data pointer.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         ArrayIndex     index into array of RTS tables
+ *
+ *  \sa #SC_TableManageCmd
+ */
+void SC_ManageRtsTable(int32 ArrayIndex);
+
+/**
+ * \brief Manage pending update to an ATS table
+ *
+ *  \par Description
+ *       This function is invoked in response to a command from cFE Table
+ *       Services indicating that an ATS table has a pending update.  The
+ *       function will release the data pointer for the specified table,
+ *       allow cFE Table Services to update the table data and re-acquire
+ *       the table data pointer.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         ArrayIndex     index into array of ATS tables
+ *
+ *  \sa #SC_TableManageCmd
+ */
+void SC_ManageAtsTable(int32 ArrayIndex);
+
+/**
+ * \brief Manage pending update to a table
+ *
+ *  \par Description
+ *       This function is invoked in response to a command from cFE Table
+ *       Services indicating that a table has a pending update.
+ *       The function will release the data pointer for the specified table,
+ *       allow cFE Table Services to update the table data and re-acquire
+ *       the table data pointer.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \sa #SC_TableManageCmd
+ */
+void SC_ManageTable(SC_TableType type, int32 ArrayIndex);
+
+/**
+ * \brief Routes commands to be processed
+ *
+ *  \par Description
+ *           This routine determines the source of a request to
+ *           the Stored Command processor and routes it to one of the lower
+ *           level request processing routines
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ */
+void SC_ProcessRequest(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Processes commands
+ *
+ *  \par Description
+ *       Process commands. Commands can be from external sources or from SC
+ *       itself.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ */
+void SC_ProcessCommand(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Sends out an Event message
+ *
+ *  \par Description
+ *       Command for testing aliveness of SC
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_NOOP_CC
+ */
+void SC_NoOpCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Reset Counters Command
+ *
+ *  \par Description
+ *       Clears the command counters and error counters for SC
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #SC_RESET_COUNTERS_CC
+ */
+void SC_ResetCountersCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Send Hk Packet to the ground
+ *
+ *  \par Description
+ *       This routine collects the housekeeping status information,
+ *       formats the packet and sends the packet over the software bus
+ *       to health and safety.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_SendHkPacket(void);
+
+/**
+ * \brief Process an ATS Command
+ *
+ *  \par Description
+ *       SC_ProcessAtpCmd takes ONE command from the current
+ *       ATS buffer and executes it. It then figures out when the
+ *       next command needs to execute and it returns. If for some
+ *       reason the next ATS command cannot be found, then the
+ *       ATS is stopped. If the command happens to be a Switch ATS command
+ *       the command is executed locally instead of sending it out on the
+ *       Software Bus.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_ProcessAtpCmd(void);
+
+/**
+ * \brief Process an RTS Command
+ *
+ *  \par Description
+ *        This routine processes ONE command from ONE active Relative
+ *        Time Sequence. The command that has to be executed is already
+ *        set up in the RTPs control block, It simply has to fetch the
+ *        command, execute it, and get the next command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_ProcessRtpCommand(void);
+
+#endif
+```
+
+### `sc_loads.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_loads.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains functions to handle validation of TBL tables,
+ *   as well as setting up Stored Command's internal data structures for
+ *   those tables
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_app.h"
+#include "sc_loads.h"
+#include "sc_atsrq.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+#include <string.h>
+
+/**************************************************************************
+ **
+ ** Local #defines
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Load the ATS from its table to memory                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_LoadAts(uint16 AtsIndex)
+{
+    uint16         AtsEntryWords; /* current ats entry length in words */
+    uint16         AtsCmdNum;     /* current ats entry command number */
+    uint16         AtsEntryIndex; /* index into the load for current ats entry */
+    SC_AtsEntry_t *EntryPtr;      /* a pointer to an ats entry */
+    uint32 *       AtsTablePtr;   /* pointer to the start of the Ats table */
+    CFE_MSG_Size_t MessageSize     = 0;
+    int32          Result          = CFE_SUCCESS;
+    bool           StillProcessing = true;
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_LOADATS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR, "ATS load error: invalid ATS index %d",
+                          AtsIndex);
+        return;
+    }
+
+    /*
+     ** Initialize all structrures
+     */
+    SC_InitAtsTables(AtsIndex);
+
+    /* initialize pointers and counters */
+    AtsTablePtr   = SC_OperData.AtsTblAddr[AtsIndex];
+    AtsEntryIndex = 0;
+
+    while (StillProcessing)
+    {
+        /*
+         ** Make sure that the pointer as well as the primary packet
+         ** header fit in the buffer, so a G.P fault is not caused.
+         */
+        if (AtsEntryIndex < SC_ATS_BUFF_SIZE32)
+        {
+            /* get a pointer to the ats command in the table */
+            EntryPtr = (SC_AtsEntry_t *)&AtsTablePtr[AtsEntryIndex];
+
+            /* get the next command number from the buffer */
+            AtsCmdNum = EntryPtr->Header.CmdNumber;
+
+            if (AtsCmdNum == 0)
+            {
+                /* end of the load reached */
+                Result          = CFE_SUCCESS;
+                StillProcessing = false;
+            }
+
+            /* make sure the CmdPtr can fit in a whole Ats Cmd Header at the very least */
+            else if (AtsEntryIndex > (SC_ATS_BUFF_SIZE32 - SC_ATS_HDR_WORDS))
+            {
+                /* even the smallest command will not fit in the buffer */
+                Result          = SC_ERROR;
+                StillProcessing = false;
+            } /* else if the cmd number is valid and the command */
+            /* has not already been loaded                     */
+            else if (AtsCmdNum <= SC_MAX_ATS_CMDS &&
+                     SC_OperData.AtsCmdStatusTblAddr[AtsIndex][SC_ATS_CMD_NUM_TO_INDEX(AtsCmdNum)] == SC_EMPTY)
+            {
+                /* get message size */
+                CFE_MSG_GetSize(&EntryPtr->Msg, &MessageSize);
+
+                /* if the length of the command is valid */
+                if (MessageSize >= SC_PACKET_MIN_SIZE && MessageSize <= SC_PACKET_MAX_SIZE)
+                {
+                    /* get the length of the entry in WORDS (plus 1 to round byte len up to word len) */
+                    AtsEntryWords = ((MessageSize + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) + SC_ATS_HDR_NOPKT_WORDS;
+
+                    /* if the command does not run off of the end of the buffer */
+                    if (AtsEntryIndex + AtsEntryWords <= SC_ATS_BUFF_SIZE32)
+                    {
+                        /* set the command pointer in the command index table */
+                        /* CmdNum starts at one....                          */
+
+                        SC_AppData.AtsCmdIndexBuffer[AtsIndex][SC_ATS_CMD_NUM_TO_INDEX(AtsCmdNum)] = AtsEntryIndex;
+
+                        /* set the command status to loaded in the command status table */
+                        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][SC_ATS_CMD_NUM_TO_INDEX(AtsCmdNum)] = SC_LOADED;
+
+                        /* increment the number of commands loaded */
+                        SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands++;
+
+                        /* increment the ats_entry index to the next ats entry */
+                        AtsEntryIndex = AtsEntryIndex + AtsEntryWords;
+                    }
+                    else
+                    { /* the command runs off the end of the buffer */
+                        Result          = SC_ERROR;
+                        StillProcessing = false;
+                    } /* end if */
+                }
+                else
+                { /* the command length was invalid */
+                    Result          = SC_ERROR;
+                    StillProcessing = false;
+                } /* end if */
+            }
+            else
+            { /* the cmd number is invalid */
+                Result          = SC_ERROR;
+                StillProcessing = false;
+            } /* end if */
+        }
+        else
+        {
+            /*
+             ** We encountered a load exactly as long as the buffer.
+             ** AtsEntryIndex cannot exceed SC_ATS_BUFF_SIZE32 here.
+             ** A command pointer over the end of the buffer will be
+             ** identified above before AtsEntryIndex is incremented.
+             ** Consequently this block does not require verifying
+             ** AtsEntryIndex >= SC_ATS_BUFF_SIZE32.
+             */
+
+            Result          = CFE_SUCCESS;
+            StillProcessing = false;
+        } /*end else */
+    }     /* end while */
+
+    /*
+     **   Now the commands are parsed through, need to build the tables
+     **   if the load was a success, need to build the tables
+     */
+    /* if the load finished without errors and there was at least one command */
+    if ((Result == CFE_SUCCESS) && (SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands > 0))
+    {
+        /* record the size of the load in the ATS info table */
+        SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize = AtsEntryIndex; /* size in 32-bit WORDS */
+
+        /* build the time index table */
+        SC_BuildTimeIndexTable(AtsIndex);
+    }
+    else
+    { /* there was an error */
+        SC_InitAtsTables(AtsIndex);
+    } /* end if */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Builds the time table for the ATS buffer                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_BuildTimeIndexTable(uint16 AtsIndex)
+{
+    int32 i;
+    int32 ListLength;
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_BUILD_TIME_IDXTBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Build time index table error: invalid ATS index %d", AtsIndex);
+        return;
+    }
+
+    /* initialize sorted list length */
+    ListLength = 0;
+
+    /* initialize sorted list contents */
+    for (i = 0; i < SC_MAX_ATS_CMDS; i++)
+    {
+        SC_AppData.AtsTimeIndexBuffer[AtsIndex][i] = SC_INVALID_CMD_NUMBER;
+
+        /* add in-use command entries to time sorted list */
+        if (SC_AppData.AtsCmdIndexBuffer[AtsIndex][i] != SC_ERROR)
+        {
+            SC_Insert(AtsIndex, i, ListLength);
+            ListLength++;
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Inserts and element into a sorted list                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_Insert(uint16 AtsIndex, uint32 NewCmdIndex, uint32 ListLength)
+{
+    SC_AtsEntryHeader_t *EntryHeader;    /* ATS table entry pointer */
+    SC_AbsTimeTag_t      NewCmdTime = 0; /* new command execution time */
+    SC_AbsTimeTag_t      ListCmdTime;    /* list entry execution time */
+    uint32               CmdIndex;       /* ATS command index (cmd num - 1) */
+    uint32               EntryIndex;     /* ATS entry location in table */
+    int32                TimeBufIndex;   /* this must be signed */
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_INSERTATS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "ATS insert error: invalid ATS index %d", AtsIndex);
+        return;
+    }
+
+    /* get execution time for new list entry */
+    if (ListLength > 0)
+    {
+        /* first get the entry index in the selected ATS table for the new command */
+        EntryIndex = SC_AppData.AtsCmdIndexBuffer[AtsIndex][NewCmdIndex];
+        /* then get a pointer to the ATS entry */
+        EntryHeader = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+        /* then get the execution time from the ATS entry for the new command */
+        NewCmdTime = SC_GetAtsEntryTime(EntryHeader);
+    }
+
+    /* start at last element in the sorted by time list */
+    TimeBufIndex = ListLength - 1;
+
+    while (TimeBufIndex >= 0)
+    {
+        /* first get the cmd index for this list entry */
+        CmdIndex = SC_ATS_CMD_NUM_TO_INDEX(SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeBufIndex]);
+        /* then get the entry index from the ATS table */
+        EntryIndex = SC_AppData.AtsCmdIndexBuffer[AtsIndex][CmdIndex];
+        /* then get a pointer to the ATS entry data */
+        EntryHeader = (SC_AtsEntryHeader_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+        /* then get cmd execution time from the ATS entry */
+        ListCmdTime = SC_GetAtsEntryTime(EntryHeader);
+
+        /* compare time for this list entry to time for new cmd */
+        if (SC_CompareAbsTime(ListCmdTime, NewCmdTime))
+        {
+            /* new cmd will execute before this list entry */
+
+            /* move this list entry to make room for new cmd */
+            SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeBufIndex + 1] =
+                SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeBufIndex];
+
+            /* back up to previous list entry (ok if -1) */
+            TimeBufIndex--;
+        }
+        else
+        {
+            /* new cmd will execute at same time or after this list entry */
+            break;
+        }
+    }
+
+    /*
+    ** TimeBufIndex is now one slot before the target slot...
+    **   if new cmd time is earlier than all other entries
+    **     then TimeBufIndex is -1 and all others have been moved
+    **   else only entries with later times have been moved
+    ** In either case, there is an empty slot next to TimeBufIndex
+    */
+    SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeBufIndex + 1] = SC_ATS_CMD_INDEX_TO_NUM(NewCmdIndex);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Clears out Ats Tables before a load                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_InitAtsTables(uint16 AtsIndex)
+{
+    int32 i;
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_INIT_ATSTBL_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "ATS table init error: invalid ATS index %d", AtsIndex);
+        return;
+    }
+
+    /* loop through and set the ATS tables to zero */
+    for (i = 0; i < SC_MAX_ATS_CMDS; i++)
+    {
+        SC_AppData.AtsCmdIndexBuffer[AtsIndex][i]    = SC_ERROR;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][i] = SC_EMPTY;
+        SC_AppData.AtsTimeIndexBuffer[AtsIndex][i]   = SC_INVALID_CMD_NUMBER;
+    }
+
+    /* initialize the pointers and counters   */
+    SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize          = 0;
+    SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands = 0;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Initializes the info table entry for an RTS                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_LoadRts(uint16 RtsIndex)
+{
+    /* validate RTS array index */
+    if (RtsIndex < SC_NUMBER_OF_RTS)
+    {
+        /* Clear out the RTS info table */
+        SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus       = SC_LOADED;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr          = 0;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr          = 0;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr       = 0;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime = 0;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr  = 0;
+
+        /* Make sure the RTS is disabled */
+        SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = true;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(SC_LOADRTS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "RTS table init error: invalid RTS index %d", RtsIndex);
+        return;
+    }
+} /* SC_LoadRts */
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Validate ATS table data                                        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 SC_ValidateAts(void *TableData)
+{
+    int32 Result;
+
+    /* Common ATS table verify function needs size of this table */
+    Result = SC_VerifyAtsTable((uint32 *)TableData, SC_ATS_BUFF_SIZE32);
+
+    return (Result);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Parses the RTS to make sure it looks good                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool SC_ParseRts(uint32 Buffer32[])
+{
+    uint16         i;
+    bool           Done;
+    bool           Error;
+    SC_RtsEntry_t *EntryPtr;
+    CFE_MSG_Size_t CmdSize = 0;
+    uint16         IndexDelta;
+    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+
+    i    = 0;
+    Done = Error = false;
+    while (Error == false && Done == false)
+    {
+        /*
+         ** Check to see if a minimum command fits within an RTS
+         */
+        if (i <= (SC_RTS_BUFF_SIZE32 - SC_RTS_HDR_WORDS))
+        {
+            /*
+             ** Cast a header to the RTS buffer current location
+             ** and get the size of the packet
+             */
+            EntryPtr = (SC_RtsEntry_t *)&Buffer32[i];
+
+            CFE_MSG_GetSize(&EntryPtr->Msg, &CmdSize);
+
+            /* Add header size, round up to boundary, convert to index delta  */
+            IndexDelta = (CmdSize + SC_RTS_HEADER_SIZE + SC_ROUND_UP_BYTES) / sizeof(Buffer32[0]);
+
+            CFE_MSG_GetMsgId(&EntryPtr->Msg, &MessageID);
+
+            if (!CFE_SB_IsValidMsgId(MessageID))
+            {
+                if (EntryPtr->Header.TimeTag == 0)
+                {
+                    Done = true; /* assumed end of file */
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(SC_RTS_INVLD_MID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "RTS cmd loaded with invalid MID at %d", i);
+                    Error = true; /* invalid message id */
+                }
+            }
+            else
+            {
+                /* check to see if the length field in the RTS is valid */
+                if (CmdSize < SC_PACKET_MIN_SIZE || CmdSize > SC_PACKET_MAX_SIZE)
+                {
+                    CFE_EVS_SendEvent(SC_RTS_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "RTS cmd loaded with invalid length at %d, len: %d", i, (int)CmdSize);
+
+                    Error = true; /* Length error */
+                }
+
+                else if ((i + IndexDelta) > SC_RTS_BUFF_SIZE32)
+                {
+                    CFE_EVS_SendEvent(SC_RTS_LEN_BUFFER_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "RTS cmd at %d runs off end of buffer", i);
+                    Error = true; /* command runs off of the end of the buffer */
+                }
+
+                else if ((i + IndexDelta) == SC_RTS_BUFF_SIZE32)
+                {
+                    Done = true;
+                }
+                else
+                { /* command fits in buffer */
+
+                    i += IndexDelta;
+
+                } /* end if */
+
+            } /* endif */
+        }
+        else
+        { /* command does not fit in the buffer */
+
+            /*
+             ** If it looks like there is data, reject the load,
+             ** if it looks empty then we are done
+             */
+            if (Buffer32[i] == 0)
+            {
+                Done = true;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(SC_RTS_LEN_TOO_LONG_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "RTS cmd loaded won't fit in buffer at %d", i);
+                Error = true;
+            }
+        } /* endif */
+
+    } /* endwhile */
+
+    /*
+     ** finished, report results
+     */
+
+    /* If Error was true   , then SC_ParseRts must return false    */
+    return (!Error);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate an RTS                                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 SC_ValidateRts(void *TableData)
+{
+    uint32 *TableDataPtr;
+    int32   Result = CFE_SUCCESS;
+
+    TableDataPtr = (uint32 *)TableData;
+
+    /*
+     ** make a rough check on the first command to see if there is
+     ** something in the buffer
+     */
+    if (SC_ParseRts(TableDataPtr) == false)
+    {
+        /* event message is put out by Parse RTS */
+        Result = SC_ERROR;
+    }
+
+    return (Result);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Validate Append ATS table data                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 SC_ValidateAppend(void *TableData)
+{
+    int32 Result;
+
+    /* Common ATS table verify function needs size of this table */
+    Result = SC_VerifyAtsTable((uint32 *)TableData, SC_APPEND_BUFF_SIZE32);
+
+    return (Result);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Have new Append ATS table data, update Append ATS Info table    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_UpdateAppend(void)
+{
+    SC_AtsEntry_t *EntryPtr;
+    CFE_MSG_Size_t CommandBytes = 0;
+    int32          CommandWords;
+    int32          EntryIndex      = 0;
+    int32          EntryCount      = 0;
+    bool           StillProcessing = true;
+
+    /* Count Append ATS table entries and get total size */
+    while (StillProcessing)
+    {
+        if (EntryIndex >= SC_APPEND_BUFF_SIZE32)
+        {
+            /* End of Append ATS table buffer */
+            StillProcessing = false;
+        }
+        else
+        {
+            EntryPtr = (SC_AtsEntry_t *)&SC_OperData.AppendTblAddr[EntryIndex];
+
+            if ((EntryPtr->Header.CmdNumber == 0) || (EntryPtr->Header.CmdNumber > SC_MAX_ATS_CMDS))
+            {
+                /* End of valid command numbers */
+                StillProcessing = false;
+            }
+            else
+            {
+                CFE_MSG_GetSize(&EntryPtr->Msg, &CommandBytes);
+                CommandWords = (CommandBytes + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD;
+
+                if ((CommandBytes < SC_PACKET_MIN_SIZE) || (CommandBytes > SC_PACKET_MAX_SIZE))
+                {
+                    /* Entry command packet must have a valid length */
+                    StillProcessing = false;
+                }
+                else if ((EntryIndex + SC_ATS_HDR_NOPKT_WORDS + CommandWords) > SC_APPEND_BUFF_SIZE32)
+                {
+                    /* Entry command packet must fit within ATS append table buffer */
+                    StillProcessing = false;
+                }
+                else
+                {
+                    /* Compute buffer index for next Append ATS table entry */
+                    EntryIndex += (SC_ATS_HDR_NOPKT_WORDS + CommandWords);
+                    EntryCount++;
+                }
+            }
+        }
+    }
+
+    /* Results will also be reported in HK */
+    SC_OperData.HkPacket.AppendLoadCount++;
+    SC_OperData.HkPacket.AppendEntryCount = EntryCount;
+    SC_OperData.HkPacket.AppendByteCount  = EntryIndex * SC_BYTES_IN_ATS_APPEND_ENTRY;
+    SC_AppData.AppendWordCount            = EntryIndex;
+
+    CFE_EVS_SendEvent(SC_UPDATE_APPEND_EID, CFE_EVS_EventType_INFORMATION,
+                      "Update Append ATS Table: load count = %d, command count = %d, byte count = %d",
+                      SC_OperData.HkPacket.AppendLoadCount, (int)EntryCount, (int)EntryIndex * SC_BYTES_IN_WORD);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Append contents of Append ATS table to indicated ATS table      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_ProcessAppend(uint16 AtsIndex)
+{
+    SC_AtsEntry_t *EntryPtr;
+    CFE_MSG_Size_t CommandBytes = 0;
+    int32          CommandWords;
+    int32          EntryIndex;
+    int32          i;
+    uint16         CmdIndex;
+
+    /* validate ATS array index */
+    if (AtsIndex >= SC_NUMBER_OF_ATS)
+    {
+        CFE_EVS_SendEvent(SC_PROCESS_APPEND_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "ATS process append error: invalid ATS index %d", AtsIndex);
+        return;
+    }
+
+    /* save index of free area at end of ATS table data */
+    EntryIndex = SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize;
+
+    /* copy Append table data to end of ATS table data */
+    memcpy(&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex], SC_OperData.AppendTblAddr,
+           SC_AppData.AppendWordCount * SC_BYTES_IN_WORD);
+
+    /* update size of ATS table data */
+    SC_OperData.AtsInfoTblAddr[AtsIndex].AtsSize += SC_AppData.AppendWordCount;
+
+    /* add appended entries to ats process tables */
+    for (i = 0; i < SC_OperData.HkPacket.AppendEntryCount; i++)
+    {
+        /* get pointer to next appended entry */
+        EntryPtr = (SC_AtsEntry_t *)&SC_OperData.AtsTblAddr[AtsIndex][EntryIndex];
+
+        /* convert base one cmd number to base zero index */
+        CmdIndex = SC_ATS_CMD_NUM_TO_INDEX(EntryPtr->Header.CmdNumber);
+
+        /* count only new commands, not replaced commands */
+        if (SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] == SC_EMPTY)
+        {
+            SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands++;
+        }
+
+        /* update array of pointers to ats entries */
+        SC_AppData.AtsCmdIndexBuffer[AtsIndex][CmdIndex]    = EntryIndex;
+        SC_OperData.AtsCmdStatusTblAddr[AtsIndex][CmdIndex] = SC_LOADED;
+
+        /* update entry index to point to the next entry */
+        CFE_MSG_GetSize(&EntryPtr->Msg, &CommandBytes);
+        CommandWords = (CommandBytes + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD;
+        EntryIndex += (SC_ATS_HDR_NOPKT_WORDS + CommandWords);
+    }
+
+    /* rebuild time sorted list of commands */
+    SC_BuildTimeIndexTable(AtsIndex);
+
+    /* did we just append to an ats that was executing? */
+    if ((SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING) &&
+        (SC_OperData.AtsCtrlBlckAddr->AtsNumber == (SC_ATS_INDEX_TO_NUM(AtsIndex))))
+    {
+        /*
+        ** re-start the ats -- this will go thru the process of skipping
+        **  past due entries (all of the old entries that had already
+        **  been executed and all of the new entries with an old time)
+        */
+        if (SC_BeginAts(AtsIndex, 0))
+        {
+            SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+        }
+    }
+
+    /* notify cFE that we have modified the ats table */
+    CFE_TBL_Modified(SC_OperData.AtsTblHandle[AtsIndex]);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Verify contents of ATS table data                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 SC_VerifyAtsTable(uint32 *Buffer32, int32 BufferWords)
+{
+    int32 Result       = CFE_SUCCESS;
+    int32 BufferIndex  = 0;
+    int32 CommandCount = 0;
+    int32 i;
+
+    bool StillProcessing = true;
+
+    /* Initialize all command numbers as unused */
+    for (i = 0; i < SC_MAX_ATS_CMDS; i++)
+    {
+        SC_OperData.AtsDupTestArray[i] = SC_DUP_TEST_UNUSED;
+    }
+
+    while (StillProcessing)
+    {
+        /* Verify the ATS table entry at the current buffer index */
+        Result = SC_VerifyAtsEntry(Buffer32, BufferIndex, BufferWords);
+
+        if (Result == SC_ERROR)
+        {
+            /* Entry at current buffer index is invalid */
+            StillProcessing = false;
+        }
+        else if (Result == CFE_SUCCESS)
+        {
+            /* No more entries -- end of buffer or cmd num = 0 */
+            StillProcessing = false;
+        }
+        else
+        {
+            /* Result is size (in words) of this entry */
+            BufferIndex += Result;
+            CommandCount++;
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        if (CommandCount == 0)
+        {
+            /* Table must contain at least one valid entry */
+            Result = SC_ERROR;
+
+            CFE_EVS_SendEvent(SC_VERIFY_ATS_MPT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Verify ATS Table error: table is empty");
+        }
+        else
+        {
+            CFE_EVS_SendEvent(SC_VERIFY_ATS_EID, CFE_EVS_EventType_INFORMATION,
+                              "Verify ATS Table: command count = %d, byte count = %d", (int)CommandCount,
+                              (int)BufferIndex * SC_BYTES_IN_WORD);
+        }
+    }
+
+    return (Result);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify contents of one ATS table entry                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 SC_VerifyAtsEntry(uint32 *Buffer32, int32 EntryIndex, int32 BufferWords)
+{
+    SC_AtsEntry_t *EntryPtr;
+    CFE_MSG_Size_t CommandBytes = 0;
+    int32          CommandWords;
+    int32          Result = CFE_SUCCESS;
+
+    EntryPtr = (SC_AtsEntry_t *)&Buffer32[EntryIndex];
+
+    /*
+    ** Verify the ATS table entry located at the indicated buffer offset
+    */
+    if (EntryIndex >= BufferWords)
+    {
+        /*
+        ** The process logic will prevent the index from ever exceeding
+        **  the size of the buffer due to bad table data content.  Still,
+        **  we must include the "greater than" in the test above to
+        **  protect against our own potential coding errors.
+        */
+
+        /* All done -- end of ATS buffer */
+        Result = CFE_SUCCESS;
+    }
+    else if (EntryPtr->Header.CmdNumber == 0)
+    {
+        /*
+        ** If there is at least one word remaining in the buffer then it
+        **  is OK to test the command number without fear of accessing
+        **  past the end of valid data because the command number is the
+        **  first element in an ATS entry structure.
+        */
+
+        /* All done -- end of in-use portion of buffer */
+        Result = CFE_SUCCESS;
+    }
+    else if (EntryPtr->Header.CmdNumber > SC_MAX_ATS_CMDS)
+    {
+        /* Error -- invalid command number */
+        Result = SC_ERROR;
+
+        CFE_EVS_SendEvent(SC_VERIFY_ATS_NUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Verify ATS Table error: invalid command number: buf index = %d, cmd num = %d",
+                          (int)EntryIndex, EntryPtr->Header.CmdNumber);
+    }
+    else if ((EntryIndex + SC_ATS_HDR_WORDS) > BufferWords)
+    {
+        /* Error -- not enough room for smallest possible ATS entry */
+        Result = SC_ERROR;
+
+        CFE_EVS_SendEvent(SC_VERIFY_ATS_END_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Verify ATS Table error: buffer full: buf index = %d, cmd num = %d, buf words = %d",
+                          (int)EntryIndex, EntryPtr->Header.CmdNumber, (int)BufferWords);
+    }
+    else
+    {
+        /* Start with the byte length of the command packet */
+        CFE_MSG_GetSize(&EntryPtr->Msg, &CommandBytes);
+
+        /* Convert packet byte length to word length (round up odd bytes) */
+        CommandWords = (CommandBytes + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD;
+
+        if ((CommandBytes < SC_PACKET_MIN_SIZE) || (CommandBytes > SC_PACKET_MAX_SIZE))
+        {
+            /* Error -- invalid command packet byte length */
+            Result = SC_ERROR;
+
+            CFE_EVS_SendEvent(SC_VERIFY_ATS_PKT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Verify ATS Table error: invalid length: buf index = %d, cmd num = %d, pkt len = %d",
+                              (int)EntryIndex, EntryPtr->Header.CmdNumber, (int)CommandBytes);
+        }
+        else if ((EntryIndex + SC_ATS_HDR_NOPKT_WORDS + CommandWords) > BufferWords)
+        {
+            /* Error -- packet must fit within buffer */
+            Result = SC_ERROR;
+
+            CFE_EVS_SendEvent(SC_VERIFY_ATS_BUF_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Verify ATS Table error: buffer overflow: buf index = %d, cmd num = %d, pkt len = %d",
+                              (int)EntryIndex, EntryPtr->Header.CmdNumber, (int)CommandBytes);
+        }
+        else if (SC_OperData.AtsDupTestArray[SC_ATS_CMD_NUM_TO_INDEX(EntryPtr->Header.CmdNumber)] != SC_DUP_TEST_UNUSED)
+        {
+            /* Entry with duplicate command number is invalid */
+            Result = SC_ERROR;
+
+            CFE_EVS_SendEvent(SC_VERIFY_ATS_DUP_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Verify ATS Table error: dup cmd number: buf index = %d, cmd num = %d, dup index = %d",
+                              (int)EntryIndex, EntryPtr->Header.CmdNumber,
+                              (int)SC_OperData.AtsDupTestArray[SC_ATS_CMD_NUM_TO_INDEX(EntryPtr->Header.CmdNumber)]);
+        }
+        else
+        {
+            /* Compute length (in words) for this ATS table entry */
+            Result = SC_ATS_HDR_NOPKT_WORDS + CommandWords;
+
+            /* Mark this ATS command ID as in use at this table index */
+            SC_OperData.AtsDupTestArray[SC_ATS_CMD_NUM_TO_INDEX(EntryPtr->Header.CmdNumber)] = EntryIndex;
+        }
+    }
+
+    return (Result);
+}
+```
+
+### `sc_loads.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_loads.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains functions to handle validation of TBL tables,
+ *   as well as setting up Stored Command's internal data structures for
+ *   those tables
+ */
+#ifndef SC_LOADS_H
+#define SC_LOADS_H
+
+#include "cfe.h"
+
+/**
+ * \brief Parses an RTS to see if it is valid
+ *
+ *  \par Description
+ *        This routine is called to validate an RTS buffer. It parses through
+ *        the RTS to make sure all of the commands look in reasonable shape.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    Buffer32 Pointer to the area to validate
+ *
+ *  \return Boolean RTS valid status
+ *  \retval true  RTS was valid
+ *  \retval false RTS was NOT valid
+ */
+bool SC_ParseRts(uint32 Buffer32[]);
+
+/**
+ * \brief Buids the Time index buffer for the ATS
+ *
+ *  \par Description
+ *        This routine builds the ATS Time Index Table after an ATS buffer
+ *        has been loaded and the ATS Command Index Table has been built.
+ *        This routine will take the commands that are pointed to by the
+ *        pointers in the command index table and sort the commands by
+ *        time order.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AtsIndex        ATS array index
+ */
+void SC_BuildTimeIndexTable(uint16 AtsIndex);
+
+/**
+ * \brief Inserts an item in a sorted list
+ *
+ *  \par Description
+ *        This function will insert a new element into the list of
+ *        ATS commands sorted by execution time.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AtsIndex        ATS array index selection
+ *  \param [in]    NewCmdIndex     ATS command index for new list element
+ *  \param [in]    ListLength      Number of elements currently in list
+ */
+void SC_Insert(uint16 AtsIndex, uint32 NewCmdIndex, uint32 ListLength);
+
+/**
+ * \brief Initializes ATS tables before a load starts
+ *
+ *  \par Description
+ *        This function simply clears out the ats tables in preparation
+ *        for a load.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AtsIndex        ATS array index
+ */
+void SC_InitAtsTables(uint16 AtsIndex);
+
+/**
+ * \brief Validation function for ATS or Append ATS table data
+ *
+ *  \par Description
+ *        This routine is called to validate the contents of an ATS
+ *        or Apppend ATS table.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Table validation result
+ *  \retval #CFE_SUCCESS Table validation success
+ *  \retval #SC_ERROR    Table not valid
+ */
+int32 SC_VerifyAtsTable(uint32 *Buffer32, int32 BufferWords);
+
+/**
+ * \brief Validation function for a single ATS or Append ATS table entry
+ *
+ *  \par Description
+ *        This routine is called to validate the contents of a
+ *        single ATS or Append ATS table entry.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Positive integer equal to table entry length (in words) or
+ *  \retval #CFE_SUCCESS Empty entry
+ *  \retval #SC_ERROR    Entry is invalid
+ */
+int32 SC_VerifyAtsEntry(uint32 *Buffer32, int32 EntryIndex, int32 BufferWords);
+
+/**
+ * \brief Loads an ATS into the data structures in SC
+ *
+ *  \par Description
+ *        This routine is called when the SC app gets a new ATS table.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AtsIndex            ATS table array index (base zero)
+ */
+void SC_LoadAts(uint16 AtsIndex);
+
+/**
+ * \brief Validation function for an ATS
+ *
+ *  \par Description
+ *        This routine is called from the cFE Table Services and passed
+ *        as a parameter in the cFE Table Registration call.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Table validation result
+ *  \retval #CFE_SUCCESS Table validation success
+ *  \retval #SC_ERROR    Table not valid
+ */
+int32 SC_ValidateAts(void *TableData);
+
+/**
+ * \brief Validation function for the Append ATS Table
+ *
+ *  \par Description
+ *        This routine is called from the cFE Table Services as part of
+ *        the table load/validate/commit process.  The function pointer
+ *        is passed as a parameter in the cFE Table Registration call.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Table validation result
+ *  \retval #CFE_SUCCESS Table validation success
+ *  \retval #SC_ERROR    Table not valid
+ */
+int32 SC_ValidateAppend(void *TableData);
+
+/**
+ * \brief Updates Append ATS Info table per new contents of Append ATS table
+ *
+ *  \par Description
+ *        This routine is called when the SC app receives notification
+ *        from cFE Table Services that the Append ATS table contents
+ *        have been updated.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_UpdateAppend(void);
+
+/**
+ * \brief Appends contents of Append ATS table to indicated ATS table
+ *
+ *  \par Description
+ *        This routine is called from the Append ATS command handler to
+ *        append the contents of the Append ATS table to the end of the
+ *        indicated ATS table.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AtsIndex            ATS table array index (base zero)
+ */
+void SC_ProcessAppend(uint16 AtsIndex);
+
+/**
+ * \brief Loads an RTS into the data structures in SC
+ *
+ *  \par Description
+ *        This routine is called when the SC app gets a new RTS table.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    RtsIndex            RTS table array index (base zero)
+ */
+void SC_LoadRts(uint16 RtsIndex);
+
+/**
+ * \brief Validation function for an RTS
+ *
+ *  \par Description
+ *        This routine is called from the cFE Table Services and passed
+ *        as a parameter in the cFE Table Registration call.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \return Table validation result
+ *  \retval #CFE_SUCCESS Table validation success
+ *  \retval #SC_ERROR    Table not valid
+ */
+int32 SC_ValidateRts(void *TableData);
+
+#endif
+```
+
+### `sc_rtsrq.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_rtsrq.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *     This file contains functions to handle all of the RTS
+ *     executive requests and internal reuqests to control
+ *     the RTP and RTSs.
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_app.h"
+#include "sc_rtsrq.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+#include "sc_msgids.h"
+
+/**************************************************************************
+ **
+ ** Functions
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Starts and RTS                                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StartRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16               RtsId;         /* rts ID */
+    uint16               RtsIndex;      /* rts array index */
+    SC_RtsEntryHeader_t *RtsEntryPtr;   /* pointer to an rts entry */
+    CFE_MSG_Message_t *  RtsEntryCmd;   /* pointer to an rts command */
+    CFE_MSG_Size_t       CmdLength = 0; /* the length of the 1st cmd */
+    /*
+     ** Verify command packet length...
+     */
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsCmd_t)))
+    {
+        /*
+         ** Check start RTS parameters
+         */
+        RtsId = ((SC_RtsCmd_t *)CmdPacket)->RtsId;
+
+        if ((RtsId > 0) && (RtsId <= SC_NUMBER_OF_RTS))
+        {
+            /* convert RTS ID to RTS array index */
+            RtsIndex = SC_RTS_ID_TO_INDEX(RtsId);
+
+            /* make sure that RTS is not disabled */
+            if (SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false)
+            {
+                /* the requested RTS is not being used and is not empty */
+                if (SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED)
+                {
+                    /*
+                     ** Check the command length
+                     */
+                    RtsEntryPtr = (SC_RtsEntryHeader_t *)SC_OperData.RtsTblAddr[RtsIndex];
+                    RtsEntryCmd = (CFE_MSG_Message_t *)((uint8_t *)RtsEntryPtr + SC_RTS_HEADER_SIZE);
+
+                    CFE_MSG_GetSize(RtsEntryCmd, &CmdLength);
+
+                    /* Make sure the command is big enough, but not too big  */
+                    if (CmdLength >= SC_PACKET_MIN_SIZE && CmdLength <= SC_PACKET_MAX_SIZE)
+                    {
+                        /*
+                         **  Initialize the RTS info table entry
+                         */
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus      = SC_EXECUTING;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr         = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr      = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr++;
+
+                        /*
+                         ** Get the absolute time for the RTSs next_cmd_time
+                         ** using the current time and the relative time tag.
+                         */
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime =
+                            SC_ComputeAbsTime(((SC_RtsEntryHeader_t *)SC_OperData.RtsTblAddr[RtsIndex])->TimeTag);
+
+                        /*
+                         ** Last, Increment some global counters associated with the
+                         ** starting of the RTS
+                         */
+                        SC_OperData.RtsCtrlBlckAddr->NumRtsActive++;
+                        SC_OperData.HkPacket.RtsActiveCtr++;
+                        SC_OperData.HkPacket.CmdCtr++;
+
+                        if (((SC_RtsCmd_t *)CmdPacket)->RtsId <= SC_LAST_RTS_WITH_EVENTS)
+                        {
+                            CFE_EVS_SendEvent(SC_RTS_START_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                              "RTS Number %03d Started", RtsId);
+                        }
+                        else
+                        {
+                            CFE_EVS_SendEvent(SC_STARTRTS_CMD_DBG_EID, CFE_EVS_EventType_DEBUG, "Start RTS #%d command",
+                                              RtsId);
+                        }
+                    }
+                    else
+                    { /* the length field of the 1st cmd was bad */
+                        CFE_EVS_SendEvent(
+                            SC_STARTRTS_CMD_INVLD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                            "Start RTS %03d Rejected: Invld Len Field for 1st Cmd in Sequence. Invld Cmd Length = %d",
+                            RtsId, (int)CmdLength);
+
+                        SC_OperData.HkPacket.CmdErrCtr++;
+                        SC_OperData.HkPacket.RtsActiveErrCtr++;
+
+                    } /* end if - check command number */
+                }
+                else
+                { /* Cannot use the RTS now */
+
+                    CFE_EVS_SendEvent(SC_STARTRTS_CMD_NOT_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Start RTS %03d Rejected: RTS Not Loaded or In Use, Status: %d",
+                                      ((SC_RtsCmd_t *)CmdPacket)->RtsId,
+                                      SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus);
+
+                    SC_OperData.HkPacket.CmdErrCtr++;
+                    SC_OperData.HkPacket.RtsActiveErrCtr++;
+
+                } /* end if */
+            }
+            else
+            { /* the RTS is disabled */
+                CFE_EVS_SendEvent(SC_STARTRTS_CMD_DISABLED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Start RTS %03d Rejected: RTS Disabled", RtsId);
+
+                SC_OperData.HkPacket.CmdErrCtr++;
+                SC_OperData.HkPacket.RtsActiveErrCtr++;
+
+            } /* end if */
+        }
+        else
+        { /* the rts id is invalid */
+            CFE_EVS_SendEvent(SC_STARTRTS_CMD_INVALID_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Start RTS %03d Rejected: Invalid RTS ID", RtsId);
+
+            SC_OperData.HkPacket.CmdErrCtr++;
+            SC_OperData.HkPacket.RtsActiveErrCtr++;
+        }
+    }
+    else
+    { /* the command length is invalid */
+        SC_OperData.HkPacket.RtsActiveErrCtr++;
+    }
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Start a group of RTS                                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StartRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 FirstId;
+    uint16 LastId;
+    uint16 FirstIndex; /* RTS array index */
+    uint16 LastIndex;
+    uint16 RtsIndex;
+    int32  StartCount = 0;
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsGrpCmd_t)))
+    {
+        FirstId = ((SC_RtsGrpCmd_t *)CmdPacket)->FirstRtsId;
+        LastId  = ((SC_RtsGrpCmd_t *)CmdPacket)->LastRtsId;
+
+        /* make sure the specified group is valid */
+        if ((FirstId > 0) && (LastId > 0) && (FirstId <= SC_NUMBER_OF_RTS) && (LastId <= SC_NUMBER_OF_RTS) &&
+            (FirstId <= LastId))
+        {
+            /* convert RTS ID to RTS array index */
+            FirstIndex = SC_RTS_ID_TO_INDEX(FirstId);
+            LastIndex  = SC_RTS_ID_TO_INDEX(LastId);
+
+            for (RtsIndex = FirstIndex; RtsIndex <= LastIndex; RtsIndex++)
+            {
+                /* make sure that RTS is not disabled, empty or executing */
+                if (SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false)
+                {
+                    if (SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_LOADED)
+                    {
+                        /* initialize the RTS info table entry */
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus      = SC_EXECUTING;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdCtr         = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr      = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr = 0;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].UseCtr++;
+
+                        /* get absolute time for 1st cmd in the RTS */
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime =
+                            SC_ComputeAbsTime(((SC_RtsEntryHeader_t *)SC_OperData.RtsTblAddr[RtsIndex])->TimeTag);
+
+                        /* maintain counters associated with starting RTS */
+                        SC_OperData.RtsCtrlBlckAddr->NumRtsActive++;
+                        SC_OperData.HkPacket.RtsActiveCtr++;
+
+                        /* count the RTS that were actually started */
+                        StartCount++;
+                    }
+                    else
+                    { /* Cannot use the RTS now */
+                        CFE_EVS_SendEvent(
+                            SC_STARTRTSGRP_CMD_NOT_LDED_ERR_EID, CFE_EVS_EventType_ERROR,
+                            "Start RTS group error: rejected RTS ID %03d, RTS Not Loaded or In Use, Status: %d",
+                            SC_RTS_INDEX_TO_ID(RtsIndex), SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus);
+
+                        SC_OperData.HkPacket.RtsActiveErrCtr++;
+
+                    } /* end if */
+                }
+                else
+                { /* the RTS is disabled */
+                    CFE_EVS_SendEvent(SC_STARTRTSGRP_CMD_DISABLED_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Start RTS group error: rejected RTS ID %03d, RTS Disabled",
+                                      SC_RTS_INDEX_TO_ID(RtsIndex));
+
+                    SC_OperData.HkPacket.RtsActiveErrCtr++;
+
+                } /* end if */
+            }
+
+            /* success */
+            CFE_EVS_SendEvent(SC_STARTRTSGRP_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Start RTS group: FirstID=%d, LastID=%d, Modified=%d", FirstId, LastId, (int)StartCount);
+            SC_OperData.HkPacket.CmdCtr++;
+        }
+        else
+        { /* error */
+            CFE_EVS_SendEvent(SC_STARTRTSGRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Start RTS group error: FirstID=%d, LastID=%d", FirstId, LastId);
+            SC_OperData.HkPacket.CmdErrCtr++;
+        }
+    }
+}
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Stop an RTS                                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StopRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 RtsId;    /* RTS ID */
+    uint16 RtsIndex; /* RTS array index */
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsCmd_t)))
+    {
+        RtsId = ((SC_RtsCmd_t *)CmdPacket)->RtsId;
+
+        /* check the command parameter */
+        if (RtsId <= SC_NUMBER_OF_RTS)
+        {
+            /* convert RTS ID to RTS array index */
+            RtsIndex = SC_RTS_ID_TO_INDEX(RtsId);
+
+            /* stop the rts by calling a generic routine */
+            SC_KillRts(RtsIndex);
+
+            SC_OperData.HkPacket.CmdCtr++;
+
+            CFE_EVS_SendEvent(SC_STOPRTS_CMD_INF_EID, CFE_EVS_EventType_INFORMATION, "RTS %03d Aborted", RtsId);
+        }
+        else
+        { /* the specified RTS is invalid */
+
+            /* the rts id is invalid */
+            CFE_EVS_SendEvent(SC_STOPRTS_CMD_ERR_EID, CFE_EVS_EventType_ERROR, "Stop RTS %03d rejected: Invalid RTS ID",
+                              RtsId);
+
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+        } /* end if */
+    }
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Stop a group of RTS                                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_StopRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 FirstId;
+    uint16 LastId;
+    uint16 FirstIndex; /* RTS array index */
+    uint16 LastIndex;
+    uint16 RtsIndex;
+    int32  StopCount = 0;
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsGrpCmd_t)))
+    {
+        FirstId = ((SC_RtsGrpCmd_t *)CmdPacket)->FirstRtsId;
+        LastId  = ((SC_RtsGrpCmd_t *)CmdPacket)->LastRtsId;
+
+        /* make sure the specified group is valid */
+        if ((FirstId > 0) && (LastId > 0) && (FirstId <= SC_NUMBER_OF_RTS) && (LastId <= SC_NUMBER_OF_RTS) &&
+            (FirstId <= LastId))
+        {
+            /* convert RTS ID to RTS array index */
+            FirstIndex = SC_RTS_ID_TO_INDEX(FirstId);
+            LastIndex  = SC_RTS_ID_TO_INDEX(LastId);
+
+            for (RtsIndex = FirstIndex; RtsIndex <= LastIndex; RtsIndex++)
+            {
+                /* count the entries that were actually stopped */
+                if (SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING)
+                {
+                    SC_KillRts(RtsIndex);
+                    StopCount++;
+                }
+            }
+
+            /* success */
+            CFE_EVS_SendEvent(SC_STOPRTSGRP_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Stop RTS group: FirstID=%d, LastID=%d, Modified=%d", FirstId, LastId, (int)StopCount);
+            SC_OperData.HkPacket.CmdCtr++;
+        }
+        else
+        { /* error */
+            CFE_EVS_SendEvent(SC_STOPRTSGRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Stop RTS group error: FirstID=%d, LastID=%d", FirstId, LastId);
+            SC_OperData.HkPacket.CmdErrCtr++;
+        }
+    }
+}
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Disables an RTS                                                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_DisableRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 RtsId;    /* RTS ID */
+    uint16 RtsIndex; /* RTS array index */
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsCmd_t)))
+    {
+        RtsId = ((SC_RtsCmd_t *)CmdPacket)->RtsId;
+
+        /* make sure tha specified rts is valid */
+        if (RtsId <= SC_NUMBER_OF_RTS)
+        {
+            /* convert RTS ID to RTS array index */
+            RtsIndex = SC_RTS_ID_TO_INDEX(RtsId);
+
+            /* disable the RTS */
+            SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = true;
+
+            /* update the command status */
+            SC_OperData.HkPacket.CmdCtr++;
+
+            CFE_EVS_SendEvent(SC_DISABLE_RTS_DEB_EID, CFE_EVS_EventType_DEBUG, "Disabled RTS %03d", RtsId);
+        }
+        else
+        { /* it is not a valid RTS id */
+            CFE_EVS_SendEvent(SC_DISRTS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Disable RTS %03d Rejected: Invalid RTS ID", RtsId);
+
+            /* update the command error status */
+            SC_OperData.HkPacket.CmdErrCtr++;
+        } /* end if */
+    }
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Disable a group of RTS                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_DisableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 FirstId;
+    uint16 LastId;
+    uint16 FirstIndex; /* RTS array index */
+    uint16 LastIndex;
+    uint16 RtsIndex;
+    int32  DisableCount = 0;
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsGrpCmd_t)))
+    {
+        FirstId = ((SC_RtsGrpCmd_t *)CmdPacket)->FirstRtsId;
+        LastId  = ((SC_RtsGrpCmd_t *)CmdPacket)->LastRtsId;
+
+        /* make sure the specified group is valid */
+        if ((FirstId > 0) && (LastId > 0) && (FirstId <= SC_NUMBER_OF_RTS) && (LastId <= SC_NUMBER_OF_RTS) &&
+            (FirstId <= LastId))
+        {
+            /* convert RTS ID to RTS array index */
+            FirstIndex = SC_RTS_ID_TO_INDEX(FirstId);
+            LastIndex  = SC_RTS_ID_TO_INDEX(LastId);
+
+            for (RtsIndex = FirstIndex; RtsIndex <= LastIndex; RtsIndex++)
+            {
+                /* count the entries that were actually disabled */
+                if (SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == false)
+                {
+                    DisableCount++;
+                    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = true;
+                }
+            }
+
+            /* success */
+            CFE_EVS_SendEvent(SC_DISRTSGRP_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Disable RTS group: FirstID=%d, LastID=%d, Modified=%d", FirstId, LastId,
+                              (int)DisableCount);
+            SC_OperData.HkPacket.CmdCtr++;
+        }
+        else
+        { /* error */
+            CFE_EVS_SendEvent(SC_DISRTSGRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Disable RTS group error: FirstID=%d, LastID=%d", FirstId, LastId);
+            SC_OperData.HkPacket.CmdErrCtr++;
+        }
+    }
+}
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Enables an RTS                                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_EnableRtsCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 RtsId;    /* RTS ID */
+    uint16 RtsIndex; /* RTS array index */
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsCmd_t)))
+    {
+        RtsId = ((SC_RtsCmd_t *)CmdPacket)->RtsId;
+
+        /* make sure the specified rts is valid */
+        if ((RtsId > 0) && (RtsId <= SC_NUMBER_OF_RTS))
+        {
+            /* convert RTS ID to RTS array index */
+            RtsIndex = SC_RTS_ID_TO_INDEX(RtsId);
+
+            /* re-enable the RTS */
+            SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+
+            /* update the command status */
+            SC_OperData.HkPacket.CmdCtr++;
+
+            CFE_EVS_SendEvent(SC_ENABLE_RTS_DEB_EID, CFE_EVS_EventType_DEBUG, "Enabled RTS %03d", RtsId);
+        }
+        else
+        { /* it is not a valid RTS id */
+            CFE_EVS_SendEvent(SC_ENARTS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Enable RTS %03d Rejected: Invalid RTS ID", RtsId);
+
+            /* update the command error status */
+            SC_OperData.HkPacket.CmdErrCtr++;
+
+        } /* end if */
+    }
+}
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Enable a group of RTS                                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_EnableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket)
+{
+    uint16 FirstId;
+    uint16 LastId;
+    uint16 FirstIndex; /* RTS array index */
+    uint16 LastIndex;
+    uint16 RtsIndex;
+    int32  EnableCount = 0;
+
+    if (SC_VerifyCmdLength(&CmdPacket->Msg, sizeof(SC_RtsGrpCmd_t)))
+    {
+        FirstId = ((SC_RtsGrpCmd_t *)CmdPacket)->FirstRtsId;
+        LastId  = ((SC_RtsGrpCmd_t *)CmdPacket)->LastRtsId;
+
+        /* make sure the specified group is valid */
+        if ((FirstId > 0) && (LastId > 0) && (FirstId <= SC_NUMBER_OF_RTS) && (LastId <= SC_NUMBER_OF_RTS) &&
+            (FirstId <= LastId))
+        {
+            /* convert RTS ID to RTS array index */
+            FirstIndex = SC_RTS_ID_TO_INDEX(FirstId);
+            LastIndex  = SC_RTS_ID_TO_INDEX(LastId);
+
+            for (RtsIndex = FirstIndex; RtsIndex <= LastIndex; RtsIndex++)
+            {
+                /* count the entries that were actually enabled */
+                if (SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag == true)
+                {
+                    EnableCount++;
+                    SC_OperData.RtsInfoTblAddr[RtsIndex].DisabledFlag = false;
+                }
+            }
+
+            /* success */
+            CFE_EVS_SendEvent(SC_ENARTSGRP_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Enable RTS group: FirstID=%d, LastID=%d, Modified=%d", FirstId, LastId,
+                              (int)EnableCount);
+            SC_OperData.HkPacket.CmdCtr++;
+        }
+        else
+        { /* error */
+            CFE_EVS_SendEvent(SC_ENARTSGRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Enable RTS group error: FirstID=%d, LastID=%d", FirstId, LastId);
+            SC_OperData.HkPacket.CmdErrCtr++;
+        }
+    }
+}
+#endif
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Kill an RTS and clear out its data                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_KillRts(uint16 RtsIndex)
+{
+    /* validate RTS array index */
+    if (RtsIndex >= SC_NUMBER_OF_RTS)
+    {
+        CFE_EVS_SendEvent(SC_KILLRTS_INV_INDEX_ERR_EID, CFE_EVS_EventType_ERROR, "RTS kill error: invalid RTS index %d",
+                          RtsIndex);
+    }
+    else if (SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING)
+    {
+        /*
+         ** Stop the RTS from executing
+         */
+        SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus       = SC_LOADED;
+        SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime = SC_MAX_TIME;
+
+        /*
+         ** Note: the rest of the fields are left alone
+         ** to provide information on where the
+         ** rts stopped. They are cleared out when it is restarted.
+         */
+
+        if (SC_OperData.RtsCtrlBlckAddr->NumRtsActive > 0)
+        {
+            SC_OperData.RtsCtrlBlckAddr->NumRtsActive--;
+        }
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Start an RTS on initilization                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_AutoStartRts(uint16 RtsNumber)
+{
+    SC_RtsCmd_t CmdPkt; /* the command packet to start an RTS */
+
+    memset(&CmdPkt, 0, sizeof(CmdPkt));
+
+    /* validate RTS ID */
+    if ((RtsNumber > 0) && (RtsNumber <= SC_NUMBER_OF_RTS))
+    {
+        /*
+         ** Format the command packet to start the first RTS
+         */
+        CFE_MSG_Init(&CmdPkt.CmdHeader.Msg, CFE_SB_ValueToMsgId(SC_CMD_MID), sizeof(SC_RtsCmd_t));
+
+        CFE_MSG_SetFcnCode(&CmdPkt.CmdHeader.Msg, SC_START_RTS_CC);
+
+        /*
+         ** Get the RTS ID to start.
+         */
+        CmdPkt.RtsId = RtsNumber;
+
+        /*
+         ** Now send the command back to SC
+         */
+        CFE_SB_TransmitMsg(&CmdPkt.CmdHeader.Msg, true);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(SC_AUTOSTART_RTS_INV_ID_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "RTS autostart error: invalid RTS ID %d", RtsNumber);
+    }
+}
+```
+
+### `sc_rtsrq.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_rtsrq.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the headers to handle all of the RTS
+ *   executive requests and internal reuqests to control
+ *   the RTP and RTSs.
+ */
+#ifndef SC_RTSRQ_H
+#define SC_RTSRQ_H
+
+#include "cfe.h"
+
+/**
+ * \brief Start an RTS Command
+ *
+ *  \par Description
+ *             This routine starts the execution of an RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_START_RTS_CC
+ */
+void SC_StartRtsCmd(const CFE_SB_Buffer_t *CmdPacket);
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+
+/**
+ * \brief Start a group of RTS Command
+ *
+ *  \par Description
+ *             This routine starts the execution of a group of RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_START_RTS_GRP_CC
+ */
+void SC_StartRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket);
+#endif
+
+/**
+ * \brief  Stop an RTS from executing Command
+ *
+ *  \par Description
+ *             This routine stops the execution of an RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_STOP_RTS_CC
+ */
+void SC_StopRtsCmd(const CFE_SB_Buffer_t *CmdPacket);
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+
+/**
+ * \brief  Stop a group of RTS from executing Command
+ *
+ *  \par Description
+ *             This routine stops the execution of a group of RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_STOP_RTS_CC
+ */
+void SC_StopRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket);
+#endif
+
+/**
+ * \brief Disable an RTS Command
+ *
+ *  \par Description
+ *             This routine disables an enabled RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_DISABLE_RTS_CC
+ */
+void SC_DisableRtsCmd(const CFE_SB_Buffer_t *CmdPacket);
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+
+/**
+ * \brief Disable a group of RTS Command
+ *
+ *  \par Description
+ *             This routine disables a group of enabled RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_DISABLE_RTS_CC
+ */
+void SC_DisableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket);
+#endif
+
+/**
+ * \brief Enable an RTS Command
+ *
+ *  \par Description
+ *             This routine enables a disabled RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_ENABLE_RTS_CC
+ */
+void SC_EnableRtsCmd(const CFE_SB_Buffer_t *CmdPacket);
+
+#if (SC_ENABLE_GROUP_COMMANDS == true)
+
+/**
+ * \brief Enable a group of RTS Command
+ *
+ *  \par Description
+ *             This routine enables a group of disabled RTS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         CmdPacket      Pointer to Software Bus buffer
+ *
+ *  \sa #SC_ENABLE_RTS_GRP_CC
+ */
+void SC_EnableRtsGrpCmd(const CFE_SB_Buffer_t *CmdPacket);
+#endif
+
+/**
+ * \brief Stops an RTS & clears out data
+ *
+ *  \par Description
+ *      This is a generic routine to stop an RTS
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         RtsIndex       RTS index to kill (base zero)
+ */
+void SC_KillRts(uint16 RtsIndex);
+
+/**
+ * \brief Automatically starts an RTS
+ *
+ *  \par Description
+ *        This function sends a command back to the SC app to
+ *        start the RTS designated as the auto-start RTS (usually 1)
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]         RtsNumber      RTS number to start (base one)
+ */
+void SC_AutoStartRts(uint16 RtsNumber);
+
+#endif
+```
+
+### `sc_state.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_state.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains functions to handle getting the next time of
+ *   commands for the ATP and RTP  as well as updating the time for
+ *   Stored Command.
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_app.h"
+#include "sc_atsrq.h"
+#include "sc_rtsrq.h"
+#include "sc_state.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+#include "sc_msgdefs.h"
+#include "sc_tbldefs.h"
+#include <string.h>
+
+/**************************************************************************
+ **
+ ** Local #defines
+ **
+ **************************************************************************/
+
+/* used for RTS table iteration */
+#define SC_INVALID_RTS_INDEX 0xFFFF
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Gets the time of the next RTS command                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_GetNextRtsTime(void)
+{
+    int16           i;        /* loop counter MUST be SIGNED !*/
+    uint16          NextRts;  /* the next rts to schedule */
+    SC_AbsTimeTag_t NextTime; /* the next time for the RTS */
+
+    NextRts  = SC_INVALID_RTS_INDEX;
+    NextTime = SC_MAX_TIME;
+
+    /*
+     ** Go through the table backwards to account for the RTS priority
+     ** Lower number RTSs get higher priority
+     ** Backward processing ensures selection of the lowest RTS number
+     ** when multiple RTSs have the same next command time
+     */
+    for (i = SC_NUMBER_OF_RTS - 1; i >= 0; i--)
+    {
+        if (SC_OperData.RtsInfoTblAddr[i].RtsStatus == SC_EXECUTING)
+        {
+            if (SC_OperData.RtsInfoTblAddr[i].NextCommandTime <= NextTime)
+            {
+                NextTime = SC_OperData.RtsInfoTblAddr[i].NextCommandTime;
+                NextRts  = i;
+            } /* end if */
+        }     /* end if */
+    }         /* end for */
+
+    if (NextRts == SC_INVALID_RTS_INDEX)
+    {
+        SC_OperData.RtsCtrlBlckAddr->RtsNumber = SC_INVALID_RTS_NUMBER;
+        SC_AppData.NextCmdTime[SC_RTP]         = SC_MAX_TIME;
+    }
+    else
+    {
+        SC_OperData.RtsCtrlBlckAddr->RtsNumber = NextRts + 1;
+        SC_AppData.NextCmdTime[SC_RTP]         = NextTime;
+    } /* end if */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Decides whether an RTS or ATS command gets scheduled next       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_UpdateNextTime(void)
+{
+    /*
+     ** First, find out which RTS needs to run next
+     */
+    SC_GetNextRtsTime();
+
+    /*
+     ** Start out with a default, no processors need to run next
+     */
+    SC_AppData.NextProcNumber = SC_NONE;
+
+    /*
+     ** Check to see if the ATP needs to schedule commands
+     */
+    if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING)
+    {
+        SC_AppData.NextProcNumber = SC_ATP;
+    }
+    /*
+     ** Last, check to see if there is an RTS that needs to schedule commands
+     ** This is determined by the RTS number in the RTP control block
+     ** If it is zero, there is no RTS that needs to run
+     */
+    if (SC_OperData.RtsCtrlBlckAddr->RtsNumber > 0)
+    {
+        /*
+         ** If the RTP needs to send commands, only send them if
+         ** the RTP time is less than the ATP time. Otherwise
+         ** the ATP has priority
+         */
+        if (SC_AppData.NextCmdTime[SC_RTP] < SC_AppData.NextCmdTime[SC_ATP])
+        {
+            SC_AppData.NextProcNumber = SC_RTP;
+        }
+    } /* end if */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Gets the next RTS Command                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_GetNextRtsCommand(void)
+{
+    uint16         RtsIndex;
+    uint16         CmdOffset;
+    SC_RtsEntry_t *EntryPtr;
+    CFE_MSG_Size_t CmdLength = 0;
+
+    /*
+     ** Make sure that the RTP is executing some RTS
+     */
+
+    if ((SC_OperData.RtsCtrlBlckAddr->RtsNumber > 0) && (SC_OperData.RtsCtrlBlckAddr->RtsNumber <= SC_NUMBER_OF_RTS))
+    {
+        /* Get the index of the rts that is running */
+        RtsIndex = SC_RTS_NUM_TO_INDEX(SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+        /*
+         ** Find out if the RTS is EXECUTING or just STARTED
+         */
+        if (SC_OperData.RtsInfoTblAddr[RtsIndex].RtsStatus == SC_EXECUTING)
+        {
+            /*
+             ** Get the information needed to find the next command
+             */
+            CmdOffset = SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr;
+            EntryPtr  = (SC_RtsEntry_t *)&SC_OperData.RtsTblAddr[RtsIndex][CmdOffset];
+
+            CFE_MSG_GetSize(&EntryPtr->Msg, &CmdLength);
+            CmdLength += SC_RTS_HEADER_SIZE;
+
+            /*
+             ** calculate the new command offset and new command length
+             ** Cmd Length is in bytes, so we convert it to words
+             ** (plus 1 to round byte len up to word len)
+             */
+
+            CmdOffset = CmdOffset + ((CmdLength + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD);
+            /*
+             ** if the end of the buffer is not reached.
+             ** This check is made to make sure that at least the minimum
+             ** Sized packet fits in the buffer. It assures we are not reading
+             ** bogus length info from other data.
+             */
+
+            /* If at least the header for a command plus the RTS header can fit in the buffer */
+            if (CmdOffset <= (SC_RTS_BUFF_SIZE32 - SC_RTS_HDR_WORDS))
+            {
+                /*
+                 ** Get the next RTS command
+                 */
+                EntryPtr = (SC_RtsEntry_t *)&SC_OperData.RtsTblAddr[RtsIndex][CmdOffset];
+
+                /*
+                 ** get the length of the new command
+                 */
+                CFE_MSG_GetSize(&EntryPtr->Msg, &CmdLength);
+                CmdLength += SC_RTS_HEADER_SIZE;
+
+                /*
+                 ** Check to see if the command length is less than the size of a header.
+                 ** This indicates that there are no more commands
+                 */
+
+                if ((CmdLength - SC_RTS_HEADER_SIZE) >= (SC_PACKET_MIN_SIZE))
+                {
+                    /*
+                     ** Check to see if the command length is too big
+                     ** If it is , then there is an error with the command
+                     */
+                    if ((CmdLength - SC_RTS_HEADER_SIZE) <= SC_PACKET_MAX_SIZE)
+                    {
+                        /*
+                         ** Last Check is to check to see if the command
+                         ** runs off of the end of the buffer
+                         ** (plus 1 to round byte len up to word len)
+                         */
+                        if (CmdOffset + ((CmdLength + SC_ROUND_UP_BYTES) / SC_BYTES_IN_WORD) <= SC_RTS_BUFF_SIZE32)
+                        {
+                            /*
+                             ** Everything passed!
+                             ** Update the proper next command time for that RTS
+                             */
+                            SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandTime =
+                                SC_ComputeAbsTime(EntryPtr->Header.TimeTag);
+
+                            /*
+                             ** Update the appropriate RTS info table current command pointer
+                             */
+                            SC_OperData.RtsInfoTblAddr[RtsIndex].NextCommandPtr = CmdOffset;
+                        }
+                        else
+                        { /* the command runs past the end of the buffer */
+
+                            /*
+                             ** Having a command that runs off of the end of the buffer
+                             ** is an error condition, so record it
+                             */
+                            SC_OperData.HkPacket.RtsCmdErrCtr++;
+                            SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr++;
+                            SC_OperData.HkPacket.LastRtsErrSeq = SC_OperData.RtsCtrlBlckAddr->RtsNumber;
+                            SC_OperData.HkPacket.LastRtsErrCmd = CmdOffset;
+
+                            /*
+                             ** Stop the RTS from executing
+                             */
+                            SC_KillRts(RtsIndex);
+                            CFE_EVS_SendEvent(SC_RTS_LNGTH_ERR_EID, CFE_EVS_EventType_ERROR,
+                                              "Cmd Runs passed end of table, RTS %03d Aborted",
+                                              SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+
+                        } /* end if the command runs off the end of the buffer */
+                    }
+                    else
+                    { /* the command length is too large */
+
+                        /* update the error information */
+                        SC_OperData.HkPacket.RtsCmdErrCtr++;
+                        SC_OperData.RtsInfoTblAddr[RtsIndex].CmdErrCtr++;
+                        SC_OperData.HkPacket.LastRtsErrSeq = SC_OperData.RtsCtrlBlckAddr->RtsNumber;
+                        SC_OperData.HkPacket.LastRtsErrCmd = CmdOffset;
+
+                        /* Stop the RTS from executing */
+                        SC_KillRts(RtsIndex);
+                        CFE_EVS_SendEvent(SC_RTS_CMD_LNGTH_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "Invalid Length Field in RTS Command, RTS %03d Aborted. Length: %u, Max: %d",
+                                          SC_OperData.RtsCtrlBlckAddr->RtsNumber,
+                                          (unsigned int)(CmdLength - (uint16)SC_RTS_HEADER_SIZE), SC_PACKET_MAX_SIZE);
+
+                    } /* end if the command length is invalid */
+                }
+                else
+                { /* The command length is zero indicating no more cmds */
+                    /*
+                     **  This is not an error condition, so stop the RTS
+                     */
+
+                    /* Stop the RTS from executing */
+                    SC_KillRts(RtsIndex);
+                    if ((SC_OperData.RtsCtrlBlckAddr->RtsNumber) <= SC_LAST_RTS_WITH_EVENTS)
+                    {
+                        CFE_EVS_SendEvent(SC_RTS_COMPL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                          "RTS %03d Execution Completed", SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+                    }
+                }
+            }
+            else
+            { /* The end of the RTS buffer has been reached... */
+                /* Stop the RTS from executing */
+                SC_KillRts(RtsIndex);
+                if ((SC_OperData.RtsCtrlBlckAddr->RtsNumber) <= SC_LAST_RTS_WITH_EVENTS)
+                {
+                    CFE_EVS_SendEvent(SC_RTS_COMPL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "RTS %03d Execution Completed", SC_OperData.RtsCtrlBlckAddr->RtsNumber);
+                }
+
+            } /* end if */
+
+        } /* end if the RTS status is EXECUTING */
+
+    } /* end if the RTS number is valid */
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Gets the next ATS Command                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_GetNextAtsCommand(void)
+{
+    uint16         AtsIndex;  /* ats array index */
+    uint16         TimeIndex; /* a time index pointer */
+    uint16         CmdIndex;  /* ats command array index */
+    SC_AtsEntry_t *EntryPtr;
+
+    if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_EXECUTING)
+    {
+        /*
+         ** Get the information that is needed to find the next command
+         */
+        AtsIndex  = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber);
+        TimeIndex = SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr + 1;
+
+        /*
+         ** Check to see if there are more ATS commands
+         */
+        if (TimeIndex < SC_OperData.AtsInfoTblAddr[AtsIndex].NumberOfCommands)
+        {
+            /* get the information for the next command in the ATP control block */
+            SC_OperData.AtsCtrlBlckAddr->TimeIndexPtr = TimeIndex;
+            SC_OperData.AtsCtrlBlckAddr->CmdNumber    = SC_AppData.AtsTimeIndexBuffer[AtsIndex][TimeIndex];
+
+            /* update the next command time */
+            CmdIndex =
+                SC_AppData.AtsCmdIndexBuffer[AtsIndex][SC_ATS_CMD_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->CmdNumber)];
+            EntryPtr                       = (SC_AtsEntry_t *)&SC_OperData.AtsTblAddr[AtsIndex][CmdIndex];
+            SC_AppData.NextCmdTime[SC_ATP] = SC_GetAtsEntryTime(&EntryPtr->Header);
+        }
+        else
+        { /* the end is near... of the ATS buffer that is */
+
+            /* stop the ATS */
+            SC_KillAts();
+            CFE_EVS_SendEvent(SC_ATS_COMPL_INF_EID, CFE_EVS_EventType_INFORMATION, "ATS %c Execution Completed",
+                              (AtsIndex ? 'B' : 'A'));
+
+            /* stop any switch that is pending */
+            /* because we just ran out of commands and are stopping the ATS */
+            /* and for the safe switch pend, that is a no-no */
+            SC_OperData.AtsCtrlBlckAddr->SwitchPendFlag = false;
+
+        } /* end if */
+    }
+    else if (SC_OperData.AtsCtrlBlckAddr->AtpState == SC_STARTING)
+    {
+        /*
+         ** The SC_STARTING state is entered when an ATS inline
+         ** switch has occurred and there are no commands to
+         ** execute in the same second that the switch occurs.
+         ** The state is transitioned here to SC_EXECUTING to
+         ** commence execution of the new ATS on the next 1Hz
+         ** command processing cycle.
+         */
+        SC_OperData.AtsCtrlBlckAddr->AtpState = SC_EXECUTING;
+
+    } /* end if ATS is EXECUTING*/
+}
+```
+
+### `sc_state.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_state.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains functions to handle getting the next time of
+ *   commands for the ATP and RTP  as well as updating the time for
+ *   Stored Command.
+ */
+#ifndef SC_STATE_H
+#define SC_STATE_H
+
+#include "cfe.h"
+
+/**
+ * \brief Gets the next time for an RTS command to run
+ *
+ *  \par Description
+ *         This function searches the RTS info table to find
+ *         the next RTS that needs to run based on the time that the
+ *         rts needs to run and it's priority.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_GetNextRtsTime(void);
+
+/**
+ * \brief Decides whether the ATS or RTS runs next
+ *
+ *  \par Description
+ *         This function compares the next command times for the RTS
+ *         and the ATS and decides which one to schedule next.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_UpdateNextTime(void);
+
+/**
+ * \brief Gets the next RTS command to run
+ *
+ *  \par Description
+ *         This routine is called when #SC_ProcessRtpCommand
+ *         executes an RTS command and needs to get the next command in
+ *         the buffer. This routine will get the next RTS command from the
+ *         currently executing RTS on the active RTP. If this routine
+ *         finds a fatal error with fetching the next RTS command or cannot
+ *         find a next RTS command, then the sequence and RTP is stopped.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_GetNextRtsCommand(void);
+
+/**
+ * \brief Gets the next ATS command to run
+ *
+ *  \par Description
+ *         This routine gets the next ATS command from the currently
+ *         executing ATS buffer. If there is no next ATS command then
+ *         this routine will stop the currently running ATS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ */
+void SC_GetNextAtsCommand(void);
+
+#endif
+```
+
+### `sc_utils.c`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the utilty functions for Stored Command
+ */
+
+/**************************************************************************
+ **
+ ** Include section
+ **
+ **************************************************************************/
+
+#include "cfe.h"
+#include "sc_utils.h"
+#include "sc_events.h"
+#include "sc_msgids.h"
+#include <string.h>
+
+/**************************************************************************
+ **
+ ** Functions
+ **
+ **************************************************************************/
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get the Current time from CFE TIME                              */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void SC_GetCurrentTime(void)
+{
+    CFE_TIME_SysTime_t TempTime;
+
+/* Use SC defined time */
+#if (SC_TIME_TO_USE == SC_USE_UTC)
+    TempTime = CFE_TIME_GetUTC();
+#elif (SC_TIME_TO_USE == SC_USE_TAI)
+    TempTime = CFE_TIME_GetTAI();
+#else
+    /* Use cFE configured time */
+    TempTime = CFE_TIME_GetTime();
+#endif
+
+    /* We don't care about subseconds */
+    SC_AppData.CurrentTime = TempTime.Seconds;
+}
+
+SC_AbsTimeTag_t SC_GetAtsEntryTime(SC_AtsEntryHeader_t *Entry)
+{
+    /*
+    ** ATS Entry Header looks like this...
+    **
+    **    uint16 Pad;
+    **    uint16 CmdNumber;
+    **
+    **    uint16 TimeTag_MS;
+    **    uint16 TimeTag_LS;
+    **
+    **    CFE_SB_Buffer_t Buffer;
+    **
+    ** The command packet data is variable length,
+    **    only the command packet header is shown here.
+    */
+
+    return ((Entry->TimeTag_MS << 16) + Entry->TimeTag_LS);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Compute Absolute time from relative time                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+SC_AbsTimeTag_t SC_ComputeAbsTime(SC_RelTimeTag_t RelTime)
+{
+    CFE_TIME_SysTime_t AbsoluteTimeWSubs;
+    CFE_TIME_SysTime_t RelTimeWSubs;
+    CFE_TIME_SysTime_t ResultTimeWSubs;
+    /*
+     ** get the current time
+     */
+    AbsoluteTimeWSubs.Seconds    = SC_AppData.CurrentTime;
+    AbsoluteTimeWSubs.Subseconds = 0;
+
+    RelTimeWSubs.Seconds    = RelTime;
+    RelTimeWSubs.Subseconds = 0;
+    /*
+     ** add the relative time the current time
+     */
+    ResultTimeWSubs = CFE_TIME_Add(AbsoluteTimeWSubs, RelTimeWSubs);
+
+    /* We don't need subseconds */
+    return (ResultTimeWSubs.Seconds);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/*  Compare absolute times                                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool SC_CompareAbsTime(SC_AbsTimeTag_t AbsTime1, SC_AbsTimeTag_t AbsTime2)
+{
+    bool               Status;
+    CFE_TIME_SysTime_t Time1WSubs;
+    CFE_TIME_SysTime_t Time2WSubs;
+    CFE_TIME_Compare_t Result;
+
+    Time1WSubs.Seconds    = AbsTime1;
+    Time1WSubs.Subseconds = 0;
+
+    Time2WSubs.Seconds    = AbsTime2;
+    Time2WSubs.Subseconds = 0;
+
+    Result = CFE_TIME_Compare(Time1WSubs, Time2WSubs);
+
+    if (Result == CFE_TIME_A_GT_B)
+    {
+        Status = true;
+    }
+    else
+    {
+        Status = false;
+    }
+
+    return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* SC Verify the length of the command                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool SC_VerifyCmdLength(const CFE_MSG_Message_t *Msg, size_t ExpectedLength)
+{
+    CFE_SB_MsgId_t    MessageID    = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode  = 0;
+    bool              Result       = true;
+    size_t            ActualLength = 0;
+
+    CFE_MSG_GetSize(Msg, &ActualLength);
+
+    /* Verify the command packet length */
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(Msg, &MessageID);
+        CFE_MSG_GetFcnCode(Msg, &CommandCode);
+
+        CFE_EVS_SendEvent(SC_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%08lX, CC = %d, Len = %d, Expected = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode, (int)ActualLength,
+                          (int)ExpectedLength);
+        Result = false;
+        if (CFE_SB_MsgIdToValue(MessageID) == SC_CMD_MID)
+        {
+            SC_OperData.HkPacket.CmdErrCtr++;
+        }
+    }
+    return (Result);
+}
+
+uint16 SC_ToggleAtsIndex(void)
+{
+    uint16 CurrAtsIndex = SC_ATS_NUM_TO_INDEX(SC_OperData.AtsCtrlBlckAddr->AtsNumber);
+
+    return (1 - CurrAtsIndex);
+}
+```
+
+### `sc_utils.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the utilty functions for Stored Command
+ */
+#ifndef SC_UTILS_H
+#define SC_UTILS_H
+
+#include "cfe.h"
+#include "sc_app.h"
+
+/**
+ * \brief Gets the current time from CFE
+ *
+ *  \par Description
+ *       Queries the CFE TIME services and retieves the Current time
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        This routine stores the time in #SC_AppData
+ */
+void SC_GetCurrentTime(void);
+
+/**
+ * \brief Gets the absolute time from an ATS entry
+ *
+ *  \par Description
+ *       This function returns the absolute time tag contained within
+ *       the ATS entry passed into the function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]        Entry         Pointer to ATS entry
+ *
+ *  \return The absolute time tag
+ */
+SC_AbsTimeTag_t SC_GetAtsEntryTime(SC_AtsEntryHeader_t *Entry);
+
+/**
+ * \brief Computes an absolute time from relative time
+ *
+ *  \par Description
+ *       This function computes an absolute time from 'now' and the
+ *       relative time passed into the function
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]        RelTime         The relative time to compute from
+ *
+ *  \return The absolute time tag
+ */
+SC_AbsTimeTag_t SC_ComputeAbsTime(SC_RelTimeTag_t RelTime);
+
+/**
+ * \brief Compares absolute time
+ *
+ *  \par Description
+ *
+ *       This function compares two absolutes time.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *        None
+ *
+ *  \param [in]    AbsTime1            The first time to compare
+ *  \param [in]    AbsTime2            The second time to compare
+ *
+ *  \return Boolean comparison result
+ *  \retval true    AbsTime1 is greater than AbsTime2
+ *  \retval false   AbsTime1 is less than AbsTime2
+ */
+bool SC_CompareAbsTime(SC_AbsTimeTag_t AbsTime1, SC_AbsTimeTag_t AbsTime2);
+
+/**
+ * \brief Verify command message length
+ *
+ *  \par Description
+ *       This routine will check if the actual length of a software bus
+ *       command message matches the expected length and send an
+ *       error event message if a mismatch occurs
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   Msg              Pointer to message
+ *  \param [in]   ExpectedLength   The expected length of the message
+ *                                 based upon the command code
+ *
+ *  \return Boolean length verification result
+ *  \retval true  Length matches expected
+ *  \retval false Length does not match expected
+ *
+ *  \sa #SC_LEN_ERR_EID
+ */
+bool SC_VerifyCmdLength(const CFE_MSG_Message_t *Msg, size_t ExpectedLength);
+
+/**
+ * \brief Toggles the ATS index
+ *
+ *  \par Description
+ *       This function toggles the ATS index between 0 and 1.  This
+ *       function does not modify global data, but rather returns a
+ *       new ATS index that can be used and saved by the calling
+ *       function.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Toggled ATS index
+ *  \retval 0 When current ATS index is 1
+ *  \retval 1 When current ATS index is 0
+ *
+ *  \sa #SC_LEN_ERR_EID
+ */
+uint16 SC_ToggleAtsIndex(void);
+
+#endif
+```
+
+### `sc_verify.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Contains CFS Stored Command macros that run preprocessor checks
+ *   on mission configurable parameters
+ */
+#ifndef SC_VERIFY_H
+#define SC_VERIFY_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+
+#include "cfe.h"
+#include "sc_platform_cfg.h"
+
+/*************************************************************************
+ * Macro Definitions
+ *************************************************************************/
+
+#ifndef SC_MAX_CMDS_PER_SEC
+#error SC_MAX_CMDS_PER_SEC must be defined!
+#elif (SC_MAX_CMDS_PER_SEC > 65535)
+#error SC_MAX_CMDS_PER_SEC cannot be greater than 65535!
+#elif (SC_MAX_CMDS_PER_SEC < 1)
+#error SC_MAX_CMDS_PER_SEC cannot be less than 1!
+#endif
+
+#ifndef SC_NUMBER_OF_RTS
+#error SC_NUMBER_OF_RTS must be defined!
+#elif (SC_NUMBER_OF_RTS > CFE_PLATFORM_TBL_MAX_NUM_TABLES)
+#error SC_NUMBER_OF_RTS cannot be greater than CFE_PLATFORM_TBL_MAX_NUM_TABLES!
+#elif (SC_NUMBER_OF_RTS > 65535)
+#error SC_NUMBER_OF_RTS cannot be greater than 65535
+#elif (SC_NUMBER_OF_RTS < 1)
+#error SC_NUMBER_OF_RTS cannot be less than 1!
+#endif
+
+/*
+ *  SC also has the following "dump only" tables..
+ *
+ *    RTS info table
+ *    RTS control block table
+ *    ATS info table
+ *    ATS control block table
+ *    ATS command status table
+ *
+ *  CFE_TBL_MAX_NUM_TABLES limits the sum of all tables from all apps.
+ */
+#if ((SC_NUMBER_OF_RTS + SC_NUMBER_OF_ATS + 5) > CFE_PLATFORM_TBL_MAX_NUM_TABLES)
+#error Sum of all SC tables cannot be greater than CFE_PLATFORM_TBL_MAX_NUM_TABLES!
+#endif
+
+#ifndef SC_ATS_BUFF_SIZE
+#error SC_ATS_BUFF_SIZE must be defined!
+#elif (SC_ATS_BUFF_SIZE > 65535)
+#error SC_ATS_BUFF_SIZE cannot be greater than 65535!
+#elif (SC_ATS_BUFF_SIZE < SC_PACKET_MIN_SIZE)
+#error SC_ATS_BUFF_SIZE must be at least big enough to hold one command (SC_PACKET_MAX_SIZE)!
+/* buf size = words, tbl size = bytes */
+#elif ((SC_ATS_BUFF_SIZE * 2) > CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE)
+#error SC_ATS_BUFF_SIZE cannot be greater than CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE!
+#endif
+
+#ifndef SC_APPEND_BUFF_SIZE
+#error SC_APPEND_BUFF_SIZE must be defined!
+#elif (SC_APPEND_BUFF_SIZE > SC_ATS_BUFF_SIZE)
+#error SC_APPEND_BUFF_SIZE cannot be greater than SC_ATS_BUFF_SIZE!
+#endif
+
+#ifndef SC_RTS_BUFF_SIZE
+#error SC_RTS_BUFF_SIZE must be defined!
+#elif (SC_RTS_BUFF_SIZE > 65535)
+#error SC_RTS_BUFF_SIZE cannot be greater than 65535!
+#elif (SC_RTS_BUFF_SIZE < SC_PACKET_MIN_SIZE)
+#error SC_RTS_BUFF_SIZE must be at least big enough to hold one command (SC_PACKET_MIN_SIZE)!
+/* buf size = words, tbl size = bytes */
+#elif ((SC_RTS_BUFF_SIZE * 2) > CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE)
+#error SC_RTS_BUFF_SIZE cannot be greater than CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE!
+#endif
+
+#ifndef SC_MAX_ATS_CMDS
+#error SC_MAX_ATS_CMDS must be defined!
+#elif (SC_MAX_ATS_CMDS > 65535)
+#error SC_MAX_ATS_CMDS cannot be greater than 65535!
+#elif (SC_MAX_ATS_CMDS < 1)
+#error SC_MAX_ATS_CMDS cannot be less than 1!
+#endif
+
+#ifndef SC_LAST_RTS_WITH_EVENTS
+#error SC_LAST_RTS_WITH_EVENTS must be defined!
+#elif (SC_LAST_RTS_WITH_EVENTS > SC_NUMBER_OF_RTS)
+#error SC_LAST_RTS_WITH_EVENTS cannot be greater than SC_NUMBER_OF_RTS!
+#elif (SC_LAST_RTS_WITH_EVENTS < 1)
+#error SC_LAST_RTS_WITH_EVENTS cannot be less than 1!
+#endif
+
+#ifndef SC_PACKET_MIN_SIZE
+#error SC_PACKET_MIN_SIZE must be defined!
+#elif (SC_PACKET_MIN_SIZE > CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+#error SC_PACKET_MIN_SIZE cannot be greater than CFE_MISSION_SB_MAX_SB_MSG_SIZE!
+#elif (SC_PACKET_MIN_SIZE < 8)
+#error SC_PACKET_MIN_SIZE cannot be less than CFE_SB_CMD_HDR_SIZE!
+#elif ((SC_PACKET_MIN_SIZE % 4) != 0)
+#error SC_PACKET_MIN_SIZE is not 32-bit aligned!
+#endif
+
+#ifndef SC_PACKET_MAX_SIZE
+#error SC_PACKET_MAX_SIZE must be defined!
+#elif (SC_PACKET_MAX_SIZE > CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+#error SC_PACKET_MAX_SIZE cannot be greater than CFE_MISSION_SB_MAX_SB_MSG_SIZE!
+#elif (SC_PACKET_MAX_SIZE < SC_PACKET_MIN_SIZE)
+#error SC_PACKET_MAX_SIZE cannot be less than SC_PACKET_MIN_SIZE!
+#elif ((SC_PACKET_MAX_SIZE % 4) != 0)
+#error SC_PACKET_MAX_SIZE is not 32-bit aligned!
+#endif
+
+#ifndef SC_PIPE_DEPTH
+#error SC_PIPE_DEPTH must be defined!
+#elif (SC_PIPE_DEPTH < 1)
+#error SC_PIPE_DEPTH cannot be less than 1!
+#endif
+
+#ifndef SC_ATS_TABLE_NAME
+#error SC_ATS_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_APPEND_TABLE_NAME
+#error SC_APPEND_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_RTS_TABLE_NAME
+#error SC_RTS_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_ATS_FILE_NAME
+#error SC_ATS_FILE_NAME must be defined!
+#endif
+
+#ifndef SC_APPEND_FILE_NAME
+#error SC_APPEND_FILE_NAME must be defined!
+#endif
+
+#ifndef SC_RTS_FILE_NAME
+#error SC_RTS_FILE_NAME must be defined!
+#endif
+
+#ifndef SC_RTSINFO_TABLE_NAME
+#error SC_RTSINFO_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_RTP_CTRL_TABLE_NAME
+#error SC_RTP_CTRL_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_ATSINFO_TABLE_NAME
+#error SC_ATSINFO_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_APPENDINFO_TABLE_NAME
+#error SC_APPENDINFO_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_ATS_CTRL_TABLE_NAME
+#error SC_ATS_CTRL_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_ATS_CMD_STAT_TABLE_NAME
+#error SC_ATS_CMD_STAT_TABLE_NAME must be defined!
+#endif
+
+#ifndef SC_CONT_ON_FAILURE_START
+#error SC_CONT_ON_FAILURE_START must be defined!
+#elif ((SC_CONT_ON_FAILURE_START != true) && (SC_CONT_ON_FAILURE_START != false))
+#error SC_CONT_ON_FAILURE_START must be either true or false!
+#endif
+
+#ifndef SC_TIME_TO_USE
+#error SC_TIME_TO_USE must be defined!
+#elif (SC_TIME_TO_USE != SC_USE_CFE_TIME)
+#if (SC_TIME_TO_USE != SC_USE_TAI)
+#if (SC_TIME_TO_USE != SC_USE_UTC)
+#error SC_TIME_TO_USE must be either SC_USE_CFE_TIME, SC_USE_TAI or SC_USE_UTC!
+#endif
+#endif
+#endif
+
+#ifndef SC_ENABLE_GROUP_COMMANDS
+#error SC_ENABLE_GROUP_COMMANDS must be defined!
+#elif ((SC_ENABLE_GROUP_COMMANDS != true) && (SC_ENABLE_GROUP_COMMANDS != false))
+#error SC_ENABLE_GROUP_COMMANDS must be either true or false!
+#endif
+
+#ifndef SC_MISSION_REV
+#error SC_MISSION_REV must be defined!
+#elif (SC_MISSION_REV < 0)
+#error SC_MISSION_REV must be greater than or equal to zero!
+#endif
+
+#endif
+```
+
+### `sc_version.h`
+
+**경로:** `fsw/apps/sc/fsw/src/sc_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Contains CFS Stored Command macros that specify Stored
+ *   Command's version
+ */
+#ifndef SC_VERSION_H
+#define SC_VERSION_H
+
+/**
+ * \defgroup cfsscversion CFS Stored Command Version
+ * \ref cfsversions
+ * \{
+ */
+
+#define SC_MAJOR_VERSION 3  /**< \brief Major version number */
+#define SC_MINOR_VERSION 1  /**< \brief Minor version number */
+#define SC_REVISION      99 /**< \brief Revision number */
+
+/**\}*/
+
+#endif
+```

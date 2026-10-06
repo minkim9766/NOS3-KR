@@ -3,20 +3,25 @@
 
 **경로:** `fsw/build/docs/cf-usersguide/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cf-usersguide-html.dir/index
 cf-usersguide.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/docs/cf-usersguide/CMakeFiles/cf-usersguide-html.dir/`](cf-usersguide-html.dir/index) — 폴더
-- [`fsw/build/docs/cf-usersguide/CMakeFiles/cf-usersguide.dir/`](cf-usersguide.dir/index) — 폴더
-- [`fsw/build/docs/cf-usersguide/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/cf-usersguide/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `fsw/build/docs/cf-usersguide/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `fsw/build/docs/cf-usersguide/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

@@ -3,18 +3,24 @@
 
 **경로:** `sims/build/CMakeFiles/3.26.0/CompilerIdCXX/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tmp/index
-file--a.out
-file--CMakeCXXCompilerId.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/CMakeFiles/3.26.0/CompilerIdCXX/tmp/`](tmp/index) — 폴더
-- [`sims/build/CMakeFiles/3.26.0/CompilerIdCXX/a.out`](file--a.out) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeFiles/3.26.0/CompilerIdCXX/CMakeCXXCompilerId.cpp`](file--CMakeCXXCompilerId.cpp) — 빌드 산출물 (경로만)
+### `a.out`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CompilerIdCXX/a.out`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCXXCompilerId.cpp`
+
+**경로:** `sims/build/CMakeFiles/3.26.0/CompilerIdCXX/CMakeCXXCompilerId.cpp`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

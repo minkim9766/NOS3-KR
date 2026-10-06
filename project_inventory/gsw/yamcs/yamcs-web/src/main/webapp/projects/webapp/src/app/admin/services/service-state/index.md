@@ -3,18 +3,66 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `service-state.component.css`
 
-file--service-state.component.css
-file--service-state.component.html
-file--service-state.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.css`
+
+
+```css
+.starting {
+  color: lightgreen;
+}
+
+.running {
+  color: #00c752;
+}
+
+.failed {
+  color: var(--y-error-color);
+}
+
+.terminated {
+  color: lightgrey;
+}
 ```
 
-## 항목
+### `service-state.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.css`](file--service-state.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.html`](file--service-state.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.ts`](file--service-state.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.html`
+
+
+```html
+@if (service.state === "STARTING") {
+  <mat-icon class="starting" [matTooltip]="service.state">check_circle</mat-icon>
+} @else if (service.state === "RUNNING") {
+  <mat-icon class="running" [matTooltip]="service.state">check_circle</mat-icon>
+} @else if (service.state === "STOPPING" || service.state === "FAILED") {
+  <mat-icon class="failed" [matTooltip]="service.state">highlight_off</mat-icon>
+} @else if (service.state === "TERMINATED" || service.state === "NEW") {
+  <mat-icon class="terminated" [matTooltip]="service.state">lens</mat-icon>
+}
+```
+
+### `service-state.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/service-state/service-state.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Service, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-service-state',
+  templateUrl: './service-state.component.html',
+  styleUrl: './service-state.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ServiceStateComponent {
+  @Input()
+  service: Service;
+}
+```

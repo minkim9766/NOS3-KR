@@ -3,26 +3,400 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fppi`
 
-file--Basic.fppi
-file--BasicU32.fppi
-file--ChoiceToChoice.fppi
-file--ChoiceToState.fppi
-file--InputPairU16U32.fppi
-file--Sequence.fppi
-file--SequenceU32.fppi
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/Basic.fppi`
+
+
+```text
+@ A basic state machine with a choice
+state machine Basic {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b
+
+  @ Signal s
+  signal s
+
+  @ Guard g
+  guard g
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ State transition
+    on s enter C
+
+  }
+
+  @ Choice C
+  choice C {
+    if g do { a } enter S2 else do { b } enter S3
+  }
+
+  @ State S2
+  state S2
+
+  @ State S3
+  state S3
+
+}
 ```
 
-## 항목
+### `BasicU32.fppi`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/Basic.fppi`](file--Basic.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/BasicU32.fppi`](file--BasicU32.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/ChoiceToChoice.fppi`](file--ChoiceToChoice.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/ChoiceToState.fppi`](file--ChoiceToState.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/InputPairU16U32.fppi`](file--InputPairU16U32.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/Sequence.fppi`](file--Sequence.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/SequenceU32.fppi`](file--SequenceU32.fppi) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/BasicU32.fppi`
+
+
+```text
+@ A basic state machine with a U32 choice
+state machine BasicU32 {
+
+  @ Action a
+  action a: U32
+
+  @ Action b
+  action b
+
+  @ Signal s
+  signal s: U32
+
+  @ Guard g
+  guard g: U32
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ State transition
+    on s enter C
+
+  }
+
+  @ Choice C
+  choice C {
+    if g do { a } enter S2 else do { b } enter S3
+  }
+
+  @ State S2
+  state S2
+
+  @ State S3
+  state S3
+
+}
+```
+
+### `ChoiceToChoice.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/ChoiceToChoice.fppi`
+
+
+```text
+@ A state machine for testing choice-to-choice transitions
+@ with hierarchy
+state machine ChoiceToChoice {
+
+  @ Exit S1
+  action exitS1
+
+  @ Action a
+  action a
+
+  @ Enter S2
+  action enterS2
+
+  @ Signal s
+  signal s
+
+  @ Guard g1
+  guard g1
+
+  @ Guard g2
+  guard g2
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Exit S1
+    exit do { exitS1 }
+
+    @ Choice C1
+    choice C1 {
+      if g1 do { a } enter S2 else do { a } enter S2.C2
+    }
+
+    @ State transition to C1
+    on s enter C1
+
+  }
+
+  @ State S2
+  state S2 {
+
+    @ Enter S2
+    entry do { enterS2 }
+
+    @ Initial transition
+    initial enter S3
+
+    @ Choice C2
+    choice C2 {
+      if g2 enter S3 else enter S4
+    }
+
+    @ State S3
+    state S3
+
+    @ State S4
+    state S4
+
+  }
+
+}
+```
+
+### `ChoiceToState.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/ChoiceToState.fppi`
+
+
+```text
+@ A state machine for testing choice-to-state transitions
+@ with hierarchy
+state machine ChoiceToState {
+
+  @ Exit S1
+  action exitS1
+
+  @ Action a
+  action a
+
+  @ Enter S2
+  action enterS2
+
+  @ Enter S3
+  action enterS3
+
+  @ Signal s
+  signal s
+
+  @ Guard g
+  guard g
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Exit S1
+    exit do { exitS1 }
+
+    @ Choice C
+    choice C {
+      if g do { a } enter S2 else do { a } enter S2.S3
+    }
+
+    @ State transition to C
+    on s enter C
+
+  }
+
+  @ State S2
+  state S2 {
+
+    @ Enter S2
+    entry do { enterS2 }
+
+    @ Initial transition
+    initial do { a } enter S3
+
+    @ State S3
+    state S3 {
+
+      @ Enter S3
+      entry do { enterS3 }
+
+    }
+
+  }
+
+}
+```
+
+### `InputPairU16U32.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/InputPairU16U32.fppi`
+
+
+```text
+@ A state machine with two inputs to a choice
+state machine InputPairU16U32 {
+
+  @ Action a
+  action a: U32
+
+  @ Signal s1
+  signal s1: U16
+
+  @ Signal s2
+  signal s2: U32
+
+  @ Guard g
+  guard g: U32
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ State transition on s1
+    on s1 enter C
+
+    @ State transition on s2
+    on s2 enter C
+
+  }
+
+  @ Choice C
+  choice C {
+    if g do { a } enter S2 else do { a } enter S3
+  }
+
+  @ State S2
+  state S2
+
+  @ State S3
+  state S3
+
+}
+```
+
+### `Sequence.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/Sequence.fppi`
+
+
+```text
+@ A basic state machine with a choice sequence
+state machine Sequence {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b
+
+  @ Signal s
+  signal s
+
+  @ Guard g1
+  guard g1
+
+  @ Guard g2
+  guard g2
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ State transition
+    on s enter C1
+
+  }
+
+  @ Choice C1
+  choice C1 {
+    if g1 enter S2 else enter C2
+  }
+
+  @ Choice C2
+  choice C2 {
+    if g2 do { a } enter S3 else do { b } enter S4
+  }
+
+  @ State S2
+  state S2
+
+  @ State S3
+  state S3
+
+  @ State S4
+  state S4
+
+}
+```
+
+### `SequenceU32.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/choice/include/SequenceU32.fppi`
+
+
+```text
+@ A basic state machine with a U32 choice sequence
+state machine SequenceU32 {
+
+  @ Action a
+  action a: U32
+
+  @ Action b
+  action b
+
+  @ Signal s
+  signal s: U32
+
+  @ Guard g1
+  guard g1
+
+  @ Guard g2
+  guard g2: U32
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ State transition
+    on s enter C1
+
+  }
+
+  @ Choice C1
+  choice C1 {
+    if g1 enter S2 else enter C2
+  }
+
+  @ Choice C2
+  choice C2 {
+    if g2 do { a } enter S3 else do { b } enter S4
+  }
+
+  @ State S2
+  state S2
+
+  @ State S3
+  state S3
+
+  @ State S4
+  state S4
+
+}
+```

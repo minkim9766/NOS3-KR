@@ -3,16 +3,49 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 img/index
-file--sdd.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+### `sdd.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/docs/sdd.md`
+
+
+```markdown
+# Svc::Sched Port
+
+## 1. Introduction
+
+The `Svc::Sched` port is used to invoke components used in the scheduling of the application. 
+It has an argument that specifies the invocation order, so components can take different actions depending on the call order.
+
+## 2. Design
+
+### 2.1 Context
+
+#### 2.1.1 Port Diagram
+
+The Svc::Sched port has the following port diagram:
+
+![Svc::Sched Diagram](img/SchedBDD.jpg "Svc::Sched Port")
+
+#### 2.1.2 Serializables
+
+The Svc::Sched port does not use any serializables for arguments.
+
+## 3. Change Log
+
+Date | Description
+---- | -----------
+6/19/2015 |  Initial Version
+
+
+
+```

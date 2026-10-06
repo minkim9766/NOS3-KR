@@ -3,14 +3,12 @@
 
 **경로:** `gsw/ait/gswait/plugins/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
+**경로:** `gsw/ait/gswait/plugins/__init__.py`
+
+
+```python
 ```
-
-## 항목
-
-- [`gsw/ait/gswait/plugins/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함

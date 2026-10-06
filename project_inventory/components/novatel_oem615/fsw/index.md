@@ -3,7 +3,7 @@
 
 **경로:** `components/novatel_oem615/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,9 +14,4 @@ shared/index
 standalone/index
 ```
 
-## 항목
-
-- [`components/novatel_oem615/fsw/cfs/`](cfs/index) — 폴더
-- [`components/novatel_oem615/fsw/fprime/`](fprime/index) — 폴더
-- [`components/novatel_oem615/fsw/shared/`](shared/index) — 폴더
-- [`components/novatel_oem615/fsw/standalone/`](standalone/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

@@ -3,7 +3,7 @@
 
 **경로:** `sims/build/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -29,36 +29,30 @@ sample/index
 sim_common/index
 sim_terminal/index
 truth_42_sim/index
-file--cmake_install.cmake
-file--CMakeCache.txt
-file--install_manifest.txt
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/arducam/`](arducam/index) — 폴더
-- [`sims/build/bin/`](bin/index) — 폴더
-- [`sims/build/blackboard/`](blackboard/index) — 폴더
-- [`sims/build/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`sims/build/generic_css/`](generic_css/index) — 폴더
-- [`sims/build/generic_eps/`](generic_eps/index) — 폴더
-- [`sims/build/generic_fss/`](generic_fss/index) — 폴더
-- [`sims/build/generic_imu/`](generic_imu/index) — 폴더
-- [`sims/build/generic_mag/`](generic_mag/index) — 폴더
-- [`sims/build/generic_radio/`](generic_radio/index) — 폴더
-- [`sims/build/generic_reaction_wheel/`](generic_reaction_wheel/index) — 폴더
-- [`sims/build/generic_star_tracker/`](generic_star_tracker/index) — 폴더
-- [`sims/build/generic_thruster/`](generic_thruster/index) — 폴더
-- [`sims/build/generic_torquer/`](generic_torquer/index) — 폴더
-- [`sims/build/lib/`](lib/index) — 폴더
-- [`sims/build/nos_time_driver/`](nos_time_driver/index) — 폴더
-- [`sims/build/novatel_oem615/`](novatel_oem615/index) — 폴더
-- [`sims/build/sample/`](sample/index) — 폴더
-- [`sims/build/sim_common/`](sim_common/index) — 폴더
-- [`sims/build/sim_terminal/`](sim_terminal/index) — 폴더
-- [`sims/build/truth_42_sim/`](truth_42_sim/index) — 폴더
-- [`sims/build/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`sims/build/CMakeCache.txt`](file--CMakeCache.txt) — 빌드 산출물 (경로만)
-- [`sims/build/install_manifest.txt`](file--install_manifest.txt) — 빌드 산출물 (경로만)
-- [`sims/build/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `sims/build/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCache.txt`
+
+**경로:** `sims/build/CMakeCache.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `install_manifest.txt`
+
+**경로:** `sims/build/install_manifest.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `sims/build/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

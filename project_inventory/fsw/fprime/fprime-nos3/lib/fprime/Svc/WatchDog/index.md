@@ -3,18 +3,53 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--WatchDog.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/WatchDog.fpp`](file--WatchDog.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/WatchDog.fpp"
+)
+
+set(MOD_DEPS
+    Fw/Port
+)
+
+register_fprime_module()
+```
+
+### `WatchDog.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/WatchDog/WatchDog.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Port for stroking a watchdog timer
+  port WatchDog(
+                 code: U32 @< Watchdog stroke code
+               )
+
+}
+```

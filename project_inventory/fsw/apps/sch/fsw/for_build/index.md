@@ -3,24 +3,1173 @@
 
 **경로:** `fsw/apps/sch/fsw/for_build/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `codewalk_doxy`
 
-file--codewalk_doxy
-file--detail_doxy
-file--Makefile
-file--schlib.mak
-file--schtables.mak
-file--user_doxy
+**경로:** `fsw/apps/sch/fsw/for_build/codewalk_doxy`
+
+
+```text
+# Doxyfile 1.5.4
+@INCLUDE_PATH=../docs/dox_src/mnem_maps \
+              $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/mnem_maps
+@INCLUDE=cfs_$(APPTARGET)_cmd_mnem_map
+@INCLUDE=cfs_$(APPTARGET)_tlm_mnem_map
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+#DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "Code Walkthrough of CFS Scheduler Application"
+PROJECT_NUMBER         = "$(CURR_DATE)"
+OUTPUT_DIRECTORY       = $(CFS_APP_SRC)/$(APPTARGET)/docs/cwt/html
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ABBREVIATE_BRIEF       = 
+ALWAYS_DETAILED_SEC    = NO
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = $(CFS_APP_SRC)
+STRIP_FROM_INC_PATH    = 
+SHORT_NAMES            = NO
+JAVADOC_AUTOBRIEF      = NO
+#QT_AUTOBRIEF           = NO
+MULTILINE_CPP_IS_BRIEF = NO
+DETAILS_AT_TOP         = NO
+INHERIT_DOCS           = YES
+SEPARATE_MEMBER_PAGES  = NO
+TAB_SIZE               = 8
+ALIASES               += "event=\xrefitem cfeevents \"Event Message\" \"cFE Event Message Cross Reference\" "
+ALIASES               += "retdesc=<TD WIDTH=\"80%\"> "
+ALIASES               += "retcode=<TR><TD WIDTH=\"20%\" VALIGN=TOP> "
+ALIASES               += endcode=</TR>
+ALIASES               += "returns=\return <TABLE BORDER=\"0\" CELLPADDING=\"2\" WIDTH=\"100%\"> "
+ALIASES               += endreturns=</TABLE>
+ALIASES               += "retstmt=<TR><TD COLSPAN=2 WIDTH=\"100%\"> "
+ALIASES               += endstmt=</TR>
+ALIASES               += "schcmd=\xrefitem cfsschcmds \"Name\" \"CFS Scheduler Commands\"  "
+ALIASES               += "schtlm=\xrefitem cfsschtlm \"Name\" \"CFS Scheduler Telemetry\"  "
+ALIASES               += "schcmdmnemonic=\xrefitem cfsschcmdmnems \"Command Mnemonic(s)\" \"SCH Command Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schtlmmnemonic=\xrefitem cfsschtlmmnems \"Telemetry Mnemonic(s)\" \"SCH Telemetry Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schcfg=\xrefitem cfsschcfg \"Purpose\" \"CFS Scheduler Configuration Parameters\"  " 
+OPTIMIZE_OUTPUT_FOR_C  = YES
+OPTIMIZE_OUTPUT_JAVA   = NO
+BUILTIN_STL_SUPPORT    = NO
+#CPP_CLI_SUPPORT        = NO
+#SIP_SUPPORT            = NO
+DISTRIBUTE_GROUP_DOC   = NO
+SUBGROUPING            = YES
+#TYPEDEF_HIDES_STRUCT   = NO
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = NO
+#EXTRACT_ANON_NSPACES   = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_IN_BODY_DOCS      = NO
+INTERNAL_DOCS          = NO
+CASE_SENSE_NAMES       = NO
+HIDE_SCOPE_NAMES       = NO
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = NO
+SORT_BY_SCOPE_NAME     = NO
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+ENABLED_SECTIONS       = 
+MAX_INITIALIZER_LINES  = 30
+SHOW_USED_FILES        = YES
+SHOW_DIRECTORIES       = YES
+FILE_VERSION_FILTER    = 
+#---------------------------------------------------------------------------
+# configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+WARN_FORMAT            = "$file:$line: $text "
+WARN_LOGFILE           = 
+#---------------------------------------------------------------------------
+# configuration options related to the input files
+#---------------------------------------------------------------------------
+INPUT                  = $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/detailed_design/cfs_$(APPTARGET).dox
+#INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/public_inc 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/mission_inc
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/platform_inc 
+#INPUT_ENCODING         = UTF-8
+FILE_PATTERNS          = *.c \
+                         *.h
+RECURSIVE              = YES
+EXCLUDE                = 
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = 
+#EXCLUDE_SYMBOLS        = 
+EXAMPLE_PATH           = 
+EXAMPLE_PATTERNS       = *
+EXAMPLE_RECURSIVE      = NO
+IMAGE_PATH             = "./"
+IMAGE_PATH            += $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/detailed_design/
+INPUT_FILTER           = 
+FILTER_PATTERNS        = 
+FILTER_SOURCE_FILES    = NO
+#---------------------------------------------------------------------------
+# configuration options related to source browsing
+#---------------------------------------------------------------------------
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+REFERENCES_LINK_SOURCE = YES
+USE_HTAGS              = NO
+VERBATIM_HEADERS       = YES
+#---------------------------------------------------------------------------
+# configuration options related to the alphabetical class index
+#---------------------------------------------------------------------------
+ALPHABETICAL_INDEX     = YES
+COLS_IN_ALPHA_INDEX    = 5
+IGNORE_PREFIX          = 
+#---------------------------------------------------------------------------
+# configuration options related to the HTML output
+#---------------------------------------------------------------------------
+GENERATE_HTML          = YES
+HTML_OUTPUT            = .
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            = 
+HTML_FOOTER            = 
+HTML_STYLESHEET        = 
+HTML_ALIGN_MEMBERS     = YES
+GENERATE_HTMLHELP      = NO
+#HTML_DYNAMIC_SECTIONS  = NO
+CHM_FILE               = CFS_Help.chm
+HHC_LOCATION           = "C:/Program Files/HTML Help Workshop/hhc.exe"
+GENERATE_CHI           = NO
+BINARY_TOC             = NO
+TOC_EXPAND             = NO
+DISABLE_INDEX          = NO
+ENUM_VALUES_PER_LINE   = 4
+GENERATE_TREEVIEW      = NO
+TREEVIEW_WIDTH         = 250
+#---------------------------------------------------------------------------
+# configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+GENERATE_LATEX         = NO
+LATEX_OUTPUT           = ../../latex
+LATEX_CMD_NAME         = latex
+MAKEINDEX_CMD_NAME     = makeindex
+COMPACT_LATEX          = YES
+PAPER_TYPE             = letter
+EXTRA_PACKAGES         = 
+LATEX_HEADER           = 
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
+LATEX_BATCHMODE        = NO
+LATEX_HIDE_INDICES     = NO
+#---------------------------------------------------------------------------
+# configuration options related to the RTF output
+#---------------------------------------------------------------------------
+GENERATE_RTF           = NO
+RTF_OUTPUT             = ../../rtf
+COMPACT_RTF            = YES
+RTF_HYPERLINKS         = NO
+RTF_STYLESHEET_FILE    = 
+RTF_EXTENSIONS_FILE    = 
+#---------------------------------------------------------------------------
+# configuration options related to the man page output
+#---------------------------------------------------------------------------
+GENERATE_MAN           = NO
+MAN_OUTPUT             = man
+MAN_EXTENSION          = .3
+MAN_LINKS              = NO
+#---------------------------------------------------------------------------
+# configuration options related to the XML output
+#---------------------------------------------------------------------------
+GENERATE_XML           = NO
+XML_OUTPUT             = xml
+XML_SCHEMA             = 
+XML_DTD                = 
+XML_PROGRAMLISTING     = YES
+#---------------------------------------------------------------------------
+# configuration options for the AutoGen Definitions output
+#---------------------------------------------------------------------------
+GENERATE_AUTOGEN_DEF   = NO
+#---------------------------------------------------------------------------
+# configuration options related to the Perl module output
+#---------------------------------------------------------------------------
+GENERATE_PERLMOD       = NO
+PERLMOD_LATEX          = NO
+PERLMOD_PRETTY         = YES
+PERLMOD_MAKEVAR_PREFIX = 
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor   
+#---------------------------------------------------------------------------
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = 
+INCLUDE_FILE_PATTERNS  = 
+PREDEFINED             = __PPC__ \
+                         MESSAGE_FORMAT_IS_CCSDS \
+                         CFE_TIME_CFG_SRC_TIME \
+                         CFE_TIME_CFG_SRC_GPS \
+                         CFE_TIME_CFG_SRC_MET
+EXPAND_AS_DEFINED      = 
+SKIP_FUNCTION_MACROS   = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to external references   
+#---------------------------------------------------------------------------
+TAGFILES               = ../cfe/cfe.tag=../cfe
+GENERATE_TAGFILE       = $(APPTARGET).tag
+ALLEXTERNALS           = NO
+EXTERNAL_GROUPS        = YES
+PERL_PATH              = /usr/bin/perl
+#---------------------------------------------------------------------------
+# Configuration options related to the dot tool   
+#---------------------------------------------------------------------------
+CLASS_DIAGRAMS         = NO
+#MSCGEN_PATH            = 
+HIDE_UNDOC_RELATIONS   = YES
+HAVE_DOT               = YES
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+GROUP_GRAPHS           = YES
+UML_LOOK               = NO
+TEMPLATE_RELATIONS     = NO
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = NO
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = YES
+DOT_IMAGE_FORMAT       = png
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+#DOT_GRAPH_MAX_NODES    = 50
+MAX_DOT_GRAPH_DEPTH    = 1000
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = NO
+GENERATE_LEGEND        = YES
+DOT_CLEANUP            = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to the search engine   
+#---------------------------------------------------------------------------
+SEARCHENGINE           = NO
 ```
 
-## 항목
+### `detail_doxy`
 
-- [`fsw/apps/sch/fsw/for_build/codewalk_doxy`](file--codewalk_doxy) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/for_build/detail_doxy`](file--detail_doxy) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/for_build/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/for_build/schlib.mak`](file--schlib.mak) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/for_build/schtables.mak`](file--schtables.mak) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/for_build/user_doxy`](file--user_doxy) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/fsw/for_build/detail_doxy`
+
+
+```text
+# Doxyfile 1.5.4
+@INCLUDE_PATH=../docs/dox_src/mnem_maps \
+              $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/mnem_maps
+@INCLUDE=cfs_$(APPTARGET)_cmd_mnem_map
+@INCLUDE=cfs_$(APPTARGET)_tlm_mnem_map
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+#DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "CFS Scheduler (SCH) Application on $(CPUNAME) Detailed Design"
+PROJECT_NUMBER         = 
+OUTPUT_DIRECTORY       = ../docs/detailed_design/html/$(APPTARGET)
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ABBREVIATE_BRIEF       = 
+ALWAYS_DETAILED_SEC    = NO
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = $(CFS_APP_SRC)
+STRIP_FROM_INC_PATH    = 
+SHORT_NAMES            = NO
+JAVADOC_AUTOBRIEF      = NO
+#QT_AUTOBRIEF           = NO
+MULTILINE_CPP_IS_BRIEF = NO
+DETAILS_AT_TOP         = NO
+INHERIT_DOCS           = YES
+SEPARATE_MEMBER_PAGES  = NO
+TAB_SIZE               = 4
+ALIASES               += "event=\xrefitem cfeevents \"Event Message\" \"cFE Event Message Cross Reference\" "
+ALIASES               += "retdesc=<TD WIDTH=\"80%\"> "
+ALIASES               += "retcode=<TR><TD WIDTH=\"20%\" VALIGN=TOP> "
+ALIASES               += endcode=</TR>
+ALIASES               += "returns=\return <TABLE BORDER=\"0\" CELLPADDING=\"2\" WIDTH=\"100%\"> "
+ALIASES               += endreturns=</TABLE>
+ALIASES               += "retstmt=<TR><TD COLSPAN=2 WIDTH=\"100%\"> "
+ALIASES               += endstmt=</TR>
+ALIASES               += "schcmd=\xrefitem cfsschcmds \"Name\" \"CFS Scheduler Commands\"  "
+ALIASES               += "schtlm=\xrefitem cfsschtlm \"Name\" \"CFS Scheduler Telemetry\"  "
+ALIASES               += "schcmdmnemonic=\xrefitem cfsschcmdmnems \"Command Mnemonic(s)\" \"SCH Command Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schtlmmnemonic=\xrefitem cfsschtlmmnems \"Telemetry Mnemonic(s)\" \"SCH Telemetry Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schcfg=\xrefitem cfsschcfg \"Purpose\" \"CFS Scheduler Configuration Parameters\"  " 
+OPTIMIZE_OUTPUT_FOR_C  = YES
+OPTIMIZE_OUTPUT_JAVA   = NO
+BUILTIN_STL_SUPPORT    = NO
+#CPP_CLI_SUPPORT        = NO
+#SIP_SUPPORT            = NO
+DISTRIBUTE_GROUP_DOC   = NO
+SUBGROUPING            = YES
+#TYPEDEF_HIDES_STRUCT   = NO
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = NO
+#EXTRACT_ANON_NSPACES   = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_IN_BODY_DOCS      = NO
+INTERNAL_DOCS          = NO
+CASE_SENSE_NAMES       = NO
+HIDE_SCOPE_NAMES       = NO
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = NO
+SORT_BY_SCOPE_NAME     = NO
+GENERATE_TODOLIST      = NO
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+ENABLED_SECTIONS       = 
+MAX_INITIALIZER_LINES  = 30
+SHOW_USED_FILES        = YES
+SHOW_DIRECTORIES       = YES
+FILE_VERSION_FILTER    = 
+#---------------------------------------------------------------------------
+# configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+WARN_FORMAT            = "$file:$line: $text "
+WARN_LOGFILE           = 
+#---------------------------------------------------------------------------
+# configuration options related to the input files
+#---------------------------------------------------------------------------
+INPUT                  = $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/detailed_design/cfs_$(APPTARGET).dox
+#INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/public_inc 
+INPUT                 += ../../mission_inc/$(APPTARGET)_perfids.h 
+#INPUT                 += ../../mission_inc/$(APPTARGET)_mission_cfg.h
+INPUT                 += ../inc/$(APPTARGET)_msgids.h 
+INPUT                 += ../inc/$(APPTARGET)_platform_cfg.h
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src 
+#INPUT_ENCODING         = UTF-8
+FILE_PATTERNS          = *.c \
+                         *.h
+RECURSIVE              = YES
+EXCLUDE                = 
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = 
+#EXCLUDE_SYMBOLS        = 
+EXAMPLE_PATH           = 
+EXAMPLE_PATTERNS       = *
+EXAMPLE_RECURSIVE      = NO
+IMAGE_PATH             = "./"
+IMAGE_PATH            += "$(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/detailed_design/"
+INPUT_FILTER           = 
+FILTER_PATTERNS        = 
+FILTER_SOURCE_FILES    = NO
+#---------------------------------------------------------------------------
+# configuration options related to source browsing
+#---------------------------------------------------------------------------
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+REFERENCES_LINK_SOURCE = YES
+USE_HTAGS              = NO
+VERBATIM_HEADERS       = YES
+#---------------------------------------------------------------------------
+# configuration options related to the alphabetical class index
+#---------------------------------------------------------------------------
+ALPHABETICAL_INDEX     = YES
+COLS_IN_ALPHA_INDEX    = 5
+IGNORE_PREFIX          = 
+#---------------------------------------------------------------------------
+# configuration options related to the HTML output
+#---------------------------------------------------------------------------
+GENERATE_HTML          = YES
+HTML_OUTPUT            = .
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            = 
+HTML_FOOTER            = 
+HTML_STYLESHEET        = 
+HTML_ALIGN_MEMBERS     = YES
+GENERATE_HTMLHELP      = NO
+#HTML_DYNAMIC_SECTIONS  = NO
+CHM_FILE               = CFS_Help.chm
+HHC_LOCATION           = "C:/Program Files/HTML Help Workshop/hhc.exe"
+GENERATE_CHI           = NO
+BINARY_TOC             = NO
+TOC_EXPAND             = NO
+DISABLE_INDEX          = NO
+ENUM_VALUES_PER_LINE   = 4
+GENERATE_TREEVIEW      = NO
+TREEVIEW_WIDTH         = 250
+#---------------------------------------------------------------------------
+# configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+GENERATE_LATEX         = NO
+LATEX_OUTPUT           = ../../../latex/$(CPUNAME)/$(APPTARGET)
+LATEX_CMD_NAME         = latex
+MAKEINDEX_CMD_NAME     = makeindex
+COMPACT_LATEX          = YES
+PAPER_TYPE             = letter
+EXTRA_PACKAGES         = 
+LATEX_HEADER           = 
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
+LATEX_BATCHMODE        = NO
+LATEX_HIDE_INDICES     = NO
+#---------------------------------------------------------------------------
+# configuration options related to the RTF output
+#---------------------------------------------------------------------------
+GENERATE_RTF           = NO
+RTF_OUTPUT             = ../../../rtf/$(CPUNAME)/$(APPTARGET)
+COMPACT_RTF            = YES
+RTF_HYPERLINKS         = NO
+RTF_STYLESHEET_FILE    = 
+RTF_EXTENSIONS_FILE    = 
+#---------------------------------------------------------------------------
+# configuration options related to the man page output
+#---------------------------------------------------------------------------
+GENERATE_MAN           = NO
+MAN_OUTPUT             = man
+MAN_EXTENSION          = .3
+MAN_LINKS              = NO
+#---------------------------------------------------------------------------
+# configuration options related to the XML output
+#---------------------------------------------------------------------------
+GENERATE_XML           = NO
+XML_OUTPUT             = xml
+XML_SCHEMA             = 
+XML_DTD                = 
+XML_PROGRAMLISTING     = YES
+#---------------------------------------------------------------------------
+# configuration options for the AutoGen Definitions output
+#---------------------------------------------------------------------------
+GENERATE_AUTOGEN_DEF   = NO
+#---------------------------------------------------------------------------
+# configuration options related to the Perl module output
+#---------------------------------------------------------------------------
+GENERATE_PERLMOD       = NO
+PERLMOD_LATEX          = NO
+PERLMOD_PRETTY         = YES
+PERLMOD_MAKEVAR_PREFIX = 
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor   
+#---------------------------------------------------------------------------
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = 
+INCLUDE_FILE_PATTERNS  = 
+PREDEFINED             = __PPC__ \
+                         MESSAGE_FORMAT_IS_CCSDS \
+                         CFE_TIME_CFG_SRC_TIME \
+                         CFE_TIME_CFG_SRC_GPS \
+                         CFE_TIME_CFG_SRC_MET
+EXPAND_AS_DEFINED      = 
+SKIP_FUNCTION_MACROS   = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to external references   
+#---------------------------------------------------------------------------
+TAGFILES               = ../cfe/cfe.tag=../cfe
+GENERATE_TAGFILE       = $(APPTARGET).tag
+ALLEXTERNALS           = NO
+EXTERNAL_GROUPS        = YES
+PERL_PATH              = /usr/bin/perl
+#---------------------------------------------------------------------------
+# Configuration options related to the dot tool   
+#---------------------------------------------------------------------------
+CLASS_DIAGRAMS         = NO
+#MSCGEN_PATH            = 
+HIDE_UNDOC_RELATIONS   = YES
+HAVE_DOT               = YES
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+GROUP_GRAPHS           = YES
+UML_LOOK               = NO
+TEMPLATE_RELATIONS     = NO
+INCLUDE_GRAPH          = YES
+INCLUDED_BY_GRAPH      = YES
+CALL_GRAPH             = YES
+CALLER_GRAPH           = YES
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = YES
+DOT_IMAGE_FORMAT       = png
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+#DOT_GRAPH_MAX_NODES    = 50
+MAX_DOT_GRAPH_DEPTH    = 1000
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = NO
+GENERATE_LEGEND        = YES
+DOT_CLEANUP            = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to the search engine   
+#---------------------------------------------------------------------------
+SEARCHENGINE           = NO
+```
+
+### `Makefile`
+
+**경로:** `fsw/apps/sch/fsw/for_build/Makefile`
+
+
+```make
+###############################################################################
+# File: CFS Application Makefile 
+#
+# $Id: Makefile 1.2 2017/06/21 15:28:59EDT mdeschu Exp  $
+#
+###############################################################################
+#
+# Subsystem produced by this makefile.
+#
+export APPTARGET = sch
+
+# 
+# Entry Point for task
+# 
+ENTRY_PT = SCH_AppMain 
+
+#
+# Object files required to build subsystem.
+#
+OBJS = sch_app.o sch_cmds.o sch_custom.o
+
+#
+# Source files required to build subsystem; used to generate dependencies.
+# As long as there are no assembly files this can be automated.
+#
+SOURCES = $(OBJS:.o=.c)
+
+
+##
+## Specify extra C Flags needed to build this subsystem
+##
+LOCAL_COPTS = 
+
+
+##
+## EXEDIR is defined here, just in case it needs to be different for a custom
+## build
+##
+EXEDIR=../exe
+
+##
+## Certain OSs and Application Loaders require the following option for
+## Shared libraries. Currently only needed for vxWorks 5.5 and RTEMS.
+## For each shared library that this app depends on, you need to have an
+## entry like the following:
+##  -R../tst_lib/tst_lib.elf
+##
+SHARED_LIB_LINK = 
+
+########################################################################
+# Should not have to change below this line, except for customized 
+# Mission and cFE directory structures
+########################################################################
+
+#
+# Set build type to CFE_APP. This allows us to 
+# define different compiler flags for the cFE Core and Apps.
+# 
+BUILD_TYPE = CFE_APP
+
+## 
+## Include all necessary cFE make rules
+## Any of these can be copied to a local file and 
+## changed if needed.
+##
+##
+##       cfe-config.mak contains PSP and OS selection
+##
+include ../cfe/cfe-config.mak
+##
+##       debug-opts.mak contains debug switches
+##
+include ../cfe/debug-opts.mak
+##
+##       compiler-opts.mak contains compiler definitions and switches/defines
+##
+include $(CFE_PSP_SRC)/$(PSP)/make/compiler-opts.mak
+
+##
+## Setup the include path for this subsystem
+## The OS specific includes are in the build-rules.make file
+##
+## If this subsystem needs include files from another app, add the path here.
+##
+INCLUDE_PATH = \
+-I$(OSAL_SRC)/inc \
+-I$(CFE_CORE_SRC)/inc \
+-I$(CFE_PSP_SRC)/inc \
+-I$(CFE_PSP_SRC)/$(PSP)/inc \
+-I$(CFS_APP_SRC)/inc \
+-I$(CFS_APP_SRC)/$(APPTARGET)/fsw/src \
+-I$(CFS_MISSION_INC) \
+-I../cfe/inc \
+-I../inc
+
+##
+## Define the VPATH make variable. 
+## This can be modified to include source from another directory.
+## If there is no corresponding app in the cfs-apps directory, then this can be discarded, or
+## if the mission chooses to put the src in another directory such as "src", then that can be 
+## added here as well.
+##
+VPATH = $(CFS_APP_SRC)/$(APPTARGET)/fsw/src 
+
+##
+## Include the common make rules for building a cFE Application
+##
+include $(CFE_CORE_SRC)/make/app-rules.mak
+```
+
+### `schlib.mak`
+
+**경로:** `fsw/apps/sch/fsw/for_build/schlib.mak`
+
+
+```text
+###############################################################################
+# File: CFS Application Makefile 
+#
+# $Id: schlib.mak 1.1 2015/08/04 04:54:41EDT rperera Exp  $
+#
+# $Log: schlib.mak  $
+# Revision 1.1 2015/08/04 04:54:41EDT rperera 
+# Initial revision
+# Member added to project /CFS-APPs-PROJECT/sch/fsw/for_build/project.pj
+# Revision 1.1 2011/06/30 13:56:49EDT aschoeni 
+# Initial revision
+# Member added to project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/sch/fsw/for_build/project.pj
+#
+###############################################################################
+#
+# Subsystem produced by this makefile.
+#
+export APPTARGET = schlib
+export PARENTAPP = sch
+
+# 
+# Entry Point for task
+# 
+ENTRY_PT = SCH_LibInit 
+
+#
+# Object files required to build subsystem.
+#
+OBJS = sch_api.o
+
+#
+# Source files required to build subsystem; used to generate dependencies.
+# As long as there are no assembly files this can be automated.
+#
+SOURCES = $(OBJS:.o=.c)
+
+
+##
+## Specify extra C Flags needed to build this subsystem
+##
+LOCAL_COPTS = 
+
+
+##
+## EXEDIR is defined here, just in case it needs to be different for a custom
+## build
+##
+EXEDIR=../exe
+
+##
+## Certain OSs and Application Loaders require the following option for
+## Shared libraries. Currently only needed for vxWorks 5.5 and RTEMS.
+## For each shared library that this app depends on, you need to have an
+## entry like the following:
+##  -R../tst_lib/tst_lib.elf
+##
+SHARED_LIB_LINK = 
+
+########################################################################
+# Should not have to change below this line, except for customized 
+# Mission and cFE directory structures
+########################################################################
+
+#
+# Set build type to CFE_APP. This allows us to 
+# define different compiler flags for the cFE Core and Apps.
+# 
+BUILD_TYPE = CFE_APP
+
+## 
+## Include all necessary cFE make rules
+## Any of these can be copied to a local file and 
+## changed if needed.
+##
+##
+##       cfe-config.mak contains PSP and OS selection
+##
+include ../cfe/cfe-config.mak
+##
+##       debug-opts.mak contains debug switches
+##
+include ../cfe/debug-opts.mak
+##
+##       compiler-opts.mak contains compiler definitions and switches/defines
+##
+include $(CFE_PSP_SRC)/$(PSP)/make/compiler-opts.mak
+
+##
+## Setup the include path for this subsystem
+## The OS specific includes are in the build-rules.make file
+##
+## If this subsystem needs include files from another app, add the path here.
+##
+INCLUDE_PATH = \
+-I$(OSAL_SRC)/inc \
+-I$(CFE_CORE_SRC)/inc \
+-I$(CFE_PSP_SRC)/inc \
+-I$(CFE_PSP_SRC)/$(PSP)/inc \
+-I$(CFS_APP_SRC)/inc \
+-I$(CFS_APP_SRC)/$(PARENTAPP)/fsw/src \
+-I$(CFS_MISSION_INC) \
+-I../cfe/inc \
+-I../inc
+
+##
+## Define the VPATH make variable. 
+## This can be modified to include source from another directory.
+## If there is no corresponding app in the cfs-apps directory, then this can be discarded, or
+## if the mission chooses to put the src in another directory such as "src", then that can be 
+## added here as well.
+##
+VPATH = $(CFS_APP_SRC)/$(PARENTAPP)/fsw/src 
+
+##
+## Include the common make rules for building a cFE Application
+##
+include $(CFE_CORE_SRC)/make/app-rules.mak
+```
+
+### `schtables.mak`
+
+**경로:** `fsw/apps/sch/fsw/for_build/schtables.mak`
+
+
+```text
+###############################################################################
+# File: CFS Application Table Makefile 
+#
+#
+# History:
+#
+###############################################################################
+#
+# The Application needs to be specified here
+#
+APPTARGET = sch
+
+#
+# List the tables that are generated here.
+# Restrictions:
+# 1. The table file name must be the same as the C source file name
+# 2. There must be a single C source file for each table
+#
+TABLES = sch_def_msgtbl.tbl sch_def_schtbl.tbl
+
+##################################################################################
+# Normally, nothing has to be changed below this line
+# The following are changes that may have to be made for a custom app environment:
+# 1. INCLUDE_PATH - This may be customized to tailor the include path for an app
+# 2. VPATH - This may be customized to tailor the location of the table sources.
+#            For example: if the tables were stored in a "tables" subdirectory
+#                        ( build/cpu1/sch/tables )
+#################################################################################
+
+#
+# Object files required for tables
+#
+OBJS = $(TABLES:.tbl=.o)
+
+#
+# Source files required to build tables.
+#
+SOURCES = $(OBJS:.o=.c)
+
+##
+## Specify extra C Flags needed to build this subsystem
+##
+LOCAL_COPTS = 
+
+##
+## EXEDIR is defined here, just in case it needs to be different for a custom
+## build
+##
+EXEDIR=../exe
+
+########################################################################
+# Should not have to change below this line, except for customized 
+# Mission and cFE directory structures
+########################################################################
+
+#
+# Set build type to CFE_APP. This allows us to 
+# define different compiler flags for the cFE Core and Apps.
+# 
+BUILD_TYPE = CFE_TABLE
+
+## 
+## Include all necessary cFE make rules
+## Any of these can be copied to a local file and 
+## changed if needed.
+##
+##
+##       cfe-config.mak contians arch, BSP, and OS selection
+##
+include ../cfe/cfe-config.mak
+
+##
+##       debug-opts.mak contains debug switches -- Note that the table must be
+##       built with -g for the elf2tbl utility to work.
+##
+include ../cfe/debug-opts.mak
+
+##
+##       compiler-opts.mak contains compiler definitions and switches/defines
+##
+include $(CFE_PSP_SRC)/$(PSP)/make/compiler-opts.mak
+
+##
+## Setup the include path for this subsystem
+## The OS specific includes are in the build-rules.make file
+##
+## If this subsystem needs include files from another app, add the path here.
+##
+INCLUDE_PATH = \
+-I$(OSAL_SRC)/inc \
+-I$(CFE_CORE_SRC)/inc \
+-I$(CFE_PSP_SRC)/$(PSP)/inc \
+-I$(CFE_PSP_SRC)/inc \
+-I$(CFS_APP_SRC)/inc \
+-I$(CFS_APP_SRC)/$(APPTARGET)/fsw/src \
+-I$(CFS_MISSION_INC) \
+-I../cfe/inc \
+-I../inc
+
+##
+## Define the VPATH make variable. 
+## This can be modified to include source from another directory.
+## If there is no corresponding app in the cfe-apps directory, then this can be discarded, or
+## if the mission chooses to put the src in another directory such as "src", then that can be 
+## added here as well.
+##
+VPATH = $(CFS_APP_SRC)/$(APPTARGET)/fsw/tables 
+
+##
+## Include the common make rules for building a cFE Application
+##
+include $(CFE_CORE_SRC)/make/table-rules.mak
+```
+
+### `user_doxy`
+
+**경로:** `fsw/apps/sch/fsw/for_build/user_doxy`
+
+
+```text
+# Doxyfile 1.5.4
+@INCLUDE_PATH=../docs/dox_src/mnem_maps \
+              $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/mnem_maps
+@INCLUDE=cfs_$(APPTARGET)_cmd_mnem_map
+@INCLUDE=cfs_$(APPTARGET)_tlm_mnem_map
+#---------------------------------------------------------------------------
+# Project related configuration options
+#---------------------------------------------------------------------------
+#DOXYFILE_ENCODING      = UTF-8
+PROJECT_NAME           = "CFS Scheduler (SCH) Application on $(CPUNAME) User's Guide"
+PROJECT_NUMBER         = 
+OUTPUT_DIRECTORY       = ../docs/users_guide/html/$(APPTARGET)
+CREATE_SUBDIRS         = NO
+OUTPUT_LANGUAGE        = English
+BRIEF_MEMBER_DESC      = YES
+REPEAT_BRIEF           = YES
+ABBREVIATE_BRIEF       = 
+ALWAYS_DETAILED_SEC    = NO
+INLINE_INHERITED_MEMB  = NO
+FULL_PATH_NAMES        = YES
+STRIP_FROM_PATH        = $(CFS_APP_SRC)
+STRIP_FROM_INC_PATH    = 
+SHORT_NAMES            = NO
+JAVADOC_AUTOBRIEF      = NO
+#QT_AUTOBRIEF           = NO
+MULTILINE_CPP_IS_BRIEF = NO
+DETAILS_AT_TOP         = NO
+INHERIT_DOCS           = YES
+SEPARATE_MEMBER_PAGES  = NO
+TAB_SIZE               = 8
+ALIASES               += "event=\xrefitem cfeevents \"Event Message\" \"cFE Event Message Cross Reference\" "
+ALIASES               += "retdesc=<TD WIDTH=\"80%\"> "
+ALIASES               += "retcode=<TR><TD WIDTH=\"20%\" VALIGN=TOP> "
+ALIASES               += endcode=</TR>
+ALIASES               += "returns=\return <TABLE BORDER=\"0\" CELLPADDING=\"2\" WIDTH=\"100%\"> "
+ALIASES               += endreturns=</TABLE>
+ALIASES               += "retstmt=<TR><TD COLSPAN=2 WIDTH=\"100%\"> "
+ALIASES               += endstmt=</TR>
+ALIASES               += "schcmd=\xrefitem cfsschcmds \"Name\" \"CFS Scheduler Commands\"  "
+ALIASES               += "schtlm=\xrefitem cfsschtlm \"Name\" \"CFS Scheduler Telemetry\"  "
+ALIASES               += "schcmdmnemonic=\xrefitem cfsschcmdmnems \"Command Mnemonic(s)\" \"SCH Command Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schtlmmnemonic=\xrefitem cfsschtlmmnems \"Telemetry Mnemonic(s)\" \"SCH Telemetry Mnemonic Cross Reference\" \b \c  "
+ALIASES               += "schcfg=\xrefitem cfsschcfg \"Purpose\" \"CFS Scheduler Configuration Parameters\"  " 
+OPTIMIZE_OUTPUT_FOR_C  = YES
+OPTIMIZE_OUTPUT_JAVA   = NO
+BUILTIN_STL_SUPPORT    = NO
+#CPP_CLI_SUPPORT        = NO
+#SIP_SUPPORT            = NO
+DISTRIBUTE_GROUP_DOC   = NO
+SUBGROUPING            = YES
+#TYPEDEF_HIDES_STRUCT   = NO
+#---------------------------------------------------------------------------
+# Build related configuration options
+#---------------------------------------------------------------------------
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
+EXTRACT_STATIC         = YES
+EXTRACT_LOCAL_CLASSES  = YES
+EXTRACT_LOCAL_METHODS  = NO
+#EXTRACT_ANON_NSPACES   = NO
+HIDE_UNDOC_MEMBERS     = NO
+HIDE_UNDOC_CLASSES     = NO
+HIDE_FRIEND_COMPOUNDS  = NO
+HIDE_IN_BODY_DOCS      = NO
+INTERNAL_DOCS          = NO
+CASE_SENSE_NAMES       = NO
+HIDE_SCOPE_NAMES       = NO
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+SORT_BRIEF_DOCS        = NO
+SORT_BY_SCOPE_NAME     = NO
+GENERATE_TODOLIST      = NO
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+ENABLED_SECTIONS       = 
+MAX_INITIALIZER_LINES  = 30
+SHOW_USED_FILES        = YES
+SHOW_DIRECTORIES       = YES
+FILE_VERSION_FILTER    = 
+#---------------------------------------------------------------------------
+# configuration options related to warning and progress messages
+#---------------------------------------------------------------------------
+QUIET                  = NO
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = YES
+WARN_IF_DOC_ERROR      = YES
+WARN_NO_PARAMDOC       = YES
+WARN_FORMAT            = "$file:$line: $text "
+WARN_LOGFILE           = 
+#---------------------------------------------------------------------------
+# configuration options related to the input files
+#---------------------------------------------------------------------------
+INPUT                  = $(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/users_guide/cfs_$(APPTARGET).dox
+#INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/public_inc 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_msgdefs.h 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_msg.h 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_tbldefs.h 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_events.h 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_custom.h 
+INPUT                 += $(CFS_APP_SRC)/$(APPTARGET)/fsw/src/$(APPTARGET)_custom.c 
+INPUT                 += $(CFS_APP_SRC)/inc/$(APPTARGET)_api.h 
+INPUT                 += ../../mission_inc/$(APPTARGET)_perfids.h 
+#INPUT                 += ../../mission_inc/$(APPTARGET)_mission_cfg.h
+INPUT                 += ../inc/$(APPTARGET)_msgids.h 
+INPUT                 += ../inc/$(APPTARGET)_platform_cfg.h 
+#INPUT_ENCODING         = UTF-8
+FILE_PATTERNS          = *.c \
+                         *.h
+RECURSIVE              = YES
+EXCLUDE                = 
+EXCLUDE_SYMLINKS       = NO
+EXCLUDE_PATTERNS       = 
+#EXCLUDE_SYMBOLS        = 
+EXAMPLE_PATH           = 
+EXAMPLE_PATTERNS       = *
+EXAMPLE_RECURSIVE      = NO
+IMAGE_PATH             = "./"
+IMAGE_PATH            += "$(CFS_APP_SRC)/$(APPTARGET)/docs/dox_src/users_guide/"
+INPUT_FILTER           = 
+FILTER_PATTERNS        = 
+FILTER_SOURCE_FILES    = NO
+#---------------------------------------------------------------------------
+# configuration options related to source browsing
+#---------------------------------------------------------------------------
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = NO
+STRIP_CODE_COMMENTS    = YES
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+REFERENCES_LINK_SOURCE = YES
+USE_HTAGS              = NO
+VERBATIM_HEADERS       = YES
+#---------------------------------------------------------------------------
+# configuration options related to the alphabetical class index
+#---------------------------------------------------------------------------
+ALPHABETICAL_INDEX     = YES
+COLS_IN_ALPHA_INDEX    = 5
+IGNORE_PREFIX          = 
+#---------------------------------------------------------------------------
+# configuration options related to the HTML output
+#---------------------------------------------------------------------------
+GENERATE_HTML          = YES
+HTML_OUTPUT            = .
+HTML_FILE_EXTENSION    = .html
+HTML_HEADER            = 
+HTML_FOOTER            = 
+HTML_STYLESHEET        = 
+HTML_ALIGN_MEMBERS     = YES
+GENERATE_HTMLHELP      = NO
+#HTML_DYNAMIC_SECTIONS  = NO
+CHM_FILE               = CFS_Help.chm
+HHC_LOCATION           = "C:/Program Files/HTML Help Workshop/hhc.exe"
+GENERATE_CHI           = NO
+BINARY_TOC             = NO
+TOC_EXPAND             = NO
+DISABLE_INDEX          = NO
+ENUM_VALUES_PER_LINE   = 4
+GENERATE_TREEVIEW      = NO
+TREEVIEW_WIDTH         = 250
+#---------------------------------------------------------------------------
+# configuration options related to the LaTeX output
+#---------------------------------------------------------------------------
+GENERATE_LATEX         = NO
+LATEX_OUTPUT           = ../../latex/$(APPTARGET)
+LATEX_CMD_NAME         = latex
+MAKEINDEX_CMD_NAME     = makeindex
+COMPACT_LATEX          = YES
+PAPER_TYPE             = letter
+EXTRA_PACKAGES         = 
+LATEX_HEADER           = 
+PDF_HYPERLINKS         = YES
+USE_PDFLATEX           = YES
+LATEX_BATCHMODE        = NO
+LATEX_HIDE_INDICES     = NO
+#---------------------------------------------------------------------------
+# configuration options related to the RTF output
+#---------------------------------------------------------------------------
+GENERATE_RTF           = NO
+RTF_OUTPUT             = ../../rtf/$(APPTARGET)
+COMPACT_RTF            = YES
+RTF_HYPERLINKS         = NO
+RTF_STYLESHEET_FILE    = 
+RTF_EXTENSIONS_FILE    = 
+#---------------------------------------------------------------------------
+# configuration options related to the man page output
+#---------------------------------------------------------------------------
+GENERATE_MAN           = NO
+MAN_OUTPUT             = man
+MAN_EXTENSION          = .3
+MAN_LINKS              = NO
+#---------------------------------------------------------------------------
+# configuration options related to the XML output
+#---------------------------------------------------------------------------
+GENERATE_XML           = NO
+XML_OUTPUT             = xml
+XML_SCHEMA             = 
+XML_DTD                = 
+XML_PROGRAMLISTING     = YES
+#---------------------------------------------------------------------------
+# configuration options for the AutoGen Definitions output
+#---------------------------------------------------------------------------
+GENERATE_AUTOGEN_DEF   = NO
+#---------------------------------------------------------------------------
+# configuration options related to the Perl module output
+#---------------------------------------------------------------------------
+GENERATE_PERLMOD       = NO
+PERLMOD_LATEX          = NO
+PERLMOD_PRETTY         = YES
+PERLMOD_MAKEVAR_PREFIX = 
+#---------------------------------------------------------------------------
+# Configuration options related to the preprocessor   
+#---------------------------------------------------------------------------
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = NO
+EXPAND_ONLY_PREDEF     = NO
+SEARCH_INCLUDES        = YES
+INCLUDE_PATH           = 
+INCLUDE_FILE_PATTERNS  = 
+PREDEFINED             = __PPC__ \
+                         MESSAGE_FORMAT_IS_CCSDS \
+                         CFE_TIME_CFG_SRC_TIME \
+                         CFE_TIME_CFG_SRC_GPS \
+                         CFE_TIME_CFG_SRC_MET
+EXPAND_AS_DEFINED      = 
+SKIP_FUNCTION_MACROS   = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to external references   
+#---------------------------------------------------------------------------
+TAGFILES               = ../cfe/cfe.tag=../cfe
+GENERATE_TAGFILE       = $(APPTARGET).tag
+ALLEXTERNALS           = NO
+EXTERNAL_GROUPS        = YES
+PERL_PATH              = /usr/bin/perl
+#---------------------------------------------------------------------------
+# Configuration options related to the dot tool   
+#---------------------------------------------------------------------------
+CLASS_DIAGRAMS         = NO
+#MSCGEN_PATH            = 
+HIDE_UNDOC_RELATIONS   = YES
+HAVE_DOT               = YES
+CLASS_GRAPH            = NO
+COLLABORATION_GRAPH    = NO
+GROUP_GRAPHS           = YES
+UML_LOOK               = NO
+TEMPLATE_RELATIONS     = NO
+INCLUDE_GRAPH          = NO
+INCLUDED_BY_GRAPH      = NO
+CALL_GRAPH             = YES
+CALLER_GRAPH           = NO
+GRAPHICAL_HIERARCHY    = NO
+DIRECTORY_GRAPH        = YES
+DOT_IMAGE_FORMAT       = png
+DOT_PATH               = 
+DOTFILE_DIRS           = 
+#DOT_GRAPH_MAX_NODES    = 50
+MAX_DOT_GRAPH_DEPTH    = 1000
+DOT_TRANSPARENT        = NO
+DOT_MULTI_TARGETS      = NO
+GENERATE_LEGEND        = YES
+DOT_CLEANUP            = YES
+#---------------------------------------------------------------------------
+# Configuration::additions related to the search engine   
+#---------------------------------------------------------------------------
+SEARCHENGINE           = NO
+```

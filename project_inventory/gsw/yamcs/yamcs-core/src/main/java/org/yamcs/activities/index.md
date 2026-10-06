@@ -3,62 +3,2808 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Activity.java`
 
-file--Activity.java
-file--ActivityDb.java
-file--ActivityExecution.java
-file--ActivityExecutor.java
-file--ActivityListener.java
-file--ActivityLog.java
-file--ActivityLogDb.java
-file--ActivityLogLevel.java
-file--ActivityLogListener.java
-file--ActivityReceiver.java
-file--ActivityService.java
-file--ActivityStatus.java
-file--CommandExecution.java
-file--CommandExecutor.java
-file--CommandStack.java
-file--CommandStackExecution.java
-file--CommandStackExecutor.java
-file--CommandStackParseException.java
-file--ManualFailureException.java
-file--OngoingActivity.java
-file--ScriptExecution.java
-file--ScriptExecutor.java
-file--StackedCommand.java
-file--StackedVerify.java
-file--Step.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/Activity.java`
+
+
+```java
+package org.yamcs.activities;
+
+import static org.yamcs.activities.ActivityDb.CNAME_ARGS;
+import static org.yamcs.activities.ActivityDb.CNAME_COMMENT;
+import static org.yamcs.activities.ActivityDb.CNAME_DETAIL;
+import static org.yamcs.activities.ActivityDb.CNAME_FAILURE_REASON;
+import static org.yamcs.activities.ActivityDb.CNAME_ID;
+import static org.yamcs.activities.ActivityDb.CNAME_SEQ;
+import static org.yamcs.activities.ActivityDb.CNAME_START;
+import static org.yamcs.activities.ActivityDb.CNAME_STARTED_BY;
+import static org.yamcs.activities.ActivityDb.CNAME_STATUS;
+import static org.yamcs.activities.ActivityDb.CNAME_STOP;
+import static org.yamcs.activities.ActivityDb.CNAME_STOPPED_BY;
+import static org.yamcs.activities.ActivityDb.CNAME_TYPE;
+
+import java.util.Map;
+import java.util.UUID;
+
+import org.yamcs.client.utils.WellKnownTypes;
+import org.yamcs.http.api.GpbWellKnownHelper;
+import org.yamcs.security.User;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+import com.google.protobuf.Struct;
+
+public class Activity implements Comparable<Activity> {
+
+    private final UUID id;
+    private final long start;
+    private final int seq;
+    private final String type;
+    private final Map<String, Object> args;
+    private final String startedBy;
+    private String detail;
+    private String comment;
+
+    private ActivityStatus status = ActivityStatus.RUNNING;
+
+    private long stop = TimeEncoding.INVALID_INSTANT;
+    private String failureReason;
+    private String stoppedBy;
+
+    public Activity(UUID id, long start, int seq, String type, Map<String, Object> args, User startedBy) {
+        this.id = id;
+        this.start = start;
+        this.seq = seq;
+        this.type = type;
+        this.args = args;
+        this.startedBy = startedBy.getName();
+    }
+
+    public Activity(Tuple tuple) {
+        id = tuple.getColumn(CNAME_ID);
+        start = tuple.getTimestampColumn(CNAME_START);
+        seq = tuple.getIntColumn(CNAME_SEQ);
+        type = tuple.getColumn(CNAME_TYPE);
+
+        Struct argsStruct = tuple.getColumn(CNAME_ARGS);
+        if (argsStruct != null) {
+            args = GpbWellKnownHelper.toJava(argsStruct);
+        } else {
+            args = null;
+        }
+
+        startedBy = tuple.getColumn(CNAME_STARTED_BY);
+        stoppedBy = tuple.getColumn(CNAME_STOPPED_BY);
+        detail = tuple.getColumn(CNAME_DETAIL);
+        comment = tuple.getColumn(CNAME_COMMENT);
+        failureReason = tuple.getColumn(CNAME_FAILURE_REASON);
+        status = ActivityStatus.valueOf(tuple.getColumn(CNAME_STATUS));
+        if (tuple.hasColumn(CNAME_STOP)) {
+            stop = tuple.getTimestampColumn(CNAME_STOP);
+        }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public ActivityStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ActivityStatus status) {
+        this.status = status;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public int getSeq() {
+        return seq;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public Map<String, Object> getArgs() {
+        return args;
+    }
+
+    public String getStartedBy() {
+        return startedBy;
+    }
+
+    public String getStoppedBy() {
+        return stoppedBy;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
+    public void setDetail(String detail) {
+        this.detail = detail;
+    }
+
+    public long getStop() {
+        return stop;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public void setFailureReason(String failureReason) {
+        this.failureReason = failureReason;
+    }
+
+    public boolean isStopped() {
+        return stop != TimeEncoding.INVALID_INSTANT;
+    }
+
+    public void cancel(User user) {
+        if (stop != TimeEncoding.INVALID_INSTANT) {
+            throw new IllegalStateException("Activity is already stopped");
+        }
+        this.status = ActivityStatus.CANCELLED;
+        this.stop = TimeEncoding.getWallclockTime();
+        this.stoppedBy = user != null ? user.getName() : null;
+    }
+
+    /**
+     * Stop a successful activity
+     */
+    public void complete(User user) {
+        if (stop != TimeEncoding.INVALID_INSTANT) {
+            throw new IllegalStateException("Activity is already stopped");
+        }
+        this.stop = TimeEncoding.getWallclockTime();
+        this.stoppedBy = user != null ? user.getName() : null;
+        this.status = ActivityStatus.SUCCESSFUL;
+    }
+
+    /**
+     * Stop an activity. If failureReason is null, the activity is considered successful.
+     */
+    public void completeExceptionally(String failureReason, User user) {
+        if (stop != TimeEncoding.INVALID_INSTANT) {
+            throw new IllegalStateException("Activity is already stopped");
+        }
+        this.stop = TimeEncoding.getWallclockTime();
+        this.failureReason = failureReason;
+        this.stoppedBy = user != null ? user.getName() : null;
+        this.status = ActivityStatus.FAILED;
+    }
+
+    public Tuple toTuple() {
+        var tuple = new Tuple();
+        tuple.addColumn(CNAME_START, start);
+        tuple.addColumn(CNAME_SEQ, seq);
+        tuple.addColumn(CNAME_ID, DataType.UUID, id);
+        tuple.addColumn(CNAME_TYPE, type);
+        var argsStruct = args != null ? WellKnownTypes.toStruct(args) : null;
+        tuple.addColumn(CNAME_ARGS, DataType.protobuf(Struct.class), argsStruct);
+        tuple.addColumn(CNAME_STATUS, status.name());
+        tuple.addColumn(CNAME_DETAIL, detail);
+        tuple.addColumn(CNAME_STARTED_BY, startedBy);
+        tuple.addColumn(CNAME_STOPPED_BY, stoppedBy);
+        tuple.addColumn(CNAME_COMMENT, comment);
+
+        if (stop != TimeEncoding.INVALID_INSTANT) {
+            tuple.addColumn(CNAME_STOP, stop);
+        } else {
+            tuple.addColumn(CNAME_STOP, null);
+        }
+
+        tuple.addColumn(CNAME_FAILURE_REASON, failureReason);
+
+        return tuple;
+    }
+
+    @Override
+    public int compareTo(Activity other) {
+        var rc = Long.compare(start, other.start);
+        return (rc != 0) ? rc : Integer.compare(seq, other.seq);
+    }
+}
 ```
 
-## 항목
+### `ActivityDb.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/Activity.java`](file--Activity.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityDb.java`](file--ActivityDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityExecution.java`](file--ActivityExecution.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityExecutor.java`](file--ActivityExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityListener.java`](file--ActivityListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLog.java`](file--ActivityLog.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogDb.java`](file--ActivityLogDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogLevel.java`](file--ActivityLogLevel.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogListener.java`](file--ActivityLogListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityReceiver.java`](file--ActivityReceiver.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityService.java`](file--ActivityService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityStatus.java`](file--ActivityStatus.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandExecution.java`](file--CommandExecution.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandExecutor.java`](file--CommandExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStack.java`](file--CommandStack.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackExecution.java`](file--CommandStackExecution.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackExecutor.java`](file--CommandStackExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackParseException.java`](file--CommandStackParseException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ManualFailureException.java`](file--ManualFailureException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/OngoingActivity.java`](file--OngoingActivity.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ScriptExecution.java`](file--ScriptExecution.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ScriptExecutor.java`](file--ScriptExecutor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/StackedCommand.java`](file--StackedCommand.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/StackedVerify.java`](file--StackedVerify.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/Step.java`](file--Step.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityDb.java`
+
+
+```java
+package org.yamcs.activities;
+
+import static org.yamcs.yarch.query.Query.createStream;
+import static org.yamcs.yarch.query.Query.createTable;
+import static org.yamcs.yarch.query.Query.deleteFromTable;
+import static org.yamcs.yarch.query.Query.selectStream;
+import static org.yamcs.yarch.query.Query.selectTable;
+import static org.yamcs.yarch.query.Query.upsertIntoTable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+import com.google.protobuf.Struct;
+
+public class ActivityDb {
+
+    public static final String TABLE_NAME = "activity";
+    private static final TupleDefinition TDEF = new TupleDefinition();
+
+    public static final String CNAME_START = "start";
+    public static final String CNAME_SEQ = "seq";
+    public static final String CNAME_ID = "id";
+    public static final String CNAME_TYPE = "type";
+    public static final String CNAME_ARGS = "args";
+    public static final String CNAME_STATUS = "status";
+    public static final String CNAME_DETAIL = "detail";
+    public static final String CNAME_STOP = "stop";
+    public static final String CNAME_STARTED_BY = "started_by";
+    public static final String CNAME_STOPPED_BY = "stopped_by";
+    public static final String CNAME_FAILURE_REASON = "failure_reason";
+    public static final String CNAME_COMMENT = "comment";
+    static {
+        TDEF.addColumn(CNAME_START, DataType.TIMESTAMP);
+        TDEF.addColumn(CNAME_SEQ, DataType.INT);
+        TDEF.addColumn(CNAME_ID, DataType.UUID);
+        TDEF.addColumn(CNAME_TYPE, DataType.STRING);
+        TDEF.addColumn(CNAME_ARGS, DataType.protobuf(Struct.class));
+        TDEF.addColumn(CNAME_STATUS, DataType.STRING);
+        TDEF.addColumn(CNAME_DETAIL, DataType.STRING);
+        TDEF.addColumn(CNAME_STARTED_BY, DataType.STRING);
+        TDEF.addColumn(CNAME_STOP, DataType.TIMESTAMP);
+        TDEF.addColumn(CNAME_FAILURE_REASON, DataType.STRING);
+        TDEF.addColumn(CNAME_STOPPED_BY, DataType.STRING);
+        TDEF.addColumn(CNAME_COMMENT, DataType.STRING);
+    }
+
+    private Log log;
+    private YarchDatabaseInstance ydb;
+    private Stream tableStream;
+    private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    public ActivityDb(String yamcsInstance) throws InitException {
+        log = new Log(ActivityDb.class, yamcsInstance);
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        try {
+            var streamName = TABLE_NAME + "_in";
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var q = createTable(TABLE_NAME, TDEF)
+                        .primaryKey(CNAME_START, CNAME_SEQ)
+                        .index(CNAME_ID);
+                ydb.execute(q.toStatement());
+            }
+            if (ydb.getStream(streamName) == null) {
+                var q = createStream(streamName, TDEF);
+                ydb.execute(q.toStatement());
+            }
+
+            var q = upsertIntoTable(TABLE_NAME)
+                    .query(selectStream(streamName).toSQL());
+            ydb.execute(q.toStatement());
+
+            tableStream = ydb.getStream(streamName);
+        } catch (StreamSqlException | ParseException e) {
+            throw new InitException(e);
+        }
+    }
+
+    public Activity getById(UUID id) {
+        rwlock.readLock().lock();
+        try {
+            var query = selectTable(TABLE_NAME).where(CNAME_ID, id);
+            var r = ydb.executeUnchecked(query.toStatement());
+            try {
+                if (r.hasNext()) {
+                    Tuple tuple = r.next();
+                    try {
+                        var activity = new Activity(tuple);
+                        log.trace("Read activity from db {}", activity);
+                        return activity;
+                    } catch (Exception e) {
+                        log.error("Cannot decode tuple {} into activity", tuple);
+                    }
+                }
+            } finally {
+                r.close();
+
+            }
+            return null;
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Returns all activities without a stop time
+     */
+    public List<Activity> getUnfinishedActivities() {
+        var unstoppedActivities = new ArrayList<Activity>();
+        rwlock.readLock().lock();
+        try {
+            var sqlBuilder = new SqlBuilder(TABLE_NAME);
+            sqlBuilder.where("stop is null");
+
+            var stmt = ydb.createStatement(sqlBuilder.toString(),
+                    sqlBuilder.getQueryArguments().toArray());
+            var result = ydb.execute(stmt);
+            result.forEachRemaining(tuple -> {
+                unstoppedActivities.add(new Activity(tuple));
+            });
+            result.close();
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+        return unstoppedActivities;
+    }
+
+    public void insert(Activity activity) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = activity.toTuple();
+            log.trace("Adding activity: {}", tuple);
+            tableStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void update(Activity activity) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = activity.toTuple();
+            log.trace("Updating activity: {}", tuple);
+            tableStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void updateAll(List<Activity> activities) {
+        rwlock.writeLock().lock();
+        try {
+            for (var activity : activities) {
+                var tuple = activity.toTuple();
+                log.trace("Updating activity: {}", tuple);
+                tableStream.emitTuple(tuple);
+            }
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void deleteActivity(UUID id) {
+        rwlock.writeLock().lock();
+        try {
+            var query = deleteFromTable(TABLE_NAME).where(CNAME_ID, id);
+            var result = ydb.executeUnchecked(query.toStatement());
+            result.close();
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+}
+```
+
+### `ActivityExecution.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityExecution.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.time.Instant;
+import java.util.concurrent.Callable;
+
+import org.yamcs.logging.Log;
+
+public abstract class ActivityExecution implements Callable<Void> {
+
+    protected Log log;
+    protected String yamcsInstance;
+    protected ActivityService activityService;
+    protected ActivityExecutor executor;
+    protected Activity activity;
+
+    private Instant start;
+    private Instant stop;
+
+    public ActivityExecution(ActivityService activityService, ActivityExecutor executor, Activity activity) {
+        log = new Log(getClass(), activityService.getYamcsInstance());
+        log.setContext(activity.getId().toString());
+
+        this.yamcsInstance = activityService.getYamcsInstance();
+        this.activityService = activityService;
+        this.executor = executor;
+        this.activity = activity;
+    }
+
+    @Override
+    public Void call() throws Exception {
+        start = Instant.now();
+        try {
+            return run();
+        } finally {
+            stop = Instant.now();
+            stop();
+        }
+    }
+
+    public abstract Void run() throws Exception;
+
+    /**
+     * Called when an activity stop is requested.
+     * <p>
+     * Implementations are expected to finish in a timely manner.
+     */
+    public abstract void stop() throws Exception;
+
+    public Instant getStart() {
+        return start;
+    }
+
+    public Instant getStop() {
+        return stop;
+    }
+
+    public void logServiceInfo(String message) {
+        log.info(message);
+        activityService.logServiceInfo(activity, message);
+    }
+
+    public void logServiceWarning(String message) {
+        log.warn(message);
+        activityService.logServiceWarning(activity, message);
+    }
+
+    public void logServiceError(String message) {
+        log.error(message);
+        activityService.logServiceError(activity, message);
+    }
+
+    public void logActivityInfo(String message) {
+        log.info(message);
+        activityService.logActivityInfo(activity, message);
+    }
+
+    public void logActivityWarning(String message) {
+        log.warn(message);
+        activityService.logActivityWarning(activity, message);
+    }
+
+    public void logActivityError(String message) {
+        log.error(message);
+        activityService.logActivityError(activity, message);
+    }
+}
+```
+
+### `ActivityExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityExecutor.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.Map;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.NamedSpec;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.security.User;
+
+/**
+ * An executor capable of executing any amount of activities of a specified type.
+ */
+public interface ActivityExecutor {
+
+    /**
+     * The activity recognized by this executor
+     */
+    String getActivityType();
+
+    /**
+     * UI-friendly display name for this type of activity
+     */
+    String getDisplayName();
+
+    /**
+     * Short imperative description of this type of activity.
+     */
+    String getDescription();
+
+    /**
+     * Icon hint for UI purpose. This should be a name present in Material Icons.
+     */
+    String getIcon();
+
+    /**
+     * Specify the options for this executor.
+     * <p>
+     * The name of this spec, is where the options are to be defined as part of the {@link ActivityService}
+     * configuration.
+     * <p>
+     * For example, the name for {@link ScriptExecutor} is {@code scriptExecution}. It is suggested to use the same
+     * naming strategy.
+     */
+    NamedSpec getSpec();
+
+    /**
+     * Initialize this executor. Called when the activity service starts.
+     */
+    void init(ActivityService activityService, YConfiguration options);
+
+    /**
+     * Specify the allowed arguments of an activity
+     */
+    Spec getActivitySpec();
+
+    /**
+     * Return a short (one-line) descriptive text for an activity that would have the specified args.
+     */
+    String describeActivity(Map<String, Object> args);
+
+    /**
+     * Create an executable activity with the provided arguments
+     * 
+     * @param activity
+     *            the activity to execute
+     *
+     * @param user
+     *            the calling user
+     */
+    ActivityExecution createExecution(Activity activity, User user) throws ValidationException;
+}
+```
+
+### `ActivityListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityListener.java`
+
+
+```java
+package org.yamcs.activities;
+
+@FunctionalInterface
+public interface ActivityListener {
+
+    /**
+     * An activity is created or updated
+     */
+    void onActivityUpdated(Activity activity);
+}
+```
+
+### `ActivityLog.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLog.java`
+
+
+```java
+package org.yamcs.activities;
+
+import static org.yamcs.activities.ActivityLogDb.CNAME_ACTIVITY_ID;
+import static org.yamcs.activities.ActivityLogDb.CNAME_LEVEL;
+import static org.yamcs.activities.ActivityLogDb.CNAME_MESSAGE;
+import static org.yamcs.activities.ActivityLogDb.CNAME_SOURCE;
+import static org.yamcs.activities.ActivityLogDb.CNAME_TIME;
+
+import java.util.Objects;
+import java.util.UUID;
+
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+public class ActivityLog {
+
+    public static final String SOURCE_SERVICE = "SERVICE";
+    public static final String SOURCE_ACTIVITY = "ACTIVITY";
+
+    private final long time;
+    private final UUID activityId;
+    private final String source;
+    private final ActivityLogLevel level;
+    private final String message;
+
+    public ActivityLog(long time, UUID activityId, String source, ActivityLogLevel level, String message) {
+        this.time = time;
+        this.activityId = Objects.requireNonNull(activityId);
+        this.source = Objects.requireNonNull(source);
+        this.level = Objects.requireNonNull(level);
+        this.message = Objects.requireNonNull(message);
+    }
+
+    public ActivityLog(Tuple tuple) {
+        this.time = tuple.getTimestampColumn(CNAME_TIME);
+        this.activityId = tuple.getColumn(CNAME_ACTIVITY_ID);
+        this.source = tuple.getColumn(CNAME_SOURCE);
+        this.level = ActivityLogLevel.valueOf(tuple.getColumn(CNAME_LEVEL));
+        this.message = tuple.getColumn(CNAME_MESSAGE);
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public UUID getActivityId() {
+        return activityId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public ActivityLogLevel getLevel() {
+        return level;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Tuple toTuple() {
+        var tuple = new Tuple();
+        tuple.addColumn(CNAME_TIME, time);
+        tuple.addColumn(CNAME_ACTIVITY_ID, DataType.UUID, activityId);
+        tuple.addColumn(CNAME_SOURCE, source);
+        tuple.addColumn(CNAME_LEVEL, level.name());
+        tuple.addColumn(CNAME_MESSAGE, message);
+        return tuple;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[%s] %s", TimeEncoding.toString(time), message);
+    }
+}
+```
+
+### `ActivityLogDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogDb.java`
+
+
+```java
+package org.yamcs.activities;
+
+import static org.yamcs.yarch.query.Query.createStream;
+import static org.yamcs.yarch.query.Query.createTable;
+import static org.yamcs.yarch.query.Query.selectStream;
+import static org.yamcs.yarch.query.Query.upsertIntoTable;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.SqlBuilder;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class ActivityLogDb {
+
+    public static final String TABLE_NAME = "activity_log";
+    private static final TupleDefinition TDEF = new TupleDefinition();
+
+    public static final String CNAME_TIME = "time";
+    public static final String CNAME_ACTIVITY_ID = "activity_id";
+    public static final String CNAME_SEQ = "seq";
+    public static final String CNAME_SOURCE = "source";
+    public static final String CNAME_LEVEL = "level";
+    public static final String CNAME_MESSAGE = "message";
+    static {
+        TDEF.addColumn(CNAME_TIME, DataType.TIMESTAMP);
+        TDEF.addColumn(CNAME_ACTIVITY_ID, DataType.UUID);
+        TDEF.addColumn(CNAME_SEQ, DataType.LONG);
+        TDEF.addColumn(CNAME_SOURCE, DataType.ENUM);
+        TDEF.addColumn(CNAME_LEVEL, DataType.STRING);
+        TDEF.addColumn(CNAME_MESSAGE, DataType.STRING);
+    }
+
+    private Log log;
+    private YarchDatabaseInstance ydb;
+    private Stream tableStream;
+    private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    public ActivityLogDb(String yamcsInstance) throws InitException {
+        log = new Log(ActivityDb.class, yamcsInstance);
+        ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        try {
+            var streamName = TABLE_NAME + "_in";
+            if (ydb.getTable(TABLE_NAME) == null) {
+                var q = createTable(TABLE_NAME, TDEF)
+                        .autoIncrement(CNAME_SEQ)
+                        .primaryKey(CNAME_TIME, CNAME_ACTIVITY_ID, CNAME_SEQ)
+                        .index(CNAME_ACTIVITY_ID);
+                ydb.execute(q.toStatement());
+            }
+            if (ydb.getStream(streamName) == null) {
+                var q = createStream(streamName, TDEF);
+                ydb.execute(q.toStatement());
+            }
+
+            var q = upsertIntoTable(TABLE_NAME)
+                    .query(selectStream(streamName).toSQL());
+            ydb.execute(q.toStatement());
+
+            tableStream = ydb.getStream(streamName);
+        } catch (StreamSqlException | ParseException e) {
+            throw new InitException(e);
+        }
+    }
+
+    public void addLogEntry(ActivityLog logEntry) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = logEntry.toTuple();
+            tableStream.emitTuple(tuple);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public List<ActivityLog> getLogEntries(UUID activityId) {
+        var logEntries = new ArrayList<ActivityLog>();
+        rwlock.readLock().lock();
+        try {
+            var sqlBuilder = new SqlBuilder(TABLE_NAME);
+            sqlBuilder.where("activity_id = ?", activityId);
+
+            var stmt = ydb.createStatement(sqlBuilder.toString(),
+                    sqlBuilder.getQueryArguments().toArray());
+            var result = ydb.execute(stmt);
+            result.forEachRemaining(tuple -> {
+                logEntries.add(new ActivityLog(tuple));
+            });
+            result.close();
+        } catch (StreamSqlException | ParseException e) {
+            log.error("Exception when executing query", e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+        return logEntries;
+    }
+}
+```
+
+### `ActivityLogLevel.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogLevel.java`
+
+
+```java
+package org.yamcs.activities;
+
+public enum ActivityLogLevel {
+
+    INFO,
+    WARNING,
+    ERROR,
+}
+```
+
+### `ActivityLogListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityLogListener.java`
+
+
+```java
+package org.yamcs.activities;
+
+@FunctionalInterface
+public interface ActivityLogListener {
+
+    void onLogRecord(Activity activity, ActivityLog log);
+}
+```
+
+### `ActivityReceiver.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityReceiver.java`
+
+
+```java
+package org.yamcs.activities;
+
+public interface ActivityReceiver {
+
+    void next(Activity activity);
+
+    /**
+     * If a paged request has been performed, the token can be used to retrieve the next chunk.
+     * <p>
+     * token is null if there was no limit or there were less items than the specified limit
+     */
+    void complete(String token);
+
+    void completeExceptionally(Throwable t);
+}
+```
+
+### `ActivityService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityService.java`
+
+
+```java
+package org.yamcs.activities;
+
+import static com.google.common.util.concurrent.MoreExecutors.listeningDecorator;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.security.User;
+import org.yamcs.utils.ExceptionUtil;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.common.util.concurrent.AbstractService;
+import com.google.common.util.concurrent.ListenableFuture;
+import com.google.common.util.concurrent.ListeningExecutorService;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+
+/**
+ * Yamcs service for executing activities.
+ */
+public class ActivityService extends AbstractService {
+
+    public static final String ACTIVITY_TYPE_MANUAL = "MANUAL";
+
+    private String yamcsInstance;
+    private Log log;
+
+    private Map<String, ActivityExecutor> executors = new HashMap<>();
+    private ConcurrentMap<UUID, OngoingActivity> ongoingActivities = new ConcurrentHashMap<>();
+    private Set<ActivityListener> listeners = new CopyOnWriteArraySet<>();
+    private Set<ActivityLogListener> logListeners = new CopyOnWriteArraySet<>();
+
+    private ActivityDb activityDb;
+    private ActivityLogDb activityLogDb;
+
+    // Distinguish records with the same timestamp
+    private AtomicInteger activitySeqSequence = new AtomicInteger();
+
+    private ListeningExecutorService exec = listeningDecorator(Executors.newCachedThreadPool(
+            new ThreadFactoryBuilder().setNameFormat("YamcsActivityService-worker").build()));
+
+    public Spec getSpec() {
+        var spec = new Spec();
+        for (var executor : ServiceLoader.load(ActivityExecutor.class)) {
+            var executorSpec = executor.getSpec();
+            if (executorSpec != null) {
+                spec.addOption(executorSpec.getName(), OptionType.MAP)
+                        .withSpec(executorSpec)
+                        .withApplySpecDefaults(true);
+            }
+        }
+
+        return spec;
+    }
+
+    public void init(String yamcsInstance, YConfiguration config) throws InitException {
+        this.yamcsInstance = yamcsInstance;
+        log = new Log(getClass(), yamcsInstance);
+        activityDb = new ActivityDb(yamcsInstance);
+        activityLogDb = new ActivityLogDb(yamcsInstance);
+        for (var executor : ServiceLoader.load(ActivityExecutor.class)) {
+            var executorConfig = YConfiguration.emptyConfig();
+            if (executor.getSpec() != null) {
+                executorConfig = config.getConfig(executor.getSpec().getName());
+            }
+
+            executor.init(this, executorConfig);
+            executors.put(executor.getActivityType(), executor);
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        // In case of an unclean shutdown, clean-up old activities without stop
+        var unfinishedActivities = activityDb.getUnfinishedActivities();
+        if (!unfinishedActivities.isEmpty()) {
+            var systemUser = YamcsServer.getServer().getSecurityStore().getSystemUser();
+            for (var activity : unfinishedActivities) {
+                log.info("Force-cancel activity {}", activity.getId());
+                activity.cancel(systemUser);
+            }
+            activityDb.updateAll(unfinishedActivities);
+        }
+
+        notifyStarted();
+    }
+
+    public String getYamcsInstance() {
+        return yamcsInstance;
+    }
+
+    public Collection<ActivityExecutor> getExecutors() {
+        return executors.values();
+    }
+
+    public ActivityExecutor getExecutor(String activity) {
+        return executors.get(activity);
+    }
+
+    public void addActivityListener(ActivityListener listener) {
+        listeners.add(listener);
+    }
+
+    public void removeActivityListener(ActivityListener listener) {
+        listeners.remove(listener);
+    }
+
+    public void addActivityLogListener(ActivityLogListener listener) {
+        logListeners.add(listener);
+    }
+
+    public void removeActivityLogListener(ActivityLogListener listener) {
+        logListeners.remove(listener);
+    }
+
+    public Activity prepareActivity(String type, Map<String, Object> args, User user, String comment) {
+        var executor = findExecutor(type);
+
+        var activity = new Activity(
+                UUID.randomUUID(),
+                TimeEncoding.getWallclockTime(),
+                activitySeqSequence.getAndIncrement(),
+                type,
+                args,
+                user);
+        activity.setComment(comment);
+
+        if (executor == null) { // Manual activity
+            activity.setDetail(YConfiguration.getString(args, "name"));
+        } else {
+            activity.setDetail(executor.describeActivity(args));
+        }
+
+        activityDb.insert(activity);
+        return activity;
+    }
+
+    public void startActivity(Activity activity, User user) {
+        log.info("Starting activity " + activity.getId() + " (" + activity.getType() + ")");
+        var executor = findExecutor(activity.getType());
+
+        var ongoingActivity = new OngoingActivity(activity);
+        logServiceInfo(activity, "Starting activity");
+
+        ActivityExecution execution = null;
+        if (executor == null) {
+            execution = null;
+            ongoingActivity.workFuture = new CompletableFuture<>();
+        } else {
+            try {
+                execution = executor.createExecution(activity, user);
+                var fExecution = execution;
+                ongoingActivity.workFuture = new FutureTask<>(() -> {
+                    fExecution.call();
+                    return null;
+                });
+                ongoingActivity.workFuture = exec.submit(fExecution);
+            } catch (Throwable t) {
+                execution = null;
+                ongoingActivity.workFuture = CompletableFuture.failedFuture(t);
+            }
+        }
+
+        var fExecution = execution;
+        ongoingActivity.resultFuture = new CompletableFuture<>();
+
+        if (ongoingActivity.workFuture instanceof ListenableFuture) {
+            ((ListenableFuture<Void>) ongoingActivity.workFuture).addListener(() -> {
+                onActivityFinished(ongoingActivity, fExecution);
+            }, exec);
+        } else {
+            ((CompletableFuture<Void>) ongoingActivity.workFuture).whenCompleteAsync((res, err) -> {
+                onActivityFinished(ongoingActivity, null);
+            }, exec);
+        }
+
+        ongoingActivities.put(activity.getId(), ongoingActivity);
+        listeners.forEach(l -> l.onActivityUpdated(activity));
+
+    }
+
+    private void onActivityFinished(OngoingActivity ongoingActivity, ActivityExecution execution) {
+        var activity = ongoingActivity.getActivity();
+        var loggedName = "Activity (" + activity.getId() + ")";
+
+        // Set if there was a cancellation. Or in the case of a manual activity,
+        // it is always set.
+        var stopRequester = ongoingActivity.getStopRequester();
+
+        try {
+            ongoingActivity.workFuture.get();
+
+            log.info("{} successful", loggedName);
+            logServiceInfo(activity, "Activity successful");
+            activity.complete(ongoingActivity.getStopRequester());
+        } catch (CancellationException e) {
+            log.info("{} cancel requested by {}", loggedName, stopRequester.getName());
+            logServiceInfo(activity, "Cancel requested by " + stopRequester.getName());
+            if (execution != null) {
+                try {
+                    execution.stop();
+                } catch (Throwable t) {
+                    log.error("Failed to stop activity execution", t);
+                }
+            }
+            log.info("{} was cancelled by {}", loggedName, stopRequester.getName());
+            logServiceInfo(activity, "Activity cancelled");
+            activity.cancel(stopRequester);
+        } catch (Exception e) {
+            var cause = ExceptionUtil.unwind(e);
+            if (cause instanceof ManualFailureException) {
+                log.error("{} failed: {}", loggedName, cause.getMessage());
+            } else {
+                log.error("{} failed", loggedName, cause);
+            }
+            var failureReason = cause.getMessage();
+            if (failureReason == null) {
+                failureReason = cause.getClass().getSimpleName();
+            }
+            logServiceError(activity, "Activity failed: " + failureReason);
+            activity.completeExceptionally(failureReason, ongoingActivity.getStopRequester());
+        } finally {
+            ongoingActivities.remove(activity.getId());
+            activityDb.update(activity);
+            listeners.forEach(l -> l.onActivityUpdated(activity));
+        }
+    }
+
+    public Activity cancelActivity(UUID id, User user) {
+        var ongoingActivity = ongoingActivities.get(id);
+        if (ongoingActivity != null) {
+            ongoingActivity.cancel(user);
+            activityDb.update(ongoingActivity.getActivity()); // Persist CANCELLED status
+            listeners.forEach(l -> l.onActivityUpdated(ongoingActivity.getActivity()));
+        }
+        return activityDb.getById(id);
+    }
+
+    public Activity completeManualActivity(UUID id, String failureReason, User user) {
+        var ongoingActivity = ongoingActivities.get(id);
+        if (ongoingActivity != null) {
+            var activity = ongoingActivity.getActivity();
+            if (!activity.getType().equals(ACTIVITY_TYPE_MANUAL)) {
+                throw new IllegalArgumentException(
+                        "Only manual activities can be completed. Did you mean to cancel?");
+            }
+            if (failureReason == null) {
+                ongoingActivity.complete(user);
+            } else {
+                ongoingActivity.completeExceptionally(failureReason, user);
+            }
+
+            activityDb.update(ongoingActivity.getActivity());
+            listeners.forEach(l -> l.onActivityUpdated(ongoingActivity.getActivity()));
+            return ongoingActivity.getActivity();
+        }
+        return activityDb.getById(id);
+    }
+
+    public Activity getActivity(UUID id) {
+        return activityDb.getById(id);
+    }
+
+    public boolean isStopRequested(Activity activity) {
+        var ongoingActivity = ongoingActivities.get(activity.getId());
+        if (ongoingActivity != null) {
+            return ongoingActivity.getStopRequester() != null;
+        }
+        return false;
+    }
+
+    public List<Activity> getOngoingActivities() {
+        return ongoingActivities.values().stream()
+                .map(OngoingActivity::getActivity)
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    private ActivityExecutor findExecutor(String activityType) {
+        ActivityExecutor executor = null;
+        if (!ACTIVITY_TYPE_MANUAL.equals(activityType)) {
+            executor = executors.get(activityType);
+            if (executor == null) {
+                throw new IllegalArgumentException("Unexpected activity type '" + activityType + "'");
+            }
+        }
+        return executor;
+    }
+
+    public void logServiceInfo(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_SERVICE, ActivityLogLevel.INFO, message);
+    }
+
+    public void logServiceWarning(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_SERVICE, ActivityLogLevel.WARNING, message);
+    }
+
+    public void logServiceError(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_SERVICE, ActivityLogLevel.ERROR, message);
+    }
+
+    public void logActivityInfo(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_ACTIVITY, ActivityLogLevel.INFO, message);
+    }
+
+    public void logActivityWarning(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_ACTIVITY, ActivityLogLevel.WARNING, message);
+    }
+
+    public void logActivityError(Activity activity, String message) {
+        logMessage(activity, ActivityLog.SOURCE_ACTIVITY, ActivityLogLevel.ERROR, message);
+    }
+
+    private void logMessage(Activity activity, String source, ActivityLogLevel level, String message) {
+        var entry = new ActivityLog(
+                TimeEncoding.getWallclockTime(),
+                activity.getId(),
+                source,
+                level,
+                message);
+        activityLogDb.addLogEntry(entry);
+        logListeners.forEach(l -> l.onLogRecord(activity, entry));
+    }
+
+    public ActivityDb getActivityDb() {
+        return activityDb;
+    }
+
+    public ActivityLogDb getActivityLogDb() {
+        return activityLogDb;
+    }
+
+    @Override
+    protected void doStop() {
+        try {
+            exec.shutdownNow();
+            exec.awaitTermination(10, TimeUnit.SECONDS);
+            notifyStopped();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            notifyFailed(e);
+        }
+    }
+}
+```
+
+### `ActivityStatus.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ActivityStatus.java`
+
+
+```java
+package org.yamcs.activities;
+
+public enum ActivityStatus {
+
+    /**
+     * An activity is running
+     */
+    RUNNING,
+
+    /**
+     * The activity was cancelled. It may or may not still be running (verify stop time).
+     */
+    CANCELLED,
+
+    /**
+     * The activity completed successfully
+     */
+    SUCCESSFUL,
+
+    /**
+     * An error occurred while running this activity
+     */
+    FAILED,
+}
+```
+
+### `CommandExecution.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandExecution.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.net.InetAddress;
+import java.util.Map;
+
+import org.yamcs.Processor;
+import org.yamcs.YamcsServer;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.security.User;
+import org.yamcs.yarch.Stream;
+
+public class CommandExecution extends ActivityExecution {
+
+    private Processor processor;
+    private String commandName;
+    private Map<String, Object> args;
+    private Map<String, Object> extra;
+    private Stream stream;
+    private User user;
+
+    public CommandExecution(
+            ActivityService activityService,
+            CommandExecutor executor,
+            Activity activity,
+            Processor processor,
+            String commandName,
+            Map<String, Object> args,
+            Map<String, Object> extra,
+            Stream stream,
+            User user) {
+        super(activityService, executor, activity);
+        this.processor = processor;
+        this.commandName = commandName;
+        this.args = args;
+        this.extra = extra;
+        this.stream = stream;
+        this.user = user;
+    }
+
+    @Override
+    public Void run() throws Exception {
+        var cmdManager = processor.getCommandingManager();
+
+        var mdb = MdbFactory.getInstance(processor.getInstance());
+        var cmd = mdb.getMetaCommand(commandName);
+
+        var origin = InetAddress.getLocalHost().getHostName();
+        var preparedCommand = cmdManager.buildCommand(cmd, args, origin, 0, user);
+
+        if (extra != null && !extra.isEmpty()) {
+            extra.forEach((k, v) -> {
+                var commandOption = YamcsServer.getServer().getCommandOption(k);
+                if (commandOption == null) {
+                    throw new IllegalArgumentException("Unknown command option '" + k + "'");
+                }
+
+                preparedCommand.addAttribute(CommandHistoryAttribute.newBuilder()
+                        .setName(k)
+                        .setValue(commandOption.coerceValue(v))
+                        .build());
+            });
+        }
+
+        if (stream != null) {
+            preparedCommand.setTcStream(stream);
+        }
+
+        cmdManager.sendCommand(user, preparedCommand);
+
+        return null;
+    }
+
+    @Override
+    public void stop() throws Exception {
+        // NOP
+    }
+}
+```
+
+### `CommandExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandExecutor.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.Collections;
+import java.util.Map;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.NamedSpec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.security.User;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+
+public class CommandExecutor implements ActivityExecutor {
+
+    private String yamcsInstance;
+    private ActivityService activityService;
+    private Spec activitySpec;
+
+    @Override
+    public String getActivityType() {
+        return "COMMAND";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Command";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Run a command.";
+    }
+
+    @Override
+    public String getIcon() {
+        return "rss_feed";
+    }
+
+    @Override
+    public NamedSpec getSpec() {
+        var spec = new NamedSpec("commandExecution");
+        return spec;
+    }
+
+    @Override
+    public void init(ActivityService activityService, YConfiguration options) {
+        this.activityService = activityService;
+        yamcsInstance = activityService.getYamcsInstance();
+
+        activitySpec = new Spec();
+        var processorOption = activitySpec.addOption("processor", OptionType.STRING);
+
+        var ysi = YamcsServer.getServer().getInstance(yamcsInstance);
+        var processor = ysi.getFirstProcessor();
+        if (processor != null && processor.hasCommanding()) {
+            processorOption.withDefault(processor.getName());
+        } else {
+            processorOption.withRequired(true);
+        }
+
+        activitySpec.addOption("command", OptionType.STRING).withRequired(true);
+        activitySpec.addOption("args", OptionType.MAP).withSpec(Spec.ANY);
+        activitySpec.addOption("extra", OptionType.MAP).withSpec(Spec.ANY);
+        activitySpec.addOption("stream", OptionType.STRING);
+    }
+
+    @Override
+    public Spec getActivitySpec() {
+        return activitySpec;
+    }
+
+    @Override
+    public String describeActivity(Map<String, Object> args) {
+        return YConfiguration.getString(args, "command");
+    }
+
+    @Override
+    public CommandExecution createExecution(Activity activity, User caller) throws ValidationException {
+        var args = getActivitySpec().validate(activity.getArgs());
+        var processorName = YConfiguration.getString(args, "processor");
+        var commandName = YConfiguration.getString(args, "command");
+
+        Map<String, Object> commandArgs = Collections.emptyMap();
+        if (args.containsKey("args")) {
+            commandArgs = YConfiguration.getMap(args, "args");
+        }
+
+        Map<String, Object> commandExtra = Collections.emptyMap();
+        if (args.containsKey("extra")) {
+            commandExtra = YConfiguration.getMap(args, "extra");
+        }
+
+        var processor = YamcsServer.getServer().getProcessor(yamcsInstance, processorName);
+
+        Stream stream = null;
+        if (args.containsKey("stream")) {
+            var ydb = YarchDatabase.getInstance(yamcsInstance);
+            stream = ydb.getStream(yamcsInstance);
+        }
+        return new CommandExecution(activityService, this,
+                activity, processor, commandName, commandArgs, commandExtra, stream, caller);
+    }
+}
+```
+
+### `CommandStack.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStack.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.xtce.MetaCommand;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+public class CommandStack {
+
+    private List<Step> steps = new ArrayList<>();
+    private String acknowledgment = CommandHistoryPublisher.AcknowledgeQueued_KEY;
+    private int waitTime = 0;
+
+    public void setAcknowledgment(String acknowledgment) {
+        this.acknowledgment = acknowledgment;
+    }
+
+    public String getAcknowledgment() {
+        return acknowledgment;
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public void addStep(Step step) {
+        steps.add(step);
+    }
+
+    public List<Step> getSteps() {
+        return steps;
+    }
+
+    public static CommandStack fromJson(String json, Mdb mdb) throws CommandStackParseException {
+        var stack = new CommandStack();
+
+        var gson = new Gson();
+        var stackObject = gson.fromJson(json, JsonObject.class);
+
+        if (stackObject.has("advancement")) {
+            var advancementObject = stackObject.get("advancement").getAsJsonObject();
+            if (advancementObject.has("acknowledgment")) {
+                var acknowledgment = advancementObject.get("acknowledgment").getAsString();
+                stack.setAcknowledgment(acknowledgment);
+            }
+            if (advancementObject.has("wait")) {
+                var wait = advancementObject.get("wait").getAsInt();
+                if (wait >= 0) {
+                    stack.setWaitTime(wait);
+                }
+            }
+        }
+
+        if (stackObject.has("steps")) { // v2
+            for (var stepEl : stackObject.getAsJsonArray("steps")) {
+                var stepObject = stepEl.getAsJsonObject();
+                var stepType = stepObject.get("type").getAsString();
+                if (stepType.equals("command")) {
+                    var command = parseCommand(mdb, stepObject);
+                    stack.addStep(command);
+                } else if (stepType.equals("verify")) {
+                    var verify = parseVerify(mdb, stepObject);
+                    stack.addStep(verify);
+                }
+            }
+        } else if (stackObject.has("commands")) { // v1
+            for (var commandEl : stackObject.getAsJsonArray("commands")) {
+                var command = parseCommand(mdb, commandEl.getAsJsonObject());
+                stack.addStep(command);
+            }
+        }
+
+        return stack;
+    }
+
+    private static StackedVerify parseVerify(Mdb mdb, JsonObject verifyObject) throws CommandStackParseException {
+        var stackedVerify = new StackedVerify();
+
+        if (verifyObject.has("condition")) {
+            var comparisonsArray = verifyObject.get("condition").getAsJsonArray();
+            for (var comparisonEl : comparisonsArray) {
+                var comparisonObject = comparisonEl.getAsJsonObject();
+
+                var parameterName = comparisonObject.get("parameter").getAsString();
+                var parameter = mdb.getParameter(parameterName);
+                if (parameter == null) {
+                    throw new CommandStackParseException(
+                            "Parameter " + parameterName + " does not exist in MDB");
+                }
+
+                var operator = comparisonObject.get("operator").getAsString();
+
+                Object value;
+                var jsonValue = comparisonObject.get("value").getAsJsonPrimitive();
+                if (jsonValue.isBoolean()) {
+                    value = jsonValue.getAsBoolean();
+                } else if (jsonValue.isNumber()) {
+                    value = jsonValue.getAsNumber();
+                } else if (jsonValue.isString()) {
+                    value = jsonValue.getAsString();
+                } else {
+                    throw new CommandStackParseException("Unexpected comparand of class " + jsonValue.getClass());
+                }
+
+                stackedVerify.addComparison(parameter, operator, value);
+            }
+        }
+
+        if (verifyObject.has("delay")) {
+            stackedVerify.setDelay(verifyObject.get("delay").getAsLong());
+        }
+        if (verifyObject.has("timeout")) {
+            stackedVerify.setTimeout(verifyObject.get("timeout").getAsLong());
+        }
+
+        return stackedVerify;
+    }
+
+    private static StackedCommand parseCommand(Mdb mdb, JsonObject commandObject) throws CommandStackParseException {
+        var name = commandObject.get("name").getAsString();
+
+        MetaCommand mdbInfo;
+        if (commandObject.has("namespace")) {
+            var namespace = commandObject.get("namespace").getAsString();
+            mdbInfo = mdb.getMetaCommand(namespace, name);
+            if (mdbInfo == null) {
+                throw new CommandStackParseException(
+                        "Command " + name + " (" + namespace + ") does not exist in MDB");
+            }
+        } else {
+            mdbInfo = mdb.getMetaCommand(name);
+            if (mdbInfo == null) {
+                throw new CommandStackParseException(
+                        "Command " + name + " does not exist in MDB");
+            }
+        }
+
+        var command = new StackedCommand();
+        command.setMetaCommand(mdbInfo);
+        if (commandObject.has("comment")) {
+            var comment = commandObject.get("comment").getAsString();
+            command.setComment(comment);
+        }
+        if (commandObject.has("stream")) {
+            var stream = commandObject.get("stream").getAsString();
+            command.setStream(stream);
+        }
+        if (commandObject.has("advancement")) {
+            var advancementObject = commandObject.get("advancement").getAsJsonObject();
+            if (advancementObject.has("acknowledgment")) {
+                var acknowledgment = advancementObject.get("acknowledgment").getAsString();
+                command.setAcknowledgment(acknowledgment);
+            }
+            if (advancementObject.has("wait")) {
+                var wait = advancementObject.get("wait").getAsInt();
+                if (wait >= 0) {
+                    command.setWaitTime(wait);
+                }
+            }
+        }
+        if (commandObject.has("arguments")) {
+            var argumentsArray = commandObject.get("arguments").getAsJsonArray();
+            for (var argumentEl : argumentsArray) {
+                var argumentObject = argumentEl.getAsJsonObject();
+
+                var argName = argumentObject.get("name").getAsString();
+                var argValue = argumentObject.get("value");
+                var argInfo = mdbInfo.getEffectiveArgument(argName);
+                if (argInfo == null) {
+                    throw new CommandStackParseException(
+                            "Argument " + argName + " does not exist in MDB for command " + name);
+                }
+                if (argValue.isJsonNull()) {
+                    command.addAssignment(argInfo, null);
+                } else if (argValue.isJsonPrimitive()) {
+                    command.addAssignment(argInfo, argValue.getAsString());
+                } else if (argValue.isJsonArray()) {
+                    command.addAssignment(argInfo, argValue.getAsJsonArray().toString());
+                } else if (argValue.isJsonObject()) {
+                    command.addAssignment(argInfo, argValue.getAsJsonObject().toString());
+                } else {
+                    throw new CommandStackParseException("Unexpected value: " + argValue);
+                }
+            }
+        }
+        if (commandObject.has("extraOptions")) {
+            var extraArray = commandObject.get("extraOptions").getAsJsonArray();
+            for (var extraEl : extraArray) {
+                var extraObject = extraEl.getAsJsonObject();
+
+                var extraId = extraObject.get("id").getAsString();
+
+                var extraValue = extraObject.get("value");
+                if (extraValue.isJsonNull()) {
+                    command.setExtra(extraId, null);
+                } else if (extraValue.isJsonPrimitive()) {
+                    var primitive = extraValue.getAsJsonPrimitive();
+                    if (primitive.isBoolean()) {
+                        command.setExtra(extraId, primitive.getAsBoolean());
+                    } else if (primitive.isNumber()) {
+                        command.setExtra(extraId, primitive.getAsNumber());
+                    } else if (primitive.isString()) {
+                        command.setExtra(extraId, primitive.getAsString());
+                    } else {
+                        throw new CommandStackParseException("Unexpected value type for " + extraValue);
+                    }
+                } else {
+                    throw new CommandStackParseException("Unexpected value type for " + extraValue);
+                }
+            }
+        }
+
+        return command;
+    }
+}
+```
+
+### `CommandStackExecution.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackExecution.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import org.yamcs.ErrorInCommand;
+import org.yamcs.Processor;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.cmdhistory.Attribute;
+import org.yamcs.cmdhistory.CommandHistoryConsumer;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.security.User;
+import org.yamcs.yarch.YarchDatabase;
+
+public class CommandStackExecution extends ActivityExecution {
+
+    private Processor processor;
+    private Bucket bucket;
+    private String stackName;
+    private User user;
+
+    private int seq = 0;
+    private AtomicReference<PendingCommand> pendingCommandRef = new AtomicReference<>();
+
+    public CommandStackExecution(
+            ActivityService activityService,
+            CommandStackExecutor executor,
+            Activity activity,
+            Processor processor,
+            Bucket bucket,
+            String stackName,
+            User user) {
+        super(activityService, executor, activity);
+        this.processor = processor;
+        this.bucket = bucket;
+        this.stackName = stackName;
+        this.user = user;
+    }
+
+    @Override
+    public Void run() throws Exception {
+        var mdb = MdbFactory.getInstance(yamcsInstance);
+        var histManager = processor.getCommandHistoryManager();
+
+        var bytes = bucket.getObjectAsync(stackName).get();
+        var json = new String(bytes, StandardCharsets.UTF_8);
+        var stack = CommandStack.fromJson(json, mdb);
+
+        var histSubscription = histManager.subscribeCommandHistory(
+                null, processor.getCurrentTime(), new CommandHistoryConsumer() {
+                    @Override
+                    public void addedCommand(PreparedCommand pc) {
+                        var currentCommand = pendingCommandRef.get();
+                        if (currentCommand != null && currentCommand.cmdId.equals(pc.getCommandId())) {
+                            currentCommand.checkIfAcknowledged0(pc.getAttributes());
+                        }
+                    }
+
+                    @Override
+                    public void updatedCommand(CommandId cmdId, long time, List<Attribute> attrs) {
+                        var currentCommand = pendingCommandRef.get();
+                        if (currentCommand != null && currentCommand.cmdId.equals(cmdId)) {
+                            currentCommand.checkIfAcknowledged(attrs);
+                        }
+                    }
+                });
+
+        try {
+            for (var step : stack.getSteps()) {
+                if (step instanceof StackedCommand stackedCommand) {
+                    runCommand(stack, stackedCommand);
+                } else if (step instanceof StackedVerify stackedVerify) {
+                    runVerify(stackedVerify);
+                }
+            }
+        } finally {
+            histManager.unsubscribeCommandHistory(histSubscription.subscriptionId);
+        }
+
+        return null;
+    }
+
+    private void runVerify(StackedVerify stackedVerify)
+            throws InterruptedException, ExecutionException, TimeoutException {
+        logActivityInfo("Verifying " + stackedVerify);
+
+        long delayTime = stackedVerify.getDelay();
+        if (delayTime > 0) {
+            logActivityInfo("Delaying verification for " + delayTime + " ms");
+            Thread.sleep(delayTime);
+        }
+
+        var parameters = stackedVerify.getCondition().stream()
+                .map(comparison -> comparison.parameter())
+                .collect(Collectors.toSet());
+
+        var prm = processor.getParameterRequestManager();
+
+        var success = testCondition(stackedVerify, prm);
+        if (success) {
+            return;
+        } else {
+            var successFuture = new CompletableFuture<Boolean>();
+            var subscriptionId = prm.addRequest(parameters, (ParameterConsumer) (subId, items) -> {
+                var success1 = testCondition(stackedVerify, prm);
+                if (success1) {
+                    successFuture.complete(true);
+                }
+            });
+
+            try {
+                if (stackedVerify.getTimeout() > 0) {
+                    successFuture.get(stackedVerify.getTimeout(), TimeUnit.MILLISECONDS);
+                } else {
+                    successFuture.get();
+                }
+            } catch (TimeoutException e) {
+                logActivityError("Timeout while verifying");
+                throw e;
+            } finally {
+                prm.removeRequest(subscriptionId);
+            }
+        }
+    }
+
+    private boolean testCondition(StackedVerify stackedVerify, ParameterRequestManager prm) {
+        for (var comparison : stackedVerify.getCondition()) {
+            var pval = prm.getLastValueFromCache(comparison.parameter());
+            if (pval == null || pval.getEngValue() == null) {
+                return false;
+            }
+
+            var stringValue = pval.getEngValue().toString();
+            var comparand = "" + comparison.value();
+
+            switch (comparison.operator()) {
+            case "eq":
+                if (!stringValue.equals(comparand)) {
+                    return false;
+                }
+                break;
+            case "neq":
+                if (stringValue.equals(comparand)) {
+                    return false;
+                }
+                break;
+            case "lt":
+                if (!isNumeric(stringValue) || !isNumeric(comparand)) {
+                    return false;
+                }
+                if (Double.parseDouble(stringValue) >= Double.parseDouble(stringValue)) {
+                    return false;
+                }
+                break;
+            case "lte":
+                if (!isNumeric(stringValue) || !isNumeric(comparand)) {
+                    return false;
+                }
+                if (Double.parseDouble(stringValue) > Double.parseDouble(stringValue)) {
+                    return false;
+                }
+                break;
+            case "gt":
+                if (!isNumeric(stringValue) || !isNumeric(comparand)) {
+                    return false;
+                }
+                if (Double.parseDouble(stringValue) < Double.parseDouble(stringValue)) {
+                    return false;
+                }
+                break;
+            case "gte":
+                if (!isNumeric(stringValue) || !isNumeric(comparand)) {
+                    return false;
+                }
+                if (Double.parseDouble(stringValue) <= Double.parseDouble(stringValue)) {
+                    return false;
+                }
+                break;
+            }
+
+        }
+
+        return true;
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private void runCommand(CommandStack stack, StackedCommand stackedCommand)
+            throws UnknownHostException, ErrorInCommand, YamcsException, InterruptedException, ExecutionException {
+        logActivityInfo("Running command " + stackedCommand);
+
+        var yamcs = YamcsServer.getServer();
+        var cmdManager = processor.getCommandingManager();
+        var ydb = YarchDatabase.getInstance(yamcsInstance);
+        var origin = InetAddress.getLocalHost().getHostName();
+
+        var args = new LinkedHashMap<String, Object>();
+        for (var arg : stackedCommand.getAssignments().entrySet()) {
+            args.put(arg.getKey().getName(), arg.getValue());
+        }
+
+        var preparedCommand = cmdManager.buildCommand(
+                stackedCommand.getMetaCommand(), args, origin, seq++, user);
+        if (stackedCommand.getComment() != null) {
+            preparedCommand.setComment(stackedCommand.getComment());
+        }
+        if (stackedCommand.getStream() != null) {
+            var stream = ydb.getStream(stackedCommand.getStream());
+            preparedCommand.setTcStream(stream);
+        }
+
+        for (var entry : stackedCommand.getExtra().entrySet()) {
+            var commandOption = yamcs.getCommandOption(entry.getKey());
+            if (commandOption == null) {
+                throw new IllegalArgumentException("Unknown command option '" + entry.getKey() + "'");
+            }
+            preparedCommand.addAttribute(CommandHistoryAttribute.newBuilder()
+                    .setName(entry.getKey())
+                    .setValue(commandOption.coerceValue(entry.getValue()))
+                    .build());
+        }
+
+        var acknowledgment = stackedCommand.getAcknowledgment();
+        if (acknowledgment == null) {
+            acknowledgment = stack.getAcknowledgment();
+        }
+        var pendingCommand = new PendingCommand(preparedCommand.getCommandId(), acknowledgment);
+        pendingCommandRef.set(pendingCommand);
+
+        cmdManager.sendCommand(user, preparedCommand);
+
+        logActivityInfo("Waiting for " + acknowledgment + " acknowledgment");
+        // No timeout, this should come from the verifier itself
+        var ackStatus = pendingCommand.acknowledgedFuture.get();
+        logActivityInfo(acknowledgment + ": " + ackStatus);
+
+        int waitTime = stackedCommand.getWaitTime();
+        if (waitTime == -1) {
+            waitTime = stack.getWaitTime();
+        }
+        if (waitTime > 0) {
+            logActivityInfo("Waiting for " + waitTime + " ms");
+            Thread.sleep(waitTime);
+        }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        // NOP
+    }
+
+    private static class PendingCommand {
+        final CommandId cmdId;
+        final String acknowledgment;
+        final CompletableFuture<AckStatus> acknowledgedFuture = new CompletableFuture<>();
+
+        PendingCommand(CommandId cmdId, String acknowledgment) {
+            this.cmdId = cmdId;
+            this.acknowledgment = acknowledgment;
+        }
+
+        void checkIfAcknowledged0(List<CommandHistoryAttribute> attrs) {
+            if (acknowledgedFuture.isDone()) {
+                return;
+            }
+            var ackStatusKey = acknowledgment + CommandHistoryPublisher.SUFFIX_STATUS;
+            for (var attr : attrs) {
+                if (attr.getName().equals(ackStatusKey)) {
+                    var ackStatus = AckStatus.valueOf(attr.getValue().getStringValue());
+                    acknowledgedFuture.complete(ackStatus);
+                }
+            }
+        }
+
+        void checkIfAcknowledged(List<Attribute> attrs) {
+            if (acknowledgedFuture.isDone()) {
+                return;
+            }
+            var ackStatusKey = acknowledgment + CommandHistoryPublisher.SUFFIX_STATUS;
+            for (var attr : attrs) {
+                if (attr.getKey().equals(ackStatusKey)) {
+                    var ackStatus = AckStatus.valueOf(attr.getValue().getStringValue());
+                    acknowledgedFuture.complete(ackStatus);
+                }
+            }
+        }
+    }
+}
+```
+
+### `CommandStackExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackExecutor.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.Map;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.NamedSpec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.buckets.Bucket;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.security.User;
+
+public class CommandStackExecutor implements ActivityExecutor {
+
+    private String yamcsInstance;
+    private ActivityService activityService;
+    private Spec activitySpec;
+
+    @Override
+    public String getActivityType() {
+        return "COMMAND_STACK";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Command Stack";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Run a command stack.";
+    }
+
+    @Override
+    public String getIcon() {
+        return "rss_feed";
+    }
+
+    @Override
+    public NamedSpec getSpec() {
+        var spec = new NamedSpec("stackExecution");
+        return spec;
+    }
+
+    @Override
+    public void init(ActivityService activityService, YConfiguration options) {
+        this.activityService = activityService;
+        yamcsInstance = activityService.getYamcsInstance();
+
+        activitySpec = new Spec();
+        var processorOption = activitySpec.addOption("processor", OptionType.STRING);
+
+        var ysi = YamcsServer.getServer().getInstance(yamcsInstance);
+        var processor = ysi.getFirstProcessor();
+        if (processor != null && processor.hasCommanding()) {
+            processorOption.withDefault(processor.getName());
+        } else {
+            processorOption.withRequired(true);
+        }
+
+        activitySpec.addOption("bucket", OptionType.STRING).withRequired(true);
+        activitySpec.addOption("stack", OptionType.STRING).withRequired(true);
+    }
+
+    @Override
+    public Spec getActivitySpec() {
+        return activitySpec;
+    }
+
+    @Override
+    public String describeActivity(Map<String, Object> args) {
+        return "ys://" + YConfiguration.getString(args, "bucket") + "/" + YConfiguration.getString(args, "stack");
+    }
+
+    @Override
+    public CommandStackExecution createExecution(Activity activity, User caller) throws ValidationException {
+        var args = getActivitySpec().validate(activity.getArgs());
+        var processorName = YConfiguration.getString(args, "processor");
+        var bucketName = YConfiguration.getString(args, "bucket");
+        var stackName = YConfiguration.getString(args, "stack");
+        var processor = YamcsServer.getServer().getProcessor(yamcsInstance, processorName);
+
+        var bucketManager = YamcsServer.getServer().getBucketManager();
+        Bucket bucket;
+        try {
+            bucket = bucketManager.getBucket(bucketName);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        return new CommandStackExecution(activityService, this, activity, processor, bucket, stackName, caller);
+    }
+}
+```
+
+### `CommandStackParseException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/CommandStackParseException.java`
+
+
+```java
+package org.yamcs.activities;
+
+@SuppressWarnings("serial")
+public class CommandStackParseException extends RuntimeException {
+
+    public CommandStackParseException(String message) {
+        super(message);
+    }
+
+    public CommandStackParseException(Throwable t) {
+        super(t);
+    }
+
+    public CommandStackParseException(String message, Throwable t) {
+        super(message, t);
+    }
+}
+```
+
+### `ManualFailureException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ManualFailureException.java`
+
+
+```java
+package org.yamcs.activities;
+
+/**
+ * Exception class carrying the failure reason (text provided by the user) of why a manual activity completed
+ * exceptionally.
+ * <p>
+ * The stacktrace is to be discarded.
+ */
+@SuppressWarnings("serial")
+public class ManualFailureException extends Exception {
+
+    public ManualFailureException(String failureReason) {
+        super(failureReason);
+    }
+}
+```
+
+### `OngoingActivity.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/OngoingActivity.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
+
+import org.yamcs.security.User;
+
+public class OngoingActivity {
+
+    private final Activity activity;
+
+    // Underlying work. This can be cancelled, after which the resultFuture triggers
+    Future<Void> workFuture;
+
+    // Future that updates state following completion of the work
+    CompletableFuture<Void> resultFuture;
+
+    private User stopRequester;
+
+    public OngoingActivity(Activity activity) {
+        this.activity = activity;
+    }
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public CompletableFuture<Void> onResult() {
+        return resultFuture;
+    }
+
+    /**
+     * If a stop has been requested, this returns the first user that asked to cancel.
+     */
+    public User getStopRequester() {
+        return stopRequester;
+    }
+
+    /**
+     * Request a stop of this activity. This method does not block.
+     */
+    public void cancel(User user) {
+        activity.setStatus(ActivityStatus.CANCELLED);
+        if (stopRequester == null) {
+            stopRequester = user;
+        }
+        workFuture.cancel(true);
+    }
+
+    public void complete(User user) {
+        verifyManualActivity();
+        stopRequester = user;
+        ((CompletableFuture<Void>) workFuture).complete(null);
+    }
+
+    public void completeExceptionally(String failureReason, User user) {
+        verifyManualActivity();
+        stopRequester = user;
+        ((CompletableFuture<Void>) workFuture).completeExceptionally(new ManualFailureException(failureReason));
+    }
+
+    private void verifyManualActivity() {
+        if (!ActivityService.ACTIVITY_TYPE_MANUAL.equals(activity.getType())) {
+            throw new UnsupportedOperationException("Cannot complete a non-manual activity");
+        }
+    }
+}
+```
+
+### `ScriptExecution.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ScriptExecution.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.http.HttpServer;
+import org.yamcs.security.User;
+
+import com.google.common.base.CharMatcher;
+
+public class ScriptExecution extends ActivityExecution {
+
+    private String processor;
+    private String program;
+    private List<String> scriptArgs;
+    private User user;
+
+    private Process process;
+
+    public ScriptExecution(
+            ActivityService activityService,
+            ScriptExecutor executor,
+            Activity activity,
+            String processor,
+            String program,
+            List<String> scriptArgs,
+            User user) {
+        super(activityService, executor, activity);
+        this.processor = processor;
+        this.program = program;
+        this.scriptArgs = scriptArgs;
+        this.user = user;
+    }
+
+    @Override
+    public Void run() throws Exception {
+        var cmdline = program;
+        for (var arg : scriptArgs) {
+            cmdline += " " + arg;
+        }
+
+        var yamcs = YamcsServer.getServer();
+        var securityStore = yamcs.getSecurityStore();
+        var httpServer = yamcs.getGlobalService(HttpServer.class);
+
+        String apiKey = null;
+        if (securityStore.isEnabled()) {
+            apiKey = securityStore.generateApiKey(user.getName());
+        }
+
+        try {
+            var pb = new ProcessBuilder(cmdline.split("\\s+"));
+            pb.environment().put("YAMCS", "1");
+            pb.environment().put("YAMCS_INSTANCE", yamcsInstance);
+
+            if (processor != null) {
+                pb.environment().put("YAMCS_PROCESSOR", processor);
+            }
+
+            var url = httpServer.getBindings().iterator().next() + httpServer.getContextPath();
+            pb.environment().put("YAMCS_URL", url);
+
+            if (apiKey != null) {
+                pb.environment().put("YAMCS_API_KEY", apiKey);
+            }
+
+            process = pb.start();
+            logServiceInfo("Started process, pid=" + process.pid());
+
+            new Thread(() -> {
+                try (var reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
+                    reader.lines().forEach(line -> {
+                        line = CharMatcher.whitespace().trimTrailingFrom(line);
+                        logActivityInfo(line);
+                    });
+                } catch (IOException e) {
+                    log.error("Exception while gobbling process output", e);
+                }
+            }, getClass().getSimpleName() + " Gobbler").start();
+
+            new Thread(() -> {
+                try (var reader = new BufferedReader(new InputStreamReader(process.getErrorStream()))) {
+                    reader.lines().forEach(line -> {
+                        line = CharMatcher.whitespace().trimTrailingFrom(line);
+                        logActivityError(line);
+                    });
+                } catch (IOException e) {
+                    log.error("Exception while gobbling process error output", e);
+                }
+            }, getClass().getSimpleName() + " Gobbler").start();
+
+            process.waitFor();
+            var exitValue = process.exitValue();
+            if (exitValue == 0) {
+                logServiceInfo("Process has terminated");
+            } else {
+                var errorMessage = "Process returned with exit value " + exitValue;
+                logServiceError(errorMessage);
+                throw new RuntimeException(errorMessage);
+            }
+            return null;
+        } finally {
+            if (apiKey != null) {
+                securityStore.removeApiKey(apiKey);
+            }
+        }
+    }
+
+    @Override
+    public void stop() throws Exception {
+        if (process != null && process.isAlive()) {
+            log.debug("Destroying process {}", process.pid());
+            process.destroy();
+            process.onExit().get(2000, TimeUnit.MILLISECONDS);
+            if (process.isAlive()) {
+                log.debug("Forcing destroy of process {}", process.pid());
+                process.destroyForcibly();
+                process.onExit().get();
+            }
+        }
+    }
+}
+```
+
+### `ScriptExecutor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/ScriptExecutor.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.NamedSpec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.security.User;
+import org.yamcs.utils.FileUtils;
+
+public class ScriptExecutor implements ActivityExecutor {
+
+    private ActivityService activityService;
+    private List<Path> searchPath;
+    private boolean impersonateCaller;
+    private Map<String, String> fileAssociations = new HashMap<>();
+
+    @Override
+    public String getActivityType() {
+        return "SCRIPT";
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "Script";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Run a script.";
+    }
+
+    @Override
+    public String getIcon() {
+        return "terminal";
+    }
+
+    @Override
+    public NamedSpec getSpec() {
+        var spec = new NamedSpec("scriptExecution");
+
+        var yamcs = YamcsServer.getServer();
+        spec.addOption("searchPath", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault(yamcs.getConfigDirectory().resolve("scripts").toString());
+
+        spec.addOption("impersonateCaller", OptionType.BOOLEAN).withDefault(true);
+
+        spec.addOption("fileAssociations", OptionType.MAP)
+                .withSpec(Spec.ANY)
+                .withApplySpecDefaults(true);
+        return spec;
+    }
+
+    @Override
+    public void init(ActivityService activityService, YConfiguration options) {
+        this.activityService = activityService;
+        searchPath = options.<String> getList("searchPath").stream()
+                .map(Path::of)
+                .collect(Collectors.toList());
+        impersonateCaller = options.getBoolean("impersonateCaller");
+
+        fileAssociations.put("java", "java");
+        fileAssociations.put("js", "node");
+        fileAssociations.put("mjs", "node");
+        fileAssociations.put("pl", "perl");
+        fileAssociations.put("py", "python -u");
+        fileAssociations.put("rb", "ruby");
+        for (var assoc : options.<String, String> getMap("fileAssociations").entrySet()) {
+            fileAssociations.put(assoc.getKey().toLowerCase(), assoc.getValue());
+        }
+    }
+
+    @Override
+    public Spec getActivitySpec() {
+        var spec = new Spec();
+        spec.addOption("processor", OptionType.STRING);
+        spec.addOption("script", OptionType.STRING).withRequired(true);
+        spec.addOption("args", OptionType.LIST_OR_ELEMENT).withElementType(OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    public String describeActivity(Map<String, Object> args) {
+        return YConfiguration.getString(args, "script");
+    }
+
+    public List<String> getScripts() throws IOException {
+        var scripts = new ArrayList<String>();
+        for (var scriptsDir : searchPath) {
+            if (Files.exists(scriptsDir)) {
+                try (var stream = Files.walk(scriptsDir)) {
+                    stream.filter(path -> canExecute(path))
+                            .map(path -> scriptsDir.relativize(path).toString())
+                            .forEach(scripts::add);
+                }
+            }
+        }
+        Collections.sort(scripts);
+        return scripts;
+    }
+
+    private boolean canExecute(Path file) {
+        if (!Files.isRegularFile(file)) {
+            return false;
+        }
+        if (Files.isExecutable(file)) {
+            return true;
+        }
+
+        // If there's a file association, the script may be non-executable
+        var fileExtension = FileUtils.getFileExtension(file);
+        if (fileExtension != null && fileAssociations.containsKey(fileExtension)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private Path locateScript(String script) throws IOException {
+        for (var scriptsDir : searchPath) {
+            var path = scriptsDir.resolve(script);
+
+            if (!path.normalize().toAbsolutePath().startsWith(scriptsDir.normalize().toAbsolutePath())) {
+                throw new IOException("Directory traversal attempted: " + path);
+            }
+
+            if (canExecute(path)) {
+                return path;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ScriptExecution createExecution(Activity activity, User caller) throws ValidationException {
+        var args = getActivitySpec().validate(activity.getArgs());
+        var processor = YConfiguration.getString(args, "processor", null);
+        var script = YConfiguration.getString(args, "script");
+
+        List<String> scriptArgs = new ArrayList<>();
+        if (args.containsKey("args")) {
+            scriptArgs = YConfiguration.<String> getList(args, "args");
+        }
+
+        Path scriptFile;
+        try {
+            scriptFile = locateScript(script);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        if (scriptFile == null) {
+            throw new IllegalArgumentException("Unexpected script '" + script + "'");
+        }
+
+        var program = scriptFile.toString();
+        var fileExtension = FileUtils.getFileExtension(scriptFile);
+        if (fileExtension != null) {
+            var assoc = fileAssociations.get(fileExtension);
+            if (assoc != null) {
+                program = assoc + " " + scriptFile.toString();
+            }
+        }
+
+        var becomeUser = caller;
+        if (!impersonateCaller) {
+            becomeUser = YamcsServer.getServer().getSecurityStore().getSystemUser();
+        }
+
+        return new ScriptExecution(activityService, this, activity, processor, program, scriptArgs, becomeUser);
+    }
+}
+```
+
+### `StackedCommand.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/StackedCommand.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.MetaCommand;
+
+/**
+ * Keep track of the lifecycle of a stacked command.
+ */
+public class StackedCommand implements Step {
+
+    private String acknowledgment;
+    // -1 means: inherit from stack
+    private int waitTime = -1;
+    private MetaCommand meta;
+    private Map<Argument, String> assignments = new LinkedHashMap<>();
+    private Map<String, Object> extra = new LinkedHashMap<>();
+    private String stream;
+    private String comment;
+
+    public StackedCommand() {
+    }
+
+    public void setAcknowledgment(String acknowledgment) {
+        this.acknowledgment = acknowledgment;
+    }
+
+    public String getAcknowledgment() {
+        return acknowledgment;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setMetaCommand(MetaCommand meta) {
+        this.meta = meta;
+    }
+
+    public String getName() {
+        return meta.getQualifiedName();
+    }
+
+    public String getName(String namespace) {
+        for (var entry : meta.getAliasSet().getAliases().entrySet()) {
+            if (entry.getKey().equals(namespace)) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public MetaCommand getMetaCommand() {
+        return meta;
+    }
+
+    public void addAssignment(Argument arg, String value) {
+        assignments.put(arg, value);
+    }
+
+    public Map<Argument, String> getAssignments() {
+        return assignments;
+    }
+
+    public boolean isAssigned(Argument arg) {
+        return assignments.get(arg) != null;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setStream(String stream) {
+        this.stream = stream;
+    }
+
+    public String getStream() {
+        return stream;
+    }
+
+    public void setExtra(String option, Object value) {
+        if (value == null) {
+            extra.remove(option);
+        } else {
+            extra.put(option, value);
+        }
+    }
+
+    public Map<String, Object> getExtra() {
+        return extra;
+    }
+
+    @Override
+    public String toString() {
+        var argLine = assignments.entrySet().stream().map(entry -> {
+            return entry.getKey().getName() + "=" + entry.getValue();
+        }).collect(Collectors.joining(", "));
+
+        var res = meta.getQualifiedName() + "(" + argLine + ")";
+
+        if (!extra.isEmpty()) {
+            res += " [" + extra.entrySet().stream().map(entry -> {
+                return entry.getKey() + "=" + entry.getValue();
+            }).collect(Collectors.joining(", ")) + "]";
+        }
+
+        return res;
+    }
+}
+```
+
+### `StackedVerify.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/StackedVerify.java`
+
+
+```java
+package org.yamcs.activities;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.yamcs.xtce.Parameter;
+
+public class StackedVerify implements Step {
+
+    private List<VerifyComparison> condition = new ArrayList<>();
+    private long delay = 0;
+    private long timeout = -1;
+
+    public void addComparison(Parameter parameter, String operator, Object value) {
+        condition.add(new VerifyComparison(parameter, operator, value));
+    }
+
+    public List<VerifyComparison> getCondition() {
+        return condition;
+    }
+
+    public long getDelay() {
+        return delay;
+    }
+
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    @Override
+    public String toString() {
+        return condition.stream()
+                .map(VerifyComparison::toString)
+                .collect(Collectors.joining(" AND "));
+    }
+
+    public static record VerifyComparison(
+            Parameter parameter,
+            String operator,
+            Object value) {
+
+        @Override
+        public final String toString() {
+            var res = parameter.getQualifiedName();
+            switch (operator) {
+            case "eq":
+                res += " = ";
+                break;
+            case "neq":
+                res += " != ";
+                break;
+            case "lt":
+                res += " < ";
+                break;
+            case "lte":
+                res += " <= ";
+                break;
+            case "gt":
+                res += " > ";
+                break;
+            case "gte":
+                res += " >= ";
+                break;
+            default:
+                res += operator;
+            }
+            res += value;
+            return res;
+        }
+    }
+}
+```
+
+### `Step.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/activities/Step.java`
+
+
+```java
+package org.yamcs.activities;
+
+public interface Step {
+
+}
+```

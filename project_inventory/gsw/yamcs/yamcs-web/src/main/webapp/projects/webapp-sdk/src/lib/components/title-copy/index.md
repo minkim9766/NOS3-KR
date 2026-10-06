@@ -3,18 +3,93 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `title-copy.component.css`
 
-file--title-copy.component.css
-file--title-copy.component.html
-file--title-copy.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.css`
+
+
+```css
+.title-copy {
+  margin-left: 10px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  font-size: 14px !important;
+  height: 14px !important;
+  width: 14px !important;
+}
+
+.title-copy:hover {
+  color: #1b61b9;
+}
 ```
 
-## 항목
+### `title-copy.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.css`](file--title-copy.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.html`](file--title-copy.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.ts`](file--title-copy.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.html`
+
+
+```html
+<mat-icon
+  #tooltip="matTooltip"
+  class="title-copy"
+  [matTooltip]="tooltip$ | async"
+  (click)="doCopy()">
+  content_paste
+</mat-icon>
+```
+
+### `title-copy.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/title-copy/title-copy.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { BehaviorSubject } from 'rxjs';
+
+const defaultText = 'Copy to clipboard';
+
+@Component({
+  selector: 'ya-title-copy',
+  templateUrl: './title-copy.component.html',
+  styleUrl: './title-copy.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, MatIcon, MatTooltip],
+})
+export class YaTitleCopy {
+  @Input()
+  text: string;
+
+  @ViewChild('tooltip')
+  tooltip: MatTooltip;
+
+  tooltip$ = new BehaviorSubject<string>(defaultText);
+
+  constructor(private clipboard: Clipboard) {}
+
+  doCopy() {
+    if (this.clipboard.copy(this.text)) {
+      this.tooltip$.next('Copied!');
+    } else {
+      this.tooltip$.next('Copy failed!');
+    }
+    this.tooltip.show();
+    setTimeout(() => {
+      this.tooltip.hide();
+      this.tooltip$.next(defaultText);
+    }, 1500);
+  }
+}
+```

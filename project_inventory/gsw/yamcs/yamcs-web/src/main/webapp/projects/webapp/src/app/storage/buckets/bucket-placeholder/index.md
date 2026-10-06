@@ -3,14 +3,28 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-placeholder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bucket-placeholder.component.ts`
 
-file--bucket-placeholder.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-placeholder/bucket-placeholder.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+/**
+ * Placeholder just to work around being able to capture file paths via
+ * angular router '**' wildcard, rather than being forced to use
+ * query parameters.
+ */
+
+@Component({
+  selector: 'app-bucket-placeholder',
+  template: '<router-outlet />',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [RouterOutlet],
+})
+export class BucketPlaceholderComponent {}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-placeholder/bucket-placeholder.component.ts`](file--bucket-placeholder.component.ts) — UTF-8 텍스트 파일 본문 포함

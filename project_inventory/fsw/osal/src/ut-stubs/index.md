@@ -3,104 +3,6419 @@
 
 **경로:** `fsw/osal/src/ut-stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--osapi-binsem-handlers.c
-file--osapi-binsem-stubs.c
-file--osapi-bsp-stubs.c
-file--osapi-clock-handlers.c
-file--osapi-clock-stubs.c
-file--osapi-common-stubs.c
-file--osapi-condvar-stubs.c
-file--osapi-countsem-handlers.c
-file--osapi-countsem-stubs.c
-file--osapi-dir-handlers.c
-file--osapi-dir-stubs.c
-file--osapi-error-handlers.c
-file--osapi-error-stubs.c
-file--osapi-file-handlers.c
-file--osapi-file-stubs.c
-file--osapi-filesys-handlers.c
-file--osapi-filesys-stubs.c
-file--osapi-heap-handlers.c
-file--osapi-heap-stubs.c
-file--osapi-idmap-handlers.c
-file--osapi-idmap-stubs.c
-file--osapi-module-handlers.c
-file--osapi-module-stubs.c
-file--osapi-mutex-handlers.c
-file--osapi-mutex-stubs.c
-file--osapi-network-handlers.c
-file--osapi-network-stubs.c
-file--osapi-printf-handlers.c
-file--osapi-printf-stubs.c
-file--osapi-queue-handlers.c
-file--osapi-queue-stubs.c
-file--osapi-select-stubs.c
-file--osapi-shell-stubs.c
-file--osapi-sockets-handlers.c
-file--osapi-sockets-stubs.c
-file--osapi-task-handlers.c
-file--osapi-task-stubs.c
-file--osapi-timebase-handlers.c
-file--osapi-timebase-stubs.c
-file--osapi-timer-handlers.c
-file--osapi-timer-stubs.c
-file--osapi-version-handlers.c
-file--osapi-version-stubs.c
-file--utstub-helpers.c
-file--utstub-helpers.h
+**경로:** `fsw/osal/src/ut-stubs/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE recipe for the OSAL stub library
+#
+######################################################################
+
+#
+# This works in conjunction with the UT Assert library to
+# provide "stub" versions of all calls in the OSAL public API.
+#
+
+set(OSAL_PUBLIC_API_HEADERS
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-binsem.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-bsp.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-clock.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-common.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-condvar.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-constants.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-countsem.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-dir.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-error.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-file.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-filesys.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-heap.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-idmap.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-macros.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-module.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-mutex.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-network.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-printf.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-queue.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-select.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-shell.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-sockets.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-task.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-timebase.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-timer.h
+    ${OSAL_SOURCE_DIR}/src/os/inc/osapi-version.h
+)
+
+# The following target rule contains the specific commands required
+# to auto-generate the stub implementations from the headers
+add_custom_target(generate_osapi_stubs
+    COMMAND ${UT_ASSERT_SOURCE_DIR}/scripts/generate_stubs.pl
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${OSAL_PUBLIC_API_HEADERS}
+    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+    VERBATIM
+)
+
+
+# NOTE: There is no separate public include directory for the stubs.
+# By definition, the stubs must implement the same public API that the
+# normal OSAL library implements.  Therefore, only the standard OSAL
+# header files are used.
+add_library(ut_osapi_stubs STATIC
+    utstub-helpers.c
+    osapi-binsem-stubs.c
+    osapi-binsem-handlers.c
+    osapi-clock-stubs.c
+    osapi-clock-handlers.c
+    osapi-common-stubs.c
+    osapi-condvar-stubs.c
+    osapi-countsem-stubs.c
+    osapi-countsem-handlers.c
+    osapi-dir-stubs.c
+    osapi-dir-handlers.c
+    osapi-error-stubs.c
+    osapi-error-handlers.c
+    osapi-file-stubs.c
+    osapi-file-handlers.c
+    osapi-filesys-stubs.c
+    osapi-filesys-handlers.c
+    osapi-heap-stubs.c
+    osapi-heap-handlers.c
+    osapi-idmap-stubs.c
+    osapi-idmap-handlers.c
+    osapi-module-stubs.c
+    osapi-module-handlers.c
+    osapi-mutex-stubs.c
+    osapi-mutex-handlers.c
+    osapi-network-stubs.c
+    osapi-network-handlers.c
+    osapi-printf-stubs.c
+    osapi-printf-handlers.c
+    osapi-queue-stubs.c
+    osapi-queue-handlers.c
+    osapi-select-stubs.c
+    osapi-shell-stubs.c
+    osapi-sockets-stubs.c
+    osapi-sockets-handlers.c
+    osapi-task-stubs.c
+    osapi-task-handlers.c
+    osapi-timer-stubs.c
+    osapi-timer-handlers.c
+    osapi-timebase-stubs.c
+    osapi-timebase-handlers.c
+    osapi-version-stubs.c
+    osapi-version-handlers.c
+)
+
+# These stubs must always link to UT Assert.
+# This also implicitly adds the path to the UT Assert header files.
+target_link_libraries(ut_osapi_stubs PUBLIC
+    osal_public_api
+    ut_assert
+)
+
+if (OSAL_INSTALL_LIBRARIES)
+    install(
+        TARGETS ut_osapi_stubs
+        EXPORT nasa-osal-export
+        LIBRARY DESTINATION lib
+        ARCHIVE DESTINATION lib
+    )
+endif()
 ```
 
-## 항목
+### `osapi-binsem-handlers.c`
 
-- [`fsw/osal/src/ut-stubs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-binsem-handlers.c`](file--osapi-binsem-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-binsem-stubs.c`](file--osapi-binsem-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-bsp-stubs.c`](file--osapi-bsp-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-clock-handlers.c`](file--osapi-clock-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-clock-stubs.c`](file--osapi-clock-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-common-stubs.c`](file--osapi-common-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-condvar-stubs.c`](file--osapi-condvar-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-countsem-handlers.c`](file--osapi-countsem-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-countsem-stubs.c`](file--osapi-countsem-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-dir-handlers.c`](file--osapi-dir-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-dir-stubs.c`](file--osapi-dir-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-error-handlers.c`](file--osapi-error-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-error-stubs.c`](file--osapi-error-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-file-handlers.c`](file--osapi-file-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-file-stubs.c`](file--osapi-file-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-filesys-handlers.c`](file--osapi-filesys-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-filesys-stubs.c`](file--osapi-filesys-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-heap-handlers.c`](file--osapi-heap-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-heap-stubs.c`](file--osapi-heap-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-idmap-handlers.c`](file--osapi-idmap-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-idmap-stubs.c`](file--osapi-idmap-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-module-handlers.c`](file--osapi-module-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-module-stubs.c`](file--osapi-module-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-mutex-handlers.c`](file--osapi-mutex-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-mutex-stubs.c`](file--osapi-mutex-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-network-handlers.c`](file--osapi-network-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-network-stubs.c`](file--osapi-network-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-printf-handlers.c`](file--osapi-printf-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-printf-stubs.c`](file--osapi-printf-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-queue-handlers.c`](file--osapi-queue-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-queue-stubs.c`](file--osapi-queue-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-select-stubs.c`](file--osapi-select-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-shell-stubs.c`](file--osapi-shell-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-sockets-handlers.c`](file--osapi-sockets-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-sockets-stubs.c`](file--osapi-sockets-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-task-handlers.c`](file--osapi-task-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-task-stubs.c`](file--osapi-task-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-timebase-handlers.c`](file--osapi-timebase-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-timebase-stubs.c`](file--osapi-timebase-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-timer-handlers.c`](file--osapi-timer-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-timer-stubs.c`](file--osapi-timer-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-version-handlers.c`](file--osapi-version-handlers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/osapi-version-stubs.c`](file--osapi-version-stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/utstub-helpers.c`](file--utstub-helpers.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/ut-stubs/utstub-helpers.h`](file--utstub-helpers.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/ut-stubs/osapi-binsem-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-binsem.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_BinSemCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_BinSemCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *sem_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_BINSEM);
+    }
+    else
+    {
+        *sem_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_BinSemGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_BinSemGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_bin_sem_prop_t *bin_prop = UT_Hook_GetArgValueByName(Context, "bin_prop", OS_bin_sem_prop_t *);
+    int32              status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_BinSemGetInfo), bin_prop, sizeof(*bin_prop)) < sizeof(*bin_prop))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &bin_prop->creator);
+        strncpy(bin_prop->name, "Name", sizeof(bin_prop->name) - 1);
+        bin_prop->name[sizeof(bin_prop->name) - 1] = '\0';
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_BinSemDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_BinSemDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_BINSEM, sem_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_BinSemGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_BinSemGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_BinSemGetIdByName), sem_id, sizeof(*sem_id)) < sizeof(*sem_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_BINSEM, sem_id);
+    }
+}
+```
+
+### `osapi-binsem-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-binsem-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-binsem header
+ */
+
+#include "osapi-binsem.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_BinSemCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_BinSemDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_BinSemGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_BinSemGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemCreate, int32);
+
+    UT_GenStub_AddParam(OS_BinSemCreate, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_BinSemCreate, const char *, sem_name);
+    UT_GenStub_AddParam(OS_BinSemCreate, uint32, sem_initial_value);
+    UT_GenStub_AddParam(OS_BinSemCreate, uint32, options);
+
+    UT_GenStub_Execute(OS_BinSemCreate, Basic, UT_DefaultHandler_OS_BinSemCreate);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemDelete(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemDelete, int32);
+
+    UT_GenStub_AddParam(OS_BinSemDelete, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_BinSemDelete, Basic, UT_DefaultHandler_OS_BinSemDelete);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemFlush()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemFlush(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemFlush, int32);
+
+    UT_GenStub_AddParam(OS_BinSemFlush, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_BinSemFlush, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemFlush, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_BinSemGetIdByName, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_BinSemGetIdByName, const char *, sem_name);
+
+    UT_GenStub_Execute(OS_BinSemGetIdByName, Basic, UT_DefaultHandler_OS_BinSemGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemGetInfo(osal_id_t sem_id, OS_bin_sem_prop_t *bin_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_BinSemGetInfo, osal_id_t, sem_id);
+    UT_GenStub_AddParam(OS_BinSemGetInfo, OS_bin_sem_prop_t *, bin_prop);
+
+    UT_GenStub_Execute(OS_BinSemGetInfo, Basic, UT_DefaultHandler_OS_BinSemGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemGive()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemGive(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemGive, int32);
+
+    UT_GenStub_AddParam(OS_BinSemGive, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_BinSemGive, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemGive, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemTake()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemTake(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemTake, int32);
+
+    UT_GenStub_AddParam(OS_BinSemTake, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_BinSemTake, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemTake, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BinSemTimedWait()
+ * ----------------------------------------------------
+ */
+int32 OS_BinSemTimedWait(osal_id_t sem_id, uint32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BinSemTimedWait, int32);
+
+    UT_GenStub_AddParam(OS_BinSemTimedWait, osal_id_t, sem_id);
+    UT_GenStub_AddParam(OS_BinSemTimedWait, uint32, msecs);
+
+    UT_GenStub_Execute(OS_BinSemTimedWait, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BinSemTimedWait, int32);
+}
+```
+
+### `osapi-bsp-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-bsp-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-bsp header
+ */
+
+#include "osapi-bsp.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BSP_GetArgC()
+ * ----------------------------------------------------
+ */
+uint32 OS_BSP_GetArgC(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BSP_GetArgC, uint32);
+
+    UT_GenStub_Execute(OS_BSP_GetArgC, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BSP_GetArgC, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BSP_GetArgV()
+ * ----------------------------------------------------
+ */
+char *const *OS_BSP_GetArgV(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BSP_GetArgV, char *const *);
+
+    UT_GenStub_Execute(OS_BSP_GetArgV, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BSP_GetArgV, char *const *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BSP_GetResourceTypeConfig()
+ * ----------------------------------------------------
+ */
+uint32 OS_BSP_GetResourceTypeConfig(uint32 ResourceType)
+{
+    UT_GenStub_SetupReturnBuffer(OS_BSP_GetResourceTypeConfig, uint32);
+
+    UT_GenStub_AddParam(OS_BSP_GetResourceTypeConfig, uint32, ResourceType);
+
+    UT_GenStub_Execute(OS_BSP_GetResourceTypeConfig, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_BSP_GetResourceTypeConfig, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BSP_SetExitCode()
+ * ----------------------------------------------------
+ */
+void OS_BSP_SetExitCode(int32 code)
+{
+    UT_GenStub_AddParam(OS_BSP_SetExitCode, int32, code);
+
+    UT_GenStub_Execute(OS_BSP_SetExitCode, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_BSP_SetResourceTypeConfig()
+ * ----------------------------------------------------
+ */
+void OS_BSP_SetResourceTypeConfig(uint32 ResourceType, uint32 ConfigOptionValue)
+{
+    UT_GenStub_AddParam(OS_BSP_SetResourceTypeConfig, uint32, ResourceType);
+    UT_GenStub_AddParam(OS_BSP_SetResourceTypeConfig, uint32, ConfigOptionValue);
+
+    UT_GenStub_Execute(OS_BSP_SetResourceTypeConfig, Basic, NULL);
+}
+```
+
+### `osapi-clock-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-clock-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-clock.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetLocalTime' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetLocalTime(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_time_t *time_struct = UT_Hook_GetArgValueByName(Context, "time_struct", OS_time_t *);
+    uint32     count       = UT_GetStubCount(FuncKey);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_GetLocalTime), time_struct, sizeof(*time_struct)) < sizeof(*time_struct))
+    {
+        *time_struct = OS_TimeAssembleFromNanoseconds(1 + (count / 100), 10000000 * (count % 100));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SetLocalTime' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SetLocalTime(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const OS_time_t *time_struct = UT_Hook_GetArgValueByName(Context, "time_struct", const OS_time_t *);
+    int32            status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_Stub_CopyFromLocal(UT_KEY(OS_SetLocalTime), time_struct, sizeof(*time_struct));
+    }
+} /*end OS_SetLocalTime */
+```
+
+### `osapi-clock-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-clock-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-clock header
+ */
+
+#include "osapi-clock.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_GetLocalTime(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SetLocalTime(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetLocalTime()
+ * ----------------------------------------------------
+ */
+int32 OS_GetLocalTime(OS_time_t *time_struct)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetLocalTime, int32);
+
+    UT_GenStub_AddParam(OS_GetLocalTime, OS_time_t *, time_struct);
+
+    UT_GenStub_Execute(OS_GetLocalTime, Basic, UT_DefaultHandler_OS_GetLocalTime);
+
+    return UT_GenStub_GetReturnValue(OS_GetLocalTime, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SetLocalTime()
+ * ----------------------------------------------------
+ */
+int32 OS_SetLocalTime(const OS_time_t *time_struct)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SetLocalTime, int32);
+
+    UT_GenStub_AddParam(OS_SetLocalTime, const OS_time_t *, time_struct);
+
+    UT_GenStub_Execute(OS_SetLocalTime, Basic, UT_DefaultHandler_OS_SetLocalTime);
+
+    return UT_GenStub_GetReturnValue(OS_SetLocalTime, int32);
+}
+```
+
+### `osapi-common-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-common-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-common header
+ */
+
+#include "osapi-common.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_API_Init()
+ * ----------------------------------------------------
+ */
+int32 OS_API_Init(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_API_Init, int32);
+
+    UT_GenStub_Execute(OS_API_Init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_API_Init, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_API_Teardown()
+ * ----------------------------------------------------
+ */
+void OS_API_Teardown(void)
+{
+
+    UT_GenStub_Execute(OS_API_Teardown, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ApplicationExit()
+ * ----------------------------------------------------
+ */
+void OS_ApplicationExit(int32 Status)
+{
+    UT_GenStub_AddParam(OS_ApplicationExit, int32, Status);
+
+    UT_GenStub_Execute(OS_ApplicationExit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ApplicationShutdown()
+ * ----------------------------------------------------
+ */
+void OS_ApplicationShutdown(uint8 flag)
+{
+    UT_GenStub_AddParam(OS_ApplicationShutdown, uint8, flag);
+
+    UT_GenStub_Execute(OS_ApplicationShutdown, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DeleteAllObjects()
+ * ----------------------------------------------------
+ */
+void OS_DeleteAllObjects(void)
+{
+
+    UT_GenStub_Execute(OS_DeleteAllObjects, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_IdleLoop()
+ * ----------------------------------------------------
+ */
+void OS_IdleLoop(void)
+{
+
+    UT_GenStub_Execute(OS_IdleLoop, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_RegisterEventHandler()
+ * ----------------------------------------------------
+ */
+int32 OS_RegisterEventHandler(OS_EventHandler_t handler)
+{
+    UT_GenStub_SetupReturnBuffer(OS_RegisterEventHandler, int32);
+
+    UT_GenStub_AddParam(OS_RegisterEventHandler, OS_EventHandler_t, handler);
+
+    UT_GenStub_Execute(OS_RegisterEventHandler, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_RegisterEventHandler, int32);
+}
+```
+
+### `osapi-condvar-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-condvar-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-condvar header
+ */
+
+#include "osapi-condvar.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarBroadcast()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarBroadcast(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarBroadcast, int32);
+
+    UT_GenStub_AddParam(OS_CondVarBroadcast, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarBroadcast, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarBroadcast, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarCreate(osal_id_t *var_id, const char *var_name, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarCreate, int32);
+
+    UT_GenStub_AddParam(OS_CondVarCreate, osal_id_t *, var_id);
+    UT_GenStub_AddParam(OS_CondVarCreate, const char *, var_name);
+    UT_GenStub_AddParam(OS_CondVarCreate, uint32, options);
+
+    UT_GenStub_Execute(OS_CondVarCreate, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarDelete(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarDelete, int32);
+
+    UT_GenStub_AddParam(OS_CondVarDelete, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarDelete, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarGetIdByName(osal_id_t *var_id, const char *var_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_CondVarGetIdByName, osal_id_t *, var_id);
+    UT_GenStub_AddParam(OS_CondVarGetIdByName, const char *, var_name);
+
+    UT_GenStub_Execute(OS_CondVarGetIdByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarGetInfo(osal_id_t var_id, OS_condvar_prop_t *condvar_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_CondVarGetInfo, osal_id_t, var_id);
+    UT_GenStub_AddParam(OS_CondVarGetInfo, OS_condvar_prop_t *, condvar_prop);
+
+    UT_GenStub_Execute(OS_CondVarGetInfo, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarLock()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarLock(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarLock, int32);
+
+    UT_GenStub_AddParam(OS_CondVarLock, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarLock, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarLock, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarSignal()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarSignal(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarSignal, int32);
+
+    UT_GenStub_AddParam(OS_CondVarSignal, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarSignal, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarSignal, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarTimedWait()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarTimedWait(osal_id_t var_id, const OS_time_t *abs_wakeup_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarTimedWait, int32);
+
+    UT_GenStub_AddParam(OS_CondVarTimedWait, osal_id_t, var_id);
+    UT_GenStub_AddParam(OS_CondVarTimedWait, const OS_time_t *, abs_wakeup_time);
+
+    UT_GenStub_Execute(OS_CondVarTimedWait, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarTimedWait, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarUnlock()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarUnlock(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarUnlock, int32);
+
+    UT_GenStub_AddParam(OS_CondVarUnlock, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarUnlock, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarUnlock, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CondVarWait()
+ * ----------------------------------------------------
+ */
+int32 OS_CondVarWait(osal_id_t var_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CondVarWait, int32);
+
+    UT_GenStub_AddParam(OS_CondVarWait, osal_id_t, var_id);
+
+    UT_GenStub_Execute(OS_CondVarWait, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CondVarWait, int32);
+}
+```
+
+### `osapi-countsem-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-countsem-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-countsem.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_CountSemCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_CountSemCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *sem_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_COUNTSEM);
+    }
+    else
+    {
+        *sem_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_CountSemDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_CountSemDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_COUNTSEM, sem_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_CountSemGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_CountSemGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_CountSemGetIdByName), sem_id, sizeof(*sem_id)) < sizeof(*sem_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_COUNTSEM, sem_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_CountSemGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_CountSemGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_count_sem_prop_t *count_prop = UT_Hook_GetArgValueByName(Context, "count_prop", OS_count_sem_prop_t *);
+    int32                status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_CountSemGetInfo), count_prop, sizeof(*count_prop)) < sizeof(*count_prop))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &count_prop->creator);
+        strncpy(count_prop->name, "Name", sizeof(count_prop->name) - 1);
+        count_prop->name[sizeof(count_prop->name) - 1] = '\0';
+    }
+}
+```
+
+### `osapi-countsem-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-countsem-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-countsem header
+ */
+
+#include "osapi-countsem.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_CountSemCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_CountSemDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_CountSemGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_CountSemGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemCreate, int32);
+
+    UT_GenStub_AddParam(OS_CountSemCreate, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_CountSemCreate, const char *, sem_name);
+    UT_GenStub_AddParam(OS_CountSemCreate, uint32, sem_initial_value);
+    UT_GenStub_AddParam(OS_CountSemCreate, uint32, options);
+
+    UT_GenStub_Execute(OS_CountSemCreate, Basic, UT_DefaultHandler_OS_CountSemCreate);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemDelete(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemDelete, int32);
+
+    UT_GenStub_AddParam(OS_CountSemDelete, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_CountSemDelete, Basic, UT_DefaultHandler_OS_CountSemDelete);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_CountSemGetIdByName, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_CountSemGetIdByName, const char *, sem_name);
+
+    UT_GenStub_Execute(OS_CountSemGetIdByName, Basic, UT_DefaultHandler_OS_CountSemGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemGetInfo(osal_id_t sem_id, OS_count_sem_prop_t *count_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_CountSemGetInfo, osal_id_t, sem_id);
+    UT_GenStub_AddParam(OS_CountSemGetInfo, OS_count_sem_prop_t *, count_prop);
+
+    UT_GenStub_Execute(OS_CountSemGetInfo, Basic, UT_DefaultHandler_OS_CountSemGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemGive()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemGive(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemGive, int32);
+
+    UT_GenStub_AddParam(OS_CountSemGive, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_CountSemGive, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemGive, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemTake()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemTake(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemTake, int32);
+
+    UT_GenStub_AddParam(OS_CountSemTake, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_CountSemTake, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemTake, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CountSemTimedWait()
+ * ----------------------------------------------------
+ */
+int32 OS_CountSemTimedWait(osal_id_t sem_id, uint32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CountSemTimedWait, int32);
+
+    UT_GenStub_AddParam(OS_CountSemTimedWait, osal_id_t, sem_id);
+    UT_GenStub_AddParam(OS_CountSemTimedWait, uint32, msecs);
+
+    UT_GenStub_Execute(OS_CountSemTimedWait, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CountSemTimedWait, int32);
+}
+```
+
+### `osapi-dir-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-dir-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-dir.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_DirectoryOpen' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_DirectoryOpen(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *dir_id = UT_Hook_GetArgValueByName(Context, "dir_id", osal_id_t *);
+    int32      Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS)
+    {
+        *dir_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_DIR);
+    }
+    else
+    {
+        *dir_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_DirectoryClose' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_DirectoryClose(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t dir_id = UT_Hook_GetArgValueByName(Context, "dir_id", osal_id_t);
+    int32     Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_DIR, dir_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_DirectoryRead' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_DirectoryRead(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    os_dirent_t *dirent = UT_Hook_GetArgValueByName(Context, "dirent", os_dirent_t *);
+    int32        Status;
+    size_t       CopySize;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS)
+    {
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OS_DirectoryRead), dirent, sizeof(*dirent));
+        if (CopySize < sizeof(*dirent))
+        {
+            memset(dirent, 0, sizeof(*dirent));
+        }
+    }
+}
+```
+
+### `osapi-dir-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-dir-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-dir header
+ */
+
+#include "osapi-dir.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_DirectoryClose(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_DirectoryOpen(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_DirectoryRead(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirectoryClose()
+ * ----------------------------------------------------
+ */
+int32 OS_DirectoryClose(osal_id_t dir_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirectoryClose, int32);
+
+    UT_GenStub_AddParam(OS_DirectoryClose, osal_id_t, dir_id);
+
+    UT_GenStub_Execute(OS_DirectoryClose, Basic, UT_DefaultHandler_OS_DirectoryClose);
+
+    return UT_GenStub_GetReturnValue(OS_DirectoryClose, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirectoryOpen()
+ * ----------------------------------------------------
+ */
+int32 OS_DirectoryOpen(osal_id_t *dir_id, const char *path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirectoryOpen, int32);
+
+    UT_GenStub_AddParam(OS_DirectoryOpen, osal_id_t *, dir_id);
+    UT_GenStub_AddParam(OS_DirectoryOpen, const char *, path);
+
+    UT_GenStub_Execute(OS_DirectoryOpen, Basic, UT_DefaultHandler_OS_DirectoryOpen);
+
+    return UT_GenStub_GetReturnValue(OS_DirectoryOpen, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirectoryRead()
+ * ----------------------------------------------------
+ */
+int32 OS_DirectoryRead(osal_id_t dir_id, os_dirent_t *dirent)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirectoryRead, int32);
+
+    UT_GenStub_AddParam(OS_DirectoryRead, osal_id_t, dir_id);
+    UT_GenStub_AddParam(OS_DirectoryRead, os_dirent_t *, dirent);
+
+    UT_GenStub_Execute(OS_DirectoryRead, Basic, UT_DefaultHandler_OS_DirectoryRead);
+
+    return UT_GenStub_GetReturnValue(OS_DirectoryRead, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_DirectoryRewind()
+ * ----------------------------------------------------
+ */
+int32 OS_DirectoryRewind(osal_id_t dir_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_DirectoryRewind, int32);
+
+    UT_GenStub_AddParam(OS_DirectoryRewind, osal_id_t, dir_id);
+
+    UT_GenStub_Execute(OS_DirectoryRewind, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_DirectoryRewind, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_mkdir()
+ * ----------------------------------------------------
+ */
+int32 OS_mkdir(const char *path, uint32 access)
+{
+    UT_GenStub_SetupReturnBuffer(OS_mkdir, int32);
+
+    UT_GenStub_AddParam(OS_mkdir, const char *, path);
+    UT_GenStub_AddParam(OS_mkdir, uint32, access);
+
+    UT_GenStub_Execute(OS_mkdir, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_mkdir, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_rmdir()
+ * ----------------------------------------------------
+ */
+int32 OS_rmdir(const char *path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_rmdir, int32);
+
+    UT_GenStub_AddParam(OS_rmdir, const char *, path);
+
+    UT_GenStub_Execute(OS_rmdir, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_rmdir, int32);
+}
+```
+
+### `osapi-error-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-error-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-error.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetErrorName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetErrorName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32          error_num = UT_Hook_GetArgValueByName(Context, "error_num", int32);
+    os_err_name_t *err_name  = UT_Hook_GetArgValueByName(Context, "err_name", os_err_name_t *);
+    int32          status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS && UT_Stub_CopyToLocal(UT_KEY(OS_GetErrorName), *err_name, sizeof(*err_name)) == 0)
+    {
+        snprintf(*err_name, sizeof(*err_name), "ut%d", (int)error_num);
+    }
+}
+```
+
+### `osapi-error-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-error-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-error header
+ */
+
+#include "osapi-error.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_GetErrorName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetErrorName()
+ * ----------------------------------------------------
+ */
+int32 OS_GetErrorName(int32 error_num, os_err_name_t *err_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetErrorName, int32);
+
+    UT_GenStub_AddParam(OS_GetErrorName, int32, error_num);
+    UT_GenStub_AddParam(OS_GetErrorName, os_err_name_t *, err_name);
+
+    UT_GenStub_Execute(OS_GetErrorName, Basic, UT_DefaultHandler_OS_GetErrorName);
+
+    return UT_GenStub_GetReturnValue(OS_GetErrorName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_StatusToString()
+ * ----------------------------------------------------
+ */
+char *OS_StatusToString(osal_status_t status, os_status_string_t *status_string)
+{
+    UT_GenStub_SetupReturnBuffer(OS_StatusToString, char *);
+
+    UT_GenStub_AddParam(OS_StatusToString, osal_status_t, status);
+    UT_GenStub_AddParam(OS_StatusToString, os_status_string_t *, status_string);
+
+    UT_GenStub_Execute(OS_StatusToString, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_StatusToString, char *);
+}
+```
+
+### `osapi-file-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-file-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-file.h" /* OSAL public API for this subsystem */
+#include "osapi-idmap.h"
+#include "utstub-helpers.h"
+
+/*****************************************************************************
+ *
+ * Local Stub helper function for reading
+ *
+ *****************************************************************************/
+static void UT_GenericReadStub(UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void * buffer = UT_Hook_GetArgValueByName(Context, "buffer", void *);
+    size_t nbytes = UT_Hook_GetArgValueByName(Context, "nbytes", size_t);
+    size_t CopySize;
+    int32  status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        CopySize = UT_Stub_CopyToLocal(FuncKey, buffer, nbytes);
+
+        /* If CopyToLocal returns zero, this probably means no buffer was supplied,
+         * in which case just generate fill data and pretend it was read.
+         */
+        if (CopySize > 0)
+        {
+            status = CopySize;
+        }
+        else
+        {
+            memset(buffer, 0, nbytes);
+            status = nbytes;
+        }
+    }
+    else if (status > 0)
+    {
+        /* generate fill data for requested size */
+        memset(buffer, 0, status);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*****************************************************************************
+ *
+ * Local Stub helper function for writing
+ *
+ *****************************************************************************/
+static void UT_GenericWriteStub(UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const void *buffer = UT_Hook_GetArgValueByName(Context, "buffer", const void *);
+    size_t      nbytes = UT_Hook_GetArgValueByName(Context, "nbytes", size_t);
+    size_t      CopySize;
+    int32       status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        CopySize = UT_Stub_CopyFromLocal(FuncKey, buffer, nbytes);
+
+        /* If CopyFromLocal returns zero, this probably means no buffer was supplied,
+         * in which case just throw out the data and pretend it was written.
+         */
+        if (CopySize > 0)
+        {
+            status = CopySize;
+        }
+        else
+        {
+            status = nbytes;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_OpenCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_OpenCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *filedes = UT_Hook_GetArgValueByName(Context, "filedes", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *filedes = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_STREAM);
+    }
+    else
+    {
+        *filedes = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_close' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_close(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t filedes = UT_Hook_GetArgValueByName(Context, "filedes", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_STREAM, filedes);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_read' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_read(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_GenericReadStub(FuncKey, Context);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_write' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_write(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_GenericWriteStub(FuncKey, Context);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimedRead' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimedRead(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_GenericReadStub(FuncKey, Context);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimedWrite' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimedWrite(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    UT_GenericWriteStub(FuncKey, Context);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_stat' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_stat(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    os_fstat_t *filestats = UT_Hook_GetArgValueByName(Context, "filestats", os_fstat_t *);
+    size_t      CopySize;
+    int32       Status;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == OS_SUCCESS)
+    {
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OS_stat), filestats, sizeof(*filestats));
+
+        /* Ensure memory is set if not provided by test */
+        if (CopySize < sizeof(*filestats))
+        {
+            memset(filestats, 0, sizeof(*filestats));
+        }
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_lseek' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_lseek(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 offset = UT_Hook_GetArgValueByName(Context, "offset", int32);
+    int32 Status;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &Status))
+    {
+        /* Use the configured status code directly as the returned offset */
+        offset = Status;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, offset);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_FDGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_FDGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_file_prop_t *fd_prop = UT_Hook_GetArgValueByName(Context, "fd_prop", OS_file_prop_t *);
+    int32           status;
+    size_t          CopySize;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        /* The user may supply specific entries to return */
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OS_FDGetInfo), fd_prop, sizeof(*fd_prop));
+        if (CopySize < sizeof(*fd_prop))
+        {
+            memset(fd_prop, 0, sizeof(*fd_prop));
+            fd_prop->IsValid = true;
+            UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &fd_prop->User);
+        }
+    }
+}
+```
+
+### `osapi-file-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-file-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-file header
+ */
+
+#include "osapi-file.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_FDGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_OpenCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimedRead(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimedWrite(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_close(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_lseek(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_read(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_stat(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_write(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CloseAllFiles()
+ * ----------------------------------------------------
+ */
+int32 OS_CloseAllFiles(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CloseAllFiles, int32);
+
+    UT_GenStub_Execute(OS_CloseAllFiles, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CloseAllFiles, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_CloseFileByName()
+ * ----------------------------------------------------
+ */
+int32 OS_CloseFileByName(const char *Filename)
+{
+    UT_GenStub_SetupReturnBuffer(OS_CloseFileByName, int32);
+
+    UT_GenStub_AddParam(OS_CloseFileByName, const char *, Filename);
+
+    UT_GenStub_Execute(OS_CloseFileByName, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_CloseFileByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FDGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_FDGetInfo(osal_id_t filedes, OS_file_prop_t *fd_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FDGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_FDGetInfo, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_FDGetInfo, OS_file_prop_t *, fd_prop);
+
+    UT_GenStub_Execute(OS_FDGetInfo, Basic, UT_DefaultHandler_OS_FDGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_FDGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileOpenCheck()
+ * ----------------------------------------------------
+ */
+int32 OS_FileOpenCheck(const char *Filename)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileOpenCheck, int32);
+
+    UT_GenStub_AddParam(OS_FileOpenCheck, const char *, Filename);
+
+    UT_GenStub_Execute(OS_FileOpenCheck, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_FileOpenCheck, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_OpenCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_OpenCreate(osal_id_t *filedes, const char *path, int32 flags, int32 access_mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_OpenCreate, int32);
+
+    UT_GenStub_AddParam(OS_OpenCreate, osal_id_t *, filedes);
+    UT_GenStub_AddParam(OS_OpenCreate, const char *, path);
+    UT_GenStub_AddParam(OS_OpenCreate, int32, flags);
+    UT_GenStub_AddParam(OS_OpenCreate, int32, access_mode);
+
+    UT_GenStub_Execute(OS_OpenCreate, Basic, UT_DefaultHandler_OS_OpenCreate);
+
+    return UT_GenStub_GetReturnValue(OS_OpenCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimedRead()
+ * ----------------------------------------------------
+ */
+int32 OS_TimedRead(osal_id_t filedes, void *buffer, size_t nbytes, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimedRead, int32);
+
+    UT_GenStub_AddParam(OS_TimedRead, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_TimedRead, void *, buffer);
+    UT_GenStub_AddParam(OS_TimedRead, size_t, nbytes);
+    UT_GenStub_AddParam(OS_TimedRead, int32, timeout);
+
+    UT_GenStub_Execute(OS_TimedRead, Basic, UT_DefaultHandler_OS_TimedRead);
+
+    return UT_GenStub_GetReturnValue(OS_TimedRead, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimedWrite()
+ * ----------------------------------------------------
+ */
+int32 OS_TimedWrite(osal_id_t filedes, const void *buffer, size_t nbytes, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimedWrite, int32);
+
+    UT_GenStub_AddParam(OS_TimedWrite, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_TimedWrite, const void *, buffer);
+    UT_GenStub_AddParam(OS_TimedWrite, size_t, nbytes);
+    UT_GenStub_AddParam(OS_TimedWrite, int32, timeout);
+
+    UT_GenStub_Execute(OS_TimedWrite, Basic, UT_DefaultHandler_OS_TimedWrite);
+
+    return UT_GenStub_GetReturnValue(OS_TimedWrite, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_chmod()
+ * ----------------------------------------------------
+ */
+int32 OS_chmod(const char *path, uint32 access_mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_chmod, int32);
+
+    UT_GenStub_AddParam(OS_chmod, const char *, path);
+    UT_GenStub_AddParam(OS_chmod, uint32, access_mode);
+
+    UT_GenStub_Execute(OS_chmod, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_chmod, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_close()
+ * ----------------------------------------------------
+ */
+int32 OS_close(osal_id_t filedes)
+{
+    UT_GenStub_SetupReturnBuffer(OS_close, int32);
+
+    UT_GenStub_AddParam(OS_close, osal_id_t, filedes);
+
+    UT_GenStub_Execute(OS_close, Basic, UT_DefaultHandler_OS_close);
+
+    return UT_GenStub_GetReturnValue(OS_close, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_cp()
+ * ----------------------------------------------------
+ */
+int32 OS_cp(const char *src, const char *dest)
+{
+    UT_GenStub_SetupReturnBuffer(OS_cp, int32);
+
+    UT_GenStub_AddParam(OS_cp, const char *, src);
+    UT_GenStub_AddParam(OS_cp, const char *, dest);
+
+    UT_GenStub_Execute(OS_cp, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_cp, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_lseek()
+ * ----------------------------------------------------
+ */
+int32 OS_lseek(osal_id_t filedes, int32 offset, uint32 whence)
+{
+    UT_GenStub_SetupReturnBuffer(OS_lseek, int32);
+
+    UT_GenStub_AddParam(OS_lseek, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_lseek, int32, offset);
+    UT_GenStub_AddParam(OS_lseek, uint32, whence);
+
+    UT_GenStub_Execute(OS_lseek, Basic, UT_DefaultHandler_OS_lseek);
+
+    return UT_GenStub_GetReturnValue(OS_lseek, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_mv()
+ * ----------------------------------------------------
+ */
+int32 OS_mv(const char *src, const char *dest)
+{
+    UT_GenStub_SetupReturnBuffer(OS_mv, int32);
+
+    UT_GenStub_AddParam(OS_mv, const char *, src);
+    UT_GenStub_AddParam(OS_mv, const char *, dest);
+
+    UT_GenStub_Execute(OS_mv, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_mv, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_read()
+ * ----------------------------------------------------
+ */
+int32 OS_read(osal_id_t filedes, void *buffer, size_t nbytes)
+{
+    UT_GenStub_SetupReturnBuffer(OS_read, int32);
+
+    UT_GenStub_AddParam(OS_read, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_read, void *, buffer);
+    UT_GenStub_AddParam(OS_read, size_t, nbytes);
+
+    UT_GenStub_Execute(OS_read, Basic, UT_DefaultHandler_OS_read);
+
+    return UT_GenStub_GetReturnValue(OS_read, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_remove()
+ * ----------------------------------------------------
+ */
+int32 OS_remove(const char *path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_remove, int32);
+
+    UT_GenStub_AddParam(OS_remove, const char *, path);
+
+    UT_GenStub_Execute(OS_remove, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_remove, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_rename()
+ * ----------------------------------------------------
+ */
+int32 OS_rename(const char *old_filename, const char *new_filename)
+{
+    UT_GenStub_SetupReturnBuffer(OS_rename, int32);
+
+    UT_GenStub_AddParam(OS_rename, const char *, old_filename);
+    UT_GenStub_AddParam(OS_rename, const char *, new_filename);
+
+    UT_GenStub_Execute(OS_rename, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_rename, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_stat()
+ * ----------------------------------------------------
+ */
+int32 OS_stat(const char *path, os_fstat_t *filestats)
+{
+    UT_GenStub_SetupReturnBuffer(OS_stat, int32);
+
+    UT_GenStub_AddParam(OS_stat, const char *, path);
+    UT_GenStub_AddParam(OS_stat, os_fstat_t *, filestats);
+
+    UT_GenStub_Execute(OS_stat, Basic, UT_DefaultHandler_OS_stat);
+
+    return UT_GenStub_GetReturnValue(OS_stat, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_write()
+ * ----------------------------------------------------
+ */
+int32 OS_write(osal_id_t filedes, const void *buffer, size_t nbytes)
+{
+    UT_GenStub_SetupReturnBuffer(OS_write, int32);
+
+    UT_GenStub_AddParam(OS_write, osal_id_t, filedes);
+    UT_GenStub_AddParam(OS_write, const void *, buffer);
+    UT_GenStub_AddParam(OS_write, size_t, nbytes);
+
+    UT_GenStub_Execute(OS_write, Basic, UT_DefaultHandler_OS_write);
+
+    return UT_GenStub_GetReturnValue(OS_write, int32);
+}
+```
+
+### `osapi-filesys-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-filesys-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-filesys.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_FileSysAddFixedMap' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_FileSysAddFixedMap(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *filesys_id = UT_Hook_GetArgValueByName(Context, "filesys_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *filesys_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_FILESYS);
+    }
+    else
+    {
+        *filesys_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_FileSysStatVolume' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_FileSysStatVolume(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_statvfs_t *statbuf = UT_Hook_GetArgValueByName(Context, "statbuf", OS_statvfs_t *);
+    int32         status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_FileSysStatVolume), statbuf, sizeof(*statbuf)) < sizeof(*statbuf))
+    {
+        memset(statbuf, 0, sizeof(*statbuf));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_FS_GetPhysDriveName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_FS_GetPhysDriveName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char *      PhysDriveName = UT_Hook_GetArgValueByName(Context, "PhysDriveName", char *);
+    const char *MountPoint    = UT_Hook_GetArgValueByName(Context, "MountPoint", const char *);
+
+    strncpy(PhysDriveName, MountPoint, OS_FS_PHYS_NAME_LEN - 1);
+    PhysDriveName[OS_FS_PHYS_NAME_LEN - 1] = 0;
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetFsInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetFsInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    os_fsinfo_t *filesys_info = UT_Hook_GetArgValueByName(Context, "filesys_info", os_fsinfo_t *);
+
+    memset(filesys_info, 0, sizeof(*filesys_info));
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TranslatePath' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TranslatePath(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const char *VirtualPath = UT_Hook_GetArgValueByName(Context, "VirtualPath", const char *);
+    char *      LocalPath   = UT_Hook_GetArgValueByName(Context, "LocalPath", char *);
+    int32       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS && VirtualPath != NULL && LocalPath != NULL &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TranslatePath), LocalPath, OS_MAX_LOCAL_PATH_LEN) == 0)
+    {
+        strncpy(LocalPath, VirtualPath, OS_MAX_LOCAL_PATH_LEN - 1);
+        LocalPath[OS_MAX_LOCAL_PATH_LEN - 1] = 0;
+    }
+}
+```
+
+### `osapi-filesys-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-filesys-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-filesys header
+ */
+
+#include "osapi-filesys.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_FS_GetPhysDriveName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_FileSysAddFixedMap(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_FileSysStatVolume(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_GetFsInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TranslatePath(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FS_GetPhysDriveName()
+ * ----------------------------------------------------
+ */
+int32 OS_FS_GetPhysDriveName(char *PhysDriveName, const char *MountPoint)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FS_GetPhysDriveName, int32);
+
+    UT_GenStub_AddParam(OS_FS_GetPhysDriveName, char *, PhysDriveName);
+    UT_GenStub_AddParam(OS_FS_GetPhysDriveName, const char *, MountPoint);
+
+    UT_GenStub_Execute(OS_FS_GetPhysDriveName, Basic, UT_DefaultHandler_OS_FS_GetPhysDriveName);
+
+    return UT_GenStub_GetReturnValue(OS_FS_GetPhysDriveName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysAddFixedMap()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysAddFixedMap(osal_id_t *filesys_id, const char *phys_path, const char *virt_path)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysAddFixedMap, int32);
+
+    UT_GenStub_AddParam(OS_FileSysAddFixedMap, osal_id_t *, filesys_id);
+    UT_GenStub_AddParam(OS_FileSysAddFixedMap, const char *, phys_path);
+    UT_GenStub_AddParam(OS_FileSysAddFixedMap, const char *, virt_path);
+
+    UT_GenStub_Execute(OS_FileSysAddFixedMap, Basic, UT_DefaultHandler_OS_FileSysAddFixedMap);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysAddFixedMap, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_FileSysStatVolume()
+ * ----------------------------------------------------
+ */
+int32 OS_FileSysStatVolume(const char *name, OS_statvfs_t *statbuf)
+{
+    UT_GenStub_SetupReturnBuffer(OS_FileSysStatVolume, int32);
+
+    UT_GenStub_AddParam(OS_FileSysStatVolume, const char *, name);
+    UT_GenStub_AddParam(OS_FileSysStatVolume, OS_statvfs_t *, statbuf);
+
+    UT_GenStub_Execute(OS_FileSysStatVolume, Basic, UT_DefaultHandler_OS_FileSysStatVolume);
+
+    return UT_GenStub_GetReturnValue(OS_FileSysStatVolume, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetFsInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_GetFsInfo(os_fsinfo_t *filesys_info)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetFsInfo, int32);
+
+    UT_GenStub_AddParam(OS_GetFsInfo, os_fsinfo_t *, filesys_info);
+
+    UT_GenStub_Execute(OS_GetFsInfo, Basic, UT_DefaultHandler_OS_GetFsInfo);
+
+    return UT_GenStub_GetReturnValue(OS_GetFsInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TranslatePath()
+ * ----------------------------------------------------
+ */
+int32 OS_TranslatePath(const char *VirtualPath, char *LocalPath)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TranslatePath, int32);
+
+    UT_GenStub_AddParam(OS_TranslatePath, const char *, VirtualPath);
+    UT_GenStub_AddParam(OS_TranslatePath, char *, LocalPath);
+
+    UT_GenStub_Execute(OS_TranslatePath, Basic, UT_DefaultHandler_OS_TranslatePath);
+
+    return UT_GenStub_GetReturnValue(OS_TranslatePath, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_chkfs()
+ * ----------------------------------------------------
+ */
+int32 OS_chkfs(const char *name, bool repair)
+{
+    UT_GenStub_SetupReturnBuffer(OS_chkfs, int32);
+
+    UT_GenStub_AddParam(OS_chkfs, const char *, name);
+    UT_GenStub_AddParam(OS_chkfs, bool, repair);
+
+    UT_GenStub_Execute(OS_chkfs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_chkfs, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_initfs()
+ * ----------------------------------------------------
+ */
+int32 OS_initfs(char *address, const char *devname, const char *volname, size_t blocksize, osal_blockcount_t numblocks)
+{
+    UT_GenStub_SetupReturnBuffer(OS_initfs, int32);
+
+    UT_GenStub_AddParam(OS_initfs, char *, address);
+    UT_GenStub_AddParam(OS_initfs, const char *, devname);
+    UT_GenStub_AddParam(OS_initfs, const char *, volname);
+    UT_GenStub_AddParam(OS_initfs, size_t, blocksize);
+    UT_GenStub_AddParam(OS_initfs, osal_blockcount_t, numblocks);
+
+    UT_GenStub_Execute(OS_initfs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_initfs, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_mkfs()
+ * ----------------------------------------------------
+ */
+int32 OS_mkfs(char *address, const char *devname, const char *volname, size_t blocksize, osal_blockcount_t numblocks)
+{
+    UT_GenStub_SetupReturnBuffer(OS_mkfs, int32);
+
+    UT_GenStub_AddParam(OS_mkfs, char *, address);
+    UT_GenStub_AddParam(OS_mkfs, const char *, devname);
+    UT_GenStub_AddParam(OS_mkfs, const char *, volname);
+    UT_GenStub_AddParam(OS_mkfs, size_t, blocksize);
+    UT_GenStub_AddParam(OS_mkfs, osal_blockcount_t, numblocks);
+
+    UT_GenStub_Execute(OS_mkfs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_mkfs, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_mount()
+ * ----------------------------------------------------
+ */
+int32 OS_mount(const char *devname, const char *mountpoint)
+{
+    UT_GenStub_SetupReturnBuffer(OS_mount, int32);
+
+    UT_GenStub_AddParam(OS_mount, const char *, devname);
+    UT_GenStub_AddParam(OS_mount, const char *, mountpoint);
+
+    UT_GenStub_Execute(OS_mount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_mount, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_rmfs()
+ * ----------------------------------------------------
+ */
+int32 OS_rmfs(const char *devname)
+{
+    UT_GenStub_SetupReturnBuffer(OS_rmfs, int32);
+
+    UT_GenStub_AddParam(OS_rmfs, const char *, devname);
+
+    UT_GenStub_Execute(OS_rmfs, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_rmfs, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_unmount()
+ * ----------------------------------------------------
+ */
+int32 OS_unmount(const char *mountpoint)
+{
+    UT_GenStub_SetupReturnBuffer(OS_unmount, int32);
+
+    UT_GenStub_AddParam(OS_unmount, const char *, mountpoint);
+
+    UT_GenStub_Execute(OS_unmount, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_unmount, int32);
+}
+```
+
+### `osapi-heap-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-heap-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-heap.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_HeapGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_HeapGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_heap_prop_t *heap_prop = UT_Hook_GetArgValueByName(Context, "heap_prop", OS_heap_prop_t *);
+    int32           status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_HeapGetInfo), heap_prop, sizeof(*heap_prop)) < sizeof(*heap_prop))
+    {
+        /* Return some random data */
+        heap_prop->free_bytes         = OSAL_SIZE_C(12345);
+        heap_prop->free_blocks        = OSAL_BLOCKCOUNT_C(6789);
+        heap_prop->largest_free_block = OSAL_SIZE_C(100);
+    }
+}
+```
+
+### `osapi-heap-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-heap-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-heap header
+ */
+
+#include "osapi-heap.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_HeapGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_HeapGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_HeapGetInfo(OS_heap_prop_t *heap_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_HeapGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_HeapGetInfo, OS_heap_prop_t *, heap_prop);
+
+    UT_GenStub_Execute(OS_HeapGetInfo, Basic, UT_DefaultHandler_OS_HeapGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_HeapGetInfo, int32);
+}
+```
+
+### `osapi-idmap-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-idmap-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ *
+ * NOTE: The Object ID manipulation calls would not be called by applications.
+ * However stubs are still defined in order to support things such as
+ * coverage testing of the low-level implementation.  This set of stubs
+ * is implemented separately here as it is only needed when coverage testing
+ * OSAL itself (not for coverage testing other units).
+ */
+
+#include "osapi-idmap.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ObjectIdToArrayIndex' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ObjectIdToArrayIndex(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t      object_id  = UT_Hook_GetArgValueByName(Context, "object_id", osal_id_t);
+    osal_index_t * ArrayIndex = UT_Hook_GetArgValueByName(Context, "ArrayIndex", osal_index_t *);
+    int32          Status;
+    osal_objtype_t checktype;
+    uint32         tempserial;
+
+    UT_Stub_GetInt32StatusCode(Context, &Status);
+
+    if (Status == 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ObjectIdToArrayIndex), ArrayIndex, sizeof(*ArrayIndex)) < sizeof(*ArrayIndex))
+    {
+        /* this needs to output something valid or code will break */
+        UT_ObjIdDecompose(object_id, &tempserial, &checktype);
+        *ArrayIndex = OSAL_INDEX_C(tempserial);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetResourceName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetResourceName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char * buffer      = UT_Hook_GetArgValueByName(Context, "buffer", char *);
+    size_t buffer_size = UT_Hook_GetArgValueByName(Context, "buffer_size", size_t);
+    int32  status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        if (buffer_size > 0 && UT_Stub_CopyToLocal(UT_KEY(OS_GetResourceName), buffer, buffer_size) == 0)
+        {
+            /* return an empty string by default */
+            buffer[0] = 0;
+        }
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ConvertToArrayIndex' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ConvertToArrayIndex(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t      object_id  = UT_Hook_GetArgValueByName(Context, "object_id", osal_id_t);
+    osal_index_t * ArrayIndex = UT_Hook_GetArgValueByName(Context, "ArrayIndex", osal_index_t *);
+    osal_objtype_t ObjType;
+    int32          status;
+    uint32         tempserial;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_ObjIdDecompose(object_id, &tempserial, &ObjType);
+        if (ObjType != OS_OBJECT_TYPE_UNDEFINED && ObjType < OS_OBJECT_TYPE_USER)
+        {
+            tempserial %= UT_MAXOBJS[ObjType];
+        }
+    }
+    else
+    {
+        /*
+         * If set to fail, then set the output to something bizarre - if the code
+         * actually tries to use this, chances are it will segfault and be fixed
+         */
+        tempserial = 0xDEADBEEFU;
+    }
+
+    *ArrayIndex = OSAL_INDEX_C(tempserial);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ForEachObjectOfType' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ForEachObjectOfType(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_ArgCallback_t callback_ptr = UT_Hook_GetArgValueByName(Context, "callback_ptr", OS_ArgCallback_t);
+    void *           callback_arg = UT_Hook_GetArgValueByName(Context, "callback_arg", void *);
+    osal_id_t        NextId;
+    size_t           IdSize;
+
+    while (1)
+    {
+        IdSize = UT_Stub_CopyToLocal(UT_KEY(OS_ForEachObjectOfType), &NextId, sizeof(NextId));
+        if (IdSize < sizeof(NextId))
+        {
+            break;
+        }
+        (*callback_ptr)(NextId, callback_arg);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ForEachObject' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ForEachObject(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_ArgCallback_t callback_ptr = UT_Hook_GetArgValueByName(Context, "callback_ptr", OS_ArgCallback_t);
+    void *           callback_arg = UT_Hook_GetArgValueByName(Context, "callback_arg", void *);
+    osal_id_t        NextId;
+    size_t           IdSize;
+
+    while (1)
+    {
+        IdSize = UT_Stub_CopyToLocal((UT_EntryKey_t)&OS_ForEachObject, &NextId, sizeof(NextId));
+        if (IdSize < sizeof(NextId))
+        {
+            break;
+        }
+        (*callback_ptr)(NextId, callback_arg);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_IdentifyObject' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_IdentifyObject(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t      object_id = UT_Hook_GetArgValueByName(Context, "object_id", osal_id_t);
+    osal_objtype_t ObjType;
+    uint32         checkindx;
+    int32          status;
+
+    if (UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        /* Use the "status code" as the object type if it was set */
+        ObjType = status;
+    }
+    else
+    {
+        /* output a type that will actually match the ID */
+        UT_ObjIdDecompose(object_id, &checkindx, &ObjType);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, ObjType);
+}
+```
+
+### `osapi-idmap-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-idmap-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-idmap header
+ */
+
+#include "osapi-idmap.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_ConvertToArrayIndex(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ForEachObject(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ForEachObjectOfType(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_GetResourceName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_IdentifyObject(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ObjectIdToArrayIndex(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ConvertToArrayIndex()
+ * ----------------------------------------------------
+ */
+int32 OS_ConvertToArrayIndex(osal_id_t object_id, osal_index_t *ArrayIndex)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ConvertToArrayIndex, int32);
+
+    UT_GenStub_AddParam(OS_ConvertToArrayIndex, osal_id_t, object_id);
+    UT_GenStub_AddParam(OS_ConvertToArrayIndex, osal_index_t *, ArrayIndex);
+
+    UT_GenStub_Execute(OS_ConvertToArrayIndex, Basic, UT_DefaultHandler_OS_ConvertToArrayIndex);
+
+    return UT_GenStub_GetReturnValue(OS_ConvertToArrayIndex, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ForEachObject()
+ * ----------------------------------------------------
+ */
+void OS_ForEachObject(osal_id_t creator_id, OS_ArgCallback_t callback_ptr, void *callback_arg)
+{
+    UT_GenStub_AddParam(OS_ForEachObject, osal_id_t, creator_id);
+    UT_GenStub_AddParam(OS_ForEachObject, OS_ArgCallback_t, callback_ptr);
+    UT_GenStub_AddParam(OS_ForEachObject, void *, callback_arg);
+
+    UT_GenStub_Execute(OS_ForEachObject, Basic, UT_DefaultHandler_OS_ForEachObject);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ForEachObjectOfType()
+ * ----------------------------------------------------
+ */
+void OS_ForEachObjectOfType(osal_objtype_t objtype, osal_id_t creator_id, OS_ArgCallback_t callback_ptr,
+                            void *callback_arg)
+{
+    UT_GenStub_AddParam(OS_ForEachObjectOfType, osal_objtype_t, objtype);
+    UT_GenStub_AddParam(OS_ForEachObjectOfType, osal_id_t, creator_id);
+    UT_GenStub_AddParam(OS_ForEachObjectOfType, OS_ArgCallback_t, callback_ptr);
+    UT_GenStub_AddParam(OS_ForEachObjectOfType, void *, callback_arg);
+
+    UT_GenStub_Execute(OS_ForEachObjectOfType, Basic, UT_DefaultHandler_OS_ForEachObjectOfType);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetResourceName()
+ * ----------------------------------------------------
+ */
+int32 OS_GetResourceName(osal_id_t object_id, char *buffer, size_t buffer_size)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetResourceName, int32);
+
+    UT_GenStub_AddParam(OS_GetResourceName, osal_id_t, object_id);
+    UT_GenStub_AddParam(OS_GetResourceName, char *, buffer);
+    UT_GenStub_AddParam(OS_GetResourceName, size_t, buffer_size);
+
+    UT_GenStub_Execute(OS_GetResourceName, Basic, UT_DefaultHandler_OS_GetResourceName);
+
+    return UT_GenStub_GetReturnValue(OS_GetResourceName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_IdentifyObject()
+ * ----------------------------------------------------
+ */
+osal_objtype_t OS_IdentifyObject(osal_id_t object_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_IdentifyObject, osal_objtype_t);
+
+    UT_GenStub_AddParam(OS_IdentifyObject, osal_id_t, object_id);
+
+    UT_GenStub_Execute(OS_IdentifyObject, Basic, UT_DefaultHandler_OS_IdentifyObject);
+
+    return UT_GenStub_GetReturnValue(OS_IdentifyObject, osal_objtype_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ObjectIdToArrayIndex()
+ * ----------------------------------------------------
+ */
+int32 OS_ObjectIdToArrayIndex(osal_objtype_t idtype, osal_id_t object_id, osal_index_t *ArrayIndex)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ObjectIdToArrayIndex, int32);
+
+    UT_GenStub_AddParam(OS_ObjectIdToArrayIndex, osal_objtype_t, idtype);
+    UT_GenStub_AddParam(OS_ObjectIdToArrayIndex, osal_id_t, object_id);
+    UT_GenStub_AddParam(OS_ObjectIdToArrayIndex, osal_index_t *, ArrayIndex);
+
+    UT_GenStub_Execute(OS_ObjectIdToArrayIndex, Basic, UT_DefaultHandler_OS_ObjectIdToArrayIndex);
+
+    return UT_GenStub_GetReturnValue(OS_ObjectIdToArrayIndex, int32);
+}
+```
+
+### `osapi-module-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-module-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-module.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*****************************************************************************/
+/**
+** \brief dummy_function stub function
+**
+** \par Description
+**        This function is used by the OS API function, OS_SymbolLookup, which
+**        requires a valid function for which to report the address.
+**
+** \par Assumptions, External Events, and Notes:
+**        None
+**
+** \returns
+**        Returns a user-defined status value.
+**
+******************************************************************************/
+int32 dummy_function(void)
+{
+    int32 status;
+
+    status = UT_DEFAULT_IMPL(dummy_function);
+
+    return status;
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ModuleLoad' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ModuleLoad(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *module_id = UT_Hook_GetArgValueByName(Context, "module_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *module_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_MODULE);
+    }
+    else
+    {
+        *module_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ModuleUnload' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ModuleUnload(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t module_id = UT_Hook_GetArgValueByName(Context, "module_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_MODULE, module_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ModuleInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ModuleInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_module_prop_t *module_info = UT_Hook_GetArgValueByName(Context, "module_info", OS_module_prop_t *);
+    int32             status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_ModuleInfo), module_info, sizeof(*module_info)) < sizeof(*module_info))
+    {
+        memset(module_info, 0, sizeof(*module_info));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SymbolLookup' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SymbolLookup(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    cpuaddr *symbol_address = UT_Hook_GetArgValueByName(Context, "symbol_address", cpuaddr *);
+    int32    status;
+
+    /*
+     * Register the context so a hook can do something with the parameters
+     */
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status != OS_SUCCESS)
+    {
+        *symbol_address = 0xDEADBEEFU;
+    }
+    else if (UT_Stub_CopyToLocal(UT_KEY(OS_SymbolLookup), symbol_address, sizeof(*symbol_address)) <
+             sizeof(*symbol_address))
+    {
+        /* return the dummy function when test didn't register anything else */
+        *symbol_address = (cpuaddr)&dummy_function;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_ModuleSymbolLookup' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_ModuleSymbolLookup(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    cpuaddr *symbol_address = UT_Hook_GetArgValueByName(Context, "symbol_address", cpuaddr *);
+    int32    status;
+
+    /*
+     * Register the context so a hook can do something with the parameters
+     */
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status != OS_SUCCESS)
+    {
+        *symbol_address = 0xDEADBEEFU;
+    }
+    else if (UT_Stub_CopyToLocal(UT_KEY(OS_ModuleSymbolLookup), symbol_address, sizeof(*symbol_address)) <
+             sizeof(*symbol_address))
+    {
+        /* return the dummy function when test didn't register anything else */
+        *symbol_address = (cpuaddr)&dummy_function;
+    }
+}
+```
+
+### `osapi-module-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-module-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-module header
+ */
+
+#include "osapi-module.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_ModuleInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ModuleLoad(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ModuleSymbolLookup(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_ModuleUnload(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SymbolLookup(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleInfo(osal_id_t module_id, OS_module_prop_t *module_info)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleInfo, int32);
+
+    UT_GenStub_AddParam(OS_ModuleInfo, osal_id_t, module_id);
+    UT_GenStub_AddParam(OS_ModuleInfo, OS_module_prop_t *, module_info);
+
+    UT_GenStub_Execute(OS_ModuleInfo, Basic, UT_DefaultHandler_OS_ModuleInfo);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleLoad()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleLoad(osal_id_t *module_id, const char *module_name, const char *filename, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleLoad, int32);
+
+    UT_GenStub_AddParam(OS_ModuleLoad, osal_id_t *, module_id);
+    UT_GenStub_AddParam(OS_ModuleLoad, const char *, module_name);
+    UT_GenStub_AddParam(OS_ModuleLoad, const char *, filename);
+    UT_GenStub_AddParam(OS_ModuleLoad, uint32, flags);
+
+    UT_GenStub_Execute(OS_ModuleLoad, Basic, UT_DefaultHandler_OS_ModuleLoad);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleLoad, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleSymbolLookup()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleSymbolLookup(osal_id_t module_id, cpuaddr *symbol_address, const char *symbol_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleSymbolLookup, int32);
+
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup, osal_id_t, module_id);
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup, cpuaddr *, symbol_address);
+    UT_GenStub_AddParam(OS_ModuleSymbolLookup, const char *, symbol_name);
+
+    UT_GenStub_Execute(OS_ModuleSymbolLookup, Basic, UT_DefaultHandler_OS_ModuleSymbolLookup);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleSymbolLookup, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ModuleUnload()
+ * ----------------------------------------------------
+ */
+int32 OS_ModuleUnload(osal_id_t module_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ModuleUnload, int32);
+
+    UT_GenStub_AddParam(OS_ModuleUnload, osal_id_t, module_id);
+
+    UT_GenStub_Execute(OS_ModuleUnload, Basic, UT_DefaultHandler_OS_ModuleUnload);
+
+    return UT_GenStub_GetReturnValue(OS_ModuleUnload, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SymbolLookup()
+ * ----------------------------------------------------
+ */
+int32 OS_SymbolLookup(cpuaddr *symbol_address, const char *symbol_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SymbolLookup, int32);
+
+    UT_GenStub_AddParam(OS_SymbolLookup, cpuaddr *, symbol_address);
+    UT_GenStub_AddParam(OS_SymbolLookup, const char *, symbol_name);
+
+    UT_GenStub_Execute(OS_SymbolLookup, Basic, UT_DefaultHandler_OS_SymbolLookup);
+
+    return UT_GenStub_GetReturnValue(OS_SymbolLookup, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SymbolTableDump()
+ * ----------------------------------------------------
+ */
+int32 OS_SymbolTableDump(const char *filename, size_t size_limit)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SymbolTableDump, int32);
+
+    UT_GenStub_AddParam(OS_SymbolTableDump, const char *, filename);
+    UT_GenStub_AddParam(OS_SymbolTableDump, size_t, size_limit);
+
+    UT_GenStub_Execute(OS_SymbolTableDump, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SymbolTableDump, int32);
+}
+```
+
+### `osapi-mutex-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-mutex-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-mutex.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_MutSemCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_MutSemCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *sem_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_MUTEX);
+    }
+    else
+    {
+        *sem_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_MutSemDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_MutSemDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_MUTEX, sem_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_MutSemGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_MutSemGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sem_id = UT_Hook_GetArgValueByName(Context, "sem_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_MutSemGetIdByName), sem_id, sizeof(*sem_id)) < sizeof(*sem_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_MUTEX, sem_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_MutSemGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_MutSemGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_mut_sem_prop_t *mut_prop = UT_Hook_GetArgValueByName(Context, "mut_prop", OS_mut_sem_prop_t *);
+    int32              status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_MutSemGetInfo), mut_prop, sizeof(*mut_prop)) < sizeof(*mut_prop))
+    {
+        strncpy(mut_prop->name, "Name", sizeof(mut_prop->name) - 1);
+        mut_prop->name[sizeof(mut_prop->name) - 1] = '\0';
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &mut_prop->creator);
+    }
+}
+```
+
+### `osapi-mutex-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-mutex-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-mutex header
+ */
+
+#include "osapi-mutex.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_MutSemCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_MutSemDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_MutSemGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_MutSemGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 options)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemCreate, int32);
+
+    UT_GenStub_AddParam(OS_MutSemCreate, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_MutSemCreate, const char *, sem_name);
+    UT_GenStub_AddParam(OS_MutSemCreate, uint32, options);
+
+    UT_GenStub_Execute(OS_MutSemCreate, Basic, UT_DefaultHandler_OS_MutSemCreate);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemDelete(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemDelete, int32);
+
+    UT_GenStub_AddParam(OS_MutSemDelete, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_MutSemDelete, Basic, UT_DefaultHandler_OS_MutSemDelete);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_MutSemGetIdByName, osal_id_t *, sem_id);
+    UT_GenStub_AddParam(OS_MutSemGetIdByName, const char *, sem_name);
+
+    UT_GenStub_Execute(OS_MutSemGetIdByName, Basic, UT_DefaultHandler_OS_MutSemGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemGetInfo(osal_id_t sem_id, OS_mut_sem_prop_t *mut_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_MutSemGetInfo, osal_id_t, sem_id);
+    UT_GenStub_AddParam(OS_MutSemGetInfo, OS_mut_sem_prop_t *, mut_prop);
+
+    UT_GenStub_Execute(OS_MutSemGetInfo, Basic, UT_DefaultHandler_OS_MutSemGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemGive()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemGive(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemGive, int32);
+
+    UT_GenStub_AddParam(OS_MutSemGive, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_MutSemGive, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemGive, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_MutSemTake()
+ * ----------------------------------------------------
+ */
+int32 OS_MutSemTake(osal_id_t sem_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_MutSemTake, int32);
+
+    UT_GenStub_AddParam(OS_MutSemTake, osal_id_t, sem_id);
+
+    UT_GenStub_Execute(OS_MutSemTake, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_MutSemTake, int32);
+}
+```
+
+### `osapi-network-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-network-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-network.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_NetworkGetHostName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_NetworkGetHostName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char * host_name = UT_Hook_GetArgValueByName(Context, "host_name", char *);
+    size_t name_len  = UT_Hook_GetArgValueByName(Context, "name_len", size_t);
+    int32  status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS && name_len > 0 &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_NetworkGetHostName), host_name, name_len) == 0)
+    {
+        strncpy(host_name, "ut", name_len - 1);
+        host_name[name_len - 1] = 0;
+    }
+}
+```
+
+### `osapi-network-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-network-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-network header
+ */
+
+#include "osapi-network.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_NetworkGetHostName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NetworkGetHostName()
+ * ----------------------------------------------------
+ */
+int32 OS_NetworkGetHostName(char *host_name, size_t name_len)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NetworkGetHostName, int32);
+
+    UT_GenStub_AddParam(OS_NetworkGetHostName, char *, host_name);
+    UT_GenStub_AddParam(OS_NetworkGetHostName, size_t, name_len);
+
+    UT_GenStub_Execute(OS_NetworkGetHostName, Basic, UT_DefaultHandler_OS_NetworkGetHostName);
+
+    return UT_GenStub_GetReturnValue(OS_NetworkGetHostName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_NetworkGetID()
+ * ----------------------------------------------------
+ */
+int32 OS_NetworkGetID(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_NetworkGetID, int32);
+
+    UT_GenStub_Execute(OS_NetworkGetID, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_NetworkGetID, int32);
+}
+```
+
+### `osapi-printf-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-printf-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-printf.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_printf' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_printf(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
+{
+    const char *string = UT_Hook_GetArgValueByName(Context, "string", const char *);
+    size_t      length = strlen(string);
+    char        str[128];
+    va_list     va_debugcopy;
+    int32       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    va_copy(va_debugcopy, va);
+    /* Output the message when in debug mode (uses a copy of the va list) */
+    vsnprintf(str, sizeof(str), string, va_debugcopy);
+    UtDebug("OS_printf: %s", str);
+    va_end(va_debugcopy);
+
+    if (status >= 0)
+    {
+        /*
+         * Special treatment of a format string which is only "%s" ...
+         * This is merely a way to avoid having to do full-blown printf processing
+         * inside the UT stub (which would make it the full version, not a stub)
+         */
+        if (strcmp(string, "%s") == 0 || strcmp(string, "%s\n") == 0)
+        {
+            string = va_arg(va, const char *);
+        }
+        length = strlen(string);
+        if (length > 0)
+        {
+            /*
+             * prune any supplied newlines -
+             * one will be explicitly added
+             *
+             * (this is to ensure a consistent separator in the output buffer)
+             */
+            while (length > 0 && string[length - 1] == '\n')
+            {
+                --length;
+            }
+            UT_Stub_CopyFromLocal(UT_KEY(OS_printf), string, length);
+            UT_Stub_CopyFromLocal(UT_KEY(OS_printf), "\n", 1);
+        }
+    }
+}
+```
+
+### `osapi-printf-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-printf-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-printf header
+ */
+
+#include <stdarg.h>
+
+#include "osapi-printf.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_printf(void *, UT_EntryKey_t, const UT_StubContext_t *, va_list);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_printf()
+ * ----------------------------------------------------
+ */
+void OS_printf(const char *string, ...)
+{
+    va_list UtStub_ArgList;
+
+    UT_GenStub_AddParam(OS_printf, const char *, string);
+
+    va_start(UtStub_ArgList, string);
+    UT_GenStub_Execute(OS_printf, Va, UT_DefaultHandler_OS_printf, UtStub_ArgList);
+    va_end(UtStub_ArgList);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_printf_disable()
+ * ----------------------------------------------------
+ */
+void OS_printf_disable(void)
+{
+
+    UT_GenStub_Execute(OS_printf_disable, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_printf_enable()
+ * ----------------------------------------------------
+ */
+void OS_printf_enable(void)
+{
+
+    UT_GenStub_Execute(OS_printf_enable, Basic, NULL);
+}
+```
+
+### `osapi-queue-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-queue-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-queue.h" /* OSAL public API for this subsystem */
+#include "osapi-idmap.h"
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueueCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueueCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *queue_id = UT_Hook_GetArgValueByName(Context, "queue_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *queue_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_QUEUE);
+    }
+    else
+    {
+        *queue_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueueDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueueDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t queue_id = UT_Hook_GetArgValueByName(Context, "queue_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_QUEUE, queue_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueueGet' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueueGet(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t queue_id    = UT_Hook_GetArgValueByName(Context, "queue_id", osal_id_t);
+    void *    data        = UT_Hook_GetArgValueByName(Context, "data", void *);
+    size_t    size        = UT_Hook_GetArgValueByName(Context, "size", size_t);
+    size_t *  size_copied = UT_Hook_GetArgValueByName(Context, "size_copied", size_t *);
+    int32     status;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        *size_copied = UT_Stub_CopyToLocal((UT_EntryKey_t)OS_ObjectIdToInteger(queue_id), data, size);
+        if (*size_copied == 0)
+        {
+            status = OS_QUEUE_EMPTY;
+        }
+
+        UT_Stub_SetReturnValue(FuncKey, status);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueuePut' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueuePut(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t   queue_id = UT_Hook_GetArgValueByName(Context, "queue_id", osal_id_t);
+    const void *data     = UT_Hook_GetArgValueByName(Context, "data", const void *);
+    size_t      size     = UT_Hook_GetArgValueByName(Context, "size", size_t);
+    int32       status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_SetDataBuffer((UT_EntryKey_t)OS_ObjectIdToInteger(queue_id), (void *)data, size, true);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueueGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueueGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *queue_id = UT_Hook_GetArgValueByName(Context, "queue_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_QueueGetIdByName), queue_id, sizeof(*queue_id)) < sizeof(*queue_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_QUEUE, queue_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_QueueGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_QueueGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_queue_prop_t *queue_prop = UT_Hook_GetArgValueByName(Context, "queue_prop", OS_queue_prop_t *);
+    int32            status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_QueueGetInfo), queue_prop, sizeof(*queue_prop)) < sizeof(*queue_prop))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &queue_prop->creator);
+        strncpy(queue_prop->name, "Name", sizeof(queue_prop->name) - 1);
+        queue_prop->name[sizeof(queue_prop->name) - 1] = '\0';
+    }
+}
+```
+
+### `osapi-queue-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-queue-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-queue header
+ */
+
+#include "osapi-queue.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_QueueCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_QueueDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_QueueGet(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_QueueGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_QueueGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_QueuePut(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueCreate(osal_id_t *queue_id, const char *queue_name, osal_blockcount_t queue_depth, size_t data_size,
+                     uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueCreate, int32);
+
+    UT_GenStub_AddParam(OS_QueueCreate, osal_id_t *, queue_id);
+    UT_GenStub_AddParam(OS_QueueCreate, const char *, queue_name);
+    UT_GenStub_AddParam(OS_QueueCreate, osal_blockcount_t, queue_depth);
+    UT_GenStub_AddParam(OS_QueueCreate, size_t, data_size);
+    UT_GenStub_AddParam(OS_QueueCreate, uint32, flags);
+
+    UT_GenStub_Execute(OS_QueueCreate, Basic, UT_DefaultHandler_OS_QueueCreate);
+
+    return UT_GenStub_GetReturnValue(OS_QueueCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueDelete(osal_id_t queue_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueDelete, int32);
+
+    UT_GenStub_AddParam(OS_QueueDelete, osal_id_t, queue_id);
+
+    UT_GenStub_Execute(OS_QueueDelete, Basic, UT_DefaultHandler_OS_QueueDelete);
+
+    return UT_GenStub_GetReturnValue(OS_QueueDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueGet()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueGet(osal_id_t queue_id, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueGet, int32);
+
+    UT_GenStub_AddParam(OS_QueueGet, osal_id_t, queue_id);
+    UT_GenStub_AddParam(OS_QueueGet, void *, data);
+    UT_GenStub_AddParam(OS_QueueGet, size_t, size);
+    UT_GenStub_AddParam(OS_QueueGet, size_t *, size_copied);
+    UT_GenStub_AddParam(OS_QueueGet, int32, timeout);
+
+    UT_GenStub_Execute(OS_QueueGet, Basic, UT_DefaultHandler_OS_QueueGet);
+
+    return UT_GenStub_GetReturnValue(OS_QueueGet, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueGetIdByName(osal_id_t *queue_id, const char *queue_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_QueueGetIdByName, osal_id_t *, queue_id);
+    UT_GenStub_AddParam(OS_QueueGetIdByName, const char *, queue_name);
+
+    UT_GenStub_Execute(OS_QueueGetIdByName, Basic, UT_DefaultHandler_OS_QueueGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_QueueGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueueGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_QueueGetInfo(osal_id_t queue_id, OS_queue_prop_t *queue_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueueGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_QueueGetInfo, osal_id_t, queue_id);
+    UT_GenStub_AddParam(OS_QueueGetInfo, OS_queue_prop_t *, queue_prop);
+
+    UT_GenStub_Execute(OS_QueueGetInfo, Basic, UT_DefaultHandler_OS_QueueGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_QueueGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_QueuePut()
+ * ----------------------------------------------------
+ */
+int32 OS_QueuePut(osal_id_t queue_id, const void *data, size_t size, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_QueuePut, int32);
+
+    UT_GenStub_AddParam(OS_QueuePut, osal_id_t, queue_id);
+    UT_GenStub_AddParam(OS_QueuePut, const void *, data);
+    UT_GenStub_AddParam(OS_QueuePut, size_t, size);
+    UT_GenStub_AddParam(OS_QueuePut, uint32, flags);
+
+    UT_GenStub_Execute(OS_QueuePut, Basic, UT_DefaultHandler_OS_QueuePut);
+
+    return UT_GenStub_GetReturnValue(OS_QueuePut, int32);
+}
+```
+
+### `osapi-select-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-select-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-select header
+ */
+
+#include "osapi-select.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectFdAdd()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectFdAdd(OS_FdSet *Set, osal_id_t objid)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectFdAdd, int32);
+
+    UT_GenStub_AddParam(OS_SelectFdAdd, OS_FdSet *, Set);
+    UT_GenStub_AddParam(OS_SelectFdAdd, osal_id_t, objid);
+
+    UT_GenStub_Execute(OS_SelectFdAdd, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectFdAdd, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectFdClear()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectFdClear(OS_FdSet *Set, osal_id_t objid)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectFdClear, int32);
+
+    UT_GenStub_AddParam(OS_SelectFdClear, OS_FdSet *, Set);
+    UT_GenStub_AddParam(OS_SelectFdClear, osal_id_t, objid);
+
+    UT_GenStub_Execute(OS_SelectFdClear, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectFdClear, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectFdIsSet()
+ * ----------------------------------------------------
+ */
+bool OS_SelectFdIsSet(const OS_FdSet *Set, osal_id_t objid)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectFdIsSet, bool);
+
+    UT_GenStub_AddParam(OS_SelectFdIsSet, const OS_FdSet *, Set);
+    UT_GenStub_AddParam(OS_SelectFdIsSet, osal_id_t, objid);
+
+    UT_GenStub_Execute(OS_SelectFdIsSet, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectFdIsSet, bool);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectFdZero()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectFdZero(OS_FdSet *Set)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectFdZero, int32);
+
+    UT_GenStub_AddParam(OS_SelectFdZero, OS_FdSet *, Set);
+
+    UT_GenStub_Execute(OS_SelectFdZero, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectFdZero, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectMultiple()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectMultiple(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectMultiple, int32);
+
+    UT_GenStub_AddParam(OS_SelectMultiple, OS_FdSet *, ReadSet);
+    UT_GenStub_AddParam(OS_SelectMultiple, OS_FdSet *, WriteSet);
+    UT_GenStub_AddParam(OS_SelectMultiple, int32, msecs);
+
+    UT_GenStub_Execute(OS_SelectMultiple, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectMultiple, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SelectSingle()
+ * ----------------------------------------------------
+ */
+int32 OS_SelectSingle(osal_id_t objid, uint32 *StateFlags, int32 msecs)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SelectSingle, int32);
+
+    UT_GenStub_AddParam(OS_SelectSingle, osal_id_t, objid);
+    UT_GenStub_AddParam(OS_SelectSingle, uint32 *, StateFlags);
+    UT_GenStub_AddParam(OS_SelectSingle, int32, msecs);
+
+    UT_GenStub_Execute(OS_SelectSingle, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SelectSingle, int32);
+}
+```
+
+### `osapi-shell-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-shell-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-shell header
+ */
+
+#include "osapi-shell.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_ShellOutputToFile()
+ * ----------------------------------------------------
+ */
+int32 OS_ShellOutputToFile(const char *Cmd, osal_id_t filedes)
+{
+    UT_GenStub_SetupReturnBuffer(OS_ShellOutputToFile, int32);
+
+    UT_GenStub_AddParam(OS_ShellOutputToFile, const char *, Cmd);
+    UT_GenStub_AddParam(OS_ShellOutputToFile, osal_id_t, filedes);
+
+    UT_GenStub_Execute(OS_ShellOutputToFile, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_ShellOutputToFile, int32);
+}
+```
+
+### `osapi-sockets-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-sockets-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-sockets.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketOpen' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketOpen(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sock_id = UT_Hook_GetArgValueByName(Context, "sock_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *sock_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_STREAM);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketRecvFrom' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketRecvFrom(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    void * buffer = UT_Hook_GetArgValueByName(Context, "buffer", void *);
+    size_t buflen = UT_Hook_GetArgValueByName(Context, "buflen", size_t);
+    int32  status;
+    size_t CopySize;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OS_SocketRecvFrom), buffer, buflen);
+
+        /* If CopyToLocal returns zero, this probably means no buffer was supplied,
+         * in which case just generate fill data and pretend it was read.
+         */
+        if (CopySize > 0)
+        {
+            status = CopySize;
+        }
+        else
+        {
+            memset(buffer, 0, buflen);
+            status = buflen;
+        }
+    }
+    else if (status > 0)
+    {
+        /* generate fill data for requested size */
+        memset(buffer, 0, status);
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketSendTo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketSendTo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    const void *buffer = UT_Hook_GetArgValueByName(Context, "buffer", const void *);
+    size_t      buflen = UT_Hook_GetArgValueByName(Context, "buflen", size_t);
+    int32       status;
+    size_t      CopySize;
+
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        CopySize = UT_Stub_CopyFromLocal(UT_KEY(OS_SocketSendTo), buffer, buflen);
+
+        /* If CopyFromLocal returns zero, this probably means no buffer was supplied,
+         * in which case just throw out the data and pretend it was written.
+         */
+        if (CopySize > 0)
+        {
+            status = CopySize;
+        }
+        else
+        {
+            status = buflen;
+        }
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, status);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *sock_id = UT_Hook_GetArgValueByName(Context, "sock_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_SocketGetIdByName), sock_id, sizeof(*sock_id)) < sizeof(*sock_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_STREAM, sock_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_socket_prop_t *sock_prop = UT_Hook_GetArgValueByName(Context, "sock_prop", OS_socket_prop_t *);
+    int32             status;
+    size_t            CopySize;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        /* The user may supply specific entries to return */
+        CopySize = UT_Stub_CopyToLocal(UT_KEY(OS_SocketGetInfo), sock_prop, sizeof(*sock_prop));
+        if (CopySize < sizeof(*sock_prop))
+        {
+            UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &sock_prop->creator);
+            strncpy(sock_prop->name, "ut", sizeof(sock_prop->name) - 1);
+            sock_prop->name[sizeof(sock_prop->name) - 1] = 0;
+        }
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketAddrInit' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketAddrInit(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_SockAddr_t *Addr = UT_Hook_GetArgValueByName(Context, "Addr", OS_SockAddr_t *);
+    int32          status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS && UT_Stub_CopyToLocal(UT_KEY(OS_SocketAddrInit), Addr, sizeof(*Addr)) < sizeof(*Addr))
+    {
+        memset(Addr, 0, sizeof(*Addr));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketAddrToString' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketAddrToString(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    char * buffer = UT_Hook_GetArgValueByName(Context, "buffer", char *);
+    size_t buflen = UT_Hook_GetArgValueByName(Context, "buflen", size_t);
+    int32  status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS && buflen > 0 && UT_Stub_CopyToLocal(UT_KEY(OS_SocketAddrToString), buffer, buflen) == 0)
+    {
+        strncpy(buffer, "UT-addr", buflen - 1);
+        buffer[buflen - 1] = 0;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketAddrFromString' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketAddrFromString(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_SockAddr_t *Addr = UT_Hook_GetArgValueByName(Context, "Addr", OS_SockAddr_t *);
+    int32          status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_SocketAddrFromString), Addr, sizeof(*Addr)) < sizeof(*Addr))
+    {
+        memset(Addr, 0, sizeof(*Addr));
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_SocketAddrGetPort' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_SocketAddrGetPort(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint16 *PortNum = UT_Hook_GetArgValueByName(Context, "PortNum", uint16 *);
+    int32   status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_SocketAddrGetPort), PortNum, sizeof(*PortNum)) < sizeof(*PortNum))
+    {
+        *PortNum = 0;
+    }
+}
+```
+
+### `osapi-sockets-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-sockets-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-sockets header
+ */
+
+#include "osapi-sockets.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_SocketAddrFromString(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketAddrGetPort(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketAddrInit(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketAddrToString(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketOpen(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketRecvFrom(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_SocketSendTo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAccept()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAccept(osal_id_t sock_id, osal_id_t *connsock_id, OS_SockAddr_t *Addr, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAccept, int32);
+
+    UT_GenStub_AddParam(OS_SocketAccept, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketAccept, osal_id_t *, connsock_id);
+    UT_GenStub_AddParam(OS_SocketAccept, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAccept, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketAccept, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAccept, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrFromString()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrFromString(OS_SockAddr_t *Addr, const char *string)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrFromString, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrFromString, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrFromString, const char *, string);
+
+    UT_GenStub_Execute(OS_SocketAddrFromString, Basic, UT_DefaultHandler_OS_SocketAddrFromString);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrFromString, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrGetPort()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrGetPort(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrGetPort, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrGetPort, uint16 *, PortNum);
+    UT_GenStub_AddParam(OS_SocketAddrGetPort, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketAddrGetPort, Basic, UT_DefaultHandler_OS_SocketAddrGetPort);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrGetPort, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrInit()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrInit(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrInit, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrInit, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrInit, OS_SocketDomain_t, Domain);
+
+    UT_GenStub_Execute(OS_SocketAddrInit, Basic, UT_DefaultHandler_OS_SocketAddrInit);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrInit, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrSetPort()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrSetPort(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrSetPort, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrSetPort, OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketAddrSetPort, uint16, PortNum);
+
+    UT_GenStub_Execute(OS_SocketAddrSetPort, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrSetPort, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketAddrToString()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketAddrToString(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketAddrToString, int32);
+
+    UT_GenStub_AddParam(OS_SocketAddrToString, char *, buffer);
+    UT_GenStub_AddParam(OS_SocketAddrToString, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketAddrToString, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketAddrToString, Basic, UT_DefaultHandler_OS_SocketAddrToString);
+
+    return UT_GenStub_GetReturnValue(OS_SocketAddrToString, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketBind()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketBind(osal_id_t sock_id, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketBind, int32);
+
+    UT_GenStub_AddParam(OS_SocketBind, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketBind, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketBind, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketBind, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketBindAddress()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketBindAddress(osal_id_t sock_id, const OS_SockAddr_t *Addr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketBindAddress, int32);
+
+    UT_GenStub_AddParam(OS_SocketBindAddress, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketBindAddress, const OS_SockAddr_t *, Addr);
+
+    UT_GenStub_Execute(OS_SocketBindAddress, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketBindAddress, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketConnect()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketConnect(osal_id_t sock_id, const OS_SockAddr_t *Addr, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketConnect, int32);
+
+    UT_GenStub_AddParam(OS_SocketConnect, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketConnect, const OS_SockAddr_t *, Addr);
+    UT_GenStub_AddParam(OS_SocketConnect, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketConnect, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketConnect, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketGetIdByName(osal_id_t *sock_id, const char *sock_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_SocketGetIdByName, osal_id_t *, sock_id);
+    UT_GenStub_AddParam(OS_SocketGetIdByName, const char *, sock_name);
+
+    UT_GenStub_Execute(OS_SocketGetIdByName, Basic, UT_DefaultHandler_OS_SocketGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_SocketGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketGetInfo(osal_id_t sock_id, OS_socket_prop_t *sock_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_SocketGetInfo, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketGetInfo, OS_socket_prop_t *, sock_prop);
+
+    UT_GenStub_Execute(OS_SocketGetInfo, Basic, UT_DefaultHandler_OS_SocketGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_SocketGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketListen()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketListen(osal_id_t sock_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketListen, int32);
+
+    UT_GenStub_AddParam(OS_SocketListen, osal_id_t, sock_id);
+
+    UT_GenStub_Execute(OS_SocketListen, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketListen, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketOpen()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketOpen(osal_id_t *sock_id, OS_SocketDomain_t Domain, OS_SocketType_t Type)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketOpen, int32);
+
+    UT_GenStub_AddParam(OS_SocketOpen, osal_id_t *, sock_id);
+    UT_GenStub_AddParam(OS_SocketOpen, OS_SocketDomain_t, Domain);
+    UT_GenStub_AddParam(OS_SocketOpen, OS_SocketType_t, Type);
+
+    UT_GenStub_Execute(OS_SocketOpen, Basic, UT_DefaultHandler_OS_SocketOpen);
+
+    return UT_GenStub_GetReturnValue(OS_SocketOpen, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketRecvFrom()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketRecvFrom(osal_id_t sock_id, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr, int32 timeout)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketRecvFrom, int32);
+
+    UT_GenStub_AddParam(OS_SocketRecvFrom, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketRecvFrom, void *, buffer);
+    UT_GenStub_AddParam(OS_SocketRecvFrom, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketRecvFrom, OS_SockAddr_t *, RemoteAddr);
+    UT_GenStub_AddParam(OS_SocketRecvFrom, int32, timeout);
+
+    UT_GenStub_Execute(OS_SocketRecvFrom, Basic, UT_DefaultHandler_OS_SocketRecvFrom);
+
+    return UT_GenStub_GetReturnValue(OS_SocketRecvFrom, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketSendTo()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketSendTo(osal_id_t sock_id, const void *buffer, size_t buflen, const OS_SockAddr_t *RemoteAddr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketSendTo, int32);
+
+    UT_GenStub_AddParam(OS_SocketSendTo, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketSendTo, const void *, buffer);
+    UT_GenStub_AddParam(OS_SocketSendTo, size_t, buflen);
+    UT_GenStub_AddParam(OS_SocketSendTo, const OS_SockAddr_t *, RemoteAddr);
+
+    UT_GenStub_Execute(OS_SocketSendTo, Basic, UT_DefaultHandler_OS_SocketSendTo);
+
+    return UT_GenStub_GetReturnValue(OS_SocketSendTo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_SocketShutdown()
+ * ----------------------------------------------------
+ */
+int32 OS_SocketShutdown(osal_id_t sock_id, OS_SocketShutdownMode_t Mode)
+{
+    UT_GenStub_SetupReturnBuffer(OS_SocketShutdown, int32);
+
+    UT_GenStub_AddParam(OS_SocketShutdown, osal_id_t, sock_id);
+    UT_GenStub_AddParam(OS_SocketShutdown, OS_SocketShutdownMode_t, Mode);
+
+    UT_GenStub_Execute(OS_SocketShutdown, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_SocketShutdown, int32);
+}
+```
+
+### `osapi-task-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-task-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-task.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *task_id = UT_Hook_GetArgValueByName(Context, "task_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *task_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_TASK);
+    }
+    else
+    {
+        *task_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t task_id = UT_Hook_GetArgValueByName(Context, "task_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_TASK, task_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskGetId' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskGetId(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t TaskId;
+    int32     status;
+
+    /* Unless set otherwise this returns a task ID that correlates to table position 1.
+     * This is for historical reasons, many old test cases assume this is the default */
+    if (!UT_Stub_GetInt32StatusCode(Context, &status))
+    {
+        status = 1;
+    }
+    UT_ObjIdCompose(status, OS_OBJECT_TYPE_OS_TASK, &TaskId);
+
+    UT_Stub_SetReturnValue(FuncKey, TaskId);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *task_id = UT_Hook_GetArgValueByName(Context, "task_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TaskGetIdByName), task_id, sizeof(*task_id)) < sizeof(*task_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, task_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_task_prop_t *task_prop = UT_Hook_GetArgValueByName(Context, "task_prop", OS_task_prop_t *);
+    int32           status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TaskGetInfo), task_prop, sizeof(*task_prop)) < sizeof(*task_prop))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &task_prop->creator);
+        task_prop->stack_size = OSAL_SIZE_C(100);
+        task_prop->priority   = OSAL_PRIORITY_C(150);
+        strncpy(task_prop->name, "UnitTest", sizeof(task_prop->name) - 1);
+        task_prop->name[sizeof(task_prop->name) - 1] = '\0';
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TaskFindIdBySystemData' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TaskFindIdBySystemData(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *task_id = UT_Hook_GetArgValueByName(Context, "task_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TaskFindIdBySystemData), task_id, sizeof(*task_id)) < sizeof(*task_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, task_id);
+    }
+}
+```
+
+### `osapi-task-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-task-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-task header
+ */
+
+#include "osapi-task.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_TaskCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TaskDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TaskFindIdBySystemData(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TaskGetId(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TaskGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TaskGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskCreate(osal_id_t *task_id, const char *task_name, osal_task_entry function_pointer,
+                    osal_stackptr_t stack_pointer, size_t stack_size, osal_priority_t priority, uint32 flags)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskCreate, int32);
+
+    UT_GenStub_AddParam(OS_TaskCreate, osal_id_t *, task_id);
+    UT_GenStub_AddParam(OS_TaskCreate, const char *, task_name);
+    UT_GenStub_AddParam(OS_TaskCreate, osal_task_entry, function_pointer);
+    UT_GenStub_AddParam(OS_TaskCreate, osal_stackptr_t, stack_pointer);
+    UT_GenStub_AddParam(OS_TaskCreate, size_t, stack_size);
+    UT_GenStub_AddParam(OS_TaskCreate, osal_priority_t, priority);
+    UT_GenStub_AddParam(OS_TaskCreate, uint32, flags);
+
+    UT_GenStub_Execute(OS_TaskCreate, Basic, UT_DefaultHandler_OS_TaskCreate);
+
+    return UT_GenStub_GetReturnValue(OS_TaskCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskDelay()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskDelay(uint32 millisecond)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskDelay, int32);
+
+    UT_GenStub_AddParam(OS_TaskDelay, uint32, millisecond);
+
+    UT_GenStub_Execute(OS_TaskDelay, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskDelay, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskDelete(osal_id_t task_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskDelete, int32);
+
+    UT_GenStub_AddParam(OS_TaskDelete, osal_id_t, task_id);
+
+    UT_GenStub_Execute(OS_TaskDelete, Basic, UT_DefaultHandler_OS_TaskDelete);
+
+    return UT_GenStub_GetReturnValue(OS_TaskDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskExit()
+ * ----------------------------------------------------
+ */
+void OS_TaskExit(void)
+{
+
+    UT_GenStub_Execute(OS_TaskExit, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskFindIdBySystemData()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskFindIdBySystemData(osal_id_t *task_id, const void *sysdata, size_t sysdata_size)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskFindIdBySystemData, int32);
+
+    UT_GenStub_AddParam(OS_TaskFindIdBySystemData, osal_id_t *, task_id);
+    UT_GenStub_AddParam(OS_TaskFindIdBySystemData, const void *, sysdata);
+    UT_GenStub_AddParam(OS_TaskFindIdBySystemData, size_t, sysdata_size);
+
+    UT_GenStub_Execute(OS_TaskFindIdBySystemData, Basic, UT_DefaultHandler_OS_TaskFindIdBySystemData);
+
+    return UT_GenStub_GetReturnValue(OS_TaskFindIdBySystemData, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskGetId()
+ * ----------------------------------------------------
+ */
+osal_id_t OS_TaskGetId(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskGetId, osal_id_t);
+
+    UT_GenStub_Execute(OS_TaskGetId, Basic, UT_DefaultHandler_OS_TaskGetId);
+
+    return UT_GenStub_GetReturnValue(OS_TaskGetId, osal_id_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskGetIdByName(osal_id_t *task_id, const char *task_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_TaskGetIdByName, osal_id_t *, task_id);
+    UT_GenStub_AddParam(OS_TaskGetIdByName, const char *, task_name);
+
+    UT_GenStub_Execute(OS_TaskGetIdByName, Basic, UT_DefaultHandler_OS_TaskGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_TaskGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskGetInfo(osal_id_t task_id, OS_task_prop_t *task_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_TaskGetInfo, osal_id_t, task_id);
+    UT_GenStub_AddParam(OS_TaskGetInfo, OS_task_prop_t *, task_prop);
+
+    UT_GenStub_Execute(OS_TaskGetInfo, Basic, UT_DefaultHandler_OS_TaskGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_TaskGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskInstallDeleteHandler()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskInstallDeleteHandler(osal_task_entry function_pointer)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskInstallDeleteHandler, int32);
+
+    UT_GenStub_AddParam(OS_TaskInstallDeleteHandler, osal_task_entry, function_pointer);
+
+    UT_GenStub_Execute(OS_TaskInstallDeleteHandler, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskInstallDeleteHandler, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TaskSetPriority()
+ * ----------------------------------------------------
+ */
+int32 OS_TaskSetPriority(osal_id_t task_id, osal_priority_t new_priority)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TaskSetPriority, int32);
+
+    UT_GenStub_AddParam(OS_TaskSetPriority, osal_id_t, task_id);
+    UT_GenStub_AddParam(OS_TaskSetPriority, osal_priority_t, new_priority);
+
+    UT_GenStub_Execute(OS_TaskSetPriority, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TaskSetPriority, int32);
+}
+```
+
+### `osapi-timebase-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-timebase-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-timebase.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimeBaseCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimeBaseCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *timebase_id = UT_Hook_GetArgValueByName(Context, "timebase_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *timebase_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_TIMEBASE);
+    }
+    else
+    {
+        *timebase_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimeBaseDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimeBaseDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t timebase_id = UT_Hook_GetArgValueByName(Context, "timebase_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimeBaseGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimeBaseGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *timebase_id = UT_Hook_GetArgValueByName(Context, "timebase_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TimeBaseGetIdByName), timebase_id, sizeof(*timebase_id)) < sizeof(*timebase_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimeBaseGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimeBaseGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_timebase_prop_t *timebase_prop = UT_Hook_GetArgValueByName(Context, "timebase_prop", OS_timebase_prop_t *);
+    int32               status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TimeBaseGetInfo), timebase_prop, sizeof(*timebase_prop)) < sizeof(*timebase_prop))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &timebase_prop->creator);
+        strncpy(timebase_prop->name, "Name", sizeof(timebase_prop->name) - 1);
+        timebase_prop->name[sizeof(timebase_prop->name) - 1] = '\0';
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimeBaseGetFreeRun' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimeBaseGetFreeRun(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    uint32 *freerun_val = UT_Hook_GetArgValueByName(Context, "freerun_val", uint32 *);
+    int32   status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TimeBaseGetFreeRun), freerun_val, sizeof(*freerun_val)) < sizeof(*freerun_val))
+    {
+        /*
+         * Use the call count such that the value increases with each successive call.
+         */
+        *freerun_val = UT_GetStubCount(FuncKey);
+    }
+}
+```
+
+### `osapi-timebase-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-timebase-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-timebase header
+ */
+
+#include "osapi-timebase.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_TimeBaseCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimeBaseDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimeBaseGetFreeRun(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimeBaseGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimeBaseGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseCreate(osal_id_t *timebase_id, const char *timebase_name, OS_TimerSync_t external_sync)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseCreate, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseCreate, osal_id_t *, timebase_id);
+    UT_GenStub_AddParam(OS_TimeBaseCreate, const char *, timebase_name);
+    UT_GenStub_AddParam(OS_TimeBaseCreate, OS_TimerSync_t, external_sync);
+
+    UT_GenStub_Execute(OS_TimeBaseCreate, Basic, UT_DefaultHandler_OS_TimeBaseCreate);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseDelete(osal_id_t timebase_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseDelete, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseDelete, osal_id_t, timebase_id);
+
+    UT_GenStub_Execute(OS_TimeBaseDelete, Basic, UT_DefaultHandler_OS_TimeBaseDelete);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseGetFreeRun()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseGetFreeRun(osal_id_t timebase_id, uint32 *freerun_val)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseGetFreeRun, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseGetFreeRun, osal_id_t, timebase_id);
+    UT_GenStub_AddParam(OS_TimeBaseGetFreeRun, uint32 *, freerun_val);
+
+    UT_GenStub_Execute(OS_TimeBaseGetFreeRun, Basic, UT_DefaultHandler_OS_TimeBaseGetFreeRun);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseGetFreeRun, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseGetIdByName(osal_id_t *timebase_id, const char *timebase_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseGetIdByName, osal_id_t *, timebase_id);
+    UT_GenStub_AddParam(OS_TimeBaseGetIdByName, const char *, timebase_name);
+
+    UT_GenStub_Execute(OS_TimeBaseGetIdByName, Basic, UT_DefaultHandler_OS_TimeBaseGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseGetInfo(osal_id_t timebase_id, OS_timebase_prop_t *timebase_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseGetInfo, osal_id_t, timebase_id);
+    UT_GenStub_AddParam(OS_TimeBaseGetInfo, OS_timebase_prop_t *, timebase_prop);
+
+    UT_GenStub_Execute(OS_TimeBaseGetInfo, Basic, UT_DefaultHandler_OS_TimeBaseGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimeBaseSet()
+ * ----------------------------------------------------
+ */
+int32 OS_TimeBaseSet(osal_id_t timebase_id, uint32 start_time, uint32 interval_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimeBaseSet, int32);
+
+    UT_GenStub_AddParam(OS_TimeBaseSet, osal_id_t, timebase_id);
+    UT_GenStub_AddParam(OS_TimeBaseSet, uint32, start_time);
+    UT_GenStub_AddParam(OS_TimeBaseSet, uint32, interval_time);
+
+    UT_GenStub_Execute(OS_TimeBaseSet, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimeBaseSet, int32);
+}
+```
+
+### `osapi-timer-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-timer-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-timer.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimerAdd' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimerAdd(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *timer_id = UT_Hook_GetArgValueByName(Context, "timer_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *timer_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_TIMECB);
+    }
+    else
+    {
+        *timer_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimerCreate' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimerCreate(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *timer_id = UT_Hook_GetArgValueByName(Context, "timer_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        *timer_id = UT_AllocStubObjId(OS_OBJECT_TYPE_OS_TIMECB);
+    }
+    else
+    {
+        *timer_id = UT_STUB_FAKE_OBJECT_ID;
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimerDelete' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimerDelete(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t timer_id = UT_Hook_GetArgValueByName(Context, "timer_id", osal_id_t);
+    int32     status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS)
+    {
+        UT_DeleteStubObjId(OS_OBJECT_TYPE_OS_TIMECB, timer_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimerGetIdByName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimerGetIdByName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t *timer_id = UT_Hook_GetArgValueByName(Context, "timer_id", osal_id_t *);
+    int32      status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TimerGetIdByName), timer_id, sizeof(*timer_id)) < sizeof(*timer_id))
+    {
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TIMECB, timer_id);
+    }
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_TimerGetInfo' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_TimerGetInfo(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    OS_timer_prop_t *timer_prop = UT_Hook_GetArgValueByName(Context, "timer_prop", OS_timer_prop_t *);
+    int32            status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+
+    if (status == OS_SUCCESS &&
+        UT_Stub_CopyToLocal(UT_KEY(OS_TimerGetInfo), timer_prop, sizeof(*timer_prop)) < sizeof(*timer_prop))
+    {
+        memset(timer_prop, 0, sizeof(*timer_prop));
+        UT_ObjIdCompose(1, OS_OBJECT_TYPE_OS_TASK, &timer_prop->creator);
+    }
+}
+```
+
+### `osapi-timer-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-timer-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-timer header
+ */
+
+#include "osapi-timer.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_TimerAdd(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimerCreate(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimerDelete(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimerGetIdByName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_TimerGetInfo(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerAdd()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerAdd(osal_id_t *timer_id, const char *timer_name, osal_id_t timebase_id, OS_ArgCallback_t callback_ptr,
+                  void *callback_arg)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerAdd, int32);
+
+    UT_GenStub_AddParam(OS_TimerAdd, osal_id_t *, timer_id);
+    UT_GenStub_AddParam(OS_TimerAdd, const char *, timer_name);
+    UT_GenStub_AddParam(OS_TimerAdd, osal_id_t, timebase_id);
+    UT_GenStub_AddParam(OS_TimerAdd, OS_ArgCallback_t, callback_ptr);
+    UT_GenStub_AddParam(OS_TimerAdd, void *, callback_arg);
+
+    UT_GenStub_Execute(OS_TimerAdd, Basic, UT_DefaultHandler_OS_TimerAdd);
+
+    return UT_GenStub_GetReturnValue(OS_TimerAdd, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerCreate()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerCreate(osal_id_t *timer_id, const char *timer_name, uint32 *clock_accuracy,
+                     OS_TimerCallback_t callback_ptr)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerCreate, int32);
+
+    UT_GenStub_AddParam(OS_TimerCreate, osal_id_t *, timer_id);
+    UT_GenStub_AddParam(OS_TimerCreate, const char *, timer_name);
+    UT_GenStub_AddParam(OS_TimerCreate, uint32 *, clock_accuracy);
+    UT_GenStub_AddParam(OS_TimerCreate, OS_TimerCallback_t, callback_ptr);
+
+    UT_GenStub_Execute(OS_TimerCreate, Basic, UT_DefaultHandler_OS_TimerCreate);
+
+    return UT_GenStub_GetReturnValue(OS_TimerCreate, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerDelete()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerDelete(osal_id_t timer_id)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerDelete, int32);
+
+    UT_GenStub_AddParam(OS_TimerDelete, osal_id_t, timer_id);
+
+    UT_GenStub_Execute(OS_TimerDelete, Basic, UT_DefaultHandler_OS_TimerDelete);
+
+    return UT_GenStub_GetReturnValue(OS_TimerDelete, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerGetIdByName()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerGetIdByName(osal_id_t *timer_id, const char *timer_name)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerGetIdByName, int32);
+
+    UT_GenStub_AddParam(OS_TimerGetIdByName, osal_id_t *, timer_id);
+    UT_GenStub_AddParam(OS_TimerGetIdByName, const char *, timer_name);
+
+    UT_GenStub_Execute(OS_TimerGetIdByName, Basic, UT_DefaultHandler_OS_TimerGetIdByName);
+
+    return UT_GenStub_GetReturnValue(OS_TimerGetIdByName, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerGetInfo()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerGetInfo(osal_id_t timer_id, OS_timer_prop_t *timer_prop)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerGetInfo, int32);
+
+    UT_GenStub_AddParam(OS_TimerGetInfo, osal_id_t, timer_id);
+    UT_GenStub_AddParam(OS_TimerGetInfo, OS_timer_prop_t *, timer_prop);
+
+    UT_GenStub_Execute(OS_TimerGetInfo, Basic, UT_DefaultHandler_OS_TimerGetInfo);
+
+    return UT_GenStub_GetReturnValue(OS_TimerGetInfo, int32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_TimerSet()
+ * ----------------------------------------------------
+ */
+int32 OS_TimerSet(osal_id_t timer_id, uint32 start_time, uint32 interval_time)
+{
+    UT_GenStub_SetupReturnBuffer(OS_TimerSet, int32);
+
+    UT_GenStub_AddParam(OS_TimerSet, osal_id_t, timer_id);
+    UT_GenStub_AddParam(OS_TimerSet, uint32, start_time);
+    UT_GenStub_AddParam(OS_TimerSet, uint32, interval_time);
+
+    UT_GenStub_Execute(OS_TimerSet, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_TimerSet, int32);
+}
+```
+
+### `osapi-version-handlers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-version-handlers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "osapi-version.h" /* OSAL public API for this subsystem */
+#include "utstub-helpers.h"
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetVersionString' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetVersionString(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    static const char DEFAULT[] = "UT";
+    void *            Buffer;
+    const char *      RetVal;
+
+    UT_GetDataBuffer(UT_KEY(OS_GetVersionString), &Buffer, NULL, NULL);
+    if (Buffer == NULL)
+    {
+        RetVal = DEFAULT;
+    }
+    else
+    {
+        RetVal = Buffer;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, RetVal);
+}
+
+/*
+ * -----------------------------------------------------------------
+ * Default handler implementation for 'OS_GetVersionCodeName' stub
+ * -----------------------------------------------------------------
+ */
+void UT_DefaultHandler_OS_GetVersionCodeName(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    static const char DEFAULT[] = "UT";
+    void *            Buffer;
+    const char *      RetVal;
+
+    UT_GetDataBuffer(UT_KEY(OS_GetVersionCodeName), &Buffer, NULL, NULL);
+    if (Buffer == NULL)
+    {
+        RetVal = DEFAULT;
+    }
+    else
+    {
+        RetVal = Buffer;
+    }
+
+    UT_Stub_SetReturnValue(FuncKey, RetVal);
+}
+```
+
+### `osapi-version-stubs.c`
+
+**경로:** `fsw/osal/src/ut-stubs/osapi-version-stubs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in osapi-version header
+ */
+
+#include "osapi-version.h"
+#include "utgenstub.h"
+
+void UT_DefaultHandler_OS_GetVersionCodeName(void *, UT_EntryKey_t, const UT_StubContext_t *);
+void UT_DefaultHandler_OS_GetVersionString(void *, UT_EntryKey_t, const UT_StubContext_t *);
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetBuildNumber()
+ * ----------------------------------------------------
+ */
+uint32 OS_GetBuildNumber(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetBuildNumber, uint32);
+
+    UT_GenStub_Execute(OS_GetBuildNumber, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(OS_GetBuildNumber, uint32);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetVersionCodeName()
+ * ----------------------------------------------------
+ */
+const char *OS_GetVersionCodeName(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetVersionCodeName, const char *);
+
+    UT_GenStub_Execute(OS_GetVersionCodeName, Basic, UT_DefaultHandler_OS_GetVersionCodeName);
+
+    return UT_GenStub_GetReturnValue(OS_GetVersionCodeName, const char *);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetVersionNumber()
+ * ----------------------------------------------------
+ */
+void OS_GetVersionNumber(uint8 VersionNumbers[4])
+{
+
+    UT_GenStub_Execute(OS_GetVersionNumber, Basic, NULL);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for OS_GetVersionString()
+ * ----------------------------------------------------
+ */
+const char *OS_GetVersionString(void)
+{
+    UT_GenStub_SetupReturnBuffer(OS_GetVersionString, const char *);
+
+    UT_GenStub_Execute(OS_GetVersionString, Basic, UT_DefaultHandler_OS_GetVersionString);
+
+    return UT_GenStub_GetReturnValue(OS_GetVersionString, const char *);
+}
+```
+
+### `utstub-helpers.c`
+
+**경로:** `fsw/osal/src/ut-stubs/utstub-helpers.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *
+ * Stub implementations for the functions defined in the OSAL API
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#include "utstub-helpers.h"
+
+#include "osapi-idmap.h"
+
+const uint32 UT_MAXOBJS[OS_OBJECT_TYPE_USER] = {[OS_OBJECT_TYPE_OS_TASK]     = OS_MAX_TASKS,
+                                                [OS_OBJECT_TYPE_OS_QUEUE]    = OS_MAX_QUEUES,
+                                                [OS_OBJECT_TYPE_OS_COUNTSEM] = OS_MAX_COUNT_SEMAPHORES,
+                                                [OS_OBJECT_TYPE_OS_BINSEM]   = OS_MAX_BIN_SEMAPHORES,
+                                                [OS_OBJECT_TYPE_OS_MUTEX]    = OS_MAX_MUTEXES,
+                                                [OS_OBJECT_TYPE_OS_TIMECB]   = OS_MAX_TIMERS,
+                                                [OS_OBJECT_TYPE_OS_MODULE]   = OS_MAX_MODULES,
+                                                [OS_OBJECT_TYPE_OS_STREAM]   = OS_MAX_NUM_OPEN_FILES,
+                                                [OS_OBJECT_TYPE_OS_TIMEBASE] = OS_MAX_TIMEBASES,
+                                                [OS_OBJECT_TYPE_OS_FILESYS]  = OS_MAX_FILE_SYSTEMS,
+                                                [OS_OBJECT_TYPE_OS_DIR]      = OS_MAX_NUM_OPEN_DIRS};
+
+static UT_ObjTypeState_t UT_ObjState[OS_OBJECT_TYPE_USER];
+
+/**
+ * Initialization function
+ */
+void UT_ClearAllStubObjects(void)
+{
+    /*
+     * Reset the fake ID numbers for create/delete operations
+     */
+    memset(UT_ObjState, 0, sizeof(UT_ObjState));
+}
+
+/*
+ * Helper function - "allocate" a fake object ID of the given type
+ */
+osal_id_t UT_AllocStubObjId(osal_objtype_t ObjType)
+{
+    UT_ObjTypeState_t *StatePtr;
+    uint8              ObjMask;
+    uint32             indx;
+    osal_id_t          Result;
+
+    UT_Stub_CallOnce(UT_ClearAllStubObjects);
+
+    if (ObjType == OS_OBJECT_TYPE_UNDEFINED || ObjType >= OS_OBJECT_TYPE_USER)
+    {
+        /* Code is broken, abort the test
+         * (This signifies an error in the stub code itself hence the abort)
+         */
+        UtAssert_Abort("ObjType out of range");
+    }
+
+    StatePtr = &UT_ObjState[ObjType];
+
+    if (StatePtr->LastIssueNumber < ((8 * sizeof(StatePtr->ValidBits)) - 1))
+    {
+        ++StatePtr->LastIssueNumber;
+    }
+
+    indx = StatePtr->LastIssueNumber;
+
+    ObjMask = 1 << (indx & 0x07);
+    /*
+     * Check for overlap/re-issue - this COULD happen when using
+     * the original (non-opaque) object IDs if a UT creates too many
+     * objects of a certain type.  There is really no way around this
+     * and it means the test needs to be revised to not create so many
+     * objects OR it needs to support opaque object IDs
+     */
+    if ((StatePtr->ValidBits[indx >> 3] & ObjMask) != 0)
+    {
+        UtAssert_Failed("OSAPI UT stub object overlap");
+    }
+    StatePtr->ValidBits[indx >> 3] |= ObjMask;
+
+    /*
+     * Finalize Object ID - put into proper range for type
+     */
+    UT_ObjIdCompose(indx, ObjType, &Result);
+
+    return Result;
+}
+
+/*
+ * Helper function - "deallocate" a fake object ID of the given type
+ */
+void UT_DeleteStubObjId(osal_objtype_t ObjType, osal_id_t ObjId)
+{
+    UT_ObjTypeState_t *StatePtr;
+    uint8              ObjMask;
+    osal_objtype_t     checktype;
+    uint32             checkidx;
+    bool               ObjWasValid;
+
+    UT_Stub_CallOnce(UT_ClearAllStubObjects);
+
+    UT_ObjIdDecompose(ObjId, &checkidx, &checktype);
+
+    /*
+     * Verify the object type
+     */
+    if (ObjType != checktype)
+    {
+        /* Calling code is broken, abort the test */
+        UtAssert_Failed("Object type is not correct");
+    }
+
+    if (checkidx >= (8 * sizeof(StatePtr->ValidBits)))
+    {
+        /* Calling code is broken */
+        UtAssert_Failed("ObjId out of range");
+    }
+
+    StatePtr = &UT_ObjState[ObjType];
+
+    /* Clear out any bit it could have been */
+    ObjWasValid = false;
+    ObjMask     = 1 << (checkidx & 0x07);
+    if ((StatePtr->ValidBits[checkidx >> 3] & ObjMask) != 0)
+    {
+        ObjWasValid = true;
+        StatePtr->ValidBits[checkidx >> 3] &= ~ObjMask;
+    }
+
+    /* Unfortunately, some code has a habit of just blindly calling "Delete"
+     * regardless of whether those entities were created or not.  This is
+     * an issue on the non-opaque OSAL implementations and will produce
+     * thousands of failed test cases, so this can only be verified
+     * on the opaque objid versions.
+     */
+    if (!ObjWasValid)
+    {
+        /*
+         * These stubs can be more strict about the usage patterns.
+         *
+         * In general any app calling delete on an ID they did not create likely
+         * signifies an error in that application.
+         */
+        UtAssert_Failed("Deleted object that was never created");
+    }
+}
+
+void UT_ObjIdCompose(uint32 indx, osal_objtype_t objtype, osal_id_t *id)
+{
+    /* note - the OS_ObjectIdFromInteger() is an inline function,
+     * and therefore this uses the real thing and not a stub  */
+    *id = OS_ObjectIdFromInteger((unsigned long)indx | ((0x4000UL | objtype) << 16));
+}
+
+void UT_ObjIdDecompose(osal_id_t id, uint32 *indx, osal_objtype_t *objtype)
+{
+    unsigned long idv = OS_ObjectIdToInteger(id);
+    *indx             = idv & 0xFFFFUL;
+    *objtype          = (idv >> 16) ^ 0x4000UL;
+}
+```
+
+### `utstub-helpers.h`
+
+**경로:** `fsw/osal/src/ut-stubs/utstub-helpers.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Internal header file for OSAL UT stub functions
+ *
+ * The stub implementation can be used for unit testing applications built
+ * on top of OSAL.  The stubs do not do any real function, but allow
+ * the return code to be crafted such that error paths in the application
+ * can be executed.
+ */
+
+#ifndef OSAPI_UTSTUB_INTERNAL_H
+#define OSAPI_UTSTUB_INTERNAL_H
+
+/*
+ * Commonly used C library headers
+ */
+#include <string.h>
+
+/*
+ * Include all relevant OSAPI (public) and UT-assert headers
+ */
+#include "common_types.h"
+#include "osapi-error.h"
+#include "osapi-constants.h"
+#include "osapi-idmap.h"
+#include "utstubs.h"
+#include "utbsp.h"
+#include "utassert.h"
+#include "uttools.h"
+
+/*
+ * A constant to use in stubs where no other value is applicable
+ */
+#define UT_STUB_FAKE_OBJECT_ID ((osal_id_t) {0xDEADBEEFU})
+
+/*
+ * Size of the bitmask for the OSAL fake object ID validity table
+ * Set this according to the highest anticipated number of OSAL objects
+ * simultaneously created by any given test case (it is reset when the
+ * test is reset).
+ *
+ * Keep as a power of two, and actual number of bits is 8x this value
+ * (Default value of 16 allows for up to 128 objects to be created in
+ * a single test case, far more than anything I've seen yet)
+ */
+#define OSAL_MAX_VALID_PER_TYPE 32
+
+typedef struct
+{
+    uint32 LastIssueNumber;
+    uint8  ValidBits[OSAL_MAX_VALID_PER_TYPE];
+} UT_ObjTypeState_t;
+
+/**
+ * Table lookup for the maximum number of OSAL objects by object type
+ */
+extern const uint32 UT_MAXOBJS[];
+
+/*
+ * Helper function - "allocate" a fake object ID of the given type
+ */
+osal_id_t UT_AllocStubObjId(osal_objtype_t ObjType);
+
+/*
+ * Helper function - "deallocate" a fake object ID of the given type
+ */
+void UT_DeleteStubObjId(osal_objtype_t ObjType, osal_id_t ObjId);
+
+/*
+ * Helper function - Clear all OSAL UT stub objects
+ * Resets the stub object table back to its initial/empty state
+ */
+void UT_ClearAllStubObjects(void);
+
+/*
+ * Compose/Decompose a unit test object ID from an index and type.
+ * This is the UT-specific version not related to the OSAL runtime version.
+ */
+void UT_ObjIdCompose(uint32 indx, osal_objtype_t objtype, osal_id_t *id);
+void UT_ObjIdDecompose(osal_id_t id, uint32 *indx, osal_objtype_t *objtype);
+
+#endif
+```

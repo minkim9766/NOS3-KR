@@ -3,16 +3,71 @@
 
 **경로:** `components/arducam/gsw/ARDUCAM/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--arducam_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/arducam/gsw/ARDUCAM/procedures/tests/`](tests/index) — 폴더
-- [`components/arducam/gsw/ARDUCAM/procedures/arducam_test.rb`](file--arducam_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `arducam_test.rb`
+
+**경로:** `components/arducam/gsw/ARDUCAM/procedures/arducam_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'arducam_lib.rb'
+
+class ARDUCAM_Functional_Test < Cosmos::Test
+  def setup
+    safe_arducam()
+  end
+
+  def test_application
+      start("tests/arducam_app_test.rb")
+  end
+
+  def test_device
+    start("tests/arducam_device_test.rb")
+  end
+
+  def teardown
+    safe_arducam()
+  end
+end
+
+class ARDUCAM_Automated_Scenario_Test < Cosmos::Test
+  def setup 
+    safe_arducam()
+  end
+
+  def test_AST
+      start("tests/arducam_ast_test.rb")
+  end
+
+  def teardown
+    safe_arducam()
+  end
+end
+
+class Arducam_Test < Cosmos::TestSuite
+  def initialize
+      super()
+      add_test('ARDUCAM_Functional_Test')
+      add_test('ARDUCAM_Automated_Scenario_Test')
+  end
+
+  def setup
+    safe_arducam()
+  end
+  
+  def teardown
+    safe_arducam()
+  end
+end
+```

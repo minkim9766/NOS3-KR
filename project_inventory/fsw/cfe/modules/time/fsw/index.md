@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/time/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ inc/index
 src/index
 ```
 
-## 항목
-
-- [`fsw/cfe/modules/time/fsw/inc/`](inc/index) — 폴더
-- [`fsw/cfe/modules/time/fsw/src/`](src/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

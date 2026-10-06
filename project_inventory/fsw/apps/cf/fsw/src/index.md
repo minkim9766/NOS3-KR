@@ -3,78 +3,15913 @@
 
 **경로:** `fsw/apps/cf/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cf_app.c`
 
-file--cf_app.c
-file--cf_app.h
-file--cf_assert.h
-file--cf_cfdp.c
-file--cf_cfdp.h
-file--cf_cfdp_dispatch.c
-file--cf_cfdp_dispatch.h
-file--cf_cfdp_pdu.h
-file--cf_cfdp_r.c
-file--cf_cfdp_r.h
-file--cf_cfdp_s.c
-file--cf_cfdp_s.h
-file--cf_cfdp_sbintf.c
-file--cf_cfdp_sbintf.h
-file--cf_cfdp_types.h
-file--cf_chunk.c
-file--cf_chunk.h
-file--cf_clist.c
-file--cf_clist.h
-file--cf_cmd.c
-file--cf_cmd.h
-file--cf_codec.c
-file--cf_codec.h
-file--cf_crc.c
-file--cf_crc.h
-file--cf_logical_pdu.h
-file--cf_playback.c
-file--cf_timer.c
-file--cf_timer.h
-file--cf_utils.c
-file--cf_utils.h
-file--cf_verify.h
-file--cf_version.h
+**경로:** `fsw/apps/cf/fsw/src/cf_app.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CF Application main application source file
+ *
+ *  This file contains the functions that initialize the application and link
+ *  all logic and functionality to the CFS.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_version.h"
+#include "cf_cmd.h"
+
+#include <string.h>
+
+CF_AppData_t CF_AppData;
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_HkCmd(void)
+{
+    CFE_MSG_SetMsgTime(&CF_AppData.hk.tlm_header.Msg, CFE_TIME_GetTime());
+    /* return value ignored */ CFE_SB_TransmitMsg(&CF_AppData.hk.tlm_header.Msg, true);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CheckTables(void)
+{
+    CFE_Status_t status;
+
+    /* check the table for an update only if engine is disabled */
+    if (!CF_AppData.engine.enabled)
+    {
+        /*
+         * NOTE: As of CFE 7.0 (Caelum), some the CFE TBL APIs return success codes
+         * other than CFE_SUCCESS, so it is not sufficient to check for only this
+         * result here.  For example they may return something like CFE_TBL_INFO_UPDATED.
+         * But from the standpoint of this routine, they are all success, because the
+         * function still did its expected job.
+         *
+         * For now, the safest way to check is to check for negative values,
+         * as the alt-success codes are in the positive range by design, and
+         * error codes are all in the negative range of CFE_Status_t.
+         *
+         * This should continue to work even if CFE TBL APIs change to
+         * remove the problematic alt-success codes at some point.
+         */
+        status = CFE_TBL_ReleaseAddress(CF_AppData.config_handle);
+        if (status < CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_CHECK_REL, CFE_EVS_EventType_ERROR,
+                              "CF: error in CFE_TBL_ReleaseAddress (check), returned 0x%08lx", (unsigned long)status);
+            CF_AppData.run_status = CFE_ES_RunStatus_APP_ERROR;
+        }
+
+        status = CFE_TBL_Manage(CF_AppData.config_handle);
+        if (status < CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_CHECK_MAN, CFE_EVS_EventType_ERROR,
+                              "CF: error in CFE_TBL_Manage (check), returned 0x%08lx", (unsigned long)status);
+            CF_AppData.run_status = CFE_ES_RunStatus_APP_ERROR;
+        }
+
+        status = CFE_TBL_GetAddress((void *)&CF_AppData.config_table, CF_AppData.config_handle);
+        if (status < CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_CHECK_GA, CFE_EVS_EventType_ERROR,
+                              "CF: failed to get table address (check), returned 0x%08lx", (unsigned long)status);
+            CF_AppData.run_status = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_ValidateConfigTable(void *tbl_ptr)
+{
+    CF_ConfigTable_t * tbl = (CF_ConfigTable_t *)tbl_ptr;
+    int32              ret; /* initialized below */
+    static const int32 no_ticks_per_second = -1;
+    static const int32 crc_alignment       = -2;
+    static const int32 outgoing_chunk_size = -3;
+
+    if (!tbl->ticks_per_second)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_INIT_TPS, CFE_EVS_EventType_ERROR, "CF: config table has zero ticks per second");
+        ret = no_ticks_per_second;
+    }
+    else if (!tbl->rx_crc_calc_bytes_per_wakeup || (tbl->rx_crc_calc_bytes_per_wakeup & 0x3ff))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_INIT_CRC_ALIGN, CFE_EVS_EventType_ERROR,
+                          "CF: config table has rx crc size not aligned with 1024");
+        ret = crc_alignment; /* must be 1024-byte aligned */
+    }
+    else if (tbl->outgoing_file_chunk_size > sizeof(CF_CFDP_PduFileDataContent_t))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_INIT_OUTGOING_SIZE, CFE_EVS_EventType_ERROR,
+                          "CF: config table has outgoing file chunk size too large");
+        ret = outgoing_chunk_size; /* must be smaller than file data character array */
+    }
+    else
+    {
+        ret = CFE_SUCCESS;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_TableInit(void)
+{
+    int32 status = CFE_SUCCESS;
+
+    status = CFE_TBL_Register(&CF_AppData.config_handle, CF_CONFIG_TABLE_NAME, sizeof(CF_ConfigTable_t),
+                              CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_LOAD_DUMP, CF_ValidateConfigTable);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_REG, CFE_EVS_EventType_ERROR,
+                          "CF: error registering table, returned 0x%08lx", (unsigned long)status);
+    }
+    else
+    {
+        status = CFE_TBL_Load(CF_AppData.config_handle, CFE_TBL_SRC_FILE, CF_CONFIG_TABLE_FILENAME);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_LOAD, CFE_EVS_EventType_ERROR,
+                              "CF: error loading table, returned 0x%08lx", (unsigned long)status);
+        }
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        status = CFE_TBL_Manage(CF_AppData.config_handle);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_MANAGE, CFE_EVS_EventType_ERROR,
+                              "CF: error in CFE_TBL_Manage, returned 0x%08lx", (unsigned long)status);
+        }
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        status = CFE_TBL_GetAddress((void **)&CF_AppData.config_table, CF_AppData.config_handle);
+        /* status will be CFE_TBL_INFO_UPDATED because it was just loaded, but we can use CFE_SUCCESS too */
+        if ((status != CFE_TBL_INFO_UPDATED) && (status != CFE_SUCCESS))
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_TBL_GETADDR, CFE_EVS_EventType_ERROR,
+                              "CF: error getting table address, returned 0x%08lx", (unsigned long)status);
+        }
+        else
+        {
+            status = CFE_SUCCESS;
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_Init(void)
+{
+    int32                            status       = CFE_SUCCESS;
+    static const CFE_SB_MsgId_Atom_t MID_VALUES[] = {CF_CMD_MID, CF_SEND_HK_MID, CF_WAKE_UP_MID};
+    uint32                           i;
+
+    CF_AppData.run_status = CFE_ES_RunStatus_APP_RUN;
+
+    CFE_MSG_Init(&CF_AppData.hk.tlm_header.Msg, CFE_SB_ValueToMsgId(CF_HK_TLM_MID), sizeof(CF_AppData.hk));
+
+    status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("CF app: error registering with EVS, returned 0x%08lx", (unsigned long)status);
+    }
+    else
+    {
+        status = CFE_SB_CreatePipe(&CF_AppData.cmd_pipe, CF_PIPE_DEPTH, CF_PIPE_NAME);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("CF app: error creating pipe %s, returned 0x%08lx", CF_PIPE_NAME,
+                                 (unsigned long)status);
+        }
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        for (i = 0; i < (sizeof(MID_VALUES) / sizeof(MID_VALUES[0])); ++i)
+        {
+            status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(MID_VALUES[i]), CF_AppData.cmd_pipe);
+            if (status != CFE_SUCCESS)
+            {
+                CFE_ES_WriteToSysLog("CF app: failed to subscribe to MID 0x%04lx, returned 0x%08lx",
+                                     (unsigned long)MID_VALUES[i], (unsigned long)status);
+                break;
+            }
+        }
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        status = CF_TableInit(); /* function sends event internally */
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        status = CF_CFDP_InitEngine(); /* function sends event internally */
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        status =
+            CFE_EVS_SendEvent(CF_EID_INF_INIT, CFE_EVS_EventType_INFORMATION, "CF Initialized. Version %d.%d.%d.%d",
+                              CF_MAJOR_VERSION, CF_MINOR_VERSION, CF_REVISION, CF_MISSION_REV);
+        if (status != CFE_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("CF: error sending init event, returned 0x%08lx", (unsigned long)status);
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_WakeUp(void)
+{
+    CFE_ES_PerfLogEntry(CF_PERF_ID_CYCLE_ENG);
+    CF_CFDP_CycleEngine();
+    CFE_ES_PerfLogExit(CF_PERF_ID_CYCLE_ENG);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ProcessMsg(CFE_SB_Buffer_t *msg)
+{
+    CFE_SB_MsgId_t msg_id = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetMsgId(&msg->Msg, &msg_id);
+
+    switch (CFE_SB_MsgIdToValue(msg_id))
+    {
+        case CF_CMD_MID:
+            CF_ProcessGroundCommand(msg);
+            break;
+
+        case CF_WAKE_UP_MID:
+            CF_WakeUp();
+            break;
+
+        case CF_SEND_HK_MID:
+            CF_HkCmd();
+            CF_CheckTables();
+            break;
+
+        default:
+            ++CF_AppData.hk.counters.err;
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_CMD_LENGTH, CFE_EVS_EventType_ERROR,
+                              "CF: invalid command packet id=0x%lx", (unsigned long)CFE_SB_MsgIdToValue(msg_id));
+            break;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Entry point function
+ * See description in cf_app.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_AppMain(void)
+{
+    int32            status;
+    CFE_SB_Buffer_t *msg;
+
+    CFE_ES_PerfLogEntry(CF_PERF_ID_APPMAIN);
+
+    status = CF_Init();
+    if (status != CFE_SUCCESS)
+    {
+        CF_AppData.run_status = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    msg = NULL;
+
+    while (CFE_ES_RunLoop(&CF_AppData.run_status))
+    {
+        CFE_ES_PerfLogExit(CF_PERF_ID_APPMAIN);
+
+        status = CFE_SB_ReceiveBuffer(&msg, CF_AppData.cmd_pipe, CF_RCVMSG_TIMEOUT);
+        CFE_ES_PerfLogEntry(CF_PERF_ID_APPMAIN);
+
+        /*
+         * note that CFE_SB_ReceiveBuffer() guarantees that a CFE_SUCCESS status is accompanied by
+         * a valid (non-NULL) output message pointer.  However the unit test can force this condition.
+         */
+        if (status == CFE_SUCCESS && msg != NULL)
+        {
+            CF_ProcessMsg(msg);
+        }
+        else if (status != CFE_SB_TIME_OUT && status != CFE_SB_NO_MESSAGE)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_MSG_RECV, CFE_EVS_EventType_ERROR,
+                              "CF: exiting due to CFE_SB_ReceiveBuffer error 0x%08lx", (unsigned long)status);
+            CF_AppData.run_status = CFE_ES_RunStatus_APP_ERROR;
+        }
+        else
+        {
+            /* nothing */
+        }
+    }
+
+    CFE_ES_PerfLogExit(CF_PERF_ID_APPMAIN);
+    CFE_ES_ExitApp(CF_AppData.run_status);
+}
 ```
 
-## 항목
+### `cf_app.h`
 
-- [`fsw/apps/cf/fsw/src/cf_app.c`](file--cf_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_app.h`](file--cf_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_assert.h`](file--cf_assert.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp.c`](file--cf_cfdp.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp.h`](file--cf_cfdp.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_dispatch.c`](file--cf_cfdp_dispatch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_dispatch.h`](file--cf_cfdp_dispatch.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_pdu.h`](file--cf_cfdp_pdu.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_r.c`](file--cf_cfdp_r.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_r.h`](file--cf_cfdp_r.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_s.c`](file--cf_cfdp_s.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_s.h`](file--cf_cfdp_s.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_sbintf.c`](file--cf_cfdp_sbintf.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_sbintf.h`](file--cf_cfdp_sbintf.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cfdp_types.h`](file--cf_cfdp_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_chunk.c`](file--cf_chunk.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_chunk.h`](file--cf_chunk.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_clist.c`](file--cf_clist.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_clist.h`](file--cf_clist.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cmd.c`](file--cf_cmd.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_cmd.h`](file--cf_cmd.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_codec.c`](file--cf_codec.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_codec.h`](file--cf_codec.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_crc.c`](file--cf_crc.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_crc.h`](file--cf_crc.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_logical_pdu.h`](file--cf_logical_pdu.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_playback.c`](file--cf_playback.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_timer.c`](file--cf_timer.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_timer.h`](file--cf_timer.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_utils.c`](file--cf_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_utils.h`](file--cf_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_verify.h`](file--cf_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/src/cf_version.h`](file--cf_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/cf/fsw/src/cf_app.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * The CF Application main application header file
+ */
+
+#ifndef CF_APP_H
+#define CF_APP_H
+
+#include "cfe.h"
+
+#include "cf_msg.h"
+#include "cf_msgids.h"
+#include "cf_tbldefs.h"
+#include "cf_platform_cfg.h"
+#include "cf_cfdp.h"
+#include "cf_clist.h"
+
+/**
+ * @brief The name of the application command pipe for CF
+ */
+#define CF_PIPE_NAME ("CF_CMD_PIPE")
+
+/**
+ * @brief A common prefix for all data pipes for CF
+ */
+#define CF_CHANNEL_PIPE_PREFIX ("CF_CHAN_")
+
+/**
+ * @brief The CF application global state structure
+ *
+ * This contains all variables related to CF application state
+ */
+typedef struct
+{
+    CF_HkPacket_t hk;
+
+    uint32 run_status;
+
+    CFE_SB_PipeId_t cmd_pipe;
+
+    CFE_TBL_Handle_t  config_handle;
+    CF_ConfigTable_t *config_table;
+
+    CF_Engine_t engine;
+} CF_AppData_t;
+
+/**
+ * @brief Singleton instance of the application global data
+ */
+extern CF_AppData_t CF_AppData;
+
+/************************************************************************/
+/** @brief Send CF housekeeping packet
+ *
+ * @par Description
+ *      The command to send the CF housekeeping packet
+ *
+ * @par Assumptions, External Events, and Notes:
+ *      None
+ */
+void CF_HkCmd(void);
+
+/************************************************************************/
+/** @brief Checks to see if a table update is pending, and perform it.
+ *
+ * @par Description
+ *       Updates the table if the engine is disabled.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ */
+void CF_CheckTables(void);
+
+/************************************************************************/
+/** @brief Validation function for config table.
+ *
+ * @par Description
+ *       Checks that the config table being loaded has correct data.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @retval Returns anything else on error.
+ *
+ */
+int32 CF_ValidateConfigTable(void *tbl_ptr);
+
+/************************************************************************/
+/** @brief Load the table on application start
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @retval Returns anything else on error.
+ *
+ */
+int32 CF_TableInit(void);
+
+/************************************************************************/
+/** @brief CF app init function
+ *
+ * @par Description
+ *       Initializes all aspects of the CF application. Messages,
+ *       pipes, events, table, and the cfdp engine.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       This must only be called once.
+ *
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @retval Returns anything else on error.
+ *
+ */
+int32 CF_Init(void);
+
+/************************************************************************/
+/** @brief CF wakeup function
+ *
+ * @par Description
+ *       Performs a single engine cycle for each wakeup
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ */
+void CF_WakeUp(void);
+
+/************************************************************************/
+/** @brief CF message processing function
+ *
+ * @par Description
+ *       Initializes all aspects of the CF application. Messages,
+ *       pipes, events, table, and the cfdp engine.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ */
+void CF_ProcessMsg(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief CF app entry point
+ *
+ * @par Description
+ *       Main entry point of CF application.
+ *       Calls the init function and manages the app run loop.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       This must only be called once.
+ *
+ */
+void CF_AppMain(void);
+
+#endif /* !CF_APP_H */
+```
+
+### `cf_assert.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_assert.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *  The CF Application CF_Assert macro
+ */
+
+#ifndef CF_ASSERT_H
+#define CF_ASSERT_H
+
+#include "cfe.h"
+
+/**
+ * \name CF assert macro
+ *
+ * CF_Assert statements within the code are primarily informational for developers,
+ * as the conditions within them should always be true.  Barring any unforeseen
+ * bugs in the code, they should never get triggered.  However, if the code is
+ * modified, these conditions could happen, so it is still worthwhile to keep
+ * these statements in the source code, so they can be enabled if necessary.
+ *
+ * The debug build assert translates CF_Assert to the system assert.
+ * Note that asserts may still get disabled
+ * if building with NDEBUG flag set, even if CF_DEBUG_BUILD flag is enabled.
+ *
+ * It should be impossible to get any conditions which are asserted, so it should
+ * be safe to turn these off via the normal build assert.  This is the configuration
+ * that the code should be normally tested and verified in.
+ * \{
+ */
+
+#ifdef CF_DEBUG_BUILD
+
+#include <assert.h>
+
+/**
+ * \brief Debug build assert
+ */
+#define CF_Assert(x) (assert(x))
+
+#else                /* CF_DEBUG_BUILD */
+
+/**
+ * \brief Normal build assert
+ */
+#define CF_Assert(x) /* no-op */
+
+#endif /* CF_DEBUG_BUILD */
+
+/**\}*/
+
+#endif /* !CF_ASSERT_H */
+```
+
+### `cf_cfdp.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application main cfdp engine and pdu parsing implementation
+ *
+ *  This file contains two sets of functions. The first is what is needed
+ *  to deal with CFDP PDUs. Specifically validating them for correctness
+ *  and ensuring the byte-order is correct for the target. The second
+ *  is incoming and outgoing CFDP PDUs pass through here. All receive
+ *  CFDP PDU logic is performed here and the data is passed to the
+ *  R (rx) and S (tx) logic.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_s.h"
+#include "cf_cfdp_dispatch.h"
+#include "cf_cfdp_sbintf.h"
+
+#include <string.h>
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeStart(CF_EncoderState_t *penc, void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size)
+{
+    /* Clear the PDU buffer structure to start */
+    memset(ph, 0, sizeof(*ph));
+
+    /* attach encoder object to PDU buffer which is attached to SB (encapsulation) buffer */
+    penc->base = (uint8 *)msgbuf;
+    ph->penc   = penc;
+
+    CF_CFDP_CodecReset(&penc->codec_state, total_size);
+
+    /*
+     * adjust so that the base points to the actual PDU Header, this makes the offset
+     * refer to the real offset within the CFDP PDU, rather than the offset of the SB
+     * msg container.
+     */
+    if (total_size > encap_hdr_size)
+    {
+        penc->codec_state.max_size -= encap_hdr_size;
+        penc->base += encap_hdr_size;
+    }
+    else
+    {
+        CF_CFDP_CodecSetDone(&penc->codec_state);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeStart(CF_DecoderState_t *pdec, const void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size)
+{
+    /* Clear the PDU buffer structure to start */
+    memset(ph, 0, sizeof(*ph));
+
+    /* attach decoder object to PDU buffer which is attached to SB (encapsulation) buffer */
+    pdec->base = (const uint8 *)msgbuf;
+    ph->pdec   = pdec;
+
+    CF_CFDP_CodecReset(&pdec->codec_state, total_size);
+
+    /*
+     * adjust so that the base points to the actual PDU Header, this makes the offset
+     * refer to the real offset within the CFDP PDU, rather than the offset of the SB
+     * msg container.
+     */
+    if (total_size > encap_hdr_size)
+    {
+        pdec->codec_state.max_size -= encap_hdr_size;
+        pdec->base += encap_hdr_size;
+    }
+    else
+    {
+        CF_CFDP_CodecSetDone(&pdec->codec_state);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_ArmAckTimer(CF_Transaction_t *t)
+{
+    CF_Timer_InitRelSec(&t->ack_timer, CF_AppData.config_table->chan[t->chan_num].ack_timer_s);
+    t->flags.com.ack_timer_armed = 1;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline CF_CFDP_Class_t CF_CFDP_GetClass(const CF_Transaction_t *t)
+{
+    CF_Assert(t->flags.com.q_index != CF_QueueIdx_FREE);
+    return !!((t->state == CF_TxnState_S2) || (t->state == CF_TxnState_R2));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline int CF_CFDP_IsSender(CF_Transaction_t *t)
+{
+    CF_Assert(t->flags.com.q_index != CF_QueueIdx_FREE);
+    /* the state could actually be CF_TxnState_IDLE, which is still not a sender. This would
+     * be an unused transaction in the RX (CF_CFDP_ReceiveMessage) path. */
+    return !!((t->state == CF_TxnState_S1) || (t->state == CF_TxnState_S2));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_CFDP_ArmInactTimer(CF_Transaction_t *t)
+{
+    CF_Timer_InitRelSec(&t->inactivity_timer, CF_AppData.config_table->chan[t->chan_num].inactivity_timer_s);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    static const CF_CFDP_TxnRecvDispatchTable_t state_fns = {.rx = {[CF_TxnState_IDLE] = CF_CFDP_RecvIdle,
+                                                                    [CF_TxnState_R1]   = CF_CFDP_R1_Recv,
+                                                                    [CF_TxnState_S1]   = CF_CFDP_S1_Recv,
+                                                                    [CF_TxnState_R2]   = CF_CFDP_R2_Recv,
+                                                                    [CF_TxnState_S2]   = CF_CFDP_S2_Recv,
+                                                                    [CF_TxnState_DROP] = CF_CFDP_RecvDrop}};
+
+    CF_CFDP_RxStateDispatch(t, ph, &state_fns);
+    CF_CFDP_ArmInactTimer(t); /* whenever a packet was received by the other size, always arm its inactivity timer */
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static void CF_CFDP_DispatchTx(CF_Transaction_t *t)
+{
+    static const CF_CFDP_TxnSendDispatchTable_t state_fns = {
+        .tx = {[CF_TxnState_S1] = CF_CFDP_S1_Tx, [CF_TxnState_S2] = CF_CFDP_S2_Tx}};
+
+    CF_CFDP_TxStateDispatch(t, &state_fns);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static CF_ChunkWrapper_t *CF_CFDP_FindUnusedChunks(CF_Channel_t *c, CF_Direction_t dir)
+{
+    CF_ChunkWrapper_t *ret;
+
+    CF_Assert(dir < CF_Direction_NUM);
+    CF_Assert(c->cs[dir]);
+
+    ret = container_of(CF_CList_Pop(&c->cs[dir]), CF_ChunkWrapper_t, cl_node);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static void CF_CFDP_SetPduLength(CF_Logical_PduBuffer_t *ph)
+{
+    uint16 final_pos;
+
+    /* final position of the encoder state should reflect the entire PDU length */
+    final_pos = CF_CODEC_GET_POSITION(ph->penc);
+
+    if (final_pos >= ph->pdu_header.header_encoded_length)
+    {
+        /* the value that goes into the packet is length _after_ header */
+        ph->pdu_header.data_encoded_length = final_pos - ph->pdu_header.header_encoded_length;
+    }
+
+    CF_CFDP_EncodeHeaderFinalSize(ph->penc, &ph->pdu_header);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_Logical_PduBuffer_t *CF_CFDP_ConstructPduHeader(const CF_Transaction_t *t, CF_CFDP_FileDirective_t directive_code,
+                                                   CF_EntityId_t src_eid, CF_EntityId_t dst_eid, bool towards_sender,
+                                                   CF_TransactionSeq_t tsn, bool silent)
+{
+    /* directive_code == 0 if file data */
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduHeader_t *hdr;
+    uint8                   eid_len;
+
+    ph = CF_CFDP_MsgOutGet(t, silent);
+
+    if (ph)
+    {
+        hdr = &ph->pdu_header;
+
+        hdr->version   = 1;
+        hdr->pdu_type  = (directive_code == 0); /* set to '1' for file data pdu, '0' for a directive pdu */
+        hdr->direction = (towards_sender != 0); /* set to '1' for toward sender, '0' for toward receiver */
+        hdr->txm_mode  = (CF_CFDP_GetClass(t) == CF_CFDP_CLASS_1); /* set to '1' for class 1 data, '0' for class 2 */
+
+        /* choose the larger of the two EIDs to determine size */
+        if (src_eid > dst_eid)
+        {
+            eid_len = CF_CFDP_GetValueEncodedSize(src_eid);
+        }
+        else
+        {
+            eid_len = CF_CFDP_GetValueEncodedSize(dst_eid);
+        }
+
+        /*
+         * This struct holds the "real" length - when assembled into the final packet
+         * this is encoded as 1 less than this value
+         */
+        hdr->eid_length     = eid_len;
+        hdr->txn_seq_length = CF_CFDP_GetValueEncodedSize(tsn);
+
+        hdr->source_eid      = src_eid;
+        hdr->destination_eid = dst_eid;
+        hdr->sequence_num    = tsn;
+
+        /*
+         * encode the known parts so far.  total_size field cannot be
+         * included yet because its value is not known, but the basic
+         * encoding of the other stuff needs to be done so the position
+         * of any data fields can be determined.
+         */
+        CF_CFDP_EncodeHeaderWithoutSize(ph->penc, hdr);
+
+        /* If directive code is zero, the pdu is a file data pdu which has no directive code field.
+         * So only set if non-zero, otherwise it will write a 0 to a byte in a file data pdu where we
+         * don't necessarily want a 0. */
+        if (directive_code)
+        {
+            /* set values which can be determined at this time */
+            ph->fdirective.directive_code = directive_code;
+
+            CF_CFDP_EncodeFileDirectiveHeader(ph->penc, &ph->fdirective);
+        }
+    }
+
+    return ph;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline size_t CF_strnlen(const char *s, size_t maxlen)
+{
+    const char *end = memchr(s, 0, maxlen);
+    if (end != NULL)
+    {
+        /* actual length of string is difference */
+        maxlen = end - s;
+    }
+    return maxlen;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendMd(CF_Transaction_t *t)
+{
+    CF_Logical_PduBuffer_t *ph =
+        CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_METADATA, CF_AppData.config_table->local_eid,
+                                   t->history->peer_eid, 0, t->history->seq_num, 0);
+    CF_Logical_PduMd_t *md;
+    CF_SendRet_t        sret;
+
+    sret = CF_SendRet_SUCCESS;
+
+    if (!ph)
+    {
+        sret = CF_SendRet_NO_MSG;
+    }
+    else
+    {
+        md = &ph->int_header.md;
+
+        CF_Assert((t->state == CF_TxnState_S1) || (t->state == CF_TxnState_S2));
+
+        md->size = t->fsize;
+
+        /* at this point, need to append filenames into md packet */
+        /* this does not actually copy here - that is done during encode */
+        md->source_filename.length =
+            CF_strnlen(t->history->fnames.src_filename, sizeof(t->history->fnames.src_filename));
+        md->source_filename.data_ptr = t->history->fnames.src_filename;
+        md->dest_filename.length = CF_strnlen(t->history->fnames.dst_filename, sizeof(t->history->fnames.dst_filename));
+        md->dest_filename.data_ptr = t->history->fnames.dst_filename;
+
+        CF_CFDP_EncodeMd(ph->penc, md);
+        CF_CFDP_SetPduLength(ph);
+        CF_CFDP_Send(t->chan_num, ph);
+    }
+
+    return sret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    /* NOTE: SendFd does not need a call to CF_CFDP_MsgOutGet, as the caller already has it */
+    CF_SendRet_t ret = CF_SendRet_SUCCESS;
+
+    /* this should check if any encoding error occurred */
+
+    /* update pdu length */
+    CF_CFDP_SetPduLength(ph);
+    CF_CFDP_Send(t->chan_num, ph);
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_AppendTlv(CF_Logical_TlvList_t *ptlv_list, CF_CFDP_TlvType_t tlv_type)
+{
+    CF_Logical_Tlv_t *ptlv;
+
+    if (ptlv_list->num_tlv < CF_PDU_MAX_TLV)
+    {
+        ptlv = &ptlv_list->tlv[ptlv_list->num_tlv];
+        ++ptlv_list->num_tlv;
+    }
+    else
+    {
+        ptlv = NULL;
+    }
+
+    if (ptlv)
+    {
+        ptlv->type = tlv_type;
+
+        if (tlv_type == CF_CFDP_TLV_TYPE_ENTITY_ID)
+        {
+            ptlv->data.eid = CF_AppData.config_table->local_eid;
+            ptlv->length   = CF_CFDP_GetValueEncodedSize(ptlv->data.eid);
+        }
+        else
+        {
+            ptlv->data.data_ptr = NULL;
+            ptlv->length        = 0;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendEof(CF_Transaction_t *t)
+{
+    CF_Logical_PduBuffer_t *ph =
+        CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_EOF, CF_AppData.config_table->local_eid,
+                                   t->history->peer_eid, 0, t->history->seq_num, 0);
+    CF_Logical_PduEof_t *eof;
+    CF_SendRet_t         ret = CF_SendRet_SUCCESS;
+
+    if (!ph)
+    {
+        ret = CF_SendRet_NO_MSG;
+    }
+    else
+    {
+        eof = &ph->int_header.eof;
+
+        eof->cc   = CF_TxnStatus_To_ConditionCode(t->history->txn_stat);
+        eof->crc  = t->crc.result;
+        eof->size = t->fsize;
+
+        if (eof->cc != CF_CFDP_ConditionCode_NO_ERROR)
+        {
+            CF_CFDP_AppendTlv(&eof->tlv_list, CF_CFDP_TLV_TYPE_ENTITY_ID);
+        }
+
+        CF_CFDP_EncodeEof(ph->penc, eof);
+        CF_CFDP_SetPduLength(ph);
+        CF_CFDP_Send(t->chan_num, ph);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_CFDP_FileDirective_t dir_code,
+                             CF_CFDP_ConditionCode_t cc, CF_EntityId_t peer_eid, CF_TransactionSeq_t tsn)
+{
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduAck_t *   ack;
+    CF_SendRet_t            ret = CF_SendRet_SUCCESS;
+    CF_EntityId_t           src_eid;
+    CF_EntityId_t           dst_eid;
+
+    CF_Assert((dir_code == CF_CFDP_FileDirective_EOF) || (dir_code == CF_CFDP_FileDirective_FIN));
+
+    if (CF_CFDP_IsSender(t))
+    {
+        src_eid = CF_AppData.config_table->local_eid;
+        dst_eid = peer_eid;
+    }
+    else
+    {
+        src_eid = peer_eid;
+        dst_eid = CF_AppData.config_table->local_eid;
+    }
+
+    ph = CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_ACK, src_eid, dst_eid,
+                                    (dir_code == CF_CFDP_FileDirective_EOF), tsn, 0);
+    if (!ph)
+    {
+        ret = CF_SendRet_NO_MSG;
+    }
+    else
+    {
+        ack = &ph->int_header.ack;
+
+        ack->ack_directive_code = dir_code;
+        ack->ack_subtype_code   = 1; /* looks like always 1 if not extended features */
+        ack->cc                 = cc;
+        ack->txn_status         = ts;
+
+        CF_CFDP_EncodeAck(ph->penc, ack);
+        CF_CFDP_SetPduLength(ph);
+        CF_CFDP_Send(t->chan_num, ph);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendFin(CF_Transaction_t *t, CF_CFDP_FinDeliveryCode_t dc, CF_CFDP_FinFileStatus_t fs,
+                             CF_CFDP_ConditionCode_t cc)
+{
+    CF_Logical_PduBuffer_t *ph =
+        CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_FIN, t->history->peer_eid,
+                                   CF_AppData.config_table->local_eid, 1, t->history->seq_num, 0);
+    CF_Logical_PduFin_t *fin;
+    CF_SendRet_t         ret = CF_SendRet_SUCCESS;
+
+    if (!ph)
+    {
+        ret = CF_SendRet_NO_MSG;
+    }
+    else
+    {
+        fin = &ph->int_header.fin;
+
+        fin->cc            = cc;
+        fin->delivery_code = dc;
+        fin->file_status   = fs;
+
+        if (cc != CF_CFDP_ConditionCode_NO_ERROR)
+        {
+            CF_CFDP_AppendTlv(&fin->tlv_list, CF_CFDP_TLV_TYPE_ENTITY_ID);
+        }
+
+        CF_CFDP_EncodeFin(ph->penc, fin);
+        CF_CFDP_SetPduLength(ph);
+        CF_CFDP_Send(t->chan_num, ph);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_SendNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    CF_Logical_PduNak_t *nak;
+    CF_SendRet_t         ret = CF_SendRet_SUCCESS;
+
+    if (!ph)
+    {
+        ret = CF_SendRet_NO_MSG;
+    }
+    else
+    {
+        CF_Assert(CF_CFDP_GetClass(t) == CF_CFDP_CLASS_2);
+
+        nak = &ph->int_header.nak;
+
+        /*
+         * NOTE: the caller should have already initialized all the fields.
+         * This does not need to add anything more to the NAK here
+         */
+
+        CF_CFDP_EncodeNak(ph->penc, nak);
+        CF_CFDP_SetPduLength(ph);
+        CF_CFDP_Send(t->chan_num, ph);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvPh(uint8 chan_num, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_Assert(chan_num < CF_NUM_CHANNELS);
+    /*
+     * If the source eid, destination eid, or sequence number fields
+     * are larger than the sizes configured in the cf platform config
+     * file, then reject the PDU.
+     */
+    if (CF_CFDP_DecodeHeader(ph->pdec, &ph->pdu_header) != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_TRUNCATION, CFE_EVS_EventType_ERROR,
+                          "CF: pdu rejected due to eid/seq number field truncation");
+        ++CF_AppData.hk.channel_hk[chan_num].counters.recv.error;
+        ret = -1;
+    }
+    /*
+     * The "large file" flag is not supported by this implementation yet.
+     * This means file sizes and offsets will be 64 bits, so codec routines
+     * will need to be updated to understand this.  OSAL also doesn't support
+     * 64-bit file access yet.
+     */
+    else if (CF_CODEC_IS_OK(ph->pdec) && ph->pdu_header.large_flag)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_LARGE_FILE, CFE_EVS_EventType_ERROR,
+                          "CF: pdu with large file bit received (unsupported)");
+        ++CF_AppData.hk.channel_hk[chan_num].counters.recv.error;
+        ret = -1;
+    }
+    else
+    {
+        if (CF_CODEC_IS_OK(ph->pdec) && ph->pdu_header.pdu_type == 0)
+        {
+            CF_CFDP_DecodeFileDirectiveHeader(ph->pdec, &ph->fdirective);
+        }
+
+        if (!CF_CODEC_IS_OK(ph->pdec))
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_PDU_SHORT_HEADER, CFE_EVS_EventType_ERROR, "CF: pdu too short (%lu received)",
+                              (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+            ++CF_AppData.hk.channel_hk[chan_num].counters.recv.error;
+            ret = -1;
+        }
+        else
+        {
+            /* pdu is ok, so continue processing */
+            ++CF_AppData.hk.channel_hk[chan_num].counters.recv.pdu;
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    const CF_Logical_PduMd_t *md = &ph->int_header.md;
+    int                       lv_ret;
+    int                       ret = 0;
+
+    CF_CFDP_DecodeMd(ph->pdec, &ph->int_header.md);
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_MD_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: metadata packet too short: %lu bytes received",
+                          (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+        /* error return path */
+        ret = -1;
+    }
+    else
+    {
+        /* store the expected file size in transaction */
+        t->fsize = md->size;
+
+        /*
+         * store the filenames in transaction.
+         *
+         * NOTE: The "CF_CFDP_CopyStringFromLV()" now knows that the data is supposed to be a C string,
+         * and ensures that the output content is properly terminated, so this only needs to check that
+         * it worked.
+         */
+        lv_ret = CF_CFDP_CopyStringFromLV(t->history->fnames.src_filename, sizeof(t->history->fnames.src_filename),
+                                          &md->source_filename);
+        if (lv_ret < 0)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_PDU_INVALID_SRC_LEN, CFE_EVS_EventType_ERROR,
+                              "CF: metadata pdu rejected due to invalid length in source filename of 0x%02x",
+                              md->source_filename.length);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+            /* error return path */
+            ret = -1;
+        }
+        else
+        {
+            lv_ret = CF_CFDP_CopyStringFromLV(t->history->fnames.dst_filename, sizeof(t->history->fnames.dst_filename),
+                                              &md->dest_filename);
+            if (lv_ret < 0)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_PDU_INVALID_DST_LEN, CFE_EVS_EventType_ERROR,
+                                  "CF: metadata pdu rejected due to invalid length in dest filename of 0x%02x",
+                                  md->dest_filename.length);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+                /* error return path */
+                ret = -1;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CF_EID_INF_PDU_MD_RECVD, CFE_EVS_EventType_INFORMATION,
+                                  "CF: md received for source: %s, dest: %s", t->history->fnames.src_filename,
+                                  t->history->fnames.dst_filename);
+            }
+        }
+    }
+
+    /* normal return path */
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_CFDP_DecodeFileDataHeader(ph->pdec, ph->pdu_header.segment_meta_flag, &ph->int_header.fd);
+
+    /* if the CRC flag is set, need to deduct the size of the CRC from the data - always 32 bits */
+    if (CF_CODEC_IS_OK(ph->pdec) && ph->pdu_header.crc_flag)
+    {
+        if (ph->int_header.fd.data_len < sizeof(CF_CFDP_uint32_t))
+        {
+            CF_CODEC_SET_DONE(ph->pdec);
+        }
+        else
+        {
+            ph->int_header.fd.data_len -= sizeof(CF_CFDP_uint32_t);
+        }
+    }
+
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_FD_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: filedata pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_PROTOCOL_ERROR);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+        ret = -1;
+    }
+    else if (ph->pdu_header.segment_meta_flag)
+    {
+        /* If recv PDU has the "segment_meta_flag" set, this is not currently handled in CF. */
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_FD_UNSUPPORTED, CFE_EVS_EventType_ERROR,
+                          "CF: filedata pdu with segment metadata received");
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_PROTOCOL_ERROR);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+        ret = -1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_CFDP_DecodeEof(ph->pdec, &ph->int_header.eof);
+
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_EOF_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: eof pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        ret = -1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_CFDP_DecodeAck(ph->pdec, &ph->int_header.ack);
+
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_ACK_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: ack pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        ret = -1;
+    }
+
+    /* nothing to do for this one, as all fields are bytes */
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_CFDP_DecodeFin(ph->pdec, &ph->int_header.fin);
+
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_FIN_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: fin pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        ret = -1;
+    }
+
+    /* NOTE: right now we don't care about the fault location */
+    /* nothing to do for this one. All fields are bytes */
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_RecvNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret = 0;
+
+    CF_CFDP_DecodeNak(ph->pdec, &ph->int_header.nak);
+
+    if (!CF_CODEC_IS_OK(ph->pdec))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_PDU_NAK_SHORT, CFE_EVS_EventType_ERROR,
+                          "CF: nak pdu too short: %lu bytes received", (unsigned long)CF_CODEC_GET_SIZE(ph->pdec));
+        ret = -1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_RecvDrop(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.dropped;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_RecvIdle(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    CF_Logical_PduFileDirectiveHeader_t *fdh;
+    int                                  status;
+
+    /* only RX transactions dare tread here */
+    t->history->seq_num = ph->pdu_header.sequence_num;
+
+    /* peer_eid is always the remote partner. src_eid is always the transaction source.
+     * in this case, they are the same */
+    t->history->peer_eid = ph->pdu_header.source_eid;
+    t->history->src_eid  = ph->pdu_header.source_eid;
+
+    t->chunks = CF_CFDP_FindUnusedChunks(&CF_AppData.engine.channels[t->chan_num], CF_Direction_RX);
+
+    /* this is an idle transaction, so see if there's a received packet that can
+     * be bound to the transaction */
+    if (ph->pdu_header.pdu_type)
+    {
+        /* file data PDU */
+        /* being idle and receiving a file data PDU means that no active transaction knew
+         * about the transaction in progress, so most likely PDUs were missed. */
+
+        /* if class 2, switch into R2 state and let it handle */
+        /* don't forget to bind the transaction */
+        if (ph->pdu_header.txm_mode)
+        {
+            /* R1, can't do anything without metadata first */
+            t->state = CF_TxnState_DROP; /* drop all incoming */
+            /* use inactivity timer to ultimately free the state */
+        }
+        else
+        {
+            /* R2 can handle missing metadata, so go ahead and create a temp file */
+            t->state = CF_TxnState_R2;
+            CF_CFDP_R_Init(t);
+            CF_CFDP_DispatchRecv(t, ph); /* re-dispatch to enter r2 */
+        }
+    }
+    else
+    {
+        fdh = &ph->fdirective;
+
+        /* file directive PDU, but we are in an idle state. It only makes sense right now to accept metadata PDU. */
+        switch (fdh->directive_code)
+        {
+            case CF_CFDP_FileDirective_METADATA:
+                status = CF_CFDP_RecvMd(t, ph);
+                if (!status)
+                {
+                    /* NOTE: whether or not class 1 or 2, get a free chunks. It's cheap, and simplifies cleanup path */
+                    t->state            = ph->pdu_header.txm_mode ? CF_TxnState_R1 : CF_TxnState_R2;
+                    t->flags.rx.md_recv = 1;
+                    CF_CFDP_R_Init(t); /* initialize R */
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_IDLE_MD, CFE_EVS_EventType_ERROR,
+                                      "CF: got invalid md pdu -- abandoning transaction");
+                    ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+                    /* leave state as idle, which will reset below */
+                }
+                break;
+            default:
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_FD_UNHANDLED, CFE_EVS_EventType_ERROR,
+                                  "CF: unhandled file directive code 0x%02x in idle state", fdh->directive_code);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+                break;
+        }
+    }
+
+    if (t->state == CF_TxnState_IDLE)
+    {
+        /* state was not changed, so free the transaction */
+        CF_CFDP_ResetTransaction(t, 0);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_CFDP_InitEngine(void)
+{
+    /* initialize all transaction nodes */
+    int                i;
+    int                j;
+    int                chunk_mem_offset = 0;
+    CF_Transaction_t * t                = CF_AppData.engine.transactions;
+    CF_ChunkWrapper_t *c                = CF_AppData.engine.chunks;
+    int32              ret              = CFE_SUCCESS;
+
+    static const int CF_DIR_MAX_CHUNKS[CF_Direction_NUM][CF_NUM_CHANNELS] = {CF_CHANNEL_NUM_RX_CHUNKS_PER_TRANSACTION,
+                                                                             CF_CHANNEL_NUM_TX_CHUNKS_PER_TRANSACTION};
+
+    memset(&CF_AppData.engine, 0, sizeof(CF_AppData.engine));
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        char nbuf[64];
+        snprintf(nbuf, sizeof(nbuf) - 1, "%s%d", CF_CHANNEL_PIPE_PREFIX, i);
+        ret = CFE_SB_CreatePipe(&CF_AppData.engine.channels[i].pipe, CF_AppData.config_table->chan[i].pipe_depth_input,
+                                nbuf);
+        if (ret != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_PIPE, CFE_EVS_EventType_ERROR,
+                              "CF: failed to create pipe %s, returned 0x%08lx", nbuf, (unsigned long)ret);
+            break;
+        }
+
+        ret = CFE_SB_SubscribeLocal(CFE_SB_ValueToMsgId(CF_AppData.config_table->chan[i].mid_input),
+                                    CF_AppData.engine.channels[i].pipe,
+                                    CF_AppData.config_table->chan[i].pipe_depth_input);
+        if (ret != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_INIT_SUB, CFE_EVS_EventType_ERROR,
+                              "CF: failed to subscribe to MID 0x%lx, returned 0x%08lx",
+                              (unsigned long)CF_AppData.config_table->chan[i].mid_input, (unsigned long)ret);
+            break;
+        }
+
+        if (CF_AppData.config_table->chan[i].sem_name[0])
+        {
+            /*
+             * There is a start up race condition because CFE starts all apps at the same time,
+             * and if this sem is instantiated by another app, it may not be created yet.
+             *
+             * Therefore if OSAL returns OS_ERR_NAME_NOT_FOUND, assume this is what is going
+             * on, delay a bit and try again.
+             */
+            ret = OS_ERR_NAME_NOT_FOUND;
+            for (j = 0; j < CF_STARTUP_SEM_MAX_RETRIES; ++j)
+            {
+                ret = OS_CountSemGetIdByName(&CF_AppData.engine.channels[i].sem_id,
+                                             CF_AppData.config_table->chan[i].sem_name);
+
+                if (ret != OS_ERR_NAME_NOT_FOUND)
+                {
+                    break;
+                }
+
+                OS_TaskDelay(CF_STARTUP_SEM_TASK_DELAY);
+            }
+
+            if (ret != OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_INIT_SEM, CFE_EVS_EventType_ERROR,
+                                  "CF: failed to get sem id for name %s, error=%ld",
+                                  CF_AppData.config_table->chan[i].sem_name, (long)ret);
+                break;
+            }
+        }
+
+        for (j = 0; j < CF_NUM_TRANSACTIONS_PER_CHANNEL; ++j, ++t)
+        {
+            int k;
+
+            t->chan_num = i;
+            CF_FreeTransaction(t);
+
+            for (k = 0; k < CF_Direction_NUM; ++k, ++c)
+            {
+                CF_Assert((chunk_mem_offset + CF_DIR_MAX_CHUNKS[k][i]) <= CF_NUM_CHUNKS_ALL_CHANNELS);
+                CF_ChunkListInit(&c->chunks, CF_DIR_MAX_CHUNKS[k][i], &CF_AppData.engine.chunk_mem[chunk_mem_offset]);
+                chunk_mem_offset += CF_DIR_MAX_CHUNKS[k][i];
+                CF_CList_InitNode(&c->cl_node);
+                CF_CList_InsertBack(&CF_AppData.engine.channels[i].cs[k], &c->cl_node);
+            }
+        }
+
+        for (j = 0; j < CF_NUM_HISTORIES_PER_CHANNEL; ++j)
+        {
+            CF_History_t *h = &CF_AppData.engine.histories[(i * CF_NUM_HISTORIES_PER_CHANNEL) + j];
+            CF_CList_InitNode(&h->cl_node);
+            CF_CList_InsertBack_Ex(&CF_AppData.engine.channels[i], CF_QueueIdx_HIST_FREE, &h->cl_node);
+        }
+    }
+
+    if (ret == CFE_SUCCESS)
+    {
+        CF_AppData.engine.enabled = 1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_CycleTxFirstActive(CF_CListNode_t *node, void *context)
+{
+    CF_CFDP_CycleTx_args_t *args = (CF_CFDP_CycleTx_args_t *)context;
+    CF_Transaction_t *      t    = container_of(node, CF_Transaction_t, cl_node);
+    int                     ret  = 1; /* default option is exit traversal */
+
+    if (t->flags.com.suspended)
+    {
+        ret = 0; /* suspended, so move on to next */
+    }
+    else
+    {
+        CF_Assert(t->flags.com.q_index == CF_QueueIdx_TXA); /* huh? */
+
+        /* if no more messages, then c->cur will be set.
+         * If the transaction sent the last filedata pdu and eof, it will move itself
+         * off the active queue. Run until either of these occur. */
+        while (!args->c->cur && t->flags.com.q_index == CF_QueueIdx_TXA)
+        {
+            CFE_ES_PerfLogEntry(CF_PERF_ID_PDUSENT(t->chan_num));
+            CF_CFDP_DispatchTx(t);
+            CFE_ES_PerfLogExit(CF_PERF_ID_PDUSENT(t->chan_num));
+        }
+
+        args->ran_one = 1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_CycleTx(CF_Channel_t *c)
+{
+    CF_Transaction_t *     t;
+    CF_CFDP_CycleTx_args_t args;
+
+    if (CF_AppData.config_table->chan[(c - CF_AppData.engine.channels)].dequeue_enabled)
+    {
+        args = (CF_CFDP_CycleTx_args_t) {c, 0};
+
+        /* loop through as long as there are pending transactions, and a message buffer to send their pdus on */
+
+        /* NOTE: tick processing is higher priority than sending new filedata pdus, so only send however many
+         * PDUs that can be sent once we get to here */
+        if (!c->cur)
+        { /* don't enter if cur is set, since we need to pick up where we left off on tick processing next wakeup */
+
+            while (true)
+            {
+                /* Attempt to run something on TXA */
+                CF_CList_Traverse(c->qs[CF_QueueIdx_TXA], CF_CFDP_CycleTxFirstActive, &args);
+
+                /* Keep going until CF_QueueIdx_PEND is empty or something is run */
+                if (args.ran_one || c->qs[CF_QueueIdx_PEND] == NULL)
+                {
+                    break;
+                }
+
+                t = container_of(c->qs[CF_QueueIdx_PEND], CF_Transaction_t, cl_node);
+                CF_MoveTransaction(t, CF_QueueIdx_TXA);
+            }
+        }
+
+        /* in case the loop exited due to no message buffers, clear it and start from the top next time */
+        c->cur = NULL;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_DoTick(CF_CListNode_t *node, void *context)
+{
+    int                  ret  = CF_CLIST_CONT; /* CF_CLIST_CONT means don't tick one, keep looking for cur */
+    CF_CFDP_Tick_args_t *args = (CF_CFDP_Tick_args_t *)context;
+    CF_Transaction_t *   t    = container_of(node, CF_Transaction_t, cl_node);
+    if (!args->c->cur || (args->c->cur == t))
+    {
+        /* found where we left off, so clear that and move on */
+        args->c->cur = NULL;
+        if (!t->flags.com.suspended)
+        {
+            args->fn(t, &args->cont);
+        }
+
+        /* if args->c->cur was set to not-NULL above, then exit early */
+        /* NOTE: if channel is frozen, then tick processing won't have been entered.
+         *     so there is no need to check it here */
+        if (args->c->cur)
+        {
+            ret              = CF_CLIST_EXIT;
+            args->early_exit = 1;
+        }
+    }
+
+    return ret; /* don't tick one, keep looking for cur */
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_TickTransactions(CF_Channel_t *c)
+{
+    bool reset = true;
+
+    void (*fns[CF_TickType_NUM_TYPES])(CF_Transaction_t *, int *) = {CF_CFDP_R_Tick, CF_CFDP_S_Tick,
+                                                                     CF_CFDP_S_Tick_Nak};
+    int qs[CF_TickType_NUM_TYPES]                                 = {CF_QueueIdx_RX, CF_QueueIdx_TXW, CF_QueueIdx_TXW};
+
+    CF_Assert(c->tick_type < CF_TickType_NUM_TYPES);
+
+    for (; c->tick_type < CF_TickType_NUM_TYPES; ++c->tick_type)
+    {
+        CF_CFDP_Tick_args_t args = {c, fns[c->tick_type], 0, 0};
+
+        do
+        {
+            args.cont = 0;
+            CF_CList_Traverse(c->qs[qs[c->tick_type]], CF_CFDP_DoTick, &args);
+            if (args.early_exit)
+            {
+                /* early exit means we ran out of available outgoing messages this wakeup.
+                 * If current tick type is nak response, then reset tick type. It would be
+                 * bad to let NAK response starve out RX or TXW ticks on the next cycle.
+                 *
+                 * If RX ticks use up all available messages, then we pick up where we left
+                 * off on the next cycle. (This causes some RX tick counts to be missed,
+                 * but that's ok. Precise timing isn't required.)
+                 *
+                 * This scheme allows the following priority for use of outgoing messages:
+                 *
+                 * RX state messages
+                 * TXW state messages
+                 * NAK response (could be many)
+                 *
+                 * New file data on TXA
+                 */
+                if (c->tick_type != CF_TickType_TXW_NAK)
+                {
+                    reset = false;
+                }
+
+                break;
+            }
+        } while (args.cont);
+
+        if (!reset)
+        {
+            break;
+        }
+    }
+
+    if (reset)
+    {
+        c->tick_type = CF_TickType_RX; /* reset tick type */
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_InitTxnTxFile(CF_Transaction_t *t, CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan, uint8 priority)
+{
+    t->chan_num = chan;
+    t->priority = priority;
+    t->keep     = keep;
+    t->state    = cfdp_class ? CF_TxnState_S2 : CF_TxnState_S1;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static void CF_CFDP_TxFile_Initiate(CF_Transaction_t *t, CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan,
+                                    uint8 priority, CF_EntityId_t dest_id)
+{
+    CFE_EVS_SendEvent(CF_EID_INF_CFDP_S_START_SEND, CFE_EVS_EventType_INFORMATION,
+                      "CF: start class %d tx of file %lu:%.*s -> %lu:%.*s", cfdp_class + 1,
+                      (unsigned long)CF_AppData.config_table->local_eid, CF_FILENAME_MAX_LEN,
+                      t->history->fnames.src_filename, (unsigned long)dest_id, CF_FILENAME_MAX_LEN,
+                      t->history->fnames.dst_filename);
+
+    CF_CFDP_InitTxnTxFile(t, cfdp_class, keep, chan, priority);
+
+    /* Increment sequence number for new transaction */
+    ++CF_AppData.engine.seq_num;
+
+    /* Capture info for history */
+    t->history->dir      = CF_Direction_TX;
+    t->history->seq_num  = CF_AppData.engine.seq_num;
+    t->history->src_eid  = CF_AppData.config_table->local_eid;
+    t->history->peer_eid = dest_id;
+
+    CF_CFDP_ArmInactTimer(t);
+
+    /* NOTE: whether or not class 1 or 2, get a free chunks. It's cheap, and simplifies cleanup path */
+    t->chunks = CF_CFDP_FindUnusedChunks(&CF_AppData.engine.channels[chan], CF_Direction_TX);
+    CF_InsertSortPrio(t, CF_QueueIdx_PEND);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_CFDP_TxFile(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                     uint8 chan, uint8 priority, CF_EntityId_t dest_id)
+{
+    CF_Transaction_t *t;
+    CF_Channel_t *    c = &CF_AppData.engine.channels[chan];
+    CF_Assert(chan < CF_NUM_CHANNELS);
+
+    int32 ret = CFE_SUCCESS;
+
+    if (c->num_cmd_tx == CF_MAX_COMMANDED_PLAYBACK_FILES_PER_CHAN)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_MAX_CMD_TX, CFE_EVS_EventType_ERROR,
+                          "CF: max number of commanded files reached");
+        ret = -1;
+    }
+    else
+    {
+        t = CF_FindUnusedTransaction(&CF_AppData.engine.channels[chan]);
+        CF_Assert(t); /* should always have a free transaction at this point */
+
+        CF_Assert(t->state == CF_TxnState_IDLE);
+
+        /* NOTE: the caller of this function ensures the provided src and dst filenames are NULL terminated */
+        strncpy(t->history->fnames.src_filename, src_filename, sizeof(t->history->fnames.src_filename) - 1);
+        t->history->fnames.src_filename[sizeof(t->history->fnames.src_filename) - 1] = 0;
+        strncpy(t->history->fnames.dst_filename, dst_filename, sizeof(t->history->fnames.dst_filename) - 1);
+        t->history->fnames.dst_filename[sizeof(t->history->fnames.dst_filename) - 1] = 0;
+        CF_CFDP_TxFile_Initiate(t, cfdp_class, keep, chan, priority, dest_id);
+
+        ++c->num_cmd_tx;
+        t->flags.tx.cmd_tx = 1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static int32 CF_CFDP_PlaybackDir_Initiate(CF_Playback_t *p, const char *src_filename, const char *dst_filename,
+                                          CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan, uint8 priority,
+                                          CF_EntityId_t dest_id)
+{
+    int32 ret = CFE_SUCCESS;
+
+    /* make sure the directory can be open */
+    ret = OS_DirectoryOpen(&p->dir_id, src_filename);
+    if (ret != OS_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_OPENDIR, CFE_EVS_EventType_ERROR,
+                          "CF: failed to open playback directory %s, error=%ld", src_filename, (long)ret);
+        ++CF_AppData.hk.channel_hk[chan].counters.fault.directory_read;
+    }
+    else
+    {
+        p->diropen    = 1;
+        p->busy       = 1;
+        p->keep       = keep;
+        p->priority   = priority;
+        p->dest_id    = dest_id;
+        p->cfdp_class = cfdp_class;
+
+        /* NOTE: the caller of this function ensures the provided src and dst filenames are NULL terminated */
+        strncpy(p->fnames.src_filename, src_filename, sizeof(p->fnames.src_filename) - 1);
+        p->fnames.src_filename[sizeof(p->fnames.src_filename) - 1] = 0;
+        strncpy(p->fnames.dst_filename, dst_filename, sizeof(p->fnames.dst_filename) - 1);
+        p->fnames.dst_filename[sizeof(p->fnames.dst_filename) - 1] = 0;
+    }
+
+    /* the executor will start the transfer next cycle */
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_CFDP_PlaybackDir(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                          uint8 chan, uint8 priority, uint16 dest_id)
+{
+    int            i;
+    CF_Playback_t *p;
+
+    for (i = 0; i < CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN; ++i)
+    {
+        p = &CF_AppData.engine.channels[chan].playback[i];
+        if (!p->busy)
+        {
+            break;
+        }
+    }
+
+    if (i == CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_DIR_SLOT, CFE_EVS_EventType_ERROR, "CF: no playback dir slot available");
+        return -1;
+    }
+
+    return CF_CFDP_PlaybackDir_Initiate(p, src_filename, dst_filename, cfdp_class, keep, chan, priority, dest_id);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_ProcessPlaybackDirectory(CF_Channel_t *c, CF_Playback_t *p)
+{
+    CF_Transaction_t *pt;
+    os_dirent_t       dirent;
+    /* either there's no transaction (first one) or the last one was finished, so check for a new one */
+
+    memset(&dirent, 0, sizeof(dirent));
+
+    while (p->diropen && (p->num_ts < CF_NUM_TRANSACTIONS_PER_PLAYBACK))
+    {
+        int32 status;
+
+        CFE_ES_PerfLogEntry(CF_PERF_ID_DIRREAD);
+        status = OS_DirectoryRead(p->dir_id, &dirent);
+        CFE_ES_PerfLogExit(CF_PERF_ID_DIRREAD);
+
+        if (status == CFE_SUCCESS)
+        {
+            if (!strcmp(dirent.FileName, ".") || !strcmp(dirent.FileName, ".."))
+            {
+                continue;
+            }
+
+            pt = CF_FindUnusedTransaction(c);
+            CF_Assert(pt); /* should be impossible not to have one because there are limits on the number of uses of
+                                them */
+
+            /* the -1 below is to make room for the slash */
+            snprintf(pt->history->fnames.src_filename, sizeof(pt->history->fnames.src_filename), "%.*s/%.*s",
+                     CF_FILENAME_MAX_PATH - 1, p->fnames.src_filename, CF_FILENAME_MAX_NAME - 1, dirent.FileName);
+            snprintf(pt->history->fnames.dst_filename, sizeof(pt->history->fnames.dst_filename), "%.*s/%.*s",
+                     CF_FILENAME_MAX_PATH - 1, p->fnames.dst_filename, CF_FILENAME_MAX_NAME - 1, dirent.FileName);
+
+            /* in case snprintf didn't have room for NULL terminator */
+            pt->history->fnames.src_filename[CF_FILENAME_MAX_LEN - 1] = 0;
+            pt->history->fnames.dst_filename[CF_FILENAME_MAX_LEN - 1] = 0;
+
+            CF_CFDP_TxFile_Initiate(pt, p->cfdp_class, p->keep, (c - CF_AppData.engine.channels), p->priority,
+                                    p->dest_id);
+
+            pt->p = p;
+            ++p->num_ts;
+        }
+        else
+        {
+            /* PFTO: can we figure out the difference between "end of dir" and an error? */
+            OS_DirectoryClose(p->dir_id);
+            p->diropen = 0;
+        }
+    }
+
+    if (!p->diropen && !p->num_ts)
+    {
+        /* the directory has been exhausted, and there are no more active transactions
+         * for this playback -- so mark it as not busy */
+        p->busy = 0;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static void CF_CFDP_UpdatePollPbCounted(CF_Playback_t *pb, int up, uint8 *counter)
+{
+    if (pb->counted != up)
+    {
+        /* only handle on state change */
+        pb->counted = !!up; /* !! ensure 0 or 1, should be optimized out */
+
+        if (up)
+        {
+            ++*counter;
+        }
+        else
+        {
+            CF_Assert(*counter); /* sanity check it isn't zero */
+            --*counter;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static void CF_CFDP_ProcessPlaybackDirectories(CF_Channel_t *c)
+{
+    int       i;
+    const int chan_index = (c - CF_AppData.engine.channels);
+
+    for (i = 0; i < CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN; ++i)
+    {
+        CF_CFDP_ProcessPlaybackDirectory(c, &c->playback[i]);
+        CF_CFDP_UpdatePollPbCounted(&c->playback[i], c->playback[i].busy,
+                                    &CF_AppData.hk.channel_hk[chan_index].playback_counter);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_ProcessPollingDirectories(CF_Channel_t *c)
+{
+    int i;
+
+    for (i = 0; i < CF_MAX_POLLING_DIR_PER_CHAN; ++i)
+    {
+        CF_Poll_t *         p           = &c->poll[i];
+        int                 chan_index  = (c - CF_AppData.engine.channels);
+        CF_ChannelConfig_t *cc          = &CF_AppData.config_table->chan[chan_index];
+        CF_PollDir_t *      pd          = &cc->polldir[i];
+        int                 count_check = 0;
+
+        if (pd->enabled && pd->interval_sec)
+        {
+            /* only handle polling for polldirs configured with a non-zero interval */
+            if (!p->pb.busy && !p->pb.num_ts)
+            {
+                if (!p->timer_set)
+                {
+                    /* timer was not set, so set it now */
+                    CF_Timer_InitRelSec(&p->interval_timer, pd->interval_sec);
+                    p->timer_set = 1;
+                }
+                else if (CF_Timer_Expired(&p->interval_timer))
+                {
+                    /* the timer has expired */
+                    int ret = CF_CFDP_PlaybackDir_Initiate(&p->pb, pd->src_dir, pd->dst_dir, pd->cfdp_class, 0,
+                                                           chan_index, pd->priority, pd->dest_eid);
+                    if (!ret)
+                    {
+                        p->timer_set = 0;
+                    }
+                    else
+                    {
+                        /* error occurred in playback directory, so reset the timer */
+                        /* an event is sent in CF_CFDP_PlaybackDir_Initiate so there is no reason to
+                         * to have another here */
+                        CF_Timer_InitRelSec(&p->interval_timer, pd->interval_sec);
+                    }
+                }
+                else
+                    CF_Timer_Tick(&p->interval_timer);
+            }
+            else
+            {
+                /* playback is active, so step it */
+                CF_CFDP_ProcessPlaybackDirectory(c, &p->pb);
+            }
+
+            count_check = 1;
+        }
+
+        CF_CFDP_UpdatePollPbCounted(&p->pb, count_check, &CF_AppData.hk.channel_hk[chan_index].poll_counter);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_CycleEngine(void)
+{
+    int i;
+
+    if (CF_AppData.engine.enabled)
+    {
+        for (i = 0; i < CF_NUM_CHANNELS; ++i)
+        {
+            CF_Channel_t *c                    = &CF_AppData.engine.channels[i];
+            CF_AppData.engine.outgoing_counter = 0;
+
+            /* consume all received messages, even if channel is frozen */
+            CF_CFDP_ReceiveMessage(c);
+
+            if (!CF_AppData.hk.channel_hk[i].frozen)
+            {
+                /* handle ticks before tx cycle. Do this because there may be a limited number of TX messages available
+                 * this cycle, and it's important to respond to class 2 ACK/NAK more than it is to send new filedata
+                 * PDUs. */
+
+                /* cycle all transactions (tick) */
+                CF_CFDP_TickTransactions(c);
+
+                /* cycle the current tx transaction */
+                CF_CFDP_CycleTx(c);
+
+                CF_CFDP_ProcessPlaybackDirectories(c);
+                CF_CFDP_ProcessPollingDirectories(c);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_ResetTransaction(CF_Transaction_t *t, int keep_history)
+{
+    CF_Channel_t *c = &CF_AppData.engine.channels[t->chan_num];
+    CF_Assert(t->chan_num < CF_NUM_CHANNELS);
+
+    CF_CFDP_SendEotPkt(t);
+
+    CF_DequeueTransaction(t);
+
+    if (OS_ObjectIdDefined(t->fd))
+    {
+        CF_WrappedClose(t->fd);
+        if (!t->keep)
+        {
+            if (CF_CFDP_IsSender(t))
+            {
+                OS_remove(t->history->fnames.src_filename);
+            }
+            else
+            {
+                OS_remove(t->history->fnames.dst_filename);
+            }
+        }
+    }
+
+    /* extra bookkeeping for tx direction only */
+    if (t->history->dir == CF_Direction_TX)
+    {
+        if (t->flags.tx.cmd_tx)
+        {
+            CF_Assert(c->num_cmd_tx); /* sanity check */
+            --c->num_cmd_tx;
+        }
+
+        if (t->p)
+        {
+            /* a playback's transaction is now done, decrement the playback counter */
+            CF_Assert(t->p->num_ts);
+            --t->p->num_ts;
+        }
+    }
+
+    /* bookkeeping for all transactions */
+    /* move transaction history to history queue */
+    if (keep_history)
+    {
+        CF_CList_InsertBack_Ex(c, CF_QueueIdx_HIST, &t->history->cl_node);
+    }
+    else
+    {
+        CF_CList_InsertBack_Ex(c, CF_QueueIdx_HIST_FREE, &t->history->cl_node);
+    }
+
+    CF_CList_InsertBack(&c->cs[!!CF_CFDP_IsSender(t)], &t->chunks->cl_node);
+
+    if (c->cur == t)
+    {
+        c->cur = NULL; /* this transaction couldn't get a message previously, so clear it here to avoid problems */
+    }
+    CF_FreeTransaction(t);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_SetTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat)
+{
+    if (!CF_TxnStatus_IsError(t->history->txn_stat))
+    {
+        t->history->txn_stat = txn_stat;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_SendEotPkt(CF_Transaction_t *t)
+{
+    CF_EotPktBuf_t *PktBuf;
+
+    /*
+    ** Get a Message block of memory and initialize it
+    */
+    PktBuf = (CF_EotPktBuf_t *)CFE_SB_AllocateMessageBuffer(sizeof(*PktBuf));
+
+    if (PktBuf != NULL)
+    {
+        CFE_MSG_Init(&PktBuf->eot.tlm_header.Msg, CFE_SB_ValueToMsgId(CF_EOT_TLM_MID), sizeof(*PktBuf));
+
+        PktBuf->eot.channel    = t->chan_num;
+        PktBuf->eot.direction  = t->history->dir;
+        PktBuf->eot.fnames     = t->history->fnames;
+        PktBuf->eot.state      = t->state;
+        PktBuf->eot.txn_stat   = t->history->txn_stat;
+        PktBuf->eot.src_eid    = t->history->src_eid;
+        PktBuf->eot.peer_eid   = t->history->peer_eid;
+        PktBuf->eot.seq_num    = t->history->seq_num;
+        PktBuf->eot.fsize      = t->fsize;
+        PktBuf->eot.crc_result = t->crc.result;
+
+        /*
+        ** Timestamp and send eod of transaction telemetry
+        */
+        CFE_SB_TimeStampMsg(&PktBuf->eot.tlm_header.Msg);
+        CFE_SB_TransmitBuffer(&PktBuf->SBBuf, true);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_CopyStringFromLV(char *buf, size_t buf_maxsz, const CF_Logical_Lv_t *src_lv)
+{
+    if (src_lv->length < buf_maxsz)
+    {
+        memcpy(buf, src_lv->data_ptr, src_lv->length);
+        buf[src_lv->length] = 0;
+        return src_lv->length;
+    }
+
+    /* ensure output is empty */
+    buf[0] = 0;
+    return -1; /* invalid len in lv? */
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_CancelTransaction(CF_Transaction_t *t)
+{
+    void (*fns[2])(CF_Transaction_t * t) = {CF_CFDP_R_Cancel, CF_CFDP_S_Cancel};
+    if (!t->flags.com.canceled)
+    {
+        t->flags.com.canceled = 1;
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_CANCEL_REQUEST_RECEIVED);
+        fns[!!CF_CFDP_IsSender(t)](t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_CloseFiles(CF_CListNode_t *n, void *context)
+{
+    CF_Transaction_t *t = container_of(n, CF_Transaction_t, cl_node);
+    if (OS_ObjectIdDefined(t->fd))
+    {
+        CF_WrappedClose(t->fd);
+    }
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DisableEngine(void)
+{
+    int                        i;
+    int                        j;
+    static const CF_QueueIdx_t CLOSE_QUEUES[] = {CF_QueueIdx_RX, CF_QueueIdx_TXA, CF_QueueIdx_TXW};
+    CF_Channel_t *             c;
+
+    CF_AppData.engine.enabled = 0;
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        c = &CF_AppData.engine.channels[i];
+
+        /* first, close all active files */
+        for (j = 0; j < (sizeof(CLOSE_QUEUES) / sizeof(CLOSE_QUEUES[0])); ++j)
+        {
+            CF_CList_Traverse(c->qs[CLOSE_QUEUES[j]], CF_CFDP_CloseFiles, NULL);
+        }
+
+        /* any playback directories need to have their directory ids closed */
+        for (j = 0; j < CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN; ++j)
+        {
+            if (c->playback[j].busy)
+            {
+                OS_DirectoryClose(c->playback[j].dir_id);
+            }
+        }
+
+        for (j = 0; j < CF_MAX_POLLING_DIR_PER_CHAN; ++j)
+        {
+            if (c->poll[j].pb.busy)
+            {
+                OS_DirectoryClose(c->poll[j].pb.dir_id);
+            }
+        }
+
+        /* finally all queue counters must be reset */
+        memset(&CF_AppData.hk.channel_hk[i].q_size, 0, sizeof(CF_AppData.hk.channel_hk[i].q_size));
+
+        CFE_SB_DeletePipe(c->pipe);
+    }
+}
+```
+
+### `cf_cfdp.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application cfdp engine and packet parsing header file
+ */
+
+#ifndef CF_CFDP_H
+#define CF_CFDP_H
+
+#include "cf_cfdp_types.h"
+
+/**
+ * @brief Structure for use with the CF_CFDP_CycleTx() function
+ */
+typedef struct CF_CFDP_CycleTx_args
+{
+    CF_Channel_t *c;       /**< \brief channel structure */
+    int           ran_one; /**< \brief should be set to 1 if a transaction was cycled */
+} CF_CFDP_CycleTx_args_t;
+
+/**
+ * @brief Structure for use with the CF_CFDP_DoTick() function
+ */
+typedef struct CF_CFDP_Tick_args
+{
+    CF_Channel_t *c;                       /**< \brief channel structure */
+    void (*fn)(CF_Transaction_t *, int *); /**< \brief function pointer */
+    int early_exit;                        /**< \brief early exit result */
+    int cont;                              /**< \brief if 1, then re-traverse the list */
+} CF_CFDP_Tick_args_t;
+
+/********************************************************************************/
+/**
+ * @brief Initiate the process of encoding a new PDU to send
+ *
+ * This resets the encoder and PDU buffer to initial values, and prepares for encoding a new PDU
+ * for sending to a remote entity.
+ *
+ * @param penc           Encoder state structure, will be reset/initialized by this call to point to msgbuf.
+ * @param msgbuf         Pointer to encapsulation message, in this case a CFE software bus message
+ * @param ph             Pointer to logical PDU buffer content, will be cleared to all zero by this call
+ * @param encap_hdr_size Offset of first CFDP PDU octet within buffer
+ * @param total_size     Allocated size of msgbuf encapsulation structure (encoding cannot exceed this)
+ */
+void CF_CFDP_EncodeStart(CF_EncoderState_t *penc, void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size);
+
+/********************************************************************************/
+/**
+ * @brief Initiate the process of decoding a received PDU
+ *
+ * This resets the decoder and PDU buffer to initial values, and prepares for decoding a new PDU
+ * that was received from a remote entity.
+ *
+ * @param pdec           Decoder state structure, will be reset/initialized by this call to point to msgbuf.
+ * @param msgbuf         Pointer to encapsulation message, in this case a CFE software bus message
+ * @param ph             Pointer to logical PDU buffer content, will be cleared to all zero by this call
+ * @param encap_hdr_size Offset of first CFDP PDU octet within buffer
+ * @param total_size     Total size of msgbuf encapsulation structure (decoding cannot exceed this)
+ */
+void CF_CFDP_DecodeStart(CF_DecoderState_t *pdec, const void *msgbuf, CF_Logical_PduBuffer_t *ph, size_t encap_hdr_size,
+                         size_t total_size);
+
+/* engine execution functions */
+
+/************************************************************************/
+/** @brief Reset a transaction and all its internals to an unused state.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param keep_history Whether the transaction info should be preserved in history
+ */
+void CF_CFDP_ResetTransaction(CF_Transaction_t *t, int keep_history);
+
+/************************************************************************/
+/** @brief Helper function to store transaction status code only
+ *
+ * This records the status in the history block but does not set FIN flag
+ * or take any other protocol/state machine actions.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param txn_stat Status Code value to set within transaction
+ */
+void CF_CFDP_SetTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat);
+
+/************************************************************************/
+/** @brief Send an end of transaction packet.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_SendEotPkt(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Initialization function for the cfdp engine
+ *
+ * @par Description
+ *       Performs all initialization of the CFDP engine
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       Only called once.
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @returns anything else on error.
+ *
+ */
+int32 CF_CFDP_InitEngine(void);
+
+/************************************************************************/
+/** @brief Cycle the engine. Called once per wakeup.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ */
+void CF_CFDP_CycleEngine(void);
+
+/************************************************************************/
+/** @brief Disables the cfdp engine and resets all state in it.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ */
+void CF_CFDP_DisableEngine(void);
+
+/************************************************************************/
+/** @brief Begin transmit of a file.
+ *
+ * @par Description
+ *       This function sets up a transaction for and starts transmit of
+ *       the given filename.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       src_filename must not be NULL. dst_filename must not be NULL.
+ *
+ * @param src_filename  Local filename
+ * @param dst_filename  Remote filename
+ * @param cfdp_class    Whether to perform a class 1 or class 2 transfer
+ * @param keep          Whether to keep or delete the local file after completion
+ * @param chan          CF channel number to use
+ * @param priority      CF priority level
+ * @param dest_id       Entity ID of remote receiver
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @returns Anything else on error.
+ */
+int32 CF_CFDP_TxFile(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                     uint8 chan, uint8 priority, CF_EntityId_t dest_id);
+
+/************************************************************************/
+/** @brief Begin transmit of a directory.
+ *
+ * @par Description
+ *       This function sets up CF_Playback_t structure with state so it can
+ *       become part of the directory polling done at each engine cycle.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       src_filename must not be NULL. dst_filename must not be NULL.
+ *
+ * @param src_filename  Local filename
+ * @param dst_filename  Remote filename
+ * @param cfdp_class    Whether to perform a class 1 or class 2 transfer
+ * @param keep          Whether to keep or delete the local file after completion
+ * @param chan          CF channel number to use
+ * @param priority      CF priority level
+ * @param dest_id       Entity ID of remote receiver
+ *
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @returns Anything else on error.
+ */
+int32 CF_CFDP_PlaybackDir(const char *src_filename, const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                          uint8 chan, uint8 priority, uint16 dest_id);
+
+/************************************************************************/
+/** @brief Build the PDU header in the output buffer to prepare to send a packet.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t              Pointer to the transaction object
+ * @param directive_code Code to use for file directive headers (set to 0 for data)
+ * @param src_eid        Value to set in source entity ID field
+ * @param dst_eid        Value to set in destination entity ID field
+ * @param towards_sender Whether this is transmitting toward the sender entity
+ * @param tsn            Transaction sequence number to put into PDU
+ * @param silent         If true, suppress error event if no message buffer available
+ *
+ * @returns Pointer to PDU buffer which may be filled with additional data
+ * @retval  NULL if no message buffer available
+ */
+CF_Logical_PduBuffer_t *CF_CFDP_ConstructPduHeader(const CF_Transaction_t *t, CF_CFDP_FileDirective_t directive_code,
+                                                   CF_EntityId_t src_eid, CF_EntityId_t dst_eid, bool towards_sender,
+                                                   CF_TransactionSeq_t tsn, bool silent);
+
+/************************************************************************/
+/** @brief Build a metadata PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t              Pointer to the transaction object
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ * @retval CF_SendRet_NO_MSG if message buffer cannot be obtained.
+ * @retval CF_SendRet_ERROR if an error occurred while building the packet.
+ */
+CF_SendRet_t CF_CFDP_SendMd(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Send a previously-assembled filedata PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t   Pointer to the transaction object
+ * @param ph  Pointer to logical PDU buffer content
+ *
+ * @note Unlike other "send" routines, the file data PDU must be acquired and
+ * filled by the caller prior to invoking this routine.  This routine only
+ * sends the PDU that was previously allocated and assembled.  As such, the
+ * typical failure possibilities do not apply to this call.
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ */
+CF_SendRet_t CF_CFDP_SendFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Build a eof PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t   Pointer to the transaction object
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ * @retval CF_SendRet_NO_MSG if message buffer cannot be obtained.
+ * @retval CF_SendRet_ERROR if an error occurred while building the packet.
+ */
+CF_SendRet_t CF_CFDP_SendEof(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Build a ack PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @note CF_CFDP_SendAck() takes a CF_TransactionSeq_t instead of getting it from transaction history because
+ * of the special case where a FIN-ACK must be sent for an unknown transaction. It's better for
+ * long term maintenance to not build an incomplete CF_History_t for it.
+ *
+ * @param t        Pointer to the transaction object
+ * @param ts       Transaction ACK status
+ * @param dir_code File directive code being ACK'ed
+ * @param cc       Condition code of transaction
+ * @param peer_eid Remote entity ID
+ * @param tsn      Transaction sequence number
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ * @retval CF_SendRet_NO_MSG if message buffer cannot be obtained.
+ * @retval CF_SendRet_ERROR if an error occurred while building the packet.
+ *
+ */
+CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_CFDP_FileDirective_t dir_code,
+                             CF_CFDP_ConditionCode_t cc, CF_EntityId_t peer_eid, CF_TransactionSeq_t tsn);
+
+/************************************************************************/
+/** @brief Build a fin PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t     Pointer to the transaction object
+ * @param dc    Final delivery status code (complete or incomplete)
+ * @param fs    Final file status (retained or rejected, etc)
+ * @param cc    Final CFDP condition code
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ * @retval CF_SendRet_NO_MSG if message buffer cannot be obtained.
+ * @retval CF_SendRet_ERROR if an error occurred while building the packet.
+ */
+CF_SendRet_t CF_CFDP_SendFin(CF_Transaction_t *t, CF_CFDP_FinDeliveryCode_t dc, CF_CFDP_FinFileStatus_t fs,
+                             CF_CFDP_ConditionCode_t cc);
+
+/************************************************************************/
+/** @brief Send a previously-assembled nak PDU for transmit.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t   Pointer to the transaction object
+ * @param ph  Pointer to logical PDU buffer content
+ *
+ * @note Unlike other "send" routines, the NAK PDU must be acquired and
+ * filled by the caller prior to invoking this routine.  This routine only
+ * encodes and sends the previously-assembled PDU buffer.  As such, the
+ * typical failure possibilities do not apply to this call.
+ *
+ * @returns CF_SendRet_t status code
+ * @retval CF_SendRet_SUCCESS on success.
+ */
+CF_SendRet_t CF_CFDP_SendNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Appends a single TLV value to the logical PDU data
+ *
+ * This function implements common functionality between SendEof and SendFin
+ * which append a TLV value specifying the faulting entity ID.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       ptlv_list must not be NULL.
+ *       Only CF_CFDP_TLV_TYPE_ENTITY_ID type is currently implemented
+ *
+ * @param ptlv_list TLV list from current PDU buffer.
+ * @param tlv_type  Type of TLV to append.  Currently must be CF_CFDP_TLV_TYPE_ENTITY_ID.
+ */
+void CF_CFDP_AppendTlv(CF_Logical_TlvList_t *ptlv_list, CF_CFDP_TlvType_t tlv_type);
+
+/************************************************************************/
+/** @brief Unpack a basic PDU header from a received message.
+ *
+ * @par Description
+ *       This interprets the common PDU header and the file directive header
+ *       (if applicable) and populates the logical PDU buffer.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       A new message has been received.
+ *
+ * @param chan_num The channel number for statistics purposes
+ * @param ph       The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvPh(uint8 chan_num, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack a metadata PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as a metadata PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ */
+int CF_CFDP_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack a file data PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as a file data PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack an eof PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as an end of file PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack an ack PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as an acknowledgment PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack an fin PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as an final PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Unpack a nak PDU from a received message.
+ *
+ * This should only be invoked for buffers that have been identified
+ * as an negative/non-acknowledgment PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ * @returns integer status code
+ * @retval 0 on success
+ * @retval -1 on error
+ *
+ */
+int CF_CFDP_RecvNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Dispatch received packet to its handler.
+ *
+ * This dispatches the PDU to the appropriate handler
+ * based on the transaction state
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be null. It must be an initialized transaction.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ *
+ */
+void CF_CFDP_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Cancels a transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ *
+ */
+void CF_CFDP_CancelTransaction(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Helper function to set tx file state in a transaction.
+ *
+ * This sets various fields inside a newly-allocated transaction
+ * structure appropriately for sending a file.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t          Pointer to the transaction state
+ * @param cfdp_class Set to class 1 or class 2
+ * @param keep       Whether to keep the local file
+ * @param chan       CF channel number
+ * @param priority   Priority of transfer
+ *
+ */
+void CF_CFDP_InitTxnTxFile(CF_Transaction_t *t, CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan, uint8 priority);
+
+/* functions to handle LVs (length-value, cfdp spec) */
+/* returns number of bytes copied, or -1 on error */
+
+/************************************************************************/
+/** @brief Copy string data from a lv (length, value) pair.
+ *
+ * This copies a string value from an LV pair inside a PDU buffer.
+ * In CF this is used for file names embedded within PDUs.
+ *
+ * @note This function assures that the output string is terminated
+ * appropriately, such that it can be used as a normal C string.  As
+ * such, the buffer size must be at least 1 byte larger than the maximum
+ * string length.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       src_lv must not be NULL. buf must not be NULL.
+ *
+ * @param buf        Pointer to buffer to store string
+ * @param buf_maxsz  Total size of buffer pointer to by buf (usable size is 1 byte less, for termination)
+ * @param src_lv     Pointer to LV pair from logical PDU buffer
+ *
+ * @returns The resulting string length, NOT including termination character
+ * @retval -1 on error
+ */
+int CF_CFDP_CopyStringFromLV(char *buf, size_t buf_maxsz, const CF_Logical_Lv_t *src_lv);
+
+/************************************************************************/
+/** @brief Arm the ack timer
+ *
+ * @par Description
+ *       Helper function to arm the ack timer and set the flag.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t          Pointer to the transaction state
+ */
+void CF_CFDP_ArmAckTimer(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Receive state function to ignore a packet.
+ *
+ * @par Description
+ *       This function signature must match all receive state functions.
+ *       The parameter t is ignored here.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ */
+void CF_CFDP_RecvDrop(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Receive state function to process new rx transaction.
+ *
+ * @par Description
+ *       An idle transaction has never had message processing performed on it.
+ *       Typically, the first packet received for a transaction would be
+ *       the metadata pdu. There's a special case for R2 where the metadata
+ *       pdu could be missed, and filedata comes in instead. In that case,
+ *       an R2 transaction must still be started.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. There must be a received message.
+ *
+ * @param t    Pointer to the transaction state
+ * @param ph   The logical PDU buffer being received
+ */
+void CF_CFDP_RecvIdle(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief List traversal function to close all files in all active transactions.
+ *
+ * This helper is used in conjunction with CF_CList_Traverse().
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL.
+ *
+ * @param n       List node pointer
+ * @param context Opaque pointer, not used in this function
+ *
+ * @returns integer traversal code
+ * @retval Always CF_LIST_CONT indicate list traversal should not exit early.
+ */
+int CF_CFDP_CloseFiles(CF_CListNode_t *n, void *context);
+
+/************************************************************************/
+/** @brief Cycle the current active tx or make a new one active.
+ *
+ * @par Description
+ *       First traverses all tx transactions on the active queue. If at
+ *       least one is found, then it stops. Otherwise it moves a
+ *       transaction on the pending queue to the active queue and
+ *       tries again to find an active one.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param c Channel to cycle
+ */
+void CF_CFDP_CycleTx(CF_Channel_t *c);
+
+/************************************************************************/
+/** @brief List traversal function that cycles the first active tx.
+ *
+ * This helper is used in conjunction with CF_CList_Traverse().
+ *
+ * @par Description
+ *       There can only be one active tx transaction per engine cycle.
+ *       This function finds the first active, and then sends file
+ *       data pdus until there are no outgoing message buffers.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       node must not be NULL. Context must not be NULL.
+ *
+ * @param node    Pointer to list node
+ * @param context Pointer to CF_CFDP_CycleTx_args_t object (passed through)
+ *
+ * @returns integer traversal code
+ * @retval CF_CLIST_EXIT when it's found, which terminates list traversal
+ * @retval CF_CLIST_CONT when it's isn't found, which causes list traversal to continue
+ */
+int CF_CFDP_CycleTxFirstActive(CF_CListNode_t *node, void *context);
+
+/************************************************************************/
+/** @brief Call R and then S tick functions for all active transactions.
+ *
+ * @par Description
+ *       Traverses all transactions in the RX and TXW queues, and calls
+ *       their tick functions. Note that the TXW queue is used twice:
+ *       once for regular tick processing, and one for NAK response.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c Channel to tick
+ */
+void CF_CFDP_TickTransactions(CF_Channel_t *c);
+
+/************************************************************************/
+/** @brief Step each active playback directory.
+ *
+ * @par Description
+ *       Check if a playback directory needs iterated, and if so does, and
+ *       if a valid file is found initiates playback on it.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL, p must not be NULL.
+ *
+ * @param c  The channel associated with the playback
+ * @param p  The playback state
+ */
+void CF_CFDP_ProcessPlaybackDirectory(CF_Channel_t *c, CF_Playback_t *p);
+
+/************************************************************************/
+/** @brief Kick the dir playback if timer elapsed.
+ *
+ * @par Description
+ *       This function waits for the polling directory interval timer,
+ *       and if it has expired, starts a playback in the polling directory.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c  The channel associated with the playback
+ */
+void CF_CFDP_ProcessPollingDirectories(CF_Channel_t *c);
+
+/************************************************************************/
+/** @brief List traversal function that calls a r or s tick function.
+ *
+ * This helper is used in conjunction with CF_CList_Traverse().
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       node must not be NULL, context must not be NULL.
+ *
+ * @param node    Pointer to list node
+ * @param context Pointer to CF_CFDP_Tick_args_t object (passed through)
+ *
+ * @returns integer traversal code
+ * @retval CF_CLIST_EXIT when it's found, which terminates list traversal
+ * @retval CF_CLIST_CONT when it's isn't found, which causes list traversal to continue
+ */
+int CF_CFDP_DoTick(CF_CListNode_t *node, void *context);
+
+#endif /* !CF_CFDP_H */
+```
+
+### `cf_cfdp_dispatch.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_dispatch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include "cf_cfdp_dispatch.h"
+
+#include <stdio.h>
+#include <string.h>
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_dispatch.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_R_SubstateDispatchTable_t *dispatch, CF_CFDP_StateRecvFunc_t fd_fn)
+{
+    CF_Assert(t->state_data.r.sub_state < CF_RxSubState_NUM_STATES);
+    CF_CFDP_StateRecvFunc_t              selected_handler;
+    CF_Logical_PduFileDirectiveHeader_t *fdh;
+
+    selected_handler = NULL;
+
+    /* the CF_CFDP_R_SubstateDispatchTable_t is only used with file directive pdu */
+    if (ph->pdu_header.pdu_type == 0)
+    {
+        fdh = &ph->fdirective;
+        if (fdh->directive_code < CF_CFDP_FileDirective_INVALID_MAX)
+        {
+            if (dispatch->state[t->state_data.r.sub_state] != NULL)
+            {
+                selected_handler = dispatch->state[t->state_data.r.sub_state]->fdirective[fdh->directive_code];
+            }
+        }
+        else
+        {
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious;
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_DC_INV, CFE_EVS_EventType_ERROR,
+                              "CF R%d(%lu:%lu): received pdu with invalid directive code %d for sub-state %d",
+                              (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num, fdh->directive_code, t->state_data.r.sub_state);
+        }
+    }
+    else
+    {
+        if (!CF_TxnStatus_IsError(t->history->txn_stat))
+        {
+            selected_handler = fd_fn;
+        }
+        else
+        {
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.dropped;
+        }
+    }
+
+    /*
+     * NOTE: if no handler is selected, this will drop packets on the floor here,
+     * without incrementing any counter.  This was existing behavior.
+     */
+    if (selected_handler != NULL)
+    {
+        selected_handler(t, ph);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_dispatch.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_S_SubstateRecvDispatchTable_t *dispatch)
+{
+    CF_Assert(t->state_data.s.sub_state < CF_TxSubState_NUM_STATES);
+    const CF_CFDP_FileDirectiveDispatchTable_t *substate_tbl;
+    CF_CFDP_StateRecvFunc_t                     selected_handler;
+    CF_Logical_PduFileDirectiveHeader_t *       fdh;
+
+    /* send state, so we only care about file directive PDU */
+    selected_handler = NULL;
+    if (ph->pdu_header.pdu_type == 0)
+    {
+        fdh = &ph->fdirective;
+        if (fdh->directive_code < CF_CFDP_FileDirective_INVALID_MAX)
+        {
+            /* This should be silent (no event) if no handler is defined in the table */
+            substate_tbl = dispatch->substate[t->state_data.s.sub_state];
+            if (substate_tbl != NULL)
+            {
+                selected_handler = substate_tbl->fdirective[fdh->directive_code];
+            }
+        }
+        else
+        {
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious;
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_DC_INV, CFE_EVS_EventType_ERROR,
+                              "CF S%d(%lu:%lu): received pdu with invalid directive code %d for sub-state %d",
+                              (t->state == CF_TxnState_S2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num, fdh->directive_code, t->state_data.s.sub_state);
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_NON_FD_PDU, CFE_EVS_EventType_ERROR,
+                          "CF S%d(%lu:%lu): received non-file directive pdu", (t->state == CF_TxnState_S2),
+                          (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+    }
+
+    /* check that there's a valid function pointer. If there isn't,
+     * then silently ignore. We may want to discuss if it's worth
+     * shutting down the whole transaction if a PDU is received
+     * that doesn't make sense to be received (For example,
+     * class 1 CFDP receiving a NAK PDU) but for now, we silently
+     * ignore the received packet and keep chugging along. */
+    if (selected_handler)
+    {
+        selected_handler(t, ph);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_dispatch.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_DispatchTransmit(CF_Transaction_t *t, const CF_CFDP_S_SubstateSendDispatchTable_t *dispatch)
+{
+    CF_CFDP_StateSendFunc_t selected_handler;
+
+    selected_handler = dispatch->substate[t->state_data.s.sub_state];
+    if (selected_handler != NULL)
+    {
+        selected_handler(t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_dispatch.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_TxStateDispatch(CF_Transaction_t *t, const CF_CFDP_TxnSendDispatchTable_t *dispatch)
+{
+    CF_CFDP_StateSendFunc_t selected_handler;
+
+    CF_Assert(t->state < CF_TxnState_INVALID);
+    selected_handler = dispatch->tx[t->state];
+    if (selected_handler != NULL)
+    {
+        selected_handler(t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_dispatch.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_RxStateDispatch(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                             const CF_CFDP_TxnRecvDispatchTable_t *dispatch)
+{
+    CF_CFDP_StateRecvFunc_t selected_handler;
+
+    CF_Assert(t->state < CF_TxnState_INVALID);
+    selected_handler = dispatch->rx[t->state];
+    if (selected_handler != NULL)
+    {
+        selected_handler(t, ph);
+    }
+}
+```
+
+### `cf_cfdp_dispatch.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_dispatch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Common routines to dispatch operations based on a transaction state
+ * and/or received PDU type.
+ */
+
+#ifndef CF_CFDP_DISPATCH_H
+#define CF_CFDP_DISPATCH_H
+
+#include "cf_cfdp_types.h"
+
+/**
+ * @brief A function for dispatching actions to a handler, without existing PDU data
+ *
+ * This allows quick delegation to handler functions using dispatch tables.  This version is
+ * used on the transmit side, where a PDU will likely be generated/sent by the handler being
+ * invoked.
+ *
+ * @param[inout] t  The transaction object
+ */
+typedef void (*CF_CFDP_StateSendFunc_t)(CF_Transaction_t *t);
+
+/**
+ * @brief A function for dispatching actions to a handler, with existing PDU data
+ *
+ * This allows quick delegation of PDUs to handler functions using dispatch tables.  This version is
+ * used on the receive side where a PDU buffer is associated with the activity, which is then
+ * interpreted by the handler being invoked.
+ *
+ * @param[inout] t  The transaction object
+ * @param[inout] ph The PDU buffer currently being received/processed
+ */
+typedef void (*CF_CFDP_StateRecvFunc_t)(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/**
+ * @brief A table of transmit handler functions based on transaction state
+ *
+ * This reflects the main dispatch table for the transmit side of a transaction.
+ * Each possible state has a corresponding function pointer in the table to implement
+ * the PDU transmit action(s) associated with that state.
+ */
+typedef struct
+{
+    CF_CFDP_StateSendFunc_t tx[CF_TxnState_INVALID]; /**< \brief Transmit handler function */
+} CF_CFDP_TxnSendDispatchTable_t;
+
+/**
+ * @brief A table of receive handler functions based on transaction state
+ *
+ * This reflects the main dispatch table for the receive side of a transaction.
+ * Each possible state has a corresponding function pointer in the table to implement
+ * the PDU receive action(s) associated with that state.
+ */
+typedef struct
+{
+    /** \brief a separate recv handler for each possible file directive PDU in this state */
+    CF_CFDP_StateRecvFunc_t rx[CF_TxnState_INVALID];
+} CF_CFDP_TxnRecvDispatchTable_t;
+
+/**
+ * @brief A table of receive handler functions based on file directive code
+ *
+ * For PDUs identified as a "file directive" type - generally anything other
+ * than file data - this provides a table to branch to a different handler
+ * function depending on the value of the file directive code.
+ */
+typedef struct
+{
+    /** \brief a separate recv handler for each possible file directive PDU in this state */
+    CF_CFDP_StateRecvFunc_t fdirective[CF_CFDP_FileDirective_INVALID_MAX];
+} CF_CFDP_FileDirectiveDispatchTable_t;
+
+/**
+ * @brief A dispatch table for receive file transactions, receive side
+ *
+ * This is used for "receive file" transactions upon receipt of a directive PDU.
+ * Depending on the sub-state of the transaction, a different action may be taken.
+ */
+typedef struct
+{
+    const CF_CFDP_FileDirectiveDispatchTable_t *state[CF_RxSubState_NUM_STATES];
+} CF_CFDP_R_SubstateDispatchTable_t;
+
+/**
+ * @brief A dispatch table for send file transactions, receive side
+ *
+ * This is used for "send file" transactions upon receipt of a directive PDU.
+ * Depending on the sub-state of the transaction, a different action may be taken.
+ */
+typedef struct
+{
+    const CF_CFDP_FileDirectiveDispatchTable_t *substate[CF_TxSubState_NUM_STATES];
+} CF_CFDP_S_SubstateRecvDispatchTable_t;
+
+/**
+ * @brief A dispatch table for send file transactions, transmit side
+ *
+ * This is used for "send file" transactions to generate the next PDU to be sent.
+ * Depending on the sub-state of the transaction, a different action may be taken.
+ */
+typedef struct
+{
+    CF_CFDP_StateSendFunc_t substate[CF_TxSubState_NUM_STATES];
+} CF_CFDP_S_SubstateSendDispatchTable_t;
+
+/************************************************************************/
+/**
+ * @brief Dispatch function for received PDUs on receive-file transactions
+ *
+ * Receive file transactions primarily only react/respond to received PDUs
+ *
+ * @param t         Transaction
+ * @param ph        PDU Buffer
+ * @param dispatch  Dispatch table for file directive PDUs
+ * @param fd_fn     Function to handle file data PDUs
+ */
+void CF_CFDP_R_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_R_SubstateDispatchTable_t *dispatch, CF_CFDP_StateRecvFunc_t fd_fn);
+
+/************************************************************************/
+/**
+ * @brief Dispatch function for received PDUs on send-file transactions
+ *
+ * Send file transactions also react/respond to received PDUs.  Note that
+ * a file data PDU is not expected here.
+ *
+ * @param t         Transaction
+ * @param ph        PDU Buffer
+ * @param dispatch  Dispatch table for file directive PDUs
+ */
+void CF_CFDP_S_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                            const CF_CFDP_S_SubstateRecvDispatchTable_t *dispatch);
+
+/************************************************************************/
+/**
+ * @brief Dispatch function to send/generate PDUs on send-file transactions
+ *
+ * Send file transactions also generate PDUs each cycle based on the transaction state
+ *
+ * This does not have an existing PDU buffer at the time of dispatch, but one may
+ * be generated by the invoked function.
+ *
+ * @param t         Transaction
+ * @param dispatch  State-based dispatch table
+ */
+void CF_CFDP_S_DispatchTransmit(CF_Transaction_t *t, const CF_CFDP_S_SubstateSendDispatchTable_t *dispatch);
+
+/************************************************************************/
+/**
+ * @brief Top-level Dispatch function send a PDU based on current state of a transaction
+ *
+ * This does not have an existing PDU buffer at the time of dispatch, but one may
+ * be generated by the invoked function.
+ *
+ * @param t             Transaction
+ * @param dispatch      Transaction State-based Dispatch table
+ */
+void CF_CFDP_TxStateDispatch(CF_Transaction_t *t, const CF_CFDP_TxnSendDispatchTable_t *dispatch);
+
+/************************************************************************/
+/**
+ * @brief Top-level Dispatch function receive a PDU based on current state of a transaction
+ *
+ * @param t           Transaction
+ * @param ph          Received PDU Buffer
+ * @param dispatch    Transaction State-based Dispatch table
+ */
+void CF_CFDP_RxStateDispatch(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                             const CF_CFDP_TxnRecvDispatchTable_t *dispatch);
+
+#endif /* CF_CFDP_DISPATCH_H */
+```
+
+### `cf_cfdp_pdu.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_pdu.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Structures defining to CFDP PDUs
+ *
+ * Note that structures and enumerations defined in this file with a CF_CFDP
+ * prefix are defined according to the CCSDS CFDP specification (727.0-B-5).
+ * These values must match the specification for that structure/field, they are
+ * not locally changeable.
+ *
+ * @note Many of the structures defined in this file are variably-sized when
+ * encoded for network transmission.  As a result, C structures used to map
+ * to these structures are of limited usefulness, generally only capable
+ * of describing the first element(s) where offsets are fixed.  A marker member
+ * is utilized to indicate where the fixed data ends and variable
+ * length data begins.  At some point, the structures in this file
+ * should change to encode/decode functions.
+ */
+
+#ifndef CF_CFDP_PDU_H
+#define CF_CFDP_PDU_H
+
+#include "common_types.h"
+#include "cf_platform_cfg.h"
+
+#include <stddef.h>
+
+/**
+ * @brief Maximum encoded size of a CFDP PDU header
+ *
+ * Per the blue book, the size of the Entity ID and Sequence Number may be up to 8 bytes.
+ * CF is configurable in what it can accept and transmit, which may be smaller than what
+ * the blue book permits.
+ */
+#define CF_CFDP_MAX_HEADER_SIZE \
+    (sizeof(CF_CFDP_PduHeader_t) + (3 * sizeof(CF_CFDP_uint64_t))) /* 8 bytes for each variable item */
+
+/**
+ * @brief Minimum encoded size of a CFDP PDU header
+ *
+ * Per the blue book, the size of the Entity ID and Sequence Number must be at least 1 byte.
+ */
+#define CF_CFDP_MIN_HEADER_SIZE \
+    (sizeof(CF_CFDP_PduHeader_t) + (3 * sizeof(CF_CFDP_uint8_t))) /* 1 byte for each variable item */
+
+/**
+ * @brief Maximum encoded size of a CFDP PDU that this implementation can accept
+ *
+ * This definition reflects the current configuration of the CF application.
+ * Note that this is based on the size of the native representation of Entity ID and
+ * sequence number.  Although the bitwise representations of these items are
+ * different in the encoded packets vs. the native representation, the basic size
+ * still correlates (e.g. if it takes 4 bytes natively, it will be encoded into
+ * 4 bytes).
+ */
+#define CF_APP_MAX_HEADER_SIZE (sizeof(CF_CFDP_PduHeader_t) + sizeof(CF_TransactionSeq_t) + (3 * sizeof(CF_EntityId_t)))
+
+/*
+ * CFDP PDU data types are based on wrapper structs which
+ * accomplish two things:
+ *  1. Attempts to read/write directly as numbers will trigger
+ *     a compiler error - one must use the access macros.
+ *  2. Values are unaligned, and will not induce any alignment
+ *     padding - basically making the structs "packed".
+ *
+ * Many of the values within CFDP PDUs have some sort of bitfield
+ * or special encoding.  It is the responsibility of the codec
+ * routines to translate these bits into logical values.  This
+ * is why direct access to these bits is discouraged - there is
+ * always some translation required in order to use them.
+ */
+
+/**
+ * @brief Encoded 8-bit value in the CFDP PDU
+ */
+typedef struct
+{
+    uint8 octets[1];
+} CF_CFDP_uint8_t;
+
+/**
+ * @brief Encoded 16-bit value in the CFDP PDU
+ */
+typedef struct
+{
+    uint8 octets[2];
+} CF_CFDP_uint16_t;
+
+/**
+ * @brief Encoded 32-bit value in the CFDP PDU
+ */
+typedef struct
+{
+    uint8 octets[4];
+} CF_CFDP_uint32_t;
+
+/**
+ * @brief Encoded 64-bit value in the CFDP PDU
+ */
+typedef struct
+{
+    uint8 octets[8];
+} CF_CFDP_uint64_t;
+
+/**
+ * @brief Structure representing base CFDP PDU header
+ *
+ * This header appears at the beginning of all CFDP PDUs, of all types.
+ * Note that the header is variable length, it also contains source
+ * and destination entity IDs, and the transaction sequence number.
+ *
+ * Defined per section 5.1 of CCSDS 727.0-B-5
+ *
+ * @note this contains variable length data for the EID+TSN, which is _not_ included
+ * in this definition.  As a result, the sizeof(CF_CFDP_PduHeader_t) reflects only the
+ * size of the fixed fields.  Use CF_HeaderSize() to get the actual size of this structure.
+ */
+typedef struct CF_CFDP_PduHeader
+{
+    CF_CFDP_uint8_t  flags;           /**< \brief Flags indicating the PDU type, direction, mode, etc */
+    CF_CFDP_uint16_t length;          /**< \brief Length of the entire PDU, in octets */
+    CF_CFDP_uint8_t  eid_tsn_lengths; /**< \brief Lengths of the EID+TSN data (bitfields) */
+
+    /* variable-length data goes here - it is at least 3 additional bytes */
+} CF_CFDP_PduHeader_t;
+
+/**
+ * @brief Structure representing CFDP File Directive Header
+ *
+ * Defined per section 5.2 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduFileDirectiveHeader
+{
+    CF_CFDP_uint8_t directive_code;
+} CF_CFDP_PduFileDirectiveHeader_t;
+
+/**
+ * @brief Structure representing CFDP LV Object format
+ *
+ * These Length + Value pairs used in several CFDP PDU types,
+ * typically for storage of strings such as file names.
+ *
+ * Defined per table 5-2 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_lv
+{
+    CF_CFDP_uint8_t length; /**< \brief Length of data field */
+} CF_CFDP_lv_t;
+
+/**
+ * @brief Structure representing CFDP TLV Object format
+ *
+ * These Type + Length + Value pairs used in several CFDP PDU types,
+ * typically for file storage requests (section 5.4).
+ *
+ * Defined per table 5-3 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_tlv
+{
+    CF_CFDP_uint8_t type;   /**< \brief Nature of data field */
+    CF_CFDP_uint8_t length; /**< \brief Length of data field */
+} CF_CFDP_tlv_t;
+
+/**
+ * @brief Values for "type" field of TLV structure
+ *
+ * Defined per section 5.4 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_TLV_TYPE_FILESTORE_REQUEST      = 0,
+    CF_CFDP_TLV_TYPE_FILESTORE_RESPONSE     = 1,
+    CF_CFDP_TLV_TYPE_MESSAGE_TO_USER        = 2,
+    CF_CFDP_TLV_TYPE_FAULT_HANDLER_OVERRIDE = 4,
+    CF_CFDP_TLV_TYPE_FLOW_LABEL             = 5,
+    CF_CFDP_TLV_TYPE_ENTITY_ID              = 6,
+    CF_CFDP_TLV_TYPE_INVALID_MAX            = 7
+} CF_CFDP_TlvType_t;
+
+/**
+ * @brief Values for "directive_code" within CF_CFDP_PduFileDirectiveHeader_t
+ *
+ * Defined per table 5-4 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_FileDirective_INVALID_MIN = 0, /**< \brief Minimum used to limit range */
+    CF_CFDP_FileDirective_EOF         = 4,
+    CF_CFDP_FileDirective_FIN         = 5,
+    CF_CFDP_FileDirective_ACK         = 6,
+    CF_CFDP_FileDirective_METADATA    = 7,
+    CF_CFDP_FileDirective_NAK         = 8,
+    CF_CFDP_FileDirective_PROMPT      = 9,
+    CF_CFDP_FileDirective_KEEP_ALIVE  = 12,
+    CF_CFDP_FileDirective_INVALID_MAX = 13, /**< \brief Maximum used to limit range */
+} CF_CFDP_FileDirective_t;
+
+/**
+ * @brief Values for "acknowledgment transfer status"
+ *
+ * This enum is pertinent to the ACK PDU type, defines the
+ * values for the directive field.
+ *
+ * Defined per section 5.2.4 / table 5-8 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_AckTxnStatus_UNDEFINED    = 0,
+    CF_CFDP_AckTxnStatus_ACTIVE       = 1,
+    CF_CFDP_AckTxnStatus_TERMINATED   = 2,
+    CF_CFDP_AckTxnStatus_UNRECOGNIZED = 3,
+    CF_CFDP_AckTxnStatus_INVALID      = 4,
+} CF_CFDP_AckTxnStatus_t;
+
+/**
+ * @brief Values for "finished delivery code"
+ *
+ * This enum is pertinent to the FIN PDU type, defines the
+ * values for the delivery code field.
+ *
+ * Defined per section 5.2.3 / table 5-7 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_FinDeliveryCode_COMPLETE   = 0,
+    CF_CFDP_FinDeliveryCode_INCOMPLETE = 1,
+    CF_CFDP_FinDeliveryCode_INVALID    = 2,
+} CF_CFDP_FinDeliveryCode_t;
+
+/**
+ * @brief Values for "finished file status"
+ *
+ * This enum is pertinent to the FIN PDU type, defines the
+ * values for the file status field.
+ *
+ * Defined per section 5.2.3 / table 5-7 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_FinFileStatus_DISCARDED           = 0,
+    CF_CFDP_FinFileStatus_DISCARDED_FILESTORE = 1,
+    CF_CFDP_FinFileStatus_RETAINED            = 2,
+    CF_CFDP_FinFileStatus_UNREPORTED          = 3,
+    CF_CFDP_FinFileStatus_INVALID             = 4,
+} CF_CFDP_FinFileStatus_t;
+
+/**
+ * @brief Values for "condition code"
+ *
+ * This enum defines the values for the condition code field
+ * for the PDU types which have this field (EOF, FIN, ACK)
+ *
+ * Defined per table 5-5 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_ConditionCode_NO_ERROR                  = 0,
+    CF_CFDP_ConditionCode_POS_ACK_LIMIT_REACHED     = 1,
+    CF_CFDP_ConditionCode_KEEP_ALIVE_LIMIT_REACHED  = 2,
+    CF_CFDP_ConditionCode_INVALID_TRANSMISSION_MODE = 3,
+    CF_CFDP_ConditionCode_FILESTORE_REJECTION       = 4,
+    CF_CFDP_ConditionCode_FILE_CHECKSUM_FAILURE     = 5,
+    CF_CFDP_ConditionCode_FILE_SIZE_ERROR           = 6,
+    CF_CFDP_ConditionCode_NAK_LIMIT_REACHED         = 7,
+    CF_CFDP_ConditionCode_INACTIVITY_DETECTED       = 8,
+    CF_CFDP_ConditionCode_INVALID_FILE_STRUCTURE    = 9,
+    CF_CFDP_ConditionCode_CHECK_LIMIT_REACHED       = 10,
+    CF_CFDP_ConditionCode_UNSUPPORTED_CHECKSUM_TYPE = 11,
+    CF_CFDP_ConditionCode_SUSPEND_REQUEST_RECEIVED  = 14,
+    CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED   = 15,
+} CF_CFDP_ConditionCode_t;
+
+/**
+ * @brief Structure representing CFDP End of file PDU
+ *
+ * Defined per section 5.2.2 / table 5-6 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduEof
+{
+    CF_CFDP_uint8_t  cc;
+    CF_CFDP_uint32_t crc;
+    CF_CFDP_uint32_t size;
+} CF_CFDP_PduEof_t;
+
+/**
+ * @brief Structure representing CFDP Finished PDU
+ *
+ * Defined per section 5.2.3 / table 5-7 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduFin
+{
+    CF_CFDP_uint8_t flags;
+} CF_CFDP_PduFin_t;
+
+/**
+ * @brief Structure representing CFDP Acknowledge PDU
+ *
+ * Defined per section 5.2.4 / table 5-8 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduAck
+{
+    CF_CFDP_uint8_t directive_and_subtype_code;
+    CF_CFDP_uint8_t cc_and_transaction_status;
+} CF_CFDP_PduAck_t;
+
+/**
+ * @brief Structure representing CFDP Segment Request
+ *
+ * Defined per section 5.2.6 / table 5-11 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_SegmentRequest
+{
+    CF_CFDP_uint32_t offset_start;
+    CF_CFDP_uint32_t offset_end;
+} CF_CFDP_SegmentRequest_t;
+
+/**
+ * @brief Structure representing CFDP Non-Acknowledge PDU
+ *
+ * Defined per section 5.2.6 / table 5-10 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduNak
+{
+    CF_CFDP_uint32_t scope_start;
+    CF_CFDP_uint32_t scope_end;
+} CF_CFDP_PduNak_t;
+
+/**
+ * @brief Structure representing CFDP Metadata PDU
+ *
+ * Defined per section 5.2.5 / table 5-9 of CCSDS 727.0-B-5
+ */
+typedef struct CF_CFDP_PduMd
+{
+    CF_CFDP_uint8_t  segmentation_control;
+    CF_CFDP_uint32_t size;
+} CF_CFDP_PduMd_t;
+
+/**
+ * @brief PDU file data header
+ */
+typedef struct CF_CFDP_PduFileDataHeader
+{
+    /**
+     * NOTE: while this is the only fixed/required field in the data PDU, it may
+     * have segment metadata prior to this, depending on how the fields in the
+     * base header are set
+     */
+    CF_CFDP_uint32_t offset;
+} CF_CFDP_PduFileDataHeader_t;
+
+/**
+ * @brief PDU file data content
+ *
+ * To serve as a sanity check, this should accommodate the largest data block possible.
+ * In that light, it should be sized based on the minimum encoded header size, rather than
+ * the maximum, as that case leaves the most space for data.
+ */
+typedef struct CF_CFDP_PduFileDataContent
+{
+    uint8 data[CF_MAX_PDU_SIZE - sizeof(CF_CFDP_PduFileDataHeader_t) - CF_CFDP_MIN_HEADER_SIZE];
+} CF_CFDP_PduFileDataContent_t;
+
+#endif /* !CF_CFDP_PDU_H */
+```
+
+### `cf_cfdp_r.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_r.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CF Application CFDP receive logic source file
+ *
+ *  Handles all CFDP engine functionality specific to RX transactions.
+ */
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_dispatch.h"
+
+#include <stdio.h>
+#include <string.h>
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_SetFinTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat)
+{
+    CF_CFDP_SetTxnStatus(t, txn_stat);
+    t->flags.rx.send_fin = 1;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R1_Reset(CF_Transaction_t *t)
+{
+    CF_CFDP_ResetTransaction(t, 1);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_Reset(CF_Transaction_t *t)
+{
+    if ((t->state_data.r.sub_state == CF_RxSubState_WAIT_FOR_FIN_ACK) ||
+        (t->state_data.r.r2.eof_cc != CF_CFDP_ConditionCode_NO_ERROR) || CF_TxnStatus_IsError(t->history->txn_stat) ||
+        t->flags.com.canceled)
+    {
+        CF_CFDP_R1_Reset(t); /* it's done */
+    }
+    else
+    {
+        /* not waiting for fin ack, so trigger send fin */
+        t->flags.rx.send_fin = 1;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R_CheckCrc(CF_Transaction_t *t, uint32 expected_crc)
+{
+    int ret = 0;
+    CF_CRC_Finalize(&t->crc);
+    if (t->crc.result != expected_crc)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_CRC, CFE_EVS_EventType_ERROR,
+                          "CF R%d(%lu:%lu): crc mismatch for R trans. got 0x%08lx expected 0x%08lx",
+                          (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                          (unsigned long)t->history->seq_num, (unsigned long)t->crc.result,
+                          (unsigned long)expected_crc);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.crc_mismatch;
+        ret = 1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_Complete(CF_Transaction_t *t, int ok_to_send_nak)
+{
+    int send_nak = 0;
+    int send_fin = 0;
+    /* checking if r2 is complete. Check nak list, and send NAK if appropriate */
+    /* if all data is present, then there will be no gaps in the chunk */
+
+    if (!CF_TxnStatus_IsError(t->history->txn_stat))
+    {
+        /* first, check if md is received. If not, send specialized nak */
+        if (!t->flags.rx.md_recv)
+        {
+            send_nak = 1;
+        }
+        else
+        {
+            /* only look for 1 gap, since the goal here is just to know that there are gaps */
+            uint32 ret = CF_ChunkList_ComputeGaps(&t->chunks->chunks, 1, t->fsize, 0, NULL, NULL);
+
+            if (ret)
+            {
+                /* there is at least 1 gap, so send a nak */
+                send_nak = 1;
+            }
+            else if (t->flags.rx.eof_recv)
+            {
+                /* the eof was received, and there are no NAKs -- process completion in send fin state */
+                send_fin = 1;
+            }
+        }
+
+        if (send_nak && ok_to_send_nak)
+        {
+            /* Increment the acknak counter */
+            ++t->state_data.r.r2.acknak_count;
+
+            /* Check limit and handle if needed */
+            if (t->state_data.r.r2.acknak_count >= CF_AppData.config_table->chan[t->chan_num].nak_limit)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_NAK_LIMIT, CFE_EVS_EventType_ERROR,
+                                  "CF R%d(%lu:%lu): nak limited reach", (t->state == CF_TxnState_R2),
+                                  (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+                send_fin = 1;
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.nak_limit;
+                /* don't use CF_CFDP_R2_SetFinTxnStatus because many places in this function set send_fin */
+                CF_CFDP_SetTxnStatus(t, CF_TxnStatus_NAK_LIMIT_REACHED);
+                t->state_data.r.r2.acknak_count = 0; /* reset for fin/ack */
+            }
+            else
+            {
+                t->flags.rx.send_nak = 1;
+            }
+        }
+
+        if (send_fin)
+        {
+            t->flags.rx.complete = 1; /* latch completeness, since send_fin is cleared later */
+
+            /* the transaction is now considered complete, but this will not overwrite an
+             * error status code if there was one set */
+            CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_NO_ERROR);
+            
+            CFE_EVS_SendEvent(CF_INF_RX_COMPLETE, CFE_EVS_EventType_INFORMATION,
+                    "CF R%d(%lu:%lu) RX: Transaction Complete!", (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                    (unsigned long)t->history->seq_num);
+        }
+
+        /* always go to CF_RxSubState_FILEDATA, and let tick change state */
+        t->state_data.r.sub_state = CF_RxSubState_FILEDATA;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R_ProcessFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    const CF_Logical_PduFileDataHeader_t *fd;
+    int32                                 fret;
+    int                                   ret;
+
+    /* this function is only entered for data PDUs */
+    fd  = &ph->int_header.fd;
+    ret = 0;
+
+    /*
+     * NOTE: The decode routine should have left a direct pointer to the data and actual data length
+     * within the PDU.  The length has already been verified, too.  Should not need to make any
+     * adjustments here, just write it.
+     */
+
+    if (t->state_data.r.cached_pos != fd->offset)
+    {
+        fret = CF_WrappedLseek(t->fd, fd->offset, OS_SEEK_SET);
+        if (fret != fd->offset)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_SEEK_FD, CFE_EVS_EventType_ERROR,
+                              "CF R%d(%lu:%lu): failed to seek offset %ld, got %ld", (t->state == CF_TxnState_R2),
+                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num, (long)fd->offset,
+                              (long)fret);
+            CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILE_SIZE_ERROR);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek;
+            ret = -1; /* connection will reset in caller */
+        }
+    }
+
+    if (ret != -1)
+    {
+        fret = CF_WrappedWrite(t->fd, fd->data_ptr, fd->data_len);
+        if (fret != fd->data_len)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_WRITE, CFE_EVS_EventType_ERROR,
+                              "CF R%d(%lu:%lu): OS_write expected %ld, got %ld", (t->state == CF_TxnState_R2),
+                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num,
+                              (long)fd->data_len, (long)fret);
+            CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_write;
+            ret = -1; /* connection will reset in caller */
+        }
+        else
+        {
+            t->state_data.r.cached_pos = fd->data_len + fd->offset;
+            CF_AppData.hk.channel_hk[t->chan_num].counters.recv.file_data_bytes += fd->data_len;
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int                        ret = CF_RxEofRet_SUCCESS;
+    const CF_Logical_PduEof_t *eof;
+
+    if (!CF_CFDP_RecvEof(t, ph))
+    {
+        /* this function is only entered for PDUs identified as EOF type */
+        eof = &ph->int_header.eof;
+
+        /* only check size if MD received, otherwise it's still OK */
+        if (t->flags.rx.md_recv && (eof->size != t->fsize))
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_SIZE_MISMATCH, CFE_EVS_EventType_ERROR,
+                              "CF R%d(%lu:%lu): eof file size mismatch: got %lu expected %lu",
+                              (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num, (unsigned long)eof->size, (unsigned long)t->fsize);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_size_mismatch;
+            ret = CF_RxEofRet_FSIZE_MISMATCH;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_PDU_EOF, CFE_EVS_EventType_ERROR, "CF R%d(%lu:%lu): invalid eof packet",
+                          (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                          (unsigned long)t->history->seq_num);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+        ret = CF_RxEofRet_BAD_EOF;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R1_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int                        ret = CF_CFDP_R_SubstateRecvEof(t, ph);
+    uint32                     crc;
+    const CF_Logical_PduEof_t *eof;
+
+    /* this function is only entered for PDUs identified as EOF type */
+    eof = &ph->int_header.eof;
+    crc = eof->crc;
+
+    if (ret == CF_RxEofRet_SUCCESS)
+    {
+        /* Verify crc */
+        if (CF_CFDP_R_CheckCrc(t, crc) == 0)
+        {
+            /* successfully processed the file */
+            t->keep = 1; /* save the file */
+        }
+        /* if file failed to process, there's nothing to do. CF_CFDP_R_CheckCrc() generates an event on failure */
+    }
+
+    /* after exit, always reset since we are done */
+    /* reset even if the eof failed -- class 1, so it won't come again! */
+    CF_CFDP_R1_Reset(t);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    const CF_Logical_PduEof_t *eof;
+    int                        ret;
+
+    if (!t->flags.rx.eof_recv)
+    {
+        ret = CF_CFDP_R_SubstateRecvEof(t, ph);
+
+        /* did receiving eof succeed? */
+        if (ret == CF_RxEofRet_SUCCESS)
+        {
+            eof = &ph->int_header.eof;
+
+            t->flags.rx.eof_recv = 1;
+
+            /* need to remember the eof crc for later */
+            t->state_data.r.r2.eof_crc  = eof->crc;
+            t->state_data.r.r2.eof_size = eof->size;
+
+            /* always ack the EOF, even if we're not done */
+            t->state_data.r.r2.eof_cc = eof->cc;
+            t->flags.rx.send_ack      = 1; /* defer sending ack to tick handling */
+
+            /* only check for complete if EOF with no errors */
+            if (t->state_data.r.r2.eof_cc == CF_CFDP_ConditionCode_NO_ERROR)
+            {
+                CF_CFDP_R2_Complete(t, 1); /* CF_CFDP_R2_Complete() will change state */
+            }
+            else
+            {
+                CF_CFDP_SetTxnStatus(t, CF_TxnStatus_From_ConditionCode(t->state_data.r.r2.eof_cc));
+                CF_CFDP_R2_Reset(t);
+            }
+        }
+        else
+        {
+            /* bad eof sent? */
+            if (ret == CF_RxEofRet_FSIZE_MISMATCH)
+            {
+                CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILE_SIZE_ERROR);
+            }
+            else
+            {
+                /* can't do anything with this bad EOF, so return to FILEDATA */
+                t->state_data.r.sub_state = CF_RxSubState_FILEDATA;
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R1_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    int ret;
+
+    /* got file data pdu? */
+    ret = CF_CFDP_RecvFd(t, ph);
+    if (ret == 0)
+    {
+        ret = CF_CFDP_R_ProcessFd(t, ph);
+    }
+
+    if (ret == 0)
+    {
+        /* class 1 digests crc */
+        CF_CRC_Digest(&t->crc, ph->int_header.fd.data_ptr, ph->int_header.fd.data_len);
+    }
+    else
+    {
+        /* Reset transaction on failure */
+        CF_CFDP_R1_Reset(t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    const CF_Logical_PduFileDataHeader_t *fd;
+    int                                   ret;
+
+    /* this function is only entered for data PDUs */
+    fd = &ph->int_header.fd;
+
+    /* got file data pdu? */
+    ret = CF_CFDP_RecvFd(t, ph);
+    if (ret == 0)
+    {
+        ret = CF_CFDP_R_ProcessFd(t, ph);
+    }
+
+    if (ret == 0)
+    {
+        /* class 2 does crc at FIN, but track gaps */
+        CF_ChunkListAdd(&t->chunks->chunks, fd->offset, fd->data_len);
+
+        if (t->flags.rx.fd_nak_sent)
+        {
+            CF_CFDP_R2_Complete(t, 0); /* once nak-retransmit received, start checking for completion at each fd */
+        }
+
+        if (!t->flags.rx.complete)
+        {
+            CF_CFDP_ArmAckTimer(t); /* re-arm ack timer, since we got data */
+        }
+
+        t->state_data.r.r2.acknak_count = 0;
+    }
+    else
+    {
+        /* Reset transaction on failure */
+        CF_CFDP_R2_Reset(t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_GapCompute(const CF_ChunkList_t *chunks, const CF_Chunk_t *c, void *opaque)
+{
+    CF_GapComputeArgs_t *        args = (CF_GapComputeArgs_t *)opaque;
+    CF_Logical_SegmentRequest_t *pseg;
+    CF_Logical_SegmentList_t *   pseglist;
+    CF_Logical_PduNak_t *        nak;
+
+    /* This function is only invoked for NAK types */
+    nak      = args->nak;
+    pseglist = &nak->segment_list;
+    CF_Assert(c->size > 0);
+
+    /* it seems that scope in the old engine is not used the way I read it in the spec, so
+     * leave this code here for now for future reference */
+
+    if (pseglist->num_segments < CF_PDU_MAX_SEGMENTS)
+    {
+        pseg = &pseglist->segments[pseglist->num_segments];
+
+        pseg->offset_start = c->offset - nak->scope_start;
+        pseg->offset_end   = pseg->offset_start + c->size;
+
+        ++pseglist->num_segments;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t)
+{
+    CF_Logical_PduBuffer_t *ph =
+        CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_NAK, t->history->peer_eid,
+                                   CF_AppData.config_table->local_eid, 1, t->history->seq_num, 1);
+    CF_Logical_PduNak_t *nak;
+    CF_SendRet_t         sret;
+
+    int ret = -1;
+
+    if (ph)
+    {
+        nak = &ph->int_header.nak;
+
+        if (t->flags.rx.md_recv)
+        {
+            /* we have metadata, so send valid nak */
+            CF_GapComputeArgs_t args = {t, nak};
+            uint32              cret;
+
+            nak->scope_start = 0;
+            cret             = CF_ChunkList_ComputeGaps(&t->chunks->chunks,
+                                            (t->chunks->chunks.count < t->chunks->chunks.max_chunks)
+                                                ? t->chunks->chunks.max_chunks
+                                                : (t->chunks->chunks.max_chunks - 1),
+                                            t->fsize, 0, CF_CFDP_R2_GapCompute, &args);
+
+            if (!cret)
+            {
+                /* no gaps left, so go ahead and check for completion */
+                t->flags.rx.complete = 1; /* we know md was received, and there's no gaps -- it's complete */
+                ret                  = 0;
+            }
+            else
+            {
+                /* gaps are present, so let's send the nak pdu */
+                nak->scope_end          = 0;
+                sret                    = CF_CFDP_SendNak(t, ph);
+                t->flags.rx.fd_nak_sent = 1;         /* latch that at least one nak has been sent requesting filedata */
+                CF_Assert(sret != CF_SendRet_ERROR); /* NOTE: this CF_Assert is here because CF_CFDP_SendNak() does not
+                                                     return CF_SendRet_ERROR, so if it's ever added to that function we
+                                                     need to test handling it here */
+                if (sret == CF_SendRet_SUCCESS)
+                {
+                    CF_AppData.hk.channel_hk[t->chan_num].counters.sent.nak_segment_requests += cret;
+                    ret = 0;
+                }
+            }
+        }
+        else
+        {
+            /* need to send simple nak packet to request metadata pdu again */
+            /* after doing so, transition to recv md state */
+            CFE_EVS_SendEvent(CF_EID_INF_CFDP_R_REQUEST_MD, CFE_EVS_EventType_INFORMATION,
+                              "CF R%d(%lu:%lu): requesting MD", (t->state == CF_TxnState_R2),
+                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+            /* scope start/end, and sr[0] start/end == 0 special value to request metadata */
+            nak->scope_start                           = 0;
+            nak->scope_end                             = 0;
+            nak->segment_list.segments[0].offset_start = 0;
+            nak->segment_list.segments[0].offset_end   = 0;
+            nak->segment_list.num_segments             = 1;
+
+            sret = CF_CFDP_SendNak(t, ph);
+            CF_Assert(sret != CF_SendRet_ERROR); /* this CF_Assert is here because CF_CFDP_SendNak() does not return
+                                                    CF_SendRet_ERROR */
+            if (sret == CF_SendRet_SUCCESS)
+            {
+                ret = 0;
+            }
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R_Init(CF_Transaction_t *t)
+{
+    int32 ret;
+
+    if (t->state == CF_TxnState_R2)
+    {
+        if (!t->flags.rx.md_recv)
+        {
+            /* we need to make a temp file and then do a NAK for md pdu */
+            /* the transaction already has a history, and that has a buffer that we can use to
+             * hold the temp filename */
+            /* the -1 below is to make room for the slash */
+            snprintf(t->history->fnames.dst_filename, sizeof(t->history->fnames.dst_filename) - 1, "%.*s/%lu.tmp",
+                     CF_FILENAME_MAX_PATH - 1, CF_AppData.config_table->tmp_dir, (unsigned long)t->history->seq_num);
+            CFE_EVS_SendEvent(CF_EID_INF_CFDP_R_TEMP_FILE, CFE_EVS_EventType_INFORMATION,
+                              "CF R%d(%lu:%lu): making temp file %s for transaction without MD",
+                              (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num, t->history->fnames.dst_filename);
+        }
+
+        CF_CFDP_ArmAckTimer(t);
+    }
+
+    ret = CF_WrappedOpenCreate(&t->fd, t->history->fnames.dst_filename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE,
+                               OS_READ_WRITE);
+    if (ret < 0)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_CREAT, CFE_EVS_EventType_ERROR,
+                          "CF R%d(%lu:%lu): failed to create file %s for writing, error=%ld",
+                          (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                          (unsigned long)t->history->seq_num, t->history->fnames.dst_filename, (long)ret);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open;
+        t->fd = OS_OBJECT_ID_UNDEFINED; /* just in case */
+        if (t->state == CF_TxnState_R2)
+        {
+            CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+        }
+        else
+        {
+            CF_CFDP_R1_Reset(t);
+        }
+    }
+    else
+    {
+        t->state_data.r.sub_state = CF_RxSubState_FILEDATA;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R2_CalcCrcChunk(CF_Transaction_t *t)
+{
+    uint8  buf[CF_R2_CRC_CHUNK_SIZE];
+    size_t count_bytes;
+    size_t want_offs_size;
+    size_t read_size;
+    int    fret;
+    int    ret;
+    bool   success = true;
+
+    memset(buf, 0, sizeof(buf));
+
+    count_bytes = 0;
+    ret         = -1;
+
+    if (t->state_data.r.r2.rx_crc_calc_bytes == 0)
+    {
+        CF_CRC_Start(&t->crc);
+    }
+
+    while ((count_bytes < CF_AppData.config_table->rx_crc_calc_bytes_per_wakeup) &&
+           (t->state_data.r.r2.rx_crc_calc_bytes < t->fsize))
+    {
+        want_offs_size = t->state_data.r.r2.rx_crc_calc_bytes + sizeof(buf);
+
+        if (want_offs_size > t->fsize)
+        {
+            read_size = t->fsize - t->state_data.r.r2.rx_crc_calc_bytes;
+        }
+        else
+        {
+            read_size = sizeof(buf);
+        }
+
+        if (t->state_data.r.cached_pos != t->state_data.r.r2.rx_crc_calc_bytes)
+        {
+            fret = CF_WrappedLseek(t->fd, t->state_data.r.r2.rx_crc_calc_bytes, OS_SEEK_SET);
+            if (fret != t->state_data.r.r2.rx_crc_calc_bytes)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_SEEK_CRC, CFE_EVS_EventType_ERROR,
+                                  "CF R%d(%lu:%lu): failed to seek offset %lu, got %ld", (t->state == CF_TxnState_R2),
+                                  (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num,
+                                  (unsigned long)t->state_data.r.r2.rx_crc_calc_bytes, (long)fret);
+                CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILE_SIZE_ERROR);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek;
+                success = false;
+                break;
+            }
+        }
+
+        fret = CF_WrappedRead(t->fd, buf, read_size);
+        if (fret != read_size)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_READ, CFE_EVS_EventType_ERROR,
+                              "CF R%d(%lu:%lu): failed to read file expected %lu, got %ld",
+                              (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num, (unsigned long)read_size, (long)fret);
+            CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILE_SIZE_ERROR);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_read;
+            success = false;
+            break;
+        }
+
+        CF_CRC_Digest(&t->crc, buf, read_size);
+        t->state_data.r.r2.rx_crc_calc_bytes += read_size;
+        t->state_data.r.cached_pos = t->state_data.r.r2.rx_crc_calc_bytes;
+        count_bytes += read_size;
+    }
+
+    if (success && t->state_data.r.r2.rx_crc_calc_bytes == t->fsize)
+    {
+        /* all bytes calculated, so now check */
+        if (!CF_CFDP_R_CheckCrc(t, t->state_data.r.r2.eof_crc))
+        {
+            /* crc matched! We are happy */
+            t->keep = 1; /* save the file */
+
+            /* set fin pdu status */
+            t->state_data.r.r2.dc = CF_CFDP_FinDeliveryCode_COMPLETE;
+            t->state_data.r.r2.fs = CF_CFDP_FinFileStatus_RETAINED;
+        }
+        else
+        {
+            CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILE_CHECKSUM_FAILURE);
+        }
+
+        t->flags.com.crc_calc = 1;
+
+        ret = 0;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t)
+{
+    CF_SendRet_t sret;
+    int          ret = 0;
+
+    if (!CF_TxnStatus_IsError(t->history->txn_stat) && !t->flags.com.crc_calc)
+    {
+        /* no error, and haven't checked crc -- so start checking it */
+        if (CF_CFDP_R2_CalcCrcChunk(t))
+        {
+            ret = -1; /* signal to caller to re-enter next tick */
+        }
+    }
+
+    if (ret != -1)
+    {
+        sret = CF_CFDP_SendFin(t, t->state_data.r.r2.dc, t->state_data.r.r2.fs,
+                               CF_TxnStatus_To_ConditionCode(t->history->txn_stat));
+        CF_Assert(sret != CF_SendRet_ERROR); /* CF_CFDP_SendFin does not return CF_SendRet_ERROR */
+        t->state_data.r.sub_state =
+            CF_RxSubState_WAIT_FOR_FIN_ACK; /* whether or not fin send successful, ok to transition state */
+        if (sret != CF_SendRet_SUCCESS)
+        {
+            ret = -1;
+        }
+    }
+
+    /* if no message, then try again next time */
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_Recv_fin_ack(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    if (!CF_CFDP_RecvAck(t, ph))
+    {
+        /* got fin ack, so time to close the state */
+        CF_CFDP_R2_Reset(t);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_PDU_FINACK, CFE_EVS_EventType_ERROR, "CF R%d(%lu:%lu): invalid fin-ack",
+                          (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                          (unsigned long)t->history->seq_num);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    bool success = true;
+
+    /* it isn't an error to get another MD pdu, right? */
+    if (!t->flags.rx.md_recv)
+    {
+        /* NOTE: t->flags.rx.md_recv always 1 in R1, so this is R2 only */
+        /* parse the md pdu. this will overwrite the transaction's history, which contains our filename. so let's
+         * save the filename in a local buffer so it can be used with OS_mv upon successful parsing of
+         * the md pdu */
+        char fname[CF_FILENAME_MAX_LEN];
+        int  status;
+
+        strcpy(
+            fname,
+            t->history->fnames.dst_filename); /* strcpy is ok, since fname is CF_FILENAME_MAX_LEN like dst_filename */
+        status = CF_CFDP_RecvMd(t, ph);
+        if (!status)
+        {
+            /* successfully obtained md pdu */
+            if (t->flags.rx.eof_recv)
+            {
+                /* eof was received, so check that md and eof sizes match */
+                if (t->state_data.r.r2.eof_size != t->fsize)
+                {
+                    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_EOF_MD_SIZE, CFE_EVS_EventType_ERROR,
+                                      "CF R%d(%lu:%lu): eof/md size mismatch md: %lu, eof: %lu",
+                                      (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                                      (unsigned long)t->history->seq_num, (unsigned long)t->fsize,
+                                      (unsigned long)t->state_data.r.r2.eof_size);
+                    ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_size_mismatch;
+                    CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILE_SIZE_ERROR);
+                    success = false;
+                }
+            }
+
+            if (success)
+            {
+                /* close and rename file */
+                CF_WrappedClose(t->fd);
+                CFE_ES_PerfLogEntry(CF_PERF_ID_RENAME);
+
+                /* Note OS_mv attempts a rename, then copy/delete if that fails so it works across file systems */
+                status = OS_mv(fname, t->history->fnames.dst_filename);
+
+                CFE_ES_PerfLogExit(CF_PERF_ID_RENAME);
+                if (status != OS_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_RENAME, CFE_EVS_EventType_ERROR,
+                                      "CF R%d(%lu:%lu): failed to rename file in R2, error=%ld",
+                                      (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                                      (unsigned long)t->history->seq_num, (long)status);
+                    t->fd = OS_OBJECT_ID_UNDEFINED;
+                    CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+                    ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_rename;
+                    success = false;
+                }
+                else
+                {
+                    int32 ret =
+                        CF_WrappedOpenCreate(&t->fd, t->history->fnames.dst_filename, OS_FILE_FLAG_NONE, OS_READ_WRITE);
+                    if (ret < 0)
+                    {
+                        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_OPEN, CFE_EVS_EventType_ERROR,
+                                          "CF R%d(%lu:%lu): failed to open renamed file in R2, error=%ld",
+                                          (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                                          (unsigned long)t->history->seq_num, (long)ret);
+                        CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+                        ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open;
+                        t->fd   = OS_OBJECT_ID_UNDEFINED; /* just in case */
+                        success = false;
+                    }
+                }
+
+                if (success)
+                {
+                    t->state_data.r.cached_pos      = 0; /* reset psn due to open */
+                    t->flags.rx.md_recv             = 1;
+                    t->state_data.r.r2.acknak_count = 0; /* in case part of nak */
+                    CF_CFDP_R2_Complete(t, 1);           /* check for completion now that md is received */
+                }
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_PDU_MD, CFE_EVS_EventType_ERROR, "CF R%d(%lu:%lu): invalid md received",
+                              (t->state == CF_TxnState_R2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+            /* do nothing here, since it will be nak'd again later */
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    static const CF_CFDP_FileDirectiveDispatchTable_t r1_fdir_handlers = {
+        .fdirective = {[CF_CFDP_FileDirective_EOF] = CF_CFDP_R1_SubstateRecvEof}};
+    static const CF_CFDP_R_SubstateDispatchTable_t substate_fns = {
+        .state = {[CF_RxSubState_FILEDATA]         = &r1_fdir_handlers,
+                  [CF_RxSubState_EOF]              = &r1_fdir_handlers,
+                  [CF_RxSubState_WAIT_FOR_FIN_ACK] = &r1_fdir_handlers}};
+
+    CF_CFDP_R_DispatchRecv(t, ph, &substate_fns, CF_CFDP_R1_SubstateRecvFileData);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    static const CF_CFDP_FileDirectiveDispatchTable_t r2_fdir_handlers_normal = {
+        .fdirective = {
+            [CF_CFDP_FileDirective_EOF]      = CF_CFDP_R2_SubstateRecvEof,
+            [CF_CFDP_FileDirective_METADATA] = CF_CFDP_R2_RecvMd,
+        }};
+    static const CF_CFDP_FileDirectiveDispatchTable_t r2_fdir_handlers_finack = {
+        .fdirective = {
+            [CF_CFDP_FileDirective_EOF] = CF_CFDP_R2_SubstateRecvEof,
+            [CF_CFDP_FileDirective_ACK] = CF_CFDP_R2_Recv_fin_ack,
+        }};
+    static const CF_CFDP_R_SubstateDispatchTable_t substate_fns = {
+        .state = {[CF_RxSubState_FILEDATA]         = &r2_fdir_handlers_normal,
+                  [CF_RxSubState_EOF]              = &r2_fdir_handlers_normal,
+                  [CF_RxSubState_WAIT_FOR_FIN_ACK] = &r2_fdir_handlers_finack}};
+
+    CF_CFDP_R_DispatchRecv(t, ph, &substate_fns, CF_CFDP_R2_SubstateRecvFileData);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R_Cancel(CF_Transaction_t *t)
+{
+    /* for cancel, only need to send FIN if R2 */
+    if ((t->state == CF_TxnState_R2) && (t->state_data.r.sub_state < CF_RxSubState_WAIT_FOR_FIN_ACK))
+    {
+        t->flags.rx.send_fin = 1;
+    }
+    else
+    {
+        CF_CFDP_R1_Reset(t); /* if R1, just call it quits */
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R_SendInactivityEvent(CF_Transaction_t *t)
+{
+    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_INACT_TIMER, CFE_EVS_EventType_ERROR,
+                      "CF R%d(%lu:%lu): inactivity timer expired", (t->state == CF_TxnState_R2),
+                      (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+    ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.inactivity_timer;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_r.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_R_Tick(CF_Transaction_t *t, int *cont /* unused */)
+{
+    /* Steven is not real happy with this function. There should be a better way to separate out
+     * the logic by state so that it isn't a bunch of if statements for different flags
+     */
+
+    bool success = true;
+
+    /* at each tick, various timers used by R are checked */
+    /* first, check inactivity timer */
+    if (t->state == CF_TxnState_R2)
+    {
+        if (!t->flags.rx.inactivity_fired)
+        {
+            if (CF_Timer_Expired(&t->inactivity_timer))
+            {
+                CF_CFDP_R_SendInactivityEvent(t);
+
+                CF_CFDP_R2_SetFinTxnStatus(t, CF_TxnStatus_INACTIVITY_DETECTED);
+                t->flags.rx.inactivity_fired = 1;
+            }
+            else
+            {
+                CF_Timer_Tick(&t->inactivity_timer);
+            }
+        }
+
+        /* rx maintenance: possibly process send_eof_ack, send_nak or send_fin */
+        if (t->flags.rx.send_ack)
+        {
+            CF_SendRet_t sret = CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_ACTIVE, CF_CFDP_FileDirective_EOF,
+                                                t->state_data.r.r2.eof_cc, t->history->peer_eid, t->history->seq_num);
+            CF_Assert(sret != CF_SendRet_ERROR);
+
+            /* if CF_SendRet_SUCCESS, then move on in the state machine. CF_CFDP_SendAck does not return
+             * CF_SendRet_ERROR */
+            if (sret != CF_SendRet_NO_MSG)
+            {
+                t->flags.rx.send_ack = 0;
+            }
+        }
+        else if (t->flags.rx.send_nak)
+        {
+            if (!CF_CFDP_R_SubstateSendNak(t))
+            {
+                t->flags.rx.send_nak = 0; /* will re-enter on error */
+            }
+        }
+        else if (t->flags.rx.send_fin)
+        {
+            if (!CF_CFDP_R2_SubstateSendFin(t))
+            {
+                t->flags.rx.send_fin = 0; /* will re-enter on error */
+            }
+        }
+        else
+        {
+            /* don't care about any other cases */
+        }
+
+        if (t->flags.com.ack_timer_armed)
+        {
+            if (CF_Timer_Expired(&t->ack_timer))
+            {
+                /* ack timer expired, so check for completion */
+                if (!t->flags.rx.complete)
+                {
+                    CF_CFDP_R2_Complete(t, 1);
+                }
+                else if (t->state_data.r.sub_state == CF_RxSubState_WAIT_FOR_FIN_ACK)
+                {
+                    /* Increment acknak counter */
+                    ++t->state_data.r.r2.acknak_count;
+
+                    /* Check limit and handle if needed */
+                    if (t->state_data.r.r2.acknak_count >= CF_AppData.config_table->chan[t->chan_num].ack_limit)
+                    {
+                        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_R_ACK_LIMIT, CFE_EVS_EventType_ERROR,
+                                          "CF R2(%lu:%lu): ack limit reached, no fin-ack",
+                                          (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+                        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_ACK_LIMIT_NO_FIN);
+                        ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.ack_limit;
+                        CF_CFDP_R2_Reset(t);
+                        success = false;
+                    }
+                    else
+                    {
+                        t->flags.rx.send_fin = 1;
+                    }
+                }
+
+                if (success)
+                {
+                    CF_CFDP_ArmAckTimer(t); /* whether sending fin or waiting for more filedata, need ack timer armed */
+                }
+            }
+            else
+            {
+                CF_Timer_Tick(&t->ack_timer);
+            }
+        }
+    }
+    else
+    {
+        if (CF_Timer_Expired(&t->inactivity_timer))
+        {
+            CF_CFDP_R_SendInactivityEvent(t);
+            CF_CFDP_R1_Reset(t);
+        }
+        else
+        {
+            CF_Timer_Tick(&t->inactivity_timer);
+        }
+    }
+}
+```
+
+### `cf_cfdp_r.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_r.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Implementation related to CFDP Receive File transactions
+ *
+ * This file contains various state handling routines for
+ * transactions which are receiving a file.
+ */
+
+#ifndef CF_CFDP_R_H
+#define CF_CFDP_R_H
+
+#include "cf_cfdp.h"
+
+/**
+ * @brief Argument for Gap Compute function
+ *
+ * This is used in conjunction with CF_CFDP_R2_GapCompute
+ */
+typedef struct
+{
+    CF_Transaction_t *   t;   /**< \brief Current transaction being processed */
+    CF_Logical_PduNak_t *nak; /**< \brief Current NAK PDU contents */
+} CF_GapComputeArgs_t;
+
+/************************************************************************/
+/** @brief R1 receive pdu processing.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief R2 receive pdu processing.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Perform tick (time-based) processing for R transactions.
+ *
+ * @par Description
+ *       This function is called on every transaction by the engine on
+ *       every CF wakeup. This is where flags are checked to send ACK,
+ *       NAK, and FIN. It checks for inactivity timer and processes the
+ *       ack timer. The ack timer is what triggers re-sends of PDUs
+ *       that require acknowledgment.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. cont is unused, so may be NULL
+ *
+ * @param t  Pointer to the transaction object
+ * @param cont Ignored/Unused
+ *
+ */
+void CF_CFDP_R_Tick(CF_Transaction_t *t, int *cont);
+
+/************************************************************************/
+/** @brief Cancel an R transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_R_Cancel(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Initialize a transaction structure for R.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_R_Init(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Helper function to store transaction status code and set send_fin flag.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param txn_stat Status Code value to set within transaction
+ */
+void CF_CFDP_R2_SetFinTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat);
+
+/************************************************************************/
+/** @brief CFDP R1 transaction reset function.
+ *
+ * @par Description
+ *       All R transactions use this call to indicate the transaction
+ *       state can be returned to the system. While this function currently
+ *       only calls CF_CFDP_ResetTransaction(), it is here as a placeholder.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_R1_Reset(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief CFDP R2 transaction reset function.
+ *
+ * @par Description
+ *       Handles reset logic for R2, then calls R1 reset logic.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_R2_Reset(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Checks that the transaction file's CRC matches expected.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ *
+ * @retval 0 on CRC match, otherwise error.
+ *
+ *
+ * @param t            Pointer to the transaction object
+ * @param expected_crc Expected CRC
+ */
+int CF_CFDP_R_CheckCrc(CF_Transaction_t *t, uint32 expected_crc);
+
+/************************************************************************/
+/** @brief Checks R2 transaction state for transaction completion status.
+ *
+ * @par Description
+ *       This function is called anywhere there's a desire to know if the
+ *       transaction has completed. It may trigger other actions by setting
+ *       flags to be handled during tick processing. In order for a
+ *       transaction to be complete, it must have had its meta-data PDU
+ *       received, the EOF must have been received, and there must be
+ *       no gaps in the file. EOF is not checked in this function, because
+ *       it's only called from functions after EOF is received.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ok_to_send_nak If set to 0, suppress sending of a NAK packet
+ */
+void CF_CFDP_R2_Complete(CF_Transaction_t *t, int ok_to_send_nak);
+
+/************************************************************************/
+/** @brief Process a filedata PDU on a transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ *
+ * @retval 0 on success. Returns anything else on error.
+ *
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+int CF_CFDP_R_ProcessFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Processing receive EOF common functionality for R1/R2.
+ *
+ * @par Description
+ *       This function is used for both R1 and R2 eof receive. It calls
+ *       the unmarshaling function and then checks known transaction
+ *       data against the PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ *
+ * @retval 0 on success. Returns anything else on error.
+ *
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+int CF_CFDP_R_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process receive EOF for R1.
+ *
+ * @par Description
+ *       Only need to confirm crc for R1.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ *
+ */
+void CF_CFDP_R1_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process receive EOF for R2.
+ *
+ * @par Description
+ *       For R2, need to trigger the send of EOF-ACK and then call the
+ *       check complete function which will either send NAK or FIN.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ *
+ */
+void CF_CFDP_R2_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process received file data for R1.
+ *
+ * @par Description
+ *       For R1, only need to digest the CRC.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R1_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process received file data for R2.
+ *
+ * @par Description
+ *       For R2, the CRC is checked after the whole file is received
+ *       since there may be gaps. Instead, insert file received range
+ *       data into chunks. Once NAK has been received, this function
+ *       always checks for completion. This function also re-arms
+ *       the ack timer.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R2_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Loads a single NAK segment request.
+ *
+ * @par Description
+ *       This is a function callback from CF_ChunkList_ComputeGaps().
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, c must not be NULL, opaque must not be NULL.
+ *
+ * @param chunks Not used, required for compatibility with CF_ChunkList_ComputeGaps
+ * @param c      Pointer to a single chunk information
+ * @param opaque Pointer to a CF_GapComputeArgs_t object (passed via CF_ChunkList_ComputeGaps)
+ */
+void CF_CFDP_R2_GapCompute(const CF_ChunkList_t *chunks, const CF_Chunk_t *c, void *opaque);
+
+/************************************************************************/
+/** @brief Send a NAK pdu for R2.
+ *
+ * @par Description
+ *       NAK pdu is sent when there are gaps in the received data. The
+ *       chunks class tracks this and generates the nak pdu by calculating
+ *       gaps internally and calling CF_CFDP_R2_GapCompute(). There is a special
+ *       case where if a metadata pdu has not been received, then a nak
+ *       packet will be sent to request another.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @retval 0 on success. Returns anything else on error.
+ *
+ * @param t  Pointer to the transaction object
+ */
+int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Calculate up to the configured amount of bytes of CRC.
+ *
+ * @par Description
+ *       The configuration table has a number of bytes to calculate per
+ *       transaction per wakeup. At each wakeup, the file is read and
+ *       this number of bytes are calculated. This function will set
+ *       the checksum error condition code if the final crc does not match.
+ *
+ * @par PTFO
+ *       Increase throughput by consuming all crc bytes per wakeup in
+ *       transaction-order. This would require a change to the meaning
+ *       of the value in the configuration table.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @retval 0 on completion
+ * @retval -1 on non-completion. Error status is stored in condition code.
+ *
+ */
+int CF_CFDP_R2_CalcCrcChunk(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Send a FIN pdu.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @retval 0 on success. Returns anything else on error.
+ *
+ * @param t  Pointer to the transaction object
+ *
+ */
+int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Process receive FIN-ACK pdu.
+ *
+ * @par Description
+ *       This is the end of an R2 transaction. Simply reset the transaction
+ *       state.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R2_Recv_fin_ack(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process receive metadata pdu for R2.
+ *
+ * @par Description
+ *       It's possible that metadata PDU was missed in cf_cfdp.c, or that
+ *       it was re-sent. This function checks if it was already processed,
+ *       and if not, handles it. If there was a temp file opened due to
+ *       missed metadata pdu, it will move the file to the correct
+ *       destination according to the metadata pdu.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_R2_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Sends an inactivity timer expired event to EVS.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_R_SendInactivityEvent(CF_Transaction_t *t);
+
+#endif /* CF_CFDP_R_H */
+```
+
+### `cf_cfdp_s.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_s.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application CFDP send logic source file
+ *
+ *  Handles all CFDP engine functionality specific to TX transactions.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include "cf_cfdp_s.h"
+#include "cf_cfdp_dispatch.h"
+
+#include <stdio.h>
+#include <string.h>
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_CFDP_S_Reset(CF_Transaction_t *t)
+{
+    CF_CFDP_ResetTransaction(t, 1);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_SendRet_t CF_CFDP_S_SendEof(CF_Transaction_t *t)
+{
+    if (!t->flags.com.crc_calc)
+    {
+        CF_CRC_Finalize(&t->crc);
+        t->flags.com.crc_calc = 1;
+    }
+    return CF_CFDP_SendEof(t);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S1_SubstateSendEof(CF_Transaction_t *t)
+{
+    /* this looks weird, but the idea is we want to reset the transaction if some error occurs while sending
+     * and we want to reset the transaction if no error occurs. But, if we couldn't send because there are
+     * no buffers, then we need to try and send again next time. */
+    if (CF_CFDP_S_SendEof(t) != CF_SendRet_NO_MSG)
+    {
+        CF_CFDP_S_Reset(t); /* all done, so clean up */
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_SubstateSendEof(CF_Transaction_t *t)
+{
+    t->state_data.s.sub_state    = CF_TxSubState_WAIT_FOR_EOF_ACK;
+    t->flags.com.ack_timer_armed = 1; /* will cause tick to see ack_timer as expired, and act */
+
+    /* no longer need to send file data PDU except in the case of NAK response */
+
+    /* move this transaction off Q_PEND */
+    CF_DequeueTransaction(t);
+    CF_InsertSortPrio(t, CF_QueueIdx_TXW);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_CFDP_S_SendFileData(CF_Transaction_t *t, uint32 foffs, uint32 bytes_to_read, uint8 calc_crc)
+{
+    bool                            success = true;
+    int                             status  = 0;
+    int32                           ret     = -1;
+    CF_Logical_PduBuffer_t *        ph      = CF_CFDP_ConstructPduHeader(t, 0, CF_AppData.config_table->local_eid,
+                                                            t->history->peer_eid, 0, t->history->seq_num, 1);
+    CF_Logical_PduFileDataHeader_t *fd;
+    size_t                          actual_bytes;
+    void *                          data_ptr;
+
+    if (!ph)
+    {
+        ret     = 0; /* couldn't get message, so no bytes sent. Will try again next time */
+        success = false;
+    }
+    else
+    {
+        fd = &ph->int_header.fd;
+
+        /* need to encode data header up to this point to figure out where data needs to get copied to */
+        fd->offset = foffs;
+        CF_CFDP_EncodeFileDataHeader(ph->penc, ph->pdu_header.segment_meta_flag, fd);
+
+        /*
+         * the actual bytes to read is the smallest of these:
+         *  - passed-in size
+         *  - outgoing_file_chunk_size from configuration
+         *  - amount of space actually available in the PDU after encoding the headers
+         */
+        actual_bytes = CF_CODEC_GET_REMAIN(ph->penc);
+        if (actual_bytes > bytes_to_read)
+        {
+            actual_bytes = bytes_to_read;
+        }
+        if (actual_bytes > CF_AppData.config_table->outgoing_file_chunk_size)
+        {
+            actual_bytes = CF_AppData.config_table->outgoing_file_chunk_size;
+        }
+
+        /*
+         * The call to CF_CFDP_DoEncodeChunk() should never fail because actual_bytes is
+         * guaranteed to be less than or equal to the remaining space in the encode buffer.
+         */
+        data_ptr = CF_CFDP_DoEncodeChunk(ph->penc, actual_bytes);
+
+        /*
+         * save off a pointer to the data for future reference.
+         * This isn't encoded into the output PDU, but it allows a future step (such as CRC)
+         * to easily find and read the data blob in this PDU.
+         */
+        fd->data_len = actual_bytes;
+        fd->data_ptr = data_ptr;
+
+        if (t->state_data.s.cached_pos != foffs)
+        {
+            status = CF_WrappedLseek(t->fd, foffs, OS_SEEK_SET);
+            if (status != foffs)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_SEEK_FD, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): error seeking to offset %ld, got %ld", (t->state == CF_TxnState_S2),
+                                  (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num, (long)foffs,
+                                  (long)status);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek;
+                success = false;
+            }
+        }
+
+        if (success)
+        {
+            status = CF_WrappedRead(t->fd, data_ptr, actual_bytes);
+            if (status != actual_bytes)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_READ, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): error reading bytes: expected %ld, got %ld",
+                                  (t->state == CF_TxnState_S2), (unsigned long)t->history->src_eid,
+                                  (unsigned long)t->history->seq_num, (long)actual_bytes, (long)status);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_read;
+                success = false;
+            }
+        }
+
+        if (success)
+        {
+            t->state_data.s.cached_pos += status;
+            status = CF_CFDP_SendFd(t, ph);
+            if (status == CF_SendRet_NO_MSG)
+            {
+                ret = 0; /* no bytes were processed */
+            }
+            else if (status == CF_SendRet_ERROR)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_SEND_FD, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): error sending fd", (t->state == CF_TxnState_S2),
+                                  (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+                ret = -1;
+            }
+            else
+            {
+                CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes += actual_bytes;
+
+                CF_Assert((foffs + actual_bytes) <= t->fsize); /* sanity check */
+                if (calc_crc)
+                {
+                    CF_CRC_Digest(&t->crc, fd->data_ptr, fd->data_len);
+                }
+
+                ret = actual_bytes;
+            }
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_SubstateSendFileData(CF_Transaction_t *t)
+{
+    int32 bytes_processed = CF_CFDP_S_SendFileData(t, t->foffs, (t->fsize - t->foffs), 1);
+
+    if (bytes_processed > 0)
+    {
+        t->foffs += bytes_processed;
+        if (t->foffs == t->fsize)
+        {
+            /* file is done */
+            t->state_data.s.sub_state = CF_TxSubState_EOF;
+        }
+    }
+    else if (bytes_processed < 0)
+    {
+        /* IO error -- change state and send EOF */
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+        t->state_data.s.sub_state = CF_TxSubState_EOF;
+    }
+    else
+    {
+        /* don't care about other cases */
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CFDP_S_CheckAndRespondNak(CF_Transaction_t *t)
+{
+    const CF_Chunk_t *c;
+    int               ret = 0;
+
+    if (t->flags.tx.md_need_send)
+    {
+        CF_SendRet_t sret = CF_CFDP_SendMd(t);
+        if (sret == CF_SendRet_ERROR)
+        {
+            ret = -1; /* error occurred */
+        }
+        else
+        {
+            if (sret == CF_SendRet_SUCCESS)
+            {
+                t->flags.tx.md_need_send = 0;
+            }
+            /* unless CF_SendRet_ERROR, return 1 to keep caller from sending file data */
+            ret = 1; /* 1 means nak processed, so don't send filedata */
+        }
+    }
+    else
+    {
+        /* Get first chunk and process if available */
+        c = CF_ChunkList_GetFirstChunk(&t->chunks->chunks);
+        if (c != NULL)
+        {
+            ret = CF_CFDP_S_SendFileData(t, c->offset, c->size, 0);
+            if (ret > 0)
+            {
+                CF_ChunkList_RemoveFromFirst(&t->chunks->chunks, ret);
+                ret = 1; /* processed nak, so caller doesn't send file data */
+            }
+            else if (ret < 0)
+            {
+                ret = -1; /* error occurred */
+            }
+            else
+            {
+                /* nothing to do if ret==0, since nothing was sent */
+            }
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_SubstateSendFileData(CF_Transaction_t *t)
+{
+    int ret = CF_CFDP_S_CheckAndRespondNak(t);
+
+    if (!ret)
+    {
+        CF_CFDP_S_SubstateSendFileData(t);
+    }
+    else if (ret < 0)
+    {
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_NAK_RESPONSE_ERROR);
+        CF_CFDP_S_Reset(t);
+    }
+    else
+    {
+        /* don't care about other cases */
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_SubstateSendMetadata(CF_Transaction_t *t)
+{
+    bool         success = true;
+    int          status  = 0;
+    CF_SendRet_t sret;
+
+    if (!OS_ObjectIdDefined(t->fd))
+    {
+        int32 ret;
+
+        if (OS_FileOpenCheck(t->history->fnames.src_filename) == OS_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_ALREADY_OPEN, CFE_EVS_EventType_ERROR,
+                              "CF S%d(%lu:%lu): file %s already open", (t->state == CF_TxnState_S2),
+                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num,
+                              t->history->fnames.src_filename);
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open;
+            success = false;
+        }
+
+        if (success)
+        {
+            ret = CF_WrappedOpenCreate(&t->fd, t->history->fnames.src_filename, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+            if (ret < 0)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_OPEN, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): failed to open file %s, error=%ld", (t->state == CF_TxnState_S2),
+                                  (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num,
+                                  t->history->fnames.src_filename, (long)ret);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open;
+                t->fd   = OS_OBJECT_ID_UNDEFINED; /* just in case */
+                success = false;
+            }
+        }
+
+        if (success)
+        {
+            status = CF_WrappedLseek(t->fd, 0, OS_SEEK_END);
+            if (status < 0)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_SEEK_END, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): failed to seek end file %s, error=%ld",
+                                  (t->state == CF_TxnState_S2), (unsigned long)t->history->src_eid,
+                                  (unsigned long)t->history->seq_num, t->history->fnames.src_filename, (long)status);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek;
+                success = false;
+            }
+        }
+
+        if (success)
+        {
+            t->fsize = status;
+
+            status = CF_WrappedLseek(t->fd, 0, OS_SEEK_SET);
+            if (status != 0)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_SEEK_BEG, CFE_EVS_EventType_ERROR,
+                                  "CF S%d(%lu:%lu): failed to seek begin file %s, got %ld",
+                                  (t->state == CF_TxnState_S2), (unsigned long)t->history->src_eid,
+                                  (unsigned long)t->history->seq_num, t->history->fnames.src_filename, (long)status);
+                ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek;
+                success = false;
+            }
+        }
+    }
+
+    if (success)
+    {
+        sret = CF_CFDP_SendMd(t);
+        if (sret == CF_SendRet_ERROR)
+        {
+            /* failed to send md */
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_SEND_MD, CFE_EVS_EventType_ERROR, "CF S%d(%lu:%lu): failed to send md",
+                              (t->state == CF_TxnState_S2), (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num);
+            success = false;
+        }
+        else if (sret == CF_SendRet_SUCCESS)
+        {
+            /* once metadata is sent, switch to filedata mode */
+            t->state_data.s.sub_state = CF_TxSubState_FILEDATA;
+        }
+        /* if sret==CF_SendRet_NO_MSG, then try to send md again next cycle */
+    }
+
+    if (!success)
+    {
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION);
+        CF_CFDP_S_Reset(t);
+    }
+
+    /* don't need CF_CRC_Start() since taken care of by reset_cfdp() */
+    /*CF_CRC_Start(&t->crc);*/
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_SubstateSendFinAck(CF_Transaction_t *t)
+{
+    /* if send, or error, reset. if no message, try again next cycle */
+    if (CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_ACTIVE, CF_CFDP_FileDirective_FIN, t->state_data.s.s2.fin_cc,
+                        t->history->peer_eid, t->history->seq_num) != CF_SendRet_NO_MSG)
+    {
+        CF_CFDP_SetTxnStatus(t, CF_TxnStatus_NO_ERROR);
+        CF_CFDP_S_Reset(t);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_EarlyFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    /* received early fin, so just cancel */
+    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_EARLY_FIN, CFE_EVS_EventType_ERROR,
+                      "CF S%d(%lu:%lu): got early fin -- cancelling", (t->state == CF_TxnState_S2),
+                      (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+    CF_CFDP_SetTxnStatus(t, CF_TxnStatus_EARLY_FIN);
+    CF_CFDP_S_Reset(t);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_Fin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    t->state_data.s.s2.fin_cc = ph->int_header.fin.cc;
+    t->state_data.s.sub_state = CF_TxSubState_SEND_FIN_ACK;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_Nak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    const CF_Logical_SegmentRequest_t *sr;
+    const CF_Logical_PduNak_t *        nak;
+    uint8                              counter;
+    uint8                              bad_sr;
+
+    bad_sr = 0;
+
+    /* this function is only invoked for NAK PDU types */
+    nak = &ph->int_header.nak;
+
+    if (CF_CFDP_RecvNak(t, ph) == 0 && nak->segment_list.num_segments > 0)
+    {
+        for (counter = 0; counter < nak->segment_list.num_segments; ++counter)
+        {
+            sr = &nak->segment_list.segments[counter];
+
+            if (sr->offset_start == 0 && sr->offset_end == 0)
+            {
+                /* need to re-send metadata pdu */
+                t->flags.tx.md_need_send = 1;
+            }
+            else
+            {
+                if (sr->offset_end < sr->offset_start)
+                {
+                    ++bad_sr;
+                    continue;
+                }
+
+                /* overflow probably won't be an issue */
+                if (sr->offset_end > t->fsize)
+                {
+                    ++bad_sr;
+                    continue;
+                }
+
+                /* insert gap data in chunks */
+                CF_ChunkListAdd(&t->chunks->chunks, sr->offset_start, sr->offset_end - sr->offset_start);
+            }
+        }
+
+        CF_AppData.hk.channel_hk[t->chan_num].counters.recv.nak_segment_requests += nak->segment_list.num_segments;
+        if (bad_sr)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_INVALID_SR, CFE_EVS_EventType_ERROR,
+                              "CF S%d(%lu:%lu): received %d invalid nak segment requests", (t->state == CF_TxnState_S2),
+                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num, bad_sr);
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_PDU_NAK, CFE_EVS_EventType_ERROR,
+                          "CF S%d(%lu:%lu): received invalid nak pdu", (t->state == CF_TxnState_S2),
+                          (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_Nak_Arm(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    CF_CFDP_ArmAckTimer(t);
+    CF_CFDP_S2_Nak(t, ph);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_WaitForEofAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    if (!CF_CFDP_RecvAck(t, ph))
+    {
+        /* don't send fin if error. Don't check the eof CC, just go with
+         * the stored one we sent before */
+        if (CF_TxnStatus_IsError(t->history->txn_stat))
+        {
+            CF_CFDP_S_Reset(t);
+        }
+        else
+        {
+            t->state_data.s.sub_state    = CF_TxSubState_WAIT_FOR_FIN;
+            t->flags.com.ack_timer_armed = 0; /* just wait for fin now, nothing to re-send */
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_PDU_EOF, CFE_EVS_EventType_ERROR,
+                          "CF S%d(%lu:%lu): received invalid eof pdu", (t->state == CF_TxnState_S2),
+                          (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+        ++CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    /* s1 doesn't need to receive anything */
+    static const CF_CFDP_S_SubstateRecvDispatchTable_t substate_fns = {{NULL}};
+    CF_CFDP_S_DispatchRecv(t, ph, &substate_fns);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+{
+    static const CF_CFDP_FileDirectiveDispatchTable_t s2_meta      = {.fdirective = {
+                                                                     [CF_CFDP_FileDirective_FIN] = CF_CFDP_S2_EarlyFin,
+                                                                 }};
+    static const CF_CFDP_FileDirectiveDispatchTable_t s2_fd_or_eof = {
+        .fdirective = {
+            [CF_CFDP_FileDirective_FIN] = CF_CFDP_S2_EarlyFin, [CF_CFDP_FileDirective_NAK] = CF_CFDP_S2_Nak}};
+    static const CF_CFDP_FileDirectiveDispatchTable_t s2_wait_eof_ack = {
+        .fdirective = {[CF_CFDP_FileDirective_FIN] = CF_CFDP_S2_Fin,
+                       [CF_CFDP_FileDirective_ACK] = CF_CFDP_S2_WaitForEofAck,
+                       [CF_CFDP_FileDirective_NAK] = CF_CFDP_S2_Nak_Arm}};
+    static const CF_CFDP_FileDirectiveDispatchTable_t s2_wait_fin = {
+        .fdirective = {[CF_CFDP_FileDirective_FIN] = CF_CFDP_S2_Fin, [CF_CFDP_FileDirective_NAK] = CF_CFDP_S2_Nak_Arm}};
+    static const CF_CFDP_FileDirectiveDispatchTable_t s2_fin_ack = {
+        .fdirective = {[CF_CFDP_FileDirective_FIN] = CF_CFDP_S2_Fin}};
+
+    static const CF_CFDP_S_SubstateRecvDispatchTable_t substate_fns = {
+        .substate = {
+            [CF_TxSubState_METADATA]         = &s2_meta,
+            [CF_TxSubState_FILEDATA]         = &s2_fd_or_eof,
+            [CF_TxSubState_EOF]              = &s2_fd_or_eof,
+            [CF_TxSubState_WAIT_FOR_EOF_ACK] = &s2_wait_eof_ack,
+            [CF_TxSubState_WAIT_FOR_FIN]     = &s2_wait_fin,
+            [CF_TxSubState_SEND_FIN_ACK]     = &s2_fin_ack,
+        }};
+
+    CF_CFDP_S_DispatchRecv(t, ph, &substate_fns);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S1_Tx(CF_Transaction_t *t)
+{
+    static const CF_CFDP_S_SubstateSendDispatchTable_t substate_fns = {
+        .substate = {
+            [CF_TxSubState_METADATA] = CF_CFDP_S_SubstateSendMetadata,
+            [CF_TxSubState_FILEDATA] = CF_CFDP_S_SubstateSendFileData,
+            [CF_TxSubState_EOF]      = CF_CFDP_S1_SubstateSendEof,
+        }};
+
+    CF_CFDP_S_DispatchTransmit(t, &substate_fns);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S2_Tx(CF_Transaction_t *t)
+{
+    static const CF_CFDP_S_SubstateSendDispatchTable_t substate_fns = {
+        .substate = {
+            [CF_TxSubState_METADATA] = CF_CFDP_S_SubstateSendMetadata,
+            [CF_TxSubState_FILEDATA] = CF_CFDP_S2_SubstateSendFileData,
+            [CF_TxSubState_EOF]      = CF_CFDP_S2_SubstateSendEof,
+        }};
+
+    CF_CFDP_S_DispatchTransmit(t, &substate_fns);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_Cancel(CF_Transaction_t *t)
+{
+    if (t->state_data.s.sub_state < CF_TxSubState_EOF)
+    {
+        /* if state has not reached CF_TxSubState_EOF, then set it to CF_TxSubState_EOF now. */
+        t->state_data.s.sub_state = CF_TxSubState_EOF;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_Tick(CF_Transaction_t *t, int *cont /* unused */)
+{
+    /* Steven is not real happy with this function. There should be a better way to separate out
+     * the logic by state so that it isn't a bunch of if statements for different flags
+     */
+    bool early_exit = false;
+
+    /* at each tick, various timers used by S are checked */
+    /* first, check inactivity timer */
+    if (t->state == CF_TxnState_S2)
+    {
+        if (CF_Timer_Expired(&t->inactivity_timer))
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_INACT_TIMER, CFE_EVS_EventType_ERROR,
+                              "CF S2(%lu:%lu): inactivity timer expired", (unsigned long)t->history->src_eid,
+                              (unsigned long)t->history->seq_num);
+            CF_CFDP_SetTxnStatus(t, CF_TxnStatus_INACTIVITY_DETECTED);
+
+            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.inactivity_timer;
+            CF_CFDP_S_Reset(t);
+        }
+        else
+        {
+            CF_Timer_Tick(&t->inactivity_timer);
+
+            if (t->flags.com.ack_timer_armed)
+            {
+                if (CF_Timer_Expired(&t->ack_timer))
+                {
+                    if (t->state_data.s.sub_state == CF_TxSubState_WAIT_FOR_EOF_ACK)
+                    {
+                        /* Increment acknak counter */
+                        ++t->state_data.s.s2.acknak_count;
+
+                        /* Check limit and handle if needed */
+                        if (t->state_data.s.s2.acknak_count >= CF_AppData.config_table->chan[t->chan_num].ack_limit)
+                        {
+                            CFE_EVS_SendEvent(CF_EID_ERR_CFDP_S_ACK_LIMIT, CFE_EVS_EventType_ERROR,
+                                              "CF S2(%lu:%lu), ack limit reached, no eof-ack",
+                                              (unsigned long)t->history->src_eid, (unsigned long)t->history->seq_num);
+                            CF_CFDP_SetTxnStatus(t, CF_TxnStatus_ACK_LIMIT_NO_EOF);
+                            ++CF_AppData.hk.channel_hk[t->chan_num].counters.fault.ack_limit;
+
+                            /* no reason to reset this timer, as it isn't used again */
+                            CF_CFDP_S_Reset(t);
+                            early_exit = true; /* must exit after reset */
+                        }
+                        else
+                        {
+                            CF_SendRet_t sret = CF_CFDP_S_SendEof(t);
+                            if (sret == CF_SendRet_NO_MSG)
+                            {
+                                early_exit = true;
+                            }
+                            else if (sret == CF_SendRet_ERROR)
+                            {
+                                CF_CFDP_SetTxnStatus(t, CF_TxnStatus_SEND_EOF_FAILURE);
+                                CF_CFDP_S_Reset(t); /* can't go on, error occurred */
+                                early_exit = true;
+                            }
+
+                            if (!early_exit)
+                            {
+                                CF_CFDP_ArmAckTimer(t); /* re-arm ack timer */
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    CF_Timer_Tick(&t->ack_timer);
+                }
+            }
+
+            if (!early_exit && t->state_data.s.sub_state == CF_TxSubState_SEND_FIN_ACK)
+            {
+                CF_CFDP_S_SubstateSendFinAck(t);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_s.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_S_Tick_Nak(CF_Transaction_t *t, int *cont)
+{
+    int ret = CF_CFDP_S_CheckAndRespondNak(t);
+
+    if (ret == 1)
+        *cont = 1; /* cause dispatcher to re-enter this wakeup */
+}
+```
+
+### `cf_cfdp_s.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_s.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Implementation related to CFDP Send File transactions
+ *
+ * This file contains various state handling routines for
+ * transactions which are sending a file.
+ */
+
+#ifndef CF_CFDP_S_H
+#define CF_CFDP_S_H
+
+#include "cf_cfdp_types.h"
+
+/************************************************************************/
+/** @brief S1 receive pdu processing.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S2 receive pdu processing.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S1 dispatch function.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_S1_Tx(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief S2 dispatch function.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_S2_Tx(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Perform tick (time-based) processing for S transactions.
+ *
+ * @par Description
+ *       This function is called on every transaction by the engine on
+ *       every CF wakeup. This is where flags are checked to send EOF or
+ *       FIN-ACK. If nothing else is sent, it checks to see if a NAK
+ *       retransmit must occur.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. cont is unused, so may be NULL
+ *
+ * @param t  Pointer to the transaction object
+ * @param cont Unused, exists for compatibility with tick processor
+ */
+void CF_CFDP_S_Tick(CF_Transaction_t *t, int *cont);
+
+/************************************************************************/
+/** @brief Perform NAK response for TX transactions
+ *
+ * @par Description
+ *       This function is called at tick processing time to send pending
+ *       NAK responses. It indicates "cont" is 1 if there are more responses
+ *       left to send.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. cont must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param cont Set to 1 if a nak was generated
+ */
+void CF_CFDP_S_Tick_Nak(CF_Transaction_t *t, int *cont);
+
+/************************************************************************/
+/** @brief Cancel an S transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_S_Cancel(CF_Transaction_t *t);
+
+/***********************************************************************
+ *
+ * Handler routines for send-file transactions
+ * These are not called from outside this module, but are declared here so they can be unit tested
+ *
+ ************************************************************************/
+
+/************************************************************************/
+/** @brief Send an eof pdu.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @retval CF_SendRet_SUCCESS on success.
+ * @retval CF_SendRet_NO_MSG if message buffer cannot be obtained.
+ * @retval CF_SendRet_ERROR if an error occurred while building the packet.
+ *
+ * @param t  Pointer to the transaction object
+ */
+CF_SendRet_t CF_CFDP_S_SendEof(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Sends an eof for S1.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_S1_SubstateSendEof(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Triggers tick processing to send an EOF and wait for EOF-ACK for S2
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ */
+void CF_CFDP_S2_SubstateSendEof(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Helper function to populate the pdu with file data and send it.
+ *
+ * @par Description
+ *       This function checks the file offset cache and if the desired
+ *       location is where the file offset is, it can skip a seek() call.
+ *       The file is read into the filedata pdu and then the pdu is sent.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @returns The number of bytes sent in the file data PDU, or negative value on error
+ *
+ * @param t     Pointer to the transaction object
+ * @param foffs Position in file to send data from
+ * @param bytes_to_read Number of bytes to send (maximum)
+ * @param calc_crc Enable CRC/Checksum calculation
+ *
+ */
+int32 CF_CFDP_S_SendFileData(CF_Transaction_t *t, uint32 foffs, uint32 bytes_to_read, uint8 calc_crc);
+
+/************************************************************************/
+/** @brief Standard state function to send the next file data PDU for active transaction.
+ *
+ * @par Description
+ *       During the transfer of active transaction file data pdus, the file
+ *       offset is saved. This function sends the next chunk of data. If
+ *       the file offset equals the file size, then transition to the EOF
+ *       state.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t     Pointer to the transaction object
+ */
+void CF_CFDP_S_SubstateSendFileData(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Respond to a nak by sending filedata pdus as response.
+ *
+ * @par Description
+ *       Checks to see if a metadata pdu or filedata re-transmits must
+ *       occur.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @returns  negative value if error.
+ * @retval 0 if no NAK processed.
+ * @retval 1 if NAK processed.
+ *
+ * @param t     Pointer to the transaction object
+ */
+int CF_CFDP_S_CheckAndRespondNak(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Send filedata handling for S2.
+ *
+ * @par Description
+ *       S2 will either respond to a NAK by sending retransmits, or in
+ *       absence of a NAK, it will send more of the original file data.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t     Pointer to the transaction object
+ */
+void CF_CFDP_S2_SubstateSendFileData(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Send metadata PDU.
+ *
+ * @par Description
+ *       Construct and send a metadata PDU. This function determines the
+ *       size of the file to put in the metadata PDU.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t     Pointer to the transaction object
+ */
+void CF_CFDP_S_SubstateSendMetadata(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Send FIN-ACK packet for S2.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t     Pointer to the transaction object
+ */
+void CF_CFDP_S_SubstateSendFinAck(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief A fin was received before file complete, so abandon the transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_EarlyFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S2 received FIN, so set flag to send FIN-ACK.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_Fin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S2 NAK pdu received handling.
+ *
+ * @par Description
+ *       Stores the segment requests from the NAK packet in the chunks
+ *       structure. These can be used to generate re-transmit filedata
+ *       PDUs.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_Nak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S2 NAK handling but with arming the NAK timer.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_Nak_Arm(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief S2 received ack pdu in wait for EOF-ACK state.
+ *
+ * @par Description
+ *       This function will trigger a state transition to CF_TxSubState_WAIT_FOR_FIN,
+ *       which waits for a FIN pdu.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. ph must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param ph Pointer to the PDU information
+ */
+void CF_CFDP_S2_WaitForEofAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+
+#endif /* !CF_CFDP_S_H */
+```
+
+### `cf_cfdp_sbintf.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_sbintf.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * This is the interface to the CFE Software Bus for CF transmit/recv.
+ * Specifically this implements 3 functions used by the CFDP engine:
+ *  - CF_CFDP_MsgOutGet() - gets a buffer prior to transmitting
+ *  - CF_CFDP_Send() - sends the buffer from CF_CFDP_MsgOutGet
+ *  - CF_CFDP_ReceiveMessage() - gets a received message
+ *
+ * These functions were originally part of the CFDP engine itself
+ * but were split into a separate file, both to improve testability
+ * as well as to (potentially) allow interfaces to message/packet services
+ * other than the CFE software bus.  However, Note that in this version,
+ * there is still a fair amount of CFDP engine mixed into these functions
+ * that would have to be isolated.
+ *
+ * Also note that the creation and deletion of SB pipes is not yet
+ * moved into this file.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_app.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_s.h"
+#include "cf_cfdp_sbintf.h"
+
+#include <string.h>
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_sbintf.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_Logical_PduBuffer_t *CF_CFDP_MsgOutGet(const CF_Transaction_t *t, bool silent)
+{
+    /* if channel is frozen, do not take message */
+    CF_Channel_t *          c       = CF_AppData.engine.channels + t->chan_num;
+    bool                    success = true;
+    CF_Logical_PduBuffer_t *ret;
+    int32                   os_status;
+
+    /* this function should not be called more than once before the message
+     * is sent, so if there's already an outgoing message allocated
+     * then drop and get a new one (not likely) */
+    ret = NULL;
+    if (CF_AppData.engine.out.msg)
+    {
+        CFE_SB_ReleaseMessageBuffer(CF_AppData.engine.out.msg);
+        CF_AppData.engine.out.msg = NULL;
+    }
+
+    if (CF_AppData.config_table->chan[t->chan_num].max_outgoing_messages_per_wakeup &&
+        (CF_AppData.engine.outgoing_counter ==
+         CF_AppData.config_table->chan[t->chan_num].max_outgoing_messages_per_wakeup))
+    {
+        /* no more messages this wakeup allowed */
+        c->cur  = t; /* remember where we were for next time */
+        success = false;
+    }
+
+    if (success && !CF_AppData.hk.channel_hk[t->chan_num].frozen && !t->flags.com.suspended)
+    {
+        /* first, check if there's room in the pipe for the message we want to build */
+        if (OS_ObjectIdDefined(c->sem_id))
+        {
+            os_status = OS_CountSemTimedWait(c->sem_id, 0);
+        }
+        else
+        {
+            os_status = OS_SUCCESS;
+        }
+
+        /* Allocate message buffer on success */
+        if (os_status == OS_SUCCESS)
+        {
+            CF_AppData.engine.out.msg = CFE_SB_AllocateMessageBuffer(offsetof(CF_PduTlmMsg_t, ph) + CF_MAX_PDU_SIZE +
+                                                                     CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES);
+        }
+
+        if (!CF_AppData.engine.out.msg)
+        {
+            c->cur = t; /* remember where we were for next time */
+            if (!silent)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CFDP_NO_MSG, CFE_EVS_EventType_ERROR,
+                                  "CF: no output message buffer available");
+            }
+            success = false;
+        }
+
+        if (success)
+        {
+            CFE_MSG_Init(&CF_AppData.engine.out.msg->Msg,
+                         CFE_SB_ValueToMsgId(CF_AppData.config_table->chan[t->chan_num].mid_output), 0);
+            ++CF_AppData.engine.outgoing_counter; /* even if max_outgoing_messages_per_wakeup is 0 (unlimited), it's ok
+                                                    to inc this */
+
+            /* prepare for encoding - the "tx_pdudata" is what serves as the temporary holding area for content */
+            ret = &CF_AppData.engine.out.tx_pdudata;
+        }
+    }
+
+    /* if returning a buffer, then reset the encoder state to point to the beginning of the encapsulation msg */
+    if (success && ret != NULL)
+    {
+        CF_CFDP_EncodeStart(&CF_AppData.engine.out.encode, CF_AppData.engine.out.msg, ret, offsetof(CF_PduTlmMsg_t, ph),
+                            offsetof(CF_PduTlmMsg_t, ph) + CF_MAX_PDU_SIZE);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_sbintf.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_Send(uint8 chan_num, const CF_Logical_PduBuffer_t *ph)
+{
+    CFE_MSG_Size_t sb_msgsize;
+
+    CF_Assert(chan_num < CF_NUM_CHANNELS);
+
+    /* now handle the SB encapsulation - this should reflect the
+     * length of the entire message, including encapsulation */
+    sb_msgsize = offsetof(CF_PduTlmMsg_t, ph);
+    sb_msgsize += ph->pdu_header.header_encoded_length;
+    sb_msgsize += ph->pdu_header.data_encoded_length;
+    sb_msgsize += CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES;
+
+    CFE_MSG_SetSize(&CF_AppData.engine.out.msg->Msg, sb_msgsize);
+    CFE_MSG_SetMsgTime(&CF_AppData.engine.out.msg->Msg, CFE_TIME_GetTime());
+    CFE_SB_TransmitBuffer(CF_AppData.engine.out.msg, true);
+
+    ++CF_AppData.hk.channel_hk[chan_num].counters.sent.pdu;
+
+    CF_AppData.engine.out.msg = NULL;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cfdp_sbintf.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_ReceiveMessage(CF_Channel_t *c)
+{
+    CF_Transaction_t *t; /* initialized below */
+    uint32            count = 0;
+    int32             status;
+    const int         chan_num = (c - CF_AppData.engine.channels);
+    CFE_SB_Buffer_t * bufptr;
+    CFE_MSG_Size_t    msg_size;
+    CFE_MSG_Type_t    msg_type = CFE_MSG_Type_Invalid;
+
+    CF_Logical_PduBuffer_t *ph;
+
+    for (; count < CF_AppData.config_table->chan[chan_num].rx_max_messages_per_wakeup; ++count)
+    {
+        status = CFE_SB_ReceiveBuffer(&bufptr, c->pipe, CFE_SB_POLL);
+        if (status != CFE_SUCCESS)
+        {
+            break; /* no more messages */
+        }
+
+        /* NOTE: this code originally stored current msg buffer in a global, but
+           going forward this should _NOT_ be used.  It is still set just in case
+           some code depends on it (mostly just UT at this point).  FSW should pass
+           the pointer to the current PDU to any function that needs it (ph here). */
+        CF_AppData.engine.in.msg = bufptr;
+        ph                       = &CF_AppData.engine.in.rx_pdudata;
+        CFE_ES_PerfLogEntry(CF_PERF_ID_PDURCVD(chan_num));
+        CFE_MSG_GetSize(&bufptr->Msg, &msg_size);
+        CFE_MSG_GetType(&bufptr->Msg, &msg_type);
+        if (msg_size > CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES)
+        {
+            /* Ignore/subtract any fixed trailing bytes */
+            msg_size -= CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES;
+        }
+        else
+        {
+            /* bad message size - not supposed to happen */
+            msg_size = 0;
+        }
+        if (msg_type == CFE_MSG_Type_Tlm)
+        {
+            CF_CFDP_DecodeStart(&CF_AppData.engine.in.decode, bufptr, ph, offsetof(CF_PduTlmMsg_t, ph), msg_size);
+        }
+        else
+        {
+            CF_CFDP_DecodeStart(&CF_AppData.engine.in.decode, bufptr, ph, offsetof(CF_PduCmdMsg_t, ph), msg_size);
+        }
+        if (!CF_CFDP_RecvPh(chan_num, ph))
+        {
+            /* got a valid pdu -- look it up by sequence number */
+            t = CF_FindTransactionBySequenceNumber(c, ph->pdu_header.sequence_num, ph->pdu_header.source_eid);
+            if (t)
+            {
+                /* found one! Send it to the transaction state processor */
+                CF_Assert(t->state > CF_TxnState_IDLE);
+                CF_CFDP_DispatchRecv(t, ph);
+            }
+            else
+            {
+                /* didn't find a match, but there's a special case:
+                 *
+                 * If an R2 sent FIN-ACK, the transaction is freed and the history data
+                 * is placed in the history queue. It's possible that the peer missed the
+                 * FIN-ACK and is sending another FIN. Since we don't know about this
+                 * transaction, we don't want to leave R2 hanging. That wouldn't be elegant.
+                 * So, send a FIN-ACK by cobbling together a temporary transaction on the
+                 * stack and calling CF_CFDP_SendAck() */
+                if (ph->pdu_header.source_eid == CF_AppData.config_table->local_eid &&
+                    ph->fdirective.directive_code == CF_CFDP_FileDirective_FIN)
+                {
+                    if (!CF_CFDP_RecvFin(t, ph))
+                    {
+                        CF_Transaction_t t_finack;
+
+                        memset(&t_finack, 0, sizeof(t_finack));
+                        CF_CFDP_InitTxnTxFile(&t_finack, CF_CFDP_CLASS_2, 1, chan_num,
+                                              0); /* populate transaction with needed fields for CF_CFDP_SendAck() */
+                        if (CF_CFDP_SendAck(&t_finack, CF_CFDP_AckTxnStatus_UNRECOGNIZED, CF_CFDP_FileDirective_FIN,
+                                            ph->int_header.fin.cc, ph->pdu_header.destination_eid,
+                                            ph->pdu_header.sequence_num) != CF_SendRet_NO_MSG)
+                        {
+                            /* couldn't get output buffer -- don't care about a send error (oh well, can't send) but we
+                             * do care that there was no message because c->cur will be set to this transaction */
+                            c->cur = NULL; /* do not remember temp transaction for next time */
+                        }
+
+                        /* NOTE: recv and recv_spurious will both be incremented */
+                        ++CF_AppData.hk.channel_hk[chan_num].counters.recv.spurious;
+                    }
+
+                    CFE_ES_PerfLogExit(CF_PERF_ID_PDURCVD(chan_num));
+                    continue;
+                }
+
+                /* if no match found, then it must be the case that we would be the destination entity id, so verify it
+                 */
+                if (ph->pdu_header.destination_eid == CF_AppData.config_table->local_eid)
+                {
+                    /* we didn't find a match, so assign it to a transaction */
+                    if (CF_AppData.hk.channel_hk[chan_num].q_size[CF_QueueIdx_RX] == CF_MAX_SIMULTANEOUS_RX)
+                    {
+                        CFE_EVS_SendEvent(
+                            CF_EID_ERR_CFDP_RX_DROPPED, CFE_EVS_EventType_ERROR,
+                            "CF: dropping packet from %lu transaction number 0x%08lx due max RX transactions reached",
+                            (unsigned long)ph->pdu_header.source_eid, (unsigned long)ph->pdu_header.sequence_num);
+
+                        /* NOTE: as there is no transaction (t) associated with this, there is no known channel,
+                            and therefore no known counter to account it to (because dropped is per-chan) */
+                    }
+                    else
+                    {
+                        t = CF_FindUnusedTransaction(c);
+                        CF_Assert(t);
+                        t->history->dir = CF_Direction_RX;
+
+                        /* set default fin status */
+                        t->state_data.r.r2.dc = CF_CFDP_FinDeliveryCode_INCOMPLETE;
+                        t->state_data.r.r2.fs = CF_CFDP_FinFileStatus_DISCARDED;
+
+                        t->flags.com.q_index = CF_QueueIdx_RX;
+                        CF_CList_InsertBack_Ex(c, t->flags.com.q_index, &t->cl_node);
+                        CF_CFDP_DispatchRecv(t, ph); /* will enter idle state */
+                    }
+                }
+                else
+                {
+                    CFE_EVS_SendEvent(CF_EID_ERR_CFDP_INVALID_DST_EID, CFE_EVS_EventType_ERROR,
+                                      "CF: dropping packet for invalid destination eid 0x%lx",
+                                      (unsigned long)ph->pdu_header.destination_eid);
+                }
+            }
+        }
+
+        CFE_ES_PerfLogExit(CF_PERF_ID_PDURCVD(chan_num));
+    }
+    CF_AppData.engine.in.msg = NULL;
+}
+```
+
+### `cf_cfdp_sbintf.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_sbintf.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * This is the interface to the CFE Software Bus for PDU transmit/recv.
+ *
+ * It may serve as a future point of abstraction to interface with message
+ * passing interfaces other than the CFE software bus, if necessary.
+ */
+
+#ifndef CF_CFDP_SBINTF_H
+#define CF_CFDP_SBINTF_H
+
+#include "cf_cfdp_types.h"
+
+/**
+ * @brief PDU command encapsulation structure
+ *
+ * This encapsulates a CFDP pdu into a format that is sent or received over the
+ * software bus, adding "command" encapsulation (even though these are not really
+ * commands).
+ *
+ * @note this is only the definition of the header.  In reality all messages are
+ * larger than this, up to CF_MAX_PDU_SIZE.
+ */
+typedef struct CF_PduCmdMsg
+{
+    CFE_MSG_CommandHeader_t hdr; /**< \brief software bus headers, not really used by CF */
+    CF_CFDP_PduHeader_t     ph;  /**< \brief Beginning of CFDP headers */
+} CF_PduCmdMsg_t;
+
+/**
+ * @brief PDU send encapsulation structure
+ *
+ * This encapsulates a CFDP pdu into a format that is sent or received over the
+ * software bus, adding "telemetry" encapsulation (even though these are not really
+ * telemetry items).
+ *
+ * @note this is only the definition of the header.  In reality all messages are
+ * larger than this, up to CF_MAX_PDU_SIZE.
+ */
+typedef struct CF_PduTlmMsg
+{
+    CFE_MSG_TelemetryHeader_t hdr; /**< \brief software bus headers, not really used by CF */
+    CF_CFDP_PduHeader_t       ph;  /**< \brief Beginning of CFDP headers */
+} CF_PduTlmMsg_t;
+
+/************************************************************************/
+/** @brief Obtain a message buffer to construct a PDU inside.
+ *
+ * @par Description
+ *       This performs the handshaking via semaphore with the consumer
+ *       of the PDU. If the semaphore can be obtained, a software bus
+ *       buffer is obtained and it is returned. If the semaphore is
+ *       unavailable, then the current transaction is remembered for next
+ *       engine cycle. If silent is true, then the event message is not
+ *       printed in the case of no buffer available.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t      Pointer to the transaction object
+ * @param silent If true, suppresses error events if no message can be allocated
+ *
+ * @returns Pointer to a CF_Logical_PduBuffer_t on success.
+ * @retval  NULL on error
+ */
+CF_Logical_PduBuffer_t *CF_CFDP_MsgOutGet(const CF_Transaction_t *t, bool silent);
+
+/************************************************************************/
+/** @brief Sends the current output buffer via the software bus.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       The PDU in the output buffer is ready to transmit.
+ *
+ * @param chan_num Channel number for statistics/accounting purposes
+ * @param ph       Pointer to PDU buffer to send
+ *
+ */
+void CF_CFDP_Send(uint8 chan_num, const CF_Logical_PduBuffer_t *ph);
+
+/************************************************************************/
+/** @brief Process received message on channel PDU input pipe.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must be a member of the array within the CF_AppData global object
+ *
+ * @param c       Channel to receive message on
+ *
+ */
+void CF_CFDP_ReceiveMessage(CF_Channel_t *c);
+
+#endif /* !CF_CFDP_SBINTF_H */
+```
+
+### `cf_cfdp_types.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cfdp_types.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Macros and data types used across the CF application
+ *
+ * @note Functions should not be declared in this file.  This should
+ * be limited to shared macros and data types only.  For unit testing,
+ * functions should be declared only in a header file with the same name
+ * as the C file that defines that function.
+ */
+
+#ifndef CF_CFDP_TYPES_H
+#define CF_CFDP_TYPES_H
+
+#include "common_types.h"
+#include "cf_cfdp_pdu.h"
+#include "cf_platform_cfg.h"
+#include "cf_msg.h"
+#include "cf_clist.h"
+#include "cf_chunk.h"
+#include "cf_timer.h"
+#include "cf_crc.h"
+#include "cf_codec.h"
+
+/**
+ * @brief Maximum possible number of transactions that may exist on a single CF channel
+ */
+#define CF_NUM_TRANSACTIONS_PER_CHANNEL                                                \
+    (CF_MAX_COMMANDED_PLAYBACK_FILES_PER_CHAN + CF_MAX_SIMULTANEOUS_RX +               \
+     ((CF_MAX_POLLING_DIR_PER_CHAN + CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN) * \
+      CF_NUM_TRANSACTIONS_PER_PLAYBACK))
+
+/**
+ * @brief Maximum possible number of transactions that may exist in the CF application
+ */
+#define CF_NUM_TRANSACTIONS (CF_NUM_CHANNELS * CF_NUM_TRANSACTIONS_PER_CHANNEL)
+
+/**
+ * @brief Maximum possible number of history entries that may exist in the CF application
+ */
+#define CF_NUM_HISTORIES (CF_NUM_CHANNELS * CF_NUM_HISTORIES_PER_CHANNEL)
+
+/**
+ * @brief Maximum possible number of chunk entries that may exist in the CF application
+ */
+#define CF_NUM_CHUNKS_ALL_CHANNELS (CF_TOTAL_CHUNKS * CF_NUM_TRANSACTIONS_PER_CHANNEL)
+
+/**
+ * @brief High-level state of a transaction
+ */
+typedef enum
+{
+    CF_TxnState_IDLE    = 0, /**< \brief State assigned to a newly allocated transaction object */
+    CF_TxnState_R1      = 1, /**< \brief Receive file as class 1 */
+    CF_TxnState_S1      = 2, /**< \brief Send file as class 1 */
+    CF_TxnState_R2      = 3, /**< \brief Receive file as class 2 */
+    CF_TxnState_S2      = 4, /**< \brief Send file as class 2 */
+    CF_TxnState_DROP    = 5, /**< \brief State where all PDUs are dropped */
+    CF_TxnState_INVALID = 6  /**< \brief Marker value for the highest possible state number */
+} CF_TxnState_t;
+
+/**
+ * @brief Sub-state of a send file transaction
+ */
+typedef enum
+{
+    CF_TxSubState_METADATA         = 0,
+    CF_TxSubState_FILEDATA         = 1,
+    CF_TxSubState_EOF              = 2,
+    CF_TxSubState_WAIT_FOR_EOF_ACK = 3,
+    CF_TxSubState_WAIT_FOR_FIN     = 4,
+    CF_TxSubState_SEND_FIN_ACK     = 5,
+    CF_TxSubState_NUM_STATES       = 6
+} CF_TxSubState_t;
+
+/**
+ * @brief Sub-state of a receive file transaction
+ */
+typedef enum
+{
+    CF_RxSubState_FILEDATA         = 0,
+    CF_RxSubState_EOF              = 1,
+    CF_RxSubState_WAIT_FOR_FIN_ACK = 2,
+    CF_RxSubState_NUM_STATES       = 3,
+} CF_RxSubState_t;
+
+/**
+ * @brief Special return values from some receive PDU processing functions
+ */
+typedef enum
+{
+    CF_RxEofRet_SUCCESS        = 0,
+    CF_RxEofRet_FSIZE_MISMATCH = 1,
+    CF_RxEofRet_BAD_EOF        = 2,
+    CF_RxEofRet_INVALID        = 3,
+} CF_RxEofRet_t;
+
+/**
+ * @brief Direction identifier
+ *
+ * Differentiates between send and receive history entries
+ */
+typedef enum
+{
+    CF_Direction_RX  = 0,
+    CF_Direction_TX  = 1,
+    CF_Direction_NUM = 2,
+} CF_Direction_t;
+
+/**
+ * @brief Values for Transaction Status code
+ *
+ * This enum defines the possible values representing the
+ * result of a transaction.  This is a superset of the condition codes
+ * defined in CCSDS book 727 (condition codes) but with additional
+ * values for local conditions that the blue book does not have,
+ * such as protocol/state machine or decoding errors.
+ *
+ * The values here are designed to not overlap with the condition
+ * codes defined in the blue book, but can be translated to one
+ * of those codes for the purposes of FIN/ACK/EOF PDUs.
+ */
+typedef enum
+{
+    /**
+     * The undefined status is a placeholder for new transactions before a value is set.
+     */
+    CF_TxnStatus_UNDEFINED = -1,
+
+    /* Status codes 0-15 share the same values/meanings as the CFDP condition code (CC) */
+    CF_TxnStatus_NO_ERROR                  = CF_CFDP_ConditionCode_NO_ERROR,
+    CF_TxnStatus_POS_ACK_LIMIT_REACHED     = CF_CFDP_ConditionCode_POS_ACK_LIMIT_REACHED,
+    CF_TxnStatus_KEEP_ALIVE_LIMIT_REACHED  = CF_CFDP_ConditionCode_KEEP_ALIVE_LIMIT_REACHED,
+    CF_TxnStatus_INVALID_TRANSMISSION_MODE = CF_CFDP_ConditionCode_INVALID_TRANSMISSION_MODE,
+    CF_TxnStatus_FILESTORE_REJECTION       = CF_CFDP_ConditionCode_FILESTORE_REJECTION,
+    CF_TxnStatus_FILE_CHECKSUM_FAILURE     = CF_CFDP_ConditionCode_FILE_CHECKSUM_FAILURE,
+    CF_TxnStatus_FILE_SIZE_ERROR           = CF_CFDP_ConditionCode_FILE_SIZE_ERROR,
+    CF_TxnStatus_NAK_LIMIT_REACHED         = CF_CFDP_ConditionCode_NAK_LIMIT_REACHED,
+    CF_TxnStatus_INACTIVITY_DETECTED       = CF_CFDP_ConditionCode_INACTIVITY_DETECTED,
+    CF_TxnStatus_INVALID_FILE_STRUCTURE    = CF_CFDP_ConditionCode_INVALID_FILE_STRUCTURE,
+    CF_TxnStatus_CHECK_LIMIT_REACHED       = CF_CFDP_ConditionCode_CHECK_LIMIT_REACHED,
+    CF_TxnStatus_UNSUPPORTED_CHECKSUM_TYPE = CF_CFDP_ConditionCode_UNSUPPORTED_CHECKSUM_TYPE,
+    CF_TxnStatus_SUSPEND_REQUEST_RECEIVED  = CF_CFDP_ConditionCode_SUSPEND_REQUEST_RECEIVED,
+    CF_TxnStatus_CANCEL_REQUEST_RECEIVED   = CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED,
+
+    /* Additional status codes for items not representable in a CFDP CC, these can be set in
+     * transactions that did not make it to the point of sending FIN/EOF. */
+    CF_TxnStatus_PROTOCOL_ERROR     = 16,
+    CF_TxnStatus_ACK_LIMIT_NO_FIN   = 17,
+    CF_TxnStatus_ACK_LIMIT_NO_EOF   = 18,
+    CF_TxnStatus_NAK_RESPONSE_ERROR = 19,
+    CF_TxnStatus_SEND_EOF_FAILURE   = 20,
+    CF_TxnStatus_EARLY_FIN          = 21,
+
+    /* keep last */
+    CF_TxnStatus_MAX = 22
+
+} CF_TxnStatus_t;
+
+/**
+ * @brief CF History entry
+ *
+ * Records CF app operations for future reference
+ */
+typedef struct CF_History
+{
+    CF_TxnFilenames_t   fnames;   /**< \brief file names associated with this history entry */
+    CF_CListNode_t      cl_node;  /**< \brief for connection to a CList */
+    CF_Direction_t      dir;      /**< \brief direction of this history entry */
+    CF_TxnStatus_t      txn_stat; /**< \brief final status of operation */
+    CF_EntityId_t       src_eid;  /**< \brief the source eid of the transaction */
+    CF_EntityId_t       peer_eid; /**< \brief peer_eid is always the "other guy", same src_eid for RX */
+    CF_TransactionSeq_t seq_num;  /**< \brief transaction identifier, stays constant for entire transfer */
+} CF_History_t;
+
+/**
+ * @brief Wrapper around a CF_ChunkList_t object
+ *
+ * This allows a CF_ChunkList_t to be stored within a CList data storage structure
+ */
+typedef struct CF_ChunkWrapper
+{
+    CF_ChunkList_t chunks;
+    CF_CListNode_t cl_node;
+} CF_ChunkWrapper_t;
+
+/**
+ * @brief CF Playback entry
+ *
+ * Keeps the state of CF playback requests
+ */
+typedef struct CF_Playback
+{
+    osal_id_t         dir_id;
+    CF_CFDP_Class_t   cfdp_class;
+    CF_TxnFilenames_t fnames;
+    uint16            num_ts; /**< \brief number of transactions */
+    uint8             priority;
+    CF_EntityId_t     dest_id;
+
+    bool busy;
+    bool diropen;
+    bool keep;
+    bool counted;
+} CF_Playback_t;
+
+/**
+ * @brief CF Poll entry
+ *
+ * Keeps the state of CF directory polling
+ */
+typedef struct CF_Poll
+{
+    CF_Playback_t pb;
+    CF_Timer_t    interval_timer;
+    bool          timer_set;
+} CF_Poll_t;
+
+/**
+ * @brief Data specific to a class 2 send file transaction
+ */
+typedef struct CF_TxS2_Data
+{
+    uint8 fin_cc; /**< \brief remember the cc in the received fin pdu to echo in eof-fin */
+    uint8 acknak_count;
+} CF_TxS2_Data_t;
+
+/**
+ * @brief Data specific to a send file transaction
+ */
+typedef struct CF_TxState_Data
+{
+    CF_TxSubState_t sub_state;
+    uint32          cached_pos;
+
+    CF_TxS2_Data_t s2;
+} CF_TxState_Data_t;
+
+/**
+ * @brief Data specific to a class 2 receive file transaction
+ */
+typedef struct CF_RxS2_Data
+{
+    uint32                    eof_crc;
+    uint32                    eof_size;
+    uint32                    rx_crc_calc_bytes;
+    CF_CFDP_FinDeliveryCode_t dc;
+    CF_CFDP_FinFileStatus_t   fs;
+    uint8                     eof_cc; /**< \brief remember the cc in the received eof pdu to echo in eof-ack */
+    uint8                     acknak_count;
+} CF_RxS2_Data_t;
+
+/**
+ * @brief Data specific to a receive file transaction
+ */
+typedef struct CF_RxState_Data
+{
+    CF_RxSubState_t sub_state;
+    uint32          cached_pos;
+
+    CF_RxS2_Data_t r2;
+} CF_RxState_Data_t;
+
+/**
+ * @brief Data that applies to all types of transactions
+ */
+typedef struct CF_Flags_Common
+{
+    uint8 q_index; /**< \brief Q index this is in */
+    bool  ack_timer_armed;
+    bool  suspended;
+    bool  canceled;
+    bool  crc_calc;
+} CF_Flags_Common_t;
+
+/**
+ * @brief Flags that apply to receive transactions
+ */
+typedef struct CF_Flags_Rx
+{
+    CF_Flags_Common_t com;
+
+    bool md_recv; /**< \brief md received for r state */
+    bool eof_recv;
+    bool send_nak;
+    bool send_fin;
+    bool send_ack;
+    bool inactivity_fired; /**< \brief used for r2 */
+    bool complete;         /**< \brief r2 */
+    bool fd_nak_sent;      /**< \brief latches that at least one nak has been sent for file data */
+} CF_Flags_Rx_t;
+
+/**
+ * @brief Flags that apply to send transactions
+ */
+typedef struct CF_Flags_Tx
+{
+    CF_Flags_Common_t com;
+
+    bool md_need_send;
+    bool cmd_tx; /**< \brief indicates transaction is commanded (ground) tx */
+} CF_Flags_Tx_t;
+
+/**
+ * @brief Summary of all possible transaction flags (tx and rx)
+ */
+typedef union CF_StateFlags
+{
+    CF_Flags_Common_t com; /**< \brief applies to all transactions */
+    CF_Flags_Rx_t     rx;  /**< \brief applies to only receive file transactions */
+    CF_Flags_Tx_t     tx;  /**< \brief applies to only send file transactions */
+} CF_StateFlags_t;
+
+/**
+ * @brief Summary of all possible transaction state information (tx and rx)
+ */
+typedef union CF_StateData
+{
+    CF_TxState_Data_t s; /**< \brief applies to only send file transactions */
+    CF_RxState_Data_t r; /**< \brief applies to only receive file transactions */
+} CF_StateData_t;
+
+/**
+ * @brief Transaction state object
+ *
+ * This keeps the state of CF file transactions
+ */
+typedef struct CF_Transaction
+{
+    CF_TxnState_t state; /**< \brief each engine is commanded to do something, which is the overall state */
+
+    CF_History_t *     history;          /**< \brief weird, holds active filenames and possibly other info */
+    CF_ChunkWrapper_t *chunks;           /**< \brief for gap tracking, only used on class 2 */
+    CF_Timer_t         inactivity_timer; /**< \brief set to the overall inactivity timer of a remote */
+    CF_Timer_t         ack_timer;        /**< \brief called ack_timer, but is also nak_timer */
+
+    uint32    fsize; /**< \brief lseek() should be 64-bit on 64-bit system, but osal limits to 32-bit */
+    uint32    foffs; /**< \brief offset into file for next read */
+    osal_id_t fd;
+
+    CF_Crc_t crc;
+
+    uint8 keep;
+    uint8 chan_num; /**< \brief if ever more than one engine, this may need to change to pointer */
+    uint8 priority;
+
+    CF_CListNode_t cl_node;
+
+    CF_Playback_t *p; /**< \brief NULL if transaction does not belong to a playback */
+
+    CF_StateData_t state_data;
+
+    /**
+     * @brief State flags
+     *
+     * \note The flags here look a little strange, because there are different flags for TX and RX.
+     * Both types share the same type of flag, though. Since RX flags plus the global flags is
+     * over one byte, storing them this way allows 2 bytes to cover all possible flags.
+     * Please ignore the duplicate declarations of the "all" flags.
+     */
+    CF_StateFlags_t flags;
+} CF_Transaction_t;
+
+/**
+ * @brief Identifies the type of timer tick being processed
+ */
+typedef enum
+{
+    CF_TickType_RX,
+    CF_TickType_TXW_NORM,
+    CF_TickType_TXW_NAK,
+    CF_TickType_NUM_TYPES
+} CF_TickType_t;
+
+/**
+ * @brief Channel state object
+ *
+ * This keeps the state of CF channels
+ *
+ * Each CF channel has a separate transaction list, PDU throttle, playback,
+ * and poll state, as well as separate addresses on the underlying message
+ * transport (e.g. SB).
+ */
+typedef struct CF_Channel
+{
+    CF_CListNode_t *qs[CF_QueueIdx_NUM];
+    CF_CListNode_t *cs[CF_Direction_NUM];
+
+    CFE_SB_PipeId_t pipe;
+
+    uint32 num_cmd_tx;
+
+    CF_Playback_t playback[CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN];
+
+    /* For polling directories, the configuration data is in a table. */
+    CF_Poll_t poll[CF_MAX_POLLING_DIR_PER_CHAN];
+
+    osal_id_t sem_id; /**< \brief semaphore id for output pipe */
+
+    const CF_Transaction_t *cur; /**< \brief current transaction during channel cycle */
+
+    uint8 tick_type;
+} CF_Channel_t;
+
+/* NOTE: the use of CF_CFDP_PduHeader_t below is correct, but the CF_PduRecvMsg_t and CF_PduSendMsg_t
+ * structures are both longer than these definitions. They are always backed by a buffer
+ * of size CF_MAX_PDU_SIZE */
+
+/**
+ * @brief CF engine output state
+ *
+ * Keeps the state of the current output PDU in the CF engine
+ */
+typedef struct CF_Output
+{
+    CFE_SB_Buffer_t * msg;    /**< \brief Binary message to be sent to underlying transport */
+    CF_EncoderState_t encode; /**< \brief Encoding state (while building message) */
+
+    /**
+     * \brief Temporary R/W buffer for holding output PDUs while working with them
+     */
+    CF_Logical_PduBuffer_t tx_pdudata;
+} CF_Output_t;
+
+/**
+ * @brief CF engine input state
+ *
+ * Keeps the state of the current input PDU in the CF engine
+ */
+typedef struct CF_Input
+{
+    CFE_SB_Buffer_t * msg;    /**< \brief Binary message received from underlying transport */
+    CF_DecoderState_t decode; /**< \brief Decoding state (while interpreting message) */
+
+    /**
+     * \brief Temporary R/W buffer for holding input PDUs while working with them
+     */
+    CF_Logical_PduBuffer_t rx_pdudata;
+} CF_Input_t;
+
+/**
+ * @brief An engine represents a pairing to a local EID
+ *
+ * Each engine can have at most CF_MAX_SIMULTANEOUS_TRANSACTIONS
+ */
+typedef struct CF_Engine
+{
+    CF_TransactionSeq_t seq_num; /* \brief keep track of the next sequence number to use for sends */
+
+    CF_Output_t out;
+    CF_Input_t  in;
+
+    /* NOTE: could have separate array of transactions as part of channel? */
+    CF_Transaction_t transactions[CF_NUM_TRANSACTIONS];
+    CF_History_t     histories[CF_NUM_HISTORIES];
+    CF_Channel_t     channels[CF_NUM_CHANNELS];
+
+    CF_ChunkWrapper_t chunks[CF_NUM_TRANSACTIONS * CF_Direction_NUM];
+    CF_Chunk_t        chunk_mem[CF_NUM_CHUNKS_ALL_CHANNELS];
+
+    uint32 outgoing_counter;
+    uint8  enabled;
+} CF_Engine_t;
+
+/**
+ * @brief Special return values from some send PDU processing functions
+ */
+typedef enum
+{
+    CF_SendRet_SUCCESS = 0, /**< \brief Successfully sent */
+    CF_SendRet_NO_MSG  = 1, /**< \brief No send buffer available, throttling limit reached */
+    CF_SendRet_ERROR   = 2, /**< \brief the send itself failed */
+    CF_SendRet_FAILURE = 3, /**< \brief generic failure message not relating to message send */
+} CF_SendRet_t;
+
+#endif
+```
+
+### `cf_chunk.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_chunk.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application chunks (sparse gap tracking) logic file
+ *
+ *  This class handles the complexity of sparse gap tracking so that
+ *  the CFDP engine doesn't need to worry about it. Information is given
+ *  to the class and when needed calculations are made internally to
+ *  help the engine build NAK packets. Received NAK segment requests
+ *  are stored in this class as well and used for re-transmit processing.
+ *
+ *  This is intended to be mostly a generic purpose class used by CF.
+ */
+
+#include <string.h>
+#include "cf_verify.h"
+#include "cf_assert.h"
+#include "cf_chunk.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Chunks_EraseRange(CF_ChunkList_t *chunks, CF_ChunkIdx_t start, CF_ChunkIdx_t end)
+{
+    /* Sanity check */
+    CF_Assert(end <= chunks->count);
+
+    if (start < end)
+    {
+        memmove(&chunks->chunks[start], &chunks->chunks[end], sizeof(*chunks->chunks) * (chunks->count - end));
+        chunks->count -= (end - start);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Chunks_EraseChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t erase_index)
+{
+    CF_Assert(chunks->count > 0);
+    CF_Assert(erase_index < chunks->count);
+
+    /* to erase, move memory over the old one */
+    memmove(&chunks->chunks[erase_index], &chunks->chunks[erase_index + 1],
+            sizeof(*chunks->chunks) * (chunks->count - 1 - erase_index));
+    --chunks->count;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Chunks_InsertChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t index_before, const CF_Chunk_t *chunk)
+{
+    CF_Assert(chunks->count < chunks->max_chunks);
+    CF_Assert(index_before <= chunks->count);
+
+    if (chunks->count && (index_before != chunks->count))
+    {
+        memmove(&chunks->chunks[index_before + 1], &chunks->chunks[index_before],
+                sizeof(*chunk) * (chunks->count - index_before));
+    }
+    memcpy(&chunks->chunks[index_before], chunk, sizeof(*chunk));
+
+    ++chunks->count;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_ChunkIdx_t CF_Chunks_FindInsertPosition(CF_ChunkList_t *chunks, const CF_Chunk_t *chunk)
+{
+    CF_ChunkIdx_t first = 0;
+    CF_ChunkIdx_t i;
+    CF_ChunkIdx_t count = chunks->count;
+    CF_ChunkIdx_t step;
+
+    while (count > 0)
+    {
+        i    = first;
+        step = count / 2;
+        i += step;
+        if (chunks->chunks[i].offset < chunk->offset)
+        {
+            first = i + 1;
+            count -= step + 1;
+        }
+        else
+        {
+            count = step;
+        }
+    }
+
+    return first;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_Chunks_CombinePrevious(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    CF_Chunk_t *     prev;
+    CF_ChunkOffset_t prev_end;
+    CF_ChunkOffset_t chunk_end;
+    int              ret = 0;
+
+    CF_Assert(i <= chunks->max_chunks);
+
+    /* Only need to check if there is a previous */
+    if (i > 0)
+    {
+        chunk_end = chunk->offset + chunk->size;
+        prev      = &chunks->chunks[i - 1];
+        prev_end  = prev->offset + prev->size;
+
+        /* Check if start of new chunk is less than end of previous (overlaps) */
+        if (chunk->offset <= prev_end)
+        {
+            /* When combining, use the bigger of the two endings */
+            if (prev_end < chunk_end)
+            {
+                /* Combine with previous chunk */
+                prev->size = chunk_end - prev->offset;
+            }
+            ret = 1;
+        }
+    }
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_Chunks_CombineNext(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    CF_ChunkIdx_t    combined_i = i;
+    int              ret        = 0;
+    CF_ChunkOffset_t chunk_end  = chunk->offset + chunk->size;
+
+    /* Assert no rollover, only possible as a bug */
+    CF_Assert(chunk_end > chunk->offset);
+
+    /* Determine how many can be combined */
+    for (; combined_i < chunks->count; ++combined_i)
+    {
+        /* Advance combine index until there is a gap between end and the next offset */
+        if (chunk_end < chunks->chunks[combined_i].offset)
+        {
+            break;
+        }
+    }
+
+    /* If index advanced the range of chunks can be combined */
+    if (i != combined_i)
+    {
+        /* End is the max of last combined chunk end or new chunk end */
+        chunk_end =
+            CF_Chunk_MAX(chunks->chunks[combined_i - 1].offset + chunks->chunks[combined_i - 1].size, chunk_end);
+
+        /* Use current slot as combined entry */
+        chunks->chunks[i].size   = chunk_end - chunk->offset;
+        chunks->chunks[i].offset = chunk->offset;
+
+        /* Erase the rest of the combined chunks (if any) */
+        CF_Chunks_EraseRange(chunks, i + 1, combined_i);
+        ret = 1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_ChunkIdx_t CF_Chunks_FindSmallestSize(const CF_ChunkList_t *chunks)
+{
+    CF_ChunkIdx_t i;
+    CF_ChunkIdx_t smallest = 0;
+
+    for (i = 1; i < chunks->count; ++i)
+    {
+        if (chunks->chunks[i].size < chunks->chunks[smallest].size)
+        {
+            smallest = i;
+        }
+    }
+
+    return smallest;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Chunks_Insert(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk)
+{
+    int n = CF_Chunks_CombineNext(chunks, i, chunk);
+    if (n)
+    {
+        int combined = CF_Chunks_CombinePrevious(chunks, i, &chunks->chunks[i]);
+        if (combined)
+        {
+            CF_Chunks_EraseChunk(chunks, i);
+        }
+    }
+    else
+    {
+        int combined = CF_Chunks_CombinePrevious(chunks, i, chunk);
+        if (!combined)
+        {
+            if (chunks->count < chunks->max_chunks)
+            {
+                CF_Chunks_InsertChunk(chunks, i, chunk);
+            }
+            else
+            {
+                CF_ChunkIdx_t smallest_i = CF_Chunks_FindSmallestSize(chunks);
+                CF_Chunk_t *  smallest_c = &chunks->chunks[smallest_i];
+                if (smallest_c->size < chunk->size)
+                {
+                    CF_Chunks_EraseChunk(chunks, smallest_i);
+                    CF_Chunks_InsertChunk(chunks, CF_Chunks_FindInsertPosition(chunks, chunk), chunk);
+                }
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ChunkListAdd(CF_ChunkList_t *chunks, CF_ChunkOffset_t offset, CF_ChunkSize_t size)
+{
+    const CF_Chunk_t    chunk = {offset, size};
+    const CF_ChunkIdx_t i     = CF_Chunks_FindInsertPosition(chunks, &chunk);
+
+    /* PTFO: files won't be so big we need to gracefully handle overflow,
+     * and in that case the user should change everything in chunks
+     * to use 64-bit numbers */
+    CF_Assert((offset + size) >= offset);
+
+    CF_Chunks_Insert(chunks, i, &chunk);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ChunkList_RemoveFromFirst(CF_ChunkList_t *chunks, CF_ChunkSize_t size)
+{
+    CF_Chunk_t *c = &chunks->chunks[0]; /* front is always 0 */
+
+    if (size > c->size)
+    {
+        size = c->size;
+    }
+    c->size -= size;
+
+    if (!c->size)
+    {
+        CF_Chunks_EraseChunk(chunks, 0);
+    }
+    else
+    {
+        c->offset += size;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+const CF_Chunk_t *CF_ChunkList_GetFirstChunk(const CF_ChunkList_t *chunks)
+{
+    return chunks->count ? &chunks->chunks[0] : NULL;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ChunkListInit(CF_ChunkList_t *chunks, CF_ChunkIdx_t max_chunks, CF_Chunk_t *chunks_mem)
+{
+    CF_Assert(max_chunks > 0);
+    chunks->max_chunks = max_chunks;
+    chunks->chunks     = chunks_mem;
+    CF_ChunkListReset(chunks);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ChunkListReset(CF_ChunkList_t *chunks)
+{
+    chunks->count = 0;
+    memset(chunks->chunks, 0, sizeof(*chunks->chunks) * chunks->max_chunks);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_chunk.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CF_ChunkList_ComputeGaps(const CF_ChunkList_t *chunks, CF_ChunkIdx_t max_gaps, CF_ChunkSize_t total,
+                                CF_ChunkOffset_t start, CF_ChunkList_ComputeGapFn_t compute_gap_fn, void *opaque)
+{
+    uint32           ret = 0;
+    CF_ChunkIdx_t    i   = 0;
+    CF_ChunkOffset_t next_off;
+    CF_ChunkOffset_t gap_start;
+    CF_Chunk_t       c;
+
+    CF_Assert(total); /* does it make sense to have a 0 byte file? */
+    CF_Assert(start < total);
+
+    /* simple case: there is no chunk data, which means there is a single gap of the entire size */
+    if (!chunks->count)
+    {
+        c.offset = 0;
+        c.size   = total;
+        if (compute_gap_fn)
+        {
+            compute_gap_fn(chunks, &c, opaque);
+        }
+        ret = 1;
+    }
+    else
+    {
+        /* Handle initial gap if needed */
+        if (start < chunks->chunks[0].offset)
+        {
+            c.offset = start;
+            c.size   = chunks->chunks[0].offset - start;
+            if (compute_gap_fn)
+            {
+                compute_gap_fn(chunks, &c, opaque);
+            }
+            ret = 1;
+        }
+
+        while ((ret < max_gaps) && (i < chunks->count))
+        {
+            next_off  = (i == (chunks->count - 1)) ? total : chunks->chunks[i + 1].offset;
+            gap_start = (chunks->chunks[i].offset + chunks->chunks[i].size);
+
+            c.offset = (gap_start > start) ? gap_start : start;
+            c.size   = (next_off - c.offset);
+
+            if (gap_start >= total)
+            {
+                break;
+            }
+            else if (start < next_off)
+            {
+                /* Only report if gap finishes after start */
+                if (compute_gap_fn)
+                {
+                    compute_gap_fn(chunks, &c, opaque);
+                }
+                ++ret;
+            }
+            ++i;
+        }
+    }
+
+    return ret;
+}
+```
+
+### `cf_chunk.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_chunk.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application chunks (spare gap tracking) header file
+ */
+
+#ifndef CF_CHUNK_H
+#define CF_CHUNK_H
+
+#include "cfe.h"
+
+typedef uint32 CF_ChunkIdx_t;
+typedef uint32 CF_ChunkOffset_t;
+typedef uint32 CF_ChunkSize_t;
+
+/**
+ * @brief Pairs an offset with a size to identify a specific piece of a file
+ */
+typedef struct CF_Chunk
+{
+    CF_ChunkOffset_t offset; /**< \brief The start offset of the chunk within the file */
+    CF_ChunkSize_t   size;   /**< \brief The size of the chunk */
+} CF_Chunk_t;
+
+/**
+ * @brief A list of CF_Chunk_t pairs
+ *
+ * This list is ordered by chunk offset, from lowest to highest
+ */
+typedef struct CF_ChunkList
+{
+    CF_ChunkIdx_t count;      /**< \brief number of chunks currently in the array */
+    CF_ChunkIdx_t max_chunks; /**< \brief maximum number of chunks allowed in the list (allocation size) */
+    CF_Chunk_t *  chunks;     /**< \brief chunk list array */
+} CF_ChunkList_t;
+
+/**
+ * @brief Function for use with CF_ChunkList_ComputeGaps()
+ *
+ * @param cs Pointer to the CF_ChunkList_t object
+ * @param c  Pointer to the chunk being currently processed
+ * @param opaque Opaque pointer passed through from initial call
+ */
+typedef void (*CF_ChunkList_ComputeGapFn_t)(const CF_ChunkList_t *cs, const CF_Chunk_t *c, void *opaque);
+
+/**
+ * @brief Selects the larger of the two passed-in offsets
+ *
+ * @param a First chunk offset
+ * @param b Second chunk offset
+ * @return the larger CF_ChunkOffset_t value
+ */
+static inline CF_ChunkOffset_t CF_Chunk_MAX(CF_ChunkOffset_t a, CF_ChunkOffset_t b)
+{
+    if (a > b)
+    {
+        return a;
+    }
+    else
+    {
+        return b;
+    }
+}
+
+/************************************************************************/
+/** @brief Initialize a CF_ChunkList_t structure.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL. chunks_mem must not be NULL.
+ *
+ * @param chunks      Pointer to CF_ChunkList_t object to initialize
+ * @param max_chunks  Maximum number of entries in the chunks_mem array
+ * @param chunks_mem  Array of CF_Chunk_t objects with length of max_chunks
+ */
+void CF_ChunkListInit(CF_ChunkList_t *chunks, CF_ChunkIdx_t max_chunks, CF_Chunk_t *chunks_mem);
+
+/************************************************************************/
+/** @brief Public function to add a chunk.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @param chunks   Pointer to CF_ChunkList_t object
+ * @param offset   Offset of chunk to add
+ * @param size     Size of chunk to add
+ */
+void CF_ChunkListAdd(CF_ChunkList_t *chunks, CF_ChunkOffset_t offset, CF_ChunkSize_t size);
+
+/************************************************************************/
+/** @brief Resets a chunks structure.
+ *
+ * All chunks are removed from the list, but the max_chunks and chunk memory
+ * pointers are retained.  This returns the chunk list to the same state as
+ * it was after the initial call to CF_ChunkListInit().
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @param chunks   Pointer to CF_ChunkList_t object
+ */
+void CF_ChunkListReset(CF_ChunkList_t *chunks);
+
+/************************************************************************/
+/** @brief Public function to remove some amount of size from the first chunk.
+ *
+ * @par Description
+ *       This may remove the chunk entirely. This function is to satisfy the
+ *       use-case where data is retrieved from the structure in-order and
+ *       once consumed should be removed.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL and list must not be empty
+ *
+ * @note
+ * Good computer science would have a generic remove function, but that's much more complex
+ * than we need for the use case. We aren't trying to make chunks a general purpose
+ * reusable module, so just take the simple case that we need.
+ *
+ * @param chunks   Pointer to CF_ChunkList_t object
+ * @param size     Size to remove
+ */
+void CF_ChunkList_RemoveFromFirst(CF_ChunkList_t *chunks, CF_ChunkSize_t size);
+
+/************************************************************************/
+/** @brief Public function to get the entire first chunk from the list
+ *
+ * This returns the first chunk from the list, or NULL if the list is empty.
+ *
+ * @note The chunk remains on the list - this call does not consume or remove the chunk
+ * from the list.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @returns Pointer to first chunk from the CF_ChunkList_t object
+ * @retval  NULL if the list was empty
+ */
+const CF_Chunk_t *CF_ChunkList_GetFirstChunk(const CF_ChunkList_t *chunks);
+
+/************************************************************************/
+/** @brief Compute gaps between chunks, and call a callback for each.
+ *
+ * @par Description
+ *       This function walks over all chunks and computes the gaps between.
+ *       It can exit early if the calculated gap start is larger than the
+ *       desired total.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL. compute_gap_fn is a valid function address.
+ *
+ * @param chunks         Pointer to CF_ChunkList_t object
+ * @param max_gaps       Maximum number of gaps to compute
+ * @param total          Size of the entire file
+ * @param start          Beginning offset for gap computation
+ * @param compute_gap_fn Callback function to be invoked for each gap
+ * @param opaque         Opaque pointer to pass through to callback function
+ *
+ * @returns The number of computed gaps.
+ */
+uint32 CF_ChunkList_ComputeGaps(const CF_ChunkList_t *chunks, CF_ChunkIdx_t max_gaps, CF_ChunkSize_t total,
+                                CF_ChunkOffset_t start, CF_ChunkList_ComputeGapFn_t compute_gap_fn, void *opaque);
+
+/************************************************************************/
+/** @brief Erase a range of chunks.
+ *
+ * Items in the list starting at the end index will be shifted/moved to close the gap.
+ * If end <= start nothing will be done (OK to pass matching start/end as a no-op)
+ * If end == list size, list from start on will be erased (nothing moved)
+ *
+ * Example:
+ *   list = {a, b, c, d, e}
+ *   EraseRange index start 1, end 3
+ *   list = {a, d, e}
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @param chunks   Pointer to CF_ChunkList_t object
+ * @param start    Starting chunk ID to erase (inclusive)
+ * @param end      Ending chunk ID (exclusive, this chunk will not be erased)
+ */
+void CF_Chunks_EraseRange(CF_ChunkList_t *chunks, CF_ChunkIdx_t start, CF_ChunkIdx_t end);
+
+/************************************************************************/
+/** @brief Erase a single chunk.
+ *
+ * @note This changes the chunk IDs of all chunks that follow
+ * Items in the list after the erase_index will be shifted/moved to close the gap.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @param chunks      Pointer to CF_ChunkList_t object
+ * @param erase_index chunk ID to erase
+ */
+void CF_Chunks_EraseChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t erase_index);
+
+/************************************************************************/
+/** @brief Insert a chunk before index_before.
+ *
+ * @note This changes the chunk IDs of all chunks that follow
+ * Items in the list after the index_before will be shifted/moved to open a gap.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, chunk must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ * @param index_before position to insert at - this becomes the ID of the inserted chunk
+ * @param chunk        Chunk data to insert (copied)
+ */
+void CF_Chunks_InsertChunk(CF_ChunkList_t *chunks, CF_ChunkIdx_t index_before, const CF_Chunk_t *chunk);
+
+/************************************************************************/
+/** @brief Finds where a chunk should be inserted in the chunks.
+ *
+ * @par Description
+ *       This is a C version of std::lower_bound from C++ algorithms.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, chunk must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ * @param chunk        Chunk data to insert
+ *
+ * @returns an index to the first chunk that is greater than or equal to the requested's offset.
+ *
+ */
+CF_ChunkIdx_t CF_Chunks_FindInsertPosition(CF_ChunkList_t *chunks, const CF_Chunk_t *chunk);
+
+/************************************************************************/
+/** @brief Possibly combines the given chunk with the previous chunk.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, chunk must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ * @param i            Index of chunk to combine
+ * @param chunk        Chunk data to combine
+ *
+ * @returns boolean code indicating if chunks were combined
+ * @retval 1 if combined with another chunk
+ * @retval 0 if not combined
+ *
+ */
+int CF_Chunks_CombinePrevious(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk);
+
+/************************************************************************/
+/** @brief Possibly combines the given chunk with the next chunk.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, chunk must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ * @param i            Index of chunk to combine
+ * @param chunk        Chunk data to combine
+ *
+ * @returns boolean code indicating if chunks were combined
+ * @retval 1 if combined with another chunk
+ * @retval 0 if not combined
+ *
+ */
+int CF_Chunks_CombineNext(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk);
+
+/************************************************************************/
+/** @brief Finds the smallest size out of all chunks.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ *
+ * @returns The chunk index with the smallest size.
+ * @retval  0 if the chunk list is empty
+ *
+ */
+CF_ChunkIdx_t CF_Chunks_FindSmallestSize(const CF_ChunkList_t *chunks);
+
+/************************************************************************/
+/** @brief Insert a chunk.
+ *
+ * @par Description
+ *       Inserts the chunk at the specified location. May combine with
+ *       an existing chunk if contiguous.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       chunks must not be NULL, chunk must not be NULL.
+ *
+ * @param chunks       Pointer to CF_ChunkList_t object
+ * @param i            Position to insert chunk at
+ * @param chunk        Chunk data to insert
+ */
+void CF_Chunks_Insert(CF_ChunkList_t *chunks, CF_ChunkIdx_t i, const CF_Chunk_t *chunk);
+
+#endif /* !CF_CHUNK_H */
+```
+
+### `cf_clist.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_clist.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application circular list definition source file
+ *
+ *  This is a circular doubly-linked list implementation. It is used for
+ *  all data structures in CF.
+ *
+ *  This file is intended to be a generic class that can be used in other apps.
+ */
+
+#include "cf_verify.h"
+#include "cf_clist.h"
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_InitNode(CF_CListNode_t *node)
+{
+    node->next = node;
+    node->prev = node;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_InsertFront(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    CF_Assert(head);
+    CF_Assert(node);
+    CF_Assert(node->next == node);
+    CF_Assert(node->prev == node);
+
+    if (*head)
+    {
+        CF_CListNode_t *last = (*head)->prev;
+
+        node->next = *head;
+        node->prev = last;
+
+        last->next    = node;
+        (*head)->prev = node;
+    }
+
+    *head = node;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_InsertBack(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    CF_Assert(head);
+    CF_Assert(node);
+    CF_Assert(node->next == node);
+    CF_Assert(node->prev == node);
+
+    if (!*head)
+    {
+        *head = node;
+    }
+    else
+    {
+        CF_CListNode_t *last = (*head)->prev;
+
+        node->next    = *head;
+        (*head)->prev = node;
+        node->prev    = last;
+        last->next    = node;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_CListNode_t *CF_CList_Pop(CF_CListNode_t **head)
+{
+    CF_CListNode_t *ret;
+
+    CF_Assert(head);
+
+    ret = *head;
+    if (ret)
+    {
+        CF_CList_Remove(head, ret);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_Remove(CF_CListNode_t **head, CF_CListNode_t *node)
+{
+    CF_Assert(head);
+    CF_Assert(node);
+    CF_Assert(*head);
+
+    if (node->next == node)
+    {
+        /* only node in the list, so this one is easy */
+        CF_Assert(node == *head); /* sanity check */
+        *head = NULL;
+    }
+    else if (*head == node)
+    {
+        /* removing the first node in the list, so make the second node in the list the first */
+        (*head)->prev->next = node->next;
+        *head               = node->next;
+
+        (*head)->prev = node->prev;
+    }
+    else
+    {
+        node->next->prev = node->prev;
+        node->prev->next = node->next;
+    }
+
+    CF_CList_InitNode(node);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_InsertAfter(CF_CListNode_t **head, CF_CListNode_t *start, CF_CListNode_t *after)
+{
+    /* calling insert_after with nothing to insert after (no head) makes no sense */
+    CF_Assert(head);
+    CF_Assert(*head);
+    CF_Assert(start);
+    CF_Assert(start != after);
+
+    /* knowing that head is not empty, and knowing that start is non-zero, this is an easy operation */
+    after->next       = start->next;
+    start->next       = after;
+    after->prev       = start;
+    after->next->prev = after;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_Traverse(CF_CListNode_t *start, CF_CListFn_t fn, void *context)
+{
+    CF_CListNode_t *n = start;
+    CF_CListNode_t *nn;
+    int             last = 0;
+
+    if (n)
+    {
+        do
+        {
+            /* set nn in case callback removes this node from the list */
+            nn = n->next;
+            if (nn == start)
+            {
+                last = 1;
+            }
+            if (fn(n, context))
+            {
+                break;
+            }
+            /* list traversal is robust against an item deleting itself during traversal,
+             * but there is a special case if that item is the starting node. Since this is
+             * a circular list, start is remembered so we know when to stop. Must set start
+             * to the next node in this case. */
+            if ((start == n) && (n->next != nn))
+            {
+                start = nn;
+            }
+            n = nn;
+        } while (!last);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_clist.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CList_Traverse_R(CF_CListNode_t *end, CF_CListFn_t fn, void *context)
+{
+    if (end)
+    {
+        CF_CListNode_t *n = end->prev;
+        CF_CListNode_t *nn;
+        int             last = 0;
+
+        if (n)
+        {
+            end = n;
+
+            do
+            {
+                /* set nn in case callback removes this node from the list */
+                nn = n->prev;
+                if (nn == end)
+                {
+                    last = 1;
+                }
+
+                if (fn(n, context))
+                {
+                    break;
+                }
+
+                /* list traversal is robust against an item deleting itself during traversal,
+                 * but there is a special case if that item is the starting node. Since this is
+                 * a circular list, "end" is remembered so we know when to stop. Must set "end"
+                 * to the next node in this case. */
+                if ((end == n) && (n->prev != nn))
+                {
+                    end = nn;
+                }
+                n = nn;
+            } while (!last);
+        }
+    }
+}
+```
+
+### `cf_clist.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_clist.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * The CF Application circular list header file
+ */
+
+#ifndef CF_CLIST_H
+#define CF_CLIST_H
+
+#include <stddef.h>
+
+#define CF_CLIST_CONT (0) /**< \brief Constant indicating to continue traversal */
+#define CF_CLIST_EXIT (1) /**< \brief Constant indicating to stop traversal */
+
+/**
+ * @brief Node link structure
+ */
+struct CF_CListNode
+{
+    struct CF_CListNode *next;
+    struct CF_CListNode *prev;
+};
+
+/**
+ * @brief Circular linked list node links
+ */
+typedef struct CF_CListNode CF_CListNode_t;
+
+/**
+ * @brief Obtains a pointer to the parent structure
+ *
+ * Given a pointer to a CF_CListNode_t object which is known to be a member of a
+ * larger container, this converts the pointer to that of the parent.
+ */
+#define container_of(ptr, type, member) ((type *)((char *)(ptr) - (char *)offsetof(type, member)))
+
+/**
+ * @brief Callback function type for use with CF_CList_Traverse()
+ *
+ * @param node    Current node being traversed
+ * @param context Opaque pointer passed through from initial call
+ *
+ * @returns integer status code indicating whether to continue traversal
+ * @retval  #CF_CLIST_CONT Indicates to continue traversing the list
+ * @retval  #CF_CLIST_EXIT Indicates to stop traversing the list
+ */
+typedef int (*CF_CListFn_t)(CF_CListNode_t *node, void *context);
+
+/************************************************************************/
+/** @brief Initialize a clist node.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       node must not be NULL.
+ *
+ * @param node  Pointer to node structure to be initialized
+ */
+void CF_CList_InitNode(CF_CListNode_t *node);
+
+/************************************************************************/
+/** @brief Insert the given node into the front of a list.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       head must not be NULL, node must not be NULL.
+ *
+ * @param head  Pointer to head of list to insert into
+ * @param node  Pointer to node to insert
+ */
+void CF_CList_InsertFront(CF_CListNode_t **head, CF_CListNode_t *node);
+
+/************************************************************************/
+/** @brief Insert the given node into the back of a list.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       head must not be NULL, node must not be NULL.
+ *
+ * @param head  Pointer to head of list to insert into
+ * @param node  Pointer to node to insert
+ */
+void CF_CList_InsertBack(CF_CListNode_t **head, CF_CListNode_t *node);
+
+/************************************************************************/
+/** @brief Remove the given node from the list.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       head must not be NULL, node must not be NULL.
+ *
+ * @param head  Pointer to head of list to remove from
+ * @param node  Pointer to node to remove
+ */
+void CF_CList_Remove(CF_CListNode_t **head, CF_CListNode_t *node);
+
+/************************************************************************/
+/** @brief Remove the first node from a list and return it.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       head must not be NULL.
+ *
+ * @param head  Pointer to head of list to remove from
+ *
+ * @returns The first node (now removed) in the list
+ * @retval  NULL if list was empty.
+ *
+ */
+CF_CListNode_t *CF_CList_Pop(CF_CListNode_t **head);
+
+/************************************************************************/
+/** @brief Insert the given node into the last after the given start node.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       head must not be NULL, node must not be NULL.
+ *
+ * @param head  Pointer to head of list to remove from
+ * @param start Pointer to node to insert
+ * @param after Pointer to position to insert after
+ */
+void CF_CList_InsertAfter(CF_CListNode_t **head, CF_CListNode_t *start, CF_CListNode_t *after);
+
+/************************************************************************/
+/** @brief Traverse the entire list, calling the given function on all nodes.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       start may be NULL, fn must be a valid function, context may be NULL.
+ *
+ * @note on traversal it's ok to delete the current node, but do not delete
+ * other nodes in the same list!!
+ *
+ * @param start   List to traverse (first node)
+ * @param fn      Callback function to invoke for each node
+ * @param context Opaque pointer to pass to callback
+ */
+void CF_CList_Traverse(CF_CListNode_t *start, CF_CListFn_t fn, void *context);
+
+/************************************************************************/
+/** @brief Reverse list traversal, starting from end, calling given function on all nodes.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       end may be NULL. fn must be a valid function, context may be NULL.
+ *
+ * @note traverse_R will work backwards from the parameter's prev, and end on param
+ *
+ * @param end     List to traverse (last node)
+ * @param fn      Callback function to invoke for each node
+ * @param context Opaque pointer to pass to callback
+ */
+void CF_CList_Traverse_R(CF_CListNode_t *end, CF_CListFn_t fn, void *context);
+
+#endif /* !CF_CLIST_H */
+```
+
+### `cf_cmd.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cmd.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application command handling source file
+ *
+ *  All ground commands are processed in this file. All supporting functions
+ *  necessary to process the commands are also here.
+ */
+
+#include "cf_app.h"
+#include "cf_verify.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+#include "cf_utils.h"
+#include "cf_version.h"
+
+#include "cf_cfdp.h"
+#include "cf_cmd.h"
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdNoop(CFE_SB_Buffer_t *msg)
+{
+    CFE_EVS_SendEvent(CF_EID_INF_CMD_NOOP, CFE_EVS_EventType_INFORMATION, "CF: No-Op received, Version %d.%d.%d.%d",
+                      CF_MAJOR_VERSION, CF_MINOR_VERSION, CF_REVISION, CF_MISSION_REV);
+    ++CF_AppData.hk.counters.cmd;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdReset(CFE_SB_Buffer_t *msg)
+{
+    CF_UnionArgsCmd_t *cmd      = (CF_UnionArgsCmd_t *)msg;
+    static const char *names[5] = {"all", "cmd", "fault", "up", "down"};
+    /* 0=all, 1=cmd, 2=fault 3=up 4=down */
+    uint8 param = cmd->data.byte[0];
+    int   i;
+    int   acc = 1;
+
+    if (param > 4)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_RESET_INVALID, CFE_EVS_EventType_ERROR,
+                          "CF: Received RESET COUNTERS command with invalid parameter %d", param);
+        ++CF_AppData.hk.counters.err;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_RESET, CFE_EVS_EventType_INFORMATION,
+                          "CF: Received RESET COUNTERS command: %s", names[param]);
+
+        /* if the param is CF_Reset_command, or all counters */
+        if ((param == CF_Reset_all) || (param == CF_Reset_command))
+        {
+            /* command counters */
+            memset(&CF_AppData.hk.counters, 0, sizeof(CF_AppData.hk.counters));
+            acc = 0; /* don't increment accept counter on command counter reset */
+        }
+
+        /* if the param is CF_Reset_fault, or all counters */
+        if ((param == CF_Reset_all) || (param == CF_Reset_fault))
+        {
+            /* fault counters */
+            for (i = 0; i < CF_NUM_CHANNELS; ++i)
+                memset(&CF_AppData.hk.channel_hk[i].counters.fault, 0,
+                       sizeof(CF_AppData.hk.channel_hk[i].counters.fault));
+        }
+
+        /* if the param is CF_Reset_up, or all counters */
+        if ((param == CF_Reset_all) || (param == CF_Reset_up))
+        {
+            /* up counters */
+            for (i = 0; i < CF_NUM_CHANNELS; ++i)
+                memset(&CF_AppData.hk.channel_hk[i].counters.recv, 0,
+                       sizeof(CF_AppData.hk.channel_hk[i].counters.recv));
+        }
+
+        /* if the param is CF_Reset_down, or all counters */
+        if ((param == CF_Reset_all) || (param == CF_Reset_down))
+        {
+            /* down counters */
+            for (i = 0; i < CF_NUM_CHANNELS; ++i)
+                memset(&CF_AppData.hk.channel_hk[i].counters.sent, 0,
+                       sizeof(CF_AppData.hk.channel_hk[i].counters.sent));
+        }
+
+        if (acc)
+        {
+            ++CF_AppData.hk.counters.cmd;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdTxFile(CFE_SB_Buffer_t *msg)
+{
+    CF_TxFileCmd_t *tx = (CF_TxFileCmd_t *)msg;
+
+    /*
+     * This needs to validate all its inputs.
+     * "keep" should only be 0 or 1 (logical true/false).
+     * For priority and dest_id params, anything is acceptable.
+     */
+    if ((tx->cfdp_class != CF_CFDP_CLASS_1 && tx->cfdp_class != CF_CFDP_CLASS_2) || tx->chan_num >= CF_NUM_CHANNELS ||
+        tx->keep > 1)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_BAD_PARAM, CFE_EVS_EventType_ERROR,
+                          "CF: bad parameter in CF_CmdTxFile(): chan=%u, class=%u keep=%u", (unsigned int)tx->chan_num,
+                          (unsigned int)tx->cfdp_class, (unsigned int)tx->keep);
+        ++CF_AppData.hk.counters.err;
+        return;
+    }
+
+    /* make sure that the src and dst filenames are null terminated */
+    tx->src_filename[sizeof(tx->src_filename) - 1] = 0;
+    tx->dst_filename[sizeof(tx->dst_filename) - 1] = 0;
+
+    if (CF_CFDP_TxFile(tx->src_filename, tx->dst_filename, tx->cfdp_class, tx->keep, tx->chan_num, tx->priority,
+                       tx->dest_id) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_TX_FILE, CFE_EVS_EventType_INFORMATION,
+                          "CF: file transfer successfully initiated");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_TX_FILE, CFE_EVS_EventType_ERROR, "CF: file transfer initiation failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdPlaybackDir(CFE_SB_Buffer_t *msg)
+{
+    CF_PlaybackDirCmd_t *tx = (CF_PlaybackDirCmd_t *)msg;
+
+    /*
+     * This needs to validate all its inputs.
+     * "keep" should only be 0 or 1 (logical true/false).
+     * For priority and dest_id params, anything is acceptable.
+     */
+    if ((tx->cfdp_class != CF_CFDP_CLASS_1 && tx->cfdp_class != CF_CFDP_CLASS_2) || tx->chan_num >= CF_NUM_CHANNELS ||
+        tx->keep > 1)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_BAD_PARAM, CFE_EVS_EventType_ERROR,
+                          "CF: bad parameter in CF_CmdPlaybackDir(): chan=%u, class=%u keep=%u",
+                          (unsigned int)tx->chan_num, (unsigned int)tx->cfdp_class, (unsigned int)tx->keep);
+        ++CF_AppData.hk.counters.err;
+        return;
+    }
+
+    /* make sure that the src and dst filenames are null terminated */
+    tx->src_filename[sizeof(tx->src_filename) - 1] = 0;
+    tx->dst_filename[sizeof(tx->dst_filename) - 1] = 0;
+
+    if (CF_CFDP_PlaybackDir(tx->src_filename, tx->dst_filename, tx->cfdp_class, tx->keep, tx->chan_num, tx->priority,
+                            tx->dest_id) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_PLAYBACK_DIR, CFE_EVS_EventType_INFORMATION,
+                          "CF: directory playback initiation successful");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_PLAYBACK_DIR, CFE_EVS_EventType_ERROR,
+                          "CF: directory playback initiation failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_DoChanAction(CF_UnionArgsCmd_t *cmd, const char *errstr, CF_ChanActionFn_t fn, void *context)
+{
+    int ret = 0;
+
+    /* this function is generic for any ground command that takes a single channel
+     * argument which must be less than CF_NUM_CHANNELS or 255 which is a special
+     * value that means apply command to all channels */
+    if (cmd->data.byte[0] == CF_ALL_CHANNELS)
+    {
+        /* apply to all channels */
+        int i;
+        for (i = 0; i < CF_NUM_CHANNELS; ++i)
+            ret |= fn(i, context);
+    }
+    else if (cmd->data.byte[0] < CF_NUM_CHANNELS)
+    {
+        ret = fn(cmd->data.byte[0], context);
+    }
+    else
+    {
+        /* bad parameter */
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_CHAN_PARAM, CFE_EVS_EventType_ERROR,
+                          "CF: %s: channel parameter out of range. received %d", errstr, cmd->data.byte[0]);
+        ret = -1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_DoFreezeThaw(uint8 chan_num, const CF_ChanAction_BoolArg_t *context)
+{
+    /* no need to bounds check chan_num, done in caller */
+    CF_AppData.hk.channel_hk[chan_num].frozen = context->barg;
+    return 0;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdFreeze(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolArg_t barg = {1}; /* param is frozen, so 1 means freeze */
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "freeze", (CF_ChanActionFn_t)CF_DoFreezeThaw, &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_FREEZE, CFE_EVS_EventType_INFORMATION, "CF: freeze successful");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_FREEZE, CFE_EVS_EventType_ERROR, "CF: freeze cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdThaw(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolArg_t barg = {0}; /* param is frozen, so 0 means thawed */
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "thaw", (CF_ChanActionFn_t)CF_DoFreezeThaw, &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_THAW, CFE_EVS_EventType_INFORMATION, "CF: thaw successful");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_THAW, CFE_EVS_EventType_ERROR, "CF: thaw cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_Transaction_t *CF_FindTransactionBySequenceNumberAllChannels(CF_TransactionSeq_t ts, CF_EntityId_t eid)
+{
+    int               i;
+    CF_Transaction_t *ret = NULL;
+
+    /* transaction sequence numbers are referenced with the tuple (eid, tsn)
+     * Even though these tuples are unique to a channel, they should be unique
+     * across the entire system. Meaning, it isn't correct to have the same
+     * EID re-using a TSN in the same system. So, in order to locate the transaction
+     * to suspend, we need to search across all channels for it. */
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        ret = CF_FindTransactionBySequenceNumber(CF_AppData.engine.channels + i, ts, eid);
+        if (ret)
+        {
+            break;
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_TsnChanAction(CF_TransactionCmd_t *cmd, const char *cmdstr, CF_TsnChanAction_fn_t fn, void *context)
+{
+    int ret = -1;
+
+    if (cmd->chan == CF_COMPOUND_KEY)
+    {
+        /* special value 254 means to use the compound key (cmd->eid, cmd->ts) to find the transaction
+         * to act upon */
+        CF_Transaction_t *t = CF_FindTransactionBySequenceNumberAllChannels(cmd->ts, cmd->eid);
+        if (t)
+        {
+            fn(t, context);
+            ret = 1; /* because one transaction was matched - this should return a count */
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_TRANS_NOT_FOUND, CFE_EVS_EventType_ERROR,
+                              "CF: %s cmd: failed to find transaction for (eid %lu, ts %lu)", cmdstr,
+                              (unsigned long)cmd->eid, (unsigned long)cmd->ts);
+        }
+    }
+    else if (cmd->chan == CF_ALL_CHANNELS)
+    {
+        /* perform action on all channels, all transactions */
+        ret = CF_TraverseAllTransactions_All_Channels(fn, context);
+    }
+    else if (cmd->chan < CF_NUM_CHANNELS)
+    {
+        /* perform action on a specific channel, all transactions */
+        ret = CF_TraverseAllTransactions(CF_AppData.engine.channels + cmd->chan, fn, context);
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_TSN_CHAN_INVALID, CFE_EVS_EventType_ERROR, "CF: %s cmd: invalid channel %d",
+                          cmdstr, cmd->chan);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_DoSuspRes_Txn(CF_Transaction_t *t, CF_ChanAction_SuspResArg_t *context)
+{
+    CF_Assert(t);
+    if (t->flags.com.suspended == context->action)
+    {
+        context->same = 1;
+    }
+    else
+    {
+        t->flags.com.suspended = context->action;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_DoSuspRes(CF_TransactionCmd_t *cmd, uint8 action)
+{
+    /* ok to not bounds check action, because the caller is using it in two places with constant values 0 or 1 */
+    static const char *        msgstr[] = {"resume", "suspend"};
+    CF_ChanAction_SuspResArg_t args     = {0, action};
+    int ret = CF_TsnChanAction(cmd, msgstr[action], (CF_TsnChanAction_fn_t)CF_DoSuspRes_Txn, &args);
+
+    /*
+     * Note that this command may affect multiple transactions, depending on the value of the "chan" argument.
+     * When acting on multiple channels, the "same" output does not apply.  In reality all it means is
+     * that one of the affected channels was already set that way.
+     */
+
+    if (ret == 1 && args.same)
+    {
+        /* A single transaction was mached, and it was already set the same way */
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_SUSPRES_SAME, CFE_EVS_EventType_ERROR,
+                          "CF: %s cmd: setting suspend flag to current value of %d", msgstr[action], action);
+        ++CF_AppData.hk.counters.err;
+    }
+    else if (ret <= 0)
+    {
+        /* No transaction was matched for the given combination of chan + eid + ts  */
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_SUSPRES_CHAN, CFE_EVS_EventType_ERROR, "CF: %s cmd: no transaction found",
+                          msgstr[action]);
+        ++CF_AppData.hk.counters.err;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_SUSPRES, CFE_EVS_EventType_INFORMATION,
+                          "CF: %s cmd: setting suspend flag to %d", msgstr[action], action);
+        ++CF_AppData.hk.counters.cmd;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdSuspend(CFE_SB_Buffer_t *msg)
+{
+    CF_DoSuspRes((CF_TransactionCmd_t *)msg, 1);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdResume(CFE_SB_Buffer_t *msg)
+{
+    CF_DoSuspRes((CF_TransactionCmd_t *)msg, 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdCancel_Txn(CF_Transaction_t *t, void *ignored)
+{
+    CF_CFDP_CancelTransaction(t);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdCancel(CFE_SB_Buffer_t *msg)
+{
+    if (CF_TsnChanAction((CF_TransactionCmd_t *)msg, "cancel", CF_CmdCancel_Txn, NULL) > 0)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_CANCEL, CFE_EVS_EventType_INFORMATION,
+                          "CF: cancel transaction successfully initiated");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        /* No transaction was matched for the given combination of chan + eid + ts  */
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_CANCEL_CHAN, CFE_EVS_EventType_ERROR, "CF: cancel cmd: no transaction found");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdAbandon_Txn(CF_Transaction_t *t, void *ignored)
+{
+    CF_CFDP_ResetTransaction(t, 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdAbandon(CFE_SB_Buffer_t *msg)
+{
+    if (CF_TsnChanAction((CF_TransactionCmd_t *)msg, "abandon", CF_CmdAbandon_Txn, NULL) > 0)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_ABANDON, CFE_EVS_EventType_INFORMATION, "CF: abandon successful");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        /* No transaction was matched for the given combination of chan + eid + ts  */
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_ABANDON_CHAN, CFE_EVS_EventType_ERROR,
+                          "CF: abandon cmd: no transaction found");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_DoEnableDisableDequeue(uint8 chan_num, const CF_ChanAction_BoolArg_t *context)
+{
+    /* no need to bounds check chan_num, done in caller */
+    CF_AppData.config_table->chan[chan_num].dequeue_enabled = context->barg;
+    return 0;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdEnableDequeue(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolArg_t barg = {1};
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "enable_dequeue", (CF_ChanActionFn_t)CF_DoEnableDisableDequeue,
+                        &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_ENABLE_DEQUEUE, CFE_EVS_EventType_INFORMATION, "CF: dequeue enabled");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_ENABLE_DEQUEUE, CFE_EVS_EventType_ERROR, "CF: enable dequeue cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdDisableDequeue(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolArg_t barg = {0};
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "disable_dequeue", (CF_ChanActionFn_t)CF_DoEnableDisableDequeue,
+                        &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_DISABLE_DEQUEUE, CFE_EVS_EventType_INFORMATION, "CF: dequeue disabled");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_DISABLE_DEQUEUE, CFE_EVS_EventType_ERROR, "CF: disable dequeue cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_DoEnableDisablePolldir(uint8 chan_num, const CF_ChanAction_BoolMsgArg_t *context)
+{
+    int ret = 0;
+    /* no need to bounds check chan_num, done in caller */
+    if (context->msg->data.byte[1] == CF_ALL_POLLDIRS)
+    {
+        /* all polldirs in channel */
+        int i;
+        for (i = 0; i < CF_MAX_POLLING_DIR_PER_CHAN; ++i)
+            CF_AppData.config_table->chan[chan_num].polldir[i].enabled = context->barg;
+    }
+    else if (context->msg->data.byte[1] < CF_MAX_POLLING_DIR_PER_CHAN)
+    {
+        CF_AppData.config_table->chan[chan_num].polldir[context->msg->data.byte[1]].enabled = context->barg;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_POLLDIR_INVALID, CFE_EVS_EventType_ERROR,
+                          "CF: enable/disable polldir: invalid polldir %d on channel %d", context->msg->data.byte[1],
+                          chan_num);
+        ret = -1;
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdEnablePolldir(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolMsgArg_t barg = {(CF_UnionArgsCmd_t *)msg, 1};
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "enable_polldir", (CF_ChanActionFn_t)CF_DoEnableDisablePolldir,
+                        &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_ENABLE_POLLDIR, CFE_EVS_EventType_INFORMATION,
+                          "CF: enabled polling directory");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_ENABLE_POLLDIR, CFE_EVS_EventType_ERROR,
+                          "CF: enable polling directory cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdDisablePolldir(CFE_SB_Buffer_t *msg)
+{
+    CF_ChanAction_BoolMsgArg_t barg = {(CF_UnionArgsCmd_t *)msg, 0};
+
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "disable_polldir", (CF_ChanActionFn_t)CF_DoEnableDisablePolldir,
+                        &barg) == CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_DISABLE_POLLDIR, CFE_EVS_EventType_INFORMATION,
+                          "CF: disabled polling directory");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_DISABLE_POLLDIR, CFE_EVS_EventType_ERROR,
+                          "CF: disable polling directory cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_PurgeHistory(CF_CListNode_t *n, CF_Channel_t *c)
+{
+    CF_History_t *h = container_of(n, CF_History_t, cl_node);
+    CF_ResetHistory(c, h); /* ok to reset transaction since it's in PEND it hasn't started yet */
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_PurgeTransaction(CF_CListNode_t *n, void *ignored)
+{
+    CF_Transaction_t *t = container_of(n, CF_Transaction_t, cl_node);
+    CF_CFDP_ResetTransaction(t, 0);
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_DoPurgeQueue(uint8 chan_num, CF_UnionArgsCmd_t *cmd)
+{
+    int ret = 0;
+    /* no need to bounds check chan_num, done in caller */
+    CF_Channel_t *c = &CF_AppData.engine.channels[chan_num];
+
+    int pend = 0;
+    int hist = 0;
+
+    switch (cmd->data.byte[1])
+    {
+        case 0: /* pend */
+            pend = 1;
+            break;
+
+        case 1: /* history */
+            hist = 1;
+            break;
+
+        case 2: /* both */
+            pend = 1;
+            hist = 1;
+            break;
+
+        default:
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_PURGE_ARG, CFE_EVS_EventType_ERROR, "CF: purge queue invalid arg %d",
+                              cmd->data.byte[1]);
+            ret = -1;
+            break;
+    }
+
+    if (pend)
+    {
+        CF_CList_Traverse(c->qs[CF_QueueIdx_PEND], CF_PurgeTransaction, NULL);
+    }
+
+    if (hist)
+    {
+        CF_CList_Traverse(c->qs[CF_QueueIdx_HIST], (CF_CListFn_t)CF_PurgeHistory, c);
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdPurgeQueue(CFE_SB_Buffer_t *msg)
+{
+    if (CF_DoChanAction((CF_UnionArgsCmd_t *)msg, "purge_queue", (CF_ChanActionFn_t)CF_DoPurgeQueue, msg) ==
+        CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_PURGE_QUEUE, CFE_EVS_EventType_INFORMATION, "CF: queue purged");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_PURGE_QUEUE, CFE_EVS_EventType_ERROR, "CF: purge queue cmd failed");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdWriteQueue(CFE_SB_Buffer_t *msg)
+{
+    CF_WriteQueueCmd_t *wq      = (CF_WriteQueueCmd_t *)msg;
+    CF_Channel_t *      c       = &CF_AppData.engine.channels[wq->chan];
+    osal_id_t           fd      = OS_OBJECT_ID_UNDEFINED;
+    bool                success = true;
+    int32               ret;
+
+    /* check the commands for validity */
+    if (wq->chan >= CF_NUM_CHANNELS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_CHAN, CFE_EVS_EventType_ERROR, "CF: write queue invalid channel arg");
+        ++CF_AppData.hk.counters.err;
+        success = false;
+    }
+    /* only invalid combination is up direction, pending queue */
+    else if ((wq->type == CF_Type_up) && (wq->queue == CF_Queue_pend))
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_ARGS, CFE_EVS_EventType_ERROR,
+                          "CF: write queue invalid command parameters");
+        ++CF_AppData.hk.counters.err;
+        success = false;
+    }
+    else
+    {
+        /* PTFO: queues can be large. may want to split this work up across the state machine and take several wakeups
+         * to complete */
+        ret = CF_WrappedOpenCreate(&fd, wq->filename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+        if (ret < 0)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_OPEN, CFE_EVS_EventType_ERROR, "CF: write queue failed to open file %s",
+                              wq->filename);
+            ++CF_AppData.hk.counters.err;
+            success = false;
+        }
+    }
+
+    /* if type is type_up, or all types */
+    if (success && ((wq->type == CF_Type_all) || (wq->type == CF_Type_up)))
+    {
+        /* process uplink queue data */
+        if ((wq->queue == CF_Queue_all) || (wq->queue == CF_Queue_active))
+        {
+            ret = CF_WriteTxnQueueDataToFile(fd, c, CF_QueueIdx_RX);
+            if (ret)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_WRITEQ_RX, CFE_EVS_EventType_ERROR,
+                                  "CF: write queue failed to write CF_QueueIdx_RX data");
+                CF_WrappedClose(fd);
+                ++CF_AppData.hk.counters.err;
+                success = false;
+            }
+        }
+
+        if (success && ((wq->queue == CF_Queue_all) || (wq->queue == CF_Queue_history)))
+        {
+            ret = CF_WriteHistoryQueueDataToFile(fd, c, CF_Direction_RX);
+            if (ret)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_WRITEHIST_RX, CFE_EVS_EventType_ERROR,
+                                  "CF: write queue failed to write history RX data");
+                CF_WrappedClose(fd);
+                ++CF_AppData.hk.counters.err;
+                success = false;
+            }
+        }
+    }
+
+    /* if type is type_down, or all types */
+    if (success && ((wq->type == CF_Type_all) || (wq->type == CF_Type_down)))
+    {
+        /* process downlink queue data */
+        if ((wq->queue == CF_Queue_all) || (wq->queue == CF_Queue_active))
+        {
+            int              i;
+            static const int qs[2] = {CF_QueueIdx_TXA, CF_QueueIdx_TXW};
+            for (i = 0; i < 2; ++i)
+            {
+                ret = CF_WriteTxnQueueDataToFile(fd, c, qs[i]);
+                if (ret)
+                {
+                    CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_WRITEQ_TX, CFE_EVS_EventType_ERROR,
+                                      "CF: write queue failed to write q index %d", qs[i]);
+                    CF_WrappedClose(fd);
+                    ++CF_AppData.hk.counters.err;
+                    success = false;
+                    break;
+                }
+            }
+        }
+
+        if (success && ((wq->queue == CF_Queue_all) || (wq->queue == CF_Queue_pend)))
+        {
+            /* write pending queue */
+            ret = CF_WriteTxnQueueDataToFile(fd, c, CF_QueueIdx_PEND);
+            if (ret)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_WRITEQ_PEND, CFE_EVS_EventType_ERROR,
+                                  "CF: write queue failed to write pending queue");
+                CF_WrappedClose(fd);
+                ++CF_AppData.hk.counters.err;
+                success = false;
+            }
+        }
+
+        if (success && ((wq->queue == CF_Queue_all) || (wq->queue == CF_Queue_history)))
+        {
+            /* write history queue */
+            ret = CF_WriteHistoryQueueDataToFile(fd, c, CF_Direction_TX);
+            if (ret)
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CMD_WQ_WRITEHIST_TX, CFE_EVS_EventType_ERROR,
+                                  "CF: write queue failed to write CF_QueueIdx_TX data");
+                CF_WrappedClose(fd);
+                ++CF_AppData.hk.counters.err;
+                success = false;
+            }
+        }
+    }
+
+    if (success)
+    {
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_WQ, CFE_EVS_EventType_INFORMATION, "CF: write queue successful");
+        ++CF_AppData.hk.counters.cmd;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CmdValidateChunkSize(uint32 val, uint8 chan_num /* ignored */)
+{
+    int ret = 0;
+    if (val > sizeof(CF_CFDP_PduFileDataContent_t))
+    {
+        ret = 1; /* failed */
+    }
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_CmdValidateMaxOutgoing(uint32 val, uint8 chan_num)
+{
+    int ret = 0;
+
+    if (!val && !CF_AppData.config_table->chan[chan_num].sem_name[0])
+    {
+        /* can't have unlimited messages and no semaphore */
+        ret = 1; /* failed */
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdGetSetParam(uint8 is_set, CF_GetSet_ValueID_t param_id, uint32 value, uint8 chan_num)
+{
+    CF_ConfigTable_t *config;
+    int               acc;
+    bool              valid_set;
+    struct
+    {
+        void * ptr;
+        uint32 size;
+        int (*fn)(uint32, uint8 chan_num);
+    } item;
+
+    acc       = -1; /* -1 means to reject */
+    valid_set = false;
+    config    = CF_AppData.config_table;
+    memset(&item, 0, sizeof(item));
+
+    switch (param_id)
+    {
+        case CF_GetSet_ValueID_ticks_per_second:
+            item.ptr  = &config->ticks_per_second;
+            item.size = sizeof(config->ticks_per_second);
+            break;
+        case CF_GetSet_ValueID_rx_crc_calc_bytes_per_wakeup:
+            item.ptr  = &config->rx_crc_calc_bytes_per_wakeup;
+            item.size = sizeof(config->rx_crc_calc_bytes_per_wakeup);
+            break;
+        case CF_GetSet_ValueID_ack_timer_s:
+            item.ptr  = &config->chan[chan_num].ack_timer_s;
+            item.size = sizeof(config->chan[chan_num].ack_timer_s);
+            break;
+        case CF_GetSet_ValueID_nak_timer_s:
+            item.ptr  = &config->chan[chan_num].nak_timer_s;
+            item.size = sizeof(config->chan[chan_num].nak_timer_s);
+            break;
+        case CF_GetSet_ValueID_inactivity_timer_s:
+            item.ptr  = &config->chan[chan_num].inactivity_timer_s;
+            item.size = sizeof(config->chan[chan_num].inactivity_timer_s);
+            break;
+        case CF_GetSet_ValueID_outgoing_file_chunk_size:
+            item.ptr  = &config->outgoing_file_chunk_size;
+            item.size = sizeof(config->outgoing_file_chunk_size);
+            item.fn   = CF_CmdValidateChunkSize;
+            break;
+        case CF_GetSet_ValueID_ack_limit:
+            item.ptr  = &config->chan[chan_num].ack_limit;
+            item.size = sizeof(config->chan[chan_num].ack_limit);
+            break;
+        case CF_GetSet_ValueID_nak_limit:
+            item.ptr  = &config->chan[chan_num].nak_limit;
+            item.size = sizeof(config->chan[chan_num].nak_limit);
+            break;
+        case CF_GetSet_ValueID_local_eid:
+            item.ptr  = &config->local_eid;
+            item.size = sizeof(config->local_eid);
+            break;
+        case CF_GetSet_ValueID_chan_max_outgoing_messages_per_wakeup:
+            item.ptr  = &config->chan[chan_num].max_outgoing_messages_per_wakeup;
+            item.size = sizeof(config->chan[chan_num].max_outgoing_messages_per_wakeup);
+            item.fn   = CF_CmdValidateMaxOutgoing;
+            break;
+        default:
+            break;
+    };
+
+    if (item.size == 0)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_GETSET_PARAM, CFE_EVS_EventType_ERROR,
+                          "CF: invalid configuration parameter id %d received", param_id);
+    }
+    else if (chan_num >= CF_NUM_CHANNELS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_GETSET_CHAN, CFE_EVS_EventType_ERROR,
+                          "CF: invalid configuration channel id %d received", chan_num);
+    }
+    else if (is_set)
+    {
+        if (item.fn)
+        {
+            if (!item.fn(value, chan_num))
+            {
+                valid_set = 1;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(CF_EID_ERR_CMD_GETSET_VALIDATE, CFE_EVS_EventType_ERROR,
+                                  "CF: validation for parameter id %d failed", param_id);
+            }
+        }
+        else
+        {
+            valid_set = 1;
+        }
+
+        if (valid_set)
+        {
+            acc = 0;
+
+            CFE_EVS_SendEvent(CF_EID_INF_CMD_GETSET1, CFE_EVS_EventType_INFORMATION,
+                              "CF: setting parameter id %d to %lu", param_id, (unsigned long)value);
+
+            /* Store value based on its size */
+            if (item.size == sizeof(uint32))
+            {
+                *((uint32 *)item.ptr) = value;
+            }
+            else if (item.size == sizeof(uint16))
+            {
+                *((uint16 *)item.ptr) = value;
+            }
+            else
+            {
+                /* uint8 is the only other option */
+                *((uint8 *)item.ptr) = value;
+            }
+        }
+    }
+    else
+    {
+        acc = 0;
+
+        /* Read value depending on its size */
+        if (item.size == sizeof(uint32))
+        {
+            value = *((const uint32 *)item.ptr);
+        }
+        else if (item.size == sizeof(uint16))
+        {
+            value = *((const uint16 *)item.ptr);
+        }
+        else
+        {
+            /* uint8 is the only other option */
+            value = *((const uint8 *)item.ptr);
+        }
+
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_GETSET2, CFE_EVS_EventType_INFORMATION, "CF: parameter id %d = %lu", param_id,
+                          (unsigned long)value);
+    }
+
+    if (acc == 0)
+    {
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdSetParam(CFE_SB_Buffer_t *msg)
+{
+    CF_SetParamCmd_t *cmd = (CF_SetParamCmd_t *)msg;
+    CF_CmdGetSetParam(1, cmd->key, cmd->value, cmd->chan_num);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdGetParam(CFE_SB_Buffer_t *msg)
+{
+    CF_GetParamCmd_t *cmd = (CF_GetParamCmd_t *)msg;
+    CF_CmdGetSetParam(0, cmd->key, 0, cmd->chan_num);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdEnableEngine(CFE_SB_Buffer_t *msg)
+{
+    if (!CF_AppData.engine.enabled)
+    {
+        if (CF_CFDP_InitEngine() == CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_EID_INF_CMD_ENABLE_ENGINE, CFE_EVS_EventType_INFORMATION, "CF: enabled CFDP engine");
+            ++CF_AppData.hk.counters.cmd;
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_ENABLE_ENGINE, CFE_EVS_EventType_ERROR,
+                              "CF: failed to re-initialize and enable CFDP engine");
+            ++CF_AppData.hk.counters.err;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_ENG_ALREADY_ENA, CFE_EVS_EventType_ERROR,
+                          "CF: received enable engine command while engine already enabled");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CmdDisableEngine(CFE_SB_Buffer_t *msg)
+{
+    if (CF_AppData.engine.enabled)
+    {
+        CF_CFDP_DisableEngine();
+        CFE_EVS_SendEvent(CF_EID_INF_CMD_DISABLE_ENGINE, CFE_EVS_EventType_INFORMATION, "CF: disabled CFDP engine");
+        ++CF_AppData.hk.counters.cmd;
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_ENG_ALREADY_DIS, CFE_EVS_EventType_ERROR,
+                          "CF: received disable engine command while engine already disabled");
+        ++CF_AppData.hk.counters.err;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_cmd.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ProcessGroundCommand(CFE_SB_Buffer_t *msg)
+{
+    static void (*const fns[CF_NUM_COMMANDS])(CFE_SB_Buffer_t *) = {
+        CF_CmdNoop,        /* CF_NOOP_CC */
+        CF_CmdReset,       /* CF_RESET_CC */
+        CF_CmdTxFile,      /* CF_TX_FILE_CC */
+        CF_CmdPlaybackDir, /* CF_PLAYBACK_DIR_CC */
+        CF_CmdFreeze,      /* CF_FREEZE_CC */
+        CF_CmdThaw,        /* CF_THAW_CC */
+        CF_CmdSuspend,     /* CF_SUSPEND_CC */
+        CF_CmdResume,      /* CF_RESUME_CC */
+        CF_CmdCancel,      /* CF_CANCEL_CC */
+        CF_CmdAbandon,     /* CF_ABANDON_CC */
+        CF_CmdSetParam,    /* CF_SET_MIB_PARAM_CC */
+        CF_CmdGetParam,    /* CF_GET_MIB_PARAM_CC */
+        NULL,
+        NULL,
+        NULL,
+        CF_CmdWriteQueue,     /* CF_WRITE_QUEUE_CC */
+        CF_CmdEnableDequeue,  /* CF_ENABLE_DEQUEUE_CC */
+        CF_CmdDisableDequeue, /* CF_DISABLE_DEQUEUE_CC */
+        CF_CmdEnablePolldir,  /* CF_ENABLE_DIR_POLLING_CC */
+        CF_CmdDisablePolldir, /* CF_DISABLE_DIR_POLLING_CC */
+        NULL,
+        CF_CmdPurgeQueue,    /* CF_PURGE_QUEUE_CC */
+        CF_CmdEnableEngine,  /* CF_ENABLE_ENGINE_CC */
+        CF_CmdDisableEngine, /* CF_DISABLE_ENGINE_CC */
+    };
+
+    static const uint16 expected_lengths[CF_NUM_COMMANDS] = {
+        sizeof(CF_NoArgsCmd_t),      /* CF_NOOP_CC */
+        sizeof(CF_UnionArgsCmd_t),   /* CF_RESET_CC */
+        sizeof(CF_TxFileCmd_t),      /* CF_TX_FILE_CC */
+        sizeof(CF_PlaybackDirCmd_t), /* CF_PLAYBACK_DIR_CC */
+        sizeof(CF_UnionArgsCmd_t),   /* CF_FREEZE_CC */
+        sizeof(CF_UnionArgsCmd_t),   /* CF_THAW_CC */
+        sizeof(CF_TransactionCmd_t), /* CF_SUSPEND_CC */
+        sizeof(CF_TransactionCmd_t), /* CF_RESUME_CC */
+        sizeof(CF_TransactionCmd_t), /* CF_CANCEL_CC */
+        sizeof(CF_TransactionCmd_t), /* CF_ABANDON_CC */
+        sizeof(CF_SetParamCmd_t),    /* CF_SET_MIB_PARAM_CC */
+        sizeof(CF_GetParamCmd_t),    /* CF_GET_MIB_PARAM_CC */
+        0,
+        0,
+        0,
+        sizeof(CF_WriteQueueCmd_t), /* CF_WRITE_QUEUE_CC */
+        sizeof(CF_UnionArgsCmd_t),  /* CF_ENABLE_DEQUEUE_CC */
+        sizeof(CF_UnionArgsCmd_t),  /* CF_DISABLE_DEQUEUE_CC */
+        sizeof(CF_UnionArgsCmd_t),  /* CF_ENABLE_DIR_POLLING_CC */
+        sizeof(CF_UnionArgsCmd_t),  /* CF_DISABLE_DIR_POLLING_CC */
+        0,
+        sizeof(CF_UnionArgsCmd_t), /* CF_PURGE_QUEUE_CC */
+        sizeof(CF_NoArgsCmd_t),    /* CF_ENABLE_ENGINE_CC */
+        sizeof(CF_NoArgsCmd_t),    /* CF_DISABLE_ENGINE_CC */
+    };
+
+    CFE_MSG_FcnCode_t cmd = 0;
+    size_t            len = 0;
+
+    CFE_MSG_GetFcnCode(&msg->Msg, &cmd);
+
+    if (cmd < CF_NUM_COMMANDS)
+    {
+        CFE_MSG_GetSize(&msg->Msg, &len);
+
+        /* first, verify command length */
+        if (len == expected_lengths[cmd])
+        {
+            /* if valid, process command */
+            if (fns[cmd])
+            {
+                fns[cmd](msg);
+            }
+        }
+        else
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_GCMD_LEN, CFE_EVS_EventType_ERROR,
+                              "CF: invalid ground command length for command 0x%02x, expected %d got %zd", cmd,
+                              expected_lengths[cmd], len);
+            ++CF_AppData.hk.counters.err;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CMD_GCMD_CC, CFE_EVS_EventType_ERROR,
+                          "CF: invalid ground command packet cmd_code=0x%02x", cmd);
+        ++CF_AppData.hk.counters.err;
+    }
+}
+```
+
+### `cf_cmd.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_cmd.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CF command processing function declarations
+ */
+
+#ifndef CF_CMD_H
+#define CF_CMD_H
+
+#include "cfe.h"
+#include "cf_app.h"
+#include "cf_utils.h"
+
+/**
+ * @brief A callback function for use with CF_DoChanAction()
+ *
+ * @param chan_num The CF channel number, for statistics purposes
+ * @param context  Opaque object passed through from initial call
+ */
+typedef int (*CF_ChanActionFn_t)(uint8 chan_num, void *context);
+
+/**
+ * @brief An object to use with channel-scope actions requiring only a boolean argument
+ */
+typedef struct CF_ChanAction_BoolArg
+{
+    bool barg;
+} CF_ChanAction_BoolArg_t;
+
+/**
+ * @brief A callback to use with transaction actions
+ *
+ * For now this is the same as CF_TraverseAllTransactions_fn_t
+ */
+typedef CF_TraverseAllTransactions_fn_t CF_TsnChanAction_fn_t;
+
+/**
+ * @brief An object to use with channel-scope actions for suspend/resume
+ *
+ * This combines a boolean action arg with an output that indicates if it
+ * was a change or not.
+ */
+typedef struct CF_ChanAction_SuspResArg
+{
+    int  same; /**< out param -- indicates at least one action was set to its current value */
+    bool action;
+} CF_ChanAction_SuspResArg_t;
+
+/**
+ * @brief An object to use with channel-scope actions that require the message value
+ *
+ * This combines a boolean action arg with the command message value
+ */
+typedef struct CF_ChanAction_BoolMsgArg
+{
+    const CF_UnionArgsCmd_t *msg;
+    bool                     barg;
+} CF_ChanAction_BoolMsgArg_t;
+
+/************************************************************************/
+/** @brief The no-operation command.
+ *
+ * @par Description
+ *       This function has a signature the same of all cmd_ functions.
+ *       This function simply prints an event message.
+ *       Increments the command accept counter.
+ *       The msg parameter is ignored in this one.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdNoop(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief The reset counters command.
+ *
+ * @par Description
+ *       This function has a signature the same of all cmd_ functions.
+ *       Resets the given counter, or all.
+ *       Increments the command accept or reject counter. If the command
+ *       counters are reset, then there is no increment.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdReset(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command to start a file transfer.
+ *
+ * @par Description
+ *       This function has a signature the same of all cmd_ functions.
+ *       Increments the command accept or reject counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ *
+ */
+void CF_CmdTxFile(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command to start directory playback.
+ *
+ * @par Description
+ *       This function has a signature the same of all cmd_ functions.
+ *       Increments the command accept or reject counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdPlaybackDir(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Common logic for all channel-based commands.
+ *
+ * @par Description
+ *       All the commands that act on channels or have the special
+ *       "all channels" parameter come through this function. This puts
+ *       all common logic in one place. It does not handle the command
+ *       accept or reject counters.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       cmd must not be NULL, errstr must not be NULL, fn must be a valid function, context may be NULL.
+ *
+ * @param cmd       Pointer to command being processed
+ * @param errstr    String to be included in the EVS event if command should fail
+ * @param fn        Callback action function to invoke for each affected channel
+ * @param context   Opaque pointer to pass through to callback (not used in this function)
+ *
+ * @returns The return value from the given action function.
+ *
+ */
+int CF_DoChanAction(CF_UnionArgsCmd_t *cmd, const char *errstr, CF_ChanActionFn_t fn, void *context);
+
+/************************************************************************/
+/** @brief Channel action to set the frozen bit for a channel.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       context must not be NULL.
+ *
+ * @param chan_num  channel number
+ * @param context   Pointer to object passed through from initial call
+ *
+ * @returns Always succeeds, so returns 0.
+ */
+int CF_DoFreezeThaw(uint8 chan_num, const CF_ChanAction_BoolArg_t *context);
+
+/************************************************************************/
+/** @brief Freeze a channel.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdFreeze(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Thaw a channel.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdThaw(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Search for a transaction across all channels.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param ts  Transaction sequence number to find
+ * @param eid Entity ID of the transaction
+ *
+ * @returns Pointer to the transaction, if found
+ * @retval  NULL if transaction not found
+ *
+ */
+CF_Transaction_t *CF_FindTransactionBySequenceNumberAllChannels(CF_TransactionSeq_t ts, CF_EntityId_t eid);
+
+/************************************************************************/
+/** @brief Common logic for all transaction sequence number and channel commands.
+ *
+ * @par Description
+ *       All the commands that on a transaction on a particular channel come
+ *       through this function. This puts all common logic in one place. It
+ *       does handle the command accept or reject counters.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       cmd must not be NULL, fn must be a valid function, context may be NULL.
+ *
+ * @param cmd       Pointer to the command message
+ * @param cmdstr    String to include in any generated EVS events
+ * @param fn        Callback function to invoke for each matched transaction
+ * @param context   Opaque object to pass through to the callback
+ *
+ * @returns returns the number of transactions acted upon
+ *
+ */
+int CF_TsnChanAction(CF_TransactionCmd_t *cmd, const char *cmdstr, CF_TsnChanAction_fn_t fn, void *context);
+
+/************************************************************************/
+/** @brief Set the suspended bit in a transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL. context must not be NULL.
+ *
+ * @param t         Pointer to the transaction object
+ * @param context   Pointer to CF_ChanAction_SuspResArg_t structure from initial call
+ */
+void CF_DoSuspRes_Txn(CF_Transaction_t *t, CF_ChanAction_SuspResArg_t *context);
+
+/************************************************************************/
+/** @brief Handle transaction suspend and resume commands.
+ *
+ * @par Description
+ *       This is called for both suspend and resume ground commands.
+ *       It uses the CF_TsnChanAction() function to perform the command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       cmd must not be NULL.
+ *
+ * @param cmd       Pointer to the command message
+ * @param action    Action to take (suspend or resume)
+ */
+void CF_DoSuspRes(CF_TransactionCmd_t *cmd, uint8 action);
+
+/************************************************************************/
+/** @brief Handle transaction suspend command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdSuspend(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Handle transaction resume command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdResume(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief tsn chan action to cancel a transaction.
+ *
+ * This helper function is used with CF_TsnChanAction() to cancel matched transactions
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t        Pointer to transaction object
+ * @param ignored  Not used by this function
+ */
+void CF_CmdCancel_Txn(CF_Transaction_t *t, void *ignored);
+
+/************************************************************************/
+/** @brief Handle a cancel ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdCancel(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief tsn chan action to abandon a transaction.
+ *
+ * This helper function is used with CF_TsnChanAction() to abandon matched transactions
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param t        Pointer to transaction object
+ * @param ignored  Not used by this function
+ */
+void CF_CmdAbandon_Txn(CF_Transaction_t *t, void *ignored);
+
+/************************************************************************/
+/** @brief Handle an abandon ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdAbandon(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Sets the dequeue enable/disable flag for a channel.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       context must not be NULL.
+ *
+ * @param chan_num  channel number
+ * @param context   Pointer to object passed through from initial call
+ *
+ * @returns Always succeeds, so returns 0.
+ *
+ */
+int CF_DoEnableDisableDequeue(uint8 chan_num, const CF_ChanAction_BoolArg_t *context);
+
+/************************************************************************/
+/** @brief Handle an enable dequeue ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdEnableDequeue(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Handle a disable dequeue ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdDisableDequeue(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Sets the enable/disable flag for the specified polling directory.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       context must not be NULL.
+ *
+ * @param chan_num  channel number
+ * @param context   Pointer to object passed through from initial call
+ *
+ * @returns success/fail status code
+ * @retval  0 if successful
+ * @retval  -1 if failed
+ */
+int CF_DoEnableDisablePolldir(uint8 chan_num, const CF_ChanAction_BoolMsgArg_t *context);
+
+/************************************************************************/
+/** @brief Enable a polling dir ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdEnablePolldir(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Disable a polling dir ground command.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdDisablePolldir(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Purge the history queue for the given channel.
+ *
+ * This helper function is used in conjunction with CF_CList_Traverse()
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL. c must not be NULL.
+ *
+ * @param n  Current list node being traversed
+ * @param c  Channel pointer passed through as opaque object
+ *
+ * @returns Always #CF_CLIST_CONT to process all entries
+ */
+int CF_PurgeHistory(CF_CListNode_t *n, CF_Channel_t *c);
+
+/************************************************************************/
+/** @brief Purge the pending transaction queue.
+ *
+ * This helper function is used in conjunction with CF_CList_Traverse()
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL.
+ *
+ * @param n  Current list node being traversed
+ * @param ignored  Not used by this implementation
+ *
+ * @returns Always #CF_CLIST_CONT to process all entries
+ */
+int CF_PurgeTransaction(CF_CListNode_t *n, void *ignored);
+
+/************************************************************************/
+/** @brief Channel action command to perform purge queue operations.
+ *
+ * @par Description
+ *       Determines from the command parameters which queues to traverse
+ *       and purge state.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param chan_num  CF channel number
+ * @param cmd       Pointer to purge queue command
+ *
+ * @returns integer status code indicating success or failure
+ * @retval  0 if successful
+ * @retval  -1 if error occurred
+ */
+int CF_DoPurgeQueue(uint8 chan_num, CF_UnionArgsCmd_t *cmd);
+
+/************************************************************************/
+/** @brief Ground command to purge either the history or pending queues.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdPurgeQueue(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command to write a file with queue information.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdWriteQueue(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Checks if the value is less than or equal to the max pdu size.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param val       Size of chunk to test
+ * @param chan_num  Ignored by this implementation
+ *
+ * @returns status code indicating if check passed
+ * @retval 0 if successful (val is less than or equal to max PDU)
+ * @retval 1 if failed (val is greater than max PDU)
+ *
+ */
+int CF_CmdValidateChunkSize(uint32 val, uint8 chan_num);
+
+/************************************************************************/
+/** @brief Checks if the value is within allowable range as outgoing packets per wakeup
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param val       Number to test
+ * @param chan_num  CF channel number
+ *
+ * @returns status code indicating if check passed
+ * @retval 0 if successful (val is allowable as max packets per wakeup)
+ * @retval 1 if failed (val is not allowed)
+ *
+ */
+int CF_CmdValidateMaxOutgoing(uint32 val, uint8 chan_num);
+
+/************************************************************************/
+/** @brief Perform a configuration get/set operation.
+ *
+ * For a set, this sets the value within the CF configuration
+ * For a get, this generates an EVS event with the requested information
+ *
+ * @par Description
+ *       Combine get and set in one function with common logic.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param is_set    Whether to get (0) or set (1)
+ * @param param_id  Parameter ID
+ * @param value     Value to get/set
+ * @param chan_num  Channel number to operate on
+ *
+ */
+void CF_CmdGetSetParam(uint8 is_set, CF_GetSet_ValueID_t param_id, uint32 value, uint8 chan_num);
+
+/************************************************************************/
+/** @brief Ground command to set a configuration parameter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdSetParam(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command to set a configuration parameter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdGetParam(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command enable engine.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdEnableEngine(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Ground command disable engine.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_CmdDisableEngine(CFE_SB_Buffer_t *msg);
+
+/************************************************************************/
+/** @brief Process any ground command contained in the given message.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       msg must not be NULL.
+ *
+ * @param msg   Pointer to command message
+ */
+void CF_ProcessGroundCommand(CFE_SB_Buffer_t *msg);
+
+#endif
+```
+
+### `cf_codec.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_codec.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFDP protocol data structure encode/decode implementation
+ */
+
+#include "cf_cfdp_pdu.h"
+#include "cf_codec.h"
+#include "cf_events.h"
+
+#include <stdint.h>
+
+typedef struct CF_Codec_BitField
+{
+    uint32 shift;
+    uint32 mask;
+} CF_Codec_BitField_t;
+
+/* NBITS == number of bits */
+#define CF_INIT_FIELD(NBITS, SHIFT)                  \
+    {                                                \
+        .shift = (SHIFT), .mask = ((1 << NBITS) - 1) \
+    }
+
+/*
+ * All CFDP sub-fields are fewer than 8 bits in size
+ */
+static inline uint8 CF_FieldGetVal(const uint8 *src, uint8 shift, uint8 mask)
+{
+    return (*src >> shift) & mask;
+}
+
+static inline void CF_FieldSetVal(uint8 *dest, uint8 shift, uint8 mask, uint8 val)
+{
+    *dest &= ~(mask << shift);
+    *dest |= ((val & mask) << shift);
+}
+
+/* FGV, FSV, and FAV are just simple shortenings of the field macros.
+ *
+ * FGV == field get val
+ * FSV == field set val
+ */
+
+#define FGV(SRC, NAME)       (CF_FieldGetVal((SRC).octets, (NAME).shift, (NAME).mask))
+#define FSV(DEST, NAME, VAL) (CF_FieldSetVal((DEST).octets, (NAME).shift, (NAME).mask, VAL))
+
+/*
+ * Fields within the "flags" byte of the PDU header
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_VERSION   = CF_INIT_FIELD(3, 5);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_TYPE      = CF_INIT_FIELD(1, 4);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_DIR       = CF_INIT_FIELD(1, 3);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_MODE      = CF_INIT_FIELD(1, 2);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_CRC       = CF_INIT_FIELD(1, 1);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_FLAGS_LARGEFILE = CF_INIT_FIELD(1, 0);
+
+/*
+ * Fields within the "eid_tsn_lengths" byte of the PDU header
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_LENGTHS_ENTITY               = CF_INIT_FIELD(3, 4);
+static const CF_Codec_BitField_t CF_CFDP_PduHeader_LENGTHS_TRANSACTION_SEQUENCE = CF_INIT_FIELD(3, 0);
+
+/*
+ * Position of the condition code value within the CC field for EOF
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduEof_FLAGS_CC = CF_INIT_FIELD(4, 4);
+
+/*
+ * Position of the sub-field values within the flags field for FIN
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduFin_FLAGS_CC            = CF_INIT_FIELD(4, 4);
+static const CF_Codec_BitField_t CF_CFDP_PduFin_FLAGS_DELIVERY_CODE = CF_INIT_FIELD(1, 2);
+static const CF_Codec_BitField_t CF_CFDP_PduFin_FLAGS_FILE_STATUS   = CF_INIT_FIELD(2, 0);
+
+/*
+ * Position of the sub-field values within the directive_and_subtype_code
+ * and cc_and_transaction_status fields within the ACK PDU.
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduAck_DIR_CODE           = CF_INIT_FIELD(4, 4);
+static const CF_Codec_BitField_t CF_CFDP_PduAck_DIR_SUBTYPE_CODE   = CF_INIT_FIELD(4, 0);
+static const CF_Codec_BitField_t CF_CFDP_PduAck_CC                 = CF_INIT_FIELD(4, 4);
+static const CF_Codec_BitField_t CF_CFDP_PduAck_TRANSACTION_STATUS = CF_INIT_FIELD(2, 0);
+
+/*
+ * Position of the sub-field values within the directive_and_subtype_code
+ * and cc_and_transaction_status fields within the ACK PDU.
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduMd_CLOSURE_REQUESTED = CF_INIT_FIELD(1, 7);
+static const CF_Codec_BitField_t CF_CFDP_PduMd_CHECKSUM_TYPE     = CF_INIT_FIELD(4, 0);
+
+/*
+ * Position of the optional sub-field values within the file data PDU header
+ * These are present only if the "segment metadata" flag in the common header
+ * is set to 1.
+ */
+static const CF_Codec_BitField_t CF_CFDP_PduFileData_RECORD_CONTINUATION_STATE = CF_INIT_FIELD(2, 6);
+static const CF_Codec_BitField_t CF_CFDP_PduFileData_SEGMENT_METADATA_LENGTH   = CF_INIT_FIELD(6, 0);
+
+/* NOTE: get/set will handle endianess */
+/*
+ * ALSO NOTE: These store/set inline functions/macros are used with
+ * literal integers as well as variables.  So they operate on value, where
+ * the load/get functions operate by reference
+ */
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Store_uint8(CF_CFDP_uint8_t *pdst, uint8 val)
+{
+    pdst->octets[0] = val;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Store_uint16(CF_CFDP_uint16_t *pdst, uint16 val)
+{
+    pdst->octets[1] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[0] = val & 0xFF;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Store_uint32(CF_CFDP_uint32_t *pdst, uint32 val)
+{
+    pdst->octets[3] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[2] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[1] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[0] = val & 0xFF;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Store_uint64(CF_CFDP_uint64_t *pdst, uint64 val)
+{
+    pdst->octets[7] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[6] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[5] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[4] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[3] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[2] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[1] = val & 0xFF;
+    val >>= 8;
+    pdst->octets[0] = val & 0xFF;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Load_uint8(uint8 *pdst, const CF_CFDP_uint8_t *psrc)
+{
+    *pdst = psrc->octets[0];
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Load_uint16(uint16 *pdst, const CF_CFDP_uint16_t *psrc)
+{
+    uint16 val = 0;
+
+    val |= psrc->octets[0];
+    val <<= 8;
+    val |= psrc->octets[1];
+
+    *pdst = val;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Load_uint32(uint32 *pdst, const CF_CFDP_uint32_t *psrc)
+{
+    uint32 val = 0;
+
+    val |= psrc->octets[0];
+    val <<= 8;
+    val |= psrc->octets[1];
+    val <<= 8;
+    val |= psrc->octets[2];
+    val <<= 8;
+    val |= psrc->octets[3];
+
+    *pdst = val;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+static inline void CF_Codec_Load_uint64(uint64 *pdst, const CF_CFDP_uint64_t *psrc)
+{
+    uint64 val = 0;
+
+    val |= psrc->octets[0];
+    val <<= 8;
+    val |= psrc->octets[1];
+    val <<= 8;
+    val |= psrc->octets[2];
+    val <<= 8;
+    val |= psrc->octets[3];
+    val <<= 8;
+    val |= psrc->octets[4];
+    val <<= 8;
+    val |= psrc->octets[5];
+    val <<= 8;
+    val |= psrc->octets[6];
+    val <<= 8;
+    val |= psrc->octets[7];
+
+    *pdst = val;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CF_CFDP_CodecCheckSize(CF_CodecState_t *state, size_t chunksize)
+{
+    size_t next_offset = state->next_offset + chunksize;
+
+    if (next_offset > state->max_size)
+    {
+        CF_CFDP_CodecSetDone(state);
+    }
+    else
+    {
+        state->next_offset = next_offset;
+    }
+
+    return CF_CFDP_CodecIsOK(state);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void *CF_CFDP_DoEncodeChunk(CF_EncoderState_t *state, size_t chunksize)
+{
+    uint8 *buf = state->base + CF_CFDP_CodecGetPosition(&state->codec_state);
+
+    if (!CF_CFDP_CodecCheckSize(&state->codec_state, chunksize))
+    {
+        buf = NULL;
+    }
+
+    return buf;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+const void *CF_CFDP_DoDecodeChunk(CF_DecoderState_t *state, size_t chunksize)
+{
+    const uint8 *buf = state->base + CF_CFDP_CodecGetPosition(&state->codec_state);
+
+    if (!CF_CFDP_CodecCheckSize(&state->codec_state, chunksize))
+    {
+        buf = NULL;
+    }
+
+    return buf;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint8 CF_CFDP_GetValueEncodedSize(uint64 Value)
+{
+    uint8  MinSize;
+    uint64 Limit = 0x100;
+
+    for (MinSize = 1; MinSize < 8 && Value >= Limit; ++MinSize)
+    {
+        Limit <<= 8;
+    }
+
+    return MinSize;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_EncodeIntegerInSize(CF_EncoderState_t *state, uint64 value, uint8 encode_size)
+{
+    uint8 *dptr;
+
+    dptr = CF_CFDP_DoEncodeChunk(state, encode_size);
+    if (dptr != NULL)
+    {
+        /* this writes from LSB to MSB, in reverse (so the result will be in network order) */
+        dptr += encode_size;
+        while (encode_size > 0)
+        {
+            --encode_size;
+            --dptr;
+            *dptr = value & 0xFF;
+            value >>= 8;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeHeaderWithoutSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    CF_CFDP_PduHeader_t *peh; /* for encoding fixed sized fields */
+
+    peh = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduHeader_t);
+    if (peh != NULL)
+    {
+        CF_Codec_Store_uint8(&(peh->flags), 0);
+        FSV(peh->flags, CF_CFDP_PduHeader_FLAGS_VERSION, plh->version);
+        FSV(peh->flags, CF_CFDP_PduHeader_FLAGS_DIR, plh->direction);
+        FSV(peh->flags, CF_CFDP_PduHeader_FLAGS_TYPE, plh->pdu_type);
+        FSV(peh->flags, CF_CFDP_PduHeader_FLAGS_MODE, plh->txm_mode);
+
+        /* The eid+tsn lengths are encoded as -1 */
+        CF_Codec_Store_uint8(&(peh->eid_tsn_lengths), 0);
+        FSV(peh->eid_tsn_lengths, CF_CFDP_PduHeader_LENGTHS_ENTITY, plh->eid_length - 1);
+        FSV(peh->eid_tsn_lengths, CF_CFDP_PduHeader_LENGTHS_TRANSACTION_SEQUENCE, plh->txn_seq_length - 1);
+
+        /* NOTE: peh->length is NOT set here, as it depends on future encoding */
+
+        /* Now copy variable-length fields */
+        CF_EncodeIntegerInSize(state, plh->source_eid, plh->eid_length);
+        CF_EncodeIntegerInSize(state, plh->sequence_num, plh->txn_seq_length);
+        CF_EncodeIntegerInSize(state, plh->destination_eid, plh->eid_length);
+
+        /* The position now reflects the length of the basic header */
+        plh->header_encoded_length = CF_CODEC_GET_POSITION(state);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeHeaderFinalSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    CF_CFDP_PduHeader_t *peh;
+
+    /*
+     * This is different as it is updating a block that was already encoded,
+     * so it cannot use CF_ENCODE_FIXED_CHUNK because this adds an entity to the tail.
+     *
+     * The PDU header that needs update is the very first entity in the packet, and
+     * this should never be NULL.
+     */
+    if (CF_CODEC_IS_OK(state) && CF_CODEC_GET_POSITION(state) >= sizeof(CF_CFDP_PduHeader_t))
+    {
+        peh = (CF_CFDP_PduHeader_t *)state->base;
+
+        /* Total length is a simple 16-bit quantity */
+        CF_Codec_Store_uint16(&(peh->length), plh->data_encoded_length);
+    }
+
+    /* This "closes" the packet so nothing else can be added to this EncoderState,
+     * it is not indicative of an error */
+    CF_CODEC_SET_DONE(state);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeFileDirectiveHeader(CF_EncoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir)
+{
+    CF_CFDP_PduFileDirectiveHeader_t *peh; /* for encoding fixed sized fields */
+    uint8                             value = pfdir->directive_code;
+
+    peh = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduFileDirectiveHeader_t);
+    if (peh != NULL)
+    {
+        CF_Codec_Store_uint8(&(peh->directive_code), value);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeLV(CF_EncoderState_t *state, CF_Logical_Lv_t *pllv)
+{
+    CF_CFDP_lv_t *lv; /* for encoding fixed sized fields */
+    void *        data_ptr;
+
+    lv = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_lv_t);
+    if (lv != NULL)
+    {
+        CF_Codec_Store_uint8(&(lv->length), pllv->length);
+        if (pllv->length > 0)
+        {
+            data_ptr = CF_CFDP_DoEncodeChunk(state, pllv->length);
+            if (data_ptr != NULL && pllv->data_ptr != NULL)
+            {
+                memcpy(data_ptr, pllv->data_ptr, pllv->length);
+            }
+            else
+            {
+                CF_CODEC_SET_DONE(state);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeTLV(CF_EncoderState_t *state, CF_Logical_Tlv_t *pltlv)
+{
+    CF_CFDP_tlv_t *tlv; /* for encoding fixed sized fields */
+    void *         data_ptr;
+
+    tlv = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_tlv_t);
+    if (tlv != NULL)
+    {
+        CF_Codec_Store_uint8(&(tlv->type), pltlv->type);
+        CF_Codec_Store_uint8(&(tlv->length), pltlv->length);
+
+        /* the only TLV type currently implemented is entity id */
+        if (pltlv->type == CF_CFDP_TLV_TYPE_ENTITY_ID)
+        {
+            CF_EncodeIntegerInSize(state, pltlv->data.eid, pltlv->length);
+        }
+        else if (pltlv->length > 0)
+        {
+            /* Copy the other data in (feature not used in CF yet, but should be handled) */
+            data_ptr = CF_CFDP_DoEncodeChunk(state, pltlv->length);
+            if (data_ptr != NULL && pltlv->data.data_ptr != NULL)
+            {
+                memcpy(data_ptr, pltlv->data.data_ptr, pltlv->length);
+            }
+            else
+            {
+                CF_CODEC_SET_DONE(state);
+            }
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeSegmentRequest(CF_EncoderState_t *state, CF_Logical_SegmentRequest_t *plseg)
+{
+    CF_CFDP_SegmentRequest_t *sr; /* for encoding fixed sized fields */
+
+    sr = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_SegmentRequest_t);
+    if (sr != NULL)
+    {
+        CF_Codec_Store_uint32(&(sr->offset_start), plseg->offset_start);
+        CF_Codec_Store_uint32(&(sr->offset_end), plseg->offset_end);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeAllTlv(CF_EncoderState_t *state, CF_Logical_TlvList_t *pltlv)
+{
+    uint8 i;
+
+    for (i = 0; CF_CODEC_IS_OK(state) && i < pltlv->num_tlv; ++i)
+    {
+        CF_CFDP_EncodeTLV(state, &pltlv->tlv[i]);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeAllSegments(CF_EncoderState_t *state, CF_Logical_SegmentList_t *plseg)
+{
+    uint8 i;
+
+    for (i = 0; CF_CODEC_IS_OK(state) && i < plseg->num_segments; ++i)
+    {
+        CF_CFDP_EncodeSegmentRequest(state, &plseg->segments[i]);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeMd(CF_EncoderState_t *state, CF_Logical_PduMd_t *plmd)
+{
+    CF_CFDP_PduMd_t *md; /* for encoding fixed sized fields */
+
+    md = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduMd_t);
+    if (md != NULL)
+    {
+        CF_Codec_Store_uint8(&(md->segmentation_control), 0);
+        FSV(md->segmentation_control, CF_CFDP_PduMd_CLOSURE_REQUESTED, plmd->close_req);
+        FSV(md->segmentation_control, CF_CFDP_PduMd_CHECKSUM_TYPE, plmd->checksum_type);
+        CF_Codec_Store_uint32(&(md->size), plmd->size);
+
+        /* Add in LV for src/dest */
+        CF_CFDP_EncodeLV(state, &plmd->source_filename);
+        CF_CFDP_EncodeLV(state, &plmd->dest_filename);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeFileDataHeader(CF_EncoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd)
+{
+    CF_CFDP_PduFileDataHeader_t *fd;
+    CF_CFDP_uint8_t *            optional_fields;
+
+    /* in this packet, the optional fields actually come first */
+    if (with_meta)
+    {
+        optional_fields = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_uint8_t);
+    }
+    else
+    {
+        optional_fields = NULL;
+    }
+
+    if (optional_fields != NULL)
+    {
+        CF_Codec_Store_uint8(optional_fields, 0);
+        FSV(*optional_fields, CF_CFDP_PduFileData_RECORD_CONTINUATION_STATE, plfd->continuation_state);
+        FSV(*optional_fields, CF_CFDP_PduFileData_SEGMENT_METADATA_LENGTH, plfd->segment_list.num_segments);
+
+        CF_CFDP_EncodeAllSegments(state, &plfd->segment_list);
+    }
+
+    fd = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduFileDataHeader_t);
+    if (fd != NULL)
+    {
+        CF_Codec_Store_uint32(&(fd->offset), plfd->offset);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeEof(CF_EncoderState_t *state, CF_Logical_PduEof_t *pleof)
+{
+    CF_CFDP_PduEof_t *eof; /* for encoding fixed sized fields */
+
+    eof = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduEof_t);
+    if (eof != NULL)
+    {
+        CF_Codec_Store_uint8(&(eof->cc), 0);
+        FSV(eof->cc, CF_CFDP_PduEof_FLAGS_CC, pleof->cc);
+        CF_Codec_Store_uint32(&(eof->crc), pleof->crc);
+        CF_Codec_Store_uint32(&(eof->size), pleof->size);
+
+        CF_CFDP_EncodeAllTlv(state, &pleof->tlv_list);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeFin(CF_EncoderState_t *state, CF_Logical_PduFin_t *plfin)
+{
+    CF_CFDP_PduFin_t *fin; /* for encoding fixed sized fields */
+
+    fin = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduFin_t);
+    if (fin != NULL)
+    {
+        CF_Codec_Store_uint8(&(fin->flags), 0);
+        FSV(fin->flags, CF_CFDP_PduFin_FLAGS_CC, plfin->cc);
+        FSV(fin->flags, CF_CFDP_PduFin_FLAGS_DELIVERY_CODE, plfin->delivery_code);
+        FSV(fin->flags, CF_CFDP_PduFin_FLAGS_FILE_STATUS, plfin->file_status);
+
+        CF_CFDP_EncodeAllTlv(state, &plfin->tlv_list);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeAck(CF_EncoderState_t *state, CF_Logical_PduAck_t *plack)
+{
+    CF_CFDP_PduAck_t *ack; /* for encoding fixed sized fields */
+
+    ack = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduAck_t);
+    if (ack != NULL)
+    {
+        CF_Codec_Store_uint8(&(ack->directive_and_subtype_code), 0);
+        FSV(ack->directive_and_subtype_code, CF_CFDP_PduAck_DIR_CODE, plack->ack_directive_code);
+        FSV(ack->directive_and_subtype_code, CF_CFDP_PduAck_DIR_SUBTYPE_CODE, plack->ack_subtype_code);
+
+        CF_Codec_Store_uint8(&(ack->cc_and_transaction_status), 0);
+        FSV(ack->cc_and_transaction_status, CF_CFDP_PduAck_CC, plack->cc);
+        FSV(ack->cc_and_transaction_status, CF_CFDP_PduAck_TRANSACTION_STATUS, plack->txn_status);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeNak(CF_EncoderState_t *state, CF_Logical_PduNak_t *plnak)
+{
+    CF_CFDP_PduNak_t *nak; /* for encoding fixed sized fields */
+
+    nak = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_PduNak_t);
+    if (nak != NULL)
+    {
+        CF_Codec_Store_uint32(&(nak->scope_start), plnak->scope_start);
+        CF_Codec_Store_uint32(&(nak->scope_end), plnak->scope_end);
+
+        CF_CFDP_EncodeAllSegments(state, &plnak->segment_list);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_EncodeCrc(CF_EncoderState_t *state, uint32 *plcrc)
+{
+    CF_CFDP_uint32_t *pecrc; /* CFDP CRC values are 32-bit only, per blue book */
+
+    pecrc = CF_ENCODE_FIXED_CHUNK(state, CF_CFDP_uint32_t);
+    if (pecrc != NULL)
+    {
+        CF_Codec_Store_uint32(pecrc, *plcrc);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint64 CF_DecodeIntegerInSize(CF_DecoderState_t *state, uint8 decode_size)
+{
+    const uint8 *sptr;
+    uint64       temp_val;
+
+    temp_val = 0;
+    sptr     = CF_CFDP_DoDecodeChunk(state, decode_size);
+    if (sptr != NULL)
+    {
+        /* this reads from MSB to LSB, so the result will be in native order */
+        while (decode_size > 0)
+        {
+            temp_val <<= 8;
+            temp_val |= *sptr & 0xFF;
+            ++sptr;
+            --decode_size;
+        }
+    }
+
+    return temp_val;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_CFDP_DecodeHeader(CF_DecoderState_t *state, CF_Logical_PduHeader_t *plh)
+{
+    const CF_CFDP_PduHeader_t *peh; /* for decoding fixed sized fields */
+    int32                      ret = CFE_SUCCESS;
+
+    /* decode the standard PDU header */
+    peh = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduHeader_t);
+    if (peh != NULL)
+    {
+        plh->version    = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_VERSION);
+        plh->direction  = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_DIR);
+        plh->pdu_type   = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_TYPE);
+        plh->txm_mode   = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_MODE);
+        plh->crc_flag   = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_CRC);
+        plh->large_flag = FGV(peh->flags, CF_CFDP_PduHeader_FLAGS_LARGEFILE);
+
+        /* The eid+tsn lengths are encoded as -1 */
+        plh->eid_length     = FGV(peh->eid_tsn_lengths, CF_CFDP_PduHeader_LENGTHS_ENTITY) + 1;
+        plh->txn_seq_length = FGV(peh->eid_tsn_lengths, CF_CFDP_PduHeader_LENGTHS_TRANSACTION_SEQUENCE) + 1;
+
+        /* Length is a simple 16-bit quantity and refers to the content after this header */
+        CF_Codec_Load_uint16(&(plh->data_encoded_length), &(peh->length));
+        if ((plh->eid_length > sizeof(plh->source_eid)) || (plh->txn_seq_length > sizeof(plh->sequence_num)))
+        {
+            ret = -1;
+        }
+        else
+        {
+            /* Now copy variable-length fields */
+            plh->source_eid      = CF_DecodeIntegerInSize(state, plh->eid_length);
+            plh->sequence_num    = CF_DecodeIntegerInSize(state, plh->txn_seq_length);
+            plh->destination_eid = CF_DecodeIntegerInSize(state, plh->eid_length);
+
+            /* The header length is where decoding ended at this point */
+            plh->header_encoded_length = CF_CODEC_GET_POSITION(state);
+        }
+    }
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeFileDirectiveHeader(CF_DecoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir)
+{
+    const CF_CFDP_PduFileDirectiveHeader_t *peh;
+    uint8                                   packet_val;
+
+    /* decode the standard PDU header */
+    peh = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduFileDirectiveHeader_t);
+    if (peh != NULL)
+    {
+        CF_Codec_Load_uint8(&packet_val, &(peh->directive_code));
+        pfdir->directive_code = packet_val;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeLV(CF_DecoderState_t *state, CF_Logical_Lv_t *pllv)
+{
+    const CF_CFDP_lv_t *lv;
+
+    lv = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_lv_t);
+    if (lv != NULL)
+    {
+        CF_Codec_Load_uint8(&(pllv->length), &(lv->length));
+        pllv->data_ptr = CF_CFDP_DoDecodeChunk(state, pllv->length);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeTLV(CF_DecoderState_t *state, CF_Logical_Tlv_t *pltlv)
+{
+    const CF_CFDP_tlv_t *tlv;
+    uint8                type_val;
+
+    tlv = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_tlv_t);
+    if (tlv != NULL)
+    {
+        CF_Codec_Load_uint8(&type_val, &(tlv->type));
+        CF_Codec_Load_uint8(&(pltlv->length), &(tlv->length));
+
+        /* the only TLV type currently implemented is entity id */
+        pltlv->type = type_val;
+        if (pltlv->type == CF_CFDP_TLV_TYPE_ENTITY_ID)
+        {
+            pltlv->data.eid = CF_DecodeIntegerInSize(state, pltlv->length);
+        }
+        else
+        {
+            /* not implemented, but must not send random data */
+            pltlv->data.data_ptr = CF_CFDP_DoDecodeChunk(state, pltlv->length);
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeSegmentRequest(CF_DecoderState_t *state, CF_Logical_SegmentRequest_t *plseg)
+{
+    const CF_CFDP_SegmentRequest_t *sr; /* for decoding fixed sized fields */
+
+    sr = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_SegmentRequest_t);
+    if (sr != NULL)
+    {
+        CF_Codec_Load_uint32(&(plseg->offset_start), &(sr->offset_start));
+        CF_Codec_Load_uint32(&(plseg->offset_end), &(sr->offset_end));
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeMd(CF_DecoderState_t *state, CF_Logical_PduMd_t *plmd)
+{
+    const CF_CFDP_PduMd_t *md; /* for decoding fixed sized fields */
+
+    md = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduMd_t);
+    if (md != NULL)
+    {
+        plmd->close_req     = FGV(md->segmentation_control, CF_CFDP_PduMd_CLOSURE_REQUESTED);
+        plmd->checksum_type = FGV(md->segmentation_control, CF_CFDP_PduMd_CHECKSUM_TYPE);
+        CF_Codec_Load_uint32(&(plmd->size), &(md->size));
+
+        /* Add in LV for src/dest */
+        CF_CFDP_DecodeLV(state, &plmd->source_filename);
+        CF_CFDP_DecodeLV(state, &plmd->dest_filename);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeFileDataHeader(CF_DecoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd)
+{
+    const CF_CFDP_PduFileDataHeader_t *fd;
+    const CF_CFDP_uint8_t *            optional_fields;
+    uint8                              field_count;
+
+    plfd->continuation_state        = 0;
+    plfd->segment_list.num_segments = 0;
+
+    /* in this packet, the optional fields actually come first */
+    if (with_meta)
+    {
+        optional_fields = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_uint8_t);
+    }
+    else
+    {
+        optional_fields = NULL;
+    }
+
+    if (optional_fields != NULL)
+    {
+        plfd->continuation_state = FGV(*optional_fields, CF_CFDP_PduFileData_RECORD_CONTINUATION_STATE);
+        field_count              = FGV(*optional_fields, CF_CFDP_PduFileData_SEGMENT_METADATA_LENGTH);
+        if (field_count > CF_PDU_MAX_SEGMENTS)
+        {
+            /* do not overfill */
+            CF_CODEC_SET_DONE(state);
+            field_count = 0;
+        }
+
+        while (field_count > 0)
+        {
+            --field_count;
+
+            /* append decoded segment info */
+            CF_CFDP_DecodeSegmentRequest(state, &plfd->segment_list.segments[plfd->segment_list.num_segments]);
+            if (!CF_CODEC_IS_OK(state))
+            {
+                break;
+            }
+
+            /* only increment if successful */
+            ++plfd->segment_list.num_segments;
+        }
+    }
+
+    fd = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduFileDataHeader_t);
+    if (fd != NULL)
+    {
+        CF_Codec_Load_uint32(&(plfd->offset), &(fd->offset));
+
+        plfd->data_len = CF_CODEC_GET_REMAIN(state);
+        plfd->data_ptr = CF_CFDP_DoDecodeChunk(state, plfd->data_len);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeCrc(CF_DecoderState_t *state, uint32 *plcrc)
+{
+    const CF_CFDP_uint32_t *pecrc; /* CFDP CRC values are 32-bit only, per blue book */
+
+    pecrc = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_uint32_t);
+    if (pecrc != NULL)
+    {
+        CF_Codec_Load_uint32(plcrc, pecrc);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeEof(CF_DecoderState_t *state, CF_Logical_PduEof_t *pleof)
+{
+    const CF_CFDP_PduEof_t *eof; /* for decoding fixed sized fields */
+
+    eof = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduEof_t);
+    if (eof != NULL)
+    {
+        pleof->cc = FGV(eof->cc, CF_CFDP_PduEof_FLAGS_CC);
+        CF_Codec_Load_uint32(&(pleof->crc), &(eof->crc));
+        CF_Codec_Load_uint32(&(pleof->size), &(eof->size));
+
+        CF_CFDP_DecodeAllTlv(state, &pleof->tlv_list, CF_PDU_MAX_TLV);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeFin(CF_DecoderState_t *state, CF_Logical_PduFin_t *plfin)
+{
+    const CF_CFDP_PduFin_t *fin; /* for decoding fixed sized fields */
+
+    fin = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduFin_t);
+    if (fin != NULL)
+    {
+        plfin->cc            = FGV(fin->flags, CF_CFDP_PduFin_FLAGS_CC);
+        plfin->delivery_code = FGV(fin->flags, CF_CFDP_PduFin_FLAGS_DELIVERY_CODE);
+        plfin->file_status   = FGV(fin->flags, CF_CFDP_PduFin_FLAGS_FILE_STATUS);
+
+        CF_CFDP_DecodeAllTlv(state, &plfin->tlv_list, CF_PDU_MAX_TLV);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeAck(CF_DecoderState_t *state, CF_Logical_PduAck_t *plack)
+{
+    const CF_CFDP_PduAck_t *ack; /* for decoding fixed sized fields */
+
+    ack = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduAck_t);
+    if (ack != NULL)
+    {
+        plack->ack_directive_code = FGV(ack->directive_and_subtype_code, CF_CFDP_PduAck_DIR_CODE);
+        plack->ack_subtype_code   = FGV(ack->directive_and_subtype_code, CF_CFDP_PduAck_DIR_SUBTYPE_CODE);
+
+        plack->cc         = FGV(ack->cc_and_transaction_status, CF_CFDP_PduAck_CC);
+        plack->txn_status = FGV(ack->cc_and_transaction_status, CF_CFDP_PduAck_TRANSACTION_STATUS);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeNak(CF_DecoderState_t *state, CF_Logical_PduNak_t *plnak)
+{
+    const CF_CFDP_PduNak_t *nak; /* for encoding fixed sized fields */
+
+    nak = CF_DECODE_FIXED_CHUNK(state, CF_CFDP_PduNak_t);
+    if (nak != NULL)
+    {
+        CF_Codec_Load_uint32(&(plnak->scope_start), &(nak->scope_start));
+        CF_Codec_Load_uint32(&(plnak->scope_end), &(nak->scope_end));
+
+        CF_CFDP_DecodeAllSegments(state, &plnak->segment_list, CF_PDU_MAX_SEGMENTS);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeAllTlv(CF_DecoderState_t *state, CF_Logical_TlvList_t *pltlv, uint8 limit)
+{
+    pltlv->num_tlv = 0;
+
+    /* The set of TLV data may exactly consume the rest of the PDU, this is OK */
+    while (limit > 0 && CF_CODEC_GET_REMAIN(state) != 0)
+    {
+        --limit;
+
+        if (pltlv->num_tlv >= CF_PDU_MAX_TLV)
+        {
+            /* too many */
+            CF_CODEC_SET_DONE(state);
+        }
+        else
+        {
+            CF_CFDP_DecodeTLV(state, &pltlv->tlv[pltlv->num_tlv]);
+        }
+
+        if (!CF_CODEC_IS_OK(state))
+        {
+            break;
+        }
+
+        /* only increment if above was successful */
+        ++pltlv->num_tlv;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_codec.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CFDP_DecodeAllSegments(CF_DecoderState_t *state, CF_Logical_SegmentList_t *plseg, uint8 limit)
+{
+    plseg->num_segments = 0;
+
+    /* The set of SegmentRequest data may exactly consume the rest of the PDU, this is OK */
+    while (limit > 0 && CF_CODEC_GET_REMAIN(state) != 0)
+    {
+        --limit;
+
+        if (plseg->num_segments >= CF_PDU_MAX_TLV)
+        {
+            /* too many */
+            CF_CODEC_SET_DONE(state);
+        }
+        else
+        {
+            CF_CFDP_DecodeSegmentRequest(state, &plseg->segments[plseg->num_segments]);
+        }
+
+        if (!CF_CODEC_IS_OK(state))
+        {
+            break;
+        }
+
+        /* only increment if above was successful */
+        ++plseg->num_segments;
+    }
+}
+```
+
+### `cf_codec.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_codec.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFDP protocol data structure encode/decode API declarations
+ */
+
+#ifndef CF_CODEC_H
+#define CF_CODEC_H
+
+#include "cfe.h"
+#include "cf_cfdp_pdu.h"
+#include "cf_logical_pdu.h"
+
+/**
+ * @brief Tracks the current state of an encode or decode operation
+ *
+ * This encapsulates the common state between encode and decode
+ */
+typedef struct CF_CodecState
+{
+    bool   is_valid;    /**< \brief whether decode is valid or not.  Set false on end of decode or error condition. */
+    size_t next_offset; /**< \brief Offset of next byte to encode/decode, current position in PDU */
+    size_t max_size;    /**< \brief Maximum number of bytes in the PDU */
+} CF_CodecState_t;
+
+/**
+ * @brief Current state of an encode operation
+ *
+ * State structure for encodes
+ */
+typedef struct CF_EncoderState
+{
+    CF_CodecState_t codec_state; /**< \brief Common state */
+    uint8 *         base;        /**< \brief Pointer to start of encoded PDU data */
+} CF_EncoderState_t;
+
+/**
+ * @brief Current state of an decode operation
+ *
+ * State structure for decodes
+ */
+typedef struct CF_DecoderState
+{
+    CF_CodecState_t codec_state; /**< \brief Common state */
+    const uint8 *   base;        /**< \brief Pointer to start of encoded PDU data */
+} CF_DecoderState_t;
+
+/*********************************************************************************
+ *
+ *   GENERAL UTILITY FUNCTIONS
+ *   These functions and macros support the encode/decode API
+ *
+ *********************************************************************************/
+
+/************************************************************************/
+/**
+ * @brief Checks if the codec is currently valid or not
+ *
+ * @param state   Encoder/Decoder common state
+ * @retval true   If encoder/decoder is still valid, has not reached end of PDU
+ * @retval false  If encoder/decoder is not valid, has reached end of PDU or an error occurred
+ */
+static inline bool CF_CFDP_CodecIsOK(const CF_CodecState_t *state)
+{
+    return state->is_valid;
+}
+
+/************************************************************************/
+/**
+ * @brief Sets a codec to the "done" state
+ *
+ * This may mean end of PDU data is reached, or that an error occurred
+ *
+ * @param state   Encoder/Decoder common state
+ */
+static inline void CF_CFDP_CodecSetDone(CF_CodecState_t *state)
+{
+    state->is_valid = false;
+}
+
+/************************************************************************/
+/**
+ * @brief Obtains the current position/offset within the PDU
+ *
+ * @param state   Encoder/Decoder common state
+ * @return Current offset in PDU
+ */
+static inline size_t CF_CFDP_CodecGetPosition(const CF_CodecState_t *state)
+{
+    return state->next_offset;
+}
+
+/************************************************************************/
+/**
+ * @brief Obtains the maximum size of the PDU being encoded/decoded
+ *
+ * @param state   Encoder/Decoder common state
+ * @return Maximum size of PDU
+ */
+static inline size_t CF_CFDP_CodecGetSize(const CF_CodecState_t *state)
+{
+    return state->max_size;
+}
+
+/************************************************************************/
+/**
+ * @brief Obtains the remaining size of the PDU being encoded/decoded
+ *
+ * @param state   Encoder/Decoder common state
+ * @return Remaining size of PDU
+ */
+static inline size_t CF_CFDP_CodecGetRemain(const CF_CodecState_t *state)
+{
+    return (state->max_size - state->next_offset);
+}
+
+/************************************************************************/
+/**
+ * @brief Resets a codec state
+ *
+ * @param state    Encoder/Decoder common state
+ * @param max_size Maximum size of PDU
+ */
+static inline void CF_CFDP_CodecReset(CF_CodecState_t *state, size_t max_size)
+{
+    state->is_valid    = true;
+    state->next_offset = 0;
+    state->max_size    = max_size;
+}
+
+/************************************************************************/
+/**
+ * @brief Advances the position by the indicated size, confirming the block will fit into the PDU
+ *
+ * On encode, this confirms there is enough available space to hold a block
+ * of the indicated size.  On decode, this confirms that decoding the indicated
+ * number of bytes will not read beyond the end of data.
+ *
+ * If true, then the current position/offset is advanced by the indicated number of bytes
+ * If false, then the error flag is set, so that future calls to CF_CFDP_CodecIsOK will
+ * also return false.
+ *
+ * @note The error flag is sticky, meaning that if any encode/decode operation fails,
+ * all future encode/decode requests on the same state will also fail.  Each encode/decode
+ * step must check the flag, and skip the operation if it is false.  Reporting the error
+ * can be deferred to the final stage, and only done once.
+ *
+ * @param state      Encoder/Decoder common state
+ * @param chunksize  Size of next block to encode/decode
+ * @retval true      If encode/decode is possible, enough space exists
+ * @retval false     If encode/decode is not possible, not enough space or prior error occurred
+ */
+bool CF_CFDP_CodecCheckSize(CF_CodecState_t *state, size_t chunksize);
+
+/************************************************************************/
+/**
+ * @brief Encode a block of data into the PDU
+ *
+ * Adds/Reserves space for a block of the given size in the current PDU
+ *
+ * @param state      Encoder state object
+ * @param chunksize  Size of block to encode
+ * @return Pointer to block, if successful
+ * @retval NULL if not successful (no space or other error).
+ */
+void *CF_CFDP_DoEncodeChunk(CF_EncoderState_t *state, size_t chunksize);
+
+/************************************************************************/
+/**
+ * @brief Decode a block of data from the PDU
+ *
+ * Deducts space for a block of the given size from the current PDU
+ *
+ * @param state      Decoder state object
+ * @param chunksize  Size of block to decode
+ * @return Pointer to block, if successful
+ * @retval NULL if not successful (no space or other error).
+ */
+const void *CF_CFDP_DoDecodeChunk(CF_DecoderState_t *state, size_t chunksize);
+
+/************************************************************************/
+/**
+ * @brief Macro to encode a block of a given CFDP type into a PDU
+ *
+ * This is a wrapper around CF_CFDP_DoEncodeChunk() to encode the given data type,
+ * rather than a generic size.  The sizeof() the type should reflect the _encoded_
+ * size within the PDU.  Specifically, this must only be used with the "CFDP" data
+ * types which are specifically designed to match the binary layout of the CFDP-defined
+ * header structures.
+ *
+ * @param state      Encoder state object
+ * @param type       Data type to encode, from cf_cfdp_pdu.h
+ * @return Pointer to block, if successful
+ * @retval NULL if not successful (no space or other error).
+ */
+#define CF_ENCODE_FIXED_CHUNK(state, type) ((type *)CF_CFDP_DoEncodeChunk(state, sizeof(type)))
+
+/************************************************************************/
+/**
+ * @brief Macro to decode a block of a given CFDP type into a PDU
+ *
+ * This is a wrapper around CF_CFDP_DoDecodeChunk() to encode the given data type,
+ * rather than a generic size.  The sizeof() the type should reflect the _encoded_
+ * size within the PDU.  Specifically, this must only be used with the "CFDP" data
+ * types which are specifically designed to match the binary layout of the CFDP-defined
+ * header structures.
+ *
+ * @param state      Decoder state object
+ * @param type       Data type to decode, from cf_cfdp_pdu.h
+ * @return Pointer to block, if successful
+ * @retval NULL if not successful (no space or other error).
+ */
+#define CF_DECODE_FIXED_CHUNK(state, type) ((const type *)CF_CFDP_DoDecodeChunk(state, sizeof(type)))
+
+/************************************************************************/
+/**
+ * @brief Macro wrapper around CF_CFDP_CodecIsOK()
+ *
+ * Checks the state of either an encoder or decoder object
+ * This just simplifies the code, as same macro may be used with either
+ * an CF_EncoderState_t or CF_DecoderState_t object.
+ *
+ * @param s Encoder or Decoder state
+ */
+#define CF_CODEC_IS_OK(s) (CF_CFDP_CodecIsOK(&((s)->codec_state)))
+
+/************************************************************************/
+/**
+ * @brief Macro wrapper around CF_CFDP_CodecSetDone()
+ *
+ * Sets the state of either an encoder or decoder object
+ * This just simplifies the code, as same macro may be used with either
+ * an CF_EncoderState_t or CF_DecoderState_t object.
+ *
+ * @param s Encoder or Decoder state
+ */
+#define CF_CODEC_SET_DONE(s) (CF_CFDP_CodecSetDone(&((s)->codec_state)))
+
+/************************************************************************/
+/**
+ * @brief Macro wrapper around CF_CFDP_CodecGetPosition()
+ *
+ * Checks the position of either an encoder or decoder object
+ * This just simplifies the code, as same macro may be used with either
+ * an CF_EncoderState_t or CF_DecoderState_t object.
+ *
+ * @param s Encoder or Decoder state
+ */
+#define CF_CODEC_GET_POSITION(s) (CF_CFDP_CodecGetPosition(&((s)->codec_state)))
+
+/************************************************************************/
+/**
+ * @brief Macro wrapper around CF_CFDP_CodecGetRemain()
+ *
+ * Checks the remainder of either an encoder or decoder object
+ * This just simplifies the code, as same macro may be used with either
+ * an CF_EncoderState_t or CF_DecoderState_t object.
+ *
+ * @param s Encoder or Decoder state
+ */
+#define CF_CODEC_GET_REMAIN(s) (CF_CFDP_CodecGetRemain(&((s)->codec_state)))
+
+/************************************************************************/
+/**
+ * @brief Macro wrapper around CF_CFDP_CodecGetSize()
+ *
+ * Checks the size of either an encoder or decoder object
+ * This just simplifies the code, as same macro may be used with either
+ * an CF_EncoderState_t or CF_DecoderState_t object.
+ *
+ * @param s Encoder or Decoder state
+ */
+#define CF_CODEC_GET_SIZE(s) (CF_CFDP_CodecGetSize(&((s)->codec_state)))
+
+/************************************************************************/
+/**
+ * @brief Gets the minimum number of octets that the given integer may be encoded in
+ *
+ * Based on the integer value, this computes the minimum number of bytes that must be
+ * allocated to that integer within a CFDP PDU.  This is typically used for entity
+ * IDs and sequence numbers, where CFDP does not specify a specific size for these
+ * items.  They may be encoded between 1 and 8 bytes, depending on the actual value
+ * is.
+ *
+ * @param Value  Integer value that needs to be encoded
+ * @returns Minimum number of bytes that the value requires (between 1 and 8, inclusive)
+ */
+uint8 CF_CFDP_GetValueEncodedSize(uint64 Value);
+
+/************************************************************************/
+/**
+ * @brief Encodes the given integer value in the given number of octets
+ *
+ * This encodes an integer value in the specified number of octets.
+ * Use CF_CFDP_GetValueEncodedSize() to determine the minimum number of octets required
+ * for a given value.  Using more than the minimum is OK, but will consume extra bytes.
+ *
+ * @warning This function does not error check the encode_size parameter, and will encode the
+ * size given, even if it results in an invalid value.  Using fewer octets than the
+ * minimum reported by CF_CFDP_GetValueEncodedSize() will likely result in incorrect decoding
+ * at the receiver.
+ *
+ * @sa CF_DecodeIntegerInSize() for the inverse operation
+ *
+ * @param state  Encoder state object
+ * @param value  Integer value that needs to be encoded
+ * @param encode_size  Number of octets to encode the value in (between 1 and 8, inclusive)
+ */
+void CF_EncodeIntegerInSize(CF_EncoderState_t *state, uint64 value, uint8 encode_size);
+
+/************************************************************************/
+/**
+ * @brief Decodes an integer value from the specified number of octets
+ *
+ * This decodes an integer value in the specified number of octets.  The actual number of
+ * octets must be determined using another field in the PDU before calling this function.
+ *
+ * @warning This function will decode exactly the given number of octets.  If this does not
+ * match actual encoded size, the return value will be wrong, and it will likely also
+ * throw off the decoding of any fields that follow this one.
+ *
+ * @sa CF_EncodeIntegerInSize() for the inverse operation
+ *
+ * @param state  Encoder state object
+ * @param decode_size  Number of octets that the value is encoded in (between 1 and 8, inclusive)
+ * @returns Decoded value
+ */
+uint64 CF_DecodeIntegerInSize(CF_DecoderState_t *state, uint8 decode_size);
+
+/*********************************************************************************
+ *
+ *   ENCODE API
+ *
+ *********************************************************************************/
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP PDU base header block, bypassing the size field
+ *
+ * On transmit side, the common/base header must be encoded in two parts, to deal
+ * with the "total_size" field.  The initial encoding of the basic fields is
+ * done as soon as it is known that a PDU of this type needs to be sent, but the
+ * total size may not be yet known, as it depends on the remainder of encoding
+ * and any additional data that might get added to the variable length sections.
+ *
+ * This function encodes all base header fields _except_ total length.  There is a
+ * separate function later to update the total_length to the correct value once the
+ * remainder of encoding is done.  Luckily, the total_length is in the first fixed
+ * position binary blob so it is easy to update later.
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @sa CF_CFDP_EncodeHeaderFinalSize() for updating the length field once it is known
+ *
+ * @param state  Encoder state object
+ * @param plh    Pointer to logical PDU header data
+ */
+void CF_CFDP_EncodeHeaderWithoutSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh);
+
+/************************************************************************/
+/**
+ * @brief Updates an already-encoded PDU base header block with the final PDU size
+ *
+ * This function encodes the "data_encoded_length" field from the logical PDU structure
+ * into the encoded header block.  The PDU will also be closed (set done) to indicate that
+ * no more data should be added.
+ *
+ * @note Unlike other encode operations, this function does not add any new blocks to the
+ * PDU.  It only updates the already-encoded block at the beginning of the PDU, which must
+ * have been done by a prior call to CF_CFDP_EncodeHeaderWithoutSize().
+ *
+ * @sa CF_CFDP_EncodeHeaderWithoutSize() for initially encoding the PDU header block
+ *
+ * @param state  Encoder state object
+ * @param plh    Pointer to logical PDU header data
+ */
+void CF_CFDP_EncodeHeaderFinalSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP file directive header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param pfdir  Pointer to logical PDU file directive header data
+ */
+void CF_CFDP_EncodeFileDirectiveHeader(CF_EncoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir);
+
+/************************************************************************/
+/**
+ * @brief Encodes a single CFDP Length+Value (LV) pair
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param pllv   Pointer to logical PDU LV header data
+ */
+void CF_CFDP_EncodeLV(CF_EncoderState_t *state, CF_Logical_Lv_t *pllv);
+
+/************************************************************************/
+/**
+ * @brief Encodes a single CFDP Type+Length+Value (TLV) tuple
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @note Only the CF_CFDP_TLV_TYPE_ENTITY_ID TLV type is currently supported by this function,
+ * but other TLV types may be added in future versions as needed.
+ *
+ * @param state  Encoder state object
+ * @param pltlv  Pointer to single logical PDU TLV header data
+ */
+void CF_CFDP_EncodeTLV(CF_EncoderState_t *state, CF_Logical_Tlv_t *pltlv);
+
+/************************************************************************/
+/**
+ * @brief Encodes a single CFDP Segment Request block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param plseg  Pointer to single logical PDU segment request header data
+ */
+void CF_CFDP_EncodeSegmentRequest(CF_EncoderState_t *state, CF_Logical_SegmentRequest_t *plseg);
+
+/************************************************************************/
+/**
+ * @brief Encodes a list of CFDP Type+Length+Value tuples
+ *
+ * This invokes CF_CFDP_EncodeTLV() for all TLV values in the given list.
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param pltlv  Pointer to logical PDU TLV header data
+ */
+void CF_CFDP_EncodeAllTlv(CF_EncoderState_t *state, CF_Logical_TlvList_t *pltlv);
+
+/************************************************************************/
+/**
+ * @brief Encodes a list of CFDP Segment Request blocks
+ *
+ * This invokes CF_CFDP_EncodeSegmentRequest() for all segments in the given list.
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param plseg  Pointer to logical PDU segment request header data
+ */
+void CF_CFDP_EncodeAllSegments(CF_EncoderState_t *state, CF_Logical_SegmentList_t *plseg);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP Metadata (MD) header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @note this encode includes the LV pairs for source and destination file names, which are
+ * logically part of the overall MD block.
+ *
+ * @param state  Encoder state object
+ * @param plmd   Pointer to logical PDU metadata header data
+ */
+void CF_CFDP_EncodeMd(CF_EncoderState_t *state, CF_Logical_PduMd_t *plmd);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP File Data (FD) header block
+ *
+ * This only encodes the FD header fields, specifically the data offset (required) and any
+ * metadata fields, if indicated.  This does _not_ encode any actual file data.
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param with_meta Whether to include optional continuation and segment request fields (always false currently)
+ * @param plfd   Pointer to logical PDU file header data
+ */
+void CF_CFDP_EncodeFileDataHeader(CF_EncoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP End-of-File (EOF) header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @note this encode includes any TLV values which are indicated in the logical data structure
+ *
+ * @param state  Encoder state object
+ * @param pleof Pointer to logical PDU EOF header data
+ */
+void CF_CFDP_EncodeEof(CF_EncoderState_t *state, CF_Logical_PduEof_t *pleof);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP Final (FIN) header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @note this encode includes any TLV values which are indicated in the logical data structure
+ *
+ * @param state  Encoder state object
+ * @param plfin  Pointer to logical PDU FIN header data
+ */
+void CF_CFDP_EncodeFin(CF_EncoderState_t *state, CF_Logical_PduFin_t *plfin);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP Acknowledge (ACK) header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param plack  Pointer to logical PDU ACK header data
+ */
+void CF_CFDP_EncodeAck(CF_EncoderState_t *state, CF_Logical_PduAck_t *plack);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP Non-Acknowledge (NAK) header block
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @note this encode includes any Segment Request values which are indicated in the logical data structure
+ *
+ * @param state  Encoder state object
+ * @param plnak  Pointer to logical PDU NAK header data
+ */
+void CF_CFDP_EncodeNak(CF_EncoderState_t *state, CF_Logical_PduNak_t *plnak);
+
+/************************************************************************/
+/**
+ * @brief Encodes a CFDP CRC/Checksum
+ *
+ * The data in the logical header will be appended to the encoded PDU at the current position
+ *
+ * If the encoder is in an error state, nothing is encoded, and the state of the
+ * encoder is not changed.
+ *
+ * @param state  Encoder state object
+ * @param plcrc  Pointer to logical CRC value
+ */
+void CF_CFDP_EncodeCrc(CF_EncoderState_t *state, uint32 *plcrc);
+
+/*********************************************************************************
+ *
+ *   DECODE API
+ *
+ *********************************************************************************/
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP base PDU header
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @note On decode the entire base header is decoded in a single call, the size
+ * will be decoded like any other field.
+ *
+ * @param state  Decoder state object
+ * @param plh    Pointer to logical PDU base header data
+ * @retval #CFE_SUCCESS \copydoc CFE_SUCCESS
+ * @retval Returns anything else on error.
+ */
+int32 CF_CFDP_DecodeHeader(CF_DecoderState_t *state, CF_Logical_PduHeader_t *plh);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP file directive header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param pfdir  Pointer to logical PDU file directive header data
+ */
+void CF_CFDP_DecodeFileDirectiveHeader(CF_DecoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir);
+
+/************************************************************************/
+/**
+ * @brief Decodes a single CFDP Length+Value (LV) pair
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param pllv   Pointer to single logical PDU LV data
+ */
+void CF_CFDP_DecodeLV(CF_DecoderState_t *state, CF_Logical_Lv_t *pllv);
+
+/************************************************************************/
+/**
+ * @brief Decodes a single CFDP Type+Length+Value (TLV) tuple
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param pltlv  Pointer to single logical PDU TLV data
+ */
+void CF_CFDP_DecodeTLV(CF_DecoderState_t *state, CF_Logical_Tlv_t *pltlv);
+
+/************************************************************************/
+/**
+ * @brief Decodes a single CFDP Segment Request block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plseg  Pointer to single logical PDU segment request header data
+ */
+void CF_CFDP_DecodeSegmentRequest(CF_DecoderState_t *state, CF_Logical_SegmentRequest_t *plseg);
+
+/************************************************************************/
+/**
+ * @brief Decodes a list of CFDP Type+Length+Value tuples
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param pltlv  Pointer to logical PDU TLV header data
+ * @param limit  Maximum number of TLV objects to decode
+ */
+void CF_CFDP_DecodeAllTlv(CF_DecoderState_t *state, CF_Logical_TlvList_t *pltlv, uint8 limit);
+
+/************************************************************************/
+/**
+ * @brief Decodes a list of CFDP Segment Request blocks
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plseg  Pointer to logical PDU segment request header data
+ * @param limit  Maximum number of Segment Request objects to decode
+ */
+void CF_CFDP_DecodeAllSegments(CF_DecoderState_t *state, CF_Logical_SegmentList_t *plseg, uint8 limit);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP Metadata (MD) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plmd   Pointer to logical PDU metadata header data
+ */
+void CF_CFDP_DecodeMd(CF_DecoderState_t *state, CF_Logical_PduMd_t *plmd);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP File Data (FD) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param with_meta Whether to include optional continuation and segment request fields (always false currently)
+ * @param plfd   Pointer to logical PDU file header data
+ */
+void CF_CFDP_DecodeFileDataHeader(CF_DecoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t *plfd);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP End-of-File (EOF) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param pleof Pointer to logical PDU EOF header data
+ */
+void CF_CFDP_DecodeEof(CF_DecoderState_t *state, CF_Logical_PduEof_t *pleof);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP Final (FIN) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plfin  Pointer to logical PDU FIN header data
+ */
+void CF_CFDP_DecodeFin(CF_DecoderState_t *state, CF_Logical_PduFin_t *plfin);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP Acknowledge (ACK) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plack  Pointer to logical PDU ACK header data
+ */
+void CF_CFDP_DecodeAck(CF_DecoderState_t *state, CF_Logical_PduAck_t *plack);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP Non-Acknowledge (NAK) header block
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plnak  Pointer to logical PDU NAK header data
+ */
+void CF_CFDP_DecodeNak(CF_DecoderState_t *state, CF_Logical_PduNak_t *plnak);
+
+/************************************************************************/
+/**
+ * @brief Decodes a CFDP CRC/Checksum
+ *
+ * The data will be decoded from the encoded PDU at the current position and
+ * the logical fields will be saved to the given data structure
+ *
+ * If the encoder is in an error state, nothing is decoded, and the state of the
+ * decoder is not changed.
+ *
+ * @param state  Decoder state object
+ * @param plcrc   Pointer to logical CRC value
+ */
+void CF_CFDP_DecodeCrc(CF_DecoderState_t *state, uint32 *plcrc);
+
+#endif /* !CF_CODEC_H */
+```
+
+### `cf_crc.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_crc.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application CRC calculation source file
+ *
+ *  This is a streaming CRC calculator. Data can all be given at once for
+ *  a result or it can trickle in.
+ *
+ *  This file is intended to be generic and usable by other apps.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_crc.h"
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_crc.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CRC_Start(CF_Crc_t *c)
+{
+    memset(c, 0, sizeof(*c));
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_crc.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CRC_Digest(CF_Crc_t *c, const uint8 *data, int len)
+{
+    int i = 0;
+
+    for (; i < len; ++i)
+    {
+        c->working <<= 8;
+        c->working |= data[i];
+
+        ++c->index;
+
+        if (c->index == 4)
+        {
+            c->result += c->working;
+            c->index = 0;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_crc.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_CRC_Finalize(CF_Crc_t *c)
+{
+    if (c->index)
+    {
+        c->result += (c->working << (8 * (4 - c->index)));
+
+        /* set the index to 0 in case the user calls CF_CRC_Digest() again. It
+         * will add the new data to the CRC result. This lets the user get
+         * the current result in the stream if they want. */
+        c->index   = 0;
+        c->working = 0;
+    }
+}
+```
+
+### `cf_crc.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_crc.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * The CF Application CRC calculation header file
+ */
+
+#ifndef CF_CRC_H
+#define CF_CRC_H
+
+#include "cfe.h"
+
+/**
+ * @brief CRC state object
+ */
+typedef struct CF_Crc
+{
+    uint32 working;
+    uint32 result;
+    uint8  index;
+} CF_Crc_t;
+
+/************************************************************************/
+/** @brief Start a CRC streamable digest.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c  CRC object to operate on
+ */
+void CF_CRC_Start(CF_Crc_t *c);
+
+/************************************************************************/
+/** @brief Digest a chunk for crc calculation.
+ *
+ * @par Description
+ *       Does the CRC calculation, and stores an index into the given
+ *       4-byte word in case the input was not evenly divisible for 4.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c    CRC object to operate on
+ * @param data Pointer to data to digest
+ * @param len  Length of data to digest
+ *
+ */
+void CF_CRC_Digest(CF_Crc_t *c, const uint8 *data, int len);
+
+/************************************************************************/
+/** @brief Finalize a crc calculation.
+ *
+ * @par Description
+ *       Checks the index and if it isn't 0, does the final calculations
+ *       on the bytes in the shift register. After this call is made, the
+ *       result field of the structure holds the result.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c    CRC object to operate on
+ *
+ */
+void CF_CRC_Finalize(CF_Crc_t *c);
+
+#endif /* !CF_CRC_H */
+```
+
+### `cf_logical_pdu.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_logical_pdu.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Structures defining logical CFDP PDUs
+ *
+ * These are CF-specific data structures that reflect the logical
+ * content of the CFDP PDUs defined in cf_cfdp_pdu.h.  Note these are
+ * _NOT_ intended to reflect the bitwise structures defined
+ * in the CCSDS blue book, but rather the values contained
+ * within those structures, in a form that can be used by software.
+ *
+ * Specifically, this intent differs in the following ways:
+ * - All numeric fields are in native byte order
+ * - All structures are padded/aligned according to native CPU (i.e. not packed)
+ * - All bit-fields are exploded, where each field/group is a separate member
+ * - Variable-size content is normalized, allocated as the maximum possible size
+ */
+
+#ifndef CF_LOGICAL_PDU_H
+#define CF_LOGICAL_PDU_H
+
+#include "common_types.h"
+#include "cf_platform_cfg.h"
+
+/* many enum values in this file are based on CFDP-defined values */
+#include "cf_cfdp_pdu.h"
+
+/**
+ * @brief Maximum number of TLV values in a single PDU
+ *
+ * This just serves to set an upper bound on the logical structures, to keep
+ * things simple.  The real limit varies depending on the specific PDU type
+ * being processed.  This caps the amount of storage memory for the worst
+ * case, the actual number present is always part of the run-time state.
+ *
+ * Without filestore requests, use of TLV is pretty limited.
+ *
+ */
+#define CF_PDU_MAX_TLV (4)
+
+/**
+ * @brief Maximum number of segment requests in a single PDU
+ *
+ * Sets an upper bound on the logical structures for the most possible
+ * segment structures in a single PDU.
+ */
+#define CF_PDU_MAX_SEGMENTS (CF_NAK_MAX_SEGMENTS)
+
+/**
+ * @brief Type for logical file size/offset value
+ *
+ * The CFDP protocol permits use of 64-bit values for file size/offsets
+ * Although the CF application only supports 32-bit legacy file size
+ * type at this point, the logical structures should use this type in
+ * case future support for large files is added.
+ */
+typedef uint32 CF_FileSize_t;
+
+/*
+ * Note that by exploding the bit-fields into separate members, this will make the
+ * storage much less efficient (in many cases using 8 bits to store only 1 logical bit)
+ * but this greatly improves and simplifies the access during processing, avoiding
+ * repeated shifts and mask.  Furthermore, it only needs to be stored this way
+ * during active processing in the engine, and there is only one engine instance,
+ * so the extra memory use here is not that impactful (just a single instance).
+ *
+ * Even if the code evolves to have a separate engine/task per channel, this is
+ * still not a big deal to store fields separately this way.
+ *
+ * Also note that since the bits are not expected to line up at all, sometimes
+ * logical fields might occur in a different order than what is in the CCSDS spec,
+ * in order to group items of similar type together.
+ */
+
+/**
+ * @brief Structure representing base CFDP PDU header
+ *
+ * Reflects the common content at the beginning of all CFDP PDUs, of all types.
+ *
+ * @sa CF_CFDP_PduHeader_t for encoded form
+ */
+typedef struct CF_Logical_PduHeader
+{
+    uint8 version;    /**< \brief Version of the protocol */
+    uint8 pdu_type;   /**< \brief File Directive (0) or File Data (1) */
+    uint8 direction;  /**< \brief Toward Receiver (0) or Toward Sender (1) */
+    uint8 txm_mode;   /**< \brief Acknowledged (0) or Unacknowledged (1) */
+    uint8 crc_flag;   /**< \brief CRC not present (0) or CRC present (1) */
+    uint8 large_flag; /**< \brief Small/32-bit size (0) or Large/64-bit size (1) */
+
+    uint8 segment_meta_flag; /**< \brief Segment Metatdata not present (0) or Present (1) */
+    uint8 eid_length;        /**< \brief Length of encoded entity IDs, in octets (NOT size of logical value) */
+    uint8 txn_seq_length;    /**< \brief Length of encoded sequence number, in octets (NOT size of logical value) */
+
+    uint16 header_encoded_length; /**< \brief Length of the encoded PDU header, in octets (NOT sizeof struct) */
+    uint16 data_encoded_length;   /**< \brief Length of the encoded PDU data, in octets */
+
+    CF_EntityId_t       source_eid;      /**< \brief Source entity ID (normalized) */
+    CF_EntityId_t       destination_eid; /**< \brief Destination entity ID (normalized) */
+    CF_TransactionSeq_t sequence_num;    /**< \brief Sequence number (normalized) */
+} CF_Logical_PduHeader_t;
+
+/**
+ * @brief Structure representing logical File Directive header
+ *
+ * This contains the file directive code from the PDUs for which it applies.
+ * The codes are mapped directly to the CFDP protocol values, but converted
+ * to a native value (enum) for direct use by software.
+ */
+typedef struct CF_Logical_PduFileDirectiveHeader
+{
+    CF_CFDP_FileDirective_t directive_code;
+} CF_Logical_PduFileDirectiveHeader_t;
+
+/**
+ * @brief Structure representing logical LV Object format
+ *
+ * These Length + Value pairs used in several CFDP PDU types,
+ * typically for storage of strings such as file names.
+ *
+ * These are only used for string data (mostly filenames) so
+ * the data can refer directly to the encoded bits, it does
+ * not necessarily need to be duplicated here.
+ */
+typedef struct CF_Logical_Lv
+{
+    uint8       length;   /**< \brief Length of data field */
+    const void *data_ptr; /**< \brief Source of actual data in original location */
+} CF_Logical_Lv_t;
+
+/**
+ * @brief Union of various data items that may occur in a TLV item
+ *
+ * The actual type is identified by the "type" field in the enclosing TLV
+ *
+ * Currently filestore requests are not implemented in CF, so the TLV
+ * use is limited.  This may change in the future.
+ *
+ * Numeric data needs to actually be copied to this buffer, because it needs
+ * to be normalized in length and byte-order.  But string data (e.g. filenames,
+ * messages) can reside in the original encoded form.
+ */
+typedef union CF_Logical_TlvData
+{
+    CF_EntityId_t eid;      /**< \brief Valid when type=ENTITY_ID (6) */
+    const void *  data_ptr; /**< \brief Source of actual data in original location (other string/binary types) */
+} CF_Logical_TlvData_t;
+
+/**
+ * @brief Structure representing logical TLV Object format
+ *
+ * In the current implementation of CF, only entity IDs are
+ * currently encoded in this form where indicated in the spec.
+ * This may change in a future version.
+ *
+ * @sa CF_CFDP_tlv_t for encoded form
+ */
+typedef struct CF_Logical_Tlv
+{
+    CF_CFDP_TlvType_t    type;   /**< \brief Nature of data field */
+    uint8                length; /**< \brief Length of data field (encoded length, not local storage size) */
+    CF_Logical_TlvData_t data;
+} CF_Logical_Tlv_t;
+
+/**
+ * @brief Structure representing logical Segment Request data
+ */
+typedef struct CF_Logical_SegmentRequest
+{
+    CF_FileSize_t offset_start;
+    CF_FileSize_t offset_end;
+} CF_Logical_SegmentRequest_t;
+
+typedef struct CF_Logical_SegmentList
+{
+    uint8 num_segments; /**< \brief number of valid entries in the segment list */
+
+    /**
+     * \brief Set of all segment requests in this PDU.
+     *
+     * Number of valid entries is indicated by num_segments,
+     * and may be 0 if the PDU does not contain any such fields.
+     */
+    CF_Logical_SegmentRequest_t segments[CF_PDU_MAX_SEGMENTS];
+} CF_Logical_SegmentList_t;
+
+typedef struct CF_Logical_TlvList
+{
+    uint8 num_tlv; /**< \brief number of valid entries in the TLV list */
+
+    CF_Logical_Tlv_t tlv[CF_PDU_MAX_TLV];
+} CF_Logical_TlvList_t;
+
+/**
+ * @brief Structure representing logical End of file PDU
+ *
+ * @sa CF_CFDP_PduEof_t for encoded form
+ */
+typedef struct CF_Logical_PduEof
+{
+    CF_CFDP_ConditionCode_t cc;
+    uint32                  crc;
+    CF_FileSize_t           size;
+
+    /**
+     * \brief Set of all TLV blobs in this PDU.
+     */
+    CF_Logical_TlvList_t tlv_list;
+} CF_Logical_PduEof_t;
+
+/**
+ * @brief Structure representing logical Finished PDU
+ *
+ * @sa CF_CFDP_PduFin_t for encoded form
+ */
+typedef struct CF_Logical_PduFin
+{
+    CF_CFDP_ConditionCode_t cc;
+    CF_CFDP_FinFileStatus_t file_status;
+    uint8                   delivery_code; /**< \brief complete file indicated by '0'.  Nonzero means incomplete. */
+
+    /**
+     * \brief Set of all TLV blobs in this PDU.
+     */
+    CF_Logical_TlvList_t tlv_list;
+} CF_Logical_PduFin_t;
+
+/**
+ * @brief Structure representing CFDP Acknowledge PDU
+ *
+ * Defined per section 5.2.4 / table 5-8 of CCSDS 727.0-B-5
+ */
+typedef struct CF_Logical_PduAck
+{
+    uint8                   ack_directive_code; /**< \brief directive code of the PDU being ack'ed */
+    uint8                   ack_subtype_code;   /**< \brief depends on ack_directive_code  */
+    CF_CFDP_ConditionCode_t cc;
+    CF_CFDP_AckTxnStatus_t  txn_status;
+} CF_Logical_PduAck_t;
+
+/**
+ * @brief Structure representing CFDP Metadata PDU
+ *
+ * Defined per section 5.2.5 / table 5-9 of CCSDS 727.0-B-5
+ */
+typedef struct CF_Logical_PduMd
+{
+    uint8 close_req;     /**< \brief transaction closure not requested (0) or requested (1) */
+    uint8 checksum_type; /**< \brief 0 indicates legacy modular checksum */
+
+    CF_FileSize_t size;
+
+    CF_Logical_Lv_t source_filename;
+    CF_Logical_Lv_t dest_filename;
+} CF_Logical_PduMd_t;
+
+/**
+ * @brief Structure representing logical Non-Acknowledge PDU
+ */
+typedef struct CF_Logical_PduNak
+{
+    CF_FileSize_t scope_start;
+    CF_FileSize_t scope_end;
+
+    /**
+     * \brief Set of all segments in this PDU.
+     */
+    CF_Logical_SegmentList_t segment_list;
+} CF_Logical_PduNak_t;
+
+typedef struct CF_Logical_PduFileDataHeader
+{
+    uint8 continuation_state;
+
+    /**
+     * \brief the segment_meta_length value will be stored in the
+     * segment_list.num_segments field below
+     */
+    CF_Logical_SegmentList_t segment_list;
+
+    CF_FileSize_t offset; /**< \brief Offset of data in file */
+
+    const void *data_ptr; /**< \brief pointer to read-only data blob within encoded PDU */
+    size_t      data_len; /**< \brief Length of data blob within encoded PDU (derived field) */
+} CF_Logical_PduFileDataHeader_t;
+
+/**
+ * @brief A union of all possible internal header types in a PDU
+ *
+ * The specific entry which applies depends on the combination of
+ * pdu type and directive code.
+ */
+typedef union CF_Logical_IntHeader
+{
+    CF_Logical_PduEof_t            eof; /**< \brief valid when pdu_type=0 + directive_code=EOF (4) */
+    CF_Logical_PduFin_t            fin; /**< \brief valid when pdu_type=0 + directive_code=FIN (5) */
+    CF_Logical_PduAck_t            ack; /**< \brief valid when pdu_type=0 + directive_code=ACK (6) */
+    CF_Logical_PduMd_t             md;  /**< \brief valid when pdu_type=0 + directive_code=METADATA (7) */
+    CF_Logical_PduNak_t            nak; /**< \brief valid when pdu_type=0 + directive_code=NAK (8) */
+    CF_Logical_PduFileDataHeader_t fd;  /**< \brief valid when pdu_type=1 (directive_code is not applicable) */
+} CF_Logical_IntHeader_t;
+
+/**
+ * @brief Encapsulates the entire PDU information
+ *
+ */
+typedef struct CF_Logical_PduBuffer
+{
+    /*
+     * The encode/decode object tracks the position within the network (encoded) buffer
+     * during the encode/decode process.  Only one or the other should be set at
+     * a given time, depending on whether this is a received or transmitted PDU.
+     */
+    struct CF_EncoderState *penc;
+    struct CF_DecoderState *pdec;
+
+    /**
+     * \brief Data in PDU header is applicable to all packets
+     */
+    CF_Logical_PduHeader_t pdu_header;
+
+    /**
+     * \brief The directive code applies to file directive PDUs, where
+     * the pdu_type in the common header is 0. Otherwise this value
+     * should be set to 0 for data PDUs (which is a reserved value and
+     * does not alias any valid directive code).
+     */
+    CF_Logical_PduFileDirectiveHeader_t fdirective;
+
+    /**
+     * \brief The internal header is specific to the type of PDU being
+     * processed. This is a union of all those possible types.
+     * See the union definition for which member applies to
+     * a given processing cycle.
+     */
+    CF_Logical_IntHeader_t int_header;
+
+    /**
+     * \brief Some PDU types might have a CRC at the end.  If so, this
+     * field reflects the value of that CRC.  Its presence/validity
+     * depends on the pdu_type and crc_flag in the pdu_header.
+     *
+     * Note that all CFDP CRCs are 32 bits in length, the blue book
+     * does not permit for any other size.
+     */
+    uint32 content_crc;
+} CF_Logical_PduBuffer_t;
+
+#endif /* !CF_LOGICAL_PDU_H */
+```
+
+### `cf_playback.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_playback.c`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: cf_playback.c 1.29.1.1 2015/03/06 15:30:24EST sstrege Exp  $
+**
+**   Copyright � 2007-2014 United States Government as represented by the 
+**   Administrator of the National Aeronautics and Space Administration. 
+**   All Other Rights Reserved.  
+**
+**   This software was created at NASA's Goddard Space Flight Center.
+**   This software is governed by the NASA Open Source Agreement and may be 
+**   used, distributed and modified only pursuant to the terms of that 
+**   agreement.
+**
+** Purpose:
+**
+** Notes:
+**
+** $Log: cf_playback.c  $
+** Revision 1.29.1.1 2015/03/06 15:30:24EST sstrege 
+** Added copyright information
+** Revision 1.29 2011/05/17 17:09:17EDT rmcgraw 
+** DCR14967:10 Change GetPoolBuf rtn check to include 0 as an error.
+** Revision 1.28 2011/05/17 17:04:46EDT rmcgraw 
+** DCR14967:9 removed parameter checks in QueueDirectoryFiles
+** Revision 1.27 2011/05/09 11:52:10EDT rmcgraw 
+** DCR13317:1 Allow Destintaion path to be blank
+** Revision 1.26 2011/05/03 16:47:21EDT rmcgraw 
+** Cleaned up events, removed \n from some events, removed event id ganging
+** Revision 1.25 2010/11/04 11:37:47EDT rmcgraw 
+** Dcr13051:1 Wrap OS_printfs in platform cfg CF_DEBUG
+** Revision 1.24 2010/11/01 16:09:33EDT rmcgraw 
+** DCR12802:1 Changes for decoupling peer entity id from channel
+** Revision 1.23 2010/10/25 11:21:49EDT rmcgraw 
+** DCR12573:1 Changes to allow more than one incoming PDU MsgId
+** Revision 1.22 2010/08/04 15:17:37EDT rmcgraw 
+** DCR11510:1 Changes prior to release
+** Revision 1.21 2010/07/20 14:37:39EDT rmcgraw 
+** Dcr11510:1 Remove Downlink buffer references
+** Revision 1.20 2010/07/08 13:47:32EDT rmcgraw 
+** DCR11510:1 Added termination checking on all cmds that take a string
+** Revision 1.19 2010/07/07 17:39:29EDT rmcgraw 
+** DCR11510:1 Added validate path calls and removed AddSlash calls
+** Revision 1.18 2010/06/17 10:11:21EDT rmcgraw 
+** DCR11510:1 Cleaned while loop logic in StartNextFile
+** Revision 1.17 2010/06/11 16:13:16EDT rmcgraw 
+** DCR11510:1 ZeroCopy, Un-hardcoded cmd/tlm input/output pdus
+** Revision 1.16 2010/06/02 21:40:12EDT rmcgraw 
+** DCR11510:1 Fixed cmd error counter problems with playback dir cmd
+** Revision 1.15 2010/06/01 11:00:25EDT rmcgraw 
+** DCR11510:1 Replaced polling tmp directory with pending queue check
+** Revision 1.14 2010/04/27 09:13:31EDT rmcgraw 
+** DCR11510:1 Fixed path params with or w/o ending slash in playback dir
+** Revision 1.13 2010/04/26 14:37:42EDT rmcgraw 
+** DCR11510:1 Fixed problem queueing files in a directory
+** Revision 1.12 2010/04/26 14:01:23EDT rmcgraw 
+** DCR11510:1 Changed strncmp to strncpy in CF_PlaybackDirectoryCmd
+** Revision 1.11 2010/04/26 12:13:13EDT rmcgraw 
+** DCR11510:1 Fixed Class check in QueueDirFiles and event in playbackfile cmd
+** Revision 1.10 2010/04/26 10:11:25EDT rmcgraw 
+** DCR11510:1 Fixed PB Directory cmd param error event
+** Revision 1.9 2010/04/23 15:55:08EDT rmcgraw 
+** DCR11510:1 Fixed pointer problem
+** Revision 1.8 2010/04/23 15:44:39EDT rmcgraw 
+** DCR11510:1 Protection against starting a transfer if file is already active
+** Revision 1.7 2010/04/23 08:39:15EDT rmcgraw 
+** Dcr11510:1 Code Review Prep
+** Revision 1.6 2010/03/26 15:30:22EDT rmcgraw 
+** DCR11510 Various developmental changes
+** Revision 1.5 2010/03/12 12:14:33EST rmcgraw 
+** DCR11510:1 Initial check-in towards CF Version 1000
+** Revision 1.4 2009/12/09 11:06:27EST rmcgraw 
+** DCR10350:3 Removed Dest path check in CF_FindNodeAtFrontOfQueue
+** Revision 1.3 2009/12/08 09:17:13EST rmcgraw 
+** DCR10350:3 Fixed bug by checking active queue for file before enqueue
+** Revision 1.2 2009/11/24 13:58:37EST rmcgraw 
+** DCR10349:1 Moved polling check printf
+** Revision 1.1 2009/11/24 12:48:54EST rmcgraw 
+** Initial revision
+** Member added to CFS CF project
+**
+*************************************************************************/
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "cf_app.h"
+#include "cf_msg.h"
+#include "cf_defs.h"
+#include "cf_verify.h"
+#include "cf_events.h"
+#include "cf_utils.h"
+#include "cf_playback.h"
+#include "cf_callbacks.h"
+#include "cf_perfids.h"
+#include <string.h>
+
+
+/************************************************************************
+** CF global data
+*************************************************************************/
+#ifdef CF_DEBUG
+extern uint32              cfdbg;
+#endif
+
+extern CF_AppData_t        CF_AppData;
+
+
+void CF_PlaybackFileCmd(CFE_SB_MsgPtr_t MessagePtr)
+{
+
+    CF_PlaybackFileCmd_t    *PlaybackFileCmdPtr;
+    CF_QueueEntry_t         *NewQueueEntry;
+    
+    if(CF_VerifyCmdLength(MessagePtr,sizeof(CF_PlaybackFileCmd_t))==CF_BAD_MSG_LENGTH_RC)
+    {
+
+        CF_AppData.Hk.ErrCounter++;
+
+    }else{
+
+        PlaybackFileCmdPtr = (CF_PlaybackFileCmd_t  *)MessagePtr;  
+                
+        /* check params */
+        if( (PlaybackFileCmdPtr->Class == 0) ||
+            (PlaybackFileCmdPtr->Class > 2) ||
+            (PlaybackFileCmdPtr->Channel >= CF_MAX_PLAYBACK_CHANNELS))
+        {
+        
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR1_EID,CFE_EVS_ERROR,
+                "Playback File Cmd Parameter error, class %d, chan %d",
+                PlaybackFileCmdPtr->Class,PlaybackFileCmdPtr->Channel);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+
+        /* Check that the channel is "in use" (defined in table) */
+        /* Cannot gang this test with above checks because chan param may be out of bounds */
+        if(CF_AppData.Tbl->OuCh[PlaybackFileCmdPtr->Channel].EntryInUse == CF_ENTRY_UNUSED)
+        {    
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR2_EID,CFE_EVS_ERROR,
+                "CF:Playback File Cmd Parameter Error, Chan %u is not in use.",
+                PlaybackFileCmdPtr->Channel);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+
+        /* check that the filename has forward slash at start, no spaces and */
+        /* is properly terminated */
+        if(CF_ValidateFilenameReportErr(PlaybackFileCmdPtr->SrcFilename, 
+                                        "PlaybackFileCmd")==CF_ERROR)
+        {
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        } 
+        
+        /* check that the filename has forward slash at start, no spaces and */
+        /* is properly terminated */
+        if(CF_ValidateFilenameReportErr(PlaybackFileCmdPtr->DstFilename, 
+                                        "PlaybackFileCmd")==CF_ERROR)
+        {
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }         
+        
+        /* Check that the there is enough room on the pending queue */
+        if(CF_AppData.Chan[PlaybackFileCmdPtr->Channel].PbQ[CF_PB_PENDINGQ].EntryCnt >=
+            CF_AppData.Tbl->OuCh[PlaybackFileCmdPtr->Channel].PendingQDepth)
+        {    
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR3_EID,CFE_EVS_ERROR,
+                "CF:Playback File Cmd Error, Chan %u Pending Queue is full %u.",
+                PlaybackFileCmdPtr->Channel,
+                CF_AppData.Chan[PlaybackFileCmdPtr->Channel].PbQ[CF_PB_PENDINGQ].EntryCnt );
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }    
+    
+        /* check peer entity ID format */
+        if(CF_ValidateEntityId(PlaybackFileCmdPtr->PeerEntityId) == CF_ERROR)
+        {
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR6_EID,CFE_EVS_ERROR,
+                "CF:PB File Cmd Err, PeerEntityId %s must be 2 byte,dotted decimal fmt.ex 0.24",
+                PlaybackFileCmdPtr->PeerEntityId);
+            CF_AppData.Hk.ErrCounter++;
+            return;        
+        }
+
+        /* Be sure the file is not open */
+        if(OS_FileOpenCheck(PlaybackFileCmdPtr->SrcFilename) == CF_OPEN)
+        {
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR4_EID,CFE_EVS_ERROR,
+                "CF:Playback File Cmd Error, File is Open:%s",
+                PlaybackFileCmdPtr->SrcFilename);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }        
+    
+
+        /* check that the file is not already pending or active */            
+        if((CF_FileIsOnQueue(PlaybackFileCmdPtr->Channel, CF_PB_PENDINGQ, PlaybackFileCmdPtr->SrcFilename)==CF_TRUE)||
+           (CF_FileIsOnQueue(PlaybackFileCmdPtr->Channel, CF_PB_ACTIVEQ, PlaybackFileCmdPtr->SrcFilename)==CF_TRUE))
+        {
+            CFE_EVS_SendEvent(CF_PB_FILE_ERR5_EID,CFE_EVS_ERROR,
+                "CF:Playback File Cmd Error, File is Already Pending or Active:%s",
+                PlaybackFileCmdPtr->SrcFilename);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+
+
+        /* allocate queue entry */
+        NewQueueEntry = CF_AllocQueueEntry();
+        if(NewQueueEntry == NULL)
+        {
+            /* Ran out of memory 
+            ** Options: Free memory by removing history nodes (Dequeue Cmd) or
+            **          Reconfigure Mem pool size in cf_platform_cfg.h(requires recompile) or
+            **          Lower History-Queue-Depth settings in table (requires table load/reboot app)
+            */
+
+            CFE_EVS_SendEvent(CF_QDIR_NOMEM1_EID,CFE_EVS_ERROR,
+                "PB File %s Cmd Ignored,Error Allocating Queue Node.", 
+                PlaybackFileCmdPtr->SrcFilename);
+            CF_AppData.Hk.ErrCounter++;    
+            return;
+        }
+        
+        /* fill-in queue entry */
+        NewQueueEntry->Class    = PlaybackFileCmdPtr->Class;
+        NewQueueEntry->Priority = PlaybackFileCmdPtr->Priority;
+        NewQueueEntry->ChanNum  = PlaybackFileCmdPtr->Channel;
+        NewQueueEntry->Source   = CF_PLAYBACKFILECMD;
+        NewQueueEntry->NodeType = CF_OUTGOING;
+        NewQueueEntry->CondCode = 0;
+        NewQueueEntry->Status   = CF_STAT_PENDING;
+        NewQueueEntry->Warning  = CF_NOT_ISSUED;
+        NewQueueEntry->Preserve = PlaybackFileCmdPtr->Preserve;
+        strncpy(&NewQueueEntry->SrcEntityId[0],CF_AppData.Hk.Eng.FlightEngineEntityId,CF_MAX_CFG_VALUE_CHARS);
+        strncpy(&NewQueueEntry->PeerEntityId[0],PlaybackFileCmdPtr->PeerEntityId,CF_MAX_CFG_VALUE_CHARS);
+        strncpy(&NewQueueEntry->SrcFile[0],PlaybackFileCmdPtr->SrcFilename,OS_MAX_PATH_LEN);
+        strncpy(&NewQueueEntry->DstFile[0],PlaybackFileCmdPtr->DstFilename,OS_MAX_PATH_LEN);
+        
+        /* ensure strings are null terminated */
+        NewQueueEntry->SrcFile[OS_MAX_PATH_LEN - 1] = '\0';
+        NewQueueEntry->DstFile[OS_MAX_PATH_LEN - 1] = '\0';
+            
+        /* place queue entry on queue */
+        CF_AddFileToPbQueue(PlaybackFileCmdPtr->Channel, CF_PB_PENDINGQ, NewQueueEntry);
+        
+        CF_PendingQueueSort(PlaybackFileCmdPtr->Channel);
+        
+        CF_AppData.Hk.CmdCounter++;
+    
+        CFE_EVS_SendEvent(CF_PLAYBACK_FILE_EID,CFE_EVS_DEBUG,
+          "Playback File Cmd Rcvd,Cl %d,Ch %d,Pri %d,Pre %d,Peer %s,File %s",
+                            PlaybackFileCmdPtr->Class,
+                            PlaybackFileCmdPtr->Channel,
+                            PlaybackFileCmdPtr->Priority,
+                            PlaybackFileCmdPtr->Preserve,
+                            PlaybackFileCmdPtr->PeerEntityId,
+                            PlaybackFileCmdPtr->SrcFilename);
+
+
+    }
+
+}/* end CF_PlaybackFileCmd */
+
+
+
+void CF_PlaybackDirectoryCmd(CFE_SB_MsgPtr_t MessagePtr)
+{
+
+    CF_PlaybackDirCmd_t     *PlaybackDirCmdPtr;
+    CF_QueueDirFiles_t      LocalStruct;
+    CF_QueueDirFiles_t      *LocalPtr = &LocalStruct;
+    int32       Status;
+    
+    if(CF_VerifyCmdLength(MessagePtr,sizeof(CF_PlaybackDirCmd_t))==CF_BAD_MSG_LENGTH_RC)
+    {
+
+        CF_AppData.Hk.ErrCounter++;
+
+    }else{
+
+        PlaybackDirCmdPtr = (CF_PlaybackDirCmd_t  *)MessagePtr;  
+            
+        /* check params */
+        if( (PlaybackDirCmdPtr->Class == 0) ||
+            (PlaybackDirCmdPtr->Class > 2) ||
+            (PlaybackDirCmdPtr->Chan >= CF_MAX_PLAYBACK_CHANNELS)||
+            (PlaybackDirCmdPtr->Preserve > 2))
+        {
+        
+            CFE_EVS_SendEvent(CF_PB_DIR_ERR1_EID,CFE_EVS_ERROR,
+                "Playback Dir Cmd Parameter error,class %d,chan %d,preserve %d",
+                PlaybackDirCmdPtr->Class,PlaybackDirCmdPtr->Chan,
+                PlaybackDirCmdPtr->Preserve);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+        
+        
+        /* Check that the channel is "in use" (defined in table) */
+        /* Cannot gang this test with above checks because chan param may be out of bounds */
+        if(CF_AppData.Tbl->OuCh[PlaybackDirCmdPtr->Chan].EntryInUse == CF_ENTRY_UNUSED)
+        {    
+            CFE_EVS_SendEvent(CF_PB_DIR_ERR2_EID,CFE_EVS_ERROR,
+                "CF:Playback Dir Cmd Parameter Error, Chan %u is not in use.",
+                PlaybackDirCmdPtr->Chan);
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+                            
+        /* check that the paths are terminated, have */
+        /* forward slash at last character and no spaces*/
+        if(CF_ValidateSrcPath(PlaybackDirCmdPtr->SrcPath)==CF_ERROR)
+        {
+            CFE_EVS_SendEvent(CF_PB_DIR_ERR3_EID, CFE_EVS_ERROR,
+                "SrcPath in PB Dir Cmd must be terminated,have no spaces,slash at end");
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }
+        
+        if(CF_ValidateDstPath(PlaybackDirCmdPtr->DstPath)==CF_ERROR)
+        {
+            CFE_EVS_SendEvent(CF_PB_DIR_ERR4_EID, CFE_EVS_ERROR,
+                "DstPath in PB Dir Cmd must be terminated and have no spaces");
+            CF_AppData.Hk.ErrCounter++;
+            return;
+        }        
+
+        /* check peer entity ID format */
+        if(CF_ValidateEntityId(PlaybackDirCmdPtr->PeerEntityId) == CF_ERROR)
+        {
+            CFE_EVS_SendEvent(CF_PB_DIR_ERR5_EID,CFE_EVS_ERROR,
+                "CF:PB Dir Cmd Err,PeerEntityId %s must be 2 byte,dotted decimal fmt.ex 0.24",
+                PlaybackDirCmdPtr->PeerEntityId);
+            CF_AppData.Hk.ErrCounter++;
+            return;        
+        }
+
+        /* Copy cmd params to the structure needed for CF_QueueDirectoryFiles */
+        LocalStruct.Chan = PlaybackDirCmdPtr->Chan;
+        LocalStruct.Class = PlaybackDirCmdPtr->Class;
+        LocalStruct.Priority = PlaybackDirCmdPtr->Priority;
+        LocalStruct.Preserve = PlaybackDirCmdPtr->Preserve;
+        LocalStruct.CmdOrPoll = CF_PLAYBACKDIRCMD; 
+
+        strncpy(&LocalStruct.PeerEntityId[0],
+                PlaybackDirCmdPtr->PeerEntityId,
+                CF_MAX_CFG_VALUE_CHARS);
+        strncpy(&LocalStruct.SrcPath[0],
+                &PlaybackDirCmdPtr->SrcPath[0],
+                OS_MAX_PATH_LEN);
+        strncpy(&LocalStruct.DstPath[0],
+                &PlaybackDirCmdPtr->DstPath[0],
+                OS_MAX_PATH_LEN);
+
+        Status = CF_QueueDirectoryFiles(LocalPtr);
+    
+        if(Status == CF_SUCCESS)
+        {
+            CFE_EVS_SendEvent(CF_PLAYBACK_DIR_EID,CFE_EVS_DEBUG,
+              "Playback Dir Cmd Rcvd,Ch %d,Cl %d,Pri %d,Pre %d,Peer %s, Src %s,Dst %s",
+                                PlaybackDirCmdPtr->Chan,
+                                PlaybackDirCmdPtr->Class,
+                                PlaybackDirCmdPtr->Priority,
+                                PlaybackDirCmdPtr->Preserve,
+                                PlaybackDirCmdPtr->PeerEntityId,
+                                PlaybackDirCmdPtr->SrcPath,
+                                PlaybackDirCmdPtr->DstPath);
+            
+        
+            CF_AppData.Hk.CmdCounter++;
+        
+        }else{
+        
+            CF_AppData.Hk.ErrCounter++;
+        }
+
+    }
+
+}/* end CF_PlaybackDirectoryCmd */
+
+
+/******************************************************************************
+**  Function:   CF_QueueDirectoryFiles()
+**
+**  Purpose:
+**    This function loads the pending queue with the closed files from the given 
+**    directory. 
+**
+**  Arguments:
+**    
+**
+**  Return:
+**    
+*/
+
+int32 CF_QueueDirectoryFiles(CF_QueueDirFiles_t  *Ptr)
+{
+    os_dirp_t       dirp;
+    os_dirent_t     *direntp;
+    char            FullSrcName[OS_MAX_PATH_LEN];
+    char            FullDstName[OS_MAX_PATH_LEN];
+    CF_QueueEntry_t *NewQueueEntry;
+    uint32          SrcPathLength,DstPathLength,FilenameLength;
+
+    CFE_ES_PerfLogEntry(CF_QDIRFILES_PERF_ID);
+                                        
+    /* parameters have been checked earlier */
+            
+    /* open the directory to access the files */
+    if((dirp = OS_opendir(Ptr->SrcPath)) == NULL) /* directory is invalid */
+    {
+        CFE_EVS_SendEvent(CF_OPEN_DIR_ERR_EID,CFE_EVS_ERROR,
+            "Playback Dir Error %d,cannot open directory %s", (int)dirp,Ptr->SrcPath);
+        CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+        return CF_ERROR;
+    }
+    
+    SrcPathLength = strlen(Ptr->SrcPath);
+    DstPathLength = strlen(Ptr->DstPath);
+
+    CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+    
+    while ((direntp = OS_readdir (dirp)) != NULL)
+    {                                                                                                     
+        CFE_ES_PerfLogEntry(CF_QDIRFILES_PERF_ID);
+    
+        /* if file is a 'dot' directory... continue to next file */
+        if((strcmp(direntp->FileName,".") == 0) || 
+           (strcmp(direntp->FileName,"..") == 0))
+        {
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }
+        
+        /* if it's a sub directory... continue to next file */
+        #ifdef DT_DIR
+        if(direntp->d_type == DT_DIR)
+        {
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }
+        #endif
+
+        /* Check that there is enough room on the pending queue */
+        if(CF_AppData.Chan[Ptr->Chan].PbQ[CF_PB_PENDINGQ].EntryCnt >=
+            CF_AppData.Tbl->OuCh[Ptr->Chan].PendingQDepth)
+        {    
+            CFE_EVS_SendEvent(CF_QDIR_PQFUL_EID,CFE_EVS_ERROR,
+                "Queue Dir %s Aborted,Ch %d Pending Queue is Full,%u Entries",
+                Ptr->SrcPath,Ptr->Chan, 
+                CF_AppData.Chan[Ptr->Chan].PbQ[CF_PB_PENDINGQ].EntryCnt);
+            
+            OS_closedir(dirp);
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            return CF_ERROR;
+        }
+
+        if(CF_ChkTermination(direntp->FileName,OS_MAX_PATH_LEN)==CF_ERROR)
+        {
+            CFE_EVS_SendEvent(CF_QDIR_INV_NAME1_EID,CFE_EVS_ERROR,
+                "File not queued from %s,Filename not terminated or too long",Ptr->SrcPath);
+
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }        
+        
+        FilenameLength = strlen(direntp->FileName);
+        
+        if(((FilenameLength + SrcPathLength) >= OS_MAX_PATH_LEN) ||
+           ((FilenameLength + DstPathLength) >= OS_MAX_PATH_LEN))
+        {
+            CFE_EVS_SendEvent(CF_QDIR_INV_NAME2_EID,CFE_EVS_ERROR,
+                "File not queued from %s,sum of Pathname,Filename too long",Ptr->SrcPath);
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }
+
+        FullSrcName[0] = '\0';
+        FullDstName[0] = '\0';
+                
+        /* Append filename to src path */ 
+        strcat(FullSrcName,Ptr->SrcPath);
+        strcat(FullSrcName,direntp->FileName);
+
+        /* Append filename to dst path */
+        strcat(FullDstName,Ptr->DstPath);
+        strcat(FullDstName,direntp->FileName);
+                
+        /* check that the file is not already pending or active */            
+        if((CF_FileIsOnQueue(Ptr->Chan, CF_PB_PENDINGQ, FullSrcName)==CF_TRUE)||
+           (CF_FileIsOnQueue(Ptr->Chan, CF_PB_ACTIVEQ, FullSrcName)==CF_TRUE))
+        {
+            CFE_EVS_SendEvent(CF_QDIR_ACTIVEFILE_EID,CFE_EVS_DEBUG,
+                    "File %s not queued because it's active or pending",FullSrcName);
+
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }
+
+        /* check that the file is not open */
+        if(OS_FileOpenCheck(FullSrcName) == CF_OPEN)
+        {               
+            CFE_EVS_SendEvent(CF_QDIR_OPENFILE_EID,CFE_EVS_INFORMATION,
+                "File %s not queued because it's open",FullSrcName);
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            continue;
+        }
+        
+        /* allocate queue entry */
+        NewQueueEntry = CF_AllocQueueEntry();
+        if(NewQueueEntry == NULL)
+        {
+            /* Ran out of memory 
+            ** Options: Free memory by removing history nodes (Dequeue Cmd) or
+            **          Reconfigure Mem pool size in cf_platform_cfg.h(requires recompile) or
+            **          Lower History-Queue-Depth settings in table (requires table load/reboot app)
+            */
+
+            CFE_EVS_SendEvent(CF_QDIR_NOMEM2_EID,CFE_EVS_ERROR,
+                "PB Dir %s Aborted,Error Allocating Queue Node.", 
+                Ptr->SrcPath);                                   
+            OS_closedir(dirp);
+            CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+            return CF_ERROR;
+        }
+        
+        if(Ptr->CmdOrPoll == CF_POLLDIRECTORY)
+        {
+            NewQueueEntry->Source = CF_POLLDIRECTORY;        
+        }else{                    
+            NewQueueEntry->Source = CF_PLAYBACKDIRCMD;        
+        }/* end if */
+
+        /* fill-in queue entry */
+        NewQueueEntry->Class    = Ptr->Class;
+        NewQueueEntry->Priority = Ptr->Priority;
+        NewQueueEntry->ChanNum  = Ptr->Chan;
+        NewQueueEntry->Preserve = Ptr->Preserve;            
+        NewQueueEntry->NodeType = CF_OUTGOING;
+        NewQueueEntry->Status   = CF_STAT_PENDING;
+        NewQueueEntry->Warning  = CF_NOT_ISSUED;
+        NewQueueEntry->CondCode = 0;
+
+
+        strncpy(NewQueueEntry->SrcEntityId,
+                CF_AppData.Hk.Eng.FlightEngineEntityId,
+                CF_MAX_CFG_VALUE_CHARS); 
+                
+        strncpy(NewQueueEntry->PeerEntityId,
+                Ptr->PeerEntityId,
+                CF_MAX_CFG_VALUE_CHARS);
+                
+        strncpy(NewQueueEntry->SrcFile,FullSrcName,OS_MAX_PATH_LEN);
+        strncpy(NewQueueEntry->DstFile,FullDstName,OS_MAX_PATH_LEN);        
+            
+        /* place queue entry on queue */
+        CF_AddFileToPbQueue(Ptr->Chan, CF_PB_PENDINGQ, NewQueueEntry);
+        
+        CF_PendingQueueSort(Ptr->Chan);                                
+        
+#ifdef CF_DEBUG
+        if(cfdbg > 1)
+        {                      
+          OS_printf("CF:Queueing File %s\n",NewQueueEntry->SrcFile);
+          OS_printf("CF:Ch %d,Cl %d,Pri %d,Pre %d,Src %d\n",
+                    NewQueueEntry->ChanNum,
+                    NewQueueEntry->Class,
+                    NewQueueEntry->Priority,
+                    NewQueueEntry->Preserve,
+                    NewQueueEntry->Source);
+          OS_printf("CF:Dest Filename %s\n\n",NewQueueEntry->DstFile);
+        }
+#endif                                                   
+        CFE_ES_PerfLogExit(CF_QDIRFILES_PERF_ID);
+    
+    }/* end while */
+    
+       
+#ifdef CF_DEBUG
+    if(cfdbg > 10)
+        OS_printf("Closing Dir %s, dirp = %x\n",Ptr->SrcPath,dirp);
+#endif    
+
+    OS_closedir(dirp);
+    
+    return CF_SUCCESS;
+
+}/* end CF_QueueDirectoryFiles */    
+
+
+/******************************************************************************
+**  Function:   CF_AllocQueueEntry()
+**
+**  Purpose:
+**    This function gets a queue entry from the CF memory pool.
+**
+**  Arguments:
+**    None
+**
+**  Return:
+**    Pointer to the queue entry
+*/
+CF_QueueEntry_t *CF_AllocQueueEntry(void)
+{
+    int32 Stat;
+    CF_QueueEntry_t *QueueEntry = NULL;
+        
+    /* Allocate a new queue entry from the CF memory pool.*/
+    Stat = CFE_ES_GetPoolBuf((uint32 **)&QueueEntry, CF_AppData.Mem.PoolHdl,  sizeof(CF_QueueEntry_t));
+    if(Stat <= 0){
+        CFE_EVS_SendEvent(CF_MEM_ALLOC_ERR_EID,CFE_EVS_ERROR,
+         "Memory Allocation Error, GetPoolBuf Returned 0x%x, dec %d",Stat,Stat);                       
+        return NULL;
+    }
+        
+    /* Add the size returned to the memory-in-use ctr and */
+    /* adjust the high water mark if needed */
+    CF_AppData.Hk.App.MemInUse += Stat;
+    if(CF_AppData.Hk.App.MemInUse > CF_AppData.Hk.App.PeakMemInUse){
+       CF_AppData.Hk.App.PeakMemInUse = CF_AppData.Hk.App.MemInUse;
+    }/* end if */
+
+#ifdef CF_DEBUG
+    if(cfdbg > 5)
+        OS_printf("CF:Queue Entry Allocated.size=%d,allocated %d,meminuse=%d\n",
+                    sizeof(CF_QueueEntry_t),Stat,CF_AppData.Hk.App.MemInUse);
+#endif    
+
+    CF_AppData.Hk.App.QNodesAllocated++;
+    
+    return QueueEntry;
+
+}/* end CF_AllocQueueEntry */
+
+
+
+/******************************************************************************
+**  Function:   CF_DeallocQueueEntry()
+**
+**  Purpose:
+**    This function returns a queue entry to the CF memory pool.
+**
+**  Arguments:
+**    None Pointer to the
+**
+**  Return:
+**    Error for bad argument, otherwise success
+*/
+int32 CF_DeallocQueueEntry(CF_QueueEntry_t *Entry)
+{
+    int32 Stat;
+
+    if(Entry==NULL){
+        return CF_ERROR;
+    }/* end if */
+    
+    /* give the destination block back to the SB memory pool */
+    Stat = CFE_ES_PutPoolBuf(CF_AppData.Mem.PoolHdl, (uint32 *)Entry);
+    if(Stat > 0){
+            
+        /* Substract the size of the queue entry from the Memory in use ctr */
+        CF_AppData.Hk.App.MemInUse-=Stat;
+    
+    }else{
+            CFE_EVS_SendEvent(CF_MEM_DEALLOC_ERR_EID,CFE_EVS_ERROR,
+                "Deallocation failed for queue entry. Stat = %d",Stat);
+            return CF_ERROR;
+    }/* end if */
+
+#ifdef CF_DEBUG
+    if(cfdbg > 5)
+        OS_printf("CF:Queue Entry Deallocated. size = %d\n",Stat);    
+#endif
+    CF_AppData.Hk.App.QNodesDeallocated++;
+    
+    return CF_SUCCESS;
+
+}/* end CF_DeallocQueueEntry */
+
+
+/******************************************************************************
+**  Function:  CF_AddFileToPbQueue()
+**
+**  Purpose:
+**      This function will add the given node to the head of the given playback 
+**      queue.
+**  Arguments:
+**      Chan - Playback Output Channel
+**      Queue - Pending,Active or History Queue (0,1,2 respectively)
+**      NewNode - Pointer to the entry to add to the list
+**
+**  Return:
+**
+*/
+int32 CF_AddFileToPbQueue(uint32 Chan, uint32 Queue, CF_QueueEntry_t *NewNode){
+
+    CF_QueueEntry_t *WBS;/* Will Be Second (WBS) node */  
+    
+    if((Chan >= CF_MAX_PLAYBACK_CHANNELS) || (NewNode == NULL) || (Queue > 2))
+    {
+#ifdef CF_DEBUG
+        OS_printf ("CF:Bad Param,CF_AddFileToPbQueue,Chan %d,Queue %u,Ptr=%p\n",
+                    Chan,Queue,NewNode);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+
+    /* if first node in list */
+    if(CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr == NULL){
+    
+        /* initialize the new node */
+        NewNode->Next = NULL;   
+        NewNode->Prev = NULL; 
+        
+        /* insert the new node */
+        CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr = NewNode;
+        CF_AppData.Chan[Chan].PbQ[Queue].TailPtr = NewNode;
+        
+    }else{
+    
+        WBS = CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr;
+    
+        /* initialize the new node */
+        NewNode->Next = WBS;   
+        NewNode->Prev = NULL;
+        
+        /* insert the new node */
+        WBS -> Prev = NewNode;    
+        CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr = NewNode;
+        
+    }/* end if */
+        
+
+    CF_AppData.Chan[Chan].PbQ[Queue].EntryCnt++;    
+
+#ifdef CF_DEBUG
+    if(cfdbg > 3)
+        OS_printf("CF:File %s added to Chan %d, Queue %d, file cnt %d\n",
+                    NewNode->SrcFile,Chan,Queue,CF_AppData.Chan[Chan].PbQ[Queue].EntryCnt);
+#endif
+
+    return CF_SUCCESS;
+
+}/* CF_AddFileToPbQueue */
+
+
+
+
+/******************************************************************************
+**  Function:  CF_RemoveFileFromPbQueue()
+**
+**  Purpose:
+**      This function will remove the given node from the list.
+**      This function assumes there is at least one node in the list.
+**
+**  Arguments:
+**      Chan - Playback Output Channel
+**      Queue - Pending,Active or History Queue (0,1,2 respectively)
+**      NodeToRemove - Pointer to the entry to remove from the list
+**
+**  Return:
+**
+*/
+int32 CF_RemoveFileFromPbQueue(uint32 Chan, uint32 Queue, CF_QueueEntry_t *NodeToRemove){
+
+    CF_QueueEntry_t *PrevNode;
+    CF_QueueEntry_t *NextNode;
+    
+    if((Chan >= CF_MAX_PLAYBACK_CHANNELS) || (NodeToRemove == NULL) || (Queue > 2))
+    {
+#ifdef CF_DEBUG
+        OS_printf ("Bad Param,CF_RemoveFileFromPbQueue,Chan %d, Queue %d, Ptr = %p\n",
+                    Chan,Queue,NodeToRemove);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+
+    /* if this is the only node in the list */
+    if((NodeToRemove->Prev == NULL) && (NodeToRemove->Next == NULL)){
+    
+        CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr = NULL;
+        CF_AppData.Chan[Chan].PbQ[Queue].TailPtr = NULL;
+        
+    /* if first node in the list and list has more than one */
+    }else if(NodeToRemove->Prev == NULL){
+        
+        NextNode = NodeToRemove->Next;
+        
+        NextNode -> Prev = NULL;
+        
+        CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr = NextNode;
+        
+    /* if last node in the list and list has more than one */
+    }else if(NodeToRemove->Next == NULL){
+    
+        PrevNode = NodeToRemove->Prev;
+        
+        PrevNode -> Next = NULL;
+        
+        CF_AppData.Chan[Chan].PbQ[Queue].TailPtr = PrevNode;
+        
+    /* NodeToRemove has node(s) before and node(s) after */
+    }else{
+    
+        PrevNode = NodeToRemove->Prev;
+        NextNode = NodeToRemove->Next;
+        
+        PrevNode -> Next = NextNode;
+        NextNode -> Prev = PrevNode;
+        
+    }/* end if */
+        
+    
+    /* initialize the node before returning it to the heap */
+    NodeToRemove -> Next = NULL;
+    NodeToRemove -> Prev = NULL; 
+    
+    CF_AppData.Chan[Chan].PbQ[Queue].EntryCnt--;
+    
+    return CF_SUCCESS;
+
+}/* CF_RemoveFileFromPbQueue */
+
+
+
+/******************************************************************************
+**  Function:  CF_InsertPbNode()
+**
+**  Purpose:
+**      This function will insert a playback node in a list.
+**  Arguments:
+**      Chan - Playabck channel
+**      Queue - Pending, Active or History Queue (0,1,2 respectively)
+**      NewNode - Entry pointer of node to insert
+**
+**  Return:
+**
+**  Note: This function does not verify that NodeAfterInsertPt belongs to the 
+**          channel or queue given as parameters
+**
+*/
+int32 CF_InsertPbNode(uint8 Chan, uint32 Queue, CF_QueueEntry_t *NodeToInsert, 
+                        CF_QueueEntry_t *NodeAfterInsertPt)
+{
+
+    CF_QueueEntry_t     *NodeBeforeInsertPt;
+    
+    if((Chan >= CF_MAX_PLAYBACK_CHANNELS)  || (Queue > 2) ||
+            (NodeToInsert == NULL) || (NodeAfterInsertPt == NULL))
+    {
+#ifdef CF_DEBUG    
+        OS_printf ("Bad Param,CF_InsertPbNode,Chan %d,Queue %d,InsertNode %p,NodeAfter %p\n",
+                    Chan,Queue,NodeToInsert,NodeAfterInsertPt);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+    /* Find node before Insetion point */
+    NodeBeforeInsertPt = NodeAfterInsertPt -> Prev;
+    
+    /* initialize new node */
+    NodeToInsert -> Next = NodeAfterInsertPt;
+    NodeToInsert -> Prev = NodeBeforeInsertPt;
+        
+    /* insert node */
+    NodeBeforeInsertPt -> Next = NodeToInsert;
+    NodeAfterInsertPt  -> Prev = NodeToInsert;
+    
+    CF_AppData.Chan[Chan].PbQ[Queue].EntryCnt++;
+
+    return CF_SUCCESS;
+
+}/* end CF_InsertPbNode */
+
+
+/******************************************************************************
+**  Function:  CF_InsertPbNodeAtFront()
+**
+**  Purpose:
+**      This function will insert a playback node at the front of the queue.
+**      The front of the queue is the tail of the list.
+**  Arguments:
+**      Chan - Playabck channel
+**      Queue - Pending, Active or History Queue (0,1,2 respectively)
+**      NewNode - Entry pointer of node to insert
+**
+**  Return:
+**
+*/
+int32 CF_InsertPbNodeAtFront(uint8 Chan,uint32 Queue, CF_QueueEntry_t *NodeToInsert)
+{
+
+    CF_QueueEntry_t     *OldNodeAtFront;
+    
+    if((Chan >= CF_MAX_PLAYBACK_CHANNELS)  || (Queue > 2) ||
+            (NodeToInsert == NULL))
+    {
+#ifdef CF_DEBUG    
+        OS_printf ("Bad Param,CF_InsertPbNodeAtFront,Chan %d,Queue %d,InsertNode %p\n",
+                    Chan,Queue,NodeToInsert);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+    OldNodeAtFront = CF_AppData.Chan[Chan].PbQ[Queue].TailPtr;
+    
+    /* Initialize the Node To Insert */
+    NodeToInsert -> Next = NULL;
+    NodeToInsert -> Prev = OldNodeAtFront;
+    
+    /* insert node */
+    OldNodeAtFront -> Next = NodeToInsert;
+    CF_AppData.Chan[Chan].PbQ[Queue].TailPtr = NodeToInsert;
+    
+    CF_AppData.Chan[Chan].PbQ[Queue].EntryCnt++;
+
+    return CF_SUCCESS;
+
+}/* end CF_InsertPbNodeAtFront */
+
+
+/******************************************************************************
+**  Function:  CF_AddFileToUpQueue()
+**
+**  Purpose:
+**      This function will add the given node to the head of the given uplink 
+**      queue.
+**  Arguments:
+**      Queue - Active or History Queue (0 or 1 respectively)
+**      NewNode - Entry pointer of node to add
+**
+**  Return:
+**
+*/
+int32 CF_AddFileToUpQueue(uint32 Queue, CF_QueueEntry_t *NewNode){
+
+    CF_QueueEntry_t *WBS;/* Will Be Second (WBS) node */  
+    
+    if((NewNode == NULL) || (Queue > 1))
+    {
+    
+#ifdef CF_DEBUG
+        if(cfdbg > 0)
+        OS_printf ("CF:Bad Param,CF_AddFileToUpQueue,Queue %s, Ptr=%p\n",
+                    Queue,NewNode);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+
+    /* if first node in list */
+    if(CF_AppData.UpQ[Queue].HeadPtr == NULL){
+    
+        /* initialize the new node */
+        NewNode->Next = NULL;   
+        NewNode->Prev = NULL; 
+        
+        /* insert the new node */
+        CF_AppData.UpQ[Queue].HeadPtr = NewNode;
+        CF_AppData.UpQ[Queue].TailPtr = NewNode;
+        
+    }else{
+    
+        WBS = CF_AppData.UpQ[Queue].HeadPtr;
+    
+        /* initialize the new node */
+        NewNode->Next = WBS;   
+        NewNode->Prev = NULL;
+        
+        /* insert the new node */
+        WBS -> Prev = NewNode;    
+        CF_AppData.UpQ[Queue].HeadPtr = NewNode;
+        
+    }/* end if */
+    
+    
+    CF_AppData.UpQ[Queue].EntryCnt++;
+    
+#ifdef CF_DEBUG
+    if(cfdbg > 5)
+        OS_printf("CF:File %s added to Uplink Queue %d, file cnt %d\n",
+                    NewNode->SrcFile,Queue,CF_AppData.UpQ[Queue].EntryCnt);
+#endif
+
+    return CF_SUCCESS;
+
+}/* CF_AddFileToUpQueue */
+
+
+
+
+/******************************************************************************
+**  Function:  CF_RemoveFileFromUpQueue()
+**
+**  Purpose:
+**      This function will remove the given node from the list.
+**      This function assumes there is at least one node in the list.
+**
+**  Arguments:
+**      Queue - Active or History Uplink Queue (0,1 respectively)
+**      NodeToRemove - Pointer to the entry to remove from the list
+**
+**  Return:
+**
+*/
+int32 CF_RemoveFileFromUpQueue(uint32 Queue, CF_QueueEntry_t *NodeToRemove){
+
+    CF_QueueEntry_t *PrevNode;
+    CF_QueueEntry_t *NextNode;
+    
+    if((NodeToRemove == NULL) || (Queue > 1))
+    {    
+#ifdef CF_DEBUG
+        if(cfdbg > 0)
+        OS_printf ("Bad Param,CF_RemoveFileFromUpQueue, Queue %d, Ptr = %p\n",
+                    Queue,NodeToRemove);
+#endif                    
+        return CF_ERROR;
+        
+    }/* end if */
+
+
+    /* if this is the only node in the list */
+    if((NodeToRemove->Prev == NULL) && (NodeToRemove->Next == NULL)){
+    
+        CF_AppData.UpQ[Queue].HeadPtr = NULL;
+        CF_AppData.UpQ[Queue].TailPtr = NULL;
+        
+    /* if first node in the list and list has more than one */
+    }else if(NodeToRemove->Prev == NULL){
+        
+        NextNode = NodeToRemove->Next;
+        
+        NextNode -> Prev = NULL;
+        
+        CF_AppData.UpQ[Queue].HeadPtr = NextNode;
+        
+    /* if last node in the list and list has more than one */
+    }else if(NodeToRemove->Next == NULL){
+    
+        PrevNode = NodeToRemove->Prev;
+        
+        PrevNode -> Next = NULL;
+        
+        CF_AppData.UpQ[Queue].TailPtr = PrevNode;
+        
+    /* NodeToRemove has node(s) before and node(s) after */
+    }else{
+    
+        PrevNode = NodeToRemove->Prev;
+        NextNode = NodeToRemove->Next;
+        
+        PrevNode -> Next = NextNode;
+        NextNode -> Prev = PrevNode;
+        
+    }/* end if */
+        
+    
+    /* initialize the node before returning it to the heap */
+    NodeToRemove -> Next = NULL;
+    NodeToRemove -> Prev = NULL; 
+    
+    CF_AppData.UpQ[Queue].EntryCnt--;
+    
+#ifdef CF_DEBUG
+    if(cfdbg > 5)    
+        OS_printf("CF:File %s Removed from Uplink Queue %d, %d more\n",
+        NodeToRemove->SrcFile,Queue,CF_AppData.UpQ[Queue].EntryCnt);
+#endif    
+    return CF_SUCCESS;
+
+}/* CF_RemoveFileFromUpQueue */
+
+
+/******************************************************************************
+**  Function:  CF_DequeueUpNode()
+**
+**  Purpose:
+**      This function removes the node on the front of the given uplink queue.
+**
+**  Arguments:
+**
+**  Return:
+**
+*/
+CF_QueueEntry_t *CF_DequeueUpNode(uint32 Queue)
+{
+    CF_QueueEntry_t *NodeToRemove;
+    
+    NodeToRemove = CF_AppData.UpQ[Queue].TailPtr;
+    
+    if(NodeToRemove == NULL)
+        return NULL;
+    
+    CF_RemoveFileFromUpQueue(Queue, NodeToRemove);
+    
+    return NodeToRemove;
+
+}/* end CF_DequeueUpNode */
+
+
+/******************************************************************************
+**  Function:  CF_DequeuePbNode()
+**
+**  Purpose:
+**      This function removes the node on the front of the given playback queue.
+**
+**  Arguments:
+**
+**  Return:
+**
+*/
+CF_QueueEntry_t *CF_DequeuePbNode(uint32 Chan, uint32 Queue)
+{
+    CF_QueueEntry_t *NodeToRemove;
+    
+    NodeToRemove = CF_AppData.Chan[Chan].PbQ[Queue].TailPtr;
+    
+    if(NodeToRemove == NULL)
+        return NULL;
+    
+    CF_RemoveFileFromPbQueue(Chan, Queue, NodeToRemove);
+    
+    return NodeToRemove;
+
+}/* end CF_DequeuePbNode */
+
+
+/******************************************************************************
+**  Function:  CF_FindNodeAtFrontOfQueue()
+**
+**  Purpose:
+**      This function checks the front of the playback pending queues
+**
+**  Note:      
+**      The 'front' of the queue is equivalent to the 'tail' of the list.
+**
+**  Arguments:
+**
+**  Return:
+**
+*/
+CF_QueueEntry_t *CF_FindNodeAtFrontOfQueue(TRANS_STATUS TransInfo)
+{
+
+    uint32      i;
+    CF_QueueEntry_t *QueueEntryPtr;
+
+    for(i=0;i<CF_MAX_PLAYBACK_CHANNELS;i++)
+    {
+
+        if(CF_AppData.Tbl->OuCh[i].EntryInUse == CF_ENTRY_IN_USE) 
+        {
+
+            if(CF_AppData.Chan[i].PbQ[CF_PB_PENDINGQ].TailPtr != NULL)
+            {                                              
+                QueueEntryPtr = CF_AppData.Chan[i].PbQ[CF_PB_PENDINGQ].TailPtr;                
+
+                if((strncmp(&TransInfo.md.source_file_name[0],QueueEntryPtr->SrcFile,OS_MAX_PATH_LEN)==0)&&
+                  (QueueEntryPtr->Status==CF_STAT_PUT_REQ_ISSUED))
+                {
+#ifdef CF_DEBUG                   
+                   if(cfdbg > 5)
+                    OS_printf("File %s found at front of queue %d\n",
+                        QueueEntryPtr->SrcFile,i); 
+#endif    
+                    return QueueEntryPtr;
+            
+                }/* end if */
+                
+            }/* end if */
+                                                                           
+        }/* end if */
+        
+    }/* end for */
+
+    return NULL;
+    
+}/* end CF_FindNodeAtFrontOfQueue */
+
+/******************************************************************************
+**  Function:  CF_GetChanNumFromTransId()
+**
+**  Purpose:
+**      This function takes a transaction number and returns the channel number
+**
+**  Arguments:
+**      Queue - Which of the three qs to check (0-Pending,1-Active,2-History)
+**      Tansaction number - the 'number' portion of the engine transaction id.
+**      The source id portion of the engine transaction number is always
+**      the same for playback files and therefore not needed.
+**
+**  Return:
+**      Chan - Playback Output Channel
+**
+*/
+int32 CF_GetChanNumFromTransId(uint32 Queue, uint32 Trans)
+{
+    int32 i;
+    CF_QueueEntry_t *QNodePtr;
+    
+    /* traverse the given queue looking for trans num match */
+    for(i=0;i<CF_MAX_PLAYBACK_CHANNELS;i++)
+    {
+        
+        if(CF_AppData.Tbl->OuCh[i].EntryInUse == CF_ENTRY_IN_USE)
+        {                        
+            QNodePtr = CF_AppData.Chan[i].PbQ[Queue].HeadPtr;            
+            while(QNodePtr != NULL)
+            {                
+                if(QNodePtr->TransNum == Trans)
+                    return i;
+                
+                QNodePtr = QNodePtr->Next;
+            }
+        }/* end if */
+        
+    }/* end for */
+    
+    return CF_ERROR; 
+    /*return 0; used to get class 2 uplink working in beta version */
+    
+}/* end CF_GetChanNumFromTransId */
+
+
+
+
+void CF_CheckPollDirs(uint32 Chan)
+{
+
+    uint32              i;
+    int32               Status;
+    CF_QueueDirFiles_t  LocalStruct;
+    CF_QueueDirFiles_t  *LocalPtr = &LocalStruct;
+
+    for(i=0;i<CF_MAX_POLLING_DIRS_PER_CHAN;i++)
+    {
+        
+        if((CF_AppData.Tbl->OuCh[Chan].PollDir[i].EntryInUse == CF_ENTRY_IN_USE) &&
+            (CF_AppData.Tbl->OuCh[Chan].PollDir[i].EnableState == CF_ENABLED))
+        {        
+#ifdef CF_DEBUG            
+            if(cfdbg > 3)
+                OS_printf("CF:Checking Poll Directory %d for Channel %d\n",i,Chan);
+#endif                                             
+
+            LocalStruct.Chan = Chan;
+            LocalStruct.Class = CF_AppData.Tbl->OuCh[Chan].PollDir[i].Class;
+            LocalStruct.Priority = CF_AppData.Tbl->OuCh[Chan].PollDir[i].Priority;
+            LocalStruct.Preserve = CF_AppData.Tbl->OuCh[Chan].PollDir[i].Preserve;
+            LocalStruct.CmdOrPoll = CF_POLLDIRECTORY; 
+            strncpy(&LocalStruct.PeerEntityId[0],
+                CF_AppData.Tbl->OuCh[Chan].PollDir[i].PeerEntityId,
+                CF_MAX_CFG_VALUE_CHARS);            
+            strncpy(&LocalStruct.SrcPath[0],
+                    &CF_AppData.Tbl->OuCh[Chan].PollDir[i].SrcPath[0],
+                    OS_MAX_PATH_LEN);
+            strncpy(&LocalStruct.DstPath[0],
+                    &CF_AppData.Tbl->OuCh[Chan].PollDir[i].DstPath[0],
+                    OS_MAX_PATH_LEN);                        
+            
+            Status = CF_QueueDirectoryFiles(LocalPtr);
+
+        }/* end if Inuse and Enabled */
+        
+    }/* end for */
+
+}/* end CF_CheckPollDirs */
+
+
+void CF_StartNextFile(uint32 Chan)
+{
+
+    uint32          NoMoreFiles = CF_FALSE;
+    uint32          FileStarted = CF_FALSE;
+    CF_QueueEntry_t *NextFileOnQ;
+    
+    NextFileOnQ = CF_AppData.Chan[Chan].PbQ[CF_PB_PENDINGQ].TailPtr;
+    if(NextFileOnQ == NULL) NoMoreFiles = CF_TRUE;
+    
+    
+    /* loop until no more files on pending queue or file started successfully */
+    while((NoMoreFiles == CF_FALSE) && (FileStarted == CF_FALSE))
+    {
+    
+        /* if file is currently active on uplink or an output channel */
+        if(CF_CheckIfFileIsActive(NextFileOnQ->SrcFile)==CF_FILE_IS_ACTIVE)
+        {
+            /* move node from pend queue to history queue and set error status */
+            CF_ProcessFileStartError(NextFileOnQ,CF_STAT_ALRDY_ACTIVE);
+                        
+            /* that file failed,  get next file on pending queue */
+            NextFileOnQ = CF_AppData.Chan[Chan].PbQ[CF_PB_PENDINGQ].TailPtr;
+            if(NextFileOnQ == NULL) NoMoreFiles = CF_TRUE;
+
+        }
+        else if(CF_BuildPutRequest(NextFileOnQ)==CF_ERROR)
+        {                
+            /* move node from pend queue to history queue and set error status */
+            CF_ProcessFileStartError(NextFileOnQ,CF_STAT_PUT_REQ_FAIL);
+
+            /* that file failed,  get next file on pending queue */
+            NextFileOnQ = CF_AppData.Chan[Chan].PbQ[CF_PB_PENDINGQ].TailPtr;
+            if(NextFileOnQ == NULL) NoMoreFiles = CF_TRUE;
+            
+        }else{
+        
+            FileStarted = CF_TRUE;            
+        
+        }/* end if */
+               
+    }/* end while */    
+    
+}/* end CF_StartNextFile */
+
+
+void CF_ProcessFileStartError(CF_QueueEntry_t *QueueEntryPtr,uint32 ErrType)
+{
+
+#ifdef CF_DEBUG
+    if(cfdbg > 3)
+    OS_printf("CF:Moving File from Chan %d Pending Queue to Hist Q\n",QueueEntryPtr->ChanNum);
+#endif    
+    CF_RemoveFileFromPbQueue(QueueEntryPtr->ChanNum, CF_PB_PENDINGQ, QueueEntryPtr);
+    QueueEntryPtr->Status = ErrType;
+    CF_AddFileToPbQueue(QueueEntryPtr->ChanNum, CF_PB_HISTORYQ, QueueEntryPtr);
+    
+    CF_AppData.Hk.Chan[QueueEntryPtr->ChanNum].FailedCounter++;
+    
+    /* add to last failed transaction string in HK */
+    
+}
+
+
+
+uint32 CF_FileIsOnQueue(uint32 Chan, uint32 Queue, char *Filename)
+{
+
+    CF_QueueEntry_t     *PtrToEntry;
+                 
+    PtrToEntry = CF_AppData.Chan[Chan].PbQ[Queue].HeadPtr;            
+    while(PtrToEntry != NULL)
+    {                
+        if(strncmp(PtrToEntry->SrcFile,Filename,OS_MAX_PATH_LEN) == 0)
+        {    
+            return  CF_TRUE;
+        }/* end if */
+        
+        PtrToEntry = PtrToEntry->Next;
+    }
+    
+    return CF_FALSE;
+
+}
+
+
+
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `cf_timer.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_timer.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application timer source file
+ *
+ *  A timer in CF is really just a structure that holds a counter that
+ *  indicates the timer expired when it reaches 0. The goal is that
+ *  any timer is driven by the scheduler ticks. There is no reason
+ *  we need any finer grained resolution than this for CF.
+ */
+
+#include "cfe.h"
+#include "cf_verify.h"
+#include "cf_timer.h"
+#include "cf_app.h"
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_timer.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CF_Timer_Sec2Ticks(CF_Timer_Seconds_t sec)
+{
+    return sec * CF_AppData.config_table->ticks_per_second;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_timer.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Timer_InitRelSec(CF_Timer_t *t, uint32 rel_sec)
+{
+    t->tick = CF_Timer_Sec2Ticks(rel_sec);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_timer.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_Timer_Expired(const CF_Timer_t *t)
+{
+    return !t->tick;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_timer.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_Timer_Tick(CF_Timer_t *t)
+{
+    CF_Assert(t->tick);
+    --t->tick;
+}
+```
+
+### `cf_timer.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_timer.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application timer header file
+ */
+
+#ifndef CF_TIMER_H
+#define CF_TIMER_H
+
+#include "cfe.h"
+
+/**
+ * @brief Type for a timer tick count
+ *
+ * @note We expect ticks to be 100/sec, so using uint32 for sec could have a bounds condition
+ * with uint32. But, we don't expect to use more than 400,000,000 seconds for any reason so
+ * let's just live with it.
+ */
+typedef uint32 CF_Timer_Ticks_t;
+
+/**
+ * @brief Type for a timer number of seconds
+ */
+typedef uint32 CF_Timer_Seconds_t;
+
+/**
+ * @brief Basic CF timer object
+ */
+typedef struct CF_Timer
+{
+    CF_Timer_Ticks_t tick; /**< \brief expires when reaches 0 */
+} CF_Timer_t;
+
+/************************************************************************/
+/** @brief Initialize a timer with a relative number of seconds.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t         Timer object to initialize
+ * @param rel_sec   Relative number of seconds
+ */
+void CF_Timer_InitRelSec(CF_Timer_t *t, CF_Timer_Seconds_t rel_sec);
+
+/************************************************************************/
+/** @brief Check if a timer has expired.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t         Timer object to check
+ *
+ * @returns status code indicating whether timer has expired
+ * @retval 1 if expired
+ * @retval 0 if not expired
+ */
+int CF_Timer_Expired(const CF_Timer_t *t);
+
+/************************************************************************/
+/** @brief Notify a timer object a tick has occurred.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t         Timer object to tick
+ */
+void CF_Timer_Tick(CF_Timer_t *t);
+
+/************************************************************************/
+/** @brief Converts seconds into scheduler ticks.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *        sub-second resolution is not required
+ *
+ * @param sec        Number of seconds
+ *
+ * @returns Number of ticks for the given seconds.
+ */
+uint32 CF_Timer_Sec2Ticks(CF_Timer_Seconds_t sec);
+
+#endif /* !CF_TIMER_H */
+```
+
+### `cf_utils.c`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application general utility functions source file
+ *
+ *  Various odds and ends are put here.
+ */
+
+#include "cf_app.h"
+#include "cf_verify.h"
+#include "cf_cfdp.h"
+#include "cf_utils.h"
+#include "cf_events.h"
+#include "cf_perfids.h"
+
+#include "cf_assert.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_Transaction_t *CF_FindUnusedTransaction(CF_Channel_t *c)
+{
+    CF_Assert(c);
+
+    if (c->qs[CF_QueueIdx_FREE])
+    {
+        int q_index; /* initialized below in if */
+
+        CF_CListNode_t *  n = c->qs[CF_QueueIdx_FREE];
+        CF_Transaction_t *t = container_of(n, CF_Transaction_t, cl_node);
+
+        CF_CList_Remove_Ex(c, CF_QueueIdx_FREE, &t->cl_node);
+
+        /* now that a transaction is acquired, must also acquire a history slot to go along with it */
+        if (c->qs[CF_QueueIdx_HIST_FREE])
+        {
+            q_index = CF_QueueIdx_HIST_FREE;
+        }
+        else
+        {
+            /* no free history, so take the oldest one from the channel's history queue */
+            CF_Assert(c->qs[CF_QueueIdx_HIST]);
+            q_index = CF_QueueIdx_HIST;
+        }
+
+        t->history      = container_of(c->qs[q_index], CF_History_t, cl_node);
+        t->history->dir = CF_Direction_NUM; /* start with no direction */
+
+        CF_CList_Remove_Ex(c, q_index, &t->history->cl_node);
+
+        return t;
+    }
+    else
+    {
+        return NULL;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_ResetHistory(CF_Channel_t *c, CF_History_t *h)
+{
+    CF_CList_Remove_Ex(c, CF_QueueIdx_HIST, &h->cl_node);
+    CF_CList_InsertBack_Ex(c, CF_QueueIdx_HIST_FREE, &h->cl_node);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_FreeTransaction(CF_Transaction_t *t)
+{
+    uint8 c = t->chan_num;
+    memset(t, 0, sizeof(*t));
+    t->flags.com.q_index = CF_QueueIdx_FREE;
+    t->fd                = OS_OBJECT_ID_UNDEFINED;
+    t->chan_num          = c;
+    t->state             = CF_TxnState_IDLE; /* NOTE: this is redundant as long as CF_TxnState_IDLE == 0 */
+    CF_CList_InitNode(&t->cl_node);
+    CF_CList_InsertBack_Ex(&CF_AppData.engine.channels[c], CF_QueueIdx_FREE, &t->cl_node);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_FindTransactionBySequenceNumber_Impl(CF_CListNode_t *n, CF_Traverse_TransSeqArg_t *context)
+{
+    CF_Transaction_t *t   = container_of(n, CF_Transaction_t, cl_node);
+    int               ret = 0;
+
+    if ((t->history->src_eid == context->src_eid) && (t->history->seq_num == context->transaction_sequence_number))
+    {
+        context->t = t;
+        ret        = 1; /* exit early */
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_Transaction_t *CF_FindTransactionBySequenceNumber(CF_Channel_t *c, CF_TransactionSeq_t transaction_sequence_number,
+                                                     CF_EntityId_t src_eid)
+{
+    /* need to find transaction by sequence number. It will either be the active transaction (front of Q_PEND),
+     * or on Q_TX or Q_RX. Once a transaction moves to history, then it's done.
+     *
+     * Let's put CF_QueueIdx_RX up front, because most RX packets will be file data PDUs */
+    CF_Traverse_TransSeqArg_t ctx    = {transaction_sequence_number, src_eid, NULL};
+    CF_CListNode_t *          ptrs[] = {c->qs[CF_QueueIdx_RX], c->qs[CF_QueueIdx_PEND], c->qs[CF_QueueIdx_TXA],
+                              c->qs[CF_QueueIdx_TXW]};
+    int                       i;
+    CF_Transaction_t *        ret = NULL;
+
+    for (i = 0; i < (sizeof(ptrs) / sizeof(ptrs[0])); ++i)
+    {
+        CF_CList_Traverse(ptrs[i], (CF_CListFn_t)CF_FindTransactionBySequenceNumber_Impl, &ctx);
+        if (ctx.t)
+        {
+            ret = ctx.t;
+            break;
+        }
+    }
+
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_WriteHistoryEntryToFile(osal_id_t fd, const CF_History_t *h)
+{
+    static const char *CF_DSTR[] = {"RX", "TX"}; /* conversion of CF_Direction_t to string */
+
+    int   i;
+    int32 ret;
+    int32 len;
+    char  linebuf[(CF_FILENAME_MAX_LEN * 2) + 128]; /* buffer for line data */
+
+    for (i = 0; i < 3; ++i)
+    {
+        switch (i)
+        {
+            case 0:
+                CF_Assert(h->dir < CF_Direction_NUM);
+                snprintf(linebuf, sizeof(linebuf), "SEQ (%lu, %lu)\tDIR: %s\tPEER %lu\tSTAT: %d\t",
+                         (unsigned long)h->src_eid, (unsigned long)h->seq_num, CF_DSTR[h->dir],
+                         (unsigned long)h->peer_eid, (int)h->txn_stat);
+                break;
+            case 1:
+                snprintf(linebuf, sizeof(linebuf), "SRC: %s\t", h->fnames.src_filename);
+                break;
+            case 2:
+            default:
+                snprintf(linebuf, sizeof(linebuf), "DST: %s\n", h->fnames.dst_filename);
+                break;
+        }
+
+        len = strlen(linebuf);
+        ret = CF_WrappedWrite(fd, linebuf, len);
+        if (ret != len)
+        {
+            CFE_EVS_SendEvent(CF_EID_ERR_CMD_WHIST_WRITE, CFE_EVS_EventType_ERROR,
+                              "CF: writing queue file failed, expected %ld got %ld", (long)len, (long)ret);
+            return -1;
+        }
+    }
+
+    return 0;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_Traverse_WriteHistoryQueueEntryToFile(CF_CListNode_t *n, void *arg)
+{
+    CF_Traverse_WriteHistoryFileArg_t *context = arg;
+    CF_History_t *                     h       = container_of(n, CF_History_t, cl_node);
+
+    /* if filter_dir is CF_Direction_NUM, this means both directions (all match) */
+    if (context->filter_dir == CF_Direction_NUM || h->dir == context->filter_dir)
+    {
+        if (CF_WriteHistoryEntryToFile(context->fd, h) < 0)
+        {
+            /* failed */
+            context->error = true;
+            return CF_CLIST_EXIT;
+        }
+
+        ++context->counter;
+    }
+
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_Traverse_WriteTxnQueueEntryToFile(CF_CListNode_t *n, void *arg)
+{
+    CF_Traverse_WriteTxnFileArg_t *context = arg;
+    CF_Transaction_t *             t       = container_of(n, CF_Transaction_t, cl_node);
+
+    if (CF_WriteHistoryEntryToFile(context->fd, t->history) < 0)
+    {
+        /* failed */
+        context->error = true;
+        return CF_CLIST_EXIT;
+    }
+
+    ++context->counter;
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WriteTxnQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_QueueIdx_t q)
+{
+    CF_Traverse_WriteTxnFileArg_t arg;
+
+    arg.fd      = fd;
+    arg.error   = false;
+    arg.counter = 0;
+
+    CF_CList_Traverse(c->qs[q], CF_Traverse_WriteTxnQueueEntryToFile, &arg);
+    return arg.error;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WriteHistoryQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_Direction_t dir)
+{
+    CF_Traverse_WriteHistoryFileArg_t arg;
+
+    arg.fd         = fd;
+    arg.filter_dir = dir;
+    arg.error      = false;
+    arg.counter    = 0;
+
+    CF_CList_Traverse(c->qs[CF_QueueIdx_HIST], CF_Traverse_WriteHistoryQueueEntryToFile, &arg);
+    return arg.error;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_PrioSearch(CF_CListNode_t *node, void *context)
+{
+    CF_Transaction_t *         t = container_of(node, CF_Transaction_t, cl_node);
+    CF_Traverse_PriorityArg_t *p = (CF_Traverse_PriorityArg_t *)context;
+
+    if (t->priority <= p->priority)
+    {
+        /* found it!
+         *
+         * the current transaction's prio is less than desired (higher)
+         */
+        p->t = t;
+        return CF_CLIST_EXIT;
+    }
+
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_InsertSortPrio(CF_Transaction_t *t, CF_QueueIdx_t q)
+{
+    int           insert_back = 0;
+    CF_Channel_t *c           = &CF_AppData.engine.channels[t->chan_num];
+    CF_Assert(t->chan_num < CF_NUM_CHANNELS);
+    CF_Assert(t->state != CF_TxnState_IDLE);
+
+    /* look for proper position on PEND queue for this transaction.
+     * This is a simple priority sort. */
+
+    if (!c->qs[q])
+    {
+        /* list is empty, so just insert */
+        insert_back = 1;
+    }
+    else
+    {
+        CF_Traverse_PriorityArg_t p = {NULL, t->priority};
+        CF_CList_Traverse_R(c->qs[q], CF_PrioSearch, &p);
+        if (p.t)
+        {
+            CF_CList_InsertAfter_Ex(c, q, &p.t->cl_node, &t->cl_node);
+        }
+        else
+        {
+            insert_back = 1;
+        }
+    }
+
+    if (insert_back)
+    {
+        CF_CList_InsertBack_Ex(c, q, &t->cl_node);
+    }
+    t->flags.com.q_index = q;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_TraverseAllTransactions_Impl(CF_CListNode_t *n, CF_TraverseAll_Arg_t *args)
+{
+    CF_Transaction_t *t = container_of(n, CF_Transaction_t, cl_node);
+    args->fn(t, args->context);
+    ++args->counter;
+    return CF_CLIST_CONT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_TraverseAllTransactions(CF_Channel_t *c, CF_TraverseAllTransactions_fn_t fn, void *context)
+{
+    CF_TraverseAll_Arg_t args = {fn, context, 0};
+    CF_QueueIdx_t        queueidx;
+    for (queueidx = CF_QueueIdx_PEND; queueidx <= CF_QueueIdx_RX; ++queueidx)
+        CF_CList_Traverse(c->qs[queueidx], (CF_CListFn_t)CF_TraverseAllTransactions_Impl, &args);
+
+    return args.counter;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int CF_TraverseAllTransactions_All_Channels(CF_TraverseAllTransactions_fn_t fn, void *context)
+{
+    int i;
+    int ret = 0;
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+        ret += CF_TraverseAllTransactions(CF_AppData.engine.channels + i, fn, context);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WrappedOpenCreate(osal_id_t *fd, const char *fname, int32 flags, int32 access)
+{
+    int32 ret;
+
+    CFE_ES_PerfLogEntry(CF_PERF_ID_FOPEN);
+    ret = OS_OpenCreate(fd, fname, flags, access);
+    CFE_ES_PerfLogExit(CF_PERF_ID_FOPEN);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CF_WrappedClose(osal_id_t fd)
+{
+    int32 ret;
+
+    CFE_ES_PerfLogEntry(CF_PERF_ID_FCLOSE);
+    ret = OS_close(fd);
+    CFE_ES_PerfLogExit(CF_PERF_ID_FCLOSE);
+
+    if (ret != OS_SUCCESS)
+    {
+        CFE_EVS_SendEvent(CF_EID_ERR_CFDP_CLOSE_ERR, CFE_EVS_EventType_ERROR,
+                          "CF: failed to close file 0x%lx, OS_close returned %ld", OS_ObjectIdToInteger(fd), (long)ret);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WrappedRead(osal_id_t fd, void *buf, size_t read_size)
+{
+    int32 ret;
+
+    CFE_ES_PerfLogEntry(CF_PERF_ID_FREAD);
+    ret = OS_read(fd, buf, read_size);
+    CFE_ES_PerfLogExit(CF_PERF_ID_FREAD);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WrappedWrite(osal_id_t fd, const void *buf, size_t write_size)
+{
+    int32 ret;
+
+    CFE_ES_PerfLogEntry(CF_PERF_ID_FWRITE);
+    ret = OS_write(fd, buf, write_size);
+    CFE_ES_PerfLogExit(CF_PERF_ID_FWRITE);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CF_WrappedLseek(osal_id_t fd, off_t offset, int mode)
+{
+    int ret;
+    CFE_ES_PerfLogEntry(CF_PERF_ID_FSEEK);
+    ret = OS_lseek(fd, offset, mode);
+    CFE_ES_PerfLogExit(CF_PERF_ID_FSEEK);
+    return ret;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Function: CF_TxnStatus_IsError
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool CF_TxnStatus_IsError(CF_TxnStatus_t txn_stat)
+{
+    /* The value of CF_TxnStatus_UNDEFINED (-1) indicates a transaction is in progress and no error
+     * has occurred yet.  This will be will be set to CF_TxnStatus_NO_ERROR (0) after successful
+     * completion of the transaction (FIN/EOF).  Anything else indicates a problem has occurred. */
+    return (txn_stat > CF_TxnStatus_NO_ERROR);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Function: CF_TxnStatus_To_ConditionCode
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_CFDP_ConditionCode_t CF_TxnStatus_To_ConditionCode(CF_TxnStatus_t txn_stat)
+{
+    CF_CFDP_ConditionCode_t result;
+
+    if (!CF_TxnStatus_IsError(txn_stat))
+    {
+        /* If no status has been set (CF_TxnStatus_UNDEFINED), treat that as NO_ERROR for
+         * the purpose of CFDP CC.  This can occur e.g. when sending ACK PDUs and no errors
+         * have happened yet, but the transaction is not yet complete and thus not final. */
+        result = CF_CFDP_ConditionCode_NO_ERROR;
+    }
+    else
+    {
+        switch (txn_stat)
+        {
+            /* The definition of CF_TxnStatus_t is such that the 4-bit codes (0-15) share the same
+             * numeric values as the CFDP condition codes, and can be put directly into the 4-bit
+             * CC field of a FIN/ACK/EOF PDU.  Extended codes use the upper bits (>15) to differentiate */
+            case CF_TxnStatus_NO_ERROR:
+            case CF_TxnStatus_POS_ACK_LIMIT_REACHED:
+            case CF_TxnStatus_KEEP_ALIVE_LIMIT_REACHED:
+            case CF_TxnStatus_INVALID_TRANSMISSION_MODE:
+            case CF_TxnStatus_FILESTORE_REJECTION:
+            case CF_TxnStatus_FILE_CHECKSUM_FAILURE:
+            case CF_TxnStatus_FILE_SIZE_ERROR:
+            case CF_TxnStatus_NAK_LIMIT_REACHED:
+            case CF_TxnStatus_INACTIVITY_DETECTED:
+            case CF_TxnStatus_INVALID_FILE_STRUCTURE:
+            case CF_TxnStatus_CHECK_LIMIT_REACHED:
+            case CF_TxnStatus_UNSUPPORTED_CHECKSUM_TYPE:
+            case CF_TxnStatus_SUSPEND_REQUEST_RECEIVED:
+            case CF_TxnStatus_CANCEL_REQUEST_RECEIVED:
+                result = (CF_CFDP_ConditionCode_t)txn_stat;
+                break;
+
+                /* Extended status codes below here ---
+                 * There are no CFDP CCs to directly represent these status codes. Normally this should
+                 * not happen as the engine should not be sending a CFDP CC (FIN/ACK/EOF PDU) for a
+                 * transaction that is not in a valid CFDP-defined state.  This should be translated
+                 * to the closest CFDP CC per the intent/meaning of the transaction status code. */
+
+            case CF_TxnStatus_ACK_LIMIT_NO_FIN:
+            case CF_TxnStatus_ACK_LIMIT_NO_EOF:
+                /* this is similar to the inactivity timeout (no fin-ack) */
+                result = CF_CFDP_ConditionCode_INACTIVITY_DETECTED;
+                break;
+
+            default:
+                /* Catch-all: any invalid protocol state will cancel the transaction, and thus this
+                 * is the closest CFDP CC in practice for all other unhandled errors. */
+                result = CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED;
+                break;
+        }
+    }
+
+    return result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Function: CF_TxnStatus_From_ConditionCode
+ *
+ * Application-scope internal function
+ * See description in cf_utils.h for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CF_TxnStatus_t CF_TxnStatus_From_ConditionCode(CF_CFDP_ConditionCode_t cc)
+{
+    /* All CFDP CC values directly correspond to a Transaction Status of the same numeric value */
+    return (CF_TxnStatus_t)cc;
+}
+```
+
+### `cf_utils.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application utils header file
+ */
+
+#ifndef CF_UTILS_H
+#define CF_UTILS_H
+
+#include "cf_cfdp.h"
+#include "cf_app.h"
+#include "cf_assert.h"
+
+/**
+ * @brief Argument structure for use with CList_Traverse()
+ *
+ * This identifies a specific transaction sequence number and entity ID
+ * The transaction pointer is set by the implementation
+ */
+typedef struct CF_Traverse_TransSeqArg
+{
+    CF_TransactionSeq_t transaction_sequence_number;
+    CF_EntityId_t       src_eid;
+    CF_Transaction_t *  t; /**< \brief output transaction pointer */
+} CF_Traverse_TransSeqArg_t;
+
+/**
+ * @brief Argument structure for use with CF_Traverse_WriteHistoryQueueEntryToFile()
+ *
+ * This is used for writing status files.  It contains a designated
+ * file descriptor for output and counters.
+ *
+ * When traversing history, the list contains all entries, and may need additional
+ * filtering for direction (TX/RX) depending on what information the user has requested.
+ */
+typedef struct CF_Traverse_WriteHistoryFileArg
+{
+    osal_id_t      fd;
+    CF_Direction_t filter_dir;
+
+    bool   error;   /**< \brief Will be set to true if any write failed */
+    uint32 counter; /**< \brief Total number of entries written */
+} CF_Traverse_WriteHistoryFileArg_t;
+
+/**
+ * @brief Argument structure for use with CF_Traverse_WriteTxnQueueEntryToFile()
+ *
+ * This is used for writing status files.  It contains a designated
+ * file descriptor for output and counters.
+ *
+ * When traversing transactions, the entire list is written to the file.
+ * No additional filtering is necessary, because the queues themselves are
+ * limited in what they contain (therefore "pre-filtered" to some degree).
+ */
+typedef struct CF_Traverse_WriteTxnFileArg
+{
+    osal_id_t fd;
+
+    bool   error;   /**< \brief Will be set to true if any write failed */
+    uint32 counter; /**< \brief Total number of entries written */
+} CF_Traverse_WriteTxnFileArg_t;
+
+/**
+ * @brief Callback function type for use with CF_TraverseAllTransactions()
+ *
+ * @param t Pointer to current transaction being traversed
+ * @param context Opaque object passed from initial call
+ */
+typedef void (*CF_TraverseAllTransactions_fn_t)(CF_Transaction_t *t, void *context);
+
+/**
+ * @brief Argument structure for use with CF_TraverseAllTransactions()
+ *
+ * This basically allows for running a CF_Traverse on several lists at once
+ */
+typedef struct CF_TraverseAll_Arg
+{
+    CF_TraverseAllTransactions_fn_t fn;      /**< \brief internal callback to use for each CList_Traverse */
+    void *                          context; /**< \brief opaque object to pass to internal callback */
+    int                             counter; /**< \brief Running tally of all nodes traversed from all lists */
+} CF_TraverseAll_Arg_t;
+
+/**
+ * @brief Argument structure for use with CF_CList_Traverse_R()
+ *
+ * This is for searching for transactions of a specific priority
+ */
+typedef struct CF_Traverse_PriorityArg
+{
+    CF_Transaction_t *t; /**< \brief OUT: holds value of transaction with which to call CF_CList_InsertAfter on */
+    uint8             priority; /**< \brief seeking this priority */
+} CF_Traverse_PriorityArg_t;
+
+/* free a transaction from the queue it's on.
+ * NOTE: this leaves the transaction in a bad state,
+ * so it must be followed by placing the transaction on
+ * another queue. Need this function because the path of
+ * freeing a transaction (returning to default state)
+ * means that it must be removed from the current queue
+ * otherwise if the structure is zero'd out the queue
+ * will become corrupted due to other nodes on the queue
+ * pointing to an invalid node */
+static inline void CF_DequeueTransaction(CF_Transaction_t *t)
+{
+    CF_Assert(t && (t->chan_num < CF_NUM_CHANNELS));
+    CF_CList_Remove(&CF_AppData.engine.channels[t->chan_num].qs[t->flags.com.q_index], &t->cl_node);
+    CF_Assert(CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index]); /* sanity check */
+    --CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index];
+}
+
+static inline void CF_MoveTransaction(CF_Transaction_t *t, CF_QueueIdx_t q)
+{
+    CF_Assert(t && (t->chan_num < CF_NUM_CHANNELS));
+    CF_CList_Remove(&CF_AppData.engine.channels[t->chan_num].qs[t->flags.com.q_index], &t->cl_node);
+    CF_Assert(CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index]); /* sanity check */
+    --CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index];
+    CF_CList_InsertBack(&CF_AppData.engine.channels[t->chan_num].qs[q], &t->cl_node);
+    t->flags.com.q_index = q;
+    ++CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index];
+}
+
+static inline void CF_CList_Remove_Ex(CF_Channel_t *c, CF_QueueIdx_t queueidx, CF_CListNode_t *node)
+{
+    CF_CList_Remove(&c->qs[queueidx], node);
+    CF_Assert(CF_AppData.hk.channel_hk[c - CF_AppData.engine.channels].q_size[queueidx]); /* sanity check */
+    --CF_AppData.hk.channel_hk[c - CF_AppData.engine.channels].q_size[queueidx];
+}
+
+static inline void CF_CList_InsertAfter_Ex(CF_Channel_t *c, CF_QueueIdx_t queueidx, CF_CListNode_t *start,
+                                           CF_CListNode_t *after)
+{
+    CF_CList_InsertAfter(&c->qs[queueidx], start, after);
+    ++CF_AppData.hk.channel_hk[c - CF_AppData.engine.channels].q_size[queueidx];
+}
+
+static inline void CF_CList_InsertBack_Ex(CF_Channel_t *c, CF_QueueIdx_t queueidx, CF_CListNode_t *node)
+{
+    CF_CList_InsertBack(&c->qs[queueidx], node);
+    ++CF_AppData.hk.channel_hk[c - CF_AppData.engine.channels].q_size[queueidx];
+}
+
+/************************************************************************/
+/** @brief Find an unused transaction on a channel.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c Pointer to the CF channel
+ *
+ * @returns Pointer to a free transaction
+ * @retval  NULL if no free transactions available.
+ */
+CF_Transaction_t *CF_FindUnusedTransaction(CF_Channel_t *c);
+
+/************************************************************************/
+/** @brief Returns a history structure back to its unused state.
+ *
+ * @par Description
+ *       There's nothing to do currently other than remove the history
+ *       from its current queue and put it back on CF_QueueIdx_HIST_FREE.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL. h must not be NULL.
+ *
+ * @param c Pointer to the CF channel
+ * @param h Pointer to the history entry
+ */
+void CF_ResetHistory(CF_Channel_t *c, CF_History_t *h);
+
+/************************************************************************/
+/** @brief Frees and resets a transaction and returns it for later use.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t Pointer to the transaction object
+ */
+void CF_FreeTransaction(CF_Transaction_t *t);
+
+/************************************************************************/
+/** @brief Finds an active transaction by sequence number.
+ *
+ * @par Description
+ *       This function traverses the active rx, pending, txa, and txw
+ *       transaction and looks for the requested transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param c Pointer to the CF channel
+ * @param transaction_sequence_number  Sequence number to find
+ * @param src_eid                      Entity ID associated with sequence number
+ *
+ * @returns Pointer to the given transaction if found
+ * @retval  NULL if the transaction is not found
+ */
+CF_Transaction_t *CF_FindTransactionBySequenceNumber(CF_Channel_t *c, CF_TransactionSeq_t transaction_sequence_number,
+                                                     CF_EntityId_t src_eid);
+
+/************************************************************************/
+/** @brief List traversal function to check if the desired sequence number matches.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       context must not be NULL. n must not be NULL.
+ *
+ * @param n         Pointer to node currently being traversed
+ * @param context   Pointer to state object passed through from initial call
+ *
+ * @retval 1 when it's found, which terminates list traversal
+ * @retval 0 when it isn't found, which causes list traversal to continue
+ *
+ */
+int CF_FindTransactionBySequenceNumber_Impl(CF_CListNode_t *n, CF_Traverse_TransSeqArg_t *context);
+
+/************************************************************************/
+/** @brief Write a single history to a file.
+ *
+ * This creates a human-readable/string representation of the information in the
+ * history object, and writes that string to the indicated file.
+ *
+ * This implements the common code between writing the history queue and transaction
+ * queue to a file, as both ultimately store the same information in a CF_History_t
+ * object, but have a different method to get to it.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       fd should be a valid file descriptor, open for writing.
+ *
+ * @param fd Open File descriptor to write to
+ * @param h  Pointer to CF history object to write
+ *
+ * @retval 0 on success
+ * @retval -1 on error
+ */
+int CF_WriteHistoryEntryToFile(osal_id_t fd, const CF_History_t *h);
+
+/************************************************************************/
+/** @brief Write a transaction-based queue's transaction history to a file.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param fd Open File descriptor to write to
+ * @param c  Pointer to associated CF channel object
+ * @param q  Queue Index to write
+ *
+ * @retval 0 on success
+ * @retval 1 on error
+ */
+int32 CF_WriteTxnQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_QueueIdx_t q);
+
+/************************************************************************/
+/** @brief Write a history-based queue's entries to a file.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL.
+ *
+ * @param fd  Open File descriptor to write to
+ * @param c   Pointer to associated CF channel object
+ * @param dir Direction to match/filter
+ *
+ * @retval 0 on success
+ * @retval 1 on error
+ */
+int32 CF_WriteHistoryQueueDataToFile(osal_id_t fd, CF_Channel_t *c, CF_Direction_t dir);
+
+/************************************************************************/
+/** @brief Insert a transaction into a priority sorted transaction queue.
+ *
+ * @par Description
+ *       This function works by walking the queue in reverse to find a
+ *       transaction with a higher priority than the given transaction.
+ *       The given transaction is then inserted after that one, since it
+ *       would be the next lower priority.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       t must not be NULL.
+ *
+ * @param t  Pointer to the transaction object
+ * @param q  Index of queue to insert into
+ */
+void CF_InsertSortPrio(CF_Transaction_t *t, CF_QueueIdx_t q);
+
+/************************************************************************/
+/** @brief Traverses all transactions on all active queues and performs an operation on them.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       c must not be NULL. fn must be a valid function. context must not be NULL.
+ *
+ * @param c       Channel to operate on
+ * @param fn      Callback to invoke for all traversed transactions
+ * @param context Opaque object to pass to all callbacks
+ *
+ * @returns Number of transactions traversed
+ */
+int CF_TraverseAllTransactions(CF_Channel_t *c, CF_TraverseAllTransactions_fn_t fn, void *context);
+
+/************************************************************************/
+/** @brief Traverses all transactions on all channels and performs an operation on them.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       fn must be a valid function. context must not be NULL.
+ *
+ * @param fn      Callback to invoke for all traversed transactions
+ * @param context Opaque object to pass to all callbacks
+ *
+ * @returns Number of transactions traversed
+ */
+int CF_TraverseAllTransactions_All_Channels(CF_TraverseAllTransactions_fn_t fn, void *context);
+
+/************************************************************************/
+/** @brief List traversal function performs operation on every active transaction.
+ *
+ * @par Description
+ *       Called on every transaction via list traversal. Calls another function
+ *       on that transaction.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL. args must not be NULL.
+ *
+ * @param n    Node being currently traversed
+ * @param args Intermediate context object from initial call
+ *
+ * @retval 0 for do not exit early (always continue)
+ */
+int CF_TraverseAllTransactions_Impl(CF_CListNode_t *n, CF_TraverseAll_Arg_t *args);
+
+/************************************************************************/
+/** @brief Writes a human readable representation of a history queue entry to a file
+ *
+ * This function is a wrapper around CF_WriteHistoryEntryToFile() that can be used with
+ * CF_Traverse() to write history queue entries to the file.
+ *
+ * This also implements a direction filter, so only matching entries are actually written
+ * to the file.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL. arg must not be NULL.
+ *
+ * @param n   Node being currently traversed
+ * @param arg Pointer to CF_Traverse_WriteHistoryFileArg_t indicating the file information
+ *
+ * @retval CF_CLIST_CONT if everything is going well
+ * @retval CF_CLIST_EXIT if a write error occurred, which means traversal should stop
+ */
+int CF_Traverse_WriteHistoryQueueEntryToFile(CF_CListNode_t *n, void *arg);
+
+/************************************************************************/
+/** @brief Writes a human readable representation of a transaction history entry to a file
+ *
+ * This function is a wrapper around CF_WriteHistoryEntryToFile() that can be used with
+ * CF_Traverse() to write transaction queue entries to the file.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       n must not be NULL. arg must not be NULL.
+ *
+ * @param n   Node being currently traversed
+ * @param arg Pointer to CF_Traverse_WriteTxnFileArg_t indicating the file information
+ *
+ * @retval CF_CLIST_CONT if everything is going well
+ * @retval CF_CLIST_EXIT if a write error occurred, which means traversal should stop
+ */
+int CF_Traverse_WriteTxnQueueEntryToFile(CF_CListNode_t *n, void *arg);
+
+/************************************************************************/
+/** @brief Searches for the first transaction with a lower priority than given.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       node must not be NULL. context must not be NULL.
+ *
+ * @param node    Node being currently traversed
+ * @param context Pointer to CF_Traverse_PriorityArg_t object indicating the priority to search for
+ *
+ * @retval CF_CLIST_EXIT when it's found, which terminates list traversal
+ * @retval CF_CLIST_CONT when it isn't found, which causes list traversal to continue
+ *
+ */
+int CF_PrioSearch(CF_CListNode_t *node, void *context);
+
+/************************************************************************/
+/** @brief Wrap the filesystem open call with a perf counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       fname must not be NULL.
+ *
+ * @sa OS_OpenCreate() for parameter descriptions
+ *
+ * @param fd      Passed directly to underlying OSAL call
+ * @param fname   Passed directly to underlying OSAL call
+ * @param flags   Passed directly to underlying OSAL call
+ * @param access  Passed directly to underlying OSAL call
+ *
+ * @returns Status code from OSAL
+ */
+int32 CF_WrappedOpenCreate(osal_id_t *fd, const char *fname, int32 flags, int32 access);
+
+/************************************************************************/
+/** @brief Wrap the filesystem close call with a perf counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @sa OS_close() for parameter descriptions
+ *
+ * @param fd      Passed directly to underlying OSAL call
+ *
+ */
+void CF_WrappedClose(osal_id_t fd);
+
+/************************************************************************/
+/** @brief Wrap the filesystem read call with a perf counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       buf must not be NULL.
+ *
+ * @sa OS_read() for parameter descriptions
+ *
+ * @param fd        Passed directly to underlying OSAL call
+ * @param buf       Passed directly to underlying OSAL call
+ * @param read_size Passed directly to underlying OSAL call
+ *
+ * @returns Status code from OSAL (byte count or error code)
+ */
+int32 CF_WrappedRead(osal_id_t fd, void *buf, size_t read_size);
+
+/************************************************************************/
+/** @brief Wrap the filesystem write call with a perf counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       buf must not be NULL.
+ *
+ * @sa OS_write() for parameter descriptions
+ *
+ * @param fd         Passed directly to underlying OSAL call
+ * @param buf        Passed directly to underlying OSAL call
+ * @param write_size Passed directly to underlying OSAL call
+ *
+ * @returns Status code from OSAL (byte count or error code)
+ */
+int32 CF_WrappedWrite(osal_id_t fd, const void *buf, size_t write_size);
+
+/************************************************************************/
+/** @brief Wrap the filesystem lseek call with a perf counter.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       fname must not be NULL.
+ *
+ * @sa OS_lseek() for parameter descriptions
+ *
+ * @param fd         Passed directly to underlying OSAL call
+ * @param offset     Passed directly to underlying OSAL call
+ * @param mode       Passed directly to underlying OSAL call
+ *
+ * @returns Status code from OSAL (byte count or error code)
+ */
+int32 CF_WrappedLseek(osal_id_t fd, off_t offset, int mode);
+
+/************************************************************************/
+/** @brief Converts the internal transaction status to a CFDP condition code
+ *
+ * Transaction status is a superset of condition codes, and includes
+ * other error conditions for which CFDP will not send FIN/ACK/EOF
+ * and thus there is no corresponding condition code.
+ *
+ * @par Assumptions, External Events, and Notes:
+ *        Not all transaction status codes directly correlate to a CFDP CC
+ *
+ * @param txn_stat   Transaction status
+ *
+ * @returns CFDP protocol condition code
+ */
+CF_CFDP_ConditionCode_t CF_TxnStatus_To_ConditionCode(CF_TxnStatus_t txn_stat);
+
+/************************************************************************/
+/** @brief Converts a CFDP condition code to an internal transaction status
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       None
+ *
+ * @param cc   CFDP condition code
+ *
+ * @returns Transaction status code
+ */
+CF_TxnStatus_t CF_TxnStatus_From_ConditionCode(CF_CFDP_ConditionCode_t cc);
+
+/************************************************************************/
+/** @brief Check if the internal transaction status represents an error
+ *
+ * @par Assumptions, External Events, and Notes:
+ *       Transaction status is a superset of condition codes, and includes
+ *       other error conditions for which CFDP will not send FIN/ACK/EOF
+ *       and thus there is no corresponding condition code.
+ *
+ * @param txn_stat   Transaction status
+ *
+ * @returns Boolean value indicating if the transaction is in an errorred state
+ * @retval true if the an error has occurred during the transaction
+ * @retval false if no error has occurred during the transaction yet
+ */
+bool CF_TxnStatus_IsError(CF_TxnStatus_t txn_stat);
+
+#endif /* !CF_UTILS_H */
+```
+
+### `cf_verify.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application configuration verification header
+ */
+
+#ifndef CF_VERIFY_H
+#define CF_VERIFY_H
+
+#include "cfe.h"
+#include "cf_platform_cfg.h"
+#include "cf_perfids.h"
+
+/* limit number of channels to a reasonable amount for special values for some commands */
+#if CF_NUM_CHANNELS > 250
+#error That's a lot of channels. I salute you, but it's too many.
+#endif
+
+#if CF_NUM_CHANNELS == 0
+#error Must have at least one channel.
+#endif
+
+#if CF_NUM_HISTORIES > 65535
+#error refactor code for 32 bit CF_NUM_HISTORIES
+#endif
+
+#if (CF_PERF_ID_PDURCVD(CF_NUM_CHANNELS - 1) >= CF_PERF_ID_PDUSENT(0))
+#error Collision between CF_PERF_ID_PDURCVD and CF_PERF_ID_PDUSENT given number of channels
+#endif
+
+#endif /* !CF_VERIFY_H */
+```
+
+### `cf_version.h`
+
+**경로:** `fsw/apps/cf/fsw/src/cf_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CFS CFDP (CF) Application header file containing version number
+ */
+
+#ifndef CF_VERSION_H
+#define CF_VERSION_H
+
+/**
+ * \defgroup cfscfversion CFS CFDP Version
+ * \ref cfsversions
+ * \{
+ */
+
+#define CF_MAJOR_VERSION (3)  /**< \brief Major version number */
+#define CF_MINOR_VERSION (0)  /**< \brief Minor version number */
+#define CF_REVISION      (99) /**< \brief Revision number */
+
+/**\}*/
+
+#endif /* CF_VERSION_H */
+```

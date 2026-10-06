@@ -3,32 +3,1074 @@
 
 **경로:** `scripts/fsw/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fsw_cfs_build.sh`
 
-file--fsw_cfs_build.sh
-file--fsw_cfs_launch.sh
-file--fsw_cfs_launch_multiple_sc.sh
-file--fsw_cfs_multipleGSW_launch.sh
-file--fsw_fprime_build.sh
-file--fsw_fprime_launch.sh
-file--fsw_respawn.sh
-file--launch_sat.sh
-file--onair_launch.sh
-file--start_fprime.sh
+**경로:** `scripts/fsw/fsw_cfs_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+# Note this is copied to ./cfg/build as part of `make config`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../../scripts/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+# Make flight software build directory
+mkdir -p $BASE_DIR/fsw/build
+
+# Build
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR --name "nos_build_fsw" -w $BASE_DIR $DBOX make -j$NUM_CPUS -e FLIGHT_SOFTWARE=cfs build-fsw
 ```
 
-## 항목
+### `fsw_cfs_launch.sh`
 
-- [`scripts/fsw/fsw_cfs_build.sh`](file--fsw_cfs_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_cfs_launch.sh`](file--fsw_cfs_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_cfs_launch_multiple_sc.sh`](file--fsw_cfs_launch_multiple_sc.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_cfs_multipleGSW_launch.sh`](file--fsw_cfs_multipleGSW_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_fprime_build.sh`](file--fsw_fprime_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_fprime_launch.sh`](file--fsw_fprime_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/fsw_respawn.sh`](file--fsw_respawn.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/launch_sat.sh`](file--launch_sat.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/onair_launch.sh`](file--onair_launch.sh) — UTF-8 텍스트 파일 본문 포함
-- [`scripts/fsw/start_fprime.sh`](file--start_fprime.sh) — UTF-8 텍스트 파일 본문 포함
+**경로:** `scripts/fsw/fsw_cfs_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+# Note this is copied to ./cfg/build as part of `make config`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../../scripts/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+touch $FSW_DIR/data/dummy.txt
+echo "1234567890" > $FSW_DIR/data/dummy.txt
+truncate -s 1M $FSW_DIR/data/dummy.txt
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create ground networks..."
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+echo ""
+
+echo "Launch GSW..."
+echo ""
+source $BASE_DIR/cfg/build/gsw_launch.sh
+
+echo "Create NOS interfaces..."
+export GND_CFG_FILE="-f nos3-simulator.xml"
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE stdio-terminal
+gnome-terminal --tab --title="NOS UDP Terminal"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-udp-terminal"    --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE udp-terminal
+gnome-terminal --tab --title="NOS CmdBus Bridge"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-sim-bridge"      --network=nos3-core -w $SIM_BIN $DBOX ./nos3-sim-cmdbus-bridge $GND_CFG_FILE
+
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=1
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc_"$i"_nos3_simulator.xml"
+
+    # Debugging
+    #echo "Spacecraft number        = " $SC_NUM
+    #echo "Spacecraft network       = " $SC_NETNAME
+    #echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - Create spacecraft network..."
+    $DNETWORK create $SC_NETNAME 2> /dev/null
+    echo ""
+
+    echo $SC_NUM " - Connect GSW " "${GSW:-cosmos-openc3-operator-1}" " to spacecraft network..."
+    $DNETWORK connect  $SC_NETNAME "${GSW:-cosmos-openc3-operator-1}" --alias cosmos --alias active-gs
+    echo ""
+
+    echo $SC_NUM " - 42..."
+    rm -rf $USER_NOS3_DIR/42/NOS3InOut
+    cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+    xhost +local:*
+    gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+    echo ""
+
+    echo $SC_NUM " - OnAIR..."
+    gnome-terminal --tab --title=$SC_NUM" - OnAIR" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-onair" --network=$SC_NETNAME -w $FSW_DIR -t $DBOX $SCRIPT_DIR/fsw/onair_launch.sh
+    echo ""
+
+    echo $SC_NUM " - Flight Software..."
+    cd $FSW_DIR
+    # Debugging
+    # Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+    gnome-terminal --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $SCRIPT_DIR/fsw/fsw_respawn.sh &
+    #gnome-terminal --window-with-profile=KeepOpen --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $FSW_DIR/core-cpu1 -R PO &
+    echo ""
+
+    echo $SC_NUM " - Simulators..."
+    cd $SIM_BIN
+    gnome-terminal --tab --title=$SC_NUM" - NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network=$SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+    gnome-terminal --tab --title=$SC_NUM" - 42 Truth Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-truth42sim"          -h truth42sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE  truth42sim
+    
+    $DNETWORK connect $SC_NETNAME nos-terminal
+    $DNETWORK connect $SC_NETNAME nos-udp-terminal
+    $DNETWORK connect $SC_NETNAME nos-sim-bridge
+
+    # Component simulators
+    gnome-terminal --tab --title=$SC_NUM" - CAM Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+    gnome-terminal --tab --title=$SC_NUM" - CSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+    gnome-terminal --tab --title=$SC_NUM" - EPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+    gnome-terminal --tab --title=$SC_NUM" - FSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+    gnome-terminal --tab --title=$SC_NUM" - GPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+    gnome-terminal --tab --title=$SC_NUM" - IMU Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-imu-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+    gnome-terminal --tab --title=$SC_NUM" - MAG Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-mag-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+    gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+    gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+    gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+    gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -e "TCP_GROUND=1" -e "MULTI_GDS=0" -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    -h radio-sim --network=$SC_NETNAME --network-alias=radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    gnome-terminal --tab --title=$SC_NUM" - Sample Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim"   -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+    gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+    gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+    gnome-terminal --tab --title=$SC_NUM" - Torquer Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim"  -h trq-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+    
+    # gnome-terminal --tab --title=$SC_NUM" - Blackboard Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-blackboard-sim" -v /dev/shm:/dev/shm -h blackboard-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE blackboard-sim
+    # cp cfg/InOut/Inp_IPC.shmem.txt cfg/InOut/Inp_IPC.txt
+    # cp cfg/sims/nos3-simulator.shmem.xml cfg/sims/nos3-simulator.xml
+    
+    echo ""
+    echo $SC_NUM " - CryptoLib..."
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW" -- $DFLAGS -e "STANDALONE_TCP=1" -e "GSWALIAS=cosmos" -e "CRYPTO_HOST=cryptolib" -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib-gsw"  -h cryptolib --network=$SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    echo ""
+done
+
+echo "NOS Time Driver..."
+sleep 8
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name nos-time-driver --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE time
+sleep 1
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export TIMENAME=$SC_NUM"-nos-time-driver"
+    $DNETWORK connect --alias nos-time-driver $SC_NETNAME nos-time-driver
+done
+echo ""
+
+echo "Docker launch script completed!"
+```
+
+### `fsw_cfs_launch_multiple_sc.sh`
+
+**경로:** `scripts/fsw/fsw_cfs_launch_multiple_sc.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+# Note this is copied to ./cfg/build as part of `make config`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../../scripts/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+touch $FSW_DIR/data/dummy.txt
+echo "1234567890" > $FSW_DIR/data/dummy.txt
+truncate -s 1M $FSW_DIR/data/dummy.txt
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create ground networks..."
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+echo ""
+
+echo "Launch GSW..."
+echo ""
+source $BASE_DIR/cfg/build/gsw_launch.sh
+
+echo "Create NOS interfaces..."
+export GND_CFG_FILE="-f nos3-simulator.xml"
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE stdio-terminal
+gnome-terminal --tab --title="NOS UDP Terminal"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-udp-terminal"    --network nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE udp-terminal
+gnome-terminal --tab --title="NOS CmdBus Bridge"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-sim-bridge"     --network nos3-core -w $SIM_BIN $DBOX ./nos3-sim-cmdbus-bridge $GND_CFG_FILE
+
+echo ""
+
+echo "sc01 - Create spacecraft network..."
+$DNETWORK create "nos3-sc01" --subnet=192.168.1.0/24
+echo "sc02 - Create spacecraft network..."
+$DNETWORK create "nos3-sc02" --subnet=192.168.2.0/24
+echo "sc03 - Create spacecraft network..."
+$DNETWORK create "nos3-sc03" --subnet=192.168.3.0/24
+echo "42..."
+rm -rf $USER_NOS3_DIR/42/NOS3InOut
+cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+xhost +local:*
+gnome-terminal --tab --title="42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name "fortytwo" -h fortytwo --network nos3-core --network nos3-sc01 --network nos3-sc02 --network nos3-sc03 -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=3
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f sc-"$i"-nos3-simulator.xml"
+
+    # Debugging
+    echo "Spacecraft number        = " $SC_NUM
+    echo "Spacecraft network       = " $SC_NETNAME
+    echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - Connect GSW " "${GSW:-cosmos-openc3-operator-1}" " to spacecraft network..."
+    $DNETWORK connect  $SC_NETNAME "${GSW:-cosmos-openc3-operator-1}" --alias cosmos --alias active-gs --ip 192.168.$i.100
+    echo ""
+
+    echo $SC_NUM " - OnAIR..."
+    gnome-terminal --tab --title=$SC_NUM" - OnAIR" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-onair" --network $SC_NETNAME -w $FSW_DIR -t $DBOX $SCRIPT_DIR/fsw/onair_launch.sh
+    echo ""
+
+    echo $SC_NUM " - Flight Software..."
+    cd $FSW_DIR
+    # Debugging
+    # Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+    gnome-terminal --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network $SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $SCRIPT_DIR/fsw/fsw_respawn.sh &
+    #gnome-terminal --window-with-profile=KeepOpen --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network $SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $FSW_DIR/core-cpu1 -R PO &
+    echo ""
+
+    echo $SC_NUM " - Waiting for nos-fsw container to get IP..."
+    FSW_CONTAINER=$SC_NUM"-nos-fsw"
+    ENG_CONTAINER=$SC_NUM"-nos-engine-server"
+    for attempt in {1..10}; do
+        # FSW_IP=$(docker inspect -f \
+        #     "{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" \
+        #     $FSW_CONTAINER 2>/dev/null)
+        FSW_IP=$(docker inspect -f \
+            "{{(index .NetworkSettings.Networks \"$SC_NETNAME\").IPAddress}}" \
+            $FSW_CONTAINER 2>/dev/null)
+        if [ -n "$FSW_IP" ]; then
+            echo $SC_NUM " - nos-fsw IP = $FSW_IP"
+            break
+        fi
+        echo "  Waiting for container IP... attempt $attempt"
+        sleep 1
+    done
+
+    if [ -z "$FSW_IP" ]; then
+        echo "ERROR: Could not resolve IP for $FSW_CONTAINER!"
+        exit 1
+    fi
+
+    echo $SC_NUM " - Simulators..."
+    cd $SIM_BIN
+    gnome-terminal --tab --title=$SC_NUM" - NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network $SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+    
+    for attempt in {1..10}; do
+    ENG_IP=$(docker inspect -f \
+        "{{(index .NetworkSettings.Networks \"$SC_NETNAME\").IPAddress}}" \
+        $ENG_CONTAINER 2>/dev/null)
+    if [ -n "$ENG_IP" ]; then
+        echo $SC_NUM " - nos-engine-server IP = $ENG_IP"
+        break
+    fi
+    echo "  Waiting for engine server IP... attempt $attempt"
+    sleep 1
+    done
+
+    if [ -z "$ENG_IP" ]; then
+        echo "ERROR: Could not get IP for $ENG_CONTAINER!"
+        exit 1
+    fi
+    
+    gnome-terminal --tab --title=$SC_NUM" - 42 Truth Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-truth42sim"          -h truth42sim --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE  truth42sim
+    
+    $DNETWORK connect $SC_NETNAME nos-terminal
+    $DNETWORK connect $SC_NETNAME nos-udp-terminal
+    $DNETWORK connect $SC_NETNAME nos-sim-bridge
+
+    # Component simulators
+    gnome-terminal --tab --title=$SC_NUM" - CAM Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"      --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+    gnome-terminal --tab --title=$SC_NUM" - CSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+    gnome-terminal --tab --title=$SC_NUM" - EPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+    gnome-terminal --tab --title=$SC_NUM" - FSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+    gnome-terminal --tab --title=$SC_NUM" - GPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+    gnome-terminal --tab --title=$SC_NUM" - IMU Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-imu-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+    gnome-terminal --tab --title=$SC_NUM" - MAG Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-mag-sim"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+    gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+    gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+    gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+    # docker create --rm -it -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -u 1001:999 -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    --network $SC_NETNAME --network-alias radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    gnome-terminal --tab --title=$SC_NUM" - Radio Sim" -- \
+        $DFLAGS -v $SIM_DIR:$SIM_DIR \
+        --name $SC_NUM"-radio-sim" \
+        --network $SC_NETNAME \
+        --network-alias radio-sim \
+        --add-host "nos-fsw:$FSW_IP" \
+        --add-host "nos-engine-server:$ENG_IP" \
+        -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    # works with sc01 errors with radio with sc02 and sc03 below
+    # gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    --network $SC_NETNAME --network-alias radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    # old below
+    # gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    --network nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    gnome-terminal --tab --title=$SC_NUM" - Sample Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim"   -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+    gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  -v /dev/shm:/dev/shm --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+    gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster-sim" --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+    gnome-terminal --tab --title=$SC_NUM" - Torquer Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim"  -h trq-sim --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+    
+    # gnome-terminal --tab --title=$SC_NUM" - Blackboard Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-blackboard-sim" -v /dev/shm:/dev/shm -h blackboard-sim --network $SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE blackboard-sim
+    # cp cfg/InOut/Inp_IPC.shmem.txt cfg/InOut/Inp_IPC.txt
+    # cp cfg/sims/nos3-simulator.shmem.xml cfg/sims/nos3-simulator.xml
+
+    echo ""
+
+    echo $SC_NUM " - CryptoLib..."
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib-gsw"  -h cryptolib --network $SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    echo ""
+
+done
+
+sleep 10
+for (( i=2; i<=$SATNUM; i++))
+do
+    export SC_NUM="sc0"$i
+    export j=$((i-1))
+    export SC_PREVNET="nos3-sc0"$j
+    export SC_NETNAME="nos3-"$SC_NUM
+    export RADNAME=$SC_NUM"-radio-sim"
+    sleep 1
+    docker network connect --alias "next-radio" $SC_PREVNET $RADNAME
+done
+
+echo "Closing the ring: connecting sc01-radio-sim to nos3-sc03 as 'next-radio'"
+sleep 3
+docker network connect --alias "next-radio" "nos3-sc03" sc01-radio-sim
+
+echo "NOS Time Driver..."
+sleep 6
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name nos-time-driver --network nos3-core --network nos3-sc01 --network nos3-sc02 --network nos3-sc03 -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE time
+sleep 1
+
+
+echo ""
+
+echo "Docker launch script completed!"
+```
+
+### `fsw_cfs_multipleGSW_launch.sh`
+
+**경로:** `scripts/fsw/fsw_cfs_multipleGSW_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+# Note this is copied to ./cfg/build as part of `make config`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../../scripts/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+touch $FSW_DIR/data/dummy.txt
+echo "1234567890" > $FSW_DIR/data/dummy.txt
+truncate -s 1M $FSW_DIR/data/dummy.txt
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create ground networks..."
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+echo ""
+
+echo "Launch GSW..."
+echo ""
+source $BASE_DIR/cfg/build/gsw_launch.sh
+source $BASE_DIR/cfg/build/gsw_launch2.sh
+
+echo "Create NOS interfaces..."
+export GND_CFG_FILE="-f nos3-simulator.xml"
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE stdio-terminal
+gnome-terminal --tab --title="NOS UDP Terminal"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-udp-terminal"    --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE udp-terminal
+gnome-terminal --tab --title="NOS CmdBus Bridge"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-sim-bridge"      --network=nos3-core -w $SIM_BIN $DBOX ./nos3-sim-cmdbus-bridge $GND_CFG_FILE
+
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=1
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc_"$i"_nos3_simulator.xml"
+
+    # Debugging
+    #echo "Spacecraft number        = " $SC_NUM
+    #echo "Spacecraft network       = " $SC_NETNAME
+    #echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - Create spacecraft network..."
+    $DNETWORK create $SC_NETNAME 2> /dev/null
+    echo ""
+
+    # echo $SC_NUM " - Connect GSW " "${GSW:-cosmos-openc3-operator-1}" " to spacecraft network..."
+    # $DNETWORK connect  $SC_NETNAME "${GSW:-cosmos-openc3-operator-1}" --alias cosmos --alias active-gs
+    # echo ""
+
+    # echo $SC_NUM " - Connect GSW " "${GSW:-cosmos-openc3-operator-2}" " to spacecraft network..."
+    # $DNETWORK connect  $SC_NETNAME "${GSW:-cosmos-openc3-operator-2}" --alias yamcs --alias active-gs2
+    # echo ""
+
+    echo $SC_NUM " - Connect GSW cosmos-openc3-operator-1 to spacecraft network..."
+    $DNETWORK connect  $SC_NETNAME cosmos-openc3-operator-1 --alias cosmos --alias active-gs
+    echo ""
+
+    echo $SC_NUM " - Connect GSW cosmos-openc3-operator-2 to spacecraft network..."
+    $DNETWORK connect  $SC_NETNAME cosmos-openc3-operator-2 --alias yamcs --alias active-gs2
+    echo ""
+
+    echo $SC_NUM " - 42..."
+    rm -rf $USER_NOS3_DIR/42/NOS3InOut
+    cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+    xhost +local:*
+    gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+    echo ""
+
+    echo $SC_NUM " - OnAIR..."
+    gnome-terminal --tab --title=$SC_NUM" - OnAIR" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-onair" --network=$SC_NETNAME -w $FSW_DIR -t $DBOX $SCRIPT_DIR/fsw/onair_launch.sh
+    echo ""
+
+    echo $SC_NUM " - Flight Software..."
+    cd $FSW_DIR
+    # Debugging
+    # Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+    gnome-terminal --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $SCRIPT_DIR/fsw/fsw_respawn.sh &
+    #gnome-terminal --window-with-profile=KeepOpen --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $FSW_DIR/core-cpu1 -R PO &
+    echo ""
+
+    echo $SC_NUM " - Simulators..."
+    cd $SIM_BIN
+    gnome-terminal --tab --title=$SC_NUM" - NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network=$SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+    gnome-terminal --tab --title=$SC_NUM" - 42 Truth Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-truth42sim"          -h truth42sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE  truth42sim
+    
+    $DNETWORK connect $SC_NETNAME nos-terminal
+    $DNETWORK connect $SC_NETNAME nos-udp-terminal
+    $DNETWORK connect $SC_NETNAME nos-sim-bridge
+
+    # Component simulators
+    gnome-terminal --tab --title=$SC_NUM" - CAM Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+    gnome-terminal --tab --title=$SC_NUM" - CSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+    gnome-terminal --tab --title=$SC_NUM" - EPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+    gnome-terminal --tab --title=$SC_NUM" - FSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+    gnome-terminal --tab --title=$SC_NUM" - GPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+    gnome-terminal --tab --title=$SC_NUM" - IMU Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-imu-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+    gnome-terminal --tab --title=$SC_NUM" - MAG Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-mag-sim"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+    gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+    gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+    gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+    gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -e "TCP_GROUND=0" -e "MULTI_GDS=1" -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    -h radio-sim --network=$SC_NETNAME --network-alias=radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    gnome-terminal --tab --title=$SC_NUM" - Sample Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim"   -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+    gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  -v /dev/shm:/dev/shm --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+    gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+    gnome-terminal --tab --title=$SC_NUM" - Torquer Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim"  -h trq-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+    
+    # gnome-terminal --tab --title=$SC_NUM" - Blackboard Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-blackboard-sim" -v /dev/shm:/dev/shm -h blackboard-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE blackboard-sim
+    # cp cfg/InOut/Inp_IPC.shmem.txt cfg/InOut/Inp_IPC.txt
+    # cp cfg/sims/nos3-simulator.shmem.xml cfg/sims/nos3-simulator.xml
+
+    echo ""
+
+    echo $SC_NUM " - CryptoLib..."
+    # gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib-gsw"  -h cryptolib --network=$SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    echo ""
+    # sleep 1
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW" -- $DFLAGS -e "STANDALONE_TCP=0" -e "GSWALIAS=cosmos" -e "CRYPTO_HOST=cryptolib" -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib-gsw"  -h cryptolib --network=$SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW2" -- $DFLAGS -e "STANDALONE_TCP=0" -e "GSWALIAS=yamcs" -e "CRYPTO_HOST=cryptolib2" -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib-gsw2"  -h cryptolib2 --network=$SC_NETNAME --network-alias=cryptolib2 -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+
+done
+
+echo "NOS Time Driver..."
+sleep 8
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name nos-time-driver --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE time
+sleep 1
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export TIMENAME=$SC_NUM"-nos-time-driver"
+    $DNETWORK connect --alias nos-time-driver $SC_NETNAME nos-time-driver
+done
+echo ""
+
+echo "Docker launch script completed!"
+```
+
+### `fsw_fprime_build.sh`
+
+**경로:** `scripts/fsw/fsw_fprime_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[1]}" )/scripts" && pwd )
+source $SCRIPT_DIR/env.sh
+
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+# Make flight software build directory
+mkdir -p $BASE_DIR/fsw/build
+
+$DFLAGS_CPUS -v $BASE_DIR:$BASE_DIR --name "nos_build_fsw" -w $BASE_DIR $DBOX make -j$NUM_CPUS -e FLIGHT_SOFTWARE=fprime build-fsw
+```
+
+### `fsw_fprime_launch.sh`
+
+**경로:** `scripts/fsw/fsw_fprime_launch.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+# Note this is copied to ./cfg/build as part of `make config`
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../../scripts/env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+# touch $FSW_DIR/data/dummy.txt
+# echo "1234567890" > $FSW_DIR/data/dummy.txt
+# truncate -s 1M $FSW_DIR/data/dummy.txt
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+# cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+# cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create ground networks..."
+$DNETWORK create \
+    --driver=bridge \
+    --subnet=192.168.41.0/24 \
+    --gateway=192.168.41.1 \
+    nos3-core
+echo ""
+
+echo "Launch GSW..."
+echo ""
+source $BASE_DIR/cfg/build/gsw_launch.sh
+
+
+echo "Create NOS interfaces..."
+export GND_CFG_FILE="-f nos3-simulator.xml"
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE stdio-terminal
+gnome-terminal --tab --title="NOS UDP Terminal"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-udp-terminal"    --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE udp-terminal
+gnome-terminal --tab --title="NOS CmdBus Bridge"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-sim-bridge"      --network=nos3-core -w $SIM_BIN $DBOX ./nos3-sim-cmdbus-bridge $GND_CFG_FILE
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=1
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc0"$i"_nos3_simulator.xml"
+
+    # Debugging
+    #echo "Spacecraft number        = " $SC_NUM
+    #echo "Spacecraft network       = " $SC_NETNAME
+    #echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - Create spacecraft network..."
+    $DNETWORK create $SC_NETNAME 2> /dev/null
+    echo ""
+
+    echo $SC_NUM " - Connect COSMOS to spacecraft network..."
+    $DNETWORK connect $SC_NETNAME cosmos-openc3-operator-1 --alias cosmos
+    echo ""
+
+    echo $SC_NUM " - 42..."
+    rm -rf $USER_NOS3_DIR/42/NOS3InOut
+    cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+    xhost +local:*
+    gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+    echo ""
+
+    # Debugging
+    # Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+    
+
+    echo $SC_NUM " - Simulators..."
+    cd $SIM_BIN
+    gnome-terminal --tab --title=$SC_NUM" - NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network=$SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+    gnome-terminal --tab --title=$SC_NUM" - 42 Truth Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-truth42sim"          -h truth42sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE  truth42sim
+    
+    $DNETWORK connect $SC_NETNAME nos-terminal
+    $DNETWORK connect $SC_NETNAME nos-udp-terminal
+    $DNETWORK connect $SC_NETNAME nos-sim-bridge
+
+    # Component simulators
+    gnome-terminal --tab --title=$SC_NUM" - CAM Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+    gnome-terminal --tab --title=$SC_NUM" - CSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+    gnome-terminal --tab --title=$SC_NUM" - EPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+    gnome-terminal --tab --title=$SC_NUM" - FSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+    gnome-terminal --tab --title=$SC_NUM" - GPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+    gnome-terminal --tab --title=$SC_NUM" - IMU Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-imu-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+    gnome-terminal --tab --title=$SC_NUM" - MAG Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-mag-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+    gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+    gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+    gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+    gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -e "TCP_GROUND=1" -e "MULTI_GDS=1" -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    -h radio-sim --network=$SC_NETNAME --network-alias=radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-radio-sim
+    gnome-terminal --tab --title=$SC_NUM" - Sample Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim"   --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+    gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+    gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+    gnome-terminal --tab --title=$SC_NUM" - Torquer Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim"  -h trq-sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+    echo ""
+
+    echo $SC_NUM " - CryptoLib..."
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib GSW" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"_cryptolib_gsw"  --network=$SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    echo ""
+
+    sleep 5 #sleeping to give time for containers to intialize for fprime to connect successfully
+
+    echo $SC_NUM " - Flight Software..."
+    # cd $FSW_DIR
+    gnome-terminal --window-with-profile=KeepOpen --title="FPrime" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-fprime" --network=$SC_NETNAME -h nos-fsw -w $BASE_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=105 --cap-add=sys_nice $DBOX $SCRIPT_DIR/fsw/start_fprime.sh
+    echo ""
+done
+
+echo "NOS Time Driver..."
+sleep 8
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name nos-time-driver --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE time
+sleep 1
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export TIMENAME=$SC_NUM"-nos-time-driver"
+    $DNETWORK connect --alias nos-time-driver $SC_NETNAME nos-time-driver
+done
+echo ""
+
+    
+sleep 3
+
+urlIP=$(docker container inspect sc01-fprime | grep -i IPAddress | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+
+sleep 10
+
+pidof firefox > /dev/null
+if [ $? -eq 1 ]
+then
+    firefox ${urlIP}:5000 & 
+fi
+
+sleep 3
+docker exec sc01-fprime sh -c "sleep 15 && cd fsw/fprime/fprime-nos3 && fprime-cli command-send deployment.cmdSeq.CS_RUN --arguments Sequences/nos3test.bin NO_BLOCK"
+
+echo "Docker launch script completed!"
+```
+
+### `fsw_respawn.sh`
+
+**경로:** `scripts/fsw/fsw_respawn.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Script to start FSW and restart it if it dies/is killed
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+#echo "fsw_respawn.sh script"
+
+cd $FSW_DIR
+
+while [ 1 ]
+do
+    pidof core-cpu1 > /dev/null
+    if [ $? -eq 1 ]
+    then
+        sleep 5
+        pidof core-cpu1 > /dev/null
+        if [ $? -eq 1 ]
+        then
+            $FSW_DIR/core-cpu1 -R PO & 
+        fi
+    fi
+    sleep 1
+done
+```
+
+### `launch_sat.sh`
+
+**경로:** `scripts/fsw/launch_sat.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+# Check that local NOS3 directory exists
+if [ ! -d $USER_NOS3_DIR ]; then
+    echo ""
+    echo "    Need to run make prep first!"
+    echo ""
+    exit 1
+fi
+
+# Check that configure build directory exists
+if [ ! -d $BASE_DIR/cfg/build ]; then
+    echo ""
+    echo "    Need to run make config first!"
+    echo ""
+    exit 1
+fi
+
+echo "Make data folders..."
+# FSW Side
+mkdir $FSW_DIR/data 2> /dev/null
+mkdir $FSW_DIR/data/cam 2> /dev/null
+mkdir $FSW_DIR/data/evs 2> /dev/null
+mkdir $FSW_DIR/data/hk 2> /dev/null
+mkdir $FSW_DIR/data/inst 2> /dev/null
+# GSW Side
+mkdir /tmp/nos3 2> /dev/null
+mkdir /tmp/nos3/data 2> /dev/null
+mkdir /tmp/nos3/data/cam 2> /dev/null
+mkdir /tmp/nos3/data/evs 2> /dev/null
+mkdir /tmp/nos3/data/hk 2> /dev/null
+mkdir /tmp/nos3/data/inst 2> /dev/null
+mkdir /tmp/nos3/uplink 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/cfe_es_startup.scr /tmp/nos3/uplink/tmp0.so 2> /dev/null
+cp $BASE_DIR/fsw/build/exe/cpu1/cf/sample.so /tmp/nos3/uplink/tmp1.so 2> /dev/null
+
+echo "Create NOS interfaces..."
+export GND_CFG_FILE="-f nos3-simulator.xml"
+gnome-terminal --tab --title="NOS Terminal"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-terminal"        --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE stdio-terminal
+gnome-terminal --tab --title="NOS UDP Terminal"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name "nos-udp-terminal"    --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE udp-terminal
+echo ""
+
+# Note only currently working with a single spacecraft
+export SATNUM=1
+
+#
+# Spacecraft Loop
+#
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export SC_CFG_FILE="-f nos3-simulator.xml" #"-f sc_"$i"_nos3_simulator.xml"
+
+    # Debugging
+    #echo "Spacecraft number        = " $SC_NUM
+    #echo "Spacecraft network       = " $SC_NETNAME
+    #echo "Spacecraft configuration = " $SC_CFG_FILE
+    
+    echo $SC_NUM " - 42..."
+    rm -rf $USER_NOS3_DIR/42/NOS3InOut
+    cp -r $BASE_DIR/cfg/build/InOut $USER_NOS3_DIR/42/NOS3InOut
+    xhost +local:*
+    gnome-terminal --tab --title=$SC_NUM" - 42" -- $DFLAGS -e DISPLAY=$DISPLAY -v $USER_NOS3_DIR:$USER_NOS3_DIR -v /tmp/.X11-unix:/tmp/.X11-unix:ro --name $SC_NUM"-fortytwo" -h fortytwo --network=$SC_NETNAME -w $USER_NOS3_DIR/42 -t $DBOX $USER_NOS3_DIR/42/42 NOS3InOut
+    echo ""
+
+    echo $SC_NUM " - OnAIR..."
+    gnome-terminal --tab --title=$SC_NUM" - OnAIR" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-onair" --network=$SC_NETNAME -w $FSW_DIR -t $DBOX $SCRIPT_DIR/fsw/onair_launch.sh
+    echo ""
+
+    echo $SC_NUM " - Flight Software..."
+    cd $FSW_DIR
+    gnome-terminal --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $SCRIPT_DIR/fsw/fsw_respawn.sh &
+
+    #gnome-terminal --window-with-profile=KeepOpen --title=$SC_NUM" - NOS3 Flight Software" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-nos-fsw" -h nos-fsw --network=$SC_NETNAME -w $FSW_DIR --sysctl fs.mqueue.msg_max=10000 --ulimit rtprio=99 --cap-add=sys_nice $DBOX $FSW_DIR/core-cpu1 -R PO &
+    echo ""
+
+    # Debugging
+    # Replace `--tab` with `--window-with-profile=KeepOpen` once you've created this gnome-terminal profile manually
+
+    echo $SC_NUM " - CryptoLib..."
+    gnome-terminal --tab --title=$SC_NUM" - CryptoLib" -- $DFLAGS -v $BASE_DIR:$BASE_DIR --name $SC_NUM"-cryptolib"  --network=$SC_NETNAME --network-alias=cryptolib -w $BASE_DIR/gsw/build $DBOX ./support/standalone
+    echo ""
+
+    echo $SC_NUM " - Simulators..."
+    cd $SIM_BIN
+    gnome-terminal --tab --title=$SC_NUM" - NOS Engine Server" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-nos-engine-server"  -h nos-engine-server --network=$SC_NETNAME -w $SIM_BIN $DBOX /usr/bin/nos_engine_server_standalone -f $SIM_BIN/nos_engine_server_config.json
+    gnome-terminal --tab --title=$SC_NUM" - 42 Truth Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-truth42sim"          -h truth42sim --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE  truth42sim
+    
+    $DNETWORK connect $SC_NETNAME nos-terminal
+    $DNETWORK connect $SC_NETNAME nos-udp-terminal
+
+    # Component simulators
+    gnome-terminal --tab --title=$SC_NUM" - CAM Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-cam-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE camsim
+    gnome-terminal --tab --title=$SC_NUM" - CSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-css-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-css-sim
+    gnome-terminal --tab --title=$SC_NUM" - EPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-eps-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-eps-sim
+    gnome-terminal --tab --title=$SC_NUM" - FSS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-fss-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-fss-sim
+    gnome-terminal --tab --title=$SC_NUM" - GPS Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-gps-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE gps
+    gnome-terminal --tab --title=$SC_NUM" - IMU Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-imu-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-imu-sim
+    gnome-terminal --tab --title=$SC_NUM" - MAG Sim"      -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-mag-sim"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-mag-sim
+    gnome-terminal --tab --title=$SC_NUM" - RW 0 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim0"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim0
+    gnome-terminal --tab --title=$SC_NUM" - RW 1 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim1"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim1
+    gnome-terminal --tab --title=$SC_NUM" - RW 2 Sim"     -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-rw-sim2"      --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-reactionwheel-sim2
+    
+    gnome-terminal --tab --title=$SC_NUM" - Radio Sim"    -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-radio-sim"    -h radio-sim --network=$SC_NETNAME --network-alias=radio-sim -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic_radio_sim
+    
+    gnome-terminal --tab --title=$SC_NUM" - Sample Sim"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-sample-sim"   --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE sample-sim
+    gnome-terminal --tab --title=$SC_NUM" - StarTrk Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-startrk-sim"  --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-star-tracker-sim
+    gnome-terminal --tab --title=$SC_NUM" - Torquer Sim"  -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-torquer-sim"  --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-torquer-sim
+    gnome-terminal --tab --title=$SC_NUM" - Thruster Sim" -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name $SC_NUM"-thruster-sim" --network=$SC_NETNAME -w $SIM_BIN $DBOX ./nos3-single-simulator $SC_CFG_FILE generic-thruster-sim
+    echo ""
+done
+
+echo "NOS Time Driver..."
+sleep 8
+gnome-terminal --tab --title="NOS Time Driver"   -- $DFLAGS -v $SIM_DIR:$SIM_DIR --name nos-time-driver --network=nos3-core -w $SIM_BIN $DBOX ./nos3-single-simulator $GND_CFG_FILE time
+sleep 1
+for (( i=1; i<=$SATNUM; i++ ))
+do
+    export SC_NUM="sc0"$i
+    export SC_NETNAME="nos3-"$SC_NUM
+    export TIMENAME=$SC_NUM"-nos-time-driver"
+    $DNETWORK connect --alias nos-time-driver $SC_NETNAME nos-time-driver
+done
+echo ""
+
+echo "Docker satellite launch script completed!"
+```
+
+### `onair_launch.sh`
+
+**경로:** `scripts/fsw/onair_launch.sh`
+
+
+```bash
+#!/bin/bash
+#
+# Script to start OnAIR
+#
+
+sleep 20
+python3 cf/onair/driver.py cf/onair/cfs_sample.ini
+```
+
+### `start_fprime.sh`
+
+**경로:** `scripts/fsw/start_fprime.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for NOS3 development
+# Use with the Dockerfile in the deployment repository
+# https://github.com/nasa-itc/deployment
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/../env.sh
+
+
+cd $BASE_DIR/fsw/fprime/fprime-nos3
+. fprime-venv/bin/activate
+fprime-gds --gui-port 5000 --gui-addr 0.0.0.0
+```

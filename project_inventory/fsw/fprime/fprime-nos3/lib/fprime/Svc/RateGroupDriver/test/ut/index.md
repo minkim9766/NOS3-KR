@@ -3,20 +3,201 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `RateGroupDriverImplTester.cpp`
 
-file--RateGroupDriverImplTester.cpp
-file--RateGroupDriverImplTester.hpp
-file--RateGroupDriverTester.cpp
-file--Readme.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.cpp`
+
+
+```cpp
+/*
+ * RateGroupDriverImplTester.cpp
+ *
+ *  Created on: Mar 18, 2015
+ *      Author: tcanham
+ */
+
+#include <gtest/gtest.h>
+#include <Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.hpp>
+
+#include <cstdio>
+#include <cstring>
+
+#include <Fw/Test/UnitTest.hpp>
+
+namespace Svc {
+RateGroupDriverImplTester::RateGroupDriverImplTester(Svc::RateGroupDriver& inst)
+    : RateGroupDriverGTestBase("testerbase", 100), m_impl(inst) {
+    this->clearPortCalls();
+}
+
+void RateGroupDriverImplTester::clearPortCalls() {
+    memset(this->m_portCalls, 0, sizeof(this->m_portCalls));
+}
+
+RateGroupDriverImplTester::~RateGroupDriverImplTester() {}
+
+void RateGroupDriverImplTester::from_CycleOut_handler(FwIndexType portNum, Os::RawTime& cycleStart) {
+    this->m_portCalls[portNum] = true;
+}
+
+void RateGroupDriverImplTester::runSchedNominal(Svc::RateGroupDriver::DividerSet dividersSet, FwIndexType numDividers) {
+    TEST_CASE(106.1.1, "Nominal Execution");
+    COMMENT(
+        "Call the port with enough ticks that the internal rollover value will roll over.\n"
+        "Verify that the output ports are being called correctly.\n");
+
+    FwSizeType expected_rollover = 1;
+
+    for (FwIndexType div = 0; div < numDividers; div++) {
+        expected_rollover *= dividersSet.dividers[div].divisor;
+    }
+
+    ASSERT_EQ(expected_rollover, this->m_impl.m_rollover);
+
+    FwSizeType iters = expected_rollover * 10;
+
+    REQUIREMENT("RGD-001");
+
+    for (FwSizeType cycle = 0; cycle < iters; cycle++) {
+        this->clearPortCalls();
+        Os::RawTime t;
+        this->invoke_to_CycleIn(0, t);
+        // make sure ticks are counting correctly
+        ASSERT_EQ((cycle + 1) % expected_rollover, this->m_impl.m_ticks);
+        // check for various intervals
+        for (FwIndexType div = 0; div < numDividers; div++) {
+            if (cycle % dividersSet.dividers[div].divisor == dividersSet.dividers[div].offset) {
+                EXPECT_TRUE(this->m_portCalls[div]);
+            } else {
+                EXPECT_FALSE(this->m_portCalls[div]);
+            }
+        }
+    }
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `RateGroupDriverImplTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.cpp`](file--RateGroupDriverImplTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.hpp`](file--RateGroupDriverImplTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverTester.cpp`](file--RateGroupDriverTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/Readme.txt`](file--Readme.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.hpp`
+
+
+```cpp
+/*
+ * RateGroupDriverImplTester.hpp
+ *
+ *  Created on: June 19, 2015
+ *      Author: tcanham
+ */
+
+#ifndef RATEGROUPDRIVER_TEST_UT_RATEGROUPDRIVERIMPLTESTER_HPP_
+#define RATEGROUPDRIVER_TEST_UT_RATEGROUPDRIVERIMPLTESTER_HPP_
+
+#include <RateGroupDriverGTestBase.hpp>
+#include <Svc/RateGroupDriver/RateGroupDriver.hpp>
+
+namespace Svc {
+
+class RateGroupDriverImplTester : public RateGroupDriverGTestBase {
+  public:
+    RateGroupDriverImplTester(Svc::RateGroupDriver& inst);
+    virtual ~RateGroupDriverImplTester();
+
+    void runSchedNominal(Svc::RateGroupDriver::DividerSet dividersSet, FwIndexType numDividers);
+
+  private:
+    void from_CycleOut_handler(FwIndexType portNum, Os::RawTime& cycleStart);
+
+    Svc::RateGroupDriver& m_impl;
+
+    void clearPortCalls();
+
+    bool m_portCalls[Svc::RateGroupDriver::DIVIDER_SIZE];
+};
+
+} /* namespace Svc */
+
+#endif
+```
+
+### `RateGroupDriverTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/RateGroupDriverTester.cpp`
+
+
+```cpp
+/*
+ * RateGroupDriverTester.cpp
+ *
+ *  Created on: Mar 18, 2015
+ *      Author: tcanham
+ */
+
+#include <Fw/Obj/SimpleObjRegistry.hpp>
+#include <Svc/RateGroupDriver/RateGroupDriver.hpp>
+#include <Svc/RateGroupDriver/test/ut/RateGroupDriverImplTester.hpp>
+
+#include <gtest/gtest.h>
+
+#if FW_OBJECT_REGISTRATION == 1
+static Fw::SimpleObjRegistry simpleReg;
+#endif
+
+void connectPorts(Svc::RateGroupDriver& impl, Svc::RateGroupDriverImplTester& tester) {
+    for (FwIndexType i = 0; i < Svc::RateGroupDriver::DIVIDER_SIZE; i++) {
+        impl.set_CycleOut_OutputPort(i, tester.get_from_CycleOut(i));
+    }
+
+    tester.connect_to_CycleIn(0, impl.get_CycleIn_InputPort(0));
+#if FW_PORT_TRACING
+    // Fw::PortBase::setTrace(true);
+#endif
+
+    // simpleReg.dump();
+}
+
+TEST(RateGroupDriverTest, NominalSchedule) {
+    Svc::RateGroupDriver::DividerSet dividersSet{};
+    for (FwIndexType i = 0; i < static_cast<FwIndexType>(Svc::RateGroupDriver::DIVIDER_SIZE); i++) {
+        dividersSet.dividers[i] = {static_cast<FwSizeType>(i + 1), static_cast<FwSizeType>(i % 2)};
+    }
+
+    Svc::RateGroupDriver impl("RateGroupDriver");
+    impl.configure(dividersSet);
+
+    Svc::RateGroupDriverImplTester tester(impl);
+
+    tester.init();
+    impl.init();
+
+    // connect ports
+    connectPorts(impl, tester);
+
+    tester.runSchedNominal(dividersSet, FW_NUM_ARRAY_ELEMENTS(dividersSet.dividers));
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Readme.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/test/ut/Readme.txt`
+
+
+```text
+This test can be run by executing the following:
+
+From Svc/RateGroupDriver:
+
+"make ut run_ut"
+
+Note that the Ref application needs to be built first. 
+The test will return a pass/fail error code depending on the
+success of the test. 
+```

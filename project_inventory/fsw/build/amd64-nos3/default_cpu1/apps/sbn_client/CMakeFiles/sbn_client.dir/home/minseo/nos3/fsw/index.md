@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/sbn_client/CMakeFiles/sbn_client.dir/home/minseo/nos3/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ apps/index
 cfe/index
 ```
 
-## 항목
-
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn_client/CMakeFiles/sbn_client.dir/home/minseo/nos3/fsw/apps/`](apps/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn_client/CMakeFiles/sbn_client.dir/home/minseo/nos3/fsw/cfe/`](cfe/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

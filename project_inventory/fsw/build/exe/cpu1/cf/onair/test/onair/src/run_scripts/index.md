@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_execution_engine.py`
 
-file--test_execution_engine.py
-file--test_sim.py
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/test_execution_engine.py`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/test_execution_engine.py`](file--test_execution_engine.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/test_sim.py`](file--test_sim.py) — 빌드 산출물 (경로만)
+### `test_sim.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/run_scripts/test_sim.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

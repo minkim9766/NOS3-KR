@@ -3,18 +3,313 @@
 
 **경로:** `components/cryptolib/support/fuzz/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build-fuzz.sh`
 
-file--build-fuzz.sh
-file--fuzz-auto.sh
-file--run-fuzz-multithreaded.sh
+**경로:** `components/cryptolib/support/fuzz/scripts/build-fuzz.sh`
+
+
+```bash
+#!/bin/bash
+
+# === Configuration Options ===
+# Set to 1 to enable aggressive optimizations (requires CPU with AVX2/FMA support)
+# Set to 0 for more compatible builds
+ENABLE_OPTIMIZATIONS=1
+
+# Navigate to project root directory
+cd ../../..
+PROJECT_ROOT="$(cd "$(dirname "$0")" && pwd)"
+cd "$PROJECT_ROOT"
+echo "🏠 Working from project root: $PROJECT_ROOT"
+
+
+# === Check for AFL++ and select best compiler ===
+echo "🔍 Checking for AFL++ compilers..."
+
+# TODO: Resolve `alf-clang-lto` errors
+#if command -v afl-clang-lto &> /dev/null; then
+#    echo "✅ Found afl-clang-lto (recommended LTO mode)"
+#    CC=afl-clang-lto
+#    CXX=afl-clang-lto++
+if command -v afl-clang-fast &> /dev/null; then
+    echo "✅ Found afl-clang-fast (LLVM mode)"
+    CC=afl-clang-fast
+    CXX=afl-clang-fast++
+elif command -v afl-gcc-fast &> /dev/null; then
+    echo "✅ Found afl-gcc-fast (GCC plugin mode)"
+    CC=afl-gcc-fast
+    CXX=afl-g++-fast
+elif command -v afl-gcc &> /dev/null; then
+    echo "✅ Found afl-gcc (basic AFL instrumentation)"
+    CC=afl-gcc
+    CXX=afl-g++
+else
+    echo "❌ ERROR: No AFL++ compilers found. Please install AFL++ first:"
+    echo "    git clone https://github.com/AFLplusplus/AFLplusplus"
+    echo "    cd AFLplusplus && make && sudo make install"
+    echo "See: https://github.com/AFLplusplus/AFLplusplus/blob/stable/docs/INSTALL.md"
+    exit 1
+fi
+
+# Export the selected compiler
+export CC=$CC
+export CXX=$CXX
+
+# Number of CPU cores for parallel compilation
+CORES=$(nproc)
+
+# Set optimization flags based on configuration
+if [ $ENABLE_OPTIMIZATIONS -eq 1 ]; then
+    echo "⚠️  Using aggressive optimizations (requires CPU with AVX2/FMA support)"
+    OPT_FLAGS="-O3 -march=native -mtune=native -flto -funroll-loops -ffast-math -mavx2 -mfma"
+else
+    echo "ℹ️  Using standard optimization level (compatible with most CPUs)"
+    OPT_FLAGS="-O2"
+fi
+
+# === Compile without ASan ===
+echo "🔨 Compiling CryptoLib without ASan..."
+rm -rf build
+mkdir -p build/fuzz && cd build/fuzz
+cmake $PROJECT_ROOT -B $PROJECT_ROOT/build/fuzz \
+  -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX \
+  -DCMAKE_C_FLAGS="$OPT_FLAGS" \
+  -DCMAKE_CXX_FLAGS="$OPT_FLAGS" \
+  -DCMAKE_EXE_LINKER_FLAGS="-flto" \
+  -DCRYPTO_LIBGCRYPT=ON \
+  -DENABLE_FUZZING=ON \
+  -DDEBUG=ON \
+  -DKEY_INTERNAL=ON \
+  -DMC_INTERNAL=ON \
+  -DSA_INTERNAL=ON
+make -j$CORES
+cd ..
+
+# === Compile with ASan ===
+echo "🔨 Compiling CryptoLib with ASan..."
+rm -rf fuzz-asan
+mkdir fuzz-asan && cd fuzz-asan
+cmake $PROJECT_ROOT -B $PROJECT_ROOT/build/fuzz-asan \
+  -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX \
+  -DCMAKE_C_FLAGS="-fsanitize=address $OPT_FLAGS" \
+  -DCMAKE_CXX_FLAGS="-fsanitize=address $OPT_FLAGS" \
+  -DCMAKE_EXE_LINKER_FLAGS="-fsanitize=address -flto" \
+  -DCRYPTO_LIBGCRYPT=ON \
+  -DENABLE_FUZZING=ON \
+  -DDEBUG=ON \
+  -DKEY_INTERNAL=ON \
+  -DMC_INTERNAL=ON \
+  -DSA_INTERNAL=ON
+make -j$CORES
+cd ..
+
+# === Compile with CmpLog ===
+echo "🔨 Compiling CryptoLib with CmpLog instrumentation..."
+rm -rf fuzz-cmplog
+mkdir fuzz-cmplog && cd fuzz-cmplog
+export AFL_LLVM_CMPLOG=1 # Enable CmpLog instrumentation
+cmake $PROJECT_ROOT -B $PROJECT_ROOT/build/fuzz-cmplog \
+  -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX \
+  -DCMAKE_C_FLAGS="$OPT_FLAGS" \
+  -DCMAKE_CXX_FLAGS="$OPT_FLAGS" \
+  -DCRYPTO_LIBGCRYPT=ON \
+  -DENABLE_FUZZING=ON \
+  -DDEBUG=ON \
+  -DKEY_INTERNAL=ON \
+  -DMC_INTERNAL=ON \
+  -DSA_INTERNAL=ON
+make -j$CORES
+unset AFL_LLVM_CMPLOG # Unset to avoid affecting other builds
+cd ..
+
+# === Compile with CompCov (laf-intel) ===
+echo "🔨 Compiling CryptoLib with CompCov (laf-intel) instrumentation..."
+rm -rf fuzz-compcov
+mkdir fuzz-compcov && cd fuzz-compcov
+export AFL_LLVM_LAF_ALL=1 # Enable CompCov instrumentation
+cmake $PROJECT_ROOT -B $PROJECT_ROOT/build/fuzz-compcov \
+  -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX \
+  -DCMAKE_C_FLAGS="$OPT_FLAGS" \
+  -DCMAKE_CXX_FLAGS="$OPT_FLAGS" \
+  -DCRYPTO_LIBGCRYPT=ON \
+  -DENABLE_FUZZING=ON \
+  -DDEBUG=ON \
+  -DKEY_INTERNAL=ON \
+  -DMC_INTERNAL=ON \
+  -DSA_INTERNAL=ON
+make -j$CORES
+unset AFL_LLVM_LAF_ALL # Unset to avoid affecting other builds
+cd ..
+
+# === Final Status ===
+echo "✅ Build complete!"
+echo "📂 Non-ASan build:     'build/fuzz/'"
+echo "📂 ASan build:         'build/fuzz-asan/'"
+echo "📂 CmpLog build:       'build/fuzz-cmplog/'"
+echo "📂 CompCov (laf-intel) build: 'build/fuzz-compcov/'"
+echo ""
+echo "To run fuzzing with AFL++:"
+echo "$(dirname "$0")/run-fuzz-multithreaded.sh"
+echo ""
+echo "⚠️  AFL++ SYSTEM CONFIGURATION REMINDERS ⚠️"
+echo "For optimal fuzzing performance, consider running these commands:"
+echo ""
+echo "1️⃣  Disable CPU frequency scaling:"
+echo "   echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+echo ""
+echo "2️⃣  Configure core pattern for crash analysis:"
+echo "   echo core | sudo tee /proc/sys/kernel/core_pattern"
+echo ""
+echo "📋 TROUBLESHOOTING FUZZING SESSIONS 📋"
+echo "If the fuzzer does not start or you encounter issues:"
+echo ""
+echo "1. List all screen sessions:"
+echo "   screen -ls"
+echo ""
+echo "2. Reattach to a specific session to see errors:"
+echo "   screen -r session_name"
+echo ""
+echo "3. To detach from a screen session: Press Ctrl+A, then D"
 ```
 
-## 항목
+### `fuzz-auto.sh`
 
-- [`components/cryptolib/support/fuzz/scripts/build-fuzz.sh`](file--build-fuzz.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/fuzz/scripts/fuzz-auto.sh`](file--fuzz-auto.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/fuzz/scripts/run-fuzz-multithreaded.sh`](file--run-fuzz-multithreaded.sh) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/support/fuzz/scripts/fuzz-auto.sh`
+
+
+```bash
+#!/bin/bash
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd $SCRIPT_DIR
+./build-fuzz.sh
+cd ..
+python3 generate_corpus.py
+cd ./scripts
+./run-fuzz-multithreaded.sh
+```
+
+### `run-fuzz-multithreaded.sh`
+
+**경로:** `components/cryptolib/support/fuzz/scripts/run-fuzz-multithreaded.sh`
+
+
+```bash
+#!/bin/bash
+
+# === CONFIGURABLE VARIABLES ===
+# MEM_LIMIT=128                                       # Memory limit for AFL++
+SEEDS_DIR="../corpus"                                 # Directory containing grammar mutator seed files
+OUT_DIR="../output"                                   # AFL++ output directory
+TARGET_BINARY="../../../build/fuzz/bin/fuzz_harness"          # Default build target
+ASAN_BINARY="../../../build/fuzz-asan/bin/fuzz_harness"       # ASan build target
+CMPLOG_BINARY="../../../build/fuzz-cmplog/bin/fuzz_harness"   # CMPLOG build target
+COMPCOV_BINARY="../../../build/fuzz-compcov/bin/fuzz_harness" # CompCov (laf-intel) build target
+NUM_CORES=$(($(nproc) - 2))                           # Use all cores except 2 for OS
+
+# === CHECK IF AFL++ AND SCREEN ARE INSTALLED ===
+if ! command -v afl-fuzz &>/dev/null; then
+  echo "❌ AFL++ is not installed. Install it before running this script."
+  exit 1
+fi
+
+if ! command -v screen &>/dev/null; then
+  echo "❌ 'screen' is not installed. Install it with 'sudo apt-get install screen' or 'sudo dnf install screen'."
+  exit 1
+fi
+
+# === CHECK IF USING VIRTUALBOX SHARED FOLDERS ===
+TARGET_GROUP="vboxsf"
+SCRIPT_PATH=$(readlink -f "$0")
+SCRIPT_GROUP=$(stat -c "%G" "$SCRIPT_PATH")
+if [ "$SCRIPT_GROUP" = "$TARGET_GROUP" ]; then
+  echo "ERROR - This script belongs to the group: $TARGET_GROUP - fuzzer not compatible with shared folders!"
+  exit 0
+fi
+
+# === EXPORT GLOBAL ENVIRONMENT VARIABLES ===
+export AFL_TESTCACHE_SIZE=100     # Enable caching of test cases
+export AFL_IMPORT_FIRST=1         # Prioritize loading test cases from other fuzzers
+export AFL_IGNORE_SEED_PROBLEMS=1 # Ignore problematic seeds
+
+# === PRINT CONFIGURATION ===
+echo "🚀 Starting AFL++ Multi-core Fuzzing in 'screen' sessions"
+echo "📂 Output Directory: $OUT_DIR"
+echo "💾 Memory Limit: $MEM_LIMIT MB"
+echo "🖥️  Using $NUM_CORES cores for fuzzing."
+
+# === START AFL++ FUZZING INSTANCES IN SCREEN SESSIONS ===
+
+# Master Fuzzer: Using explore strategy
+screen -dmS afl_main bash -c "AFL_FINAL_SYNC=1 AFL_AUTORESUME=1 afl-fuzz -M main0 -i '$SEEDS_DIR' -o '$OUT_DIR' -p explore -- '$TARGET_BINARY' @@; exec bash"
+
+# Secondary Fuzzers Configuration Counters
+ASAN_COUNT=0
+CMPLOG_COUNT=0
+COMPCOV_COUNT=0
+MOPT_COUNT=0
+OLD_QUEUE_COUNT=0
+DISABLE_TRIM_COUNT=0
+
+# Recommended Limits
+CMPLOG_MAX=2
+COMPCOV_MAX=3
+MOPT_MAX=$(($NUM_CORES / 10))        # 10% for MOpt
+OLD_QUEUE_MAX=$(($NUM_CORES / 10))   # 10% for old queue
+DISABLE_TRIM_MIN=$(($NUM_CORES / 2)) # At least 50% for AFL_DISABLE_TRIM
+
+# Power Schedules
+POWER_SCHEDULES=("fast" "explore" "coe" "lin" "quad" "exploit" "rare")
+
+# Start Secondary Fuzzers
+for i in $(seq 1 $NUM_CORES); do
+  FUZZER_NAME="main$i"
+  SCREEN_SESSION="afl_$FUZZER_NAME"
+  CMD="AFL_AUTORESUME=1 afl-fuzz -S '$FUZZER_NAME' -i '$SEEDS_DIR' -o '$OUT_DIR'"
+
+  # Apply configurations based on counters and recommendations
+  if [ $ASAN_COUNT -lt 1 ]; then
+    CMD="AFL_USE_ASAN=1 $CMD -p fast -- '$ASAN_BINARY' @@"
+    ASAN_COUNT=$((ASAN_COUNT + 1))
+  elif [ $CMPLOG_COUNT -lt $CMPLOG_MAX ]; then
+    if [ $CMPLOG_COUNT -eq 0 ]; then
+      CMD="$CMD -p coe -l 2 -- '$CMPLOG_BINARY' @@"
+    else
+      CMD="$CMD -p lin -l 2AT -- '$CMPLOG_BINARY' @@"
+    fi
+    CMPLOG_COUNT=$((CMPLOG_COUNT + 1))
+  elif [ $COMPCOV_COUNT -lt $COMPCOV_MAX ]; then
+    CMD="$CMD -p explore -- '$COMPCOV_BINARY' @@"
+    COMPCOV_COUNT=$((COMPCOV_COUNT + 1))
+  elif [ $MOPT_COUNT -lt $MOPT_MAX ]; then
+    CMD="$CMD -p quad -L 0 -- '$TARGET_BINARY' @@"
+    MOPT_COUNT=$((MOPT_COUNT + 1))
+  elif [ $OLD_QUEUE_COUNT -lt $OLD_QUEUE_MAX ]; then
+    CMD="$CMD -p rare -Z -- '$TARGET_BINARY' @@"
+    OLD_QUEUE_COUNT=$((OLD_QUEUE_COUNT + 1))
+  elif [ $DISABLE_TRIM_COUNT -lt $DISABLE_TRIM_MIN ]; then
+    CMD="AFL_DISABLE_TRIM=1 $CMD -p exploit -- '$TARGET_BINARY' @@"
+    DISABLE_TRIM_COUNT=$((DISABLE_TRIM_COUNT + 1))
+  else
+    # Default configuration if all quotas are met
+    RANDOM_POWER_SCHEDULE=${POWER_SCHEDULES[$((RANDOM % ${#POWER_SCHEDULES[@]}))]}
+    CMD="$CMD -p $RANDOM_POWER_SCHEDULE -- '$TARGET_BINARY' @@"
+  fi
+
+  # Launch in screen session
+  screen -dmS "$SCREEN_SESSION" bash -c "$CMD; exec bash"
+  echo "🖥️  Started fuzzer in screen session '$SCREEN_SESSION'"
+done
+
+# === PERIODIC AFL++ STATUS UPDATES ===
+sleep 10
+echo "📊 Starting AFL++ status updates every 10 seconds (Press Ctrl+C to stop monitoring)..."
+while true; do
+  clear
+  echo "📈 AFL++ Fuzzing Status (Updated every 10 seconds)"
+  afl-whatsup -s "$OUT_DIR"
+  sleep 10
+done
+```

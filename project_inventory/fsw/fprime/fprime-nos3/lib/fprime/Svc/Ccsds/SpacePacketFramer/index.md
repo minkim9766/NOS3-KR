@@ -3,24 +3,277 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--SpacePacketFramer.cpp
-file--SpacePacketFramer.fpp
-file--SpacePacketFramer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.cpp`](file--SpacePacketFramer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.fpp`](file--SpacePacketFramer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.hpp`](file--SpacePacketFramer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/documentation/reference
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketFramer.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketFramer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+)
+
+
+### Unit Tests ###
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SpacePacketFramerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/SpacePacketFramerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/SpacePacketFramer.fpp"
+  DEPENDS
+    STest
+  UT_AUTO_HELPERS
+)
+```
+
+### `SpacePacketFramer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketFramer.cpp
+// \author thomas-bc
+// \brief  cpp file for SpacePacketFramer component implementation class
+// ======================================================================
+
+#include "Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/Ccsds/Types/SpacePacketHeaderSerializableAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+SpacePacketFramer ::SpacePacketFramer(const char* const compName) : SpacePacketFramerComponentBase(compName) {}
+
+SpacePacketFramer ::~SpacePacketFramer() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void SpacePacketFramer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    SpacePacketHeader header;
+    Fw::SerializeStatus status;
+    FwSizeType frameSize = SpacePacketHeader::SERIALIZED_SIZE + data.getSize();
+    FW_ASSERT(data.getSize() <= std::numeric_limits<Fw::Buffer::SizeType>::max() - SpacePacketHeader::SERIALIZED_SIZE,
+              static_cast<FwAssertArgType>(data.getSize()));
+    FW_ASSERT(
+        data.getSize() > 0,
+        static_cast<FwAssertArgType>(data.getSize()));  // Protocol specifies at least 1 byte of data for a valid packet
+
+    // Allocate frame buffer
+    Fw::Buffer frameBuffer = this->bufferAllocate_out(0, static_cast<Fw::Buffer::SizeType>(frameSize));
+    auto frameSerializer = frameBuffer.getSerializer();
+
+    // -----------------------------------------------
+    // Header
+    // -----------------------------------------------
+    // PVN is always 0 per Standard - Packet Type is 0 for Telemetry (downlink) - SecHdr flag is 0 for no secondary
+    // header
+    U16 packetIdentification = 0;
+    ComCfg::APID::T apid = context.get_apid();
+    FW_ASSERT((apid >> SpacePacketSubfields::ApidWidth) == 0,
+              static_cast<FwAssertArgType>(apid));  // apid must fit in 11 bits
+    packetIdentification |= static_cast<U16>(apid) & static_cast<U16>(SpacePacketSubfields::ApidMask);  // 11 bit APID
+
+    U16 sequenceCount = this->getApidSeqCount_out(0, apid, 0);  // retrieve the sequence count for this APID
+    U16 packetSequenceControl = 0;
+    packetSequenceControl |=
+        0x3 << SpacePacketSubfields::SeqFlagsOffset;  // Sequence Flags 0b11 = unsegmented User Data
+    packetSequenceControl |=
+        sequenceCount & static_cast<U16>(SpacePacketSubfields::SeqCountMask);  // 14 bit sequence count
+
+    FW_ASSERT(data.getSize() <= std::numeric_limits<U16>::max(), static_cast<FwAssertArgType>(data.getSize()));
+    U16 packetDataLength =
+        static_cast<U16>(data.getSize() - 1);  // Standard specifies length is number of bytes minus 1
+
+    header.set_packetIdentification(packetIdentification);
+    header.set_packetSequenceControl(packetSequenceControl);
+    header.set_packetDataLength(packetDataLength);
+
+    // -----------------------------------------------
+    // Serialize the packet
+    // -----------------------------------------------
+    status = frameSerializer.serialize(header);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    status = frameSerializer.serialize(data.getData(), data.getSize(), Fw::Serialization::OMIT_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    this->dataOut_out(0, frameBuffer, context);
+    this->dataReturnOut_out(0, data, context);  // return ownership of the original data buffer
+}
+
+void SpacePacketFramer ::comStatusIn_handler(FwIndexType portNum, Fw::Success& condition) {
+    if (this->isConnected_comStatusOut_OutputPort(portNum)) {
+        this->comStatusOut_out(portNum, condition);
+    }
+}
+
+void SpacePacketFramer ::dataReturnIn_handler(FwIndexType portNum,
+                                              Fw::Buffer& frameBuffer,
+                                              const ComCfg::FrameContext& context) {
+    // dataReturnIn is the allocated buffer coming back from the dataOut port
+    this->bufferDeallocate_out(0, frameBuffer);
+}
+
+}  // namespace Ccsds
+}  // namespace Svc
+```
+
+### `SpacePacketFramer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+    @ Deframer for the CCSDS Space Packet protocol
+    passive component SpacePacketFramer {
+
+        import Framer
+
+        @ Port to allocate a buffer for a space packet
+        output port bufferAllocate: Fw.BufferGet
+
+        @ Port to deallocate a buffer once space packet is sent
+        output port bufferDeallocate: Fw.BufferSend
+
+        @ Port to retrieve the current sequence count for a given APID
+        output port getApidSeqCount: Ccsds.ApidSequenceCount
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @ Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+
+} # end Ccsds
+} # end Svc
+```
+
+### `SpacePacketFramer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/SpacePacketFramer/SpacePacketFramer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SpacePacketFramer.hpp
+// \author thomas-bc
+// \brief  hpp file for SpacePacketFramer component implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_SpacePacketFramer_HPP
+#define Svc_Ccsds_SpacePacketFramer_HPP
+
+#include "Svc/Ccsds/SpacePacketFramer/SpacePacketFramerComponentAc.hpp"
+#include "config/APIDEnumAc.hpp"
+
+namespace Svc {
+
+namespace Ccsds {
+
+class SpacePacketFramer final : public SpacePacketFramerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct SpacePacketFramer object
+    SpacePacketFramer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy SpacePacketFramer object
+    ~SpacePacketFramer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for comStatusIn
+    //!
+    //! Port receiving the general status from the downstream component
+    //! indicating it is ready or not-ready for more input
+    void comStatusIn_handler(FwIndexType portNum,    //!< The port number
+                             Fw::Success& condition  //!< Condition success/failure
+                             ) override;
+
+    //! Handler implementation for dataIn
+    //!
+    //! Port to receive data to frame, in a Fw::Buffer with optional context
+    //!
+    //! Header fields are set according to the CCSDS Space Packet standard, and
+    //! is described in the component SDD.
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Buffer coming from a deallocate call in a ComDriver component
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,
+                              const ComCfg::FrameContext& context) override;
+};
+
+}  // namespace Ccsds
+
+}  // namespace Svc
+
+#endif
+```

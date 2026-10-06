@@ -3,18 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `links-page-tabs.component.css`
 
-file--links-page-tabs.component.css
-file--links-page-tabs.component.html
-file--links-page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.css`
+
+
+```css
+.mat-mdc-tab-link {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
 ```
 
-## 항목
+### `links-page-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.css`](file--links-page-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.html`](file--links-page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.ts`](file--links-page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    routerLink="/links"
+    routerLinkActive
+    [routerLinkActiveOptions]="{ exact: true }"
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Links
+  </a>
+  <a
+    routerLink="/links/log"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Action log
+  </a>
+
+  <ng-container actions><ng-content /></ng-container>
+</ya-page-tabs>
+```
+
+### `links-page-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/links-page-tabs/links-page-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-links-page-tabs',
+  templateUrl: './links-page-tabs.component.html',
+  styleUrl: './links-page-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class LinksPageTabsComponent {
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

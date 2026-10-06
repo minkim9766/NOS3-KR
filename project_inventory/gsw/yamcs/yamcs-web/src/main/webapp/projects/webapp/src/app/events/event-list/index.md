@@ -3,24 +3,1136 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `completions.ts`
 
-file--completions.ts
-file--event-list.component.css
-file--event-list.component.html
-file--event-list.component.ts
-file--EventBuffer.ts
-file--events.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/completions.ts`
+
+
+```typescript
+import { Completion, insertCompletionText } from '@codemirror/autocomplete';
+import { EditorView } from 'codemirror';
+
+function applyString(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  const replacement = completion.label + ' = \"\"';
+  const tr = insertCompletionText(view.state, replacement, from, to);
+  // Place cursor between quotes
+  tr.selection = { anchor: from + replacement.length - 1 };
+  view.dispatch(tr);
+}
+
+function applyEnum(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' = ', from, to),
+  );
+}
+
+function applyNumber(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' = ', from, to),
+  );
+}
+
+function applyLogicalOperator(
+  view: EditorView,
+  completion: Completion,
+  from: number,
+  to: number,
+) {
+  view.dispatch(
+    insertCompletionText(view.state, completion.label + ' ', from, to),
+  );
+}
+
+export const EVENT_COMPLETIONS: Completion[] = [
+  {
+    label: 'message',
+    type: 'method',
+    info: 'Filter by event message',
+    apply: applyString,
+  },
+  {
+    label: 'seqNumber',
+    type: 'method',
+    info: 'Filter by event sequence number',
+    apply: applyNumber,
+  },
+  {
+    label: 'severity',
+    type: 'method',
+    info: 'Filter by event severity (info, watch, warning, distress, critical, severe)',
+    apply: applyEnum,
+  },
+  {
+    label: 'source',
+    type: 'method',
+    info: 'Filter by event source',
+    apply: applyString,
+  },
+  {
+    label: 'type',
+    type: 'method',
+    info: 'Filter by event type',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude events',
+    label: '-message',
+    type: 'method',
+    info: 'Exclude events based on message',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude events',
+    label: '-seqNumber',
+    type: 'method',
+    info: 'Exclude events based on sequence number',
+    apply: applyNumber,
+  },
+  {
+    section: 'Exclude events',
+    label: '-severity',
+    type: 'method',
+    info: 'Exclude events based on severity (info, watch, warning, distress, critical, severe)',
+    apply: applyEnum,
+  },
+  {
+    section: 'Exclude events',
+    label: '-source',
+    type: 'method',
+    info: 'Exclude events based on source',
+    apply: applyString,
+  },
+  {
+    section: 'Exclude events',
+    label: '-type',
+    type: 'method',
+    info: 'Exclude events based on type',
+    apply: applyString,
+  },
+  {
+    section: 'Logical operators',
+    label: 'AND',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'OR',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+  {
+    section: 'Logical operators',
+    label: 'NOT',
+    type: 'constant',
+    apply: applyLogicalOperator,
+  },
+];
 ```
 
-## 항목
+### `event-list.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/completions.ts`](file--completions.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.css`](file--event-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.html`](file--event-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.ts`](file--event-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/EventBuffer.ts`](file--EventBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/events.datasource.ts`](file--events.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.css`
+
+
+```css
+.ya-filter-bar.query {
+  height: unset;
+}
+
+.ya-data-table td.mat-mdc-cell.message {
+  white-space: pre-wrap;
+}
+
+.WATCH td,
+.WARNING td {
+  color: var(--y-warning-color) !important;
+}
+
+.ERROR td,
+.DISTRESS td,
+.CRITICAL td,
+.SEVERE td {
+  color: var(--y-error-color) !important;
+}
+```
+
+### `event-list.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Events">
+    @if (mayWriteEvents()) {
+      <ya-page-button (clicked)="createEvent()" icon="add_box">Create event</ya-page-button>
+    }
+
+    @if (dataSource.streaming$ | async) {
+      <ya-page-button matTooltip="Pause streaming events" (clicked)="stopStreaming()" icon="pause">
+        Stop streaming
+      </ya-page-button>
+    } @else {
+      <ya-page-button (clicked)="startStreaming()" icon="play_arrow">
+        Start streaming
+      </ya-page-button>
+    }
+
+    <ya-page-button (clicked)="jumpToNow()" icon="refresh">Jump to now</ya-page-button>
+  </ya-instance-toolbar>
+
+  @if (dataSource) {
+    <ya-panel>
+      <app-events-page-tabs>
+        <ya-button
+          appearance="text"
+          icon="clear"
+          (click)="clearQuery()"
+          [disabled]="!isClearQueryEnabled()">
+          Clear query
+        </ya-button>
+        <ya-button appearance="text" icon="save" (click)="openSaveQueryDialog()">
+          Save query
+        </ya-button>
+      </app-events-page-tabs>
+
+      <ya-filter-bar [formGroup]="filterForm" class="query" style="margin-top: 16px">
+        <ya-select icon="access_time" formControlName="interval">
+          <ya-option id="PT1H" label="Last hour" />
+          <ya-option id="PT6H" label="Last 6 hours" />
+          <ya-option id="P1D" label="Last 24 hours" />
+          <ya-option id="NO_LIMIT" label="No limit" />
+          <ya-option id="CUSTOM" label="Custom" group="true" />
+        </ya-select>
+        @if (filterForm.value["interval"] === "CUSTOM") {
+          <ya-date-time-input formControlName="customStart" />
+          <ya-date-time-input formControlName="customStop" />
+          <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">Apply</ya-button>
+        }
+        <ya-search-filter2
+          #searchFilter
+          formControlName="filter"
+          placeholder="Search events"
+          style="flex: 1 1 auto"
+          [completions]="completions"
+          (typedValue)="parseQuery($event)" />
+        <ya-select formControlName="severity">
+          <ya-option id="INFO" label="Info level" />
+          <ya-option id="WATCH" label="Watch level" />
+          <ya-option id="WARNING" label="Warning level" />
+          <ya-option id="DISTRESS" label="Distress level" />
+          <ya-option id="CRITICAL" label="Critical level" />
+          <ya-option id="SEVERE" label="Severe level" />
+        </ya-select>
+        <ya-multi-select
+          [options]="sourceOptions$ | async"
+          formControlName="source"
+          emptyOption="Any source" />
+      </ya-filter-bar>
+
+      <ya-table-window [duration]="appliedInterval" [start]="validStart" [stop]="validStop">
+        @if (dataSource.loading$ | async) {
+          <ya-dots />
+        }
+        @if (dataSource.streaming$ | async) {
+          <div style="text-align: right; flex: 1 1 150px">
+            Listening for events
+            <ya-dots fontSize="16" />
+          </div>
+        }
+        <ya-button appearance="text" icon="download" (click)="exportEvents()">Export CSV</ya-button>
+
+        <ya-column-chooser
+          #columnChooser
+          [columns]="columns"
+          preferenceKey="events"
+          appearance="text"
+          icon="view_columns" />
+      </ya-table-window>
+
+      @if (searchFilter.dirty()) {
+        <ya-table-top>
+          The search filter has changed.
+          @if (!(searchFilter.errorState$ | async)) {
+            &nbsp;
+            <a href class="ya-link" (click)="searchFilter.doSearch(); $event.preventDefault()">
+              Apply filter
+            </a>
+            .
+          }
+        </ya-table-top>
+      }
+      <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+        <ng-container cdkColumnDef="severity">
+          <th mat-header-cell *cdkHeaderCellDef>Severity</th>
+          <td mat-cell *cdkCellDef="let row">
+            <app-event-severity [severity]="row.severity" />
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="message">
+          <th mat-header-cell *cdkHeaderCellDef class="expand">Message</th>
+          <td mat-cell *cdkCellDef="let row" class="mono message expand">
+            <app-event-message [message]="row.message" [highlight]="filterForm.value.filter" />
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="type">
+          <th mat-header-cell *cdkHeaderCellDef>Type</th>
+          <td mat-cell *cdkCellDef="let row">
+            @if (row.type) {
+              <ya-highlight [text]="row.type" [term]="filterForm.value.filter" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="source">
+          <th mat-header-cell *cdkHeaderCellDef>Source</th>
+          <td mat-cell *cdkCellDef="let row">
+            @if (row.source) {
+              <ya-highlight [text]="row.source" [term]="filterForm.value.filter" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="gentime">
+          <th mat-header-cell *cdkHeaderCellDef>Generation time</th>
+          <td mat-cell *cdkCellDef="let row" style="white-space: nowrap">
+            {{ (row.generationTime | datetime) || "-" }}
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="rectime">
+          <th mat-header-cell *cdkHeaderCellDef>Reception time</th>
+          <td mat-cell *cdkCellDef="let row" style="white-space: nowrap">
+            {{ (row.receptionTime | datetime) || "-" }}
+          </td>
+        </ng-container>
+        <ng-container cdkColumnDef="seqNumber">
+          <th mat-header-cell *cdkHeaderCellDef>Sequence number</th>
+          <td mat-cell *cdkCellDef="let row">
+            {{ row.seqNumber ?? "-" }}
+          </td>
+        </ng-container>
+        @for (extraColumn of extraColumns; track extraColumn) {
+          <ng-container [cdkColumnDef]="extraColumn.id">
+            <th mat-header-cell *cdkHeaderCellDef>
+              {{ extraColumn.label }}
+            </th>
+            <td mat-cell *cdkCellDef="let row">
+              @if (row.extra) {
+                {{ row.extra[extraColumn.id] ?? "-" }}
+              } @else {
+                -
+              }
+            </td>
+          </ng-container>
+        }
+        <tr mat-header-row *cdkHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *cdkRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          [ngClass]="row.severity"></tr>
+      </table>
+
+      <ya-toolbar appearance="bottom" align="center">
+        <ya-button [disabled]="!dataSource.hasMore()" (click)="loadMoreData()">Load more</ya-button>
+      </ya-toolbar>
+    </ya-panel>
+  }
+</ya-instance-page>
+```
+
+### `event-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/event-list.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  input,
+  viewChild,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  EventSeverity,
+  ExtraColumnInfo,
+  GetEventsOptions,
+  MessageService,
+  ParseFilterSubscription,
+  Synchronizer,
+  WebappSdkModule,
+  YaColumnInfo,
+  YaSearchFilter2,
+  YaSelectOption,
+  YamcsService,
+  stringArrayAttribute,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CreateEventDialogComponent } from '../create-event-dialog/create-event-dialog.component';
+import { CreateEventQueryDialogComponent } from '../create-event-query-dialog/create-event-query-dialog.component';
+import { EventMessageComponent } from '../event-message/event-message.component';
+import { EventSeverityComponent } from '../event-severity/event-severity.component';
+import { EventsPageTabsComponent } from '../events-page-tabs/events-page-tabs.component';
+import { ExportEventsDialogComponent } from '../export-events-dialog/export-events-dialog.component';
+import { EVENT_COMPLETIONS } from './completions';
+import { EventsDataSource } from './events.datasource';
+
+const defaultInterval = 'PT1H';
+
+@Component({
+  templateUrl: './event-list.component.html',
+  styleUrl: './event-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    EventMessageComponent,
+    EventsPageTabsComponent,
+    EventSeverityComponent,
+    WebappSdkModule,
+  ],
+})
+export class EventListComponent implements OnInit, OnDestroy {
+  filter = input<string>();
+  severity = input<EventSeverity>();
+  source = input([], { transform: stringArrayAttribute });
+  interval = input<string>();
+  customStart = input<string>();
+  customStop = input<string>();
+
+  // From resolver
+  parseFilterSubscription = input.required<ParseFilterSubscription>();
+
+  searchFilter = viewChild.required<YaSearchFilter2>('searchFilter');
+  completions = EVENT_COMPLETIONS;
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new FormGroup({
+    filter: new FormControl<string | null>(null),
+    severity: new FormControl<EventSeverity | null>('INFO'),
+    source: new FormControl<string[] | null>([]),
+    interval: new FormControl<string | null>(defaultInterval),
+    customStart: new FormControl<string | null>(null),
+    customStop: new FormControl<string | null>(null),
+  });
+
+  dataSource: EventsDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'severity', label: 'Severity', visible: true },
+    { id: 'gentime', label: 'Generation time', alwaysVisible: true },
+    { id: 'message', label: 'Message', alwaysVisible: true },
+    { id: 'source', label: 'Source', visible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'rectime', label: 'Reception time' },
+    { id: 'seqNumber', label: 'Sequence number' },
+  ];
+
+  /**
+   * Columns specific to a Yamcs deployment
+   */
+  extraColumns: ExtraColumnInfo[] = [];
+
+  sourceOptions$ = new BehaviorSubject<YaSelectOption[]>([]);
+
+  downloadURL$ = new BehaviorSubject<string | null>(null);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    configService: ConfigService,
+    private messageService: MessageService,
+    private router: Router,
+    private route: ActivatedRoute,
+    title: Title,
+    synchronizer: Synchronizer,
+  ) {
+    title.setTitle('Events');
+
+    // Consider site-specific configuration
+    const eventConfig = configService.getConfig().events;
+    if (eventConfig) {
+      this.extraColumns = eventConfig.extraColumns || [];
+      for (const extraColumn of this.extraColumns) {
+        for (let i = 0; i < this.columns.length; i++) {
+          if (this.columns[i].id === extraColumn.after) {
+            this.columns.splice(i + 1, 0, extraColumn);
+            break;
+          }
+        }
+      }
+    }
+
+    yamcs.yamcsClient.getEventSources(yamcs.instance!).then((sources) => {
+      for (const source of sources) {
+        this.sourceOptions$.next([
+          ...this.sourceOptions$.value,
+          {
+            id: source,
+            label: source,
+          },
+        ]);
+      }
+    });
+
+    this.dataSource = new EventsDataSource(yamcs, synchronizer);
+
+    // Add new sources to source filter
+    this.dataSource.sources$.subscribe((sources) => {
+      this.sourceOptions$.next(
+        sources.map((source) => {
+          return { id: source, label: source };
+        }),
+      );
+    });
+  }
+
+  ngOnInit(): void {
+    this.parseFilterSubscription().addMessageListener((data) => {
+      if (data.errorMessage) {
+        this.searchFilter().addErrorMark(data.errorMessage, {
+          beginLine: data.beginLine!,
+          beginColumn: data.beginColumn!,
+          endLine: data.endLine!,
+          endColumn: data.endColumn!,
+        });
+      } else {
+        this.searchFilter().clearErrorMark();
+      }
+    });
+
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm.get('filter')!.valueChanges.forEach((filter) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('severity')!.valueChanges.forEach((severity) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('source')!.valueChanges.forEach((source) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else if (nextInterval) {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  private initializeOptions() {
+    if (this.filter()) {
+      const filter = this.filter()!;
+      this.filterForm.get('filter')!.setValue(filter);
+    }
+    if (this.severity()) {
+      const severity = this.severity()!;
+      this.filterForm.get('severity')!.setValue(severity);
+    }
+    if (this.source()) {
+      const source = this.source()!;
+      this.filterForm.get('source')!.setValue(source);
+    }
+    if (this.interval()) {
+      this.appliedInterval = this.interval()!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = this.customStart()!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = utils.toDate(customStart);
+        const customStop = this.customStop()!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = utils.toDate(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.controls['interval'].value;
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval === 'CUSTOM') {
+      // For simplicity reasons, just reset to default 1h interval.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval) {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  startStreaming() {
+    this.filterForm.get('interval')!.setValue('NO_LIMIT');
+    this.dataSource.startStreaming();
+  }
+
+  stopStreaming() {
+    this.dataSource.stopStreaming();
+  }
+
+  applyCustomDates() {
+    const { controls } = this.filterForm;
+    this.validStart = utils.toDate(controls['customStart'].value);
+    this.validStop = utils.toDate(controls['customStop'].value);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  /**
+   * Loads the first page of data within validStart and validStop
+   */
+  loadData() {
+    const { controls } = this.filterForm;
+    this.updateURL();
+    const options: GetEventsOptions = {
+      severity: controls['severity'].value!,
+    };
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.filter = filter;
+    }
+    const source = controls['source'].value;
+    if (source?.length) {
+      options.source = source;
+    }
+
+    this.dataSource
+      .loadEvents(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  loadMoreData() {
+    const { controls } = this.filterForm;
+    const options: GetEventsOptions = {
+      severity: controls['severity'].value!,
+    };
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.filter = filter;
+    }
+    const source = controls['source'].value;
+    if (source?.length) {
+      options.source = source;
+    }
+
+    this.dataSource
+      .loadMoreData(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const { controls } = this.filterForm;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: controls['filter'].value || null,
+        severity: controls['severity'].value,
+        source: controls['source'].value ? controls['source'].value : null,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStart'].value
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStop'].value
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  clearQuery() {
+    this.filterForm.reset({
+      severity: 'INFO',
+      source: [],
+      interval: defaultInterval,
+    });
+  }
+
+  openSaveQueryDialog() {
+    const { controls } = this.filterForm;
+    this.dialog
+      .open(CreateEventQueryDialogComponent, {
+        width: '800px',
+        data: {
+          severity: controls['severity'].value,
+          // Use currently typed value (even if not submitted)
+          filter: this.searchFilter().getTypedValue(),
+          source: controls['source'].value,
+          sourceOptions: this.sourceOptions$.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.messageService.showInfo('Query saved');
+        }
+      });
+  }
+
+  parseQuery(typedQuery: string) {
+    this.parseFilterSubscription().sendMessage({
+      resource: 'events',
+      filter: typedQuery,
+    });
+  }
+
+  isClearQueryEnabled() {
+    const fv = this.filterForm.value;
+    return (
+      this.searchFilter().empty() || fv.severity !== 'INFO' || fv.source?.length
+    );
+  }
+
+  mayWriteEvents() {
+    return this.authService.getUser()!.hasSystemPrivilege('WriteEvents');
+  }
+
+  createEvent() {
+    const dialogInstance = this.dialog.open(CreateEventDialogComponent, {
+      width: '400px',
+    });
+    dialogInstance.afterClosed().subscribe((result) => {
+      if (result) {
+        this.jumpToNow();
+      }
+    });
+  }
+
+  exportEvents() {
+    const { controls } = this.filterForm;
+    this.dialog.open(ExportEventsDialogComponent, {
+      width: '800px',
+      data: {
+        severity: controls['severity'].value,
+        start: this.validStart,
+        stop: this.validStop,
+        filter: controls['filter'].value,
+        source: controls['source'].value,
+        sourceOptions: this.sourceOptions$.value,
+      },
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.parseFilterSubscription().cancel();
+  }
+}
+```
+
+### `EventBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/EventBuffer.ts`
+
+
+```typescript
+import { Event } from '@yamcs/webapp-sdk';
+
+export type WatermarkObserver = () => void;
+
+/**
+ * Combines archive events obtained via REST
+ * with realtime events obtained via WebSocket.
+ *
+ * This class does not care about whether archive samples
+ * and realtime values are connected. Both sets are joined and sorted under all conditions.
+ */
+export class EventBuffer {
+  public dirty = false;
+
+  private archiveEvents: Event[] = [];
+
+  private realtimeBuffer: (Event | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.realtimeBuffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  addArchiveData(events: Event[]) {
+    this.archiveEvents = this.archiveEvents.concat(events);
+    this.dirty = true;
+  }
+
+  addRealtimeEvent(event: Event) {
+    if (this.pointer < this.bufferSize) {
+      this.realtimeBuffer[this.pointer] = event;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.alreadyWarned = true;
+        this.watermarkObserver();
+      }
+      this.pointer = this.pointer + 1;
+    }
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archiveEvents = [];
+    this.realtimeBuffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.dirty = true;
+  }
+
+  snapshot(): Event[] {
+    const realtimeEvents = this.realtimeBuffer.filter(
+      (s) => s !== undefined,
+    ) as Event[];
+
+    const splicedEvents = this.archiveEvents
+      .concat(realtimeEvents)
+      .sort((e1, e2) => {
+        let res = -e1.generationTime.localeCompare(e2.generationTime);
+        if (res === 0) {
+          res = -e1.source.localeCompare(e2.source);
+        }
+        return res !== 0 ? res : e2.seqNumber - e1.seqNumber;
+      });
+    return splicedEvents;
+  }
+
+  /**
+   * Transfers the realtime buffer into the archive buffer, and
+   * reduces its size to a set limit. The oldest events (based
+   * on generation time) are removed first.
+   */
+  compact(limit: number) {
+    const snapshot = this.snapshot();
+    snapshot.length = Math.min(limit, snapshot.length);
+    this.reset();
+    this.archiveEvents = snapshot;
+    this.dirty = true;
+  }
+}
+```
+
+### `events.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/events.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Event,
+  EventSubscription,
+  GetEventsOptions,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { EventBuffer } from './EventBuffer';
+
+export class EventsDataSource extends DataSource<Event> {
+  pageSize = 100;
+  offscreenRecord: Event | null;
+  options: GetEventsOptions;
+  blockHasMore = false;
+
+  events$ = new BehaviorSubject<Event[]>([]);
+  private eventBuffer: EventBuffer;
+
+  sources$ = new BehaviorSubject<string[]>([]);
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+  public streaming$ = new BehaviorSubject<boolean>(false);
+
+  private realtimeSubscription: EventSubscription;
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.eventBuffer.dirty && !this.loading$.getValue()) {
+        this.emitEvents();
+        this.eventBuffer.dirty = false;
+      }
+    });
+
+    this.eventBuffer = new EventBuffer(() => {
+      // Best solution for now, alternative is to re-establish
+      // the offscreenRecord after compacting.
+      this.blockHasMore = true;
+
+      this.eventBuffer.compact(500);
+    });
+  }
+
+  connect() {
+    return this.events$;
+  }
+
+  private emitEvents() {
+    this.events$.next(this.eventBuffer.snapshot());
+  }
+
+  loadEvents(options: GetEventsOptions) {
+    this.loading$.next(true);
+
+    if (this.streaming$.value) {
+      // Other filters (time, q, severity, source) are applied
+      // client-side
+      this.realtimeSubscription.sendMessage({
+        instance: this.yamcs.instance!,
+        filter: options.filter,
+      });
+    }
+
+    return Promise.all([
+      this.yamcs.yamcsClient.getEventSources(this.yamcs.instance!),
+      this.loadPage({
+        ...options,
+        limit: this.pageSize + 1, // One extra to detect hasMore
+      }),
+    ])
+      .then((results) => {
+        const sources = results[0];
+        const events = results[1];
+
+        this.eventBuffer.reset();
+        this.blockHasMore = false;
+        this.eventBuffer.addArchiveData(events);
+
+        this.sources$.next(sources);
+
+        // Quick emit, don't wait on sync tick
+        this.emitEvents();
+
+        return events;
+      })
+      .catch((err) => {
+        this.eventBuffer.reset();
+        throw err;
+      })
+      .finally(() => {
+        this.loading$.next(false);
+      });
+  }
+
+  hasMore() {
+    return this.offscreenRecord != null && !this.blockHasMore;
+  }
+
+  /**
+   * Fetches a page of data and keeps track of one invisible record that
+   * allows to deterimine if there are further page(s). The next to last
+   * record is used to determine the stop date of the next query because
+   * the server uses the interval bounds: [start,stop)
+   */
+  private loadPage(options: GetEventsOptions) {
+    this.options = options;
+    return this.yamcs.yamcsClient
+      .getEvents(this.yamcs.instance!, options)
+      .then((events) => {
+        if (events.length > this.pageSize) {
+          events.splice(events.length - 1, 1);
+          this.offscreenRecord = events[events.length - 1];
+        } else {
+          this.offscreenRecord = null;
+        }
+        return events;
+      });
+  }
+
+  /**
+   * Loads the next page of data starting at where the previous page was cut off.
+   * This not 100% waterproof as data may have arrived with generation time between
+   * the last visible data and the offscreen record. This is unlikely to cause
+   * practical problems.
+   */
+  async loadMoreData(options: GetEventsOptions) {
+    if (!this.offscreenRecord) {
+      return;
+    }
+    return this.loadPage({
+      ...options,
+      stop: this.offscreenRecord.generationTime,
+      limit: this.pageSize + 1, // One extra to detect hasMore
+    }).then((events) => {
+      this.eventBuffer.addArchiveData(events);
+
+      // Quick emit, don't wait on sync tick
+      this.emitEvents();
+    });
+  }
+
+  startStreaming() {
+    this.streaming$.next(true);
+    this.realtimeSubscription = this.yamcs.yamcsClient.createEventSubscription(
+      {
+        instance: this.yamcs.instance!,
+        filter: this.options.filter,
+      },
+      (event) => {
+        this.addEventSource(event);
+        if (!this.loading$.getValue() && this.matchesFilter(event)) {
+          this.eventBuffer.addRealtimeEvent(event);
+        }
+      },
+    );
+  }
+
+  private addEventSource(event: Event) {
+    if (!event.source) {
+      return;
+    }
+
+    for (const source of this.sources$.value) {
+      if (source === event.source) {
+        return;
+      }
+    }
+
+    this.sources$.next(
+      [...this.sources$.value, event.source].sort((a, b) =>
+        a.toLowerCase().localeCompare(b.toLocaleLowerCase()),
+      ),
+    );
+  }
+
+  private matchesFilter(event: Event) {
+    if (this.options) {
+      if (this.options.source?.length) {
+        if (this.options.source.indexOf(event.source) === -1) {
+          return false;
+        }
+      }
+      if (this.options.severity) {
+        switch (this.options.severity) {
+          case 'SEVERE':
+          case 'ERROR':
+            if (event.severity === 'CRITICAL') {
+              return false;
+            }
+          // fall
+          case 'CRITICAL':
+            if (event.severity === 'DISTRESS') {
+              return false;
+            }
+          // fall
+          case 'DISTRESS':
+            if (event.severity === 'WARNING') {
+              return false;
+            }
+          // fall
+          case 'WARNING':
+            if (event.severity === 'WATCH') {
+              return false;
+            }
+          // fall
+          case 'WATCH':
+            if (event.severity === 'INFO') {
+              return false;
+            }
+        }
+      }
+    }
+
+    return true;
+  }
+
+  stopStreaming() {
+    this.realtimeSubscription?.cancel();
+    this.streaming$.next(false);
+  }
+
+  disconnect() {
+    this.stopStreaming();
+    this.syncSubscription?.unsubscribe();
+    this.events$.complete();
+    this.sources$.complete();
+    this.loading$.complete();
+    this.streaming$.complete();
+  }
+}
+```

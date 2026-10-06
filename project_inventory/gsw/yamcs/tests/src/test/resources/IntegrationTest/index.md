@@ -3,28 +3,320 @@
 
 **경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 instance-templates/index
-file--processor.yaml
-file--roles.yaml
-file--security.yaml
-file--users.yaml
-file--yamcs.instance1.yaml
-file--yamcs.instance2.yaml
-file--yamcs.yaml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/instance-templates/`](instance-templates/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/roles.yaml`](file--roles.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/security.yaml`](file--security.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/users.yaml`](file--users.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.instance1.yaml`](file--yamcs.instance1.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.instance2.yaml`](file--yamcs.instance2.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/processor.yaml`
+
+
+```yaml
+# this file defines the different processors types
+# a processor is where TM/TC processing happens inside Yamcs.
+#
+
+realtime:
+    services: 
+        - class: org.yamcs.StreamTmPacketProvider
+          args: 
+              streams: ["tm_realtime"]    
+        - class: org.yamcs.StreamTcCommandReleaser
+        - class: org.yamcs.tctm.StreamParameterProvider
+       # implements XTCE algorithms
+        - class: org.yamcs.algorithms.AlgorithmManager
+          args:            
+              libraries:
+                  JavaScript:
+                      - mdb/algolib.js
+                  python:
+                      - mdb/algolib.py
+        - class: org.yamcs.parameter.LocalParameterManager
+    config:
+        persistParameters: true
+        subscribeAll: true
+        #check parameter and event alarms and also enable the alarm servers (that keeps track of unacknowledged alarms)
+        alarm:
+            parameterCheck: true
+            parameterServer: enabled
+            eventServer: enabled
+        recordInitialValues: true
+        recordLocalValues: true
+
+
+#used for archive replays (to displays, etc)
+Archive:
+    services: 
+       - class: org.yamcs.tctm.ReplayService
+    config:
+        subscribeAll: true
+
+#used for archive replays (to displays, etc)
+ArchiveWithPpExclusion:
+    services: 
+       - class: org.yamcs.tctm.ReplayService
+         args: 
+             #do not replay these parameters
+            excludeParameterGroups: ["IntegrationTest"]
+    config:
+        subscribeAll: true
+            
+#used for performing archive retrievals (e.g. parameter-extractor.sh)
+ArchiveRetrieval:
+    services:
+        - class: org.yamcs.tctm.ReplayService
+        - class: org.yamcs.algorithms.AlgorithmManager
+          args:
+              libraries:
+                  JavaScript:
+                      - mdb/algolib.js
+                  python:
+                      - mdb/algolib.py
+            
+#used for performing archive retrievals (e.g. parameter-extractor.sh)
+ParameterArchive:
+    services :
+        - class: org.yamcs.tctm.ReplayService
+```
+
+### `roles.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/roles.yaml`
+
+
+```yaml
+Role1:
+  ReadParameter: [".*IntegerPara.*"]
+  WriteParameter: []
+  ReadPacket: ["PP_.*", ".*"]
+  Command: [".*INT_ARG_TC.*"]
+  System: ["ControlProcessor", "ControlCommandQueue", "Command", "GetMissionDatabase", "ControlArchiving", "WriteEvents"]
+
+Operator:
+  ReadParameter: [".*"]
+  WriteParameter: []
+  ReadPacket: ["PP_.*", ".*"]
+  Command: [".*"]
+  InsertCommandQueue: ["ops"]
+  System: ["ControlProcessor", "ModifyCommandHistory", "ControlCommandQueue", "Command", "GetMissionDatabase", 
+"ControlArchiving", "WriteEvents"]
+
+Administrator:
+  ReadParameter: [".*"]
+  WriteParameter: [".*"]
+  ReadPacket: [".*"]
+  Command: [".*"]
+  ChangeCalibrator: [".*"]
+  System: ["ControlProcessor", "ModifyCommandHistory", "ControlCommandQueue", "Command", "GetMissionDatabase", 
+"ControlArchiving", "ControlServices", "ReadTables", "WriteTables",  "WriteEvents", "ChangeMissionDatabase", "CreateInstances"]
+
+EmptyRole:
+```
+
+### `security.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/security.yaml`
+
+
+```yaml
+enabled: true
+authModules:
+  - class: org.yamcs.security.YamlAuthModule
+```
+
+### `users.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/users.yaml`
+
+
+```yaml
+testuser:
+  password: password
+  roles: [Role1, EmptyRole]
+  
+operator:
+  password: password
+  roles: [Operator]
+  
+admin:
+  password: rootpassword
+  roles: [Administrator, Operator]
+```
+
+### `yamcs.instance1.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.instance1.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+        backFiller:
+          automaticBackfilling: false
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime"
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.parameter.ParameterRetrievalService
+    args:
+      parameterCache:
+         enabled: true
+         cacheAll: true
+         duration: 3600
+         maxNumEntries: 4096
+
+dataLinks:
+  - name: tm_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$PacketProvider
+    num: 0
+    stream: tm_realtime
+  - name: tm2_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$PacketProvider
+    num: 1
+    stream: tm2_realtime
+            
+  - name: pp_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$ParameterProvider
+    stream: pp_realtime
+    num: 0
+  - name: tc_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$TcDataLink
+    num: 0
+    stream: tc_realtime
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+  - type: "xtce"    
+    args:
+      file: "mdb/writable_subsys.xml"
+    writable: true
+    
+streamConfig:
+  tm: 
+   - name: tm_realtime
+     processor: realtime
+   - name: tm2_realtime
+     processor: realtime
+     rootContainer: /REFMDB/tm2
+   - name: tm_dump
+  cmdHist: ["cmdhist_realtime",  "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["sys_param", "pp_realtime", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc: 
+    - name: "tc_realtime"
+      processor: realtime
+```
+
+### `yamcs.instance2.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.instance2.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.parameterarchive.ParameterArchive
+    args:
+       backFiller:
+          automaticBackfilling: false
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime"
+  - class: org.yamcs.archive.CommandHistoryRecorder
+
+dataLinks:
+  - name: tm_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$PacketProvider
+    num: 2
+    stream: tm_realtime
+  - name: tm2_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$PacketProvider
+    num: 3
+    stream: tm2_realtime
+            
+  - name: pp_realtime
+    class: org.yamcs.tests.AbstractIntegrationTest$ParameterProvider
+    stream: pp_realtime
+    num: 1
+  - name: datalink_tc1
+    class: org.yamcs.tests.AbstractIntegrationTest$TcDataLink
+    stream: tcstream1
+    num: 1
+  - name: datalink_tc2
+    class: org.yamcs.tests.AbstractIntegrationTest$TcDataLink
+    stream: tcstream2
+    num: 2
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig:
+  tm: 
+   - name: tm_realtime
+     processor: realtime
+   - name: tm2_realtime
+     processor: realtime
+     rootContainer: /REFMDB/tm2
+   - name: tm_dump
+  cmdHist: ["cmdhist_realtime",  "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["sys_param", "pp_realtime", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc:
+    - name: tcstream1
+      processor: realtime
+      tcPatterns: ["/REFMDB/SUBSYS1/ONE.*"]
+    - name: tcstream2
+      processor: realtime
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/IntegrationTest/yamcs.yaml`
+
+
+```yaml
+instances:
+  - instance1
+  - instance2
+
+services:
+  - class: org.yamcs.http.HttpServer
+    args:
+      port: 9190
+      maxPageSize: 10000
+
+dataDir: ${java.io.tmpdir}/yamcs-IntegrationTest-data
+
+secretKey: testtest
+```

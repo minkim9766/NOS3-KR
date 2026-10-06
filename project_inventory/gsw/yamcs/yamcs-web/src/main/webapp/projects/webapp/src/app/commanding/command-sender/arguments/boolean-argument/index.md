@@ -3,18 +3,197 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `boolean-argument.component.css`
 
-file--boolean-argument.component.css
-file--boolean-argument.component.html
-file--boolean-argument.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.css`
+
+
+```css
+:host.ng-invalid:not(.ng-pristine) ::ng-deep input {
+  border-color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `boolean-argument.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.css`](file--boolean-argument.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.html`](file--boolean-argument.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.ts`](file--boolean-argument.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.html`
+
+
+```html
+<ya-field [label]="label" [class.error]="err.invalid$ | async">
+  @if (type.rangeMin !== undefined || type.rangeMax !== undefined) {
+    <ya-meta>
+      <ya-interval [left]="type.rangeMin" [right]="type.rangeMax" />
+    </ya-meta>
+  }
+  @if (type.unitSet) {
+    <ya-meta>
+      {{ type.unitSet | units }}
+    </ya-meta>
+  }
+  @if (type.signed === false) {
+    <ya-meta>unsigned</ya-meta>
+  }
+
+  <ya-meta>{{ type.engType }}</ya-meta>
+
+  @if (description) {
+    <ya-help>
+      {{ description }}
+    </ya-help>
+  }
+
+  <ya-errors #err [controlName]="controlName" />
+
+  <div class="radio-group" [formGroup]="formGroup">
+    <label class="radio" [class.checked]="formGroup.controls['enabled'].value === 'true'">
+      <input type="radio" formControlName="enabled" value="true" />
+      {{ type.oneStringValue }}
+    </label>
+    <label class="radio" [class.checked]="formGroup.controls['enabled'].value === 'false'">
+      <input type="radio" formControlName="enabled" value="false" />
+      {{ type.zeroStringValue }}
+    </label>
+  </div>
+</ya-field>
+```
+
+### `boolean-argument.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/boolean-argument/boolean-argument.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  forwardRef,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  FormGroup,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { ArgumentType, utils, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-boolean-argument',
+  templateUrl: './boolean-argument.component.html',
+  styleUrl: './boolean-argument.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => BooleanArgumentComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => BooleanArgumentComponent),
+      multi: true,
+    },
+  ],
+  imports: [WebappSdkModule],
+})
+export class BooleanArgumentComponent
+  implements ControlValueAccessor, OnInit, Validator, OnDestroy
+{
+  @Input()
+  name: string;
+
+  @Input()
+  description?: string;
+
+  @Input()
+  type: ArgumentType;
+
+  @Input()
+  index?: number;
+
+  @Input()
+  dimensions?: number[];
+
+  // Wrap in a group to avoid interference between multiple
+  // BooleanArgument instances. See #729
+  formGroup: FormGroup;
+
+  controlName: string;
+
+  private validators: ValidatorFn[] = [];
+  private onChange = (_: string | null) => {};
+  private subscriptions: Subscription[] = [];
+
+  constructor() {
+    this.formGroup = new FormGroup({
+      enabled: new FormControl(null),
+    });
+  }
+
+  ngOnInit() {
+    this.subscriptions.push(
+      this.formGroup.valueChanges.subscribe(() => {
+        let value = this.formGroup.get('enabled')!.value;
+        this.onChange(value);
+      }),
+    );
+
+    if (this.index === undefined) {
+      this.controlName = this.name;
+    } else {
+      this.controlName = String(this.index);
+    }
+
+    this.validators.push(Validators.required);
+  }
+
+  get label() {
+    if (this.index !== undefined) {
+      const index = utils.unflattenIndex(this.index, this.dimensions!);
+      return index.map((i) => '[' + i + ']').join('');
+    } else {
+      return this.name;
+    }
+  }
+
+  writeValue(obj: any) {
+    if (obj === 'true') {
+      this.formGroup.setValue({ enabled: 'true' });
+    } else if (obj === 'false') {
+      this.formGroup.setValue({ enabled: 'false' });
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: UntypedFormControl): ValidationErrors | null {
+    for (const validator of this.validators) {
+      const errors = validator(control);
+      if (errors) {
+        return errors;
+      }
+    }
+    return null;
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
+```

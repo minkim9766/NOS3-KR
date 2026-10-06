@@ -3,18 +3,39 @@
 
 **경로:** `gsw/cosmos/config/targets/PDU/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
 lib/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/PDU/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/config/targets/PDU/lib/`](lib/index) — 폴더
-- [`gsw/cosmos/config/targets/PDU/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/config/targets/PDU/target.txt`
+
+
+```text
+# Requires for additinal .rb files
+REQUIRE pdu_defines.rb
+
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+
+# Ignored Items
+#IGNORE_ITEM CCSDS_STREAMID
+#IGNORE_ITEM CCSDS_SEQUENCE
+#IGNORE_ITEM CCSDS_LENGTH
+```

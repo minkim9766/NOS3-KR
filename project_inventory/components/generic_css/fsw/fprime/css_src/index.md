@@ -3,22 +3,647 @@
 
 **경로:** `components/generic_css/fsw/fprime/css_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_css.cpp
-file--Generic_css.fpp
-file--Generic_css.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_css/fsw/fprime/css_src/docs/`](docs/index) — 폴더
-- [`components/generic_css/fsw/fprime/css_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/fprime/css_src/Generic_css.cpp`](file--Generic_css.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/fprime/css_src/Generic_css.fpp`](file--Generic_css.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/fprime/css_src/Generic_css.hpp`](file--Generic_css.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_css/fsw/fprime/css_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_css.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_css.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_css_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+ 
+)
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_css_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `Generic_css.cpp`
+
+**경로:** `components/generic_css/fsw/fprime/css_src/Generic_css.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_css.cpp
+// \author jstar
+// \brief  cpp file for Generic_css component implementation class
+// ======================================================================
+
+#include "css_src/Generic_css.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_css ::
+    Generic_css(const char* const compName) :
+      Generic_cssComponentBase(compName)
+  {
+
+    /* Initialize HWLIB */
+    nos_init_link();
+
+    int32_t status = OS_SUCCESS;
+    uint16_t Voltage[GENERIC_CSS_NUM_CHANNELS];
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_CSS_DEVICE_ENABLED;
+
+    /* Open device specific protocols */
+    Generic_CSSI2c.handle = GENERIC_CSS_CFG_HANDLE;
+    Generic_CSSI2c.isOpen = PORT_CLOSED;
+    Generic_CSSI2c.speed = GENERIC_CSS_CFG_BAUDRATE_HZ;
+    Generic_CSSI2c.addr = GENERIC_CSS_I2C_ADDRESS;
+    status = i2c_master_init(&Generic_CSSI2c);
+    if (status == OS_SUCCESS)
+    {
+        printf("I2C device %d configured with speed %d \n", Generic_CSSI2c.handle, Generic_CSSI2c.speed);
+    }
+    else
+    {
+        printf("I2C device %d failed to initialize! \n", Generic_CSSI2c.handle);
+    }
+
+    // status = i2c_master_close(&Generic_CSSI2c);
+  }
+
+  Generic_css ::
+    ~Generic_css()
+  {
+    // Close the device 
+    i2c_master_close(&Generic_CSSI2c);
+
+    nos_destroy_link();
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+
+  void Generic_css :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_css :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_CSS_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      Generic_CSSI2c.handle = GENERIC_CSS_CFG_HANDLE;
+      Generic_CSSI2c.isOpen = PORT_CLOSED;
+      Generic_CSSI2c.speed  = GENERIC_CSS_CFG_BAUDRATE_HZ;
+      Generic_CSSI2c.addr   = GENERIC_CSS_I2C_ADDRESS;
+
+      status = i2c_master_init(&Generic_CSSI2c);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_CSS_DEVICE_ENABLED;
+        HkTelemetryPkt.DeviceCount++;
+
+        Fw::LogStringArg log_msg("Enable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+
+        Fw::LogStringArg log_msg("Enable command failed to init I2C!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Enable failed, already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_css :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_CSS_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = i2c_master_close(&Generic_CSSI2c);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_CSS_DEVICE_DISABLED;
+        HkTelemetryPkt.DeviceCount++;
+
+        Fw::LogStringArg log_msg("Disable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        
+        Fw::LogStringArg log_msg("Disable command failed to close I2C!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+
+      Fw::LogStringArg log_msg("Disable failed, already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_css :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_CSS_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+      this->tlmWrite_ADCVoltage0(Generic_CSSData.Voltage[0]);
+      this->tlmWrite_ADCVoltage1(Generic_CSSData.Voltage[1]);
+      this->tlmWrite_ADCVoltage2(Generic_CSSData.Voltage[2]);
+      this->tlmWrite_ADCVoltage3(Generic_CSSData.Voltage[3]);
+      this->tlmWrite_ADCVoltage4(Generic_CSSData.Voltage[4]);
+      this->tlmWrite_ADCVoltage5(Generic_CSSData.Voltage[5]);
+
+      this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+      this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+      this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+      this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+      this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+      Fw::LogStringArg log_msg("Requested Housekeeping!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("HK failed, Device Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_css :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+ // GENERIC_CSS_RequestData
+ void Generic_css :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+  int32_t status = OS_SUCCESS;
+
+  if(HkTelemetryPkt.DeviceEnabled == GENERIC_CSS_DEVICE_ENABLED){
+    HkTelemetryPkt.CommandCount++;
+
+    status = GENERIC_CSS_RequestData(&Generic_CSSI2c, &Generic_CSSData);
+    if (status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      
+      Fw::LogStringArg log_msg("Request Data command success\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+      Fw::LogStringArg log_msg("Request Data command failed!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+  }
+  else
+  {
+    HkTelemetryPkt.CommandErrorCount++;
+    Fw::LogStringArg log_msg("Request Data failed, Device Disabled!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+  }
+
+  this->tlmWrite_ADCVoltage0(Generic_CSSData.Voltage[0]);
+  this->tlmWrite_ADCVoltage1(Generic_CSSData.Voltage[1]);
+  this->tlmWrite_ADCVoltage2(Generic_CSSData.Voltage[2]);
+  this->tlmWrite_ADCVoltage3(Generic_CSSData.Voltage[3]);
+  this->tlmWrite_ADCVoltage4(Generic_CSSData.Voltage[4]);
+  this->tlmWrite_ADCVoltage5(Generic_CSSData.Voltage[5]);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+  // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+  this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Generic_css :: updateData_handler(const FwIndexType portNum, U32 context)
+{
+  int32_t status = OS_SUCCESS;
+
+  status = GENERIC_CSS_RequestData(&Generic_CSSI2c, &Generic_CSSData);
+
+  if(status == OS_SUCCESS)
+  {
+    HkTelemetryPkt.DeviceCount++;
+    this->CSSout_out(0, Generic_CSSData.Voltage[0], Generic_CSSData.Voltage[1], Generic_CSSData.Voltage[2], Generic_CSSData.Voltage[3], Generic_CSSData.Voltage[4], Generic_CSSData.Voltage[5]);
+  }
+  else
+  {
+    HkTelemetryPkt.DeviceErrorCount++;
+  }
+}
+
+void Generic_css :: updateTlm_handler(const FwIndexType portNum, U32 context)
+{
+  this->tlmWrite_ADCVoltage0(Generic_CSSData.Voltage[0]);
+  this->tlmWrite_ADCVoltage1(Generic_CSSData.Voltage[1]);
+  this->tlmWrite_ADCVoltage2(Generic_CSSData.Voltage[2]);
+  this->tlmWrite_ADCVoltage3(Generic_CSSData.Voltage[3]);
+  this->tlmWrite_ADCVoltage4(Generic_CSSData.Voltage[4]);
+  this->tlmWrite_ADCVoltage5(Generic_CSSData.Voltage[5]);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+}
+
+inline Generic_css_ActiveState Generic_css :: get_active_state(uint8_t DeviceEnabled)
+{
+  Generic_css_ActiveState state;
+
+  if(DeviceEnabled == GENERIC_CSS_DEVICE_ENABLED)
+  {
+    state.e = Generic_css_ActiveState::ENABLED;
+  }
+  else
+  {
+    state.e = Generic_css_ActiveState::DISABLED;
+  }
+
+  return state;
+}
+
+
+}
+
+ 
+```
+
+### `Generic_css.fpp`
+
+**경로:** `components/generic_css/fsw/fprime/css_src/Generic_css.fpp`
+
+
+```fpp
+module Components {
+    @ generic_css
+    active component Generic_css {
+
+        @ CSS output port
+        output port CSSout: CSSDataPort
+
+        @ Periodic Data CSS
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm CSS
+        async input port updateTlm: Svc.Sched
+        
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        @ NOOP Command
+        async command NOOP()
+        
+        @ Command to Request Data
+        async command REQUEST_DATA()
+
+        @ Enable Command
+        async command ENABLE()
+
+        @ Disable Command
+        async command DISABLE()
+
+        @ REQUEST HK Command
+        async command REQUEST_HOUSEKEEPING()
+
+        @ Reset Counters Command
+        async command RESET_COUNTERS()
+
+        @ event with maximum greeting length of 30 characters
+        event TELEM(
+            log_info: string size 40 @<
+        ) severity activity high format "Generic_css: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ Device Enable
+        telemetry DeviceEnabled: ActiveState
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage0: U16
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage1: U16
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage2: U16
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage3: U16
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage4: U16
+
+        @ A count of the number of greetings issues
+        telemetry ADCVoltage5: U16
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_css.hpp`
+
+**경로:** `components/generic_css/fsw/fprime/css_src/Generic_css.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_css.hpp
+// \author jstar
+// \brief  hpp file for Generic_css component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_css_HPP
+#define Components_Generic_css_HPP
+
+#include "css_src/Generic_cssComponentAc.hpp"
+#include "css_src/Generic_css_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "generic_css_device.h"
+#include "libi2c.h"
+}
+
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+} CSS_Hk_tlm_t;
+#define CSS_HK_TLM_LNGTH sizeof(CSS_Hk_tlm_t)
+
+#define GENERIC_CSS_DEVICE_DISABLED 0
+#define GENERIC_CSS_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_css :
+    public Generic_cssComponentBase
+  {
+
+    public:
+
+    i2c_bus_info_t Generic_CSSI2c;
+    GENERIC_CSS_Device_Data_tlm_t Generic_CSSData;
+    CSS_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_css object
+      Generic_css(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_css object
+      ~Generic_css();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      // void TODO_cmdHandler(
+      //     FwOpcodeType opCode, //!< The opcode
+      //     U32 cmdSeq //!< The command sequence number
+      // ) override;
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_DATA_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      inline Generic_css_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

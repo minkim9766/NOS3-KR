@@ -3,20 +3,53 @@
 
 **경로:** `components/onair/fsw/test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 onair/index
 plugins/index
-file--__init__.py
-file--test_driver.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/onair/fsw/test/onair/`](onair/index) — 폴더
-- [`components/onair/fsw/test/plugins/`](plugins/index) — 폴더
-- [`components/onair/fsw/test/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/test_driver.py`](file--test_driver.py) — UTF-8 텍스트 파일 본문 포함
+### `__init__.py`
+
+**경로:** `components/onair/fsw/test/__init__.py`
+
+
+```python
+```
+
+### `test_driver.py`
+
+**경로:** `components/onair/fsw/test/test_driver.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test Driver """
+import os
+import unittest
+
+class TestDriver(unittest.TestCase):
+
+    def setUp(self):
+        self.test_path = os.path.dirname(os.path.abspath(__file__)) + '/../../'
+
+    def test_driver(self):
+        # os.system('python3 ' + self.test_path + 'driver.py -t' )
+        return 
+
+if __name__ == '__main__':
+    unittest.main()
+```

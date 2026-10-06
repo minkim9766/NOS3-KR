@@ -3,62 +3,317 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/test/curl/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `authentication-ok-getparameters.sh`
 
-file--authentication-ok-getparameters.sh
-file--authentication-wrong-getparameters.sh
-file--change-speed.sh
-file--create-bucket.sh
-file--create-instance.sh
-file--delete-bucket.sh
-file--delete-object.sh
-file--download-object.sh
-file--issue-command.sh
-file--list-buckets.sh
-file--list-objects.sh
-file--list-table-data.sh
-file--multipart-object
-file--param-set-single.sh
-file--param-set-single1.sh
-file--param-set-single2.sh
-file--pinfo.sh
-file--post-event.sh
-file--realtime-param-get-multi.sh
-file--realtime-param-get-single.sh
-file--request-example-to-REST-Archive-CSV-API.txt
-file--simtime.sh
-file--upload-object-form.sh
-file--upload-object-multipart.sh
-file--upload-object-simple.sh
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/authentication-ok-getparameters.sh`
+
+
+```bash
+# Provide the username and password "operator:password". This part needs to be encoded in base64.
+curl -H "Authorization: Basic b3BlcmF0b3I6cGFzc3dvcmQ=" -XGET http://localhost:8090/simulator/api/mdb/parameters?pretty
 ```
 
-## 항목
+### `authentication-wrong-getparameters.sh`
 
-- [`gsw/yamcs/yamcs-api/src/test/curl/authentication-ok-getparameters.sh`](file--authentication-ok-getparameters.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/authentication-wrong-getparameters.sh`](file--authentication-wrong-getparameters.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/change-speed.sh`](file--change-speed.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/create-bucket.sh`](file--create-bucket.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/create-instance.sh`](file--create-instance.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/delete-bucket.sh`](file--delete-bucket.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/delete-object.sh`](file--delete-object.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/download-object.sh`](file--download-object.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/issue-command.sh`](file--issue-command.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/list-buckets.sh`](file--list-buckets.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/list-objects.sh`](file--list-objects.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/list-table-data.sh`](file--list-table-data.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/multipart-object`](file--multipart-object) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/param-set-single.sh`](file--param-set-single.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/param-set-single1.sh`](file--param-set-single1.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/param-set-single2.sh`](file--param-set-single2.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/pinfo.sh`](file--pinfo.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/post-event.sh`](file--post-event.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/realtime-param-get-multi.sh`](file--realtime-param-get-multi.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/realtime-param-get-single.sh`](file--realtime-param-get-single.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/request-example-to-REST-Archive-CSV-API.txt`](file--request-example-to-REST-Archive-CSV-API.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/simtime.sh`](file--simtime.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/upload-object-form.sh`](file--upload-object-form.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/upload-object-multipart.sh`](file--upload-object-multipart.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/test/curl/upload-object-simple.sh`](file--upload-object-simple.sh) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/authentication-wrong-getparameters.sh`
+
+
+```bash
+# request without authentication, should return 401 Unauthorized if privileges are enable on Yamcs server
+curl  -XGET http://localhost:8090/simulator/api/mdb/parameters?pretty
+```
+
+### `change-speed.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/change-speed.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/obcp/api/processor/replay6/?pretty -d '
+  {
+     "operation": 5,
+     "replaySpeed" : {
+          "type": 3,
+           "param": 1000.0
+      }
+     
+  }'
+```
+
+### `create-bucket.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/create-bucket.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/api/buckets/_global -d '{"name": "my_bucket"}' 
+```
+
+### `create-instance.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/create-instance.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/api/instances -d '{
+    name: "simulator2",
+    template: "template1",
+    templateArgs: {
+        tmPort: 30000,
+        tcPort: 30001,
+        losPort: 30002,
+        tm2Port: 30003,
+        telnetPort: 30004
+    };
+    labels: {
+        label1: "value1",
+        label2: "value2"
+    }
+}'
+```
+
+### `delete-bucket.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/delete-bucket.sh`
+
+
+```bash
+curl -XDELETE http://localhost:8090/api/buckets/_global/my_bucket 
+```
+
+### `delete-object.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/delete-object.sh`
+
+
+```bash
+curl -XDELETE http://localhost:8090/api/buckets/_global/my_bucket/request-example-to-REST-Archive-CSV-API.txt
+```
+
+### `download-object.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/download-object.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/api/buckets/_global/my_bucket/request-example-to-REST-Archive-CSV-API.txt
+```
+
+### `issue-command.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/issue-command.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/api/processors/simulator/realtime/commands/YSS/SIMULATOR/SWITCH_VOLTAGE_OFF -d '{
+  "sequenceNumber" : 1,
+  "origin" : "nico",
+  "assignment" : [ {
+    "name": "voltage_num",
+    "value": "3"
+  } ]
+}'
+```
+
+### `list-buckets.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/list-buckets.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/api/buckets/_global
+```
+
+### `list-objects.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/list-objects.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/api/buckets/_global/my_bucket?prefix=r
+```
+
+### `list-table-data.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/list-table-data.sh`
+
+
+```bash
+curl "http://localhost:8090/api/archive/simulator/tables/pp/data?cols=/yamcs/nm/tm_dump/linkStatus"
+```
+
+### `multipart-object`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/multipart-object`
+
+
+```text
+--foo_bar_baz
+Content-Type: application/json; charset=UTF-8
+
+{
+  "name": "fox_over_dog"
+}
+
+--foo_bar_baz
+Content-Type: text/plain
+
+The quick brown fox jumps over the lazy dog
+--foo_bar_baz--
+```
+
+### `param-set-single.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/param-set-single.sh`
+
+
+```bash
+curl -XPOST http://dcms-v-scs:8090/api/processors/2018-07-18T09h08m05s/realtime/parameters/esim/Big/NodeWithVeryLongNameBlablabla/lotsofdoublevariables.c/double100 -d '{
+  "type" : "DOUBLE",
+  "doubleValue" : 1.29
+}'
+```
+
+### `param-set-single1.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/param-set-single1.sh`
+
+
+```bash
+curl -XPOST http://dcms-v-scs:8090/api/processors/2018-07-18T09h08m05s/realtime/parameters/esim/Big/NodeWithVeryLongNameBlablabla/lotsofvariables.c/int100 -d '{
+  "type" : "DOUBLE",
+  "doubleValue" : 15.5
+}'
+```
+
+### `param-set-single2.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/param-set-single2.sh`
+
+
+```bash
+curl -XPOST http://dcms-v-scs:8090/api/processors/2018-07-18T11h09m04s/realtime/parameters/esim/Big/NodeWithVeryLongNameBlablabla/lotsofenumvariables.c/enum2 -d '{
+  "type" : "STRING",
+  "stringValue" : "const5"
+}'
+```
+
+### `pinfo.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/pinfo.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/mwlgt-ops/api/mdb/parameterInfo?pretty -d '
+  {
+    "list": [
+    { "name":"MWL_GT002_HKU_CFG_AIN0_Temp_B ",
+    "namespace":"MDB:OPS Name"}
+   ]
+  }'
+```
+
+### `post-event.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/post-event.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/api/archive/simulator/events -d '{"source":"REST API", "type":"Test", "seqNumber":3, "message":"this is a test event", "generationTime":0, "receptionTime":0, "severity":"WARNING"}'
+#
+```
+
+### `realtime-param-get-multi.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/realtime-param-get-multi.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/simulator/api/parameter/_get?pretty -d '
+  {
+    "list": [
+      {"name":"/YSS/SIMULATOR/Longitude"},
+      {"name":"/YSS/SIMULATOR/Latitude"},
+      {"name":"/YSS/SIMULATOR/Altitude"}]
+     ,"timeout":2000}
+  }'
+```
+
+### `realtime-param-get-single.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/realtime-param-get-single.sh`
+
+
+```bash
+curl -XGET http://localhost:8090/simulator/api/parameter/YSS/SIMULATOR/BatteryVoltage2?pretty
+```
+
+### `request-example-to-REST-Archive-CSV-API.txt`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/request-example-to-REST-Archive-CSV-API.txt`
+
+
+```text
+The following curl requests query the Yamcs Archive REST API for parameters.
+They request the result to be provided in the CSV format.
+
+
+=====
+Request specifying parameters in body request:
+
+curl -H "Accept:text/csv" -XGET http://localhost:8090/simulator/api/archive -d '{"start":0,"stop":2000000000000, "parameterRequest": {  "nameFilter" : {    "name": "SIMULATOR_BatteryTemperature1",   "namespace": "MDB:OPS Name"  },  "nameFilter" : {    "name":"SIMULATOR_BatteryCapacity1",    "namespace": "MDB:OPS Name"  }}}'
+
+
+=====
+Requests using a profile:
+
+curl -H "Accept:text/csv" -XGET http://localhost:8090/simulator/api/archive/?profile=systems -d '{"start":0,"stop":2000000000000, "parameterRequest": {}}'
+
+curl -H "Accept:text/csv" -XGET http://localhost:8090/simulator/api/archive/?profile=propulsion -d '{"start":0,"stop":2000000000000, "parameterRequest": {}}'
+
+
+
+```
+
+### `simtime.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/simtime.sh`
+
+
+```bash
+curl -XPOST http://localhost:8090/api/instances/node2:setTime -d '
+  {
+    "time0": "2018-04-01T00:00:30Z",
+    "elapsedTime": 0,
+    "speed": 3
+  }'
+```
+
+### `upload-object-form.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/upload-object-form.sh`
+
+
+```bash
+curl -F file=@request-example-to-REST-Archive-CSV-API.txt -F color=blue -F world=wonderful http://localhost:8090/api/buckets/_global/my_bucket
+```
+
+### `upload-object-multipart.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/upload-object-multipart.sh`
+
+
+```bash
+curl -v -H "Content-Type:multipart/related; boundary=foo_bar_baz" -XPOST http://localhost:8090/api/buckets/_global/my_bucket/ -T multipart-object
+```
+
+### `upload-object-simple.sh`
+
+**경로:** `gsw/yamcs/yamcs-api/src/test/curl/upload-object-simple.sh`
+
+
+```bash
+curl -H "Content-Type: text/plain" -XPOST http://localhost:8090/api/buckets/_global/my_bucket/obj/name -T request-example-to-REST-Archive-CSV-API.txt
+```

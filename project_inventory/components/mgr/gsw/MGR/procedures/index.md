@@ -3,16 +3,65 @@
 
 **경로:** `components/mgr/gsw/MGR/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--mgr_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/mgr/gsw/MGR/procedures/tests/`](tests/index) — 폴더
-- [`components/mgr/gsw/MGR/procedures/mgr_test.rb`](file--mgr_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `mgr_test.rb`
+
+**경로:** `components/mgr/gsw/MGR/procedures/mgr_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'mission_lib.rb'
+
+class MGR_LPT < Cosmos::Test
+  def setup
+
+  end
+
+  def test_lpt
+      start("tests/mgr_lpt_test.rb")
+  end
+
+  def teardown
+
+  end
+end
+
+class MGR_CPT < Cosmos::Test
+  def setup
+      
+  end
+
+  def test_cpt
+      start("tests/mgr_cpt_test.rb")
+  end
+
+  def teardown
+
+  end
+end
+
+class Mgr_Test < Cosmos::TestSuite
+  def initialize
+      super()
+      add_test('MGR_CPT')
+      add_test('MGR_LPT')
+  end
+
+  def setup
+  end
+  
+  def teardown
+  end
+end
+```

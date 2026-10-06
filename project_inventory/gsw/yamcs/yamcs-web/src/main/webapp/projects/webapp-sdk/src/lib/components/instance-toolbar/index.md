@@ -3,30 +3,756 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `instance-toolbar-label.directive.ts`
 
-file--instance-toolbar-label.directive.ts
-file--instance-toolbar.component.css
-file--instance-toolbar.component.html
-file--instance-toolbar.component.ts
-file--session-expired-dialog.component.css
-file--session-expired-dialog.component.html
-file--session-expired-dialog.component.ts
-file--start-replay-dialog.component.html
-file--start-replay-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide a label to a toolbar without causing a circular dependency
+ */
+export const YA_INSTANCE_TOOLBAR = new InjectionToken<any>(
+  'YA_INSTANCE_TOOLBAR',
+);
+
+/** Flag labels for use with the portal directive */
+@Directive({
+  selector: '[ya-instance-toolbar-label]',
+})
+export class YaInstanceToolbarLabel extends CdkPortal {
+  _closestToolbar = inject(YA_INSTANCE_TOOLBAR, { optional: true });
+}
 ```
 
-## 항목
+### `instance-toolbar.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar-label.directive.ts`](file--instance-toolbar-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.css`](file--instance-toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.html`](file--instance-toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.ts`](file--instance-toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.css`](file--session-expired-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.html`](file--session-expired-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.ts`](file--session-expired-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/start-replay-dialog.component.html`](file--start-replay-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/start-replay-dialog.component.ts`](file--start-replay-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--y-background-color);
+  box-sizing: content-box;
+  padding: 0 16px 0 24px;
+  font:
+    400 20px / 28px Roboto,
+    sans-serif;
+  letter-spacing: 0.25px;
+}
+
+.ya-instance-toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.ya-instance-toolbar-content {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.drop-down {
+  border-left: 1px solid #d3d3d3;
+  min-width: 0;
+  padding: 0 8px;
+}
+
+.hide {
+  visibility: hidden;
+}
+
+.range,
+.processor-time {
+  font-size: 12px;
+  letter-spacing: 1.07143px;
+}
+
+.processor-time {
+  margin-right: 8px;
+}
+
+.processor-time.paused {
+  font-style: italic;
+}
+
+.icon-action {
+  display: flex;
+  align-items: center;
+}
+```
+
+### `instance-toolbar.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.html`
+
+
+```html
+<div class="ya-instance-toolbar-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+</div>
+<div class="ya-instance-toolbar-content">
+  <ng-content />
+</div>
+
+<span style="flex: 1 1 auto"></span>
+
+@if (processor$ | async; as processor) {
+  @if (connected$ | async) {
+    @if (connectionInfo$ | async; as connectionInfo) {
+      @if (processor.replay && processor.replayState === "RUNNING") {
+        <ya-page-button
+          (menuOpened)="switchProcessorMenuOpened()"
+          (clicked)="pauseReplay()"
+          icon="pause">
+          PAUSE REPLAY
+        </ya-page-button>
+      }
+      @if (processor.replay && processor.replayState !== "RUNNING") {
+        <ya-page-button
+          (menuOpened)="switchProcessorMenuOpened()"
+          (clicked)="resumeReplay()"
+          icon="play_arrow">
+          PLAY
+        </ya-page-button>
+      }
+      @if (showRange()) {
+        <ya-text-action class="range" matTooltip="Lookback period" [matMenuTriggerFor]="rangeMenu">
+          {{ range$ | async | duration }} ▾
+        </ya-text-action>
+      }
+      <ya-text-action
+        class="processor-time"
+        [class.paused]="processor.replayState === 'PAUSED'"
+        matTooltip="Processor time. Click for actions"
+        [matMenuTriggerFor]="processorMenu"
+        (menuOpened)="switchProcessorMenuOpened()">
+        {{ time$ | async | datetime }} ▾
+      </ya-text-action>
+      @if (fullScreenMode$ | async) {
+        <ya-icon-action
+          class="icon-action"
+          icon="fullscreen_exit"
+          (click)="exitFullScreen()"
+          matTooltip="Exit full screen" />
+      }
+      @if (!(fullScreenMode$ | async) && (focusMode$ | async)) {
+        <ya-icon-action
+          class="icon-action"
+          icon="fullscreen_exit"
+          (click)="exitFocusMode()"
+          matTooltip="Exit focus mode" />
+      }
+      @if (!(fullScreenMode$ | async)) {
+        <ya-icon-action
+          class="icon-action"
+          icon="monitor"
+          [matMenuTriggerFor]="moreMenu"
+          matTooltip="Show full screen options" />
+      }
+    }
+  }
+}
+
+<mat-menu
+  #moreMenu="matMenu"
+  class="ya-menu"
+  overlapTrigger="false"
+  xPosition="before"
+  yPosition="below">
+  @if (!(focusMode$ | async)) {
+    <button mat-menu-item [disabled]="fullScreenMode$ | async" (click)="enterFocusMode()">
+      Enter focus mode
+    </button>
+  }
+  @if (focusMode$ | async) {
+    <button mat-menu-item [disabled]="fullScreenMode$ | async" (click)="exitFocusMode()">
+      Exit focus mode
+    </button>
+  }
+  @if (!(fullScreenMode$ | async)) {
+    <button mat-menu-item (click)="enterFullScreen()">Enter full screen</button>
+  }
+  @if (fullScreenMode$ | async) {
+    <button mat-menu-item (click)="exitFullScreen()">Exit full screen</button>
+  }
+</mat-menu>
+
+<mat-menu
+  #rangeMenu="matMenu"
+  class="ya-menu"
+  overlapTrigger="false"
+  xPosition="before"
+  yPosition="below">
+  @if (range$ | async; as range) {
+    <button mat-menu-item (click)="yamcs.range$.next('PT1M')">
+      <mat-icon [class.hide]="range !== 'PT1M'">check</mat-icon>
+      1 minute
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('PT5M')">
+      <mat-icon [class.hide]="range !== 'PT5M'">check</mat-icon>
+      5 minutes
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('PT15M')">
+      <mat-icon [class.hide]="range !== 'PT15M'">check</mat-icon>
+      15 minutes
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('PT30M')">
+      <mat-icon [class.hide]="range !== 'PT30M'">check</mat-icon>
+      30 minutes
+    </button>
+    <mat-divider />
+    <button mat-menu-item (click)="yamcs.range$.next('PT1H')">
+      <mat-icon [class.hide]="range !== 'PT1H'">check</mat-icon>
+      1 hour
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('PT6H')">
+      <mat-icon [class.hide]="range !== 'PT6H'">check</mat-icon>
+      6 hours
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('PT12H')">
+      <mat-icon [class.hide]="range !== 'PT12H'">check</mat-icon>
+      12 hours
+    </button>
+    <mat-divider />
+    <button mat-menu-item (click)="yamcs.range$.next('P1D')">
+      <mat-icon [class.hide]="range !== 'P1D'">check</mat-icon>
+      1 day
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('P2D')">
+      <mat-icon [class.hide]="range !== 'P2D'">check</mat-icon>
+      2 days
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('P7D')">
+      <mat-icon [class.hide]="range !== 'P7D'">check</mat-icon>
+      7 days
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('P14D')">
+      <mat-icon [class.hide]="range !== 'P14D'">check</mat-icon>
+      14 days
+    </button>
+    <button mat-menu-item (click)="yamcs.range$.next('P30D')">
+      <mat-icon [class.hide]="range !== 'P30D'">check</mat-icon>
+      30 days
+    </button>
+  }
+</mat-menu>
+
+<mat-menu
+  #processorMenu="matMenu"
+  class="ya-menu"
+  overlapTrigger="false"
+  xPosition="before"
+  yPosition="below">
+  @if (processor$ | async; as processor) {
+    @if (!processor.replay) {
+      <button mat-menu-item (click)="startReplay()">
+        <mat-icon>replay</mat-icon>
+        Replay from date
+      </button>
+    }
+    @if (processor.replay) {
+      <button mat-menu-item (click)="changeSpeed('1x')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.param !== 1">check</mat-icon>
+        1x (original speed)
+      </button>
+      <button mat-menu-item (click)="changeSpeed('2x')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.param !== 2">check</mat-icon>
+        2x
+      </button>
+      <button mat-menu-item (click)="changeSpeed('4x')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.param !== 4">check</mat-icon>
+        4x
+      </button>
+      <button mat-menu-item (click)="changeSpeed('8x')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.param !== 8">check</mat-icon>
+        8x
+      </button>
+      <button mat-menu-item (click)="changeSpeed('16x')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.param !== 16">check</mat-icon>
+        16x
+      </button>
+      <button mat-menu-item (click)="changeSpeed('afap')">
+        <mat-icon [class.hide]="processor.replayRequest?.speed?.type !== 'AFAP'">check</mat-icon>
+        As fast as possible
+      </button>
+    }
+    <mat-divider />
+    @for (otherProcessor of allProcessors$ | async; track otherProcessor) {
+      <button mat-menu-item (click)="switchProcessor(otherProcessor)">
+        <mat-icon [class.hide]="processor.name !== otherProcessor.name">check</mat-icon>
+        {{ otherProcessor.name }}
+      </button>
+    }
+    @if (processor.replay) {
+      <mat-divider />
+      <button mat-menu-item (click)="leaveAndCloseReplay()" [disabled]="processor.protected">
+        <mat-icon>exit_to_app</mat-icon>
+        Leave &amp; close replay
+      </button>
+    }
+  }
+</mat-menu>
+```
+
+### `instance-toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/instance-toolbar.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  ContentChild,
+  input,
+  OnDestroy,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { MatDivider } from '@angular/material/list';
+import { MatMenu, MatMenuItem, MatMenuTrigger } from '@angular/material/menu';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { BaseComponent } from '../../abc/BaseComponent';
+import { ConnectionInfo, Processor, ProcessorSubscription } from '../../client';
+import { DateTimePipe } from '../../pipes/datetime.pipe';
+import { DurationPipe } from '../../pipes/duration.pipe';
+import { YaIconAction } from '../icon-action/icon-action.component';
+import { YaPageButton } from '../page-button/page-button.component';
+import { YaTextAction } from '../text-action/text-action.component';
+import {
+  YA_INSTANCE_TOOLBAR,
+  YaInstanceToolbarLabel,
+} from './instance-toolbar-label.directive';
+import { SessionExpiredDialogComponent } from './session-expired-dialog.component';
+import { StartReplayDialogComponent } from './start-replay-dialog.component';
+
+@Component({
+  selector: 'ya-instance-toolbar',
+  templateUrl: './instance-toolbar.component.html',
+  styleUrl: './instance-toolbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: YA_INSTANCE_TOOLBAR,
+      useExisting: YaInstanceToolbar,
+    },
+  ],
+  host: {
+    class: 'ya-instance-toolbar',
+  },
+  imports: [
+    AsyncPipe,
+    CdkPortalOutlet,
+    DateTimePipe,
+    DurationPipe,
+    MatDivider,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatMenuTrigger,
+    MatTooltip,
+    YaIconAction,
+    YaPageButton,
+    YaTextAction,
+  ],
+})
+export class YaInstanceToolbar extends BaseComponent implements OnDestroy {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+
+  private _templateLabel: YaInstanceToolbarLabel;
+
+  // Content for the attr label given by `<ng-template ya-instance-toolbar-label>`
+  @ContentChild(YaInstanceToolbarLabel)
+  get templateLabel(): YaInstanceToolbarLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: YaInstanceToolbarLabel | undefined) {
+    if (value && value._closestToolbar === this) {
+      this._templateLabel = value;
+    }
+  }
+
+  processor$ = new BehaviorSubject<Processor | null>(null);
+  processorSubscription: ProcessorSubscription;
+
+  time$: Observable<string | null>;
+
+  showRange = computed(() => {
+    const m = this.routeData();
+    return m.get('showRangeSelector') === true;
+  });
+  range$: Observable<string>;
+
+  connected$: Observable<boolean>;
+  connectionInfo$: Observable<ConnectionInfo | null>;
+  fullScreenMode$: Observable<boolean>;
+  focusMode$: Observable<boolean>;
+
+  // For use in lazy dynamic population of Switch Processor menu.
+  allProcessors$ = new BehaviorSubject<Processor[]>([]);
+
+  private connectedSubscription: Subscription;
+
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+  ) {
+    super();
+    const { yamcs } = this;
+    this.processor$.next(yamcs.getProcessor());
+    if (yamcs.processor) {
+      this.processorSubscription =
+        yamcs.yamcsClient.createProcessorSubscription(
+          {
+            instance: yamcs.instance!,
+            processor: yamcs.processor,
+          },
+          (processor) => {
+            this.processor$.next(processor);
+          },
+        );
+    }
+
+    this.connected$ = this.yamcs.yamcsClient.connected$;
+    this.time$ = this.yamcs.time$;
+    this.range$ = this.yamcs.range$;
+    this.fullScreenMode$ = this.appearanceService.fullScreenMode$;
+    this.focusMode$ = this.appearanceService.focusMode$;
+
+    this.connectedSubscription = this.connected$.subscribe((connected) => {
+      if (!connected && this.authService.user$.value) {
+        dialog.open(SessionExpiredDialogComponent, {
+          disableClose: true,
+          width: '400px',
+          height: '200px',
+        });
+      }
+    });
+
+    this.connectionInfo$ = this.yamcs.connectionInfo$;
+  }
+
+  startReplay() {
+    this.dialog
+      .open(StartReplayDialogComponent, {
+        width: '400px',
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.snackBar.open(
+            `Initializing replay ${result.name}...`,
+            undefined,
+            {
+              horizontalPosition: 'end',
+            },
+          );
+          this.yamcs.yamcsClient
+            .createProcessor(result)
+            .then(() => {
+              this.yamcs.switchContext(this.yamcs.instance!, result.name);
+              this.snackBar.open(`Joining replay ${result.name}`, undefined, {
+                duration: 3000,
+                horizontalPosition: 'end',
+              });
+            })
+            .catch((err) => {
+              this.snackBar.open(`Failed to initialize replay`, undefined, {
+                duration: 3000,
+                horizontalPosition: 'end',
+              });
+            });
+        }
+      });
+  }
+
+  pauseReplay() {
+    this.yamcs.yamcsClient
+      .editReplayProcessor(this.yamcs.instance!, this.yamcs.processor!, {
+        state: 'paused',
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  resumeReplay() {
+    this.yamcs.yamcsClient
+      .editReplayProcessor(this.yamcs.instance!, this.yamcs.processor!, {
+        state: 'running',
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  changeSpeed(speed: string) {
+    this.yamcs.yamcsClient
+      .editReplayProcessor(this.yamcs.instance!, this.yamcs.processor!, {
+        speed,
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  async leaveAndCloseReplay() {
+    const instance = this.yamcs.instance!;
+    const processor = this.yamcs.processor!;
+    try {
+      await this.yamcs.switchContext(instance);
+      await this.yamcs.yamcsClient.deleteReplayProcessor(instance, processor);
+    } catch (err: any) {
+      this.messageService.showError(err);
+    }
+  }
+
+  switchProcessorMenuOpened() {
+    this.allProcessors$.next([]);
+    this.yamcs.yamcsClient
+      .getInstance(this.yamcs.instance!)
+      .then((instance) => {
+        this.allProcessors$.next(instance.processors || []);
+      });
+  }
+
+  enterFocusMode() {
+    this.appearanceService.focusMode$.next(true);
+  }
+
+  exitFocusMode() {
+    this.appearanceService.focusMode$.next(false);
+  }
+
+  enterFullScreen() {
+    this.appearanceService.fullScreenRequested.set(true);
+    this.appearanceService.fullScreenMode$.next(true);
+  }
+
+  exitFullScreen() {
+    this.appearanceService.fullScreenRequested.set(false);
+    this.appearanceService.fullScreenMode$.next(false);
+  }
+
+  switchProcessor(processor: Processor) {
+    this.yamcs
+      .switchContext(this.yamcs.instance!, processor.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.processorSubscription?.cancel();
+    this.connectedSubscription?.unsubscribe();
+  }
+}
+```
+
+### `session-expired-dialog.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.css`
+
+
+```css
+.title-bar {
+  display: flex;
+  align-items: center;
+}
+
+.title-bar .material-symbols {
+  padding-right: 4px;
+}
+```
+
+### `session-expired-dialog.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.html`
+
+
+```html
+<div class="title-bar" mat-dialog-title>
+  <mat-icon>offline_bolt</mat-icon>
+  No connection
+</div>
+
+<mat-dialog-content>Connection to Yamcs was lost.</mat-dialog-content>
+
+<mat-dialog-actions>
+  <ya-button appearance="primary" mat-dialog-close (click)="reload()">RELOAD</ya-button>
+</mat-dialog-actions>
+```
+
+### `session-expired-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/session-expired-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { YaButton } from '../button/button.component';
+
+@Component({
+  selector: 'ya-session-expired-dialog',
+  templateUrl: './session-expired-dialog.component.html',
+  styleUrl: './session-expired-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    MatDialogActions,
+    MatDialogContent,
+    MatDialogClose,
+    MatDialogTitle,
+    MatIcon,
+    YaButton,
+  ],
+})
+export class SessionExpiredDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  reload() {
+    window.location.reload();
+  }
+}
+```
+
+### `start-replay-dialog.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/start-replay-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Start replay processor</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Start time">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+
+    <ya-field label="Stop time" hint="(optional)">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+
+    <ya-field label="Processor name">
+      <input type="text" formControlName="name" />
+      <span class="hint">Must be unique. Other users can join your replay via this name</span>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="start()" [disabled]="!form.valid">START</ya-button>
+</mat-dialog-actions>
+```
+
+### `start-replay-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/instance-toolbar/start-replay-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  ReactiveFormsModule,
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogRef,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { BaseComponent } from '../../abc/BaseComponent';
+import * as utils from '../../utils';
+import { YaButton } from '../button/button.component';
+import { YaDateTimeInput } from '../date-time-input/date-time-input.component';
+import { YaField } from '../field/field.component';
+
+@Component({
+  selector: 'ya-start-replay-dialog',
+  templateUrl: './start-replay-dialog.component.html',
+  imports: [
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    ReactiveFormsModule,
+    YaDateTimeInput,
+    YaButton,
+    YaField,
+  ],
+})
+export class StartReplayDialogComponent extends BaseComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<StartReplayDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    super();
+    let initialStart = this.yamcs.getMissionTime();
+    let initialStop;
+
+    if (this.data) {
+      if (this.data.start) {
+        initialStart = this.data.start;
+      }
+      if (this.data.stop) {
+        initialStop = this.data.stop;
+      }
+    }
+
+    this.form = formBuilder.group({
+      name: [utils.generateRandomName(), Validators.required],
+      start: [utils.toISOString(initialStart), [Validators.required]],
+      stop: [initialStop ? utils.toISOString(initialStop) : ''],
+    });
+  }
+
+  start() {
+    const replayConfig: { [key: string]: any } = {
+      start: utils.toISOString(this.form.value.start),
+      endAction: 'STOP',
+    };
+    if (this.form.value.stop) {
+      replayConfig.stop = utils.toISOString(this.form.value.stop);
+    }
+
+    this.dialogRef.close({
+      instance: this.yamcs.instance!,
+      name: this.form.value.name,
+      type: 'Archive', // TODO make configurable?
+      persistent: true,
+      config: JSON.stringify(replayConfig),
+    });
+  }
+}
+```

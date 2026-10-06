@@ -3,24 +3,590 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-constraints.component.css`
 
-file--command-constraints.component.css
-file--command-constraints.component.html
-file--command-constraints.component.ts
-file--CommandHistoryTemplateProvider.ts
-file--configure-command.component.html
-file--configure-command.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.css`
+
+
+```css
+.evaluation {
+  font-family: "Roboto Mono", monospace;
+  background-color: #ffeef0;
+  color: red;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.evaluation.valid {
+  background-color: #e6ffed;
+  color: #00c752;
+}
+
+th {
+  white-space: nowrap;
+}
+
+p {
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `command-constraints.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.css`](file--command-constraints.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.html`](file--command-constraints.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.ts`](file--command-constraints.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/CommandHistoryTemplateProvider.ts`](file--CommandHistoryTemplateProvider.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/configure-command.component.html`](file--configure-command.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/configure-command.component.ts`](file--configure-command.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.html`
+
+
+```html
+@if (command(); as command) {
+  <p>
+    Constraints are evaluated after the command is released from the assigned queue. The following
+    is an indication of the current constraint state.
+  </p>
+  <table yaDataTable>
+    <tr>
+      <th class="expand">Constraint</th>
+      <th>Timeout</th>
+      <th>Live evaluation</th>
+    </tr>
+    @for (constraint of command.constraint; track constraint) {
+      <tr>
+        <td><app-expression [expression]="constraint.expression" [relto]="relto()" /></td>
+        <td style="white-space: nowrap">{{ (constraint.timeout | millisDuration) || "-" }}</td>
+        <td style="white-space: nowrap">
+          @if (expr.result() === true) {
+            <span class="evaluation valid">satisfied</span>
+          }
+          @if (expr.result() === false) {
+            <span class="evaluation invalid">not satisfied</span>
+          }
+          <app-live-expression
+            #expr
+            [expression]="constraint.expression"
+            [style.display]="'none'" />
+        </td>
+      </tr>
+    }
+  </table>
+}
+```
+
+### `command-constraints.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/command-constraints.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  Command,
+  MillisDurationPipe,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { ExpressionComponent } from '../../../shared/expression/expression.component';
+import { LiveExpressionComponent } from '../../../shared/live-expression/live-expression.component';
+
+@Component({
+  selector: 'app-command-constraints',
+  templateUrl: './command-constraints.component.html',
+  styleUrl: './command-constraints.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    ExpressionComponent,
+    LiveExpressionComponent,
+    MillisDurationPipe,
+    WebappSdkModule,
+  ],
+})
+export class CommandConstraintsComponent {
+  command = input<Command | null>(null);
+  relto = input<string | null>(null);
+}
+```
+
+### `CommandHistoryTemplateProvider.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/CommandHistoryTemplateProvider.ts`
+
+
+```typescript
+import {
+  AdvancementParams,
+  CommandHistoryEntry,
+  CommandOptionType,
+  Value,
+} from '@yamcs/webapp-sdk';
+import { TemplateProvider } from '../command-form/TemplateProvider';
+
+export class CommandHistoryTemplateProvider implements TemplateProvider {
+  constructor(private entry: CommandHistoryEntry) {}
+
+  getAssignment(argumentName: string) {
+    if (this.entry.assignments) {
+      for (const assignment of this.entry.assignments) {
+        if (assignment.name === argumentName) {
+          return assignment.value;
+        }
+      }
+    }
+  }
+
+  getOption(id: string, expectedType: CommandOptionType) {
+    for (const attr of this.entry.attr || []) {
+      if (attr.name === id) {
+        switch (expectedType) {
+          case 'BOOLEAN':
+            return this.getBooleanOption(attr.value);
+          case 'NUMBER':
+            return this.getNumberOption(attr.value);
+          case 'STRING':
+            return this.getStringOption(attr.value);
+          case 'TIMESTAMP':
+            return this.getTimestampOption(attr.value);
+        }
+      }
+    }
+  }
+
+  private getBooleanOption(value: Value) {
+    if (value.type === 'BOOLEAN') {
+      return value;
+    }
+  }
+
+  private getNumberOption(value: Value) {
+    switch (value.type) {
+      case 'SINT32':
+      case 'UINT32':
+      case 'SINT64':
+      case 'UINT64':
+        return value;
+    }
+  }
+
+  private getStringOption(value: Value) {
+    if (value.type === 'STRING') {
+      return value;
+    }
+  }
+
+  private getTimestampOption(value: Value) {
+    if (value.type === 'TIMESTAMP') {
+      return value;
+    }
+  }
+
+  getComment() {
+    // Don't copy
+  }
+
+  getStream() {
+    // Don't copy (not currently stored)
+  }
+
+  getAdvancementParams(): AdvancementParams | undefined {
+    return undefined;
+  }
+}
+```
+
+### `configure-command.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/configure-command.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Send a command" />
+
+  <app-send-command-wizard-step step="2" />
+
+  <div class="form-content">
+    @if (command(); as command) {
+      <dl class="dl-horizontal no-lead">
+        <dt>Command</dt>
+        <dd>{{ command.qualifiedName | shortName }}</dd>
+        <dt>System</dt>
+        <dd>{{ (command.qualifiedName | spaceSystemName) || "-" }}</dd>
+        @for (alias of command.alias; track alias) {
+          <dt>{{ alias.namespace }}</dt>
+          <dd>{{ alias.name }}</dd>
+        }
+        @if (command.longDescription || command.shortDescription) {
+          @if (command.longDescription) {
+            <dt>Description</dt>
+            <dd>
+              <app-markdown [text]="command.longDescription" />
+            </dd>
+          }
+          @if (!command.longDescription) {
+            <dt>Description</dt>
+            <dd>
+              {{ command.shortDescription || "-" }}
+            </dd>
+          }
+        }
+        <dt>Significance</dt>
+        <dd>
+          @if (command?.effectiveSignificance; as significance) {
+            <app-significance-level [level]="significance.consequenceLevel" />
+            &nbsp;&nbsp;{{ significance.reasonForWarning }}
+          } @else {
+            -
+          }
+        </dd>
+      </dl>
+    }
+
+    @if (!(cleared$ | async)) {
+      <ya-warning-message>You're not cleared to send this command</ya-warning-message>
+    }
+
+    <app-command-form
+      #commandForm
+      [command]="command()"
+      [templateProvider]="templateProvider$ | async">
+      <ng-container head>
+        <ya-stepper-step label="Constraints" [expanded]="true" [visible]="!!command()?.constraint">
+          <app-command-constraints
+            [command]="command()"
+            [relto]="command()?.qualifiedName | spaceSystemName" />
+        </ya-stepper-step>
+      </ng-container>
+    </app-command-form>
+
+    <p>&nbsp;</p>
+    <mat-toolbar>
+      <ya-button (click)="goBack()">Cancel</ya-button>
+      <span style="flex: 1 1 auto"></span>
+      @if (config.twoStageCommanding) {
+        <mat-slide-toggle [formControl]="armControl" color="primary">Arm</mat-slide-toggle>
+        <div style="width: 20px"></div>
+      }
+      <ya-button
+        appearance="primary"
+        icon="send"
+        [disabled]="
+          (config.twoStageCommanding && !armControl.value) ||
+          !(cleared$ | async) ||
+          !commandForm.form.valid
+        "
+        (click)="sendCommand()">
+        Send
+      </ya-button>
+      @if (showSchedule()) {
+        &nbsp;
+        <ya-icon-action
+          [matMenuTriggerFor]="
+            (config.twoStageCommanding && !armControl.value) ||
+            !(cleared$ | async) ||
+            !commandForm.form.valid
+              ? null
+              : sendMenu
+          "
+          icon="arrow_drop_down"
+          [padding]="false"
+          [disabled]="
+            (config.twoStageCommanding && !armControl.value) ||
+            !(cleared$ | async) ||
+            !commandForm.form.valid
+          "
+          style="line-height: 12px" />
+        <mat-menu #sendMenu="matMenu" class="ya-menu" [overlapTrigger]="false">
+          <button mat-menu-item (click)="sendCommand()">Send now</button>
+          <button mat-menu-item (click)="openScheduleCommandDialog()">Send later...</button>
+        </mat-menu>
+      }
+    </mat-toolbar>
+  </div>
+</ya-instance-page>
+```
+
+### `configure-command.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/configure-command/configure-command.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatStepperIcon, MatStepperModule } from '@angular/material/stepper';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  Clearance,
+  Command,
+  CommandHistoryEntry,
+  ConfigService,
+  CreateTimelineItemRequest,
+  MessageService,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+  YaStepperStep,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+import { CommandFormComponent } from '../command-form/command-form.component';
+import { TemplateProvider } from '../command-form/TemplateProvider';
+import { ScheduleCommandDialogComponent } from '../schedule-command-dialog/schedule-command-dialog.component';
+import { SendCommandWizardStepComponent } from '../send-command-wizard-step/send-command-wizard-step.component';
+import { CommandConstraintsComponent } from './command-constraints.component';
+import { CommandHistoryTemplateProvider } from './CommandHistoryTemplateProvider';
+
+@Component({
+  templateUrl: './configure-command.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommandConstraintsComponent,
+    CommandFormComponent,
+    MarkdownComponent,
+    MatIconModule,
+    MatStepperIcon,
+    MatStepperModule,
+    SendCommandWizardStepComponent,
+    SignificanceLevelComponent,
+    WebappSdkModule,
+    YaStepperStep,
+  ],
+})
+export class ConfigureCommandComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  qualifiedName = input.required<string>({ alias: 'command' });
+
+  @ViewChild('commandForm')
+  commandForm: CommandFormComponent;
+
+  config: WebsiteConfig;
+
+  command = signal<Command | null>(null);
+  templateProvider$ = new BehaviorSubject<TemplateProvider | null>(null);
+  cleared$ = new BehaviorSubject<boolean>(true);
+
+  private connectionInfoSubscription: Subscription;
+
+  armControl = new UntypedFormControl();
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private title: Title,
+    private messageService: MessageService,
+    readonly yamcs: YamcsService,
+    private location: Location,
+    configService: ConfigService,
+    private authService: AuthService,
+    private dialog: MatDialog,
+  ) {
+    this.config = configService.getConfig();
+  }
+
+  ngOnInit(): void {
+    this.title.setTitle(`Send a command: ${this.qualifiedName()}`);
+
+    const promises: Promise<any>[] = [
+      this.yamcs.yamcsClient.getCommand(
+        this.yamcs.instance!,
+        this.qualifiedName(),
+      ),
+    ];
+
+    const templateId = this.route.snapshot.queryParamMap.get('template');
+    if (templateId) {
+      const promise = this.yamcs.yamcsClient.getCommandHistoryEntry(
+        this.yamcs.instance!,
+        templateId,
+      );
+      promises.push(promise);
+    }
+
+    Promise.all(promises).then((responses) => {
+      const command = responses[0] as Command;
+      let template: CommandHistoryEntry | undefined;
+      if (responses.length > 1) {
+        template = responses[1];
+      }
+      this.command.set(command);
+      if (template) {
+        this.templateProvider$.next(
+          new CommandHistoryTemplateProvider(template),
+        );
+      } else {
+        this.templateProvider$.next(null);
+      }
+
+      if (this.config.commandClearanceEnabled) {
+        this.connectionInfoSubscription = this.yamcs.clearance$.subscribe(
+          (clearance) => {
+            const significance = command.effectiveSignificance;
+            this.cleared$.next(
+              this.isCleared(clearance, significance?.consequenceLevel),
+            );
+          },
+        );
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    if (this.config.twoStageCommanding) {
+      this.commandForm.form.valueChanges.subscribe(() => {
+        this.armControl.setValue(false);
+      });
+      this.commandForm.form.statusChanges.subscribe(() => {
+        if (this.commandForm.form.valid) {
+          this.armControl.enable();
+        } else {
+          this.armControl.disable();
+        }
+      });
+    }
+  }
+
+  goBack() {
+    this.location.back();
+  }
+
+  sendCommand() {
+    this.armControl.setValue(false);
+
+    const qname = this.qualifiedName();
+    const commandConfig = this.commandForm.getResult();
+
+    this.yamcs.yamcsClient
+      .issueCommand(this.yamcs.instance!, this.yamcs.processor!, qname, {
+        args: commandConfig.args,
+        stream: commandConfig.stream,
+        comment: commandConfig.comment,
+        extra: commandConfig.extra,
+      })
+      .then((response) => {
+        this.router.navigate(
+          ['/commanding/send' + qname, '-', 'report', response.id],
+          {
+            queryParams: {
+              c: this.yamcs.context,
+            },
+          },
+        );
+      })
+      .catch((err) => {
+        this.messageService.showError(err);
+      });
+  }
+
+  showSchedule() {
+    const capabilities =
+      this.yamcs.connectionInfo$.value?.instance?.capabilities || [];
+    return (
+      capabilities.indexOf('timeline') !== -1 &&
+      capabilities.indexOf('activities') !== -1 &&
+      this.authService.getUser()!.hasSystemPrivilege('ControlTimeline')
+    );
+  }
+
+  openScheduleCommandDialog() {
+    this.dialog
+      .open(ScheduleCommandDialogComponent, {
+        width: '600px',
+      })
+      .afterClosed()
+      .subscribe((scheduleOptions) => {
+        if (scheduleOptions) {
+          this.armControl.setValue(false);
+
+          const qname = this.qualifiedName();
+          const commandConfig = this.commandForm.getResult(true);
+
+          const options: CreateTimelineItemRequest = {
+            type: 'ACTIVITY',
+            duration: '0s',
+            name: qname,
+            start: scheduleOptions['executionTime'],
+            tags: scheduleOptions['tags'],
+            activityDefinition: {
+              type: 'COMMAND',
+              args: {
+                processor: this.yamcs.processor!,
+                command: qname,
+                args: commandConfig.args,
+                extra: commandConfig.extra,
+                stream: commandConfig.stream,
+              },
+            },
+          };
+
+          this.yamcs.yamcsClient
+            .createTimelineItem(this.yamcs.instance!, options)
+            .then(() => {
+              this.messageService.showInfo('Command scheduled');
+              this.router.navigateByUrl(
+                `/commanding/send?c=${this.yamcs.context}`,
+              );
+            })
+            .catch((err) => this.messageService.showError(err));
+        }
+      });
+  }
+
+  private isCleared(clearance: Clearance | null, level?: string) {
+    if (!clearance) {
+      return false;
+    }
+
+    switch (clearance.level) {
+      case 'SEVERE':
+        if (level === 'SEVERE') {
+          return true;
+        }
+      // fall
+      case 'CRITICAL':
+        if (level === 'CRITICAL') {
+          return true;
+        }
+      // fall
+      case 'DISTRESS':
+        if (level === 'DISTRESS') {
+          return true;
+        }
+      // fall
+      case 'WARNING':
+        if (level === 'WARNING') {
+          return true;
+        }
+      // fall
+      case 'WATCH':
+        if (level === 'WATCH') {
+          return true;
+        }
+      // fall
+      case 'NONE':
+        if (level === 'NONE' || !level) {
+          return true;
+        }
+    }
+
+    return false;
+  }
+
+  ngOnDestroy() {
+    this.connectionInfoSubscription?.unsubscribe();
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `sims/sim_terminal/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,16 +11,69 @@
 cfg/index
 inc/index
 src/index
-file--.git
-file--CMakeLists.txt
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/sim_terminal/cfg/`](cfg/index) — 폴더
-- [`sims/sim_terminal/inc/`](inc/index) — 폴더
-- [`sims/sim_terminal/src/`](src/index) — 폴더
-- [`sims/sim_terminal/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_terminal/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_terminal/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `sims/sim_terminal/.git`
+
+
+```text
+gitdir: ../../.git/modules/sims/sim_terminal
+```
+
+### `CMakeLists.txt`
+
+**경로:** `sims/sim_terminal/CMakeLists.txt`
+
+
+```cmake
+project(sim_terminal)
+
+find_package(Boost REQUIRED QUIET COMPONENTS system program_options filesystem)
+find_package(ITC_Common REQUIRED COMPONENTS itc_logger)
+find_package(NOSENGINE REQUIRED COMPONENTS common transport client server i2c can spi uart)
+
+include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+include_directories(
+                    ${sim_common_SOURCE_DIR}/inc
+                    ${ITC_Common_INCLUDE_DIRS}
+                    ${NOSENGINE_INCLUDE_DIRS}
+                    inc
+)
+
+set(sim_terminal_src
+    src/simulator_terminal.cpp
+    src/bus_connections.cpp
+)
+
+# For Code::Blocks and other IDEs
+#file(GLOB sim_terminal_inc inc/*.hpp)
+
+set(sim_terminal_libs
+    sim_common
+    ${Boost_LIBRARIES}
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+    readline
+    history
+)
+ 
+set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:$ORIGIN/../lib") # Pick up .so in install directory
+
+add_library(sim_terminal SHARED ${sim_terminal_src} ${sim_terminal_inc})
+target_link_libraries(sim_terminal ${sim_terminal_libs})
+install(TARGETS sim_terminal LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+```
+
+### `README.md`
+
+**경로:** `sims/sim_terminal/README.md`
+
+
+```markdown
+# sim_terminal
+
+```

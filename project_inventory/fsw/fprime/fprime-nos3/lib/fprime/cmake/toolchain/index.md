@@ -3,24 +3,186 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 helpers/index
-file--aarch64-linux.cmake
-file--arm-hf-linux.cmake
-file--arm-sf-linux.cmake
-file--raspberrypi.cmake
-file--toolchain.cmake.template
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/helpers/`](helpers/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/aarch64-linux.cmake`](file--aarch64-linux.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/arm-hf-linux.cmake`](file--arm-hf-linux.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/arm-sf-linux.cmake`](file--arm-sf-linux.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/raspberrypi.cmake`](file--raspberrypi.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/toolchain.cmake.template`](file--toolchain.cmake.template) — UTF-8 텍스트 파일 본문 포함
+### `aarch64-linux.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/aarch64-linux.cmake`
+
+
+```cmake
+####
+# ARM 64-bit Toolchain
+#
+# This ARM toolchain will compile for 64-bit ARM systems running linux. It uses the arm packages installed on the system
+# path for cross-compilation. To override the location of the tools use -DARM_TOOLS_PATH=... to specify the root
+# directory of the tools installation. That directory should contain folders bin, lib, etc where the tools are located.
+#
+# These toolchains will use the linux libraries shipped with the compiler to build the final image. To override this,
+# users should set -DCMAKE_SYSROOT=... to a directory containing a valid sysroot for their device.
+#
+# Cautions:
+#  1. Care must be taken to ensure that the Linux OS running on the target is newer than the cross-compilers, or sysroot
+#     should be used to specify fixed library targets to compile against.
+#  2. Specifying sysroot should be used with care as both libraries and headers must exist both in the sysroot
+#
+####
+set(CMAKE_SYSTEM_PROCESSOR "aarch64")
+include("${CMAKE_CURRENT_LIST_DIR}/helpers/arm-linux-base.cmake")
+```
+
+### `arm-hf-linux.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/arm-hf-linux.cmake`
+
+
+```cmake
+####
+# ARM 32-bit Toolchain with Hardware Floating Point
+#
+# This ARM toolchain will compile for 32-bit ARM linux systems supporting hardware floating point operations. It uses
+# the arm packages installed on the system path for cross-compilation. To override the location of the tools use
+# -DARM_TOOLS_PATH=... to specify the root directory of the tools installation. That directory should contain folders
+# bin, lib, etc where the tools are located.
+#
+# These toolchains will use the linux libraries shipped with the compiler to build the final image. To override this,
+# users should set -DCMAKE_SYSROOT=... to a directory containing a valid sysroot for their device.
+#
+# Cautions:
+#  1. Care must be taken to ensure that the Linux OS running on the target is newer than the cross-compilers, or sysroot
+#     should be used to specify fixed library targets to compile against.
+#  2. Specifying sysroot should be used with care as both libraries and headers must both exist in the sysroot
+#
+####
+set(CMAKE_SYSTEM_PROCESSOR "arm")
+set(ARM_TOOL_SUFFIX eabihf)
+include("${CMAKE_CURRENT_LIST_DIR}/helpers/arm-linux-base.cmake")
+```
+
+### `arm-sf-linux.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/arm-sf-linux.cmake`
+
+
+```cmake
+####
+# ARM 32-bit Toolchain with Software Floating Point
+#
+# This ARM toolchain will compile for 32-bit ARM linux systems supporting software floating point operations. It uses
+# the arm packages installed on the system path for cross-compilation. To override the location of the tools use
+# -DARM_TOOLS_PATH=... to specify the root directory of the tools installation. That directory should contain folders
+# bin, lib, etc where the tools are located.
+#
+# These toolchains will use the linux libraries shipped with the compiler to build the final image. To override this,
+# users should set -DCMAKE_SYSROOT=... to a directory containing a valid sysroot for their device.
+#
+# Cautions:
+#  1. Care must be taken to ensure that the Linux OS running on the target is newer than the cross-compilers, or sysroot
+#     should be used to specify fixed library targets to compile against.
+#  2. Specifying sysroot should be used with care as both libraries and headers must both exist in the sysroot
+#
+####
+set(CMAKE_SYSTEM_PROCESSOR "arm")
+set(ARM_TOOL_SUFFIX eabi)
+include("${CMAKE_CURRENT_LIST_DIR}/helpers/arm-linux-base.cmake")
+```
+
+### `raspberrypi.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/raspberrypi.cmake`
+
+
+```cmake
+####
+# Raspberry PI Toolchain
+#
+# This is a toolchain for the Raspberry Pi. This toolchain can be used to build
+# against the Raspberry Pi embedded Linux target. In order to use this toolchain,
+# the Raspberry Pi cross-compiler should be installed on a Linux host. These
+# tools are installable as follows:
+#   sudo apt install gcc-arm-linux-gnueabihf g++-arm-linux-gnueabihf  gdb-multiarch
+####
+
+set(CMAKE_SYSTEM_PROCESSOR "arm")
+set(ARM_TOOL_SUFFIX eabihf)
+
+if(DEFINED ENV{RPI_TOOLCHAIN_DIR})
+    set(ENV{ARM_TOOLS_PATH} "$ENV{RPI_TOOLCHAIN_DIR}")
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/helpers/arm-linux-base.cmake")
+```
+
+### `toolchain.cmake.template`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/toolchain/toolchain.cmake.template`
+
+
+````text
+####
+# Template toolchain.cmake.template: 
+#
+# This file acts as a template for the cmake toolchains. These toolchain files
+# specify what tools to use when performing the build as part of CMake. This
+# file can be used to quickly set one up.
+#
+# Follow all the steps in this template to create a toolchain file. Ensure
+# to remove the template-failsafe (step 1) and fill in all <SOMETHING> tags.
+#
+# **Note:** this file should follow the standard CMake toolchain format. See:
+# https://cmake.org/cmake/help/v3.12/manual/cmake-toolchains.7.html
+#
+# **Note:** If the user desires to set compile flags, or F prime specific build options, a platform
+#           file should be constructed. See: [platform.md](../platform/platform.md)
+#
+# ### Filling In CMake Toolchain by Example ###
+#
+# CMake Toolchain files, at the most basic, define the system name and C and C++ compilers. In
+# addition, a find path can be set to search for other utilities. This example will walk through
+# setting these values using the appropriate variables. These can be specified using the following
+# CMake setting flags:
+#
+# ```
+# CMAKE_SYSTEM_NAME "RaspberryPI"
+# # specify the cross compiler
+# set(CMAKE_C_COMPILER "/opt/rpi/bin/arm-linux-gnueabihf-gcc")
+# set(CMAKE_CXX_COMPILER "/opt/rpi/bin/arm-linux-gnueabihf-g++")
+# # where is the target environment
+# set(CMAKE_FIND_ROOT_PATH  "/opt/rpi")
+# ```
+#
+# **Note:** if copying the template, delete the message with FATAL_ERROR line. This is a fail-safe
+#           to prevent a raw-copy from being treated as a valid toolchain file. 
+####
+
+## STEP 1: DELETE the following fail-safe line
+message(FATAL_ERROR "\n[F-PRIME] Template must be filled before use.\n")
+
+## STEP 2: Specify the target system's name. i.e. raspberry-pi-3
+set(CMAKE_SYSTEM_NAME "<NAME-OF-TARGET-SYSTEM>")
+
+# STEP 3: Specify the path to C and CXX cross compilers
+set(CMAKE_C_COMPILER "<PATH-TO-C-CROSS-COMPILER")
+set(CMAKE_CXX_COMPILER "<PATH-TO-CXX-CROSS-COMPILER>")
+
+# STEP 4: Specify paths to root of toolchain package, for searching for
+#         libraries, executables, etc.
+set(CMAKE_FIND_ROOT_PATH  "<PATH-TO-TOOLCHAIN-ROOT>")
+
+# DO NOT EDIT: F prime searches the host for programs, not the cross
+# compile toolchain
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+# DO NOT EDIT: F prime searches for libs, includes, and packages in the
+# toolchain when cross-compiling.
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_PACKAGE ONLY)
+````

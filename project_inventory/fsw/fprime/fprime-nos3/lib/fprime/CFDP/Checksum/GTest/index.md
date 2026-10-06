@@ -3,18 +3,117 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Checksums.cpp`
 
-file--Checksums.cpp
-file--Checksums.hpp
-file--CMakeLists.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/Checksums.cpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  CFDP/Checksum/GTest/Checksums.cpp
+// \author bocchino
+// \brief  cpp file for CFDP Checksum gtest utilities
+//
+// \copyright
+// Copyright (C) 2016, California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// 
+// ====================================================================== 
+
+#include "CFDP/Checksum/GTest/Checksums.hpp"
+
+namespace CFDP {
+
+  namespace GTest {
+
+    void Checksums ::
+      compare(
+          const CFDP::Checksum& expected,
+          const CFDP::Checksum& actual
+      ) 
+    {
+      const U32 expectedValue = expected.getValue();
+      const U32 actualValue = actual.getValue();
+      ASSERT_EQ(expectedValue, actualValue);
+    }
+
+  }
+
+}
 ```
 
-## 항목
+### `Checksums.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/Checksums.cpp`](file--Checksums.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/Checksums.hpp`](file--Checksums.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/Checksums.hpp`
+
+
+```cpp
+// ====================================================================== 
+// \title  CFDP/Checksum/GTest/Checksums.hpp
+// \author bocchino
+// \brief  hpp file for CFDP Checksum gtest utilities
+//
+// \copyright
+// Copyright (C) 2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// 
+// ====================================================================== 
+
+#ifndef GTest_CFDP_Checksums_HPP
+#define GTest_CFDP_Checksums_HPP
+
+#include "gtest/gtest.h"
+
+#include "CFDP/Checksum/Checksum.hpp"
+
+namespace CFDP {
+
+  namespace GTest {
+
+    //! Utilities for testing Checksum operations
+    //!
+    namespace Checksums {
+
+      void compare(
+          const CFDP::Checksum& expected, //!< Expected value
+          const CFDP::Checksum& actual //!< Actual value
+      );
+
+    }
+
+  }
+
+}
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+if (BUILD_TESTING)
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/Checksums.cpp"
+    )
+
+    set(MOD_DEPS
+        gtest
+        CFDP/Checksum
+    )
+    register_fprime_module()
+endif()
+```

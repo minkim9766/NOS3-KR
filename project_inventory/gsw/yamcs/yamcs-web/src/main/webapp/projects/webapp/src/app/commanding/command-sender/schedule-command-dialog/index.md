@@ -3,16 +3,79 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/schedule-command-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `schedule-command-dialog.component.html`
 
-file--schedule-command-dialog.component.html
-file--schedule-command-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/schedule-command-dialog/schedule-command-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Send later</h2>
+
+<mat-dialog-content>
+  <div class="hint">
+    <p>This command will be submitted to the Yamcs Timeline, for execution at a later time.</p>
+  </div>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Execution time">
+      <ya-date-time-input formControlName="executionTime" [showMillis]="true" [showNow]="true" />
+    </ya-field>
+
+    <ya-field label="Timeline tags" hint="(optional)">
+      <ya-help dialogTitle="Timeline Tags">
+        Tags allow to categorise items per band. Bands only show items for which one of the tags is
+        matching.
+      </ya-help>
+      <ya-tag-select formControlName="tags" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <div style="flex: 1 1 auto"></div>
+
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="schedule()" [disabled]="!form.valid">SCHEDULE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `schedule-command-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/schedule-command-dialog/schedule-command-dialog.component.html`](file--schedule-command-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/schedule-command-dialog/schedule-command-dialog.component.ts`](file--schedule-command-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/schedule-command-dialog/schedule-command-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-schedule-command-dialog',
+  templateUrl: './schedule-command-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ScheduleCommandDialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<ScheduleCommandDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+  ) {
+    this.form = formBuilder.group({
+      executionTime: ['', [Validators.required]],
+      tags: [[], []],
+    });
+  }
+
+  schedule() {
+    this.dialogRef.close(this.form.value);
+  }
+}
+```

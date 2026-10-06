@@ -3,18 +3,75 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `label.component.css`
 
-file--label.component.css
-file--label.component.html
-file--label.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.css`
+
+
+```css
+span.ya-label {
+  padding: 4px;
+  margin-right: 5px;
+  border-radius: 12px;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  font-size: 11px;
+  line-height: 12px;
+}
+
+span.ya-label .mat-icon {
+  vertical-align: middle;
+  font-size: 12px !important;
+  line-height: 16px;
+}
 ```
 
-## 항목
+### `label.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.css`](file--label.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.html`](file--label.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.ts`](file--label.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.html`
+
+
+```html
+<span
+  class="ya-label"
+  [style.backgroundColor]="backgroundColor"
+  [style.borderColor]="borderColor"
+  [style.color]="color">
+  @if (icon) {
+    <mat-icon>{{ icon }}</mat-icon>
+  }
+  <ng-content />
+</span>
+```
+
+### `label.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/label/label.component.ts`
+
+
+```typescript
+import { Component, Input } from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-label',
+  templateUrl: './label.component.html',
+  styleUrl: './label.component.css',
+  imports: [MatIcon],
+})
+export class YaLabel {
+  @Input()
+  icon: string;
+
+  @Input()
+  backgroundColor = '#eee';
+
+  @Input()
+  color = 'inherit';
+
+  @Input()
+  borderColor = '#ccc';
+}
+```

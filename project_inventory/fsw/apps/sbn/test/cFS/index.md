@@ -3,24 +3,361 @@
 
 **경로:** `fsw/apps/sbn/test/cFS/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 apps/index
 sample_defs/index
-file--cisend
-file--install
-file--run
-file--to_recv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/test/cFS/apps/`](apps/index) — 폴더
-- [`fsw/apps/sbn/test/cFS/sample_defs/`](sample_defs/index) — 폴더
-- [`fsw/apps/sbn/test/cFS/cisend`](file--cisend) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/install`](file--install) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/run`](file--run) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/cFS/to_recv`](file--to_recv) — UTF-8 텍스트 파일 본문 포함
+### `cisend`
+
+**경로:** `fsw/apps/sbn/test/cFS/cisend`
+
+
+```text
+#!/usr/bin/env python3
+
+import socket, struct, optparse, sys
+
+parser = optparse.OptionParser('sends CCSDS packets to CI')
+parser.add_option('--host', action='store', dest='host', default='127.0.0.1', help='Host name/IP address of the CI host.')
+parser.add_option('--port', type='int', dest='port', default=1234, help='Port of the CI host.')
+parser.add_option('--mid', type='int', dest='mid', default=0x18DA, help='Message ID.')
+parser.add_option('--cc', type='int', dest='cc', default=0, help='Command code.')
+(options, args) = parser.parse_args()
+
+payload=sys.stdin.buffer.read()
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+ccsds_msg = struct.pack('>HHHBB', options.mid, 0, len(payload) + 1, options.cc, 0) + payload
+
+print('sending %r' % ccsds_msg)
+
+sock.sendto(ccsds_msg, (options.host, options.port))
+```
+
+### `install`
+
+**경로:** `fsw/apps/sbn/test/cFS/install`
+
+
+```text
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <CFS_FOLDER>"
+    exit 1
+fi
+
+CFS_ROOT="$1"
+pushd ../..
+export SBN_ROOT=$(pwd)
+popd
+
+for app in to_lab sch_lab; do
+    if [ ! -r "${CFS_ROOT}/apps/${app}" ]; then
+        echo "${app} not in ${CFS_ROOT}/apps"
+        exit 1
+    fi
+done
+
+cp "${CFS_ROOT}/cfe/cmake/Makefile.sample" "${CFS_ROOT}/Makefile"
+rsync -r -v "${CFS_ROOT}/cfe/cmake/sample_defs" "${CFS_ROOT}"
+
+sed -e 's/BASE/BASE2/g' -e 's/0x1800/0x1818/' -e 's/0x0800/0x0818/' < "${CFS_ROOT}/sample_defs/cpu1_msgids.h" > "${CFS_ROOT}/sample_defs/cpu2_msgids.h"
+sed -e 's/BASE/BASE3/g' -e 's/0x1800/0x1830/' -e 's/0x0800/0x0830/' < "${CFS_ROOT}/sample_defs/cpu1_msgids.h" > "${CFS_ROOT}/sample_defs/cpu3_msgids.h"
+
+# -e 's/CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG 0xE/CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG 0xF/' \
+sed \
+    -e 's/CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST 32/CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST 3200/' \
+    -i "${CFS_ROOT}/sample_defs/cpu1_platform_cfg.h"
+cp "${CFS_ROOT}/sample_defs/cpu1_platform_cfg.h" "${CFS_ROOT}/sample_defs/cpu2_platform_cfg.h"
+cp "${CFS_ROOT}/sample_defs/cpu1_platform_cfg.h" "${CFS_ROOT}/sample_defs/cpu3_platform_cfg.h"
+
+cat > "${CFS_ROOT}/sample_defs/targets.cmake" <<- "EOF"
+	SET(MISSION_NAME "SampleMission")
+	SET(SPACECRAFT_ID 0x42)
+	list(APPEND MISSION_GLOBAL_APPLIST sbn sbn_udp sbn_tcp sch_lab sbn_f_remap)
+
+	SET(FT_INSTALL_SUBDIR "host/functional-test")
+	SET(MISSION_CPUNAMES cpu1 cpu2 cpu3)
+
+	SET(cpu1_PROCESSORID 1)
+	SET(cpu1_APPLIST ci_lab)
+	SET(cpu1_FILELIST cfe_es_startup.scr)
+	SET(cpu1_SYSTEM i686-linux-gnu)
+
+	SET(cpu2_PROCESSORID 2)
+	SET(cpu2_APPLIST fib)
+	SET(cpu2_FILELIST cfe_es_startup.scr)
+	SET(cpu2_SYSTEM i686-linux-gnu)
+
+	SET(cpu3_PROCESSORID 3)
+	SET(cpu3_APPLIST to_lab)
+	SET(cpu3_FILELIST cfe_es_startup.scr)
+	SET(cpu3_SYSTEM i686-linux-gnu)
+EOF
+
+cat > "${CFS_ROOT}/sample_defs/cpu1_cfe_es_startup.scr" <<- "EOF"
+	CFE_APP, /cf/ci_lab.so,      CI_Lab_AppMain,  CI_LAB_APP,   60,   16384, 0x0, 0;
+	CFE_APP, /cf/sch_lab.so,     SCH_Lab_AppMain, SCH_LAB_APP,  80,   16384, 0x0, 0;
+	CFE_APP, /cf/sbn.so,     SBN_AppMain, SBN,  80,   100000, 0x0, 0;
+	!
+EOF
+
+cat > "${CFS_ROOT}/sample_defs/cpu2_cfe_es_startup.scr" <<- "EOF"
+	CFE_APP, /cf/fib_app.so,      FIB_AppMain,  FIB_APP,   70,   1024, 0x0, 0;
+	CFE_APP, /cf/sch_lab.so,     SCH_Lab_AppMain, SCH_LAB_APP,  80,   16384, 0x0, 0;
+	CFE_APP, /cf/sbn.so,     SBN_AppMain, SBN,  80,   100000, 0x0, 0;
+	!
+EOF
+
+cat > "${CFS_ROOT}/sample_defs/cpu3_cfe_es_startup.scr" <<- "EOF"
+	CFE_APP, /cf/to_lab.so,      TO_LAB_AppMain,  TO_LAB_APP,   70,   16384, 0x0, 0;
+	CFE_APP, /cf/sch_lab.so,     SCH_Lab_AppMain, SCH_LAB_APP,  80,   16384, 0x0, 0;
+	CFE_APP, /cf/sbn.so,     SBN_AppMain, SBN,  80,   100000, 0x0, 0;
+	!
+EOF
+
+cat > "${CFS_ROOT}/apps/to_lab/fsw/tables/to_lab_sub.c" <<- "EOF"
+	#include "cfe_tbl_filedef.h"
+	#include "to_lab_sub_table.h"
+	#include "to_lab_msgids.h"
+	#include "fib_app_msgids.h"
+	
+	TO_LAB_Subs_t TO_LAB_Subs = {
+            .Subs = {
+                {CFE_SB_MSGID_WRAP_VALUE(FIB_TLM_REMAP_MID), {0, 0}, 4},
+                {CFE_SB_MSGID_WRAP_VALUE(FIB_TLM_MID), {0, 0}, 4},
+            }
+	};
+	
+	CFE_TBL_FILEDEF(TO_LAB_Subs, TO_LAB_APP.TO_LAB_Subs, TO Lab Sub Tbl, to_lab_sub.tbl)
+EOF
+
+cat > "${CFS_ROOT}/apps/sbn/fsw/tables/sbn_conf_tbl.c" <<- "EOF"
+	#include "sbn_tbl.h"
+	#include "cfe_tbl_filedef.h"
+	
+	SBN_ConfTbl_t SBN_ConfTbl = {
+	    .ProtocolModules = {
+	        { .Name = "UDP", .LibFileName = "/cf/sbn_udp.so", .LibSymbol = "SBN_UDP_Ops", .BaseEID = 0x0100 }
+	    },
+	    .ProtocolCnt = 1,
+	    .FilterModules = {
+	        { .Name = "Remap", .LibFileName = "/cf/sbn_f_remap.so", .LibSymbol = "SBN_F_Remap", .BaseEID = 0x1000 }
+	    },
+	    .FilterCnt = 1,
+	
+	    .Peers = {
+	        { .ProcessorID = 1, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2234", .TaskFlags = SBN_TASK_POLL },
+	        { .ProcessorID = 2, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2235", .TaskFlags = SBN_TASK_POLL },
+	        { .ProcessorID = 3, .SpacecraftID = 0x42, .NetNum = 0, .ProtocolName = "UDP", .Filters = {"Remap"}, .Address = "127.0.0.1:2236", .TaskFlags = SBN_TASK_POLL },
+	    },
+	    .PeerCnt = 3
+	};
+	
+	CFE_TBL_FILEDEF(SBN_ConfTbl, SBN.SBN_ConfTbl, SBN Configuration Table, sbn_conf_tbl.tbl)
+EOF
+
+cat > "${CFS_ROOT}/apps/sbn_f_remap/fsw/tables/sbn_remap_tbl.c" <<- "EOF"
+	#include "sbn_remap_tbl.h"
+	#include "cfe_tbl_filedef.h"
+	#include "cfe_sb.h" 
+	
+	SBN_RemapTbl_t SBN_RemapTbl = {
+	    .RemapDefaultFlag = SBN_REMAP_DEFAULT_SEND,
+	    .Entries = {
+	        {.ProcessorID = 3, .SpacecraftID = 0x42, .FromMID = CFE_SB_MSGID_WRAP_VALUE(0x0882), .ToMID = CFE_SB_MSGID_WRAP_VALUE(0x0883)},
+	        {0}
+	    }
+	};
+	
+	CFE_TBL_FILEDEF(SBN_RemapTbl, SBN.SBN_RemapTbl, SBN Remap Table, sbn_remap_tbl.tbl)
+EOF
+
+cat > "${CFS_ROOT}/apps/sch_lab/fsw/tables/sch_lab_table.c" <<- "EOF"
+	#include "cfe_tbl_filedef.h" 
+	#include "sch_lab_table.h"
+	#include "cfe_sb.h" 
+	#include "sbn_msgids.h"
+	
+	SCH_LAB_ScheduleTable_t SCH_TBL_Structure = {.TickRate = 1, .Config = {{CFE_SB_MSGID_WRAP_VALUE(SBN_CMD_MID), 4, 0}}};
+
+	CFE_TBL_FILEDEF(SCH_TBL_Structure, SCH_LAB_APP.SCH_LAB_SchTbl, Schedule Lab MsgID Table, sch_lab_table.tbl)
+EOF
+
+cat > "${CFS_ROOT}/apps/to_lab/CMakeLists.txt" <<- "EOF"
+	cmake_minimum_required(VERSION 3.5)
+	project(CFS_TO_LAB C)
+	
+	include_directories(fsw/mission_inc)
+	include_directories(fsw/platform_inc)
+	include_directories(${fib_MISSION_DIR}/fsw/platform_inc)
+	
+	aux_source_directory(fsw/src APP_SRC_FILES)
+	
+	# Create the app module
+	add_cfe_app(to_lab ${APP_SRC_FILES})
+
+        add_cfe_tables(TO_LAB_Subs fsw/tables/to_lab_sub.c)
+EOF
+
+cat > "${CFS_ROOT}/apps/sch_lab/CMakeLists.txt" <<- "EOF"
+	cmake_minimum_required(VERSION 3.5)
+	project(CFS_SCH_LAB C)
+	
+	include_directories(fsw/mission_inc)
+	include_directories(fsw/platform_inc)
+	include_directories(${ci_lab_MISSION_DIR}/fsw/platform_inc)
+	include_directories(${to_lab_MISSION_DIR}/fsw/platform_inc)
+	include_directories(${sbn_MISSION_DIR}/fsw/platform_inc)
+	include_directories(${fib_MISSION_DIR}/fsw/platform_inc)
+	
+	# Create the app module
+	add_cfe_app(sch_lab fsw/src/sch_lab_app.c)
+	add_cfe_tables(sch_lab_table fsw/tables/sch_lab_table.c)
+EOF
+
+rm ${CFS_ROOT}/apps/sbn
+ln -s ${SBN_ROOT} ${CFS_ROOT}/apps/sbn
+rm ${CFS_ROOT}/apps/sbn_udp
+ln -s ${SBN_ROOT}/modules/protocol/udp ${CFS_ROOT}/apps/sbn_udp
+rm ${CFS_ROOT}/apps/sbn_tcp
+ln -s ${SBN_ROOT}/modules/protocol/tcp ${CFS_ROOT}/apps/sbn_tcp
+rm ${CFS_ROOT}/apps/sbn_f_remap
+ln -s ${SBN_ROOT}/modules/filter/remap ${CFS_ROOT}/apps/sbn_f_remap
+rm ${CFS_ROOT}/apps/fib
+ln -s $(pwd)/apps/fib ${CFS_ROOT}/apps/fib
+
+cd ${CFS_ROOT}
+rm -rf build
+make SIMULATION=native prep
+make install
+```
+
+### `run`
+
+**경로:** `fsw/apps/sbn/test/cFS/run`
+
+
+```text
+#!/bin/bash -e
+
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 <CFS_FOLDER>"
+    exit 1
+fi
+CFS_ROOT="$1"
+
+pids=""
+for cpu in cpu1 cpu2 cpu3
+do
+    echo starting ${cpu}
+    pushd ${CFS_ROOT}/build/exe/${cpu}
+    ./core-${cpu} -R PO 2>&1 > ${cpu}.log &
+    pids="${pids} $!"
+    popd
+    sleep 1
+done
+
+echo waiting for SBN network to settle
+sleep 5
+
+echo starting to_recv
+./to_recv 2>&1 > to_recv.log &
+pids="${pids} $!"
+tail -f to_recv.log &
+pids="${pids} $!"
+sleep 5
+
+echo starting TO
+TO_MID=0x1880
+TO_START_CC=6
+printf '127.0.0.1       ' | ./cisend --mid=$TO_MID --cc=$TO_START_CC
+sleep 1
+
+echo commanding Fib
+FIB_MID=0x1882
+printf '' | ./cisend --mid=$FIB_MID --cc=0
+sleep 1
+printf '' | ./cisend --mid=$FIB_MID --cc=0
+sleep 1
+printf '' | ./cisend --mid=$FIB_MID --cc=0
+sleep 1
+
+echo -n "Press return to shut down: "
+read
+
+for pid in $pids
+do
+    kill $pid
+done
+
+echo done
+```
+
+### `to_recv`
+
+**경로:** `fsw/apps/sbn/test/cFS/to_recv`
+
+
+```text
+#!/usr/bin/env python3
+
+import socket, struct, sys
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(("127.0.0.1", 1235))
+
+class FibTlm:
+    structstr = '>H'
+    structstrsz = struct.calcsize(structstr)
+    
+    def __init__(self, data):
+        (Fib,) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return '<Fib %d>' % (self.Fib)
+
+class CCSDSPri:
+    structstr = '>HHH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        (self.MID, self.Seq, self.Len) = struct.unpack(self.structstr,
+            data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<CCSDSPri MID=0x%x Seq=%d Len=%d>' % (
+            self.MID, self.Seq, self.Len)
+    def __str__(self):
+        return self.__repr__()
+
+decodemap = {
+    0x0883: FibTlm,
+}
+
+while True:
+    print('--waiting for TO messages--')
+    sys.stdout.flush()
+    data, addr = sock.recvfrom(4096)
+    print('--received from TO (len=%d)--' % len(data))
+    print('%r' % data)
+    pri = CCSDSPri(data)
+    print('%r' % pri)
+    if pri.MID & 0x1000: print('cmd')
+    else:
+        if pri.MID in decodemap:
+            decodemap[pri.MID](data[12:])
+    sys.stdout.flush()
+```

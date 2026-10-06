@@ -3,16 +3,18 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 top/index
-file--DpManager.png
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/top/`](top/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/DpManager.png`](file--DpManager.png) — 바이너리 (경로만)
+### `DpManager.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/img/DpManager.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

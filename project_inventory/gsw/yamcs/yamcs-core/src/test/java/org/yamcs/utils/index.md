@@ -3,52 +3,2981 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AggregateUtilTest.java`
 
-file--AggregateUtilTest.java
-file--BitBufferTest.java
-file--BooleanArrayTest.java
-file--ByteArrayTest.java
-file--ByteArrayUtilsTest.java
-file--FileUtilsTest.java
-file--FilterParserTest.java
-file--GlobFileFinderTest.java
-file--HttpClient.java
-file--IntArrayTest.java
-file--IntHashSetTest.java
-file--Mil1750ATest.java
-file--ParameterFormatterTest.java
-file--ParititionedTimeTest.java
-file--SortedIntArrayTest.java
-file--TaiUtcConverterTest.java
-file--TimeEncodingTest.java
-file--TimeIntervalTest.java
-file--TimestampUtilsTest.java
-file--VarIntUtilTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/AggregateUtilTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.mdb.DataTypeProcessor;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.PartialParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.DataType;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.util.DataTypeUtil;
+
+public class AggregateUtilTest {
+
+    @Test
+    public void testSubtype() {
+        IntegerParameterType.Builder itb = new IntegerParameterType.Builder();
+        AggregateParameterType.Builder aggType = new AggregateParameterType.Builder();
+        Member m1 = new Member("m1");
+        IntegerParameterType intType = itb.build();
+        m1.setDataType(intType);
+        aggType.addMember(m1);
+        ArrayParameterType.Builder arrayType = new ArrayParameterType.Builder().setNumberOfDimensions(1);
+        arrayType.setElementType(aggType.build());
+        PathElement[] path = AggregateUtil.parseReference("[2].m1");
+
+        DataType dt = DataTypeUtil.getMemberType(arrayType.build(), path);
+
+        assertEquals(intType, dt);
+    }
+
+    @Test
+    public void testPatchAggregate() {
+        Parameter p = getAggregateParameter("p");
+        AggregateParameterType adt = (AggregateParameterType) p.getParameterType();
+        Map<String, Object> m = adt.convertType("{ m1: 3, m2: { s1: 5, s2:7}}");
+        Value v = DataTypeProcessor.getValueForType(adt, m);
+
+        ParameterValue pv = new ParameterValue(p);
+        pv.setEngValue(v);
+        PathElement[] pem1 = AggregateUtil.parseReference("m1");
+        PathElement[] pes2 = AggregateUtil.parseReference("m2.s2");
+
+        PartialParameterValue patch1 = new PartialParameterValue(p, pem1);
+        patch1.setEngValue(ValueUtility.getSint32Value(31));
+        AggregateUtil.updateMember(pv, patch1);
+        assertEquals(31, AggregateUtil.getMemberValue(pv.getEngValue(), pem1).getSint32Value());
+
+        PartialParameterValue patch2 = new PartialParameterValue(p, pes2);
+        patch2.setEngValue(ValueUtility.getSint32Value(51));
+        AggregateUtil.updateMember(pv, patch2);
+
+        assertEquals(51, AggregateUtil.getMemberValue(pv.getEngValue(), pes2).getSint32Value());
+
+    }
+
+    @Test
+    public void testPatchArray() {
+        Parameter p = new Parameter("p");
+        ArrayParameterType.Builder aptb = new ArrayParameterType.Builder().setNumberOfDimensions(1);
+        aptb.setElementType(new IntegerParameterType.Builder().build());
+        ArrayParameterType apt = aptb.build();
+        p.setParameterType(apt);
+
+        Object[] o = apt.convertType("[1,2,3,4]");
+        Value v = DataTypeProcessor.getValueForType(apt, o);
+
+        ParameterValue pv = new ParameterValue(p);
+        pv.setEngValue(v);
+
+        PathElement[] pe3 = AggregateUtil.parseReference("[2]");
+        PartialParameterValue patch1 = new PartialParameterValue(p, pe3);
+        patch1.setEngValue(ValueUtility.getSint32Value(100));
+
+        AggregateUtil.updateMember(pv, patch1);
+        assertEquals(100, AggregateUtil.getMemberValue(pv.getEngValue(), pe3).getSint32Value());
+
+    }
+
+    @Test
+    public void testPatchArrayInsideAggregate() {
+        Parameter p = getArrayInsideAggregateParameter();
+        AggregateParameterType adt = (AggregateParameterType) p.getParameterType();
+        Map<String, Object> m = adt.convertType("{ m1: 3, m2: { s1: 5, a2:[7, 9, 10]}}");
+        Value v = DataTypeProcessor.getValueForType(adt, m);
+
+        ParameterValue pv = new ParameterValue(p);
+        pv.setEngValue(v);
+
+        PathElement[] pea1 = AggregateUtil.parseReference("m2.a2[1]");
+
+        PartialParameterValue patch1 = new PartialParameterValue(p, pea1);
+        patch1.setEngValue(ValueUtility.getSint32Value(1000));
+        AggregateUtil.updateMember(pv, patch1);
+
+        assertEquals(1000, AggregateUtil.getMemberValue(pv.getEngValue(), pea1).getSint32Value());
+    }
+
+    @Test
+    public void testVerifyPath() {
+        Parameter p = getAggregateParameter("/yamcs/nm/UDP_FRAME_OUT.tc/cop1Status");
+        String name = "/yamcs/nm/UDP_FRAME_OUT.tc/cop1Status.m1";
+        int x = AggregateUtil.findSeparator(name);
+        PathElement[] path = AggregateUtil.parseReference(name.substring(x));
+        assertTrue(AggregateUtil.verifyPath(p.getParameterType(), path));
+    }
+
+    @Test
+    public void testFindSeparator() {
+
+    }
+
+    private Parameter getArrayInsideAggregateParameter() {
+        Parameter p = new Parameter("p");
+        AggregateParameterType.Builder adt = new AggregateParameterType.Builder();
+        adt.addMember(getIntegerMember("m1"));
+        adt.addMember(getAggregateMemberWithArray("m2"));
+        p.setParameterType(adt.build());
+        return p;
+    }
+
+    private Parameter getAggregateParameter(String pname) {
+        Parameter p = new Parameter(pname);
+        AggregateParameterType.Builder adt = new AggregateParameterType.Builder();
+        adt.addMember(getIntegerMember("m1"));
+        adt.addMember(getAggregateMember("m2"));
+        p.setParameterType(adt.build());
+        return p;
+    }
+
+    private Member getIntegerMember(String name) {
+        Member m = new Member(name);
+        IntegerParameterType mType = new IntegerParameterType.Builder().setName(name + "Type").build();
+        m.setDataType(mType);
+        return m;
+    }
+
+    private Member getIntegerArrayMember(String name) {
+        Member m = new Member(name);
+        ArrayParameterType.Builder apt = new ArrayParameterType.Builder();
+        apt.setNumberOfDimensions(1);
+        apt.setElementType(new IntegerParameterType.Builder().setName(name + "ElementType").build());
+        m.setDataType(apt.build());
+        return m;
+    }
+
+    private Member getAggregateMember(String name) {
+        Member m = new Member(name);
+        AggregateParameterType.Builder adt = new AggregateParameterType.Builder();
+        adt.addMember(getIntegerMember("s1"));
+        adt.addMember(getIntegerMember("s2"));
+        m.setDataType(adt.build());
+        return m;
+    }
+
+    private Member getAggregateMemberWithArray(String name) {
+        Member m = new Member(name);
+        AggregateParameterType.Builder adt = new AggregateParameterType.Builder();
+        adt.addMember(getIntegerMember("s1"));
+        adt.addMember(getIntegerArrayMember("a2"));
+        m.setDataType(adt.build());
+        return m;
+    }
+}
 ```
 
-## 항목
+### `BitBufferTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/AggregateUtilTest.java`](file--AggregateUtilTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/BitBufferTest.java`](file--BitBufferTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/BooleanArrayTest.java`](file--BooleanArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ByteArrayTest.java`](file--ByteArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ByteArrayUtilsTest.java`](file--ByteArrayUtilsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/FileUtilsTest.java`](file--FileUtilsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/FilterParserTest.java`](file--FilterParserTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/GlobFileFinderTest.java`](file--GlobFileFinderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/HttpClient.java`](file--HttpClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/IntArrayTest.java`](file--IntArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/IntHashSetTest.java`](file--IntHashSetTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/Mil1750ATest.java`](file--Mil1750ATest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ParameterFormatterTest.java`](file--ParameterFormatterTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ParititionedTimeTest.java`](file--ParititionedTimeTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/SortedIntArrayTest.java`](file--SortedIntArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TaiUtcConverterTest.java`](file--TaiUtcConverterTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimeEncodingTest.java`](file--TimeEncodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimeIntervalTest.java`](file--TimeIntervalTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimestampUtilsTest.java`](file--TimestampUtilsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/VarIntUtilTest.java`](file--VarIntUtilTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/BitBufferTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteOrder;
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+
+public class BitBufferTest {
+
+    @Test
+    public void testBigEndianRead() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { 0x18, 0x7A, 0x23, (byte) 0xFF }, 0);
+        assertEquals(0, bitbuf.getBits(1));
+        assertEquals(1, bitbuf.getPosition());
+        assertEquals(1, bitbuf.getBits(3));
+        assertEquals(4, bitbuf.getPosition());
+
+        bitbuf.setPosition(0);
+        assertEquals(0x18, bitbuf.getBits(8));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x87, bitbuf.getBits(8));
+
+        bitbuf.setPosition(0);
+        assertEquals(0x187A, bitbuf.getBits(16));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x87A, bitbuf.getBits(12));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x87A2, bitbuf.getBits(16));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x87A23, bitbuf.getBits(20));
+
+        bitbuf.setPosition(0);
+
+        assertEquals(0x187A23FF, bitbuf.getBits(32));
+    }
+
+    @Test
+    public void testBigEndianWrite() {
+        byte[] x = new byte[10];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putBits(0, 1);
+        assertEquals(0, x[0]);
+
+        bitbuf.putBits(1, 3);
+        assertEquals(4, bitbuf.getPosition());
+
+        assertEquals(0x10, x[0] & 0xFF);
+
+        bitbuf.putBits(0xFF, 7);
+        assertEquals(0x1F, x[0] & 0xFF);
+        assertEquals(0xE0, x[1] & 0xFF);
+    }
+
+    @Test
+    public void testBigEndianWrite1() {
+        byte[] x = new byte[10];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putBits(1, 1);
+        assertEquals(0x80, x[0] & 0xFF);
+
+        bitbuf.putBits(1, 3);
+        assertEquals(4, bitbuf.getPosition());
+
+        assertEquals(0x90, x[0] & 0xFF);
+        bitbuf.setPosition(0);
+        bitbuf.putBits(0, 1);
+        assertEquals(0x10, x[0] & 0xFF);
+
+        bitbuf.putBits(1, 1);
+        assertEquals(0x50, x[0] & 0xFF);
+        bitbuf.putBits(1, 1);
+        assertEquals(0x70, x[0] & 0xFF);
+        bitbuf.putBits(0, 1);
+        assertEquals(0x60, x[0] & 0xFF);
+        bitbuf.putBits(1, 2);
+        assertEquals(0x64, x[0] & 0xFF);
+    }
+
+    @Test
+    public void testBigEndianWrite2() {
+        byte[] x = new byte[4];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putBits(0x01020304, 32);
+        assertEquals("01020304", StringConverter.arrayToHexString(x));
+    }
+
+    @Test
+    public void testFastPut() {
+        byte[] x = new byte[4];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putByte((byte) 1);
+        bitbuf.put(new byte[] { 2, 3, 4 });
+        assertEquals("01020304", StringConverter.arrayToHexString(x));
+    }
+
+    @Test
+    public void testBigEndianWrite3() {
+        byte[] x = new byte[8];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putBits(0x0102030405060708L, 64);
+        assertEquals("0102030405060708", StringConverter.arrayToHexString(x));
+    }
+
+    @Test
+    public void testBigEndianWrite4() {
+        byte[] x = new byte[8];
+        BitBuffer bitbuf = new BitBuffer(x);
+        bitbuf.putBits(0x0102030405060708L, 60);
+        assertEquals("1020304050607080", StringConverter.arrayToHexString(x));
+    }
+
+    @Test
+    public void test2() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { (byte) 0xE0, 0x7A }, 0);
+        assertEquals(14, bitbuf.getBits(4));
+    }
+
+    @Test
+    public void testLittleEndianRead() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { 0x18, 0x7A, 0x23, (byte) 0xFF }, 0);
+        bitbuf.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+
+        assertEquals(0, bitbuf.getBits(1));
+        assertEquals(1, bitbuf.getPosition());
+
+        assertEquals(4, bitbuf.getBits(3));
+        assertEquals(4, bitbuf.getPosition());
+
+        bitbuf.setPosition(0);
+        assertEquals(0x18, bitbuf.getBits(8));
+
+        bitbuf.setPosition(4);
+        assertEquals(0xA1, bitbuf.getBits(8));
+
+        bitbuf.setPosition(0);
+        assertEquals(0x7A18, bitbuf.getBits(16));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x7A1, bitbuf.getBits(12));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x37A1, bitbuf.getBits(16));
+
+        bitbuf.setPosition(4);
+        assertEquals(0x237A1, bitbuf.getBits(20));
+
+        bitbuf.setPosition(0);
+
+        assertEquals(0xFF237A18L, bitbuf.getBits(32));
+    }
+
+    @Test
+    public void testLittleEndianRead1() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { 0x03, (byte) 0x80, (byte) 0xFF, (byte) 0xFF }, 0);
+        bitbuf.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+
+        assertEquals(3, bitbuf.getBits(3));
+        assertEquals(0, bitbuf.getBits(12));
+        assertEquals(0x1FFFFL, bitbuf.getBits(17));
+    }
+
+    @Test
+    public void testLittleEndianWrite1() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { (byte) 0xFF, (byte) 0xFF, (byte) 0x00, (byte) 0x00 });
+        bitbuf.setByteOrder(ByteOrder.LITTLE_ENDIAN);
+        bitbuf.putBits(3, 3);
+        bitbuf.putBits(0, 12);
+        bitbuf.putBits(0x1FFFF, 17);
+
+        assertEquals("0380FFFF", StringConverter.arrayToHexString(bitbuf.array()));
+    }
+
+    @Test
+    public void testDoubleSlice() {
+        BitBuffer bitbuf = new BitBuffer(new byte[] { (byte) 0x01, (byte) 0x02, (byte) 0x03, (byte) 0x04 });
+        assertEquals(1, bitbuf.getBits(8));
+
+        BitBuffer bitbuf1 = bitbuf.slice();
+        assertEquals(2, bitbuf1.getBits(8));
+
+        BitBuffer bitbuf2 = bitbuf1.slice();
+        assertEquals(3, bitbuf2.getBits(8));
+    }
+
+    // @Test
+    public void testSpeed() {
+        int n = 1000_000;
+        byte[] b = new byte[n];
+        BitBuffer bitbuf = new BitBuffer(b);
+
+        long s = 0;
+        Random r = new Random();
+        long t0 = System.currentTimeMillis();
+
+        long c = 0;
+
+        for (int i = 0; i < 3000; i++) {
+            bitbuf.setPosition(0);
+            b[r.nextInt(n)] = (byte) r.nextInt();
+            hopa: while (true) {
+                for (int j = 1; j < 33; j++) {
+                    if (bitbuf.getPosition() + 64 > n * 8) {
+                        break hopa;
+                    }
+                    c++;
+                    s += bitbuf.getBits(j);
+                }
+            }
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println("s: " + s + " t1-t0: " + (t1 - t0) + " millisecs c: " + c);
+    }
+
+}
+```
+
+### `BooleanArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/BooleanArrayTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.BitSet;
+
+import org.junit.jupiter.api.Test;
+
+public class BooleanArrayTest {
+
+    @Test
+    public void test1() {
+        BooleanArray ba = new BooleanArray();
+
+        ba.add(false);
+        assertFalse(ba.get(0));
+        ba.add(true);
+        assertFalse(ba.get(0));
+        assertTrue(ba.get(1));
+
+        ba.add(0, true);
+        assertEquals(3, ba.size());
+        assertTrue(ba.get(0));
+        assertFalse(ba.get(1));
+        assertTrue(ba.get(2));
+
+        for (int i = 0; i < 100; i++) {
+            ba.add(0, true);
+        }
+        assertEquals(103, ba.size());
+        assertTrue(ba.get(0));
+        assertTrue(ba.get(100));
+        assertFalse(ba.get(101));
+        assertTrue(ba.get(102));
+
+    }
+
+    @Test
+    public void test2() {
+        BooleanArray ba = new BooleanArray();
+        BitSet bitSet = new BitSet();
+        for (int i = 0; i < 100; i++) {
+            ba.add(3 * i, false);
+            ba.add(3 * i + 1, true);
+            ba.add(3 * i + 2, true);
+
+            bitSet.set(3 * i, false);
+            bitSet.set(3 * i + 1, true);
+            bitSet.set(3 * i + 2, true);
+        }
+        assertArrayEquals(bitSet.toLongArray(), ba.toLongArray());
+    }
+}
+```
+
+### `ByteArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ByteArrayTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+
+public class ByteArrayTest {
+    static Random rand = new Random();
+
+    @Test
+    public void testString0() throws DecodingException {
+        ByteArray ba = new ByteArray();
+        ba.addNullTerminatedUTF("aa");
+        assertEquals(3, ba.size());
+        assertEquals("aa", ba.getNullTerminatedUTF());
+
+        assertEquals(3, ba.position());
+    }
+
+    @Test
+    public void testString1() throws DecodingException {
+        String s1 = "abc";
+        String s2 = "cdh";
+
+        ByteArray ba = new ByteArray();
+        ba.addSizePrefixedUTF(s1);
+        ba.addNullTerminatedUTF(s2);
+        ba.add((byte) 42);
+
+        String s1out = ba.getSizePrefixedUTF();
+        String s2out = ba.getNullTerminatedUTF();
+
+        assertEquals(s1, s1out);
+        assertEquals(s2, s2out);
+        assertEquals(42, ba.get());
+    }
+
+    @Test
+    public void testString2() throws DecodingException {
+        byte[] x = new byte[100];
+        rand.nextBytes(x);
+        String s1 = new String(x);
+
+        ByteArray ba = new ByteArray();
+        ba.addSizePrefixedUTF(s1);
+
+        String s2 = ba.getSizePrefixedUTF();
+        assertEquals(s1, s2);
+    }
+
+    @Test
+    public void testString3() throws DecodingException {
+        byte[] x = new byte[100];
+        rand.nextBytes(x);
+        String s1 = new String(x);
+
+        ByteArray ba = new ByteArray();
+        ba.addNullTerminatedUTF(s1);
+
+        String s2 = ba.getNullTerminatedUTF();
+        assertEquals(s1, s2);
+    }
+}
+```
+
+### `ByteArrayUtilsTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ByteArrayUtilsTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.yamcs.utils.StringConverter.arrayToHexString;
+
+import org.junit.jupiter.api.Test;
+
+public class ByteArrayUtilsTest {
+    @Test
+    public void testPlusOne() {
+        assertEquals("0102", plusOne("0101"));
+        assertEquals("0200", plusOne("01FF"));
+    }
+
+    @Test
+    public void testPlusOneOverflow() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            plusOne("FFFF");
+        });
+    }
+
+    @Test
+    public void testMinusOne() {
+        assertEquals("0102", minusOne("0103"));
+        assertEquals("01FF", minusOne("0200"));
+    }
+
+    @Test
+    public void testMinusOneUnderflow() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            minusOne("0000");
+        });
+    }
+
+    private String plusOne(String hex) {
+        return arrayToHexString(ByteArrayUtils.plusOne(h2b(hex)));
+    }
+
+    private String minusOne(String hex) {
+        return arrayToHexString(ByteArrayUtils.minusOne(h2b(hex)));
+    }
+
+    @Test
+    public void testCompare() {
+        assertEquals(0, ByteArrayUtils.compare(h2b("0001"), h2b("0001")));
+        assertEquals(0, ByteArrayUtils.compare(h2b("0001"), h2b("000102")));
+        assertEquals(0, ByteArrayUtils.compare(h2b("00010203"), h2b("000102")));
+        assertEquals(-1, ByteArrayUtils.compare(h2b("0102"), h2b("0103")));
+        assertEquals(1, ByteArrayUtils.compare(h2b("0103"), h2b("0102")));
+    }
+
+    @Test
+    public void testLong() {
+        byte[] a = h2b("0102030405060708");
+        assertEquals(0x0102030405060708l, ByteArrayUtils.decodeLong(a, 0));
+
+        byte[] b = new byte[8];
+        ByteArrayUtils.encodeLong(0xF0F1F2F3F4F5F6F7l, b, 0);
+        assertEquals("F0F1F2F3F4F5F6F7", arrayToHexString(b));
+
+        assertEquals("0102030405060708",
+                arrayToHexString(ByteArrayUtils.encodeLong(0x0102030405060708l)));
+    }
+
+    @Test
+    public void testLongLE() {
+        byte[] a = h2b("0102030405060708");
+        assertEquals(0x0807060504030201l, ByteArrayUtils.decodeLongLE(a, 0));
+
+        byte[] b = new byte[8];
+        ByteArrayUtils.encodeLongLE(0xFFFEFDFCFBFAF0F9l, b, 0);
+        assertEquals("F9F0FAFBFCFDFEFF", arrayToHexString(b));
+    }
+
+    @Test
+    public void testUnsigned7Bytes() {
+        byte[] b = h2b("F1F2F3F4F5F6F7");
+        assertEquals(0xF1F2F3F4F5F6F7l, ByteArrayUtils.decodeUnsigned7Bytes(b, 0));
+    }
+
+    @Test
+    public void testUnsigned6Bytes() {
+        byte[] b = h2b("F1F2F3F4F5F6");
+        assertEquals(0xF1F2F3F4F5F6l, ByteArrayUtils.decodeUnsigned6Bytes(b, 0));
+    }
+
+    @Test
+    public void testSigned6Bytes() {
+        byte[] b = h2b("FFFFFFFFFFFF");
+        assertEquals(-1, ByteArrayUtils.decode6Bytes(b, 0));
+        b = h2b("000000000102");
+        assertEquals(0x0102, ByteArrayUtils.decode6Bytes(b, 0));
+
+        ByteArrayUtils.encodeUnsigned6Bytes(0xFFFFFFFFFFFEl, b, 0);
+        assertEquals("FFFFFFFFFFFE", arrayToHexString(b));
+
+        ByteArrayUtils.encodeUnsigned6Bytes(0x010203040506l, b, 0);
+        assertEquals("010203040506", arrayToHexString(b));
+    }
+
+    @Test
+    public void testUnsigned5Bytes() {
+        byte[] b = h2b("F1F2F3F4F5");
+        assertEquals(0xF1F2F3F4F5l, ByteArrayUtils.decodeUnsigned5Bytes(b, 0));
+
+        ByteArrayUtils.encodeUnsigned5Bytes(0xFFFFFFFFFEl, b, 0);
+        assertEquals("FFFFFFFFFE", arrayToHexString(b));
+
+        ByteArrayUtils.encodeUnsigned5Bytes(0x0102030405l, b, 0);
+        assertEquals("0102030405", arrayToHexString(b));
+    }
+
+    @Test
+    public void testSigned5Bytes() {
+        byte[] b = h2b("FFFFFFFFFF");
+        assertEquals(-1, ByteArrayUtils.decode5Bytes(b, 0));
+        b = h2b("0000000102");
+        assertEquals(0x0102, ByteArrayUtils.decode5Bytes(b, 0));
+
+    }
+
+    @Test
+    public void testSignedInt() {
+        byte[] b = h2b("FFFFFFFF");
+        assertEquals(-1, ByteArrayUtils.decodeInt(b, 0));
+
+        ByteArrayUtils.encodeInt(-2, b, 0);
+        assertEquals("FFFFFFFE", arrayToHexString(b));
+
+        assertEquals("FFFFFFFD", arrayToHexString(ByteArrayUtils.encodeInt(-3)));
+
+    }
+
+    @Test
+    public void testSignedIntLE() {
+        byte[] b = h2b("FEFFFFFF");
+        assertEquals(-2, ByteArrayUtils.decodeIntLE(b, 0));
+    }
+
+    @Test
+    public void testUnsigned3Bytes() {
+        byte[] b = h2b("F1F2F3");
+        assertEquals(0xF1F2F3l, ByteArrayUtils.decodeUnsigned3Bytes(b, 0));
+
+        ByteArrayUtils.encodeUnsigned3Bytes(0xF1F2F3, b, 0);
+        assertEquals("F1F2F3", arrayToHexString(b));
+
+        ByteArrayUtils.encodeUnsigned3Bytes(0x010203, b, 0);
+        assertEquals("010203", arrayToHexString(b));
+    }
+
+    @Test
+    public void testUnsigned3BytesLE() {
+        byte[] b = h2b("F1F2F3");
+        assertEquals(0xF3F2F1l, ByteArrayUtils.decodeUnsigned3BytesLE(b, 0));
+    }
+
+    /*
+     * @Test
+     * public void testSignedShort() {
+     * byte[] b = h2b("FFFF");
+     * assertEquals(-1, ByteArrayUtils.decodeShort(b, 0));
+     * 
+     * b = h2b("0102");
+     * assertEquals(0x0102, ByteArrayUtils.decodeShort(b, 0));
+     * 
+     * ByteArrayUtils.encodeShort(-2, b, 0);
+     * assertEquals("FFFE", arrayToHexString(b));
+     * 
+     * ByteArrayUtils.encodeShort(2, b, 0);
+     * assertEquals("0002", arrayToHexString(b));
+     * 
+     * }
+     */
+    @Test
+    public void testUnsignedShort() {
+        byte[] b = h2b("FFFF");
+        assertEquals(0xFFFF, ByteArrayUtils.decodeUnsignedShort(b, 0));
+
+        b = h2b("0102");
+        assertEquals(0x0102, ByteArrayUtils.decodeShort(b, 0));
+
+        ByteArrayUtils.encodeUnsignedShort(0xFFFE, b, 0);
+        assertEquals("FFFE", arrayToHexString(b));
+
+        ByteArrayUtils.encodeUnsignedShort(2, b, 0);
+        assertEquals("0002", arrayToHexString(b));
+
+    }
+
+    @Test
+    public void testUnsignedShortLE() {
+        byte[] b = h2b("F1F2");
+        assertEquals(0xF2F1, ByteArrayUtils.decodeUnsignedShortLE(b, 0));
+    }
+
+    // hex to binary
+    private byte[] h2b(String hex) {
+        return StringConverter.hexStringToArray(hex);
+    }
+}
+```
+
+### `FileUtilsTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/FileUtilsTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.Test;
+
+public class FileUtilsTest {
+
+    @Test
+    public void testGetFileExtension() {
+        var p = Path.of("a/b/cc.txt");
+        assertEquals("txt", FileUtils.getFileExtension(p));
+
+        p = Path.of("a/b/cc.TXT");
+        assertEquals("txt", FileUtils.getFileExtension(p));
+
+        p = Path.of("a/b/cc");
+        assertNull(FileUtils.getFileExtension(p));
+
+        p = Path.of("a/b/cc.");
+        assertNull(FileUtils.getFileExtension(p));
+
+        p = Path.of(".gitignore");
+        assertEquals("gitignore", FileUtils.getFileExtension(p));
+    }
+}
+```
+
+### `FilterParserTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/FilterParserTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static java.util.Arrays.asList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.ArrayList;
+import java.util.HexFormat;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.utils.parser.Filter;
+import org.yamcs.utils.parser.IncorrectTypeException;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.utils.parser.UnknownFieldException;
+
+public class FilterParserTest {
+
+    private static final HexFormat HEX = HexFormat.of();
+
+    private Item a = new Item("round horn", EventSeverity.INFO, false, 1, HEX.parseHex("aabb"), List.of("foo", "bar"));
+    private Item b = new Item("wacky hippo", EventSeverity.WATCH, true, 2, HEX.parseHex("bbcc"), List.of("foo"));
+    private Item c = new Item("icy wombat", EventSeverity.WARNING, true, 3, HEX.parseHex("ccdd"), List.of("bar"));
+    private Item d = new Item("lush ghost", EventSeverity.DISTRESS, false, 4, HEX.parseHex("ddee"), List.of());
+    private Item e = new Item("rich sea", EventSeverity.CRITICAL, false, 5, HEX.parseHex("eeff"), List.of("baz"));
+    private Item f = new Item("heavy lake", null, false, 6, HEX.parseHex("ff00"), List.of());
+
+    private List<Item> allItems = asList(a, b, c, d, e, f);
+
+    private List<Item> filterItems(ItemFilter filter) {
+        return allItems.stream().filter(filter::matches).toList();
+    }
+
+    @Test
+    public void testEmptyFilter() throws ParseException {
+        var filter = new ItemFilter("");
+        assertEquals(allItems, filterItems(filter));
+
+        filter = new ItemFilter("\n");
+        assertEquals(allItems, filterItems(filter));
+    }
+
+    @Test
+    public void testRegex() throws ParseException {
+        var filter = new ItemFilter("name =~ \"s.a\"");
+        assertEquals(asList(e), filterItems(filter));
+
+        filter = new ItemFilter("name =~ \"^r.*$\"");
+        assertEquals(asList(a, e), filterItems(filter));
+
+        filter = new ItemFilter("name !~ \"^r.*$\"");
+        assertEquals(asList(b, c, d, f), filterItems(filter));
+
+        filter = new ItemFilter("name =~ \"SeA\"");
+        assertEquals(asList(), filterItems(filter), "Regex is case-sensitive");
+
+        filter = new ItemFilter("name =~ \"(?i)SeA\""); // Case-insensitive
+        assertEquals(asList(e), filterItems(filter));
+    }
+
+    @Test
+    public void testNullField() throws ParseException {
+        var filter = new ItemFilter("severity=null");
+        assertEquals(asList(f), filterItems(filter));
+
+        var nullString = new Item(null, EventSeverity.INFO, false, 1, null, List.of());
+        var extendedItems = new ArrayList<>(allItems);
+        extendedItems.add(nullString);
+        filter = new ItemFilter("name = null");
+        assertEquals(asList(nullString), extendedItems.stream().filter(filter::matches).toList());
+
+        var nullBoolean = new Item("swift gopher", EventSeverity.INFO, null, 1, null, List.of());
+        extendedItems = new ArrayList<>(allItems);
+        extendedItems.add(nullBoolean);
+        filter = new ItemFilter("animal = null");
+        assertEquals(asList(nullBoolean), extendedItems.stream().filter(filter::matches).toList());
+
+        var nullNumber = new Item("swift gopher", EventSeverity.INFO, true, null, null, List.of());
+        extendedItems = new ArrayList<>(allItems);
+        extendedItems.add(nullNumber);
+        filter = new ItemFilter("order = null");
+        assertEquals(asList(nullNumber), extendedItems.stream().filter(filter::matches).toList());
+
+        var nullBinary = new Item("swift gopher", EventSeverity.INFO, true, 1, null, List.of());
+        extendedItems = new ArrayList<>(allItems);
+        extendedItems.add(nullBinary);
+        filter = new ItemFilter("binary = null");
+        assertEquals(asList(nullBinary), extendedItems.stream().filter(filter::matches).toList());
+    }
+
+    @Test
+    public void testPrecendence() throws ParseException {
+        var filter = new ItemFilter("lush AND (ghost OR wombat)");
+        assertEquals(asList(d), filterItems(filter));
+
+        filter = new ItemFilter("(lush AND ghost) OR wombat");
+        assertEquals(asList(c, d), filterItems(filter));
+
+        // Unlike programming languages, OR has higher precedence than AND
+        filter = new ItemFilter("lush AND ghost OR wombat");
+        assertEquals(asList(d), filterItems(filter));
+    }
+
+    @Test
+    public void testLogicalOperators() throws ParseException {
+        var filter = new ItemFilter("name=\"icy wombat\" OR severity=DISTRESS");
+        assertEquals(asList(c, d), filterItems(filter));
+
+        filter = new ItemFilter("name=\"icy wombat\" AND severity=DISTRESS");
+        assertEquals(asList(), filterItems(filter));
+
+        filter = new ItemFilter("name=\"icy wombat\" AND severity=WARNING");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("name=\"icy wombat\" AND (severity=WARNING OR severity=DISTRESS)");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("name=\"icy wombat\" OR (severity=WARNING OR severity=DISTRESS)");
+        assertEquals(asList(c, d), filterItems(filter));
+
+        filter = new ItemFilter("(name=\"icy wombat\" OR severity=CRITICAL) OR severity=DISTRESS");
+        assertEquals(asList(c, d, e), filterItems(filter));
+    }
+
+    @Test
+    public void testQuotedString() throws ParseException {
+        var filter = new ItemFilter("name=\"icy wombat\"");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("name != \"icy wombat\"");
+        assertEquals(asList(a, b, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("-name = \"icy wombat\"");
+        assertEquals(asList(a, b, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("NOT ( name = \"icy wombat\" )");
+        assertEquals(asList(a, b, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("name > \"mmm\"");
+        assertEquals(asList(a, b, e), filterItems(filter));
+    }
+
+    @Test
+    public void testEnum() throws ParseException {
+        var filter = new ItemFilter("severity = INFO");
+        assertEquals(asList(a), filterItems(filter));
+
+        filter = new ItemFilter("severity = info");
+        assertEquals(asList(a), filterItems(filter), "Must be case-insensitive");
+
+        filter = new ItemFilter("severity >= DISTRESS");
+        assertEquals(asList(d, e), filterItems(filter));
+
+        var exc = assertThrows(IncorrectTypeException.class, () -> {
+            new ItemFilter("severity >= INFOooo");
+        });
+        assertEquals(exc.getValue(), "INFOooo");
+
+        var exc2 = assertThrows(UnknownFieldException.class, () -> {
+            new ItemFilter("severityy >= INFO");
+        });
+        assertEquals(exc2.getField(), "severityy");
+    }
+
+    @Test
+    public void testBoolean() throws ParseException {
+        var filter = new ItemFilter("animal=true");
+        assertEquals(asList(b, c), filterItems(filter));
+
+        filter = new ItemFilter("animal=True");
+        assertEquals(asList(b, c), filterItems(filter));
+
+        filter = new ItemFilter("animal=false");
+        assertEquals(asList(a, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("animal=False");
+        assertEquals(asList(a, d, e, f), filterItems(filter));
+    }
+
+    @Test
+    public void testNumber() throws ParseException {
+        var filter = new ItemFilter("order < \"3.2\"");
+        assertEquals(asList(a, b, c), filterItems(filter));
+    }
+
+    @Test
+    public void testBinary() throws ParseException {
+        var filter = new ItemFilter("binary=ccdd");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("binary=CCDD");
+        assertEquals(asList(c), filterItems(filter), "Case-insensitive");
+
+        filter = new ItemFilter("binary=\"ccdd\"");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("binary:cc");
+        assertEquals(asList(b, c), filterItems(filter));
+
+        filter = new ItemFilter("binary < cc");
+        assertEquals(asList(a, b), filterItems(filter));
+    }
+
+    @Test
+    public void testQuotedEnum() throws ParseException {
+        var filter = new ItemFilter("severity = \"INFO\"");
+        assertEquals(asList(a), filterItems(filter));
+
+        filter = new ItemFilter("severity >= \"DISTRESS\"");
+        assertEquals(asList(d, e), filterItems(filter));
+
+        var exc = assertThrows(IncorrectTypeException.class, () -> {
+            new ItemFilter("severity >= \"INFOooo\"");
+        });
+        assertEquals(exc.getValue(), "INFOooo");
+
+        var exc2 = assertThrows(UnknownFieldException.class, () -> {
+            new ItemFilter("severityy >= \"INFO\"");
+        });
+        assertEquals(exc2.getField(), "severityy");
+    }
+
+    @Test
+    public void testTextSearch() throws ParseException {
+        var filter = new ItemFilter("wombat");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("hippo OR wombat");
+        assertEquals(asList(b, c), filterItems(filter));
+
+        filter = new ItemFilter("-hippo");
+        assertEquals(asList(a, c, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("-wombat");
+        assertEquals(asList(a, b, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("-wombat AND -hippo");
+        assertEquals(asList(a, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("NOT wombat AND NOT hippo");
+        assertEquals(asList(a, d, e, f), filterItems(filter));
+
+        filter = new ItemFilter("wom AND bat");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("wom bat");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("wom -bat");
+        assertEquals(asList(), filterItems(filter));
+
+        assertThrows(ParseException.class, () -> {
+            new ItemFilter("- wombat");
+        }, "No space allowed after minus sign");
+    }
+
+    @Test
+    public void testCaseSensitiveLogicalOperators() throws ParseException {
+        var filter = new ItemFilter("wombat OR hippo");
+        assertEquals(asList(b, c), filterItems(filter));
+
+        filter = new ItemFilter("wombat or hippo"); // Same as: wombat AND or AND hippo
+        assertEquals(asList(), filterItems(filter));
+    }
+
+    @Test
+    public void testMultilineAndComments() throws ParseException {
+        var filter = new ItemFilter("""
+                -wombat
+                wombat
+                """);
+        assertEquals(asList(), filterItems(filter));
+
+        filter = new ItemFilter("""
+                ---wombat
+                wombat
+                """);
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("""
+                -wombat
+                --wombat
+                """);
+        assertEquals(asList(a, b, d, e, f), filterItems(filter));
+
+        // Intentional EOF instead of newline, following final line comment
+        filter = new ItemFilter("""
+                --nothing
+                --but
+                --comments""");
+        assertEquals(allItems, filterItems(filter));
+    }
+
+    @Test
+    public void testHas() throws ParseException {
+        var filter = new ItemFilter("name:wom");
+        assertEquals(asList(c), filterItems(filter));
+    }
+
+    @Test
+    public void testCaseInsensitiveFields() throws ParseException {
+        var filter = new ItemFilter("name:wom");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("nAme:wom");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("NAME:wom");
+        assertEquals(asList(c), filterItems(filter));
+    }
+
+    @Test
+    public void testCaseInsensitiveMatching() throws ParseException {
+        var filter = new ItemFilter("name:wom");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("name:wOm");
+        assertEquals(asList(c), filterItems(filter));
+
+        filter = new ItemFilter("wOmBat");
+        assertEquals(asList(c), filterItems(filter));
+    }
+
+    @Test
+    public void testPrefix() throws ParseException {
+        var filter = new ItemFilter("label.name=\"icy wombat\"");
+        assertEquals(asList(c), filterItems(filter));
+    }
+
+    @Test
+    public void testStringArray() throws ParseException {
+        var filter = new ItemFilter("tag=foo");
+        assertEquals(asList(a, b), filterItems(filter));
+    }
+
+    public static record Item(String name, EventSeverity severity, Boolean animal, Integer order, byte[] binary,
+            List<String> tags) {
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    public static class ItemFilter extends Filter<Item> {
+
+        public ItemFilter(String query) throws ParseException {
+            super(query);
+            addStringField("name", item -> item.name());
+            addStringCollectionField("tag", item -> item.tags);
+            addEnumField("severity", EventSeverity.class, item -> item.severity());
+            addBooleanField("animal", item -> item.animal());
+            addNumberField("order", item -> item.order());
+            addBinaryField("binary", item -> item.binary());
+            addPrefixField("label.", (item, field) -> {
+                if (field.equals("label.name")) {
+                    return item.name;
+                } else {
+                    return null;
+                }
+            });
+            parse();
+        }
+
+        @Override
+        protected boolean matchesLiteral(Item item, String literal) {
+            return item.name().toLowerCase().contains(literal);
+        }
+    }
+}
+```
+
+### `GlobFileFinderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/GlobFileFinderTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+public class GlobFileFinderTest {
+    static Path tempDir, p_a, p_aa, p_b, p_c, p_c_abc, p_c_bbb, p_c_cbb, p_d, p_d_abc;
+
+    @BeforeAll
+    public static void makeTempFiles() throws IOException {
+        tempDir = Files.createTempDirectory("globtest");
+
+        p_a = Files.createFile(tempDir.resolve("a"));
+        p_aa = Files.createFile(tempDir.resolve("aa"));
+        p_b = Files.createFile(tempDir.resolve("b"));
+        p_c = Files.createDirectory(tempDir.resolve("c"));
+        p_d = Files.createDirectory(tempDir.resolve("d"));
+        p_c_abc = Files.createFile(p_c.resolve("abc"));
+        p_c_bbb = Files.createFile(p_c.resolve("bbb"));
+        p_c_cbb = Files.createFile(p_c.resolve("cbb"));
+        p_d_abc = Files.createFile(p_d.resolve("abc"));
+    }
+
+    @AfterAll
+    public static void cleanup() throws IOException {
+        FileUtils.deleteRecursively(tempDir);
+    }
+
+    @Test
+    public void testEmpty() {
+        GlobFileFinder gff = new GlobFileFinder();
+
+        List<Path> l1 = gff.find(tempDir + "/*.txt");
+        assertEquals(0, l1.size());
+
+        List<Path> l2 = gff.find(tempDir + "/..");
+        assertEquals(0, l2.size());
+    }
+
+    @Test
+    public void testAbsolute() {
+        GlobFileFinder gff = new GlobFileFinder();
+
+        List<Path> l1 = gff.find(tempDir + "/*");
+        assertEquals(3, l1.size());
+        assertTrue(find(p_aa, l1));
+        assertTrue(find(p_a, l1));
+        assertTrue(find(p_b, l1));
+
+        List<Path> l2 = gff.find(tempDir + "/a*");
+        assertEquals(2, l2.size());
+        assertTrue(find(p_aa, l2));
+        assertTrue(find(p_a, l2));
+        assertFalse(find(p_b, l2));
+
+        List<Path> l3 = gff.find(tempDir + "/c/*b*");
+        assertEquals(3, l3.size());
+        assertTrue(find(p_c_abc, l3));
+        assertTrue(find(p_c_bbb, l3));
+        assertTrue(find(p_c_cbb, l3));
+
+        List<Path> l4 = gff.find(tempDir + "/c/[a-b]*");
+        assertEquals(2, l4.size());
+        assertTrue(find(p_c_abc, l4));
+        assertTrue(find(p_c_bbb, l4));
+
+        List<Path> l5 = gff.find(tempDir + "/c/?bb");
+        assertEquals(2, l5.size());
+        assertTrue(find(p_c_bbb, l5));
+        assertTrue(find(p_c_cbb, l5));
+
+        List<Path> l6 = gff.find(tempDir + "/c/{b,c}bb");
+        assertEquals(2, l6.size());
+        assertTrue(find(p_c_bbb, l6));
+        assertTrue(find(p_c_cbb, l6));
+    }
+
+    @Test
+    public void testRelative() {
+        GlobFileFinder gff = new GlobFileFinder();
+
+        List<Path> l1 = gff.find(tempDir, "../" + tempDir.getFileName() + "/*/a*");
+        assertEquals(2, l1.size());
+        assertTrue(find(p_c_abc, l1));
+        assertTrue(find(p_d_abc, l1));
+    }
+
+    @Test
+    public void testIoLimit() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            GlobFileFinder gff = new GlobFileFinder();
+            gff.setIoLimit(10);
+
+            gff.find(tempDir.resolve("*/*").toString());
+        });
+    }
+
+    private boolean find(Path path, List<Path> plist) {
+        return plist.stream()
+                .map(p -> p.toAbsolutePath().normalize())
+                .anyMatch(p -> p.compareTo(path) == 0);
+    }
+}
+```
+
+### `HttpClient.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/HttpClient.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.net.URI;
+import java.util.Base64;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.security.UsernamePasswordToken;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.DefaultFullHttpRequest;
+import io.netty.handler.codec.http.HttpClientCodec;
+import io.netty.handler.codec.http.HttpContent;
+import io.netty.handler.codec.http.HttpContentDecompressor;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpHeaderValues;
+import io.netty.handler.codec.http.HttpMethod;
+import io.netty.handler.codec.http.HttpObject;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpVersion;
+import io.netty.handler.codec.http.LastHttpContent;
+import io.netty.util.CharsetUtil;
+
+public class HttpClient {
+    URI uri;
+    Exception exception;
+    StringBuilder result = new StringBuilder();
+
+    // public Future<String> doAsyncRequest(String url, HttpMethod httpMethod, String body) throws Exception {
+    // return doAsyncRequest(url, httpMethod, body, null);
+    // }
+
+    public Future<String> doAsyncRequest(String url, HttpMethod httpMethod, String body,
+            UsernamePasswordToken authToken) throws Exception {
+        uri = new URI(url);
+        String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
+        String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
+        int port = uri.getPort();
+        if (port == -1) {
+            port = 80;
+        }
+
+        if (!"http".equalsIgnoreCase(scheme)) {
+            throw new IllegalArgumentException("Only HTTP is supported.");
+        }
+
+        exception = null;
+        result.setLength(0);
+
+        EventLoopGroup group = new NioEventLoopGroup();
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) {
+                        ChannelPipeline p = ch.pipeline();
+                        p.addLast(new HttpClientCodec());
+                        p.addLast(new HttpContentDecompressor());
+                        p.addLast(new MyChannelHandler());
+                    }
+                });
+
+        Channel ch = b.connect(host, port).sync().channel();
+        ByteBuf content = null;
+        if (body != null) {
+            content = Unpooled.copiedBuffer(body, CharsetUtil.UTF_8);
+        } else {
+            content = Unpooled.EMPTY_BUFFER;
+        }
+
+        String fullUri = uri.getRawPath();
+        if (uri.getRawQuery() != null) {
+            fullUri += "?" + uri.getRawQuery();
+        }
+        HttpRequest request = new DefaultFullHttpRequest(HttpVersion.HTTP_1_1, httpMethod, fullUri, content);
+        request.headers().set(HttpHeaderNames.HOST, host);
+        request.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());
+        request.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.CLOSE);
+        if (authToken != null) {
+            String credentialsClear = authToken.getPrincipal();
+            if (authToken.getPassword() != null) {
+                credentialsClear += ":" + new String(authToken.getPassword());
+            }
+            String credentialsB64 = new String(Base64.getEncoder().encode(credentialsClear.getBytes()));
+            String authorization = "Basic " + credentialsB64;
+            request.headers().set(HttpHeaderNames.AUTHORIZATION, authorization);
+        }
+
+        ch.writeAndFlush(request).await(1, TimeUnit.SECONDS);
+
+        ResultFuture rf = new ResultFuture(ch.closeFuture());
+
+        return rf;
+    }
+
+    /*	public String doRequest(String url, HttpMethod httpMethod, String body) throws Exception {
+    	return doRequest(url, httpMethod, body, null);
+    }*/
+    public String doRequest(String url, HttpMethod httpMethod, String body, UsernamePasswordToken authToken)
+            throws Exception {
+        Future<String> f = doAsyncRequest(url, httpMethod, body, authToken);
+        return f.get(5, TimeUnit.SECONDS);
+    }
+
+    /*	public String doGetRequest(String url, String body) throws Exception {
+    	return doGetRequest(url, body, null);
+    }*/
+    public String doGetRequest(String url, String body, UsernamePasswordToken authToken) throws Exception {
+        return doRequest(url, HttpMethod.GET, body, authToken);
+    }
+
+    /*	public String doPostRequest(String url, String body) throws Exception {
+    	return doPostRequest(url, body, null);
+    }*/
+    public String doPostRequest(String url, String body, UsernamePasswordToken authToken) throws Exception {
+        return doRequest(url, HttpMethod.POST, body, authToken);
+    }
+
+    class MyChannelHandler extends SimpleChannelInboundHandler<HttpObject> {
+        @Override
+        public void channelRead0(ChannelHandlerContext ctx, HttpObject msg) {
+            if (msg instanceof HttpResponse) {
+                // HttpResponse response = (HttpResponse) msg;
+            }
+            if (msg instanceof HttpContent) {
+                HttpContent content = (HttpContent) msg;
+                result.append(content.content().toString(CharsetUtil.UTF_8));
+
+                if (content instanceof LastHttpContent) {
+                    ctx.close();
+                }
+            }
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            if (cause instanceof Exception) {
+                exception = (Exception) cause;
+            } else {
+                exception = new RuntimeException(cause);
+            }
+            cause.printStackTrace();
+            ctx.close();
+        }
+    }
+
+    class ResultFuture implements Future<String> {
+        ChannelFuture closeFuture;
+
+        public ResultFuture(ChannelFuture closeFuture) {
+            this.closeFuture = closeFuture;
+        }
+
+        @Override
+        public boolean cancel(boolean mayInterruptIfRunning) {
+            return closeFuture.cancel(mayInterruptIfRunning);
+        }
+
+        @Override
+        public boolean isCancelled() {
+            return closeFuture.isCancelled();
+        }
+
+        @Override
+        public boolean isDone() {
+            return closeFuture.isDone();
+        }
+
+        @Override
+        public String get() throws InterruptedException, ExecutionException {
+            closeFuture.await();
+            if (HttpClient.this.exception != null) {
+                throw new ExecutionException(HttpClient.this.exception);
+            }
+            return HttpClient.this.result.toString();
+        }
+
+        @Override
+        public String get(long timeout, TimeUnit unit)
+                throws InterruptedException, ExecutionException, TimeoutException {
+            if (closeFuture.await(timeout, unit)) {
+                if (HttpClient.this.exception != null) {
+                    throw new ExecutionException(HttpClient.this.exception);
+                }
+            } else {
+                throw new TimeoutException();
+            }
+            return HttpClient.this.result.toString();
+        }
+    }
+}
+```
+
+### `IntArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/IntArrayTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import org.junit.jupiter.api.Test;
+
+public class IntArrayTest {
+    static Random rand = new Random();
+
+    @Test
+    public void testSort1() {
+        IntArray s1 = IntArray.wrap(3, 9, 5);
+        List<Integer> l = toList(s1);
+        s1.sort(l);
+        assertEquals(3, s1.size());
+
+        checkSortedAndEqual(s1, l);
+    }
+
+    @Test
+    public void testSortSorted50000() {
+        int n = 50000;
+        IntArray a = new IntArray();
+        for (int i = 0; i < n; i++) {
+            a.add(1);
+        }
+        List<Integer> l = toList(a);
+        a.sort(l);
+        assertEquals(n, a.size());
+
+        checkSortedAndEqual(a, l);
+    }
+
+    @Test
+    public void testSortEquals() {
+        IntArray s1 = IntArray.wrap(3, 3, 3);
+        List<Integer> l = toList(s1);
+        s1.sort(l);
+        assertEquals(3, s1.size());
+
+        checkSortedAndEqual(s1, l);
+    }
+
+    @Test
+    public void testSortEmpty() {
+        IntArray a = new IntArray();
+        List<Integer> l = toList(a);
+        a.sort(l);
+        assertEquals(0, a.size());
+    }
+
+    @Test
+    public void testSort1000() {
+        int n = 1000;
+        IntArray a = new IntArray();
+        for (int i = 0; i < n; i++) {
+            a.add(rand.nextInt());
+        }
+        List<Integer> l = toList(a);
+        a.sort(l);
+        assertEquals(n, a.size());
+
+        checkSortedAndEqual(a, l);
+    }
+
+    @Test
+    public void testRemove() {
+        int n = 10;
+        IntArray a = new IntArray();
+        for (int i = 0; i < n; i++) {
+            a.add(i);
+        }
+        List<Integer> l = toList(a);
+        a.remove(0);
+        l.remove(0);
+
+        assertEquals(l, toList(a));
+
+        a.remove(a.size() - 1);
+        l.remove(l.size() - 1);
+        assertEquals(l, toList(a));
+
+        a.remove(3);
+        l.remove(3);
+        assertEquals(l, toList(a));
+
+    }
+
+    @Test
+    public void testBinarySearch() {
+        IntArray s1 = IntArray.wrap(1, 4, 5);
+        assertEquals(0, s1.binarySearch(1));
+        assertEquals(2, s1.binarySearch(5));
+
+        assertEquals(-4, s1.binarySearch(7));
+
+        assertEquals(-1, s1.binarySearch(-10));
+    }
+
+    @Test
+    public void testIntersection1() {
+        IntArray s1 = IntArray.wrap(3, 5, 9);
+        IntArray s2 = IntArray.wrap(3, 20);
+        assertEquals(1, s1.intersectionSize(s2));
+    }
+
+    @Test
+    public void testIntersection2() {
+        IntArray s1 = IntArray.wrap(3, 3, 3, 5, 9);
+        IntArray s2 = IntArray.wrap(3, 3, 20);
+        assertEquals(2, s2.intersectionSize(s1));
+    }
+
+    @Test
+    public void testUnion() {
+        IntArray s1 = IntArray.wrap(3, 3, 3, 5, 9);
+        IntArray s2 = IntArray.wrap(3, 3, 20);
+        IntArray s3 = IntArray.union(s1, s2, 0);
+
+        assertEquals(IntArray.wrap(3, 3, 3, 5, 9, 20), s3);
+    }
+
+    private void checkSortedAndEqual(IntArray a, List<Integer> l) {
+        for (int i = 0; i < a.size(); i++) {
+            assertEquals(a.get(i), (int) l.get(i));
+            if (i > 0) {
+                assertTrue(a.get(i - 1) <= a.get(i));
+            }
+        }
+    }
+
+    @Test
+    public void testCompare() {
+        assertEquals(0, IntArray.compare(IntArray.wrap(), IntArray.wrap()));
+
+        assertEquals(0, IntArray.compare(IntArray.wrap(1), IntArray.wrap(1)));
+
+        assertEquals(2, IntArray.compare(IntArray.wrap(1), IntArray.wrap()));
+
+        assertEquals(1, IntArray.compare(IntArray.wrap(), IntArray.wrap(1)));
+
+        assertEquals(1, IntArray.compare(IntArray.wrap(1), IntArray.wrap(1, 2)));
+
+        assertEquals(2, IntArray.compare(IntArray.wrap(1, 2), IntArray.wrap(1)));
+
+        assertEquals(1, IntArray.compare(IntArray.wrap(1, 2, 4), IntArray.wrap(1, 2, 3, 4)));
+
+        assertEquals(2, IntArray.compare(IntArray.wrap(1, 2, 3, 4), IntArray.wrap(1, 2, 4)));
+
+        assertEquals(1, IntArray.compare(IntArray.wrap(2, 4), IntArray.wrap(1, 2, 3, 4)));
+
+        assertEquals(2, IntArray.compare(IntArray.wrap(1, 2, 3, 4), IntArray.wrap(2, 4)));
+
+        assertEquals(-1, IntArray.compare(IntArray.wrap(1), IntArray.wrap(2)));
+
+        assertEquals(-1, IntArray.compare(IntArray.wrap(1, 2), IntArray.wrap(1, 3)));
+
+    }
+
+    List<Integer> toList(IntArray a) {
+        return a.stream().boxed().collect(Collectors.toList());
+    }
+}
+```
+
+### `IntHashSetTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/IntHashSetTest.java`
+
+
+```java
+package org.yamcs.utils;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+public class IntHashSetTest {
+
+    @Test
+    public void testAddAndContains() {
+        IntHashSet set = new IntHashSet();
+
+        assertTrue(set.add(1));
+        assertTrue(set.add(2));
+        assertTrue(set.add(3));
+
+        assertTrue(set.contains(1));
+        assertTrue(set.contains(2));
+        assertTrue(set.contains(3));
+        assertFalse(set.contains(4));
+    }
+
+    @Test
+    public void testDuplicateAdd() {
+        IntHashSet set = new IntHashSet();
+
+        assertTrue(set.add(1));
+        assertFalse(set.add(1));
+    }
+
+    @Test
+    public void testMinValue() {
+        IntHashSet set = new IntHashSet();
+
+        assertTrue(set.add(Integer.MIN_VALUE));
+        assertTrue(set.contains(Integer.MIN_VALUE));
+
+        assertFalse(set.add(Integer.MIN_VALUE));
+    }
+
+    @Test
+    public void testRehashing() {
+        IntHashSet set = new IntHashSet();
+
+        for (int i = 0; i < 100; i++) {
+            assertTrue(set.add(i));
+        }
+
+        for (int i = 0; i < 100; i++) {
+            assertTrue(set.contains(i));
+        }
+
+        assertFalse(set.contains(100));
+    }
+
+    @Test
+    public void testRemoveExistingElement() {
+        IntHashSet set = new IntHashSet();
+        set.add(10);
+
+        assertTrue(set.contains(10));
+        assertTrue(set.remove(10));
+        assertFalse(set.contains(10));
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    public void testRemoveNonExistingElement() {
+        IntHashSet set = new IntHashSet();
+        set.add(10);
+        assertFalse(set.remove(20));
+        assertTrue(set.contains(10));
+        assertEquals(1, set.size());
+    }
+
+    @Test
+    public void testRemoveEmptyValue() {
+        IntHashSet set = new IntHashSet();
+        set.add(Integer.MIN_VALUE);
+        assertTrue(set.contains(Integer.MIN_VALUE));
+        assertTrue(set.remove(Integer.MIN_VALUE));
+        assertFalse(set.contains(Integer.MIN_VALUE));
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    public void testRemoveAlreadyRemovedElement() {
+        IntHashSet set = new IntHashSet();
+        set.add(10);
+        assertTrue(set.remove(10));
+        assertFalse(set.remove(10));
+        assertFalse(set.contains(10));
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    public void testRemoveFromEmptySet() {
+        IntHashSet set = new IntHashSet();
+
+        assertFalse(set.remove(10));
+        assertFalse(set.contains(10));
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    public void testRemoveUpdatesSize() {
+        IntHashSet set = new IntHashSet();
+
+        set.add(10);
+        set.add(20);
+        set.add(30);
+        assertEquals(3, set.size());
+
+        assertTrue(set.remove(20));
+        assertEquals(2, set.size());
+
+        assertTrue(set.remove(10));
+        assertEquals(1, set.size());
+
+        assertTrue(set.remove(30));
+        assertEquals(0, set.size());
+    }
+
+    @Test
+    public void testRemoveAndRehash() {
+        IntHashSet set = new IntHashSet();
+
+        set.add(10);
+        set.add(20);
+        set.add(30);
+
+        assertTrue(set.remove(20));
+        assertTrue(set.add(40)); // Should add successfully even after removal
+
+        assertTrue(set.contains(10));
+        assertTrue(set.contains(30));
+        assertTrue(set.contains(40));
+        assertFalse(set.contains(20));
+    }
+}
+```
+
+### `Mil1750ATest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/Mil1750ATest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class Mil1750ATest {
+
+    @Test
+    public void testEncode32() {
+        assertEquals(0, MilStd1750A.encode32(0));
+        assertEquals(0x7FFF_FF_7F, MilStd1750A.encode32(0.99999988079071044921873 * Math.pow(2, 127)));
+        assertEquals(0x4000_00_7F, MilStd1750A.encode32(0.5 * Math.pow(2, 127)));
+
+        assertEquals(0x5000_00_04, MilStd1750A.encode32(0.625 * 16));
+        assertEquals(0x4000_00_01, MilStd1750A.encode32(1));
+        assertEquals(0x4000_00_00, MilStd1750A.encode32(0.5));
+        assertEquals(0x4000_00_FF, MilStd1750A.encode32(0.25));
+        assertEquals(0x4000_00_80, MilStd1750A.encode32(0.5 * Math.pow(2, -128)));
+
+        assertEquals(0x8000_00_00, MilStd1750A.encode32(-1));
+        assertEquals(0xBFFF_FF_80, MilStd1750A.encode32(-0.5000001 * Math.pow(2, -128)));
+        assertEquals(0x9FFF_FF_04, MilStd1750A.encode32(-0.7500001 * 16));
+
+        assertEquals(0xBFFF_FF_80, MilStd1750A.encode32(-1.4693682324014469e-39));
+
+        assertEquals(MilStd1750A.MAX_FLOAT32_VALUE, MilStd1750A.encode32(1e200));
+        assertEquals(MilStd1750A.MIN_FLOAT32_VALUE, MilStd1750A.encode32(-1e200));
+    }
+
+    @Test
+    public void testDecode32() {
+        assertEquals(0, MilStd1750A.decode32(0), 1E-5);
+
+        assertEquals(0.99999988079071044921873 * Math.pow(2, 127), MilStd1750A.decode32(0x7FFF_FF_7F), 1E-5);
+        assertEquals(0.5 * Math.pow(2, 127), MilStd1750A.decode32(0x4000_00_7F), 1E-5);
+        assertEquals(0.625 * 16, MilStd1750A.decode32(0x5000_00_04), 1E-5);
+        assertEquals(1.0, MilStd1750A.decode32(0x4000_00_01), 1E-5);
+        assertEquals(0.5, MilStd1750A.decode32(0x4000_00_00), 1E-5);
+        assertEquals(0.25, MilStd1750A.decode32(0x4000_00_FF), 1E-5);
+        assertEquals(0.5 * Math.pow(2, -128), MilStd1750A.decode32(0x4000_00_80), 1E-5);
+
+        assertEquals(-1, MilStd1750A.decode32(0x8000_00_00), 1E-5);
+        assertEquals(-0.5000001 * Math.pow(2, -128), MilStd1750A.decode32(0xBFFF_FF_80), 1E-5);
+        assertEquals(-0.7500001 * 16, MilStd1750A.decode32(0x9FFF_FF_04), 1E-5);
+        assertEquals(-1.4693682324014469e-39, MilStd1750A.decode32(0xBFFF_FF_80), 1E-45);
+    }
+
+    @Test
+    public void testEncode48() {
+        assertEquals(0, MilStd1750A.encode48(0));
+        assertEquals(0x400000_7F_0000L, MilStd1750A.encode48(0.5 * Math.pow(2, 127)));
+        assertEquals(0x800000_80_0000L, MilStd1750A.encode48(-Math.pow(2, -128)));
+        assertEquals(0xA00000_FF_0000L, MilStd1750A.encode48(-0.75 * 0.5));
+        assertEquals(0x69A3B50754ABL, MilStd1750A.encode48(105.639485637520592250));
+    }
+
+    @Test
+    public void testDecode48() {
+        assertEquals(0, MilStd1750A.decode48(0), 1E-10);
+        assertEquals(0.5 * Math.pow(2, 127), MilStd1750A.decode48(0x400000_7F_0000L), 1E-10);
+        assertEquals(-Math.pow(2, -128), MilStd1750A.decode48(0x800000_80_0000L), 1E-10);
+        assertEquals(-0.75 * 0.5, MilStd1750A.decode48(0xA00000_FF_0000L), 1E-10);
+        assertEquals(105.639485637520592250, MilStd1750A.decode48(0x69A3B50754ABL), 1E-10);
+    }
+}
+```
+
+### `ParameterFormatterTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ParameterFormatterTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.ParameterFormatter.Header;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.List;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class ParameterFormatterTest {
+
+    private StringWriter writer;
+    private ParameterFormatter formatter;
+    private NamedObjectId param1;
+    private NamedObjectId param2;
+
+    @BeforeAll
+    static void beforeAll() {
+        TimeEncoding.setUp();
+    }
+
+    @BeforeEach
+    void setUp() {
+        writer = new StringWriter();
+        param1 = NamedObjectId.newBuilder().setName("param1").build();
+        param2 = NamedObjectId.newBuilder().setName("param2").build();
+        formatter = new ParameterFormatter(writer, List.of(param1, param2));
+    }
+
+    @Test
+    void testWriteParameters_singleParameter() throws IOException {
+        List<ParameterValueWithId> params = List.of(getPv(param1, 100L, "value1"));
+
+        formatter.writeParameters(params);
+        formatter.close();
+        var reader = new BufferedReader(new StringReader(writer.toString()));
+
+        assertTrue(reader.readLine().contains("value1"));
+        assertEquals(1, formatter.getLinesReceived());
+    }
+
+    @Test
+    void testWriteParameters_multipleParameters() throws IOException {
+        List<ParameterValueWithId> params = List.of(
+                getPv(param1, 100L, "value1"),
+                getPv(param2, 100L, "value2"));
+
+        formatter.writeParameters(params);
+        formatter.close();
+
+        var reader = new BufferedReader(new StringReader(writer.toString()));
+        var l1 = reader.readLine();
+        assertTrue(l1.contains("value1\tvalue2"));
+        assertEquals(1, formatter.getLinesReceived());
+    }
+
+    @Test
+    void testWriteParameters_timeWindow() throws IOException {
+        formatter.setTimeWindow(50);
+        List<ParameterValueWithId> params1 = List.of(getPv(param1, 100L, "value1"));
+        List<ParameterValueWithId> params2 = List.of(getPv(param1, 130L, "value2"));
+        List<ParameterValueWithId> params3 = List.of(getPv(param1, 160L, "value3"));
+
+        formatter.writeParameters(params1);
+        formatter.writeParameters(params2);
+        formatter.writeParameters(params3);
+        formatter.close();
+
+        var reader = new BufferedReader(new StringReader(writer.toString()));
+        assertTrue(reader.readLine().contains("value2"));
+        assertTrue(reader.readLine().contains("value3"));
+        assertEquals(3, formatter.getLinesReceived());
+    }
+
+    @Test
+    void testWriteParameters_withHeader() throws IOException {
+        formatter.setWriteHeader(Header.SHORT_NAME);
+        List<ParameterValueWithId> params = List.of(getPv(param1, 100L, "value1"));
+
+        formatter.writeParameters(params);
+        formatter.close();
+        var reader = new BufferedReader(new StringReader(writer.toString()));
+        var l1 = reader.readLine();
+        assertTrue(l1.contains("Time\tparam1"));
+    }
+
+    @Test
+    void testWriteParameters_withDuplicates() throws IOException {
+        List<ParameterValueWithId> params = List.of(getPv(param1, 100L, "value1"), getPv(param2, 100L, "value2"),
+                getPv(param1, 100L, "value3"));
+
+        formatter.writeParameters(params);
+        formatter.close();
+        var reader = new BufferedReader(new StringReader(writer.toString()));
+        assertTrue(reader.readLine().contains("value1\tvalue2"));
+        assertTrue(reader.readLine().contains("value3"));
+
+    }
+
+    private ParameterValueWithId getPv(NamedObjectId id, long generationTime, String value) {
+        ParameterValue pv = new ParameterValue(id.getName());
+        var v = ValueUtility.getStringValue(value);
+        pv.setEngValue(v);
+        pv.setRawValue(v);
+        pv.setGenerationTime(generationTime);
+        return new ParameterValueWithId(pv, id);
+    }
+}
+```
+
+### `ParititionedTimeTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/ParititionedTimeTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Iterator;
+
+import org.junit.jupiter.api.Test;
+
+public class ParititionedTimeTest {
+
+    @Test
+    public void test1() {
+        PartitionedTimeInterval<TimeInterval> pt = new PartitionedTimeInterval<>();
+        assertEquals(0, pt.size());
+
+        pt.insert(new TimeInterval(0, 1000));
+        assertEquals(1, pt.size());
+
+        TimeInterval ti = pt.insert(new TimeInterval(999, 5000));
+        assertNull(ti);
+        assertEquals(1, pt.size());
+
+        ti = pt.insert(new TimeInterval(999, 5000), 1);
+        assertEquals(1000, ti.getStart());
+
+        pt.insert(new TimeInterval(6000, 7000), 0);
+
+        ti = pt.insert(new TimeInterval(4990, 6010), 11);
+        assertEquals(5000, ti.getStart());
+        assertEquals(6000, ti.getEnd());
+
+        assertEquals(4, pt.size());
+        ti = pt.get(2);
+        assertEquals(5000, ti.getStart());
+        assertEquals(6000, ti.getEnd());
+    }
+
+    @Test
+    public void test2() {
+        PartitionedTimeInterval<TimeInterval> pt = new PartitionedTimeInterval<>();
+        assertEquals(0, pt.size());
+
+        pt.insert(new TimeInterval(0, 1000));
+        assertEquals(1, pt.size());
+
+        pt.insert(new TimeInterval(1000, 2000));
+        assertEquals(2, pt.size());
+
+        pt.insert(new TimeInterval(3000, 4000));
+        assertEquals(3, pt.size());
+
+        pt.insert(new TimeInterval(2000, 3000));
+        assertEquals(4, pt.size());
+
+        TimeInterval ti = pt.get(2);
+        assertTiEqual(ti, 2000, 3000);
+
+        Iterator<TimeInterval> it = pt.iterator();
+        assertTrue(it.hasNext());
+        assertTiEqual(it.next(), 0, 1000);
+        assertTiEqual(it.next(), 1000, 2000);
+        assertTiEqual(it.next(), 2000, 3000);
+        assertTiEqual(it.next(), 3000, 4000);
+        assertTrue(!it.hasNext());
+
+        it = pt.reverseIterator();
+        assertTrue(it.hasNext());
+        assertTiEqual(it.next(), 3000, 4000);
+        assertTiEqual(it.next(), 2000, 3000);
+        assertTiEqual(it.next(), 1000, 2000);
+        assertTiEqual(it.next(), 0, 1000);
+        assertTrue(!it.hasNext());
+
+        assertNull(pt.getFit(-1));
+        assertNull(pt.getFit(7000));
+        assertNull(pt.getFit(4000));
+        assertEquals(pt.get(0), pt.getFit(0));
+        assertEquals(pt.get(3), pt.getFit(3001));
+    }
+
+    @Test
+    public void test3() {
+        PartitionedTimeInterval<TimeInterval> pt = new PartitionedTimeInterval<>();
+        assertEquals(0, pt.size());
+
+        pt.insert(TimeInterval.openStart(1000));
+        assertEquals(1, pt.size());
+        assertTiOpenStartEqual(pt.get(0), 1000);
+        TimeInterval ti = pt.insert(new TimeInterval(999, 1000));
+        assertNull(ti);
+        ti = pt.insert(TimeInterval.openEnd(1000));
+        assertNotNull(ti);
+        assertTiOpenEndEqual(pt.get(1), 1000);
+
+        assertEquals(pt.get(1), pt.getFit(1000));
+        assertEquals(pt.get(0), pt.getFit(999));
+    }
+
+    @Test
+    public void test4() {
+        PartitionedTimeInterval<TimeInterval> pt = new PartitionedTimeInterval<>();
+        pt.insert(new TimeInterval());
+        assertEquals(1, pt.size());
+        assertNull(pt.insert(new TimeInterval(10, 100)));
+
+        assertEquals(pt.get(0), pt.getFit(10000));
+    }
+
+    void assertTiOpenStartEqual(TimeInterval ti, long stop) {
+        assertFalse(ti.hasStart());
+        assertEquals(stop, ti.getEnd());
+    }
+
+    void assertTiOpenEndEqual(TimeInterval ti, long start) {
+        assertFalse(ti.hasEnd());
+        assertEquals(start, ti.getStart());
+    }
+
+    void assertTiEqual(TimeInterval ti, long start, long stop) {
+        assertEquals(start, ti.getStart());
+        assertEquals(stop, ti.getEnd());
+    }
+}
+```
+
+### `SortedIntArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/SortedIntArrayTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.HashSet;
+import java.util.PrimitiveIterator;
+import java.util.Set;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+public class SortedIntArrayTest {
+
+    @Test
+    public void test1() {
+        SortedIntArray s = new SortedIntArray();
+        assertEquals(0, s.size());
+
+        s.insert(2);
+        assertEquals(1, s.size());
+        assertEquals(2, s.get(0));
+
+        s.insert(3);
+        assertEquals(2, s.size());
+        assertEquals(2, s.get(0));
+        assertEquals(3, s.get(1));
+
+        s.insert(1);
+        assertEquals(3, s.size());
+        assertEquals(1, s.get(0));
+        assertEquals(2, s.get(1));
+        assertEquals(3, s.get(2));
+
+    }
+
+    @Test
+    public void test2() {
+        SortedIntArray s = new SortedIntArray();
+        assertEquals(0, s.size());
+        int n = 1000;
+        for (int i = 0; i < n / 2; i++) {
+            s.insert(i);
+        }
+        for (int i = n - 1; i >= n / 2; i--) {
+            s.insert(i);
+        }
+        assertEquals(n, s.size());
+
+        for (int i = 0; i < n; i++) {
+            assertEquals(i, s.get(i));
+        }
+    }
+
+    @Test
+    public void testEquals() {
+        SortedIntArray s1 = new SortedIntArray(1, 3, 7);
+        SortedIntArray s2 = new SortedIntArray(3, 1, 7);
+        SortedIntArray s3 = new SortedIntArray(1, 3);
+        assertEquals(s1.hashCode(), s2.hashCode());
+
+        assertTrue(s1.equals(s2));
+        assertTrue(s2.equals(s1));
+
+        assertFalse(s1.equals(s3));
+        assertFalse(s3.equals(s1));
+
+        assertFalse(s1.hashCode() == s3.hashCode());
+    }
+
+    @Test
+    public void testSameValue() {
+        SortedIntArray s = new SortedIntArray();
+        s.insert(0);
+        assertEquals(1, s.insert(2));
+        assertEquals(2, s.insert(2));
+    }
+
+    private void assertItEquals(PrimitiveIterator.OfInt it, int... a) {
+        for (int i = 0; i < a.length; i++) {
+            assertTrue(it.hasNext());
+            assertEquals(a[i], it.nextInt());
+        }
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testAscendingIterator() {
+        SortedIntArray s1 = new SortedIntArray(1, 3, 4);
+
+        PrimitiveIterator.OfInt it = s1.getAscendingIterator(0);
+        assertItEquals(it, 1, 3, 4);
+
+        it = s1.getAscendingIterator(1);
+        assertItEquals(it, 1, 3, 4);
+
+        it = s1.getAscendingIterator(2);
+        assertItEquals(it, 3, 4);
+
+        it = s1.getAscendingIterator(4);
+        assertItEquals(it, 4);
+
+        it = s1.getAscendingIterator(5);
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testDescendingIterator() {
+        SortedIntArray s1 = new SortedIntArray(1, 3, 4);
+
+        PrimitiveIterator.OfInt it = s1.getDescendingIterator(0);
+        assertFalse(it.hasNext());
+
+        it = s1.getDescendingIterator(1);
+        assertFalse(it.hasNext());
+
+        it = s1.getDescendingIterator(2);
+        assertItEquals(it, 1);
+
+        it = s1.getDescendingIterator(4);
+        assertItEquals(it, 3, 1);
+
+        it = s1.getDescendingIterator(5);
+        assertItEquals(it, 4, 3, 1);
+    }
+
+    @Test
+    public void testIteratorsEmptyArray() {
+        SortedIntArray s1 = new SortedIntArray();
+        PrimitiveIterator.OfInt it = s1.getDescendingIterator(0);
+        assertFalse(it.hasNext());
+
+        it = s1.getAscendingIterator(0);
+    }
+
+    @Test
+    @Disabled
+    public void testperf() {
+        Runtime runtime = Runtime.getRuntime();
+        System.out.println("allocated memory (KB): " + runtime.totalMemory() / 1024);
+
+        int n = 10000000;
+        SortedIntArray sia = new SortedIntArray();
+        long t0 = System.currentTimeMillis();
+        for (int i = 0; i < n; i++) {
+            sia.insert(i);
+        }
+        System.out.println("Populate sortedintarray: " + (System.currentTimeMillis() - t0) + " ms");
+        System.out.println("allocated memory (KB): " + runtime.totalMemory() / 1024);
+
+        long t1 = System.currentTimeMillis();
+        Set<Integer> set = new HashSet<>();
+        for (int i = 0; i < n; i++) {
+            set.add(sia.get(i));
+        }
+        System.out.println("Populate hashset: " + (System.currentTimeMillis() - t1) + " ms");
+        System.out.println("allocated memory (KB): " + runtime.totalMemory() / 1024);
+
+        for (int k = 0; k < 20; k++) {
+            long t2 = System.currentTimeMillis();
+            long sum = 0;
+            for (int i = 0; i < n; i++) {
+                if (sia.search(i) >= 0) {
+                    sum += i;
+                }
+            }
+            System.out.println("sum: " + sum + " Search in sorted array: " + (System.currentTimeMillis() - t2) + " ms");
+            System.out.println("allocated memory (KB): " + runtime.totalMemory() / 1024);
+            long t3 = System.currentTimeMillis();
+            sum = 0;
+            for (int i = 0; i < n; i++) {
+                if (set.contains(i)) {
+                    sum += i;
+                }
+            }
+            System.out.println("sum: " + sum + " Search in hashset: " + (System.currentTimeMillis() - t3) + " ms");
+            System.out.println("allocated memory (KB): " + runtime.totalMemory() / 1024);
+        }
+    }
+}
+```
+
+### `TaiUtcConverterTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TaiUtcConverterTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TaiUtcConverter.DateTimeComponents;
+
+import com.google.protobuf.Timestamp;
+import com.google.protobuf.util.Timestamps;
+
+public class TaiUtcConverterTest {
+
+    @BeforeAll
+    static public void setUp() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void test0() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        DateTimeComponents dtc = tuc.instantToUtc(0);
+        assertEquals(1970, dtc.year);
+        assertEquals(1, dtc.month);
+        assertEquals(1, dtc.day);
+        assertEquals(0, dtc.hour);
+        assertEquals(0, dtc.minute);
+        assertEquals(0, dtc.second);
+    }
+
+    @Test
+    public void test2008() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        DateTimeComponents dtc = tuc.instantToUtc(1230768032000L);
+        assertEquals(59, dtc.second);
+    }
+
+    @Test
+    public void testNegative() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        long t = tuc.utcToInstant(new DateTimeComponents(1017, 1, 1, 11, 59, 58, 999));
+        assertEquals("1017-01-01T11:59:58.999Z", TimeEncoding.toString(t));
+    }
+
+    @Test
+    public void testInstantToTimestamp() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        long t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 30, 23, 59, 59, 0));
+        Timestamp ts = tuc.instantToProtobuf(t);
+        assertEquals("2016-12-30T23:59:59Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2017, 1, 1, 12, 1, 1, 3));
+        ts = tuc.instantToProtobuf(t);
+        assertEquals("2017-01-01T12:01:01.003Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 12, 0, 1, 0));
+        ts = tuc.instantToProtobuf(t);
+        assertEquals("2016-12-31T12:00:00.999988427Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 23, 59, 60, 0));
+        ts = tuc.instantToProtobuf(t);
+        assertEquals("2016-12-31T23:59:59.500005787Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 23, 59, 60, 500));
+        ts = tuc.instantToProtobuf(t);
+        assertEquals("2017-01-01T00:00:00Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2017, 1, 1, 11, 59, 58, 999));
+        ts = tuc.instantToProtobuf(t);
+        assertEquals("2017-01-01T11:59:58.999011586Z", Timestamps.toString(ts));
+
+    }
+
+    @Test
+    public void testInstantToTimestampOutOfRange() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        long t = tuc.utcToInstant(new DateTimeComponents(20017, 1, 1, 11, 59, 58, 992));
+        Timestamp ts = tuc.instantToProtobuf(t);
+        Timestamps.checkValid(ts);
+        assertEquals("9999-12-31T23:59:59.992Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(-20, 1, 1, 11, 59, 58, 992));
+        ts = tuc.instantToProtobuf(t);
+        Timestamps.checkValid(ts);
+        assertEquals("0001-01-01T00:00:00.992Z", Timestamps.toString(ts));
+    }
+
+    @Test
+    public void testTimestampToInstant() throws Exception {
+        TaiUtcConverter tuc = new TaiUtcConverter();
+        long t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 30, 23, 59, 59, 0));
+        Timestamp ts = tuc.instantToProtobuf(t);
+        long t1 = tuc.protobufToInstant(ts);
+        assertEquals("2016-12-30T23:59:59.000Z", TimeEncoding.toString(t1));
+        assertEquals("2016-12-30T23:59:59Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2017, 1, 1, 12, 1, 1, 3));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2017-01-01T12:01:01.003Z", TimeEncoding.toString(t1));
+        assertEquals("2017-01-01T12:01:01.003Z", Timestamps.toString(ts));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 12, 0, 1, 0));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2016-12-31T12:00:01.000Z", TimeEncoding.toString(t1));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 23, 59, 60, 0));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2016-12-31T23:59:60.000Z", TimeEncoding.toString(t1));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 23, 59, 60, 500));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2016-12-31T23:59:60.500Z", TimeEncoding.toString(t1));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2016, 12, 31, 20, 30, 17, 532));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2016-12-31T20:30:17.532Z", TimeEncoding.toString(t1));
+
+        t = tuc.utcToInstant(new DateTimeComponents(2017, 1, 1, 11, 59, 58, 999));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("2017-01-01T11:59:58.999Z", TimeEncoding.toString(t1));
+
+        t = tuc.utcToInstant(new DateTimeComponents(1017, 1, 1, 11, 59, 58, 999));
+        ts = tuc.instantToProtobuf(t);
+        t1 = tuc.protobufToInstant(ts);
+        assertEquals("1017-01-01T11:59:58.999Z", Timestamps.toString(ts));
+    }
+}
+```
+
+### `TimeEncodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimeEncodingTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.time.Instant;
+
+public class TimeEncodingTest {
+    static final long j1972 = (2L * 365 * 24 * 3600 + 10) * 1000 + 123;
+
+    @BeforeAll
+    public static void setUpBeforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testCurrentInstant() {
+        TimeEncoding.getWallclockTime();
+        long time = System.currentTimeMillis();
+        long instant = TimeEncoding.getWallclockTime();
+        long correction = Math.abs(instant - time) % 1000;
+
+        assertTrue(correction < 3);
+        time += correction;
+
+        String sinstant = TimeEncoding.toString(instant);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        String stime = sdf.format(new Date(time));
+        assertEquals(sinstant, stime);
+    }
+
+    @Test
+    public void testToStringLong() {
+        assertEquals("1972-01-01T00:00:00.123Z", TimeEncoding.toString(j1972));
+    }
+
+    @Test
+    public void testToOrdinalDateTimeLong() {
+        assertEquals("1972-001T00:00:00.123", TimeEncoding.toOrdinalDateTime(j1972));
+    }
+
+    @Test
+    public void testToCombinedFormatLong() {
+        assertEquals("1972-01-01/001T00:00:00.123", TimeEncoding.toCombinedFormat(j1972));
+    }
+
+    @Test
+    public void testFromGpsCcsds() {
+        long instant = TimeEncoding.fromGpsCcsdsTime(0, (byte) 128);
+        assertEquals("1980-01-06T00:00:00.500Z", TimeEncoding.toString(instant));
+    }
+
+    @Test
+    public void testFromGpsYearSecMillis() {
+        long instant = TimeEncoding.fromGpsYearSecMillis(2010, 15, 200);
+        assertEquals("2010-01-01T00:00:00.200Z", TimeEncoding.toString(instant));
+    }
+
+    @Test
+    public void getInstantFromUnix2() throws ParseException {
+        long instant = TimeEncoding.fromUnixMillisec(123);
+        assertEquals("1970-01-01T00:00:00.123Z", TimeEncoding.toString(instant));
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        long inst1 = TimeEncoding.fromUnixMillisec(sdf.parse("2008-12-31T23:59:59.125Z").getTime());
+        long inst2 = TimeEncoding.fromUnixMillisec(sdf.parse("2009-01-01T00:00:00.126Z").getTime());
+        assertEquals("2008-12-31T23:59:59.125Z", TimeEncoding.toString(inst1));
+        assertEquals("2009-01-01T00:00:00.126Z", TimeEncoding.toString(inst2));
+        assertEquals(2001, (inst2 - inst1));
+    }
+
+    @Test
+    public void getUnixFromInstant() throws ParseException {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        long unix1 = sdf.parse("2008-12-31T23:59:59.125Z").getTime();
+        long unix2 = sdf.parse("2009-01-01T00:00:00.126Z").getTime();
+
+        long inst1 = TimeEncoding.fromUnixMillisec(unix1);
+        long inst2 = TimeEncoding.fromUnixMillisec(unix2);
+
+        assertEquals("2008-12-31T23:59:59.125Z", TimeEncoding.toString(inst1));
+        assertEquals("2009-01-01T00:00:00.126Z", TimeEncoding.toString(inst2));
+        assertEquals(1001, (unix2 - unix1));
+        assertEquals(2001, (inst2 - inst1));
+    }
+
+    @Test
+    public void testGetInstantFromUnix() {
+        long instant = TimeEncoding.fromUnixTime(1266539888, 20000);
+        assertEquals("2010-02-19T00:38:08.020Z", TimeEncoding.toString(instant));
+    }
+
+    @Test
+    public void testGetInstantFromCal() throws ParseException {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        String utc = "2010-01-01T00:00:00.000Z";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        Date d = sdf.parse(utc);
+        cal.setTime(d);
+        long instant = TimeEncoding.fromCalendar(cal);
+        String s = TimeEncoding.toString(instant);
+
+        assertEquals(utc, s);
+
+        utc = "2010-12-31T23:59:59.000Z";
+        d = sdf.parse(utc);
+        cal.setTime(d);
+        instant = TimeEncoding.fromCalendar(cal);
+        s = TimeEncoding.toString(instant);
+        assertEquals(utc, s);
+    }
+
+    @Test
+    public void testGetJavaGpsFromInstant() {
+        String utc = "2010-01-01T00:00:00";
+        String javagps = "2010-01-01T00:00:15.000";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        long instant = TimeEncoding.parse(utc);
+        long jt = TimeEncoding.getJavaGpsFromInstant(instant);
+        String s = sdf.format(new Date(jt));
+        assertEquals(javagps, s);
+    }
+
+    @Test
+    public void testParse() {
+        assertEquals(1230768032001L, TimeEncoding.parse("2008-12-31T23:59:59.001"));
+        assertEquals(1230768033000L, TimeEncoding.parse("2008-12-31T23:59:60"));
+        assertEquals(1230768034000L, TimeEncoding.parse("2009-01-01T00:00:00"));
+
+        assertEquals(1230768034000L, TimeEncoding.parse("2009/001T00:00:00"));
+        assertEquals(1230768033000L, TimeEncoding.parse("2008/366T23:59:60"));
+    }
+
+    @Test
+    public void testParseNanos() {
+        // We don't consider nanos, but we shouldn't crash on them either
+        assertEquals(1580605360001L, TimeEncoding.parse("2020-02-02T01:02:03.001Z"));
+        assertEquals(1580605360001L, TimeEncoding.parse("2020-02-02T01:02:03.0010Z"));
+        assertEquals(1580605360001L, TimeEncoding.parse("2020-02-02T01:02:03.00123Z"));
+        assertEquals(1580605360001L, TimeEncoding.parse("2020-02-02T01:02:03.001234Z"));
+    }
+
+    @Test
+    public void testParseHres() {
+        Instant t = TimeEncoding.parseHres("2020-02-02T01:02:03.001Z");
+        assertEquals(1580605360001L, t.getMillis());
+        assertEquals(0, t.getPicos());
+
+        Instant t1 = TimeEncoding.parseHres("2020-02-02T01:02:03.001012Z");
+        assertEquals(1580605360001L, t1.getMillis());
+        assertEquals(12000000, t1.getPicos());
+
+        Instant t2 = TimeEncoding.parseHres("2020-02-02T01:02:03.001123456789Z");
+        assertEquals(1580605360001L, t2.getMillis());
+        assertEquals(123456789, t2.getPicos());
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("2008-12-31T23:59:59.000Z", TimeEncoding.toString(1230768032000L));
+        assertEquals("2008-12-31T23:59:60.000Z", TimeEncoding.toString(1230768033000L));
+        assertEquals("2009-01-01T00:00:00.000Z", TimeEncoding.toString(1230768034000L));
+    }
+
+    @Test
+    public void testGetGpsTime1() {
+        final int startCoarseTime = 981456898;
+
+        for (int coarseTime = startCoarseTime; coarseTime < startCoarseTime + 5; ++coarseTime) {
+            for (short fineTime = 0; fineTime < 256; ++fineTime) {
+                GpsCcsdsTime time = TimeEncoding.toGpsTime(TimeEncoding.fromGpsCcsdsTime(coarseTime, (byte) fineTime));
+
+                // System.out.println("in coarse: " + coarseTime + "\tin fine: " + (fineTime&0xFF));
+                // System.out.println("out coarse: " + time.coarseTime + "\tout fine: " + (time.fineTime&0xFF));
+
+                assertEquals(time.coarseTime, coarseTime);
+                assertTrue(Math.abs((time.fineTime & 0xFF) - fineTime) <= 1);
+            }
+        }
+    }
+
+    @Test
+    public void testGetGpsTime2() {
+        long instant = 1293841234004L;
+        GpsCcsdsTime time = TimeEncoding.toGpsTime(instant);
+        assertEquals(977876415, time.coarseTime);
+        assertEquals(1, time.fineTime);
+    }
+
+    @Test
+    public void testTaiOffset() {
+        long instant = TimeEncoding.fromTaiMillisec(0);
+        assertEquals(TimeEncoding.parse("1958-01-01T00:00:00"), instant);
+    }
+
+    @Test
+    public void testTaiOffset1() {
+        java.time.Instant t1 = java.time.Instant.parse("1958-01-01T00:00:00Z");
+        java.time.Instant t2 = java.time.Instant.parse("2022-01-01T00:00:00Z");
+
+        long instant = TimeEncoding.fromTaiMillisec(t2.toEpochMilli() - t1.toEpochMilli());
+        assertEquals(TimeEncoding.parse("2021-12-31T23:59:23"), instant);
+    }
+
+    @Test
+    public void testJ2000Offset() {
+        long instant = TimeEncoding.fromJ2000Millisec(0);
+        assertEquals(TimeEncoding.parse("2000-01-01T11:58:55.816"), instant);
+    }
+
+    @Test
+    public void test1972() {
+        long instant = TimeEncoding.parse("1972-01-01T00:00:01.000Z");
+        for (int i = 0; i < 1000; i++) {
+            String s = TimeEncoding.toString(instant);
+            long x = TimeEncoding.parse(s);
+            assertEquals(instant, x);
+            instant -= 1000;
+        }
+    }
+
+    @Test
+    public void checkMaxInstantValue() {
+        TimeEncoding.setUp();
+
+        // Assert that TimeEncoding can encode/decode with MAX_INSTANT
+        String sMax = TimeEncoding.toString(TimeEncoding.MAX_INSTANT);
+        long decodedMax = TimeEncoding.parse(sMax);
+        assertEquals(TimeEncoding.MAX_INSTANT, decodedMax);
+
+        String sRMax = TimeEncoding.toString(decodedMax);
+        assertEquals(sMax, sRMax);
+
+        assertEquals("+inf", TimeEncoding.toString(TimeEncoding.MAX_INSTANT + 1));
+    }
+}
+```
+
+### `TimeIntervalTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimeIntervalTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeInterval.FilterOverlappingIterator;
+
+public class TimeIntervalTest {
+
+    private void checkElements(Iterator<TimeInterval> it, List<TimeInterval> list, int... indices) {
+        for (int i : indices) {
+            assertTrue(it.hasNext());
+            assertEquals(list.get(i), it.next());
+        }
+        assertTrue(!it.hasNext());
+    }
+
+    @Test
+    public void testOverlappingTailIterator() {
+        List<TimeInterval> list = new ArrayList<>();
+        list.add(new TimeInterval(10, 20));
+        list.add(new TimeInterval(20, 30));
+        list.add(new TimeInterval(50, 100));
+
+        Iterator<TimeInterval> it;
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(), list.iterator());
+        checkElements(it, list, 0, 1, 2);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(10, 100), list.iterator());
+        checkElements(it, list, 0, 1, 2);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(1, 2), list.iterator());
+        checkElements(it, list);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(1, 10), list.iterator());
+        checkElements(it, list, 0);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(10, 10), list.iterator());
+        checkElements(it, list, 0);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(41, 42), list.iterator());
+        checkElements(it, list);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(100, 102), list.iterator());
+        checkElements(it, list);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(30, 50), list.iterator());
+        checkElements(it, list, 2);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(25, 50), list.iterator());
+        checkElements(it, list, 1, 2);
+
+        it = new FilterOverlappingIterator<>(new TimeInterval(200, 300), list.iterator());
+        checkElements(it, list);
+    }
+}
+```
+
+### `TimestampUtilsTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/TimestampUtilsTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+import com.google.protobuf.Timestamp;
+
+public class TimestampUtilsTest {
+
+    @Test
+    public void testCurrent() {
+        Timestamp ts = TimestampUtil.currentTimestamp();
+        assertTrue(ts.getSeconds() * 1000 - System.currentTimeMillis() < 1000);
+    }
+
+    @Test
+    public void testFromJava() {
+        Timestamp ts = TimestampUtil.java2Timestamp(1002);
+        assertEquals(1L, ts.getSeconds());
+        assertEquals(2_000_000L, ts.getNanos());
+    }
+
+    @Test
+    public void testToJava() {
+        Timestamp ts = TimestampUtil.java2Timestamp(1002);
+        assertEquals(1002, TimestampUtil.timestamp2Java(ts));
+    }
+}
+```
+
+### `VarIntUtilTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/utils/VarIntUtilTest.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+
+public class VarIntUtilTest {
+
+    @Test
+    public void testVarInt32() throws Exception {
+        ByteBuffer bb = ByteBuffer.allocate(10);
+        VarIntUtil.writeVarInt32(bb, 3);
+        assertEquals(1, bb.position());
+
+        bb.rewind();
+        assertEquals(3, VarIntUtil.readVarInt32(bb));
+
+        bb.rewind();
+        VarIntUtil.writeVarInt32(bb, 200);
+        assertEquals(2, bb.position());
+        bb.rewind();
+        assertEquals(200, VarIntUtil.readVarInt32(bb));
+
+        bb.rewind();
+        VarIntUtil.writeVarInt32(bb, 0xFFFF);
+        assertEquals(3, bb.position());
+        bb.rewind();
+        assertEquals(0xFFFF, VarIntUtil.readVarInt32(bb));
+
+        bb.rewind();
+        VarIntUtil.writeVarInt32(bb, 0xFFFFFFFF);
+        assertEquals(5, bb.position());
+        bb.rewind();
+        assertEquals(0xFFFFFFFF, VarIntUtil.readVarInt32(bb));
+    }
+
+    @Test
+    public void testInvalid() {
+        ByteBuffer bb = ByteBuffer.wrap(StringConverter.hexStringToArray("8182838485"));
+        try {
+            VarIntUtil.readVarInt32(bb);
+            fail("Should have thrown an exception");
+        } catch (DecodingException e) {
+        }
+    }
+
+    @Test
+    public void testDeltaDeltaZigZag() throws Exception {
+        int n = 100;
+        int[] a = new int[n];
+        for (int i = 0; i < n; i++) {
+            a[i] = i;
+        }
+
+        int[] ddz = VarIntUtil.encodeDeltaDeltaZigZag(a);
+        assertEquals(n, ddz.length);
+        assertEquals(0, ddz[0]);
+        assertEquals(2, ddz[1]);
+        for (int i = 2; i < n; i++) {
+            assertEquals(0, ddz[i]);
+        }
+        int[] b = VarIntUtil.decodeDeltaDeltaZigZag(ddz);
+        assertArrayEquals(a, b);
+
+        for (int i = 0; i < n; i++) {
+            a[i] = -i;
+        }
+        ddz = VarIntUtil.encodeDeltaDeltaZigZag(a);
+        b = VarIntUtil.decodeDeltaDeltaZigZag(ddz);
+        assertArrayEquals(a, b);
+
+        for (int i = 0; i < n; i++) {
+            a[i] = (1 << 31) + i * (((i & 1) << 1) - 1);
+        }
+        ddz = VarIntUtil.encodeDeltaDeltaZigZag(a);
+        b = VarIntUtil.decodeDeltaDeltaZigZag(ddz);
+        assertArrayEquals(a, b);
+
+    }
+
+    @Test
+    public void testEncodeDecodeIntArray() {
+        IntArray s1 = IntArray.wrap(1, 5, 20);
+        byte[] encoded = VarIntUtil.encodeDeltaIntArray(s1);
+        IntArray s2 = VarIntUtil.decodeDeltaIntArray(encoded);
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void testEncodeDecodeNegative() {
+        IntArray s1 = IntArray.wrap(-1, 5, 20);
+        byte[] encoded = VarIntUtil.encodeDeltaIntArray(s1);
+        IntArray s2 = VarIntUtil.decodeDeltaIntArray(encoded);
+        assertTrue(s1.equals(s2));
+    }
+
+    @Test
+    public void testEncodeDecodeZeroLength() {
+        IntArray s1 = new IntArray();
+        byte[] encoded = VarIntUtil.encodeDeltaIntArray(s1);
+        IntArray s2 = VarIntUtil.decodeDeltaIntArray(encoded);
+        assertTrue(s1.equals(s2));
+    }
+}
+```

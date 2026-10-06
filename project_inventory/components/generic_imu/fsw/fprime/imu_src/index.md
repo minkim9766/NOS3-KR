@@ -3,22 +3,686 @@
 
 **경로:** `components/generic_imu/fsw/fprime/imu_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_imu.cpp
-file--Generic_imu.fpp
-file--Generic_imu.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_imu/fsw/fprime/imu_src/docs/`](docs/index) — 폴더
-- [`components/generic_imu/fsw/fprime/imu_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/fprime/imu_src/Generic_imu.cpp`](file--Generic_imu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/fprime/imu_src/Generic_imu.fpp`](file--Generic_imu.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/fprime/imu_src/Generic_imu.hpp`](file--Generic_imu.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_imu/fsw/fprime/imu_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared")
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_imu.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_imu.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_imu_device.c" #need to fix undeclared errors
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+  
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_imu_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `Generic_imu.cpp`
+
+**경로:** `components/generic_imu/fsw/fprime/imu_src/Generic_imu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_imu.cpp
+// \author jstar
+// \brief  cpp file for Generic_imu component implementation class
+// ======================================================================
+
+#include "imu_src/Generic_imu.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_imu ::
+    Generic_imu(const char* const compName) :
+      Generic_imuComponentBase(compName)
+  {
+    nos_init_link();
+
+    int32_t status = OS_SUCCESS;
+    /* Open device specific protocols */
+    Generic_IMUcan.handle = GENERIC_IMU_CFG_HANDLE;
+    Generic_IMUcan.isUp = CAN_INTERFACE_DOWN;
+    Generic_IMUcan.loopback = false;
+    Generic_IMUcan.listenOnly = false;
+    Generic_IMUcan.tripleSampling = false;
+    Generic_IMUcan.oneShot = false;
+    Generic_IMUcan.berrReporting = false;
+    Generic_IMUcan.fd = false;
+    Generic_IMUcan.presumeAck = false;
+    Generic_IMUcan.bitrate = GENERIC_IMU_CFG_CAN_BITRATE;
+    Generic_IMUcan.second_timeout = GENERIC_IMU_CFG_CAN_TIMEOUT;
+    Generic_IMUcan.microsecond_timeout = GENERIC_IMU_CFG_CAN_MS_TIMEOUT;
+    Generic_IMUcan.xfer_us_delay = GENERIC_IMU_CFG_CAN_XFER_US;
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+    HkTelemetryPkt.DeviceEnabled = GENERIC_IMU_DEVICE_ENABLED;
+
+    Generic_IMUHK.DeviceCounter = 0;
+    Generic_IMUHK.DeviceStatus = 0;
+    
+    status = can_init_dev(&Generic_IMUcan);
+
+    if (status == OS_SUCCESS)
+    {
+        printf("CAN device 0x%02x configured with speed %d \n", Generic_IMUcan.handle, Generic_IMUcan.bitrate);
+    }
+    else
+    {
+        printf("I2C device 0x%02x failed to initialize! \n", Generic_IMUcan.handle);
+        status = OS_ERROR;
+    }
+
+    // can_close_device(&Generic_IMUcan);
+
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+  }
+
+  Generic_imu ::
+    ~Generic_imu()
+  {
+     // Close the device 
+    can_close_device(&Generic_IMUcan);
+
+    nos_destroy_link();
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+// GENERIC_IMU_RequestHK
+void Generic_imu :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+  int32_t status = OS_SUCCESS;
+
+  HkTelemetryPkt.CommandCount++;
+
+  if(HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED){
+    status = GENERIC_IMU_RequestHK(&Generic_IMUcan, &Generic_IMUHK);
+    if (status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      Fw::LogStringArg log_msg("RequestHK command success\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+      Fw::LogStringArg log_msg("RequestHK command failed!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+  }
+
+  this->tlmWrite_ReportedComponentCount(Generic_IMUHK.DeviceCounter);
+  this->tlmWrite_DeviceStatus(Generic_IMUHK.DeviceStatus);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+  this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+  
+  // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+  this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Generic_imu :: updateData_handler(const FwIndexType portNum, U32 context)
+{
+  int32_t status = OS_SUCCESS;
+  status = GENERIC_IMU_RequestData(&Generic_IMUcan, &Generic_IMUData);
+  if(status == OS_SUCCESS)
+  {
+    HkTelemetryPkt.DeviceCount++;
+    this->IMUout_out(0, Generic_IMUData.X_Data.LinearAcc, Generic_IMUData.Y_Data.LinearAcc, Generic_IMUData.Z_Data.LinearAcc, Generic_IMUData.X_Data.AngularAcc, Generic_IMUData.Y_Data.AngularAcc, Generic_IMUData.Z_Data.AngularAcc);
+  }
+  else{
+    HkTelemetryPkt.DeviceErrorCount++;
+  }
+}
+
+void Generic_imu :: updateTlm_handler(const FwIndexType portNum, U32 context)
+{
+  GENERIC_IMU_RequestHK(&Generic_IMUcan, &Generic_IMUHK);
+  this->tlmWrite_X_Axis_LinearAcc(Generic_IMUData.X_Data.LinearAcc);
+  this->tlmWrite_X_Axis_AngularAcc(Generic_IMUData.X_Data.AngularAcc);
+  this->tlmWrite_Y_Axis_LinearAcc(Generic_IMUData.Y_Data.LinearAcc);
+  this->tlmWrite_Y_Axis_AngularAcc(Generic_IMUData.Y_Data.AngularAcc);
+  this->tlmWrite_Z_Axis_LinearAcc(Generic_IMUData.Z_Data.LinearAcc);
+  this->tlmWrite_Z_Axis_AngularAcc(Generic_IMUData.Z_Data.AngularAcc);
+  this->tlmWrite_ReportedComponentCount(Generic_IMUHK.DeviceCounter);
+  this->tlmWrite_DeviceStatus(Generic_IMUHK.DeviceStatus);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+}
+
+// GENERIC_IMU_RequestData
+void Generic_imu :: REQUEST_DATA_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+  int32_t status = OS_SUCCESS;
+
+  if(HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+  {  
+    HkTelemetryPkt.CommandCount++;
+    status = GENERIC_IMU_RequestData(&Generic_IMUcan, &Generic_IMUData);
+    if (status == OS_SUCCESS)
+    {
+      Fw::LogStringArg log_msg("RequestData command success\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      Fw::LogStringArg log_msg("RequestData command failed!\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+  }
+  else
+  {
+    HkTelemetryPkt.CommandErrorCount++;
+  }
+
+  this->tlmWrite_X_Axis_LinearAcc(Generic_IMUData.X_Data.LinearAcc);
+  this->tlmWrite_X_Axis_AngularAcc(Generic_IMUData.X_Data.AngularAcc);
+  this->tlmWrite_Y_Axis_LinearAcc(Generic_IMUData.Y_Data.LinearAcc);
+  this->tlmWrite_Y_Axis_AngularAcc(Generic_IMUData.Y_Data.AngularAcc);
+  this->tlmWrite_Z_Axis_LinearAcc(Generic_IMUData.Z_Data.LinearAcc);
+  this->tlmWrite_Z_Axis_AngularAcc(Generic_IMUData.Z_Data.AngularAcc);
+
+  this->tlmWrite_ReportedComponentCount(Generic_IMUHK.DeviceCounter);
+  this->tlmWrite_DeviceStatus(Generic_IMUHK.DeviceStatus);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+  this->IMUout_out(0, Generic_IMUData.X_Data.LinearAcc, Generic_IMUData.Y_Data.LinearAcc, Generic_IMUData.Z_Data.LinearAcc, Generic_IMUData.X_Data.AngularAcc, Generic_IMUData.Y_Data.AngularAcc, Generic_IMUData.Z_Data.AngularAcc);
+  
+  // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+  this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Generic_imu :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+  uint32_t status = OS_SUCCESS;
+
+  status = GENERIC_IMU_CommandDevice(&Generic_IMUcan, GENERIC_IMU_DEVICE_NOOP_CMD);
+
+  HkTelemetryPkt.CommandCount++;
+  Fw::LogStringArg log_msg("NOOP SENT");
+  this->log_ACTIVITY_HI_TELEM(log_msg);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+  // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+  this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Generic_imu :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+  HkTelemetryPkt.CommandCount = 0;
+  HkTelemetryPkt.CommandErrorCount = 0;
+  HkTelemetryPkt.DeviceCount = 0;
+  HkTelemetryPkt.DeviceErrorCount = 0;
+
+  Fw::LogStringArg log_msg("Reset Counters command successful!");
+  this->log_ACTIVITY_HI_TELEM(log_msg);
+  this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+  this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+  this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+  this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+  this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void Generic_imu :: ENABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_DISABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      Generic_IMUcan.handle = GENERIC_IMU_CFG_HANDLE;
+      Generic_IMUcan.isUp = CAN_INTERFACE_DOWN;
+      Generic_IMUcan.loopback = false;
+      Generic_IMUcan.listenOnly = false;
+      Generic_IMUcan.tripleSampling = false;
+      Generic_IMUcan.oneShot = false;
+      Generic_IMUcan.berrReporting = false;
+      Generic_IMUcan.fd = false;
+      Generic_IMUcan.presumeAck = false;
+      Generic_IMUcan.bitrate = GENERIC_IMU_CFG_CAN_BITRATE;
+      Generic_IMUcan.second_timeout = GENERIC_IMU_CFG_CAN_TIMEOUT;
+      Generic_IMUcan.microsecond_timeout = GENERIC_IMU_CFG_CAN_MS_TIMEOUT;
+      Generic_IMUcan.xfer_us_delay = GENERIC_IMU_CFG_CAN_XFER_US;
+
+      status = can_init_dev(&Generic_IMUcan);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_IMU_DEVICE_ENABLED;
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Enable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Enable command failed to init CAN!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Enable failed, already Enabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);;
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_imu :: DISABLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+
+    if(HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+    {
+      HkTelemetryPkt.CommandCount++;
+
+      status = can_close_device(&Generic_IMUcan);
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceEnabled = GENERIC_IMU_DEVICE_DISABLED;
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Disable command success!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        HkTelemetryPkt.DeviceErrorCount++;
+        Fw::LogStringArg log_msg("Disable command failed to close CAN!");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Disable failed, already Disabled!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_DeviceEnabled(get_active_state(HkTelemetryPkt.DeviceEnabled));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  inline Generic_imu_ActiveState Generic_imu :: get_active_state(uint8_t DeviceEnabled)
+  {
+    Generic_imu_ActiveState state;
+
+    if(DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+    {
+      state.e = Generic_imu_ActiveState::ENABLED;
+    }
+    else
+    {
+      state.e = Generic_imu_ActiveState::DISABLED;
+    }
+
+    return state;
+  }
+
+
+}
+
+```
+
+### `Generic_imu.fpp`
+
+**경로:** `components/generic_imu/fsw/fprime/imu_src/Generic_imu.fpp`
+
+
+```fpp
+module Components {
+    @ generic_imu
+    active component Generic_imu {
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+
+        @ IMU output port
+        output port IMUout: IMUDataPort
+
+        @ Periodic Data IMU
+        async input port updateData: Svc.Sched
+
+        @ Periodic Tlm IMU
+        async input port updateTlm: Svc.Sched
+        
+        @ Component Enable State
+        enum ActiveState {
+            DISABLED @< DISABLED
+            ENABLED @< ENABLED
+        }
+
+        @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING(
+        )
+
+        @ Command to Request Data
+        async command REQUEST_DATA(
+        )
+
+        @ NOOP Command
+        async command NOOP(
+        )
+
+        @ Enable Cmd
+        async command ENABLE()
+
+        @ Disable Cmd
+        async command DISABLE()
+
+        @ Reset Counters Cmd
+        async command RESET_COUNTERS()
+
+        @ event with maximum length of 30 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_imu: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ Device Enabled
+        telemetry DeviceEnabled: ActiveState
+
+         @ Device Command Counter Parameter 
+        telemetry ReportedComponentCount: U32
+
+         @ Device Status Parameter
+        telemetry DeviceStatus: U32
+
+         @ X Axis Linear Acceleration
+        telemetry X_Axis_LinearAcc: F32
+
+         @ X Axis Angular Acceleration
+        telemetry X_Axis_AngularAcc: F32
+
+         @ Y Axis Linear Acceleration
+        telemetry Y_Axis_LinearAcc: F32
+
+         @ Y Axis Angular Acceleration
+        telemetry Y_Axis_AngularAcc: F32
+
+         @ Z Axis Linear Acceleration
+        telemetry Z_Axis_LinearAcc: F32
+
+         @ Z Axis Angular Acceleration
+        telemetry Z_Axis_AngularAcc: F32
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_imu.hpp`
+
+**경로:** `components/generic_imu/fsw/fprime/imu_src/Generic_imu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_imu.hpp
+// \author jstar
+// \brief  hpp file for Generic_imu component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_imu_HPP
+#define Components_Generic_imu_HPP
+
+#include "imu_src/Generic_imuComponentAc.hpp"
+#include "imu_src/Generic_imu_ActiveStateEnumAc.hpp"
+
+extern "C"{
+#include "generic_imu_device.h"
+#include "generic_imu_platform_cfg.h"
+#include "libcan.h"
+}
+
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+    uint8_t                         DeviceEnabled;
+} IMU_Hk_tlm_t;
+#define IMU_HK_TLM_LNGTH sizeof(IMU_Hk_tlm_t)
+
+#define GENERIC_IMU_DEVICE_DISABLED 0
+#define GENERIC_IMU_DEVICE_ENABLED  1
+
+namespace Components {
+
+  class Generic_imu :
+    public Generic_imuComponentBase
+  {
+
+    public:
+
+    can_info_t Generic_IMUcan;
+    GENERIC_IMU_Device_HK_tlm_t Generic_IMUHK;
+    GENERIC_IMU_Device_Data_tlm_t Generic_IMUData;
+    IMU_Hk_tlm_t HkTelemetryPkt;
+
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_imu object
+      Generic_imu(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_imu object
+      ~Generic_imu();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      // void TODO_cmdHandler(
+      //     FwOpcodeType opCode, //!< The opcode
+      //     U32 cmdSeq //!< The command sequence number
+      // ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void REQUEST_DATA_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void updateData_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void updateTlm_handler(
+        const FwIndexType portNum, //!< The port number
+        U32 context //!< The call order
+      ) override;
+
+      void ENABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void DISABLE_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      inline Generic_imu_ActiveState get_active_state(uint8_t DeviceEnabled);
+
+  };
+
+}
+
+#endif
+```

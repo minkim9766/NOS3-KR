@@ -3,16 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/edit-command-band/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-command-band.component.html`
 
-file--edit-command-band.component.html
-file--edit-command-band.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/edit-command-band/edit-command-band.component.html`
+
+
+```html
+@if (formConfigured$ | async) {
+  <form [formGroup]="form">
+    <ya-field label="Label" hint="(required)">
+      <input type="text" formControlName="name" />
+    </ya-field>
+
+    <ya-field label="Description" hint="(optional)">
+      <textarea formControlName="description" rows="3"></textarea>
+    </ya-field>
+  </form>
+}
 ```
 
-## 항목
+### `edit-command-band.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/edit-command-band/edit-command-band.component.html`](file--edit-command-band.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/edit-command-band/edit-command-band.component.ts`](file--edit-command-band.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/edit-command-band/edit-command-band.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
+import { UntypedFormGroup } from '@angular/forms';
+import { TimelineBand, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-edit-command-band',
+  templateUrl: './edit-command-band.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class EditCommandBandComponent implements AfterViewInit {
+  @Input()
+  form: UntypedFormGroup;
+
+  @Input()
+  band: TimelineBand;
+
+  formConfigured$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+  ) {}
+
+  ngAfterViewInit() {
+    this.formConfigured$.next(true);
+    this.changeDetection.detectChanges();
+  }
+}
+```

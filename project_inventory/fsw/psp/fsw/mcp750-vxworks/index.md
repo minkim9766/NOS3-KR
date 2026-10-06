@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/fsw/mcp750-vxworks/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,59 @@ doc/index
 inc/index
 make/index
 src/index
-file--CMakeLists.txt
-file--psp_module_list.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/fsw/mcp750-vxworks/doc/`](doc/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/inc/`](inc/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/make/`](make/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/src/`](src/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/psp_module_list.cmake`](file--psp_module_list.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for mcp750-vxworks PSP component
+#
+######################################################################
+
+# This contains the fully platform-specific code to
+# run CFE on this target.
+
+# Build the mcp750-vxworks implementation as a library
+add_library(psp-${CFE_PSP_TARGETNAME}-impl OBJECT
+    src/cfe_psp_exception.c
+    src/cfe_psp_memory.c
+    src/cfe_psp_ssr.c
+    src/cfe_psp_start.c
+    src/cfe_psp_support.c
+    src/cfe_psp_watchdog.c
+)
+target_compile_definitions(psp-${CFE_SYSTEM_PSPNAME}-impl PRIVATE
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_COMPILE_DEFINITIONS>
+)
+
+target_include_directories(psp-${CFE_PSP_TARGETNAME}-impl PRIVATE
+    inc
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_INCLUDE_DIRECTORIES>
+)
+
+```
+
+### `psp_module_list.cmake`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/psp_module_list.cmake`
+
+
+```cmake
+# This is a list of modules that is included as a fixed/base set
+# when this PSP is selected.  They must exist under fsw/modules
+
+soft_timebase
+timebase_vxworks
+eeprom_direct
+ram_direct
+port_direct
+iodriver
+vxworks_sysmon
+```

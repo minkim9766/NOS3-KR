@@ -3,22 +3,775 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `makefile`
 
-file--makefile
-file--udp_stubs.c
-file--udp_stubs.h
-file--udp_testcase.c
-file--udp_testrunner.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=udp
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../../src/services
+VPATH += ../ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../../src
+INCLUDES += -I../../public_inc
+INCLUDES += -I../ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := trans_udp.o
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_time_stubs.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT := $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -D_LINUX_OS_
+COPT += -DUT_VERBOSE 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(UT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov -b $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
 ```
 
-## 항목
+### `udp_stubs.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_stubs.c`](file--udp_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_stubs.h`](file--udp_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_testcase.c`](file--udp_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_testrunner.c`](file--udp_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_stubs.c`
+
+
+```c
+/*
+ * File: rs422_stubs.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Stub out various functions not stubbed out by the UT-Assert code
+ *
+ */
+
+#include "cfe.h"
+#include "udp_stubs.h"
+
+UDP_HookTable_t           UDP_HookTable;
+UDP_ReturnCodeTable_t     UDP_ReturnCodeTable[UDP_MAX_INDEX];
+
+void UDP_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UDP_MAX_INDEX) {
+        UDP_ReturnCodeTable[Index].Value = RtnVal;
+        UDP_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+
+bool UDP_UseReturnCode(uint32 Index)
+{
+    if (UDP_ReturnCodeTable[Index].Count > 0) {
+        UDP_ReturnCodeTable[Index].Count--;
+        if (UDP_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+
+void UDP_SetFunctionHook(uint32 Index, void *FunPtr)
+{
+    if (Index == UDP_SOCKET_INDEX)      
+    { 
+        UDP_HookTable.socket = FunPtr; 
+    }
+    else
+    {
+        printf("Unsupported UDP Index In SetFunctionHook Call %u\n", Index);
+    }
+}
+
+void UDP_Reset(void)
+{
+    memset(&UDP_HookTable, 0, sizeof(UDP_HookTable));
+    memset(&UDP_ReturnCodeTable, 0, sizeof(UDP_ReturnCodeTable));
+}
+
+
+int socket(int a, int b, int c)
+{
+    if (UDP_UseReturnCode(UDP_SOCKET_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_SOCKET_INDEX].Value;
+    }
+    return 1;
+}
+
+int setsockopt(int socket, int level, int option_name, 
+               const void *option_value, int option_len)
+{
+    if (UDP_UseReturnCode(UDP_SETSOCKOPT_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_SETSOCKOPT_INDEX].Value;
+    }
+    return 0;
+}
+
+//Use POSIX version instead
+//int inet_aton(const char *cp, struct in_addr *inp)
+//{
+//    if (UDP_UseReturnCode(UDP_INET_ATON_INDEX))
+//    {
+//        return UDP_ReturnCodeTable[UDP_INET_ATON_INDEX].Value;
+//    }
+//    *inp = INADDR_ANY;
+//
+//    return INADDR_ANY;
+//}
+
+
+int bind(int sockfd, const struct sockaddr *addr, int addrlen)
+{
+    if (UDP_UseReturnCode(UDP_BIND_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_BIND_INDEX].Value;
+    }
+    return 0;
+}
+
+int close(int fd)
+{
+    if (UDP_UseReturnCode(UDP_CLOSE_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_CLOSE_INDEX].Value;
+    }
+    return 0;
+}
+
+ssize_t recvfrom(int socket, void *buffer, size_t length,
+                 int flags, struct sockaddr *address,
+                 int *address_len)
+{
+    if (UDP_UseReturnCode(UDP_RECVFROM_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_RECVFROM_INDEX].Value;
+    }
+    return length;
+}
+
+
+int select(int nfds, fd_set *readfds, fd_set *writefds,
+           fd_set *exceptfds, struct timeval *timeout)
+{
+    if (UDP_UseReturnCode(UDP_SELECT_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_SELECT_INDEX].Value;
+    }
+    return 1;
+}
+
+size_t sendto(int socket, const void *message, size_t length,
+              int flags, const struct sockaddr *dest_addr,
+              int dest_len)
+{
+    if (UDP_UseReturnCode(UDP_SENDTO_INDEX))
+    {
+        return UDP_ReturnCodeTable[UDP_SENDTO_INDEX].Value;
+    }
+    return length;
+}
+```
+
+### `udp_stubs.h`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_stubs.h`
+
+
+```c
+/*
+ * File: rs422_stubs.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide stubs for unit testing transfer frames
+ *
+ * History:
+ *   04/16/2015  G. de Carufel
+ *    * Created
+ */
+
+#ifndef _UDP_STUBS_H_
+#define _UDP_STUBS_H_
+
+#include "uttools.h"
+
+typedef enum
+{
+    UDP_SOCKET_INDEX,
+    UDP_SETSOCKOPT_INDEX,
+    UDP_INET_ATON_INDEX,
+    UDP_BIND_INDEX,
+    UDP_CLOSE_INDEX,
+    UDP_SELECT_INDEX,
+    UDP_RECVFROM_INDEX,
+    UDP_SENDTO_INDEX,
+    UDP_MAX_INDEX
+} UDP_INDEX_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} UDP_ReturnCodeTable_t;
+
+
+typedef struct
+{
+   int32 (*socket)(int a, int b, int c);
+} UDP_HookTable_t;
+
+
+void UDP_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+void UDP_SetFunctionHook(uint32 Index, void *FunPtr);
+bool UDP_UseReturnCode(uint32 Index);
+void UDP_Reset(void);
+
+#endif
+```
+
+### `udp_testcase.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_testcase.c`
+
+
+```c
+/*
+ * Filename: udp_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test cases for transfer frames
+ *
+ */
+
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_osapi_stubs.h"
+
+#include "udp_stubs.h"
+
+#include <errno.h>
+#include <stdio.h>
+#include <termios.h>
+#include <string.h>
+#include "trans_udp.h"
+
+
+
+extern speed_t IO_TransUDPGetBaudRateMacro(int32 bps);
+
+/* -------------------- Special Test Case Variables ------------------------- */
+
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+
+void Test_TransUdpInit_CreateSocket(void)
+{
+    int32 fd;
+    int32 expected = 0;
+    IO_TransUdpConfig_t config;
+    IO_TransUdp_t udp;
+
+    memset(&config, 0x0, sizeof(config));
+
+    /*************************/
+    fd = IO_TransUdpInit(&config, NULL);
+    expected = IO_TRANS_UDP_SOCKETCREATE_ERROR; 
+    UtAssert_True(fd == expected, "NULL udp ptr");
+    
+    /*************************/
+    UDP_SetReturnCode(UDP_SOCKET_INDEX, -1, 1);
+
+    fd = IO_TransUdpInit(&config, &udp);
+    expected = IO_TRANS_UDP_SOCKETCREATE_ERROR;
+    UtAssert_True(fd == expected, "Create Socket Failed.");
+    
+    /*************************/
+    fd = IO_TransUdpCreateSocket(&udp);
+    expected = 1;
+    UtAssert_True(fd == expected, "Create Socket Nominal.");
+}
+
+
+void Test_TransUdpInit_ConfigSocket(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdpConfig_t config;
+    IO_TransUdp_t udp;
+
+    memset(&config, 0x0, sizeof(config));
+
+    /*************************/
+    actual = IO_TransUdpInit(NULL, &udp);
+    expected = IO_TRANS_UDP_SOCKETOPT_ERROR;
+    UtAssert_True(actual == expected, "NULL Config");
+    
+    /*************************/
+    udp.sockId = -1;
+    
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "Socket not created");
+    
+    /*************************/
+    udp.sockId = 1;
+    config.timeoutRcv = -2;
+    
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "Bad timeoutRcv");
+    
+    /*************************/
+    config.timeoutRcv = 100;
+    config.timeoutSnd = -2;
+    
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "Bad timeoutSnd");
+    
+    /*************************/
+    config.timeoutRcv = 100;
+    config.timeoutSnd = 100;
+    strncpy(config.cAddr,"",1);
+
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "Bad cAddr Setting");
+    
+    /*************************/
+    strncpy(config.cAddr, IO_TRANS_UDP_INADDR_ANY, 16);
+
+    UDP_SetReturnCode(UDP_SETSOCKOPT_INDEX, -1, 1);
+
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_SOCKETOPT_ERROR;
+    UtAssert_True(actual == expected, "Set SO_RCVTIMEO failed");
+
+    /*************************/
+    UDP_SetReturnCode(UDP_SETSOCKOPT_INDEX, -1, 2);
+
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_SOCKETOPT_ERROR;
+    UtAssert_True(actual == expected, "Set SO_SNDTIMEO failed");
+    
+    /*************************/
+    actual = IO_TransUdpConfigSocket(&config, &udp);
+    expected = IO_TRANS_UDP_NO_ERROR;
+    UtAssert_True(actual == expected, "Config Socket Nominal");
+}
+
+void Test_TransUdpInit_BindSocket(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdpConfig_t config;
+    IO_TransUdp_t udp;
+
+    memset(&config, 0x0, sizeof(config));
+    
+    udp.sockId = 1;
+    config.timeoutRcv = 100;
+    config.timeoutSnd = 100;
+    strncpy(config.cAddr, IO_TRANS_UDP_INADDR_ANY, 16);
+
+    /*************************/
+    actual = IO_TransUdpBindSocket(NULL);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Input");
+
+    /*************************/
+    UDP_SetReturnCode(UDP_BIND_INDEX, -1, 1);
+    
+    actual = IO_TransUdpInit(&config, &udp);
+    expected = IO_TRANS_UDP_SOCKETBIND_ERROR;
+    UtAssert_True(actual == expected, "Socket Bind Fail");
+    
+    /*************************/
+    actual = IO_TransUdpInit(&config, &udp);
+    expected = 1;
+    UtAssert_True(actual == expected, "Socket Bind Nominal");
+}
+    
+void Test_TransUdpCloseSocket(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdp_t udp;
+
+    /*************************/
+    actual = IO_TransUdpCloseSocket(NULL);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Input");
+
+    /*************************/
+    UDP_SetReturnCode(UDP_CLOSE_INDEX, -1, 1);
+    
+    actual = IO_TransUdpCloseSocket(&udp);
+    expected = -1;
+    UtAssert_True(actual == expected, "Socket Close Fail");
+    
+    /*************************/
+    actual = IO_TransUdpCloseSocket(&udp);
+    expected = IO_TRANS_UDP_NO_ERROR;
+    UtAssert_True(actual == expected, "Socket Close Nominal");
+}
+
+
+void Test_TransUdpSetDestAddr(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdp_t udp;
+    
+    /*************************/
+    actual = IO_TransUdpSetDestAddr(NULL, "", 0);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Udp Input");
+    
+    /*************************/
+    actual = IO_TransUdpSetDestAddr(&udp, NULL, 0);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL destAddr Input");
+    
+    /*************************/
+    actual = IO_TransUdpSetDestAddr(&udp, "", 0);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "Invalid Dest Address");
+    
+    /*************************/
+    actual = IO_TransUdpSetDestAddr(&udp, "111.111.111.111", 0);
+    expected = IO_TRANS_UDP_NO_ERROR;
+    UtAssert_True(actual == expected, "Set Dest Address - Nominal");
+}
+
+
+void Test_TransUdpRcv(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdp_t udp;
+    uint8 buffer[10];
+
+    /*************************/
+    actual = IO_TransUdpRcv(NULL, buffer, 10);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Udp Input");
+
+    /*************************/
+    actual = IO_TransUdpRcv(&udp, buffer, 10);
+    expected = 10;
+    UtAssert_True(actual == expected, "Nominal");
+}
+
+
+void Test_TransUdpRcvTimeout(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdp_t udp;
+    uint8 buffer[10];
+
+    /*************************/
+    actual = IO_TransUdpRcvTimeout(NULL, buffer, 10, IO_TRANS_PEND_FOREVER);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Udp Input");
+    
+    /*************************/
+    udp.sockId = 1;
+    UDP_SetReturnCode(UDP_SELECT_INDEX, -1, 1);
+    
+    actual = IO_TransUdpRcvTimeout(&udp, buffer, 10, IO_TRANS_PEND_FOREVER);
+    expected = -1;
+    UtAssert_True(actual == expected, "Select Pend Forever Fail");
+    
+    /*************************/
+    UDP_SetReturnCode(UDP_SELECT_INDEX, -1, 1);
+    
+    actual = IO_TransUdpRcvTimeout(&udp, buffer, 10, 100);
+    expected = -1;
+    UtAssert_True(actual == expected, "Select Pend Fail");
+    
+    /*************************/
+    actual = IO_TransUdpRcvTimeout(&udp, buffer, 10, 100);
+    expected = 10;
+    UtAssert_True(actual == expected, "Nominal");
+}
+
+
+void Test_TransUdpSnd(void)
+{
+    int32 actual;
+    int32 expected = 0;
+    IO_TransUdp_t udp;
+    uint8 msg[10] = "Haha. Not real.";
+    
+    /*************************/
+    actual = IO_TransUdpSnd(NULL, msg, 10);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Udp Input");
+    
+    /*************************/
+    actual = IO_TransUdpSnd(&udp, NULL, 10);
+    expected = IO_TRANS_UDP_BAD_INPUT_ERROR;
+    UtAssert_True(actual == expected, "NULL Msg Input");
+    
+    /*************************/
+    UDP_SetReturnCode(UDP_SENDTO_INDEX, -1, 1);
+    
+    actual = IO_TransUdpSnd(&udp, msg, 10);
+    expected = -1;
+    UtAssert_True(actual == expected, "sendto Fail");
+    
+    /*************************/
+    actual = IO_TransUdpSnd(&udp, msg, 10);
+    expected = 10;
+    UtAssert_True(actual == expected, "Nominal");
+}
+
+
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+/*
+ * UDP_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void UDP_Setup(void)
+{
+    Ut_OSAPI_Reset();
+    Ut_CFE_EVS_Reset();
+}
+
+/*
+ * UDP_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void UDP_TearDown(void)
+{
+
+}
+
+
+#define ADD_TEST(test,setup,teardown) UtTest_Add((test), (setup), (teardown), #test)
+
+/* UDP_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void UDP_AddTestCase(void)
+{
+    /* UDP_GetVersion Tests */
+    ADD_TEST(Test_TransUdpInit_CreateSocket, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpInit_ConfigSocket, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpInit_BindSocket, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpCloseSocket, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpSetDestAddr, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpRcv, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpRcvTimeout, UDP_Setup, UDP_TearDown);
+    ADD_TEST(Test_TransUdpSnd, UDP_Setup, UDP_TearDown);
+}
+```
+
+### `udp_testrunner.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_trans_udp/udp_testrunner.c`
+
+
+```c
+
+void UDP_AddTestCase(void);
+
+/*
+ * Filename: udp_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for UDP Transport protocol.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    UDP_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

@@ -3,16 +3,16 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BufferManagerBDD.jpg`
 
-file--BufferManagerBDD.jpg
-file--CommandExecution.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/img/BufferManagerBDD.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/img/BufferManagerBDD.jpg`](file--BufferManagerBDD.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/img/CommandExecution.jpg`](file--CommandExecution.jpg) — 바이너리 (경로만)
+### `CommandExecution.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/img/CommandExecution.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

@@ -3,30 +3,1023 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `BufferLoggerMain.cpp`
 
-file--BufferLoggerMain.cpp
-file--BufferLoggerTester.cpp
-file--BufferLoggerTester.hpp
-file--Errors.cpp
-file--Errors.hpp
-file--Health.cpp
-file--Health.hpp
-file--Logging.cpp
-file--Logging.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// Main.cpp
+// ----------------------------------------------------------------------
+
+#include "BufferLoggerTester.hpp"
+#include "Errors.hpp"
+#include "Health.hpp"
+#include "Logging.hpp"
+
+TEST(Test, LogNoInit) {
+    Svc::BufferLoggerTester tester(false);  // don't call initLog for the user
+    tester.LogNoInit();
+}
+
+// ----------------------------------------------------------------------
+// Test Errors
+// ----------------------------------------------------------------------
+
+TEST(TestErrors, LogFileOpen) {
+    Svc::Errors::BufferLoggerTester tester;
+    tester.LogFileOpen();
+}
+
+TEST(TestErrors, LogFileWrite) {
+    Svc::Errors::BufferLoggerTester tester;
+    tester.LogFileWrite();
+}
+
+TEST(TestErrors, LogFileValidation) {
+    Svc::Errors::BufferLoggerTester tester;
+    tester.LogFileValidation();
+}
+
+// ----------------------------------------------------------------------
+// Test Logging
+// ----------------------------------------------------------------------
+
+TEST(TestLogging, BufferSendIn) {
+    Svc::Logging::BufferLoggerTester tester;
+    tester.BufferSendIn();
+}
+
+TEST(TestLogging, CloseFile) {
+    Svc::Logging::BufferLoggerTester tester;
+    tester.CloseFile();
+}
+
+TEST(TestLogging, ComIn) {
+    Svc::Logging::BufferLoggerTester tester;
+    tester.ComIn();
+}
+
+TEST(TestLogging, OnOff) {
+    Svc::Logging::BufferLoggerTester tester;
+    tester.OnOff();
+}
+
+// ----------------------------------------------------------------------
+// Test Health
+// ----------------------------------------------------------------------
+
+TEST(TestHealth, Ping) {
+    Svc::Health::BufferLoggerTester tester;
+    tester.Ping();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `BufferLoggerTester.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerMain.cpp`](file--BufferLoggerMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerTester.cpp`](file--BufferLoggerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerTester.hpp`](file--BufferLoggerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Errors.cpp`](file--Errors.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Errors.hpp`](file--Errors.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Health.cpp`](file--Health.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Health.hpp`](file--Health.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Logging.cpp`](file--Logging.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Logging.hpp`](file--Logging.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferLogger.hpp
+// \author bocchino, mereweth
+// \brief  cpp file for BufferLogger test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "BufferLoggerTester.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Os/FileSystem.hpp"
+#include "Os/ValidatedFile.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 30
+#define QUEUE_DEPTH 10
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Instance variables
+// ----------------------------------------------------------------------
+
+U8 BufferLoggerTester::data[COM_BUFFER_LENGTH] = {0xDE, 0xAD, 0xBE, 0xEF};
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+BufferLoggerTester ::BufferLoggerTester(bool doInitLog)
+    : BufferLoggerGTestBase("Tester", MAX_HISTORY_SIZE), component("BufferLogger") {
+    (void)system("rm -rf buf");
+    (void)system("mkdir buf");
+    this->initComponents();
+    this->connectPorts();
+
+    if (doInitLog) {
+        this->component.initLog("buf/log", ".buf", static_cast<U32>(MAX_BYTES_PER_FILE), sizeof(SIZE_TYPE));
+    }
+}
+
+BufferLoggerTester ::~BufferLoggerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BufferLoggerTester ::LogNoInit() {
+    this->component.m_file.m_baseName = Fw::String("LogNoInit");
+    // NOTE (mereweth) - make something sensible happen when no-one calls initLog()
+    // Send data
+    this->sendComBuffers(3);
+    ASSERT_EVENTS_SIZE(3);
+    ASSERT_EVENTS_BL_NoLogFileOpenInitError_SIZE(3);
+}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void BufferLoggerTester ::from_bufferSendOut_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->pushFromPortEntry_bufferSendOut(fwBuffer);
+}
+
+void BufferLoggerTester ::from_pingOut_handler(const FwIndexType portNum, U32 key) {
+    this->pushFromPortEntry_pingOut(key);
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void BufferLoggerTester ::connectPorts() {
+    // bufferSendIn
+    this->connect_to_bufferSendIn(0, this->component.get_bufferSendIn_InputPort(0));
+
+    // cmdIn
+    this->connect_to_cmdIn(0, this->component.get_cmdIn_InputPort(0));
+
+    // comIn
+    this->connect_to_comIn(0, this->component.get_comIn_InputPort(0));
+
+    // pingIn
+    this->connect_to_pingIn(0, this->component.get_pingIn_InputPort(0));
+
+    // schedIn
+    this->connect_to_schedIn(0, this->component.get_schedIn_InputPort(0));
+
+    // bufferSendOut
+    this->component.set_bufferSendOut_OutputPort(0, this->get_from_bufferSendOut(0));
+
+    // cmdRegOut
+    this->component.set_cmdRegOut_OutputPort(0, this->get_from_cmdRegOut(0));
+
+    // cmdResponseOut
+    this->component.set_cmdResponseOut_OutputPort(0, this->get_from_cmdResponseOut(0));
+
+    // eventOut
+    this->component.set_eventOut_OutputPort(0, this->get_from_eventOut(0));
+
+    // eventOutText
+    this->component.set_eventOutText_OutputPort(0, this->get_from_eventOutText(0));
+
+    // pingOut
+    this->component.set_pingOut_OutputPort(0, this->get_from_pingOut(0));
+
+    // timeCaller
+    this->component.set_timeCaller_OutputPort(0, this->get_from_timeCaller(0));
+
+    // tlmOut
+    this->component.set_tlmOut_OutputPort(0, this->get_from_tlmOut(0));
+}
+
+void BufferLoggerTester ::initComponents() {
+    this->init();
+    this->component.init(QUEUE_DEPTH, INSTANCE);
+}
+
+void BufferLoggerTester ::dispatchOne() {
+    this->component.doDispatch();
+}
+
+void BufferLoggerTester ::dispatchAll() {
+    while (this->component.m_queue.getMessagesAvailable() > 0)
+        this->dispatchOne();
+}
+
+Fw::Time BufferLoggerTester ::generateTestTime(const U32 seconds) {
+    Fw::Time time(TimeBase::TB_DONT_CARE, FW_CONTEXT_DONT_CARE, 234567, seconds);
+    return time;
+}
+
+void BufferLoggerTester ::setTestTimeSeconds(const U32 seconds) {
+    Fw::Time time = this->generateTestTime(seconds);
+    this->setTestTime(time);
+}
+
+void BufferLoggerTester ::sendComBuffers(const U32 n) {
+    Fw::ComBuffer buffer(data, sizeof(data));
+    for (U32 i = 0; i < n; ++i) {
+        this->invoke_to_comIn(0, buffer, 0);
+        this->dispatchOne();
+    }
+}
+
+void BufferLoggerTester ::sendManagedBuffers(const U32 n) {
+    Fw::Buffer buffer(data, sizeof(data));
+    for (U32 i = 0; i < n; ++i) {
+        this->invoke_to_bufferSendIn(0, buffer);
+        this->dispatchOne();
+    }
+}
+
+void BufferLoggerTester ::checkFileExists(const Fw::StringBase& fileName) {
+    Fw::String command;
+    command.format("test -f %s", fileName.toChar());
+    const int status = system(command.toChar());
+    ASSERT_EQ(0, status);
+}
+
+void BufferLoggerTester ::checkHashFileExists(const Fw::StringBase& fileName) {
+    Os::ValidatedFile validatedFile(fileName.toChar());
+    const Fw::StringBase& hashFileName = validatedFile.getHashFileName();
+    this->checkFileExists(hashFileName);
+}
+
+void BufferLoggerTester ::checkLogFileIntegrity(const char* const fileName,
+                                                const U32 expectedSize,
+                                                const U32 expectedNumBuffers) {
+    {
+        // Make sure the file size is within bounds
+        FwSizeType actualSize = 0;
+        const Os::FileSystem::Status status = Os::FileSystem::getFileSize(fileName, actualSize);
+        ASSERT_EQ(Os::FileSystem::OP_OK, status);
+        ASSERT_LE(expectedSize, actualSize);
+    }
+
+    // Open the file
+    Os::File file;
+    {
+        const Os::File::Status status = file.open(fileName, Os::File::OPEN_READ);
+        ASSERT_EQ(Os::File::OP_OK, status);
+    }
+
+    // Check the data
+    U8 buf[expectedSize];
+    for (U32 i = 0; i < expectedNumBuffers; ++i) {
+        // Get length of buffer to read
+        FwSizeType length = static_cast<FwSizeType>(sizeof(SIZE_TYPE));
+        Os::File::Status status = file.read(buf, length);
+        ASSERT_EQ(Os::File::OP_OK, status);
+        ASSERT_EQ(sizeof(SIZE_TYPE), static_cast<U32>(length));
+        Fw::SerialBuffer comBuffLength(buf, length);
+        comBuffLength.fill();
+        SIZE_TYPE bufferSize;
+        const Fw::SerializeStatus serializeStatus = comBuffLength.deserialize(bufferSize);
+        ASSERT_EQ(Fw::FW_SERIALIZE_OK, serializeStatus);
+        ASSERT_EQ(sizeof(data), bufferSize);
+        // Read and check the buffer
+        length = bufferSize;
+        status = file.read(buf, length);
+        ASSERT_EQ(Os::File::OP_OK, status);
+        ASSERT_EQ(bufferSize, static_cast<U32>(length));
+        ASSERT_EQ(memcmp(buf, data, sizeof(data)), 0);
+    }
+
+    // Make sure we reached the end of the file
+    {
+        FwSizeType length = 10;
+        const Os::File::Status status = file.read(buf, length);
+        ASSERT_EQ(Os::File::OP_OK, status);
+        ASSERT_EQ(0, length);
+    }
+}
+
+void BufferLoggerTester ::checkFileValidation(const char* const fileName) {
+    Os::ValidatedFile validatedFile(fileName);
+    const Os::ValidateFile::Status status = validatedFile.validate();
+    ASSERT_EQ(Os::ValidateFile::VALIDATION_OK, status);
+}
+
+}  // end namespace Svc
+```
+
+### `BufferLoggerTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/BufferLoggerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferLogger/test/ut/Tester.hpp
+// \author bocchino, mereweth
+// \brief  hpp file for BufferLogger test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "BufferLoggerGTestBase.hpp"
+#include "Svc/BufferLogger/BufferLogger.hpp"
+
+#define COM_BUFFER_LENGTH 4
+#define MAX_ENTRIES_PER_FILE 5
+#define SIZE_TYPE U32
+#define MAX_BYTES_PER_FILE (MAX_ENTRIES_PER_FILE * COM_BUFFER_LENGTH + MAX_ENTRIES_PER_FILE * sizeof(SIZE_TYPE))
+
+namespace Svc {
+
+class BufferLoggerTester : public BufferLoggerGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object BufferLoggerTester
+    //!
+    BufferLoggerTester(bool doInitLog = true);
+
+    //! Destroy object BufferLoggerTester
+    //!
+    ~BufferLoggerTester();
+
+    // ----------------------------------------------------------------------
+    // Tests (rest are in Errors, Health, and Logging classes)
+    // ----------------------------------------------------------------------
+
+  public:
+    //! No-one called initLog
+    void LogNoInit();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_bufferSendOut
+    //!
+    void from_bufferSendOut_handler(const FwIndexType portNum, /*!< The port number*/
+                                    Fw::Buffer& fwBuffer);
+
+    //! Handler for from_pingOut
+    //!
+    void from_pingOut_handler(const FwIndexType portNum, /*!< The port number*/
+                              U32 key                    /*!< Value to return to pinger*/
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Dispatch one message on the queue
+    void dispatchOne();
+
+    //! Dispatch all messages on the queue
+    void dispatchAll();
+
+    //! Generate a test time
+    Fw::Time generateTestTime(const U32 seconds  //!< The seconds value
+    );
+
+    //! Set test time seconds
+    void setTestTimeSeconds(const U32 seconds  //!< The seconds value
+    );
+
+    //! Send com buffers to comIn
+    void sendComBuffers(const U32 n  //!< The number of buffers to send
+    );
+
+    //! Send managed buffers to bufferSendIn
+    void sendManagedBuffers(const U32 n  //!< The number of buffers to send
+    );
+
+    //! Check that file exists
+    void checkFileExists(const Fw::StringBase& fileName  //!< The file name
+    );
+
+    //! Check that hash file exists
+    void checkHashFileExists(const Fw::StringBase& fileName  //!< The file name
+    );
+
+    //! Check the integrity of a log file
+    void checkLogFileIntegrity(const char* const fileName,   //!< The file name
+                               const U32 expectedSize,       //!< The expected file size in bytes
+                               const U32 expectedNumBuffers  //!< The expected number of buffers
+    );
+
+    //! Check file validation
+    void checkFileValidation(const char* const fileName  //!< The file name
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    BufferLogger component;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! Data for input buffers
+    static U8 data[COM_BUFFER_LENGTH];
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `Errors.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Errors.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Errors.cpp
+// \author bocchino, mereweth
+// \brief  Implementation for Buffer Logger error tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <cstdlib>
+
+#include "Errors.hpp"
+#include "Os/ValidatedFile.hpp"
+
+namespace Svc {
+
+namespace Errors {
+
+void BufferLoggerTester ::LogFileOpen() {
+    // Remove buf directory
+    (void)system("rm -rf buf");
+
+    this->component.m_file.m_baseName = Fw::String("LogFileOpen");
+
+    // Check initial state
+    ASSERT_EQ(BufferLogger::File::Mode::CLOSED, this->component.m_file.m_mode);
+    ASSERT_EVENTS_SIZE(0);
+
+    // Send data
+    this->sendComBuffers(3);
+
+    // Check events
+    // NOTE(mereweth) - not throttled
+    ASSERT_EVENTS_SIZE(3);
+    ASSERT_EVENTS_BL_LogFileOpenError_SIZE(3);
+    for (int i = 0; i < 3; i++) {
+        ASSERT_EVENTS_BL_LogFileOpenError(i, Os::File::DOESNT_EXIST, this->component.m_file.m_name.toChar());
+    }
+
+    // Create buf directory and try again
+    (void)system("mkdir buf");
+    ASSERT_EQ(BufferLogger::File::Mode::CLOSED, this->component.m_file.m_mode);
+
+    // Send data
+    this->sendComBuffers(3);
+
+    // Check events
+    // NOTE(mereweth) - should have no more events than we did before
+    ASSERT_EVENTS_SIZE(3);
+    ASSERT_EVENTS_BL_LogFileOpenError_SIZE(3);
+    this->component.m_file.close();
+
+    // Remove buf directory and try again
+    (void)system("rm -rf buf");
+    ASSERT_EQ(BufferLogger::File::Mode::CLOSED, this->component.m_file.m_mode);
+
+    // Send data
+    this->sendComBuffers(3);
+
+    // Check events
+    // We expect 3 more; not throttled
+    ASSERT_EVENTS_SIZE(6);
+    ASSERT_EVENTS_BL_LogFileOpenError_SIZE(6);
+    for (int i = 3; i < 6; i++) {
+        ASSERT_EVENTS_BL_LogFileOpenError(i, Os::File::DOESNT_EXIST, this->component.m_file.m_name.toChar());
+    }
+}
+
+void BufferLoggerTester ::LogFileWrite() {
+    ASSERT_EQ(BufferLogger::File::Mode::CLOSED, this->component.m_file.m_mode);
+    ASSERT_EVENTS_SIZE(0);
+
+    this->component.m_file.m_baseName = Fw::String("LogFileWrite");
+
+    // Send data
+    this->sendComBuffers(1);
+
+    // Force close the file
+    this->component.m_file.m_osFile.close();
+
+    // Send data
+    this->sendComBuffers(1);
+
+    // Construct file name
+    Fw::String fileName;
+    fileName.format("%s%s%s", this->component.m_file.m_prefix.toChar(), this->component.m_file.m_baseName.toChar(),
+                    this->component.m_file.m_suffix.toChar());
+
+    // Check events
+    // NOTE(mereweth) - not throttled
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_BL_LogFileWriteError_SIZE(1);
+    ASSERT_EVENTS_BL_LogFileWriteError(0,
+                                       Os::File::NOT_OPENED,  // errornum
+                                       0,                     // bytesWritten
+                                       sizeof(SIZE_TYPE),     // bytesAttempted
+                                       fileName.toChar()      // file
+    );
+
+    // Make comlogger open a new file:
+    this->component.m_file.m_mode = BufferLogger::File::Mode::CLOSED;
+    this->component.m_file.open();
+
+    // NOTE(mereweth) - new file; counter has incremented
+    fileName.format("%s%s%d%s", this->component.m_file.m_prefix.toChar(), this->component.m_file.m_baseName.toChar(), 1,
+                    this->component.m_file.m_suffix.toChar());
+
+    // Try to write and make sure it succeeds
+    // Send data
+    this->sendComBuffers(3);
+
+    // Expect no new errors
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_BL_LogFileWriteError_SIZE(1);
+
+    // Force close the file from underneath the component
+    component.m_file.m_osFile.close();
+
+    // Send data
+    this->sendComBuffers(3);
+
+    // Check events
+    // NOTE(mereweth) - not throttled; 3 more events
+    ASSERT_EVENTS_SIZE(4);
+    ASSERT_EVENTS_BL_LogFileWriteError_SIZE(4);
+    for (int i = 1; i < 4; i++) {
+        ASSERT_EVENTS_BL_LogFileWriteError(i, Os::File::NOT_OPENED, 0, sizeof(SIZE_TYPE), fileName.toChar());
+    }
+}
+
+void BufferLoggerTester ::LogFileValidation() {
+    this->component.m_file.m_baseName = Fw::String("LogFileValidation");
+
+    // Send data
+    this->sendComBuffers(1);
+    // Remove permission to buf directory
+    (void)system("chmod -w buf");
+    // Send close file command
+    this->sendCmd_BL_CloseFile(0, 0);
+    this->dispatchOne();
+    // Check events
+    ASSERT_EVENTS_SIZE(2);
+    Fw::String fileName;
+    fileName.format("%s%s%s", this->component.m_file.m_prefix.toChar(), this->component.m_file.m_baseName.toChar(),
+                    this->component.m_file.m_suffix.toChar());
+    ASSERT_EVENTS_BL_LogFileClosed(0, fileName.toChar());
+    Os::ValidatedFile validatedFile(fileName.toChar());
+    const Fw::StringBase& hashFileName = validatedFile.getHashFileName();
+    ASSERT_EVENTS_BL_LogFileValidationError(0, hashFileName.toChar(), Os::ValidateFile::VALIDATION_FILE_NO_PERMISSION);
+    // Restore permission
+    (void)system("chmod +w buf");
+}
+
+}  // namespace Errors
+
+}  // namespace Svc
+```
+
+### `Errors.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Errors.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Errors.hpp
+// \author bocchino, mereweth
+// \brief  Interface for BufferLogger error tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Errors_HPP
+#define Svc_Errors_HPP
+
+#include "BufferLoggerTester.hpp"
+
+namespace Svc {
+
+namespace Errors {
+
+class BufferLoggerTester : public Svc::BufferLoggerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Log file open error
+    void LogFileOpen();
+
+    //! Log file write error
+    void LogFileWrite();
+
+    //! Log file validation error
+    void LogFileValidation();
+};
+
+}  // namespace Errors
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Health.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Health.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.cpp
+// \author bocchino, mereweth
+// \brief  Implementation for Buffer Logger health tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Health.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+void BufferLoggerTester ::Ping() {
+    U32 key = 42;
+
+    this->invoke_to_pingIn(0, key);
+    this->dispatchAll();
+
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_from_pingOut_SIZE(1);
+    ASSERT_from_pingOut(0, key);
+}
+
+}  // namespace Health
+
+}  // namespace Svc
+```
+
+### `Health.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Health.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Health.hpp
+// \author bocchino
+// \brief  Interface for BufferLogger health tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Health_HPP
+#define Svc_Health_HPP
+
+#include "BufferLoggerTester.hpp"
+
+namespace Svc {
+
+namespace Health {
+
+class BufferLoggerTester : public Svc::BufferLoggerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Health ping test
+    void Ping();
+};
+
+}  // namespace Health
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Logging.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Logging.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Logging.cpp
+// \author bocchino, mereweth
+// \brief  Implementation for Buffer Logger logging tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Logging.hpp"
+#include "Os/FileSystem.hpp"
+
+namespace Svc {
+
+namespace Logging {
+
+class CloseFileTester : public Logging::BufferLoggerTester {
+  public:
+    CloseFileTester() {
+        Fw::Time testTime = this->generateTestTime(0);
+        this->setTestTime(testTime);
+    }
+
+  private:
+    //! Send close file commands
+    void sendCloseFileCommands(const U32 n) {
+        this->clearHistory();
+
+        for (U32 i = 0; i < n; ++i) {
+            this->sendCmd_BL_CloseFile(0, i);
+            this->dispatchOne();
+            ASSERT_CMD_RESPONSE(i, BufferLogger::OPCODE_BL_CLOSEFILE, i, Fw::CmdResponse::OK);
+        }
+
+        ASSERT_CMD_RESPONSE_SIZE(n);
+    }
+
+    //! Check that files exist
+    void checkFilesExist() {
+        const Fw::String& fileName = this->component.m_file.m_name;
+        this->checkFileExists(fileName);
+        this->checkHashFileExists(fileName);
+    }
+
+  public:
+    void test() {
+        this->component.m_file.m_baseName = Fw::String("CloseFileTester");
+        ASSERT_EVENTS_SIZE(0);
+        this->sendCloseFileCommands(3);
+        this->sendComBuffers(3);
+        this->sendCloseFileCommands(3);
+        ASSERT_EVENTS_SIZE(1);
+        ASSERT_EVENTS_BL_LogFileClosed_SIZE(1);
+        ASSERT_EVENTS_BL_LogFileClosed(0, component.m_file.m_name.toChar());
+        this->checkFilesExist();
+    }
+};
+
+void BufferLoggerTester ::CloseFile() {
+    CloseFileTester tester;
+    tester.test();
+}
+
+class SendBuffersTester : public Logging::BufferLoggerTester {
+  protected:
+    //! Send buffers
+    virtual void sendBuffers(const U32 n  //!< The number of buffers to send
+                             ) = 0;
+
+  public:
+    //! Run a test
+    void test(const U32 numFiles,               //!< The number of files to create
+              const Fw::CmdStringArg& baseName  //!< The baseName to use
+    ) {
+        this->sendCmd_BL_OpenFile(0, 0, baseName);
+        this->dispatchOne();
+        // Create file name
+        Fw::String currentFileName;
+        currentFileName.format("%s%s%s", this->component.m_file.m_prefix.toChar(), baseName.toChar(),
+                               this->component.m_file.m_suffix.toChar());
+        this->sendBuffers(1);
+        // 0th event has already happened (file open)
+        for (U32 i = 1; i < numFiles + 1; ++i) {
+            // File was just created and name set
+            ASSERT_EQ(currentFileName, this->component.m_file.m_name);
+            // Write data to the file
+            this->sendBuffers(MAX_ENTRIES_PER_FILE - 1);
+            // File still should have same name
+            ASSERT_EQ(currentFileName, this->component.m_file.m_name);
+            // Send more data
+            // This should open a new file with the updated counter
+            this->sendBuffers(1);
+            currentFileName.format("%s%s%d%s", this->component.m_file.m_prefix.toChar(), baseName.toChar(), i,
+                                   this->component.m_file.m_suffix.toChar());
+            // Assert file state
+            ASSERT_EQ(BufferLogger::File::Mode::OPEN, component.m_file.m_mode);
+            ASSERT_EQ(currentFileName, this->component.m_file.m_name);
+            // Assert events
+            ASSERT_EVENTS_SIZE(i);
+            ASSERT_EVENTS_BL_LogFileClosed_SIZE(i);
+        }
+
+        // Close the last file
+        this->sendCmd_BL_CloseFile(0, 0);
+        this->dispatchOne();
+
+        // Check files
+        for (U32 i = 0; i < numFiles; ++i) {
+            // Create file name
+            Fw::String fileName;
+            if (i == 0) {
+                fileName.format("%s%s%s", this->component.m_file.m_prefix.toChar(), baseName.toChar(),
+                                this->component.m_file.m_suffix.toChar());
+            } else {
+                fileName.format("%s%s%d%s", this->component.m_file.m_prefix.toChar(), baseName.toChar(), i,
+                                this->component.m_file.m_suffix.toChar());
+            }
+            // Check events
+            ASSERT_EVENTS_BL_LogFileClosed(i, fileName.toChar());
+            // Check file integrity
+            this->checkLogFileIntegrity(fileName.toChar(), MAX_BYTES_PER_FILE, MAX_ENTRIES_PER_FILE);
+            // Check validation
+            this->checkFileValidation(fileName.toChar());
+        }
+    }
+};
+
+class ComInTester : public SendBuffersTester {
+    void sendBuffers(const U32 n) { this->sendComBuffers(n); }
+};
+
+void BufferLoggerTester ::ComIn() {
+    ComInTester tester;
+    tester.test(3, Fw::CmdStringArg("ComIn"));
+}
+
+class BufferSendInTester : public SendBuffersTester {
+    void sendBuffers(const U32 n) { this->sendManagedBuffers(n); }
+};
+
+void BufferLoggerTester ::BufferSendIn() {
+    BufferSendInTester tester;
+    tester.test(3, Fw::CmdStringArg("BufferSendIn"));
+}
+
+class OnOffTester : Logging::BufferLoggerTester {
+  private:
+    //! Send data
+    void sendData() { this->sendComBuffers(MAX_ENTRIES_PER_FILE); }
+
+  public:
+    //! Set the state
+    void setState(const BufferLogger_LogState state  //!< The state
+    ) {
+        this->clearHistory();
+        this->sendCmd_BL_SetLogging(0, 0, state);
+        this->dispatchOne();
+        ASSERT_CMD_RESPONSE_SIZE(1);
+        ASSERT_CMD_RESPONSE(0, BufferLogger::OPCODE_BL_SETLOGGING, 0, Fw::CmdResponse::OK);
+    }
+
+    //! Test logging on
+    void testLoggingOn() {
+        this->component.m_file.m_baseName = Fw::String("OnOffTester");
+        this->sendData();
+        this->setState(BufferLogger_LogState::LOGGING_OFF);
+        this->checkLogFileIntegrity(this->component.m_file.m_name.toChar(), MAX_BYTES_PER_FILE, MAX_ENTRIES_PER_FILE);
+    }
+
+    //! Test logging off
+    void testLoggingOff() {
+        this->setState(BufferLogger_LogState::LOGGING_OFF);
+        this->sendData();
+        ASSERT_EVENTS_SIZE(0);
+        this->setState(BufferLogger_LogState::LOGGING_ON);
+    }
+};
+
+void BufferLoggerTester ::OnOff() {
+    {
+        OnOffTester tester;
+        tester.testLoggingOn();
+    }
+    {
+        OnOffTester tester;
+        tester.testLoggingOff();
+    }
+}
+
+}  // namespace Logging
+
+}  // namespace Svc
+```
+
+### `Logging.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/ut/Logging.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Logging.hpp
+// \author bocchino, mereweth
+// \brief  Interface for BufferLogger logging tests
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_Logging_HPP
+#define Svc_Logging_HPP
+
+#include "BufferLoggerTester.hpp"
+
+namespace Svc {
+
+namespace Logging {
+
+class BufferLoggerTester : public Svc::BufferLoggerTester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test logging of data from bufferSendIn
+    void BufferSendIn();
+
+    //! Test close file command
+    void CloseFile();
+
+    //! Test logging of data from comIn
+    void ComIn();
+
+    //! Test logging on/off capability
+    void OnOff();
+};
+
+}  // namespace Logging
+
+}  // namespace Svc
+
+#endif
+```

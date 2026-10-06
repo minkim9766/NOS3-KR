@@ -3,16 +3,48 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table.component.html`
 
-file--table.component.html
-file--table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/table.component.html`
+
+
+```html
+@if (table$ | async; as table) {
+  <router-outlet />
+}
 ```
 
-## 항목
+### `table.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/table.component.html`](file--table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/table.component.ts`](file--table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/table/table.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Table, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-table-page',
+  templateUrl: './table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TableComponent {
+  table$: Promise<Table>;
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    title: Title,
+  ) {
+    const database = route.snapshot.parent!.paramMap.get('database')!;
+    const name = route.snapshot.paramMap.get('table')!;
+    title.setTitle(name);
+    this.table$ = yamcs.yamcsClient.getTable(database, name);
+  }
+}
+```

@@ -3,36 +3,937 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/programs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _images/index
-file--index.rst
-file--packet-viewer.rst
-file--systemd-unit.rst
-file--yamcsadmin.rst
-file--yamcsadmin_backup.rst
-file--yamcsadmin_confcheck.rst
-file--yamcsadmin_mdb.rst
-file--yamcsadmin_password-hash.rst
-file--yamcsadmin_rocksdb.rst
-file--yamcsadmin_users.rst
-file--yamcsd.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/programs/_images/`](_images/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/programs/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/packet-viewer.rst`](file--packet-viewer.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/systemd-unit.rst`](file--systemd-unit.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin.rst`](file--yamcsadmin.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_backup.rst`](file--yamcsadmin_backup.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_confcheck.rst`](file--yamcsadmin_confcheck.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_mdb.rst`](file--yamcsadmin_mdb.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_password-hash.rst`](file--yamcsadmin_password-hash.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_rocksdb.rst`](file--yamcsadmin_rocksdb.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsadmin_users.rst`](file--yamcsadmin_users.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/programs/yamcsd.rst`](file--yamcsd.rst) — UTF-8 텍스트 파일 본문 포함
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/index.rst`
+
+
+```rst
+Programs
+========
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    yamcsadmin
+    yamcsd
+    systemd-unit
+    packet-viewer
+```
+
+### `packet-viewer.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/packet-viewer.rst`
+
+
+```rst
+packet-viewer
+=============
+
+.. program:: packet-viewer
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | *packet-viewer* [<*OPTIONS*>]
+    | *packet-viewer* [-l <*N*>] -x <*MDB*> <*FILE*>
+    | *packet-viewer* [-l <*N*>] [-x <*MDB*>] -i <*INSTANCE*> [-s <*STREAM*>] <*URL*>
+
+
+Description
+-----------
+
+Use :program:`packet-viewer` to extract parameters from packets by either loading a packet dump from disk (~ offline mode), or by decoding the raw data received from connecting to a Yamcs server (~ online mode).
+
+In *online mode*, the splitting of packets is done by Yamcs Server and :program:`packet-viewer` extracts parameters from each packet binary by using the same logic as Yamcs Server would.
+
+In *offline mode* :program:`packet-viewer` must in addition have access to a local MDB, and requires configuration so that it knows how to decode individual packets from a dump file. By default, dump files are assumed to contain concatenated CCSDS.
+
+
+Options
+-------
+
+.. option:: -h
+
+    Print a help message and exit.
+
+.. option:: -l <N>
+
+    Limit the view to <N> packets.
+    
+    In *online mode* only the last <N> packets will be visible. The default is 1000.
+    
+    In *offline mode* only the first <N> packets of the file are displayed. There is no default, but for large dumps :program:`packet-viewer` may become sluggish or run out of heap memory.
+
+.. option:: -x <MDB>
+
+    Name of the applicable MDB as specified in the :file:`etc/mdb.yaml` configuration file.
+
+    This option is required in *offline mode*. In *online* mode the MDB defaults to that of the connected Yamcs instance.
+
+.. option:: -i <INSTANCE>
+
+    In *online mode*, this indicates which instance's telemetry stream :program:`packet-viewer` should connect to.
+
+.. option:: -s <STREAM>
+
+    In *online mode*, this indicates which telemetry stream :program:`packet-viewer` should connect to. 
+    
+    Default: ``tm_realtime``.
+
+.. option:: <FILE>
+
+    A local file which contains one or more packets. Typically concatenated CCSDS, but other file formats can be defined through configuration.
+
+.. option:: <URL>
+
+    Base URL of a Yamcs server.
+
+
+Examples
+--------
+
+Offline mode:
+
+.. code-block:: console
+
+    packet-viewer -l 50 -x my-db packet-file
+
+
+Online mode:
+
+.. code-block:: console
+
+    packet-viewer -l 50 -i simulator http://localhost:8090
+
+
+Configuration Files
+-------------------
+
+:program:`packet-viewer` configuration files are placed in the :file:`etc/` directory. MDB files for local packet decoding are placed in :file:`mdb/` directory.
+
+.. code-block:: text
+
+    <packet-viewer>
+    |-- bin/
+    |-- etc/
+    |   |-- mdb.yaml
+    |   +-- packet-viewer.yaml
+    |-- lib/
+    +-- mdb/
+        |-- xtce1.xml
+        +-- xtce2.xml
+
+mdb.yaml
+~~~~~~~~
+
+Specifies one or more MDB configurations, which you can then choose from in order to extract parameters from a packet.
+
+The MDB configuration structure can be copied from a :file:`etc/yamcs.{instance}.yaml` configuration file, but with a level on top which specifies the name visible in UI. In the following example, the user can choose between `mymdb1` and `mymdb2`.
+
+.. code-block:: yaml
+
+    mymdb1:
+       - type: "xtce"
+         args:
+           file: "mdb/xtce1.xml"
+
+    mymdb2:
+       - type: "xtce"
+         args:
+           file: "mdb/xtce2.xml"
+
+packet-viewer.yaml
+~~~~~~~~~~~~~~~~~~
+
+``packetPreprocessorClassName`` / ``packetPreprocessorArgs``
+    Configure a packet pre-processor. Configuration options are identical to preprocessor configuration of a data link on Yamcs Server.
+
+``fileFormats``
+   List of supported file formats when opening a local packet dump file. The file format determines how to split the file in packets. Sub-keys:
+
+   ``name``
+      Name of the format, as visible in UI.
+    
+   ``packetInputStreamClassName`` / ``packetInputStreamArgs``
+      Configures a packet input stream. Configuration options are identical to packet input stream configuration of a data link on Yamcs Server.
+    
+   ``rootContainer``
+      Qualified name of the base container. Required if it cannot be uniquely determined.
+
+Example:
+
+.. code-block:: yaml
+
+    packetPreprocessorClassName: org.yamcs.tctm.IssPacketPreprocessor
+    fileFormats:
+      - name: CCSDS Packets
+        packetInputStreamClassName: org.yamcs.tctm.CcsdsPacketInputStream
+
+
+Packet Filter
+-------------
+
+Packet Viewer includes a filter box for filtering the displayed packets through arbitrary expressions.
+
+.. only:: latex or json or html
+
+   .. Exclude this from manpage generation.
+
+   .. image:: _images/packet-filter.png
+      :align: center
+
+For example, assume you have parameters ``/YSS/param1`` and ``/YSS/param2`` then you could write arbitrary expressions like:
+
+.. code-block:: text
+
+   param1 > 2
+   param2 == 3
+   param1 > 3 or param2 != 4
+
+The **left-hand side** of a clause must always be the parameter. This may also be a fully qualified parameter name like ``/YSS/param1``.
+
+The **operator** must be one of ``==``, ``!=``, ``<``, ``<=``, ``>``, ``>=`` or ``contains``. The latter is useful for string parameters.
+
+The **right-hand side** of a clause may be a number or a string, and is compared to the engineering value of the parameter. The string may be surrounded by double quotes.
+
+You can combine multiple clauses through the logical operators ``and``, ``or``, ``not`` (or ``&&``, ``||``, ``!``). Parentheses are allowed.
+
+When done typing a filter, press :kbd:`ENTER` to apply it.
+
+Filter on packet properties
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two hardcoded "parameters" that allow filtering on the global packet name or length:
+
+.. code-block:: text
+
+   packet.name == DHS
+   packet.length > 200
+
+Filter on parameter presence
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The operator and right-hand side of a clause are optional. This allows filtering on the presence of a parameter inside a packet. Example:
+
+.. code-block:: text
+
+   param1
+
+Or, display only packets that do *not* include a parameter ``param1``:
+
+.. code-block:: text
+
+   !(param1)
+
+Filter grammar
+~~~~~~~~~~~~~~
+
+.. container:: productionlist
+
+   .. productionlist:: packet-filter-grammar
+      expr: `or_expr`
+      or_expr: `and_expr` ( `or_op` `and_expr` )*
+      and_expr: `unary_expr` ( `and_op` `unary_expr` )*
+      unary_expr: `not_op` "(" `expr` ")"
+                : | "(" `expr` ")"
+                : | `comparison`
+      comparison: `reference` [ `rel_op` `literal` ]
+      reference: `refchar`+
+      refchar: `letter` | `digit` | "/" | "_" | "-" | "[" | "]" | "."
+      literal: `string` | `quoted_string`
+      string: `stringchar`+
+      quoted_string: '"' [ `string` ] '"'
+      stringchar: `letter` | `digit` | ":" | "_" | "/" | "-"
+      letter: "a"..."Z"
+      digit: "0"..."9"
+      rel_op: `eq_op` | `ne_op`
+            : | `gt_op` | `lt_op`
+            : | `ge_op` | `le_op`
+            : | `matches_op` | "contains"
+      eq_op: "eq" | "=="
+      ne_op: "ne" | "!="
+      gt_op: "gt" | ">"
+      lt_op: "lt" | "<"
+      ge_op: "ge" | ">="
+      le_op: "le" | "<="
+      matches_op: "matches" | "~"
+      and_op: "and" | "&&"
+      or_op: "or" | "||"
+      not_op: "not" | "!"
+```
+
+### `systemd-unit.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/systemd-unit.rst`
+
+
+```rst
+Systemd Unit File
+=================
+
+Yamcs package installations include a systemd unit file for starting and stopping Yamcs as a service.
+
+The unit file is located at ``/usr/lib/systemd/system/yamcs.service``.
+
+You should not modify this file directly, but instead use standard systemd mechanisms to customize unit files. See the instructions for your operating system.
+
+Usage::
+
+    systemctl start|stop|restart|status yamcs
+
+
+systemctl accepts these commands:
+
+.. describe:: start
+
+    Starts Yamcs.
+
+.. describe:: stop
+
+    Stops the Yamcs process and any other processes it may have launched.
+
+.. describe:: restart
+
+    Stops Yamcs if it is running, then starts it again.
+
+.. describe:: status
+
+    Checks if Yamcs is currently running. This will only detect a Yamcs runtime that has been started via systemd.
+
+
+If you would like Yamcs to start automatically on boot, run::
+
+    systemctl enable yamcs
+
+If you want to revert Yamcs starting automatically, run::
+
+    systemctl disable yamcs
+```
+
+### `yamcsadmin.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin.rst`
+
+
+```rst
+yamcsadmin
+==========
+
+.. program:: yamcsadmin
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | *yamcsadmin* [--etc-dir <*DIR*>] <*COMMAND*> [<*ARGS*>]
+
+
+Options
+-------
+
+.. option:: --log <LEVEL>
+
+    Level of verbosity. From 0 (off) to 5 (all). Default: 2.
+
+.. option:: --etc-dir <DIR>
+
+    Override default Yamcs configuration directory.
+
+.. option:: --data-dir <DIR>
+
+    Override default Yamcs data directory.
+
+.. option:: -h, --help
+
+    Show usage.
+
+.. option:: -v, --version
+
+    Print version information and quit.
+
+
+Commands
+--------
+
+:doc:`backup <yamcsadmin_backup>`
+    Perform and restore backups. See :manpage:`yamcsadmin-backup(1)`.
+:doc:`confcheck <yamcsadmin_confcheck>`
+    Check Yamcs configuration. See :manpage:`yamcsadmin-confcheck(1)`.
+:doc:`mdb <yamcsadmin_mdb>`
+    Provides MDB information. See :manpage:`yamcsadmin-mdb(1)`.
+:doc:`password-hash <yamcsadmin_password-hash>`
+    Generate password hash for use in :file:`etc/users.yaml`.
+    See :manpage:`yamcsadmin-password-hash(1)`.
+:doc:`rocksdb <yamcsadmin_rocksdb>`
+    Provides low-level RocksDB data operations.
+    See :manpage:`yamcsadmin-rocksdb(1)`.
+:doc:`users <yamcsadmin_users>`
+    User operations. See :manpage:`yamcsadmin-users(1)`.
+
+
+.. only:: latex or json or html
+
+    .. Purpose of "only" is to hide toctree content from the man builder
+
+    .. toctree::
+        :hidden:
+
+        backup <yamcsadmin_backup>
+        confcheck <yamcsadmin_confcheck>
+        mdb <yamcsadmin_mdb>
+        password-hash <yamcsadmin_password-hash>
+        rocksdb <yamcsadmin_rocksdb>
+        users <yamcsadmin_users>
+```
+
+### `yamcsadmin_backup.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_backup.rst`
+
+
+```rst
+yamcsadmin backup
+=================
+
+.. program:: yamcsadmin backup
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | **yamcsadmin backup** create --backup-dir <*DIR*> [--data-dir <*DIR*>]
+                             [--pid <*PID*>] [--host <*HOST:PORT*>] <*TABLESPACE*>
+    | **yamcsadmin backup** delete --backup-dir <*DIR*> <*ID*>...
+    | **yamcsadmin backup** list --backup-dir <*DIR*>
+    | **yamcsadmin backup** purge --backup-dir <*DIR*> --keep <*N*>
+    | **yamcsadmin backup** restore --backup-dir <*DIR*> --restore-dir <*DIR*> [<*ID*>]
+
+
+Description
+-----------
+
+Use :program:`yamcsadmin backup` when you want to save and restore Yamcs data.
+
+Backups are performed at the level of a tablespace, which (unless otherwise configured) corresponds with an instance name. A special tablespace ``_global`` contains data that is not specific to an instance.
+
+The backup directory is in binary format and can contain multiple restore points, one for each time the ``create`` command was used. Use the ``list`` command to see all restore points in a backup directory.
+
+
+Commands
+--------
+
+.. describe:: create --backup-dir <DIR> [--data-dir <DIR>] [--pid <PID>] [--url <HOST:PORT>] <TABLESPACE>
+
+    Create a backup of a Yamcs tablespace. The default mode of this command is to find a locally running Yamcs server and attach to its JVM for submitting a backup instruction while Yamcs is running.
+
+    If (and only if) Yamcs is stopped, you can perform a cold backup using the :option:`--data-dir` property.
+
+.. describe:: delete --backup-dir <DIR> <ID>...
+
+    Delete one or more backups.
+
+.. describe:: list --backup-dir <DIR>
+
+    List the existing backups.
+
+.. describe:: purge --backup-dir <DIR> --keep <N>
+
+    Purge old backups.
+
+.. describe:: restore --backup-dir <DIR> --restore-dir <DIR> [<ID>]
+
+    Restore a backup by its ID.
+
+    If unspecified ``<ID>`` defaults to the last backup.
+
+    Note that backups can only be restored when Yamcs is not running.
+
+
+Options
+-------
+
+.. option:: --backup-dir <DIR>
+
+    Directory containing backups.
+
+    When used with the ``create`` command, the directory is automatically created if it does not yet exist.
+
+.. option:: --data-dir <DIR>
+
+    This option is only valid for the ``create`` command.
+
+    Path to a Yamcs data directory. This must be specified when performing a cold backup.
+
+.. option:: --restore-dir <DIR>
+
+    This option is only valid for the ``restore`` command.
+
+    Directory where to restore the backup.
+
+.. option:: --pid <PID>
+
+    This option is only valid for the ``create`` command.
+
+    Specify the program identifier of the Yamcs server to attach to. If there is only one server running, use of this option is unnecessary.
+
+.. option:: --host <HOST:PORT>
+
+    This option is only valid for the ``create`` command.
+
+    Perform a hot backup using a remote JMX operation.
+
+.. option:: --keep <N>
+
+    This option is only valid for the ``purge`` command.
+
+    The number of backups to keep.
+
+.. option:: <ID>
+
+   A unique identifier for a restore point. You can find existing identifiers using the ``list`` command.
+```
+
+### `yamcsadmin_confcheck.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_confcheck.rst`
+
+
+```rst
+yamcsadmin confcheck
+====================
+
+.. program:: yamcsadmin confcheck
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+    
+    | **yamcsadmin** confcheck
+
+
+Description
+-----------
+
+Check Yamcs configuration.
+```
+
+### `yamcsadmin_mdb.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_mdb.rst`
+
+
+```rst
+yamcsadmin mdb
+==============
+
+.. program:: yamcsadmin mdb
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | **yamcsadmin mdb** print <*INSTANCE*>
+    | **yamcsadmin mdb** verify <*INSTANCE*>
+
+
+Description
+-----------
+
+Groups operations on a the Mission Database (MDB) of a specific Yamcs instance.
+
+
+Commands
+--------
+
+.. describe:: print <INSTANCE>
+
+    Print MDB content
+
+.. describe:: verify <INSTANCE>
+
+    Verify that the MDB can be loaded
+```
+
+### `yamcsadmin_password-hash.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_password-hash.rst`
+
+
+```rst
+yamcsadmin password-hash
+========================
+
+.. program:: yamcsadmin password-hash
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | **yamcsadmin** password-hash
+
+
+Description
+-----------
+
+Prompts to enter and confirm a password, and generates a randomly salted PBKDF2 hash of this password. This hash may be used in :file:`etc/users.yaml` instead of the actual password, and allows verifying user passwords without storing them.
+
+
+Environment
+-----------
+
+.. describe:: YAMCSADMIN_PASSWORD
+
+   Provide the password through the environment, thereby avoiding prompts.
+```
+
+### `yamcsadmin_rocksdb.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_rocksdb.rst`
+
+
+```rst
+yamcsadmin rocksdb
+==================
+
+.. program:: yamcsadmin rocksdb
+
+Synopsis
+--------
+
+.. rst-class: synopsis
+
+    | **yamcsadmin rocksdb** compact [--dbDir <*DIR*>] [--sizeMB <*SIZE*>]
+    | **yamcsadmin rocksdb** bench [--dbDir DIR] [--baseTime TIME]
+                             [--count COUNT] [--duration HOURS]
+
+
+Description
+-----------
+
+Provides low-level RocksDB data operations.
+
+
+Commands
+--------
+
+.. describe:: compact [--dbDir DIR] [--sizeMB SIZE]
+
+    Compact RocksDB database
+
+.. describe:: bench [--dbDir DIR] [--baseTime TIME] [--count COUNT] [--duration HOURS]
+
+    Benchmark RocksDB storage engine.
+
+    A ``rocksbench`` archive instance will be created in the directory indicated by :option:`--dbDir`.
+
+    The benchmark consists of a table load and a few selects. The table is loaded with telemetry packets received at frequencies of [10/sec, 1/sec, 1/10sec, 1/60sec and 1/hour]. The table will be identical to the tm table and will contain a histogram on pname (= packet name). It is possible to specify how many partitions (i.e. how many different pnames) to be loaded for each frequency and the time duration of the data.
+
+
+Options
+-------
+
+.. option:: --dbDir <DIR>
+
+    Database directory.
+
+.. option:: --sizeMB <SIZE>
+
+    This option is only valid for the ``compact`` command.
+
+    Target size of each SST file in MB (default is 256 MB).
+
+.. option:: --baseTime <TIME>
+
+    This option is only valid for the ``bench`` command.
+
+    Start inserting data with this time. Default: 2017-01-01T00:00:00
+
+.. option:: --count <COUNT>
+
+    This option is only valid for the ``bench`` command.
+
+    The partition counts for the 5 frequencies: [10/sec, 1/sec, 1/10sec, 1/60sec and 1/hour]. It has to be specified as a string (use quotes).
+
+.. option:: --duration <HOURS>
+
+    This option is only valid for the ``bench`` command.
+
+    The duration in hours of the simulated data. Default: 24
+```
+
+### `yamcsadmin_users.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsadmin_users.rst`
+
+
+```rst
+yamcsadmin users
+================
+
+.. program:: yamcsadmin users
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | **yamcsadmin users** add-role <*USERNAME*> --role <*ROLE*>
+    | **yamcsadmin users** check-password <*USERNAME*>
+    | **yamcsadmin users** create [--email <*EMAIL*>] [--display-name <*NAME*>]
+                [--inactive] [--superuser] [--no-password] <*USERNAME*>
+    | **yamcsadmin users** delete <*USERNAME*>
+    | **yamcsadmin users** describe <*USERNAME*>
+    | **yamcsadmin users** list
+    | **yamcsadmin users** remove-identity <*USERNAME*> --identity <*IDENTITY*>
+    | **yamcsadmin users** remove-role <*USERNAME*> --role <*ROLE*>
+    | **yamcsadmin users** reset-password <*USERNAME*>
+    | **yamcsadmin users** update [--active true | false]
+                [--display-name <*NAME*>] [--email <*EMAIL*>]
+                [--superuser true | false] <*USERNAME*>
+
+
+Description
+-----------
+
+User operations.
+
+
+Commands
+--------
+
+.. describe:: add-role <USERNAME> --role <ROLE>
+
+    Add a role to a user.
+
+.. describe:: check-password <USERNAME>
+
+    Check a user's password. This command prompts to enter the user's current password. The command will print if the provided password is correct or not.
+
+    The command may be used in non-interactive mode by setting the password with the environment variable ``YAMCSADMIN_PASSWORD``.
+
+.. describe:: create [--email <EMAIL>] [--display-name <NAME>] [--inactive] [--superuser] [--no-password] <USERNAME>
+
+    Create a new Yamcs user. This prompts for a password.
+
+    The command may be used in non-interactive mode by setting the password with the environment variable ``YAMCSADMIN_PASSWORD``, or using the option ``--no-password``.
+
+.. describe:: delete <USERNAME>
+
+    Delete a user.
+
+.. describe:: describe <USERNAME>
+
+    Describe user details.
+
+.. describe:: list
+
+    List users.
+
+.. describe:: remove-identity <USERNAME> --identity <IDENTITY>
+
+    Remove an identity from a user.
+
+.. describe:: remove-role <USERNAME> --role <ROLE>
+
+    Remove a role from a user.
+
+.. describe:: reset-password <USERNAME>
+
+    Reset a user's password.
+
+.. describe:: update [--active true | false] [--display-name <NAME>] [--email <EMAIL>] [--superuser true | false] <USERNAME>
+
+    Update user details. Prompts to enter and confirm a new user password.
+
+    The command may be used in non-interactive mode by setting the password with the environment variable ``YAMCSADMIN_PASSWORD``.
+
+
+Options
+-------
+
+.. option:: --role <ROLE>
+
+    With ``add-role``, specify the role to be added.
+
+    With ``remove-role``, specify the role to be removed.
+
+.. option:: --display-name <NAME>
+
+    With ``create`` and ``update``, specify the displayed name of the user.
+
+.. option:: --email <EMAIL>
+
+    With ``create`` and ``update``, specify the user email.
+
+.. option:: --inactive
+
+    With ``create``, prevent Yamcs from activating the account.
+
+.. option:: --active true | false
+
+    With ``update``, activate or inactivate the user account.
+
+.. option:: --superuser
+
+    With ``create`` and ``update``, grant this user superuser privileges.
+
+.. option:: --no-password
+
+    With ``create``, indicate that this user should not have a password. This will also bypass the password prompt.
+
+
+Environment
+-----------
+
+.. describe:: YAMCSADMIN_PASSWORD
+
+   Commands that prompt for a password, can alternatively be run in non-interactive mode by specifying this environment variable.
+```
+
+### `yamcsd.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/programs/yamcsd.rst`
+
+
+```rst
+yamcsd
+======
+
+.. program:: yamcsd
+
+Synopsis
+--------
+
+.. rst-class:: synopsis
+
+    | **yamcsd** [--version] [--help] [--check] [--log <*LEVEL*>] [--log-config <*FILE*>]
+       [--no-color] [--no-stream-redirect] [--etc-dir <*DIR*>] [--data-dir <*DIR*>]
+       [--cache-dir <*DIR*>] [--netty-leak-detection <*LEVEL*>]
+
+
+Description
+-----------
+
+:program:`yamcsd` is a shell wrapper that launches a :abbr:`JVM (Java Virtual Machine)` running the Yamcs main program.
+
+
+Options
+-------
+
+.. option:: --log <LEVEL>
+
+   Level of verbosity. From 0 (off) to 4 (all). Default: 2. This option only affects console logging, not file logging. For high verbosity levels, this option should be combined with the option ``--log-config`` to reduce the amount of output to only selected individual loggers.
+
+.. option:: --log-config <FILE>
+
+   Finetune the log level of individual loggers. This option only affects console logging, not file logging. An example is given below. When this option is not specified, all loggers are active.
+
+.. option:: --no-color
+
+   Add this flag to disable ANSI color codes used in console logging.
+
+.. option:: --no-stream-redirect
+
+   Add this flag to prevent Yamcs from redirecting stdout/stderr output via the logging system.
+
+.. option:: --etc-dir <DIR>
+
+   Path to config directory. This defaults to the :file:`etc` directory relative to the working directory.
+
+.. option:: --data-dir <DIR>
+
+   Path to data directory. When unspecified the location is read from the :file:`etc/yamcs.yaml` configuration file.
+
+.. option:: --cache-dir <DIR>
+
+   Path to cache directory. When unspecified the location is read from the :file:`etc/yamcs.yaml` configuration file.
+
+.. option:: --check
+
+   Run syntax tests on configuration files and quit.
+
+.. option:: --netty-leak-detection <LEVEL>
+
+   Level of leak detection used by the Netty library. Leak detection is disabled by default as it has a negative impact on performance. The available levels are:
+
+   DISABLED
+      Disables leak detection (default)
+   SIMPLE
+      Samples 1% of all Netty resources and reports when a leak is detected. Small overhead, but difficult to tell what caused the leak.
+   ADVANCED
+      Samples 1% of all Netty resources and reports when a leak is detected and where the object was recently accessed. High overhead.
+   PARANOID
+      Tracks all Netty resources and reports when a leak is detected and where the object was recently accessed. Very high overhead.
+
+   Note that leak detection triggers only upon a GC.
+
+.. option:: -v, --version
+
+   Print version information and quit.
+
+.. option:: -h, --help
+
+   Show usage.
+
+
+Environment
+-----------
+
+The following environment variables may be specified.
+
+.. describe:: YAMCS_DATA_DIR
+
+    Path to data directory.
+
+.. describe:: YAMCS_ETC_DIR
+
+    Path to configuration directory.
+
+.. describe:: YAMCS_CACHE_DIR
+
+    Path to cache directory.
+
+.. describe:: YAMCS_NO_COLOR, NO_COLOR
+
+    Suppress colorized output. The ``NO_COLOR`` alias is a convention used by many other programs.
+
+
+Log Config Example
+------------------
+
+The file specified with the option :option:`--log-config` must be in properties format, where keys represent a logger, and values represent the verbosity level of that logger. Unmentioned loggers are considered to be off (level = 0). Example:
+
+.. code-block:: properties
+
+    # Levels:
+    # 0 = off
+    # 1 = warnings and errors
+    # 2 = info
+    # 3 = debug
+    # 4 = trace
+
+    org.yamcs = 3
+    org.yamcs.http = 1
+    com.example.myproject = 4
+
+Note that the effective log level of any specified logger is always ceiled to that of the :option:`--log` option.
+```

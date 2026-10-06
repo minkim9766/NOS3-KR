@@ -3,14 +3,32 @@
 
 **경로:** `fsw/apps/sbn/modules/protocol/serial/fsw/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_serial_platform_cfg.h`
 
-file--sbn_serial_platform_cfg.h
+**경로:** `fsw/apps/sbn/modules/protocol/serial/fsw/platform_inc/sbn_serial_platform_cfg.h`
+
+
+```c
+/**
+ * @file
+ *
+ * This file contains several user-configurable parameters
+ *
+ * @author Jaclyn Beck
+ * @date 2015/06/24 15:30:00
+ */
+#ifndef _serial_platform_cfg_h_
+#define _serial_platform_cfg_h_
+
+#define SBN_SERIAL_MAX_CHAR_NAME 32 /**< How long the device name can be in the SbnPeerData file */
+
+#define SBN_SERIAL_CHILD_STACK_SIZE 2048 /**< Stack size that each child task gets */
+
+#define SBN_SERIAL_CHILD_TASK_PRIORITY 70 /**< Priority of the child tasks */
+
+#define SBN_SERIAL_PEER_HEARTBEAT 5
+#define SBN_SERIAL_PEER_TIMEOUT   10
+#endif
 ```
-
-## 항목
-
-- [`fsw/apps/sbn/modules/protocol/serial/fsw/platform_inc/sbn_serial_platform_cfg.h`](file--sbn_serial_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함

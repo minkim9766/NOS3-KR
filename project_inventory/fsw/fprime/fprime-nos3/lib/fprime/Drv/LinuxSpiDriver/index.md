@@ -3,32 +3,522 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--Events.fppi
-file--LinuxSpiDriver.fpp
-file--LinuxSpiDriver.hpp
-file--LinuxSpiDriverComponentImpl.cpp
-file--LinuxSpiDriverComponentImpl.hpp
-file--LinuxSpiDriverComponentImplCommon.cpp
-file--LinuxSpiDriverComponentImplStub.cpp
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriver.fpp`](file--LinuxSpiDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriver.hpp`](file--LinuxSpiDriver.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.cpp`](file--LinuxSpiDriverComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp`](file--LinuxSpiDriverComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImplCommon.cpp`](file--LinuxSpiDriverComponentImplCommon.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImplStub.cpp`](file--LinuxSpiDriverComponentImplStub.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+if (NOT FPRIME_USE_STUBBED_DRIVERS)
+    restrict_platforms(Linux)
+endif()
+if(FPRIME_USE_STUBBED_DRIVERS)
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriver.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriverComponentImplCommon.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriverComponentImplStub.cpp"
+    )
+    register_fprime_module()
+elseif(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+    set(SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriver.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriverComponentImplCommon.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/LinuxSpiDriverComponentImpl.cpp"
+    )
+    register_fprime_module()
+endif()
+
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/Events.fppi`
+
+
+```text
+@ SPI open error
+event SPI_OpenError(
+                     device: I32 @< The device
+                     select: I32 @< The chip select
+                     error: I32 @< The error code
+                   ) \
+  severity warning high \
+  id 0 \
+  format "Error opening SPI device {}.{}: {}"
+
+@ SPI config error
+event SPI_ConfigError(
+                       device: I32 @< The device
+                       select: I32 @< The chip select
+                       error: I32 @< The error code
+                     ) \
+  severity warning high \
+  id 1 \
+  format "Error configuring SPI device {}.{}: {}"
+
+@ SPI write error
+event SPI_WriteError(
+                      device: I32 @< The device
+                      select: I32 @< The chip select
+                      error: I32 @< The error code
+                    ) \
+  severity warning high \
+  id 2 \
+  format "Error writing/reading SPI device {}.{}: {}" \
+  throttle 5
+
+@ SPI open notification
+event SPI_PortOpened(
+                      device: I32 @< The device
+                      select: I32 @< The chip select
+                    ) \
+  severity activity high \
+  id 4 \
+  format "SPI Device {}.{} configured"
+```
+
+### `LinuxSpiDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriver.fpp`
+
+
+```fpp
+module Drv {
+
+  passive component LinuxSpiDriver {
+
+    # ----------------------------------------------------------------------
+    # Interfaces
+    # ----------------------------------------------------------------------
+    
+    import Drv.Spi
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    event port Log
+
+    telemetry port Tlm
+
+    text event port LogText
+
+    time get port Time
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+  }
+
+}
+```
+
+### `LinuxSpiDriver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriver.hpp`
+
+
+```cpp
+// ======================================================================
+// LinuxSpiDriver.hpp
+// Standardization header for LinuxSpiDriver
+// ======================================================================
+
+#ifndef Drv_LinuxSpiDriver_HPP
+#define Drv_LinuxSpiDriver_HPP
+
+#include "Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp"
+
+namespace Drv {
+
+using LinuxSpiDriver = LinuxSpiDriverComponentImpl;
+
+}
+
+#endif
+```
+
+### `LinuxSpiDriverComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriverImpl.cpp
+// \author tcanham
+// \brief  cpp file for LinuxSpiDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <fcntl.h>
+#include <linux/spi/spidev.h>
+#include <linux/types.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/FileNameString.hpp>
+#include <cerrno>
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+
+static_assert(FW_USE_PRINTF_FAMILY_FUNCTIONS_IN_STRING_FORMATTING,
+              "Cannot use SPI driver without full string formatting");
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void LinuxSpiDriverComponentImpl::SpiReadWrite_handler(const FwIndexType portNum,
+                                                       Fw::Buffer& writeBuffer,
+                                                       Fw::Buffer& readBuffer) {
+    if (this->m_fd == -1) {
+        return;
+    }
+
+    spi_ioc_transfer tr;
+    // Zero for unused fields:
+    memset(&tr, 0, sizeof(tr));
+    tr.tx_buf = reinterpret_cast<__u64>(writeBuffer.getData());
+    tr.rx_buf = reinterpret_cast<__u64>(readBuffer.getData());
+    FW_ASSERT_NO_OVERFLOW(writeBuffer.getSize(), __u32);
+    tr.len = static_cast<__u32>(writeBuffer.getSize());
+    /*
+                .speed_hz = 0,
+                .delay_usecs = 0,
+                .bits_per_word = 0,
+                .cs_change = 0,
+                .tx_nbits = 0, // on more-recent kernel versions;
+                .rx_nbits = 0, // on more-recent kernel versions;
+                .pad = 0
+    */
+
+    int stat = ioctl(this->m_fd, SPI_IOC_MESSAGE(1), &tr);
+
+    if (stat < 1) {
+        this->log_WARNING_HI_SPI_WriteError(this->m_device, this->m_select, stat);
+    }
+    this->m_bytes += readBuffer.getSize();
+    this->tlmWrite_SPI_Bytes(this->m_bytes);
+}
+
+bool LinuxSpiDriverComponentImpl::open(FwIndexType device, FwIndexType select, SpiFrequency clock, SpiMode spiMode) {
+    FW_ASSERT(device >= 0, static_cast<FwAssertArgType>(device));
+    FW_ASSERT(select >= 0, static_cast<FwAssertArgType>(select));
+
+    this->m_device = device;
+    this->m_select = select;
+    int fd;
+    int ret;
+
+    // Open:
+    Fw::FileNameString devString;
+    Fw::FormatStatus formatStatus =
+        devString.format("/dev/spidev%" PRI_FwIndexType ".%" PRI_FwIndexType, device, select);
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+
+    fd = ::open(devString.toChar(), O_RDWR);
+    if (fd == -1) {
+        this->log_WARNING_HI_SPI_OpenError(device, select, fd);
+        return false;
+    }
+
+    this->m_fd = fd;
+
+    // Configure:
+    /*
+     * SPI Mode 0, 1, 2, 3
+     */
+
+    U8 mode;  // Mode Select (CPOL = 0/1, CPHA = 0/1)
+    switch (spiMode) {
+        case SpiMode::SPI_MODE_CPOL_LOW_CPHA_LOW:
+            mode = SPI_MODE_0;
+            break;
+        case SpiMode::SPI_MODE_CPOL_LOW_CPHA_HIGH:
+            mode = SPI_MODE_1;
+            break;
+        case SpiMode::SPI_MODE_CPOL_HIGH_CPHA_LOW:
+            mode = SPI_MODE_2;
+            break;
+        case SpiMode::SPI_MODE_CPOL_HIGH_CPHA_HIGH:
+            mode = SPI_MODE_3;
+            break;
+        default:
+            // Assert if the device SPI Mode is not in the correct range
+            FW_ASSERT(0, spiMode);
+            break;
+    }
+
+    ret = ioctl(fd, SPI_IOC_WR_MODE, &mode);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    ret = ioctl(fd, SPI_IOC_RD_MODE, &mode);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    /*
+     * 8 bits per word
+     */
+    U8 bits = 8;
+    ret = ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    ret = ioctl(fd, SPI_IOC_RD_BITS_PER_WORD, &bits);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    /*
+     * Max speed in Hz
+     */
+    ret = ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &clock);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    ret = ioctl(fd, SPI_IOC_RD_MAX_SPEED_HZ, &clock);
+    if (ret == -1) {
+        this->log_WARNING_HI_SPI_ConfigError(device, select, ret);
+        return false;
+    }
+
+    return true;
+}
+
+LinuxSpiDriverComponentImpl::~LinuxSpiDriverComponentImpl() {
+    (void)close(this->m_fd);
+}
+
+}  // end namespace Drv
+```
+
+### `LinuxSpiDriverComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriverImpl.hpp
+// \author tcanham
+// \brief  hpp file for LinuxSpiDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef LinuxSpiDriver_HPP
+#define LinuxSpiDriver_HPP
+
+#include "Drv/LinuxSpiDriver/LinuxSpiDriverComponentAc.hpp"
+
+namespace Drv {
+
+/**
+ * This was taken from the dspal_tester example
+ *
+ * Supported SPI frequency to talk to MPU9x50 slave device
+ * MPU9x50 SPI interface supports upto 20MHz frequency. However 20MHz is not
+ * reliable in our test and corrupted data is observed.
+ */
+enum SpiFrequency {
+    SPI_FREQUENCY_1MHZ = 1000000UL,
+    SPI_FREQUENCY_5MHZ = 5000000UL,
+    SPI_FREQUENCY_10MHZ = 10000000UL,
+    SPI_FREQUENCY_15MHZ = 15000000UL,
+    SPI_FREQUENCY_20MHZ = 20000000UL,
+};
+
+/**
+ * SPI Mode Select
+ *
+ * Defines the SPI Clock Polarity and Phase for each SPI Transaction.
+ *
+ * SPI Clock Polarity(CPOL): Defines clock polarity as idle low (CPOL = 0) or idle high(CPOL = 1)
+ * SPI Clock Phase(CPHA): Defines if data is shifted out on the rising clock edge and sampled
+ *                        on the falling clock edge(CPHA = 0) or if data is shifted out on the
+ *                        falling clock edge and sampled on the rising clock edge(CPHA=1)
+ *
+ */
+enum SpiMode {
+    SPI_MODE_CPOL_LOW_CPHA_LOW,    ///< (CPOL = 0, CPHA = 0)
+    SPI_MODE_CPOL_LOW_CPHA_HIGH,   ///< (CPOL = 0, CPHA = 1)
+    SPI_MODE_CPOL_HIGH_CPHA_LOW,   ///< (CPOL = 1, CPHA = 0)
+    SPI_MODE_CPOL_HIGH_CPHA_HIGH,  ///< (CPOL = 1, CPHA = 1)
+};
+
+class LinuxSpiDriverComponentImpl final : public LinuxSpiDriverComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object LinuxSpiDriver
+    //!
+    LinuxSpiDriverComponentImpl(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object LinuxSpiDriver
+    //!
+    ~LinuxSpiDriverComponentImpl();
+
+    //! Open device
+    bool open(FwIndexType device,
+              FwIndexType select,
+              SpiFrequency clock,
+              SpiMode spiMode = SpiMode::SPI_MODE_CPOL_LOW_CPHA_LOW);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for SpiReadWrite
+    //!
+    void SpiReadWrite_handler(const FwIndexType portNum, /*!< The port number*/
+                              Fw::Buffer& WriteBuffer,
+                              Fw::Buffer& readBuffer);
+
+    int m_fd;
+    FwIndexType m_device;
+    FwIndexType m_select;
+    FwSizeType m_bytes;
+};
+
+}  // end namespace Drv
+
+#endif
+```
+
+### `LinuxSpiDriverComponentImplCommon.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImplCommon.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriverImpl.cpp
+// \author tcanham
+// \brief  cpp file for LinuxSpiDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+LinuxSpiDriverComponentImpl::LinuxSpiDriverComponentImpl(const char* const compName)
+    : LinuxSpiDriverComponentBase(compName), m_fd(-1), m_device(-1), m_select(-1), m_bytes(0) {}
+
+}  // end namespace Drv
+```
+
+### `LinuxSpiDriverComponentImplStub.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/LinuxSpiDriverComponentImplStub.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxSpiDriverImpl.cpp
+// \author tcanham
+// \brief  cpp file for LinuxSpiDriver component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/LinuxSpiDriver/LinuxSpiDriverComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace Drv {
+
+bool LinuxSpiDriverComponentImpl::open(FwIndexType device, FwIndexType select, SpiFrequency clock, SpiMode spiMode) {
+    return false;
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void LinuxSpiDriverComponentImpl::SpiReadWrite_handler(const FwIndexType portNum,
+                                                       Fw::Buffer& WriteBuffer,
+                                                       Fw::Buffer& readBuffer) {}
+
+LinuxSpiDriverComponentImpl::~LinuxSpiDriverComponentImpl() {}
+
+}  // end namespace Drv
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxSpiDriver/Telemetry.fppi`
+
+
+```text
+@ Bytes Sent/Received
+telemetry SPI_Bytes: FwSizeType id 0
+```

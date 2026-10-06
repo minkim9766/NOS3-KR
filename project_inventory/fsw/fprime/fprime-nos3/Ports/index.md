@@ -3,16 +3,49 @@
 
 **경로:** `fsw/fprime/fprime-nos3/Ports/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ADCSports.fpp`
 
-file--ADCSports.fpp
-file--CMakeLists.txt
+**경로:** `fsw/fprime/fprime-nos3/Ports/ADCSports.fpp`
+
+
+```fpp
+module Components {
+
+    port MagDataPort (MagX: I32, MagY: I32, MagZ: I32)
+    port FSSDataPort (Alpha: F32, Beta: F32, Error: U8)
+    port CSSDataPort (ADCV0: U16, ADCV1: U16, ADCV2: U16, ADCV3: U16, ADCV4: U16, ADCV5: U16)
+    port IMUDataPort (XLin: F32, YLin: F32, ZLin: F32, XAng: F32, YAng: F32, ZAng: F32)
+    port RWDataPort  (RW0: F64, RW1: F64, RW2: F64)
+    port STDataPort  (Q0: F64, Q1: F64, Q2: F64, Q3: F64, IsValid: U8)
+    port GPSDataPort (Weeks: I16, SecondsIntoWeek: U32, Fractions: F64, ECEFX: F64, ECEFY: F64, ECEFZ: F64, VelX: F64, VelY: F64, VelZ: F64, lat: F64, lon: F64, alt: F64)
+
+    port TORQDataPort (Percent_0: U8, Direction_0: U8, Percent_1: U8, Direction_1: U8, Percent_2: U8, Direction_2: U8)
+    port RWOUTDataPort  (Torque0: F64, Torque1: F64, Torque2: F64)
+    
+}
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/fprime/fprime-nos3/Ports/ADCSports.fpp`](file--ADCSports.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/Ports/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/Ports/CMakeLists.txt`
+
+
+```cmake
+# Include project-wide components here
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ADCSports.fpp"
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+set(MOD_DEPS
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+```

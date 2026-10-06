@@ -3,14 +3,33 @@
 
 **경로:** `components/mgr/fsw/cfs/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `mgr_perfids.h`
 
-file--mgr_perfids.h
+**경로:** `components/mgr/fsw/cfs/mission_inc/mgr_perfids.h`
+
+
+```c
+/*******************************************************************************
+** File:
+**   $Id: mgr_perfids.h $
+**
+** Purpose:
+**  Define MGR Performance IDs
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _MGR_PERFIDS_H_
+#define _MGR_PERFIDS_H_
+
+/*
+** define any performance id integer for the app - try to not have this
+** id conflict with other apps.  Performance IDs are used for cFE performance
+** metrics.
+*/
+#define MGR_PERF_ID 500
+
+#endif /* _MGR_PERFIDS_H_ */
 ```
-
-## 항목
-
-- [`components/mgr/fsw/cfs/mission_inc/mgr_perfids.h`](file--mgr_perfids.h) — UTF-8 텍스트 파일 본문 포함

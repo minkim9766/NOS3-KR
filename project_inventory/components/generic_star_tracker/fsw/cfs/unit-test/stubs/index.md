@@ -3,16 +3,205 @@
 
 **경로:** `components/generic_star_tracker/fsw/cfs/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_star_tracker_device_stubs.c`
 
-file--generic_star_tracker_device_stubs.c
-file--libuart_stubs.c
+**경로:** `components/generic_star_tracker/fsw/cfs/unit-test/stubs/generic_star_tracker_device_stubs.c`
+
+
+```c
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in generic_star_tracker_device header
+ */
+
+#include "generic_star_tracker_device.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_STAR_TRACKER_CommandDevice()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_STAR_TRACKER_CommandDevice(uart_info_t *device, uint8_t cmd, uint32_t payload)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_STAR_TRACKER_CommandDevice, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_CommandDevice, uart_info_t *, device);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_CommandDevice, uint8_t, cmd);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_CommandDevice, uint32_t, payload);
+
+    UT_GenStub_Execute(GENERIC_STAR_TRACKER_CommandDevice, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_STAR_TRACKER_CommandDevice, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_STAR_TRACKER_ReadData()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_STAR_TRACKER_ReadData(uart_info_t *device, uint8_t *read_data, uint8_t data_length)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_STAR_TRACKER_ReadData, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_ReadData, uart_info_t *, device);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_ReadData, uint8_t *, read_data);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_ReadData, uint8_t, data_length);
+
+    UT_GenStub_Execute(GENERIC_STAR_TRACKER_ReadData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_STAR_TRACKER_ReadData, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_STAR_TRACKER_RequestData()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_STAR_TRACKER_RequestData(uart_info_t *device, GENERIC_STAR_TRACKER_Device_Data_tlm_t *data)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_STAR_TRACKER_RequestData, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_RequestData, uart_info_t *, device);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_RequestData, GENERIC_STAR_TRACKER_Device_Data_tlm_t *, data);
+
+    UT_GenStub_Execute(GENERIC_STAR_TRACKER_RequestData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_STAR_TRACKER_RequestData, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_STAR_TRACKER_RequestHK()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_STAR_TRACKER_RequestHK(uart_info_t *device, GENERIC_STAR_TRACKER_Device_HK_tlm_t *data)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_STAR_TRACKER_RequestHK, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_RequestHK, uart_info_t *, device);
+    UT_GenStub_AddParam(GENERIC_STAR_TRACKER_RequestHK, GENERIC_STAR_TRACKER_Device_HK_tlm_t *, data);
+
+    UT_GenStub_Execute(GENERIC_STAR_TRACKER_RequestHK, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_STAR_TRACKER_RequestHK, int32_t);
+}
 ```
 
-## 항목
+### `libuart_stubs.c`
 
-- [`components/generic_star_tracker/fsw/cfs/unit-test/stubs/generic_star_tracker_device_stubs.c`](file--generic_star_tracker_device_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_star_tracker/fsw/cfs/unit-test/stubs/libuart_stubs.c`](file--libuart_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_star_tracker/fsw/cfs/unit-test/stubs/libuart_stubs.c`
+
+
+```c
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in libuart header
+ */
+
+#include "libuart.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_bytes_available()
+ * ----------------------------------------------------
+ */
+int32_t uart_bytes_available(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_bytes_available, int32_t);
+
+    UT_GenStub_AddParam(uart_bytes_available, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_bytes_available, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_bytes_available, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_close_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_close_port(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_close_port, int32_t);
+
+    UT_GenStub_AddParam(uart_close_port, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_close_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_close_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_flush()
+ * ----------------------------------------------------
+ */
+int32_t uart_flush(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_flush, int32_t);
+
+    UT_GenStub_AddParam(uart_flush, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_flush, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_flush, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_init_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_init_port(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_init_port, int32_t);
+
+    UT_GenStub_AddParam(uart_init_port, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_init_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_init_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_read_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_read_port(uart_info_t *device, uint8_t data[], const uint32_t numBytes)
+{
+    UT_GenStub_SetupReturnBuffer(uart_read_port, int32_t);
+
+    UT_GenStub_AddParam(uart_read_port, uart_info_t *, device);
+    UT_GenStub_AddParam(uart_read_port, uint8_t *, data);
+    UT_GenStub_AddParam(uart_read_port, const uint32_t, numBytes);
+
+    UT_GenStub_Execute(uart_read_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_read_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_write_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_write_port(uart_info_t *device, uint8_t data[], const uint32_t numBytes)
+{
+    UT_GenStub_SetupReturnBuffer(uart_write_port, int32_t);
+
+    UT_GenStub_AddParam(uart_write_port, uart_info_t *, device);
+    UT_GenStub_AddParam(uart_write_port, const uint32_t, numBytes);
+
+    UT_GenStub_Execute(uart_write_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_write_port, int32_t);
+}
+```

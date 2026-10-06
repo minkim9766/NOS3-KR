@@ -3,14 +3,44 @@
 
 **경로:** `gsw/yamcs/distribution/systemd/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `yamcs.service`
 
-file--yamcs.service
+**경로:** `gsw/yamcs/distribution/systemd/yamcs.service`
+
+
+```text
+[Unit]
+Description=Yamcs Mission Control
+Documentation=https://docs.yamcs.org
+After=network-online.target remote-fs.target
+Wants=network-online.target remote-fs.target
+
+[Service]
+Type=notify
+User=yamcs
+Group=yamcs
+ExecStart=/opt/yamcs/bin/yamcsd --no-color
+TimeoutStartSec=120
+
+# First attempt a graceful shutdown through the main process
+# Only if that fails kill remaining processes in the cgroup
+# directly.
+KillMode=mixed
+
+# 143 (= 128 + 15) means that java was killed with signal 15
+# SIGTERM (the default behaviour of systemd). 
+SuccessExitStatus=143
+
+# Set a high open file limit to avoid problems with rocksdb
+# opening too many files
+LimitNOFILE=10000
+
+[Install]
+WantedBy=multi-user.target
+
+# Alias for convenience.
+# This is only applied when the service is enabled
+Alias=yamcsd.service
 ```
-
-## 항목
-
-- [`gsw/yamcs/distribution/systemd/yamcs.service`](file--yamcs.service) — UTF-8 텍스트 파일 본문 포함

@@ -3,30 +3,473 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--Tlm.fpp
-file--TlmBuffer.cpp
-file--TlmBuffer.hpp
-file--TlmPacket.cpp
-file--TlmPacket.hpp
-file--TlmString.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/Tlm.fpp`](file--Tlm.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmBuffer.cpp`](file--TlmBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmBuffer.hpp`](file--TlmBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmPacket.cpp`](file--TlmPacket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmPacket.hpp`](file--TlmPacket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmString.hpp`](file--TlmString.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(MOD_DEPS
+    Fw/Com
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Tlm.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/TlmBuffer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/TlmPacket.cpp"
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/TlmTest.cpp"
+)
+set(UT_MOD_DEPS
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Tlm"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Com"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Obj"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Port"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Time"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Types"
+)
+register_fprime_ut()
+```
+
+### `Tlm.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/Tlm.fpp`
+
+
+```fpp
+module Fw {
+
+  type TlmBuffer
+
+  enum TlmValid {
+    VALID = 0
+    INVALID = 1
+  }
+
+  @ Port for sending telemetry
+  port Tlm(
+            $id: FwChanIdType @< Telemetry Channel ID
+            ref timeTag: Fw.Time @< Time Tag
+            ref val: TlmBuffer @< Buffer containing serialized telemetry value
+          )
+
+  @ Port for getting telemetry
+  port TlmGet(
+               $id: FwChanIdType @< Telemetry Channel ID
+               ref timeTag: Fw.Time @< Time Tag
+               @ Buffer containing serialized telemetry value. 
+               @ Size set to 0 if channel not found, or if no value
+               @ has been received for this channel yet.
+               ref val: Fw.TlmBuffer 
+             ) -> Fw.TlmValid
+
+}
+```
+
+### `TlmBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmBuffer.cpp`
+
+
+```cpp
+#include <Fw/Tlm/TlmBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+TlmBuffer::TlmBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+TlmBuffer::TlmBuffer() {}
+
+TlmBuffer::~TlmBuffer() {}
+
+TlmBuffer::TlmBuffer(const TlmBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+TlmBuffer& TlmBuffer::operator=(const TlmBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType TlmBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* TlmBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* TlmBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `TlmBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmBuffer.hpp`
+
+
+```cpp
+/*
+ * TlmBuffer.hpp
+ *
+ *      Author: tcanham
+ */
+
+/*
+ * Description:
+ * This object contains the TlmBuffer type, used for storing telemetry
+ */
+#ifndef FW_TLM_BUFFER_HPP
+#define FW_TLM_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class TlmBuffer final : public SerializeBufferBase {
+  public:
+    enum { SERIALIZED_TYPE_ID = FW_TYPEID_TLM_BUFF, SERIALIZED_SIZE = FW_TLM_BUFFER_MAX_SIZE + sizeof(FwBuffSizeType) };
+
+    TlmBuffer(const U8* args, FwSizeType size);
+    TlmBuffer();
+    TlmBuffer(const TlmBuffer& other);
+    virtual ~TlmBuffer();
+    TlmBuffer& operator=(const TlmBuffer& other);
+
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_bufferData[FW_TLM_BUFFER_MAX_SIZE];  // command argument buffer
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `TlmPacket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmPacket.cpp`
+
+
+```cpp
+/*
+ * TlmPacket.cpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+#include <Fw/Tlm/TlmPacket.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+TlmPacket::TlmPacket() : m_numEntries(0) {
+    this->m_type = ComPacketType::FW_PACKET_TELEM;
+    this->m_tlmBuffer.resetSer();
+}
+
+TlmPacket::~TlmPacket() {}
+
+SerializeStatus TlmPacket::resetPktSer() {
+    this->m_tlmBuffer.resetSer();
+    // reset packet count
+    this->m_numEntries = 0;
+    // make sure packet type is correct before serializing. It should
+    // never be anything but FW_PACKET_TELEM, so assert.
+    FW_ASSERT(ComPacketType::FW_PACKET_TELEM == this->m_type, static_cast<FwAssertArgType>(this->m_type));
+    // serialize descriptor
+    // The function serializeBase inherited from ComPacket converts this->m_type
+    // to type FwPacketDescriptorType and serializes the result into this->m_tlmBuffer.
+    return this->serializeBase(this->m_tlmBuffer);
+}
+
+SerializeStatus TlmPacket::resetPktDeser() {
+    this->m_tlmBuffer.resetDeser();
+    // deserialize descriptor
+    // The function deserializeBase inherited from ComPacket deserializes a
+    // value of type FwPacketDescriptorType from this->m_tlmBuffer and stores it
+    // into this->m_type.
+    Fw::SerializeStatus stat = this->deserializeBase(this->m_tlmBuffer);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    // make sure that this->m_tlmBuffer stores a telemetry packet
+    if (this->m_type != ComPacketType::FW_PACKET_TELEM) {
+        return Fw::FW_DESERIALIZE_TYPE_MISMATCH;
+    }
+
+    return Fw::FW_SERIALIZE_OK;
+}
+
+FwSizeType TlmPacket::getNumEntries() {
+    return this->m_numEntries;
+}
+
+Fw::ComBuffer& TlmPacket::getBuffer() {
+    return this->m_tlmBuffer;
+}
+
+void TlmPacket::setBuffer(Fw::ComBuffer& buffer) {
+    this->m_tlmBuffer = buffer;
+}
+
+SerializeStatus TlmPacket::addValue(FwChanIdType id, Time& timeTag, TlmBuffer& buffer) {
+    // check to make sure there is room for all the fields
+    FwSizeType left = this->m_tlmBuffer.getBuffCapacity() - this->m_tlmBuffer.getBuffLength();
+    if ((sizeof(FwChanIdType) + Time::SERIALIZED_SIZE + buffer.getBuffLength()) > left) {
+        return Fw::FW_SERIALIZE_NO_ROOM_LEFT;
+    }
+
+    // serialize items into buffer
+
+    // id
+    SerializeStatus stat = this->m_tlmBuffer.serializeFrom(id);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // time tag
+    stat = this->m_tlmBuffer.serializeFrom(timeTag);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // telemetry buffer
+    stat =
+        this->m_tlmBuffer.serializeFrom(buffer.getBuffAddr(), buffer.getBuffLength(), Fw::Serialization::OMIT_LENGTH);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // increment number of packets
+    this->m_numEntries++;
+
+    return Fw::FW_SERIALIZE_OK;
+}
+
+// extract telemetry value
+SerializeStatus TlmPacket::extractValue(FwChanIdType& id, Time& timeTag, TlmBuffer& buffer, FwSizeType bufferSize) {
+    // deserialize items out of buffer
+
+    // id
+    SerializeStatus stat = this->m_tlmBuffer.deserializeTo(id);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // time tag
+    stat = this->m_tlmBuffer.deserializeTo(timeTag);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // telemetry buffer
+    stat = this->m_tlmBuffer.deserializeTo(buffer.getBuffAddr(), bufferSize, Fw::Serialization::OMIT_LENGTH);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    // set buffer size
+    stat = buffer.setBuffLen(bufferSize);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+
+    return Fw::FW_SERIALIZE_OK;
+}
+
+SerializeStatus TlmPacket::serializeTo(SerializeBufferBase& buffer) const {
+    // serialize the number of packets
+    SerializeStatus stat = buffer.serializeFrom(this->m_numEntries);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    // Serialize the ComBuffer
+    return buffer.serializeFrom(this->m_tlmBuffer.getBuffAddr(), m_tlmBuffer.getBuffLength(),
+                                Fw::Serialization::OMIT_LENGTH);
+}
+
+SerializeStatus TlmPacket::deserializeFrom(SerializeBufferBase& buffer) {
+    // deserialize the number of packets
+    SerializeStatus stat = buffer.deserializeTo(this->m_numEntries);
+    if (stat != Fw::FW_SERIALIZE_OK) {
+        return stat;
+    }
+    // deserialize the channel value entry buffers
+    FwSizeType size = buffer.getBuffLeft();
+    stat = buffer.deserializeTo(this->m_tlmBuffer.getBuffAddr(), size, Fw::Serialization::OMIT_LENGTH);
+    if (stat == FW_SERIALIZE_OK) {
+        // Shouldn't fail
+        stat = this->m_tlmBuffer.setBuffLen(size);
+        FW_ASSERT(stat == FW_SERIALIZE_OK, static_cast<FwAssertArgType>(stat));
+    }
+    return stat;
+}
+
+} /* namespace Fw */
+```
+
+### `TlmPacket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmPacket.hpp`
+
+
+```cpp
+/*
+ * TlmPacket.hpp
+ *
+ *  Created on: May 24, 2014
+ *      Author: Timothy Canham
+ */
+
+#ifndef TLMPACKET_HPP_
+#define TLMPACKET_HPP_
+
+#include <Fw/Com/ComBuffer.hpp>
+#include <Fw/Com/ComPacket.hpp>
+#include <Fw/Time/Time.hpp>
+#include <Fw/Tlm/TlmBuffer.hpp>
+
+namespace Fw {
+
+class TlmPacket : public ComPacket {
+  public:
+    //! Constructor
+    TlmPacket();
+    //! Destructor
+    virtual ~TlmPacket();
+
+    SerializeStatus serializeTo(SerializeBufferBase& buffer) const override;  //!< serialize contents
+    SerializeStatus deserializeFrom(SerializeBufferBase& buffer) override;
+    //! Add telemetry value to buffer.
+    SerializeStatus addValue(FwChanIdType id, Time& timeTag, TlmBuffer& buffer);
+    //! extract telemetry value - since there are potentially multiple channel values in the packet,
+    //! the size of the entry must be known
+    SerializeStatus extractValue(FwChanIdType& id, Time& timeTag, TlmBuffer& buffer, FwSizeType bufferSize);
+
+    //! Reset serialization of values. This should be done when starting to accumulate a new set of values.
+    SerializeStatus resetPktSer();
+    //! Reset deserialization. This should be done before extracting values.
+    SerializeStatus resetPktDeser();
+    //! get buffer to send to the ground
+    Fw::ComBuffer& getBuffer();
+    //! set the internal buffer for deserializing values
+    void setBuffer(Fw::ComBuffer& buffer);
+    //! get the number of packets added via addValue()
+    FwSizeType getNumEntries();
+
+  private:
+    ComBuffer m_tlmBuffer;    //!< serialized data
+    FwSizeType m_numEntries;  //!< number of entries stored during addValue()
+};
+
+} /* namespace Fw */
+
+#endif /* TLMPACKET_HPP_ */
+```
+
+### `TlmString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Tlm/TlmString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   TlmString.hpp
+// @author F Prime
+// @brief  A string sized for a telemetry channel
+// ======================================================================
+
+#ifndef FW_TLM_STRING_HPP
+#define FW_TLM_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class TlmString final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_TLM_STR,
+        STRING_SIZE = FW_TLM_STRING_MAX_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    TlmString() : StringBase() { *this = ""; }
+
+    TlmString(const TlmString& src) : StringBase() { *this = src; }
+
+    TlmString(const StringBase& src) : StringBase() { *this = src; }
+
+    TlmString(const char* src) : StringBase() { *this = src; }
+
+    ~TlmString() {}
+
+    TlmString& operator=(const TlmString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TlmString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    TlmString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```

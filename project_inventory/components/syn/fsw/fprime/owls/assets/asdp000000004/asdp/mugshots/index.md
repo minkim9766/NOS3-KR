@@ -3,16 +3,16 @@
 
 **경로:** `components/syn/fsw/fprime/owls/assets/asdp000000004/asdp/mugshots/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `2048_2048_112_1222_1622_284_312_8_0_0_2_2.png`
 
-file--2048_2048_112_1222_1622_284_312_8_0_0_2_2.png
-file--2048_2048_128_1838_1566_172_180_16_0_1_2_2.png
-```
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000004/asdp/mugshots/2048_2048_112_1222_1622_284_312_8_0_0_2_2.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`components/syn/fsw/fprime/owls/assets/asdp000000004/asdp/mugshots/2048_2048_112_1222_1622_284_312_8_0_0_2_2.png`](file--2048_2048_112_1222_1622_284_312_8_0_0_2_2.png) — 바이너리 (경로만)
-- [`components/syn/fsw/fprime/owls/assets/asdp000000004/asdp/mugshots/2048_2048_128_1838_1566_172_180_16_0_1_2_2.png`](file--2048_2048_128_1838_1566_172_180_16_0_1_2_2.png) — 바이너리 (경로만)
+### `2048_2048_128_1838_1566_172_180_16_0_1_2_2.png`
+
+**경로:** `components/syn/fsw/fprime/owls/assets/asdp000000004/asdp/mugshots/2048_2048_128_1838_1566_172_180_16_0_1_2_2.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

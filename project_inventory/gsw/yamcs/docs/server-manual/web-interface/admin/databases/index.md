@@ -3,20 +3,104 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/databases/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `db-shell.rst`
 
-file--db-shell.rst
-file--index.rst
-file--streams.rst
-file--tables.rst
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/databases/db-shell.rst`
+
+
+```rst
+DB Shell
+========
+
+This page emulates a shell environment for executing low-level SQL queries on the Yamcs database.
+
+For example:
+
+.. code-block:: text
+    :emphasize-lines: 3-13,17-23
+
+    simulator> show tables
+
+    +--------------+
+    | name         |
+    +--------------+
+    |       alarms |
+    |      cmdhist |
+    | event_alarms |
+    |       events |
+    |           pp |
+    |           tm |
+    +--------------+
+    6 rows in set
+
+    simulator> select gentime, seqNum, pname from tm limit 2
+
+    +-----------------------------+--------+---------------------------+
+    |                     gentime | seqNum |                     pname |
+    +-----------------------------+--------+---------------------------+
+    | 2021-05-18 09:18:05.040 UTC |    880 | /YSS/SIMULATOR/FlightData |
+    | 2021-05-18 09:18:06.040 UTC |    881 | /YSS/SIMULATOR/FlightData |
+    +-----------------------------+--------+---------------------------+
+    2 rows in set
+
+
+The :doc:`Yamcs SQL Language <../../../sql-language/index>` is detailed in appendix.
+
+This shell may be of interest for debugging or development purposes. Concepts such as packets, parameters and events are better accessed using the high-level HTTP API, instead of SQL.
 ```
 
-## 항목
+### `index.rst`
 
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/databases/db-shell.rst`](file--db-shell.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/databases/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/databases/streams.rst`](file--streams.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/databases/tables.rst`](file--tables.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/databases/index.rst`
+
+
+```rst
+Databases
+=========
+
+This page lists all the Yamcs databases. There is at least one database named ``_global`` for Yamcs housekeeping, and then one database for each Yamcs instance. Databases have the same name as the instance.
+
+By selecting a database, we can see a listing of its tables and streams, or execute manual queries in a SQL-like language.
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    tables
+    streams
+    db-shell
+```
+
+### `streams.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/databases/streams.rst`
+
+
+```rst
+Streams
+=======
+
+This page lists all the streams in a specific Yamcs database.
+
+For each stream we can see a description of its columns. We can also snoop on newly emitted tuples.
+
+For more information on the standard streams, see :doc:`../../../data-management/streams`.
+```
+
+### `tables.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/admin/databases/tables.rst`
+
+
+```rst
+Tables
+======
+
+This page lists all the tables in a specific Yamcs database.
+
+For each table we can see a description of its columns, and a sampling of the most recent data rows.
+
+For more information on the standard tables, see :doc:`../../../data-management/archive/index`.
+```

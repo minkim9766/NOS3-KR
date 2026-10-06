@@ -3,7 +3,7 @@
 
 **경로:** `components/syn/synopsis/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,28 +15,399 @@ json/index
 python/index
 src/index
 test/index
-file--.git
-file--.gitignore
-file--.gitlab-ci.yml
-file--.gitmodules
-file--CMakeLists.txt
-file--README.md
-file--synopsis.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/synopsis/bin/`](bin/index) — 폴더
-- [`components/syn/synopsis/examples/`](examples/index) — 폴더
-- [`components/syn/synopsis/include/`](include/index) — 폴더
-- [`components/syn/synopsis/json/`](json/index) — 폴더
-- [`components/syn/synopsis/python/`](python/index) — 폴더
-- [`components/syn/synopsis/src/`](src/index) — 폴더
-- [`components/syn/synopsis/test/`](test/index) — 폴더
-- [`components/syn/synopsis/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/.gitlab-ci.yml`](file--.gitlab-ci.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/.gitmodules`](file--.gitmodules) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/synopsis.py`](file--synopsis.py) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `components/syn/synopsis/.git`
+
+
+```text
+gitdir: ../../../.git/modules/components/syn/modules/synopsis
+```
+
+### `.gitignore`
+
+**경로:** `components/syn/synopsis/.gitignore`
+
+
+```text
+build
+*.sw*
+.DS_Store
+.vscode/
+.vscode
+```
+
+### `.gitlab-ci.yml`
+
+**경로:** `components/syn/synopsis/.gitlab-ci.yml`
+
+
+```yaml
+---
+
+variables:
+  GIT_SSL_NO_VERIFY: "true"
+  CI_PROJECT_URL: "https://jstarbuild.ivv.nasa.gov"
+
+default:
+  image: ubuntu:latest
+
+stages:
+  - build_and_test
+
+build-and-test-synopsis:
+  stage: build_and_test
+  tags:
+    - itc-inp
+  script:
+    - dpkg --add-architecture i386
+    - apt update
+    - apt-get install cmake g++ g++-multilib gcc-multilib libsqlite3-dev:i386 sqlite3:i386 make -y
+    - mkdir build
+    - cd build
+    - cmake ..
+    - make 
+    - make test
+
+
+
+```
+
+### `.gitmodules`
+
+**경로:** `components/syn/synopsis/.gitmodules`
+
+
+```text
+[submodule "json"]
+	path = json
+	url = https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent.git
+	branch = main
+```
+
+### `CMakeLists.txt`
+
+**경로:** `components/syn/synopsis/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 3.14.0)
+include(FetchContent)
+project(synopsis DESCRIPTION "Science Yield improvemeNt via Onboard Prioritization and Summary of Information System")
+
+option(SYNOPSIS_TEST "Synopsis Test" OFF)
+
+# GoogleTest requires at least C++11
+set(CMAKE_CXX_STANDARD 11)
+#set(CMAKE_CXX_FLAGS "-Wnon-virtual-dtor")
+set(CMAKE_C_FLAGS "-Wno-format")
+set(CMAKE_CXX_FLAGS "-Wno-format")
+
+#FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/v3.11.3/json.tar.xz)
+#FetchContent_MakeAvailable(json)
+set(JSON_BuildTests OFF CACHE INTERNAL "")
+add_subdirectory(json)
+
+if(SYNOPSIS_TEST)
+    FetchContent_Declare(googletest URL https://github.com/google/googletest/archive/609281088cfefc76f9d0ce82e1ff6c30cc3591e5.zip)
+    # For Windows: Prevent overriding the parent project's compiler/linker settings
+    set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+    FetchContent_MakeAvailable(googletest)
+endif()
+
+add_library(synopsis SHARED
+src/sqlite3.c
+src/Sqlite3Statement.cpp
+src/synopsis.cpp
+src/ASDS.cpp
+src/DpMsg.cpp
+src/DpDbMsg.cpp
+src/PassthroughASDS.cpp
+src/SqliteASDPDB.cpp
+src/StdLogger.cpp
+src/LinuxClock.cpp
+src/Timer.cpp
+src/RuleAST.cpp
+src/DownlinkPlanner.cpp
+src/MaxMarginalRelevanceDownlinkPlanner.cpp
+src/Similarity.cpp
+src/itc_synopsis_bridge.cpp
+)
+set_target_properties(synopsis PROPERTIES PUBLIC_HEADER include/synopsis.hpp)
+target_include_directories(synopsis PRIVATE include)
+target_include_directories(synopsis PRIVATE src)
+target_link_libraries(synopsis PRIVATE nlohmann_json::nlohmann_json ${CMAKE_DL_LIBS})
+
+include(GNUInstallDirs)
+install(TARGETS synopsis
+LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+
+# CLI
+add_executable(
+synopsis_cli
+bin/synopsis_cli.cpp
+)
+target_include_directories(synopsis_cli PRIVATE include)
+target_link_libraries(
+synopsis_cli PRIVATE nlohmann_json::nlohmann_json
+synopsis
+pthread
+)
+
+# Unit Testing
+if(SYNOPSIS_TEST)
+    enable_testing()
+
+    add_executable(
+    synopsis_test
+    test/synopsis_test.cpp
+    )
+    target_include_directories(synopsis_test PRIVATE include)
+    target_link_libraries(
+    synopsis_test
+    gtest_main
+    synopsis
+    )
+
+    include(GoogleTest)
+    gtest_discover_tests(synopsis_test PROPERTIES ENVIRONMENT
+    "SYNOPSIS_TEST_DATA=${CMAKE_CURRENT_LIST_DIR}/test/data"
+    )
+endif()
+
+install(TARGETS synopsis DESTINATION ${CMAKE_INSTALL_PREFIX}/${TGTSYS_${SYSVAR}}/${INSTALL_SUBDIR})
+```
+
+### `README.md`
+
+**경로:** `components/syn/synopsis/README.md`
+
+
+```markdown
+SYNOPSIS: Science Yield improvemeNt via Onboard Prioritization and Summary of Information System
+================================================================================================
+
+SYNOPSIS is a system to prioritize the downlink of data products, including
+both raw data products as well as "autonomous science data products" that are
+extracted onboard the spacecraft to summarize data.
+
+## Team
+ - Mark Wronkiewicz
+ - Jack Lightholder
+ - Lukas Mandrake
+ - Gary Doran
+
+## Setup
+
+1. Run `cmake -S . -B build` to set up the build directory
+2. Run `cmake --build build` to build the code
+3. Run `cd build && ctest` to execute the tests
+
+## Testing
+
+To test from scratch, run the following commands:
+
+1. `ssh itlinux-b` (or equivalent machine)
+2. `git clone git@github.jpl.nasa.gov:SYNOPSIS/synopsis.git`
+3. `cd synopsis`
+4. Proceed with the Setup steps above
+
+## Architecture Overview
+
+SYNOPSIS is designed to be a modular framework for downlink prioritization to
+be incorporated into flight software frameworks such as
+[F'](https://nasa.github.io/fprime/) or [cFS](https://cfs.gsfc.nasa.gov/).
+Users of the SYNOPSIS library instantiate an `Application` (see `synopsis.hpp`)
+along with a number of modules. Modules include:
+
+ - Autonomous Science Data Systems (see `ASDS.hpp`)
+ - An Autonomous Science Data Product Database (see `ASDPDB.hpp`)
+ - A Downlink Planner (see `DownlinkPlanner.hpp`)
+ - A Logger (see `Logger.hpp`)
+ - A Clock (see `Clock.hpp`)
+
+The ASDSs are registered with an application instance after construction (see
+`Application::add_asds`), whereas the other modules are used during application
+construction. After registering ASDSs, the application instance should be
+initialized using `Application::init`. A helper function
+`Application::memory_requirement` specifies how much pre-allocated memory
+should be passed to the application for initialization.
+
+After initialization, new data products can be ingested into SYNOPSIS using the
+`Application::accept_dp` function. Data product messages passed to this
+function contain information about the data product's origin (i.e., which
+instrument produced it), type, location on a filesystem, and metadata location.
+Invoking this function will either synchronously or asynchronously (depending
+on the design of the ASDS) process the data product to produce an autonomous
+science data product (ASDP), which will then be inserted into the ASDP
+database (ASDPDB).
+
+SYNOPSIS provides an interface to manually update information in the ASDP DB,
+which can be invoked via ground commands. These functions are:
+
+ - `Application::update_science_utility`
+ - `Application::update_priority_bin`
+ - `Application::update_downlink_state`
+ - `Application::update_asdp_metadata`
+
+At any time, the user of SYNOPSIS can also invoke the `Application::prioritize`
+function, which will return a prioritized list of ASDPs using a set of
+prioritization rules and constraints, along with similarity configuration for
+diversity-aware prioritization. This functionality should be invoked prior to
+a downlink pass, and the information associated with unique ASDP identifier can
+be queried from the ASDP DB to enable transmission to the ground. After
+transmission, the downlink state of each transmitted ASDP should be updated so
+that subsequent invocations of the `Application::prioritize` function exclude
+these data products.
+
+Finally, when SYNOPSIS functionality is no longer required, the
+`Application::deinit` function can be used to relinquish the use of the memory
+provided during application initialization. Initialization and
+de-initialization can be performed as often as necessary (i.e., immediately
+prior to and after the invocation of one of the functions above that requires
+SYNOPSIS to be initialized). One exception is for asynchronous ASDSs; SYNOPSIS
+must be initialized when an ASDS returns its result to be submitted to the ASDP
+DB.
+
+## Acknowledgements
+
+Funding and support for this work was provided by the Multi-mission Ground
+Systems and Services (MGSS) program office.
+
+Copyright 2023, by the California Institute of Technology. ALL RIGHTS RESERVED. United States Government Sponsorship acknowledged. Any commercial use must be negotiated with the Office of Technology Transfer at the California Institute of Technology.
+
+This software may be subject to U.S. export control laws. By accepting this software, the user agrees to comply with all applicable U.S. export laws and regulations. User has the responsibility to obtain export licenses, or other export authority as may be required before exporting such information to foreign countries or providing access to foreign persons.
+```
+
+### `synopsis.py`
+
+**경로:** `components/syn/synopsis/synopsis.py`
+
+
+```python
+'''
+
+Description: calls C++ SYNOPSIS library by passing input files
+
+'''
+
+import subprocess
+import os
+import json
+
+def synopsis(path_to_synopsis_cli, asdpdb_file, rule_config_file, similarity_config_file, output_file=None):
+    '''
+    Entry point to C++ implementation of SYNOPSIS (synopsis_cli)
+
+    downlink states (given in dictionaries describing each DP):
+    UNTRANSMITTED = 0
+    TRANSMITTED = 1
+    DOWNLINKED = 2
+
+    Parameters
+    ----------
+    path_to_synopsis_cli: str
+        Path to the CLI executable `synopsis_cli`
+    asdpdb_file: str
+        Path to DB file
+    rule_config_file: str
+        Path to JSON file with rules
+    similarity_config_file: str
+        Path to JSON file with similarity and diversity parameters
+    output_file: str
+        Path to JSON file to output, or None if writing to file is not desired
+
+    Returns
+    -------
+    logs: list
+        List of log statements from SYNOPSIS
+    prioritized_dps: list
+        None if there is an error running SYNOPSIS, else a list of dictionaries holding DP information in order of priority 
+    
+    
+
+    '''
+
+    if not os.path.exists(asdpdb_file):
+        print("invalid asdpdb_file")
+    if not os.path.exists(rule_config_file):
+        print("invalid rule_config_file")
+    if not os.path.exists(similarity_config_file):
+        print("invalid similarity_config_file")
+
+    logs = None
+    prioritized_dps = None
+
+    try:
+        if output_file is not None:
+            print("output file given: ", output_file)
+            cp = subprocess.run(
+                [path_to_synopsis_cli, asdpdb_file, rule_config_file, similarity_config_file, output_file],
+                capture_output=True
+            )
+        else:
+            print("no output file given")
+            cp = subprocess.run(
+                [path_to_synopsis_cli, asdpdb_file, rule_config_file, similarity_config_file],
+                capture_output=True
+            )
+
+    except:
+        print("Error running SYNOPSIS, check synopsis_cli.cpp")
+
+    else:
+        if cp.returncode == 0:
+            print("SYNOPSIS ran successfully")
+        else:
+            print("SYNOPSIS returned error")
+
+        stddout = cp.stdout.decode().split('\n')
+        stderr = cp.stderr.decode().split('\n')
+
+        logs = []
+        msg = []
+        for line in stddout:
+            if "[INFO]" in line or "[WARN]" in line or "[ERROR]" in line:
+                logs.append(line)
+            else:
+                msg.append(line)
+        logs.extend(stderr)
+        
+        msg = (' '.join(msg))
+        msg = json.loads(msg)
+        prioritized_dps = [msg[str(i)] for i in msg['prioritized_list']]
+
+    finally:
+        return logs, prioritized_dps
+
+
+if __name__ == "__main__":
+
+    
+    path_to_synopsis_cli = './build/synopsis_cli'
+
+    # Example files
+    asdpdb_file = 'test/data/dd_example.db'
+    rule_config_file = 'test/data/dd_example_rules.json'
+    similarity_config_file = 'test/data/dd_example_similarity_config.json'
+    # CLI call: ./build/synopsis_cli test/data/dd_example.db test/data/dd_example_rules.json test/data/dd_example_similarity_config.json output.json
+
+    # Pass name of JSON File to output to, or None if writing to file is not desired
+    output_file = 'output.json'  # or None if outputs are not to be saved
+    # output_file = None
+
+    logs, prioritized_dps = synopsis(path_to_synopsis_cli, asdpdb_file, rule_config_file, similarity_config_file, output_file)
+
+    print("prioritized dps: ")
+    for i in prioritized_dps:
+        print(i)
+
+    print("logs: ")
+    for line in logs:
+        print(line)
+```

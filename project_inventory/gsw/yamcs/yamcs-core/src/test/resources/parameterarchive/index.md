@@ -3,14 +3,10 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/parameterarchive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `5V_Current.txt.gz`
 
-file--5V_Current.txt.gz
-```
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/parameterarchive/5V_Current.txt.gz`
 
-## 항목
-
-- [`gsw/yamcs/yamcs-core/src/test/resources/parameterarchive/5V_Current.txt.gz`](file--5V_Current.txt.gz) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

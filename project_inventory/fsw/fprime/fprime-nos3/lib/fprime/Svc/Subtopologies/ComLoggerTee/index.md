@@ -3,22 +3,85 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ComLoggerTeeConfig/index
-file--CMakeLists.txt
-file--ComLoggerTee.fpp
-file--PingEntries.hpp
-file--subtopology-template.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/`](ComLoggerTeeConfig/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTee.fpp`](file--ComLoggerTee.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/PingEntries.hpp`](file--PingEntries.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/subtopology-template.fppi`](file--subtopology-template.fppi) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComLoggerTeeConfig")
+
+register_fprime_module(
+    EXCLUDE_FROM_ALL
+    AUTOCODER_INPUTS
+        ${CMAKE_CURRENT_LIST_DIR}/ComLoggerTee.fpp
+    DEPENDS
+        Svc_Subtopologies_ComLoggerTee_ComLoggerTeeConfig
+    INTERFACE
+)
+```
+
+### `ComLoggerTee.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTee.fpp`
+
+
+```fpp
+module ComLoggerTee{
+    constant BASE_ID = 0x10500000
+
+    include "./subtopology-template.fppi"
+
+}
+```
+
+### `PingEntries.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/PingEntries.hpp`
+
+
+```cpp
+#ifndef COMLOGGERTEE_PINGENTRIES_HPP
+#define COMLOGGERTEE_PINGENTRIES_HPP
+
+namespace PingEntries {
+namespace ComLoggerTee_comLog {
+enum { WARN = 3, FATAL = 5 };
+}
+}  // namespace PingEntries
+
+#endif
+```
+
+### `subtopology-template.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/subtopology-template.fppi`
+
+
+```text
+instance comLog: Svc.ComLogger base id BASE_ID \
+    queue size ComLoggerTeeConfig.QueueSizes.comLog \
+    stack size ComLoggerTeeConfig.StackSizes.comLog \
+    priority ComLoggerTeeConfig.Priorities.comLog
+
+instance comSplitter: Svc.ComSplitter base id BASE_ID + 0x0100
+
+topology Subtopology{
+    instance comLog
+    instance comSplitter
+
+    connections ComSplitter{
+        comSplitter.comOut -> comLog.comIn
+    }
+}
+```

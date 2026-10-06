@@ -3,18 +3,271 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-parameter-states.component.css`
 
-file--create-parameter-states.component.css
-file--create-parameter-states.component.html
-file--create-parameter-states.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.css`
+
+
+```css
+table.mappings td {
+  white-space: nowrap;
+}
+
+table.mappings td:not(:first-child),
+table.mappings th:not(:first-child) {
+  padding-left: 5px;
+}
+
+table.mappings td:not(:last-child),
+table.mappings th:not(:last-child) {
+  padding-right: 5px;
+}
 ```
 
-## 항목
+### `create-parameter-states.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.css`](file--create-parameter-states.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.html`](file--create-parameter-states.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.ts`](file--create-parameter-states.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Create band" />
+
+  <app-create-band-wizard-step step="2" />
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-stepper>
+        <ya-stepper-step label="General" [expanded]="true">
+          <ya-field label="Label" hint="(required)">
+            <input type="text" formControlName="name" style="width: 100%" />
+          </ya-field>
+
+          <ya-field label="Description" hint="(optional)">
+            <textarea formControlName="description" rows="3"></textarea>
+          </ya-field>
+
+          <app-parameter-states-styles [form]="form" />
+        </ya-stepper-step>
+
+        <ya-stepper-step label="Value mapping" [expanded]="true">
+          @if (valueMappings.length) {
+            <table class="mappings" formArrayName="valueMappings">
+              <tr>
+                <th>Type</th>
+                <th>
+                  Condition
+                  <span class="hint">(required)</span>
+                </th>
+                <th></th>
+                <th>Label</th>
+                <th>Color</th>
+                <th style="width: 99%"></th>
+              </tr>
+              @for (mapping of valueMappings.controls; track mapping; let i = $index) {
+                <tr [formGroupName]="i">
+                  <td>
+                    <input #type type="hidden" formControlName="type" />
+                    {{ mapping.value["type"] | titlecase }}
+                  </td>
+                  <td>
+                    @if (type.value === "value") {
+                      <input
+                        type="text"
+                        placeholder="value"
+                        formControlName="value"
+                        style="width: 164px" />
+                    } @else if (type.value === "range") {
+                      <input
+                        type="number"
+                        placeholder="start"
+                        formControlName="start"
+                        style="display: inline-block; width: 80px; margin-right: 4px" />
+                      <input
+                        type="number"
+                        placeholder="end"
+                        formControlName="end"
+                        style="display: inline-block; width: 80px" />
+                    }
+                  </td>
+                  <td>→</td>
+                  <td>
+                    <input
+                      type="text"
+                      style="width: 140px"
+                      placeholder="(optional)"
+                      formControlName="label" />
+                  </td>
+                  <td>
+                    <ya-color-input formControlName="color" label="auto" />
+                  </td>
+                  <td style="text-align: right">
+                    <ya-icon-action
+                      icon="arrow_drop_up"
+                      matTooltip="Move up"
+                      [disabled]="i === 0"
+                      (click)="moveUp(i)" />
+                    <ya-icon-action
+                      icon="arrow_drop_down"
+                      matTooltip="Move down"
+                      [disabled]="i >= valueMappings.controls.length - 1"
+                      (click)="moveDown(i)" />
+                    <ya-icon-action
+                      icon="delete_outline"
+                      matTooltip="Remove mapping"
+                      (click)="removeMapping(i)" />
+                  </td>
+                </tr>
+              }
+            </table>
+            <br />
+          }
+          <ya-button icon="add_circle" (click)="addValueMapping()">Add value mapping</ya-button>
+          &nbsp;
+          <ya-button icon="add_circle" (click)="addRangeMapping()">Add range mapping</ya-button>
+        </ya-stepper-step>
+      </ya-stepper>
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink="../.." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
+```
+
+### `create-parameter-states.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/create-parameter-states.component.ts`
+
+
+```typescript
+import { TitleCasePipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  BaseComponent,
+  CreateTimelineBandRequest,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { CreateBandWizardStepComponent } from '../../create-band-wizard-step/create-band-wizard-step.component';
+import { removeUnsetProperties } from '../../shared/properties';
+import { ParameterStatesStylesComponent } from '../parameter-states-styles/parameter-states-styles.component';
+import { propertyInfo } from '../ParameterStateBand';
+
+@Component({
+  selector: 'app-create-parameter-states',
+  templateUrl: './create-parameter-states.component.html',
+  styleUrl: './create-parameter-states.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CreateBandWizardStepComponent,
+    ParameterStatesStylesComponent,
+    TitleCasePipe,
+    WebappSdkModule,
+  ],
+})
+export class CreateParameterStatesComponent extends BaseComponent {
+  form: FormGroup;
+
+  constructor(private formBuilder: FormBuilder) {
+    super();
+    this.setTitle('Configure parameter states');
+
+    this.form = formBuilder.group({
+      name: ['', [Validators.required]],
+      description: '',
+      valueMappings: formBuilder.array([]),
+      properties: formBuilder.group({
+        frozen: [propertyInfo.frozen.defaultValue, [Validators.required]],
+        height: [propertyInfo.height.defaultValue, [Validators.required]],
+        parameter: ['', [Validators.required]],
+      }),
+    });
+  }
+
+  get valueMappings() {
+    return this.form.controls['valueMappings'] as FormArray;
+  }
+
+  addValueMapping() {
+    const form = this.formBuilder.group({
+      type: ['value', [Validators.required]],
+      value: ['', [Validators.required]],
+      label: [''],
+      color: [''],
+    });
+    this.valueMappings.push(form);
+  }
+
+  addRangeMapping() {
+    const form = this.formBuilder.group({
+      type: ['range', [Validators.required]],
+      start: ['', [Validators.required]],
+      end: ['', [Validators.required]],
+      label: [''],
+      color: [''],
+    });
+    this.valueMappings.push(form);
+  }
+
+  removeMapping(index: number) {
+    this.valueMappings.removeAt(index);
+  }
+
+  moveUp(index: number) {
+    const form = this.valueMappings.at(index);
+    this.valueMappings.removeAt(index);
+    this.valueMappings.insert(index - 1, form);
+  }
+
+  moveDown(index: number) {
+    const form = this.valueMappings.at(index);
+    this.valueMappings.removeAt(index);
+    this.valueMappings.insert(index + 1, form);
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    const options: CreateTimelineBandRequest = {
+      name: formValue.name,
+      description: formValue.description,
+      type: 'PARAMETER_STATES',
+      shared: true,
+      properties: {},
+    };
+
+    for (const key in formValue.properties) {
+      const value = formValue.properties[key];
+      if (value !== null) {
+        options.properties![key] = value;
+      }
+    }
+
+    for (let i = 0; i < this.valueMappings.length; i++) {
+      const mappingForm = this.valueMappings.at(i) as FormGroup;
+      for (const key in mappingForm.controls) {
+        const propName = `value_mapping_${i}_${key}`;
+        const value = mappingForm.controls[key].value;
+        options.properties![propName] = value;
+      }
+    }
+
+    removeUnsetProperties(options.properties || {});
+
+    this.yamcs.yamcsClient
+      .createTimelineBand(this.yamcs.instance!, options)
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/bands?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

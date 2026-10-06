@@ -3,20 +3,30 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 __pycache__/index
-file--agent.py
-file--complex_reasoning_interface.py
-file--diagnosis.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/__pycache__/`](__pycache__/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/agent.py`](file--agent.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/complex_reasoning_interface.py`](file--complex_reasoning_interface.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/diagnosis.py`](file--diagnosis.py) — 빌드 산출물 (경로만)
+### `agent.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/agent.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `complex_reasoning_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/complex_reasoning_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `diagnosis.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/reasoning/diagnosis.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

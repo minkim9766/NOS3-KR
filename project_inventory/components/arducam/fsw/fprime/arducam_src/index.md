@@ -3,22 +3,503 @@
 
 **경로:** `components/arducam/fsw/fprime/arducam_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--Arducam.cpp
-file--Arducam.fpp
-file--Arducam.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/arducam/fsw/fprime/arducam_src/docs/`](docs/index) — 폴더
-- [`components/arducam/fsw/fprime/arducam_src/Arducam.cpp`](file--Arducam.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/fprime/arducam_src/Arducam.fpp`](file--Arducam.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/fprime/arducam_src/Arducam.hpp`](file--Arducam.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/arducam/fsw/fprime/arducam_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `Arducam.cpp`
+
+**경로:** `components/arducam/fsw/fprime/arducam_src/Arducam.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Arducam.cpp
+// \author jstar
+// \brief  cpp file for Arducam component implementation class
+// ======================================================================
+
+#include "arducam_src/Arducam.hpp"
+// #include "FpConfig.hpp"
+#include <Fw/Log/LogString.hpp>
+#include "Fw/FPrimeBasicTypes.hpp"
+
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Arducam ::
+    Arducam(const char* const compName) :
+      ArducamComponentBase(compName)
+  {
+    
+    nos_init_link();
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    
+  }
+
+  Arducam ::
+    ~Arducam()
+  {
+    // Close the device(s)
+    i2c_master_close(&CAM_I2C);
+    spi_close_device(&CAM_SPI);
+
+    nos_destroy_link();
+    
+
+    OS_printf("Cleanly exiting arducam application...\n\n");
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Arducam :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+    status = CAM_init_i2c();
+    if (status != OS_SUCCESS)
+    {   
+      Fw::LogStringArg log_msg("I2C Failure!\n");  
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+      HkTelemetryPkt.CommandErrorCount++;
+    }   
+    else
+    {   
+        status = CAM_init_spi();
+        if (status != OS_SUCCESS)
+        {
+            Fw::LogStringArg log_msg("SPI Failure!\n");  
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+            HkTelemetryPkt.CommandErrorCount++;
+        }
+        else
+        {
+            Fw::LogStringArg log_msg("CAM Hardware NOOP (I2C & SPI) Successful!\n");
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+            HkTelemetryPkt.CommandCount++;
+        }
+    }   
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: I2C_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+    status = CAM_init_i2c();
+    if (status == OS_SUCCESS)
+    {   
+        Fw::LogStringArg log_msg("I2C Initialization Success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandCount++;
+    }   
+    else
+    {   
+        Fw::LogStringArg log_msg("I2C Initialization Failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandErrorCount++;
+    }   
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: SPI_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    int32_t status = OS_SUCCESS;
+    status = CAM_init_spi();
+    if (status == OS_SUCCESS)
+    {   
+        Fw::LogStringArg log_msg("SPI Initialisation Success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandCount++;
+    }   
+    else
+    {   
+        Fw::LogStringArg log_msg("SPI Initialisation Failed!\n");  
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandErrorCount++;
+    }   
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: IMAGE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, const Arducam_ImageSize image_size) {
+    int32_t status = OS_SUCCESS;
+
+    switch (image_size.e)
+    {
+      case 0:
+        status = take_picture(size_320x240);
+        break;
+      case 1:
+        status = take_picture(size_1600x1200);
+        break;
+      case 2:
+        status = take_picture(size_2592x1944);
+        break;
+
+      default:
+        status = -1;
+        break;
+    }
+
+    if (status == OS_SUCCESS)
+    {   
+        Fw::LogStringArg log_msg("Arducam image sent\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandCount++;
+    }   
+    else
+    {   
+        Fw::LogStringArg log_msg("Arducam image send failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandErrorCount++;
+    }   
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: RESET_COUNTERS_cmdHandler(FwOpcodeType opcode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Command Counters\n");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: REPORT_HOUSEKEEPING_cmdHandler(FwOpcodeType opcode, U32 cmdSeq){
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+
+    Fw::LogStringArg log_msg("Updated Housekeeping Information\n");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Arducam :: HARDWARE_CHECKOUT_cmdHandler(FwOpcodeType opcode, U32 cmdSeq){
+    int32_t status = OS_SUCCESS;
+    status = CAM_init_i2c();
+    if (status != OS_SUCCESS)
+    {   
+        Fw::LogStringArg log_msg("I2C Failure!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandErrorCount++;
+    }   
+    else
+    {   
+        status = CAM_init_spi();
+        if (status != OS_SUCCESS)
+        {
+            Fw::LogStringArg log_msg("SPI Failure!\n");
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+            HkTelemetryPkt.CommandErrorCount++;
+        }
+        else
+        {
+            Fw::LogStringArg log_msg("CAM Hardware Checkout (I2C & SPI) Successful!\n");
+            this->log_ACTIVITY_HI_TELEM(log_msg);
+            HkTelemetryPkt.CommandCount++;
+        }
+    }
+    
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->cmdResponse_out(opcode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+}
+```
+
+### `Arducam.fpp`
+
+**경로:** `components/arducam/fsw/fprime/arducam_src/Arducam.fpp`
+
+
+```fpp
+module Components {
+    @ Arducam component from NOS3
+    active component Arducam {
+
+        @ Image Size
+        enum ImageSize {
+            Small @< Small (0)
+            Medium @< Medium (1)
+            Large @< Large (2)
+        }
+        
+        @ Command to connect I2C
+        async command I2C(
+        )
+
+        @ Command to connect SPI
+        async command SPI(
+        )
+
+        @ Command to request an image 
+        async command IMAGE(
+            image_size: ImageSize @< 0 (small), 1 (medium), or 2 (large)
+        )
+
+        @ Command to send NOOP
+        async command NOOP(
+        )
+
+        @ Command to Reset Counters
+        async command RESET_COUNTERS(
+        )
+
+        @ Command to Report HouseKeeping
+        async command REPORT_HOUSEKEEPING(
+        )
+
+        async command HARDWARE_CHECKOUT(
+        )
+
+        @ Telemetry event 
+        event TELEM(
+            log_info: string size 60 
+        ) severity activity high format "Arducam: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Arducam.hpp`
+
+**경로:** `components/arducam/fsw/fprime/arducam_src/Arducam.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Arducam.hpp
+// \author jstar
+// \brief  hpp file for Arducam component implementation class
+// ======================================================================
+
+#ifndef Components_Arducam_HPP
+#define Components_Arducam_HPP
+
+#include "arducam_src/ArducamComponentAc.hpp"
+
+extern "C"{
+#include "cam_device.h"
+#include "cam_registers.h"
+}
+
+#include "nos_link.h"
+
+typedef struct
+{
+    uint8_t                     CommandErrorCount;
+    uint8_t                     CommandCount;
+} __attribute__((packed)) CAM_Hk_tlm_t;
+#define CAM_HK_TLM_LNGTH sizeof(CAM_Hk_tlm_t)
+
+namespace Components {
+
+  class Arducam :
+    public ArducamComponentBase
+  {
+
+    public:
+
+    CAM_Hk_tlm_t HkTelemetryPkt;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Arducam object
+      Arducam(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Arducam object
+      ~Arducam();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+      void NOOP_cmdHandler(
+          FwOpcodeType opcode, // The opcode
+          U32 cmdSeq // The command sequence number
+      ) override;
+
+      void I2C_cmdHandler(
+          FwOpcodeType opcode, // The opcode
+          U32 cmdSeq // The command sequence number
+      ) override;
+
+      void IMAGE_cmdHandler(
+        FwOpcodeType opcode, // The opcode
+        U32 cmdSeq, // The command sequence number
+        Arducam_ImageSize image_size //
+      ) override;
+
+      void SPI_cmdHandler(
+          FwOpcodeType opcode, // The opcode
+          U32 cmdSeq // The command sequence number
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opcode,
+        U32 cmdSeq
+      ) override;
+
+      void REPORT_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opcode,
+        U32 cmdSeq
+      ) override;
+
+      void HARDWARE_CHECKOUT_cmdHandler(
+        FwOpcodeType opcode,
+        U32 cmdSeq
+      ) override;
+
+  };
+
+}
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `components/arducam/fsw/fprime/arducam_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared/") #device.h #cam_registers.h
+# include_directories("../../standalone/") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc") #platform_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc") #nos_link.h
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Arducam.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Arducam.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/cam_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/cam_registers.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+set(MOD_DEPS
+    #     Add your dependencies here
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/cam_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/cam_registers.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared/"
+  "../../standalone/"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```

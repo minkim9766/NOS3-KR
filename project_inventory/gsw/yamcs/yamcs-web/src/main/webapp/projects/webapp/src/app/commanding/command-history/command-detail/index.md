@@ -3,16 +3,238 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-detail.component.html`
 
-file--command-detail.component.html
-file--command-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-detail/command-detail.component.html`
+
+
+```html
+<ya-attr-list>
+  <ya-attr label="ID">
+    {{ command.id }}
+  </ya-attr>
+
+  <ya-attr label="Command">
+    {{ command.commandName }}
+    <app-command-arguments [command]="command" />
+  </ya-attr>
+
+  @if (command.unprocessedBinary && command.unprocessedBinary !== command.binary) {
+    <ya-attr>
+      <ng-template ya-attr-label>
+        Unprocessed binary
+        <ya-more icon="more_horiz" yaPrintZoneHide>
+          <button mat-menu-item (click)="copyHex(command.unprocessedBinary)">Copy hex</button>
+          <button mat-menu-item (click)="copyBinary(command.unprocessedBinary)">Copy binary</button>
+        </ya-more>
+      </ng-template>
+      <app-hex [base64String]="command.unprocessedBinary" />
+    </ya-attr>
+  }
+
+  @if (command.binary) {
+    <ya-attr>
+      <ng-template ya-attr-label>
+        Binary
+        <ya-more icon="more_horiz" yaPrintZoneHide>
+          <button mat-menu-item (click)="copyHex(command.binary)">Copy hex</button>
+          <button mat-menu-item (click)="copyBinary(command.binary)">Copy binary</button>
+        </ya-more>
+      </ng-template>
+      <app-hex [base64String]="command.binary" />
+    </ya-attr>
+  }
+
+  <ya-attr-divider />
+
+  <ya-attr label="Time">
+    {{ command.generationTime | datetime }}
+  </ya-attr>
+
+  <ya-attr label="Issuer">
+    @if (command.origin) {
+      {{ command.username }}&#64;{{ command.origin }}
+    } @else {
+      {{ command.username }}
+    }
+  </ya-attr>
+
+  @if (command.queue) {
+    <ya-attr label="Queue">
+      {{ command.queue || "-" }}
+    </ya-attr>
+  }
+
+  @if (command.comment) {
+    <ya-attr-divider />
+    <ya-attr label="Comment">
+      {{ command.comment }}
+    </ya-attr>
+  }
+
+  @if (command.extra.length) {
+    <ya-attr-divider />
+    @for (extra of command.extra; track extra.name; let first = $first) {
+      <ya-attr>
+        <ng-template ya-attr-label>
+          {{ extra.name }}
+          @if (extra.value.type === "BINARY") {
+            <ya-more icon="more_horiz" yaPrintZoneHide>
+              <button mat-menu-item (click)="copyHex(extra.value.binaryValue!)">Copy hex</button>
+              <button mat-menu-item (click)="copyBinary(extra.value.binaryValue!)">
+                Copy binary
+              </button>
+            </ya-more>
+          }
+        </ng-template>
+
+        @switch (extra.value.type) {
+          @case ("BINARY") {
+            <app-hex [base64String]="extra.value.binaryValue" />
+          }
+          @default {
+            {{ extra.value | value }}
+          }
+        }
+      </ya-attr>
+    }
+  }
+
+  <ya-attr-divider />
+  <ya-attr label="Yamcs acknowledgments">
+    <app-yamcs-acknowledgments-table [command]="command" [showIcons]="showIcons" />
+  </ya-attr>
+
+  @if (command.extraAcks.length) {
+    <ya-attr label="Extra acknowledgments">
+      <app-extra-acknowledgments-table [command]="command" [showIcons]="showIcons" />
+    </ya-attr>
+  }
+
+  @if (command.completed?.returnValue; as value) {
+    <ya-attr-divider />
+    <ya-attr>
+      <ng-template ya-attr-label>
+        Return value
+        @if (value.type === "BINARY") {
+          <ya-more icon="more_horiz" yaPrintZoneHide>
+            <button mat-menu-item (click)="copyHex(value.binaryValue!)">Copy hex</button>
+            <button mat-menu-item (click)="copyBinary(value.binaryValue!)">Copy binary</button>
+          </ya-more>
+        }
+      </ng-template>
+
+      @switch (value.type) {
+        @case ("BINARY") {
+          <app-hex [base64String]="value.binaryValue" />
+        }
+        @case ("STRING") {
+          <pre style="margin: 0; line-height: 1em">{{ value.stringValue }}</pre>
+        }
+        @default {
+          {{ value | value }}
+        }
+      }
+    </ya-attr>
+  }
+
+  <ya-attr label="Completion">
+    @if (command.completed?.status === "OK") {
+      SUCCESS
+    } @else if (command.completed?.status === "NOK") {
+      FAILURE: {{ command.completed?.message }}
+    } @else {
+      -
+    }
+  </ya-attr>
+
+  @for (upstream of command.cascadedRecordsByPrefix | keyvalue; track upstream.key) {
+    <ya-attr-divider />
+    <ya-attr>
+      <ng-template ya-attr-label>{{ upstream.key | cascadingPrefix }} acknowledgments</ng-template>
+      <app-yamcs-acknowledgments-table [command]="upstream.value" [showIcons]="showIcons" />
+    </ya-attr>
+
+    @if (upstream.value.extraAcks.length) {
+      <ya-attr>
+        <ng-template ya-attr-label>
+          {{ upstream.key | cascadingPrefix }} extra acknowledgments
+        </ng-template>
+        <app-extra-acknowledgments-table [command]="upstream.value" [showIcons]="showIcons" />
+      </ya-attr>
+    }
+
+    <ya-attr>
+      <ng-template ya-attr-label>{{ upstream.key | cascadingPrefix }} completion</ng-template>
+
+      @if (upstream.value.completed?.status === "OK") {
+        SUCCESS
+      } @else if (upstream.value.completed?.status === "NOK") {
+        FAILURE: {{ upstream.value.completed?.message }}
+      } @else {
+        -
+      }
+    </ya-attr>
+  }
+</ya-attr-list>
 ```
 
-## 항목
+### `command-detail.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-detail/command-detail.component.html`](file--command-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-detail/command-detail.component.ts`](file--command-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-detail/command-detail.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  CommandHistoryRecord,
+  WebappSdkModule,
+  YaPrintZoneHide,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { HexComponent } from '../../../shared/hex/hex.component';
+import { CommandArgumentsComponent } from '../command-arguments/command-arguments.component';
+import { ExtraAcknowledgmentsTableComponent } from '../extra-acknowledgments-table/extra-acknowledgments-table.component';
+import { CascadingPrefixPipe } from '../shared/cascading-prefix.pipe';
+import { YamcsAcknowledgmentsTableComponent } from '../yamcs-acknowledgments-table/yamcs-acknowledgments-table.component';
+
+@Component({
+  selector: 'app-command-detail2',
+  templateUrl: './command-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[style.display]': '"block"',
+  },
+  imports: [
+    CascadingPrefixPipe,
+    CommandArgumentsComponent,
+    ExtraAcknowledgmentsTableComponent,
+    HexComponent,
+    WebappSdkModule,
+    YamcsAcknowledgmentsTableComponent,
+    YaPrintZoneHide,
+  ],
+})
+export class CommandDetailComponent {
+  @Input()
+  command: CommandHistoryRecord;
+
+  @Input()
+  showIcons = true;
+
+  constructor(private clipboard: Clipboard) {}
+
+  copyHex(base64: string) {
+    const hex = utils.convertBase64ToHex(base64);
+    this.clipboard.copy(hex);
+  }
+
+  copyBinary(base64: string) {
+    const raw = window.atob(base64);
+    this.clipboard.copy(raw);
+  }
+}
+```

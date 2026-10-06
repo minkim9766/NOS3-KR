@@ -3,32 +3,1957 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `01-full-intro.md`
 
-file--01-full-intro.md
-file--02-fprime-architecture.md
-file--03-port-comp-top.md
-file--04-cmd-evt-chn-prm.md
-file--05-enum-arr-ser.md
-file--development-practice.md
-file--gds-introduction.md
-file--proj-dep.md
-file--source-tree.md
-file--unit-testing.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/01-full-intro.md`
+
+
+```markdown
+# Introduction To F´
+
+This document will reintroduce F´ giving more context and detail for users who desire the "full story", or at least a
+more complete "story". This document contains the following sections:
+
+- [The Origins of F´](#the-origins-of-f)
+- [A (Brief) Introduction to Space Systems](#a-brief-introduction-to-space-systems)
+- [The Organization of F´ Deployments](#the-organization-of-f-deployments)
+- [Threads, Multi-Core Architectures and F´](#threads-multi-core-architectures-and-f)
+- [Conclusion](#conclusion)
+
+
+## The Origins of F´
+
+F´ is an embedded systems framework developed build to meet certain goals expanded upon below.
+These goals it particularly well suited for small embedded missions (and projects) that need
+reliable components and infrastructure provided by the framework in
+order to minimize development cost, schedule, or effort. These missions
+include CubeSats, small-sats, and deployables. Despite being built for NASA missions, F´ can be used for any
+embedded system regardless of the project size or field.
+
+
+F´ was built to meet the following goals:
+
+  - Capture the reusability of embedded projects into a Framework
+  - Ease the separating and reassembling of shareable system components
+  - Isolate components for ease of testing
+  - Adapt easily to new contexts
+  - Port to new architectures and platforms
+  - Be easy to use
+  - Scale and configure to meet new use cases
+  - Perform well in resource-constrained context
+
+F´ was developed at NASA's Jet Propulsion Laboratory for small-scale embedded flight software. These small missions
+desperately needed a Flight-Quality framework to expedite development while reducing cost.
+
+## A (Brief) Introduction to Space Systems
+
+Although F´ can be used to model any embedded system, it has its origin in the stars. It was built at NASA's Jet
+Propulsion Laboratory for use in small-scale space flight missions and thus to understand the basics of these systems
+is to more completely understand F´ itself.
+
+What is a space system? For the purposes of this guide, it is any embedded system in space. Typically these systems
+compose the complete control and operation of a spacecraft to accomplish some mission.  At JPL these systems are
+typically conducting some aspect of scientific research.
+
+Since F´ is usually the complete software for one of these systems, F´ decomposes its projects into discrete
+**Components** that each manage one part of the system. e.g. a Radio Component may control the radio hardware to
+facilitate communication. **Components** are connected to one another via **Ports**. **Ports** allow communication
+between **Components**.  The complete graph or network of **Components** connected via **Ports** is called a
+**Topology**, which encapsulates the full system.
+
+F´ was built to support **Command and Data Handling** (C&DH) of these space systems as well as instruments running as
+part of these space systems. This means F´ out-of-the-box is designed to handle commands sent from the ground, and
+respond with telemetry to the ground. In F´ this telemetry is broken into **Events** representing the history of actions
+taken by the system, and channels representing the current state of the system broken into named channels that each
+contain a portion of the state. e.g. an **Event** might be "Established Communications" and a **Channel** might be
+"Current Temperature: 3C".
+
+All projects using F´ are composed of **Components**, **Ports**, and **Topologies**. Although F´ does not require the
+the user to control the system using **Commands**, **Events**, and **Channels**, these constructs represent the typical
+use case for F´projects and such constructs are built-in. Thus helpful to understand both **Components**, **Ports**, and
+**Topologies**, as well as **Command**, **Events**, and **Channels** in order to fully understand the power of the F´
+framework.
+
+## The Organization of F´ Deployments
+
+The core F′ software framework allows projects to be decomposed into a set of **Components** that are interconnected by
+**Ports**. Each **Component** represents one discrete piece of the system. e.g. the Command Dispatcher is a framework
+component used to dispatch incoming commands to be handled by another component in the system. Its job is to receive a
+ground communication and translate that into an action, dispatch the action to another component, and await the
+completion of this action. It emits **Events** to signify when the action is dispatched, and when it has been completed. It
+has **Channels** counting the number of commands dispatched.
+
+From this example, we can see the organization of an F´ project. **Components** are the key to system
+modularization and each component has a set of **Ports** to communicate from. In addition, each **Component** may
+define a set of **Commands** it may handle (these are the actions seen dispatched above), and each **Component** may
+define a set of **Events** it can report as well as a set of **Channels** that it will send out. When a system is built
+from these modules, the functionality is distributed amongst the **Components** and the **Topology** sets up the
+communication such that the system can function.
+
+## Threads, Multi-Core Architectures and F´
+
+F´ was built for use on platforms running an Operating System (OS) and executing on a single core. Notably, these systems
+come with a thread scheduler. That being said it is entirely possible to use F´ on a baremetal system, or a multi-core
+system, however; some care should be taken when designing for such systems an understanding of execution context is
+required.  See: [F´ On Baremetal and Multi-Core Systems](../framework/baremetal-multicore.md)
+
+## Conclusion
+
+The F′ software framework is released as open source and has been ported to Linux, macOS, Windows (WSL), VxWorks, ARINC
+ 653, Baremetal(No OS), PPC, Leon3, x86, ARM (A15/A7), and MSP430. Mature sets of CD&H components are available
+following flight process, such as code inspections, static analysis, and full-coverage unit testing.
 ```
 
-## 항목
+### `02-fprime-architecture.md`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/01-full-intro.md`](file--01-full-intro.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/02-fprime-architecture.md`](file--02-fprime-architecture.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/03-port-comp-top.md`](file--03-port-comp-top.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/04-cmd-evt-chn-prm.md`](file--04-cmd-evt-chn-prm.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/05-enum-arr-ser.md`](file--05-enum-arr-ser.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/development-practice.md`](file--development-practice.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/gds-introduction.md`](file--gds-introduction.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/proj-dep.md`](file--proj-dep.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/source-tree.md`](file--source-tree.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/unit-testing.md`](file--unit-testing.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/02-fprime-architecture.md`
+
+
+```markdown
+# F´ Software Architecture
+
+Slide decks regarding the F´ Software Architecture, as well as general Flight Software design and architecture concepts, can be found in [F Prime Course Materials](https://github.com/fprime-community/fprime-course-materials).  
+
+These materials are updated yearly and are used during our [Events](https://fprime.jpl.nasa.gov/events/).
+
+```
+
+### `03-port-comp-top.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/03-port-comp-top.md`
+
+
+```markdown
+# Core Constructs: Ports, Components, and Topologies
+
+**Ports**, **Components**, and **Topologies** represent the building blocks of an F´ system.  From these pieces, a
+modular system is constructed to complete the objective of the embedded system. This document includes:
+
+- [Ports: F´ Communication](#ports-f-communication)
+- [Components: F´ Modules](#components-f-modules)
+- [Topology: F´ Application](#topology-f-application)
+- [Conclusion](#conclusion)
+
+## Ports: F´ Communication
+
+Although F´ is primarily decomposed into a set of **Components**, it is often the port that a user of F´ must
+understand first. This is because the set of ports a **Component** defines is the external (or public) interface of
+that **Component** in an F´ system. Thus it is essential to understand and design these **Ports** correctly.
+
+### Port Characteristics
+
+Ports are the point of interconnection between **Components** in the software framework and encapsulate typed interfaces
+in the architecture. This means that each port definition is of a specific type (e.g. CommandDispatchPort) and can only
+connect **Components** defining ports of the same type. When one **Component** uses a port to communicate with another
+**Component** this action is called a port **invocation**. These port types are known as "data_types" because they
+represent the data being conveyed across the port.
+
+A port supports passing arguments across the port's connection in order to pass data to the receiving
+**Component** of an invocation. Some ports may also return data from the receiving **Component** to the invoking
+**Component**. A port may specify zero or more arguments of any F´ data type or primitive (int, float, U8, etc.).
+Pointers and references are allowed as arguments to the port as well (for performance purposes), but care should be
+taken to ensure correct memory management as the ownership of the underlying memory is effectively shared when the
+port is invoked.  The port's type is synonymous with the port invocations' "data_type" when used on a **Component**.
+
+When using a port, the user specifies directionality. It can represent an input or an output. This direction
+pertains to the direction of invocation from one originating **Component** to another and not necessarily the direction
+of data flow i.e. output ports (invoking out to another **Component**) can in some cases retrieve data. Multiple output
+ports can be connected to a single input port implying that at **Component** responding to a port invocation could be
+responding to one of a set of invoking **Components**. **Caution:** a single output port can be connected to only one
+input port at a time.
+
+Another aspect of port usage is the synchronous/asynchronous nature of the port. A synchronous port operates like a
+function call running in the execution context of the invoking **Component** (i.e. on the invoker's Thread). The
+synchronous nature of the port along with the directionality is combined in the "kind" when used by the **Component**.
+
+Finally, a port can be defined as "guarded", which means invocations into the port are limited to a single invocation
+at a time by a component-wide mutex. This is also combined into the "kind" attribute.
+
+![Port Image](../../img/core1.png)
+
+**Figure 1. Port connectivity.** Ports are connected to ports of the same type. When used by a *component*, the ports
+can define directionality. Using *serialized ports* (see below), serializes the call and passes it to a data buffer
+such that it can be sent and deserialized anywhere.
+
+When discussing ports, one must be careful to distinguish between the port **design** and the port instantiation.  A
+port's design is generic specifying its type (name, arguments transported, etc) and when used in a **Component** is
+designated as the port's "data_type". The design is careful not to specify its usage by a component (directionality,
+synchronous/asynchronous nature, guarded/not guarded). This is specified as part of the instantiation of a port when
+used by a component. This instantiation is specifically part of the **Component**'s design and not the port's
+design and is known as the "kind" of port's instantiation.
+
+### A Quick Look at Port Kinds Defined in A Component's Usage
+
+| Port Kind | Direction | Synchronous / Asynchronous | Guarded | May Return Data | See Diagram | Notes |
+|---|---|---|---|---|---|---|
+| output | out | | | | `func4()` | The input side of a connection defines all port properties.|
+| sync_input | in | synchronous | no | yes | `func2()` | |
+| async_input | in | asynchronous | no | no | `func1()` | |
+| guarded_input | in | synchronous | yes | yes | `func3()` | Guarded ports by definition must be synchronous |
+
+> [!NOTE]
+> A port's type (aka data_type) is dependent on the design and usage in the deployment.
+
+![Port Instance Kinds](../../img/core2.png)
+
+**Figure 2. Port Kinds Used on a Component.** For the *synchronous port*, the call directly invokes derived functions
+without the use of a queue. For a *guarded port*, the call directly invokes derived functions, but only after locking a
+mutex shared by all guarded ports in the component. For an *asynchronous port*, the call is placed in a queue and
+dispatched on a thread that empties the queue.
+
+Should the user wish to understand what types of ports are available per component type, please review the section on
+[Port Kinds Available to Each Component Type](#port-kinds-available-to-each-component-type)
+
+### Port Call Serialization
+
+Serialization on ports take arguments supplied to the port and translates them to a data buffer. The serialized ports
+are supported by the framework allowing users to send primitive and custom types. Ports can have return valves; however,
+use is limited to only return data when the component has defined the input port (invoked port) as a synchronous
+interface, and the port serialization has been disabled since serialization passes a data buffer without returning one.
+
+Serialization takes a specific set of typed values or function arguments and converts them in an
+architecture-independent way translating them to a data buffer. A port call’s commands and arguments are serialized and
+placed on message queues in the receiving component. In addition command arguments and telemetry values are passed as
+serialized buffers so that components that transfer the data can be independent of the definition of the data.
+
+Users can define arbitrary interface argument types and the framework automatically serializes the data for port calls.
+They can also define complex types in FPP where a code generator generates classes that are serializable for use
+internally, and usable with the F´ supplied ground system.
+
+
+### Special Serialized Ports
+
+Serialization ports are special ports that handle serialized buffers without automatically unpacking them. Any output
+port type can connect to a serialization port input type, and any serialization output port can be connected to any
+input port type. This allows strongly-typed ports to connect to generic "pass-any-data" serialization ports as shown
+in Figure 3. For input ports, the calling port detects a connection and serializes arguments. For the output ports,
+the serialized port calls an interface on the typed port that deserializes arguments. Serialization ports do not support
+ports with return types. These ports allow serialized data to be passed around by generic components that do not know
+the type contained. The [Hub pattern](../design-patterns/hub-pattern.md) often uses serialized ports such that data can be routed
+across an address-space gap in a generic fashion.
+
+![Serialization Ports](../../img/core3.png)
+
+**Figure 3. Serialization ports.** Input ports input the serialized buffer, while the output ports output
+the serialized buffer.
+
+Serialization ports are useful for generic storage and communication components that do not need to know the type of
+data passing through them. This allows the design and implementation of command and data handling (C&DH) components that
+provide reusability. Tested C&DH components are developed to implement typical non-mission-specific flight functions
+
+See note about usage for [Commands, Events and Telemetry](04-cmd-evt-chn-prm.md).
+
+
+## Components: F´ Modules
+
+The F′ architecture is based on decomposing the system into modules called components. Each component contains a
+a discrete portion of the system's logic (Figure 10); The component architecture implies usage patterns, as well as
+usage constraints.
+
+![Component Architecture](../../img/core10.png)
+
+**Figure 10. Example of F′ component architecture pattern.**
+
+Components encapsulate behavior and are not aware of other components. They are localized to one compute context with
+specific interactions with other components using ports. There should be no non-port communication between components.
+Components are responsible for handling the invocations of ports used in the component. They may also define and handle
+commands as well as emit telemetry and events.
+
+![Example Component](../../img/core11.png)
+
+**Figure 11. Encapsulation of Behavior** The component handles the port behaviors as well as executes the commands and
+then produces the telemetry. It does not directly interact with other components.
+
+### Component Types
+
+There are three types of components: passive, queued, and active. These components allow for different functionality in
+the system and may use different port input types [see below](#port-kinds-available-to-each-component-type). Each type
+of component is defined below:
+
+**Passive component:** has no thread and cannot support asynchronous port invocations nor asynchronous commands. Port
+invocations call into the developer class but execution context is supplied from the invoking component.
+
+**Active component:** has a thread of execution as well as a queue. The thread dispatches port calls from the queue
+as on the execution context of the thread. Active components may define use port kinds. **Caution:** Synchronous and
+guarded port invocations still execute in the execution context of the invoker.
+
+**Queued component:** has no thread but does have a queue. Thus it handles asynchronous commands and port invocations;
+however, the user must implement at least one synchronous port invocation that unloads and handles the messages on the
+queue. For this and any other synchronously invocation execution context is supplied by the invoker.  **Note:** this
+component type is only rarely used.  Ensure it is the correct choice for your design.
+
+#### A Quick Look at Component Types
+
+| Component Type | Has Queue | Has Thread |
+|---|---|---|
+| Passive Component | No | No |
+| Active Component | Yes | Yes |
+| Queued Component | Yes | No |
+
+### Division of Component Implementation
+
+Each component is divided into three classes that each represent a piece of the component's implementation. These three
+classes are as follows:
+
+1. Core Framework Class: the base class of components defined as part of the framework.  A component may inherit from:
+active, passive, and queued classes.  These represent the component types defined above.
+2. Generated Component-Specific Base: this class is the direct descendant of the core framework class and is
+automatically generated to provide all the implementation for framework features.
+3. Component-Specific Developer Implementation Class: this class inherits from the generated component-specific base
+class and contains only the user-specific implementation for the component.
+
+These are shown in Figure 12.
+
+![Component Class Hierarchy](../../img/core12.png)
+
+**Figure 12. Example of component class hierarchy.**
+
+
+### Port Kinds Available to Each Component Type
+
+Passive components support synchronous and guarded ports with the execution context supplied by the calling component.
+There is no queue to support asynchronous ports. Active components support all three port types; however, the active
+component needs at least one asynchronous port otherwise it would be effectively passive with a superfluous queue and
+thread.
+
+Queued components also support all three port types; however, the queued component needs at least one synchronous or
+guarded port as the code and one asynchronous port. A synchronous or guarded port must be defined to unload the internal
+queue as a queued component does not have a thread to automatically unload the queue. A queued component must define one
+asynchronous port otherwise it too would effectively be a passive component with an unused queue attached.
+
+Output ports are invoked by calling generated base class functions from the implementation class. The behavior invoked
+is defined input port side of the connection and thus there are no special restrictions to use output ports.
+
+### Quick Look at Component Types and Supported Ports
+
+| Component Type | Output | Guarded / Synchronous Ports | Asynchronous Ports |
+|---|---|---|---|
+| Passive | 0 or more | 0 or more | Not available |
+| Queued  | 0 or more | 1 or more | 1 or more |
+| Active  | 0 or more | 0 or more | 1 or more |
+
+> [!NOTE]
+> The designer should be aware of how the different calls interact, for example during reentrant port calls guarded ports may deadlock.
+
+## Topology: F´ Application
+
+Components are instantiated at runtime and then connected through the ports to other components in the system. This
+graph of interconnected components is known as a topology, as shown in Figure 13. The topology graph is still designed
+before runtime, but the actual connection of ports happens during the construction and setup phase of runtime F´
+software. There should be no code dependencies between the components, only dependencies on port interface types. A
+component's ability to communicate with other components is enabled through the interconnections specified in the
+topology. Alternate implementations can therefore easily be swapped, for example with simulation versions.
+
+![Example Topology](../../img/core13.png)
+
+**Figure 13. Example of a topology.**
+
+## Conclusion
+
+F´ is decomposed into a federation of discrete components organized into a system graph. The interconnections in this
+graph are handled through port calls such that the otherwise independent components can interact with each other.
+```
+
+### `04-cmd-evt-chn-prm.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/04-cmd-evt-chn-prm.md`
+
+
+```markdown
+# Data Constructs: Commands, Events, Channels, and Parameters
+
+Typically, spacecraft software is controlled through commands and monitored using a set of events and telemetry
+channels. These are the critical data constructs supported directly by F´ and have built-in autocoder support. In
+addition, the F´ `Svc` components handle these types making it easy to define and control an F´ system through commands,
+events, and telemetry channels.
+
+Parameters allow for controlling stored values that affect the operation of an F´ system. They have framework support
+to automatically, load, store, and set these values using commands.
+
+> [!NOTE]
+> Events are sometimes called EVRs and telemetry channels are sometimes called EHAs.
+
+These types will be elaborated within this guide. It contains:
+
+- [Commands](#commands)
+    - [Command Dispatching](#command-dispatching)
+    - [Command Sequencing](#command-sequencing)
+- [Events](#events)
+    - [Event Logging](#event-logging)
+- [Channels](#channels)
+    - [Telemetry Database](#telemetry-database)
+- [Parameters](#parameters)
+- [A Note On Serialized Ports](#a-note-on-serialized-ports)
+
+## Commands
+
+Each **Component** defines a set of commands for operations. Unlike ports, which are intended for component to component communication, commands are designed for user interaction with a component. Commands are defined through a series of
+properties. Users can send commands to the F´ system and via `Svc::CmdDispatcher` these commands are dispatched to a
+handling component to invoke some behavior. The handling component handles a command by defining a command handler function
+to run when the command arrives.
+
+The properties defining commands are shown below:
+
+1. opcode: a numerical value uniquely representing the command. This opcode is automatically adjusted to be relative to
+a component's base id, and thus will not collide with other commands defined by other components.
+2. mnemonic: a text value uniquely representing the command. The component instance name is prepended to the mnemonic
+to ensure uniqueness in the system.
+3. arguments: a set of primitive and F´ data types supplied to the command handler to adjust its execution. These
+arguments are sent from the ground.
+4. synchronization "kind": (sync, async, guarded) controls which execution context the command runs in. Sync and guarded
+commands run on the execution context of the command dispatcher. Async commands execute on the component threads and
+can specify a priority. Guarded commands are protected from reentrancy by a mutex. These are similar to
+[port kinds](03-port-comp-top.md#a-quick-look-at-port-kinds-defined-in-a-components-usage)
+
+Code in the component-specific generated base class calls a function to invoke the user-defined command handler. This is
+hooked up by connecting the command registration, command dispatch, and command response ports.
+
+### Command Dispatching
+
+When commands are defined for a component, the autocoder automatically adds ports for registering and receiving
+commands, and reporting an execution status when finished. Each component that handles commands should be hooked up to
+the command dispatcher connecting the registration, dispatch, and response ports in parallel.
+
+![Command Dispatcher](../../img/data_model1.png)
+
+**Figure 4. Command dispatcher.** The command dispatcher receives the raw buffer containing the command and arguments.
+The command opcode is extracted, and a lookup table is used to find the handling component. The argument buffer is then
+passed to the component, and the command dispatcher waits without blocking for the component to return status..
+
+In many projects, commands need to be sequenced in order. In order to facilitate this, the framework provides 
+`Svc::CmdSequencer`. The command sequencer reads a defined sequence of commands and sends each in turn to the command 
+dispatcher; after each command is dispatched, the status of its execution is returned to the sequencer. Sending command buffers 
+to the command dispatcher through the command sequencer is an alternate path to sending them externally from the ground.
+
+### Command Sequencing
+
+![Command Sequencer](../../img/data_model2.png)
+
+**Figure 5. Command sequence.** The command sequencer loads a sequence file from the file system, sends the command,
+ and waits for the response for each command in the sequence. A failed response terminates the sequence,
+while a successful response moves to the next command in the sequence.
+
+## Events
+
+Events represent a log of activities taken by the embedded system. Events can be thought of in the same way as a program
+execution log in that they enable the ability to trace the execution of the system. Events are sent out of the system via 
+the `Svc::EventManager` component and components defining events should hook up the log port to it. If console logging is
+desired, the text log port can be hooked up to the `Svc::PassiveConsoleTextLogger` component. Events are defined per
+component and are typically used to capture what the component is doing. Events can occur sporadically; however, they 
+should all be captured for downlink. Events are defined by the following properties:
+
+1. id: a numeric id uniquely define this event. It is automatically offset by the component's base id to ensure global
+uniqueness.
+2. name: a unique text identifier for this event. This is prepended by the component instance name to remain unique.
+3. severity: a text identifier identifying the severity of this event. Possible values are:
+    1. DIAGNOSTIC: akin to debug messages.  Usually not sent to the ground.
+    2. ACTIVITY_LO: akin to fine info messages these typically come from background tasks
+    3. ACTIVITY_HI: akin to info messages these typically come from foreground tasks
+    4. WARNING_LO: less severe warning events
+    5. WARNING_HI: high-severity warning events, although the system can still function
+    6. FATAL: fatal events indicating that the system **must** reboot
+    7. COMMAND: events tracing the execution of commands
+4. arguments: like command arguments, these are primitive and complex types that represent the variable data associated
+with the event. These are injected into the format string for a full text representation of the event.
+5. format string: a C-style format string used to reconstruct a text version of the event.
+
+> [!NOTE]
+> the use of events to severity levels are based on the judgement of the system designer.
+
+Code in the component-specific generated base class provides a function to call to emit each event defined by the
+component. This function expects an argument to be supplied for each argument defined by the event. The code generator
+automatically adds ports for retrieving a time tag and sending events. There are two independent ports for sending
+events:
+
+1. binary log output port for sending outside the system
+2. a text log output port for on-board consoles
+
+### Event Logging
+
+Events first acquire a time tag to represent when they occurred and then are typically sent to the `Svc::EventManager`
+component on their way to be sent down to the ground. This logger component both processes the event and also recognizes
+and begins responses for FATAL severity events.
+
+![Active Logger](../../img/data_model3.png)
+
+**Figure 6. Event log.** The component implementation calls a function to generate the event. The base class retrieves the
+time tag from the time source component. The component sends the event to the event log component, which reads it from
+the port queue and sends it to the ground.
+
+## Channels
+
+Channels, also known as Telemetry Channels, or just Telemetry, represent the current reading of some portion of the system
+state. This state is either restricted to "send on change" or "send per update" even if the update is already the
+current value. Channels are broken up per component and are typically sampled at a set rate and downlinked. Channels are
+id, time, and value triples and are defined per component with the following properties:
+
+1. id: the unique id of the channel. This is offset by the base id of the component for global uniqueness.
+2. name: the unique text name of the channel. This is prepended with the component instance name for global uniqueness.
+3. data_type: type of the value of the channel. Can be primitive and complex types.
+4. update: "on_change" to update only when the written value changes, and omitted to always downlink
+
+Code in the component-specific generated base class provides a function to call to set the current value for a
+channel id. This function must be supplied with a typed argument for the value. It will request the time tag internally.
+The code generator automatically adds ports for retrieving time tags and sending channelized data.
+
+### Telemetry Database
+
+The telemetry database acts as a double-buffered store for telemetry values. Components are free to update channels at
+any time; however, the current value will be read from the telemetry database and sent to the ground at a set rate.
+Components using this service should hook up the telemetry port to the telemetry database (`Svc::TlmChan`).
+
+![Telemetry Database](../../img/data_model4.png)
+
+**Figure 7. Telemetry database.** The telemetry database has a double-buffered array of telemetry buffers. The base
+class function retrieves the time tag from the time source component and then writes the updated value to the telemetry
+database component. The telemetry database is called periodically to send the current set of telemetry to the ground.
+
+> [!NOTE]
+> the periodic call to the telemetry database is typically made by a [rate group](../design-patterns/rate-group.md).
+
+## Parameters
+
+Parameters are traditional means of storing non-volatile states in the embedded system. The framework provides code
+generation to manage parameters defined by a component. Parameters are defined by the following properties:
+
+1. id: unique id of the parameter, offset by component base id to ensure global uniqueness
+2. name: unique text name of parameter prepended by component instance name for global uniqueness.
+3. data type: primitive or complex types that represent the type of the value stored.
+4. default value: default values are assigned in the event the parameter cannot be retrieved.
+
+The code generator automatically adds ports for retrieving parameters. During initialization, a public method in the
+class is called which retrieves the parameters and stores copies locally. Calls can reoccur if the parameter is updated.
+The code-generated base class provides a function to call for each parameter to retrieve the stored copy; and an
+implementation class can retrieve the value whenever the parameter value is needed.
+
+### Parameter Database
+
+The framework provides the ability to store these parameters in the parameter database (`Svc::PrmDb`). This component
+provides ports to get and set parameters, which are stored in a file to persist across reboots.
+
+![Parameter Database](../../img/data_model5.png)
+
+**Figure 8. Parameter manager.** The parameter manager or database loads the file containing parameters from the file
+system during initialization. The initialization subsequently calls *loadParameters()* on components with parameters.
+Components can set and retrieve parameters. The parameter manager saves the updated values to the file system via the
+set and save commands auto-generated for every parameter; the set command updates the value of the parameter locally
+within the component that owns it, and the save command pushing the current value of the parameter to non-volatile storage,
+meaning it will persist within the files of the system across system resets.
+
+
+## A Note On Serialized Ports
+
+The `Svc` components use serialize ports to generically handle port data of different types to support uplink and
+downlink.
+```
+
+### `05-enum-arr-ser.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/05-enum-arr-ser.md`
+
+
+````markdown
+# Data Structures and Types
+
+This guide will describe the types available in F´.  F´ defines both useful short names for primitive types as well as
+a set of autocoded complex types.  The types described here are available to both the flight software and the ground
+system unless otherwise noted. Included in this document:
+
+- [Data Types and Data Structures: Primitive Types, Enums, Arrays, and Serializables](#data-types-and-data-structures-primitive-types-enums-arrays-and-serializables)
+  - [Primitive Types](#primitive-types)
+  - [Polymorphic Type](#polymorphic-type)
+    - [Setting Polymorphic Values](#setting-polymorphic-values)
+    - [Getting Polymorphic Values](#getting-polymorphic-values)
+    - [Checking Polymorphic Values](#checking-polymorphic-values)
+  - [Complex Types](#complex-types)
+    - [Enums](#enums)
+    - [Arrays](#arrays)
+    - [Serializables](#serializables)
+    - [C++ Classes](#c-classes)
+  - [Alias Types](#alias-types)
+  - [Conclusion](#conclusion)
+
+## Primitive Types
+
+F´ provides convenient type names for C/C++ primitive types. These are established to simplify the writing of F´ code
+across multiple systems as well as give an exact definition for each variable used. These types are described in the
+following table and are available to both the ground system, events, channels, and commands, and the software itself.
+
+| F´ Type | C/C++ Type | Description             |
+|---------|------------|-------------------------|
+| BOOL    | bool       | C++ boolean             |
+| I8      | int8_t     | signed 8-bit integer    |
+| I16     | int16_t    | signed 16-bit integer   |
+| I32     | int32_t    | signed 32-bit integer   |
+| I64     | int64_t    | signed 64-bit integer   |
+| U8      | uint8_t    | unsigned 8-bit integer  |
+| U16     | uint16_t   | unsigned 16-bit integer |
+| U32     | uint32_t   | unsigned 32-bit integer |
+| U64     | uint64_t   | unsigned 64-bit integer |
+| F32     | float      | 32-bit floating point   |
+| F64     | double     | 64-bit floating point   |
+
+> [!NOTE]
+> For a full description of numerical types available to F´ see: [Numerical Types](../../reference/numerical-types.md).
+
+> [!NOTE]
+> C/C++ types come from `stdint.h` and `stdbool.h`.  The last three types above are not of set size but are architecture-dependent. Should a project's architecture not support all these types, see: [Configuring F´: Architecture Supported Primitive Types](../framework/configuring-fprime.md)
+
+## Polymorphic Type
+
+F´ defines a type for use by the user that can represent any of the primitive types using the same storage space. This
+is similar to a C `union` defined with fields of each above type.
+
+### Setting Polymorphic Values
+
+The PolyType object can have a value assigned to it via the constructor or the *equals* operator:
+
+```
+PolyType myInt(123)
+PolyType myFloat;
+myFloat = 123.03
+```
+
+### Getting Polymorphic Values
+
+The value stored in the PolyType object can be retrieved in two ways:
+
+1)  Cast the object to the type of the value:
+```
+U32 val = (U32)pt;
+```
+6)  Use the get() method:
+```
+U32 val;
+pt.get(val);
+```
+
+In both cases, if the type being retrieved does not match the stored
+type, the code will assert.
+
+### Checking Polymorphic Values
+
+The PolyType instance has isXXX functions for checking what type is being stored, where XXX is the name of the type.
+
+```
+PolyType p(123);
+if (p.isU32()) {
+    ...
+}
+```
+
+## Complex Types
+
+The F´ framework supports several types of auto-generated complex types that can be used in the system, including use
+in software, command, event, and channel types, and even with the F´ ground system. These types are:
+
+1. Enums: defined enumeration of values
+2. Arrays: fixed-length containers of other types
+3. Serializable: defined composition of other types akin to a C++ `struct`/`class`
+
+These can all be designed and used in the modeling of F´ and the C++ implementation is autogenerated.
+
+### Enums
+
+Enums are a fixed set of values that can be referred to by name, but are stored and transmitted as an integer type. The
+auto-generator produces a class to wrap the type providing convenience functions.
+
+### Arrays
+
+Arrays are fixed-length containers of other types. They must be type-homogeneous but can store any other single type.
+
+### Serializables
+
+Serializables are field-value compositions of other types. They can be type-heterogeneous and may contain any other type
+as a value. The autocoder will generate a class with accessor methods for the fields.
+
+### C++ Classes
+
+When interacting only in the software and not within the F´ design layer, nor with the ground system the user may use
+arbitrary C++ `class`/`struct` types. If these types are to be passed through a port invocation as an argument, they
+should be defined as subclasses of the `Fw::Serializable` and define `serializeTo` and `deserializeFrom` methods to be called
+to perform the serialization.
+
+## Alias Types
+
+Alias types provide an alternate name for a type that is defined elsewhere. An alias type can refer to any type, including another alias type (excluding itself).
+
+Alias types are designed and used in the modeling of F´ and the C++ implementation is autogenerated.
+
+
+## Conclusion
+
+F´ supports many different types, including autocoded complex types.
+````
+
+### `development-practice.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/development-practice.md`
+
+
+````markdown
+# F´ Development Process
+
+The purpose of this guide is to lay out the standard F´ development process. This is the process used
+by most developers who use F´ and, as such, many of the F´ tools are written to support the stages
+of the process. This guide will walk through each step in this process.
+
+The process:
+
+1. [High Level Design](#high-level-design): Draft high level requirements and architecture.
+2. [Setup Deployment](#setup-deployment): Setup project F´ deployment
+3. [Develop Components](#develop-ports-and-components): Create individual project components
+      - [Design and Requirements](#design-and-requirements): Draft component requirements and interfaces
+      - [Creating a Port](#creating-a-port): Implement component interfaces
+      - [Creating a Component Definition](#creating-a-component-definition): Create initial mockup of component
+      - [Component Implementation](#component-implementation): Implement component behavior
+      - [Component Unit Testing](#component-unit-testing): Test and verify component behavior
+4. [Assemble Topology](#assemble-topology): Compose a F´ deployment from individual components
+5. [Integration Testing](#integration-testing): Verify high-level project behaviors
+
+## High-Level Design
+
+The first step of the development process is to establish a high-level design for the project.
+This involves specifying system-level requirements and a block diagram that represents the key
+system functionality. Once complete the project should break this functionality into discrete units
+of functionality that represent the system. In addition, the interface between these units should be
+defined. The units of functionality are Components and the interfaces are further broken down into
+discrete calls or actions through that interface. These are F´ ports. The full design of the system
+of components and ports is the Topology. See: [Ports Components and
+Topologies](03-port-comp-top.md)
+
+Next, the project should review the components provided by the F´ framework to see what
+functionality can be inherited for free. This usually consists of the basic command and data
+handling components, the Os layer, drivers, and other Svc components. Where possible, these
+components should be used as-is to support a project to minimize extra work, but these may be
+cloned and owned if they fall short of project requirements.
+
+The project now has a list of what components they must provide, and what they will inherit.
+
+## Setup Deployment
+
+The next step for most projects is to prepare for development. This means getting enough of a
+deployment setup such that the developers can be assigned components and ports to implement, and
+test within a working deployment.
+
+There are two options for creating a deployment:
+
+You can create an in-tree deployment, where a deployment is created within the F´ git repository.
+This is convenient and requires minimal setup, but placing your code within the F´ source tree
+can make it harder to update F´ in the future if the project wants to take advantage of future
+bug fixes and features. To create an in-tree deployment, the Ref application can be copied and used
+as a starting point.
+
+Another option is creating a standalone deployment, where the deployment is set up by itself and
+points to an F´ installation. This requires more upfront work to setup, but provides the benefit
+of separating mission code from F´ framework code.
+
+The layout for a git repository for a standalone repository might look something like:
+
+```
+mission
+├── mission_deployment_1
+├── fprime (git submodule to fprime repository)
+├── ...
+└── library (git submodule to an external library)
+```
+
+After creating the project layout, external deployments can also be created by copying the Ref
+application.
+
+After copying the Ref app, both in-tree and standalone deployments need to create and modify a
+`settings.ini` file in the root of the deployment to set the deployment toolchain, library
+locations, and for standalone deployments, the location of the F´ framework.
+
+For details on configuring the `settings.ini` file, see the [user guide page](../build-system/settings.md).
+
+
+## Develop Ports and Components
+
+Next, each developer is typically assigned a set of components to develop. This development starts
+with the ports that are defined to be used by the component, and then the component itself. This
+development is described in the following sections.
+
+### Design and Requirements
+
+Using the high-level requirements, the developer should define requirements for an individual
+component. These requirements should define the behaviors of the component, as well as the
+interfaces with other components.
+
+### Creating a Port
+
+Once the interfaces between components have been defined, ports should be created to implement those
+interfaces. This can be done by hand or by using `fprime-util new --port`.
+
+It's recommended that ports are kept in their own directories, separate from components.
+
+To create a new port:
+
+1. If necessary, create a new port directory
+2. Create a new port `*.fpp` file, possibly by copying from an existing port.
+3. Add the new port file to `SOURCE_FILES` in the `CMakeLists.txt` file in the directory
+4. If necessary, add the port directory to the deployment's cmake file with `add_fprime_subdirectory`.
+
+Alternatively, you may use `fprime-util new --port` from the fprime-tools package. This will 
+walk the user through a few prompts about the port they want to create. Then the following
+will be done automatically:
+
+1. If the specified directory for the port does not exist, it will be created
+2. The `*.fpp` file will be generated, with information and arguments filled in
+3. The port will be added to the source files of `CMakeLists.txt`. If there is no `CMakeLists.txt`
+   file, one will be automatically generated and filled out
+4. If necessary, the port directory will be added to the deployment's cmake file with 
+   `add_fprime_subdirectory`
+
+### Creating a Component Definition
+
+The first step in creating a component is to create the component FPP definition, which defines
+which interfaces it implements, what commands it supports, which telemetry it provides, and what
+events it produces. This can be done by hand or by using `fprime-util new --component`.
+
+To create a new component definition by hand:
+
+1. Create a new component directory
+2. Create a new component `*.fpp` file, possibly by copying from an existing component.
+3. Optional, create a commands `.fppi` file for GDS commands and include it in the component file.
+4. Optional, create an events `.fppi` file and include it in the component file.
+5. Optional, create a telemetry `.fppi` for telemetry channels and include it in the component file.
+6. Create a component `CMakeLists.txt` test file and add the component file to `SOURCE_FILES`
+   variable in the file.
+7. Add component directory to the deployment's cmake file with `add_fprime_subdirectory`.
+
+Alternatively, you may use `fprime-util new --component` from the fprime-tools package. This will 
+walk the user through a few prompts about the component they are creating. Then the following
+will be done automatically:
+
+1. A new component directory will be created
+2. The `*.fpp` file will be generated and filled out with all of the information provided by the user
+3. Commands, telemetry, events, and parameters will be added to the file based on what the user chooses through the prompts
+4. Ports necessary for commands, telemetry, events, and parameters will be automatically added to the `*.fpp` file depending which elements the user chooses to include
+5. A component `CMakeLists.txt` file will be generated and the component  will be added
+   to the source files.
+6. The component directory will be added to the deployments cmake file with
+   `add_fprime-subdirectory`
+7. The user is given the option to generate implementation `*.cpp` and `*.hpp` files
+8. The user is given the option to generate a unit test directory with necessary
+   unit test files within it.
+9. An SDD file is generated with documentation about ports, commands, events,  
+   telemetry, parameters, and time of creation already filled out. Note: Developers should explicitly state in the SDD if they use the FPP `priority` for their ports.
+
+The `fprime-util new --component` uses the built-in cookiecutter template by default, 
+but users can substitute their own component template by using the component_cookiecutter 
+field of the settings.ini file. To learn more, see the [Cookiecutter Documentation](https://cookiecutter.readthedocs.io/en/latest/index.html).
+
+### Component Implementation
+
+Next, the developer typically runs `fprime-util impl` to produce `-template` files of the hand-coded
+.cpp and .hpp files. However, if your component was created with `fprime-util new --component` and 
+you select yes when asked about generating implementation files, this is automatically done. 
+These can be used as a basis for implementation with all the stubs in place for the developer to 
+implement the design. Developers then fill in these files and stubs with an implementation that 
+supports the functionality of the design.
+
+The component can then be built as development proceeds to look for errors.  Ports are entirely
+autogenerated and do not need an implementation.
+
+### Component Unit Testing
+
+Along with implementation, unit tests can be templated and implemented to test against the
+requirements of the component. These should be developed and run often to ensure the implemented
+component works.
+
+> [!NOTE]
+> If `fprime-util new --cookiecutter` was used to create the component, and the user chose the generate unit tests, steps 1-3 should be skipped because these are automatically done.
+
+To add unit tests to a component:
+
+1. Create a test directory within the component (usually called `test`).
+2. Run `fprime-util impl --ut` to generate unit testing code skeleton
+3. Add unit test sources to `UT_SOURCE_FILES` and register unit tests with `register_fprime_ut()` in
+   the component `CMakeLists.txt`.
+4. Run `fprime-util check` in the component directory to run unit tests.
+
+## Assemble Topology
+
+As components are completed, it is helpful to add them to the topology. As more components are
+completed, the topology is slowly built up over time. This can enable integration tests early on in
+the project. The full deployment should be built at this stage to ensure that there are no errors.
+
+To add a component to the topology:
+
+1. In the topology `*.fpp` file
+    - Instantiate the component as many times as necessary.
+    - Connect component output ports with the corresponding input port and vice versa.
+2. In the topology `Topology.cpp` file:
+    - Instantiate the component.
+    - If additional setup is required, call a user-defined setup function.
+    - If using commands, register the component's commands.
+    - If using health checking, add the component to ping entries.
+    - If using an active component, start the component with `start` function and call `exit` when
+      exiting.
+
+## Integration Testing
+
+As the topology comes together, it is helpful to write system-level tests for subsystems of the
+overall deployment. This makes sure that as a system, top-level requirements are met.
+
+The fprime-gds has a python API that can be used to write integration test cases that support sending commands, checking for events, and getting telemetry channel readings. To get started with writing integration tests, check out the [GDS integration test guide](../gds/gds-test-api-guide.md).
+
+## Conclusion
+
+This guide was an overview of the workflow most F´ developers follow, from the start to completion
+of a project. These workflows can be applied to any F´ project and should hopefully provide the
+smoothest development experience.
+````
+
+### `gds-introduction.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/gds-introduction.md`
+
+
+````markdown
+# The F´ Ground Data System
+
+The F´ Ground Data System (GDS) was built to aid in the usage, development, test, and integration of F´-based embedded
+systems. It was designed for projects that have not already chosen a GDS, for developers who need to test before the
+project's GDS is fully online, and for integration testers who wish to automate tests against F´ software. This guide
+will give you a quick introduction to what the F´ GDS is and how you can use it.
+
+- [A Brief Guide to the F´ Ground Data System](#a-brief-guide-to-the-f-ground-data-system)
+  - [What is the GDS?](#what-is-the-gds)
+  - [Getting Started](#getting-started)
+    - [Running the GDS](#running-the-gds)
+  - [GDS Options](#gds-options)
+    - [Specify the Deployment or Dictionary](#specify-the-deployment-or-dictionary)
+    - [Disable Automatic Flight Software Execution](#disable-automatic-flight-software-execution)
+    - [Specify GDS Addresses and Ports](#specify-gds-addresses-and-ports)
+    - [Run the GDS Without a UI](#run-the-gds-without-a-ui)
+    - [Help and Other Options](#help-and-other-options)
+  - [Navigating the GDS GUI](#navigating-the-gds-gui)
+    - [Commanding](#commanding)
+    - [Events](#events)
+    - [Channels](#channels)
+    - [Uplink](#uplink)
+    - [Downlink](#downlink)
+    - [Logs](#logs)
+    - [Dashboard](#dashboard)
+  - [Conclusion](#conclusion)
+
+![GDS Image](../../img/gds_gui_events.png)
+
+## What is the GDS?
+
+A GDS is the "Ground Data System" that supports large-scale embedded systems by allowing operators to interact with the
+embedded system. This system is typically used with spacecraft to facilitate control and monitoring of those systems'
+flight software. Any data being sent from a ground computer to the spacecraft, or vice versa, has to pass through a GDS.
+
+The F´ GDS provides this capability out-of-the-box to developers and projects using F´. This means that functions
+traditionally performed through the GDS like systems testing, operation testing, and developer debugging can happen
+as soon as F´ is installed. This frees users of F´ to quickly get started on processes that usually occur at the end of
+the project even if a different GDS will eventually be used.
+
+The rest of this guide will talk about how to use the built-in F´ GDS. Let's take a look!
+
+**Note:** The `Ref` application will be used as the flight software for exploring the GDS.  It will work with your
+project too!
+
+## Getting Started
+
+The F´ GDS is a minimal amount of Python code and JavaScript that is automatically installed when you run the F´
+installation instructions in the [installation guide](../../getting-started/installing-fprime.md). This guide will walk the user through running
+the GDS, setting options, and letting the user loose to run the system.
+
+
+### Running the GDS
+
+To start the GDS with the default settings (IP adapter, default ports, loading the default dictionary for the project),
+navigate to the project directory and run `fprime-gds`. This will launch both the `Ref` flight software and the GDS layer along with the browser pointed at the GDS.
+
+```bash
+$ cd fprime/Ref
+$ fprime-gds
+```
+
+**Note:** Ensure the virtual environment has been activated.  Consult the installation guide for more information.
+
+`Ref` is just an example application that comes with F´; you can run `fprime-gds` in any deployment project folder. For
+this to work properly, the user must build and install the `Ref` application using `fprime-util`.
+
+By default, the `fprime-gds` command uses the current deployment to find the dictionary and the flight software to run.
+The dictionary is used for the GDS to understand the events, channels, and commands produced by the embedded system and
+the software is run as a convenience for local testing (`-n` will disable this feature).
+
+In the following sections, we will explore various options for using the GDS.
+
+## GDS Options
+
+While fine for basic testing, you may want to change the operation of the GDS to meet project needs. Here are a few
+common scenarios where most users will want to modify the operation.
+
+To learn the F´ GDS UI, [skip to this section](#navigating-the-gds-gui).
+
+### Specify the Deployment or Dictionary
+
+By default, the GDS will try to use the current working directory to find the deployment or dictionary it needs to run.
+If a user wants to specify the deployment, specify the `-d DEPLOY_DIR` option. This can be run from anywhere and does
+not require `cd`.
+
+```bash
+$ fprime-gds -d path/to/deployment
+```
+
+The GDS does not need to automatically run flight software (see next section) and thus doesn't strictly need a full
+deployment directory.  The user can simply specify the `--dictionary` for basic operations. **Note:** the GDS logs will
+be placed in the user's home directory when the `-d`/`--deploy` flag isn't set.
+
+```bash
+$ fprime-gds -n --dictionary path/to/dictionary/
+```
+
+**Note:** `-n` is described below.
+
+### Disable Automatic Flight Software Execution
+
+By default, starting the GUI will also execute any native build of the deployments' F´ flight software instance. Often,
+this becomes unnecessary as testing migrates to the embedded system. This automatic execution can be disabled by
+supplying the `-n` flag. This also means the GDS is not required to be supplied a `-d`/`--deploy` flag, and the user can
+run it with just the `--dictionary` and `-l`/`--log` flags.
+
+```bash
+$ fprime-gds -n
+```
+
+### Specify GDS Addresses and Ports
+
+By default, the GDS runs on the local machine and uses the following local addresses and ports:
+
+- **127.0.0.1:5000**: Hosts the HTML frontend. The browser connects here to access the GUI.
+- **0.0.0.0:50000**: The default communication interface port. The embedded system connects here.
+- **0.0.0.0:50050**: An internal port used for transporting GDS data. Communication and HTML endpoints internally connect here.
+
+If a user wishes to change the IP address and port used to allow the embedded system to connect to the GDS, the user
+should specify the `--ip-address ADDRESS` and `--ip-port PORT` flag. **Note:** These options are only available when
+using the default IP connector.
+
+```bash
+$ fprime-gds --ip-address 8.8.8.8 --ip-port 12345
+```
+
+If you need to change the IP or port of the internal server, you can do so by passing the `--tts-addr IP_ADDRESS` and
+`--tts-port TTS_PORT` options, respectively. This allows the user to avoid collisions with other ports.
+
+```bash
+$ fprime-gds --tts-addr 8.8.8.8 --tts-port 12345
+```
+
+Changing the port used by the UI is done using the flask configuration by setting the `ADDRESS` and `PORT` settings in
+the `gds.ini` file. This file can be set with the `-c` flag. The `ADDRESS` or `PORT` environment variables can also be
+set to modify these variables.
+
+### Run the GDS Without a UI
+
+In some cases, the user may wish to run the GDS without the HTML/browser UI loading. This can be done using the
+`-g none` flag. This is usually done when running automatic integration testing, or using the [`fprime-cli`](../gds/gds-cli.md)
+tool to operate without a UI.
+
+```bash
+$ fprime-gds -g none
+```
+
+### Help and Other Options
+
+To see the full list of options you have when running the `fprime-gds` command, use the `--help` flag. e.g.
+`fprime-gds --help`.
+
+## Navigating the GDS GUI
+
+When running the GDS using the default UI, the GDS should launch a browser tab that looks similar to the following. In
+general, the available tabs are listed across the top and each view can be selected by clicking on those tabs.
+
+![Launched Browser Window](../../img/gds_gui_commanding.png)
+
+Across the top of the screen is a series of tabs: "Commanding", "Events", etc. Each of those tabs represents a piece of
+the GDS's functionality. Each view opens when you click on it. Next, we'll go through each tab's functions in more
+detail in upcoming sections.
+
+To the right of those tabs is a "New Window" button. If you want to open a new GUI window to view multiple tabs at once
+click that button. This new window will connect to the same backend as the first window.
+
+At the very top-right, there should be a green circle or a red X representing the GUI's connection status. A green
+circle means that data is still flowing from the embedded system, while a red X means the embedded system is currently
+disconnected and not sending/receiving any data. This is reset to an X via timeout, so you may need to configure that
+timeout in the `config.js` file.  This widget is fondly referred to as "the orb" as it quickly shows if there is data
+flow from the embedded F´ system.
+
+There's also an F´ logo on the far left, which is configurable in `config.js`.
+
+The tabs across the top perform most of the functionality of the GDS. What do the tabs contain? Do they contain things?
+Let's find out!
+
+### Commanding
+
+The commanding tab contains the items needed to send commands to the embedded system. All available commands are listed
+in the "Mnemonic" dropdown box, in the form `<COMPONENT>.<COMMAND>`. The commands are found in the dictionary supplied
+to the GDS.  The user may select a command from the dropdown or type to filter the available commands. If the selected
+command requires any arguments, they'll appear below the dropdown where the values may be entered. Invalid argument
+inputs will be outlined in red. When clicked, the "Send Command" button will transmit the selected command and input
+arguments through the GDS and to the embedded system, while "Clear Arguments" will reset the arguments inputs
+to their default values.  Should an error occur in the GDS, it will be shown below the inputs.  The commanding tab is
+shown below. See: [Commands](04-cmd-evt-chn-prm.md#commands)
+
+![Commanding Tab](../../img/gds_gui_commanding.png)
+
+
+Below the command input is the "Command History" table. This records all the commands sent with their associated
+arguments. This is recorded by the GDS and thus may include commands that did not transmit all the way to the embedded
+system in case of communication error or other events. To search for commands, you can type something into the "Filters"
+box and type enter, which displays only matching results. You can sort the rows by one of the table headers
+(e.g. "Command Time") by clicking on that header. Double-clicking a historical command will re-populate the command
+sending component and is useful to retry the transmission of a command.
+
+### Events
+
+The Events tab will display a table of all the "Events" that have happened on the embedded system and been received by
+the GDS. See: [Events](04-cmd-evt-chn-prm.md#events). The Events tab is shown below.
+
+![Events Tab](../../img/gds_gui_events.png)
+
+Each event is color-coded based on its "Event Severity;" there are 7 different kinds of severities:
+
+| Severity | Color | Description |
+|---|---|---|
+| DIAGNOSTIC  |        | Debug events not typically sent to the GDS |
+| COMMAND     | GREEN  | Events produced by the command dispatcher to aid in tracing actual command execution |
+| ACTIVITY_LO | GRAY   | Low priority informational events typically tracking background process actions      |
+| ACTIVITY_HI | BLUE   | High-priority informational events typically tracking ground-commanded foreground actions |
+| WARNING_LO  | YELLOW | Low priority non-critical warning events |
+| WARNING_HI  | ORANGE | High priority critical warning events |
+| FATAL       | RED    | Critical failure event typically resulting in embedded system restart |
+
+Just like the "Command History" table, these items can all be filtered and sorted based on the column headers.
+Additionally, a "Clear" button will clear the table thus making the monitoring of new events easier. There is special
+support for COMMAND event types, which will replace the opcode with the command mnemonic to help the user.  The opcode
+can be found by hovering over the mnemonic and a tooltip will appear.
+
+### Channels
+
+The Channels tab displays an updating table of the latest "Channels", or telemetry data, the GDS has received from the
+embedded system. These represent the latest values and, by default, only telemetry channels that have been received
+by the GDS are shown. Channels with no received value are not displayed but can be configured (described below). Only
+the most recently received value for each channel is shown. This view can be seen below.
+
+![Channel GUIs](../../img/gds_gui_channels.png)
+
+If you want to view a full list of all available channels, set a view to watch specific channels, or monitor all
+channels even those which have not arrived, you can click on the "Edit View". This will show all available channels
+and allows users to tick the checkbox next to a channel that should be shown. Any unchecked channels will be hidden.
+To apply the view, click the "Done".  Import and Export allow downloading and uploading text files that represent these
+views such that they may be saved. The "Edit View" is shown below.
+
+
+![Channel Edit GUIs](../../img/gds_gui_channels_edit.png)
+
+
+Just like the other tables, you can sort or filter these channel items.
+
+### Uplink
+
+The uplink tab allows users to upload files to the embedded system. This is dependent on the usage of the FileUplink
+components and a file system implementation. The uplink process has two steps: staging and uplink. First, the user
+browses for files to uplink to the system.  This submits the files to a working set and allows them to curate that set
+before committing to an uplink. Finally, the user should press the "Submit Uplink" button to upload the files to the GDS,
+add them to the outgoing queue, and start the uplink.  Uplink progress can be monitored and the queue can be paused to
+temporarily stop the uplink. Files are limited to no more than 32Mb.
+
+![Uplink Tab](../../img/gds_gui_uplink.png)
+
+### Downlink
+
+The downlink tab monitors the downlink of files into the GDS. Any files that have been downlinked using the
+`fileDownlink.FileDownlink_SendFile` command will be tracked in this tab once the packets arrive in the F´ GDS. The
+progress of this download is tracked, and once the file has been downlinked, the user has the ability to download the files.
+
+![Downlink](../../img/gds_gui_downlink.png)
+
+### Logs
+
+The logs tab allows the user to monitor logs produced on-disk by the GDS. This is a convenience to allow the user to
+see those without going to the GDS server's ground system. Select a log from the list to see its contents, which update
+in real time.
+
+![Logs](../../img/gds_gui_logs.png)
+
+There are several standard logs that appear:
+- `ThreadedTCP.log`: log from the GDS middleware server linking comm to the GDS actual
+- `channel.log`: log of all channels received by the GDS
+- `command.log`: log of all commands sent by the GDS
+- `event.log`: log of all events received by the GDS
+
+In addition, if the GDS automatically ran flight software, its log will appear here.  Any downlinking files will also
+produce logs available to this tab.
+
+### Dashboard
+
+The dashboard lets users combine the tools from the other tabs onto a single screen, designing their own custom
+interface for working with the GDS. You can learn more about how this works in the
+[Dashboard guide](../gds/gds-custom-dashboards.md).  An example is shown below:
+
+![Dashboard](../../img/dashboard_header.png)
+
+
+## Conclusion
+
+This guide walked the user through running the GDS and navigating the GDS UI. While the GUI can handle everything
+you need for the GDS, it's certainly not required to use it, and some users might prefer a command-line interface for
+certain tasks. You can learn more about how to do this through the [GDS CLI guide](../gds/gds-cli.md).
+````
+
+### `proj-dep.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/proj-dep.md`
+
+
+```markdown
+# Projects and Deployments
+
+F´ is naturally organized into projects and deployments. Projects use F´ to solve some embedded system problem, and may
+consist of one or more deployments. Deployments are tied to individual builds of code and are typically used to drive
+a single device.
+
+A topology is a specific set of interconnected components, which represents the design of a deployment. Further
+explanation of projects and deployments and how they differ is explained in this guide.
+
+- [Projects](#projects)
+- [Deployments](#deployments)
+- [Topologies](#topologies)
+- [Conclusion](#conclusion)
+
+To illustrate this, the Mars Helicopter project is an excellent example. Mars Helicopter uses one project that defines
+two deployments: one for a base station, and one for the mobile helicopter. This is shown in Figure 1.
+
+![Mars Helicopter](../../img/proj_dep1.png)
+**Figure 1. Mars Helicopter flight software components.**
+
+## Projects
+
+A project may consist of one or more related deployments. Each deployment is one instance of F´ software. Projects are
+used to organize F´ code that is closely related. They define at least one deployment (see above), but may define
+multiple deployments. Component designs and source may be shared between these related deployments.
+
+There are several reasons a project may contain multiple deployments.
+
+1. A project consists of multiple spacecraft/electronic platforms/CPUs/systems. F´ can be used on multiple nodes in such systems.
+2. A project has test deployments, mocked-deployments, or other deployments that allow for specific testing setups.
+
+Figure 1 shows an example of a project, the Mars Helicopter flight software, which was implemented with F´. The Mars
+Helicopter is the project, but has two deployments: one designated for the helicopter, and one designated for the base
+station.
+
+## Deployments
+
+Deployments are tied to builds; for each build of the code there is a single deployment. These deployments may share
+components and ports from within the project, but the topology and the individual build of F´ are typically unique.
+
+Deployments may define custom components and ports that are only used in that specific deployment. They may also inherit
+other components, like those defined by the F´ framework. Each F´ deployment uses a set of components and ports,
+and has a single topology. Components and ports are organized into the deployments topology to represent the behavior of
+that deployment.
+
+Deployments contain the needed build system artifacts to build the F´ framework, components, ports, and the topology
+into an executable that can be deployed onto embedded hardware, or even run on the user’s computer.
+
+
+In our example, multiple non-homogeneous systems are defined for the Mars Helicopter. It has multiple deployments as
+each system would have a separate unique executable to control it.
+
+
+## Topologies
+
+A topology is a specific set of interconnected components that represent a system. Topologies contain instantiations of
+each component, and list connections between the ports of the components.
+
+Projects contain one or more deployments that are closely related, as discussed above, while deployments contain a
+topology that represents the design of the system including, ports, and components needed for the specific use of F´.
+
+## Conclusion
+
+Projects are containers of related deployments to solve some problem. Deployments are a container for a topology and
+build configuration to create an executable for a specific device used on the project.
+```
+
+### `source-tree.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/source-tree.md`
+
+
+```markdown
+---
+search:
+  boost: 0.4
+---
+
+# A Tour of the Source Tree
+
+The following directories constitute the demonstration code. The
+directories are a mix of tools, framework code, and demonstration code.
+Details on each module can be seen in the docs/sdd.md (or html)
+subdirectory. When the code generator is run in a particular directory,
+it will generate files with the suffixes Ac.hpp and Ac.cpp. These files
+are not described since they are considered build products. They are
+automatically incorporated into the build by the build system.
+
+
+## docs
+
+The Docs directory contains documentation related to the design and
+usage of the F′ framework.
+
+## Fw
+
+The Fw directory is the location of framework code and base classes.
+This code should not be modified by developers using the framework. The code generation relies on
+the types declared to construct the entities in the architecture.
+
+### config
+
+The config directory contains header files used to
+configure various properties of the architecture. The developer can
+modify the file to tune the architecture for the requirements of a
+particular deployment environment. The contents are described in Section
+9.
+
+The file AcConstants.fpp contains a set of values for variables used in
+the code generation. Using this file allows component features like opcodes
+and port numbers to be changed without modifying the component FPP itself. 
+
+### Types
+
+The Types directory contains basic types and other base classes used in
+the architecture, as shown in Table 2.
+
+### Obj
+
+The Obj directory contains class declarations and implementations for
+the root base class in the architectural framework. FwObjBase.hpp
+contains the declaration for the object base class. In addition, it
+contains a declaration for an object registry class. An object registry
+is an optional feature that allows all objects to be registered as they
+are created. It is a way to keep track of which objects have been
+created as well as perform some common actions such as printing a string
+representation of each object. Components and ports use the object class
+as a base class. Table 3 lists the files and their descriptions.
+
+
+### Port
+
+The Port directory contains the base classes for ports. Table 4 lists
+the files and their descriptions.
+
+
+### Comp
+
+The Comp directory contains the class declarations for the various kinds
+of components. These classes act as base classes for components created
+by the code generation and are not directly used by developers. Table 5
+lists the files and their descriptions.
+
+
+### Cmd
+
+This Cmd directory contains FPP and class declarations used to generate
+code for command interfaces to components. The FPP generates port
+classes in the normal way via the code generator. The code generator
+then uses those generated classes as special command input ports for
+components that define commands in their component FPP. Since the ports
+themselves are generated in the same way as any other port, they can be
+used by developers in other components that process commands, such as command dispatchers. Table 6 lists the files and their descriptions.
+
+### Tlm
+
+This Tlm directory contains FPP and class declarations used to generate
+code for channelized telemetry interfaces for components. Channelized
+telemetry has historically been a snapshot in time of a set of data. Every
+value of that data is not necessarily stored permanently, but is
+sampled. The FPP generates port classes in the normal way via the code
+generator. The code generator then uses those generated classes as
+special telemetry output ports for components needing telemetry. Since
+the ports themselves are generated in the same way as any other port,
+they can be used by developers in other components that process
+telemetry, such as a telemetry buffer for downlinking telemetry. Table 7
+lists the files and their descriptions.
+
+
+###  Log
+
+This Log directory contains FPP and class declarations used to generate
+code logging (event) interfaces for components. Developer implementation
+code sends log events to capture all the events of interest in a system
+as they happen. Other components serve to store events for forwarding to
+a ground interface or test software. An FPP definition for telemetry
+ports is defined, which the code generator then uses as special logging
+output ports for components. Since the ports themselves are generated in
+the same way as any other port, they can be used by developers in other
+components that process logging, such as a logging history. Table 8
+lists the files and their descriptions.
+
+
+### Prm
+
+This Prm directory contains FPP and class declarations used to generate
+parameter interfaces for components. Parameters are values are meant to
+be stored in nonvolatile storage that affect various properties of the
+software. Parameters are loaded at run time and given to components on
+request. An FPP definition for a parameter port is used by the code
+generator to create special parameter output ports for components. Since
+the ports themselves are generated in the same way as any other port,
+they can be used by developers in other components that provide
+parameters. Table 9 lists the files and their descriptions.
+
+### Time
+
+This Time directory contains FPP and class declarations used to generate
+time interfaces for components. The time interface port is created by
+the code generator as a source of time for time-tagging telemetry
+samples and log events. Since the ports themselves are generated in the
+same way as any other port, they can be used by developers in other
+components that provide time from whatever sources are present in the
+system. Table 10 lists the files and their descriptions.
+
+
+### Com
+
+This Com directory contains definitions for a communication port. This
+port could be used as an interface to components that send and receive
+data to ground or test software. Table 11 lists the files and their
+descriptions.
+
+
+
+## Svc
+
+The intent of this directory is to provide a set of components
+implementing services that would be useful for a flight application. The
+service layer in software is traditionally the layer that provides the
+mechanism for executing the software and managing data. The components,
+ports, and other types are examples of how the architecture can be
+applied. The component example implementations are very simple; flight
+versions would most likely be more sophisticated. The way development is
+done is that the developer will define the components and their
+properties in FPP. The code generator will generate C++ classes that
+encapsulate the features of the component. The developer will then write
+a class that derives from those generated classes and implement the port
+methods. For these directories, each file will not be described, but a
+higher-level description of what each directory contains will be given
+instead. The descriptions are as follows.
+
+### EventManager
+
+This directory contains a component FPP description and implementation
+for an active component that accepts serialized log events. The input
+port accepting log entries puts them in a message queue for the
+component thread. The component thread calls the port handler in the
+derived class written by the developer. In this case, the handler simply
+takes the log entry, serializes it into a communications buffer, and
+sends it out via the output communications port. There are commands for
+filtering the event levels.
+
+### ActiveRateGroup
+
+This directory contains a component implementation of an active rate
+group. In real-time programming, a rate group is a thread of execution
+that does a sequential set of operations that execute cyclically and are
+required to be complete by a certain deadline. In this case, this
+component provides the thread for the rate group and sequentially calls
+a set of output ports that would be connected to other components doing
+the specific operations that are required.
+
+### CmdDispatcher
+
+This directory contains an implementation of a command dispatcher. The
+commands are received in serialized form from another component. The
+command identifier (opcode) is deserialized, and an output port is
+looked up that is matched with that identifier. The port is then invoked
+with the serialized command arguments. After executing the command, the
+component responds back to the dispatcher via a response port and
+reports on the outcome of the command. The dispatcher then calls a
+status output port if connected in the event there was something else
+such as a sequencer waiting for a result. During initialization, a
+command registration port is called by components to match the
+identifier with the port that the component is executing commands from.
+The component also implements some NO\_OP commands.
+
+### CmdSequencer
+
+This directory contains an implementation of a command sequencer. A
+sequence file uploaded to the system contains a set of commands that are
+executed in order with optional time points. The sequencer waits until
+the current command is complete before executing the next in the
+sequence. A failed command terminates the sequence.
+
+### CmdRecord
+
+This directory specifies the port used to pass command buffers between
+the SequenceFileLoader and the SequenceRunner components.
+
+### Cycle
+
+This directory specifies the port used to drive the ActiveRateGroup
+components. The port passes a time stamp indicating when the cycle started.
+
+### Fatal
+
+The directory specifies a port used to pass a notification that a FATAL
+event has occurred. It is currently produced by the EventManager
+component when it receives a FATAL event from a component.
+
+### GndIf
+
+The directory contains just the FPP definition of a component that could
+be used to send and receive communications packets. The uplink port
+would be connected to the command dispatcher for executing commands, and
+the downlink port would be connected by components collecting downlink
+telemetry like logs and channelized data. A derived class implementing a
+TCP/IP socket version can be seen in SocketGndIf.
+
+### Hub
+
+A hub is a pattern for communicating between computing nodes. A hub
+component is a component that contains input and output serialized
+ports. As mentioned in Section 5.3.4, when a typed port is connected to
+a serialized port, the port arguments are serialized and passed as a
+data buffer to the serialized port. Likewise, when a data buffer is sent
+from a serialized port to a typed port, the data are deserialized back
+into the typed arguments of the port. A hub component takes the
+serialized data passed to it and sends it via a communication channel to
+a hub on a remote node. The remote hub takes that data and calls a
+serialized output port connected to a typed port of the same type as the
+original port. That allows components to be interconnected across
+computing nodes without any modifications to the components themselves.
+This particular hub is implemented as an active hub, which means that
+the serial buffers from the incoming ports are put in a message queue
+and then sent out to the DataOut ports on the thread of the component. The
+data output ports are in the form of a generic com buffer. The data
+output ports would be connected to a component that manages the
+communication hardware. Likewise, incoming data on the DataIn port is
+queued for the component thread, which sends it out via a serialized
+output port.
+
+### LinuxTime
+
+This component is an adaptation of the time source component specified in
+the Time directory. In this case, it is a time source that makes a Linux
+system call for the Linux demo.
+
+### PassiveConsoleTextLogger
+
+This is an adaptation of the PassiveTextLogger component that simply
+takes the text version of the log and prints it to the standard output.
+
+### PassiveRateGroup
+
+This is a rate group with the same implementation as the active rate
+group in Section 5.4.2, with the exception that the component does not
+have a thread. The thread that calls the input run port will be used to
+call all the output ports. This component is not currently used in the
+reference application.
+
+### PassiveTextLogger
+
+This defines a base class for a component that prints the text version
+of events. It executes on the thread of the caller. The implementation
+classes are elsewhere, such as PassiveConsoleTextLogger.
+
+### PolyDb
+
+This component implements a database of PolyType entries. The intent is
+for this to be used as a database of values being used by different
+components in the system. Some components submit new values they have
+gathered, and other components retrieve the ones they use.
+
+### PolyIf
+
+This contains the definition for a PolyPort, or a port that passes a
+PolyType. It is used to set and get values for the PolyDb component.
+
+### PrmDb
+
+This component implements storage for parameters. It implements the
+framework setPrm and getPrm ports. Parameter values are stored as a
+table based on parameter ID. It reads a file during initialization that
+contains the parameter values and loads them into memory. Subsequent
+calls to getPrm will get the loaded file. Parameter values in the
+components can be updated by command and saved to PrmDb. The PrmDb
+component can be commanded to save the updated values to a file.
+
+### RateGroupDriver
+
+This component takes a primary clock tick in the system and divides it
+down to drive output ports. Constructor arguments define the divisors
+for each port. The output ports are meant to be connected to the input
+ports of rate groups to drive them at the correct rate.
+
+### Sched
+
+This directory contains the definition of a scheduler port that is used
+by the rate group components and rate group members.
+
+### SequenceFileLoader
+
+This directory contains a component that loads a set of command buffers
+from a file and passes them to the SequenceFileRunner component.
+
+### SequenceRunner
+
+The directory contains a component that will sequence through a series
+of command buffers passed through its CmdRecord port.
+
+### SocketGndIf
+
+This directory contains a notional uplink/downlink component that
+communicates with ground software via a TCP/IP socket. It would be
+connected to telemetry sources and the command dispatcher.
+
+### Time
+
+This directory contains the FPP definition for the time source base
+class. A time source is necessary for time-tagging the telemetry and log
+events in components. Various implementations that derive from this base
+class will provide time.
+
+### Tlm
+
+This directory defines a passive telemetry storage component base class.
+It has an input port for the telemetry buffers sent by components. It
+has an output port to send the telemetry packets to a ground interface
+component like the one in Section 5.4.21. It has a scheduler input port
+so that it can be executed periodically on a rate group to send the
+stored telemetry to the ground interface.
+
+### TlmChan
+
+This directory contains an adaptation of the Tlm base class in Section
+5.4.23. In this adaptation, the telemetry is stored in an array of
+telemetry buffers based on the telemetry ID. The storage is
+double-buffered. When the scheduler port is invoked, the component
+switches the active array to non-active and starts copying the
+non-active array to the packet output port. If incoming telemetry calls
+happen during the copy operation, they are placed in the active array.
+
+## Os
+
+This directory contains classes that abstract operating system features.
+This allows the components that are code generated to not be dependent
+on a particular operating system. The architecture is dependent on these
+classes. The subdirectories contain implementations of the class for
+different operating systems. Not all operating systems will implement
+all classes. The classes are as follows.
+
+### Task
+
+This class represents a task (AKA thread) in an operating system
+process. It has methods for starting, ending, waiting, and suspending
+tasks. This class is used by active components.
+
+### Queue
+
+This class represents a message queue. It has methods for creating,
+writing to, reading from, and destroying queues. This class is used by
+queued components.
+
+### Mutex
+
+This class represents a mutex. It is used to guard critical sections of
+data and code. It is used by components that have guarded ports (see
+architecture description).
+
+### File
+
+This class represents a file. It is used to abstract away various
+operating system implementations of file I/O.
+
+## Drv
+
+The Drv directory contains some hypothetical device driver components
+and types. It is part of the example code. The architecture does not
+depend on the source code in this directory. There is no particular
+significance to the name; rather, it was selected to represent how a
+developer might organize their code. The subdirectories are as follows.
+
+### DataTypes
+
+This directory contains the port and data buffer types used by the
+driver and components using the driver.
+
+## Ref
+
+This directory contains a reference application. Components here
+represent what an adapter might do when writing application-specific
+logic. An adapter would use the framework layers, drivers, and services
+that are meant to be reusable, along with application components for a
+particular task.
+
+### BlockDriver
+
+This represents a hardware driver that accepts buffers of data to send
+to a device, and sends buffers that it receives from the device. Since
+there is no real hardware behind the driver, the driver takes any
+incoming data buffers from the input port and sends them out the output
+port.
+
+### SendBuffApp
+
+This passive component represents a part of the application that sends
+data to a consumer. It runs periodically in a rate group and sends a
+packet upon command. It uses the driver described in Section 5.6.1.
+
+### RecvBuffApp
+
+This active component represents a part of the application that receives
+data from a sender, in this case SendBuffApp. It receives a buffer from
+the driver.
+
+### Top
+
+This is the topology module. This is where all the components are
+instantiated and connected together, and the active components are
+started. It is also the location of the C main() function entry point.
+Each deployment (see Section 6.2) will have a module similar to this.
+```
+
+### `unit-testing.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/unit-testing.md`
+
+
+````markdown
+# Unit Testing in F´
+
+Testing is an important part of flight software (FSW) development.
+Testing is divided into two phases: i) unit testing, and ii) integration
+testing. Unit testing tests the individual units, such as F′ components,
+while integration testing tests the integrated system. Test framework
+classes include the auto-generated *TesterBase*, the auto-generated
+*GTestBase*, and the developer-written *Tester*. The testing phases and
+test framework classes are discussed in further detail below.
+
+## Unit Testing
+
+Thorough unit testing is critical. It provides unit-level regression
+tests, and makes integration easier since localized errors are caught
+early and system-level issues only appear during integration.
+
+F′ provides the support for unit testing at the component level. The
+overall framework for unit testing is shown in Figure 1.
+
+![Test](../../img/test1.png)
+
+**Figure 1.** Unit testing framework overview.
+
+The goal of unit testing is to cover all component-level requirements and achieve close to 100% code coverage with a reasonable amount of
+system state and path coverage. These requirements should drive the
+tests. A record of how the tests cover the requirements should be
+maintained. Mapping the tests to requirements can be recorded on a
+spreadsheet, or in the actual test using comments or in the console
+output mechanism.
+
+To start, generate the test classes and add public test methods to the
+tester. The *TesterBase* and the *GTestBase* are auto-generated, while
+the *Tester* is developer-written from a generated template.
+
+***TesterBase*** is the base class for testing a component and provides
+a harness for unit tests. The *TesterBase* interface is the mirror image
+of the component (*C*) under test. For each output port in *C* there is
+an input port called a “from port,” and for each input port in *C* there
+is an output port called a “to port.” For each “from port” there is a
+history (*H*) of data received through a virtual input handler that
+stores its argument into *H*. The *TesterBase* provides utility methods
+for writing tests for the component. These include sending commands,
+sending invocations onto ports, and getting and setting parameters and
+time.
+
+***GTestBase*** is derived from the *TesterBase* and includes headers
+for the Google Test framework with F′ specific macros. It supports test
+assertions, such as *ASSERT\_EQ(3, x)* to check that two values are
+equal when writing tests. The F′ specific macros check the telemetry
+received from the ports, the events received from the ports, and the
+data received (user-defined) from the ports. The *GTestBase* is factored
+into a separate class so its use is optional on systems that do not
+support it.
+
+***Tester*** is derived from the *GTestBase* and contains the component
+under test as a member. The autocoder provides a template where the user
+then adds tests as a public method, and also writes tests in a derived
+class of the *Tester*.
+
+Once the test class is generated, the user can begin to send commands,
+check events and telemetry, check user-defined output ports, set
+parameters and the time, build and run the unit tests from the
+*component directory*, and finally analyze the code coverage from the
+*component directory* after building and running the test. However, be
+sure to review the analysis from the *test/ut directory*.
+
+A standard approach to writing unit tests is to write a complete test
+that covers the requirement. If there is overlap, refactoring into
+functions is the preferred approach to avoid code duplication. A more
+disciplined approach would be to write functions that test individual
+behaviors. When writing test code treat unit testing as a programming
+problem by applying similar style guidelines as the flight code. This
+approach avoids less code duplication and provides more readable,
+maintainable, and modifiable tests.
+
+When writing unit tests for a component be sure to test against the
+interface, such as the send commands and the send data on the output
+ports. Read the internal component state to verify it is good, and only
+modify the state through the interface; do not update the state of the
+component. This approach leads to a more structured test. If there is a
+requirement to test a function in a component implementation that has a
+complex algorithm, then write a test against the function interface.
+
+When unit testing a component, model the external behavior to receive
+commands and send responses by writing a test harness. This approach
+supports modularity testing that can be used for many tests.
+
+To check event and telemetry histories the user first sends a command,
+and then checks events and telemetry by writing the following code.
+
+**Sending Commands:**
+
+```
+// Send command
+this->sendCOMMAND_NAME(
+    cmdSeq, // Command sequence number
+    arg1, // Argument 1
+    arg2 // Argument 2
+);
+
+this->component.doDispatch();
+// Assert command response
+ASSERT_CMD_RESPONSE\_SIZE(1);
+ASSERT_CMD_RESPONSE(
+    0, // Index in the history
+    Component::OPCODE\_COMMAND\_NAME, // Expected command opcode
+    cmdSeq, // Expected command sequence number
+    Fw::CmdResponse::OK // Expected command response
+}
+```
+
+**Checking Events:**
+
+```
+// Send command and check response
+…
+
+// Assert total number of events in history
+ASSERT_EVENTS_SIZE(1);
+
+// Assert number of a particular event
+ASSERT_EVENTS_EventName_SIZE(1);
+
+// Assert arguments for a particular event
+ASSERT_EVENTS_EventName(
+    0, // Index in history
+    arg1, // Expected value of argument 1
+    arg2 // Expected value of argument 2
+);
+```
+
+**Checking Telemetry:**
+```
+// Send command and check response
+…
+
+// Assert total number of telemetry entries in history
+ASSERT_TLM_SIZE(1);
+
+// Assert number of entries on a particular channel
+ASSERT_TLM_ChannelName_SIZE(1);
+
+// Assert value for a particular entry
+ASSERT_TLM_ChannelName(
+    0, // Index in history
+    value // Expected value
+);
+```
+To check the user-defined output ports write the following code.
+```
+// Send command and check response
+…
+
+// Assert total number of entries on from ports
+ASSERT_FROM_PORT_HISTORY_SIZE(1);
+
+// Assert number of entries on a particular from port
+ASSERT_from_PortName_SIZE(1);
+
+// Assert value for a particular entry
+ASSERT_from_PortName(
+    0, // Index in history
+    arg1, // Expected value of argument 1
+    arg2 // Expected value of argument 2
+);
+```
+
+To set the parameters in a test of component *C*, write the following
+code. This call stores the argument in member variables of *TesterBase*,
+so when *C* invokes the *ParamGet* port it receives the argument.
+
+```
+this->paramSet_ParamName(
+    value, // Parameter value
+    Fw::PARAM_VALID // Parameter status
+);
+```
+
+Next, to set the time in a text of component *C*, write the following
+code. *Time* is an *Fw::Time* object, so when *C* invokes the *TimeGet*
+port it receives the value time.
+
+`this->setTime(time)`
+
+The F′ Prime build system provides targets for building and running
+component unit tests.
+
+To build unit tests, go to the component directory (not the *test/ut*
+directory) and run `fprime-util generate --ut`.
+
+To run unit tests, go to the component directory (not the *test/ut*
+directory) and run `fprime-util check [parameter flags]`.
+
+Unit test check parameter | Description
+---|---
+`--all` | Run all unit tests, combinable with `coverage`
+`--coverage` | Check for code coverage in unit tests
+
+For example, to run all unit tests and check for code coverage, run `fprime-util check --all --coverage`.
+
+### Choosing a test library
+
+Components that call into libraries have two ways to write tests:
+
+- Link against the library in the test
+- Link against a mock or stub library
+
+If you link against the library in the test, avoid linking against the
+mock or stub library. Linking against only the test library proves that the component code works with the actual library.
+
+Linking against a mock or stub library makes it easier to induce
+behaviors for testing, like injecting faults. This approach may be
+the only option on some platforms.
+
+### Code coverage
+
+Code coverage checks which lines were run at least once during
+a test. Tools like *gcov* perform code coverage analysis by compiling and running the tests, then producing a report.
+
+Generally, code coverage checks close to 80% of lines. The remaining
+lines are usually off-nominal behaviors that may require additional
+effort to check by reverse reasoning from the desired behavior to
+synthesize the inputs, or by injecting faults into the library
+behaviors.
+
+Note that 100% code coverage does not check which system states were tested, nor which paths through the code were tested.
+
+To review code coverage analysis, go to the component directory and review the summary output *\_gcov.txt* files. Next, go to the component directory to review the coverage annotation *.hpp.gcov* and *.cpp.gcov* source files.
+````

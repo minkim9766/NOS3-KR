@@ -3,16 +3,40 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `LinuxCpuTests.cpp`
 
-file--LinuxCpuTests.cpp
-file--LinuxMemoryTests.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/ut/LinuxCpuTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/test/ut/LinuxCpuTests.cpp
+// \brief tests using Linux implementation for Os::Cpu interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `LinuxMemoryTests.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/ut/LinuxCpuTests.cpp`](file--LinuxCpuTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/ut/LinuxMemoryTests.cpp`](file--LinuxMemoryTests.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Linux/test/ut/LinuxMemoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Linux/test/ut/LinuxMemoryTests.cpp
+// \brief tests using Linux implementation for Os::Memory interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

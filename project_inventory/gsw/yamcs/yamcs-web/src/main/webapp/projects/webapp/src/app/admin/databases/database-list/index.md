@@ -3,16 +3,114 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `database-list.component.html`
 
-file--database-list.component.html
-file--database-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/database-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Databases" />
+
+  <ya-panel>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="ya-data-table expand"
+      matSort
+      matSortActive="name"
+      matSortDirection="asc"
+      matSortDisableClear>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+        <td mat-cell *matCellDef="let database">
+          <a [routerLink]="database.name">
+            {{ database.name }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="tablespace">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tablespace</th>
+        <td mat-cell *matCellDef="let database">
+          {{ database.tablespace }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="path">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Path</th>
+        <td mat-cell *matCellDef="let database">
+          {{ database.path }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `database-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/database-list.component.html`](file--database-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/database-list.component.ts`](file--database-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/database-list/database-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  Database,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './database-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class DatabaseListComponent implements AfterViewInit {
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = ['name', 'tablespace', 'path', 'actions'];
+
+  dataSource = new MatTableDataSource<Database>();
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    messageService: MessageService,
+  ) {
+    title.setTitle('Databases');
+    yamcs.yamcsClient
+      .getDatabases()
+      .then((databases) => {
+        this.dataSource.data = databases;
+      })
+      .catch((err) => messageService.showError(err));
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+}
+```

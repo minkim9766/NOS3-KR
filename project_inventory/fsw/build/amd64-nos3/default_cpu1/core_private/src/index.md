@@ -3,26 +3,46 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `check_cfe_core_resourceid_basevalues.h.c`
 
-file--check_cfe_core_resourceid_basevalues.h.c
-file--check_cfe_es_erlog_typedef.h.c
-file--check_cfe_es_perfdata_typedef.h.c
-file--check_cfe_es_resetdata_typedef.h.c
-file--check_cfe_evs_log_typedef.h.c
-file--check_cfe_sb_destination_typedef.h.c
-file--check_cfe_sbr.h.c
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_core_resourceid_basevalues.h.c`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_core_resourceid_basevalues.h.c`](file--check_cfe_core_resourceid_basevalues.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_erlog_typedef.h.c`](file--check_cfe_es_erlog_typedef.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_perfdata_typedef.h.c`](file--check_cfe_es_perfdata_typedef.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_resetdata_typedef.h.c`](file--check_cfe_es_resetdata_typedef.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_evs_log_typedef.h.c`](file--check_cfe_evs_log_typedef.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_sb_destination_typedef.h.c`](file--check_cfe_sb_destination_typedef.h.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_sbr.h.c`](file--check_cfe_sbr.h.c) — 빌드 산출물 (경로만)
+### `check_cfe_es_erlog_typedef.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_erlog_typedef.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `check_cfe_es_perfdata_typedef.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_perfdata_typedef.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `check_cfe_es_resetdata_typedef.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_es_resetdata_typedef.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `check_cfe_evs_log_typedef.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_evs_log_typedef.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `check_cfe_sb_destination_typedef.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_sb_destination_typedef.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `check_cfe_sbr.h.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/core_private/src/check_cfe_sbr.h.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

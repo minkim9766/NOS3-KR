@@ -3,20 +3,380 @@
 
 **경로:** `components/generic_css/fsw/standalone/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--device_cfg.h
-file--generic_css_checkout.c
-file--generic_css_checkout.h
+**경로:** `components/generic_css/fsw/standalone/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+
+project (generic_css_checkout)
+
+if (NOT DEFINED TGTNAME)
+  message(FATAL_ERROR "TGTNAME must be defined on the cmake command line (e.g. \"-DTGTNAME=cpu1\")")
+endif()
+
+include(../../../ComponentSettings.cmake)
+
+if(${TGTNAME} STREQUAL cpu1)
+  find_path(_ITC_CMAKE_MODULES_
+    NAMES FindITC_Common.cmake
+    PATHS ${ITC_CMAKE_MODULES}
+            ${ITC_DEV_ROOT}/cmake/modules
+            $ENV{ITC_DEV_ROOT}/cmake/modules
+            /usr/local/cmake/modules
+            /usr/cmake/modules)
+  if(NOT _ITC_CMAKE_MODULES_)
+    message(WARNING "Unable to find ITC CMake Modules")
+  endif()
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+  find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+endif()
+
+include_directories("./")
+include_directories("../cfs/platform_inc")
+include_directories("../cfs/src")
+include_directories("../shared")
+include_directories("../../../../fsw/apps/hwlib/fsw/public_inc")
+
+set(generic_css_checkout_src
+  generic_css_checkout.c 
+  ../shared/generic_css_device.c
+)
+
+if(${TGTNAME} STREQUAL cpu1)
+  include_directories("../../../../fsw/apps/hwlib/sim/inc")
+  set(generic_css_checkout_src 
+    ${generic_css_checkout_src}
+    ../../../../fsw/apps/hwlib/sim/src/libuart.c
+    ../../../../fsw/apps/hwlib/sim/src/libcan.c
+    ../../../../fsw/apps/hwlib/sim/src/libi2c.c
+    ../../../../fsw/apps/hwlib/sim/src/libspi.c
+    ../../../../fsw/apps/hwlib/sim/src/nos_link.c
+  )
+  set(generic_css_checkout_libs
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+  )
+endif()
+if(${TGTNAME} STREQUAL cpu2)
+  set(generic_css_checkout_src 
+    ${generic_css_checkout_src}
+    ../../../../fsw/apps/hwlib/fsw/linux/libuart.c
+  )
+endif()
+
+add_executable(generic_css_checkout ${generic_css_checkout_src})
+target_link_libraries(generic_css_checkout ${generic_css_checkout_libs})
+
+if(${TGTNAME} STREQUAL cpu1)
+  set_target_properties(generic_css_checkout PROPERTIES COMPILE_FLAGS "-g" LINK_FLAGS "-g")
+endif()
 ```
 
-## 항목
+### `device_cfg.h`
 
-- [`components/generic_css/fsw/standalone/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/standalone/device_cfg.h`](file--device_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/standalone/generic_css_checkout.c`](file--generic_css_checkout.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/standalone/generic_css_checkout.h`](file--generic_css_checkout.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_css/fsw/standalone/device_cfg.h`
+
+
+```c
+#ifndef _GENERIC_CSS_CHECKOUT_DEVICE_CFG_H_
+#define _GENERIC_CSS_CHECKOUT_DEVICE_CFG_H_
+
+/*
+** GENERIC_CSS Checkout Configuration
+*/
+#define GENERIC_CSS_CFG
+#define GENERIC_CSS_CFG_STRING      "i2c_2"
+#define GENERIC_CSS_CFG_HANDLE      2
+#define GENERIC_CSS_CFG_BAUDRATE_HZ 1000
+#define GENERIC_CSS_CFG_MS_TIMEOUT  250
+#define GENERIC_CSS_CFG_DEBUG
+
+#endif /* _GENERIC_CSS_CHECKOUT_DEVICE_CFG_H_ */
+```
+
+### `generic_css_checkout.c`
+
+**경로:** `components/generic_css/fsw/standalone/generic_css_checkout.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_css_checkout.c
+**
+** Purpose:
+**   This checkout can be run without cFS and is used to quickly develop and
+**   test functions required for a specific component.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_css_checkout.h"
+
+/*
+** Global Variables
+*/
+i2c_bus_info_t                Generic_CSSI2c;
+GENERIC_CSS_Device_Data_tlm_t Generic_CSSData;
+
+/*
+** Component Functions
+*/
+void print_help(void)
+{
+    printf(PROMPT "command [args]\n"
+                  "---------------------------------------------------------------------\n"
+                  "help                               - Display help                    \n"
+                  "exit                               - Exit app                        \n"
+                  "css                                - Request generic_css data        \n"
+                  "  c                                - ^                               \n"
+                  "\n");
+}
+
+int get_command(const char *str)
+{
+    int  status = CMD_UNKNOWN;
+    char lcmd[MAX_INPUT_TOKEN_SIZE];
+    strncpy(lcmd, str, MAX_INPUT_TOKEN_SIZE);
+
+    /* Convert command to lower case */
+    to_lower(lcmd);
+
+    if (strcmp(lcmd, "help") == 0)
+    {
+        status = CMD_HELP;
+    }
+    else if (strcmp(lcmd, "exit") == 0)
+    {
+        status = CMD_EXIT;
+    }
+    else if (strcmp(lcmd, "css") == 0)
+    {
+        status = CMD_GENERIC_CSS;
+    }
+    else if (strcmp(lcmd, "c") == 0)
+    {
+        status = CMD_GENERIC_CSS;
+    }
+    return status;
+}
+
+int process_command(int cc, int num_tokens, char tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE])
+{
+    int32_t status      = OS_SUCCESS;
+    int32_t exit_status = OS_SUCCESS;
+    /* Process command */
+    switch (cc)
+    {
+        case CMD_HELP:
+            print_help();
+            break;
+
+        case CMD_EXIT:
+            exit_status = OS_ERROR;
+            break;
+
+        case CMD_GENERIC_CSS:
+            if (check_number_arguments(num_tokens, 0) == OS_SUCCESS)
+            {
+                status = GENERIC_CSS_RequestData(&Generic_CSSI2c, &Generic_CSSData);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("GENERIC_CSS_RequestData command success\n");
+                }
+                else
+                {
+                    OS_printf("GENERIC_CSS_RequestData command failed!\n");
+                }
+            }
+            break;
+
+        default:
+            OS_printf("Invalid command format, type 'help' for more info\n");
+            break;
+    }
+    return exit_status;
+}
+
+int main(int argc, char *argv[])
+{
+    int     status = OS_SUCCESS;
+    char    input_buf[MAX_INPUT_BUF];
+    char    input_tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE];
+    int     num_input_tokens;
+    int     cmd;
+    char   *token_ptr;
+    uint8_t run_status = OS_SUCCESS;
+
+/* Initialize HWLIB */
+#ifdef _NOS_ENGINE_LINK_
+    nos_init_link();
+#endif
+
+    /* Open device specific protocols */
+    Generic_CSSI2c.handle = GENERIC_CSS_CFG_HANDLE;
+    Generic_CSSI2c.isOpen = PORT_CLOSED;
+    Generic_CSSI2c.speed  = GENERIC_CSS_CFG_BAUDRATE_HZ;
+    Generic_CSSI2c.addr   = GENERIC_CSS_I2C_ADDRESS;
+    status                = i2c_master_init(&Generic_CSSI2c);
+    if (status == OS_SUCCESS)
+    {
+        printf("I2C device %d configured with speed %d \n", Generic_CSSI2c.handle, Generic_CSSI2c.speed);
+    }
+    else
+    {
+        printf("I2C device %d failed to initialize! \n", Generic_CSSI2c.handle);
+        run_status = OS_ERROR;
+    }
+
+    /* Main loop */
+    print_help();
+    while (run_status == OS_SUCCESS)
+    {
+        num_input_tokens = -1;
+        cmd              = CMD_UNKNOWN;
+
+        /* Read user input */
+        printf(PROMPT);
+        fgets(input_buf, MAX_INPUT_BUF, stdin);
+
+        /* Tokenize line buffer */
+        token_ptr = strtok(input_buf, " \t\n");
+        while ((num_input_tokens < MAX_INPUT_TOKENS) && (token_ptr != NULL))
+        {
+            if (num_input_tokens == -1)
+            {
+                /* First token is command */
+                cmd = get_command(token_ptr);
+            }
+            else
+            {
+                strncpy(input_tokens[num_input_tokens], token_ptr, MAX_INPUT_TOKEN_SIZE);
+            }
+            token_ptr = strtok(NULL, " \t\n");
+            num_input_tokens++;
+        }
+
+        /* Process command if valid */
+        if (num_input_tokens >= 0)
+        {
+            /* Process command */
+            run_status = process_command(cmd, num_input_tokens, input_tokens);
+        }
+    }
+
+    // Close the device
+    i2c_master_close(&Generic_CSSI2c);
+
+#ifdef _NOS_ENGINE_LINK_
+    nos_destroy_link();
+#endif
+
+    OS_printf("Cleanly exiting generic_css application...\n\n");
+    return 1;
+}
+
+/*
+** Generic Functions
+*/
+int check_number_arguments(int actual, int expected)
+{
+    int status = OS_SUCCESS;
+    if (actual != expected)
+    {
+        status = OS_ERROR;
+        OS_printf("Invalid command format, type 'help' for more info\n");
+    }
+    return status;
+}
+
+void to_lower(char *str)
+{
+    char *ptr = str;
+    while (*ptr)
+    {
+        *ptr = tolower((unsigned char)*ptr);
+        ptr++;
+    }
+    return;
+}
+```
+
+### `generic_css_checkout.h`
+
+**경로:** `components/generic_css/fsw/standalone/generic_css_checkout.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_css_checkout.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_CSS checkout.
+**
+*******************************************************************************/
+#ifndef _GENERIC_CSS_CHECKOUT_H_
+#define _GENERIC_CSS_CHECKOUT_H_
+
+/*
+** Includes
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <time.h>
+
+#include "hwlib.h"
+#include "device_cfg.h"
+#include "generic_css_device.h"
+
+#if TGTNAME == cpu1
+#include "nos_link.h"
+#endif
+
+/*
+** Standard Defines
+*/
+#define PROMPT               "generic_css> "
+#define MAX_INPUT_BUF        512
+#define MAX_INPUT_TOKENS     64
+#define MAX_INPUT_TOKEN_SIZE 50
+#define TELEM_BUF_LEN        8
+
+/*
+** Command Defines
+*/
+#define CMD_UNKNOWN     -1
+#define CMD_HELP        0
+#define CMD_EXIT        1
+#define CMD_GENERIC_CSS 2
+
+/*
+** Prototypes
+*/
+void print_help(void);
+int  get_command(const char *str);
+int  main(int argc, char *argv[]);
+
+/*
+** Generic Prototypes
+*/
+int  check_number_arguments(int actual, int expected);
+void to_lower(char *str);
+
+#endif /* _GENERIC_CSS_CHECKOUT_H_ */
+```

@@ -3,22 +3,34 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_config.ini`
 
-file--default_config.ini
-file--kalman_csv_output_example.ini
-file--redis_example.ini
-file--reporter_config.ini
-file--sbn_cfs_config.ini
-```
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/default_config.ini`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/config/default_config.ini`](file--default_config.ini) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/config/kalman_csv_output_example.ini`](file--kalman_csv_output_example.ini) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/config/redis_example.ini`](file--redis_example.ini) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/config/reporter_config.ini`](file--reporter_config.ini) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/config/sbn_cfs_config.ini`](file--sbn_cfs_config.ini) — 빌드 산출물 (경로만)
+### `kalman_csv_output_example.ini`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/kalman_csv_output_example.ini`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `redis_example.ini`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/redis_example.ini`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `reporter_config.ini`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/reporter_config.ini`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sbn_cfs_config.ini`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/config/sbn_cfs_config.ini`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

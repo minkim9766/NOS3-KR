@@ -3,20 +3,42 @@
 
 **경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 mugshots/index
-file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv
-file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv
-file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/mugshots/`](mugshots/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv`](file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv`](file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv`](file--2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv) — UTF-8 텍스트 파일 본문 포함
+### `2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dd.csv`
+
+
+```text
+bbox_area_min_pc10.0,bbox_area_min_pc50.0,bbox_area_min_pc90.0,disp_e2e_norm_pc10.0,disp_e2e_norm_pc50.0,disp_e2e_norm_pc90.0,speed_mean_pc10.0,speed_mean_pc50.0,speed_mean_pc90.0
+0.0008888888888888888,0.005333333333333333,0.026000000000000037,0.00035048231544996503,0.0015622426493100956,0.056604695448484454,0.005392061745000075,0.021025700023112163,0.05330514316400805
+```
+
+### `2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_dqe.csv`
+
+
+```text
+DQE
+0.9199999999999999
+```
+
+### `2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000003/asdp/2021_03_03_dhm_true_med_bsub_grayscale_lab_13_sue.csv`
+
+
+```text
+SUE
+0.43095984260018483
+```

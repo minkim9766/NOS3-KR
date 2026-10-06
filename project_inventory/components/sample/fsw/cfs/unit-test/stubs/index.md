@@ -3,16 +3,179 @@
 
 **경로:** `components/sample/fsw/cfs/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `libuart_stubs.c`
 
-file--libuart_stubs.c
-file--sample_device_stubs.c
+**경로:** `components/sample/fsw/cfs/unit-test/stubs/libuart_stubs.c`
+
+
+```c
+/**
+ * @file
+ *
+ * Auto-Generated stub implementations for functions defined in libuart header
+ */
+
+#include "libuart.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_bytes_available()
+ * ----------------------------------------------------
+ */
+int32_t uart_bytes_available(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_bytes_available, int32_t);
+
+    UT_GenStub_AddParam(uart_bytes_available, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_bytes_available, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_bytes_available, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_close_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_close_port(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_close_port, int32_t);
+
+    UT_GenStub_AddParam(uart_close_port, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_close_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_close_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_flush()
+ * ----------------------------------------------------
+ */
+int32_t uart_flush(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_flush, int32_t);
+
+    UT_GenStub_AddParam(uart_flush, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_flush, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_flush, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_init_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_init_port(uart_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(uart_init_port, int32_t);
+
+    UT_GenStub_AddParam(uart_init_port, uart_info_t *, device);
+
+    UT_GenStub_Execute(uart_init_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_init_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_read_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_read_port(uart_info_t *device, uint8_t data[], const uint32_t numBytes)
+{
+    UT_GenStub_SetupReturnBuffer(uart_read_port, int32_t);
+
+    UT_GenStub_AddParam(uart_read_port, uart_info_t *, device);
+    UT_GenStub_AddParam(uart_read_port, uint8_t *, data);
+    UT_GenStub_AddParam(uart_read_port, const uint32_t, numBytes);
+
+    UT_GenStub_Execute(uart_read_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_read_port, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for uart_write_port()
+ * ----------------------------------------------------
+ */
+int32_t uart_write_port(uart_info_t *device, uint8_t data[], const uint32_t numBytes)
+{
+    UT_GenStub_SetupReturnBuffer(uart_write_port, int32_t);
+
+    UT_GenStub_AddParam(uart_write_port, uart_info_t *, device);
+    UT_GenStub_AddParam(uart_write_port, const uint32_t, numBytes);
+
+    UT_GenStub_Execute(uart_write_port, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(uart_write_port, int32_t);
+}
 ```
 
-## 항목
+### `sample_device_stubs.c`
 
-- [`components/sample/fsw/cfs/unit-test/stubs/libuart_stubs.c`](file--libuart_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/cfs/unit-test/stubs/sample_device_stubs.c`](file--sample_device_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/sample/fsw/cfs/unit-test/stubs/sample_device_stubs.c`
+
+
+```c
+#include "utgenstub.h"
+#include "sample_device.h"
+
+int32_t SAMPLE_ReadData(uart_info_t *device, uint8_t *read_data, uint8_t data_length)
+{
+    UT_GenStub_SetupReturnBuffer(SAMPLE_ReadData, int32_t);
+
+    UT_GenStub_AddParam(SAMPLE_ReadData, uart_info_t *, device);
+    UT_GenStub_AddParam(SAMPLE_ReadData, uint8_t *, read_data);
+    UT_GenStub_AddParam(SAMPLE_ReadData, uint8_t, data_length);
+
+    UT_GenStub_Execute(SAMPLE_ReadData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(SAMPLE_ReadData, int32_t);
+}
+
+int32_t SAMPLE_CommandDevice(uart_info_t *device, uint8_t cmd, uint32_t payload)
+{
+    UT_GenStub_SetupReturnBuffer(SAMPLE_CommandDevice, int32_t);
+
+    UT_GenStub_AddParam(SAMPLE_CommandDevice, uart_info_t *, device);
+    UT_GenStub_AddParam(SAMPLE_CommandDevice, uint8_t, cmd);
+    UT_GenStub_AddParam(SAMPLE_CommandDevice, uint32_t, payload);
+
+    UT_GenStub_Execute(SAMPLE_CommandDevice, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(SAMPLE_CommandDevice, int32_t);
+}
+
+int32_t SAMPLE_RequestHK(uart_info_t *device, SAMPLE_Device_HK_tlm_t *data)
+{
+    UT_GenStub_SetupReturnBuffer(SAMPLE_RequestHK, int32_t);
+
+    UT_GenStub_AddParam(SAMPLE_RequestHK, uart_info_t *, device);
+    UT_GenStub_AddParam(SAMPLE_RequestHK, SAMPLE_Device_HK_tlm_t *, data);
+
+    UT_GenStub_Execute(SAMPLE_RequestHK, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(SAMPLE_RequestHK, int32_t);
+}
+
+int32_t SAMPLE_RequestData(uart_info_t *device, SAMPLE_Device_Data_tlm_t *data)
+{
+    UT_GenStub_SetupReturnBuffer(SAMPLE_RequestData, int32_t);
+
+    UT_GenStub_AddParam(SAMPLE_RequestData, uart_info_t *, device);
+    UT_GenStub_AddParam(SAMPLE_RequestData, SAMPLE_Device_Data_tlm_t *, data);
+
+    UT_GenStub_Execute(SAMPLE_RequestData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(SAMPLE_RequestData, int32_t);
+}
+```

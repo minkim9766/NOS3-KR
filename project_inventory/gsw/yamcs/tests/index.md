@@ -3,20 +3,123 @@
 
 **경로:** `gsw/yamcs/tests/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--.gitignore
-file--mdb
-file--pom.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/tests/src/`](src/index) — 폴더
-- [`gsw/yamcs/tests/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/mdb`](file--mdb) — 심볼릭 링크 → `../yamcs-core/mdb` (대상 미포함)
-- [`gsw/yamcs/tests/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `gsw/yamcs/tests/.gitignore`
+
+
+```text
+/cache/
+```
+
+### `mdb`
+
+**경로:** `gsw/yamcs/tests/mdb`
+
+심볼릭 링크 대상: `../yamcs-core/mdb` (대상 미포함)
+
+### `pom.xml`
+
+**경로:** `gsw/yamcs/tests/pom.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.yamcs</groupId>
+		<artifactId>yamcs</artifactId>
+		<version>5.12.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>tests</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Yamcs :: Tests</name>
+	<description>
+    	Some integration tests.
+  	</description>
+
+	<properties>
+		<javaModuleName>org.yamcs.tests</javaModuleName>
+		<sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+		<sonar.skip>true</sonar.skip>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.yamcs</groupId>
+			<artifactId>yamcs-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.python</groupId>
+			<artifactId>jython-standalone</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<forkCount>1</forkCount>
+					<reuseForks>false</reuseForks>
+					<systemPropertyVariables>
+						<java.util.logging.config.file>
+							${project.build.directory}/test-classes/logging.properties
+						</java.util.logging.config.file>
+					</systemPropertyVariables>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<profiles>
+		<profile>
+			<id>coverage</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jacoco</groupId>
+						<artifactId>jacoco-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>report</id>
+								<goals>
+									<goal>report-aggregate</goal>
+								</goals>
+								<phase>verify</phase>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+</project>
+```

@@ -3,18 +3,106 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `dots.component.css`
 
-file--dots.component.css
-file--dots.component.html
-file--dots.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.css`
+
+
+```css
+:host:not(.connected) {
+  display: none;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 0.2;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.2;
+  }
+}
+
+.dot1,
+.dot2,
+.dot3 {
+  animation-name: blink;
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+  color: #009e87;
+}
+
+.dot2 {
+  animation-delay: 500ms;
+}
+
+.dot3 {
+  animation-delay: 1000ms;
+}
 ```
 
-## 항목
+### `dots.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.css`](file--dots.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.html`](file--dots.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.ts`](file--dots.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.html`
+
+
+```html
+<span class="dot1" [style.color]="color()" [style.fontSize.px]="fontSize()">&#9642;</span>
+<span class="dot2" [style.color]="color()" [style.fontSize.px]="fontSize()">&#9642;</span>
+<span class="dot3" [style.color]="color()" [style.fontSize.px]="fontSize()">&#9642;</span>
+```
+
+### `dots.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/dots/dots.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  numberAttribute,
+  OnDestroy,
+  signal,
+} from '@angular/core';
+import { Subscription } from 'rxjs';
+import { BaseComponent } from '../../abc/BaseComponent';
+
+@Component({
+  selector: 'ya-dots',
+  templateUrl: './dots.component.html',
+  styleUrl: './dots.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-dots',
+    '[class.connected]': 'isConnected()',
+  },
+})
+export class YaDots extends BaseComponent implements OnDestroy {
+  color = input<string>();
+  fontSize = input(20, { transform: numberAttribute });
+
+  isConnected = signal(false);
+
+  private subscription: Subscription;
+
+  constructor() {
+    super();
+    this.subscription = this.yamcs.yamcsClient.connected$.subscribe(
+      (connected) => this.isConnected.set(connected),
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+}
+```

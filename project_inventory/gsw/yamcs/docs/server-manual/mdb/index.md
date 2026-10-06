@@ -3,28 +3,886 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/mdb/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 loaders/index
-file--alarm-definitions.rst
-file--algorithm-definitions.rst
-file--command-definitions.rst
-file--container-definitions.rst
-file--data-types.rst
-file--index.rst
-file--parameter-definitions.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/`](loaders/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/mdb/alarm-definitions.rst`](file--alarm-definitions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/algorithm-definitions.rst`](file--algorithm-definitions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/command-definitions.rst`](file--command-definitions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/container-definitions.rst`](file--container-definitions.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/data-types.rst`](file--data-types.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/parameter-definitions.rst`](file--parameter-definitions.rst) — UTF-8 텍스트 파일 본문 포함
+### `alarm-definitions.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/alarm-definitions.rst`
+
+
+```rst
+Alarm Definitions
+=================
+
+Yamcs supports the XTCE notion of *alarms*. Based on the value of a parameter, Yamcs assigns a monitoring result to each parameter.
+
+An alarm check is performed when any of these applies (in order):
+
+* The condition for a context alarm is satisfied (if multiple, the alarm specification for first matching context is applied).
+* There is an alarm specification without a context (default alarm).
+
+The monitoring result can be:
+
+* *null* (no alarm specification applies)
+* IN_LIMITS (an alarm was checked, but the value is within limits)
+* WATCH
+* WARNING
+* DISTRESS
+* CRITICAL
+* SEVERE
+```
+
+### `algorithm-definitions.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/algorithm-definitions.rst`
+
+
+```rst
+Algorithm Definitions
+=====================
+
+Algorithms are user scripts that can perform arbitrary logic on a set of incoming parameters. The result is typically one or more derived parameters, called *output parameters*, that are delivered together with the original set of parameters (at least, if they have been subscribed to).
+
+Output parameters are very much identical to regular parameters. They can be calibrated (in which case the algorithm's direct outcome is considered the raw value), and they can also be subject to alarm generation.
+
+Algorithms can be written in JavaScript, Python or Java. By default Yamcs supports JavaScript algorithms executed using the Nashorn JavaScript engine. Support for other languages (e.g. Python) requires installing additional dependencies.
+
+
+Yamcs will bind these input parameters in the script's execution context, so that they can be accessed from within there. In particular the following attributes and methods are made available:
+
+value
+    the engineering value
+rawValue
+    the raw value (if the parameter has a raw value)
+monitoringResult
+    the result of the monitoring: *null*, ``DISABLED``, ``WATCH``, ``WARNING``, ``DISTRESS``, ``CRITICAL`` or ``SEVERE``.
+rangeCondition
+    If set, one of ``LOW`` or ``HIGH``.
+generationTimeMillis
+    The parameter generation time - milliseconds since Yamcs epoch.
+aquisitionTimeMillis
+    The parameter acquisition time - milliseconds since Yamcs epoch.
+generationTime()
+    The parameter generation time converted to Java Instant (by removing the leap seconds).
+aquisitionTime()
+    The parameter acquisition time converted to Java Instant (by removing the leap seconds).
+    
+    
+If there was no update for a certain parameter, yet the algorithm is still being executed, the previous value of that parameter will be retained.
+
+
+Triggers
+--------
+
+Algorithms can trigger on two conditions:
+
+#. Whenever a specified parameter is updated
+#. Periodically
+
+Multiple triggers can be combined. In the typical example, an algorithm will trigger on updates for each of its input parameters. In other cases (for example because the algorithm doesn't have any inputs), it may be necessary to trigger on some other parameter. Or maybe a piece of logic just needs to be run at regular time intervals, rather than with each parameter update.
+
+If an algorithm was triggered and not all of its input parameters were set, these parameters *will* be defined in the algorithm's scope, but with their value set to ``null``.
+
+
+User Libraries
+--------------
+
+The Yamcs algorithm engine can be configured to import a number of user libraries. Just like with algorithms, these libraries can contain any sort of logic and are written in the same scripting language. Yamcs will load user libraries *one time only* at start-up in their defined order. This will happen before running any algorithm. Anything that was defined in the user library, will be accessible by any algorithm. In other words, user libraries define a kind-of global scope. Common use cases for libraries are: sharing functions between algorithms, shortening user algorithms, easier outside testing of algorithm logic, ...
+
+Allowing to split the code in different user libraries is merely a user convenience. From the server perspective they could all be merged together in one big file.
+
+
+Algorithm Scope
+---------------
+
+User algorithms have each their own scope. This scope is safe with respect to other algorithms (i.e. variables defined in algorithm *a* will not leak to algorithm *b*.
+
+An algorithm's scope, however, is shared across multiple algorithm runs. This allows you to keep variables inside internal memory if needed. Do take caution with initializing your variables correctly at the beginning of your algorithm if you only update them under a certain set of conditions (unless of course you intend them to keep their value across runs).
+
+
+Sharing State
+-------------
+
+If some kind of a shared state is required between multiple algorithms, the user libraries' shared scope could be used for this. In many cases, the better solution would be to just output a parameter from one algorithm, and input it into another. Yamcs will automatically detect such dependencies, and will execute algorithms in the correct order.
+
+
+Historic Values
+---------------
+
+With what has been described so far, it would already be possible to store values in an algorithm's scope and perform windowing operations, such as averages. Yamcs goes a step further by allowing you to input a particular *instance* of a parameter. By default instance *0* is inputted, which means the parameter's actual value. But you could also define instance *-1* for inputting the parameter's value as it was on the previous parameter update. If you define input parameters for, say, each of the instances *-4*, *-3*, *-2*, *-1* and *0*, your user algorithm could be just a simple one-liner, since Yamcs is taking care of the administration.
+
+Algorithms with windowed parameters will only trigger as soon as each of these parameters have all instances defined (i.e. when the windows are full).
+
+
+JavaScript algorithms
+---------------------
+
+The JavaScript algorithms are executed by the Nashorn engine.
+
+The algorithm text is expected to contain the full function body. The body will be encapsulated in a JavaScript function like:
+
+.. code-block:: javascript
+
+    function algorithm_name(in_1, in_2, ..., out_1, out_2...) {
+        <algorithm-text>
+    }
+
+
+``in_x`` and  ``out_x`` are names assigned to the inputs/outputs in the algorithm definition.
+
+The method can make use of the input variables and assign ``out_x.value`` (this is the engineering value) or ``out_x.rawValue`` (this is the raw value) and ``out_x.updated`` for each output variable.
+
+The ``<out>.updated`` can be set to false to indicate that the output value has not to be further processed even if the algorithm has run. By default it is true, meaning that each time the algorithm is run, it is assumed that it updates all the output variables.
+
+If ``out_x.rawValue`` is set and ``out_x.value`` is not, then Yamcs will run a calibration to compute the engineering value.
+
+Note that some algorithms (e.g. command verifiers) need to return a value.
+
+
+Python algorithms
+-----------------
+
+This works very similarly with the JavaScript algorithms. The thing to pay attention is the indentation. The algorithm text which is specified in the spreadsheet will be automatically indented with 4 characters:
+
+.. code-block:: python
+
+    function algorithm_name(in_1, in_2, ..., out_1, out_2...) {
+        <algorithm-text>
+    }
+
+
+Java expression algorithms
+--------------------------
+
+This works similarly with the JavaScript and Python algorithms: a java class is generated containing the user defined algorithm text. It offers better performance than the scripting algorithms because no script engine is involved.
+
+.. code-block:: java
+
+    ... imports
+    ... class declaration
+    private void execute_java_expr(ParameterValue input0, ParameterValue input1..., ParameterValue output0, ParameterValue output1...) {
+        <algorithm-text>
+    }
+
+The first variables are the inputs, followed by the outputs.
+The java class :javadoc:`org.yamcs.parameter.ParameterValue` has to be used to get the values of the inputs (e.g. ``getEngValue()`` will give the engineering value) and set the value of the outputs. For example the text to add two inputs ``pv0`` and ``pv1`` into ``AlgoFloatAdditionJe`` could be:
+
+.. code-block:: java
+
+    float f0 = pv0.getEngValue().getFloatValue();
+    float f1 = pv1.getEngValue().getFloatValue();
+    AlgoFloatAdditionJe.setFloatValue(f0 + f1);
+
+The ``getFloatValue()`` in the code above is because the engineering type is Float with sizeInBits=32. If the wrong get is used on a  :javadoc:`org.yamcs.parameter.Value`, an exception will be thrown by the algorithm (should be visible in the yamcs-web as well as in the logs).
+
+The algorithm can leave the output values unset; in that case the values will not be used further.
+
+In case the algorithm is used for a command verifier (see below), it has to return a value. A boolean value of ``true`` (in fact java ``Boolean.TRUE`` object) means that the verifier has succeeded, ``null`` means that the verifier is still pending. Any other value means that the verifier has failed; the object will be converted to string and used as an explanation for the failure.
+
+    
+Java algorithms
+---------------
+
+The algorithm text is a class name with optionally parentheses enclosed string that is parsed into an object by a yaml parser. Unlike the java-expression algorithms, the Java algorithms require the user to pre-compile the classes into a jar and place it on the server in the lib/ext directory.
+
+Yamcs will locate the given class which must be implementing the :javadoc:`org.yamcs.algorithms.AlgorithmExecutor` interface and will create an object with a constructor with three parameters:
+
+.. code-block:: java
+
+    MyAlgorithmExecutor(Algorithm algorithmDef, AlgorithmExecutionContext context, Object arg)
+
+* ``algorithmDef`` represents the algorithm definition; it can be used for example to retrieve the MDB algorithm name, input parameters, etc.
+* ``context`` is an object holding some contextual information related to where the algorithm is running. Generally this refers to a processor but for command verifiers there is a restricted context to distinguish the same algorithm running as verifier for different commands.
+* ``arg`` is an optional argument parsed using the snakeyaml parser (can be a Integer, Long, Double, Map or List).
+
+If the optional argument is not present in the algorithm text definition,  then the class constructor  should only have two parameters.
+
+The class has two main methods ``updateParameters`` which is called each time one of input parameters changes and ``runAlgorithm`` which runs the algorithm and returns the output values. The algorithm is free to chose which output values are returned at each run (it could also return an empty list when no value has been generated).
+
+The abstract class :javadoc:`org.yamcs.algorithms.AbstractAlgorithmExecutor` offers some helper methods and can be used as base class for implementation of such algorithm.
+
+If the algorithm is used for data decoding, it has to implement the :javadoc:`org.yamcs.mdb.DataDecoder` interface instead (see below).
+
+
+Command verifier algorithms
+---------------------------
+
+Command verifier algorithms are special algorithms associated to the command verifiers. Multiple instances of the same algorithm may execute in parallel if there are multiple pending commands executed in parallel.
+
+These algorithms are special as they can use as input variables not only parameters but also command arguments and command history events. These are specified by using "/yamcs/cmd/arg/" and "/yamcs/cmdHist" prefix respectively.
+
+In addition these algorithms have to return a boolean value (whereas the normal algorithms only have to write to output variables). The returned value is used to indicate if the verifier has succeeded or failed. No return value will mean that the verifier is still pending.
+
+
+Data Decoding algorithms
+------------------------
+
+The Data Decoding algorithms are used to extract a raw value from a binary buffer. These algorithms do not produce any output and are triggered whenever the parameter has to be extracted from a container.
+
+These algorithms work differently from the other ones and have are some limitations:
+
+* only Java is supported as a language
+* not possible to specify input parameters
+
+These algorithms have to implement the interface :javadoc:`org.yamcs.mdb.DataDecoder`.
+```
+
+### `command-definitions.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/command-definitions.rst`
+
+
+```rst
+Command Definitions
+===================
+
+A command is a message sent from Yamcs to a spacecraft or other remote system instructing it to perform a particular action or set of actions.
+
+A command is defined by a name and a set of named arguments, the arguments are of specified data types.
+
+Similar with the telemetry containers, the commands also support inheritance. A command inheriting another command, inherits all its parent arguments, can define certain fixed values for those and can add additional arguments.
+
+Traditionally, the commands sent to spacecrafts are encoded into binary packets to save bandwith. Together with the command name and its arguments, the MDB defines how to compose the binary packet.
+
+
+The MDB contains other optional characteristics for commands:
+
+- Command Significance - can be used to indicate the relative importance or urgency of a command. That allows the user interface applications to alert the user. Yamcs can also use the significance to allow users with elevated privileges to send them. 
+- Transmission Constraints - can be used to specify some conditions that have to be valid in order to send a command.
+- Command Verification - can be used to verify the command execution after the command has been sent.
+```
+
+### `container-definitions.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/container-definitions.rst`
+
+
+```rst
+Container Definitions
+=====================
+
+Containers are the equivalent of packets in the usual terminology.
+
+A container employs two mechanism to overcome limitations of the traditional "packet with parameters" approach. These mechanisms are *aggregation* and *inheritance*.
+
+
+Container Aggregation
+---------------------
+
+A container contains sequence entries which can be of two types:
+
+#. **Parameter entries** pointing to normal parameters.
+#. **Container entries** pointing to other containers which are then included in the big container.
+
+Special attention must be given to the specification of positions of entries in the container. For performance reasons, it is preferable that all positions are absolute (i.e. relative to the beginning of the container) rather than relative to the previous entry. The Excel spreadsheet loader tries to transform the relative positions specified in the spreadsheet into absolute positions.
+
+However, due to entries which can be of variable size, the situation cannot always be avoided. When an entry whose position is relative to the previous entry is subscribed, Yamcs adds to the subscription all the previous entries until it finds one whose position is absolute.
+
+If an entry's position depends on another entry (it can be the same in case the entry repeats itself) which is a Container Entry (i.e. makes reference to a container), and the referenced container doesn't have the size in bits specified, then all the entries of the referenced container plus all the inheriting containers and their entries recursively are added to the subscription. Thus, the processing of this entry will imply the extraction of all parameters from the referenced container and from the inheriting containers. The maximum position reached when extracting entries from the referenced and inheriting containers is considered the end of this entry and used as the beginning of the following one.
+
+
+Container Inheritance
+---------------------
+
+Containers can point to another container through the baseContainer property, meaning that the baseContainer is extended with additional sequence entries. The inheritance is based on a condition put on the parameters from the baseContainer (e.g. a EDR_HK packet is a CCSDS packet with ``apid=943`` and ``packetid=0x1300abcd``).
+
+
+Little Endian Parameter Encoding
+--------------------------------
+Yamcs supports only little or big endian (XTCE allows in addition arbitrary byte orders, this is not supported).
+
+For little endian parameters which occupy a non-integer number of bytes, the following algorithm is applied to extract the parameter from the packet:
+
+#. Based on the location of the first bit and on the size in bits of the parameter, find the sequence of bytes that contains the parameter. Only parameters that occupy at most 4 bytes are supported.
+
+#. Read the bytes in reverse order in a 4 bytes int variable.
+
+#. Apply the mask and the shift required to bring the parameter to the rightmost bit.
+
+For example, assume this C struct on an x86 CPU:
+
+.. code-block:: c
+
+    struct {
+        unsigned int parameter1:4;
+        unsigned int parameter2:16;
+        unsigned int parameter3:12;
+    } x;
+    x.a=0x1;
+    x.b=0x2345;
+    x.c=0x678;
+
+
+When converted to network order, this would give the sequence of hex bytes `51 34 82 67`. Thus, the definition of this packet should look like:
+
+.. list-table::
+    :header-rows: 1
+    :widths: 50 25 25
+
+    * - Parameter
+      - Location
+      - Size
+    * - parameter1
+      - 4
+      - 4
+    * - parameter2
+      - 4
+      - 16
+    * - parameter3
+      - 16
+      - 12
+```
+
+### `data-types.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/data-types.rst`
+
+
+```rst
+Data Types
+==========
+
+The MDB data types are associated to parameters and command arguments and provide several characteristics of these:
+
+- the value type (int64, int32, float,...) of the engineering value
+- the value type of the raw value
+- validity conditions
+- units
+- alarms (only for types corresponding to parameters)
+- engineering/raw transformation using calibrators
+- raw/binary transformation using data encodings
+
+The distinction between a parameter and its type is not so evident and many control systems do not make this distinction (i.e. each parameter with its own type). 
+
+In practice most use of shared types has been to define generic types such as ``uint8``, ``uint16``, and use those for parameters that do not require any calibration, units or other specific properties.
+
+Types can also be shared for parameters associated to the same type of sensors which do not need individual calibrators.
+
+
+Yamcs supports the following parameter and argument data types:
+
+* Integer data type
+* Float data type
+* Boolean data type
+* String data type
+* Binary data type
+* Absolute time data type
+* Enumerated data type - a (integer, string) pair.
+* Aggregate data type - complex data type similar to a C-struct. Each member of the aggregate has a name and a type. 
+* Array data type - multidimensional array where each element is of the same type.
+
+As mentioned above, one important function of a data type is to describe how to represent the raw value on the wire (i.e. in the command or telemetry packet). The following encodings are supported:
+
+- Integer data encoding 
+- Float data encoding
+- Boolean data encoding
+- String data encoding
+- Binary data encoding
+
+Note that ``xyz`` in the ``xyz data encoding`` refers to the type of the raw value whereas the ``xyz`` in ``xyz data type`` refers to type of the engineering value.
+
+One will certainly notice that there is no direct encoding for absolute times, enumerated, aggregated and array value types. Currently these can only be encoded/decoded by other means (e.g. an aggregate value will be decoded by decoding its members, an enumerated value by decoding its integer or string representation).
+
+The integer and float encodings have optionally a calibrator which allow transforming the raw value to engineering value or reverse.
+
+There may be MDB data types without encoding - these are used by local parameters which are never encoded on wire.
+
+All the data encodings in Yamcs can be performed by user defined java code by implementing the :javadoc:`org.yamcs.mdb.DataEncoder` or :javadoc:`org.yamcs.mdb.DataDecoder` respectively. Such code has to be written if the encoding format is not part of Yamcs.
+
+
+Parameter types vs Argument types
+---------------------------------
+
+The data types described in this section are used both for parameters and command arguments. Internally in Yamcs the types are not shared.
+
+For convenience, when defining the Mission Database in spreadsheet format, there is one place where all the data types are defined. However when Yamcs loads the spreadsheet, it duplicates in memory the definition for the parameters and arguments.
+
+In XTCE they are defined in different sections: ``<ParameterTypeSet>`` and ``<ArgumentTypeSet>``.
+
+Note that the calibrator (if defined) applies in a different direction: for parameter types it converts from raw to engineering value whereas for argument types it converts from engineering value to raw. Thus one cannot apply the same calibrator even if a parameter  corresponds conceptually to an argument. The user would have to invert (in mathematical terms) the calibrator used in the parameter type definition when defining the corresponding argument data type.
+
+
+Integer data type
+-----------------
+
+Integer values in Yamcs can be 32 or 64 bits signed or unsigned.
+
+Integer values can be encoded/decoded on any number of bits smaller than 64. Signed and unsigned values are supported. Signed values can be encoded in twos complement, sign magnitude or ones complement.
+
+A simple XTCE example of an unsigned integer parameter type with an integer encoding:
+
+.. code-block:: xml
+
+    <IntegerParameterType signed="false" name="uint16">
+        <IntegerDataEncoding encoding="unsigned" sizeInBits="16" />
+        <ValidRange minInclusive="100" maxInclusive="1000"/>
+    </IntegerParameterType>
+
+
+Note that by default the type has a ``sizeInBits=32`` so the value will be converted from 16 bits on the wire to 32 bits value.
+Yamcs will use a 32 bit integer for any parameter with ``sizeInBits <= 32`` and a 64 bit integer for any type with the ``32 < sizeInBits <= 64``.
+
+The ``<ValidRange>`` construct is optional and used differently for parameters and arguments:
+
+* for parameters it is used to check the validity. If a parameter value does not satisfy the range, it will be marked as invalid (and can be seen with a specific color in the display)
+* for arguments it is used to verify the value provided by the user. If the value does not match the range, the command is rejected.
+
+Integer parameters can also have associated alarms and calibrators (see below an example for float parameters, it is identical for integer parameters).
+ 
+One important thing to mention about calibrators is that even when associated to the integers, they still work on (signed) double floating point numbers. Some precision will be lost when converting from a large (unsigned) integer to a double or vice versa.
+ 
+
+The integer parameters can also be encoded as strings, as in the following XTCE example:
+
+.. code-block:: xml
+  
+   <IntegerParameterType signed="false" name="int_encoded_as_string">
+        <StringDataEncoding>
+            <SizeInBits>
+                <Fixed>
+                    <FixedValue>48</FixedValue>
+                </Fixed>
+                <TerminationChar>00</TerminationChar>
+            </SizeInBits>
+        </StringDataEncoding>
+   </IntegerParameterType>
+  
+In this case the raw value will be of type string and the engineering value of type integer. For an explanation of how the string encoding works, please see below in the String data type section.
+
+  
+Float data type
+----------------
+
+Floating point data in Yamcs can be simple precision (32 bit) or double precision (64 bit).
+
+It can be encoded/decoded either to a IEEE754 representation or to an integer representation using a calibration function. Typically a sensor will produce a digital value (e.g. 12 bits integer) which has to be converted to an analog value using a calibration (or transfer) function. 
+
+An XTCE example of a float parameter encoded as integer and having a polynomial calibrator:
+
+.. code-block:: xml
+
+    <FloatParameterType initialValue="20" name="Temperature_Type">
+        <UnitSet>
+            <Unit>degC</Unit>
+        </UnitSet>
+        <IntegerDataEncoding encoding="unsigned" sizeInBits="12">
+            <DefaultCalibrator>
+                <PolynomialCalibrator>
+                    <Term coefficient="0" exponent="-20" />
+                    <Term coefficient="1" exponent=".025" />
+                </PolynomialCalibrator>
+            </DefaultCalibrator>
+        </IntegerDataEncoding>
+        <DefaultAlarm>
+            <StaticAlarmRanges>
+                <WarningRange minInclusive="10" maxInclusive="30" />
+                <CriticalRange minInclusive="-10" maxInclusive="50" />
+                </StaticAlarmRanges>
+        </DefaultAlarm>
+    </FloatParameterType>
+
+Yamcs supports the following type of calibrations:
+
+- polynomial - the conversion between the raw value and the engineering value is obtained by applying a polynomial function.
+- linear spline (point pairs) - the conversion between the raw and engineering value is obtained by interpolating linearly the raw value.
+- mathematical operations specified in reverse polish notation (only in XTCE format) - the conversion is obtained by applying the mathematical operation.
+- Java expressions (only in spreadsheet format) - the conversion is obtained by running it through the java expression.
+ 
+The java expression is the most flexible calibration as it can practically call any java code available on the server. However it is not allowed by XTCE (instead an algorithm can be used to generate the output value into a different parameter).
+
+The example above also defines an default alarm - perhaps a bit counter intuitive the parameter will trigger the alarm if it is outside of the range defined there (for example a value of 40 will trigger the warning alarm and a value of -15 will trigger the critical alarm).  As per XTCE there are 5 levels of alarms supported (in order of severity): watch, warning, distress, critical and severe.
+
+Both calibrators and alarms can be contextualized: that means a different alarm or calibrator will be used depending on the value of other parameters.
+
+While the most common encoding for float is float encoding, the other encodings can also be used:
+
+- integer: will convert number to integer by performing a java cast to long and then fitting the long into the number of bits required. This may result in loss of precision and even in completely wrong number when converting a signed float to a unsigned integer. 
+- string: the value will be converted to a string representation.
+- binary: 
+
+
+Boolean data type
+-----------------
+
+Boolean values in Yamcs take take a simple ``true`` or ``false`` value. In XTCE one can define different values instead of ``true``/``false`` as in the example below. Yamcs only supports these values when reading the XTCE file (they can be used in conditions for example) but the value computed does not include the string (and thus cannot be shown in the display).
+
+To encode boolean values one can use any data encoding with the following transformations:
+
+- for integer/float raw values: 
+
+  - decoding: ``0`` is ``false`` and anything else is true when decoding. 
+  - encoding: ``true`` is converted to ``1``, ``false`` is converted to ``0``.
+- for string values: 
+
+  - decoding: if the string value is empty, case insensitive equal with the ``zeroStringValue`` defined in the type or with the string ``0`` then the value is ``false``, anything else is ``true``. 
+  - encoding: ``true`` is converted to the ``oneStringValue`` defined in the type, ``false`` is converted to ``zeroStringValue`` defined in the type.
+- for binary values: 
+
+  - decoding: if the binary value is empty or consists only of nulls then the value of the boolean is ``false`` anything else is ``true``.
+  - encoding: the value is converted to a binary array of one element with the value ``1`` if ``true`` or ``0`` if ``false``.
+
+.. code-block:: xml
+
+    <BooleanParameterType name="bool2" oneStringValue="yes!" zeroStringValue="nooo">
+        <StringDataEncoding>
+            <SizeInBits>
+                <Fixed>
+                    <FixedValue>32</FixedValue>
+                </Fixed>
+                <TerminationChar>00</TerminationChar>
+            </SizeInBits>
+        </StringDataEncoding>
+    </BooleanParameterType>
+        
+The spreadsheet format allows to define a data type with  a boolean data encoding by using a raw type of ``bool`` in the Data Type definition. This encoding is not possible to be defined in XTCE (but it is equivalent with a 1 bit integer encoding) and it always uses one bit representation with ``0 = false`` and ``1 = true``.  
+
+
+String data type
+----------------
+
+In Yamcs the string data is represented as a java (unicode) String value. The encoding to/from the wire is performed using a string data encoding with one of the supported `Java Charsets <https://docs.oracle.com/javase/8/docs/api/java/nio/charset/Charset.html>`_ (UTF-8, ISO-8859-1, etc)
+
+In addition to converting the bytes to unicode characters, a typical problem in decoding telemetry is knowing the boundary of the string inside the packet. To comply with XTCE, Yamcs implements a "string in a buffer" approach:
+
+- conceptually the packet contains a buffer (or a box) where the string has to be extracted from or encoded into.
+- the buffer can be the same size with the string or larger than the string. If the buffer is larger than the string, it will be filled by Yamcs with 0 for commands or some filler which is ignored by Yamcs for telemetry.
+- if the buffer is larger than the string, the buffer size can be fixed or its size can be determined from the value of a parameter/argument.
+- inside the buffer:
+
+  - the string can fill completely the buffer (so the size of the string is determined by the size of the buffer).
+  - the size of the string can be encoded at the beginning of the buffer (in front of the string)
+  - or the string can be terminated by a special character (or by the end of the buffer, whichever comes first).
+
+One case which is not supported by Yamcs (nor by XTCE) is a fixed size string inside a fixed size buffer with the string not filling completely the buffer. For this case you can limit the size of the buffer to the size of the string and define another parameter for the remaining of the buffer, or simply define an offset for the next container entry.
+
+The size of the buffer is in number of bytes - depending on the encoding used, a character of the string may be encoded on multiple bytes (for example UTF-8 encodes each character in one to four bytes).
+
+Finally, please note that although XTCE defines a number of bits for the buffer size or for the size tag, Yamcs only supports encoding these on an integer number of bytes (e.g. encoding strings on partial bytes is not supported) so the number of bits has to be divisible by 8.
+
+
+.. rubric:: Example 1: string encoded in a fixed size buffer with a null terminator
+
+The buffer is 6 bytes long (meaning that the next parameter will come after the 6 bytes even if the string is shorter). 
+If the terminator is not found, it is not considered an error and the string will be 6 bytes long.
+If the terminator is not specified (by removing the ``<TerminationChar>`` section), the string will always be 6 bytes long.
+Note that it may cause the string to include nulls but that is not a problem in Java.
+
+.. code-block:: xml
+
+    <StringParameterType name="string1">
+        <StringDataEncoding encoding="UTF-8">
+            <SizeInBits>
+                <Fixed>
+                    <FixedValue>48</FixedValue>
+                </Fixed>
+                <TerminationChar>00</TerminationChar>
+            </SizeInBits>
+        </StringDataEncoding>
+    </StringParameterType>
+
+This example can be defined in the spreadsheet with the encoding ``terminated(0x00, UTF-8, 48)``. If there is no terminator (so the string covers all the time the buffer), the equivalent spreadsheet encoding is ``fixed(48, UTF-8)``.
+
+
+.. rubric:: Example 2: prefixed size string encoded in undefined buffer
+
+The buffer is not explicitly defined so it is effectively as long as the prefix + string.
+The ``maxSizeInBits`` refers to the size of the buffer, so in this example the maximum size of the string will be 4.
+
+Note the ``_yamcs_ignore`` parameter reference which is used to workaround XTCE mandating a dynamic value. Yamcs will accept the XML file without the ``DynamicValue`` section but the file will not validate with XTCE 1.2 xsd. An alternative for the ``_yamcs_ignore`` would be to derive the buffer length from the packet length.
+
+.. code-block:: xml
+
+    <StringParameterType name="string5">
+        <StringDataEncoding encoding="UTF-8">
+            <Variable maxSizeInBits="48">
+                <DynamicValue>
+                    <ParameterInstanceRef parameterRef="_yamcs_ignore" />
+                </DynamicValue>
+                <LeadingSize sizeInBitsOfSizeTag="16" />
+            </Variable>
+        </StringDataEncoding>
+    </StringParameterType>
+
+This example can be best defined in the spreadsheet with the encoding ``PrependedSize(16)``. The maximum size cannot be defined, so the effective maximum size will be the remaining of the packet.
+
+.. rubric:: Example 3: null terminated string encoded in undefined buffer
+
+This examples provides string argument type whose size is variable. The buffer is not defined which means the buffer will be effectively the string + terminator.
+
+The maxSizeInBits refers to the maximum size of the buffer; it means that the maximum size of the string in binary is ``maxSizeInBits/8 - 1``.
+
+Note the _``yamcs_ignore`` parameter reference which is used to workaround XTCE mandating a dynamic value. Yamcs will accept the XML file without the ``DynamicValue`` section but the file will not validate with XTCE 1.2 xsd. An alternative for the ``_yamcs_ignore`` would be to define an argument for the buffer length but that would be inconvenient for the user.
+
+.. code-block:: xml
+
+    <StringArgumentType name="string3">
+        <StringDataEncoding encoding="UTF-8">
+            <Variable maxSizeInBits="48">
+                <DynamicValue>
+                    <ParameterInstanceRef parameterRef="_yamcs_ignore" />
+                </DynamicValue>
+                <TerminationChar>00</TerminationChar>
+            </Variable>
+        </StringDataEncoding>
+    </StringArgumentType>
+
+More XTCE examples:
+
+* :source:`yamcs-core/src/test/resources/xtce/strings-tm.xml`
+* :source:`yamcs-core/src/test/resources/xtce/strings-cmd.xml`
+
+More Spreadsheet examples:
+
+* :source:`yamcs-core/mdb/refmdb.xls`
+
+Finally, we mention that string values can also be encoded with a binary encoder; the translation from string to binary is using the `String#getBytes <https://docs.oracle.com/javase/8/docs/api/java/lang/String.html#getBytes>`_ method.
+
+
+Binary data type
+----------------
+
+A binary data type represents a sequence of bytes (a byte[] in java). The values of this type implicitly have a length.
+
+As for strings, Yamcs only supports types which are an integer number of bytes.
+
+Unlike strings, when encoding binary values there is no distinction between the value being encoded and the buffer in which the value is encoded: the value always fills the buffer.
+
+
+.. rubric:: Example 1: binary parameter type of fixed size
+
+.. code-block:: xml
+
+    <BinaryParameterType name="binary_type1">	
+        <BinaryDataEncoding>
+            <SizeInBits>
+                <FixedValue>128</FixedValue>
+            </SizeInBits>
+        </BinaryDataEncoding>
+    </BinaryParameterType>
+
+A parameter of this type will always be 16 bytes in length. 
+
+
+.. rubric:: Example 2: binary parameter type of variable size with the size given by another parameter
+
+The example below defines a parameter type whose size is given by another parameter named ``size``. That parameter has to be of integer type and precede the binary one in the packet.
+
+.. code-block:: xml
+
+    <BinaryParameterType name="BinaryType">
+        <BinaryDataEncoding>
+            <SizeInBits>
+                <DynamicValue>
+                    <ParameterInstanceRef parameterRef="size" />
+                    <LinearAdjustment slope="8" />
+                </DynamicValue>
+            </SizeInBits>
+    </BinaryDataEncoding>
+    
+Note the ``<LinearAdjustment>`` construct which allows to convert from number of bytes to number of bits required by the ``<SizeInBits>`` element.
+
+
+.. rubric:: Example 3: binary argument type of variable size with the size encoded in front of the data
+
+The example above needs another parameter for the data size. When used in command it has the disadvantage that the user needs to enter the number of bytes in addition to the bytes themselves (with the risk of introducing inconsistencies). Yamcs allows to use an algorithm which will perform the encoding without the addition of the extra argument:
+
+
+.. code-block:: xml
+
+    <BinaryArgumentType name="barray">
+        <AncillaryDataSet>
+            <AncillaryData name="Yamcs">minLength=2</AncillaryData>
+            <AncillaryData name="Yamcs">maxLength=10</AncillaryData>
+        </AncillaryDataSet>
+        <BinaryDataEncoding>       
+            <SizeInBits> 
+                 <DynamicValue>
+                    <ParameterInstanceRef parameterRef="_yamcs_ignore" />
+                </DynamicValue>
+            </SizeInBits>
+            <ToBinaryTransformAlgorithm name="LeadingSizeBinaryEncoder">
+                <!-- the 16 passed to the constructor means the size is encoded on 16 bits -->
+                <AlgorithmText language="java">
+                    org.yamcs.algo.LeadingSizeBinaryEncoder(16)
+                </AlgorithmText>
+            </ToBinaryTransformAlgorithm>
+        </BinaryDataEncoding>
+    </BinaryArgumentType>
+
+Note again the ``<DynamicValue>`` construct with a reference to ``_yamcs_ignore`` which will make yamcs ignore this section. The ``<SizeInBits>`` section can be removed from the file if XSD compliance is not important, Yamcs will not complain.
+
+Note also the minLength and maxLength which are used to configure the minimum/maximum length of the accepted data (not including the 16 bits size tag!).
+
+    
+Absolute time data type
+-----------------------
+Instead of encoding and decoding time using raw integer or binary parameters, Yamcs supports the AbsoluteTimeParameterType to describe time. This parameter can be encoded using on of ``BinaryDataEncoding``, ``FloatDataEncoding``, ``IntegerDataEncoding`` and ``StringDataEncoding`` elements. 
+
+The following example displays the use of a ``IntegerDataEncoding`` element where ``scale`` and ``offset`` attributes are used to apply a linear transformation to the incoming value in order to parse the proper time value. 
+
+.. rubric:: Example 1: integer encoding for a AbsoluteTimeParameterType parameter
+
+The example below is using UNIX as its reference time, whose count starts at January 1 1970 and is used by modern computers, linux systems etc. The offset and the scale are part of a linear transformation which has the form ``y = ax + b`` where ``b`` represents the offset, ``a`` represents the scale and ``x`` is the input.
+
+This transformation could be used for a system whose internal clock counts in seconds from 1/1/2000, so we need to add ``946677600`` seconds to that time in order to get the appropriate UNIX timestamp. 
+
+- ``<ReferenceTime>`` describes origin(epoch or reference) of this time type
+- ``<Epoch>`` may be specified as an XS date where time is implied to be 00:00:00, xs dateTime, or string enumeration of common epochs. The enumerations are TAI(used by CCSDS and others), J2000, UNIX(also known as POSIX) and GPS
+
+.. code-block:: xml
+
+    <AbsoluteTimeParameterType name="absolute_time_param_type_example">
+        <Encoding offset="946677600" scale="1">
+            <IntegerDataEncoding sizeInBits="32" />
+        </Encoding>
+        <ReferenceTime>
+            <Epoch>UNIX</Epoch>
+        </ReferenceTime>
+    </AbsoluteTimeParameterType>
+
+
+Enumerated data type
+--------------------
+
+The EnumeratedParameterType supports the description of enumerations, which are a list of values and their associated labels. Below is an example that demonstrates how an enumerated parameter type is declared and its mostly used attributes:
+
+.. rubric:: Example 1: simple enumerated parameter declaration
+
+.. code-block:: xml
+
+    <EnumeratedParameterType name="enumerated_parameter_type_example">
+        <IntegerDataEncoding sizeInBits="16"/>
+            <EnumerationList>
+                <Enumeration value="0" label="label_1" />
+                <Enumeration value="2" label="label_2" />
+                <Enumeration value="4" label="label_3" />
+                <Enumeration value="6" label="label_4" />
+            </EnumerationList>
+    </EnumeratedParameterType>
+
+
+Aggregate data type
+-------------------
+
+The AggregateParameterType is used to describe aggregates. It is similar to C-structs or records
+in other languages. The ArrayParameterType is defined as shown in the example below:
+
+.. rubric:: Example 1: simple aggregate parameter declaration
+
+``<Member>`` is used to define members of the aggregate. Each member has a ``name``, a ``typeRef`` for its type and an optional ``initialValue`` for a possible predefined value.
+
+.. code-block:: xml
+
+    <AggregateParameterType name="aggregate_parameter_type_example"  shortDescription="Aggregate Parameter Type Example">
+        <MemberList>
+            <Member name="member_1" typeRef="bool_t"/>
+            <Member name="member_1" typeRef="uint16_t" initialValue="5"/>
+            <Member name="member_1" typeRef="float_t"/>
+        </MemberList>
+    </AggregateParameterType>
+
+
+Array data type
+---------------
+
+
+The ArrayParameterType is used to describe arrays of other ParameterTypes. It is used in containers that are formed dynamically. 
+This happens when the number of the container's parameters depends on a specific parameter's value. In that part of the container that will be dynamically repeated an ``ArrayParameterRefEntry`` is injected.
+The ArrayParameterType is defined as shown in the example below:
+
+- ``arrayTypeRef`` is a reference to another ParameterType from which the array cells are formed. Any parameter type can be used.
+- ``DimensionList`` describes the dimensions of the array. Can be static or dynamic (value from another parameter).
+
+
+.. rubric:: Example 1: simple array parameter declaration with predefined size = 6
+
+.. code-block:: xml
+
+    <ArrayParameterType name="array_parameter_type_example" arrayTypeRef="other_parameter_type">
+        <DimensionList>
+            <Dimension>
+                <StartingIndex>
+                    <FixedValue>0</FixedValue>
+                </StartingIndex>
+                <EndingIndex>
+                    <FixedValue>5</FixedValue>
+                </EndingIndex>
+            </Dimension>
+        </DimensionList>
+    </ArrayParameterType>
+
+.. rubric:: Example 2: simple array parameter declaration with dynamic size
+
+In this example, the size of the array is equal to the integer parameter ``number_of_parameters``. The ``<LinearAdjustment>`` element is used because the final array size will be equal to ``<EndingIndex> - <StartingIndex> + 1``   
+
+.. code-block:: xml
+
+    <ArrayParameterType name="array_parameter_type_example" arrayTypeRef="other_parameter_type">
+        <DimensionList>
+            <Dimension>
+                <StartingIndex>
+                    <FixedValue>0</FixedValue>
+                </StartingIndex>
+                <EndingIndex>
+                    <DynamicValue>
+                        <ParameterInstanceRef parameterRef="number_of_parameters" />
+                        <LinearAdjustment intercept="-1" />
+                    </DynamicValue>
+                </EndingIndex>
+            </Dimension>
+        </DimensionList>
+    </ArrayParameterType>
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/index.rst`
+
+
+```rst
+Mission Database
+================
+
+The Mission Database describes the telemetry and commands that are processed by Yamcs. It tells Yamcs how to decode packets or how to encode telecommands.
+
+The database organizes TM/TC definitions by *space system*. A space system may contain other sub-space systems, thereby structuring the definitions in logical groups. Space systems have a name and can be uniquely identified via UNIX-like paths starting from the root of the space system hierarchy. For example: ``/BogusSAT/SC001/BusElectronics`` could be the name of a sub-space system under ``/BogusSAT/SC001``. The root space system is ``/``.
+
+The terminology used in the Yamcs Mission Database is very close to the terminology used in the XTCE exchange format. XTCE prescribes a useful set of building blocks: space systems, containers, parameters, commands, algorithms, etc.
+
+Generally, the Mission Database is read-only. Until version 5.8.8, Yamcs allowed overriding some aspects of the Mission database: calibrators and alarms for parameters and algorithms. Those changes were not permanent and applicable to a single processor only.
+
+Starting with Yamcs 5.8.8, Yamcs allows designating some sub-trees of the Mission Database as read/write and allows adding objects under those sub-systems. It is possible to add/change Subsystems, Parameters and Parameter Types. In future versions this may be extended to other objects (containers, commands...). Yamcs will also persist the corresponding MDB tree on disk (in XTCE format) so that the information is not lost when Yamcs restarts.
+
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    data-types
+    parameter-definitions
+    container-definitions
+    alarm-definitions
+    algorithm-definitions
+    command-definitions
+    loaders/index
+```
+
+### `parameter-definitions.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/parameter-definitions.rst`
+
+
+```rst
+Parameter Definitions
+=====================
+
+
+```

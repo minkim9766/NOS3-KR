@@ -3,18 +3,275 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `fpp_depend.cmake`
 
-file--fpp_depend.cmake
-file--fpp_locs.cmake
-file--module_info.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/fpp_depend.cmake`
+
+
+```cmake
+####
+# fpp_depend.cmake:
+#
+# fpp_depend is a special target used to build cached information for fpp-depend output. It is run as part of the
+# sub-build that generates cached-information about the build itself.
+####
+include_guard()
+set(FPP__INTERNAL_LOCATE_DEFS_HELPER "${PYTHON}" "${CMAKE_CURRENT_LIST_DIR}/../tools/redirector.py")
+####
+# Function `fpp_depend_add_global_target`:
+#
+# Sets up the `fpp_depend` target used to generate depend output across the whole build.
+# - **TARGET:** name of the target to setup (fpp_depend)
+####
+function(fpp_depend_add_global_target TARGET)
+    add_custom_target("${TARGET}")
+endfunction(fpp_depend_add_global_target)
+
+####
+# Function `fpp_depend_add_deployment_target`:
+#
+# Pass-through to fpp_depend_add_module_target. FULL_DEPENDENCIES is unused.
+####
+function(fpp_depend_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    fpp_depend_add_module_target("${MODULE}" "${TARGET}" "${SOURCES}" "${DEPENDENCIES}")
+endfunction(fpp_depend_add_deployment_target)
+
+####
+# Function `fpp_depend_add_module_target`:
+#
+# Generates the cached fpp-depend output fore each module and registers the target to the global fpp_depend target.
+# - **MODULE:** module name, unused
+# - **TARGET:** name of the target to setup (fpp_depend)
+# - **SOURCES:** list of sources filtered to .fpp
+# - **DEPENDENCIES:** module dependencies, unused.
+####
+function(fpp_depend_add_module_target MODULE TARGET SOURCES_UNUSED DEPENDENCIES)
+    get_target_property(AUTOCODER_INPUTS "${MODULE}" AUTOCODER_INPUTS)
+    set(FPP_SOURCES "")
+    # Check each source for FPP support
+    foreach(SOURCE IN LISTS AUTOCODER_INPUTS)
+        fpp_is_supported("${SOURCE}")
+        if (IS_SUPPORTED)
+            list(APPEND FPP_SOURCES "${SOURCE}")
+        endif()
+    endforeach()
+    file(RELATIVE_PATH OFFSET "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_BINARY_DIR}")
+    set(LOCAL_CACHE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache")
+    set(DELIVERY_CACHE "${FPRIME_BINARY_DIR}/${OFFSET}/fpp-cache")
+    file(MAKE_DIRECTORY "${LOCAL_CACHE}")
+    file(MAKE_DIRECTORY "${DELIVERY_CACHE}")
+    if (FPP_SOURCES)
+        set(OUTPUT_FILES
+            "${LOCAL_CACHE}/stdout.txt"
+            "${LOCAL_CACHE}/direct.txt"
+            "${LOCAL_CACHE}/missing.txt"
+            "${LOCAL_CACHE}/framework.txt"
+            "${LOCAL_CACHE}/generated.txt"
+            "${LOCAL_CACHE}/include.txt"
+            "${LOCAL_CACHE}/unittest.txt"
+        )
+        add_custom_command(
+            OUTPUT ${OUTPUT_FILES}
+            COMMAND ${FPP__INTERNAL_LOCATE_DEFS_HELPER}
+                "${LOCAL_CACHE}/stdout.txt"
+                "${FPP_DEPEND}"
+                "${FPRIME_BINARY_DIR}/locs.fpp"
+                "-d" "${LOCAL_CACHE}/direct.txt"
+                "-m" "${LOCAL_CACHE}/missing.txt"
+                "-f" "${LOCAL_CACHE}/framework.txt"
+                "-g" "${LOCAL_CACHE}/generated.txt"
+                "-i" "${LOCAL_CACHE}/include.txt"
+                "-u" "${LOCAL_CACHE}/unittest.txt"
+                "-a"
+                ${FPP_SOURCES}
+            DEPENDS
+                fpp_locs
+                "${FPRIME_BINARY_DIR}/locs.fpp"
+                ${FPP_SOURCES}
+        )
+        add_custom_target("${TARGET}_${MODULE}" DEPENDS ${OUTPUT_FILES}
+            COMMAND "${CMAKE_COMMAND}" -E copy_if_different ${OUTPUT_FILES} "${DELIVERY_CACHE}"
+        )
+    else()
+        add_custom_target("${TARGET}_${MODULE}")
+    endif()
+    add_dependencies("${TARGET}" "${TARGET}_${MODULE}")
+endfunction(fpp_depend_add_module_target)
 ```
 
-## 항목
+### `fpp_locs.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/fpp_depend.cmake`](file--fpp_depend.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/fpp_locs.cmake`](file--fpp_locs.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/module_info.cmake`](file--module_info.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/fpp_locs.cmake`
+
+
+```cmake
+####
+# fpp_locs.cmake:
+#
+# fpp_locs is a special target used to build fpp_locs file output. It is run as part of the sub-build that generates
+# cached-information about the build itself. This file defines the following target functions:
+#
+# fpp_locs_add_global_target: global registration target setting up the fpp-locs target run
+# fpp_locs_add_deployment_target: unused, required for the API
+# fpp_locs_add_module_target: used to identify all source files to pass to location global target
+####
+include_guard()
+set(FPP__INTERNAL_LOCATE_DEFS_HELPER "${PYTHON}" "${CMAKE_CURRENT_LIST_DIR}/../tools/redirector.py")
+
+####
+# Function `fpp_locs_add_global_target`:
+#
+# Sets up the `fpp_locs` target used to generate the FPP locs file. This is build and then updated in the outer build
+# cache.
+# - **TARGET:** name of the target to setup (fpp_locs)
+####
+function(fpp_locs_add_global_target TARGET)
+    add_custom_command(
+        OUTPUT "${CMAKE_BINARY_DIR}/locs.fpp"
+        COMMAND 
+            "${FPP__INTERNAL_LOCATE_DEFS_HELPER}"
+            "${CMAKE_BINARY_DIR}/locs.fpp"
+            "${FPP_LOCATE_DEFS}"
+            -d "${FPRIME_BINARY_DIR}"
+            $<TARGET_PROPERTY:${TARGET},GLOBAL_FPP_FILES>
+        COMMAND_EXPAND_LISTS
+    )
+    add_custom_target(
+        "${TARGET}" DEPENDS "${CMAKE_BINARY_DIR}/locs.fpp"
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${CMAKE_BINARY_DIR}/locs.fpp"
+            "${FPRIME_BINARY_DIR}/locs.fpp"
+    )
+endfunction(fpp_locs_add_global_target)
+
+####
+# Function `fpp_locs_add_module_target`:
+#
+# Pass-through to fpp_locs_add_module_target. FULL_DEPENDENCIES is unused.
+####
+function(fpp_locs_add_deployment_target MODULE TARGET SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    fpp_locs_add_module_target("${MODULE}" "${TARGET}" "${SOURCES}" "${DEPENDENCIES}")
+endfunction(fpp_locs_add_deployment_target)
+
+####
+# Function `fpp_locs_add_module_target`:
+#
+# Sets up the list of FPP files used in locations generation.  Each FPP source file for each module is added to the
+# global target's GLOBAL_FPP_FILES property that is referenced to pass in targets.
+# - **MODULE:** module name, unused
+# - **TARGET:** name of the target to setup (fpp_locs)
+# - **SOURCES:** list of sources filtered to .fpp
+# - **DEPENDENCIES:** module dependencies, unused.
+####
+function(fpp_locs_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    get_target_property(AUTOCODER_INPUTS "${MODULE}" AUTOCODER_INPUTS)
+    # Check each source for FPP support
+    foreach(SOURCE IN LISTS AUTOCODER_INPUTS)
+        fpp_is_supported("${SOURCE}")
+        if (IS_SUPPORTED)
+            append_list_property("${SOURCE}" TARGET "${TARGET_NAME}" PROPERTY GLOBAL_FPP_FILES)
+        endif()
+    endforeach()
+endfunction(fpp_locs_add_module_target)
+```
+
+### `module_info.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/target/sub-build/module_info.cmake`
+
+
+```cmake
+####
+# module_info.cmake:
+#
+# module_info is a special target used to precalculate model information for the outer build. It calculates information
+# as modules are processed and then saves this information to the outer build cache as a cmake file that sets
+# properties.
+####
+include_guard()
+include(config_assembler)
+set(FPRIME__INTERNAL_PROPERTY_WRITER "${PYTHON}" "${CMAKE_CURRENT_LIST_DIR}/../tools/property_writer.py")
+set(FPRIME__INTERNAL_CAT "${PYTHON}" "${CMAKE_CURRENT_LIST_DIR}/../tools/cat.py")
+
+
+
+####
+# Function `module_info_add_global_target`:
+#
+# Reads properties set by module processing and writes them to the outer build cache via a cmake file.
+# 
+# - **CUSTOM_TARGET_NAME:** name of the target to setup (module_info)
+####
+function(module_info_add_global_target CUSTOM_TARGET_NAME)
+    fprime_cmake_ASSERT("Cannot run module_info outside of a sub-build" FPRIME_IS_SUB_BUILD)
+    set(MODULE_INFO_FILE "${CMAKE_CURRENT_BINARY_DIR}/fprime_module_info.cmake")
+    add_custom_target("module_info"
+        COMMAND "${FPRIME__INTERNAL_PROPERTY_WRITER}" "--file" "${MODULE_INFO_FILE}.part"
+            SET GLOBAL PROPERTY FPRIME_BASE_CHOSEN_IMPLEMENTATIONS
+            "$<TARGET_PROPERTY:${FPRIME__INTERNAL_CONFIG_TARGET_NAME},FPRIME_CHOSEN_IMPLEMENTATIONS>" 
+        COMMAND_EXPAND_LISTS
+        COMMAND "${FPRIME__INTERNAL_CAT}"
+           $<TARGET_PROPERTY:${CUSTOM_TARGET_NAME},FPRIME_CONCATENATED_FILES>
+           "--output" "${MODULE_INFO_FILE}"
+        COMMAND_EXPAND_LISTS
+        COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+            "${MODULE_INFO_FILE}"
+            "${FPRIME_BINARY_DIR}/fprime_module_info.cmake"
+    )
+    append_list_property("${MODULE_INFO_FILE}.part" TARGET "${CUSTOM_TARGET_NAME}" PROPERTY FPRIME_CONCATENATED_FILES)
+endfunction(module_info_add_global_target)
+
+####
+# Function `module_info_add_deployment_target`:
+#
+# Just calls `module_info_add_module_target`.
+####
+function(module_info_add_deployment_target BUILD_MODULE_NAME CUSTOM_TARGET_NAME SOURCES DEPENDENCIES FULL_DEPENDENCIES)
+    module_info_add_module_target("${BUILD_MODULE_NAME}" "${CUSTOM_TARGET_NAME}" "${SOURCES}" "${DEPENDENCIES}")
+endfunction(module_info_add_deployment_target)
+
+####
+# Function `module_info_add_module_target`:
+#
+# Generates a CMake file that sets a bunch of properties for the outer build. All the module file commands will be
+# concatenated together and set in the above scope.
+#
+# - **MODULE:** module name, unused
+# - **TARGET:** name of the target to setup (module_info)
+# - **SOURCES:** list of sources filtered to .fpp
+# - **DEPENDENCIES:** module dependencies, unused.
+####
+function(module_info_add_module_target BUILD_MODULE_NAME CUSTOM_TARGET_NAME SOURCES DEPENDENCIES)
+    get_target_property(IMPLEMENTS "${BUILD_MODULE_NAME}" FPRIME_IMPLEMENTS)
+    get_target_property(REQUIRES "${BUILD_MODULE_NAME}" FPRIME_REQUIRES_IMPLEMENTATIONS)
+    set(FILE_LINES "")
+
+    # If this module implements something, set a property
+    if (IMPLEMENTS)
+        list(APPEND "FILE_LINES"
+             "set_property(GLOBAL PROPERTY FPRIME_${BUILD_MODULE_NAME}_IMPLEMENTS ${IMPLEMENTS})\n"
+        )
+    endif()
+
+    # If this module requires something append it to the list property
+    if (REQUIRES)
+        string(REPLACE ";" "\;" REQUIRES_ESCAPED "${REQUIRES}")
+        list(APPEND "FILE_LINES"
+            "include(utilities)\n"
+            "append_list_property(\"${REQUIRES_ESCAPED}\" GLOBAL PROPERTY FPRIME_REQUIRED_IMPLEMENTATIONS)\n"
+        )
+    endif()
+    get_target_property(AUTOCODER_INPUTS "${BUILD_MODULE_NAME}" AUTOCODER_INPUTS)
+    foreach(AUTOCODER_INPUT IN LISTS AUTOCODER_INPUTS)
+        list(APPEND "FILE_LINES"
+            "set_property(GLOBAL PROPERTY \"FPRIME_${AUTOCODER_INPUT}_MODULE\"\n"
+            "    \"${BUILD_MODULE_NAME}\")\n"
+        )
+    endforeach()
+    set(OUTPUT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/implements-snippet-${BUILD_MODULE_NAME}.cmake")
+    file(WRITE "${OUTPUT_FILE_NAME}" ${FILE_LINES})
+    append_list_property("${OUTPUT_FILE_NAME}" TARGET "${CUSTOM_TARGET_NAME}" PROPERTY FPRIME_CONCATENATED_FILES)
+endfunction(module_info_add_module_target)
+```

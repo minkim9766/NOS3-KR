@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sbn/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,33 +14,409 @@ modules/index
 test/index
 unit-test/index
 ut-stubs/index
-file--.clang-format
-file--.git
-file--.gitattributes
-file--.travis.yml
-file--app.cfg
-file--CMakeLists.txt
-file--Core%20Flight%20System%20%28CFS%29%20NOSA%20GSC-16917-1.pdf
-file--install
-file--README.md
-file--wireshark-sbn.lua
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/doc/`](doc/index) — 폴더
-- [`fsw/apps/sbn/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/modules/`](modules/index) — 폴더
-- [`fsw/apps/sbn/test/`](test/index) — 폴더
-- [`fsw/apps/sbn/unit-test/`](unit-test/index) — 폴더
-- [`fsw/apps/sbn/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/apps/sbn/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/.gitattributes`](file--.gitattributes) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/.travis.yml`](file--.travis.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/app.cfg`](file--app.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/Core Flight System (CFS) NOSA GSC-16917-1.pdf`](file--Core%20Flight%20System%20%28CFS%29%20NOSA%20GSC-16917-1.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sbn/install`](file--install) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/wireshark-sbn.lua`](file--wireshark-sbn.lua) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `fsw/apps/sbn/.clang-format`
+
+
+```text
+---
+Language:        Cpp
+AccessModifierOffset: -4
+AlignAfterOpenBracket: Align
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: true
+AlignConsecutiveMacros: true
+AlignEscapedNewlines: Left
+AlignOperands:   true
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowShortBlocksOnASingleLine: Empty
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+BinPackArguments: true
+BinPackParameters: true
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Allman
+BreakBeforeTernaryOperators: true
+BreakStringLiterals: true
+ColumnLimit:     120
+CommentPragmas:  ''
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+ExperimentalAutoDetectBinPacking: false
+ForEachMacros: []
+IncludeBlocks:   Preserve
+IncludeCategories:  []
+IncludeIsMainRegex: '$'
+IndentCaseLabels: true
+IndentPPDirectives: None
+IndentWidth:     4
+KeepEmptyLinesAtTheStartOfBlocks: true
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 19
+PenaltyBreakComment: 300
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakString: 1000
+PenaltyExcessCharacter: 1000000
+PenaltyReturnTypeOnItsOwnLine: 60
+PointerAlignment: Right
+ReflowComments:  true
+SortIncludes:    false
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeParens: ControlStatements
+SpaceInEmptyParentheses: false
+SpaceBeforeCpp11BracedList: true
+SpacesBeforeTrailingComments: 1
+SpacesInCStyleCastParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+Standard:        c++11
+TabWidth:        8
+UseTab:          Never
+...
+
+```
+
+### `.git`
+
+**경로:** `fsw/apps/sbn/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/sbn
+```
+
+### `.gitattributes`
+
+**경로:** `fsw/apps/sbn/.gitattributes`
+
+
+```text
+*.c ident
+*.h ident
+*.h linguist-language=c
+
+*.css linguist-documentation=true
+*.htm linguist-documentation=true
+*.html linguist-documentation=true
+*.prc linguist-documentation=true
+```
+
+### `.travis.yml`
+
+**경로:** `fsw/apps/sbn/.travis.yml`
+
+
+```yaml
+os: linux
+dist: bionic
+language: c
+compiler:
+  - gcc
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake cppcheck doxygen lcov graphviz
+env:
+  global:
+   - SIMULATION=native
+   - ENABLE_UNIT_TESTS=true
+   - DEPLOY_DIR=$TRAVIS_BUILD_DIR/deploy
+  jobs:
+   - BUILDTYPE=release OMIT_DEPRECATED=true
+
+deploy:
+  provider: pages
+  strategy: git
+  cleanup: false
+  token: $GITHUB_TOKEN
+  keep_history: false
+  local_dir: $DEPLOY_DIR
+
+script:
+  - git clone https://github.com/nasa/cFS.git nasa/cFS
+  - ( cd nasa/cFS && git submodule init && git submodule update )
+  # install SBN and its modules
+  - ./install nasa/cFS
+  - cp -r test/cFS nasa/
+  # git SHA report
+  - git rev-parse HEAD
+  # Prep and build
+  - cd nasa/cFS
+  - make prep
+  - make
+  - make install
+  # Run unit tests and generate coverage results
+  - make test
+  - |
+    if [[ -s build/native/Testing/Temporary/LastTestsFailed.log ]]; then
+      echo "You must fix unit test errors before submitting a pull request"
+      echo ""
+      cat build/native/Testing/Temporary/LastTestsFailed.log
+      grep "\[ FAIL\]" build/native/Testing/Temporary/LastTest.log
+      exit -1
+    fi
+  - make lcov
+  - genhtml build/native/coverage_total.info --output-directory $DEPLOY_DIR/
+
+  - lcov -c -d build/native/default_cpu1/apps/sbn -o sbn.coverage
+  - |
+    pct=`lcov --summary sbn.coverage 2>&1 | grep lines | sed -e 's/.*: \([0-9]*\)\..*/\1/'`
+    echo "coverage is at ${pct}%"
+    if [[ ${pct} -lt 99 ]]
+    then
+        echo "coverage has dropped below 99%, be sure to add coverage test code (in unit-test/coverage) prior to pushing"
+        exit -2
+    else
+    fi
+  # run functional test
+  - ./run
+  - sleep 5
+  - echo === TO output ===
+  - cnt=`grep 'received from TO' to_recv.log | wc -l`
+  - |
+    if [[ ${cnt} -eq 3 ]]
+    then
+        echo 'success!'
+        sleep 5
+    else
+        echo "Only ${cnt} entries in to_recv.log"
+        sleep 5
+        exit 1
+    fi
+  - exit 0
+```
+
+### `app.cfg`
+
+**경로:** `fsw/apps/sbn/app.cfg`
+
+
+```text
+SHOULD_START=1
+APP_NAME=sbn
+APP_ABBREV=SBN
+OBJ_TYPE=CFE_APP           
+APP_PATH=/cf/apps/sbn.so   
+ENTRY_PT=SBN_AppMain 
+CFE_NAME=SBN
+PRIORITY=70                   
+STACK_SIZE=4096               
+LOAD_ADDR=0x0                 
+EXCEPT_ACT=0
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(SBN_APP C)
+
+# workaround until these definitions are exposed by cfe_sb
+include_directories(${CFECORE_SOURCE_DIR}/src/sb)
+
+include_directories(fsw/platform_inc)
+
+aux_source_directory(fsw/src APP_SRC_FILES)
+
+# Create the app module
+add_cfe_app(sbn ${APP_SRC_FILES})
+
+aux_source_directory(fsw/tables APP_TBL_FILES)
+add_cfe_tables(sbn ${APP_TBL_FILES})
+
+#if (ENABLE_UNIT_TESTS)
+#  add_subdirectory(ut-stubs)
+#  add_subdirectory(unit-test)
+#endif (ENABLE_UNIT_TESTS)
+```
+
+### `Core Flight System (CFS) NOSA GSC-16917-1.pdf`
+
+**경로:** `fsw/apps/sbn/Core Flight System (CFS) NOSA GSC-16917-1.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `install`
+
+**경로:** `fsw/apps/sbn/install`
+
+
+```text
+#!/bin/bash
+
+SBN_BASE=`pwd` # TODO: compute?
+
+if [ $# -lt 1 ]
+then
+    echo "$0 <cFS base>"
+    exit 1
+fi
+
+CFS_BASE=$1
+APP_BASE=${CFS_BASE}/apps
+
+if [ ! -d ${APP_BASE} ]
+then
+    echo "invalid cFS base (can't find ${APP_BASE}.)"
+    exit 2
+fi
+
+mkdir -p "${APP_BASE}/sbn"
+ln -sf "${SBN_BASE}/fsw" "${APP_BASE}/sbn/"
+ln -sf "${SBN_BASE}/ut-stubs" "${APP_BASE}/sbn/"
+ln -sf "${SBN_BASE}/unit-test" "${APP_BASE}/sbn/"
+ln -sf "${SBN_BASE}/CMakeLists.txt" "${APP_BASE}/sbn/"
+
+for protocol in ${SBN_BASE}/modules/protocol/*
+do
+    b=`basename ${protocol}`
+    l="${APP_BASE}/sbn_${b}"
+    rm "${l}"
+    ln -sf "${protocol}" "${l}"
+done
+
+for filter in ${SBN_BASE}/modules/filter/*
+do
+    b=`basename ${filter}`
+    l="${APP_BASE}/sbn_f_${b}"
+    rm "${l}"
+    ln -sf "${filter}" "${l}"
+done
+```
+
+### `README.md`
+
+**경로:** `fsw/apps/sbn/README.md`
+
+
+```markdown
+# Software Bus Network
+NASA Core Flight System (cFS) Software Bus Network (SBN) Application
+
+## Description
+The SBN is a cFS application that is a plug in to the Core Flight Executive (cFE) component of the cFS.
+
+The cFS is a platform and project independent reusable software framework and set of reusable applications developed by NASA Goddard Space Flight Center. This framework is used as the basis for the flight software for satellite data systems and instruments, but can be used on other embedded systems. More information on the cFS can be found at [http://cfs.gsfc.nasa.gov](http://cfs.gsfc.nasa.gov)
+
+The SBN application connects the cFE Software Bus (SB) to other buses, bridging the publish/subscribe messaging service to separate cFS instances in separate partitions, processes, processors, and/or networks.
+
+## License
+This software is licensed under the NASA Open Source Agreement. http://ti.arc.nasa.gov/opensource/nosa
+```
+
+### `wireshark-sbn.lua`
+
+**경로:** `fsw/apps/sbn/wireshark-sbn.lua`
+
+
+```text
+-- LUA code for a Wireshark protocol dissector for SBN messages.
+-- TODO: would be nice to auto-decode CCSDS payloads in "app" messages.
+--
+-- For install instructions, see:
+--         https://www.wireshark.org/docs/wsdg_html_chunked/wsluarm.html
+
+-- change below or use "Decode As..." to decode SBN messages.
+
+local sbn_port_udp = 2234
+local sbn_port_tcp = 2234
+
+local proto_sbn = Proto("cfs_sbn", "Core Flight Software - Software Bus Networking")
+
+local proto_sbn_types = {
+    [0] = "NOMSG",
+    [1] = "SUB",
+    [2] = "UNSUB",
+    [3] = "APP",
+    [4] = "PROTO"
+}
+
+local proto_sbn_msgsz = ProtoField.uint16("cfs_sbn.MsgSz", "MsgSz", base.DEC)
+
+local proto_sbn_type =
+    ProtoField.uint8("cfs_sbn.MsgType", "MsgType", base.DEC, proto_sbn_types)
+
+local proto_sbn_cpuid = ProtoField.uint32("cfs_sbn.CPUID", "CPUID", base.DEC)
+
+local proto_sbn_version =
+    ProtoField.string("cfs_sbn.sub.Version", "Version", base.ASCII)
+
+local proto_sbn_sub_cnt =
+    ProtoField.uint16("cfs_sbn.sub.Cnt", "Sub Count", base.DEC)
+
+local proto_sbn_sub_mid =
+    ProtoField.uint16("cfs_sbn.sub.MID", "Subscription", base.HEX)
+
+proto_sbn.fields = {
+    proto_sbn_msgsz,
+    proto_sbn_type,
+    proto_sbn_cpuid,
+    proto_sbn_sub,
+    proto_sbn_version,
+    proto_sbn_sub_cnt,
+    proto_sbn_sub_mid
+}
+
+function proto_sbn.dissector(buffer, pinfo, tree)
+    if buffer:len() == 0 then return end
+    pinfo.cols.protocol = proto_sbn.name
+
+    local subtree = tree:add(proto_sbn, buffer(), "SBN Data")
+    local offset = 0
+
+    subtree:add(proto_sbn_msgsz, buffer(offset, 2))
+    offset = offset + 2
+
+    subtree:add(proto_sbn_type, buffer(offset, 1))
+    local msgtype = buffer(offset, 1):uint()
+    offset = offset + 1
+
+    subtree:add(proto_sbn_cpuid, buffer(3, 4))
+    offset = offset + 4
+
+    if msgtype == 1 then -- sub
+        subtree:add(proto_sbn_version, buffer(offset, 48))
+        offset = offset + 48
+    end
+
+    if msgtype == 1 or msgtype == 2 then -- sub/unsub
+        subtree:add(proto_sbn_sub_cnt, buffer(offset, 2))
+        local sub_cnt = buffer(offset, 2):uint()
+        offset = offset + 2
+
+        for i = 0, sub_cnt - 1, 1 do
+            subtree:add(proto_sbn_sub_mid, buffer(offset, 2))
+            offset = offset + 2
+        end
+    end
+
+    if msgtype == 3 then
+        local ccsds = Dissector.get("data")
+        ccsds:call(buffer(offset):tvb(), pinfo, subtree)
+    end
+end
+
+DissectorTable.get("udp.port"):add(sbn_port_udp, proto_sbn)
+DissectorTable.get("tcp.port"):add(sbn_port_tcp, proto_sbn)
+```

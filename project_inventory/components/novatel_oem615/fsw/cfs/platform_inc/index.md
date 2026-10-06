@@ -3,16 +3,79 @@
 
 **경로:** `components/novatel_oem615/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `novatel_oem615_msgids.h`
 
-file--novatel_oem615_msgids.h
-file--novatel_oem615_platform_cfg.h
+**경로:** `components/novatel_oem615/fsw/cfs/platform_inc/novatel_oem615_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: novatel_oem615_msgids.h  $
+**
+** Purpose:
+**  Define NOVATEL_OEM615 Message IDs
+**
+*************************************************************************/
+#ifndef _NOVATEL_OEM615_MSGIDS_H_
+#define _NOVATEL_OEM615_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define NOVATEL_OEM615_CMD_MID 0x1870
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define NOVATEL_OEM615_REQ_HK_MID 0x1871
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define NOVATEL_OEM615_HK_TLM_MID     0x0870
+#define NOVATEL_OEM615_DEVICE_TLM_MID 0x0871
+
+#endif /* _NOVATEL_OEM615_MSGIDS_H_ */
 ```
 
-## 항목
+### `novatel_oem615_platform_cfg.h`
 
-- [`components/novatel_oem615/fsw/cfs/platform_inc/novatel_oem615_msgids.h`](file--novatel_oem615_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/novatel_oem615/fsw/cfs/platform_inc/novatel_oem615_platform_cfg.h`](file--novatel_oem615_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/novatel_oem615/fsw/cfs/platform_inc/novatel_oem615_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: novatel_oem615_platform_cfg.h  $
+**
+** Purpose:
+**  Define novatel_oem615 Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _NOVATEL_OEM615_PLATFORM_CFG_H_
+#define _NOVATEL_OEM615_PLATFORM_CFG_H_
+
+/*
+** Default NOVATEL_OEM615 Configuration
+*/
+#ifndef NOVATEL_OEM615_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define NOVATEL_OEM615_CFG_STRING         "usart_1"
+#define NOVATEL_OEM615_CFG_HANDLE         1
+#define NOVATEL_OEM615_CFG_BAUDRATE_HZ    115200
+#define NOVATEL_OEM615_CFG_MS_TIMEOUT     50 /* Max 255 */
+#define NOVATEL_OEM615_CFG_READ_TIMEOUT   250
+#define NOVATEL_OEM615_CFG_DATA_ERROR_CNT 10
+/* Note: Debug flag disabled (commented out) by default */
+//#define NOVATEL_OEM615_CFG_DEBUG
+#endif
+
+#endif /* _NOVATEL_OEM615_PLATFORM_CFG_H_ */
+```

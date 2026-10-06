@@ -3,16 +3,124 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-report/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-report.component.html`
 
-file--command-report.component.html
-file--command-report.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-report/command-report.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Send a command" />
+
+  <app-send-command-wizard-step step="3" />
+
+  @if (command$ | async; as command) {
+    <ya-panel>
+      <app-command-detail2 [command]="command" />
+      <ng-container>
+        <br />
+        <mat-divider />
+        <br />
+        <ya-button routerLink="/commanding/send" [queryParams]="{ c: yamcs.context }">
+          Send another command
+        </ya-button>
+        &nbsp;&nbsp;
+        <ya-button
+          [routerLink]="'/commanding/send' + command.commandName"
+          [queryParams]="{ c: yamcs.context, template: command.id }">
+          Resend this command
+        </ya-button>
+      </ng-container>
+    </ya-panel>
+  }
+</ya-instance-page>
 ```
 
-## 항목
+### `command-report.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-report/command-report.component.html`](file--command-report.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-report/command-report.component.ts`](file--command-report.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/command-report/command-report.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  input,
+} from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import {
+  CommandHistoryEntry,
+  CommandHistoryRecord,
+  CommandSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CommandDetailComponent } from '../../command-history/command-detail/command-detail.component';
+import { SendCommandWizardStepComponent } from '../send-command-wizard-step/send-command-wizard-step.component';
+
+@Component({
+  templateUrl: './command-report.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    CommandDetailComponent,
+    SendCommandWizardStepComponent,
+    WebappSdkModule,
+  ],
+})
+export class CommandReportComponent implements OnInit, OnDestroy {
+  qualifiedName = input.required<string>({ alias: 'command' });
+  commandId = input.required<string>();
+
+  private commandSubscription: CommandSubscription;
+  command$ = new BehaviorSubject<CommandHistoryRecord | null>(null);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private title: Title,
+  ) {}
+
+  ngOnInit(): void {
+    this.title.setTitle(this.qualifiedName());
+
+    const commandId = this.commandId();
+    this.commandSubscription = this.yamcs.yamcsClient.createCommandSubscription(
+      {
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        ignorePastCommands: false,
+      },
+      (wsEntry) => {
+        if (wsEntry.id === commandId) {
+          this.mergeEntry(wsEntry, false);
+        }
+      },
+    );
+    this.commandSubscription.addReplyListener(() => {
+      this.yamcs.yamcsClient
+        .getCommandHistoryEntry(this.yamcs.instance!, commandId)
+        .then((entry) => {
+          this.mergeEntry(entry, true /* append ws replies to rest response */);
+        });
+    });
+  }
+
+  private mergeEntry(entry: CommandHistoryEntry, reverse: boolean) {
+    const rec = this.command$.value;
+    if (rec) {
+      const mergedRec = rec.mergeEntry(entry, reverse);
+      this.command$.next(mergedRec);
+    } else {
+      this.command$.next(new CommandHistoryRecord(entry));
+    }
+  }
+
+  ngOnDestroy() {
+    this.commandSubscription?.cancel();
+  }
+}
+```

@@ -3,18 +3,167 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ChronoTimeTester.cpp`
 
-file--ChronoTimeTester.cpp
-file--ChronoTimeTester.hpp
-file--ChronoTimeTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChronoTimeTester.cpp
+// \author mstarch
+// \brief  cpp file for ChronoTime component test harness implementation class
+// ======================================================================
+
+#include "ChronoTimeTester.hpp"
+#include <Fw/Test/UnitTest.hpp>
+#include <iostream>
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+ChronoTimeTester ::ChronoTimeTester()
+    : ChronoTimeGTestBase("ChronoTimeTester", ChronoTimeTester::MAX_HISTORY_SIZE), component("ChronoTime") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+ChronoTimeTester ::~ChronoTimeTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void ChronoTimeTester ::test_basic_time() {
+    const U32 SECONDS_SINCE_EPOCH_2024_11_25 = 1732492800ull;             // Time since epoch as of date of writing
+    const std::string expected_epoch_time("Thu Jan  1 00:00:00 1970\n");  // std::asctime adds \n
+
+    // Calculate the system_clock epoch. This test is only valid when the system_clock uses unix epoch.
+    const auto epoch = std::chrono::time_point<std::chrono::system_clock>{};
+    std::time_t epoch_time = std::chrono::system_clock::to_time_t(epoch);
+    const std::string reported_epoch_time(std::asctime(std::gmtime(&epoch_time)));
+
+    // Skip test when epoch is not the unix epoch
+    if (expected_epoch_time != reported_epoch_time) {
+        GTEST_SKIP() << "Cannot run std::chrono test with non-unix epoch of: " << reported_epoch_time;
+    }
+
+    REQUIREMENT("SVC_CHRONO_TIME_002");
+    REQUIREMENT("SVC_CHRONO_TIME_003");
+
+    // Invoke port
+    Fw::Time time;
+    this->invoke_to_timeGetPort(0, time);
+    ASSERT_GT(time.getSeconds(), SECONDS_SINCE_EPOCH_2024_11_25);
+    // Check for correct use of milliseconds
+    ASSERT_GE(time.getUSeconds(), 0U);
+    ASSERT_LE(time.getUSeconds(), 999999U);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `ChronoTimeTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTester.cpp`](file--ChronoTimeTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTester.hpp`](file--ChronoTimeTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTestMain.cpp`](file--ChronoTimeTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChronoTimeTester.hpp
+// \author mstarch
+// \brief  hpp file for ChronoTime component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_ChronoTimeTester_HPP
+#define Svc_ChronoTimeTester_HPP
+
+#include "Svc/ChronoTime/ChronoTime.hpp"
+#include "Svc/ChronoTime/ChronoTimeGTestBase.hpp"
+
+namespace Svc {
+
+class ChronoTimeTester : public ChronoTimeGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object ChronoTimeTester
+    ChronoTimeTester();
+
+    //! Destroy object ChronoTimeTester
+    ~ChronoTimeTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! To do
+    void test_basic_time();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    ChronoTime component;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `ChronoTimeTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/ut/ChronoTimeTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChronoTimeTestMain.cpp
+// \author mstarch
+// \brief  cpp file for ChronoTime component test main function
+// ======================================================================
+
+#include "ChronoTimeTester.hpp"
+
+TEST(Nominal, TestBasicTime) {
+    Svc::ChronoTimeTester tester;
+    tester.test_basic_time();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

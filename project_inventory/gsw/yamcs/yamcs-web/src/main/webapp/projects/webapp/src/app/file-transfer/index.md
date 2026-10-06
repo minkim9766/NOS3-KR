@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,17 +14,66 @@ file-transfer-tabs/index
 remote-file-selector/index
 shared/index
 transfer-file-dialog/index
-file--file-transfer.resolvers.ts
-file--file-transfer.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/action-log-tab/`](action-log-tab/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-list/`](file-transfer-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer-tabs/`](file-transfer-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/remote-file-selector/`](remote-file-selector/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/`](transfer-file-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer.resolvers.ts`](file--file-transfer.resolvers.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer.routes.ts`](file--file-transfer.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `file-transfer.resolvers.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer.resolvers.ts`
+
+
+```typescript
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { FileTransferService, YamcsService } from '@yamcs/webapp-sdk';
+
+export const resolveServices: ResolveFn<FileTransferService[]> = (
+  route,
+  state,
+) => {
+  const yamcs = inject(YamcsService);
+  return yamcs.yamcsClient
+    .getFileTransferServices(yamcs.instance!)
+    .then((page) => page.services);
+};
+```
+
+### `file-transfer.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/file-transfer.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { ActionLogTabComponent } from './action-log-tab/action-log-tab.component';
+import { FileTransferListComponent } from './file-transfer-list/file-transfer-list.component';
+import { resolveServices } from './file-transfer.resolvers';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: FileTransferListComponent,
+        resolve: {
+          services: resolveServices,
+        },
+      },
+      {
+        path: 'log',
+        component: ActionLogTabComponent,
+      },
+    ],
+  },
+];
+```

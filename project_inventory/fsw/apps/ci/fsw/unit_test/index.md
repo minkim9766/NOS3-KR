@@ -3,28 +3,992 @@
 
 **경로:** `fsw/apps/ci/fsw/unit_test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ut-assert/index
-file--.gitignore
-file--ci_stubs.c
-file--ci_stubs.h
-file--ci_testcase.c
-file--ci_testrunner.c
-file--makefile
-file--Readme.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/ci/fsw/unit_test/ut-assert/`](ut-assert/index) — 폴더
-- [`fsw/apps/ci/fsw/unit_test/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/ci_stubs.c`](file--ci_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/ci_stubs.h`](file--ci_stubs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/ci_testcase.c`](file--ci_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/ci_testrunner.c`](file--ci_testrunner.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/unit_test/Readme.txt`](file--Readme.txt) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/.gitignore`
+
+
+```text
+*.o
+*.exe
+*.gcov
+*.out
+*.gcno
+```
+
+### `ci_stubs.c`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/ci_stubs.c`
+
+
+```c
+/*
+ * File: ci_stubs.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *  Stub out various functions not stubbed out by the UT-Assert code, including standard socket library functions
+ */
+
+#include <sys/socket.h>
+#include <string.h>
+#include <stdio.h>
+
+#include "cfe.h"
+#include "ci_app.h"
+#include "ci_stubs.h"
+
+
+extern CI_AppData_t  g_CI_AppData;
+
+Ut_CI_ReturnCodeTable_t     Ut_CI_ReturnCodeTable[UT_CI_MAX_INDEX];
+
+void Ut_CI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt)
+{
+    if (Index < UT_CI_MAX_INDEX) {
+        Ut_CI_ReturnCodeTable[Index].Value = RtnVal;
+        Ut_CI_ReturnCodeTable[Index].Count = CallCnt;
+    }
+    else {
+        printf("Unsupported Index In SetReturnCode Call %u\n", Index);
+    }
+}
+
+
+bool Ut_CI_UseReturnCode(uint32 Index)
+{
+    if (Ut_CI_ReturnCodeTable[Index].Count > 0) {
+        Ut_CI_ReturnCodeTable[Index].Count--;
+        if (Ut_CI_ReturnCodeTable[Index].Count == 0)
+            return(true);
+    }
+
+    return(false);
+}
+
+
+
+/* Functions normally declared in Custom File (ci_custom.c) */
+int32 CI_CustomInit(void)
+{
+    if (Ut_CI_UseReturnCode(UT_CI_CUSTOMINIT_INDEX))
+        return Ut_CI_ReturnCodeTable[UT_CI_CUSTOMINIT_INDEX].Value;
+    
+    return CI_SUCCESS;
+}
+
+
+int32 CI_CustomAppCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    uint32 uiCmdCode = CFE_MSG_GetFcnCode(pCmdMsg, CFE_MSG_FcnCode_t *FcnCode);
+
+    if (Ut_CI_UseReturnCode(UT_CI_CUSTOMAPPCMDS_INDEX))
+        return Ut_CI_ReturnCodeTable[UT_CI_CUSTOMAPPCMDS_INDEX].Value;
+
+    CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdCnt);
+    CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "Received Custom Cmd (%d)",
+                      uiCmdCode);
+    
+    return CI_SUCCESS;
+}
+
+
+void CI_CustomEnableTO(CFE_MSG_Message_t * pCmdMsg)
+{
+    return;
+}
+
+
+void CI_CustomCleanup(void)
+{
+    return;
+}
+```
+
+### `ci_stubs.h`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/ci_stubs.h`
+
+
+```c
+/*
+ * File: ci_stubs.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide stubs for unit testing CI
+ *
+ * History:
+ *   Jan 15, 2015  dasp
+ *    *
+ */
+
+#ifndef Ut_CI_STUBS_H
+#define Ut_CI_STUBS_H
+
+#include "uttools.h"
+
+typedef enum
+{
+    UT_CI_CUSTOMINIT_INDEX,
+    UT_CI_CUSTOMAPPCMDS_INDEX,
+    UT_CI_MAX_INDEX
+} Ut_CI_INDEX_t;
+
+typedef struct
+{
+    int32   Value;
+    uint32  Count;
+} Ut_CI_ReturnCodeTable_t;
+
+
+void Ut_CI_SetReturnCode(uint32 Index, int32 RtnVal, uint32 CallCnt);
+bool Ut_CI_UseReturnCode(uint32 Index);
+
+
+#endif
+```
+
+### `ci_testcase.c`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/ci_testcase.c`
+
+
+```c
+/*
+ * Filename: ci_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains unit test cases for the ci application
+ * 
+ */
+
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "ci_app.h"
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_osapi_stubs.h"
+#include "ut_osfileapi_stubs.h"
+#include "ut_cfe_fs_stubs.h"
+#include <errno.h>
+
+#include "ci_stubs.h"
+
+
+extern CI_AppData_t  g_CI_AppData;
+
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+/*******************************************************************************
+**
+**  CI_InitEvent Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_InitEvent_RegisterFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = CI_ERROR;
+    int32 actual = 0;
+    Ut_CFE_EVS_SetReturnCode(UT_CFE_EVS_REGISTER_INDEX, 
+                            CFE_EVS_UNKNOWN_FILTER, 1);
+
+    /* Execute Test */
+    actual = CI_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitEvent - Event Register Fail");
+}
+
+void Test_CI_InitEvent(void)
+{
+    /* Setup Inputs */
+    int32 expected = CFE_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = CI_InitEvent();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitEvent - Nominal");
+}
+
+
+/*******************************************************************************
+**
+**  CI_InitPipe Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_InitPipe_CreatePipeFail(void)
+{
+    /* Setup Inputs */
+    int32 expected = CI_ERROR;
+    int32 actual = 0;
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 1);
+
+    /* Execute Test */
+    actual = CI_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - SCH CreatePipe Fail");
+
+    expected = CFE_SB_BAD_ARGUMENT;
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_CREATEPIPE_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 2);
+    
+    /* Execute Test */
+    actual = CI_InitPipe();
+    
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitPipe - CMD CreatePipe Fail");
+    UtAssert_True(g_CI_AppData.usCmdPipeDepth == CI_CMD_PIPE_DEPTH, 
+                  "Side effect test.");
+}
+
+void Test_CI_InitPipe(void)
+{
+    /* Setup Inputs */
+    int32 expected = CFE_SUCCESS; 
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = CI_InitPipe();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "Init Pipe - Nominal");
+}
+
+/*******************************************************************************
+**
+**  CI_InitData Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_InitData(void)
+{
+    /* Setup Inputs */
+    int32 expected = CI_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = CI_InitData();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "InitData - Nominal");
+    UtAssert_True(g_CI_AppData.uiWakeupTimeout == CI_WAKEUP_TIMEOUT,
+                  "Side effect test.");
+}
+
+
+/*******************************************************************************
+**
+**  CI_InitCustom Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_CustomInit_Fail(void)
+{
+    /* Setup Inputs */
+    int32 expected = CI_ERROR;
+    int32 actual = 0;
+
+    Ut_CI_SetReturnCode(UT_CI_CUSTOMINIT_INDEX, 
+                        CI_ERROR, 1);
+
+    /* Execute Test */
+    actual = CI_CustomInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "CustomInit - Fail");
+}
+
+/*******************************************************************************
+**
+**  CI_AppInit Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_AppInit(void)
+{
+    /* Setup Inputs */
+    int32 expected = CI_SUCCESS;
+    int32 actual = 0;
+
+    /* Execute Test */
+    actual = CI_AppInit();
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "AppInit - Nominal");
+}
+
+
+/*******************************************************************************
+**
+**  CI_AppMain Tests
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_AppMain_RegisterFail(void)
+{
+    g_CI_AppData.uiWakeupTimeout = 0;
+    Ut_CFE_ES_SetReturnCode(UT_CFE_ES_REGISTERAPP_INDEX, 
+                            -1, 1);
+    
+    /* Execute Test */
+    CI_AppMain();
+
+    UtAssert_True(g_CI_AppData.uiWakeupTimeout == 0,
+                  "AppMain - RegisterApp Fail");
+}
+
+
+void Test_CI_AppMain_InitFail(void)
+{
+    Ut_CI_SetReturnCode(UT_CI_CUSTOMINIT_INDEX, 
+                        CI_ERROR, 1);
+
+    CI_AppMain();
+    
+    UtAssert_True(g_CI_AppData.uiWakeupTimeout == CI_WAKEUP_TIMEOUT,
+                  "AppMain - AppInit Fail");
+    
+}
+
+void Test_CI_AppMain_RcvMsgFail(void)
+{
+    Ut_CFE_SB_SetReturnCode(UT_CFE_SB_RCVMSG_INDEX, 
+                            CFE_SB_BAD_ARGUMENT, 1);
+    
+    CI_AppMain();
+    
+    UtAssert_True(g_CI_AppData.uiRunStatus == CFE_ES_RunStatus_APP_ERROR,
+                  "AppMain - RcvMsg Fail");
+
+    /* For code coverage */
+    CI_CleanupCallback();                  
+}
+
+
+/*******************************************************************************
+**
+** CI_RcvMsg Test
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_RcvMsg_NoMsgError(void)
+{
+    int32 actual;
+    int32 expected = CFE_SB_NO_MESSAGE;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    actual = CI_RcvMsg(CFE_SB_POLL);
+    UtAssert_True(actual == expected, "RcvMsg - NoMsgError");
+}
+
+void Test_CI_RcvMsg_BadMsg(void)
+{
+    int32 actual;
+    int32 expected = CFE_SUCCESS;
+    CFE_MSG_Message_t msg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &msg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, 0);
+    CFE_MSG_SetSize(pMsg,  sizeof(msg));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_CI_AppData.SchPipeId);
+
+    actual = CI_RcvMsg(CFE_SB_PEND_FOREVER);
+    UtAssert_True(actual == expected, "RcvMsg - Bad MID");
+}
+
+void Test_CI_RcvMsg_Wakeup(void)
+{
+    int32 actual;
+    int32 expected = CFE_SUCCESS;
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, CI_WAKEUP_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(cmdMsg));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_CI_AppData.SchPipeId);
+
+    actual = CI_RcvMsg(CFE_SB_PEND_FOREVER);
+    UtAssert_True(actual == expected, "RcvMsg - Wakeup MID");
+}
+
+void Test_CI_RcvMsg_Timeout(void)
+{
+    int32 actual;
+    int32 expected = CFE_SB_TIME_OUT;
+    
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    actual = CI_RcvMsg(10);
+    UtAssert_True(actual == expected, "RcvMsg - timeout");
+}
+    
+
+/*******************************************************************************
+**
+** CI_ProcessNewCmds Test 
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_ProcessNewCmds_BadMsg(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    /* Send a Bad Command */
+    CFE_MSG_SetMsgId(pMsg, 0);
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_NoArgCmd_t));         
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_CI_AppData.CmdPipeId);
+
+    CI_ProcessNewCmds();
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewCmds - Bad Msg");
+}
+
+
+void Test_CI_ProcessNewCmds_AppCmd(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    /* Send Noop Cmd Command */
+    CFE_MSG_SetMsgId(pMsg, CI_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  CI_NOOP_CC);
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_NoArgCmd_t));                      
+
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_CI_AppData.CmdPipeId);
+
+    CI_ProcessNewCmds();
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewCmds - AppCmd Msg");
+}
+    
+
+void Test_CI_ProcessNewCmds_SendHk(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+
+    /* Initialize the Command pipe and subscribe to messages */
+    CI_InitPipe();
+
+    CFE_MSG_SetMsgId(pMsg, CI_SEND_HK_MID);
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_NoArgCmd_t));                      
+
+    Ut_CFE_SB_AddMsgToPipe(pMsg, g_CI_AppData.CmdPipeId);
+
+    CI_ProcessNewCmds();
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 0,
+                  "ProcessNewCmds - SendHk Msg");
+}
+
+
+
+
+/*******************************************************************************
+**
+** CI_ProcessNewAppCmds Test 
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------------------*/
+void Test_CI_ProcessNewAppCmds_Noop(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, CI_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  CI_NOOP_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - NOOP_CC - Invalid Len.");
+    
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_NoArgCmd_t));
+    
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewAppCmds - NOOP_CC");
+}
+
+
+void Test_CI_ProcessNewAppCmds_Reset(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, CI_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  CI_RESET_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - RESET_CC - Invalid Len.");
+    
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_NoArgCmd_t));
+    
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 0,
+                  "ProcessNewAppCmds - RESET_CC");
+}
+
+
+void Test_CI_ProcessNewAppCmds_EnableTO(void)
+{
+    CI_EnableTOCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, CI_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  CI_ENABLE_TO_CC);
+    CFE_MSG_SetSize(pMsg,  20);                      
+
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - ENABLE_TO_CC - Invalid Len.");
+    
+    CFE_MSG_SetSize(pMsg,  sizeof(CI_EnableTOCmd_t));
+    
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewAppCmds - ENABLE_TO_CC");
+}
+
+
+void Test_CI_ProcessNewAppCmds_Custom(void)
+{
+    CI_NoArgCmd_t cmdMsg;
+    CFE_MSG_Message_t * pMsg = (CFE_MSG_Message_t *) &cmdMsg;
+    
+    CFE_MSG_SetMsgId(pMsg, CI_APP_CMD_MID);
+    CFE_MSG_SetFcnCode(pMsg,  10);
+
+    Ut_CI_SetReturnCode(UT_CI_CUSTOMAPPCMDS_INDEX, 
+                        CI_ERROR, 1);
+    
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+   
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdErrCnt == 1,
+                  "ProcessNewAppCmds - Invalid Custom Cmd ID");
+    
+    /* Execute test */
+    CI_ProcessNewAppCmds(pMsg);
+
+    UtAssert_True(g_CI_AppData.HkTlm.usCmdCnt == 1,
+                  "ProcessNewAppCmds - Valid Custom Cmd ID");
+}
+
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+
+/*
+ * CI_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void CI_Setup(void)
+{  
+    Ut_OSAPI_Reset();
+    Ut_CFE_SB_Reset();
+    Ut_CFE_ES_Reset();
+    Ut_CFE_EVS_Reset();
+    Ut_CFE_TBL_Reset();
+}
+
+/*
+ * CI_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void CI_TearDown(void)
+{
+    CFE_PSP_MemSet((void*)&g_CI_AppData.HkTlm, 0x00, 
+                   sizeof(g_CI_AppData.HkTlm));
+}
+
+
+/* CI_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void CI_AddTestCase(void)
+{
+    /* CI_AppInit Tests */
+    UtTest_Add(Test_CI_InitEvent_RegisterFail,  CI_Setup, CI_TearDown,
+               "Test_CI_InitEvent_RegisterFail");
+    UtTest_Add(Test_CI_InitEvent,  CI_Setup, CI_TearDown,
+               "Test_CI_InitEvent");
+    UtTest_Add(Test_CI_InitPipe_CreatePipeFail,  CI_Setup, CI_TearDown,
+               "Test_CI_InitPipe_CreatePipeFail");
+    UtTest_Add(Test_CI_InitPipe,  CI_Setup, CI_TearDown,
+               "Test_CI_InitPipe");
+    UtTest_Add(Test_CI_InitData,  CI_Setup, CI_TearDown,
+               "Test_CI_InitData");
+    UtTest_Add(Test_CI_CustomInit_Fail,  CI_Setup, CI_TearDown,
+               "Test_CI_CustomInit_Fail");
+    UtTest_Add(Test_CI_AppInit,  CI_Setup, CI_TearDown,
+               "Test_CI_AppInit");
+
+    /* CI_AppMain */
+    UtTest_Add(Test_CI_AppMain_RegisterFail, CI_Setup, CI_TearDown,
+               "Test_CI_AppMain_Registerfail");
+    UtTest_Add(Test_CI_AppMain_InitFail, CI_Setup, CI_TearDown,
+               "Test_CI_AppMain_Initfail");
+    UtTest_Add(Test_CI_AppMain_RcvMsgFail, CI_Setup, CI_TearDown,
+               "Test_CI_AppMain_RcvMsgfail");
+
+    /* CI_RcvMsg */
+    UtTest_Add(Test_CI_RcvMsg_NoMsgError,  CI_Setup, CI_TearDown,
+              "Test_CI_RcvMsg_NoMsgError");
+    UtTest_Add(Test_CI_RcvMsg_BadMsg,  CI_Setup, CI_TearDown,
+              "Test_CI_RcvMsg_BadMsg");
+    UtTest_Add(Test_CI_RcvMsg_Wakeup,  CI_Setup, CI_TearDown,
+              "Test_CI_RcvMsg_Wakeup");
+    UtTest_Add(Test_CI_RcvMsg_Timeout,  CI_Setup, CI_TearDown,
+              "Test_CI_RcvMsg_Timeout");
+
+    /* CI_ProcessNewCmds */
+    UtTest_Add(Test_CI_ProcessNewCmds_BadMsg,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewCmds_BadMsg");
+    UtTest_Add(Test_CI_ProcessNewCmds_AppCmd,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewCmds_AppCmd");
+    UtTest_Add(Test_CI_ProcessNewCmds_SendHk,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewCmds_SendHk");
+
+    /* CI_ProcessNewAppCmds */
+    UtTest_Add(Test_CI_ProcessNewAppCmds_Noop,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewAppCmds_Noop");
+    UtTest_Add(Test_CI_ProcessNewAppCmds_Reset,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewAppCmds_Reset");
+    UtTest_Add(Test_CI_ProcessNewAppCmds_EnableTO,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewAppCmds_EnableTO");
+    UtTest_Add(Test_CI_ProcessNewAppCmds_Custom,  CI_Setup, CI_TearDown,
+               "Test_CI_ProcessNewAppCmds_Custom");
+    
+
+}
+
+
+  
+
+```
+
+### `ci_testrunner.c`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/ci_testrunner.c`
+
+
+```c
+
+void CI_AddTestCase(void);
+
+/*
+ * Filename: ci_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for the CI Application.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    CI_AddTestCase();
+    return(UtTest_Run());
+}
+
+```
+
+### `makefile`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=ci
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+# Note, CI has an explicit dependency on the TO app
+APP_PATH  = $(APP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../src
+VPATH += ./ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../src
+INCLUDES += -I../platform_inc
+INCLUDES += -I../mission_inc
+INCLUDES += -I../../../inc
+#INCLUDES += -I../../../io_lib/fsw/public_inc
+INCLUDES += -I./ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+INCLUDES += -I$(APP_PATH)/to/fsw/platform_inc
+INCLUDES += -I$(APP_PATH)/to/fsw/src
+
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := $(APP)_app.o $(APP)_utils.o 
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -DUT_VERBOSE -D_LINUX_OS_
+#COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
+```
+
+### `Readme.txt`
+
+**경로:** `fsw/apps/ci/fsw/unit_test/Readme.txt`
+
+
+```text
+This directory holds the unit tests for the CI application.
+
+To build and run the unit tests:
+1. Be sure an appropriate *_ci_types.h is in the apps/inc directory by:
+  a. cd ../examples
+  b. ./setup.sh -m CFS_TST udp     (see below)
+  c. cd ../unit_test
+2. Do the same for TO.  Be sure an appropriate *_to_types.h is in the 
+   apps/inc directory by:
+  a. cd ../../../to/fsw/examples
+  b. ./setup.sh -m CFS_TST udp     (see below)
+  c. cd ../../../ci/fsw/unit_test
+3. make clean
+4. make
+5. make run
+6. make gcov
+
+Background:
+The unit tests also expect (like the apps) to find the 
+ apps/inc/CFS_TST_ci_types.h
+ apps/inc/CFS_TST_to_types.h
+where the mission name, CFS_TST, is assumed by default.
+
+These are put into place by the [ci/to]/fsw/examples/setup.py scripts.
+Choose the appropriate name for your code to compile if you aren't 
+using "CFS_TST".
+```

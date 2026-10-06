@@ -3,24 +3,388 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--DpManager.cpp
-file--DpManager.fpp
-file--DpManager.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.cpp`](file--DpManager.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.fpp`](file--DpManager.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.hpp`](file--DpManager.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/DpManager.cpp"
+)
+
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DpManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpManagerTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DpManagerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/BufferGetStatus.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/CLEAR_EVENT_THROTTLE.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/ProductGetIn.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/ProductRequestIn.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/ProductSendIn.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/SchedIn.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Rules/Testers.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Scenarios/Random.cpp"
+)
+
+set(UT_MOD_DEPS
+  STest
+)
+
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+```
+
+### `DpManager.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpManager.cpp
+// \author bocchino
+// \brief  cpp file for DpManager component implementation class
+// ======================================================================
+
+#include "Svc/DpManager/DpManager.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+DpManager::DpManager(const char* const compName)
+    : DpManagerComponentBase(compName),
+      numSuccessfulAllocations(0),
+      numFailedAllocations(0),
+      numDataProducts(0),
+      numBytes(0) {}
+
+DpManager::~DpManager() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+Fw::Success DpManager::productGetIn_handler(const FwIndexType portNum,
+                                            FwDpIdType id,
+                                            FwSizeType size,
+                                            Fw::Buffer& buffer) {
+    return this->getBuffer(portNum, id, size, buffer);
+}
+
+void DpManager::productRequestIn_handler(const FwIndexType portNum, FwDpIdType id, FwSizeType size) {
+    // Get a buffer
+    Fw::Buffer buffer;
+    const Fw::Success status = this->getBuffer(portNum, id, size, buffer);
+    // Send buffer on productResponseOut
+    this->productResponseOut_out(portNum, id, buffer, status);
+}
+
+void DpManager::productSendIn_handler(const FwIndexType portNum, FwDpIdType id, const Fw::Buffer& buffer) {
+    // id is unused
+    (void)id;
+    // Update state variables
+    ++this->numDataProducts;
+    this->numBytes += buffer.getSize();
+    // Send the buffer on productSendOut
+    Fw::Buffer sendBuffer = buffer;
+    this->productSendOut_out(portNum, sendBuffer);
+}
+
+void DpManager::schedIn_handler(const FwIndexType portNum, U32 context) {
+    // Emit telemetry
+    this->tlmWrite_NumSuccessfulAllocations(this->numSuccessfulAllocations);
+    this->tlmWrite_NumFailedAllocations(this->numFailedAllocations);
+    this->tlmWrite_NumDataProducts(this->numDataProducts);
+    this->tlmWrite_NumBytes(this->numBytes);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for commands
+// ----------------------------------------------------------------------
+
+void DpManager ::CLEAR_EVENT_THROTTLE_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    this->log_WARNING_HI_BufferAllocationFailed_ThrottleClear();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+// ----------------------------------------------------------------------
+// Private helper functions
+// ----------------------------------------------------------------------
+
+Fw::Success DpManager::getBuffer(FwIndexType portNum, FwDpIdType id, FwSizeType size, Fw::Buffer& buffer) {
+    // Set status
+    Fw::Success status(Fw::Success::FAILURE);
+    // Get a buffer
+    buffer = this->bufferGetOut_out(portNum, static_cast<U32>(size));
+    if (buffer.isValid()) {
+        // Buffer is valid
+        ++this->numSuccessfulAllocations;
+        status = Fw::Success::SUCCESS;
+    } else {
+        // Buffer is invalid
+        ++this->numFailedAllocations;
+        this->log_WARNING_HI_BufferAllocationFailed(id);
+    }
+    return status;
+}
+
+}  // end namespace Svc
+```
+
+### `DpManager.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for managing data products
+  active component DpManager {
+
+    # ----------------------------------------------------------------------
+    # Scheduling ports
+    # ----------------------------------------------------------------------
+
+    @ Schedule in port
+    async input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Ports for handling buffer requests
+    # ----------------------------------------------------------------------
+
+    @ Ports for responding to a data product get from a client component
+    sync input port productGetIn: [DpManagerNumPorts] Fw.DpGet
+
+    @ Ports for receiving data product buffer requests from a client component
+    async input port productRequestIn: [DpManagerNumPorts] Fw.DpRequest
+
+    @ Ports for sending requested data product buffers to a client component
+    output port productResponseOut: [DpManagerNumPorts] Fw.DpResponse
+
+    @ Ports for getting buffers from a Buffer Manager
+    output port bufferGetOut: [DpManagerNumPorts] Fw.BufferGet
+
+    # ----------------------------------------------------------------------
+    # Ports for forwarding filled data products
+    # ----------------------------------------------------------------------
+
+    @ Ports for receiving filled data product buffers from a client component
+    async input port productSendIn: [DpManagerNumPorts] Fw.DpSend
+
+    @ Ports for sending filled data product buffers to a downstream component
+    output port productSendOut: [DpManagerNumPorts] Fw.BufferSend
+
+    # ----------------------------------------------------------------------
+    # F' special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command registration port
+    command reg port cmdRegIn
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port eventOut
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    @ Text event port
+    text event port textEventOut
+
+    @ Time get port
+    time get port timeGetOut
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Clear event throttling
+    async command CLEAR_EVENT_THROTTLE opcode 0x00
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ Buffer allocation failed
+    event BufferAllocationFailed(
+                                  $id: FwDpIdType @< The container ID
+                                ) \
+      severity warning high \
+      format "Buffer allocation failed for container id {}" \
+      throttle 10
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ The number of successful buffer allocations
+    telemetry NumSuccessfulAllocations: U32 update on change
+
+    @ The number of failed buffer allocations
+    telemetry NumFailedAllocations: U32 update on change
+
+    @ Number of data products handled
+    telemetry NumDataProducts: U32 update on change
+
+    @ Number of bytes handled
+    telemetry NumBytes: U64 update on change
+
+  }
+
+}
+```
+
+### `DpManager.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/DpManager.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpManager.hpp
+// \author bocchino
+// \brief  hpp file for DpManager component implementation class
+// ======================================================================
+
+#ifndef Svc_DpManager_HPP
+#define Svc_DpManager_HPP
+
+#include <atomic>
+
+#include "Svc/DpManager/DpManagerComponentAc.hpp"
+#include "config/FppConstantsAc.hpp"
+
+namespace Svc {
+
+class DpManager final : public DpManagerComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Static assertions against the assumptions about the model
+    // ----------------------------------------------------------------------
+
+    static_assert(DpManager::NUM_PRODUCTGETIN_INPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of product get in ports must equal DpManagerNumPorts");
+    static_assert(DpManager::NUM_PRODUCTREQUESTIN_INPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of product request in ports must equal DpManagerNumPorts");
+    static_assert(DpManager::NUM_PRODUCTRESPONSEOUT_OUTPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of product response out ports must equal DpManagerNumPorts");
+    static_assert(DpManager::NUM_BUFFERGETOUT_OUTPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of buffer get out ports must equal DpManagerNumPorts");
+    static_assert(DpManager::NUM_PRODUCTSENDIN_INPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of product send in ports must equal DpManagerNumPorts");
+    static_assert(DpManager::NUM_PRODUCTSENDOUT_OUTPUT_PORTS == static_cast<FwSizeType>(DpManagerNumPorts),
+                  "Number of product send out ports must equal DpManagerNumPorts");
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct a DpManager
+    explicit DpManager(const char* const compName  //!< The component name
+    );
+
+    //! Destroy the DpManager
+    ~DpManager();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for productGetIn
+    Fw::Success productGetIn_handler(const FwIndexType portNum,  //!< The port number
+                                     FwDpIdType id,              //!< The container ID
+                                     FwSizeType size,            //!< The size of the requested buffer
+                                     Fw::Buffer& buffer          //!< The buffer
+                                     ) final;
+
+    //! Handler implementation for productRequestIn
+    void productRequestIn_handler(const FwIndexType portNum,  //!< The port number
+                                  FwDpIdType id,              //!< The container ID
+                                  FwSizeType size             //!< The size of the requested buffer
+                                  ) final;
+
+    //! Handler implementation for productSendIn
+    void productSendIn_handler(const FwIndexType portNum,  //!< The port number
+                               FwDpIdType id,              //!< The container ID
+                               const Fw::Buffer& buffer    //!< The buffer
+                               ) final;
+
+    //! Handler implementation for schedIn
+    void schedIn_handler(const FwIndexType portNum,  //!< The port number
+                         U32 context                 //!< The call order
+                         ) final;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for commands
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for command CLEAR_EVENT_THROTTLE
+    //!
+    //! Clear event throttling
+    void CLEAR_EVENT_THROTTLE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                         U32 cmdSeq            //!< The command sequence number
+                                         ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper functions
+    // ----------------------------------------------------------------------
+
+    //! Get a buffer
+    //! \return Status
+    Fw::Success getBuffer(FwIndexType portNum,  //!< The port number
+                          FwDpIdType id,        //!< The container ID (input)
+                          FwSizeType size,      //!< The requested size (input)
+                          Fw::Buffer& buffer    //!< The buffer (output)
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The number of successful buffer allocations
+    std::atomic<U32> numSuccessfulAllocations;
+
+    //! The number of failed buffer allocations
+    std::atomic<U32> numFailedAllocations;
+
+    //! The number of data products handled
+    U32 numDataProducts;
+
+    //! The number of bytes handled
+    U64 numBytes;
+};
+
+}  // end namespace Svc
+
+#endif
+```

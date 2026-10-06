@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,36 @@ ComFprime/index
 ComLoggerTee/index
 DataProducts/index
 FileHandling/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CdhCore/`](CdhCore/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComCcsds/`](ComCcsds/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComFprime/`](ComFprime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/`](ComLoggerTee/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/`](DataProducts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/FileHandling/`](FileHandling/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/CMakeLists.txt`
+
+
+```cmake
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CdhCore/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComCcsds/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComFprime/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FileHandling/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DataProducts/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/ComLoggerTee/")
+
+add_custom_target(
+    Svc_Subtopologies
+    DEPENDS
+        Svc_Subtopologies_CdhCore
+        Svc_Subtopologies_CdhCore_CdhCoreConfig
+        Svc_Subtopologies_ComCcsds
+        Svc_Subtopologies_ComCcsds_ComCcsdsConfig
+        Svc_Subtopologies_ComFprime
+        Svc_Subtopologies_ComFprime_ComFprimeConfig
+        Svc_Subtopologies_FileHandling
+        Svc_Subtopologies_FileHandling_FileHandlingConfig
+        Svc_Subtopologies_DataProducts
+        Svc_Subtopologies_DataProducts_DataProductsConfig
+        Svc_Subtopologies_ComLoggerTee
+)
+```

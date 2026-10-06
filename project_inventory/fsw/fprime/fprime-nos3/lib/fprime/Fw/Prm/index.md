@@ -3,30 +3,333 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--ParamBuffer.hpp
-file--Prm.fpp
-file--PrmBuffer.cpp
-file--PrmBuffer.hpp
-file--PrmExternalTypes.hpp
-file--PrmString.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/ParamBuffer.hpp`](file--ParamBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/Prm.fpp`](file--Prm.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmBuffer.cpp`](file--PrmBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmBuffer.hpp`](file--PrmBuffer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmExternalTypes.hpp`](file--PrmExternalTypes.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmString.hpp`](file--PrmString.hpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Fw::PARAM_UNINIT
+Fw::ParamValid::UNINIT
+
+Fw::PARAM_VALID
+Fw::ParamValid::VALID
+
+Fw::PARAM_INVALID
+Fw::ParamValid::INVALID
+
+Fw::PARAM_DEFAULT
+Fw::ParamValid::DEFAULT
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Prm.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PrmBuffer.cpp"
+)
+
+register_fprime_module()
+
+```
+
+### `ParamBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/ParamBuffer.hpp`
+
+
+```cpp
+// Work around inconsistent spelling
+#include "PrmBuffer.hpp"
+```
+
+### `Prm.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/Prm.fpp`
+
+
+```fpp
+module Fw {
+
+  type ParamBuffer
+
+  @ Enum representing parameter validity
+  enum ParamValid {
+    UNINIT = 0
+    VALID = 1
+    INVALID = 2
+    DEFAULT = 3
+  }
+
+  @ Port for getting a parameter
+  port PrmGet(
+               $id: FwPrmIdType @< Parameter ID
+               @ Buffer containing serialized parameter value.
+               @ Unmodified if param not found.
+               ref val: ParamBuffer
+             ) -> ParamValid
+
+  @ Port for setting a parameter
+  port PrmSet(
+               $id: FwPrmIdType @< Parameter ID
+               ref val: ParamBuffer @< Buffer containing serialized parameter value
+             )
+
+}
+```
+
+### `PrmBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmBuffer.cpp`
+
+
+```cpp
+#include <Fw/Prm/PrmBuffer.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Fw {
+
+ParamBuffer::ParamBuffer(const U8* args, FwSizeType size) {
+    SerializeStatus stat = SerializeBufferBase::setBuff(args, size);
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+ParamBuffer::ParamBuffer() {}
+
+ParamBuffer::~ParamBuffer() {}
+
+ParamBuffer::ParamBuffer(const ParamBuffer& other) : Fw::SerializeBufferBase() {
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+ParamBuffer& ParamBuffer::operator=(const ParamBuffer& other) {
+    if (this == &other) {
+        return *this;
+    }
+
+    SerializeStatus stat = SerializeBufferBase::setBuff(other.m_bufferData, other.getBuffLength());
+    FW_ASSERT(FW_SERIALIZE_OK == stat, static_cast<FwAssertArgType>(stat));
+    return *this;
+}
+
+FwSizeType ParamBuffer::getBuffCapacity() const {
+    return sizeof(this->m_bufferData);
+}
+
+const U8* ParamBuffer::getBuffAddr() const {
+    return this->m_bufferData;
+}
+
+U8* ParamBuffer::getBuffAddr() {
+    return this->m_bufferData;
+}
+
+}  // namespace Fw
+```
+
+### `PrmBuffer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmBuffer.hpp`
+
+
+```cpp
+/*
+ * PrmBuffer.hpp
+ *
+ *  Created on: Sep 10, 2012
+ *      Author: ppandian
+ */
+
+/*
+ * Description:
+ * This object contains the ParamBuffer type, used for storing parameters
+ */
+#ifndef FW_PRM_BUFFER_HPP
+#define FW_PRM_BUFFER_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerIds.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+static_assert(FW_PARAM_BUFFER_MAX_SIZE >= StringBase::BUFFER_SIZE(FW_PARAM_STRING_MAX_SIZE),
+              "param string must fit into param buffer");
+
+class ParamBuffer final : public SerializeBufferBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_PRM_BUFF,
+        SERIALIZED_SIZE = FW_PARAM_BUFFER_MAX_SIZE + sizeof(FwBuffSizeType)
+    };
+
+    ParamBuffer(const U8* args, FwSizeType size);
+    ParamBuffer();
+    ParamBuffer(const ParamBuffer& other);
+    virtual ~ParamBuffer();
+    ParamBuffer& operator=(const ParamBuffer& other);
+
+    FwSizeType getBuffCapacity() const;  // !< returns capacity, not current size, of buffer
+    U8* getBuffAddr();
+    const U8* getBuffAddr() const;
+
+  private:
+    U8 m_bufferData[FW_PARAM_BUFFER_MAX_SIZE];  // command argument buffer
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `PrmExternalTypes.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmExternalTypes.hpp`
+
+
+```cpp
+// ============================================================================
+// @file   PrmExternalTypes.hpp
+// @author Brian Campuzano
+// @brief  Types for delegating parameter serialization and deserialization
+// ============================================================================
+
+#ifndef FW_EXTERNAL_PARAM_TYPES_HPP
+#define FW_EXTERNAL_PARAM_TYPES_HPP
+
+#include <Fw/Prm/ParamValidEnumAc.hpp>
+#include <config/FpConfig.hpp>
+#include "PrmBuffer.hpp"
+
+namespace Fw {
+
+//! Fw::ParamExternalDelegate is used for parameters that are stored and managed
+//! externally to the owning F' component.
+//!
+//! Fw::ParamExternalDelegate is an abstract base class that defines the interfaces
+//! needed by the F' component to interact with the externally managed parameter(s)
+class ParamExternalDelegate {
+  public:
+    //! Deserialize a parameter from a parameter buffer
+    //!
+    //! \param base_id: The component base ID of the parameter being deserialized
+    //! \param local_id: The local parameter ID of the parameter being deserialized
+    //! \param prmStat: The parameter status of the parameter being deserialized
+    //! \param buff: The buffer contained the serialized parameter
+    //!
+    //! \return: The status of the deserialize operation
+    virtual SerializeStatus deserializeParam(const FwPrmIdType base_id,
+                                             const FwPrmIdType local_id,
+                                             const ParamValid prmStat,
+                                             SerializeBufferBase& buff) = 0;
+
+    //! Serialize a parameter into a parameter buffer
+    //!
+    //! \param base_id: The component base ID of the parameter being deserialized
+    //! \param local_id: The local Parameter ID of the parameter to serialized
+    //! \param buff: The buffer to serialize the parameter into
+    //!
+    //! \return: The status of the serialize operation
+    virtual SerializeStatus serializeParam(const FwPrmIdType base_id,
+                                           const FwPrmIdType local_id,
+                                           SerializeBufferBase& buff) const = 0;
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `PrmString.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Prm/PrmString.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   PrmString.hpp
+// @author F Prime
+// @brief  A string sized for a parameter
+// ======================================================================
+
+#ifndef FW_PARAM_STRING_HPP
+#define FW_PARAM_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Fw {
+
+class ParamString final : public StringBase {
+  public:
+    enum {
+        SERIALIZED_TYPE_ID = FW_TYPEID_PRM_STR,
+        STRING_SIZE = FW_PARAM_STRING_MAX_SIZE,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE)
+    };
+
+    ParamString() : StringBase() { *this = ""; }
+
+    ParamString(const ParamString& src) : StringBase() { *this = src; }
+
+    ParamString(const StringBase& src) : StringBase() { *this = src; }
+
+    ParamString(const char* src) : StringBase() { *this = src; }
+
+    ~ParamString() {}
+
+    ParamString& operator=(const ParamString& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    ParamString& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    ParamString& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Fw
+
+#endif
+```

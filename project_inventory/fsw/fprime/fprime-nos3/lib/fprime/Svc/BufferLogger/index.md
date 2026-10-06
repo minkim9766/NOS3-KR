@@ -3,32 +3,831 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--BufferLogger.cpp
-file--BufferLogger.fpp
-file--BufferLogger.hpp
-file--BufferLoggerFile.cpp
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--Commands.fppi
-file--Events.fppi
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.cpp`](file--BufferLogger.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.fpp`](file--BufferLogger.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.hpp`](file--BufferLogger.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLoggerFile.cpp`](file--BufferLoggerFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `BufferLogger.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferLogger.cpp
+// \author bocchino, dinkel, mereweth
+// \brief  Svc BufferLogger implementation
+//
+// \copyright
+// Copyright (C) 2015-2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/BufferLogger/BufferLogger.hpp"
+
+namespace Svc {
+
+typedef BufferLogger_LogState LogState;
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+BufferLogger ::BufferLogger(const char* const compName)
+    : BufferLoggerComponentBase(compName), m_state(LogState::LOGGING_ON), m_file(*this) {}
+
+// ----------------------------------------------------------------------
+// Public methods
+// ----------------------------------------------------------------------
+
+// TODO(mereweth) - only allow calling this once?
+void BufferLogger ::initLog(const char* const logFilePrefix,
+                            const char* const logFileSuffix,
+                            const FwSizeType maxFileSize,
+                            const U8 sizeOfSize) {
+    m_file.init(logFilePrefix, logFileSuffix, maxFileSize, sizeOfSize);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void BufferLogger ::bufferSendIn_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    if (m_state == LogState::LOGGING_ON) {
+        const U8* const addr = fwBuffer.getData();
+        const FwSizeType size = fwBuffer.getSize();
+        m_file.logBuffer(addr, size);
+    }
+    this->bufferSendOut_out(0, fwBuffer);
+}
+
+void BufferLogger ::comIn_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    if (m_state == LogState::LOGGING_ON) {
+        const U8* const addr = data.getBuffAddr();
+        const FwSizeType size = data.getBuffLength();
+        m_file.logBuffer(addr, size);
+    }
+}
+
+void BufferLogger ::pingIn_handler(FwIndexType portNum, U32 key) {
+    this->pingOut_out(0, key);
+}
+
+void BufferLogger ::schedIn_handler(const FwIndexType portNum, U32 context) {
+    // TODO
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+// TODO(mereweth) - should this command only set the base name?
+void BufferLogger ::BL_OpenFile_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, const Fw::CmdStringArg& file) {
+    m_file.setBaseName(file);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void BufferLogger ::BL_CloseFile_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    m_file.closeAndEmitEvent();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void BufferLogger ::BL_SetLogging_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, LogState state) {
+    m_state = state;
+    if (state == LogState::LOGGING_OFF) {
+        m_file.closeAndEmitEvent();
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void BufferLogger ::BL_FlushFile_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq) {
+    const bool status = m_file.flush();
+    if (status) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    } else {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+}  // namespace Svc
+```
+
+### `BufferLogger.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.fpp`
+
+
+```fpp
+module Svc {
+
+  active component BufferLogger {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Buffer input port
+    async input port bufferSendIn: Fw.BufferSend
+
+    @ Buffer output port
+    output port bufferSendOut: Fw.BufferSend
+
+    @ Packet input port
+    async input port comIn: Fw.Com
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    async input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Port for receiving commands
+    command recv port cmdIn
+
+    @ Port for sending command registration requests
+    command reg port cmdRegOut
+
+    @ Port for sending command response
+    command resp port cmdResponseOut
+
+    @ Port for emitting events
+    event port eventOut
+
+    @ Port for emitting text events
+    text event port eventOutText
+
+    @ Port for getting the time
+    time get port timeCaller
+
+    @ Port for emitting telemetry
+    telemetry port tlmOut
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+  }
+
+}
+```
+
+### `BufferLogger.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLogger.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferLogger.hpp
+// \author bocchino, dinkel, mereweth
+// \brief  Svc Buffer Logger interface
+//
+// \copyright
+// Copyright (C) 2015-2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_BufferLogger_HPP
+#define Svc_BufferLogger_HPP
+
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/String.hpp"
+#include "Os/File.hpp"
+#include "Os/Mutex.hpp"
+#include "Svc/BufferLogger/BufferLoggerComponentAc.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Svc {
+
+// Forward declaration for UTs
+namespace Logging {
+class CloseFileTester;
+class SendBuffersTester;
+class OnOffTester;
+}  // namespace Logging
+namespace Errors {
+class BufferLoggerTester;
+}
+
+class BufferLogger final : public BufferLoggerComponentBase {
+    friend class BufferLoggerTester;
+    friend class Svc::Logging::CloseFileTester;
+    friend class Svc::Logging::SendBuffersTester;
+    friend class Svc::Logging::OnOffTester;
+    friend class Svc::Errors::BufferLoggerTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! A BufferLogger file
+    class File {
+        friend class BufferLoggerTester;
+        friend class Svc::Logging::CloseFileTester;
+        friend class Svc::Logging::SendBuffersTester;
+        friend class Svc::Logging::OnOffTester;
+        friend class Svc::Errors::BufferLoggerTester;
+
+      public:
+        //! The file mode
+        struct Mode {
+            typedef enum { CLOSED = 0, OPEN = 1 } t;
+        };
+
+      public:
+        //! Construct a File object
+        File(BufferLogger& bufferLogger  //!< The enclosing BufferLogger instance
+        );
+
+        //! Destroy a File object
+        ~File();
+
+      public:
+        //! Set File object parameters
+        void init(const char* const prefix,  //!< The file name prefix
+                  const char* const suffix,  //!< The file name suffix
+                  const FwSizeType maxSize,  //!< The maximum file size
+                  const U8 sizeOfSize  //!< The number of bytes to use when storing the size field and the start of each
+                                       //!< buffer)
+        );
+
+        //! Set base file name
+        void setBaseName(
+            const Fw::StringBase& baseName  //!< The base file name; used with prefix, unique counter value, and suffix
+        );
+
+        //! Log a buffer
+        void logBuffer(const U8* const data,  //!< The buffer data
+                       const FwSizeType size  //!< The size
+        );
+
+        //! Close the file and emit an event
+        void closeAndEmitEvent();
+
+        //! Flush the file
+        bool flush();
+
+      private:
+        //! Open the file
+        void open();
+
+        //! Write a buffer to a file
+        //! \return Success or failure
+        bool writeBuffer(const U8* const data,  //!< The buffer data
+                         const FwSizeType size  //!< The number of bytes to write
+        );
+
+        //! Write the size field of a buffer
+        //! \return Success or failure
+        bool writeSize(const FwSizeType size  //!< The size
+        );
+
+        //! Write bytes to a file
+        //! \return Success or failure
+        bool writeBytes(const void* const data,  //!< The data
+                        const FwSizeType length  //!< The number of bytes to write
+        );
+
+        //! Write a hash file
+        void writeHashFile();
+
+        //! Close the file
+        void close();
+
+      private:
+        //! The enclosing BufferLogger instance
+        BufferLogger& m_bufferLogger;
+
+        //! The prefix to use for file names
+        Fw::String m_prefix;
+
+        //! The suffix to use for file names
+        Fw::String m_suffix;
+
+        //! The file name base
+        Fw::String m_baseName;
+
+        //! The counter to use for the same file name
+        FwSizeType m_fileCounter;
+
+        //! The maximum file size
+        FwSizeType m_maxSize;
+
+        //! The number of bytes to use when storing the size field at the start of each buffer
+        U8 m_sizeOfSize;
+
+        //! The name of the currently open file
+        Fw::String m_name;
+
+        // The current mode
+        Mode::t m_mode;
+
+        //! The underlying Os::File representation
+        Os::File m_osFile;
+
+        //! The number of bytes written to the current file
+        FwSizeType m_bytesWritten;
+
+    };  // class File
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Create a BufferLogger object
+    BufferLogger(const char* const compName /*!< The component name*/
+    );
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
+
+    //! Set up log file parameters
+    void initLog(
+        const char* const logFilePrefix,  //!< The log file name prefix
+        const char* const logFileSuffix,  //!< The log file name suffix
+        const FwSizeType maxFileSize,     //!< The maximum file size
+        const U8 sizeOfSize  //!< The number of bytes to use when storing the size field at the start of each buffer
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferSendIn
+    //!
+    void bufferSendIn_handler(const FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer);
+
+    //! Handler implementation for comIn
+    //!
+    void comIn_handler(const FwIndexType portNum,  //!< The port number
+                       Fw::ComBuffer& data,        //!< Buffer containing packet data
+                       U32 context                 //!< Call context value; meaning chosen by user
+    );
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum,  //!< The port number
+                        U32 key                     //!< Value to return to pinger
+    );
+
+    //! Handler implementation for schedIn
+    //!
+    void schedIn_handler(const FwIndexType portNum, /*!< The port number*/
+                         U32 context                /*!< The call order*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for BL_OpenFile command handler
+    //! Open a new log file with specified name; required before activating logging
+    void BL_OpenFile_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                const U32 cmdSeq,          /*!< The command sequence number*/
+                                const Fw::CmdStringArg& file);
+
+    //! Implementation for BL_CloseFile command handler
+    //! Close the currently open log file, if any
+    void BL_CloseFile_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                 const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+    //! Implementation for BL_SetLogging command handler
+    //! Sets the volatile logging state
+    void BL_SetLogging_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                  const U32 cmdSeq,          /*!< The command sequence number*/
+                                  BufferLogger_LogState state);
+
+    //! Implementation for BL_FlushFile command handler
+    //! Flushes the current open log file to disk
+    void BL_FlushFile_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                 const U32 cmdSeq           /*!< The command sequence number*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private instance variables
+    // ----------------------------------------------------------------------
+
+    //! The logging state
+    BufferLogger_LogState m_state;
+
+    //! The file
+    File m_file;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `BufferLoggerFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/BufferLoggerFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferLoggerFile.cpp
+// \author bocchino, dinkel, mereweth
+// \brief  Implementation for Svc::BufferLogger::BufferLoggerFile
+//
+// \copyright
+// Copyright (C) 2015-2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Os/ValidateFile.hpp"
+#include "Os/ValidatedFile.hpp"
+#include "Svc/BufferLogger/BufferLogger.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Constructors and destructors
+// ----------------------------------------------------------------------
+
+BufferLogger::File ::File(BufferLogger& bufferLogger)
+    : m_bufferLogger(bufferLogger),
+      m_prefix(""),
+      m_suffix(""),
+      m_baseName(""),
+      m_fileCounter(0),
+      m_maxSize(0),
+      m_sizeOfSize(0),
+      m_mode(Mode::CLOSED),
+      m_bytesWritten(0) {}
+
+BufferLogger::File ::~File() {
+    this->close();
+}
+
+// ----------------------------------------------------------------------
+// Public functions
+// ----------------------------------------------------------------------
+
+void BufferLogger::File ::init(const char* const logFilePrefix,
+                               const char* const logFileSuffix,
+                               const FwSizeType maxFileSize,
+                               const U8 sizeOfSize) {
+    // NOTE(mereweth) - only call this before opening the file
+    FW_ASSERT(this->m_mode == File::Mode::CLOSED);
+
+    this->m_prefix = logFilePrefix;
+    this->m_suffix = logFileSuffix;
+    this->m_maxSize = maxFileSize;
+    this->m_sizeOfSize = sizeOfSize;
+
+    FW_ASSERT(sizeOfSize <= sizeof(FwSizeType), static_cast<FwAssertArgType>(sizeOfSize));
+    FW_ASSERT(m_maxSize > sizeOfSize, static_cast<FwAssertArgType>(m_maxSize));
+}
+
+void BufferLogger::File ::setBaseName(const Fw::StringBase& baseName) {
+    if (this->m_mode == File::Mode::OPEN) {
+        this->closeAndEmitEvent();
+    }
+    this->m_baseName = baseName;
+    this->m_fileCounter = 0;
+    this->open();
+}
+
+void BufferLogger::File ::logBuffer(const U8* const data, const FwSizeType size) {
+    // Close the file if it will be too big
+    if (this->m_mode == File::Mode::OPEN) {
+        const FwSizeType projectedByteCount = this->m_bytesWritten + this->m_sizeOfSize + size;
+        if (projectedByteCount > this->m_maxSize) {
+            this->closeAndEmitEvent();
+        }
+    }
+    // Open a file if necessary
+    if (this->m_mode == File::Mode::CLOSED) {
+        this->open();
+    }
+    // Write to the file if it is open
+    if (this->m_mode == File::Mode::OPEN) {
+        (void)this->writeBuffer(data, size);
+    }
+}
+
+void BufferLogger::File ::closeAndEmitEvent() {
+    if (this->m_mode == File::Mode::OPEN) {
+        this->close();
+        Fw::LogStringArg logStringArg(this->m_name.toChar());
+        this->m_bufferLogger.log_DIAGNOSTIC_BL_LogFileClosed(logStringArg);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private functions
+// ----------------------------------------------------------------------
+
+void BufferLogger::File ::open() {
+    FW_ASSERT(this->m_mode == File::Mode::CLOSED);
+
+    // NOTE(mereweth) - check that file path has been set and that initLog has been called
+    if ((this->m_baseName.toChar()[0] == '\0') || (this->m_sizeOfSize > sizeof(FwSizeType)) ||
+        (this->m_maxSize <= this->m_sizeOfSize)) {
+        this->m_bufferLogger.log_WARNING_HI_BL_NoLogFileOpenInitError();
+        return;
+    }
+
+    if (this->m_fileCounter == 0) {
+        this->m_name.format("%s%s%s", this->m_prefix.toChar(), this->m_baseName.toChar(), this->m_suffix.toChar());
+    } else {
+        this->m_name.format("%s%s%" PRI_FwSizeType "%s", this->m_prefix.toChar(), this->m_baseName.toChar(),
+                            this->m_fileCounter, this->m_suffix.toChar());
+    }
+
+    const Os::File::Status status = this->m_osFile.open(this->m_name.toChar(), Os::File::OPEN_WRITE);
+    if (status == Os::File::OP_OK) {
+        this->m_fileCounter++;
+        // Reset bytes written
+        this->m_bytesWritten = 0;
+        // Set mode
+        this->m_mode = File::Mode::OPEN;
+    } else {
+        Fw::LogStringArg string(this->m_name.toChar());
+        this->m_bufferLogger.log_WARNING_HI_BL_LogFileOpenError(status, string);
+    }
+}
+
+bool BufferLogger::File ::writeBuffer(const U8* const data, const FwSizeType size) {
+    bool status = this->writeSize(size);
+    if (status) {
+        status = this->writeBytes(data, size);
+    }
+    return status;
+}
+
+bool BufferLogger::File ::writeSize(const FwSizeType size) {
+    FW_ASSERT(this->m_sizeOfSize <= sizeof(FwSizeType));
+    U8 sizeBuffer[sizeof(FwSizeType)];
+    FwSizeType sizeRegister = size;
+    for (U8 i = 0; i < this->m_sizeOfSize; ++i) {
+        sizeBuffer[this->m_sizeOfSize - i - 1] = sizeRegister & 0xFF;
+        sizeRegister >>= 8;
+    }
+    const bool status = this->writeBytes(sizeBuffer, this->m_sizeOfSize);
+    return status;
+}
+
+bool BufferLogger::File ::writeBytes(const void* const data, const FwSizeType length) {
+    FwSizeType size = length;
+    const Os::File::Status fileStatus = this->m_osFile.write(reinterpret_cast<const U8*>(data), size);
+    bool status;
+    if (fileStatus == Os::File::OP_OK && static_cast<FwSizeType>(size) == length) {
+        this->m_bytesWritten += length;
+        status = true;
+    } else {
+        Fw::LogStringArg string(this->m_name.toChar());
+
+        this->m_bufferLogger.log_WARNING_HI_BL_LogFileWriteError(fileStatus, static_cast<U32>(size),
+                                                                 static_cast<U32>(length), string);
+        status = false;
+    }
+    return status;
+}
+
+void BufferLogger::File ::writeHashFile() {
+    Os::ValidatedFile validatedFile(this->m_name.toChar());
+    const Os::ValidateFile::Status status = validatedFile.createHashFile();
+    if (status != Os::ValidateFile::VALIDATION_OK) {
+        const Fw::StringBase& hashFileName = validatedFile.getHashFileName();
+        Fw::LogStringArg logStringArg(hashFileName.toChar());
+        this->m_bufferLogger.log_WARNING_HI_BL_LogFileValidationError(logStringArg, status);
+    }
+}
+
+bool BufferLogger::File ::flush() {
+    return true;
+    // NOTE(if your fprime uses buffered file I/O, re-enable this)
+    /*bool status = true;
+    if(this->mode == File::Mode::OPEN)
+    {
+      const Os::File::Status fileStatus = this->osFile.flush();
+      if(fileStatus == Os::File::OP_OK)
+      {
+        status = true;
+      }
+      else
+      {
+        status = false;
+      }
+    }
+    return status;*/
+}
+
+void BufferLogger::File ::close() {
+    if (this->m_mode == File::Mode::OPEN) {
+        // Close file
+        this->m_osFile.close();
+        // Write out the hash file to disk
+        this->writeHashFile();
+        // Update mode
+        this->m_mode = File::Mode::CLOSED;
+    }
+}
+
+}  // namespace Svc
+```
+
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::BufferLoggerComponentBase::LogState
+Svc::BufferLogger_LogState
+
+Svc::BufferLoggerComponentBase::LOGGING_ON
+Svc::BufferLogger_LogState::LOGGING_ON
+
+Svc::BufferLoggerComponentBase::LOGGING_OFF
+Svc::BufferLogger_LogState::LOGGING_OFF
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BufferLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BufferLogger.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BufferLoggerFile.cpp"
+)
+
+register_fprime_module()
+
+### UTS ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BufferLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferLoggerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Logging.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Errors.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Health.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferLoggerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferLoggerMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Commands.fppi`
+
+
+```text
+@ Open a new log file with specified name; also resets unique file counter to 0
+async command BL_OpenFile(
+                           file: string size 40
+                         ) \
+  opcode 0x00
+
+@ Close the currently open log file, if any
+async command BL_CloseFile \
+  opcode 0x01
+
+enum LogState {
+  LOGGING_ON = 0
+  LOGGING_OFF = 1
+}
+
+@ Sets the volatile logging state
+async command BL_SetLogging(
+                             $state: LogState
+                           ) \
+  opcode 0x02
+
+@ Flushes the current open log file to disk; a no-op with fprime's unbuffered file I/O, so always returns success
+async command BL_FlushFile \
+  opcode 0x03
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Events.fppi`
+
+
+```text
+@ The Buffer Logger closed a log file
+event BL_LogFileClosed(
+                        file: string size 256 @< The file
+                      ) \
+  severity diagnostic \
+  id 0x00 \
+  format "File {} closed"
+
+@ The Buffer Logger encountered an error opening a log file
+event BL_LogFileOpenError(
+                           errornum: U32 @< The error number returned from the open operation
+                           file: string size 256 @< The file
+                         ) \
+  severity warning high \
+  id 0x01 \
+  format "Error {} opening file {}"
+
+@ The Buffer Logger encountered an error writing a validation file
+event BL_LogFileValidationError(
+                                 validationFile: string size 256 @< The validation file
+                                 status: U32 @< The Os::Validate::Status return
+                               ) \
+  severity warning high \
+  id 0x02 \
+  format "Failed creating validation file {} with status {}"
+
+@ The Buffer Logger encountered an error writing to a log file
+event BL_LogFileWriteError(
+                            errornum: U32 @< The error number returned from the write operation
+                            bytesWritten: U32 @< The number of bytes successfully written
+                            bytesToWrite: U32 @< The number of bytes attempted
+                            file: string size 256 @< The file
+                          ) \
+  severity warning high \
+  id 0x03 \
+  format "Error {} while writing {} of {} bytes to {}"
+
+@ Buffer logger was activated
+event BL_Activated \
+  severity activity low \
+  id 0x04 \
+  format "Buffer logger was activated"
+
+@ Buffer logger was deactivated
+event BL_Deactivated \
+  severity activity low \
+  id 0x05 \
+  format "Buffer logger was deactivated"
+
+@ No log file open command was received by BufferLogger
+event BL_NoLogFileOpenInitError \
+  severity warning high \
+  id 0x06 \
+  format "No log file open command"
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferLogger/Telemetry.fppi`
+
+
+```text
+@ The number of buffers logged
+telemetry BufferLogger_NumLoggedBuffers: U32 id 0
+```

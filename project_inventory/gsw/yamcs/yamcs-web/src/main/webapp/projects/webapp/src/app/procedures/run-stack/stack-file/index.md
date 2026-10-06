@@ -3,28 +3,2319 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-file.component.css`
 
-file--stack-file.component.css
-file--stack-file.component.html
-file--stack-file.component.ts
-file--StackedEntry.ts
-file--StackFileService.ts
-file--StackLogEntry.ts
-file--xmlparse.ts
-file--ycsparse.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.css`
+
+
+```css
+:host ::ng-deep h1,
+:host ::ng-deep h2,
+:host ::ng-deep h3,
+:host ::ng-deep h4,
+:host ::ng-deep h5,
+:host ::ng-deep h6 {
+  margin-top: 0;
+  line-height: 1em;
+}
+
+.main-pane {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+}
+
+.tab-content {
+  position: absolute;
+  top: calc(24px + 36px);
+  bottom: 0;
+  left: 0;
+  right: 0;
+  overflow: auto;
+  padding: 24px;
+}
+
+.ya-data-table td {
+  vertical-align: top;
+}
+
+div.entry {
+  font-size: 12px;
+  line-height: 17px;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+div.entry div.in {
+  display: flex;
+  border-left: 8px solid transparent;
+  margin-bottom: 10px;
+}
+
+div.entry div.out {
+  display: flex;
+  border-left: 8px solid transparent;
+  margin-bottom: 10px;
+}
+
+div.entry.selected div.in,
+div.entry.selected div.out {
+  border-color: var(--y-accent);
+}
+
+div.entry .seq {
+  width: 64px;
+  text-align: right;
+  padding-top: 0;
+  padding-right: 10px;
+  user-select: none;
+  -webkit-user-select: none;
+  font-family: "Roboto Mono", monospace;
+  color: #bdbdbd;
+}
+
+div.entry div.in .seq {
+  cursor: move;
+}
+
+div.entry.selected .seq {
+  color: var(--y-accent);
+}
+
+div.entry .body {
+  flex-grow: 1;
+  padding: 5px;
+}
+
+div.entry.display-text .body {
+  padding: 0;
+}
+
+div.entry div.in .body {
+  background-color: #fafafa;
+  border: 1px solid rgb(224, 224, 224);
+  font-family: "Roboto Mono", monospace;
+}
+
+div.entry.display-text div.in .body {
+  background-color: inherit;
+  border-color: transparent;
+}
+
+div.entry div.out .body.err {
+  background-color: #fcc;
+  color: var(--y-error-color);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.6;
+}
+
+.comment {
+  margin-top: 1em;
+  margin-left: 5px;
+  border-left: 5px solid rgb(224, 224, 224);
+  padding: 1em;
+}
+
+.comment .title {
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+}
+
+.comment .title .display-text {
+  margin-left: 5px;
+}
+
+.block {
+  font-weight: normal;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `stack-file.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.css`](file--stack-file.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.html`](file--stack-file.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.ts`](file--stack-file.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackedEntry.ts`](file--StackedEntry.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackFileService.ts`](file--StackFileService.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackLogEntry.ts`](file--StackLogEntry.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/xmlparse.ts`](file--xmlparse.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/ycsparse.ts`](file--ycsparse.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button
+        [routerLink]="folderLink"
+        [queryParams]="{ c: yamcs.context }"
+        icon="arrow_back" />
+      {{ filename | basename }}
+    </ng-template>
+
+    <ya-page-button
+      matTooltip="Save stack"
+      (clicked)="stackFileService.saveStack()"
+      [disabled]="!(stackFileService.dirty$ | async)"
+      icon="save">
+      Save
+    </ya-page-button>
+
+    <ya-vertical-divider />
+
+    <ya-page-button
+      matTooltip="Add a step below"
+      [disabled]="!format || (running$ | async)"
+      [matMenuTriggerFor]="addEntryMenu"
+      icon="add_box"
+      dropdown="true">
+      Add step
+    </ya-page-button>
+    <mat-menu class="ya-menu" #addEntryMenu="matMenu">
+      <a mat-menu-item (click)="addTextEntry()">
+        <mat-icon>notes</mat-icon>
+        Display text
+      </a>
+      <mat-divider />
+      <a mat-menu-item (click)="addCheckEntry()">
+        <mat-icon>toll</mat-icon>
+        List parameters
+      </a>
+      <a mat-menu-item (click)="addVerifyEntry()">
+        <mat-icon>checklist_rtl</mat-icon>
+        Verify parameters
+      </a>
+      <mat-divider />
+      <a mat-menu-item (click)="addCommandEntry()">
+        <mat-icon>rss_feed</mat-icon>
+        Send command
+      </a>
+    </mat-menu>
+    <ya-page-icon-button
+      matTooltip="Edit the selected step"
+      [disabled]="!format || (running$ | async) || !(selectedEntry$ | async)"
+      (clicked)="editSelectedEntry()"
+      icon="edit" />
+    <ya-page-icon-button
+      matTooltip="Cut the selected step"
+      [disabled]="!format || (running$ | async) || !(selectedEntry$ | async)"
+      (clicked)="cutSelectedEntry()"
+      icon="content_cut" />
+    <ya-page-icon-button
+      matTooltip="Copy the selected step"
+      [disabled]="!format || (running$ | async) || !(selectedEntry$ | async)"
+      (clicked)="copySelectedEntry()"
+      icon="content_copy" />
+    <ya-page-icon-button
+      matTooltip="Paste entry from the clipboard"
+      [disabled]="!format || (running$ | async) || !(clipboardEntry$ | async)"
+      (clicked)="pasteEntry()"
+      icon="content_paste" />
+
+    <ya-vertical-divider />
+
+    <ya-page-icon-button
+      matTooltip="Run the selected step"
+      [disabled]="!format || (running$ | async) || !(selectedEntry$ | async)"
+      (clicked)="runSelection()"
+      icon="play_arrow" />
+    <ya-page-icon-button
+      matTooltip="Stop current execution"
+      [disabled]="!format || !(running$ | async)"
+      (clicked)="stopRun()"
+      icon="stop" />
+    <ya-page-icon-button
+      matTooltip="Clear all outputs"
+      [disabled]="!format || (running$ | async) || !(hasState$ | async)"
+      (clicked)="clearOutputs()"
+      icon="refresh" />
+    <ya-page-icon-button
+      matTooltip="Run all from selected step"
+      [disabled]="!format || (running$ | async) || !(selectedEntry$ | async)"
+      (clicked)="runFromSelection()"
+      icon="playlist_play" />
+
+    <ya-vertical-divider />
+
+    @if (showSchedule()) {
+      <ya-page-button
+        matTooltip="Run stack at a later time"
+        (clicked)="openScheduleStackDialog()"
+        [disabled]="!loaded || format !== 'ycs' || !entries$.value.length"
+        icon="schedule">
+        Schedule
+      </ya-page-button>
+    }
+    <ya-vertical-divider />
+
+    <ya-page-button
+      matTooltip="Export stack"
+      [matMenuTriggerFor]="exportMenu"
+      [disabled]="!format"
+      (clicked)="setExportURLs()"
+      icon="open_in_new">
+      Export
+    </ya-page-button>
+    <mat-menu class="ya-menu" #exportMenu="matMenu">
+      <a mat-menu-item [href]="jsonBlobUrl" [download]="(filename | basename) + '.ycs'">
+        <mat-icon>data_object</mat-icon>
+        YCS FILE
+      </a>
+      <a mat-menu-item [href]="xmlBlobUrl" [download]="(filename | basename) + '.xml'">
+        <mat-icon>code</mat-icon>
+        <span style="vertical-align: middle">
+          XML FILE
+          <span style="color: #cc0000">(legacy)</span>
+        </span>
+      </a>
+    </mat-menu>
+  </ya-instance-toolbar>
+
+  <div class="main-pane">
+    <app-stack-file-page-tabs [objectName]="objectName">
+      @if (running$ | async) {
+        <ya-dots />
+      }
+    </app-stack-file-page-tabs>
+
+    @if (loaded && !format) {
+      <ya-empty-message>
+        <mat-icon style="vertical-align: bottom; margin-right: 10px">link_off</mat-icon>
+        Unsupported stack format
+      </ya-empty-message>
+    }
+    @if (loaded && format && !entries$.value.length) {
+      <ya-empty-message>
+        Empty stack
+        <br />
+        Click
+        <mat-icon inline style="vertical-align: bottom">add_box</mat-icon>
+        to start adding steps
+      </ya-empty-message>
+    }
+
+    <div #entryParent class="tab-content" cdkDropList (cdkDropListDropped)="handleDrop($event)">
+      <div id="drag-boundary">
+        @for (entry of entries$ | async; track entry) {
+          <div
+            cdkDrag
+            cdkDragBoundary="#drag-boundary"
+            class="entry"
+            [class.display-text]="entry.type === 'text'"
+            [class.selected]="entry === (selectedEntry$ | async)"
+            (click)="selectEntry(entry)"
+            (dblclick)="editEntry(entry)">
+            <div class="in">
+              <div cdkDragHandle class="seq">
+                @if (entry.executing) {
+                  [*]:
+                } @else if (entry.executionNumber === 0 || entry.executionNumber) {
+                  [{{ entry.executionNumber }}]:
+                } @else if (entry.executionNumber !== 0 && !entry.executionNumber) {
+                  [ ]:
+                }
+              </div>
+              <div class="body">
+                @if (entry.type === "check") {
+                  <app-stacked-check-entry [entry]="entry" [pvals]="pvals$ | async" />
+                } @else if (entry.type === "command") {
+                  <app-stacked-command-entry [entry]="entry" />
+                } @else if (entry.type === "text") {
+                  <app-stacked-text-entry [entry]="entry" />
+                } @else if (entry.type === "verify") {
+                  <app-stacked-verify-entry [entry]="entry" [pvals]="pvals$ | async" />
+                }
+
+                @if (entry.comment) {
+                  <div class="comment">
+                    <div class="title">
+                      <mat-icon class="icon14">info</mat-icon>
+                      <span class="text">Info</span>
+                    </div>
+                    <app-markdown [text]="entry.comment" />
+                  </div>
+                }
+              </div>
+            </div>
+            @if (entry.hasOutputs()) {
+              <div class="out">
+                <div class="seq" (click)="selectEntry(entry)"></div>
+                <div class="body" [class.err]="entry.err">
+                  @if (entry.err) {
+                    {{ entry.err }}
+                  } @else if (entry.type === "command") {
+                    <app-yamcs-acknowledgments-table [command]="entry.record" [inline]="true" />
+                    @if ((entry.record?.extra || []).length) {
+                      <div class="block">
+                        <app-extra-acknowledgments-table [command]="entry.record" [inline]="true" />
+                      </div>
+                    }
+                  } @else if (entry.type === "check") {
+                    <table>
+                      @for (namedPval of entry.pvals; track namedPval) {
+                        <tr>
+                          <td style="padding-right: 20px">{{ namedPval.parameter }}</td>
+                          <td>
+                            @if (namedPval.pval?.engValue; as value) {
+                              <ya-value [value]="value" />
+                            } @else {
+                              -
+                            }
+                          </td>
+                        </tr>
+                      }
+                    </table>
+                  } @else if (entry.type === "verify") {
+                    <app-verify-table [entry]="entry" />
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</ya-instance-page>
+```
+
+### `stack-file.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/stack-file.component.ts`
+
+
+```typescript
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  SecurityContext,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import {
+  DomSanitizer,
+  SafeResourceUrl,
+  Title,
+} from '@angular/platform-browser';
+import {
+  AppearanceService,
+  AuthService,
+  CommandHistoryRecord,
+  CommandStep,
+  CommandSubscription,
+  ConfigService,
+  CreateTimelineItemRequest,
+  MessageService,
+  NamedObjectId,
+  ParameterSubscription,
+  ParameterValue,
+  StackFormatter,
+  Step,
+  utils,
+  WebappSdkModule,
+  YamcsService,
+  YaVerticalDivider,
+} from '@yamcs/webapp-sdk';
+import {
+  BehaviorSubject,
+  delay,
+  filter,
+  first,
+  Observable,
+  Subscription,
+  timeout,
+  TimeoutError,
+} from 'rxjs';
+import { ExtraAcknowledgmentsTableComponent } from '../../../commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component';
+import { YamcsAcknowledgmentsTableComponent } from '../../../commanding/command-history/yamcs-acknowledgments-table/yamcs-acknowledgments-table.component';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { AdvanceAckHelpComponent } from '../advance-ack-help/advance-ack-help.component';
+import { EditCheckEntryDialogComponent } from '../edit-check-entry-dialog/edit-check-entry-dialog.component';
+import {
+  CommandResult,
+  EditCommandEntryDialogComponent,
+} from '../edit-command-entry-dialog/edit-command-entry-dialog.component';
+import { EditTextEntryDialogComponent } from '../edit-text-entry-dialog/edit-text-entry-dialog.component';
+import { EditVerifyEntryDialogComponent } from '../edit-verify-entry-dialog/edit-verify-entry-dialog.component';
+import { ScheduleStackDialogComponent } from '../schedule-stack-dialog/schedule-stack-dialog.component';
+import { StackFilePageTabsComponent } from '../stack-file-page-tabs/stack-file-page-tabs.component';
+import { StackedCheckEntryComponent } from '../stacked-check-entry/stacked-check-entry.component';
+import { StackedCommandEntryComponent } from '../stacked-command-entry/stacked-command-entry.component';
+import { StackedTextEntryComponent } from '../stacked-text-entry/stacked-text-entry.component';
+import { StackedVerifyEntryComponent } from '../stacked-verify-entry/stacked-verify-entry.component';
+import { VerifyTableComponent } from '../verify-table/verify-table.component';
+import {
+  NamedParameterValue,
+  StackedCheckEntry,
+  StackedCommandEntry,
+  StackedEntry,
+  StackedTextEntry,
+  StackedVerifyEntry,
+} from './StackedEntry';
+import { StackFileService } from './StackFileService';
+
+@Component({
+  templateUrl: './stack-file.component.html',
+  styleUrl: './stack-file.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdvanceAckHelpComponent,
+    ExtraAcknowledgmentsTableComponent,
+    MarkdownComponent,
+    StackedCheckEntryComponent,
+    StackedCommandEntryComponent,
+    StackedTextEntryComponent,
+    StackedVerifyEntryComponent,
+    StackFilePageTabsComponent,
+    VerifyTableComponent,
+    WebappSdkModule,
+    YamcsAcknowledgmentsTableComponent,
+    YaVerticalDivider,
+  ],
+})
+export class StackFileComponent implements OnInit, OnDestroy {
+  @Input()
+  objectName: string;
+
+  filename: string;
+  folderLink: string;
+
+  running$ = new BehaviorSubject<boolean>(false);
+  runningStack = false;
+
+  private parameterSubscription: ParameterSubscription;
+  private commandSubscription: CommandSubscription;
+  private stepScopedSubscriptions: Subscription[] = [];
+  entries$: BehaviorSubject<StackedEntry[]>;
+  hasState$: Observable<boolean>;
+  selectedEntry$ = new BehaviorSubject<StackedEntry | null>(null);
+  clipboardEntry$ = new BehaviorSubject<StackedEntry | null>(null);
+  private commandHistoryRecords = new Map<string, CommandHistoryRecord>();
+
+  @ViewChild('entryParent')
+  private entryParent: ElementRef<HTMLDivElement>;
+
+  private executionCounter = 0;
+
+  private bucket: string;
+
+  loaded = false;
+  format: 'ycs' | 'xml';
+
+  jsonBlobUrl: SafeResourceUrl;
+  xmlBlobUrl: SafeResourceUrl;
+
+  private nextCommandDelayTimeout: number;
+  private nextEntryScheduled = false;
+
+  idMapping: { [key: number]: NamedObjectId } = {};
+  pvals$ = new BehaviorSubject<{ [key: string]: ParameterValue }>({});
+
+  constructor(
+    private dialog: MatDialog,
+    readonly yamcs: YamcsService,
+    private title: Title,
+    private authService: AuthService,
+    private configService: ConfigService,
+    private messageService: MessageService,
+    private sanitizer: DomSanitizer,
+    readonly appearanceService: AppearanceService,
+    readonly stackFileService: StackFileService,
+  ) {
+    this.bucket = configService.getStackBucket();
+    this.entries$ = stackFileService.entries$;
+    this.hasState$ = stackFileService.hasState$;
+
+    this.parameterSubscription = yamcs.yamcsClient.createParameterSubscription(
+      {
+        instance: yamcs.instance!,
+        processor: yamcs.processor!,
+        action: 'REPLACE',
+        abortOnInvalid: false,
+        sendFromCache: true,
+        updateOnExpiration: true,
+        id: [],
+      },
+      (data) => {
+        if (data.mapping) {
+          this.idMapping = data.mapping;
+        }
+        if (data.values) {
+          const pvals = { ...this.pvals$.value };
+          for (const value of data.values) {
+            const pname = this.idMapping[value.numericId];
+            if (pname) {
+              pvals[pname.name] = value;
+            }
+          }
+          this.pvals$.next(pvals);
+        }
+      },
+    );
+  }
+
+  ngOnInit(): void {
+    const idx = this.objectName.lastIndexOf('/');
+    if (idx === -1) {
+      this.folderLink = '/procedures/stacks/browse/';
+      this.filename = this.objectName;
+    } else {
+      const folderName = this.objectName.substring(0, idx);
+      this.folderLink = '/procedures/stacks/browse/' + folderName;
+      this.filename = this.objectName.substring(idx + 1);
+    }
+
+    this.title.setTitle(this.filename);
+
+    const format = utils
+      .getExtension(utils.getFilename(this.objectName))
+      ?.toLowerCase();
+    if (format === 'ycs' || format === 'xml') {
+      this.format = format;
+    } else {
+      this.loaded = true;
+      return;
+    }
+
+    const entries = this.stackFileService.entries;
+
+    // Update the page
+    this.stackFileService.updateEntries(entries);
+    this.selectedEntry$.next(entries.length ? entries[0] : null);
+    this.updateParameterSubscription();
+    this.loaded = true;
+
+    this.commandSubscription = this.yamcs.yamcsClient.createCommandSubscription(
+      {
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        ignorePastCommands: true,
+      },
+      (histUpdate) => {
+        const id = histUpdate.id;
+        let rec = this.commandHistoryRecords.get(id);
+        if (rec) {
+          rec = rec.mergeEntry(histUpdate);
+        } else {
+          rec = new CommandHistoryRecord(histUpdate);
+        }
+        this.commandHistoryRecords.set(id, rec);
+
+        // Try to find a with matching id. If it's there
+        // update it. If not: no problem, the link will be made when
+        // handling the command response.
+        for (const entry of this.stackFileService.entries$.value) {
+          if (entry instanceof StackedCommandEntry && entry.id === id) {
+            entry.record = rec;
+            break;
+          }
+        }
+
+        // Continue running entries
+        const currentEntry = this.selectedEntry$.value;
+        if (currentEntry && currentEntry instanceof StackedCommandEntry) {
+          this.checkAckContinueRunning(currentEntry, rec);
+        }
+      },
+    );
+  }
+
+  handleDrop(event: CdkDragDrop<Step[]>) {
+    if (event.previousIndex !== event.currentIndex) {
+      moveItemInArray(
+        this.entries$.value,
+        event.previousIndex,
+        event.currentIndex,
+      );
+      this.stackFileService.updateEntries([...this.entries$.value]);
+      this.stackFileService.markDirty();
+    }
+  }
+
+  private updateParameterSubscription() {
+    const parameters = new Set<string>();
+    for (const entry of this.stackFileService.entries$.value) {
+      if (entry.type === 'check') {
+        for (const check of entry.parameters) {
+          parameters.add(check.parameter);
+        }
+      } else if (entry.type === 'verify') {
+        for (const comparison of entry.condition) {
+          parameters.add(comparison.parameter);
+        }
+      }
+    }
+
+    const ids: NamedObjectId[] = [];
+    parameters.forEach((p) => ids.push({ name: p }));
+
+    // Ensure the initial reply is already received
+    this.parameterSubscription.addReplyListener(() => {
+      this.parameterSubscription.sendMessage({
+        action: 'REPLACE',
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        abortOnInvalid: false,
+        sendFromCache: true,
+        updateOnExpiration: true,
+        id: ids,
+      });
+    });
+  }
+
+  selectEntry(entry: StackedEntry) {
+    this.selectedEntry$.next(entry);
+  }
+
+  deleteSelectedCommands() {
+    const entry = this.selectedEntry$.value;
+    if (entry) {
+      const idx = this.entries$.value.indexOf(entry);
+      if (idx !== -1) {
+        this.entries$.value.splice(idx, 1);
+        this.selectedEntry$.next(null);
+        this.stackFileService.updateEntries([...this.entries$.value]);
+        this.stackFileService.markDirty();
+      }
+    }
+  }
+
+  clearOutputs() {
+    for (const entry of this.entries$.value) {
+      entry.clearOutputs();
+    }
+    this.executionCounter = 0;
+    this.stackFileService.logs$.next([]);
+    this.stackFileService.updateEntries([...this.entries$.value]);
+    if (this.entries$.value.length) {
+      this.selectEntry(this.entries$.value[0]);
+    }
+  }
+
+  async runSelection() {
+    const entry = this.selectedEntry$.value;
+    if (!entry) {
+      return;
+    }
+    this.running$.next(true);
+
+    this.runEntry(entry);
+  }
+
+  private async runEntry(entry: StackedEntry) {
+    const executionNumber = ++this.executionCounter;
+    const { instance, processor } = this.yamcs;
+    entry.clearOutputs();
+    if (entry instanceof StackedCommandEntry) {
+      const namespace = entry.namespace ?? null;
+      return this.yamcs.yamcsClient
+        .issueCommandForNamespace(
+          instance!,
+          processor!,
+          namespace,
+          entry.name,
+          {
+            sequenceNumber: executionNumber,
+            args: entry.args,
+            stream: entry.stream,
+            extra: entry.extra,
+          },
+        )
+        .then((response) => {
+          entry.executionNumber = executionNumber;
+          entry.executing = true;
+          entry.id = response.id;
+
+          const logMessage = `Sending command ${entry}`;
+          this.stackFileService.addLogEntry(executionNumber, logMessage);
+
+          // It's possible the WebSocket received data before we
+          // get our response.
+          const rec = this.commandHistoryRecords.get(entry.id);
+          if (rec) {
+            entry.record = rec;
+            this.checkAckContinueRunning(entry, rec);
+          }
+        })
+        .catch((err) => {
+          entry.executionNumber = executionNumber;
+          entry.executing = false;
+          entry.err = err.message || err;
+          this.stopRun();
+        })
+        .finally(() => {
+          // Refresh subject, to be sure
+          this.stackFileService.updateEntries([...this.entries$.value]);
+        });
+    } else if (entry instanceof StackedVerifyEntry) {
+      entry.executionNumber = executionNumber;
+      entry.executing = true;
+      await this.runVerifyEntry(entry);
+    } else if (entry instanceof StackedCheckEntry) {
+      const pvals: NamedParameterValue[] = [];
+      for (const check of entry.parameters) {
+        const allPvals = this.pvals$.value;
+        pvals.push({
+          parameter: check.parameter,
+          pval: allPvals[check.parameter] || null,
+        });
+      }
+      entry.pvals = pvals;
+      entry.executionNumber = executionNumber;
+      this.stackFileService.updateEntries([...this.entries$.value]); // Refresh subject
+      this.continueRunning(entry);
+    } else if (entry instanceof StackedTextEntry) {
+      entry.executionNumber = executionNumber;
+      this.stackFileService.updateEntries([...this.entries$.value]); // Refresh subject
+      this.continueRunning(entry);
+    }
+  }
+
+  private async runVerifyEntry(entry: StackedVerifyEntry) {
+    const logMessage = `Verifying ${entry}`;
+    this.stackFileService.addLogEntry(entry.executionNumber!, logMessage);
+
+    let pipeline = this.pvals$.pipe();
+
+    if (entry.delay && entry.delay > 0) {
+      pipeline = pipeline.pipe(delay(entry.delay));
+    }
+    pipeline = pipeline.pipe(
+      filter((pvals) => this.testVerifyEntry(entry)),
+      first(), // Unsubscribe when test succeeds)
+    );
+    if (entry.timeout && entry.timeout > 0) {
+      const delay = Math.max(0, entry.delay || 0);
+      pipeline = pipeline.pipe(timeout(delay + entry.timeout));
+    }
+    const subscription = pipeline.subscribe({
+      next: () => this.continueRunning(entry),
+      error: (err) => {
+        if (err instanceof TimeoutError) {
+          entry.executing = false;
+          entry.err = err.message || String(err);
+          this.stopRun();
+        }
+      },
+    });
+    this.stepScopedSubscriptions.push(subscription);
+  }
+
+  private testVerifyEntry(entry: StackedVerifyEntry) {
+    const result = entry.test(this.pvals$.value);
+    this.stackFileService.updateEntries([...this.entries$.value]); // Refresh subject
+    return result;
+  }
+
+  runFromSelection() {
+    let entry = this.selectedEntry$.value;
+    if (!entry) {
+      this.stopRun();
+      return;
+    }
+
+    this.running$.next(true);
+    this.runningStack = true;
+    this.nextEntryScheduled = false;
+
+    this.runEntry(entry);
+  }
+
+  private checkAckContinueRunning(
+    entry: StackedCommandEntry,
+    record: CommandHistoryRecord,
+  ) {
+    // Attempts to continue the current run from selected by checking acknowledgement statuses
+    if (!this.running$.value || this.nextEntryScheduled) {
+      return;
+    }
+
+    const { advancement: stackAdvancement } = this.stackFileService;
+
+    let acceptingAck =
+      entry.advancement?.acknowledgment || stackAdvancement.acknowledgment!;
+    let delay = entry.advancement?.wait ?? stackAdvancement.wait!;
+
+    if (entry.id === record.id) {
+      let ack = record.acksByName[acceptingAck];
+      if (ack && ack.status) {
+        if (ack.status === 'OK' || ack.status === 'DISABLED') {
+          this.continueRunning(entry, delay);
+        } else if (ack.status === 'NOK' || ack.status === 'CANCELLED') {
+          entry.executing = false;
+          // Stop execution
+          this.stopRun();
+        }
+      }
+    }
+  }
+
+  private continueRunning(entry: StackedEntry, delay = 0) {
+    this.nextEntryScheduled = this.runningStack;
+    this.nextCommandDelayTimeout = window.setTimeout(
+      () => {
+        entry.executing = false;
+        if (this.running$.value) {
+          this.advanceSelection(entry);
+          if (this.runningStack) {
+            this.runFromSelection();
+          } else {
+            this.stopRun();
+          }
+        }
+      },
+      Math.max(delay, 0),
+    );
+  }
+
+  stopRun() {
+    this.clearStepScopedSubscriptions();
+    this.running$.next(false);
+    this.runningStack = false;
+    for (const entry of this.stackFileService.entries$.value) {
+      entry.executing = false;
+      if (entry instanceof StackedVerifyEntry) {
+        for (const pval of entry.pvals || []) {
+          if (pval?.status && pval.status() === 'pending') {
+            pval.status.set('cancelled');
+          }
+        }
+      }
+    }
+    window.clearTimeout(this.nextCommandDelayTimeout);
+    this.nextEntryScheduled = false;
+  }
+
+  private clearStepScopedSubscriptions() {
+    this.stepScopedSubscriptions.forEach((s) => s.unsubscribe());
+    this.stepScopedSubscriptions.length = 0;
+  }
+
+  private advanceSelection(entry: StackedEntry) {
+    const entries = this.stackFileService.entries$.value;
+    const idx = entries.indexOf(entry);
+    if (idx < entries.length - 1) {
+      const nextEntry = entries[idx + 1];
+      this.selectEntry(nextEntry);
+
+      const parentEl = this.entryParent.nativeElement;
+      const entryEl = parentEl.getElementsByClassName('entry')[
+        idx + 1
+      ] as HTMLDivElement;
+      if (!this.isVisible(entryEl)) {
+        entryEl.scrollIntoView();
+      }
+    } else {
+      this.selectedEntry$.next(null);
+    }
+  }
+
+  private isVisible(el: HTMLDivElement) {
+    const rect = el.getBoundingClientRect();
+    const viewHeight = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight,
+    );
+    return !(rect.bottom < 0 || rect.top - viewHeight >= 0);
+  }
+
+  addCheckEntry() {
+    this.dialog
+      .open(EditCheckEntryDialogComponent, {
+        autoFocus: false,
+        width: '800px',
+        data: {
+          edit: false,
+        },
+      })
+      .afterClosed()
+      .subscribe((result?: any) => {
+        if (result) {
+          const entry = new StackedCheckEntry({
+            type: 'check',
+            ...result,
+          });
+
+          const relto = this.selectedEntry$.value;
+          if (relto) {
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(relto);
+            entries.splice(idx + 1, 0, entry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+          } else {
+            this.stackFileService.updateEntries([
+              ...this.entries$.value,
+              entry,
+            ]);
+          }
+          this.selectEntry(entry);
+          this.stackFileService.markDirty();
+          this.updateParameterSubscription();
+        }
+      });
+  }
+
+  addVerifyEntry() {
+    this.dialog
+      .open(EditVerifyEntryDialogComponent, {
+        autoFocus: false,
+        width: '800px',
+        data: {
+          edit: false,
+        },
+      })
+      .afterClosed()
+      .subscribe((result?: any) => {
+        if (result) {
+          const entry = new StackedVerifyEntry({
+            type: 'verify',
+            ...result,
+          });
+
+          const relto = this.selectedEntry$.value;
+          if (relto) {
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(relto);
+            entries.splice(idx + 1, 0, entry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+          } else {
+            this.stackFileService.updateEntries([
+              ...this.entries$.value,
+              entry,
+            ]);
+          }
+          this.selectEntry(entry);
+          this.stackFileService.markDirty();
+          this.updateParameterSubscription();
+        }
+      });
+  }
+
+  addCommandEntry() {
+    const dialogRef = this.dialog.open(EditCommandEntryDialogComponent, {
+      width: '70%',
+      height: '100%',
+      autoFocus: false,
+      position: {
+        right: '0',
+      },
+      panelClass: 'dialog-full-size',
+      data: {
+        okLabel: 'ADD TO STACK',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result?: CommandResult) => {
+      if (result) {
+        const model: CommandStep = {
+          type: 'command',
+          name: result.command.qualifiedName,
+          args: result.args,
+          comment: result.comment,
+          stream: result.stream,
+          extra: result.extra,
+        };
+
+        if (result.advancement) {
+          model.advancement = result.advancement;
+        }
+
+        // Save with an alias, if so configured and the alias is available
+        const config = this.configService.getConfig();
+        if (config.preferredNamespace) {
+          for (const alias of result.command.alias || []) {
+            if (alias.namespace === config.preferredNamespace) {
+              model.name = alias.name;
+              model.namespace = alias.namespace;
+              break;
+            }
+          }
+        }
+
+        const entry = new StackedCommandEntry(model);
+        entry.command = result.command;
+        const relto = this.selectedEntry$.value;
+        if (relto) {
+          const entries = this.entries$.value;
+          const idx = entries.indexOf(relto);
+          entries.splice(idx + 1, 0, entry);
+          this.stackFileService.updateEntries([...this.entries$.value]);
+        } else {
+          this.stackFileService.updateEntries([...this.entries$.value, entry]);
+        }
+        this.selectEntry(entry);
+        this.stackFileService.markDirty();
+      }
+    });
+  }
+
+  addTextEntry() {
+    this.dialog
+      .open(EditTextEntryDialogComponent, {
+        autoFocus: false,
+        width: '800px',
+        data: {
+          edit: false,
+        },
+      })
+      .afterClosed()
+      .subscribe((result?: string) => {
+        if (result) {
+          const entry = new StackedTextEntry({
+            type: 'text',
+            text: result,
+          });
+
+          const relto = this.selectedEntry$.value;
+          if (relto) {
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(relto);
+            entries.splice(idx + 1, 0, entry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+          } else {
+            this.stackFileService.updateEntries([
+              ...this.entries$.value,
+              entry,
+            ]);
+          }
+          this.selectEntry(entry);
+          this.stackFileService.markDirty();
+        }
+      });
+  }
+
+  editSelectedEntry() {
+    const entry = this.selectedEntry$.value!;
+    this.editEntry(entry);
+  }
+
+  editEntry(entry: StackedEntry) {
+    this.selectEntry(entry);
+
+    if (entry instanceof StackedCommandEntry) {
+      this.dialog
+        .open(EditCommandEntryDialogComponent, {
+          width: '70%',
+          height: '100%',
+          autoFocus: false,
+          position: {
+            right: '0',
+          },
+          panelClass: 'dialog-full-size',
+          data: {
+            okLabel: 'UPDATE',
+            entry,
+          },
+        })
+        .afterClosed()
+        .subscribe((result?: CommandResult) => {
+          if (result) {
+            const changedModel: CommandStep = {
+              type: 'command',
+              name: result.command.qualifiedName,
+              args: result.args,
+              comment: result.comment,
+              stream: result.stream,
+              extra: result.extra,
+              advancement: result.advancement,
+            };
+
+            // Save with an alias, if so configured and the alias is available
+            const config = this.configService.getConfig();
+            if (config.preferredNamespace) {
+              for (const alias of result.command.alias || []) {
+                if (alias.namespace === config.preferredNamespace) {
+                  changedModel.name = alias.name;
+                  changedModel.namespace = alias.namespace;
+                  break;
+                }
+              }
+            }
+
+            const changedEntry = new StackedCommandEntry(changedModel);
+            changedEntry.command = result.command;
+
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(entry);
+            entries.splice(idx, 1, changedEntry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+
+            this.selectEntry(changedEntry);
+            this.stackFileService.markDirty();
+          }
+        });
+    } else if (entry instanceof StackedCheckEntry) {
+      this.dialog
+        .open(EditCheckEntryDialogComponent, {
+          autoFocus: false,
+          width: '800px',
+          data: {
+            edit: true,
+            entry,
+          },
+        })
+        .afterClosed()
+        .subscribe((result?: any) => {
+          if (result) {
+            const changedEntry = new StackedCheckEntry({
+              type: 'check',
+              ...result,
+            });
+
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(entry);
+            entries.splice(idx, 1, changedEntry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+
+            this.selectEntry(changedEntry);
+            this.stackFileService.markDirty();
+            this.updateParameterSubscription();
+          }
+        });
+    } else if (entry instanceof StackedTextEntry) {
+      this.dialog
+        .open(EditTextEntryDialogComponent, {
+          autoFocus: false,
+          width: '800px',
+          data: {
+            edit: true,
+            entry,
+          },
+        })
+        .afterClosed()
+        .subscribe((result?: string) => {
+          if (result) {
+            const changedEntry = new StackedTextEntry({
+              type: 'text',
+              text: result,
+            });
+
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(entry);
+            entries.splice(idx, 1, changedEntry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+
+            this.selectEntry(changedEntry);
+            this.stackFileService.markDirty();
+          }
+        });
+    } else if (entry instanceof StackedVerifyEntry) {
+      this.dialog
+        .open(EditVerifyEntryDialogComponent, {
+          autoFocus: false,
+          width: '800px',
+          data: {
+            edit: true,
+            entry,
+          },
+        })
+        .afterClosed()
+        .subscribe((result?: any) => {
+          if (result) {
+            const changedEntry = new StackedVerifyEntry({
+              type: 'verify',
+              ...result,
+            });
+
+            const entries = this.entries$.value;
+            const idx = entries.indexOf(entry);
+            entries.splice(idx, 1, changedEntry);
+            this.stackFileService.updateEntries([...this.entries$.value]);
+
+            this.selectEntry(changedEntry);
+            this.stackFileService.markDirty();
+            this.updateParameterSubscription();
+          }
+        });
+    }
+
+    return false;
+  }
+
+  cutSelectedEntry() {
+    const entry = this.selectedEntry$.value!;
+    this.advanceSelection(entry);
+    this.clipboardEntry$.next(entry);
+
+    const entries = this.entries$.value;
+    const idx = entries.indexOf(entry);
+    entries.splice(idx, 1);
+    this.stackFileService.updateEntries([...this.entries$.value]);
+
+    this.stackFileService.markDirty();
+  }
+
+  copySelectedEntry() {
+    const entry = this.selectedEntry$.value!;
+    this.clipboardEntry$.next(entry);
+  }
+
+  pasteEntry() {
+    const entry = this.clipboardEntry$.value;
+    if (entry) {
+      const copiedEntry = entry.copy();
+
+      const relto = this.selectedEntry$.value;
+      if (relto) {
+        const entries = this.entries$.value;
+        const idx = entries.indexOf(relto);
+        entries.splice(idx + 1, 0, copiedEntry);
+        this.stackFileService.updateEntries([...this.entries$.value]);
+      } else {
+        this.stackFileService.updateEntries([
+          ...this.entries$.value,
+          copiedEntry,
+        ]);
+      }
+      this.selectEntry(copiedEntry);
+      this.stackFileService.markDirty();
+    }
+  }
+
+  showSchedule() {
+    const capabilities =
+      this.yamcs.connectionInfo$.value?.instance?.capabilities || [];
+    return (
+      capabilities.indexOf('timeline') !== -1 &&
+      capabilities.indexOf('activities') !== -1 &&
+      this.authService.getUser()!.hasSystemPrivilege('ControlTimeline')
+    );
+  }
+
+  openScheduleStackDialog() {
+    this.dialog
+      .open(ScheduleStackDialogComponent, {
+        width: '600px',
+      })
+      .afterClosed()
+      .subscribe((scheduleOptions) => {
+        if (scheduleOptions) {
+          const options: CreateTimelineItemRequest = {
+            type: 'ACTIVITY',
+            duration: '0s',
+            name: this.filename,
+            start: scheduleOptions['executionTime'],
+            tags: scheduleOptions['tags'],
+            activityDefinition: {
+              type: 'COMMAND_STACK',
+              args: {
+                processor: this.yamcs.processor!,
+                bucket: this.bucket,
+                stack: this.filename,
+              },
+            },
+          };
+
+          this.yamcs.yamcsClient
+            .createTimelineItem(this.yamcs.instance!, options)
+            .then(() => {
+              this.messageService.showInfo('Stack scheduled');
+            })
+            .catch((err) => this.messageService.showError(err));
+        }
+      });
+  }
+
+  setExportURLs() {
+    const entryModels = this.entries$.value.map((e) => e.model);
+    const formatter = new StackFormatter(entryModels, {
+      advancement: this.stackFileService.advancement,
+    });
+
+    const jsonBlob = new Blob([formatter.toJSON()], {
+      type: 'application/json',
+    });
+    this.jsonBlobUrl = this.sanitizer.sanitize(
+      SecurityContext.URL,
+      URL.createObjectURL(jsonBlob),
+    )!;
+
+    const xmlBlob = new Blob([formatter.toXML()], { type: 'application/xml' });
+    this.xmlBlobUrl = this.sanitizer.sanitize(
+      SecurityContext.URL,
+      URL.createObjectURL(xmlBlob),
+    )!;
+  }
+
+  ngOnDestroy() {
+    this.clearStepScopedSubscriptions();
+    this.parameterSubscription?.cancel();
+    this.commandSubscription?.cancel();
+  }
+}
+```
+
+### `StackedEntry.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackedEntry.ts`
+
+
+```typescript
+import { signal, WritableSignal } from '@angular/core';
+import {
+  CheckStep,
+  Command,
+  CommandHistoryRecord,
+  CommandStep,
+  ParameterValue,
+  Step,
+  TextStep,
+  VerifyStep,
+} from '@yamcs/webapp-sdk';
+import { renderValue } from '../../../commanding/command-sender/arguments/argument/argument.component';
+
+export type StackedEntry =
+  | StackedCheckEntry
+  | StackedCommandEntry
+  | StackedTextEntry
+  | StackedVerifyEntry;
+
+abstract class AbstractStackedEntry<T extends Step> {
+  model: T;
+
+  executionNumber?: number;
+  executing = false;
+  err?: string;
+
+  constructor(model: T) {
+    this.model = model;
+  }
+
+  get comment() {
+    return this.model.comment;
+  }
+
+  clearOutputs(): void {
+    this.executionNumber = undefined;
+    this.err = undefined;
+  }
+
+  hasOutputs(): boolean {
+    return !!this.err;
+  }
+
+  abstract copy(): AbstractStackedEntry<T>;
+}
+
+export class StackedCommandEntry extends AbstractStackedEntry<CommandStep> {
+  type: 'command' = 'command';
+  command?: Command;
+  id?: string;
+  record?: CommandHistoryRecord;
+
+  constructor(model: CommandStep) {
+    super(model);
+  }
+
+  get name() {
+    return this.model.name;
+  }
+  get namespace() {
+    return this.model.namespace;
+  }
+  get args() {
+    return this.model.args;
+  }
+  get extra() {
+    return this.model.extra;
+  }
+  get stream() {
+    return this.model.stream;
+  }
+  get advancement() {
+    return this.model.advancement;
+  }
+
+  override clearOutputs(): void {
+    super.clearOutputs();
+    this.id = undefined;
+    this.record = undefined;
+  }
+
+  override hasOutputs(): boolean {
+    return super.hasOutputs() || !!this.record;
+  }
+
+  override copy(): StackedCommandEntry {
+    const copiedEntry = new StackedCommandEntry({
+      type: 'command',
+      name: this.name,
+      namespace: this.namespace,
+      args: { ...this.args },
+      comment: this.comment,
+      stream: this.stream,
+    });
+    copiedEntry.command = this.command;
+    if (this.extra) {
+      copiedEntry.model.extra = { ...this.extra };
+    }
+    if (this.advancement) {
+      copiedEntry.model.advancement = { ...this.advancement };
+    }
+    return copiedEntry;
+  }
+
+  override toString(): string {
+    let res = this.name;
+    if (this.args) {
+      res += ' [';
+      let first = true;
+      for (const k in this.args) {
+        if (first) {
+          first = false;
+        } else {
+          res += ', ';
+        }
+        res += `${k}=${this.args[k]}`;
+      }
+      res += ']';
+    }
+    return res;
+  }
+}
+
+export interface NamedParameterValue {
+  parameter: string;
+  pval: ParameterValue | null;
+  status?: WritableSignal<'ok' | 'nok' | 'pending' | 'cancelled' | null>;
+}
+
+export class StackedVerifyEntry extends AbstractStackedEntry<VerifyStep> {
+  type: 'verify' = 'verify';
+  pvals?: NamedParameterValue[];
+
+  constructor(model: VerifyStep) {
+    super(model);
+  }
+
+  get condition() {
+    return this.model.condition;
+  }
+  get delay() {
+    return this.model.delay;
+  }
+  get timeout() {
+    return this.model.timeout;
+  }
+
+  override clearOutputs(): void {
+    super.clearOutputs();
+    this.pvals = undefined;
+  }
+
+  override hasOutputs(): boolean {
+    return super.hasOutputs() || !!this.pvals;
+  }
+
+  override copy() {
+    return new StackedVerifyEntry({
+      type: 'verify',
+      condition: this.condition.map((c) => ({ ...c })),
+      comment: this.comment,
+    });
+  }
+
+  override toString(): string {
+    let res = '';
+    let first = true;
+    for (let comparison of this.condition || []) {
+      if (first) {
+        first = false;
+      } else {
+        res += ' AND ';
+      }
+      res += comparison.parameter;
+      switch (comparison.operator) {
+        case 'eq':
+          res += ' = ';
+          break;
+        case 'neq':
+          res += ' != ';
+          break;
+        case 'lt':
+          res += ' < ';
+          break;
+        case 'lte':
+          res += ' <= ';
+          break;
+        case 'gt':
+          res += ' > ';
+          break;
+        case 'gte':
+          res += ' >= ';
+          break;
+      }
+      res += comparison.value;
+    }
+    return res;
+  }
+
+  test(pvals: { [key: string]: ParameterValue }): boolean {
+    const matchedPvals: NamedParameterValue[] = [];
+    for (const comparison of this.condition) {
+      const allPvals = pvals;
+      matchedPvals.push({
+        parameter: comparison.parameter,
+        pval: allPvals[comparison.parameter] || null,
+        status: signal(null),
+      });
+    }
+    this.pvals = matchedPvals;
+
+    let allOK = true;
+    for (let i = 0; i < this.condition.length; i++) {
+      const matchedPval = matchedPvals[i];
+      if (matchedPval === null || !matchedPval.pval?.engValue) {
+        allOK = false;
+        continue;
+      } else if (!matchedPval.pval?.engValue) {
+        allOK = false;
+        matchedPval.status!.set('pending');
+        continue;
+      } else {
+        const actual = renderValue(matchedPval.pval.engValue);
+        const comparand = String(this.condition[i].value);
+        switch (this.condition[i].operator) {
+          case 'eq':
+            if (actual === comparand) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+          case 'neq':
+            if (actual !== comparand) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+          case 'lt':
+            if (isNaN(actual) || isNaN(comparand as any)) {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            } else if (Number(actual) < Number(comparand)) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+          case 'lte':
+            if (isNaN(actual) || isNaN(comparand as any)) {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            } else if (Number(actual) <= Number(comparand)) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+          case 'gt':
+            if (isNaN(actual) || isNaN(comparand as any)) {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            } else if (Number(actual) > Number(comparand)) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+          case 'gte':
+            if (isNaN(actual) || isNaN(comparand as any)) {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            } else if (Number(actual) >= Number(comparand)) {
+              matchedPval.status!.set('ok');
+            } else {
+              allOK = false;
+              matchedPval.status!.set('pending');
+            }
+            break;
+        }
+      }
+    }
+
+    return allOK;
+  }
+}
+
+export class StackedCheckEntry extends AbstractStackedEntry<CheckStep> {
+  type: 'check' = 'check';
+  pvals?: NamedParameterValue[];
+
+  constructor(model: CheckStep) {
+    super(model);
+  }
+
+  get parameters() {
+    return this.model.parameters;
+  }
+
+  override clearOutputs(): void {
+    super.clearOutputs();
+    this.pvals = undefined;
+  }
+
+  override hasOutputs(): boolean {
+    return super.hasOutputs() || !!this.pvals;
+  }
+
+  override copy() {
+    return new StackedCheckEntry({
+      type: 'check',
+      parameters: this.parameters.map((p) => ({ ...p })),
+      comment: this.comment,
+    });
+  }
+}
+
+export class StackedTextEntry extends AbstractStackedEntry<TextStep> {
+  type: 'text' = 'text';
+
+  renderedText = signal<string>('');
+
+  constructor(model: TextStep) {
+    super(model);
+  }
+
+  get text() {
+    return this.model.text;
+  }
+
+  override copy() {
+    return new StackedTextEntry({
+      type: 'text',
+      text: this.text,
+    });
+  }
+}
+```
+
+### `StackFileService.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackFileService.ts`
+
+
+```typescript
+import { Injectable } from '@angular/core';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  RouterStateSnapshot,
+} from '@angular/router';
+import {
+  AdvancementParams,
+  Argument,
+  Command,
+  ConfigService,
+  MessageService,
+  StackFormatter,
+  Step,
+  StorageClient,
+  utils,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, map } from 'rxjs';
+import {
+  StackedCheckEntry,
+  StackedCommandEntry,
+  StackedEntry,
+  StackedTextEntry,
+  StackedVerifyEntry,
+} from './StackedEntry';
+import { StackLogEntry } from './StackLogEntry';
+import { parseXML } from './xmlparse';
+import { parseYCS } from './ycsparse';
+
+@Injectable()
+export class StackFileService implements CanActivate {
+  storageClient: StorageClient;
+  bucket: string;
+  objectName: string;
+
+  entries: StackedEntry[] = [];
+
+  advancement: AdvancementParams = {
+    acknowledgment: 'Acknowledge_Queued',
+    wait: 0,
+  };
+
+  dirty$ = new BehaviorSubject<boolean>(false);
+
+  entries$ = new BehaviorSubject<StackedEntry[]>([]);
+  hasState$ = this.entries$.pipe(
+    map((entries) => {
+      for (const entry of entries) {
+        if (entry.hasOutputs() || entry.executionNumber !== undefined) {
+          return true;
+        }
+      }
+      return false;
+    }),
+  );
+  logs$ = new BehaviorSubject<StackLogEntry[]>([]);
+
+  constructor(
+    private configService: ConfigService,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+  ) {
+    this.bucket = configService.getStackBucket();
+    this.storageClient = yamcs.createStorageClient();
+  }
+
+  markDirty() {
+    this.dirty$.next(true);
+  }
+
+  addLogEntry(executionNumber: number, text: string) {
+    this.logs$.next([
+      ...this.logs$.value,
+      {
+        executionNumber,
+        text,
+        time: this.yamcs.getMissionTime().toISOString(),
+      },
+    ]);
+  }
+
+  async canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    // Clear state
+    this.entries = [];
+
+    this.objectName = route.params['objectName'];
+    const format = utils
+      .getExtension(utils.getFilename(this.objectName))
+      ?.toLowerCase();
+
+    try {
+      const response = await this.storageClient.getObject(
+        this.bucket,
+        this.objectName,
+      );
+      if (response.ok) {
+        const text = await response.text();
+        if (format === 'xml' || format === 'ycs') {
+          await this.processStack(text, format);
+        } else {
+          return false;
+        }
+      }
+    } catch (err: any) {
+      this.messageService.showError(err);
+      return false;
+    }
+
+    return true;
+  }
+
+  private async processStack(text: string, format: string) {
+    this.entries = [];
+
+    switch (format) {
+      case 'ycs':
+        let ycsEntries: Step[];
+        [ycsEntries, this.advancement] = parseYCS(
+          text,
+          this.configService.getCommandOptions(),
+        );
+        for (const ycsEntry of ycsEntries) {
+          if (ycsEntry.type === 'check') {
+            this.entries.push(new StackedCheckEntry(ycsEntry));
+          } else if (ycsEntry.type === 'command') {
+            this.entries.push(new StackedCommandEntry(ycsEntry));
+          } else if (ycsEntry.type === 'text') {
+            this.entries.push(new StackedTextEntry(ycsEntry));
+          } else if (ycsEntry.type === 'verify') {
+            this.entries.push(new StackedVerifyEntry(ycsEntry));
+          } else {
+            console.error('Unexpected step', ycsEntry);
+          }
+        }
+        break;
+      case 'xml':
+        const xmlModels = parseXML(
+          text,
+          this.configService.getCommandOptions(),
+        );
+        for (const xmlModel of xmlModels) {
+          this.entries.push(new StackedCommandEntry(xmlModel));
+        }
+        break;
+    }
+
+    const commandEntries = this.entries.filter(
+      (entry) => entry instanceof StackedCommandEntry,
+    );
+
+    // Enrich entries with MDB info, it's used in the detail panel
+    const promises = [];
+    const instance = this.yamcs.instance!;
+    for (const entry of commandEntries) {
+      const namespace = entry.namespace ?? null;
+      const name = entry.name;
+      promises.push(
+        this.yamcs.yamcsClient
+          .getCommandForNamespace(instance, namespace, name)
+          .then((command) => {
+            entry.command = command;
+          }),
+      );
+    }
+
+    // Wait on all definition requests to arrive
+    for (const promise of promises) {
+      try {
+        await promise;
+      } catch {
+        // For now, don't care
+      }
+    }
+
+    // Convert enum values to labels. This provides some resilience to MDB changes
+    // where a numeric parameter becomes an enumeration.
+    for (const entry of commandEntries) {
+      if (entry.command) {
+        for (const argumentName in entry.args) {
+          const argument = this.getArgument(argumentName, entry.command);
+          if (argument?.type.engType === 'enumeration') {
+            let match = false;
+            for (const enumValue of argument.type.enumValue || []) {
+              if (enumValue.label === entry.args[argumentName]) {
+                match = true;
+                break;
+              }
+            }
+            if (!match) {
+              for (const enumValue of argument.type.enumValue || []) {
+                if (
+                  String(enumValue.value) === String(entry.args[argumentName])
+                ) {
+                  entry.args[argumentName] = enumValue.label;
+                  match = true;
+                  break;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Convert arrays/aggregates from JSON to JavaScript
+    if (format === 'xml') {
+      for (const entry of commandEntries) {
+        if (entry.command) {
+          for (const argumentName in entry.args) {
+            if (this.isComplex(argumentName, entry.command)) {
+              entry.args[argumentName] = JSON.parse(entry.args[argumentName]);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private getArgument(argumentName: string, info: Command): Argument | null {
+    for (const argument of info.argument || []) {
+      if (argument.name === argumentName) {
+        return argument;
+      }
+    }
+    if (info.baseCommand) {
+      return this.getArgument(argumentName, info.baseCommand);
+    } else {
+      return null;
+    }
+  }
+
+  private isComplex(argumentName: string, info: Command): boolean {
+    for (const argument of info.argument || []) {
+      if (argument.name === argumentName) {
+        return (
+          argument.type.engType === 'aggregate' ||
+          argument.type.engType.endsWith('[]')
+        );
+      }
+    }
+    if (info.baseCommand) {
+      return this.isComplex(argumentName, info.baseCommand);
+    } else {
+      return false;
+    }
+  }
+
+  updateEntries(entries: StackedEntry[]) {
+    this.renumberHeadings(entries);
+    this.entries$.next(entries);
+  }
+
+  private renumberHeadings(entries: StackedEntry[]) {
+    const counters = [0, 0, 0, 0, 0, 0];
+    for (const entry of entries) {
+      if (entry instanceof StackedTextEntry) {
+        let renderedLines = [];
+        for (const line of entry.text.split('\n')) {
+          if (line.startsWith('# ')) {
+            counters[0]++;
+            counters[1] = 0;
+            counters[2] = 0;
+            counters[3] = 0;
+            counters[4] = 0;
+            counters[5] = 0;
+            const renderedLine =
+              `# ${counters[0]}.&nbsp;&nbsp;` + line.slice(2);
+            renderedLines.push(renderedLine);
+          } else if (line.startsWith('## ')) {
+            counters[1]++;
+            counters[2] = 0;
+            counters[3] = 0;
+            counters[4] = 0;
+            counters[5] = 0;
+            const renderedLine =
+              `## ${counters[0]}.${counters[1]}.&nbsp;&nbsp;` + line.slice(3);
+            renderedLines.push(renderedLine);
+          } else if (line.startsWith('### ')) {
+            counters[2]++;
+            counters[3] = 0;
+            counters[4] = 0;
+            counters[5] = 0;
+            const renderedLine =
+              `### ${counters[0]}.${counters[1]}.${counters[2]}.&nbsp;&nbsp;` +
+              line.slice(4);
+            renderedLines.push(renderedLine);
+          } else if (line.startsWith('#### ')) {
+            counters[3]++;
+            counters[4] = 0;
+            counters[5] = 0;
+            const renderedLine =
+              `#### ${counters[0]}.${counters[1]}.${counters[2]}.${counters[3]}.&nbsp;&nbsp;` +
+              line.slice(5);
+            renderedLines.push(renderedLine);
+          } else if (line.startsWith('##### ')) {
+            counters[4]++;
+            counters[5] = 0;
+            const renderedLine =
+              `##### ${counters[0]}.${counters[1]}.${counters[2]}.${counters[3]}.${counters[4]}.&nbsp;&nbsp;` +
+              line.slice(6);
+            renderedLines.push(renderedLine);
+          } else if (line.startsWith('###### ')) {
+            counters[5]++;
+            const renderedLine =
+              `###### ${counters[0]}.${counters[1]}.${counters[2]}.${counters[3]}.${counters[4]}.${counters[5]}.&nbsp;&nbsp;` +
+              line.slice(7);
+            renderedLines.push(renderedLine);
+          } else {
+            renderedLines.push(line);
+          }
+        }
+        entry.renderedText.set(renderedLines.join('\n'));
+      }
+    }
+  }
+
+  saveStack() {
+    const format = utils
+      .getExtension(utils.getFilename(this.objectName))
+      ?.toLowerCase();
+
+    const modelEntries = this.entries$.value.map((e) => e.model);
+    let file;
+    switch (format) {
+      case 'ycs':
+        file = new StackFormatter(modelEntries, {
+          advancement: this.advancement,
+        }).toJSON();
+        break;
+      case 'xml':
+        file = new StackFormatter(modelEntries, {
+          advancement: this.advancement,
+        }).toXML();
+        break;
+      default:
+        console.error('Unexpected format');
+        return;
+    }
+    const type = format === 'xml' ? 'application/xml' : 'application/json';
+    const blob = new Blob([file], { type });
+    return this.storageClient
+      .uploadObject(this.bucket, this.objectName, blob)
+      .then(() => {
+        this.dirty$.next(false);
+      });
+  }
+}
+```
+
+### `StackLogEntry.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/StackLogEntry.ts`
+
+
+```typescript
+export interface StackLogEntry {
+  time: string;
+  text: string;
+  executionNumber: number;
+  err?: string;
+}
+```
+
+### `xmlparse.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/xmlparse.ts`
+
+
+```typescript
+import { CommandOption, CommandStep, Value } from '@yamcs/webapp-sdk';
+
+export function parseXML(
+  text: string,
+  commandOptions: CommandOption[],
+): CommandStep[] {
+  const xmlParser = new DOMParser();
+  const doc = xmlParser.parseFromString(text, 'text/xml') as XMLDocument;
+  return parseRoot(doc.documentElement, commandOptions);
+}
+
+function parseRoot(root: Node, commandOptions: CommandOption[]) {
+  const entries: CommandStep[] = [];
+  for (let i = 0; i < root.childNodes.length; i++) {
+    const child = root.childNodes[i];
+    if (child.nodeType !== 3) {
+      // Ignore text or whitespace
+      if (child.nodeName === 'command') {
+        const entry = parseEntry(child as Element, commandOptions);
+        entries.push(entry);
+      }
+    }
+  }
+
+  return entries;
+}
+
+function parseEntry(
+  node: Element,
+  commandOptions: CommandOption[],
+): CommandStep {
+  const args: { [key: string]: any } = {};
+  const extra: { [key: string]: Value } = {};
+  for (let i = 0; i < node.childNodes.length; i++) {
+    const child = node.childNodes[i] as Element;
+    if (child.nodeName === 'commandArgument') {
+      const argumentName = getStringAttribute(child, 'argumentName');
+      args[argumentName] = getStringAttribute(child, 'argumentValue');
+      if (args[argumentName] === 'true') {
+        args[argumentName] = true;
+      } else if (args[argumentName] === 'false') {
+        args[argumentName] = false;
+      }
+    } else if (child.nodeName === 'extraOptions') {
+      for (let j = 0; j < child.childNodes.length; j++) {
+        const extraChild = child.childNodes[j] as Element;
+        if (extraChild.nodeName === 'extraOption') {
+          const id = getStringAttribute(extraChild, 'id');
+          const stringValue = getStringAttribute(extraChild, 'value');
+          const value = convertOptionStringToValue(
+            id,
+            stringValue,
+            commandOptions,
+          );
+          if (value) {
+            extra[id] = value;
+          }
+        }
+      }
+    }
+  }
+  const entry: CommandStep = {
+    type: 'command',
+    name: getStringAttribute(node, 'qualifiedName'),
+    args,
+    extra,
+  };
+
+  if (node.hasAttribute('comment')) {
+    entry.comment = getStringAttribute(node, 'comment');
+  }
+
+  return entry;
+}
+
+function getStringAttribute(node: Node, name: string) {
+  const attr = (node as Element).attributes.getNamedItem(name);
+  if (attr === null) {
+    throw new Error(`No attribute named ${name}`);
+  } else {
+    return attr.textContent || '';
+  }
+}
+
+function convertOptionStringToValue(
+  id: string,
+  value: string,
+  commandOptions: CommandOption[],
+): Value | null {
+  for (const option of commandOptions) {
+    if (option.id === id) {
+      switch (option.type) {
+        case 'BOOLEAN':
+          return { type: 'BOOLEAN', booleanValue: value === 'true' };
+        case 'NUMBER':
+          return { type: 'SINT32', sint32Value: Number(value) };
+        default:
+          return { type: 'STRING', stringValue: value };
+      }
+    }
+  }
+  return null;
+}
+```
+
+### `ycsparse.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file/ycsparse.ts`
+
+
+```typescript
+import {
+  AdvancementParams,
+  CheckStep,
+  CommandOption,
+  CommandStep,
+  Step,
+  TextStep,
+  Value,
+  VerifyStep,
+} from '@yamcs/webapp-sdk';
+
+export function parseYCS(json: string, commandOptions: CommandOption[]) {
+  const steps: Step[] = [];
+
+  const stack: { [key: string]: any } = JSON.parse(json);
+  if (stack.steps) {
+    // v2
+    for (const step of stack.steps) {
+      if (step.type === 'check') {
+        steps.push(parseCheckEntry(step));
+      } else if (step.type === 'command') {
+        steps.push(parseCommandEntry(step, commandOptions));
+      } else if (step.type === 'text') {
+        steps.push(parseTextEntry(step));
+      } else if (step.type === 'verify') {
+        steps.push(parseVerifyEntry(step));
+      } else {
+        console.warn(`Unexpected entry of type '${step.type}'`);
+      }
+    }
+  } else if (stack.commands) {
+    // v1
+    for (const command of stack.commands) {
+      steps.push(parseCommandEntry(command, commandOptions));
+    }
+  }
+
+  const advancement: AdvancementParams = {
+    acknowledgment: stack.advancement?.acknowledgment || 'Acknowledge_Queued',
+    wait: stack.advancement?.wait != null ? stack.advancement?.wait : 0,
+  };
+
+  return [steps, advancement] as const;
+}
+
+function parseCommandEntry(
+  entry: { [key: string]: any },
+  commandOptions: CommandOption[],
+) {
+  const result: CommandStep = {
+    type: 'command',
+    name: entry.name,
+    namespace: entry.namespace,
+    ...(entry.comment && { comment: entry.comment }),
+    ...(entry.stream && { stream: entry.stream }),
+    ...(entry.arguments && { args: parseArguments(entry.arguments) }),
+    ...(entry.extraOptions && {
+      extra: parseExtraOptions(entry.extraOptions, commandOptions),
+    }),
+    ...(entry.advancement && { advancement: entry.advancement }),
+  };
+  return result;
+}
+
+function parseCheckEntry(entry: { [key: string]: any }) {
+  // No transformations
+  return entry as CheckStep;
+}
+
+function parseVerifyEntry(entry: { [key: string]: any }) {
+  // No transformations
+  return entry as VerifyStep;
+}
+
+function parseTextEntry(entry: { [key: string]: any }) {
+  const result: TextStep = {
+    type: 'text',
+    text: entry.text,
+  };
+  return result;
+}
+
+function parseArguments(commandArguments: Array<any>) {
+  const args: { [key: string]: any } = {};
+  for (let argument of commandArguments) {
+    args[argument.name] = argument.value;
+  }
+  return args;
+}
+
+function parseExtraOptions(
+  options: Array<any>,
+  commandOptions: CommandOption[],
+) {
+  const extra: { [key: string]: Value } = {};
+  for (let option of options) {
+    const stringValue = new String(option.value).toString();
+    const value = convertOptionStringToValue(
+      option.id,
+      stringValue,
+      commandOptions,
+    );
+    if (value) {
+      extra[option.id] = value;
+    }
+  }
+  return extra;
+}
+
+function convertOptionStringToValue(
+  id: string,
+  value: string,
+  commandOptions: CommandOption[],
+): Value | null {
+  for (const option of commandOptions) {
+    if (option.id === id) {
+      switch (option.type) {
+        case 'BOOLEAN':
+          return { type: 'BOOLEAN', booleanValue: value === 'true' };
+        case 'NUMBER':
+          return { type: 'SINT32', sint32Value: Number(value) };
+        default:
+          return { type: 'STRING', stringValue: value };
+      }
+    }
+  }
+  return null;
+}
+```

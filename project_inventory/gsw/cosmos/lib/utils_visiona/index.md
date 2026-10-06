@@ -3,16 +3,483 @@
 
 **경로:** `gsw/cosmos/lib/utils_visiona/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `testutils.rb`
 
-file--testutils.rb
-file--utils.rb
+**경로:** `gsw/cosmos/lib/utils_visiona/testutils.rb`
+
+
+```ruby
+# FUNCTIONS
+CFDP_CLASS_HASH = {"CFDP::PDUMetadata"=>0, "CFDP::PDUFileData"=>1, "CFDP::PDUFinished"=>2,
+	"CFDP::PDUNAK"=>3, "CFDP::PDUEOF"=>4, "CFDP::PDUACK"=>5}
+
+def miss_pdus(*args)
+
+	miss_sent_hash = args[0][:miss_sent_pdus]
+	unless miss_sent_hash.nil?
+
+		miss_sent_hash.each do |key, value|
+			cmd("CFDP_TEST MISS_SENT_PACKET with PDU_CLASS #{CFDP_CLASS_HASH[key.to_s]}, PACKET_NUMBER_ARRAY #{value}")
+		end
+	end
+
+	miss_received_hash = args[0][:miss_received_pdus]
+	unless miss_received_hash.nil?
+
+		miss_received_hash.each do |key, value|
+			cmd("CFDP_TEST MISS_RECEIVED_PACKET with PDU_CLASS #{CFDP_CLASS_HASH[key.to_s]}, PACKET_NUMBER_ARRAY #{value}")
+		end
+	end
+	wait(1)
+end
+
+# This function specify how long a file transaction should performn
+def calculateWaitTime(fileSize, link)
+
+	# fileSize should be in bytes, so...
+	# Hypotetical 50% of max performance here.
+	perf = 0.5
+	return (fileSize/((link*perf).to_i<<7).to_f).ceil*2
+end
+
+# This monkey patch is used to check if a string contains
+# multiples substrings (in any order)
+class String
+
+	def minclude?(arg)
+
+		raise ArgumentError unless arg.is_a?(Array)
+
+		arg.each do |arg1|
+			return false unless self.include?(arg1)
+		end
+		return true
+	end
+end
+
+# This is a specific function that verifies if TO is available.
+# If not, it enables it.
+def TO_enabled?(ip, destport, routemask, ifiledesc, default_timeout)
+
+	counter = get_tlm_cnt("TO", "TO_HKPACKET")
+
+	begin
+
+		puts "Verifying if TO is enable"
+		wait_check_expression("get_tlm_cnt(\"TO\", \"TO_HKPACKET\") > #{counter}", default_timeout)
+	rescue
+
+		puts "TO not enable. Enabling it now!"
+		cmd("TO TO_ENABLE_OUTPUT with IP \"#{ip}\", DESTPORT #{destport}, ROUTEMASK #{routemask}, IFILEDESC #{ifiledesc}")
+		wait_check_expression("get_tlm_cnt(\"TO\", \"TO_HKPACKET\") > #{counter}", default_timeout)
+	end
+end
+
+# This is a specific function that verifies if TO is available.
+# This is to be called within a test event, so it can contains
+# scripting commands for COSMOS.
+def TO_available?(default_timeout=5)
+
+	puts "Verifying if TO is enable"
+
+	# This function needs that TO_HKPACKET tlm are sent by default
+	counter = get_tlm_cnt("TO", "TO_HKPACKET")
+	cmd("TO TO_ENABLE_OUTPUT with IP \"#{MY_IP}\", DESTPORT 1235, ROUTEMASK 0, IFILEDESC 0")
+    wait_check_expression("get_tlm_cnt('TO', 'TO_HKPACKET') > #{counter}", default_timeout)
+    puts "TO is ok."
+end
+
+# This is a specific function that verifies if CF is available.
+# This is to be called within a test event, so it can contains
+# scripting commands for COSMOS.
+def CF_available?(default_timeout)
+
+	puts "Verifying if CF is enable"
+	# To must be available in order to check CF
+	TO_available?(default_timeout)
+
+	# This functions needs that CF_HKPACKET tlm are sent by default
+	counter = get_tlm_cnt("CF", "CF_HKPACKET")
+    wait_check_expression("get_tlm_cnt('CF', 'CF_HKPACKET') > #{counter}", default_timeout)
+	puts "CF is ok."
+end
+
+# This function return the minimal amount of PDUS that will be transfered for a given
+# file. fileSize must be in kilobytes.
+def PDUS?(pdu_size, fileSize)
+
+	return ((fileSize<<10)/pdu_size).ceil
+end
+
+def appendFile(fileName, text)
+
+	return if (text.nil? || fileName.nil?)
+	File.open(fileName, 'a+') do |file|
+		file.write(text)
+	end
+end
+
+def downlinkAndCheck(check, classe, channel, priority, preserve, peerID, sourceFileName, destFileName, waitTime)
+
+	downlinkTransfer(classe, channel, priority, preserve, peerID, sourceFileName, destFileName, waitTime)
+	wait(1) # this wait is to check if file is gonna be written
+
+	check_expression("#{File.exist?(destFileName)} == #{check}")
+	wait(1)
+end
+
+# This function starts a file downlink transfer on satelite and
+# validate it using CF and TO HK tlm packets
+def downlinkTransfer(classe, channel, priority, preserve, peerID, sourceFileName, destFileName, waitTime)
+
+	# Initialize counters
+	counter = get_tlm_cnt("CF", "CF_HKPACKET")
+	filesSent = tlm("CF CF_HKPACKET ENG_TOTALFILESSENT")
+
+	# Ask for a file
+	cmd("CF CF_PLAYBACK_FILE_CC with 	CLASS #{classe},
+										CHANNEL #{channel},
+										PRIORITY #{priority},
+										PRESERVE #{preserve},
+										PEERID \"#{peerID}\",
+										SRCFILENAME \"#{sourceFileName}\",
+										DSTFILENAME \"#{destFileName}\""
+	)
+
+	# Wait for successful file transaction
+	wait_check_expression("get_tlm_cnt('CF', 'CF_HKPACKET') > #{counter} and tlm('CF CF_HKPACKET ENG_TOTALFILESSENT') > #{filesSent}", waitTime)
+end
+
+def uplinkTransfer(classe, destID, sourceFileName, destFileName, waitTime, shouldSucess = true)
+
+	# Initialize counters
+    counter = get_tlm_cnt("CF", "CF_HKPACKET")
+    filesReceived = tlm("CF CF_HKPACKET APP_TOTALSUCCESSTRANS")
+    totalFailedTrans = tlm("CF CF_HKPACKET APP_TOTALFAILEDTRANS")
+
+    # Send file
+    cmd("CFDP SEND_FILE with 	CLASS #{classe},
+								DEST_ID '#{destID}',
+								SRCFILENAME '#{sourceFileName}',
+								DSTFILENAME '#{destFileName}'
+		")
+
+	# Wait for successful file transaction
+	if shouldSucess
+    	wait_check_expression("get_tlm_cnt('CF', 'CF_HKPACKET') > #{counter} and tlm('CF CF_HKPACKET APP_TOTALSUCCESSTRANS') > #{filesReceived}", waitTime)
+    else
+    	wait_check_expression("get_tlm_cnt('CF', 'CF_HKPACKET') > #{counter} and tlm('CF CF_HKPACKET APP_TOTALFAILEDTRANS') > #{totalFailedTrans}", waitTime)
+    end
+end
+
+def createMainTestDir(current_test_suite, current_test, current_test_case)
+
+	time = Time.now
+	mainTestDir = Cosmos::USERPATH+"/outputs/tests/"
+
+	Dir.mkdir(mainTestDir+current_test_suite.to_s) unless Dir.exist?(mainTestDir+current_test_suite.to_s)
+	Dir.mkdir(mainTestDir+"#{current_test_suite}/#{current_test}") unless Dir.exist?(mainTestDir+"#{current_test_suite}/#{current_test}")
+	Dir.mkdir(mainTestDir+"#{current_test_suite}/#{current_test}/" + current_test_case.to_s) unless Dir.exist?(mainTestDir+"#{current_test_suite}/#{current_test}/" + current_test_case.to_s)
+	finalTestDir = mainTestDir+"#{current_test_suite}/#{current_test}/" + current_test_case.to_s
+	finalTestDir += "/" + time.strftime("%Y%m%d_%H%M%S")
+	Dir.mkdir(finalTestDir)
+	Dir.mkdir(finalTestDir+"/input")
+	Dir.mkdir(finalTestDir+"/output")
+
+	return finalTestDir
+end
+
+def createRandomFile(fileName, size)
+
+	File.open(fileName, 'wb+') do |f|
+		size.to_i.times {
+			f.write(SecureRandom.random_bytes((1<<10)))
+		}
+	end
+end
+
+def printFullHash(hash)
+
+	return "nil" if (hash.nil? || hash.empty?)
+	hashoutput = ""
+	hash.each { |key, value| hashoutput << "#{key}=>#{value.to_s}, " }
+	return "{#{hashoutput.chop!.chop!}}"
+end
 ```
 
-## 항목
+### `utils.rb`
 
-- [`gsw/cosmos/lib/utils_visiona/testutils.rb`](file--testutils.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/lib/utils_visiona/utils.rb`](file--utils.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/lib/utils_visiona/utils.rb`
+
+
+```ruby
+require 'tempfile'
+
+UTILS_VISIONA = "1.0.0"
+
+module Utils_visiona
+
+  DEBUG = 1
+  CCSDS_HEADER_LENGTH = 8
+
+  class BadLengthError < StandardError; end
+  class VerifyError < StandardError; end
+  class NoTargetError < StandardError; end
+
+  def hasSymbol?(hashe, symbol, data_type, bits)
+
+    return false if hashe[symbol].nil?
+    return false unless hashe[symbol].is_a?(data_type)
+
+    if data_type == Integer
+
+      # Check for int (byte) stuff
+      return false if hashe[symbol] < 0
+      return false if hashe[symbol] >= (2**bits)
+    elsif data_type == Array
+
+      # Check for array stuff
+      for i in 0..hashe[symbol].length-1 do
+
+        return false if hashe[symbol][i] < 0
+        return false if hashe[symbol][i] >= (2**bits)
+      end
+    end
+
+    return true
+  end
+
+  def checkByteArray(array)
+
+    raise VerifyError, "Invalid input #{array.class}" unless array.is_a?(Array)
+
+    array.each do |ele|
+
+      verifyInput(Integer, ele.class)
+      raise VerifyError, "Not a byte" unless (ele >= 0 and ele < 256)
+    end
+  end
+
+  def getBits (binSequence, bitStart, bitEnd)
+
+    return false if bitStart > bitEnd
+
+    if bitStart==bitEnd
+      return 1 if (binSequence & (1 << bitStart-1) != 0)
+      return 0
+    end
+
+    soma = 0
+    for i in 0..(bitEnd-bitStart)
+      soma+=2**i if (binSequence & (1 << (bitStart+i)-1) != 0)
+    end
+
+    return soma
+  end
+
+  def strToDecArray(string)
+
+    arr = Array.new
+    string.each_char do |c|
+      arr << c.ord
+    end
+    return arr
+  end
+
+  def getDecValueFromHexa (str)
+
+    hexaDict = {"A"=>10, "B"=>11, "C"=>12, "D"=>13, "E"=>14, "F"=>15}
+    return hexaDict[str].nil? ? str.to_i : hexaDict[str]
+  end
+
+  # This functions return 2 hexas for each byte in array; e.g. [12, 1] = 0C01
+  def decArrayToHexaStr(array)
+
+    str = ""
+    array.each do |dec|
+      aux = dec.to_s(16)
+      if aux.length != 2
+        aux = "0#{aux}"
+      else end
+      str << aux
+    end
+    return str.delete('" [],').upcase
+  end
+
+  def hexaStrToDecArray(hexaString)
+
+    packet = Array.new
+    for i in (0..hexaString.length-2).step(2)
+      aux1 = getDecValueFromHexa(hexaString[i])
+      aux2 = getDecValueFromHexa(hexaString[i+1])
+      packet << ((aux1 << 4) + aux2)
+    end
+    return packet
+  end
+
+  def verifyLength(operation, actual, expected)
+
+    case operation.upcase
+    when "LESS"
+
+      if actual < expected
+        OS_print(0, "Expected min length \"#{expected}\". Got \"#{actual}\"")
+        raise BadLengthError, "Expected min length \"#{expected}\". Got \"#{actual}\""
+      end
+    when "DIFF"
+
+      if actual != expected
+        OS_print(0, "Expected exactly length \"#{expected}\". Got \"#{actual}\"")
+        raise BadLengthError, "Expected exactly length \"#{expected}\". Got \"#{actual}\""
+      end
+    when "BIGGER"
+
+      if actual > expected
+        OS_print(0, "Expected max length \"#{expected}\". Got \"#{actual}\"")
+        raise BadLengthError, "Expected max length \"#{expected}\". Got \"#{actual}\""
+      end
+    else
+      raise ArgumentError, "Invalid operation for verifyLength function"
+    end
+  end
+
+  def compareValues(actual, expected, msg)
+
+    unless actual == expected
+      OS_print(0, "Should have \"#{expected}\" #{msg}. Got \"#{actual}\"")
+      raise VerifyError, "Should have \"#{expected}\" #{msg}. Got \"#{actual}\""
+    end
+  end
+
+  def removeCCSDSHeader(pdu)
+
+    return pdu[CCSDS_HEADER_LENGTH..(pdu.length-1)]
+  end
+
+  def writeFile(filename, data)
+
+    # i'm expecting an array of binary data array
+    raise ArgumentError, "Data is not a Hash" unless data.is_a?(Hash)
+
+    data.each do |key, value|
+      data[key] = value.pduPayload.data
+    end
+
+    begin
+      File.open(filename, 'wb+') do |file|
+        IO.binwrite(file, data.sort.to_h.values.flatten.pack('c*'))
+      end
+    rescue Exception => err
+      file = Tempfile.new('cfdp')
+      IO.binwrite(file, data.sort.to_h.values.flatten.pack('c*'))
+      file.close
+      puts err
+      puts "Error while writing file. It has been saved in /tmp with basename 'cfdp'"
+    end
+  end
+
+  def OS_print(errorCode, string)
+
+    if DEBUG==1
+      outputStr = ""
+      errorCodeHash = {0=>"ERROR", 1=>"WARNING", 2=>"SUCCESS"}
+      outputStr << errorCodeHash[errorCode] << ": " << string << "\nGenerated by " << caller_locations(1,1).to_s << "\n\n"
+      #puts outputStr
+    end
+  end
+
+  def completeBytes(array, expectedSize, type)
+
+    raise "Array is bigger than expected." if array.length > expectedSize
+
+    # I will complete bytes to the left here
+    if type.upcase.eql?("LITTLE_ENDIAN")
+
+      while (array.length < expectedSize)
+        array.unshift(0)
+      end
+    # I will complete bytes to the right here
+    elsif type.upcase.eql?("BIG_ENDIAN")
+
+      while (array.length < expectedSize)
+        array << 0
+      end
+    end
+
+    return array
+  end
+
+  # this function performs operation to transform id X to 0.x str binary array (eg 21 to "0.21 = [48, 46, 50, 49]"")
+  def IDtoStrArray(id)
+
+    strArray = Array.new
+    strArray << 48
+    strArray << 46
+
+    id.to_s.each_char do |c|
+      strArray << c.ord
+    end
+    return strArray
+  end
+
+  def verifyInput(expected, actual)
+
+    if expected.is_a?(Array)
+
+      if !expected.include?(actual)
+
+        puts "#{caller}\n. Expected object of classes #{expected.to_s}." + " Received " + (actual.nil? ? "nil" : "#{actual}")
+        raise ArgumentError, "#{caller}\n. Expected object of classes #{expected.to_s}. Received " + (actual.nil? ? "nil" : "#{actual}")
+      end
+    else
+
+      if expected != actual
+
+        puts "#{caller}\n. Expected object of class " + (expected.nil? ? "nil." : "#{expected}.") + " Received " + (actual.nil? ? "nil" : "#{actual}")
+        raise ArgumentError, "#{caller}\n. Expected object of class " + (expected.nil? ? "nil." : "#{expected}.") + " Received " + (actual.nil? ? "nil" : "#{actual}")
+      end
+    end
+  end
+
+  def calculateFileChecksum(fileName)
+
+    begin
+
+      sum = 0
+      File.open(fileName, 'rb') do |file|
+
+        until file.eof?
+
+            buffer = file.read(4)
+
+        (sum += buffer.unpack('L>')[0]; next) if buffer.length == 4
+        for i in 0..(buffer.length-1); sum += (buffer[i].ord<<(8*(4-i-1))); end
+        end
+      end
+      return Utils_visiona.getBits(sum, 1, 32)
+    rescue Exception => err
+
+      puts "Error is" + err
+    end
+  end
+
+  module_function :hasSymbol?
+  module_function :checkByteArray
+  module_function :getBits
+  module_function :strToDecArray
+  module_function :getDecValueFromHexa
+  module_function :decArrayToHexaStr
+  module_function :hexaStrToDecArray
+  module_function :writeFile
+  module_function :OS_print
+  module_function :verifyLength
+  module_function :compareValues
+  module_function :removeCCSDSHeader
+  module_function :completeBytes
+  module_function :IDtoStrArray
+  module_function :verifyInput
+  module_function :calculateFileChecksum
+end # module Utils_visiona
+```

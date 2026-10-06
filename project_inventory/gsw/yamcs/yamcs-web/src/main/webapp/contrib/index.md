@@ -3,14 +3,35 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/contrib/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generate-tznames.js`
 
-file--generate-tznames.js
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/contrib/generate-tznames.js`
+
+
+```javascript
+const https = require('https');
+
+https.get('https://data.iana.org/time-zones/data/zone1970.tab', (response) => {
+  var data = '';
+  response.on('data', (chunk) => (data += chunk));
+  response.on('end', () => {
+    const names = ['UTC'];
+    for (let line of data.split('\n')) {
+      if (!line || line.indexOf('#') === 0) {
+        continue;
+      }
+      const parts = line.split('\t');
+      names.push(parts[2]);
+    }
+    names.sort();
+
+    let code = `export default tznames = [
+  '${names.join("',\n  '")}'
+];
+`;
+    console.log(code);
+  });
+});
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/contrib/generate-tznames.js`](file--generate-tznames.js) — UTF-8 텍스트 파일 본문 포함

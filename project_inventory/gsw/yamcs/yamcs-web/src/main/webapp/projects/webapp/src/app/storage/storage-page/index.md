@@ -3,18 +3,63 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `storage-page.component.css`
 
-file--storage-page.component.css
-file--storage-page.component.html
-file--storage-page.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.css`
+
+
+```css
+.storage-page-content {
+  position: absolute;
+  top: 48px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--y-background-color);
+}
+
+.storage-page-content.message-bar-visible {
+  top: 112px;
+  /* 48 + 64*/
+}
+
+mat-toolbar {
+  background-color: #fcfcfc;
+  border-bottom: 1px solid #d3d3d3;
+  box-sizing: content-box;
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `storage-page.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.css`](file--storage-page.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.html`](file--storage-page.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.ts`](file--storage-page.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.html`
+
+
+```html
+<ya-message-bar #messageBar />
+
+<div class="storage-page-content" [class.message-bar-visible]="messageBar.show$ | async">
+  <router-outlet />
+</div>
+```
+
+### `storage-page.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-page/storage-page.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './storage-page.component.html',
+  styleUrl: './storage-page.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StoragePageComponent {}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,32 +17,54 @@ osal_public_api/index
 src/index
 tables/index
 tools/index
-file--cfe_build_env.in
-file--cfe_module_version.in
-file--cmake_install.cmake
-file--CMakeCache.txt
-file--CTestTestfile.cmake
-file--install_manifest.txt
-file--Makefile
-file--mission_vars.cache
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/`](amd64-nos3/index) — 폴더
-- [`fsw/build/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/docs/`](docs/index) — 폴더
-- [`fsw/build/exe/`](exe/index) — 폴더
-- [`fsw/build/inc/`](inc/index) — 폴더
-- [`fsw/build/osal_public_api/`](osal_public_api/index) — 폴더
-- [`fsw/build/src/`](src/index) — 폴더
-- [`fsw/build/tables/`](tables/index) — 폴더
-- [`fsw/build/tools/`](tools/index) — 폴더
-- [`fsw/build/cfe_build_env.in`](file--cfe_build_env.in) — 빌드 산출물 (경로만)
-- [`fsw/build/cfe_module_version.in`](file--cfe_module_version.in) — 빌드 산출물 (경로만)
-- [`fsw/build/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeCache.txt`](file--CMakeCache.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/install_manifest.txt`](file--install_manifest.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/mission_vars.cache`](file--mission_vars.cache) — 빌드 산출물 (경로만)
+### `cfe_build_env.in`
+
+**경로:** `fsw/build/cfe_build_env.in`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_module_version.in`
+
+**경로:** `fsw/build/cfe_module_version.in`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCache.txt`
+
+**경로:** `fsw/build/CMakeCache.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `install_manifest.txt`
+
+**경로:** `fsw/build/install_manifest.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `mission_vars.cache`
+
+**경로:** `fsw/build/mission_vars.cache`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

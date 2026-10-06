@@ -3,16 +3,156 @@
 
 **경로:** `components/generic_css/fsw/cfs/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_css_device_stubs.c`
 
-file--generic_css_device_stubs.c
-file--libi2c_stubs.c
+**경로:** `components/generic_css/fsw/cfs/unit-test/stubs/generic_css_device_stubs.c`
+
+
+```c
+#include "utgenstub.h"
+#include "generic_css_device.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for GENERIC_CSS_RequestData()
+ * ----------------------------------------------------
+ */
+int32_t GENERIC_CSS_RequestData(i2c_bus_info_t *device, GENERIC_CSS_Device_Data_tlm_t *data)
+{
+    UT_GenStub_SetupReturnBuffer(GENERIC_CSS_RequestData, int32_t);
+
+    UT_GenStub_AddParam(GENERIC_CSS_RequestData, i2c_bus_info_t *, device);
+    UT_GenStub_AddParam(GENERIC_CSS_RequestData, GENERIC_CSS_Device_Data_tlm_t *, data);
+
+    UT_GenStub_Execute(GENERIC_CSS_RequestData, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(GENERIC_CSS_RequestData, int32_t);
+}
 ```
 
-## 항목
+### `libi2c_stubs.c`
 
-- [`components/generic_css/fsw/cfs/unit-test/stubs/generic_css_device_stubs.c`](file--generic_css_device_stubs.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/cfs/unit-test/stubs/libi2c_stubs.c`](file--libi2c_stubs.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_css/fsw/cfs/unit-test/stubs/libi2c_stubs.c`
+
+
+```c
+#include "libi2c.h"
+#include "utgenstub.h"
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_master_close()
+ * ----------------------------------------------------
+ */
+int32_t i2c_master_close(i2c_bus_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_master_close, int32_t);
+
+    UT_GenStub_AddParam(i2c_master_close, i2c_bus_info_t *, device);
+
+    UT_GenStub_Execute(i2c_master_close, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_master_close, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_master_init()
+ * ----------------------------------------------------
+ */
+int32_t i2c_master_init(i2c_bus_info_t *device)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_master_init, int32_t);
+
+    UT_GenStub_AddParam(i2c_master_init, i2c_bus_info_t *, device);
+
+    UT_GenStub_Execute(i2c_master_init, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_master_init, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_master_transaction()
+ * ----------------------------------------------------
+ */
+int32_t i2c_master_transaction(i2c_bus_info_t *device, uint8_t addr, void *txbuf, uint8_t txlen, void *rxbuf,
+                               uint8_t rxlen, uint16_t timeout)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_master_transaction, int32_t);
+
+    UT_GenStub_AddParam(i2c_master_transaction, i2c_bus_info_t *, device);
+    UT_GenStub_AddParam(i2c_master_transaction, uint8_t, addr);
+    UT_GenStub_AddParam(i2c_master_transaction, void *, txbuf);
+    UT_GenStub_AddParam(i2c_master_transaction, uint8_t, txlen);
+    UT_GenStub_AddParam(i2c_master_transaction, void *, rxbuf);
+    UT_GenStub_AddParam(i2c_master_transaction, uint8_t, rxlen);
+    UT_GenStub_AddParam(i2c_master_transaction, uint16_t, timeout);
+
+    UT_GenStub_Execute(i2c_master_transaction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_master_transaction, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_multiple_transaction()
+ * ----------------------------------------------------
+ */
+int32_t i2c_multiple_transaction(i2c_bus_info_t *device, uint8_t addr, struct i2c_rdwr_ioctl_data *rdwr_data,
+                                 uint16_t timeout)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_multiple_transaction, int32_t);
+
+    UT_GenStub_AddParam(i2c_multiple_transaction, i2c_bus_info_t *, device);
+    UT_GenStub_AddParam(i2c_multiple_transaction, uint8_t, addr);
+    UT_GenStub_AddParam(i2c_multiple_transaction, struct i2c_rdwr_ioctl_data *, rdwr_data);
+    UT_GenStub_AddParam(i2c_multiple_transaction, uint16_t, timeout);
+
+    UT_GenStub_Execute(i2c_multiple_transaction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_multiple_transaction, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_read_transaction()
+ * ----------------------------------------------------
+ */
+int32_t i2c_read_transaction(i2c_bus_info_t *device, uint8_t addr, void *rxbuf, uint8_t rxlen, uint8_t timeout)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_read_transaction, int32_t);
+
+    UT_GenStub_AddParam(i2c_read_transaction, i2c_bus_info_t *, device);
+    UT_GenStub_AddParam(i2c_read_transaction, uint8_t, addr);
+    UT_GenStub_AddParam(i2c_read_transaction, void *, rxbuf);
+    UT_GenStub_AddParam(i2c_read_transaction, uint8_t, rxlen);
+    UT_GenStub_AddParam(i2c_read_transaction, uint8_t, timeout);
+
+    UT_GenStub_Execute(i2c_read_transaction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_read_transaction, int32_t);
+}
+
+/*
+ * ----------------------------------------------------
+ * Generated stub function for i2c_write_transaction()
+ * ----------------------------------------------------
+ */
+int32_t i2c_write_transaction(i2c_bus_info_t *device, uint8_t addr, void *txbuf, uint8_t txlen, uint8_t timeout)
+{
+    UT_GenStub_SetupReturnBuffer(i2c_write_transaction, int32_t);
+
+    UT_GenStub_AddParam(i2c_write_transaction, i2c_bus_info_t *, device);
+    UT_GenStub_AddParam(i2c_write_transaction, uint8_t, addr);
+    UT_GenStub_AddParam(i2c_write_transaction, void *, txbuf);
+    UT_GenStub_AddParam(i2c_write_transaction, uint8_t, txlen);
+    UT_GenStub_AddParam(i2c_write_transaction, uint8_t, timeout);
+
+    UT_GenStub_Execute(i2c_write_transaction, Basic, NULL);
+
+    return UT_GenStub_GetReturnValue(i2c_write_transaction, int32_t);
+}
+```

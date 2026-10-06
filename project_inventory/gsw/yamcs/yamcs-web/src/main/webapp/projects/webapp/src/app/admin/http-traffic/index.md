@@ -3,18 +3,266 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `http-traffic.component.html`
 
-file--http-traffic.component.html
-file--http-traffic.component.ts
-file--user-agent.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/http-traffic.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="HTTP traffic" />
+
+  <ya-panel>
+    @if (traffic$ | async; as traffic) {
+      <dl class="dl-horizontal no-lead">
+        <dt>Cumulative read</dt>
+        <dd>{{ traffic.readBytes | formatBytes }}</dd>
+        <dt>Cumulative written</dt>
+        <dd>{{ traffic.writtenBytes | formatBytes }}</dd>
+        <dt>Rx</dt>
+        <dd>{{ traffic.readThroughput * 8 | dataRate }}</dd>
+        <dt>Tx</dt>
+        <dd>{{ traffic.writeThroughput * 8 | dataRate }}</dd>
+      </dl>
+    }
+
+    <div class="section-divider">
+      <mat-divider />
+    </div>
+    <h4>Current connections</h4>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      [trackBy]="tableTrackerFn"
+      class="ya-data-table expand"
+      matSort
+      matSortActive="id"
+      matSortDirection="asc"
+      matSortDisableClear>
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Id</th>
+        <td mat-cell *matCellDef="let conn">{{ conn.id }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="userAgent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header class="expand">User agent</th>
+        <td mat-cell *matCellDef="let conn">
+          {{ (conn.httpRequest?.userAgent | userAgent) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="protocol">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Protocol</th>
+        <td mat-cell *matCellDef="let conn">{{ conn.httpRequest?.protocol || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="remoteAddress">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Remote address</th>
+        <td mat-cell *matCellDef="let conn">{{ conn.remoteAddress || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="readBytes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Read</th>
+        <td mat-cell *matCellDef="let conn">{{ (conn.readBytes | formatBytes) || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="writtenBytes">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Written</th>
+        <td mat-cell *matCellDef="let conn">{{ (conn.writtenBytes | formatBytes) || "-" }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="readThroughput">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Rx</th>
+        <td mat-cell *matCellDef="let conn">{{ conn.readThroughput * 8 | dataRate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="writeThroughput">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Tx</th>
+        <td mat-cell *matCellDef="let conn">{{ conn.writeThroughput * 8 | dataRate }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="request">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Request</th>
+        <td mat-cell *matCellDef="let conn">
+          {{ conn.httpRequest?.method }}
+          {{ conn.httpRequest?.uri }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="authorization">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Authorization</th>
+        <td mat-cell *matCellDef="let conn">
+          {{ conn.username || "-" }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    <mat-paginator [pageSize]="100" [hidePageSize]="true" [showFirstLastButtons]="true" />
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `http-traffic.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/http-traffic.component.html`](file--http-traffic.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/http-traffic.component.ts`](file--http-traffic.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/user-agent.pipe.ts`](file--user-agent.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/http-traffic.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  ClientConnectionInfo,
+  HttpTraffic,
+  HttpTrafficSubscription,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { AdminPageTemplateComponent } from '../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../shared/admin-toolbar/admin-toolbar.component';
+import { UserAgentPipe } from './user-agent.pipe';
+
+@Component({
+  templateUrl: './http-traffic.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AdminPageTemplateComponent,
+    AppAdminToolbar,
+    WebappSdkModule,
+    UserAgentPipe,
+  ],
+})
+export class HttpTrafficComponent implements AfterViewInit, OnDestroy {
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+
+  displayedColumns = [
+    'id',
+    'protocol',
+    'remoteAddress',
+    'readBytes',
+    'writtenBytes',
+    'readThroughput',
+    'writeThroughput',
+    'request',
+    'authorization',
+    'userAgent',
+  ];
+
+  tableTrackerFn = (index: number, conn: ClientConnectionInfo) => conn.id;
+
+  traffic$ = new BehaviorSubject<HttpTraffic | null>(null);
+  dataSource = new MatTableDataSource<ClientConnectionInfo>();
+
+  private httpTrafficSubscription: HttpTrafficSubscription;
+
+  constructor(yamcs: YamcsService, title: Title) {
+    title.setTitle('HTTP traffic');
+    this.httpTrafficSubscription =
+      yamcs.yamcsClient.createHttpTrafficSubscription((traffic) => {
+        this.traffic$.next(traffic);
+        this.dataSource.data = traffic.connections;
+      });
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+  }
+
+  ngOnDestroy() {
+    this.httpTrafficSubscription?.cancel();
+  }
+}
+```
+
+### `user-agent.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/user-agent.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+/**
+ * Attempts to parse a "User Agent" string.
+ *
+ * Really we prefer to just show the browser name + version.
+ * But the user agent set by browser is often VERY long.
+ *
+ * If we can't find a likely match, than default to
+ * full User Agent.
+ */
+@Pipe({
+  name: 'userAgent',
+})
+export class UserAgentPipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) {
+      return value;
+    }
+
+    // Careful with testing, a lot of browsers match multiple
+    // expressions.
+    //
+    // For example, Edge on macOS, matches Edge, Chrome and Safari.
+    const chromeMatch = value.match(/Chrome\/([a-zA-Z0-9\.]+)/);
+    const chromiumMatch = value.match(/Chromium\/([a-zA-Z0-9\.]+)/);
+    const edgeMatch = value.match(/Edg\/([a-zA-Z0-9\.]+)/);
+    const firefoxMatch = value.match(/Firefox\/([a-zA-Z0-9\.]+)/);
+    const operaMatch = value.match(/OPR\/([a-zA-Z0-9\.]+)/);
+    const safariMatch = value.match(/Safari\/([a-zA-Z0-9\.]+)/);
+    const seamonkeyMatch = value.match(/Seamonkey\/([a-zA-Z0-9\.]+)/);
+
+    let browserName;
+    let browserVersion;
+    if (safariMatch && !chromeMatch && !chromiumMatch && !edgeMatch) {
+      browserName = 'Safari';
+      browserVersion = safariMatch[1];
+      const versionMatch = value.match(/Version\/([a-zA-Z0-9\.]+)/);
+      if (versionMatch) {
+        browserVersion = versionMatch[1];
+      }
+    } else if (chromeMatch && !chromiumMatch && !edgeMatch) {
+      browserName = 'Chrome';
+      browserVersion = chromeMatch[1];
+    } else if (chromiumMatch) {
+      browserName = 'Chromium';
+      browserVersion = chromiumMatch[1];
+    } else if (firefoxMatch && !seamonkeyMatch) {
+      browserName = 'Firefox';
+      browserVersion = firefoxMatch[1];
+    } else if (seamonkeyMatch) {
+      browserName = 'Seamonkey';
+      browserVersion = seamonkeyMatch[1];
+    } else if (operaMatch) {
+      browserName = 'Opera';
+      browserVersion = operaMatch[1];
+    } else if (edgeMatch) {
+      browserName = 'Edge';
+      browserVersion = edgeMatch[1];
+    }
+
+    if (browserName) {
+      return `${browserName} ${browserVersion}`;
+    }
+    return value;
+  }
+}
+```

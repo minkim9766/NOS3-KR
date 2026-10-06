@@ -3,42 +3,2443 @@
 
 **경로:** `gsw/cosmos/outputs/logs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `2026_08_26_08_05_46_server_messages.txt`
 
-file--2026_08_26_08_05_46_server_messages.txt
-file--2026_08_26_08_05_46_tlm.bin
-file--2026_08_26_08_16_05_exception.txt
-file--2026_08_26_08_16_06_exception.txt
-file--2026_08_26_08_16_06_tlm.bin
-file--2026_08_26_08_16_07_server_messages.txt
-file--2026_08_26_08_28_13_tlm.bin
-file--2026_08_26_08_28_17_server_messages.txt
-file--2026_08_26_08_28_49_tlm.bin
-file--2026_08_26_08_53_20_server_messages.txt
-file--2026_08_26_08_53_20_tlm.bin
-file--2026_08_27_11_09_22_server_messages.txt
-file--2026_08_27_11_09_22_tlm.bin
-file--2026_08_27_11_12_21_cmd.bin
-file--2026_08_27_11_12_21_cmdsender_messages.txt
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_05_46_server_messages.txt`
+
+
+```text
+2026/08/26 08:05:41.446  INFO: COSMOS Version: 4.5.0
+2026/08/26 08:05:41.446  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt
+2026/08/26 08:05:41.521  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt
+2026/08/26 08:05:41.554  INFO: Marshal file does not exist: /home/minseo/nos3/gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:05:41.632  WARN: CFS CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:05:42.532  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.532  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.533  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.533  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.533  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.534  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.534  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.534  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.535  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.535  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.535  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.536  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.536  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.536  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.537  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.537  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.538  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.538  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.538  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.539  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.539  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.539  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.540  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.540  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.541  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.541  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.541  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.541  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.542  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.542  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.543  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.543  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.543  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.543  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.544  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.544  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.544  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.545  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.545  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.545  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.545  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.546  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.546  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.546  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.547  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.547  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.547  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.548  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.548  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.549  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.549  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.549  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.550  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.550  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.550  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.551  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.551  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.552  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.552  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.552  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.553  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.553  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.554  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.554  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.555  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.555  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.556  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.556  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.557  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.557  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.557  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.558  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.558  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.558  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.559  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.559  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.559  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.560  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.560  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.561  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.561  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.561  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.562  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.562  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.563  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.563  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.563  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.567  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.568  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.568  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.569  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.569  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.570  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.570  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.571  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.571  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.571  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.572  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.572  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.572  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.573  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.573  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.573  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.574  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.574  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.575  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.575  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.575  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.576  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.576  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.576  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.577  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.577  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.577  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.578  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.578  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.579  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.579  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.579  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.580  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.580  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.580  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.581  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.581  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.582  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.582  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.582  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.583  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:42.746  WARN: Command Packet SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.747  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.752  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.753  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.772  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.773  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.774  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.776  WARN: Command Packet SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.777  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE redefined.
+2026/08/26 08:05:42.777  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE redefined.
+2026/08/26 08:05:42.777  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:05:42.777  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:05:43.073  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:05:43.073  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:05:43.074  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:05:43.182  WARN: CFS_RADIO CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:05:43.894  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.895  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.895  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.895  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.895  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.896  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.896  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.896  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.896  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.896  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.897  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.897  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.897  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.897  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.898  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.898  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.898  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.898  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.899  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.899  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.899  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.900  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.900  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.900  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.901  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.901  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.901  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.902  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.902  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.902  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.903  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.903  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.903  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.904  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.904  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.904  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.905  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.905  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.905  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.906  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.909  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.909  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.910  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.910  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.910  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.911  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.911  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.911  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.911  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.911  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.912  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.912  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.912  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.912  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.913  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.913  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.913  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.913  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.913  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.914  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.914  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.914  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.914  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.915  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.915  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.915  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.916  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.916  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.916  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.917  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.917  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.917  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.917  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.918  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.918  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.918  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.919  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.919  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.919  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.920  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.920  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.920  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.921  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.921  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.936  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.937  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.937  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.938  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.938  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.939  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.939  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.939  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.940  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.940  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.941  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.941  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.941  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.942  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.942  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.942  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.943  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.943  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.943  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.944  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.944  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.944  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.945  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.945  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.945  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.946  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.946  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.946  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.947  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.947  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.947  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.948  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.948  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.948  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.949  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.949  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.950  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.950  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.950  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.951  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.951  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.951  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.952  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:43.952  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:05:44.231  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:05:44.231  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:05:44.231  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:05:44.991  INFO: Creating thread for router PREIDENTIFIED_ROUTER
+2026/08/26 08:05:44.991  INFO: Creating thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:05:44.991  INFO: Creating thread for interface DEBUG
+2026/08/26 08:05:44.992  INFO: Creating thread for interface RADIO
+2026/08/26 08:05:44.992  INFO: Creating thread for interface CFDP_INT
+2026/08/26 08:05:44.992  INFO: Creating thread for interface SIM_42_TRUTH_INT
+2026/08/26 08:05:44.992  INFO: Creating thread for interface SIM_CMDBUS_BRIDGE
+2026/08/26 08:05:44.993  INFO: Starting packet reading for PREIDENTIFIED_ROUTER
+2026/08/26 08:05:44.993  INFO: Connecting to PREIDENTIFIED_ROUTER...
+2026/08/26 08:05:44.994  INFO: PREIDENTIFIED_ROUTER Connection Success
+2026/08/26 08:05:44.994  INFO: Starting connection maintenance for PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:05:44.994  INFO: Connecting to PREIDENTIFIED_CMD_ROUTER...
+2026/08/26 08:05:44.995  INFO: PREIDENTIFIED_CMD_ROUTER Connection Success
+2026/08/26 08:05:44.995  INFO: Starting packet reading for RADIO
+2026/08/26 08:05:44.995  INFO: Connecting to RADIO...
+2026/08/26 08:05:44.996  INFO: Starting packet reading for CFDP_INT
+2026/08/26 08:05:45.057  INFO: Starting packet reading for SIM_CMDBUS_BRIDGE
+2026/08/26 08:05:45.057  INFO: Connecting to SIM_CMDBUS_BRIDGE...
+2026/08/26 08:05:45.060  INFO: CFDP Engine has started.
+2026/08/26 08:05:45.063  INFO: Starting packet reading for DEBUG
+2026/08/26 08:05:45.063  INFO: Connecting to DEBUG...
+2026/08/26 08:05:45.063  INFO: Starting packet reading for SIM_42_TRUTH_INT
+2026/08/26 08:05:45.063  INFO: Connecting to SIM_42_TRUTH_INT...
+2026/08/26 08:05:45.363  INFO: SIM_CMDBUS_BRIDGE Connection Success
+2026/08/26 08:05:45.555  INFO: DEBUG Connection Success
+2026/08/26 08:05:45.557  INFO: SIM_42_TRUTH_INT Connection Success
+2026/08/26 08:05:45.558  INFO: RADIO Connection Success
+2026/08/26 08:05:46.149  INFO: Log File Opened : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_05_46_tlm.bin
 ```
 
-## 항목
+### `2026_08_26_08_05_46_tlm.bin`
 
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_05_46_server_messages.txt`](file--2026_08_26_08_05_46_server_messages.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_05_46_tlm.bin`](file--2026_08_26_08_05_46_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_16_05_exception.txt`](file--2026_08_26_08_16_05_exception.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_16_06_exception.txt`](file--2026_08_26_08_16_06_exception.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_16_06_tlm.bin`](file--2026_08_26_08_16_06_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_16_07_server_messages.txt`](file--2026_08_26_08_16_07_server_messages.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_28_13_tlm.bin`](file--2026_08_26_08_28_13_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_28_17_server_messages.txt`](file--2026_08_26_08_28_17_server_messages.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_28_49_tlm.bin`](file--2026_08_26_08_28_49_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_53_20_server_messages.txt`](file--2026_08_26_08_53_20_server_messages.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_26_08_53_20_tlm.bin`](file--2026_08_26_08_53_20_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_27_11_09_22_server_messages.txt`](file--2026_08_27_11_09_22_server_messages.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_27_11_09_22_tlm.bin`](file--2026_08_27_11_09_22_tlm.bin) — 바이너리 (경로만)
-- [`gsw/cosmos/outputs/logs/2026_08_27_11_12_21_cmd.bin`](file--2026_08_27_11_12_21_cmd.bin) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/logs/2026_08_27_11_12_21_cmdsender_messages.txt`](file--2026_08_27_11_12_21_cmdsender_messages.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_05_46_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_26_08_16_05_exception.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_16_05_exception.txt`
+
+
+```text
+Exception:
+RuntimeError : Invalid hostname: nos-sim-bridge
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/streams/tcpip_client_stream.rb:48:in `rescue in initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/streams/tcpip_client_stream.rb:43:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_client_interface.rb:50:in `new'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_client_interface.rb:50:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:266:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:71:in `block (2 levels) in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `block in start'
+
+Caller Backtrace:
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:455:in `block (2 levels) in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `block in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:425:in `create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:482:in `write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:232:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+Ruby Version: ruby 2.5.1 (2018-03-29 patchlevel 57) [x86_64-linux-gnu]
+Rubygems Version: 2.7.6
+Cosmos Version: 4.5.0
+Cosmos::PATH: /var/lib/gems/2.5.0/gems/cosmos-4.5.0
+Cosmos::USERPATH: /home/minseo/nos3/gsw/cosmos
+
+Environment:
+RUBYOPT: 
+RUBYLIB: 
+GEM_PATH: 
+GEMRC: 
+RI_DEVKIT: 
+GEM_HOME: 
+PATH: /var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/../bin:/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/../bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Ruby Path:
+  /var/lib/gems/2.5.0/gems/uuidtools-2.2.0/lib
+  /home/minseo/nos3/gsw/cosmos/lib
+  /usr/share/rubygems-integration/all/gems/did_you_mean-1.2.0/lib
+  /var/lib/gems/2.5.0/gems/bundler-2.1.4/lib
+  /var/lib/gems/2.5.0/gems/coderay-1.1.3/lib
+  /var/lib/gems/2.5.0/gems/method_source-1.0.0/lib
+  /var/lib/gems/2.5.0/gems/pry-0.13.1/lib
+  /var/lib/gems/2.5.0/gems/yard-0.9.25/lib
+  /var/lib/gems/2.5.0/gems/pry-doc-0.13.5/lib
+  /var/lib/gems/2.5.0/gems/uuidtools-2.2.0/lib
+  /var/lib/gems/2.5.0/gems/snmp-1.3.2/lib
+  /var/lib/gems/2.5.0/gems/rubyzip-1.3.0/lib
+  /var/lib/gems/2.5.0/gems/mini_portile2-2.4.0/lib
+  /var/lib/gems/2.5.0/gems/nokogiri-1.10.10/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/nokogiri-1.10.10
+  /var/lib/gems/2.5.0/gems/opengl-bindings-1.6.10/lib
+  /var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/qtbindings-4.8.6.5
+  /var/lib/gems/2.5.0/gems/puma-3.12.6/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/puma-3.12.6
+  /var/lib/gems/2.5.0/gems/rack-2.2.3/lib
+  /var/lib/gems/2.5.0/gems/httpclient-2.8.3/lib
+  /var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/cosmos-4.5.0
+  /var/lib/gems/2.5.0/gems/ruby-termios-1.0.2/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/ruby-termios-1.0.2
+  /usr/local/lib/site_ruby/2.5.0
+  /usr/local/lib/x86_64-linux-gnu/site_ruby
+  /usr/local/lib/site_ruby
+  /usr/lib/ruby/vendor_ruby/2.5.0
+  /usr/lib/x86_64-linux-gnu/ruby/vendor_ruby/2.5.0
+  /usr/lib/ruby/vendor_ruby
+  /usr/lib/ruby/2.5.0
+  /usr/lib/x86_64-linux-gnu/ruby/2.5.0
+  /var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/../lib/2.5
+  /home/minseo/nos3/gsw/cosmos/config/targets/MISSION/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/MISSION/procedures
+  /home/minseo/nos3/gsw/cosmos/config/targets/SIM_42_TRUTH/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/procedures
+  /home/minseo/nos3/gsw/cosmos/config/targets/PDU/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP_TEST/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFS/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_CSS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_CSS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_EPS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_FSS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_FSS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_IMU/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_IMU/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_MAG/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_MAG/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_RADIO/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_REACTION_WHEEL/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_REACTION_WHEEL/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_TORQUER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_TORQUER/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/MGR/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/NOVATEL_OEM615/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/SAMPLE/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/SAMPLE/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_ADCS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_ADCS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_THRUSTER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_THRUSTER/procedures
+
+Gems:
+did_you_mean 1.2.0 ruby
+bundler 2.1.4 ruby
+rdoc 6.0.1 ruby
+json 2.1.0 ruby
+coderay 1.1.3 ruby
+method_source 1.0.0 ruby
+pry 0.13.1 ruby
+yard 0.9.25 ruby
+pry-doc 0.13.5 ruby
+uuidtools 2.2.0 ruby
+snmp 1.3.2 ruby
+rubyzip 1.3.0 ruby
+mini_portile2 2.4.0 ruby
+nokogiri 1.10.10 ruby
+opengl-bindings 1.6.10 ruby
+qtbindings 4.8.6.5 ruby
+puma 3.12.6 ruby
+rack 2.2.3 ruby
+httpclient 2.8.3 ruby
+cosmos 4.5.0 ruby
+date 1.0.0 ruby
+csv 1.0.0 ruby
+fileutils 1.0.2 ruby
+ipaddr 1.2.0 ruby
+ruby-termios 1.0.2 ruby
+openssl 2.1.1 ruby
+
+All Threads Backtraces:
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:148:in `add_tool_button'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:136:in `block (2 levels) in populate_packets_table'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:117:in `each'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:117:in `block in populate_packets_table'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:115:in `each'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:115:in `populate_packets_table'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:102:in `populate'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/gui/packets_tab.rb:42:in `populate_commands'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:171:in `block in start'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:104:in `block in execute_in_main_thread'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:57:in `callback_timeout'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `qt_metacall'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `method_missing'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `exec'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:323:in `block in run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:304:in `run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:646:in `block in run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:556:in `catch_fatal_exception'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:608:in `run'
+tools/CmdTlmServer:15:in `block in <main>'
+/home/minseo/nos3/gsw/cosmos/tools/tool_launch.rb:16:in `tool_launch'
+tools/CmdTlmServer:13:in `<main>'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:487:in `block (2 levels) in redirect_io'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:472:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:472:in `block in redirect_io'
+
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `sleep'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `execute_in_main_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:158:in `start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:136:in `block in initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/dialogs/splash.rb:109:in `block in execute'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:428:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:428:in `block in process_server_messages'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/single.rb:117:in `join'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/single.rb:117:in `run'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/launcher.rb:186:in `run'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/rack/handler/puma.rb:73:in `run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/json_drb.rb:150:in `block in start_service'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:128:in `select'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:128:in `run_internal'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:253:in `block in run_in_thread'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:285:in `sleep'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:285:in `block in start!'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:256:in `sleep'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:256:in `block in start!'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:386:in `select'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:386:in `handle_servers'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:360:in `block in run'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:218:in `pop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:218:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:108:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `fast_select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:105:in `rescue in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:102:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:139:in `read_interface'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:194:in `block in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:130:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `fast_select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:105:in `rescue in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:102:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:139:in `read_interface'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:194:in `block in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:130:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/interfaces/visiona_cfdp_interface.rb:26:in `sleep'
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/interfaces/visiona_cfdp_interface.rb:26:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:447:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:447:in `block in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:425:in `create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:482:in `write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:232:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:518:in `backtrace'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:518:in `block (2 levels) in write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:517:in `each'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:517:in `block in write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:455:in `block (2 levels) in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `block in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:425:in `create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:482:in `write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:232:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb:67:in `sleep'
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb:67:in `call'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/background_tasks.rb:42:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server.rb:770:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `rescue in listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:356:in `listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:345:in `block (2 levels) in start_listen_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `block in start_listen_thread'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `block in check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:473:in `rescue in block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:469:in `block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:130:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `block (2 levels) in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `rescue in block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:487:in `block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:142:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `rescue in listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:356:in `listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:345:in `block (2 levels) in start_listen_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `block in start_listen_thread'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `block in check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:473:in `rescue in block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:469:in `block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:130:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `block (2 levels) in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `rescue in block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:487:in `block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:142:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `block in connect'
+
+
+
+```
+
+### `2026_08_26_08_16_06_exception.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_16_06_exception.txt`
+
+
+```text
+Exception:
+SocketError : getaddrinfo: Temporary failure in name resolution
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:125:in `gethostbyname'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:125:in `multicast?'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:52:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:192:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:88:in `new'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:88:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:266:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:71:in `block (2 levels) in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `block in start'
+
+Caller Backtrace:
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:455:in `block (2 levels) in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `block in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:425:in `create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:482:in `write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:232:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+Ruby Version: ruby 2.5.1 (2018-03-29 patchlevel 57) [x86_64-linux-gnu]
+Rubygems Version: 2.7.6
+Cosmos Version: 4.5.0
+Cosmos::PATH: /var/lib/gems/2.5.0/gems/cosmos-4.5.0
+Cosmos::USERPATH: /home/minseo/nos3/gsw/cosmos
+
+Environment:
+RUBYOPT: 
+RUBYLIB: 
+GEM_PATH: 
+GEMRC: 
+RI_DEVKIT: 
+GEM_HOME: 
+PATH: /var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/../bin:/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/../bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+Ruby Path:
+  /var/lib/gems/2.5.0/gems/uuidtools-2.2.0/lib
+  /home/minseo/nos3/gsw/cosmos/lib
+  /usr/share/rubygems-integration/all/gems/did_you_mean-1.2.0/lib
+  /var/lib/gems/2.5.0/gems/bundler-2.1.4/lib
+  /var/lib/gems/2.5.0/gems/coderay-1.1.3/lib
+  /var/lib/gems/2.5.0/gems/method_source-1.0.0/lib
+  /var/lib/gems/2.5.0/gems/pry-0.13.1/lib
+  /var/lib/gems/2.5.0/gems/yard-0.9.25/lib
+  /var/lib/gems/2.5.0/gems/pry-doc-0.13.5/lib
+  /var/lib/gems/2.5.0/gems/uuidtools-2.2.0/lib
+  /var/lib/gems/2.5.0/gems/snmp-1.3.2/lib
+  /var/lib/gems/2.5.0/gems/rubyzip-1.3.0/lib
+  /var/lib/gems/2.5.0/gems/mini_portile2-2.4.0/lib
+  /var/lib/gems/2.5.0/gems/nokogiri-1.10.10/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/nokogiri-1.10.10
+  /var/lib/gems/2.5.0/gems/opengl-bindings-1.6.10/lib
+  /var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/qtbindings-4.8.6.5
+  /var/lib/gems/2.5.0/gems/puma-3.12.6/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/puma-3.12.6
+  /var/lib/gems/2.5.0/gems/rack-2.2.3/lib
+  /var/lib/gems/2.5.0/gems/httpclient-2.8.3/lib
+  /var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/cosmos-4.5.0
+  /var/lib/gems/2.5.0/gems/ruby-termios-1.0.2/lib
+  /var/lib/gems/2.5.0/extensions/x86_64-linux/2.5.0/ruby-termios-1.0.2
+  /usr/local/lib/site_ruby/2.5.0
+  /usr/local/lib/x86_64-linux-gnu/site_ruby
+  /usr/local/lib/site_ruby
+  /usr/lib/ruby/vendor_ruby/2.5.0
+  /usr/lib/x86_64-linux-gnu/ruby/vendor_ruby/2.5.0
+  /usr/lib/ruby/vendor_ruby
+  /usr/lib/ruby/2.5.0
+  /usr/lib/x86_64-linux-gnu/ruby/2.5.0
+  /var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/../lib/2.5
+  /home/minseo/nos3/gsw/cosmos/config/targets/MISSION/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/MISSION/procedures
+  /home/minseo/nos3/gsw/cosmos/config/targets/SIM_42_TRUTH/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/procedures
+  /home/minseo/nos3/gsw/cosmos/config/targets/PDU/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFDP_TEST/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFS/lib
+  /home/minseo/nos3/gsw/cosmos/config/targets/CFS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_CSS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_CSS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_EPS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_FSS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_FSS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_IMU/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_IMU/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_MAG/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_MAG/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_RADIO/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_RADIO/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_REACTION_WHEEL/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_REACTION_WHEEL/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_STAR_TRACKER/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_TORQUER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_TORQUER/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/MGR/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/NOVATEL_OEM615/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/NOVATEL_OEM615/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/SAMPLE/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/SAMPLE/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_ADCS/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_ADCS/procedures
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_THRUSTER/lib
+  /home/minseo/nos3/gsw/cosmos/COMPONENTS/GENERIC_THRUSTER/procedures
+
+Gems:
+did_you_mean 1.2.0 ruby
+bundler 2.1.4 ruby
+rdoc 6.0.1 ruby
+json 2.1.0 ruby
+coderay 1.1.3 ruby
+method_source 1.0.0 ruby
+pry 0.13.1 ruby
+yard 0.9.25 ruby
+pry-doc 0.13.5 ruby
+uuidtools 2.2.0 ruby
+snmp 1.3.2 ruby
+rubyzip 1.3.0 ruby
+mini_portile2 2.4.0 ruby
+nokogiri 1.10.10 ruby
+opengl-bindings 1.6.10 ruby
+qtbindings 4.8.6.5 ruby
+puma 3.12.6 ruby
+rack 2.2.3 ruby
+httpclient 2.8.3 ruby
+cosmos 4.5.0 ruby
+date 1.0.0 ruby
+csv 1.0.0 ruby
+fileutils 1.0.2 ruby
+ipaddr 1.2.0 ruby
+ruby-termios 1.0.2 ruby
+openssl 2.1.1 ruby
+
+All Threads Backtraces:
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:50:in `sleep'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:50:in `ruby_thread_timeout'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:354:in `qt_metacall'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:354:in `method_missing'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:354:in `kill_tab_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:320:in `handle_tab_change'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:185:in `block in start'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:104:in `block in execute_in_main_thread'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:57:in `callback_timeout'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `qt_metacall'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `method_missing'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt/qtruby4.rb:479:in `exec'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:323:in `block in run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:304:in `run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:646:in `block in run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:556:in `catch_fatal_exception'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:608:in `run'
+tools/CmdTlmServer:15:in `block in <main>'
+/home/minseo/nos3/gsw/cosmos/tools/tool_launch.rb:16:in `tool_launch'
+tools/CmdTlmServer:13:in `<main>'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:487:in `block (2 levels) in redirect_io'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:472:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/qt_tool.rb:472:in `block in redirect_io'
+
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `sleep'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `execute_in_main_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:158:in `start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:136:in `block in initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/gui/dialogs/splash.rb:109:in `block in execute'
+
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `sleep'
+/var/lib/gems/2.5.0/gems/qtbindings-4.8.6.5/lib/Qt4.rb:107:in `execute_in_main_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:446:in `handle_string_output'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server_gui.rb:431:in `block in process_server_messages'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/single.rb:117:in `join'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/single.rb:117:in `run'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/launcher.rb:186:in `run'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/rack/handler/puma.rb:73:in `run'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/json_drb.rb:150:in `block in start_service'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:128:in `select'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:128:in `run_internal'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/reactor.rb:253:in `block in run_in_thread'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:285:in `sleep'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:285:in `block in start!'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:256:in `sleep'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/thread_pool.rb:256:in `block in start!'
+
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:386:in `select'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:386:in `handle_servers'
+/var/lib/gems/2.5.0/gems/puma-3.12.6/lib/puma/server.rb:360:in `block in run'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:218:in `pop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:218:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:108:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `fast_select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:105:in `rescue in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:102:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:139:in `read_interface'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:194:in `block in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:130:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/core_ext/io.rb:48:in `fast_select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:105:in `rescue in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:102:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:139:in `read_interface'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:194:in `block in read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/interface.rb:188:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:130:in `read'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:86:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:192:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:192:in `new'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:192:in `block in start_new_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:179:in `start_new_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:260:in `write_packet'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/packet_logs/packet_log_writer.rb:125:in `write'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:213:in `block in handle_packet'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:211:in `each'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:211:in `handle_packet'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:106:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:518:in `backtrace'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:518:in `block (2 levels) in write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:517:in `each'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:517:in `block in write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:455:in `block (2 levels) in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:452:in `block in create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:741:in `set_working_dir'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:425:in `create_log_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/top_level.rb:482:in `write_exception_file'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:232:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:281:in `disconnect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:238:in `handle_connection_failed'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:75:in `rescue in block in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:68:in `block in start'
+
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb:67:in `sleep'
+/home/minseo/nos3/gsw/cosmos/config/targets/CFDP/lib/cfdp_engine_task.rb:67:in `call'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/background_tasks.rb:42:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/utilities/sleeper.rb:27:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/cmd_tlm_server.rb:770:in `block in start'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `rescue in listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:356:in `listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:345:in `block (2 levels) in start_listen_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `block in start_listen_thread'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `block in check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:473:in `rescue in block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:469:in `block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:130:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `block (2 levels) in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `rescue in block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:487:in `block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:142:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `select'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:359:in `rescue in listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:356:in `listen_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:345:in `block (2 levels) in start_listen_thread'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:344:in `block in start_listen_thread'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:580:in `block in check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:579:in `check_for_dead_clients'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:473:in `rescue in block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:469:in `block in write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:467:in `write_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:130:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:129:in `block in connect'
+
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `sleep'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `wait'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:493:in `block (2 levels) in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:492:in `rescue in block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:487:in `block in write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:485:in `write_raw_thread_body'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:142:in `block (2 levels) in connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `loop'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_server_interface.rb:141:in `block in connect'
+
+
+
+```
+
+### `2026_08_26_08_16_06_tlm.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_16_06_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_26_08_16_07_server_messages.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_16_07_server_messages.txt`
+
+
+```text
+2026/08/26 08:16:04.901  INFO: COSMOS Version: 4.5.0
+2026/08/26 08:16:04.902  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt
+2026/08/26 08:16:04.965  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt
+2026/08/26 08:16:05.315  INFO: Marshal load success: /home/minseo/nos3/gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:16:05.315  WARN: CFS CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:16:05.315  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.315  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.315  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.315  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:16:05.316  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:16:05.316  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:16:05.316  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:16:05.317  WARN: CFS_RADIO CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:16:05.317  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:16:05.317  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:16:05.317  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:16:05.421  INFO: Creating thread for router PREIDENTIFIED_ROUTER
+2026/08/26 08:16:05.421  INFO: Creating thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:16:05.422  INFO: Creating thread for interface DEBUG
+2026/08/26 08:16:05.425  INFO: Creating thread for interface RADIO
+2026/08/26 08:16:05.425  INFO: Creating thread for interface CFDP_INT
+2026/08/26 08:16:05.425  INFO: Creating thread for interface SIM_42_TRUTH_INT
+2026/08/26 08:16:05.426  INFO: Creating thread for interface SIM_CMDBUS_BRIDGE
+2026/08/26 08:16:05.431  INFO: Starting packet reading for PREIDENTIFIED_ROUTER
+2026/08/26 08:16:05.431  INFO: Connecting to PREIDENTIFIED_ROUTER...
+2026/08/26 08:16:05.435  INFO: PREIDENTIFIED_ROUTER Connection Success
+2026/08/26 08:16:05.436  INFO: Starting connection maintenance for PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:16:05.436  INFO: Connecting to PREIDENTIFIED_CMD_ROUTER...
+2026/08/26 08:16:05.540  INFO: Starting packet reading for CFDP_INT
+2026/08/26 08:16:05.540  INFO: Starting packet reading for SIM_42_TRUTH_INT
+2026/08/26 08:16:05.540  INFO: Connecting to SIM_42_TRUTH_INT...
+2026/08/26 08:16:05.541  INFO: Starting packet reading for DEBUG
+2026/08/26 08:16:05.541  INFO: Connecting to DEBUG...
+2026/08/26 08:16:05.541  INFO: Starting packet reading for SIM_CMDBUS_BRIDGE
+2026/08/26 08:16:05.541  INFO: Connecting to SIM_CMDBUS_BRIDGE...
+2026/08/26 08:16:05.543  INFO: CFDP Engine has started.
+2026/08/26 08:16:05.545  INFO: Starting packet reading for RADIO
+2026/08/26 08:16:05.545  INFO: Connecting to RADIO...
+2026/08/26 08:16:05.641  INFO: PREIDENTIFIED_CMD_ROUTER Connection Success
+2026/08/26 08:16:05.642  ERROR: SIM_CMDBUS_BRIDGE Connection Failed: RuntimeError : Invalid hostname: nos-sim-bridge
+2026/08/26 08:16:05.642  ERROR: RuntimeError : Invalid hostname: nos-sim-bridge
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/streams/tcpip_client_stream.rb:48:in `rescue in initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/streams/tcpip_client_stream.rb:43:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_client_interface.rb:50:in `new'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/tcpip_client_interface.rb:50:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:266:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:71:in `block (2 levels) in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `block in start'
+2026/08/26 08:16:05.742  INFO: DEBUG Connection Success
+2026/08/26 08:16:05.743  ERROR: SIM_42_TRUTH_INT Connection Failed: SocketError : getaddrinfo: Temporary failure in name resolution
+2026/08/26 08:16:05.743  ERROR: SocketError : getaddrinfo: Temporary failure in name resolution
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:125:in `gethostbyname'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:125:in `multicast?'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:52:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/io/udp_sockets.rb:192:in `initialize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:88:in `new'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/interfaces/udp_interface.rb:88:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:266:in `connect'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:71:in `block (2 levels) in start'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `synchronize'
+/var/lib/gems/2.5.0/gems/cosmos-4.5.0/lib/cosmos/tools/cmd_tlm_server/interface_thread.rb:69:in `block in start'
+2026/08/26 08:16:05.842  INFO: RADIO Connection Success
+2026/08/26 08:16:06.840  INFO: Log File Opened : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_16_06_tlm.bin
+```
+
+### `2026_08_26_08_28_13_tlm.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_28_13_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_26_08_28_17_server_messages.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_28_17_server_messages.txt`
+
+
+```text
+2026/08/26 08:28:12.125  INFO: COSMOS Version: 4.5.0
+2026/08/26 08:28:12.125  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt
+2026/08/26 08:28:12.302  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt
+2026/08/26 08:28:12.876  INFO: Marshal load success: /home/minseo/nos3/gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:28:12.876  WARN: CFS CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.876  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.877  WARN: Command Packet SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.877  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.877  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.877  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.877  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:28:12.878  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:28:12.878  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:28:12.878  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:28:12.878  WARN: CFS_RADIO CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.878  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.879  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:28:12.880  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:28:12.880  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:28:12.880  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:28:13.087  INFO: Creating thread for router PREIDENTIFIED_ROUTER
+2026/08/26 08:28:13.088  INFO: Creating thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:28:13.088  INFO: Creating thread for interface DEBUG
+2026/08/26 08:28:13.089  INFO: Creating thread for interface RADIO
+2026/08/26 08:28:13.089  INFO: Creating thread for interface CFDP_INT
+2026/08/26 08:28:13.090  INFO: Creating thread for interface SIM_42_TRUTH_INT
+2026/08/26 08:28:13.090  INFO: Creating thread for interface SIM_CMDBUS_BRIDGE
+2026/08/26 08:28:13.091  INFO: Starting packet reading for DEBUG
+2026/08/26 08:28:13.091  INFO: Connecting to DEBUG...
+2026/08/26 08:28:13.092  INFO: Starting connection maintenance for PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:28:13.092  INFO: Connecting to PREIDENTIFIED_CMD_ROUTER...
+2026/08/26 08:28:13.097  INFO: PREIDENTIFIED_CMD_ROUTER Connection Success
+2026/08/26 08:28:13.097  INFO: Starting packet reading for RADIO
+2026/08/26 08:28:13.097  INFO: Connecting to RADIO...
+2026/08/26 08:28:13.097  INFO: Starting packet reading for CFDP_INT
+2026/08/26 08:28:13.098  INFO: Starting packet reading for SIM_42_TRUTH_INT
+2026/08/26 08:28:13.098  INFO: Connecting to SIM_42_TRUTH_INT...
+2026/08/26 08:28:13.098  INFO: Starting packet reading for SIM_CMDBUS_BRIDGE
+2026/08/26 08:28:13.098  INFO: Connecting to SIM_CMDBUS_BRIDGE...
+2026/08/26 08:28:13.099  INFO: CFDP Engine has started.
+2026/08/26 08:28:13.100  INFO: Starting packet reading for PREIDENTIFIED_ROUTER
+2026/08/26 08:28:13.100  INFO: Connecting to PREIDENTIFIED_ROUTER...
+2026/08/26 08:28:13.106  INFO: PREIDENTIFIED_ROUTER Connection Success
+2026/08/26 08:28:13.210  INFO: SIM_CMDBUS_BRIDGE Connection Success
+2026/08/26 08:28:13.491  INFO: RADIO Connection Success
+2026/08/26 08:28:13.492  INFO: SIM_42_TRUTH_INT Connection Success
+2026/08/26 08:28:13.591  INFO: DEBUG Connection Success
+2026/08/26 08:28:13.789  INFO: Log File Opened : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_28_13_tlm.bin
+2026/08/26 08:28:37.539  INFO: User disconnecting interface RADIO
+2026/08/26 08:28:37.539  INFO: Killing thread for interface RADIO
+2026/08/26 08:28:37.540  INFO: Clean disconnect from RADIO (returned nil)
+2026/08/26 08:28:37.540  INFO: Connection Lost for RADIO
+2026/08/26 08:28:37.540  INFO: Stopped packet reading for RADIO
+2026/08/26 08:28:37.550  INFO: Disconnected from interface RADIO
+2026/08/26 08:28:39.388  INFO: User connecting interface RADIO
+2026/08/26 08:28:39.389  INFO: Creating thread for interface RADIO
+2026/08/26 08:28:39.391  INFO: Starting packet reading for RADIO
+2026/08/26 08:28:39.391  INFO: Connecting to RADIO...
+2026/08/26 08:28:39.399  INFO: RADIO Connection Success
+2026/08/26 08:28:49.613  INFO: Log File Closed : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_28_13_tlm.bin
+2026/08/26 08:28:49.685  INFO: Log File Opened : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_28_49_tlm.bin
+2026/08/26 08:28:59.759  INFO: Log File Closed : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_28_49_tlm.bin
+2026/08/26 08:29:08.239  INFO: Killing thread for router PREIDENTIFIED_ROUTER
+2026/08/26 08:29:08.239  INFO: Clean disconnect from PREIDENTIFIED_ROUTER (returned nil)
+2026/08/26 08:29:08.239  INFO: Connection Lost for PREIDENTIFIED_ROUTER
+2026/08/26 08:29:08.260  INFO: Stopped packet reading for PREIDENTIFIED_ROUTER
+2026/08/26 08:29:08.270  INFO: Disconnected from router PREIDENTIFIED_ROUTER
+2026/08/26 08:29:08.270  INFO: Killing thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:29:08.270  INFO: Stopped packet reading for PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:29:08.353  INFO: Disconnected from router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:29:08.364  INFO: CFDP Engine has ended.
+2026/08/26 08:29:08.590  INFO: Killing thread for interface DEBUG
+2026/08/26 08:29:08.591  INFO: Clean disconnect from DEBUG (returned nil)
+2026/08/26 08:29:08.591  INFO: Connection Lost for DEBUG
+2026/08/26 08:29:08.591  INFO: Stopped packet reading for DEBUG
+2026/08/26 08:29:08.591  INFO: Disconnected from interface DEBUG
+2026/08/26 08:29:08.591  INFO: Killing thread for interface RADIO
+2026/08/26 08:29:08.591  INFO: Clean disconnect from RADIO (returned nil)
+2026/08/26 08:29:08.591  INFO: Connection Lost for RADIO
+2026/08/26 08:29:08.591  INFO: Stopped packet reading for RADIO
+2026/08/26 08:29:08.591  INFO: Disconnected from interface RADIO
+2026/08/26 08:29:08.591  INFO: Killing thread for interface CFDP_INT
+2026/08/26 08:29:08.741  INFO: Stopped packet reading for CFDP_INT
+2026/08/26 08:29:08.742  INFO: Disconnected from interface CFDP_INT
+2026/08/26 08:29:08.742  INFO: Killing thread for interface SIM_42_TRUTH_INT
+2026/08/26 08:29:08.743  INFO: Clean disconnect from SIM_42_TRUTH_INT (returned nil)
+2026/08/26 08:29:08.743  INFO: Connection Lost for SIM_42_TRUTH_INT
+2026/08/26 08:29:08.743  INFO: Stopped packet reading for SIM_42_TRUTH_INT
+2026/08/26 08:29:08.754  INFO: Disconnected from interface SIM_42_TRUTH_INT
+2026/08/26 08:29:08.754  INFO: Killing thread for interface SIM_CMDBUS_BRIDGE
+2026/08/26 08:29:08.758  INFO: Clean disconnect from SIM_CMDBUS_BRIDGE (returned nil)
+2026/08/26 08:29:08.758  INFO: Connection Lost for SIM_CMDBUS_BRIDGE
+2026/08/26 08:29:08.758  INFO: Stopped packet reading for SIM_CMDBUS_BRIDGE
+2026/08/26 08:29:08.765  INFO: Disconnected from interface SIM_CMDBUS_BRIDGE
+```
+
+### `2026_08_26_08_28_49_tlm.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_28_49_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_26_08_53_20_server_messages.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_53_20_server_messages.txt`
+
+
+```text
+2026/08/26 08:53:18.508  INFO: COSMOS Version: 4.5.0
+2026/08/26 08:53:18.508  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt
+2026/08/26 08:53:18.565  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt
+2026/08/26 08:53:18.961  INFO: Marshal load success: /home/minseo/nos3/gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:53:18.961  WARN: CFS CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.961  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.962  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.963  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/26 08:53:18.964  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:53:18.964  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:53:18.965  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_1 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_2 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_3 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_4 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_5 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_6 redefined.
+2026/08/26 08:53:18.965  WARN: CFS_RADIO CF_HKPACKET SPARE_7 redefined.
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.965  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.966  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/26 08:53:18.967  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_X redefined.
+2026/08/26 08:53:18.967  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/26 08:53:18.967  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/26 08:53:19.071  INFO: Creating thread for router PREIDENTIFIED_ROUTER
+2026/08/26 08:53:19.071  INFO: Creating thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:53:19.071  INFO: Creating thread for interface DEBUG
+2026/08/26 08:53:19.072  INFO: Creating thread for interface RADIO
+2026/08/26 08:53:19.072  INFO: Creating thread for interface CFDP_INT
+2026/08/26 08:53:19.072  INFO: Creating thread for interface SIM_42_TRUTH_INT
+2026/08/26 08:53:19.072  INFO: Creating thread for interface SIM_CMDBUS_BRIDGE
+2026/08/26 08:53:19.073  INFO: Starting connection maintenance for PREIDENTIFIED_CMD_ROUTER
+2026/08/26 08:53:19.074  INFO: Connecting to PREIDENTIFIED_CMD_ROUTER...
+2026/08/26 08:53:19.077  INFO: PREIDENTIFIED_CMD_ROUTER Connection Success
+2026/08/26 08:53:19.078  INFO: Starting packet reading for RADIO
+2026/08/26 08:53:19.078  INFO: Connecting to RADIO...
+2026/08/26 08:53:19.078  INFO: Starting packet reading for CFDP_INT
+2026/08/26 08:53:19.078  INFO: Starting packet reading for SIM_42_TRUTH_INT
+2026/08/26 08:53:19.078  INFO: Connecting to SIM_42_TRUTH_INT...
+2026/08/26 08:53:19.078  INFO: Starting packet reading for SIM_CMDBUS_BRIDGE
+2026/08/26 08:53:19.078  INFO: Connecting to SIM_CMDBUS_BRIDGE...
+2026/08/26 08:53:19.080  INFO: CFDP Engine has started.
+2026/08/26 08:53:19.080  INFO: Starting packet reading for PREIDENTIFIED_ROUTER
+2026/08/26 08:53:19.080  INFO: Connecting to PREIDENTIFIED_ROUTER...
+2026/08/26 08:53:19.084  INFO: PREIDENTIFIED_ROUTER Connection Success
+2026/08/26 08:53:19.085  INFO: Starting packet reading for DEBUG
+2026/08/26 08:53:19.085  INFO: Connecting to DEBUG...
+2026/08/26 08:53:19.127  INFO: SIM_CMDBUS_BRIDGE Connection Success
+2026/08/26 08:53:19.326  INFO: RADIO Connection Success
+2026/08/26 08:53:19.704  INFO: DEBUG Connection Success
+2026/08/26 08:53:19.705  INFO: SIM_42_TRUTH_INT Connection Success
+2026/08/26 08:53:20.439  INFO: Log File Opened : /home/minseo/nos3/gsw/cosmos/outputs/logs/2026_08_26_08_53_20_tlm.bin
+```
+
+### `2026_08_26_08_53_20_tlm.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_26_08_53_20_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_27_11_09_22_server_messages.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_27_11_09_22_server_messages.txt`
+
+
+```text
+2026/08/27 11:09:21.034  INFO: COSMOS Version: 4.5.0
+2026/08/27 11:09:21.035  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/tools/cmd_tlm_server/cmd_tlm_server.txt
+2026/08/27 11:09:21.130  INFO: Processing CmdTlmServer configuration in file: /home/minseo/nos3/gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt
+2026/08/27 11:09:21.365  INFO: Marshal load success: /home/minseo/nos3/gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_1 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_2 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_3 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_4 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_5 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_6 redefined.
+2026/08/27 11:09:21.365  WARN: CFS CF_HKPACKET SPARE_7 redefined.
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.365  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE ARDUCAM_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_CSS_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_IMU_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_MAG_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_STAR_TRACKER_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE GENERIC_TORQUER_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE NOVATEL_OEM615_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_ENABLE redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_DISABLE redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: Command Packet SIM_CMDBUS_BRIDGE SAMPLE_SIM_SET_STATUS redefined.
+2026/08/27 11:09:21.366  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_X redefined.
+2026/08/27 11:09:21.366  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/27 11:09:21.366  WARN: GENERIC_ADCS GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_1 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_2 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_3 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_4 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_5 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_6 redefined.
+2026/08/27 11:09:21.366  WARN: CFS_RADIO CF_HKPACKET SPARE_7 redefined.
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS1_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS2_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS3_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS4_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS5_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS6_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS7_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS8_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS9_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS10_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS11_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS12_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS13_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS14_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS15_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS16_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS17_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS18_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS19_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS20_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS21_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS22_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS23_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS24_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS25_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS26_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS27_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS28_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS29_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS30_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS31_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS32_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS33_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS34_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS35_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS36_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS37_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS38_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS39_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS40_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS41_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS42_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS43_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS44_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS45_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS46_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS47_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS48_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS49_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS50_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS51_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS52_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS53_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS54_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS55_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS56_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS57_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS58_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS59_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS60_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS61_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS62_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS63_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS64_EXECUTING does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS1_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS2_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS3_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS4_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS5_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS6_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS7_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS8_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS9_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS10_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS11_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS12_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS13_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS14_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS15_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS16_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS17_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS18_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS19_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS20_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS21_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS22_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS23_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS24_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS25_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS26_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS27_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS28_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS29_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS30_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS31_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS32_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS33_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS34_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS35_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS36_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS37_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS38_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS39_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS40_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS41_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS42_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS43_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS44_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS45_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS46_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS47_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS48_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS49_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS50_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS51_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS52_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS53_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS54_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS55_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS56_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS57_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS58_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS59_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS60_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS61_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS62_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS63_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: Read Conversion BitFieldConversion on item RTS64_DISABLED does not specify converted type or bit size. Will not be supported by DART
+2026/08/27 11:09:21.366  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_X redefined.
+2026/08/27 11:09:21.367  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Y redefined.
+2026/08/27 11:09:21.367  WARN: GENERIC_ADCS_RADIO GENERIC_ADCS_AD WBN_Z redefined.
+2026/08/27 11:09:21.468  INFO: Creating thread for router PREIDENTIFIED_ROUTER
+2026/08/27 11:09:21.469  INFO: Creating thread for router PREIDENTIFIED_CMD_ROUTER
+2026/08/27 11:09:21.470  INFO: Creating thread for interface DEBUG
+2026/08/27 11:09:21.470  INFO: Creating thread for interface RADIO
+2026/08/27 11:09:21.470  INFO: Creating thread for interface CFDP_INT
+2026/08/27 11:09:21.470  INFO: Creating thread for interface SIM_42_TRUTH_INT
+2026/08/27 11:09:21.471  INFO: Creating thread for interface SIM_CMDBUS_BRIDGE
+2026/08/27 11:09:21.472  INFO: Starting connection maintenance for PREIDENTIFIED_CMD_ROUTER
+2026/08/27 11:09:21.472  INFO: Connecting to PREIDENTIFIED_CMD_ROUTER...
+2026/08/27 11:09:21.475  INFO: PREIDENTIFIED_CMD_ROUTER Connection Success
+2026/08/27 11:09:21.475  INFO: Starting packet reading for DEBUG
+2026/08/27 11:09:21.475  INFO: Connecting to DEBUG...
+2026/08/27 11:09:21.475  INFO: Starting packet reading for CFDP_INT
+2026/08/27 11:09:21.476  INFO: Starting packet reading for RADIO
+2026/08/27 11:09:21.476  INFO: Connecting to RADIO...
+2026/08/27 11:09:21.476  INFO: Starting packet reading for SIM_42_TRUTH_INT
+2026/08/27 11:09:21.476  INFO: Connecting to SIM_42_TRUTH_INT...
+2026/08/27 11:09:21.476  INFO: Starting packet reading for SIM_CMDBUS_BRIDGE
+2026/08/27 11:09:21.476  INFO: Connecting to SIM_CMDBUS_BRIDGE...
+2026/08/27 11:09:21.477  INFO: CFDP Engine has started.
+2026/08/27 11:09:21.477  INFO: Starting packet reading for PREIDENTIFIED_ROUTER
+2026/08/27 11:09:21.477  INFO: Connecting to PREIDENTIFIED_ROUTER...
+2026/08/27 11:09:21.481  INFO: PREIDENTIFIED_ROUTER Connection Success
+2026/08/27 11:09:21.670  INFO: SIM_CMDBUS_BRIDGE Connection Success
+2026/08/27 11:09:21.770  INFO: RADIO Connection Success
+2026/08/27 11:09:21.771  INFO: SIM_42_TRUTH_INT Connection Success
+2026/08/27 11:09:21.772  INFO: DEBUG Connection Success
+```
+
+### `2026_08_27_11_09_22_tlm.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_27_11_09_22_tlm.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `2026_08_27_11_12_21_cmd.bin`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_27_11_12_21_cmd.bin`
+
+
+```text
+```
+
+### `2026_08_27_11_12_21_cmdsender_messages.txt`
+
+**경로:** `gsw/cosmos/outputs/logs/2026_08_27_11_12_21_cmdsender_messages.txt`
+
+
+```text
+```

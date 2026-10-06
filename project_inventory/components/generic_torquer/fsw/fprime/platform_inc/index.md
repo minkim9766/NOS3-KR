@@ -3,16 +3,68 @@
 
 **경로:** `components/generic_torquer/fsw/fprime/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_torquer_msgids.h`
 
-file--generic_torquer_msgids.h
-file--generic_torquer_platform_cfg.h
+**경로:** `components/generic_torquer/fsw/fprime/platform_inc/generic_torquer_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_torquer_msgids.h  $
+**
+** Purpose:
+**  Define GENERIC_TORQUER Message IDs
+**
+*************************************************************************/
+#ifndef _GENERIC_TORQUER_MSGIDS_H_
+#define _GENERIC_TORQUER_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define GENERIC_TORQUER_CMD_MID 0x193A
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define GENERIC_TORQUER_REQ_HK_MID 0x193B
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define GENERIC_TORQUER_HK_TLM_MID 0x093A
+
+#endif /* _GENERIC_TORQUER_MSGIDS_H_ */
 ```
 
-## 항목
+### `generic_torquer_platform_cfg.h`
 
-- [`components/generic_torquer/fsw/fprime/platform_inc/generic_torquer_msgids.h`](file--generic_torquer_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/fsw/fprime/platform_inc/generic_torquer_platform_cfg.h`](file--generic_torquer_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_torquer/fsw/fprime/platform_inc/generic_torquer_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_torquer_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_torquer Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_TORQUER_PLATFORM_CFG_H_
+#define _GENERIC_TORQUER_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_TORQUER Configuration
+*/
+#ifndef GENERIC_TORQUER_CFG
+#define GENERIC_TORQUER_CFG_PERIOD 50000000
+#endif
+
+#endif /* _GENERIC_TORQUER_PLATFORM_CFG_H_ */
+```

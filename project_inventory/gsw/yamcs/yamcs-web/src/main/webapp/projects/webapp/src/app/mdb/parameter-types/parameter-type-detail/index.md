@@ -3,18 +3,420 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-type-detail.component.css`
 
-file--parameter-type-detail.component.css
-file--parameter-type-detail.component.html
-file--parameter-type-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.css`
+
+
+```css
+:host {
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
 ```
 
-## 항목
+### `parameter-type-detail.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.css`](file--parameter-type-detail.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.html`](file--parameter-type-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.ts`](file--parameter-type-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.html`
+
+
+```html
+<dl class="dl-horizontal no-lead">
+  <dt>Parameter type</dt>
+  <dd>{{ parameterType.qualifiedName | shortName }}</dd>
+
+  <dt>System</dt>
+  <dd>
+    @if (parameterType.qualifiedName | spaceSystemName; as spaceSystemName) {
+      <a
+        routerLink="/mdb/parameter-types"
+        [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+        class="ya-link">
+        {{ spaceSystemName }}
+      </a>
+    }
+  </dd>
+
+  @for (alias of parameterType.alias; track alias) {
+    <dt>{{ alias.namespace }}</dt>
+    <dd>{{ alias.name }}</dd>
+  }
+
+  <dt>Type</dt>
+  <dd>
+    @if (parameterType.engType; as engType) {
+      <span class="mono">
+        {{ engType }}
+      </span>
+    } @else {
+      -
+    }
+  </dd>
+
+  <dt>Units</dt>
+  <dd>
+    @if (parameterType.unitSet; as unitSet) {
+      {{ unitSet | units }}
+    } @else {
+      -
+    }
+  </dd>
+
+  @if (parameterType.signed !== undefined) {
+    <dt>Signed</dt>
+    <dd>
+      {{ parameterType.signed }}
+    </dd>
+  }
+  @if (parameterType.sizeInBits !== undefined) {
+    <dt>Size in bits</dt>
+    <dd>
+      {{ parameterType.sizeInBits }}
+    </dd>
+  }
+
+  <dt>Short description</dt>
+  <dd>{{ parameterType.shortDescription || "-" }}</dd>
+
+  <dt>Long description</dt>
+  <dd>
+    @if (parameterType.longDescription) {
+      <app-markdown [text]="parameterType.longDescription" />
+    } @else {
+      -
+    }
+  </dd>
+</dl>
+
+@if (parameterType.usedBy?.length) {
+  <div class="section-divider">
+    <mat-divider />
+  </div>
+
+  <h4>Used by</h4>
+  <table yaDataTable>
+    <tr>
+      <th>Type</th>
+      <th>Ref</th>
+      <th class="wrap200">Description</th>
+    </tr>
+    @for (parameter of parameterType.usedBy; track parameter) {
+      <tr>
+        <td>Parameter</td>
+        <td>
+          <a
+            [routerLink]="['/mdb/parameters/', parameter.qualifiedName]"
+            [queryParams]="{ c: yamcs.context }">
+            {{
+              parameter.qualifiedName | relativize: (parameterType.qualifiedName | spaceSystemName)
+            }}
+          </a>
+        </td>
+        <td class="wrap200">{{ parameter.shortDescription || "-" }}</td>
+      </tr>
+    }
+  </table>
+  <p>&nbsp;</p>
+}
+
+@if (parameterType.dataEncoding; as dataEncoding) {
+  <div class="section-divider">
+    <mat-divider />
+  </div>
+
+  <h4>Data encoding</h4>
+  <dl class="dl-horizontal no-trail">
+    <dt>Size in bits</dt>
+    <dd>{{ dataEncoding?.sizeInBits | nvl: "-" }}</dd>
+    @if (dataEncoding?.littleEndian !== undefined) {
+      <dt>Byte order</dt>
+      <dd>
+        @if (dataEncoding?.littleEndian !== undefined) {
+          {{ dataEncoding?.littleEndian ? "Little endian" : "Big endian" }}
+        }
+        @if (dataEncoding?.littleEndian === undefined) {
+          -
+        }
+      </dd>
+    }
+    <dt>Encoding</dt>
+    <dd>{{ dataEncoding?.encoding || "-" }}</dd>
+  </dl>
+}
+
+@if (parameterType.engType === "integer" || parameterType.engType === "float") {
+  <div class="section-divider">
+    <mat-divider />
+  </div>
+
+  <h4>Calibration</h4>
+  <app-parameter-calibration
+    [ptype]="parameterType"
+    [relto]="parameterType.qualifiedName | spaceSystemName" />
+  <p>&nbsp;</p>
+}
+
+@if (parameterType.engType === "enumeration") {
+  <div class="section-divider">
+    <mat-divider />
+  </div>
+
+  <h4>Enumeration</h4>
+  @if (parameterType.engType === "enumeration") {
+    <table yaDataTable>
+      <tr>
+        <th style="width: 50px">Value</th>
+        <th style="width: 100px">Label</th>
+        <th style="width: 300px">Description</th>
+        <th>Alarm level (default)</th>
+        @for (contextAlarm of parameterType.contextAlarm; track contextAlarm) {
+          <th>
+            <app-expression
+              [expression]="contextAlarm.context"
+              [relto]="parameterType.qualifiedName | spaceSystemName" />
+          </th>
+        }
+      </tr>
+      @for (enumValue of parameterType.enumValues; track enumValue) {
+        <tr>
+          <td style="white-space: nowrap">{{ enumValue.value }}</td>
+          <td style="white-space: nowrap">{{ enumValue.label }}</td>
+          <td>{{ enumValue.description || "-" }}</td>
+          <td>
+            @if (getDefaultAlarmLevel(parameterType, enumValue.label); as level) {
+              <app-alarm-level [level]="level" [grayscale]="true" />
+              {{ level }}
+            } @else {
+              <span>-</span>
+            }
+          </td>
+          @for (contextAlarm of parameterType.contextAlarm; track contextAlarm) {
+            <td>
+              @if (getEnumerationAlarmLevel(contextAlarm, enumValue.label); as level) {
+                <app-alarm-level [level]="level" [grayscale]="true" />
+                {{ level }}
+              } @else {
+                <span>-</span>
+              }
+            </td>
+          }
+        </tr>
+      }
+      @for (enumRange of parameterType.enumRanges; track enumRange) {
+        <tr>
+          <td style="white-space: nowrap">
+            <ya-interval
+              [left]="enumRange.min"
+              [right]="enumRange.max"
+              [leftInclusive]="enumRange.minInclusive"
+              [rightInclusive]="enumRange.maxInclusive" />
+          </td>
+          <td style="white-space: nowrap">{{ enumRange.label }}</td>
+          <td>{{ enumRange.description || "-" }}</td>
+          <td>
+            @if (getDefaultAlarmLevel(parameterType, enumRange.label); as level) {
+              <app-alarm-level [level]="level" [grayscale]="true" />
+              {{ level }}
+            } @else {
+              <span>-</span>
+            }
+          </td>
+          @for (context of parameterType.contextAlarm; track context) {
+            <td>
+              @if (getEnumerationAlarmLevel(context, enumRange.label); as level) {
+                <app-alarm-level [level]="level" [grayscale]="true" />
+                {{ level }}
+              } @else {
+                <span>-</span>
+              }
+            </td>
+          }
+        </tr>
+      }
+      <tr>
+        <td>Other</td>
+        <td>UNDEF</td>
+        <td>-</td>
+        <td>
+          @if (parameterType.defaultAlarm?.defaultLevel; as level) {
+            <app-alarm-level [level]="level" [grayscale]="true" />
+            {{ level }}
+          }
+        </td>
+        @for (context of parameterType.contextAlarm; track context) {
+          <td>
+            @if (context.alarm.defaultLevel; as level) {
+              <app-alarm-level [level]="level" [grayscale]="true" />
+              {{ level }}
+            }
+          </td>
+        }
+      </tr>
+    </table>
+  }
+  <p>&nbsp;</p>
+}
+
+@if (parameterType.engType === "integer" || parameterType.engType === "float") {
+  <div class="section-divider">
+    <mat-divider />
+  </div>
+
+  <h4>Alarm Info</h4>
+  @if (parameterType.defaultAlarm || parameterType.contextAlarm) {
+    @if (parameterType.defaultAlarm; as alarm) {
+      <dl class="dl-horizontal">
+        <dt>Min. violations</dt>
+        <dd>{{ alarm.minViolations }}</dd>
+      </dl>
+      <table yaDataTable>
+        <tr>
+          <th>Alarm level (default)</th>
+          <th>Range</th>
+        </tr>
+        @for (range of alarm.staticAlarmRanges; track range) {
+          <tr>
+            <td>
+              <app-alarm-level [level]="range.level" [grayscale]="true" />
+              {{ range.level }}
+            </td>
+            <td>
+              @if (
+                range.minInclusive !== undefined ||
+                range.minExclusive !== undefined ||
+                range.maxInclusive !== undefined ||
+                range.maxExclusive !== undefined
+              ) {
+                <ya-interval
+                  [left]="range.minInclusive | nvl: range.minExclusive"
+                  [right]="range.maxInclusive | nvl: range.maxExclusive"
+                  [leftInclusive]="range.minInclusive !== undefined"
+                  [rightInclusive]="range.maxInclusive !== undefined"
+                  [outside]="true" />
+              } @else {
+                -
+              }
+            </td>
+          </tr>
+        }
+      </table>
+    }
+    @for (contextAlarm of parameterType.contextAlarm; track contextAlarm; let first = $first) {
+      @if (!first) {
+        <p>&nbsp;</p>
+      }
+      <h5>
+        Context:
+        <app-expression
+          [expression]="contextAlarm.context"
+          [relto]="parameterType.qualifiedName | spaceSystemName" />
+      </h5>
+      <dl class="dl-horizontal">
+        <dt>Min. violations</dt>
+        <dd>{{ contextAlarm.alarm.minViolations }}</dd>
+      </dl>
+      <table yaDataTable>
+        <tr>
+          <th>Level</th>
+          <th>Range</th>
+        </tr>
+        @for (range of contextAlarm.alarm.staticAlarmRanges; track range) {
+          <tr>
+            <td>
+              <app-alarm-level [level]="range.level" [grayscale]="true" />
+              {{ range.level }}
+            </td>
+            <td>
+              @if (
+                range.minInclusive !== undefined ||
+                range.minExclusive !== undefined ||
+                range.maxInclusive !== undefined ||
+                range.maxExclusive !== undefined
+              ) {
+                <ya-interval
+                  [left]="range.minInclusive | nvl: range.minExclusive"
+                  [right]="range.maxInclusive | nvl: range.maxExclusive"
+                  [leftInclusive]="range.minInclusive !== undefined"
+                  [rightInclusive]="range.maxInclusive !== undefined"
+                  [outside]="true" />
+              } @else {
+                -
+              }
+            </td>
+          </tr>
+        }
+      </table>
+    }
+  } @else {
+    None
+  }
+
+  <p>&nbsp;</p>
+}
+```
+
+### `parameter-type-detail.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameter-types/parameter-type-detail/parameter-type-detail.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ContextAlarmInfo,
+  ParameterType,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AlarmLevelComponent } from '../../../shared/alarm-level/alarm-level.component';
+import { ExpressionComponent } from '../../../shared/expression/expression.component';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+import { ParameterCalibrationComponent } from '../../parameters/parameter-calibration/parameter-calibration.component';
+
+@Component({
+  selector: 'app-parameter-type-detail',
+  templateUrl: './parameter-type-detail.component.html',
+  styleUrl: './parameter-type-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AlarmLevelComponent,
+    ExpressionComponent,
+    MarkdownComponent,
+    ParameterCalibrationComponent,
+    WebappSdkModule,
+  ],
+})
+export class ParameterTypeDetailComponent {
+  @Input()
+  parameterType: ParameterType;
+
+  constructor(readonly yamcs: YamcsService) {}
+
+  getDefaultAlarmLevel(ptype: ParameterType, label: string) {
+    if (ptype && ptype.defaultAlarm) {
+      const alarm = ptype.defaultAlarm;
+      if (alarm.enumerationAlarms) {
+        for (const enumAlarm of alarm.enumerationAlarms) {
+          if (enumAlarm.label === label) {
+            return enumAlarm.level;
+          }
+        }
+      }
+      return alarm.defaultLevel;
+    }
+  }
+
+  getEnumerationAlarmLevel(contextAlarm: ContextAlarmInfo, label: string) {
+    const alarm = contextAlarm.alarm;
+    for (const enumAlarm of alarm.enumerationAlarms) {
+      if (enumAlarm.label === label) {
+        return enumAlarm.level;
+      }
+    }
+    return alarm.defaultLevel;
+  }
+}
+```

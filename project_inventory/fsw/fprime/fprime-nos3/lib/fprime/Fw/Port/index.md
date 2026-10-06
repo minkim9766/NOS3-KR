@@ -3,38 +3,594 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--InputPortBase.cpp
-file--InputPortBase.hpp
-file--InputSerializePort.cpp
-file--InputSerializePort.hpp
-file--OutputPortBase.cpp
-file--OutputPortBase.hpp
-file--OutputSerializePort.cpp
-file--OutputSerializePort.hpp
-file--PortBase.cpp
-file--PortBase.hpp
-file--README
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputPortBase.cpp`](file--InputPortBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputPortBase.hpp`](file--InputPortBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputSerializePort.cpp`](file--InputSerializePort.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputSerializePort.hpp`](file--InputSerializePort.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputPortBase.cpp`](file--OutputPortBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputPortBase.hpp`](file--OutputPortBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputSerializePort.cpp`](file--OutputSerializePort.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputSerializePort.hpp`](file--OutputSerializePort.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/PortBase.cpp`](file--PortBase.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/PortBase.hpp`](file--PortBase.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/README`](file--README) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/InputPortBase.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/InputSerializePort.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/OutputPortBase.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/OutputSerializePort.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PortBase.cpp"
+)
+set(MOD_DEPS
+  Fw/Types
+  Fw/Logger
+  Fw/Obj
+)
+register_fprime_module()
+```
+
+### `InputPortBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputPortBase.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Port/InputPortBase.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cstdio>
+
+namespace Fw {
+
+InputPortBase::InputPortBase() : PortBase(), m_comp(nullptr), m_portNum(-1) {}
+
+InputPortBase::~InputPortBase() {}
+
+void InputPortBase::init() {
+    PortBase::init();
+}
+
+void InputPortBase::setPortNum(FwIndexType portNum) {
+    FW_ASSERT(portNum >= 0, static_cast<FwAssertArgType>(portNum));
+    this->m_portNum = portNum;
+}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* InputPortBase::getToStringFormatString() {
+    return "Input Port: %s %s->(%s)";
+}
+#endif
+
+}  // namespace Fw
+```
+
+### `InputPortBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputPortBase.hpp`
+
+
+```cpp
+#ifndef FW_INPUT_PORT_BASE_HPP
+#define FW_INPUT_PORT_BASE_HPP
+
+#include <Fw/Comp/PassiveComponentBase.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Port/PortBase.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class InputPortBase : public PortBase {
+  public:
+    void setPortNum(FwIndexType portNum);  // !< set the port number
+
+#if FW_PORT_SERIALIZATION
+    virtual SerializeStatus invokeSerial(
+        SerializeBufferBase& buffer) = 0;  // !< invoke the port with a serialized version of the call
+#endif
+
+  protected:
+    InputPortBase();           // Constructor
+    virtual ~InputPortBase();  // Destructor
+    void init() override;
+
+    PassiveComponentBase* m_comp;  // !< pointer to containing component
+    FwIndexType m_portNum;         // !< port number in containing object
+#if FW_OBJECT_TO_STRING == 1
+    const char* getToStringFormatString() override;  //!< Get format string for toString call
+#endif
+
+  private:
+    // Disable constructors since we don't want to instantiate directly
+    InputPortBase(InputPortBase*);
+    InputPortBase(InputPortBase&);
+    InputPortBase& operator=(InputPortBase&);
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `InputSerializePort.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputSerializePort.cpp`
+
+
+```cpp
+#include <Fw/Port/InputSerializePort.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cstdio>
+
+#if FW_PORT_SERIALIZATION == 1
+
+namespace Fw {
+
+// SerializePort has no call interface. It is to pass through serialized data
+InputSerializePort::InputSerializePort() : InputPortBase(), m_func(nullptr) {}
+InputSerializePort::~InputSerializePort() {}
+
+void InputSerializePort::init() {
+    InputPortBase::init();
+}
+
+SerializeStatus InputSerializePort::invokeSerial(SerializeBufferBase& buffer) {
+    FW_ASSERT(this->m_comp);
+    FW_ASSERT(this->m_func);
+
+    this->m_func(this->m_comp, this->m_portNum, buffer);
+
+    // The normal input ports perform deserialize() on the passed buffer,
+    // which is what this status is based on.  This is not the case for the
+    // InputSerializePort, so just return an okay status
+    return FW_SERIALIZE_OK;
+}
+
+void InputSerializePort::addCallComp(Fw::PassiveComponentBase* callComp, CompFuncPtr funcPtr) {
+    FW_ASSERT(callComp);
+    FW_ASSERT(funcPtr);
+    this->m_comp = callComp;
+    this->m_func = funcPtr;
+}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* InputSerializePort::getToStringFormatString() {
+    return "Input Serial Port: %s %s->(%s)";
+}
+#endif
+
+}  // namespace Fw
+#endif
+```
+
+### `InputSerializePort.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/InputSerializePort.hpp`
+
+
+```cpp
+#ifndef FW_INPUT_SERIALIZE_PORT_HPP
+#define FW_INPUT_SERIALIZE_PORT_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#if FW_PORT_SERIALIZATION == 1
+
+#include <Fw/Port/InputPortBase.hpp>
+
+namespace Fw {
+
+class InputSerializePort final : public InputPortBase {
+  public:
+    InputSerializePort();
+    virtual ~InputSerializePort();
+
+    void init() override;
+
+    SerializeStatus invokeSerial(
+        SerializeBufferBase& buffer) override;  // !< invoke the port with a serialized version of the call
+
+    typedef void (*CompFuncPtr)(Fw::PassiveComponentBase* callComp,
+                                FwIndexType portNum,
+                                SerializeBufferBase& arg);                      //!< port callback definition
+    void addCallComp(Fw::PassiveComponentBase* callComp, CompFuncPtr funcPtr);  //!< call to register a component
+
+  protected:
+#if FW_OBJECT_TO_STRING == 1
+    const char* getToStringFormatString() override;  //!< Get format string for toString call
+#endif
+
+  private:
+    CompFuncPtr m_func;  //!< pointer to port callback function
+    InputSerializePort(InputSerializePort*);
+    InputSerializePort(InputSerializePort&);
+    InputSerializePort& operator=(InputSerializePort&);
+};
+
+}  // namespace Fw
+
+#endif  // FW_INPUT_SERIALIZE_PORT_HPP
+
+#endif
+```
+
+### `OutputPortBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputPortBase.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Port/OutputPortBase.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Console.hpp>
+#include <cstdio>
+
+namespace Fw {
+
+OutputPortBase::OutputPortBase()
+    : PortBase()
+#if FW_PORT_SERIALIZATION == 1
+      ,
+      m_serPort(nullptr)
+#endif
+{
+}
+
+OutputPortBase::~OutputPortBase() {}
+
+void OutputPortBase::init() {
+    PortBase::init();
+}
+#if FW_PORT_SERIALIZATION == 1
+void OutputPortBase::registerSerialPort(InputPortBase* port) {
+    FW_ASSERT(port);
+    this->m_connObj = port;
+    this->m_serPort = port;
+}
+
+SerializeStatus OutputPortBase::invokeSerial(SerializeBufferBase& buffer) {
+    FW_ASSERT(this->m_serPort);
+    return this->m_serPort->invokeSerial(buffer);
+}
+#endif
+
+#if FW_OBJECT_TO_STRING == 1
+const char* OutputPortBase::getToStringFormatString() {
+    return "Output Port: %s %s->(%s)";
+}
+#endif
+
+}  // namespace Fw
+```
+
+### `OutputPortBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputPortBase.hpp`
+
+
+```cpp
+#ifndef FW_OUTPUT_PORT_BASE_HPP
+#define FW_OUTPUT_PORT_BASE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Port/InputPortBase.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+class OutputPortBase : public PortBase {
+  public:
+#if FW_PORT_SERIALIZATION == 1
+    void registerSerialPort(InputPortBase* port);  // !< register a port for serialized calls
+    SerializeStatus invokeSerial(
+        SerializeBufferBase& buffer);  // !< invoke the port with a serialized version of the call
+#endif
+
+  protected:
+    OutputPortBase();           // constructor
+    virtual ~OutputPortBase();  // destructor
+    void init() override;
+
+#if FW_OBJECT_TO_STRING == 1
+    const char* getToStringFormatString() override;  //!< Get format string for toString call
+#endif
+
+#if FW_PORT_SERIALIZATION == 1
+    Fw::InputPortBase* m_serPort;  // !< pointer to port for serialized calls
+#endif
+  private:
+    // Disable constructors
+    OutputPortBase(OutputPortBase*);
+    OutputPortBase(OutputPortBase&);
+    OutputPortBase& operator=(OutputPortBase&);
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `OutputSerializePort.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputSerializePort.cpp`
+
+
+```cpp
+#include <Fw/Port/OutputSerializePort.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cstdio>
+
+#if FW_PORT_SERIALIZATION
+
+namespace Fw {
+
+// SerializePort has no call interface. It is to pass through serialized data
+
+OutputSerializePort::OutputSerializePort() : OutputPortBase() {}
+
+OutputSerializePort::~OutputSerializePort() {}
+
+void OutputSerializePort::init() {
+    OutputPortBase::init();
+}
+
+#if FW_OBJECT_TO_STRING == 1
+const char* OutputSerializePort::getToStringFormatString() {
+    return "Output Serial Port: %s %s->(%s)";
+}
+#endif
+
+}  // namespace Fw
+
+#endif  // FW_PORT_SERIALIZATION
+```
+
+### `OutputSerializePort.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/OutputSerializePort.hpp`
+
+
+```cpp
+#ifndef FW_OUTPUT_SERIALIZE_PORT_HPP
+#define FW_OUTPUT_SERIALIZE_PORT_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#if FW_PORT_SERIALIZATION == 1
+
+#include <Fw/Port/OutputPortBase.hpp>
+
+namespace Fw {
+
+class OutputSerializePort final : public OutputPortBase {
+  public:
+    OutputSerializePort();
+    virtual ~OutputSerializePort();
+    void init() override;
+
+  protected:
+#if FW_OBJECT_TO_STRING == 1
+    const char* getToStringFormatString() override;  //!< Get format string for toString call
+#endif
+
+  private:
+    OutputSerializePort(OutputSerializePort*);
+    OutputSerializePort(OutputSerializePort&);
+    OutputSerializePort& operator=(OutputSerializePort&);
+};
+
+}  // namespace Fw
+
+#endif  // FW_OUTPUT_SERIALIZE_PORT_HPP
+
+#endif
+```
+
+### `PortBase.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/PortBase.cpp`
+
+
+```cpp
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Port/PortBase.hpp>
+#include <cstdio>
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/ExternalString.hpp"
+
+#if FW_PORT_TRACING
+void setConnTrace(bool trace) {
+    Fw::PortBase::setTrace(trace);
+}
+
+namespace Fw {
+bool PortBase::s_trace = false;
+}
+
+#endif  // FW_PORT_TRACING
+
+namespace Fw {
+
+PortBase::PortBase()
+    : Fw::ObjBase(nullptr),
+      m_connObj(nullptr)
+#if FW_PORT_TRACING == 1
+      ,
+      m_trace(false),
+      m_ovr_trace(false)
+#endif
+{
+}
+
+PortBase::~PortBase() {}
+
+void PortBase::init() {
+    ObjBase::init();
+}
+
+bool PortBase::isConnected() const {
+    return m_connObj == nullptr ? false : true;
+}
+
+#if FW_PORT_TRACING == 1
+
+void PortBase::trace() const {
+    bool do_trace = false;
+
+    if (this->m_ovr_trace) {
+        if (this->m_trace) {
+            do_trace = true;
+        }
+    } else if (PortBase::s_trace) {
+        do_trace = true;
+    }
+
+    if (do_trace) {
+#if FW_OBJECT_NAMES == 1
+        Fw::Logger::log("Trace: %s\n", this->m_objName.toChar());
+#else
+        Fw::Logger::log("Trace: %p\n", this);
+#endif
+    }
+}
+
+void PortBase::setTrace(bool trace) {
+    PortBase::s_trace = trace;
+}
+
+void PortBase::ovrTrace(bool ovr, bool trace) {
+    this->m_ovr_trace = ovr;
+    this->m_trace = trace;
+}
+
+#endif  // FW_PORT_TRACING
+
+#if FW_OBJECT_TO_STRING == 1
+const char* PortBase::getToStringFormatString() {
+    return "Port: %s %s->(%s)";
+}
+
+void PortBase::toString(char* buffer, FwSizeType size) {
+    FW_ASSERT(size > 0);
+    // Get the port-custom format string
+    const char* formatString = this->getToStringFormatString();
+    // Determine this port object name (or use "UNKNOWN")
+    const char* object_name =
+#if FW_OBJECT_NAMES == 1
+        this->m_objName.toChar();
+#else
+        "UNKNOWN";
+#endif
+    // Get the C/NC for connected or not
+    const char* this_is_connected = this->isConnected() ? "C" : "NC";
+
+    // Get the name of the connection object, "UNKNOWN" or "NONE"
+    const char* connected_to = this->isConnected() ?
+#if FW_OBJECT_NAMES == 1
+                                                   this->m_connObj->getObjName()
+#else
+                                                   "UNKNOWN"
+#endif
+                                                   : "None";
+    // Format the external string or use "" on error
+    if (Fw::ExternalString(buffer, static_cast<Fw::ExternalString::SizeType>(size))
+            .format(formatString, object_name, this_is_connected, connected_to) != Fw::FormatStatus::SUCCESS) {
+        buffer[0] = 0;
+    }
+}
+#endif  // FW_OBJECT_TO_STRING
+
+}  // namespace Fw
+```
+
+### `PortBase.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/PortBase.hpp`
+
+
+```cpp
+#ifndef FW_PORT_BASE_HPP
+#define FW_PORT_BASE_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Obj/ObjBase.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+#if FW_PORT_TRACING == 1
+extern "C" {
+void setConnTrace(bool trace);
+}
+#endif
+
+namespace Fw {
+
+class PortBase : public Fw::ObjBase {
+  public:
+#if FW_PORT_TRACING == 1
+    static void setTrace(bool trace);     // !< turn tracing on or off
+    void ovrTrace(bool ovr, bool trace);  // !< override tracing for a particular port
+#endif
+
+    bool isConnected() const;
+
+  protected:
+    // Should only be accessed by derived classes
+    PortBase();           // Constructor
+    virtual ~PortBase();  // Destructor
+    virtual void init();  // !< initialization function
+
+#if FW_PORT_TRACING == 1
+    void trace() const;  // !<  trace port calls if active
+#endif
+    Fw::ObjBase* m_connObj;  // !< object port is connected to
+
+#if FW_OBJECT_TO_STRING
+    virtual const char* getToStringFormatString();  //!< Get format string for toString call
+
+    void toString(char* str, FwSizeType size) override;  //!< Unified port toString method
+#endif
+
+  private:
+#if FW_PORT_TRACING == 1
+    static bool s_trace;  // !< global tracing is active
+    bool m_trace;         // !< local trace flag
+    bool m_ovr_trace;     // !< flag to override global trace
+#endif
+    // Disable constructors
+    PortBase(PortBase*);
+    PortBase(PortBase&);
+    PortBase& operator=(PortBase&);
+};
+
+}  // namespace Fw
+
+#endif
+```
+
+### `README`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Port/README`
+
+
+```text
+File Contents:
+
+PortBase.hpp/.cpp - Port base class
+InputPortBase.hpp/.cpp - Input port base class
+```

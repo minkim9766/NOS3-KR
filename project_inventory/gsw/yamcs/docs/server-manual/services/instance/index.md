@@ -3,56 +3,1590 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/services/instance/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _images/index
-file--alarm-mirror.rst
-file--alarm-recorder.rst
-file--ccsds-tm-index.rst
-file--cfdp.rst
-file--cfs-event-decoder.rst
-file--command-history-recorder.rst
-file--event-recorder.rst
-file--file-listing.rst
-file--index.rst
-file--parameter-archive-service.rst
-file--parameter-list-service.rst
-file--parameter-recorder.rst
-file--parameter-retrieval.rst
-file--processor-creator-service.rst
-file--replay-server.rst
-file--replication-master.rst
-file--replication-slave.rst
-file--system-parameters-service.rst
-file--time-correlation.rst
-file--timeline-service.rst
-file--xtce-tm-recorder.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/services/instance/_images/`](_images/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/services/instance/alarm-mirror.rst`](file--alarm-mirror.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/alarm-recorder.rst`](file--alarm-recorder.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/ccsds-tm-index.rst`](file--ccsds-tm-index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/cfdp.rst`](file--cfdp.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/cfs-event-decoder.rst`](file--cfs-event-decoder.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/command-history-recorder.rst`](file--command-history-recorder.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/event-recorder.rst`](file--event-recorder.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/file-listing.rst`](file--file-listing.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/parameter-archive-service.rst`](file--parameter-archive-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/parameter-list-service.rst`](file--parameter-list-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/parameter-recorder.rst`](file--parameter-recorder.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/parameter-retrieval.rst`](file--parameter-retrieval.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/processor-creator-service.rst`](file--processor-creator-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/replay-server.rst`](file--replay-server.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/replication-master.rst`](file--replication-master.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/replication-slave.rst`](file--replication-slave.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/system-parameters-service.rst`](file--system-parameters-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/time-correlation.rst`](file--time-correlation.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/timeline-service.rst`](file--timeline-service.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/instance/xtce-tm-recorder.rst`](file--xtce-tm-recorder.rst) — UTF-8 텍스트 파일 본문 포함
+### `alarm-mirror.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/alarm-mirror.rst`
+
+
+```rst
+Alarm Mirroring
+===============
+
+Mirrors alarms. Works in conjunction with the :ref:`replication slave <replication-slave>` to mirror alarms from a replication master.
+
+It works by monitoring the streams of type parameterAlarm and eventAlarm (usually these are `alarms_realtime`` and `event_alarms_realtime`` respectively). These streams have to be configured for replication. Since information on these streams is only sent when an alarm is created or updated, the service maintains its own database of alarms. At startup, it loads alarms triggered within the last 30 days.
+
+Please see the replication1 example on how this service is configured to mirror alarms from node1 to node2. Note in the processor.yaml that node2 uses a processor without the usual alarm servers configured.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.alarms.AlarmMirrorService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.alarms.AlarmMirrorService
+        args: 
+            alarmLoadDays: 30
+
+
+Configuration Options
+---------------------
+
+alarmLoadDays (float)
+    Specifies the number of days' worth of alarms to load at startup. This parameter determines the time range based on the alarm's trigger time (i.e., the moment the alarm was triggered).
+    Setting a negative value, disables loading alarms from the database.
+    
+    Default: 30
+```
+
+### `alarm-recorder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/alarm-recorder.rst`
+
+
+```rst
+Alarm Recorder
+==============
+
+Records alarms. This service stores the data coming from one or more streams into a table ``alarms``.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.AlarmRecorder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.AlarmRecorder
+
+    streamConfig:
+      alarm:
+        - alarms_realtime
+
+With this configuration alarms emitted to the ``alarms_realtime`` stream are stored into the table ``alarms``.
+```
+
+### `ccsds-tm-index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/ccsds-tm-index.rst`
+
+
+```rst
+CCSDS TM Index
+==============
+
+Creates an index for the CCSDS Space Packets (`CCSDS 133.0-B-1 <https://public.ccsds.org/Pubs/133x0b1c2.pdf>`) based on the sequence count in the primary header. The index allows to see per APID the available packets in the archive. The main use of such index is to detect when packets are missing. It can be combined with user defined scripts that request missing data from remote systems (if such systems exist that record data in the user specific setup).
+
+The configuration allows to define a list of tm streams where the packets are read from. The packets on those streams have to be CCSDS space packets. This service does not use the Mission Database for interpreting the packets, it just reads the primary header from  the binary data. If the packet length is less than 7 bytes, it is discarded.
+
+
+The index can be visualized in the Yamcs web interface in the :menuselection:`Archive Browser`. It is denoted as :guilabel:`Completeness` and contains one timeline bar for each APID.
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.CcsdsTmIndex`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.IndexServer
+        streams: ["tm-realtime", "tm_dump"]
+
+
+Configuration Options
+---------------------
+
+streams (list of strings)
+    The streams to index. When unspecified, all ``tm`` streams defined in ``streamConfig`` are indexed. 
+```
+
+### `cfdp.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/cfdp.rst`
+
+
+```rst
+.. _cfdp-service:
+
+CCSDS File Delivery Protocol (CFDP)
+===================================
+
+This service implements the CCSDS File Delivery Protocol class 1 (unreliable transfer also called unacknowledged ) and class 2 (reliable transfer also called acknowledged).
+
+Class 3 and 4 (transfers via one or more waypoints) are not supported.
+
+The service uploads and downloads files between a spacecraft (or a remote device) and a Yamcs bucket. In the description below, the entity that sends the file is called the Sender and the entity that receives the file is called the Receiver.
+
+The protocol specification can be found in  `CCSDS 727.0-B-5 <https://public.ccsds.org/Pubs/727x0b5.pdf>`_ The following description summarizes the specs and provide details on the parts implemented/not implemented by this service.
+
+The upload/download works by splitting the file into segments and uploading/downloading each segment individually (usually embedded as part of a TC/TM packet). The transmission is preceded by a metadata PDU (Protocol Data Unit) and finished with an EOF PDU. The Receiver will send the Finished PDU to let the Sender know that all PDUs have been received.
+
+The class 1 (unreliable transfer) will upload/download all the segments without the possibility of retransmission. The EOF is not acknowledged by the Receiver. The Issue 5 of the CFDP standard introduces an option "Closure Requested" which requests the class 1 Receiver to send a Finished PDU upon receiving all the data (or when the canceling the transfer).  The Finished PDU is not acknowledged by the Sender. This option is useful when the underlying communication protocol is reliable.   
+
+For class 2 (reliable transfer) transfers, the Receiver can indicate missing metadata or data by sending NAK PDUs. In this mode, the Receiver has to acknowledge the EOF PDU and the Sender has to acknowledge the Finished PDU. Sending a PDU that requires acknowledgment will start a timer. When the timer expires, if the acknowledgment has not been received, the PDU is resent and this is done until a count reaches a maximum defined value. Finally if the count has reached its maximum value and the acknowledgment has still not been received, a fault condition is triggered which may cause the transfer to be abandoned, canceled or suspended.
+
+A diagram of the operations for class 2 is presented in the figure below. Note that the Receiver operates in immediate NAK mode; it sends a NAK as soon as it receives the FileData PDU (containing a file segment) and detects a missing segment.
+
+Note also that the file is available on the Receiver before the transfer is completed by the reception of the Finished ACK PDU.
+
+.. image:: _images/cfdp-class2.png
+    :alt: Yamcs Server Architecture
+    :align: center
+
+The CFDP transfers can be suspended and resumed. Suspending means that no PDU is sent out but incoming PDUs are still processed. The timers are deactivated. Upon resuming, the timers are restarted and their counts reset to 0. For example if at the time of the suspension, an EOF has been sent 2 times out of 5, after the transfer is resumed, the EOF sending is again starting with 0 out of 5. This allows suspending the transfer when the limit has been reached and resume the transfer at a later moment without changing the state.
+
+
+Several peculiarities and limitations of the implementation can be noted:
+
+* The NAK PDUs issued by the Sender always contain the beginning of the file up to filling up the PDU with data. Unless the file is very large and with lots of small gaps, a NAK PDU will contain all the missing data at the given point.
+* The Receiver will overwrite the list of segments to resend with the list received in the latest NAK.
+* Keep Alive PDU and Prompt PDU are not used.
+* Filestore requests are not supported.
+* Only proxy put requests and directory listing requests are supported, other user operations (proxy, remote status, etc.) as per chapter 6 of the CCSDS 727.0-B-5 are not supported.
+* Remote suspend/resume operations are not supported. Note that local suspend/resume operations are supported; this means that suspending a transfer has to be done concurrently on this service and remotely with a different mechanism (e.g. sending a telecommand).
+
+
+Usage
+-----
+The service produces PDUs as per CCSDS specification. The PDUs are written/read to/from Yamcs streams. How the PDUs are sent to/from the spacecraft is mission specific.
+
+An example on how to use the streams to embed the CFDP PDUs into CCSDS packets can be seen in the cfdp example (the most interesting part is in :file:`src/main/yamcs/etc/extra_streams.sql`).
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.cfdp.CfdpService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+  services:
+     - class: org.yamcs.cfdp.CfdpService
+       name: cfdp0
+       args:
+           sequenceNrLength: 4
+           maxPduSize: 512
+           incomingBucket: "cfdpDown"
+           eofAckTimeout: 3000
+           eofAckLimit: 3
+           sleepBetweenPdus: 1000
+           localEntities:
+             - name: id1
+               id: 11
+               bucket: bucket1
+             - name: id2
+               id: 12
+           remoteEntities:
+             - name: target1
+               id: 5
+             - name: target2
+               id: 7
+               bucket: bucket3
+           senderFaultHandlers:
+             AckLimitReached: suspend
+           receiverFaultHandlers:
+             AckLimitReached: suspend
+            
+
+              
+Configuration Options
+---------------------
+
+name
+    The name of the service - used in the API calls. If multiple CfdpServices are used, this has to contain a different value for each service. By default it is "CfdpService".
+    
+inStream (string)
+    The name of the stream where the CFDP PDUs are read from. Default: ``cfdp_in``
+    
+outStream (string)
+    The name of the stream where the CFDP PDUs are written. Default: ``cfdp_out``
+  
+incomingBucket (string)
+    The name of the bucket where the CFDP incoming files are saved if no specific ones are defined per local or remote entity. Default: ``cfdpDown``
+
+allowRemoteProvidedBucket (boolean)
+    Enable setting the bucket for incoming remote files with the ``bucketName:filename`` syntax for the received object name. Default: ``false``
+
+allowRemoteProvidedSubdirectory (boolean)
+    Enable subdirectory comprehension from incoming remote object names containing directory delimiters. **Be wary of directory traversal depending on the bucket type**, FileSystemBucket should be safe. Default: ``false``
+
+allowDownloadOverwrites (boolean)
+    Permit overwriting incoming files if their names match. If false, will append an incremented number (up to ``maxExistingFileRenames``) to the received file name. Default: ``false``
+
+maxExistingFileRenames (integer)
+    Maximum number appended to incoming file names in case of matching names (when ``allowDownloadOverwrites`` is false). Default: ``1000``
+
+localEntities (map)
+    A list of entity definitions used to give names to the local (Yamcs) entity identifiers as well as to configure which bucket is used for storing the files received for that entity. The names can be used in the API calls when initiating transfers. The list has to contain all identifiers which will be used by the remote system to send files.  If a PDU is received to an identifier not in this map, the PDU will be dropped and no transaction will be started.
+
+    The ``bucket`` is optional; if missing, the file will be saved into the bucket specified for the remote entity and if that is missing too in the general bucket configured with the ``incomingBucket``.
+    
+remoteEntities (map)
+    A list of entity definitions used to give names to the remote (spacecraft) entity identifiers. The names can be used in the API call when initiating transfers.
+
+    The list has to contain all identifiers which will be used by the remote system to send files. If a PDU is received from an identifier not in this map, the PDU will be dropped and no transaction will be started.
+    The list can contain also a bucket name used if the matching local entity does not define a bucket. In the example above if a file is downlinked having source (spacecraft) id = 7 and destination (Yamcs) id = 12, it will end up in bucket3.
+
+entityIdLength (integer)
+    The length in bytes of the entity id for the outgoing CFDP transfers. The entity id and the sequence number represent the CFDP transaction identifier. It is encoded in the header of all the CFDP PDUs. These lengths together with the sequenceNrLength determine the size of the PDU header:    
+    
+    ``PDU_header_size(bytes) = 4 + 2 * entityIdLength + sequenceNrLength``
+    
+    For the incoming transfers the remote peer specifies the lengths. Default: ``2``
+     
+sequenceNrLength (integer)
+    The length in bytes of the sequence number for the outgoing CFDP transfers. Default: ``4``
+    
+maxPduSize (integer)
+    The maximum length in bytes of the PDU is used by the sender to determine how to split the file into segments (segment size = PDU size - header size). For the incoming transfers the peer specifies the PDU size. Default ``512``
+
+sleepBetweenPdus (integer)
+    The time in milliseconds used by the sender to wait in between sending two successive PDUs. This together with the PDU determine the uplink data rate. The data rate has to match the maximum uplink speed as well as the receiver expected data rate. No mechanism is implemented for auto-tuning the uplink rate. 
+
+canChangePduSize (boolean)
+    Whether a ``FileTransferOption`` can be used to set a specific transfer's PDU size. Default: ``false``
+
+pduSizePredefinedValues (list)
+    List of predefined integer values for the PDU size option when ``canChangePduSize`` is ``true``, shown as a dropdown menu in the web UI.
+
+canChangePduDelay (boolean)
+    Whether a ``FileTransferOption`` can be used to set a specific transfer's PDU delay (sleep between PDUs). Default: ``false``
+
+pduDelayPredefinedValues (list)
+    List of predefined integer values for the PDU delay option when ``canChangePduDelay`` is ``true``, shown as a dropdown menu in the web UI.
+
+inactivityTimeout (integer)
+    The time in milliseconds used by both the sender and receiver to check for inactivity. The timer is active on the receiver until EOF has been received and on class 2 sender after EOF has been sent (while waiting for the Finished PDU). If the timer expires, the InactivityDetected event will be triggered and the transaction may be cancelled or suspended (depending on the configuration of the fault handler for InactivityDetected event).
+
+    Default: ``10000`` (10 seconds).
+
+eofAckTimeout (integer) 
+    Valid for class 2 transfers; the time in milliseconds used by the sender to wait for the EOF PDU acknowledgment. The sender sends the EOF PDU to indicate that it has completed transmitting the file. It expects to receive an acknowledgement indicating the reception of the EOF PDU (not of the file!, the Finished PDU is used for that). The EOF PDU is retransmitted if no acknowledgment has been received in this time.
+
+    Default: ``3000`` (3 seconds).
+
+eofAckLimit (integer)
+    Valid for class 2 transfers; the number of times to retry sending the EOF PDU before declaring a fault. Zero means that only one PDU will be sent (no retry). Negative value means no limit. Default: ``5``.
+
+finAckTimeout (integer)
+    The time in milliseconds used by the receiver to wait for the FIN PDU acknowledgment. The receiver sends the Finished PDU to indicate that the file has been received or that a fault has been encountered. The receiver expects the sender to acknowledge reception of this PDU and will retransmit the PDU if no acknowledgment has been received in this time.
+
+    Default: ``10000`` (10 seconds)
+
+finAckLimit (integer)
+     The number of times to retry sending the Finished PDU before declaring a fault. Zero means that only one PDU will be sent (no retry). Negative value means no limit. Default: ``5``.
+
+immediateNak (boolean)
+     Valid for class 2 transfers; if true, the receiver will send NAK PDUs as soon as a missing segment is detected. The NAK PDU contains the list of segments that are missing at the receiver side. If the EOF PDU has not been received, the NAK PDU covers only the segments missing up to the last one received.
+
+     If this parameter is false, the receiver will only send NAK PDUs after the EOF PDU has been received. In this case the NAK PDU will contain all the missing segments. Default: ``true``
+
+nakTimeout (integer)
+   Valid for class 2 transfers; used by the receiver as the time interval between two successive NAK PDUs, assuming the data has not been recovered.
+
+   Default: ``5000``
+
+nakLimit (integer)
+    Valid for class 2 transfers; the number of times to send a NAK PDU with no data recovered before declaring a fault. A value of 1 means that one NAK is sent and if no data is recovered within the nakTimeout milliseconds, a fault will be declared. Zero or negative value means no limit. 
+
+    Default: ``-1``
+ 
+
+senderFaultHandlers (map)
+    A definition of the actions to be taken when the sender encounters different faults. The definitions are in the form of ``conditionCode -> action`` map.
+    
+    The possible condition codes are: ``AckLimitReached``, ``KeepAliveLimitReached``, ``InvalidTransmissionMode``, ``FilestoreRejection``, ``FileChecksumFailure``, ``FileSizeError``, ``NakLimitReached``, ``InactivityDetected``, ``InvalidFileStructure``, ``CheckLimitReached`` and ``UnsupportedChecksum``.
+
+    The possible actions are: ``suspend``, ``cancel`` or ``abandon``. Suspend means the transfer will be suspended and can be resumed later (for example an ack limit reached may be caused by the lost of communication with the spacecraft and the transfer can be resumed when the communication is established again). Cancel means that the remote peer is notified that the transaction is canceled. Abandon means to abort the transaction without notifying the peer.
+
+    Note that the error can be generated locally or received from the peer in a FIN PDU.
+
+receiverFaultHandlers (map)
+    Similar with ``senderFaultHandlers`` but applies when the service works as Receiver (i.e. for downlinks). 
+
+maxNumPendingDownloads (integer)
+    The maximum number of allowed concurrent downloads. If this limit is reached, any PDU that would start a new download is dropped and an event message generated. Default: ``100``
+
+maxNumPendingUploads (integer)
+    The maximum number of allowed concurrent uploads (including download requests and directory listing requests). If this limit is reached, the new uploads are queued. Default: ``10``
+
+directoryTerminators (list)
+    When starting an upload to a directory (folder), the CFDP service will append the object name to the directory name. To know if the destination is a folder (and not a file), the end character is compared with the terminators in this list.
+
+    This is also being used for the directory listing parsing if not specified in its options. Default: ``["/", ":", "\\"]``
+
+hasDownloadCapability (boolean)
+    Whether this CFDP service is able to download remote files. Default: ``true``
+
+hasFileListingCapability (boolean)
+    Whether this CFDP service is able to request a file list of a remote directory. Default: ``true``
+
+fileListingServiceClassName (string)
+    Class of the directory listing service to use (see :ref:`File listing service <file-listing>`) to retrieve file lists.
+    Default: ``org.yamcs.cfdp.CfdpService`` (i.e. ``this`` very instance of the service).
+
+fileListingServiceArgs (map)
+    Arguments to the FileListingService used (depends on implementation).
+
+automaticDirectoryListingReloads (boolean)
+    Whether the CFDP Service should automatically try to send a directory listing request when a client fetches a file listing. Default: ``false``
+
+fileListingParserClassName (string)
+    Class for parsing the CFDP directory listing response files. Default: ``org.yamcs.filetransfer.BasicListingParser``
+
+fileListingParserArgs (map)
+    Arguments for the FileListingParser used (depends on implementation).
+
+allowConcurrentFileOverwrites (boolean)
+    If this option is true, when starting an upload, the CFDP service verifies if an upload with the same destination filename is ongoing or queued and will raise an error. This is done in order to avoid overwriting the same destination file in case multiple files are uploaded from the yamcs-web. Default: ``true``
+
+pendingAfterCompletion (integer)
+    Number of milliseconds to keep the incoming transaction in memory after completion. During this time, the newly received EOF PDUs belonging to the transaction are still answered. All the other PDUs belonging to the transaction are ignored. Default: ``600000`` (10 minutes).
+    Consequentially if a new transfer would start with the same id (for example following an on-board computer reboot), the transfer will not be recognized as new before this timer has expired.
+```
+
+### `cfs-event-decoder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/cfs-event-decoder.rst`
+
+
+```rst
+CFS Event Decoder
+=================
+
+Decodes `cFS <https://cfs.gsfc.nasa.gov/>`_ (Core Flight System) events. This service translates binary cFS telemetry packets into Yamcs events.
+
+The packets are filtered by message id (first 2 bytes of the header).
+
+The structure of the event packets is as defined in the `CFE_EVS_LongEventTlm_Payload struct <https://github.com/nasa/cFE/blob/main/fsw/cfe-core/src/inc/cfe_evs_msg.h#L1235>`_. The structure had different names in older versions of cFS.
+
+The field ``EventType`` is used to derive the event severity:
+
+* value 3 is considered severity ``ERROR``
+* value 4 is considered severity ``CRITICAL``
+* all the other values are considered severity ``INFO``
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tctm.cfs.CfsEventDecoder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.tctm.cfs.CfsEventDecoder
+        args:
+          msgIds: [0x0808]
+          byteOrder: BIG_ENDIAN
+          charset: US-ASCII
+          appNameMax: 20
+          eventMsgMax: 122
+          streams:
+            - tm_realtime
+
+
+Configuration Options
+---------------------
+
+msgIds ([integer])
+    The message ids that will be considered as events. This argument is required.
+
+byteOrder (string):
+    The byte order of the event telemetry packet. Default:``BIG_ENDIAN``
+
+charset (string):
+    The charset used to decode the text string. Default: ``US-ASCII``
+
+appNameMax (integer):
+    The size of the app name in bytes. Default: ``20``
+
+eventMsgMax (integer):
+    The size of the event message string in bytes. Default: ``122``
+
+streams ([string]):
+    The streams to process for events. Not required. If no stream is provided, all telemetry streams of type ``tm`` are used (these are configured in the instance configuration file under the ``streamConfig`` section).
+```
+
+### `command-history-recorder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/command-history-recorder.rst`
+
+
+```rst
+Command History Recorder
+========================
+
+Records command history entries. This service stores the data coming from one or more streams into a table ``cmdhist``.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.CommandHistoryRecorder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.CommandHistoryRecorder
+
+    streamConfig:
+      event:
+        - cmdhist_realtime
+        - cmdhist_dump
+
+With this configuration events emitted to the ``cmdhist_realtime`` or ``cmdhist_dump`` stream are stored into the table ``cmdhist``.
+```
+
+### `event-recorder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/event-recorder.rst`
+
+
+```rst
+Event Recorder
+==============
+
+Records events. This service stores the data coming from one or more streams into a table ``events``.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.EventRecorder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.EventRecorder
+
+    streamConfig:
+      event:
+        - events_realtime
+        - events_dump
+
+With this configuration events emitted to the ``events_realtime`` or ``events_dump`` stream are stored into the table ``events``.
+```
+
+### `file-listing.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/file-listing.rst`
+
+
+```rst
+.. _file-listing:
+
+File listing service
+====================
+
+This service provides an interface for retrieving and saving the list of files of a certain remote directory.
+
+This may be coupled with the file transfer services, such as the :ref:`CFDP service <cfdp-service>`
+-- which implements it --, to provide remote directory listing capabilities.
+
+Implementing classes may make use of a :javadoc:`org.yamcs.filetransfer.FileListingParser` in order to parse a provided
+file listing according to a certain specification (currently :javadoc:`org.yamcs.filetransfer.BasicListingParser` and
+:javadoc:`org.yamcs.filetransfer.CsvListingParser` exist).
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.filetransfer.FileListingService`
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml` but its configuration is implementation specific.
+Here is an example of it being parametrised inside a file transfer service with a set file listing parser:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.filetransfer.MyFileTransferService
+        name: my-file-transfer
+        args:
+            fileListingServiceClassName: org.yamcs.filetransfer.MyFileListingService
+            fileListingServiceArgs:
+                automaticDirectoryListingReloads: false
+                fileListingParserClassName: org.yamcs.filetransfer.BasicListingParser
+                fileListingParserArgs:
+                    directoryTerminators: ["/"]
+
+
+Configuration Options
+---------------------
+
+**The interface has no common parameters** but these may be of use by certain implementations:
+
+fileListingParserClassName
+    Class to use to parse the file listing data.
+
+fileListingParserArgs
+    Arguments to pass to the FileListingParser used.
+
+The implementation specific parameters (and defaults) can be found in their respective class:
+
+* :ref:`CFDP service <cfdp-service>`
+
+Parser Configuration Options
+----------------------------
+
+Each implementation of the file listing parsers have their own parameters.
+
+BasicListingParser
+~~~~~~~~~~~~~~~~~~
+
+The BasicListingParser parses the file listing from a linebreak separated list of filenames.
+Directories are detected by checking whether the file name ends with a directory terminator.
+
+removePrependingRemotePath (boolean)
+    Whether the filenames in the file listing contain the remote path as a prefix.
+    Default: ``true``
+
+directoryTerminators (list)
+    Directory terminators, used to determine whether a file name corresponds to a directory. Parsing will remove all
+    prepending and ending directory terminators.
+    Default: ``["/"]``
+
+CsvListingParser
+~~~~~~~~~~~~~~~~
+
+The CsvListingParser parses the file listing from a Comma Separated Value text, with each line representing a file and
+each column one of its properties. Timestamps can be parsed as numbers or as strings in the ISO format.
+
+useCsvHeader (boolean)
+    Whether the parser should read the header of the CSV to determine what value goes to which property.
+    Default: ``false``
+
+protobufColumnNumberMapping (map)
+    Mapping of the *RemoteFile* protobuf field names to the column number of the CSV (not used if *useCsvHeader* is ``true``).
+    Default: *Column numbers are the same as the protobuf's (same order of fields)*
+
+headerProtobufMapping (map)
+    Mapping of the CSV column names in the header (when *useCsvHeader* is ``true``) to the protobuf fields names of *RemoteFile*.
+    Default: *Same names as the protobuf fields*
+
+timestampMultiplier (float)
+    If timestamps are parsed as numbers, the multiplier to use to get the result in milliseconds.
+    Default: ``1000``
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/index.rst`
+
+
+```rst
+Instance Services
+=================
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    alarm-recorder
+    command-history-recorder
+    event-recorder
+    ccsds-tm-index
+    parameter-archive-service
+    parameter-list-service
+    parameter-recorder
+    parameter-retrieval
+    processor-creator-service
+    replay-server
+    system-parameters-service
+    xtce-tm-recorder
+    time-correlation
+    timeline-service
+    replication-master
+    replication-slave
+    cfdp
+    file-listing
+    cfs-event-decoder
+    alarm-mirror
+```
+
+### `parameter-archive-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/parameter-archive-service.rst`
+
+
+```rst
+Parameter Archive Service
+=========================
+
+The Parameter Archive stores time ordered parameter values. The parameter archive is column-oriented and is optimized for accessing a (relatively small) number of parameters over longer periods of time. Data is stored in fixed duration time intervals, each interval covering a length of :math:`2^{23}` milliseconds (~139 minutes). 
+
+An interval has always to be processed or reprocessed in full - this means if one data point is added in the interval, the full 139 minutes of data have to be reprocessed.
+
+Intervals are further split into segments such that each segment cannot contain more than a configurable maximum number of samples. This is done in order to limit the number of samples stored in memory when rebuilding an interval. 
+A parameter that comes at high frequency will be split into multiple segments whereas for one that comes at low frequency there will be only one segment in each interval.
+
+The parameters are grouped such that the samples of all parameters from one group have the same timestamp. For example all parameters extracted from one TM packet have usually the same timestamp and are part of the same group. A special case is the aggregate parameters: these are decomposed into the individual members if scalar types but all values are belonging to the same group and thus the aggregate can be rebuilt even though the members are stored separately.
+
+Filling the parameter archive
+-----------------------------
+
+Generating the parameter archive has to be done in batches since it is not possible to write individual data points (i.e. a parameter value at one specific time).
+Generally, the data has to come from a processor (either realtime or replay).
+
+There are three mechanisms implemented:
+
+- the realtime filler monitors the realtime processor and builds in memory parts of the archive which are then written to the archive when the segments are full.
+- the backfiller builds parts of the archive from the past. It can monitor incoming (dump) tm or parameter streams and start filling processes based on the data that is coming on those streams. It can also run periodically independent of any incoming data.
+- finally, the API can be used to rebuild parts of the archive. 
+
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.parameterarchive.ParameterArchive`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.parameterarchive.ParameterArchive
+        args: 
+          realtimeFiller:
+            enabled: true
+            flushFrequency: 300  #seconds
+          backFiller:
+            #warmupTime: 60 seconds default warmupTime
+            automaticBackfilling: true
+            schedule: [{startInterval: 10, numIntervals: 3}]
+
+This configuration enables the realtime filler, and in addition the backFiller fills the archive 10 intervals in the past, 3 intervals at a time.
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.parameterarchive.ParameterArchive
+        args:
+          realtimeFiller:
+            enabled: false
+          backFiller:
+            enabled: true
+            warmupTime: 120
+            schedule:
+              - {startInterval: 10, numIntervals: 3}
+              - {startInterval: 2, numIntervals: 2, frequency: 600}
+
+This configuration does not use the realtime filler, but instead performs regular (each 600 seconds) back-fillings of the last two intervals. It is the configuration used in the :abbr:`ISS (International Space Station)` ground segment where due to regular (each 20 to 30 minutes) LOS (loss of signal), the archive is very fragmented and the only way to obtain continuous data is to perform replays.
+
+Starting with Yamcs 5.11.1, it is possible to specify better how the archive should be rebuild based on monitoring stream data (tm packets and parameters):
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.parameterarchive.ParameterArchive
+        args:
+          realtimeFiller:
+            enabled: false
+          backFiller:
+               streamUpdateFillPolicy:
+                 - dataAge: 168.0  # Disable the automatic rebuild (manual rebuild required) of data older than 7 days
+                   fillFrequency: -1 
+                   quietThreshold: -1
+                 
+                 - dataAge: 2.0  # Applies to data older than 2 hours but newer than 7 days
+                   quietThreshold: 60   # Trigger a rebuild if no data arrives for 1 minute
+                   fillFrequency: 3600   # Trigger a rebuild every hour even if the 1 min threshold above does not trigger a rebuild
+
+                 - dataAge: 0   # Applies to new data not older than 2 hours (but it does not apply to data coming in the 'future')
+                   quietThreshold: 10   # Trigger a rebuild if no new data is received for 10 seconds
+                   fillFrequency: 600   # Fill every 10 minutes, even if the 10 sec threshold above does not trigger a rebuild
+
+General Options
+---------------
+
+maxSegmentSize (integer)
+     The ParameterArchive stores data in segments, each segment storing multiple samples of the same parameter. This option configures the maximum segment size. 
+
+     The parameter archive accumulates data in memory to fill the segments, in parallel for all parameters. This option affects thus the memory consumed when the parameter archive is being filled.
+
+     The segment size is limited by the duration of an interval, a segment cannot be larger than :math:`2^{23}` milliseconds (approximately 139 minutes).
+
+     Starting with Yamcs 5.10 the segments from an interval are merged together inside RocksDB such that when retrieving there is only one segment for each interval.
+     In order to reduce the memory consumption during parameter archive buildup, the default value of this setting has been changed from 5000 to 500.
+
+     Default: ``500``
+
+sparseGroups (boolean)
+    If set to true Parameter Archive will allow gaps in the parameter groups. This reduces the memory consumption and increases the retrieval speed at the expense of storing a gap list with some parameters.
+        
+    Default: ``true``
+    
+minimumGroupOverlap (double)
+    The term "minimum overlap" falling between 0 and 1 refers to the threshold used when determining if a parameter list belongs to an existing group. Overlap between a parameter list and an existing group (which is also formed from a parameter list) is calculated by dividing the number of the common elements in both lists by the length of the smaller list. If one list is entirely contained within another, the overlap value is 1.
+    
+    Default: ``0.5``
+    
+coverageEndDelta (integer)
+    Number of seconds in the future, relative to the mission time, considered for the parameter archive coverage end. Any data falling beyond this, it is not considered.
+
+    The coverage end should normally be in the past and it is used when retrieving parameters - if parameters fall before the coverage end, then the parameter retrieval service will attempt retrieval from the parameter archive and will not try to retrieve the parameter via other means (cache or replay).
+
+    The reason for implementing this delta is to avoid adding by mistake some data in the far future causing the parameter retrieval to never use the cache (because theoretically all data is covered by the parameter archive)
+    
+    Default: ``60`` (one minute)
+
+
+Backfiller Options
+------------------
+
+These options appear under the ``backFiller`` key.
+
+
+warmupTime (integer)
+     When the backfiller performs a replay to fill a data interval, the replay will start this number of seconds before the interval start. This is sometimes required for algorithms that aggregate data, to be able to have all the input data necessary to produce the output. Default: ``60``
+     
+automaticBackfilling  (boolean)
+     If true the backfiller executes backfilling operations according to the schedule or the streamUpdateFillPolicy. 
+     Default: ``true`` if the realtime filler is disabled and ``false`` if the realtime filler is enabled.
+     The automatic backfilling can be enabled/disabled at runtime via an API call.
+     
+monitorStreams (string[])
+     The list of tm or parameter streams that will be monitored to check for new data. If the list is empty, no stream will be monitored and the archive will be rebuilt according to the
+     schedule defined below.
+     Default: all the tm and param streams defined in the :file:`etc/yamcs.{instance}.yaml` streamConfig section. The backfiller will check the generation time of the packet or parameter received on the monitoring streams and will mark that interval as ``dirty``. 
+     As soon as the ``quietPeriodThreshold`` is reached or the ``streamUpdateFillFrequency`` timer (see below) expires, a new filling task is started for that interval.
+     
+streamUpdateFillFrequency (integer)
+     Valid if the ``monitorStreams`` is not empty, configures how often in seconds the fillup based on the stream monitoring is started. The fillup only starts if new data has been received on the streams. The time applies from the last time the filler ran.
+     Default ``3600``.
+
+     Starting with Yamcs 5.11.1, this option is deprecated in favour of the streamUpdateFillPolicy below.
+     Internally it is replaced with streamUpdateFillPolicy: [{dataAge: -1, fillFrequency: 600, quietThreshold: -1}] which is the behaviour in the previous Yamcs versions.
+
+streamUpdateFillPolicy (list of maps)
+    This policy applies when monitorStreams is not empty. It determines how often the archive is updated based on incoming stream data. A fill operation only occurs 
+    when new data is received. The list contains multiple entries, each specifying update behavior for a different data age.
+    
+    Each entry in the list has the following keys:
+     
+     dataAge (float)
+        **Required** Specifies the number of hours in the past this entry applies to. This determines which quietThreshold and fillFrequency settings are used:
+        * Helps reduce rebuild frequency for older data.
+        * Computed as: mission time - data timestamp.
+        * If data is received in the future (relative to mission time), the age is negative. In such cases, add an entry with a negative dataAge if the archive should be rebuilt.
+
+     fillFrequency (integer)
+        Determines how often (in seconds) the archive is updated when new data arrives. A negative value disables periodic updates.
+        Default ``3600``. 
+     
+     quietThreshold: (integer)
+        Specifies how long (in seconds) streams must be inactive before triggering an immediate rebuild. It helps react quickly to data inactivity instead of waiting for fillFrequency.
+        A negative value disables stream quietness monitoring, the fillFrequency above will be used to trigger periodic rebuilds.  
+        Default: ``60``
+
+     Disabling both fillFrequency and quietThreshold will make the filler ignore data older than the ``dataAge`` (manual rebuilding the archive is still possible).
+     
+     The different entries are sorted in increasing order of `dataAge` and for each tuple received on one of the monitoring streams, the last entry with the ``dataAge`` less than 
+     or equal to ``tupleAge`` where ``tupleAge = (mission time - tuple time)``, will apply. If no entry meets this condition, the tuple will be ignored.
+     
+     The default policy is  [{dataAge: -1, fillFrequency: 600, quietThreshold: 60}, {dataAge: 2, fillFrequency: -1, quietThreshold: 60}].
+     This means that data that is newer than 2 hours and up to one hour in the future causes the archive to be rebuilt every 10 minutes or 10 seconds after no data is received 
+     (unlikely since Yamcs always generates some parameters), 
+     and data that is older than 2 hours causes the archive to be rebuild as soon as no data is received for one minute. 
+      
+
+schedule (list of maps)
+    This option contains a list of schedules configuring when the parameter archive runs. This is used when the back filler does not monitor any input stream and instead rebuilds the archive according to a schedule (even if there was maybe no new data received). Each map in the list has the following keys:
+    
+    startInterval (integer)
+        **Required.** when a backfiller starts, it starts processing with this number of intervals in the past.
+    
+    numIntervals (integer)
+        **Required.**  how many intervals to process at one time
+    
+    frequency (integer)
+    
+compactFrequency (integer)
+    After how many backfilling tasks to compact the underlying RocksDB database. Because the backfiller removes the previous data, RocksDB will have lots of tombstones to skip over when reading. Compacting will get rid of the tombstones. Compacting improves the reading at the expense of writing speed.
+    ``-1`` means that no compaction will be performed (RocksDB merges by itself files, and that also gets rid of the tombstones).
+    
+    Default value: -1
+    
+
+Realtime filler Options
+-----------------------
+   
+enabled  (boolean)
+     If true the realtime filler is enabled. Default: ``true``
+ 
+processorName (String)
+     The name of the processor used to receive realtime data. Default: ``realtime``
+     
+sortingThreshold (integer) milliseconds
+     When receiving realtime data, the realtime filler builds up data in memory. In order to know that data can be written to the archive (whole segments at once) the filler needs to know that no data can be received into the old segments. This option configures in milliseconds the amount of acceptable unsorting - that is each new data timestamp which is older than the previous received data timestamp, will be accepted as long as the difference is not bigger than this.
+     
+     This option is interpreted at the level of parameter group; For example having multiple streams of TM packets (a stream understood as an ordered sequence of packets not necessarily a Yamcs stream) with different timestamps is not a problem as long as each stream has its monotonic increasing time.
+     
+     Note also the option ``pastJumpThreshold`` below. Default: ``1000`` 
+
+pastJumpThreshold (integer) seconds
+     When processing data and the time jumps in the past with more than this number of seconds, the realtime filler will flush all the segments to disk and start from scratch. Default ``86400``.
+
+numThreads (integer)
+     The realtime filler will compress and flush the segments to disk in background. This option configures how many threads should be used for that operation. The default is the total number of CPUs of the system minus 1.
+
+flushInterval (integer) seconds
+     If no data is received for a parameter group in this number of seconds, then flush the data to the archive. If data is received regularely, it will be flushed when the segment is full (see maxSegmentSize above)
+
+```
+
+### `parameter-list-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/parameter-list-service.rst`
+
+
+```rst
+Parameter List Service
+======================
+
+This service creates a ``parameter_list`` table in the Yamcs DB, and enables UI functionality relating to parameter lists.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.plists.ParameterListService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.plists.ParameterListService
+
+
+Configuration Options
+---------------------
+
+Not applicable
+```
+
+### `parameter-recorder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/parameter-recorder.rst`
+
+
+```rst
+Parameter Recorder
+==================
+
+Records parameters. This service stores the data coming from one or more streams into a table ``pp``. The term *pp* stands for processed parameter. These are parameters that typically are processed by an external system before being recorded in Yamcs. It is also used to store system parameters that are generated by Yamcs itself.
+
+.. note::
+    Parameters extracted from packets are usually not stored in ``pp``. Instead Yamcs provides a different service called the :doc:`Parameter Archive <parameter-archive-service>` which is specially optimized for data retrieval.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.ParameterRecorder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.ParameterRecorder
+
+    streamConfig:
+      param:
+        - pp_realtime
+        - sys_param
+
+With this configuration both system parameters and processed parameters coming from the ``pp_realtime`` stream are stored into the table ``pp``.
+
+
+Configuration Options
+---------------------
+
+streams (list of strings)
+  The streams to record. When unspecified, all ``param`` streams defined in ``streamConfig`` are recorded.
+```
+
+### `parameter-retrieval.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/parameter-retrieval.rst`
+
+
+```rst
+This service implements parameter retrieval. It stands behind the "/parameters" API endpoints.
+
+It has been introduced in Yamcs 5.11.0. In order to not require modification of all existing configurations, the service is enabled automatically at startup. It can still be declared in order to change the default configuration.
+
+
+The service combines retrieval from several sources:
+
+- Parameter Archive - this stores efficiently parameter values for long durations.
+  However the parameter archive is built by the back filler in segments and generally a segment cannot be used unless the full segment has been built and written to the database. 
+- Replays - this means processing a stream of packets for extracting parameters. 
+  For parameters not part of packets, a similar process is used, 
+  entire rows from the pp table have to be streamed in order to extract the value of the required parameters.
+  This process makes the replays more CPU intensive but the advantage is that up to date records can be retrieved.
+- Parameter Cache - Yamcs can cache in memory the most recently received values of some parameters. However, as this consumes RAM,
+  the number of samples which can be cached is limited.
+- Realtime Parameter Archive filler - in certain cases when it is guaranteed that only new data is received (common case during 
+  lab/flatsat/EGSE tests), the realtime filler can be used instead of the back filler. 
+  The realtime filler works as a parameter cache as well (so it can return values from the segments that are being built),
+  so the Parameter Cache is not required in this scenario.
+
+
+Configuration Options
+---------------------
+parallelRetrievals (integer)
+    Number of retrievals allowed to run concurrently. Default: 4.
+
+procName (String)
+    Name of te processor used for the realtime subscription of the parameter cache (if enabled);
+
+
+Parameter Cache options
+-----------------------
+
+These options are under the `parameterCache` configuration.
+
+enabled (boolean)
+    If true, the parameter cache will be enabled. Default: enabled with the realtime parameter archive filler is not enabled.
+            
+cacheAll (boolean)
+    If true, the cache will store all parameter value regardless if there is any user requesting them or not. If false, the values are added to the cache only for the parameters requested by a user. Once a parameter is added to the cache, its values are always cached. This option can be used to reduce the amount of memory used by the cache with the inconvenience that first time retrieving the values of one parameter will not have them in the cache. 
+
+    Note that the option `subscribeAll` above is somehow similar - if that is set to false, then only some parameters will be available for cache even if this option is set to true. Default: false
+
+duration (integer)
+    How long in seconds the parameters should be kept in the cache. This value should be tuned according to the parameter archive consolidation interval. Default: 6000
+    
+maxNumEntries (integer)
+    How many values should be kept in cache for one parameter. Default: 4096
+```
+
+### `processor-creator-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/processor-creator-service.rst`
+
+
+```rst
+Processor Creator Service
+=========================
+
+Creates persistent processors owned by the system user.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.ProcessorCreatorService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.ProcessorCreatorService
+        args:
+          name: realtime
+          type: realtime
+
+
+Configuration Options
+---------------------
+
+name (string)
+    **Required.** The name of the processor
+
+type (string)
+    **Required.** The type of the processor
+
+config (string)
+    Configuration string to pass to the processor
+```
+
+### `replay-server.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/replay-server.rst`
+
+
+```rst
+Replay Server
+=============
+
+This service handles replay requests of archived data. Each replay runs with a separate processor that runs in parallel to the realtime processing.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.ReplayServer`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.ReplayServer
+```
+
+### `replication-master.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/replication-master.rst`
+
+
+```rst
+Replication Master
+==================
+
+
+Replicates data streams to remote servers. Works both in TCP server and TCP client mode. In TCP server mode, it relies on the :doc:`../global/replication-server` to provide the TCP connectivity.
+
+In TCP client mode, it connects to a list of slaves specified in the configuration.
+
+The master works by storing stream of tuples serialized in memory mapped files :javadoc:`org.yamcs.replication.ReplicationFile`. Each tuple receives a 64 bit incremental transaction id. In addition to the tuple data, there are some metadata transactions storing information about the streams and allowing the data to be compressed. For example a parameter tuple has the potentially very long qualified parameter names as column names, these are only stored in the metadata and replaced in the data by 32 bit integers. The serialization mechanism is the same used for serializing tuples in the stream archive but there is no distinction between the key and the value.
+
+The replication files are append only (except for a header which contains the number of tuples stored) and contain a configurable number of tuples. The maximum size of the file is also configurable so a new file is created either when the maximum number of transactions has been reached or when the maximum size of the file has been reached.
+
+The replication slaves are responsible for keeping track of their last received transaction id. In both TCP client and server mode, the slaves are sending to the master the first transaction id and the master starts replaying from there. In case the slave has not connected for a long time, the first transaction may be in one of the deleted files. The master will start sending from the first transaction available.
+
+New in version 5.6.1: the master will regularly send time messages in order to keep the connection alive if there is no data. The slave can optionally use the time message to update the local mission time, synchronizing it to the master.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.replication.ReplicationMaster`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+  services:
+      - class: org.yamcs.replication.ReplicationMaster
+        args:
+            tcpRole: client
+            pageSize: 500
+            maxPages: 500
+            streams: ["tm_realtime", "tm2_realtime"]
+            maxFileSizeKB: 102400
+            expirationDays: 7
+            fileCloseTimeSec: 300
+            slaves:
+                - host: "localhost"
+                  port: 8099
+                  instance: "node2"
+                  enableTls: false
+            reconnectionInterval: 5000
+
+Configuration Options
+---------------------
+
+tcpRole  (string)
+    **Required** One of client or server.
+
+maxPages (integer)
+    The number of pages of the replication file. The replication file header contains an index allowing to access the start of each page. Thus more pages, the faster is to jump to a given transaction but the larger the header. Since seeking a transaction is only performed when a slave connects, it is not critical that the search is very fast. The total number of transactions in one file is ``maxPages`` times ``pageSize``. Default: 500
+
+pageSize (integer)
+    The number of transactions on one page. Default: 500
+ 
+streams (list of strings)
+    The list of streams that will be replicated. The replication file will contain multiplexed data from these streams in order in which the data is generated. The connected slaves will receive data from all streams but they may filter it out locally.
+    
+maxFileSizeKB (integer)
+    Maximum size in KB of the replication file. Default 102400 (e.g. the maximum file size will be 100 MB).
+ 
+fileCloseTimeSec (integer)
+    How many seconds to keep a file open after being accessed by a slave. Default: 300.
+
+expirationDays (double)
+    How many days to keep the replication files before removing them. Default: 7
+
+slaves (list of maps)
+    **Required** if the ``tcpRole`` is ``client``. The list of slaves to connect to. Each slave is specified as a host/port and the slave instance name. In addition, TLS (encrypted connections) can be specified for each slave individually using the ``enableTls`` option.
+
+    The replication master will connect to the replication server on the remote host/port and will send a Wakeup message containing the salve instance name; the replication server will then redirect the connection to the corresponding replication slave if one has registered for the given instance.
+
+reconnectionIntervalSec (integer)
+    If the ``tcpRole`` is ``client`` this configures how often in seconds the replication master will try to connect to the salve if the connection is broken. A negative value means that no reconnection will take place.
+
+timeMsgFreqSec (integer)
+    Added in version 5.6.1. How often (in seconds) should send the time messages. Default: 10
+```
+
+### `replication-slave.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/replication-slave.rst`
+
+
+```rst
+.. _replication-slave:
+
+Replication Slave
+==================
+
+
+The slave counterpart to the :doc:`replication-master`.  It receives serialized tuple data from the master and injects it in the local stream. Works both in TCP server and TCP client mode. In TCP server mode, it relies on the :doc:`../global/replication-server` to provide the TCP connectivity. 
+In TCP client mode, it connects to the master defined in the configuration.
+
+The slave keeps track of the id of the last transaction received from the master in a local text file :file:`{yamcs-data}/{instance}/replication/slave-lastid.txt`. Each time the connection to the master is established, it sends a request containing the last transaction id, plus one. The master will start replaying data from that transaction. If the replication slave does not find the file at startup, it will receive all the data that the master has.
+
+There can be two or replication slaves running for the same instance, connected to two different masters.
+
+To avoid an infinite message flood caused by a miss-configuration whereby a slave receives and inserts into a stream the data which was extracted from the same stream, each incoming messages contains a 32 bit ``instance id``. This is the id of the instance where the message has originated from. If a slave receives a message with its own instance id it will discard it and not insert it into the stream.
+
+The instance id is calculated as a hash code from the ``<serverId>.<instanceName>``. The serverId is by default the hostname but can be changed in :file:`etc/yamcs.yaml`.
+
+New in version 5.6.1: the master will regularly send time messages in order to keep the connection alive if there is no data. The slave can optionally use the time message to update the local mission time, synchronizing it to the master.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.replication.ReplicationSlave`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+  services:
+      - class: org.yamcs.replication.ReplicationSlave
+        args:
+            tcpRole: client
+            masterHost: localhost
+            masterPort: 8099
+            masterInstance: node1
+            enableTls: false
+            reconnectionIntervalSec: 30
+            streams: ["tm_realtime", "sys_param"]
+            lastTxFile: "slave-lastid.txt"
+
+
+Configuration Options
+---------------------
+
+tcpRole  (string)
+    **Required** One of client or server.
+
+masterHost (string)
+    **Required** if the ``tcpRole`` is ``client``. The hostname of the master. Not relevant if the ``tcpRole`` is ``server``.
+    
+masterPort (integer)
+    **Required** if the ``tcpRole`` is ``client``. The port of the master.  Not relevant if the ``tcpRole`` is ``server``.
+    
+masterInstance (string)
+    **Required** if the ``tcpRole`` is ``client``. The instance of the master. When working in ``server`` tcp mode, the instance on which the master is configured determines the data which will be passed to the slave. If two masters try to connect to the same slave, only the first connection will be accepted. 
+
+enableTls (boolean)
+     **Required**  Used when ``tcpRole`` is ``client``. If true, a TLS connection will be attempted. The server provided certificate will be checked against the trustStore in Yamcs :file:`etc/` directory. If the ``tcpRole`` is ``server`` the usage or not of TLS is determined by the configuration of the :doc:`../global/replication-server`.
+     
+reconnectionIntervalSec (integer)
+    If the ``tcpRole`` is ``client`` this configures how often in seconds the slave will try to connect to the master if the connection is broken. A negative value means that no reconnection will take place. Default: 30
+               
+streams (list of strings)
+    The list of streams that will be processed. The master may send data from other streams but they will be filtered out.
+
+lastTxFile (String)
+    The name of file where the slave will keep track of the last transaction id received from the server. It defaults to the ``<service-name>-lastid.txt``
+
+maxTupleSize (integer)
+    if the ``tcpRole`` is ``client`` this configures the maximum size of one message received from the master.  If the serialized tuples are larger than this size, this limit has to be increased otherwise the tuples cannot be transferred. Default 131072 (128KB).
+
+timeoutSec (float)
+    Added in version 5.6.1. Timeout (in seconds) for detecting broken connections. If no message is received in this time from the master, the connection will be closed. Even if there is no data, the master sends a time message at configurable intervals.
+
+    Default: 30.
+
+updateSimTime (boolean)
+    Added in version 5.6.1. If true, update the simulation time with the time received from the master in the time messages, allowing to synchronize the mission time between the master an the slave. This only works if the ``SimulationTimeService`` is configured on the same instance with this service. The time0 will be set to 0 at the service startup. The messages received regularly from the master contain the triplet (localTime, missionTime, speed) and will be used to call the methods ``setSimElapsedTime(long javaTime, long simElapsedTime)`` and ``setSpeed(double speed)`` in the ``SimulationTimeService``.
+    
+    The synchronization relies on the fact that the local (UNIX) times are synchronized between master and slave. This has to be ensured at the system level (e.g. using NTP).
+
+    Default: false
+```
+
+### `system-parameters-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/system-parameters-service.rst`
+
+
+```rst
+System Parameters Service
+===========================
+
+Collects system parameters from any Yamcs component at a frequency of 1 Hz. Parameter values are emitted to the ``sys_var`` stream.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.parameter.SystemParametersService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.parameter.SystemParametersService
+        args:
+          provideJvmVariables: true
+
+
+Configuration Options
+---------------------
+
+provideJvmVariables (boolean)
+    When set to ``true`` this service will create a few system parameters that allows monitoring basic JVM properties such as memory usage and thread count. Default: ``false``
+```
+
+### `time-correlation.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/time-correlation.rst`
+
+
+```rst
+Time Correlation Service
+========================
+
+Correlates (synchronizes) time between a free running on-board clock and ground.
+
+It receives samples ``(obt, ert)`` where:
+
+* ``obt`` - onboard time considered to be a counter running based on an on-board computer clock.
+* ``ert`` - Earth Reception Time - the time when the signal has been received on the ground - it is typically provided by a ground station.
+ 
+It takes into account the parameters:
+
+* ``onboardDelay``: Covers any delay happening on-board (sampling time, radiation time)
+* ``tof``: Time of flight: the time it takes for the signal to reach the ground. This can be fixed or computed by dynamically interpolating from data provided by a flight dynamics system.
+
+Assuming that:
+ ob_time = ert - (tof + onboardDelay)
+
+the service will compute ``m`` = gradient and ``c`` = offset such that:
+ ob_time = m * obt + c
+ 
+Using the computed gradient and offset, the free running obt can be correlated  to the ground time. The process has to be repeated each time the on-board computer resets to 0 (this typically happens when the computer reboots). This method can compensate for a linear drift of the on-board clock.
+
+The determination of the gradient and offset is done using the least squares method.
+ 
+The number of samples used for computing the coefficients is configurable and has to be minimum 2.
+
+The ground time ``ert`` being provided by a ground station (and not by Yamcs), is considered to be accurate enough for the required purpose.
+
+*Note about accuracy*: the main usage of this service is to timestamp the telemetry received from the on-board system. Yamcs keeps such timestamps at milliseconds resolution. However the service keeps internally the time at picosecond resolution so theoretically it can be used to achieve better than millisecond accuracy. In practice this is not so easy: it requires an accurate on-board clock, an accurate ground-station clock, a good time of flight estimation taking into account various effects (ionospheric, tropospheric delays, etc). All the dynamic delays have to be incorporated into the time of flight estimation.
+  
+ 
+Accuracy and validity
+---------------------
+
+Once the coefficients have been calculated, for each new sample received a deviation is calculated as the delta between the OBT computed using the coefficients and the OBT which is part of the sample (after adjusting for delays). The deviation is compared with the accuracy and validity parameters:
+ 
+* If the deviation is greater than ``accuracy`` but smaller than ``validity``, then a recalculation of the coefficients is performed based on the last received samples.
+* If the deviation is greater than ``validity`` then the coefficients are declared as invalid and all the samples from the buffer except the last one are dropped. The time returned by ``getTime()`` will be invalid until the required number of new samples is received and the next recalculation is performed.
+
+ 
+Verify Only Mode
+----------------
+
+If the on-board clock is synchronized via a different method, this service can still be used to verify the synchronization.
+ 
+  
+The method ``verify(TmPacket pkt)`` will check the difference between the packet generation time and the expected generation time (using ``ert - delays``) and in case the difference is greater than the validity, the packet will be changed with the local computed time and the flag {@link TmPacket#setLocalGenTime()} will also be set.
+
+
+Usage
+-----
+  
+To use this service the preprocessor (or other mission specific service) will adds samples using the ``addSample(long, Instant)`` each time it receives a correlation sample from on-board. How the on-board system will send such samples is mission specific (for  example the PUS protocol defines some specific time packets for this purpose).
+
+The preprocessor can then use the method ``getTime(long obt)`` to get the time corresponding to the ``obt`` or call ``timestamp(long obt, TmPacket pkt)`` to timestamp the packet. 
+The second method will timestamp the packet with a time derived from the ``ert`` if the service is not synchronized. A corresponding flag will be set on the packet so it can be distinguished in the archive.
+
+
+Time of flight estimation
+-------------------------
+
+As explained above, the correlation process requires the estimation of the time of flight between the spacecraft and the ground station. This can be configured to a static value or dynamically computed based on the user supplied polynomials on time intervals. The :apidoc:`HTTP API <time-correlation/add-time-of-flight-intervals/>` can be used to add the intervals and corresponding polynomials. 
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.time.TimeCorrelationService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+  services:
+      - class: org.yamcs.time.TimeCorrelationService
+        name: tco0
+        args:            
+            onboardDelay: 0.0
+            useTofEstimator: false
+            defaultTof: 0.0
+            accuracy: 0.1
+            validity: 0.2
+            numSamples: 3            
+
+
+Configuration Options
+---------------------
+
+onboardDelay  (double)
+    The on-board delay in seconds. This is a fixed value estimating the time it takes for the time packet to leave the spacecraft. The default value is 0 seconds.
+
+useTofEstimator (boolean)
+    Flag to enable or disable time of flight estimator service. The default value is false. Enable time of flight estimator service when it is required to dynamically compute the time of flight.
+
+defaultTof (double)
+    The default time of flight in seconds. This value is used if the tof estimator does not return a value because no interval has been configured.
+
+accuracy (double)
+    The accuracy in seconds. See above for an explanation on how this value is used. Default: 0.1 (100 milliseconds). 
+ 
+validity (double)
+    The validity in seconds. See above for an explanation on how this value is used. Default: 0.2 (200 milliseconds). 
+
+numSamples (integer)
+    How many samples to collect before computing the correlation coefficients. It has to be minimum 2. Default: 3.
+```
+
+### `timeline-service.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/timeline-service.rst`
+
+
+```rst
+Timeline Service
+================
+
+This services enables Timeline and Activity-related functionalities.
+
+The Yamcs Timeline provides a visual, chronological overview of mission events. It can also be used to schedule activities for future execution.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.timeline.TimelineService`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.timeline.TimelineService
+        args:
+          activities:
+            scriptExecution:
+              searchPath: etc/scripts
+              impersonateCaller: false
+              fileAssociations:
+                py: python3 -u
+
+
+Configuration Options
+---------------------
+
+scheduling (map)
+  Placeholder for future scheduling-related options. Nothing currently.
+
+activities (map)
+  Optional configuration for each of the supported activity executors.
+
+  The built-in types are ``commandExecution``, ``stackExecution`` and ``scriptExecution``. These are further described in the sub-configuration sections below.
+
+
+Command execution sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Placeholder for future command executor options. Nothing currently.
+
+
+Stack execution sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Placeholder for future stack executor options. Nothing currently.
+
+
+Script execution sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+searchPath (string or string[])
+  Directory where to locate scripts or executables.
+
+  Default: :file:`etc/scripts`
+
+fileAssociations (map)
+  Extend or override the default file associations. Each entry maps a file extension (case-insensitive) to a program that should be used to execute this file.
+
+  The default file associations are:
+
+  .. code-block:: yaml
+
+      fileAssociations:
+        java: java
+        js: node
+        mjs: node
+        pl: perl
+        py: python -u
+        rb: ruby
+
+  Any file that does not have an association, is executed directly.
+
+impersonateCaller (boolean)
+  Scripts receive a transient API key via an environment variable. By default this API key uses the built-in ``System`` user, which provides unrestricted access.
+
+  When this property is enabled, the script receives instead an API key of the user that started the activity.
+
+  Default: ``false``
+```
+
+### `xtce-tm-recorder.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/instance/xtce-tm-recorder.rst`
+
+
+```rst
+XTCE TM Recorder
+================
+
+Records XTCE TM sequence containers. This service stores the data coming from one or more streams into a table ``tm``. The tm table has a column called ``pname`` which stands for packet name. The main task of this service is to assign the value for that column; all the other columns will come directly from the tm stream as provided by the data links.
+
+The pname is a fully qualified name of a matching XTCE container. In the XTCE hierarchy some containers have a flag ``useAsArchivingPartition`` (this flag is an Yamcs extension to XTCE). That flag is used to determine the container that will give its name to the packet when saved into the tm table - the name of the lowest level matching container with this flag set is chosen as the pname. If no container matches, then the name of the root container will be used. 
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.archive.XtceTmRecorder`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.{instance}.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.archive.XtceTmRecorder
+
+    streamConfig:
+      tm:
+        - tm_realtime
+        - tm_dump
+
+With this configuration containers coming from both the tm_realtime and tm_dump streams are stored into the table ``tm``.
+
+
+Configuration Options
+---------------------
+
+streams (list of strings)
+    The streams to record. When unspecified, all ``tm`` streams defined in ``streamConfig`` are recorded.
+```

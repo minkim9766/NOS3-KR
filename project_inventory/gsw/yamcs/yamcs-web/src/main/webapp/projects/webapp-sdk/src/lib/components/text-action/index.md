@@ -3,18 +3,101 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `text-action.component.css`
 
-file--text-action.component.css
-file--text-action.component.html
-file--text-action.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.css`
+
+
+```css
+:host {
+  text-decoration: none;
+  display: inline-flex;
+  column-gap: 4px;
+  vertical-align: middle;
+  align-items: center;
+  color: #000;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  font-size: 12px;
+}
+
+:host:hover {
+  color: #009e87;
+}
+
+:host.active {
+  color: #009e87;
+  margin-bottom: -2px;
+  border-bottom: 2px solid #009e87;
+}
+
+:host.disabled {
+  cursor: not-allowed;
+  color: #aaa;
+}
+
+:host.padding {
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+.material-symbols {
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+  line-height: 16px;
+  vertical-align: middle;
+}
 ```
 
-## 항목
+### `text-action.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.css`](file--text-action.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.html`](file--text-action.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.ts`](file--text-action.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.html`
+
+
+```html
+@if (icon(); as icon) {
+  <mat-icon>{{ icon }}</mat-icon>
+}
+<span>
+  <ng-content />
+</span>
+```
+
+### `text-action.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/text-action/text-action.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+@Component({
+  selector: 'ya-text-action',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './text-action.component.html',
+  styleUrl: './text-action.component.css',
+  host: {
+    class: 'ya-text-action',
+    '[class.active]': 'active()',
+    '[class.padding]': 'padding()',
+    '[class.disabled]': 'disabled()',
+  },
+  imports: [MatIcon],
+})
+export class YaTextAction {
+  icon = input<string>();
+  active = input(false, { transform: booleanAttribute });
+  padding = input(true, { transform: booleanAttribute });
+  disabled = input(false, { transform: booleanAttribute });
+}
+```

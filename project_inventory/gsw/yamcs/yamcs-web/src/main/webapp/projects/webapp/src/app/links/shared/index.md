@@ -3,14 +3,70 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `link.service.ts`
 
-file--link.service.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/shared/link.service.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActionInfo, MessageService, YamcsService } from '@yamcs/webapp-sdk';
+import { LinkActionDialogComponent } from '../link-action-dialog/link-action-dialog.component';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LinkService {
+  private dialog = inject(MatDialog);
+  private yamcs = inject(YamcsService);
+  private messageService = inject(MessageService);
+  private snackBar = inject(MatSnackBar);
+
+  runAction(link: string, action: ActionInfo) {
+    if (action.spec) {
+      this.dialog
+        .open(LinkActionDialogComponent, {
+          data: { action },
+          width: '600px',
+        })
+        .afterClosed()
+        .subscribe((result) => {
+          if (result) {
+            this.submitRequest(link, action, result);
+          }
+        });
+    } else {
+      this.submitRequest(link, action);
+    }
+  }
+
+  private submitRequest(
+    link: string,
+    action: ActionInfo,
+    message?: { [key: string]: any },
+  ) {
+    this.snackBar.open(`Running '${action.label}' ...`, undefined, {
+      horizontalPosition: 'end',
+    });
+    this.yamcs.yamcsClient
+      .runLinkAction(this.yamcs.instance!, link, action.id, message)
+      .then(() => {
+        this.snackBar.open(`'${action.label}' successful`, undefined, {
+          duration: 3000,
+          horizontalPosition: 'end',
+        });
+      })
+      .catch((err) => {
+        this.messageService.showError(err);
+        this.snackBar.open(`'${action.label}' failed`, undefined, {
+          duration: 3000,
+          horizontalPosition: 'end',
+        });
+      });
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/shared/link.service.ts`](file--link.service.ts) — UTF-8 텍스트 파일 본문 포함

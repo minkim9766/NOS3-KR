@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,20 +13,733 @@ edit-parameter-plot/index
 parameter-plot-styles/index
 parameter-plot-tooltip/index
 trace-styles/index
-file--ParameterPlot.ts
-file--PlotBuffer.ts
-file--PlotDataSource.ts
-file--PlotPoint.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/create-parameter-plot/`](create-parameter-plot/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/edit-parameter-plot/`](edit-parameter-plot/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-styles/`](parameter-plot-styles/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/`](parameter-plot-tooltip/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/`](trace-styles/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/ParameterPlot.ts`](file--ParameterPlot.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotBuffer.ts`](file--PlotBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotDataSource.ts`](file--PlotDataSource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotPoint.ts`](file--PlotPoint.ts) — UTF-8 텍스트 파일 본문 포함
+### `ParameterPlot.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/ParameterPlot.ts`
+
+
+```typescript
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ElementRef } from '@angular/core';
+import { Line, LinePlot } from '@fqqb/timeline';
+import {
+  BackfillingSubscription,
+  ConfigService,
+  Synchronizer,
+  TimelineBand,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { NamedParameterType } from '../../shared/parameter-plot/NamedParameterType';
+import {
+  BooleanProperty,
+  ColorProperty,
+  convertColor,
+  NumberProperty,
+  PropertyInfoSet,
+  resolveProperties,
+  TextProperty,
+} from '../shared/properties';
+import { TimelineChartComponent } from '../timeline-chart/timeline-chart.component';
+import { ParameterPlotTooltipComponent } from './parameter-plot-tooltip/parameter-plot-tooltip.component';
+import { PlotDataSource } from './PlotDataSource';
+
+export const propertyInfo: PropertyInfoSet = {
+  frozen: new BooleanProperty(false),
+  height: new NumberProperty(30),
+  minimum: new NumberProperty(),
+  maximum: new NumberProperty(),
+  zeroLineWidth: new NumberProperty(0),
+  zeroLineColor: new ColorProperty('#ff0000'),
+  minimumFractionDigits: new NumberProperty(0),
+  maximumFractionDigits: new NumberProperty(2),
+};
+
+export function createTracePropertyInfo(
+  index: number,
+  color: string,
+): PropertyInfoSet {
+  const set: PropertyInfoSet = {};
+  set[`trace_${index}_parameter`] = new TextProperty('');
+  set[`trace_${index}_lineColor`] = new ColorProperty(color);
+  set[`trace_${index}_visible`] = new BooleanProperty(true);
+  set[`trace_${index}_lineWidth`] = new NumberProperty(1);
+  set[`trace_${index}_fill`] = new BooleanProperty(false);
+  set[`trace_${index}_fillColor`] = new ColorProperty('#dddddd');
+  set[`trace_${index}_minMax`] = new BooleanProperty(false);
+  set[`trace_${index}_minMaxOpacity`] = new NumberProperty(0.17);
+  return set;
+}
+
+export function resolveTraceProperties(
+  index: number,
+  info: PropertyInfoSet,
+  properties: { [key: string]: any },
+) {
+  const prefix = `trace_${index}_`;
+  const prefixedResult = resolveProperties(info, properties);
+  const lstripped: { [key: string]: any } = {};
+  for (const key in prefixedResult) {
+    lstripped[key.slice(prefix.length)] = prefixedResult[key];
+  }
+  return lstripped;
+}
+
+export const DEFAULT_COLORS = [
+  '#1b73e8',
+  '#129eaf',
+  '#d01984',
+  '#34a853',
+  '#7626bb',
+  '#e64b19',
+];
+
+export class ParameterPlot extends LinePlot {
+  private dataSource: PlotDataSource;
+
+  private tooltipInstance: ParameterPlotTooltipComponent;
+  private backfillSubscription?: BackfillingSubscription;
+
+  constructor(
+    chart: TimelineChartComponent,
+    bandInfo: TimelineBand,
+    yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    configService: ConfigService,
+    overlay: Overlay,
+  ) {
+    super(chart.timeline);
+    this.label = bandInfo.name;
+    this.data = { band: bandInfo };
+
+    const properties = resolveProperties(
+      propertyInfo,
+      bandInfo.properties || {},
+    );
+    this.frozen = properties.frozen ?? propertyInfo.frozen.defaultValue;
+    this.contentHeight = properties.height ?? propertyInfo.height.defaultValue;
+    this.labelBackground = 'rgba(255, 255, 255, 0.75)';
+    this.minimum = properties.minimum ?? propertyInfo.minimum.defaultValue;
+    this.maximum = properties.maximum ?? propertyInfo.maximum.defaultValue;
+    this.zeroLineWidth =
+      properties.zeroLineWidth ?? propertyInfo.zeroLineWidth.defaultValue;
+    this.zeroLineColor =
+      properties.zeroLineColor ?? propertyInfo.zeroLineColor.defaultValue;
+
+    const numberFormat = Intl.NumberFormat('en-US', {
+      minimumFractionDigits:
+        properties.minimumFractionDigits ??
+        propertyInfo.minimumFractionDigits.defaultValue,
+      maximumFractionDigits:
+        properties.maximumFractionDigits ??
+        propertyInfo.maximumFractionDigits.defaultValue,
+      useGrouping: false,
+    });
+    this.labelFormatter = (value) => numberFormat.format(value);
+
+    const bodyRef = new ElementRef(document.body);
+    const positionStrategy = overlay
+      .position()
+      .flexibleConnectedTo(bodyRef)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ])
+      .withPush(false);
+
+    const overlayRef = overlay.create({ positionStrategy });
+    const tooltipPortal = new ComponentPortal(ParameterPlotTooltipComponent);
+    this.tooltipInstance = overlayRef.attach(tooltipPortal).instance;
+
+    const traces: Array<{ [key: string]: any }> = [];
+
+    let idx = 1;
+    while (true) {
+      const tracePropertyInfo = createTracePropertyInfo(idx, '#zzzzzz');
+      const traceProperties = resolveTraceProperties(
+        idx,
+        tracePropertyInfo,
+        bandInfo.properties || {},
+      );
+      if (!traceProperties.parameter) {
+        break;
+      }
+      idx++;
+      traces.push(traceProperties);
+    }
+
+    this.dataSource = new PlotDataSource(yamcs, synchronizer, configService);
+    this.dataSource.data$.subscribe((data) => {
+      const lines: Line[] = [];
+      for (let i = 0; i < traces.length; i++) {
+        const trace = traces[i];
+        const series = data.length ? data[i] : [];
+        const pointsByTime = new Map<number, number | null>();
+        const minMax = new Map<number, [number, number] | null>();
+        for (let j = 0; j < series.length; j++) {
+          const point = series[j];
+          if (point.n === 0) {
+            pointsByTime.set(point.time, null);
+            minMax.set(point.time, null);
+          } else {
+            const prevIsGap = j === 0 || series[j - 1].n === 0;
+            const nextIsGap = j === series.length - 1 || series[j + 1].n === 0;
+
+            let time: number;
+            if (prevIsGap && !nextIsGap) {
+              time = point.firstTime;
+            } else if (!prevIsGap && nextIsGap) {
+              time = point.lastTime;
+            } else {
+              time = point.time;
+            }
+
+            pointsByTime.set(time, point.avg);
+            minMax.set(time, [point.min!, point.max!]);
+          }
+        }
+        const hexOpacity = Math.floor(trace.minMaxOpacity * 255).toString(16);
+        lines.push({
+          visible: trace.visible,
+          points: pointsByTime,
+          pointRadius: 0,
+          lohi: trace.minMax ? minMax : undefined,
+          lineColor: trace.lineColor,
+          lohiColor: convertColor(trace.lineColor) + hexOpacity,
+          lineWidth: trace.lineWidth,
+          fill: trace.fill ? trace.fillColor : 'transparent',
+        });
+      }
+      this.lines = lines;
+    });
+
+    this.backfillSubscription = yamcs.yamcsClient.createBackfillingSubscription(
+      {
+        instance: yamcs.instance!,
+      },
+      (update) => {
+        if (update.finished) {
+          this.dataSource.reloadVisibleRange();
+        }
+      },
+    );
+
+    const toAdd: NamedParameterType[] = [];
+    for (let i = 0; i < traces.length; i++) {
+      toAdd.push({ qualifiedName: traces[i].parameter });
+    }
+    if (toAdd.length) {
+      this.dataSource.addParameter(...toAdd);
+    }
+
+    this.addMouseMoveListener((evt) => {
+      this.tooltipInstance.show(
+        evt.clientX,
+        evt.clientY,
+        new Date(evt.time),
+        traces,
+        evt.points,
+        this.labelFormatter,
+      );
+    });
+    this.addMouseLeaveListener((evt) => {
+      this.tooltipInstance.hide();
+    });
+  }
+
+  refreshData() {
+    const loadStart = this.timeline.start;
+    const loadStop = this.timeline.stop;
+    this.dataSource.updateWindow(new Date(loadStart), new Date(loadStop));
+  }
+
+  override disconnectedCallback(): void {
+    this.backfillSubscription?.cancel();
+    this.dataSource.disconnect();
+  }
+}
+```
+
+### `PlotBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotBuffer.ts`
+
+
+```typescript
+import { PlotPoint } from './PlotPoint';
+
+export type WatermarkObserver = () => void;
+
+export interface NamedSeries {
+  name: string;
+  series: PlotPoint[];
+}
+
+export type PlotSeries = PlotPoint[];
+
+/**
+ * Buffer for a single parameter's realtime values.
+ *
+ * This merges incoming values together in a single
+ * data point (~ equivalent of an archive sample),
+ * except when gaps are detected.
+ */
+class RealtimeBuffer {
+  private buffer: (PlotPoint | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+  public forceNextPoint = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.buffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  push(point: PlotPoint) {
+    let prev: PlotPoint | undefined = undefined;
+    if (this.pointer > 0) {
+      prev = this.buffer[this.pointer - 1];
+    }
+
+    // Merge with previous point when possible
+    if (prev && !this.forceNextPoint) {
+      if (prev.n === 0 && point.n === 0) {
+        // Consecutive gaps
+        prev.time = Math.min(prev.time, point.time);
+        prev.firstTime = Math.min(prev.firstTime, point.firstTime);
+        prev.lastTime = Math.max(prev.lastTime, point.lastTime);
+        return;
+      } else if (prev.n > 0 && point.n > 0) {
+        // Consecutive non-gaps
+        prev.time = Math.min(prev.time, point.time);
+        prev.firstTime = Math.min(prev.firstTime, point.firstTime);
+        prev.lastTime = Math.max(prev.lastTime, point.lastTime);
+        prev.min = Math.min(prev.min!, point.min!);
+        prev.max = Math.max(prev.max!, point.max!);
+        prev.n += point.n;
+        prev.avg! -= prev.avg! / prev.n;
+        prev.avg! += point.avg! / prev.n;
+        return;
+      }
+    }
+
+    // Can't merge: new point
+    if (this.pointer < this.bufferSize) {
+      this.buffer[this.pointer] = point;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.watermarkObserver();
+        this.alreadyWarned = true;
+      }
+      this.pointer = this.pointer + 1;
+    }
+
+    // Unset, so we can merge going forward
+    this.forceNextPoint = false;
+  }
+
+  snapshot() {
+    return this.buffer.filter((s) => s !== undefined);
+  }
+
+  reset() {
+    this.buffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.forceNextPoint = false;
+  }
+}
+
+/**
+ * Combines archive samples obtained via REST
+ * with realtime samples obtained via WebSocket.
+ *
+ * This class does not care about whether archive samples
+ * and realtime values are connected. Both sets are joined
+ * and sorted under all conditions.
+ */
+export class PlotBuffer {
+  private archiveData = new Map<string, PlotPoint[]>();
+  private realtimeBuffers = new Map<string, RealtimeBuffer>();
+
+  constructor(private watermarkObserver: WatermarkObserver) {}
+
+  setArchiveData(archiveData: NamedSeries[]) {
+    this.archiveData.clear();
+    for (const series of archiveData) {
+      this.archiveData.set(series.name, series.series);
+    }
+  }
+
+  addRealtimeValue(seriesName: string, point: PlotPoint) {
+    let realtimeBuffer = this.realtimeBuffers.get(seriesName);
+    if (!realtimeBuffer) {
+      realtimeBuffer = new RealtimeBuffer(this.watermarkObserver);
+      this.realtimeBuffers.set(seriesName, realtimeBuffer);
+    }
+
+    realtimeBuffer.push(point);
+  }
+
+  forceNextPoint() {
+    this.realtimeBuffers.forEach((b) => (b.forceNextPoint = true));
+  }
+
+  reset() {
+    this.archiveData.clear();
+    this.realtimeBuffers.forEach((b) => b.reset());
+  }
+
+  snapshot(start: number, stop: number): PlotSeries[] {
+    const allSeries: PlotSeries[] = [];
+
+    for (const [name, archivePoints] of this.archiveData) {
+      const realtimeBuffer = this.realtimeBuffers.get(name)?.snapshot() || [];
+      const realtimePoints = realtimeBuffer.filter((s) => s !== undefined);
+
+      // Archive sample data contains [null] points for future data (because of empty buckets)
+      // Filter these out so that they don't overlap with incoming realtime.
+      let archiveCutOff: number | null = null;
+      if (realtimePoints.length > 0) {
+        archiveCutOff = realtimePoints[0].firstTime;
+      }
+
+      let splicedPoints = archivePoints.filter(
+        (s) => archiveCutOff === null || s.firstTime < archiveCutOff,
+      );
+
+      // Ignore realtime points if they fall outside of the visible
+      // viewport (this avoids seeing a straight line between the
+      // archive tail and realtime head when panning).
+      if (realtimePoints.length > 0) {
+        if (realtimePoints[0].firstTime <= stop) {
+          splicedPoints = splicedPoints.concat(realtimePoints);
+        }
+      }
+
+      splicedPoints = splicedPoints.sort(
+        (s1, s2) => s1.firstTime - s2.firstTime,
+      );
+      allSeries.push(splicedPoints);
+    }
+    return allSeries;
+  }
+}
+```
+
+### `PlotDataSource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotDataSource.ts`
+
+
+```typescript
+import {
+  ConfigService,
+  NamedObjectId,
+  ParameterSubscription,
+  ParameterValue,
+  Sample,
+  Synchronizer,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { NamedParameterType } from '../../shared/parameter-plot/NamedParameterType';
+import { NamedSeries, PlotBuffer, PlotSeries } from './PlotBuffer';
+import { PlotPoint } from './PlotPoint';
+
+/**
+ * Stores sample data for use in a ParameterPlot.
+ */
+export class PlotDataSource {
+  // How many samples to load at once
+  resolution = 6000;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  data$ = new BehaviorSubject<PlotSeries[]>([]);
+
+  visibleStart: Date;
+  visibleStop: Date;
+
+  parameters$ = new BehaviorSubject<NamedParameterType[]>([]);
+  private plotBuffer: PlotBuffer;
+
+  private lastLoadPromise: Promise<any> | null;
+
+  private realtimeSubscription: ParameterSubscription;
+  private syncSubscription: Subscription;
+  private idMapping: { [key: number]: NamedObjectId };
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    private configService: ConfigService,
+  ) {
+    this.syncSubscription = synchronizer.sync(() => {
+      this.plotBuffer.forceNextPoint();
+      this.emitDataUpdate();
+    });
+    this.plotBuffer = new PlotBuffer(() => {
+      this.reloadVisibleRange();
+    });
+  }
+
+  private emitDataUpdate() {
+    if (!this.loading$.getValue()) {
+      const visibleStart = this.visibleStart.getTime();
+      const visibleStop = this.visibleStop.getTime();
+      const plotData = this.plotBuffer.snapshot(visibleStart, visibleStop);
+      this.data$.next(plotData);
+    }
+  }
+
+  public addParameter(...parameter: NamedParameterType[]) {
+    this.parameters$.next([...this.parameters$.value, ...parameter]);
+
+    if (this.realtimeSubscription) {
+      const ids = parameter.map((p) => ({ name: p.qualifiedName }));
+      this.addToRealtimeSubscription(ids);
+    } else {
+      this.connectRealtime();
+    }
+  }
+
+  public removeParameter(qualifiedName: string) {
+    const parameters = this.parameters$.value.filter(
+      (p) => p.qualifiedName !== qualifiedName,
+    );
+    this.parameters$.next(parameters);
+  }
+
+  /**
+   * Triggers a new server request for samples.
+   */
+  reloadVisibleRange() {
+    return this.updateWindow(this.visibleStart, this.visibleStop);
+  }
+
+  updateWindowOnly(start: Date, stop: Date) {
+    this.visibleStart = start;
+    this.visibleStop = stop;
+  }
+
+  updateWindow(start: Date, stop: Date) {
+    if (this.configService.getConfig().tmArchive) {
+      this.loading$.next(true);
+      // Load some offscreen data to reduce chances of being able to connect
+      // an offscreen point with the start of the visible plot line.
+      const offscreenEdge = (stop.getTime() - start.getTime()) / 10;
+      const loadStart = new Date(start.getTime() - offscreenEdge);
+      const loadStop = new Date(stop.getTime());
+
+      const parameters = this.parameters$.value;
+      const promises: Promise<any>[] = [];
+      for (const parameter of parameters) {
+        promises.push(
+          this.yamcs.yamcsClient.getParameterSamples(
+            this.yamcs.instance!,
+            parameter.qualifiedName,
+            {
+              start: loadStart.toISOString(),
+              stop: loadStop.toISOString(),
+              count: this.resolution,
+              fields: [
+                'time',
+                'n',
+                'avg',
+                'min',
+                'max',
+                'firstTime',
+                'lastTime',
+              ],
+              gapTime: 300000,
+              source: this.configService.isParameterArchiveEnabled()
+                ? 'ParameterArchive'
+                : 'replay',
+            },
+          ),
+        );
+      }
+
+      const loadPromise = Promise.allSettled(promises);
+      this.lastLoadPromise = loadPromise;
+      return loadPromise.then((results) => {
+        // Effectively cancels past requests
+        if (this.lastLoadPromise === loadPromise) {
+          this.loading$.next(false);
+          this.plotBuffer.reset();
+          this.visibleStart = start;
+          this.visibleStop = stop;
+          const namedSeries: NamedSeries[] = [];
+          for (let i = 0; i < results.length; i++) {
+            const result = results[i];
+            if (result.status === 'fulfilled') {
+              namedSeries.push({
+                name: parameters[i].qualifiedName,
+                series: this.processSamples(result.value),
+              });
+            } else {
+              console.warn(
+                `Failed to retrieve samples for ${parameters[i].qualifiedName}`,
+                result.reason,
+              );
+              namedSeries.push({
+                name: parameters[i].qualifiedName,
+                series: [],
+              });
+            }
+          }
+          this.plotBuffer.setArchiveData(namedSeries);
+          // Quick emit, don't wait on sync tick
+          this.emitDataUpdate();
+          this.lastLoadPromise = null;
+        }
+      });
+    } else {
+      this.plotBuffer.reset();
+      this.visibleStart = start;
+      this.visibleStop = stop;
+      // Even though there's no archive, pass series
+      // information to PlotBuffer. It uses it to order
+      // data when snapshotting.
+      const namedSeries: NamedSeries[] = [];
+      const parameters = this.parameters$.value;
+      for (let i = 0; i < parameters.length; i++) {
+        namedSeries.push({
+          name: parameters[i].qualifiedName,
+          series: [],
+        });
+      }
+      this.plotBuffer.setArchiveData(namedSeries);
+      // Quick emit, don't wait on sync tick
+      this.emitDataUpdate();
+    }
+  }
+
+  private connectRealtime() {
+    const ids = this.parameters$.value.map((parameter) => ({
+      name: parameter.qualifiedName,
+    }));
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createParameterSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+          id: ids,
+          sendFromCache: false,
+          updateOnExpiration: true,
+          abortOnInvalid: true,
+          action: 'REPLACE',
+        },
+        (data) => {
+          if (data.mapping) {
+            this.idMapping = {
+              ...this.idMapping,
+              ...data.mapping,
+            };
+          }
+          if (data.values && data.values.length) {
+            this.processRealtimeDelivery(data.values);
+          }
+        },
+      );
+  }
+
+  addToRealtimeSubscription(ids: NamedObjectId[]) {
+    // Ensure the initial reply is already received
+    this.realtimeSubscription.addReplyListener(() => {
+      this.realtimeSubscription.sendMessage({
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        id: ids,
+        sendFromCache: false,
+        updateOnExpiration: true,
+        abortOnInvalid: true,
+        action: 'ADD',
+      });
+    });
+  }
+
+  private processRealtimeDelivery(pvals: ParameterValue[]) {
+    for (const pval of pvals) {
+      const id = this.idMapping[pval.numericId];
+      const time = Date.parse(pval.generationTime);
+      const value = utils.convertValueToNumber(pval.engValue);
+      if (value === null || pval.acquisitionStatus !== 'ACQUIRED') {
+        this.plotBuffer.addRealtimeValue(id.name, {
+          time,
+          firstTime: time,
+          lastTime: time,
+          n: 1,
+          avg: null,
+          min: null,
+          max: null,
+        });
+      } else {
+        this.plotBuffer.addRealtimeValue(id.name, {
+          time,
+          firstTime: time,
+          lastTime: time,
+          n: 1,
+          avg: value,
+          min: value,
+          max: value,
+        });
+      }
+    }
+  }
+
+  disconnect() {
+    this.data$.complete();
+    this.loading$.complete();
+    this.realtimeSubscription?.cancel();
+    this.syncSubscription?.unsubscribe();
+  }
+
+  private processSamples(samples: Sample[]): PlotPoint[] {
+    const points: PlotPoint[] = [];
+    for (const sample of samples) {
+      points.push({
+        time: Date.parse(sample.time),
+        firstTime: Date.parse(sample.firstTime ?? sample.time),
+        lastTime: Date.parse(sample.lastTime ?? sample.time),
+        n: sample.n,
+        avg: sample.avg,
+        min: sample.min,
+        max: sample.max,
+      });
+    }
+    return points;
+  }
+}
+```
+
+### `PlotPoint.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/PlotPoint.ts`
+
+
+```typescript
+export interface PlotPoint {
+  time: number; // Start of sample interval
+  firstTime: number; // Lowest actual time within sample interval
+  lastTime: number; // Highest actual time within sample interval
+  n: number;
+  avg: number | null;
+  min: number | null;
+  max: number | null;
+}
+```

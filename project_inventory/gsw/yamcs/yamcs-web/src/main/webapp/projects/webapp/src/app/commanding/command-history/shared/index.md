@@ -3,16 +3,69 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cascading-prefix.pipe.ts`
 
-file--cascading-prefix.pipe.ts
-file--command-download-link.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/shared/cascading-prefix.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+// Entries that come from a cascading server
+// are prefixed with the pattern yamcs_<SERVER>
+const UPSTREAM_PATTERN = /yamcs<([^>]+)>_/g;
+
+/**
+ * Converts something like 'yamcs<YUP2>_yamcs_<YUP1>_' to 'YUP1'
+ */
+@Pipe({
+  name: 'cascadingPrefix',
+})
+export class CascadingPrefixPipe implements PipeTransform {
+  transform(prefix: string): string | null {
+    if (!prefix || !prefix.startsWith('yamcs<')) {
+      return prefix;
+    }
+
+    let result;
+    let servers = [];
+    while ((result = UPSTREAM_PATTERN.exec(prefix))) {
+      servers.push(result[1]);
+    }
+
+    if (servers.length) {
+      return servers[servers.length - 1];
+    } else {
+      return prefix;
+    }
+  }
+}
 ```
 
-## 항목
+### `command-download-link.pipe.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/shared/cascading-prefix.pipe.ts`](file--cascading-prefix.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/shared/command-download-link.pipe.ts`](file--command-download-link.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/shared/command-download-link.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { CommandHistoryRecord, YamcsService } from '@yamcs/webapp-sdk';
+
+@Pipe({
+  name: 'commandDownloadLink',
+})
+export class CommandDownloadLinkPipe implements PipeTransform {
+  constructor(private yamcs: YamcsService) {}
+
+  transform(command: CommandHistoryRecord | null): string | null {
+    if (!command) {
+      return null;
+    }
+
+    const instance = this.yamcs.instance!;
+    return this.yamcs.yamcsClient.getCommandDownloadURL(instance, command.id);
+  }
+}
+```

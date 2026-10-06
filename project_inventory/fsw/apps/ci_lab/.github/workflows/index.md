@@ -3,18 +3,62 @@
 
 **경로:** `fsw/apps/ci_lab/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `codeql-build.yml`
 
-file--codeql-build.yml
-file--format-check.yml
-file--static-analysis.yml
+**경로:** `fsw/apps/ci_lab/.github/workflows/codeql-build.yml`
+
+
+```yaml
+name: "CodeQL Analysis"
+
+on:
+  push:
+  pull_request:
+  
+jobs:
+  codeql:
+    name: CodeQL Analysis
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: apps/ci_lab
+      make: 'make -C build/native/default_cpu1/apps/ci_lab'
 ```
 
-## 항목
+### `format-check.yml`
 
-- [`fsw/apps/ci_lab/.github/workflows/codeql-build.yml`](file--codeql-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci_lab/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci_lab/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/ci_lab/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/apps/ci_lab/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Reuse Static Analysis
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-analysis:
+    name: Static Analysis
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+```

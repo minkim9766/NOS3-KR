@@ -3,20 +3,698 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `hex.component.css`
 
-file--hex.component.css
-file--hex.component.html
-file--hex.component.ts
-file--model.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.css`
+
+
+```css
+* {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+canvas {
+  margin-top: 4px;
+}
 ```
 
-## 항목
+### `hex.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.css`](file--hex.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.html`](file--hex.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.ts`](file--hex.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/model.ts`](file--model.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.html`
+
+
+```html
+<canvas #canvasEl yaPrintZoneHide width="200" height="200"></canvas>
+
+<pre yaPrintZoneShow style="margin: 0; line-height: 1em">{{ (base64String | hexDump) || "-" }}</pre>
+```
+
+### `hex.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/hex.component.ts`
+
+
+```typescript
+import { APP_BASE_HREF } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  Input,
+  OnChanges,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { EventHandler, Graphics } from '@fqqb/timeline';
+import {
+  BitRange,
+  HexDumpPipe,
+  YaPrintZoneHide,
+  YaPrintZoneShow,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { HexModel, Line } from './model';
+
+@Component({
+  selector: 'app-hex',
+  templateUrl: './hex.component.html',
+  styleUrl: './hex.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [HexDumpPipe, YaPrintZoneHide, YaPrintZoneShow],
+})
+export class HexComponent implements AfterViewInit, OnChanges, OnDestroy {
+  fontPreloaded$: Promise<boolean>;
+
+  @ViewChild('canvasEl')
+  canvasEl: ElementRef;
+
+  @Input()
+  base64String?: string | null;
+
+  @Input()
+  fontSize = 10;
+
+  public highlighted$ = new BehaviorSubject<BitRange | null>(null);
+  public selection$ = new BehaviorSubject<BitRange | null>(null);
+
+  private charWidth: number;
+
+  private model: HexModel;
+  private g: Graphics;
+  private dirty = true;
+
+  private _highlight?: BitRange;
+  private _selection?: BitRange;
+  private pressStart?: BitRange;
+
+  private mediaQueryList?: MediaQueryList;
+  private mediaQueryListEventListener: () => void;
+  private animationFrameRequest?: number;
+
+  constructor(@Inject(APP_BASE_HREF) baseHref: string) {
+    const resourceUrl = `url(${baseHref}media/RobotoMono-Regular.woff2)`;
+    this.fontPreloaded$ = new Promise((resolve) => {
+      const robotoMono = new FontFace('Roboto Mono', resourceUrl);
+      robotoMono
+        .load()
+        .then(() => resolve(true))
+        .catch(() => resolve(false));
+    });
+  }
+
+  ngAfterViewInit() {
+    this.fontPreloaded$.then(() => this.initCanvas());
+  }
+
+  get highlight() {
+    return this._highlight;
+  }
+
+  set highlight(_highlight: BitRange | undefined) {
+    this._highlight = _highlight;
+    if ((_highlight || null) !== this.highlighted$.value) {
+      this.highlighted$.next(_highlight || null);
+    }
+  }
+
+  get selection() {
+    return this._selection;
+  }
+
+  set selection(_selection: BitRange | undefined) {
+    this._selection = _selection;
+    if ((_selection || null) !== this.selection$.value) {
+      this.selection$.next(_selection || null);
+    }
+  }
+
+  private initCanvas() {
+    const el = this.canvasEl.nativeElement as HTMLCanvasElement;
+    const ctx = el.getContext('2d')!;
+    ctx.font = `${this.fontSize}px 'Roboto Mono', monospace`;
+    this.charWidth = ctx.measureText('0').width;
+
+    this.g = new Graphics(el);
+
+    new EventHandler(this.g.canvas, this.g.hitCanvas);
+
+    this.mediaQueryListEventListener = () => {
+      this.dirty = true;
+      this.mediaQueryList = matchMedia(
+        `(resolution: ${window.devicePixelRatio}dppx)`,
+      );
+      this.mediaQueryList.addEventListener(
+        'change',
+        this.mediaQueryListEventListener,
+        { once: true },
+      );
+    };
+    this.mediaQueryListEventListener();
+
+    this.animationFrameRequest = window.requestAnimationFrame(() =>
+      this.step(),
+    );
+  }
+
+  ngOnChanges() {
+    const raw = window.atob(this.base64String ?? '');
+    this.model = new HexModel(raw);
+    this.highlight = undefined;
+    this.selection = undefined;
+    this.pressStart = undefined;
+    this.dirty = true;
+  }
+
+  public setHighlight(range: BitRange | null) {
+    if (range) {
+      this.highlight = range;
+    } else {
+      this.highlight = undefined;
+    }
+    this.dirty = true;
+  }
+
+  public setSelection(range: BitRange | null) {
+    if (range) {
+      this.selection = range;
+    } else {
+      this.selection = undefined;
+    }
+    this.dirty = true;
+  }
+
+  @HostListener('document:mouseup')
+  onMouseUp() {
+    this.pressStart = undefined;
+  }
+
+  @HostListener('document:mouseout')
+  onMouseOut() {
+    this.highlight = undefined;
+  }
+
+  private step() {
+    this.animationFrameRequest = window.requestAnimationFrame(() =>
+      this.step(),
+    );
+
+    if (!this.dirty) {
+      return;
+    }
+
+    const lineWidth = Math.ceil(this.charWidth * (6 + 39 + 18));
+    this.g.resize(lineWidth, this.fontSize * this.model.lines.length);
+    this.g.ctx.clearRect(0, 0, this.g.canvas.width, this.g.canvas.height);
+    this.g.clearHitCanvas();
+
+    let y = 0;
+    for (const line of this.model.lines) {
+      this.drawCharcount(line, y);
+      this.drawHex(line, y);
+      this.drawAscii(line, y);
+      y += this.fontSize;
+    }
+
+    this.dirty = false;
+  }
+
+  private drawCharcount(line: Line, y: number) {
+    const text = line.charCountHex + ': ';
+
+    this.g
+      .addHitRegion({
+        id: line.id,
+        mouseDown: () => {
+          this.pressStart = line.range;
+          this.selection = line.range;
+          this.dirty = true;
+        },
+        mouseEnter: () => {
+          this.highlight = line.range;
+          this.dirty = true;
+        },
+        mouseLeave: () => {
+          this.highlight = undefined;
+          this.dirty = true;
+        },
+        mouseMove: (pressing) => {
+          if (pressing && this.pressStart) {
+            const joined = this.pressStart.join(line.range);
+            this.selection = joined;
+            this.dirty = true;
+          }
+        },
+      })
+      .addRect(0, y, this.charWidth * text.length, this.fontSize);
+
+    this.g.fillText({
+      x: 0,
+      y,
+      baseline: 'top',
+      align: 'left',
+      font: `${this.fontSize}px 'Roboto Mono', monospace`,
+      color: '#777777',
+      text,
+    });
+  }
+
+  private drawHex(line: Line, y: number) {
+    let x = this.charWidth * (line.charCountHex + ': ').length;
+
+    for (let i = 0; i < line.hexComponents.length; i++) {
+      const component = line.hexComponents[i];
+      if (component.type === 'word') {
+        // Highlight entire word when any of its four nibbles is hovered
+        this.g
+          .addHitRegion({
+            id: component.id,
+            mouseDown: () => {
+              this.pressStart = component.range;
+              this.selection = component.range;
+              this.dirty = true;
+            },
+            mouseEnter: () => {
+              this.highlight = component.range;
+              this.dirty = true;
+            },
+            mouseLeave: () => {
+              this.highlight = undefined;
+              this.dirty = true;
+            },
+            mouseMove: (pressing) => {
+              if (pressing && this.pressStart) {
+                const joined = this.pressStart.join(component.range);
+                this.selection = joined;
+                this.dirty = true;
+              }
+            },
+          })
+          .addRect(
+            x,
+            y,
+            component.nibbles.length * this.charWidth,
+            this.fontSize,
+          );
+
+        for (const nibble of component.nibbles) {
+          let bgColor;
+          let fgColor = '#000000';
+          if (
+            !this.pressStart &&
+            this.highlight &&
+            this.highlight.overlaps(nibble.range)
+          ) {
+            bgColor = 'lightgrey';
+          } else if (this.selection && this.selection.overlaps(nibble.range)) {
+            bgColor = '#009e87';
+            fgColor = '#ffffff';
+          }
+          if (bgColor) {
+            this.g.fillRect({
+              x: Math.floor(x),
+              y: Math.floor(y),
+              width: Math.ceil(this.charWidth),
+              height: this.fontSize,
+              fill: bgColor,
+            });
+          }
+          this.g.fillText({
+            x,
+            y,
+            baseline: 'top',
+            align: 'left',
+            font: `${this.fontSize}px 'Roboto Mono', monospace`,
+            color: fgColor,
+            text: nibble.content,
+          });
+          x += this.charWidth;
+        }
+      } else if (component.type === 'filler') {
+        this.g
+          .addHitRegion({
+            id: component.id,
+            mouseDown: () => {
+              this.pressStart = new BitRange(component.bitpos, 0);
+            },
+            mouseMove: (pressing) => {
+              if (pressing && this.pressStart) {
+                const joined = this.pressStart.joinBit(component.bitpos);
+                this.selection = joined;
+                this.dirty = true;
+              }
+            },
+          })
+          .addRect(
+            x,
+            y,
+            component.content.length * this.charWidth,
+            this.fontSize,
+          );
+
+        let bgColor;
+        if (
+          !this.pressStart &&
+          this.highlight &&
+          this.highlight.containsBitExclusive(component.bitpos)
+        ) {
+          bgColor = 'lightgrey';
+        } else if (
+          this.selection &&
+          this.selection.containsBitExclusive(component.bitpos)
+        ) {
+          bgColor = '#009e87';
+        }
+        if (bgColor && i !== line.hexComponents.length - 1) {
+          this.g.fillRect({
+            x: Math.floor(x),
+            y: Math.floor(y),
+            width: Math.ceil(this.charWidth * component.content.length),
+            height: this.fontSize,
+            fill: bgColor,
+          });
+        }
+        x += component.content.length * this.charWidth;
+      }
+    }
+  }
+
+  private drawAscii(line: Line, y: number) {
+    let x = (6 + 39 + 2) * this.charWidth;
+
+    for (const component of line.asciiComponents) {
+      if (component.type === 'word') {
+        for (const c of component.chars) {
+          // Highlight byte when a character is hovered
+          this.g
+            .addHitRegion({
+              id: component.id,
+              mouseDown: () => {
+                this.pressStart = c.range;
+                this.selection = c.range;
+                this.dirty = true;
+              },
+              mouseEnter: () => {
+                this.highlight = c.range;
+                this.dirty = true;
+              },
+              mouseLeave: () => {
+                this.highlight = undefined;
+                this.dirty = true;
+              },
+              mouseMove: (pressing) => {
+                if (pressing && this.pressStart) {
+                  const joined = this.pressStart.join(c.range);
+                  this.selection = joined;
+                  this.dirty = true;
+                }
+              },
+            })
+            .addRect(x, y, this.charWidth, this.fontSize);
+
+          let bgColor;
+          let fgColor = '#777';
+          if (
+            !this.pressStart &&
+            this.highlight &&
+            this.highlight.overlaps(c.range)
+          ) {
+            bgColor = 'lightgrey';
+          } else if (this.selection && this.selection.overlaps(c.range)) {
+            bgColor = '#009e87';
+            fgColor = '#ffffff';
+          }
+          if (bgColor) {
+            this.g.fillRect({
+              x: Math.floor(x),
+              y: Math.floor(y),
+              width: Math.ceil(this.charWidth),
+              height: this.fontSize,
+              fill: bgColor,
+            });
+          }
+          this.g.fillText({
+            x,
+            y,
+            baseline: 'top',
+            align: 'left',
+            font: `${this.fontSize}px 'Roboto Mono', monospace`,
+            color: fgColor,
+            text: c.content,
+          });
+          x += this.charWidth;
+        }
+      } else if (component.type === 'filler') {
+        this.g
+          .addHitRegion({
+            id: component.id,
+            mouseDown: () => {
+              this.pressStart = new BitRange(component.bitpos, 0);
+            },
+            mouseMove: (pressing) => {
+              if (pressing && this.pressStart) {
+                const joined = this.pressStart.joinBit(component.bitpos);
+                this.selection = joined;
+                this.dirty = true;
+              }
+            },
+          })
+          .addRect(
+            x,
+            y,
+            component.content.length * this.charWidth,
+            this.fontSize,
+          );
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.mediaQueryList?.removeEventListener(
+      'change',
+      this.mediaQueryListEventListener,
+    );
+    this.animationFrameRequest &&
+      window.cancelAnimationFrame(this.animationFrameRequest);
+  }
+}
+```
+
+### `model.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/hex/model.ts`
+
+
+```typescript
+import { BitRange } from '@yamcs/webapp-sdk';
+
+let seq = 0;
+
+export class HexModel {
+  readonly bitlength: number;
+
+  readonly lines: Line[] = [];
+
+  constructor(raw: string) {
+    this.bitlength = raw.length * 8;
+    for (let i = 0; i < raw.length; i += 16) {
+      this.lines.push(new Line(this, i, raw.substring(i, i + 16)));
+    }
+  }
+}
+
+interface WordHex {
+  id: string;
+  type: 'word';
+  range: BitRange;
+  nibbles: NibbleHex[];
+}
+
+interface NibbleHex {
+  id: string;
+  range: BitRange;
+  content: string;
+}
+
+interface Filler {
+  id: string;
+  type: 'filler';
+  bitpos: number;
+  content: string;
+  trailing: boolean;
+}
+
+interface WordAscii {
+  id: string;
+  type: 'word';
+  bitpos: number;
+  chars: CharAscii[];
+}
+
+interface CharAscii {
+  id: string;
+  range: BitRange;
+  content: string;
+}
+
+export class Line {
+  id: string;
+  range: BitRange;
+  charCountHex: string;
+  hexComponents: (WordHex | Filler)[] = [];
+  asciiComponents: (WordAscii | Filler)[] = [];
+
+  wordCount = 0;
+
+  constructor(
+    readonly model: HexModel,
+    charCount: number,
+    readonly chars: string,
+  ) {
+    this.id = 'p' + seq++;
+    this.range = new BitRange(charCount * 8, chars.length * 8);
+    this.charCountHex = this.lpad(charCount.toString(16), 4);
+    for (let i = 0; i < chars.length; i += 2) {
+      const last = i + 2 >= chars.length;
+      this.addWord(chars.substring(i, i + 2), last);
+    }
+
+    if (chars.length < 16) {
+      let filler: Filler = {
+        id: 'p' + seq++,
+        type: 'filler',
+        content: ' '.repeat(16 - chars.length),
+        bitpos: this.range.stop,
+        trailing: true,
+      };
+      this.asciiComponents.push(filler);
+
+      let hexFiller = '';
+      for (let j = 0; j < 32 - 2 * (chars.length % 16); j++) {
+        if (j !== 0 && (2 * chars.length + j) % 4 === 0) {
+          hexFiller += '  ';
+        } else {
+          hexFiller += ' ';
+        }
+      }
+
+      hexFiller += ' ';
+      filler = {
+        id: 'p' + seq++,
+        type: 'filler',
+        content: hexFiller,
+        bitpos: this.range.stop,
+        trailing: true,
+      };
+      this.hexComponents.push(filler);
+    }
+  }
+
+  get hexLengthInChars(): number {
+    let result = 0;
+    for (const component of this.hexComponents) {
+      if (component.type === 'word') {
+        result += component.nibbles.length;
+      } else if (component.type === 'filler' && !component.trailing) {
+        result += component.content.length;
+      }
+    }
+    return result;
+  }
+
+  get asciiLengthInChars(): number {
+    let result = 0;
+    for (const component of this.asciiComponents) {
+      if (component.type === 'word') {
+        result += component.chars.length;
+      } else if (component.type === 'filler' && !component.trailing) {
+        result += component.content.length;
+      }
+    }
+    return result;
+  }
+
+  private lpad(hex: string, width: number) {
+    if (hex.length >= width) {
+      return hex;
+    } else {
+      return new Array(width - hex.length + 1).join('0') + hex;
+    }
+  }
+
+  /*
+   * Adds a word (two characters, four nibbles, 16 bits)
+   */
+  private addWord(word: string, last: boolean) {
+    let hex = '';
+    let ascii = '';
+
+    for (let i = 0; i < word.length; i++) {
+      hex += this.charToHex(word[i]);
+      ascii += this.charToAscii(word[i]);
+    }
+
+    const bitpos = this.range.start + this.wordCount * 16;
+    const hexChars = hex.split('');
+    const nibbles: NibbleHex[] = [];
+    for (let i = 0; i < hexChars.length; i++) {
+      const nibble = {
+        id: 'p' + seq++,
+        range: new BitRange(bitpos + i * 4, 4),
+        content: hexChars[i],
+      };
+      nibbles.push(nibble);
+    }
+    this.hexComponents.push({
+      id: 'p' + seq++,
+      type: 'word',
+      nibbles,
+      range: new BitRange(bitpos, 4 * nibbles.length),
+    });
+    if (word.length === 2) {
+      const filler: Filler = {
+        id: 'p' + seq++,
+        type: 'filler',
+        content: ' ',
+        bitpos: bitpos + 16,
+        trailing: last,
+      };
+      this.hexComponents.push(filler);
+    }
+
+    const asciiChars = ascii.split('');
+    const chars: CharAscii[] = [];
+    for (let i = 0; i < asciiChars.length; i++) {
+      const c = {
+        id: 'p' + seq++,
+        range: new BitRange(bitpos + i * 8, 8),
+        content: asciiChars[i],
+      };
+      chars.push(c);
+    }
+    this.asciiComponents.push({
+      id: 'p' + seq++,
+      type: 'word',
+      chars,
+      bitpos,
+    });
+    this.wordCount++;
+  }
+
+  private charToHex(char: string) {
+    const code = char.charCodeAt(0);
+    const hex = code.toString(16);
+    return hex.length === 2 ? hex : '0' + hex;
+  }
+
+  private charToAscii(char: string) {
+    const code = char.charCodeAt(0);
+    return 32 <= code && code <= 126 ? char : '.';
+  }
+}
+```

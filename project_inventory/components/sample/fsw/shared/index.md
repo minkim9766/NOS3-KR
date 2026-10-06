@@ -3,16 +3,363 @@
 
 **경로:** `components/sample/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sample_device.c`
 
-file--sample_device.c
-file--sample_device.h
+**경로:** `components/sample/fsw/shared/sample_device.c`
+
+
+```c
+/*******************************************************************************
+** File: sample_device.c
+**
+** Purpose:
+**   This file contains the source code for the SAMPLE device.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "sample_device.h"
+
+/*
+** Generic read data from device
+*/
+int32_t SAMPLE_ReadData(uart_info_t *device, uint8_t *read_data, uint8_t data_length)
+{
+    int32_t status             = OS_SUCCESS;
+    int32_t bytes              = 0;
+    int32_t bytes_available    = 0;
+    uint8_t ms_timeout_counter = 0;
+
+    /* Wait until all data received or timeout occurs */
+    bytes_available = uart_bytes_available(device);
+    while ((bytes_available < data_length) && (ms_timeout_counter < SAMPLE_CFG_MS_TIMEOUT))
+    {
+        ms_timeout_counter++;
+        OS_TaskDelay(1);
+        bytes_available = uart_bytes_available(device);
+    }
+
+    if (ms_timeout_counter < SAMPLE_CFG_MS_TIMEOUT)
+    {
+        /* Limit bytes available */
+        if (bytes_available > data_length)
+        {
+            bytes_available = data_length;
+        }
+
+        /* Read data */
+        bytes = uart_read_port(device, read_data, bytes_available);
+        if (bytes != bytes_available)
+        {
+#ifdef SAMPLE_CFG_DEBUG
+            OS_printf("  SAMPLE_ReadData: Bytes read != to requested! \n");
+#endif
+            status = OS_ERROR;
+        } /* uart_read */
+    }
+    else
+    {
+        status = OS_ERROR;
+    } /* ms_timeout_counter */
+
+    return status;
+}
+
+/*
+** Generic command to device
+** Note that confirming the echoed response is specific to this implementation
+*/
+int32_t SAMPLE_CommandDevice(uart_info_t *device, uint8_t cmd_code, uint32_t payload)
+{
+    int32_t status = OS_SUCCESS;
+    int32_t bytes  = 0;
+    uint8_t write_data[SAMPLE_DEVICE_CMD_SIZE];
+    uint8_t read_data[SAMPLE_DEVICE_DATA_SIZE];
+
+    /* Prepare command */
+    write_data[0] = SAMPLE_DEVICE_HDR_0;
+    write_data[1] = SAMPLE_DEVICE_HDR_1;
+    write_data[2] = cmd_code;
+    write_data[3] = payload >> 24;
+    write_data[4] = payload >> 16;
+    write_data[5] = payload >> 8;
+    write_data[6] = payload;
+    write_data[7] = SAMPLE_DEVICE_TRAILER_0;
+    write_data[8] = SAMPLE_DEVICE_TRAILER_1;
+
+    /* Flush any prior data */
+    status = uart_flush(device);
+    if (status == UART_SUCCESS)
+    {
+        /* Write data */
+        bytes = uart_write_port(device, write_data, SAMPLE_DEVICE_CMD_SIZE);
+#ifdef SAMPLE_CFG_DEBUG
+        OS_printf("  SAMPLE_CommandDevice[%d] = ", bytes);
+        for (uint32_t i = 0; i < SAMPLE_DEVICE_CMD_SIZE; i++)
+        {
+            OS_printf("%02x", write_data[i]);
+        }
+        OS_printf("\n");
+#endif
+        if (bytes == SAMPLE_DEVICE_CMD_SIZE)
+        {
+            status = SAMPLE_ReadData(device, read_data, SAMPLE_DEVICE_CMD_SIZE);
+            if (status == OS_SUCCESS)
+            {
+                /* Confirm echoed response */
+                bytes = 0;
+                while ((bytes < (int32_t)SAMPLE_DEVICE_CMD_SIZE) && (status == OS_SUCCESS))
+                {
+                    if (read_data[bytes] != write_data[bytes])
+                    {
+                        status = OS_ERROR;
+                    }
+                    bytes++;
+                }
+            } /* SAMPLE_ReadData */
+            else
+            {
+#ifdef SAMPLE_CFG_DEBUG
+                OS_printf("SAMPLE_CommandDevice - SAMPLE_ReadData returned %d \n", status);
+#endif
+            }
+        }
+        else
+        {
+#ifdef SAMPLE_CFG_DEBUG
+            OS_printf("SAMPLE_CommandDevice - uart_write_port returned %d, expected %d \n", bytes,
+                      SAMPLE_DEVICE_CMD_SIZE);
+#endif
+        } /* uart_write */
+    }     /* uart_flush*/
+    return status;
+}
+
+/*
+** Request housekeeping command
+*/
+int32_t SAMPLE_RequestHK(uart_info_t *device, SAMPLE_Device_HK_tlm_t *data)
+{
+    int32_t status = OS_SUCCESS;
+    uint8_t read_data[SAMPLE_DEVICE_HK_SIZE];
+
+    /* Command device to send HK */
+    status = SAMPLE_CommandDevice(device, SAMPLE_DEVICE_REQ_HK_CMD, 0);
+    if (status == OS_SUCCESS)
+    {
+        /* Read HK data */
+        status = SAMPLE_ReadData(device, read_data, sizeof(read_data));
+        if (status == OS_SUCCESS)
+        {
+#ifdef SAMPLE_CFG_DEBUG
+            OS_printf("  SAMPLE_RequestHK = ");
+            for (uint32_t i = 0; i < sizeof(read_data); i++)
+            {
+                OS_printf("%02x", read_data[i]);
+            }
+            OS_printf("\n");
+#endif
+
+            /* Verify data header and trailer */
+            if ((read_data[0] == SAMPLE_DEVICE_HDR_0) && (read_data[1] == SAMPLE_DEVICE_HDR_1) &&
+                (read_data[14] == SAMPLE_DEVICE_TRAILER_0) && (read_data[15] == SAMPLE_DEVICE_TRAILER_1))
+            {
+                data->DeviceCounter = read_data[2] << 24;
+                data->DeviceCounter |= read_data[3] << 16;
+                data->DeviceCounter |= read_data[4] << 8;
+                data->DeviceCounter |= read_data[5];
+
+                data->DeviceConfig = read_data[6] << 24;
+                data->DeviceConfig |= read_data[7] << 16;
+                data->DeviceConfig |= read_data[8] << 8;
+                data->DeviceConfig |= read_data[9];
+
+                data->DeviceStatus = read_data[10] << 24;
+                data->DeviceStatus |= read_data[11] << 16;
+                data->DeviceStatus |= read_data[12] << 8;
+                data->DeviceStatus |= read_data[13];
+
+#ifdef SAMPLE_CFG_DEBUG
+                OS_printf("  Header  = 0x%02x%02x  \n", read_data[0], read_data[1]);
+                OS_printf("  Counter = 0x%08x      \n", data->DeviceCounter);
+                OS_printf("  Config  = 0x%08x      \n", data->DeviceConfig);
+                OS_printf("  Status  = 0x%08x      \n", data->DeviceStatus);
+                OS_printf("  Trailer = 0x%02x%02x  \n", read_data[14], read_data[15]);
+#endif
+            }
+            else
+            {
+#ifdef SAMPLE_CFG_DEBUG
+                OS_printf("  SAMPLE_RequestHK: SAMPLE_ReadData reported error %d \n", status);
+#endif
+                status = OS_ERROR;
+            }
+        } /* SAMPLE_ReadData */
+    }
+    else
+    {
+#ifdef SAMPLE_CFG_DEBUG
+        OS_printf("  SAMPLE_RequestHK: SAMPLE_CommandDevice reported error %d \n", status);
+#endif
+    }
+    return status;
+}
+
+/*
+** Request data command
+*/
+int32_t SAMPLE_RequestData(uart_info_t *device, SAMPLE_Device_Data_tlm_t *data)
+{
+    int32_t status = OS_SUCCESS;
+    uint8_t read_data[SAMPLE_DEVICE_DATA_SIZE];
+
+    /* Command device to send HK */
+    status = SAMPLE_CommandDevice(device, SAMPLE_DEVICE_REQ_DATA_CMD, 0);
+    if (status == OS_SUCCESS)
+    {
+        /* Read HK data */
+        status = SAMPLE_ReadData(device, read_data, sizeof(read_data));
+        if (status == OS_SUCCESS)
+        {
+#ifdef SAMPLE_CFG_DEBUG
+            OS_printf("  SAMPLE_RequestData = ");
+            for (uint32_t i = 0; i < sizeof(read_data); i++)
+            {
+                OS_printf("%02x", read_data[i]);
+            }
+            OS_printf("\n");
+#endif
+
+            /* Verify data header and trailer */
+            if ((read_data[0] == SAMPLE_DEVICE_HDR_0) && (read_data[1] == SAMPLE_DEVICE_HDR_1) &&
+                (read_data[12] == SAMPLE_DEVICE_TRAILER_0) && (read_data[13] == SAMPLE_DEVICE_TRAILER_1))
+            {
+                data->DeviceCounter = read_data[2] << 24;
+                data->DeviceCounter |= read_data[3] << 16;
+                data->DeviceCounter |= read_data[4] << 8;
+                data->DeviceCounter |= read_data[5];
+
+                data->DeviceDataX = read_data[6] << 8;
+                data->DeviceDataX |= read_data[7];
+
+                data->DeviceDataY = read_data[8] << 8;
+                data->DeviceDataY |= read_data[9];
+
+                data->DeviceDataZ = read_data[10] << 8;
+                data->DeviceDataZ |= read_data[11];
+
+#ifdef SAMPLE_CFG_DEBUG
+                OS_printf("  Header  = 0x%02x%02x  \n", read_data[0], read_data[1]);
+                OS_printf("  Counter = 0x%08x, %d  \n", data->DeviceCounter, data->DeviceCounter);
+                OS_printf("  Data X  = 0x%04x, %d  \n", data->DeviceDataX, data->DeviceDataX);
+                OS_printf("  Data Y  = 0x%04x, %d  \n", data->DeviceDataY, data->DeviceDataY);
+                OS_printf("  Data Z  = 0x%04x, %d  \n", data->DeviceDataZ, data->DeviceDataZ);
+                OS_printf("  Trailer = 0x%02x%02x  \n", read_data[12], read_data[13]);
+#endif
+            }
+        }
+        else
+        {
+#ifdef SAMPLE_CFG_DEBUG
+            OS_printf("  SAMPLE_RequestData: Invalid data read! \n");
+#endif
+            status = OS_ERROR;
+        } /* SAMPLE_ReadData */
+    }
+    else
+    {
+#ifdef SAMPLE_CFG_DEBUG
+        OS_printf("  SAMPLE_RequestData: SAMPLE_CommandDevice reported error %d \n", status);
+#endif
+    }
+    return status;
+}
 ```
 
-## 항목
+### `sample_device.h`
 
-- [`components/sample/fsw/shared/sample_device.c`](file--sample_device.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/shared/sample_device.h`](file--sample_device.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/sample/fsw/shared/sample_device.h`
+
+
+```c
+/*******************************************************************************
+** File: sample_device.h
+**
+** Purpose:
+**   This is the header file for the SAMPLE device.
+**
+*******************************************************************************/
+#ifndef _SAMPLE_DEVICE_H_
+#define _SAMPLE_DEVICE_H_
+
+/*
+** Required header files.
+*/
+#include "device_cfg.h"
+#include "hwlib.h"
+
+#ifndef SAMPLE_CFG
+#include "sample_platform_cfg.h"
+#endif
+
+/*
+** Type definitions
+** TODO: Make specific to your application
+*/
+#define SAMPLE_DEVICE_HDR   0xDEAD
+#define SAMPLE_DEVICE_HDR_0 0xDE
+#define SAMPLE_DEVICE_HDR_1 0xAD
+
+#define SAMPLE_DEVICE_NOOP_CMD     0x00
+#define SAMPLE_DEVICE_REQ_HK_CMD   0x01
+#define SAMPLE_DEVICE_REQ_DATA_CMD 0x02
+#define SAMPLE_DEVICE_CFG_CMD      0x03
+
+#define SAMPLE_DEVICE_TRAILER   0xBEEF
+#define SAMPLE_DEVICE_TRAILER_0 0xBE
+#define SAMPLE_DEVICE_TRAILER_1 0xEF
+
+#define SAMPLE_DEVICE_HDR_TRL_LEN 4
+#define SAMPLE_DEVICE_CMD_SIZE    9
+
+/*
+** SAMPLE device housekeeping telemetry definition
+*/
+typedef struct
+{
+    uint32_t DeviceCounter;
+    uint32_t DeviceConfig;
+    uint32_t DeviceStatus;
+
+} __attribute__((packed)) SAMPLE_Device_HK_tlm_t;
+#define SAMPLE_DEVICE_HK_LNGTH sizeof(SAMPLE_Device_HK_tlm_t)
+#define SAMPLE_DEVICE_HK_SIZE  SAMPLE_DEVICE_HK_LNGTH + SAMPLE_DEVICE_HDR_TRL_LEN
+
+/*
+** SAMPLE device data telemetry definition
+*/
+typedef struct
+{
+    uint32_t DeviceCounter;
+    uint16_t DeviceDataX;
+    uint16_t DeviceDataY;
+    uint16_t DeviceDataZ;
+
+} __attribute__((packed)) SAMPLE_Device_Data_tlm_t;
+#define SAMPLE_DEVICE_DATA_LNGTH sizeof(SAMPLE_Device_Data_tlm_t)
+#define SAMPLE_DEVICE_DATA_SIZE  SAMPLE_DEVICE_DATA_LNGTH + SAMPLE_DEVICE_HDR_TRL_LEN
+
+/*
+** Prototypes
+*/
+int32_t SAMPLE_ReadData(uart_info_t *device, uint8_t *read_data, uint8_t data_length);
+int32_t SAMPLE_CommandDevice(uart_info_t *device, uint8_t cmd, uint32_t payload);
+int32_t SAMPLE_RequestHK(uart_info_t *device, SAMPLE_Device_HK_tlm_t *data);
+int32_t SAMPLE_RequestData(uart_info_t *device, SAMPLE_Device_Data_tlm_t *data);
+
+#endif /* _SAMPLE_DEVICE_H_ */
+```

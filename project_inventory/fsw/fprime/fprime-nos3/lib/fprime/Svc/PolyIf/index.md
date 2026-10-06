@@ -3,20 +3,78 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--changed-symbols.txt
-file--CMakeLists.txt
-file--PolyIf.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/changed-symbols.txt`](file--changed-symbols.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/PolyIf.fpp`](file--PolyIf.fpp) — UTF-8 텍스트 파일 본문 포함
+### `changed-symbols.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/changed-symbols.txt`
+
+
+```text
+Old Symbol
+New Symbol
+
+Svc::MEASUREMENT_OK
+Svc::MeasurementStatus::OK
+
+Svc::MEASUREMENT_FAILURE
+Svc::MeasurementStatus::FAILURE
+
+Svc::MEASUREMENT_STALE
+Svc::MeasurementStatus::STALE
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/PolyIf.fpp"
+)
+
+register_fprime_module()
+```
+
+### `PolyIf.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PolyIf/PolyIf.fpp`
+
+
+```fpp
+module Svc {
+
+  @ An enumeration for measurement status
+  enum MeasurementStatus {
+    OK = 0 @< Measurement was good
+    FAILURE = 1 @< Failure to retrieve measurement
+    STALE = 2 @< Measurement is stale
+  }
+
+  @ Port for setting and getting PolyType values
+  port Poly(
+             $entry: PolyDbCfg.PolyDbEntry @< The entry to access
+             ref status: MeasurementStatus @< The command response argument
+             ref $time: Fw.Time @< The time of the measurement
+             ref val: Fw.PolyType @< The value to be passed
+           )
+
+}
+```

@@ -3,22 +3,768 @@
 
 **경로:** `components/generic_eps/fsw/fprime/eps_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_eps.cpp
-file--Generic_eps.fpp
-file--Generic_eps.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_eps/fsw/fprime/eps_src/docs/`](docs/index) — 폴더
-- [`components/generic_eps/fsw/fprime/eps_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/fsw/fprime/eps_src/Generic_eps.cpp`](file--Generic_eps.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/fsw/fprime/eps_src/Generic_eps.fpp`](file--Generic_eps.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/fsw/fprime/eps_src/Generic_eps.hpp`](file--Generic_eps.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_eps/fsw/fprime/eps_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+# include_directories("../platform_inc")
+# include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_eps.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_eps.cpp"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_eps_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+  
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_eps_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../../shared"
+  "../../standalone"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+  "../platform_inc"
+  "../../../../../fsw/apps/hwlib/sim/inc"
+)
+```
+
+### `Generic_eps.cpp`
+
+**경로:** `components/generic_eps/fsw/fprime/eps_src/Generic_eps.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_eps.cpp
+// \author jstar
+// \brief  cpp file for Generic_eps component implementation class
+// ======================================================================
+
+#include "eps_src/Generic_eps.hpp"
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+  
+#include "nos_link.h"
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_eps ::
+    Generic_eps(const char* const compName) :
+      Generic_epsComponentBase(compName)
+  {
+
+    /* Initialize HWLIB */
+    nos_init_link();
+    
+    int32_t status = OS_SUCCESS;
+     /* Open device specific protocols */
+    Generic_epsI2c.handle = GENERIC_EPS_CFG_I2C_HANDLE;
+    Generic_epsI2c.addr = GENERIC_EPS_CFG_I2C_ADDRESS;
+    Generic_epsI2c.isOpen = I2C_CLOSED;
+    Generic_epsI2c.speed = GENERIC_EPS_CFG_I2C_SPEED;
+    status = i2c_master_init(&Generic_epsI2c);
+
+    if (status == OS_SUCCESS)
+    {
+        printf("I2C device 0x%02x configured with speed %d \n", Generic_epsI2c.addr, Generic_epsI2c.speed);
+    }
+    else
+    {
+        printf("I2C device 0x%02x failed to initialize! \n", Generic_epsI2c.addr);
+        status = OS_ERROR;
+    }
+
+  }
+
+  Generic_eps ::
+    ~Generic_eps()
+  {
+
+    i2c_master_close(&Generic_epsI2c);
+
+    nos_destroy_link();
+
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_eps :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success\n");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_eps :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command success\n");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+
+    Update_Counters();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_eps :: SWITCH_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, Generic_eps_SW_NUM switch_num, Generic_eps_State switch_state) {
+
+    int32_t status = OS_SUCCESS;
+    uint8_t value;
+
+    if(switch_state.e == Generic_eps_State::ON)
+    {
+      value = 0xAA;
+    }
+    else
+    {
+      value = 0x00;
+    }
+
+    if(switch_num < 8)
+    {
+      HkTelemetryPkt.CommandCount++;
+      status = GENERIC_EPS_CommandSwitch(&Generic_epsI2c, switch_num.e, value, &Generic_epsHK);
+
+      if(status == OS_SUCCESS)
+      {
+        HkTelemetryPkt.DeviceCount++;
+        Fw::LogStringArg log_msg("Switch command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+      }
+      else
+      {
+        Fw::LogStringArg log_msg("Switch command failed\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.DeviceErrorCount++;
+      }
+    }
+    else
+    {
+      HkTelemetryPkt.CommandErrorCount++;
+      Fw::LogStringArg log_msg("Switch command failed\n");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    Update_Counters();
+    Update_SW_Tlm();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+
+  }
+
+  // GENERIC_EPS_RequestHK
+  void Generic_eps :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    int32_t status = OS_SUCCESS;
+    
+    status = GENERIC_EPS_RequestHK(&Generic_epsI2c, &Generic_epsHK);
+    if (status == OS_SUCCESS)
+    {
+        Fw::LogStringArg log_msg("RequestHK command success\n");  
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandCount++;
+        HkTelemetryPkt.DeviceCount++;
+    }
+    else
+    {
+        Fw::LogStringArg log_msg("RequestHK command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+        HkTelemetryPkt.CommandErrorCount++;
+        HkTelemetryPkt.DeviceErrorCount++;
+    }
+
+    Update_Counters();
+    // sleep(1);
+    Update_Base_Tlm();
+    // sleep(1);
+    Update_SW_Tlm();
+    // sleep(1); // ensure all telemetry goes thru
+
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_eps :: Update_Counters(){
+
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+
+    sleep(1);
+    
+  }
+
+  void Generic_eps :: Update_Base_Tlm(){
+
+    this->tlmWrite_BatteryVoltage(Generic_epsHK.BatteryVoltage / 1000.0);
+    this->tlmWrite_BatteryTemperature((Generic_epsHK.BatteryTemperature / 100.0) - 60);
+    this->tlmWrite_Bus3p3Voltage(Generic_epsHK.Bus3p3Voltage / 1000.0);
+    this->tlmWrite_Bus5p0Voltage(Generic_epsHK.Bus5p0Voltage / 1000.0);
+    this->tlmWrite_Bus12Voltage(Generic_epsHK.Bus12Voltage / 1000.0);
+    this->tlmWrite_EPSTemperature((Generic_epsHK.EPSTemperature / 100.0) - 60);
+    this->tlmWrite_SolarArrayVoltage(Generic_epsHK.SolarArrayVoltage / 1000.0);
+    this->tlmWrite_SolarArrayTemperature(Generic_epsHK.SolarArrayTemperature / 1000.0);
+    
+    sleep(1);
+
+    this->tlmWrite_RawBatteryVoltage(Generic_epsHK.BatteryVoltage);
+    this->tlmWrite_RawBatteryTemperature(Generic_epsHK.BatteryTemperature);
+    this->tlmWrite_RawBus3p3V(Generic_epsHK.Bus3p3Voltage);
+    this->tlmWrite_RawBus5p0V(Generic_epsHK.Bus5p0Voltage);
+    this->tlmWrite_RawBus12V(Generic_epsHK.Bus12Voltage);
+    this->tlmWrite_RawEPSTemperature(Generic_epsHK.EPSTemperature);
+    this->tlmWrite_RawSAVoltage(Generic_epsHK.SolarArrayVoltage);
+    this->tlmWrite_RawSATemperature(Generic_epsHK.SolarArrayTemperature);
+
+  }
+
+  void Generic_eps :: Update_SW_Tlm() {
+
+    sleep(1);
+
+    this->tlmWrite_RawSW0Voltage(Generic_epsHK.Switch[0].Voltage);
+    this->tlmWrite_RawSW0Current(Generic_epsHK.Switch[0].Current);
+    this->tlmWrite_SW0Voltage(Generic_epsHK.Switch[0].Voltage / 1000.0);
+    this->tlmWrite_SW0Current(Generic_epsHK.Switch[0].Current / 1000.0);
+    this->tlmWrite_SW0State(get_switch_state(Generic_epsHK.Switch[0].Status));
+    this->tlmWrite_SW0Flag(get_switch_flag(Generic_epsHK.Switch[0].Status));
+    
+    this->tlmWrite_RawSW1Voltage(Generic_epsHK.Switch[1].Voltage);
+    this->tlmWrite_RawSW1Current(Generic_epsHK.Switch[1].Current);
+    this->tlmWrite_SW1Voltage(Generic_epsHK.Switch[1].Voltage / 1000.0);
+    this->tlmWrite_SW1Current(Generic_epsHK.Switch[1].Current / 1000.0);
+    this->tlmWrite_SW1State(get_switch_state(Generic_epsHK.Switch[1].Status));
+    this->tlmWrite_SW1Flag(get_switch_flag(Generic_epsHK.Switch[1].Status));
+
+    sleep(1);
+
+    this->tlmWrite_RawSW2Voltage(Generic_epsHK.Switch[2].Voltage);
+    this->tlmWrite_RawSW2Current(Generic_epsHK.Switch[2].Current);
+    this->tlmWrite_SW2Voltage(Generic_epsHK.Switch[2].Voltage / 1000.0);
+    this->tlmWrite_SW2Current(Generic_epsHK.Switch[2].Current / 1000.0);
+    this->tlmWrite_SW2State(get_switch_state(Generic_epsHK.Switch[2].Status));
+    this->tlmWrite_SW2Flag(get_switch_flag(Generic_epsHK.Switch[2].Status));
+
+    this->tlmWrite_RawSW3Voltage(Generic_epsHK.Switch[3].Voltage);
+    this->tlmWrite_RawSW3Current(Generic_epsHK.Switch[3].Current);
+    this->tlmWrite_SW3Voltage(Generic_epsHK.Switch[3].Voltage / 1000.0);
+    this->tlmWrite_SW3Current(Generic_epsHK.Switch[3].Current / 1000.0);
+    this->tlmWrite_SW3State(get_switch_state(Generic_epsHK.Switch[3].Status));
+    this->tlmWrite_SW3Flag(get_switch_flag(Generic_epsHK.Switch[3].Status));
+
+    sleep(1);
+
+    this->tlmWrite_RawSW4Voltage(Generic_epsHK.Switch[4].Voltage);
+    this->tlmWrite_RawSW4Current(Generic_epsHK.Switch[4].Current);
+    this->tlmWrite_SW4Voltage(Generic_epsHK.Switch[4].Voltage / 1000.0);
+    this->tlmWrite_SW4Current(Generic_epsHK.Switch[4].Current / 1000.0);
+    this->tlmWrite_SW4State(get_switch_state(Generic_epsHK.Switch[4].Status));
+    this->tlmWrite_SW4Flag(get_switch_flag(Generic_epsHK.Switch[4].Status));
+
+    this->tlmWrite_RawSW5Voltage(Generic_epsHK.Switch[5].Voltage);
+    this->tlmWrite_RawSW5Current(Generic_epsHK.Switch[5].Current);
+    this->tlmWrite_SW5Voltage(Generic_epsHK.Switch[5].Voltage / 1000.0);
+    this->tlmWrite_SW5Current(Generic_epsHK.Switch[5].Current / 1000.0);
+    this->tlmWrite_SW5State(get_switch_state(Generic_epsHK.Switch[5].Status));
+    this->tlmWrite_SW5Flag(get_switch_flag(Generic_epsHK.Switch[5].Status));
+
+    sleep(1);
+    
+    this->tlmWrite_RawSW6Voltage(Generic_epsHK.Switch[6].Voltage);
+    this->tlmWrite_RawSW6Current(Generic_epsHK.Switch[6].Current);
+    this->tlmWrite_SW6Voltage(Generic_epsHK.Switch[6].Voltage / 1000.0);
+    this->tlmWrite_SW6Current(Generic_epsHK.Switch[6].Current / 1000.0);
+    this->tlmWrite_SW6State(get_switch_state(Generic_epsHK.Switch[6].Status));
+    this->tlmWrite_SW6Flag(get_switch_flag(Generic_epsHK.Switch[6].Status));
+    
+    this->tlmWrite_RawSW7Voltage(Generic_epsHK.Switch[7].Voltage);
+    this->tlmWrite_RawSW7Current(Generic_epsHK.Switch[7].Current);
+    this->tlmWrite_SW7Voltage(Generic_epsHK.Switch[7].Voltage / 1000.0);
+    this->tlmWrite_SW7Current(Generic_epsHK.Switch[7].Current / 1000.0);
+    this->tlmWrite_SW7State(get_switch_state(Generic_epsHK.Switch[7].Status));
+    this->tlmWrite_SW7Flag(get_switch_flag(Generic_epsHK.Switch[7].Status));
+
+  }
+
+  inline Generic_eps_State Generic_eps :: get_switch_state(uint16_t switch_status)
+  {
+    Generic_eps_State sw;
+    if((switch_status & 0x00FF) == 0xAA){
+      sw.e = Generic_eps_State::ON;
+    }else{
+      sw.e = Generic_eps_State::OFF;
+    }
+
+    return sw;
+  }
+
+  inline Generic_eps_Flag Generic_eps :: get_switch_flag(uint16_t switch_status)
+  {
+    Generic_eps_Flag sw;
+    if(((switch_status & 0xFF00) >> 8) == 0x00)
+    {
+      sw.e = Generic_eps_Flag::HEALTHY;
+    }
+    else{
+      sw.e = Generic_eps_Flag::UNHEALTHY_PLACEHOLDER;
+    }
+    // implement other flags
+
+    return sw;
+  }
+
+}
+```
+
+### `Generic_eps.fpp`
+
+**경로:** `components/generic_eps/fsw/fprime/eps_src/Generic_eps.fpp`
+
+
+```fpp
+module Components {
+    
+    @ generic_eps
+    active component Generic_eps {
+
+        @ Switch State
+        enum State {
+          OFF @< OFF
+          ON @< ON
+        }
+
+        @ Switch Flags
+        enum Flag {
+          HEALTHY @< HEALTHY Operation
+          UNHEALTHY_PLACEHOLDER @< Replace with Other Flags But UNHEALTHY
+        }
+
+        @ SwitchNum
+        enum SW_NUM {
+          SW_0 @< Switch 0
+          SW_1 @< Switch 1
+          SW_2 @< Switch 2
+          SW_3 @< Switch 3
+          SW_4 @< Switch 4
+          SW_5 @< Switch 5
+          SW_6 @< Switch 6
+          SW_7 @< Switch 7
+        }
+
+         @ NOOP Command
+        async command NOOP(
+        )
+
+         @ Reset Counters Command
+        async command RESET_COUNTERS(
+        )
+
+         @ Change Switch State
+        async command SWITCH(
+          switch_num: SW_NUM @< Switch 0-7 to command
+          switch_state: State @< ON/OFF for Switch
+        )
+
+         @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING(
+        )
+
+         @ Greeting event with maximum greeting length of 30 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_eps: {}"
+
+         @ Battery Voltage Parameter
+        telemetry BatteryVoltage: F32
+
+         @ Battery Temperature Parameter
+        telemetry BatteryTemperature: F32
+
+         @ Bus 3p3 Voltage Parameter
+        telemetry Bus3p3Voltage: F32
+
+         @ Bus 5p0 Voltage Parameter
+        telemetry Bus5p0Voltage: F32
+
+         @ Bus 12 Voltage Parameter
+        telemetry Bus12Voltage: F32
+
+         @ EPS Temperature Parameter
+        telemetry EPSTemperature: F32
+
+         @ Solar Array Voltage Parameter
+        telemetry SolarArrayVoltage: F32
+
+         @ Solar Array Temperature Parameter
+        telemetry SolarArrayTemperature: F32
+
+         @ Switch 0 Voltage Parameter
+        telemetry SW0Voltage: F32
+
+          @ Switch 0 Current Parameter
+        telemetry SW0Current: F32
+
+         @ Switch 1 Voltage Parameter
+        telemetry SW1Voltage: F32
+
+          @ Switch 1 Current Parameter
+        telemetry SW1Current: F32
+
+         @ Switch 2 Voltage Parameter
+        telemetry SW2Voltage: F32
+
+          @ Switch 2 Current Parameter
+        telemetry SW2Current: F32
+
+         @ Switch 3 Voltage Parameter
+        telemetry SW3Voltage: F32
+
+          @ Switch 3 Current Parameter
+        telemetry SW3Current: F32
+
+         @ Switch 4 Voltage Parameter
+        telemetry SW4Voltage: F32
+
+          @ Switch 4 Current Parameter
+        telemetry SW4Current: F32
+
+         @ Switch 5 Voltage Parameter
+        telemetry SW5Voltage: F32
+
+          @ Switch 5 Current Parameter
+        telemetry SW5Current: F32
+
+         @ Switch 6 Voltage Parameter
+        telemetry SW6Voltage: F32
+
+          @ Switch 6 Current Parameter
+        telemetry SW6Current: F32
+
+         @ Switch 7 Voltage Parameter
+        telemetry SW7Voltage: F32
+
+          @ Switch 7 Current Parameter
+        telemetry SW7Current: F32
+
+         @ Device Count
+        telemetry DeviceCount: U32
+
+         @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+         @ Command Count
+        telemetry CommandCount: U32
+
+         @ Command Error Count
+        telemetry CommandErrorCount: U32
+        
+         @ Battery Raw Voltage
+        telemetry RawBatteryVoltage: U16
+
+         @ Battery Raw Temperature
+        telemetry RawBatteryTemperature: U16
+
+         @ Bus 3.3V Raw
+        telemetry RawBus3p3V: U16
+
+         @ Bus 5.0V Raw
+        telemetry RawBus5p0V: U16
+
+         @ Bus 12V Raw
+        telemetry RawBus12V: U16
+
+         @ EPS Temperature Raw
+        telemetry RawEPSTemperature: U16
+
+         @ SA Voltage Raw
+        telemetry RawSAVoltage: U16
+
+         @ SA Temperature Raw
+        telemetry RawSATemperature: U16
+
+         @ Switch 0 Raw Voltage
+        telemetry RawSW0Voltage: U16
+
+         @ Switch 0 Raw Current
+        telemetry RawSW0Current: U16
+
+         @ Switch 0 State Parameter
+        telemetry SW0State: State
+
+         @ Switch 0 Flag Parameter
+        telemetry SW0Flag: Flag
+
+         @ Switch 1 Raw Voltage
+        telemetry RawSW1Voltage: U16
+
+         @ Switch 1 Raw Current
+        telemetry RawSW1Current: U16
+
+         @ Switch 1 State Parameter
+        telemetry SW1State: State
+
+         @ Switch 1 Flag Parameter
+        telemetry SW1Flag: Flag
+
+         @ Switch 2 Raw Voltage
+        telemetry RawSW2Voltage: U16
+
+         @ Switch 2 Raw Current
+        telemetry RawSW2Current: U16
+
+         @ Switch 2 State Parameter
+        telemetry SW2State: State
+
+         @ Switch 2 Flag Parameter
+        telemetry SW2Flag: Flag
+
+         @ Switch 3 Raw Voltage
+        telemetry RawSW3Voltage: U16
+
+         @ Switch 3 Raw Current
+        telemetry RawSW3Current: U16
+
+         @ Switch 3 State Parameter
+        telemetry SW3State: State
+
+         @ Switch 3 Flag Parameter
+        telemetry SW3Flag: Flag
+
+         @ Switch 4 Raw Voltage
+        telemetry RawSW4Voltage: U16
+
+         @ Switch 4 Raw Current
+        telemetry RawSW4Current: U16
+
+         @ Switch 4 State Parameter
+        telemetry SW4State: State
+
+         @ Switch 4 Flag Parameter
+        telemetry SW4Flag: Flag
+
+         @ Switch 5 Raw Voltage
+        telemetry RawSW5Voltage: U16
+
+         @ Switch 5 Raw Current
+        telemetry RawSW5Current: U16
+
+         @ Switch 5 State Parameter
+        telemetry SW5State: State
+
+         @ Switch 5 Flag Parameter
+        telemetry SW5Flag: Flag
+
+         @ Switch 6 Raw Voltage
+        telemetry RawSW6Voltage: U16
+
+         @ Switch 6 Raw Current
+        telemetry RawSW6Current: U16
+
+         @ Switch 6 State Parameter
+        telemetry SW6State: State
+
+         @ Switch 6 Flag Parameter
+        telemetry SW6Flag: Flag
+
+         @ Switch 7 Raw Voltage
+        telemetry RawSW7Voltage: U16
+
+         @ Switch 7 Raw Current
+        telemetry RawSW7Current: U16
+
+         @ Switch 7 State Parameter
+        telemetry SW7State: State
+
+         @ Switch 7 Flag Parameter
+        telemetry SW7Flag: Flag
+
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_eps.hpp`
+
+**경로:** `components/generic_eps/fsw/fprime/eps_src/Generic_eps.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_eps.hpp
+// \author jstar
+// \brief  hpp file for Generic_eps component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_eps_HPP
+#define Components_Generic_eps_HPP
+
+#include "eps_src/Generic_epsComponentAc.hpp"
+#include "eps_src/Generic_eps_StateEnumAc.hpp"
+#include "eps_src/Generic_eps_FlagEnumAc.hpp"
+#include "eps_src/Generic_eps_SW_NUMEnumAc.hpp"
+
+extern "C"{
+  #include "generic_eps_device.h"
+  #include "libi2c.h"
+  }
+
+typedef struct
+{
+    uint8_t                     DeviceCount;
+    uint8_t                     DeviceErrorCount;
+    uint8_t                     CommandErrorCount;
+    uint8_t                     CommandCount;
+} __attribute__((packed)) EPS_Hk_tlm_t;
+#define EPS_HK_TLM_LNGTH sizeof(EPS_Hk_tlm_t)
+
+namespace Components {
+
+  class Generic_eps :
+    public Generic_epsComponentBase
+  {
+
+    public:
+
+      i2c_bus_info_t Generic_epsI2c;
+      GENERIC_EPS_Device_HK_tlm_t Generic_epsHK;
+      EPS_Hk_tlm_t HkTelemetryPkt;
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_eps object
+      Generic_eps(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_eps object
+      ~Generic_eps();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+      void SWITCH_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        Generic_eps_SW_NUM switch_num,
+        Generic_eps_State switch_state
+      ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void Update_Counters();
+      void Update_Base_Tlm();
+      void Update_SW_Tlm();
+
+      inline Generic_eps_State get_switch_state(uint16_t switch_status);
+      inline Generic_eps_Flag get_switch_flag(uint16_t switch_status);
+
+  };
+
+}
+
+#endif
+```

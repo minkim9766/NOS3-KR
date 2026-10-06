@@ -3,16 +3,86 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page1/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-instance-page1.component.html`
 
-file--create-instance-page1.component.html
-file--create-instance-page1.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page1/create-instance-page1.component.html`
+
+
+```html
+<app-appbase-toolbar>
+  <ng-template app-appbase-toolbar-label>
+    <ya-page-icon-button routerLink="/" color="primary" icon="arrow_back" />
+    Create an instance
+  </ng-template>
+</app-appbase-toolbar>
+
+<app-create-instance-wizard-step step="1" />
+
+<div class="form-content">
+  <table mat-table [dataSource]="dataSource" class="ya-data-table" style="width: 100%">
+    <ng-container cdkColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Template</th>
+      <td mat-cell *cdkCellDef="let row">
+        <a [routerLink]="row.name">
+          {{ row.name }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *cdkCellDef="let row">
+        {{ row.description || "-" }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *cdkRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
 ```
 
-## 항목
+### `create-instance-page1.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page1/create-instance-page1.component.html`](file--create-instance-page1.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page1/create-instance-page1.component.ts`](file--create-instance-page1.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/create-instance-page1/create-instance-page1.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { InstanceTemplate, YamcsService } from '@yamcs/webapp-sdk';
+import { CreateInstanceWizardStepComponent } from '../create-instance-wizard-step/create-instance-wizard-step.component';
+
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppAppBaseToolbarLabel } from '../appbase-toolbar/appbase-toolbar-label.directive';
+import { AppAppBaseToolbar } from '../appbase-toolbar/appbase-toolbar.component';
+
+@Component({
+  templateUrl: './create-instance-page1.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AppAppBaseToolbar,
+    AppAppBaseToolbarLabel,
+    CreateInstanceWizardStepComponent,
+    WebappSdkModule,
+  ],
+})
+export class CreateInstancePage1Component {
+  dataSource = new MatTableDataSource<InstanceTemplate>([]);
+
+  displayedColumns = ['name', 'description'];
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+  ) {
+    title.setTitle('Create an instance');
+    this.yamcs.yamcsClient.getInstanceTemplates().then((templates) => {
+      this.dataSource.data = templates;
+    });
+  }
+}
+```

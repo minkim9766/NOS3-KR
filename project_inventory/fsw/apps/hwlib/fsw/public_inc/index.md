@@ -3,32 +3,1085 @@
 
 **경로:** `fsw/apps/hwlib/fsw/public_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `hwlib.h`
 
-file--hwlib.h
-file--hwlib_version.h
-file--libcan.h
-file--libgpio.h
-file--libi2c.h
-file--libmem.h
-file--libsocket.h
-file--libspi.h
-file--libtrq.h
-file--libuart.h
+**경로:** `fsw/apps/hwlib/fsw/public_inc/hwlib.h`
+
+
+```c
+/* Copyright (C) 2009 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+
+#ifndef _hwlib_h_
+#define _hwlib_h_
+
+/* HWLIB Event IDs for Logging */
+#define HWLIB_INIT_EID  1
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "libcan.h"
+#include "libi2c.h"
+#include "libmem.h"
+#include "libtrq.h"
+#include "libspi.h"
+#include "libuart.h"
+#include "libgpio.h"
+#include "libsocket.h"
+
+/************************************************************************
+** Outside of cFS build
+*************************************************************************/
+#ifdef OS_SUCCESS
+    // Inside cFS
+    #include "cfe_endian.h"
+#else
+    // Outside cFS
+    #pragma GCC diagnostic ignored "-Wall"
+    #pragma GCC diagnostic warning "-Wunused-value"
+    #define OS_printf           printf
+    #define OS_TaskDelay(n)     ( usleep((n) * 1000) )
+    #if defined (__GNUC__)
+      #define OS_PACK         __attribute__ ((packed))
+    #else
+      #define OS_PACK
+    #endif
+    #define OS_SUCCESS          0
+    #define OS_ERROR           -1
+    #define OS_ERR_FILE        -2
+    #define OS_MutSemCreate(n1, n2, n3)    0  
+    #define OS_MutSemDelete(n)             0 
+    #define OS_MutSemTake(n)               0 
+    #define OS_MutSemGive(n)               0  
+    #ifdef SOFTWARE_BIG_BIT_ORDER
+      #define CFE_MAKE_BIG16(n) (n)
+      #define CFE_MAKE_BIG32(n) (n)
+    #else
+      #define CFE_MAKE_BIG16(n) ( (((n) << 8) & 0xFF00) | (((n) >> 8) & 0x00FF) )
+      #define CFE_MAKE_BIG32(n) ( (((n) << 24) & 0xFF000000) | (((n) << 8) & 0x00FF0000) | (((n) >> 8) & 0x0000FF00) | (((n) >> 24) & 0x000000FF) )
+    #endif
+#endif
+
+#endif /* _hwlib_h_ */
 ```
 
-## 항목
+### `hwlib_version.h`
 
-- [`fsw/apps/hwlib/fsw/public_inc/hwlib.h`](file--hwlib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/hwlib_version.h`](file--hwlib_version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libcan.h`](file--libcan.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libgpio.h`](file--libgpio.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libi2c.h`](file--libi2c.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libmem.h`](file--libmem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libsocket.h`](file--libsocket.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libspi.h`](file--libspi.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libtrq.h`](file--libtrq.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/public_inc/libuart.h`](file--libuart.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/hwlib/fsw/public_inc/hwlib_version.h`
+
+
+```c
+/* Copyright (C) 2009 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _hw_lib_version_h_
+#define _hw_lib_version_h_
+
+
+#define HW_LIB_MAJOR_VERSION    2
+#define HW_LIB_MINOR_VERSION    0
+#define HW_LIB_REVISION         0
+#define HW_LIB_MISSION_REV      0
+ 
+#endif 
+```
+
+### `libcan.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libcan.h`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_can_h_
+#define _lib_can_h_
+
+/* Includes */
+#include "hwlib.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdbool.h>
+
+#ifdef __linux__
+    #include <libsocketcan.h>
+    #include <unistd.h>
+    #include <net/if.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <sys/ioctl.h>
+    #include <linux/can.h>
+    #include <linux/can/raw.h>
+    #include <linux/if.h>
+    #include <sys/time.h>
+    #include <errno.h>
+    #include <fcntl.h>
+#endif
+
+/* Definitions */
+//#define LIBCAN_VERBOSE
+#define CAN_INTERFACE_UP        1
+#define CAN_INTERFACE_DOWN      0
+
+#ifdef __linux__
+    #define CAN_CTRLMODE_LOOPBACK		0x01	/* Loopback mode */
+    #define CAN_CTRLMODE_LISTENONLY		0x02	/* Listen-only mode */
+    #define CAN_CTRLMODE_3_SAMPLES		0x04	/* Triple sampling mode */
+    #define CAN_CTRLMODE_ONE_SHOT		0x08	/* One-Shot mode */
+    #define CAN_CTRLMODE_BERR_REPORTING	0x10	/* Bus-error reporting */
+    #define CAN_CTRLMODE_FD			    0x20	/* CAN FD mode */
+    #define CAN_CTRLMODE_PRESUME_ACK	0x40	/* Ignore missing CAN ACKs */
+    #define CAN_CTRLMODE_FD_NON_ISO		0x80	/* CAN FD in non-ISO mode */
+#endif
+
+/* CAN device modes */
+#define CAN_MASTER 	0
+#define CAN_SLAVE 	1
+
+#define CAN_MAX_DLEN 8
+
+#define CAN_SUCCESS             OS_SUCCESS
+#define CAN_ERROR               OS_ERROR
+#define CAN_UP_ERR              -2
+#define CAN_DOWN_ERR            -3
+#define CAN_SET_MODES_ERR       -4
+#define CAN_SET_BITRATE_ERR     -5
+#define CAN_SOCK_OPEN_ERR       -6
+#define CAN_SOCK_FLAGSET_ERR    -7
+#define CAN_SOCK_BIND_ERR       -8
+#define CAN_WRITE_ERR           -9
+#define CAN_READ_ERR            -10
+#define CAN_READ_TIMEOUT_ERR    -11
+#define CAN_SOCK_SETOPT_ERR     -12
+
+/*
+ * Controller Area Network Identifier structure
+ *
+ * bit 0-28	: CAN identifier (11/29 bit)
+ * bit 29	: error message frame flag (0 = data frame, 1 = error message)
+ * bit 30	: remote transmission request flag (1 = rtr frame)
+ * bit 31	: frame format flag (0 = standard 11 bit, 1 = extended 29 bit)
+ */
+typedef uint32_t canid_t;
+
+#ifdef __rtems__
+/**
+ * struct can_frame - basic CAN frame structure
+ */
+struct can_frame{
+    uint32_t  can_id;  /* 32 bit CAN_ID*/
+    uint8_t   can_dlc; /* frame payload length in byte (0 .. CAN_MAX_DLEN) */
+    uint8_t   data[CAN_MAX_DLEN];
+};
+#endif
+
+/* CAN device info struct */
+typedef struct 
+{
+    int32_t     handle;   /* handle to the network interface ex: 0 = "can0"*/
+    uint8_t     isUp;     /* if the interface is up */
+    /* Modes: each one can be on/off 
+     * See section 6.5.1 of the socketcan kernel docs for reference 
+     * https://www.kernel.org/doc/Documentation/networking/can.txt */
+
+    bool        loopback;
+    bool        listenOnly;
+    bool        tripleSampling;
+    bool        oneShot;
+    bool        berrReporting;
+    bool        fd;
+    bool        presumeAck;
+    uint32_t    bitrate;  /* bitrate for CAN device */  
+    uint32_t    second_timeout;
+    uint32_t    microsecond_timeout;
+    uint32_t    xfer_us_delay;
+    struct can_frame tx_frame;
+    struct can_frame rx_frame;
+    #ifdef __linux__
+        struct ifreq ifr;
+        struct sockaddr_can addr;
+        int sock;
+    #endif
+} can_info_t;
+
+/**
+ * Initialize CAN device
+ * @param device can_info_t struct with all can params  
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+*/
+int32_t can_init_dev(can_info_t* device);
+
+/**
+ * Sets all of the CAN devices modes (specified in the `can_info_t` device struct) in one go
+ * @param device can_info_t struct with all can params
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+ */
+int32_t can_set_modes(can_info_t* device);
+
+/**
+ * Write a number of bytes to a given CAN interface
+ * 
+ * @param device can_info_t struct with all can params
+ * @param can_id what to set can_id of frame as
+ * @param buf pointer to data to write
+ * @param length number of bytes to write the port (length of buf)
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+*/
+int32_t can_write(can_info_t* device);
+
+/**
+ * Non-blocking read for a number of bytes off of a given CAN interface
+ * 
+ * @param device can_info_t struct with all can params
+ * @param can_frame readFrame pointer to read CAN frame
+ * @param length number of bytes to read off the port
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+*/
+int32_t can_read(can_info_t* device);
+
+/**
+ * Close the CAN device 
+ * 
+ * @param can_info_t struct with all can params
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+*/
+int32_t can_close_device(can_info_t* device);
+
+/**
+ * Excecute a CAN master write and slave read in one transaction
+ *
+ * @param device can_info_t struct with all can params
+ * @param can_id what to set can_id of frame as
+ * @param txbuf pointer to data to write
+ * @param txlen number of bytes to write the port (length of buf)
+ * @param rxbuf readFrame pointer to read CAN frame
+ * @param rxlen number of bytes to read off the port
+ * @return Returns CAN_SUCCESS or CAN_ERROR
+ */
+int32_t can_master_transaction(can_info_t* device);
+
+#endif // _lib_can_h_
+```
+
+### `libgpio.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libgpio.h`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_gpio_h_
+#define _lib_gpio_h_
+
+/* Includes */
+#include "hwlib.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#if defined __linux__ 
+    #include <fcntl.h>
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/ioctl.h>
+#endif
+
+/* Defines */
+#define GPIO_SUCCESS            OS_SUCCESS
+#define GPIO_ERROR              OS_ERROR
+#define GPIO_FD_OPEN_ERR        OS_ERR_FILE
+#define GPIO_WRITE_ERR          -3
+#define GPIO_READ_ERR           -4
+
+#define GPIO_INPUT              0
+#define GPIO_OUTPUT             1
+
+#define GPIO_OPEN               1
+#define GPIO_CLOSED             0
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Structures */
+typedef struct
+{
+    uint32_t pin;                /* pin number to initialize */
+    int32_t  handle;             /* handle to device */ 
+    uint8_t  direction;          /* in or out */
+    uint8_t  isOpen;             
+} gpio_info_t;
+
+/* Prototypes */
+void gpio_dummy(void);
+
+/*
+ * Initialize GPIO pin
+ * @param device - GPIO device information
+ * @return Returns GPIO_SUCCESS or an error code defined above
+ */
+int32_t gpio_init(gpio_info_t* device);
+
+/*
+ * Read a specified GPIO pin value
+ * @param device - GPIO device information
+ * @param value - uint8_t pointer to store read value in
+ * @return Returns GPIO_SUCCESS or an error code defined above
+ */
+int32_t gpio_read(gpio_info_t* device, uint8_t* value);
+
+/*
+ * Write `value` to a specified GPIO pin
+ * @param device - GPIO device information
+ * @param value - value to write to the pin (1 or 0)
+ * @return Returns GPIO_SUCCESS or an error code defined above
+ */
+int32_t gpio_write(gpio_info_t* device, uint8_t value);
+
+/*
+ * Close GPIO handle
+ * @param device - GPIO device information
+ * @return Returns GPIO_SUCCESS or an error code defined above
+ */
+int32_t gpio_close(gpio_info_t* device);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif
+```
+
+### `libi2c.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libi2c.h`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_i2c_h_
+#define _lib_i2c_h_
+
+#include "hwlib.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+
+#ifdef __linux__
+  #include <fcntl.h>
+  #include <sys/time.h>
+  #include <linux/i2c.h>
+  #include <linux/i2c-dev.h>
+  #include <sys/ioctl.h>
+  #include <unistd.h>
+#endif
+
+#ifdef __rtems__
+  #include <errno.h>
+  #include <string.h>
+  #include <rtems/libi2c.h>
+  #include <rtems/libio.h>
+  #include <unistd.h>
+  #include <sys/types.h>
+  #include <sys/stat.h>
+  #include <fcntl.h>
+  #include <grlib/i2cmst.h>
+  #include "rtos_i2c_rdwr.h"
+#endif
+
+
+/*
+ * I2C device modes
+*/
+#define I2C_OPEN                0
+#define I2C_CLOSED              1
+
+/* Number of I2C busses */
+#define NUM_I2C                 2
+
+/* Max size of I2C transaction */
+#define I2C_MAX_BYTES           128
+
+/* Defines */
+#define I2C_SUCCESS            OS_SUCCESS
+#define I2C_ERROR              OS_ERROR
+#define I2C_FD_OPEN_ERR        OS_ERR_FILE
+
+/*
+** I2C bus info struct
+*/
+typedef struct
+{
+    int32_t  handle;   /* handle to the fd */
+    int32_t  addr;     /* slave address */
+    uint8_t  isOpen;   /* port status */
+    uint32_t speed;    
+} i2c_bus_info_t;
+
+/* 
+ * Initialize I2C handle as Master with bus speed
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @param speed Bus speed in kbps
+ * @return Returns error code: I2C_SUCCESS, or I2C_ERROR
+*/
+int32_t i2c_master_init(i2c_bus_info_t* device);
+
+/**
+ * Execute an I2C master write and slave read in one transaction
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @param addr I2C address, not bit-shifted
+ * @param txbuf pointer to tx data
+ * @param txlen length of tx data
+ * @param rxbuf pointer to rx data
+ * @param rxlen length of rx data
+ * @param timeout Number of ticks to wait for a frame
+ * @return Returns error code: I2C_SUCCESS if a frame is received, or I2C_ERROR if timed out or if handle is not a valid device
+ */
+int32_t i2c_master_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, void * rxbuf, uint8_t rxlen, uint16_t timeout);
+
+/**
+ * Execute an I2C slave read
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @param addr I2C address, not bit-shifted
+ * @param rxbuf pointer to rx data
+ * @param rxlen length of rx data
+ * @param timeout Number of ticks to wait for a frame
+ * @return Returns error code: I2C_SUCCESS if a frame is received, or I2C_ERROR if timed out or if handle is not a valid device
+ */
+int32_t i2c_read_transaction(i2c_bus_info_t* device, uint8_t addr, void * rxbuf, uint8_t rxlen, uint8_t timeout);
+
+/**
+ * Execute an I2C master write
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @param addr I2C address, not bit-shifted
+ * @param txbuf pointer to tx data
+ * @param txlen length of tx data
+ * @param timeout Number of ticks to wait for a frame
+ * @return Returns error code: I2C_SUCCESS if a frame is received, or I2C_ERROR if timed out or if handle is not a valid device
+ */
+int32_t i2c_write_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, uint8_t timeout);
+
+/**
+ * Execute multiple I2C transactions without stops
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @param addr I2C address, not bit-shifted
+ * @param i2c_rdwr_ioctl_data structure containing multiple messages
+ * @param timeout Number of ticks to wait for a frame
+ * @return Returns error code: I2C_SUCCESS if a frame is received, or I2C_ERROR if timed out or if handle is not a valid device
+ */
+int32_t i2c_multiple_transaction(i2c_bus_info_t* device, uint8_t addr, struct i2c_rdwr_ioctl_data* rdwr_data, uint16_t timeout);
+
+/**
+ * Close an I2C bus
+ *
+ * @param device Which I2C bus (if more than one exists)
+ * @return Returns error code: I2C_SUCCESS if close was succes, or I2C_ERROR if close fails
+ */
+int32_t i2c_master_close(i2c_bus_info_t* device);
+
+#endif
+```
+
+### `libmem.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libmem.h`
+
+
+```c
+/* Copyright (C) 2009 - 2020 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_mem_h_
+#define _lib_mem_h_
+
+#include "hwlib.h"
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Defines */
+#define MEM_SUCCESS            OS_SUCCESS
+#define MEM_ERROR              OS_ERROR
+
+void mem_dummy(void);
+
+int32_t devmem_write(uint32_t addr, uint8_t *in, int32_t length); 
+int32_t devmem_read(uint32_t addr, uint8_t *out, int32_t length); 
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /*_lib_mem_h_*/
+```
+
+### `libsocket.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libsocket.h`
+
+
+```c
+#ifndef _lib_socket_h_
+#define _lib_socket_h_
+
+#include "hwlib.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <unistd.h>
+
+/* Defines */
+#define SOCKET_SUCCESS             OS_SUCCESS
+#define SOCKET_ERROR               OS_ERROR
+#define SOCKET_CREATE_ERR          -2
+#define SOCKET_BIND_ERR            -3
+#define SOCKET_LISTEN_ERR          -4 
+#define SOCKET_ACCEPT_ERR          -5 
+#define SOCKET_CONNECT_ERR         -6
+#define SOCKET_RECV_ERR            -7
+#define SOCKET_SEND_ERR            -8 
+#define SOCKET_CLOSE_ERR           -9
+#define SOCKET_TRY_AGAIN           -10
+
+/* Types */
+typedef enum {
+    ip_ver_4,
+    ip_ver_6
+} addr_fam_e;
+
+typedef enum {
+    stream,
+    dgram
+} type_e;
+
+typedef enum {
+    server,
+    client
+} category_e;
+
+typedef struct {
+    int        sockfd;            // Socket descriptor 
+    int        port_num;          // Function dependent
+    char*      ip_address;        // Function dependent  
+    addr_fam_e address_family;    // IP version 4 or 6
+    type_e     type;              // Stream or Data Gram 
+    category_e category;          // Server or Client 
+    bool       block;             // 1 = Block, 0 = Non-block
+    bool       keep_alive;        // 1 = Keep Alive On, 0 = Keep Alive Off
+    bool       created;           // Has a file desciptor been assigned? 
+    bool       bound;             // Is the socket bound to an ip address and port num?
+    bool       listening;         // Is the socket being listened on?
+    bool       connected;         // Is the stream socket in a connected state?
+} socket_info_t;
+
+/* Function Prototypes */
+void socket_dummy(void);
+int32_t socket_create(socket_info_t* socket_info);
+int32_t socket_listen(socket_info_t* socket_info);
+int32_t socket_accept(socket_info_t* socket_info);
+int32_t socket_connect(socket_info_t* socket_info, char* remote_ip_address, int remote_port_num);
+int32_t socket_send(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_sent, char* remote_ip_address, int remote_port_num);
+int32_t socket_recv(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_recvd);
+int32_t socket_close(socket_info_t* socket_info);
+int32_t HostToIp(const char * hostname, char* ip);
+
+#endif
+```
+
+### `libspi.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libspi.h`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_spi_h_
+#define _lib_spi_h_
+
+/*
+** Includes
+*/ 
+#include "hwlib.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifdef __linux__    
+  #include <fcntl.h>      /* for posix open()  */
+  #include <unistd.h>     /* for posix close() */
+  #include <sys/ioctl.h>
+  #include <linux/types.h>
+  #include <linux/spi/spidev.h>
+#endif
+
+
+#ifdef __rtems__
+    #include <rtems.h>
+    #include <bsp.h>
+
+    #include <errno.h>
+    #include <sys/types.h>
+    #include <sys/stat.h>
+    #include <fcntl.h>
+
+    #include <rtems/libi2c.h>
+    #include <rtems/libio.h>
+    #include <grlib/spictrl.h>
+    #include <rtems/bspIo.h>
+#endif
+
+
+/*
+** Definitions
+*/
+#define SPI_DEVICE_CLOSED    0
+#define SPI_DEVICE_OPEN      1
+
+#define SPI_SUCCESS        		  OS_SUCCESS
+#define SPI_ERROR          		  OS_ERROR
+#define SPI_ERR_FILE_OPEN  		 -2 
+#define SPI_ERR_FILE_CLOSE 		 -3
+#define SPI_ERR_FILE_HANDLE		 -4
+#define SPI_ERR_INVAL_MD   		 -5
+#define SPI_ERR_WR_MODE    		 -6
+#define SPI_ERR_RD_MODE    		 -7
+#define SPI_ERR_WR_BPW     		 -8
+#define SPI_ERR_RD_BPW     		 -9
+#define SPI_ERR_WR_SD_HZ   		-10
+#define SPI_ERR_RD_SD_HZ   		-11
+#define SPI_ERR_IOC_MSG	   		-12
+#define SPI_ERR_MUTEX_CREATE 	-13
+
+#define MAX_SPI_BUSES        		3
+
+/* 
+** Structures
+*/
+typedef struct 
+{
+	uint32_t spi_mutex;
+	uint8_t  users;
+} spi_mutex_t;
+
+typedef struct {
+	const char*     deviceString;  /* uart string descriptor of the port  */
+	int32_t   handle;	       /* handle to the hardware device */
+	uint8_t   bus;           /* bus number for mutex use */
+	uint8_t   cs;			       /* chip Select */
+	uint32_t  baudrate;		   /* baudrate for the SPI */
+	uint8_t   spi_mode;		   /* which of the four SPI-modes to use when transmitting */
+	uint8_t   isOpen;        /* device status */
+	uint8_t   bits_per_word; /* number of bits per word */
+} spi_info_t;
+
+/*
+ * Initialize SPI device
+ * @param device spi_info_t struct with all spi params
+ * @return Returns SPI_SUCCESS or an error code 
+ */
+int32_t spi_init_dev(spi_info_t* device);
+
+/*
+ * Set SPI device mode
+ * @param device spi_info_t struct with all spi params
+ * @return Returns SPI_SUCCESS or an error code 
+ */
+int32_t spi_set_mode(spi_info_t* device);
+
+/*
+ * Get SPI device mode
+ * @param device spi_info_t struct 
+ * @return Returns SPI_SUCCESS or an error code 
+ */
+int32_t spi_get_mode(spi_info_t* device);
+
+/*
+ * Write a number of bytes to a given spi port
+ * 
+ * @param spi_info_t struct with all spi params
+ * @param data array of the data to write
+ * @param numBytes number of bytes to write the port
+ * @return Returns error code: OS_SUCCESS, or OS_ERROR
+*/
+int32_t spi_write(spi_info_t* device, uint8_t data[], const uint32_t numBytes);
+
+/*
+ * Read a number of bytes off of a given spi port
+ * 
+ * @param spi_info_t struct with all spi params
+ * @param data array to store the read data
+ * @param numBytes number of bytes to read off the port
+ * @return Returns error code: OS_SUCCESS, or OS_ERROR
+*/
+int32_t spi_read(spi_info_t* device, uint8_t data[], const uint32_t numBytes);
+
+/*
+ * Perform a full duplex SPI transaction
+ * 
+ * @param spi_info_t struct with all spi params
+ * @param pointer to transmit data buffer or null, if null zeros are shifted out
+ * @param pointer to receive data buffer or null
+ * @param length of tx and rx buffers in bytes
+ * @param if nonzero, how long to delay after the last bit transfer
+ * @param number of bits per word 
+ * @param (1) to leave SS active after transmit, (0) to leave SS non-active after transmit
+ * @return Returns SPI_SUCCESS or an error code 
+*/
+int32_t spi_transaction(spi_info_t* device, uint8_t *txBuff, uint8_t * rxBuffer, uint32_t length, uint16_t delay, uint8_t bits, uint8_t deselect);
+
+/*
+ * For manual control of the CS line where needed
+ * 
+ * @param chipSelect the number of the CS line
+ * @return Returns error code: OS_SUCCESS, or OS_ERROR
+*/
+int32_t spi_select_chip(spi_info_t* device);
+
+int32_t spi_unselect_chip(spi_info_t* device);
+
+/*
+ * Close the SPI device 
+ * 
+ * @param spi_info_t struct with all spi params
+ * @return Returns SPI_SUCCESS or an error code 
+*/
+int32_t spi_close_device(spi_info_t* device);
+#endif /*_lib_spi_h_*/
+```
+
+### `libtrq.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libtrq.h`
+
+
+```c
+/* Copyright (C) 2009 - 2020 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_trq_h_
+#define _lib_trq_h_
+
+#include "hwlib.h"
+#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include <string.h>
+
+#ifdef __linux__
+    #include <unistd.h>
+#endif
+
+#ifdef __rtems__
+    #include <bsp.h>
+    #include <stdlib.h>
+    #include <sys/types.h>
+    #include <sys/ioctl.h>
+    #include <sys/stat.h>
+    #include <fcntl.h>
+    #include <errno.h>
+    #include <math.h>
+    #include <rtems/bspIo.h>
+    #include <grlib/grpwm.h>
+#endif
+
+#define TRQ_SUCCESS             OS_SUCCESS
+#define TRQ_ERROR               OS_ERROR
+#define TRQ_INIT_ERR            -1
+#define TRQ_SELFTEST_ERR        -2
+#define TRQ_CONNECT_ERR         -3
+#define TRQ_NUM_ERR             -4
+#define TRQ_TIME_HIGH_VAL_ERR   -5
+
+#define TRQ_DIR_POSITIVE        1
+#define TRQ_DIR_NEGATIVE        0
+
+/* Torquer info struct */
+typedef struct {
+    // User initialized fields
+    uint8_t     trq_num;            // torquer number (0, 1, 2)
+    uint32_t    timer_period_ns;    // nanoseconds
+    // HWLIB managed fields
+    int         timerfd; 
+    int         direction_pin_fd;
+    uint32_t    timer_high_ns;      // nanoseconds 
+    bool        positive_direction; // TRUE = Positive direction, FALSE = Negative direction
+    bool        enabled;
+} trq_info_t;
+
+void trq_dummy(void);
+
+int32_t trq_set_time_high(trq_info_t* device, uint32_t new_time);
+int32_t trq_set_period(trq_info_t* device);
+int32_t trq_set_direction(trq_info_t* device, bool direction);
+
+int32_t trq_init(trq_info_t* device); 
+int32_t trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir);
+void trq_close(trq_info_t* device);
+
+#endif
+```
+
+### `libuart.h`
+
+**경로:** `fsw/apps/hwlib/fsw/public_inc/libuart.h`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#ifndef _lib_uart_h_
+#define _lib_uart_h_
+
+/*
+** Includes
+*/
+#include "hwlib.h"
+#include <stdint.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <errno.h>
+#include <fcntl.h>         /* for posix open()  */
+#include <unistd.h>        /* for posix close() */
+#include <string.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+
+
+/*
+** Defines
+*/
+#define PORT_CLOSED  0
+#define PORT_OPEN    1
+
+#define UART_SUCCESS            OS_SUCCESS
+#define UART_ERROR              OS_ERROR
+#define UART_FD_OPEN            OS_ERR_FILE
+
+
+/*
+** Enums and Structs
+*/
+typedef enum
+{
+    uart_access_flag_RDONLY = 0,
+    uart_access_flag_WRONLY = 1,
+    uart_access_flag_RDWR   = 2
+} uart_access_flag;
+
+typedef struct
+{
+    const char  *deviceString; /* uart string descriptor of the port  */
+    int32_t  handle;           /* handle to device */
+    uint8_t  isOpen;           /* port status */
+    uint32_t baud;             /* baud rate */
+    uint8_t  canonicalModeOn;  /* turn on canonical mode */
+    struct termios options;
+    uart_access_flag access_option;
+} uart_info_t;
+
+
+/*
+ * Generic uart initialization/ port open
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @return Returns error code: UART_SUCCESS or specific UART_ERROR
+*/
+int32_t uart_init_port(uart_info_t* device);
+
+/*
+ * Get the number of bytes waiting to be read for a given port
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @return Returns number of bytes available
+*/
+int32_t uart_bytes_available(uart_info_t* device);
+
+/*
+ * Flushes data waiting to be read for a given port
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @return Returns error code: UART_SUCCESS or specific UART_ERROR
+*/
+int32_t uart_flush(uart_info_t* device);
+
+/*
+ * Read a number of bytes off of a given uart port
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @param data array to store the read data
+ * @param numBytes number of bytes to read off the port
+ * @return Returns number of bytes successfully read
+*/
+int32_t uart_read_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes);
+
+/*
+ * Write a number of bytes to of a given uart port
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @param data array of the data to write
+ * @param numBytes number of bytes to write to the port
+ * @return Returns number of bytes successfully written
+*/
+int32_t uart_write_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes);
+
+/*
+ * Generic uart port close
+ * 
+ * @param device uart_info_t struct with all uart params
+ * @return Returns error code: UART_SUCCESS or specific UART_ERROR
+*/
+int32_t uart_close_port(uart_info_t* device);
+
+#endif
+```

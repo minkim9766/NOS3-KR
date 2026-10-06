@@ -3,18 +3,24 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ai_plugin_abstract/index
-file--test_learners_interface.py
-file--test_planners_interface.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/ai_plugin_abstract/`](ai_plugin_abstract/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/test_learners_interface.py`](file--test_learners_interface.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/test_planners_interface.py`](file--test_planners_interface.py) — 빌드 산출물 (경로만)
+### `test_learners_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/test_learners_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `test_planners_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/onair/src/ai_components/test_planners_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

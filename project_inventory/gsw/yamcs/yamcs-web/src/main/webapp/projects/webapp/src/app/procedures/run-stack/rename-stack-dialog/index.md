@@ -3,16 +3,106 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `rename-stack-dialog.component.html`
 
-file--rename-stack-dialog.component.html
-file--rename-stack-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/rename-stack-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Rename stack</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="filenameForm" class="ya-form">
+    <ya-field label="Name" [class.invalid]="filenameForm.get('name')?.invalid">
+      <input #filename type="text" formControlName="name" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="rename()" [disabled]="!filenameForm.valid">
+    RENAME
+  </ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `rename-stack-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/rename-stack-dialog.component.html`](file--rename-stack-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/rename-stack-dialog.component.ts`](file--rename-stack-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/rename-stack-dialog/rename-stack-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  ConfigService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-rename-stack-dialog',
+  templateUrl: './rename-stack-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class RenameStackDialogComponent {
+  filenameForm: UntypedFormGroup;
+
+  private storageClient: StorageClient;
+  private bucket: string;
+
+  constructor(
+    private dialogRef: MatDialogRef<RenameStackDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    yamcs: YamcsService,
+    configService: ConfigService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.storageClient = yamcs.createStorageClient();
+    this.bucket = configService.getStackBucket();
+
+    const basename = utils.getBasename(utils.getFilename(this.data.name));
+    this.filenameForm = formBuilder.group({
+      name: [basename, [Validators.required]],
+    });
+  }
+
+  async rename() {
+    let prefix;
+    const idx = this.data.name.lastIndexOf('/');
+    if (idx !== -1) {
+      prefix = this.data.name.substring(0, idx + 1);
+    }
+
+    const response = await this.storageClient.getObject(
+      this.bucket,
+      this.data.name,
+    );
+    const blob = await response.blob();
+
+    const format = utils
+      .getExtension(utils.getFilename(this.data.name))
+      ?.toLowerCase();
+
+    const newObjectName =
+      (prefix || '') +
+      this.filenameForm.get('name')!.value +
+      (format ? '.' + format : '');
+    if (newObjectName !== this.data.name) {
+      await this.storageClient.uploadObject(this.bucket, newObjectName, blob);
+      await this.storageClient.deleteObject(this.bucket, this.data.name);
+    }
+    this.dialogRef.close(newObjectName);
+  }
+}
+```

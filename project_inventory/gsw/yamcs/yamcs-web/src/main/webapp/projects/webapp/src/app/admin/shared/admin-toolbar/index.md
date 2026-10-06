@@ -3,20 +3,138 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `admin-toolbar-label.directive.ts`
 
-file--admin-toolbar-label.directive.ts
-file--admin-toolbar.component.css
-file--admin-toolbar.component.html
-file--admin-toolbar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide a label to a toolbar without causing a circular dependency
+ */
+export const APP_ADMIN_TOOLBAR = new InjectionToken<any>('APP_ADMIN_TOOLBAR');
+
+/** Flag labels for use with the portal directive */
+@Directive({
+  selector: '[app-admin-toolbar-label]',
+})
+export class AppAdminToolbarLabel extends CdkPortal {
+  _closestToolbar = inject(APP_ADMIN_TOOLBAR, { optional: true });
+}
 ```
 
-## 항목
+### `admin-toolbar.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar-label.directive.ts`](file--admin-toolbar-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.css`](file--admin-toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.html`](file--admin-toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.ts`](file--admin-toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--y-background-color);
+  box-sizing: content-box;
+  padding: 0 16px 0 24px;
+  font:
+    400 20px / 28px Roboto,
+    sans-serif;
+  letter-spacing: 0.25px;
+}
+
+.app-admin-toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.app-admin-toolbar-content {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 8px;
+}
+
+.icon-action {
+  display: flex;
+  align-items: center;
+}
+```
+
+### `admin-toolbar.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.html`
+
+
+```html
+<div class="app-admin-toolbar-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+</div>
+<div class="app-admin-toolbar-content">
+  <ng-content />
+</div>
+```
+
+### `admin-toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/admin-toolbar/admin-toolbar.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  input,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import {
+  APP_ADMIN_TOOLBAR,
+  AppAdminToolbarLabel,
+} from './admin-toolbar-label.directive';
+
+@Component({
+  selector: 'app-admin-toolbar',
+  templateUrl: './admin-toolbar.component.html',
+  styleUrl: './admin-toolbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: APP_ADMIN_TOOLBAR,
+      useExisting: AppAdminToolbar,
+    },
+  ],
+  host: {
+    class: 'app-instance-toolbar',
+  },
+  imports: [CdkPortalOutlet, WebappSdkModule],
+})
+export class AppAdminToolbar {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+
+  private _templateLabel: AppAdminToolbarLabel;
+
+  // Content for the attr label given by `<ng-template app-admin-toolbar-label>`
+  @ContentChild(AppAdminToolbarLabel)
+  get templateLabel(): AppAdminToolbarLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: AppAdminToolbarLabel | undefined) {
+    if (value && value._closestToolbar === this) {
+      this._templateLabel = value;
+    }
+  }
+}
+```

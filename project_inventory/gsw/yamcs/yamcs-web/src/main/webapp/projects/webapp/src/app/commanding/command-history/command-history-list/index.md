@@ -3,22 +3,1108 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-history-list.component.css`
 
-file--command-history-list.component.css
-file--command-history-list.component.html
-file--command-history-list.component.ts
-file--command-history.datasource.ts
-file--CommandHistoryBuffer.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.css`
+
+
+```css
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+.mat-mdc-row {
+  cursor: pointer;
+}
+
+tr.failed td,
+tr.failed td a {
+  color: red;
+}
+
+tr.success td.completion {
+  background-color: #e6ffed;
+  color: #00c752;
+}
+
+tr.failed td.completion {
+  background-color: #ffeef0;
+  color: red;
+}
+
+th.dense,
+td.dense {
+  width: 1px;
+  white-space: nowrap;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+tr.item-row.expanded td {
+  border-bottom: none;
+}
+
+tr.item-detail td {
+  padding-left: 40px !important;
+}
+
+tr.item-detail:not(.expanded) {
+  display: none;
+}
+
+tr td {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `command-history-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.css`](file--command-history-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.html`](file--command-history-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.ts`](file--command-history-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history.datasource.ts`](file--command-history.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/CommandHistoryBuffer.ts`](file--CommandHistoryBuffer.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Command history">
+    @if (!(dataSource.streaming$ | async)) {
+      <ya-page-button (clicked)="startStreaming()" icon="play_arrow">
+        Start streaming
+      </ya-page-button>
+    }
+
+    @if (dataSource.streaming$ | async) {
+      <ya-page-button
+        matTooltip="Pause streaming commands"
+        (clicked)="stopStreaming()"
+        icon="pause">
+        Stop streaming
+      </ya-page-button>
+    }
+
+    <ya-page-button color="primary" (clicked)="jumpToNow()" icon="refresh">
+      Jump to now
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <ya-detail-pane>
+    @if (selectedRecord$ | async; as selectedRecord) {
+      <ya-detail-toolbar>Command detail</ya-detail-toolbar>
+      <div style="padding: 0 16px">
+        <app-command-detail2 [command]="selectedRecord" />
+        @if (showResend()) {
+          <br />
+          <mat-divider />
+          <br />
+          <ya-button
+            [routerLink]="'/commanding/send' + selectedRecord?.commandName"
+            [queryParams]="{ c: yamcs.context, template: selectedRecord?.id }">
+            Resend
+          </ya-button>
+        }
+        <p>&nbsp;</p>
+      </div>
+    } @else {
+      <ya-detail-toolbar>Select a command</ya-detail-toolbar>
+    }
+  </ya-detail-pane>
+
+  <div class="table-wrapper">
+    @if (dataSource) {
+      <ya-panel>
+        <ya-filter-bar [formGroup]="filterForm">
+          <ya-search-filter formControlName="filter" placeholder="Filter by text search" />
+          <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="cmdhist" />
+
+          <div style="flex: 1 1 auto"></div>
+
+          @if (showCommandExports()) {
+            <ya-button
+              appearance="primary"
+              [matMenuTriggerFor]="exportMenu"
+              [disabled]="!(dataSource.records$ | async)?.length"
+              dropdown="true"
+              icon="download">
+              Export
+            </ya-button>
+          }
+
+          <mat-menu #exportMenu="matMenu" class="ya-menu" overlapTrigger="false" xPosition="before">
+            <button
+              mat-menu-item
+              matTooltip="Print preview with one command per page"
+              matTooltipPosition="right"
+              (click)="printReport()">
+              Printer-friendly
+            </button>
+            <button
+              mat-menu-item
+              matTooltip="Command table, one command per row"
+              matTooltipPosition="right"
+              (click)="exportCsv()">
+              CSV format
+            </button>
+          </mat-menu>
+        </ya-filter-bar>
+
+        <ya-filter-bar [formGroup]="filterForm">
+          <ya-select formControlName="queue">
+            <ya-option id="" label="Any queue" />
+            @for (queue of config.queueNames; track queue) {
+              <ya-option [id]="queue" [label]="queue" />
+            }
+          </ya-select>
+          <ya-select icon="access_time" formControlName="interval">
+            <ya-option id="PT1H" label="Last hour" />
+            <ya-option id="PT6H" label="Last 6 hours" />
+            <ya-option id="P1D" label="Last 24 hours" />
+            <ya-option id="NO_LIMIT" label="No limit" />
+            <ya-option id="CUSTOM" label="Custom" group="true" />
+          </ya-select>
+          @if (filterForm.value["interval"] === "CUSTOM") {
+            <ya-date-time-input formControlName="customStart" />
+            <ya-date-time-input formControlName="customStop" />
+            <ya-button (click)="applyCustomDates()" [disabled]="filterForm.invalid">
+              Apply
+            </ya-button>
+          }
+
+          @if (dataSource.loading$ | async) {
+            <ya-dots />
+          }
+
+          @if (dataSource.streaming$ | async) {
+            <div style="text-align: right; flex: 1 1 150px">
+              Listening for commands
+              <ya-dots fontSize="16" />
+            </div>
+          }
+        </ya-filter-bar>
+
+        <ya-table-window [duration]="appliedInterval" [start]="validStart" [stop]="validStop">
+          <ya-table-toggle #args preferenceKey="cmdhist.arguments">Arguments</ya-table-toggle>
+          <ya-table-toggle #rv preferenceKey="cmdhist.returnValue">Return value</ya-table-toggle>
+        </ya-table-window>
+
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="ya-data-table expand nohover"
+          multiTemplateDataRows>
+          <ng-container matColumnDef="commandId">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let item">
+              <a
+                [routerLink]="['/commanding/history', item.id]"
+                [queryParams]="{ c: yamcs.context }">
+                {{ item.id }}
+              </a>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="generationTime">
+            <th mat-header-cell *matHeaderCellDef>Time</th>
+            <td mat-cell *matCellDef="let item">
+              {{ item.generationTime | datetime }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="comment">
+            <th mat-header-cell *matHeaderCellDef class="iconcol">
+              <mat-icon matTooltip="Comment" class="icon16">comment</mat-icon>
+            </th>
+            <td mat-cell *matCellDef="let item" class="iconcol">
+              @if (item.comment) {
+                <mat-icon class="icon16" [matTooltip]="item.comment">comment</mat-icon>
+              }
+              @if (!item.comment) {
+                -
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="command">
+            <th mat-header-cell *matHeaderCellDef>Command</th>
+            <td mat-cell *matCellDef="let item">
+              <ya-highlight [text]="item.commandName" [term]="filterForm.value.filter" />
+            </td>
+          </ng-container>
+
+          @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+            <ng-container [matColumnDef]="aliasColumn.id">
+              <th mat-header-cell *matHeaderCellDef>
+                {{ aliasColumn.label }}
+              </th>
+              <td mat-cell *matCellDef="let item">
+                @if (item | alias: aliasColumn.id; as name) {
+                  <ya-highlight [text]="name" [term]="filterForm.value.filter" />
+                } @else {
+                  -
+                }
+              </td>
+            </ng-container>
+          }
+
+          <ng-container matColumnDef="issuer">
+            <th mat-header-cell *matHeaderCellDef>Issuer</th>
+            <td mat-cell *matCellDef="let item">
+              @if (item.origin) {
+                {{ item.username }}&#64;{{ item.origin }}
+              } @else {
+                {{ item.username }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="queue">
+            <th mat-header-cell *matHeaderCellDef>Queue</th>
+            <td mat-cell *matCellDef="let item">
+              {{ item.queue || "-" }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sequenceNumber">
+            <th mat-header-cell *matHeaderCellDef>Sequence number</th>
+            <td mat-cell *matCellDef="let item">
+              {{ item.sequenceNumber }}
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="queued">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="iconcol dense"
+              style="text-align: center"
+              matTooltip="Command queued">
+              Q
+            </th>
+            <td mat-cell *matCellDef="let item" class="iconcol dense" style="text-align: center">
+              <div style="display: flex; align-items: center">
+                <app-acknowledgment-icon [ack]="item.queued" />
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="released">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="iconcol dense"
+              style="text-align: center"
+              matTooltip="Command released">
+              R
+            </th>
+            <td mat-cell *matCellDef="let item" class="iconcol dense" style="text-align: center">
+              <div style="display: flex; align-items: center">
+                @if (!item.released) {
+                  <app-transmission-constraints-icon [command]="item" />
+                }
+                @if (item.released) {
+                  <app-acknowledgment-icon [ack]="item.released" />
+                }
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="sent">
+            <th
+              mat-header-cell
+              *matHeaderCellDef
+              class="iconcol dense"
+              style="text-align: center"
+              matTooltip="Command sent">
+              S
+            </th>
+            <td mat-cell *matCellDef="let item" class="iconcol dense" style="text-align: center">
+              <div style="display: flex; align-items: center">
+                <app-acknowledgment-icon [ack]="item.sent" />
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="acknowledgments">
+            <th mat-header-cell *matHeaderCellDef class="dense">Acks</th>
+            <td mat-cell *matCellDef="let item" class="dense">
+              <div style="display: flex; align-items: center">
+                @for (ack of item.extraAcks; track ack) {
+                  <app-acknowledgment-icon [ack]="ack" />
+                }
+              </div>
+              @if (!item.extraAcks.length) {
+                -
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="completion">
+            <th mat-header-cell *matHeaderCellDef style="padding-left: 8px">Completion</th>
+            <td
+              mat-cell
+              *matCellDef="let item"
+              class="completion"
+              style="text-align: center; padding-left: 8px">
+              @if (item.completed?.status === "OK") {
+                SUCCESS
+              }
+              @if (item.completed?.status === "NOK") {
+                <span [matTooltip]="item.completed?.message">FAILURE</span>
+              }
+              @if (!item.completed) {
+                -
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let item">
+              <ya-more>
+                @if (showResend()) {
+                  <button
+                    mat-menu-item
+                    [routerLink]="'/commanding/send' + item.commandName"
+                    [queryParams]="{ c: yamcs.context, template: item.id }">
+                    Resend
+                  </button>
+                  <mat-divider />
+                }
+                <button mat-menu-item (click)="copyHex(item)">Copy hex</button>
+                <button mat-menu-item (click)="copyBinary(item)">Copy binary</button>
+                @if (showCommandExports()) {
+                  <mat-divider />
+                  <ya-download-menu-item [link]="item | commandDownloadLink">
+                    Download
+                  </ya-download-menu-item>
+                }
+              </ya-more>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="detail">
+            <td
+              mat-cell
+              *matCellDef="let row"
+              [attr.colspan]="(columnChooser.displayedColumns$ | async)?.length">
+              <div style="display: flex">
+                @if (args.checked) {
+                  <ya-attr-list style="min-width: 300px">
+                    <ya-attr label="Arguments">
+                      @if (row.userAssignments.length) {
+                        <app-command-arguments [command]="row" [nomargin]="true" />
+                      } @else {
+                        -
+                      }
+                    </ya-attr>
+                  </ya-attr-list>
+                }
+                @if (rv.checked) {
+                  <ya-attr-list>
+                    <ya-attr label="Return value">
+                      @if (row.completed?.returnValue; as rv) {
+                        @switch (rv.type) {
+                          @case ("BINARY") {
+                            <app-hex [base64String]="rv.binaryValue" />
+                          }
+                          @case ("STRING") {
+                            <pre style="margin: 0; margin-top: 4px; line-height: 1em">{{
+                              rv.stringValue
+                            }}</pre>
+                          }
+                          @default {
+                            {{ rv | value }}
+                          }
+                        }
+                      } @else {
+                        -
+                      }
+                    </ya-attr>
+                  </ya-attr-list>
+                }
+                <div style="flex: 1 1 auto"></div>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+            (click)="selectRecord(row)"
+            class="item-row"
+            [class.expanded]="args.checked || rv.checked"
+            [class.selected]="(selectedRecord$ | async) === row"
+            [class.success]="row.completed?.status === 'OK'"
+            [class.failed]="row.completed?.status === 'NOK'"></tr>
+          <tr
+            mat-row
+            *matRowDef="let row; columns: ['detail']"
+            class="item-detail"
+            [class.expanded]="args.checked || rv.checked"
+            (click)="selectRecord(row)"></tr>
+        </table>
+
+        <ya-toolbar appearance="bottom" align="center">
+          <ya-button [disabled]="!dataSource.hasMore()" (click)="loadMoreData()">
+            Load more
+          </ya-button>
+        </ya-toolbar>
+      </ya-panel>
+    }
+  </div>
+</ya-instance-page>
+```
+
+### `command-history-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history-list.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import {
+  AuthService,
+  BaseComponent,
+  CommandHistoryRecord,
+  ConfigService,
+  GetCommandHistoryOptions,
+  PrintService,
+  User,
+  WebappSdkModule,
+  WebsiteConfig,
+  YaColumnChooser,
+  YaColumnInfo,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { HexComponent } from '../../../shared/hex/hex.component';
+import { AcknowledgmentIconComponent } from '../acknowledgment-icon/acknowledgment-icon.component';
+import { CommandArgumentsComponent } from '../command-arguments/command-arguments.component';
+import { CommandDetailComponent } from '../command-detail/command-detail.component';
+import { CommandHistoryPrintableComponent } from '../command-history-printable/command-history-printable.component';
+import { ExportCommandsDialogComponent } from '../export-commands-dialog/export-commands-dialog.component';
+import { CommandDownloadLinkPipe } from '../shared/command-download-link.pipe';
+import { TransmissionConstraintsIconComponent } from '../transmission-constraints-icon/transmission-constraints-icon.component';
+import { CommandHistoryDataSource } from './command-history.datasource';
+
+const defaultInterval = 'PT1H';
+
+@Component({
+  templateUrl: './command-history-list.component.html',
+  styleUrl: './command-history-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AcknowledgmentIconComponent,
+    CommandArgumentsComponent,
+    CommandDetailComponent,
+    CommandDownloadLinkPipe,
+    HexComponent,
+    WebappSdkModule,
+    TransmissionConstraintsIconComponent,
+  ],
+})
+export class CommandHistoryListComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
+  selectedRecord$ = new BehaviorSubject<CommandHistoryRecord | null>(null);
+
+  validStart: Date | null;
+  validStop: Date | null;
+
+  // Same as filter.interval but only updates after 'apply' in case of custom dates
+  // This allows showing visual indicators for the visible data set before a custom
+  // range is actually applied.
+  appliedInterval: string;
+
+  filterForm = new FormGroup({
+    filter: new FormControl<string | null>(null),
+    queue: new FormControl<string | null>(null),
+    interval: new FormControl<string | null>(defaultInterval),
+    customStart: new FormControl<string | null>(null),
+    customStop: new FormControl<string | null>(null),
+  });
+
+  dataSource: CommandHistoryDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'commandId', label: 'ID', alwaysVisible: true },
+    { id: 'generationTime', label: 'Time', alwaysVisible: true },
+    { id: 'comment', label: 'Comment', visible: true },
+    { id: 'command', label: 'Command', alwaysVisible: true },
+    { id: 'issuer', label: 'Issuer' },
+    { id: 'queue', label: 'Queue' },
+    { id: 'queued', label: 'Queued', visible: true },
+    { id: 'released', label: 'Released', visible: true },
+    { id: 'sent', label: 'Sent', visible: true },
+    { id: 'acknowledgments', label: 'Extra acknowledgments', visible: true },
+    { id: 'completion', label: 'Completion', visible: true },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual commands.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  user: User;
+  config: WebsiteConfig;
+
+  private subscriptions: Subscription[] = [];
+
+  constructor(
+    configService: ConfigService,
+    authService: AuthService,
+    private route: ActivatedRoute,
+    private printService: PrintService,
+    private clipboard: Clipboard,
+    private dialog: MatDialog,
+  ) {
+    super();
+    this.setTitle('Command history');
+    this.config = configService.getConfig();
+    this.user = authService.getUser()!;
+
+    this.dataSource = new CommandHistoryDataSource(
+      this.yamcs,
+      this.synchronizer,
+    );
+  }
+
+  ngOnInit(): void {
+    this.initializeOptions();
+    this.loadData();
+
+    this.filterForm
+      .get('filter')!
+      .valueChanges.pipe(debounceTime(400))
+      .forEach((filter) => {
+        this.loadData();
+      });
+
+    this.filterForm.get('queue')!.valueChanges.forEach((queue) => {
+      this.loadData();
+    });
+
+    this.filterForm.get('interval')!.valueChanges.forEach((nextInterval) => {
+      if (nextInterval === 'CUSTOM') {
+        const customStart = this.validStart || this.yamcs.getMissionTime();
+        const customStop = this.validStop || this.yamcs.getMissionTime();
+        this.filterForm
+          .get('customStart')!
+          .setValue(utils.toISOString(customStart));
+        this.filterForm
+          .get('customStop')!
+          .setValue(utils.toISOString(customStop));
+      } else if (nextInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      } else if (nextInterval) {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(this.validStop, nextInterval);
+        this.appliedInterval = nextInterval;
+        this.loadData();
+      }
+    });
+  }
+
+  ngAfterViewInit() {
+    this.subscriptions.push(
+      this.dataSource.namespaces$.subscribe((namespaces) => {
+        // Reset alias columns
+        for (const aliasColumn of this.aliasColumns$.value) {
+          const idx = this.columns.indexOf(aliasColumn);
+          if (idx !== -1) {
+            this.columns.splice(idx, 1);
+          }
+        }
+        const aliasColumns = [];
+        for (const namespace of namespaces) {
+          const aliasColumn = {
+            id: namespace,
+            label: namespace,
+            alwaysVisible: true,
+          };
+          aliasColumns.push(aliasColumn);
+        }
+        const insertIdx = this.columns.findIndex(
+          (column) => column.id === 'command',
+        );
+        this.columns.splice(insertIdx + 1, 0, ...aliasColumns); // Insert after name column
+        this.aliasColumns$.next(aliasColumns);
+        this.columnChooser.recalculate(this.columns);
+      }),
+    );
+  }
+
+  private initializeOptions() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      const filter = queryParams.get('filter')!;
+      this.filterForm.get('filter')!.setValue(filter);
+    }
+    if (queryParams.has('queue')) {
+      const queue = queryParams.get('queue')!;
+      this.filterForm.get('queue')!.setValue(queue);
+    }
+    if (queryParams.has('interval')) {
+      this.appliedInterval = queryParams.get('interval')!;
+      this.filterForm.get('interval')!.setValue(this.appliedInterval);
+      if (this.appliedInterval === 'CUSTOM') {
+        const customStart = queryParams.get('customStart')!;
+        this.filterForm.get('customStart')!.setValue(customStart);
+        this.validStart = new Date(customStart);
+        const customStop = queryParams.get('customStop')!;
+        this.filterForm.get('customStop')!.setValue(customStop);
+        this.validStop = new Date(customStop);
+      } else if (this.appliedInterval === 'NO_LIMIT') {
+        this.validStart = null;
+        this.validStop = null;
+      } else {
+        this.validStop = this.yamcs.getMissionTime();
+        this.validStart = utils.subtractDuration(
+          this.validStop,
+          this.appliedInterval,
+        );
+      }
+    } else {
+      this.appliedInterval = defaultInterval;
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, defaultInterval);
+    }
+  }
+
+  jumpToNow() {
+    const interval = this.filterForm.value['interval'];
+    if (interval === 'NO_LIMIT') {
+      // NO_LIMIT may include future data under erratic conditions. Reverting
+      // to the default interval is more in line with the wording 'jump to now'.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval === 'CUSTOM') {
+      // For simplicity reasons, just reset to default 1h interval.
+      this.filterForm.get('interval')!.setValue(defaultInterval);
+    } else if (interval) {
+      this.validStop = this.yamcs.getMissionTime();
+      this.validStart = utils.subtractDuration(this.validStop, interval);
+      this.loadData();
+    }
+  }
+
+  startStreaming() {
+    this.filterForm.get('interval')!.setValue('NO_LIMIT');
+    this.dataSource.startStreaming();
+  }
+
+  stopStreaming() {
+    this.dataSource.stopStreaming();
+  }
+
+  // Used in table trackBy to prevent continuous row recreation
+  // tableTrackerFn = (index: number, entry: CommandHistoryEntry) => ;
+
+  applyCustomDates() {
+    this.validStart = utils.toDate(this.filterForm.value['customStart']);
+    this.validStop = utils.toDate(this.filterForm.value['customStop']);
+    this.appliedInterval = 'CUSTOM';
+    this.loadData();
+  }
+
+  loadData() {
+    const { controls } = this.filterForm;
+    this.updateURL();
+    const options: GetCommandHistoryOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    if (this.validStop) {
+      options.stop = this.validStop.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.q = filter;
+    }
+    const queue = controls['queue'].value;
+    if (queue) {
+      options.queue = queue;
+    }
+    this.dataSource
+      .loadEntries(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  loadMoreData() {
+    const { controls } = this.filterForm;
+    const options: GetCommandHistoryOptions = {};
+    if (this.validStart) {
+      options.start = this.validStart.toISOString();
+    }
+    const filter = controls['filter'].value;
+    if (filter) {
+      options.q = filter;
+    }
+    const queue = controls['queue'].value;
+    if (queue) {
+      options.queue = queue;
+    }
+
+    this.dataSource
+      .loadMoreData(options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  showResend() {
+    return this.config.tc && this.user.hasAnyObjectPrivilegeOfType('Command');
+  }
+
+  showCommandExports() {
+    return this.config.commandExports;
+  }
+
+  private updateURL() {
+    const { controls } = this.filterForm;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: controls['filter'].value || null,
+        queue: controls['queue'].value || null,
+        interval: this.appliedInterval,
+        customStart:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStart'].value
+            : null,
+        customStop:
+          this.appliedInterval === 'CUSTOM'
+            ? controls['customStop'].value
+            : null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  copyHex(command: CommandHistoryRecord) {
+    const hex = utils.convertBase64ToHex(command.binary);
+    this.clipboard.copy(hex);
+  }
+
+  copyBinary(command: CommandHistoryRecord) {
+    const raw = window.atob(command.binary);
+    this.clipboard.copy(raw);
+  }
+
+  selectRecord(rec: CommandHistoryRecord) {
+    this.selectedRecord$.next(rec);
+    this.openDetailPane();
+  }
+
+  printReport() {
+    const data = this.dataSource.records$.value.slice().reverse();
+    this.printService.printComponent(
+      CommandHistoryPrintableComponent,
+      'Command Report',
+      data,
+    );
+  }
+
+  exportCsv() {
+    this.dialog.open(ExportCommandsDialogComponent, {
+      width: '400px',
+      data: {
+        start: this.validStart,
+        stop: this.validStop,
+        q: this.filterForm.controls['filter'].value,
+      },
+    });
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((sub) => sub.unsubscribe());
+  }
+}
+```
+
+### `command-history.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/command-history.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  CommandHistoryEntry,
+  CommandHistoryRecord,
+  CommandSubscription,
+  GetCommandHistoryOptions,
+  Synchronizer,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { CommandHistoryBuffer } from './CommandHistoryBuffer';
+
+export class CommandHistoryDataSource extends DataSource<CommandHistoryRecord> {
+  pageSize = 100;
+  continuationToken?: string;
+  options: GetCommandHistoryOptions;
+  blockHasMore = false;
+
+  records$ = new BehaviorSubject<CommandHistoryRecord[]>([]);
+  private buffer: CommandHistoryBuffer;
+
+  loading$ = new BehaviorSubject<boolean>(false);
+  public streaming$ = new BehaviorSubject<boolean>(false);
+
+  namespaces$ = new BehaviorSubject<string[]>([]);
+
+  private realtimeSubscription: CommandSubscription;
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+  ) {
+    super();
+    this.syncSubscription = synchronizer.sync(() => {
+      if (this.buffer.dirty && !this.loading$.getValue()) {
+        this.emitCommands();
+        this.buffer.dirty = false;
+      }
+    });
+
+    this.buffer = new CommandHistoryBuffer(() => {
+      // Best solution for now, alternative is to re-establish
+      // the offscreenRecord after compacting.
+      this.blockHasMore = true;
+
+      this.buffer.compact(500);
+    });
+  }
+
+  connect() {
+    return this.records$;
+  }
+
+  private emitCommands() {
+    this.records$.next(this.buffer.snapshot());
+  }
+
+  loadEntries(options: GetCommandHistoryOptions) {
+    this.loading$.next(true);
+    return this.loadPage({
+      ...options,
+      limit: this.pageSize,
+    })
+      .then((entries) => {
+        this.buffer.reset();
+        this.blockHasMore = false;
+        this.buffer.addArchiveData(
+          entries.map((entry) => new CommandHistoryRecord(entry)),
+        );
+
+        // Quick emit, don't wait on sync tick
+        this.emitCommands();
+      })
+      .finally(() => {
+        this.loading$.next(false);
+      });
+  }
+
+  hasMore() {
+    return !!this.continuationToken && !this.blockHasMore;
+  }
+
+  private async loadPage(options: GetCommandHistoryOptions) {
+    return this.yamcs.yamcsClient
+      .getCommandHistoryEntries(this.yamcs.instance!, options)
+      .then((page) => {
+        this.continuationToken = page.continuationToken;
+        var commands = page.commands || [];
+        for (const command of commands) {
+          this.updateNamespaces(command);
+        }
+        return commands;
+      });
+  }
+
+  async loadMoreData(options: GetCommandHistoryOptions) {
+    if (!this.continuationToken) {
+      return;
+    }
+    return this.loadPage({
+      ...options,
+      next: this.continuationToken,
+      limit: this.pageSize,
+    }).then((entries) => {
+      const records = entries.map((entry) => new CommandHistoryRecord(entry));
+      this.buffer.addArchiveData(records);
+
+      // Quick emit, don't wait on sync tick
+      this.emitCommands();
+    });
+  }
+
+  startStreaming() {
+    this.streaming$.next(true);
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createCommandSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+        },
+        (entry) => {
+          if (!this.loading$.getValue()) {
+            this.updateNamespaces(entry);
+            this.buffer.addRealtimeCommand(entry);
+          }
+        },
+      );
+  }
+
+  private updateNamespaces(command: CommandHistoryEntry) {
+    const knownNamespaces = this.namespaces$.value;
+    if (command.aliases) {
+      for (const namespace in command.aliases) {
+        if (knownNamespaces.indexOf(namespace) === -1) {
+          knownNamespaces.push(namespace);
+          knownNamespaces.sort();
+          this.namespaces$.next([...knownNamespaces]);
+        }
+      }
+    }
+  }
+
+  stopStreaming() {
+    this.realtimeSubscription?.cancel();
+    this.streaming$.next(false);
+  }
+
+  disconnect() {
+    this.syncSubscription?.unsubscribe();
+    this.records$.complete();
+    this.loading$.complete();
+    this.streaming$.complete();
+    this.namespaces$.complete();
+  }
+
+  isEmpty() {
+    return !this.records$.getValue().length;
+  }
+}
+```
+
+### `CommandHistoryBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/command-history-list/CommandHistoryBuffer.ts`
+
+
+```typescript
+import { CommandHistoryEntry, CommandHistoryRecord } from '@yamcs/webapp-sdk';
+
+export type WatermarkObserver = () => void;
+
+/**
+ * Combines archive cmdhist entries obtained via REST
+ * with realtime entries obtained via WebSocket.
+ *
+ * This class does not care about whether archive samples
+ * and realtime values are connected. Both sets are joined and sorted under all conditions.
+ */
+export class CommandHistoryBuffer {
+  public dirty = false;
+
+  private archiveRecords: CommandHistoryRecord[] = [];
+
+  private realtimeBuffer: (CommandHistoryEntry | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.realtimeBuffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  addArchiveData(records: CommandHistoryRecord[]) {
+    this.archiveRecords = this.archiveRecords.concat(records);
+    this.dirty = true;
+  }
+
+  addRealtimeCommand(entry: CommandHistoryEntry) {
+    if (this.pointer < this.bufferSize) {
+      this.realtimeBuffer[this.pointer] = entry;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.alreadyWarned = true;
+        this.watermarkObserver();
+      }
+      this.pointer = this.pointer + 1;
+    }
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archiveRecords = [];
+    this.realtimeBuffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.dirty = true;
+  }
+
+  snapshot(): CommandHistoryRecord[] {
+    const splicedRecords = [...this.archiveRecords];
+
+    this.realtimeBuffer.map((entry) => {
+      if (!entry) return;
+
+      const existingIndex = splicedRecords.findIndex((r) => r.id == entry.id);
+      if (existingIndex === -1) {
+        splicedRecords.push(new CommandHistoryRecord(entry));
+      } else {
+        splicedRecords[existingIndex] =
+          splicedRecords[existingIndex].mergeEntry(entry);
+      }
+    });
+
+    splicedRecords.sort((r1, r2) => {
+      let res = -r1.generationTime.localeCompare(r2.generationTime);
+      if (res === 0) {
+        res = -r1.origin.localeCompare(r2.origin);
+      }
+      return res !== 0 ? res : r2.sequenceNumber - r1.sequenceNumber;
+    });
+    return splicedRecords;
+  }
+
+  /**
+   * Transfers the realtime buffer into the archive buffer, and
+   * reduces its size to a set limit. The oldest events (based
+   * on generation time) are removed first.
+   */
+  compact(limit: number) {
+    const snapshot = this.snapshot();
+    snapshot.length = Math.min(limit, snapshot.length);
+    this.reset();
+    this.archiveRecords = snapshot;
+    this.dirty = true;
+  }
+}
+```

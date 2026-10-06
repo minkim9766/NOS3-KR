@@ -3,18 +3,645 @@
 
 **경로:** `fsw/apps/ci/fsw/examples/multi/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ci_custom.c`
 
-file--ci_custom.c
-file--ci_platform_cfg.h
-file--MISSION_ci_types.h
+**경로:** `fsw/apps/ci/fsw/examples/multi/ci_custom.c`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_custom.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions for Custom Layer of CI with multi channels.
+*
+*   \par
+*     This file defines the functions for a custom implementation of the custom
+*     layer of the CI application over UDP and RS422 serial port. 
+*
+*   \par API Functions Defined:
+*     - CI_CustomInit() - Initialize the transport protocol, create child task
+*     - CI_CustomAppCmds() - Process custom App Commands
+*     - CI_CustomEnableTO() - Send msg to TO to enable downlink
+*     - CI_CustomCleanup() - Cleanup callback to close transport channel.
+*     - CI_CustomMain() - Main entry point for the custom child task. 
+*     - CI_CustomGateCmds() - Process custom Gate Commands
+*
+*   \par Private Functions Defined:
+*     - CI_CustomProcessUpMsg() - Process new uplink message
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - All input messages are CCSDS messages
+*     - Both CI and TO makes use of the same RS422 device
+*     - All config macros defined in ci_platform_cfg.h
+*     - ciMutex must be used whenever g_CI_AppData is accessed.
+*
+*   \par Modification History:
+*     - 2015-06-01 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+#include <errno.h>
+
+#include "cfe.h"
+#include "network_includes.h"
+#include "trans_select.h"
+#include "trans_rs422.h"
+#include "trans_udp.h"
+
+#include "ci_app.h"
+#include "ci_platform_cfg.h"
+#include "to_mission_cfg.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+typedef struct
+{
+    IO_TransSelect_t        select;             /**< Select struct            */
+    int32                   serialFd;           /**< File Descriptor of port  */
+    IO_TransUdp_t           socket;             /**< Socket structure         */
+    TO_EnableOutputCmd_t    toEnableCmd;        /**< TO Enable CMD msg        */
+    uint8                   buffer[CI_CUSTOM_BUFFER_SIZE];  /**< buffer       */
+} CI_CustomData_t;
+
+/*
+** External Global Variables
+*/
+extern CI_AppData_t g_CI_AppData;
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+static CI_CustomData_t g_CI_CustomData;
+
+/*
+** Local Function Definitions
+*/
+static int32 CI_CustomReadSerial(void);
+static int32 CI_CustomReadSocket(void);
+static void CI_CustomProcessUpMsg(CFE_MSG_Message_t * pSbMsg, CFE_SB_MsgId_t msgId);
+
+
+/*******************************************************************************
+** Custom Application Functions (Executed by Main Task)
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Custom Initialization
+*******************************************************************************/
+int32 CI_CustomInit(void)
+{
+    int32 iStatus = CI_ERROR;
+    uint32 taskId = 0;
+    IO_TransRS422Config_t configSerial;
+    IO_TransUdpConfig_t configSocket;
+
+    /* Init as errors */
+    g_CI_CustomData.serialFd = -1;
+    g_CI_CustomData.socket.sockId = -1;
+
+    /* Initialize select */ 
+    if (IO_TransSelectClear(&g_CI_CustomData.select) < 0)
+    {
+        goto end_of_function;
+    }
+
+    /*Initialize a RS422 Port  */
+    strncpy((char *) &configSerial.device, CI_CONFIG_SERIAL_PORT, 
+            PORT_NAME_SIZE);
+    configSerial.baudRate = CI_CONFIG_BAUD_RATE;
+    configSerial.timeout  = CI_CONFIG_TIMEOUT;
+    configSerial.minBytes = CI_CONFIG_MINBYTES;
+    configSerial.cFlags   = 0;
+    
+    g_CI_CustomData.serialFd = IO_TransRS422Init(&configSerial);
+    if (g_CI_CustomData.serialFd < 0)
+    {
+        goto end_of_function;
+    }
+
+    /* Add to select set  */
+    if (IO_TransSelectAddFd(&g_CI_CustomData.select,
+                            g_CI_CustomData.serialFd) < 0)
+    {
+        goto end_of_function;
+    }
+
+    /* Initialize Socket */
+    CFE_PSP_MemSet((void *) &configSocket, 0x0, sizeof(IO_TransUdpConfig_t));
+    strncpy(configSocket.cAddr, CI_CUSTOM_UDP_ADDR, 16);
+    configSocket.usPort = CI_CUSTOM_UDP_PORT;
+    configSocket.timeoutRcv = CI_CUSTOM_UDP_TIMEOUT;
+    
+    if (IO_TransUdpInit(&configSocket, &g_CI_CustomData.socket) < 0)
+    {
+        goto end_of_function;
+    }
+
+    /* Add to select set */
+    if (IO_TransSelectAddFd(&g_CI_CustomData.select,
+                            g_CI_CustomData.socket.sockId) < 0)
+    {
+        goto end_of_function;
+    }
+
+    iStatus = CFE_ES_CreateChildTask(&taskId,
+                                     "CI Custom Main Task",
+                                     CI_CustomMain,
+                                     CI_CUSTOM_TASK_STACK_PTR, 
+                                     CI_CUSTOM_TASK_STACK_SIZE, 
+                                     CI_CUSTOM_TASK_PRIO,
+                                     0);
+end_of_function:    
+    return (iStatus);
+}
+    
+
+/******************************************************************************/
+/** \brief Custom app command response
+*******************************************************************************/
+int32 CI_CustomAppCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    int32 iStatus = CI_SUCCESS;
+    uint32 uiCmdCode = CFE_MSG_GetFcnCode(pCmdMsg, CFE_MSG_FcnCode_t *FcnCode);
+    switch (uiCmdCode)
+    {
+        /*  Example of a valid custom command. Declare at top of file. 
+        case CI_CUSTOM_EXAMPLE_CC:
+            if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_CustomExampleCmd_t)))
+            {
+                CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdCnt);
+                CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "CI: Recvd example custom app cmd (%d)", uiCmdCode);
+            }
+            break;
+        */
+
+        default:
+            iStatus = CI_ERROR;
+            break;
+    }
+    
+    return iStatus;
+}
+
+
+/******************************************************************************/
+/** \brief Custom response to CI_ENABLE_TO_CC cmd code
+*******************************************************************************/
+void CI_CustomEnableTO(CFE_MSG_Message_t * pCmdMsg)
+{
+    /* Copy the first part of the command (for socket setup) */
+    CFE_PSP_MemCpy((void *) &g_CI_CustomData.toEnableCmd, 
+                   (void *) pCmdMsg, sizeof(CI_EnableTOCmd_t));
+
+    /* Setup the toEnableCmd */
+    CFE_MSG_Init((CFE_MSG_Message_t *) &g_CI_CustomData.toEnableCmd, 
+                   TO_APP_CMD_MID, sizeof(TO_EnableOutputCmd_t), false); 
+    CFE_SB_SetCmdCode((CFE_MSG_Message_t *) &g_CI_CustomData.toEnableCmd, 
+                      TO_ENABLE_OUTPUT_CC);
+    g_CI_CustomData.toEnableCmd.iFileDesc = g_CI_CustomData.serialFd;
+    CFE_SB_GenerateChecksum((CFE_MSG_Message_t *) &g_CI_CustomData.toEnableCmd);
+    
+    /* Send the TO Enable Telemetry Output Message */    
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *) &g_CI_CustomData.toEnableCmd, true);
+    
+    return;
+}
+
+
+/******************************************************************************/
+/** \brief Custom Cleanup
+*******************************************************************************/
+void CI_CustomCleanup(void)
+{
+    IO_TransRS422Close(g_CI_CustomData.serialFd);
+    IO_TransUdpCloseSocket(&g_CI_CustomData.socket);
+    IO_TransSelectClear(&g_CI_CustomData.select);
+}
+
+
+/*******************************************************************************
+** Custom Functions (Executed by Custom child task)
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Entry Point of custom child task
+*******************************************************************************/
+void CI_CustomMain(void)
+{
+    int32 size = 0;
+
+    if (g_CI_CustomData.serialFd < 0)
+    {
+        CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR, 
+                          "CI: Serial Port not set. Check init. "
+                          "Quitting CI_CustomMain.");
+        goto end_of_function;
+    }
+
+    if (g_CI_CustomData.socket.sockId < 0)
+    {
+        CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR, 
+                          "CI: Socket ID not set. Check init. "
+                          "Quitting CI_CustomMain.");
+        goto end_of_function;
+    }
+
+    while(size >= 0)
+    {
+        size = IO_TransSelectInput(&g_CI_CustomData.select, 
+                                   IO_TRANS_PEND_FOREVER);
+
+        if (size > 0)
+        {
+            if (IO_TransSelectFdInActive(&g_CI_CustomData.select,
+                                         g_CI_CustomData.serialFd))
+            {
+                size = CI_CustomReadSerial();
+            }
+            else if (IO_TransSelectFdInActive(&g_CI_CustomData.select,
+                                              g_CI_CustomData.socket.sockId))
+            {
+                size = CI_CustomReadSocket();
+            }
+            else 
+            {
+                CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "CI: Unexpected Active Device. "
+                                  "Quitting CI_CustomMain.");
+                break;
+            }
+        }
+    }
+
+end_of_function:
+    return;
+}
+
+
+/******************************************************************************/
+/** \brief Read message on Serial Port (Private)
+*******************************************************************************/
+int32 CI_CustomReadSerial(void)
+{
+    int32 msgSize = 0;
+    int32 dataSize = 0;
+    CFE_SB_MsgId_t  msgId;
+    CFE_MSG_Message_t * pSbMsg = (CFE_MSG_Message_t *) &g_CI_CustomData.buffer[0];
+    
+    /* Get header of message. */
+    int32 size = IO_TransRS422Read(g_CI_CustomData.serialFd, 
+                                   &g_CI_CustomData.buffer[0], 6); 
+
+    /* Received CCSDS message. */
+    if (size == 6)
+    {
+       /* Get Msg ID */
+       msgId = CFE_MSG_GetMsgId(pSbMsg, CFE_SB_MsgId_t *MsgId);
+       
+       /* Get message size */
+       msgSize = CFE_MSG_GetSize(pSbMsg, CFE_MSG_Size_t *Size);
+       dataSize = msgSize - 6;
+
+       if (msgSize > CI_CUSTOM_BUFFER_SIZE)
+       {
+           CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                             "CI: Message received larger than buffer. "
+                             "Message ID:0x%x dropped.", msgId);
+       }
+       else if (dataSize >= 0)
+       {
+           /* Read full message. May timeout based on init config. */
+           size = IO_TransRS422Read(g_CI_CustomData.serialFd, 
+                                    &g_CI_CustomData.buffer[6], dataSize);
+
+           if (size != dataSize)
+           {
+               CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                                 "CI: Incomplete message received. "
+                                 "Message ID:0x%x dropped.", msgId);
+           }
+           else
+           {
+               CI_CustomProcessUpMsg(pSbMsg, msgId);
+           }
+       }
+       else
+       {
+           CFE_EVS_SendEvent(CI_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                             "CI: Error on serial port read. errno:%d",
+                             errno);
+       }
+
+    }
+    else
+    {
+        /* Deal with messages smaller than CCSDS packets here. */
+    }
+    
+    return size;
+}
+
+/******************************************************************************/
+/** \brief Read message on Serial Port (Private)
+*******************************************************************************/
+int32 CI_CustomReadSocket(void)
+{
+    CFE_SB_MsgId_t  msgId;
+    CFE_MSG_Message_t * pSbMsg = (CFE_MSG_Message_t *) &g_CI_CustomData.buffer[0];
+    
+    /* Get header of message. */
+    int32 size = IO_TransUdpRcv(&g_CI_CustomData.socket, 
+                                &g_CI_CustomData.buffer[0], 
+                                CI_CUSTOM_BUFFER_SIZE); 
+    if (size > 0)
+    {
+        msgId = CFE_MSG_GetMsgId(pSbMsg, CFE_SB_MsgId_t *MsgId);
+        CI_CustomProcessUpMsg(pSbMsg, msgId);
+    }
+
+    return size;
+}
+   
+
+/******************************************************************************/
+/** \brief Custom Process Uplink Msg (Private)
+*******************************************************************************/
+void CI_CustomProcessUpMsg(CFE_MSG_Message_t * pSbMsg, CFE_SB_MsgId_t msgId)
+{
+     /* NOTE: Comment this out if you would like to test with cmdUtils tool,
+        As it does not include a checksum in it's commands sent. */
+     
+     /* CCSDS command checksum check. */
+     if (CFE_SB_ValidateChecksum(pSbMsg) == false)
+     {
+         uint16 cmdCode = CFE_MSG_GetFcnCode(pSbMsg, CFE_MSG_FcnCode_t *FcnCode);
+         CFE_EVS_SendEvent(CI_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                           "CI: MID:0x%04x - Cmd Checksum failed. CmdCode:%u",
+                           msgId, cmdCode);
+         return;
+     }
+
+     /* If command is GATE command, execute immediately. */
+     if (msgId == CI_GATE_CMD_MID)
+     {
+         CI_CustomGateCmds(pSbMsg);
+     }
+     /* Any other message is passed through to the SB. */
+     else 
+     {
+         CFE_SB_TransmitMsg(pSbMsg, true);
+     }
+
+    return;
+}
+
+/******************************************************************************/
+/** \brief Custom Gate command response
+*******************************************************************************/
+void CI_CustomGateCmds(CFE_MSG_Message_t * pCmdMsg)
+{
+    uint32 uiCmdCode = 0;
+
+    uiCmdCode = CFE_MSG_GetFcnCode(pCmdMsg, CFE_MSG_FcnCode_t *FcnCode);
+    switch (uiCmdCode)
+    {
+        /*  Example of a valid custom command.
+        case CI_EXAMPLE_GATE_CC:
+            if (CI_VerifyCmdLength(pCmdMsg, sizeof(CI_CustomExampleCmd_t)))
+            {
+                CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdCnt);
+                CFE_EVS_SendEvent(CI_CMD_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "CI: Recvd example custom gate cmd (%d)", uiCmdCode);
+            }
+            break;
+        */
+
+        default:
+            CI_IncrHkCounter(&g_CI_AppData.HkTlm.usCmdErrCnt);
+            CFE_EVS_SendEvent(CI_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "CI: Recvd invalid Gate cmd (%d)", uiCmdCode);
+            break;
+    }
+    
+    return;
+}
+
+/*==============================================================================
+** End of file ci_custom.c
+**============================================================================*/
 ```
 
-## 항목
+### `ci_platform_cfg.h`
 
-- [`fsw/apps/ci/fsw/examples/multi/ci_custom.c`](file--ci_custom.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/examples/multi/ci_platform_cfg.h`](file--ci_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/examples/multi/MISSION_ci_types.h`](file--MISSION_ci_types.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/ci/fsw/examples/multi/ci_platform_cfg.h`
+
+
+```c
+/******************************************************************************/
+/** \file  ci_platform_cfg.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Sample config file for CI Application with RS422 device
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - Make use of the setup.sh script to move / link this file to the 
+*       {MISSION_HOME}/apps/to/fsw/platform_inc folder.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+#ifndef _CI_PLATFORM_CFG_H_
+#define _CI_PLATFORM_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines
+*/
+/* Check new commands every 1s if not scheduled */
+#define CI_WAKEUP_TIMEOUT  1000  
+
+#define CI_SCH_PIPE_DEPTH  10
+#define CI_CMD_PIPE_DEPTH  10
+#define CI_TLM_PIPE_DEPTH  10
+
+//swdev - Loopback
+#define CI_CONFIG_SERIAL_PORT "/dev/ttyS6"
+//#define CI_CONFIG_SERIAL_PORT "/tyCo/2"
+#define CI_CONFIG_BAUD_RATE   921600
+#define CI_CONFIG_TIMEOUT     100
+#define CI_CONFIG_MINBYTES    6
+
+#define CI_CUSTOM_UDP_PORT 5010
+#define CI_CUSTOM_UDP_ADDR IO_TRANS_UDP_INADDR_ANY
+#define CI_CUSTOM_UDP_TIMEOUT 100
+#define CI_CUSTOM_MAX_IP_STRING_SIZE  16 
+
+#define CI_CUSTOM_BUFFER_SIZE 1000
+
+#define CI_CUSTOM_TASK_STACK_PTR NULL
+#define CI_CUSTOM_TASK_STACK_SIZE 0x4000
+#define CI_CUSTOM_TASK_PRIO 118
+
+/*
+** Include Files
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_PLATFORM_CFG_H_ */
+
+/*==============================================================================
+** End of file ci_platform_cfg.h
+**============================================================================*/
+    
+```
+
+### `MISSION_ci_types.h`
+
+**경로:** `fsw/apps/ci/fsw/examples/multi/MISSION_ci_types.h`
+
+
+```c
+/******************************************************************************/
+/** \file  MISSION_ci_types.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Command and telemetry data strucutres for CI application
+*
+*   \par
+*       This header file contains definitions of command and telemetry data
+*       structures for CI applications for the RS422 transport protocol example.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Make use of the setup.sh script to move / link this file to the
+*     {MISSION_HOME}/apps/inc/ folder.
+*     - Default HK Telemetry structure is defined in ci_hktlm.h
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2015-10-16 | Guy de Carufel | Moved hktlm to ci_hktlm.h
+*******************************************************************************/
+#ifndef _MISSION_CI_TYPES_H_
+#define _MISSION_CI_TYPES_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "../ci/fsw/src/ci_hktlm.h"
+#include "../to/fsw/mission_inc/to_mission_cfg.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t  ucCmdHeader;
+} CI_NoArgCmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t  ucCmdHeader;
+    char    cDestIp[TO_MAX_IP_STRING_SIZE];   /* Destination Socket IP */	
+    uint16  usDestPort;                       /* Destination Socket Port */ 
+} CI_EnableTOCmd_t;
+
+
+/* NOTE: In this example, the OutData is empty (not used.) */
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t  ucTlmHeader;
+} CI_OutData_t;
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _CI_TO_DEV_CI_TYPES_H_ */
+
+/*==============================================================================
+** End of file MISSION_ci_types.h
+**============================================================================*/
+    
+```

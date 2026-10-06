@@ -3,22 +3,783 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 scripts/index
-file--autocoder.cmake
-file--fpp.cmake
-file--fpp_ut.cmake
-file--helpers.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/scripts/`](scripts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/autocoder.cmake`](file--autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/fpp.cmake`](file--fpp.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/fpp_ut.cmake`](file--fpp_ut.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/helpers.cmake`](file--helpers.cmake) — UTF-8 텍스트 파일 본문 포함
+### `autocoder.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/autocoder.cmake`
+
+
+```cmake
+####
+# autocoder/autocoder.cmake:
+#
+# Autocoder setup and support file. This performs all of the general autocoder functions, running the specific functions
+# defined within the individual autocoders. This gives the ability to run a set of autocoders to produce files.
+#
+# Note: autocoders need to be run by targets. See target/target.cmake.
+####
+include_guard()
+include(utilities)
+include(autocoder/helpers)
+
+# Allowed return values
+set(FPRIME_AUTOCODER_UNSUPPORTED AUTOCODER_GENERATED AUTOCODER_SCRIPT AUTOCODER_INPUTS AUTOCODER_INCLUDES)
+set(FPRIME_AUTOCODER_REQUIRED AUTOCODER_GENERATED_AUTOCODER_INPUTS AUTOCODER_GENERATED_BUILD_SOURCES AUTOCODER_GENERATED_OTHER)
+set(FPRIME_AUTOCODER_OPTIONAL AUTOCODER_DEPENDENCIES)
+
+####
+# run_ac_set:
+#
+# Run a set of autocoder allowing back-to-back execution of a set of autocoders. SOURCES are the source files that are
+# input into the autocoder filters.  Extra arguments may be an include path for an autocoder (e.g. autocoder/fpp).
+#
+# BUILD_TARGET_NAME: name of the build target getting attached autocoding
+# SOURCES: source file input list
+# ...: autocoder include
+####
+function (run_ac_set BUILD_TARGET_NAME)
+    # Get all sources available for autocode processing
+    get_target_property(AUTOCODER_INPUT_SOURCES "${BUILD_TARGET_NAME}" AUTOCODER_INPUTS)
+    # Get the source list, if passed in
+    set(AC_LIST)
+    if (ARGN)
+        set(AC_LIST "${ARGN}")
+    endif()
+    # Do not init GENERATED_FILE_LIST as it is read from previous AC runs above
+    
+    # Create a hash of the autocoder set to isolate results
+    string(SHA1 "AC_SET_HASH" "${AC_LIST}")
+    
+    foreach(AC_CMAKE IN LISTS AC_LIST)
+        run_ac("${BUILD_TARGET_NAME}" "${AC_CMAKE}" "${AUTOCODER_INPUT_SOURCES}" "${GENERATED_FILE_LIST}" "${AC_SET_HASH}")
+        get_property(AUTOCODER_GENERATED_AUTOCODER_INPUTS_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_GENERATED_AUTOCODER_INPUTS")
+        list(APPEND AUTOCODER_INPUT_SOURCES ${AUTOCODER_GENERATED_AUTOCODER_INPUTS_VALUES})
+    endforeach()
+    
+
+    # Read from hash-specific properties for this autocoder set
+    get_property(AUTOCODER_GENERATED_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_GENERATED")
+    get_property(AUTOCODER_GENERATED_BUILD_SOURCES_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_GENERATED_BUILD_SOURCES")
+    get_property(AUTOCODER_GENERATED_AUTOCODER_INPUTS_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_GENERATED_AUTOCODER_INPUTS")
+    get_property(AUTOCODER_DEPENDENCIES_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_DEPENDENCIES")
+    get_property(AUTOCODER_GENERATED_OTHER_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AC_SET_HASH}_AUTOCODER_GENERATED_OTHER")
+    
+    # Append to final target properties (aggregate of all runs)
+    append_list_property("${AUTOCODER_GENERATED_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY AC_GENERATED)
+    append_list_property("${AUTOCODER_GENERATED_AUTOCODER_INPUTS_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY AUTOCODER_INPUTS)
+    # Cannot use `target_sources` as it does not respect the "GENERATED" flag. Thus the sources need to be added
+    # to the SOURCES property directly.
+    append_list_property("${AUTOCODER_GENERATED_BUILD_SOURCES_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY SOURCES)
+    append_list_property("${AUTOCODER_DEPENDENCIES_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY LINK_LIBRARIES)
+    append_list_property("${AUTOCODER_DEPENDENCIES_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY INTERFACE_LINK_LIBRARIES)
+    append_list_property("${AUTOCODER_DEPENDENCIES_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY FPRIME_DEPENDENCIES)
+    # Invalidate the TRANSITIVE_DEPENDENCIES on the target
+    if (AUTOCODER_DEPENDENCIES_VALUES)
+        set_property(TARGET "${BUILD_TARGET_NAME}" PROPERTY TRANSITIVE_DEPENDENCIES)
+    endif()
+    # CMake claims that all generated files are marked generated. This asserts this fact.
+    get_target_property(ALL_GENERATED "${BUILD_TARGET_NAME}" AC_GENERATED)
+    foreach(SOURCE IN LISTS ALL_GENERATED)
+        get_source_file_property(IS_GENERATED ${SOURCE} GENERATED)
+        fprime_cmake_ASSERT("${SOURCE} is not marked generated." IS_GENERATED)
+    endforeach()
+    
+    # Set variables in parent scope for this run's results
+    set(AUTOCODER_GENERATED "${AUTOCODER_GENERATED_VALUES}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_BUILD_SOURCES "${AUTOCODER_GENERATED_BUILD_SOURCES_VALUES}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_AUTOCODER_INPUTS "${AUTOCODER_GENERATED_AUTOCODER_INPUTS_VALUES}" PARENT_SCOPE)
+    set(AUTOCODER_DEPENDENCIES "${AUTOCODER_DEPENDENCIES_VALUES}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_OTHER "${AUTOCODER_GENERATED_OTHER_VALUES}" PARENT_SCOPE)
+endfunction()
+
+####
+# run_ac:
+#
+# Run the autocoder across the set of source files, SOURCES, and the previously generated sources, GENERATED_SOURCES.
+# This will filter the SOURCES and GENERATED_SOURCES down to the handled set. Then for single-input autocoders, it runs
+# the autocoder one input at a time, otherwise it runs the autocoder once on all inputs.
+#
+# AUTOCODER_CMAKE: cmake file containing autocoder definition
+# SOURCES: sources input to run on the autocoder
+####
+function(run_ac BUILD_TARGET_NAME AUTOCODER_CMAKE SOURCES GENERATED_FILE_LIST HASH)
+    plugin_include_helper(AUTOCODER_NAME "${AUTOCODER_CMAKE}" is_supported setup_autocode get_generated_files get_dependencies)
+    # Normalize and filter source paths so that what we intend to run is in a standard form
+    normalize_paths(AC_INPUT_SOURCES "${SOURCES}")
+    _filter_sources(AC_INPUT_SOURCES "${AC_INPUT_SOURCES}")
+
+    # Break early if there are no sources, no need to autocode nothing
+    if (NOT AC_INPUT_SOURCES)
+        if (CMAKE_DEBUG_OUTPUT)
+            message(STATUS "[Autocode/${AUTOCODER_NAME}] No sources detected")
+        endif()
+        return()
+    endif()
+
+    # Check if this autocoder has been run before by comparing the hash of inputs. This allows us to skip running
+    # at a previous time.  If so, skip autocoder and use old results
+    string(SHA1 "SRCS_HASH" "${AC_INPUT_SOURCES};${AUTOCODER_CMAKE}")
+    
+    # Check if we have a previously stored hash and compare it
+    get_property(STORED_HASH TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_SRCS_HASH")
+    get_property(HASH_SET TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_SRCS_HASH" SET)
+    
+    # If we have not run this autocoder before, or if the hash has changed, run the autocoder
+    if (NOT HASH_SET)
+        # Store the hash for future runs
+        set_property(TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_SRCS_HASH" "${SRCS_HASH}")
+        
+        _describe_autocoder_prep("${AUTOCODER_NAME}" "${AC_INPUT_SOURCES}")
+
+        # Find the one variable set in the autocoder
+        get_property(HANDLES_INDIVIDUAL_SOURCES_SET GLOBAL PROPERTY "${AUTOCODER_NAME}_HANDLES_INDIVIDUAL_SOURCES" SET)
+        if (NOT HANDLES_INDIVIDUAL_SOURCES_SET)
+            message(FATAL_ERROR "${AUTOCODER_CMAKE} did not call one of the autocoder_setup_for_*_sources functions")
+        endif()
+        get_property(HANDLES_INDIVIDUAL_SOURCES GLOBAL PROPERTY "${AUTOCODER_NAME}_HANDLES_INDIVIDUAL_SOURCES")
+
+        # Handles individual/multiple source handling
+        if (HANDLES_INDIVIDUAL_SOURCES)
+            foreach(SOURCE IN LISTS AC_INPUT_SOURCES)
+                __ac_process_sources("${BUILD_TARGET_NAME}" "${SOURCE}")
+            endforeach()
+        else()
+            __ac_process_sources("${BUILD_TARGET_NAME}" "${AC_INPUT_SOURCES}")
+        endif()
+    else()
+        # Assert runs are identical for the same autocoder
+        fprime_cmake_ASSERT("Hash mismatch for autocoder ${AUTOCODER_NAME}: stored '${STORED_HASH}' vs calculated '${SRCS_HASH}'" 
+                            "${STORED_HASH}" STREQUAL "${SRCS_HASH}")
+    endif()
+
+    # Read autocoder outputs from properties using the centralized variable lists
+    set(ALL_AUTOCODER_VARIABLES ${FPRIME_AUTOCODER_REQUIRED} ${FPRIME_AUTOCODER_OPTIONAL} AUTOCODER_GENERATED)
+
+    # Process each autocoder variable and append to target properties with the same name
+    foreach(VARIABLE_NAME IN LISTS ALL_AUTOCODER_VARIABLES)
+        get_property(VARIABLE_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_${VARIABLE_NAME}")
+        if (VARIABLE_VALUES)
+            append_list_property("${VARIABLE_VALUES}" TARGET "${BUILD_TARGET_NAME}" PROPERTY "${HASH}_${VARIABLE_NAME}")
+        endif()
+    endforeach()
+    _describe_autocoder_run("${AUTOCODER_NAME}")
+
+endfunction(run_ac)
+
+####
+# Function `_describe_autocoder_prep`:
+#
+# Describes the inputs into an autocoder run. Does nothing unless CMAKE_DEBUG_OUTPUT is ON. Run before running the
+# autocoder
+#
+# AUTOCODER_NAME: name of autocoder being run
+# AC_INPUT_SOURCES: input files to autocoder
+####
+function(_describe_autocoder_prep AUTOCODER_NAME AC_INPUT_SOURCES)
+    # Start by displaying inputs to autocoders
+    if (CMAKE_DEBUG_OUTPUT)
+        message(STATUS "[Autocode/${AUTOCODER_NAME}] Autocoding Input Sources:")
+        foreach(SOURCE IN LISTS AC_INPUT_SOURCES)
+            message(STATUS "[Autocode/${AUTOCODER_NAME}]   ${SOURCE}")
+        endforeach()
+    endif()
+endfunction()
+
+####
+# Function `_describe_autocoder_run`:
+#
+# Describe the results of an autocoder run. Does nothing unless CMAKE_DEBUG_OUTPUT is ON. Must have run the autocoder
+# already and set the properties.
+#
+# AUTOCODER_NAME: name of autocoder being described
+####
+function(_describe_autocoder_run AUTOCODER_NAME)
+    # When actually generating items, explain what is done and why
+    if (CMAKE_DEBUG_OUTPUT)
+        # Create a map of property names to display names
+        set(PROPERTY_DISPLAY_NAMES)
+        list(APPEND PROPERTY_DISPLAY_NAMES "AUTOCODER_GENERATED" "Generated Files")
+        list(APPEND PROPERTY_DISPLAY_NAMES "AUTOCODER_GENERATED_BUILD_SOURCES" "New Build Sources")
+        list(APPEND PROPERTY_DISPLAY_NAMES "AUTOCODER_GENERATED_AUTOCODER_INPUTS" "Additional Autocode Inputs")
+        list(APPEND PROPERTY_DISPLAY_NAMES "AUTOCODER_GENERATED_OTHER" "Other Generated Files")
+        list(APPEND PROPERTY_DISPLAY_NAMES "AUTOCODER_DEPENDENCIES" "Module Dependencies")
+        
+        # Process all variables from the FPRIME_AUTOCODER lists plus AUTOCODER_GENERATED
+        set(ALL_AUTOCODER_VARIABLES ${FPRIME_AUTOCODER_REQUIRED} ${FPRIME_AUTOCODER_OPTIONAL} AUTOCODER_GENERATED)
+        
+        foreach(VARIABLE_NAME IN LISTS ALL_AUTOCODER_VARIABLES)
+            # Find the display name for this variable
+            list(FIND PROPERTY_DISPLAY_NAMES "${VARIABLE_NAME}" NAME_INDEX)
+            if (NAME_INDEX GREATER_EQUAL 0)
+                math(EXPR DISPLAY_INDEX "${NAME_INDEX} + 1")
+                list(GET PROPERTY_DISPLAY_NAMES ${DISPLAY_INDEX} DISPLAY_NAME)
+                
+                get_property(PROPERTY_VALUES TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_${VARIABLE_NAME}")
+                if (PROPERTY_VALUES)
+                    message(STATUS "[Autocode/${AUTOCODER_NAME}] ${DISPLAY_NAME}:")
+                    foreach(VALUE IN LISTS PROPERTY_VALUES)
+                        message(STATUS "[Autocode/${AUTOCODER_NAME}]   ${VALUE}")
+                    endforeach()
+                endif()
+            endif()
+        endforeach()
+    endif()
+endfunction()
+
+####
+# _filter_sources:
+#
+# Filters sources down to the ones supported by the active autocoder. It is an error to call this helper function before
+# including an autocoder's CMake file and thus setting the active autocoder. Helper function.
+#
+# OUTPUT_NAME: name of output variable to set in parent scope
+# ...: any number of arguments containing lists of sources
+####
+function(_filter_sources OUTPUT_NAME)
+    set(OUTPUT_LIST)
+    # Loop over the list and check
+    foreach (SOURCE_LIST IN LISTS ARGN)
+        foreach(SOURCE IN LISTS SOURCE_LIST)
+            cmake_language(CALL "${AUTOCODER_NAME}_is_supported" "${SOURCE}")
+            if (IS_SUPPORTED)
+                list(APPEND OUTPUT_LIST "${SOURCE}")
+            endif()
+        endforeach()
+    endforeach()
+    set(${OUTPUT_NAME} "${OUTPUT_LIST}" PARENT_SCOPE)
+endfunction(_filter_sources)
+
+####
+# __ac_process_sources:
+#
+# Process sources found in SOURCES list and sets up the autocoder to run on the sources by registering a rule to create
+# those sources.
+# SOURCES: source file list. Note: if the autocoder sets HANDLES_INDIVIDUAL_SOURCES this will be singular
+####
+function(__ac_process_sources BUILD_TARGET_NAME SOURCES)
+    # Loop through the variables from the various lists and make sure they are undefined
+    foreach(VARIABLE IN LISTS FPRIME_AUTOCODER_UNSUPPORTED FPRIME_AUTOCODER_REQUIRED FPRIME_AUTOCODER_OPTIONAL)
+        fprime_cmake_ASSERT("'${VARIABLE}' set to '${${VARIABLE}}' before call" NOT DEFINED ${VARIABLE})
+    endforeach()
+    # Run the generation setup when not requesting "info only"
+    cmake_language(CALL "${AUTOCODER_NAME}_setup_autocode" "${BUILD_TARGET_NAME}" "${SOURCES}")
+
+    # Check for removed support
+    foreach(VARIABLE IN LISTS FPRIME_AUTOCODER_UNSUPPORTED)
+        fprime_cmake_ASSERT("Unsupported '${VARIABLE}' set to '${${VARIABLE}}' by autocoder ${AUTOCODER_NAME}"
+                            NOT DEFINED ${VARIABLE})
+    endforeach()
+
+    # Search through requirements ensuring one was set
+    set(AUTOCODER_MET_REQUIRED FALSE)
+    foreach(REQUIREMENT IN LISTS FPRIME_AUTOCODER_REQUIRED)
+        if (DEFINED ${REQUIREMENT})
+            list(APPEND AUTOCODER_GENERATED ${${REQUIREMENT}})
+            set(AUTOCODER_MET_REQUIRED TRUE)
+        endif()
+    endforeach()
+    fprime_cmake_ASSERT("Autocoder must define at least one of: ${FPRIME_AUTOCODER_REQUIRED}" AUTOCODER_MET_REQUIRED)
+
+    # Set autocoder output variables as target properties
+    foreach(VARIABLE IN LISTS FPRIME_AUTOCODER_REQUIRED FPRIME_AUTOCODER_OPTIONAL)
+        if (DEFINED ${VARIABLE})
+            append_list_property("${${VARIABLE}}" TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_${VARIABLE}")
+        endif()
+    endforeach()
+    # Also set the calculated AUTOCODER_GENERATED
+    if (DEFINED AUTOCODER_GENERATED)
+        append_list_property("${AUTOCODER_GENERATED}" TARGET "${BUILD_TARGET_NAME}" PROPERTY "${AUTOCODER_NAME}_AUTOCODER_GENERATED")
+    endif()
+endfunction()
+```
+
+### `fpp.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/fpp.cmake`
+
+
+```cmake
+####
+# autocoder/fpp.cmake:
+#
+# CMake implementation of an fprime autocoder. Includes the necessary function definitions to implement the fprime
+# autocoder API and wraps calls to the FPP tools.
+####
+include_guard()
+include(utilities)
+include(autocoder/helpers)
+set(FPRIME_FPP_TO_DICT_WRAPPER "${CMAKE_CURRENT_LIST_DIR}/scripts/fpp_to_dict_wrapper.py")
+
+autocoder_setup_for_multiple_sources()
+####
+# locate_fpp_tools:
+#
+# Locates the fpp tool suite and sets FPP_FOUND if the right version of the tools is found. It will look first to the
+# above install location and then to the system path as a fallback.
+####
+function(locate_fpp_tools)
+    # Loop through each tool, looking if it was found and check the version
+    get_expected_tool_version("fprime-fpp" FPP_VERSION)
+    foreach(TOOL FPP_DEPEND FPP_TO_CPP FPP_LOCATE_DEFS FPP_TO_DICT)
+        # Skipped already defined tools
+        if (${TOOL})
+            continue()
+        endif ()
+        string(TOLOWER ${TOOL} PROGRAM)
+        string(REPLACE "_" "-" PROGRAM "${PROGRAM}")
+
+        # Clear any previous version of this find and search in this order: install dir, system path
+        unset(${TOOL} CACHE)
+        find_program(${TOOL} ${PROGRAM})
+        # If the tool exists, check the version
+        if (${TOOL} AND FPRIME_SKIP_TOOLS_VERSION_CHECK)
+            continue()
+        elseif(${TOOL})
+            set(FPP_RE_MATCH "(v[0-9]+\.[0-9]+\.[0-9]+[a-g0-9-]*)")
+            execute_process(COMMAND ${${TOOL}} --help OUTPUT_VARIABLE OUTPUT_TEXT)
+            if (OUTPUT_TEXT MATCHES "${FPP_RE_MATCH}")
+                ends_with(ENDS_WITH_EXPECTED "${CMAKE_MATCH_1}" "${FPP_VERSION}")
+                if (ENDS_WITH_EXPECTED)
+                    continue()
+                endif()
+                message(STATUS "[fpp-tools] ${${TOOL}} version ${CMAKE_MATCH_1} not expected version ${FPP_VERSION}")
+                set(FPP_REINSTALL_ERROR_MESSAGE
+                    "fpp-tools version incompatible. Found ${CMAKE_MATCH_1}, expected ${FPP_VERSION}." PARENT_SCOPE
+                )
+            elseif(OUTPUT_TEXT MATCHES "requires 'java'")
+                set(FPP_ERROR_MESSAGE
+                        "fpp tools require 'java'. Please install 'java' and ensure it is on your PATH." PARENT_SCOPE
+                )
+            else()
+                message(STATUS "[fpp-tools] ${PROGRAM} installed incorrectly.")
+                set(FPP_REINSTALL_ERROR_MESSAGE "fpp tools installed incorrectly." PARENT_SCOPE)
+            endif()
+        else()
+            message(STATUS "[fpp-tools] Could not find ${PROGRAM}.")
+        endif()
+        set(FPP_FOUND FALSE PARENT_SCOPE)
+        return()
+    endforeach()
+    set(FPP_FOUND TRUE PARENT_SCOPE)
+endfunction(locate_fpp_tools)
+
+####
+# Function `is_supported`:
+#
+# Required function, processes FPP files.
+# `AC_INPUT_FILE` potential input to the autocoder
+####
+function(fpp_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".fpp" "${AC_INPUT_FILE}" TRUE)
+endfunction(fpp_is_supported)
+
+####
+# Function `fpp_get_framework_dependency_helper`:
+#
+# Helps detect framework dependencies. Either, it calculates specific dependencies *or* if the Fw roll-up target exists,
+# it will depend on that.  Note: targets within Fw always calculate the internal Fw targets as depending on Fw would
+# cause a circular dependency.
+#
+# MODULE_NAME: current module being processed
+# FRAMEWORK: list of framework dependencies. **NOTE:** will be overridden in PARENT_SCOPE with updated list
+####
+function(fpp_get_framework_dependency_helper MODULE_NAME FRAMEWORK)
+    get_target_property(FPRIME_IS_CONFIG "${MODULE_NAME}" FPRIME_CONFIGURATION)
+    # Subset the framework dependencies, or where possible use the Fw interface target
+    if (FPRIME_IS_CONFIG)
+        # config modules have no automatic dependencies
+    elseif (NOT DEFINED FPRIME_FRAMEWORK_MODULES)
+        fprime_fatal_cmake_error("${MODULE_NAME} Fw/CMakeLists.txt not included in deployment")
+    elseif (MODULE_NAME STREQUAL Fw_Types)
+        # Skip Fw_Types as it is the root dependency
+    elseif (NOT TARGET Fw OR MODULE_NAME IN_LIST FPRIME_FRAMEWORK_MODULES)
+        list(APPEND FRAMEWORK ${FPRIME_FRAMEWORK_MODULES})
+        list(FIND FRAMEWORK "${MODULE_NAME}" START_INDEX)
+        math(EXPR START_INDEX "${START_INDEX} + 1")
+        list(SUBLIST FRAMEWORK ${START_INDEX} -1 FRAMEWORK)
+    else()
+        list(APPEND FRAMEWORK Fw)
+    endif()
+    set(FRAMEWORK "${FRAMEWORK}" PARENT_SCOPE)
+endfunction(fpp_get_framework_dependency_helper)
+
+####
+# Function `fpp_info`:
+#
+# Given a set of supported autocoder input files, this will produce a list of files that will be generated. It sets the
+# following variables in parent scope:
+#
+# - GENERATED_FILES: a list of files generated for the given input sources
+# - MODULE_DEPENDENCIES: inter-module dependencies determined from the given input sources
+# - FILE_DEPENDENCIES: specific file dependencies of the given input sources
+# - FPP_IMPORTS: The fpp model dependencies, which end up being the input to the -i flag for the fpp-to-cpp tool
+#
+# Note: although this function is only required to set `GENERATED_FILES`, the remaining information is also set as
+# setting this information now will prevent a duplicated call to the tooling.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(fpp_info MODULE_NAME AC_INPUT_FILES)
+    find_program(FPP_DEPEND fpp-depend)
+    if (DEFINED FPP_TO_DEPEND-NOTFOUND)
+        message(FATAL_ERROR "fpp tools not found, please install them onto your system path")
+    endif()
+    set(DIRECT_DEPENDENCIES_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/direct.txt")
+    set(INCLUDED_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/include.txt")
+    set(MISSING_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/missing.txt")
+    set(GENERATED_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/generated.txt")
+    set(FRAMEWORK_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/framework.txt")
+    set(STDOUT_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/stdout.txt")
+    set(UNITTEST_FILE "${CMAKE_CURRENT_BINARY_DIR}/fpp-cache/unittest.txt")
+
+    # Read files and convert to lists of dependencies. e.g. read INCLUDED_FILE file into INCLUDED variable, then process
+    foreach(NAME INCLUDED MISSING GENERATED DIRECT_DEPENDENCIES FRAMEWORK STDOUT UNITTEST)
+        if (NOT EXISTS "${${NAME}_FILE}")
+            message(FATAL_ERROR "fpp-depend cache did not generate '${${NAME}_FILE}'")
+        endif()
+        file(READ "${${NAME}_FILE}" "${NAME}")
+        string(STRIP "${${NAME}}" "${NAME}")
+        string(REPLACE "\n" ";" "${NAME}" "${${NAME}}")
+    endforeach()
+
+    fpp_get_framework_dependency_helper("${MODULE_NAME}" "${FRAMEWORK}")
+
+    # First assemble the generated files list
+    set(GENERATED_FILES)
+    foreach(LINE IN LISTS GENERATED)
+        list(APPEND GENERATED_FILES "${CMAKE_CURRENT_BINARY_DIR}/${LINE}")
+    endforeach()
+    set(UNITTEST_FILES)
+    foreach(LINE IN LISTS UNITTEST)
+        list(APPEND UNITTEST_FILES "${CMAKE_CURRENT_BINARY_DIR}/${LINE}")
+    endforeach()
+
+    # If we have missing dependencies, print and fail
+    if (MISSING)
+        message(WARNING "[autocode/fpp] Missing dependencies ${AC_INPUT_FILES}")
+        foreach (MISS IN LISTS MISSING)
+            message(WARNING "[autocode/fpp]  ${MISS}")
+        endforeach()
+        message(FATAL_ERROR)
+    endif()
+
+    # Module dependencies are: detected "direct" + framework dependencies - "included" files
+    set(FILTERED_DIRECT_DEPENDENCIES)
+    foreach(ITEM IN LISTS DIRECT_DEPENDENCIES)
+        if (NOT ITEM IN_LIST INCLUDED)
+            list(APPEND FILTERED_DIRECT_DEPENDENCIES "${ITEM}")
+        endif()
+    endforeach()
+    fpp_to_modules("${MODULE_NAME}" "${FILTERED_DIRECT_DEPENDENCIES}" MODULE_DEPENDENCIES)
+    list(APPEND MODULE_DEPENDENCIES ${FRAMEWORK})
+    list(REMOVE_DUPLICATES MODULE_DEPENDENCIES)
+    # File dependencies are any files that this depends on
+    set(FILE_DEPENDENCIES ${AC_INPUT_FILES} ${INCLUDED})
+
+    # Should have been inherited from previous call to `get_generated_files`
+    set(GENERATED_FILES "${GENERATED_FILES}" PARENT_SCOPE)
+    set(UNITTEST_FILES "${UNITTEST_FILES}" PARENT_SCOPE)
+    set(MODULE_DEPENDENCIES "${MODULE_DEPENDENCIES}" PARENT_SCOPE)
+    set(FILE_DEPENDENCIES "${FILE_DEPENDENCIES}" PARENT_SCOPE)
+    set(FPP_IMPORTS "${STDOUT}" PARENT_SCOPE)
+endfunction(fpp_info)
+
+####
+# Function `fpp_setup_autocode`:
+#
+# Sets up the steps to run the autocoder and produce the files during the build. This is passed the lists generated
+# in calls to `get_generated_files` and `get_dependencies`.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(fpp_setup_autocode MODULE_NAME AC_INPUT_FILES)
+    if (DEFINED FPP_TO_CPP-NOTFOUND)
+        message(FATAL_ERROR "fpp tools not found, please install them onto your system path")
+    endif()
+    fpp_info("${MODULE_NAME}" "${AC_INPUT_FILES}")
+    set(CMAKE_BINARY_DIR_RESOLVED "${CMAKE_BINARY_DIR}")
+    set(CMAKE_CURRENT_BINARY_DIR_RESOLVED "${CMAKE_CURRENT_BINARY_DIR}")
+    resolve_path_variables(CMAKE_BINARY_DIR_RESOLVED CMAKE_CURRENT_BINARY_DIR_RESOLVED)
+    string(REGEX REPLACE ";" ","  FPRIME_BUILD_LOCATIONS_COMMA_SEP "${FPRIME_BUILD_LOCATIONS}")
+    string(REGEX REPLACE ";" ","  FPP_IMPORTS_COMMA_SEP "${FPP_IMPORTS}")
+    set(IMPORTS)
+    if (FPP_IMPORTS_COMMA_SEP)
+        set(IMPORTS "-i" "${FPP_IMPORTS_COMMA_SEP}")
+    endif()
+    # Separate the source files into the CPP
+    set(GENERATED_CPP)
+    set(GENERATED_DICT)
+    foreach(GENERATED IN LISTS GENERATED_FILES)
+        if (GENERATED MATCHES ".*TopologyDictionary\.json")
+            list(APPEND GENERATED_DICT "${GENERATED}")
+        # XML outputs from FPP are discarded
+        elseif(GENERATED MATCHES ".*\.xml$")
+        else()
+            list(APPEND GENERATED_CPP "${GENERATED}")
+        endif()
+    endforeach()
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/fpp-import-list" "${FPP_IMPORTS}")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/fpp-source-list" "${AC_INPUT_FILES}")
+
+    # Mark included files (.fppi) as regenerators like their .fpp parents
+    foreach (INCLUDED_FILE IN LISTS FILE_DEPENDENCIES)
+        requires_regeneration("${INCLUDED_FILE}")
+    endforeach()
+
+    # Add in steps for CPP generation
+    if (GENERATED_CPP)
+        add_custom_command(
+                OUTPUT ${GENERATED_CPP}
+                COMMAND ${FPP_TO_CPP} "-d" "${CMAKE_CURRENT_BINARY_DIR_RESOLVED}" ${IMPORTS} ${AC_INPUT_FILES}
+                    "-p" "${FPRIME_BUILD_LOCATIONS_COMMA_SEP},${CMAKE_BINARY_DIR_RESOLVED}"
+                DEPENDS ${FILE_DEPENDENCIES}
+        )
+    endif()
+    # Add in dictionary generation
+    if (GENERATED_DICT)
+        set(FPRIME_JSON_VERSION_FILE "${CMAKE_BINARY_DIR}/versions/version.json")
+        add_custom_command(
+            OUTPUT ${GENERATED_DICT}
+            COMMAND ${FPRIME_FPP_TO_DICT_WRAPPER}
+                "--executable" "${FPP_TO_DICT}"
+                "--cmake-bin-dir" "${CMAKE_CURRENT_BINARY_DIR}"
+                "--jsonVersionFile" "${FPRIME_JSON_VERSION_FILE}"
+                ${IMPORTS} ${AC_INPUT_FILES}
+            DEPENDS ${FILE_DEPENDENCIES}
+                    ${FPRIME_JSON_VERSION_FILE}
+                    version_generate
+        )
+    endif()
+
+    set(AUTOCODER_DEPENDENCIES "${MODULE_DEPENDENCIES}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_BUILD_SOURCES "${GENERATED_CPP}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_OTHER "${GENERATED_DICT}" PARENT_SCOPE)
+endfunction(fpp_setup_autocode)
+
+####
+# `fpp_to_modules`:
+#
+# Helper function. Converts a list of files and a list of autocoder inputs into a list of module names.
+#
+# FILE_LIST: list of files
+# OUTPUT_VAR: output variable to set with result
+####
+function(fpp_to_modules CURRENT_MODULE FILE_LIST OUTPUT_VAR)
+    init_variables(OUTPUT_DATA)
+    foreach(INCLUDE IN LISTS FILE_LIST)
+        get_property(MODULE_OF_INCLUDE GLOBAL PROPERTY "FPRIME_${INCLUDE}_MODULE")
+        fprime_cmake_ASSERT("File module not set in sub-build: ${INCLUDE}"
+            NOT "${MODULE_OF_INCLUDE}" STREQUAL "NOTFOUND")
+        # Do not add current module
+        if (CURRENT_MODULE STREQUAL MODULE_OF_INCLUDE)
+            continue() # Skip adding to module list
+        endif()
+        list(APPEND OUTPUT_DATA "${MODULE_OF_INCLUDE}")
+        list(REMOVE_DUPLICATES OUTPUT_DATA)
+    endforeach()
+    set(${OUTPUT_VAR} "${OUTPUT_DATA}" PARENT_SCOPE)
+endfunction(fpp_to_modules)
+```
+
+### `fpp_ut.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/fpp_ut.cmake`
+
+
+```cmake
+####
+# autocoder/fpp.cmake:
+#
+# CMake implementation of an fprime autocoder. Includes the necessary function definitions to implement the fprime
+# autocoder API and wraps calls to the FPP tools.
+####
+include(utilities)
+include(autocoder/helpers)
+include(autocoder/fpp)
+
+autocoder_setup_for_multiple_sources()
+
+####
+# Function `fpp_ut_is_supported`:
+#
+# Runs on any .fpp file.
+####
+function(fpp_ut_is_supported AC_INPUT_FILE)
+    autocoder_support_by_suffix(".fpp" "${AC_INPUT_FILE}" TRUE)
+endfunction(fpp_ut_is_supported)
+
+####
+# Function `fpp_ut_setup_autocode`:
+#
+# Sets up the steps to run the autocoder and produce the files during the build. This is passed the lists generated
+# in calls to `get_generated_files` and `get_dependencies`.
+#
+# AC_INPUT_FILES: list of supported autocoder input files
+####
+function(fpp_ut_setup_autocode MODULE_NAME AC_INPUT_FILES)
+    if (DEFINED FPP_TO_CPP-NOTFOUND)
+        message(FATAL_ERROR "fpp tools not found, please install them onto your system path")
+    endif()
+    fpp_info("${MODULE_NAME}" "${AC_INPUT_FILES}")
+    string(REGEX REPLACE ";" ","  FPRIME_BUILD_LOCATIONS_COMMA_SEP "${FPRIME_BUILD_LOCATIONS}")
+    string(REGEX REPLACE ";" ","  FPP_IMPORTS_COMMA_SEP "${FPP_IMPORTS}")
+    set(IMPORTS)
+    if (FPP_IMPORTS_COMMA_SEP)
+        set(IMPORTS "-i" "${FPP_IMPORTS_COMMA_SEP}")
+    endif()
+    # Separate the source files into the CPP
+    set(GENERATED_AI)
+    set(GENERATED_CPP)
+    foreach(GENERATED IN LISTS UNITTEST_FILES)
+        list(APPEND GENERATED_CPP "${GENERATED}")
+    endforeach()
+    set(CLI_ARGS ${FPP_TO_CPP} "-u" "-d" "${CMAKE_CURRENT_BINARY_DIR}" ${IMPORTS} ${AC_INPUT_FILES} "-p" "${FPRIME_BUILD_LOCATIONS_COMMA_SEP},${CMAKE_BINARY_DIR}")
+    get_target_property(UT_AUTO_HELPERS "${MODULE_NAME}" FPRIME_UT_AUTO_HELPERS)
+    if (UT_AUTO_HELPERS)
+        list(APPEND CLI_ARGS "-a")
+    else()
+        set(NEW_GENERATED_CPP)
+        foreach(GC_FILE IN LISTS GENERATED_CPP)
+            ends_with(IS_MATCHING "${GC_FILE}" "TesterHelpers.cpp")
+            if (NOT IS_MATCHING)
+                list(APPEND NEW_GENERATED_CPP "${GC_FILE}")
+            endif()
+        endforeach()
+        set(GENERATED_CPP "${NEW_GENERATED_CPP}")
+    endif()
+
+    # Add in steps for CPP generation
+    if (GENERATED_CPP)
+        add_custom_command(
+                OUTPUT ${GENERATED_CPP}
+                COMMAND ${CLI_ARGS}
+                DEPENDS ${FILE_DEPENDENCIES} ${MODULE_DEPENDENCIES}
+        )
+    endif()
+    set(AUTOCODER_DEPENDENCIES "${MODULE_DEPENDENCIES}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_BUILD_SOURCES "${GENERATED_CPP}" PARENT_SCOPE)
+    set(AUTOCODER_GENERATED_AUTOCODER_INPUTS "${GENERATED_AI}" PARENT_SCOPE)
+endfunction(fpp_ut_setup_autocode)
+```
+
+### `helpers.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/autocoder/helpers.cmake`
+
+
+```cmake
+####
+# autocoder/helpers.cmake:
+#
+# Helper functions to make implementing custom autocoders easier! These codify some of the basic patterns for autocoders
+# so that implementers can handle standard functions easily.
+####
+include_guard()
+include("utilities")
+
+####
+# Macro `autocoder_support_by_suffix`:
+#
+# This sets up an autocoder to handle files based on a suffix. For example, passing in "*.fpp" will support all files
+# ending in ".fpp" i.e. FPP files. It is implemented as a macro such that users need not do anything other than call it
+# with the suffix to setup the system correctly. This performs raw ascii comparison, not regular expression matching.
+#
+# **Note:** this will set the appropriate variable in PARENT_SCOPE and since it is macro this will be the parent scope
+# of the caller.
+#
+# **SUFFIX**: suffix to support
+# **AC_INPUT_FILE**: file to check with suffix
+# **REQUIRE_CMAKE_RESCAN:** (optional) this file should trigger a cmake rescan. Default: false
+####
+macro(autocoder_support_by_suffix SUFFIX AC_INPUT_FILE)
+    ends_with(IS_SUPPORTED "${AC_INPUT_FILE}" "${SUFFIX}")
+    # Note: set in PARENT_SCOPE in macro is intended. Caller **wants** to set IS_SUPPORTED in their parent's scope.
+    set(IS_SUPPORTED "${IS_SUPPORTED}" PARENT_SCOPE)
+
+    # Files that are supported may also be marked as requiring a rescan. This is done through an optional third argument
+    if (IS_SUPPORTED AND ${ARGC} GREATER 2)
+        # CMake weirdness, if ${ARGC} is <= 2 then ${ARGV2} is inherited not from this macro call, but rather from the
+        # calling function.  Thus we need a 2-tier if statement to prevent an explosion.
+        # See: https://cmake.org/cmake/help/latest/command/macro.html#argument-caveats
+        if (${ARGV2})
+            requires_regeneration("${AC_INPUT_FILE}")
+        endif()
+    endif()
+endmacro()
+
+####
+# Function `requires_regeneration`:
+#
+# Called by the autocoder when a source file needs to setup CMake to reconfigure when the source file changes.
+#
+# `AC_INPUT_FILE`: file to mark as tracked
+####
+function(requires_regeneration AC_INPUT_FILE)
+    get_source_file_property(IS_GENERATED "${AC_INPUT_FILE}" GENERATED)
+    if (NOT IS_GENERATED)
+        set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS "${AC_INPUT_FILE}")
+    endif()
+endfunction()
+
+####
+# Function `_set_autocoder_name`:
+#
+# Function to set AUTOCODER_NAME in parent scope. Helper to the below two function, not intended for users to call this
+# function.
+#
+# FUNCTION_NAME: function name for producing error message
+####
+function(_set_autocoder_name FUNCTION_NAME)
+    get_filename_component(AUTOCODER_DIRPATH "${CMAKE_CURRENT_LIST_FILE}" DIRECTORY)
+    get_filename_component(AUTOCODER_DIRNAME "${AUTOCODER_DIRPATH}" NAME)
+    get_filename_component(AUTOCODER_NAME "${CMAKE_CURRENT_LIST_FILE}" NAME_WLE)
+
+    # Some basic check
+    if (AUTOCODE_NAME STREQUAL "CMakeList")
+        message(FATAL_ERROR "${FUNCTION_NAME} may only be called globally and from within an autocoder CMake file")
+    # ASSERT we are not getting the name from autocoder/autocoder.cmake
+    elseif(AUTOCODER_DIRNAME STREQUAL "autocoder" AND AUTOCODER_NAME STREQUAL "autocoder")
+        message(FATAL_ERROR "CMake code is inconsistent")
+    # ASSERT we are not getting the name from autocoder/helpers.cmake
+    elseif(AUTOCODER_DIRNAME STREQUAL "autocoder" AND AUTOCODER_NAME STREQUAL "helpers")
+        message(FATAL_ERROR "CMake code is inconsistent")
+    # ASSERT we are not getting the name from utilities.cmake
+    elseif(AUTOCODER_DIRNAME STREQUAL "cmake" AND AUTOCODER_NAME STREQUAL "utilities")
+        message(FATAL_ERROR "CMake code is inconsistent")
+    endif()
+    set(AUTOCODER_NAME "${AUTOCODER_NAME}" PARENT_SCOPE)
+endfunction()
+
+####
+# Macro `autocoder_setup_for_individual_sources`:
+#
+# A helper to setup the autocoder to handle individual sources. Each source input to the autocoder will result in a new
+# call through the autocoder. This handles setting the appropriate property such that this autocoder need not know nor
+# care about the property itself. This may only be called from within an autocoder file.
+###
+function(autocoder_setup_for_individual_sources)
+    _set_autocoder_name(autocoder_setup_for_individual_sources)
+    set_property(GLOBAL PROPERTY "${AUTOCODER_NAME}_HANDLES_INDIVIDUAL_SOURCES" TRUE)
+endfunction()
+
+####
+# Macro `autocoder_setup_for_multiple_sources`:
+#
+# A helper to setup the autocoder to handle multiple sources with one invocation. All supported source for the module
+# will be supplied to a single invocation of the autocoder. This handles setting the appropriate property such that this
+# autocoder need not know nor care about the property itself. This may only be called from within an autocoder file.
+###
+function(autocoder_setup_for_multiple_sources)
+    _set_autocoder_name(autocoder_setup_for_multiple_sources)
+    set_property(GLOBAL PROPERTY "${AUTOCODER_NAME}_HANDLES_INDIVIDUAL_SOURCES" FALSE)
+endfunction()
+```

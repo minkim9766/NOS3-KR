@@ -3,26 +3,786 @@
 
 **경로:** `fsw/cfe/modules/config/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_config_get.c`
 
-file--cfe_config_get.c
-file--cfe_config_init.c
-file--cfe_config_lookup.c
-file--cfe_config_map.h
-file--cfe_config_priv.h
-file--cfe_config_set.c
-file--cfe_config_table.h
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_get.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * API definition for configuration registry
+ *
+ * This defines the "getter" functions, which are publicly available
+ */
+
+/*
+** Required header files.
+*/
+#include "cfe_config_priv.h"
+#include "cfe_config_map.h"
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 CFE_Config_GetValue(CFE_ConfigId_t ConfigId)
+{
+    const CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry == NULL || Entry->ActualType != CFE_ConfigType_VALUE)
+    {
+        return 0;
+    }
+
+    return Entry->Datum.AsInteger;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+const void *CFE_Config_GetObjPointer(CFE_ConfigId_t ConfigId)
+{
+    const CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry == NULL || (Entry->ActualType != CFE_ConfigType_POINTER && Entry->ActualType != CFE_ConfigType_STRING))
+    {
+        return NULL;
+    }
+
+    return Entry->Datum.AsPointer;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+const char *CFE_Config_GetString(CFE_ConfigId_t ConfigId)
+{
+    const CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry == NULL || Entry->ActualType != CFE_ConfigType_STRING)
+    {
+        return CFE_Config_Global.UnknownString;
+    }
+
+    return Entry->Datum.AsPointer;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+const char *CFE_Config_GetName(CFE_ConfigId_t ConfigId)
+{
+    uint32 OffsetVal;
+
+    OffsetVal = CFE_Config_IdToOffset(ConfigId);
+
+    if (OffsetVal >= CFE_ConfigIdOffset_MAX)
+    {
+        return CFE_Config_Global.UnknownString;
+    }
+
+    return CFE_CONFIG_IDNAME_MAP[OffsetVal].Name;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_ConfigId_t CFE_Config_GetIdByName(const char *Name)
+{
+    const CFE_Config_IdNameEntry_t *NamePtr;
+    uint32                          OffsetVal;
+
+    NamePtr = CFE_CONFIG_IDNAME_MAP;
+    for (OffsetVal = 0; OffsetVal < CFE_ConfigIdOffset_MAX; ++OffsetVal)
+    {
+        if (NamePtr->Name != NULL && strcmp(NamePtr->Name, Name) == 0)
+        {
+            break;
+        }
+        ++NamePtr;
+    }
+
+    if (OffsetVal >= CFE_ConfigIdOffset_MAX)
+    {
+        return CFE_CONFIGID_UNDEFINED;
+    }
+
+    return CFE_Config_OffsetToId(OffsetVal);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Defined per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_Config_IterateAll(void *Arg, CFE_Config_Callback_t Callback)
+{
+    const CFE_Config_IdNameEntry_t *NamePtr;
+    uint32                          OffsetVal;
+
+    NamePtr = CFE_CONFIG_IDNAME_MAP;
+    for (OffsetVal = 0; OffsetVal < CFE_ConfigIdOffset_MAX; ++OffsetVal)
+    {
+        if (CFE_Config_Global.Table[OffsetVal].ActualType != CFE_ConfigType_UNDEFINED)
+        {
+            Callback(Arg, CFE_Config_OffsetToId(OffsetVal), NamePtr->Name);
+        }
+        ++NamePtr;
+    }
+}
 ```
 
-## 항목
+### `cfe_config_init.c`
 
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_get.c`](file--cfe_config_get.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_init.c`](file--cfe_config_init.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_lookup.c`](file--cfe_config_lookup.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_map.h`](file--cfe_config_map.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_priv.h`](file--cfe_config_priv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_set.c`](file--cfe_config_set.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/fsw/src/cfe_config_table.h`](file--cfe_config_table.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_init.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Initialization for CFE configuration registry
+ */
+
+#include "cfe_config_priv.h"
+#include "cfe_error.h"
+#include "cfe_version.h"
+#include "target_config.h"
+
+#include "cfe_config_map.h"
+#include "cfe_config_ids.h"
+
+#include <string.h>
+#include <ctype.h>
+#include <stdio.h>
+
+/* The define names are uppercase while the module names are likely lowercase */
+/* C99 does not have a standard "strcasecmp" - must do it manually */
+bool CFE_Config_StrCaseEq(const char *c1, const char *c2)
+{
+    while (*c1 != 0 && *c2 != 0)
+    {
+        if (toupper((unsigned char)*c1) != toupper((unsigned char)*c2))
+        {
+            break;
+        }
+        ++c1;
+        ++c2;
+    }
+
+    return (*c1 == 0 && *c2 == 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Find value for given config key
+ *
+ *-----------------------------------------------------------------*/
+const char *CFE_Config_FindTargetKeyValue(CFE_ConfigKeyValue_t *ConfigList, const char *KeyName)
+{
+    const char *ValuePtr;
+
+    ValuePtr = NULL;
+    if (KeyName != NULL && ConfigList != NULL)
+    {
+        while (ConfigList->Key != NULL)
+        {
+            if (CFE_Config_StrCaseEq(KeyName, ConfigList->Key))
+            {
+                ValuePtr = ConfigList->Value;
+                break;
+            }
+            ++ConfigList;
+        }
+    }
+
+    return ValuePtr;
+}
+
+const char *CFE_Config_IsModuleInList(CFE_ConfigName_t *ModuleListPtr, const char *ModuleName)
+{
+    const char *Result;
+
+    Result = NULL;
+    while (ModuleListPtr != NULL && ModuleListPtr->Name != NULL)
+    {
+        if (CFE_Config_StrCaseEq(ModuleListPtr->Name, ModuleName))
+        {
+            Result = ModuleListPtr->Name;
+            break;
+        }
+        ++ModuleListPtr;
+    }
+
+    return Result;
+}
+
+const char *CFE_Config_IsPspModule(CFE_StaticModuleLoadEntry_t *PspModuleList, const char *ModuleName)
+{
+    const char *                 Result;
+    CFE_StaticModuleLoadEntry_t *ModuleListPtr;
+
+    ModuleListPtr = PspModuleList;
+    Result        = NULL;
+    while (ModuleListPtr != NULL && ModuleListPtr->Name != NULL)
+    {
+        if (CFE_Config_StrCaseEq(ModuleListPtr->Name, ModuleName))
+        {
+            Result = ModuleListPtr->Name;
+            break;
+        }
+        ++ModuleListPtr;
+    }
+
+    return Result;
+}
+
+const char *CFE_Config_FindStaticModName(CFE_ConfigName_t *ModuleListSet[], size_t SetLength, const char *ModuleName)
+{
+    const char *Result;
+    size_t      i;
+
+    Result = NULL;
+    for (i = 0; i < SetLength; ++i)
+    {
+        Result = CFE_Config_IsModuleInList(ModuleListSet[i], ModuleName);
+        if (Result != NULL)
+        {
+            break;
+        }
+    }
+
+    return Result;
+}
+
+void CFE_Config_SetupModuleVersions(CFE_ConfigName_t *ModuleListSet[], size_t SetLength,
+                                    CFE_ConfigKeyValue_t *ActiveList)
+{
+    const char *                    ModName;
+    const char *                    KeyVal;
+    uint32                          OffsetVal;
+    const CFE_Config_IdNameEntry_t *NamePtr;
+
+    static const char IDNAME_PREFIX[] = "MOD_SRCVER_";
+
+    NamePtr = CFE_CONFIG_IDNAME_MAP;
+    for (OffsetVal = 0; OffsetVal < CFE_ConfigIdOffset_MAX; ++OffsetVal)
+    {
+        if (NamePtr->Name != NULL && strncmp(NamePtr->Name, IDNAME_PREFIX, sizeof(IDNAME_PREFIX) - 1) == 0)
+        {
+            ModName = NamePtr->Name + sizeof(IDNAME_PREFIX) - 1;
+
+            /* skip modules which are not statically linked (version depends on dynamic load) */
+            ModName = CFE_Config_FindStaticModName(ModuleListSet, SetLength, ModName);
+            if (ModName != NULL)
+            {
+                KeyVal = CFE_Config_FindTargetKeyValue(ActiveList, ModName);
+                if (KeyVal != NULL)
+                {
+                    CFE_Config_SetString(CFE_Config_OffsetToId(OffsetVal), KeyVal);
+                }
+            }
+        }
+        ++NamePtr;
+    }
+}
+
+void CFE_Config_SetupBasicBuildInfo(void)
+{
+    const char *KeyVal;
+
+    /* Global mission name */
+    CFE_Config_SetString(CFE_CONFIGID_MISSION_NAME, GLOBAL_CONFIGDATA.MissionName);
+    KeyVal = CFE_Config_FindTargetKeyValue(GLOBAL_CONFIGDATA.ModuleVersionList, "MISSION");
+    CFE_Config_SetString(CFE_CONFIGID_MISSION_SRCVER, KeyVal);
+
+    /* propagate the version numbers from version.h */
+    CFE_Config_SetValue(CFE_CONFIGID_CORE_VERSION_MAJOR, CFE_MAJOR_VERSION);
+    CFE_Config_SetValue(CFE_CONFIGID_CORE_VERSION_MINOR, CFE_MINOR_VERSION);
+    CFE_Config_SetValue(CFE_CONFIGID_CORE_VERSION_REVISION, CFE_REVISION);
+    CFE_Config_SetValue(CFE_CONFIGID_CORE_VERSION_MISSION_REV, CFE_MISSION_REV);
+    CFE_Config_SetValue(CFE_CONFIGID_CORE_VERSION_BUILDNUM, CFE_BUILD_NUMBER);
+
+    CFE_Config_SetString(CFE_CONFIGID_CORE_VERSION_BASELINE, CFE_BUILD_BASELINE);
+    CFE_Config_SetString(CFE_CONFIGID_CORE_VERSION_DESCRIPTION, CFE_VERSION_STRING);
+
+    /*
+     * Initialize values from the "target_config" CFE internal object
+     */
+    KeyVal = CFE_Config_FindTargetKeyValue(GLOBAL_CONFIGDATA.BuildEnvironment, "BUILDDATE");
+    CFE_Config_SetString(CFE_CONFIGID_CORE_BUILDINFO_DATE, KeyVal);
+    KeyVal = CFE_Config_FindTargetKeyValue(GLOBAL_CONFIGDATA.BuildEnvironment, "BUILDUSER");
+    CFE_Config_SetString(CFE_CONFIGID_CORE_BUILDINFO_USER, KeyVal);
+    KeyVal = CFE_Config_FindTargetKeyValue(GLOBAL_CONFIGDATA.BuildEnvironment, "BUILDHOST");
+    CFE_Config_SetString(CFE_CONFIGID_CORE_BUILDINFO_HOST, KeyVal);
+}
+
+/*----------------------------------------------------------------
+ *
+ * CFE core internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_Config_Init(void)
+{
+    /* Clear the table, just in case it was not already cleared from initial program loading */
+    memset(&CFE_Config_Global, 0, sizeof(CFE_Config_Global));
+
+    CFE_ConfigName_t *ModuleListSet[2] = {GLOBAL_CONFIGDATA.CoreModuleList, GLOBAL_CONFIGDATA.StaticAppList};
+
+    /*
+     * Create a fixed string that can be returned in place of NULL for string returns,
+     * this makes it safer/easier to use with printf-style calls
+     */
+    CFE_Config_Global.UnknownString = "[unknown]";
+
+    CFE_Config_SetupBasicBuildInfo();
+    CFE_Config_SetupModuleVersions(ModuleListSet, 2, GLOBAL_CONFIGDATA.ModuleVersionList);
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_config_lookup.c`
+
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_lookup.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File:
+**    cfe_es_api.c
+**
+**  Purpose:
+**    This file implements the cFE Executive Services API functions.
+**
+**  References:
+**     Flight Software Branch C Coding Standard Version 1.0a
+**     cFE Flight Software Application Developers Guide
+**
+**  Notes:
+**
+*/
+
+/*
+** Required header files.
+*/
+#include "cfe_config_priv.h"
+
+#include "cfe_resourceid.h"
+#include "cfe_core_resourceid_basevalues.h"
+
+/*
+ * Instantiate the global table
+ */
+CFE_Config_Global_t CFE_Config_Global;
+
+/*----------------------------------------------------------------
+ *
+ * Application scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Config_ValueEntry_t *CFE_Config_LocateConfigRecordByID(CFE_ConfigId_t ConfigId)
+{
+    uint32 OffsetVal;
+
+    OffsetVal = CFE_Config_IdToOffset(ConfigId);
+
+    if (OffsetVal >= CFE_ConfigIdOffset_MAX)
+    {
+        return NULL;
+    }
+
+    return &CFE_Config_Global.Table[OffsetVal];
+}
+```
+
+### `cfe_config_map.h`
+
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_map.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * This file contains the CFE configuration registry global data definitions.
+ */
+
+#ifndef CFE_CONFIG_MAP_H
+#define CFE_CONFIG_MAP_H
+
+/*
+** Includes
+*/
+#include "common_types.h"
+#include "cfe_config_ids.h"
+
+typedef struct CFE_Config_IdNameEntry
+{
+    const char *Name;
+} CFE_Config_IdNameEntry_t;
+
+extern const CFE_Config_IdNameEntry_t CFE_CONFIG_IDNAME_MAP[];
+
+#endif /* CFE_CONFIG_MAP_H */
+```
+
+### `cfe_config_priv.h`
+
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_priv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * This file contains the CFE configuration registry global data definitions.
+ */
+
+#ifndef CFE_CONFIG_PRIV_H
+#define CFE_CONFIG_PRIV_H
+
+/*
+** Includes
+*/
+#include "cfe_config_core_internal.h"
+#include "cfe_config_table.h"
+#include "cfe_config.h"
+#include "target_config.h"
+
+/*
+ * Actual definition of the config registry table
+ *
+ * Note this object is instantiated by a bit of generated code from CMake -
+ * The final length depends on the number of config keys in use in the mission
+ */
+typedef struct
+{
+    const char *            UnknownString;
+    CFE_Config_ValueEntry_t Table[CFE_ConfigIdOffset_MAX];
+} CFE_Config_Global_t;
+
+extern CFE_Config_Global_t CFE_Config_Global;
+
+/*
+ ******************************
+ * INTERNAL FUNCTION CALLS
+ ******************************
+ */
+
+/**
+ * @brief Converts a configuration ID to a table index
+ *
+ * This function is intended for internal use only, and does not perform
+ * any error checks.  It uses a simpler conversion than other ID conversions.
+ */
+static inline uint32 CFE_Config_IdToOffset(CFE_ConfigId_t ConfigId)
+{
+    uint32 OffsetVal;
+
+    OffsetVal = CFE_RESOURCEID_TO_ULONG(ConfigId);
+    OffsetVal -= CFE_CONFIGID_BASE;
+
+    return OffsetVal;
+}
+
+/**
+ * @brief Converts a table index to a configuration ID
+ *
+ * This function is intended for internal use only, and does not perform
+ * any error checks.  It uses a simpler conversion than other ID conversions.
+ */
+static inline CFE_ConfigId_t CFE_Config_OffsetToId(uint32 OffsetVal)
+{
+    return CFE_CONFIGID_C(CFE_ResourceId_FromInteger(CFE_CONFIGID_BASE + OffsetVal));
+}
+
+bool        CFE_Config_StrCaseEq(const char *c1, const char *c2);
+const char *CFE_Config_FindTargetKeyValue(CFE_ConfigKeyValue_t *ConfigList, const char *KeyName);
+const char *CFE_Config_IsModuleInList(CFE_ConfigName_t *ModuleListPtr, const char *ModuleName);
+const char *CFE_Config_IsPspModule(CFE_StaticModuleLoadEntry_t *PspModuleList, const char *ModuleName);
+const char *CFE_Config_FindStaticModName(CFE_ConfigName_t *ModuleListSet[], size_t SetLength, const char *ModuleName);
+
+void CFE_Config_SetupModuleVersions(CFE_ConfigName_t *ModuleListSet[], size_t SetLength,
+                                    CFE_ConfigKeyValue_t *ActiveList);
+void CFE_Config_SetupBasicBuildInfo(void);
+
+/**
+ * @brief Gets the value record associated with a config ID
+ */
+CFE_Config_ValueEntry_t *CFE_Config_LocateConfigRecordByID(CFE_ConfigId_t ConfigId);
+
+#endif /* CFE_CONFIG_PRIV_H */
+```
+
+### `cfe_config_set.c`
+
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_set.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * API definition for configuration registry
+ *
+ * This defines the "setter" functions, which are reserved for CFE core internal use during startup.
+ */
+
+/*
+** Required header files.
+*/
+#include "cfe_config_priv.h"
+
+/*----------------------------------------------------------------
+ *
+ * CFE core internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_Config_SetValue(CFE_ConfigId_t ConfigId, uint32 Value)
+{
+    CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry != NULL)
+    {
+        Entry->ActualType      = CFE_ConfigType_VALUE;
+        Entry->Datum.AsInteger = Value;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * CFE core internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_Config_SetObjPointer(CFE_ConfigId_t ConfigId, const void *Ptr)
+{
+    CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry != NULL)
+    {
+        Entry->ActualType      = CFE_ConfigType_POINTER;
+        Entry->Datum.AsPointer = Ptr;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * CFE core internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_Config_SetString(CFE_ConfigId_t ConfigId, const char *Ptr)
+{
+    CFE_Config_ValueEntry_t *Entry;
+
+    Entry = CFE_Config_LocateConfigRecordByID(ConfigId);
+    if (Entry != NULL)
+    {
+        Entry->ActualType      = CFE_ConfigType_STRING;
+        Entry->Datum.AsPointer = Ptr;
+    }
+}
+```
+
+### `cfe_config_table.h`
+
+**경로:** `fsw/cfe/modules/config/fsw/src/cfe_config_table.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * This file contains the CFE configuration registry global data definitions.
+ */
+
+#ifndef CFE_CONFIG_TABLE_H
+#define CFE_CONFIG_TABLE_H
+
+/*
+** Includes
+*/
+#include "common_types.h"
+#include "cfe_config_ids.h"
+
+typedef enum CFE_ConfigType
+{
+    CFE_ConfigType_UNDEFINED,
+    CFE_ConfigType_VALUE,   /**< Value is an unsigned int */
+    CFE_ConfigType_STRING,  /**< Value is a string pointer */
+    CFE_ConfigType_POINTER, /**< Value is a non-string object pointer */
+} CFE_ConfigType_t;
+
+typedef union CFE_Config_ValueBuffer
+{
+    uint32      AsInteger;
+    const void *AsPointer;
+} CFE_Config_ValueBuffer_t;
+
+typedef struct CFE_Config_ValueEntry
+{
+    CFE_ConfigType_t         ActualType;
+    CFE_Config_ValueBuffer_t Datum;
+} CFE_Config_ValueEntry_t;
+
+#endif /* CFE_CONFIG_TABLE_H */
+```

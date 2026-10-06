@@ -3,28 +3,1659 @@
 
 **경로:** `components/generic_adcs/fsw/cfs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_adcs_app.c`
 
-file--generic_adcs_app.c
-file--generic_adcs_app.h
-file--generic_adcs_events.h
-file--generic_adcs_ingest.c
-file--generic_adcs_ingest.h
-file--generic_adcs_msg.h
-file--generic_adcs_output.c
-file--generic_adcs_output.h
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_app.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file contains the source code for the Generic ADCS application.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_adcs_perfids.h"
+#include "generic_adcs_events.h"
+#include "generic_adcs_msgids.h"
+#include "generic_adcs_version.h"
+#include "generic_adcs_ingest.h"
+#include "generic_adcs_adac.h"
+#include "generic_adcs_output.h"
+#include "generic_adcs_app.h"
+
+// ADCS sensor/actuator messages
+#include "generic_mag_msgids.h"
+#include "generic_fss_msgids.h"
+#include "generic_css_msgids.h"
+#include "generic_imu_msgids.h"
+#include "generic_torquer_msgids.h"
+#include "generic_reaction_wheel_msgids.h"
+#include "generic_star_tracker_msgids.h"
+#include "novatel_oem615_msgids.h"
+
+/*
+** Global Data
+*/
+Generic_ADCS_AppData_t Generic_ADCS_AppData;
+
+/*
+** Forward Declarations
+*/
+static int32 Generic_ADCS_AppInit(void);
+static void  Generic_ADCS_ProcessCommandPacket(void);
+static void  Generic_ADCS_ProcessGroundCommand(void);
+static void  Generic_ADCS_ProcessTelemetryRequest(void);
+static void  Generic_ADCS_ReportHousekeeping(void);
+static void  Generic_ADCS_ResetCounters(void);
+static int32 Generic_ADCS_SendDICommand(void);
+static int32 Generic_ADCS_SendADCommand(void);
+static int32 Generic_ADCS_SendGNCCommand(void);
+static int32 Generic_ADCS_SendACCommand(void);
+static int32 Generic_ADCS_SendDOCommand(void);
+static int32 Generic_ADCS_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length);
+
+/*
+** Application entry point and main process loop
+*/
+void ADCS_AppMain(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /*
+    ** Create the first Performance Log entry
+    */
+    CFE_ES_PerfLogEntry(GENERIC_ADCS_PERF_ID);
+
+    /*
+    ** Perform application initialization
+    */
+    status = Generic_ADCS_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main loop
+    */
+    while (CFE_ES_RunLoop(&Generic_ADCS_AppData.RunStatus) == true)
+    {
+        /*
+        ** Performance log exit stamp
+        */
+        CFE_ES_PerfLogExit(GENERIC_ADCS_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message
+        ** Note that this is the standard, but timeouts are available
+        */
+        status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&Generic_ADCS_AppData.MsgPtr, Generic_ADCS_AppData.CmdPipe,
+                                      CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution.
+        */
+        CFE_ES_PerfLogEntry(GENERIC_ADCS_PERF_ID);
+
+        /*
+        ** If the CFE_SB_ReceiveBuffer was successful, then continue to process the command packet
+        ** If not, then exit the application in error.
+        ** Note that a SB read error should not always result in an app quitting.
+        */
+        if (status == CFE_SUCCESS)
+        {
+            Generic_ADCS_ProcessCommandPacket();
+        }
+        else
+        {
+            CFE_EVS_SendEvent(GENERIC_ADCS_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: SB Pipe Read Error = %d", (int)status);
+            Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    /*
+    ** Performance log exit stamp
+    */
+    CFE_ES_PerfLogExit(GENERIC_ADCS_PERF_ID);
+
+    /*
+    ** Exit the application
+    */
+    CFE_ES_ExitApp(Generic_ADCS_AppData.RunStatus);
+}
+
+/*
+** Initialize application
+*/
+static int32 Generic_ADCS_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    Generic_ADCS_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Register the events
+    */
+    status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY); /* as default, no filters are used */
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS: Error registering for event services: 0x%08X\n", (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Create the Software Bus command pipe
+    */
+    status = CFE_SB_CreatePipe(&Generic_ADCS_AppData.CmdPipe, GENERIC_ADCS_PIPE_DEPTH, "ADCS_CMD_PIPE");
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Error Creating SB Pipe,RC=0x%08X",
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to ground commands
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_CMD_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Gnd Cmds, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_CMD_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to housekeeping (hk) message requests
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_REQ_HK_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Request, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_REQ_HK_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** TODO: Subscribe to any other messages here
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_ADCS_ADAC_UPDATE_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to ADAC Update, MID=0x%04X, RC=0x%08X", GENERIC_ADCS_ADAC_UPDATE_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Initialize the published HK message - this HK message will contain the
+    ** telemetry that has been defined in the Generic_ADCS_HkTelemetryPkt for this app.
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.HkTelemetryPkt.TlmHeader),
+                 CFE_SB_ValueToMsgId(GENERIC_ADCS_HK_TLM_MID), GENERIC_ADCS_HK_TLM_LNGTH);
+
+    /*
+    ** Initialize any other messages that this app will publish
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.DIPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_DI_MID),
+                 GENERIC_ADCS_DI_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.ADPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_AD_MID),
+                 GENERIC_ADCS_AD_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.GNCPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_GNC_MID),
+                 GENERIC_ADCS_GNC_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.ACSPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_AC_MID),
+                 GENERIC_ADCS_AC_LNGTH);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.DOPacket.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_ADCS_DO_MID),
+                 GENERIC_ADCS_DO_LNGTH);
+
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.MtbPctOnCmd.CmdHeader), CFE_SB_ValueToMsgId(GENERIC_TORQUER_CMD_MID),
+                 GENERIC_TORQUER_ALL_PERCENT_ON_CMD_LEN);
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&Generic_ADCS_AppData.MtbPctOnCmd, GENERIC_TORQUER_CONFIG_ALL_CC);
+    CFE_MSG_Init(CFE_MSG_PTR(Generic_ADCS_AppData.RwCmd.CmdHeader), CFE_SB_ValueToMsgId(GENERIC_RW_APP_CMD_MID),
+                 GENERIC_RW_CMD_LEN);
+    CFE_MSG_SetFcnCode((CFE_MSG_Message_t *)&Generic_ADCS_AppData.RwCmd, GENERIC_RW_APP_SET_TORQUE_CC);
+
+    /*
+    ** Always reset all counters during application initialization
+    */
+    Generic_ADCS_ResetCounters();
+
+    /* ADCS initializations */
+    FILE *adcs_in = fopen("cf/Inp_DI.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_DI.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_ingest_init(adcs_in, &Generic_ADCS_AppData.DIPacket.Payload);
+    fclose(adcs_in);
+
+    adcs_in = fopen("cf/Inp_ADAC.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_ADAC.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_init_attitude_determination_and_attitude_control(
+        adcs_in, &Generic_ADCS_AppData.EPHPacket.Payload, &Generic_ADCS_AppData.ADPacket.Payload,
+        &Generic_ADCS_AppData.GNCPacket.Payload, &Generic_ADCS_AppData.ACSPacket.Payload);
+    fclose(adcs_in);
+
+    adcs_in = fopen("cf/Inp_DO.txt", "r");
+    if (adcs_in == NULL)
+    {
+        CFE_EVS_SendEvent(GENERIC_ADCS_FOPEN_ERR_EID, CFE_EVS_EventType_ERROR, "Error opening cf/Inp_DO.txt");
+        return OS_ERROR;
+    }
+    Generic_ADCS_output_init(adcs_in, &Generic_ADCS_AppData.DOPacket.Payload);
+    fclose(adcs_in);
+
+    /*
+    ** Subscribe to ADCS packets from the sensors
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_MAG_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_MAG_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_FSS_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_FSS_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_CSS_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_CSS_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_IMU_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_IMU_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_RW_APP_HK_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to GENERIC_RW_APP_HK_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_STAR_TRACKER_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog(
+            "Generic_ADCS App: Error Subscribing to GENERIC_STAR_TRACKER_DEVICE_TLM_MID, RC = 0x%08lX\n",
+            (unsigned long)status);
+        return (status);
+    }
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(NOVATEL_OEM615_DEVICE_TLM_MID), Generic_ADCS_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS App: Error Subscribing to NOVATEL_OEM615_DEVICE_TLM_MID, RC = 0x%08lX\n",
+                             (unsigned long)status);
+        return (status);
+    }
+
+    /*
+     ** Send an information event that the app has initialized.
+     ** This is useful for debugging the loading of individual applications.
+     */
+    status = CFE_EVS_SendEvent(GENERIC_ADCS_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                               "Generic_ADCS App Initialized. Version %d.%d.%d.%d", GENERIC_ADCS_MAJOR_VERSION,
+                               GENERIC_ADCS_MINOR_VERSION, GENERIC_ADCS_REVISION, GENERIC_ADCS_MISSION_REV);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("Generic_ADCS: Error sending initialization event: 0x%08X\n", (unsigned int)status);
+    }
+    return status;
+}
+
+/*
+** Process packets received on the Generic_ADCS command pipe
+*/
+static void Generic_ADCS_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &MsgId);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the GENERIC_ADCS_CMD_MID (Message ID)
+        */
+        case GENERIC_ADCS_CMD_MID:
+            Generic_ADCS_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        */
+        case GENERIC_ADCS_REQ_HK_MID:
+            Generic_ADCS_ProcessTelemetryRequest();
+            break;
+
+        case GENERIC_MAG_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_mag(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Mag);
+            break;
+
+        case GENERIC_FSS_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_fss(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Fss);
+            break;
+
+        case GENERIC_CSS_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_css(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Css);
+            break;
+
+        case GENERIC_IMU_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_imu(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Imu);
+            break;
+
+        case GENERIC_RW_APP_HK_TLM_MID:
+            Generic_ADCS_ingest_generic_rw(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Rw);
+            break;
+
+        case GENERIC_STAR_TRACKER_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_generic_st(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.St);
+            break;
+
+        case NOVATEL_OEM615_DEVICE_TLM_MID:
+            Generic_ADCS_ingest_novatel_gps(Generic_ADCS_AppData.MsgPtr, &Generic_ADCS_AppData.DIPacket.Payload.Gps);
+            break;
+
+        case GENERIC_ADCS_ADAC_UPDATE_MID:
+            Generic_ADCS_execute_attitude_determination_and_attitude_control(
+                &Generic_ADCS_AppData.DIPacket.Payload, &Generic_ADCS_AppData.EPHPacket.Payload,
+                &Generic_ADCS_AppData.ADPacket.Payload, &Generic_ADCS_AppData.GNCPacket.Payload,
+                &Generic_ADCS_AppData.ACSPacket.Payload);
+            Generic_ADCS_output_to_actuators(&Generic_ADCS_AppData.GNCPacket.Payload,
+                                             &Generic_ADCS_AppData.DOPacket.Payload, &Generic_ADCS_AppData.MtbPctOnCmd,
+                                             &Generic_ADCS_AppData.RwCmd);
+            break;
+
+        /*
+        ** All other invalid messages that this app doesn't recognize,
+        ** increment the command error counter and log as an error event.
+        */
+        default:
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_PROCESS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+    return;
+}
+
+/*
+** Process ground commands
+*/
+static void Generic_ADCS_ProcessGroundCommand(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case
+    */
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &MsgId);
+
+    /*
+    ** Ground Commands, by definition, have a command code (_CC) associated with them
+    ** Pull this command code from the message and then process
+    */
+    CFE_MSG_GetFcnCode(Generic_ADCS_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case GENERIC_ADCS_NOOP_CC:
+            /*
+            ** First, verify the command length immediately after CC identification
+            ** Note that VerifyCmdLength handles the command and command error counters
+            */
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                /* Second, send EVS event on successful receipt ground commands*/
+                CFE_EVS_SendEvent(GENERIC_ADCS_CMD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Generic_ADCS: NOOP command received");
+                /* Third, do the desired command action if applicable, in the case of NOOP it is no operation */
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case GENERIC_ADCS_RESET_COUNTERS_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(GENERIC_ADCS_CMD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Generic_ADCS: RESET counters command received");
+                Generic_ADCS_ResetCounters();
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SET_MODE_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_Mode_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                Generic_ADCS_Mode_cmd_t *cmd;
+                cmd                                         = (Generic_ADCS_Mode_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.GNCPacket.Payload.Mode = cmd->Mode; // Keep the current value in **one** place
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_MODE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "***ADCS*** Changed mode to: %u", cmd->Mode);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr,
+                                             sizeof(Generic_ADCS_MomentumManagement_cmd_t)) == OS_SUCCESS)
+            {
+                Generic_ADCS_MomentumManagement_cmd_t *cmd;
+                cmd = (Generic_ADCS_MomentumManagement_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.GNCPacket.Payload.HmgmtOn =
+                    cmd->MomentumManagement; // Keep the current value in **one** place
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "***ADCS*** Changed momentum management to: %u", cmd->MomentumManagement);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_DI_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendDICommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send DI telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_AD_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendADCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send AD telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_GNC_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendGNCCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send GNC telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_AC_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendACCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send AC telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_SEND_DO_CMD_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_NoArgs_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                int32 status = Generic_ADCS_SendDOCommand();
+                if (status != CFE_SUCCESS)
+                {
+                    CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Unable to send DO telemetry: status = %d", status);
+                }
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        case GENERIC_ADCS_INERTIAL_QUATERNION_CC:
+            if (Generic_ADCS_VerifyCmdLength(Generic_ADCS_AppData.MsgPtr, sizeof(Generic_ADCS_Quat_cmd_t)) ==
+                OS_SUCCESS)
+            {
+                Generic_ADCS_Quat_cmd_t *cmd;
+                cmd = (Generic_ADCS_Quat_cmd_t *)Generic_ADCS_AppData.MsgPtr;
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[0] = ((double)cmd->qbn[0]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[1] = ((double)cmd->qbn[1]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[2] = ((double)cmd->qbn[2]);
+                Generic_ADCS_AppData.ACSPacket.Payload.Inertial.qbn_cmd[3] = ((double)cmd->qbn[3]);
+                CFE_EVS_SendEvent(GENERIC_ADCS_SET_INER_QUAT_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Set inertial quaternion to: %f,%f,%f,%f", cmd->qbn[0], cmd->qbn[1], cmd->qbn[2],
+                                  cmd->qbn[3]);
+            }
+            else
+            {
+                Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            }
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Process Telemetry Request - Triggered in response to a telemetery request
+*/
+static void Generic_ADCS_ProcessTelemetryRequest(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /* MsgId is only needed if the command code is not recognized. See default case */
+    CFE_MSG_GetMsgId(Generic_ADCS_AppData.MsgPtr, &MsgId);
+
+    /* Pull this command code from the message and then process */
+    CFE_MSG_GetFcnCode(Generic_ADCS_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        case GENERIC_ADCS_REQ_HK_TLM:
+            Generic_ADCS_ReportHousekeeping();
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_ADCS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Generic_ADCS: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Report Application Housekeeping
+*/
+static void Generic_ADCS_ReportHousekeeping(void)
+{
+    /* Time stamp and publish housekeeping telemetry */
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.HkTelemetryPkt, true);
+}
+
+/*
+** Reset all global counter variables
+*/
+static void Generic_ADCS_ResetCounters(void)
+{
+    Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+    Generic_ADCS_AppData.HkTelemetryPkt.CommandCount      = 0;
+}
+
+static int32 Generic_ADCS_SendDICommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.DIPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.DIPacket, true);
+}
+
+static int32 Generic_ADCS_SendADCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.ADPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.ADPacket, true);
+}
+
+static int32 Generic_ADCS_SendGNCCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.GNCPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.GNCPacket, true);
+}
+
+static int32 Generic_ADCS_SendACCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.ACSPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.ACSPacket, true);
+}
+
+static int32 Generic_ADCS_SendDOCommand(void)
+{
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.DOPacket);
+    return CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&Generic_ADCS_AppData.DOPacket, true);
+}
+
+/*
+** Verify command packet length matches expected
+*/
+static int32 Generic_ADCS_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length)
+{
+    int32             status        = OS_SUCCESS;
+    CFE_SB_MsgId_t    msg_id        = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t cmd_code      = 0;
+    size_t            actual_length = 0;
+
+    CFE_MSG_GetSize(msg, &actual_length);
+    if (expected_length == actual_length)
+    {
+        /* Increment the command counter upon receipt of an invalid command */
+        Generic_ADCS_AppData.HkTelemetryPkt.CommandCount++;
+    }
+    else
+    {
+        CFE_MSG_GetMsgId(msg, &msg_id);
+        CFE_MSG_GetFcnCode(msg, &cmd_code);
+
+        CFE_EVS_SendEvent(GENERIC_ADCS_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X,  CC = %d, Len = %ld, Expected = %d",
+                          CFE_SB_MsgIdToValue(msg_id), cmd_code, actual_length, expected_length);
+
+        status = OS_ERROR;
+
+        /* Increment the command error counter upon receipt of an invalid command */
+        Generic_ADCS_AppData.HkTelemetryPkt.CommandErrorCount++;
+    }
+    return status;
+}
 ```
 
-## 항목
+### `generic_adcs_app.h`
 
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_app.c`](file--generic_adcs_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_app.h`](file--generic_adcs_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_events.h`](file--generic_adcs_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.c`](file--generic_adcs_ingest.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.h`](file--generic_adcs_ingest.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_msg.h`](file--generic_adcs_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_output.c`](file--generic_adcs_output.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/cfs/src/generic_adcs_output.h`](file--generic_adcs_output.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_app.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This is the main header file for the GENERIC_ADCS application.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_APP_H_
+#define _GENERIC_ADCS_APP_H_
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "generic_torquer_msg.h"
+#include "generic_reaction_wheel_msg.h"
+#include "generic_adcs_msg.h"
+
+/*
+** Specified pipe depth - how many messages will be queued in the pipe
+*/
+#define GENERIC_ADCS_PIPE_DEPTH 32
+
+/*
+** GENERIC_ADCS global data structure
+** The cFE convention is to put all global app data in a single struct.
+** This struct is defined in the `sample_app.h` file with one global instance
+** in the `.c` file.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet
+    ** Each app defines its own packet which contains its OWN telemetry
+    */
+    Generic_ADCS_Hk_tlm_t  HkTelemetryPkt; /* GENERIC_ADCS Housekeeping Telemetry Packet */
+    Generic_ADCS_EPH_Tlm_t EPHPacket;
+    Generic_ADCS_DI_Tlm_t  DIPacket;
+    Generic_ADCS_AD_Tlm_t  ADPacket;
+    Generic_ADCS_GNC_Tlm_t GNCPacket;
+    Generic_ADCS_AC_Tlm_t  ACSPacket;
+    Generic_ADCS_DO_Tlm_t  DOPacket;
+
+    /*
+    ** Command packets to other apps
+    */
+    GENERIC_TORQUER_All_Percent_On_cmd_t MtbPctOnCmd;
+    GENERIC_RW_Cmd_t                     RwCmd;
+
+    /*
+    ** Operational data  - not reported in housekeeping
+    */
+    CFE_MSG_Message_t *MsgPtr;    /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;   /* Pipe Id for HK command pipe */
+    uint32             RunStatus; /* App run status for controlling the application state */
+
+} Generic_ADCS_AppData_t;
+
+/*
+** Exported Data
+** Extern the global struct in the header for the Unit Test Framework (UTF).
+*/
+extern Generic_ADCS_AppData_t Generic_ADCS_AppData; /* GENERIC_ADCS App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (ADCS_AppMain), these
+**       functions are not called from any other source module.
+*/
+void ADCS_AppMain(void);
+
+#endif
+```
+
+### `generic_adcs_events.h`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_events.h`
+
+
+```c
+/************************************************************************
+** Purpose:
+**  Define GENERIC_ADCS application event IDs
+**
+*************************************************************************/
+
+#ifndef _GENERIC_ADCS_EVENTS_H_
+#define _GENERIC_ADCS_EVENTS_H_
+
+/* Standard app event IDs */
+#define GENERIC_ADCS_RESERVED_EID        0
+#define GENERIC_ADCS_STARTUP_INF_EID     1
+#define GENERIC_ADCS_LEN_ERR_EID         2
+#define GENERIC_ADCS_PIPE_ERR_EID        3
+#define GENERIC_ADCS_SUB_CMD_ERR_EID     4
+#define GENERIC_ADCS_SUB_REQ_HK_ERR_EID  5
+#define GENERIC_ADCS_PROCESS_CMD_ERR_EID 6
+#define GENERIC_ADCS_FOPEN_ERR_EID       7
+
+/* Standard command event IDs */
+#define GENERIC_ADCS_CMD_ERR_EID       10
+#define GENERIC_ADCS_CMD_NOOP_INF_EID  11
+#define GENERIC_ADCS_CMD_RESET_INF_EID 12
+
+#define GENERIC_ADCS_SET_MODE_INF_EID                20
+#define GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_INF_EID 21
+
+#define GENERIC_ADCS_SET_INER_QUAT_INF_EID 30
+
+#endif
+```
+
+### `generic_adcs_ingest.c`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file implements the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+
+#include <stdio.h>
+#include <math.h>
+#include "generic_mag_msg.h"
+#include "generic_fss_msg.h"
+#include "generic_css_msg.h"
+#include "generic_imu_msg.h"
+#include "generic_reaction_wheel_msg.h"
+#include "generic_star_tracker_msg.h"
+#include "novatel_oem615_msg.h"
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_ingest.h"
+
+static const double NANO = 1.0e-9;
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI)
+{
+    char junk[120], newline;
+    // Magnetometer
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Mag.qbs[0], &DI->Mag.qbs[1], &DI->Mag.qbs[2], &DI->Mag.qbs[3], junk,
+           &newline);
+    // Fine Sun Sensor
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Fss.qbs[0], &DI->Fss.qbs[1], &DI->Fss.qbs[2], &DI->Fss.qbs[3], junk,
+           &newline);
+    // Coarse Sun Sensors
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[0].axis[0], &DI->Css.Sensor[0].axis[1],
+           &DI->Css.Sensor[0].axis[2], &DI->Css.Sensor[0].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[1].axis[0], &DI->Css.Sensor[1].axis[1],
+           &DI->Css.Sensor[1].axis[2], &DI->Css.Sensor[1].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[2].axis[0], &DI->Css.Sensor[2].axis[1],
+           &DI->Css.Sensor[2].axis[2], &DI->Css.Sensor[2].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[3].axis[0], &DI->Css.Sensor[3].axis[1],
+           &DI->Css.Sensor[3].axis[2], &DI->Css.Sensor[3].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[4].axis[0], &DI->Css.Sensor[4].axis[1],
+           &DI->Css.Sensor[4].axis[2], &DI->Css.Sensor[4].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[5].axis[0], &DI->Css.Sensor[5].axis[1],
+           &DI->Css.Sensor[5].axis[2], &DI->Css.Sensor[5].scale, junk, &newline);
+    // Inertial Measurement Unit
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Imu.qbs[0], &DI->Imu.qbs[1], &DI->Imu.qbs[2], &DI->Imu.qbs[3], junk,
+           &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &DI->Imu.pos[0], &DI->Imu.pos[1], &DI->Imu.pos[2], junk, &newline);
+    // Reaction Wheels
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    double h_max[3] = {0.0, 0.0, 0.0};
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[0][0], &DI->Rw.whl_axis[0][1], &DI->Rw.whl_axis[0][2],
+           &h_max[0], junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[1][0], &DI->Rw.whl_axis[1][1], &DI->Rw.whl_axis[1][2],
+           &h_max[1], junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[2][0], &DI->Rw.whl_axis[2][1], &DI->Rw.whl_axis[2][2],
+           &h_max[2], junk, &newline);
+    double H_in_body[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i < 3; i++)
+    {
+        DI->Rw.H_maxB[i] = 0.0;
+    }
+    for (int whl = 0; whl < 3; whl++)
+    {
+        SxV(h_max[whl], DI->Rw.whl_axis[whl], H_in_body);
+        for (int i = 0; i < 3; i++)
+        {
+            DI->Rw.H_maxB[i] += H_in_body[i];
+        }
+    }
+    // Star Tracker
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->St.qbs[0], &DI->St.qbs[1], &DI->St.qbs[2], &DI->St.qbs[3], junk,
+           &newline);
+}
+
+void Generic_ADCS_ingest_generic_mag(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag)
+{
+    GENERIC_MAG_Device_tlm_t *mag        = (GENERIC_MAG_Device_tlm_t *)Msg;
+    double                    msg_bvs[3] = {mag->Generic_mag.MagneticIntensityX, mag->Generic_mag.MagneticIntensityY,
+                                            mag->Generic_mag.MagneticIntensityZ};
+    QxV(Mag->qbs, msg_bvs, Mag->bvb); // convert from sensor frame to body frame
+    /* convert from raw data to engineering units of Teslas */
+    Mag->bvb[0] *= NANO;
+    Mag->bvb[1] *= NANO;
+    Mag->bvb[2] *= NANO;
+    /* OS_printf("Generic_ADCS_ingest_generic_mag: %f %f %f\n", Mag->bvb[0], Mag->bvb[1], Mag->bvb[2]); */
+}
+
+void Generic_ADCS_ingest_generic_fss(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss)
+{
+    GENERIC_FSS_Device_tlm_t *fss = (GENERIC_FSS_Device_tlm_t *)Msg;
+
+    Fss->valid = 0;
+    if (fss->Generic_fss.ErrorCode == 0)
+        Fss->valid = 1;
+    if (Fss->valid == 1)
+    {
+        double svs[3];
+        double ta = tan(fss->Generic_fss.Alpha);
+        double tb = tan(fss->Generic_fss.Beta);
+        svs[2]    = 1.0 / sqrt(1 + ta * ta + tb * tb);
+        svs[0]    = svs[2] * ta;
+        svs[1]    = svs[2] * tb;
+        QxV(Fss->qbs, svs, Fss->svb); // convert from sensor frame to body frame
+    }
+    else
+    {
+        Fss->svb[0] = 0.0;
+        Fss->svb[1] = 0.0;
+        Fss->svb[2] = 0.0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_css(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Css_Tlm_Payload_t *Css)
+{
+    GENERIC_CSS_Device_tlm_t *css = (GENERIC_CSS_Device_tlm_t *)Msg;
+    Css->Sensor[0].percenton      = css->Generic_css.Voltage[0] * Css->Sensor[0].scale;
+    Css->Sensor[1].percenton      = css->Generic_css.Voltage[1] * Css->Sensor[1].scale;
+    Css->Sensor[2].percenton      = css->Generic_css.Voltage[2] * Css->Sensor[2].scale;
+    Css->Sensor[3].percenton      = css->Generic_css.Voltage[3] * Css->Sensor[3].scale;
+    Css->Sensor[4].percenton      = css->Generic_css.Voltage[4] * Css->Sensor[4].scale;
+    Css->Sensor[5].percenton      = css->Generic_css.Voltage[5] * Css->Sensor[5].scale;
+
+    double svb[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i < 6; i++)
+    {
+        svb[0] += Css->Sensor[i].axis[0] * Css->Sensor[i].percenton;
+        svb[1] += Css->Sensor[i].axis[1] * Css->Sensor[i].percenton;
+        svb[2] += Css->Sensor[i].axis[2] * Css->Sensor[i].percenton;
+    }
+    UNITV(svb);
+
+    Css->svb[0] = svb[0];
+    Css->svb[1] = svb[1];
+    Css->svb[2] = svb[2];
+    if (MAGV(svb) > 0.0)
+    {
+        Css->valid = 1;
+    }
+    else
+    {
+        Css->valid = 0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_imu(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu)
+{
+    GENERIC_IMU_Device_tlm_t *imu    = (GENERIC_IMU_Device_tlm_t *)Msg;
+    double                    wsn[3] = {imu->Generic_imu.X_Data.AngularAcc, imu->Generic_imu.Y_Data.AngularAcc,
+                                        imu->Generic_imu.Z_Data.AngularAcc};
+    QxV(Imu->qbs, wsn, Imu->wbn);
+    double acc[3] = {imu->Generic_imu.X_Data.LinearAcc, imu->Generic_imu.Y_Data.LinearAcc,
+                     imu->Generic_imu.Z_Data.LinearAcc};
+    QxV(Imu->qbs, acc, Imu->acc);
+    Imu->valid = 1;
+}
+
+void Generic_ADCS_ingest_generic_rw(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw)
+{
+    double              H_in_body[3] = {0.0, 0.0, 0.0};
+    GENERIC_RW_HkTlm_t *rw           = (GENERIC_RW_HkTlm_t *)Msg;
+    for (int i = 0; i < 3; i++)
+    {
+        Rw->HwhlB[i] = 0.0;
+    }
+    for (int whl = 0; whl < 3; whl++)
+    {
+        SxV(rw->Payload.data.momentum[whl], Rw->whl_axis[whl], H_in_body);
+        for (int i = 0; i < 3; i++)
+        {
+            Rw->HwhlB[i] += H_in_body[i];
+        }
+    }
+}
+
+void Generic_ADCS_ingest_generic_st(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_St_Tlm_Payload_t *St)
+{
+    GENERIC_STAR_TRACKER_Device_tlm_t *st = (GENERIC_STAR_TRACKER_Device_tlm_t *)Msg;
+
+    St->valid   = st->Generic_star_tracker.IsValid;
+    double q[4] = {st->Generic_star_tracker.Q0, st->Generic_star_tracker.Q1, st->Generic_star_tracker.Q2,
+                   st->Generic_star_tracker.Q3};
+    QxQ(q, St->qbs, St->q);
+}
+
+void Generic_ADCS_ingest_novatel_gps(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps)
+{
+    NOVATEL_OEM615_Device_tlm_t *gps = (NOVATEL_OEM615_Device_tlm_t *)Msg;
+
+    Gps->Weeks           = gps->Novatel_oem615.Weeks;
+    Gps->SecondsIntoWeek = gps->Novatel_oem615.SecondsIntoWeek;
+    Gps->Fractions       = gps->Novatel_oem615.Fractions;
+    Gps->ECEFX           = gps->Novatel_oem615.ECEFX;
+    Gps->ECEFY           = gps->Novatel_oem615.ECEFY;
+    Gps->ECEFZ           = gps->Novatel_oem615.ECEFZ;
+    Gps->VelX            = gps->Novatel_oem615.VelX;
+    Gps->VelY            = gps->Novatel_oem615.VelY;
+    Gps->VelZ            = gps->Novatel_oem615.VelZ;
+    Gps->lat             = gps->Novatel_oem615.lat;
+    Gps->lon             = gps->Novatel_oem615.lon;
+    Gps->alt             = gps->Novatel_oem615.alt;
+}
+```
+
+### `generic_adcs_ingest.h`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_ingest.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file has the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_INGEST_H_
+#define _GENERIC_ADCS_INGEST_H_
+
+#include "cfe.h"
+#include "generic_adcs_msg.h"
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI);
+void Generic_ADCS_ingest_generic_mag(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag);
+void Generic_ADCS_ingest_generic_fss(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss);
+void Generic_ADCS_ingest_generic_css(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Css_Tlm_Payload_t *Css);
+void Generic_ADCS_ingest_generic_imu(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu);
+void Generic_ADCS_ingest_generic_rw(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw);
+void Generic_ADCS_ingest_generic_st(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_St_Tlm_Payload_t *St);
+void Generic_ADCS_ingest_novatel_gps(CFE_MSG_Message_t *Msg, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps);
+
+#endif
+```
+
+### `generic_adcs_msg.h`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_msg.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**  Define GENERIC_ADCS application commands and telemetry messages
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_MSG_H_
+#define _GENERIC_ADCS_MSG_H_
+
+#include "cfe.h"
+
+/*
+** Ground Command Codes
+*/
+#define GENERIC_ADCS_NOOP_CC                    0
+#define GENERIC_ADCS_RESET_COUNTERS_CC          1
+#define GENERIC_ADCS_SET_MODE_CC                2
+#define GENERIC_ADCS_SEND_DI_CMD_CC             3
+#define GENERIC_ADCS_SEND_AD_CMD_CC             4
+#define GENERIC_ADCS_SEND_GNC_CMD_CC            5
+#define GENERIC_ADCS_SEND_AC_CMD_CC             6
+#define GENERIC_ADCS_SEND_DO_CMD_CC             7
+#define GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC 8
+#define GENERIC_ADCS_INERTIAL_QUATERNION_CC     9
+
+/*
+** Telemetry Request Command Codes
+*/
+#define GENERIC_ADCS_REQ_HK_TLM 0
+
+/*
+** Generic "no arguments" command type definition
+*/
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} Generic_ADCS_NoArgs_cmd_t;
+
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   Mode;
+} Generic_ADCS_Mode_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint8                   MomentumManagement;
+} Generic_ADCS_MomentumManagement_cmd_t;
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    double                  qbn[4];
+} __attribute__((packed)) Generic_ADCS_Quat_cmd_t;
+
+/*
+** Generic_ADCS housekeeping type definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    uint8                     CommandErrorCount;
+    uint8                     CommandCount;
+} __attribute__((packed)) Generic_ADCS_Hk_tlm_t;
+#define GENERIC_ADCS_HK_TLM_LNGTH sizeof(Generic_ADCS_Hk_tlm_t)
+
+/*
+** Generic_ADCS EPH type definition
+*/
+typedef struct
+{
+    double date_epoch;
+    double coeff_G1;
+    double coeff_G2;
+    double coeff_L1;
+    double coeff_l2;
+    double coeff_long1;
+    double coeff_long2;
+    double cos_obliq_eclp;
+    double sin_obliq_eclp;
+} __attribute__((packed)) Generic_ADCS_EPH_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    int nmax;
+} __attribute__((packed)) Generic_ADCS_EPH_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_EPH_Sol_Tlm_Payload_t Sol;
+    Generic_ADCS_EPH_Mag_Tlm_Payload_t bfld;
+} __attribute__((packed)) Generic_ADCS_EPH_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t      TlmHeader;
+    Generic_ADCS_EPH_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_EPH_Tlm_t;
+#define GENERIC_ADCS_EPH_LNGTH sizeof(Generic_ADCS_EPH_Tlm_t)
+
+/*
+** Generic_ADCS DI type definition
+*/
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double bvb[3]; // magnetic field measurement by sensor in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    uint8  valid;
+    double svb[3]; // sun vector from sensor in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Fss_Tlm_Payload_t;
+
+typedef struct
+{
+    double axis[3]; // CSS axis in body frame
+    double scale;   // scale factor
+    double percenton;
+} __attribute__((packed)) Generic_ADCS_DI_Css_Sensor_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Css_Sensor_Payload_t Sensor[6];
+    uint8                                valid;
+    double                               svb[3]; // sun vector from sensors in body frame
+} __attribute__((packed)) Generic_ADCS_DI_Css_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double pos[3]; // position of sensor in body
+    uint8  valid;
+    double wbn[3]; // angular rate
+    double acc[3]; // acceleration
+} __attribute__((packed)) Generic_ADCS_DI_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    double whl_axis[3][3];
+    double H_maxB[3];
+    double HwhlB[3];
+} __attribute__((packed)) Generic_ADCS_DI_Rw_Tlm_Payload_t;
+
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double q[4];
+    uint8  valid;
+} __attribute__((packed)) Generic_ADCS_DI_St_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} __attribute__((packed)) Generic_ADCS_DI_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Mag_Tlm_Payload_t Mag;
+    Generic_ADCS_DI_Fss_Tlm_Payload_t Fss;
+    Generic_ADCS_DI_Css_Tlm_Payload_t Css;
+    Generic_ADCS_DI_Imu_Tlm_Payload_t Imu;
+    Generic_ADCS_DI_Rw_Tlm_Payload_t  Rw;
+    Generic_ADCS_DI_St_Tlm_Payload_t  St;
+    Generic_ADCS_DI_Gps_Tlm_Payload_t Gps;
+} __attribute__((packed)) Generic_ADCS_DI_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_DI_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_DI_Tlm_t;
+#define GENERIC_ADCS_DI_LNGTH sizeof(Generic_ADCS_DI_Tlm_t)
+
+/*
+** Generic_ADCS AD type definition
+*/
+typedef struct
+{
+    double bvb[3];
+    uint8  MagValid;
+} __attribute__((packed)) Generic_ADCS_AD_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  SunValid;
+    uint8  FssValid;
+    double svb[3];
+} __attribute__((packed)) Generic_ADCS_AD_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  init;
+    double alpha;
+    uint8  valid;
+    double wbn_prev[3];
+    double wbn[3];
+    double acc[3];
+} __attribute__((packed)) Generic_ADCS_AD_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  Valid;  /* [-] data validity flag */
+    double qbn[4]; /* [-] quaternion expressed in body frame */
+} __attribute__((packed)) Generic_ADCS_AD_ST_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} __attribute__((packed)) Generic_ADCS_AD_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    uint8  Valid;
+    uint8  enable_filter; /*Flag to enable/disable Moving Average filter*/
+    uint8  SolInit;
+    uint8  MagInit;
+    double wbn[3];
+    double ws[3];       /*(rad/s) Estimated angular rate from Sun Vector*/
+    double wm[3];       /*(rad/s) Estimated angular rate from Mag Vector*/
+    double svb_prev[3]; /*sol.svb at prevous time*/
+    double bvb_prev[3]; /*mag.bvb unit at last time step*/
+    int32  sample_size; /*Number of samples used in moving average filter*/
+} __attribute__((packed)) Generic_AD_rateEst_Tlm_Payload_t;
+
+typedef struct
+{
+    long   init; /* Initialization marker */
+    double dt;   /* rate at which dynamics propogated */
+    double eye3[3][3];
+    double sig_u;
+    double sig_v;
+    double sig_mag;
+    double sig_sun;
+    double sig_star;
+    double bias_est[3];
+    double qk_est[4];
+    double Pk[6][6];
+    double Qk[6][6];
+    double Gt[6][6];
+    double Hk[3][6];
+    double delta_xk_est[6];
+    double ek_ST_bound;
+    double ek_FSS_bound;
+    double ek_MG_bound;
+    double wbn[3];
+    double qbn[4];
+    int    AKFvalid;
+    double Mag_range;
+    double Dvg_tol;
+    int    reset_flag;
+} __attribute__((packed)) Generic_ADCS_AD_murAKF_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_AD_Mag_Tlm_Payload_t    Mag;
+    Generic_ADCS_AD_Sol_Tlm_Payload_t    Sol;
+    Generic_ADCS_AD_Imu_Tlm_Payload_t    Imu;
+    Generic_ADCS_AD_ST_Tlm_Payload_t     ST;
+    Generic_ADCS_AD_Gps_Tlm_Payload_t    Gps;
+    Generic_AD_rateEst_Tlm_Payload_t     RateEst;
+    Generic_ADCS_AD_murAKF_Tlm_Payload_t AKF;
+} __attribute__((packed)) Generic_ADCS_AD_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_AD_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_AD_Tlm_t;
+#define GENERIC_ADCS_AD_LNGTH sizeof(Generic_ADCS_AD_Tlm_t)
+
+/*
+** Generic_ADCS GNC type definition
+*/
+typedef struct
+{
+    double Kb;
+    double b_range;
+    double loFrac;
+    double hiFrac;
+    uint8  mm_active[3];
+    double Mcmd[3];
+} __attribute__((packed)) Generic_ADCS_GNC_Hmgmt_t;
+
+typedef struct
+{
+    double                   DT;
+    double                   MaxMcmd;
+    uint8                    Mode;
+    uint8                    HmgmtOn;
+    Generic_ADCS_GNC_Hmgmt_t Hmgmt;
+    double                   bvb[3];
+    double                   svb[3];
+    uint8                    SunValid;
+    double                   wbn[3];
+    double                   HwhlMaxB[3];
+    double                   HwhlB[3];
+    double                   Mcmd[3];
+    double                   Tcmd[3];
+    uint8                    qValid;
+    double                   qbn[4];
+    double                   qErr[4];
+    double                   Bfield_ECIF[3];
+    double                   Bfield_ECEF[3];
+    double                   Bfield_NED[3];
+    double                   svn[3];
+    double                   beta;
+} __attribute__((packed)) Generic_ADCS_GNC_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t      TlmHeader;
+    Generic_ADCS_GNC_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_GNC_Tlm_t;
+#define GENERIC_ADCS_GNC_LNGTH sizeof(Generic_ADCS_GNC_Tlm_t)
+
+/*
+** Generic_ADCS AC type definition
+*/
+typedef struct
+{
+    double b_range;
+    double Kb;
+    double bold[3];
+    double bdot[3];
+} __attribute__((packed)) Generic_ADCS_AC_Bdot_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double Kp[3];
+    double Kr[3];
+    double sside[3];
+    double vmax;
+    double cmd_wbn[3];
+    uint8  h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double werr[3];
+    double Tcmd[3];
+    double err_t;
+} __attribute__((packed)) Generic_ADCS_AC_Sunsafe_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double Kp[3];
+    double Kr[3];
+    double Ki[3];
+    double phiErr_max;
+    double qbn_cmd[4];
+    long   h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double sumtherr[3];
+    double qErr[4];
+    double werr[3];
+    double Tcmd[3];
+} __attribute__((packed)) Generic_ADCS_AC_Inertial_Tlm_t;
+
+typedef struct
+{
+    Generic_ADCS_AC_Bdot_Tlm_t     Bdot;
+    Generic_ADCS_AC_Sunsafe_Tlm_t  Sunsafe;
+    Generic_ADCS_AC_Inertial_Tlm_t Inertial;
+} __attribute__((packed)) Generic_ADCS_AC_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_AC_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_AC_Tlm_t;
+#define GENERIC_ADCS_AC_LNGTH sizeof(Generic_ADCS_AC_Tlm_t)
+
+/*
+** Generic_ADCS DO type definition
+*/
+typedef struct
+{
+    double qba[4]; // quaternion from actuator to body
+    double Mcmd[3];
+} __attribute__((packed)) Generic_ADCS_DO_Trq_TlmPayload_t;
+
+typedef struct
+{
+    double axis[3][3];
+    double Tcmd[3];
+} __attribute__((packed)) Generic_ADCS_DO_Rw_TlmPayload_t;
+
+typedef struct
+{
+    Generic_ADCS_DO_Trq_TlmPayload_t Trq;
+    Generic_ADCS_DO_Rw_TlmPayload_t  Rw;
+} __attribute__((packed)) Generic_ADCS_DO_Tlm_Payload_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    Generic_ADCS_DO_Tlm_Payload_t Payload;
+} __attribute__((packed)) Generic_ADCS_DO_Tlm_t;
+#define GENERIC_ADCS_DO_LNGTH sizeof(Generic_ADCS_DO_Tlm_t)
+
+#endif
+```
+
+### `generic_adcs_output.c`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_output.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file implements the functions to output messages to the actuator applications.
+**
+*******************************************************************************/
+
+#include "generic_adcs_app.h"
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_output.h"
+
+static void send_mtb_commands(double Mcmd[3], Generic_ADCS_DO_Trq_TlmPayload_t *DO,
+                              GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd);
+static void mcmd_to_percent_direction(double Mcmd, uint8 *percent, uint8 *direction);
+static void send_rw_commands(double Tcmd[3], Generic_ADCS_DO_Rw_TlmPayload_t *DO, GENERIC_RW_Cmd_t *RwCmd);
+
+void Generic_ADCS_output_init(FILE *in, Generic_ADCS_DO_Tlm_Payload_t *DO)
+{
+    char junk[512], newline;
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DO->Trq.qba[0], &DO->Trq.qba[1], &DO->Trq.qba[2], &DO->Trq.qba[3], junk,
+           &newline);
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &DO->Rw.axis[0][0], &DO->Rw.axis[0][1], &DO->Rw.axis[0][2], junk, &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &DO->Rw.axis[1][0], &DO->Rw.axis[1][1], &DO->Rw.axis[1][2], junk, &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &DO->Rw.axis[2][0], &DO->Rw.axis[2][1], &DO->Rw.axis[2][2], junk, &newline);
+}
+
+void Generic_ADCS_output_to_actuators(const Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_DO_Tlm_Payload_t *DO,
+                                      GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd, GENERIC_RW_Cmd_t *RwCmd)
+{
+    send_mtb_commands(GNC->Mcmd, &DO->Trq, MtbPctOnCmd);
+    send_rw_commands(GNC->Tcmd, &DO->Rw, RwCmd);
+}
+
+static struct
+{
+    uint8 Direction;
+    uint8 PercentOn;
+} CurrentMtb[] = {{1, 0}, {1, 0}, {1, 0}}; // Keep current state so commands are only sent on change
+static void send_mtb_commands(double Mcmd[3], Generic_ADCS_DO_Trq_TlmPayload_t *DO,
+                              GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd)
+{
+    QTxV(DO->qba, Mcmd, DO->Mcmd);
+    mcmd_to_percent_direction(DO->Mcmd[0], &MtbPctOnCmd->PercentOn_0, &MtbPctOnCmd->Direction_0);
+    mcmd_to_percent_direction(DO->Mcmd[1], &MtbPctOnCmd->PercentOn_1, &MtbPctOnCmd->Direction_1);
+    mcmd_to_percent_direction(DO->Mcmd[2], &MtbPctOnCmd->PercentOn_2, &MtbPctOnCmd->Direction_2);
+    if ((MtbPctOnCmd->Direction_0 != CurrentMtb[0].Direction) ||
+        (MtbPctOnCmd->PercentOn_0 != CurrentMtb[0].PercentOn) ||
+        (MtbPctOnCmd->Direction_1 != CurrentMtb[1].Direction) ||
+        (MtbPctOnCmd->PercentOn_1 != CurrentMtb[1].PercentOn) ||
+        (MtbPctOnCmd->Direction_2 != CurrentMtb[2].Direction) || (MtbPctOnCmd->PercentOn_2 != CurrentMtb[2].PercentOn))
+    {
+        CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)MtbPctOnCmd);
+        CFE_SB_TransmitMsg((CFE_MSG_Message_t *)MtbPctOnCmd, true);
+        CurrentMtb[0].Direction = MtbPctOnCmd->Direction_0;
+        CurrentMtb[0].PercentOn = MtbPctOnCmd->PercentOn_0;
+        CurrentMtb[1].Direction = MtbPctOnCmd->Direction_1;
+        CurrentMtb[1].PercentOn = MtbPctOnCmd->PercentOn_1;
+        CurrentMtb[2].Direction = MtbPctOnCmd->Direction_2;
+        CurrentMtb[2].PercentOn = MtbPctOnCmd->PercentOn_2;
+    }
+}
+
+static void mcmd_to_percent_direction(double Mcmd, uint8 *percent, uint8 *direction)
+{
+    double pct = 100.0 * Mcmd / Generic_ADCS_AppData.GNCPacket.Payload.MaxMcmd;
+    *direction = 1;
+    if (pct < 0)
+    {
+        pct *= -1.0;
+        *direction = 0;
+    }
+    if (pct > 100)
+        pct = 100;
+    *percent = pct;
+}
+
+static int16 CurrentRw[] = {0, 0, 0}; // Keep current state so commands are only sent on change
+static void  send_rw_commands(double Tcmd[3], Generic_ADCS_DO_Rw_TlmPayload_t *DO, GENERIC_RW_Cmd_t *RwCmd)
+{
+    int16 torque;
+    for (uint8 i = 0; i < 3; i++)
+    {
+        DO->Tcmd[i] = Tcmd[i];
+        torque      = 10000.0 * VoV(Tcmd, DO->axis[i]); // cmd is in 10^-4 Nm
+        if (torque != CurrentRw[i])
+        {
+            RwCmd->data         = torque;
+            RwCmd->wheel_number = i;
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)RwCmd);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)RwCmd, true);
+            CurrentRw[i] = torque;
+        }
+    }
+}
+```
+
+### `generic_adcs_output.h`
+
+**경로:** `components/generic_adcs/fsw/cfs/src/generic_adcs_output.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file has the functions to output messages to the actuator applications.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_OUTPUT_H_
+#define _GENERIC_ADCS_OUTPUT_H_
+
+#include "cfe.h"
+#include "generic_adcs_msg.h"
+#include "generic_torquer_msg.h"
+#include "generic_reaction_wheel_msg.h"
+
+void Generic_ADCS_output_init(FILE *in, Generic_ADCS_DO_Tlm_Payload_t *DO);
+void Generic_ADCS_output_to_actuators(const Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_DO_Tlm_Payload_t *DO,
+                                      GENERIC_TORQUER_All_Percent_On_cmd_t *MtbPctOnCmd, GENERIC_RW_Cmd_t *RwCmd);
+
+#endif
+```

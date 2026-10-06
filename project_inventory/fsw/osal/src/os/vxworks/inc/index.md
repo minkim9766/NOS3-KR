@@ -3,50 +3,1071 @@
 
 **경로:** `fsw/osal/src/os/vxworks/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-binsem.h`
 
-file--os-impl-binsem.h
-file--os-impl-console.h
-file--os-impl-countsem.h
-file--os-impl-dirs.h
-file--os-impl-files.h
-file--os-impl-filesys.h
-file--os-impl-gettime.h
-file--os-impl-idmap.h
-file--os-impl-io.h
-file--os-impl-loader.h
-file--os-impl-mutex.h
-file--os-impl-network.h
-file--os-impl-queues.h
-file--os-impl-select.h
-file--os-impl-sockets.h
-file--os-impl-symtab.h
-file--os-impl-tasks.h
-file--os-impl-timebase.h
-file--os-vxworks.h
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-binsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_BINSEM_H
+#define OS_IMPL_BINSEM_H
+
+#include "osconfig.h"
+#include <semLib.h>
+
+/* Binary Semaphores */
+typedef struct
+{
+    VX_BINARY_SEMAPHORE(bmem);
+    SEM_ID vxid;
+} OS_impl_binsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+#endif /* OS_IMPL_BINSEM_H */
 ```
 
-## 항목
+### `os-impl-console.h`
 
-- [`fsw/osal/src/os/vxworks/inc/os-impl-binsem.h`](file--os-impl-binsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-console.h`](file--os-impl-console.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-countsem.h`](file--os-impl-countsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-dirs.h`](file--os-impl-dirs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-files.h`](file--os-impl-files.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-filesys.h`](file--os-impl-filesys.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-gettime.h`](file--os-impl-gettime.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-idmap.h`](file--os-impl-idmap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-io.h`](file--os-impl-io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-loader.h`](file--os-impl-loader.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-mutex.h`](file--os-impl-mutex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-network.h`](file--os-impl-network.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-queues.h`](file--os-impl-queues.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-select.h`](file--os-impl-select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-sockets.h`](file--os-impl-sockets.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-symtab.h`](file--os-impl-symtab.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-tasks.h`](file--os-impl-tasks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-impl-timebase.h`](file--os-impl-timebase.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/vxworks/inc/os-vxworks.h`](file--os-vxworks.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-console.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_CONSOLE_H
+#define OS_IMPL_CONSOLE_H
+
+#include <stdbool.h>
+#include "osconfig.h"
+#include <semLib.h>
+#include <taskLib.h>
+
+/* Console device */
+typedef struct
+{
+    VX_COUNTING_SEMAPHORE(cmem);
+    SEM_ID  datasem;
+    TASK_ID taskid;
+} OS_impl_console_internal_record_t;
+
+extern OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+#endif /* OS_IMPL_CONSOLE_H */
+```
+
+### `os-impl-countsem.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-countsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_COUNTSEM_H
+#define OS_IMPL_COUNTSEM_H
+
+#include "osconfig.h"
+#include <semLib.h>
+
+/* Counting & Binary Semaphores */
+typedef struct
+{
+    VX_COUNTING_SEMAPHORE(cmem);
+    SEM_ID vxid;
+} OS_impl_countsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+#endif /* OS_IMPL_COUNTSEM_H */
+```
+
+### `os-impl-dirs.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-dirs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_DIRS_H
+#define OS_IMPL_DIRS_H
+
+#include "osconfig.h"
+#include <unistd.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+/*
+ * In VxWorks 6.x the system mkdir() function only has a path argument
+ * In VxWorks 7 it is now POSIX compilant and adds a mode argument
+ *
+ * This macro simply discards the second argument, allowing code to use
+ * mkdir() in a consistent, POSIX compliant fashion.
+ */
+#ifdef OSAL_VXWORKS6_COMPATIBILITY
+#define mkdir(path, mode) mkdir(path)
+#endif
+
+typedef struct
+{
+    DIR *dp;
+} OS_impl_dir_internal_record_t;
+
+/*
+ * The directory handle table.
+ */
+extern OS_impl_dir_internal_record_t OS_impl_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+#endif /* OS_IMPL_DIRS_H */
+```
+
+### `os-impl-files.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-files.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_FILES_H
+#define OS_IMPL_FILES_H
+
+#include "os-impl-io.h"
+
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+#include <unistd.h>
+
+/*
+ * VxWorks does not have UID/GID so these are defined as 0.
+ */
+#define OS_IMPL_SELF_EUID 0
+#define OS_IMPL_SELF_EGID 0
+
+/*
+ * Do not set any additional flags for regular files
+ */
+#define OS_IMPL_REGULAR_FILE_FLAGS 0
+
+#endif /* OS_IMPL_FILES_H */
+```
+
+### `os-impl-filesys.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-filesys.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_FILESYS_H
+#define OS_IMPL_FILESYS_H
+
+#include "osconfig.h"
+#include "common_types.h"
+#include <blkIo.h>
+#include <xbdBlkDev.h>
+
+typedef struct
+{
+    BLK_DEV *blkDev;
+    device_t xbd;
+    uint32   xbdMaxPartitions;
+} OS_impl_filesys_internal_record_t;
+
+extern OS_impl_filesys_internal_record_t OS_impl_filesys_table[OS_MAX_FILE_SYSTEMS];
+
+#endif /* OS_IMPL_FILESYS_H */
+```
+
+### `os-impl-gettime.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-gettime.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_GETTIME_H
+#define OS_IMPL_GETTIME_H
+
+#include "osconfig.h"
+#include <time.h>
+
+/**
+ * \brief Identifies the clock ID for OSAL clock operations on VxWorks
+ *
+ * This is the POSIX clock ID that will be used to implement
+ * OS_GetLocalTime() and OS_SetLocalTime().
+ */
+#define OSAL_GETTIME_SOURCE_CLOCK CLOCK_REALTIME
+
+#endif /* OS_IMPL_GETTIME_H */
+```
+
+### `os-impl-idmap.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-idmap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_IDMAP_H
+#define OS_IMPL_IDMAP_H
+
+#include "osconfig.h"
+#include "osapi-idmap.h"
+#include <semLib.h>
+
+typedef struct
+{
+    void *const mem;
+    SEM_ID      vxid;
+} OS_impl_objtype_lock_t;
+
+/* Tables where the lock state information is stored */
+extern OS_impl_objtype_lock_t *const OS_impl_objtype_lock_table[OS_OBJECT_TYPE_USER];
+
+#endif /* OS_IMPL_IDMAP_H */
+```
+
+### `os-impl-io.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-io.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_IO_H
+#define OS_IMPL_IO_H
+
+#include "osconfig.h"
+#include "common_types.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/types.h>
+
+typedef struct
+{
+    int  fd;
+    bool selectable;
+} OS_impl_file_internal_record_t;
+
+/*
+ * The global file handle table.
+ *
+ * This table is shared across multiple units (files, sockets, etc) and they will share
+ * the same file handle table from the basic file I/O.
+ */
+extern OS_impl_file_internal_record_t OS_impl_filehandle_table[OS_MAX_NUM_OPEN_FILES];
+
+/*
+ * VxWorks needs to cast the argument to "write()" to avoid a warning.
+ * This can be turned off in a future version if the vendor fixes the
+ * prototype to be standards-compliant
+ */
+#define GENERIC_IO_CONST_DATA_CAST (void *)
+
+#endif /* OS_IMPL_IO_H */
+```
+
+### `os-impl-loader.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-loader.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_LOADER_H
+#define OS_IMPL_LOADER_H
+
+#include "osconfig.h"
+#include <moduleLib.h>
+
+/*
+ * A local lookup table for posix-specific information.
+ * This is not directly visible to the outside world.
+ */
+typedef struct
+{
+    MODULE_ID moduleID;
+} OS_impl_module_internal_record_t;
+
+/*
+ * The storage table is only instantiated when OS_MAX_MODULES is nonzero.
+ * It is allowed to be zero to save memory in statically linked apps.
+ * However even in that case it is still relevant to include the
+ * OS_SymbolLookup_Impl() function for symbol lookups.
+ *
+ * If neither loading nor symbol lookups are desired then this file
+ * shouldn't be used at all -- a no-op version should be used instead.
+ */
+extern OS_impl_module_internal_record_t OS_impl_module_table[OS_MAX_MODULES];
+
+#endif /* OS_IMPL_LOADER_H */
+```
+
+### `os-impl-mutex.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-mutex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_MUTEX_H
+#define OS_IMPL_MUTEX_H
+
+#include "osconfig.h"
+#include <semLib.h>
+
+typedef struct
+{
+    VX_MUTEX_SEMAPHORE(mmem);
+    SEM_ID vxid;
+} OS_impl_mutsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_mutsem_internal_record_t OS_impl_mutex_table[OS_MAX_MUTEXES];
+
+#endif /* OS_IMPL_MUTEX_H */
+```
+
+### `os-impl-network.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-network.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_NETWORK_H
+#define OS_IMPL_NETWORK_H
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <hostLib.h>
+
+#endif /* OS_IMPL_NETWORK_H */
+```
+
+### `os-impl-queues.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-queues.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_QUEUES_H
+#define OS_IMPL_QUEUES_H
+
+#include "osconfig.h"
+#include <msgQLib.h>
+
+typedef struct
+{
+    MSG_Q_ID vxid;
+} OS_impl_queue_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+#endif /* OS_IMPL_QUEUES_H */
+```
+
+### `os-impl-select.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_SELECT_H
+#define OS_IMPL_SELECT_H
+
+#include "os-impl-io.h"
+#include <selectLib.h>
+
+#endif /* OS_IMPL_SELECT_H */
+```
+
+### `os-impl-sockets.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-sockets.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_SOCKETS_H
+#define OS_IMPL_SOCKETS_H
+
+#include "os-impl-io.h"
+#include "os-shared-globaldefs.h"
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <hostLib.h>
+#include <ioLib.h>
+
+/*
+ * Override the socket flag set routine on this platform.
+ * This is required because some versions of VxWorks do not support
+ * the standard POSIX fcntl() opcodes, and must use ioctl() instead.
+ */
+#define OS_IMPL_SET_SOCKET_FLAGS(impl) OS_VxWorks_SetSocketFlags_Impl(impl)
+
+/* The "in.h" header file supplied in VxWorks 6.9 is missing the "in_port_t" typedef */
+typedef u_short in_port_t;
+
+/* VxWorks-specific helper function to configure the socket flags on a connection */
+void OS_VxWorks_SetSocketFlags_Impl(const OS_object_token_t *token);
+
+#endif /* OS_IMPL_SOCKETS_H */
+```
+
+### `os-impl-symtab.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-symtab.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_SYMTAB_H
+#define OS_IMPL_SYMTAB_H
+
+#include "osconfig.h"
+#include <symLib.h>
+
+typedef struct
+{
+    size_t Sizelimit;
+    size_t CurrSize;
+    int32  StatusCode;
+    int    fd;
+} SymbolDumpState_t;
+
+/* A global for storing the state in a SymbolDump call */
+extern SymbolDumpState_t OS_VxWorks_SymbolDumpState;
+
+BOOL OS_SymTableIterator_Impl(char *name, SYM_VALUE val, SYM_TYPE type, _Vx_usr_arg_t arg, SYM_GROUP group);
+
+#endif /* OS_IMPL_SYMTAB_H */
+```
+
+### `os-impl-tasks.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-tasks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_TASKS_H
+#define OS_IMPL_TASKS_H
+
+#include "osconfig.h"
+#include <taskLib.h>
+
+#if defined(VX_WIND_TCB_SIZE)
+/**
+ * vxworks >= 7.0 should provide this symbol via taskLib.h. WIND_TCB is an opaque type
+ * NOTE: uint64 used to ensure sufficient alignment, and + 1 means it's at least big enough
+ *       but might be slightly bigger than necessary if VX_WIND_TCB_SIZE mod 8 is zero
+ */
+typedef uint64 OS_VxWorks_TCB_t[(VX_WIND_TCB_SIZE / 8) + 1];
+#else
+/* older vxworks expose the definition of VX_WIND_TCB_SIZE */
+typedef WIND_TCB OS_VxWorks_TCB_t;
+#endif /* !defined(VX_WIND_TCB_SIZE) */
+
+/*tasks */
+typedef struct
+{
+    OS_VxWorks_TCB_t tcb; /* Must be first */
+    TASK_ID          vxid;
+    void *           heap_block; /* set non-null if the stack was obtained with malloc() */
+    size_t           heap_block_size;
+} OS_impl_task_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+#endif /* OS_IMPL_TASKS_H */
+```
+
+### `os-impl-timebase.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-impl-timebase.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_IMPL_TIMEBASE_H
+#define OS_IMPL_TIMEBASE_H
+
+#include "osconfig.h"
+#include "common_types.h"
+#include <signal.h>
+#include <taskLib.h>
+#include <semLib.h>
+
+enum OS_TimerState
+{
+    OS_TimerRegState_INIT = 0,
+    OS_TimerRegState_SUCCESS,
+    OS_TimerRegState_ERROR
+};
+
+typedef struct
+{
+    VX_MUTEX_SEMAPHORE(mmem);
+    SEM_ID             handler_mutex;
+    int                assigned_signal;
+    sigset_t           timer_sigset;
+    TASK_ID            handler_task;
+    timer_t            host_timerid;
+    enum OS_TimerState timer_state;
+    uint32             configured_start_time;
+    uint32             configured_interval_time;
+    bool               reset_flag;
+} OS_impl_timebase_internal_record_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+extern OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+#endif /* OS_IMPL_TIMEBASE_H */
+```
+
+### `os-vxworks.h`
+
+**경로:** `fsw/osal/src/os/vxworks/inc/os-vxworks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  vxworks
+ *
+ */
+
+#ifndef OS_VXWORKS_H
+#define OS_VXWORKS_H
+
+/****************************************************************************************
+                                    COMMON INCLUDE FILES
+****************************************************************************************/
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <errno.h>
+
+#include <semLib.h>
+#include <errnoLib.h>
+
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                                     DEFINES
+****************************************************************************************/
+
+/****************************************************************************************
+                                    TYPEDEFS
+****************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+****************************************************************************************/
+
+/****************************************************************************************
+                       VXWORKS IMPLEMENTATION FUNCTION PROTOTYPES
+****************************************************************************************/
+
+int32 OS_VxWorks_TaskAPI_Impl_Init(void);
+int32 OS_VxWorks_QueueAPI_Impl_Init(void);
+int32 OS_VxWorks_BinSemAPI_Impl_Init(void);
+int32 OS_VxWorks_CountSemAPI_Impl_Init(void);
+int32 OS_VxWorks_MutexAPI_Impl_Init(void);
+int32 OS_VxWorks_TimeBaseAPI_Impl_Init(void);
+int32 OS_VxWorks_ModuleAPI_Impl_Init(void);
+int32 OS_VxWorks_StreamAPI_Impl_Init(void);
+int32 OS_VxWorks_DirAPI_Impl_Init(void);
+
+int OS_VxWorks_TaskEntry(int arg);
+int OS_VxWorks_ConsoleTask_Entry(int arg);
+
+uint32 OS_VxWorks_SigWait(osal_id_t timebase_id);
+int    OS_VxWorks_TimeBaseTask(int arg);
+void   OS_VxWorks_RegisterTimer(osal_id_t obj_id);
+void   OS_VxWorks_UsecToTimespec(uint32 usecs, struct timespec *time_spec);
+
+int32 OS_VxWorks_GenericSemTake(SEM_ID vxid, int sys_ticks);
+int32 OS_VxWorks_GenericSemGive(SEM_ID vxid);
+
+int32 OS_VxWorks_TableMutex_Init(osal_objtype_t idtype);
+
+#endif /* OS_VXWORKS_H */
+```

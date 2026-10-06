@@ -3,7 +3,7 @@
 
 **경로:** `sims/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,16 +13,120 @@ nos_time_driver/index
 sim_common/index
 sim_terminal/index
 truth_42_sim/index
-file--CMakeLists.txt
-file--MissionSettings.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`sims/build/`](build/index) — 폴더
-- [`sims/nos_time_driver/`](nos_time_driver/index) — 폴더
-- [`sims/sim_common/`](sim_common/index) — 폴더
-- [`sims/sim_terminal/`](sim_terminal/index) — 폴더
-- [`sims/truth_42_sim/`](truth_42_sim/index) — 폴더
-- [`sims/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`sims/MissionSettings.cmake`](file--MissionSettings.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `sims/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(NOS3)
+include(CMakeParseArguments)
+
+# find itc cmake module path
+find_path(_ITC_CMAKE_MODULES_
+          NAMES FindITC_Common.cmake
+          PATHS ${ITC_CMAKE_MODULES}
+                ${ITC_DEV_ROOT}/cmake/modules
+                $ENV{ITC_DEV_ROOT}/cmake/modules
+                /usr/local/cmake/modules
+                /usr/cmake/modules
+                /usr/lib/)
+if(NOT _ITC_CMAKE_MODULES_)
+    message(WARNING "Unable to find ITC CMake Modules")
+endif()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+# note: not sure why this needs to be re-configured for sim but cmake is resetting option values
+set(CXX_11 ON)
+ if(CXX_11)
+    set(ITC_CXX_FLAGS "")   #Used for C++
+	if(ITC_CXX_FLAGS)
+		STRING(REGEX REPLACE "--std=c\\+\\+98" "" ITC_CXX_FLAGS ${ITC_CXX_FLAGS}) #Remove the C++98 Flag if it exists
+		endif(ITC_CXX_FLAGS)		
+    set(ITC_CXX_FLAGS "${ITC_CXX_FLAGS} --std=c++11")    
+    set(CMAKE_CXX_FLAGS "-Wl,--disable-new-dtags -Werror -Wall -Wextra -pedantic -Wno-vla -Wwrite-strings -Wpointer-arith -Wcast-align")
+    set(CMAKE_SHARED_LINKER_FLAGS "-Wl,--disable-new-dtags")
+endif(CXX_11)
+
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR})
+include(MissionSettings.cmake)
+
+# NOS3 Sim Core
+add_subdirectory(sim_common)
+add_subdirectory(nos_time_driver)
+add_subdirectory(sim_terminal)
+add_subdirectory(truth_42_sim)
+
+# Add Component Sims
+FILE(GLOB _ALL_FILES ${CMAKE_CURRENT_SOURCE_DIR}/../components/*)
+FOREACH(_FILE ${_ALL_FILES})
+  IF(EXISTS ${_FILE}/sim/CMakeLists.txt)
+    get_filename_component(SIM_NAME ${_FILE} NAME)
+    add_subdirectory(${_FILE}/sim ./${SIM_NAME})
+  ENDIF()
+ENDFOREACH()
+
+# Install configuration files to bin
+set(sim_cfg
+    ../cfg/build/sims/nos_engine_server_config.json
+    ../cfg/build/sims/nos3-simulator.xml
+    ../cfg/build/sims/sim_log_config.xml
+)
+install(FILES ${sim_cfg} DESTINATION bin COMPONENT config)
+```
+
+### `MissionSettings.cmake`
+
+**경로:** `sims/MissionSettings.cmake`
+
+
+```cmake
+message(STATUS "Setting up Mission Settings")
+
+if(NOT CMAKE_BUILD_TYPE)
+    message(STATUS "No build type set, assuming Debug")
+	set(CMAKE_BUILD_TYPE Debug CACHE STRING "Choose the type of build." FORCE)
+endif()
+
+set(ARCHITECTURE_STRING "amd64")
+
+set(ITC_C_FLAGS "")     #Used for C
+set(ITC_CCXX_FLAGS "")  #Works for both C/C++
+set(CLANG_OVERRIDE "")
+set(BOOST_LIBRARYDIR /usr/lib/amd64-linux-gnu)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    message(STATUS "Clang detected. MissionSettings will invoke GCC Compile Flags")
+    set(CLANG_OVERRIDE True)
+endif()
+
+#######GNU Compiler Settings########
+if(CMAKE_COMPILER_IS_GNUCXX OR CLANG_OVERRIDE)
+    include(CheckCCompilerFlag)
+
+    #not enabling just yet for gcc
+	#add_definitions(-Werror) #Turns all warnings into errors
+
+    #Options not available on versions of GCC 3.4.6
+
+    set(ITC_CCXX_FLAGS "${ITC_CCXX_FLAGS} -fdiagnostics-show-option")
+
+    message(STATUS "Setting compiler options...")
+    #set(ITC_CCXX_FLAGS "${ITC_CCXX_FLAGS} -fPIC")
+    #set(CMAKE_SHARED_LINKER_FLAGS "-fpic")
+    #set(CMAKE_EXE_LINKER_FLAGS "-fpic")
+    
+    CHECK_C_COMPILER_FLAG(-fvisibility=hidden HAVE_VISIBILITY)
+
+endif(CMAKE_COMPILER_IS_GNUCXX OR CLANG_OVERRIDE)
+
+#Removing Visibility check. the core-linux C++ util needs to expose it's symbols in order for cFE to work.
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${ITC_CCXX_FLAGS} ${ITC_CXX_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${ITC_CCXX_FLAGS} ${ITC_C_FLAGS}")
+
+```

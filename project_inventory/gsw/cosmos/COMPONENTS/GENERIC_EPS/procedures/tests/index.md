@@ -3,18 +3,148 @@
 
 **경로:** `gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_eps_app_test.rb`
 
-file--generic_eps_app_test.rb
-file--generic_eps_ast_test.rb
-file--generic_eps_device_test.rb
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_app_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_eps_lib.rb"
+
+##
+## This script tests the standard cFS component application functionality.
+## Currently this includes: 
+##   Housekeeping, request telemetry to be published on the software bus
+##   NOOP, no operation but confirm correct counters increment
+##   Reset counters, increment as done in NOOP and confirm ability to clear repeatably
+##   Invalid ground command, confirm bad lengths and codes are rejected
+##
+
+# Get to known state
+safe_eps()
+
+##
+##   Housekeeping, request telemetry to be published on the software bus
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    get_eps_hk()
+end
+
+
+##
+## NOOP, no operation but confirm correct counters increment
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    eps_cmd("GENERIC_EPS GENERIC_EPS_NOOP_CC")
+end
+
+
+##
+## Reset counters, increment as done in NOOP and confirm ability to clear repeatably
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    eps_cmd("GENERIC_EPS GENERIC_EPS_NOOP_CC")
+    cmd("GENERIC_EPS GENERIC_EPS_RST_COUNTERS_CC") # Note standard `cmd` as we can't reset counters and then confirm increment
+    get_eps_hk()
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_COUNT == 0")
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_ERR_COUNT == 0")
+end
+
+
+##
+##   Invalid ground command, confirm bad lengths and codes are rejected
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    # Bad length
+    cmd_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_ERR_COUNT")
+    cmd("GENERIC_EPS GENERIC_EPS_NOOP_CC with CCSDS_LENGTH #{n+2}") # Note +2 due to CCSDS already being +1
+    get_eps_hk()
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
+
+for n in 6..(5 + GENERIC_EPS_TEST_LOOP_COUNT)
+    # Bad command codes
+    cmd_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_COUNT")
+    cmd_err_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_ERR_COUNT")
+    cmd("GENERIC_EPS GENERIC_EPS_NOOP_CC with CCSDS_FC #{n+1}")
+    get_eps_hk()
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_COUNT == #{cmd_cnt}")
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM CMD_ERR_COUNT == #{cmd_err_cnt+1}")
+end
 ```
 
-## 항목
+### `generic_eps_ast_test.rb`
 
-- [`gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_app_test.rb`](file--generic_eps_app_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_ast_test.rb`](file--generic_eps_ast_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_device_test.rb`](file--generic_eps_device_test.rb) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_ast_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_eps_lib.rb"
+
+##
+## This script tests the cFS component in an automated scenario.
+## Currently this includes: 
+##   Hardware failure
+##   Hardware status reporting fault
+##
+
+
+##
+## Hardware failure
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    # Prepare
+    eps_prepare_ast()
+
+    # Disable sim and confirm device error counts increase
+    dev_cmd_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_COUNT")
+    dev_cmd_err_cnt = tlm("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_ERR_COUNT")
+    eps_sim_disable()
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_COUNT == #{dev_cmd_cnt}")
+    check("GENERIC_EPS GENERIC_EPS_HK_TLM DEVICE_ERR_COUNT >= #{dev_cmd_err_cnt}")
+
+    # Enable sim and confirm return to nominal operation
+    eps_sim_enable()
+    confirm_eps_data_loop()
+end
+
+```
+
+### `generic_eps_device_test.rb`
+
+**경로:** `gsw/cosmos/COMPONENTS/GENERIC_EPS/procedures/tests/generic_eps_device_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require "generic_eps_lib.rb"
+
+##
+## This script tests the cFS component device functionality.
+## Currently this includes: 
+##   Enable / disable, control hardware communications
+##
+
+
+##
+## Enable / disable, control hardware communications
+##
+GENERIC_EPS_TEST_LOOP_COUNT.times do |n|
+    # Get to known state
+    safe_eps()
+
+    # Confirm device counters increment without errors
+    confirm_eps_data_loop()
+
+end
+
+```

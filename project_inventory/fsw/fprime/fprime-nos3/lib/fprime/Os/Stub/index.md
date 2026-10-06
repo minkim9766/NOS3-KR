@@ -3,76 +3,1805 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--ConditionVariable.cpp
-file--ConditionVariable.hpp
-file--Console.cpp
-file--Console.hpp
-file--Cpu.cpp
-file--Cpu.hpp
-file--DefaultConsole.cpp
-file--DefaultCpu.cpp
-file--DefaultFile.cpp
-file--DefaultMemory.cpp
-file--DefaultMutex.cpp
-file--DefaultQueue.cpp
-file--DefaultRawTime.cpp
-file--DefaultTask.cpp
-file--Directory.cpp
-file--Directory.hpp
-file--File.cpp
-file--File.hpp
-file--FileSystem.cpp
-file--FileSystem.hpp
-file--Memory.cpp
-file--Memory.hpp
-file--Mutex.cpp
-file--Mutex.hpp
-file--Queue.cpp
-file--Queue.hpp
-file--RawTime.cpp
-file--RawTime.hpp
-file--Task.cpp
-file--Task.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.cpp`](file--ConditionVariable.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.hpp`](file--ConditionVariable.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.cpp`](file--Console.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.hpp`](file--Console.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.cpp`](file--Cpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.hpp`](file--Cpu.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultConsole.cpp`](file--DefaultConsole.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultCpu.cpp`](file--DefaultCpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultFile.cpp`](file--DefaultFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMemory.cpp`](file--DefaultMemory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMutex.cpp`](file--DefaultMutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultQueue.cpp`](file--DefaultQueue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultRawTime.cpp`](file--DefaultRawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultTask.cpp`](file--DefaultTask.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.cpp`](file--Directory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.hpp`](file--Directory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.hpp`](file--File.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.cpp`](file--FileSystem.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.hpp`](file--FileSystem.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.cpp`](file--Memory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.hpp`](file--Memory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.cpp`](file--Mutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.hpp`](file--Mutex.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.cpp`](file--Queue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.hpp`](file--Queue.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.cpp`](file--RawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.hpp`](file--RawTime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.cpp`](file--Task.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.hpp`](file--Task.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+register_os_implementation("File;FileSystem;Directory" Stub)
+register_os_implementation(Console Stub)
+register_os_implementation(Task Stub)
+register_os_implementation("Mutex;ConditionVariable" Stub)
+register_os_implementation(Cpu Stub)
+register_os_implementation(Memory Stub)
+register_os_implementation(Queue Stub)
+register_os_implementation(RawTime Stub)
+
+register_fprime_implementation(
+    Os_File_None
+  IMPLEMENTS
+    Os_File
+  INTERFACE
+)
+
+# Remainder of file is specific to UTs
+if (NOT BUILD_TESTING)
+    return()
+endif ()
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test")
+
+## Stubs test: checks that all the no-op stubs can be selected and compile ##
+register_fprime_ut(
+    StubTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/StubTests.cpp"
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    Os
+    Os_Models
+  CHOOSES_IMPLEMENTATIONS
+    Os_Task_Stub
+    Os_Mutex_Stub
+    Os_File_Stub
+    Os_Console_Stub
+    Os_Cpu_Stub
+    Os_Memory_Stub
+    Os_RawTime_Stub
+)
+if (TARGET StubTest)
+    target_compile_options(StubTest PRIVATE -Wno-conversion)
+endif()
+```
+
+### `ConditionVariable.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/ConditionVariable.cpp
+// \brief Stub implementations for Os::ConditionVariable
+// ======================================================================
+#include "Os/Stub/ConditionVariable.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+StubConditionVariable::Status StubConditionVariable::pend(Os::Mutex& mutex) {
+    // This stub implementation can only be used in deployments that never need to wait on any ConditionVariable.
+    // Return error if anyone ever tries to wait.
+    return StubConditionVariable::Status::ERROR_NOT_IMPLEMENTED;
+}
+void StubConditionVariable::notify() {
+    // Nobody is waiting, because we assert if anyone tries to wait.
+    // Therefore, we can notify all waiters by doing nothing.
+}
+void StubConditionVariable::notifyAll() {
+    // Nobody is waiting, because we assert if anyone tries to wait.
+    // Therefore, we can notify all waiters by doing nothing.
+}
+
+ConditionVariableHandle* StubConditionVariable::getHandle() {
+    return &m_handle;
+}
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `ConditionVariable.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/ConditionVariable.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/ConditionVariable.hpp
+// \brief Stub definitions for Os::ConditionVariable
+// ======================================================================
+#ifndef OS_STUB_CONDITION_VARIABLE_HPP
+#define OS_STUB_CONDITION_VARIABLE_HPP
+#include <Os/Condition.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+struct StubConditionVariableHandle : public ConditionVariableHandle {};
+
+//! \brief Stub implementation of Os::ConditionVariable
+//!
+//! Stub implementation of `ConditionVariable` for use as a delegate class handling error-only file operations.
+//!
+class StubConditionVariable : public ConditionVariableInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubConditionVariable() = default;
+
+    //! \brief destructor
+    //!
+    ~StubConditionVariable() override = default;
+
+    //! \brief assignment operator is forbidden
+    ConditionVariableInterface& operator=(const ConditionVariableInterface& other) override = delete;
+
+    //! \brief wait releasing mutex
+    StubConditionVariable::Status pend(Os::Mutex& mutex) override;
+
+    //! \brief notify a single waiter
+    void notify() override;
+
+    //! \brief notify all current waiters
+    void notifyAll() override;
+
+    //! \brief get handle
+    ConditionVariableHandle* getHandle() override;
+
+  private:
+    //! Handle for PosixMutex
+    StubConditionVariableHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_CONDITION_VARIABLE_HPP
+```
+
+### `Console.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Console.cpp
+// \brief stub implementation for Os::Console
+// ======================================================================
+#include <Os/Stub/Console.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Console {
+
+void StubConsole::writeMessage(const CHAR* message, const FwSizeType size) {}
+
+ConsoleHandle* StubConsole::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Console.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Console.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Console.hpp
+// \brief stub implementation for Os::Console, header and test definitions
+// ======================================================================
+#include <Os/Console.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Console_HPP
+#define OS_Stub_Console_HPP
+
+namespace Os {
+namespace Stub {
+namespace Console {
+
+//! ConsoleHandle class definition for stub implementations.
+//!
+struct StubConsoleHandle : public ConsoleHandle {};
+
+//! \brief stub implementation of Os::ConsoleInterface
+//!
+//! Stub implementation of `ConsoleInterface` for use as a delegate class handling stub console operations.
+//!
+class StubConsole : public ConsoleInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubConsole() = default;
+
+    //! \brief copy constructor
+    StubConsole(const StubConsole& other) = default;
+
+    //! \brief default copy assignment
+    StubConsole& operator=(const StubConsole& other) = default;
+
+    //! \brief destructor
+    //!
+    ~StubConsole() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size. This will use the active file descriptor as the output
+    //! destination.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    void writeMessage(const CHAR* message, const FwSizeType size) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    ConsoleHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubConsoleHandle m_handle;
+};
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Console_HPP
+```
+
+### `Cpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Cpu.cpp
+// \brief stub implementation for Os::Cpu
+// ======================================================================
+#include <Os/Stub/Cpu.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+
+CpuInterface::Status StubCpu::_getCount(FwSizeType& cpu_count) {
+    cpu_count = 0;
+    return Status::ERROR;
+}
+
+CpuInterface::Status StubCpu::_getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) {
+    ticks.total = 1;
+    ticks.used = 1;
+    return Status::ERROR;
+}
+
+CpuHandle* StubCpu::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Cpu.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Cpu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Cpu.hpp
+// \brief stub implementation for Os::Cpu, header and test definitions
+// ======================================================================
+#include <Os/Cpu.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Cpu_HPP
+#define OS_Stub_Cpu_HPP
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+
+//! CpuHandle class definition for stub implementations.
+//!
+struct StubCpuHandle : public CpuHandle {};
+
+//! \brief stub implementation of Os::CpuInterface
+//!
+//! Stub implementation of `CpuInterface` for use as a delegate class handling stub console operations.
+//!
+class StubCpu : public CpuInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubCpu() = default;
+
+    //! \brief copy constructor
+    StubCpu(const StubCpu& other) = delete;
+
+    //! \brief default copy assignment
+    CpuInterface& operator=(const CpuInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~StubCpu() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType& cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Ticks& ticks, FwSizeType cpu_index) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    CpuHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubCpuHandle m_handle;
+};
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Cpu_HPP
+```
+
+### `DefaultConsole.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultConsole.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultConsole.cpp
+// \brief sets default Os::Console to stub implementation via linker
+// ======================================================================
+#include "Os/Console.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Console.hpp"
+
+namespace Os {
+ConsoleInterface* ConsoleInterface::getDelegate(ConsoleHandleStorage& aligned_new_memory,
+                                                const ConsoleInterface* to_copy) {
+    return Os::Delegate::makeDelegate<ConsoleInterface, Os::Stub::Console::StubConsole>(aligned_new_memory, to_copy);
+}
+}  // namespace Os
+```
+
+### `DefaultCpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultCpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultCpu.cpp
+// \brief sets default Os::Cpu to stub implementation via linker
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Cpu.hpp"
+
+namespace Os {
+CpuInterface* CpuInterface::getDelegate(CpuHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<CpuInterface, Os::Stub::Cpu::StubCpu>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultFile.cpp
+// \brief sets default Os::File to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Directory.hpp"
+#include "Os/Stub/File.hpp"
+#include "Os/Stub/FileSystem.hpp"
+namespace Os {
+
+//! \brief get a delegate for FileInterface that intercepts calls for stub file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileInterface* FileInterface::getDelegate(FileHandleStorage& aligned_placement_new_memory,
+                                          const FileInterface* to_copy) {
+    return Os::Delegate::makeDelegate<FileInterface, Os::Stub::File::StubFile>(aligned_placement_new_memory, to_copy);
+}
+
+//! \brief get a delegate for FileSystemInterface that intercepts calls for stub fileSystem usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileSystemInterface* FileSystemInterface::getDelegate(FileSystemHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<FileSystemInterface, Os::Stub::FileSystem::StubFileSystem>(
+        aligned_placement_new_memory);
+}
+
+//! \brief get a delegate for DirectoryInterface that intercepts calls for stub Directory usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+DirectoryInterface* DirectoryInterface::getDelegate(DirectoryHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<DirectoryInterface, Os::Stub::Directory::StubDirectory>(
+        aligned_placement_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMemory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMemory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultMemory.cpp
+// \brief sets default Os::Memory to stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Memory.hpp"
+#include "Os/Stub/Memory.hpp"
+
+namespace Os {
+MemoryInterface* MemoryInterface::getDelegate(MemoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MemoryInterface, Os::Stub::Memory::StubMemory>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultMutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultMutex.cpp
+// \brief sets default Os::Mutex to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/ConditionVariable.hpp"
+#include "Os/Stub/Mutex.hpp"
+namespace Os {
+
+//! \brief get a delegate for MutexInterface that intercepts calls for stub file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+MutexInterface* MutexInterface::getDelegate(MutexHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MutexInterface, Os::Stub::Mutex::StubMutex>(aligned_new_memory);
+}
+
+//! \brief get a delegate for condition variable
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+ConditionVariableInterface* ConditionVariableInterface::getDelegate(
+    ConditionVariableHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<ConditionVariableInterface, Os::Stub::Mutex::StubConditionVariable,
+                                      ConditionVariableHandleStorage>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultQueue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultQueue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultQueue.cpp
+// \brief sets default Os::Queue to stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Queue.hpp"
+#include "Os/Stub/Queue.hpp"
+
+namespace Os {
+QueueInterface* QueueInterface::getDelegate(QueueHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<QueueInterface, Os::Stub::Queue::StubQueue>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultRawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultRawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultRawTime.cpp
+// \brief sets default Os::RawTime to no-op stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/RawTime.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for RawTimeInterface that intercepts calls for stub RawTime usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+RawTimeInterface* RawTimeInterface::getDelegate(RawTimeHandleStorage& aligned_placement_new_memory,
+                                                const RawTimeInterface* to_copy) {
+    return Os::Delegate::makeDelegate<RawTimeInterface, Os::Stub::RawTime::StubRawTime, RawTimeHandleStorage>(
+        aligned_placement_new_memory, to_copy);
+}
+
+}  // namespace Os
+```
+
+### `DefaultTask.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/DefaultTask.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultTask.cpp
+// \brief sets default Os::Task to test stub implementation via linker
+// ======================================================================
+#include <sys/time.h>
+#include <cerrno>
+#include "Os/Delegate.hpp"
+#include "Os/Stub/Task.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+TaskInterface* TaskInterface::getDelegate(TaskHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<TaskInterface, Os::Stub::Task::StubTask>(aligned_new_memory);
+}
+
+}  // namespace Os
+```
+
+### `Directory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Directory.cpp
+// \brief stub implementation for Os::Directory
+// ======================================================================
+#include "Os/Stub/Directory.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Directory {
+
+StubDirectory::Status StubDirectory::open(const char* path, OpenMode mode) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubDirectory::Status StubDirectory::rewind() {
+    return Status::NOT_SUPPORTED;
+}
+
+StubDirectory::Status StubDirectory::read(char* fileNameBuffer, FwSizeType bufSize) {
+    return Status::NOT_SUPPORTED;
+}
+
+void StubDirectory::close() {
+    // no-op
+}
+
+DirectoryHandle* StubDirectory::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Directory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Directory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Directory.hpp
+// \brief stub definitions for Os::Directory
+// ======================================================================
+#ifndef OS_STUB_DIRECTORY_HPP
+#define OS_STUB_DIRECTORY_HPP
+
+#include "Os/Directory.hpp"
+namespace Os {
+namespace Stub {
+namespace Directory {
+
+struct StubDirectoryHandle : public DirectoryHandle {};
+
+//! \brief stub implementation of Os::Directory
+//!
+//! Stub implementation of `DirectoryInterface` for use as a delegate class handling error-only file operations.
+//!
+class StubDirectory : public DirectoryInterface {
+  public:
+    //! \brief constructor
+    StubDirectory() = default;
+
+    //! \brief destructor
+    ~StubDirectory() override = default;
+
+    //! \brief return the underlying Directory handle (implementation specific)
+    //! \return internal Directory handle representation
+    DirectoryHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific Directory member functions
+    // ------------------------------------------------------------
+
+    //! \brief Open or create a directory
+    //!
+    //! Using the path provided, this function will open or create a directory.
+    //! Use OpenMode::READ to open an existing directory and error if the directory is not found
+    //! Use OpenMode::CREATE_IF_MISSING to open a directory, creating the directory if it doesn't exist
+    //! Use OpenMode::CREATE_EXCLUSIVE to open a directory, creating the directory and erroring if it already exists
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //!
+    //! \param path: path of directory to open
+    //! \param mode: enum (READ, CREATE_IF_MISSING, CREATE_EXCLUSIVE). See notes above for more information
+    //! \return status of the operation
+    Status open(const char* path, OpenMode mode) override;
+
+    //! \brief Check if Directory is open or not
+    //! \return true if Directory is open, false otherwise
+    bool isOpen();
+
+    //! \brief Rewind directory stream
+    //!
+    //! Each read operation moves the seek position forward. This function resets the seek position to the beginning.
+    //!
+    //! \return status of the operation
+    Status rewind() override;
+
+    //! \brief Get next filename from directory stream
+    //!
+    //! Writes at most buffSize characters of the file name to fileNameBuffer.
+    //! This function skips the current directory (.) and parent directory (..) entries.
+    //! Returns NO_MORE_FILES if there are no more files to read from the buffer.
+    //!
+    //! It is invalid to pass `nullptr` as fileNameBuffer.
+    //!
+    //! \param fileNameBuffer: buffer to store filename
+    //! \param buffSize: size of fileNameBuffer
+    //! \return status of the operation
+    Status read(char* fileNameBuffer, FwSizeType buffSize) override;
+
+    //! \brief Close directory
+    void close() override;
+
+  private:
+    //! Handle for StubDirectory
+    StubDirectoryHandle m_handle;
+};
+
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_DIRECTORY_HPP
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/File.cpp
+// \brief stub implementation for Os::File
+// ======================================================================
+#include "Os/Stub/File.hpp"
+
+namespace Os {
+namespace Stub {
+namespace File {
+
+StubFile::Status StubFile::open(const char* filepath, StubFile::Mode open_mode, OverwriteType overwrite) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+void StubFile::close() {}
+
+StubFile::Status StubFile::size(FwSizeType& size_result) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::position(FwSizeType& position_result) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::preallocate(FwSizeType offset, FwSizeType length) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::seek(FwSignedSizeType offset, SeekType seekType) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::flush() {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::read(U8* buffer, FwSizeType& size, StubFile::WaitType wait) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+StubFile::Status StubFile::write(const U8* buffer, FwSizeType& size, StubFile::WaitType wait) {
+    Status status = Status::NOT_SUPPORTED;
+    return status;
+}
+
+FileHandle* StubFile::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `File.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/File.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/File.hpp
+// \brief stub file definitions for Os::File
+// ======================================================================
+#include "Os/File.hpp"
+
+#ifndef OS_STUB_FILE_HPP
+#define OS_STUB_FILE_HPP
+namespace Os {
+namespace Stub {
+namespace File {
+
+struct StubFileHandle : public FileHandle {};
+
+//! \brief stub implementation of Os::File
+//!
+//! Stub implementation of `FileInterface` for use as a delegate class handling error-only file operations.
+//!
+class StubFile : public FileInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubFile() = default;
+
+    //! \brief destructor
+    //!
+    ~StubFile() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: NOT_IMPLEMENTED
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! This implementation does nothing.
+    //!
+    void close() override;
+
+    //! \brief get size of currently open file
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //! \param size: output parameter for size.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status size(FwSizeType& size_result) override;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //! \param position: output parameter for size.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status position(FwSizeType& position_result) override;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status preallocate(FwSizeType offset, FwSizeType length) override;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status seek(FwSignedSizeType offset, SeekType seekType) override;
+
+    //! \brief flush file contents to storage
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status flush() override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status read(U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! This implementation does nothing but return NOT_IMPLEMENTED.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return NOT_IMPLEMENTED
+    //!
+    Status write(const U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    FileHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubFileHandle m_handle;
+};
+
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_FILE_HPP
+```
+
+### `FileSystem.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/File.cpp
+// \brief stub implementation for Os::File
+// ======================================================================
+#include "Os/Stub/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+
+StubFileSystem::Status StubFileSystem::_removeDirectory(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_removeFile(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_rename(const char* originPath, const char* destPath) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_getWorkingDirectory(char* path, FwSizeType bufferSize) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_changeWorkingDirectory(const char* path) {
+    return Status::NOT_SUPPORTED;
+}
+
+StubFileSystem::Status StubFileSystem::_getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) {
+    return Status::NOT_SUPPORTED;
+}
+
+FileSystemHandle* StubFileSystem::getHandle() {
+    return &this->m_handle;
+}
+
+StubFileSystem::Status StubFileSystem::_getPathType(const char* path, PathType& pathType) {
+    return Status::NOT_SUPPORTED;
+}
+
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `FileSystem.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/FileSystem.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/FileSystem.hpp
+// \brief stub fileSystem definitions for Os::FileSystem
+// ======================================================================
+#ifndef OS_STUB_FILESYSTEM_HPP
+#define OS_STUB_FILESYSTEM_HPP
+
+#include "Os/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+
+struct StubFileSystemHandle : public FileSystemHandle {};
+
+//! \brief stub implementation of Os::FileSystem
+//!
+//! Stub implementation of `FileSystemInterface` for use as a delegate class handling error-only fileSystem operations.
+//!
+class StubFileSystem : public FileSystemInterface {
+  public:
+    //! \brief constructor
+    StubFileSystem() = default;
+
+    //! \brief destructor
+    ~StubFileSystem() override = default;
+
+    // ------------------------------------------------------------
+    // Implementation-specific FileSystem member functions
+    // ------------------------------------------------------------
+
+    //! \brief Remove a directory at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the directory to remove
+    //! \return Status of the operation
+    Status _removeDirectory(const char* path) override;
+
+    //! \brief Remove a file at the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the file to remove
+    //! \return Status of the operation
+    Status _removeFile(const char* path) override;
+
+    //! \brief Rename a file from source to destination
+    //!
+    //! If the rename fails due to a cross-device operation, this function should return EXDEV_ERROR
+    //! and moveFile can be used instead to force a copy-and-remove.
+    //!
+    //! It is invalid to pass `nullptr` as sourcePath or destPath.
+    //!
+    //! \param sourcePath The path of the source file
+    //! \param destPath The path of the destination file
+    //! \return Status of the operation
+    Status _rename(const char* sourcePath, const char* destPath) override;
+
+    //! \brief Get filesystem free and total space in bytes on the filesystem containing the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path on the filesystem to query
+    //! \param totalBytes Reference to store the total bytes on the filesystem
+    //! \param freeBytes Reference to store the free bytes on the filesystem
+    //! \return Status of the operation
+    Status _getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) override;
+
+    //! \brief Get the current working directory
+    //!
+    //! Writes the current working directory path to the provided buffer of size bufferSize.
+    //! If the buffer is too small to hold the full path, the function will return BUFFER_TOO_SMALL.
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //! It is invalid to pass a bufferSize of 0.
+    //!
+    //! \param path Buffer to store the current working directory path
+    //! \param bufferSize Size of the buffer
+    //! \return Status of the operation
+    Status _getWorkingDirectory(char* path, FwSizeType bufferSize) override;
+
+    //! \brief Change the current working directory to the specified path
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path of the new working directory
+    //! \return Status of the operation
+    Status _changeWorkingDirectory(const char* path) override;
+
+    //! \brief returns the raw fileSystem handle
+    //!
+    //! Gets the raw fileSystem handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw fileSystem handle
+    //!
+    FileSystemHandle* getHandle() override;
+
+    //! \brief Get the type of the path (file, directory, etc.)
+    //!
+    //! It is invalid to pass `nullptr` as the path.
+    //!
+    //! \param path The path to check
+    //! \param pathType Reference to store the path type
+    //! \return Status of the operation
+    Status _getPathType(const char* path, PathType& pathType) override;
+
+  private:
+    //! FileSystem handle for PosixFileSystem
+    StubFileSystemHandle m_handle;
+};
+
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_FILESYSTEM_HPP
+```
+
+### `Memory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Memory.cpp
+// \brief stub implementation for Os::Memory
+// ======================================================================
+#include <Os/Stub/Memory.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+
+MemoryInterface::Status StubMemory::_getUsage(Os::Memory::Usage& memory_usage) {
+    memory_usage.used = 0;
+    memory_usage.total = 0;
+    return Status::ERROR;
+}
+
+MemoryHandle* StubMemory::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Memory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Memory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Memory.hpp
+// \brief stub implementation for Os::Memory, header and test definitions
+// ======================================================================
+#include <Os/Memory.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Memory_HPP
+#define OS_Stub_Memory_HPP
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+
+//! MemoryHandle class definition for stub implementations.
+//!
+struct StubMemoryHandle : public MemoryHandle {};
+
+//! \brief stub implementation of Os::MemoryInterface
+//!
+//! Stub implementation of `MemoryInterface` for use as a delegate class handling stub console operations.
+//!
+class StubMemory : public MemoryInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubMemory() = default;
+
+    //! \brief copy constructor
+    StubMemory(const StubMemory& other) = delete;
+
+    //! \brief default copy assignment
+    MemoryInterface& operator=(const MemoryInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~StubMemory() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Usage& memory_usage) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    MemoryHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    StubMemoryHandle m_handle;
+};
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Memory_HPP
+```
+
+### `Mutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Mutex.cpp
+// \brief stub implementation for Os::Mutex
+// ======================================================================
+#include "Os/Stub/Mutex.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+StubMutex::Status StubMutex::take() {
+    // Attempt to mark the mutex as taken.
+    if (this->m_handle.m_mutex_taken.exchange(true)) {
+        // The mutex was already taken, so fail the operation.
+        // (This stub is for platforms without the ability to block.)
+        return Status::ERROR_BUSY;
+    }
+    // The mutex was not already taken.
+    // Now that it has been marked as taken, we have successfully entered the critical section.
+    return Status::OP_OK;
+}
+
+StubMutex::Status StubMutex::release() {
+    // Attempt to mark the mutex as not taken.
+    if (!this->m_handle.m_mutex_taken.exchange(false)) {
+        // The mutex was already not taken, which indicates a coding defect.
+        return Status::ERROR_OTHER;
+    }
+    // The mutex was taken.
+    // Now that it has been marked as not taken, we have successfully exited the critical section.
+    return Status::OP_OK;
+}
+
+MutexHandle* StubMutex::getHandle() {
+    return &this->m_handle;
+}
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Mutex.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Mutex.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Mutex.hpp
+// \brief stub definitions for Os::Mutex
+// ======================================================================
+#include "Os/Mutex.hpp"
+
+#include <atomic>
+
+#ifndef OS_STUB_MUTEX_HPP
+#define OS_STUB_MUTEX_HPP
+namespace Os {
+namespace Stub {
+namespace Mutex {
+
+struct StubMutexHandle : public MutexHandle {
+    //! True if the mutex has been acquired without being released.
+    std::atomic<bool> m_mutex_taken = {false};
+};
+
+//! \brief Nonblocking stub implementation of Os::Mutex
+//!
+//! Stub implementation of `MutexInterface` for use as a delegate class.
+//!
+//! This mutex will never block, which allows it to be used on any platform without OS dependencies.
+//! It is unsuitable for use in environments where threads need to contend over mutexes.
+//! However, it is appropriate for use in environments with multiple threads that are not intended to
+//! contend over mutexes, and where contention would indicate a coding defect worthy of an assertion.
+//!
+class StubMutex : public MutexInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubMutex() = default;
+
+    //! \brief destructor
+    //!
+    ~StubMutex() override = default;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal mutex handle representation
+    MutexHandle* getHandle() override;
+
+    Status take() override;     //!<  lock the mutex and get return status
+    Status release() override;  //!<  unlock the mutex and get return status
+
+  private:
+    //! Handle for StubMutex
+    StubMutexHandle m_handle;
+};
+
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_MUTEX_HPP
+```
+
+### `Queue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Queue.cpp
+// \brief stub implementation for Os::Queue
+// ======================================================================
+#include "Queue.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+
+QueueInterface::Status StubQueue::create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) {
+    return QueueInterface::Status::UNKNOWN_ERROR;
+}
+
+QueueInterface::Status StubQueue::send(const U8* buffer,
+                                       FwSizeType size,
+                                       FwQueuePriorityType priority,
+                                       QueueInterface::BlockingType blockType) {
+    return QueueInterface::Status::UNINITIALIZED;
+}
+
+QueueInterface::Status StubQueue::receive(U8* destination,
+                                          FwSizeType capacity,
+                                          QueueInterface::BlockingType blockType,
+                                          FwSizeType& actualSize,
+                                          FwQueuePriorityType& priority) {
+    return QueueInterface::Status::UNINITIALIZED;
+}
+
+FwSizeType StubQueue::getMessagesAvailable() const {
+    return 0;
+}
+
+FwSizeType StubQueue::getMessageHighWaterMark() const {
+    return 0;
+}
+
+QueueHandle* StubQueue::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Queue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Queue.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Queue.hpp
+// \brief stub definitions for Os::Queue
+// ======================================================================
+#ifndef OS_STUB_QUEUE_HPP
+#define OS_STUB_QUEUE_HPP
+#include "Os/Queue.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+
+struct StubQueueHandle : public QueueHandle {};
+
+//! \brief stub queue implementation with injectable statuses
+class StubQueue : public QueueInterface {
+  public:
+    //! \brief default queue interface constructor
+    StubQueue() = default;
+
+    //! \brief default queue destructor
+    virtual ~StubQueue() = default;
+
+    //! \brief copy constructor is forbidden
+    StubQueue(const QueueInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    StubQueue(const QueueInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    StubQueue& operator=(const QueueInterface& other) override = delete;
+
+    //! \brief create queue storage
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each.
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    Status create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) override;
+
+    //! \brief send a message into the queue
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full.
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) override;
+
+    //! \brief receive a message from the queue
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status.
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    Status receive(U8* destination,
+                   FwSizeType capacity,
+                   BlockingType blockType,
+                   FwSizeType& actualSize,
+                   FwQueuePriorityType& priority) override;
+
+    //! \brief get number of messages available
+    //!
+    //! \return number of messages available
+    FwSizeType getMessagesAvailable() const override;
+
+    //! \brief get maximum messages stored at any given time
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for this
+    //! queue.
+    //! \return queue message high-water mark
+    FwSizeType getMessageHighWaterMark() const override;
+
+    QueueHandle* getHandle() override;
+
+    StubQueueHandle m_handle;
+};
+
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_STUB_QUEUE_HPP
+```
+
+### `RawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/RawTime.cpp
+// \brief stub implementation for Os::RawTime
+// ======================================================================
+#include "Os/Stub/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+
+RawTimeHandle* StubRawTime::getHandle() {
+    return &this->m_handle;
+}
+
+StubRawTime::Status StubRawTime::now() {
+    return Status::OP_OK;
+}
+
+StubRawTime::Status StubRawTime::getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const {
+    interval.set(0, 0);
+    return Status::OP_OK;
+}
+
+Fw::SerializeStatus StubRawTime::serializeTo(Fw::SerializeBufferBase& buffer) const {
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus StubRawTime::deserializeFrom(Fw::SerializeBufferBase& buffer) {
+    return Fw::FW_SERIALIZE_OK;
+}
+
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `RawTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/RawTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/RawTime.hpp
+// \brief stub definitions for Os::RawTime
+// ======================================================================
+#ifndef OS_STUB_RAWTIME_HPP
+#define OS_STUB_RAWTIME_HPP
+
+#include "Os/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+
+struct StubRawTimeHandle : public RawTimeHandle {};
+
+//! \brief stub implementation of Os::RawTime
+//!
+//! Stub implementation of `RawTimeInterface`.
+//!
+class StubRawTime : public RawTimeInterface {
+  public:
+    //! \brief constructor
+    //!
+    StubRawTime() = default;
+
+    //! \brief destructor
+    //!
+    ~StubRawTime() override = default;
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    RawTimeHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific RawTime overrides
+    // ------------------------------------------------------------
+    //! \brief Get the current time.
+    //!
+    //! This function retrieves the current time and stores it in the RawTime object.
+    //! Each implementation should define its RawTimeHandle type for storing the time.
+    //!
+    //! \return Status indicating the result of the operation.
+    Status now() override;
+
+    //! \brief Calculate the time interval between this and another raw time.
+    //!
+    //! This function calculates the time interval between the current raw time and another
+    //! specified raw time. The result is stored in the provided (output) interval object.
+    //!
+    //! \param other The other RawTimeHandle to compare against.
+    //! \param interval Output parameter to store the calculated time interval.
+    //! \return Status indicating the result of the operation.
+    Status getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const override;
+
+    //! \brief Serialize the contents of the RawTimeInterface object into a buffer.
+    //!
+    //! This function serializes the contents of the RawTimeInterface object into the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to serialize the contents into.
+    //! \return Fw::SerializeStatus indicating the result of the serialization.
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& buffer) const override;
+
+    //! \brief Deserialize the contents of the RawTimeInterface object from a buffer.
+    //!
+    //! This function deserializes the contents of the RawTimeInterface object from the provided
+    //! buffer.
+    //!
+    //! \note The serialization must fit within `FW_RAW_TIME_SERIALIZATION_MAX_SIZE` bytes. This value is
+    //! defined in FpConfig.h. For example, Posix systems use a pair of U32 (sec, nanosec) and can therefore
+    //! serialize in 8 bytes. Should an OSAL implementation require more than this, the project must increase
+    //! that value in its config/ folder.
+    //!
+    //! \param buffer The buffer to deserialize the contents from.
+    //! \return Fw::SerializeStatus indicating the result of the deserialization.
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer) override;
+
+  private:
+    //! Handle for StubRawTime
+    StubRawTimeHandle m_handle;
+};
+
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_RAWTIME_HPP
+```
+
+### `Task.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Task.cpp
+// \brief stub implementations for Os::Task
+// ======================================================================
+#include "Os/Stub/Task.hpp"
+namespace Os {
+namespace Stub {
+namespace Task {
+
+void StubTask::onStart() {}
+
+Os::TaskInterface::Status StubTask::join() {
+    return Os::TaskInterface::Status::UNKNOWN_ERROR;
+}
+
+void StubTask::suspend(Os::TaskInterface::SuspensionType suspensionType) {}
+
+void StubTask::resume() {}
+
+Os::TaskHandle* StubTask::getHandle() {
+    return nullptr;
+}
+
+Os::TaskInterface::Status StubTask::start(const Os::TaskInterface::Arguments& arguments) {
+    return Os::TaskInterface::Status::UNKNOWN_ERROR;
+}
+
+bool StubTask::isCooperative() {
+    return true;
+}
+
+Os::Task::Status StubTask::_delay(Fw::TimeInterval interval) {
+    FW_ASSERT(0);
+    return Os::Task::Status::UNKNOWN_ERROR;
+}
+
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Task.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/Task.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Task.hpp
+// \brief stub definitions for Os::Task
+// ======================================================================
+#include "Os/Task.hpp"
+
+#ifndef OS_STUB_TASK_HPP
+#define OS_STUB_TASK_HPP
+namespace Os {
+namespace Stub {
+namespace Task {
+
+//! Test task handle
+class StubTaskHandle : public TaskHandle {};
+
+//! Implementation of task
+class StubTask : public TaskInterface {
+  public:
+    //! Constructor
+    StubTask() = default;
+
+    //! Destructor
+    ~StubTask() override = default;
+
+    //! \brief perform required task start actions
+    void onStart() override;
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    Status join() override;
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    void suspend(SuspensionType suspensionType) override;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    void resume() override;
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    Status _delay(Fw::TimeInterval interval) override;
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    TaskHandle* getHandle() override;
+
+    //! \brief determine if the task requires cooperative multitasking
+    //!
+    //! Some task implementations require cooperative multitasking where the task execution is run by a user
+    //! defined task scheduler and not the operating system task scheduler. These tasks cooperatively on
+    //! multitask by doing one unit of work and return from the function.
+    //!
+    //! This function indicates if the task requires cooperative support.
+    //! The default implementation returns false.
+    //!
+    //! \return true when the task expects cooperation, false otherwise
+    bool isCooperative() override;
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    Status start(const Arguments& arguments) override;
+};
+
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_TASK_HPP
+```

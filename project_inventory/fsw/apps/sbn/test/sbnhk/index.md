@@ -3,30 +3,557 @@
 
 **경로:** `fsw/apps/sbn/test/sbnhk/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cisend`
 
-file--cisend
-file--ds_replay_hk
-file--README.md
-file--sbn_hk
-file--testsend
-file--tlmsend
-file--to_lab_sub_table.h
-file--to_recv
-file--to_start
+**경로:** `fsw/apps/sbn/test/sbnhk/cisend`
+
+
+```text
+#!/usr/bin/env python
+
+def hexdump(src, length=16):
+    FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
+    lines = []
+    for c in xrange(0, len(src), length):
+        chars = src[c:c+length]
+        hex = ' '.join(["%02x" % ord(x) for x in chars])
+        printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
+        lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
+    return ''.join(lines)
+
+import socket, struct, optparse, sys
+
+parser = optparse.OptionParser('sends CCSDS packets to CI')
+parser.add_option('--host', action='store', dest='host', default='127.0.0.1', help='Host name/IP address of the CI host.')
+parser.add_option('--port', type='int', dest='port', default=1234, help='Port of the CI host.')
+parser.add_option('--mid', type='int', dest='mid', default=0x18DA, help='Message ID.')
+parser.add_option('--cc', type='int', dest='cc', default=0, help='Command code.')
+parser.add_option('--ccendian', type='choice', choices=('big', 'little', 'platform'), dest='ccendian', default='platform', help='Command code.')
+(options, args) = parser.parse_args()
+
+print 'reading payload from stdin'
+payload=sys.stdin.read()
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+cmdhigh = options.cc
+cmdlow = 0
+if options.ccendian == 'little':
+    cmdlow = cmdhigh
+    cmdhigh = 0
+ccsds_msg = struct.pack('>HHHBB', options.mid, 0, len(payload) + 1, cmdhigh, cmdlow) + payload
+
+print hexdump(ccsds_msg)
+sock.sendto(ccsds_msg, (options.host, options.port))
 ```
 
-## 항목
+### `ds_replay_hk`
 
-- [`fsw/apps/sbn/test/sbnhk/cisend`](file--cisend) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/ds_replay_hk`](file--ds_replay_hk) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/sbn_hk`](file--sbn_hk) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/testsend`](file--testsend) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/tlmsend`](file--tlmsend) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/to_lab_sub_table.h`](file--to_lab_sub_table.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/to_recv`](file--to_recv) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/test/sbnhk/to_start`](file--to_start) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn/test/sbnhk/ds_replay_hk`
+
+
+```text
+#!/bin/bash
+
+mid=0x1843
+
+# noop
+./cisend --mid=$mid --ccendian=little --cc=0 < /dev/null
+sleep 1
+
+# get hk
+./cisend --mid=$mid --ccendian=little --cc=0x20 < /dev/null
+sleep 1
+
+# midconfig
+printf '\000' | ./cisend --mid=$mid --ccendian=little --cc=0x21
+sleep 1
+
+# task
+printf '\000' | ./cisend --mid=$mid --ccendian=little --cc=0x22
+sleep 1
+
+# file
+printf '\000\000' | ./cisend --mid=$mid --ccendian=little --cc=0x23
+sleep 1
+```
+
+### `README.md`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/README.md`
+
+
+```markdown
+So you'd like to test SBN? Here's some suggestions:
+
+### Configuration
+
+1. Set up at least two targets in the cFS build system (targets.cmake).
+
+    a. Target 1 - "cpu1" with the applist of "ci_lab sbn_app sbn_udp sbn_tcp"
+
+    b. Target 2 - "cpu2" with the applist of "to_lab sbn_app sbn_udp sbn_tcp"
+
+2. Configure ES startup scripts:
+
+    a. cpu1:
+
+>CFE_APP, /cf/sbn.so, SBN_AppMain, SBN, 80, 16384, 0x0, 0;
+>CFE_APP, /cf/ci_lab.so, CI_Lab_AppMain, CI_LAB, 80, 16384, 0x0, 0;
+>!
+
+    b. cpu2:
+
+>CFE_APP, /cf/sbn.so, SBN_AppMain, SBN, 80, 16384, 0x0, 0;
+>CFE_APP, /cf/to_lab.so, TO_Lab_AppMain, TO_LAB, 80, 16384, 0x0, 0;
+>!
+
+3. Make sure CPU_PLATFORM_CPU_ID and CPU_PLATFORM_CPU_NAME are correct in cpu*_platform_cfg.h (e.g. "1" and "CPU1" for cpu1_platform_cfg.h) Otherwise their contents should be identical between files.
+
+4. cpu*_msgids.h can be all identical. Same with toolchain-cpu*.cmake.
+
+5. Copy `to_lab_sub_table.h` to `apps/to_lab/fsw/platform_inc`.
+
+### Building
+
+1. Follow the standard build, but with a `make mission-install` as the final step to create (by default) `/usr/local/cpu*`.
+
+### Running
+
+1. In one window, cd to `/usr/local/cpu1` and start the instance with `./core-cpu1 -R PO`.
+2. In a second window, cd to `/usr/local/cpu2` and start the instance with `./core-cpu2 -R PO`. -- Confirm you see "CPU N connected" on each.
+3. In a third window, start `to_recv`.
+4. In a fourth window, run the `to_start` command to start telemetry output.
+5. In that fourth window, run the command `testsend` to send a test telemetry packet to CPU1, which should be relayed to CPU2 and down to to_recv to be displayed in the third window.
+```
+
+### `sbn_hk`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/sbn_hk`
+
+
+```text
+#!/bin/bash
+
+ENDIAN=little
+
+SBN_MID=0x18DA
+
+SBN_NOOP_CC=0
+SBN_RESET_CC=1
+SBN_RESET_PEER_CC=2
+
+SBN_HK_CC=10
+SBN_HK_NET_CC=11
+SBN_HK_PEER_CC=12
+SBN_HK_PEER_SUBS_CC=13
+SBN_HK_SUBS_CC=14
+
+echo 'sending NOOP command'
+./cisend --mid=$SBN_MID --cc=$SBN_NOOP_CC --ccendian=$ENDIAN < /dev/null
+echo -n 'press return to continue: '
+read a
+
+#./cisend --mid=$SBN_MID --cc=$SBN_RESET_CC --ccendian=$ENDIAN < /dev/null
+
+echo 'sending HK command'
+./cisend --mid=$SBN_MID --cc=$SBN_HK_CC --ccendian=$ENDIAN < /dev/null
+echo -n 'press return to continue: '
+read a
+
+echo 'sending HK command for net 0'
+printf '\x00' | ./cisend --mid=$SBN_MID --cc=$SBN_HK_NET_CC --ccendian=$ENDIAN
+echo -n 'press return to continue: '
+read a
+
+echo 'sending HK command for net 0, peer 0'
+printf '\x00\x00' | ./cisend --mid=$SBN_MID --cc=$SBN_HK_PEER_CC --ccendian=$ENDIAN
+echo -n 'press return to continue: '
+read a
+
+echo 'sending HK command for net 0, peer 1'
+printf '\x00\x01' | ./cisend --mid=$SBN_MID --cc=$SBN_HK_PEER_CC --ccendian=$ENDIAN
+echo -n 'press return to continue: '
+read a
+
+echo 'sending subs HK command for net 0, peer 1'
+printf '\x00\x01' | ./cisend --mid=$SBN_MID --cc=$SBN_HK_PEER_SUBS_CC --ccendian=$ENDIAN
+echo -n 'press return to continue: '
+read a
+
+echo 'sending subs HK command'
+./cisend --mid=$SBN_MID --cc=$SBN_HK_SUBS_CC --ccendian=$ENDIAN < /dev/null
+echo -n 'press return to continue: '
+read a
+```
+
+### `testsend`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/testsend`
+
+
+```text
+#!/bin/bash
+
+mid=0x0888
+
+printf '\000\001\002\003\004\005\006\007\010\011\012\013\014\015\016\017' | ./tlmsend --mid=$mid
+sleep 1
+```
+
+### `tlmsend`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/tlmsend`
+
+
+```text
+#!/usr/bin/env python
+
+def hexdump(src, length=16):
+    FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
+    lines = []
+    for c in xrange(0, len(src), length):
+        chars = src[c:c+length]
+        hex = ' '.join(["%02x" % ord(x) for x in chars])
+        printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
+        lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
+    return ''.join(lines)
+
+import socket, struct, optparse, sys
+
+parser = optparse.OptionParser('sends CCSDS packets to CI')
+parser.add_option('--host', action='store', dest='host', default='127.0.0.1', help='Host name/IP address of the CI host.')
+parser.add_option('--port', type='int', dest='port', default=1234, help='Port of the CI host.')
+parser.add_option('--mid', type='int', dest='mid', default=0x18DA, help='Message ID.')
+(options, args) = parser.parse_args()
+
+print 'reading payload from stdin'
+payload=sys.stdin.read()
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+ccsds_msg = struct.pack('>HHHIH', options.mid, 0, len(payload) - 1, 0xDEADBEEF, 0xF0E1) + payload
+
+print hexdump(ccsds_msg)
+sock.sendto(ccsds_msg, (options.host, options.port))
+```
+
+### `to_lab_sub_table.h`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/to_lab_sub_table.h`
+
+
+```c
+/************************************************************************
+** File: to_sub_table.h
+**
+** Purpose: 
+**  Define TO Lab CPU specific subscription table 
+**
+** Notes:
+**
+** $Log: to_lab_sub_table.h  $
+** Revision 1.3 2014/07/16 14:44:45GMT-05:00 acudmore 
+** Member renamed from to_sub_table.h to to_lab_sub_table.h in project c:/MKSDATA/MKS-REPOSITORY/CFS-REPOSITORY/to_lab/fsw/platform_inc/project.pj.
+** Revision 1.2 2014/07/16 14:44:45ACT acudmore 
+** Updated TO_LAB subscription table header file ( comments, clean up )
+**
+*************************************************************************/
+
+/* 
+** Add the proper include file for the message IDs below
+*/
+#include "cfe_msgids.h"
+
+/*
+** Common CFS app includes below are commented out
+*/
+#include "ci_lab_msgids.h"
+
+#if 0
+#include "hs_msgids.h"
+#include "fm_msgids.h"
+#include "sc_msgids.h"
+#include "ds_msgids.h"
+#include "lc_msgids.h"
+#endif
+
+static TO_subscription_t  TO_SubTable[] =
+{
+            /* CFS App Subscriptions */
+            {0x0843,                {0,0},  4},
+            {0x08FA,                {0,0},  4},
+            /* telemetry test sub */
+            {0x0888,                {0,0},  4},
+            {TO_UNUSED,              {0,0},  0}
+};
+
+/************************
+** End of File Comment ** 
+************************/
+```
+
+### `to_recv`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/to_recv`
+
+
+```text
+#!/usr/bin/env python
+
+import socket, struct
+
+def hexdump(src, length=16):
+    FILTER = ''.join([(len(repr(chr(x))) == 3) and chr(x) or '.' for x in range(256)])
+    lines = []
+    for c in xrange(0, len(src), length):
+        chars = src[c:c+length]
+        hex = ' '.join(["%02x" % ord(x) for x in chars])
+        printable = ''.join(["%s" % ((ord(x) <= 127 and FILTER[ord(x)]) or '.') for x in chars])
+        lines.append("%04x  %-*s  %s\n" % (c, length*3, hex, printable))
+    return ''.join(lines)
+
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.bind(("127.0.0.1", 1235))
+
+class SBN_Peer:
+    structstr = '>4B8s5I5H'
+    structstrsz = struct.calcsize(structstr)
+    
+    def __init__(self, data):
+        (self.CC, self.QoSPri, self.QoSRel, self.NameLen, self.Name, self.ProcessorID, self.LastSendSec, self.LastSendUSec, self.LastRecvSec, self.LastRecvUSec, self.SendCnt, self.RecvCnt, self.SendErrCnt, self.RecvErrCnt, self.SubCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return '<SBN_Peer Name="%s" ProcessorID=%d LastSend=%d.%d LastRecv=%d.%d SendCnt=%d RecvCnt=%d SendErrCnt=%d RecvErrCnt=%d SubCnt=%d>''' % (self.Name, self.ProcessorID, self.LastSendSec, self.LastSendUSec, self.LastRecvUSec, self.LastRecvUSec, self.SendCnt, self.RecvCnt, self.SendErrCnt, self.RecvErrCnt, self.SubCnt)
+
+class SBN_Net:
+    structstr = '>2B16sBH'
+    structstrsz = struct.calcsize(structstr)
+    
+    def __init__(self, data):
+        (self.CC, self.NameLen, self.Name, self.ProtocolID, self.PeerCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return '''<SBN_Net Name=%s ProtocolID=%d PeerCnt=%d>''' % ( self.Name, self.ProtocolID, self.PeerCnt)
+
+class SBN_Housekeeping:
+    structstr = '>B4H'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        (self.CC, self.CmdCnt, self.CmdErrCnt, self.SubCnt, self.NetCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __repr__(self):
+        return '<SBN_Housekeeping CmdCnt=%d CmdErrCnt=%d SubCnt=%d NetCnt=%d>''' % (self.CmdCnt, self.CmdErrCnt, self.SubCnt, self.NetCnt)
+
+class SBN_Sub:
+    structstr = '>H'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        (self.MID) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<SBN_Sub MID=0x%x>' % (self.MID)
+
+    def __str__(self):
+        return self.__repr__()
+
+class SBN_SubHk:
+    structstr = '>BH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, self.SubCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+        offset = offset + self.structstrsz
+        self.SubList = []
+        for i in range(0, self.SubCnt):
+            self.SubList.append(SBN_Sub(
+                data[offset:offset + SBN_Sub.structstrsz]));
+            offset = offset + SBN_Sub.structstrsz
+
+    def __repr__(self):
+        return '<SBN_SubHk SubCnt=%d %r>' % (self.SubCnt, self.SubList)
+
+    def __str__(self):
+        return self.__repr__()
+
+class SBN_PeerSubHk:
+    structstr = '>B3H'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, self.NetIdx, self.PeerIdx, self.SubCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+        offset = offset + self.structstrsz
+        self.SubList = []
+        for i in range(0, self.SubCnt):
+            self.SubList.append(SBN_Sub(
+                data[offset:offset + SBN_Sub.structstrsz]));
+            offset = offset + SBN_Sub.structstrsz
+
+    def __repr__(self):
+        return '<SBN_PeerSubHk NetIdx=%d PeerIdx=%d SubCnt=%d %r>' % (self.NetIdx, self.PeerIdx, self.SubCnt, self.SubList)
+
+    def __str__(self):
+        return self.__repr__()
+
+class DS_REPLAY_Hk:
+    structstr = '>BBBBH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, Padding, self.CmdCnt, self.ErrCnt, self.MIDConfigCnt) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<DS_REPLAY_Hk CC=%d CmdCnt=%d ErrCnt=%d MIDConfigCnt=%d>' % (self.CC, self.CmdCnt, self.ErrCnt, self.MIDConfigCnt)
+
+    def __str__(self):
+        return self.__repr__()
+
+class DS_REPLAY_MIDConfig:
+    structstr = '>BBHH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, self.MIDConfigNum, self.FromMID, self.ToMID) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<DS_REPLAY_MIDConfig CC=%d MIDConfigNum=%d FromMID=0x%04X ToMID=0x%04X>' % (self.CC, self.MIDConfigNum, self.FromMID, self.ToMID)
+
+    def __str__(self):
+        return self.__repr__()
+
+class DS_REPLAY_Task:
+    structstr = '>BBHIBBBBL'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, self.TaskNum, Padding, self.ReplayRate, self.RateIsHz, self.Status, self.Stop, self.FileCnt, self.TaskID) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<DS_REPLAY_Task CC=%d Rate=%d Hz=%d Status=%d Stop=%d FileCnt=%d TaskID=0x%04X>' % (self.CC, self.ReplayRate, self.RateIsHz, self.Status, self.Stop, self.FileCnt, self.TaskID)
+
+    def __str__(self):
+        return self.__repr__()
+
+class DS_REPLAY_File:
+    structstr = '>BBBB32sIBBBB'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        offset = 0
+        (self.CC, self.TaskNum, self.FileNum, Padding, self.FileName, self.FileOffset, self.SwapCCSDSPri, self.TimestampFormat, self.TimestampLittleEndian, self.TimestampOverwrite) = struct.unpack(self.structstr, data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<DS_REPLAY_File CC=%d TaskNum=%d FileNum=%d FileName=%s FileOffset=%d SwapCCSDSPri=%d TimestampFormat=%d TimestampLittleEndian=%d TimestampOverwrite=%d>' % (self.CC, self.TaskNum, self.FileNum, self.FileName, self.FileOffset, self.SwapCCSDSPri, self.TimestampFormat, self.TimestampLittleEndian, self.TimestampOverwrite)
+
+    def __str__(self):
+        return self.__repr__()
+
+class CCSDSPri:
+    structstr = '>HHH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        (self.MID, self.Seq, self.Len) = struct.unpack(self.structstr,
+            data[0:self.structstrsz])
+
+    def __repr__(self):
+        return '<CCSDSPri MID=0x%x Seq=%d Len=%d>' % (
+            self.MID, self.Seq, self.Len)
+    def __str__(self):
+        return self.__repr__()
+
+class CCSDSTlmSec:
+    structstr = '>HHH'
+    structstrsz = struct.calcsize(structstr)
+
+    def __init__(self, data):
+        (self.MID, self.Seq, self.Len) = struct.unpack(self.structstr,
+            data[0:self.structstrsz])
+
+SBN_tlm_map = {
+    10: SBN_Housekeeping,
+    11: SBN_Net,
+    12: SBN_Peer,
+    13: SBN_PeerSubHk,
+    14: SBN_SubHk,
+}
+
+def SBN_tlm(data):
+    (CC,) = struct.unpack('B', data[0])
+    print 'CC: %d' % CC
+    if SBN_tlm_map.has_key(CC):
+        print '%r' % SBN_tlm_map[CC](data)
+
+DS_REPLAY_tlm_map = {
+    0x20: DS_REPLAY_Hk,
+    0x21: DS_REPLAY_MIDConfig,
+    0x22: DS_REPLAY_Task,
+    0x23: DS_REPLAY_File,
+}
+def DS_REPLAY_tlm(data):
+    (CC,) = struct.unpack('B', data[0])
+    print 'CC: %d' % CC
+    if DS_REPLAY_tlm_map.has_key(CC):
+        print '%r' % DS_REPLAY_tlm_map[CC](data)
+
+decodemap = {
+    0x08FC: SBN_tlm,
+    0x0843: DS_REPLAY_tlm,
+}
+
+while True:
+    print '--waiting for TO messages--'
+    data, addr = sock.recvfrom(4096)
+    print '--received from TO (len=%d)--' % len(data)
+    print hexdump(data)
+    pri = CCSDSPri(data)
+    print '%r' % pri
+    if pri.MID & 0x1000:
+        print 'cmd'
+    else:
+        if decodemap.has_key(pri.MID):
+            decodemap[pri.MID](data[12:])
+```
+
+### `to_start`
+
+**경로:** `fsw/apps/sbn/test/sbnhk/to_start`
+
+
+```text
+#!/bin/bash
+
+##### commands TO to send messages to to_recv
+
+TO_NOOP_CC=0
+TO_ADD_MID_CC=2
+TO_START_CC=6
+TO_MID=0x1880
+
+# ./cisend --mid=$TO_MID --cc=$TO_NOOP_CC --ccendian=little < /dev/null
+
+# tell TO to send SBN HK
+printf '\xFC\x08\x00\x00\x00\x00\x10' | \
+    ./cisend --mid=$TO_MID --cc=$TO_ADD_MID_CC --ccendian=little
+
+printf '127.0.0.1       ' | \
+    ./cisend --mid=$TO_MID --cc=$TO_START_CC --ccendian=little
+```

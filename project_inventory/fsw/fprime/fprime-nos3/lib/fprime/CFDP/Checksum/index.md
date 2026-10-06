@@ -3,22 +3,356 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 GTest/index
 test/index
-file--Checksum.cpp
-file--Checksum.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/GTest/`](GTest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/Checksum.cpp`](file--Checksum.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/Checksum.hpp`](file--Checksum.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `Checksum.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/Checksum.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CFDP/Checksum/Checksum.cpp
+// \author bocchino
+// \brief  cpp file for CFDP checksum class
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "CFDP/Checksum/Checksum.hpp"
+#include "Fw/Types/Assert.hpp"
+
+static U32 min(const U32 a, const U32 b) {
+  return (a < b) ? a : b;
+}
+
+namespace CFDP {
+
+  Checksum ::
+    Checksum() : m_value(0)
+  {
+
+  }
+
+  Checksum ::
+    Checksum(const U32 value) : m_value(value)
+  {
+
+  }
+
+  Checksum ::
+    Checksum(const Checksum &original)
+  {
+    this->m_value = original.getValue();
+  }
+
+  Checksum ::
+    ~Checksum()
+  {
+
+  }
+
+  Checksum& Checksum ::
+    operator=(const Checksum& checksum)
+  {
+    this->m_value = checksum.m_value;
+    return *this;
+  }
+
+  bool Checksum ::
+    operator==(const Checksum& checksum) const
+  {
+    return this->m_value == checksum.m_value;
+  }
+
+  bool Checksum ::
+    operator!=(const Checksum& checksum) const
+  {
+    return not (*this == checksum);
+  }
+
+  U32 Checksum ::
+    getValue() const
+  {
+    return this->m_value;
+  }
+
+  void Checksum ::
+    update(
+        const U8 *const data,
+        const U32 offset,
+        const U32 length
+    )
+  {
+    U32 index = 0;
+
+    // Add the first word unaligned if necessary
+    const U32 offsetMod4 = offset % 4;
+    if (offsetMod4 != 0) {
+      const U8 wordLength = static_cast<U8>(min(length, 4 - offsetMod4));
+      this->addWordUnaligned(
+          &data[index],
+          static_cast<U8>(offset + index),
+          wordLength
+      );
+      index += wordLength;
+    }
+
+    // Add the middle words aligned
+    for ( ; index + 4 <= length; index += 4) {
+      addWordAligned(&data[index]);
+    }
+
+    // Add the last word unaligned if necessary
+    if (index < length) {
+      const U8 wordLength = static_cast<U8>(length - index);
+      this->addWordUnaligned(
+          &data[index],
+          static_cast<U8>(offset + index),
+          wordLength
+      );
+    }
+
+  }
+
+  void Checksum ::
+    addWordAligned(const U8 *const word)
+  {
+    for (U8 i = 0; i < 4; ++i) {
+      addByteAtOffset(word[i], i);
+    }
+  }
+
+  void Checksum ::
+    addWordUnaligned(
+        const U8 *word,
+        const U8 position,
+        const U8 length
+    )
+  {
+    FW_ASSERT(length < 4);
+    U8 offset = position % 4;
+    for (U8 i = 0; i < length; ++i) {
+      addByteAtOffset(word[i], offset);
+      ++offset;
+      if (offset == 4) {
+        offset = 0;
+      }
+    }
+  }
+
+  void Checksum ::
+    addByteAtOffset(
+        const U8 byte,
+        const U8 offset
+    )
+  {
+    FW_ASSERT(offset < 4);
+    const U32 addend = static_cast<U32>(byte) << (8*(3-offset));
+    this->m_value += addend;
+  }
+
+}
+```
+
+### `Checksum.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/Checksum.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CFDP/Checksum/Checksum.hpp
+// \author bocchino
+// \brief  hpp file for CFDP checksum class
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef CFDP_Checksum_HPP
+#define CFDP_Checksum_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+namespace CFDP {
+
+  //! \class Checksum
+  //! \brief Class representing a 32-bit checksum as mandated by the CCSDS File
+  //!        Delivery Protocol.
+  //!
+  //!        This checksum is calculated by update of an existing 32-bit value
+  //!        with the "next" 32-bit string drawn from the file data. Beginning
+  //!        at the start of the file, a 4-byte window moves up the file by four
+  //!        bytes per update. The update itself replaces the existing checksum
+  //!        with the byte-wise sum of the existing checksum and the file data
+  //!        contained in the window. Overflows in the addition are permitted
+  //!        and the carry discarded.
+  //!
+  //!        If an update is to be made beginning at an offset into the file
+  //!        which is not aligned to a 4-byte boundary, the window is treated
+  //!        as beginning at the last 4-byte boundary, but is left-zero-padded.
+  //!        Similarly, where the file data for an update ends on an unaligned
+  //!        byte, the window extends up to the next boundary and is
+  //!        right-zero-padded.
+  //!
+  //!        ## Example
+  //!
+  //!        For buffer 0xDE 0xAD 0xBE 0xEF 0xCA 0xFE and initial zero checksum:
+  //!
+  //!        ------------------------------------ Update 1
+  //!        Window     0xDE 0xAD 0xBE 0xEF
+  //!        Checksum   0xDEADBEEF
+  //!
+  //!        ------------------------------------ Update 2
+  //!        Window     0xCA 0xFE
+  //!        Checksum   0xDEADBEEF+
+  //!                   0xCAFE0000
+  //!                   ----------
+  //!                   0xA8ABBEEF <- Final value
+  class Checksum {
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Types
+      // ----------------------------------------------------------------------
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct a fresh Checksum object.
+      Checksum();
+
+      //! Construct a Checksum object and initialize it with a value.
+      Checksum(const U32 value);
+
+      //! Copy a Checksum object.
+      Checksum(const Checksum &original);
+
+      //! Destroy a Checksum object.
+      ~Checksum();
+
+    public:
+
+      // ----------------------------------------------------------------------
+      // Public instance methods
+      // ----------------------------------------------------------------------
+
+      //! Assign checksum to this.
+      Checksum& operator=(const Checksum& checksum);
+
+      //! Compare checksum and this for equality.
+      bool operator==(const Checksum& checksum) const;
+
+      //! Compare checksum and this for inequality.
+      bool operator!=(const Checksum& checksum) const;
+
+      //! Update the checksum value by accumulating words in the given data.
+      //!
+      //! \important The data and data-length passed to this method are specifically
+      //!            those over which the update is made, rather than the entire
+      //!            file. Typically, therefore, `data` will be a pointer to the
+      //!            byte given by the offset, e.g. `&file_buffer[offset]`.
+      //!
+      void update(const U8* const data,  //!< Beginning of the data over which to update.
+                  const U32 offset,      //!< Offset into the file at which the data begins.
+                  const U32 length       //!< Length of the update data in bytes.
+      );
+
+      //! Get the checksum value
+      U32 getValue() const;
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private instance methods
+      // ----------------------------------------------------------------------
+
+      //! Add a four-byte aligned word to the checksum value
+      void addWordAligned(
+          const U8 *const word //! The word
+      );
+
+      //! Add a four-byte unaligned word to the checksum value
+      void addWordUnaligned(
+          const U8 *const word, //! The word
+          const U8 position, //! The position of the word relative to the start of the file
+          const U8 length //! The number of valid bytes in the word
+      );
+
+      //! Add byte to value at offset in word
+      void addByteAtOffset(
+          const U8 byte, //! The byte
+          const U8 offset //! The offset
+      );
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Private member variables
+      // ----------------------------------------------------------------------
+
+      //! The accumulated checksum value
+      U32 m_value;
+
+    };
+
+}
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/CFDP/Checksum/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Checksum.cpp"
+)
+
+set(MOD_DEPS
+  Fw/Types
+)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ChecksumMain.cpp"
+)
+
+set(UT_MOD_DEPS
+  "${FPRIME_FRAMEWORK_PATH}/CFDP/Checksum"
+  "${FPRIME_FRAMEWORK_PATH}/Fw/Types"
+)
+register_fprime_ut()
+# Add GTest directory
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/GTest")
+```

@@ -3,18 +3,379 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-trace-tab.component.css`
 
-file--algorithm-trace-tab.component.css
-file--algorithm-trace-tab.component.html
-file--algorithm-trace-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.css`
+
+
+```css
+.extra-bar-container {
+  padding: 12px;
+  border-bottom: 1.1px solid rgba(0, 0, 0, 0.08);
+}
+
+.extra-bar {
+  height: 24px;
+  line-height: 24px;
+}
+
+.separator {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+table.logs {
+  line-height: 12px;
+}
+
+table.logs td {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+table.logs td.time {
+  color: rgba(0, 0, 0, 0.35);
+}
+
+.status .ok {
+  color: #00c752;
+}
+
+.status .error {
+  color: var(--y-error-color);
+}
 ```
 
-## 항목
+### `algorithm-trace-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.css`](file--algorithm-trace-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.html`](file--algorithm-trace-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.ts`](file--algorithm-trace-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.html`
+
+
+```html
+@if (algorithm$ | async; as algorithm) {
+  @if (status$ | async; as status) {
+    @if (status.traceEnabled) {
+      <div class="extra-bar-container">
+        <div class="extra-bar">
+          <ya-button (click)="stopTrace()">Stop trace</ya-button>
+          &nbsp;
+          <ya-button (click)="refreshData()">Refresh</ya-button>
+          &nbsp;
+          @if (section$ | async; as section) {
+            <span class="separator" style="margin-left: 10px; margin-right: 10px"></span>
+            <ya-text-action
+              icon="directions_run"
+              [active]="section === 'runs'"
+              (click)="switchToSection('runs')">
+              Runs
+            </ya-text-action>
+            &nbsp;&nbsp;
+            <ya-text-action
+              icon="menu_book"
+              [active]="section === 'logs'"
+              (click)="switchToSection('logs')">
+              Logs
+            </ya-text-action>
+          }
+        </div>
+      </div>
+      <ya-panel>
+        @if ((section$ | async) === "runs") {
+          @if (trace$ | async; as trace) {
+            @if (trace.runs?.length) {
+              <table yaDataTable class="expand">
+                <tr>
+                  <th class="status"></th>
+                  <th>Started</th>
+                  <th>Inputs</th>
+                  <th>Outputs</th>
+                  <th>Return value</th>
+                  <th>Error</th>
+                  <th></th>
+                </tr>
+                @for (run of trace.runs; track run; let index = $index) {
+                  <tr>
+                    <td class="status">
+                      @if (run.error) {
+                        <mat-icon class="error">error</mat-icon>
+                      } @else {
+                        <mat-icon class="ok">check_circle</mat-icon>
+                      }
+                    </td>
+                    <td style="width: 200px">{{ run.time | datetime }}</td>
+                    <td style="width: 400px">
+                      @for (input of run.inputs || []; track input; let last = $last) {
+                        <a
+                          [routerLink]="'/telemetry/parameters' + input.id.name"
+                          [queryParams]="{ c: yamcs.context }"
+                          class="secundary">
+                          {{ input.id.name }}
+                        </a>
+                        :
+                        <ya-value [value]="input.engValue" />
+                        @if (!last) {
+                          <br />
+                        }
+                      }
+                      @if (!run.inputs?.length) {
+                        -
+                      }
+                    </td>
+                    <td style="width: 400px">
+                      @for (output of run.outputs || []; track output; let last = $last) {
+                        <a
+                          [routerLink]="'/telemetry/parameters' + output.id.name"
+                          [queryParams]="{ c: yamcs.context }"
+                          class="secundary">
+                          {{ output.id.name }}
+                        </a>
+                        :
+                        <ya-value [value]="output.engValue" />
+                        @if (!last) {
+                          <br />
+                        }
+                      }
+                      @if (!run.outputs?.length) {
+                        -
+                      }
+                    </td>
+                    <td style="width: 200px">{{ run.returnValue | nvl: "-" }}</td>
+                    <td style="width: 200px">{{ run.error || "-" }}</td>
+                    <td></td>
+                  </tr>
+                }
+              </table>
+            } @else {
+              <ya-empty-message>
+                <p>Tracing has started.</p>
+                <p>
+                  This page does
+                  <strong>not</strong>
+                  update automatically.
+                </p>
+                <p>
+                  Hit refresh, or check back at a later time when you think there should be trace
+                  entries.
+                </p>
+                <p>
+                  <ya-button appearance="primary" (click)="refreshData()">Refresh</ya-button>
+                </p>
+              </ya-empty-message>
+            }
+          } @else {
+            <ya-empty-message>
+              <p>Tracing has started.</p>
+              <p>
+                This page does
+                <strong>not</strong>
+                update automatically.
+              </p>
+              <p>
+                Hit refresh, or check back at a later time when you think there should be trace
+                entries.
+              </p>
+              <p>
+                <ya-button appearance="primary" (click)="refreshData()">Refresh</ya-button>
+              </p>
+            </ya-empty-message>
+          }
+        }
+        @if ((section$ | async) === "logs") {
+          @if (trace$ | async; as trace) {
+            @if (trace.logs?.length) {
+              <table class="logs mono" style="width: 100%">
+                @for (log of trace.logs; track log) {
+                  <tr>
+                    <td class="time" style="white-space: nowrap" width="1">
+                      [{{ log.time | datetime }}]
+                    </td>
+                    <td class="msg" style="white-space: pre">{{ log.msg }}</td>
+                  </tr>
+                }
+              </table>
+            } @else {
+              <ya-empty-message>
+                <p>Tracing has started.</p>
+                <p>
+                  This page does
+                  <strong>not</strong>
+                  update automatically.
+                </p>
+                <p>
+                  Hit refresh, or check back at a later time when you think there should be trace
+                  entries.
+                </p>
+                <p>
+                  <ya-button appearance="primary" (click)="refreshData()">Refresh</ya-button>
+                </p>
+              </ya-empty-message>
+            }
+          } @else {
+            <ya-empty-message>
+              <p>Tracing has started.</p>
+              <p>
+                This page does
+                <strong>not</strong>
+                update automatically.
+              </p>
+              <p>
+                Hit refresh, or check back at a later time when you think there should be trace
+                entries.
+              </p>
+              <p>
+                <ya-button appearance="primary" (click)="refreshData()">Refresh</ya-button>
+              </p>
+            </ya-empty-message>
+          }
+        }
+      </ya-panel>
+    } @else {
+      <ya-empty-message headerTitle="Trace">
+        <p>The trace tool captures runs, inputs, outputs and log messages of this algorithm.</p>
+        <p>
+          <ya-button appearance="primary" (click)="startTrace()">Start trace</ya-button>
+        </p>
+      </ya-empty-message>
+    }
+  }
+}
+```
+
+### `algorithm-trace-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-trace-tab/algorithm-trace-tab.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  input,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AlgorithmStatus,
+  AlgorithmTrace,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  templateUrl: './algorithm-trace-tab.component.html',
+  styleUrl: './algorithm-trace-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AlgorithmTraceTabComponent implements OnInit, AfterViewInit {
+  qualifiedName = input.required<string>({ alias: 'algorithm' });
+
+  algorithm$: Promise<Algorithm>;
+  status$ = new BehaviorSubject<AlgorithmStatus | null>(null);
+  trace$ = new BehaviorSubject<AlgorithmTrace | null>(null);
+
+  section$ = new BehaviorSubject<string>('runs');
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+  ) {}
+
+  ngOnInit(): void {
+    this.algorithm$ = this.yamcs.yamcsClient.getAlgorithm(
+      this.yamcs.instance!,
+      this.qualifiedName(),
+    );
+    this.refreshData();
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('section')) {
+      this.switchToSection(queryParams.get('section')!);
+    }
+  }
+
+  switchToSection(section: string) {
+    this.section$.next(section);
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: { section },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  refreshData() {
+    if (this.yamcs.processor) {
+      this.yamcs.yamcsClient
+        .getAlgorithmStatus(
+          this.yamcs.instance!,
+          this.yamcs.processor,
+          this.qualifiedName(),
+        )
+        .then((status) => {
+          this.status$.next(status);
+        })
+        .catch((err) => {
+          this.messageService.showError(err);
+        });
+
+      this.yamcs.yamcsClient
+        .getAlgorithmTrace(
+          this.yamcs.instance!,
+          this.yamcs.processor,
+          this.qualifiedName(),
+        )
+        .then((trace) => {
+          this.trace$.next(trace);
+        })
+        .catch((err) => {
+          this.messageService.showError(err);
+        });
+    } else {
+      this.status$.next(null);
+      this.trace$.next(null);
+    }
+  }
+
+  startTrace() {
+    this.yamcs.yamcsClient
+      .startAlgorithmTrace(
+        this.yamcs.instance!,
+        this.yamcs.processor!,
+        this.qualifiedName(),
+      )
+      .then(() => {
+        this.refreshData();
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  stopTrace() {
+    this.yamcs.yamcsClient
+      .stopAlgorithmTrace(
+        this.yamcs.instance!,
+        this.yamcs.processor!,
+        this.qualifiedName(),
+      )
+      .then(() => {
+        this.refreshData();
+        this.switchToSection('runs');
+        this.router.navigate([], {
+          replaceUrl: true,
+          relativeTo: this.route,
+          queryParams: { section: null },
+          queryParamsHandling: 'merge',
+        });
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

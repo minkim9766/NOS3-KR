@@ -3,18 +3,69 @@
 
 **경로:** `components/generic_fss/sim/cfg/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Inp_fss_IPC.txt`
 
-file--Inp_fss_IPC.txt
-file--nos3-fss-simulator.xml
-file--SC_fss_NOS3.txt
+**경로:** `components/generic_fss/sim/cfg/Inp_fss_IPC.txt`
+
+
+```text
+**********************************  FSS   *******************************
+TX                                      ! IPC Mode (OFF,TX,RX,TXRX,ACS,WRITEFILE,READFILE)
+0                                       ! AC.ID for ACS mode
+"FSS.42"                                ! File name for WRITE or READ
+SERVER                                  ! Socket Role (SERVER,CLIENT,GMSEC_CLIENT)
+localhost      4279                     ! Server Host Name, Port 
+FALSE                                   ! Allow Blocking (i.e. wait on RX)
+FALSE                                   ! Echo to stdout
+1                                       ! Number of TX prefixes
+"SC"                                    ! Prefix 0
 ```
 
-## 항목
+### `nos3-fss-simulator.xml`
 
-- [`components/generic_fss/sim/cfg/Inp_fss_IPC.txt`](file--Inp_fss_IPC.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/sim/cfg/nos3-fss-simulator.xml`](file--nos3-fss-simulator.xml) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/sim/cfg/SC_fss_NOS3.txt`](file--SC_fss_NOS3.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_fss/sim/cfg/nos3-fss-simulator.xml`
+
+
+```xml
+        <simulator>
+            <name>generic-fss-sim</name>
+            <active>true</active>
+            <library>libgeneric_fss_sim.so</library>
+            <hardware-model>
+                <type>GENERIC_FSS</type>
+                <connections>
+                    <connection><type>command</type><bus-name>command</bus-name><node-name>fss-command</node-name></connection>
+                    <connection><type>spi</type>
+                        <bus-name>spi_1</bus-name>
+                        <chip-select>1</chip-select>
+                    </connection>
+                </connections>
+                <data-provider>               
+                    <type>GENERIC_FSS_42_PROVIDER</type>
+                    <hostname>localhost</hostname>
+                    <port>4279</port>
+                    <max-connection-attempts>5</max-connection-attempts>
+                    <retry-wait-seconds>5</retry-wait-seconds>
+                    <spacecraft>0</spacecraft>
+                </data-provider>               
+            </hardware-model>
+        </simulator>
+```
+
+### `SC_fss_NOS3.txt`
+
+**경로:** `components/generic_fss/sim/cfg/SC_fss_NOS3.txt`
+
+
+```text
+=============================== FSS 0 ===================================
+0.2                           ! Sample Time,sec
+90.0  0.0  0.0  231           ! Mounting Angles (deg), Seq in Body
+Z_AXIS                        ! Boresight Axis X_AXIS, Y_AXIS, or Z_AXIS
+60.0   60.0                   ! X, Y FOV Size, deg
+0.1                           ! Noise Equivalent Angle, deg RMS
+0.5                           ! Quantization, deg
+0                             ! Flex Node Index
+```

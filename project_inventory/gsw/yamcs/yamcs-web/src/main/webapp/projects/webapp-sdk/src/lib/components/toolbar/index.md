@@ -3,18 +3,69 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `toolbar.component.css`
 
-file--toolbar.component.css
-file--toolbar.component.html
-file--toolbar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  column-gap: 7px;
+  height: 24px;
+}
+
+:host.ya-toolbar-bottom {
+  margin-top: 16px;
+}
+
+:host.ya-toolbar-center {
+  justify-content: center;
+}
+
+@media print {
+  :host {
+    display: none !important;
+  }
+}
 ```
 
-## 항목
+### `toolbar.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.css`](file--toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.html`](file--toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.ts`](file--toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.html`
+
+
+```html
+<ng-content />
+```
+
+### `toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/toolbar/toolbar.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+
+export type YaToolbarAppearance = 'top' | 'bottom';
+
+export type YaToolbarAlign = 'left' | 'center';
+
+@Component({
+  selector: 'ya-toolbar',
+  templateUrl: 'toolbar.component.html',
+  styleUrl: './toolbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-toolbar',
+    '[class.ya-toolbar-bottom]': "appearance() === 'bottom'",
+    '[class.ya-toolbar-center]': "align() === 'center'",
+  },
+})
+export class YaToolbar {
+  appearance = input<YaToolbarAppearance>('top');
+  align = input<YaToolbarAlign>('left');
+}
+```

@@ -3,18 +3,79 @@
 
 **경로:** `gsw/yamcs/examples/replication2/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/replication2/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/replication2/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/replication2/README`](file--README) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/replication2/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>replication2</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Yamcs :: Examples :: Replication2</name>
+  <description>
+    Example demonstrating the use of replication
+  </description>
+
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README`
+
+**경로:** `gsw/yamcs/examples/replication2/README`
+
+
+```text
+This contains an example with a Yamcs server with three instances node1, node2 and node3 with the data replicating:
+node1 -> node2
+node1 -> node3
+node2 -> node3 when the TM link to node1 goes down.
+
+The node2 TM link and  node2->node3 replication are disabled by default. A script can be written to monitor the node1 TM link and start the node2 link when the node1 link goes down.
+
+This setup corresponds to a node1 and node2 running in some sort of redundancy mode, pushing data to a node3.
+
+The three instances can be separated on different Yamcs servers by copying the instance configuration file. 
+
+Connecting via a web-browser, you can go to nodeX->Archive->Streams and observe the stream count.
+```

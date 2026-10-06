@@ -3,18 +3,216 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PassiveRateGroupTester.cpp`
 
-file--PassiveRateGroupTester.cpp
-file--PassiveRateGroupTester.hpp
-file--PassiveRateGroupTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.cpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test component for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ */
+
+#include <gtest/gtest.h>
+#include <Fw/Test/UnitTest.hpp>
+#include <Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.hpp>
+
+#include <unistd.h>
+#include <cstdio>
+#include <cstring>
+
+namespace Svc {
+
+PassiveRateGroupTester::PassiveRateGroupTester(Svc::PassiveRateGroup& inst)
+    : PassiveRateGroupGTestBase("testerbase", 100), m_impl(inst), m_callOrder(0) {
+    this->clearPortCalls();
+}
+
+void PassiveRateGroupTester::clearPortCalls() {
+    memset(this->m_callLog, 0, sizeof(this->m_callLog));
+    this->m_callOrder = 0;
+}
+
+PassiveRateGroupTester::~PassiveRateGroupTester() {}
+
+void PassiveRateGroupTester::from_RateGroupMemberOut_handler(FwIndexType portNum, U32 context) {
+    ASSERT_TRUE(portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(m_impl.m_RateGroupMemberOut_OutputPort)));
+    this->m_callLog[portNum].portCalled = true;
+    this->m_callLog[portNum].contextVal = context;
+    this->m_callLog[portNum].order = this->m_callOrder++;
+    // Adding a small sleep to ensure that the cycle time is bigger than 0 us
+    usleep(1);
+}
+
+void PassiveRateGroupTester::runNominal(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance) {
+    TEST_CASE(101.1.1, "Run nominal rate group execution");
+
+    // clear events
+    this->clearTlm();
+
+    Os::RawTime timestamp;
+    timestamp.now();
+
+    // clear port call log
+    this->clearPortCalls();
+
+    REQUIREMENT("FPRIME-PRG-001");
+    // call active rate group with timestamp val
+    this->invoke_to_CycleIn(0, timestamp);
+
+    // check calls
+    REQUIREMENT("FPRIME-PRG-002");
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+         portNum++) {
+        ASSERT_TRUE(this->m_callLog[portNum].portCalled);
+        ASSERT_EQ(this->m_callLog[portNum].contextVal, contexts[portNum]);
+        ASSERT_EQ(this->m_callLog[portNum].order, portNum);
+    }
+    // Cycle times should be non-zero
+    REQUIREMENT("FPRIME-PRG-003");
+    ASSERT_TLM_MaxCycleTime_SIZE(1);
+    ASSERT_TLM_CycleTime_SIZE(1);
+    ASSERT_TLM_CycleCount_SIZE(1);
+    ASSERT_GT(this->tlmHistory_MaxCycleTime->at(0).arg, 0);
+    ASSERT_GT(this->tlmHistory_CycleTime->at(0).arg, 0);
+    ASSERT_GT(this->tlmHistory_CycleCount->at(0).arg, 0);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `PassiveRateGroupTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.cpp`](file--PassiveRateGroupTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.hpp`](file--PassiveRateGroupTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTestMain.cpp`](file--PassiveRateGroupTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.hpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test component header for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ */
+
+#ifndef PASSIVERATEGROUP_TEST_UT_PASSIVERATEGROUPIMPLTESTER_HPP_
+#define PASSIVERATEGROUP_TEST_UT_PASSIVERATEGROUPIMPLTESTER_HPP_
+
+#include <PassiveRateGroupGTestBase.hpp>
+#include <Svc/PassiveRateGroup/PassiveRateGroup.hpp>
+
+namespace Svc {
+
+class PassiveRateGroupTester : public PassiveRateGroupGTestBase {
+  public:
+    PassiveRateGroupTester(Svc::PassiveRateGroup& inst);
+    virtual ~PassiveRateGroupTester();
+
+    void runNominal(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance);
+
+    static FwSizeType getNumRateGroupMemberOutPorts() {
+        return Svc::PassiveRateGroupComponentBase::NUM_RATEGROUPMEMBEROUT_OUTPUT_PORTS;
+    }
+
+  private:
+    void from_RateGroupMemberOut_handler(FwIndexType portNum, U32 context);
+
+    Svc::PassiveRateGroup& m_impl;
+
+    void clearPortCalls();
+
+    struct {
+        bool portCalled;
+        U32 contextVal;
+        FwIndexType order;
+    } m_callLog[Svc::PassiveRateGroupComponentBase::NUM_RATEGROUPMEMBEROUT_OUTPUT_PORTS];
+
+    FwIndexType m_callOrder;  //!< tracks order of port call.
+};
+
+} /* namespace Svc */
+
+#endif /* PASSIVERATEGROUP_TEST_UT_PASSIVERATEGROUPIMPLTESTER_HPP_ */
+```
+
+### `PassiveRateGroupTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PassiveRateGroup/test/ut/PassiveRateGroupTestMain.cpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test driver for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ */
+#include <config/FppConstantsAc.hpp>
+
+#include <Fw/Obj/SimpleObjRegistry.hpp>
+#include <Svc/PassiveRateGroup/PassiveRateGroup.hpp>
+#include <Svc/PassiveRateGroup/test/ut/PassiveRateGroupTester.hpp>
+
+#include <gtest/gtest.h>
+
+void connectPorts(Svc::PassiveRateGroup& impl, Svc::PassiveRateGroupTester& tester) {
+    tester.connect_to_CycleIn(0, impl.get_CycleIn_InputPort(0));
+
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(Svc::PassiveRateGroupTester::getNumRateGroupMemberOutPorts()); portNum++) {
+        impl.set_RateGroupMemberOut_OutputPort(portNum, tester.get_from_RateGroupMemberOut(portNum));
+    }
+
+    impl.set_Tlm_OutputPort(0, tester.get_from_Tlm(0));
+    impl.set_Time_OutputPort(0, tester.get_from_Time(0));
+}
+
+TEST(PassiveRateGroupTest, NominalSchedule) {
+    for (FwEnumStoreType inst = 0; inst < 3; inst++) {
+        U32 contexts[FppConstant_PassiveRateGroupOutputPorts::PassiveRateGroupOutputPorts] = {1, 2, 3, 4, 5};
+
+        Svc::PassiveRateGroup impl("PassiveRateGroup");
+        impl.configure(contexts, FW_NUM_ARRAY_ELEMENTS(contexts));
+        Svc::PassiveRateGroupTester tester(impl);
+
+        tester.init();
+        impl.init(inst);
+
+        // connect ports
+        connectPorts(impl, tester);
+
+        tester.runNominal(contexts, FW_NUM_ARRAY_ELEMENTS(contexts), inst);
+    }
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

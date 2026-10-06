@@ -3,16 +3,40 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--ComLoggerTeeConfig.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/CMakeLists.txt`
+
+
+```cmake
+register_fprime_config(
+    EXCLUDE_FROM_ALL
+    AUTOCODER_INPUTS
+        ${CMAKE_CURRENT_LIST_DIR}/ComLoggerTeeConfig.fpp
+    INTERFACE
+)
 ```
 
-## 항목
+### `ComLoggerTeeConfig.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/ComLoggerTeeConfig.fpp`](file--ComLoggerTeeConfig.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/ComLoggerTee/ComLoggerTeeConfig/ComLoggerTeeConfig.fpp`
+
+
+```fpp
+module ComLoggerTeeConfig {
+    
+    module QueueSizes {
+        constant comLog = 10
+    }
+    
+    module StackSizes {
+        constant comLog = 64 * 1024
+    }
+
+    module Priorities {
+        constant comLog = 95
+    }
+}
+```

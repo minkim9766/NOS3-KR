@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,27 +12,947 @@ create-parameter-states/index
 edit-parameter-states/index
 parameter-states-styles/index
 parameter-states-tooltip/index
-file--ColorMap.ts
-file--CountedValue.ts
-file--LegendEntry.ts
-file--ParameterStateBand.ts
-file--State.ts
-file--StateBuffer.ts
-file--StateLegend.ts
-file--StateRemapper.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/create-parameter-states/`](create-parameter-states/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/`](edit-parameter-states/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/`](parameter-states-styles/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-tooltip/`](parameter-states-tooltip/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/ColorMap.ts`](file--ColorMap.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/CountedValue.ts`](file--CountedValue.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/LegendEntry.ts`](file--LegendEntry.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/ParameterStateBand.ts`](file--ParameterStateBand.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/State.ts`](file--State.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateBuffer.ts`](file--StateBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateLegend.ts`](file--StateLegend.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateRemapper.ts`](file--StateRemapper.ts) — UTF-8 텍스트 파일 본문 포함
+### `ColorMap.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/ColorMap.ts`
+
+
+```typescript
+export const OTHER_COLOR = '#000000';
+
+// Adapted from cb-Set3
+// https://google.github.io/palette.js/
+//
+// - Removed gray (#d9d9d9)
+// - Moved palid yellow (#ffffb3) to the end
+export const PALETTE = [
+  '#8dd3c7',
+  '#bebada',
+  '#fb8072',
+  '#80b1d3',
+  '#fdb462',
+  '#b3de69',
+  '#fccde5',
+  '#bc80bd',
+  '#ccebc5',
+  '#ffffb3',
+];
+
+export class ColorMap {
+  // Maps preserve insertion order.
+  //
+  // We use this attribute to store entries
+  // from LRU to MRU.
+  private cache = new Map<any, string>();
+
+  // Index into palette. Prefer this over randomization,
+  // so that a browser refresh doesn't mess up colorings.
+  private nextIndex = 0;
+
+  colorForValue(value: any): string {
+    if (value === '__OTHER') {
+      return OTHER_COLOR;
+    }
+    let color = this.cache.get(value);
+    if (color) {
+      // Remove earlier access record
+      this.cache.delete(value);
+    } else {
+      color = PALETTE[this.nextIndex];
+      this.nextIndex++;
+      if (this.nextIndex > PALETTE.length - 1) {
+        this.nextIndex = 0;
+        this.keepSizeWithinLimits();
+      }
+    }
+
+    // Insert MRU
+    this.cache.set(value, color);
+    return color;
+  }
+
+  reset() {
+    this.cache.clear();
+    this.nextIndex = 0;
+  }
+
+  private keepSizeWithinLimits() {
+    while (this.cache.size > 1000) {
+      let i = 0;
+      for (var k of this.cache.keys()) {
+        if (i++ > 100) {
+          break;
+        }
+        this.cache.delete(k);
+      }
+    }
+  }
+}
+```
+
+### `CountedValue.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/CountedValue.ts`
+
+
+```typescript
+export interface CountedValue {
+  value: string | null;
+  count: number;
+  // Preferred color
+  color?: string;
+}
+```
+
+### `LegendEntry.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/LegendEntry.ts`
+
+
+```typescript
+export interface LegendEntry {
+  label: any;
+  color: string | CanvasPattern;
+  count: number;
+  mostFrequent: boolean;
+}
+```
+
+### `ParameterStateBand.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/ParameterStateBand.ts`
+
+
+```typescript
+import { Overlay } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { ElementRef } from '@angular/core';
+import { Item, ItemBand } from '@fqqb/timeline';
+import {
+  BackfillingSubscription,
+  ConfigService,
+  Formatter,
+  GetParameterRangesOptions,
+  ParameterSubscription,
+  Range,
+  Synchronizer,
+  TimelineBand,
+  utils,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+import {
+  BooleanProperty,
+  ColorProperty,
+  NumberProperty,
+  PropertyInfoSet,
+  resolveProperties,
+  TextProperty,
+} from '../shared/properties';
+import { TimelineChartComponent } from '../timeline-chart/timeline-chart.component';
+import { ParameterStatesTooltipComponent } from './parameter-states-tooltip/parameter-states-tooltip.component';
+import { State } from './State';
+import { StateBuffer } from './StateBuffer';
+import { StateLegend } from './StateLegend';
+import { StateRemapper } from './StateRemapper';
+
+/**
+ * Distance between two states, before inserting gap
+ */
+const MAX_GAP = 120000;
+
+export const propertyInfo: PropertyInfoSet = {
+  frozen: new BooleanProperty(false),
+  height: new NumberProperty(30),
+  parameter: new TextProperty(''),
+};
+
+export function createValueMappingPropertyInfo(index: number): PropertyInfoSet {
+  const set: PropertyInfoSet = {};
+  set[`value_mapping_${index}_type`] = new TextProperty('');
+  set[`value_mapping_${index}_value`] = new TextProperty('');
+  set[`value_mapping_${index}_start`] = new NumberProperty();
+  set[`value_mapping_${index}_end`] = new NumberProperty();
+  set[`value_mapping_${index}_label`] = new TextProperty('');
+  set[`value_mapping_${index}_color`] = new ColorProperty('');
+  return set;
+}
+
+export function resolveValueMappingProperties(
+  index: number,
+  info: PropertyInfoSet,
+  properties: { [key: string]: any },
+) {
+  const prefix = `value_mapping_${index}_`;
+  const prefixedResult = resolveProperties(info, properties);
+  const lstripped: { [key: string]: any } = {};
+  for (const key in prefixedResult) {
+    if (prefixedResult[key] !== '') {
+      lstripped[key.slice(prefix.length)] = prefixedResult[key];
+    }
+  }
+  return lstripped;
+}
+
+export class ParameterStateBand extends ItemBand {
+  private tooltipInstance: ParameterStatesTooltipComponent;
+  private backfillSubscription?: BackfillingSubscription;
+
+  private parameter: string;
+  private stateRemapper = new StateRemapper();
+  private legend = new StateLegend();
+
+  private mixedPattern: CanvasPattern;
+
+  private stateBuffer: StateBuffer;
+  private realtimeSubscription: ParameterSubscription;
+  private syncSubscription: Subscription;
+
+  constructor(
+    chart: TimelineChartComponent,
+    bandInfo: TimelineBand,
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    private formatter: Formatter,
+    private configService: ConfigService,
+    overlay: Overlay,
+  ) {
+    super(chart.timeline);
+    this.label = bandInfo.name;
+    this.multiline = false;
+    this.itemTextOverflow = 'hide';
+    this.itemHoverBorderWidth = 1;
+    this.data = { band: bandInfo };
+
+    const properties = resolveProperties(
+      propertyInfo,
+      bandInfo.properties || {},
+    );
+    this.frozen = properties.frozen ?? propertyInfo.frozen.defaultValue;
+    this.itemHeight = properties.height ?? propertyInfo.height.defaultValue;
+    this.parameter =
+      properties.parameter ?? propertyInfo.parameter.defaultValue;
+
+    let idx = 0;
+    while (true) {
+      const mappingPropertiesInfo = createValueMappingPropertyInfo(idx);
+      const mappingProperties = resolveValueMappingProperties(
+        idx,
+        mappingPropertiesInfo,
+        bandInfo.properties || {},
+      );
+      if (!mappingProperties.type) {
+        break;
+      }
+      idx++;
+      this.stateRemapper.addMapping(mappingProperties);
+    }
+
+    const bodyRef = new ElementRef(document.body);
+    const positionStrategy = overlay
+      .position()
+      .flexibleConnectedTo(bodyRef)
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'top',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ])
+      .withPush(false);
+
+    const overlayRef = overlay.create({ positionStrategy });
+    const tooltipPortal = new ComponentPortal(ParameterStatesTooltipComponent);
+    this.tooltipInstance = overlayRef.attach(tooltipPortal).instance;
+
+    this.stateBuffer = new StateBuffer(
+      MAX_GAP,
+      this.formatter,
+      this.stateRemapper,
+      () => {
+        this.refreshData(false /* don't reset color assignment */);
+      },
+    );
+    this.syncSubscription = synchronizer.sync(() => {
+      this.updateChart();
+    });
+
+    this.backfillSubscription = yamcs.yamcsClient.createBackfillingSubscription(
+      {
+        instance: yamcs.instance!,
+      },
+      (update) => {
+        if (update.finished) {
+          this.refreshData(false /* don't reset color assignment */);
+        }
+      },
+    );
+
+    this.addItemMouseEnterListener((evt) => {
+      this.tooltipInstance.show(evt.clientX, evt.clientY, this.legend);
+    });
+    this.addItemMouseMoveListener((evt) => {
+      this.tooltipInstance.show(
+        evt.clientX,
+        evt.clientY,
+        this.legend,
+        evt.item,
+      );
+    });
+    this.addItemMouseLeaveListener((evt) => {
+      this.tooltipInstance.hide();
+    });
+
+    this.mixedPattern = this.createMixedPattern();
+  }
+
+  refreshData(resetColors = true) {
+    // Load some offscreen data to reduce likelihood of missing ranges that start
+    // offscreen, yet end in the viewport.
+    const offscreenEdge = (this.timeline.stop - this.timeline.start) / 10;
+    const loadStart = this.timeline.start - offscreenEdge;
+    const loadStop = this.timeline.stop;
+    const maxRanges = 5000;
+    const options: GetParameterRangesOptions = {
+      // maxValues can be high, states are reprocessed with a
+      // lower maxValues value in StateRemapper (then also
+      // accounting for realtime values)
+      maxValues: 15,
+      maxGap: MAX_GAP,
+      start: new Date(loadStart).toISOString(),
+      stop: new Date(loadStop).toISOString(),
+      minRange: Math.floor((loadStop - loadStart) / maxRanges),
+    };
+
+    if (this.configService.getConfig().tmArchive) {
+      this.yamcs.yamcsClient
+        .getParameterRanges(this.yamcs.instance!, this.parameter, options)
+        .then((ranges) => {
+          this.connectRealtime();
+          const states = this.convertRangesToStates(ranges);
+          this.stateBuffer.reset();
+          this.stateBuffer.setArchiveData(states);
+        })
+        .catch((err) => {
+          console.warn(`Failed to retrieve samples for ${this.parameter}`, err);
+          this.stateBuffer.reset();
+          this.stateBuffer.setArchiveData([]);
+        })
+        .finally(() => {
+          if (resetColors) {
+            this.legend.resetColorAssignment();
+          }
+          // Quick emit, don't wait on sync tick
+          this.updateChart();
+        });
+    } else {
+      this.connectRealtime();
+      this.stateBuffer.reset();
+      this.stateBuffer.setArchiveData([]);
+      if (resetColors) {
+        this.legend.resetColorAssignment();
+      }
+      // Quick emit, don't wait on sync tick
+      this.updateChart();
+    }
+  }
+
+  private connectRealtime() {
+    this.realtimeSubscription?.cancel();
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createParameterSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+          id: [{ name: this.parameter }],
+          sendFromCache: false,
+          updateOnExpiration: false, // TODO turn into gap
+          abortOnInvalid: true,
+          action: 'REPLACE',
+        },
+        (data) => {
+          for (const pval of data.values || []) {
+            this.stateBuffer.addRealtimeValue(pval);
+          }
+        },
+      );
+  }
+
+  private convertRangesToStates(ranges: Range[]): State[] {
+    const states: State[] = [];
+    for (const range of ranges) {
+      const state: State = {
+        start: utils.toDate(range.start).getTime(),
+        stop: utils.toDate(range.stop).getTime(),
+        values: [],
+        otherCount: range.otherCount,
+        mixed: false, // Calculated later on
+        mostFrequentValue: { value: null, count: 0 }, // Calculated later on
+      };
+
+      for (let i = 0; i < range.engValues?.length; i++) {
+        const textValue = this.formatter.formatValue(range.engValues[i]);
+        const count = range.counts[i];
+        state.values.push({ value: textValue, count });
+      }
+
+      states.push(state);
+    }
+
+    return states;
+  }
+
+  private updateChart() {
+    const states = this.stateBuffer.snapshot(
+      this.timeline.start,
+      this.timeline.stop,
+    );
+    this.legend.recalculate(states);
+
+    const items: Item[] = [];
+    for (const state of states) {
+      let background: string | CanvasPattern;
+      let textColor: string;
+      let label: string;
+      if (state.mixed) {
+        background = this.mixedPattern;
+        textColor = '#000';
+        label = 'Mixed';
+      } else if (state.otherCount > 0) {
+        background = '#000';
+        textColor = '#fff';
+        label = 'Misc';
+      } else {
+        background = this.legend.getBackground(state);
+        textColor = this.legend.getForeground(state);
+        label = this.legend.getLabel(state);
+      }
+
+      const item: Item = {
+        start: state.start,
+        stop: state.stop,
+        background,
+        textColor,
+        label,
+        borderWidth: 0,
+        data: { range: state },
+      };
+      items.push(item);
+    }
+
+    this.items = items;
+  }
+
+  private createMixedPattern() {
+    const size = 6;
+    const offscreen = document.createElement('canvas');
+    offscreen.width = 6;
+    offscreen.height = 6;
+    const ctx = offscreen.getContext('2d')!;
+    ctx.fillStyle = '#d3d3d3';
+
+    // Top triangle
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(size / 3, 0);
+    ctx.lineTo(0, size / 3);
+    ctx.closePath();
+    ctx.fill();
+
+    // Diagonal
+    ctx.beginPath();
+    ctx.moveTo((size * 2) / 3, 0);
+    ctx.lineTo(size, 0);
+    ctx.lineTo(size, (size * 1) / 3);
+    ctx.lineTo((size * 1) / 3, size);
+    ctx.lineTo(0, size);
+    ctx.lineTo(0, (size * 2) / 3);
+    ctx.closePath();
+    ctx.fill();
+
+    // Bottom triangle
+    ctx.beginPath();
+    ctx.moveTo(size, size);
+    ctx.lineTo(size, size - size / 3);
+    ctx.lineTo(size - size / 3, size);
+    ctx.closePath();
+    ctx.fill();
+
+    return ctx.createPattern(offscreen, 'repeat')!;
+  }
+
+  override disconnectedCallback(): void {
+    this.backfillSubscription?.cancel();
+    this.realtimeSubscription?.cancel();
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```
+
+### `State.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/State.ts`
+
+
+```typescript
+import { CountedValue } from './CountedValue';
+
+export interface State {
+  start: number;
+
+  stop: number;
+
+  // Preprocessed values (mappings applied)
+  values: CountedValue[];
+
+  // The most frequent value in a range
+  mostFrequentValue: CountedValue;
+
+  otherCount: number;
+
+  // If true, different values fall within this range
+  // (one of which may be 'Others')
+  mixed: boolean;
+}
+
+export function copyState(state: State): State {
+  const copiedValues: CountedValue[] = [];
+  for (const value of state.values) {
+    copiedValues.push({ ...value });
+  }
+  return {
+    start: state.start,
+    stop: state.stop,
+    values: copiedValues,
+    mostFrequentValue: { ...state.mostFrequentValue },
+    otherCount: state.otherCount,
+    mixed: state.mixed,
+  };
+}
+
+export function canMerge(a: State, b: State): boolean {
+  if (
+    (a.otherCount === 0 && b.otherCount !== 0) ||
+    (a.otherCount !== 0 && b.otherCount === 0)
+  ) {
+    return false;
+  }
+  if (a.stop !== b.start) {
+    return false;
+  }
+  const aVals = a.values
+    .filter((countedValue) => countedValue.count > 0)
+    .map((countedValue) => countedValue.value)
+    .sort();
+  const bVals = b.values
+    .filter((countedValue) => countedValue.count > 0)
+    .map((countedValue) => countedValue.value)
+    .sort();
+  if (aVals.length !== bVals.length) {
+    return false;
+  }
+  for (let i = 0; i < aVals.length; i++) {
+    if (aVals[i] !== bVals[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+```
+
+### `StateBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateBuffer.ts`
+
+
+```typescript
+import { Formatter, ParameterValue, utils } from '@yamcs/webapp-sdk';
+import { CountedValue } from './CountedValue';
+import { State } from './State';
+import { StateRemapper } from './StateRemapper';
+
+export type WatermarkObserver = () => void;
+
+class RealtimeState implements State {
+  start: number;
+  stop: number;
+  values: CountedValue[];
+  mostFrequentValue: CountedValue;
+  otherCount = 0;
+  mixed = false;
+  other = false;
+}
+
+class RealtimeBuffer {
+  private buffer: (RealtimeState | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(
+    private maxGap: number,
+    private formatter: Formatter,
+    private watermarkObserver: WatermarkObserver,
+  ) {
+    this.buffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  push(pval: ParameterValue) {
+    let prev: State | undefined = undefined;
+    if (this.pointer > 0) {
+      prev = this.buffer[this.pointer - 1];
+    }
+
+    const gentime = utils.toDate(pval.generationTime).getTime();
+    const value = this.formatter.formatValue(pval.engValue);
+    const countedValue: CountedValue = { value, count: 1 };
+
+    const state = new RealtimeState();
+    state.start = gentime;
+    state.stop = state.start;
+    state.values = [countedValue];
+    state.mostFrequentValue = countedValue;
+
+    // Merge with previous state when possible
+    if (prev && prev.values[0].value === value) {
+      prev.stop = state.start;
+      prev.values[0].count++;
+      return;
+    } else if (prev && prev.stop - state.start <= this.maxGap) {
+      // Extend prev
+      prev.stop = state.start;
+    }
+
+    // Can't merge: new state
+    if (this.pointer < this.bufferSize) {
+      this.buffer[this.pointer] = state;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.watermarkObserver();
+        this.alreadyWarned = true;
+      }
+      this.pointer = this.pointer + 1;
+    }
+  }
+
+  snapshot() {
+    return this.buffer.filter((s) => s !== undefined);
+  }
+
+  reset() {
+    this.buffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+  }
+}
+
+export class StateBuffer {
+  private archiveData: State[] = [];
+  private realtimeBuffer: RealtimeBuffer;
+
+  constructor(
+    private maxGap: number,
+    formatter: Formatter,
+    private stateRemapper: StateRemapper,
+    watermarkObserver: WatermarkObserver,
+  ) {
+    this.realtimeBuffer = new RealtimeBuffer(
+      maxGap,
+      formatter,
+      watermarkObserver,
+    );
+  }
+
+  setArchiveData(archiveData: State[]) {
+    this.archiveData = archiveData;
+  }
+
+  addRealtimeValue(pval: ParameterValue) {
+    this.realtimeBuffer.push(pval);
+  }
+
+  reset() {
+    this.archiveData.length = 0;
+    this.realtimeBuffer.reset();
+  }
+
+  snapshot(start: number, stop: number): State[] {
+    const archiveStates = this.archiveData;
+    const realtimeStates = this.realtimeBuffer.snapshot();
+
+    // Connect the archive tail with the realtime head.
+    // Does not attempt to merge (probably not worth it).
+    if (archiveStates.length > 0 && realtimeStates.length > 0) {
+      const archiveTail = archiveStates[archiveStates.length - 1];
+      const realtimeHead = realtimeStates[0];
+      if (realtimeHead.start - archiveTail.stop <= this.maxGap) {
+        archiveTail.stop = realtimeHead.start;
+      }
+    }
+
+    // Filter out everything outside of visible window, so that
+    // it doesn't impact legend calculation.
+    let allStates: State[] = [...archiveStates, ...realtimeStates].filter(
+      (state) => state.stop >= start && state.start <= stop,
+    );
+
+    allStates = this.stateRemapper.applyMappings(allStates);
+    return allStates;
+  }
+}
+```
+
+### `StateLegend.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateLegend.ts`
+
+
+```typescript
+import { ColorMap } from './ColorMap';
+import { State } from './State';
+
+export class StateLegend {
+  private colorByValue = new Map<string, string>();
+  private colorMap = new ColorMap();
+
+  entries() {
+    return this.colorByValue.entries();
+  }
+
+  /**
+   * Forget all color assignments. Do this after changing
+   * the viewport, to avoid colors getting reused.
+   */
+  resetColorAssignment() {
+    this.colorMap.reset();
+  }
+
+  recalculate(states: State[]) {
+    const legendMap = new Map<string, string | undefined>();
+    for (const state of states) {
+      for (const stateValue of state.values) {
+        if (!legendMap.has(stateValue.value!)) {
+          legendMap.set(stateValue.value!, stateValue.color);
+        }
+      }
+    }
+    const sorted = [...legendMap.entries()].sort((a, b) => {
+      return a[0].localeCompare(b[0], undefined, {
+        numeric: true,
+        sensitivity: 'base',
+      });
+    });
+    this.colorByValue.clear();
+    for (const [value, color] of sorted) {
+      if (color) {
+        this.colorByValue.set(value, color);
+      } else {
+        // For better predictability, apply autocolors only after having
+        // sorted the values.
+        const autoColor = this.colorMap.colorForValue(value);
+        this.colorByValue.set(value, autoColor);
+      }
+    }
+    this.colorByValue.set('__OTHER', this.colorMap.colorForValue('__OTHER'));
+  }
+
+  getBackground(state: State) {
+    return (
+      state.mostFrequentValue.color ??
+      this.colorMap.colorForValue(state.mostFrequentValue.value)
+    );
+  }
+
+  getForeground(state: State) {
+    const background = this.getBackground(state);
+    return this.isDark(background) ? '#fff' : '#000';
+  }
+
+  getLabel(state: State) {
+    return state.mostFrequentValue.value ?? 'null';
+  }
+
+  private isDark(hexColor: string) {
+    const color =
+      hexColor.charAt(0) === '#' ? hexColor.substring(1, 7) : hexColor;
+    const r = parseInt(color.substring(0, 2), 16);
+    const g = parseInt(color.substring(2, 4), 16);
+    const b = parseInt(color.substring(4, 6), 16);
+    return r * 0.299 + g * 0.587 + b * 0.114 <= 186;
+  }
+}
+```
+
+### `StateRemapper.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/StateRemapper.ts`
+
+
+```typescript
+import { CountedValue } from './CountedValue';
+import { canMerge, copyState, State } from './State';
+
+export class StateRemapper {
+  private mappings: Array<{ [key: string]: any }> = [];
+
+  addMapping(mapping: { [key: string]: any }) {
+    this.mappings.push(mapping);
+  }
+
+  applyMappings(states: State[]): State[] {
+    // Note: a copy is done for each state, so as to keep the value
+    // in the buffer immutable. This avoids issues with cyclic mapping
+    // rules that otherwise may get applied over and over.
+    const modifiedStates: State[] = [];
+    for (const state of states) {
+      const stateCopy = copyState(state);
+      this.applyMappingsToState(stateCopy);
+      modifiedStates.push(stateCopy);
+    }
+    this.reduceDistinctValues(modifiedStates);
+    this.compactStates(modifiedStates);
+    this.calculateMostFrequent(modifiedStates);
+    return modifiedStates;
+  }
+
+  private applyMappingsToState(state: State) {
+    const mappedValues: CountedValue[] = [];
+    for (let inputValue of state.values) {
+      let value = inputValue.value;
+      let color: string | undefined = undefined;
+      for (const mapping of this.mappings) {
+        if (mapping.type === 'value') {
+          if (value === mapping.value) {
+            if (mapping.label) {
+              value = mapping.label;
+            }
+            color = mapping.color || undefined;
+          }
+        } else if (mapping.type === 'range') {
+          const start = Number(mapping.start);
+          const end = Number(mapping.end);
+          if (!isNaN(value as any)) {
+            const numberValue = Number(value);
+            if (numberValue >= start && numberValue <= end) {
+              if (mapping.label) {
+                value = mapping.label;
+              }
+              color = mapping.color || undefined;
+            }
+          }
+        }
+      }
+      mappedValues.push({ value: value!, count: inputValue.count, color });
+    }
+
+    // If there were mappings applied, we may need to combine some values together
+    const squashedValues: CountedValue[] = [];
+    for (const mappedValue of mappedValues) {
+      let prevMatch = squashedValues.find(
+        (candidate) => candidate.value === mappedValue.value,
+      );
+      if (prevMatch) {
+        prevMatch.count += mappedValue.count;
+      } else {
+        squashedValues.push(mappedValue);
+      }
+    }
+
+    state.values = squashedValues;
+  }
+
+  private reduceDistinctValues(states: State[]) {
+    // Identify the most frequent values among all states.
+    // Reclassify non-frequent values as 'other', instead
+    // of using up a color/legend entry.
+    const maxValues = 10; // Keep below palette colors
+    const countsByValue = new Map<any, number>();
+    for (const state of states) {
+      for (const countedValue of state.values) {
+        const count = countsByValue.get(countedValue.value) || 0;
+        countsByValue.set(countedValue.value, count + countedValue.count);
+      }
+    }
+
+    const frequentValues = [...countsByValue.entries()]
+      .sort((a, b) => {
+        return b[1] - a[1]; // Descending by count
+      })
+      .slice(0, maxValues)
+      .map((entry) => entry[0]);
+
+    for (const state of states) {
+      for (let i = state.values.length - 1; i >= 0; i--) {
+        const countedValue = state.values[i];
+        if (frequentValues.indexOf(countedValue.value) === -1) {
+          state.values.splice(i, 1);
+          state.otherCount += countedValue.count;
+        }
+      }
+    }
+  }
+
+  /**
+   * Merge consecutive states together, if they share the same set of values.
+   */
+  private compactStates(states: State[]) {
+    let compacted: State[] = [];
+
+    let prevState: State | null = null;
+    for (const state of states) {
+      if (prevState && canMerge(prevState, state)) {
+        prevState.otherCount += state.otherCount;
+        prevState.stop = state.stop;
+        for (const v of state.values) {
+          let prev = prevState.values.find((x) => x.value === v.value);
+          if (prev) {
+            prev.count += v.count;
+          } else {
+            prevState.values.push(v);
+          }
+        }
+      } else {
+        compacted.push(state);
+        prevState = state;
+      }
+    }
+
+    states.length = 0;
+    states.push(...compacted);
+  }
+
+  private calculateMostFrequent(states: State[]) {
+    for (const state of states) {
+      let mostFrequent: CountedValue = { value: null, count: 0 };
+      let distinctValues = 0;
+      for (const valueCount of state.values) {
+        if (valueCount.count > mostFrequent.count) {
+          mostFrequent = { ...valueCount };
+        }
+        if (valueCount.count > 0) {
+          distinctValues++;
+        }
+      }
+
+      if (state.otherCount) {
+        distinctValues++;
+      }
+      if (state.otherCount > mostFrequent.count) {
+        mostFrequent = { value: '__OTHER', count: state.otherCount };
+      }
+
+      state.mostFrequentValue = mostFrequent;
+      state.mixed = distinctValues > 1;
+    }
+  }
+}
+```

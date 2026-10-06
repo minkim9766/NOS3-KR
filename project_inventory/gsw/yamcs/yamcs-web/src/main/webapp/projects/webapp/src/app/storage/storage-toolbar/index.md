@@ -3,20 +3,135 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `storage-toolbar-label.directive.ts`
 
-file--storage-toolbar-label.directive.ts
-file--storage-toolbar.component.css
-file--storage-toolbar.component.html
-file--storage-toolbar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide a label to a toolbar without causing a circular dependency
+ */
+export const APP_STORAGE_TOOLBAR = new InjectionToken<any>(
+  'APP_STORAGE_TOOLBAR',
+);
+
+/** Flag labels for use with the portal directive */
+@Directive({
+  selector: '[app-storage-toolbar-label]',
+})
+export class AppStorageToolbarLabel extends CdkPortal {
+  _closestToolbar = inject(APP_STORAGE_TOOLBAR, { optional: true });
+}
 ```
 
-## 항목
+### `storage-toolbar.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar-label.directive.ts`](file--storage-toolbar-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.css`](file--storage-toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.html`](file--storage-toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.ts`](file--storage-toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  min-height: 48px;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: var(--y-background-color);
+  box-sizing: content-box;
+  padding: 0 16px 0 24px;
+  font:
+    400 20px / 28px Roboto,
+    sans-serif;
+  letter-spacing: 0.25px;
+}
+
+.app-storage-toolbar-label {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 48px;
+}
+
+.app-storage-toolbar-content {
+  display: inline-flex;
+  align-items: center;
+  column-gap: 8px;
+}
+```
+
+### `storage-toolbar.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.html`
+
+
+```html
+<div class="app-storage-toolbar-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+</div>
+<div class="app-storage-toolbar-content">
+  <ng-content />
+</div>
+```
+
+### `storage-toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/storage-toolbar/storage-toolbar.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  input,
+} from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import {
+  APP_STORAGE_TOOLBAR,
+  AppStorageToolbarLabel,
+} from './storage-toolbar-label.directive';
+
+@Component({
+  selector: 'app-storage-toolbar',
+  templateUrl: './storage-toolbar.component.html',
+  styleUrl: './storage-toolbar.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: APP_STORAGE_TOOLBAR,
+      useExisting: AppStorageToolbar,
+    },
+  ],
+  host: {
+    class: 'app-storage-toolbar',
+  },
+  imports: [CdkPortalOutlet, WebappSdkModule],
+})
+export class AppStorageToolbar {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+
+  private _templateLabel: AppStorageToolbarLabel;
+
+  // Content for the attr label given by `<ng-template app-storage-toolbar-label>`
+  @ContentChild(AppStorageToolbarLabel)
+  get templateLabel(): AppStorageToolbarLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: AppStorageToolbarLabel | undefined) {
+    if (value && value._closestToolbar === this) {
+      this._templateLabel = value;
+    }
+  }
+}
+```

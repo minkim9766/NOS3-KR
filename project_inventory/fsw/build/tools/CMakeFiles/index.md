@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/tools/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeDirectoryInformation.cmake`
 
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
-```
+**경로:** `fsw/build/tools/CMakeFiles/CMakeDirectoryInformation.cmake`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/tools/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/tools/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `progress.marks`
+
+**경로:** `fsw/build/tools/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

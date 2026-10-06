@@ -3,16 +3,133 @@
 
 **경로:** `gsw/yamcs/examples/ccsds-frames/src/main/java/org/yamcs/examples/ccsdsframes/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SampleCltuGenerator.java`
 
-file--SampleCltuGenerator.java
-file--SampleVcaHandler.java
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/java/org/yamcs/examples/ccsdsframes/SampleCltuGenerator.java`
+
+
+```java
+package org.yamcs.examples.ccsdsframes;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.ccsds.error.CltuGenerator;
+
+/**
+ * Implements a CLTU generator that pads the CLTU to a multiple of a specified
+ * size. Note that the result is not a valid CCSDS TC CLTU. This processing is for
+ * example purposes only.
+ * <p>
+ * The randomization option is ignored.
+ */
+public class SampleCltuGenerator extends CltuGenerator {
+
+	private int frameMultiple;
+
+	public SampleCltuGenerator() {
+		this(YConfiguration.emptyConfig());
+	}
+
+	public SampleCltuGenerator(YConfiguration config) {
+		super(null, null);
+		frameMultiple = config.getInt("frameMultiple", 128);
+	}
+
+	@Override
+        public byte[] makeCltu(byte[] data, boolean randomize) {
+		int newLength = frameMultiple * ((data.length + frameMultiple - 1) / frameMultiple);
+		byte[] result = new byte[newLength];
+		System.arraycopy(data, 0, result, 0, data.length);
+		return result;
+	}
+
+}
 ```
 
-## 항목
+### `SampleVcaHandler.java`
 
-- [`gsw/yamcs/examples/ccsds-frames/src/main/java/org/yamcs/examples/ccsdsframes/SampleCltuGenerator.java`](file--SampleCltuGenerator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/ccsds-frames/src/main/java/org/yamcs/examples/ccsdsframes/SampleVcaHandler.java`](file--SampleVcaHandler.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/examples/ccsds-frames/src/main/java/org/yamcs/examples/ccsdsframes/SampleVcaHandler.java`
+
+
+```java
+package org.yamcs.examples.ccsdsframes;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractTmDataLink;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.tctm.ccsds.DownlinkTransferFrame;
+import org.yamcs.tctm.ccsds.PacketDecoder;
+import org.yamcs.tctm.ccsds.VcDownlinkHandler;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.StringConverter;
+
+/**
+ * Example of a VCA (Virtual Channel Access) handler.
+ * <p>
+ * Extracts CCSDS packets from a frame which does not include the first header pointer.
+ * <p>
+ * Each frame it starts a new packet decoder.
+ *
+ */
+public class SampleVcaHandler extends AbstractTmDataLink implements VcDownlinkHandler {
+    private Instant ertime;
+    private long frameSeqCount;
+
+    @Override
+    public void init(String instance, String name, YConfiguration config) {
+        super.init(instance, name, config);
+    }
+
+    @Override
+    public void handle(DownlinkTransferFrame frame) {
+        if (isDisabled()) {
+            log.trace("Dropping frame for VC {} because the link is disabled", frame.getVirtualChannelId());
+            return;
+        }
+
+        if (log.isTraceEnabled()) {
+            log.trace("Processing frame VC {}, SEQ {}, FHP {}, DS {}, DE {}", frame.getVirtualChannelId(),
+                    frame.getVcFrameSeq(),
+                    frame.getFirstHeaderPointer(), frame.getDataStart(), frame.getDataEnd());
+        }
+        ertime = frame.getEarthRceptionTime();
+        frameSeqCount = frame.getVcFrameSeq();
+
+        PacketDecoder packetDecoder = new PacketDecoder(frame.getDataEnd() - frame.getDataStart(),
+                p -> handlePacket(p));
+        try {
+            packetDecoder.process(frame.getData(), frame.getDataStart(), frame.getDataEnd() - frame.getDataStart());
+        } catch (TcTmException e) {
+            log.warn("Exception processing frame data: ", e);
+        }
+    }
+
+    private void handlePacket(byte[] p) {
+        log.info("Received packet of length {}: {}", p.length, StringConverter.arrayToHexString(p, true));
+        TmPacket pwt = new TmPacket(timeService.getMissionTime(), p);
+        pwt.setEarthReceptionTime(ertime);
+        pwt.setFrameSeqCount(frameSeqCount);
+
+        pwt = packetPreprocessor.process(pwt);
+        processPacket(pwt);
+        updateStats(p.length);
+    }
+
+    @Override
+    protected Status connectionStatus() {
+        return Status.OK;
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+}
+```

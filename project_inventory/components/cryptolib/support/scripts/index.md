@@ -3,44 +3,374 @@
 
 **경로:** `components/cryptolib/support/scripts/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build_docs.sh`
 
-file--build_docs.sh
-file--build_ep.sh
-file--build_internal.sh
-file--build_kmc.sh
-file--build_minimal.sh
-file--build_rhel.sh
-file--build_support.sh
-file--build_wolf.sh
-file--docker_build.sh
-file--docker_debug.sh
-file--documentation_build.sh
-file--env.sh
-file--internal_docker_build.sh
-file--kmc_docker_build.sh
-file--update_env.sh
-file--wolf_docker_build.sh
+**경로:** `components/cryptolib/support/scripts/build_docs.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./build_docs.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+cd $BASE_DIR/docs/wiki > /dev/null 2>&1
+echo "Creating Documentation Wiki Pages"
+sphinx-build -b html . _build
+echo ""
+
 ```
 
-## 항목
+### `build_ep.sh`
 
-- [`components/cryptolib/support/scripts/build_docs.sh`](file--build_docs.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_ep.sh`](file--build_ep.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_internal.sh`](file--build_internal.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_kmc.sh`](file--build_kmc.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_minimal.sh`](file--build_minimal.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_rhel.sh`](file--build_rhel.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_support.sh`](file--build_support.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/build_wolf.sh`](file--build_wolf.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/docker_build.sh`](file--docker_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/docker_debug.sh`](file--docker_debug.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/documentation_build.sh`](file--documentation_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/env.sh`](file--env.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/internal_docker_build.sh`](file--internal_docker_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/kmc_docker_build.sh`](file--kmc_docker_build.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/update_env.sh`](file--update_env.sh) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/support/scripts/wolf_docker_build.sh`](file--wolf_docker_build.sh) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/support/scripts/build_ep.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_ep.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DMC_INTERNAL=1 -DTEST=1 -DSA_FILE=1 -DCRYPTO_LIBGCRYPT=1 -DKEY_INTERNAL=1 -DSA_INTERNAL=1 -DCRYPTO_EPROC=1 && make && make test
+```
+
+### `build_internal.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_internal.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_internal.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DMC_INTERNAL=1 -DTEST=1 -DSA_FILE=1 -DCRYPTO_LIBGCRYPT=1 -DKEY_INTERNAL=1 -DSA_INTERNAL=1 && make && make test
+```
+
+### `build_kmc.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_kmc.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_kmc.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DCRYPTO_KMC=1 -DKEY_KMC=1 -DMC_DISABLED=1 -DSA_MARIADB=1 -DTEST=1 -DSA_FILE=1 -DKMC_MDB_DB=1 && make && make test
+```
+
+### `build_minimal.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_minimal.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_minimal.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR && make && make test
+```
+
+### `build_rhel.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_rhel.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_rhel.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DMC_INTERNAL=1 -DTEST=1 -DSA_FILE=1 -DCRYPTO_LIBGCRYPT=1 -DKEY_INTERNAL=1 -DSA_INTERNAL=1 && make && make test
+
+```
+
+### `build_support.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_support.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_support.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DSUPPORT=1 -DTEST=1 -DCRYPTO_LIBGCRYPT=1 -DSA_INTERNAL=1 -DMC_INTERNAL=1 -DKEY_INTERNAL=1 && make && make test
+```
+
+### `build_wolf.sh`
+
+**경로:** `components/cryptolib/support/scripts/build_wolf.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will build in current directory
+#
+#  ./build_wolf.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+rm $BASE_DIR/CMakeCache.txt
+#                                           should be -DCRYPTO_WOLFSSL=1 but segfaults
+cmake $BASE_DIR -DCODECOV=1 -DDEBUG=1 -DMC_INTERNAL=1 -DCRYPTO_LIBGCRYPT=1 -DKEY_INTERNAL=1 -DTEST=1 -DSA_FILE=1 -DSA_INTERNAL=1 && make && make test
+```
+
+### `docker_build.sh`
+
+**경로:** `components/cryptolib/support/scripts/docker_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./docker_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+$SCRIPT_DIR/internal_docker_build.sh
+$SCRIPT_DIR/kmc_docker_build.sh
+$SCRIPT_DIR/wolf_docker_build.sh
+```
+
+### `docker_debug.sh`
+
+**경로:** `components/cryptolib/support/scripts/docker_debug.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./internal_docker_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+echo "Start docker container to debug in..."
+$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR $DBOX bash
+echo ""
+```
+
+### `documentation_build.sh`
+
+**경로:** `components/cryptolib/support/scripts/documentation_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./documentation_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+echo "Building Sphinx Documentation..."
+$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/docs/wiki $DBOX bash -c \
+    "../../support/scripts/build_docs.sh"
+echo ""
+```
+
+### `env.sh`
+
+**경로:** `components/cryptolib/support/scripts/env.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  source ./env.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+export BASE_DIR=$(cd `dirname $SCRIPT_DIR`/.. && pwd)
+
+DFLAGS="docker run --rm -it -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro -u $(id -u $(stat -c '%U' $SCRIPT_DIR/env.sh)):$(getent group $(stat -c '%G' $SCRIPT_DIR/env.sh) | cut -d: -f3)"
+
+DBOX="ivvitc/cryptolib:dev"
+```
+
+### `internal_docker_build.sh`
+
+**경로:** `components/cryptolib/support/scripts/internal_docker_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./internal_docker_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+# Prepare build directory
+mkdir $BASE_DIR/build > /dev/null 2>&1
+rm -r $BASE_DIR/build/internal/* > /dev/null 2>&1
+mkdir $BASE_DIR/build/internal > /dev/null 2>&1
+
+#$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/internal $DBOX /bin/bash
+
+echo "Internal build and test..."
+$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/internal $DBOX bash -c \
+    "../../support/scripts/build_internal.sh"
+echo ""
+```
+
+### `kmc_docker_build.sh`
+
+**경로:** `components/cryptolib/support/scripts/kmc_docker_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./kmc_docker_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+# Prepare build directory
+mkdir $BASE_DIR/build > /dev/null 2>&1
+rm -r $BASE_DIR/build/kmc/* > /dev/null 2>&1
+mkdir $BASE_DIR/build/kmc > /dev/null 2>&1
+
+#$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/kmc $DBOX /bin/bash
+
+echo "KMC build and test..."
+# Note that the `KMC_MDB_DB` flag is not in use as docker compose will need configured to enable these tests
+$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/kmc $DBOX bash -c \
+    "../../support/scripts/build_kmc.sh"
+echo ""
+```
+
+### `update_env.sh`
+
+**경로:** `components/cryptolib/support/scripts/update_env.sh`
+
+
+```bash
+  #!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+# Will update Libgpg and LibGCrypt
+#
+
+apt-get install -y lcov libcurl4-openssl-dev libmariadb-dev libmariadb-dev-compat python3
+curl -LS https://www.gnupg.org/ftp/gcrypt/libgpg-error/libgpg-error-1.50.tar.bz2 -o /tmp/libgpg-error-1.50.tar.bz2 
+tar -xjf /tmp/libgpg-error-1.50.tar.bz2 -C /tmp/ && cd /tmp/libgpg-error-1.50 && ./configure && make install 
+curl -LS https://www.gnupg.org/ftp/gcrypt/libgcrypt/libgcrypt-1.11.0.tar.bz2 -o /tmp/libgcrypt-1.11.0.tar.bz2 
+tar -xjf /tmp/libgcrypt-1.11.0.tar.bz2 -C /tmp/ && cd /tmp/libgcrypt-1.11.0 && ./configure && make install && ldconfig    
+```
+
+### `wolf_docker_build.sh`
+
+**경로:** `components/cryptolib/support/scripts/wolf_docker_build.sh`
+
+
+```bash
+#!/bin/bash -i
+#
+# Convenience script for CryptoLib development
+#
+#  ./wolf_docker_build.sh
+#
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/env.sh
+
+# Prepare build directory
+mkdir $BASE_DIR/build > /dev/null 2>&1
+rm -r $BASE_DIR/build/wolf/* > /dev/null 2>&1
+mkdir $BASE_DIR/build/wolf > /dev/null 2>&1
+
+#$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/wolf $DBOX /bin/bash
+
+echo "Wolf build and test..."
+$DFLAGS -v $BASE_DIR:$BASE_DIR -w $BASE_DIR/build/wolf $DBOX bash -c \
+    "../../support/scripts/build_wolf.sh"
+echo ""
+```

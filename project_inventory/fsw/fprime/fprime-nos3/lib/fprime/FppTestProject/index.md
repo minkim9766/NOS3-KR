@@ -3,20 +3,90 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 FppTest/index
-file--CMakeLists.txt
-file--README.md
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/`](FppTest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/CMakeLists.txt`
+
+
+```cmake
+###
+# FPP Test
+#
+# Builds unit tests for FPP autocoder
+###
+
+cmake_minimum_required(VERSION 3.16)
+cmake_policy(SET CMP0048 NEW)
+project(FppTest C CXX)
+
+include(CheckCXXCompilerFlag)
+
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/FPrime.cmake")
+
+add_compile_options(
+    -Wall
+    -Wconversion
+    -Wdouble-promotion
+    -Werror
+    -Wextra
+    $<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>
+    -Wshadow
+    -pedantic
+)
+
+# Required by F Prime
+add_compile_options(
+    -Wno-unused-parameter
+    -Wno-vla
+)
+include("${CMAKE_CURRENT_LIST_DIR}/../cmake/FPrime-Code.cmake")
+
+# Required by Google Test typed tests
+check_cxx_compiler_flag(-Wno-variadic-macro-arguments-omitted VAR_MAC_OMITTED_SUPPORTED)
+if(VAR_MAC_OMITTED_SUPPORTED)
+    add_compile_options(-Wno-variadic-macro-arguments-omitted)
+endif()
+
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/FppTest/")
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/README.md`
+
+
+```markdown
+# FppTest
+
+This project contains unit tests for the FPP autocoder.
+
+To use this directory, you must have installed F Prime, and you must be inside 
+the F Prime Python virtual environment.
+
+* To build the tests, run `cd FppTest; fprime-util build --ut`.
+* To run the tests, run `cd FppTest; fprime-util check`.
+```
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/settings.ini`
+
+
+```text
+; Ref requires no specific settings thus the [fprime] configuration block is empty
+; For more information: https://fprime.jpl.nasa.gov/latest/docs/user-manual/framework/settings/
+[fprime]
+framework_path: ..
+project_root: .
+default_cmake_options: FPRIME_SKIP_TOOLS_VERSION_CHECK=ON FPRIME_ENABLE_FRAMEWORK_UTS=OFF FPRIME_ENABLE_AUTOCODER_UTS=OFF
+```

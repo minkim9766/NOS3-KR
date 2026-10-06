@@ -3,20 +3,65 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--config.cpp
-file--config.hpp
-file--StaticMemoryConfig.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/CMakeLists.txt`
+
+
+```cmake
+register_fprime_config(
+        library_config
+    CONFIGURATION_OVERRIDES
+        "${CMAKE_CURRENT_LIST_DIR}/StaticMemoryConfig.hpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/config.hpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/config.cpp"
+)
 ```
 
-## 항목
+### `config.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/config.cpp`](file--config.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/config.hpp`](file--config.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/StaticMemoryConfig.hpp`](file--StaticMemoryConfig.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/config.cpp`
+
+
+```cpp
+static_assert(false, "This file was not overridden, library source override failed")
+```
+
+### `config.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/config.hpp`
+
+
+```cpp
+const bool MY_LIBRARY_CONFIG = true;
+```
+
+### `StaticMemoryConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-config-library/ConfigLibrary/default/config/StaticMemoryConfig.hpp`
+
+
+```cpp
+/*
+ * StaticMemoryCfg.hpp:
+ *
+ * Configuration settings for the static memory component.
+ */
+
+#ifndef SVC_STATIC_MEMORY_CFG_HPP_
+#define SVC_STATIC_MEMORY_CFG_HPP_
+const bool MY_LIBRARY_OVERRIDE = true;
+
+namespace Svc {
+    enum StaticMemoryConfig {
+        STATIC_MEMORY_ALLOCATION_SIZE = 2048
+    };
+}
+
+#endif
+
+```

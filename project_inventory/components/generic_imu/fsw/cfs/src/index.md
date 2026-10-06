@@ -3,22 +3,834 @@
 
 **경로:** `components/generic_imu/fsw/cfs/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_imu_app.c`
 
-file--generic_imu_app.c
-file--generic_imu_app.h
-file--generic_imu_events.h
-file--generic_imu_msg.h
-file--generic_imu_version.h
+**경로:** `components/generic_imu/fsw/cfs/src/generic_imu_app.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_imu_app.c
+**
+** Purpose:
+**   This file contains the source code for the GENERIC_IMU application.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_imu_app.h"
+
+/*
+** Global Data
+*/
+GENERIC_IMU_AppData_t GENERIC_IMU_AppData;
+
+/*
+** Application entry point and main process loop
+*/
+void IMU_AppMain(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /*
+    ** Create the first Performance Log entry
+    */
+    CFE_ES_PerfLogEntry(GENERIC_IMU_PERF_ID);
+
+    /*
+    ** Perform application initialization
+    */
+    status = GENERIC_IMU_AppInit();
+    if (status != CFE_SUCCESS)
+    {
+        GENERIC_IMU_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main loop
+    */
+    while (CFE_ES_RunLoop(&GENERIC_IMU_AppData.RunStatus) == true)
+    {
+        /*
+        ** Performance log exit stamp
+        */
+        CFE_ES_PerfLogExit(GENERIC_IMU_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message
+        ** Note that this is the standard, but timeouts are available
+        */
+        status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&GENERIC_IMU_AppData.MsgPtr, GENERIC_IMU_AppData.CmdPipe,
+                                      CFE_SB_PEND_FOREVER);
+
+        /*
+        ** Begin performance metrics on anything after this line. This will help to determine
+        ** where we are spending most of the time during this app execution.
+        */
+        CFE_ES_PerfLogEntry(GENERIC_IMU_PERF_ID);
+
+        /*
+        ** If the CFE_SB_ReceiveBuffer was successful, then continue to process the command packet
+        ** If not, then exit the application in error.
+        ** Note that a SB read error should not always result in an app quitting.
+        */
+        if (status == CFE_SUCCESS)
+        {
+            GENERIC_IMU_ProcessCommandPacket();
+        }
+        else
+        {
+            CFE_EVS_SendEvent(GENERIC_IMU_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "GENERIC_IMU: SB Pipe Read Error = %d",
+                              (int)status);
+            GENERIC_IMU_AppData.RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+    }
+
+    /*
+    ** Disable component, and clean up the interface
+    */
+    GENERIC_IMU_Disable();
+    can_close_device(&GENERIC_IMU_AppData.Generic_imuCan);
+
+    /*
+    ** Performance log exit stamp
+    */
+    CFE_ES_PerfLogExit(GENERIC_IMU_PERF_ID);
+
+    /*
+    ** Exit the application
+    */
+    CFE_ES_ExitApp(GENERIC_IMU_AppData.RunStatus);
+}
+
+/*
+** Initialize application
+*/
+int32 GENERIC_IMU_AppInit(void)
+{
+    int32 status = OS_SUCCESS;
+
+    GENERIC_IMU_AppData.RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Register the events
+    */
+    status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY); /* as default, no filters are used */
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("GENERIC_IMU: Error registering for event services: 0x%08X\n", (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Create the Software Bus command pipe
+    */
+    status = CFE_SB_CreatePipe(&GENERIC_IMU_AppData.CmdPipe, GENERIC_IMU_PIPE_DEPTH, "IMU_CMD_PIPE");
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_IMU_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Error Creating SB Pipe,RC=0x%08X",
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to ground commands
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_IMU_CMD_MID), GENERIC_IMU_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_IMU_SUB_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Gnd Cmds, MID=0x%04X, RC=0x%08X", GENERIC_IMU_CMD_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Subscribe to housekeeping (hk) message requests
+    */
+    status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(GENERIC_IMU_REQ_HK_MID), GENERIC_IMU_AppData.CmdPipe);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(GENERIC_IMU_SUB_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Request, MID=0x%04X, RC=0x%08X", GENERIC_IMU_REQ_HK_MID,
+                          (unsigned int)status);
+        return status;
+    }
+
+    /*
+    ** Initialize the published HK message - this HK message will contain the
+    ** telemetry that has been defined in the GENERIC_IMU_HkTelemetryPkt for this app.
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(GENERIC_IMU_AppData.HkTelemetryPkt.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_IMU_HK_TLM_MID),
+                 GENERIC_IMU_HK_TLM_LNGTH);
+
+    /*
+    ** Initialize the device packet message
+    ** This packet is specific to your application
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(GENERIC_IMU_AppData.DevicePkt.TlmHeader), CFE_SB_ValueToMsgId(GENERIC_IMU_DEVICE_TLM_MID),
+                 GENERIC_IMU_DEVICE_TLM_LNGTH);
+
+    /*
+    ** Always reset all counters during application initialization
+    */
+    GENERIC_IMU_ResetCounters();
+
+    /*
+    ** Initialize application data
+    ** Note that counters are excluded as they were reset in the previous code block
+    */
+    GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled          = GENERIC_IMU_DEVICE_DISABLED;
+    GENERIC_IMU_AppData.HkTelemetryPkt.DeviceHK.DeviceCounter = 0;
+    GENERIC_IMU_AppData.HkTelemetryPkt.DeviceHK.DeviceStatus  = 0;
+
+    /*
+     ** Send an information event that the app has initialized.
+     ** This is useful for debugging the loading of individual applications.
+     */
+    status = CFE_EVS_SendEvent(GENERIC_IMU_STARTUP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                               "GENERIC_IMU App Initialized. Version %d.%d.%d.%d", GENERIC_IMU_MAJOR_VERSION,
+                               GENERIC_IMU_MINOR_VERSION, GENERIC_IMU_REVISION, GENERIC_IMU_MISSION_REV);
+    if (status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("GENERIC_IMU: Error sending initialization event: 0x%08X\n", (unsigned int)status);
+    }
+    return status;
+}
+
+/*
+** Process packets received on the GENERIC_IMU command pipe
+*/
+void GENERIC_IMU_ProcessCommandPacket(void)
+{
+    CFE_SB_MsgId_t MsgId = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_GetMsgId(GENERIC_IMU_AppData.MsgPtr, &MsgId);
+    switch (CFE_SB_MsgIdToValue(MsgId))
+    {
+        /*
+        ** Ground Commands with command codes fall under the GENERIC_IMU_CMD_MID (Message ID)
+        */
+        case GENERIC_IMU_CMD_MID:
+            GENERIC_IMU_ProcessGroundCommand();
+            break;
+
+        /*
+        ** All other messages, other than ground commands, add to this case statement.
+        */
+        case GENERIC_IMU_REQ_HK_MID:
+            GENERIC_IMU_ProcessTelemetryRequest();
+            break;
+
+        /*
+        ** All other invalid messages that this app doesn't recognize,
+        ** increment the command error counter and log as an error event.
+        */
+        default:
+            GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_PROCESS_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: Invalid command packet, MID = 0x%x", CFE_SB_MsgIdToValue(MsgId));
+            break;
+    }
+    return;
+}
+
+/*
+** Process ground commands
+*/
+void GENERIC_IMU_ProcessGroundCommand(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /*
+    ** MsgId is only needed if the command code is not recognized. See default case
+    */
+    CFE_MSG_GetMsgId(GENERIC_IMU_AppData.MsgPtr, &MsgId);
+
+    /*
+    ** Ground Commands, by definition, have a command code (_CC) associated with them
+    ** Pull this command code from the message and then process
+    */
+    CFE_MSG_GetFcnCode(GENERIC_IMU_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        /*
+        ** NOOP Command
+        */
+        case GENERIC_IMU_NOOP_CC:
+
+            /*
+            ** First, verify the command length immediately after CC identification
+            ** Note that VerifyCmdLength handles the command and command error counters
+            */
+            if (GENERIC_IMU_VerifyCmdLength(GENERIC_IMU_AppData.MsgPtr, sizeof(GENERIC_IMU_NoArgs_cmd_t)) == OS_SUCCESS)
+            {
+                GENERIC_IMU_AppData.HkTelemetryPkt.CommandCount++;
+
+                /* Second, send EVS event on successful receipt ground commands*/
+                CFE_EVS_SendEvent(GENERIC_IMU_CMD_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "GENERIC_IMU: NOOP command received");
+                /* Third, do the desired command action if applicable, in the case of NOOP it is no operation */
+            }
+            break;
+
+        /*
+        ** Reset Counters Command
+        */
+        case GENERIC_IMU_RESET_COUNTERS_CC:
+            if (GENERIC_IMU_VerifyCmdLength(GENERIC_IMU_AppData.MsgPtr, sizeof(GENERIC_IMU_NoArgs_cmd_t)) == OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(GENERIC_IMU_CMD_RESET_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "GENERIC_IMU: RESET counters command received");
+                GENERIC_IMU_ResetCounters();
+            }
+            break;
+
+        /*
+        ** Enable Command
+        */
+        case GENERIC_IMU_ENABLE_CC:
+            if (GENERIC_IMU_VerifyCmdLength(GENERIC_IMU_AppData.MsgPtr, sizeof(GENERIC_IMU_NoArgs_cmd_t)) == OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(GENERIC_IMU_CMD_ENABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "GENERIC_IMU: Enable command received");
+                GENERIC_IMU_Enable();
+            }
+            break;
+
+        /*
+        ** Disable Command
+        */
+        case GENERIC_IMU_DISABLE_CC:
+            if (GENERIC_IMU_VerifyCmdLength(GENERIC_IMU_AppData.MsgPtr, sizeof(GENERIC_IMU_NoArgs_cmd_t)) == OS_SUCCESS)
+            {
+                CFE_EVS_SendEvent(GENERIC_IMU_CMD_DISABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "GENERIC_IMU: Disable command received");
+                GENERIC_IMU_Disable();
+            }
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Process Telemetry Request - Triggered in response to a telemetry request
+*/
+void GENERIC_IMU_ProcessTelemetryRequest(void)
+{
+    CFE_SB_MsgId_t    MsgId       = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    /* MsgId is only needed if the command code is not recognized. See default case */
+    CFE_MSG_GetMsgId(GENERIC_IMU_AppData.MsgPtr, &MsgId);
+
+    /* Pull this command code from the message and then process */
+    CFE_MSG_GetFcnCode(GENERIC_IMU_AppData.MsgPtr, &CommandCode);
+    switch (CommandCode)
+    {
+        case GENERIC_IMU_REQ_HK_TLM:
+            GENERIC_IMU_ReportHousekeeping();
+            break;
+
+        case GENERIC_IMU_REQ_DATA_TLM:
+            GENERIC_IMU_ReportDeviceTelemetry();
+            break;
+
+        /*
+        ** Invalid Command Codes
+        */
+        default:
+            /* Increment the error counter upon receipt of an invalid command */
+            GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_DEVICE_TLM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: Invalid command code for packet, MID = 0x%x, cmdCode = 0x%x",
+                              CFE_SB_MsgIdToValue(MsgId), CommandCode);
+            break;
+    }
+    return;
+}
+
+/*
+** Report Application Housekeeping
+*/
+void GENERIC_IMU_ReportHousekeeping(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is enabled */
+    if (GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+    {
+        status = GENERIC_IMU_RequestHK(&GENERIC_IMU_AppData.Generic_imuCan,
+                                       (GENERIC_IMU_Device_HK_tlm_t *)&GENERIC_IMU_AppData.HkTelemetryPkt.DeviceHK);
+        if (status == OS_SUCCESS)
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceCount++;
+        }
+        else
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_REQ_HK_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: Request device HK reported error %d", status);
+        }
+    }
+    /* Intentionally do not report errors if disabled */
+
+    /* Time stamp and publish housekeeping telemetry */
+    CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&GENERIC_IMU_AppData.HkTelemetryPkt);
+    CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&GENERIC_IMU_AppData.HkTelemetryPkt, true);
+    return;
+}
+
+/*
+** Collect and Report Device Telemetry
+*/
+void GENERIC_IMU_ReportDeviceTelemetry(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is enabled */
+    if (GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+    {
+        status = GENERIC_IMU_RequestData(&GENERIC_IMU_AppData.Generic_imuCan,
+                                         (GENERIC_IMU_Device_Data_tlm_t *)&GENERIC_IMU_AppData.DevicePkt.Generic_imu);
+        if (status == OS_SUCCESS)
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceCount++;
+            /* Time stamp and publish data telemetry */
+            CFE_SB_TimeStampMsg((CFE_MSG_Message_t *)&GENERIC_IMU_AppData.DevicePkt);
+            CFE_SB_TransmitMsg((CFE_MSG_Message_t *)&GENERIC_IMU_AppData.DevicePkt, true);
+        }
+        else
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_REQ_DATA_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: Request device data reported error %d", status);
+        }
+    }
+    /* Intentionally do not report errors if disabled */
+    return;
+}
+
+/*
+** Reset all global counter variables
+*/
+void GENERIC_IMU_ResetCounters(void)
+{
+    GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount = 0;
+    GENERIC_IMU_AppData.HkTelemetryPkt.CommandCount      = 0;
+    GENERIC_IMU_AppData.HkTelemetryPkt.DeviceErrorCount  = 0;
+    GENERIC_IMU_AppData.HkTelemetryPkt.DeviceCount       = 0;
+    return;
+}
+
+/*
+** Enable Component
+*/
+void GENERIC_IMU_Enable(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Check that device is disabled */
+    if (GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_DISABLED)
+    {
+        /* Increment command success counter */
+        GENERIC_IMU_AppData.HkTelemetryPkt.CommandCount++;
+
+        /* Do the action, initialize hardware interface and set enabled */
+        GENERIC_IMU_AppData.Generic_imuCan.handle              = GENERIC_IMU_CFG_HANDLE;
+        GENERIC_IMU_AppData.Generic_imuCan.isUp                = CAN_INTERFACE_DOWN;
+        GENERIC_IMU_AppData.Generic_imuCan.loopback            = false;
+        GENERIC_IMU_AppData.Generic_imuCan.listenOnly          = false;
+        GENERIC_IMU_AppData.Generic_imuCan.tripleSampling      = false;
+        GENERIC_IMU_AppData.Generic_imuCan.oneShot             = false;
+        GENERIC_IMU_AppData.Generic_imuCan.berrReporting       = false;
+        GENERIC_IMU_AppData.Generic_imuCan.fd                  = false;
+        GENERIC_IMU_AppData.Generic_imuCan.presumeAck          = false;
+        GENERIC_IMU_AppData.Generic_imuCan.bitrate             = GENERIC_IMU_CFG_CAN_BITRATE;
+        GENERIC_IMU_AppData.Generic_imuCan.second_timeout      = GENERIC_IMU_CFG_CAN_TIMEOUT;
+        GENERIC_IMU_AppData.Generic_imuCan.microsecond_timeout = GENERIC_IMU_CFG_CAN_MS_TIMEOUT;
+        GENERIC_IMU_AppData.Generic_imuCan.xfer_us_delay       = GENERIC_IMU_CFG_CAN_XFER_US;
+
+        status = can_init_dev(&GENERIC_IMU_AppData.Generic_imuCan);
+        if (status == OS_SUCCESS)
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceCount++;
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled = GENERIC_IMU_DEVICE_ENABLED;
+            CFE_EVS_SendEvent(GENERIC_IMU_ENABLE_INF_EID, CFE_EVS_EventType_INFORMATION, "GENERIC_IMU: Device enabled");
+        }
+        else
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_CAN_INIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: CAN port initialization error %d", status);
+        }
+    }
+    else
+    {
+        /* Increment command error count */
+        GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+        CFE_EVS_SendEvent(GENERIC_IMU_ENABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "GENERIC_IMU: Device enable failed, already enabled");
+    }
+    return;
+}
+
+/*
+** Disable Component
+*/
+void GENERIC_IMU_Disable(void)
+{
+    int32 status = OS_SUCCESS;
+
+    /* Do any necessary checks, confirm that device is currently enabled */
+    if (GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled == GENERIC_IMU_DEVICE_ENABLED)
+    {
+        /* Increment command success counter */
+        GENERIC_IMU_AppData.HkTelemetryPkt.CommandCount++;
+
+        /* Do the action, close hardware interface and set disabled */
+        status = can_close_device(&GENERIC_IMU_AppData.Generic_imuCan);
+        if (status == OS_SUCCESS)
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceCount++;
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceEnabled = GENERIC_IMU_DEVICE_DISABLED;
+            CFE_EVS_SendEvent(GENERIC_IMU_DISABLE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "GENERIC_IMU: Device disabled");
+        }
+        else
+        {
+            GENERIC_IMU_AppData.HkTelemetryPkt.DeviceErrorCount++;
+            CFE_EVS_SendEvent(GENERIC_IMU_CAN_CLOSE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "GENERIC_IMU: CAN port close error %d", status);
+        }
+    }
+    else
+    {
+        /* Increment command error count */
+        GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+        CFE_EVS_SendEvent(GENERIC_IMU_DISABLE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "GENERIC_IMU: Device disable failed, already disabled");
+    }
+    return;
+}
+
+/*
+** Verify command packet length matches expected
+*/
+int32 GENERIC_IMU_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length)
+{
+    int32             status        = OS_SUCCESS;
+    CFE_SB_MsgId_t    msg_id        = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t cmd_code      = 0;
+    size_t            actual_length = 0;
+
+    CFE_MSG_GetSize(msg, &actual_length);
+    if (expected_length != actual_length)
+    {
+        CFE_MSG_GetMsgId(msg, &msg_id);
+        CFE_MSG_GetFcnCode(msg, &cmd_code);
+
+        CFE_EVS_SendEvent(GENERIC_IMU_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Invalid msg length: ID = 0x%X,  CC = %d, Len = %ld, Expected = %d",
+                          CFE_SB_MsgIdToValue(msg_id), cmd_code, actual_length, expected_length);
+
+        status = OS_ERROR;
+
+        /* Increment the command error counter upon receipt of an invalid command */
+        GENERIC_IMU_AppData.HkTelemetryPkt.CommandErrorCount++;
+    }
+    return status;
+}
 ```
 
-## 항목
+### `generic_imu_app.h`
 
-- [`components/generic_imu/fsw/cfs/src/generic_imu_app.c`](file--generic_imu_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/cfs/src/generic_imu_app.h`](file--generic_imu_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/cfs/src/generic_imu_events.h`](file--generic_imu_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/cfs/src/generic_imu_msg.h`](file--generic_imu_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/cfs/src/generic_imu_version.h`](file--generic_imu_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_imu/fsw/cfs/src/generic_imu_app.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_imu_app.h
+**
+** Purpose:
+**   This is the main header file for the GENERIC_IMU application.
+**
+*******************************************************************************/
+#ifndef _GENERIC_IMU_APP_H_
+#define _GENERIC_IMU_APP_H_
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "generic_imu_device.h"
+#include "generic_imu_events.h"
+#include "generic_imu_platform_cfg.h"
+#include "generic_imu_perfids.h"
+#include "generic_imu_msg.h"
+#include "generic_imu_msgids.h"
+#include "generic_imu_version.h"
+#include "hwlib.h"
+
+/*
+** Specified pipe depth - how many messages will be queued in the pipe
+*/
+#define GENERIC_IMU_PIPE_DEPTH 32
+
+/*
+** Enabled and Disabled Definitions
+*/
+#define GENERIC_IMU_DEVICE_DISABLED 0
+#define GENERIC_IMU_DEVICE_ENABLED  1
+
+/*
+** GENERIC_IMU global data structure
+** The cFE convention is to put all global app data in a single struct.
+** This struct is defined in the `generic_imu_app.h` file with one global instance
+** in the `.c` file.
+*/
+typedef struct
+{
+    /*
+    ** Housekeeping telemetry packet
+    ** Each app defines its own packet which contains its OWN telemetry
+    */
+    GENERIC_IMU_Hk_tlm_t HkTelemetryPkt; /* GENERIC_IMU Housekeeping Telemetry Packet */
+
+    /*
+    ** Operational data  - not reported in housekeeping
+    */
+    CFE_MSG_Message_t *MsgPtr;    /* Pointer to msg received on software bus */
+    CFE_SB_PipeId_t    CmdPipe;   /* Pipe Id for HK command pipe */
+    uint32             RunStatus; /* App run status for controlling the application state */
+
+    /*
+     ** Device data
+     */
+    uint32                   DeviceID;  /* Device ID provided by CFS on initialization */
+    GENERIC_IMU_Device_tlm_t DevicePkt; /* Device specific data packet */
+
+    /*
+    ** Device protocol: CAN
+    */
+    can_info_t Generic_imuCan; /* Hardware protocol definition */
+
+} GENERIC_IMU_AppData_t;
+
+/*
+** Exported Data
+** Extern the global struct in the header for the Unit Test Framework (UTF).
+*/
+extern GENERIC_IMU_AppData_t GENERIC_IMU_AppData; /* GENERIC_IMU App Data */
+
+/*
+**
+** Local function prototypes.
+**
+** Note: Except for the entry point (IMU_AppMain), these
+**       functions are not called from any other source module.
+*/
+void  IMU_AppMain(void);
+int32 GENERIC_IMU_AppInit(void);
+void  GENERIC_IMU_ProcessCommandPacket(void);
+void  GENERIC_IMU_ProcessGroundCommand(void);
+void  GENERIC_IMU_ProcessTelemetryRequest(void);
+void  GENERIC_IMU_ReportHousekeeping(void);
+void  GENERIC_IMU_ReportDeviceTelemetry(void);
+void  GENERIC_IMU_ResetCounters(void);
+void  GENERIC_IMU_Enable(void);
+void  GENERIC_IMU_Disable(void);
+int32 GENERIC_IMU_VerifyCmdLength(CFE_MSG_Message_t *msg, uint16 expected_length);
+
+#endif /* _GENERIC_IMU_APP_H_ */
+```
+
+### `generic_imu_events.h`
+
+**경로:** `components/generic_imu/fsw/cfs/src/generic_imu_events.h`
+
+
+```c
+/************************************************************************
+** File:
+**    generic_imu_events.h
+**
+** Purpose:
+**  Define GENERIC_IMU application event IDs
+**
+*************************************************************************/
+
+#ifndef _GENERIC_IMU_EVENTS_H_
+#define _GENERIC_IMU_EVENTS_H_
+
+/* Standard app event IDs */
+#define GENERIC_IMU_RESERVED_EID        0
+#define GENERIC_IMU_STARTUP_INF_EID     1
+#define GENERIC_IMU_LEN_ERR_EID         2
+#define GENERIC_IMU_PIPE_ERR_EID        3
+#define GENERIC_IMU_SUB_CMD_ERR_EID     4
+#define GENERIC_IMU_SUB_REQ_HK_ERR_EID  5
+#define GENERIC_IMU_PROCESS_CMD_ERR_EID 6
+
+/* Standard command event IDs */
+#define GENERIC_IMU_CMD_ERR_EID         10
+#define GENERIC_IMU_CMD_NOOP_INF_EID    11
+#define GENERIC_IMU_CMD_RESET_INF_EID   12
+#define GENERIC_IMU_CMD_ENABLE_INF_EID  13
+#define GENERIC_IMU_ENABLE_INF_EID      14
+#define GENERIC_IMU_ENABLE_ERR_EID      15
+#define GENERIC_IMU_CMD_DISABLE_INF_EID 16
+#define GENERIC_IMU_DISABLE_INF_EID     17
+#define GENERIC_IMU_DISABLE_ERR_EID     18
+
+/* Device specific command event IDs */
+#define GENERIC_IMU_CMD_CONFIG_INF_EID 20
+#define GENERIC_IMU_CONFIG_INF_EID     21
+#define GENERIC_IMU_CONFIG_ERR_EID     22
+
+/* Standard telemetry event IDs */
+#define GENERIC_IMU_DEVICE_TLM_ERR_EID 30
+#define GENERIC_IMU_REQ_HK_ERR_EID     31
+
+/* Device specific telemetry event IDs */
+#define GENERIC_IMU_REQ_DATA_ERR_EID        32
+#define GENERIC_IMU_REQ_DATA_STATUS_ERR_EID 33
+
+/* Hardware protocol event IDs */
+#define GENERIC_IMU_CAN_INIT_ERR_EID    40
+#define GENERIC_IMU_CAN_READ_ERR_EID    41
+#define GENERIC_IMU_CAN_WRITE_ERR_EID   42
+#define GENERIC_IMU_CAN_TIMEOUT_ERR_EID 43
+#define GENERIC_IMU_CAN_CLOSE_ERR_EID   44
+
+#endif /* _GENERIC_IMU_EVENTS_H_ */
+```
+
+### `generic_imu_msg.h`
+
+**경로:** `components/generic_imu/fsw/cfs/src/generic_imu_msg.h`
+
+
+```c
+/*******************************************************************************
+** File:
+**   generic_imu_msg.h
+**
+** Purpose:
+**  Define GENERIC_IMU application commands and telemetry messages
+**
+*******************************************************************************/
+#ifndef _GENERIC_IMU_MSG_H_
+#define _GENERIC_IMU_MSG_H_
+
+#include "cfe.h"
+#include "generic_imu_device.h"
+
+/*
+** Ground Command Codes
+** TODO: Add additional commands required by the specific component
+*/
+#define GENERIC_IMU_NOOP_CC           0
+#define GENERIC_IMU_RESET_COUNTERS_CC 1
+#define GENERIC_IMU_ENABLE_CC         2
+#define GENERIC_IMU_DISABLE_CC        3
+#define GENERIC_IMU_CONFIG_CC         4
+
+/*
+** Telemetry Request Command Codes
+** TODO: Add additional commands required by the specific component
+*/
+#define GENERIC_IMU_REQ_HK_TLM   0
+#define GENERIC_IMU_REQ_DATA_TLM 1
+
+/*
+** Generic "no arguments" command type definition
+*/
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    CFE_MSG_CommandHeader_t CmdHeader;
+
+} GENERIC_IMU_NoArgs_cmd_t;
+
+/*
+** GENERIC_IMU write configuration command
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;
+    uint32                  DeviceCfg;
+
+} GENERIC_IMU_Config_cmd_t;
+
+/*
+** GENERIC_IMU device telemetry definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t     TlmHeader;
+    GENERIC_IMU_Device_Data_tlm_t Generic_imu;
+
+} __attribute__((packed)) GENERIC_IMU_Device_tlm_t;
+#define GENERIC_IMU_DEVICE_TLM_LNGTH sizeof(GENERIC_IMU_Device_tlm_t)
+
+/*
+** GENERIC_IMU housekeeping type definition
+*/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t   TlmHeader;
+    uint8                       CommandErrorCount;
+    uint8                       CommandCount;
+    uint8                       DeviceErrorCount;
+    uint8                       DeviceCount;
+    uint8                       DeviceEnabled;
+    GENERIC_IMU_Device_HK_tlm_t DeviceHK;
+
+} __attribute__((packed)) GENERIC_IMU_Hk_tlm_t;
+#define GENERIC_IMU_HK_TLM_LNGTH sizeof(GENERIC_IMU_Hk_tlm_t)
+
+#endif /* _GENERIC_IMU_MSG_H_ */
+```
+
+### `generic_imu_version.h`
+
+**경로:** `components/generic_imu/fsw/cfs/src/generic_imu_version.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_imu_app_version.h  $
+**
+** Purpose:
+**  The Generic_imu Application header file containing version number
+**
+*************************************************************************/
+
+/* The Generic_imu Application header file containing version number */
+#ifndef _GENERIC_IMU_VERSION_H_
+#define _GENERIC_IMU_VERSION_H_
+
+#define GENERIC_IMU_MAJOR_VERSION 1
+#define GENERIC_IMU_MINOR_VERSION 0
+#define GENERIC_IMU_REVISION      0
+#define GENERIC_IMU_MISSION_REV   0
+
+#endif
+```

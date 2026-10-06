@@ -3,18 +3,157 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-calibration.component.html`
 
-file--parameter-calibration.component.html
-file--parameter-calibration.component.ts
-file--polynomial.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/parameter-calibration.component.html`
+
+
+```html
+@if (ptype.dataEncoding?.defaultCalibrator || ptype.dataEncoding?.contextCalibrators) {
+  <table yaDataTable>
+    <tr>
+      <th width="200">Calibrator</th>
+      <th width="100">Type</th>
+      <th width="200">Definition</th>
+    </tr>
+    @if (ptype.dataEncoding?.defaultCalibrator; as defaultCalibrator) {
+      <tr>
+        <td>default</td>
+        <td>{{ defaultCalibrator.type }}</td>
+        <td>
+          @switch (defaultCalibrator.type) {
+            @case ("POLYNOMIAL") {
+              <span
+                [innerHTML]="
+                  defaultCalibrator.polynomialCalibrator.coefficients | polynomial
+                "></span>
+            }
+            @case ("SPLINE") {
+              <span>{{ defaultCalibrator.splineCalibrator.points.length }} points</span>
+            }
+            @case ("JAVA_EXPRESSION") {
+              <span>
+                {{ defaultCalibrator.javaExpressionCalibrator.formula }}
+              </span>
+            }
+            @default {
+              <span>-</span>
+            }
+          }
+        </td>
+      </tr>
+    }
+    @if (ptype.dataEncoding?.contextCalibrators; as contextCalibrators) {
+      @for (contextCalibrator of contextCalibrators; track contextCalibrator) {
+        <tr>
+          <td>
+            <app-expression [expression]="contextCalibrator.context" [relto]="relto" />
+          </td>
+          <td>{{ contextCalibrator.calibrator.type }}</td>
+          <td>
+            @switch (contextCalibrator.calibrator.type) {
+              @case ("POLYNOMIAL") {
+                <span
+                  [innerHTML]="
+                    contextCalibrator.calibrator.polynomialCalibrator.coefficients | polynomial
+                  "></span>
+              }
+              @case ("SPLINE") {
+                <span>
+                  {{ contextCalibrator.calibrator.splineCalibrator.points.length }} points
+                </span>
+              }
+              @case ("JAVA_EXPRESSION") {
+                <span>
+                  {{ contextCalibrator.calibrator.javaExpressionCalibrator.formula }}
+                </span>
+              }
+              @default {
+                <span>-</span>
+              }
+            }
+          </td>
+        </tr>
+      }
+    }
+  </table>
+} @else {
+  None
+}
 ```
 
-## 항목
+### `parameter-calibration.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/parameter-calibration.component.html`](file--parameter-calibration.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/parameter-calibration.component.ts`](file--parameter-calibration.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/polynomial.pipe.ts`](file--polynomial.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/parameter-calibration.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ParameterType,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { ExpressionComponent } from '../../../shared/expression/expression.component';
+import { PolynomialPipe } from './polynomial.pipe';
+
+@Component({
+  selector: 'app-parameter-calibration',
+  templateUrl: './parameter-calibration.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ExpressionComponent, PolynomialPipe, WebappSdkModule],
+})
+export class ParameterCalibrationComponent {
+  @Input()
+  ptype: ParameterType;
+
+  @Input()
+  relto?: string;
+
+  constructor(readonly yamcs: YamcsService) {}
+}
+```
+
+### `polynomial.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter-calibration/polynomial.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'polynomial',
+})
+export class PolynomialPipe implements PipeTransform {
+  transform(coefficients?: number[]): string | null {
+    if (!coefficients || !coefficients.length) {
+      return null;
+    }
+    let result = '';
+    let firstTerm = true;
+    for (let i = coefficients.length - 1; i >= 0; i--) {
+      if (coefficients[i] !== 0) {
+        if (!firstTerm) {
+          if (coefficients[i] > 0) {
+            result += ' + ';
+          } else {
+            result += ' - ';
+          }
+        }
+        result += Math.abs(coefficients[i]);
+        if (i === 1) {
+          result += '𝑥';
+        } else if (i >= 1) {
+          result += '𝑥<sup>' + i + '</sup>';
+        }
+
+        firstTerm = false;
+      }
+    }
+    return result;
+  }
+}
+```

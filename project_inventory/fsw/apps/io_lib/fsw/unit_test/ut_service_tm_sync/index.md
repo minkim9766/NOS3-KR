@@ -3,18 +3,433 @@
 
 **경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `makefile`
 
-file--makefile
-file--tm_sync_testcase.c
-file--tm_sync_testrunner.c
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/makefile`
+
+
+```text
+##############################################################################
+## GNU Makefile for building UT unit tests
+
+#
+# Supported MAKEFILE targets:
+#   clean - deletes object files, executables, output files, and gcov files
+#   all   - makes utf_test_runner.exe
+#   run   - runs utf_test_runner.exe
+#   gcov  - prints a GCOV coverage report (make all, make run, make gcov)
+#
+# GCOV is disabled by default.  If you are using the source level debugger you will want to 
+# disable GCOV.  To enable GCOV you can override the ENABLE_GCOV variable on the command line 
+# by setting it to TRUE.  For example "make ENABLE_GCOV=TRUE".
+#
+
+APP=tm_sync
+
+CFE_PATH  = $(CFE_FSW)/cfe-core
+OSAL_PATH = $(OSAL_DIR)
+PSP_PATH  = $(PSP_DIR)
+
+#
+# VPATH specifies the search paths for source files outside of the current directory.  Note that
+# all object files will be created in the current directory even if the source file is not in the 
+# current directory.
+#
+VPATH := ../../src/services
+VPATH += ../../src
+VPATH += ../ut-assert/src
+
+#
+# INCLUDES specifies the search paths for include files outside of the current directory.  
+# Note that the -I is required. 
+#
+INCLUDES := -I.
+INCLUDES += -I..
+INCLUDES += -I../../src
+INCLUDES += -I../../public_inc
+INCLUDES += -I../ut-assert/inc
+INCLUDES += -I$(CFE_PATH)/os/inc
+INCLUDES += -I$(CFE_PATH)/src/inc
+INCLUDES += -I$(CFE_PATH)/src/time
+INCLUDES += -I$(CFE_PATH)/src/sb
+INCLUDES += -I$(CFE_PATH)/src/es
+INCLUDES += -I$(CFE_PATH)/src/evs
+INCLUDES += -I$(CFE_PATH)/src/fs
+INCLUDES += -I$(CFE_PATH)/src/tbl
+INCLUDES += -I$(CFE_PATH)/../mission_inc
+INCLUDES += -I$(CFE_PATH)/../platform_inc/cpu1
+INCLUDES += -I$(OSAL_PATH)/src/os/inc
+INCLUDES += -I$(OSAL_PATH)/build/inc
+INCLUDES += -I$(OSAL_PATH)/src/bsp/pc-linux/config
+INCLUDES += -I$(PSP_PATH)/fsw/inc
+INCLUDES += -I$(PSP_PATH)/fsw/pc-linux/inc
+
+#
+# APP_OBJS specifies flight software object files.
+#
+APP_OBJS := $(APP).o
+APP_OBJS += io_lib_utils.o
+
+
+#
+# UT_OBJS specifies unit test object files.
+#
+UT_OBJS := ut_osapi_stubs.o
+UT_OBJS += ut_osfileapi_stubs.o
+UT_OBJS += ut_cfe_psp_memutils_stubs.o
+UT_OBJS += ut_cfe_sb_stubs.o
+UT_OBJS += ut_cfe_sb_hooks.o
+UT_OBJS += ut_cfe_es_stubs.o
+UT_OBJS += ut_cfe_es_hooks.o
+UT_OBJS += ut_cfe_evs_stubs.o
+UT_OBJS += ut_cfe_evs_hooks.o
+UT_OBJS += ut_cfe_tbl_stubs.o
+UT_OBJS += ut_cfe_tbl_hooks.o
+UT_OBJS += ut_cfe_time_stubs.o
+UT_OBJS += ut_cfe_fs_stubs.o
+UT_OBJS += utassert.o
+UT_OBJS += utlist.o
+UT_OBJS += uttest.o
+UT_OBJS += uttools.o
+UT_OBJS += $(APP)_testcase.o
+#UT_OBJS += $(APP)_stubs.o
+
+###############################################################################
+
+COMPILER=gcc
+LINKER=gcc
+
+#
+# Compiler and Linker Options
+#
+ENABLE_GCOV = TRUE
+ifeq ($(ENABLE_GCOV), TRUE)
+GCOV_COPT = -fprofile-arcs -ftest-coverage -pg -p
+GCOV_LOPT = -pg -p -fprofile-arcs -ftest-coverage -lgcov
+endif
+
+#WARNINGS = -Wall -W -ansi -Werror -Wstrict-prototypes -Wundef
+WARNINGS = -Wall -Wstrict-prototypes
+DEBUGGER = -g
+
+COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D__x86_64__ -D_LINUX_OS_
+#COPT = $(WARNINGS) $(DEBUGGER) $(GCOV_COPT) -DSOFTWARE_LITTLE_BIT_ORDER -D_EL -D_ix86_ -DUT_VERBOSE 
+
+LOPT = $(GCOV_LOPT)
+
+###############################################################################
+## Rule to make the specified TARGET
+##
+%.exe: %.o
+	$(LINKER) $(LOPT) $^ -o $*.exe
+
+###############################################################################
+##  "C" COMPILER RULE
+##
+%.o: %.c
+	$(COMPILER) -c $(COPT) $(INCLUDES) $<
+
+##############################################################################
+##
+
+all:$(APP)_testrunner.exe
+
+$(APP)_testrunner.exe: $(APP)_testrunner.o $(UT_OBJS) $(APP_OBJS)
+
+clean ::
+	rm -f *.o *.exe *.gcda *.gcno *.gcov gmon.out
+
+run ::
+	./$(APP)_testrunner.exe
+
+#gcov ::
+#	@echo
+#	@gcov $(UT_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+#		sed -n '/File/p' | sed '/ads/d'  | \
+#		sed 's/ Lines executed:/ /; s/File/gcov:/; s/of//'
+#	@rm -f *.gcda *.gcno
+#	@echo
+
+gcov ::
+	@echo
+	@gcov -b $(APP_OBJS:.o=.gcda) | sed 'N;s/\n/ /' | \
+         sed -n '/File/p' | sed '/ads/d' | sed -e '/\.h/d'  | \
+         sed 's/ Lines executed:/ /; s/File/gcov:/; s/of// '
+	@rm -f *.gcda *.gcno
+	@echo
+
+# end of file
 ```
 
-## 항목
+### `tm_sync_testcase.c`
 
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/makefile`](file--makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/tm_sync_testcase.c`](file--tm_sync_testcase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/tm_sync_testrunner.c`](file--tm_sync_testrunner.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/tm_sync_testcase.c`
+
+
+```c
+/*
+ * Filename: tm_sync_testcase.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test cases for the TM_SYNC Service
+ *
+ * Modification History:
+ *   11/02/2015 Guy de Carufel, Odyssey Space Research, LLC
+ *    * Created
+ *
+ */
+
+
+/*
+ * Includes
+ */
+#include "cfe.h"
+#include "utassert.h"
+#include "uttest.h"
+#include "utlist.h"
+#include "ut_cfe_time_stubs.h"
+#include "ut_cfe_tbl_stubs.h"
+#include "ut_cfe_tbl_hooks.h"
+#include "ut_cfe_evs_stubs.h"
+#include "ut_cfe_evs_hooks.h"
+#include "ut_cfe_sb_stubs.h"
+#include "ut_cfe_sb_hooks.h"
+#include "ut_cfe_es_stubs.h"
+#include "ut_osapi_stubs.h"
+#include "ut_osfileapi_stubs.h"
+#include "ut_cfe_fs_stubs.h"
+
+#include "tm_sync.h"
+
+
+/* ---------------------  Begin test cases  --------------------------------- */
+
+/*******************************************************************************
+**
+**  Test PseudoRandomize 
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TM_SYNC_PseudoRandomize(void)
+{
+    uint8 expSeq[5] = {0xff, 0x48, 0x0e, 0xc0, 0x9A};
+    uint8 data[100];
+
+    /* Clear buffer */
+    memset(data, 0x0, 100);
+
+    /* Execute Test */
+    TM_SYNC_LibInit();
+    TM_SYNC_PseudoRandomize(&data[0], 100);
+
+    /* Verify Outputs */
+    UtAssert_True(data[0] == expSeq[0], "Pseudo-Random Seq byte 0");
+    UtAssert_True(data[1] == expSeq[1], "Pseudo-Random Seq byte 1");
+    UtAssert_True(data[2] == expSeq[2], "Pseudo-Random Seq byte 2");
+    UtAssert_True(data[3] == expSeq[3], "Pseudo-Random Seq byte 3");
+    UtAssert_True(data[4] == expSeq[4], "Pseudo-Random Seq byte 4");
+    UtAssert_True(data[32] == 0xfe, "Test Pseudo-Random 1x period lapse");
+    UtAssert_True(data[64] == 0xfd, "Test Pseudo-Random 2x period lapse");
+
+    /* Execute Test */
+    TM_SYNC_PseudoRandomize(&data[0], 100);
+
+    /* Verify Outputs */
+    UtAssert_True(data[43] == 0x00, "De-randomize check.");
+}
+
+
+/*******************************************************************************
+**
+**  Test Synchronize
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TM_SYNC_Synchronize_NullPtr(void)
+{
+    uint8 buffer[100];
+    
+    /* Execute Test */
+    int32 expected = TM_SYNC_INVALID_POINTER;
+    int32 actual = TM_SYNC_Synchronize(NULL, TM_SYNC_ASM_STR, TM_SYNC_ASM_SIZE, 96, true);
+    UtAssert_True(actual == expected, "NULL Pointer");
+
+    actual = TM_SYNC_Synchronize(buffer, NULL, TM_SYNC_ASM_SIZE, 96, true);
+    UtAssert_True(actual == expected, "NULL ASM String");
+}
+
+
+void Test_TM_SYNC_Synchronize_BadAsm(void)
+{
+    uint8 buffer[100];
+    
+    /* Execute Test */
+    int32 expected = TM_SYNC_INVALID_ASM_SIZE;
+    int32 actual = TM_SYNC_Synchronize(buffer, TM_SYNC_ASM_STR, 3, 96, true);
+    UtAssert_True(actual == expected, "Invalid ASM Size");
+
+    actual = TM_SYNC_Synchronize(buffer, TM_SYNC_ASM_STR, 5, 96, true);
+    UtAssert_True(actual == expected, "Invalid ASM Size");
+}
+
+
+void Test_TM_SYNC_Synchronize(void)
+{
+    uint8 expAsm[4] = {0x1a, 0xcf, 0xfc, 0x1d};
+    uint8 expSeq[5] = {0xff, 0x48, 0x0e, 0xc0, 0x9A};
+    uint8 buffer[100];
+
+    /* Clear buffer */
+    memset(buffer, 0x0, 100);
+
+    /* Execute Test */
+    TM_SYNC_LibInit();
+    TM_SYNC_Synchronize(buffer, TM_SYNC_ASM_STR, TM_SYNC_ASM_SIZE, 96, true);
+
+    /* Verify Outputs */
+    UtAssert_True(buffer[0] == expAsm[0], "ASM Header byte 0");
+    UtAssert_True(buffer[1] == expAsm[1], "ASM Header byte 1");
+    UtAssert_True(buffer[2] == expAsm[2], "ASM Header byte 2");
+    UtAssert_True(buffer[3] == expAsm[3], "ASM Header byte 3");
+    UtAssert_True(buffer[5] == expSeq[1], "Pseudo-Randomize check");
+
+    /* Execute Test */
+    TM_SYNC_PseudoRandomize(&buffer[4], 96);
+
+    /* Verify Outputs */
+    UtAssert_True(buffer[5] == 0x00, "De-randomize check.");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/*******************************************************************************
+**
+**  Test Synchronize no random.
+**
+*******************************************************************************/
+/*----------------------------------------------------------------------------*/
+void Test_TM_SYNC_Synchronize_NoRandom(void)
+{
+    uint8 expAsm[4] = {0x1a, 0xcf, 0xfc, 0x1d};
+    uint8 buffer[100];
+
+    /* Clear buffer */
+    memset(buffer, 0x0, 100);
+
+    /* Execute Test */
+    TM_SYNC_LibInit();
+    TM_SYNC_Synchronize(buffer, TM_SYNC_ASM_STR, TM_SYNC_ASM_SIZE, 96, false);
+
+    /* Verify Outputs */
+    UtAssert_True(buffer[0] == expAsm[0], "ASM Header byte 0");
+    UtAssert_True(buffer[1] == expAsm[1], "ASM Header byte 1");
+    UtAssert_True(buffer[2] == expAsm[2], "ASM Header byte 2");
+    UtAssert_True(buffer[3] == expAsm[3], "ASM Header byte 3");
+    UtAssert_True(buffer[5] == 0x00, "No pseudo-Randomize check");
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+
+/*
+ * TM_SYNC_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void TM_SYNC_Setup(void)
+{
+
+}
+
+/*
+ * TM_SYNC_TearDown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void TM_SYNC_TearDown(void)
+{
+
+}
+
+
+/*
+ * TM_SYNC_Setup_ProcessFrame
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test of TM_SYNC_ProcessFrame
+ *
+ * Notes:
+ */
+void TM_SYNC_Setup_ProcessFrame(void)
+{
+    TM_SYNC_Setup();
+}
+
+
+
+
+#define ADD_TEST(test,setup,teardown) UtTest_Add((test), (setup), (teardown), #test)
+
+/* TM_SYNC_AddTestCase
+ *
+ * Purpose:
+ *   Registers the test cases to execute with the unit test tool
+ */
+void TM_SYNC_AddTestCase(void)
+{
+    /* TM_SYNC_PseudoRandomize */
+    ADD_TEST(Test_TM_SYNC_PseudoRandomize,       TM_SYNC_Setup, TM_SYNC_TearDown);
+    ADD_TEST(Test_TM_SYNC_Synchronize_NullPtr,   TM_SYNC_Setup, TM_SYNC_TearDown);
+    ADD_TEST(Test_TM_SYNC_Synchronize_BadAsm,    TM_SYNC_Setup, TM_SYNC_TearDown);
+    ADD_TEST(Test_TM_SYNC_Synchronize,           TM_SYNC_Setup, TM_SYNC_TearDown);
+    ADD_TEST(Test_TM_SYNC_Synchronize_NoRandom,  TM_SYNC_Setup, TM_SYNC_TearDown);
+}
+```
+
+### `tm_sync_testrunner.c`
+
+**경로:** `fsw/apps/io_lib/fsw/unit_test/ut_service_tm_sync/tm_sync_testrunner.c`
+
+
+```c
+
+void TM_SYNC_AddTestCase(void);
+
+/*
+ * Filename: cop1_testrunner.c
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose: This file contains a unit test runner for the COP-1 procedure.
+ *
+ */
+
+/*
+ * Includes
+ */
+
+#include "uttest.h"
+
+/*
+ * Function Definitions
+ */
+
+int main(void)
+{
+    /* Call AddTestSuite or AddTestCase functions here */
+    TM_SYNC_AddTestCase();
+    return(UtTest_Run());
+}
+
+```

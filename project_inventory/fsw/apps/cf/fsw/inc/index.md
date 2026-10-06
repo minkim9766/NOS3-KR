@@ -3,26 +3,3260 @@
 
 **경로:** `fsw/apps/cf/fsw/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cf_events.h`
 
-file--cf_events.h
-file--cf_extern_typedefs.h
-file--cf_msg.h
-file--cf_msgids.h
-file--cf_perfids.h
-file--cf_platform_cfg.h
-file--cf_tbldefs.h
+**경로:** `fsw/apps/cf/fsw/inc/cf_events.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application event id definition header file
+ */
+
+#ifndef CF_EVENTS_H
+#define CF_EVENTS_H
+
+/**
+ * \defgroup cfscfevents CFS CFDP Event IDs
+ * \{
+ */
+
+/**************************************************************************
+ * CF_INIT event IDs - Initialization
+ */
+
+#define CF_INF_RX_COMPLETE (1)
+
+/**
+ * \brief CF Initialization Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Successful completion of application initialization
+ */
+#define CF_EID_INF_INIT (20)
+
+/**
+ * \brief CF Check Table Release Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from release table address call during periodic table check
+ */
+#define CF_EID_ERR_INIT_TBL_CHECK_REL (21)
+
+/**
+ * \brief CF Check Table Manage Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from manage table call during periodic table check
+ */
+#define CF_EID_ERR_INIT_TBL_CHECK_MAN (22)
+
+/**
+ * \brief CF Check Table Get Address Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from get table call during periodic table check
+ */
+#define CF_EID_ERR_INIT_TBL_CHECK_GA (23)
+
+/**
+ * \brief CF Table Registration At Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from table register call during application initialization
+ */
+#define CF_EID_ERR_INIT_TBL_REG (24)
+
+/**
+ * \brief CF Table Load At Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from table load call during application initialization
+ */
+#define CF_EID_ERR_INIT_TBL_LOAD (25)
+
+/**
+ * \brief CF Table Manage At Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from table manage call during application initialization
+ */
+#define CF_EID_ERR_INIT_TBL_MANAGE (26)
+
+/**
+ * \brief CF Table Get Address At Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from table get address call during application initialization
+ */
+#define CF_EID_ERR_INIT_TBL_GETADDR (27)
+
+/**
+ * \brief CF Message ID Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Invalid message ID received on the software bus pipe
+ */
+#define CF_EID_ERR_INIT_CMD_LENGTH (28)
+
+/**
+ * \brief CF SB Receive Buffer Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from SB Receive Buffer call in application run loop
+ */
+#define CF_EID_ERR_INIT_MSG_RECV (29)
+
+/**
+ * \brief CF Channel Semaphore Initialization Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from get semaphore by name call during engine channel initialization,
+ *  semaphore needs to exist before engine is initialized.
+ */
+#define CF_EID_ERR_INIT_SEM (30)
+
+/**
+ * \brief CF Channel Create Pipe Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from create pipe call during engine channel initialization
+ */
+#define CF_EID_ERR_INIT_PIPE (31)
+
+/**
+ * \brief CF Channel Message Subscription Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from message subscription call during engine channel initialization
+ */
+#define CF_EID_ERR_INIT_SUB (32)
+
+/**
+ * \brief CF Ticks Per Second Config Table Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Configuration table ticks per second set to zero
+ */
+#define CF_EID_ERR_INIT_TPS (33)
+
+/**
+ * \brief CF CRC Bytes Per Wakeup Config Table Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Configuration table CRC bytes per wakeup not aligned or zero
+ */
+#define CF_EID_ERR_INIT_CRC_ALIGN (34)
+
+/**
+ * \brief CF Outgoing Chunk Size Config Table Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Configuration table outgoing chunk size larger than PDU data size
+ */
+#define CF_EID_ERR_INIT_OUTGOING_SIZE (35)
+
+/**************************************************************************
+ * CF_PDU event IDs - Protocol data unit
+ */
+
+/**
+ * \brief CF Metadata PDU Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Successful processing of metadata PDU
+ */
+#define CF_EID_INF_PDU_MD_RECVD (40)
+
+/**
+ * \brief CF PDU Header Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing PDU header
+ */
+#define CF_EID_ERR_PDU_SHORT_HEADER (41)
+
+/**
+ * \brief CF Metadata PDU Too Shourt Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing metadata PDU
+ */
+#define CF_EID_ERR_PDU_MD_SHORT (43)
+
+/**
+ * \brief CF Metadata PDU Source Filename Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Metadata PDU source filename length exceeds buffer size
+ */
+#define CF_EID_ERR_PDU_INVALID_SRC_LEN (44)
+
+/**
+ * \brief CF Metadata PDU Destination Filename Length Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Metadata PDU destination filename length exceeds buffer size
+ */
+#define CF_EID_ERR_PDU_INVALID_DST_LEN (45)
+
+/**
+ * \brief CF File Data PDU Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing file data PDU
+ */
+#define CF_EID_ERR_PDU_FD_SHORT (46)
+
+/**
+ * \brief CF End-Of-File PDU Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing end-of-file PDU
+ */
+#define CF_EID_ERR_PDU_EOF_SHORT (47)
+
+/**
+ * \brief CF Acknowledgment PDU Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing acknowledgment PDU
+ */
+#define CF_EID_ERR_PDU_ACK_SHORT (48)
+
+/**
+ * \brief CF Finished PDU Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing finished PDU
+ */
+#define CF_EID_ERR_PDU_FIN_SHORT (49)
+
+/**
+ * \brief CF Negative Acknowledgment PDU Too Short Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing negative acknowledgment PDU
+ */
+#define CF_EID_ERR_PDU_NAK_SHORT (50)
+
+/**
+ * \brief CF File Data PDU Unsupported Option Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  File Data PDU received with the segment metadata flag set
+ */
+#define CF_EID_ERR_PDU_FD_UNSUPPORTED (54)
+
+/**
+ * \brief CF PDU Header Large File Flag Set Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  PDU Header received with the unsupported large file flag set
+ */
+#define CF_EID_ERR_PDU_LARGE_FILE (55)
+
+/**
+ * \brief CF PDU Header Field Truncation
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  PDU Header received with fields that would be truncated with the cf configuration
+ */
+#define CF_EID_ERR_PDU_TRUNCATION (56)
+
+/**************************************************************************
+ * CF_CFDP event IDs - Engine
+ */
+
+/**
+ * \brief CF PDU Received Without Existing Transaction, Dropped Due To Max RX Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  PDU without a matching/existing transaction received when channel receive queue is already
+ *  handling the maximum number of concurrent receive transactions
+ */
+#define CF_EID_ERR_CFDP_RX_DROPPED (60)
+
+/**
+ * \brief CF PDU Received With Invalid Destination Entity ID Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  PDU without a matching/existing transaction received with an entity ID that doesn't
+ *  match the receiving channel's entity ID
+ */
+#define CF_EID_ERR_CFDP_INVALID_DST_EID (61)
+
+/**
+ * \brief CF Invalid Metadata PDU Received On Idle Transaction Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Metadata PDU received for an idle transaction failed decoding
+ */
+#define CF_EID_ERR_CFDP_IDLE_MD (62)
+
+/**
+ * \brief CF Non-metadata File Directive PDU Received On Idle Transaction Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  File Directive PDU received without the metadata directive code on an idle transaction
+ */
+#define CF_EID_ERR_CFDP_FD_UNHANDLED (63)
+
+/**
+ * \brief CF Transmission Request Rejected Due To Max Commanded TX Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Command request to transmit a file received when channel is already
+ *  handling the maximum number of concurrent command transmit transactions
+ */
+#define CF_EID_ERR_CFDP_MAX_CMD_TX (64)
+
+/**
+ * \brief CF Playback/Polling Directory Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure opening directory during playback or polling initialization
+ */
+#define CF_EID_ERR_CFDP_OPENDIR (65)
+
+/**
+ * \brief CF Playback Request Rejected Due to Max Playback Directories Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Command request to playback a directory received when channel is already
+ *  handling the maximum number of concurrent playback directories
+ */
+#define CF_EID_ERR_CFDP_DIR_SLOT (66)
+
+/**
+ * \brief CF No Message Buffer Available Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from SB allocate message buffer call when constructing PDU
+ */
+#define CF_EID_ERR_CFDP_NO_MSG (67)
+
+/**
+ * \brief CF Close File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from file close call
+ */
+#define CF_EID_ERR_CFDP_CLOSE_ERR (68)
+
+/**************************************************************************
+ * CF_CFDP_R event IDs - Engine receive
+ */
+
+/**
+ * \brief CF Requesting RX Metadata Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  RX transaction missing metadata which results in a NAK being sent to
+ *  request a metadata PDU for the transaction
+ */
+#define CF_EID_INF_CFDP_R_REQUEST_MD (70)
+
+/**
+ * \brief CF Creating Temp File For RX Transaction Without Metadata PDU
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  RX transaction missing metadata causing creation of a temporary
+ *  filename to store the data
+ */
+#define CF_EID_INF_CFDP_R_TEMP_FILE (71)
+
+/**
+ * \brief CF RX Transaction NAK Limit Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Condition that triggers a NAK occurred that would meet or exceed the NAK limit
+ */
+#define CF_EID_ERR_CFDP_R_NAK_LIMIT (72)
+
+/**
+ * \brief CF RX Transaction ACK Limit Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Condition that triggers a ACK occurred that would meet or exceed the ACK limit
+ */
+#define CF_EID_ERR_CFDP_R_ACK_LIMIT (73)
+
+/**
+ * \brief CF RX Transaction CRC Mismatch Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  RX Transaction final CRC mismatch
+ */
+#define CF_EID_ERR_CFDP_R_CRC (74)
+
+/**
+ * \brief CF RX File Data PDU Seek Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of lseek call when processing out of order file data PDUs
+ */
+#define CF_EID_ERR_CFDP_R_SEEK_FD (75)
+
+/**
+ * \brief CF RX Class 2 CRC Seek Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of lseek call when calculating CRC from the file at
+ *  the end of a Class 2 RX transaction
+ */
+#define CF_EID_ERR_CFDP_R_SEEK_CRC (76)
+
+/**
+ * \brief CF RX File Data PDU Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ * Failure of write to file call when processing file data PDUs
+ */
+#define CF_EID_ERR_CFDP_R_WRITE (77)
+
+/**
+ * \brief CF RX End-Of-File PDU File Size Mismatch Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  End-of-file PDU file size does not match transaction expected file size
+ */
+#define CF_EID_ERR_CFDP_R_SIZE_MISMATCH (78)
+
+/**
+ * \brief CF Invalid End-Of-File PDU Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  End-of-file PDU failed decoding
+ */
+#define CF_EID_ERR_CFDP_R_PDU_EOF (79)
+
+/**
+ * \brief CF RX Transaction File Create Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure in opencreate file call for an RX transaction
+ */
+#define CF_EID_ERR_CFDP_R_CREAT (80)
+
+/**
+ * \brief CF Class 2 RX Transaction Invalid FIN-ACK PDU Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  ACK PDU failed decoding during Class 2 RX Transaction
+ */
+#define CF_EID_ERR_CFDP_R_PDU_FINACK (81)
+
+/**
+ * \brief CF RX Class 2 Metadata PDU Size Mismatch Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Out-of-order RX Class 2 Metadata PDU received with file size that doesn't
+ *  match already received EOF PDU file size
+ */
+#define CF_EID_ERR_CFDP_R_EOF_MD_SIZE (82)
+
+/**
+ * \brief CF RX Class 2 Metadata PDU File Rename Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from file rename call after reception of an out-of-order RX
+ *  Class 2 Metadata PDU
+ */
+#define CF_EID_ERR_CFDP_R_RENAME (83)
+
+/**
+ * \brief CF RX Class 2 Metadata PDU File Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from file open call after reception of an out-of-order RX
+ *  Class 2 Metadata PDU
+ */
+#define CF_EID_ERR_CFDP_R_OPEN (84)
+
+/**
+ * \brief CF Invalid Out-of-order Metadata PDU Received Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure to decode out-of-order metadata PDU
+ */
+#define CF_EID_ERR_CFDP_R_PDU_MD (85)
+
+/**
+ * \brief CF Class 2 CRC Read From File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure from file read call during RX Class 2 CRC calculation
+ */
+#define CF_EID_ERR_CFDP_R_READ (86)
+
+/**
+ * \brief CF RX Invalid File Directive PDU Code Received Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Unrecognized file directive PDU directive code received for
+ *  a current transaction
+ */
+#define CF_EID_ERR_CFDP_R_DC_INV (87)
+
+/**
+ * \brief CF RX Inactivity Timer Expired Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Expiration of the RX inactivity timer
+ */
+#define CF_EID_ERR_CFDP_R_INACT_TIMER (88)
+
+/**************************************************************************
+ * CF_CFDP_S event IDs - Engine send
+ */
+
+/**
+ * \brief CF TX Initiated Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  File TX transaction initiated
+ */
+#define CF_EID_INF_CFDP_S_START_SEND (90)
+
+/**
+ * \brief CF TX File Data PDU Seek Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of lseek call when preparing to send file data PDU
+ */
+#define CF_EID_ERR_CFDP_S_SEEK_FD (91)
+
+/**
+ * \brief CF TX File Data PDU Read Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of read file call when preparing to send file data PDU
+ */
+#define CF_EID_ERR_CFDP_S_READ (92)
+
+/**
+ * \brief CF TX File Data PDU Send Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure to send the file data PDU
+ */
+#define CF_EID_ERR_CFDP_S_SEND_FD (93)
+
+/**
+ * \brief CF TX Metadata PDU File Already Open Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure to send metadata PDU due to file already being open
+ */
+#define CF_EID_ERR_CFDP_S_ALREADY_OPEN (94)
+
+/**
+ * \brief CF TX Metadata PDU File Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure in file open call when preparing to send metadata PDU
+ */
+#define CF_EID_ERR_CFDP_S_OPEN (95)
+
+/**
+ * \brief CF TX Metadata PDU File Seek End Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure in file lseek to end of file call when preparing
+ *  to send metadata PDU
+ */
+#define CF_EID_ERR_CFDP_S_SEEK_END (96)
+
+/**
+ * \brief CF TX Metadata PDU File Seek Beginning Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure in file lseek to beginning of file call when
+ *  preparing to send metadata PDU
+ */
+#define CF_EID_ERR_CFDP_S_SEEK_BEG (97)
+
+/**
+ * \brief CF TX Metadata PDU Send Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure to send the metadata PDU
+ */
+#define CF_EID_ERR_CFDP_S_SEND_MD (98)
+
+/**
+ * \brief CF TX Received NAK PDU Bad Segment Request Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Bad segment request values in recived NAK PDU relating
+ *  to a current transaction
+ */
+#define CF_EID_ERR_CFDP_S_INVALID_SR (100)
+
+/**
+ * \brief CF TX Received NAK PDU Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing recived NAK PDU relating
+ *  to a current transaction
+ */
+#define CF_EID_ERR_CFDP_S_PDU_NAK (101)
+
+/**
+ * \brief CF TX Received EOF ACK PDU Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure processing received ACK PDU relating
+ *  to a current transaction
+ */
+#define CF_EID_ERR_CFDP_S_PDU_EOF (102)
+
+/**
+ * \brief CF TX Received Early FIN PDU Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Early FIN PDU received prior to completion of a current transaction
+ */
+#define CF_EID_ERR_CFDP_S_EARLY_FIN (103)
+
+/**
+ * \brief CF Invalid TX File Directive PDU Code Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Unrecognized file directive PDU directive code received for
+ *  a current transaction
+ */
+#define CF_EID_ERR_CFDP_S_DC_INV (104)
+
+/**
+ * \brief CF Received TX Non-File Directive PDU Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Received a non-file directive PDU on a send transaction
+ */
+#define CF_EID_ERR_CFDP_S_NON_FD_PDU (105)
+
+/**
+ * \brief CF TX EOF PDU Send Limit Reached Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Timed out the limit number of times waiting for an ACK PDU for the EOF PDU on a
+ *  current transaction
+ */
+#define CF_EID_ERR_CFDP_S_ACK_LIMIT (106)
+
+/**
+ * \brief CF TX Inactivity Timer Expired Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Send transaction activity timeout expired
+ */
+#define CF_EID_ERR_CFDP_S_INACT_TIMER (107)
+
+/**************************************************************************
+ * CF_CMD event IDs - Command processing
+ */
+
+/**
+ * \brief CF NOOP Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt of NOOP command
+ */
+#define CF_EID_INF_CMD_NOOP (110)
+
+/**
+ * \brief CF Reset Counters Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of reset counters command
+ */
+#define CF_EID_INF_CMD_RESET (111)
+
+/**
+ * \brief CF Set Parameter Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of set parameter command
+ */
+#define CF_EID_INF_CMD_GETSET1 (112)
+
+/**
+ * \brief CF Get Parameter Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of get parameter command
+ */
+#define CF_EID_INF_CMD_GETSET2 (113)
+
+/**
+ * \brief CF Suspend/Resume Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of suspend/resume command
+ */
+#define CF_EID_INF_CMD_SUSPRES (114)
+
+/**
+ * \brief CF Write Queue Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of write queue command
+ */
+#define CF_EID_INF_CMD_WQ (115)
+
+/**
+ * \brief CF Enable Engine Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of enable engine command
+ */
+#define CF_EID_INF_CMD_ENABLE_ENGINE (116)
+
+/**
+ * \brief CF Disable Engine Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of disable engine command
+ */
+#define CF_EID_INF_CMD_DISABLE_ENGINE (117)
+
+/**
+ * \brief CF Transfer File Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of transfer file command
+ */
+#define CF_EID_INF_CMD_TX_FILE (118)
+
+/**
+ * \brief CF Playback Directory Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of playback directory command
+ */
+#define CF_EID_INF_CMD_PLAYBACK_DIR (119)
+
+/**
+ * \brief CF Freeze Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of freeze command
+ */
+#define CF_EID_INF_CMD_FREEZE (120)
+
+/**
+ * \brief CF Thaw Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of thaw command
+ */
+#define CF_EID_INF_CMD_THAW (121)
+
+/**
+ * \brief CF Cancel Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of cancel command
+ */
+#define CF_EID_INF_CMD_CANCEL (122)
+
+/**
+ * \brief CF Abandon Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of abandon command
+ */
+#define CF_EID_INF_CMD_ABANDON (123)
+
+/**
+ * \brief CF Enable Dequeue Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of enable dequeue command
+ */
+#define CF_EID_INF_CMD_ENABLE_DEQUEUE (124)
+
+/**
+ * \brief CF Disable Dequeue Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of disable dequeue command
+ */
+#define CF_EID_INF_CMD_DISABLE_DEQUEUE (125)
+
+/**
+ * \brief CF Enable Polldir Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of enable polldir command
+ */
+#define CF_EID_INF_CMD_ENABLE_POLLDIR (126)
+
+/**
+ * \brief CF Disable Polldir Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of disable polldir command
+ */
+#define CF_EID_INF_CMD_DISABLE_POLLDIR (127)
+
+/**
+ * \brief CF Purge Queue Command Received Event ID
+ *
+ *  \par Type: INFORMATION
+ *
+ *  \par Cause:
+ *
+ *  Receipt and successful processing of purge queue command
+ */
+#define CF_EID_INF_CMD_PURGE_QUEUE (128)
+
+/**
+ * \brief CF Reset Counters Command Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Reset counters command received with invalid parameter
+ */
+#define CF_EID_ERR_CMD_RESET_INVALID (129)
+
+/**
+ * \brief CF Command Channel Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Command received with channel parameter out of range
+ */
+#define CF_EID_ERR_CMD_CHAN_PARAM (130)
+
+/**
+ * \brief CF Command Transaction Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Command received without a matching transaction
+ */
+#define CF_EID_ERR_CMD_TRANS_NOT_FOUND (131)
+
+/**
+ * \brief CF Command All Transaction Channel Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Command received to act on all transactions with invalid channel
+ */
+#define CF_EID_ERR_CMD_TSN_CHAN_INVALID (132)
+
+/**
+ * \brief CF Suspend/Resume Command For Single Transaction State Unchanged Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Suspend/resume command received affecting single transaction already set to that state
+ */
+#define CF_EID_ERR_CMD_SUSPRES_SAME (133)
+
+/**
+ * \brief CF Suspend/Resume Command No Matching Transaction Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Suspend/resume command received without a matching transaction
+ */
+#define CF_EID_ERR_CMD_SUSPRES_CHAN (134)
+
+/**
+ * \brief CF Enable/Disable Polling Directory Command Invalid Polling Directory Index Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Enable/disable polling directory command received with invalid poling directory index
+ */
+#define CF_EID_ERR_CMD_POLLDIR_INVALID (135)
+
+/**
+ * \brief CF Purge Queue Command Invalid Argument Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Purge Queue command received with invalid queue argument
+ */
+#define CF_EID_ERR_CMD_PURGE_ARG (136)
+
+/**
+ * \brief CF Write Queue Command Invalid Channel Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Write Queue command received with invalid channel argument
+ */
+#define CF_EID_ERR_CMD_WQ_CHAN (137)
+
+/**
+ * \brief CF Write Queue Command Invalid Queue Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Write Queue command received with invalid queue selection arguments
+ */
+#define CF_EID_ERR_CMD_WQ_ARGS (138)
+
+/**
+ * \brief CF Write Queue Command File Open Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of open file call during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_OPEN (139)
+
+/**
+ * \brief CF Write Queue Command RX Active File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of file write call for RX active transactions during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_WRITEQ_RX (140)
+
+/**
+ * \brief CF Write Queue Command RX History File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of file write call for RX history during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_WRITEHIST_RX (141)
+
+/**
+ * \brief CF Write Queue Command TX Active File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of file write call for TX active transactions during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_WRITEQ_TX (142)
+
+/**
+ * \brief CF Write Queue Command TX Pending File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of file write call for TX pending transactions during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_WRITEQ_PEND (143)
+
+/**
+ * \brief CF Write Queue Command TX History File Write Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failure of file write call for TX history during processing of write queue command
+ */
+#define CF_EID_ERR_CMD_WQ_WRITEHIST_TX (144)
+
+/**
+ * \brief CF Set Parameter Command Parameter Validation Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Parameter validation failed during processing of set parameter command
+ */
+#define CF_EID_ERR_CMD_GETSET_VALIDATE (145)
+
+/**
+ * \brief CF Set/Get Parameter Command Invalid Parameter ID Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Invalid parameter id value received in set or get parameter command
+ */
+#define CF_EID_ERR_CMD_GETSET_PARAM (146)
+
+/**
+ * \brief CF Set/Get Parameter Command Invalid Channel Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Invalid channel value received in set or get parameter command
+ */
+#define CF_EID_ERR_CMD_GETSET_CHAN (147)
+
+/**
+ * \brief CF Enable Engine Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Failed to initialize engine when processing engine enable command
+ */
+#define CF_EID_ERR_CMD_ENABLE_ENGINE (148)
+
+/**
+ * \brief CF Enable Engine Command Engine Already Enabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Enable engine command received while engine is already enabled
+ */
+#define CF_EID_ERR_CMD_ENG_ALREADY_ENA (149)
+
+/**
+ * \brief CF Disable Engine Command Engine Already Disabled Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Disable engine command received while engine is already disabled
+ */
+#define CF_EID_ERR_CMD_ENG_ALREADY_DIS (150)
+
+/**
+ * \brief CF Command Length Verification Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Received command length verification failure
+ */
+#define CF_EID_ERR_CMD_GCMD_LEN (151)
+
+/**
+ * \brief CF Command Code Invalid Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Received command code unrecognized
+ */
+#define CF_EID_ERR_CMD_GCMD_CC (152)
+
+/**
+ * \brief CF Write Entry To File Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Write entry to file did not match expected length
+ */
+#define CF_EID_ERR_CMD_WHIST_WRITE (153)
+
+/**
+ * \brief CF Playback Dir Or TX File Command Bad Parameter Event ID
+ *
+ *  \par Type:  ERROR
+ *
+ *  \par Cause:
+ *
+ *  Bad parameter received in playback directory or transfer file command
+ */
+#define CF_EID_ERR_CMD_BAD_PARAM (154)
+
+/**
+ * \brief CF Cancel Command No Matching Transaction Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Cancel command received without a matching transaction
+ */
+#define CF_EID_ERR_CMD_CANCEL_CHAN (155)
+
+/**
+ * \brief CF Abandon Command No Matching Transaction Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Abandon command received without a matching transaction
+ */
+#define CF_EID_ERR_CMD_ABANDON_CHAN (156)
+
+/**
+ * \brief CF Transfer File Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Transfer file command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_TX_FILE (157)
+
+/**
+ * \brief CF Playback Directory Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Playback directory command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_PLAYBACK_DIR (158)
+
+/**
+ * \brief CF Freeze Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Freeze command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_FREEZE (159)
+
+/**
+ * \brief CF Thaw Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Thaw command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_THAW (160)
+
+/**
+ * \brief CF Enable Dequeue Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Enable Dequeue command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_ENABLE_DEQUEUE (161)
+
+/**
+ * \brief CF Disable Dequeue Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Disable dequeue command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_DISABLE_DEQUEUE (162)
+
+/**
+ * \brief CF Enable Polldir Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Enable polldir command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_ENABLE_POLLDIR (163)
+
+/**
+ * \brief CF Disable Polldir Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Disable polldir command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_DISABLE_POLLDIR (164)
+
+/**
+ * \brief CF Purge Queue Command Failed Event ID
+ *
+ *  \par Type: ERROR
+ *
+ *  \par Cause:
+ *
+ *  Purge queue command was unsuccessful
+ */
+#define CF_EID_ERR_CMD_PURGE_QUEUE (165)
+
+/**\}*/
+
+#endif /* !CF_EVENTS_H */
 ```
 
-## 항목
+### `cf_extern_typedefs.h`
 
-- [`fsw/apps/cf/fsw/inc/cf_events.h`](file--cf_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_extern_typedefs.h`](file--cf_extern_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_msg.h`](file--cf_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_msgids.h`](file--cf_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_perfids.h`](file--cf_perfids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_platform_cfg.h`](file--cf_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/fsw/inc/cf_tbldefs.h`](file--cf_tbldefs.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/cf/fsw/inc/cf_extern_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cf_extern_typedefs module
+ */
+
+#ifndef CF_EXTERN_TYPEDEFS_H
+#define CF_EXTERN_TYPEDEFS_H
+
+#include <cf_platform_cfg.h>
+
+/**
+ * @brief Values for CFDP file transfer class
+ *
+ * The CFDP specification prescribes two classes/modes of file
+ * transfer protocol operation - unacknowledged/simple or
+ * acknowledged/reliable.
+ *
+ * Defined per section 7.1 of CCSDS 727.0-B-5
+ */
+typedef enum
+{
+    CF_CFDP_CLASS_1 = 0, /**< \brief CFDP class 1 - Unreliable transfer */
+    CF_CFDP_CLASS_2 = 1, /**< \brief CFDP class 2 - Reliable transfer */
+} CF_CFDP_Class_t;
+
+/**
+ * @brief CF queue identifiers
+ */
+typedef enum
+{
+    CF_QueueIdx_PEND      = 0, /**< \brief first one on this list is active */
+    CF_QueueIdx_TXA       = 1,
+    CF_QueueIdx_TXW       = 2,
+    CF_QueueIdx_RX        = 3,
+    CF_QueueIdx_HIST      = 4,
+    CF_QueueIdx_HIST_FREE = 5,
+    CF_QueueIdx_FREE      = 6,
+    CF_QueueIdx_NUM       = 7,
+} CF_QueueIdx_t;
+
+/**
+ * @brief Cache of source and destination filename
+ *
+ * This pairs a source and destination file name together
+ * to be retained for future reference in the transaction/history
+ */
+typedef struct CF_TxnFilenames
+{
+    char src_filename[CF_FILENAME_MAX_LEN];
+    char dst_filename[CF_FILENAME_MAX_LEN];
+} CF_TxnFilenames_t;
+
+#endif /* CF_EXTERN_TYPEDEFS_H */
+```
+
+### `cf_msg.h`
+
+**경로:** `fsw/apps/cf/fsw/inc/cf_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  The CF Application message definitions header file
+ */
+
+#ifndef CF_MSG_H
+#define CF_MSG_H
+
+#include <cfe.h>
+#include <cf_platform_cfg.h>
+#include <cf_extern_typedefs.h>
+#include <cf_tbldefs.h>
+
+#define CF_ALL_CHANNELS (255)
+#define CF_ALL_POLLDIRS (CF_ALL_CHANNELS)
+#define CF_COMPOUND_KEY (254)
+
+/**
+ * \defgroup cfscftlm CFS CFDP Telemetry
+ * \{
+ */
+
+/**
+ * \brief Housekeeping command counters
+ */
+typedef struct CF_HkCmdCounters
+{
+    uint16 cmd; /**< \brief Command success counter */
+    uint16 err; /**< \brief Command error counter */
+} CF_HkCmdCounters_t;
+
+/**
+ * \brief Housekeeping sent counters
+ */
+typedef struct CF_HkSent
+{
+    uint64 file_data_bytes;      /**< \brief Sent File data bytes */
+    uint32 pdu;                  /**< \brief Sent PDUs counter */
+    uint32 nak_segment_requests; /**< \brief Sent NAK segment requests counter */
+} CF_HkSent_t;
+
+/**
+ * \brief Housekeeping received counters
+ */
+typedef struct CF_HkRecv
+{
+    uint64 file_data_bytes;      /**< \brief Received File data bytes */
+    uint32 pdu;                  /**< \brief Received PDUs with valid header counter */
+    uint32 error;                /**< \brief Received PDUs with error counter, see related event for cause */
+    uint16 spurious;             /**< \brief Received PDUs with invalid directive code for current context or
+                                  *          file directive FIN without matching active transaction counter,
+                                  *          see related event for cause
+                                  */
+    uint16 dropped;              /**< \brief Received PDUs dropped due to a transaction error */
+    uint32 nak_segment_requests; /**< \brief Received NAK segment requests counter */
+} CF_HkRecv_t;
+
+/**
+ * \brief Housekeeping fault counters
+ */
+typedef struct CF_HkFault
+{
+    uint16 file_open;          /**< \brief File open fault counter */
+    uint16 file_read;          /**< \brief File read fault counter */
+    uint16 file_seek;          /**< \brief File seek fault counter */
+    uint16 file_write;         /**< \brief File write fault counter */
+    uint16 file_rename;        /**< \brief File rename fault counter */
+    uint16 directory_read;     /**< \brief Directory read fault counter */
+    uint16 crc_mismatch;       /**< \brief CRC mismatch fault counter */
+    uint16 file_size_mismatch; /**< \brief File size mismatch fault counter */
+    uint16 nak_limit;          /**< \brief NAK limit exceeded fault counter */
+    uint16 ack_limit;          /**< \brief ACK limit exceeded fault counter */
+    uint16 inactivity_timer;   /**< \brief Inactivity timer exceeded counter */
+    uint16 spare;              /**< \brief Alignment spare to avoid implicit padding */
+} CF_HkFault_t;
+
+/**
+ * \brief Housekeeping counters
+ */
+typedef struct CF_HkCounters
+{
+    CF_HkSent_t  sent;  /**< \brief Sent counters */
+    CF_HkRecv_t  recv;  /**< \brief Received counters */
+    CF_HkFault_t fault; /**< \brief Fault counters */
+} CF_HkCounters_t;
+
+/**
+ * \brief Housekeeping channel data
+ */
+typedef struct CF_HkChannel_Data
+{
+    CF_HkCounters_t counters;                /**< \brief Counters */
+    uint16          q_size[CF_QueueIdx_NUM]; /**< \brief Queue sizes */
+    uint8           poll_counter;            /**< \brief Number of active polling directories */
+    uint8           playback_counter;        /**< \brief Number of active playback directories */
+    uint8           frozen;                  /**< \brief Frozen state: 0 == not frozen, else frozen */
+    uint8           spare[7];                /**< \brief Alignment spare (uint64 values in the counters) */
+} CF_HkChannel_Data_t;
+
+/**
+ * \brief Housekeeping packet
+ */
+typedef struct CF_HkPacket
+{
+    CFE_MSG_TelemetryHeader_t tlm_header; /**< \brief Telemetry header */
+    CF_HkCmdCounters_t        counters;   /**< \brief Command counters */
+    uint8                     spare[4];   /**< \brief Alignment spare (CF_HkCmdCounters_t is 4 bytes) */
+
+    CF_HkChannel_Data_t channel_hk[CF_NUM_CHANNELS]; /**< \brief Per channel housekeeping data */
+} CF_HkPacket_t;
+
+/**
+ * \brief End of transaction packet
+ */
+typedef struct CF_EotPacket
+{
+    CFE_MSG_TelemetryHeader_t tlm_header; /**< \brief Telemetry header */
+    CF_TransactionSeq_t       seq_num;    /**< \brief transaction identifier, stays constant for entire transfer */
+    uint32                    channel;    /**< \brief Channel number */
+    uint32                    direction;  /**< \brief direction of this transaction */
+    uint32                    state;      /**< \brief Transaction state */
+    uint32                    txn_stat;   /**< \brief final status code of transaction (extended CFDP CC) */
+    CF_EntityId_t             src_eid;    /**< \brief the source eid of the transaction */
+    CF_EntityId_t             peer_eid;   /**< \brief peer_eid is always the "other guy", same src_eid for RX */
+    uint32                    fsize;      /**< \brief File size */
+    uint32                    crc_result; /**< \brief CRC result */
+    CF_TxnFilenames_t         fnames;     /**< \brief file names associated with this transaction */
+} CF_EotPacket_t;
+
+/**
+ * \brief Single application file info packet buffer
+ *
+ * This typedef supports CFE_SB_AllocateMessageBuffer use with a CF_EotPkt_t
+ * that compiles with the alignment constraints of a CFE_SB_Buffer_t
+ */
+typedef union
+{
+    CFE_SB_Buffer_t SBBuf; /**< \brief Message buffer for alignment */
+    CF_EotPacket_t  eot;   /**< \brief Single end of transaction info packet */
+} CF_EotPktBuf_t;
+
+/**\}*/
+
+/**
+ * \defgroup cfscfcmdcodes CFS CFDP Command Codes
+ * \{
+ */
+typedef enum
+{
+    /**
+     * \brief No-op
+     *
+     *  \par Description
+     *       No-operation command for aliveness verification and version reporting
+     *
+     *  \par Command Structure
+     *       #CF_NoArgsCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_NOOP
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     */
+    CF_NOOP_CC = 0,
+
+    /**
+     * \brief Reset counters
+     *
+     *  \par Description
+     *       Resets the requested housekeeping counters
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t where byte[0] specifies the counters type, byte[1-3] don't care:
+     *       - 0 = all counters
+     *       - 1 = command counters
+     *       - 2 = fault counters
+     *       - 3 = up counters
+     *       - 4 = down counters
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_RESET
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid counter type, #CF_EID_ERR_CMD_RESET_INVALID
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     */
+    CF_RESET_CC = 1,
+
+    /**
+     * \brief Transmit file
+     *
+     *  \par Description
+     *       Requests transmission of a file
+     *
+     *  \par Command Structure
+     *       #CF_TxFileCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_TX_FILE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid parameter, #CF_EID_ERR_CMD_BAD_PARAM
+     *       - Transaction initialization failure, #CF_EID_ERR_CMD_TX_FILE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_PLAYBACK_DIR_CC
+     */
+    CF_TX_FILE_CC = 2,
+
+    /**
+     * \brief Playback a directory
+     *
+     *  \par Description
+     *       Transmits all the files in a directory
+     *
+     *  \par Command Structure
+     *       #CF_PlaybackDirCmd_t - note it's currently a typedef of CF_TxFileCmd_t, where
+     *       the source filename and destination filename are directories
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_PLAYBACK_DIR
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid parameter, #CF_EID_ERR_CMD_BAD_PARAM
+     *       - Playback initialization failure, #CF_EID_ERR_CMD_PLAYBACK_DIR
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_TX_FILE_CC
+     */
+    CF_PLAYBACK_DIR_CC = 3,
+
+    /**
+     * \brief Freeze a channel
+     *
+     *  \par Description
+     *       Disables the transmission of all PDUs and disables tick processing (timeouts, ACK/NAK, etc)
+     *       for the specified channel, will still consume all received messages.  Note
+     *       this could cause failures for class 2 transactions in progress.
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t where byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_FREEZE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Command processing failure, #CF_EID_ERR_CMD_FREEZE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_THAW_CC
+     */
+    CF_FREEZE_CC = 4,
+
+    /**
+     * \brief Thaw a channel
+     *
+     *  \par Description
+     *       Enables the transmission of all PDUs and resumes tick processing (timeouts, ACK/NAK, etc)
+     *       for the specified channel, note received messages are consumed either way.
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t where byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_THAW
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Command processing failure, #CF_EID_ERR_CMD_THAW
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_FREEZE_CC
+     */
+    CF_THAW_CC = 5,
+
+    /**
+     * \brief Suspend a transaction
+     *
+     *  \par Description
+     *       Disables the transmission of all PDUs and disables tick processing (timeouts, ACK/NAK, etc) on a single
+     *       transaction, all channels and transactions, or all transactions on a specific channel.
+     *       Will still consume all received messages. Note suspension is tracked per transaction,
+     *       whereas freeze/thaw are tracked per channel.
+     *
+     *  \par Command Structure
+     *       #CF_TransactionCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_SUSPRES
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Transaction not found using compound key, #CF_EID_ERR_CMD_TRANS_NOT_FOUND
+     *       - Invalid channel number, #CF_EID_ERR_CMD_TSN_CHAN_INVALID
+     *       - Already in requested state, #CF_EID_ERR_CMD_SUSPRES_SAME
+     *       - No matching transaction, #CF_EID_ERR_CMD_SUSPRES_CHAN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_RESUME_CC, #CF_CANCEL_CC, #CF_ABANDON_CC
+     */
+    CF_SUSPEND_CC = 6,
+
+    /**
+     * \brief Resume a transaction
+     *
+     *  \par Description
+     *       Enables the transmission of all PDUs and resumes tick processing (timeouts, ACK/NAK, etc) on a single
+     *       transaction, all channels and transactions, or all transactions on a specific channel.
+     *       Note a suspended transaction still consume all received messages. Note suspension is tracked per
+     *       transaction, whereas freeze/thaw are tracked per channel.
+     *
+     *  \par Command Structure
+     *       #CF_TransactionCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_SUSPRES
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Transaction not found using compound key, #CF_EID_ERR_CMD_TRANS_NOT_FOUND
+     *       - Invalid channel number, #CF_EID_ERR_CMD_TSN_CHAN_INVALID
+     *       - Already in requested state, #CF_EID_ERR_CMD_SUSPRES_SAME
+     *       - No matching transaction, #CF_EID_ERR_CMD_SUSPRES_CHAN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_SUSPEND_CC, #CF_CANCEL_CC, #CF_ABANDON_CC
+     */
+    CF_RESUME_CC = 7,
+
+    /**
+     * \brief Cancel a transaction
+     *
+     *  \par Description
+     *       Cancel transaction processing by taking steps to close out cleanly (based on transaction
+     *       type and direction) for a single transaction, all channels and transactions,
+     *       or all transactions on a specific channel.
+     *
+     *  \par Command Structure
+     *       #CF_TransactionCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_CANCEL
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Transaction not found using compound key, #CF_EID_ERR_CMD_TRANS_NOT_FOUND
+     *       - Invalid channel number, #CF_EID_ERR_CMD_TSN_CHAN_INVALID
+     *       - No matching transaction, #CF_EID_ERR_CMD_CANCEL_CHAN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_SUSPEND_CC, #CF_RESUME_CC, #CF_ABANDON_CC
+     */
+    CF_CANCEL_CC = 8,
+
+    /**
+     * \brief Abandon a transaction
+     *
+     *  \par Description
+     *       Abandon transaction processing with an immediate reset (no close out attempted)
+     *       for a single transaction, all channels and transactions,
+     *       or all transactions on a specific channel.
+     *
+     *  \par Command Structure
+     *       #CF_TransactionCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_ABANDON
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Transaction not found using compound key, #CF_EID_ERR_CMD_TRANS_NOT_FOUND
+     *       - Invalid channel number, #CF_EID_ERR_CMD_TSN_CHAN_INVALID
+     *       - No matching transaction, #CF_EID_ERR_CMD_ABANDON_CHAN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_SUSPEND_CC, #CF_RESUME_CC, #CF_CANCEL_CC
+     */
+    CF_ABANDON_CC = 9,
+
+    /**
+     * \brief Set parameter
+     *
+     *  \par Description
+     *       Sets a configuration parameter
+     *
+     *  \par Command Structure
+     *       #CF_SetParamCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_GETSET1
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid configuration parameter key, #CF_EID_ERR_CMD_GETSET_PARAM
+     *       - Invalid channel number, #CF_EID_ERR_CMD_GETSET_CHAN
+     *       - Parameter value failed validation, #CF_EID_ERR_CMD_GETSET_VALIDATE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_GET_MIB_PARAM_CC
+     */
+    CF_SET_MIB_PARAM_CC = 10,
+
+    /**
+     * \brief Get parameter
+     *
+     *  \par Description
+     *       Gets a configuration parameter
+     *
+     *  \par Command Structure
+     *       #CF_GetParamCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_GETSET2
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid configuration parameter key, #CF_EID_ERR_CMD_GETSET_PARAM
+     *       - Invalid channel number, #CF_EID_ERR_CMD_GETSET_CHAN
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_SET_MIB_PARAM_CC
+     */
+    CF_GET_MIB_PARAM_CC = 11,
+
+    /**
+     * \brief Write queue
+     *
+     *  \par Description
+     *       Writes requested queue(s) to a file
+     *
+     *  \par Command Structure
+     *       #CF_WriteQueueCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_WQ
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid parameter combination, #CF_EID_ERR_CMD_WQ_ARGS
+     *       - Invalid channel number, #CF_EID_ERR_CMD_WQ_CHAN
+     *       - Open file to write failed, #CF_EID_ERR_CMD_WQ_OPEN
+     *       - Write RX data failed, #CF_EID_ERR_CMD_WQ_WRITEQ_RX
+     *       - Write RX history data failed, #CF_EID_ERR_CMD_WQ_WRITEHIST_RX
+     *       - Write TX data failed, #CF_EID_ERR_CMD_WQ_WRITEQ_TX
+     *       - Write TX history data failed, #CF_EID_ERR_CMD_WQ_WRITEHIST_TX
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_PURGE_QUEUE_CC
+     */
+    CF_WRITE_QUEUE_CC = 15,
+
+    /**
+     * \brief Enable dequeue
+     *
+     *  \par Description
+     *       Enables the sending of file data PDUs.
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t where byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_ENABLE_DEQUEUE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Enable dequeue failed, #CF_EID_ERR_CMD_ENABLE_DEQUEUE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_DISABLE_DEQUEUE_CC
+     */
+    CF_ENABLE_DEQUEUE_CC = 16,
+
+    /**
+     * \brief Disable dequeue
+     *
+     *  \par Description
+     *       Disables the sending of file data PDUs.
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t where byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_DISABLE_DEQUEUE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Disable dequeue failed, #CF_EID_INF_CMD_DISABLE_DEQUEUE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_ENABLE_DEQUEUE_CC
+     */
+    CF_DISABLE_DEQUEUE_CC = 17,
+
+    /**
+     * \brief Enable directory polling
+     *
+     *  \par Description
+     *       Enables the processing of polling directories
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the polling directory index
+     *       - 255 = all polling directories
+     *       - else = single polling directory index
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_ENABLE_POLLDIR
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Invalid polling directory index, #CF_EID_ERR_CMD_POLLDIR_INVALID
+     *       - Enable directory polling failed, #CF_EID_ERR_CMD_ENABLE_POLLDIR
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_DISABLE_DIR_POLLING_CC
+     */
+    CF_ENABLE_DIR_POLLING_CC = 18,
+
+    /**
+     * \brief Disable directory polling
+     *
+     *  \par Description
+     *       Disable the processing of polling directories
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the polling directory index
+     *       - 255 = all polling directories
+     *       - else = single polling directory index
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_DISABLE_POLLDIR
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Invalid polling directory index, #CF_EID_ERR_CMD_POLLDIR_INVALID
+     *       - Disable directory polling failed, #CF_EID_ERR_CMD_DISABLE_POLLDIR
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_ENABLE_DIR_POLLING_CC
+     */
+    CF_DISABLE_DIR_POLLING_CC = 19,
+
+    /**
+     * \brief Purge queue
+     *
+     *  \par Description
+     *       Purge the requested queue
+     *
+     *  \par Command Structure
+     *       #CF_UnionArgsCmd_t
+     *
+     *       byte[0] specifies the channel number or all channels
+     *       - 255 = all channels
+     *       - else = single channel
+     *
+     *       byte[1] specifies the queue
+     *       - 0 = Pending queue
+     *       - 1 = History queue
+     *       - 2 = Both pending and history queue
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_PURGE_QUEUE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Invalid channel number, #CF_EID_ERR_CMD_CHAN_PARAM
+     *       - Invalid purge queue argument, #CF_EID_ERR_CMD_PURGE_ARG
+     *       - Purge queue failed, #CF_EID_ERR_CMD_PURGE_QUEUE
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_WRITE_QUEUE_CC
+     */
+    CF_PURGE_QUEUE_CC = 21,
+
+    /**
+     * \brief Enable engine
+     *
+     *  \par Description
+     *       Reinitialize engine and enable processing.  Note configuration table updates
+     *       are not processed while the engine is enabled.
+     *
+     *  \par Command Structure
+     *       #CF_NoArgsCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_ENABLE_ENGINE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Engine initialization failed, #CF_EID_ERR_CMD_ENABLE_ENGINE
+     *       - Engine already enabled, #CF_EID_ERR_CMD_ENG_ALREADY_ENA
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_DISABLE_ENGINE_CC
+     */
+    CF_ENABLE_ENGINE_CC = 22,
+
+    /**
+     * \brief Disable engine
+     *
+     *  \par Description
+     *       Disable engine processing.  Note configuration table updates
+     *       can be performed while the engine is disabled, and when the engine is
+     *       re-enabled the new configuration will take affect.
+     *
+     *  \par Command Structure
+     *       #CF_NoArgsCmd_t
+     *
+     *  \par Command Verification
+     *       Successful execution of this command may be verified with
+     *       the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.cmd will increment
+     *       - #CF_EID_INF_CMD_DISABLE_ENGINE
+     *
+     *  \par Error Conditions
+     *       This command may fail for the following reason(s):
+     *       - Command packet length not as expected, #CF_EID_ERR_CMD_GCMD_LEN
+     *       - Engine already disabled, #CF_EID_ERR_CMD_ENG_ALREADY_DIS
+     *
+     *  \par Evidence of failure may be found in the following telemetry:
+     *       - #CF_HkPacket_t.counters #CF_HkCmdCounters_t.err will increment
+     *
+     *  \par Criticality
+     *       None
+     *
+     *  \sa #CF_DISABLE_ENGINE_CC
+     */
+    CF_DISABLE_ENGINE_CC = 23,
+
+    /** \brief Command code limit used for validity check and array sizing */
+    CF_NUM_COMMANDS = 24,
+} CF_CMDS;
+
+/**\}*/
+
+/**
+ * \defgroup cfscfcmdstructs CFS CFDP Command Structures
+ * \{
+ */
+
+/**
+ * \brief No arguments command structure
+ *
+ * For command details see #CF_NOOP_CC, #CF_ENABLE_ENGINE_CC, #CF_DISABLE_ENGINE_CC
+ */
+typedef struct CF_NoArgsCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+} CF_NoArgsCmd_t;
+
+/**
+ * \brief Command payload argument union to support 4 uint8's, 2 uint16's or 1 uint32
+ */
+typedef union CF_UnionArgs_Payload
+{
+    uint32 dword;    /**< \brief Generic uint32 argument */
+    uint16 hword[2]; /**< \brief Generic uint16 array of arguments */
+    uint8  byte[4];  /**< \brief Generic uint8 array of arguments */
+} CF_UnionArgs_Payload_t;
+
+/**
+ * \brief Generic command structure with arguments supports common handling on multiple command types
+ *
+ * For command details see #CF_RESET_CC, #CF_FREEZE_CC, #CF_THAW_CC, #CF_ENABLE_DEQUEUE_CC,
+ * #CF_DISABLE_DEQUEUE_CC, #CF_ENABLE_DIR_POLLING_CC, #CF_ENABLE_DIR_POLLING_CC, #CF_PURGE_QUEUE_CC
+ */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+    CF_UnionArgs_Payload_t  data;       /**< \brief Generic command arguments */
+} CF_UnionArgsCmd_t;
+
+/**
+ * \brief IDs for use for Reset cmd
+ */
+typedef enum
+{
+    CF_Reset_all     = 0, /**< \brief Reset all */
+    CF_Reset_command = 1, /**< \brief Reset command */
+    CF_Reset_fault   = 2, /**< \brief Reset fault */
+    CF_Reset_up      = 3, /**< \brief Reset up */
+    CF_Reset_down    = 4  /**< \brief Reset down */
+} CF_Reset_t;
+
+/**
+ * \brief Type IDs for use for Write Queue cmd
+ */
+typedef enum
+{
+    CF_Type_all  = 0, /**< \brief Type all */
+    CF_Type_up   = 1, /**< \brief Type up */
+    CF_Type_down = 2  /**< \brief Type down */
+} CF_Type_t;
+
+/**
+ * \brief Queue IDs for use for Write Queue cmd
+ */
+typedef enum
+{
+    CF_Queue_pend    = 0, /**< \brief Queue pending */
+    CF_Queue_active  = 1, /**< \brief Queue active */
+    CF_Queue_history = 2, /**< \brief Queue history */
+    CF_Queue_all     = 3  /**< \brief Queue all */
+} CF_Queue_t;
+
+/**
+ * \brief Parameter IDs for use with Get/Set parameter messages
+ *
+ * Specifically these are used for the "key" field within CF_GetParamCmd_t and
+ * CF_SetParamCmd_t message structures.
+ */
+typedef enum
+{
+    CF_GetSet_ValueID_ticks_per_second,                      /**< \brief Ticks per second key */
+    CF_GetSet_ValueID_rx_crc_calc_bytes_per_wakeup,          /**< \brief Receive CRC calculated bytes per wake-up key */
+    CF_GetSet_ValueID_ack_timer_s,                           /**< \brief ACK timer in seconds key */
+    CF_GetSet_ValueID_nak_timer_s,                           /**< \brief NAK timer in seconds key */
+    CF_GetSet_ValueID_inactivity_timer_s,                    /**< \brief Inactivity timer in seconds key */
+    CF_GetSet_ValueID_outgoing_file_chunk_size,              /**< \brief Outgoing file chunk size key */
+    CF_GetSet_ValueID_ack_limit,                             /**< \brief ACK retry limit key */
+    CF_GetSet_ValueID_nak_limit,                             /**< \brief NAK retry limit key */
+    CF_GetSet_ValueID_local_eid,                             /**< \brief Local entity id key */
+    CF_GetSet_ValueID_chan_max_outgoing_messages_per_wakeup, /**< \brief Max outgoing messages per wake-up key */
+    CF_GetSet_ValueID_MAX                                    /**< \brief Key limit used for validity check */
+} CF_GetSet_ValueID_t;
+
+/**
+ * \brief Get parameter command structure
+ *
+ * For command details see #CF_GET_MIB_PARAM_CC
+ */
+typedef struct CF_GetParamCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+    uint8                   key;        /**< \brief Parameter key, see #CF_GetSet_ValueID_t */
+    uint8                   chan_num;   /**< \brief Channel number */
+} CF_GetParamCmd_t;
+
+/**
+ * \brief Set parameter command structure
+ *
+ * For command details see #CF_SET_MIB_PARAM_CC
+ */
+typedef struct CF_SetParamCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+    uint32                  value;      /**< \brief Parameter value to set */
+    uint8                   key;        /**< \brief Parameter key, see #CF_GetSet_ValueID_t */
+    uint8                   chan_num;   /**< \brief Channel number */
+    uint8                   spare[2];   /**< \brief Alignment spare, uint32 multiple */
+} CF_SetParamCmd_t;
+
+/**
+ * \brief Transmit file command structure
+ *
+ * For command details see #CF_TX_FILE_CC
+ */
+typedef struct CF_TxFileCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header;                        /**< \brief Command header */
+    uint8                   cfdp_class;                        /**< \brief CFDP class: 0=class 1, 1=class 2 */
+    uint8                   keep;                              /**< \brief Keep file flag: 1=keep, else delete */
+    uint8                   chan_num;                          /**< \brief Channel number */
+    uint8                   priority;                          /**< \brief Priority: 0=highest priority */
+    CF_EntityId_t           dest_id;                           /**< \brief Destination entity id */
+    char                    src_filename[CF_FILENAME_MAX_LEN]; /**< \brief Source file/directory name */
+    char                    dst_filename[CF_FILENAME_MAX_LEN]; /**< \brief Destination file/directory name */
+} CF_TxFileCmd_t;
+
+/**
+ * \brief Write Queue command structure
+ *
+ * For command details see #CF_WRITE_QUEUE_CC
+ */
+typedef struct CF_WriteQueueCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+    uint8                   type;       /**< \brief Transaction direction: all=0, up=1, down=2 */
+    uint8                   chan;       /**< \brief Channel number */
+    uint8                   queue;      /**< \brief Queue type: 0=pending, 1=active, 2=history, 3=all */
+    uint8                   spare;      /**< \brief Alignment spare, puts filename on 32-bit boundary */
+
+    char filename[CF_FILENAME_MAX_LEN]; /**< \brief Filename written to */
+} CF_WriteQueueCmd_t;
+
+/**
+ * \brief Playback directory command structure
+ *
+ * For command details see #CF_PLAYBACK_DIR_CC
+ */
+typedef CF_TxFileCmd_t CF_PlaybackDirCmd_t;
+
+/**
+ * \brief Transaction command structure
+ *
+ * For command details see #CF_SUSPEND_CC, #CF_RESUME_CC, #CF_CANCEL_CC, #CF_ABANDON_CC
+ */
+typedef struct CF_TransactionCmd
+{
+    CFE_MSG_CommandHeader_t cmd_header; /**< \brief Command header */
+    CF_TransactionSeq_t     ts;         /**< \brief Transaction sequence number */
+    CF_EntityId_t           eid;        /**< \brief Entity id */
+    uint8                   chan;       /**< \brief Channel number: 254=use ts, 255=all channels, else channel */
+    uint8                   spare[3];   /**< \brief Alignment spare for 32-bit multiple */
+} CF_TransactionCmd_t;
+
+/**\}*/
+
+#endif /* !CF_MSG_H */
+```
+
+### `cf_msgids.h`
+
+**경로:** `fsw/apps/cf/fsw/inc/cf_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  The CF Application Message IDs header file
+ */
+
+#ifndef CF_MSGIDS_H
+#define CF_MSGIDS_H
+
+/**
+ * \defgroup cfscfcmdmid CFS CFDP Command Message IDs
+ * \{
+ */
+
+#define CF_CMD_MID     (0x18B3) /**< \brief Message ID for commands */
+#define CF_SEND_HK_MID (0x18B4) /**< \brief Message ID to request housekeeping telemetry */
+#define CF_WAKE_UP_MID (0x18B5) /**< \brief Message ID for waking up the processing cycle */
+
+/**\}*/
+
+/**
+ * \defgroup cfscftlmmid CFS CFDP Telemetry Message IDs
+ * \{
+ */
+
+#define CF_HK_TLM_MID  (0x08B0) /**< \brief Message ID for housekeeping telemetry */
+#define CF_EOT_TLM_MID (0x08B3) /**< \brief Message ID for end of transaction telemetry */
+
+/**\}*/
+
+#endif /* !CF_MSGIDS_H */
+```
+
+### `cf_perfids.h`
+
+**경로:** `fsw/apps/cf/fsw/inc/cf_perfids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *  Define CF Performance IDs
+ */
+
+#ifndef CF_PERFIDS_H
+#define CF_PERFIDS_H
+
+/**
+ * \defgroup cfscfmissioncfg CFS CFDP Mission Configuration
+ * \{
+ */
+
+#define CF_PERF_ID_APPMAIN   (11) /**< \brief Main application performance ID */
+#define CF_PERF_ID_FSEEK     (12) /**< \brief File seek performance ID */
+#define CF_PERF_ID_FOPEN     (13) /**< \brief File open performance ID */
+#define CF_PERF_ID_FCLOSE    (14) /**< \brief File close performance ID */
+#define CF_PERF_ID_FREAD     (15) /**< \brief File read performance ID */
+#define CF_PERF_ID_FWRITE    (16) /**< \brief File write performance ID */
+#define CF_PERF_ID_CYCLE_ENG (17) /**< \brief Cycle engine performance ID */
+#define CF_PERF_ID_DIRREAD   (18) /**< \brief Directory read performance ID */
+#define CF_PERF_ID_CREAT     (19) /**< \brief Create performance ID */
+#define CF_PERF_ID_RENAME    (20) /**< \brief Rename performance ID */
+
+#define CF_PERF_ID_PDURCVD(x) (30 + x) /**< \brief PDU Received performance ID */
+#define CF_PERF_ID_PDUSENT(x) (40 + x) /**< \brief PDU Sent performance ID */
+
+/**\}*/
+
+#endif /* !CF_PERFIDS_H */
+```
+
+### `cf_platform_cfg.h`
+
+**경로:** `fsw/apps/cf/fsw/inc/cf_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  CF application platform configuration.
+ *  These options are used to configure application behavior.
+ */
+
+#ifndef CF_PLATFORM_CFG_H
+#define CF_PLATFORM_CFG_H
+
+/*************************************************************************
+ * Macro definitions
+ *************************************************************************/
+
+/**
+ * \defgroup cfscfplatformcfg CFS CFDP Platform Configuration
+ * \{
+ */
+
+/**
+ * @brief Entity id size
+ *
+ * @par Description:
+ *      The maximum size of the entity id as expected for all CFDP packets.
+ *      CF supports the spec's variable size of EID, where the actual size is
+ *      selected at runtime, and therefore the size in CFDP PDUs may be smaller
+ *      than the size specified here.  This type only establishes the maximum
+ *      size (and therefore maximum value) that an EID may be.
+ *
+ * @note This type is used in several CF commands, and so changing the size
+ *       of this type will affect the following structs:
+ *        CF_ConfigTable_t, configuration table - will change size of file
+ *        CF_ConfigPacket_t, set config params command
+ *        CF_TxFileCmd_t, transmit file command
+ *        CF_PlaybackDirCmd_t, equivalent to above
+ *        CF_TransactionCmd_t, any command that selects a transaction based on EID
+ *
+ * @par Limits
+ *         Must be one of uint8, uint16, uint32, uint64.
+ */
+typedef uint32 CF_EntityId_t;
+
+/**
+ * @brief transaction sequence number size
+ *
+ * @par Description:
+ *      The max size of the transaction sequence number as expected for all CFDP packets.
+ *      CF supports the spec's variable size of TSN, where the actual size is
+ *      selected at runtime, and therefore the size in CFDP PDUs may be smaller
+ *      than the size specified here.  This type only establishes the maximum
+ *      size (and therefore maximum value) that a TSN may be.
+ *
+ * @note This type is used in several CF commands, and so changing the size
+ *       of this type will affect the following structure:
+ *        CF_TransactionCmd_t, any command that selects a transaction based on TSN
+ *
+ * @par Limits
+ *         Must be one of uint8, uint16, uint32, uint64.
+ */
+typedef uint32 CF_TransactionSeq_t;
+
+/**
+ *  @brief Application Pipe Depth
+ *
+ *  @par Description:
+ *       Dictates the pipe depth of the cf command pipe.
+ *
+ *  @par Limits:
+ *		 The minimum size of this parameter is 1
+ *       The maximum size dictated by cFE platform configuration
+ *		 parameter is CFE_SB_MAX_PIPE_DEPTH
+ */
+#define CF_PIPE_DEPTH (32)
+
+/**
+ *  @brief Number of channels
+ *
+ *  @par Description:
+ *       The number of channels in the engine. Changing this
+ *       value changes the configuration table for the application.
+ *
+ *  @par Limits:
+ *       Must be less <= 200. Obviously it will be smaller than that.
+ */
+#define CF_NUM_CHANNELS (2)
+
+/**
+ *  @brief Max NAK segments supported in a NAK pdu
+ *
+ *  @par Description:
+ *       When a NAK pdu is sent or received, this is the max number of
+ *       segment requests supported. This number should match the ground
+ *       cfdp engine configuration as well.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_NAK_MAX_SEGMENTS (58)
+
+/**
+ *  @brief RX chunks per transaction (per channel)
+ *
+ *  @par Description:
+ *       Number of chunks per transaction per channel (RX).
+ *
+ * CHUNKS -
+ * A chunk is a representation of a range range (offset, size) of data received by a receiver.
+ *
+ * Class 2 CFDP deals with NAK, so received data must be tracked for receivers in order to generate
+ * the NAK. The sender must also keep track of NAK requests and send new file data PDUs as a result.
+ * (array size must be CF_NUM_CHANNELS)
+ * CF_CHANNEL_NUM_RX_CHUNKS_PER_TRANSACTION is an array for each channel indicating the number of chunks per transaction
+ * CF_CHANNEL_NUM_TX_CHUNKS_PER_TRANSACTION is an array for each channel indicate the number of chunks to keep track of
+ * NAK requests from the receiver per transaction
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_CHANNEL_NUM_RX_CHUNKS_PER_TRANSACTION \
+    {                                            \
+        CF_NAK_MAX_SEGMENTS, CF_NAK_MAX_SEGMENTS \
+    }
+
+/**
+ *  @brief TX chunks per transaction (per channel)
+ *
+ *  @par Description:
+ *       Number of chunks per transaction per channel (TX).
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_CHANNEL_NUM_TX_CHUNKS_PER_TRANSACTION \
+    {                                            \
+        CF_NAK_MAX_SEGMENTS, CF_NAK_MAX_SEGMENTS \
+    }
+
+/**
+ *  @brief Total number of chunks (tx, rx, all channels)
+ *
+ *  @par Description:
+ *       Must be equal to the sum of all values input in CF_CHANNEL_NUM_RX_CHUNKS_PER_TRANSACTION
+ *       and CF_CHANNEL_NUM_TX_CHUNKS_PER_TRANSACTION.
+ *
+ *  @par Limits:
+ *
+ */
+/* CF_TOTAL_CHUNKS must be equal to the total number of chunks per rx/tx transactions per channel */
+/* (in other words, the summation of all elements in CF_CHANNEL_NUM_R/TX_CHUNKS_PER_TRANSACTION */
+#define CF_TOTAL_CHUNKS (CF_NAK_MAX_SEGMENTS * 4)
+
+/* definitions that affect file queuing */
+/**
+ *  @brief Number of max commanded playback files per chan.
+ *
+ *  @par Description:
+ *       This is the max number of outstanding ground commanded file transmits per channel.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_MAX_COMMANDED_PLAYBACK_FILES_PER_CHAN (10)
+
+/**
+ *  @brief Max number of simultaneous file receives.
+ *
+ *  @par Description:
+ *       Each channel can support this number of file receive transactions at a time.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_MAX_SIMULTANEOUS_RX (5)
+
+/* definitions that affect execution */
+
+/**
+ *  @brief Max number of commanded playback directories per channel.
+ *
+ *  @par Description:
+ *       Each channel can support this number of ground commanded directory playbacks.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN (2)
+
+/**
+ *  @brief Max number of polling directories per channel.
+ *
+ *  @par Description:
+ *       This affects the configuration table. There must be an entry (can
+ *       be empty) for each of these polling directories per channel.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_MAX_POLLING_DIR_PER_CHAN (5)
+
+/**
+ *  @brief Number of transactions per playback directory.
+ *
+ *  @par Description:
+ *       Each playback/polling directory operation will be able to have this
+ *       many active transfers at a time pending or active.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_NUM_TRANSACTIONS_PER_PLAYBACK (5)
+
+/**
+ *  @brief Number of histories per channel
+ *
+ *  @par Description:
+ *       Each channel can support this number of file receive transactions at a time.
+ *
+ *  @par Limits:
+ *       65536 is the current max.
+ */
+#define CF_NUM_HISTORIES_PER_CHANNEL (256)
+
+/**
+ *  @brief Max PDU size.
+ *
+ *  @par Description:
+ *       The max PDU size across all channels in the system. Keep in mind that
+ *       the max filedata pdu will be smaller than this. This size includes
+ *       the PDU headers and everything. While this is the max value for all
+ *       channels, the outgoing_file_chunk_size in the configuration table
+ *       is different for each channel so a smaller size can be used.
+ *
+ *  @par Limits:
+ *
+ */
+/* CF_MAX_PDU_SIZE must be the max possible PDU for any channel. Channels can be configured with a smaller max. */
+#define CF_MAX_PDU_SIZE (512)
+
+/**
+ *  @brief Name of the CF Configuration Table
+ *
+ *  @par Description:
+ *       This parameter defines the name of the CF Configuration Table.
+ *
+ *  @par Limits
+ *       The length of this string, including the NULL terminator cannot exceed
+ *       the #OS_MAX_PATH_LEN value.
+ */
+#define CF_CONFIG_TABLE_NAME ("config_table")
+
+/**
+ *  @brief CF Configuration Table Filename
+ *
+ *  @par Description:
+ *       The value of this constant defines the filename of the CF Config Table
+ *
+ *  @par Limits
+ *       The length of this string, including the NULL terminator cannot exceed
+ *       the #OS_MAX_PATH_LEN value.
+ */
+#define CF_CONFIG_TABLE_FILENAME ("/cf/cf_def_config.tbl")
+
+/**
+ *  @brief Maximum file name length.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_FILENAME_MAX_NAME (OS_MAX_FILE_NAME)
+
+/**
+ *  @brief Maximum file path (not including file name)
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_FILENAME_MAX_PATH (OS_MAX_PATH_LEN - OS_MAX_FILE_NAME)
+
+/**
+ *  @brief Max filename and path length.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_FILENAME_MAX_LEN (CF_FILENAME_MAX_NAME + CF_FILENAME_MAX_PATH)
+
+/**
+ *  @brief R2 crc calc chunk size
+ *
+ *  @par Description
+ *       R2 performs crc calculation upon file completion in chunks. This is the size
+ *       of the buffer. The larger the size the more stack will be used, but
+ *       the faster it can go. The overall number of bytes calculated per wakeup
+ *       is set in the configuration table.
+ *
+ *  @par Limits:
+ *
+ */
+#define CF_R2_CRC_CHUNK_SIZE (1024)
+
+#if CF_FILENAME_MAX_LEN > OS_MAX_PATH_LEN
+#error CF_FILENAME_MAX_LEN must be <= OS_MAX_PATH_LEN
+#endif
+
+/**
+ *  @brief Number of milliseconds to wait for a SB message
+ */
+#define CF_RCVMSG_TIMEOUT (100)
+
+/**
+ * @brief Limits the number of retries to obtain the CF throttle sem
+ *
+ * @par Description
+ *      If the CF throttle sem is not available during CF startup, the initialization
+ *      will retry after a short delay.
+ *
+ * @sa CF_STARTUP_SEM_TASK_DELAY
+ */
+#define CF_STARTUP_SEM_MAX_RETRIES 25
+
+/**
+ * @brief Number of milliseconds to wait if CF throttle sem is not available
+ *
+ * @par Description
+ *      If the CF throttle sem is not available during CF startup, the initialization
+ *      will delay for this period of time before trying again
+ *
+ * @sa CF_STARTUP_SEM_MAX_RETRIES
+ */
+#define CF_STARTUP_SEM_TASK_DELAY 100
+
+/**
+ * @brief Number of trailing bytes to add to CFDP PDU
+ *
+ * @par Description
+ *      Additional padding bytes to be appended to the tail of CFDP PDUs
+ *      This reserves extra space to the software bus encapsulation buffer for every
+ *      CFDP PDU such that platform-specific trailer information may be added.  This
+ *      includes, but is not limited to a separate CRC or error control field in addition
+ *      to the error control field(s) within the the nominal CFDP protocol.
+ *
+ *      These extra bytes are added at the software bus encapsulation layer, they are not
+ *      part of the CFDP PDU itself.
+ *
+ *      Set to 0 to disable this feature, such that the software bus buffer
+ *      encapsulates only the CFDP PDU and no extra bytes are added.
+ *
+ *  @par Limits:
+ *       Maximum value is the difference between the maximum size of a CFDP PDU and the
+ *       maximum size of an SB message.
+ */
+#define CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES 0
+
+/**
+ * \brief Mission specific version number
+ *
+ *  \par Description:
+ *       An application version number consists of four parts:
+ *       major version number, minor version number, revision
+ *       number and mission specific revision number. The mission
+ *       specific revision number is defined here such
+ *       that missions can manage as a configuration definition
+ *
+ *  \par Limits:
+ *       Must be defined as a numeric value that is greater than
+ *       or equal to zero.
+ */
+#define CF_MISSION_REV 0
+
+/**\}*/
+
+#endif /* !CF_PLATFORM_CFG_H */
+```
+
+### `cf_tbldefs.h`
+
+**경로:** `fsw/apps/cf/fsw/inc/cf_tbldefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *  The CF Application Table Definitions header file
+ */
+
+#ifndef CF_TBLDEFS_H
+#define CF_TBLDEFS_H
+
+#include <cf_platform_cfg.h>
+#include <cf_extern_typedefs.h>
+
+/**
+ * \brief Configuration entry for directory polling
+ */
+typedef struct CF_PollDir
+{
+    uint32 interval_sec; /**<
+                          * \brief number of seconds to wait before trying a new directory.
+                          *
+                          * Must be >0 or slot is inactive.
+                          */
+
+    uint8           priority;   /**< \brief priority to use when placing transactions on the pending queue */
+    CF_CFDP_Class_t cfdp_class; /**< \brief the CFDP class to send */
+    CF_EntityId_t   dest_eid;   /**< \brief destination entity id */
+
+    char src_dir[CF_FILENAME_MAX_PATH]; /**< \brief path to source dir */
+    char dst_dir[CF_FILENAME_MAX_PATH]; /**< \brief path to destination dir */
+
+    uint8 enabled; /**< \brief Enabled flag */
+} CF_PollDir_t;
+
+/**
+ * \brief Configuration entry for CFDP channel
+ */
+typedef struct CF_ChannelConfig
+{
+    uint32 max_outgoing_messages_per_wakeup; /**< \brief max number of messages to send per wakeup (0 - unlimited) */
+    uint32 rx_max_messages_per_wakeup;       /**< \brief max number of rx messages to process per wakeup */
+
+    uint32 ack_timer_s;        /**< \brief Acknowledge timer in seconds */
+    uint32 nak_timer_s;        /**< \brief Non-acknowledge timer in seconds */
+    uint32 inactivity_timer_s; /**< \brief Inactivity timer in seconds */
+
+    uint8 ack_limit; /**< number of times to retry ACK (for ex, send fin and wait for fin-ack) */
+    uint8 nak_limit; /**< number of times to retry NAK before giving up (resets on a single response */
+
+    CFE_SB_MsgId_Atom_t mid_input;  /**< \brief msgid integer value for incoming messages */
+    CFE_SB_MsgId_Atom_t mid_output; /**< \brief msgid integer value for outgoing messages */
+
+    uint16 pipe_depth_input; /**< \brief depth of pipe to receive incoming pdu */
+
+    CF_PollDir_t polldir[CF_MAX_POLLING_DIR_PER_CHAN]; /**< \brief Configuration for polled directories */
+
+    char  sem_name[OS_MAX_API_NAME]; /**< \brief name of throttling semaphore in TO */
+    uint8 dequeue_enabled;           /**< \brief if 1, then the channel will make pending transactions active */
+} CF_ChannelConfig_t;
+
+/**
+ * \brief Top-level CFDP configuration structure
+ */
+typedef struct CF_ConfigTable
+{
+    uint32 ticks_per_second;             /**< \brief expected ticks per second to cfdp app */
+    uint32 rx_crc_calc_bytes_per_wakeup; /**< \brief max number of bytes per wakeup to calculate
+                                          * r2 crc for recvd file (must be 1024-byte aligned)
+                                          */
+
+    CF_EntityId_t local_eid; /**< \brief the local entity ID of the CF app */
+
+    CF_ChannelConfig_t chan[CF_NUM_CHANNELS]; /**< \brief Channel configuration */
+
+    uint16 outgoing_file_chunk_size;      /**< maximum size of outgoing file data PDUs */
+    char   tmp_dir[CF_FILENAME_MAX_PATH]; /**< directory to put temp files */
+} CF_ConfigTable_t;
+
+#endif /* !CF_TBLDEFS_H */
+```

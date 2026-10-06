@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/examples/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -21,24 +21,187 @@ replication3/index
 simulation/index
 snippets/index
 templates/index
-file--pom.xml
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/cascading/`](cascading/index) — 폴더
-- [`gsw/yamcs/examples/ccsds-frames/`](ccsds-frames/index) — 폴더
-- [`gsw/yamcs/examples/cfdp/`](cfdp/index) — 폴더
-- [`gsw/yamcs/examples/cfdp-udp/`](cfdp-udp/index) — 폴더
-- [`gsw/yamcs/examples/perftest1/`](perftest1/index) — 폴더
-- [`gsw/yamcs/examples/perftest2/`](perftest2/index) — 폴더
-- [`gsw/yamcs/examples/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/examples/replication1/`](replication1/index) — 폴더
-- [`gsw/yamcs/examples/replication2/`](replication2/index) — 폴더
-- [`gsw/yamcs/examples/replication3/`](replication3/index) — 폴더
-- [`gsw/yamcs/examples/simulation/`](simulation/index) — 폴더
-- [`gsw/yamcs/examples/snippets/`](snippets/index) — 폴더
-- [`gsw/yamcs/examples/templates/`](templates/index) — 폴더
-- [`gsw/yamcs/examples/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/pom.xml`
+
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <groupId>org.yamcs.examples</groupId>
+  <artifactId>examples</artifactId>
+  <packaging>pom</packaging>
+
+  <name>Yamcs :: Examples</name>
+  <description>
+    A collection of practical examples on how to use Yamcs.
+  </description>
+
+  <properties>
+    <maven.install.skip>true</maven.install.skip>
+    <maven.deploy.skip>true</maven.deploy.skip>
+    <maven.javadoc.skip>true</maven.javadoc.skip>
+    <maven.source.skip>true</maven.source.skip>
+    <gpg.skip>true</gpg.skip>
+    <javaModuleName>org.yamcs.examples</javaModuleName>
+  </properties>
+
+  <modules>
+    <module>cascading</module>
+    <module>ccsds-frames</module>
+    <module>cfdp</module>
+    <module>cfdp-udp</module>
+    <module>perftest1</module>
+    <module>perftest2</module>
+    <module>pus</module>
+    <module>replication1</module>
+    <module>replication2</module>
+    <module>replication3</module>
+    <module>simulation</module>
+    <module>snippets</module>
+    <module>templates</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <configuration>
+            <!-- central-publishing-maven-plugin, and
+                 yamcs-maven-plugin bundle goal
+                 require an artifact -->
+            <skipIfEmpty>false</skipIfEmpty>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.yamcs</groupId>
+          <artifactId>yamcs-maven-plugin</artifactId>
+          <configuration>
+            <!--  Hook the webapp sources directly to the output of npm. This
+                  allows running npm in watch mode without restarting Yamcs. -->
+            <jvmArgs>
+              <jvmArg>-Dyamcs.web.staticRoot=../../../../yamcs-web/src/main/webapp/dist/webapp</jvmArg>
+            </jvmArgs>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.sonatype.central</groupId>
+          <artifactId>central-publishing-maven-plugin</artifactId>
+          <configuration>
+            <!-- Seems to get ignored? -->
+            <skipPublishing>true</skipPublishing>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>bundle-examples</id>
+      <activation>
+        <property>
+          <name>bundle-examples</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.yamcs</groupId>
+            <artifactId>yamcs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>bundle-yamcs</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>bundle</goal>
+                </goals>
+                <configuration>
+                  <classifier>bundle</classifier>
+                  <attach>false</attach>
+                  <includeDefaultWrappers>true</includeDefaultWrappers>
+                  <scope>compile</scope>
+                  <formats>
+                    <format>tar.gz</format>
+                  </formats>
+                </configuration>
+              </execution>
+              <execution>
+                <id>bundle-dropin</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>bundle</goal>
+                </goals>
+                <configuration>
+                  <classifier>dropin</classifier>
+                  <attach>false</attach>
+                  <includeDefaultWrappers>false</includeDefaultWrappers>
+                  <scope>runtime</scope>
+                  <formats>
+                    <format>tar.gz</format>
+                  </formats>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+</project>
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/examples/README.md`
+
+
+```markdown
+This folder includes a few example configurations of Yamcs.
+
+To run one of these examples, use the `./run-example.sh` script from the upper
+directory like this:
+
+    ./run-example.sh EXAMPLE [options]
+
+Where `EXAMPLE` is one of the subdirectories in here.
+
+The following is a short description of each example:
+
+## simulation
+Basic TC/TM using a trivial simulation of a landing spacecraft. The simulator is connected via TCP links.
+
+
+## ccsds-frames
+The same simulator is connected via AOS and TC frames on UDP links. COP1 is used for command frame acknowledgment. TC frames can be optionally emebedded into CLTU. TM or USLP frames can be used instead of AOS frames.
+
+
+## replication1, replication2 and replication3
+Demonstrate the usage of replication between two or three instances. Into a real environment the instances should be deployed on different Yamcs servers. This is done for redundancy purposes or for security reasons (i.e. one server running in an restricted operational environment and the other one into DMZ accessed by external users).
+The README file in each directory contains a description of the respective setup.
+
+## cfdp & cfdp-udp
+Demonstrates the usage of CCSDS File Delivery Protocol:
+_cfdp_ uses the built-in simulator (which works with CFDP encapsulated in CCSDS packets), while _cfdp-udp_ expects an external UDP connection to transmit and receive raw CFDP PDUs. 
+
+## pus
+Simulator using PUS (Packet Utilization Standard - ECSS-E-ST-70-41C) also connected via TCP links. Please read the README inside to understand what services are simulated.
+
+## perftest
+This configuration is used to asses the performance of Yamcs for processing telemetry. The simulator sends a configurable number of packets with random content. On the Yamcs server side a MDB will be generated (by the PerfMdbLoader) to define all the packets and parameters within.
+```

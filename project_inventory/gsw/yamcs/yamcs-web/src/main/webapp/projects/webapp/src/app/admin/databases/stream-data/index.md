@@ -3,16 +3,45 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream-data.component.html`
 
-file--stream-data.component.html
-file--stream-data.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/stream-data.component.html`
+
+
+```html
+<ya-attr-list>
+  @for (column of streamData.column; track column; let i = $index) {
+    <ya-attr [label]="column.name">
+      @if (column.value.type === "BINARY") {
+        <app-hex [base64String]="streamData.column[i].value.binaryValue" />
+      } @else {
+        {{ (streamData.column[i].value | value) || "-" }}
+      }
+    </ya-attr>
+  }
+</ya-attr-list>
 ```
 
-## 항목
+### `stream-data.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/stream-data.component.html`](file--stream-data.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/stream-data.component.ts`](file--stream-data.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-data/stream-data.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { StreamData, ValuePipe, YaAttr, YaAttrList } from '@yamcs/webapp-sdk';
+import { HexComponent } from '../../../shared/hex/hex.component';
+
+@Component({
+  selector: 'app-stream-data',
+  templateUrl: './stream-data.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [HexComponent, ValuePipe, YaAttr, YaAttrList],
+})
+export class StreamDataComponent {
+  @Input()
+  streamData: StreamData;
+}
+```

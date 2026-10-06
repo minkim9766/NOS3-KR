@@ -3,76 +3,2518 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ut/index
-file--CMakeLists.txt
-file--ConditionVariable.cpp
-file--ConditionVariable.hpp
-file--Console.cpp
-file--Console.hpp
-file--Cpu.cpp
-file--Cpu.hpp
-file--DefaultConsole.cpp
-file--DefaultCpu.cpp
-file--DefaultFile.cpp
-file--DefaultMemory.cpp
-file--DefaultMutex.cpp
-file--DefaultQueue.cpp
-file--DefaultRawTime.cpp
-file--DefaultTask.cpp
-file--Directory.cpp
-file--Directory.hpp
-file--File.cpp
-file--File.hpp
-file--FileSystem.cpp
-file--FileSystem.hpp
-file--Memory.cpp
-file--Memory.hpp
-file--Mutex.cpp
-file--Mutex.hpp
-file--Queue.cpp
-file--Queue.hpp
-file--RawTime.cpp
-file--RawTime.hpp
-file--Task.cpp
-file--Task.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/`](ut/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ConditionVariable.cpp`](file--ConditionVariable.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ConditionVariable.hpp`](file--ConditionVariable.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Console.cpp`](file--Console.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Console.hpp`](file--Console.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Cpu.cpp`](file--Cpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Cpu.hpp`](file--Cpu.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultConsole.cpp`](file--DefaultConsole.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultCpu.cpp`](file--DefaultCpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultFile.cpp`](file--DefaultFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultMemory.cpp`](file--DefaultMemory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultMutex.cpp`](file--DefaultMutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultQueue.cpp`](file--DefaultQueue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultRawTime.cpp`](file--DefaultRawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultTask.cpp`](file--DefaultTask.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Directory.cpp`](file--Directory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Directory.hpp`](file--Directory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/File.cpp`](file--File.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/File.hpp`](file--File.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/FileSystem.cpp`](file--FileSystem.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/FileSystem.hpp`](file--FileSystem.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Memory.cpp`](file--Memory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Memory.hpp`](file--Memory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Mutex.cpp`](file--Mutex.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Mutex.hpp`](file--Mutex.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Queue.cpp`](file--Queue.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Queue.hpp`](file--Queue.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/RawTime.cpp`](file--RawTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/RawTime.hpp`](file--RawTime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Task.cpp`](file--Task.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Task.hpp`](file--Task.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+if (NOT BUILD_TESTING)
+    return()
+endif ()
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+add_compile_options(
+    -Wno-conversion
+)
+
+register_os_implementation("File;FileSystem;Directory" Test_Stub)
+register_os_implementation(Console Test_Stub)
+register_os_implementation(Task Test_Stub)
+register_os_implementation("Mutex;ConditionVariable" Test_Stub)
+register_os_implementation(Cpu Test_Stub)
+register_os_implementation(Memory Test_Stub)
+register_os_implementation(Queue Test_Stub)
+register_os_implementation(RawTime Test_Stub) # add Fw_Buffer here?
+
+#### File Stub Testing ####
+register_fprime_ut(
+    StubFileTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubFileTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/file/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/file/FileRules.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_Test_Stub
+  DEPENDS
+    Fw_Types
+    Os
+    Os_Test_File_SyntheticFileSystem
+    STest
+)
+
+#### Console Stub Testing ####
+register_fprime_ut(
+    StubConsoleTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubConsoleTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Console_Test_Stub
+  DEPENDS
+    Fw_Types
+    STest
+)
+
+
+#### Cpu Stub Testing ####
+register_fprime_ut(
+    StubCpuTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubCpuTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Cpu_Test_Stub
+  DEPENDS
+    Fw_Types
+    STest
+)
+
+#### Memory Stub Testing ####
+register_fprime_ut(
+    StubMemoryTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubMemoryTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+  Os_Memory_Test_Stub
+  DEPENDS
+    Fw_Types
+    STest
+)
+
+#### Queue Stub Testing ####
+register_fprime_ut(
+    StubQueueTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubQueueTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/queue/QueueRules.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/queue/CommonTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Queue_Test_Stub
+  DEPENDS
+    Os
+    Fw_Types
+    STest
+)
+if (TARGET StubQueueTest)
+    target_include_directories(StubQueueTest PRIVATE "${CMAKE_CURRENT_LIST_DIR}/ut")
+endif ()
+
+#### Task Stub Testing ####
+register_fprime_ut(
+    StubTaskTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubTaskTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/task/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/task/TaskRules.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Task_Test_Stub
+  DEPENDS
+    Fw_Types
+    STest
+    Os
+)
+
+#### Mutex Stub Testing ####
+register_fprime_ut(
+    StubMutexTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubMutexTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/mutex/CommonTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/../../test/ut/mutex/MutexRules.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Mutex_Test_Stub
+  DEPENDS
+    Fw_Types
+    STest
+)
+
+#### FileSystem Stub Testing ####
+register_fprime_ut(
+    StubFileSystemTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubFileSystemTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_Test_Stub
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+
+#### Directory Stub Testing ####
+register_fprime_ut(
+    StubDirectoryTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubDirectoryTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_File_Test_Stub
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+
+## Condition variable tests
+register_fprime_ut(
+    StubConditionVariableTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubConditionTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Mutex_Test_Stub
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+
+#### RawTime Stub Testing ####
+register_fprime_ut(
+    StubRawTimeTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/ut/StubRawTimeTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_RawTime_Test_Stub
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+```
+
+### `ConditionVariable.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ConditionVariable.cpp`
+
+
+```cpp
+//
+// Created by Michael Starch on 8/27/24.
+//
+#include "ConditionVariable.hpp"
+#include <cstring>
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+namespace Stub {
+namespace ConditionVariable {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestConditionVariable::TestConditionVariable() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestConditionVariable::~TestConditionVariable() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestConditionVariable::Status TestConditionVariable::pend(Os::Mutex& mutex) {
+    StaticData::data.lastCalled = StaticData::LastFn::WAIT_FN;
+    StaticData::data.passed = &mutex;
+    return TestConditionVariable::Status::OP_OK;
+}
+
+void TestConditionVariable::notify() {
+    StaticData::data.lastCalled = StaticData::LastFn::NOTIFY_FN;
+}
+
+void TestConditionVariable::notifyAll() {
+    StaticData::data.lastCalled = StaticData::LastFn::NOTIFY_ALL_FN;
+}
+ConditionVariableHandle* TestConditionVariable::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::HANDLE_FN;
+    StaticData::data.handle = &this->m_handle;
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace ConditionVariable
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `ConditionVariable.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ConditionVariable.hpp`
+
+
+```cpp
+
+#ifndef OS_STUB_TEST_CONDITION_VARIABLE_HPP
+#define OS_STUB_TEST_CONDITION_VARIABLE_HPP
+#include <deque>
+#include <queue>
+#include "Os/Condition.hpp"
+
+namespace Os {
+namespace Stub {
+namespace ConditionVariable {
+namespace Test {
+
+//! Data that supports the stubbed File implementation.
+//!
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn { NONE_FN, CONSTRUCT_FN, DESTRUCT_FN, WAIT_FN, NOTIFY_FN, NOTIFY_ALL_FN, HANDLE_FN };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+    Os::Mutex* passed = nullptr;
+    ConditionVariableHandle* handle = nullptr;
+
+    // Singleton data
+    static StaticData data;
+};
+
+struct TestConditionVariableHandle : public ConditionVariableHandle {};
+
+//! \brief interface testing condition variable
+class TestConditionVariable : public ConditionVariableInterface {
+  public:
+    //! \brief default interface constructor
+    TestConditionVariable();
+
+    //! \brief default destructor
+    ~TestConditionVariable() override;
+
+    //! \brief copy constructor is forbidden
+    TestConditionVariable(const ConditionVariableInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    TestConditionVariable(const ConditionVariableInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    ConditionVariableInterface& operator=(const ConditionVariableInterface& other) override = delete;
+
+    //! \brief wait releasing mutex
+    TestConditionVariable::Status pend(Os::Mutex& mutex) override;
+
+    //! \brief notify a single waiter
+    void notify() override;
+
+    //! \brief notify all current waiters
+    void notifyAll() override;
+
+    ConditionVariableHandle* getHandle() override;
+
+    TestConditionVariableHandle m_handle;
+};
+
+}  // namespace Test
+}  // namespace ConditionVariable
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_STUB_TEST_CONDITION_VARIABLE_HPP
+```
+
+### `Console.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Console.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Console.cpp
+// \brief stub implementation for Os::Console
+// ======================================================================
+#include <Os/Stub/test/Console.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Console {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestConsole::TestConsole() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestConsole::~TestConsole() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestConsole::TestConsole(const Os::Stub::Console::Test::TestConsole& other) {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_COPY_FN;
+    StaticData::data.copyObject = &other;
+    this->m_handle = other.m_handle;
+}
+
+void TestConsole::writeMessage(const CHAR* message, const FwSizeType size) {
+    StaticData::data.message = message;
+    StaticData::data.size = size;
+    StaticData::data.lastCalled = StaticData::LastFn::WRITE_FN;
+}
+
+ConsoleHandle* TestConsole::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Console.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Console.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Console.hpp
+// \brief test stub implementation for Os::Console, header and test definitions
+// ======================================================================
+#include <Os/Console.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Test_Console_HPP
+#define OS_Stub_Test_Console_HPP
+
+namespace Os {
+namespace Stub {
+namespace Console {
+namespace Test {
+
+class TestConsole;
+
+//! Data that supports the stubbed File implementation.
+//!/
+struct StaticData {
+    enum LastFn {
+        NONE_FN,
+        CONSTRUCT_FN,
+        CONSTRUCT_COPY_FN,
+        COPY_FN,
+        DESTRUCT_FN,
+        WRITE_FN,
+    };
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+    //! Copy object
+    const TestConsole* copyObject;
+
+    //! Last message passed
+    const CHAR* message = nullptr;
+    //! Last size passed
+    FwSizeType size = 0;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! ConsoleHandle class definition for stub implementations.
+//!
+struct TestConsoleHandle : public ConsoleHandle {};
+
+//! \brief stub implementation of Os::ConsoleInterface
+//!
+//! Stub implementation of `ConsoleInterface` for use as a delegate class handling stub console operations.
+//!
+class TestConsole : public ConsoleInterface {
+  public:
+    //! \brief constructor
+    //!
+    TestConsole();
+
+    //! \brief copy constructor
+    TestConsole(const TestConsole& other);
+
+    //! \brief assignment operator that copies the internal representation
+    TestConsole& operator=(const TestConsole& other) = delete;
+
+    //! \brief destructor
+    //!
+    ~TestConsole() override;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief write message to console
+    //!
+    //! Write a message to the console with a bounded size. This will use the active file descriptor as the output
+    //! destination.
+    //!
+    //! \param message: raw message to write
+    //! \param size: size of the message to write to the console
+    void writeMessage(const CHAR* message, const FwSizeType size) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    ConsoleHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    TestConsoleHandle m_handle;
+};
+}  // namespace Test
+}  // namespace Console
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Test_Console_HPP
+```
+
+### `Cpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Cpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Cpu.cpp
+// \brief stub implementation for Os::Cpu
+// ======================================================================
+#include <Os/Stub/test/Cpu.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestCpu::TestCpu() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestCpu::~TestCpu() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestCpu::Status TestCpu::_getCount(FwSizeType& cpu_count) {
+    StaticData::data.lastCalled = StaticData::LastFn::COUNT_FN;
+    StaticData::data.count = cpu_count;
+    return StaticData::data.status_out;
+}
+
+TestCpu::Status TestCpu::_getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) {
+    StaticData::data.lastCalled = StaticData::LastFn::TICKS_FN;
+    StaticData::data.index = cpu_index;
+    StaticData::data.ticks.total = ticks.total;
+    StaticData::data.ticks.used = ticks.used;
+    return StaticData::data.status_out;
+}
+
+CpuHandle* TestCpu::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::HANDLE_FN;
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Cpu.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Cpu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Cpu.hpp
+// \brief test stub implementation for Os::Cpu, header and test definitions
+// ======================================================================
+#include <Os/Cpu.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Test_Cpu_HPP
+#define OS_Stub_Test_Cpu_HPP
+
+namespace Os {
+namespace Stub {
+namespace Cpu {
+namespace Test {
+
+class TestCpu;
+
+//! Data that supports the stubbed File implementation.
+//!/
+struct StaticData {
+    enum LastFn { NONE_FN, CONSTRUCT_FN, DESTRUCT_FN, COUNT_FN, TICKS_FN, HANDLE_FN };
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    //! Count test
+    FwSizeType count = 0;
+    //! Count test
+    FwSizeType index = 0;
+
+    //! Ticks test
+    Os::Cpu::Ticks ticks;
+
+    //! Status out
+    CpuInterface::Status status_out;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! CpuHandle class definition for stub implementations.
+//!
+struct TestCpuHandle : public CpuHandle {};
+
+//! \brief stub implementation of Os::CpuInterface
+//!
+//! Stub implementation of `CpuInterface` for use as a delegate class handling stub console operations.
+//!
+class TestCpu : public CpuInterface {
+  public:
+    //! \brief constructor
+    //!
+    TestCpu();
+
+    //! \brief copy constructor
+    TestCpu(const TestCpu& other) = delete;
+
+    //! \brief assignment operator that copies the internal representation
+    CpuInterface& operator=(const CpuInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~TestCpu() override;
+
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType& cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    CpuHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    TestCpuHandle m_handle;
+};
+}  // namespace Test
+}  // namespace Cpu
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Test_Cpu_HPP
+```
+
+### `DefaultConsole.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultConsole.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultConsole.cpp
+// \brief sets default Os::Console to stub test implementation via linker
+// ======================================================================
+#include "Os/Console.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/Console.hpp"
+
+namespace Os {
+ConsoleInterface* ConsoleInterface::getDelegate(ConsoleHandleStorage& aligned_new_memory,
+                                                const ConsoleInterface* to_copy) {
+    return Os::Delegate::makeDelegate<ConsoleInterface, Os::Stub::Console::Test::TestConsole>(aligned_new_memory,
+                                                                                              to_copy);
+}
+}  // namespace Os
+```
+
+### `DefaultCpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultCpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultCpu.cpp
+// \brief sets default Os::Cpu to stub implementation via linker
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/Cpu.hpp"
+
+namespace Os {
+CpuInterface* CpuInterface::getDelegate(CpuHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<CpuInterface, Os::Stub::Cpu::Test::TestCpu>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultFile.cpp
+// \brief sets default Os::File to test stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/Directory.hpp"
+#include "Os/Stub/test/File.hpp"
+#include "Os/Stub/test/FileSystem.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for FileInterface that intercepts calls for  for stub test file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileInterface* FileInterface::getDelegate(FileHandleStorage& aligned_placement_new_memory,
+                                          const FileInterface* to_copy) {
+    return Os::Delegate::makeDelegate<FileInterface, Os::Stub::File::Test::TestFile>(aligned_placement_new_memory,
+                                                                                     to_copy);
+}
+//! \brief get a delegate for Directory that intercepts calls for  for stub test file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+DirectoryInterface* DirectoryInterface::getDelegate(DirectoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<DirectoryInterface, Os::Stub::Directory::Test::TestDirectory>(aligned_new_memory);
+}
+
+//! \brief get a delegate for FileSystemInterface that intercepts calls for  for stub test file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+FileSystemInterface* FileSystemInterface::getDelegate(FileSystemHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<FileSystemInterface, Os::Stub::FileSystem::Test::TestFileSystem>(
+        aligned_placement_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMemory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultMemory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/DefaultMemory.cpp
+// \brief sets default Os::Memory to stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Memory.hpp"
+#include "Os/Stub/test/Memory.hpp"
+
+namespace Os {
+MemoryInterface* MemoryInterface::getDelegate(MemoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MemoryInterface, Os::Stub::Memory::Test::TestMemory>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultMutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultMutex.cpp
+// \brief sets default Os::Mutex to test stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/ConditionVariable.hpp"
+#include "Os/Stub/test/Mutex.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for Mutex that intercepts calls for  for stub test Mutex usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+MutexInterface* MutexInterface::getDelegate(MutexHandleStorage& aligned_placement_new_memory) {
+    return Os::Delegate::makeDelegate<MutexInterface, Os::Stub::Mutex::Test::TestMutex>(aligned_placement_new_memory);
+}
+
+//! \brief get a delegate for MutexInterface that intercepts calls for Posix
+//! \param aligned_new_memory: aligned memory to fill
+//! \return: pointer to delegate
+ConditionVariableInterface* ConditionVariableInterface::getDelegate(
+    ConditionVariableHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<ConditionVariableInterface,
+                                      Os::Stub::ConditionVariable::Test::TestConditionVariable,
+                                      ConditionVariableHandleStorage>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultQueue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultQueue.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultQueue.cpp
+// \brief sets default Os::Queue to stub test implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Queue.hpp"
+#include "Os/Stub/test/Queue.hpp"
+
+namespace Os {
+QueueInterface* QueueInterface::getDelegate(QueueHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<QueueInterface, Os::Stub::Queue::Test::InjectableStlQueue, QueueHandleStorage>(
+        aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultRawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultRawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultRawTime.cpp
+// \brief sets default Os::RawTime to test stub implementation via linker
+// ======================================================================
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/RawTime.hpp"
+
+namespace Os {
+
+//! \brief get a delegate for RawTimeInterface that intercepts calls for  for stub test file usage
+//! \param aligned_new_memory: aligned memory to fill
+//! \param to_copy: pointer to copy-constructor input
+//! \return: pointer to delegate
+RawTimeInterface* RawTimeInterface::getDelegate(RawTimeHandleStorage& aligned_placement_new_memory,
+                                                const RawTimeInterface* to_copy) {
+    return Os::Delegate::makeDelegate<RawTimeInterface, Os::Stub::RawTime::Test::TestRawTime, RawTimeHandleStorage>(
+        aligned_placement_new_memory, to_copy);
+}
+
+}  // namespace Os
+```
+
+### `DefaultTask.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/DefaultTask.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/DefaultTask.cpp
+// \brief sets default Os::Task to test stub implementation via linker
+// ======================================================================
+#include <cerrno>
+#include "Os/Delegate.hpp"
+#include "Os/Stub/test/Task.hpp"
+#include "Os/Task.hpp"
+
+namespace Os {
+TaskInterface* TaskInterface::getDelegate(TaskHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<TaskInterface, Os::Stub::Task::Test::TestTask>(aligned_new_memory);
+}
+
+}  // namespace Os
+```
+
+### `Directory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Directory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Directory.cpp
+// \brief implementation for TestDirectory stubs for interface testing
+// ======================================================================
+
+#include "Os/Stub/test/Directory.hpp"
+#include "Os/Directory.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Directory {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestDirectory::TestDirectory() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestDirectory::~TestDirectory() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestDirectory::Status TestDirectory::open(const char* path, OpenMode mode) {
+    StaticData::data.lastCalled = StaticData::LastFn::OPEN_FN;
+    return Status::OP_OK;
+}
+
+TestDirectory::Status TestDirectory::rewind() {
+    StaticData::data.lastCalled = StaticData::LastFn::REWIND_FN;
+    return Status::OP_OK;
+}
+
+TestDirectory::Status TestDirectory::read(char* fileNameBuffer, FwSizeType bufSize) {
+    StaticData::data.lastCalled = StaticData::LastFn::READ_FN;
+    return Status::OP_OK;
+}
+
+void TestDirectory::close() {
+    StaticData::data.lastCalled = StaticData::LastFn::CLOSE_FN;
+}
+
+Os::DirectoryHandle* TestDirectory::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_HANDLE_FN;
+    return nullptr;
+}
+
+}  // namespace Test
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Directory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Directory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Directory.cpp
+// \brief definitions for TestDirectory stubs for interface testing
+// ======================================================================
+#ifndef OS_STUB_Directory_TEST_HPP
+#define OS_STUB_Directory_TEST_HPP
+
+#include "Os/Directory.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Directory {
+namespace Test {
+
+//! Data that supports the stubbed Directory implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    enum LastFn {
+        NONE_FN,
+        CONSTRUCT_FN,
+        DESTRUCT_FN,
+        OPEN_FN,
+        REWIND_FN,
+        READ_FN,
+        CLOSE_FN,
+        GET_HANDLE_FN,
+    };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! Test task handle
+class TestDirectoryHandle : public DirectoryHandle {};
+
+//! Implementation of task
+class TestDirectory : public DirectoryInterface {
+  public:
+    //! Constructor
+    TestDirectory();
+
+    //! Destructor
+    ~TestDirectory() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific Directory member functions
+    // ------------------------------------------------------------
+    Status open(const char* path, OpenMode mode) override;
+    Status rewind() override;
+    Status read(char* fileNameBuffer, FwSizeType bufSize) override;
+    void close() override;
+
+    //! \brief return the underlying Directory handle (implementation specific)
+    //! \return internal task handle representation
+    DirectoryHandle* getHandle() override;
+};
+
+}  // namespace Test
+}  // namespace Directory
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_MUTEX_TEST_HPP
+```
+
+### `File.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/File.cpp`
+
+
+```cpp
+#include "Os/Stub/test/File.hpp"
+#include <new>
+#include "Os/File.hpp"
+namespace Os {
+namespace Stub {
+namespace File {
+namespace Test {
+
+StaticData StaticData::data;
+
+void StaticData::setNextStatus(Os::File::Status status) {
+    StaticData::data.openStatus = status;
+    StaticData::data.sizeStatus = status;
+    StaticData::data.positionStatus = status;
+    StaticData::data.preallocateStatus = status;
+    StaticData::data.seekStatus = status;
+    StaticData::data.flushStatus = status;
+    StaticData::data.readStatus = status;
+    StaticData::data.writeStatus = status;
+}
+
+void StaticData::setSizeResult(FwSizeType size) {
+    StaticData::data.sizeResult = size;
+}
+
+void StaticData::setPositionResult(FwSizeType position) {
+    StaticData::data.positionResult = position;
+}
+
+void StaticData::setReadResult(U8* buffer, FwSizeType size) {
+    StaticData::data.readResult = buffer;
+    StaticData::data.readResultSize = size;
+}
+
+void StaticData::setReadSize(FwSizeType size) {
+    StaticData::data.readSizeResult = size;
+}
+
+void StaticData::setWriteResult(U8* buffer, FwSizeType size) {
+    StaticData::data.writeResult = buffer;
+    StaticData::data.writeResultSize = size;
+}
+
+void StaticData::setWriteSize(FwSizeType size) {
+    StaticData::data.writeSizeResult = size;
+}
+
+TestFile::TestFile() {
+    StaticData::data.lastCalled = StaticData::CONSTRUCT_FN;
+}
+
+TestFile::~TestFile() {
+    StaticData::data.lastCalled = StaticData::DESTRUCT_FN;
+}
+
+FileInterface::Status TestFile::open(const char* filepath, Mode open_mode, OverwriteType overwrite) {
+    StaticData::data.openPath = filepath;
+    StaticData::data.openMode = open_mode;
+    StaticData::data.openOverwrite = overwrite;
+    StaticData::data.lastCalled = StaticData::OPEN_FN;
+    StaticData::data.pointer = 0;
+    return StaticData::data.openStatus;
+}
+
+void TestFile::close() {
+    StaticData::data.lastCalled = StaticData::CLOSE_FN;
+}
+
+FileInterface::Status TestFile::size(FwSizeType& size_result) {
+    StaticData::data.lastCalled = StaticData::SIZE_FN;
+    size_result = StaticData::data.sizeResult;
+    return StaticData::data.sizeStatus;
+}
+
+FileInterface::Status TestFile::position(FwSizeType& position_result) {
+    StaticData::data.lastCalled = StaticData::POSITION_FN;
+    position_result = StaticData::data.positionResult;
+    return StaticData::data.positionStatus;
+}
+
+FileInterface::Status TestFile::preallocate(FwSizeType offset, FwSizeType length) {
+    StaticData::data.preallocateOffset = offset;
+    StaticData::data.preallocateLength = length;
+    StaticData::data.lastCalled = StaticData::PREALLOCATE_FN;
+    return StaticData::data.preallocateStatus;
+}
+
+FileInterface::Status TestFile::seek(FwSignedSizeType offset, SeekType seekType) {
+    StaticData::data.seekOffset = offset;
+    StaticData::data.seekType = seekType;
+    StaticData::data.lastCalled = StaticData::SEEK_FN;
+    return StaticData::data.seekStatus;
+}
+
+FileInterface::Status TestFile::flush() {
+    StaticData::data.lastCalled = StaticData::FLUSH_FN;
+    return StaticData::data.flushStatus;
+}
+
+FileInterface::Status TestFile::read(U8* buffer, FwSizeType& size, WaitType wait) {
+    StaticData::data.readBuffer = buffer;
+    StaticData::data.readSize = size;
+    StaticData::data.readWait = wait;
+    StaticData::data.lastCalled = StaticData::READ_FN;
+    // Copy read data if set
+    if (nullptr != StaticData::data.readResult) {
+        size = FW_MIN(size, StaticData::data.readResultSize - StaticData::data.pointer);
+        (void)::memcpy(buffer, StaticData::data.readResult + StaticData::data.pointer, static_cast<size_t>(size));
+        StaticData::data.pointer += size;
+    } else {
+        size = StaticData::data.readSizeResult;
+    }
+    return StaticData::data.readStatus;
+}
+
+FileInterface::Status TestFile::write(const U8* buffer, FwSizeType& size, WaitType wait) {
+    StaticData::data.writeBuffer = buffer;
+    StaticData::data.writeSize = size;
+    StaticData::data.writeWait = wait;
+    StaticData::data.lastCalled = StaticData::WRITE_FN;
+    // Copy read data if set
+    if (nullptr != StaticData::data.writeResult) {
+        size = FW_MIN(size, StaticData::data.writeResultSize - StaticData::data.pointer);
+        (void)::memcpy(StaticData::data.writeResult + StaticData::data.pointer, buffer, static_cast<size_t>(size));
+        StaticData::data.pointer += size;
+    } else {
+        size = StaticData::data.writeSizeResult;
+    }
+    return StaticData::data.writeStatus;
+}
+
+FileHandle* TestFile::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `File.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/File.hpp`
+
+
+```cpp
+#include <string.h>
+#include "Os/File.hpp"
+
+#ifndef OS_STUB_FILE_TEST_HPP
+#define OS_STUB_FILE_TEST_HPP
+namespace Os {
+namespace Stub {
+namespace File {
+namespace Test {
+
+//! Data that supports the stubbed File implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn {
+        NONE_FN,
+        CONSTRUCT_FN,
+        DESTRUCT_FN,
+        OPEN_FN,
+        CLOSE_FN,
+        SIZE_FN,
+        POSITION_FN,
+        PREALLOCATE_FN,
+        SEEK_FN,
+        FLUSH_FN,
+        READ_FN,
+        WRITE_FN
+    };
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+    //! Path of last open call
+    const char* openPath = nullptr;
+    //! Mode of last open call
+    Os::File::Mode openMode = Os::File::MAX_OPEN_MODE;
+    //! Overwrite of last open call
+    Os::File::OverwriteType openOverwrite = Os::File::OverwriteType::NO_OVERWRITE;
+    //! Offset of last preallocate call
+    FwSizeType preallocateOffset = std::numeric_limits<FwSizeType>::max();
+    //! Length of last preallocate call
+    FwSizeType preallocateLength = std::numeric_limits<FwSizeType>::max();
+    //! Offset of last seek call
+    FwSizeType seekOffset = std::numeric_limits<FwSizeType>::max();
+    //! Absolute of last seek call
+    Os::File::SeekType seekType = Os::File::SeekType::ABSOLUTE;
+    //! Buffer of last read call
+    U8* readBuffer = nullptr;
+    //! Size of last read call
+    FwSizeType readSize = std::numeric_limits<FwSizeType>::max();
+    //! Wait of last read call
+    Os::File::WaitType readWait = Os::File::WaitType::NO_WAIT;
+    //! Buffer of last write call
+    const void* writeBuffer = nullptr;
+    //! Size of last write call
+    FwSizeType writeSize = std::numeric_limits<FwSizeType>::max();
+    //! Wait of last write call
+    Os::File::WaitType writeWait = Os::File::WaitType::NO_WAIT;
+
+    //! File pointer
+    FwSizeType pointer = 0;
+
+    //! Status to return from open
+    Os::File::Status openStatus = Os::File::Status::OP_OK;
+    //! Status to return from size
+    Os::File::Status sizeStatus = Os::File::Status::OP_OK;
+    //! Status to return from position
+    Os::File::Status positionStatus = Os::File::Status::OP_OK;
+    //! Status to return from preallocate
+    Os::File::Status preallocateStatus = Os::File::Status::OP_OK;
+    //! Status to return from seek
+    Os::File::Status seekStatus = Os::File::Status::OP_OK;
+    //! Status to return from flush
+    Os::File::Status flushStatus = Os::File::Status::OP_OK;
+    //! Status to return from read
+    Os::File::Status readStatus = Os::File::Status::OP_OK;
+    //! Status to return from write
+    Os::File::Status writeStatus = Os::File::Status::OP_OK;
+
+    //! Return of next size call
+    FwSizeType sizeResult = std::numeric_limits<FwSizeType>::max();
+    //! Return of next position call
+    FwSizeType positionResult = 0;
+    //! Result of next read call
+    U8* readResult = nullptr;
+    //! Size result of next read data
+    FwSizeType readResultSize = std::numeric_limits<FwSizeType>::max();
+    //! Size result of next read call
+    FwSizeType readSizeResult = std::numeric_limits<FwSizeType>::max();
+    //! Result holding buffer of next write call
+    U8* writeResult = nullptr;
+    //! Size result of next write data
+    FwSizeType writeResultSize = std::numeric_limits<FwSizeType>::max();
+    //! Size result of next read call
+    FwSizeType writeSizeResult = std::numeric_limits<FwSizeType>::max();
+
+    // Singleton data
+    static StaticData data;
+
+    //! Set next status to return
+    static void setNextStatus(Os::File::Status status);
+
+    //! Set next size to result
+    static void setSizeResult(FwSizeType size);
+
+    //! Set next position to result
+    static void setPositionResult(FwSizeType position);
+
+    //! Set next read result
+    static void setReadResult(U8* buffer, FwSizeType size);
+
+    //! Set next read size result
+    static void setReadSize(FwSizeType size);
+
+    //! Set next write result
+    static void setWriteResult(U8* buffer, FwSizeType size);
+
+    //! Set next write size result
+    static void setWriteSize(FwSizeType size);
+};
+
+class TestFileHandle : public FileHandle {};
+
+//! \brief tracking implementation of Os::File
+//!
+//! Tracking implementation of `FileInterface` for use as a delegate class handling test file operations. Posix files
+//! use standard `open`, `read`, and `write` posix calls. The handle is represented as a `PosixFileHandle` which wraps a
+//! single `int` type file descriptor used in those API calls.
+//!
+class TestFile : public FileInterface {
+  public:
+    //! \brief constructor
+    //!
+    TestFile();
+
+    //! \brief destructor
+    //!
+    ~TestFile() override;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+
+    //! \brief open file with supplied path and mode
+    //!
+    //! Open the file passed in with the given mode. If overwrite is set to OVERWRITE, then opening files in
+    //! OPEN_CREATE mode will clobber existing files. Set overwrite to NO_OVERWRITE to preserve existing files.
+    //! The status of the open request is returned from the function call. Delegates to the chosen
+    //! implementation's `open` function.
+    //!
+    //! It is invalid to send `nullptr` as the path.
+    //! It is invalid to supply `mode` as a non-enumerated value.
+    //! It is invalid to supply `overwrite` as a non-enumerated value.
+    //!
+    //! \param path: c-string of path to open
+    //! \param mode: file operation mode
+    //! \param overwrite: overwrite existing file on create
+    //! \return: status of the open
+    //!
+    Os::FileInterface::Status open(const char* path, Mode mode, OverwriteType overwrite) override;
+
+    //! \brief close the file, if not opened then do nothing
+    //!
+    //! Closes the file, if open. Otherwise this function does nothing. Delegates to the chosen implementation's
+    //! `closeInternal` function. `mode` is set to `OPEN_NO_MODE`.
+    //!
+    void close() override;
+
+    //! \brief get size of currently open file
+    //!
+    //! Get the size of the currently open file and fill the size parameter. Return status of the operation.
+    //! \param size: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status size(FwSizeType& size_result) override;
+
+    //! \brief get file pointer position of the currently open file
+    //!
+    //! Get the current position of the read/write pointer of the open file.
+    //! \param position: output parameter for size.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status position(FwSizeType& position_result) override;
+
+    //! \brief pre-allocate file storage
+    //!
+    //! Pre-allocates file storage with at least `length` storage starting at `offset`. No-op on implementations
+    //! that cannot pre-allocate.
+    //!
+    //! It is invalid to pass a negative `offset`.
+    //! It is invalid to pass a negative `length`.
+    //!
+    //! \param offset: offset into file
+    //! \param length: length after offset to preallocate
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status preallocate(FwSizeType offset, FwSizeType length) override;
+
+    //! \brief seek the file pointer to the given offset
+    //!
+    //! Seek the file pointer to the given `offset`. If `seekType` is set to `ABSOLUTE` then the offset is calculated
+    //! from the start of the file, and if it is set to `RELATIVE` it is calculated from the current position.
+    //!
+    //! \param offset: offset to seek to
+    //! \param seekType: `ABSOLUTE` for seeking from beginning of file, `RELATIVE` to use current position.
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status seek(FwSignedSizeType offset, SeekType seekType) override;
+
+    //! \brief flush file contents to storage
+    //!
+    //! Flushes the file contents to storage (i.e. out of the OS cache to disk). Does nothing in implementations
+    //! that do not support flushing.
+    //!
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status flush() override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Read data from this file up to the `size` and store it in `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been read successfully read or the end of the file has been
+    //! reached. When `wait` is set to `NO_WAIT` it will return whatever data is currently available.
+    //!
+    //! `size` will be updated to the count of bytes actually read. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status read(U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief read data from this file into supplied buffer bounded by size
+    //!
+    //! Write data to this file up to the `size` from the `buffer`.  When `wait` is set to `WAIT`, this
+    //! will block until the requested size has been written successfully to disk. When `wait` is set to
+    //! `NO_WAIT` it will return once the data is sent to the OS.
+    //!
+    //! `size` will be updated to the count of bytes actually written. Status will reflect the success/failure of
+    //! the read operation.
+    //!
+    //! It is invalid to pass `nullptr` to this function call.
+    //! It is invalid to pass a negative `size`.
+    //! It is invalid to supply wait as a non-enumerated value.
+    //!
+    //! \param buffer: memory location to store data read from file
+    //! \param size: size of data to read
+    //! \param wait: `WAIT` to wait for data to write to disk, `NO_WAIT` to return what is currently available
+    //! \return OP_OK on success otherwise error status
+    //!
+    Status write(const U8* buffer, FwSizeType& size, WaitType wait) override;
+
+    //! \brief returns the raw file handle
+    //!
+    //! Gets the raw file handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it//!must* be passed as an opaque type.
+    //!
+    //! \return raw file handle
+    //!
+    FileHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    TestFileHandle m_handle;
+};
+
+}  // namespace Test
+}  // namespace File
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_FILE_TEST_HPP
+```
+
+### `FileSystem.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/FileSystem.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/FileSystem.cpp
+// \brief implementation for TestFileSystem stubs for interface testing
+// ======================================================================
+
+#include "Os/Stub/test/FileSystem.hpp"
+#include "Os/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestFileSystem::TestFileSystem() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestFileSystem::~TestFileSystem() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestFileSystem::Status TestFileSystem::_removeDirectory(const char* path) {
+    StaticData::data.lastCalled = StaticData::LastFn::REMOVE_DIR_FN;
+    return Status::OP_OK;
+}
+
+TestFileSystem::Status TestFileSystem::_removeFile(const char* path) {
+    StaticData::data.lastCalled = StaticData::LastFn::REMOVE_FILE_FN;
+    return Status::OP_OK;
+}
+
+TestFileSystem::Status TestFileSystem::_rename(const char* originPath, const char* destPath) {
+    StaticData::data.lastCalled = StaticData::LastFn::RENAME_FN;
+    return Status::OP_OK;
+}
+
+TestFileSystem::Status TestFileSystem::_getWorkingDirectory(char* path, FwSizeType size) {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_CWD_FN;
+    return Status::OP_OK;
+}
+
+TestFileSystem::Status TestFileSystem::_changeWorkingDirectory(const char* path) {
+    StaticData::data.lastCalled = StaticData::LastFn::CHANGE_CWD_FN;
+    return Status::OP_OK;
+}
+
+TestFileSystem::Status TestFileSystem::_getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_FREESPACE_FN;
+    return Status::OP_OK;
+}
+
+Os::FileSystemHandle* TestFileSystem::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_HANDLE_FN;
+    return &this->m_handle;
+}
+
+TestFileSystem::Status TestFileSystem::_getPathType(const char* path, PathType& pathType) {
+    StaticData::data.lastCalled = StaticData::GET_PATH_TYPE_FN;
+    pathType = PathType::NOT_EXIST;
+    return StaticData::data.lastStatus;
+}
+
+}  // namespace Test
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `FileSystem.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/FileSystem.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/FileSystem.cpp
+// \brief definitions for TestFileSystem stubs for interface testing
+//
+// These classes are here to test that delegation of Os::FileSystem calls
+// the selected implementation of a FileSystemInterface.
+// ======================================================================
+#ifndef OS_STUB_FILESYSTEM_TEST_HPP
+#define OS_STUB_FILESYSTEM_TEST_HPP
+
+#include "Os/FileSystem.hpp"
+
+namespace Os {
+namespace Stub {
+namespace FileSystem {
+namespace Test {
+
+//! Data that supports the stubbed FileSystem implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn {
+        NONE_FN,
+        CONSTRUCT_FN,
+        DESTRUCT_FN,
+        CREATE_DIR_FN,
+        REMOVE_DIR_FN,
+        REMOVE_FILE_FN,
+        RENAME_FN,
+        GET_CWD_FN,
+        CHANGE_CWD_FN,
+        GET_FREESPACE_FN,
+        GET_HANDLE_FN,
+        GET_PATH_TYPE_FN,
+    };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    Os::FileSystem::Status lastStatus = Os::FileSystem::Status::OP_OK;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! Test task handle
+class TestFileSystemHandle : public FileSystemHandle {};
+
+//! Implementation of task
+class TestFileSystem : public FileSystemInterface {
+  public:
+    //! Constructor
+    TestFileSystem();
+
+    //! Destructor
+    ~TestFileSystem() override;
+
+    Status _removeDirectory(const char* path) override;
+    Status _removeFile(const char* path) override;
+    Status _rename(const char* originPath, const char* destPath) override;
+    Status _getFreeSpace(const char* path, FwSizeType& totalBytes, FwSizeType& freeBytes) override;
+    Status _changeWorkingDirectory(const char* path) override;
+    Status _getWorkingDirectory(char* path, FwSizeType size) override;
+    Status _getPathType(const char* path, PathType& pathType) override;
+
+    //! \brief return the underlying FileSystem handle (implementation specific)
+    //! \return internal task handle representation
+    FileSystemHandle* getHandle() override;
+
+  private:
+    //! FileSystem handle for TestFileSystem
+    TestFileSystemHandle m_handle;
+};
+
+}  // namespace Test
+}  // namespace FileSystem
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_MUTEX_TEST_HPP
+```
+
+### `Memory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Memory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/Memory.cpp
+// \brief stub implementation for Os::Memory
+// ======================================================================
+#include <Os/Stub/test/Memory.hpp>
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestMemory::TestMemory() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestMemory::~TestMemory() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+TestMemory::Status TestMemory::_getUsage(Os::Memory::Usage& memory_usage) {
+    StaticData::data.lastCalled = StaticData::LastFn::USAGE_FN;
+    StaticData::data.usage.total = memory_usage.total;
+    StaticData::data.usage.used = memory_usage.used;
+    return Status::ERROR;
+}
+
+MemoryHandle* TestMemory::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::HANDLE_FN;
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Memory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Memory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Memory.hpp
+// \brief test stub implementation for Os::Memory, header and test definitions
+// ======================================================================
+#include <Os/Memory.hpp>
+#include <cstdio>
+#ifndef OS_Stub_Test_Memory_HPP
+#define OS_Stub_Test_Memory_HPP
+
+namespace Os {
+namespace Stub {
+namespace Memory {
+namespace Test {
+
+class TestMemory;
+
+//! Data that supports the stubbed File implementation.
+//!/
+struct StaticData {
+    enum LastFn { NONE_FN, CONSTRUCT_FN, DESTRUCT_FN, USAGE_FN, HANDLE_FN };
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    //! Count test
+    FwSizeType count = 0;
+    //! Count test
+    FwSizeType index = 0;
+
+    //! Ticks test
+    Os::Memory::Usage usage;
+
+    //! Status out
+    MemoryInterface::Status status_out;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! MemoryHandle class definition for stub implementations.
+//!
+struct TestMemoryHandle : public MemoryHandle {};
+
+//! \brief stub implementation of Os::MemoryInterface
+//!
+//! Stub implementation of `MemoryInterface` for use as a delegate class handling stub console operations.
+//!
+class TestMemory : public MemoryInterface {
+  public:
+    //! \brief constructor
+    //!
+    TestMemory();
+
+    //! \brief copy constructor
+    TestMemory(const TestMemory& other) = delete;
+
+    //! \brief assignment operator that copies the internal representation
+    MemoryInterface& operator=(const MemoryInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~TestMemory() override;
+
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Os::Memory::Usage& memory_usage) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    MemoryHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    TestMemoryHandle m_handle;
+};
+}  // namespace Test
+}  // namespace Memory
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_Stub_Test_Memory_HPP
+```
+
+### `Mutex.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Mutex.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Mutex.cpp
+// \brief implementation for TestMutex stubs for interface testing
+// ======================================================================
+
+#include "Os/Stub/test/Mutex.hpp"
+namespace Os {
+namespace Stub {
+namespace Mutex {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestMutex::TestMutex() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestMutex::~TestMutex() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+Os::MutexInterface::Status TestMutex::take() {
+    StaticData::data.lastCalled = StaticData::LastFn::TAKE_FN;
+    return StaticData::data.takeStatus;
+}
+
+Os::MutexInterface::Status TestMutex::release() {
+    StaticData::data.lastCalled = StaticData::LastFn::RELEASE_FN;
+    return StaticData::data.releaseStatus;
+}
+
+Os::MutexHandle* TestMutex::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_HANDLE_FN;
+    return nullptr;
+}
+
+}  // namespace Test
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Mutex.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Mutex.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/Mutex.cpp
+// \brief definitions for TestMutex stubs for interface testing
+// ======================================================================
+#include "Os/Mutex.hpp"
+
+#ifndef OS_STUB_MUTEX_TEST_HPP
+#define OS_STUB_MUTEX_TEST_HPP
+namespace Os {
+namespace Stub {
+namespace Mutex {
+namespace Test {
+
+//! Data that supports the stubbed Mutex implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn { NONE_FN, CONSTRUCT_FN, DESTRUCT_FN, TAKE_FN, RELEASE_FN, GET_HANDLE_FN };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    Os::Mutex::Status takeStatus = Os::Mutex::Status::OP_OK;
+    Os::Mutex::Status releaseStatus = Os::Mutex::Status::OP_OK;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! Test task handle
+class TestMutexHandle : public MutexHandle {};
+
+//! Implementation of task
+class TestMutex : public MutexInterface {
+  public:
+    //! Constructor
+    TestMutex();
+
+    //! Destructor
+    ~TestMutex() override;
+
+    //! \brief lock mutex and return status
+    Status take() override;
+
+    //! \brief unlock mutex and return status
+    Status release() override;
+
+    //! \brief return the underlying mutex handle (implementation specific)
+    //! \return internal task handle representation
+    MutexHandle* getHandle() override;
+};
+
+}  // namespace Test
+}  // namespace Mutex
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_MUTEX_TEST_HPP
+```
+
+### `Queue.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Queue.cpp`
+
+
+```cpp
+//
+// Created by Michael Starch on 8/27/24.
+//
+#include "Queue.hpp"
+#include <cstring>
+#include "Fw/Types/Assert.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+namespace Test {
+
+StaticData StaticData::data;
+U64 InjectableStlQueueHandle::Message::order_counter = 0;
+
+InjectableStlQueueHandle::InjectableStlQueueHandle()
+    :  // Creates the necessary handle on the heap to keep the handle size small
+      m_storage(*new std::priority_queue<Message, std::deque<Message>, Message::LessMessage>),
+      m_high_water(0),
+      m_max_depth(0) {}
+
+InjectableStlQueueHandle::~InjectableStlQueueHandle() {
+    // Clean-up heap
+    delete &m_storage;
+}
+
+InjectableStlQueue::InjectableStlQueue() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+InjectableStlQueue::~InjectableStlQueue() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+QueueInterface::Status InjectableStlQueue::create(const Fw::StringBase& name,
+                                                  FwSizeType depth,
+                                                  FwSizeType messageSize) {
+    StaticData::data.lastCalled = StaticData::LastFn::CREATE_FN;
+    // This must be the case or this test queue will not work
+    if (StaticData::data.sendStatus != QueueInterface::Status::OP_OK) {
+        FW_ASSERT(messageSize <= sizeof InjectableStlQueueHandle::Message::data);
+    }
+    StaticData::data.name = name;
+    StaticData::data.depth = depth;
+    StaticData::data.size = messageSize;
+    this->m_handle.m_max_depth = depth;
+    return StaticData::data.createStatus;
+}
+
+QueueInterface::Status InjectableStlQueue::send(const U8* buffer,
+                                                FwSizeType size,
+                                                FwQueuePriorityType priority,
+                                                QueueInterface::BlockingType blockType) {
+    StaticData::data.lastCalled = StaticData::LastFn::SEND_FN;
+    StaticData::data.buffer = const_cast<U8*>(buffer);
+    StaticData::data.size = size;
+    StaticData::data.priority = priority;
+    StaticData::data.blockType = blockType;
+    if (StaticData::data.sendStatus != QueueInterface::Status::OP_OK) {
+        return StaticData::data.sendStatus;
+    } else if (size > sizeof InjectableStlQueueHandle::Message::data) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    } else if (this->m_handle.m_storage.size() >= this->m_handle.m_max_depth) {
+        return QueueInterface::Status::FULL;
+    }
+
+    InjectableStlQueueHandle::Message message;
+    (void)std::memcpy(message.data, buffer, static_cast<size_t>(size));
+    message.priority = priority;
+    message.size = size;
+    message.order = InjectableStlQueueHandle::Message::order_counter++;
+    this->m_handle.m_storage.push(message);
+    this->m_handle.m_high_water = FW_MAX(this->m_handle.m_high_water, this->m_handle.m_storage.size());
+    return QueueInterface::Status::OP_OK;
+}
+
+QueueInterface::Status InjectableStlQueue::receive(U8* destination,
+                                                   FwSizeType capacity,
+                                                   QueueInterface::BlockingType blockType,
+                                                   FwSizeType& actualSize,
+                                                   FwQueuePriorityType& priority) {
+    StaticData::data.lastCalled = StaticData::LastFn::RECEIVE_FN;
+    StaticData::data.buffer = const_cast<U8*>(destination);
+    StaticData::data.capacity = capacity;
+    StaticData::data.blockType = blockType;
+    if (StaticData::data.receiveStatus != QueueInterface::Status::OP_OK) {
+        actualSize = StaticData::data.size;
+        priority = StaticData::data.priority;
+        return StaticData::data.receiveStatus;
+    }
+    if (this->m_handle.m_storage.empty()) {
+        return Status::EMPTY;
+    }
+    InjectableStlQueueHandle::Message message = this->m_handle.m_storage.top();
+    // Fail with size miss-match when the destination cannot store message
+    if (message.size > capacity) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    }
+    std::memcpy(destination, message.data, static_cast<size_t>(message.size));
+    priority = message.priority;
+    actualSize = message.size;
+    this->m_handle.m_storage.pop();
+    return QueueInterface::Status::OP_OK;
+}
+
+FwSizeType InjectableStlQueue::getMessagesAvailable() const {
+    StaticData::data.lastCalled = StaticData::LastFn::MESSAGES_FN;
+    // Injection detected
+    if (StaticData::data.messages != -1) {
+        return StaticData::data.messages;
+    }
+    return this->m_handle.m_storage.size();
+}
+
+FwSizeType InjectableStlQueue::getMessageHighWaterMark() const {
+    StaticData::data.lastCalled = StaticData::LastFn::HIGH_WATER_FN;
+    // Injection detected
+    if (StaticData::data.highWaterMark != -1) {
+        return StaticData::data.highWaterMark;
+    }
+    return this->m_handle.m_high_water;
+}
+
+QueueHandle* InjectableStlQueue::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::HANDLE_FN;
+    StaticData::data.handle = &this->m_handle;
+    return &this->m_handle;
+}
+
+}  // namespace Test
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Queue.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Queue.hpp`
+
+
+```cpp
+
+#ifndef OS_STUB_TEST_QUEUE_HPP
+#define OS_STUB_TEST_QUEUE_HPP
+#include <cassert>
+#include <deque>
+#include <limits>
+#include <queue>
+#include "Os/Queue.hpp"
+
+namespace Os {
+namespace Stub {
+namespace Queue {
+namespace Test {
+constexpr FwSizeType STUB_QUEUE_TEST_MESSAGE_MAX_SIZE = 1024;
+
+//! Data that supports the stubbed File implementation.
+//!
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn {
+        NONE_FN,
+        CONSTRUCT_FN,
+        DESTRUCT_FN,
+        CREATE_FN,
+        SEND_FN,
+        RECEIVE_FN,
+        MESSAGES_FN,
+        HIGH_WATER_FN,
+        HANDLE_FN
+    };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    Os::QueueInterface::Status createStatus = Os::QueueInterface::Status::OP_OK;
+    Os::QueueInterface::Status sendStatus = Os::QueueInterface::Status::OP_OK;
+    Os::QueueInterface::Status receiveStatus = Os::QueueInterface::Status::OP_OK;
+
+    FwSignedSizeType messages = -1;
+    FwSignedSizeType highWaterMark = -1;
+    QueueHandle* handle = nullptr;
+
+    // Received variables
+    Os::QueueString name;
+    FwSizeType depth;
+    FwSizeType size;
+    FwSizeType capacity;
+    U8* buffer;
+    FwQueuePriorityType priority;
+    QueueInterface::BlockingType blockType;
+
+    // Singleton data
+    static StaticData data;
+};
+
+struct InjectableStlQueueHandle : public QueueHandle {
+    //! \brief message type
+    struct Message {
+        U8 data[STUB_QUEUE_TEST_MESSAGE_MAX_SIZE];
+        FwQueuePriorityType priority;
+        FwSizeType size;
+        U64 order;
+        static U64 order_counter;
+        //! \brief comparison utility for messages
+        struct LessMessage {
+            bool operator()(const Message& a, const Message& b) {
+                // Compare priority for unequal priority
+                if (a.priority != b.priority) {
+                    return std::greater<FwQueuePriorityType>()(a.priority, b.priority);
+                }
+                // Cannot have like ordered items
+                assert(a.order != b.order);
+                // Compare received order for unequal received orders
+                return a.order > b.order;
+            }
+        };
+    };
+    InjectableStlQueueHandle();
+    ~InjectableStlQueueHandle();
+
+    std::priority_queue<Message, std::deque<Message>, Message::LessMessage>& m_storage;
+    FwSizeType m_high_water;
+    FwSizeType m_max_depth;
+};
+
+//! \brief standard library powered queue implementation with injectable statuses
+class InjectableStlQueue : public QueueInterface {
+  public:
+    //! \brief default queue interface constructor
+    InjectableStlQueue();
+
+    //! \brief default queue destructor
+    virtual ~InjectableStlQueue();
+
+    //! \brief copy constructor is forbidden
+    InjectableStlQueue(const QueueInterface& other) = delete;
+
+    //! \brief copy constructor is forbidden
+    InjectableStlQueue(const QueueInterface* other) = delete;
+
+    //! \brief assignment operator is forbidden
+    InjectableStlQueue& operator=(const QueueInterface& other) override = delete;
+
+    //! \brief create queue storage
+    //!
+    //! Creates a queue ensuring sufficient storage to hold `depth` messages of `messageSize` size each.
+    //! \param name: name of queue
+    //! \param depth: depth of queue in number of messages
+    //! \param messageSize: size of an individual message
+    //! \return: status of the creation
+    Status create(const Fw::StringBase& name, FwSizeType depth, FwSizeType messageSize) override;
+
+    //! \brief send a message into the queue
+    //!
+    //! Send a message into the queue, providing the message data, size, priority, and blocking type. When
+    //! `blockType` is set to BLOCKING, this call will block on queue full. Otherwise, this will return an error
+    //! status on queue full.
+    //!
+    //! \param buffer: message data
+    //! \param size: size of message data
+    //! \param priority: priority of the message
+    //! \param blockType: BLOCKING to block for space or NONBLOCKING to return error when queue is full
+    //! \return: status of the send
+    Status send(const U8* buffer, FwSizeType size, FwQueuePriorityType priority, BlockingType blockType) override;
+
+    //! \brief receive a message from the queue
+    //!
+    //! Receive a message from the queue, providing the message destination, capacity, priority, and blocking type.
+    //! When `blockType` is set to BLOCKING, this call will block on queue empty. Otherwise, this will return an
+    //! error status on queue empty. Actual size received and priority of message is set on success status.
+    //!
+    //! \param destination: destination for message data
+    //! \param capacity: maximum size of message data
+    //! \param blockType: BLOCKING to wait for message or NONBLOCKING to return error when queue is empty
+    //! \param actualSize: (output) actual size of message read
+    //! \param priority: (output) priority of message read
+    //! \return: status of the send
+    Status receive(U8* destination,
+                   FwSizeType capacity,
+                   BlockingType blockType,
+                   FwSizeType& actualSize,
+                   FwQueuePriorityType& priority) override;
+
+    //! \brief get number of messages available
+    //!
+    //! \return number of messages available
+    FwSizeType getMessagesAvailable() const override;
+
+    //! \brief get maximum messages stored at any given time
+    //!
+    //! Returns the maximum number of messages in this queue at any given time. This is the high-water mark for this
+    //! queue.
+    //! \return queue message high-water mark
+    FwSizeType getMessageHighWaterMark() const override;
+
+    QueueHandle* getHandle() override;
+
+    InjectableStlQueueHandle m_handle;
+};
+
+}  // namespace Test
+}  // namespace Queue
+}  // namespace Stub
+}  // namespace Os
+
+#endif  // OS_STUB_TEST_QUEUE_HPP
+```
+
+### `RawTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/RawTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/RawTime.cpp
+// \brief stub implementation for Os::RawTime
+// ======================================================================
+#include "Os/Stub/test/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestRawTime::TestRawTime() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestRawTime::TestRawTime(const TestRawTime& other) {
+    StaticData::data.lastCalled = StaticData::LastFn::COPY_CONSTRUCT_FN;
+}
+
+TestRawTime::~TestRawTime() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+RawTimeHandle* TestRawTime::getHandle() {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_HANDLE_FN;
+    return &this->m_handle;
+}
+
+TestRawTime::Status TestRawTime::now() {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_TIME_FN;
+    return Status::OP_OK;
+}
+
+TestRawTime::Status TestRawTime::getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const {
+    StaticData::data.lastCalled = StaticData::LastFn::GET_INTERVAL_FN;
+    return Status::OP_OK;
+}
+
+Fw::SerializeStatus TestRawTime::serializeTo(Fw::SerializeBufferBase& buffer) const {
+    StaticData::data.lastCalled = StaticData::LastFn::SERIALIZE_FN;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+Fw::SerializeStatus TestRawTime::deserializeFrom(Fw::SerializeBufferBase& buffer) {
+    StaticData::data.lastCalled = StaticData::LastFn::DESERIALIZE_FN;
+    return Fw::FW_SERIALIZE_OK;
+}
+
+}  // namespace Test
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `RawTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/RawTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/RawTime.hpp
+// \brief stub definitions for Os::RawTime
+// ======================================================================
+#ifndef OS_STUB_RAWTIME_TEST_HPP
+#define OS_STUB_RAWTIME_TEST_HPP
+
+#include "Os/RawTime.hpp"
+
+namespace Os {
+namespace Stub {
+namespace RawTime {
+namespace Test {
+
+//! Data that supports the stubbed Mutex implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn {
+        NONE_FN,
+        GET_TIME_FN,
+        GET_INTERVAL_FN,
+        SERIALIZE_FN,
+        DESERIALIZE_FN,
+        GET_HANDLE_FN,
+        CONSTRUCT_FN,
+        COPY_CONSTRUCT_FN,
+        DESTRUCT_FN
+    };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    Os::RawTime::Status lastStatus = Os::RawTime::Status::OP_OK;
+
+    // Singleton data
+    static StaticData data;
+};
+struct TestRawTimeHandle : public RawTimeHandle {};
+
+//! \brief Test implementation of Os::RawTime
+//!
+//! Test implementation of `RawTimeInterface`.
+//!
+class TestRawTime : public RawTimeInterface {
+  public:
+    //! \brief constructor
+    //!
+    TestRawTime();
+
+    //! \brief copy constructor
+    TestRawTime(const TestRawTime& other);
+
+    //! \brief destructor
+    //!
+    ~TestRawTime() override;
+
+    //! \brief return the underlying RawTime handle (implementation specific)
+    //! \return internal RawTime handle representation
+    RawTimeHandle* getHandle() override;
+
+    // ------------------------------------------------------------
+    // Implementation-specific RawTime overrides
+    // ------------------------------------------------------------
+    Status now() override;
+    Status getTimeInterval(const Os::RawTime& other, Fw::TimeInterval& interval) const override;
+    Fw::SerializeStatus serializeTo(Fw::SerializeBufferBase& buffer) const override;
+    Fw::SerializeStatus deserializeFrom(Fw::SerializeBufferBase& buffer) override;
+
+  private:
+    //! Handle for TestRawTime
+    TestRawTimeHandle m_handle;
+};
+
+}  // namespace Test
+}  // namespace RawTime
+}  // namespace Stub
+}  // namespace Os
+#endif  // OS_STUB_RAWTIME_TEST_HPP
+```
+
+### `Task.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Task.cpp`
+
+
+```cpp
+#include "Os/Stub/test/Task.hpp"
+#include <sys/time.h>
+namespace Os {
+namespace Stub {
+namespace Task {
+namespace Test {
+
+StaticData StaticData::data;
+
+TestTask::TestTask() {
+    StaticData::data.lastCalled = StaticData::LastFn::CONSTRUCT_FN;
+}
+
+TestTask::~TestTask() {
+    StaticData::data.lastCalled = StaticData::LastFn::DESTRUCT_FN;
+}
+
+void TestTask::onStart() {}
+
+Os::TaskInterface::Status TestTask::join() {
+    StaticData::data.lastCalled = StaticData::LastFn::JOIN_FN;
+    return StaticData::data.joinStatus;
+}
+
+void TestTask::suspend(Os::TaskInterface::SuspensionType suspensionType) {
+    StaticData::data.suspensionType = suspensionType;
+    StaticData::data.lastCalled = StaticData::LastFn::SUSPEND_FN;
+}
+
+void TestTask::resume() {
+    StaticData::data.lastCalled = StaticData::LastFn::RESUME_FN;
+}
+
+Os::TaskHandle* TestTask::getHandle() {
+    return nullptr;
+}
+
+Os::TaskInterface::Status TestTask::start(const Os::TaskInterface::Arguments& arguments) {
+    StaticData::data.lastCalled = StaticData::LastFn::START_FN;
+    return StaticData::data.startStatus;
+}
+
+Os::Task::Status TestTask::_delay(Fw::TimeInterval interval) {
+    Os::Stub::Task::Test::StaticData::data.lastCalled = Os::Stub::Task::Test::StaticData::LastFn::DELAY_FN;
+    Os::Stub::Task::Test::StaticData::data.delay = interval;
+
+    // For testing stub, the default implementation of delay for a "task" is a busy wait. This acts as a synthetic
+    // albeit inefficient implementation.
+    timeval start;
+    timeval end;
+    if (gettimeofday(&start, nullptr) == 0) {
+        end.tv_usec = (start.tv_usec + interval.getUSeconds()) % 1000000;
+        end.tv_sec = start.tv_sec + interval.getSeconds() + (start.tv_usec + interval.getUSeconds()) / 1000000;
+        // Bounded busy wait
+        for (U64 wait = 0; wait < std::numeric_limits<U64>::max(); wait++) {
+            gettimeofday(&start, nullptr);
+            if (((start.tv_sec >= end.tv_sec) && (start.tv_usec >= end.tv_usec)) || (start.tv_sec > end.tv_sec)) {
+                break;
+            }
+        }
+    }
+    return Os::Stub::Task::Test::StaticData::data.delayStatus;
+}
+
+bool TestTask::isCooperative() {
+    return true;
+}
+}  // namespace Test
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+```
+
+### `Task.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/Task.hpp`
+
+
+```cpp
+#include "Os/Task.hpp"
+
+#ifndef OS_STUB_TASK_TEST_HPP
+#define OS_STUB_TASK_TEST_HPP
+namespace Os {
+namespace Stub {
+namespace Task {
+namespace Test {
+
+//! Data that supports the stubbed File implementation.
+//!/
+struct StaticData {
+    //! Enumeration of last function called
+    //!
+    enum LastFn { NONE_FN, CONSTRUCT_FN, DESTRUCT_FN, DELAY_FN, JOIN_FN, SUSPEND_FN, RESUME_FN, START_FN };
+    StaticData() = default;
+    ~StaticData() = default;
+
+    //! Last function called
+    LastFn lastCalled = NONE_FN;
+
+    Os::Task::SuspensionType suspensionType;
+    Fw::TimeInterval delay;
+
+    Os::Task::Status delayStatus = Os::Task::Status::OP_OK;
+    Os::Task::Status joinStatus = Os::Task::Status::OP_OK;
+    Os::Task::Status startStatus = Os::Task::Status::OP_OK;
+
+    // Singleton data
+    static StaticData data;
+};
+
+//! Test task handle
+class TestTaskHandle : public TaskHandle {};
+
+//! Implementation of task
+class TestTask : public TaskInterface {
+  public:
+    //! Constructor
+    TestTask();
+
+    //! Destructor
+    ~TestTask() override;
+
+    //! \brief perform required task start actions
+    void onStart() override;
+
+    //! \brief block until the task has ended
+    //!
+    //! Blocks the current (calling) task until this task execution has ended. Callers should ensure that any
+    //! signals required to stop this task have already been emitted or will be emitted by another task.
+    //!
+    //! \return status of the block
+    Status join() override;
+
+    //! \brief suspend the task given the suspension type
+    //!
+    //! Suspends the task. Some implementations track if the suspension of a task was intentional or
+    //! unintentional. The supplied `suspensionType` parameter indicates that this was intentional or
+    //! unintentional. The type of suspension is also returned when calling `isSuspended`.
+    //!
+    //! \param suspensionType intentionality of the suspension
+    void suspend(SuspensionType suspensionType) override;
+
+    //! \brief resume a suspended task
+    //!
+    //! Resumes this task. Not started, running, and exited tasks take no action.
+    //!
+    void resume() override;
+
+    //! \brief delay the current task
+    //!
+    //! Delays, or sleeps, the current task by the supplied time interval. In non-preempting os implementations
+    //! the task will resume no earlier than expected but an exact wake-up time is not guaranteed.
+    //!
+    //! \param interval: delay time
+    //! \return status of the delay
+    Status _delay(Fw::TimeInterval interval) override;
+
+    //! \brief return the underlying task handle (implementation specific)
+    //! \return internal task handle representation
+    TaskHandle* getHandle() override;
+
+    //! \brief determine if the task requires cooperative multitasking
+    //!
+    //! Some task implementations require cooperative multitasking where the task execution is run by a user
+    //! defined task scheduler and not the operating system task scheduler. These tasks cooperatively on
+    //! multitask by doing one unit of work and return from the function.
+    //!
+    //! This function indicates if the task requires cooperative support.
+    //! The default implementation returns false.
+    //!
+    //! \return true when the task expects cooperation, false otherwise
+    bool isCooperative() override;
+
+    //! \brief start the task
+    //!
+    //! Starts the task given the supplied arguments.
+    //!
+    //! \param arguments: arguments supplied to the task start call
+    //! \return status of the task start
+    Status start(const Arguments& arguments) override;
+};
+
+}  // namespace Test
+}  // namespace Task
+}  // namespace Stub
+}  // namespace Os
+#endif  // End OS_STUB_TASK_TEST_HPP
+```

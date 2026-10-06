@@ -3,20 +3,107 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--DataProductsConfig.fpp
-file--DataProductsSubtopologyConfig.cpp
-file--DataProductsSubtopologyConfig.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/CMakeLists.txt`
+
+
+```cmake
+register_fprime_config(
+    EXCLUDE_FROM_ALL
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/DataProductsSubtopologyConfig.cpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/DataProductsSubtopologyConfig.hpp"
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/DataProductsConfig.fpp"
+    DEPENDS
+        Fw_Types
+)
 ```
 
-## 항목
+### `DataProductsConfig.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsConfig.fpp`](file--DataProductsConfig.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsSubtopologyConfig.cpp`](file--DataProductsSubtopologyConfig.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsSubtopologyConfig.hpp`](file--DataProductsSubtopologyConfig.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsConfig.fpp`
+
+
+```fpp
+module DataProductsConfig {
+    #Base ID for the DataProducts Subtopology, all components are offsets from this base ID
+    constant BASE_ID = 0x04000000
+    
+    module QueueSizes {
+        constant dpCat    = 10
+        constant dpMgr  = 10
+        constant dpWriter   = 10
+        constant dpBufferManager   = 10
+    }
+    
+
+    module StackSizes {
+        constant dpCat    = 64 * 1024
+        constant dpMgr  = 64 * 1024
+        constant dpWriter   = 64 * 1024
+        constant dpBufferManager   = 64 * 1024
+    }
+
+    module Priorities {
+        constant dpCat    = 101
+        constant dpMgr  = 100
+        constant dpWriter   = 99
+        constant dpBufferManager  = 98
+    }
+
+    # Buffer management constants
+    module BuffMgr {
+        constant dpBufferStoreSize  = 10000   
+        constant dpBufferStoreCount = 10       
+        constant dpBufferManagerId  = 300         
+    }
+    
+    # Directory and file paths
+    module Paths {
+        constant dpDir    = "./DpCat"                
+        constant dpState  = "./DpCat/DpState.dat"  
+    }
+}
+```
+
+### `DataProductsSubtopologyConfig.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsSubtopologyConfig.cpp`
+
+
+```cpp
+#include "DataProductsSubtopologyConfig.hpp"
+
+namespace DataProducts {
+namespace Allocation {
+// This instance can be changed to use a different allocator in the DataProducts Subtopology
+Fw::MallocAllocator mallocatorInstance;
+Fw::MemAllocator& memAllocator = mallocatorInstance;
+}  // namespace Allocation
+}  // namespace DataProducts
+```
+
+### `DataProductsSubtopologyConfig.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Subtopologies/DataProducts/DataProductsConfig/DataProductsSubtopologyConfig.hpp`
+
+
+```cpp
+#ifndef DATAPRODUCTSSUBTOPOLOGY_CONFIG_HPP
+#define DATAPRODUCTSSUBTOPOLOGY_CONFIG_HPP
+
+#include "Fw/Types/MallocAllocator.hpp"
+
+namespace DataProducts {
+namespace Allocation {
+extern Fw::MemAllocator& memAllocator;
+}
+}  // namespace DataProducts
+
+#endif
+```

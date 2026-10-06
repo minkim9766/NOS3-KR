@@ -3,18 +3,113 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `acknowledgment-icon.component.css`
 
-file--acknowledgment-icon.component.css
-file--acknowledgment-icon.component.html
-file--acknowledgment-icon.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.css`
+
+
+```css
+:host {
+  line-height: 0;
+  font-size: 0;
+}
+
+.scheduled {
+  color: lightgrey;
+}
+
+.ok {
+  color: #00c752;
+}
+
+.pending {
+  color: lightgrey;
+}
+
+.cancelled {
+  color: lightgrey;
+}
+
+.disabled {
+  color: lightgrey;
+}
+
+.timeout {
+  color: var(--y-error-color);
+}
+
+.failed {
+  color: var(--y-error-color);
+}
+
+.no-ack {
+  color: lightgrey;
+}
 ```
 
-## 항목
+### `acknowledgment-icon.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.css`](file--acknowledgment-icon.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.html`](file--acknowledgment-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.ts`](file--acknowledgment-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.html`
+
+
+```html
+@if (ack) {
+  @switch (ack.status) {
+    @case ("SCHEDULED") {
+      <mat-icon [matTooltip]="ack.name! + ': Scheduled'" class="icon16 scheduled">
+        schedule
+      </mat-icon>
+    }
+    @case ("OK") {
+      <mat-icon [matTooltip]="ack.name! + ': OK'" class="icon16 ok">check_circle_outline</mat-icon>
+    }
+    @case ("PENDING") {
+      <mat-icon [matTooltip]="ack.name! + ': PENDING'" class="icon16 pending">lens</mat-icon>
+    }
+    @case ("CANCELLED") {
+      <mat-icon [matTooltip]="ack.name! + ': CANCELLED'" class="icon16 cancelled">block</mat-icon>
+    }
+    @case ("DISABLED") {
+      <mat-icon [matTooltip]="ack.name! + ': DISABLED'" class="icon16 disabled">block</mat-icon>
+    }
+    @case ("TIMEOUT") {
+      <mat-icon [matTooltip]="ack.name! + ': TIMEOUT'" class="icon16 timeout">
+        highlight_off
+      </mat-icon>
+    }
+    @default {
+      <mat-icon
+        [matTooltip]="ack.name! + ': ' + ack.status! + ' (' + ack.message! + ')'"
+        class="icon16 failed">
+        highlight_off
+      </mat-icon>
+    }
+  }
+} @else {
+  <mat-icon [matTooltip]="'Unknown'" class="icon16 no-ack">lens</mat-icon>
+}
+```
+
+### `acknowledgment-icon.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/acknowledgment-icon/acknowledgment-icon.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Acknowledgment, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-acknowledgment-icon',
+  templateUrl: './acknowledgment-icon.component.html',
+  styleUrl: './acknowledgment-icon.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AcknowledgmentIconComponent {
+  @Input()
+  ack: Acknowledgment;
+}
+```

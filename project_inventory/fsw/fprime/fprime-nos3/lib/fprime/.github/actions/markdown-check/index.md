@@ -3,16 +3,47 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `mlc-config.json`
 
-file--mlc-config.json
-file--README.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/mlc-config.json`
+
+
+```json
+{
+    "ignorePatterns": [
+      {
+        "pattern": "^(https?://)?localhost"
+      },
+      {
+        "pattern": "https?://"
+      },
+      {
+        "pattern": "./tutorials-"
+      },
+      {
+        "pattern": "^\\.\\./tree/HEAD/"
+      },
+      {
+        "pattern": ".*\\.[chf]pp"
+      },
+      {
+        "pattern": "../../../.."
+      }
+    ]
+}
 ```
 
-## 항목
+### `README.md`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/mlc-config.json`](file--mlc-config.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/markdown-check/README.md`
+
+
+```markdown
+### Markdown Link Checker
+
+Uses the following GitHub Action: https://github.com/gaurav-nelson/github-action-markdown-link-check
+
+Config file options: https://github.com/tcort/markdown-link-check#config-file-format
+```

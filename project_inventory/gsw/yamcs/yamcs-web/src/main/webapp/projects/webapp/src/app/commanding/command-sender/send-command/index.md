@@ -3,20 +3,494 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `commands.datasource.ts`
 
-file--commands.datasource.ts
-file--send-command.component.css
-file--send-command.component.html
-file--send-command.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/commands.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Command,
+  GetCommandsOptions,
+  SpaceSystem,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ListItem {
+  name: string;
+  system?: SpaceSystem;
+  command?: Command;
+}
+
+export class CommandsDataSource extends DataSource<ListItem> {
+  items$ = new BehaviorSubject<ListItem[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.items$;
+  }
+
+  loadCommands(options: GetCommandsOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getCommands(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        const items: ListItem[] = [];
+        for (const system of page.systems || []) {
+          items.push({ name: system.qualifiedName, system });
+        }
+        for (const command of page.commands || []) {
+          items.push({ name: command.qualifiedName, command });
+        }
+        this.items$.next(items);
+      });
+  }
+
+  getAliasNamespaces() {
+    const namespaces: string[] = [];
+    for (const item of this.items$.value) {
+      if (item.command?.alias) {
+        for (const alias of item.command.alias) {
+          if (alias.namespace && namespaces.indexOf(alias.namespace) === -1) {
+            namespaces.push(alias.namespace);
+          }
+        }
+      }
+    }
+    return namespaces.sort();
+  }
+
+  disconnect() {
+    this.items$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
 ```
 
-## 항목
+### `send-command.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/commands.datasource.ts`](file--commands.datasource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.css`](file--send-command.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.html`](file--send-command.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.ts`](file--send-command.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.css`
+
+
+```css
+.pullRight {
+  float: right;
+}
+
+.primary-td .mat-icon {
+  margin-right: 7px;
+}
+```
+
+### `send-command.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Send a command" />
+  <span #top></span>
+
+  <app-send-command-wizard-step step="1" />
+
+  @if (connectionInfo$ | async; as connectionInfo) {
+    <ya-panel>
+      <div [class.noDisplay]="!connectionInfo.processor?.hasCommanding">
+        @if (breadcrumb$ | async; as breadcrumb) {
+          @if (breadcrumb.length) {
+            <ya-filter-bar>
+              <ya-breadcrumb-trail>
+                <ya-breadcrumb
+                  link="/commanding/send"
+                  [queryParams]="{ c: yamcs.context }"
+                  icon="account_tree" />
+                @for (item of breadcrumb; track item) {
+                  <ya-breadcrumb
+                    [link]="item.route"
+                    [queryParams]="item.queryParams"
+                    [label]="item.name" />
+                }
+              </ya-breadcrumb-trail>
+            </ya-filter-bar>
+          }
+        }
+        <ya-filter-bar>
+          <ya-search-filter
+            [formControl]="filterControl"
+            placeholder="Search by name"
+            icon="search"
+            (onArrowDown)="selectNext()"
+            (onArrowUp)="selectPrevious()"
+            (onEnter)="applySelection()" />
+          <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="sendCommand" />
+        </ya-filter-bar>
+
+        @if (dataSource) {
+          <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+            <ng-container matColumnDef="significance">
+              <th mat-header-cell *matHeaderCellDef>Significance</th>
+              <td mat-cell *matCellDef="let item">
+                @if (item.command?.effectiveSignificance; as significance) {
+                  <app-significance-level [level]="significance.consequenceLevel" />
+                } @else {
+                  -
+                }
+              </td>
+            </ng-container>
+            <ng-container cdkColumnDef="name">
+              <th mat-header-cell *cdkHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let item" class="primary-td">
+                @if (item.system) {
+                  <mat-icon class="icon12" style="vertical-align: middle">folder</mat-icon>
+                  <a
+                    routerLink="/commanding/send"
+                    [queryParams]="{ c: yamcs.context, system: item.name }">
+                    {{ item.name | filename }}/
+                  </a>
+                }
+                @if (item.command) {
+                  <mat-icon class="icon12" style="vertical-align: middle">rss_feed</mat-icon>
+                  <a
+                    [routerLink]="'/commanding/send' + item.command.qualifiedName"
+                    [queryParams]="{ c: yamcs.context }">
+                    @if (!system) {
+                      <ya-highlight
+                        [text]="item.command.qualifiedName"
+                        [term]="filterControl.value" />
+                    }
+                    @if (system) {
+                      <ya-highlight
+                        [text]="item.command.qualifiedName | slice: system!.length + 1"
+                        [term]="filterControl.value" />
+                    }
+                  </a>
+                }
+              </td>
+            </ng-container>
+            <ng-container matColumnDef="shortDescription">
+              <th mat-header-cell *matHeaderCellDef>Description</th>
+              <td mat-cell *matCellDef="let item" class="wrap400">
+                @if (item.system) {
+                  {{ item.system.shortDescription || "-" }}
+                }
+                @if (item.command) {
+                  @if (item.command?.shortDescription; as desc) {
+                    <ya-highlight [text]="desc" [term]="filterControl.value" />
+                  } @else {
+                    -
+                  }
+                }
+              </td>
+            </ng-container>
+            @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+              <ng-container [matColumnDef]="aliasColumn.id">
+                <th mat-header-cell *matHeaderCellDef>
+                  {{ aliasColumn.label }}
+                </th>
+                <td mat-cell *matCellDef="let item">
+                  @if (item.command | alias: aliasColumn.id; as name) {
+                    <ya-highlight [text]="name" [term]="filterControl.value" />
+                  } @else {
+                    -
+                  }
+                </td>
+              </ng-container>
+            }
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef class="expand"></th>
+              <td mat-cell *matCellDef="let row"></td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+            <tr
+              mat-row
+              *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+              [class.selected]="selection.isSelected(row)"></tr>
+          </table>
+        }
+        <mat-paginator
+          [pageSize]="pageSize"
+          [hidePageSize]="true"
+          [showFirstLastButtons]="true"
+          [length]="dataSource.totalSize$ | async" />
+      </div>
+      @if (!connectionInfo.processor?.hasCommanding) {
+        <ya-empty-message headerTitle="Send a command">
+          <p>
+            You are connected to the
+            @if (connectionInfo.processor?.replay) {
+              replay
+            }
+            processor
+            <strong>{{ connectionInfo.processor?.name }}</strong>
+            .
+          </p>
+          <p>This processor does not support commanding.</p>
+        </ya-empty-message>
+      }
+    </ya-panel>
+  }
+</ya-instance-page>
+```
+
+### `send-command.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/send-command/send-command.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  ConnectionInfo,
+  GetCommandsOptions,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { SignificanceLevelComponent } from '../../../shared/significance-level/significance-level.component';
+import { SendCommandWizardStepComponent } from '../send-command-wizard-step/send-command-wizard-step.component';
+import { CommandsDataSource, ListItem } from './commands.datasource';
+
+@Component({
+  templateUrl: './send-command.component.html',
+  styleUrl: './send-command.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    SendCommandWizardStepComponent,
+    WebappSdkModule,
+    SignificanceLevelComponent,
+  ],
+})
+export class SendCommandComponent implements AfterViewInit, OnDestroy {
+  connectionInfo$: Observable<ConnectionInfo | null>;
+
+  pageSize = 100;
+
+  system: string | null = null;
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator)
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: CommandsDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'significance', label: 'Significance', visible: true },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  // Added dynamically based on actual commands.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  private queryParamMapSubscription: Subscription;
+
+  selection = new SelectionModel<ListItem>(false);
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    title.setTitle('Send a command');
+    this.connectionInfo$ = yamcs.connectionInfo$;
+    this.dataSource = new CommandsDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    this.filterControl.setValue(
+      this.route.snapshot.queryParamMap.get('filter'),
+    );
+    this.changeSystem(this.route.snapshot.queryParamMap);
+
+    this.queryParamMapSubscription = this.route.queryParamMap.subscribe(
+      (map) => {
+        if (map.get('system') !== this.system) {
+          this.changeSystem(map);
+        }
+      },
+    );
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  changeSystem(map: ParamMap) {
+    this.system = map.get('system');
+    this.updateBrowsePath();
+
+    if (map.has('page')) {
+      this.paginator.pageIndex = Number(map.get('page'));
+    } else {
+      this.paginator.pageIndex = 0;
+    }
+    this.updateDataSource();
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetCommandsOptions = {
+      system: this.system || '/',
+      noAbstract: true,
+      details: true,
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+      fields: [
+        'name',
+        'qualifiedName',
+        'alias',
+        'effectiveSignificance',
+        'shortDescription',
+      ],
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource.loadCommands(options).then(() => {
+      this.selection.clear();
+      this.updateBrowsePath();
+
+      // Reset alias columns
+      for (const aliasColumn of this.aliasColumns$.value) {
+        const idx = this.columns.indexOf(aliasColumn);
+        if (idx !== -1) {
+          this.columns.splice(idx, 1);
+        }
+      }
+      const aliasColumns = [];
+      for (const namespace of this.dataSource.getAliasNamespaces()) {
+        const aliasColumn = {
+          id: namespace,
+          label: namespace,
+          alwaysVisible: true,
+        };
+        aliasColumns.push(aliasColumn);
+      }
+      this.columns.splice(1, 0, ...aliasColumns); // Insert after name column
+      this.aliasColumns$.next(aliasColumns);
+      this.columnChooser.recalculate(this.columns);
+    });
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: filterValue || null,
+        system: this.system || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    if (this.system) {
+      for (const part of this.system.slice(1).split('/')) {
+        path += '/' + part;
+        breadcrumb.push({
+          name: part,
+          route: '/commanding/send',
+          queryParams: { system: path, c: this.yamcs.context },
+        });
+      }
+    }
+    this.breadcrumb$.next(breadcrumb);
+  }
+
+  selectNext() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.items$.value;
+      if (item.command && items.indexOf(item) !== -1) {
+        this.router.navigate(
+          ['/commanding/send' + item.command?.qualifiedName],
+          {
+            queryParams: { c: this.yamcs.context },
+          },
+        );
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.queryParamMapSubscription?.unsubscribe();
+  }
+}
+
+export interface BreadCrumbItem {
+  name?: string;
+  route: string;
+  queryParams: any;
+}
+```

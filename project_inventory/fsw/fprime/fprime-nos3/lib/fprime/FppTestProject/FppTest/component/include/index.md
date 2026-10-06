@@ -3,26 +3,246 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `commands.fppi`
 
-file--commands.fppi
-file--commands_async.fppi
-file--events.fppi
-file--external_params.fppi
-file--internal_ports.fppi
-file--params.fppi
-file--telemetry.fppi
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/commands.fppi`
+
+
+```text
+sync command CMD_NO_ARGS
+
+sync command CMD_PRIMITIVE(
+  u32_1: U32, @< A U32
+  u32_2: U32, @< A U32
+  f32_1: F32, @< An F32
+  f32_2: F32, @< An F32
+  b1: bool @< A boolean
+  b2: bool @< A boolean
+) opcode 0x10
+
+sync command CMD_STRINGS(
+  str1: string, @< A string
+  str2: string size 100 @< Another string
+)
+
+sync command CMD_ENUM(
+  en: FormalParamEnum @< An enum
+)
+
+guarded command CMD_ARRAY(
+  arr: FormalParamArray @< An array
+)
+
+guarded command CMD_STRUCT(
+  str: FormalParamStruct @< A struct
+)
 ```
 
-## 항목
+### `commands_async.fppi`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/commands.fppi`](file--commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/commands_async.fppi`](file--commands_async.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/events.fppi`](file--events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/external_params.fppi`](file--external_params.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/internal_ports.fppi`](file--internal_ports.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/params.fppi`](file--params.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/telemetry.fppi`](file--telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/commands_async.fppi`
+
+
+```text
+async command CMD_ASYNC_NO_ARGS
+
+async command CMD_ASYNC_PRIMITIVE (
+  u32_1: U32, @< A U32
+  u32_2: U32, @< A U32
+  f32_1: F32, @< An F32
+  f32_2: F32, @< An F32
+  b1: bool @< A boolean
+  b2: bool @< A boolean
+)
+
+async command CMD_ASYNC_STRINGS(
+  str1: string, @< A string
+  str2: string size 100 @< Another string
+) opcode 0x20 priority 10
+
+async command CMD_ASYNC_ENUM (
+  en: FormalParamEnum @< An enum
+) priority 20
+
+async command CMD_ASYNC_ARRAY(
+  arr: FormalParamArray @< An array
+) drop
+
+async command CMD_ASYNC_STRUCT(
+  str: FormalParamStruct @< A struct
+) priority 30 drop
+```
+
+### `events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/events.fppi`
+
+
+```text
+event EventNoArgs \
+  severity activity high \
+  format "Event Activity High occurred"
+
+event EventPrimitive(
+  u32_1: U32, @< A U32
+  u32_2: U32, @< A U32
+  f32_1: F32, @< An F32
+  f32_2: F32, @< An F32
+  b1: bool @< A boolean
+  b2: bool @< A boolean
+) \
+  severity activity low \
+  id 0x10 \
+  format "Event Activity Low occurred with arguments: {}, {}, {}, {}, {}, {}" \
+  throttle 5
+
+event EventString (
+  str1: string, @< A string
+  str2: string size 100 @< Another string
+) \
+  severity command \
+  format "Event Command occurred with arguments: {}, {}"
+
+event EventEnum(
+  en: FormalParamEnum @< An enum
+) \
+  severity diagnostic \
+  format "Event Diagnostic occurred with argument: {}"
+
+event EventArray (
+  arr: FormalParamArray @< An array
+) \
+  severity fatal \
+  format "Event Fatal occurred with argument: {}" \
+  throttle 10
+
+event EventStruct (
+  str: FormalParamStruct @< A struct
+) \
+  severity warning high \
+  id 0x20 \
+  format "Event Warning High occurred with argument: {}"
+
+event EventBool (
+  b: bool @< A boolean
+) \
+  severity warning low \
+  format "Event Warning Low occurred {}" \
+  throttle 10
+```
+
+### `external_params.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/external_params.fppi`
+
+
+```text
+external param ParamBoolExternal: bool
+
+external param ParamI32External: I32
+
+external param ParamStringExternal: string \
+  default "external default"
+
+external param ParamEnumExternal: FormalParamEnum \
+  id 0x50
+
+external param ParamArrayExternal: FormalParamArray \
+  default [ 1.0, 2.0, 3.0 ] \
+  save opcode 0x75
+
+external param ParamStructExternal: FormalParamStruct \
+  set opcode 0x80 \
+  save opcode 0x85
+```
+
+### `internal_ports.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/internal_ports.fppi`
+
+
+```text
+internal port internalNoArgs priority 10 drop
+
+internal port internalPrimitive(
+  u32_1: U32, @< A U32
+  u32_2: U32, @< A U32
+  f32_1: F32, @< An F32
+  f32_2: F32, @< An F32
+  b1: bool @< A boolean
+  b2: bool @< A boolean
+) priority 5
+
+internal port internalString(
+  str1: string, @< A string
+  str2: string size 100 @< Another string
+)
+
+internal port internalEnum(
+  en: FormalParamEnum @< An enum
+)
+
+internal port internalArray(
+  arr: FormalParamArray @< An array
+)
+
+internal port internalStruct(
+  str: FormalParamStruct @< A struct
+) priority 20 drop
+```
+
+### `params.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/params.fppi`
+
+
+```text
+param ParamBool: bool
+
+param ParamU32: U32
+
+param ParamString: string \
+  default "default"
+
+param ParamEnum: FormalParamEnum \
+  id 0x30
+
+param ParamArray: FormalParamArray \
+  default [ 1.0, 2.0, 3.0 ] \
+  save opcode 0x35
+
+param ParamStruct: FormalParamStruct \
+  set opcode 0x40 \
+  save opcode 0x45
+```
+
+### `telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/include/telemetry.fppi`
+
+
+```text
+telemetry ChannelEnum: FormalParamEnum
+
+telemetry ChannelArray: FormalParamArray \
+  id 0x10
+
+telemetry ChannelStruct: FormalParamStruct \
+  update always
+
+telemetry ChannelU32: U32 \
+  format "{x}" \
+  low { red 0, orange 1, yellow 2 }
+
+telemetry ChannelF32: F32 \
+  update always \
+  format "{.3f}" \
+  low { red -3, orange -2, yellow -1 } \
+  high { red 3, orange 2, yellow 1 }
+
+telemetry ChannelString: string \
+  update on change \
+  format "{}"
+```

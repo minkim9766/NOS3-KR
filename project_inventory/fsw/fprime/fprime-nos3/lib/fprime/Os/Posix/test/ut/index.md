@@ -3,28 +3,504 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `PosixConditionTests.cpp`
 
-file--PosixConditionTests.cpp
-file--PosixConsoleTests.cpp
-file--PosixDirectoryTests.cpp
-file--PosixFileSystemTests.cpp
-file--PosixFileTests.cpp
-file--PosixMutexTests.cpp
-file--PosixRawTimeTests.cpp
-file--PosixTaskTests.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixConditionTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixConditionTests.cpp
+// \brief tests using posix condition variable tests
+// ======================================================================
+#include <gtest/gtest.h>
+#include "STest/Random/Random.hpp"
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `PosixConsoleTests.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixConditionTests.cpp`](file--PosixConditionTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixConsoleTests.cpp`](file--PosixConsoleTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixDirectoryTests.cpp`](file--PosixDirectoryTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixFileSystemTests.cpp`](file--PosixFileSystemTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixFileTests.cpp`](file--PosixFileTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixMutexTests.cpp`](file--PosixMutexTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixRawTimeTests.cpp`](file--PosixRawTimeTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixTaskTests.cpp`](file--PosixTaskTests.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixConsoleTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixFileTests.cpp
+// \brief tests for posix implementation for Os::File
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Console.hpp"
+#include "Os/Posix/Console.hpp"
+
+TEST(Nominal, SwitchStream) {
+    Os::Posix::Console::PosixConsole posix_console;
+    ASSERT_EQ(reinterpret_cast<Os::Posix::Console::PosixConsoleHandle*>(posix_console.getHandle())->m_file_descriptor,
+              stdout);
+    posix_console.setOutputStream(Os::Posix::Console::PosixConsole::Stream::STANDARD_ERROR);
+    ASSERT_EQ(reinterpret_cast<Os::Posix::Console::PosixConsoleHandle*>(posix_console.getHandle())->m_file_descriptor,
+              stderr);
+    posix_console.setOutputStream(Os::Posix::Console::PosixConsole::Stream::STANDARD_OUT);
+    ASSERT_EQ(reinterpret_cast<Os::Posix::Console::PosixConsoleHandle*>(posix_console.getHandle())->m_file_descriptor,
+              stdout);
+}
+TEST(OffNominal, SwitchStream) {
+    Os::Posix::Console::PosixConsole posix_console;
+    ASSERT_DEATH(
+        posix_console.setOutputStream(static_cast<Os::Posix::Console::PosixConsole::Stream>(3)),
+        "Posix/|\\Console.cpp:33");  // NOLINT(clang-analyzer-optin.core.EnumCastOutOfRange) intentional death test
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixDirectoryTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixDirectoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixDirectoryTests.cpp
+// \brief tests for posix implementation for Os::Directory
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/test/ut/directory/CommonTests.hpp"
+#include "Os/test/ut/directory/RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+#include <fcntl.h>   // for ::open()
+#include <unistd.h>  // for ::close()
+
+namespace Os {
+namespace Test {
+namespace Directory {
+
+//! Maximum number of files per test directory
+//! Intentionally low to have a decent probability of having an empty directory
+static const FwIndexType MAX_FILES_PER_DIRECTORY = 4;
+static const std::string FILENAME_PREFIX = "test_file_";
+static const std::string TEST_DIRECTORY_PATH = "./test_directory";
+
+//! Set up function as defined by the unit test implementor
+void setUp(Os::Test::Directory::Tester* tester) {
+    tester->m_path = TEST_DIRECTORY_PATH;
+    ::mkdir(tester->m_path.c_str(), 0777);
+    // Files are named test_file_0, test_file_1, ...
+    std::vector<std::string> filenames;
+    // fileCount can be 0 (empty directory)
+    FwSizeType fileCount = STest::Pick::lowerUpper(0, MAX_FILES_PER_DIRECTORY);
+    for (FwSizeType i = 0; i < fileCount; i++) {
+        tester->m_filenames.push_back(FILENAME_PREFIX + std::to_string(i));
+    }
+    for (auto filename : tester->m_filenames) {
+        int fd = ::open((tester->m_path + "/" + filename).c_str(), O_CREAT | O_WRONLY, 0644);
+        if (fd >= 0) {
+            ::close(fd);
+        }
+    }
+}
+
+//! Tear down function as defined by the unit test implementor
+void tearDown(Os::Test::Directory::Tester* tester) {
+    for (auto filename : tester->m_filenames) {
+        ::unlink((tester->m_path + "/" + filename).c_str());
+    }
+    ::rmdir(tester->m_path.c_str());
+}
+
+}  // namespace Directory
+}  // namespace Test
+}  // namespace Os
+
+// ----------------------------------------------------------------------
+// Posix Test Cases:
+//
+// No posix-specific tests - tests are pulled in from CommonTests.cpp
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixFileSystemTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixFileSystemTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixFileSystemTests.cpp
+// \brief tests for posix implementation for Os::FileSystem
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/test/ut/filesystem/CommonTests.hpp"
+#include "Os/test/ut/filesystem/RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+// ----------------------------------------------------------------------
+// Posix Test Cases
+// ----------------------------------------------------------------------
+
+// POSIX-specific test class
+class PosixFileSystemTest : public ::testing::Test {
+  protected:
+    void SetUp() override {
+        // Create a test directory
+        m_test_dir = "posix_test_dir";
+        Os::FileSystem::createDirectory(m_test_dir.c_str());
+    }
+
+    void TearDown() override {
+        // Clean up test directory
+        Os::FileSystem::removeDirectory(m_test_dir.c_str());
+    }
+
+    std::string m_test_dir;
+};
+
+// Test POSIX-specific path types (FIFO, symlinks, etc.)
+TEST_F(PosixFileSystemTest, DetectSpecialPathTypes) {
+    // Test directory detection
+    Os::FileSystem::PathType dirType = Os::FileSystem::getSingleton().getPathType(m_test_dir.c_str());
+    ASSERT_EQ(dirType, Os::FileSystem::PathType::DIRECTORY) << "Failed to detect directory: " << m_test_dir;
+
+    // Create a test file
+    std::string testFile = m_test_dir + "/test_file.txt";
+    ASSERT_EQ(Os::FileSystem::touch(testFile.c_str()), Os::FileSystem::Status::OP_OK) << "Failed to create test file";
+
+    // Test file detection
+    Os::FileSystem::PathType fileType = Os::FileSystem::getSingleton().getPathType(testFile.c_str());
+    ASSERT_EQ(fileType, Os::FileSystem::PathType::FILE) << "Failed to detect file: " << testFile;
+
+    // Test nonexistent path
+    std::string nonExistentPath = "non_existent_path";
+    Os::FileSystem::PathType nonExistentType = Os::FileSystem::getSingleton().getPathType(nonExistentPath.c_str());
+    ASSERT_EQ(nonExistentType, Os::FileSystem::PathType::NOT_EXIST) << "Failed to detect nonexistent path";
+
+    // Clean up test file
+    ASSERT_EQ(Os::FileSystem::removeFile(testFile.c_str()), Os::FileSystem::Status::OP_OK)
+        << "Failed to remove test file";
+
+    // Test FIFO (named pipe)
+    std::string fifoPath = m_test_dir + "/test_fifo";
+    ASSERT_EQ(mkfifo(fifoPath.c_str(), 0666), 0) << "Failed to create FIFO";
+
+    Os::FileSystem::PathType fifoType = Os::FileSystem::getPathType(fifoPath.c_str());
+    ASSERT_EQ(fifoType, Os::FileSystem::PathType::OTHER) << "Failed to detect FIFO as OTHER type";
+
+    // Clean up FIFO
+    ASSERT_EQ(unlink(fifoPath.c_str()), 0) << "Failed to remove FIFO";
+
+    // Test directory vs file with similar names
+    std::string subdirPath = m_test_dir + "/test_subdir";
+    ASSERT_EQ(Os::FileSystem::createDirectory(subdirPath.c_str()), Os::FileSystem::Status::OP_OK)
+        << "Failed to create test subdirectory";
+
+    // Create a file with the same name as the directory plus extension
+    ASSERT_EQ(Os::FileSystem::touch((subdirPath + ".txt").c_str()), Os::FileSystem::Status::OP_OK)
+        << "Failed to create test file";
+
+    // Verify directory detection
+    ASSERT_EQ(Os::FileSystem::getPathType(subdirPath.c_str()), Os::FileSystem::PathType::DIRECTORY)
+        << "Failed to detect directory with file in same path";
+
+    // Verify file detection
+    ASSERT_EQ(Os::FileSystem::getPathType((subdirPath + ".txt").c_str()), Os::FileSystem::PathType::FILE)
+        << "Failed to detect file with directory in same path";
+
+    // Clean up subdirectory
+    ASSERT_EQ(Os::FileSystem::removeDirectory(subdirPath.c_str()), Os::FileSystem::Status::OP_OK)
+        << "Failed to remove test directory";
+}
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixFileTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixFileTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixFileTests.cpp
+// \brief tests for posix implementation for Os::File
+// ======================================================================
+#include <gtest/gtest.h>
+#include <unistd.h>
+#include <csignal>
+#include <cstdio>
+#include <list>
+#include "Os/File.hpp"
+#include "Os/Posix/File.hpp"
+#include "Os/test/ut/file/CommonTests.hpp"
+#include "STest/Pick/Pick.hpp"
+namespace Os {
+namespace Test {
+namespace FileTest {
+
+std::vector<std::shared_ptr<const std::string> > FILES;
+
+static const U32 MAX_FILES = 100;
+static const char BASE_PATH[] = "/tmp/fprime";
+static const char TEST_FILE[] = "fprime-os-file-test";
+//! Check if we can use the file. F_OK file exists, R_OK, W_OK are read and write.
+//! \return true if it exists, false otherwise.
+//!
+bool check_permissions(const char* path, int permission) {
+    return ::access(path, permission) == 0;
+}
+
+//! Get a filename, randomly if random is true, otherwise use a basic filename.
+//! \param random: true if filename should be random, false if predictable
+//! \return: filename to use for testing
+//!
+std::shared_ptr<std::string> get_test_filename(bool random) {
+    const char* filename = TEST_FILE;
+    char full_buffer[_POSIX_PATH_MAX];
+    char buffer[_POSIX_PATH_MAX - sizeof(BASE_PATH)];
+    // When random, select random characters
+    if (random) {
+        filename = buffer;
+        size_t i = 0;
+        for (i = 0; i < STest::Pick::lowerUpper(2, (sizeof buffer) - 1); i++) {
+            char selected_character = static_cast<char>(STest::Pick::lowerUpper(48, 126));
+            selected_character =
+                (selected_character == '/') ? static_cast<char>(selected_character + 1) : selected_character;
+            buffer[i] = selected_character;
+        }
+        buffer[i] = 0;  // Terminate random string
+    }
+    (void)snprintf(full_buffer, _POSIX_PATH_MAX, "%s/%s", BASE_PATH, filename);
+    // Create a shared pointer wrapping our filename buffer
+    std::shared_ptr<std::string> pointer(new std::string(full_buffer), std::default_delete<std::string>());
+    return pointer;
+}
+
+//! Clean-up the files created during this test.
+//!
+void cleanup(int signal) {
+    // Ensure the test files are removed only when the test was run
+    for (const auto& val : FILES) {
+        if (check_permissions(val->c_str(), F_OK)) {
+            ::unlink(val->c_str());
+        }
+    }
+    FILES.clear();
+}
+
+//! Set up for the test ensures that the test can run at all
+//!
+void setUp(bool requires_io) {
+    std::shared_ptr<std::string> non_random_filename = get_test_filename(false);
+    int result = mkdir(BASE_PATH, 0777);
+    // Check that we could make the directory for test files
+    if (result != 0 && errno != EEXIST) {
+        GTEST_SKIP() << "Cannot make directory for test files: " << strerror(errno);
+    }
+    // IO required and test file exists then skip
+    else if (check_permissions(non_random_filename->c_str(), F_OK)) {
+        GTEST_SKIP() << "Test file exists: " << non_random_filename->c_str();
+    }
+    // IO required and cannot read/write to BASE_PATH then skip
+    else if (requires_io && not check_permissions(BASE_PATH, R_OK & W_OK)) {
+        GTEST_SKIP() << "Cannot read/write in directory: " << BASE_PATH;
+    }
+    int signals[] = {SIGQUIT, SIGABRT, SIGTERM, SIGINT, SIGHUP};
+    for (unsigned long i = 0; i < FW_NUM_ARRAY_ELEMENTS(signals); i++) {
+        // Could not register signal handler
+        if (signal(SIGQUIT, cleanup) == SIG_ERR) {
+            GTEST_SKIP() << "Cannot register signal handler for cleanup";
+        }
+    }
+}
+
+//! Tear down for the tests cleans up the test file used
+//!
+void tearDown() {
+    cleanup(0);
+}
+
+class PosixTester : public Tester {
+    //! Check if the test file exists.
+    //! \return true if it exists, false otherwise.
+    //!
+    bool exists(const std::string& filename) const override {
+        bool exits = check_permissions(filename.c_str(), F_OK);
+        return exits;
+    }
+
+    //! Get a filename, randomly if random is true, otherwise use a basic filename.
+    //! \param random: true if filename should be random, false if predictable
+    //! \return: filename to use for testing
+    //!
+    std::shared_ptr<const std::string> get_filename(bool random) const override {
+        U32 pick = STest::Pick::lowerUpper(0, MAX_FILES);
+        if (random && pick < FILES.size()) {
+            return FILES[pick];
+        }
+        std::shared_ptr<const std::string> filename = get_test_filename(random);
+        FILES.push_back(filename);
+        return filename;
+    }
+
+    //! Posix tester is fully functional
+    //! \return true
+    //!
+    bool functional() const override { return true; }
+};
+
+std::unique_ptr<Os::Test::FileTest::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::FileTest::Tester>(new Os::Test::FileTest::PosixTester());
+}
+
+}  // namespace FileTest
+}  // namespace Test
+}  // namespace Os
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixMutexTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixMutexTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixMutexTests.cpp
+// \brief tests for posix implementation for Os::Mutex
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/test/ut/mutex/CommonTests.hpp"
+#include "Os/test/ut/mutex/RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+// A routine that modifies the internal state of the MutexTester to test that the mutex
+// protects the shared variable successfully when ran in parallel with the main task
+static void testTaskRoutine(void* pointer) {
+    Os::Test::Mutex::Tester* tester = reinterpret_cast<Os::Test::Mutex::Tester*>(pointer);
+
+    for (FwSizeType i = 0; i < 100000; i++) {
+        tester->m_mutex.lock();
+        tester->m_state = Os::Test::Mutex::Tester::MutexState::LOCKED;
+
+        U32 randomValue = STest::Pick::any();
+        tester->m_value = randomValue;
+        ASSERT_EQ(tester->m_value, randomValue);
+
+        tester->m_state = Os::Test::Mutex::Tester::MutexState::UNLOCKED;
+        tester->m_mutex.unLock();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Posix Test Cases
+// ----------------------------------------------------------------------
+
+// Attempt to delete a locked mutex - expect an assertion
+TEST_F(FunctionalityTester, PosixDeleteLockedMutex) {
+    Os::Test::Mutex::Tester::LockMutex lock_rule;
+    lock_rule.apply(*tester);
+    // tester is a unique_ptr, retrieve the raw pointer and attempt to delete the Mutex
+    ASSERT_DEATH_IF_SUPPORTED(delete tester.get(), Os::Test::Mutex::Tester::ASSERT_IN_MUTEX_CPP);
+}
+
+// Test behavior of the mutex - two threads (main and test_task) using a mutex to protect a shared variable
+TEST_F(FunctionalityTester, PosixMutexDataProtection) {
+    // start a task that will lock the mutex, change the value and assert, then unlock mutex
+    Os::Task test_task;
+    Os::Task::Arguments arguments(Fw::String("MutexTestLockTask"), testTaskRoutine, static_cast<void*>(tester.get()));
+    Os::Task::Status stat = test_task.start(arguments);
+    FW_ASSERT(Os::Task::OP_OK == stat, static_cast<FwAssertArgType>(stat));
+
+    Os::Test::Mutex::Tester::ProtectDataCheck protect_data_rule;
+
+    for (FwSizeType i = 0; i < 100000; i++) {
+        protect_data_rule.apply(*tester);
+    }
+
+    test_task.join();
+}
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixRawTimeTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixRawTimeTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Posix/test/ut/PosixRawTimeTests.cpp
+// \brief tests for posix implementation for Os::RawTime
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Posix/Task.hpp"
+#include "Os/test/ut/rawtime/CommonTests.hpp"
+#include "Os/test/ut/rawtime/RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+// ----------------------------------------------------------------------
+// Posix Test Cases
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `PosixTaskTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Posix/test/ut/PosixTaskTests.cpp`
+
+
+```cpp
+#include <gtest/gtest.h>
+#include "STest/Scenario/Scenario.hpp"
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

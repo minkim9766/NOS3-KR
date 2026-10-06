@@ -3,16 +3,318 @@
 
 **경로:** `components/generic_imu/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_imu_device.c`
 
-file--generic_imu_device.c
-file--generic_imu_device.h
+**경로:** `components/generic_imu/fsw/shared/generic_imu_device.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_imu_device.c
+**
+** Purpose:
+**   This file contains the source code for the GENERIC_IMU device.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_imu_device.h"
+
+// Both of the below constants are defined to allow the greatest possible precision
+// without overflow on a range of -10<x<10 for x=linear acceleration (in g) and
+// -400<x<400 for x=angular rotation rate (in deg/s).
+#define LIN_CONV_CONST 214748364.0 // multiply by 10 to get the added constant
+#define ANG_CONV_CONST 5368709.0   // multiply by 400 to get the added constant
+
+/*
+** Helper Function
+*/
+void GENERIC_IMU_FramePrep(can_info_t *device, uint8_t *data, uint8_t data_len)
+{
+    /* TX Frame */
+    device->tx_frame.can_id  = GENERIC_IMU_CFG_CAN_ID;
+    device->tx_frame.can_dlc = data_len;
+    // CFE_PSP_MemCpy((void*)device->tx_frame.data, data, CAN_MAX_DLEN);
+    memcpy((void *)device->tx_frame.data, data, CAN_MAX_DLEN);
+
+    /* RX Frame */
+    device->rx_frame.can_id  = GENERIC_IMU_CFG_CAN_ID;
+    device->rx_frame.can_dlc = 0;
+    // CFE_PSP_MemSet((void*)device->rx_frame.data, 0x00, CAN_MAX_DLEN);
+    memset((void *)device->rx_frame.data, 0x00, CAN_MAX_DLEN);
+}
+
+/*
+** Generic read data from device
+*/
+int32_t GENERIC_IMU_ReadData(can_info_t *canDevice, uint8_t data_length)
+{
+    int32_t status = OS_SUCCESS;
+
+    /* Wait until all data received or timeout occurs */
+    status = can_master_transaction(canDevice);
+    if (status != CAN_SUCCESS)
+    {
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("GENERIC_IMU_ReadData: GENERIC_IMU_ReadData can_master_transaction failed with %d error! \n", status);
+#endif
+        status = CAN_ERROR;
+    }
+    return status;
+}
+
+/*
+** Generic command to device
+** Note that confirming the echoed response is specific to this implementation
+*/
+int32_t GENERIC_IMU_CommandDevice(can_info_t *canDevice, uint8_t cmd_code)
+{
+    int32_t status                                  = OS_SUCCESS;
+    uint8_t write_data[GENERIC_IMU_DEVICE_CMD_SIZE] = {0};
+
+    /* Prepare command */
+    write_data[0] = GENERIC_IMU_DEVICE_HDR;
+    write_data[1] = cmd_code;
+
+    GENERIC_IMU_FramePrep(canDevice, write_data, GENERIC_IMU_DEVICE_CMD_SIZE);
+    status = GENERIC_IMU_ReadData(canDevice, GENERIC_IMU_DEVICE_CMD_SIZE);
+    if (status != OS_SUCCESS)
+    {
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("GENERIC_IMU_CommandDevice - GENERIC_IMU_ReadData returned %d \n", status);
+#endif
+    }
+    return status;
+}
+
+/*
+** Request housekeeping command
+*/
+int32_t GENERIC_IMU_RequestHK(can_info_t *canDevice, GENERIC_IMU_Device_HK_tlm_t *data)
+{
+    int32_t status = OS_SUCCESS;
+
+    status = GENERIC_IMU_CommandDevice(canDevice, GENERIC_IMU_DEVICE_REQ_HK_CMD);
+    if (status == OS_SUCCESS)
+    {
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("  GENERIC_IMU_RequestHK[%d] = ", canDevice->rx_frame.can_dlc);
+        for (uint32_t i = 0; i < canDevice->rx_frame.can_dlc; i++)
+        {
+            OS_printf("%02x", canDevice->rx_frame.data[i]);
+        }
+        OS_printf("\n");
+#endif
+
+        data->DeviceCounter = canDevice->rx_frame.data[0] << 24;
+        data->DeviceCounter |= canDevice->rx_frame.data[1] << 16;
+        data->DeviceCounter |= canDevice->rx_frame.data[2] << 8;
+        data->DeviceCounter |= canDevice->rx_frame.data[3];
+
+        data->DeviceStatus = canDevice->rx_frame.data[4] << 24;
+        data->DeviceStatus |= canDevice->rx_frame.data[5] << 16;
+        data->DeviceStatus |= canDevice->rx_frame.data[6] << 8;
+        data->DeviceStatus |= canDevice->rx_frame.data[7];
+
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("  Counter = 0x%08x      \n", data->DeviceCounter);
+        OS_printf("  Status  = 0x%08x      \n", data->DeviceStatus);
+#endif
+    }
+    return status;
+}
+
+/*
+** Request Axis
+*/
+int32_t GENERIC_IMU_RequestAxis(can_info_t *canDevice, GENERIC_IMU_Device_Axis_Data_t *data, uint8_t cmd_code)
+{
+    int32_t  status = OS_SUCCESS;
+    uint32_t la_tmp;
+    uint32_t aa_tmp;
+
+    status = GENERIC_IMU_CommandDevice(canDevice, cmd_code);
+    if (status == OS_SUCCESS)
+    {
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("  GENERIC_IMU_RequestAxis %d, [%d] = ", cmd_code, canDevice->rx_frame.can_dlc);
+        for (uint32_t i = 0; i < canDevice->rx_frame.can_dlc; i++)
+        {
+            OS_printf("%02x", canDevice->rx_frame.data[i]);
+        }
+        OS_printf("\n");
+#endif
+
+        /* Verify return frame length */
+
+        /* Proces data */
+        la_tmp = canDevice->rx_frame.data[0] << 24;
+        la_tmp |= canDevice->rx_frame.data[1] << 16;
+        la_tmp |= canDevice->rx_frame.data[2] << 8;
+        la_tmp |= canDevice->rx_frame.data[3];
+
+        aa_tmp = canDevice->rx_frame.data[4] << 24;
+        aa_tmp |= canDevice->rx_frame.data[5] << 16;
+        aa_tmp |= canDevice->rx_frame.data[6] << 8;
+        aa_tmp |= canDevice->rx_frame.data[7];
+
+        /* Float conversion */
+        data->LinearAcc  = (float)((la_tmp - (LIN_CONV_CONST * 10.0)) / LIN_CONV_CONST);
+        data->AngularAcc = (float)((aa_tmp - (ANG_CONV_CONST * 400.0)) / ANG_CONV_CONST);
+    }
+    else
+    {
+#ifdef GENERIC_IMU_CFG_DEBUG
+        OS_printf("  GENERIC_IMU_RequestAxis: Invalid data read! \n");
+#endif
+        status = OS_ERROR;
+    }
+    return status;
+}
+
+/*
+** Request data command
+*/
+int32_t GENERIC_IMU_RequestData(can_info_t *canDevice, GENERIC_IMU_Device_Data_tlm_t *data)
+{
+    int32_t status = OS_SUCCESS;
+
+    status = GENERIC_IMU_RequestAxis(canDevice, &data->X_Data, GENERIC_IMU_DEVICE_REQ_X_DATA_CMD);
+    if (status == OS_SUCCESS)
+    {
+        status = GENERIC_IMU_RequestAxis(canDevice, &data->Y_Data, GENERIC_IMU_DEVICE_REQ_Y_DATA_CMD);
+        if (status == OS_SUCCESS)
+        {
+            status = GENERIC_IMU_RequestAxis(canDevice, &data->Z_Data, GENERIC_IMU_DEVICE_REQ_Z_DATA_CMD);
+        }
+    }
+
+#ifdef GENERIC_IMU_CFG_DEBUG
+    if (status != OS_SUCCESS)
+    {
+        OS_printf("  GENERIC_IMU_RequestData: Error %d reported in GENERIC_IMU_RequestAxis \n", status);
+    }
+    OS_printf("GENERIC_IMU_RequestData\n");
+    OS_printf("  Linear X  = 0x%08x, ", data->X_Data.LinearAcc);
+    OS_printf("%f  \n", data->X_Data.LinearAcc);
+    OS_printf("  Angular X = 0x%08x, ", data->X_Data.AngularAcc);
+    OS_printf("%f  \n", data->X_Data.AngularAcc);
+    OS_printf("  Linear Y  = 0x%08x, ", data->Y_Data.LinearAcc);
+    OS_printf("%f  \n", data->Y_Data.LinearAcc);
+    OS_printf("  Angular Y = 0x%08x, ", data->Y_Data.AngularAcc);
+    OS_printf("%f  \n", data->Y_Data.AngularAcc);
+    OS_printf("  Linear Z  = 0x%08x, ", data->Z_Data.LinearAcc);
+    OS_printf("%f  \n", data->Z_Data.LinearAcc);
+    OS_printf("  Angular Z = 0x%08x, ", data->Z_Data.AngularAcc);
+    OS_printf("%f  \n", data->Z_Data.AngularAcc);
+    OS_printf("\n");
+#endif
+
+    return status;
+}
 ```
 
-## 항목
+### `generic_imu_device.h`
 
-- [`components/generic_imu/fsw/shared/generic_imu_device.c`](file--generic_imu_device.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_imu/fsw/shared/generic_imu_device.h`](file--generic_imu_device.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_imu/fsw/shared/generic_imu_device.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_imu_device.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_IMU device.
+**
+*******************************************************************************/
+#ifndef _GENERIC_IMU_DEVICE_H_
+#define _GENERIC_IMU_DEVICE_H_
+
+/*
+** Required header files.
+*/
+#include "device_cfg.h"
+#include "hwlib.h"
+#include "generic_imu_platform_cfg.h"
+
+/*
+** Type definitions
+** TODO: Make specific to your application
+*/
+#define GENERIC_IMU_DEVICE_HDR         0x80
+#define GENERIC_IMU_DEVICE_CMD_SIZE    2
+#define GENERIC_IMU_DEVICE_HDR_TRL_LEN 1
+
+#define GENERIC_IMU_DEVICE_NOOP_CMD       0x00
+#define GENERIC_IMU_DEVICE_REQ_HK_CMD     0x01
+#define GENERIC_IMU_DEVICE_REQ_X_DATA_CMD 0x02
+#define GENERIC_IMU_DEVICE_REQ_Y_DATA_CMD 0x03
+#define GENERIC_IMU_DEVICE_REQ_Z_DATA_CMD 0x04
+
+/*
+** GENERIC_IMU device housekeeping telemetry definition
+*/
+typedef struct
+{
+    uint32_t DeviceCounter;
+    uint32_t DeviceStatus;
+
+} __attribute__((packed)) GENERIC_IMU_Device_HK_tlm_t;
+#define GENERIC_IMU_DEVICE_HK_LNGTH sizeof(GENERIC_IMU_Device_HK_tlm_t)
+#define GENERIC_IMU_DEVICE_HK_SIZE  GENERIC_IMU_DEVICE_HK_LNGTH + GENERIC_IMU_DEVICE_HDR_TRL_LEN
+
+/*
+** IMU Command Message
+*/
+typedef struct
+{
+    // uint8_t     CmdHeader[sizeof(CFE_MSG_CommandHeader_t)];
+    uint8_t msg_type;
+    uint8_t cmd_id;
+    uint8_t src_mask;
+    uint8_t dest_mask;
+    uint8_t data_len;
+    uint8_t data[CAN_MAX_DLEN];
+} __attribute__((packed)) GENERIC_IMU_Cmd_t;
+#define GENERIC_IMU_CMD_LEN (sizeof(GENERIC_IMU_Cmd_t))
+
+/*
+** GENERIC_IMU device data definition for each individual axis
+*/
+typedef struct
+{
+    float LinearAcc;
+    float AngularAcc;
+} __attribute__((packed)) GENERIC_IMU_Device_Axis_Data_t;
+#define GENERIC_IMU_DEVICE_AXIS_DATA_LNGTH sizeof(GENERIC_IMU_Device_Axis_Data_t)
+#define GENERIC_IMU_DEVICE_X_DATA_SIZE     GENERIC_IMU_DEVICE_X_DATA_LNGTH + GENERIC_IMU_DEVICE_HDR_TRL_LEN
+
+/*
+** GENERIC_IMU device data telemetry definition
+*/
+typedef struct
+{
+    GENERIC_IMU_Device_Axis_Data_t X_Data;
+    GENERIC_IMU_Device_Axis_Data_t Y_Data;
+    GENERIC_IMU_Device_Axis_Data_t Z_Data;
+
+} __attribute__((packed)) GENERIC_IMU_Device_Data_tlm_t;
+#define GENERIC_IMU_DEVICE_DATA_LNGTH sizeof(GENERIC_IMU_Device_Data_tlm_t)
+#define GENERIC_IMU_DEVICE_DATA_SIZE  GENERIC_IMU_DEVICE_DATA_LNGTH + GENERIC_IMU_DEVICE_HDR_TRL_LEN
+
+/*
+** Prototypes
+*/
+void    GENERIC_IMU_FramePrep(can_info_t *device, uint8_t *data, uint8_t data_len);
+int32_t GENERIC_IMU_ReadData(can_info_t *canDevice, uint8_t data_length);
+int32_t GENERIC_IMU_CommandDevice(can_info_t *canDevice, uint8_t cmd_code);
+int32_t GENERIC_IMU_RequestHK(can_info_t *canDevice, GENERIC_IMU_Device_HK_tlm_t *data);
+int32_t GENERIC_IMU_RequestAxis(can_info_t *canDevice, GENERIC_IMU_Device_Axis_Data_t *data, uint8_t cmd_code);
+int32_t GENERIC_IMU_RequestData(can_info_t *canDevice, GENERIC_IMU_Device_Data_tlm_t *data);
+
+#endif /* _GENERIC_IMU_DEVICE_H_ */
+```

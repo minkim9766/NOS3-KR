@@ -3,16 +3,68 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `set-failed-dialog.component.html`
 
-file--set-failed-dialog.component.html
-file--set-failed-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/set-failed-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Set failed</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Failure reason">
+      <input #filename type="text" formControlName="failureReason" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="submit()" [disabled]="!form.valid">SUBMIT</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `set-failed-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/set-failed-dialog.component.html`](file--set-failed-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/set-failed-dialog.component.ts`](file--set-failed-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/set-failed-dialog/set-failed-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-set-failed-dialog',
+  templateUrl: './set-failed-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class SetFailedDialogComponent {
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<SetFailedDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form = formBuilder.group({
+      failureReason: ['', [Validators.required]],
+    });
+  }
+
+  async submit() {
+    this.dialogRef.close({
+      failureReason: this.form.value['failureReason'],
+    });
+  }
+}
+```

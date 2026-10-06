@@ -3,30 +3,956 @@
 
 **경로:** `fsw/apps/sbn/fsw/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_interfaces.h`
 
-file--sbn_interfaces.h
-file--sbn_msg.h
-file--sbn_msgdefs.h
-file--sbn_msgids.h
-file--sbn_perfids.h
-file--sbn_platform_cfg.h
-file--sbn_tbl.h
-file--sbn_types.h
-file--sbn_version.h
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_interfaces.h`
+
+
+```c
+#ifndef _sbn_interfaces_h_
+#define _sbn_interfaces_h_
+
+#include "cfe.h"
+#include "sbn_types.h"
+#include "sbn_msg.h"
+
+typedef struct SBN_IfOps_s         SBN_IfOps_t;
+typedef struct SBN_NetInterface_s  SBN_NetInterface_t;
+typedef struct SBN_PeerInterface_s SBN_PeerInterface_t;
+
+/**
+ * SBN packs messages for transmission over the wire, reducing the size to the minimum
+ * required (structs in memory are padded to align values and pointers to CPU-friendly
+ * alignments.)
+ *
+ * @note The packed size is likely smaller than an in-memory's struct
+ * size, as the compiler will align objects.
+ * SBN headers are MsgSz + MsgType + ProcessorID
+ * SBN subscription messages are MsgID + QoS
+ */
+#define SBN_PACKED_HDR_SZ (sizeof(SBN_MsgSz_t) + sizeof(SBN_MsgType_t) + sizeof(CFE_ProcessorID_t) + sizeof(CFE_SpacecraftID_t))
+#define SBN_PACKED_SUB_SZ \
+    (SBN_PACKED_HDR_SZ + sizeof(SBN_SubCnt_t) + (sizeof(CFE_SB_MsgId_t) + sizeof(CFE_SB_Qos_t)) * SBN_MAX_SUBS_PER_PEER)
+#define SBN_MAX_PACKED_MSG_SZ (SBN_PACKED_HDR_SZ + CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+
+/**
+ * Filters modify messages in place, doing such things as byte swapping, packing/unpacking, etc.
+ *
+ * @return SBN_SUCCESS if processing nominal, SBN_IF_EMPTY if the message should not be transmitted, SBN_ERROR for
+ * other error conditions.
+ */
+typedef struct
+{
+    CFE_ProcessorID_t  MyProcessorID;
+    CFE_SpacecraftID_t MySpacecraftID;
+
+    CFE_ProcessorID_t  PeerProcessorID;
+    CFE_SpacecraftID_t PeerSpacecraftID;
+} SBN_Filter_Ctx_t;
+
+typedef struct
+{
+    /**
+     * Initializes the filter module.
+     *
+     * @param FilterVersion[in] The version # of the filter API.
+     * @param BaseEID[in] The start of the Event ID's for this module.
+     *
+     * @return CFE_SUCCESS on successful initialization, otherwise error specific to failure.
+     */
+    SBN_Status_t (*InitModule)(int FilterVersion, CFE_EVS_EventID_t BaseEID);
+
+    /**
+     * Interface is called to apply a filter algorithm on an SB (CCSDS) message
+     * header and body.
+     *
+     * @param MsgBuf[inout] The message buffer to alter in-place.
+     * @param Context[in] The context information for this message (particularly peer info.)
+     *
+     * @return SBN_SUCCESS when the filter feels it processed the message successfully
+     *         (this doesn't necessarily mean the message was altered.)
+     *         SBN_IF_EMPTY if the filter believes the message should not be relayed.
+     *         SBN_ERROR for all other error conditions.
+     */
+    SBN_Status_t (*FilterRecv)(void *MsgBuf, SBN_Filter_Ctx_t *Context);
+
+    /**
+     * Interface is called to apply a filter algorithm on an SB (CCSDS) message
+     * header and body.
+     *
+     * @param MsgBuf[inout] The message buffer to alter in-place.
+     * @param Context[in] The context information for this message (particularly peer info.)
+     *
+     * @return SBN_SUCCESS when the filter feels it processed the message successfully
+     *         (this doesn't necessarily mean the message was altered.)
+     *         SBN_IF_EMPTY if the filter believes the message should not be relayed.
+     *         SBN_ERROR for all other error conditions.
+     */
+    SBN_Status_t (*FilterSend)(void *MsgBuf, SBN_Filter_Ctx_t *Context);
+
+    /**
+     * Some filter interfaces may alter the message ID of the messages it processes.
+     * SBN needs to know this when it relays subscription information to peers.
+     *
+     * @param FromToMidPtr[inout] A pointer to the message id to be altered, and the resulting
+     *        message id when it has been altered.
+     * @param Context[in] The context information for this request (particularly peer info.)
+     *
+     * @return SBN_SUCCESS when the function feels it processed the message remapping successfully
+     *         (this doesn't necessarily mean the id was altered.)
+     *         SBN_IF_EMPTY if the filter believes the subscription should not be relayed.
+     *         SBN_ERROR for all other error conditions.
+     */
+    SBN_Status_t (*RemapMID)(CFE_SB_MsgId_t *FromToMidPtr, SBN_Filter_Ctx_t *Context);
+} SBN_FilterInterface_t;
+
+struct SBN_PeerInterface_s
+{
+    /** @brief The processor ID of this peer (MUST match the ProcessorID.) */
+    CFE_ProcessorID_t ProcessorID;
+
+    /** @brief The Spacecraft ID of this peer (MUST match the SpacecraftID.) */
+    CFE_SpacecraftID_t SpacecraftID;
+
+    /** @brief A convenience pointer to the net that this peer belongs to. */
+    SBN_NetInterface_t *Net;
+
+    SBN_Task_Flag_t TaskFlags;
+
+    /**
+     * @brief The ID of the task created to pend on the pipe and send messages
+     * to the net as soon as they are read. 0 if there is no send task.
+     */
+    OS_TaskID_t SendTaskID;
+
+    /**
+     * @brief The ID of the task created to pend on the net and send messages
+     * to the software bus as soon as they are read. 0 if there is no recv task.
+     */
+    OS_TaskID_t RecvTaskID; /* for mesh nets */
+
+    /** @brief The pipe ID used to read messages destined for the peer. */
+    CFE_SB_PipeId_t Pipe;
+
+    /**
+     * @brief A local table of subscriptions the peer has requested.
+     * Includes one extra entry for a null termination.
+     */
+    SBN_Subs_t Subs[SBN_MAX_SUBS_PER_PEER + 1];
+
+    /**
+     * @brief Filters alter message headers/bodies before sending to a peer or after
+     *        receiving from the peer.
+     */
+    SBN_FilterInterface_t *Filters[SBN_MAX_FILTERS];
+    SBN_ModuleIdx_t        FilterCnt;
+
+    OS_time_t   LastSend, LastRecv;
+    SBN_HKTlm_t SendCnt, RecvCnt, SendErrCnt, RecvErrCnt, SubCnt;
+
+    bool Connected;
+
+    /** @brief generic blob of bytes for the module-specific data. */
+    union {
+      uint8 _buf[128];
+      uint32 _align;
+    } ModulePvt[1];
+};
+
+
+struct SBN_NetInterface_s
+{
+    bool Configured;
+
+    SBN_ModuleIdx_t ProtocolIdx;
+
+    SBN_Task_Flag_t TaskFlags;
+
+    /* For some network topologies, this application only needs one connection
+     * to communicate to peers. These tasks are used for those networks. ID's
+     * are 0 if there is no task.
+     */
+    OS_TaskID_t  SendTaskID;
+    OS_MutexID_t SendMutex;
+
+    OS_TaskID_t RecvTaskID;
+
+    SBN_IfOps_t *IfOps; /* convenience */
+
+    SBN_PeerIdx_t PeerCnt;
+
+    SBN_PeerInterface_t Peers[SBN_MAX_PEER_CNT];
+
+    /**
+     * @brief Filters alter message headers/bodies before sending to a peer or after
+     *        receiving from the peer.
+     */
+    SBN_FilterInterface_t *Filters[SBN_MAX_FILTERS];
+    SBN_ModuleIdx_t        FilterCnt;
+
+    /** @brief generic blob of bytes, module-specific */
+    union {
+      uint8 _buf[128];
+      uint32 _align;
+    } ModulePvt[1];
+};
+
+/**
+ * When a protocol module is loaded, SBN provides the module a number of functions for sending,
+ * receiving, and processing SBN messages on the local bus.
+ */
+typedef struct
+{
+    /**
+     * @brief Used by modules to pack messages to send.
+     *
+     * @param SBNMsgBuf[out] The buffer pointer to receive the packed message.
+     *                       Should be MsgSz + SBN_PACKED_HDR_SZ bytes or larger.
+     * @param MsgSz[in] The size of the Msg parameter.
+     * @param MsgType[in] The type of the Msg (app, sub/unsub, heartbeat, announce).
+     * @param ProcessorID[in] The Processor ID of the sender (should be CFE_CPU_ID)
+     * @param SpacecraftID[in] The Spacecraft ID of the sender
+     * @param Msg[in] The SBN message payload (CCSDS message, sub/unsub)
+     *
+     * @sa UnpackMsg
+     */
+    void (*PackMsg)(void *SBNMsgBuf, SBN_MsgSz_t MsgSz, SBN_MsgType_t MsgType, CFE_ProcessorID_t ProcessorID,
+                    CFE_SpacecraftID_t SpacecraftID, void *Msg);
+
+    /**
+     * @brief Used by modules to unpack messages received.
+     *
+     * @param SBNMsgBuf[in] The buffer pointer containing the SBN message.
+     * @param MsgSzPtr[out] The size of the Msg parameter.
+     * @param MsgTypePtr[out] The type of the Msg (app, sub/unsub, heartbeat, announce).
+     * @param ProcessorIDPtr[out] The Processor ID of the sender (should be CFE_CPU_ID)
+     * @param SpacecraftIDPtr[out] The Spacecraft ID of the sender
+     * @param Msg[out] The SBN message payload (CCSDS message, sub/unsub, ensure it is at least
+     * CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+     * @return TRUE if we were unable to unpack/verify the message.
+     *
+     * @sa PackMsg
+     */
+    bool (*UnpackMsg)(void *SBNBuf, SBN_MsgSz_t *MsgSzPtr, SBN_MsgType_t *MsgTypePtr, CFE_ProcessorID_t *ProcessorIDPtr,
+                      CFE_SpacecraftID_t *SpacecraftIDPtr, void *Msg);
+
+    /**
+     * Called by backend modules to signal that the connection has been
+     * established and that the initial handshake should ensue.
+     *
+     * @param Peer[in]      The peer to mark as disconnected.
+     *
+     * @return SBN_SUCCESS on successfully marking the peer connected, otherwise SBN_ERROR.
+     */
+    SBN_Status_t (*Connected)(SBN_PeerInterface_t *Peer);
+
+    /**
+     * Called by backend modules to signal that the connection has been lost.
+     *
+     * @param Peer[in]      The peer to mark as disconnected.
+     *
+     * @return SBN_SUCCESS on successfully marking the peer disconnected, otherwise SBN_ERROR.
+     */
+    SBN_Status_t (*Disconnected)(SBN_PeerInterface_t *Peer);
+
+    /**
+     * Used by modules to send protocol-specific messages (which will loop through SBN and come back to the
+     * module's send endpoint, particularly UDP which needs to send announcement/heartbeat msgs.)
+     *
+     * @param MsgType[in]   The type of SBN message to send.
+     * @param MsgSz[in]     The size of the message payload.
+     * @param Msg[in]       The payload.
+     * @param Peer[in]      The peer to send the message to.
+     *
+     * @return SBN_SUCCESS when message successfully sent, otherwise SBN_ERROR
+     */
+    SBN_Status_t (*SendNetMsg)(SBN_MsgType_t MsgType, SBN_MsgSz_t MsgSz, void *Msg, SBN_PeerInterface_t *Peer);
+
+    /**
+     * @brief For a given network and processor ID, get the peer interface.
+     *
+     * @param Net[in] The network to check.
+     * @param ProcessorID[in] The processor of the peer.
+     * @param SpacecraftID[in] The spacecraft of the peer.
+     *
+     * @return A pointer to the peer interface structure.
+     */
+    SBN_PeerInterface_t *(*GetPeer)(SBN_NetInterface_t *Net, CFE_ProcessorID_t ProcessorID, CFE_SpacecraftID_t SpacecraftID);
+} SBN_ProtocolOutlet_t;
+
+/**
+ * This structure contains function pointers to interface-specific versions
+ * of the key SBN functions.  Every interface module must have an equivalent
+ * structure that points to the approprate functions for that interface.
+ */
+struct SBN_IfOps_s
+{
+    /**
+     * Initializes the protocol module.
+     *
+     * @param FilterVersion[in] The version # of the protocol API.
+     * @param BaseEID[in] The start of the Event ID's for this module.
+     * @param Outlet[in] The SBN functions provided to protocol modules.
+     *
+     * @return SBN_SUCCESS on successful initialization, otherwise SBN_ERROR.
+     */
+    SBN_Status_t (*InitModule)(int ProtocolVersion, CFE_EVS_EventID_t BaseEID, SBN_ProtocolOutlet_t *Outlet);
+
+    /**
+     * Initializes the host interface.
+     *
+     * @param Net[in,out] Struct pointer describing a single interface
+     * @return SBN_SUCCESS on successful initialization
+     *         SBN_ERROR otherwise
+     */
+    SBN_Status_t (*InitNet)(SBN_NetInterface_t *Host);
+
+    /**
+     * Initializes the peer interface.
+     *
+     * @param Peer[in,out] The peer interface to initialize
+     * @return SBN_SUCCESS on successful initialization
+     *         SBN_ERROR otherwise
+     */
+    SBN_Status_t (*InitPeer)(SBN_PeerInterface_t *Peer);
+
+    /**
+     * Configures the network interface with the address (a string whose format is defined by
+     * the protocol module. For example, UDP uses "hostname:port".
+     *
+     * @param Net[in] The initialized network interface.
+     * @param Address[in] The protocol-specific address.
+     *
+     * @return SBN_SUCCESS on successful loading.
+     */
+    SBN_Status_t (*LoadNet)(SBN_NetInterface_t *Net, const char *Address);
+
+    /**
+     * Configures the peer interface with the address (a string whose format is defined by
+     * the protocol module. For example, TCP uses "hostname:port", serial uses device path.
+     *
+     * @param Peer[in] The initialized peer interface.
+     * @param Address[in] The protocol-specific address.
+     *
+     * @return SBN_SUCCESS on successful loading.
+     */
+    SBN_Status_t (*LoadPeer)(SBN_PeerInterface_t *Peer, const char *Address);
+
+    /**
+     * SBN will poll any peer that does not have any messages to be sent
+     * after a timeout period. This is for (re)establishing connections
+     * and handshaking subscriptions.
+     *
+     * @param Peer[in] The peer to poll.
+     *
+     * @return SBN_SUCCESS on successful polling, SBN_ERROR otherwise.
+     */
+    SBN_Status_t (*PollPeer)(SBN_PeerInterface_t *Peer);
+
+    /**
+     * Sends a message to a peer over the specified interface.
+     * Both protocol and data message buffers are included in the parameters,
+     * but only one is used at a time.  The data message buffer is used for
+     * un/subscriptions and app messages.  The protocol message buffer is used
+     * for announce and heartbeat messages/acks.
+     *
+     * @param Net[in] Interface data for the network where this peer lives.
+     * @param Peer[in] Interface data describing the intended peer recipient.
+     * @param MsgType[in] The SBN message type.
+     * @param MsgSz[in] The size of the SBN message payload.
+     * @param Payload[in] The SBN message payload.
+     *
+     * @return SBN_SUCCESS when message successfully sent, otherwise SBN_ERROR.
+     */
+    SBN_Status_t (*Send)(SBN_PeerInterface_t *Peer, SBN_MsgType_t MsgType, SBN_MsgSz_t MsgSz, void *Payload);
+
+    /**
+     * Receives an individual message from the specified peer. Note, only
+     * define this or the RecvFromNet method, not both!
+     *
+     * @param Net[in] Interface data for the network where this peer lives.
+     * @param Peer[in] Interface data describing the intended peer recipient.
+     * @param MsgTypePtr[out] SBN message type received.
+     * @param MsgSzPtr[out] Payload size received.
+     * @param ProcessorIDPtr[out] ProcessorID of the sender.
+     * @param SpacecraftIDPtr[out] SpacecraftID of the sender.
+     * @param PayloadBuffer[out] Payload buffer
+     *                      (pass in a buffer of CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+     *
+     * @return SBN_SUCCESS on success, SBN_ERROR on failure
+     */
+    SBN_Status_t (*RecvFromPeer)(SBN_NetInterface_t *Net, SBN_PeerInterface_t *Peer, SBN_MsgType_t *MsgTypePtr,
+                                 SBN_MsgSz_t *MsgSzPtr, CFE_ProcessorID_t *ProcessorIDPtr, CFE_SpacecraftID_t *SpacecraftIDPtr, void *PayloadBuffer);
+
+    /**
+     * Receives an individual message from the network.
+     *
+     * @param Net[in] Interface data for the network where this peer lives.
+     * @param MsgTypePtr[out] SBN message type received.
+     * @param MsgSzPtr[out] Payload size received.
+     * @param ProcessorIDPtr[out] ProcessorID of the sender.
+     * @param SpacecraftIDPtr[out] SpacecraftID of the sender.
+     * @param PayloadBuffer[out] Payload buffer
+     *                      (pass in a buffer of CFE_MISSION_SB_MAX_SB_MSG_SIZE)
+     *
+     * @return SBN_SUCCESS on success, SBN_ERROR on failure
+     */
+    SBN_Status_t (*RecvFromNet)(SBN_NetInterface_t *Net, SBN_MsgType_t *MsgTypePtr, SBN_MsgSz_t *MsgSzPtr,
+                                CFE_ProcessorID_t *ProcessorIDPtr, CFE_SpacecraftID_t *SpacecraftIDPtr, void *PayloadBuffer);
+
+    /**
+     * Unload a network. This will unload all associated peers as well.
+     *
+     * @param Net[in] Network to unload.
+     *
+     * @return  SBN_SUCCESS when the net is unloaded.
+     *          SBN_ERROR if the net cannot be unloaded.
+     *          SBN_NOT_IMPLEMENTED if the module does not implement this
+     *          function.
+     *
+     * @sa LoadNet, LoadPeer, UnloadPeer
+     */
+    SBN_Status_t (*UnloadNet)(SBN_NetInterface_t *Net);
+
+    /**
+     * Unload a peer.
+     *
+     * @param Peer[in] Peer to unload.
+     *
+     * @return  SBN_SUCCESS when the peer is unloaded.
+     *          SBN_ERROR if the peer cannot be unloaded.
+     *          SBN_NOT_IMPLEMENTED if the module does not implement this
+     *          function.
+     *
+     * @sa LoadNet, LoadPeer, UnloadNet
+     */
+    SBN_Status_t (*UnloadPeer)(SBN_PeerInterface_t *Peer);
+};
+
+#endif /* _sbn_interfaces_h_ */
 ```
 
-## 항목
+### `sbn_msg.h`
 
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_interfaces.h`](file--sbn_interfaces.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_msg.h`](file--sbn_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_msgdefs.h`](file--sbn_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_msgids.h`](file--sbn_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_perfids.h`](file--sbn_perfids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_platform_cfg.h`](file--sbn_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_tbl.h`](file--sbn_tbl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_types.h`](file--sbn_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/fsw/platform_inc/sbn_version.h`](file--sbn_version.h) — 바이너리 (경로만)
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_msg.h`
+
+
+```c
+#ifndef _sbn_msg_h_
+#define _sbn_msg_h_
+
+#include "sbn_msgdefs.h"
+#include "sbn_platform_cfg.h"
+#include "sbn_types.h"
+#include "cfe.h"
+
+#define SBN_CMD_NET_LEN sizeof(CFE_MSG_CommandHeader_t) + sizeof(SBN_NetIdx_t)
+
+#define SBN_CMD_PEER_LEN sizeof(CFE_MSG_CommandHeader_t) + sizeof(SBN_PeerIdx_t)
+
+/** @brief uint8 Enabled, uint8 DefaultFlag */
+#define SBN_CMD_REMAPCFG_LEN sizeof(CFE_MSG_CommandHeader_t) + 2
+
+/** @brief ProcessorID, FromMID, ToMID */
+#define SBN_CMD_REMAPADD_LEN sizeof(CFE_MSG_CommandHeader_t) + sizeof(CFE_ProcessorID_t) + sizeof(CFE_SB_MsgId_t) * 2
+
+/** @brief ProcessorID, FromMID */
+#define SBN_CMD_REMAPDEL_LEN sizeof(CFE_MSG_CommandHeader_t) + sizeof(CFE_ProcessorID_t) + sizeof(CFE_SB_MsgId_t)
+
+/** @brief CC, CmdCnt, CmdErrCnt, SubCnt, NetCnt */
+#define SBN_HK_LEN (sizeof(CFE_MSG_TelemetryHeader_t) + sizeof(uint8) + (sizeof(SBN_HKTlm_t) * 4))
+
+/** @brief CC, SBN_SubCnt_t SubCnt, CFE_SB_MsgId_t Subs[SBN_MAX_SUBS_PER_PEER] */
+#define SBN_HKMYSUBS_LEN \
+    (sizeof(CFE_MSG_TelemetryHeader_t) + sizeof(uint8) + sizeof(SBN_SubCnt_t) + SBN_MAX_SUBS_PER_PEER * sizeof(CFE_SB_MsgId_t))
+
+/** @brief CC, NetIdx, PeerIdx, SubCnt, Subs[SBN_MAX_SUBS_PER_PEER] */
+#define SBN_HKPEERSUBS_LEN                                                                                       \
+    (sizeof(CFE_MSG_TelemetryHeader_t) + sizeof(uint8) + sizeof(SBN_NetIdx_t) + sizeof(SBN_PeerIdx_t) + sizeof(SBN_SubCnt_t) + \
+     SBN_MAX_SUBS_PER_PEER * sizeof(CFE_SB_MsgId_t))
+
+/** @brief CC, SubCnt, ProcessorID, LastSend, LastRecv, SendCnt, RecvCnt, SendErrCnt, RecvErrCnt */
+#define SBN_HKPEER_LEN                                                                                                \
+    (sizeof(CFE_MSG_TelemetryHeader_t) + sizeof(uint8) + sizeof(SBN_SubCnt_t) + sizeof(CFE_ProcessorID_t) + sizeof(OS_time_t) * 2 + \
+     sizeof(SBN_HKTlm_t) * 4)
+
+/** @brief CC, ProtocolID, PeerCnt */
+#define SBN_HKNET_LEN (sizeof(CFE_MSG_TelemetryHeader_t) + sizeof(uint8) + sizeof(SBN_ModuleIdx_t) + sizeof(SBN_PeerIdx_t))
+
+/**
+ * @brief Module status response packet structure
+ */
+typedef struct
+{
+    /**
+     * This is a struct that will be sent (as-is) in a response to a HK command.
+     */
+    CFE_MSG_TelemetryHeader_t TlmHeader;
+    /** @brief The Protocol ID being queried. */
+    SBN_ModuleIdx_t ProtocolIdx;
+    /** @brief The module status as returned by the module. */
+    uint8 ModuleStatus[SBN_MOD_STATUS_MSG_SZ];
+} SBN_ModuleStatusPacket_t;
+
+#endif /* _sbn_msg_h_ */
+```
+
+### `sbn_msgdefs.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_msgdefs.h`
+
+
+```c
+#ifndef _sbn_msgdefs_h_
+#define _sbn_msgdefs_h_
+
+#define SBN_NOOP_CC 0
+
+#define SBN_HK_CC            10
+#define SBN_HK_NET_CC        11
+#define SBN_HK_PEER_CC       12
+#define SBN_HK_PEERSUBS_CC   13
+#define SBN_HK_MYSUBS_CC     14
+#define SBN_HK_RESET_CC      15
+#define SBN_HK_RESET_PEER_CC 16
+
+#define SBN_SCH_WAKEUP_CC 100
+#define SBN_TBL_CC        110
+
+#endif /* _sbn_msgdefs_h_ */
+```
+
+### `sbn_msgids.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_msgids.h`
+
+
+```c
+/*=======================================================================================
+** File Name:  sbn_msgids.h
+**
+** Title:
+**
+** $Author:    Steve Duran
+** $Revision:  $
+** $Date:      2013-06-10
+**
+** Purpose:
+**
+** Modification History:
+**   Date | Author | Description
+**   ---------------------------
+**   2013-06-10 | Steve Duran | Build #: Code Started
+**
+**=====================================================================================*/
+
+#ifndef _SBN_MSGIDS_H_
+#define _SBN_MSGIDS_H_
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines
+*/
+#define SBN_CMD_MID 0x18DA
+
+// #define SBN_TLM_MID 0x08DC
+#define SBN_HK_TLM_MID        0x08DB  // Basic HK
+#define SBN_HKNET_TLM_MID     0x08DC  // Network HK
+#define SBN_HKPEER_TLM_MID    0x08DD  // Peer HK
+#define SBN_HKPEERSUBS_TLM_MID 0x08DE // Peer Subscriptions
+#define SBN_HKMYSUBS_TLM_MID  0x08DF  // My Subscriptions
+/*
+** Include Files
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#endif /* _SBN_MSGIDS_H_ */
+
+/*=======================================================================================
+** End of file sbn_msgids.h
+**=====================================================================================*/
+```
+
+### `sbn_perfids.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_perfids.h`
+
+
+```c
+#ifndef _sbn_perfids_h_
+#define _sbn_perfids_h_
+
+#define SBN_PERF_MIN_ID  1
+#define SBN_PERF_SEND_ID SBN_PERF_MIN_ID
+#define SBN_PERF_RECV_ID SBN_PERF_MIN_ID + 1
+#define SBN_PERF_MAX_ID  SBN_PERF_MIN_ID + 100
+
+#endif /* _sbn_perfids_h_ */
+```
+
+### `sbn_platform_cfg.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_platform_cfg.h`
+
+
+```c
+/******************************************************************************
+** File: sbn_platform_cfg.h
+**
+**      Copyright (c) 2004-2016, United States government as represented by the
+**      administrator of the National Aeronautics Space Administration.
+**      All rights reserved. This software(cFE) was created at NASA's Goddard
+**      Space Flight Center pursuant to government contracts.
+**
+**      This software may be used only pursuant to a United States government
+**      sponsored project and the United States government may not be charged
+**      for use thereof.
+**
+** Purpose:
+**      This header file contains prototypes for private functions and type
+**      definitions for the Software Bus Network Application.
+**
+** Authors:   J. Wilmot/GSFC Code582
+**            R. McGraw/SSI
+**            C. Knight/ARC Code TI
+******************************************************************************/
+#include "cfe.h"
+
+#ifndef _sbn_platform_cfg_h
+#define _sbn_platform_cfg_h
+
+/** @brief Maximum number of networks allowed. */
+#define SBN_MAX_NETS 16
+
+/** @brief Maximum number of subscriptions allowed per peer allowed. */
+#define SBN_MAX_SUBS_PER_PEER 256
+
+/** @brief Maximum number of incoming and outgoing message filters. */
+#define SBN_MAX_FILTERS 16
+
+/** @brief Maximum number of outgoing and incoming message filters for each peer. */
+#define SBN_MAX_FILTERS_PER_PEER 8
+
+/**
+ * @brief At most process this many SB messages per peer per wakeup.
+ * (To prevent starvation if a peer is babbling.)
+ */
+#define SBN_MAX_MSG_PER_WAKEUP 32
+
+/**
+ * @brief In the polling configuration, how long (in milliseconds) to wait for
+ * a SCH wakeup message before SBN times out and processes. (Note, should
+ * really be significantly longer than the expected time between SCH wakeup
+ * messages.)
+ */
+#define SBN_MAIN_LOOP_DELAY 200
+
+/**
+ * @brief For each peer, a pipe is created to receive messages that the peer has
+ * subscribed to. The pipe should be deep enough to handle all messages that
+ * will queue between wakeups.
+ */
+#define SBN_PEER_PIPE_DEPTH 32
+
+/**
+ * @brief The maximum number of messages that will be queued for a particular
+ * message ID for a particular peer.
+ */
+#define SBN_DEFAULT_MSG_LIM 8
+
+/**
+ * @brief The maximum number of subscription messages that will be queued
+ * between wakeups.
+ */
+#define SBN_SUB_PIPE_DEPTH 32
+
+/**
+ * @brief The maximum number of subscription messages for a single message ID
+ * that will be queued between wakeups. (These are received when updates occur
+ * after SBN starts up.)
+ */
+#define SBN_MAX_ONESUB_PKTS_ON_PIPE 16
+
+/**
+ * @brief The maximum number of subscription messages for all message IDs that
+ * will be queued between wakeups. (These are received on SBN startup.)
+ */
+#define SBN_MAX_ALLSUBS_PKTS_ON_PIPE 64
+
+/**
+ * @brief The maximum length of a module's name
+ * file.
+ */
+#define SBN_MAX_MOD_NAME_LEN 16
+
+/** @brief Maximum number of protocol modules. */
+#define SBN_MAX_MOD_CNT 8
+
+/** @brief Maximum number of peers. */
+#define SBN_MAX_PEER_CNT 16
+
+/**
+ * @brief SBN modules can provide status messages for housekeeping requests,
+ * this is the maximum length those messages can be.
+ */
+#define SBN_MOD_STATUS_MSG_SZ 128
+
+/**
+ * @brief The number of characters for a "peer address", this can be
+ * an IP address, a device inode path, a DTN EIN, etc. The meaning
+ * of the address field is network module-dependent.
+ */
+#define SBN_ADDR_SZ 48
+
+/**
+ * @brief If defined, remapping is enabled at boot time.
+ */
+#define SBN_REMAP_ENABLED
+
+#define SBN_REMAP_TBL_FILENAME "/cf/sbn_remap_tbl.tbl"
+
+#define SBN_CONF_TBL_FILENAME "/cf/sbn_conf_tbl.tbl"
+
+#endif /* _sbn_platform_cfg_h_ */
+```
+
+### `sbn_tbl.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_tbl.h`
+
+
+```c
+#ifndef _sbn_tbl_h_
+#define _sbn_tbl_h_
+
+#include "cfe.h"
+#include "sbn_platform_cfg.h"
+#include "sbn_types.h"
+
+/****
+ * @brief The config table contains entries for peers (other CPU's),
+ * modules (back-end libraries used to talk to peers), networks
+ * (all peers that communicate amonsgt each other using a specific
+ * protocol/network technology), and interfaces (the interconnection
+ * between the "host" end and the peer end of the network.)
+ */
+typedef struct
+{
+    /** @brief The name for this protocol module. */
+    char Name[SBN_MAX_MOD_NAME_LEN];
+
+    /** @brief The file name to load the module from, if it's not already loaded by ES. */
+    char LibFileName[OS_MAX_PATH_LEN];
+
+    /** @brief The entry symbol to call when loaded. For protocol modules, this is the initialization fn.
+     * For filter modules, this is the filter function symbol name.
+     */
+    char LibSymbol[OS_MAX_API_NAME];
+
+    CFE_EVS_EventID_t BaseEID;
+} SBN_Module_Entry_t;
+
+typedef struct
+{
+    /** @brief Needs to match the ProcessorID of the peer. */
+    CFE_ProcessorID_t ProcessorID;
+
+    /** @brief Needs to match the SpacecraftID of the peer. */
+    CFE_SpacecraftID_t SpacecraftID;
+
+    /** @brief Network number indicating peers that inter-communicate using a common protocol. */
+    SBN_NetIdx_t NetNum;
+
+    /** @brief The name of the protocol module for which to use for this peer. */
+    char ProtocolName[SBN_MAX_MOD_NAME_LEN];
+
+    /** @brief The modules name for the filter interface for this peer. */
+    char Filters[SBN_MAX_FILTERS_PER_PEER][SBN_MAX_MOD_NAME_LEN];
+
+    /** @brief Protocol-specific address, such as "127.0.0.1:1234". */
+    uint8 Address[SBN_ADDR_SZ];
+
+    /** @brief Indicates whether to spawn tasks for send/recv; for a given netnum, probably wise to use the same
+     *         TaskFlags setting.
+     */
+    SBN_Task_Flag_t TaskFlags;
+} SBN_Peer_Entry_t;
+
+typedef struct
+{
+    SBN_Module_Entry_t ProtocolModules[SBN_MAX_MOD_CNT];
+    SBN_ModuleIdx_t    ProtocolCnt;
+    SBN_Module_Entry_t FilterModules[SBN_MAX_MOD_CNT];
+    SBN_ModuleIdx_t    FilterCnt;
+    SBN_Peer_Entry_t   Peers[SBN_MAX_PEER_CNT];
+    SBN_PeerIdx_t      PeerCnt;
+} SBN_ConfTbl_t;
+
+#endif /* _sbn_tbl_h_ */
+```
+
+### `sbn_types.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_types.h`
+
+
+```c
+/******************************************************************************
+** File: sbn_types.h
+**
+**      Copyright (c) 2004-2016, United States government as represented by the
+**      administrator of the National Aeronautics Space Administration.
+**      All rights reserved. This software(cFE) was created at NASA's Goddard
+**      Space Flight Center pursuant to government contracts.
+**
+**      This software may be used only pursuant to a United States government
+**      sponsored project and the United States government may not be charged
+**      for use thereof.
+**
+** Purpose:
+**      This header file contains prototypes for private functions and type
+**      definitions for the Software Bus Network Application.
+**
+** Authors:   J. Wilmot/GSFC Code582
+**            R. McGraw/SSI
+**            C. Knight/ARC Code TI
+******************************************************************************/
+#include "cfe.h"
+
+#ifndef _sbn_types_h_
+#define _sbn_types_h_
+
+/**
+ * Below are types that the user shouldn't have to change, but are useful
+ * to know and are shared with modules.
+ * If it's a compile-time configuration option, it should be in
+ * sbn_platform_cfg.h instead.
+ */
+
+typedef enum
+{
+    SBN_SUCCESS = 0,
+    SBN_ERROR,
+    SBN_IF_EMPTY,
+    SBN_NOT_IMPLEMENTED
+} SBN_Status_t;
+
+typedef enum
+{
+    SBN_TASK_POLL = 0x00, /**< @brief poll connections for this net/peer */
+    SBN_TASK_SEND = 0x01, /**< @brief create a task for each net/peer and blocks on the pipe */
+    SBN_TASK_RECV = 0x02, /**< @brief create a task for each net/peer and blocks on the net recv */
+    SBN_TASKS     = SBN_TASK_SEND | SBN_TASK_RECV, /**< @brief create two tasks per net/peer, tasks block on reads */
+} SBN_Task_Flag_t;
+
+typedef enum
+{
+    SBN_UDP            = 1,
+    SBN_TCP            = 2,
+    SBN_SPACEWIRE_RMAP = 3,
+    SBN_SPACEWIRE_PKT  = 4,
+    SBN_SHMEM          = 5,
+    SBN_SERIAL         = 6,
+    SBN_1553           = 7,
+    SBN_DTN            = 8,
+} SBN_Protocol_t;
+
+/**
+ * Message types definitions, reserve the high 128 values for module-specific
+ * message types.
+ */
+typedef enum
+{
+    SBN_NO_MSG    = 0x00, /**< @brief no payload */
+    SBN_SUB_MSG   = 0x01, /**< @brief payload is subs */
+    SBN_UNSUB_MSG = 0x02, /**< @brief payload is unsubs */
+    SBN_APP_MSG   = 0x03, /**< @brief payload is SB msg */
+    SBN_PROTO_MSG = 0x04, /**< @brief payload is SBN proto */
+} SBN_MsgTypeEnum_t;
+
+/**
+ * Mask to identift module-specific message types
+ */
+#define SBN_MODULE_SPECIFIC_MESSAGE_ID_MASK (0x80)
+
+/**
+ * @brief Generated by GIT. Used to ensure peers are running the same
+ * version of code.
+ */
+#define SBN_IDENT "$Id: dccf6239093d99c4c9351e140c15b61a95d8fc37 $"
+
+/** @brief Id is always the same len, plus \0 */
+#define SBN_IDENT_LEN 48
+
+#define SBN_PROTO_VER 11
+
+/* used in local and peer subscription tables */
+typedef struct
+{
+    uint32         InUseCtr;
+    CFE_SB_MsgId_t MsgID;
+    CFE_SB_Qos_t   QoS;
+} SBN_Subs_t;
+
+/* most/all scalars should be typedef'd for readability and type checking */
+typedef int16             SBN_MsgSz_t; /* needs to support < 0 for errs */
+typedef uint8             SBN_MsgType_t;
+typedef uint8             SBN_ModuleIdx_t;
+typedef uint8             SBN_NetIdx_t;
+typedef uint16            SBN_PeerIdx_t;
+typedef uint32            CFE_ProcessorID_t;
+typedef uint32            CFE_SpacecraftID_t;
+typedef uint32            OS_TaskID_t;
+typedef uint32            OS_MutexID_t;
+typedef int32             OS_SocketPort_t;
+typedef uint32            OS_SocketID_t;
+typedef int32             OS_FileDes_t;
+typedef uint32            OS_SockFileDes_t;
+typedef int32             OS_SelectTimeout_t;
+typedef int32             OS_Status_t;
+typedef uint32            CFE_ES_AppID_t;
+typedef uint32            CFE_ES_ObjectID_t;
+typedef CFE_ES_ObjectID_t CFE_ES_ModuleID_t;
+typedef CFE_ES_ObjectID_t CFE_ES_MutexID_t;
+typedef uint16            CFE_EVS_EventID_t;
+typedef int16             SBN_SubCnt_t;
+typedef uint16            SBN_HKTlm_t;
+
+#define EVSSendInfo(E, ...) CFE_EVS_SendEvent((E), CFE_EVS_EventType_INFORMATION, __VA_ARGS__)
+#define EVSSendDbg(E, ...)  CFE_EVS_SendEvent((E), CFE_EVS_EventType_DEBUG, __VA_ARGS__)
+#define EVSSendErr(E, ...)  CFE_EVS_SendEvent((E), CFE_EVS_EventType_ERROR, __VA_ARGS__)
+#define EVSSendCrit(E, ...) CFE_EVS_SendEvent((E), CFE_EVS_EventType_CRITICAL, __VA_ARGS__)
+
+/*****************************************************************************/
+#endif /* _sbn_types_h_ */
+```
+
+### `sbn_version.h`
+
+**경로:** `fsw/apps/sbn/fsw/platform_inc/sbn_version.h`
+
+바이너리 파일입니다. 본문은 생략했습니다.

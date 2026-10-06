@@ -3,20 +3,81 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bad.cpp`
 
-file--bad.cpp
-file--CMakeLists.txt
-file--good_implementation.cpp
-file--good_override.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/bad.cpp`
+
+
+```cpp
+static_assert(false, "This is a bad implementation");
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/bad.cpp`](file--bad.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/good_implementation.cpp`](file--good_implementation.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/good_override.cpp`](file--good_override.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/CMakeLists.txt`
+
+
+```cmake
+# Require some implementations
+register_fprime_config(
+    INTERFACE
+    REQUIRES_IMPLEMENTATIONS Test_Implementation Test_Override
+)
+
+# Now create some implementations. This happens to be a convenient place, but not required to be here.
+register_fprime_implementation(
+        Test_Implementation_Platform
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/good_implementation.cpp"
+    IMPLEMENTS
+        Test_Implementation
+)
+
+register_fprime_implementation(
+        Test_Implementation_Override
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/bad.cpp"
+    IMPLEMENTS
+        Test_Implementation
+)
+
+register_fprime_implementation(
+        Test_Override_Override
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/good_override.cpp"
+    IMPLEMENTS
+        Test_Override
+)
+
+register_fprime_implementation(
+        Test_Override_Unused
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/bad.cpp"
+    IMPLEMENTS
+        Test_Override
+)
+```
+
+### `good_implementation.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/good_implementation.cpp`
+
+
+```cpp
+bool good_implementation() {
+    return true;
+}
+```
+
+### `good_override.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-implementations/Deployment/TestModule/good_override.cpp`
+
+
+```cpp
+bool good_override() {
+    return true;
+}
+```

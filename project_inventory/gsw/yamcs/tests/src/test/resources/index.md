@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/tests/src/test/resources/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,20 +13,126 @@ LongWebsocketFrameTest/index
 pus/index
 RealtimeParchive/index
 refmdb/index
-file--logging.properties
-file--mdb.yaml
-file--processor.yaml
-file--yamcs.yaml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/tests/src/test/resources/IntegrationTest/`](IntegrationTest/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/LongWebsocketFrameTest/`](LongWebsocketFrameTest/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/pus/`](pus/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/RealtimeParchive/`](RealtimeParchive/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/refmdb/`](refmdb/index) — 폴더
-- [`gsw/yamcs/tests/src/test/resources/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/mdb.yaml`](file--mdb.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/resources/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+### `logging.properties`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/logging.properties`
+
+
+```text
+#used for unit tests, log everything on standard output
+handlers= java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = SEVERE
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.CompactFormatter
+
+org.yamcs.level = WARNING
+io.netty.level = WARNING
+```
+
+### `mdb.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/mdb.yaml`
+
+
+```yaml
+refmdb:
+    # Configuration of the active loaders
+    # Valid loaders are: sheet, xtce or fully qualified name of the class
+    - type: "sheet"
+      args: 
+           file: "mdb/refmdb.xls"
+           enableAliasReferences: false
+      
+
+refmdb-v6:
+    # Configuration of the active loaders
+    # Valid loaders are: sheet, xtce or fully qualified name of the class
+    - type: "sheet"
+      args: 
+           file: "mdb/refmdb-v6.xls"
+           enableAliasReferences: false
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/processor.yaml`
+
+
+```yaml
+# this file defines the diferrent channels
+# channel is where TM/TC processing happends inside Yamcs.
+#
+# each channel uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+#
+
+
+
+realtime:
+    services: 
+       - class: org.yamcs.StreamTmPacketProvider
+       - class: org.yamcs.StreamTcCommandReleaser
+       # implements XTCE algorithms
+       - class: org.yamcs.algorithms.AlgorithmManager
+       # manages software parameters
+       - class: org.yamcs.parameter.LocalParameterManager
+    config:
+        subscribeAll: true
+        #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+        alarm:
+            parameterCheck: true
+            parameterServer: enabled
+
+
+Archive:
+    services: 
+        - class: org.yamcs.tctm.ReplayService
+
+#used for performing archive retrievals (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+    services:
+        - class: org.yamcs.tctm.ReplayService
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/tests/src/test/resources/yamcs.yaml`
+
+
+```yaml
+#the instance list is empty here but YarchTestCase creates anyway an instance based on the UnitTest class name
+instances:
+  - testinst
+
+dataDir: ${java.io.tmpdir}/yamcs-data
+
+archive:
+  #max length of the data of type binary(e.g. tm packets)
+  maxBinaryLength: 1048576
+
+storageEngines: [rocksdb2]
+
+rdbConfig:
+  tableConfig:
+    - tableNamePattern: .*
+      maxOpenFiles: 100
+      columnFamilyOptions:
+        targetFileSizeBase: 10240 #in KB
+        targetFileSizeMultiplier: 10
+        maxBytesForLevelBase: 102400 #in KB
+        maxBytesForLevelMultiplier: 10
+        writeBufferSize: 50240 #in KB
+        maxWriteBufferNumber: 2
+      tableFormatConfig:
+        blockSize: 256 #KB
+        blockCacheSize: 50000 #KB
+
+secretKey: testtest
+```

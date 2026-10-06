@@ -3,14 +3,47 @@
 
 **경로:** `components/onair/fsw/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `unit-test.yml`
 
-file--unit-test.yml
+**경로:** `components/onair/fsw/.github/workflows/unit-test.yml`
+
+
+```yaml
+name: Unit test run
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up OnAIR test environment
+      uses: conda-incubator/setup-miniconda@v3
+      with:
+        activate-environment: onair
+        environment-file: environment.yml
+        python-version: ${{ matrix.python-version }}
+        auto-activate-base: false
+    - name: Install dependencies
+      shell: bash -l {0}
+      run: |
+        conda info
+        conda list
+    - name: Test with pytest
+      shell: bash -l {0}
+      run: python -m coverage run --branch --source=onair,plugins -m pytest ./test/
+    - name: Coverage report
+      shell: bash -l {0}
+      run: coverage report --skip-empty
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4
 ```
-
-## 항목
-
-- [`components/onair/fsw/.github/workflows/unit-test.yml`](file--unit-test.yml) — UTF-8 텍스트 파일 본문 포함

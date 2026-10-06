@@ -3,18 +3,513 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-detail.component.css`
 
-file--algorithm-detail.component.css
-file--algorithm-detail.component.html
-file--algorithm-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.css`
+
+
+```css
+code {
+  display: block;
+  background-color: #fafafa;
+  padding: 1em;
+  font-size: 10px;
+  border: 1px solid #d3d3d3;
+  white-space: pre;
+}
+
+.algorithm-text {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.override-annotation {
+  font-style: italic;
+  font-weight: 300;
+}
 ```
 
-## 항목
+### `algorithm-detail.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.css`](file--algorithm-detail.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.html`](file--algorithm-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.ts`](file--algorithm-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.html`
+
+
+```html
+<dl class="dl-horizontal no-lead">
+  <dt>Algorithm</dt>
+  <dd>{{ algorithm.qualifiedName | shortName }}</dd>
+
+  <dt>System</dt>
+  <dd>
+    @if (algorithm.qualifiedName | spaceSystemName; as spaceSystemName) {
+      <a
+        routerLink="/algorithms"
+        [queryParams]="{ c: yamcs.context, system: spaceSystemName }"
+        class="ya-link">
+        {{ spaceSystemName }}
+      </a>
+    }
+  </dd>
+
+  @for (alias of algorithm.alias; track alias) {
+    <dt>{{ alias.namespace }}</dt>
+    <dd>{{ alias.name }}</dd>
+  }
+
+  @if (algorithm.longDescription) {
+    <dt>Description</dt>
+    <dd>
+      <app-markdown [text]="algorithm.longDescription" />
+    </dd>
+  } @else {
+    <dt>Description</dt>
+    <dd>
+      {{ algorithm.shortDescription || "-" }}
+    </dd>
+  }
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Scope</dt>
+  <dd>{{ algorithm.scope || "-" }}</dd>
+
+  <dt>Type</dt>
+  <dd>{{ algorithm.type || "-" }}</dd>
+
+  <dt>Language</dt>
+  <dd>{{ algorithm.language || "-" }}</dd>
+</dl>
+
+@if (status && algorithm.scope === "GLOBAL") {
+  <mat-divider />
+  <dl class="dl-horizontal">
+    <dt>Status</dt>
+    <dd style="display: flex; align-items: center">
+      <app-algorithm-status [status]="status" />
+      &nbsp;
+      @if (status.errorMessage) {
+        {{ status.errorMessage }}
+      } @else {
+        OK
+      }
+    </dd>
+    <dt>Run count</dt>
+    <dd>{{ (status.runCount | number) || "-" }}</dd>
+    <dt>Total run time</dt>
+    <dd>
+      {{ (status.execTimeNs | nanosDuration) || "-" }}
+    </dd>
+    <dt>Average run time</dt>
+    <dd>
+      @if (status.runCount) {
+        <span>
+          {{ status.execTimeNs / status.runCount | nanosDuration }}
+        </span>
+      } @else {
+        <span>-</span>
+      }
+    </dd>
+    <dt>Last run</dt>
+    <dd>{{ (status.lastRun | datetime) || "-" }}</dd>
+  </dl>
+}
+
+@if (algorithm.text) {
+  <mat-divider />
+  <dl class="dl-horizontal">
+    <dt>
+      Text
+      @if (isChangeMissionDatabaseEnabled()) {
+        <ya-help>
+          You may override the MDB algorithm text. Such a change is scoped to the current processor
+          only and will not persist across server restarts.
+        </ya-help>
+      }
+      <br />
+      @if ((overrides$ | async)?.textOverride) {
+        <span class="override-annotation">MDB Override</span>
+      }
+    </dt>
+    <dd>
+      @if (isChangeMissionDatabaseEnabled()) {
+        <div style="padding-bottom: 5px">
+          <ya-button
+            style="margin-right: 5px"
+            [disabled]="!(dirty$ | async)"
+            (click)="saveTextChanges()"
+            icon="save">
+            Save
+          </ya-button>
+          <ya-button
+            [disabled]="!(overrides$ | async)?.textOverride"
+            (click)="revertText()"
+            icon="undo">
+            Restore MDB text
+          </ya-button>
+        </div>
+      }
+      <div #text class="algorithm-text"></div>
+    </dd>
+  </dl>
+}
+
+@if (algorithm.mathElements) {
+  <mat-divider />
+  <dl class="dl-horizontal">
+    <dt>Postfix Expression</dt>
+    <dd>
+      <table yaDataTable>
+        <tr>
+          <th>Type</th>
+          <th>Value</th>
+        </tr>
+        @for (el of algorithm.mathElements; track el) {
+          <tr>
+            @switch (el.type) {
+              @case ("VALUE_OPERAND") {
+                <td>Operand</td>
+                <td>{{ el.value }}</td>
+              }
+              @case ("OPERATOR") {
+                <td>Operator</td>
+                <td>{{ el.operator }}</td>
+              }
+              @case ("THIS_PARAMETER_OPERAND") {
+                <td>Operand</td>
+                <td>this</td>
+              }
+              @case ("PARAMETER") {
+                <td>Operand</td>
+                <td>
+                  <a
+                    [routerLink]="['/mdb/parameters/', el.parameter.qualifiedName]"
+                    [queryParams]="{ c: yamcs.context }"
+                    class="ya-link">
+                    {{ el.parameter.qualifiedName }}
+                  </a>
+                </td>
+              }
+            }
+          </tr>
+        }
+      </table>
+    </dd>
+  </dl>
+}
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Input parameters</dt>
+  <dd>
+    @if (algorithm.inputParameter) {
+      <table yaDataTable>
+        <tr>
+          <th>Input name</th>
+          <th>Type</th>
+          <th>Ref</th>
+          <th>Instance</th>
+          <th>Mandatory</th>
+        </tr>
+        @for (inputParameter of algorithm.inputParameter; track inputParameter) {
+          <tr>
+            <td>{{ inputParameter.inputName || "-" }}</td>
+            <td>
+              @if (inputParameter.parameter) {
+                Parameter
+              } @else if (inputParameter.argument) {
+                Argument
+              } @else {
+                Unknown
+              }
+            </td>
+            <td>
+              @if (inputParameter.parameter) {
+                <a
+                  [routerLink]="'/telemetry/parameters' + inputParameter.parameter.qualifiedName"
+                  [queryParams]="{ c: yamcs.context }">
+                  {{
+                    inputParameter.parameter.qualifiedName
+                      | relativize: (algorithm.qualifiedName | spaceSystemName)
+                  }}
+                </a>
+              } @else if (inputParameter.argument) {
+                {{ inputParameter.argument.name }}
+              } @else {
+                -
+              }
+            </td>
+            <td style="text-align: center">
+              {{ inputParameter.parameterInstance ?? "-" }}
+            </td>
+            <td style="text-align: center">
+              {{ inputParameter.mandatory ? "Yes" : "No" }}
+            </td>
+          </tr>
+        }
+      </table>
+    } @else {
+      <span>-</span>
+    }
+  </dd>
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Output parameters</dt>
+  <dd>
+    @if (algorithm.outputParameter) {
+      <table yaDataTable>
+        <tr>
+          <th>Output name</th>
+          <th>Parameter</th>
+        </tr>
+        @for (outputParameter of algorithm.outputParameter; track outputParameter) {
+          <tr>
+            <td>{{ outputParameter.outputName || "-" }}</td>
+            <td>
+              <a
+                [routerLink]="'/telemetry/parameters' + outputParameter.parameter!.qualifiedName"
+                [queryParams]="{ c: yamcs.context }">
+                {{
+                  outputParameter.parameter!.qualifiedName
+                    | relativize: (algorithm.qualifiedName | spaceSystemName)
+                }}
+              </a>
+            </td>
+          </tr>
+        }
+      </table>
+    } @else {
+      <span>-</span>
+    }
+  </dd>
+</dl>
+
+<mat-divider />
+
+<dl class="dl-horizontal">
+  <dt>Triggers</dt>
+  <dd>
+    @if (algorithm.onParameterUpdate || algorithm.onPeriodicRate) {
+      <table yaDataTable>
+        <tr>
+          <th>Type</th>
+          <th>Value</th>
+        </tr>
+        @for (trigger of algorithm.onParameterUpdate; track trigger) {
+          <tr>
+            <td>OnParameterUpdate</td>
+            <td>
+              <a
+                [routerLink]="'/telemetry/parameters' + trigger.qualifiedName"
+                [queryParams]="{ c: yamcs.context }">
+                {{
+                  trigger.qualifiedName | relativize: (algorithm.qualifiedName | spaceSystemName)
+                }}
+              </a>
+            </td>
+          </tr>
+        }
+        @if (algorithm.onPeriodicRate) {
+          <tr>
+            <td>OnPeriodicRate</td>
+            <td>{{ algorithm.onPeriodicRate }} ms</td>
+          </tr>
+        }
+      </table>
+    } @else {
+      -
+    }
+  </dd>
+</dl>
+```
+
+### `algorithm-detail.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-detail/algorithm-detail.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import { indentWithTab } from '@codemirror/commands';
+import { java } from '@codemirror/lang-java';
+import { javascript } from '@codemirror/lang-javascript';
+import { python } from '@codemirror/lang-python';
+import { EditorState, Extension } from '@codemirror/state';
+import { keymap } from '@codemirror/view';
+import {
+  Algorithm,
+  AlgorithmOverrides,
+  AlgorithmStatus,
+  AuthService,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { EditorView, basicSetup } from 'codemirror';
+import { BehaviorSubject } from 'rxjs';
+import { MarkdownComponent } from '../../shared/markdown/markdown.component';
+import { AlgorithmStatusComponent } from '../algorithm-status/algorithm-status.component';
+
+@Component({
+  selector: 'app-algorithm-detail',
+  templateUrl: './algorithm-detail.component.html',
+  styleUrl: './algorithm-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlgorithmStatusComponent, MarkdownComponent, WebappSdkModule],
+})
+export class AlgorithmDetailComponent implements AfterViewInit {
+  @ViewChild('text')
+  textContainer: ElementRef<HTMLDivElement>;
+
+  @Input({ required: true })
+  algorithm: Algorithm;
+
+  @Input()
+  status: AlgorithmStatus | null;
+
+  overrides$ = new BehaviorSubject<AlgorithmOverrides | null>(null);
+
+  private editorView: EditorView;
+  dirty$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private authService: AuthService,
+  ) {}
+
+  ngAfterViewInit() {
+    if (this.algorithm.text) {
+      this.initializeEditor();
+      this.refreshOverrides();
+    }
+  }
+
+  isChangeMissionDatabaseEnabled() {
+    const user = this.authService.getUser()!;
+    return user.hasSystemPrivilege('ChangeMissionDatabase');
+  }
+
+  private initializeEditor() {
+    const extensions: Extension[] = [
+      basicSetup,
+      keymap.of([indentWithTab]),
+      EditorView.lineWrapping,
+    ];
+
+    if (this.isChangeMissionDatabaseEnabled()) {
+      extensions.push(
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            this.dirty$.next(true);
+          }
+        }),
+      );
+    } else {
+      extensions.push(EditorState.readOnly.of(true));
+    }
+
+    const theme = EditorView.theme(
+      {
+        '&': { height: '300px', fontSize: '12px' },
+        '.cm-scroller': {
+          overflow: 'auto',
+          fontFamily: "'Roboto Mono', monospace",
+        },
+      },
+      { dark: false },
+    );
+    extensions.push(theme);
+
+    switch (this.algorithm.language.toLowerCase()) {
+      case 'java-expression':
+        extensions.push(java());
+        break;
+      case 'javascript':
+        extensions.push(javascript());
+        break;
+      case 'python':
+        extensions.push(python());
+        break;
+      default:
+        console.warn(`Unexpected language ${this.algorithm.language}`);
+    }
+
+    const state = EditorState.create({
+      doc: this.algorithm.text,
+      extensions,
+    });
+
+    this.editorView = new EditorView({
+      state,
+      parent: this.textContainer.nativeElement,
+    });
+  }
+
+  private refreshOverrides() {
+    const qualifiedName = this.algorithm.qualifiedName;
+    const instance = this.yamcs.instance!;
+    const processor = this.yamcs.processor!;
+    this.yamcs.yamcsClient
+      .getAlgorithmOverrides(instance, processor, qualifiedName)
+      .then((overrides) => {
+        this.overrides$.next(overrides);
+        if (overrides.textOverride) {
+          this.updateEditorValue(overrides.textOverride.text);
+        } else {
+          this.updateEditorValue(this.algorithm.text);
+        }
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateEditorValue(text: string) {
+    this.editorView.dispatch({
+      changes: {
+        from: 0,
+        to: this.editorView.state.doc.length,
+        insert: text,
+      },
+    });
+
+    this.dirty$.next(false);
+  }
+
+  saveTextChanges() {
+    const text = this.editorView.state.doc.toString();
+    const instance = this.yamcs.instance!;
+    const processor = this.yamcs.processor!;
+    this.yamcs.yamcsClient
+      .updateAlgorithmText(
+        instance,
+        processor,
+        this.algorithm.qualifiedName,
+        text,
+      )
+      .then(() => this.refreshOverrides())
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  revertText() {
+    const instance = this.yamcs.instance!;
+    const processor = this.yamcs.processor!;
+    this.yamcs.yamcsClient
+      .revertAlgorithmText(instance, processor, this.algorithm.qualifiedName)
+      .then(() => this.refreshOverrides())
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

@@ -3,20 +3,327 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `DownsamplerTest.java`
 
-file--DownsamplerTest.java
-file--NameDescriptionSearchMatcherTest.java
-file--ParameterRangerTest.java
-file--XtceToGpbAssemblerTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/DownsamplerTest.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.http.api.Downsampler.Sample;
+
+public class DownsamplerTest {
+
+    @Test
+    public void testSampling() {
+        Downsampler sampler = new Downsampler(1, 10, 3);
+
+        List<Sample> samples = sampler.collect();
+        assertEquals(0, samples.size());
+
+        sampler.process(1, 5, -1);
+
+        samples = sampler.collect();
+        assertEquals(1, samples.size());
+        assertEquals(5, samples.get(0).avg, 1e-10);
+        assertEquals(1, samples.get(0).n);
+
+        // Add to same bucket
+        sampler.process(2, 10, -1);
+        assertEquals(1, samples.size());
+        assertEquals((5 + 10) / 2., samples.get(0).avg, 1e-10);
+        assertEquals(2, samples.get(0).n);
+
+        // Add to same bucket
+        sampler.process(3, 7, -1);
+        samples = sampler.collect();
+        assertEquals(1, samples.size());
+        assertEquals((5 + 10 + 7) / 3., samples.get(0).avg, 1e-10);
+        assertEquals(3, samples.get(0).n);
+
+        // Due to flooring, leads to a new bucket
+        sampler.process(4, 2, -1);
+        samples = sampler.collect();
+        assertEquals(2, samples.size());
+
+        Sample sample0 = samples.get(0);
+        assertEquals((5 + 10 + 7) / 3., sample0.avg, 1e-10);
+        assertEquals(5, sample0.min, 1e-10);
+        assertEquals(10, sample0.max, 1e-10);
+
+        Sample sample1 = samples.get(1);
+        assertEquals(2, sample1.avg, 1e-10);
+        assertEquals(2, sample1.min, 1e-10);
+        assertEquals(2, sample1.max, 1e-10);
+    }
+
+    @Test
+    public void testSamplingTooMany() {
+        Downsampler sampler = new Downsampler(1, 2, 3);
+        sampler.process(1, 1, -1);
+        sampler.process(2, 2, -1);
+        sampler.process(2, 2.3, -1);
+        List<Sample> samples = sampler.collect();
+        assertEquals(1, samples.size());
+    }
+
+    @Test
+    public void testSamplingInvalid() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            new Downsampler(2, 1, 3);
+        });
+    }
+}
 ```
 
-## 항목
+### `NameDescriptionSearchMatcherTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/DownsamplerTest.java`](file--DownsamplerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/NameDescriptionSearchMatcherTest.java`](file--NameDescriptionSearchMatcherTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/ParameterRangerTest.java`](file--ParameterRangerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/XtceToGpbAssemblerTest.java`](file--XtceToGpbAssemblerTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/NameDescriptionSearchMatcherTest.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+public class NameDescriptionSearchMatcherTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+    }
+
+    @Test
+    public void testSearchMatch() throws ConfigurationException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refmdb");
+        assertTrue(match("/REFMDB/CcSdS-APID", mdb));
+        assertTrue(match("REFMDB_ccsds-apid", mdb));
+        assertTrue(match("ap ReFmDB_CC", mdb));
+    }
+
+    private boolean match(String searchTerm, Mdb mdb) {
+        NameDescriptionSearchMatcher matcher = new NameDescriptionSearchMatcher(searchTerm);
+        for (Parameter p : mdb.getParameters()) {
+            if (matcher.matches(p)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+### `ParameterRangerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/ParameterRangerTest.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.http.api.ParameterRanger.MultiRange;
+import org.yamcs.http.api.ParameterRanger.Range;
+import org.yamcs.http.api.ParameterRanger.SingleRange;
+import org.yamcs.parameter.ValueArray;
+import org.yamcs.parameterarchive.ParameterValueArray;
+import org.yamcs.yarch.protobuf.Db.ParameterStatus;
+
+public class ParameterRangerTest {
+    @Test
+    public void test1() {
+        ParameterRanger ranger = new ParameterRanger(-1, -1, 6, 2);
+
+        ParameterValueArray pva = getPva("a", "b", "c", "b", "a", "a");
+        ranger.accept(pva);
+        List<Range> rlist = ranger.getRanges();
+        assertEquals(1, rlist.size());
+        checkMultiRange((MultiRange) rlist.get(0), 6, new int[] { 3, 2 }, new String[] { "a", "b" });
+    }
+
+    @Test
+    public void test2() {
+        ParameterRanger ranger = new ParameterRanger(-1, -1, 5, 2);
+        ParameterValueArray pva = getPva("a", "b", "c", "b", "a", "a");
+        ranger.accept(pva);
+        List<Range> rlist = ranger.getRanges();
+        assertEquals(2, rlist.size());
+        checkMultiRange((MultiRange) rlist.get(0), 5, new int[] { 2, 2 }, new String[] { "a", "b" });
+        checkSingleRange((SingleRange) rlist.get(1), 1, "a");
+    }
+
+    @Test
+    public void test3() {
+        ParameterRanger ranger = new ParameterRanger(-1, 1, 5, 2);
+        ParameterValueArray pva = getPva("a", "b", "c", "b", "b",
+                "a", "a", "a", "a", "a",
+                "c");
+        ranger.accept(pva);
+        List<Range> rlist = ranger.getRanges();
+        assertEquals(3, rlist.size());
+        checkMultiRange((MultiRange) rlist.get(0), 5, new int[] { 1, 3 }, new String[] { "a", "b" });
+        checkSingleRange((SingleRange) rlist.get(1), 5, "a");
+
+        checkSingleRange((SingleRange) rlist.get(2), 1, null);
+    }
+
+    @Test
+    public void test4() {
+        ParameterRanger ranger = new ParameterRanger(-1, 1, 3, 1);
+        ParameterValueArray pva = getPva("a", "a", "b", "c", "c", "c");
+        ranger.accept(pva);
+        List<Range> rlist = ranger.getRanges();
+        assertEquals(2, rlist.size());
+
+        checkMultiRange((MultiRange) rlist.get(0), 3, new int[] {}, new String[] {});
+        checkSingleRange((SingleRange) rlist.get(1), 3, "c");
+    }
+
+    @Test
+    public void test5() {
+        ParameterRanger ranger = new ParameterRanger(-1, 1, 5, 1);
+        ParameterValueArray pva = getPva("a", "a", "b", "a", "c");
+        ranger.accept(pva);
+        List<Range> rlist = ranger.getRanges();
+        assertEquals(1, rlist.size());
+
+        checkMultiRange((MultiRange) rlist.get(0), 5, new int[] { 3 }, new String[] { "a" });
+    }
+
+    private void checkSingleRange(SingleRange sr, int count, String value) {
+        assertEquals(count, sr.totalCount());
+        if (value == null) {
+            assertNull(sr.value);
+        } else {
+            assertEquals(value, sr.value.getStringValue());
+        }
+    }
+
+    void checkMultiRange(MultiRange mr, int count, int[] counts, String[] values) {
+        assertEquals(count, mr.totalCount());
+
+        assertArrayEquals(counts, mr.counts.toArray());
+        assertEquals(values.length, mr.valueCount());
+        for (int i = 0; i < values.length; i++) {
+            assertEquals(values[i], mr.values.get(i).getStringValue());
+        }
+    }
+
+    ParameterValueArray getPva(String... values) {
+        ValueArray engValues = new ValueArray(values);
+        long[] timestamps = new long[values.length];
+        for (int i = 0; i < timestamps.length; i++) {
+            timestamps[i] = i;
+        }
+        ParameterStatus[] paramStatus = new ParameterStatus[values.length];
+        Arrays.fill(paramStatus, ParameterStatus.newBuilder().setAcqStatus(0).build());
+
+        return new ParameterValueArray(timestamps, engValues, engValues, paramStatus);
+    }
+}
+```
+
+### `XtceToGpbAssemblerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/http/api/XtceToGpbAssemblerTest.java`
+
+
+```java
+package org.yamcs.http.api;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.http.api.XtceToGpbAssembler.DetailLevel;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.protobuf.Mdb.CommandInfo;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.mdb.Mdb;
+
+public class XtceToGpbAssemblerTest {
+
+    @Test
+    public void toCommandInfo_float_test() throws Exception {
+        // Arrange
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        Mdb mdb = MdbFactory.getInstance("refmdb");
+        MetaCommand cmd1 = mdb.getMetaCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC");
+
+        // Act
+        CommandInfo commandInfo = XtceToGpbAssembler.toCommandInfo(cmd1, DetailLevel.FULL);
+
+        // Assert
+        assertEquals("FLOAT_ARG_TC", commandInfo.getName());
+        assertEquals("float", commandInfo.getArgument(0).getType().getEngType());
+        assertEquals(-30, commandInfo.getArgument(0).getType().getRangeMin(), 0);
+        assertEquals(-10, commandInfo.getArgument(0).getType().getRangeMax(), 0);
+        assertEquals("m/s", commandInfo.getArgument(0).getType().getUnitSet(0).getUnit());
+    }
+
+    @Test
+    public void toCommandInfo_int_test() throws Exception {
+        // Arrange
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        Mdb mdb = MdbFactory.getInstance("refmdb");
+        MetaCommand cmd1 = mdb.getMetaCommand("/REFMDB/SUBSYS1/CCSDS_TC");
+
+        // Act
+        CommandInfo commandInfo = XtceToGpbAssembler.toCommandInfo(cmd1, DetailLevel.FULL);
+
+        // Assert
+        assertEquals("CCSDS_TC", commandInfo.getName());
+        assertEquals("integer", commandInfo.getArgument(0).getType().getEngType());
+        assertTrue(commandInfo.getArgument(0).getType().hasRangeMin(), "should have a range set");
+        assertEquals(1, commandInfo.getArgument(0).getType().getRangeMin(), 0);
+        assertEquals(3, commandInfo.getArgument(0).getType().getRangeMax(), 0);
+    }
+
+    @Test
+    public void toCommandInfo_calib_test() throws Exception {
+        // Arrange
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        Mdb mdb = MdbFactory.getInstance("refmdb");
+        MetaCommand cmd1 = mdb.getMetaCommand("/REFMDB/SUBSYS1/CALIB_TC");
+
+        // Act
+        CommandInfo commandInfo = XtceToGpbAssembler.toCommandInfo(cmd1, DetailLevel.FULL);
+
+        // Assert
+        assertEquals("CALIB_TC", commandInfo.getName());
+        assertEquals("enumeration", commandInfo.getArgument(3).getType().getEngType());
+        assertEquals("value0", commandInfo.getArgument(3).getType().getEnumValue(0).getLabel());
+        assertEquals("value2", commandInfo.getArgument(3).getType().getEnumValue(2).getLabel());
+        assertTrue(!commandInfo.getArgument(0).getType().hasRangeMin(), "should not have a range set");
+    }
+}
+```

@@ -3,18 +3,329 @@
 
 **경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Bucket.java`
 
-file--Bucket.java
-file--ObjectId.java
-file--StorageClient.java
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/Bucket.java`
+
+
+```java
+package org.yamcs.client.storage;
+
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.HttpBody;
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.client.storage.Bucket.ListObjectsOptions.DelimiterOption;
+import org.yamcs.client.storage.Bucket.ListObjectsOptions.ListObjectsOption;
+import org.yamcs.client.storage.Bucket.ListObjectsOptions.PrefixOption;
+import org.yamcs.protobuf.BucketInfo;
+import org.yamcs.protobuf.BucketsApiClient;
+import org.yamcs.protobuf.DeleteObjectRequest;
+import org.yamcs.protobuf.GetBucketRequest;
+import org.yamcs.protobuf.GetObjectInfoRequest;
+import org.yamcs.protobuf.GetObjectRequest;
+import org.yamcs.protobuf.ListObjectsRequest;
+import org.yamcs.protobuf.ListObjectsResponse;
+import org.yamcs.protobuf.ObjectInfo;
+import org.yamcs.protobuf.UploadObjectRequest;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+
+public class Bucket {
+
+    private BucketsApiClient bucketService;
+    private String bucket;
+
+    Bucket(BucketsApiClient bucketService, String bucket) {
+        this.bucketService = bucketService;
+        this.bucket = bucket;
+    }
+
+    public String getName() {
+        return bucket;
+    }
+
+    public CompletableFuture<BucketInfo> getInfo() {
+        var requestb = GetBucketRequest.newBuilder()
+                .setBucketName(bucket);
+        var f = new CompletableFuture<BucketInfo>();
+        bucketService.getBucket(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    @Deprecated
+    public CompletableFuture<ListObjectsResponse> listObjects(String prefix) {
+        return listObjects(
+                ListObjectsOptions.delimiter("/"),
+                ListObjectsOptions.prefix(prefix));
+    }
+
+    public CompletableFuture<ListObjectsResponse> listObjects(ListObjectsOption... options) {
+        var requestb = ListObjectsRequest.newBuilder()
+                .setBucketName(bucket);
+        for (var option : options) {
+            if (option instanceof DelimiterOption o) {
+                if (o.delimiter != null) {
+                    requestb.setDelimiter(o.delimiter);
+                }
+            } else if (option instanceof PrefixOption o) {
+                if (o.prefix != null) {
+                    requestb.setPrefix(o.prefix);
+                }
+            } else {
+                throw new IllegalArgumentException("Usupported option " + option.getClass());
+            }
+        }
+        var f = new CompletableFuture<ListObjectsResponse>();
+        bucketService.listObjects(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<ObjectInfo> getObject(String objectName) {
+        var requestb = GetObjectInfoRequest.newBuilder()
+                .setBucketName(bucket)
+                .setObjectName(objectName);
+        var f = new CompletableFuture<ObjectInfo>();
+        bucketService.getObjectInfo(null, requestb.build(), new ResponseObserver<>(f));
+        return f;
+    }
+
+    public CompletableFuture<Void> uploadObject(String objectName, byte[] bytes) {
+        var request = UploadObjectRequest.newBuilder()
+                .setBucketName(bucket)
+                .setObjectName(objectName)
+                .setData(HttpBody.newBuilder().setData(ByteString.copyFrom(bytes)))
+                .build();
+        var f = new CompletableFuture<Empty>();
+        bucketService.uploadObject(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<byte[]> downloadObject(String objectName) {
+        var request = GetObjectRequest.newBuilder()
+                .setBucketName(bucket)
+                .setObjectName(objectName)
+                .build();
+        var f = new CompletableFuture<HttpBody>();
+        bucketService.getObject(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getData().toByteArray());
+    }
+
+    public CompletableFuture<Void> deleteObject(String objectName) {
+        var request = DeleteObjectRequest.newBuilder()
+                .setBucketName(bucket)
+                .setObjectName(objectName)
+                .build();
+        var f = new CompletableFuture<Empty>();
+        bucketService.deleteObject(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public static final class ListObjectsOptions {
+
+        public static interface ListObjectsOption {
+        }
+
+        public static ListObjectsOption prefix(String prefix) {
+            return new PrefixOption(prefix);
+        }
+
+        public static ListObjectsOption delimiter(String delimiter) {
+            return new DelimiterOption(delimiter);
+        }
+
+        static final class PrefixOption implements ListObjectsOption {
+            final String prefix;
+
+            public PrefixOption(String prefix) {
+                this.prefix = prefix;
+            }
+        }
+
+        static final class DelimiterOption implements ListObjectsOption {
+            final String delimiter;
+
+            public DelimiterOption(String delimiter) {
+                this.delimiter = delimiter;
+            }
+        }
+    }
+}
 ```
 
-## 항목
+### `ObjectId.java`
 
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/Bucket.java`](file--Bucket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/ObjectId.java`](file--ObjectId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/StorageClient.java`](file--StorageClient.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/ObjectId.java`
+
+
+```java
+package org.yamcs.client.storage;
+
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * Identifies an object in a bucket
+ */
+public class ObjectId {
+
+    private static Pattern URL_PATTERN = Pattern.compile("ys://([^\\/]+)/(.+)");
+
+    private final String instance;
+    private final String bucket;
+    private final String objectName;
+
+    private ObjectId(String instance, String bucket, String objectName) {
+        this.instance = Objects.requireNonNull(instance);
+        this.bucket = Objects.requireNonNull(bucket);
+        this.objectName = Objects.requireNonNull(objectName);
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public String getObjectName() {
+        return objectName;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ObjectId)) {
+            return false;
+        }
+        ObjectId other = (ObjectId) obj;
+        return Objects.equals(instance, other.instance)
+                && Objects.equals(bucket, other.bucket)
+                && Objects.equals(objectName, other.objectName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(instance, bucket, objectName);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("ys://%s/%s", bucket, objectName);
+    }
+
+    public static ObjectId of(String bucket, String objectName) {
+        return new ObjectId("_global", bucket, objectName);
+    }
+
+    public static ObjectId of(String instance, String bucket, String objectName) {
+        return new ObjectId(instance, bucket, objectName);
+    }
+
+    /**
+     * Parses a URL of the form {@code ys://my-bucket/some/file.txt}
+     */
+    public static ObjectId parseURL(String url) {
+        return parseURL("_global", url);
+    }
+
+    public static ObjectId parseURL(String instance, String url) {
+        Matcher matcher = URL_PATTERN.matcher(url);
+        if (matcher.matches()) {
+            return of(instance, matcher.group(1), matcher.group(2));
+        } else {
+            throw new IllegalArgumentException("Invalid object URL '" + url + "'");
+        }
+    }
+}
+```
+
+### `StorageClient.java`
+
+**경로:** `gsw/yamcs/yamcs-client/src/main/java/org/yamcs/client/storage/StorageClient.java`
+
+
+```java
+package org.yamcs.client.storage;
+
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+import org.yamcs.api.HttpBody;
+import org.yamcs.api.MethodHandler;
+import org.yamcs.client.base.ResponseObserver;
+import org.yamcs.protobuf.BucketInfo;
+import org.yamcs.protobuf.BucketsApiClient;
+import org.yamcs.protobuf.CreateBucketRequest;
+import org.yamcs.protobuf.DeleteBucketRequest;
+import org.yamcs.protobuf.GetObjectRequest;
+import org.yamcs.protobuf.ListBucketsRequest;
+import org.yamcs.protobuf.ListBucketsResponse;
+import org.yamcs.protobuf.UploadObjectRequest;
+
+import com.google.protobuf.ByteString;
+import com.google.protobuf.Empty;
+
+public class StorageClient {
+
+    private BucketsApiClient bucketService;
+
+    public StorageClient(MethodHandler handler) {
+        bucketService = new BucketsApiClient(handler);
+    }
+
+    public CompletableFuture<Bucket> createBucket(String bucketName) {
+        var request = CreateBucketRequest.newBuilder()
+                .setName(bucketName)
+                .build();
+        var f = new CompletableFuture<BucketInfo>();
+        bucketService.createBucket(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> getBucket(response.getName()));
+    }
+
+    public CompletableFuture<Void> deleteBucket(String bucketName) {
+        var request = DeleteBucketRequest.newBuilder()
+                .setBucketName(bucketName)
+                .build();
+        var f = new CompletableFuture<Empty>();
+        bucketService.deleteBucket(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<Void> uploadObject(ObjectId target, byte[] bytes) {
+        var request = UploadObjectRequest.newBuilder()
+                .setBucketName(target.getBucket())
+                .setObjectName(target.getObjectName())
+                .setData(HttpBody.newBuilder().setData(ByteString.copyFrom(bytes)))
+                .build();
+        var f = new CompletableFuture<Empty>();
+        bucketService.uploadObject(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> null);
+    }
+
+    public CompletableFuture<byte[]> downloadObject(ObjectId source) {
+        var request = GetObjectRequest.newBuilder()
+                .setBucketName(source.getBucket())
+                .setObjectName(source.getObjectName())
+                .build();
+        var f = new CompletableFuture<HttpBody>();
+        bucketService.getObject(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getData().toByteArray());
+    }
+
+    public CompletableFuture<List<BucketInfo>> listBuckets() {
+        var request = ListBucketsRequest.newBuilder().build();
+        var f = new CompletableFuture<ListBucketsResponse>();
+        bucketService.listBuckets(null, request, new ResponseObserver<>(f));
+        return f.thenApply(response -> response.getBucketsList());
+    }
+
+    public Bucket getBucket(String bucket) {
+        return new Bucket(bucketService, bucket);
+    }
+}
+```

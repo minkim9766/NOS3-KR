@@ -3,16 +3,50 @@
 
 **경로:** `fsw/cfe/modules/config/cmake/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_config_ids.h.in`
 
-file--cfe_config_ids.h.in
-file--cfe_config_map.c.in
+**경로:** `fsw/cfe/modules/config/cmake/cfe_config_ids.h.in`
+
+
+```text
+/* This file is auto-generated from CMake build system.  Do not manually edit! */
+#ifndef CFE_CONFIG_IDS_H
+#define CFE_CONFIG_IDS_H
+
+#include "cfe_config_api_typedefs.h"
+#include "cfe_resourceid.h"
+#include "cfe_core_resourceid_basevalues.h"
+
+/* Value offsets from base (needed for macros; do not use directly) */
+enum CFE_ConfigIdOffset
+{
+@GENERATED_ENUM_OFFSET_LIST@
+  CFE_ConfigIdOffset_MAX
+};
+
+/*
+ * Set of actual CONFIGID constants -
+ * these may be used in application code
+ */
+@GENERATED_CONSTANT_DEFINE_LIST@
+
+#endif /* CFE_CONFIG_IDS_H */
 ```
 
-## 항목
+### `cfe_config_map.c.in`
 
-- [`fsw/cfe/modules/config/cmake/cfe_config_ids.h.in`](file--cfe_config_ids.h.in) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/config/cmake/cfe_config_map.c.in`](file--cfe_config_map.c.in) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/config/cmake/cfe_config_map.c.in`
+
+
+```text
+/* This file is auto-generated from CMake build system.  Do not manually edit! */
+#include "cfe_config_map.h"
+
+/* Map of configuration key IDs to printable names */
+const CFE_Config_IdNameEntry_t CFE_CONFIG_IDNAME_MAP[CFE_ConfigIdOffset_MAX] =
+{
+@GENERATED_IDNAME_MAP_LIST@
+};
+```

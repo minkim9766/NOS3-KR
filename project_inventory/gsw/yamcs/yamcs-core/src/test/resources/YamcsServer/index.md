@@ -3,18 +3,52 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `yamcs.instance0.yaml`
 
-file--yamcs.instance0.yaml
-file--yamcs.instance1.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.instance0.yaml`
+
+
+```yaml
+services: []
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig: 
+   tm:
 ```
 
-## 항목
+### `yamcs.instance1.yaml`
 
-- [`gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.instance0.yaml`](file--yamcs.instance0.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.instance1.yaml`](file--yamcs.instance1.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.instance1.yaml`
+
+
+```yaml
+services: []
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/YamcsServer/yamcs.yaml`
+
+
+```yaml
+instances:
+  - instance0
+  - instance1
+
+dataDir: ${java.io.tmpdir}/yamcs-data
+
+secretKey: testtest
+```

@@ -3,22 +3,469 @@
 
 **경로:** `components/generic_radio/fsw/fprime/radio_src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Generic_radio.cpp
-file--Generic_radio.fpp
-file--Generic_radio.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_radio/fsw/fprime/radio_src/docs/`](docs/index) — 폴더
-- [`components/generic_radio/fsw/fprime/radio_src/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/fsw/fprime/radio_src/Generic_radio.cpp`](file--Generic_radio.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/fsw/fprime/radio_src/Generic_radio.fpp`](file--Generic_radio.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_radio/fsw/fprime/radio_src/Generic_radio.hpp`](file--Generic_radio.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/generic_radio/fsw/fprime/radio_src/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+#ITC Changes
+
+# include_directories("../platform_inc")
+# include_directories("../../shared")
+# include_directories("../../standalone") #device_cfg.h
+# include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+
+
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_radio.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Generic_radio.cpp"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_radio_device.c" 
+
+)
+
+# Uncomment and add any modules that this component depends on, else
+# they might not be available when cmake tries to build this component.
+
+# set(MOD_DEPS
+#     Add your dependencies here
+# )
+set(MOD_DEPS
+    Fw_Types
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module()
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../shared/generic_radio_device.c" 
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+  "../platform_inc"
+  "../../shared"
+  "../../standalone"
+  "../../../../../fsw/apps/hwlib/fsw/public_inc"
+)
+
+```
+
+### `Generic_radio.cpp`
+
+**경로:** `components/generic_radio/fsw/fprime/radio_src/Generic_radio.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_radio.cpp
+// \author jstar
+// \brief  cpp file for Generic_radio component implementation class
+// ======================================================================
+
+#include "radio_src/Generic_radio.hpp"
+#include <Fw/Logger/Logger.hpp>
+// #include "FpConfig.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include <Fw/Log/LogString.hpp>
+
+
+
+
+void init_socket_data() {
+
+  
+}
+
+namespace Components {
+
+  // ----------------------------------------------------------------------
+  // Component construction and destruction
+  // ----------------------------------------------------------------------
+
+  Generic_radio ::
+    Generic_radio(const char* const compName) :
+      Generic_radioComponentBase(compName)
+  {
+        int status = OS_SUCCESS;
+        uint8_t run_status = OS_SUCCESS;
+
+        /* Initialize HWLIB */
+          #ifdef _NOS_ENGINE_LINK_
+              nos_init_link();
+          #endif
+
+        /*
+        ** Initialize sockets
+        */
+        RadioSocket.sockfd = -1;
+        RadioSocket.port_num = GENERIC_RADIO_CFG_UDP_RADIO_TO_FSW;
+        RadioSocket.ip_address = GENERIC_RADIO_CFG_FSW_IP;
+        RadioSocket.address_family = ip_ver_4;
+        RadioSocket.type = dgram;
+        RadioSocket.category = client;
+        RadioSocket.block = false;
+        RadioSocket.keep_alive = false;
+        RadioSocket.created = false;
+        RadioSocket.bound = false;
+        RadioSocket.listening = false;
+        RadioSocket.connected = false;
+
+        status = socket_create(&RadioSocket);
+        
+        if (status != SOCKET_SUCCESS)
+        {
+            printf("GENERIC_RADIO: Radio interface create error %d\n", status);
+            run_status = OS_ERROR;
+        }
+        else
+        {
+            printf("GENERIC_RADIO: Radio Interface %d created successfully!\n", RadioSocket.sockfd);
+        }
+
+        ProxSocket.sockfd = -1;
+        ProxSocket.port_num = GENERIC_RADIO_CFG_UDP_PROX_TO_FSW;
+        ProxSocket.ip_address = GENERIC_RADIO_CFG_FSW_IP;
+        ProxSocket.address_family = ip_ver_4;
+        ProxSocket.type = dgram;
+        ProxSocket.category = client;
+        ProxSocket.block = false;
+        ProxSocket.keep_alive = false;
+        ProxSocket.created = false;
+        ProxSocket.bound = false;
+        ProxSocket.listening = false;
+        ProxSocket.connected = false;
+
+        status = socket_create(&ProxSocket);
+        if (status != SOCKET_SUCCESS)
+        {
+            printf("GENERIC_RADIO: Proximity interface create error %d\n", status);
+            run_status = OS_ERROR;
+        }
+        else
+        {
+            printf("GENERIC_RADIO: Proximity Interface %d created successfully!\n", ProxSocket.sockfd);
+        }
+
+        HkTelemetryPkt.CommandCount = 0;
+        HkTelemetryPkt.CommandErrorCount = 0;
+        HkTelemetryPkt.DeviceCount = 0;
+        HkTelemetryPkt.DeviceErrorCount = 0;
+  }
+
+  Generic_radio ::
+    ~Generic_radio()
+  {
+
+  }
+
+  // ----------------------------------------------------------------------
+  // Handler implementations for commands
+  // ----------------------------------------------------------------------
+
+  void Generic_radio :: NOOP_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount++;
+
+    Fw::LogStringArg log_msg("NOOP command success!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_radio :: CONFIG_cmdHandler(FwOpcodeType opCode, U32 cmdSeq, U32 config_value){
+    int32_t status = OS_SUCCESS;
+    HkTelemetryPkt.CommandCount++;
+
+    status = GENERIC_RADIO_SetConfiguration(&RadioSocket, config_value);
+    if(status == OS_SUCCESS)
+    {
+      HkTelemetryPkt.DeviceCount++;
+      Fw::LogStringArg log_msg("Config command successful!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+      HkTelemetryPkt.DeviceErrorCount++;
+      Fw::LogStringArg log_msg("Config command failed!");
+      this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  void Generic_radio :: RESET_COUNTERS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq){
+    HkTelemetryPkt.CommandCount = 0;
+    HkTelemetryPkt.CommandErrorCount = 0;
+    HkTelemetryPkt.DeviceCount = 0;
+    HkTelemetryPkt.DeviceErrorCount = 0;
+
+    Fw::LogStringArg log_msg("Reset Counters command successful!");
+    this->log_ACTIVITY_HI_TELEM(log_msg);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+  // GENERIC_radio_RequestHK
+  void Generic_radio :: REQUEST_HOUSEKEEPING_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+
+    int32_t status = OS_SUCCESS;
+
+    status = GENERIC_RADIO_RequestHK(&RadioSocket, &RadioHK);
+    
+    if (status == OS_SUCCESS)
+    {
+        Fw::LogStringArg log_msg("RequestHK command success\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+    else
+    {
+        Fw::LogStringArg log_msg("RequestHK command failed!\n");
+        this->log_ACTIVITY_HI_TELEM(log_msg);
+    }
+
+    this->tlmWrite_ReportedComponentCount(RadioHK.DeviceCounter);
+    this->tlmWrite_DeviceConfig(RadioHK.DeviceConfig);
+    this->tlmWrite_ProxySignal(RadioHK.ProxSignal);
+    this->tlmWrite_CommandCount(HkTelemetryPkt.CommandCount);
+    this->tlmWrite_CommandErrorCount(HkTelemetryPkt.CommandErrorCount);
+    this->tlmWrite_DeviceCount(HkTelemetryPkt.DeviceCount);
+    this->tlmWrite_DeviceErrorCount(HkTelemetryPkt.DeviceErrorCount);
+    
+    // Tell the fprime command system that we have completed the processing of the supplied command with OK status
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+  }
+
+}
+```
+
+### `Generic_radio.fpp`
+
+**경로:** `components/generic_radio/fsw/fprime/radio_src/Generic_radio.fpp`
+
+
+```fpp
+module Components {
+    @ generic_radio from nos3
+    active component Generic_radio {
+
+        # One async command/port is required for active components
+        # This should be overridden by the developers with a useful command/port
+
+        @ Command to Request Housekeeping
+        async command REQUEST_HOUSEKEEPING()
+
+        @ Command to Request Noop
+        async command NOOP()
+
+        @ Config Command
+        async command CONFIG(
+            config_value: U32
+        )
+
+        @ Reset Counters Command
+        async command RESET_COUNTERS()
+
+        @ event with maximum length of 40 characters
+        event TELEM(
+            log_info: string size 40 @< 
+        ) severity activity high format "Generic_radio: {}"
+
+        @ Command Count
+        telemetry CommandCount: U32
+
+        @ Command Error Count
+        telemetry CommandErrorCount: U32
+
+        @ Device Count
+        telemetry DeviceCount: U32
+
+        @ Device Error Count
+        telemetry DeviceErrorCount: U32
+
+        @ A count of the number of greetings issued
+        telemetry ReportedComponentCount: U32
+
+         @ A count of the number of greetings issued
+        telemetry DeviceConfig: U32
+
+         @ A count of the number of greetings issued
+        telemetry ProxySignal: U32
+
+        ##############################################################################
+        #### Uncomment the following examples to start customizing your component ####
+        ##############################################################################
+
+        # @ Example async command
+        # async command COMMAND_NAME(param_name: U32)
+
+        # @ Example telemetry counter
+        # telemetry ExampleCounter: U64
+
+        # @ Example event
+        # event ExampleStateEvent(example_state: Fw.On) severity activity high id 0 format "State set to {}"
+
+        # @ Example port: receiving calls from the rate group
+        # sync input port run: Svc.Sched
+
+        # @ Example parameter
+        # param PARAMETER_NAME: U32
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+```
+
+### `Generic_radio.hpp`
+
+**경로:** `components/generic_radio/fsw/fprime/radio_src/Generic_radio.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Generic_radio.hpp
+// \author jstar
+// \brief  hpp file for Generic_radio component implementation class
+// ======================================================================
+
+#ifndef Components_Generic_radio_HPP
+#define Components_Generic_radio_HPP
+
+#include "radio_src/Generic_radioComponentAc.hpp"
+
+
+extern "C"{
+#include "generic_radio_device.h"
+}
+
+typedef struct
+{
+    uint8_t                         DeviceCount;
+    uint8_t                         DeviceErrorCount;
+    uint8_t                         CommandErrorCount;
+    uint8_t                         CommandCount;
+} RADIO_Hk_tlm_t;
+#define RADIO_HK_TLM_LNGTH sizeof(RADIO_Hk_tlm_t)
+
+namespace Components {
+
+  class Generic_radio :
+    public Generic_radioComponentBase
+  {
+
+    public:
+
+
+    socket_info_t RadioSocket;
+    socket_info_t ProxSocket;
+    GENERIC_RADIO_Device_HK_tlm_t RadioHK;
+    RADIO_Hk_tlm_t HkTelemetryPkt;
+    uint8_t RadioData;
+    uint16_t SCID = 0x42;
+
+      // ----------------------------------------------------------------------
+      // Component construction and destruction
+      // ----------------------------------------------------------------------
+
+      //! Construct Generic_radio object
+      Generic_radio(
+          const char* const compName //!< The component name
+      );
+
+      //! Destroy Generic_radio object
+      ~Generic_radio();
+
+    private:
+
+      // ----------------------------------------------------------------------
+      // Handler implementations for commands
+      // ----------------------------------------------------------------------
+
+      //! Handler implementation for command TODO
+      //!
+      //! TODO
+      // void TODO_cmdHandler(
+      //     FwOpcodeType opCode, //!< The opcode
+      //     U32 cmdSeq //!< The command sequence number
+      // ) override;
+
+      void REQUEST_HOUSEKEEPING_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      );
+
+      void NOOP_cmdHandler(
+        FwOpcodeType opCode, 
+        U32 cmdSeq
+      ) override;
+
+      void CONFIG_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        U32 config_value
+      ) override;
+
+      void RESET_COUNTERS_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq
+      ) override;
+
+  };
+
+}
+
+#endif
+```

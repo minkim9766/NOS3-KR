@@ -3,14 +3,29 @@
 
 **경로:** `fsw/psp/fsw/pc-rtems/make/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build_options.cmake`
 
-file--build_options.cmake
+**경로:** `fsw/psp/fsw/pc-rtems/make/build_options.cmake`
+
+
+```cmake
+##########################################################################
+#
+# Build options for "pc-rtems" PSP
+# This file specifies any global-scope compiler options when using this PSP
+#
+##########################################################################
+
+# This indicates where to install target binaries created during the build
+# Note - this should be phased out in favor of the staging dir from OSAL BSP
+set(INSTALL_SUBDIR "eeprom")
+
+# Some upper-level code may be gated on _RTEMS_OS_ being defined
+# This is for compatibility with older build scripts which defined this symbol,
+# but no CFE/OSAL framework code depends on this symbol.
+add_definitions("-D_RTEMS_OS_")
+
+
 ```
-
-## 항목
-
-- [`fsw/psp/fsw/pc-rtems/make/build_options.cmake`](file--build_options.cmake) — UTF-8 텍스트 파일 본문 포함

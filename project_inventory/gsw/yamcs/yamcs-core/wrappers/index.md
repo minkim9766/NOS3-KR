@@ -3,20 +3,154 @@
 
 **경로:** `gsw/yamcs/yamcs-core/wrappers/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `yamcsadmin`
 
-file--yamcsadmin
-file--yamcsadmin.cmd
-file--yamcsd
-file--yamcsd.cmd
+**경로:** `gsw/yamcs/yamcs-core/wrappers/yamcsadmin`
+
+
+```text
+#!/bin/sh
+
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+# Get standard environment variables
+PRGDIR=`dirname "$PRG"`
+YAMCS_HOME=`cd "$PRGDIR/.." ; pwd`
+
+# cd into YAMCS_HOME to support relative links in configuration files
+cd "$YAMCS_HOME"
+
+if [ -d "$JAVA_HOME" ]; then
+  _RUNJAVA="$JAVA_HOME/bin/java"
+else
+  _RUNJAVA=java
+fi
+
+export CLASSPATH="$YAMCS_HOME/lib/*:$YAMCS_HOME/lib/ext/*"
+exec "$_RUNJAVA" -Djava.library.path=$YAMCS_HOME/lib:$YAMCS_HOME/lib/ext -Xmx512m org.yamcs.cli.YamcsAdminCli "$@"
 ```
 
-## 항목
+### `yamcsadmin.cmd`
 
-- [`gsw/yamcs/yamcs-core/wrappers/yamcsadmin`](file--yamcsadmin) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/wrappers/yamcsadmin.cmd`](file--yamcsadmin.cmd) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/wrappers/yamcsd`](file--yamcsd) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/wrappers/yamcsd.cmd`](file--yamcsd.cmd) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/wrappers/yamcsadmin.cmd`
+
+
+```text
+@echo off
+setlocal
+
+set YAMCS_HOME=%~dp0..
+
+rem cd into YAMCS_HOME to support relative links in configuration files
+cd %YAMCS_HOME%
+
+rem Enable ansi color processing
+set ENABLE_VIRTUAL_TERMINAL_PROCESSING=1
+
+java -cp "lib\*;lib\ext\*" -Djava.library.path="lib;lib\ext" org.yamcs.cli.YamcsAdminCli %*
+```
+
+### `yamcsd`
+
+**경로:** `gsw/yamcs/yamcs-core/wrappers/yamcsd`
+
+
+```text
+#!/bin/sh
+
+# Variables
+# ---------
+# DO NOT MODIFY THIS FILE (package updates would overwrite your changes)
+# Instead set variables via a script YAMCS_HOME/bin/setenv.sh
+#
+# JMX           Set to 1 to allow remote JMX connections (jconsole).
+#
+# JAVA_OPTS     Java runtime options
+
+# resolve links - $0 may be a softlink
+PRG="$0"
+
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+# Get standard environment variables
+PRGDIR=`dirname "$PRG"`
+YAMCS_HOME=`cd "$PRGDIR/.." ; pwd`
+
+# cd into YAMCS_HOME to support relative links in configuration files
+cd "$YAMCS_HOME"
+
+# Remove user classpath, but allow custom classpath additions via setenv.sh
+CLASSPATH=
+LIBPATH=
+
+# Prevent native memory OOM.
+# If unset, glibc defaults to "8 x cores" pools.
+export MALLOC_ARENA_MAX=4
+
+if [ -r bin/setenv.sh ]; then
+  . bin/setenv.sh
+fi
+
+if [ "x$CLASSPATH" != x ]; then
+  CLASSPATH="$CLASSPATH:"
+fi
+if [ "x$LIBPATH" != x ]; then
+  LIBPATH="$LIBPATH:"
+fi
+
+export CLASSPATH="$CLASSPATH$YAMCS_HOME/lib/*:$YAMCS_HOME/lib/ext/*"
+LIBPATH="$LIBPATH$YAMCS_HOME/lib:$YAMCS_HOME/lib/ext"
+
+if [ -d "$JAVA_HOME" ]; then
+  _RUNJAVA="$JAVA_HOME/bin/java"
+else
+  _RUNJAVA=java
+fi
+
+if [ "$JMX" = 1 ]; then
+  JMX_OPTS="-Dcom.sun.management.jmxremote.port=9999 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+fi
+
+exec "$_RUNJAVA" $JAVA_OPTS $JMX_OPTS -Djava.util.logging.manager=org.yamcs.logging.YamcsLogManager -Djava.library.path=$LIBPATH -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/ org.yamcs.YamcsServer "$@"
+```
+
+### `yamcsd.cmd`
+
+**경로:** `gsw/yamcs/yamcs-core/wrappers/yamcsd.cmd`
+
+
+```text
+@echo off
+setlocal
+
+set YAMCS_HOME=%~dp0..
+
+rem cd into YAMCS_HOME to support relative links in configuration files
+cd %YAMCS_HOME%
+
+rem Enable ansi color processing
+set ENABLE_VIRTUAL_TERMINAL_PROCESSING=1
+
+java -cp "lib\*;lib\ext\*" -Djava.util.logging.manager=org.yamcs.logging.YamcsLogManager -Djava.library.path="lib;lib\ext" org.yamcs.YamcsServer %*
+```

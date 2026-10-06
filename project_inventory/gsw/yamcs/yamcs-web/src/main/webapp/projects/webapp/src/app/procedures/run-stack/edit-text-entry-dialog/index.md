@@ -3,18 +3,157 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-text-entry-dialog.component.css`
 
-file--edit-text-entry-dialog.component.css
-file--edit-text-entry-dialog.component.html
-file--edit-text-entry-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.css`
+
+
+```css
+.text-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  margin-top: 12px;
+  height: 300px;
+}
+
+.preview-container {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: #fafafa;
+  margin-top: 12px;
+  height: 300px;
+}
 ```
 
-## 항목
+### `edit-text-entry-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.css`](file--edit-text-entry-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.html`](file--edit-text-entry-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.ts`](file--edit-text-entry-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Step: Display text</h2>
+
+<mat-dialog-content>
+  <mat-tab-group animationDuration="0ms" class="small-tabs" [mat-stretch-tabs]="false">
+    <mat-tab label="Write">
+      <div #textContainer class="text-container"></div>
+    </mat-tab>
+    <mat-tab label="Preview">
+      <div class="preview-container">
+        <app-markdown [text]="text()" />
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button appearance="text" (click)="gotoMarkdownDocs()" icon="open_in_new">
+    Markdown syntax
+  </ya-button>
+  <div style="flex: 1 1 auto"></div>
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()">
+    {{ data.edit ? "UPDATE" : "ADD TO STACK" }}
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `edit-text-entry-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-text-entry-dialog/edit-text-entry-dialog.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  OnDestroy,
+  signal,
+  viewChild,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { markdown } from '@codemirror/lang-markdown';
+import { Extension } from '@codemirror/state';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { basicSetup, EditorView } from 'codemirror';
+import { MarkdownComponent } from '../../../shared/markdown/markdown.component';
+
+@Component({
+  selector: 'app-edit-text-entry-dialog',
+  templateUrl: './edit-text-entry-dialog.component.html',
+  styleUrl: './edit-text-entry-dialog.component.css',
+  imports: [MarkdownComponent, WebappSdkModule],
+})
+export class EditTextEntryDialogComponent implements AfterViewInit, OnDestroy {
+  textContainerRef =
+    viewChild.required<ElementRef<HTMLDivElement>>('textContainer');
+  editorView?: EditorView;
+
+  text = signal<string>('');
+
+  constructor(
+    private dialogRef: MatDialogRef<EditTextEntryDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {}
+
+  ngAfterViewInit(): void {
+    this.text.set(this.data.entry?.text || '');
+
+    const extensions: Extension[] = [
+      basicSetup,
+      EditorView.lineWrapping,
+      markdown(),
+      EditorView.updateListener.of((update) => {
+        if (update.docChanged) {
+          const newValue = update.state.doc.toString();
+          this.text.set(newValue);
+        }
+      }),
+    ];
+
+    const theme = EditorView.theme(
+      {
+        '&': {
+          height: '100%',
+          fontSize: '12px',
+        },
+        '.cm-scroller': {
+          overflow: 'auto',
+          fontFamily: "'Roboto Mono', monospace",
+        },
+        '&.cm-focused': {
+          outline: 'none',
+        },
+      },
+      { dark: false },
+    );
+    extensions.push(theme);
+
+    this.editorView = new EditorView({
+      doc: this.text(),
+      extensions,
+      parent: this.textContainerRef().nativeElement,
+    });
+    this.editorView.focus();
+  }
+
+  save() {
+    const text = this.editorView?.state.doc.toString() || '';
+    this.dialogRef.close(text);
+  }
+
+  gotoMarkdownDocs() {
+    window.open(
+      'https://www.markdownguide.org/basic-syntax/',
+      '_blank',
+      'noreferrer',
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.editorView?.destroy();
+  }
+}
+```

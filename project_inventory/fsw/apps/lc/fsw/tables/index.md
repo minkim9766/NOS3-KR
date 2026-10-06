@@ -3,16 +3,4872 @@
 
 **경로:** `fsw/apps/lc/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lc_def_adt.c`
 
-file--lc_def_adt.c
-file--lc_def_wdt.c
+**경로:** `fsw/apps/lc/fsw/tables/lc_def_adt.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Limit Checker (LC) default actionpoint definition table (ADT)
+ *
+ * @note
+ *   This file provides a default ADT table that simply sets all
+ *   actionpoint entries to "not used". It has been formatted to make
+ *   it easy for mission developers to edit as needed (see the
+ *   examples section below).
+ *
+ *   LC will append a trailer string to the end of the text
+ *   specified in the "EventText" field with additional information.
+ *   See lc_action.h for the format.
+ */
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "cfe_tbl_filedef.h"
+#include "lc_platform_cfg.h"
+#include "lc_msgdefs.h"
+#include "lc_extern_typedefs.h"
+#include "lc_tbldefs.h"
+#include "lc_events.h"
+
+/*************************************************************************
+** Examples
+** (note that comment delimiters have been changed to '**')
+**
+** Actions that trigger off a single watchpoint:
+** (see lc_def_wdt.c for companion watchpoint definitions)
+**
+**    ** #100 **
+**    {
+**        .DefaultState        = LC_APSTATE_DISABLED,
+**        .MaxPassiveEvents    = 2,
+**        .MaxPassFailEvents   = 2,
+**        .MaxFailPassEvents   = 2,
+**        .RTSId               = RTS_ID_DIVINER_SAFE_MODE,
+**        .MaxFailsBeforeRTS   = 60,
+**        .EventType           = CFE_EVS_EventType_INFORMATION,
+**        .EventID             = LC_BASE_AP_EID + 100,
+**        .EventText           = { "Diviner: low input volt (1)" },
+**        .RPNEquation         = { ** (WP_112) **
+**                                 112,
+**                                 LC_RPN_EQUAL
+**                               }
+**    },
+**
+**    ** #101 **
+**    {
+**        .DefaultState        = LC_APSTATE_DISABLED,
+**        .MaxPassiveEvents    = 2,
+**        .MaxPassFailEvents   = 2,
+**        .MaxFailPassEvents   = 2,
+**        .RTSId               = RTS_ID_DIVINER_SAFE_MODE,
+**        .MaxFailsBeforeRTS   = 3,
+**        .EventType           = CFE_EVS_EventType_INFORMATION,
+**        .EventID             = LC_BASE_AP_EID + 101,
+**        .EventText           = { "Diviner: low input volt (2)" },
+**        .RPNEquation         = { ** (WP_113) **
+**                                 113,
+**                                 LC_RPN_EQUAL
+**                               }
+**    },
+**
+** Examples of more complex Reverse Polish Notation expressions:
+**
+**    ** #43 **
+**    {
+**        .DefaultState        = LC_APSTATE_ENABLED,
+**        .MaxPassiveEvents    = 2,
+**        .MaxPassFailEvents   = 2,
+**        .MaxFailPassEvents   = 2,
+**        .RTSId               = RTS_ID_ACS_EXIT_THRUSTER_MODE,
+**        .MaxFailsBeforeRTS   = 10,
+**        .EventType           = CFE_EVS_EventType_INFORMATION,
+**        .EventID             = LC_BASE_AP_EID + 43,
+**        .EventText           = { "GNC: delta-V sys attitude" },
+**        .RPNEquation         = { ** (WP_26 && !WP_61 && !WP_64 && !WP_45 && WP_46 && WP_47) **
+**                                 26, 61,
+**                                 LC_RPN_NOT,
+**                                 LC_RPN_AND,
+**                                 64,
+**                                 LC_RPN_NOT,
+**                                 LC_RPN_AND,
+**                                 45,
+**                                 LC_RPN_NOT,
+**                                 LC_RPN_AND,
+**                                 46,
+**                                 LC_RPN_AND,
+**                                 47,
+**                                 LC_RPN_AND,
+**                                 LC_RPN_EQUAL
+**                               }
+**    },
+**
+**    ** #47 **
+**    {
+**        .DefaultState        = LC_APSTATE_ENABLED,
+**        .MaxPassiveEvents    = 2,
+**        .MaxPassFailEvents   = 2,
+**        .MaxFailPassEvents   = 2,
+**        .RTSId               = RTS_ID_ACS_POWER_OFF_ALL_RW,
+**        .MaxFailsBeforeRTS   = 2,
+**        .EventType           = CFE_EVS_EventType_INFORMATION,
+**        .EventID             = LC_BASE_AP_EID + 47,
+**        .EventText           = { "GNC: wheel on, attached" },
+**        .RPNEquation         = { ** (!WP_80 && (WP_48 || WP_49 || WP_50 || WP_51))) **
+**                                 80,
+**                                 LC_RPN_NOT,
+**                                 48, 49, 50, 51,
+**                                 LC_RPN_OR,
+**                                 LC_RPN_OR,
+**                                 LC_RPN_OR,
+**                                 LC_RPN_AND,
+**                                 LC_RPN_EQUAL
+**                               }
+**    },
+**
+**    ** #142 **
+**    {
+**        .DefaultState        = LC_APSTATE_DISABLED,
+**        .MaxPassiveEvents    = 2,
+**        .MaxPassFailEvents   = 2,
+**        .MaxFailPassEvents   = 2,
+**        .RTSId               = RTS_ID_LEND_POWER_OFF,
+**        .MaxFailsBeforeRTS   = 60,
+**        .EventType           = CFE_EVS_EventType_INFORMATION,
+**        .EventID             = LC_BASE_AP_EID + 142,
+**        .EventText           = { "LEND: comp over temp #1" },
+**        .RPNEquation         = { ** (WP_142 && WP_143) || (WP_144 && WP_145) || (WP_146 && WP_147) **
+**                                 142, 143,
+**                                 LC_RPN_AND,
+**                                 144, 145,
+**                                 LC_RPN_AND,
+**                                 146, 147,
+**                                 LC_RPN_AND,
+**                                 LC_RPN_OR,
+**                                 LC_RPN_OR,
+**                                 LC_RPN_EQUAL
+**                               }
+**    },
+**
+*************************************************************************/
+
+/*************************************************************************
+** Exported Data
+*************************************************************************/
+/*
+** Table file header
+*/
+static CFE_TBL_FileDef_t CFE_TBL_FileDef
+    __attribute__((__used__)) = {"LC_DefaultADT", LC_APP_NAME "." LC_ADT_TABLENAME, "LC actionpoint definition table",
+                                 "lc_def_adt.tbl", (sizeof(LC_ADTEntry_t) * LC_MAX_ACTIONPOINTS)};
+
+/*
+** Default actionpoint definition table (ADT) data
+*/
+LC_ADTEntry_t LC_DefaultADT[LC_MAX_ACTIONPOINTS] = {
+    /* #0 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #1 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #2 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #3 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #4 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #5 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #6 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #7 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #8 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #9 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #10 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #11 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #12 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #13 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #14 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #15 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #16 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #17 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #18 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #19 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #20 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #21 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #22 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #23 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #24 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #25 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #26 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #27 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #28 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #29 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #30 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #31 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #32 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #33 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #34 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #35 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #36 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #37 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #38 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #39 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #40 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #41 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #42 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #43 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #44 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #45 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #46 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #47 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #48 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #49 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #50 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #51 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #52 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #53 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #54 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #55 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #56 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #57 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #58 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #59 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #60 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #61 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #62 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #63 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #64 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #65 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #66 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #67 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #68 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #69 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #70 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #71 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #72 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #73 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #74 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #75 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #76 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #77 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #78 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #79 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #80 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #81 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #82 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #83 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #84 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #85 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #86 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #87 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #88 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #89 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #90 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #91 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #92 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #93 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #94 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #95 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #96 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #97 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #98 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #99 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #100 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #101 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #102 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #103 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #104 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #105 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #106 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #107 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #108 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #109 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #110 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #111 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #112 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #113 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #114 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #115 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #116 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #117 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #118 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #119 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #120 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #121 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #122 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #123 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #124 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #125 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #126 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #127 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #128 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #129 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #130 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #131 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #132 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #133 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #134 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #135 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #136 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #137 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #138 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #139 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #140 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #141 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #142 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #143 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #144 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #145 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #146 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #147 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #148 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #149 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #150 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #151 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #152 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #153 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #154 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #155 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #156 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #157 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #158 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #159 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #160 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #161 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #162 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #163 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #164 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #165 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #166 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #167 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #168 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #169 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #170 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #171 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #172 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #173 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #174 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation =
+         {/* (WP_0) */
+          0, LC_RPN_EQUAL}},
+
+    /* #175 (unused) */
+    {.DefaultState      = LC_ACTION_NOT_USED,
+     .MaxPassiveEvents  = 0,
+     .MaxPassFailEvents = 0,
+     .MaxFailPassEvents = 0,
+     .RTSId             = 0,
+     .MaxFailsBeforeRTS = 0,
+     .EventType         = CFE_EVS_EventType_INFORMATION,
+     .EventID           = 0,
+     .EventText         = {" "},
+     .RPNEquation       = {              /* (WP_0) */
+                     0, LC_RPN_EQUAL}}}; /* end LC_DefaultADT */
 ```
 
-## 항목
+### `lc_def_wdt.c`
 
-- [`fsw/apps/lc/fsw/tables/lc_def_adt.c`](file--lc_def_adt.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/tables/lc_def_wdt.c`](file--lc_def_wdt.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/lc/fsw/tables/lc_def_wdt.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Limit Checker (LC) default watchpoint definition table (WDT)
+ *
+ * @note
+ *   This file provides a default WDT table that simply sets all
+ *   watchpoint entries to "not used". It has been formatted to make
+ *   it easy for mission developers to edit as needed (see the
+ *   examples section below).
+ */
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "cfe_tbl_filedef.h"
+#include "lc_platform_cfg.h"
+#include "lc_msgdefs.h"
+#include "lc_extern_typedefs.h"
+#include "lc_tbldefs.h"
+
+/*************************************************************************
+** Examples
+** (note that comment delimiters have been changed to '**')
+**
+** Incremental tests on the same data point:
+** (see lc_def_adt.c for companion actionpoint definitions)
+**
+**    ** #112 (Diviner - low s/c bus voltage, level 1) **
+**    {
+**        .DataType                   = LC_DATA_UWORD_BE,
+**        .OperatorID                 = LC_OPER_LT,
+**        .MessageID                  = PSE_FAST_HK_TLM_MID,
+**        .WatchpointOffset           = 184,
+**        .BitMask                    = LC_NO_BITMASK,
+**        .CustomFuncArgument         = 0,
+**        .ResultAgeWhenStale         = 0,
+**        .ComparisonValue.Unsigned16in32.Unsigned16 = 3417,
+**    },
+**
+**    ** #113 (Diviner - low s/c bus voltage, level 2) **
+**    {
+**        .DataType                   = LC_DATA_UWORD_BE,
+**        .OperatorID                 = LC_OPER_LT,
+**        .MessageID                  = PSE_FAST_HK_TLM_MID,
+**        .WatchpointOffset           = 184,
+**        .BitMask                    = LC_NO_BITMASK,
+**        .CustomFuncArgument         = 0,
+**        .ResultAgeWhenStale         = 0,
+**        .ComparisonValue.Unsigned16in32.Unsigned16 = 3319,
+**    },
+**
+** Use of bitmasking and a custom function:
+**
+**    ** #154 (IRU - 24 bit value with custom transform) **
+**    {
+**        .DataType                   = LC_DATA_UDWORD_BE,
+**        .OperatorID                 = LC_OPER_CUSTOM,
+**        .MessageID                  = IRU_FAST_HK_TLM_MID,
+**        .WatchpointOffset           = 76,
+**        .BitMask                    = 0x00FFFFFF,
+**        .CustomFuncArgument         = LC_CUSTOM_XYZ_TRANSFORM,
+**        .ResultAgeWhenStale         = 0,
+**        .ComparisonValue.Unsigned32 = 1050000,
+**    },
+**
+*************************************************************************/
+
+/*************************************************************************
+** Exported Data
+*************************************************************************/
+/*
+** Table file header
+*/
+static CFE_TBL_FileDef_t CFE_TBL_FileDef
+    __attribute__((__used__)) = {"LC_DefaultWDT", LC_APP_NAME "." LC_WDT_TABLENAME, "LC watchpoint definition table",
+                                 "lc_def_wdt.tbl", (sizeof(LC_WDTEntry_t) * LC_MAX_WATCHPOINTS)};
+
+/*
+** Default watchpoint definition table (WDT) data
+*/
+LC_WDTEntry_t LC_DefaultWDT[LC_MAX_WATCHPOINTS] = {
+    /* #0 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #1 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #2 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #3 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #4 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #5 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #6 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #7 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #8 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #9 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #10 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #11 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #12 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #13 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #14 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #15 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #16 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #17 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #18 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #19 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #20 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #21 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #22 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #23 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #24 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #25 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #26 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #27 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #28 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #29 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #30 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #31 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #32 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #33 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #34 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #35 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #36 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #37 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #38 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #39 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #40 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #41 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #42 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #43 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #44 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #45 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #46 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #47 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #48 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #49 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #50 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #51 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #52 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #53 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #54 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #55 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #56 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #57 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #58 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #59 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #60 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #61 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #62 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #63 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #64 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #65 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #66 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #67 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #68 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #69 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #70 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #71 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #72 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #73 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #74 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #75 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #76 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #77 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #78 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #79 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #80 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #81 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #82 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #83 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #84 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #85 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #86 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #87 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #88 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #89 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #90 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #91 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #92 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #93 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #94 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #95 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #96 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #97 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #98 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #99 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #100 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #101 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #102 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #103 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #104 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #105 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #106 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #107 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #108 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #109 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #110 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #111 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #112 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #113 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #114 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #115 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #116 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #117 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #118 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #119 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #120 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #121 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #122 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #123 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #124 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #125 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #126 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #127 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #128 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #129 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #130 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #131 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #132 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #133 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #134 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #135 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #136 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #137 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #138 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #139 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #140 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #141 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #142 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #143 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #144 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #145 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #146 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #147 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #148 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #149 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #150 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #151 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #152 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #153 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #154 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #155 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #156 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #157 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #158 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #159 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #160 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #161 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #162 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #163 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #164 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #165 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #166 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #167 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #168 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #169 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #170 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #171 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #172 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #173 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #174 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    },
+
+    /* #175 (unused) */
+    {
+        .DataType                   = LC_WATCH_NOT_USED,
+        .OperatorID                 = LC_NO_OPER,
+        .MessageID                  = CFE_SB_MSGID_RESERVED,
+        .WatchpointOffset           = 0,
+        .BitMask                    = LC_NO_BITMASK,
+        .CustomFuncArgument         = 0,
+        .ResultAgeWhenStale         = 0,
+        .ComparisonValue.Unsigned32 = 0,
+    }}; /* end LC_DefaultWDT */
+```

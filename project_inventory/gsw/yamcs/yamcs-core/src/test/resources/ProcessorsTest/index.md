@@ -3,20 +3,92 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `processor.yaml`
 
-file--processor.yaml
-file--yamcs.yaml
-file--yamcs.yproctest0.yaml
-file--yamcs.yproctest1.yaml
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/processor.yaml`
+
+
+```yaml
+      
+dummy:
+    services: 
+        - class: org.yamcs.management.ProcessorsTest$DummyTmProvider
+
+
+Archive:
+    services:
+        - class: org.yamcs.tctm.ReplayService
+
 ```
 
-## 항목
+### `yamcs.yaml`
 
-- [`gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yproctest0.yaml`](file--yamcs.yproctest0.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yproctest1.yaml`](file--yamcs.yproctest1.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.http.HttpServer
+    args:
+      port: 28090
+
+instances:
+  - yproctest0
+  - yproctest1
+
+dataDir: ${java.io.tmpdir}/yamcs-data
+
+secretKey: testtest
+```
+
+### `yamcs.yproctest0.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yproctest0.yaml`
+
+
+```yaml
+services:     
+    - class: org.yamcs.archive.XtceTmRecorder
+    - class: org.yamcs.ProcessorCreatorService
+      args:
+          name: "realtime"
+          type: "dummy"
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false
+
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+  
+```
+
+### `yamcs.yproctest1.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/ProcessorsTest/yamcs.yproctest1.yaml`
+
+
+```yaml
+services:  
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.ProcessorCreatorService
+    args:
+      name: "realtime"
+      type: "dummy"
+
+mdb:
+  - type: "sheet"
+    args: 
+      file: "mdb/refmdb.xls"
+      enableAliasReferences: false    
+
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+```

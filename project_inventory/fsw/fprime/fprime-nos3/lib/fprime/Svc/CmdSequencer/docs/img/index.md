@@ -3,20 +3,28 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CmdSeqInBDD.jpg`
 
-file--CmdSeqInBDD.jpg
-file--CmdSequencerBDD.jpg
-file--CmdSequencerIBD.jpg
-file--SequenceExecution.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSeqInBDD.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSeqInBDD.jpg`](file--CmdSeqInBDD.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSequencerBDD.jpg`](file--CmdSequencerBDD.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSequencerIBD.jpg`](file--CmdSequencerIBD.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/SequenceExecution.jpg`](file--SequenceExecution.jpg) — 바이너리 (경로만)
+### `CmdSequencerBDD.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSequencerBDD.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `CmdSequencerIBD.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/CmdSequencerIBD.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SequenceExecution.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/docs/img/SequenceExecution.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

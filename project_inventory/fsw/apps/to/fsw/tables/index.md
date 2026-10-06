@@ -3,20 +3,556 @@
 
 **경로:** `fsw/apps/to/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `table_change.sh`
 
-file--table_change.sh
-file--to_config.c
-file--to_config_2.c
-file--to_grpids.h
+**경로:** `fsw/apps/to/fsw/tables/table_change.sh`
+
+
+```bash
+## This is a test script to load and activate to_config_2.tbl to verify table changes.
+## Notes
+## 1: ValidateChecksum checks in ci_custom.c must not be performed as in UDP example.
+##    Since cmdUtil does not compute a checksum for commands sent.
+## 2: Ensure that your criticalMsgIds array does not include message ID that
+##    Are not included in the to_config_2.tbl, otherwise table validation will 
+##    fail. 
+
+
+# Load to_config_2.tbl
+echo "Step 1: Load the to_config_2.tbl through CFE TBL."
+cmdUtil --port=5010 --endian=LE --pktid=0x1804 --cmdcode=2 --string="64:/cf/apps/to_config_2.tbl"
+sleep 1
+# Verify the new inactive table
+echo "Step 2: Verify the new table through CFE_TBL."
+cmdUtil --port=5010 --endian=LE --pktid=0x1804 --cmdcode=4 --half=0 --string="40:TO.to_config"
+sleep 1
+# Activate the new table (CFE TBL will call TO_ManageTable
+echo "Step 3: Activate the new table through CFE_TBL."
+cmdUtil --port=5010 --endian=LE --pktid=0x1804 --cmdcode=5 --string="40:TO.to_config"
+sleep 1
 ```
 
-## 항목
+### `to_config.c`
 
-- [`fsw/apps/to/fsw/tables/table_change.sh`](file--table_change.sh) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/tables/to_config.c`](file--to_config.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/tables/to_config_2.c`](file--to_config_2.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/tables/to_grpids.h`](file--to_grpids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/to/fsw/tables/to_config.c`
+
+
+```c
+/*==============================================================================
+** File Name: to_config.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Title:     TO table definition
+**
+** $Author: $
+** $Revision: $
+** $Date:  $
+**
+** Purpose:   To provide the table for default data config.
+**
+** Functions Contained:
+**    None
+**
+**
+** Limitations, Assumptions, External Events, and Notes:
+**  1.   None
+**
+**
+**==============================================================================
+*/
+
+/*
+#ifndef _TO_CONFIG_
+#define _TO_CONFIG_
+
+
+#ifdef   __cplusplus
+extern "C" {
+#endif
+*/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+#include "to_platform_cfg.h"
+#include "to_mission_cfg.h"
+#include "to_app.h"
+#include "to_tbldefs.h"
+#include "to_grpids.h"
+
+#include "cfe_msgids.h"
+
+#include "ci_msgids.h"
+//#include "cf_msgids.h"
+#include "ds_msgids.h"
+#include "fm_msgids.h"
+//#include "hs_msgids.h"
+//#include "hk_msgids.h"
+#include "lc_msgids.h"
+#include "sc_msgids.h"
+#include "sch_msgids.h"
+#include "to_msgids.h"
+
+
+/*
+** Local Defines
+*/
+
+
+/*
+** Local Structure Declarations
+*/
+static CFE_TBL_FileDef_t CFE_TBL_FileDef =
+{
+    "to_ConfigTable", "TO.to_config", "TO config table",
+    "to_config.tbl", sizeof(TO_ConfigTable_t)
+};
+
+/*
+** Default TO iLoad table data
+*/
+
+TO_ConfigTable_t to_ConfigTable =
+{
+   {
+       /* 0 - 9 */
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_APP_TLM_MID),           {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_HK_TLM_MID),            {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_ES_MEMSTATS_TLM_MID),      {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_EVS_HK_TLM_MID),           {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_ALLSUBS_TLM_MID),       {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_HK_TLM_MID),            {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_ONESUB_TLM_MID),        {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_SB_STATS_TLM_MID),         {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_HK_TLM_MID),           {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_TBL_REG_TLM_MID),          {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+                                                         
+       /* 10 - 19 */                                     
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_DIAG_TLM_MID),        {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CFE_TIME_HK_TLM_MID),          {0,0},  1,   0xffff,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_HK_TLM_MID),                {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(SCH_DIAG_TLM_MID),             {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(SCH_HK_TLM_MID),               {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(CI_HK_TLM_MID),                {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_DATA_TYPE_MID),             {0,0},  1,   0xffff,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+                                                         
+       /* 20 - 29 */                                     
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},       
+       
+       /* 30 - 39 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 40 - 49 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 50 - 59 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 60 - 69 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 70 - 79 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 80 - 89 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 90 - 99 */
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {CFE_SB_MSGID_WRAP_VALUE(TO_UNUSED_ENTRY),              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0}
+    }
+};
+
+void to_dummy(void)
+{
+    OS_printf("Avoid unused table issue %s \n", CFE_TBL_FileDef.ObjectName);
+}
+
+/*
+#ifdef   __cplusplus
+}
+#endif
+
+#endif
+*/
+
+/* _TO_CONFIG_ */
+```
+
+### `to_config_2.c`
+
+**경로:** `fsw/apps/to/fsw/tables/to_config_2.c`
+
+
+```c
+/*==============================================================================
+** File Name: to_config.c
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Title:     TO table definition
+**
+** $Author: $
+** $Revision: $
+** $Date:  $
+**
+** Purpose:   To provide the table for default data config.
+**
+** Functions Contained:
+**    None
+**
+**
+** Limitations, Assumptions, External Events, and Notes:
+**  1.   None
+**
+**
+**==============================================================================
+*/
+
+/*
+#ifndef _TO_CONFIG_
+#define _TO_CONFIG_
+
+
+#ifdef   __cplusplus
+extern "C" {
+#endif
+*/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+#include "to_platform_cfg.h"
+#include "to_mission_cfg.h"
+#include "to_app.h"
+#include "to_tbldefs.h"
+#include "to_grpids.h"
+
+#include "cfe_msgids.h"
+
+#include "ci_msgids.h"
+
+
+/*
+** Local Defines
+*/
+
+
+/*
+** Local Structure Declarations
+*/
+
+static CFE_TBL_FileDef_t CFE_TBL_FileDef =
+{
+    "to_ConfigTable", "TO.to_config", "TO config table",
+    "to_config_2.tbl", sizeof(TO_ConfigTable_t)
+};
+
+/*
+** Default TO iLoad table data
+*/
+
+TO_ConfigTable_t to_ConfigTable =
+{
+   {
+       /* 0 - 9 */
+       {TO_HK_TLM_MID,                {0,0},  1,   0x0003,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CI_HK_TLM_MID,                {0,0},  1,   0x0003,     TO_GROUP_APP | TO_MGROUP_ONE, 0,1},
+       {CFE_TBL_HK_TLM_MID,           {0,0},  1,   0x0003,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {CFE_EVS_EVENT_MSG_MID,        {0,0},  32,  0x0003,     TO_GROUP_CFE | TO_MGROUP_ONE, 0,1},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 40 - 49 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 50 - 59 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       
+       /* 30 - 39 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 40 - 49 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 50 - 59 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 60 - 69 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 70 - 79 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 80 - 89 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+
+       /* 90 - 99 */
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0},
+       {TO_UNUSED_ENTRY,              {0,0},  0,   0x0000,     TO_GROUP_NONE,            0,0}
+    }
+};
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+/*
+#ifdef   __cplusplus
+}
+#endif
+
+#endif
+*/
+
+/* _TO_CONFIG_ */
+```
+
+### `to_grpids.h`
+
+**경로:** `fsw/apps/to/fsw/tables/to_grpids.h`
+
+
+```c
+/*=======================================================================================
+** File Name:  to_grpids.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Title:  Group IDs used by the default TO table  
+**=====================================================================================*/
+
+#ifndef _TO_GRP_IDS_H_
+#define _TO_GRP_IDS_H_
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+
+/*
+** Local Defines
+*/
+/* Define multigroups as bit. Max is TO_MULTI_GROUP_MASK (default: 24-bits) */
+#define TO_MGROUP_NONE  0 
+#define TO_MGROUP_ONE   1 
+#define TO_MGROUP_TWO   1 << 1
+#define TO_MGROUP_THREE 1 << 2
+#define TO_MGROUP_FOUR  1 << 3
+#define TO_MGROUP_FIVE  1 << 4
+#define TO_MGROUP_SIX   1 << 5
+#define TO_MGROUP_SEVEN 1 << 6
+#define TO_MGROUP_EIGHT 1 << 7
+#define TO_MGROUP_NINE  1 << 8
+#define TO_MGROUP_TEN   1 << 9
+
+/* Define group as Hex based on TO_GROUP_NUMBER_MASK (default: 0x00 << 24 to 0xff << 24) */
+#define TO_GROUP_NONE   0x00000000
+#define TO_GROUP_CFE    0x01000000
+#define TO_GROUP_APP    0x02000000
+#define TO_GROUP_THREE  0x03000000
+
+#endif /* _TO_GRP_IDS_H_ */
+
+/*=======================================================================================
+** End of file sch_grpids.h
+**=====================================================================================*/
+    
+```

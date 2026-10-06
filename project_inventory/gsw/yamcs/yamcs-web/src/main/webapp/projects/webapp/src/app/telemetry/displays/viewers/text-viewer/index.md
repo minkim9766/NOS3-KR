@@ -3,14 +3,69 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/text-viewer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `text-viewer.component.ts`
 
-file--text-viewer.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/text-viewer/text-viewer.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+} from '@angular/core';
+import {
+  ConfigService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Viewer } from '../Viewer';
+
+@Component({
+  selector: 'app-text-viewer',
+  template: `
+    @if (text) {
+      <pre>{{ text }}</pre>
+    }
+  `,
+  styles: `
+    pre {
+      margin: 1em;
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TextViewerComponent implements Viewer {
+  text: string;
+
+  private storageClient: StorageClient;
+  private bucket: string;
+
+  constructor(
+    yamcs: YamcsService,
+    private changeDetector: ChangeDetectorRef,
+    configService: ConfigService,
+  ) {
+    this.storageClient = yamcs.createStorageClient();
+    this.bucket = configService.getDisplayBucket();
+  }
+
+  public init(objectName: string) {
+    this.storageClient.getObject(this.bucket, objectName).then((response) => {
+      response.text().then((text) => {
+        this.text = text;
+        this.changeDetector.detectChanges();
+      });
+    });
+    return Promise.resolve();
+  }
+
+  public hasPendingChanges() {
+    return false;
+  }
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/text-viewer/text-viewer.component.ts`](file--text-viewer.component.ts) — UTF-8 텍스트 파일 본문 포함

@@ -3,30 +3,951 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Bucket.java`
 
-file--Bucket.java
-file--BucketLocation.java
-file--BucketManager.java
-file--BucketProperties.java
-file--BucketProvider.java
-file--FileSystemBucket.java
-file--ObjectProperties.java
-file--RemoteYamcsBucket.java
-file--RemoteYamcsBucketProvider.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/Bucket.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+
+public interface Bucket {
+
+    /**
+     * Bucket location
+     */
+    BucketLocation getLocation();
+
+    /**
+     * This bucket's name
+     */
+    String getName();
+
+    CompletableFuture<BucketProperties> getPropertiesAsync();
+
+    /**
+     * Update the size limit for this bucket.
+     * <p>
+     * If the specified size is smaller than the current size, the bucket will no longer accept new files.
+     */
+    void setMaxSize(long maxSize) throws IOException;
+
+    /**
+     * Update the object count limit for this bucket.
+     * <p>
+     * If the specified count is smaller than the current count, the bucket will no longer accept new files.
+     */
+    void setMaxObjects(int maxObjects) throws IOException;
+
+    default CompletableFuture<List<ObjectProperties>> listObjectsAsync() {
+        return listObjectsAsync(null, x -> true);
+    }
+
+    default CompletableFuture<List<ObjectProperties>> listObjectsAsync(String prefix) {
+        return listObjectsAsync(prefix, x -> true);
+    }
+
+    default CompletableFuture<List<ObjectProperties>> listObjectsAsync(Predicate<ObjectProperties> p) {
+        return listObjectsAsync(null, p);
+    }
+
+    /**
+     * retrieve objects whose name start with prefix and that match the condition Note that searching by prefix is
+     * cheap, the condition will be evaluated for all objects that match the prefix
+     * 
+     * @param prefix
+     * @param p
+     *            predicate to be matched by the returned objects
+     * @return list of objects
+     */
+    CompletableFuture<List<ObjectProperties>> listObjectsAsync(String prefix, Predicate<ObjectProperties> p);
+
+    CompletableFuture<Void> putObjectAsync(String objectName, String contentType, Map<String, String> metadata,
+            byte[] objectData);
+
+    /**
+     * Retrieve object from the bucket. Returns null if object does not exist.
+     */
+    CompletableFuture<byte[]> getObjectAsync(String objectName);
+
+    CompletableFuture<Void> deleteObjectAsync(String objectName);
+
+    /**
+     * Retrieve the object properties or null if not such an object exist
+     */
+    CompletableFuture<ObjectProperties> findObjectAsync(String objectName);
+
+}
 ```
 
-## 항목
+### `BucketLocation.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/Bucket.java`](file--Bucket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketLocation.java`](file--BucketLocation.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketManager.java`](file--BucketManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketProperties.java`](file--BucketProperties.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketProvider.java`](file--BucketProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/FileSystemBucket.java`](file--FileSystemBucket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/ObjectProperties.java`](file--ObjectProperties.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/RemoteYamcsBucket.java`](file--RemoteYamcsBucket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/RemoteYamcsBucketProvider.java`](file--RemoteYamcsBucketProvider.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketLocation.java`
+
+
+```java
+package org.yamcs.buckets;
+
+public record BucketLocation(String name, String description) {
+
+    @Override
+    public final String toString() {
+        return name;
+    }
+}
+```
+
+### `BucketManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketManager.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ServiceLoader;
+
+import org.yamcs.ConfigScope;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.BucketDatabase;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.rocksdb.RdbBucket;
+import org.yamcs.yarch.rocksdb.RdbBucketDatabase;
+
+/**
+ * Provides access to buckets of various types.
+ */
+public class BucketManager {
+
+    private static final Log log = new Log(BucketManager.class);
+
+    private Map<String, Bucket> buckets = new HashMap<>();
+
+    private BucketDatabase bucketDatabase; // Local DB buckets
+    private Map<String, BucketProvider> providers = new HashMap<>(); // External buckets
+
+    public BucketManager() {
+        var yamcs = YamcsServer.getServer();
+
+        var bucketSpec = new Spec();
+        bucketSpec.addOption("name", OptionType.STRING).withRequired(true);
+        bucketSpec.addOption("path", OptionType.STRING);
+        bucketSpec.addOption("maxSize", OptionType.INTEGER);
+        bucketSpec.addOption("maxObjects", OptionType.INTEGER);
+        yamcs.addConfigurationList(ConfigScope.YAMCS, "buckets", bucketSpec);
+
+        // Discover known providers
+        for (var provider : ServiceLoader.load(BucketProvider.class)) {
+            providers.put(provider.getLocation().name(), provider);
+        }
+
+        var providerSpec = new Spec();
+        providerSpec.addOption("type", OptionType.STRING)
+                .withRequired(true)
+                .withChoices(providers.keySet());
+
+        for (var provider : providers.values()) {
+            var condition = providerSpec.when("type", provider.getLocation().name());
+            condition.mergeSpec(provider.getSpec());
+        }
+
+        yamcs.addConfigurationList(ConfigScope.YAMCS, "bucketProviders", providerSpec);
+    }
+
+    public void loadBuckets() throws IOException {
+        var yarchDatabase = YarchDatabase.getInstance(YamcsServer.GLOBAL_INSTANCE);
+        bucketDatabase = YarchDatabase.getDefaultStorageEngine().getBucketDatabase(yarchDatabase);
+
+        for (var rdbBucket : bucketDatabase.listBuckets()) {
+            buckets.put(rdbBucket.getName(), rdbBucket);
+        }
+
+        var yconf = YamcsServer.getServer().getConfig();
+        if (yconf != null) { // Can be null in unit tests
+            if (yconf.containsKey("buckets")) {
+                var bucketsConfigs = yconf.getConfigList("buckets");
+                for (var config : bucketsConfigs) {
+                    loadBucket(config);
+                }
+            }
+
+            if (yconf.containsKey("bucketProviders")) {
+                for (var providerConfig : yconf.getConfigList("bucketProviders")) {
+                    var provider = providers.get(providerConfig.getString("type"));
+                    var extraBuckets = provider.loadBuckets(providerConfig);
+                    synchronized (buckets) {
+                        for (var extraBucket : extraBuckets) {
+                            var bucket = buckets.get(extraBucket.getName());
+                            if (bucket == null) {
+                                log.info("Adding {} bucket '{}'", extraBucket.getLocation(), extraBucket.getName());
+                                buckets.put(extraBucket.getName(), extraBucket);
+                            } else {
+                                throw new IllegalArgumentException(
+                                        "Bucket " + extraBucket.getName() + " already exists");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void loadBucket(YConfiguration config) throws IOException {
+        String name = config.getString("name");
+        Bucket bucket;
+        if (config.containsKey("path")) {
+            var path = Paths.get(config.getString("path"));
+            bucket = createFileSystemBucket(name, path);
+        } else {
+            bucket = getBucket(name);
+            if (bucket == null) {
+                log.info("Creating bucket {}", name);
+                bucket = createBucket(name);
+            }
+        }
+        if (config.containsKey("maxSize")) {
+            long maxSize = config.getLong("maxSize");
+            bucket.setMaxSize(maxSize);
+        }
+        if (config.containsKey("maxObjects")) {
+            int maxObjects = config.getInt("maxObjects");
+            bucket.setMaxObjects(maxObjects);
+        }
+    }
+
+    public Bucket getBucket(String bucketName) throws IOException {
+        synchronized (buckets) {
+            return buckets.get(bucketName);
+        }
+    }
+
+    public Bucket createBucket(String bucketName) throws IOException {
+        synchronized (buckets) {
+            var bucket = buckets.get(bucketName);
+            if (bucket == null) {
+                bucket = bucketDatabase.createBucket(bucketName);
+                buckets.put(bucketName, bucket);
+            } else {
+                throw new IllegalArgumentException("Bucket " + bucketName + " already exists");
+            }
+            return bucket;
+        }
+    }
+
+    /**
+     * Adds a bucket that maps to the file system. This is a transient operation that has to be done on each server
+     * restart.
+     * 
+     * @param bucketName
+     *            the name of the bucket
+     * @param location
+     *            path to the bucket contents. The directory is created if it does not yet exist.
+     * @return the created bucket
+     * @throws IOException
+     *             on I/O issues
+     */
+    public FileSystemBucket createFileSystemBucket(String bucketName, Path location) throws IOException {
+        synchronized (buckets) {
+            var bucket = buckets.get(bucketName);
+            if (bucket == null || bucket instanceof RdbBucket) { // Shadow existing RDB bucket
+                if (!Files.exists(location)) { // Mandatory check, to allow for symlinks
+                    Files.createDirectories(location);
+                }
+                var fsBucket = new FileSystemBucket(bucketName, location);
+                buckets.put(bucketName, fsBucket);
+                return fsBucket;
+            } else {
+                throw new IllegalArgumentException("Bucket " + bucketName + " already exists");
+            }
+        }
+    }
+
+    public List<Bucket> listBuckets() throws IOException {
+        synchronized (buckets) {
+            return new ArrayList<>(buckets.values());
+        }
+    }
+
+    public void deleteBucket(String bucketName) throws IOException {
+        var bucket = getBucket(bucketName);
+        if (bucket instanceof RdbBucketDatabase) {
+            bucketDatabase.deleteBucket(bucketName);
+        } else {
+            throw new UnsupportedOperationException("Only local RocksDB buckets can be deleted");
+        }
+    }
+
+    /**
+     * Configure this class for use in standalone unit tests
+     */
+    public static void setMockup() {
+        var bucketManager = new BucketManager();
+        try {
+            bucketManager.loadBuckets();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        YamcsServer.getServer().setBucketManager(bucketManager);
+    }
+}
+```
+
+### `BucketProperties.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketProperties.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import org.yamcs.protobuf.BucketInfo;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace;
+
+public record BucketProperties(
+        /**
+         * Bucket name
+         */
+        String name,
+
+        /**
+         * Bucket creation date
+         */
+        long created,
+
+        /**
+         * Maximum number of objects in this bucket
+         */
+        int maxNumObjects,
+
+        /**
+         * Maximum size in bytes of this bucket
+         */
+        long maxSize,
+
+        /**
+         * Current number of objects in this bucket
+         */
+        int numObjects,
+
+        /**
+         * Current size in bytes of this bucket
+         */
+        long size) {
+
+    public static BucketProperties fromBucketInfo(BucketInfo info) {
+        return new BucketProperties(
+                info.getName(),
+                TimeEncoding.fromProtobufTimestamp(info.getCreated()),
+                info.getMaxObjects(),
+                info.getMaxSize(),
+                info.getNumObjects(),
+                info.getSize());
+    }
+
+    public static BucketProperties fromYarch(Tablespace.BucketProperties props) {
+        return new BucketProperties(
+                props.getName(),
+                props.getCreated(),
+                props.getMaxNumObjects(),
+                props.getMaxSize(),
+                props.getNumObjects(),
+                props.getSize());
+    }
+}
+```
+
+### `BucketProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/BucketProvider.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+
+public interface BucketProvider {
+    /**
+     * Description of provider location
+     */
+    BucketLocation getLocation();
+
+    /**
+     * Returns the valid configuration options for this plugin.
+     */
+    Spec getSpec();
+
+    /**
+     * Called on Yamcs startup. Provider should create and return all buckets that match the provided configuration.
+     * <p>
+     * Implementations do not need to verify bucket uniqueness.
+     */
+    List<Bucket> loadBuckets(YConfiguration config) throws IOException;
+}
+```
+
+### `FileSystemBucket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/FileSystemBucket.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileVisitOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Predicate;
+
+import org.yamcs.utils.Mimetypes;
+import org.yamcs.utils.TimeEncoding;
+
+public class FileSystemBucket implements Bucket {
+
+    private static final BucketLocation LOCATION = new BucketLocation("fs", "File system");
+    private static final long DEFAULT_MAX_SIZE = 100L * 1024 * 1024; // 100MB
+    private static final int DEFAULT_MAX_OBJECTS = 1000;
+    private static final Mimetypes MIME = Mimetypes.getInstance();
+
+    private String bucketName;
+    private Path root;
+    private boolean includeHidden = false;
+    private long maxSize = DEFAULT_MAX_SIZE;
+    private int maxObjects = DEFAULT_MAX_OBJECTS;
+
+    public FileSystemBucket(String bucketName, Path root) throws IOException {
+        this.bucketName = bucketName;
+        this.root = root;
+    }
+
+    @Override
+    public BucketLocation getLocation() {
+        return LOCATION;
+    }
+
+    @Override
+    public String getName() {
+        return bucketName;
+    }
+
+    @Override
+    public void setMaxSize(long maxSize) throws IOException {
+        // Not stored anywhere, we expect it to be set upon startup. For
+        // example, coming from configuration.
+        this.maxSize = maxSize;
+    }
+
+    @Override
+    public void setMaxObjects(int maxObjects) throws IOException {
+        // Not stored anywhere, we expect it to be set upon startup. For
+        // example, coming from configuration.
+        this.maxObjects = maxObjects;
+    }
+
+    @Override
+    public CompletableFuture<BucketProperties> getPropertiesAsync() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return getProperties();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public BucketProperties getProperties() throws IOException {
+        var attrs = Files.readAttributes(root, BasicFileAttributes.class);
+        var created = TimeEncoding.fromUnixMillisec(attrs.creationTime().toMillis());
+
+        AtomicLong size = new AtomicLong(0);
+        AtomicInteger objectCount = new AtomicInteger(0);
+        Set<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+        Files.walkFileTree(root, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                size.addAndGet(attrs.size());
+                objectCount.incrementAndGet();
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        return new BucketProperties(
+                bucketName,
+                created,
+                maxObjects,
+                maxSize,
+                objectCount.get(),
+                size.get());
+    }
+
+    @Override
+    public CompletableFuture<List<ObjectProperties>> listObjectsAsync(String prefix, Predicate<ObjectProperties> p) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return listObjects(prefix, p);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public List<ObjectProperties> listObjects(String prefix, Predicate<ObjectProperties> p)
+            throws IOException {
+        List<ObjectProperties> objects = new ArrayList<>();
+        Set<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+        Files.walkFileTree(root, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                String objectName = root.relativize(file).toString();
+                if (prefix == null || objectName.startsWith(prefix)) {
+                    if (includeHidden || !Files.isHidden(file)) {
+                        var props = toObjectProperties(objectName, file, attrs);
+                        if (p.test(props)) {
+                            objects.add(props);
+                        }
+                    }
+                }
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                String rel = root.relativize(dir).toString();
+                if (!rel.isEmpty()) {
+                    rel += "/";
+                }
+
+                if (includeHidden || !Files.isHidden(dir)) {
+                    // By convention, empty folders are represented as objects with a terminating slash
+                    if (!Files.isSameFile(root, dir) && (prefix == null || rel.startsWith(prefix))) {
+                        try (DirectoryStream<Path> directory = Files.newDirectoryStream(dir)) {
+                            if (!directory.iterator().hasNext()) {
+                                var props = toObjectProperties(rel, dir, attrs);
+                                if (p.test(props)) {
+                                    objects.add(props);
+                                }
+                            }
+                        }
+                    }
+
+                    return FileVisitResult.CONTINUE;
+                }
+                return FileVisitResult.SKIP_SUBTREE;
+            }
+        });
+
+        Collections.sort(objects, (o1, o2) -> o1.name().compareTo(o2.name()));
+        return objects;
+    }
+
+    @Override
+    public CompletableFuture<Void> putObjectAsync(String objectName, String contentType, Map<String, String> metadata,
+            byte[] objectData) {
+        return CompletableFuture.runAsync(() -> {
+            try {
+                putObject(objectName, contentType, metadata, objectData);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public void putObject(String objectName, String contentType, Map<String, String> metadata, byte[] objectData)
+            throws IOException {
+        // TODO: do something with metadata
+
+        Path path = resolvePath(objectName);
+
+        if (objectName.endsWith("/")) {
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            } else if (!Files.isDirectory(path)) {
+                throw new IOException("Object path is already in use");
+            }
+        } else {
+            // Current implementation ignores specified contentType, instead deriving
+            // MIME type from the filename extension.
+            boolean fileExists = Files.isRegularFile(path);
+
+            // Verify limits
+            AtomicLong size = new AtomicLong(fileExists ? -Files.size(path) : 0);
+            AtomicInteger count = new AtomicInteger(fileExists ? -1 : 0);
+            Set<FileVisitOption> opts = EnumSet.of(FileVisitOption.FOLLOW_LINKS);
+            Files.walkFileTree(root, opts, Integer.MAX_VALUE, new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    size.addAndGet(attrs.size());
+                    count.incrementAndGet();
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+
+            long newSize = size.get() + objectData.length;
+            if (newSize > maxSize) {
+                throw new IOException("Maximum bucket size " + maxSize + " exceeded");
+            }
+
+            int newCount = count.get() + 1;
+            if (newCount > maxObjects) {
+                throw new IOException(
+                        "Maximum number of objects in the bucket " + newCount + " exceeded");
+            }
+
+            if (!Files.exists(path.getParent())) { // Check to avoid error when the parent is a symlink
+                Files.createDirectories(path.getParent());
+            }
+            Files.write(path, objectData);
+        }
+    }
+
+    @Override
+    public CompletableFuture<byte[]> getObjectAsync(String objectName) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return getObject(objectName);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public byte[] getObject(String objectName) throws IOException {
+        Path path = resolvePath(objectName);
+        if (Files.exists(path)) {
+            return Files.readAllBytes(path);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public CompletableFuture<Void> deleteObjectAsync(String objectName) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                deleteObject(objectName);
+                return null;
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public void deleteObject(String objectName) throws IOException {
+        Path path = resolvePath(objectName);
+        Files.delete(path);
+    }
+
+    @Override
+    public CompletableFuture<ObjectProperties> findObjectAsync(String objectName) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                return findObject(objectName);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
+    }
+
+    public ObjectProperties findObject(String objectName) throws IOException {
+        Path path = resolvePath(objectName);
+        if (Files.exists(path)) {
+            var attrs = Files.readAttributes(path, BasicFileAttributes.class);
+            return toObjectProperties(objectName, path, attrs);
+        } else {
+            return null;
+        }
+    }
+
+    private Path resolvePath(String objectName) throws IOException {
+        Path path = root.resolve(objectName);
+
+        // Prevent directory traversal
+        if (!path.normalize().toAbsolutePath().startsWith(root.normalize().toAbsolutePath())) {
+            throw new IOException("Directory traversal attempted: " + path);
+        }
+
+        return path;
+    }
+
+    public Path getBucketRoot() {
+        return root;
+    }
+
+    private ObjectProperties toObjectProperties(String objectName, Path file, BasicFileAttributes attrs) {
+        // Not creation time. Objects are always replaced.
+        var created = TimeEncoding.fromUnixMillisec(attrs.lastModifiedTime().toMillis());
+
+        return new ObjectProperties(
+                objectName,
+                MIME.getMimetype(file),
+                created,
+                attrs.size(),
+                Collections.emptyMap());
+    }
+}
+```
+
+### `ObjectProperties.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/ObjectProperties.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.util.Map;
+
+import org.yamcs.protobuf.ObjectInfo;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.rocksdb.protobuf.Tablespace;
+
+public record ObjectProperties(
+        /**
+         * Object name
+         */
+        String name,
+
+        /**
+         * Content type
+         */
+        String contentType,
+
+        /**
+         * Creation date
+         */
+        long created,
+
+        /**
+         * Size in bytes
+         */
+        long size,
+
+        /**
+         * Object metadata
+         */
+        Map<String, String> metadata) {
+
+    public static ObjectProperties fromObjectInfo(ObjectInfo info) {
+        return new ObjectProperties(
+                info.getName(),
+                info.hasContentType() ? info.getContentType() : null,
+                TimeEncoding.fromProtobufTimestamp(info.getCreated()),
+                info.getSize(),
+                info.getMetadataMap());
+    }
+
+    public static ObjectProperties fromYarch(Tablespace.ObjectPropertiesOrBuilder props) {
+        return new ObjectProperties(
+                props.getName(),
+                props.getContentType(),
+                props.getCreated(),
+                props.getSize(),
+                props.getMetadataMap());
+    }
+}
+```
+
+### `RemoteYamcsBucket.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/RemoteYamcsBucket.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
+
+import org.yamcs.client.storage.Bucket.ListObjectsOptions;
+
+public class RemoteYamcsBucket implements Bucket {
+
+    public static final BucketLocation LOCATION = new BucketLocation("remote-yamcs", "Remote Yamcs");
+
+    private String localName;
+    private org.yamcs.client.storage.Bucket bucketClient;
+
+    public RemoteYamcsBucket(String localName, org.yamcs.client.storage.Bucket bucketClient) {
+        this.localName = localName;
+        this.bucketClient = bucketClient;
+    }
+
+    @Override
+    public BucketLocation getLocation() {
+        return LOCATION;
+    }
+
+    @Override
+    public String getName() {
+        return localName;
+    }
+
+    @Override
+    public CompletableFuture<BucketProperties> getPropertiesAsync() {
+        return bucketClient.getInfo().thenApply(BucketProperties::fromBucketInfo);
+    }
+
+    @Override
+    public void setMaxSize(long maxSize) throws IOException {
+        // Ignore, managed by remote
+    }
+
+    @Override
+    public void setMaxObjects(int maxObjects) throws IOException {
+        // Ignore, managed by remote
+    }
+
+    @Override
+    public CompletableFuture<List<ObjectProperties>> listObjectsAsync(String prefix, Predicate<ObjectProperties> p) {
+        return bucketClient.listObjects(ListObjectsOptions.prefix(prefix)).thenApply(response -> {
+            return response.getObjectsList().stream()
+                    .map(ObjectProperties::fromObjectInfo)
+                    .filter(p::test)
+                    .toList();
+        });
+    }
+
+    @Override
+    public CompletableFuture<Void> putObjectAsync(String objectName, String contentType, Map<String, String> metadata,
+            byte[] objectData) {
+        return bucketClient.uploadObject(objectName, objectData);
+    }
+
+    @Override
+    public CompletableFuture<byte[]> getObjectAsync(String objectName) {
+        return bucketClient.downloadObject(objectName);
+    }
+
+    @Override
+    public CompletableFuture<Void> deleteObjectAsync(String objectName) {
+        return bucketClient.deleteObject(objectName);
+    }
+
+    @Override
+    public CompletableFuture<ObjectProperties> findObjectAsync(String objectName) {
+        return bucketClient.getObject(objectName)
+                .thenApply(ObjectProperties::fromObjectInfo);
+    }
+}
+```
+
+### `RemoteYamcsBucketProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/buckets/RemoteYamcsBucketProvider.java`
+
+
+```java
+package org.yamcs.buckets;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.client.BasicAuthCredentials;
+import org.yamcs.client.YamcsClient;
+import org.yamcs.client.storage.StorageClient;
+
+public class RemoteYamcsBucketProvider implements BucketProvider {
+
+    private StorageClient storageClient;
+
+    @Override
+    public BucketLocation getLocation() {
+        return RemoteYamcsBucket.LOCATION;
+    }
+
+    @Override
+    public Spec getSpec() {
+        var bucketSpec = new Spec();
+        bucketSpec.addOption("name", OptionType.STRING).withRequired(true);
+        bucketSpec.addOption("localName", OptionType.STRING);
+
+        var spec = new Spec();
+        spec.addOption("yamcsUrl", OptionType.STRING).withRequired(true);
+        spec.addOption("username", OptionType.STRING);
+        spec.addOption("password", OptionType.STRING).withSecret(true);
+        spec.addOption("verifyTls", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("buckets", OptionType.LIST)
+                .withRequired(true)
+                .withElementType(OptionType.MAP)
+                .withSpec(bucketSpec);
+        spec.requireTogether("username", "password");
+        return spec;
+    }
+
+    @Override
+    public List<Bucket> loadBuckets(YConfiguration config) throws IOException {
+        var client = YamcsClient.newBuilder(config.getString("yamcsUrl"))
+                .withVerifyTls(config.getBoolean("verifyTls"));
+        if (config.containsKey("username")) {
+            var username = config.getString("username");
+            var password = config.getString("password").toCharArray();
+            client.withCredentials(new BasicAuthCredentials(username, password));
+        }
+
+        storageClient = client.build().createStorageClient();
+
+        var buckets = new ArrayList<Bucket>();
+        for (var bucketConfig : config.getConfigList("buckets")) {
+            var remoteBucketName = bucketConfig.getString("name");
+
+            var localBucketName = remoteBucketName;
+            if (bucketConfig.containsKey("localName")) {
+                localBucketName = bucketConfig.getString("localName");
+            }
+
+            var bucketClient = storageClient.getBucket(remoteBucketName);
+            buckets.add(new RemoteYamcsBucket(localBucketName, bucketClient));
+        }
+        return buckets;
+    }
+}
+```

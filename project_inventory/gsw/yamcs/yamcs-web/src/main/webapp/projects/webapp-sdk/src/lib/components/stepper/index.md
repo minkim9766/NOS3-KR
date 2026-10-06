@@ -3,28 +3,189 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stepper-step-actions.component.css`
 
-file--stepper-step-actions.component.css
-file--stepper-step-actions.component.ts
-file--stepper-step.component.css
-file--stepper-step.component.html
-file--stepper-step.component.ts
-file--stepper.component.css
-file--stepper.component.html
-file--stepper.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step-actions.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+}
 ```
 
-## 항목
+### `stepper-step-actions.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step-actions.component.css`](file--stepper-step-actions.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step-actions.component.ts`](file--stepper-step-actions.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.css`](file--stepper-step.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.html`](file--stepper-step.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.ts`](file--stepper-step.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.css`](file--stepper.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.html`](file--stepper.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.ts`](file--stepper.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step-actions.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+@Component({
+  selector: 'ya-stepper-step-actions',
+  template: '<ng-content />',
+  styleUrl: './stepper-step-actions.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaStepperStepActions {}
+```
+
+### `stepper-step.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.css`
+
+
+```css
+.stepper-step.hidden {
+  display: none;
+}
+
+.header {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding-left: 24px;
+}
+
+.header:hover {
+  background-color: #eee;
+}
+
+.header .bullet,
+.header .title {
+  height: calc(40px - 6px - 6px);
+  font-size: 15px;
+  line-height: calc(40px - 6px - 6px);
+}
+
+.header .bullet {
+  background-color: #d3d3d3;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.header .title {
+  margin-left: 20px;
+  padding: 6px 0px;
+}
+
+.header.expanded .bullet {
+  background-color: rgba(0, 0, 0, 0.654);
+}
+
+.content-box {
+  border-left: 1px solid #d3d3d3;
+  padding-bottom: 12px;
+  margin-left: calc(24px + 3px);
+}
+
+.content {
+  padding-left: 24px;
+}
+```
+
+### `stepper-step.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.html`
+
+
+```html
+<div class="stepper-step" [class.hidden]="!visible()">
+  <div class="header" [class.expanded]="expanded()" (click)="toggle($event)">
+    <div class="bullet"></div>
+    <div class="title">{{ label() }}</div>
+    <span style="flex: 1 1 auto"></span>
+    @if (expanded()) {
+      <ng-content select="ya-stepper-step-actions" />
+    }
+  </div>
+  @if (expanded()) {
+    <div class="content-box">
+      <div class="content">
+        <ng-content />
+      </div>
+    </div>
+  }
+</div>
+```
+
+### `stepper-step.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper-step.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  model,
+} from '@angular/core';
+
+@Component({
+  selector: 'ya-stepper-step',
+  templateUrl: './stepper-step.component.html',
+  styleUrl: './stepper-step.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaStepperStep {
+  label = input.required<string>();
+  visible = input(true);
+  expanded = model(false);
+
+  toggle(event: MouseEvent) {
+    if (!event.target) {
+      return;
+    }
+
+    if ((event.target as HTMLElement).closest('ya-stepper-step-actions')) {
+      // Ignore bubbled up click
+      return;
+    }
+
+    this.expanded.set(!this.expanded());
+  }
+}
+```
+
+### `stepper.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.css`
+
+
+```css
+:host {
+  display: block;
+  margin-left: -24px;
+}
+```
+
+### `stepper.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.html`
+
+
+```html
+<ng-content />
+```
+
+### `stepper.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/stepper/stepper.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-stepper',
+  templateUrl: './stepper.component.html',
+  styleUrl: './stepper.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class YaStepper {}
+```

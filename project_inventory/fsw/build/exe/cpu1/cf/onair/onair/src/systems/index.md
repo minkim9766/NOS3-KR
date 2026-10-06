@@ -3,20 +3,30 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/systems/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 __pycache__/index
-file--status.py
-file--telemetry_test_suite.py
-file--vehicle_rep.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/systems/__pycache__/`](__pycache__/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/systems/status.py`](file--status.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/systems/telemetry_test_suite.py`](file--telemetry_test_suite.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/systems/vehicle_rep.py`](file--vehicle_rep.py) — 빌드 산출물 (경로만)
+### `status.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/systems/status.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `telemetry_test_suite.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/systems/telemetry_test_suite.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `vehicle_rep.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/systems/vehicle_rep.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

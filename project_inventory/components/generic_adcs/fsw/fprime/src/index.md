@@ -3,18 +3,680 @@
 
 **경로:** `components/generic_adcs/fsw/fprime/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_adcs_ingest.c`
 
-file--generic_adcs_ingest.c
-file--generic_adcs_ingest.h
-file--generic_adcs_msg.h
+**경로:** `components/generic_adcs/fsw/fprime/src/generic_adcs_ingest.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file implements the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+
+#include <stdio.h>
+#include <stdint.h>
+#include <math.h>
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_ingest.h"
+
+static const double NANO = 1.0e-9;
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI)
+{
+    char junk[120], newline;
+    // Magnetometer
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Mag.qbs[0], &DI->Mag.qbs[1], &DI->Mag.qbs[2], &DI->Mag.qbs[3], junk,
+           &newline);
+    // Fine Sun Sensor
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Fss.qbs[0], &DI->Fss.qbs[1], &DI->Fss.qbs[2], &DI->Fss.qbs[3], junk,
+           &newline);
+    // Coarse Sun Sensors
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[0].axis[0], &DI->Css.Sensor[0].axis[1],
+           &DI->Css.Sensor[0].axis[2], &DI->Css.Sensor[0].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[1].axis[0], &DI->Css.Sensor[1].axis[1],
+           &DI->Css.Sensor[1].axis[2], &DI->Css.Sensor[1].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[2].axis[0], &DI->Css.Sensor[2].axis[1],
+           &DI->Css.Sensor[2].axis[2], &DI->Css.Sensor[2].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[3].axis[0], &DI->Css.Sensor[3].axis[1],
+           &DI->Css.Sensor[3].axis[2], &DI->Css.Sensor[3].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[4].axis[0], &DI->Css.Sensor[4].axis[1],
+           &DI->Css.Sensor[4].axis[2], &DI->Css.Sensor[4].scale, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Css.Sensor[5].axis[0], &DI->Css.Sensor[5].axis[1],
+           &DI->Css.Sensor[5].axis[2], &DI->Css.Sensor[5].scale, junk, &newline);
+    // Inertial Measurement Unit
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Imu.qbs[0], &DI->Imu.qbs[1], &DI->Imu.qbs[2], &DI->Imu.qbs[3], junk,
+           &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &DI->Imu.pos[0], &DI->Imu.pos[1], &DI->Imu.pos[2], junk, &newline);
+    // Reaction Wheels
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    double h_max[3] = {0.0, 0.0, 0.0};
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[0][0], &DI->Rw.whl_axis[0][1], &DI->Rw.whl_axis[0][2],
+           &h_max[0], junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[1][0], &DI->Rw.whl_axis[1][1], &DI->Rw.whl_axis[1][2],
+           &h_max[1], junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->Rw.whl_axis[2][0], &DI->Rw.whl_axis[2][1], &DI->Rw.whl_axis[2][2],
+           &h_max[2], junk, &newline);
+    double H_in_body[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i < 3; i++)
+    {
+        DI->Rw.H_maxB[i] = 0.0;
+    }
+    for (int whl = 0; whl < 3; whl++)
+    {
+        SxV(h_max[whl], DI->Rw.whl_axis[whl], H_in_body);
+        for (int i = 0; i < 3; i++)
+        {
+            DI->Rw.H_maxB[i] += H_in_body[i];
+        }
+    }
+    // Star Tracker
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &DI->St.qbs[0], &DI->St.qbs[1], &DI->St.qbs[2], &DI->St.qbs[3], junk,
+           &newline);
+}
+
+void Generic_ADCS_ingest_generic_mag(__int32_t MagIntX, __int32_t MagIntY, __int32_t MagIntZ,
+                                     Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag)
+{
+    double bvs[3] = {(double)MagIntX, (double)MagIntY, (double)MagIntZ};
+
+    QxV(Mag->qbs, bvs, Mag->bvb);
+
+    Mag->bvb[0] *= NANO;
+    Mag->bvb[1] *= NANO;
+    Mag->bvb[2] *= NANO;
+}
+
+void Generic_ADCS_ingest_generic_fss(float Alpha, float Beta, __uint8_t Error, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss)
+{
+    Fss->valid = 0;
+    if (Error == 0)
+        Fss->valid = 1;
+
+    if (Fss->valid == 1)
+    {
+        double svs[3];
+        double ta = tan(Alpha);
+        double tb = tan(Beta);
+        svs[2]    = 1.0 / sqrt(1 + ta * tb + tb * tb);
+        svs[0]    = svs[2] * ta;
+        svs[1]    = svs[2] * tb;
+        QxV(Fss->qbs, svs, Fss->svb);
+    }
+    else
+    {
+        Fss->svb[0] = 0.0;
+        Fss->svb[1] = 0.0;
+        Fss->svb[2] = 0.0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_css(__uint16_t ADCV0, __uint16_t ADCV1, __uint16_t ADCV2, __uint16_t ADCV3,
+                                     __uint16_t ADCV4, __uint16_t ADCV5, Generic_ADCS_DI_Css_Tlm_Payload_t *Css)
+{
+    Css->Sensor[0].percenton = ADCV0 * Css->Sensor[0].scale;
+    Css->Sensor[1].percenton = ADCV1 * Css->Sensor[1].scale;
+    Css->Sensor[2].percenton = ADCV2 * Css->Sensor[2].scale;
+    Css->Sensor[3].percenton = ADCV3 * Css->Sensor[3].scale;
+    Css->Sensor[4].percenton = ADCV4 * Css->Sensor[4].scale;
+    Css->Sensor[5].percenton = ADCV5 * Css->Sensor[5].scale;
+
+    double svb[3] = {0.0, 0.0, 0.0};
+    for (int i = 0; i < 6; i++)
+    {
+        svb[0] += Css->Sensor[i].axis[0] * Css->Sensor[i].percenton;
+        svb[1] += Css->Sensor[i].axis[1] * Css->Sensor[i].percenton;
+        svb[2] += Css->Sensor[i].axis[2] * Css->Sensor[i].percenton;
+    }
+    UNITV(svb);
+
+    Css->svb[0] = svb[0];
+    Css->svb[1] = svb[1];
+    Css->svb[2] = svb[2];
+    if (MAGV(svb) > 0.0)
+    {
+        Css->valid = 1;
+    }
+    else
+    {
+        Css->valid = 0;
+    }
+}
+
+void Generic_ADCS_ingest_generic_imu(float LinX, float LinY, float LinZ, float AngX, float AngY, float AngZ,
+                                     Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu)
+{
+    double wsn[3] = {AngX, AngY, AngZ};
+    QxV(Imu->qbs, wsn, Imu->wbn);
+
+    double acc[3] = {LinX, LinY, LinZ};
+    QxV(Imu->qbs, acc, Imu->acc);
+    Imu->valid = 1;
+}
+
+void Generic_ADCS_ingest_generic_rw(double RW0, double RW1, double RW2, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw)
+{
+    double H_in_body[3]   = {0.0, 0.0, 0.0};
+    double rwMomentums[3] = {RW0, RW1, RW2};
+
+    for (int i = 0; i < 3; i++)
+    {
+        Rw->HwhlB[i] = 0.0;
+    }
+
+    for (int whl = 0; whl < 3; whl++)
+    {
+        SxV(rwMomentums[whl], Rw->whl_axis[whl], H_in_body);
+
+        for (int i = 0; i < 3; i++)
+        {
+            Rw->HwhlB[i] += H_in_body[i];
+        }
+    }
+}
+
+void Generic_ADCS_ingest_generic_st(double Q0, double Q1, double Q2, double Q3, __uint8_t IsValid,
+                                    Generic_ADCS_DI_St_Tlm_Payload_t *St)
+{
+    St->valid   = IsValid;
+    double q[4] = {Q0, Q1, Q2, Q3};
+    QxQ(q, St->qbs, St->q);
+}
+
+void Generic_ADCS_ingest_novatel_gps(uint16_t Weeks, uint32_t SecondsIntoWeek, double Fractions, double ECEFX,
+                                     double ECEFY, double ECEFZ, double VelX, double VelY, double VelZ, double lat,
+                                     double lon, double alt, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps)
+{
+    Gps->Weeks           = Weeks;
+    Gps->SecondsIntoWeek = SecondsIntoWeek;
+    Gps->Fractions       = Fractions;
+    Gps->ECEFX           = ECEFX;
+    Gps->ECEFY           = ECEFY;
+    Gps->ECEFZ           = ECEFZ;
+    Gps->VelX            = VelX;
+    Gps->VelY            = VelY;
+    Gps->VelZ            = VelZ;
+    Gps->lat             = lat;
+    Gps->lon             = lon;
+    Gps->alt             = alt;
+}
 ```
 
-## 항목
+### `generic_adcs_ingest.h`
 
-- [`components/generic_adcs/fsw/fprime/src/generic_adcs_ingest.c`](file--generic_adcs_ingest.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/fprime/src/generic_adcs_ingest.h`](file--generic_adcs_ingest.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/fprime/src/generic_adcs_msg.h`](file--generic_adcs_msg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_adcs/fsw/fprime/src/generic_adcs_ingest.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file has the functions to ingest messages from the sensor applications.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_INGEST_H_
+#define _GENERIC_ADCS_INGEST_H_
+
+#include "generic_adcs_msg.h"
+
+void Generic_ADCS_ingest_init(FILE *in, Generic_ADCS_DI_Tlm_Payload_t *DI);
+void Generic_ADCS_ingest_generic_mag(__int32_t MagIntX, __int32_t MagIntY, __int32_t MagIntZ,
+                                     Generic_ADCS_DI_Mag_Tlm_Payload_t *Mag);
+void Generic_ADCS_ingest_generic_fss(float Alpha, float Beta, __uint8_t Error, Generic_ADCS_DI_Fss_Tlm_Payload_t *Fss);
+void Generic_ADCS_ingest_generic_css(__uint16_t ADCV0, __uint16_t ADCV1, __uint16_t ADCV2, __uint16_t ADCV3,
+                                     __uint16_t ADCV4, __uint16_t ADCV5, Generic_ADCS_DI_Css_Tlm_Payload_t *Css);
+void Generic_ADCS_ingest_generic_imu(float LinX, float LinY, float LinZ, float AngX, float AngY, float AngZ,
+                                     Generic_ADCS_DI_Imu_Tlm_Payload_t *Imu);
+void Generic_ADCS_ingest_generic_rw(double RW0, double RW1, double RW2, Generic_ADCS_DI_Rw_Tlm_Payload_t *Rw);
+void Generic_ADCS_ingest_generic_st(double Q0, double Q1, double Q2, double Q3, __uint8_t IsValid,
+                                    Generic_ADCS_DI_St_Tlm_Payload_t *St);
+void Generic_ADCS_ingest_novatel_gps(uint16_t Weeks, uint32_t SecondsIntoWeek, double Fractions, double ECEFX,
+                                     double ECEFY, double ECEFZ, double VelX, double VelY, double VelZ, double lat,
+                                     double lon, double alt, Generic_ADCS_DI_Gps_Tlm_Payload_t *Gps);
+
+#endif
+```
+
+### `generic_adcs_msg.h`
+
+**경로:** `components/generic_adcs/fsw/fprime/src/generic_adcs_msg.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**  Define GENERIC_ADCS application commands and telemetry messages
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_MSG_H_
+#define _GENERIC_ADCS_MSG_H_
+/*
+** Ground Command Codes
+*/
+#define GENERIC_ADCS_NOOP_CC                    0
+#define GENERIC_ADCS_RESET_COUNTERS_CC          1
+#define GENERIC_ADCS_SET_MODE_CC                2
+#define GENERIC_ADCS_SEND_DI_CMD_CC             3
+#define GENERIC_ADCS_SEND_AD_CMD_CC             4
+#define GENERIC_ADCS_SEND_GNC_CMD_CC            5
+#define GENERIC_ADCS_SEND_AC_CMD_CC             6
+#define GENERIC_ADCS_SEND_DO_CMD_CC             7
+#define GENERIC_ADCS_SET_MOMENTUM_MANAGEMENT_CC 8
+#define GENERIC_ADCS_INERTIAL_QUATERNION_CC     9
+
+/*
+** Telemetry Request Command Codes
+*/
+#define GENERIC_ADCS_REQ_HK_TLM 0
+
+typedef struct
+{
+    /* Every command requires a header used to identify it */
+    __uint8_t Mode;
+} Generic_ADCS_Mode_cmd_t;
+
+typedef struct
+{
+    __uint8_t MomentumManagement;
+} Generic_ADCS_MomentumManagement_cmd_t;
+
+typedef struct
+{
+    double qbn[4];
+} Generic_ADCS_Quat_cmd_t;
+
+/*
+** Generic_ADCS housekeeping type definition
+*/
+typedef struct
+{
+    __uint8_t CommandErrorCount;
+    __uint8_t CommandCount;
+} Generic_ADCS_Hk_tlm_t;
+#define GENERIC_ADCS_HK_TLM_LNGTH sizeof(Generic_ADCS_Hk_tlm_t)
+
+/*
+** Generic_ADCS EPH type definition
+*/
+typedef struct
+{
+    double date_epoch;
+    double coeff_G1;
+    double coeff_G2;
+    double coeff_L1;
+    double coeff_l2;
+    double coeff_long1;
+    double coeff_long2;
+    double cos_obliq_eclp;
+    double sin_obliq_eclp;
+} Generic_ADCS_EPH_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    int nmax;
+} Generic_ADCS_EPH_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_EPH_Sol_Tlm_Payload_t Sol;
+    Generic_ADCS_EPH_Mag_Tlm_Payload_t bfld;
+} Generic_ADCS_EPH_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_EPH_Tlm_Payload_t Payload;
+} Generic_ADCS_EPH_Tlm_t;
+#define GENERIC_ADCS_EPH_LNGTH sizeof(Generic_ADCS_EPH_Tlm_t)
+
+/*
+** Generic_ADCS DI type definition
+*/
+typedef struct
+{
+    double qbs[4]; // quaternion from sensor to body
+    double bvb[3]; // magnetic field measurement by sensor in body frame
+} Generic_ADCS_DI_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    double    qbs[4]; // quaternion from sensor to body
+    __uint8_t valid;
+    double    svb[3]; // sun vector from sensor in body frame
+} Generic_ADCS_DI_Fss_Tlm_Payload_t;
+
+typedef struct
+{
+    double axis[3]; // CSS axis in body frame
+    double scale;   // scale factor
+    double percenton;
+} Generic_ADCS_DI_Css_Sensor_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Css_Sensor_Payload_t Sensor[6];
+    __uint8_t                            valid;
+    double                               svb[3]; // sun vector from sensors in body frame
+} Generic_ADCS_DI_Css_Tlm_Payload_t;
+
+typedef struct
+{
+    double    qbs[4]; // quaternion from sensor to body
+    double    pos[3]; // position of sensor in body
+    __uint8_t valid;
+    double    wbn[3]; // angular rate
+    double    acc[3]; // acceleration
+} Generic_ADCS_DI_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    double whl_axis[3][3];
+    double H_maxB[3];
+    double HwhlB[3];
+} Generic_ADCS_DI_Rw_Tlm_Payload_t;
+
+typedef struct
+{
+    double    qbs[4]; // quaternion from sensor to body
+    double    q[4];
+    __uint8_t valid;
+} Generic_ADCS_DI_St_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} Generic_ADCS_DI_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Mag_Tlm_Payload_t Mag;
+    Generic_ADCS_DI_Fss_Tlm_Payload_t Fss;
+    Generic_ADCS_DI_Css_Tlm_Payload_t Css;
+    Generic_ADCS_DI_Imu_Tlm_Payload_t Imu;
+    Generic_ADCS_DI_Rw_Tlm_Payload_t  Rw;
+    Generic_ADCS_DI_St_Tlm_Payload_t  St;
+    Generic_ADCS_DI_Gps_Tlm_Payload_t Gps;
+} Generic_ADCS_DI_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DI_Tlm_Payload_t Payload;
+} Generic_ADCS_DI_Tlm_t;
+#define GENERIC_ADCS_DI_LNGTH sizeof(Generic_ADCS_DI_Tlm_t)
+
+/*
+** Generic_ADCS AD type definition
+*/
+typedef struct
+{
+    double    bvb[3];
+    __uint8_t MagValid;
+} Generic_ADCS_AD_Mag_Tlm_Payload_t;
+
+typedef struct
+{
+    __uint8_t SunValid;
+    __uint8_t FssValid;
+    double    svb[3];
+} Generic_ADCS_AD_Sol_Tlm_Payload_t;
+
+typedef struct
+{
+    __uint8_t init;
+    double    alpha;
+    __uint8_t valid;
+    double    wbn_prev[3];
+    double    wbn[3];
+    double    acc[3];
+} Generic_ADCS_AD_Imu_Tlm_Payload_t;
+
+typedef struct
+{
+    __uint8_t Valid;  /* [-] data validity flag */
+    double    qbn[4]; /* [-] quaternion expressed in body frame */
+} Generic_ADCS_AD_ST_Tlm_Payload_t;
+
+typedef struct
+{
+    uint16_t Weeks;
+    uint32_t SecondsIntoWeek;
+    double   Fractions;
+    double   ECEFX;
+    double   ECEFY;
+    double   ECEFZ;
+    double   VelX;
+    double   VelY;
+    double   VelZ;
+    double   lat;
+    double   lon;
+    double   alt;
+} Generic_ADCS_AD_Gps_Tlm_Payload_t;
+
+typedef struct
+{
+    __uint8_t Valid;
+    __uint8_t enable_filter; /*Flag to enable/disable Moving Average filter*/
+    __uint8_t SolInit;
+    __uint8_t MagInit;
+    double    wbn[3];
+    double    ws[3];       /*(rad/s) Estimated angular rate from Sun Vector*/
+    double    wm[3];       /*(rad/s) Estimated angular rate from Mag Vector*/
+    double    svb_prev[3]; /*sol.svb at prevous time*/
+    double    bvb_prev[3]; /*mag.bvb unit at last time step*/
+    int32_t   sample_size; /*Number of samples used in moving average filter*/
+} Generic_AD_rateEst_Tlm_Payload_t;
+
+typedef struct
+{
+    long   init; /* Initialization marker */
+    double dt;   /* rate at which dynamics propogated */
+    double eye3[3][3];
+    double sig_u;
+    double sig_v;
+    double sig_mag;
+    double sig_sun;
+    double sig_star;
+    double bias_est[3];
+    double qk_est[4];
+    double Pk[6][6];
+    double Qk[6][6];
+    double Gt[6][6];
+    double Hk[3][6];
+    double delta_xk_est[6];
+    double ek_ST_bound;
+    double ek_FSS_bound;
+    double ek_MG_bound;
+    double wbn[3];
+    double qbn[4];
+    int    AKFvalid;
+    double Mag_range;
+    double Dvg_tol;
+    int    reset_flag;
+} Generic_ADCS_AD_murAKF_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_AD_Mag_Tlm_Payload_t    Mag;
+    Generic_ADCS_AD_Sol_Tlm_Payload_t    Sol;
+    Generic_ADCS_AD_Imu_Tlm_Payload_t    Imu;
+    Generic_ADCS_AD_ST_Tlm_Payload_t     ST;
+    Generic_ADCS_AD_Gps_Tlm_Payload_t    Gps;
+    Generic_AD_rateEst_Tlm_Payload_t     RateEst;
+    Generic_ADCS_AD_murAKF_Tlm_Payload_t AKF;
+} Generic_ADCS_AD_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_AD_Tlm_Payload_t Payload;
+} Generic_ADCS_AD_Tlm_t;
+#define GENERIC_ADCS_AD_LNGTH sizeof(Generic_ADCS_AD_Tlm_t)
+
+/*
+** Generic_ADCS GNC type definition
+*/
+typedef struct
+{
+    double    Kb;
+    double    b_range;
+    double    loFrac;
+    double    hiFrac;
+    __uint8_t mm_active[3];
+    double    Mcmd[3];
+} Generic_ADCS_GNC_Hmgmt_t;
+
+typedef struct
+{
+    double                   DT;
+    double                   MaxMcmd;
+    __uint8_t                Mode;
+    __uint8_t                HmgmtOn;
+    Generic_ADCS_GNC_Hmgmt_t Hmgmt;
+    double                   bvb[3];
+    double                   svb[3];
+    __uint8_t                SunValid;
+    double                   wbn[3];
+    double                   HwhlMaxB[3];
+    double                   HwhlB[3];
+    double                   Mcmd[3];
+    double                   Tcmd[3];
+    __uint8_t                qValid;
+    double                   qbn[4];
+    double                   qErr[4];
+    double                   Bfield_ECIF[3];
+    double                   Bfield_ECEF[3];
+    double                   Bfield_NED[3];
+    double                   svn[3];
+    double                   beta;
+} Generic_ADCS_GNC_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_GNC_Tlm_Payload_t Payload;
+} Generic_ADCS_GNC_Tlm_t;
+#define GENERIC_ADCS_GNC_LNGTH sizeof(Generic_ADCS_GNC_Tlm_t)
+
+/*
+** Generic_ADCS AC type definition
+*/
+typedef struct
+{
+    double b_range;
+    double Kb;
+    double bold[3];
+    double bdot[3];
+} Generic_ADCS_AC_Bdot_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double    Kp[3];
+    double    Kr[3];
+    double    sside[3];
+    double    vmax;
+    double    cmd_wbn[3];
+    __uint8_t h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double werr[3];
+    double Tcmd[3];
+    double err_t;
+} Generic_ADCS_AC_Sunsafe_Tlm_t;
+
+typedef struct
+{
+    /* Inputs*/
+    double Kp[3];
+    double Kr[3];
+    double Ki[3];
+    double phiErr_max;
+    double qbn_cmd[4];
+    long   h_mgmt;
+
+    /* Internal Variables */
+    double therr[3];
+    double sumtherr[3];
+    double qErr[4];
+    double werr[3];
+    double Tcmd[3];
+} Generic_ADCS_AC_Inertial_Tlm_t;
+
+typedef struct
+{
+    Generic_ADCS_AC_Bdot_Tlm_t     Bdot;
+    Generic_ADCS_AC_Sunsafe_Tlm_t  Sunsafe;
+    Generic_ADCS_AC_Inertial_Tlm_t Inertial;
+} Generic_ADCS_AC_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_AC_Tlm_Payload_t Payload;
+} Generic_ADCS_AC_Tlm_t;
+#define GENERIC_ADCS_AC_LNGTH sizeof(Generic_ADCS_AC_Tlm_t)
+
+/*
+** Generic_ADCS DO type definition
+*/
+typedef struct
+{
+    double qba[4]; // quaternion from actuator to body
+    double Mcmd[3];
+} Generic_ADCS_DO_Trq_TlmPayload_t;
+
+typedef struct
+{
+    double axis[3][3];
+    double Tcmd[3];
+} Generic_ADCS_DO_Rw_TlmPayload_t;
+
+typedef struct
+{
+    Generic_ADCS_DO_Trq_TlmPayload_t Trq;
+    Generic_ADCS_DO_Rw_TlmPayload_t  Rw;
+} Generic_ADCS_DO_Tlm_Payload_t;
+
+typedef struct
+{
+    Generic_ADCS_DO_Tlm_Payload_t Payload;
+} Generic_ADCS_DO_Tlm_t;
+#define GENERIC_ADCS_DO_LNGTH sizeof(Generic_ADCS_DO_Tlm_t)
+
+typedef struct
+{
+    __uint8_t Direction_0;
+    __uint8_t PercentOn_0;
+    __uint8_t Direction_1;
+    __uint8_t PercentOn_1;
+    __uint8_t Direction_2;
+    __uint8_t PercentOn_2;
+
+} GENERIC_TORQUER_All_Percent_On_cmd_t;
+#define GENERIC_TORQUER_ALL_PERCENT_ON_CMD_LEN sizeof(GENERIC_TORQUER_All_Percent_On_cmd_t)
+
+typedef struct
+{
+    __uint8_t wheel_number;
+    __int16_t data;
+
+} GENERIC_RW_Cmd_t;
+#define GENERIC_RW_CMD_LEN sizeof(GENERIC_RW_Cmd_t)
+
+#endif
+```

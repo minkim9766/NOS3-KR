@@ -3,18 +3,132 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `color-input.component.css`
 
-file--color-input.component.css
-file--color-input.component.html
-file--color-input.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.css`
+
+
+```css
+:host {
+  display: inline-block;
+  position: relative;
+  white-space: nowrap;
+}
+
+input[type="color"] {
+  position: absolute;
+  width: 100%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+span.color {
+  cursor: pointer;
+}
+
+span.action {
+  color: #009e87;
+  cursor: pointer;
+  text-decoration: underline;
+}
 ```
 
-## 항목
+### `color-input.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.css`](file--color-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.html`](file--color-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.ts`](file--color-input.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.html`
+
+
+```html
+<input #colorInput [formControl]="colorControl" type="color" />
+@if (selectedColor) {
+  <span class="color" [style.color]="selectedColor" (click)="openColorPicker()">⬤</span>
+  <ya-icon-action icon="close" (click)="unsetColor()" matTooltip="Unset color" />
+} @else {
+  <span class="action" (click)="openColorPicker()">{{ label() }}</span>
+}
+```
+
+### `color-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/color-input/color-input.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  input,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  FormControl,
+  NG_VALUE_ACCESSOR,
+  ReactiveFormsModule,
+} from '@angular/forms';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { YaIconAction } from '../icon-action/icon-action.component';
+
+@Component({
+  selector: 'ya-color-input',
+  templateUrl: './color-input.component.html',
+  styleUrl: './color-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaColorInput),
+      multi: true,
+    },
+  ],
+  imports: [MatIcon, MatTooltip, ReactiveFormsModule, YaIconAction],
+})
+export class YaColorInput implements ControlValueAccessor {
+  label = input('Set color');
+
+  @ViewChild('colorInput')
+  private colorInput: ElementRef<HTMLInputElement>;
+
+  colorControl = new FormControl<string>('#000000');
+
+  // Follows the HTML5 color input, but could also be null
+  selectedColor: string | null = null;
+
+  private onChange = (_: string | null) => {};
+
+  constructor() {
+    this.colorControl.valueChanges.subscribe((value) => {
+      this.selectedColor = value;
+      this.onChange(value);
+    });
+  }
+
+  writeValue(obj: any): void {
+    if (obj) {
+      this.colorControl.setValue(obj);
+    } else {
+      this.selectedColor = null;
+    }
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+
+  openColorPicker() {
+    this.colorInput.nativeElement.click();
+  }
+
+  unsetColor() {
+    this.selectedColor = null;
+    this.onChange(null);
+  }
+}
+```

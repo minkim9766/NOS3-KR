@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/fs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,80 @@ config/index
 eds/index
 fsw/index
 ut-coverage/index
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/fs/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/fs/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/fs/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/fs/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/fs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/fs/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/fs/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE File Services (FS) module CMake build recipe
+#
+##################################################################
+
+project(CFE_FS C)
+
+# File services source files
+set(fs_SOURCES
+    fsw/src/cfe_fs_api.c
+    fsw/src/cfe_fs_priv.c
+    fsw/src/cfe_fs_api.c
+    fsw/src/cfe_fs_priv.c
+)
+add_library(fs STATIC ${fs_SOURCES})
+
+target_include_directories(fs PUBLIC fsw/inc)
+target_link_libraries(fs PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/fs/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# FS Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the FS configuration
+set(FS_MISSION_CONFIG_FILE_LIST
+  cfe_fs_mission_cfg.h
+  cfe_fs_interface_cfg.h
+  cfe_fs_filedef.h
+  cfe_fs_extern_typedefs.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(FS_CFGFILE ${FS_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${FS_CFGFILE}" NAME_WE)
+  if (DEFINED FS_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${FS_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${FS_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${FS_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

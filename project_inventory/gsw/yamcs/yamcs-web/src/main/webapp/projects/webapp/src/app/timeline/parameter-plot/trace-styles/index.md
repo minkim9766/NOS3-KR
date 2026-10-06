@@ -3,18 +3,111 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `trace-styles.component.css`
 
-file--trace-styles.component.css
-file--trace-styles.component.html
-file--trace-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.css`
+
+
+```css
+.inline {
+  display: inline-block !important;
+  width: 100px !important;
+}
 ```
 
-## 항목
+### `trace-styles.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.css`](file--trace-styles.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.html`](file--trace-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.ts`](file--trace-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.html`
+
+
+```html
+<form [formGroup]="form">
+  <table class="style-table">
+    <tr>
+      <td class="property">Parameter</td>
+      <td class="widget">
+        <app-parameter-input formControlName="parameter" [fill]="true" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Line color</td>
+      <td class="widget">
+        <input type="color" formControlName="lineColor" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Visible</td>
+      <td class="widget">
+        <mat-slide-toggle formControlName="visible" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Line width</td>
+      <td class="widget">
+        <input type="number" formControlName="lineWidth" class="inline" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Show min/max</td>
+      <td class="widget">
+        <mat-slide-toggle #minMax formControlName="minMax" />
+      </td>
+    </tr>
+    @if (minMax.checked) {
+      <tr>
+        <td class="property">Min/max opacity</td>
+        <td class="widget">
+          <input
+            type="number"
+            formControlName="minMaxOpacity"
+            class="inline"
+            min="0"
+            max="1"
+            step="0.1" />
+          <span class="hint">Value between 0 and 1</span>
+        </td>
+      </tr>
+    }
+    <tr>
+      <td class="property">Fill</td>
+      <td class="widget">
+        <mat-slide-toggle #fill formControlName="fill" />
+      </td>
+    </tr>
+    @if (fill.checked) {
+      <tr>
+        <td class="property">Fill color</td>
+        <td class="widget">
+          <input type="color" formControlName="fillColor" />
+        </td>
+      </tr>
+    }
+  </table>
+</form>
+```
+
+### `trace-styles.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/trace-styles/trace-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppParameterInput } from '../../../shared/parameter-input/parameter-input.component';
+
+@Component({
+  selector: 'app-trace-styles',
+  templateUrl: './trace-styles.component.html',
+  styleUrls: ['./trace-styles.component.css', '../../shared/StyleTable.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppParameterInput, WebappSdkModule],
+})
+export class TraceStylesComponent {
+  @Input()
+  form: FormGroup;
+}
+```

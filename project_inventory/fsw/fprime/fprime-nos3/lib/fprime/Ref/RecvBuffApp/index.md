@@ -3,24 +3,348 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--RecvBuff.hpp
-file--RecvBuffApp.fpp
-file--RecvBuffComponentImpl.cpp
-file--RecvBuffComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuff.hpp`](file--RecvBuff.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffApp.fpp`](file--RecvBuffApp.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffComponentImpl.cpp`](file--RecvBuffComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffComponentImpl.hpp`](file--RecvBuffComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_compile_options(
+    -Wno-conversion
+    -Wno-double-promotion
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/RecvBuffApp.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/RecvBuffComponentImpl.cpp"
+
+)
+set(MOD_DEPS "Os" "Fw/Cmd")
+register_fprime_module()
+```
+
+### `RecvBuff.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuff.hpp`
+
+
+```cpp
+// ======================================================================
+// RecvBuff.hpp
+// Standardization header for RecvBuff
+// ======================================================================
+
+#ifndef Ref_RecvBuff_HPP
+#define Ref_RecvBuff_HPP
+
+#include "Ref/RecvBuffApp/RecvBuffComponentImpl.hpp"
+
+namespace Ref {
+
+  typedef RecvBuffImpl RecvBuff;
+
+}
+
+#endif
+```
+
+### `RecvBuffApp.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffApp.fpp`
+
+
+```fpp
+module Ref {
+
+  @ Packet receive status
+  enum PacketRecvStatus {
+    PACKET_STATE_NO_PACKETS = 0
+    PACKET_STATE_OK = 1
+    PACKET_STATE_ERRORS = 3 @< Receiver has seen errors
+  }
+
+  @ Some Packet Statistics
+  struct PacketStat {
+    BuffRecv: U32 @< Number of buffers received
+    BuffErr: U32 @< Number of buffers received with errors
+    PacketStatus: PacketRecvStatus @< Packet Status
+  }
+
+  @ A rate group active component with input and output scheduler ports
+  passive component RecvBuff {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ The data buffer input
+    sync input port Data: Drv.DataBuffer
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    @ A port for getting parameter values
+    param get port ParamGet
+
+    @ A port for setting parameter values
+    param set port ParamSet
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ First packet received
+    event FirstPacketReceived(
+                               $id: U32 @< The ID argument
+                             ) \
+      severity activity low \
+      id 0 \
+      format "First packet ID {} received"
+
+    @ Packet checksum error
+    event PacketChecksumError(
+                               $id: U32 @< The ID argument
+                             ) \
+      severity warning high \
+      id 1 \
+      format "Packet ID {} had checksum error"
+
+    @ Report parameter update
+    event BuffRecvParameterUpdated(
+                                    $id: U32 @< The ID argument
+                                  ) \
+      severity activity low \
+      id 2 \
+      format "BuffRecv Parameter {} was updated"
+
+    # ----------------------------------------------------------------------
+    # Parameters
+    # ----------------------------------------------------------------------
+
+    @ A test parameter
+    param parameter1: U32 default 10 id 0 \
+      set opcode 0 \
+      save opcode 1
+
+    @ A test parameter
+    param parameter2: I16 default 11 id 1 \
+      set opcode 2 \
+      save opcode 3
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Packet Statistics
+    telemetry PktState: Ref.PacketStat id 0
+
+    @ Value of Sensor1
+    telemetry Sensor1: F32 id 1 \
+    format "{.2f}V"
+
+    @ Value of Sensor3
+    telemetry Sensor2: F32 id 2
+
+    @ Readback of Parameter1
+    telemetry Parameter1: U32 id 3 update on change
+
+    @ Readback of Parameter2
+    telemetry Parameter2: I16 id 4 update on change \
+      low {
+        red -3
+        orange -2
+        yellow -1
+      } \
+      high {
+        red 3
+        orange 2
+        yellow 1
+      }
+
+  }
+
+}
+```
+
+### `RecvBuffComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffComponentImpl.cpp`
+
+
+```cpp
+#include <Ref/RecvBuffApp/RecvBuffComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Console.hpp>
+#include <Fw/Types/Assert.hpp>
+
+#include <cstdio>
+
+#define DEBUG_LVL 1
+
+namespace Ref {
+
+    RecvBuffImpl::RecvBuffImpl(const char* compName) :
+            RecvBuffComponentBase(compName) {
+        this->m_firstBuffReceived = 0;
+        this->m_sensor1 = 1000.0;
+        this->m_sensor2 = 10.0;
+        this->m_stats.set_BuffRecv(0);
+        this->m_stats.set_BuffErr(0);
+        this->m_stats.set_PacketStatus(PacketRecvStatus::PACKET_STATE_NO_PACKETS);
+    }
+
+    RecvBuffImpl::~RecvBuffImpl() {
+
+    }
+
+    void RecvBuffImpl::Data_handler(FwIndexType portNum, Drv::DataBuffer &buff) {
+
+        this->m_stats.set_BuffRecv(++this->m_buffsReceived);
+        // reset deserialization of buffer
+        buff.resetDeser();
+        // deserialize packet ID
+        U32 id = 0;
+        Fw::SerializeStatus stat = buff.deserializeTo(id);
+        FW_ASSERT(stat == Fw::FW_SERIALIZE_OK,static_cast<FwAssertArgType>(stat));
+        // deserialize data
+        U8 testData[24] = {0};
+        FwSizeType size = sizeof(testData);
+        stat = buff.deserializeTo(testData,size);
+        FW_ASSERT(stat == Fw::FW_SERIALIZE_OK,static_cast<FwAssertArgType>(stat));
+        // deserialize checksum
+        U32 csum = 0;
+        stat = buff.deserializeTo(csum);
+        FW_ASSERT(stat == Fw::FW_SERIALIZE_OK,static_cast<FwAssertArgType>(stat));
+        // if first packet, send event
+        if (not this->m_firstBuffReceived) {
+            this->log_ACTIVITY_LO_FirstPacketReceived(id);
+            this->m_stats.set_PacketStatus(PacketRecvStatus::PACKET_STATE_OK);
+            this->m_firstBuffReceived = true;
+        }
+
+        // compute checksum
+        U32 sum = 0;
+        for (U32 byte = 0; byte < size; byte++) {
+            sum += testData[byte];
+        }
+        // check checksum
+        if (sum != csum) {
+            // increment error count
+            this->m_stats.set_BuffErr(++this->m_errBuffs);
+            // send error event
+            this->log_WARNING_HI_PacketChecksumError(id);
+            // update stats
+            this->m_stats.set_PacketStatus(PacketRecvStatus::PACKET_STATE_ERRORS);
+        }
+        // update sensor values
+        this->m_sensor1 += 5.0;
+        this->m_sensor2 += 1.2;
+        // update channels
+        this->tlmWrite_Sensor1(this->m_sensor1);
+        this->tlmWrite_Sensor2(this->m_sensor2);
+        this->tlmWrite_PktState(this->m_stats);
+
+    }
+
+    void RecvBuffImpl::parameterUpdated(FwPrmIdType id) {
+        this->log_ACTIVITY_LO_BuffRecvParameterUpdated(id);
+        Fw::ParamValid valid;
+        switch(id) {
+            case PARAMID_PARAMETER1: {
+                U32 val = this->paramGet_parameter1(valid);
+                this->tlmWrite_Parameter1(val);
+                break;
+            }
+            case PARAMID_PARAMETER2: {
+                I16 val = this->paramGet_parameter2(valid);
+                this->tlmWrite_Parameter2(val);
+                break;
+            }
+            default:
+                FW_ASSERT(0,id);
+                break;
+        }
+    }
+
+}
+```
+
+### `RecvBuffComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/RecvBuffComponentImpl.hpp`
+
+
+```cpp
+#ifndef REF_LPR_ATM_IMPL_HPP
+#define REF_LPR_ATM_IMPL_HPP
+
+#include <Ref/RecvBuffApp/RecvBuffComponentAc.hpp>
+
+namespace Ref {
+
+    class RecvBuffImpl final : public RecvBuffComponentBase {
+        public:
+
+            // Only called by derived class
+            RecvBuffImpl(const char* compName);
+
+            ~RecvBuffImpl();
+
+        private:
+
+            // downcall for input port
+            void Data_handler(FwIndexType portNum, Drv::DataBuffer &buff);
+            Ref::PacketStat m_stats;
+            U32 m_buffsReceived; // !< number of buffers received
+            bool m_firstBuffReceived; // !< first buffer received or not
+            U32 m_errBuffs; // !< number of buffers with errors received
+            F32 m_sensor1;
+            F32 m_sensor2;
+
+            // parameter update notification
+            void parameterUpdated(FwPrmIdType id);
+
+    };
+
+}
+
+#endif
+```

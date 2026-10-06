@@ -3,14 +3,27 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/toolchain/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic-native.cmake`
 
-file--generic-native.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/toolchain/generic-native.cmake`
+
+
+```cmake
+####
+# File: toolchain/generic-native.cmake:
+#
+# A toolchain file for compiling natively, but using a "Generic" toolchain. This tests that "Generic" toolchains work
+# within F Prime.
+#
+####
+# A normal F Prime toolchain would set the CMAKE_SYSTEM_NAME to Generic and set FPRIME_PLATFORM. However, this is a
+# customization of the toolchain for fprime.  This toolchain is a generic CMake toolchain where FPRIME_PLATFORM is set
+# via a -DFPRIME_PLATFORM flag, showing this other route to use CMake toolchains as-is.
+set(CMAKE_SYSTEM_NAME Generic)
+
+# Standard program names
+find_program(CMAKE_C_COMPILER   NAMES cc gcc clang)
+find_program(CMAKE_CXX_COMPILER NAMES c++ g++ clang++)
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/toolchain/generic-native.cmake`](file--generic-native.cmake) — UTF-8 텍스트 파일 본문 포함

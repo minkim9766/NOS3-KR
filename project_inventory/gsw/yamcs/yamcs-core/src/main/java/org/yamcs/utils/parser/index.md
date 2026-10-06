@@ -3,40 +3,3639 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 ast/index
-file--Filter.java
-file--FilterParser.java
-file--FilterParser.jj
-file--FilterParserConstants.java
-file--FilterParserTokenManager.java
-file--IncorrectTypeException.java
-file--InvalidPatternException.java
-file--javacc-invocation.sh
-file--ParseException.java
-file--SimpleCharStream.java
-file--Token.java
-file--TokenMgrError.java
-file--UnknownFieldException.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ast/`](ast/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/Filter.java`](file--Filter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParser.java`](file--FilterParser.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParser.jj`](file--FilterParser.jj) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParserConstants.java`](file--FilterParserConstants.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParserTokenManager.java`](file--FilterParserTokenManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/IncorrectTypeException.java`](file--IncorrectTypeException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/InvalidPatternException.java`](file--InvalidPatternException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/javacc-invocation.sh`](file--javacc-invocation.sh) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ParseException.java`](file--ParseException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/SimpleCharStream.java`](file--SimpleCharStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/Token.java`](file--Token.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/TokenMgrError.java`](file--TokenMgrError.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/UnknownFieldException.java`](file--UnknownFieldException.java) — UTF-8 텍스트 파일 본문 포함
+### `Filter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/Filter.java`
+
+
+```java
+package org.yamcs.utils.parser;
+
+import java.io.StringReader;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.regex.Pattern;
+
+import org.yamcs.utils.parser.ast.AndExpression;
+import org.yamcs.utils.parser.ast.Comparison;
+import org.yamcs.utils.parser.ast.OrExpression;
+import org.yamcs.utils.parser.ast.UnaryExpression;
+
+import com.google.common.primitives.Bytes;
+
+public abstract class Filter<T> {
+
+    private FilterParser<T> parser;
+    private AndExpression expression;
+
+    public Filter(String query) {
+        parser = new FilterParser<>(new StringReader(query));
+    }
+
+    public void parse() throws ParseException {
+        expression = parser.parse();
+    }
+
+    /**
+     * True if the provided field is part of the parsed query.
+     * <p>
+     * This method should only be used after {@link #parse()} is called.
+     */
+    public boolean isQueryField(String field) {
+        return parser.isQueryField(field);
+    }
+
+    /**
+     * True if the parsed query includes at least one text search.
+     * <p>
+     * This method should only be used after {@link #parse()} is called.
+     */
+    public boolean includesTextSearch() {
+        return parser.includesTextSearch();
+    }
+
+    protected void addPrefixField(String field, BiFunction<T, String, String> resolver) {
+        parser.addPrefixField(field, resolver);
+    }
+
+    protected void addStringField(String field, Function<T, String> resolver) {
+        parser.addStringField(field, resolver);
+    }
+
+    protected void addStringCollectionField(String field, Function<T, Collection<String>> resolver) {
+        parser.addStringCollectionField(field, resolver);
+    }
+
+    protected <E extends Enum<?>> void addEnumField(String field, Class<E> enumClass, Function<T, E> resolver) {
+        parser.addEnumField(field, enumClass, resolver);
+    }
+
+    protected void addNumberField(String field, Function<T, Number> resolver) {
+        parser.addNumberField(field, resolver);
+    }
+
+    protected void addNumberCollectionField(String field, Function<T, Collection<? extends Number>> resolver) {
+        parser.addNumberCollectionField(field, resolver);
+    }
+
+    protected void addBooleanField(String field, Function<T, Boolean> resolver) {
+        parser.addBooleanField(field, resolver);
+    }
+
+    protected void addBinaryField(String field, Function<T, byte[]> resolver) {
+        parser.addBinaryField(field, resolver);
+    }
+
+    public boolean matches(T item) {
+        if (expression == null) {
+            return true;
+        } else {
+            beforeItem(item);
+            return matchAndExpression(expression, item);
+        }
+    }
+
+    /**
+     * Called for each new item, before any comparisons.
+     * <p>
+     * The default implementation does nothing, concrete classes may override to hook any initialization logic.
+     */
+    public void beforeItem(T item) {
+    }
+
+    public String printExpression() {
+        return expression.toString("  ");
+    }
+
+    /**
+     * Implementatinos must search the provided item for the given literal in a manner that makes sense to the type of
+     * item. Search should be exact and case-insensitive.
+     * 
+     * @param item
+     *            Item to match
+     * @param lowercaseLiteral
+     *            A search string. Always lowercase.
+     */
+    protected abstract boolean matchesLiteral(T item, String lowercaseLiteral);
+
+    private boolean matchOrExpression(OrExpression expression, T item) {
+        for (UnaryExpression clause : expression.getClauses()) {
+            if (matchUnaryExpression(clause, item)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean matchAndExpression(AndExpression expression, T item) {
+        for (OrExpression clause : expression.getClauses()) {
+            if (!matchOrExpression(clause, item)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean matchUnaryExpression(UnaryExpression expression, T item) {
+        boolean res;
+        if (expression.getComparison() != null) {
+            res = matchComparison(expression.getComparison(), item);
+        } else {
+            res = matchAndExpression(expression.getAndExpression(), item);
+        }
+        return expression.isNot() ? !res : res;
+    }
+
+    private boolean matchComparison(Comparison comparison, T item) {
+        if (comparison.comparator == null) {
+            return matchesLiteral(item, comparison.comparable);
+        }
+
+        var stringResolver = parser.getStringResolver(comparison.comparable);
+        if (stringResolver != null) {
+            var fieldValue = stringResolver.apply(item);
+            return matchStringComparison(comparison, fieldValue);
+        }
+
+        var enumResolver = parser.getEnumResolver(comparison.comparable);
+        if (enumResolver != null) {
+            return matchEnumComparison(comparison, item, enumResolver);
+        }
+
+        var numberResolver = parser.getNumberResolver(comparison.comparable);
+        if (numberResolver != null) {
+            return matchNumberComparison(comparison, item, numberResolver);
+        }
+
+        var booleanResolver = parser.getBooleanResolver(comparison.comparable);
+        if (booleanResolver != null) {
+            return matchBooleanComparison(comparison, item, booleanResolver);
+        }
+
+        var binaryResolver = parser.getBinaryResolver(comparison.comparable);
+        if (binaryResolver != null) {
+            return matchBinaryComparison(comparison, item, binaryResolver);
+        }
+
+        var prefixResolver = parser.getPrefixResolver(comparison.comparable);
+        if (prefixResolver != null) {
+            var fieldValue = prefixResolver.apply(item, comparison.comparable);
+            return matchStringComparison(comparison, fieldValue);
+        }
+
+        var stringCollectionResolver = parser.getStringCollectionResolver(comparison.comparable);
+        if (stringCollectionResolver != null) {
+            var fieldValue = stringCollectionResolver.apply(item);
+            return matchStringCollectionComparison(comparison, fieldValue);
+        }
+
+        var numberCollectionResolver = parser.getNumberCollectionResolver(comparison.comparable);
+        if (numberCollectionResolver != null) {
+            return matchNumberCollectionComparison(comparison, item, numberCollectionResolver);
+        }
+
+        throw new IllegalArgumentException("Unexpected field '" + comparison.comparable + "'");
+    }
+
+    private boolean matchStringComparison(Comparison comparison, String fieldValue) {
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+            return isEqual(fieldValue, comparison.value); // Faster than compare
+        case NOT_EQUAL_TO:
+            return !isEqual(fieldValue, comparison.value); // Faster than compare
+        case GREATER_THAN:
+            return compareStringField(fieldValue, comparison.value) > 0;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return compareStringField(fieldValue, comparison.value) >= 0;
+        case LESS_THAN:
+            return compareStringField(fieldValue, comparison.value) < 0;
+        case LESS_THAN_OR_EQUAL_TO:
+            return compareStringField(fieldValue, comparison.value) <= 0;
+        case HAS:
+            return testStringFieldContains(fieldValue, comparison.value);
+        case RE_EQUAL_TO:
+            return testRegexMatch(fieldValue, comparison.pattern);
+        case RE_NOT_EQUAL_TO:
+            return !testRegexMatch(fieldValue, comparison.pattern);
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchStringCollectionComparison(Comparison comparison, Collection<String> fieldValue) {
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (isEqual(fieldItem, comparison.value)) { // Faster than compare
+                    return true;
+                }
+            }
+            return false;
+        case NOT_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (!isEqual(fieldItem, comparison.value)) { // Faster than compare
+                    return true;
+                }
+            }
+            return false;
+        case GREATER_THAN:
+            for (var fieldItem : fieldValue) {
+                if (compareStringField(fieldItem, comparison.value) > 0) {
+                    return true;
+                }
+            }
+            return false;
+        case GREATER_THAN_OR_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareStringField(fieldItem, comparison.value) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        case LESS_THAN:
+            for (var fieldItem : fieldValue) {
+                if (compareStringField(fieldItem, comparison.value) < 0) {
+                    return true;
+                }
+            }
+            return false;
+        case LESS_THAN_OR_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareStringField(fieldItem, comparison.value) <= 0) {
+                    return true;
+                }
+            }
+            return false;
+        case HAS:
+            for (var fieldItem : fieldValue) {
+                if (testStringFieldContains(fieldItem, comparison.value)) {
+                    return true;
+                }
+            }
+            return false;
+        case RE_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (testRegexMatch(fieldItem, comparison.pattern)) {
+                    return true;
+                }
+            }
+            return false;
+        case RE_NOT_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (!testRegexMatch(fieldItem, comparison.pattern)) {
+                    return true;
+                }
+            }
+            return false;
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchEnumComparison(Comparison comparison, T item, Function<T, ? extends Enum<?>> resolver) {
+        Class<? extends Enum<?>> enumClass = parser.getEnumClass(comparison.comparable);
+        Enum<?> comparand = null;
+        if (enumClass != null) {
+            comparand = parser.findEnum(enumClass, comparison.value);
+        }
+
+        var fieldValue = resolver.apply(item);
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+        case HAS:
+        case RE_EQUAL_TO:
+            return compareEnumField(fieldValue, comparand) == 0;
+        case NOT_EQUAL_TO:
+        case RE_NOT_EQUAL_TO:
+            return compareEnumField(fieldValue, comparand) != 0;
+        case GREATER_THAN:
+            return compareEnumField(fieldValue, comparand) > 0;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return compareEnumField(fieldValue, comparand) >= 0;
+        case LESS_THAN:
+            return compareEnumField(fieldValue, comparand) < 0;
+        case LESS_THAN_OR_EQUAL_TO:
+            return compareEnumField(fieldValue, comparand) <= 0;
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchNumberComparison(Comparison comparison, T item, Function<T, Number> resolver) {
+        var fieldValue = resolver.apply(item);
+        var comparand = comparison.value.equalsIgnoreCase("null")
+                ? null
+                : Double.parseDouble(comparison.value);
+
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+        case HAS:
+        case RE_EQUAL_TO:
+            return compareNumberField(fieldValue, comparand) == 0;
+        case NOT_EQUAL_TO:
+        case RE_NOT_EQUAL_TO:
+            return compareNumberField(fieldValue, comparand) != 0;
+        case GREATER_THAN:
+            return compareNumberField(fieldValue, comparand) > 0;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return compareNumberField(fieldValue, comparand) >= 0;
+        case LESS_THAN:
+            return compareNumberField(fieldValue, comparand) < 0;
+        case LESS_THAN_OR_EQUAL_TO:
+            return compareNumberField(fieldValue, comparand) <= 0;
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchNumberCollectionComparison(Comparison comparison, T item,
+            Function<T, Collection<? extends Number>> resolver) {
+        var fieldValue = resolver.apply(item);
+        var comparand = comparison.value.equalsIgnoreCase("null")
+                ? null
+                : Double.parseDouble(comparison.value);
+
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+        case HAS:
+        case RE_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) == 0) {
+                    return true;
+                }
+            }
+            return false;
+        case NOT_EQUAL_TO:
+        case RE_NOT_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) != 0) {
+                    return true;
+                }
+            }
+            return false;
+        case GREATER_THAN:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) > 0) {
+                    return true;
+                }
+            }
+            return false;
+        case GREATER_THAN_OR_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) >= 0) {
+                    return true;
+                }
+            }
+            return false;
+        case LESS_THAN:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) < 0) {
+                    return true;
+                }
+            }
+            return false;
+        case LESS_THAN_OR_EQUAL_TO:
+            for (var fieldItem : fieldValue) {
+                if (compareNumberField(fieldItem, comparand) <= 0) {
+                    return true;
+                }
+                return false;
+            }
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchBooleanComparison(Comparison comparison, T item, Function<T, Boolean> resolver) {
+        var fieldValue = resolver.apply(item);
+        var comparand = comparison.value.equalsIgnoreCase("null")
+                ? null
+                : Boolean.parseBoolean(comparison.value);
+
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+        case HAS:
+        case RE_EQUAL_TO:
+            return compareBooleanField(fieldValue, comparand) == 0;
+        case NOT_EQUAL_TO:
+        case RE_NOT_EQUAL_TO:
+            return compareBooleanField(fieldValue, comparand) != 0;
+        case GREATER_THAN:
+            return compareBooleanField(fieldValue, comparand) > 0;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return compareBooleanField(fieldValue, comparand) >= 0;
+        case LESS_THAN:
+            return compareBooleanField(fieldValue, comparand) < 0;
+        case LESS_THAN_OR_EQUAL_TO:
+            return compareBooleanField(fieldValue, comparand) <= 0;
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean matchBinaryComparison(Comparison comparison, T item, Function<T, byte[]> resolver) {
+        var fieldValue = resolver.apply(item);
+        var comparand = comparison.binary;
+
+        switch (comparison.comparator) {
+        case EQUAL_TO:
+        case RE_EQUAL_TO:
+            return Arrays.equals(fieldValue, comparand);
+        case HAS:
+            return Bytes.indexOf(fieldValue, comparand) != -1;
+        case NOT_EQUAL_TO:
+        case RE_NOT_EQUAL_TO:
+            return !Arrays.equals(fieldValue, comparand);
+        case GREATER_THAN:
+            return compareBinaryField(fieldValue, comparand) > 0;
+        case GREATER_THAN_OR_EQUAL_TO:
+            return compareBinaryField(fieldValue, comparand) >= 0;
+        case LESS_THAN:
+            return compareBinaryField(fieldValue, comparand) < 0;
+        case LESS_THAN_OR_EQUAL_TO:
+            return compareBinaryField(fieldValue, comparand) <= 0;
+        default:
+            throw new IllegalStateException("Unexpected comparator " + comparison.comparator);
+        }
+    }
+
+    private boolean isEqual(String fieldValue, String comparand) {
+        if (fieldValue == null) {
+            return comparand.equalsIgnoreCase("null");
+        }
+        return fieldValue.equalsIgnoreCase(comparand);
+    }
+
+    private boolean testRegexMatch(String fieldValue, Pattern comparand) {
+        if (fieldValue == null) {
+            return false;
+        }
+        // Unanchored regex
+        return comparand.matcher(fieldValue).find();
+    }
+
+    private int compareStringField(String fieldValue, String comparand) {
+        if (fieldValue == null) {
+            return -1;
+        }
+        return fieldValue.compareToIgnoreCase(comparand);
+    }
+
+    private boolean testStringFieldContains(String fieldValue, String comparand) {
+        if (fieldValue == null) {
+            return false;
+        }
+        return fieldValue.toLowerCase().contains(comparand);
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    private int compareEnumField(Enum fieldValue, Enum comparand) {
+        // Nulls first
+        if (fieldValue == null) {
+            return comparand == null ? 0 : -1;
+        } else if (comparand == null) {
+            return 1;
+        }
+        return fieldValue.compareTo(comparand);
+    }
+
+    private int compareNumberField(Number fieldValue, Double comparand) {
+        // Nulls first
+        if (fieldValue == null) {
+            return comparand == null ? 0 : -1;
+        } else if (comparand == null) {
+            return 1;
+        }
+
+        if (fieldValue instanceof Integer i) {
+            return Double.compare(i, comparand);
+        } else if (fieldValue instanceof Long l) {
+            return Double.compare(l, comparand);
+        } else if (fieldValue instanceof Double d) {
+            return Double.compare(d, comparand);
+        } else if (fieldValue instanceof Float f) {
+            return Double.compare(f, comparand);
+        } else if (fieldValue instanceof Short s) {
+            return Double.compare(s, comparand);
+        } else if (fieldValue instanceof Byte b) {
+            return Double.compare(b, comparand);
+        } else {
+            throw new IllegalArgumentException("Unexpected number class");
+        }
+    }
+
+    private int compareBooleanField(Boolean fieldValue, Boolean comparand) {
+        // Nulls first
+        if (fieldValue == null) {
+            return comparand == null ? 0 : -1;
+        } else if (comparand == null) {
+            return 1;
+        }
+        return fieldValue.compareTo(comparand);
+    }
+
+    private int compareBinaryField(byte[] fieldValue, byte[] comparand) {
+        // Nulls first
+        if (fieldValue == null) {
+            return comparand == null ? 0 : -1;
+        } else if (comparand == null) {
+            return 1;
+        }
+        return Arrays.compare(fieldValue, comparand);
+    }
+}
+```
+
+### `FilterParser.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParser.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. FilterParser.java */
+package org.yamcs.utils.parser;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.HexFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import org.yamcs.utils.parser.ast.*;
+
+@SuppressWarnings({"serial", "unused"})
+public class FilterParser<T> implements FilterParserConstants {
+
+    private static final HexFormat HEX = HexFormat.of();
+
+    // All available fields (lowercase)
+    private Set<String> fields = new HashSet<String>();
+
+    // Fields that are part of the actual query (lowercase)
+    private Set<String> queryFields = new HashSet<String>();
+
+    // True if the query includes at least one text comparison
+    private boolean includesTextSearch;
+
+    // Resolvers by lowercase field
+    private Map<String, BiFunction<T, String, String>> prefixResolvers = new HashMap<String, BiFunction<T, String, String>>();
+    private Map<String, Function<T, String>> stringResolvers = new HashMap<String, Function<T, String>>();
+    private Map<String, Function<T, Collection<String>>> stringCollectionResolvers = new HashMap<String, Function<T, Collection<String>>>();
+    private Map<String, Function<T, Number>> numberResolvers = new HashMap<String, Function<T, Number>>();
+    private Map<String, Function<T, Collection<? extends Number>>> numberCollectionResolvers = new HashMap<String, Function<T, Collection<? extends Number>>>();
+    private Map<String, Function<T, Boolean>> booleanResolvers = new HashMap<String, Function<T, Boolean>>();
+    private Map<String, Function<T, byte[]>> binaryResolvers = new HashMap<String, Function<T, byte[]>>();
+    private Map<String, Function<T, ? extends Enum<?>>> enumResolvers = new HashMap<String, Function<T, ? extends Enum<?>>>();
+
+    // Enum class by lowercase field
+    private Map<String, Class<? extends Enum<?>>> enumClassByField = new HashMap<String, Class<? extends Enum<?>>>();
+
+    public boolean isQueryField(String field) {
+        return queryFields.contains(field.toLowerCase());
+    }
+
+    public boolean includesTextSearch() {
+       return includesTextSearch;
+    }
+
+    public void addPrefixField(String field, BiFunction<T, String, String> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        prefixResolvers.put(lcField, resolver);
+    }
+
+    public void addStringField(String field, Function<T, String> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        stringResolvers.put(lcField, resolver);
+    }
+
+    public void addStringCollectionField(String field, Function<T, Collection<String>> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        stringCollectionResolvers.put(lcField, resolver);
+    }
+
+    public <E extends Enum<?>> void addEnumField(String field, Class<E> enumClass, Function<T, E> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        enumResolvers.put(lcField, resolver);
+        enumClassByField.put(lcField, enumClass);
+    }
+
+    public void addNumberField(String field, Function<T, Number> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        numberResolvers.put(lcField, resolver);
+    }
+
+    public void addNumberCollectionField(String field, Function<T, Collection<? extends Number>> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        numberCollectionResolvers.put(lcField, resolver);
+    }
+
+    public void addBooleanField(String field, Function<T, Boolean> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        booleanResolvers.put(lcField, resolver);
+    }
+
+    public void addBinaryField(String field, Function<T, byte[]> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        binaryResolvers.put(lcField, resolver);
+    }
+
+    public BiFunction<T, String, String> getPrefixResolver(String field) {
+        for (var entry : prefixResolvers.entrySet()) {
+            if (field.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public Function<T, String> getStringResolver(String field) {
+        return stringResolvers.get(field);
+    }
+
+    public Function<T, Collection<String>> getStringCollectionResolver(String field) {
+        return stringCollectionResolvers.get(field);
+    }
+
+    public Function<T, Number> getNumberResolver(String field) {
+        return numberResolvers.get(field);
+    }
+
+    public Function<T, Collection<? extends Number>> getNumberCollectionResolver(String field) {
+        return numberCollectionResolvers.get(field);
+    }
+
+    public Function<T, Boolean> getBooleanResolver(String field) {
+        return booleanResolvers.get(field);
+    }
+
+    public Function<T, byte[]> getBinaryResolver(String field) {
+        return binaryResolvers.get(field);
+    }
+
+    public Function<T, ? extends Enum<?>> getEnumResolver(String field) {
+        return enumResolvers.get(field);
+    }
+
+    public Class<? extends Enum<?>> getEnumClass(String field) {
+        return enumClassByField.get(field);
+    }
+
+    /**
+     * Finds the constant for an Enum label, but case-insensitive.
+     */
+    public <E extends Enum<?>> E findEnum(Class<E> enumeration, String value) {
+        for (E enumConstant : enumeration.getEnumConstants()) {
+            if (enumConstant.name().compareToIgnoreCase(value) == 0) {
+                return enumConstant;
+            }
+        }
+        return null;
+    }
+
+  final public AndExpression parse() throws ParseException {
+  AndExpression result = null;
+    if (jj_2_1(2)) {
+      jj_consume_token(WS);
+    } else {
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LPAREN:
+    case MINUS:
+    case NOT:
+    case STRING:
+    case QUOTED_STRING:
+      result = expr();
+      break;
+    default:
+      jj_la1[0] = jj_gen;
+      ;
+    }
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case WS:
+      jj_consume_token(WS);
+      break;
+    default:
+      jj_la1[1] = jj_gen;
+      ;
+    }
+    jj_consume_token(0);
+                                                          {if (true) return result;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public AndExpression expr() throws ParseException {
+  AndExpression and;
+    and = and();
+    if (jj_2_2(2)) {
+      jj_consume_token(WS);
+    } else {
+      ;
+    }
+                                     {if (true) return and;}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public AndExpression and() throws ParseException {
+  OrExpression clause;
+  List<OrExpression> clauses = new ArrayList<OrExpression>();
+    clause = or();
+                  clauses.add(clause);
+    label_1:
+    while (true) {
+      if (jj_2_3(2)) {
+        ;
+      } else {
+        break label_1;
+      }
+      jj_consume_token(WS);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case AND:
+        jj_consume_token(AND);
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[2] = jj_gen;
+        ;
+      }
+      clause = or();
+                                                   clauses.add(clause);
+    }
+    {if (true) return new AndExpression(clauses);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public OrExpression or() throws ParseException {
+  UnaryExpression clause;
+  List<UnaryExpression> clauses = new ArrayList<UnaryExpression>();
+    clause = unary();
+                     clauses.add(clause);
+    label_2:
+    while (true) {
+      if (jj_2_4(2)) {
+        ;
+      } else {
+        break label_2;
+      }
+      jj_consume_token(WS);
+      jj_consume_token(OR);
+      jj_consume_token(WS);
+      clause = unary();
+                                                 clauses.add(clause);
+    }
+    {if (true) return new OrExpression(clauses);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public UnaryExpression unary() throws ParseException {
+  Comparison comparison;
+  AndExpression expr;
+    if (jj_2_5(3)) {
+      jj_consume_token(NOT);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case WS:
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[3] = jj_gen;
+        ;
+      }
+      jj_consume_token(LPAREN);
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case WS:
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[4] = jj_gen;
+        ;
+      }
+      expr = expr();
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case WS:
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[5] = jj_gen;
+        ;
+      }
+      jj_consume_token(RPAREN);
+                                                               {if (true) return new UnaryExpression(expr, true);}
+    } else {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case NOT:
+        jj_consume_token(NOT);
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case WS:
+          jj_consume_token(WS);
+          break;
+        default:
+          jj_la1[6] = jj_gen;
+          ;
+        }
+        comparison = comparison();
+                                           {if (true) return new UnaryExpression(comparison, true);}
+        break;
+      case MINUS:
+        jj_consume_token(MINUS);
+        comparison = comparison();
+                                      {if (true) return new UnaryExpression(comparison, true);}
+        break;
+      case LPAREN:
+        jj_consume_token(LPAREN);
+        expr = expr();
+        jj_consume_token(RPAREN);
+                                    {if (true) return new UnaryExpression(expr, false);}
+        break;
+      case STRING:
+      case QUOTED_STRING:
+        comparison = comparison();
+                              {if (true) return new UnaryExpression(comparison, false);}
+        break;
+      default:
+        jj_la1[7] = jj_gen;
+        jj_consume_token(-1);
+        throw new ParseException();
+      }
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Comparison comparison() throws ParseException {
+  String comparable;
+  Token comparableToken;
+  Token comparatorToken = null;
+  Comparator comparator = null;
+  String value = null;
+  Pattern pattern = null;
+  byte[] binary = null;
+    comparable = term();
+    comparableToken = token;
+    if (jj_2_6(2)) {
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case WS:
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[8] = jj_gen;
+        ;
+      }
+      comparator = comparator();
+    comparatorToken = token;
+      switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case WS:
+        jj_consume_token(WS);
+        break;
+      default:
+        jj_la1[9] = jj_gen;
+        ;
+      }
+      value = term();
+    } else {
+      ;
+    }
+    String lcComparable = comparable.toLowerCase();
+    if (comparator == null) {
+        includesTextSearch = true;
+    } else {
+        queryFields.add(lcComparable);
+        if (!fields.contains(lcComparable)) {
+            boolean prefixMatch = false;
+            for (String prefix : prefixResolvers.keySet()) {
+                if (lcComparable.startsWith(prefix)) {
+                    prefixMatch = true;
+                    break;
+                }
+            }
+            if (!prefixMatch) {
+                {if (true) throw new UnknownFieldException(lcComparable, comparableToken, tokenImage);}
+            }
+        }
+
+        Class<? extends Enum<?>> enumClass = enumClassByField.get(lcComparable);
+        if (enumClass != null) {
+            if (!value.equalsIgnoreCase("null") && findEnum(enumClass, value) == null) {
+                {if (true) throw new IncorrectTypeException(value, token, tokenImage);}
+            }
+        }
+
+        if (binaryResolvers.containsKey(lcComparable)) {
+            if (!value.equalsIgnoreCase("null")) {
+                try {
+                    binary = HEX.parseHex(value);
+                } catch (IllegalArgumentException e) {
+                    {if (true) throw new IncorrectTypeException(value, token, tokenImage);}
+                }
+            }
+        }
+
+        if (comparator == Comparator.RE_EQUAL_TO || comparator == Comparator.RE_NOT_EQUAL_TO) {
+            try {
+                pattern = Pattern.compile(value);
+            } catch (PatternSyntaxException e) {
+                {if (true) throw new InvalidPatternException(value, token, tokenImage);}
+            }
+        }
+    }
+
+    {if (true) return new Comparison(lcComparable, comparator, value, pattern, binary);}
+    throw new Error("Missing return statement in function");
+  }
+
+  final public String term() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case STRING:
+      jj_consume_token(STRING);
+             {if (true) return token.image;}
+      break;
+    case QUOTED_STRING:
+      jj_consume_token(QUOTED_STRING);
+    String s = token.image;
+    {if (true) return s.substring(1, s.length() - 1).replace("\u005c\u005c\u005c"","\u005c"").replace("\u005c\u005c\u005c\u005c","\u005c\u005c");}
+      break;
+    default:
+      jj_la1[10] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  final public Comparator comparator() throws ParseException {
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case EQUAL_TO:
+      jj_consume_token(EQUAL_TO);
+               {if (true) return Comparator.EQUAL_TO;}
+      break;
+    case NOT_EQUAL_TO:
+      jj_consume_token(NOT_EQUAL_TO);
+                   {if (true) return Comparator.NOT_EQUAL_TO;}
+      break;
+    case LESS_THAN:
+      jj_consume_token(LESS_THAN);
+                {if (true) return Comparator.LESS_THAN;}
+      break;
+    case GREATER_THAN:
+      jj_consume_token(GREATER_THAN);
+                   {if (true) return Comparator.GREATER_THAN;}
+      break;
+    case LESS_THAN_OR_EQUAL_TO:
+      jj_consume_token(LESS_THAN_OR_EQUAL_TO);
+                            {if (true) return Comparator.LESS_THAN_OR_EQUAL_TO;}
+      break;
+    case GREATER_THAN_OR_EQUAL_TO:
+      jj_consume_token(GREATER_THAN_OR_EQUAL_TO);
+                               {if (true) return Comparator.GREATER_THAN_OR_EQUAL_TO;}
+      break;
+    case HAS:
+      jj_consume_token(HAS);
+          {if (true) return Comparator.HAS;}
+      break;
+    case RE_EQUAL_TO:
+      jj_consume_token(RE_EQUAL_TO);
+                  {if (true) return Comparator.RE_EQUAL_TO;}
+      break;
+    case RE_NOT_EQUAL_TO:
+      jj_consume_token(RE_NOT_EQUAL_TO);
+                      {if (true) return Comparator.RE_NOT_EQUAL_TO;}
+      break;
+    default:
+      jj_la1[11] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
+    throw new Error("Missing return statement in function");
+  }
+
+  private boolean jj_2_1(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_1(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(0, xla); }
+  }
+
+  private boolean jj_2_2(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_2(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(1, xla); }
+  }
+
+  private boolean jj_2_3(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_3(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(2, xla); }
+  }
+
+  private boolean jj_2_4(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_4(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(3, xla); }
+  }
+
+  private boolean jj_2_5(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_5(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(4, xla); }
+  }
+
+  private boolean jj_2_6(int xla) {
+    jj_la = xla; jj_lastpos = jj_scanpos = token;
+    try { return !jj_3_6(); }
+    catch(LookaheadSuccess ls) { return true; }
+    finally { jj_save(5, xla); }
+  }
+
+  private boolean jj_3_3() {
+    if (jj_scan_token(WS)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_3()) jj_scanpos = xsp;
+    if (jj_3R_4()) return true;
+    return false;
+  }
+
+  private boolean jj_3_6() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(2)) jj_scanpos = xsp;
+    if (jj_3R_6()) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(2)) jj_scanpos = xsp;
+    if (jj_3R_7()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_9() {
+    if (jj_3R_4()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_25() {
+    if (jj_3R_7()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_5() {
+    if (jj_3R_9()) return true;
+    return false;
+  }
+
+  private boolean jj_3_1() {
+    if (jj_scan_token(WS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_24() {
+    if (jj_3R_25()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_23() {
+    if (jj_scan_token(LPAREN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_22() {
+    if (jj_scan_token(MINUS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_21() {
+    if (jj_scan_token(NOT)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_18() {
+    if (jj_scan_token(RE_NOT_EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_17() {
+    if (jj_scan_token(RE_EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3_5() {
+    if (jj_scan_token(NOT)) return true;
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_scan_token(2)) jj_scanpos = xsp;
+    if (jj_scan_token(LPAREN)) return true;
+    xsp = jj_scanpos;
+    if (jj_scan_token(2)) jj_scanpos = xsp;
+    if (jj_3R_5()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_8() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3_5()) {
+    jj_scanpos = xsp;
+    if (jj_3R_21()) {
+    jj_scanpos = xsp;
+    if (jj_3R_22()) {
+    jj_scanpos = xsp;
+    if (jj_3R_23()) {
+    jj_scanpos = xsp;
+    if (jj_3R_24()) return true;
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_16() {
+    if (jj_scan_token(HAS)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_15() {
+    if (jj_scan_token(GREATER_THAN_OR_EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_14() {
+    if (jj_scan_token(LESS_THAN_OR_EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_13() {
+    if (jj_scan_token(GREATER_THAN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_3() {
+    if (jj_scan_token(AND)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_12() {
+    if (jj_scan_token(LESS_THAN)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_11() {
+    if (jj_scan_token(NOT_EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_6() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_10()) {
+    jj_scanpos = xsp;
+    if (jj_3R_11()) {
+    jj_scanpos = xsp;
+    if (jj_3R_12()) {
+    jj_scanpos = xsp;
+    if (jj_3R_13()) {
+    jj_scanpos = xsp;
+    if (jj_3R_14()) {
+    jj_scanpos = xsp;
+    if (jj_3R_15()) {
+    jj_scanpos = xsp;
+    if (jj_3R_16()) {
+    jj_scanpos = xsp;
+    if (jj_3R_17()) {
+    jj_scanpos = xsp;
+    if (jj_3R_18()) return true;
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+    return false;
+  }
+
+  private boolean jj_3R_10() {
+    if (jj_scan_token(EQUAL_TO)) return true;
+    return false;
+  }
+
+  private boolean jj_3_4() {
+    if (jj_scan_token(WS)) return true;
+    if (jj_scan_token(OR)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_4() {
+    if (jj_3R_8()) return true;
+    return false;
+  }
+
+  private boolean jj_3R_20() {
+    if (jj_scan_token(QUOTED_STRING)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_19() {
+    if (jj_scan_token(STRING)) return true;
+    return false;
+  }
+
+  private boolean jj_3R_7() {
+    Token xsp;
+    xsp = jj_scanpos;
+    if (jj_3R_19()) {
+    jj_scanpos = xsp;
+    if (jj_3R_20()) return true;
+    }
+    return false;
+  }
+
+  private boolean jj_3_2() {
+    if (jj_scan_token(WS)) return true;
+    return false;
+  }
+
+  /** Generated Token Manager. */
+  public FilterParserTokenManager token_source;
+  SimpleCharStream jj_input_stream;
+  /** Current token. */
+  public Token token;
+  /** Next token. */
+  public Token jj_nt;
+  private int jj_ntk;
+  private Token jj_scanpos, jj_lastpos;
+  private int jj_la;
+  private int jj_gen;
+  final private int[] jj_la1 = new int[12];
+  static private int[] jj_la1_0;
+  static {
+      jj_la1_init_0();
+   }
+   private static void jj_la1_init_0() {
+      jj_la1_0 = new int[] {0xc1c00,0x4,0x8,0x4,0x4,0x4,0x4,0xc1c00,0x4,0x4,0xc0000,0x1a3f0,};
+   }
+  final private JJCalls[] jj_2_rtns = new JJCalls[6];
+  private boolean jj_rescan = false;
+  private int jj_gc = 0;
+
+  /** Constructor with InputStream. */
+  public FilterParser(java.io.InputStream stream) {
+     this(stream, null);
+  }
+  /** Constructor with InputStream and supplied encoding */
+  public FilterParser(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream = new SimpleCharStream(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source = new FilterParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream) {
+     ReInit(stream, null);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream stream, String encoding) {
+    try { jj_input_stream.ReInit(stream, encoding, 1, 1); } catch(java.io.UnsupportedEncodingException e) { throw new RuntimeException(e); }
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor. */
+  public FilterParser(java.io.Reader stream) {
+    jj_input_stream = new SimpleCharStream(stream, 1, 1);
+    token_source = new FilterParserTokenManager(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader stream) {
+    jj_input_stream.ReInit(stream, 1, 1);
+    token_source.ReInit(jj_input_stream);
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Constructor with generated Token Manager. */
+  public FilterParser(FilterParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  /** Reinitialise. */
+  public void ReInit(FilterParserTokenManager tm) {
+    token_source = tm;
+    token = new Token();
+    jj_ntk = -1;
+    jj_gen = 0;
+    for (int i = 0; i < 12; i++) jj_la1[i] = -1;
+    for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
+  }
+
+  private Token jj_consume_token(int kind) throws ParseException {
+    Token oldToken;
+    if ((oldToken = token).next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    if (token.kind == kind) {
+      jj_gen++;
+      if (++jj_gc > 100) {
+        jj_gc = 0;
+        for (int i = 0; i < jj_2_rtns.length; i++) {
+          JJCalls c = jj_2_rtns[i];
+          while (c != null) {
+            if (c.gen < jj_gen) c.first = null;
+            c = c.next;
+          }
+        }
+      }
+      return token;
+    }
+    token = oldToken;
+    jj_kind = kind;
+    throw generateParseException();
+  }
+
+  static private final class LookaheadSuccess extends java.lang.Error { }
+  final private LookaheadSuccess jj_ls = new LookaheadSuccess();
+  private boolean jj_scan_token(int kind) {
+    if (jj_scanpos == jj_lastpos) {
+      jj_la--;
+      if (jj_scanpos.next == null) {
+        jj_lastpos = jj_scanpos = jj_scanpos.next = token_source.getNextToken();
+      } else {
+        jj_lastpos = jj_scanpos = jj_scanpos.next;
+      }
+    } else {
+      jj_scanpos = jj_scanpos.next;
+    }
+    if (jj_rescan) {
+      int i = 0; Token tok = token;
+      while (tok != null && tok != jj_scanpos) { i++; tok = tok.next; }
+      if (tok != null) jj_add_error_token(kind, i);
+    }
+    if (jj_scanpos.kind != kind) return true;
+    if (jj_la == 0 && jj_scanpos == jj_lastpos) throw jj_ls;
+    return false;
+  }
+
+
+/** Get the next Token. */
+  final public Token getNextToken() {
+    if (token.next != null) token = token.next;
+    else token = token.next = token_source.getNextToken();
+    jj_ntk = -1;
+    jj_gen++;
+    return token;
+  }
+
+/** Get the specific Token. */
+  final public Token getToken(int index) {
+    Token t = token;
+    for (int i = 0; i < index; i++) {
+      if (t.next != null) t = t.next;
+      else t = t.next = token_source.getNextToken();
+    }
+    return t;
+  }
+
+  private int jj_ntk() {
+    if ((jj_nt=token.next) == null)
+      return (jj_ntk = (token.next=token_source.getNextToken()).kind);
+    else
+      return (jj_ntk = jj_nt.kind);
+  }
+
+  private java.util.List<int[]> jj_expentries = new java.util.ArrayList<int[]>();
+  private int[] jj_expentry;
+  private int jj_kind = -1;
+  private int[] jj_lasttokens = new int[100];
+  private int jj_endpos;
+
+  private void jj_add_error_token(int kind, int pos) {
+    if (pos >= 100) return;
+    if (pos == jj_endpos + 1) {
+      jj_lasttokens[jj_endpos++] = kind;
+    } else if (jj_endpos != 0) {
+      jj_expentry = new int[jj_endpos];
+      for (int i = 0; i < jj_endpos; i++) {
+        jj_expentry[i] = jj_lasttokens[i];
+      }
+      jj_entries_loop: for (java.util.Iterator<?> it = jj_expentries.iterator(); it.hasNext();) {
+        int[] oldentry = (int[])(it.next());
+        if (oldentry.length == jj_expentry.length) {
+          for (int i = 0; i < jj_expentry.length; i++) {
+            if (oldentry[i] != jj_expentry[i]) {
+              continue jj_entries_loop;
+            }
+          }
+          jj_expentries.add(jj_expentry);
+          break jj_entries_loop;
+        }
+      }
+      if (pos != 0) jj_lasttokens[(jj_endpos = pos) - 1] = kind;
+    }
+  }
+
+  /** Generate ParseException. */
+  public ParseException generateParseException() {
+    jj_expentries.clear();
+    boolean[] la1tokens = new boolean[20];
+    if (jj_kind >= 0) {
+      la1tokens[jj_kind] = true;
+      jj_kind = -1;
+    }
+    for (int i = 0; i < 12; i++) {
+      if (jj_la1[i] == jj_gen) {
+        for (int j = 0; j < 32; j++) {
+          if ((jj_la1_0[i] & (1<<j)) != 0) {
+            la1tokens[j] = true;
+          }
+        }
+      }
+    }
+    for (int i = 0; i < 20; i++) {
+      if (la1tokens[i]) {
+        jj_expentry = new int[1];
+        jj_expentry[0] = i;
+        jj_expentries.add(jj_expentry);
+      }
+    }
+    jj_endpos = 0;
+    jj_rescan_token();
+    jj_add_error_token(0, 0);
+    int[][] exptokseq = new int[jj_expentries.size()][];
+    for (int i = 0; i < jj_expentries.size(); i++) {
+      exptokseq[i] = jj_expentries.get(i);
+    }
+    return new ParseException(token, exptokseq, tokenImage);
+  }
+
+  /** Enable tracing. */
+  final public void enable_tracing() {
+  }
+
+  /** Disable tracing. */
+  final public void disable_tracing() {
+  }
+
+  private void jj_rescan_token() {
+    jj_rescan = true;
+    for (int i = 0; i < 6; i++) {
+    try {
+      JJCalls p = jj_2_rtns[i];
+      do {
+        if (p.gen > jj_gen) {
+          jj_la = p.arg; jj_lastpos = jj_scanpos = p.first;
+          switch (i) {
+            case 0: jj_3_1(); break;
+            case 1: jj_3_2(); break;
+            case 2: jj_3_3(); break;
+            case 3: jj_3_4(); break;
+            case 4: jj_3_5(); break;
+            case 5: jj_3_6(); break;
+          }
+        }
+        p = p.next;
+      } while (p != null);
+      } catch(LookaheadSuccess ls) { }
+    }
+    jj_rescan = false;
+  }
+
+  private void jj_save(int index, int xla) {
+    JJCalls p = jj_2_rtns[index];
+    while (p.gen > jj_gen) {
+      if (p.next == null) { p = p.next = new JJCalls(); break; }
+      p = p.next;
+    }
+    p.gen = jj_gen + xla - jj_la; p.first = token; p.arg = xla;
+  }
+
+  static final class JJCalls {
+    int gen;
+    Token first;
+    int arg;
+    JJCalls next;
+  }
+
+}
+```
+
+### `FilterParser.jj`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParser.jj`
+
+
+```text
+options
+{
+    STATIC=false;
+    IGNORE_CASE=false;
+}
+
+PARSER_BEGIN(FilterParser)
+package org.yamcs.utils.parser;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.HexFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import org.yamcs.utils.parser.ast.*;
+
+@SuppressWarnings({"serial", "unused"})
+public class FilterParser<T> {
+
+    private static final HexFormat HEX = HexFormat.of();
+
+    // All available fields (lowercase)
+    private Set<String> fields = new HashSet<String>();
+
+    // Fields that are part of the actual query (lowercase)
+    private Set<String> queryFields = new HashSet<String>();
+
+    // True if the query includes at least one text comparison
+    private boolean includesTextSearch;
+
+    // Resolvers by lowercase field
+    private Map<String, BiFunction<T, String, String>> prefixResolvers = new HashMap<String, BiFunction<T, String, String>>();
+    private Map<String, Function<T, String>> stringResolvers = new HashMap<String, Function<T, String>>();
+    private Map<String, Function<T, Collection<String>>> stringCollectionResolvers = new HashMap<String, Function<T, Collection<String>>>();
+    private Map<String, Function<T, Number>> numberResolvers = new HashMap<String, Function<T, Number>>();
+    private Map<String, Function<T, Collection<? extends Number>>> numberCollectionResolvers = new HashMap<String, Function<T, Collection<? extends Number>>>();
+    private Map<String, Function<T, Boolean>> booleanResolvers = new HashMap<String, Function<T, Boolean>>();
+    private Map<String, Function<T, byte[]>> binaryResolvers = new HashMap<String, Function<T, byte[]>>();
+    private Map<String, Function<T, ? extends Enum<?>>> enumResolvers = new HashMap<String, Function<T, ? extends Enum<?>>>();
+
+    // Enum class by lowercase field
+    private Map<String, Class<? extends Enum<?>>> enumClassByField = new HashMap<String, Class<? extends Enum<?>>>();
+
+    public boolean isQueryField(String field) {
+        return queryFields.contains(field.toLowerCase());
+    }
+
+    public boolean includesTextSearch() {
+       return includesTextSearch;
+    }
+
+    public void addPrefixField(String field, BiFunction<T, String, String> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        prefixResolvers.put(lcField, resolver);
+    }
+
+    public void addStringField(String field, Function<T, String> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        stringResolvers.put(lcField, resolver);
+    }
+
+    public void addStringCollectionField(String field, Function<T, Collection<String>> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        stringCollectionResolvers.put(lcField, resolver);
+    }
+
+    public <E extends Enum<?>> void addEnumField(String field, Class<E> enumClass, Function<T, E> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        enumResolvers.put(lcField, resolver);
+        enumClassByField.put(lcField, enumClass);
+    }
+
+    public void addNumberField(String field, Function<T, Number> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        numberResolvers.put(lcField, resolver);
+    }
+
+    public void addNumberCollectionField(String field, Function<T, Collection<? extends Number>> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        numberCollectionResolvers.put(lcField, resolver);
+    }
+
+    public void addBooleanField(String field, Function<T, Boolean> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        booleanResolvers.put(lcField, resolver);
+    }
+
+    public void addBinaryField(String field, Function<T, byte[]> resolver) {
+        String lcField = field.toLowerCase();
+        fields.add(lcField);
+        binaryResolvers.put(lcField, resolver);
+    }
+
+    public BiFunction<T, String, String> getPrefixResolver(String field) {
+        for (var entry : prefixResolvers.entrySet()) {
+            if (field.startsWith(entry.getKey())) {
+                return entry.getValue();
+            }
+        }
+        return null;
+    }
+
+    public Function<T, String> getStringResolver(String field) {
+        return stringResolvers.get(field);
+    }
+
+    public Function<T, Collection<String>> getStringCollectionResolver(String field) {
+        return stringCollectionResolvers.get(field);
+    }
+
+    public Function<T, Number> getNumberResolver(String field) {
+        return numberResolvers.get(field);
+    }
+
+    public Function<T, Collection<? extends Number>> getNumberCollectionResolver(String field) {
+        return numberCollectionResolvers.get(field);
+    }
+
+    public Function<T, Boolean> getBooleanResolver(String field) {
+        return booleanResolvers.get(field);
+    }
+
+    public Function<T, byte[]> getBinaryResolver(String field) {
+        return binaryResolvers.get(field);
+    }
+
+    public Function<T, ? extends Enum<?>> getEnumResolver(String field) {
+        return enumResolvers.get(field);
+    }
+
+    public Class<? extends Enum<?>> getEnumClass(String field) {
+        return enumClassByField.get(field);
+    }
+
+    /**
+     * Finds the constant for an Enum label, but case-insensitive.
+     */
+    public <E extends Enum<?>> E findEnum(Class<E> enumeration, String value) {
+        for (E enumConstant : enumeration.getEnumConstants()) {
+            if (enumConstant.name().compareToIgnoreCase(value) == 0) {
+                return enumConstant;
+            }
+        }
+        return null;
+    }
+}
+PARSER_END(FilterParser)
+
+
+SPECIAL_TOKEN :
+{
+  < SINGLE_LINE_COMMENT: "--"(~["\n","\r"])* ("\n"|"\r"|"\r\n")? >
+}
+
+TOKEN :
+{
+  < WS: ([" ", "\t", "\n", "\r"])+ >
+}
+
+TOKEN :
+{
+  < AND:                      "AND" >
+| < EQUAL_TO:                 "=" >
+| < GREATER_THAN:             ">" >
+| < GREATER_THAN_OR_EQUAL_TO: ">=" >
+| < HAS:                      ":" >
+| < LESS_THAN:                "<" >
+| < LESS_THAN_OR_EQUAL_TO:    "<=" >
+| < LPAREN:                   "(" >
+| < MINUS:                    "-" >
+| < NOT:                      "NOT" >
+| < NOT_EQUAL_TO:             "!=" >
+| < OR:                       "OR" >
+| < RE_EQUAL_TO:              "=~" >
+| < RE_NOT_EQUAL_TO:          "!~" >
+| < RPAREN:                   ")" >
+}
+
+TOKEN :
+{
+  < STRING: ["A"-"Z", "a"-"z", "0"-"9", "_"](["A"-"Z", "a"-"z", "0"-"9", "_", "-", "."])* >
+| < QUOTED_STRING: "\""
+    (
+       "\\" ~[]     //any escaped character
+    |  ~["\"","\\"]  //any character except quote or backslash
+    )*
+    "\"" >
+}
+
+AndExpression parse() :
+{
+  AndExpression result = null;
+}
+{
+  [ LOOKAHEAD(2) <WS>] [ result = expr() ] [<WS>] <EOF> { return result; }
+}
+
+AndExpression expr() :
+{
+  AndExpression and;
+}
+{
+  and = and() [ LOOKAHEAD(2) <WS>] { return and; }
+}
+
+AndExpression and() :
+{
+  OrExpression clause;
+  List<OrExpression> clauses = new ArrayList<OrExpression>();
+}
+{
+  clause = or() { clauses.add(clause); }
+  ( LOOKAHEAD(2) <WS> [<AND> <WS>] clause = or() { clauses.add(clause); } )*
+  {
+    return new AndExpression(clauses);
+  }
+}
+
+OrExpression or() :
+{
+  UnaryExpression clause;
+  List<UnaryExpression> clauses = new ArrayList<UnaryExpression>();
+}
+{
+  clause = unary() { clauses.add(clause); }
+  ( LOOKAHEAD(2) <WS> <OR> <WS> clause=unary() { clauses.add(clause); } )*
+  {
+    return new OrExpression(clauses);
+  }
+}
+
+UnaryExpression unary() :
+{
+  Comparison comparison;
+  AndExpression expr;
+}
+{
+  LOOKAHEAD(3)
+  <NOT> [<WS>] <LPAREN> [<WS>] expr = expr() [<WS>] <RPAREN> { return new UnaryExpression(expr, true); }
+| <NOT> [<WS>] comparison = comparison() { return new UnaryExpression(comparison, true); }
+| <MINUS> comparison = comparison() { return new UnaryExpression(comparison, true); }
+| <LPAREN> expr = expr() <RPAREN> { return new UnaryExpression(expr, false); }
+| comparison = comparison() { return new UnaryExpression(comparison, false); }
+}
+
+Comparison comparison() :
+{
+  String comparable;
+  Token comparableToken;
+  Token comparatorToken = null;
+  Comparator comparator = null;
+  String value = null;
+  Pattern pattern = null;
+  byte[] binary = null;
+}
+{
+  comparable = term() {
+    comparableToken = token;
+  }
+  [ LOOKAHEAD(2) [<WS>] comparator = comparator() {
+    comparatorToken = token;
+  }
+  [<WS>] value = term() ] {
+    String lcComparable = comparable.toLowerCase();
+    if (comparator == null) {
+        includesTextSearch = true;
+    } else {
+        queryFields.add(lcComparable);
+        if (!fields.contains(lcComparable)) {
+            boolean prefixMatch = false;
+            for (String prefix : prefixResolvers.keySet()) {
+                if (lcComparable.startsWith(prefix)) {
+                    prefixMatch = true;
+                    break;
+                }
+            }
+            if (!prefixMatch) {
+                throw new UnknownFieldException(lcComparable, comparableToken, tokenImage);
+            }
+        }
+
+        Class<? extends Enum<?>> enumClass = enumClassByField.get(lcComparable);
+        if (enumClass != null) {
+            if (!value.equalsIgnoreCase("null") && findEnum(enumClass, value) == null) {
+                throw new IncorrectTypeException(value, token, tokenImage);
+            }
+        }
+
+        if (binaryResolvers.containsKey(lcComparable)) {
+            if (!value.equalsIgnoreCase("null")) {
+                try {
+                    binary = HEX.parseHex(value);
+                } catch (IllegalArgumentException e) {
+                    throw new IncorrectTypeException(value, token, tokenImage);    
+                }
+            }
+        }
+
+        if (comparator == Comparator.RE_EQUAL_TO || comparator == Comparator.RE_NOT_EQUAL_TO) {
+            try {
+                pattern = Pattern.compile(value);
+            } catch (PatternSyntaxException e) {
+                throw new InvalidPatternException(value, token, tokenImage);
+            }
+        }
+    }
+
+    return new Comparison(lcComparable, comparator, value, pattern, binary);
+  }
+}
+
+String term() :
+{}
+{
+  <STRING> { return token.image; }
+| <QUOTED_STRING> {
+    String s = token.image;
+    return s.substring(1, s.length() - 1).replace("\\\"","\"").replace("\\\\","\\");
+  }
+}
+
+Comparator comparator() :
+{}
+{
+  <EQUAL_TO> { return Comparator.EQUAL_TO; }
+| <NOT_EQUAL_TO> { return Comparator.NOT_EQUAL_TO; }
+| <LESS_THAN> { return Comparator.LESS_THAN; }
+| <GREATER_THAN> { return Comparator.GREATER_THAN; }
+| <LESS_THAN_OR_EQUAL_TO> { return Comparator.LESS_THAN_OR_EQUAL_TO; }
+| <GREATER_THAN_OR_EQUAL_TO> { return Comparator.GREATER_THAN_OR_EQUAL_TO; }
+| <HAS> { return Comparator.HAS; }
+| <RE_EQUAL_TO> { return Comparator.RE_EQUAL_TO; }
+| <RE_NOT_EQUAL_TO> { return Comparator.RE_NOT_EQUAL_TO; }
+}
+```
+
+### `FilterParserConstants.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParserConstants.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. FilterParserConstants.java */
+package org.yamcs.utils.parser;
+
+
+/**
+ * Token literal values and constants.
+ * Generated by org.javacc.parser.OtherFilesGen#start()
+ */
+public interface FilterParserConstants {
+
+  /** End of File. */
+  int EOF = 0;
+  /** RegularExpression Id. */
+  int SINGLE_LINE_COMMENT = 1;
+  /** RegularExpression Id. */
+  int WS = 2;
+  /** RegularExpression Id. */
+  int AND = 3;
+  /** RegularExpression Id. */
+  int EQUAL_TO = 4;
+  /** RegularExpression Id. */
+  int GREATER_THAN = 5;
+  /** RegularExpression Id. */
+  int GREATER_THAN_OR_EQUAL_TO = 6;
+  /** RegularExpression Id. */
+  int HAS = 7;
+  /** RegularExpression Id. */
+  int LESS_THAN = 8;
+  /** RegularExpression Id. */
+  int LESS_THAN_OR_EQUAL_TO = 9;
+  /** RegularExpression Id. */
+  int LPAREN = 10;
+  /** RegularExpression Id. */
+  int MINUS = 11;
+  /** RegularExpression Id. */
+  int NOT = 12;
+  /** RegularExpression Id. */
+  int NOT_EQUAL_TO = 13;
+  /** RegularExpression Id. */
+  int OR = 14;
+  /** RegularExpression Id. */
+  int RE_EQUAL_TO = 15;
+  /** RegularExpression Id. */
+  int RE_NOT_EQUAL_TO = 16;
+  /** RegularExpression Id. */
+  int RPAREN = 17;
+  /** RegularExpression Id. */
+  int STRING = 18;
+  /** RegularExpression Id. */
+  int QUOTED_STRING = 19;
+
+  /** Lexical state. */
+  int DEFAULT = 0;
+
+  /** Literal token values. */
+  String[] tokenImage = {
+    "<EOF>",
+    "<SINGLE_LINE_COMMENT>",
+    "<WS>",
+    "\"AND\"",
+    "\"=\"",
+    "\">\"",
+    "\">=\"",
+    "\":\"",
+    "\"<\"",
+    "\"<=\"",
+    "\"(\"",
+    "\"-\"",
+    "\"NOT\"",
+    "\"!=\"",
+    "\"OR\"",
+    "\"=~\"",
+    "\"!~\"",
+    "\")\"",
+    "<STRING>",
+    "<QUOTED_STRING>",
+  };
+
+}
+```
+
+### `FilterParserTokenManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/FilterParserTokenManager.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. FilterParserTokenManager.java */
+package org.yamcs.utils.parser;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.HexFormat;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import org.yamcs.utils.parser.ast.*;
+
+/** Token Manager. */
+public class FilterParserTokenManager implements FilterParserConstants
+{
+
+  /** Debug output. */
+  public  java.io.PrintStream debugStream = System.out;
+  /** Set debug output. */
+  public  void setDebugStream(java.io.PrintStream ds) { debugStream = ds; }
+private final int jjStopStringLiteralDfa_0(int pos, long active0)
+{
+   switch (pos)
+   {
+      case 0:
+         if ((active0 & 0x800L) != 0L)
+            return 0;
+         if ((active0 & 0x5008L) != 0L)
+         {
+            jjmatchedKind = 18;
+            return 8;
+         }
+         return -1;
+      case 1:
+         if ((active0 & 0x1008L) != 0L)
+         {
+            jjmatchedKind = 18;
+            jjmatchedPos = 1;
+            return 8;
+         }
+         if ((active0 & 0x4000L) != 0L)
+            return 8;
+         return -1;
+      default :
+         return -1;
+   }
+}
+private final int jjStartNfa_0(int pos, long active0)
+{
+   return jjMoveNfa_0(jjStopStringLiteralDfa_0(pos, active0), pos + 1);
+}
+private int jjStopAtPos(int pos, int kind)
+{
+   jjmatchedKind = kind;
+   jjmatchedPos = pos;
+   return pos + 1;
+}
+private int jjMoveStringLiteralDfa0_0()
+{
+   switch(curChar)
+   {
+      case 33:
+         return jjMoveStringLiteralDfa1_0(0x12000L);
+      case 40:
+         return jjStopAtPos(0, 10);
+      case 41:
+         return jjStopAtPos(0, 17);
+      case 45:
+         return jjStartNfaWithStates_0(0, 11, 0);
+      case 58:
+         return jjStopAtPos(0, 7);
+      case 60:
+         jjmatchedKind = 8;
+         return jjMoveStringLiteralDfa1_0(0x200L);
+      case 61:
+         jjmatchedKind = 4;
+         return jjMoveStringLiteralDfa1_0(0x8000L);
+      case 62:
+         jjmatchedKind = 5;
+         return jjMoveStringLiteralDfa1_0(0x40L);
+      case 65:
+         return jjMoveStringLiteralDfa1_0(0x8L);
+      case 78:
+         return jjMoveStringLiteralDfa1_0(0x1000L);
+      case 79:
+         return jjMoveStringLiteralDfa1_0(0x4000L);
+      default :
+         return jjMoveNfa_0(5, 0);
+   }
+}
+private int jjMoveStringLiteralDfa1_0(long active0)
+{
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(0, active0);
+      return 1;
+   }
+   switch(curChar)
+   {
+      case 61:
+         if ((active0 & 0x40L) != 0L)
+            return jjStopAtPos(1, 6);
+         else if ((active0 & 0x200L) != 0L)
+            return jjStopAtPos(1, 9);
+         else if ((active0 & 0x2000L) != 0L)
+            return jjStopAtPos(1, 13);
+         break;
+      case 78:
+         return jjMoveStringLiteralDfa2_0(active0, 0x8L);
+      case 79:
+         return jjMoveStringLiteralDfa2_0(active0, 0x1000L);
+      case 82:
+         if ((active0 & 0x4000L) != 0L)
+            return jjStartNfaWithStates_0(1, 14, 8);
+         break;
+      case 126:
+         if ((active0 & 0x8000L) != 0L)
+            return jjStopAtPos(1, 15);
+         else if ((active0 & 0x10000L) != 0L)
+            return jjStopAtPos(1, 16);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(0, active0);
+}
+private int jjMoveStringLiteralDfa2_0(long old0, long active0)
+{
+   if (((active0 &= old0)) == 0L)
+      return jjStartNfa_0(0, old0);
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) {
+      jjStopStringLiteralDfa_0(1, active0);
+      return 2;
+   }
+   switch(curChar)
+   {
+      case 68:
+         if ((active0 & 0x8L) != 0L)
+            return jjStartNfaWithStates_0(2, 3, 8);
+         break;
+      case 84:
+         if ((active0 & 0x1000L) != 0L)
+            return jjStartNfaWithStates_0(2, 12, 8);
+         break;
+      default :
+         break;
+   }
+   return jjStartNfa_0(1, active0);
+}
+private int jjStartNfaWithStates_0(int pos, int kind, int state)
+{
+   jjmatchedKind = kind;
+   jjmatchedPos = pos;
+   try { curChar = input_stream.readChar(); }
+   catch(java.io.IOException e) { return pos + 1; }
+   return jjMoveNfa_0(state, pos + 1);
+}
+static final long[] jjbitVec0 = {
+   0x0L, 0x0L, 0xffffffffffffffffL, 0xffffffffffffffffL
+};
+private int jjMoveNfa_0(int startState, int curPos)
+{
+   int startsAt = 0;
+   jjnewStateCnt = 14;
+   int i = 1;
+   jjstateSet[0] = startState;
+   int kind = 0x7fffffff;
+   for (;;)
+   {
+      if (++jjround == 0x7fffffff)
+         ReInitRounds();
+      if (curChar < 64)
+      {
+         long l = 1L << curChar;
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 5:
+                  if ((0x3ff000000000000L & l) != 0L)
+                  {
+                     if (kind > 18)
+                        kind = 18;
+                     jjCheckNAdd(8);
+                  }
+                  else if ((0x100002600L & l) != 0L)
+                  {
+                     if (kind > 2)
+                        kind = 2;
+                     jjCheckNAdd(6);
+                  }
+                  else if (curChar == 34)
+                     jjCheckNAddStates(0, 2);
+                  else if (curChar == 45)
+                     jjstateSet[jjnewStateCnt++] = 0;
+                  break;
+               case 0:
+                  if (curChar != 45)
+                     break;
+                  if (kind > 1)
+                     kind = 1;
+                  jjCheckNAddStates(3, 5);
+                  break;
+               case 1:
+                  if ((0xffffffffffffdbffL & l) == 0L)
+                     break;
+                  if (kind > 1)
+                     kind = 1;
+                  jjCheckNAddStates(3, 5);
+                  break;
+               case 2:
+                  if ((0x2400L & l) != 0L && kind > 1)
+                     kind = 1;
+                  break;
+               case 3:
+                  if (curChar == 10 && kind > 1)
+                     kind = 1;
+                  break;
+               case 4:
+                  if (curChar == 13)
+                     jjstateSet[jjnewStateCnt++] = 3;
+                  break;
+               case 6:
+                  if ((0x100002600L & l) == 0L)
+                     break;
+                  if (kind > 2)
+                     kind = 2;
+                  jjCheckNAdd(6);
+                  break;
+               case 7:
+                  if ((0x3ff000000000000L & l) == 0L)
+                     break;
+                  if (kind > 18)
+                     kind = 18;
+                  jjCheckNAdd(8);
+                  break;
+               case 8:
+                  if ((0x3ff600000000000L & l) == 0L)
+                     break;
+                  if (kind > 18)
+                     kind = 18;
+                  jjCheckNAdd(8);
+                  break;
+               case 9:
+                  if (curChar == 34)
+                     jjCheckNAddStates(0, 2);
+                  break;
+               case 11:
+                  jjCheckNAddStates(0, 2);
+                  break;
+               case 12:
+                  if ((0xfffffffbffffffffL & l) != 0L)
+                     jjCheckNAddStates(0, 2);
+                  break;
+               case 13:
+                  if (curChar == 34 && kind > 19)
+                     kind = 19;
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else if (curChar < 128)
+      {
+         long l = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 5:
+               case 8:
+                  if ((0x7fffffe87fffffeL & l) == 0L)
+                     break;
+                  if (kind > 18)
+                     kind = 18;
+                  jjCheckNAdd(8);
+                  break;
+               case 1:
+                  if (kind > 1)
+                     kind = 1;
+                  jjAddStates(3, 5);
+                  break;
+               case 10:
+                  if (curChar == 92)
+                     jjstateSet[jjnewStateCnt++] = 11;
+                  break;
+               case 11:
+                  jjCheckNAddStates(0, 2);
+                  break;
+               case 12:
+                  if ((0xffffffffefffffffL & l) != 0L)
+                     jjCheckNAddStates(0, 2);
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      else
+      {
+         int i2 = (curChar & 0xff) >> 6;
+         long l2 = 1L << (curChar & 077);
+         do
+         {
+            switch(jjstateSet[--i])
+            {
+               case 1:
+                  if ((jjbitVec0[i2] & l2) == 0L)
+                     break;
+                  if (kind > 1)
+                     kind = 1;
+                  jjAddStates(3, 5);
+                  break;
+               case 11:
+               case 12:
+                  if ((jjbitVec0[i2] & l2) != 0L)
+                     jjCheckNAddStates(0, 2);
+                  break;
+               default : break;
+            }
+         } while(i != startsAt);
+      }
+      if (kind != 0x7fffffff)
+      {
+         jjmatchedKind = kind;
+         jjmatchedPos = curPos;
+         kind = 0x7fffffff;
+      }
+      ++curPos;
+      if ((i = jjnewStateCnt) == (startsAt = 14 - (jjnewStateCnt = startsAt)))
+         return curPos;
+      try { curChar = input_stream.readChar(); }
+      catch(java.io.IOException e) { return curPos; }
+   }
+}
+static final int[] jjnextStates = {
+   10, 12, 13, 1, 2, 4, 
+};
+
+/** Token literal values. */
+public static final String[] jjstrLiteralImages = {
+"", null, null, "\101\116\104", "\75", "\76", "\76\75", "\72", "\74", 
+"\74\75", "\50", "\55", "\116\117\124", "\41\75", "\117\122", "\75\176", "\41\176", 
+"\51", null, null, };
+
+/** Lexer state names. */
+public static final String[] lexStateNames = {
+   "DEFAULT",
+};
+static final long[] jjtoToken = {
+   0xffffdL, 
+};
+static final long[] jjtoSkip = {
+   0x2L, 
+};
+static final long[] jjtoSpecial = {
+   0x2L, 
+};
+protected SimpleCharStream input_stream;
+private final int[] jjrounds = new int[14];
+private final int[] jjstateSet = new int[28];
+protected char curChar;
+/** Constructor. */
+public FilterParserTokenManager(SimpleCharStream stream){
+   if (SimpleCharStream.staticFlag)
+      throw new Error("ERROR: Cannot use a static CharStream class with a non-static lexical analyzer.");
+   input_stream = stream;
+}
+
+/** Constructor. */
+public FilterParserTokenManager(SimpleCharStream stream, int lexState){
+   this(stream);
+   SwitchTo(lexState);
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream)
+{
+   jjmatchedPos = jjnewStateCnt = 0;
+   curLexState = defaultLexState;
+   input_stream = stream;
+   ReInitRounds();
+}
+private void ReInitRounds()
+{
+   int i;
+   jjround = 0x80000001;
+   for (i = 14; i-- > 0;)
+      jjrounds[i] = 0x80000000;
+}
+
+/** Reinitialise parser. */
+public void ReInit(SimpleCharStream stream, int lexState)
+{
+   ReInit(stream);
+   SwitchTo(lexState);
+}
+
+/** Switch to specified lex state. */
+public void SwitchTo(int lexState)
+{
+   if (lexState >= 1 || lexState < 0)
+      throw new TokenMgrError("Error: Ignoring invalid lexical state : " + lexState + ". State unchanged.", TokenMgrError.INVALID_LEXICAL_STATE);
+   else
+      curLexState = lexState;
+}
+
+protected Token jjFillToken()
+{
+   final Token t;
+   final String curTokenImage;
+   final int beginLine;
+   final int endLine;
+   final int beginColumn;
+   final int endColumn;
+   String im = jjstrLiteralImages[jjmatchedKind];
+   curTokenImage = (im == null) ? input_stream.GetImage() : im;
+   beginLine = input_stream.getBeginLine();
+   beginColumn = input_stream.getBeginColumn();
+   endLine = input_stream.getEndLine();
+   endColumn = input_stream.getEndColumn();
+   t = Token.newToken(jjmatchedKind, curTokenImage);
+
+   t.beginLine = beginLine;
+   t.endLine = endLine;
+   t.beginColumn = beginColumn;
+   t.endColumn = endColumn;
+
+   return t;
+}
+
+int curLexState = 0;
+int defaultLexState = 0;
+int jjnewStateCnt;
+int jjround;
+int jjmatchedPos;
+int jjmatchedKind;
+
+/** Get the next Token. */
+public Token getNextToken() 
+{
+  Token specialToken = null;
+  Token matchedToken;
+  int curPos = 0;
+
+  EOFLoop :
+  for (;;)
+  {
+   try
+   {
+      curChar = input_stream.BeginToken();
+   }
+   catch(java.io.IOException e)
+   {
+      jjmatchedKind = 0;
+      matchedToken = jjFillToken();
+      matchedToken.specialToken = specialToken;
+      return matchedToken;
+   }
+
+   jjmatchedKind = 0x7fffffff;
+   jjmatchedPos = 0;
+   curPos = jjMoveStringLiteralDfa0_0();
+   if (jjmatchedKind != 0x7fffffff)
+   {
+      if (jjmatchedPos + 1 < curPos)
+         input_stream.backup(curPos - jjmatchedPos - 1);
+      if ((jjtoToken[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+      {
+         matchedToken = jjFillToken();
+         matchedToken.specialToken = specialToken;
+         return matchedToken;
+      }
+      else
+      {
+         if ((jjtoSpecial[jjmatchedKind >> 6] & (1L << (jjmatchedKind & 077))) != 0L)
+         {
+            matchedToken = jjFillToken();
+            if (specialToken == null)
+               specialToken = matchedToken;
+            else
+            {
+               matchedToken.specialToken = specialToken;
+               specialToken = (specialToken.next = matchedToken);
+            }
+         }
+         continue EOFLoop;
+      }
+   }
+   int error_line = input_stream.getEndLine();
+   int error_column = input_stream.getEndColumn();
+   String error_after = null;
+   boolean EOFSeen = false;
+   try { input_stream.readChar(); input_stream.backup(1); }
+   catch (java.io.IOException e1) {
+      EOFSeen = true;
+      error_after = curPos <= 1 ? "" : input_stream.GetImage();
+      if (curChar == '\n' || curChar == '\r') {
+         error_line++;
+         error_column = 0;
+      }
+      else
+         error_column++;
+   }
+   if (!EOFSeen) {
+      input_stream.backup(1);
+      error_after = curPos <= 1 ? "" : input_stream.GetImage();
+   }
+   throw new TokenMgrError(EOFSeen, curLexState, error_line, error_column, error_after, curChar, TokenMgrError.LEXICAL_ERROR);
+  }
+}
+
+private void jjCheckNAdd(int state)
+{
+   if (jjrounds[state] != jjround)
+   {
+      jjstateSet[jjnewStateCnt++] = state;
+      jjrounds[state] = jjround;
+   }
+}
+private void jjAddStates(int start, int end)
+{
+   do {
+      jjstateSet[jjnewStateCnt++] = jjnextStates[start];
+   } while (start++ != end);
+}
+private void jjCheckNAddTwoStates(int state1, int state2)
+{
+   jjCheckNAdd(state1);
+   jjCheckNAdd(state2);
+}
+
+private void jjCheckNAddStates(int start, int end)
+{
+   do {
+      jjCheckNAdd(jjnextStates[start]);
+   } while (start++ != end);
+}
+
+}
+```
+
+### `IncorrectTypeException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/IncorrectTypeException.java`
+
+
+```java
+package org.yamcs.utils.parser;
+
+@SuppressWarnings("serial")
+public class IncorrectTypeException extends ParseException {
+
+    private String value;
+
+    public IncorrectTypeException(String value, Token currentToken, String[] tokenImage) {
+        super("Value '" + value + "' is of incorrect type");
+        this.value = value;
+        this.currentToken = currentToken;
+        this.tokenImage = tokenImage;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public String getKind() {
+        return tokenImage[currentToken.kind];
+    }
+}
+```
+
+### `InvalidPatternException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/InvalidPatternException.java`
+
+
+```java
+package org.yamcs.utils.parser;
+
+@SuppressWarnings("serial")
+public class InvalidPatternException extends ParseException {
+
+    private String pattern;
+
+    public InvalidPatternException(String pattern, Token currentToken, String[] tokenImage) {
+        super("Invalid regex '" + pattern + "'");
+        this.pattern = pattern;
+        this.currentToken = currentToken;
+        this.tokenImage = tokenImage;
+    }
+
+    public String getPattern() {
+        return pattern;
+    }
+
+    public String getKind() {
+        return tokenImage[currentToken.kind];
+    }
+}
+```
+
+### `javacc-invocation.sh`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/javacc-invocation.sh`
+
+
+```bash
+#!/bin/sh
+
+javacc -nostatic -JDK_VERSION=1.6 FilterParser.jj
+```
+
+### `ParseException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/ParseException.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. ParseException.java Version 5.0 */
+/* JavaCCOptions:KEEP_LINE_COL=null */
+package org.yamcs.utils.parser;
+
+/**
+ * This exception is thrown when parse errors are encountered.
+ * You can explicitly create objects of this exception type by
+ * calling the method generateParseException in the generated
+ * parser.
+ *
+ * You can modify this class to customize your error reporting
+ * mechanisms so long as you retain the public fields.
+ */
+public class ParseException extends Exception {
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * This constructor is used by the method "generateParseException"
+   * in the generated parser.  Calling this constructor generates
+   * a new object of this type with the fields "currentToken",
+   * "expectedTokenSequences", and "tokenImage" set.
+   */
+  public ParseException(Token currentTokenVal,
+                        int[][] expectedTokenSequencesVal,
+                        String[] tokenImageVal
+                       )
+  {
+    super(initialise(currentTokenVal, expectedTokenSequencesVal, tokenImageVal));
+    currentToken = currentTokenVal;
+    expectedTokenSequences = expectedTokenSequencesVal;
+    tokenImage = tokenImageVal;
+  }
+
+  /**
+   * The following constructors are for use by you for whatever
+   * purpose you can think of.  Constructing the exception in this
+   * manner makes the exception behave in the normal way - i.e., as
+   * documented in the class "Throwable".  The fields "errorToken",
+   * "expectedTokenSequences", and "tokenImage" do not contain
+   * relevant information.  The JavaCC generated code does not use
+   * these constructors.
+   */
+
+  public ParseException() {
+    super();
+  }
+
+  /** Constructor with message. */
+  public ParseException(String message) {
+    super(message);
+  }
+
+
+  /**
+   * This is the last token that has been consumed successfully.  If
+   * this object has been created due to a parse error, the token
+   * followng this token will (therefore) be the first error token.
+   */
+  public Token currentToken;
+
+  /**
+   * Each entry in this array is an array of integers.  Each array
+   * of integers represents a sequence of tokens (by their ordinal
+   * values) that is expected at this point of the parse.
+   */
+  public int[][] expectedTokenSequences;
+
+  /**
+   * This is a reference to the "tokenImage" array of the generated
+   * parser within which the parse error occurred.  This array is
+   * defined in the generated ...Constants interface.
+   */
+  public String[] tokenImage;
+
+  /**
+   * It uses "currentToken" and "expectedTokenSequences" to generate a parse
+   * error message and returns it.  If this object has been created
+   * due to a parse error, and you do not catch it (it gets thrown
+   * from the parser) the correct error message
+   * gets displayed.
+   */
+  private static String initialise(Token currentToken,
+                           int[][] expectedTokenSequences,
+                           String[] tokenImage) {
+    String eol = System.getProperty("line.separator", "\n");
+    StringBuffer expected = new StringBuffer();
+    int maxSize = 0;
+    for (int i = 0; i < expectedTokenSequences.length; i++) {
+      if (maxSize < expectedTokenSequences[i].length) {
+        maxSize = expectedTokenSequences[i].length;
+      }
+      for (int j = 0; j < expectedTokenSequences[i].length; j++) {
+        expected.append(tokenImage[expectedTokenSequences[i][j]]).append(' ');
+      }
+      if (expectedTokenSequences[i][expectedTokenSequences[i].length - 1] != 0) {
+        expected.append("...");
+      }
+      expected.append(eol).append("    ");
+    }
+    String retval = "Encountered \"";
+    Token tok = currentToken.next;
+    for (int i = 0; i < maxSize; i++) {
+      if (i != 0) retval += " ";
+      if (tok.kind == 0) {
+        retval += tokenImage[0];
+        break;
+      }
+      retval += " " + tokenImage[tok.kind];
+      retval += " \"";
+      retval += add_escapes(tok.image);
+      retval += " \"";
+      tok = tok.next;
+    }
+    retval += "\" at line " + currentToken.next.beginLine + ", column " + currentToken.next.beginColumn;
+    retval += "." + eol;
+    if (expectedTokenSequences.length == 1) {
+      retval += "Was expecting:" + eol + "    ";
+    } else {
+      retval += "Was expecting one of:" + eol + "    ";
+    }
+    retval += expected.toString();
+    return retval;
+  }
+
+  /**
+   * The end of line string for this machine.
+   */
+  protected String eol = System.getProperty("line.separator", "\n");
+
+  /**
+   * Used to convert raw characters to their escaped version
+   * when these raw version cannot be used as part of an ASCII
+   * string literal.
+   */
+  static String add_escapes(String str) {
+      StringBuffer retval = new StringBuffer();
+      char ch;
+      for (int i = 0; i < str.length(); i++) {
+        switch (str.charAt(i))
+        {
+           case 0 :
+              continue;
+           case '\b':
+              retval.append("\\b");
+              continue;
+           case '\t':
+              retval.append("\\t");
+              continue;
+           case '\n':
+              retval.append("\\n");
+              continue;
+           case '\f':
+              retval.append("\\f");
+              continue;
+           case '\r':
+              retval.append("\\r");
+              continue;
+           case '\"':
+              retval.append("\\\"");
+              continue;
+           case '\'':
+              retval.append("\\\'");
+              continue;
+           case '\\':
+              retval.append("\\\\");
+              continue;
+           default:
+              if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+                 String s = "0000" + Integer.toString(ch, 16);
+                 retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+              } else {
+                 retval.append(ch);
+              }
+              continue;
+        }
+      }
+      return retval.toString();
+   }
+
+}
+/* JavaCC - OriginalChecksum=e064738456fb14f453b306e185f35165 (do not edit this line) */
+```
+
+### `SimpleCharStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/SimpleCharStream.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. SimpleCharStream.java Version 5.0 */
+/* JavaCCOptions:STATIC=false,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
+package org.yamcs.utils.parser;
+
+/**
+ * An implementation of interface CharStream, where the stream is assumed to
+ * contain only ASCII characters (without unicode processing).
+ */
+
+public class SimpleCharStream
+{
+/** Whether parser is static. */
+  public static final boolean staticFlag = false;
+  int bufsize;
+  int available;
+  int tokenBegin;
+/** Position in buffer. */
+  public int bufpos = -1;
+  protected int bufline[];
+  protected int bufcolumn[];
+
+  protected int column = 0;
+  protected int line = 1;
+
+  protected boolean prevCharIsCR = false;
+  protected boolean prevCharIsLF = false;
+
+  protected java.io.Reader inputStream;
+
+  protected char[] buffer;
+  protected int maxNextCharInd = 0;
+  protected int inBuf = 0;
+  protected int tabSize = 8;
+
+  protected void setTabSize(int i) { tabSize = i; }
+  protected int getTabSize(int i) { return tabSize; }
+
+
+  protected void ExpandBuff(boolean wrapAround)
+  {
+    char[] newbuffer = new char[bufsize + 2048];
+    int newbufline[] = new int[bufsize + 2048];
+    int newbufcolumn[] = new int[bufsize + 2048];
+
+    try
+    {
+      if (wrapAround)
+      {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        System.arraycopy(buffer, 0, newbuffer, bufsize - tokenBegin, bufpos);
+        buffer = newbuffer;
+
+        System.arraycopy(bufline, tokenBegin, newbufline, 0, bufsize - tokenBegin);
+        System.arraycopy(bufline, 0, newbufline, bufsize - tokenBegin, bufpos);
+        bufline = newbufline;
+
+        System.arraycopy(bufcolumn, tokenBegin, newbufcolumn, 0, bufsize - tokenBegin);
+        System.arraycopy(bufcolumn, 0, newbufcolumn, bufsize - tokenBegin, bufpos);
+        bufcolumn = newbufcolumn;
+
+        maxNextCharInd = (bufpos += (bufsize - tokenBegin));
+      }
+      else
+      {
+        System.arraycopy(buffer, tokenBegin, newbuffer, 0, bufsize - tokenBegin);
+        buffer = newbuffer;
+
+        System.arraycopy(bufline, tokenBegin, newbufline, 0, bufsize - tokenBegin);
+        bufline = newbufline;
+
+        System.arraycopy(bufcolumn, tokenBegin, newbufcolumn, 0, bufsize - tokenBegin);
+        bufcolumn = newbufcolumn;
+
+        maxNextCharInd = (bufpos -= tokenBegin);
+      }
+    }
+    catch (Throwable t)
+    {
+      throw new Error(t.getMessage());
+    }
+
+
+    bufsize += 2048;
+    available = bufsize;
+    tokenBegin = 0;
+  }
+
+  protected void FillBuff() throws java.io.IOException
+  {
+    if (maxNextCharInd == available)
+    {
+      if (available == bufsize)
+      {
+        if (tokenBegin > 2048)
+        {
+          bufpos = maxNextCharInd = 0;
+          available = tokenBegin;
+        }
+        else if (tokenBegin < 0)
+          bufpos = maxNextCharInd = 0;
+        else
+          ExpandBuff(false);
+      }
+      else if (available > tokenBegin)
+        available = bufsize;
+      else if ((tokenBegin - available) < 2048)
+        ExpandBuff(true);
+      else
+        available = tokenBegin;
+    }
+
+    int i;
+    try {
+      if ((i = inputStream.read(buffer, maxNextCharInd, available - maxNextCharInd)) == -1)
+      {
+        inputStream.close();
+        throw new java.io.IOException();
+      }
+      else
+        maxNextCharInd += i;
+      return;
+    }
+    catch(java.io.IOException e) {
+      --bufpos;
+      backup(0);
+      if (tokenBegin == -1)
+        tokenBegin = bufpos;
+      throw e;
+    }
+  }
+
+/** Start. */
+  public char BeginToken() throws java.io.IOException
+  {
+    tokenBegin = -1;
+    char c = readChar();
+    tokenBegin = bufpos;
+
+    return c;
+  }
+
+  protected void UpdateLineColumn(char c)
+  {
+    column++;
+
+    if (prevCharIsLF)
+    {
+      prevCharIsLF = false;
+      line += (column = 1);
+    }
+    else if (prevCharIsCR)
+    {
+      prevCharIsCR = false;
+      if (c == '\n')
+      {
+        prevCharIsLF = true;
+      }
+      else
+        line += (column = 1);
+    }
+
+    switch (c)
+    {
+      case '\r' :
+        prevCharIsCR = true;
+        break;
+      case '\n' :
+        prevCharIsLF = true;
+        break;
+      case '\t' :
+        column--;
+        column += (tabSize - (column % tabSize));
+        break;
+      default :
+        break;
+    }
+
+    bufline[bufpos] = line;
+    bufcolumn[bufpos] = column;
+  }
+
+/** Read a character. */
+  public char readChar() throws java.io.IOException
+  {
+    if (inBuf > 0)
+    {
+      --inBuf;
+
+      if (++bufpos == bufsize)
+        bufpos = 0;
+
+      return buffer[bufpos];
+    }
+
+    if (++bufpos >= maxNextCharInd)
+      FillBuff();
+
+    char c = buffer[bufpos];
+
+    UpdateLineColumn(c);
+    return c;
+  }
+
+  @Deprecated
+  /**
+   * @deprecated
+   * @see #getEndColumn
+   */
+
+  public int getColumn() {
+    return bufcolumn[bufpos];
+  }
+
+  @Deprecated
+  /**
+   * @deprecated
+   * @see #getEndLine
+   */
+
+  public int getLine() {
+    return bufline[bufpos];
+  }
+
+  /** Get token end column number. */
+  public int getEndColumn() {
+    return bufcolumn[bufpos];
+  }
+
+  /** Get token end line number. */
+  public int getEndLine() {
+     return bufline[bufpos];
+  }
+
+  /** Get token beginning column number. */
+  public int getBeginColumn() {
+    return bufcolumn[tokenBegin];
+  }
+
+  /** Get token beginning line number. */
+  public int getBeginLine() {
+    return bufline[tokenBegin];
+  }
+
+/** Backup a number of characters. */
+  public void backup(int amount) {
+
+    inBuf += amount;
+    if ((bufpos -= amount) < 0)
+      bufpos += bufsize;
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    inputStream = dstream;
+    line = startline;
+    column = startcolumn - 1;
+
+    available = bufsize = buffersize;
+    buffer = new char[buffersize];
+    bufline = new int[buffersize];
+    bufcolumn = new int[buffersize];
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream, int startline,
+                          int startcolumn)
+  {
+    this(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.Reader dstream)
+  {
+    this(dstream, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    inputStream = dstream;
+    line = startline;
+    column = startcolumn - 1;
+
+    if (buffer == null || buffersize != buffer.length)
+    {
+      available = bufsize = buffersize;
+      buffer = new char[buffersize];
+      bufline = new int[buffersize];
+      bufcolumn = new int[buffersize];
+    }
+    prevCharIsLF = prevCharIsCR = false;
+    tokenBegin = inBuf = maxNextCharInd = 0;
+    bufpos = -1;
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream, int startline,
+                     int startcolumn)
+  {
+    ReInit(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.Reader dstream)
+  {
+    ReInit(dstream, 1, 1, 4096);
+  }
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
+  int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
+  {
+    this(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, int startline,
+  int startcolumn, int buffersize)
+  {
+    this(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding, int startline,
+                          int startcolumn) throws java.io.UnsupportedEncodingException
+  {
+    this(dstream, encoding, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, int startline,
+                          int startcolumn)
+  {
+    this(dstream, startline, startcolumn, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
+  {
+    this(dstream, encoding, 1, 1, 4096);
+  }
+
+  /** Constructor. */
+  public SimpleCharStream(java.io.InputStream dstream)
+  {
+    this(dstream, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding, int startline,
+                          int startcolumn, int buffersize) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(encoding == null ? new java.io.InputStreamReader(dstream) : new java.io.InputStreamReader(dstream, encoding), startline, startcolumn, buffersize);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, int startline,
+                          int startcolumn, int buffersize)
+  {
+    ReInit(new java.io.InputStreamReader(dstream), startline, startcolumn, buffersize);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(dstream, encoding, 1, 1, 4096);
+  }
+
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream)
+  {
+    ReInit(dstream, 1, 1, 4096);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, String encoding, int startline,
+                     int startcolumn) throws java.io.UnsupportedEncodingException
+  {
+    ReInit(dstream, encoding, startline, startcolumn, 4096);
+  }
+  /** Reinitialise. */
+  public void ReInit(java.io.InputStream dstream, int startline,
+                     int startcolumn)
+  {
+    ReInit(dstream, startline, startcolumn, 4096);
+  }
+  /** Get token literal value. */
+  public String GetImage()
+  {
+    if (bufpos >= tokenBegin)
+      return new String(buffer, tokenBegin, bufpos - tokenBegin + 1);
+    else
+      return new String(buffer, tokenBegin, bufsize - tokenBegin) +
+                            new String(buffer, 0, bufpos + 1);
+  }
+
+  /** Get the suffix. */
+  public char[] GetSuffix(int len)
+  {
+    char[] ret = new char[len];
+
+    if ((bufpos + 1) >= len)
+      System.arraycopy(buffer, bufpos - len + 1, ret, 0, len);
+    else
+    {
+      System.arraycopy(buffer, bufsize - (len - bufpos - 1), ret, 0,
+                                                        len - bufpos - 1);
+      System.arraycopy(buffer, 0, ret, len - bufpos - 1, bufpos + 1);
+    }
+
+    return ret;
+  }
+
+  /** Reset buffer when finished. */
+  public void Done()
+  {
+    buffer = null;
+    bufline = null;
+    bufcolumn = null;
+  }
+
+  /**
+   * Method to adjust line and column numbers for the start of a token.
+   */
+  public void adjustBeginLineColumn(int newLine, int newCol)
+  {
+    int start = tokenBegin;
+    int len;
+
+    if (bufpos >= tokenBegin)
+    {
+      len = bufpos - tokenBegin + inBuf + 1;
+    }
+    else
+    {
+      len = bufsize - tokenBegin + bufpos + 1 + inBuf;
+    }
+
+    int i = 0, j = 0, k = 0;
+    int nextColDiff = 0, columnDiff = 0;
+
+    while (i < len && bufline[j = start % bufsize] == bufline[k = ++start % bufsize])
+    {
+      bufline[j] = newLine;
+      nextColDiff = columnDiff + bufcolumn[k] - bufcolumn[j];
+      bufcolumn[j] = newCol + columnDiff;
+      columnDiff = nextColDiff;
+      i++;
+    }
+
+    if (i < len)
+    {
+      bufline[j] = newLine++;
+      bufcolumn[j] = newCol + columnDiff;
+
+      while (i++ < len)
+      {
+        if (bufline[j = start % bufsize] != bufline[++start % bufsize])
+          bufline[j] = newLine++;
+        else
+          bufline[j] = newLine;
+      }
+    }
+
+    line = bufline[j];
+    column = bufcolumn[j];
+  }
+
+}
+/* JavaCC - OriginalChecksum=23f796bd380f2ded60a098dd214657e7 (do not edit this line) */
+```
+
+### `Token.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/Token.java`
+
+
+```java
+/* Generated By:JavaCC: Do not edit this line. Token.java Version 5.0 */
+/* JavaCCOptions:TOKEN_EXTENDS=,KEEP_LINE_COL=null,SUPPORT_CLASS_VISIBILITY_PUBLIC=true */
+package org.yamcs.utils.parser;
+
+/**
+ * Describes the input token stream.
+ */
+
+public class Token implements java.io.Serializable {
+
+  /**
+   * The version identifier for this Serializable class.
+   * Increment only if the <i>serialized</i> form of the
+   * class changes.
+   */
+  private static final long serialVersionUID = 1L;
+
+  /**
+   * An integer that describes the kind of this token.  This numbering
+   * system is determined by JavaCCParser, and a table of these numbers is
+   * stored in the file ...Constants.java.
+   */
+  public int kind;
+
+  /** The line number of the first character of this Token. */
+  public int beginLine;
+  /** The column number of the first character of this Token. */
+  public int beginColumn;
+  /** The line number of the last character of this Token. */
+  public int endLine;
+  /** The column number of the last character of this Token. */
+  public int endColumn;
+
+  /**
+   * The string image of the token.
+   */
+  public String image;
+
+  /**
+   * A reference to the next regular (non-special) token from the input
+   * stream.  If this is the last token from the input stream, or if the
+   * token manager has not read tokens beyond this one, this field is
+   * set to null.  This is true only if this token is also a regular
+   * token.  Otherwise, see below for a description of the contents of
+   * this field.
+   */
+  public Token next;
+
+  /**
+   * This field is used to access special tokens that occur prior to this
+   * token, but after the immediately preceding regular (non-special) token.
+   * If there are no such special tokens, this field is set to null.
+   * When there are more than one such special token, this field refers
+   * to the last of these special tokens, which in turn refers to the next
+   * previous special token through its specialToken field, and so on
+   * until the first special token (whose specialToken field is null).
+   * The next fields of special tokens refer to other special tokens that
+   * immediately follow it (without an intervening regular token).  If there
+   * is no such token, this field is null.
+   */
+  public Token specialToken;
+
+  /**
+   * An optional attribute value of the Token.
+   * Tokens which are not used as syntactic sugar will often contain
+   * meaningful values that will be used later on by the compiler or
+   * interpreter. This attribute value is often different from the image.
+   * Any subclass of Token that actually wants to return a non-null value can
+   * override this method as appropriate.
+   */
+  public Object getValue() {
+    return null;
+  }
+
+  /**
+   * No-argument constructor
+   */
+  public Token() {}
+
+  /**
+   * Constructs a new token for the specified Image.
+   */
+  public Token(int kind)
+  {
+    this(kind, null);
+  }
+
+  /**
+   * Constructs a new token for the specified Image and Kind.
+   */
+  public Token(int kind, String image)
+  {
+    this.kind = kind;
+    this.image = image;
+  }
+
+  /**
+   * Returns the image.
+   */
+  public String toString()
+  {
+    return image;
+  }
+
+  /**
+   * Returns a new Token object, by default. However, if you want, you
+   * can create and return subclass objects based on the value of ofKind.
+   * Simply add the cases to the switch for all those special cases.
+   * For example, if you have a subclass of Token called IDToken that
+   * you want to create if ofKind is ID, simply add something like :
+   *
+   *    case MyParserConstants.ID : return new IDToken(ofKind, image);
+   *
+   * to the following switch statement. Then you can cast matchedToken
+   * variable to the appropriate type and use sit in your lexical actions.
+   */
+  public static Token newToken(int ofKind, String image)
+  {
+    switch(ofKind)
+    {
+      default : return new Token(ofKind, image);
+    }
+  }
+
+  public static Token newToken(int ofKind)
+  {
+    return newToken(ofKind, null);
+  }
+
+}
+/* JavaCC - OriginalChecksum=34c3a43b991691e10620cb5a76f7a13e (do not edit this line) */
+```
+
+### `TokenMgrError.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/TokenMgrError.java`
+
+
+```java
+/* JavaCCOptions: */
+package org.yamcs.utils.parser;
+
+/** Token Manager Error. */
+public class TokenMgrError extends Error {
+
+    /**
+     * The version identifier for this Serializable class. Increment only if the <i>serialized</i> form of the class
+     * changes.
+     */
+    private static final long serialVersionUID = 1L;
+
+    /*
+     * Ordinals for various reasons why an Error of this type can be thrown.
+     */
+
+    /**
+     * Lexical error occurred.
+     */
+    static final int LEXICAL_ERROR = 0;
+
+    /**
+     * An attempt was made to create a second instance of a static token manager.
+     */
+    static final int STATIC_LEXER_ERROR = 1;
+
+    /**
+     * Tried to change to an invalid lexical state.
+     */
+    static final int INVALID_LEXICAL_STATE = 2;
+
+    /**
+     * Detected (and bailed out of) an infinite loop in the token manager.
+     */
+    static final int LOOP_DETECTED = 3;
+
+    /**
+     * Indicates the reason why the exception is thrown. It will have one of the above 4 values.
+     */
+    int errorCode;
+
+    /**
+     * Replaces unprintable characters by their escaped (or unicode escaped) equivalents in the given string
+     */
+    protected static final String addEscapes(String str) {
+        StringBuffer retval = new StringBuffer();
+        char ch;
+        for (int i = 0; i < str.length(); i++) {
+            switch (str.charAt(i)) {
+            case 0:
+                continue;
+            case '\b':
+                retval.append("\\b");
+                continue;
+            case '\t':
+                retval.append("\\t");
+                continue;
+            case '\n':
+                retval.append("\\n");
+                continue;
+            case '\f':
+                retval.append("\\f");
+                continue;
+            case '\r':
+                retval.append("\\r");
+                continue;
+            case '\"':
+                retval.append("\\\"");
+                continue;
+            case '\'':
+                retval.append("\\\'");
+                continue;
+            case '\\':
+                retval.append("\\\\");
+                continue;
+            default:
+                if ((ch = str.charAt(i)) < 0x20 || ch > 0x7e) {
+                    String s = "0000" + Integer.toString(ch, 16);
+                    retval.append("\\u" + s.substring(s.length() - 4, s.length()));
+                } else {
+                    retval.append(ch);
+                }
+                continue;
+            }
+        }
+        return retval.toString();
+    }
+
+    /**
+     * Returns a detailed message for the Error when it is thrown by the token manager to indicate a lexical error.
+     * Parameters : EOFSeen : indicates if EOF caused the lexical error curLexState : lexical state in which this error
+     * occurred errorLine : line number when the error occurred errorColumn : column number when the error occurred
+     * errorAfter : prefix that was seen before this error occurred curchar : the offending character Note: You can
+     * customize the lexical error message by modifying this method.
+     */
+    protected static String LexicalError(boolean EOFSeen, int lexState, int errorLine, int errorColumn,
+            String errorAfter, char curChar) {
+        return ("Lexical error at line " +
+                errorLine + ", column " +
+                errorColumn + ".  Encountered: " +
+                (EOFSeen ? "<EOF> "
+                        : ("\"" + addEscapes(String.valueOf(curChar)) + "\"") + " (" + (int) curChar + "), ")
+                +
+                "after : \"" + addEscapes(errorAfter) + "\"");
+    }
+
+    /**
+     * You can also modify the body of this method to customize your error messages. For example, cases like
+     * LOOP_DETECTED and INVALID_LEXICAL_STATE are not of end-users concern, so you can return something like :
+     *
+     * "Internal Error : Please file a bug report .... "
+     *
+     * from this method for such cases in the release version of your parser.
+     */
+    @Override
+    public String getMessage() {
+        return super.getMessage();
+    }
+
+    /*
+     * Constructors of various flavors follow.
+     */
+
+    /** No arg constructor. */
+    public TokenMgrError() {
+    }
+
+    /** Constructor with message and reason. */
+    public TokenMgrError(String message, int reason) {
+        super(message);
+        errorCode = reason;
+    }
+
+    /** Full Constructor. */
+    /*
+     * Customized for Yamcs to expose error context on lexical errors.
+     * 
+     * Note that javacc will preserve changes to this class (while throwing
+     * a non-meaningful warning message)
+     */
+    public TokenMgrError(boolean EOFSeen, int lexState, int errorLine, int errorColumn, String errorAfter, char curChar,
+            int reason) {
+        this("Invalid syntax", reason);
+        this.errorLine = errorLine;
+        this.errorColumn = errorColumn;
+    }
+
+    // Custom fields
+    public int errorLine = -1;
+    public int errorColumn = -1;
+
+}
+/* JavaCC - OriginalChecksum=2d23260405996cde0da4ac168a4e7948 (do not edit this line) */
+```
+
+### `UnknownFieldException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/UnknownFieldException.java`
+
+
+```java
+package org.yamcs.utils.parser;
+
+@SuppressWarnings("serial")
+public class UnknownFieldException extends ParseException {
+
+    private String field;
+
+    public UnknownFieldException(String field, Token currentToken, String[] tokenImage) {
+        super("Field not found '" + field + "'");
+        this.field = field;
+        this.currentToken = currentToken;
+        this.tokenImage = tokenImage;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public String getKind() {
+        return tokenImage[currentToken.kind];
+    }
+}
+```

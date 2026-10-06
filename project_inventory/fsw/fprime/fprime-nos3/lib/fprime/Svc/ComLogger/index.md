@@ -3,30 +3,572 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--ComLogger.cpp
-file--ComLogger.fpp
-file--ComLogger.hpp
-file--Commands.fppi
-file--Events.fppi
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.cpp`](file--ComLogger.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.fpp`](file--ComLogger.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.hpp`](file--ComLogger.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/.gitignore`
+
+
+```text
+# Ignore Test Outputs
+test_*.com
+test_*.com.CRC32
+good_*.com
+good_*.com.CRC32
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ComLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ComLogger.cpp"
+)
+
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/ComLogger/ComLogger.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComLoggerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/ComLoggerMain.cpp"
+)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `ComLogger.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+//
+// ComLogger.cpp
+//
+// ----------------------------------------------------------------------
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/SerialBuffer.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <Os/ValidateFile.hpp>
+#include <Svc/ComLogger/ComLogger.hpp>
+#include <cstdio>
+
+namespace Svc {
+static_assert(std::numeric_limits<U16>::max() <= std::numeric_limits<FwSizeType>::max(),
+              "U16 must fit in the positive range of FwSizeType");
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+ComLogger ::ComLogger(const char* compName, const char* incomingFilePrefix, U32 maxFileSize, bool storeBufferLength)
+    : ComLoggerComponentBase(compName),
+      m_maxFileSize(maxFileSize),
+      m_fileMode(CLOSED),
+      m_byteCount(0),
+      m_writeErrorOccurred(false),
+      m_openErrorOccurred(false),
+      m_storeBufferLength(storeBufferLength),
+      m_initialized(true) {
+    this->init_log_file(incomingFilePrefix, maxFileSize, storeBufferLength);
+}
+
+ComLogger ::ComLogger(const char* compName)
+    : ComLoggerComponentBase(compName),
+      m_filePrefix(),
+      m_maxFileSize(0),
+      m_fileMode(CLOSED),
+      m_fileName(),
+      m_hashFileName(),
+      m_byteCount(0),
+      m_writeErrorOccurred(false),
+      m_openErrorOccurred(false),
+      m_storeBufferLength(),
+      m_initialized(false) {}
+
+void ComLogger ::init_log_file(const char* incomingFilePrefix, U32 maxFileSize, bool storeBufferLength) {
+    FW_ASSERT(incomingFilePrefix != nullptr);
+    this->m_maxFileSize = maxFileSize;
+    this->m_storeBufferLength = storeBufferLength;
+    if (this->m_storeBufferLength) {
+        FW_ASSERT(maxFileSize > sizeof(U16), static_cast<FwAssertArgType>(maxFileSize));
+    }
+    // Assign the prefix checking if it is too big
+    Fw::FormatStatus formatStatus = this->m_filePrefix.format("%s", incomingFilePrefix);
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+    this->m_initialized = true;
+}
+
+ComLogger ::~ComLogger() {
+    // Close file:
+    // this->closeFile();
+    // NOTE: the above did not work because we don't want to issue an event
+    // in the destructor. This can cause "virtual method called" segmentation
+    // faults.
+    // So I am copying part of that function here.
+    if (OPEN == this->m_fileMode) {
+        // Close file:
+        this->m_file.close();
+
+        // Write out the hash file to disk:
+        this->writeHashFile();
+
+        // Update mode:
+        this->m_fileMode = CLOSED;
+
+        // Send event:
+        // Fw::LogStringArg logStringArg((char*) fileName);
+        // this->log_DIAGNOSTIC_FileClosed(logStringArg);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations
+// ----------------------------------------------------------------------
+
+void ComLogger ::comIn_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context) {
+    FW_ASSERT(portNum == 0);
+
+    // Get length of buffer:
+    FwSizeType sizeNative = data.getBuffLength();
+    // ComLogger only writes 16-bit sizes to save space
+    // on disk:
+    FW_ASSERT(sizeNative < 65536, static_cast<FwAssertArgType>(sizeNative));
+    U16 size = sizeNative & 0xFFFF;
+
+    // Close the file if it will be too big:
+    if (OPEN == this->m_fileMode) {
+        U32 projectedByteCount = this->m_byteCount + size;
+        if (this->m_storeBufferLength) {
+            projectedByteCount += static_cast<U32>(sizeof(size));
+        }
+        if (projectedByteCount > this->m_maxFileSize) {
+            this->closeFile();
+        }
+    }
+
+    // Open the file if it there is not one open:
+    if (CLOSED == this->m_fileMode) {
+        this->openFile();
+    }
+
+    // Write to the file if it is open:
+    if (OPEN == this->m_fileMode) {
+        this->writeComBufferToFile(data, size);
+    }
+}
+
+void ComLogger ::CloseFile_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+    this->closeFile();
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void ComLogger ::pingIn_handler(const FwIndexType portNum, U32 key) {
+    // return key
+    this->pingOut_out(0, key);
+}
+
+void ComLogger ::openFile() {
+    FW_ASSERT(CLOSED == this->m_fileMode);
+
+    if (!this->m_initialized) {
+        this->log_WARNING_LO_FileNotInitialized();
+        return;
+    }
+
+    // Create filename:
+    Fw::Time timestamp = getTime();
+    Fw::FormatStatus formatStatus = this->m_fileName.format(
+        "%s_%" PRI_FwTimeBaseStoreType "_%" PRIu32 "_%06" PRIu32 ".com", this->m_filePrefix.toChar(),
+        static_cast<FwTimeBaseStoreType>(timestamp.getTimeBase()), timestamp.getSeconds(), timestamp.getUSeconds());
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+    this->m_hashFileName.format("%s%s", this->m_fileName.toChar(), Utils::Hash::getFileExtensionString());
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+
+    Os::File::Status ret = m_file.open(this->m_fileName.toChar(), Os::File::OPEN_WRITE);
+    if (Os::File::OP_OK != ret) {
+        if (!this->m_openErrorOccurred) {  // throttle this event, otherwise a positive
+                                           // feedback event loop can occur!
+            this->log_WARNING_HI_FileOpenError(ret, this->m_fileName);
+        }
+        this->m_openErrorOccurred = true;
+    } else {
+        // Reset event throttle:
+        this->m_openErrorOccurred = false;
+
+        // Reset byte count:
+        this->m_byteCount = 0;
+
+        // Set mode:
+        this->m_fileMode = OPEN;
+    }
+}
+
+void ComLogger ::closeFile() {
+    if (OPEN == this->m_fileMode) {
+        // Close file:
+        this->m_file.close();
+
+        // Write out the hash file to disk:
+        this->writeHashFile();
+
+        // Update mode:
+        this->m_fileMode = CLOSED;
+
+        // Send event:
+        this->log_DIAGNOSTIC_FileClosed(this->m_fileName);
+    }
+}
+
+void ComLogger ::writeComBufferToFile(Fw::ComBuffer& data, U16 size) {
+    if (this->m_storeBufferLength) {
+        U8 buffer[sizeof(size)];
+        Fw::SerialBuffer serialLength(&buffer[0], sizeof(size));
+        serialLength.serialize(size);
+        if (this->writeToFile(serialLength.getBuffAddr(), static_cast<U16>(serialLength.getBuffLength()))) {
+            this->m_byteCount += static_cast<U32>(serialLength.getBuffLength());
+        } else {
+            return;
+        }
+    }
+
+    // Write buffer to file:
+    if (this->writeToFile(data.getBuffAddr(), size)) {
+        this->m_byteCount += size;
+    }
+}
+
+bool ComLogger ::writeToFile(void* data, U16 length) {
+    FwSizeType size = length;
+    Os::File::Status ret = m_file.write(reinterpret_cast<const U8*>(data), size);
+    if ((Os::File::OP_OK != ret) || (size != length)) {
+        if (!this->m_writeErrorOccurred) {  // throttle this event, otherwise a positive
+                                            // feedback event loop can occur!
+            this->log_WARNING_HI_FileWriteError(ret, static_cast<U32>(size), length, this->m_fileName);
+        }
+        this->m_writeErrorOccurred = true;
+        return false;
+    }
+
+    this->m_writeErrorOccurred = false;
+    return true;
+}
+
+void ComLogger ::writeHashFile() {
+    Os::ValidateFile::Status validateStatus;
+    validateStatus = Os::ValidateFile::createValidation(this->m_fileName.toChar(), this->m_hashFileName.toChar());
+    if (Os::ValidateFile::VALIDATION_OK != validateStatus) {
+        this->log_WARNING_LO_FileValidationError(this->m_fileName, this->m_hashFileName, validateStatus);
+    }
+}
+}  // namespace Svc
+```
+
+### `ComLogger.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for logging Com buffers
+  active component ComLogger {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    @ Com input port
+    async input port comIn: Fw.Com
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command registration port
+    command reg port cmdRegOut
+
+    @ Command received port
+    command recv port cmdIn
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port logOut
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port timeCaller
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+```
+
+### `ComLogger.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/ComLogger.hpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+//
+// ComLogger.hpp
+//
+// ----------------------------------------------------------------------
+
+#ifndef Svc_ComLogger_HPP
+#define Svc_ComLogger_HPP
+
+#include <limits.h>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/FileNameString.hpp>
+#include <Os/File.hpp>
+#include <Os/Mutex.hpp>
+#include <Utils/Hash/Hash.hpp>
+#include <cstdarg>
+#include <cstdio>
+#include "Svc/ComLogger/ComLoggerComponentAc.hpp"
+
+namespace Svc {
+
+class ComLogger final : public ComLoggerComponentBase {
+    friend class ComLoggerTester;
+
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // CONSTRUCTOR:
+    // filePrefix: string to prepend the file name with, ie. "thermal_telemetry"
+    // maxFileSize: the maximum size a file should reach before being closed and a new one opened
+    // storeBufferLength: if true, store the length of each com buffer before storing the buffer itself,
+    //                    otherwise just store the com buffer. false might be advantageous in a system
+    //                    where you can ensure that all buffers given to the ComLogger are the same size
+    //                    in which case you do not need the overhead. Or you store an id which you can
+    //                    match to an expected size on the ground during post processing.
+    ComLogger(const char* compName, const char* filePrefix, U32 maxFileSize, bool storeBufferLength = true);
+
+    // CONSTRUCTOR:
+    ComLogger(const char* compName);
+
+    // filePrefix: string to prepend the file name with, ie. "thermal_telemetry"
+    // maxFileSize: the maximum size a file should reach before being closed and a new one opened
+    // storeBufferLength: if true, store the length of each com buffer before storing the buffer itself,
+    //                    otherwise just store the com buffer. false might be advantageous in a system
+    //                    where you can ensure that all buffers given to the ComLogger are the same size
+    //                    in which case you do not need the overhead. Or you store an id which you can
+    //                    match to an expected size on the ground during post processing.
+    void init_log_file(const char* filePrefix, U32 maxFileSize, bool storeBufferLength = true);
+
+    ~ComLogger();
+
+    // ----------------------------------------------------------------------
+    // Handler implementations
+    // ----------------------------------------------------------------------
+
+  private:
+    void comIn_handler(FwIndexType portNum, Fw::ComBuffer& data, U32 context);
+
+    void CloseFile_cmdHandler(FwOpcodeType opCode, U32 cmdSeq);
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        U32 key                    /*!< Value to return to pinger*/
+    );
+
+    // The filename data:
+    Fw::FileNameString m_filePrefix;
+    U32 m_maxFileSize;
+
+    // ----------------------------------------------------------------------
+    // Internal state:
+    // ----------------------------------------------------------------------
+    enum FileMode { CLOSED = 0, OPEN = 1 };
+
+    FileMode m_fileMode;
+    Os::File m_file;
+
+    Fw::FileNameString m_fileName;
+    Fw::FileNameString m_hashFileName;
+    U32 m_byteCount;
+    bool m_writeErrorOccurred;
+    bool m_openErrorOccurred;
+    bool m_storeBufferLength;
+    bool m_initialized;
+
+    // ----------------------------------------------------------------------
+    // File functions:
+    // ----------------------------------------------------------------------
+    void openFile();
+
+    void closeFile();
+
+    void writeComBufferToFile(Fw::ComBuffer& data, U16 size);
+
+    // ----------------------------------------------------------------------
+    // Helper functions:
+    // ----------------------------------------------------------------------
+
+    bool writeToFile(void* data, U16 length);
+
+    void writeHashFile();
+};
+}  // namespace Svc
+
+#endif
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/Commands.fppi`
+
+
+```text
+@ Forces a close of the currently opened file.
+async command CloseFile \
+  opcode 0x00
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/Events.fppi`
+
+
+```text
+@ The ComLogger encountered an error opening a file
+event FileOpenError(
+                     errornum: U32 @< The error number returned from open file
+                     file: string size 240 @< The file
+                   ) \
+  severity warning high \
+  id 0x00 \
+  format "Error {} opening file {}"
+
+@ The ComLogger encountered an error writing to a file
+event FileWriteError(
+                      errornum: U32 @< The error number returned from write file
+                      bytesWritten: U32 @< The number of bytes successfully written to file
+                      bytesToWrite: U32 @< The number of bytes attempted to write to file
+                      file: string size 240 @< The file
+                    ) \
+  severity warning high \
+  id 0x01 \
+  format "Error {} while writing {} of {} bytes to {}"
+
+@ The ComLogger encountered an error writing the validation file
+event FileValidationError(
+                           validationFile: string size 240 @< The validation file
+                           file: string size 240 @< The file
+                           status: U32 @< The Os::Validate::Status return
+                         ) \
+  severity warning low \
+  id 0x02 \
+  format "The ComLogger failed to create a validation file {} for {} with error {}."
+
+@ The ComLogger successfully closed a file on command.
+event FileClosed(
+                  file: string size 240 @< The file
+                ) \
+  severity diagnostic \
+  id 0x03 \
+  format "File {} closed successfully."
+
+event FileNotInitialized \
+  severity warning low \
+  id 0x04 \
+  format "Could not open ComLogger file. File not initialized" \
+  throttle 5
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComLogger/README.md`
+
+
+```markdown
+# Svc::ComLogger Component
+
+This is the build directory for the ISF ComLogger component.
+
+## Redo Targets
+
+**Main targets:** The following `redo` targets are available:
+
+* `all`: Build the target `Build/$TARGET/$MODE/lib.a`, where `TARGET` and `MODE` are environment variables. The targets are Darwin, Linux, and CORTEX160. The modes are Unit, Integration, and Flight. If `TARGET` is not set, the system will use the native environment (Darwin or Linux) as the default. If `MODE` is not set, the system will use Unit as the default.
+
+* `clean`: Clean this directory and its subdirectories.
+
+* `Dictionary`: Create a directory `Dictionary` containing a dictionary for the ISF Ground Support Equipment (GSE).
+
+* `Docs`: Create a directory `Docs` containing ISF-style component documentation.
+
+* `html`: Generate `docs/ComLogger.html
+
+* `Interface`: Create a directory `Interface` containing an ASTERIA-style component interface.
+
+* `NCSL`: Create a directory `NCSL` containing counts of non-commented source lines of code.
+
+* `README.md`: Generate this `README` file.
+
+* `report`: Generate `ComLoggerComponentReport.txt`.
+
+**Helper targets:** The main targets use the following helper targets.
+  You should not have to invoke these targets directly,
+  except when developing or debugging the build system.
+
+* `default.a`: Build a component library target `Build/`*target*`/`*mode*`/lib.a`.
+
+* `default.ncsl.txt`: Generate an NCSL file.
+
+* `default.o`: Build target of the form `Build/`*target*`/`*mode*`/`*path*`/`*file*`.o`, where *path* may be empty.
+```

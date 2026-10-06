@@ -3,18 +3,356 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CspCommandPostprocessor.java`
 
-file--CspCommandPostprocessor.java
-file--CspPacket.java
-file--CspPacketPreprocessor.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspCommandPostprocessor.java`
+
+
+```java
+package org.yamcs.tctm.csp;
+
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeSent_KEY;
+
+import java.nio.ByteBuffer;
+import java.util.Arrays;
+import java.util.zip.CRC32C;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryPublisher.AckStatus;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.logging.Log;
+import org.yamcs.tctm.CommandPostprocessor;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Link postprocessor for CSP 1.x commands (CubeSat Protocol)
+ */
+public class CspCommandPostprocessor implements CommandPostprocessor {
+    protected Log log = new Log(getClass());
+
+    protected int maximumTcPacketLength = -1; // the maximum size of the CSP packets uplinked
+    protected CommandHistoryPublisher commandHistory;
+
+    public void init(String yamcsInstance, YConfiguration config) {
+        maximumTcPacketLength = config.getInt("maximumTcPacketLength", -1);
+    }
+
+    @Override
+    public void setCommandHistoryPublisher(CommandHistoryPublisher commandHistory) {
+        this.commandHistory = commandHistory;
+    }
+
+    @Override
+    public byte[] process(PreparedCommand pc) {
+        byte[] binary = pc.getBinary();
+
+        int newLength = getBinaryLength(pc);
+        if (maximumTcPacketLength != -1 && newLength > maximumTcPacketLength) {
+            String msg = "Command too long, length: " + newLength + ", expected maximum length: "
+                    + maximumTcPacketLength;
+            log.warn(msg);
+            long t = TimeEncoding.getWallclockTime();
+            commandHistory.publishAck(pc.getCommandId(), AcknowledgeSent_KEY, t, AckStatus.NOK, msg);
+            commandHistory.commandFailed(pc.getCommandId(), t, msg);
+            return null;
+        }
+        if (newLength > binary.length) {
+            binary = Arrays.copyOf(binary, newLength);
+        }
+
+        if (CspPacket.getCrcFlag(binary)) {
+            var crc = new CRC32C();
+            crc.update(binary, 4, binary.length - 4 - 4); // Header is excluded
+
+            var bb = ByteBuffer.wrap(binary);
+            bb.putInt(binary.length - 4, (int) crc.getValue()); // uint32
+        }
+
+        commandHistory.publish(pc.getCommandId(), PreparedCommand.CNAME_BINARY, binary);
+        return binary;
+    }
+
+    @Override
+    public int getBinaryLength(PreparedCommand pc) {
+        var binary = pc.getBinary();
+        var length = binary.length;
+        if (CspPacket.getCrcFlag(binary)) {
+            length += 4;
+        }
+        return length;
+    }
+
+    public int getMaximumTcPacketLength() {
+        return maximumTcPacketLength;
+    }
+}
 ```
 
-## 항목
+### `CspPacket.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspCommandPostprocessor.java`](file--CspCommandPostprocessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspPacket.java`](file--CspPacket.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspPacketPreprocessor.java`](file--CspPacketPreprocessor.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspPacket.java`
+
+
+```java
+package org.yamcs.tctm.csp;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Helper class for accessing CubeSat Space Protocol v1 fields
+ */
+public class CspPacket {
+
+    protected ByteBuffer bb;
+
+    public CspPacket(byte[] packet) {
+        bb = ByteBuffer.wrap(packet);
+    }
+
+    public CspPacket(ByteBuffer bb) {
+        this.bb = bb;
+    }
+
+    public int getPriority() {
+        return (bb.get(0) & 0xC0) >>> 6;
+    }
+
+    public int getSource() {
+        return (bb.get(0) & 0x3E) >>> 1;
+    }
+
+    public static int getSource(byte[] packet) {
+        return (packet[0] & 0x3E) >>> 1;
+    }
+
+    public int getSourcePort() {
+        return bb.get(2) & 0x3F;
+    }
+
+    public int getDestination() {
+        var originalOrder = bb.order();
+        bb.order(ByteOrder.BIG_ENDIAN);
+        int dest = (bb.getShort(0) & 0x01F0) >>> 4;
+        bb.order(originalOrder);
+        return dest;
+    }
+
+    public static int getDestination(byte[] packet) {
+        return (ByteArrayUtils.decodeUnsignedShort(packet, 0) & 0x01F0) >>> 4;
+    }
+
+    public int getDestinationPort() {
+        var originalOrder = bb.order();
+        bb.order(ByteOrder.BIG_ENDIAN);
+        int dport = (bb.getShort(1) & 0x0FC0) >>> 6;
+        bb.order(originalOrder);
+        return dport;
+    }
+
+    public boolean getHmacFlag() {
+        return (bb.get(3) & 0x08) == 0x08;
+    }
+
+    public boolean getXteaFlag() {
+        return (bb.get(3) & 0x04) == 0x04;
+    }
+
+    public boolean getRdpFlag() {
+        return (bb.get(3) & 0x02) == 0x02;
+    }
+
+    public boolean getCrcFlag() {
+        return (bb.get(3) & 0x01) == 0x01;
+    }
+
+    public static boolean getCrcFlag(byte[] packet) {
+        return (packet[3] & 0x01) == 0x01;
+    }
+
+    public static void setCrcFlag(byte[] packet, boolean enabled) {
+        packet[3] |= 0x01;
+    }
+
+    public void setHeader(byte priority, byte source, byte destination, byte destinationPort, byte sourcePort) {
+        setHeader(priority, source, destination, destinationPort, sourcePort, false, false, false, false);
+    }
+
+    public void setHeader(byte priority, byte source, byte destination, byte destinationPort, byte sourcePort,
+            boolean hmacFlag, boolean xteaFlag, boolean rdpFlag, boolean crcFlag) {
+        int headerBits = (priority & 0b11) << 30 |
+                (source & 0b11111) << 25 |
+                (destination & 0b11111) << 20 |
+                (destinationPort & 0b111111) << 14 |
+                (sourcePort & 0b111111) << 8 |
+                (byte) (hmacFlag ? (0b1 << 3) : 0b0) |
+                (byte) (xteaFlag ? (0b1 << 2) : 0b0) |
+                (byte) (rdpFlag ? (0b1 << 1) : 0b0) |
+                (byte) (crcFlag ? 0b1 : 0b0);
+        bb.putInt(0, headerBits);
+    }
+
+    public int getLength() {
+        return bb.capacity();
+    }
+
+    public byte[] getBytes() {
+        if (bb.hasArray() && bb.array().length == bb.capacity() && !bb.isReadOnly()) {
+            return bb.array();
+        }
+        byte[] b = new byte[bb.capacity()];
+        int pos = bb.position();
+        bb.get(b);
+        bb.position(0);
+        bb.position(pos);
+
+        return b;
+    }
+
+    public ByteBuffer getByteBuffer() {
+        return bb;
+    }
+
+    @Override
+    public String toString() {
+        var buf = new StringBuilder("S ")
+                .append(getSource())
+                .append(":")
+                .append(getSourcePort())
+                .append(", D ")
+                .append(getDestination())
+                .append(":")
+                .append(getDestinationPort());
+        return buf.toString();
+    }
+}
+```
+
+### `CspPacketPreprocessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/tctm/csp/CspPacketPreprocessor.java`
+
+
+```java
+package org.yamcs.tctm.csp;
+
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.zip.CRC32C;
+
+import org.yamcs.TmPacket;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.AbstractPacketPreprocessor;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * Link preprocessor for CSP 1.x packets (CubeSat Protocol)
+ */
+public class CspPacketPreprocessor extends AbstractPacketPreprocessor {
+
+    private static final String CONFIG_CSP_ID_FILTER = "cspId";
+
+    // Unless empty, filter incoming packets on their CSP destination ID
+    private int[] cspIdFilter;
+    private AtomicInteger seqCount = new AtomicInteger();
+
+    // Arbitrary max sequence count, only to distinguish archived packets
+    private static final int MAX_SEQ_COUNT = 0x0000ffff;
+
+    public CspPacketPreprocessor(String yamcsInstance) {
+        this(yamcsInstance, YConfiguration.emptyConfig());
+    }
+
+    public CspPacketPreprocessor(String yamcsInstance, YConfiguration config) {
+        super(yamcsInstance, config);
+        if (config.containsKey(CONFIG_CSP_ID_FILTER)) {
+            if (config.isList(CONFIG_CSP_ID_FILTER)) {
+                cspIdFilter = config.getList(CONFIG_CSP_ID_FILTER).stream()
+                        .mapToInt(x -> (int) x)
+                        .toArray();
+            } else {
+                cspIdFilter = new int[] { config.getInt(CONFIG_CSP_ID_FILTER) };
+            }
+        } else {
+            cspIdFilter = new int[0]; // Accept all
+        }
+    }
+
+    @Override
+    public TmPacket process(TmPacket packet) {
+        byte[] bytes = packet.getPacket();
+
+        if (bytes.length < 4) { // Expect at least the length of the CSP header
+            eventProducer.sendWarning("SHORT_PACKET",
+                    "Short packet received, length: " + bytes.length + "; minimum required length is 4 bytes");
+            return null; // Drop packet
+        }
+
+        if (cspIdFilter.length > 0) {
+            var dst = CspPacket.getDestination(bytes);
+            var match = false;
+            for (int i = 0; i < cspIdFilter.length; i++) {
+                if (dst == cspIdFilter[i]) {
+                    match = true;
+                    break;
+                }
+            }
+            if (!match) {
+                return null; // Drop packet, it's not for us
+            }
+        }
+
+        var checksumIndicator = CspPacket.getCrcFlag(bytes);
+        var corrupted = false;
+        if (checksumIndicator) {
+            int n = packet.length();
+            var crc = new CRC32C();
+            crc.update(bytes, 4, bytes.length - 4 - 4);
+            int computedCheckword = (int) crc.getValue(); // uint32
+            int packetCheckword = ByteArrayUtils.decodeInt(bytes, n - 4);
+            if (packetCheckword != computedCheckword) {
+                var message = "Corrupted packet received, computed checkword: " + computedCheckword
+                        + "; packet checkword: " + packetCheckword;
+                log.warn(message);
+                eventProducer.sendWarning(ETYPE_CORRUPTED_PACKET, message);
+                corrupted = true;
+            }
+        }
+
+        packet.setGenerationTime(getGenerationTime(packet));
+        packet.setSequenceCount(getSequenceCount(packet));
+        packet.setInvalid(corrupted);
+
+        return packet;
+    }
+
+    /**
+     * Returns the generation time (= packet time).
+     * <p>
+     * Because no time information is available in CSP header, returns Yamcs-local time by default.
+     */
+    protected long getGenerationTime(TmPacket packet) {
+        return packet.getReceptionTime();
+    }
+
+    /**
+     * Returns a sequence count for identifying a packet in addition to the generation time.
+     * <p>
+     * No sequence counter is available in CSP header, so the default implementation uses a local rotating counter.
+     */
+    protected int getSequenceCount(TmPacket packet) { // For extension
+        return seqCount.accumulateAndGet(1, (value, inc) -> {
+            var newValue = value + inc;
+            if (newValue > MAX_SEQ_COUNT) {
+                return 0;
+            } else {
+                return newValue;
+            }
+        });
+    }
+}
+```

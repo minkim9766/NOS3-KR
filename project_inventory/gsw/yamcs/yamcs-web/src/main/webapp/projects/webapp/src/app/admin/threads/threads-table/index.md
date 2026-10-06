@@ -3,16 +3,153 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `threads-table.component.html`
 
-file--threads-table.component.html
-file--threads-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/threads-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="id"
+    matSortDirection="desc"
+    matSortDisableClear>
+    <ng-container matColumnDef="id">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>ID</th>
+      <td mat-cell *matCellDef="let row">{{ row.id }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+      <td mat-cell *matCellDef="let row">
+        <a [routerLink]="row.id">
+          {{ row.name }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="state">
+      <th mat-header-cell *matHeaderCellDef class="status"></th>
+      <td mat-cell *matCellDef="let row" class="status">
+        @if (row.state === "RUNNABLE") {
+          <mat-icon [matTooltip]="row.state">playlist_play</mat-icon>
+        } @else if (row.state === "TIMED_WAITING") {
+          <mat-icon [matTooltip]="row.state">timer</mat-icon>
+        } @else if (row.state === "WAITING") {
+          <mat-icon [matTooltip]="row.state">pause</mat-icon>
+        } @else if (row.state === "BLOCKED") {
+          <mat-icon [matTooltip]="row.state">block</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="native">
+      <th mat-header-cell *matHeaderCellDef>Native</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.native ? "Yes" : "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="suspended">
+      <th mat-header-cell *matHeaderCellDef>Suspended</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.suspended ? "Yes" : "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="group">
+      <th mat-header-cell *matHeaderCellDef>Group</th>
+      <td mat-cell *matCellDef="let row">
+        {{ row.group?.name || "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="trace">
+      <th mat-header-cell *matHeaderCellDef>Frame</th>
+      <td mat-cell *matCellDef="let row">
+        @if (row.trace) {
+          <app-trace-element [element]="row.trace[0]" />
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
 ```
 
-## 항목
+### `threads-table.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/threads-table.component.html`](file--threads-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/threads-table.component.ts`](file--threads-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/threads-table/threads-table.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { ThreadInfo, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { TraceElementComponent } from '../trace-element/trace-element.component';
+
+@Component({
+  selector: 'app-threads-table',
+  templateUrl: './threads-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule, TraceElementComponent],
+})
+export class ThreadsTableComponent implements AfterViewInit, OnChanges {
+  displayedColumns = [
+    'id',
+    'state',
+    'name',
+    'trace',
+    'native',
+    'suspended',
+    'group',
+    'actions',
+  ];
+
+  @Input()
+  threads: ThreadInfo[];
+
+  @Input()
+  filter: string;
+
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  dataSource = new MatTableDataSource<ThreadInfo>();
+
+  ngAfterViewInit() {
+    this.dataSource.filterPredicate = (thread, filter) => {
+      return thread.name.toLowerCase().indexOf(filter) >= 0;
+    };
+    this.dataSource.sort = this.sort;
+  }
+
+  ngOnChanges() {
+    this.dataSource.data = this.threads || [];
+    this.dataSource.filter = this.filter;
+  }
+}
+```

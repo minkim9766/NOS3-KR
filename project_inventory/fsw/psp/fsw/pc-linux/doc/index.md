@@ -3,14 +3,12 @@
 
 **경로:** `fsw/psp/fsw/pc-linux/doc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
+**경로:** `fsw/psp/fsw/pc-linux/doc/.gitignore`
+
+
+```text
 ```
-
-## 항목
-
-- [`fsw/psp/fsw/pc-linux/doc/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함

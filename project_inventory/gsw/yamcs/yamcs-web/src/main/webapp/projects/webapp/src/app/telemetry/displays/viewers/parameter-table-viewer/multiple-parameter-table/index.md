@@ -3,18 +3,271 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `multiple-parameter-table.component.css`
 
-file--multiple-parameter-table.component.css
-file--multiple-parameter-table.component.html
-file--multiple-parameter-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.css`
+
+
+```css
+.paused td {
+  font-style: italic;
+}
 ```
 
-## 항목
+### `multiple-parameter-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.css`](file--multiple-parameter-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.html`](file--multiple-parameter-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.ts`](file--multiple-parameter-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.html`
+
+
+```html
+@if (dataSource.data.length) {
+  <table mat-table [dataSource]="dataSource" class="ya-data-table expand" [class.paused]="paused">
+    <ng-container cdkColumnDef="select">
+      <th
+        mat-header-cell
+        *cdkHeaderCellDef
+        class="checkbox"
+        (click)="cb.toggle(); $event.stopPropagation()">
+        <ya-table-checkbox
+          #cb
+          [dataSource]="dataSource"
+          [selection]="selection"
+          [transform]="transformRowForSelection" />
+      </th>
+      <td
+        mat-cell
+        *cdkCellDef="let item"
+        class="checkbox"
+        (click)="cb.toggle(); $event.stopPropagation()">
+        <ya-table-checkbox
+          #cb
+          [dataSource]="dataSource"
+          [selection]="selection"
+          [item]="item"
+          [transform]="transformRowForSelection" />
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="name">
+      <th mat-header-cell *cdkHeaderCellDef>Name</th>
+      <td mat-cell *cdkCellDef="let row" style="white-space: nowrap">
+        <a [routerLink]="'/telemetry/parameters' + row.name" [queryParams]="{ c: yamcs.context }">
+          {{ row.name }}
+        </a>
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="severity">
+      <th mat-header-cell *cdkHeaderCellDef>Severity</th>
+      <td mat-cell *cdkCellDef="let row">
+        @if (row.pval?.monitoringResult) {
+          <app-alarm-level [level]="row.pval?.monitoringResult" />
+        } @else {
+          <span>-</span>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="rawValue">
+      <th mat-header-cell *cdkHeaderCellDef>Raw</th>
+      <td mat-cell *cdkCellDef="let row" class="wrap200">
+        {{ (row.pval?.rawValue | value) || "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="engValue">
+      <th mat-header-cell *cdkHeaderCellDef>Eng</th>
+      <td mat-cell *cdkCellDef="let row" class="wrap200">
+        @if (row.pval) {
+          <ya-expirable [pval]="row.pval">
+            {{ (row.pval?.engValue | value) || "-" }}
+            @if (row.pval?.rangeCondition === "LOW") {
+              <span>&#8595;</span>
+            }
+            @if (row.pval?.rangeCondition === "HIGH") {
+              <span>&#8593;</span>
+            }
+          </ya-expirable>
+        } @else {
+          <span>-</span>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="receptionTime">
+      <th mat-header-cell *cdkHeaderCellDef>Reception time</th>
+      <td mat-cell *cdkCellDef="let row">
+        {{ (row.pval?.acquisitionTime | datetime) || "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="generationTime">
+      <th mat-header-cell *cdkHeaderCellDef>Generation time</th>
+      <td mat-cell *cdkCellDef="let row">{{ (row.pval?.generationTime | datetime) || "-" }}</td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="acquisitionStatus">
+      <th mat-header-cell *cdkHeaderCellDef>Acquisition status</th>
+      <td mat-cell *cdkCellDef="let row">{{ row.pval?.acquisitionStatus || "-" }}</td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="actions">
+      <th mat-header-cell *cdkHeaderCellDef class="expand"></th>
+      <td mat-cell *cdkCellDef="let row; let i = index">
+        <ya-icon-action
+          (click)="moveDown.emit(i); $event.stopPropagation()"
+          icon="keyboard_arrow_down" />
+        <ya-icon-action
+          (click)="moveUp.emit(i); $event.stopPropagation()"
+          icon="keyboard_arrow_up" />
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *cdkRowDef="let row; columns: displayedColumns"
+      [class.selected]="selection.isSelected(row.name)"
+      (click)="toggleOne(row.name)"></tr>
+  </table>
+}
+```
+
+### `multiple-parameter-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/multiple-parameter-table/multiple-parameter-table.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  ParameterValue,
+  Synchronizer,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+import { AlarmLevelComponent } from '../../../../../shared/alarm-level/alarm-level.component';
+import { ParameterTableBuffer } from '../ParameterTableBuffer';
+import { ParameterTable } from '../ParameterTableModel';
+
+@Component({
+  selector: 'app-multiple-parameter-table',
+  templateUrl: './multiple-parameter-table.component.html',
+  styleUrl: './multiple-parameter-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlarmLevelComponent, WebappSdkModule],
+})
+export class MultipleParameterTableComponent
+  implements OnInit, OnChanges, OnDestroy
+{
+  @Input()
+  model: ParameterTable = {
+    scroll: false,
+    parameters: [],
+  };
+
+  @Input()
+  buffer: ParameterTableBuffer;
+
+  @Input()
+  showActions: boolean;
+
+  @Input()
+  paused: boolean;
+
+  @Input()
+  selection: SelectionModel<string>;
+
+  @Output()
+  moveUp = new EventEmitter<number>();
+
+  @Output()
+  moveDown = new EventEmitter<number>();
+
+  dataSource = new MatTableDataSource<ParameterTableRecord>([]);
+
+  private syncSubscription: Subscription;
+
+  private defaultColumns = [
+    'severity',
+    'name',
+    'generationTime',
+    'rawValue',
+    'engValue',
+    'acquisitionStatus',
+  ];
+
+  displayedColumns: string[];
+
+  transformRowForSelection = (item: ParameterTableRecord) => item.name;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetector: ChangeDetectorRef,
+    synchronizer: Synchronizer,
+  ) {
+    this.syncSubscription = synchronizer.syncFast(() => {
+      if (!this.paused) {
+        this.refreshTable();
+      }
+    });
+  }
+
+  ngOnInit() {
+    this.refreshTable();
+  }
+
+  private refreshTable() {
+    const recs: ParameterTableRecord[] = this.model.parameters.map((name) => ({
+      name,
+    }));
+    for (const rec of recs) {
+      rec.pval = this.buffer.getLatestValue(rec.name);
+    }
+    this.dataSource.data = recs;
+    this.changeDetector.detectChanges();
+  }
+
+  ngOnChanges() {
+    if (this.showActions) {
+      this.displayedColumns = ['select', ...this.defaultColumns, 'actions'];
+    } else {
+      this.displayedColumns = this.defaultColumns;
+    }
+  }
+
+  toggleOne(name: string) {
+    if (
+      !this.selection.isSelected(name) ||
+      this.selection.selected.length > 1
+    ) {
+      this.selection.clear();
+    }
+    this.selection.toggle(name);
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
+
+export interface ParameterTableRecord {
+  name: string;
+  pval?: ParameterValue;
+}
+```

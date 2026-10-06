@@ -3,20 +3,28 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ParameterGetSetScenario.jpg`
 
-file--ParameterGetSetScenario.jpg
-file--ParameterLoadScenario.jpg
-file--ParameterSaveScenario.jpg
-file--PrmDbBDD.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterGetSetScenario.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterGetSetScenario.jpg`](file--ParameterGetSetScenario.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterLoadScenario.jpg`](file--ParameterLoadScenario.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterSaveScenario.jpg`](file--ParameterSaveScenario.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/PrmDbBDD.jpg`](file--PrmDbBDD.jpg) — 바이너리 (경로만)
+### `ParameterLoadScenario.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterLoadScenario.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `ParameterSaveScenario.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/ParameterSaveScenario.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `PrmDbBDD.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/PrmDb/docs/img/PrmDbBDD.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

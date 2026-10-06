@@ -3,24 +3,297 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sidebar-nav-group.component.css`
 
-file--sidebar-nav-group.component.css
-file--sidebar-nav-group.component.html
-file--sidebar-nav-group.component.ts
-file--sidebar-nav-item.component.css
-file--sidebar-nav-item.component.html
-file--sidebar-nav-item.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.css`
+
+
+```css
+.nav-item-group {
+  color: #fff !important;
+  position: relative;
+}
+
+.nav-item-group.active {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.arrow {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  font-size: 16px !important;
+  height: 16px !important;
+  width: 16px !important;
+}
+
+.item-icon {
+  padding-right: 16px;
+}
+
+.item-icon.svg-icon {
+  height: 18px;
+  width: 18px;
+  padding-left: 3px;
+}
+
+.item-icon.material-symbols {
+  font-size: 18px !important;
+  height: 24px !important;
+  width: 24px !important;
+  line-height: 24px;
+  text-align: center;
+}
+
+.nav-item-group-items {
+  margin-right: 20px;
+  /* Prevent glitch during animation */
+  overflow: hidden;
+}
+
+.mat-mdc-list-item:hover,
+.mat-mdc-list-item:focus {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
 ```
 
-## 항목
+### `sidebar-nav-group.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.css`](file--sidebar-nav-group.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.html`](file--sidebar-nav-group.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.ts`](file--sidebar-nav-group.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.css`](file--sidebar-nav-item.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.html`](file--sidebar-nav-item.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.ts`](file--sidebar-nav-item.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.html`
+
+
+```html
+<mat-list-item
+  class="nav-item-group"
+  [class.active]="active"
+  [class.expanded]="expanded"
+  (click)="toggle.emit(!expanded)">
+  @if (expanded) {
+    <mat-icon class="arrow">arrow_drop_down</mat-icon>
+  } @else {
+    <mat-icon class="arrow">arrow_right</mat-icon>
+  }
+  <mat-icon class="item-icon" [class.svg-icon]="!!svgIcon" [svgIcon]="svgIcon">{{ icon }}</mat-icon>
+  {{ label }}
+</mat-list-item>
+@if (expanded) {
+  <div class="nav-item-group-items">
+    <ng-content />
+  </div>
+}
+```
+
+### `sidebar-nav-group.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-group.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+import { MatListItem } from '@angular/material/list';
+
+@Component({
+  selector: 'ya-sidebar-nav-group',
+  templateUrl: './sidebar-nav-group.component.html',
+  styleUrl: './sidebar-nav-group.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatIcon, MatListItem],
+})
+export class YaSidebarNavGroup {
+  @Input()
+  label: string;
+
+  @Input()
+  icon: string;
+
+  @Input()
+  svgIcon: string;
+
+  @Input()
+  active = false;
+
+  @Input()
+  expanded = false;
+
+  @Output()
+  toggle = new EventEmitter<boolean>();
+}
+```
+
+### `sidebar-nav-item.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.css`
+
+
+```css
+a.subitem {
+  border-top-right-radius: 25px;
+  border-bottom-right-radius: 25px;
+}
+
+a.subitem.mat-mdc-list-item {
+  height: 32px;
+}
+
+:host:focus {
+  outline: none;
+}
+
+::ng-deep .item-icon {
+  padding-right: 16px;
+}
+
+::ng-deep .item-icon.material-symbols {
+  font-size: 18px !important;
+  height: 24px !important;
+  width: 24px !important;
+  line-height: 24px;
+  text-align: center;
+}
+
+::ng-deep .mat-mdc-nav-list {
+  padding: 4px 0;
+}
+
+.mat-mdc-list-item:hover,
+.mat-mdc-list-item:focus {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.mat-mdc-list-item.link-active,
+.mat-mdc-list-item.link-active:hover,
+.mat-mdc-list-item.link-active:focus {
+  background-color: #009e87 !important;
+}
+
+::ng-deep .mdc-list-item__primary-text {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+::ng-deep .mdc-list-item.mdc-list-item--with-one-line {
+  height: 40px;
+}
+
+::ng-deep .mat-mdc-list-item .mdc-list-item__primary-text {
+  color: #fff !important;
+  font-size: 12px;
+}
+```
+
+### `sidebar-nav-item.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.html`
+
+
+```html
+<a
+  mat-list-item
+  [routerLink]="routerLink()"
+  [queryParams]="queryParams"
+  [class.subitem]="subitem"
+  [class.link-active]="linkActive()"
+  [style.color]="color ? color + ' !important' : undefined">
+  @if (subitem) {
+    <div style="display: inline-block; width: 60px"></div>
+  }
+  <ng-content />
+</a>
+```
+
+### `sidebar-nav-item.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/sidebar/sidebar-nav-item.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+  Input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
+import { MatListItem } from '@angular/material/list';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+
+@Component({
+  selector: 'ya-sidebar-nav-item',
+  templateUrl: './sidebar-nav-item.component.html',
+  styleUrl: './sidebar-nav-item.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [MatListItem, RouterLink],
+})
+export class YaSidebarNavItem implements OnInit, OnDestroy {
+  router = inject(Router);
+
+  routerLink = input.required<string>();
+  activeWhen = input.required<string>();
+  exact = input(false);
+
+  @Input()
+  queryParams: {};
+
+  @Input()
+  subitem = false;
+
+  @Input()
+  color: string;
+
+  linkActive = signal(false);
+
+  private routerSubscription: Subscription;
+
+  ngOnInit(): void {
+    this.checkLinkActive(this.router.url);
+    this.routerSubscription = this.router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe((evt) => {
+        this.checkLinkActive(evt.url);
+      });
+  }
+
+  private checkLinkActive(url: string) {
+    if (this.exact()) {
+      let activeWhen = this.activeWhen();
+      if (activeWhen.endsWith('/')) {
+        activeWhen = activeWhen.substring(0, activeWhen.length - 1);
+      }
+
+      const urlTree = this.router.parseUrl(this.router.url);
+      urlTree.queryParams = {};
+      urlTree.fragment = null;
+      let urlWithoutParams = urlTree.toString();
+      if (urlWithoutParams.endsWith('/')) {
+        urlWithoutParams = urlWithoutParams.substring(
+          0,
+          urlWithoutParams.length - 1,
+        );
+      }
+
+      this.linkActive.set(urlWithoutParams === activeWhen);
+    } else {
+      this.linkActive.set(url.startsWith(this.activeWhen()));
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.routerSubscription.unsubscribe();
+  }
+}
+```

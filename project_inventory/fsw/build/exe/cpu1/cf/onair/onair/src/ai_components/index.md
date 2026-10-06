@@ -3,22 +3,31 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 __pycache__/index
 ai_plugin_abstract/index
-file--__init__.py
-file--learners_interface.py
-file--planners_interface.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/__pycache__/`](__pycache__/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/ai_plugin_abstract/`](ai_plugin_abstract/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/__init__.py`](file--__init__.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/learners_interface.py`](file--learners_interface.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/planners_interface.py`](file--planners_interface.py) — 빌드 산출물 (경로만)
+### `__init__.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/__init__.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `learners_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/learners_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `planners_interface.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/ai_components/planners_interface.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

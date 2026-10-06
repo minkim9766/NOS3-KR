@@ -3,14 +3,52 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `gtest-ci.yml`
 
-file--gtest-ci.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/workflows/gtest-ci.yml`
+
+
+```yaml
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  Linux:
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Tests
+      run: bazel test --test_output=errors //...
+
+  MacOs:
+    runs-on: macos-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Tests
+      run: bazel test --test_output=errors //...
+
+
+  Windows:
+    runs-on: windows-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Tests
+      run: bazel test --test_output=errors //...
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/workflows/gtest-ci.yml`](file--gtest-ci.yml) — UTF-8 텍스트 파일 본문 포함

@@ -3,16 +3,47 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/show-streams-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `show-streams-dialog.component.html`
 
-file--show-streams-dialog.component.html
-file--show-streams-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/show-streams-dialog/show-streams-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Replicated Streams</h2>
+
+<mat-dialog-content>
+  <table yaDataTable style="width: 100%">
+    @for (stream of data.streams; track stream) {
+      <tr>
+        <td>{{ stream }}</td>
+      </tr>
+    }
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>Close</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `show-streams-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/show-streams-dialog/show-streams-dialog.component.html`](file--show-streams-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/show-streams-dialog/show-streams-dialog.component.ts`](file--show-streams-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/show-streams-dialog/show-streams-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-show-streams-dialog',
+  templateUrl: './show-streams-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class ShowStreamsDialogComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) readonly data: any) {}
+}
+```

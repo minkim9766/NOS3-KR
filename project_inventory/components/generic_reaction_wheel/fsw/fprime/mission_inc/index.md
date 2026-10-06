@@ -3,14 +3,32 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/fprime/mission_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_reaction_wheel_perfids.h`
 
-file--generic_reaction_wheel_perfids.h
+**경로:** `components/generic_reaction_wheel/fsw/fprime/mission_inc/generic_reaction_wheel_perfids.h`
+
+
+```c
+/************************************************************************
+** File:
+**  generic_reaction_wheel_perfids.h
+**
+** Purpose:
+**  Define Generic Reaction Wheel Performance IDs
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _generic_reaction_wheel_perfids_h_
+#define _generic_reaction_wheel_perfids_h_
+
+#define GENERIC_RW_APP_PERF_ID 77
+
+#endif /* _generic_reaction_wheel_perfids_h_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
 ```
-
-## 항목
-
-- [`components/generic_reaction_wheel/fsw/fprime/mission_inc/generic_reaction_wheel_perfids.h`](file--generic_reaction_wheel_perfids.h) — UTF-8 텍스트 파일 본문 포함

@@ -3,18 +3,82 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream-script-tab.component.css`
 
-file--stream-script-tab.component.css
-file--stream-script-tab.component.html
-file--stream-script-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.css`
+
+
+```css
+code {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 14px;
+}
 ```
 
-## 항목
+### `stream-script-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.css`](file--stream-script-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.html`](file--stream-script-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.ts`](file--stream-script-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.html`
+
+
+```html
+<ya-panel class="sql">
+  <code [innerHTML]="sqlHtml()"></code>
+</ya-panel>
+```
+
+### `stream-script-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-script-tab/stream-script-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  OnInit,
+  SecurityContext,
+  signal,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import {
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import * as utils from '../utils';
+
+@Component({
+  selector: 'app-stream-script-tab',
+  templateUrl: './stream-script-tab.component.html',
+  styleUrls: ['./stream-script-tab.component.css', '../streamsql.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StreamScriptTabComponent implements OnInit {
+  database = input.required<string>();
+  stream = input.required<string>();
+
+  sqlHtml = signal<string | null>(null);
+
+  constructor(
+    private messageService: MessageService,
+    private yamcs: YamcsService,
+    private sanitizer: DomSanitizer,
+  ) {}
+
+  ngOnInit(): void {
+    this.yamcs.yamcsClient
+      .getStream(this.database(), this.stream())
+      .then((stream) => {
+        const html = utils.formatSQL(stream.script);
+        const safeHtml = this.sanitizer.sanitize(SecurityContext.HTML, html);
+        this.sqlHtml.set(safeHtml);
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

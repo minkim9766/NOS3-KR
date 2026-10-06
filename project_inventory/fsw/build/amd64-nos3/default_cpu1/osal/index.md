@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/osal/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,25 +14,42 @@ nos-linux_impl/index
 nos_impl/index
 ut-stubs/index
 ut_assert/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--libosal.a
-file--libosal_bsp.a
-file--Makefile
-file--osconfig.gen
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/osal/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/inc/`](inc/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/nos-linux_impl/`](nos-linux_impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/nos_impl/`](nos_impl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/ut-stubs/`](ut-stubs/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/ut_assert/`](ut_assert/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/osal/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/osal/libosal.a`](file--libosal.a) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/osal/libosal_bsp.a`](file--libosal_bsp.a) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/osal/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/osal/osconfig.gen`](file--osconfig.gen) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libosal.a`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/libosal.a`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libosal_bsp.a`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/libosal_bsp.a`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `osconfig.gen`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/osal/osconfig.gen`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

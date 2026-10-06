@@ -3,18 +3,65 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `detail-toolbar.component.css`
 
-file--detail-toolbar.component.css
-file--detail-toolbar.component.html
-file--detail-toolbar.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.css`
+
+
+```css
+mat-toolbar {
+  background-color: #fcfcfc;
+  font-style: normal;
+  font-weight: normal;
+  align-items: center;
+}
+
+.icon-action {
+  display: flex;
+  align-items: center;
+}
 ```
 
-## 항목
+### `detail-toolbar.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.css`](file--detail-toolbar.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.html`](file--detail-toolbar.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.ts`](file--detail-toolbar.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.html`
+
+
+```html
+<mat-toolbar class="detail-toolbar">
+  <ng-content />
+  @if (!alwaysOpen()) {
+    <span style="flex: 1 1 auto"></span>
+    <ya-icon-action
+      class="icon-action"
+      icon="close"
+      matTooltip="Close pane"
+      (click)="closeDetailPane()" />
+  }
+</mat-toolbar>
+```
+
+### `detail-toolbar.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/detail-toolbar/detail-toolbar.component.ts`
+
+
+```typescript
+import { booleanAttribute, Component, input } from '@angular/core';
+import { MatToolbar } from '@angular/material/toolbar';
+import { MatTooltip } from '@angular/material/tooltip';
+import { BaseComponent } from '../../abc/BaseComponent';
+import { YaIconAction } from '../icon-action/icon-action.component';
+
+@Component({
+  selector: 'ya-detail-toolbar',
+  templateUrl: './detail-toolbar.component.html',
+  styleUrl: './detail-toolbar.component.css',
+  imports: [MatToolbar, MatTooltip, YaIconAction],
+})
+export class YaDetailToolbar extends BaseComponent {
+  alwaysOpen = input(false, { transform: booleanAttribute });
+}
+```

@@ -3,40 +3,5440 @@
 
 **경로:** `fsw/apps/sch/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sch_api.c`
 
-file--sch_api.c
-file--sch_apipriv.h
-file--sch_app.c
-file--sch_app.h
-file--sch_cmds.c
-file--sch_cmds.h
-file--sch_custom.c
-file--sch_custom.h
-file--sch_events.h
-file--sch_msg.h
-file--sch_msgdefs.h
-file--sch_tbldefs.h
-file--sch_verify.h
-file--sch_version.h
+**경로:** `fsw/apps/sch/fsw/src/sch_api.c`
+
+
+```c
+/*
+** $Id: sch_api.c 1.3 2017/06/21 15:28:59EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: This file contains api functions to modify and obtain the current
+**          SCH Schedule Processing state.
+** 
+** Author:
+**
+** References: 
+**
+*/
+
+/*
+** Includes
+*/
+
+#include "sch_api.h"
+#include "sch_apipriv.h"
+#include "sch_platform_cfg.h"
+
+/*
+** Exported data
+*/
+
+SCH_LibData_t SCH_LibData;
+
+/*******************************************************************
+**
+** SCH_LibInit() -- Initializes the SCH Library
+**
+** NOTE: For complete prolog information, see 'sch_apipriv.h'.
+********************************************************************/
+int32 SCH_LibInit(void)
+{
+    SCH_LibData.ProcessingDisabledCtr = SCH_LIB_DIS_CTR;
+    return OS_SUCCESS;
+}
+
+/*******************************************************************
+**
+** SCH_EnableProcessing() -- Enables SCH schedule processing
+**
+** NOTE: For complete prolog information, see 'sch_api.h'.
+********************************************************************/
+void SCH_EnableProcessing(void)
+{
+    if (SCH_LibData.ProcessingDisabledCtr > 0)
+    {
+        SCH_LibData.ProcessingDisabledCtr--;
+    }
+}
+
+
+/*******************************************************************
+**
+** SCH_DisableProcessing() -- Disables SCH schedule processing
+**
+** NOTE: For complete prolog information, see 'sch_api.h'.
+********************************************************************/
+void SCH_DisableProcessing(void)
+{
+    SCH_LibData.ProcessingDisabledCtr++;
+}
+
+
+/*******************************************************************
+**
+** SCH_GetProcessingState() -- Obtains the current SCH schedule
+**                             table processing state
+**
+** NOTE: For complete prolog information, see 'sch_api.h'.
+********************************************************************/
+bool SCH_GetProcessingState(void)
+{
+    return (SCH_LibData.ProcessingDisabledCtr == 0);
+}
 ```
 
-## 항목
+### `sch_apipriv.h`
 
-- [`fsw/apps/sch/fsw/src/sch_api.c`](file--sch_api.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_apipriv.h`](file--sch_apipriv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_app.c`](file--sch_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_app.h`](file--sch_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_cmds.c`](file--sch_cmds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_cmds.h`](file--sch_cmds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_custom.c`](file--sch_custom.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_custom.h`](file--sch_custom.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_events.h`](file--sch_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_msg.h`](file--sch_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_msgdefs.h`](file--sch_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_tbldefs.h`](file--sch_tbldefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_verify.h`](file--sch_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/src/sch_version.h`](file--sch_version.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/fsw/src/sch_apipriv.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: sch_apipriv.h 1.4 2017/06/21 15:29:01EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: 
+**  The CFS Scheduler (SCH) API header file
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _sch_apipriv_
+#define _sch_apipriv_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*
+** Type definition (SCH lib global data)
+*/
+typedef struct
+{
+    uint32         ProcessingDisabledCtr;  /**< \brief Processing disable if greater than zero */
+} SCH_LibData_t;
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+extern SCH_LibData_t    SCH_LibData;
+
+/*************************************************************************
+**
+** Exported functions
+**
+**************************************************************************/
+
+/************************************************************************/
+/** \brief CFS Scheduler (SCH) Library Entry Point
+**  
+**  \par Description
+**       Scheduler library entry point for initialization.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+int32  SCH_LibInit(void);
+
+/************************************************************************/
+/** \brief SCH_EnableProcessing()
+**  
+**  \par Description
+**       Enables SCH schedule processing.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void SCH_EnableProcessing(void);
+
+/************************************************************************/
+/** \brief SCH_DisableProcessing()
+**  
+**  \par Description
+**       Disables SCH schedule processing.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void SCH_DisableProcessing(void);
+
+/************************************************************************/
+/** \brief SCH_GetProcessingState()
+**  
+**  \par Description
+**       Obtains the current SCH schedule table processing state.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+bool SCH_GetProcessingState(void);
+
+#endif /* _sch_apipriv_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_app.c`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_app.c`
+
+
+```c
+/*
+** $Id: sch_app.c 1.5 2017/06/21 15:29:02EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) application
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+
+#include "sch_msgids.h"
+#include "sch_perfids.h"
+#include "sch_platform_cfg.h"
+
+#if SCH_LIB_PRESENCE == 1
+#include "sch_api.h"
+#endif
+
+#include "sch_custom.h"
+#include "sch_msg.h"
+#include "sch_events.h"
+#include "sch_app.h"
+#include "sch_cmds.h"
+#include "sch_version.h"
+
+#include "cfe_time_msg.h"
+#include "sch_verify.h"
+#include "cfe_platform_cfg.h" /* for CFE_SB_HIGHEST_VALID_MSGID */
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*
+** Time Semaphore Characteristics
+*/
+#define SCH_SEM_NAME     "SCH_TIME_SEM"
+#define SCH_SEM_VALUE    0
+#define SCH_SEM_OPTIONS  0
+
+/*
+** SDT Table Validation Error Codes
+*/
+#define SCH_SDT_GARBAGE_ENTRY    (-1)
+#define SCH_SDT_NO_FREQUENCY     (-2)
+#define SCH_SDT_BAD_REMAINDER    (-3)
+#define SCH_SDT_BAD_ACTIVITY     (-4)
+#define SCH_SDT_BAD_MSG_INDEX    (-5)
+#define SCH_SDT_BAD_ENABLE_STATE (-6)
+
+/*
+** MDT Table Validation Error Codes
+*/
+#define SCH_MDT_GARBAGE_ENTRY   (-1)
+#define SCH_MDT_INVALID_LENGTH  (-2)
+#define SCH_MDT_BAD_MSG_ID      (-3)
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Imported data
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+/*
+** Application global data
+*/
+SCH_AppData_t           SCH_AppData;
+
+/*************************************************************************
+**
+** Function definitions
+**
+**************************************************************************/
+
+/*******************************************************************
+**
+** SCH_AppMain
+**
+** NOTE: For complete prolog information, see 'sch_app.h'
+********************************************************************/
+
+void SCH_AppMain(void)
+{
+    int32  Status    = CFE_SUCCESS;
+    uint32 RunStatus = CFE_ES_RunStatus_APP_RUN;
+
+    /*
+    ** Performance Log (start time counter)
+    */
+    CFE_ES_PerfLogEntry(SCH_APPMAIN_PERF_ID);
+
+    Status = SCH_AppInit();
+    
+    /* If no errors were detected during initialization, then wait for everyone to start */
+    if (Status == CFE_SUCCESS)
+    {
+        Status = SCH_CustomLateInit();
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(SCH_MAJOR_FRAME_SUB_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error initializing Timers (RC=0x%08X)", 
+                              (unsigned int)Status);    
+        }
+    }
+
+    /*
+    ** Check for start-up error
+    */
+    if (Status != CFE_SUCCESS)
+    {
+        /*
+        ** Set request to terminate main loop
+        */
+        RunStatus = CFE_ES_RunStatus_APP_ERROR;
+    }
+
+    /*
+    ** Main process loop
+    */
+    while (CFE_ES_RunLoop(&RunStatus))
+    {
+        /*
+        ** Performance Log (stop time counter)
+        */
+        CFE_ES_PerfLogExit(SCH_APPMAIN_PERF_ID);
+
+        /*
+        ** Wait for the next slot (Major or Minor Frame)
+        */
+        Status = OS_BinSemTake(SCH_AppData.TimeSemaphore);
+
+        /*
+        ** Performance Log (start time counter)
+        */
+        CFE_ES_PerfLogEntry(SCH_APPMAIN_PERF_ID);
+
+        /*
+        ** Report if during the previous frame the major has determined to be unstable
+        */
+        if (SCH_AppData.IgnoreMajorFrame == true)
+        {
+            if (SCH_AppData.IgnoreMajorFrameMsgSent == false)
+            {
+                CFE_EVS_SendEvent(SCH_NOISY_MAJOR_FRAME_ERR_EID, CFE_EVS_EventType_ERROR, 
+                                  "Major Frame Sync too noisy (Slot %d). Disabling synchronization.", 
+                                  SCH_AppData.MinorFramesSinceTone);
+                SCH_AppData.IgnoreMajorFrameMsgSent = true;
+            }
+        }
+        else
+        {
+            SCH_AppData.IgnoreMajorFrameMsgSent = false;
+        }
+
+        /*
+        ** Process schedule table activities
+        */
+#if SCH_LIB_PRESENCE == 1
+        if ((Status == OS_SUCCESS) &&
+            (SCH_GetProcessingState() == true))
+        {
+            Status = SCH_ProcessScheduleTable();
+        }
+#else
+        if (Status == OS_SUCCESS)
+        {
+            Status = SCH_ProcessScheduleTable();
+        }
+#endif
+
+        /*
+        ** Note: If there were some reason to exit the task
+        **       normally (without error) then we would set
+        **       RunStatus = CFE_ES_APP_EXIT
+        */
+        if (Status != SCH_SUCCESS)
+        {
+            /*
+            ** Set request to terminate main loop
+            */
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+
+    } /* End of while */
+
+    /*
+    ** Check for "fatal" process error
+    */
+    if ((Status != OS_SUCCESS) || (Status != SCH_SUCCESS))
+    {
+        /*
+        ** Send an event describing the reason for the termination
+        */
+        CFE_EVS_SendEvent(SCH_APP_EXIT_EID, CFE_EVS_EventType_CRITICAL, 
+                          "SCH App: terminating, err = 0x%08X", (unsigned int)Status);
+
+        /*
+        ** In case cFE Event Services is not working
+        */
+        CFE_ES_WriteToSysLog("SCH App terminating, err = 0x%08X\n", (unsigned int)Status);
+    }
+ 
+    /*
+    ** Perform any custom cleanup
+    */
+    SCH_CustomCleanup();
+
+    /*
+    ** Performance Log (stop time counter)
+    */
+    CFE_ES_PerfLogExit(SCH_APPMAIN_PERF_ID);
+
+    /*
+    ** Let cFE kill the task (and any child tasks)
+    */
+    CFE_ES_ExitApp(RunStatus);
+
+} /* End of SH_AppMain() */
+
+
+/*******************************************************************
+**
+** SCH_AppInit
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_AppInit(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    /*
+    ** Initialize Application Processing Counters
+    */
+    SCH_AppData.SlotsProcessedCount = 0;
+    SCH_AppData.SkippedSlotsCount   = 0;
+    SCH_AppData.MultipleSlotsCount  = 0;
+    SCH_AppData.SameSlotCount       = 0;
+    SCH_AppData.ScheduleActivitySuccessCount = 0;
+    SCH_AppData.ScheduleActivityFailureCount = 0;
+
+    /*
+    ** Initialize Command Counters
+    */
+    SCH_AppData.CmdCounter = 0;
+    SCH_AppData.ErrCounter = 0;
+    
+    /*
+    ** Get our assigned Application ID
+    */
+    Status = CFE_ES_GetAppID(&SCH_AppData.AppID);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("SCH App: Unable to obtain own AppID, RC=0x%08X\n", (unsigned int)Status);
+        return(Status);
+    }
+    
+    /*
+    ** Initialize Event Services Interface
+    */
+    Status = SCH_EvsInit();
+    if (Status != CFE_SUCCESS)
+    {
+        return(Status);
+    }
+    
+    Status = SCH_SbInit();
+    if (Status != CFE_SUCCESS)
+    {
+        return(Status); 
+    }
+    
+    /*
+    ** Initialize application tables
+    */
+    Status = SCH_TblInit();
+    if (Status != CFE_SUCCESS)
+    {
+        return(Status);
+    }
+
+    /*
+    ** Initialize timer interfaces
+    */
+    Status = SCH_TimerInit();
+    if (Status != CFE_SUCCESS)
+    {
+        return(Status);
+    }
+
+    /*
+    ** Application startup event message
+    */
+    Status = CFE_EVS_SendEvent(SCH_INITSTATS_INF_EID,
+                               CFE_EVS_EventType_INFORMATION,
+                               "SCH Initialized. Version %d.%d.%d.%d",
+                               SCH_MAJOR_VERSION,
+                               SCH_MINOR_VERSION,
+                               SCH_REVISION,
+                               SCH_MISSION_REV);
+ 
+    return(Status);
+
+} /* End of SCH_AppInit() */
+
+
+/*******************************************************************
+**
+** SCH_EvsInit
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_EvsInit(void)
+{
+    int32   Status = CFE_SUCCESS;
+
+    SCH_AppData.EventFilters[0].EventID = SCH_SAME_SLOT_EID;
+    SCH_AppData.EventFilters[0].Mask    = CFE_EVS_FIRST_ONE_STOP;
+
+    SCH_AppData.EventFilters[1].EventID = SCH_MULTI_SLOTS_EID;
+    SCH_AppData.EventFilters[1].Mask    = CFE_EVS_FIRST_ONE_STOP;
+
+    SCH_AppData.EventFilters[2].EventID = SCH_SKIPPED_SLOTS_EID;
+    SCH_AppData.EventFilters[2].Mask    = CFE_EVS_FIRST_ONE_STOP;
+
+    SCH_AppData.EventFilters[3].EventID = SCH_CORRUPTION_EID;
+    SCH_AppData.EventFilters[3].Mask    = CFE_EVS_FIRST_TWO_STOP;
+
+    SCH_AppData.EventFilters[4].EventID = SCH_PACKET_SEND_EID;
+    SCH_AppData.EventFilters[4].Mask    = CFE_EVS_FIRST_ONE_STOP;
+
+    /*
+    ** Register for event services
+    */
+    Status = CFE_EVS_Register(SCH_AppData.EventFilters, SCH_FILTER_COUNT, CFE_EVS_EventFilter_BINARY);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("SCH App: Error Registering For Event Services, RC=0x%08X\n", (unsigned int)Status);
+    }
+
+    return(Status);
+    
+} /* End of SCH_EvsInit() */
+
+
+/*******************************************************************
+**
+** SCH_SbInit
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_SbInit(void)
+{
+    int32 Status = CFE_SUCCESS;
+    
+    SCH_AppData.MsgPtr  = (CFE_MSG_Message_t *) NULL;
+    SCH_AppData.CmdPipe = 0;
+    
+    /*
+    ** Initialize housekeeping packet (clear user data area)
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(SCH_AppData.HkPacket.TelemetryHeader), CFE_SB_ValueToMsgId(SCH_HK_TLM_MID), sizeof(SCH_HkPacket_t));
+    
+    /*
+    ** Initialize diagnostic packet (clear user data area)
+    */
+    CFE_MSG_Init(CFE_MSG_PTR(SCH_AppData.DiagPacket.TelemetryHeader),  CFE_SB_ValueToMsgId(SCH_DIAG_TLM_MID), sizeof(SCH_DiagPacket_t));
+
+    /*
+    ** Create Software Bus message pipe
+    */
+    Status = CFE_SB_CreatePipe(&SCH_AppData.CmdPipe, SCH_PIPE_DEPTH, SCH_PIPE_NAME);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Creating SB Pipe, RC=0x%08X", (unsigned int)Status);
+        return(Status);
+    }
+
+    /*
+    ** Subscribe to Housekeeping request commands
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SCH_SEND_HK_MID), SCH_AppData.CmdPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_SUB_HK_REQ_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to HK Request(MID=0x%04X), RC=0x%08X", 
+                          SCH_SEND_HK_MID, (unsigned int)Status);    
+        return(Status);
+    }
+
+    /*
+    ** Subscribe to SCH ground command packets
+    */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(SCH_CMD_MID), SCH_AppData.CmdPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_SUB_GND_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Subscribing to GND CMD(MID=0x%04X), RC=0x%08X", 
+                          SCH_CMD_MID, (unsigned int)Status);    
+        return(Status);
+    }
+
+    return(Status);
+    
+} /* End of SCH_SbInit() */
+
+
+/*******************************************************************
+**
+** SCH_TblInit
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_TblInit(void)
+{
+    uint32 TableSize = 0;
+    int32  Status = CFE_SUCCESS;
+
+    /*
+    ** Initialize SCH table variables
+    */
+    SCH_AppData.ScheduleTable = (SCH_ScheduleEntry_t *) NULL;
+    SCH_AppData.MessageTable  = (SCH_MessageEntry_t  *) NULL;
+
+    SCH_AppData.ScheduleTableHandle = CFE_TBL_BAD_TABLE_HANDLE;
+    SCH_AppData.MessageTableHandle  = CFE_TBL_BAD_TABLE_HANDLE;
+    
+    SCH_AppData.BadTableDataCount       = 0;
+    SCH_AppData.TableVerifySuccessCount = 0;
+    SCH_AppData.TableVerifyFailureCount = 0;
+    SCH_AppData.TablePassCount          = 0;
+
+    /*
+    ** Register schedule definition table
+    */
+    TableSize = SCH_TABLE_ENTRIES * sizeof (SCH_ScheduleEntry_t);
+
+    Status = CFE_TBL_Register(&SCH_AppData.ScheduleTableHandle,
+                               SCH_SCHEDULE_TABLE_NAME,
+                               TableSize,
+                               CFE_TBL_OPT_DEFAULT,
+                               SCH_ValidateScheduleData);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_SDT_REG_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Registering SDT, RC=0x%08X", 
+                          (unsigned int)Status);    
+        return(Status);
+    }
+
+    /*
+    ** Register message definition table
+    */
+    TableSize = SCH_MAX_MESSAGES * sizeof (SCH_MessageEntry_t);
+
+    Status = CFE_TBL_Register(&SCH_AppData.MessageTableHandle,
+                               SCH_MESSAGE_TABLE_NAME,
+                               TableSize,
+                               CFE_TBL_OPT_DEFAULT,
+                               SCH_ValidateMessageData);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_MDT_REG_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Registering MDT, RC=0x%08X", 
+                          (unsigned int)Status);    
+        return(Status);
+    }
+
+    /*
+    ** Load default schedule definition table data
+    */
+    Status = CFE_TBL_Load(SCH_AppData.ScheduleTableHandle,
+                          CFE_TBL_SRC_FILE,
+                          (const void *) SCH_SCHEDULE_FILENAME);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_SDT_LOAD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error (RC=0x%08X) Loading SDT with %s", 
+                          (unsigned int)Status, SCH_SCHEDULE_FILENAME);    
+        return(Status);
+    }
+
+    /*
+    ** Load default message definition table data
+    */
+    Status = CFE_TBL_Load(SCH_AppData.MessageTableHandle,
+                          CFE_TBL_SRC_FILE,
+                          (const void *) SCH_MESSAGE_FILENAME);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_MDT_LOAD_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error (RC=0x%08X) Loading MDT with %s", 
+                          (unsigned int)Status, SCH_MESSAGE_FILENAME);    
+        return(Status);
+    }
+
+
+    /*
+    ** Get pointers to table data
+    */
+    Status = SCH_AcquirePointers();
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_ACQ_PTR_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error Acquiring Tbl Ptrs (RC=0x%08X)", 
+                          (unsigned int)Status);    
+        return(Status);
+    }
+
+    return(Status);
+
+} /* End of SCH_TblInit() */
+
+
+/*******************************************************************
+**
+** SCH_TimerInit
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_TimerInit(void)
+{
+    int32             Status = CFE_SUCCESS;
+    
+    /*
+    ** Start off assuming Major Frame synch is normal
+    ** and should be coming at any moment
+    */
+    SCH_AppData.IgnoreMajorFrame     = false;
+    SCH_AppData.IgnoreMajorFrameMsgSent = false;
+    SCH_AppData.UnexpectedMajorFrame = false;
+    SCH_AppData.SyncToMET            = SCH_NOT_SYNCHRONIZED;
+    SCH_AppData.MajorFrameSource     = SCH_MAJOR_FS_NONE;
+    SCH_AppData.NextSlotNumber       = 0;
+    SCH_AppData.MinorFramesSinceTone = SCH_TIME_SYNC_SLOT;
+    SCH_AppData.LastSyncMETSlot      = 0;
+    SCH_AppData.SyncAttemptsLeft     = 0;
+    
+    SCH_AppData.UnexpectedMajorFrameCount   = 0;
+    SCH_AppData.MissedMajorFrameCount       = 0;
+    SCH_AppData.ValidMajorFrameCount        = 0;
+    SCH_AppData.WorstCaseSlotsPerMinorFrame = 1;
+    
+    /*
+    ** Configure Major Frame and Minor Frame sources
+    */
+    SCH_AppData.ClockAccuracy = SCH_WORST_CLOCK_ACCURACY;
+    /*
+    ** Create the timer to be used for minor frames
+    */
+    Status = SCH_CustomEarlyInit();
+    
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error creating Timer (RC=0x%08X)", 
+                          (unsigned int)Status);    
+        return(Status);
+    }
+    
+    /*
+    ** Determine if the timer has an acceptable clock accuracy
+    */
+    if (SCH_AppData.ClockAccuracy > SCH_WORST_CLOCK_ACCURACY)
+    {
+        CFE_EVS_SendEvent(SCH_MINOR_FRAME_TIMER_ACC_WARN_EID, CFE_EVS_EventType_INFORMATION,
+                          "OS Timer Accuracy (%d > reqd %d usec) requires Minor Frame MET sync",
+                          (int)SCH_AppData.ClockAccuracy, SCH_WORST_CLOCK_ACCURACY);
+        
+        /* Synchronize Minor Frame Timing with Mission Elapsed Time to keep from losing slots */
+        SCH_AppData.SyncToMET = SCH_MINOR_SYNCHRONIZED;
+
+        /* Calculate how many slots we may have to routinely process on each Minor Frame Wakeup */
+        SCH_AppData.WorstCaseSlotsPerMinorFrame = ((SCH_AppData.ClockAccuracy * 2) / SCH_NORMAL_SLOT_PERIOD) + 1;
+    }
+    
+    /*
+    ** Create main task semaphore (given by MajorFrameCallback and MinorFrameCallback)
+    */
+    Status = OS_BinSemCreate(&SCH_AppData.TimeSemaphore, SCH_SEM_NAME, SCH_SEM_VALUE, SCH_SEM_OPTIONS);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(SCH_SEM_CREATE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error creating Main Loop Timing Semaphore (RC=0x%08X)", 
+                          (unsigned int)Status);    
+        return(Status);
+    }
+    
+    return(Status);
+    
+} /* End of SCH_TimerInit() */
+
+
+/*******************************************************************
+**
+** SCH_ProcessScheduleTable
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_ProcessScheduleTable(void)
+{
+    uint32 CurrentSlot;
+    uint32 ProcessCount;
+    int32  Result = CFE_SUCCESS;
+
+    /*
+    ** Get the slot we should be at 
+    */
+    CurrentSlot = SCH_CustomGetCurrentSlotNumber();
+
+    /*
+    ** Compute the number of slots we need to process (watch for rollover)
+    */
+    if (CurrentSlot < SCH_AppData.NextSlotNumber)
+    {
+        ProcessCount = SCH_TOTAL_SLOTS - SCH_AppData.NextSlotNumber;
+        ProcessCount += (CurrentSlot + 1);
+    }
+    else
+    {
+        ProcessCount = (CurrentSlot - SCH_AppData.NextSlotNumber) + 1;
+    }
+
+    /*
+    ** Correct for the following conditions observed when minor frame driven
+    ** by a clock with poor accuracy
+    **
+    **   1) Wake up a little too late for just 1 slot
+    **      symptom = multi slots event followed by same slot event
+    **
+    **   2) Wake up a little too early for just 1 slot
+    **      symptom = same slot event followed by multi slots event
+    */
+    if (ProcessCount == 2)
+    {
+        /*
+        ** If we want to do 2 slots but last time was OK then assume we
+        **    are seeing condition #1 above.  By doing just 1 slot now,
+        **    there will still be 1 to do when the next wakeup occurs
+        **    and we will avoid both events.  But, if we really are in
+        **    a delayed state, we will process both slots when we wake
+        **    up next time because then the last time will NOT be OK.
+        */
+        if (SCH_AppData.LastProcessCount == 1)
+        {
+            ProcessCount = 1;
+        }
+        SCH_AppData.LastProcessCount = 2;
+    }
+    else if (ProcessCount == SCH_TOTAL_SLOTS)
+    {
+        /*
+        ** Same as previous comment except in reverse order.
+        */
+        if (SCH_AppData.LastProcessCount != SCH_TOTAL_SLOTS)
+        {
+            ProcessCount = 1;
+        }
+        SCH_AppData.LastProcessCount = SCH_TOTAL_SLOTS;
+    }
+    else
+    {
+        SCH_AppData.LastProcessCount = ProcessCount;
+    }
+
+    /*
+    ** If current slot = next slot - 1, assume current slot did not increment
+    */
+    if (ProcessCount == SCH_TOTAL_SLOTS)
+    {
+        SCH_AppData.SameSlotCount++;
+
+        CFE_EVS_SendEvent(SCH_SAME_SLOT_EID, CFE_EVS_EventType_DEBUG,
+                          "Slot did not increment: slot = %d",
+                          (int)CurrentSlot);
+        ProcessCount = 0;
+    }
+
+    /*
+    ** If we are too far behind, jump forward and do just the current slot
+    */
+    if (ProcessCount > SCH_MAX_LAG_COUNT)
+    {
+        SCH_AppData.SkippedSlotsCount++;
+
+        CFE_EVS_SendEvent(SCH_SKIPPED_SLOTS_EID, CFE_EVS_EventType_ERROR,
+                          "Slots skipped: slot = %d, count = %d",
+                          SCH_AppData.NextSlotNumber, (int)(ProcessCount - 1));
+
+        /*
+        ** Update the pass counter if we are skipping the rollover slot
+        */
+        if (CurrentSlot < SCH_AppData.NextSlotNumber)
+        {
+            SCH_AppData.TablePassCount++;
+        }
+
+        /*
+        ** Process ground commands if we are skipping the time synch slot
+        ** NOTE: This assumes the Time Synch Slot is the LAST Schedule slot
+        **       (see definition of SCH_TIME_SYNC_SLOT in sch_app.h)
+        ** Ground commands should only be processed at the end of the schedule table
+        ** so that Group Enable/Disable commands do not change the state of entries
+        ** in the middle of a schedule.
+        */
+        if ((SCH_AppData.NextSlotNumber + ProcessCount) > SCH_TIME_SYNC_SLOT)
+        {
+            Result = SCH_ProcessCommands();
+        }
+
+        SCH_AppData.NextSlotNumber = CurrentSlot;
+        ProcessCount = 1;
+    }
+
+    /*
+    ** Don't try to catch up all at once, just do a couple
+    */
+    if (ProcessCount > SCH_MAX_SLOTS_PER_WAKEUP)
+    {
+        ProcessCount = SCH_MAX_SLOTS_PER_WAKEUP;
+    }
+
+    /*
+    ** Keep track of multi-slot processing
+    */
+    if (ProcessCount > 1)
+    {
+        SCH_AppData.MultipleSlotsCount++;
+
+        /* Generate an event message if not syncing to MET or when there is more than two being processed */
+        if ((ProcessCount > SCH_AppData.WorstCaseSlotsPerMinorFrame) || (SCH_AppData.SyncToMET == SCH_NOT_SYNCHRONIZED))
+        {
+            CFE_EVS_SendEvent(SCH_MULTI_SLOTS_EID, CFE_EVS_EventType_INFORMATION,
+                              "Multiple slots processed: slot = %d, count = %d",
+                              SCH_AppData.NextSlotNumber, (int)ProcessCount);
+        }
+    }
+
+    /*
+    ** Process the slots (most often this will be just one)
+    */
+    while ((ProcessCount != 0) && (Result == CFE_SUCCESS))
+    {
+        Result = SCH_ProcessNextSlot();
+
+        ProcessCount--;
+    }
+
+    return(Result);
+
+} /* End of SCH_ProcessScheduleTable() */
+
+
+/*******************************************************************
+**
+** SCH_ProcessNextSlot
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_ProcessNextSlot(void)
+{
+    int32 Result = CFE_SUCCESS;
+    int32 EntryNumber;
+    int32 SlotIndex;
+    SCH_ScheduleEntry_t *NextEntry;
+
+    SlotIndex = SCH_AppData.NextSlotNumber * SCH_ENTRIES_PER_SLOT;
+    NextEntry = &SCH_AppData.ScheduleTable[SlotIndex];
+
+    /*
+    ** Process each (enabled) entry in the schedule table slot
+    */
+    for (EntryNumber = 0; EntryNumber < SCH_ENTRIES_PER_SLOT; EntryNumber++)
+    {
+        if (NextEntry->EnableState == SCH_ENABLED)
+        {
+            SCH_ProcessNextEntry(NextEntry, EntryNumber);
+        }
+
+        NextEntry++;
+    }
+
+    /*
+    ** Process ground commands in the slot reserved for time synch
+    ** Ground commands should only be processed at the end of the schedule table
+    ** so that Group Enable/Disable commands do not change the state of entries
+    ** in the middle of a schedule.
+    */
+    if (SCH_AppData.NextSlotNumber == SCH_TIME_SYNC_SLOT)
+    {
+        Result = SCH_ProcessCommands();
+    }
+
+    /*
+    ** Maintain "next" schedule table slot index
+    */
+    SCH_AppData.NextSlotNumber++;
+
+    if (SCH_AppData.NextSlotNumber == SCH_TOTAL_SLOTS)
+    {
+        SCH_AppData.NextSlotNumber = 0;
+        SCH_AppData.TablePassCount++;
+    }
+
+    /*
+    ** Maintain "total slots processed" counter
+    */
+    SCH_AppData.SlotsProcessedCount++;
+
+    return(Result);
+
+} /* End of SCH_ProcessNextSlot() */
+
+
+/*******************************************************************
+**
+** SCH_ProcessNextEntry
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_ProcessNextEntry(SCH_ScheduleEntry_t *NextEntry, int32 EntryNumber)
+{
+    int32   Status;
+    uint32  Remainder;
+    uint16 *Message;
+
+    /*
+    ** Check for invalid table entry
+    **
+    ** (run time corruption -- data was verified at table load)
+    */
+    if ((NextEntry->MessageIndex >= SCH_MAX_MESSAGES) ||
+        (NextEntry->Frequency    == SCH_UNUSED)       ||
+        (NextEntry->Type         != SCH_ACTIVITY_SEND_MSG) ||
+        (NextEntry->Remainder    >= NextEntry->Frequency))
+    {
+        SCH_AppData.BadTableDataCount++;
+
+        /*
+        ** Too much data for just one event
+        */
+        CFE_EVS_SendEvent(SCH_CORRUPTION_EID, CFE_EVS_EventType_ERROR,
+                          "Corrupt data error (1): slot = %d, entry = %d",
+                          SCH_AppData.NextSlotNumber, (int)EntryNumber);
+
+        CFE_EVS_SendEvent(SCH_CORRUPTION_EID, CFE_EVS_EventType_ERROR,
+                          "Corrupt data error (2): msg = %d, freq = %d, type = %d, rem = %d",
+                          NextEntry->MessageIndex,
+                          NextEntry->Frequency,
+                          NextEntry->Type,
+                          NextEntry->Remainder);
+
+        /*
+        ** Disable entry to avoid repeating this error
+        */
+        NextEntry->EnableState = SCH_DISABLED;
+        CFE_TBL_Modified(SCH_AppData.ScheduleTableHandle);
+    }
+    else
+    {
+        /*
+        ** Look for entry active on this particular pass through table
+        */
+        Remainder = SCH_AppData.TablePassCount % NextEntry->Frequency;
+
+        if (Remainder == NextEntry->Remainder)
+        {
+            Message = SCH_AppData.MessageTable[NextEntry->MessageIndex].MessageBuffer;
+            Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *) Message, true);
+            
+            /* If additional activity types are added in the future, a switch statement */
+            /* would be useful, as shown below:                                         */
+            /* NOTE: The "default" clause should never be able to be executed but is    */
+            /*       required by Flight Software Branch Coding Standards                */
+       /*
+        *   switch(NextEntry->Type)
+        *   {
+        *       case SCH_ACTIVITY_SEND_MSG:
+        *           Message = SCH_AppData.MessageTable[NextEntry->MessageIndex].MessageBuffer;
+        *           Status = CFE_SB_TransmitMsg((CFE_MSG_Message_t *) Message, true);
+        *           break;
+        *            
+        *       default:
+        *           Status = SCH_UNKNOWN_ACTIVITY;
+        *           break;
+        *   }
+        */
+            if (Status == CFE_SUCCESS)
+            {
+                SCH_AppData.ScheduleActivitySuccessCount++;
+            }
+            else
+            {
+                SCH_AppData.ScheduleActivityFailureCount++;
+
+                CFE_EVS_SendEvent(SCH_PACKET_SEND_EID, CFE_EVS_EventType_ERROR,
+                                  "Activity error: slot = %d, entry = %d, err = 0x%08X",
+                                  SCH_AppData.NextSlotNumber, (int)EntryNumber, (unsigned int)Status);
+            }
+        }
+    }
+
+    return;
+
+} /* End of SCH_ProcessNextEntry() */
+
+
+/*******************************************************************
+**
+** SCH_ProcessCommands
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_ProcessCommands(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    while (Status == CFE_SUCCESS)
+    {
+        /*
+        ** Process pending Software Bus messages
+        */
+        Status = CFE_SB_ReceiveBuffer((CFE_SB_Buffer_t **)&SCH_AppData.MsgPtr,  SCH_AppData.CmdPipe,  CFE_SB_POLL);
+
+        if (Status == CFE_SUCCESS)
+        {
+            Status = SCH_AppPipe(SCH_AppData.MsgPtr);
+        }
+    }
+
+    if (Status == CFE_SB_NO_MESSAGE)
+    {
+        /*
+        ** It's OK to not get a message -- we are polling
+        */
+        Status = CFE_SUCCESS;
+    }
+
+    return(Status);
+
+} /* End of SCH_ProcessCommands() */
+
+
+/*******************************************************************
+**
+** SCH_ValidateScheduleData
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_ValidateScheduleData(void *TableData)
+{
+    SCH_ScheduleEntry_t *TableArray = (SCH_ScheduleEntry_t *) TableData;
+    int32 EntryResult = CFE_SUCCESS;
+    int32 TableResult = CFE_SUCCESS;
+    int32 TableIndex;
+
+    uint8  EnableState;
+    uint8  Type;
+    uint16 Frequency;
+    uint16 Remainder;
+    uint16 MessageIndex;
+    uint32 GroupData;
+
+    int32 GoodCount   = 0;
+    int32 BadCount    = 0;
+    int32 UnusedCount = 0;
+
+    /*
+    ** Verify each entry in pending SCH schedule table
+    */
+    for (TableIndex = 0; TableIndex < SCH_TABLE_ENTRIES; TableIndex++)
+    {
+        EnableState  = TableArray[TableIndex].EnableState;
+        Type         = TableArray[TableIndex].Type;
+        Frequency    = TableArray[TableIndex].Frequency;
+        Remainder    = TableArray[TableIndex].Remainder;
+        MessageIndex = TableArray[TableIndex].MessageIndex;
+        GroupData    = TableArray[TableIndex].GroupData;
+
+        EntryResult  = CFE_SUCCESS;
+
+        if (EnableState == SCH_UNUSED)
+        {
+            /*
+            ** If enable state is unused, then all fields must be unused
+            */
+            if ((Frequency != SCH_UNUSED) ||
+                (Remainder != SCH_UNUSED) ||
+                (GroupData != SCH_UNUSED) ||
+                (Type      != SCH_UNUSED) ||
+                (MessageIndex != SCH_UNUSED))
+            {
+                EntryResult = SCH_SDT_GARBAGE_ENTRY;
+                BadCount++;
+            }
+            else
+            {
+                UnusedCount++;
+            }
+        }
+        else if ((EnableState == SCH_ENABLED) || (EnableState == SCH_DISABLED))
+        {
+            /*
+            ** If enable state is used, then verify all fields
+            **
+            **  - Frequency must be non-zero
+            **  - Remainder must be < Frequency
+            **  - Type must be SCH_ACTIVITY_SEND_MSG
+            **  - MessageIndex must be non-zero (reserved value = "unused")
+            **  - MessageIndex must be < SCH_MAX_MESSAGES
+            */
+            if (Frequency == SCH_UNUSED)
+            {
+                EntryResult = SCH_SDT_NO_FREQUENCY;
+            }
+            else if (Remainder >= Frequency)
+            {
+                EntryResult = SCH_SDT_BAD_REMAINDER;
+            }
+            else if (Type != SCH_ACTIVITY_SEND_MSG)
+            {
+                EntryResult = SCH_SDT_BAD_ACTIVITY;
+            }
+            else if (MessageIndex == 0)
+            {
+                EntryResult = SCH_SDT_BAD_MSG_INDEX;
+            }
+            else if (MessageIndex >= SCH_MAX_MESSAGES)
+            {
+                EntryResult = SCH_SDT_BAD_MSG_INDEX;
+            }
+            
+            if (EntryResult != CFE_SUCCESS)
+            {
+                BadCount++;
+            }
+            else
+            {
+                GoodCount++;
+            }
+        }
+        else
+        {
+            EntryResult = SCH_SDT_BAD_ENABLE_STATE;
+            BadCount++;
+        }
+
+        /*
+        ** Send event for "first" error found
+        */
+        if ((EntryResult != CFE_SUCCESS) && (TableResult == CFE_SUCCESS))
+        {
+            TableResult = EntryResult;
+
+            CFE_EVS_SendEvent(SCH_SCHEDULE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Schedule tbl verify error - idx[%d] ena[%d] typ[%d] fre[%d] rem[%d] msg[%d] grp[0x%08X]",
+                              (int)TableIndex, EnableState, Type, Frequency, Remainder, MessageIndex, (unsigned int)GroupData);
+        }
+    }
+
+    /*
+    ** Send event describing results
+    */
+    CFE_EVS_SendEvent(SCH_SCHEDULE_TABLE_EID, CFE_EVS_EventType_DEBUG,
+                      "Schedule table verify results -- good[%d] bad[%d] unused[%d]",
+                      (int)GoodCount, (int)BadCount, (int)UnusedCount);
+    /*
+    ** Maintain table verification statistics
+    */
+    if (TableResult == CFE_SUCCESS)
+    {
+        SCH_AppData.TableVerifySuccessCount++;
+    }
+    else
+    {
+        SCH_AppData.TableVerifyFailureCount++;
+    }
+
+    return(TableResult);
+
+} /* End of SCH_ValidateScheduleData() */
+
+
+/*******************************************************************
+**
+** SCH_ValidateMessageData
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_ValidateMessageData(void *TableData)
+{
+    SCH_MessageEntry_t *TableArray = (SCH_MessageEntry_t *) TableData;
+    int32 EntryResult = CFE_SUCCESS;
+    int32 TableResult = CFE_SUCCESS;
+    int32 TableIndex;
+    int32 BufferIndex;
+
+
+    CFE_MSG_Message_t* MessageBuffer;
+    uint16         *UserDataPtr;
+
+    CFE_MSG_Size_t  MessageLength;
+    CFE_SB_MsgId_t  MessageID = CFE_SB_INVALID_MSG_ID;
+    CFE_SB_MsgId_t  MaxValue = CFE_SB_ValueToMsgId(SCH_MDT_MAX_MSG_ID);
+    CFE_SB_MsgId_t  MinValue = CFE_SB_ValueToMsgId(SCH_MDT_MIN_MSG_ID);
+
+    int32 GoodCount   = 0;
+    int32 BadCount    = 0;
+    int32 UnusedCount = 0;
+
+    /*
+    ** Verify each entry in pending SCH Message table
+    */
+    for (TableIndex = 0; TableIndex < SCH_MAX_MESSAGES; TableIndex++)
+    {
+        EntryResult = CFE_SUCCESS;
+        BufferIndex = 0;
+
+        MessageBuffer = (CFE_MSG_Message_t*) &TableArray[TableIndex].MessageBuffer[0];
+        CFE_MSG_GetMsgId(MessageBuffer, &MessageID);
+        CFE_MSG_GetSize(MessageBuffer, &MessageLength);
+
+        if (CFE_SB_MsgIdToValue(MessageID) == SCH_UNUSED_MID)
+        {
+            /*
+            ** If message ID is unused, then look for junk in user data portion
+            */
+            UnusedCount++;
+            UserDataPtr = (uint16 *)CFE_SB_GetUserData(MessageBuffer);
+            while (UserDataPtr < &TableArray[TableIndex+1].MessageBuffer[0])
+            {
+                if (*UserDataPtr != SCH_UNUSED)
+                {
+                    EntryResult = SCH_MDT_GARBAGE_ENTRY;
+                    BadCount++;
+                    UnusedCount--;
+                    break;
+                }
+                UserDataPtr++;
+            }
+        }
+        else if ((CFE_SB_MsgIdToValue(MessageID) <= CFE_SB_MsgIdToValue(MaxValue)) && 
+                 (CFE_SB_MsgIdToValue(MessageID) >= CFE_SB_MsgIdToValue(MinValue)))
+        {
+            /*
+            ** If message ID is valid, then check message length
+            */
+            if ((MessageLength > (SCH_MAX_MSG_WORDS * 2)) ||
+                (MessageLength < (SCH_MIN_MSG_WORDS * 2)) ||
+               ((MessageLength & 1) != 0))
+            {
+                EntryResult = SCH_MDT_INVALID_LENGTH;
+                BadCount++;
+            }
+            else
+            {
+                GoodCount++;
+            }
+        }
+        else
+        {
+            EntryResult = SCH_MDT_BAD_MSG_ID;
+            BadCount++;
+        }
+
+        /*
+        ** Save index of "first" error found
+        */
+        if ((EntryResult != CFE_SUCCESS) && (TableResult == CFE_SUCCESS))
+        {
+            TableResult = EntryResult;
+
+            CFE_EVS_SendEvent(SCH_MESSAGE_TBL_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Message tbl verify err - idx[%d] mid[0x%X] len[%ld] buf[%d]",
+                              (int)TableIndex, CFE_SB_MsgIdToValue(MessageID), MessageLength, (int)BufferIndex);
+        }
+    }
+
+    /*
+    ** Send event describing results
+    */
+    CFE_EVS_SendEvent(SCH_MESSAGE_TABLE_EID, CFE_EVS_EventType_DEBUG,
+                      "Message tbl verify results - good[%d] bad[%d] unused[%d]",
+                      (int)GoodCount, (int)BadCount, (int)UnusedCount);
+    /*
+    ** Maintain table verification statistics
+    */
+    if (TableResult == CFE_SUCCESS)
+    {
+        SCH_AppData.TableVerifySuccessCount++;
+    }
+    else
+    {
+        SCH_AppData.TableVerifyFailureCount++;
+    }
+
+    return(TableResult);
+
+} /* End of SCH_ValidateMessageData() */
+
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```
+
+### `sch_app.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_app.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: sch_app.h 1.4 2017/06/21 15:29:01EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: 
+**  The CFS Scheduler (SCH) Application header file
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _sch_app_
+#define _sch_app_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+#include "sch_msg.h"
+#include "sch_tbldefs.h"
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*************************************************************************/
+/*************************************************************************/
+
+/*
+** Computed Scheduler Parameters
+*/
+#define SCH_WORST_CLOCK_ACCURACY     (SCH_NORMAL_SLOT_PERIOD/(SCH_TOTAL_SLOTS-1))
+                                     /**< \brief Maximum allowed error in minor frame timing */
+                                     /**< Worst accuracy determined to be the amount of drift that would
+                                          cause the loss of a minor frame over one major frame */
+#define SCH_MAX_SYNC_ATTEMPTS        (SCH_TOTAL_SLOTS * 3)
+                                     /**< \brief Maximum number of minor frames to sample looking for subsecs = 0 */
+                                     /**< Maximum number of minor frame timer expirations to allow before giving up
+                                          on finding the slot whose MET subseconds field is zero.  It is assumed that
+                                          three complete major frames should be sufficient for finding such a slot. */
+/*
+** Command pipe definitions
+*/
+/** \name Scheduler App Pipe Characteristics */
+/**  \{ */
+#define SCH_PIPE_NAME       "SCH_CMD_PIPE"  /**< \brief SCH Command Pipe Name */
+/** \} */
+
+/*
+** Event filter table definitions
+*/
+/** \name Scheduler App Event Filter Characteristics */
+/**  \{ */
+#define SCH_FILTER_COUNT    5
+/** \} */
+
+/*
+** Minor Frame Slot Characteristics
+*/
+/** \name Scheduler App Minor Frame Characteristics */
+/**  \{ */
+#define SCH_TIME_SYNC_SLOT     (SCH_TOTAL_SLOTS-1)  /**< NOTE: If this is set to anything other than the last slot, 
+                                                               logic in SCH_ProcessScheduleTable will need to change */
+#define SCH_NORMAL_SLOT_PERIOD (SCH_MICROS_PER_MAJOR_FRAME / SCH_TOTAL_SLOTS)
+#define SCH_SYNC_SLOT_PERIOD   (SCH_NORMAL_SLOT_PERIOD + SCH_SYNC_SLOT_DRIFT_WINDOW)
+#define SCH_SHORT_SLOT_PERIOD  (SCH_NORMAL_SLOT_PERIOD - SCH_SYNC_SLOT_DRIFT_WINDOW)
+/** \} */
+
+/*
+** Table names
+*/
+/** \name Scheduler App Table Names */
+/**  \{ */
+#define SCH_SCHEDULE_TABLE_NAME  "SCHED_DEF"  /**< \brief Schedule Definition Table Name */
+#define SCH_MESSAGE_TABLE_NAME   "MSG_DEFS"   /**< \brief Message Definition Table Name */
+/** \} */
+
+/*
+** Internal Function Return Codes
+*/
+/** \name Scheduler App Internal Error Codes */
+/**  \{ */
+#define SCH_SUCCESS              (0) /**< \brief SCH return code for success */
+#define SCH_ERROR               (-1) /**< \brief SCH return code for general error */
+#define SCH_BAD_MSG_LENGTH_RC   (-2) /**< \brief SCH return code for unexpected cmd length */
+#define SCH_UNKNOWN_ACTIVITY    (-3) /**< \brief SCH return code for unknown Entry Activity Type */
+/** \} */
+
+/*
+** Time Semaphore Characteristics
+*/
+#define SCH_SEM_NAME     "SCH_TIME_SEM"
+#define SCH_SEM_VALUE    0
+#define SCH_SEM_OPTIONS  0
+
+/*
+** SDT Table Validation Error Codes
+*/
+#define SCH_SDT_GARBAGE_ENTRY    (-1)
+#define SCH_SDT_NO_FREQUENCY     (-2)
+#define SCH_SDT_BAD_REMAINDER    (-3)
+#define SCH_SDT_BAD_ACTIVITY     (-4)
+#define SCH_SDT_BAD_MSG_INDEX    (-5)
+#define SCH_SDT_BAD_ENABLE_STATE (-6)
+
+/*
+** MDT Table Validation Error Codes
+*/
+#define SCH_MDT_GARBAGE_ENTRY   (-1)
+#define SCH_MDT_INVALID_LENGTH  (-2)
+#define SCH_MDT_BAD_MSG_ID      (-3)
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*
+** Type definition (SCH app global data)
+*/
+typedef struct
+{
+    /*
+    ** Operational data 
+    */
+    CFE_MSG_Message_t *       MsgPtr;                         /**< \brief Ptr to most recently received cmd message */
+    CFE_SB_PipeId_t       CmdPipe;                        /**< \brief Pipe ID for SCH Command Pipe */
+    
+    SCH_MessageEntry_t   *MessageTable;                   /**< \brief Ptr to Message Table contents */
+    SCH_ScheduleEntry_t  *ScheduleTable;                  /**< \brief Ptr to Schedule Table contents */
+    
+    CFE_TBL_Handle_t      ScheduleTableHandle;            /**< \brief Handle for Schedule Definition Table */
+    CFE_TBL_Handle_t      MessageTableHandle;             /**< \brief Handle for Message Definition Table */
+    
+    CFE_EVS_BinFilter_t   EventFilters[SCH_FILTER_COUNT]; /**< \brief Array of Event Filters */
+    
+    SCH_HkPacket_t        HkPacket;                       /**< \brief Housekeeping Telemetry Packet */
+    SCH_DiagPacket_t      DiagPacket;                     /**< \brief Diagnostic Telemetry Packet */
+    
+    uint32                LastProcessCount;               /**< \brief Number of Slots Processed Last Cycle */
+    
+    uint32                TimerId;                        /**< \brief OSAL assigned timer ID for minor frame timer */
+    uint32                TimeSemaphore;                  /**< \brief Semaphore used by time references to control main loop */
+    uint32                ClockAccuracy;                  /**< \brief Accuracy of Minor Frame Timer */
+    uint32                WorstCaseSlotsPerMinorFrame;    /**< \brief When syncing to MET, worst case # of slots that may need */
+                                                          /*   to be processed upon each Minor Frame signal */
+    
+    
+    uint32                AppID;                          /**< \brief SCH Application's Application ID */
+    
+    /*
+    ** Command execution counters (ground commands)
+    */
+    uint8                 CmdCounter;                     /**< \brief Number of successful ground cmds received */
+    uint8                 ErrCounter;                     /**< \brief Number of unsuccessful ground cmds received */
+    uint8                 SyncToMET;                      /**< \brief Slots should be aligned with subseconds */
+    uint8                 MajorFrameSource;               /**< \brief Major Frame Signal source identifier */
+    
+    /*
+    ** Messages sent by schedule table processor
+    */
+    uint32                ScheduleActivitySuccessCount;   /**< \brief Number of successfully performed activities */
+    uint32                ScheduleActivityFailureCount;   /**< \brief Number of unsuccessful activities attempted */
+    
+    /*
+    ** Total schedule table slots processed
+    */
+    uint32                SlotsProcessedCount;            /**< \brief Total # of Schedule Slots (Minor Frames) Processed */
+    
+    /*
+    ** The number of times that slots were skipped
+    ** (not the number of slots that were skipped)
+    */
+    uint16                SkippedSlotsCount;              /**< \brief Number of times that slots were skipped */
+                                                          /**< The number of times that a slot (minor frame) was skipped.
+                                                             \c Note: This is NOT the number of slots that were skipped */
+    
+    /*
+    ** The number of times that multiple slots were processed
+    ** (not the number of slots that were processed)
+    */
+    uint16                MultipleSlotsCount;              /**< \brief Number of times that multiple slots processed */
+                                                           /**< The number of times that multiple slots (minor frames)
+                                                                were processed in the same minor frame.
+                                                              \c Note: This is NOT the number of slots that were processed */
+    
+    /*
+    ** The number of times that SCH woke up in the same slot as last time
+    */
+    uint16                SameSlotCount;                   /**< \brief # of times SCH woke up in the same slot as last time */
+    
+    /*
+    ** The number of times that a table entry with bad data was processed
+    ** (the entry previously passed validation but then somehow went bad)
+    */
+    uint16                BadTableDataCount;              /**< \brief # of times corrupted table entries were processed */
+    
+    /*
+    ** The number of tables verified prior to table load
+    */
+    uint16                TableVerifySuccessCount;       /**< \brief # of times table loads successfully verified */
+    uint16                TableVerifyFailureCount;       /**< \brief # of times table loads unsuccessfully verified */
+    
+    uint32                ValidMajorFrameCount;          /**< \brief # of valid Major Frame tones received */
+    uint32                MissedMajorFrameCount;         /**< \brief # of missing Major Frame tones */
+    uint32                UnexpectedMajorFrameCount;     /**< \brief # of unexpected Major Frame tones */
+
+    uint32                TablePassCount;                /**< \brief # of times Schedule Table has been processed */
+    uint32                ConsecutiveNoisyFrameCounter;  /**< \brief # of consecutive noisy Major Frames */
+
+    uint16                MinorFramesSinceTone;          /**< \brief # of Minor Frames since last Major Frame tone */
+    uint16                NextSlotNumber;                /**< \brief Next Minor Frame to be processed */
+    uint16                LastSyncMETSlot;               /**< \brief MET Slot # where Time Sync last occurred */
+    uint16                SyncAttemptsLeft;              /**< \brief Timeout counter used when syncing Major Frame to MET */
+    
+    bool               IgnoreMajorFrame;              /**< \brief Major Frame too noisy to trust */
+    bool               IgnoreMajorFrameMsgSent;       /**< \brief Major Frame Event Message has been sent */
+    bool               UnexpectedMajorFrame;          /**< \brief Major Frame signal was unexpected */
+
+} SCH_AppData_t;
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+extern SCH_AppData_t    SCH_AppData;
+
+/*************************************************************************
+**
+** Exported functions
+**
+**************************************************************************/
+
+/*
+** Application entry point and main process loop
+*/
+/************************************************************************/
+/** \brief CFS Scheduler (SCH) Application Entry Point
+**  
+**  \par Description
+**       Scheduler application entry point and main process loop.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void   SCH_AppMain(void);
+
+/*************************************************************************
+** Local function prototypes
+**************************************************************************/
+
+/************************************************************************/
+/** \brief Initialize the Scheduler CFS application
+**  
+**  \par Description
+**       Scheduler application initialization routine. This 
+**       function performs all the required startup steps to 
+**       get the application registered with the cFE services so
+**       it can begin to receive command messages. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_AppInit(void);
+
+/************************************************************************/
+/** \brief Initialize the cFE Events with CFS Scheduler Application
+**  
+**  \par Description
+**       This function performs those steps required to initialize the
+**       relationship between the CFS Scheduler and the cFE Events Services. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_EvsInit(void);
+
+/************************************************************************/
+/** \brief Initialize cFE Software Bus with CFS Scheduler Application
+**  
+**  \par Description
+**       This function performs those steps required to initialize the
+**       relationship between the CFS Scheduler and the cFE Software Bus. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_SbInit(void);
+
+/************************************************************************/
+/** \brief Initialize cFE Table Services with CFS Scheduler Application
+**  
+**  \par Description
+**       This function performs those steps required to initialize the
+**       relationship between the CFS Scheduler and the cFE Table Services. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_TblInit(void);
+
+/************************************************************************/
+/** \brief Initialize cFE Table Services with cFE Time Services and OSAL timer
+**  
+**  \par Description
+**       This function performs those steps required to initialize the
+**       relationship between the CFS Scheduler and cFE Time Services as
+**       well as with the OS Abstraction Layer Timer Interface. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_TimerInit(void);
+
+/************************************************************************/
+/** \brief Processes the Schedule Table to determine next Minor Frame
+**  
+**  \par Description
+**       This function performs the highest level operations associated with
+**       processing the Schedule Definition Table.  It determines which
+**       minor frame schedule definitions are to be processed during this
+**       cycle. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_ProcessScheduleTable(void);
+
+/************************************************************************/
+/** \brief Processes the next minor frame in schedule definition table
+**  
+**  \par Description
+**       This function performs the high level operations associated with
+**       processing a minor frame definition in the Schedule Definition
+**       Table. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32  SCH_ProcessNextSlot(void);
+
+/************************************************************************/
+/** \brief Processes the next entry in the current minor frame
+**  
+**  \par Description
+**       This function processes the next entry in the current minor frame
+**       as defined in the schedule definition table. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void   SCH_ProcessNextEntry(SCH_ScheduleEntry_t *NextEntry, int32 EntryNumber);
+
+/************************************************************************/
+/** \brief Processes commands received from cFE Software Bus
+**  
+**  \par Description
+**       This function pulls messages from command pipe and processes
+**       them accordingly. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32  SCH_ProcessCommands(void);
+
+/************************************************************************/
+/** \brief Validates contents of Schedule Definition Table
+**  
+**  \par Description
+**       This function is called by table services when a validation of
+**       the Schedule Definition Table is required. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_ValidateScheduleData(void *TableData);
+
+/************************************************************************/
+/** \brief Validates contents of Message Definition Table
+**  
+**  \par Description
+**       This function is called by table services when a validation of
+**       the Message Definition Table is required. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_ValidateMessageData(void *TableData);
+
+#endif /* _sch_app_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_cmds.c`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_cmds.c`
+
+
+```c
+/*
+** $Id: sch_cmds.c 1.5 2017/06/21 15:29:02EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) application command handling
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+#include "sch_msgids.h"
+
+#include "sch_msg.h"
+#include "sch_events.h"
+#include "sch_app.h"
+#include "sch_cmds.h"
+#include "sch_version.h"
+
+#include "cfe_time_msg.h"
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+/*
+** Application global data
+*/
+extern SCH_AppData_t           SCH_AppData;
+
+/*************************************************************************
+**
+** File data
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*******************************************************************
+**
+** SCH_AppPipe
+**
+** NOTE: For complete prolog information, see 'sch_cmds.h'
+********************************************************************/
+
+int32 SCH_AppPipe(CFE_MSG_Message_t * MessagePtr)
+{
+    int32 Result = CFE_SUCCESS;
+    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    CFE_MSG_GetMsgId(MessagePtr, &MessageID);
+
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        /*
+        ** Housekeeping telemetry request
+        */
+        case SCH_SEND_HK_MID:
+            Result = SCH_HousekeepingCmd(MessagePtr);
+            break;
+
+        /*
+        ** SCH ground commands
+        */
+        case SCH_CMD_MID:
+
+            CFE_MSG_GetFcnCode(MessagePtr, &CommandCode);
+            switch (CommandCode)
+            {
+                case SCH_NOOP_CC:
+                    SCH_NoopCmd(MessagePtr);
+                    break;
+
+                case SCH_RESET_CC:
+                    SCH_ResetCmd(MessagePtr);
+                    break;
+
+                case SCH_ENABLE_CC:
+                    SCH_EnableCmd(MessagePtr);
+                    break;
+
+                case SCH_DISABLE_CC:
+                    SCH_DisableCmd(MessagePtr);
+                    break;
+
+                case SCH_ENABLE_GROUP_CC:
+                    SCH_EnableGroupCmd(MessagePtr);
+                    break;
+
+                case SCH_DISABLE_GROUP_CC:
+                    SCH_DisableGroupCmd(MessagePtr);
+                    break;
+
+                case SCH_ENABLE_SYNC_CC:
+                    SCH_EnableSyncCmd(MessagePtr);
+                    break;
+
+                case SCH_SEND_DIAG_TLM_CC:
+                    SCH_SendDiagTlmCmd(MessagePtr);
+                    break;
+
+                /*
+                ** SCH ground commands with unknown command codes...
+                */
+                default:
+                    CFE_EVS_SendEvent(SCH_CC_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Invalid command code: ID = 0x%04X, CC = %d",
+                                      CFE_SB_MsgIdToValue(MessageID), CommandCode);
+
+                    SCH_AppData.ErrCounter++;
+                    break;
+            }
+            break;
+
+        /*
+        ** Unknown message ID's
+        */
+        default:
+            CFE_EVS_SendEvent(SCH_MD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Msg with Invalid message ID Rcvd -- ID = 0x%04X",
+                              CFE_SB_MsgIdToValue(MessageID));
+            break;
+    }
+
+    return(Result);
+
+} /* End of SCH_AppPipe() */
+
+
+/*******************************************************************
+**
+** SCH_HousekeepingCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_HousekeepingCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    int32  TableResult = SCH_SUCCESS;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_NoArgsCmd_t)) == SCH_SUCCESS)
+    {
+        /*
+        ** Update contents of Housekeeping Packet
+        */
+        SCH_AppData.HkPacket.CmdCounter                   = SCH_AppData.CmdCounter;
+        SCH_AppData.HkPacket.ErrCounter                   = SCH_AppData.ErrCounter;
+        SCH_AppData.HkPacket.ScheduleActivitySuccessCount = SCH_AppData.ScheduleActivitySuccessCount;
+        SCH_AppData.HkPacket.ScheduleActivityFailureCount = SCH_AppData.ScheduleActivityFailureCount;
+        SCH_AppData.HkPacket.SlotsProcessedCount          = SCH_AppData.SlotsProcessedCount;
+        SCH_AppData.HkPacket.SkippedSlotsCount            = SCH_AppData.SkippedSlotsCount;
+        SCH_AppData.HkPacket.MultipleSlotsCount           = SCH_AppData.MultipleSlotsCount;
+        SCH_AppData.HkPacket.SameSlotCount                = SCH_AppData.SameSlotCount;
+        SCH_AppData.HkPacket.BadTableDataCount            = SCH_AppData.BadTableDataCount;
+        SCH_AppData.HkPacket.TableVerifySuccessCount      = SCH_AppData.TableVerifySuccessCount;
+        SCH_AppData.HkPacket.TableVerifyFailureCount      = SCH_AppData.TableVerifyFailureCount;
+        SCH_AppData.HkPacket.TablePassCount               = SCH_AppData.TablePassCount;
+        SCH_AppData.HkPacket.ValidMajorFrameCount         = SCH_AppData.ValidMajorFrameCount;
+        SCH_AppData.HkPacket.MissedMajorFrameCount        = SCH_AppData.MissedMajorFrameCount;
+        SCH_AppData.HkPacket.UnexpectedMajorFrameCount    = SCH_AppData.UnexpectedMajorFrameCount;
+        SCH_AppData.HkPacket.MinorFramesSinceTone         = SCH_AppData.MinorFramesSinceTone;
+        SCH_AppData.HkPacket.NextSlotNumber               = SCH_AppData.NextSlotNumber;
+        SCH_AppData.HkPacket.LastSyncMETSlot              = SCH_AppData.LastSyncMETSlot;
+        SCH_AppData.HkPacket.IgnoreMajorFrame             = SCH_AppData.IgnoreMajorFrame;
+        SCH_AppData.HkPacket.UnexpectedMajorFrame         = SCH_AppData.UnexpectedMajorFrame;
+        SCH_AppData.HkPacket.SyncToMET                    = SCH_AppData.SyncToMET;
+        SCH_AppData.HkPacket.MajorFrameSource             = SCH_AppData.MajorFrameSource;
+        
+        /*
+        ** Timestamps and send housekeeping packet
+        */
+        CFE_SB_TimeStampMsg((CFE_MSG_Message_t *) &SCH_AppData.HkPacket);
+        CFE_SB_TransmitMsg((CFE_MSG_Message_t *) &SCH_AppData.HkPacket, true);
+
+        /*
+        ** Reset "high rate" event filters
+        */
+        CFE_EVS_ResetAllFilters();
+    }
+
+    /*
+    ** Note:
+    **
+    **   The following table functions will give the cFE Table Manager
+    **   a chance to update the tables used by this application.  If
+    **   there is an error (very unlikely) the return value will cause
+    **   us to fall out of the main process loop and terminate the SCH
+    **   task.  It may sound extreme but there is nothing for the
+    **   Scheduler to do if it cannot access both the message
+    **   and schedule tables.
+    */
+    CFE_TBL_ReleaseAddress(SCH_AppData.ScheduleTableHandle);
+    CFE_TBL_ReleaseAddress(SCH_AppData.MessageTableHandle);
+
+    TableResult = SCH_AcquirePointers();
+
+    return(TableResult);
+
+} /* End of SCH_HousekeepingCmd() */
+
+
+/*******************************************************************
+**
+** SCH_NoopCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_NoopCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_NoArgsCmd_t)) != SCH_SUCCESS)
+    {
+        SCH_AppData.ErrCounter++;
+    }
+    else
+    {
+        /*
+        ** This command is used primarily for "aliveness" testing
+        */
+        SCH_AppData.CmdCounter++;
+
+        CFE_EVS_SendEvent(SCH_NOOP_CMD_EID, CFE_EVS_EventType_INFORMATION,
+                          "NO-op command. Version %d.%d.%d.%d",
+                          SCH_MAJOR_VERSION,
+                          SCH_MINOR_VERSION,
+                          SCH_REVISION,
+                          SCH_MISSION_REV);
+    }
+
+    return;
+
+} /* End of SCH_NoopCmd() */
+
+
+/*******************************************************************
+**
+** SCH_ResetCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_ResetCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_NoArgsCmd_t)) != SCH_SUCCESS)
+    {
+        SCH_AppData.ErrCounter++;
+    }
+    else
+    {
+        /*
+        ** Reset housekeeping counters
+        */
+        SCH_AppData.CmdCounter      = 0;
+        SCH_AppData.ErrCounter      = 0;
+
+        SCH_AppData.ScheduleActivitySuccessCount = 0;
+        SCH_AppData.ScheduleActivityFailureCount = 0;
+
+        SCH_AppData.SlotsProcessedCount = 0;
+        SCH_AppData.SkippedSlotsCount   = 0;
+        SCH_AppData.MultipleSlotsCount  = 0;
+        SCH_AppData.SameSlotCount       = 0;
+        SCH_AppData.BadTableDataCount   = 0;
+
+        SCH_AppData.TableVerifySuccessCount = 0;
+        SCH_AppData.TableVerifyFailureCount = 0;
+        
+        SCH_AppData.ValidMajorFrameCount      = 0;
+        SCH_AppData.MissedMajorFrameCount     = 0;
+        SCH_AppData.UnexpectedMajorFrameCount = 0;
+
+        CFE_EVS_SendEvent(SCH_RESET_CMD_EID, CFE_EVS_EventType_DEBUG,
+                          "RESET command");
+    }
+
+    return;
+
+} /* End of SCH_ResetCmd() */
+
+
+/*******************************************************************
+**
+** SCH_EnableCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_EnableCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool         GoodCommand = false;
+    SCH_EntryCmd_t *EnableCmd = NULL;
+    uint16          SlotNumber = 0; 
+    uint16          EntryNumber = 0;
+    uint16          TableIndex = 0;
+    
+    /*
+    ** Extract contents of command
+    */
+    EnableCmd   = (SCH_EntryCmd_t *) MessagePtr;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_EntryCmd_t)) == SCH_SUCCESS)
+    {
+        SlotNumber  = EnableCmd->SlotNumber;
+        EntryNumber = EnableCmd->EntryNumber;
+        TableIndex  = (SlotNumber * SCH_ENTRIES_PER_SLOT) + EntryNumber;
+
+        if ((SlotNumber >= SCH_TOTAL_SLOTS) || (EntryNumber >= SCH_ENTRIES_PER_SLOT))
+        {
+            /*
+            ** Invalid command packet argument
+            */
+            CFE_EVS_SendEvent(SCH_ENABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ENABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)",
+                              SlotNumber, SCH_TOTAL_SLOTS, 
+                              EntryNumber, SCH_ENTRIES_PER_SLOT);
+        }
+        else if ((SCH_AppData.ScheduleTable[TableIndex].EnableState != SCH_ENABLED) &&
+                 (SCH_AppData.ScheduleTable[TableIndex].EnableState != SCH_DISABLED))
+        {
+            /*
+            ** Invalid schedule table enable state (unused or corrupt)
+            */
+            CFE_EVS_SendEvent(SCH_ENABLE_CMD_ENTRY_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ENABLE command: invalid state = %d, slot = %d, entry = %d",
+                              SCH_AppData.ScheduleTable[TableIndex].EnableState,
+                              SlotNumber, EntryNumber);
+        }
+        else
+        {
+            /*
+            ** Success
+            */
+            GoodCommand = true;
+    
+            SCH_AppData.ScheduleTable[TableIndex].EnableState = SCH_ENABLED;
+            CFE_TBL_Modified(SCH_AppData.ScheduleTableHandle);
+    
+            CFE_EVS_SendEvent(SCH_ENABLE_CMD_EID, CFE_EVS_EventType_DEBUG,
+                              "ENABLE command: slot = %d, entry = %d",
+                              SlotNumber, EntryNumber );
+        }
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_EnableCmd() */
+
+
+/*******************************************************************
+**
+** SCH_DisableCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_DisableCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool         GoodCommand = false;
+    SCH_EntryCmd_t *DisableCmd  = NULL;
+    uint16          SlotNumber  = 0;
+    uint16          EntryNumber = 0;
+    uint16          TableIndex  = 0;
+
+    /*
+    ** Extract contents of command
+    */
+    DisableCmd  = (SCH_EntryCmd_t *) MessagePtr;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_EntryCmd_t)) == SCH_SUCCESS)
+    {
+        SlotNumber  = DisableCmd->SlotNumber;
+        EntryNumber = DisableCmd->EntryNumber;
+        TableIndex  = (SlotNumber * SCH_ENTRIES_PER_SLOT) + EntryNumber;
+
+        if ((SlotNumber >= SCH_TOTAL_SLOTS) || (EntryNumber >= SCH_ENTRIES_PER_SLOT))
+        {
+            /*
+            ** Invalid command packet argument
+            */
+            CFE_EVS_SendEvent(SCH_DISABLE_CMD_ARG_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "DISABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)",
+                              SlotNumber, SCH_TOTAL_SLOTS, 
+                              EntryNumber, SCH_ENTRIES_PER_SLOT);
+        }
+        else if ((SCH_AppData.ScheduleTable[TableIndex].EnableState != SCH_ENABLED) &&
+                 (SCH_AppData.ScheduleTable[TableIndex].EnableState != SCH_DISABLED))
+        {
+            /*
+            ** Invalid schedule table enable state (unused or corrupt)
+            */
+            CFE_EVS_SendEvent(SCH_DISABLE_CMD_ENTRY_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "DISABLE command: invalid state = %d, slot = %d, entry = %d",
+                              SCH_AppData.ScheduleTable[TableIndex].EnableState,
+                              SlotNumber, EntryNumber);
+        }
+        else
+        {
+            /*
+            ** Success
+            */
+            GoodCommand = true;
+    
+            SCH_AppData.ScheduleTable[TableIndex].EnableState = SCH_DISABLED;
+            CFE_TBL_Modified(SCH_AppData.ScheduleTableHandle);
+    
+            CFE_EVS_SendEvent(SCH_DISABLE_CMD_EID, CFE_EVS_EventType_DEBUG,
+                              "DISABLE command: slot = %d, entry = %d",
+                              SlotNumber, EntryNumber);
+        }
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_DisableCmd() */
+
+
+/*******************************************************************
+**
+** SCH_EnableGroupCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_EnableGroupCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool              GoodCommand = false;
+    uint32               TblGroupNumber = 0;
+    uint32               TblMultiGroup = 0;
+    int32                LoopCount = 0;
+    int32                MatchCount = 0;
+    SCH_GroupCmd_t      *EnableCmd = NULL;
+    SCH_ScheduleEntry_t *TableEntry = NULL;
+    uint32               CmdGroupNumber = 0;
+    uint32               CmdMultiGroup  = 0;
+
+    /*
+    ** Extract command parameters
+    */
+    EnableCmd = (SCH_GroupCmd_t *) MessagePtr;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_GroupCmd_t)) == SCH_SUCCESS)
+    {
+        TableEntry = &SCH_AppData.ScheduleTable[0];
+        CmdGroupNumber = EnableCmd->GroupData & SCH_GROUP_NUMBER_BIT_MASK;
+        CmdMultiGroup  = EnableCmd->GroupData & SCH_MULTI_GROUP_BIT_MASK;
+
+        if ((CmdGroupNumber == SCH_UNUSED) && (CmdMultiGroup == SCH_UNUSED))
+        {
+            /*
+            ** No groups selected
+            */
+            CFE_EVS_SendEvent(SCH_ENA_GRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "ENABLE GROUP command: invalid argument, no groups selected");
+        }
+        else
+        {
+            /*
+            ** Search entire schedule table for group members
+            */
+            for (LoopCount = 0; LoopCount < SCH_TABLE_ENTRIES; LoopCount++)
+            {
+                /*
+                ** Skip unused table entries
+                */
+                if (TableEntry->GroupData != SCH_UNUSED)
+                {
+                    TblGroupNumber = TableEntry->GroupData & SCH_GROUP_NUMBER_BIT_MASK;
+                    TblMultiGroup  = TableEntry->GroupData & SCH_MULTI_GROUP_BIT_MASK;
+    
+                    /*
+                    ** Look for matching table entries
+                    */
+                    if (((CmdGroupNumber != SCH_UNUSED) && (CmdGroupNumber == TblGroupNumber)) ||
+                        ((CmdMultiGroup & TblMultiGroup) != SCH_UNUSED))
+                    {
+                        MatchCount++;
+                        TableEntry->EnableState = SCH_ENABLED;
+                    }
+                }
+    
+                TableEntry++;
+            }
+
+            if (MatchCount > 0)
+            {
+                CFE_TBL_Modified(SCH_AppData.ScheduleTableHandle);
+                CFE_EVS_SendEvent(SCH_ENA_GRP_CMD_EID, CFE_EVS_EventType_DEBUG,
+                                  "ENABLE GROUP command: match count = %d",
+                                  (int)MatchCount);
+                GoodCommand = true;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(SCH_ENA_GRP_NOT_FOUND_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "ENABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found",
+                                  (int)(CmdGroupNumber>>24), (unsigned int)CmdMultiGroup);
+            }
+        }
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_EnableGroupCmd() */
+
+
+/*******************************************************************
+**
+** SCH_DisableGroupCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_DisableGroupCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool              GoodCommand = false;
+    uint32               TblGroupNumber = 0;
+    uint32               TblMultiGroup = 0;
+    int32                LoopCount = 0;
+    int32                MatchCount = 0;
+    SCH_GroupCmd_t      *DisableCmd = NULL;
+    SCH_ScheduleEntry_t *TableEntry = NULL;
+    uint32               CmdGroupNumber = 0;
+    uint32               CmdMultiGroup  = 0;
+
+    /*
+    ** Extract command parameters
+    */
+    DisableCmd = (SCH_GroupCmd_t *) MessagePtr;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_GroupCmd_t)) == SCH_SUCCESS)
+    {
+        TableEntry = &SCH_AppData.ScheduleTable[0];
+        CmdGroupNumber = DisableCmd->GroupData & SCH_GROUP_NUMBER_BIT_MASK;
+        CmdMultiGroup  = DisableCmd->GroupData & SCH_MULTI_GROUP_BIT_MASK;
+
+        if ((CmdGroupNumber == SCH_UNUSED) && (CmdMultiGroup == SCH_UNUSED))
+        {
+            /*
+            ** No groups selected
+            */
+            CFE_EVS_SendEvent(SCH_DIS_GRP_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "DISABLE GROUP command: invalid argument, no groups selected");
+        }
+        else
+        {
+            /*
+            ** Search entire schedule table for group members
+            */
+            for (LoopCount = 0; LoopCount < SCH_TABLE_ENTRIES; LoopCount++)
+            {
+                /*
+                ** Skip unused table entries
+                */
+                if (TableEntry->GroupData != SCH_UNUSED)
+                {
+                    TblGroupNumber = TableEntry->GroupData & SCH_GROUP_NUMBER_BIT_MASK;
+                    TblMultiGroup  = TableEntry->GroupData & SCH_MULTI_GROUP_BIT_MASK;
+    
+                    /*
+                    ** Look for matching table entries
+                    */
+                    if (((CmdGroupNumber != SCH_UNUSED) && (CmdGroupNumber == TblGroupNumber)) ||
+                        ((CmdMultiGroup & TblMultiGroup) != SCH_UNUSED))
+                    {
+                        MatchCount++;
+                        TableEntry->EnableState = SCH_DISABLED;
+                    }
+                }
+    
+                TableEntry++;
+            }
+
+            if (MatchCount > 0)
+            {
+                CFE_TBL_Modified(SCH_AppData.ScheduleTableHandle);
+                CFE_EVS_SendEvent(SCH_DIS_GRP_CMD_EID, CFE_EVS_EventType_DEBUG,
+                                  "DISABLE GROUP command: match count = %d",
+                                  (int)MatchCount);
+                GoodCommand = true;
+            }
+            else
+            {
+                CFE_EVS_SendEvent(SCH_DIS_GRP_NOT_FOUND_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "DISABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found",
+                                  (int)(CmdGroupNumber>>24), (unsigned int)CmdMultiGroup);
+            }
+        }
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_DisableGroupCmd() */
+
+
+/*******************************************************************
+**
+** SCH_EnableSyncCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_EnableSyncCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool   GoodCommand = false;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_NoArgsCmd_t)) == SCH_SUCCESS)
+    {
+        GoodCommand = true;
+        
+        SCH_AppData.IgnoreMajorFrame = false;
+        SCH_AppData.UnexpectedMajorFrame = false;
+        SCH_AppData.ConsecutiveNoisyFrameCounter = 0;
+        
+        CFE_EVS_SendEvent(SCH_ENA_SYNC_CMD_EID, CFE_EVS_EventType_DEBUG,
+                          "Major Frame Synchronization Enabled");
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_EnableSyncCmd() */
+
+
+
+
+/*******************************************************************
+**
+** SCH_SendDiagTlmCmd
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_SendDiagTlmCmd(CFE_MSG_Message_t * MessagePtr)
+{
+    bool              GoodCommand = false;
+    uint32               TblIndex = 0;
+    uint32               WordIndex = 0;
+    uint32               BitIndex = 0;
+    SCH_ScheduleEntry_t *TableEntry = NULL;
+
+    if(SCH_VerifyCmdLength(MessagePtr, sizeof(SCH_NoArgsCmd_t)) == SCH_SUCCESS)
+    {
+        GoodCommand = true;
+        
+        /* Zero out the previous entry states */
+        CFE_PSP_MemSet(&SCH_AppData.DiagPacket.EntryStates[0], 0x0, SCH_NUM_STATUS_BYTES_REQD);
+        
+        for (TblIndex=0; TblIndex<SCH_TABLE_ENTRIES; TblIndex++)
+        {
+            TableEntry = &SCH_AppData.ScheduleTable[TblIndex];
+            WordIndex = TblIndex/8;             /* 8 states can fit in each word */
+            BitIndex  = (7-(TblIndex%8))*2;     /* Determine bit pair, MSBs contain lowest index */
+            
+            if (TableEntry->EnableState == SCH_ENABLED)
+            {
+                SCH_AppData.DiagPacket.EntryStates[WordIndex] |= (1 << BitIndex);
+                CFE_MSG_GetMsgId((CFE_MSG_Message_t *)&SCH_AppData.MessageTable[SCH_AppData.ScheduleTable[TblIndex].MessageIndex], 
+                                 &SCH_AppData.DiagPacket.MsgIDs[TblIndex]);
+            }
+            else if (TableEntry->EnableState == SCH_DISABLED)
+            {
+                SCH_AppData.DiagPacket.EntryStates[WordIndex] |= (2 << BitIndex);
+                CFE_MSG_GetMsgId((CFE_MSG_Message_t *)&SCH_AppData.MessageTable[SCH_AppData.ScheduleTable[TblIndex].MessageIndex], 
+                                 &SCH_AppData.DiagPacket.MsgIDs[TblIndex]);
+            }
+            else
+            {
+                SCH_AppData.DiagPacket.MsgIDs[TblIndex] = CFE_SB_INVALID_MSG_ID;
+            }
+        }
+        /*
+        ** Timestamp and send diagnostic packet
+        */
+        CFE_SB_TimeStampMsg((CFE_MSG_Message_t *) &SCH_AppData.DiagPacket);
+        CFE_SB_TransmitMsg((CFE_MSG_Message_t *) &SCH_AppData.DiagPacket, true);
+
+        CFE_EVS_SendEvent(SCH_SEND_DIAG_CMD_EID, CFE_EVS_EventType_DEBUG,
+                          "Transmitting Diagnostic Message");
+    }
+
+    SCH_PostCommandResult(GoodCommand);
+
+    return;
+
+} /* End of SCH_SendDiagTlmCmd() */
+
+
+/*******************************************************************
+**
+** SCH_AcquirePointers
+**
+** NOTE: For complete prolog information, see 'sch_cmds.h'
+********************************************************************/
+
+int32 SCH_AcquirePointers(void)
+{
+    int32  Result;
+
+    /*
+    ** Let cFE manage the tables
+    */
+    CFE_TBL_Manage(SCH_AppData.ScheduleTableHandle);
+    CFE_TBL_Manage(SCH_AppData.MessageTableHandle);
+
+    /*
+    ** Get a pointer to the schedule table
+    */
+    Result = CFE_TBL_GetAddress((void *)&SCH_AppData.ScheduleTable, 
+                                         SCH_AppData.ScheduleTableHandle);
+
+    if (Result > CFE_SUCCESS)
+    {
+        /*
+        ** Change warning results to indicate "success"
+        */
+        Result = CFE_SUCCESS;
+    }
+
+    /*
+    ** Repeat the process for the message table
+    */
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_TBL_GetAddress((void *)&SCH_AppData.MessageTable, 
+                                             SCH_AppData.MessageTableHandle);
+        if (Result > CFE_SUCCESS)
+        {
+            Result = CFE_SUCCESS;
+        }
+    }
+
+    return(Result);
+
+} /* End of SCH_AcquirePointers() */
+
+
+/*******************************************************************
+**
+** SCH_VerifyCmdLength
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+int32 SCH_VerifyCmdLength (CFE_MSG_Message_t * MessagePtr, uint32 ExpectedLength)
+{
+    int32               Status = SCH_SUCCESS;
+    CFE_MSG_Size_t      ActualLength = 0;
+    CFE_SB_MsgId_t      MessageID = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t   CommandCode = 0; 
+   
+    CFE_MSG_GetSize(MessagePtr, &ActualLength);
+      
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(MessagePtr, &MessageID);
+        CFE_MSG_GetFcnCode(MessagePtr, &CommandCode);   
+         
+        CFE_EVS_SendEvent(SCH_CMD_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Cmd Msg with Bad length Rcvd: ID = 0x%04X, CC = %d, Exp Len = %d, Len = %ld",
+                          CFE_SB_MsgIdToValue(MessageID), CommandCode, (int)ExpectedLength, ActualLength);
+
+        Status = SCH_BAD_MSG_LENGTH_RC;
+    }
+
+    return Status;
+
+} /* End of SCH_VerifyCmdLength () */
+
+
+/*******************************************************************
+**
+** SCH_PostCommandResult
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_PostCommandResult(bool GoodCommand)
+{
+    if (GoodCommand)
+    {
+        SCH_AppData.CmdCounter++;
+    }
+    else
+    {
+        SCH_AppData.ErrCounter++;
+    }
+
+    return;
+
+} /* End of SCH_PostCommandResult() */
+
+
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```
+
+### `sch_cmds.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_cmds.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: sch_cmds.h 1.4 2017/06/21 15:29:00EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: 
+**  The CFS Scheduler (SCH) Application header file
+**
+** Notes:
+**
+**
+*************************************************************************/
+#ifndef _sch_cmds_
+#define _sch_cmds_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+/*************************************************************************
+**
+** Exported functions
+**
+**************************************************************************/
+/************************************************************************/
+/** \brief Process a command pipe message
+**  
+**  \par Description
+**       Processes a single software bus command pipe message. Checks
+**       the message and command IDs and calls the appropriate routine
+**       to handle the command.
+**       
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]  MessagePtr   A #CFE_MSG_Message_t * pointer that
+**                            references the software bus message 
+**
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+**  \sa #CFE_SB_ReceiveBuffer
+**
+*************************************************************************/
+int32 SCH_AppPipe(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Manages Scheduler's Schedule and Message Definition Tables
+**  
+**  \par Description
+**       This function manages the contents of the Schedule and Message
+**       Definition Tables.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_AcquirePointers(void);
+
+/************************************************************************/
+/** \brief Process housekeeping request
+**  
+**  \par Description
+**       Processes an on-board housekeeping request message.
+**
+**  \par Assumptions, External Events, and Notes:
+**       This command does not affect the command execution counter
+**       
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
+**                             references the software bus message 
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_HousekeepingCmd(CFE_MSG_Message_t * MessagePtr);
+
+/*
+** Application command handlers
+*/
+/************************************************************************/
+/** \brief Process noop command
+**  
+**  \par Description
+**       Processes a noop ground command.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
+**                             references the software bus message 
+**
+**  \sa #SCH_NOOP_CC
+**
+*************************************************************************/
+void SCH_NoopCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Process reset counters command
+**  
+**  \par Description
+**       Processes a reset counters ground command which will reset
+**       the Scheduler commmand error, command execution and performance
+**       statistics counters to zero.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr   A #CFE_MSG_Message_t * pointer that
+**                             references the software bus message 
+**
+**  \sa #SCH_RESET_CC
+**
+*************************************************************************/
+void SCH_ResetCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Enable a Single Activity Command
+**  
+**  \par Description
+**       Command to Enable a specific activity in the Schedule 
+**       Definition Table.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+**
+*************************************************************************/
+void SCH_EnableCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Disable a Single Activity Command
+**  
+**  \par Description
+**       Command to Disable a specific activity in the Schedule 
+**       Definition Table.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+**
+*************************************************************************/
+void SCH_DisableCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Enable a Group and/or Multi-Group(s) Command
+**  
+**  \par Description
+**       Command to Enable a single Group and/or one or more Multi-Groups
+**       of activities.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+**
+*************************************************************************/
+void SCH_EnableGroupCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Disable a Group and/or Multi-Group(s) Command
+**  
+**  \par Description
+**       Command to Disable a single Group and/or one or more Multi-Groups
+**       of activities.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+**
+*************************************************************************/
+void SCH_DisableGroupCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Enables Major Frame Synchronization
+**  
+**  \par Description
+**       Command to enable synchronization of Schedule Definition Table to
+**       the Major Frame Sync signal.  The synchronization can become
+**       unsynchronized when the Major Frame signal becomes noisy.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \sa #SCH_ENABLE_CC, #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+**
+*************************************************************************/
+void SCH_EnableSyncCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Creates and sends diagnostic message packet
+**  
+**  \par Description
+**       Command to send the Scheduler diagnostic message.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+*************************************************************************/
+void SCH_SendDiagTlmCmd(CFE_MSG_Message_t * MessagePtr);
+
+/************************************************************************/
+/** \brief Updates appropriate command counters following command execution
+**  
+**  \par Description
+**       This function updates the ground or on-board command counter or
+**       command error counter depending upon the success of the command
+**       and where it originated.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \param [in]   GoodCommand    Indicates the command was successfully
+**                               performed (=true) or contained an error
+**                               (=false). 
+**       
+*************************************************************************/
+void SCH_PostCommandResult(bool GoodCommand);
+
+/************************************************************************/
+/** \brief Verifies the length of the specified message
+**  
+**  \par Description
+**       This function determines whether the specified message is of the
+**       specified expected length.  If not, an event message is generated
+**       and the appropriate command error counter is incremented.  If the
+**       message length is appropriate, then the appropriate command counter
+**       is incremented.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**       
+**  \param [in]   MessagePtr     A #CFE_MSG_Message_t * pointer that
+**                               references the software bus message 
+**       
+**  \param [in]   ExpectedLength The size, in bytes, that the specified
+**                               message should be equal to. 
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_EVS_Register         \endcode
+**  \retstmt Return codes from #CFE_SB_CreatePipe        \endcode
+**  \retstmt Return codes from #CFE_SB_Subscribe         \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_VerifyCmdLength (CFE_MSG_Message_t * MessagePtr, uint32 ExpectedLength);
+
+#endif /* _sch_cmds_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_custom.c`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_custom.c`
+
+
+```c
+/*
+** $Id: sch_custom.c 1.5 2017/06/21 15:29:41EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) application custom component
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+#include "sch_platform_cfg.h"
+
+#include "sch_app.h"
+#include "sch_custom.h"
+
+#include "cfe_time_msg.h"
+
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*************************************************************************
+** Local function prototypes
+**************************************************************************/
+
+
+/*************************************************************************
+**
+** Function definitions
+**
+**************************************************************************/
+
+
+
+
+/*******************************************************************
+**
+** SCH_CustomEarlyInit
+**
+** NOTE: For complete prolog information, see 'sch_custom.h'
+**
+** This function MUST update SCH_AppData.ClockAccuracy to the
+** resolution of the minor frame timer.
+********************************************************************/
+
+int32 SCH_CustomEarlyInit(void)
+{
+    int32             Status = CFE_SUCCESS;
+    
+    Status = OS_TimerCreate(&SCH_AppData.TimerId,
+                             SCH_TIMER_NAME,
+                            &SCH_AppData.ClockAccuracy,
+                             SCH_MinorFrameCallback);
+    
+    return Status;
+
+} /* End of CustomEarlyInit() */
+
+
+/*******************************************************************
+**
+** SCH_CustomLateInit
+**
+** NOTE: For complete prolog information, see 'sch_custom.h'
+**
+** This function MUST perform any startup synchronization required,
+** and MUST finish setting up the major and minor frame timers. 
+********************************************************************/
+
+int32 SCH_CustomLateInit(void)
+{
+    int32  Status    = CFE_SUCCESS;
+    
+    CFE_ES_WaitForStartupSync(SCH_STARTUP_SYNC_TIMEOUT);
+
+    /*
+    ** Connect to cFE TIME's time reference marker (typically 1 Hz)
+    ** to use it as the Major Frame synchronization source
+    */
+    Status = CFE_TIME_RegisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+        ** Start the Minor Frame Timer with an extended delay to allow a Major Frame Sync
+        ** to start processing.  If the Major Frame Sync fails to arrive, then we will
+        ** start when this timer expires and synch ourselves to the MET clock.
+        */
+        Status = OS_TimerSet(SCH_AppData.TimerId, SCH_STARTUP_PERIOD, 0);
+    }
+
+    return Status;
+
+} /* End of SH_CustomLateInit() */
+
+
+/*******************************************************************
+**
+** SCH_CustomGetCurrentSlotNumber
+**
+** NOTE: For complete prolog information, see 'sch_custom.h'
+********************************************************************/
+
+uint32 SCH_CustomGetCurrentSlotNumber(void)
+{
+    uint32  CurrentSlot;
+    
+    if (SCH_AppData.SyncToMET != SCH_NOT_SYNCHRONIZED)
+    {
+        CurrentSlot = SCH_GetMETSlotNumber();
+        
+        /* 
+        ** If we are only concerned with synchronizing the minor frames to an MET,
+        ** then we need to adjust the current slot by whatever MET time is prevalent
+        ** when the Major Frame Signal is received.
+        ** If we are synchronizing the Major Frame, then, by definition, LastSyncMETSlot
+        ** would be a zero and the current slot would be appropriate.
+        */
+        if (CurrentSlot < SCH_AppData.LastSyncMETSlot)
+        {
+            CurrentSlot = CurrentSlot + SCH_TOTAL_SLOTS - SCH_AppData.LastSyncMETSlot;
+        }
+        else
+        {
+            CurrentSlot = CurrentSlot - SCH_AppData.LastSyncMETSlot;
+        }
+    }
+    else
+    {
+        CurrentSlot = SCH_AppData.MinorFramesSinceTone;
+    }
+    
+    return CurrentSlot;
+} /* End of SH_CustomGetCurrentSlotNumber() */
+
+/*******************************************************************
+**
+** SCH_CustomCleanup
+**
+** NOTE: For complete prolog information, see 'sch_custom.h'
+********************************************************************/
+
+void SCH_CustomCleanup(void)
+{
+    /* unregister the TIME callback for the major frame */
+    CFE_TIME_UnregisterSynchCallback((CFE_TIME_SynchCallbackPtr_t)&SCH_MajorFrameCallback);
+
+} /* End of SH_CustomCleanup() */
+
+
+/*******************************************************************
+**
+** SCH_GetMETSlotNumber
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+uint32 SCH_GetMETSlotNumber(void)
+{
+    uint32 SubSeconds = 0;
+    uint32 MicroSeconds;
+    uint32 Remainder;
+    uint32 METSlot;
+    
+    /*
+    ** Use MET rather than current time to avoid time changes
+    */
+    SubSeconds = CFE_TIME_GetMETsubsecs();
+
+    /*
+    ** Convert sub-seconds to micro-seconds
+    */
+    MicroSeconds = CFE_TIME_Sub2MicroSecs(SubSeconds);
+
+    /*
+    ** Calculate schedule table slot number
+    */
+    METSlot = (MicroSeconds / SCH_NORMAL_SLOT_PERIOD);
+
+    /*
+    ** Check to see if close enough to round up to next slot
+    */
+    Remainder = MicroSeconds - (METSlot * SCH_NORMAL_SLOT_PERIOD);
+    
+    /*
+    ** Add one more microsecond and see if it is sufficient to add another slot
+    */
+    Remainder += 1;
+    METSlot += (Remainder / SCH_NORMAL_SLOT_PERIOD);
+    
+    /*
+    ** Check to see if the Current Slot number needs to roll over
+    */
+    if (METSlot == SCH_TOTAL_SLOTS)
+    {
+        METSlot = 0;
+    }
+    
+    return METSlot;
+    
+}
+
+
+/*******************************************************************
+**
+** SCH_MajorFrameCallback
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_MajorFrameCallback(void)
+{
+    /*
+    ** Synchronize slot zero to the external tone signal
+    */
+    uint16 StateFlags;
+
+    /*
+    ** If cFE TIME is in FLYWHEEL mode, then ignore all synchronization signals
+    */
+    StateFlags = CFE_TIME_GetClockInfo();
+    
+    if ((StateFlags & CFE_TIME_FLAG_FLYING) == 0)
+    {
+        /*
+        ** Determine whether the major frame is noisy or not
+        **
+        ** Conditions below are as follows:
+        **    If we are NOT synchronized to the MET (i.e. - the Minor Frame timer
+        **    has an acceptable resolution), then the Major Frame signal should
+        **    only occur in the last slot of the schedule table.
+        **
+        **    If we ARE synchronized to the MET (i.e. - the Minor Frame timer is
+        **    not as good as we would like), then the Major Frame signal should
+        **    occur within a window of slots at the end of the table.
+        */
+        if (((SCH_AppData.SyncToMET == SCH_NOT_SYNCHRONIZED) && 
+             (SCH_AppData.MinorFramesSinceTone != SCH_TIME_SYNC_SLOT)) ||
+            ((SCH_AppData.SyncToMET == SCH_MINOR_SYNCHRONIZED) && 
+             (SCH_AppData.NextSlotNumber != 0) && 
+             (SCH_AppData.NextSlotNumber < 
+              (SCH_TOTAL_SLOTS - SCH_AppData.WorstCaseSlotsPerMinorFrame - 1))))
+        {
+            /*
+            ** Count the number of consecutive noisy major frames and the Total number
+            ** of noisy major frames.  Also, indicate in telemetry that this particular
+            ** Major Frame signal is considered noisy.
+            */
+            SCH_AppData.UnexpectedMajorFrame = true;
+            SCH_AppData.UnexpectedMajorFrameCount++;
+
+            /*
+            ** If the Major Frame is not being ignored yet, then increment the consecutive noisy
+            ** Major Frame counter.
+            */
+            if (!SCH_AppData.IgnoreMajorFrame)
+            {
+                SCH_AppData.ConsecutiveNoisyFrameCounter++;
+                
+                /*
+                ** If the major frame is too "noisy", then send event message and ignore future signals
+                */
+                if (SCH_AppData.ConsecutiveNoisyFrameCounter >= SCH_MAX_NOISY_MAJORF)
+                {
+                    SCH_AppData.IgnoreMajorFrame = true;
+                }
+            }
+        }
+        else /* Major Frame occurred when expected */
+        {
+            SCH_AppData.UnexpectedMajorFrame = false;
+            SCH_AppData.ConsecutiveNoisyFrameCounter = 0;
+        }
+        
+        /*
+        ** Ignore this callback if SCH has detected a noisy Major Frame Synch signal
+        */
+        if (SCH_AppData.IgnoreMajorFrame == false)
+        {
+            /*
+            ** Stop Minor Frame Timer (which should be waiting for an unusually long
+            ** time to allow the Major Frame source to resynchronize timing) and start
+            ** it again with nominal Minor Frame timing
+            */
+            OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+    
+            /*
+            ** Increment Major Frame process counter
+            */
+            SCH_AppData.ValidMajorFrameCount++;
+    
+            /*
+            ** Set current slot = zero to synchronize activities
+            */
+            SCH_AppData.MinorFramesSinceTone = 0;
+            
+            /*
+            ** Major Frame Source is now from CFE TIME
+            */
+            SCH_AppData.MajorFrameSource = SCH_MAJOR_FS_CFE_TIME;
+            
+            /* Clear any Major Frame In Sync with MET flags */
+            /* But keep the Minor Frame In Sync with MET flag if it is set */
+            SCH_AppData.SyncToMET &= SCH_MINOR_SYNCHRONIZED;
+            
+            /*
+            ** Give "wakeup SCH" semaphore
+            */
+            OS_BinSemGive(SCH_AppData.TimeSemaphore);
+        }
+    }
+
+    /*
+    ** We should assume that the next Major Frame will be in the same MET slot as this 
+    */
+    SCH_AppData.LastSyncMETSlot = SCH_GetMETSlotNumber();
+
+    return;
+
+} /* End of SCH_MajorFrameCallback() */
+
+
+/*******************************************************************
+**
+** SCH_MinorFrameCallback
+**
+** NOTE: For complete prolog information, see above
+********************************************************************/
+
+void SCH_MinorFrameCallback(uint32 TimerId)
+{
+    uint32  CurrentSlot;
+    
+    /*
+    ** If this is the very first timer interrupt, then the initial 
+    ** Major Frame Synchronization timed out.  This can occur when
+    ** either the signal is not arriving or the clock has gone into
+    ** FLYWHEEL mode.  We should synchronize to the MET time instead.
+    */
+    if (SCH_AppData.MajorFrameSource == SCH_MAJOR_FS_NONE)
+    {
+        SCH_AppData.MajorFrameSource = SCH_MAJOR_FS_MINOR_FRAME_TIMER;
+        
+        /* Synchronize timing to MET */
+        SCH_AppData.SyncToMET |= SCH_PENDING_MAJOR_SYNCH;
+        SCH_AppData.SyncAttemptsLeft = SCH_MAX_SYNC_ATTEMPTS;
+        SCH_AppData.LastSyncMETSlot = 0;
+    }
+    
+    /* If attempting to synchronize the Major Frame with MET, then wait for zero subsecs before starting */
+    if (((SCH_AppData.SyncToMET & SCH_PENDING_MAJOR_SYNCH) != 0) &&
+        (SCH_AppData.MajorFrameSource == SCH_MAJOR_FS_MINOR_FRAME_TIMER))
+    {
+        /* Whether we have found the Major Frame Start or not, wait another slot */
+        OS_TimerSet(SCH_AppData.TimerId, SCH_NORMAL_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+
+        /* Determine if this was the last attempt */
+        SCH_AppData.SyncAttemptsLeft--;
+
+        CurrentSlot = SCH_GetMETSlotNumber();
+        if ((CurrentSlot != 0) && (SCH_AppData.SyncAttemptsLeft > 0))
+        {
+            return;
+        }
+        else  /* Synchronization achieved (or at least, aborted) */
+        {
+            /* Clear the pending synchronization flag and set the "Major In Sync" flag */
+            SCH_AppData.SyncToMET &= ~SCH_PENDING_MAJOR_SYNCH;
+            SCH_AppData.SyncToMET |= SCH_MAJOR_SYNCHRONIZED;
+            
+            /* CurrentSlot should be equal to zero.  If not, this is the best estimate we can use */
+            SCH_AppData.MinorFramesSinceTone = CurrentSlot;
+            SCH_AppData.LastSyncMETSlot = 0;
+        }
+    }
+    else
+    {
+        /*
+        ** If we are already synchronized with MET or don't care to be, increment current slot
+        */
+        SCH_AppData.MinorFramesSinceTone++;
+    }
+
+    if (SCH_AppData.MinorFramesSinceTone >= SCH_TOTAL_SLOTS)
+    {
+        /*
+        ** If we just rolled over from the last slot to slot zero,
+        ** It means that the Major Frame Callback did not cancel the
+        ** "long slot" timer that was started in the last slot
+        **
+        ** It also means that we may now need a "short slot"
+        ** timer to make up for the previous long one
+        */
+        OS_TimerSet(SCH_AppData.TimerId, SCH_SHORT_SLOT_PERIOD, SCH_NORMAL_SLOT_PERIOD);
+        
+        SCH_AppData.MinorFramesSinceTone = 0;
+        
+        SCH_AppData.MissedMajorFrameCount++;
+    }
+
+    /*
+    ** Determine the timer delay value for the next slot
+    */
+    if (SCH_AppData.MinorFramesSinceTone == SCH_TIME_SYNC_SLOT)
+    {
+        /*
+        ** Start "long slot" timer (should be stopped by Major Frame Callback)
+        */
+        OS_TimerSet(SCH_AppData.TimerId, SCH_SYNC_SLOT_PERIOD, 0);
+    }
+    
+    /*
+    ** Note that if this is neither the first "short" minor frame nor the
+    ** last "long" minor frame, the timer is not modified.  This should
+    ** provide more stable timing than introducing the dither associated
+    ** with software response times to timer interrupts.
+    */
+
+    /*
+    ** Give "wakeup SCH" semaphore
+    */
+    OS_BinSemGive(SCH_AppData.TimeSemaphore);
+
+    return;
+
+} /* End of SCH_MinorFrameCallback() */
+
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```
+
+### `sch_custom.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_custom.h`
+
+
+```c
+/*************************************************************************
+** File:
+**   $Id: sch_custom.h 1.5 2017/06/21 15:29:23EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: 
+**   Specification for the CFS Scheduler (SCH) mission specific
+**   custom function interface
+**
+** Notes:
+** 
+**************************************************************************/
+#ifndef _sch_custom_
+#define _sch_custom_
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "cfe.h"
+
+/*************************************************************************
+** Macro definitions
+**************************************************************************/
+
+/*
+** Timer Characteristics
+*/
+#define SCH_TIMER_NAME   "SCH_MINOR_TIMER"
+
+/*************************************************************************
+** Exported Functions
+*************************************************************************/
+
+/************************************************************************/
+/** \brief Custom Early Initialization
+**  
+**  \par Description
+**       This function is intended to perform the creation of the
+**       minor frame timer. It is called during #SCH_TimerInit
+**       It may be updated to include other initializations, or 
+**       modifications to already set scheduler parameters.
+**
+**  \par Assumptions, External Events, and Notes:
+**       SCH_AppData.ClockAccuracy will be set to the clock resolution 
+**       in microseconds. 
+**       CFE_SUCCESS will be returned if all creation was performed
+**       properly.
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_PSP_TimerInit        \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_CustomEarlyInit(void);
+
+/************************************************************************/
+/** \brief Custom Late Initialization
+**  
+**  \par Description
+**       This function is intended to perform a wait for startup sync
+**       followed by the initialization and starting of the major frame
+**       timer, and the starting of the minor frame timer. It may be 
+**       updated to include other initializations, or modifications to 
+**       already set scheduler parameters, or remove actions previously
+**       performed in #SCH_CustomEarlyInit . This function is called
+**       following the completion of #SCH_AppInit
+**
+**  \par Assumptions, External Events, and Notes:
+**       Any startup synchronization is included in this function
+**       CFE_SUCCESS will be returned if all initialization was performed
+**       properly.
+**       
+**  \returns
+**  \retcode #CFE_SUCCESS  \retdesc \copydoc CFE_SUCCESS \endcode
+**  \retstmt Return codes from #CFE_PSP_TimerInit        \endcode
+**  \endreturns
+**
+*************************************************************************/
+int32 SCH_CustomLateInit(void);
+
+/************************************************************************/
+/** \brief Obtains the Current Slot (Minor Frame) number
+**  
+**  \par Description
+**       This function determines the current slot (minor frame) number.
+**       It corrects for any minor frame overlap caused by poor minor frame
+**       timing, if necessary. This function and associated subfunction
+**       was added to the customizable section as on slower platforms
+**       this function can have noticible overhead, and several simplifying
+**       assumptions can be made on a platform specific basis.
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retstmt Returns slot index from zero to (#SCH_TOTAL_SLOTS-1) \endcode
+**  \endreturns
+**
+*************************************************************************/
+uint32 SCH_CustomGetCurrentSlotNumber(void);
+
+/************************************************************************/
+/** \brief Custom Cleanup
+**  
+**  \par Description
+**       This function is intended to perform any clean up of custom
+**       initialization that would be necessary on an application exit
+**
+**  \par Assumptions, External Events, and Notes:
+**       Any resources that will not be cleaned up automatically be CFE
+**       need to be cleaned up in this function.
+**       
+*************************************************************************/
+void SCH_CustomCleanup(void);
+
+/************************************************************************/
+/** \brief Computes a minor slot number from a MET subseconds zero point
+**  
+**  \par Description
+**       This function determines the current slot (minor frame) number if
+**       one were to assume that slot zero started when the MET microseconds
+**       are equal to zero. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+**  \returns
+**  \retstmt Returns slot index from zero to (#SCH_TOTAL_SLOTS-1) \endcode
+**  \endreturns
+**
+*************************************************************************/
+uint32 SCH_GetMETSlotNumber(void);
+
+/************************************************************************/
+/** \brief Performs Major Frame Synchronization
+**  
+**  \par Description
+**       This function is called by cFE TIME services when a Major Frame
+**       synchronization signal is received.  It then synchronizes the
+**       minor frame (slot) processing of the Schedule Definition Table. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void  SCH_MajorFrameCallback(void);
+
+/************************************************************************/
+/** \brief Performs Minor Frame time step
+**  
+**  \par Description
+**       This function is called by an OSAL timer when the minor frame
+**       timing reference sends a signal.  The Scheduler Application uses
+**       this to drive the Application's processing of each minor frame. 
+**
+**  \par Assumptions, External Events, and Notes:
+**       None
+**       
+*************************************************************************/
+void  SCH_MinorFrameCallback(uint32 TimerId);
+
+#endif /* _sch_custom_ */
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_events.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_events.h`
+
+
+```c
+/*
+** $Id: sch_events.h 1.3 2017/06/21 15:29:22EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Subsystem: Scheduler (SCH) event message ID's
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+#ifndef _sch_events_
+#define _sch_events_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/** \brief <tt> 'SCH Initialized. Version %d.%d.%d.%d' </tt>
+**  \event <tt> 'SCH Initialized. Version %d.%d.%d.%d' </tt>
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is issued when the Scheduler App completes its
+**  initialization.
+**
+**  The first \c %d field contains the Application's Major Version Number
+**  The second \c %d field contains the Application's Minor Version Number
+**  The third \c %d field contains the Application's Revision Number
+**  The fourth \c %d field contains the Application's Mission Revision Number
+**/
+#define SCH_INITSTATS_INF_EID                      1
+
+/** \brief <tt> 'SCH App: terminating, err = 0x%08X' </tt>
+**  \event <tt> 'SCH App: terminating, err = 0x%08X' </tt> 
+**
+**  \par Type: CRITICAL
+**
+**  \par Cause:
+**
+**  This event message is always issued whenever the Scheduler Application
+**  exits.  Exiting can be caused by an error during initialization, while
+**  loading a table or on command via the ES.
+**/
+#define SCH_APP_EXIT_EID                     2
+
+/** \brief <tt> 'Error Creating SB Pipe, RC=0x%08X' </tt>
+**  \event <tt> 'Error Creating SB Pipe, RC=0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to create its
+**  command pipe via the #CFE_SB_CreatePipe API.
+**
+**  The \c RC field contains the return code from the #CFE_SB_CreatePipe API.
+**/
+#define SCH_CR_PIPE_ERR_EID                   3
+
+/** \brief <tt> 'Error Subscribing to HK Request(MID=0x%04X), RC=0x%08X' </tt>
+**  \event <tt> 'Error Subscribing to HK Request(MID=0x%04X), RC=0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to subscribe to its
+**  Housekeeping Request message via the #CFE_SB_Subscribe API.
+**
+**  The \c MID value identifies the Message ID that Scheduler was attempting to
+**  subscribe to.  The \c RC value contains the return code that was obtained from
+**  the #CFE_SB_Subscribe API.
+**/
+#define SCH_SUB_HK_REQ_ERR_EID                4
+
+/** \brief <tt> 'Error Subscribing to GND CMD(MID=0x%04X), RC=0x%08X' </tt>
+**  \event <tt> 'Error Subscribing to GND CMD(MID=0x%04X), RC=0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to subscribe to its
+**  Ground commands via the #CFE_SB_Subscribe API.
+**
+**  The \c MID value identifies the Message ID that Scheduler was attempting to
+**  subscribe to.  The \c RC value contains the return code that was obtained from
+**  the #CFE_SB_Subscribe API.
+**/
+#define SCH_SUB_GND_CMD_ERR_EID               5
+
+/** \brief <tt> 'Error Registering SDT, RC=0x%08X' </tt>
+**  \event <tt> 'Error Registering SDT, RC=0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to register its
+**  Schedule Definition Table with cFE Table Services via the #CFE_TBL_Register API.
+**
+**  The \c RC value is the return code from the #CFE_TBL_Register API call.
+**/
+#define SCH_SDT_REG_ERR_EID                   7
+
+/** \brief <tt> 'Error Registering MDT, RC=0x%08X' </tt>
+**  \event <tt> 'Error Registering MDT, RC=0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to register its
+**  Message Definition Table with cFE Table Services via the #CFE_TBL_Register API.
+**
+**  The \c RC value is the return code from the #CFE_TBL_Register API call.
+**/
+#define SCH_MDT_REG_ERR_EID                   8
+
+/** \brief <tt> 'Error (RC=0x%08X) Loading SDT with %s' </tt>
+**  \event <tt> 'Error (RC=0x%08X) Loading SDT with %s' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to load its
+**  Schedule Definition Table with cFE Table Services via the #CFE_TBL_Load API.
+**
+**  The \c RC value is the return code from the #CFE_TBL_Load API call
+**  and \c %s is the filename that was used for the load attempt.
+**/
+#define SCH_SDT_LOAD_ERR_EID                  9
+
+/** \brief <tt> 'Error (RC=0x%08X) Loading MDT with %s' </tt>
+**  \event <tt> 'Error (RC=0x%08X) Loading MDT with %s' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to load its
+**  Message Definition Table with cFE Table Services via the #CFE_TBL_Load API.
+**
+**  The \c RC value is the return code from the #CFE_TBL_Load API call
+**  and \c %s is the filename that was used for the load attempt.
+**/
+#define SCH_MDT_LOAD_ERR_EID                 10
+
+/** \brief <tt> 'Error Acquiring Tbl Ptrs (RC=0x%08X)' </tt>
+**  \event <tt> 'Error Acquiring Tbl Ptrs (RC=0x%08X)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is issued when Scheduler is unable to obtain pointers to
+**  the contents of either the Schedule Definition Table or the Message 
+**  Definition Table with cFE Table Services via the #CFE_TBL_GetAddress API.
+**
+**  The \c RC value is the return code from the #CFE_TBL_GetAddress API.
+**/
+#define SCH_ACQ_PTR_ERR_EID                  11
+
+/** \brief <tt> 'Error creating Timer (RC=0x%08X)' </tt>
+**  \event <tt> 'Error creating Timer (RC=0x%08X)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when an error is detected while
+**  creating the Timer via the #SCH_CustomEarlyInit call.
+**
+**  The \c RC value is the return code from the #SCH_CustomEarlyInit call.
+**/
+#define SCH_MINOR_FRAME_TIMER_CREATE_ERR_EID 12
+
+/** \brief <tt> 'OS Timer Accuracy (%d > reqd %d usec) requires Minor Frame MET sync' </tt>
+**  \event <tt> 'OS Timer Accuracy (%d > reqd %d usec) requires Minor Frame MET sync' </tt> 
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is generated when the minor frame timer obtained from OSAL
+**  has a specified clock accuracy that is not adequate enough for the Scheduler
+**  to maintain precise enough timing.  The Scheduler will try to maintain conistent
+**  timing by implementing an additional minor frame synchronization to the MET clock.
+**  This means the Scheduler may end up needing to process more than one minor frame at
+**  a time if the minor frame timer does not stay close enough to required time.
+**
+**  The first \c %d field specifies the clock accuracy (in microseconds) obtained for the 
+**  minor frame timer and the second \c %d field specifies the clock accuracy (in 
+**  microseconds) that Scheduler has determined is necessary to maintain adequate timing.
+**/
+#define SCH_MINOR_FRAME_TIMER_ACC_WARN_EID   13
+
+/** \brief <tt> 'Error initializing Timers (RC=0x%08X)' </tt>
+**  \event <tt> 'Error initializing Timers (RC=0x%08X)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated during initialization when the Scheduler Application
+**  is attempting to attach to the cFE TIME Services Time Synchronization Signal and start
+**  the minor frame timer.
+**
+**  The \c RC field identifies the return code from the #SCH_CustomLateInit function.
+**/
+#define SCH_MAJOR_FRAME_SUB_ERR_EID          14
+
+/** \brief <tt> 'Error creating Main Loop Timing Semaphore (RC=0x%08X)' </tt>
+**  \event <tt> 'Error creating Main Loop Timing Semaphore (RC=0x%08X)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when Scheduler is unable to create the necessary
+**  semaphore used to synchronize itself with the Major and Minor Frame timing sources.
+**
+**  The \c RC value is the return code obtained from the #OS_BinSemCreate API.
+**/
+#define SCH_SEM_CREATE_ERR_EID               15
+
+/** \brief <tt> 'Slot did not increment: slot = %d' </tt>
+**  \event <tt> 'Slot did not increment: slot = %d' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is issued when the Scheduler has determined that it has awoken
+**  in the same minor frame slot as the last cycle.  It will not perform any activities
+**  this cycle and may need to perform two sets of activities next cycle to make up for
+**  the lost time.
+**
+**  The \c %d field identifies the Minor Frame (slot) since the last Major Frame Signal.
+**/
+#define SCH_SAME_SLOT_EID                    16
+
+/** \brief <tt> 'Slots skipped: slot = %d, count = %d' </tt>
+**  \event <tt> 'Slots skipped: slot = %d, count = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a significant jump in minor frame timing has
+**  occurred and the Scheduler has determined that catching up is not feasible.
+**
+**  The \c slot value identifies what the minor frame to be executed is.  The \c count
+**  field identifies the number of minor frames that were skipped in order to get to
+**  the current minor frame.
+**/
+#define SCH_SKIPPED_SLOTS_EID                17
+
+/** \brief <tt> 'Multiple slots processed: slot = %d, count = %d' </tt>
+**  \event <tt> 'Multiple slots processed: slot = %d, count = %d' </tt> 
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is generated when the Scheduler determines that more than one
+**  minor frame needs to be processed in order to keep up with the current time.
+**
+**  The \c slot value identifies the current minor frame.  The \c count field
+**  specifies the number of minor frames processed on this cycle.
+**/
+#define SCH_MULTI_SLOTS_EID                  18
+
+/** \brief <tt> 'Corrupt data error (1): slot = %d, entry = %d' </tt>
+**  \event <tt> 'Corrupt data error (1): slot = %d, entry = %d' </tt> 
+**  \event <tt> 'Corrupt data error (2): msg = %d, freq = %d, type = %d, rem = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when an Activity is found in the Schedule Definition
+**  Table that has inappropriate values.  The table must have become corrupt since being
+**  loaded since the value(s) that are incorrect were verified before the table was loaded.
+**
+**  The \c slot value identifies the minor frame containing the error.
+**  The \c entry value identifies which entry for the specified minor frame is in error.
+**  The \c msg value specifies the index into the Message Definition Table.
+**  The \c freq value specifies the activity's frequency (in seconds)
+**  The \c type value specifies the activity's type
+**  The \c rem value specifies the activity's remainder (used to stagger items with the
+**  same frequency value.
+**/
+#define SCH_CORRUPTION_EID                   19
+
+/** \brief <tt> 'Activity error: slot = %d, entry = %d, err = 0x%08X' </tt>
+**  \event <tt> 'Activity error: slot = %d, entry = %d, err = 0x%08X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when an Send Message Activity fails to send
+**  the message via the #CFE_SB_TransmitMsg API.
+**
+**  The \c slot field identifies the minor frame in the Schedule Definition Table
+**  containing the activity that failed.
+**  The \c entry field identifies the entry in the minor frame that failed.
+**  The \c err field specifies the return code from the #CFE_SB_TransmitMsg API.
+**/
+#define SCH_PACKET_SEND_EID                  20
+
+/** \brief <tt> 'Major Frame Sync too noisy (Slot %d). Disabling synchronization.' </tt>
+**  \event <tt> 'Major Frame Sync too noisy (Slot %d). Disabling synchronization.' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when two consecutive Major Frame Signals are
+**  received significantly earlier than expected.
+**
+**  The \c Slot field identifies the current slot when the Major Frame Signal arrived.  It
+**  should have been the last slot in the schedule.
+**/
+#define SCH_NOISY_MAJOR_FRAME_ERR_EID        21
+
+/** \brief <tt> 'Schedule tbl verify error - idx[%d] ena[%d] typ[%d] fre[%d] rem[%d] msg[%d] grp[0x%08X]' </tt>
+**  \event <tt> 'Schedule tbl verify error - idx[%d] ena[%d] typ[%d] fre[%d] rem[%d] msg[%d] grp[0x%08X]' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when the operator has requested validation
+**  of a new Schedule Definition Table and it contains an error.
+**
+**  The \c idx field specifies the index into the Schedule Definition Table containing the error.
+**  The index is a linear count with the first entry in the table being index zero.
+**  The \c ena field specifies the contents of the Enable/Disable field for the entry in error.
+**  The \c typ field specifies the contents of the Activity Type field for the entry in error.
+**  The \c fre field specifies the contents of the Frequency field for the entry in error.
+**  The \c rem field specifies the contents of the Remainder field for the entry in error.
+**  The \c msg field specifies the contents of the Message Index for the entry in error.
+**  The \c grp field specifies the contents of the Group/Multi-Group field for the entry in error.
+**/
+#define SCH_SCHEDULE_TBL_ERR_EID             30
+
+/** \brief <tt> 'Schedule table verify results -- good[%d] bad[%d] unused[%d]' </tt>
+**  \event <tt> 'Schedule table verify results -- good[%d] bad[%d] unused[%d]' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message provides a statistics summary of the results of validating the
+**  contents of a new Schedule Definition Table.
+**
+**  The \c good field specifies the number of entries that were deemed correct.
+**  The \c bad field specifies the number of entries that contained an error.
+**  The \c unused field specifies the number of entries that are empty.
+**/
+#define SCH_SCHEDULE_TABLE_EID               31
+
+/** \brief <tt> 'Message tbl verify err - idx[%d] mid[0x%X] len[%d] buf[%d]' </tt>
+**  \event <tt> 'Message tbl verify err - idx[%d] mid[0x%X] len[%d] buf[%d]' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when the operator has requested validation
+**  of a new Message Definition Table and it contains an error.
+**
+**  The \c idx field specifies the index into the Message Definition Table containing the error.
+**  The index is a linear count with the first entry in the table being index zero.
+**  The \c mid field specifies the contents of the Message ID field for the entry in error.
+**  The \c len field specifies the contents of the Message Length field for the entry in error.
+**  The \c buf field specifies the index into an empty message that contains data.
+**/
+#define SCH_MESSAGE_TBL_ERR_EID              32
+
+/** \brief <tt> 'Message tbl verify results - good[%d] bad[%d] unused[%d]' </tt>
+**  \event <tt> 'Message tbl verify results - good[%d] bad[%d] unused[%d]' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message provides a statistics summary of the results of validating the
+**  contents of a new Message Definition Table.
+**
+**  The \c good field specifies the number of entries that were deemed correct.
+**  The \c bad field specifies the number of entries that contained an error.
+**  The \c unused field specifies the number of entries that are empty.
+**/
+#define SCH_MESSAGE_TABLE_EID                33
+
+/** \brief <tt> 'NO-op command. Version %d.%d.%d.%d' </tt>
+**  \event <tt> 'NO-op command. Version %d.%d.%d.%d' </tt> 
+**
+**  \par Type: INFORMATION
+**
+**  \par Cause:
+**
+**  This event message is always automatically issued when Scheduler receives
+**  the \link #SCH_NOOP_CC Scheduler NO-OP Command \endlink.
+**
+**  The first \c %d field contains the Application's Major Version Number
+**  The second \c %d field contains the Application's Minor Version Number
+**  The third \c %d field contains the Application's Revision Number
+**  The fourth \c %d field contains the Application's Mission Revision Number
+**/
+#define SCH_NOOP_CMD_EID                     40
+
+/** \brief <tt> 'RESET command' </tt>
+**  \event <tt> 'RESET command' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is always automatically issued in response 
+**  to a Scheduler \link #SCH_RESET_CC Reset Counters command \endlink
+**/
+#define SCH_RESET_CMD_EID                    41
+
+/** \brief <tt> 'ENABLE command: slot = %d, entry = %d' </tt>
+**  \event <tt> 'ENABLE command: slot = %d, entry = %d' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_CC Enable Entry Command \endlink
+**  is received and successfully processed.
+**
+**  The \c slot field specifies the slot index from the Enable command.
+**  The \c entry field specifies the entry index from the Enable command.
+**/
+#define SCH_ENABLE_CMD_EID                   42
+
+/** \brief <tt> 'DISABLE command: slot = %d, entry = %d' </tt>
+**  \event <tt> 'DISABLE command: slot = %d, entry = %d' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_CC Disable Entry Command \endlink
+**  is received and successfully processed.
+**
+**  The \c slot field specifies the slot index from the Disable command.
+**  The \c entry field specifies the entry index from the Disable command.
+**/
+#define SCH_DISABLE_CMD_EID                  43
+
+/** \brief <tt> 'ENABLE GROUP command: match count = %d' </tt>
+**  \event <tt> 'ENABLE GROUP command: match count = %d' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_GROUP_CC Enable Group Command \endlink
+**  is received and successfully processed.
+**
+**  The \c count field specifies the number of Activities in the Schedule Definition Table
+**  that were Enabled due to this command.
+**/
+#define SCH_ENA_GRP_CMD_EID                  44
+
+/** \brief <tt> 'DISABLE GROUP command: match count = %d' </tt>
+**  \event <tt> 'DISABLE GROUP command: match count = %d' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_GROUP_CC Disable Group Command \endlink
+**  is received and successfully processed.
+**
+**  The \c count field specifies the number of Activities in the Schedule Definition Table
+**  that were Disabled due to this command.
+**/
+#define SCH_DIS_GRP_CMD_EID                  45
+
+/** \brief <tt> 'Major Frame Synchronization Enabled' </tt>
+**  \event <tt> 'Major Frame Synchronization Enabled' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is always automatically issued when the Scheduler receives
+**  a \link #SCH_ENABLE_SYNC_CC Enable Sync Command \endlink.
+**/
+#define SCH_ENA_SYNC_CMD_EID                 46
+
+/** \brief <tt> 'Transmitting Diagnostic Message' </tt>
+**  \event <tt> 'Transmitting Diagnostic Message' </tt> 
+**
+**  \par Type: DEBUG
+**
+**  \par Cause:
+**
+**  This event message is always automatically issued when the Scheduler receives
+**  a \link #SCH_SEND_DIAG_TLM_CC Send Diagnostic Telemetry Command \endlink.
+**/
+#define SCH_SEND_DIAG_CMD_EID                47
+
+/** \brief <tt> 'ENABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)' </tt>
+**  \event <tt> 'ENABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_CC Enable Entry Command \endlink
+**  is received that contains either a slot or entry index that is out of the acceptable range.
+**
+**  The \c slot parameters identify first-the slot in the command, second-the maximum allowed slot
+**  The \c entry parameters identify first-the entry index in the command, second-the maximum
+**  allowed entry index.
+**/
+#define SCH_ENABLE_CMD_ARG_ERR_EID           50
+
+/** \brief <tt> 'ENABLE command: invalid state = %d, slot = %d, entry = %d' </tt>
+**  \event <tt> 'ENABLE command: invalid state = %d, slot = %d, entry = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_CC Enable Entry Command \endlink
+**  is received that specifies a slot that does not have an appropriate State.
+**
+**  The \c state parameter identifies the current state of the specified table entry.  The
+**  state should be either #SCH_ENABLED, or #SCH_DISABLED.  If it is #SCH_UNUSED, the operator
+**  is not allowed to enable it.  Any other value represents a corrupted table.
+**  The \c slot parameter identifies the slot specified in the Enable command.
+**  The \c entry parameter identifies the entry index specified in the Enable command.
+**/
+#define SCH_ENABLE_CMD_ENTRY_ERR_EID         51
+
+/** \brief <tt> 'DISABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)' </tt>
+**  \event <tt> 'DISABLE cmd: invalid argument, slot=%d (<%d), entry=%d (<%d)' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_CC Disable Entry Command \endlink
+**  is received that contains either a slot or entry index that is out of the acceptable range.
+**
+**  The \c slot parameters identify first-the slot in the command, second-the maximum allowed slot
+**  The \c entry parameters identify first-the entry index in the command, second-the maximum
+**  allowed entry index.
+**/
+#define SCH_DISABLE_CMD_ARG_ERR_EID          52
+
+/** \brief <tt> 'DISABLE command: invalid state = %d, slot = %d, entry = %d' </tt>
+**  \event <tt> 'DISABLE command: invalid state = %d, slot = %d, entry = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_CC Disable Entry Command \endlink
+**  is received that specifies a slot that does not have an appropriate State.
+**
+**  The \c state parameter identifies the current state of the specified table entry.  The
+**  state should be either #SCH_ENABLED, or #SCH_DISABLED.  If it is #SCH_UNUSED, the operator
+**  is not allowed to disable it.  Any other value represents a corrupted table.
+**  The \c slot parameter identifies the slot specified in the Disable command.
+**  The \c entry parameter identifies the entry index specified in the Disable command.
+**/
+#define SCH_DISABLE_CMD_ENTRY_ERR_EID        53
+
+/** \brief <tt> 'ENABLE GROUP command: invalid argument, no groups selected' </tt>
+**  \event <tt> 'ENABLE GROUP command: invalid argument, no groups selected' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_GROUP_CC Enable Group Command \endlink
+**  is received that does not specify either a group or a multi-group.
+**/
+#define SCH_ENA_GRP_CMD_ERR_EID              54
+
+/** \brief <tt> 'ENABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found' </tt>
+**  \event <tt> 'ENABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_ENABLE_GROUP_CC Enable Group Command \endlink
+**  is received that specifies either a group and/or multi-group that cannot be located as being
+**  associated with any Activities defined in the Schedule Definition Table.
+**
+**  The \c Group field identifies the Group ID number that was in the received Enable Group command.
+**  The \c Multi-Group field identifies the Multi-Group bit mask that was in the received Enable Group command.
+**/
+#define SCH_ENA_GRP_NOT_FOUND_ERR_EID        55
+
+/** \brief <tt> 'DISABLE GROUP command: invalid argument, no groups selected' </tt>
+**  \event <tt> 'DISABLE GROUP command: invalid argument, no groups selected' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_GROUP_CC Disable Group Command \endlink
+**  is received that does not specify either a group or a multi-group.
+**/
+#define SCH_DIS_GRP_CMD_ERR_EID              56
+
+/** \brief <tt> 'DISABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found' </tt>
+**  \event <tt> 'DISABLE GROUP command: Neither Group %d nor Multi-Group 0x%06X found' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when a \link #SCH_DISABLE_GROUP_CC Disable Group Command \endlink
+**  is received that specifies either a group and/or multi-group that cannot be located as being
+**  associated with any Activities defined in the Schedule Definition Table.
+**
+**  The \c Group field identifies the Group ID number that was in the received Disable Group command.
+**  The \c Multi-Group field identifies the Multi-Group bit mask that was in the received Disable Group command.
+**/
+#define SCH_DIS_GRP_NOT_FOUND_ERR_EID        57
+
+/** \brief <tt> 'Invalid command code: ID = 0x%04X, CC = %d' </tt>
+**  \event <tt> 'Invalid command code: ID = 0x%04X, CC = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when Scheduler obtains a message from its
+**  command pipe that does not have a valid command code for either the Ground
+**  Message ID or the Flight Message ID.
+**
+**  The \c ID field identifies the Message ID of the message with the inappropriate
+**  command code.
+**  The \c CC field identifies the Command Code found in the message.
+**/
+#define SCH_CC_ERR_EID                       58
+
+/** \brief <tt> 'Msg with Invalid message ID Rcvd -- ID = 0x%04X' </tt>
+**  \event <tt> 'Msg with Invalid message ID Rcvd -- ID = 0x%04X' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated when Scheduler obtains a message from its
+**  command pipe with a message ID that it did not subscribe to.
+**
+**  The \c ID field identifies the Message ID of the obtained message.
+**/
+#define SCH_MD_ERR_EID                       59
+
+/** \brief <tt> 'Cmd Msg with Bad length Rcvd: ID = 0x%04X, CC = %d, Exp Len = %d, Len = %d' </tt>
+**  \event <tt> 'Cmd Msg with Bad length Rcvd: ID = 0x%04X, CC = %d, Exp Len = %d, Len = %d' </tt> 
+**
+**  \par Type: ERROR
+**
+**  \par Cause:
+**
+**  This event message is generated whenever the Scheduler receives a command message whose
+**  length does not correctly correspond to the length expected for a message with its command code.
+**
+**  The \c ID field specifies the Message ID of the message in error.
+**  The \c CC field specifies the Command Code.
+**  The <B> Exp Len </B> field specifies the Expected Length for a command with this command code.
+**  The \c Len field specifies the actual length of the command received.
+**/
+#define SCH_CMD_LEN_ERR_EID                  60
+
+#endif /* _sch_events_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_msg.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_msg.h`
+
+
+```c
+/*
+** $Id: sch_msg.h 1.3 2017/06/21 15:29:01EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Subsystem: Scheduler (SCH) packet definitions
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Ensure that "this" header is included only once
+**
+**************************************************************************/
+
+#ifndef _sch_msg_
+#define _sch_msg_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "common_types.h"
+#include "sch_msgdefs.h"
+
+/*************************************************************************
+**
+** SCH command packet structure definitions
+**
+**************************************************************************/
+
+/*
+** SCH_SEND_HK_MID, SCH_NOOP_CC, SCH_RESET_CC, 
+** SCH_ENABLE_SYNC_CC, SCH_SEND_DIAG_TLM_CC
+*/
+/** 
+**  \brief No Arguments Command
+**
+**  For command details see #SCH_NOOP_CC, #SCH_RESET_CC, 
+**  #SCH_ENABLE_SYNC_CC or #SCH_SEND_DIAG_TLM_CC
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
+
+} SCH_NoArgsCmd_t;
+
+/*
+** SCH_ENABLE_CC, SCH_DISABLE_CC
+*/
+/** 
+**  \brief Entry Enable/Disable Commands
+**
+**  For command details see #SCH_ENABLE_CC, #SCH_DISABLE_CC 
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
+
+    uint16   SlotNumber;                              /**< \brief Slot Number of Activity whose state is to change */
+                                                      /**< \details Valid Range is zero to (#SCH_TOTAL_SLOTS - 1) */
+    uint16   EntryNumber;                             /**< \brief Entry Number of Activity whose state is to change
+                                                           \details Valid Range is zero to (#SCH_ENTRIES_PER_SLOT - 1) */
+
+} SCH_EntryCmd_t;
+
+/*
+** SCH_ENABLE_GROUP_CC, SCH_DISABLE_GROUP_CC
+*/
+/** 
+**  \brief Entry Enable/Disable Commands
+**
+**  For command details see #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC 
+*/
+typedef struct
+{
+    CFE_MSG_CommandHeader_t CmdHeader;                /**< \brief Command header */
+
+    uint32   GroupData;                               /**< \brief Group and Multi-Group Identifiers
+                                                           \details Most Significant Byte contains a Group ID of 1 to 255,
+                                                           remaining 24 bits identify 24 Multi-Group Identifiers */
+} SCH_GroupCmd_t;
+
+
+/*************************************************************************
+**
+** SCH housekeeping telemetry packet definition
+**
+**************************************************************************/
+
+/** 
+**  \schtlm Scheduler HK Telemetry format
+**/
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t    TelemetryHeader;     /**< \brief cFE Software Bus Telemetry Message Header */
+
+    /*
+    ** Command execution counters (ground commands)
+    */
+    uint8    CmdCounter;                              /**< \schtlmmnemonic \SCH_CMDPC
+                                                           \brief Command Counter
+                                                           \details \ref SCHHK_CmdCounter "Click for more" */
+    uint8    ErrCounter;                              /**< \schtlmmnemonic \SCH_CMDEC
+                                                           \brief Command Error Counter 
+                                                           \details \ref SCHHK_ErrCounter "Click for more"  */
+    uint8    SyncToMET;                               /**< \schtlmmnemonic \SCH_SYNCTOMET
+                                                           \brief Status indicating whether slots are synched to MET 
+                                                           \details \ref SCHHK_SyncToMET "Click for more"  */
+    uint8    MajorFrameSource;                        /**< \schtlmmnemonic \SCH_MAJORFRAMESOURCE
+                                                           \brief Major Frame Signal source identifier 
+                                                           \details \ref SCHHK_MajorFrameSource "Click for more"  */
+
+    /*
+    ** Messages sent by schedule table processor
+    */
+    uint32   ScheduleActivitySuccessCount;            /**< \schtlmmnemonic \SCH_ACTSUCCESSCTR
+                                                           \brief Number of successfully performed activities 
+                                                           \details \ref SCHHK_ScheduleActivitySuccessCount "Click for more"  */
+    uint32   ScheduleActivityFailureCount;            /**< \schtlmmnemonic \SCH_ACTFAILURECTR
+                                                           \brief Number of unsuccessful activities attempted 
+                                                           \details \ref SCHHK_ScheduleActivityFailureCount "Click for more"  */
+
+    /*
+    ** Total schedule table slots processed
+    */
+    uint32   SlotsProcessedCount;                     /**< \schtlmmnemonic \SCH_SLOTPROCCTR
+                                                           \brief Total # of Schedule Slots (Minor Frames) Processed 
+                                                           \details \ref SCHHK_SlotsProcessedCount "Click for more"  */
+
+    /*
+    ** The number of times that slots were skipped
+    ** (not the number of slots that were skipped)
+    */
+    uint16   SkippedSlotsCount;                       /**< \schtlmmnemonic \SCH_SKIPSLOTCTR
+                                                           \brief Number of times that slots were skipped
+                                                           \details The number of times that a slot (minor frame) was skipped.
+                                                           \ref SCHHK_SkippedSlotsCount "Click for more" 
+                                                           \b Note: This is NOT the number of slots that were skipped */
+
+    /*
+    ** The number of times that multiple slots were processed
+    ** (not the number of slots that were processed)
+    */
+    uint16   MultipleSlotsCount;                      /**< \schtlmmnemonic \SCH_MULTSLOTCTR
+                                                           \brief Number of times that multiple slots processed 
+                                                           \details The number of times that multiple slots (minor frames)
+                                                           were processed in the same minor frame.  
+                                                           \ref SCHHK_MultipleSlotsCount "Click for more"
+                                                           \b Note: This is NOT the number of slots that were processed */
+
+    /*
+    ** The number of times that SH woke up in the same slot as last time
+    */
+    uint16   SameSlotCount;                           /**< \schtlmmnemonic \SCH_SAMESLOTCTR
+                                                           \brief # of times SCH woke up in the same slot as last time 
+                                                           \details \ref SCHHK_SameSlotCount "Click for more"  */
+
+    /*
+    ** The number of times that a table entry with bad data was processed
+    ** (the entry previously passed validation but then somehow went bad)
+    */
+    uint16   BadTableDataCount;                       /**< \schtlmmnemonic \SCH_BADTBLDATACTR
+                                                           \brief # of times corrupted table entries were processed 
+                                                           \details \ref SCHHK_BadTableDataCount "Click for more"  */
+
+    /*
+    ** The number of tables verified prior to table load
+    */
+    uint16   TableVerifySuccessCount;                 /**< \schtlmmnemonic \SCH_TBLPASSVERIFYCTR
+                                                           \brief # of times table loads successfully verified 
+                                                           \details \ref SCHHK_TableVerifySuccessCount "Click for more"  */
+    uint16   TableVerifyFailureCount;                 /**< \schtlmmnemonic \SCH_TBLFAILVERIFYCTR
+                                                           \brief # of times table loads unsuccessfully verified 
+                                                           \details \ref SCHHK_TableVerifyFailureCount "Click for more"  */
+    uint32   TablePassCount;                          /**< \schtlmmnemonic \SCH_TBLPROCCTR
+                                                           \brief # of times Schedule Table has been processed 
+                                                           \details \ref SCHHK_TablePassCount "Click for more"  */
+    uint32   ValidMajorFrameCount;                    /**< \schtlmmnemonic \SCH_VALIDMFCTR
+                                                           \brief # of valid Major Frame tones received 
+                                                           \details \ref SCHHK_ValidMajorFrameCount "Click for more"  */
+    uint32   MissedMajorFrameCount;                   /**< \schtlmmnemonic \SCH_MISSMFCTR
+                                                           \brief # of missing Major Frame tones 
+                                                           \details \ref SCHHK_MissedMajorFrameCount "Click for more"  */
+    uint32   UnexpectedMajorFrameCount;               /**< \schtlmmnemonic \SCH_UNEXPCTDMFCTR
+                                                           \brief # of unexpected Major Frame tones 
+                                                           \details \ref SCHHK_UnexpectedMajorFrameCount "Click for more"  */
+    uint16   MinorFramesSinceTone;                    /**< \schtlmmnemonic \SCH_MINORSINCETONE
+                                                           \brief # of Minor Frames since last Major Frame tone 
+                                                           \details \ref SCHHK_MinorFramesSinceTone "Click for more"  */
+    uint16   NextSlotNumber;                          /**< \schtlmmnemonic \SCH_NEXTSLOT
+                                                           \brief Next Minor Frame to be processed 
+                                                           \details \ref SCHHK_NextSlotNumber "Click for more"  */
+    uint16   LastSyncMETSlot;                         /**< \schtlmmnemonic \SCH_LASTSYNCMETSLOT
+                                                           \brief Slot number where Time Sync last occurred 
+                                                           \details \ref SCHHK_LastSyncMETSlot "Click for more"  */
+    bool  IgnoreMajorFrame;                        /**< \schtlmmnemonic \SCH_IGNOREMF
+                                                           \brief Major Frame too noisy to trust 
+                                                           \details \ref SCHHK_IgnoreMajorFrame "Click for more"  */
+    bool  UnexpectedMajorFrame;                    /**< \schtlmmnemonic \SCH_UNEXPCTDMAJORFRAME
+                                                           \brief Most Recent Major Frame signal was unexpected 
+                                                           \details \ref SCHHK_UnexpectedMajorFrame "Click for more"  */
+} SCH_HkPacket_t;
+
+
+/*************************************************************************
+**
+** SCH diagnostic telemetry packet definition
+**
+**************************************************************************/
+
+/** 
+**  \schtlm Scheduler Diagnostic Telemetry format
+**/
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t    TelemetryHeader;     /**< \brief cFE Software Bus Telemetry Message Header */
+
+    uint16          EntryStates[SCH_NUM_STATUS_BYTES_REQD/2]; 
+                                                      /**< \schtlmmnemonic \SCH_ENTRYSTATES
+                                                           \brief States of each Schedule Entry 
+                                                           \details Each two bits represents the state for
+                                                           a single entry in Schedule Definition Table.
+                                                           Unused=0, Enabled=1, Disabled=2
+                                                           MSBs are the lowest numbered entry */
+    CFE_SB_MsgId_t   MsgIDs[SCH_TABLE_ENTRIES]; 
+                                                      /**< \schtlmmnemonic \SCH_MSGIDS
+                                                           \brief Message ID of msg associated with each entry */
+} SCH_DiagPacket_t;
+
+#endif /* _sch_msg_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```
+
+### `sch_msgdefs.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_msgdefs.h`
+
+
+```c
+/*
+** $Id: sch_msgdefs.h 1.3 2017/06/21 15:28:58EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Subsystem: Scheduler (SCH) packet macro definitions
+**
+** Author: David Kobe
+**
+** Notes:
+**   These Macro definitions have been put in this file (instead of 
+**   sch_msg.h) so this file can be included directly into ASIST build 
+**   test scripts. ASIST RDL files can accept C language #defines but 
+**   can't handle type definitions. As a result: DO NOT PUT ANY
+**   TYPEDEFS OR STRUCTURE DEFINITIONS IN THIS FILE! 
+**   ADD THEM TO sch_msg.h IF NEEDED! 
+**
+**
+*/
+
+#ifndef _sch_msgdefs_
+#define _sch_msgdefs_
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "sch_platform_cfg.h"
+
+
+/*************************************************************************
+**
+** SCH application definitions
+**
+**************************************************************************/
+
+/*
+** Table value definitions
+*/
+/** \name Scheduler App Entry States */
+/**  \{ */
+#define SCH_UNUSED              0
+#define SCH_ENABLED             1
+#define SCH_DISABLED            2
+/** \} */
+
+/*
+** Table Entry Activity Types
+*/
+/** \name Scheduler App Entry Types */
+/**  \{ */
+#define SCH_ACTIVITY_NONE       0
+#define SCH_ACTIVITY_SEND_MSG   1
+/** \} */
+
+/*
+** Synchronized to Mission Elapsed Time States
+*/
+/** \name Synchronized to MET States */
+/**  \{ */
+#define SCH_NOT_SYNCHRONIZED          0
+#define SCH_MINOR_SYNCHRONIZED        1
+#define SCH_PENDING_MAJOR_SYNCH       2
+#define SCH_MAJOR_SYNCHRONIZED        4
+/** \} */
+
+/*
+** Major Frame Signal Source Identifiers
+*/
+/** \name Major Frame Signal Source Identifiers */
+/**  \{ */
+#define SCH_MAJOR_FS_NONE               0
+#define SCH_MAJOR_FS_CFE_TIME           1
+#define SCH_MAJOR_FS_MINOR_FRAME_TIMER  2
+/** \} */
+
+/*
+** Schedule table group data field masks
+*/
+/** \name Scheduler App Entry Group Bit Masks */
+/**  \{ */
+#define SCH_GROUP_NUMBER_BIT_MASK  0xFF000000
+#define SCH_MULTI_GROUP_BIT_MASK   0x00FFFFFF
+/** \} */
+
+/*
+** Message table definitions
+*/
+/** \name Scheduler App Miscellaneous Limits */
+/**  \{ */
+#define SCH_MIN_MSG_WORDS       (sizeof(CFE_MSG_CommandHeader_t) / 2)
+#define SCH_TABLE_ENTRIES       (SCH_TOTAL_SLOTS * SCH_ENTRIES_PER_SLOT)
+/** \} */
+
+#define SCH_NUM_STATUS_BYTES_REQD    (((SCH_TABLE_ENTRIES+7)/8)*2)
+                                     /**< \brief Num Bytes req'd to store entry states in diag pkt 
+                                              (2-bits per entry rounded up to nearest 16-bit word) */
+
+/*
+**  SCH command packet command codes 
+** (SCH_GND_CMD_MID and SCH_SC_CMD_MID)
+*/
+/** \name CFS Scheduler Command Codes */
+/** \{ */
+
+/** \schcmd Scheduler No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the 
+**       command execution counter. The command may be used to verify 
+**       general aliveness of the Scheduler Application.
+**
+**  \schcmdmnemonic \SCH_NOOP
+**
+**  \par Command Structure
+**       #SCH_NoArgsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_NOOP_CMD_EID informational event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Scheduler 
+**       receives the command, the event is sent (although it 
+**       may be filtered by EVS) and the counter is incremented 
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa 
+*/
+#define SCH_NOOP_CC             0   /* no-op command */
+
+/** \schcmd Scheduler Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the  
+**       Scheduler housekeeping telemetry:
+**       - Command Execution Counter (\SCH_CMDPC)
+**       - Command Error Counter (\SCH_CMDEC)
+**       - Schedule Activities Success Counter (\SCH_ACTSUCCESSCTR)
+**       - Schedule Activities Failure Counter (\SCH_ACTFAILURECTR)
+**       - Schedule Slots Processed Counter (\SCH_SLOTPROCCTR)
+**       - Schedule Skipping Slots Counter (\SCH_SKIPSLOTCTR)
+**       - Multiple Schedule Slots Processed Counter (\SCH_MULTSLOTCTR)
+**       - Awoke in Same Slot Counter (\SCH_SAMESLOTCTR)
+**       - Corrupted Table Data Counter (\SCH_BADTBLDATACTR)
+**       - Table Loads Successfully Verified Counter (\SCH_TBLPASSVERIFYCTR)
+**       - Table Loads Unsuccessfully Verified Counter (\SCH_TBLFAILVERIFYCTR)
+**       - Valid Major Frames Received Counter (\SCH_VALIDMFCTR)
+**       - Missed Major Frames Received Counter (\SCH_MISSMFCTR)
+**       - Unexpected Major Frames Received Counter (\SCH_UNEXPCTDMFCTR)
+** 
+**  \schcmdmnemonic \SCH_RESETCTRS
+**
+**  \par Command Structure
+**       #SCH_NoArgsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_RESET_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Scheduler 
+**       receives the command, the event is sent (although it 
+**       may be filtered by EVS) and the counter is incremented 
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, it is 
+**       possible for ground systems and on-board safing procedures 
+**       to be designed such that they react to changes in the counter 
+**       values that are reset by this command.
+**
+**  \sa 
+*/
+#define SCH_RESET_CC            1   /* Reset HK counters */
+
+/** \schcmd Enable Schedule Table Entry
+**
+**  \par Description
+**       This command enables a single activity in the Schedule Definition Table.
+**
+**  \schcmdmnemonic \SCH_ENABLEENTRY
+**
+**  \par Command Structure
+**       #SCH_EntryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_ENABLE_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - Invalid Slot (Minor Frame) specified in the command
+**       - Invalid Entry ID specified in the command
+**       - Current state is neither Enabled or Disabled (i.e. - it is corrupted or empty)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SCH_CMDEC  - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       Criticality is dependent entirely on the contents 
+**       of the Schedule Definition Table entry being enabled
+**
+**  \sa #SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+*/
+#define SCH_ENABLE_CC           2   /* Enable Schedule Table Entry */
+
+/** \schcmd Disable Schedule Entry
+**
+**  \par Description
+**       This command disables a single activity in the Schedule Definition Table.
+**
+**  \schcmdmnemonic \SCH_DISABLEENTRY
+**
+**  \par Command Structure
+**       #SCH_EntryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_DISABLE_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - Invalid Slot (Minor Frame) specified in the command
+**       - Invalid Entry ID specified in the command
+**       - Current state is neither Enabled or Disabled (i.e. - it is corrupted or empty)
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SCH_CMDEC - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       Criticality is dependent entirely on the contents 
+**       of the Schedule Definition Table entry being disabled
+**
+**  \sa #SCH_ENABLE_CC, #SCH_ENABLE_GROUP_CC, #SCH_DISABLE_GROUP_CC
+*/
+#define SCH_DISABLE_CC          3   /* disable schedule table entry */
+
+/** \schcmd Enable Group and/or Multi-Groups of Schedule Activities
+**
+**  \par Description
+**       This command enables a single group and/or a collection of
+**       Multi-Group Activities in the Schedule Definition Table.
+**
+**  \schcmdmnemonic \SCH_ENABLEGROUP
+**
+**  \par Command Structure
+**       #SCH_GroupCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_ENA_GRP_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - No Group nor any Multi-Group was specified in the command
+**       - No activities with the specified Group and Multi-Group was located
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SCH_CMDEC - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       Criticality is dependent entirely on the contents 
+**       of the Schedule Definition Table entries being enabled
+**
+**  \sa #SCH_ENABLE_CC, SCH_DISABLE_CC, #SCH_DISABLE_GROUP_CC
+*/
+#define SCH_ENABLE_GROUP_CC     4   /* enable group of entries */
+
+/** \schcmd Disable Group and/or Multi-Groups of Schedule Activities
+**
+**  \par Description
+**       This command disables a single group and/or a collection of
+**       Multi-Group Activities in the Schedule Definition Table.
+**
+**  \schcmdmnemonic \SCH_DISABLEGROUP
+**
+**  \par Command Structure
+**       #SCH_GroupCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_DIS_GRP_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - No Group nor any Multi-Group was specified in the command
+**       - No activities with the specified Group and Multi-Group was located
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \SCH_CMDEC - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       Criticality is dependent entirely on the contents 
+**       of the Schedule Definition Table entries being disabled
+**
+**  \sa #SCH_ENABLE_CC, SCH_DISABLE_CC, #SCH_ENABLE_GROUP_CC
+*/
+#define SCH_DISABLE_GROUP_CC    5   /* disable group of entries */
+
+/** \schcmd Enable Major Frame Synchronization
+**
+**  \par Description
+**       This command allows the operator to enable processing and
+**       synchronization of the Major Frame Signal to the processing
+**       of the Schedule Definition Table.
+**
+**  \schcmdmnemonic \SCH_ENABLESYNC
+**
+**  \par Command Structure
+**       #SCH_NoArgsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_ENA_SYNC_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Scheduler 
+**       receives the command, the event is sent (although it 
+**       may be filtered by EVS) and the counter is incremented 
+**       unconditionally.
+**
+**  \par Criticality
+**       May cause a number of minor frames to be skipped when the major frame
+**       synchronization signal is received and acted upon.
+**
+**  \sa 
+*/
+#define SCH_ENABLE_SYNC_CC      6   /* enable major frame synchronization */
+
+/** \schcmd Telemeter Scheduler Diagnostic Packet
+**
+**  \par Description
+**       This command generates and sends the Scheduler Application's
+**       Diagnostic Telemetry packet.
+**
+**  \schcmdmnemonic \SCH_SENDDIAG
+**
+**  \par Command Structure
+**       #SCH_NoArgsCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the 
+**       following telemetry:
+**       - \b \c \SCH_CMDPC - command execution 
+**         counter will increment
+**       - The #SCH_SEND_DIAG_CMD_EID debug event message will 
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Scheduler 
+**       receives the command, the event is sent (although it 
+**       may be filtered by EVS) and the counter is incremented 
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa 
+*/
+#define SCH_SEND_DIAG_TLM_CC    7   /* sends diagnostic message packet */
+/** \} */
+
+
+#endif /* _sch_msgdefs_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```
+
+### `sch_tbldefs.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_tbldefs.h`
+
+
+```c
+/*
+** $Id: sch_tbldefs.h 1.3 2017/06/21 15:29:42EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Subsystem: Scheduler (SCH) table definitions
+**
+** Author:
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Ensure that "this" header is included only once
+**
+**************************************************************************/
+
+#ifndef _sch_tbldefs_
+#define _sch_tbldefs_
+
+/*************************************************************************
+**
+** SCH table structure definitions
+**
+**************************************************************************/
+
+/*
+** Schedule definition table entry
+*/
+typedef struct
+{
+    uint8    EnableState;          /**< \brief State may be #SCH_UNUSED, #SCH_ENABLED, #SCH_DISABLED */
+    uint8    Type;                 /**< \brief Activity Type may be #SCH_ACTIVITY_NONE or #SCH_ACTIVITY_SEND_MSG */
+    uint16   Frequency;            /**< \brief Number of seconds between Activity execution */
+    uint16   Remainder;            /**< \brief Seconds offset to perform Activity */
+    uint16   MessageIndex;         /**< \brief Byte index into Message Definition Table */
+
+    uint32   GroupData;            /**< \brief Group and Multi-Group membership definitions */
+
+} SCH_ScheduleEntry_t;
+
+/*
+** Message definition table entry
+*/
+typedef struct
+{
+    uint16   MessageBuffer[SCH_MAX_MSG_WORDS]; /**< \brief Packed Messages */
+
+} SCH_MessageEntry_t;
+
+
+#endif /* _sch_tbldefs_ */
+```
+
+### `sch_verify.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_verify.h`
+
+
+```c
+/*
+** $Id: sch_verify.h 1.3 2017/06/21 15:29:22EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose:  CFS Scheduler (SCH) configuration verification
+**
+** Notes:
+**
+*/
+
+#ifndef _sch_verify_
+#define _sch_verify_
+
+/*************************************************************************/
+
+#if SCH_PIPE_DEPTH < 1
+  #error SCH_PIPE_DEPTH must be greater than zero. 
+#endif
+
+#if SCH_ENTRIES_PER_SLOT < 1
+  #error SCH_ENTRIES_PER_SLOT must be greater than zero.  Schedule Definition Table must have at least one entry per slot.
+#endif
+
+#if SCH_MAX_MESSAGES < 1
+  #error SCH_MAX_MESSAGES must be greater than zero.  Message Definition Table must have at least one message definition.
+#endif
+
+#if SCH_MAX_MESSAGES < 1
+  #error SCH_MAX_MESSAGES must be greater than zero.  Message Definition Table must have at least one message definition.
+#endif
+
+#if SCH_MDT_MIN_MSG_ID < 0
+  #error  SCH_MDT_MIN_MSG_ID must be at least 0.
+#endif
+
+#if SCH_MDT_MAX_MSG_ID < SCH_MDT_MIN_MSG_ID
+  #error  SCH_MDT_MAX_MSG_ID must be at least SCH_MDT_MIN_MSG_ID.
+#endif
+
+#if SCH_MDT_MAX_MSG_ID > CFE_PLATFORM_SB_HIGHEST_VALID_MSGID
+  #error SCH_MDT_MAX_MSG_ID must be less than or equal to CFE_SB_HIGHEST_VALID_MSGID.
+#endif
+
+#if SCH_MAX_LAG_COUNT < 1
+  #error SCH_MAX_LAG_COUNT must be at least 1.
+#endif
+
+#if SCH_MAX_LAG_COUNT > SCH_TOTAL_SLOTS
+  #error SCH_MAX_LAG_COUNT cannot be greater than SCH_TOTAL_SLOTS.
+#endif
+
+
+#if SCH_MAX_SLOTS_PER_WAKEUP < 1
+  #error SCH_MAX_SLOTS_PER_WAKEUP must be at least 1.
+#endif
+
+#if SCH_MICROS_PER_MAJOR_FRAME < SCH_TOTAL_SLOTS
+  #error SCH_MICROS_PER_MAJOR_FRAME must be greater than SCH_TOTAL_SLOTS (i.e. - a normal slot period must be at least 1 microsecond)
+#endif
+
+#if SCH_STARTUP_SYNC_TIMEOUT < 0
+  #error SCH_STARTUP_SYNC_TIMEOUT must be greater than or equal to zero.
+#endif
+
+#if SCH_STARTUP_PERIOD < SCH_MICROS_PER_MAJOR_FRAME
+  #error SCH_STARTUP_PERIOD must be greater than or equal to SCH_MICROS_PER_MAJOR_FRAME.
+#endif
+
+/*
+** Make sure Diagnostic Packet does not exceed mission packet size
+** NOTE: The "2" below is for the current size of a CFE_SB_MsgId_t in bytes.  "sizeof" cannot be used in #if statements.
+**       and the "14" is the size of a CCSDS Telemetry Header
+*/
+#ifdef MESSAGE_FORMAT_IS_CCSDS
+#if (SCH_NUM_STATUS_BYTES_REQD + 2*SCH_TABLE_ENTRIES + 12 ) > CFE_SB_MAX_SB_MSG_SIZE
+  #error SCH Diagnostic Packet exceeds maximum allowed message size (see CFE_SB_MAX_SB_MSG_SIZE)
+#endif
+#endif
+
+/*
+** Validate Number of Minor Frames per Major Frame
+*/
+#if SCH_TOTAL_SLOTS > 65535
+  #error SCH_TOTAL_SLOTS cannot specify more than 65535 minor frames per major frame
+#endif
+
+#if SCH_TOTAL_SLOTS < 2
+  #error SCH_TOTAL_SLOTS must specify at least 2 minor frames per major frame
+#endif
+
+/*
+** Ensure Allowed Drift is not larger than a single slot
+*/
+#if SCH_SYNC_SLOT_DRIFT_WINDOW >= (SCH_MICROS_PER_MAJOR_FRAME/SCH_TOTAL_SLOTS)
+  #error SCH_SYNC_SLOT_DRIFT_WINDOW must be less than one normal slot period
+#endif
+
+#if SCH_SYNC_SLOT_DRIFT_WINDOW < 0
+  #error SCH_SYNC_SLOT_DRIFT_WINDOW must be greater than or equal to zero
+#endif
+
+/*
+** Noisy Major Frame
+*/
+
+#if SCH_MAX_NOISY_MAJORF < 2
+  #error SCH_MAX_NOISY_MAJORF must specify at least 2 noisy frames before disregarding
+#endif
+
+#ifndef SCH_MISSION_REV
+    #error SCH_MISSION_REV must be defined!
+#elif (SCH_MISSION_REV < 0)
+    #error SCH_MISSION_REV must be greater than or equal to zero!
+#endif 
+
+
+/*************************************************************************/
+
+#endif /* _sch_verify_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `sch_version.h`
+
+**경로:** `fsw/apps/sch/fsw/src/sch_version.h`
+
+
+```c
+/*
+** $Id: sch_version.h 1.3.1.3 2017/07/05 15:37:38EDT sstrege Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Subsystem: Scheduler (SCH) version definitions
+**
+** Author:
+**
+** Notes:
+*/
+
+/*************************************************************************
+**
+** Ensure that "this" header is included only once
+**
+**************************************************************************/
+
+#ifndef _sch_version_
+#define _sch_version_
+
+#define SCH_MAJOR_VERSION          2
+#define SCH_MINOR_VERSION          2
+#define SCH_REVISION               1
+
+#endif /* _sch_version_ */
+```

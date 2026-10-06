@@ -3,24 +3,454 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--SendBuff.hpp
-file--SendBuffApp.fpp
-file--SendBuffComponentImpl.cpp
-file--SendBuffComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuff.hpp`](file--SendBuff.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffApp.fpp`](file--SendBuffApp.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffComponentImpl.cpp`](file--SendBuffComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffComponentImpl.hpp`](file--SendBuffComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_compile_options(
+    -Wno-conversion
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SendBuffApp.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SendBuffComponentImpl.cpp"
+)
+register_fprime_module()
+```
+
+### `SendBuff.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuff.hpp`
+
+
+```cpp
+// ======================================================================
+// SendBuff.hpp
+// Standardization header for SendBuff
+// ======================================================================
+
+#ifndef Ref_SendBuff_HPP
+#define Ref_SendBuff_HPP
+
+#include "Ref/SendBuffApp/SendBuffComponentImpl.hpp"
+
+namespace Ref {
+
+  typedef SendBuffImpl SendBuff;
+
+}
+
+#endif
+```
+
+### `SendBuffApp.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffApp.fpp`
+
+
+```fpp
+module Ref {
+
+  @ A rate group active component with input and output scheduler ports
+  queued component SendBuff {
+
+    # ----------------------------------------------------------------------
+    # Types
+    # ----------------------------------------------------------------------
+
+    @ Active state
+    enum ActiveState {
+      SEND_IDLE
+      SEND_ACTIVE
+    }
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ The rate group scheduler input
+    sync input port SchedIn: Svc.Sched
+
+    @ The data buffer output
+    output port Data: Drv.DataBuffer
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port CmdDisp
+
+    @ Command registration port
+    command reg port CmdReg
+
+    @ Command response port
+    command resp port CmdStatus
+
+    @ Event port
+    event port Log
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    @ Param get port
+    param get port ParamGet
+
+    @ Param set port
+    param set port ParamSet
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    @ Command to start sending packets
+    async command SB_START_PKTS \
+      opcode 0
+
+    @ Send a bad packet
+    async command SB_INJECT_PKT_ERROR \
+      opcode 1
+
+    @ Generate a FATAL EVR
+    async command SB_GEN_FATAL(
+                                arg1: U32 @< First FATAL Argument
+                                arg2: U32 @< Second FATAL Argument
+                                arg3: U32 @< Third FATAL Argument
+                              ) \
+      opcode 2
+
+    @ Generate an ASSERT
+    async command SB_GEN_ASSERT(
+                                 arg1: U32 @< First ASSERT Argument
+                                 arg2: U32 @< Second ASSERT Argument
+                                 arg3: U32 @< Third ASSERT Argument
+                                 arg4: U32 @< Fourth ASSERT Argument
+                                 arg5: U32 @< Fifth ASSERT Argument
+                                 arg6: U32 @< Sixth ASSERT Argument
+                               ) \
+      opcode 3
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    @ First packet send
+    event FirstPacketSent(
+                           $id: U32 @< The ID argument
+                         ) \
+      severity activity high \
+      id 0 \
+      format "First packet ID {} received"
+
+    @ Packet checksum error
+    event PacketErrorInserted(
+                               $id: U32 @< The ID argument
+                             ) \
+      severity warning high \
+      id 1 \
+      format "Inserted error in packet ID {}"
+
+    @ Report parameter update
+    event BuffSendParameterUpdated(
+                                    $id: U32 @< The ID argument
+                                  ) \
+      severity activity low \
+      id 2 \
+      format "BuffSend Parameter {} was updated"
+
+    @ A test FATAL
+    event SendBuffFatal(
+                         arg1: U32 @< First FATAL argument
+                         arg2: U32 @< Second FATAL argument
+                         arg3: U32 @< Second FATAL argument
+                       ) \
+      severity fatal \
+      id 3 \
+      format "Test Fatal: {} {} {}"
+
+    # ----------------------------------------------------------------------
+    # Parameters
+    # ----------------------------------------------------------------------
+
+    @ A test parameter
+    param parameter3: U8 default 12 id 0 \
+      set opcode 10 \
+      save opcode 11
+
+    @ A test parameter
+    param parameter4: F32 default 13.14 id 1 \
+      set opcode 12 \
+      save opcode 13
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    @ Number of packets sent
+    telemetry PacketsSent: U64 id 0
+
+    @ Number of errors injected
+    telemetry NumErrorsInjected: U32 id 1 update on change
+
+    @ Readback of Parameter3
+    telemetry Parameter3: U8 id 2 update on change
+
+    @ Readback of Parameter4
+    telemetry Parameter4: F32 id 3 update on change
+
+    @ Readback of Parameter4
+    telemetry SendState: ActiveState id 4
+
+  }
+
+}
+```
+
+### `SendBuffComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffComponentImpl.cpp`
+
+
+```cpp
+#include <Ref/SendBuffApp/SendBuffComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Console.hpp>
+#include <cstring>
+
+#include <cstdio>
+
+#define DEBUG_LEVEL 1
+
+namespace Ref {
+
+    SendBuffImpl::SendBuffImpl(const char* compName) :
+        SendBuffComponentBase(compName) {
+        this->m_currPacketId = 0;
+        this->m_invocations = 0;
+        this->m_buffsSent = 0;
+        this->m_errorsInjected = 0;
+        this->m_injectError = false;
+        this->m_sendPackets = false;
+        this->m_currPacketId = 0;
+        this->m_firstPacketSent = false;
+        this->m_state = SendBuff_ActiveState::SEND_IDLE;
+    }
+
+    SendBuffImpl::~SendBuffImpl() {
+
+    }
+
+    void SendBuffImpl::SchedIn_handler(FwIndexType portNum, U32 context) {
+
+        // first, dequeue any messages
+
+        MsgDispatchStatus stat = MSG_DISPATCH_OK;
+
+        while (MSG_DISPATCH_OK == stat) {
+            stat = this->doDispatch();
+            FW_ASSERT(stat != MSG_DISPATCH_ERROR);
+        }
+
+        if (this->m_sendPackets) {
+            // check to see if first
+            if (this->m_firstPacketSent) {
+                this->m_firstPacketSent = false;
+                this->log_ACTIVITY_HI_FirstPacketSent(this->m_currPacketId);
+                this->tlmWrite_NumErrorsInjected(this->m_errorsInjected);
+            }
+            // reset buffer
+            this->m_testBuff.resetSer();
+            // serialize packet id
+            Fw::SerializeStatus serStat = this->m_testBuff.serialize(this->m_currPacketId);
+            FW_ASSERT(serStat == Fw::FW_SERIALIZE_OK);
+            // increment packet id
+            this->m_currPacketId++;
+            this->m_buffsSent++;
+            // set telemetry
+            this->tlmWrite_PacketsSent(this->m_buffsSent);
+            // write data
+            U8 testData[24];
+            FwSizeType dataSize = static_cast<FwSizeType>(sizeof(testData));
+            memset(testData,0xFF,static_cast<size_t>(dataSize));
+            // compute checksum
+            U32 csum = 0;
+            for (U32 byte = 0; byte < dataSize; byte++) {
+                csum += testData[byte];
+            }
+            // inject error, if requested
+            if (this->m_injectError) {
+                this->m_injectError = false;
+                this->m_errorsInjected++;
+                testData[5] = 0;
+                this->log_WARNING_HI_PacketErrorInserted(this->m_currPacketId-1);
+            }
+            // serialize data
+            serStat = this->m_testBuff.serialize(testData,dataSize);
+            FW_ASSERT(serStat == Fw::FW_SERIALIZE_OK);
+            // serialize checksum
+            serStat = this->m_testBuff.serialize(csum);
+            FW_ASSERT(serStat == Fw::FW_SERIALIZE_OK);
+            // send data
+            this->Data_out(0,this->m_testBuff);
+
+        }
+
+        this->m_invocations++;
+
+        this->tlmWrite_SendState(this->m_state);
+    }
+
+    void SendBuffImpl::SB_START_PKTS_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+        this->m_sendPackets = true;
+        this->m_state = SendBuff_ActiveState::SEND_ACTIVE;
+        this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+    }
+
+    void SendBuffImpl::SB_INJECT_PKT_ERROR_cmdHandler(FwOpcodeType opCode, U32 cmdSeq) {
+        this->m_injectError = true;
+        this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+    }
+
+    void SendBuffImpl::SB_GEN_FATAL_cmdHandler(
+            FwOpcodeType opCode, /*!< The opcode*/
+            U32 cmdSeq, /*!< The command sequence number*/
+            U32 arg1, /*!< First FATAL Argument*/
+            U32 arg2, /*!< Second FATAL Argument*/
+            U32 arg3 /*!< Third FATAL Argument*/
+        ) {
+        this->log_FATAL_SendBuffFatal(arg1,arg2,arg3);
+        this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+    }
+
+        //! Handler for command SB_GEN_ASSERT
+        /* Generate an ASSERT */
+     void SendBuffImpl::SB_GEN_ASSERT_cmdHandler(
+            FwOpcodeType opCode, /*!< The opcode*/
+            U32 cmdSeq, /*!< The command sequence number*/
+            U32 arg1, /*!< First ASSERT Argument*/
+            U32 arg2, /*!< Second ASSERT Argument*/
+            U32 arg3, /*!< Third ASSERT Argument*/
+            U32 arg4, /*!< Fourth ASSERT Argument*/
+            U32 arg5, /*!< Fifth ASSERT Argument*/
+            U32 arg6 /*!< Sixth ASSERT Argument*/
+        ) {
+         FW_ASSERT(0,arg1,arg2,arg3,arg4,arg5,arg6);
+         this->cmdResponse_out(opCode,cmdSeq,Fw::CmdResponse::OK);
+     }
+
+    void SendBuffImpl::parameterUpdated(FwPrmIdType id) {
+        this->log_ACTIVITY_LO_BuffSendParameterUpdated(id);
+        Fw::ParamValid valid;
+        switch(id) {
+            case PARAMID_PARAMETER3: {
+                U8 val = this->paramGet_parameter3(valid);
+                this->tlmWrite_Parameter3(val);
+                break;
+            }
+            case PARAMID_PARAMETER4: {
+                F32 val = this->paramGet_parameter4(valid);
+                this->tlmWrite_Parameter4(val);
+                break;
+            }
+            default:
+                FW_ASSERT(0,id);
+                break;
+        }
+    }
+}
+```
+
+### `SendBuffComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/SendBuffComponentImpl.hpp`
+
+
+```cpp
+#ifndef REF_LPS_ATM_IMPL_HPP
+#define REF_LPS_ATM_IMPL_HPP
+
+#include <Ref/SendBuffApp/SendBuffComponentAc.hpp>
+
+namespace Ref {
+
+    /// This component sends a data buffer to a driver each time it is invoked by a scheduler
+
+    class SendBuffImpl final : public SendBuffComponentBase {
+        public:
+
+            // Only called by derived class
+            SendBuffImpl(const char* compName); //!< constructor
+            ~SendBuffImpl(); //!< destructor
+
+        private:
+
+            void SchedIn_handler(FwIndexType portNum, U32 context); //!< downcall for input port
+            void SB_START_PKTS_cmdHandler(FwOpcodeType opcode, U32 cmdSeq); //!< START_PKTS command handler
+            void SB_INJECT_PKT_ERROR_cmdHandler(FwOpcodeType opcode, U32 cmdSeq); //!< START_PKTS command handler
+            void SB_GEN_FATAL_cmdHandler(
+                    FwOpcodeType opCode, /*!< The opcode*/
+                    U32 cmdSeq, /*!< The command sequence number*/
+                    U32 arg1, /*!< First FATAL Argument*/
+                    U32 arg2, /*!< Second FATAL Argument*/
+                    U32 arg3 /*!< Third FATAL Argument*/
+                );
+
+                //! Handler for command SB_GEN_ASSERT
+                /* Generate an ASSERT */
+             void SB_GEN_ASSERT_cmdHandler(
+                    FwOpcodeType opCode, /*!< The opcode*/
+                    U32 cmdSeq, /*!< The command sequence number*/
+                    U32 arg1, /*!< First ASSERT Argument*/
+                    U32 arg2, /*!< Second ASSERT Argument*/
+                    U32 arg3, /*!< Third ASSERT Argument*/
+                    U32 arg4, /*!< Fourth ASSERT Argument*/
+                    U32 arg5, /*!< Fifth ASSERT Argument*/
+                    U32 arg6 /*!< Sixth ASSERT Argument*/
+                );
+            U32 m_invocations; //!< number of times component has been called by the scheduler
+            U32 m_buffsSent; //!< number of buffers sent
+            U32 m_errorsInjected; //!< number of errors injected
+            bool m_injectError; //!< flag to inject error on next packet
+            bool m_sendPackets; //!< If true, send packets
+            U32 m_currPacketId; //!< current packet ID to be sent
+            bool m_firstPacketSent; //!< set if first packet
+
+            // buffer data
+            Drv::DataBuffer m_testBuff; //!< data buffer to send
+
+            // parameter update notification
+            void parameterUpdated(FwPrmIdType id); //!< Notification function for changed parameters
+
+            // send state
+            SendBuff_ActiveState m_state;
+};
+
+}
+
+#endif
+```

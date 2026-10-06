@@ -3,28 +3,204 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `attr-divider.component.css`
 
-file--attr-divider.component.css
-file--attr-divider.component.ts
-file--attr-label.directive.ts
-file--attr-list.component.css
-file--attr-list.component.ts
-file--attr.component.css
-file--attr.component.html
-file--attr.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-divider.component.css`
+
+
+```css
+:host {
+  display: block;
+  margin: 0;
+  margin-bottom: 12px;
+  border-top-style: solid;
+  border-top-color: var(--y-border-color);
+  border-top-width: 1px;
+}
 ```
 
-## 항목
+### `attr-divider.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-divider.component.css`](file--attr-divider.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-divider.component.ts`](file--attr-divider.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-label.directive.ts`](file--attr-label.directive.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-list.component.css`](file--attr-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-list.component.ts`](file--attr-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.css`](file--attr.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.html`](file--attr.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.ts`](file--attr.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-divider.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-attr-divider',
+  template: '',
+  styleUrl: './attr-divider.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-attr-divider',
+    role: 'separator',
+  },
+})
+export class YaAttrDivider {}
+```
+
+### `attr-label.directive.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-label.directive.ts`
+
+
+```typescript
+import { CdkPortal } from '@angular/cdk/portal';
+import { Directive, InjectionToken, inject } from '@angular/core';
+
+/**
+ * Provide an attr label to an attr without causing a circular dependency
+ */
+export const YA_ATTR = new InjectionToken<any>('YA_ATTR');
+
+/** Flag field labels for use with the portal directive */
+@Directive({
+  selector: '[ya-attr-label]',
+})
+export class YaAttrLabel extends CdkPortal {
+  _closestAttr = inject(YA_ATTR, { optional: true });
+}
+```
+
+### `attr-list.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-list.component.css`
+
+
+```css
+:host {
+  display: flex;
+  flex-direction: column;
+}
+```
+
+### `attr-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-attr-list',
+  template: '<ng-content />',
+  styleUrl: './attr-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-attr-list',
+  },
+})
+export class YaAttrList {}
+```
+
+### `attr.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.css`
+
+
+```css
+:host {
+  display: block;
+  position: relative;
+}
+
+:host:not(:last-child) {
+  margin-bottom: 12px;
+}
+
+.ya-attr-label {
+  font-weight: 500;
+  font-size: 12px;
+  padding-bottom: 0;
+  margin: 0;
+}
+
+.ya-attr-content {
+  font-weight: normal;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+.ya-attr-meta {
+  position: absolute;
+  top: calc((20px - 12px) / 2);
+  right: 0;
+  display: flex;
+  column-gap: 5px;
+}
+```
+
+### `attr.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.html`
+
+
+```html
+<div class="ya-attr-label">
+  @if (templateLabel) {
+    <ng-template [cdkPortalOutlet]="templateLabel" />
+  } @else {
+    {{ textLabel() }}
+  }
+</div>
+<div class="ya-attr-content">
+  <ng-content />
+</div>
+<div class="ya-attr-meta">
+  <ng-content select="ya-meta" />
+</div>
+```
+
+### `attr.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/attr-list/attr.component.ts`
+
+
+```typescript
+import { CdkPortalOutlet } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ContentChild,
+  input,
+} from '@angular/core';
+import { YA_ATTR, YaAttrLabel } from './attr-label.directive';
+
+@Component({
+  selector: 'ya-attr',
+  templateUrl: './attr.component.html',
+  styleUrl: './attr.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: YA_ATTR,
+      useExisting: YaAttr,
+    },
+  ],
+  host: {
+    class: 'ya-attr',
+  },
+  imports: [CdkPortalOutlet],
+})
+export class YaAttr {
+  // Plain text label, used when there is no template label
+  textLabel = input<string | undefined>(undefined, { alias: 'label' });
+
+  private _templateLabel: YaAttrLabel;
+
+  // Content for the attr label given by `<ng-template ya-attr-label>`
+  @ContentChild(YaAttrLabel)
+  get templateLabel(): YaAttrLabel {
+    return this._templateLabel;
+  }
+  set templateLabel(value: YaAttrLabel | undefined) {
+    if (value && value._closestAttr === this) {
+      this._templateLabel = value;
+    }
+  }
+}
+```

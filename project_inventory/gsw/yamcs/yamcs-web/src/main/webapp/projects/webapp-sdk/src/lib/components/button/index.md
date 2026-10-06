@@ -3,18 +3,160 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `button.component.css`
 
-file--button.component.css
-file--button.component.html
-file--button.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.css`
+
+
+```css
+:host {
+  display: inline-block;
+}
+
+button {
+  width: 100%;
+}
+
+button {
+  height: 24px;
+  border: 1px solid #d3d3d3;
+  background-color: #fff;
+  outline: none;
+  color: rgba(0, 0, 0, 0.75);
+  padding: 1px 6px;
+  margin: 0;
+  border-radius: 1px;
+  background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.02));
+  cursor: pointer;
+  font:
+    400 12px / 12px Roboto,
+    sans-serif;
+  display: flex;
+  align-items: center;
+}
+
+button:active {
+  border-color: #bbb;
+  color: rgba(0, 0, 0, 0.75);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0.04));
+}
+
+button:hover {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+button:disabled {
+  /*color: rgba(0, 0, 0, .25);*/
+  opacity: 0.6;
+  cursor: default;
+}
+
+button.toggled {
+  color: var(--y-accent);
+}
+
+button .icon {
+  margin-right: 6px;
+}
+
+button .material-symbols {
+  font-size: 14px;
+  height: 14px;
+  width: 14px;
+  vertical-align: middle;
+}
+
+button.primary {
+  background-color: var(--y-accent);
+  color: white;
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+button.text-only {
+  border: 0;
+  background: inherit;
+  color: var(--y-accent);
+}
+
+button.text-only:hover {
+  box-shadow: none;
+}
+
+button.text-only:hover:not(:disabled) {
+  background-color: #e6f1ef;
+}
+
+button.right-align {
+  display: flex;
+  justify-content: end;
+}
 ```
 
-## 항목
+### `button.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.css`](file--button.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.html`](file--button.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.ts`](file--button.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.html`
+
+
+```html
+<button
+  [class.text-only]="appearance() === 'text'"
+  [class.primary]="appearance() === 'primary'"
+  [class.toggled]="toggled()"
+  [class.right-align]="rightAlign()"
+  [disabled]="disabled()"
+  (click)="onClick($event)">
+  @if (icon(); as icon) {
+    <mat-icon class="icon">{{ icon }}</mat-icon>
+  }
+  <ng-content />
+  @if (dropdown()) {
+    <mat-icon>arrow_drop_down</mat-icon>
+  }
+</button>
+```
+
+### `button.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button/button.component.ts`
+
+
+```typescript
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
+import { MatIcon } from '@angular/material/icon';
+
+export type YaButtonAppearance = 'basic' | 'text' | 'primary';
+
+@Component({
+  selector: 'ya-button',
+  templateUrl: './button.component.html',
+  styleUrl: './button.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-button',
+  },
+  imports: [MatIcon],
+})
+export class YaButton {
+  icon = input<string>();
+  appearance = input('basic');
+  disabled = input(false, { transform: booleanAttribute });
+  dropdown = input(false, { transform: booleanAttribute });
+  toggled = input(false, { transform: booleanAttribute });
+  rightAlign = input(false, { transform: booleanAttribute });
+
+  click = output<MouseEvent>();
+
+  onClick(event: MouseEvent) {
+    this.click.emit(event);
+    event.stopPropagation();
+  }
+}
+```

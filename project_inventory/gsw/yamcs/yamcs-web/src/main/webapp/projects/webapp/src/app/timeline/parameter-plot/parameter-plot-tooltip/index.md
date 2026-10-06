@@ -3,18 +3,136 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-plot-tooltip.component.css`
 
-file--parameter-plot-tooltip.component.css
-file--parameter-plot-tooltip.component.html
-file--parameter-plot-tooltip.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.css`
+
+
+```css
+.ya-tooltip {
+  position: absolute;
+  display: none;
+  white-space: pre;
+  border-radius: 2px;
+  max-width: 350px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--y-border-color);
+  font-family: Roboto, sans-serif;
+  font-size: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+table {
+  width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+table td {
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
 ```
 
-## 항목
+### `parameter-plot-tooltip.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.css`](file--parameter-plot-tooltip.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.html`](file--parameter-plot-tooltip.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.ts`](file--parameter-plot-tooltip.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.html`
+
+
+```html
+<div #tt class="ya-tooltip">
+  {{ date() | datetime }}
+  <br />
+  <br />
+  <table>
+    @for (item of legend(); track item.label) {
+      <tr>
+        <td width="1">
+          <span [style.color]="item.color">⬤</span>
+        </td>
+        <td>
+          {{ item.label }}
+        </td>
+        <td>{{ item.value ?? "-" }}</td>
+      </tr>
+    }
+  </table>
+</div>
+```
+
+### `parameter-plot-tooltip.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/parameter-plot-tooltip/parameter-plot-tooltip.component.ts`
+
+
+```typescript
+import { CommonModule } from '@angular/common';
+import { Component, ElementRef, signal, ViewChild } from '@angular/core';
+import { LinePlotPoint } from '@fqqb/timeline';
+import { DateTimePipe } from '@yamcs/webapp-sdk';
+
+interface Legend {
+  color: string;
+  label: string;
+  value: any;
+}
+
+@Component({
+  selector: 'app-parameter-plot-tooltip',
+  templateUrl: './parameter-plot-tooltip.component.html',
+  styleUrl: './parameter-plot-tooltip.component.css',
+  imports: [CommonModule, DateTimePipe],
+})
+export class ParameterPlotTooltipComponent {
+  @ViewChild('tt', { static: true })
+  tt: ElementRef<HTMLDivElement>;
+
+  date = signal<Date | null>(null);
+  legend = signal<Legend[]>([]);
+
+  show(
+    left: number,
+    top: number,
+    date: Date,
+    traces: { [key: string]: any }[],
+    points: Array<LinePlotPoint | null>,
+    labelFormatter: (value: number) => string,
+  ) {
+    this.date.set(date);
+
+    const visibleTraces = traces.filter((trace) => trace.visible);
+
+    const legend: Legend[] = [];
+    for (let i = 0; i < visibleTraces.length; i++) {
+      let value: string | null = null;
+      const point = points[i];
+      if (point && point.value !== null) {
+        value = labelFormatter(point.value);
+      }
+      legend.push({
+        color: visibleTraces[i].lineColor,
+        label: visibleTraces[i].parameter,
+        value: value,
+      });
+    }
+    this.legend.set(legend);
+
+    const el = this.tt.nativeElement;
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+    el.style.display = 'block';
+  }
+
+  hide() {
+    const el = this.tt.nativeElement;
+    el.style.display = 'none';
+  }
+}
+```

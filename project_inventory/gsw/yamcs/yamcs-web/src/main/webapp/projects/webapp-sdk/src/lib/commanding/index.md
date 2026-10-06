@@ -3,26 +3,553 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Acknowledgment.ts`
 
-file--Acknowledgment.ts
-file--AdvancementParams.ts
-file--CommandHistoryRecord.ts
-file--ParameterCheck.ts
-file--StackFormatter.ts
-file--Step.ts
-file--VerifyComparison.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/Acknowledgment.ts`
+
+
+```typescript
+import { Value } from '../client/types/monitoring';
+
+export interface Acknowledgment {
+  name?: string;
+  status?: string;
+  time?: string;
+  message?: string;
+  returnValue?: Value;
+}
 ```
 
-## 항목
+### `AdvancementParams.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/Acknowledgment.ts`](file--Acknowledgment.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/AdvancementParams.ts`](file--AdvancementParams.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/CommandHistoryRecord.ts`](file--CommandHistoryRecord.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/ParameterCheck.ts`](file--ParameterCheck.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/StackFormatter.ts`](file--StackFormatter.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/Step.ts`](file--Step.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/VerifyComparison.ts`](file--VerifyComparison.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/AdvancementParams.ts`
+
+
+```typescript
+export interface AdvancementParams {
+  acknowledgment?: string;
+  wait?: number;
+}
+```
+
+### `CommandHistoryRecord.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/CommandHistoryRecord.ts`
+
+
+```typescript
+import {
+  CommandAssignment,
+  CommandHistoryAttribute,
+  CommandHistoryEntry,
+  Value,
+} from '../client';
+import { Acknowledgment } from './Acknowledgment';
+
+// Entries that come from a cascading server
+// are prefixed with the pattern yamcs_<SERVER>
+const CASCADED_PREFIX = /^(yamcs<[^>]+>_)+/;
+
+export class CommandHistoryRecord {
+  private entry: CommandHistoryEntry;
+
+  id: string;
+
+  generationTime: string;
+  origin: string;
+  sequenceNumber: number;
+
+  commandName: string;
+  aliases: { [key: string]: string } = {};
+
+  assignments: CommandAssignment[] = [];
+  userAssignments: CommandAssignment[] = [];
+
+  username: string;
+
+  raw: boolean;
+  unprocessedBinary: string;
+  binary: string;
+
+  comment?: string;
+  queue?: string;
+
+  transmissionConstraints?: Acknowledgment;
+
+  queued?: Acknowledgment;
+  released?: Acknowledgment;
+  sent?: Acknowledgment;
+  extraAcks: Acknowledgment[] = [];
+
+  completed?: Acknowledgment;
+
+  extra: { name: string; value: Value }[] = [];
+
+  acksByName: { [key: string]: Acknowledgment } = {};
+
+  cascadedRecordsByPrefix = new Map<string, CommandHistoryRecord>();
+
+  constructor(entry: CommandHistoryEntry, prefix?: string) {
+    this.entry = entry;
+    this.id = entry.id;
+    this.generationTime = entry.generationTime;
+    this.origin = entry.origin;
+    this.sequenceNumber = entry.sequenceNumber;
+    this.commandName = entry.commandName;
+    this.aliases = entry.aliases || {};
+
+    for (const assignment of entry.assignments || []) {
+      this.assignments.push(assignment);
+      if (assignment.userInput) {
+        this.userAssignments.push(assignment);
+      }
+    }
+
+    const cascadedServers = new Set<string>();
+
+    for (const attr of entry.attr) {
+      let attrName = attr.name;
+      if (prefix !== undefined) {
+        if (!attrName.startsWith(prefix)) {
+          continue;
+        }
+        attrName = attrName.substring(prefix.length);
+        if (attrName.startsWith('yamcs<')) {
+          // Multiple cascading, flattened at top
+          continue;
+        }
+      }
+
+      const match = attrName.match(CASCADED_PREFIX);
+
+      if (match) {
+        cascadedServers.add(match[0]);
+      } else {
+        if (attrName === 'username') {
+          this.username = attr.value.stringValue!;
+        } else if (attrName === 'source') {
+          // Legacy, ignore.
+        } else if (attrName === 'raw') {
+          this.raw = attr.value.booleanValue!;
+        } else if (attrName === 'unprocessedBinary') {
+          this.unprocessedBinary = attr.value.binaryValue!;
+        } else if (attrName === 'binary') {
+          this.binary = attr.value.binaryValue!;
+        } else if (attrName === 'comment') {
+          this.comment = attr.value.stringValue;
+        } else if (attrName === 'queue') {
+          this.queue = attr.value.stringValue;
+        } else if (attrName.endsWith('_Message')) {
+          const ackName = attrName.substring(
+            0,
+            attrName.length - '_Message'.length,
+          );
+          this.saveAckMessage(ackName, attr.value.stringValue!);
+        } else if (attrName.endsWith('_Time')) {
+          const ackName = attrName.substring(
+            0,
+            attrName.length - '_Time'.length,
+          );
+          this.saveAckTime(ackName, attr.value.stringValue!);
+        } else if (attrName.endsWith('_Status')) {
+          const ackName = attrName.substring(
+            0,
+            attrName.length - '_Status'.length,
+          );
+          this.saveAckStatus(ackName, attr.value.stringValue!);
+        } else if (attrName.endsWith('_Return')) {
+          const ackName = attrName.substring(
+            0,
+            attrName.length - '_Return'.length,
+          );
+          this.saveAckReturnValue(ackName, attr.value);
+        } else {
+          this.extra.push({ name: attrName, value: attr.value });
+        }
+      }
+    }
+
+    for (const ack of Object.values(this.acksByName)) {
+      if (ack.name === 'CommandComplete') {
+        this.completed = ack;
+      } else if (ack.name === 'TransmissionConstraints') {
+        this.transmissionConstraints = ack;
+      } else if (ack.name === 'Acknowledge_Queued') {
+        this.queued = ack;
+      } else if (ack.name === 'Acknowledge_Released') {
+        this.released = ack;
+      } else if (ack.name === 'Acknowledge_Sent') {
+        this.sent = ack;
+      } else {
+        this.extraAcks.push(ack);
+      }
+    }
+
+    for (const prefix of cascadedServers) {
+      this.cascadedRecordsByPrefix.set(
+        prefix,
+        new CommandHistoryRecord(entry, prefix),
+      );
+    }
+  }
+
+  mergeEntry(
+    entry: CommandHistoryEntry,
+    reverse = false,
+  ): CommandHistoryRecord {
+    const mergedAttr = reverse
+      ? this.mergeAttr(entry.attr, this.entry.attr)
+      : this.mergeAttr(this.entry.attr, entry.attr);
+
+    const mergedEntry = reverse
+      ? {
+          ...this.entry,
+          ...entry,
+          attr: mergedAttr,
+        }
+      : ({
+          ...entry,
+          ...this.entry,
+          attr: mergedAttr,
+        } as CommandHistoryEntry);
+
+    return new CommandHistoryRecord(mergedEntry);
+  }
+
+  private mergeAttr(
+    target: CommandHistoryAttribute[],
+    source: CommandHistoryAttribute[],
+  ) {
+    const targetKeys = target.map((attr) => attr.name);
+    const merged = [...target];
+    for (const attr of source) {
+      const idx = targetKeys.indexOf(attr.name);
+      if (idx === -1) {
+        merged.push(attr);
+      } else {
+        merged[idx] = attr;
+      }
+    }
+    return merged;
+  }
+
+  private saveAckTime(name: string, time: string) {
+    let ack: Acknowledgment | null = null;
+    for (const key in this.acksByName) {
+      if (key === name) {
+        ack = this.acksByName[key];
+        break;
+      }
+    }
+    if (!ack) {
+      ack = { name };
+      this.acksByName[name] = ack;
+    }
+    ack.time = time;
+  }
+
+  private saveAckStatus(name: string, status: string) {
+    let ack: Acknowledgment | null = null;
+    for (const key in this.acksByName) {
+      if (key === name) {
+        ack = this.acksByName[key];
+        break;
+      }
+    }
+    if (!ack) {
+      ack = { name };
+      this.acksByName[name] = ack;
+    }
+    ack.status = status;
+  }
+
+  private saveAckMessage(name: string, message: string) {
+    let ack: Acknowledgment | null = null;
+    for (const key in this.acksByName) {
+      if (key === name) {
+        ack = this.acksByName[key];
+        break;
+      }
+    }
+    if (!ack) {
+      ack = { name };
+      this.acksByName[name] = ack;
+    }
+    ack.message = message;
+  }
+
+  private saveAckReturnValue(name: string, returnValue: Value) {
+    let ack: Acknowledgment | null = null;
+    for (const key in this.acksByName) {
+      if (key === name) {
+        ack = this.acksByName[key];
+        break;
+      }
+    }
+    if (!ack) {
+      ack = { name };
+      this.acksByName[name] = ack;
+    }
+    ack.returnValue = returnValue;
+  }
+}
+```
+
+### `ParameterCheck.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/ParameterCheck.ts`
+
+
+```typescript
+export interface ParameterCheck {
+  parameter: string;
+}
+```
+
+### `StackFormatter.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/StackFormatter.ts`
+
+
+```typescript
+import { Value } from '../client';
+import { AdvancementParams } from './AdvancementParams';
+import { Step } from './Step';
+
+export class StackFormatter {
+  private steps: Step[];
+  private stackOptions: { advancement?: AdvancementParams };
+
+  constructor(
+    steps: Step[] = [],
+    stackOptions: { advancement?: AdvancementParams },
+  ) {
+    this.steps = steps;
+    this.stackOptions = stackOptions;
+  }
+
+  addStep(step: Step) {
+    this.steps.push(step);
+  }
+
+  toXML() {
+    const doc = document.implementation.createDocument(null, null, null);
+    const rootEl = doc.createElement('commandStack');
+    doc.appendChild(rootEl);
+
+    for (const step of this.steps) {
+      if (step.type !== 'command') {
+        continue;
+      }
+
+      const stepEl = doc.createElement('command');
+      stepEl.setAttribute('qualifiedName', step.name);
+      if (step.comment) {
+        stepEl.setAttribute('comment', step.comment);
+      }
+      if (step.extra) {
+        const extraOptionsEl = doc.createElement('extraOptions');
+        for (const id in step.extra) {
+          const extraOptionEl = doc.createElement('extraOption');
+          extraOptionEl.setAttribute('id', id);
+          const value = this.getValue(step.extra[id]);
+          if (value != null) {
+            extraOptionEl.setAttribute('value', '' + value);
+            extraOptionsEl.appendChild(extraOptionEl);
+          }
+        }
+        stepEl.appendChild(extraOptionsEl);
+      }
+      for (const argName in step.args) {
+        const argumentEl = doc.createElement('commandArgument');
+        argumentEl.setAttribute('argumentName', argName);
+        const argValue = this.formatValue(step.args[argName]);
+        argumentEl.setAttribute('argumentValue', argValue);
+        stepEl.appendChild(argumentEl);
+      }
+      rootEl.appendChild(stepEl);
+    }
+
+    let xmlString = new XMLSerializer().serializeToString(rootEl);
+    return this.formatXml(xmlString);
+  }
+
+  private formatValue(value: any) {
+    if (Array.isArray(value)) {
+      return JSON.stringify(value);
+    } else if (typeof value === 'object') {
+      return JSON.stringify(value);
+    } else {
+      return String(value);
+    }
+  }
+
+  private formatXml(xml: string) {
+    let formatted = '';
+    let indent = '';
+    const spaces = '  ';
+    xml.split(/>\s*</).forEach(function (node) {
+      if (node.match(/^\/\w/)) indent = indent.substring(spaces.length);
+      formatted += indent + '<' + node + '>\r\n';
+      if (node.match(/^<?\w[^>]*[^\/]$/)) indent += spaces;
+    });
+    return formatted.substring(1, formatted.length - 3);
+  }
+
+  toJSON() {
+    const root: { [key: string]: any } = {
+      $schema: 'https://yamcs.org/schema/stack.schema.json',
+      steps: [],
+    };
+    for (const step of this.steps) {
+      if (step.type === 'command') {
+        root['steps'].push({
+          type: step.type,
+          name: step.name,
+          ...(step.namespace && { namespace: step.namespace }),
+          ...(step.comment && { comment: step.comment }),
+          ...(step.stream && { stream: step.stream }),
+          ...(step.extra && {
+            extraOptions: this.getExtraOptionsJSON(step.extra),
+          }),
+          ...(step.args && {
+            arguments: this.getCommandArgumentsJSON(step.args),
+          }),
+          ...(step.advancement && { advancement: step.advancement }),
+        });
+      } else if (step.type === 'check') {
+        root['steps'].push({
+          type: step.type,
+          ...(step.comment && { comment: step.comment }),
+          parameters: [...step.parameters],
+        });
+      } else if (step.type === 'verify') {
+        root['steps'].push({
+          type: step.type,
+          condition: [...step.condition],
+          ...(step.delay && { delay: step.delay }),
+          ...(step.timeout && { timeout: step.timeout }),
+          ...(step.comment && { comment: step.comment }),
+        });
+      } else if (step.type === 'text') {
+        root['steps'].push({
+          type: step.type,
+          text: step.text,
+        });
+      }
+    }
+
+    if (this.stackOptions.advancement) {
+      root['advancement'] = this.stackOptions.advancement;
+    }
+
+    return JSON.stringify(root, null, 2);
+  }
+
+  private getExtraOptionsJSON(extra: { [key: string]: Value }): any {
+    let extraOptions = [];
+    for (const id in extra) {
+      const value = this.getValue(extra[id]);
+      extraOptions.push({
+        id: id,
+        ...(value != null && { value: value }),
+      });
+    }
+    return extraOptions;
+  }
+
+  private getCommandArgumentsJSON(args: { [key: string]: any }) {
+    let commandArguments = [];
+    for (const argName in args) {
+      commandArguments.push({
+        name: argName,
+        value: args[argName],
+      });
+    }
+    return commandArguments;
+  }
+
+  private getValue(value: Value) {
+    switch (value.type) {
+      case 'BOOLEAN':
+        return value.booleanValue;
+      case 'FLOAT':
+        return value.floatValue;
+      case 'DOUBLE':
+        return value.doubleValue;
+      case 'UINT32':
+        return value.uint32Value;
+      case 'SINT32':
+        return value.sint32Value;
+      case 'ENUMERATED':
+      case 'STRING':
+        return value.stringValue;
+      case 'UINT64':
+        return value.uint64Value;
+      case 'SINT64':
+        return value.sint64Value;
+      default: // Ignore
+    }
+  }
+}
+```
+
+### `Step.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/Step.ts`
+
+
+```typescript
+import { Value } from '../client';
+import { AdvancementParams } from './AdvancementParams';
+import { ParameterCheck } from './ParameterCheck';
+import { VerifyComparison } from './VerifyComparison';
+
+export type Step = CheckStep | CommandStep | TextStep | VerifyStep;
+
+export interface CommandStep {
+  type: 'command';
+  name: string;
+  namespace?: string;
+  args: { [key: string]: any };
+  extra?: { [key: string]: Value };
+  advancement?: AdvancementParams;
+  stream?: string;
+  comment?: string;
+}
+
+export interface CheckStep {
+  type: 'check';
+  parameters: ParameterCheck[];
+  comment?: string;
+}
+
+export interface TextStep {
+  type: 'text';
+  text: string;
+  comment?: string;
+}
+
+export interface VerifyStep {
+  type: 'verify';
+  condition: VerifyComparison[];
+  delay?: number;
+  timeout?: number;
+  comment?: string;
+}
+```
+
+### `VerifyComparison.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/commanding/VerifyComparison.ts`
+
+
+```typescript
+export interface VerifyComparison {
+  parameter: string;
+  operator: 'eq' | 'neq' | 'lt' | 'lte' | 'gt' | 'gte';
+  value: any;
+}
+```

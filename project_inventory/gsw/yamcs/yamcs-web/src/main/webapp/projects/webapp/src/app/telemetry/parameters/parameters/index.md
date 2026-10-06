@@ -3,20 +3,714 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameters.component.css`
 
-file--parameters.component.css
-file--parameters.component.html
-file--parameters.component.ts
-file--parameters.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.css`
+
+
+```css
+.primary-td .mat-icon {
+  margin-right: 7px;
+}
+
+.alert {
+  color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `parameters.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.css`](file--parameters.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.html`](file--parameters.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.ts`](file--parameters.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.datasource.ts`](file--parameters.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Parameters" />
+  <span #top></span>
+
+  <ya-panel>
+    @if (breadcrumb$ | async; as breadcrumb) {
+      @if (breadcrumb.length) {
+        <ya-filter-bar>
+          <ya-breadcrumb-trail>
+            <ya-breadcrumb
+              link="/telemetry/parameters"
+              [queryParams]="{ c: yamcs.context }"
+              icon="account_tree" />
+            @for (item of breadcrumb; track item) {
+              <ya-breadcrumb
+                [link]="item.route"
+                [queryParams]="item.queryParams"
+                [label]="item.name" />
+            }
+          </ya-breadcrumb-trail>
+        </ya-filter-bar>
+      }
+    }
+    <ya-filter-bar [formGroup]="filterForm">
+      <ya-search-filter
+        [formControl]="filterForm.controls['filter']"
+        placeholder="Search by name"
+        icon="search"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-select [options]="typeOptions" formControlName="type" />
+      <ya-select [options]="sourceOptions" formControlName="source" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="tmParameters" />
+
+      @if (dataSource.loading$ | async) {
+        <ya-dots />
+      }
+    </ya-filter-bar>
+
+    <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>Name</th>
+        <td mat-cell *matCellDef="let item" class="primary-td">
+          @if (item.system) {
+            <mat-icon class="icon12" style="vertical-align: middle">folder</mat-icon>
+            <a
+              routerLink="/telemetry/parameters"
+              [queryParams]="{ c: yamcs.context, system: item.name }">
+              {{ item.name | filename }}/
+            </a>
+          }
+          @if (!item.system) {
+            <mat-icon class="icon12" style="vertical-align: middle">toll</mat-icon>
+            <a
+              [routerLink]="'/telemetry/parameters' + item.name"
+              [queryParams]="{ c: yamcs.context }">
+              @if (!(system$ | async)) {
+                <ya-highlight [text]="item.name" [term]="filterForm.value.filter" />
+              }
+              @if (system$ | async; as system) {
+                <ya-highlight
+                  [text]="item.name | slice: system.length + 1"
+                  [term]="filterForm.value.filter" />
+              }
+            </a>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rawValue">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Raw value</th>
+        <td mat-cell *cdkCellDef="let item">
+          {{ (item.pval?.rawValue | value: { maxBytes: dataSource.binaryPreview }) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="engValue">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Value</th>
+        <td
+          mat-cell
+          *matCellDef="let item"
+          [class.alert]="
+            item.pval?.monitoringResult && item.pval?.monitoringResult !== 'IN_LIMITS'
+          ">
+          @if (item.pval) {
+            <ya-expirable [pval]="item.pval">
+              {{ (item.pval?.engValue | value: { maxBytes: dataSource.binaryPreview }) || "-" }}
+              @if (item.parameter?.type?.unitSet) {
+                <span>
+                  {{ (item.parameter | parameterTypeForPath)?.unitSet | units }}
+                </span>
+              }
+              @if (item.pval?.rangeCondition === "LOW") {
+                <span>&#8595;</span>
+              }
+              @if (item.pval?.rangeCondition === "HIGH") {
+                <span>&#8593;</span>
+              }
+            </ya-expirable>
+          }
+          @if (!item.pval) {
+            <span>-</span>
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="gentime">
+        <th mat-header-cell *matHeaderCellDef>Generation time</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.pval?.generationTime | datetime) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="rectime">
+        <th mat-header-cell *matHeaderCellDef>Reception time</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.pval?.acquisitionTime | datetime) || "-" }}
+          @if (item.pval?.generationTime && item.pval?.acquisitionTime) {
+            ({{ item.pval.acquisitionTime | deltaWith: item.pval.generationTime }})
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>Type</th>
+        <td mat-cell *matCellDef="let item">
+          @if ((item.parameter | parameterTypeForPath)?.engType; as engType) {
+            <span class="mono">
+              {{ engType }}
+            </span>
+          } @else {
+            -
+          }
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="dataSource">
+        <th mat-header-cell *matHeaderCellDef>Data source</th>
+        <td mat-cell *matCellDef="let item">
+          {{ (item.parameter?.dataSource | titlecase) || "-" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="shortDescription">
+        <th mat-header-cell *matHeaderCellDef class="wrap200">Description</th>
+        <td mat-cell *matCellDef="let item">
+          @if (item.system) {
+            {{ item.system.shortDescription || "-" }}
+          }
+          @if (item.parameter) {
+            {{ item.parameter.shortDescription || "-" }}
+          }
+        </td>
+      </ng-container>
+
+      @for (aliasColumn of aliasColumns$ | async; track aliasColumn) {
+        <ng-container [matColumnDef]="aliasColumn.id">
+          <th mat-header-cell *matHeaderCellDef>
+            {{ aliasColumn.label }}
+          </th>
+          <td mat-cell *matCellDef="let item">
+            @if (item.parameter | alias: aliasColumn.id; as name) {
+              <ya-highlight [text]="name" [term]="filterForm.value.filter" />
+            } @else {
+              -
+            }
+          </td>
+        </ng-container>
+      }
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let item"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+        [class.selected]="selection.isSelected(row)"></tr>
+    </table>
+
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+
+  <ng-template #empty>
+    <ya-panel>
+      The Mission Database for
+      <i>{{ yamcs.instance }}</i>
+      does not define any parameters.
+    </ya-panel>
+  </ng-template>
+</ya-instance-page>
+```
+
+### `parameters.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl, UntypedFormGroup } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import {
+  GetParametersOptions,
+  Synchronizer,
+  WebappSdkModule,
+  YaColumnChooser,
+  YaColumnInfo,
+  YaSelectOption,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { ListItem, ParametersDataSource } from './parameters.datasource';
+
+export const PLIST_COLUMNS: YaColumnInfo[] = [
+  { id: 'name', label: 'Name', alwaysVisible: true },
+  { id: 'type', label: 'Type', visible: true },
+  { id: 'dataSource', label: 'Data source', visible: true },
+  { id: 'engValue', label: 'Value', visible: true },
+  { id: 'gentime', label: 'Generation time', visible: false },
+  { id: 'rectime', label: 'Reception time', visible: false },
+  { id: 'shortDescription', label: 'Description', visible: true },
+  { id: 'actions', label: '', alwaysVisible: true },
+];
+
+export const PLIST_TYPE_OPTIONS: YaSelectOption[] = [
+  { id: 'ANY', label: 'Any type' },
+  { id: 'aggregate', label: 'aggregate' },
+  { id: 'array', label: 'array' },
+  { id: 'binary', label: 'binary' },
+  { id: 'boolean', label: 'boolean' },
+  { id: 'enumeration', label: 'enumeration' },
+  { id: 'float', label: 'float' },
+  { id: 'integer', label: 'integer' },
+  { id: 'string', label: 'string' },
+  { id: 'time', label: 'time' },
+];
+
+export const PLIST_SOURCE_OPTIONS: YaSelectOption[] = [
+  { id: 'ANY', label: 'Any source' },
+  { id: 'COMMAND', label: 'Command' },
+  { id: 'COMMAND_HISTORY', label: 'Command History' },
+  { id: 'CONSTANT', label: 'Constant' },
+  { id: 'DERIVED', label: 'Derived' },
+  { id: 'EXTERNAL1', label: 'External 1' },
+  { id: 'EXTERNAL2', label: 'External 2' },
+  { id: 'EXTERNAL3', label: 'External 3' },
+  { id: 'GROUND', label: 'Ground' },
+  { id: 'LOCAL', label: 'Local' },
+  { id: 'SYSTEM', label: 'System' },
+  { id: 'TELEMETERED', label: 'Telemetered' },
+];
+
+@Component({
+  templateUrl: './parameters.component.html',
+  styleUrl: './parameters.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParametersComponent implements AfterViewInit, OnDestroy {
+  filterForm = new UntypedFormGroup({
+    filter: new UntypedFormControl(),
+    type: new UntypedFormControl('ANY'),
+    source: new UntypedFormControl('ANY'),
+  });
+
+  shortName = false;
+  pageSize = 100;
+
+  // For use in this controller (immediately updated)
+  private system: string | null = null;
+
+  // For use in the template (update only when the data has arrived)
+  system$ = new BehaviorSubject<string | null>(null);
+
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  @ViewChild(YaColumnChooser)
+  columnChooser: YaColumnChooser;
+
+  dataSource: ParametersDataSource;
+
+  columns = PLIST_COLUMNS;
+  typeOptions = PLIST_TYPE_OPTIONS;
+  sourceOptions = PLIST_SOURCE_OPTIONS;
+
+  // Added dynamically based on actual commands.
+  aliasColumns$ = new BehaviorSubject<YaColumnInfo[]>([]);
+
+  private queryParamMapSubscription: Subscription;
+
+  selection = new SelectionModel<ListItem>(false);
+
+  // Would prefer to use formGroup, but when using valueChanges this
+  // only is updated after the callback...
+  private type: string;
+  private source: string;
+  private filter: string;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private synchronizer: Synchronizer,
+    changeDetection: ChangeDetectorRef,
+  ) {
+    this.dataSource = new ParametersDataSource(
+      this.yamcs,
+      this.synchronizer,
+      changeDetection,
+    );
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filter = queryParams.get('filter') || '';
+      this.filterForm.get('filter')!.setValue(this.filter);
+    }
+    if (queryParams.has('type')) {
+      this.type = queryParams.get('type')!;
+      this.filterForm.get('type')!.setValue(this.type);
+    }
+    if (queryParams.has('source')) {
+      this.source = queryParams.get('source')!;
+      this.filterForm.get('source')!.setValue(this.source);
+    }
+
+    this.filterForm.get('filter')!.valueChanges.subscribe((filter) => {
+      this.paginator.pageIndex = 0;
+      this.filter = filter;
+      this.updateDataSource();
+    });
+
+    this.filterForm.get('type')!.valueChanges.forEach((type) => {
+      this.type = type !== 'ANY' ? type : null;
+      this.updateDataSource();
+    });
+
+    this.filterForm.get('source')!.valueChanges.forEach((source) => {
+      this.source = source !== 'ANY' ? source : null;
+      this.updateDataSource();
+    });
+
+    this.changeSystem(this.route.snapshot.queryParamMap);
+    this.queryParamMapSubscription = this.route.queryParamMap.subscribe(
+      (map) => {
+        if (map.get('system') !== this.system) {
+          this.changeSystem(map);
+        }
+      },
+    );
+
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  changeSystem(map: ParamMap) {
+    this.system = map.get('system');
+    this.updateBrowsePath();
+
+    if (map.has('page')) {
+      this.paginator.pageIndex = Number(map.get('page'));
+    } else {
+      this.paginator.pageIndex = 0;
+    }
+
+    this.updateDataSource();
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetParametersOptions = {
+      system: this.system || '/',
+      details: true,
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+    };
+    if (this.filter) {
+      options.q = this.filter;
+      options.searchMembers = true;
+    }
+    if (this.type) {
+      options.type = this.type;
+    }
+    if (this.source) {
+      options.source = this.source;
+    }
+    this.dataSource.loadParameters(options).then(() => {
+      this.selection.clear();
+      this.updateBrowsePath();
+      this.system$.next(this.system);
+
+      // Reset alias columns
+      const newColumns = [...this.columns];
+      for (const aliasColumn of this.aliasColumns$.value) {
+        const idx = newColumns.indexOf(aliasColumn);
+        if (idx !== -1) {
+          newColumns.splice(idx, 1);
+        }
+      }
+      const aliasColumns = [];
+      for (const namespace of this.dataSource.getAliasNamespaces()) {
+        const aliasColumn = {
+          id: namespace,
+          label: namespace,
+          alwaysVisible: true,
+        };
+        aliasColumns.push(aliasColumn);
+      }
+      newColumns.splice(1, 0, ...aliasColumns); // Insert after name column
+      this.aliasColumns$.next(aliasColumns);
+      this.columnChooser.recalculate(newColumns);
+    });
+  }
+
+  private updateURL() {
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: this.filter || null,
+        type: this.type || null,
+        source: this.source || null,
+        system: this.system || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    if (this.system) {
+      for (const part of this.system.slice(1).split('/')) {
+        path += '/' + part;
+        breadcrumb.push({
+          name: part,
+          route: '/telemetry/parameters',
+          queryParams: { system: path, c: this.yamcs.context },
+        });
+      }
+    }
+    this.breadcrumb$.next(breadcrumb);
+  }
+
+  selectNext() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.items$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.items$.value;
+      if (item.parameter && items.indexOf(item) !== -1) {
+        this.router.navigate(
+          ['/telemetry/parameters' + item.parameter?.qualifiedName],
+          {
+            queryParams: { c: this.yamcs.context },
+          },
+        );
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.queryParamMapSubscription?.unsubscribe();
+    this.dataSource.disconnect();
+  }
+}
+
+export interface BreadCrumbItem {
+  name: string;
+  route: string;
+  queryParams: any;
+}
+```
+
+### `parameters.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameters/parameters.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import { ChangeDetectorRef } from '@angular/core';
+import {
+  GetParametersOptions,
+  NamedObjectId,
+  Parameter,
+  ParameterSubscription,
+  ParameterValue,
+  SpaceSystem,
+  Synchronizer,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+export class ListItem {
+  name: string;
+  system?: SpaceSystem;
+  parameter?: Parameter;
+  pval?: ParameterValue;
+}
+
+export class ParametersDataSource extends DataSource<ListItem> {
+  // Max bytes to fetch and show
+  readonly binaryPreview = 16;
+
+  items$ = new BehaviorSubject<ListItem[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  private dataSubscription?: ParameterSubscription;
+  private idMapping: { [key: number]: NamedObjectId } = {};
+  private latestValues = new Map<string, ParameterValue>();
+
+  private syncSubscription: Subscription;
+
+  constructor(
+    private yamcs: YamcsService,
+    private synchronizer: Synchronizer,
+    private changeDetection: ChangeDetectorRef,
+  ) {
+    super();
+  }
+
+  connect() {
+    this.syncSubscription = this.synchronizer.syncFast(() => {
+      this.refreshTable();
+    });
+    return this.items$;
+  }
+
+  async loadParameters(options: GetParametersOptions) {
+    this.loading$.next(true);
+
+    if (this.dataSubscription) {
+      this.dataSubscription.cancel();
+      this.dataSubscription = undefined;
+    }
+
+    return this.yamcs.yamcsClient
+      .getParameters(this.yamcs.instance!, options)
+      .then((page) => {
+        this.totalSize$.next(page.totalSize);
+        const items: ListItem[] = [];
+        for (const system of page.systems || []) {
+          items.push({ name: system.qualifiedName, system });
+        }
+        for (const parameter of page.parameters || []) {
+          items.push({
+            name: utils.getMemberPath(parameter)!,
+            parameter: parameter,
+          });
+        }
+        this.items$.next(items);
+        this.startSubscription(page.parameters || []);
+      })
+      .finally(() => this.loading$.next(false));
+  }
+
+  private refreshTable() {
+    const items = this.items$.value;
+    for (const item of items) {
+      if (!item.system) {
+        item.pval = this.latestValues.get(item.name);
+      }
+    }
+    this.items$.next([...items]);
+    this.changeDetection.detectChanges();
+  }
+
+  private startSubscription(parameters: Parameter[]) {
+    const ids = parameters.map((p) => {
+      const fullPath = utils.getMemberPath(p)!;
+      return { name: fullPath };
+    });
+    if (ids.length) {
+      this.dataSubscription =
+        this.yamcs.yamcsClient.createParameterSubscription(
+          {
+            instance: this.yamcs.instance!,
+            processor: this.yamcs.processor!,
+            id: ids,
+            abortOnInvalid: false,
+            sendFromCache: true,
+            updateOnExpiration: true,
+            maxBytes: this.binaryPreview + 1, // 1 more, so we know when to show ellipsis
+            action: 'REPLACE',
+          },
+          (data) => {
+            if (data.mapping) {
+              this.idMapping = data.mapping;
+              this.latestValues.clear();
+            }
+            this.processDelivery(data.values || []);
+
+            // Update page, don't wait on first sync
+            if (data.mapping) {
+              this.refreshTable();
+            }
+          },
+        );
+    }
+  }
+
+  private processDelivery(delivery: ParameterValue[]) {
+    for (const pval of delivery) {
+      const id = this.idMapping[pval.numericId];
+      if (id) {
+        // Can be unset, in case we get an old update, following a changed subscription
+        this.latestValues.set(id.name, pval);
+      }
+    }
+  }
+
+  getAliasNamespaces() {
+    const namespaces: string[] = [];
+    for (const item of this.items$.value) {
+      if (item.parameter?.alias) {
+        for (const alias of item.parameter.alias) {
+          if (alias.namespace && namespaces.indexOf(alias.namespace) === -1) {
+            namespaces.push(alias.namespace);
+          }
+        }
+      }
+    }
+    return namespaces.sort();
+  }
+
+  disconnect() {
+    this.syncSubscription?.unsubscribe();
+    this.dataSubscription?.cancel();
+
+    this.items$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

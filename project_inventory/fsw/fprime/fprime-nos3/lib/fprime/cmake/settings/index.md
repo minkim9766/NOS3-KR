@@ -3,16 +3,243 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ini-to-stdio.py`
 
-file--ini-to-stdio.py
-file--ini.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/ini-to-stdio.py`
+
+
+```python
+""" ini-to-stdio.py:
+
+Loads fprime style ini files into a format CMake can process.
+"""
+import argparse
+import os.path
+import sys
+from functools import partial
+
+from pathlib import Path
+from typing import List
+
+from fprime.fbuild.settings import IniSettings
+
+
+REMAPPING = {}
+
+
+def print_setting(setting: str, value: str = "", ending: str = ";"):
+    """Print a setting for CMake
+
+    Prints a setting for CMake using the format 'SETTING=VALUE;' producing a CMake list of settings.
+
+    Args:
+         setting: name of setting in cmake
+         value: value to provide to cmake
+         ending: ending of the print line
+    """
+    value = str(value).replace(";", "\\;")
+    for initial, final in REMAPPING.items():
+        value = value.replace(initial, final)
+    print(f"{setting}={value}", end=ending)
+
+
+def print_list_settings(items: List[str]):
+    """Print a list of settings of form SETTING=VALUE"""
+    for item in items:
+        splits = item.strip().split("=", 1)
+        if splits[0] != "":
+            print_setting(*splits)
+
+
+CMAKE_NEEDED_SETTINGS = {
+    "framework_path": partial(print_setting, "FPRIME_FRAMEWORK_PATH"),
+    "project_root": partial(print_setting, "FPRIME_PROJECT_ROOT"),
+    "library_locations": lambda value: print_setting(
+        "FPRIME_LIBRARY_LOCATIONS", ";".join(str(item) for item in value)
+    ),
+    "default_cmake_options": lambda value: print_list_settings(value.split("\n")),
+    # Sets two settings from install dest: fprime and cmake settings
+    "install_destination": partial(print_setting, "CMAKE_INSTALL_PREFIX"),
+}
+
+
+def main():
+    """Do the thing."""
+    parser = argparse.ArgumentParser()
+    parser.add_argument("settings", type=Path, help="Path to settings.ini")
+    parser.add_argument(
+        "toolchain",
+        nargs="?",
+        type=Path,
+        default=Path("native"),
+        help="Path to toolchain file",
+    )
+    args_ns = parser.parse_args()
+    loaded_settings = IniSettings.load(
+        args_ns.settings, str(args_ns.toolchain.stem), False
+    )
+    loaded_settings_ut = IniSettings.load(
+        args_ns.settings, str(args_ns.toolchain.stem), True
+    )
+    ini_path = str(args_ns.settings)
+    ini_real_path = str(args_ns.settings.resolve())
+    common_suffix = os.path.commonprefix([ini_path[::-1], ini_real_path[::-1]])[::-1]
+    REMAPPING[ini_real_path[: -1 * len(common_suffix)]] = ini_path[
+        : -1 * len(common_suffix)
+    ]
+
+    for setting, handler in CMAKE_NEEDED_SETTINGS.items():
+        try:
+            setting_value = loaded_settings[setting]
+            ut_setting_value = loaded_settings_ut[setting]
+
+            assert (
+                setting_value == ut_setting_value
+            ), "CMake can only parse unittest independent settings"
+            output = loaded_settings[setting]
+            handler(output)
+        except KeyError as key_error:
+            print(
+                f"[WARNING] Failed to load settings.ini field {key_error}. Update fprime-util.",
+                end=";",
+                file=sys.stderr,
+            )
+    # Print the last setting with no ending to prevent null-entry at list end
+    print_setting("FPRIME_SETTINGS_FILE", args_ns.settings, ending="")
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        sys.exit(main())
+    except Exception as exc:
+        print(f"{exc}", file=sys.stderr)
+    sys.exit(1)
 ```
 
-## 항목
+### `ini.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/ini-to-stdio.py`](file--ini-to-stdio.py) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/ini.cmake`](file--ini.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/settings/ini.cmake`
+
+
+```cmake
+####
+# ini.cmake:
+#
+# This file loads settings from INI files. In cases where these settings are supplied via fprime-util, the settings are
+# checked for discrepancy. This allows the cmake system to detect when it should be regenerated and has not been. In the
+# case that the settings were not supplied, it sets them.
+####
+include_guard()
+
+# Necessary global variables
+set(FPRIME__INTERNAL_SETTINGS_CMAKE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}")
+find_program(PYTHON NAMES python3 python) #This happens before required
+
+####
+# FPRIME_UTIL_CRITICAL_LIST:
+#
+# This is a list of critical settings that are passed in from fprime-util. If these settings change in `settings.ini`
+# they need to result in a WARNING to let the user know that had fprime-util be run, it now needs to be rerun.
+####
+set(FPRIME_UTIL_CRITICAL_LIST
+    "FPRIME_FRAMEWORK_PATH"
+    "FPRIME_LIBRARY_LOCATIONS"
+    "FPRIME_PROJECT_ROOT"
+    "FPRIME_ENVIRONMENT_FILE"
+    "FPRIME_INSTALL_DEST"
+)
+
+####
+# ini_to_cache:
+#
+# Uses a python script to load INI files. These items are set into the CMake cache.
+####
+function(ini_to_cache)
+    set(CALCULATED_INI "${CMAKE_SOURCE_DIR}/settings.ini")
+
+    # Check if settings.ini is defined and is not what is expected
+    if (DEFINED FPRIME_SETTINGS_FILE AND NOT FPRIME_SETTINGS_FILE STREQUAL "${CALCULATED_INI}")
+        message(FATAL_ERROR "Provided settings.ini '${FPRIME_SETTINGS_FILE}' not expected file '${CALCULATED_INI}'")
+    endif()
+    # Execute the process
+    execute_process(COMMAND ${PYTHON}
+        "${FPRIME__INTERNAL_SETTINGS_CMAKE_DIRECTORY}/ini-to-stdio.py"
+        "${CALCULATED_INI}"
+        ${CMAKE_TOOLCHAIN_FILE}
+        OUTPUT_VARIABLE INI_OUTPUT
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        RESULT_VARIABLE RESULT_CODE
+    )
+    # Check result code
+    if (NOT RESULT_CODE EQUAL 0)
+        message(FATAL_ERROR "Failed to process settings.ini file: ${CALCULATED_INI}")
+    endif()
+
+    # Unset the CMAKE_INSTALL_PREFIX as we override it
+    if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT OR CMAKE_INSTALL_PREFIX STREQUAL "")
+        unset(CMAKE_INSTALL_PREFIX CACHE)
+    endif()
+    # Process line-by-line
+    STRING(REPLACE "\n" ";" INI_OUTPUT "${INI_OUTPUT}")
+    foreach(LINE IN LISTS INI_OUTPUT)
+        # Skip malformed lines
+        if (NOT LINE MATCHES "^[A-Za-z0-9_]+=")
+            message(STATUS "${LINE}")
+            continue()
+        endif()
+        STRING(REPLACE ";" "\\;" LINE "${LINE}")
+        STRING(REPLACE "=" ";" LINE "${LINE}")
+        list(GET LINE 0 SETTING)
+        list(LENGTH LINE ELEMENTS)
+        if (ELEMENTS GREATER 1)
+            list(GET LINE 1 VALUE)
+        else()
+            set(VALUE "")
+        endif()
+
+        # Here we set several cache variables:
+        # - <setting>_INI_: original setting, but was loaded from settings.ini
+        # - <setting>_CLI_: original setting, but was passed in via CLI
+        # These are used to detect changes and alert the user.
+        # If the setting is undefined, then we must load it from the INI file and set the proper value.
+        if (NOT DEFINED "${SETTING}")
+            # Print source of setting when debugging
+            if (CMAKE_DEBUG_OUTPUT)
+                message(STATUS "${SETTING} read from settings.ini as '${VALUE}'")
+            endif()
+            set("${SETTING}_INI_" "${VALUE}" CACHE INTERNAL "Original value of ${SETTING} from settings.ini")
+            set("${SETTING}" "${VALUE}" CACHE INTERNAL "")
+        # If setting was originally loaded, here, from settings.ini. We should check that it is correctly re-set.
+        elseif(DEFINED "${SETTING}_INI_")
+            # Changed INI files are hard-failure as it is difficult to know how/when to regenerate
+            if(NOT "${VALUE}" STREQUAL "${${SETTING}_INI_}")
+                # Print some extra output to help debug
+                if (CMAKE_DEBUG_OUTPUT)
+                    message(WARNING "${SETTING} changed from '${${SETTING}_INI_}' to '${VALUE}'")
+                endif()
+                message(FATAL_ERROR "settings.ini field changed. Please regenerate.")
+            endif()
+        # If setting was passed in on CLI
+        elseif(DEFINED "${SETTING}_CLI_")
+            # Changed INI files are hard-failure as it is difficult to know how/when to regenerate
+            if(NOT "${VALUE}" STREQUAL "${${SETTING}_CLI_}" AND SETTING IN_LIST FPRIME_UTIL_CRITICAL_LIST)
+                # Print some extra output to help debug
+                if (CMAKE_DEBUG_OUTPUT)
+                    message(WARNING "${SETTING} changed from '${${SETTING}_CLI_}' to '${VALUE}'")
+                endif()
+                message(WARNING "settings.ini field changed. This likely means fprime-util generate should be run.")
+            endif()
+        # Setting defined, but none of the check-values are set. This it is the first run, with items from CLI.
+        else()
+            # Print source of setting when debugging
+            if (CMAKE_DEBUG_OUTPUT)
+                message(STATUS "${SETTING} read from CLI as '${${SETTING}}'")
+            endif()
+            set("${SETTING}_CLI_" "${${SETTING}}" CACHE INTERNAL "Original value of ${SETTING} from CLI")
+        endif()
+    endforeach()
+endfunction(ini_to_cache)
+```

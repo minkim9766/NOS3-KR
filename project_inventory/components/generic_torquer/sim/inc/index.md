@@ -3,16 +3,118 @@
 
 **경로:** `components/generic_torquer/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_torquer_42_data_provider.hpp`
 
-file--generic_torquer_42_data_provider.hpp
-file--generic_torquer_hardware_model.hpp
+**경로:** `components/generic_torquer/sim/inc/generic_torquer_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_TORQUER42DATAPROVIDER_HPP
+#define NOS3_GENERIC_TORQUER42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_torquer42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_torquer42DataProvider(const boost::property_tree::ptree& config);
+
+        /** \brief Method to command the torquer
+         *
+         * @param trq_num    Torquer number to command
+         * @param trq_value  (Signed) Value to apply to the MTB in A-m^2
+         */
+        void cmd_torque(int trq_num, double trq_value);
+
+    private:
+        /* Disallow these */
+        ~Generic_torquer42DataProvider(void) {};
+        Generic_torquer42DataProvider& operator=(const Generic_torquer42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_torquer_hardware_model.hpp`
 
-- [`components/generic_torquer/sim/inc/generic_torquer_42_data_provider.hpp`](file--generic_torquer_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_torquer/sim/inc/generic_torquer_hardware_model.hpp`](file--generic_torquer_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_torquer/sim/inc/generic_torquer_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_TORQUERHARDWAREMODEL_HPP
+#define NOS3_GENERIC_TORQUERHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <sim_i_hardware_model.hpp>
+#include <generic_torquer_42_data_provider.hpp>
+
+#include <sys/socket.h>
+#include <arpa/inet.h>	
+#include <fcntl.h>
+
+
+/*
+** Defines
+*/
+#define GENERIC_TORQUER_SIM_SUCCESS 0
+#define GENERIC_TORQUER_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_torquerHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_torquerHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_torquerHardwareModel(void);
+
+    private:
+        /* Private helper methods */
+        void run(void);
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_torquer_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        int _num_mtbs;
+        std::vector<double> _max_trq;
+        int sockfd;
+        int port_num;
+        char* ip_address;
+        sa_family_t address_family;
+        int socket_flags;
+    };
+}
+
+#endif
+```

@@ -3,22 +3,945 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--FileSystemRules.cpp
-file--FileSystemRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/filesystem/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/filesystem/CommonTests.hpp"
+
+#include <STest/Pick/Pick.hpp>
+
+std::unique_ptr<Os::Test::FileSystem::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::FileSystem::Tester>(new Os::Test::FileSystem::Tester());
+}
+
+Functionality::Functionality() : tester(get_tester_implementation()) {}
+
+void Functionality::SetUp() {
+    using namespace Os::Test::FileSystem;
+    const FwSizeType NUMBER_TEST_FILES = 30;
+
+    // Lambda function to generate a random alphanumeric string
+    // used to populate the contents of the test files
+    // If need to debug, it can be useful to manually set strings
+    // of known values in this->m_test_files instead
+    auto generate_random_string = []() -> std::string {
+        static const char alphanums[] =
+            "0123456789"
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
+        FwIndexType len = STest::Pick::lowerUpper(1, 4);
+        std::string result;
+        result.reserve(len);
+        for (FwIndexType i = 0; i < len; ++i) {
+            result += alphanums[STest::Pick::lowerUpper(0, sizeof(alphanums) - 2)];
+        }
+        return result;
+    };
+
+    // Set up test state - create a directory structure with files
+    std::string root_dir = "filesystem_test_directory";
+    tester->m_test_dirs = {TestDirectory(root_dir), TestDirectory(root_dir + "/sub_dir_1"),
+                           TestDirectory(root_dir + "/sub_dir_2")};
+
+    for (FwSizeType i = 0; i < NUMBER_TEST_FILES; ++i) {
+        std::string path = root_dir + "/test_file_" + std::to_string(i);
+        tester->m_test_files.push_back(TestFile(path, generate_random_string()));
+    }
+
+    // All of the above is in the tester state, i.e. in memory
+    // The below initializes the filesystem with the same structure, on disk
+    tester->write_test_state_to_disk();
+}
+
+void Functionality::TearDown() {
+    tester->purge_test_state_from_disk();
+}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+// Existing paths exists, non-existing paths do not exist
+TEST_F(Functionality, Exists) {
+    Os::Test::FileSystem::Tester::DirectoryExists dir_exist_rule;
+    Os::Test::FileSystem::Tester::FileExists file_exist_rule;
+    Os::Test::FileSystem::Tester::PathNotExists no_exist_rule;
+    dir_exist_rule.apply(*tester);
+    file_exist_rule.apply(*tester);
+    no_exist_rule.apply(*tester);
+}
+
+// RemoveFile removes a file
+TEST_F(Functionality, RemoveFile) {
+    Os::Test::FileSystem::Tester::RemoveFile rm_file_rule;
+    rm_file_rule.apply(*tester);
+}
+
+// RemoveDirectory removes a directory
+TEST_F(Functionality, RemoveDirectory) {
+    Os::Test::FileSystem::Tester::RemoveDirectory rm_dir_rule;
+    rm_dir_rule.apply(*tester);
+}
+
+// TouchFile touches a file
+TEST_F(Functionality, TouchFile) {
+    Os::Test::FileSystem::Tester::TouchFile touch_rule;
+    touch_rule.apply(*tester);
+}
+
+// CreateDirectory
+TEST_F(Functionality, CreateDirectory) {
+    Os::Test::FileSystem::Tester::CreateDirectory create_dir_rule;
+    create_dir_rule.apply(*tester);
+}
+
+// MoveFile
+TEST_F(Functionality, MoveFile) {
+    Os::Test::FileSystem::Tester::MoveFile move_rule;
+    move_rule.apply(*tester);
+}
+
+// RenameFile
+TEST_F(Functionality, RenameFile) {
+    Os::Test::FileSystem::Tester::RenameFile rename_rule;
+    rename_rule.apply(*tester);
+}
+
+// CopyFile
+TEST_F(Functionality, CopyFile) {
+    Os::Test::FileSystem::Tester::CopyFile move_rule;
+    move_rule.apply(*tester);
+}
+
+// AppendFile
+TEST_F(Functionality, AppendFile) {
+    Os::Test::FileSystem::Tester::AppendFile append_rule;
+    append_rule.apply(*tester);
+}
+
+// AppendToNewFile
+TEST_F(Functionality, AppendToNewFile) {
+    Os::Test::FileSystem::Tester::AppendToNewFile append_new_rule;
+    append_new_rule.apply(*tester);
+}
+
+// GetFileSize
+TEST_F(Functionality, GetFileSize) {
+    Os::Test::FileSystem::Tester::GetFileSize get_size_rule;
+    get_size_rule.apply(*tester);
+}
+
+// GetFreeSpace
+TEST_F(Functionality, GetFreeSpace) {
+    Os::Test::FileSystem::Tester::GetFreeSpace free_space_rule;
+    free_space_rule.apply(*tester);
+}
+
+// // Test both get and set working directory
+TEST_F(Functionality, GetSetWorkingDirectory) {
+    Os::Test::FileSystem::Tester::GetSetWorkingDirectory change_cwd_rule;
+    change_cwd_rule.apply(*tester);
+}
+
+// Randomized testing
+TEST_F(Functionality, RandomizedTesting) {
+    // Enumerate all rules and construct an instance of each
+
+    Os::Test::FileSystem::Tester::DirectoryExists directory_exists_rule;
+    Os::Test::FileSystem::Tester::FileExists file_exists_rule;
+    Os::Test::FileSystem::Tester::PathNotExists not_exists_rule;
+    Os::Test::FileSystem::Tester::RemoveFile remove_rule;
+    Os::Test::FileSystem::Tester::RemoveDirectory remove_directory_rule;
+    Os::Test::FileSystem::Tester::TouchFile touch_rule;
+    Os::Test::FileSystem::Tester::CreateDirectory create_directory_rule;
+    Os::Test::FileSystem::Tester::MoveFile move_rule;
+    Os::Test::FileSystem::Tester::RenameFile rename_rule;
+    Os::Test::FileSystem::Tester::CopyFile copyfile_rule;
+    Os::Test::FileSystem::Tester::AppendFile append_rule;
+    Os::Test::FileSystem::Tester::AppendToNewFile append_new_rule;
+    Os::Test::FileSystem::Tester::GetFileSize file_size_rule;
+    Os::Test::FileSystem::Tester::GetFreeSpace free_space_rule;
+    Os::Test::FileSystem::Tester::GetSetWorkingDirectory cwd_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::FileSystem::Tester>* rules[] = {&directory_exists_rule,
+                                                          &file_exists_rule,
+                                                          &not_exists_rule,
+                                                          &remove_rule,
+                                                          &remove_directory_rule,
+                                                          &touch_rule,
+                                                          &create_directory_rule,
+                                                          &move_rule,
+                                                          &rename_rule,
+                                                          &copyfile_rule,
+                                                          &append_rule,
+                                                          &append_new_rule,
+                                                          &file_size_rule,
+                                                          &free_space_rule,
+                                                          &cwd_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::FileSystem::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::FileSystem::Tester> bounded("Bounded Random Rules Scenario", random, 1000);
+    // Run!
+    const U32 numSteps = bounded.run(*tester);
+    printf("Ran %u steps.\n", numSteps);
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.cpp`](file--FileSystemRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.hpp`](file--FileSystemRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/filesystem/CommonTests.hpp
+// \brief GoogleTest fixture definitions used in common FileSystem testing
+// ======================================================================
+#ifndef OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+#define OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+
+#include <gtest/gtest.h>
+#include <Os/FileSystem.hpp>
+#include <Os/test/ut/filesystem/RulesHeaders.hpp>
+
+class Functionality : public ::testing::Test {
+  public:
+    //! Constructor
+    Functionality();
+
+    //! SetUp test fixture
+    void SetUp() override;
+
+    //! TearDown test fixture for safe destruction
+    void TearDown() override;
+
+    //! Tester/state implementation
+    std::unique_ptr<Os::Test::FileSystem::Tester> tester;
+};
+
+#endif  // OS_TEST_UT_COMMON_FILESYSTEM_TESTS_HPP
+```
+
+### `FileSystemRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/filesystem/FileSystemRules.cpp
+// \brief rule implementations for common testing of filesystem
+// ======================================================================
+
+#include "FileSystemRules.hpp"
+#include "RulesHeaders.hpp"
+#include "STest/Pick/Pick.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Utility functions
+// ------------------------------------------------------------------------------------------------------
+
+bool compare_file_contents_on_disk(std::string path1, std::string path2) {
+    Os::File file1, file2;
+    file1.open(path1.c_str(), Os::File::OPEN_READ);
+    file2.open(path2.c_str(), Os::File::OPEN_READ);
+
+    const FwSizeType chunk_size = 128;
+
+    FwSizeType file1Size, file2Size;
+    file1.size(file1Size);
+    file2.size(file2Size);
+    if (file1Size != file2Size) {
+        return false;
+    }
+    const FwIndexType loopLimit = file1Size / chunk_size + 2;
+
+    U8 buffer1[chunk_size], buffer2[chunk_size];
+    FwSizeType bytesRead1 = chunk_size, bytesRead2 = chunk_size;
+
+    for (FwIndexType i = 0; i < loopLimit; i++) {
+        file1.read(buffer1, bytesRead1);
+        file2.read(buffer2, bytesRead2);
+        if (bytesRead1 != bytesRead2 || memcmp(buffer1, buffer2, bytesRead1) != 0) {
+            return false;
+        }
+        if (bytesRead1 < chunk_size) {
+            return true;  // End of file reached
+        }
+    }
+    return false;
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  DirectoryExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::DirectoryExists::DirectoryExists()
+    : STest::Rule<Os::Test::FileSystem::Tester>("DirectoryExists") {}
+
+bool Os::Test::FileSystem::Tester::DirectoryExists::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_dirs.size() > 0;  // should always be true in random testing
+}
+
+void Os::Test::FileSystem::Tester::DirectoryExists::action(Os::Test::FileSystem::Tester& state) {
+    std::string dirPath = state.get_random_directory().path;
+    printf("--> Rule: %s directory path %s\n", this->getName(), dirPath.c_str());
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirPath.c_str())) << "exists() failed for directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FileExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::FileExists::FileExists() : STest::Rule<Os::Test::FileSystem::Tester>("FileExists") {}
+
+bool Os::Test::FileSystem::Tester::FileExists::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::FileExists::action(Os::Test::FileSystem::Tester& state) {
+    std::string filename = state.get_random_file().path;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(filename.c_str())) << "exists() failed for file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PathNotExists
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::PathNotExists::PathNotExists()
+    : STest::Rule<Os::Test::FileSystem::Tester>("PathNotExists") {}
+
+bool Os::Test::FileSystem::Tester::PathNotExists::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::PathNotExists::action(Os::Test::FileSystem::Tester& state) {
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists("does_not_exist"))
+        << "exists() failed to return false for nonexistent path";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RemoveFile::RemoveFile() : STest::Rule<Os::Test::FileSystem::Tester>("RemoveFile") {}
+
+bool Os::Test::FileSystem::Tester::RemoveFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::RemoveFile::action(Os::Test::FileSystem::Tester& state) {
+    std::string filepath = state.get_random_file().path;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(filepath.c_str()));
+    Os::FileSystem::Status status = Os::FileSystem::getSingleton().removeFile(filepath.c_str());
+    state.remove_file(filepath);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to remove test file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(filepath.c_str())) << "exists() failed for touched file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TouchFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::TouchFile::TouchFile() : STest::Rule<Os::Test::FileSystem::Tester>("TouchFile") {}
+
+bool Os::Test::FileSystem::Tester::TouchFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::TouchFile::action(Os::Test::FileSystem::Tester& state) {
+    std::string new_filename = state.new_random_filepath();
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().touch(new_filename.c_str());
+    state.touch_file(new_filename);
+    // Check that the file was created
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to touch file";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(new_filename.c_str())) << "exists() failed for touched file";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CreateDirectory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::CreateDirectory::CreateDirectory()
+    : STest::Rule<Os::Test::FileSystem::Tester>("CreateDirectory") {}
+
+bool Os::Test::FileSystem::Tester::CreateDirectory::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::CreateDirectory::action(Os::Test::FileSystem::Tester& state) {
+    std::string dirpath = state.get_random_directory().path + "/" + state.get_new_dirname();
+    Os::FileSystem::Status status;
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dirpath.c_str()));
+    status = Os::FileSystem::getSingleton().createDirectory(dirpath.c_str());
+    state.create_directory(dirpath);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to create test directory";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirpath.c_str()))
+        << "exists() should return true for created directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveDirectory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RemoveDirectory::RemoveDirectory()
+    : STest::Rule<Os::Test::FileSystem::Tester>("RemoveDirectory") {}
+
+bool Os::Test::FileSystem::Tester::RemoveDirectory::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::RemoveDirectory::action(Os::Test::FileSystem::Tester& state) {
+    // We create a new directory to be removed because we need to ensure that the directory is empty
+    // and this is the simplest way to do so. CreateDirectory is already tested above.
+    std::string dirpath = state.get_random_directory().path + "/to_be_removed";
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().createDirectory(dirpath.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to create test directory";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dirpath.c_str())) << "exists() failed for created test directory";
+    status = Os::FileSystem::getSingleton().removeDirectory(dirpath.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to remove test directory";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dirpath.c_str()))
+        << "exists() should return false for removed directory";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RenameFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::RenameFile::RenameFile() : STest::Rule<Os::Test::FileSystem::Tester>("RenameFile") {}
+
+bool Os::Test::FileSystem::Tester::RenameFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::RenameFile::action(Os::Test::FileSystem::Tester& state) {
+    TestFile& file = state.get_random_file();
+    std::string source_path = file.path;
+    std::string original_content = file.contents;
+
+    std::string dest_path = state.new_random_filepath();
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().rename(source_path.c_str(), dest_path.c_str());
+    state.move_file(file, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to rename file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Assert file contents on disk
+    ASSERT_TRUE(state.validate_contents_on_disk(file));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  MoveFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::MoveFile::MoveFile() : STest::Rule<Os::Test::FileSystem::Tester>("MoveFile") {}
+
+bool Os::Test::FileSystem::Tester::MoveFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::MoveFile::action(Os::Test::FileSystem::Tester& state) {
+    TestFile& file = state.get_random_file();
+    std::string source_path = file.path;
+    std::string original_content = file.contents;
+
+    std::string dest_path = state.new_random_filepath();
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::getSingleton().moveFile(source_path.c_str(), dest_path.c_str());
+    state.move_file(file, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to move file";
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Assert file contents on disk
+    ASSERT_TRUE(state.validate_contents_on_disk(file));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::CopyFile::CopyFile() : STest::Rule<Os::Test::FileSystem::Tester>("CopyFile") {}
+
+bool Os::Test::FileSystem::Tester::CopyFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::CopyFile::action(Os::Test::FileSystem::Tester& state) {
+    Os::FileSystem::Status status;
+
+    TestFile& source = state.get_random_file();
+    std::string source_path = source.path;
+    std::string dest_path = state.new_random_filepath();
+
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_FALSE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    status = Os::FileSystem::getSingleton().copyFile(source_path.c_str(), dest_path.c_str());
+    state.copy_file(source, dest_path);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to move file";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+
+    // Compare contents of source and dest on disk
+    ASSERT_TRUE(compare_file_contents_on_disk(source_path, dest_path));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::AppendFile::AppendFile() : STest::Rule<Os::Test::FileSystem::Tester>("AppendFile") {}
+
+bool Os::Test::FileSystem::Tester::AppendFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::AppendFile::action(Os::Test::FileSystem::Tester& state) {
+    Os::FileSystem::Status status;
+    TestFile& source = state.get_random_file();
+    std::string source_path = source.path;
+    TestFile& dest = state.get_random_file();
+    std::string dest_path = dest.path;
+
+    bool createMissingDest = false;
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(dest_path.c_str()));
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    status = Os::FileSystem::getSingleton().appendFile(source_path.c_str(), dest_path.c_str(), createMissingDest);
+    state.append_file(source, dest, createMissingDest);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to append file";
+    // Compare contents of dest on disk with expected contents
+    ASSERT_TRUE(state.validate_contents_on_disk(dest));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendToNewFile
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::AppendToNewFile::AppendToNewFile()
+    : STest::Rule<Os::Test::FileSystem::Tester>("AppendToNewFile") {}
+
+bool Os::Test::FileSystem::Tester::AppendToNewFile::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::AppendToNewFile::action(Os::Test::FileSystem::Tester& state) {
+    Os::FileSystem::Status status;
+    TestFile& source = state.get_random_file();
+    std::string source_path = source.path;
+    TestFile& dest = state.get_random_file();
+    std::string dest_path = dest.path;
+
+    if (source_path == dest_path) {
+        return;  // skip test - cannot remove dest if it is the same as source
+    }
+    // Set up test state: remove dest file from disk and reset contents in test state
+    bool createMissingDest = true;
+    Os::FileSystem::getSingleton().removeFile(dest_path.c_str());
+    dest.contents = "";
+    ASSERT_TRUE(Os::FileSystem::getSingleton().exists(source_path.c_str()));
+    // Perform append operation
+    status = Os::FileSystem::getSingleton().appendFile(source_path.c_str(), dest_path.c_str(), createMissingDest);
+    state.append_file(source, dest, createMissingDest);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to append file";
+    // Compare contents of dest on disk with expected contents
+    ASSERT_TRUE(state.validate_contents_on_disk(dest));
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFileSize
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetFileSize::GetFileSize() : STest::Rule<Os::Test::FileSystem::Tester>("GetFileSize") {}
+
+bool Os::Test::FileSystem::Tester::GetFileSize::precondition(const Os::Test::FileSystem::Tester& state) {
+    return state.m_test_files.size() > 0;
+}
+
+void Os::Test::FileSystem::Tester::GetFileSize::action(Os::Test::FileSystem::Tester& state) {
+    TestFile file = state.get_random_file();
+    Os::FileSystem::Status status;
+    FwSizeType size;
+    status = Os::FileSystem::getSingleton().getFileSize(file.path.c_str(), size);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to get file size";
+    ASSERT_EQ(size, file.contents.size()) << "File size should match contents size";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFreeSpace
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetFreeSpace::GetFreeSpace()
+    : STest::Rule<Os::Test::FileSystem::Tester>("GetFreeSpace") {}
+
+bool Os::Test::FileSystem::Tester::GetFreeSpace::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::GetFreeSpace::action(Os::Test::FileSystem::Tester& state) {
+    Os::FileSystem::Status status;
+    FwSizeType totalBytes = 0, freeBytes = 0;
+    status = Os::FileSystem::getSingleton().getFreeSpace("/", totalBytes, freeBytes);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to run getFreeSpace";
+    ASSERT_GT(totalBytes, 0) << "Total bytes should be greater than 0";
+    ASSERT_GT(freeBytes, 0) << "Free bytes should be greater than 0";
+    ASSERT_GT(totalBytes, freeBytes) << "Total bytes should be greater than free bytes";
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetSetWorkingDirectory: Test both get and set working directory
+// ------------------------------------------------------------------------------------------------------
+Os::Test::FileSystem::Tester::GetSetWorkingDirectory::GetSetWorkingDirectory()
+    : STest::Rule<Os::Test::FileSystem::Tester>("GetSetWorkingDirectory") {}
+
+bool Os::Test::FileSystem::Tester::GetSetWorkingDirectory::precondition(const Os::Test::FileSystem::Tester& state) {
+    return true;
+}
+
+void Os::Test::FileSystem::Tester::GetSetWorkingDirectory::action(Os::Test::FileSystem::Tester& state) {
+    Os::FileSystem::Status status;
+    FwSizeType cwdSize = PATH_MAX;
+    char cwdBuffer[cwdSize];
+
+    // Get original working directory
+    status = Os::FileSystem::getSingleton().getWorkingDirectory(cwdBuffer, cwdSize);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to get original working directory";
+    std::string original_cwd(cwdBuffer);
+
+    // Change working directory
+    std::string other_dir = state.get_random_directory().path;
+    status = Os::FileSystem::getSingleton().changeWorkingDirectory(other_dir.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to change working directory";
+    status = Os::FileSystem::getSingleton().getWorkingDirectory(cwdBuffer, cwdSize);
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to change working directory back";
+    ASSERT_TRUE(other_dir.compare(cwdBuffer)) << "getWorkingDirectory did not return the expected directory";
+
+    // Change back to original working directory
+    // This is done so that this test does not affect the working directory of other tests during random testing
+    status = Os::FileSystem::getSingleton().changeWorkingDirectory(original_cwd.c_str());
+    ASSERT_EQ(status, Os::FileSystem::Status::OP_OK) << "Failed to change working directory back";
+}
+```
+
+### `FileSystemRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/FileSystemRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/filesystem/FileSystemRules.hpp
+// \brief rule definitions for common testing of filesystem
+// ======================================================================
+// Stripped when compiled, here for IDEs
+#include "RulesHeaders.hpp"
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  DirectoryExists: Check that exists() returns true for an existing directory
+// ------------------------------------------------------------------------------------------------------
+struct DirectoryExists : public STest::Rule<Os::Test::FileSystem::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    DirectoryExists();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::FileSystem::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::FileSystem::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  FileExists: Check that exists() returns false for an existing file
+// ------------------------------------------------------------------------------------------------------
+struct FileExists : public STest::Rule<Os::Test::FileSystem::Tester> {
+    FileExists();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  PathNotExists: Check that exists() returns false for a non-existing path
+// ------------------------------------------------------------------------------------------------------
+struct PathNotExists : public STest::Rule<Os::Test::FileSystem::Tester> {
+    PathNotExists();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveFile: Check that removeFile() removes a file
+// ------------------------------------------------------------------------------------------------------
+struct RemoveFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    RemoveFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  TouchFile: Check that touch() creates a file
+// ------------------------------------------------------------------------------------------------------
+struct TouchFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    TouchFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RemoveDirectory: Check directory removal
+// ------------------------------------------------------------------------------------------------------
+struct RemoveDirectory : public STest::Rule<Os::Test::FileSystem::Tester> {
+    RemoveDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CreateDirectory: Check directory creation
+// ------------------------------------------------------------------------------------------------------
+struct CreateDirectory : public STest::Rule<Os::Test::FileSystem::Tester> {
+    CreateDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  RenameFile: Move a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct RenameFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    RenameFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  MoveFile: Move a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct MoveFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    MoveFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  CopyFile: Copy a file from one location to another
+// ------------------------------------------------------------------------------------------------------
+struct CopyFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    CopyFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendFile: Append a file to another existing file
+// ------------------------------------------------------------------------------------------------------
+struct AppendFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    AppendFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  AppendToNewFile: Append file to a new path, using createMissingDest
+// ------------------------------------------------------------------------------------------------------
+struct AppendToNewFile : public STest::Rule<Os::Test::FileSystem::Tester> {
+    AppendToNewFile();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFileSize: Test the GetFileSize function
+// ------------------------------------------------------------------------------------------------------
+struct GetFileSize : public STest::Rule<Os::Test::FileSystem::Tester> {
+    GetFileSize();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetFreeSpace: Test the GetFreeSpace function
+// ------------------------------------------------------------------------------------------------------
+struct GetFreeSpace : public STest::Rule<Os::Test::FileSystem::Tester> {
+    GetFreeSpace();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  GetSetWorkingDirectory: Get working directory, set working directory
+// ------------------------------------------------------------------------------------------------------
+struct GetSetWorkingDirectory : public STest::Rule<Os::Test::FileSystem::Tester> {
+    GetSetWorkingDirectory();
+    bool precondition(const Os::Test::FileSystem::Tester& state);
+    void action(Os::Test::FileSystem::Tester& state);
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/filesystem/RulesHeaders.hpp
+// \brief rule definitions for common testing
+// ======================================================================
+#ifndef __RULES_HEADERS__
+#define __RULES_HEADERS__
+
+#include <gtest/gtest.h>
+#include "Os/FileSystem.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+namespace Os {
+namespace Test {
+namespace FileSystem {
+
+struct FileSystemNode {
+    std::string path;
+    explicit FileSystemNode(std::string a_path) : path(a_path) {};
+    bool operator==(const FileSystemNode& other) const { return this->path == other.path; }
+};
+struct TestFile : FileSystemNode {
+    std::string contents;
+    TestFile(std::string a_path, std::string a_contents) : FileSystemNode(a_path), contents(a_contents) {};
+};  //!< Representation of a file for tracking state of the filesystem during testing
+
+struct TestDirectory : FileSystemNode {
+    explicit TestDirectory(std::string a_path) : FileSystemNode(a_path) {};
+};  //!< Representation of a directory for tracking state of the filesystem during testing
+
+struct Tester {
+    // Constructors that ensures the filesystem is always valid
+    Tester() = default;
+
+    // Destructor must be virtual
+    virtual ~Tester() = default;
+
+    //! State representation of a section of FileSystem (i.e. a test directory)
+    //! This only tracks relative paths, and not hierarchy. This means that all files
+    //! and directories that are nested within the root of the test directory are all
+    //! tracked in the same vector. This is for simplicity, because hierarchy is not
+    //! needed for the tests.
+    std::vector<TestDirectory> m_test_dirs;
+    std::vector<TestFile> m_test_files;
+
+    U64 m_counter;  //!< Counter for generating unique file/directory names
+
+    // ---------------------------------------------------------------
+    // Functions to manipulate the state of the Tester w.r.t filesystem
+    // ---------------------------------------------------------------
+    void touch_file(std::string path) { this->m_test_files.push_back(TestFile(path, "")); }
+    void create_directory(std::string path) { this->m_test_dirs.push_back(TestDirectory(path)); }
+    void remove_file(std::string path) {
+        for (auto it = this->m_test_files.begin(); it != this->m_test_files.end(); ++it) {
+            if (it->path == path) {
+                this->m_test_files.erase(it);
+                return;
+            }
+        }
+    }
+    void move_file(TestFile& source, std::string dest_path) { source.path = dest_path; }
+    void copy_file(TestFile& source, std::string dest_path) {
+        TestFile new_file(dest_path, source.contents);
+        this->m_test_files.push_back(new_file);
+    }
+    void append_file(TestFile& source_file, TestFile& dest_file, bool createMissingDest) {
+        dest_file.contents += source_file.contents;
+    }
+
+    // ----------------------------------------------------------------
+    // Helper functions for testing
+    // ----------------------------------------------------------------
+    std::string get_new_filename() {
+        assert(m_counter != std::numeric_limits<U64>::max());
+        return "test_file_" + std::to_string(m_counter++);
+    }
+    std::string get_new_dirname() {
+        assert(m_counter != std::numeric_limits<U64>::max());
+        return "test_dir_" + std::to_string(m_counter++);
+    }
+    TestFile& get_random_file() {
+        return this->m_test_files[STest::Pick::lowerUpper(0, this->m_test_files.size() - 1)];
+    }
+    TestDirectory& get_random_directory() {
+        return this->m_test_dirs[STest::Pick::lowerUpper(0, this->m_test_dirs.size() - 1)];
+    }
+    std::string new_random_filepath() { return get_random_directory().path + "/" + get_new_filename(); }
+
+    bool validate_contents_on_disk(TestFile& file) {
+        Os::File os_file;
+        os_file.open(file.path.c_str(), Os::File::OPEN_READ);
+        FwSizeType size;
+        os_file.size(size);
+        if (size == 0) {
+            os_file.close();
+            return file.contents.empty();
+        }
+        U8 buffer[size];
+        os_file.read(buffer, size);
+        os_file.close();
+        std::string disk_contents(reinterpret_cast<char*>(buffer), size);
+        return disk_contents == file.contents;
+    }
+
+    // ----------------------------------------------------------------
+    // Helpers to write and remove test state from disk
+    // ----------------------------------------------------------------
+    void write_test_state_to_disk() {
+        Os::File file;
+        Os::Directory dir;
+        // Create and write directories
+        for (TestDirectory& dir_track : this->m_test_dirs) {
+            dir.open(dir_track.path.c_str(), Os::Directory::OpenMode::CREATE_IF_MISSING);
+            dir.close();
+            this->m_counter++;
+        }
+        // Create and write files
+        for (TestFile& file_track : this->m_test_files) {
+            file.open(file_track.path.c_str(), Os::File::OPEN_CREATE);
+            FwSizeType bytesRead = file_track.contents.size();
+            file.write(reinterpret_cast<const U8*>(file_track.contents.c_str()), bytesRead);
+            file.close();
+            this->m_counter++;
+        }
+    }
+
+    void purge_test_state_from_disk() {
+        for (auto filename : this->m_test_files) {
+            Os::FileSystem::removeFile(filename.path.c_str());
+        }
+        for (auto it = this->m_test_dirs.rbegin(); it != this->m_test_dirs.rend(); ++it) {
+            Os::FileSystem::removeDirectory(it->path.c_str());
+        }
+    }
+
+// Do NOT alter, adds rules to Tester as inner classes
+#include "FileSystemRules.hpp"
+};
+
+}  // namespace FileSystem
+}  // namespace Test
+}  // namespace Os
+#endif  // __RULES_HEADERS__
+```

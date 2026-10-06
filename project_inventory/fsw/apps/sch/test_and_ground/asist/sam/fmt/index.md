@@ -3,22 +3,34 @@
 
 **경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `SCX_CPU1_SCH_DIAG.fmt`
 
-file--SCX_CPU1_SCH_DIAG.fmt
-file--SCX_CPU1_SCH_HK.fmt
-file--SCX_CPU1_SCH_MSG_DEF_TBL.fmt
-file--SCX_CPU1_SCH_MSG_DEF_TBL_DATA.fmt
-file--SCX_CPU1_SCH_SDEF_TBL.fmt
-```
+**경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_DIAG.fmt`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_DIAG.fmt`](file--SCX_CPU1_SCH_DIAG.fmt) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_HK.fmt`](file--SCX_CPU1_SCH_HK.fmt) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_MSG_DEF_TBL.fmt`](file--SCX_CPU1_SCH_MSG_DEF_TBL.fmt) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_MSG_DEF_TBL_DATA.fmt`](file--SCX_CPU1_SCH_MSG_DEF_TBL_DATA.fmt) — 바이너리 (경로만)
-- [`fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_SDEF_TBL.fmt`](file--SCX_CPU1_SCH_SDEF_TBL.fmt) — 바이너리 (경로만)
+### `SCX_CPU1_SCH_HK.fmt`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_HK.fmt`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SCX_CPU1_SCH_MSG_DEF_TBL.fmt`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_MSG_DEF_TBL.fmt`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SCX_CPU1_SCH_MSG_DEF_TBL_DATA.fmt`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_MSG_DEF_TBL_DATA.fmt`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `SCX_CPU1_SCH_SDEF_TBL.fmt`
+
+**경로:** `fsw/apps/sch/test_and_ground/asist/sam/fmt/SCX_CPU1_SCH_SDEF_TBL.fmt`
+
+바이너리 파일입니다. 본문은 생략했습니다.

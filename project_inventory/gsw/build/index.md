@@ -3,7 +3,7 @@
 
 **경로:** `gsw/build/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,22 +11,42 @@
 CMakeFiles/index
 src/index
 support/index
-file--cmake_install.cmake
-file--CMakeCache.txt
-file--libcryptolib.so
-file--log.txt
-file--Makefile
-file--sa_save_file.bin
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/build/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`gsw/build/src/`](src/index) — 폴더
-- [`gsw/build/support/`](support/index) — 폴더
-- [`gsw/build/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`gsw/build/CMakeCache.txt`](file--CMakeCache.txt) — 빌드 산출물 (경로만)
-- [`gsw/build/libcryptolib.so`](file--libcryptolib.so) — 빌드 산출물 (경로만)
-- [`gsw/build/log.txt`](file--log.txt) — 빌드 산출물 (경로만)
-- [`gsw/build/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`gsw/build/sa_save_file.bin`](file--sa_save_file.bin) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `gsw/build/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCache.txt`
+
+**경로:** `gsw/build/CMakeCache.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `libcryptolib.so`
+
+**경로:** `gsw/build/libcryptolib.so`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `log.txt`
+
+**경로:** `gsw/build/log.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `gsw/build/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sa_save_file.bin`
+
+**경로:** `gsw/build/sa_save_file.bin`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

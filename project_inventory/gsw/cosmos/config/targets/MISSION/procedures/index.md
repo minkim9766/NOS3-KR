@@ -3,22 +3,331 @@
 
 **경로:** `gsw/cosmos/config/targets/MISSION/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 com/index
-file--commissioning.rb
-file--deployment_test.rb
-file--mission_test.rb
-file--nominal_ops.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/MISSION/procedures/com/`](com/index) — 폴더
-- [`gsw/cosmos/config/targets/MISSION/procedures/commissioning.rb`](file--commissioning.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/MISSION/procedures/deployment_test.rb`](file--deployment_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/MISSION/procedures/mission_test.rb`](file--mission_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/MISSION/procedures/nominal_ops.rb`](file--nominal_ops.rb) — UTF-8 텍스트 파일 본문 포함
+### `commissioning.rb`
+
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/commissioning.rb`
+
+
+```ruby
+require 'mission_lib'
+
+# First, make sure we can contact the SC and we can receive data from it
+enable_TO_and_verify()
+sleep(20)
+
+# Second, check out battery health
+prompt("Proceed with battery voltage check, Press OK to continue.")
+wait_check_packet("GENERIC_EPS_RADIO", "GENERIC_EPS_HK_TLM", 1, 10) 
+battery_bus_voltage = tlm("GENERIC_EPS_RADIO GENERIC_EPS_HK_TLM BATT_VOLTAGE")
+message_box("Battery bus voltage reported to be #{battery_bus_voltage} volts.", "OK", false)
+
+# Third, verify SC State
+prompt("Proceed with Manager SC Mode check, Press OK to continue.")
+wait_check_packet("MGR_RADIO", "MGR_HK_TLM", 1, 10) 
+sc_mode = tlm("MGR_RADIO MGR_HK_TLM SPACECRAFT_MODE")
+message_box("Spacecraft Mode reported to be #{sc_mode}.", "OK", false)
+
+# Fourth, check for any anomalous reboots since launch
+prompt("Proceed with Anomalous Reboot check, Press OK to continue.")
+wait_check_packet("MGR_RADIO", "MGR_HK_TLM", 1, 10) 
+ar_cnt = tlm("MGR_RADIO MGR_HK_TLM ANOM_REBOOT_COUNTER")
+message_box("Anomalous reboot counter reported to be #{ar_cnt}.", "OK", false)
+
+# Fifth, Instrument first light?
+prompt("Proceed with Instrument First Light!, Press OK to continue.")
+cmd("SAMPLE_RADIO SAMPLE_ENABLE_CC")
+prompt("Check Sample Data for streaming telemetry, dismiss this prompt when done.")
+message_box("Press OK to disable sample device.", "OK", false)
+cmd("SAMPLE_RADIO SAMPLE_DISABLE_CC")
+
+# Sixth, configure Science Regions to later be used
+prompt("About to configure science regions, Press OK to continue.")
+cmd("MGR_RADIO MGR_SET_AK_CC with AK_STATUS ENABLE")
+cmd("MGR_RADIO MGR_SET_CONUS_CC with CONUS_STATUS ENABLE")
+cmd("MGR_RADIO MGR_SET_HI_CC with HI_STATUS ENABLE")
+
+# Seventh, complete pass and turn off radio
+prompt("STF commissioning complete!  Press OK to turn off SC Radio.")
+cmd("CFS_RADIO TO_DISABLE_OUTPUT")
+```
+
+### `deployment_test.rb`
+
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/deployment_test.rb`
+
+
+```ruby
+#
+# Deployment Test Script
+#
+
+# Enable ADCS components
+cmd("GENERIC_CSS_DEBUG GENERIC_CSS_ENABLE_CC")
+cmd("GENERIC_FSS_DEBUG GENERIC_FSS_ENABLE_CC")
+cmd("GENERIC_IMU_DEBUG GENERIC_IMU_ENABLE_CC")
+cmd("GENERIC_MAG_DEBUG GENERIC_MAG_ENABLE_CC")
+cmd("GENERIC_TORQUER_DEBUG GENERIC_TORQUER_ENABLE_CC")
+cmd("NOVATEL_OEM615_DEBUG NOVATEL_OEM615_ENABLE_CC")
+wait(3)
+
+# Prepare scenario, i.e. spin up spacecraft
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 2")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", -0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 0, TORQUE 0")
+
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 4")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", -0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 1, TORQUE 0")
+
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE -6")
+wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.10, 0.01, 120)
+cmd("GENERIC_REACTION_WHEEL_DEBUG GENERIC_RW_SET_TORQUE_CC with WHEEL_NUMBER 2, TORQUE 0")
+wait(30)
+
+## Enable BDOT mode to detumble
+#cmd("GENERIC_ADCS_DEBUG GENERIC_ADCS_SET_MODE_CC with GNC_MODE 'BDOT_MODE'")
+#wait(3)
+#
+## Wait on transition until all axis reported under 3 degrees angular rate
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", 0.0, 0.015, 120)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", 0.0, 0.015, 120)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.0, 0.015, 120)
+#
+## Check again to be sure
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_X", 0.0, 0.015, 10)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Y", 0.0, 0.015, 10)
+#wait_check_tolerance("GENERIC_ADCS_DEBUG GENERIC_ADCS_AD WBN_Z", 0.0, 0.015, 10)
+
+# Set sun safe mode
+cmd("GENERIC_ADCS_DEBUG GENERIC_ADCS_SET_MODE_CC with GNC_MODE 'SUNSAFE_MODE'")
+```
+
+### `mission_test.rb`
+
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/mission_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'mission_lib.rb'
+
+class COM < Cosmos::Test
+    def setup
+        enable_TO_and_verify()
+    end
+
+    def test_debug
+        start("com/debug.rb")
+    end
+
+    def test_cfs
+        start("com/cfs.rb")
+    end
+
+    def test_radio
+        # Confirm radio operational
+        enable_TO_and_verify()
+    end
+
+    def test_cfs_radio
+        start("com/cfs_radio.rb")
+    end
+
+    def teardown
+        cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+    end
+end
+
+class LPT < Cosmos::Test
+    # Limited Performance Test
+
+    def setup
+        # Confirm radio operational
+        enable_TO_and_verify()
+    end
+
+    def test_cfdp_large_c1
+        # Confirm radio operational
+        enable_TO_and_verify()
+        # Uplink
+        cmd("CFS_RADIO FM_DELETE with FILENAME '/data/tmp1_c1.so'")
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        cmd("CFDP SEND_FILE with CLASS 1, DEST_ID '24', SRCFILENAME '/tmp/nos3/uplink/tmp1.so', DSTFILENAME '/data/tmp1_c1.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 180)
+        check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}")
+        sleep 5
+        # Downlink
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        cmd("CFS_RADIO CF_TX_FILE with CLASS 'CLASS 1 - NO FEEDBACK', KEEP 'KEEP', CHAN_NUM 'CHAN 0', PRIORITY 1, DEST_ID 0x18, SRCFILENAME '/data/tmp1_c1.so', DSTFILENAME '/tmp/nos3/data/tmp1_c1.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 180)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}", 20)
+    end
+
+    def test_cfdp_large_c2
+        # Confirm radio operational
+        enable_TO_and_verify()
+        # Uplink
+        cmd("CFS_RADIO FM_DELETE with FILENAME '/data/tmp1_c2.so'")
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        cmd("CFDP SEND_FILE with CLASS 2, DEST_ID '24', SRCFILENAME '/tmp/nos3/uplink/tmp1.so', DSTFILENAME '/data/tmp1_c2.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 180)
+        check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}")
+        sleep 5
+        # Downlink
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        cmd("CFS_RADIO CF_TX_FILE with CLASS 'CLASS 2 - WITH FEEDBACK', KEEP 'KEEP', CHAN_NUM 'CHAN 0', PRIORITY 1, DEST_ID 0x18, SRCFILENAME '/data/tmp1_c2.so', DSTFILENAME '/tmp/nos3/data/tmp1_c2.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 180)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}", 20)
+    end
+    
+    def test_cfdp_small_c1
+        # Confirm radio operational
+        enable_TO_and_verify()
+        # Uplink
+        cmd("CFS_RADIO FM_DELETE with FILENAME '/data/tmp0_c1.so'")
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        cmd("CFDP SEND_FILE with CLASS 1, DEST_ID '24', SRCFILENAME '/tmp/nos3/uplink/tmp0.so', DSTFILENAME '/data/tmp0_c1.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 20)
+        check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}")
+        sleep 5
+        # Downlink
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        cmd("CFS_RADIO CF_TX_FILE with CLASS 'CLASS 1 - NO FEEDBACK', KEEP 'KEEP', CHAN_NUM 'CHAN 0', PRIORITY 1, DEST_ID 0x18, SRCFILENAME '/data/tmp0_c1.so', DSTFILENAME '/tmp/nos3/data/tmp0_c1.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 20)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}", 20)
+    end
+
+    def test_cfdp_small_c2
+        # Confirm radio operational
+        enable_TO_and_verify()
+        # Uplink
+        cmd("CFS_RADIO FM_DELETE with FILENAME '/data/tmp0_c2.so'")
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        cmd("CFDP SEND_FILE with CLASS 2, DEST_ID '24', SRCFILENAME '/tmp/nos3/uplink/tmp0.so', DSTFILENAME '/data/tmp0_c2.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 20)
+        check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}")
+        sleep 5
+        # Downlink
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+        initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+        cmd("CFS_RADIO CF_TX_FILE with CLASS 'CLASS 2 - WITH FEEDBACK', KEEP 'KEEP', CHAN_NUM 'CHAN 0', PRIORITY 1, DEST_ID 0x18, SRCFILENAME '/data/tmp0_c2.so', DSTFILENAME '/tmp/nos3/data/tmp0_c2.so'")
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 20)
+        wait_check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}", 20)
+    end
+
+    def teardown
+        cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+    end
+end
+
+class CRYPTO < Cosmos::Test
+    # CryptoLib Performance Test
+
+    def setup
+        # Confirm radio operational
+        enable_TO_and_verify()
+    end
+
+    def test_sc_hktlm
+        # Confirm radio operational
+        enable_TO_and_verify()
+        cmd("CFS_RADIO SC_RESET_COUNTERS")
+        wait_check("CFS_RADIO SC_HKTLM CMDCTR == 0", 10)
+        100.times do |n|
+            cmd("CFS_RADIO SC_NOOP")
+        end
+        wait_check("CFS_RADIO SC_HKTLM CMDCTR >= 100", 10)
+    end
+
+    def teardown
+        cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+    end
+end
+
+class Mission_Test < Cosmos::TestSuite
+    def initialize
+        super()
+        add_test('COM')
+        add_test('LPT')
+        add_test('CRYPTO')
+    end
+
+    def setup
+        cmd("CFS LC_SET_LC_STATE with NEWLCSTATE LC_STATE_ACTIVE")
+        enable_TO_and_verify()
+    end
+    
+    def teardown
+        cmd("CFS LC_SET_LC_STATE with NEWLCSTATE LC_STATE_DISABLED")
+        cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+    end
+end
+```
+
+### `nominal_ops.rb`
+
+**경로:** `gsw/cosmos/config/targets/MISSION/procedures/nominal_ops.rb`
+
+
+```ruby
+require 'mission_lib'
+
+enable_TO_and_verify()
+sleep(20)
+
+battery_threshold = 23.00 # volts
+battery_bus_voltage = tlm("GENERIC_EPS_RADIO GENERIC_EPS_HK_TLM BATT_VOLTAGE")
+
+if battery_bus_voltage < battery_threshold
+    should_cancel = message_box("Battery bus voltage below #{battery_threshold}V threshold! Abort pass?", 'Yes', 'No', false)
+    case should_cancel
+    when 'Yes'
+        cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+    when 'No'
+        wait(3) # Prompt twice to make sure user is REALLY sure
+        really_should_cancel = message_box("Battery bus voltage below #{battery_threshold}V threshold! Abort pass?", 'Yes', 'No', false)
+        case really_should_cancel
+        when 'Yes'
+            cmd("CFS_RADIO TO_PAUSE_OUTPUT")
+        end 
+    end
+end
+
+wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 10)
+initial_success_count = tlm("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS")
+cmd("CFS_RADIO CF_TX_FILE with CLASS 'CLASS 2 - WITH FEEDBACK', KEEP 'KEEP', CHAN_NUM 'CHAN 0', PRIORITY 1, DEST_ID 0x18, SRCFILENAME '/data/dummy.txt', DSTFILENAME '/tmp/nos3/data/dummy.txt'")
+wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 1", 10)
+wait_check("CFDP CFDP_ENGINE_HK ENG_INPROGRESSTRANS == 0", 400)
+wait_check("CFDP CFDP_ENGINE_HK ENG_TOTALSUCCESSTRANS > #{initial_success_count}", 20)
+
+puts "STF nominal pass script complete!  Perform any necessary commanding now."
+raise "Pausing script - press go to resume and conclude the pass."
+
+cmd("CFS_RADIO TO_DISABLE_OUTPUT")
+```

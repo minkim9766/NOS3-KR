@@ -3,38 +3,84 @@
 
 **경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 home/index
-file--build.make
-file--cmake_clean.cmake
-file--compiler_depend.make
-file--compiler_depend.ts
-file--depend.make
-file--DependInfo.cmake
-file--flags.make
-file--link.txt
-file--progress.make
-file--sample_checkout.c.gcno
-file--sample_checkout.c.o
-file--sample_checkout.c.o.d
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/home/`](home/index) — 폴더
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/build.make`](file--build.make) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/cmake_clean.cmake`](file--cmake_clean.cmake) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/compiler_depend.make`](file--compiler_depend.make) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/compiler_depend.ts`](file--compiler_depend.ts) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/depend.make`](file--depend.make) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/DependInfo.cmake`](file--DependInfo.cmake) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/flags.make`](file--flags.make) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/link.txt`](file--link.txt) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/progress.make`](file--progress.make) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.gcno`](file--sample_checkout.c.gcno) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.o`](file--sample_checkout.c.o) — 빌드 산출물 (경로만)
-- [`components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.o.d`](file--sample_checkout.c.o.d) — 빌드 산출물 (경로만)
+### `build.make`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/build.make`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cmake_clean.cmake`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/cmake_clean.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `compiler_depend.make`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/compiler_depend.make`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `compiler_depend.ts`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/compiler_depend.ts`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `depend.make`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/depend.make`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `DependInfo.cmake`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/DependInfo.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `flags.make`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/flags.make`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `link.txt`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/link.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.make`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/progress.make`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sample_checkout.c.gcno`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.gcno`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sample_checkout.c.o`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sample_checkout.c.o.d`
+
+**경로:** `components/sample/fsw/standalone/build/CMakeFiles/sample_checkout.dir/sample_checkout.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

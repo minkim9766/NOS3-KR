@@ -3,18 +3,44 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ComQueue.png`
 
-file--ComQueue.png
-file--state-machine.png
-file--state-machine.puml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/ComQueue.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `state-machine.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/state-machine.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `state-machine.puml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/state-machine.puml`
+
+
+```text
+@startuml
+' If/choice check states for handling statuses
+state status_check <<choice>>
+' If/choice check for queue availability
+state queue_check <<choice>>
+
+' State definitions to capture self transitions
+state WAITING: Buffer Received / Queue Buffer
+
+[*] -down-> WAITING
+' Status In transitions
+WAITING -down-> status_check: Status In
+status_check -right-> queue_check: [SUCCESS]
+status_check -up-> WAITING: [FAILURE]
+
+queue_check -up-> WAITING: [Buffer Queued] / Send Buffer
+queue_check -right-> READY: [No Buffer Queued]
+READY -up-> WAITING: Buffer Received / Send Buffer
+@enduml
+
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/ComQueue.png`](file--ComQueue.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/state-machine.png`](file--state-machine.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ComQueue/docs/img/state-machine.puml`](file--state-machine.puml) — UTF-8 텍스트 파일 본문 포함

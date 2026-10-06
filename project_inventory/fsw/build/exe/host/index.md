@@ -3,14 +3,10 @@
 
 **경로:** `fsw/build/exe/host/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `elf2cfetbl`
 
-file--elf2cfetbl
-```
+**경로:** `fsw/build/exe/host/elf2cfetbl`
 
-## 항목
-
-- [`fsw/build/exe/host/elf2cfetbl`](file--elf2cfetbl) — 빌드 산출물 (경로만)
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

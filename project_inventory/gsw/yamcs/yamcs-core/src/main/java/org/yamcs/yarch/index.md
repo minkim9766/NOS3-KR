@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,139 +12,8010 @@ query/index
 rocksdb/index
 streamsql/index
 utils/index
-file--AbstractTableWalker.java
-file--ArrayDataType.java
-file--BackupControl.java
-file--BackupControlMBean.java
-file--BackupUtils.java
-file--BucketDatabase.java
-file--ByteArrayComparator.java
-file--ColumnDefinition.java
-file--ColumnSerializer.java
-file--ColumnSerializerFactory.java
-file--ColumnSerializerV2.java
-file--ColumnSerializerV3.java
-file--CompiledAggregateExpression.java
-file--CompiledAggregateList.java
-file--CompiledExpression.java
-file--CompiledFirstVal.java
-file--ConstantValueCompiledExpression.java
-file--DataType.java
-file--DbRange.java
-file--ExecutionContext.java
-file--FieldReturnCompiledExpression.java
-file--FilterableTarget.java
-file--HistogramInfo.java
-file--HistogramIterator.java
-file--HistogramReaderStream.java
-file--HistogramRecord.java
-file--HistogramSegment.java
-file--IndexFilter.java
-file--InternalStream.java
-file--MergeStream.java
-file--OutputStream.java
-file--ParameterValueColumnSerializer.java
-file--Partition.java
-file--PartitioningSpec.java
-file--PartitionIntervalIterator.java
-file--PartitionManager.java
-file--ProtobufDatabase.java
-file--ProtobufDataType.java
-file--RawTuple.java
-file--Row.java
-file--SelectStream.java
-file--Sequence.java
-file--SequenceInfo.java
-file--SqlBuilder.java
-file--StorageEngine.java
-file--Stream.java
-file--StreamSubscriber.java
-file--Table.java
-file--TableColumnDefinition.java
-file--TableDefinition.java
-file--TableDefinitionConstructor.java
-file--TableReaderStream.java
-file--TableVisitor.java
-file--TableWalker.java
-file--TableWriter.java
-file--TimePartitionInfo.java
-file--TimePartitionSchema.java
-file--Tuple.java
-file--TupleDataType.java
-file--TupleDefinition.java
-file--WindowProcessor.java
-file--YarchDatabase.java
-file--YarchDatabaseInstance.java
-file--YarchException.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/query/`](query/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/rocksdb/`](rocksdb/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/streamsql/`](streamsql/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/utils/`](utils/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/AbstractTableWalker.java`](file--AbstractTableWalker.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ArrayDataType.java`](file--ArrayDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupControl.java`](file--BackupControl.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupControlMBean.java`](file--BackupControlMBean.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupUtils.java`](file--BackupUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BucketDatabase.java`](file--BucketDatabase.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ByteArrayComparator.java`](file--ByteArrayComparator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnDefinition.java`](file--ColumnDefinition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializer.java`](file--ColumnSerializer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerFactory.java`](file--ColumnSerializerFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerV2.java`](file--ColumnSerializerV2.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerV3.java`](file--ColumnSerializerV3.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledAggregateExpression.java`](file--CompiledAggregateExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledAggregateList.java`](file--CompiledAggregateList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledExpression.java`](file--CompiledExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledFirstVal.java`](file--CompiledFirstVal.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ConstantValueCompiledExpression.java`](file--ConstantValueCompiledExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/DataType.java`](file--DataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/DbRange.java`](file--DbRange.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ExecutionContext.java`](file--ExecutionContext.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/FieldReturnCompiledExpression.java`](file--FieldReturnCompiledExpression.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/FilterableTarget.java`](file--FilterableTarget.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramInfo.java`](file--HistogramInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramIterator.java`](file--HistogramIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramReaderStream.java`](file--HistogramReaderStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramRecord.java`](file--HistogramRecord.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramSegment.java`](file--HistogramSegment.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/IndexFilter.java`](file--IndexFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/InternalStream.java`](file--InternalStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/MergeStream.java`](file--MergeStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/OutputStream.java`](file--OutputStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ParameterValueColumnSerializer.java`](file--ParameterValueColumnSerializer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Partition.java`](file--Partition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitioningSpec.java`](file--PartitioningSpec.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitionIntervalIterator.java`](file--PartitionIntervalIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitionManager.java`](file--PartitionManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ProtobufDatabase.java`](file--ProtobufDatabase.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ProtobufDataType.java`](file--ProtobufDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/RawTuple.java`](file--RawTuple.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Row.java`](file--Row.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SelectStream.java`](file--SelectStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Sequence.java`](file--Sequence.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SequenceInfo.java`](file--SequenceInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SqlBuilder.java`](file--SqlBuilder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/StorageEngine.java`](file--StorageEngine.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Stream.java`](file--Stream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/StreamSubscriber.java`](file--StreamSubscriber.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Table.java`](file--Table.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableColumnDefinition.java`](file--TableColumnDefinition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableDefinition.java`](file--TableDefinition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableDefinitionConstructor.java`](file--TableDefinitionConstructor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableReaderStream.java`](file--TableReaderStream.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableVisitor.java`](file--TableVisitor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableWalker.java`](file--TableWalker.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableWriter.java`](file--TableWriter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TimePartitionInfo.java`](file--TimePartitionInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TimePartitionSchema.java`](file--TimePartitionSchema.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Tuple.java`](file--Tuple.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TupleDataType.java`](file--TupleDataType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TupleDefinition.java`](file--TupleDefinition.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/WindowProcessor.java`](file--WindowProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchDatabase.java`](file--YarchDatabase.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchDatabaseInstance.java`](file--YarchDatabaseInstance.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchException.java`](file--YarchException.java) — UTF-8 텍스트 파일 본문 포함
+### `AbstractTableWalker.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/AbstractTableWalker.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.yamcs.logging.Log;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Iterator through a table.
+ * <p>
+ * Iterates through partitions, can support partition filter (by time and/or value) and and also ranges on primary key.
+ * <p>This class expects raw (byte[]) input for the primary key ranges.
+ * 
+ * @author nm
+ *
+ */
+public abstract class AbstractTableWalker implements TableWalker {
+    protected Log log;
+
+    protected TableDefinition tableDefinition;
+
+    // if not null, the iterate should run in this range
+    //by default everything
+    private DbRange range = new DbRange();
+
+    //// if not null, only includes data from these partitions
+    private Set<Object> partitionValueFilter;
+    TimeInterval partitionTimeFilter;
+    
+    final protected boolean ascending;
+    final protected boolean follow;
+   
+    protected long numRecordsRead = 0;
+  
+    volatile protected boolean running = false;
+
+    protected final YarchDatabaseInstance ydb;
+    protected final ExecutionContext ctx;
+
+    protected AbstractTableWalker(ExecutionContext ctx, TableDefinition tableDefinition, boolean ascending,
+            boolean follow) {
+        this.tableDefinition = tableDefinition;
+        this.ctx = ctx;
+        this.ydb = ctx.getDb();
+
+        this.ascending = ascending;
+        this.follow = follow;
+        log = new Log(getClass(), ydb.getName());
+    }
+
+    @Override
+    public void walk(TableVisitor visitor) throws StreamSqlException {
+        if (visitor == null) {
+            throw new NullPointerException("visitor cannot be null");
+        }
+        log.debug("Starting to walk ascending: {}, rangeIndexFilter: {}", ascending, range, visitor);
+
+        running = true;
+        Iterator<PartitionManager.Interval> partitionIterator = getIntervalIterator();
+        try {
+            while (isRunning() && partitionIterator.hasNext()) {
+                PartitionManager.Interval interval = partitionIterator.next();
+                boolean endReached = walkInterval(interval, range, visitor);
+                if (endReached) {
+                    break;
+                }
+            }
+        } finally {
+            close();
+        }
+    }
+
+
+    private Iterator<PartitionManager.Interval> getIntervalIterator() {
+        PartitionManager partitionManager = ydb.getPartitionManager(tableDefinition);
+        Iterator<PartitionManager.Interval> partitionIterator;
+
+        PartitioningSpec pspec = tableDefinition.getPartitioningSpec();
+        if (pspec.valueColumn != null) {
+            if ((ascending) && (partitionTimeFilter != null) && partitionTimeFilter.hasStart()) {
+                long start = partitionTimeFilter.getStart();
+                partitionIterator = partitionManager.iterator(start, partitionValueFilter);
+            } else if ((!ascending) && (partitionTimeFilter != null) && partitionTimeFilter.hasEnd()) {
+                long start = partitionTimeFilter.getEnd();
+                partitionIterator = partitionManager.reverseIterator(start, partitionValueFilter);
+            } else {
+                if (ascending) {
+                    partitionIterator = partitionManager.iterator(partitionValueFilter);
+                } else {
+                    partitionIterator = partitionManager.reverseIterator(partitionValueFilter);
+                }
+            }
+        } else {
+            if (ascending) {
+                partitionIterator = partitionManager.iterator(partitionValueFilter);
+            } else {
+                partitionIterator = partitionManager.reverseIterator(partitionValueFilter);
+            }
+        }
+        return partitionIterator;
+    }
+
+    protected boolean iAscendingFinished(byte[] key, byte[] value, byte[] rangeEnd) {
+        boolean finished = false;
+        if (rangeEnd != null) { // check if we have reached the end
+            int c = ByteArrayUtils.compare(key, rangeEnd);
+            if (c <= 0) {
+                finished = false;
+            } else {
+                finished = true;
+            }
+        }
+        return finished;
+    }
+
+    protected boolean isDescendingFinished(byte[] key, byte[] value, byte[] rangeStart) {
+        boolean finished = false;
+        if (rangeStart != null) { // check if we have reached the start
+            int c = ByteArrayUtils.compare(key, rangeStart);
+            if (c >= 0) {
+                finished = false;
+            } else {
+                finished = true;
+            }
+        }
+        return finished;
+    }
+
+    @Override
+    public void setPartitionFilter(TimeInterval partitionTimeFilter, Set<Object> partitionValueFilter) {
+        this.partitionValueFilter = partitionValueFilter;
+        this.partitionTimeFilter = partitionTimeFilter;
+    }
+
+    @Override
+    public void setPrimaryIndexRange(DbRange range) {
+        if(range == null) {
+            throw new NullPointerException();
+        }
+        this.range = range;
+    }
+    
+    /**
+     * Runs the data in a time interval (corresponding to a time partition) sending data only that conform with the
+     * start and end filters. Returns true if the stop condition is met
+     * 
+     * @return returns true if the end condition has been reached.
+     * @throws StreamSqlException
+     */
+    protected abstract boolean walkInterval(PartitionManager.Interval interval, DbRange range, TableVisitor visitor)
+            throws YarchException, StreamSqlException;
+
+    protected boolean isRunning() {
+        return running;
+    }
+
+    @Override
+    public void close() {
+        running = false;
+    }
+}
+```
+
+### `ArrayDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ArrayDataType.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class ArrayDataType extends DataType {
+
+    private final DataType elementType;
+
+    protected ArrayDataType(DataType elementType) {
+        super(_type.ARRAY, ARRAY_ID);
+        this.elementType = elementType;
+    }
+
+    public DataType getElementType() {
+        return elementType;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean hasEnums() {
+        return elementType.hasEnums();
+    }
+
+    @Override
+    public int hashCode() {
+        return 31 + elementType.hashCode();
+    }
+
+    @Override
+    public String name() {
+        return "ARRAY(" + elementType.name() + ")";
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ArrayDataType other = (ArrayDataType) obj;
+        if (elementType == null) {
+            if (other.elementType != null) {
+                return false;
+            }
+        } else if (!elementType.equals(other.elementType)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return name();
+    }
+}
+```
+
+### `BackupControl.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupControl.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.rocksdb.RDBFactory;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+
+/**
+ * JMX MBean for performing a hot backup of a tablespace.
+ */
+public class BackupControl implements BackupControlMBean {
+
+    private static final Log log = new Log(BackupControl.class);
+
+    @Override
+    public void createBackup(String tablespaceName, String backupDir) throws IOException {
+        log.info("Backing up tablespace {} to {}", tablespaceName, backupDir);
+        RdbStorageEngine rse = RdbStorageEngine.getInstance();
+        Tablespace tablespace = rse.getTablespace(tablespaceName);
+        if (tablespace == null) {
+            throw new IllegalArgumentException("No tablespace by name '" + tablespaceName + "'");
+        }
+
+        BackupUtils.verifyBackupDirectory(backupDir, false);
+        RDBFactory rdbFactory = tablespace.getRdbFactory();
+
+        try {
+            rdbFactory.doBackup(backupDir).get();
+            log.info("Backup finished");
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            return;
+        } catch (ExecutionException e) {
+            log.error("Error while creating backup", e);
+        }
+    }
+}
+```
+
+### `BackupControlMBean.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupControlMBean.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+
+public interface BackupControlMBean {
+
+    public void createBackup(String tablespace, String backupDir) throws IOException;
+}
+```
+
+### `BackupUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BackupUtils.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystemException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+public class BackupUtils {
+
+    public static void verifyBackupDirectory(String backupDir, boolean mustExist) throws IOException {
+        Path path = FileSystems.getDefault().getPath(backupDir);
+        if (path.toFile().exists()) {
+            if (!path.toFile().isDirectory()) {
+                throw new FileSystemException(backupDir, null,
+                        "File '" + backupDir + "' exists and is not a directory");
+            }
+
+            boolean isEmpty = true;
+            boolean isBackupDir = false;
+            try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(path)) {
+                for (Path p : dirStream) {
+                    isEmpty = false;
+                    if (p.endsWith("meta")) {
+                        isBackupDir = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!isEmpty && !isBackupDir) {
+                throw new FileSystemException(backupDir, null,
+                        "Directory '" + backupDir + "' is not a backup directory");
+            }
+            if (!Files.isWritable(path)) {
+                throw new FileSystemException(backupDir, null, "Directory '" + backupDir + "' is not writable");
+            }
+        } else {
+            if (mustExist) {
+                throw new FileSystemException(backupDir, null, "Directory '" + backupDir + "' does not exist");
+            } else {
+                Files.createDirectories(path);
+            }
+        }
+    }
+}
+```
+
+### `BucketDatabase.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/BucketDatabase.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.util.List;
+
+import org.yamcs.buckets.Bucket;
+
+public interface BucketDatabase {
+    Bucket createBucket(String bucketName) throws IOException;
+
+    /**
+     * Retrieve a bucket handler from the database.
+     * 
+     * @return the bucket with the given name or null if it does not exist
+     */
+    Bucket getBucket(String bucketName) throws IOException;
+
+    List<? extends Bucket> listBuckets() throws IOException;
+
+    void deleteBucket(String bucketName) throws IOException;
+}
+```
+
+### `ByteArrayComparator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ByteArrayComparator.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Comparator;
+
+/*this is shamelessly copied from the java.security.util.ByteArrayLexOrder */
+public class ByteArrayComparator implements Comparator<byte[]> {
+	public int compare(byte[] a1, byte[] a2) {
+		for(int i=0;i<a1.length && i<a2.length;i++) {
+			int d=(a1[i]&0xFF)-(a2[i]&0xFF);
+			if(d!=0)return d;
+		}
+		return a1.length-a2.length;
+	}
+}
+```
+
+### `ColumnDefinition.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnDefinition.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import org.yamcs.yarch.DataType._type;
+
+
+public class ColumnDefinition {
+    protected final String name;
+    protected final DataType type;
+    
+    public ColumnDefinition(String name, DataType type) {
+        super();
+        this.name=name;
+        this.type=type;
+    }
+
+    public String javaType() {
+        return type.javaType();
+    }
+
+    public DataType getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Returns a sql like "name type" definition for the column 
+     * @return
+     */
+    public Object getStringDefinition() {
+        if(type.val==_type.PROTOBUF) {
+            return String.format("\"%s\" PROTOBUF('%s')", name, ((ProtobufDataType)type).getClassName());
+        } else if (type.val == _type.ARRAY) {
+            return String.format("\"%s\" %s[]", name, ((ArrayDataType) type).getElementType());
+        } else {
+            return String.format("\"%s\" %s",name, type);
+        }
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s %s",name, type);
+    }
+}
+```
+
+### `ColumnSerializer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializer.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+
+import org.yamcs.utils.ByteArray;
+
+/**
+ * Serializes column values to byte arrays (used as part of tables) and back
+ * 
+ * @author nm
+ * @param <T>
+ *
+ */
+public interface ColumnSerializer<T> {
+    /**
+     * Read one column value (i.e. a cell from the stream)
+     * 
+     * The enums are deserialized as shorts
+     * (it is converted to the actual type in the {@link TableDefinition#deserialize(byte[], byte[])})
+     * 
+     * @param array
+     *            - array used for the input
+     * @param cd
+     *            the column definition for the involved column (can be used to look up column name or other properties
+     *            to help in deserialization)
+     * @return the deserialized value
+     */
+    T deserialize(ByteArray array, ColumnDefinition cd);
+
+    /**
+     * Same as above but read the data from a ByteBuffer.
+     * <p>
+     * If the buffer is not long enough, it throws an {@link BufferUnderflowException}.
+     * 
+     * @param byteBuf
+     * @param cd
+     * @return
+     */
+    T deserialize(ByteBuffer byteBuf, ColumnDefinition cd);
+
+    /**
+     * @param array
+     * @param v
+     */
+    public void serialize(ByteArray array, T v);
+
+    /**
+     * Same as above but serialize into a bytebuffer. If the ByteBuffer is not large enough, a
+     * {@link BufferOverflowException} will be thrown.
+     * 
+     * @param byteBuf
+     * @param v
+     * @throws BufferOverflowException
+     */
+    public void serialize(ByteBuffer byteBuf, T v) throws BufferOverflowException;
+
+    /**
+     * This method serializes the value into a byte array
+     * 
+     * @param v
+     * @return the resulting byte array
+     */
+    public default byte[] toByteArray(T v) {
+        ByteArray ba = new ByteArray();
+        serialize(ba, v);
+        return ba.toArray();
+    }
+
+    /**
+     * this method deserializes the value from a byte array
+     * 
+     * @param b
+     *            the input byte array
+     * @param cd
+     *            the column definition for the involved column (can be used to look up column name or other properties
+     *            to help in deserialization)
+     * @return the deserialized value
+     */
+    public default T fromByteArray(byte[] b, ColumnDefinition cd) {
+        ByteArray ba = ByteArray.wrap(b);
+        return deserialize(ba, cd);
+    }
+
+}
+```
+
+### `ColumnSerializerFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerFactory.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.nio.BufferOverflowException;
+import java.nio.BufferUnderflowException;
+import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.yarch.DataType._type;
+
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.CodedOutputStream.OutOfSpaceException;
+import com.google.protobuf.MessageLite;
+import com.google.protobuf.MessageLite.Builder;
+
+public class ColumnSerializerFactory {
+    static YConfiguration config;
+    static int maxBinaryLength = 1048576;
+    static Logger log = LoggerFactory.getLogger(ColumnSerializer.class.getName());
+
+    static final BooleanColumnSerializer BOOLEAN_CS = new BooleanColumnSerializer();
+    static final ByteColumnSerializer BYTE_CS = new ByteColumnSerializer();
+    static final ColumnSerializer<Short> SHORT_CS_V2 = new ColumnSerializerV2.ShortColumnSerializer();
+    static final ColumnSerializer<Integer> INT_CS_V2 = new ColumnSerializerV2.IntegerColumnSerializer();
+    static final ColumnSerializer<Long> LONG_CS_V2 = new ColumnSerializerV2.LongColumnSerializer();
+
+    static final ColumnSerializer<Short> SHORT_CS_V3 = new ColumnSerializerV3.ShortColumnSerializer();
+    static final ColumnSerializer<Integer> INT_CS_V3 = new ColumnSerializerV3.IntegerColumnSerializer();
+    static final ColumnSerializer<Long> LONG_CS_V3 = new ColumnSerializerV3.LongColumnSerializer();
+
+    static final ColumnSerializer<Double> DOUBLE_CS_V3 = new ColumnSerializerV3.DoubleColumnSerializer();
+    static final ColumnSerializer<Double> DOUBLE_CS_V2 = new ColumnSerializerV2.DoubleColumnSerializer();
+
+    static final SizePrefixedtringColumnSerializer STRING_CS_V2 = new SizePrefixedtringColumnSerializer();
+    static final NullTerminatedStringColumnSerializer STRING_CS_V3 = new NullTerminatedStringColumnSerializer();
+
+    static final BinaryColumnSerializer BINARY_CS = new BinaryColumnSerializer();
+
+    static final ColumnSerializer<Instant> HRES_TIMESTAMP_CS_V2 = new ColumnSerializerV2.HresTimestampColumnSerializer();
+    static final ColumnSerializer<Instant> HRES_TIMESTAMP_CS_V3 = new ColumnSerializerV3.HresTimestampColumnSerializer();
+    static final ColumnSerializer<java.util.UUID> UUID_CS = new ColumnSerializerV3.UUIDColumnSerializer();
+
+    static final ParameterValueColumnSerializer PARAMETER_VALUE_CS = new ParameterValueColumnSerializer();
+
+    static Map<String, ProtobufColumnSerializer> protoSerialziers = new HashMap<>();
+
+    static {
+        config = YConfiguration.getConfiguration("yamcs").getConfigOrEmpty("archive");
+        if (config.containsKey("maxBinaryLength")) {
+            maxBinaryLength = config.getInt("maxBinaryLength");
+        }
+    }
+
+    public static <T> ColumnSerializer<T> getColumnSerializer(TableDefinition tblDef, TableColumnDefinition cd) {
+        return getColumnSerializer(tblDef, cd, cd.getType());
+    }
+
+    public static <T> ColumnSerializer<T> getColumnSerializer(TableDefinition tblDef, TableColumnDefinition cd,
+            DataType type) {
+        if (type.val == _type.ENUM) {
+            return (ColumnSerializer<T>) new EnumColumnSerializer(tblDef, cd);
+        } else if (type.val == _type.PROTOBUF) {
+            return (ColumnSerializer<T>) getProtobufSerializer(cd);
+        } else if (type.val == _type.ARRAY) {
+            DataType elementType = ((ArrayDataType) type).getElementType();
+            return (ColumnSerializer<T>) new ColumnSerializerV3.ArrayColumnSerializer(
+                    getColumnSerializer(tblDef, cd, elementType));
+        } else {
+            if (tblDef.getFormatVersion() < 3) {
+                return getBasicColumnSerializerV2(type);
+            } else {
+                return getBasicColumnSerializerV3(type);
+            }
+        }
+    }
+
+    /**
+     * Returns the V2 serializers with the enumerations serialzied as strings (so they don't need a decoding table on
+     * the other end)
+     * 
+     * @param cd
+     * @return
+     */
+    public static ColumnSerializer<?> getColumnSerializerForReplication(ColumnDefinition cd) {
+        return getColumnSerializerForReplication(cd.getType(), cd.getName());
+    }
+
+    public static ColumnSerializer<?> getColumnSerializerForReplication(DataType type, String colName) {
+        if (type.val == _type.ENUM) {
+            return STRING_CS_V2;
+        } else if (type.val == _type.PROTOBUF) {
+            return getProtobufSerializer((ProtobufDataType) type, colName);
+        } else if (type.val == _type.ARRAY) {
+            DataType elementType = ((ArrayDataType) type).getElementType();
+            return (ColumnSerializer<?>) new ColumnSerializerV3.ArrayColumnSerializer(
+                    getColumnSerializerForReplication(elementType, colName));
+        } else if (type.val == _type.UUID) {
+            return getBasicColumnSerializerV3(type);
+        } else {
+            // V2 is fine for replication as the serialized values are not used for sorting
+            // should upgrade to V3 at some point but it will break compatibility with old replicated data
+            return getBasicColumnSerializerV2(type);
+        }
+    }
+
+    /**
+     * returns a column serializer for basic types
+     * 
+     * @param type
+     * @return
+     */
+    @SuppressWarnings({ "incomplete-switch", "unchecked" })
+    public static <T> ColumnSerializer<T> getBasicColumnSerializerV3(DataType type) {
+        switch (type.val) {
+        case BOOLEAN:
+            return (ColumnSerializer<T>) BOOLEAN_CS;
+        case BYTE:
+            return (ColumnSerializer<T>) BYTE_CS;
+        case SHORT:
+            return (ColumnSerializer<T>) SHORT_CS_V3;
+        case INT:
+            return (ColumnSerializer<T>) INT_CS_V3;
+        case DOUBLE:
+            return (ColumnSerializer<T>) DOUBLE_CS_V3;
+        case TIMESTAMP:
+        case LONG: // intentional fall through
+            return (ColumnSerializer<T>) LONG_CS_V3;
+        case STRING:
+            return (ColumnSerializer<T>) STRING_CS_V3;
+        case BINARY:
+            return (ColumnSerializer<T>) BINARY_CS;
+        case PARAMETER_VALUE:
+            return (ColumnSerializer<T>) PARAMETER_VALUE_CS;
+        case HRES_TIMESTAMP:
+            return (ColumnSerializer<T>) HRES_TIMESTAMP_CS_V3;
+        case UUID:
+            return (ColumnSerializer<T>) UUID_CS;
+        case TUPLE:
+            // TODO
+            throw new UnsupportedOperationException("Tuple not implemented");
+        default:
+            throw new IllegalArgumentException("' " + type + " is not a basic type");
+        }
+    }
+
+    /**
+     * returns a column serializer for basic types
+     * 
+     * @param type
+     * @return
+     */
+    @SuppressWarnings({ "incomplete-switch", "unchecked" })
+    public static <T> ColumnSerializer<T> getBasicColumnSerializerV2(DataType type) {
+        switch (type.val) {
+        case BOOLEAN:
+            return (ColumnSerializer<T>) BOOLEAN_CS;
+        case BYTE:
+            return (ColumnSerializer<T>) BYTE_CS;
+        case SHORT:
+            return (ColumnSerializer<T>) SHORT_CS_V2;
+        case INT:
+            return (ColumnSerializer<T>) INT_CS_V2;
+        case DOUBLE:
+            return (ColumnSerializer<T>) DOUBLE_CS_V2;
+        case TIMESTAMP:
+        case LONG: // intentional fall through
+            return (ColumnSerializer<T>) LONG_CS_V2;
+        case STRING:
+            return (ColumnSerializer<T>) STRING_CS_V2;
+        case BINARY:
+            return (ColumnSerializer<T>) BINARY_CS;
+        case PARAMETER_VALUE:
+            return (ColumnSerializer<T>) PARAMETER_VALUE_CS;
+        case HRES_TIMESTAMP:
+            return (ColumnSerializer<T>) HRES_TIMESTAMP_CS_V2;
+        case ARRAY:
+        case TUPLE:
+            // TODO
+            throw new UnsupportedOperationException("List and Tuple not implemented");
+        default:
+            throw new IllegalArgumentException("' " + type + " is not a basic type");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    static public <T extends MessageLite> ColumnSerializer<T> getProtobufSerializer(ColumnDefinition cd) {
+        return getProtobufSerializer((ProtobufDataType) cd.getType(), cd.getName());
+    }
+
+    @SuppressWarnings("unchecked")
+    static public <T extends MessageLite> ColumnSerializer<T> getProtobufSerializer(ProtobufDataType dtype,
+            String colName) {
+        String className = dtype.getClassName();
+
+        synchronized (protoSerialziers) {
+            ProtobufColumnSerializer pcs = protoSerialziers.get(className);
+            if (pcs != null) {
+                return (ColumnSerializer<T>) pcs;
+            }
+            Class<?> c;
+            try {
+                c = Class.forName(className);
+                Method newBuilderMethod = c.getMethod("newBuilder");
+                pcs = new ProtobufColumnSerializer(newBuilderMethod);
+                protoSerialziers.put(className, pcs);
+                return (ColumnSerializer<T>) pcs;
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException(
+                        "Cannot find class '" + className + "' required to deserialize column '" + colName + "'",
+                        e);
+            } catch (NoSuchMethodException e) {
+                throw new IllegalArgumentException("Class '" + className + "' required to deserialize column '"
+                        + colName + "' does not have a method newBuilder", e);
+            }
+        }
+    }
+
+    static class BooleanColumnSerializer implements ColumnSerializer<Boolean> {
+        @Override
+        public Boolean deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.get() != 0;
+        }
+
+        @Override
+        public Boolean deserialize(ByteBuffer buf, ColumnDefinition cd) {
+            return buf.get() != 0;
+        }
+
+        @Override
+        public void serialize(ByteArray ba, Boolean v) {
+            ba.add(v ? (byte) 1 : (byte) 0);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Boolean v) {
+            byteBuf.put(v ? (byte) 1 : (byte) 0);
+        }
+
+    }
+
+    static class ByteColumnSerializer implements ColumnSerializer<Byte> {
+        @Override
+        public Byte deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.get();
+        }
+
+        @Override
+        public Byte deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return byteBuf.get();
+        }
+
+        @Override
+        public void serialize(ByteArray ba, Byte v) {
+            ba.add(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Byte v) {
+            byteBuf.put(v);
+        }
+    }
+
+    static class NullTerminatedStringColumnSerializer implements ColumnSerializer<String> {
+        @Override
+        public String deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            try {
+                return byteArray.getNullTerminatedUTF();
+            } catch (DecodingException e) {
+                throw new DatabaseCorruptionException(e);
+            }
+        }
+
+        @Override
+        public String deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return decodeUTF(byteBuf, true);
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, String v) {
+            byteArray.addNullTerminatedUTF(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, String v) {
+            encodeUTF(byteBuf, v);
+            byteBuf.put((byte) 0);
+        }
+    }
+
+    static class SizePrefixedtringColumnSerializer implements ColumnSerializer<String> {
+
+        @Override
+        public String deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            try {
+                return byteArray.getSizePrefixedUTF();
+            } catch (DecodingException e) {
+                throw new DatabaseCorruptionException(e);
+            }
+        }
+
+        @Override
+        public String deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            int len = byteBuf.getShort();
+            if (len > byteBuf.remaining()) {
+                throw new BufferUnderflowException();
+            }
+            int oldlimit = byteBuf.limit();
+            byteBuf.limit(byteBuf.position() + len);
+            String s = decodeUTF(byteBuf, false);
+            byteBuf.limit(oldlimit);
+            return s;
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, String v) {
+            byteArray.addSizePrefixedUTF(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, String v) {
+            int pos = byteBuf.position();
+            byteBuf.putShort((short) 0);
+            encodeUTF(byteBuf, v);
+            byteBuf.putShort(pos, (short) (byteBuf.position() - pos - 2));
+        }
+    }
+
+    static private void encodeUTF(ByteBuffer byteBuf, String v) {
+        int strlen = v.length();
+        int c;
+        int len = 0;
+        for (int i = 0; i < strlen; i++) {
+            c = v.charAt(i);
+            if ((c > 0) && (c < 0x80)) {
+                byteBuf.put((byte) c);
+                len++;
+            } else if (c < 0x0800) {// this cover also the null characters (c=0)
+                byteBuf.put((byte) (0xC0 | ((c >> 6) & 0x1F)));
+                byteBuf.put((byte) (0x80 | ((c >> 0) & 0x3F)));
+                len += 2;
+            } else {
+                byteBuf.put((byte) (0xE0 | ((c >> 12) & 0x0F)));
+                byteBuf.put((byte) (0x80 | ((c >> 6) & 0x3F)));
+                byteBuf.put((byte) (0x80 | ((c >> 0) & 0x3F)));
+                len += 3;
+            }
+        }
+
+        if (len > 0xFFFF) {
+            throw new BufferOverflowException();
+        }
+    }
+
+    static private String decodeUTF(ByteBuffer byteBuf, boolean nullTerminated) {
+        char[] ca = new char[byteBuf.remaining()];
+        int k = 0;
+
+        while (byteBuf.hasRemaining()) {
+            int c = byteBuf.get() & 0xFF;
+            if (nullTerminated && c == 0) {
+                break;
+            }
+
+            int char2, char3;
+            int c4 = c >> 4;
+            if (c4 <= 7) {
+                ca[k++] = (char) c;
+            } else if (c4 == 12 || c4 == 13) {
+                char2 = byteBuf.get() & 0xFF;
+                ca[k++] = (char) (((c & 0x1F) << 6) |
+                        (char2 & 0x3F));
+            } else if (c4 == 14) {
+                char2 = byteBuf.get() & 0xFF;
+                char3 = byteBuf.get() & 0xFF;
+                ca[k++] = (char) (((c & 0x0F) << 12) |
+                        ((char2 & 0x3F) << 6) |
+                        ((char3 & 0x3F) << 0));
+            } else {
+                throw new DatabaseCorruptionException("invalid UTF8 string at byte" + byteBuf.position());
+            }
+        }
+        return new String(ca, 0, k);
+    }
+
+    static class BinaryColumnSerializer implements ColumnSerializer<byte[]> {
+        @Override
+        public byte[] deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            int length = byteArray.getInt();
+            if (length > maxBinaryLength) {
+                log.warn("binary length greater than maxBinaryLenght (is the endianess wrong?): ?>?", length,
+                        maxBinaryLength);
+                return null;
+            }
+            byte[] bp = new byte[length];
+            byteArray.get(bp);
+            return bp;
+        }
+
+        @Override
+        public byte[] deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            int length = byteBuf.getInt();
+            if (length > maxBinaryLength) {
+                throw new YarchException("binary length " + length + " greater than maxBinaryLenght " + maxBinaryLength
+                        + " (is the endianess wrong?)");
+            }
+            byte[] bp = new byte[length];
+            byteBuf.get(bp);
+            return bp;
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, byte[] v) {
+            byteArray.addInt(v.length);
+            byteArray.add(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, byte[] v) {
+            byteBuf.putInt(v.length);
+            byteBuf.put(v);
+        }
+    }
+
+    static class ProtobufColumnSerializer implements ColumnSerializer<MessageLite> {
+        // for columns of type PROTOBUF
+        private final Method newBuilderMethod;
+
+        public ProtobufColumnSerializer(Method newBuilderMethod) {
+            this.newBuilderMethod = newBuilderMethod;
+        }
+
+        @Override
+        public MessageLite deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            try {
+                Builder b = (Builder) newBuilderMethod.invoke(null);
+                byteArray.getSizePrefixedProto(b);
+                return b.build();
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+        @Override
+        public MessageLite deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            int length = byteBuf.getInt();
+            if (length > maxBinaryLength) {
+                throw new YarchException(
+                        "binary length " + length + " greater than maxBinaryLenght " + maxBinaryLength);
+            }
+            Builder b;
+            try {
+                b = (Builder) newBuilderMethod.invoke(null);
+            } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+                throw new IllegalStateException(e);
+            }
+            int limit = byteBuf.limit();
+            byteBuf.limit(byteBuf.position() + length);
+            try {
+                b.mergeFrom(CodedInputStream.newInstance(byteBuf));
+            } catch (IOException e) {
+                throw new YarchException(e);
+            }
+            byteBuf.limit(limit);
+            byteBuf.position(byteBuf.position() + length);
+
+            return b.build();
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, MessageLite v) {
+            byteArray.addSizePrefixedProto(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, MessageLite v) {
+            try {
+                int position = byteBuf.position();
+                byteBuf.putInt(0);
+                CodedOutputStream cos = CodedOutputStream.newInstance(byteBuf);
+                v.writeTo(cos);
+                int size = cos.getTotalBytesWritten();
+                byteBuf.position(position + size + 4);
+                byteBuf.putInt(position, size);
+            } catch (IOException e) {
+                if (e instanceof OutOfSpaceException) {
+                    throw new BufferOverflowException();
+                } else {
+                    throw new UncheckedIOException(e);
+                }
+            }
+        }
+    }
+
+    static class EnumColumnSerializer implements ColumnSerializer<String> {
+        private final TableDefinition tblDef;
+        TableColumnDefinition colDef;
+        String columnName;
+
+        public EnumColumnSerializer(TableDefinition tblDef, TableColumnDefinition colDef) {
+            this.tblDef = tblDef;
+            this.columnName = colDef.getName();
+            this.colDef = colDef;
+        }
+
+        String getValue(short x) {
+            String v = colDef.getEnumValue(x);
+            if (v == null) { // probably the column definition has changed
+                colDef = tblDef.getColumnDefinition(columnName);
+                v = colDef.getEnumValue(x);
+            }
+            return v;
+        }
+
+        short getIndex(String value) {
+            Short idx = colDef.getEnumIndex(value);
+            if (idx == null) {
+                idx = tblDef.addAndGetEnumValue(columnName, value);
+                colDef = tblDef.getColumnDefinition(columnName);
+            }
+            return idx;
+        }
+
+        @Override
+        public String deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return getValue(byteArray.getShort());
+        }
+
+        @Override
+        public String deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return getValue(byteBuf.getShort());
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, String value) {
+            byteArray.addShort(getIndex(value));
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, String value) {
+            byteBuf.putShort(getIndex(value));
+        }
+
+        public String getColumnName() {
+            return columnName;
+        }
+    }
+}
+```
+
+### `ColumnSerializerV2.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerV2.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.nio.ByteBuffer;
+
+import org.yamcs.time.Instant;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.ByteArrayUtils;
+
+/**
+ * serializers for table format version &#8804; 2 where the signed integers (and timestamps) are stored as they are and
+ * do not sort properly when they are primary keys.
+ *
+ */
+public class ColumnSerializerV2 {
+    static class ShortColumnSerializer implements ColumnSerializer<Short> {
+        @Override
+        public Short deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.getShort();
+        }
+
+        @Override
+        public Short deserialize(ByteBuffer buf, ColumnDefinition cd) {
+            return buf.getShort();
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Short v) {
+            byteArray.addShort(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Short v) {
+            byteBuf.putShort(v);
+        }
+    }
+
+    static class IntegerColumnSerializer implements ColumnSerializer<Integer> {
+        @Override
+        public Integer deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.getInt();
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Integer v) {
+            byteArray.addInt(v);
+        }
+
+        @Override
+        public Integer deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return byteBuf.getInt();
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Integer v) {
+            byteBuf.putInt((Integer) v);
+        }
+    }
+
+    static class LongColumnSerializer implements ColumnSerializer<Long> {
+        @Override
+        public Long deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.getLong();
+        }
+
+        @Override
+        public Long deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return byteBuf.getLong();
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Long v) {
+            byteArray.addLong(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Long v) {
+            byteBuf.putLong(v);
+        }
+
+        @Override
+        public byte[] toByteArray(Long v) {
+            return ByteArrayUtils.encodeLong(v);
+        }
+
+        @Override
+        public Long fromByteArray(byte[] b, ColumnDefinition cd) {
+            return ByteArrayUtils.decodeLong(b, 0);
+        }
+    }
+
+
+    static class HresTimestampColumnSerializer implements ColumnSerializer<Instant> {
+
+        @Override
+        public Instant deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            long millis = byteArray.getLong();
+            int picos = byteArray.getInt();
+            return Instant.get(millis, picos);
+        }
+
+        @Override
+        public Instant deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            long millis = byteBuf.getLong();
+            int picos = byteBuf.getInt();
+            return Instant.get(millis, picos);
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Instant v) {
+            byteArray.addLong(v.getMillis());
+            byteArray.addInt(v.getPicos());
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Instant v) {
+            byteBuf.putLong(v.getMillis());
+            byteBuf.putInt(v.getPicos());
+        }
+
+        @Override
+        public byte[] toByteArray(Instant v) {
+            byte[] b= new byte[12];
+            ByteArrayUtils.encodeLong(v.getMillis(), b, 0);
+            ByteArrayUtils.encodeInt(v.getPicos(), b, 8);
+            return b;
+        }
+
+        @Override
+        public Instant fromByteArray(byte[] b, ColumnDefinition cd) {
+            long millis = ByteArrayUtils.decodeLong(b, 0);
+            int picos = ByteArrayUtils.decodeInt(b, 8);
+            return Instant.get(millis, picos);
+        }
+    }
+    static class DoubleColumnSerializer implements ColumnSerializer<Double> {
+
+        @Override
+        public Double deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return byteArray.getDouble();
+        }
+
+        @Override
+        public Double deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return byteBuf.getDouble();
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Double v) {
+            byteArray.addDouble(v);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Double v) {
+            byteBuf.putDouble(v);
+        }
+    }
+
+}
+```
+
+### `ColumnSerializerV3.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ColumnSerializerV3.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.time.Instant;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.DatabaseCorruptionException;
+
+import static org.yamcs.yarch.ColumnSerializerFactory.*;
+
+public class ColumnSerializerV3 {
+    static short invertSign(short x) {
+        return (short) (x ^ Short.MIN_VALUE);
+    }
+    static int invertSign(int x) {
+        return x ^ Integer.MIN_VALUE;
+    }
+    static long invertSign(long x) {
+        return x ^ Long.MIN_VALUE;
+    } 
+
+    static class ShortColumnSerializer implements ColumnSerializer<Short> {
+        @Override
+        public Short deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return invertSign(byteArray.getShort());
+        }
+
+        @Override
+        public Short deserialize(ByteBuffer buf, ColumnDefinition cd) {
+            return invertSign(buf.getShort());
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Short v) {
+            byteArray.addShort(invertSign((Short) v));
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Short v) {
+            byteBuf.putShort(invertSign((Short) v));
+        }
+
+        @Override
+        public byte[] toByteArray(Short v) {
+            short s = invertSign(v);
+            return new byte[] { (byte) ((s >> 8) & 0xFF), (byte) (s & 0xFF) };
+        }
+
+        @Override
+        public Short fromByteArray(byte[] b, ColumnDefinition cd) {
+            return invertSign((short) (((b[0] & 0xFF) << 8) + (b[1] & 0xFF)));
+        }
+    }
+
+    static class IntegerColumnSerializer implements ColumnSerializer<Integer> {
+        @Override
+        public Integer deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return invertSign(byteArray.getInt());
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Integer v) {
+            byteArray.addInt(invertSign(v));
+        }
+
+        @Override
+        public Integer deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return invertSign(byteBuf.getInt());
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Integer v) {
+            byteBuf.putInt(invertSign(v));
+        }
+    }
+
+    
+    static class LongColumnSerializer implements ColumnSerializer<Long> {
+        @Override
+        public Long deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return invertSign(byteArray.getLong());
+        }
+
+        @Override
+        public Long deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return invertSign(byteBuf.getLong());
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Long v) {
+            byteArray.addLong(invertSign(v));
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Long v) {
+            byteBuf.putLong(invertSign(v));
+        }
+    }
+
+    static class DoubleColumnSerializer implements ColumnSerializer<Double> {
+        static long doubleToLong(double x) {
+            long v = Double.doubleToLongBits(x);
+            
+            //for negative values, flips all the bits
+            //for positive values, flips only the sign=first bit
+            v ^= (v >> 63) | Long.MIN_VALUE;
+            return v;
+        }
+
+        static double longToDouble(long x) {
+            x ^= (~x >> 63) | Long.MIN_VALUE;
+            return Double.longBitsToDouble(x);
+        }
+
+        @Override
+        public Double deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            return longToDouble(byteArray.getLong());
+        }
+
+        @Override
+        public Double deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            return longToDouble(byteBuf.getLong());
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Double v) {
+            byteArray.addLong(doubleToLong(v));
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Double v) {
+            byteBuf.putLong(doubleToLong(v));
+        }
+    }
+
+    
+    static class HresTimestampColumnSerializer implements ColumnSerializer<Instant> {
+      //picos is always positive, no need to invert the sign
+        @Override
+        public Instant deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            long millis = invertSign(byteArray.getLong());
+            int picos = byteArray.getInt(); 
+            return Instant.get(millis, picos);
+        }
+
+        @Override
+        public Instant deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            long millis = invertSign(byteBuf.getLong());
+            int picos = byteBuf.getInt();
+            return Instant.get(millis, picos);
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, Instant v) {
+            byteArray.addLong(invertSign(v.getMillis()));
+            byteArray.addInt(v.getPicos());
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, Instant v) {
+            byteBuf.putLong(invertSign(v.getMillis()));
+            byteBuf.putInt(v.getPicos());
+        }
+
+        @Override
+        public byte[] toByteArray(Instant v) {
+            byte[] b = new byte[12];
+            ByteArrayUtils.encodeLong(invertSign(v.getMillis()), b, 0);
+            ByteArrayUtils.encodeInt(v.getPicos(), b, 8);
+            return b;
+        }
+
+        @Override
+        public Instant fromByteArray(byte[] b, ColumnDefinition cd) {
+            long millis = invertSign(ByteArrayUtils.decodeLong(b, 0));
+            int picos = ByteArrayUtils.decodeInt(b, 8);
+            return Instant.get(millis, picos);
+        }
+    }
+
+    
+    static class UUIDColumnSerializer implements ColumnSerializer<java.util.UUID> {
+        @Override
+        public java.util.UUID deserialize(ByteArray byteArray, ColumnDefinition cd) {
+            long msb = invertSign(byteArray.getLong());
+            long lsb = invertSign(byteArray.getLong());
+            return new java.util.UUID(msb, lsb);
+        }
+
+        @Override
+        public java.util.UUID deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            long msb = invertSign(byteBuf.getLong());
+            long lsb = invertSign(byteBuf.getLong());
+            return new java.util.UUID(msb, lsb);
+        }
+
+        @Override
+        public void serialize(ByteArray byteArray, java.util.UUID v) {
+            byteArray.addLong(invertSign(v.getMostSignificantBits()));
+            byteArray.addLong(invertSign(v.getLeastSignificantBits()));
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, java.util.UUID v) {
+            byteBuf.putLong(invertSign(v.getMostSignificantBits()));
+            byteBuf.putLong(invertSign(v.getLeastSignificantBits()));
+        }
+    }
+
+    static class ArrayColumnSerializer implements ColumnSerializer<java.util.List> {
+        ColumnSerializer elementSerializer;
+
+        public ArrayColumnSerializer(ColumnSerializer elementSerializer) {
+            this.elementSerializer = elementSerializer;
+        }
+        @Override
+        public List deserialize(ByteArray array, ColumnDefinition cd) {
+            int length = array.getInt();
+            int position = array.position();
+            if (length > maxBinaryLength) {
+                throw new YarchException(
+                        "binary length " + length + " greater than maxBinaryLenght " + maxBinaryLength);
+            }
+            if (length > array.size() - position) {
+                throw new DatabaseCorruptionException(
+                        " " + length + " greater than available data " + (array.size() - position));
+            }
+            List<Object> list = new ArrayList<Object>();
+            while (array.position() - position < length) {
+                Object o = elementSerializer.deserialize(array, cd);
+                list.add(o);
+            }
+
+            return list;
+        }
+
+        @Override
+        public List deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+            int length = byteBuf.getInt();
+            int position = byteBuf.position();
+            if (length > maxBinaryLength) {
+                throw new YarchException(
+                        "binary length " + length + " greater than maxBinaryLenght " + maxBinaryLength);
+            }
+            if (length > byteBuf.remaining()) {
+                throw new DatabaseCorruptionException(
+                        " " + length + " greater than available data " + byteBuf.remaining());
+            }
+            List<Object> list = new ArrayList<Object>();
+            while(byteBuf.position()-position<length) {
+                Object o = elementSerializer.deserialize(byteBuf, cd);
+                list.add(o);
+            }
+            
+            return list;
+        }
+
+        @Override
+        public void serialize(ByteArray array, List v) {
+            int position = array.size();
+            array.addInt(0);
+            for (Object o : v) {
+                elementSerializer.serialize(array, o);
+            }
+            int size = array.size() - position - 4;
+            array.setInt(position, size);
+        }
+
+        @Override
+        public void serialize(ByteBuffer byteBuf, List v) throws BufferOverflowException {
+            int position = byteBuf.position();
+            byteBuf.putInt(0);
+            for (Object o : v) {
+                elementSerializer.serialize(byteBuf, o);
+            }
+            int size = byteBuf.position() - position - 4;
+            byteBuf.putInt(position, size);
+        }
+    }
+
+}
+```
+
+### `CompiledAggregateExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledAggregateExpression.java`
+
+
+```java
+package org.yamcs.yarch;
+
+
+public interface CompiledAggregateExpression {
+    public void newData(Tuple tuple);
+
+    public Object getValue();
+    public void clear();
+
+}
+```
+
+### `CompiledAggregateList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledAggregateList.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.LimitExceededException;
+
+public class CompiledAggregateList implements CompiledAggregateExpression {
+    final static int MAX_LENGTH = 1000;
+    
+    List<Tuple> list=new ArrayList<Tuple>();
+    @Override
+    public void clear() {
+      list=new ArrayList<Tuple>();
+    }
+
+    @Override
+    public Object getValue() {
+        return list;
+    }
+
+    @Override
+    public void newData(Tuple tuple) {
+        if(list.size()>=MAX_LENGTH) {
+            throw new LimitExceededException("To many elements in the aggregate list");
+        }
+        list.add(tuple);
+    }
+
+}
+```
+
+### `CompiledExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledExpression.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public interface CompiledExpression {
+    ColumnDefinition getDefinition();
+    Object getValue(Tuple tuple);  
+
+}
+```
+
+### `CompiledFirstVal.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/CompiledFirstVal.java`
+
+
+```java
+package org.yamcs.yarch;
+
+
+public class CompiledFirstVal implements CompiledAggregateExpression {
+    String[] args;
+    boolean star;
+    Object firstVal;
+    
+    public CompiledFirstVal(String[] args, boolean star) {
+        this.args=args;
+        this.star=star;
+    }
+
+    @Override
+    public void clear() {
+       firstVal=null;
+    }
+
+    @Override
+    public Object getValue() {
+        return firstVal;
+    }
+
+    @Override
+    public void newData(Tuple tuple) {
+        if(firstVal==null) {
+            if(star) {
+                firstVal=tuple;
+            } else if(args.length==1) {
+                firstVal=tuple.getColumn(args[0]);
+            } else {
+                //TODO
+            }
+        }
+    }
+
+}
+```
+
+### `ConstantValueCompiledExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ConstantValueCompiledExpression.java`
+
+
+```java
+package org.yamcs.yarch;
+
+/**
+ * this is no compiled expression at all, it just returns the same value
+ * 
+ * @author nm
+ *
+ */
+public class ConstantValueCompiledExpression implements CompiledExpression {
+    Object value;
+    ColumnDefinition cdef;
+
+    public ConstantValueCompiledExpression(Object value2, ColumnDefinition cdef) {
+        this.value = value2;
+        this.cdef = cdef;
+    }
+
+    @Override
+    public Object getValue(Tuple tuple) {
+        return value;
+    }
+
+    @Override
+    public ColumnDefinition getDefinition() {
+        return cdef;
+    }
+}
+```
+
+### `DataType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/DataType.java`
+
+
+```java
+/**
+ * 
+ */
+package org.yamcs.yarch;
+
+import java.util.List;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.MessageLite;
+
+/**
+ * Types supported by yarch. Currently TUPLE and LIST do now work well. ENUM is just like String, except that when it's
+ * stored on disk a two bytes integer value from a map is stored instead of the String. (maximum allowed version is 2^16
+ * (which is anyway too big considering that the map is stored as serialised yaml file)
+ * 
+ * PROTOBUF is a Google Protocol Buffer message
+ * 
+ * @author nm
+ *
+ */
+public class DataType {
+
+    public enum _type {
+        BYTE,
+        SHORT,
+        INT,
+        LONG,
+        DOUBLE,
+        TIMESTAMP,
+        STRING,
+        BINARY,
+        BOOLEAN,
+        ENUM,
+        PROTOBUF,
+        PARAMETER_VALUE,
+        TUPLE,
+        ARRAY,
+        HRES_TIMESTAMP,
+        UUID
+    }
+
+    public final _type val;
+
+    public static final DataType BYTE = new DataType(_type.BYTE, (byte) 1, true);
+    public static final DataType SHORT = new DataType(_type.SHORT, (byte) 2, true);
+    public static final DataType INT = new DataType(_type.INT, (byte) 3, true);
+    public static final DataType LONG = new DataType(_type.LONG, (byte) 4, true);
+    public static final DataType DOUBLE = new DataType(_type.DOUBLE, (byte) 5, true);
+    public static final DataType STRING = new DataType(_type.STRING, (byte) 6, true);
+    public static final DataType BINARY = new DataType(_type.BINARY, (byte) 7, true);
+    public static final DataType BOOLEAN = new DataType(_type.BOOLEAN, (byte) 8);
+    public static final DataType TIMESTAMP = new DataType(_type.TIMESTAMP, (byte) 9, true);
+    public static final DataType ENUM = new DataType(_type.ENUM, (byte) 10);
+    public static final DataType PARAMETER_VALUE = new DataType(_type.PARAMETER_VALUE, (byte) 11);
+
+    public static final byte PROTOBUF_ID = 12;
+    public static final byte TUPLE_ID = 13;
+    public static final byte ARRAY_ID = 14;
+
+    public static final DataType HRES_TIMESTAMP = new DataType(_type.HRES_TIMESTAMP, (byte) 15, true);
+    public static final DataType UUID = new DataType(_type.UUID, (byte) 16);
+
+    // since yamcs 5.3 the it is stored on disk before the column index, see TableDefinition
+    private final byte id;
+
+    private final boolean comparable;
+
+    protected DataType(_type t, byte id, boolean comparable) {
+        this.val = t;
+        this.id = id;
+        this.comparable = comparable;
+    }
+
+    protected DataType(_type t, byte id) {
+        this(t, id, false);
+    }
+
+    public static DataType tuple(TupleDefinition td) {
+        return new TupleDataType(td);
+    }
+
+    public static DataType array(DataType elementType) {
+        return new ArrayDataType(elementType);
+    }
+
+    public static DataType protobuf(String className) {
+        return new ProtobufDataType(className);
+    }
+
+    public static DataType protobuf(Class<? extends MessageLite> clazz) {
+        return new ProtobufDataType(clazz.getName());
+    }
+
+    /**
+     * this is the inverse of {@link #name()}
+     * 
+     * @param name
+     * @return the DataType corresponding to the name
+     * @throws IllegalArgumentException
+     *             thrown in case the name is invalid
+     */
+    public static DataType byName(String name) throws IllegalArgumentException {
+        if (name == null) {
+            throw new NullPointerException();
+        }
+        switch (name) {
+        case "BYTE":
+            return BYTE;
+        case "SHORT":
+            return SHORT;
+        case "INT":
+            return INT;
+        case "DOUBLE":
+            return DOUBLE;
+        case "STRING":
+            return STRING;
+        case "BINARY":
+            return BINARY;
+        case "BOOLEAN":
+            return BOOLEAN;
+        case "TIMESTAMP":
+            return TIMESTAMP;
+        case "ENUM":
+            return ENUM;
+        case "LONG":
+            return LONG;
+        case "HRES_TIMESTAMP":
+            return HRES_TIMESTAMP;
+        case "UUID":
+            return UUID;
+        case "PARAMETER_VALUE":
+            return PARAMETER_VALUE;
+        default:
+            if (name.toUpperCase().startsWith("PROTOBUF(")) {
+                return protobuf(name.substring(9, name.length() - 1));
+            }
+            if (name.toUpperCase().startsWith("ARRAY(")) {
+                return array(byName(name.substring(6, name.length() - 1)));
+            }
+
+            throw new IllegalArgumentException("invalid or unsupported DataType '" + name + "'");
+        }
+    }
+
+    /**
+     * return the size in bytes of the encoded data type if it can be encoded on fixed size, or -1 if not.
+     * 
+     * @param dt
+     * @return
+     */
+    public static int getSerializedSize(DataType dt) {
+        switch (dt.val) {
+        case INT:
+            return 4;
+        case SHORT:
+        case ENUM: // intentional fall-through
+            return 2;
+        case BYTE:
+        case BOOLEAN: // intentional fall-through
+            return 1;
+        case LONG:
+        case DOUBLE:
+        case TIMESTAMP: // intentional fall-through
+            return 8;
+        case HRES_TIMESTAMP:
+            return 12;
+        case UUID:
+            return 16;
+        default:
+            return -1;
+        }
+    }
+
+    /* returns Int, Short, etc suitable to use as getInt(), getShort() on the Object */
+    public static String capitalized(String s) {
+        String t = s.toString();
+        return t.substring(0, 1).toUpperCase() + t.substring(1).toLowerCase();
+    }
+
+    public String javaType() {
+        switch (val) {
+        case BOOLEAN:
+        case BYTE:
+        case DOUBLE:
+        case SHORT:
+        case STRING:
+        case LONG:
+            return capitalized(val.toString());
+        case BINARY:
+            return "byte[]";
+        case TIMESTAMP:
+            return "Long";
+        case ENUM:
+            return "String";
+        case INT:
+            return "Integer";
+        case PARAMETER_VALUE:
+            return "ParameterValue";
+        case HRES_TIMESTAMP:
+            return "org.yamcs.time.Instant";
+        case UUID:
+            return "java.util.UUID";
+        case ARRAY:
+            return "java.util.List";
+        default:
+            throw new IllegalStateException("no java type available for " + this);
+        }
+    }
+
+    public String primitiveJavaType() {
+        switch (val) {
+        case BOOLEAN:
+        case BYTE:
+        case DOUBLE:
+        case SHORT:
+        case INT:
+        case LONG:
+            return val.toString().toLowerCase();
+        case TIMESTAMP:
+            return "long";
+        default:
+            throw new IllegalStateException("no primitive java type for " + val);
+        }
+    }
+
+    public boolean isPrimitiveJavaType() {
+        switch (val) {
+        case BOOLEAN:
+        case BYTE:
+        case DOUBLE:
+        case SHORT:
+        case INT:
+        case LONG:
+        case TIMESTAMP:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    @Override
+    public String toString() {
+        return val.toString();
+    }
+
+    /**
+     * Returns type as string.
+     * 
+     * 
+     * @return for basic types returns the enum name for PROTOBUF returns PROTOBUF(className)
+     */
+    public String name() {
+        return val.name();
+    }
+
+    public static DataType typeOf(Object v) {
+        if (v instanceof Boolean) {
+            return BOOLEAN;
+        } else if (v instanceof Byte) {
+            return BYTE;
+        } else if (v instanceof Short) {
+            return SHORT;
+        } else if (v instanceof Integer) {
+            return INT;
+        } else if (v instanceof Double) {
+            return DOUBLE;
+        } else if (v instanceof Long) {
+            return LONG;
+        } else if (v instanceof String) {
+            return STRING;
+        } else if (v instanceof byte[]) {
+            return BINARY;
+        } else if (v instanceof ParameterValue) {
+            return PARAMETER_VALUE;
+        } else if (v instanceof Instant) {
+            return HRES_TIMESTAMP;
+        } else if (v instanceof java.util.UUID) {
+            return UUID;
+        } else if (v instanceof List<?>) {
+            List<?> l = (List<?>) v;
+            if (l.isEmpty()) {
+                throw new IllegalArgumentException("Constant empty arrays not supported");
+            }
+            return DataType.array(typeOf(l.get(0)));
+        } else if (v instanceof MessageLite) {
+            return DataType.protobuf(v.getClass().getName());
+        } else {
+            throw new IllegalArgumentException("invalid or unsupported object of type of " + v.getClass());
+        }
+    }
+
+    public static int compare(Object v1, Object v2) {
+        if (v1 instanceof Boolean) {
+            return ((Boolean) v1).compareTo((Boolean) v2);
+        } else if (v1 instanceof Byte) {
+            return ((Byte) v1).compareTo((Byte) v2);
+        } else if (v1 instanceof Short) {
+            return ((Short) v1).compareTo((Short) v2);
+        } else if (v1 instanceof Integer) {
+            return ((Integer) v1).compareTo((Integer) v2);
+        } else if (v1 instanceof Double) {
+            return ((Double) v1).compareTo((Double) v2);
+        } else if (v1 instanceof Long) {
+            return ((Long) v1).compareTo((Long) v2);
+        } else if (v1 instanceof String) {
+            return ((String) v1).compareTo((String) v2);
+        } else {
+            throw new IllegalArgumentException("cannot compare objects of type " + v1.getClass());
+        }
+    }
+
+    /**
+     * Performs casting of v from sourceType to targetType
+     * 
+     * @param sourceType
+     * @param targetType
+     * @param v
+     * @return the casted object (can be v if no casting is performed)
+     * @throws IllegalArgumentException
+     */
+    public static Object castAs(DataType sourceType, DataType targetType, Object v) throws IllegalArgumentException {
+        if (sourceType.equals(targetType)) {
+            return v;
+        }
+
+        if (v instanceof Number) {
+            Number n = (Number) v;
+            switch (targetType.val) {
+            case BYTE:
+                return n.byteValue();
+            case DOUBLE:
+                return n.doubleValue();
+            case SHORT:
+                return n.shortValue();
+            case INT:
+                return n.intValue();
+            case LONG:
+            case TIMESTAMP:
+                return n.longValue();
+            case HRES_TIMESTAMP:
+                return Instant.get(n.longValue());
+            case STRING:
+            case ENUM:
+                return n.toString();
+            default:
+                // throws exception below
+            }
+        } else if (v instanceof String) {
+            String s = (String) v;
+            switch (targetType.val) {
+            case BYTE:
+                return Byte.decode(s);
+            case DOUBLE:
+                return Double.valueOf(s);
+            case SHORT:
+                return Short.decode(s);
+            case INT:
+                return Integer.decode(s);
+            case LONG:
+                return Long.decode(s);
+            case TIMESTAMP:
+                return TimeEncoding.parse(s);
+            case HRES_TIMESTAMP:
+                return TimeEncoding.parseHres(s);
+            case UUID:
+                return java.util.UUID.fromString(s);
+            case STRING:
+            case ENUM:
+                return s;
+            default:
+                // throws exception below
+            }
+        } else if (v instanceof Instant) {
+            long n = ((Instant) v).getMillis();
+            switch (targetType.val) {
+            case BYTE:
+                return (byte) n;
+            case DOUBLE:
+                return (double) n;
+            case SHORT:
+                return (short) n;
+            case INT:
+                return (int) n;
+            case LONG:
+            case TIMESTAMP:
+                return n;
+            case STRING:
+            case ENUM:
+                return Long.toString(n);
+            default:
+                // throws exception below
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot convert '" + v + "' from " + sourceType + " into " + targetType);
+    }
+
+    /**
+     * Performs casting: numbers to numbers, numbers to string, string to numbers
+     * 
+     * @param targetType
+     * @param v
+     * @return the casted object (can be to v if no casting is performed)
+     * @throws IllegalArgumentException
+     * 
+     */
+    public static Object castAs(DataType targetType, Object v) throws IllegalArgumentException {
+        return castAs(typeOf(v), targetType, v);
+    }
+
+    public static boolean isNumber(DataType dt) {
+        switch (dt.val) {
+        case BYTE:
+        case DOUBLE:
+        case INT:
+        case LONG:
+        case SHORT:
+        case TIMESTAMP:
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    public static boolean compatible(DataType dt1, DataType dt2) {
+        if (dt1 == dt2) {
+            return true;
+        }
+
+        if (isNumber(dt1) && isNumber(dt2)) {
+            return true;
+        }
+
+        if (dt1.val == _type.STRING || dt1.val == _type.ENUM) {
+            return dt2.val == _type.STRING || dt2.val == _type.ENUM;
+        }
+        if (dt1 instanceof ArrayDataType && dt2 instanceof ArrayDataType) {
+            return compatible(((ArrayDataType) dt1).getElementType(), ((ArrayDataType) dt2).getElementType());
+        }
+        if (dt1 instanceof ProtobufDataType && dt2 instanceof ProtobufDataType) {
+            return ((ProtobufDataType) dt1).getClassName().equals(((ProtobufDataType) dt2).getClassName());
+        }
+        return false;
+    }
+
+    public byte getTypeId() {
+        return id;
+    }
+
+    /**
+     * Return true if this data type is an enum or a composite type (array) containing an enum
+     */
+    public boolean hasEnums() {
+        return val == _type.ENUM;
+    }
+
+    /**
+     * 
+     * @return true if two values of this type are comparable (i.e. if they support a natural ordering)
+     */
+    public boolean isComparable() {
+        return comparable;
+    }
+}
+```
+
+### `DbRange.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/DbRange.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import org.yamcs.utils.StringConverter;
+
+public class DbRange {
+    public byte[] rangeStart = null;
+    public byte[] rangeEnd = null;
+
+    @Override
+    public String toString() {
+        return "DbRange [rangeStart=" + StringConverter.arrayToHexString(rangeStart) + ", rangeEnd="
+                + StringConverter.arrayToHexString(rangeEnd) + "]";
+    }
+}
+```
+
+### `ExecutionContext.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ExecutionContext.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.rocksdb.Snapshot;
+import org.yamcs.logging.Log;
+import org.yamcs.yarch.rocksdb.Tablespace;
+import org.yamcs.yarch.rocksdb.YRDB;
+
+/**
+ * Keeps track of attributes associated with an execution context of a query: tablespace, database and snapshots
+ * <p>
+ * The context has to be closed to release the snapshots (otherwise
+ *
+ */
+public class ExecutionContext implements AutoCloseable {
+    final YarchDatabaseInstance db;
+    Tablespace tablespace;
+    Map<YRDB, Snapshot> snapshots;
+    private volatile boolean closed = false;
+    final static Log log = new Log(ExecutionContext.class);
+    // used to keep a stack trace when created. to remove
+    Exception e;
+
+    public ExecutionContext(YarchDatabaseInstance db) {
+        this.db = db;
+        e = new Exception();
+    }
+
+    public YarchDatabaseInstance getDb() {
+        return db;
+    }
+
+    public void setTablespace(Tablespace tablespace) {
+        if (this.tablespace != null && this.tablespace != tablespace) {
+            throw new IllegalStateException("Multiple tablespaces not supported");
+        }
+        this.tablespace = tablespace;
+    }
+
+    public Tablespace getTablespace() {
+        return tablespace;
+    }
+
+    public synchronized Snapshot getSnapshot(YRDB rdb) {
+        if (closed) {
+            throw new IllegalStateException("ExecutionContext is closed");
+        }
+        if (snapshots == null) {
+            snapshots = new HashMap<>();
+        }
+        return snapshots.computeIfAbsent(rdb, x -> rdb.getSnapshot());
+    }
+
+    public synchronized void close() {
+        closed = true;
+        if(snapshots != null) {
+            for (Map.Entry<YRDB, Snapshot> me : snapshots.entrySet()) {
+                me.getKey().releaseSnapshot(me.getValue());
+                me.getValue().close();
+            }
+        }
+        snapshots = null;
+    }
+
+    public synchronized void addSnapshot(YRDB rdb, Snapshot snapshot) {
+        if (closed) {
+            throw new IllegalStateException("ExecutionContext is closed");
+        }
+
+        if (snapshots == null) {
+            snapshots = new HashMap<>();
+        }
+        if (snapshots.containsKey(rdb)) {
+            throw new IllegalStateException("Already have a snapshot for this database");
+        }
+        snapshots.put(rdb, snapshot);
+    }
+
+    @Override
+    public void finalize() {
+        if (!closed && snapshots != null) {
+            log.error("ExecutionContext " + this + " not closed", e);
+        }
+    }
+}
+```
+
+### `FieldReturnCompiledExpression.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/FieldReturnCompiledExpression.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class FieldReturnCompiledExpression implements CompiledExpression {
+    final String field;
+    final ColumnDefinition cdef;
+    public FieldReturnCompiledExpression(String field, ColumnDefinition cdef) {
+        this.field=field;
+        this.cdef=cdef;
+    }
+    @Override
+    public Object getValue(Tuple tuple) {
+        return tuple.getColumn(field);
+    }
+    @Override
+    public ColumnDefinition getDefinition() {
+        return cdef;
+    }
+    
+    @Override
+    public String toString() {
+        return "FieldReturnCompiledExpression(field: "+field+" columnDefinition: "+cdef+")";
+    }
+}
+```
+
+### `FilterableTarget.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/FilterableTarget.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Set;
+
+import org.yamcs.yarch.streamsql.ColumnExpression;
+import org.yamcs.yarch.streamsql.RelOp;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+
+public interface FilterableTarget {
+    /**
+     * Tries to add a restriction for the rows to be selected/updated/deleted. This will implement optimisations to avoid scanning the table row by row.
+     * <p>
+     * Typically it works if the condition refers to the primary key.
+     * 
+     * @param cexpr
+     * @param relOp
+     * @param value
+     * @throws StreamSqlException
+     */
+    public void addRelOpFilter(ColumnExpression cexpr, RelOp relOp, Object value) throws StreamSqlException;
+    /**
+     * same as {@link #addRelOpFilter(ColumnExpression, RelOp, Object)} but adds a restrictions for a set of values resulted from a where x in (a,b,c) condition
+     * 
+     * @param cexpr
+     * @param negation
+     * @param values
+     * @throws StreamSqlException
+     */
+    public void addInFilter(ColumnExpression cexpr, boolean negation, Set<Object> values) throws StreamSqlException;
+}
+```
+
+### `HistogramInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramInfo.java`
+
+
+```java
+package org.yamcs.yarch;
+
+/**
+ * 
+ * information about histogram.
+ * Only the column name is kept here - subclasses can store more information if required.
+ *
+ */
+public class HistogramInfo {
+    protected final String columnName;
+    public HistogramInfo(String columnName) {
+        this.columnName = columnName;
+    }
+}
+```
+
+### `HistogramIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramIterator.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Iterator;
+
+/**
+ * Iterator over histogram records
+ * 
+ * The iterator offers a partial ordering - for one column the records are sorted by time
+ * 
+ * @author nm
+ *
+ */
+public interface HistogramIterator extends AutoCloseable, Iterator<HistogramRecord> {
+    void seek(byte[] columnValue, long time);
+    
+    /**
+     * Close the iterator 
+     */
+    void close();
+}
+```
+
+### `HistogramReaderStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramReaderStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.utils.TimeInterval;
+
+/**
+ * Sends histogram data to a stream.
+ * 
+ * The definition of the emitted tuples is in {@link org.yamcs.yarch.streamsql.TupleSourceExpression#bind}
+ * 
+ * @author nm
+ *
+ */
+public class HistogramReaderStream extends Stream implements Runnable {
+    // this is the table and the column on which we run the histogram
+    final private ColumnSerializer<?> histoColumnSerializer;
+    HistogramIterator iter;
+    final TableDefinition tblDef;
+    final String histoColumnName;
+    // filter conditions
+    TimeInterval timeInterval = new TimeInterval();
+
+    long mergeTime = 2000;
+
+    static AtomicInteger count = new AtomicInteger(0);
+    volatile boolean quit = false;
+    private ColumnDefinition histoColumnDefinition;
+
+    public HistogramReaderStream(YarchDatabaseInstance ydb, TableDefinition tblDef, String histoColumnName,
+            TupleDefinition tupleDef) throws YarchException {
+        super(ydb, tblDef.getName() + "_histo_" + count.getAndIncrement(), tupleDef);
+        this.histoColumnSerializer = tblDef.getColumnSerializer(histoColumnName);
+        this.histoColumnDefinition = tblDef.getColumnDefinition(histoColumnName);
+        this.tblDef = tblDef;
+        this.histoColumnName = histoColumnName;
+    }
+
+    @Override
+    public void doStart() {
+        (new Thread(this, "HistogramReader[" + getName() + "]")).start();
+    }
+
+    @Override
+    public void run() {
+        if (log.isDebugEnabled()) {
+            log.debug("starting a histogram stream for interval {}, mergeTime: {})", timeInterval.toStringEncoded(),
+                    mergeTime);
+        }
+        try {
+            iter = ydb.getStorageEngine(tblDef).getHistogramIterator(ydb, tblDef, histoColumnName, timeInterval);
+            HistogramRecord r;
+            while (!quit && iter.hasNext()) {
+                r = iter.next();
+                emit(r);
+            }
+            return;
+        } catch (Exception e) {
+            log.error("got exception ", e);
+        } finally {
+            close();
+        }
+    }
+
+    private void emit(HistogramRecord r) throws IOException {
+        Object cvalue = histoColumnSerializer.fromByteArray(r.columnv, histoColumnDefinition);
+        Tuple t = new Tuple(getDefinition(), new Object[] { cvalue, r.start, r.stop, r.num });
+        emitTuple(t);
+    }
+
+
+    /**
+     * Retrieve only the histograms overlapping with this interval.
+     * 
+     * @param filter
+     */
+    public void setTimeInterval(TimeInterval filter) {
+        this.timeInterval = filter;
+    }
+    
+    public void setMergeTime(long mergeTime) {
+        this.mergeTime = mergeTime;
+    }
+
+    @Override
+    public void doClose() {
+        iter.close();
+        quit = true;
+    }
+}
+```
+
+### `HistogramRecord.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramRecord.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Comparator;
+
+import org.yamcs.utils.StringConverter;
+
+import com.google.common.primitives.UnsignedBytes;
+
+/**
+ * Stores a record in the histogram database.
+ * 
+ * A record is composed of
+ * - value
+ * - start
+ * - stop
+ * - num tuples
+ * 
+ * Note: this class has a natural ordering that is inconsistent with equals.
+ * 
+ * @author nm
+ *
+ */
+public class HistogramRecord implements Comparable<HistogramRecord> {
+    final byte[] columnv;
+    final long start;
+    final long stop;
+    final int num;
+
+    static final Comparator<byte[]> comparator = UnsignedBytes.lexicographicalComparator();
+
+    public HistogramRecord(byte[] columnv, long start, long stop, int num) {
+        this.columnv = columnv;
+        this.start = start;
+        this.stop = stop;
+        this.num = num;
+    }
+
+    @Override
+    public int compareTo(HistogramRecord p) {
+        if (start != p.start)
+            return Long.signum(start - p.start);
+        return comparator.compare(columnv, p.columnv);
+    }
+
+    public byte[] getColumnv() {
+        return columnv;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public long getStop() {
+        return stop;
+    }
+
+    public int getNumTuples() {
+        return num;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("time:(%d,%d), nump: %d, columnv: %s" , start, stop, num, StringConverter.arrayToHexString(columnv));
+    }
+
+}
+```
+
+### `HistogramSegment.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/HistogramSegment.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.StringConverter;
+
+/* 
+ * keeps all the records in a {@value #GROUPING_FACTOR} millisec interval
+ * 
+ * */
+public class HistogramSegment {
+    byte[] columnv;
+    long sstart; // segment start
+    ArrayList<HistogramSegment.SegRecord> pps;
+    public static final long GROUPING_FACTOR = 3600 * 1000;
+    static final int REC_SIZE = 10; // 4 bytes for start and stop, 2 bytes for num
+    static final int MAX_INTERVAL = 120000; // make two records if the time between packets is more than 2 minutes
+                                            // (because the packets are not very related)
+    private static long LOSS_TIME = 1000; // time in milliseconds above which we consider a packet loss
+
+    /**
+     * Constructs an empty segment
+     * 
+     * @param columnv
+     *            - column value in binary
+     * @param sstart
+     */
+    public HistogramSegment(byte[] columnv, long sstart) {
+        this.columnv = columnv;
+        this.sstart = sstart;
+        pps = new ArrayList<>();
+    }
+
+    public HistogramSegment(byte[] columnv, long sstart, byte[] val) {
+        ByteBuffer v = ByteBuffer.wrap(val);
+        this.columnv = columnv;
+        this.sstart = sstart;
+        pps = new ArrayList<>();
+        while (v.hasRemaining()) {
+            pps.add(new SegRecord(v.getInt(), v.getInt(), v.getShort()));
+        }
+    }
+
+    public HistogramSegment(byte[] key, byte[] val) {
+        ByteBuffer k = ByteBuffer.wrap(key);
+        ByteBuffer v = ByteBuffer.wrap(val);
+        this.sstart = k.getLong(0);
+        columnv = new byte[k.remaining()];
+        k.get(columnv);
+        pps = new ArrayList<>();
+        while (v.hasRemaining()) {
+            pps.add(new SegRecord(v.getInt(), v.getInt(), v.getShort()));
+        }
+    }
+
+    public static long getSstart(byte[] key) {
+        return ByteBuffer.wrap(key).getLong(0);
+    }
+
+    public static byte[] key(long sstart, byte[] columnv) {
+        byte[] b = ByteArrayUtils.encodeLong(sstart, new byte[8 + columnv.length], 0);
+        System.arraycopy(columnv, 0, b, 8, columnv.length);
+        return b;
+    }
+
+    public byte[] val() {
+        ByteBuffer bbv = ByteBuffer.allocate(REC_SIZE * pps.size());
+        for (HistogramSegment.SegRecord p : pps) {
+            bbv.putInt(p.dstart);
+            bbv.putInt(p.dstop);
+            bbv.putShort((short)p.num); //TODO fix overflow int->short (should convert all histograms to int)
+        }
+        return bbv.array();
+    }
+
+    public static long segmentStart(long instant) {
+        return instant / HistogramSegment.GROUPING_FACTOR;
+    }
+
+    // used for merging
+    private boolean mergeLeft, mergeRight;
+
+    HistogramSegment.SegRecord left, right;
+    int dtime;
+
+    /**
+     * @param dtime1
+     *            delta time from segment start in milliseconds
+     */
+    public void merge(int dtime1) {
+        mergeLeft = mergeRight = false;
+        int leftIndex = -1;
+        int rightIndex = -1;
+
+        this.dtime = dtime1;
+        for (int i = 0; i < pps.size(); i++) {
+            HistogramSegment.SegRecord r = pps.get(i);
+            if (dtime >= r.dstart) {
+                if (dtime <= r.dstop) { // inside left
+                    r.num++;
+                    return;
+                }
+                left = r;
+                leftIndex = i;
+                continue;
+            }
+            if (dtime < r.dstart) {
+                rightIndex = i;
+                right = r;
+                break;
+            }
+        }
+
+        if (leftIndex != -1) {
+            checkMergeLeft();
+        }
+
+        if (rightIndex != -1) {
+            checkMergeRight();
+        }
+
+        if (mergeLeft && mergeRight) {
+            selectBestMerge();
+        }
+        // based on the information collected above, compute the new records
+        if (mergeLeft && mergeRight) {
+            pps.set(leftIndex, new SegRecord(left.dstart, right.dstop, left.num + right.num + 1));
+            pps.remove(rightIndex);
+        } else if (mergeLeft) {
+            left.dstop = dtime;
+            left.num++;
+        } else if (mergeRight) {
+            right.dstart = dtime;
+            right.num++;
+        } else { // add a new record
+            HistogramSegment.SegRecord center = new SegRecord(dtime, dtime, 1);
+            if (leftIndex != -1) {
+                pps.add(leftIndex + 1, center);
+            } else if (rightIndex != -1) {
+                pps.add(rightIndex, center);
+            } else {
+                pps.add(center);
+            }
+        }
+    }
+
+    int leftInterval = -1;
+    int rightInterval = -1;
+
+    private void checkMergeLeft() { // check if it can be merged to left
+        if ((dtime - left.dstop) < MAX_INTERVAL) {
+            if (left.num == 1) {
+                mergeLeft = true;
+            } else {
+                leftInterval = (left.dstop - left.dstart) / (left.num - 1);
+                if ((dtime - left.dstop) < leftInterval + LOSS_TIME) {
+                    mergeLeft = true;
+                }
+            }
+        }
+    }
+
+    private void checkMergeRight() { // check if it can be merged to right
+        if ((right.dstart - dtime) < MAX_INTERVAL) {
+            if (right.num == 1) {
+                mergeRight = true;
+            } else {
+                rightInterval = (right.dstop - right.dstart) / (right.num - 1);
+                if ((right.dstart - dtime) < rightInterval + LOSS_TIME) {
+                    mergeRight = true;
+                }
+            }
+        }
+    }
+
+    private void selectBestMerge() {
+        int intervalToLeft = dtime - left.dstop;
+        int intervalToRight = right.dstart - dtime;
+        if (Math.abs(intervalToLeft - intervalToRight) >= LOSS_TIME) {
+            if (intervalToLeft < intervalToRight) {
+                mergeRight = false;
+            } else {
+                mergeLeft = false;
+            }
+        }
+    }
+
+    // add a new record to the segment (to be used for testing only
+    void add(int dstart, int dstop, int num) {
+        pps.add(new SegRecord(dstart, dstop, num));
+
+    }
+
+    public int size() {
+        return pps.size();
+    }
+    
+    public long getSegmentStart() {
+        return sstart;
+    }
+    
+    @Override
+    public String toString() {
+        return "start: " + sstart + ", columnv: " + StringConverter.arrayToHexString(columnv) + " recs:" + pps;
+    }
+
+    static class SegRecord {
+        int dstart, dstop; // deltas from the segment start in milliseconds
+        int num;
+
+        public SegRecord(int dstart, int dstop, int num) {
+            this.dstart = dstart;
+            this.dstop = dstop;
+            this.num = num;
+        }
+
+        @Override
+        public String toString() {
+            return String.format("time:(%d,%d), nump: %d", dstart, dstop, num);
+        }
+    }
+
+    
+}
+```
+
+### `IndexFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/IndexFilter.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class IndexFilter {
+    // currently only supported is filtering on the first column part of the primary index
+    public Object keyStart = null;
+    public Object keyEnd = null;
+    public boolean strictStart, strictEnd;
+
+    @Override
+    public String toString() {
+        return "keyStart: " + keyStart + " strictStart:" + strictStart + " keyEnd: " + keyEnd + " strictEnd: "
+                + strictEnd;
+    }
+}
+```
+
+### `InternalStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/InternalStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+/**
+ * Stream created by the "create stream statement"
+ * <p>
+ * It has an execution context associated and is responsible for closing it when the stream closes.
+ * 
+ */
+public class InternalStream extends Stream implements StreamSubscriber {
+    final ExecutionContext ctx;
+    Stream inner;
+
+    public InternalStream(ExecutionContext ctx, String name, TupleDefinition definition) {
+        super(ctx.getDb(), name, definition);
+        this.ctx = ctx;
+    }
+
+    public void setInner(Stream inner) {
+        this.inner = inner;
+        inner.addSubscriber(this);
+    }
+
+    @Override
+    protected void doClose() {
+        if (inner != null) {
+            inner.close();
+        }
+        ctx.close();
+    }
+
+    @Override
+    public void doStart() {
+        if (inner != null) {
+            inner.start();
+        }
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple tuple) {
+        emitTuple(tuple);
+    }
+
+
+
+    @Override
+    public void streamClosed(Stream stream) {
+        if (stream == inner) {
+            close();
+        }
+    }
+}
+```
+
+### `MergeStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/MergeStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+public class MergeStream extends Stream implements StreamSubscriber, Runnable {
+    private Map<Stream, LinkedBlockingQueue<Tuple>> tupleQueues;
+    private PriorityQueue<TupleQueuePair> orderedQueue;
+    Stream[] streams;
+    private Tuple queueEndMark = new Tuple(new TupleDefinition(), new ArrayList<>());
+    static AtomicInteger counter = new AtomicInteger();
+    private final String mergeColumn;
+
+    public MergeStream(YarchDatabaseInstance ydb, Stream[] streams, String mergeColumn, boolean ascending)
+            throws StreamSqlException {
+        // TODO check that the streams columns have compatible names and types
+        super(ydb, getStreamName(streams), streams[0].getDefinition());
+        this.streams = streams;
+        this.mergeColumn = mergeColumn;
+
+        if (ascending) {
+            orderedQueue = new PriorityQueue<>();
+        } else {
+            orderedQueue = new PriorityQueue<>(REVERSE_COMPARATOR);
+        }
+
+        Map<Stream, LinkedBlockingQueue<Tuple>> t = new HashMap<>();
+
+        for (Stream s : streams) {
+            t.put(s, new LinkedBlockingQueue<Tuple>(50));
+        }
+        tupleQueues = Collections.unmodifiableMap(t);
+
+        for (Stream s : streams) {
+            s.addSubscriber(this);
+        }
+    }
+
+    private static String getStreamName(Stream[] streams) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("merge").append(counter.getAndIncrement());
+        /*		for(Stream s:streams) {
+        		sb.append("_").append(s.getName());
+        	}*/
+        return sb.toString();
+    }
+
+    @Override
+    public void onTuple(Stream s, Tuple tuple) {
+        try {
+            tupleQueues.get(s).put(tuple);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.info("got InterruptedException when writing data to the queue");
+        }
+    }
+
+    @Override
+    public void streamClosed(Stream s) {
+        if (getState() == QUITTING) {
+            return;
+        }
+        log.debug("Got stream closed for {}", s);
+        try {
+            tupleQueues.get(s).put(queueEndMark);
+        } catch (InterruptedException e) {
+            log.info("got InterruptedException when writing the end mark to the queue");
+            Thread.currentThread().interrupt();
+        }
+        // tupleQueues.remove(s);
+    }
+
+    @Override
+    public void doStart() {
+        log.debug("Starting merge stream with {} substreams", streams.length);
+        // first start all the substreams
+        for (Stream s : streams) {
+            s.start();
+        }
+        // now start the thread that collects data from the substreams
+        new Thread(this).start();
+    }
+
+    @Override
+    public void run() {
+        try {
+            // first wait for all the queues to have at least a tuple
+            log.debug("waiting for at least one tuple in each queue");
+            for (LinkedBlockingQueue<Tuple> q : tupleQueues.values()) {
+                Tuple t = q.take();
+                if (t == queueEndMark) {
+                    continue;// this queue is finished, ignore it
+                }
+                orderedQueue.add(new TupleQueuePair(q, t));
+            }
+            log.debug("got one tuple from each stream, starting the business");
+
+            // now continue publishing the first element from the priority queue till it becomes empty
+            while (orderedQueue.size() > 0) {
+                TupleQueuePair tq = orderedQueue.poll();
+                if (getState() == QUITTING) {
+                    break;
+                }
+                emitTuple(tq.t);
+                // get a new tuple from the queue from which the previous one has been sent
+                Tuple t = tq.q.take();
+                if (t == queueEndMark) {
+                    continue;// this queue is finished, ignore it
+                }
+                if (!t.hasColumn(mergeColumn)) {
+                    log.warn("Ignoring tuple because it does not have column {}", mergeColumn);
+                }
+
+                orderedQueue.add(new TupleQueuePair(tq.q, t));
+            }
+            close();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.info("Got interrupted exception, quitting");
+            return;
+        }
+    }
+
+    @Override
+    protected void doClose() {
+        for (Stream s : streams) {
+            s.close();
+        }
+    }
+
+    private static final Comparator<TupleQueuePair> REVERSE_COMPARATOR = (o1, o2) -> -o1.compareTo(o2);
+
+    class TupleQueuePair implements Comparable<TupleQueuePair> {
+
+        LinkedBlockingQueue<Tuple> q;
+        Tuple t;
+
+        TupleQueuePair(LinkedBlockingQueue<Tuple> q, Tuple t) {
+            this.q = q;
+            this.t = t;
+        }
+
+        @Override
+        public int compareTo(TupleQueuePair o) {
+            return DataType.compare(t.getColumn(mergeColumn), o.t.getColumn(mergeColumn));
+        }
+    }
+}
+```
+
+### `OutputStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/OutputStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class OutputStream extends Stream implements StreamSubscriber {
+    ServerSocket serverSocket;
+    Socket socket;
+    Stream subscribedStream;
+    java.io.DataOutputStream dos;
+
+    public OutputStream(YarchDatabaseInstance dict, String name, TupleDefinition def) throws YarchException {
+        super(dict, name, def);
+        try {
+            serverSocket = new ServerSocket(0);
+            log.info("Created output stream {} listening to port {}", this, getPort());
+        } catch (IOException e) {
+            throw new YarchException(e);
+        }
+    }
+
+    public void setSubscribedStream(Stream s) {
+        this.subscribedStream = s;
+    }
+
+    public int getPort() {
+        return serverSocket.getLocalPort();
+    }
+
+    @Override
+    public void onTuple(Stream s, Tuple t) {
+        try {
+            if (socket == null) {
+                socket = serverSocket.accept();
+            }
+            dos = new java.io.DataOutputStream(socket.getOutputStream()); // TODO endinaness
+        } catch (IOException e) {
+            return;
+        }
+        /*
+         * log.trace("Outputing tuple: {}",t);
+         * try {
+         * getDefinition().write(dos,t);
+         * } catch (IOException e) {
+         * e.printStackTrace();
+         * socket=null;
+         * }
+         */
+    }
+
+    /**
+     * Called when the subcribed stream is closed we close this stream also.
+     */
+    @Override
+    public void streamClosed(Stream stream) {
+        close();
+    }
+
+    @Override
+    public void doClose() {
+        subscribedStream.removeSubscriber(this);
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            log.error("got exception when closing the output stream socket: ", e);
+        }
+        if (socket != null) {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                log.warn("got exception when closing the output stream socket:", e);
+            }
+        }
+    }
+
+    @Override
+    public void doStart() {
+        // does nothing.
+    }
+
+    @Override
+    public String toString() {
+        return "OUTPUT STREAM " + name + "(" + outputDefinition.toString() + ")";
+    }
+
+}
+```
+
+### `ParameterValueColumnSerializer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ParameterValueColumnSerializer.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+
+import org.yamcs.parameter.BasicParameterValue;
+import org.yamcs.parameter.ParameterStatus;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+
+import org.yamcs.yarch.protobuf.Db;
+
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.CodedOutputStream.OutOfSpaceException;
+
+public class ParameterValueColumnSerializer implements ColumnSerializer<ParameterValue> {
+
+    @Override
+    public ParameterValue deserialize(ByteArray byteArray, ColumnDefinition cd) {
+        Db.ParameterValue.Builder gpvb = Db.ParameterValue.newBuilder();
+        byteArray.getSizePrefixedProto(gpvb);
+        return fromProto(cd.getName(), gpvb.build());
+    }
+
+    @Override
+    public ParameterValue deserialize(ByteBuffer byteBuf, ColumnDefinition cd) {
+        int size = byteBuf.getInt();
+        if (size > ColumnSerializerFactory.maxBinaryLength) {
+            throw new YarchException("serialized size too big " + size + ">" + ColumnSerializerFactory.maxBinaryLength);
+        }
+
+        Db.ParameterValue.Builder gpvb = Db.ParameterValue.newBuilder();
+
+        int limit = byteBuf.limit();
+        byteBuf.limit(byteBuf.position() + size);
+        try {
+            gpvb.mergeFrom(CodedInputStream.newInstance(byteBuf));
+        } catch (IOException e) {
+            throw new YarchException(e);
+        }
+        byteBuf.limit(limit);
+        byteBuf.position(byteBuf.position() + size);
+
+        return fromProto(cd.getName(), gpvb.build());
+    }
+
+    @Override
+    public void serialize(ByteArray byteArray, ParameterValue pv) {
+        byteArray.addSizePrefixedProto(toProto(pv));
+    }
+
+    @Override
+    public void serialize(ByteBuffer byteBuf, ParameterValue pv) {
+        Db.ParameterValue gpv = toProto(pv);
+        try {
+            int position = byteBuf.position();
+            byteBuf.putInt(0);
+            CodedOutputStream cos = CodedOutputStream.newInstance(byteBuf);
+            gpv.writeTo(cos);
+            int size = cos.getTotalBytesWritten();
+            byteBuf.putInt(position, size);
+            byteBuf.position(position + size + 4);
+        } catch (IOException e) {
+            if (e instanceof OutOfSpaceException) {
+                throw new BufferOverflowException();
+            } else {
+                throw new UncheckedIOException(e);
+            }
+        }
+    }
+
+    private ParameterValue fromProto(String fqn, Db.ParameterValue gpv) {
+        ParameterValue pv = new ParameterValue(fqn);
+        if (gpv.hasAcqStatus()) {
+            pv.setAcqStatus(gpv.getAcqStatus());
+        } else {
+            pv.setAcqStatus(ParameterStatus.getAcquisitionStatus(gpv.getAcquisitionStatus()));
+        }
+
+        if (gpv.hasEngValue()) {
+            pv.setEngValue(ValueUtility.fromGpb(gpv.getEngValue()));
+        }
+
+        if (gpv.hasAcquisitionTime()) {
+            pv.setAcquisitionTime(gpv.getAcquisitionTime());
+        }
+
+        if (gpv.hasExpireMillis()) {
+            pv.setExpireMillis(gpv.getExpireMillis());
+        }
+
+        if (gpv.hasGenerationTime()) {
+            pv.setGenerationTime(gpv.getGenerationTime());
+        }
+        if (gpv.hasMonitoringResult()) {
+            pv.setMonitoringResult(gpv.getMonitoringResult());
+        }
+
+        if (gpv.hasRangeCondition()) {
+            pv.setRangeCondition(gpv.getRangeCondition());
+        }
+
+        if (gpv.hasRawValue()) {
+            pv.setRawValue(ValueUtility.fromGpb(gpv.getRawValue()));
+        }
+
+        return pv;
+    }
+
+    public Db.ParameterValue toProto(ParameterValue pv) {
+
+        Db.ParameterValue.Builder gpvb = Db.ParameterValue.newBuilder()
+                .setAcqStatus(pv.getAcqStatus())
+                .setGenerationTime(pv.getGenerationTime());
+
+        if (pv.getAcquisitionTime() != TimeEncoding.INVALID_INSTANT) {
+            gpvb.setAcquisitionTime(pv.getAcquisitionTime());
+        }
+
+        if (pv.getEngValue() != null) {
+            gpvb.setEngValue(ValueUtility.toGbp(pv.getEngValue()));
+        }
+
+        if (pv.getMonitoringResult() != null) {
+            gpvb.setMonitoringResult(pv.getMonitoringResult());
+        }
+        if (pv.getRangeCondition() != null) {
+            gpvb.setRangeCondition(pv.getRangeCondition());
+        }
+
+        long expireMillis = pv.getExpireMillis();
+        if (expireMillis >= 0) {
+            gpvb.setExpireMillis(expireMillis);
+        }
+
+        if (pv.getWatchRange() != null) {
+            gpvb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(AlarmLevelType.WATCH, pv.getWatchRange()));
+        }
+        if (pv.getWarningRange() != null) {
+            gpvb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(AlarmLevelType.WARNING, pv.getWarningRange()));
+        }
+        if (pv.getDistressRange() != null) {
+            gpvb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(AlarmLevelType.DISTRESS, pv.getDistressRange()));
+        }
+        if (pv.getCriticalRange() != null) {
+            gpvb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(AlarmLevelType.CRITICAL, pv.getCriticalRange()));
+        }
+        if (pv.getSevereRange() != null) {
+            gpvb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(AlarmLevelType.SEVERE, pv.getSevereRange()));
+        }
+
+        if (pv.getRawValue() != null) {
+            gpvb.setRawValue(ValueUtility.toGbp(pv.getRawValue()));
+        }
+        return gpvb.build();
+    }
+}
+```
+
+### `Partition.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Partition.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ *  stores information about Partition of a table
+ *  It is subclassed by storage engines to store additional information 
+ */
+public class Partition {
+    final protected long start, end; // for time based partitioning
+    final protected Object value; // for value based partitioning, otherwise null
+
+    public Partition(long start, long end, Object value) {
+        this.start = start;
+        this.end = end;
+        this.value = value;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public long getEnd() {
+        return end;
+    }
+
+    public Object getValue() {
+        return value;
+    }
+
+    @Override
+    public String toString() {
+        return "Partition [start=" + TimeEncoding.toString(start) + ", end=" + TimeEncoding.toString(end) + ", value=" + value + "]";
+    }
+}
+```
+
+### `PartitioningSpec.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitioningSpec.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class PartitioningSpec {
+    public enum _type {
+        NONE, // no partition at all
+        TIME, // partition by time
+        VALUE, // partition by value
+        TIME_AND_VALUE // partition by time and value (in this order)
+    }
+
+    final public _type type;
+    final public String timeColumn;
+    final public String valueColumn;
+    final TimePartitionSchema timePartitioningSchema;
+
+    // this thing is not final because it is determined the TableDefinition when attaching the pspec. Could be changed
+    // into a builder pattern.
+    private DataType valueColumnType;
+
+    PartitioningSpec(_type type, String timeColumn, String valueColumn, String timePartitioningSchema) {
+        this.type = type;
+        this.timeColumn = timeColumn;
+        this.valueColumn = valueColumn;
+
+        this.timePartitioningSchema = (timePartitioningSchema == null)? 
+                TimePartitionSchema.getInstance("YYYY") :
+                TimePartitionSchema.getInstance(timePartitioningSchema);
+    }
+
+    public static PartitioningSpec noneSpec() {
+        return new PartitioningSpec(_type.NONE, null, null, null);
+    }
+
+    public static PartitioningSpec valueSpec(String valueColumn) {
+        return new PartitioningSpec(_type.VALUE, null, valueColumn, null);
+    }
+
+    public static PartitioningSpec timeSpec(String timeColumn, String timePartitioningSchema) {
+        return new PartitioningSpec(_type.TIME, timeColumn, null, timePartitioningSchema);
+    }
+
+    public static PartitioningSpec timeAndValueSpec(String timeColumn, String valueColumn,
+            String timePartitioningSchema) {
+        return new PartitioningSpec(_type.TIME_AND_VALUE, timeColumn, valueColumn, timePartitioningSchema);
+    }
+
+    public DataType getValueColumnType() {
+        return valueColumnType;
+    }
+
+    public void setValueColumnType(DataType valueColumnType) {
+        if (type != _type.VALUE && type != _type.TIME_AND_VALUE) {
+            throw new IllegalArgumentException("value column type not allowed for type " + type);
+        }
+        this.valueColumnType = valueColumnType;
+    }
+
+    public TimePartitionSchema getTimePartitioningSchema() {
+        return timePartitioningSchema;
+    }
+
+    @Override
+    public String toString() {
+        return "timeColumn: " + timeColumn + " valueColumn:" + valueColumn;
+    }
+}
+```
+
+### `PartitionIntervalIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitionIntervalIterator.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import org.yamcs.yarch.PartitionManager.Interval;
+
+/**
+ * Iterates over time based intervals of a partition
+ * 
+ * @author nm
+ *
+ */
+public class PartitionIntervalIterator implements Iterator<Interval> {
+    final PartitioningSpec partitioningSpec;
+    final Iterator<Interval> it;
+    final Set<Object> partitionValueFilter;
+    Interval next;
+    boolean reverse;
+    long start;
+    boolean jumpToStart = false;
+
+    PartitionIntervalIterator(PartitioningSpec partitioningSpec, Iterator<Interval> it, Set<Object> partitionFilter,
+            boolean reverse) {
+        this.partitioningSpec = partitioningSpec;
+        this.it = it;
+        this.partitionValueFilter = partitionFilter;
+        this.reverse = reverse;
+    }
+
+    public void jumpToStart(long startInstant) {
+        this.start = startInstant;
+        jumpToStart = true;
+    }
+
+    @Override
+    public boolean hasNext() {
+        if (next != null) {
+            return true;
+        }
+
+        while (it.hasNext()) {
+            Interval intv = it.next();
+            if ((!reverse && jumpToStart && intv.hasEnd() && intv.getEnd() <= start) ||
+                    (reverse && jumpToStart && intv.hasStart() && intv.getStart() >= start)) {
+                continue;
+            } else {
+                jumpToStart = false;
+            }
+
+            next = new Interval(intv);
+            for (Map.Entry<Object, Partition> me : intv.partitions.entrySet()) {
+                if ((partitionValueFilter == null) || (partitionValueFilter.contains(me.getKey()))) {
+                    next.add(me.getKey(), me.getValue());
+                }
+            }
+
+            if (next.size() > 0) {
+                break;
+            }
+        }
+        if (next == null || next.size() == 0) {
+            next = null;
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public Interval next() {
+        Interval ret = next;
+        next = null;
+
+        return ret;
+    }
+
+    @Override
+    public void remove() {
+        throw new UnsupportedOperationException("cannot remove partitions like this");
+    }
+}
+```
+
+### `PartitionManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/PartitionManager.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import org.yamcs.utils.PartitionedTimeInterval;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.PartitioningSpec._type;
+
+/**
+ * Keeps track of partitions and histograms for one table.
+ * <p>
+ * The partitioning is organised in a set of time based partitioning intervals, each interval being
+ * one day/month/year long, depending on the partitioning schema.
+ * 
+ * <p>
+ * Each interval has associated a set of value based partitions.
+ * 
+ * <p>
+ * In addition each interval has a set of histograms - one for each table column for which
+ * histograms have been created.
+ * 
+ * <p>
+ * In the RocksDB implementation (both old and new) each interval corresponds to
+ * one rocksdb database directory.
+ * 
+ * <p>
+ * In case there is no time based partitioning, there is only one interval.
+ * <p>
+ * In case there is no value based partitioning, there is only one partition in
+ * each interval.
+ * 
+ * @author nm
+ *
+ */
+public abstract class PartitionManager {
+    final protected TableDefinition tableDefinition;
+    final protected PartitioningSpec partitioningSpec;
+
+    protected final PartitionedTimeInterval<Interval> intervals = new PartitionedTimeInterval<>();
+    // pcache is a cache of the last interval where data has been inserted
+    // in case of value based partition, it is basically the list of all
+    // partitions
+    protected Interval pcache;
+
+    public PartitionManager(TableDefinition tableDefinition) {
+        this.tableDefinition = tableDefinition;
+        this.partitioningSpec = tableDefinition.getPartitioningSpec();
+        if (partitioningSpec.type == _type.NONE || partitioningSpec.type == _type.VALUE) {
+            // pcache never changes in this case
+            pcache = new Interval();
+            intervals.insert(pcache);
+        }
+    }
+
+    /**
+     * Returns an iterator which at each step gives the list of partition
+     * corresponding to a time interval (so when we do a replay those partitions
+     * have to be played in parallel). The iterator returns intervals sorted on
+     * time.
+     * 
+     * 
+     * @param partitionValueFilter
+     *            - return only partitions whose value are in the filter. If
+     *            null, return all partitions;
+     * @return iterator going over partitions
+     */
+    public Iterator<Interval> iterator(Set<Object> partitionValueFilter) {
+        return new PartitionIntervalIterator(partitioningSpec, intervals.iterator(), partitionValueFilter, false);
+    }
+
+    /**
+     * same as above, only in reverse direction
+     * 
+     * @param partitionValueFilter
+     * @return
+     */
+    public Iterator<Interval> reverseIterator(Set<Object> partitionValueFilter) {
+        return new PartitionIntervalIterator(partitioningSpec, intervals.reverseIterator(), partitionValueFilter, true);
+    }
+
+    /**
+     * See {@link #iterator(Set)}
+     * 
+     * @param start
+     * @param partitionValueFilter
+     *            values - return only partitions whose value are in the filter.
+     *            If null, return all partitions;
+     * 
+     * @return an iterator over the partitions starting at the specified start
+     *         time
+     * 
+     */
+    public Iterator<PartitionManager.Interval> iterator(long start, Set<Object> partitionValueFilter) {
+        PartitionIntervalIterator pi = new PartitionIntervalIterator(partitioningSpec, intervals.iterator(),
+                partitionValueFilter,
+                false);
+        pi.jumpToStart(start);
+        return pi;
+    }
+
+    /**
+     * Iterates over all intervals overlapping with the timeInterval.
+     * 
+     * Note that the timeInterval is considered closed at both ends (if set):
+     * [timeInterval.start, timeInterval.stop] whereas the partition intervals
+     * are considered closed at start and open at stop: [Interval.start,
+     * Interval.stop)
+     * 
+     */
+    public Iterator<Interval> intervalIterator(TimeInterval timeInterval) {
+        return intervals.overlappingIterator(timeInterval);
+    }
+
+    public Iterator<Interval> reverseIterator(long start, Set<Object> partitionValueFilter) {
+        PartitionIntervalIterator pi = new PartitionIntervalIterator(partitioningSpec, intervals.reverseIterator(),
+                partitionValueFilter, true);
+        pi.jumpToStart(start);
+        return pi;
+    }
+
+    /**
+     * Creates (if not already existing) and returns the partition in which the
+     * instant,value should be written.
+     *
+     * value can be null (in case of no value partitioning)
+     * 
+     * @param instant
+     *            - time for which the partition has to be created - can be
+     *            TimeEncoding.INVALID in case value only or no partitioning
+     * @param value
+     *            - value for which the partition has to be created - can be
+     *            null in case of time only or no partitioning.
+     * 
+     *            For the enum partitions, the value is the index (type Short)
+     *            rather than the string.
+     * 
+     * @return a Partition
+     * @throws IOException
+     */
+    public synchronized Partition createAndGetPartition(long instant, Object value) throws IOException {
+        Partition partition;
+        Interval tmpInterval = pcache;
+
+        if ((partitioningSpec.timeColumn != null) &&
+                ((tmpInterval == null) || (!tmpInterval.contains0(instant)))) {
+            tmpInterval = intervals.getFit(instant);
+            if (tmpInterval == null) {
+                TimePartitionInfo pinfo = partitioningSpec.getTimePartitioningSchema().getPartitionInfo(instant);
+                tmpInterval = intervals.insert(new Interval(pinfo.getStart(), pinfo.getEnd()), 60000L);
+                assert tmpInterval != null;
+            }
+        }
+        partition = tmpInterval.get(value);
+        if (partition == null) {
+            if (partitioningSpec.timeColumn != null) {
+                TimePartitionInfo pinfo = partitioningSpec.getTimePartitioningSchema().getPartitionInfo(instant);
+                partition = createPartitionByTime(pinfo, value);
+            } else {
+                partition = createPartition(value);
+            }
+            tmpInterval.add(value, partition);
+        }
+        pcache = tmpInterval;
+
+        return partition;
+    }
+
+    public synchronized HistogramInfo createAndGetHistogram(long instant, String columnName) {
+        HistogramInfo histo;
+        Interval tmpInterval = pcache;
+        if ((partitioningSpec.timeColumn != null) &&
+                ((tmpInterval == null) || (!tmpInterval.contains0(instant)))) {
+            tmpInterval = intervals.getFit(instant);
+            if (tmpInterval == null) {
+                TimePartitionInfo pinfo = partitioningSpec.getTimePartitioningSchema().getPartitionInfo(instant);
+                tmpInterval = intervals.insert(new Interval(pinfo.getStart(), pinfo.getEnd()), 60000L);
+                assert tmpInterval != null;
+            }
+        }
+
+        histo = tmpInterval.getHistogram(columnName);
+        if (histo == null) {
+            if (partitioningSpec.timeColumn != null) {
+                TimePartitionInfo pinfo = partitioningSpec.getTimePartitioningSchema().getPartitionInfo(instant);
+                histo = createHistogramByTime(pinfo, columnName);
+            } else {
+                histo = createHistogram(columnName);
+            }
+            tmpInterval.addHistogram(columnName, histo);
+        }
+        pcache = tmpInterval;
+        return histo;
+    }
+
+    /**
+     * Gets partition where tuple has to be written. Creates the partition if
+     * necessary.
+     * 
+     * @param t
+     * 
+     * @return the partition where the tuple has to be written
+     * @throws IOException
+     */
+    public synchronized Partition getPartitionForTuple(Tuple t) throws IOException {
+        long time = TimeEncoding.INVALID_INSTANT;
+        Object value = null;
+        if (partitioningSpec.timeColumn != null) {
+            time = (Long) t.getColumn(partitioningSpec.timeColumn);
+        }
+        if (partitioningSpec.valueColumn != null) {
+            value = t.getColumn(partitioningSpec.valueColumn);
+            ColumnDefinition cd = tableDefinition.getColumnDefinition(partitioningSpec.valueColumn);
+            if (cd.getType() == DataType.ENUM) {
+                value = tableDefinition.addAndGetEnumValue(partitioningSpec.valueColumn, (String) value);
+            }
+        }
+        return createAndGetPartition(time, value);
+    }
+
+    /**
+     * Get the name of the table whose partitions are managed by this object.
+     * 
+     * @return the name of the table.
+     */
+    public String getTableName() {
+        return tableDefinition.getName();
+    }
+
+    public TableDefinition getTableDefinition() {
+        return tableDefinition;
+    }
+
+    public PartitioningSpec getPartitioningSpec() {
+        return partitioningSpec;
+    }
+
+    /**
+     * Create a partition for time (and possible value) based partitioning
+     * 
+     * @param pinfo
+     * @param value
+     * @return
+     * @throws IOException
+     */
+    protected abstract Partition createPartitionByTime(TimePartitionInfo pinfo, Object value) throws IOException;
+
+    /**
+     * Create a partition for value based partitioning
+     * 
+     * @param value
+     * @return
+     */
+    protected abstract Partition createPartition(Object value);
+
+    protected abstract HistogramInfo createHistogramByTime(TimePartitionInfo pinfo, String columnName);
+
+    protected abstract HistogramInfo createHistogram(String columnName);
+
+    /**
+     * Retrieves the existing partitions
+     * 
+     * @return list of all existing partitions
+     */
+    public List<Partition> getPartitions() {
+        List<Partition> plist = new ArrayList<>();
+        for (Interval interval : intervals) {
+            plist.addAll(interval.partitions.values());
+        }
+        return plist;
+    }
+
+    /**
+     * For tables partitioned by time this holds all the partitions for a given time interval. For example if YYYY
+     * schema is used, this holds all the partitions for one year.
+     * 
+     * <p>
+     * For tables not partitioned by time, this holds all the partitions (by value) for the table and there is only one
+     * instance of this class for that table.
+     * <p>
+     * 
+     * Practically it keeps a value -&gt; partition map.
+     *
+     */
+    public static class Interval extends TimeInterval implements Iterable<Partition> {
+        // we use this as a key in the ConcurrentHashMap in case value is null (i.e. time only partitioning)
+        static final Object NON_NULL = new Object();
+
+        Map<Object, Partition> partitions = new ConcurrentHashMap<>();
+
+        // columnName -> Histogram for this interval
+        Map<String, HistogramInfo> histograms = new ConcurrentHashMap<>();
+
+        public Interval(long start, long stop) {
+            super(start, stop);
+        }
+
+        /**
+         * Constructs an interval without start or stop (covers all time)
+         */
+        public Interval() {
+            super();
+        }
+
+        public Interval(TimeInterval intv) {
+            super(intv);
+        }
+
+        /**
+         * Get the partition corresponding to the value
+         * 
+         * @param value
+         * @return
+         */
+        public Partition get(Object value) {
+            if (value == null) {
+                return partitions.get(NON_NULL);
+            } else {
+                return partitions.get(value);
+            }
+        }
+
+        public void addTimePartition(Partition partition) {
+            partitions.put(NON_NULL, partition);
+        }
+
+        /**
+         * Add a partition
+         * 
+         * @param value
+         *            - can be null in case of time based partitioning
+         */
+        public void add(Object value, Partition partition) {
+            if (value != null) {
+                partitions.put(value, partition);
+            } else {
+                addTimePartition(partition);
+            }
+        }
+
+        public void addHistogram(String columnName, HistogramInfo histo) {
+            histograms.put(columnName, histo);
+        }
+
+        public Map<Object, Partition> getPartitions() {
+            return Collections.unmodifiableMap(partitions);
+        }
+
+        public List<Partition> getPartitionList() {
+            return new ArrayList<Partition>(partitions.values());
+        }
+
+        public HistogramInfo getHistogram(String columnName) {
+            return histograms.get(columnName);
+        }
+
+        public Collection<HistogramInfo> getHistograms() {
+            return histograms.values();
+        }
+
+        /**
+         * Iterates over the partitions from this interval
+         */
+        @Override
+        public Iterator<Partition> iterator() {
+            return partitions.values().iterator();
+        }
+
+        /**
+         * @return the number of partitions in this interval
+         */
+        public int size() {
+            return partitions.size();
+        }
+
+       
+
+        public Collection<HistogramInfo> removeHistograms() {
+            List<HistogramInfo> l = new ArrayList<>(histograms.values());
+            histograms.clear();
+            return l;
+        }
+
+        @Override
+        public String toString() {
+            return "[" + TimeEncoding.toString(getStart()) + "(" + getStart() + ") - " + TimeEncoding.toString(getEnd())
+                    + "(" + getEnd()
+                    + ")] values: " + partitions;
+        }
+    }
+}
+```
+
+### `ProtobufDatabase.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ProtobufDatabase.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+
+import com.google.protobuf.Message;
+
+/**
+ * A database that allows to store and retrieve protobuf messages.
+ */
+public interface ProtobufDatabase {
+
+    /**
+     * Save a protobuf message. If a message is already saved under the given id, it is overwritten.
+     * 
+     * @param id
+     *            the identifier
+     * @param message
+     *            the protobuf message
+     */
+    void save(String id, Message message) throws IOException;
+
+    /**
+     * Retrieves a protobuf message for a specific id.
+     * 
+     * @param id
+     *            the identifier to search for
+     * @param messageClass
+     *            the expected message class
+     * 
+     * @return the found message, or {@code null}
+     */
+    <T extends Message> T get(String id, Class<T> messageClass) throws IOException;
+
+    /**
+     * Delete a protobuf message for a specific id.
+     * 
+     * @param id
+     *            the identifier to search for
+     * 
+     * @return whether a record was found and deleted.
+     */
+    boolean delete(String id) throws IOException;
+}
+```
+
+### `ProtobufDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/ProtobufDataType.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.lang.reflect.Method;
+
+import org.yamcs.ConfigurationException;
+
+import com.google.protobuf.Descriptors.Descriptor;
+
+public class ProtobufDataType extends DataType {
+
+private final String className;
+    protected ProtobufDataType(String className) {
+        super(_type.PROTOBUF, PROTOBUF_ID);
+        this.className = className;
+    }
+    
+    
+    public String toString() {
+        return name();
+    } 
+    
+    @Override
+    public String name() {
+        return "PROTOBUF("+className+")";
+    }
+    
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result
+                + ((className == null) ? 0 : className.hashCode());
+        return result;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ProtobufDataType other = (ProtobufDataType) obj;
+        if (className == null) {
+            if (other.className != null)
+                return false;
+        } else if (!className.equals(other.className))
+            return false;
+        return true;
+    }
+
+
+    public String getClassName() {
+        return className;
+    }
+    
+    @Override
+    public String javaType() {
+        return className;
+    }
+    
+    
+    public Descriptor getDescriptor() {
+        try {
+            Class<?> c = Class.forName(className);
+            Method m = c.getMethod("getDescriptor");
+            return (Descriptor) m.invoke(null);
+        } catch (Exception e) {
+            throw new ConfigurationException("cannot get the descriptor for class "+className, e);
+        }
+    }
+}
+```
+
+### `RawTuple.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/RawTuple.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Comparator;
+
+import com.google.common.primitives.UnsignedBytes;
+
+
+public abstract class RawTuple implements Comparable<RawTuple>{
+    protected int index; //used for sorting tuples with equals keys
+    protected abstract byte[] getKey();
+    protected abstract byte[] getValue();
+    
+    static Comparator<byte[]> bytesComparator=UnsignedBytes.lexicographicalComparator();
+
+    public static Comparator<RawTuple> reverseComparator = new Comparator<RawTuple>() {
+        @Override
+        public int compare(RawTuple o1, RawTuple o2) {
+            return -o1.compareTo(o2);
+        }
+    };
+
+    public RawTuple(int index) {
+        this.index=index;
+    }
+
+    @Override
+    public int compareTo(RawTuple o) {
+        int c = bytesComparator.compare(getKey(), o.getKey());
+        if(c!=0) return c;
+        return (index-o.index);
+    }
+}
+```
+
+### `Row.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Row.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Arrays;
+
+import org.yamcs.utils.IndexedList;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.TableColumnDefinition;
+
+/**
+ * 
+ * This is like a tuple used in the context of table writing to collect values used for histograms and secondary
+ * indices.
+ * <p>
+ * It is fixed size and unlike the normal tuples, it stores null values on the missing column places.
+ * 
+ * @author nm
+ *
+ */
+public class Row {
+    IndexedList<String, TableColumnDefinition> definition;
+    Object[] values;
+    byte[] key;
+
+    public Row(IndexedList<String, TableColumnDefinition> definition) {
+        this.definition = definition;
+        this.values = new Object[definition.size()];
+    }
+
+    int getIndex(String colName) {
+        return definition.getIndex(colName);
+    }
+
+    public Object get(int idx) {
+        return values[idx];
+    }
+
+    public Object get(String colName) {
+        int idx = getIndex(colName);
+        return values[idx];
+    }
+
+    void set(int idx, Object value) {
+        this.values[idx] = value;
+    }
+
+    void set(String colName, Object value) {
+        int idx = getIndex(colName);
+        this.values[idx] = value;
+    }
+
+    public void clear() {
+        Arrays.fill(values, null);
+    }
+
+    public void setKey(byte[] key) {
+        this.key = key;
+    }
+
+    public byte[] getKey() {
+        return key;
+    }
+
+    public TableColumnDefinition getColumnDefinition(String colName) {
+        return definition.get(colName);
+    }
+
+    public String toString() {
+        return StringConverter.arrayToHexString(key) + ":" + Arrays.toString(values);
+    }
+}
+```
+
+### `SelectStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SelectStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @see org.yamcs.yarch.streamsql.SelectExpression
+ *
+ */
+public class SelectStream extends Stream implements StreamSubscriber {
+    CompiledExpression whereExp;
+    Stream input;
+    final private List<CompiledExpression> aggInputList;
+    final private List<CompiledExpression> selectList;
+    final private WindowProcessor windowProc;
+    final private boolean hasStars;
+
+    // used as a marker for the * in "select a,*,b from..." expressions
+    final static public CompiledExpression STAR = new CompiledExpression() {
+        @Override
+        public Object getValue(Tuple tuple) {
+            return null;
+        }
+
+        @Override
+        public ColumnDefinition getDefinition() {
+            return null;
+        }
+    };
+
+    /**
+     * 
+     * @param ydb
+     * @param input
+     * @param cWhereClause
+     *            if null, then no where filtering
+     * @param wp
+     *            if null, then no windowProcessing (aggInputList is also null in this case)
+     * @param cselectList
+     * @param outputDef
+     *            //output definition containing the expanded stars
+     * @param minOutputDef
+     *            //output definition where stars are not included
+     */
+    public SelectStream(YarchDatabaseInstance ydb, Stream input, CompiledExpression cWhereClause,
+            List<CompiledExpression> caggInputList, WindowProcessor wp,
+            List<CompiledExpression> cselectList, TupleDefinition outputDef, TupleDefinition minOutputDef) {
+
+        super(ydb, input.getName() + "_select", outputDef);
+        this.input = input;
+        input.addSubscriber(this);
+
+        this.aggInputList = caggInputList;
+        this.whereExp = cWhereClause;
+        this.windowProc = wp;
+        this.selectList = cselectList;
+        boolean hs = false;
+        if (selectList != null) {
+            for (CompiledExpression ce : selectList) {
+                if (ce == STAR) {
+                    hs = true;
+                    break;
+                }
+            }
+        }
+        hasStars = hs;
+    }
+
+    @Override
+    public void onTuple(Stream stream, Tuple t) {
+        if (whereExp != null) {
+            Boolean v = (Boolean) whereExp.getValue(t);
+            if (v == null || !v) {
+                return;
+            }
+        }
+        if (windowProc != null) {
+            processWindow(t);
+        } else {
+            processSelectList(t);
+        }
+    }
+
+    private void processWindow(Tuple tuple) {
+        if (aggInputList != null) {
+            Object[] v = new Object[aggInputList.size()];
+            for (int i = 0; i < v.length; i++) {
+                v[i] = aggInputList.get(i).getValue(tuple);
+            }
+            tuple = new Tuple(windowProc.aggInputDef, v);
+        }
+        for (Tuple t : windowProc.newData(tuple)) {
+            processSelectList(t);
+        }
+    }
+
+    private void processSelectList(Tuple tuple) {
+        if (selectList == null) {
+            emitTuple(tuple);
+            return;
+        }
+        ArrayList<Object> v = new ArrayList<>();
+        TupleDefinition tdef = new TupleDefinition();
+        for (CompiledExpression ce : selectList) {
+            if (ce == STAR) {
+                for (int i = 0; i < tuple.size(); i++) {
+                    tdef.addColumn(tuple.getColumnDefinition(i));
+                    v.add(tuple.getColumn(i));
+                }
+            } else {
+                tdef.addColumn(ce.getDefinition());
+                v.add(ce.getValue(tuple));
+            }
+        }
+        tuple = new Tuple(tdef, v);
+        emitTuple(tuple);
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        if (windowProc != null) {
+            for (Tuple t : windowProc.streamClosed()) {
+                processSelectList(t);
+            }
+        }
+        close();
+    }
+
+    @Override
+    public void doStart() {
+        input.start();
+    }
+
+    @Override
+    protected void doClose() {
+        input.close();
+    }
+}
+```
+
+### `Sequence.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Sequence.java`
+
+
+```java
+package org.yamcs.yarch;
+
+/**
+ * Sequences generate incrementing numbers and are persisted to the database (i.e. upon restart they continue from where
+ * they left)
+ * 
+ * 
+ * @author nm
+ *
+ */
+public interface Sequence {
+    long get();
+    long next() throws YarchException;
+    void reset(long value);
+}
+```
+
+### `SequenceInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SequenceInfo.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class SequenceInfo {
+    final private String name;
+    final private long value;
+
+    public SequenceInfo(String name, long value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getValue() {
+        return value;
+    }
+}
+```
+
+### `SqlBuilder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/SqlBuilder.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.yamcs.utils.TimeEncoding;
+
+import com.google.protobuf.Timestamp;
+
+public class SqlBuilder {
+
+    private String table;
+    private List<String> selectExpressions = new ArrayList<>();
+    private List<String> conditions = new ArrayList<>(2);
+    private Boolean descend;
+    private Long offset;
+    private Long limit;
+
+    private List<Object> queryArgs = new ArrayList<>();
+
+    public SqlBuilder(String table) {
+        this.table = table;
+    }
+
+    /**
+     * Additive! Calling multiple times will add extra select expressions to the already specified list.
+     */
+    public SqlBuilder select(String... exprs) {
+        for (String expr : exprs) {
+            selectExpressions.add(expr);
+        }
+        return this;
+    }
+
+    /**
+     * Additive! Calling multiple times will add extra conditions to the already specified list.
+     */
+    public SqlBuilder where(String whereCondition, Object... args) {
+        conditions.add(whereCondition);
+        for (Object o : args) {
+            queryArgs.add(o);
+        }
+        return this;
+    }
+
+    public SqlBuilder whereColAfter(String colName, Timestamp timestamp) {
+        return whereColAfter(colName, TimeEncoding.fromProtobufTimestamp(timestamp), true);
+    }
+
+    public SqlBuilder whereColAfter(String colName, long instant) {
+        return whereColAfter(colName, instant, true);
+    }
+
+    public SqlBuilder whereColAfterOrEqual(String colName, long instant) {
+        return whereColAfter(colName, instant, false);
+    }
+
+    public SqlBuilder whereColAfterOrEqual(String colName, Timestamp timestamp) {
+        return whereColAfter(colName, TimeEncoding.fromProtobufTimestamp(timestamp), false);
+    }
+
+    private SqlBuilder whereColAfter(String colName, long instant, boolean strict) {
+        StringBuilder cond = new StringBuilder();
+        cond.append(colName);
+        cond.append(strict ? " > " : " >= ");
+        cond.append(instant);
+        conditions.add(cond.toString());
+        return this;
+    }
+
+    public SqlBuilder whereColBeforeOrEqual(String colName, Timestamp timestamp) {
+        return whereColBefore(colName, TimeEncoding.fromProtobufTimestamp(timestamp), false);
+    }
+
+    public SqlBuilder whereColBeforeOrEqual(String colName, long instant) {
+        return whereColBefore(colName, instant, false);
+    }
+
+    public SqlBuilder whereColBefore(String colName, Timestamp timestamp) {
+        return whereColBefore(colName, TimeEncoding.fromProtobufTimestamp(timestamp), true);
+    }
+
+    public SqlBuilder whereColBefore(String colName, long instant) {
+        return whereColBefore(colName, instant, true);
+    }
+
+    private SqlBuilder whereColBefore(String colName, long instant, boolean strict) {
+        StringBuilder cond = new StringBuilder();
+        cond.append(colName);
+        cond.append(strict ? " < " : " <= ");
+        cond.append(instant);
+        conditions.add(cond.toString());
+        return this;
+    }
+
+    public SqlBuilder whereColIn(String colName, Collection<?> values) {
+        return whereColInNotIn(colName, values, true);
+    }
+
+    public SqlBuilder whereColNotIn(String colName, Collection<?> values) {
+        return whereColInNotIn(colName, values, false);
+    }
+
+    private SqlBuilder whereColInNotIn(String colName, Collection<?> values, boolean in) {
+        StringBuilder cond = new StringBuilder();
+        cond.append(colName);
+        if (!in) {
+            cond.append(" NOT");
+        }
+        cond.append(" IN (");
+        boolean first = true;
+        for (Object o : values) {
+            if (first) {
+                first = false;
+            } else {
+                cond.append(", ");
+            }
+            cond.append("?");
+            queryArgs.add(o);
+        }
+        cond.append(")");
+        conditions.add(cond.toString());
+
+        return this;
+    }
+
+    public SqlBuilder descend(boolean descend) {
+        this.descend = descend;
+        return this;
+    }
+
+    public SqlBuilder limit(long limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public SqlBuilder limit(long offset, long limit) {
+        this.offset = offset;
+        this.limit = limit;
+        return this;
+    }
+
+    public List<Object> getQueryArguments() {
+        return queryArgs;
+    }
+
+    public Object[] getQueryArgumentsArray() {
+        return queryArgs.toArray();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder buf = new StringBuilder("select ");
+        if (selectExpressions.isEmpty()) {
+            buf.append("*");
+        } else {
+            boolean first = true;
+            for (String expr : selectExpressions) {
+                if (!first) {
+                    buf.append(", ");
+                }
+                buf.append(expr);
+                first = false;
+            }
+        }
+        buf.append(" from ").append(table);
+        if (!conditions.isEmpty()) {
+            buf.append(" where ");
+            boolean first = true;
+            for (String condition : conditions) {
+                if (!first) {
+                    buf.append(" and ");
+                } else {
+                    first = false;
+                }
+                buf.append(condition);
+            }
+        }
+        if (descend != null) {
+            buf.append(descend ? " order desc" : " order asc");
+        }
+        if (limit != null) {
+            if (offset != null) {
+                buf.append(" limit ").append(offset).append(",").append(limit);
+            } else {
+                buf.append(" limit ").append(limit);
+            }
+        }
+        return buf.toString();
+    }
+}
+```
+
+### `StorageEngine.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/StorageEngine.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.List;
+
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.TableWriter.InsertMode;
+
+public interface StorageEngine {
+    /**
+     * Loads the table definitions from the disk for all the tables belonging to the instance.
+     * <p>
+     * called at startup.
+     * 
+     * @param ydb
+     * @throws YarchException
+     */
+    public List<TableDefinition> loadTables(YarchDatabaseInstance ydb) throws YarchException;
+
+    /**
+     * Create a new table based on definition.
+     * 
+     * @param ydb
+     * @param tblDef
+     * @throws YarchException
+     */
+    public void createTable(YarchDatabaseInstance ydb, TableDefinition tblDef) throws YarchException;
+
+    /**
+     * Persist the table definition to diks (called when the table definition modifies)
+     * 
+     * <p>
+     * The general table properties should be read from the tblDef argument but the column properties should be read
+     * from the extra arguments This is because the method is called with modified column content which is not reflected
+     * in the table definition until the data is saved in the database.
+     * 
+     * @param ydb
+     * @param tblDef
+     * @throws YarchException
+     */
+    public void saveTableDefinition(YarchDatabaseInstance ydb, TableDefinition tblDef,
+            List<TableColumnDefinition> keyColumns,
+            List<TableColumnDefinition> valueColumns) throws YarchException;
+
+    /**
+     * Drop the table (removing all data)
+     * 
+     * @param ydb
+     * @param tblDef
+     * @throws YarchException
+     */
+    public void dropTable(YarchDatabaseInstance ydb, TableDefinition tblDef) throws YarchException;
+
+    /**
+     * 
+     * Creates a new table writer
+     * 
+     * @param ydb
+     * @param tblDef
+     * @param insertMode
+     * @return
+     * @throws YarchException
+     */
+    public TableWriter newTableWriter(YarchDatabaseInstance ydb, TableDefinition tblDef, InsertMode insertMode)
+            throws YarchException;
+
+    /**
+     * 
+     * Creates a new table iterator.
+     * 
+     * @param ctx
+     * @param tblDef
+     */
+    public TableWalker newTableWalker(ExecutionContext ctx, TableDefinition tblDef, boolean ascending,
+            boolean follow);
+
+    public HistogramIterator getHistogramIterator(YarchDatabaseInstance ydb, TableDefinition tblDef, String columnName,
+            TimeInterval interval) throws YarchException;
+
+    public BucketDatabase getBucketDatabase(YarchDatabaseInstance yarchDatabaseInstance) throws YarchException;
+
+    public ProtobufDatabase getProtobufDatabase(YarchDatabaseInstance ydb) throws YarchException;
+
+    public PartitionManager getPartitionManager(YarchDatabaseInstance ydb, TableDefinition tblDef);
+
+    /**
+     * In Yamcs version 4 the table definitions were stored in yaml serialized format (in the
+     * /storage/yamcs-data/<instance-name>/<table-name>.def)
+     * 
+     * <p>
+     * This function is called to migrate them inside the storage engine where they are stored starting with Yamcs 5
+     * 
+     * @throws YarchException
+     */
+    default void migrateTableDefinition(YarchDatabaseInstance ydb, TableDefinition tblDef) throws YarchException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Returns a sequence with the given name if it exists or first create it and returns it if create is true.
+     * <p>
+     * If create is false and the sequence does not exist, returns null.
+     * 
+     * @param name
+     * @param create
+     * @return
+     * @throws YarchException
+     */
+    public Sequence getSequence(YarchDatabaseInstance ydb, String name, boolean create) throws YarchException;
+
+    public TableWalker newSecondaryIndexTableWalker(YarchDatabaseInstance ydb, TableDefinition tableDefinition,
+            boolean ascending, boolean follow);
+
+    /**
+     * Gets the list of sequences togehter with their latest values
+     */
+    public List<SequenceInfo> getSequencesInfo(YarchDatabaseInstance ydb);
+
+    /**
+     * rename the table
+     */
+    public void renameTable(YarchDatabaseInstance ydb, TableDefinition tblDef, String newName);
+
+}
+```
+
+### `Stream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Stream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.yamcs.logging.Log;
+
+/**
+ * Streams are means to transport tuples.
+ *
+ */
+public abstract class Stream {
+
+    // states
+    public static final int SETUP = 0;
+    public static final int RUNNING = 1;
+    public static final int QUITTING = 2;
+
+    protected String name;
+    protected TupleDefinition outputDefinition;
+    final protected Collection<StreamSubscriber> subscribers = new ConcurrentLinkedQueue<>();
+
+    protected AtomicInteger state = new AtomicInteger(SETUP);
+
+    protected Log log;
+
+    protected YarchDatabaseInstance ydb;
+    private volatile AtomicLong dataCount = new AtomicLong();
+    private volatile AtomicInteger subscriberCount = new AtomicInteger();
+    private ExceptionHandler handler;
+
+    protected Stream(YarchDatabaseInstance ydb, String name, TupleDefinition definition) {
+        this.name = name;
+        this.outputDefinition = definition;
+        this.ydb = ydb;
+        log = new Log(getClass(), ydb.getName());
+        log.setContext(name);
+    }
+
+    /**
+     * Start emitting tuples.
+     */
+    public abstract void doStart();
+
+    public TupleDefinition getDefinition() {
+        return outputDefinition;
+    }
+
+    public void emitTuple(Tuple tuple) {
+        dataCount.incrementAndGet();
+        for (StreamSubscriber s : subscribers) {
+            try {
+                s.onTuple(this, tuple);
+            } catch (Exception e) {
+                if (handler != null) {
+                    handler.handle(tuple, s, e);
+                } else {
+                    log.warn("Exception received when emitting tuple to subscriber " + s, e);
+                    throw e;
+                }
+            }
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String streamName) {
+        this.name = streamName;
+    }
+
+    public void addSubscriber(StreamSubscriber s) {
+        subscribers.add(s);
+        subscriberCount.incrementAndGet();
+    }
+
+    public void removeSubscriber(StreamSubscriber s) {
+        subscribers.remove(s);
+        subscriberCount.decrementAndGet();
+    }
+
+    public ColumnDefinition getColumnDefinition(String colName) {
+        return outputDefinition.getColumn(colName);
+    }
+
+    /**
+     * Start the stream by changing the state and calling {@link #doStart()}
+     * <p>
+     * If the stream is already started, do nothing.
+     */
+    final public void start() {
+        if (state.compareAndSet(SETUP, RUNNING)) {
+            doStart();
+        }
+    }
+
+    protected boolean isRunning() {
+        return state.get() == RUNNING;
+    }
+
+    protected boolean quitting() {
+        return state.get() == QUITTING;
+    }
+
+    /**
+     * Closes the stream by changing the state, calling {@link #doClose()} sand then sending the streamClosed signal to
+     * all subscribed clients.
+     * <p>
+     * if the stream is already closed, do nothing.
+     */
+    public final void close() {
+        int oldState = state.getAndSet(QUITTING);
+        if (oldState == QUITTING) {
+            return;
+        }
+
+        ydb.removeStream(name);
+        log.debug("Closed stream {} num emitted tuples: {}", name, getDataCount());
+        doClose();
+        for (StreamSubscriber s : subscribers) {
+            s.streamClosed(this);
+        }
+    }
+
+    protected abstract void doClose();
+
+    public int getState() {
+        return state.get();
+    }
+
+    public boolean isClosed() {
+        return state.get() == QUITTING;
+    }
+
+    public long getDataCount() {
+        return dataCount.get();
+    }
+
+    public int getSubscriberCount() {
+        return subscriberCount.get();
+    }
+
+    public Collection<StreamSubscriber> getSubscribers() {
+        return Collections.unmodifiableCollection(subscribers);
+    }
+
+    public void exceptionHandler(ExceptionHandler h) {
+        this.handler = h;
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    public static interface ExceptionHandler {
+        public void handle(Tuple tuple, StreamSubscriber s, Throwable t);
+    }
+}
+```
+
+### `StreamSubscriber.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/StreamSubscriber.java`
+
+
+```java
+package org.yamcs.yarch;
+
+@FunctionalInterface
+public interface StreamSubscriber {
+
+    void onTuple(Stream stream, Tuple tuple);
+
+    default void streamClosed(Stream stream) {
+    }
+}
+```
+
+### `Table.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Table.java`
+
+
+```java
+package org.yamcs.yarch;
+
+
+public abstract class Table {
+    final protected TableDefinition tableDefinition;
+    
+    public Table(TableDefinition tblDef) {
+        this.tableDefinition = tblDef;
+    }
+    
+
+    public TableDefinition getDefinition() {
+        return tableDefinition;
+    }
+
+
+    public String getName() {
+        return tableDefinition.getName();
+    }
+    
+}
+```
+
+### `TableColumnDefinition.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableColumnDefinition.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+
+import org.yamcs.LimitExceededException;
+import org.yamcs.utils.ByteArray;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+/**
+ * Stores properties for table columns
+ * 
+ * @author nm
+ *
+ */
+public class TableColumnDefinition extends ColumnDefinition {
+    private ColumnSerializer<Object> serializer;
+    BiMap<String, Short> enumValues;
+    boolean autoincrement;
+
+    //used to get the next value for this column when autoincrement = true
+    Sequence sequence;
+    
+    public TableColumnDefinition(String name, DataType type) {
+        super(name, type);
+        if (type.hasEnums()) {
+            enumValues = HashBiMap.create();
+        }
+    }
+
+
+
+    public TableColumnDefinition(ColumnDefinition c) {
+        this(c.name, c.type);
+    }
+
+    /**
+     * Copies the definition into a new one with a different type. Used for some table migrations operations between
+     * versions.
+     */
+    TableColumnDefinition(TableColumnDefinition tcd, DataType dataType) {
+        super(tcd.name, dataType);
+        this.serializer = tcd.serializer;
+        this.enumValues = tcd.enumValues;
+        this.autoincrement = tcd.autoincrement;
+    }
+
+    /**
+     * Copy constructor
+     */
+    public TableColumnDefinition(TableColumnDefinition tcd) {
+        this(tcd, tcd.type);
+    }
+
+    public void setAutoIncrement(boolean b) {
+        this.autoincrement = b;
+    }
+
+    public <T extends Object> void serializeValue(ByteArray byteArray, T v) {
+        serializer.serialize(byteArray, v);
+    }
+
+    public Object deserializeValue(ByteArray byteArray) throws IOException {
+        return serializer.deserialize(byteArray, this);
+    }
+
+    public void setEnumValues(BiMap<String, Short> enumValues) {
+        this.enumValues = enumValues;
+    }
+
+    public <T extends Object> ColumnSerializer<T> getSerializer() {
+        return (ColumnSerializer<T>) serializer;
+    }
+
+    public Sequence getSequence() {
+        return sequence;
+    }
+    
+    public Short getEnumIndex(String value) {
+        if (enumValues == null) {
+            throw new IllegalArgumentException("column named '" + name + "' is not an enum");
+        }
+        return enumValues.get(value);
+    }
+
+    public String getEnumValue(short idx) {
+        if (enumValues == null) {
+            throw new IllegalArgumentException("column named '" + name + "' is not an enum");
+        }
+        return enumValues.inverse().get(idx);
+    }
+
+    short addEnumValue(String value) {
+        if (value == null) {
+            throw new NullPointerException("Enum value cannot be null");
+        }
+        if (enumValues.containsKey(value)) {
+            throw new IllegalArgumentException("There is already a value '" + value + "'");
+        }
+        if (enumValues.size() >= (int) Short.MAX_VALUE) {
+            throw new LimitExceededException(
+                    "Number of enum values for column " + name + " is exceeding the limit " + Short.MAX_VALUE);
+        }
+
+        short x = (short) enumValues.size();
+        enumValues.put(value, x);
+
+        return x;
+    }
+
+    public BiMap<String, Short> getEnumValues() {
+        return enumValues;
+    }
+    
+    public boolean isAutoIncrement() {
+        return autoincrement;
+    }
+    
+    /**
+     * Set sequence used for auto-increment
+     * @param sequence
+     */
+    public void setSequence(Sequence sequence) {
+        this.sequence = sequence;
+    }
+    
+    @Override
+    public String toString() {
+        return String.format("%s %s %s",name, type, autoincrement?"auto_increment":"");
+    }
+
+    public void setSerializer(ColumnSerializer<Object> columnSerializer) {
+        this.serializer = columnSerializer;
+    }
+}
+```
+
+### `TableDefinition.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableDefinition.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.LimitExceededException;
+import org.yamcs.utils.ByteArray;
+import org.yamcs.utils.DatabaseCorruptionException;
+import org.yamcs.utils.IndexedList;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.yarch.PartitioningSpec._type;
+import org.yamcs.yarch.streamsql.ColumnNotFoundException;
+import org.yamcs.yarch.streamsql.GenericStreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlException.ErrCode;
+
+import com.google.common.collect.BiMap;
+
+/**
+ * A table definition consists of a (key,value) pair of tuple definitions. A tuple has to contain all the columns from
+ * the key while it can contain only a few of the columns from the value (basically it's a sparse table).
+ * 
+ * <p>
+ * The key is encoded as a byte array of all the columns in order. The value is encoded as a byte array of all the
+ * columns preceded by the id of their data type (1 byte) and their index (3 bytes).
+ * <p>
+ * The secondary index key is encoded as a byte array of all the columns in order preceded by the id of their data type
+ * with the first bit set to 1 for the columns present and 0 for the column not present (i.e. null).
+ * <p>
+ * A table can also be partitioned according to the partitioningSpec.
+ * 
+ */
+public class TableDefinition {
+    static Logger log = LoggerFactory.getLogger(TableDefinition.class.getName());
+    static final int MAX_NUM_COLS = 0x00FFFFFF;
+    /*
+     * table version history
+     * 0: yamcs version < 3.0
+     * 1: - the histogram were stored in a separate rocksdb database.
+     * - pp table contained a column ppgroup instead of group
+     * 2: - the PROTOBUF(org.yamcs.protobuf.Pvalue$ParameterValue) is replaced by PARAMETER_VALUE in the pp table
+     * 3: November 2020 (Yamcs 5.3)
+     * - changed serialization to preserve order of negative values in the key
+     * - first of the 4 bytes column index preceding the value is the datatype
+     * 
+     */
+    public static final int CURRENT_FORMAT_VERSION = 3;
+    private final int formatVersion;
+
+    // the definition of keys and values columns
+    private volatile IndexedList<String, TableColumnDefinition> keyDef;
+    private volatile IndexedList<String, TableColumnDefinition> valueDef;
+
+    // these are all columns used in histograms or secondary indices
+    private volatile IndexedList<String, TableColumnDefinition> histoIdx;
+
+    // keyDef+valueDef
+    private volatile TupleDefinition tupleDef;
+
+    private YarchDatabaseInstance ydb;
+
+    // compressed and column family name are actually storage dependent
+    // if we ever support a secondary storage, we should move them into some sort of options
+    private boolean compressed;
+    private String cfName;
+
+    private PartitioningSpec partitioningSpec = PartitioningSpec.noneSpec();
+
+    private String storageEngineName = YarchDatabase.RDB_ENGINE_NAME;
+
+    private String name;
+    private List<String> histoColumns;
+    private List<String> secondaryIndex;
+
+    // these are the value columns which are autoincrement.
+    private List<TableColumnDefinition> autoIncrementValues;
+
+    /**
+     * Used when creating an empty table via sql.
+     * 
+     * @param name
+     * @param tdef
+     * @param primaryKey
+     * @throws StreamSqlException
+     */
+    public TableDefinition(String name, TupleDefinition tdef, List<String> primaryKey) throws StreamSqlException {
+        this.name = name;
+        this.formatVersion = CURRENT_FORMAT_VERSION;
+
+        keyDef = new IndexedList<>();
+        for (String s : primaryKey) {
+            ColumnDefinition cd = tdef.getColumn(s);
+            if (cd == null) {
+                throw new ColumnNotFoundException(s);
+            }
+
+            TableColumnDefinition tcd = getTcd(cd);
+            keyDef.add(cd.getName(), tcd);
+            tcd.setSerializer(ColumnSerializerFactory.getColumnSerializer(this, tcd));
+        }
+
+        valueDef = new IndexedList<>(tdef.size() - keyDef.size());
+        for (ColumnDefinition cd : tdef.getColumnDefinitions()) {
+            if (!keyDef.hasKey(cd.getName())) {
+                TableColumnDefinition tcd = getTcd(cd);
+                valueDef.add(cd.getName(), tcd);
+                tcd.setSerializer(ColumnSerializerFactory.getColumnSerializer(this, tcd));
+            }
+        }
+        computeTupleDef();
+        computeAutoincrValues();
+        computeHistoIdx();
+    }
+
+    private TableColumnDefinition getTcd(ColumnDefinition cd) {
+        if (cd instanceof TableColumnDefinition) {
+            return (TableColumnDefinition) cd;
+        } else {
+            return new TableColumnDefinition(cd);
+        }
+    }
+
+    /**
+     * Used when creating the table from the serialized data on disk
+     * 
+     */
+    public TableDefinition(int formatVersion, List<TableColumnDefinition> key, List<TableColumnDefinition> value) {
+
+        this.keyDef = new IndexedList<>(key.size());
+        this.formatVersion = formatVersion;
+        for (TableColumnDefinition tcd : key) {
+            tcd.setSerializer(ColumnSerializerFactory.getColumnSerializer(this, tcd));
+            keyDef.add(tcd.getName(), tcd);
+        }
+
+        this.valueDef = new IndexedList<>(key.size());
+        for (TableColumnDefinition tcd : value) {
+            tcd.setSerializer(ColumnSerializerFactory.getColumnSerializer(this, tcd));
+            valueDef.add(tcd.getName(), tcd);
+        }
+        computeTupleDef();
+        computeAutoincrValues();
+        computeHistoIdx();
+    }
+
+    public void setDb(YarchDatabaseInstance ydb) {
+        this.ydb = ydb;
+    }
+
+    private void computeAutoincrValues() {
+        for (TableColumnDefinition tcd : valueDef) {
+            if (tcd.isAutoIncrement()) {
+                if (autoIncrementValues == null) {
+                    autoIncrementValues = new ArrayList<TableColumnDefinition>();
+                }
+                autoIncrementValues.add(tcd);
+            }
+        }
+    }
+
+    /**
+     * time based partitions can be on the first column of the key (which has to be of type timestamp) value based
+     * partitions can be on any other mandatory column
+     * 
+     * @param pspec
+     */
+    public void setPartitioningSpec(PartitioningSpec pspec) throws StreamSqlException {
+        if ((pspec.type == PartitioningSpec._type.TIME) || (pspec.type == PartitioningSpec._type.TIME_AND_VALUE)) {
+            ColumnDefinition cd = keyDef.get(pspec.timeColumn);
+            if (cd == null) {
+                throw new GenericStreamSqlException(
+                        "time partition specified on a column not part of the primary key: '" + pspec.timeColumn + "'");
+            }
+            if (cd.getType() != DataType.TIMESTAMP) {
+                throw new GenericStreamSqlException("time partition specified on a column of type " + cd.getType());
+            }
+            if (!keyDef.get(0).getName().equals(pspec.timeColumn)) {
+                throw new GenericStreamSqlException(
+                        "time partition supported only on the first column of the primary key");
+            }
+        }
+
+        if ((pspec.type == PartitioningSpec._type.VALUE) || (pspec.type == PartitioningSpec._type.TIME_AND_VALUE)) {
+            ColumnDefinition c = getColumnDefinition(pspec.valueColumn);
+            if (c == null) {
+                throw new ColumnNotFoundException(pspec.valueColumn);
+            }
+            pspec.setValueColumnType(c.getType());
+        }
+
+        this.partitioningSpec = pspec;
+    }
+
+    private void computeTupleDef() {
+        TupleDefinition tmp = new TupleDefinition();
+        for (ColumnDefinition cd : keyDef) {
+            tmp.addColumn(cd);
+        }
+        for (ColumnDefinition cd : valueDef) {
+            tmp.addColumn(cd);
+        }
+        tupleDef = tmp;
+    }
+
+    private void computeHistoIdx() {
+        IndexedList<String, TableColumnDefinition> tmp = new IndexedList<>();
+        TableColumnDefinition tcd = keyDef.get(0);
+        if (histoColumns != null) {
+            tmp.add(tcd.getName(), tcd);
+
+            for (String s : histoColumns) {
+                if (!tmp.hasKey(s)) {
+                    tmp.add(s, getColumnDefinition(s));
+                }
+            }
+        }
+        if (secondaryIndex != null) {
+            for (String s : secondaryIndex) {
+                if (!tmp.hasKey(s)) {
+                    tmp.add(s, getColumnDefinition(s));
+                }
+            }
+        }
+
+        histoIdx = tmp;
+    }
+
+    public List<TableColumnDefinition> getKeyDefinition() {
+        return keyDef.getList();
+    }
+
+    public List<TableColumnDefinition> getValueDefinition() {
+        return valueDef.getList();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public TupleDefinition getTupleDefinition() {
+        return tupleDef;
+    }
+
+    /**
+     * Checks that the table definition is valid: - primary key not string, except for the last in the list (otherwise
+     * the binary sorting does not work properly)
+     * 
+     * @throws StreamSqlException
+     */
+    public void validate() throws StreamSqlException {
+        for (TableColumnDefinition tcd : keyDef) {
+            if (tcd.isAutoIncrement() && tcd.getType() != DataType.LONG) {
+                throw new StreamSqlException(ErrCode.NOT_SUPPORTED,
+                        "AUTO_INCREMENT is only supported for columns of type long.");
+            }
+        }
+
+        for (TableColumnDefinition tcd : valueDef) {
+            if (tcd.isAutoIncrement() && tcd.getType() != DataType.LONG) {
+                throw new StreamSqlException(ErrCode.NOT_SUPPORTED,
+                        "AUTO_INCREMENT is only supported for columns of type long.");
+            }
+        }
+
+    }
+
+    /**
+     * Generate a new table row by transforming the key part of the tuple into a byte array to be written to disk. The
+     * tuple must contain each column from the key and they are written in order (such that sorting is according to the
+     * definition of the primary key).
+     * <p>
+     * In addition, it stores into the returned row all the values for the columns used in histograms or indices
+     * 
+     * @param t
+     * @return a tuple containing the histogram and secondary index values as well as the generated key
+     * @throws YarchException
+     */
+    public Row generateRow(Tuple t) throws YarchException {
+        Row tableTuple = new Row(histoIdx);
+        ByteArray byteArray = new ByteArray();
+        for (int keyIdx = 0; keyIdx < keyDef.size(); keyIdx++) {
+            TableColumnDefinition tableCd = keyDef.get(keyIdx);
+            String colName = tableCd.getName();
+            int tIdx = t.getColumnIndex(colName);
+            Object value;
+            if (tIdx < 0) {
+                if (tableCd.isAutoIncrement()) {
+                    value = tableCd.getSequence().next();
+                } else {
+                    throw new IllegalArgumentException("Tuple does not have mandatory column '" + colName + "'");
+                }
+            } else {
+                ColumnDefinition tupleCd = t.getColumnDefinition(tIdx);
+                Object v = t.getColumn(tIdx);
+                value = DataType.castAs(tupleCd.type, tableCd.type, v);
+            }
+            tableCd.serializeValue(byteArray, value);
+            setSertupleValue(tableTuple, colName, value);
+        }
+        tableTuple.setKey(byteArray.toArray());
+        return tableTuple;
+    }
+
+    /**
+     * adds all missing columns to the value part and serialises the table definition to disk
+     */
+    private synchronized void addMissingValueColumns(TupleDefinition tdef) {
+        IndexedList<String, TableColumnDefinition> valueDef1 = new IndexedList<>(valueDef);
+        if (valueDef.size() >= MAX_NUM_COLS) {
+            throw new LimitExceededException(
+                    "The number of value columns in table " + name + " has reached the maximum " + MAX_NUM_COLS);
+        }
+
+        for (int i = 0; i < tdef.size(); i++) {
+            ColumnDefinition cd = tdef.getColumn(i);
+            if (keyDef.hasKey(cd.getName())) {
+                continue;
+            }
+            int cidx = valueDef.getIndex(cd.getName());
+            if (cidx == -1) {
+                TableColumnDefinition tcd = new TableColumnDefinition(cd);
+                tcd.setSerializer(ColumnSerializerFactory.getColumnSerializer(this, tcd));
+                valueDef1.add(tcd.name, tcd);
+            }
+        }
+
+        ydb.saveTableDefinition(this, keyDef.getList(), valueDef1.getList());
+        valueDef = valueDef1;
+        computeTupleDef();
+
+    }
+
+    /**
+     * Renames column and serializes the table definition to disk.
+     * 
+     * Commented out because not safe (can only be used when nobody is using the table)
+     * 
+     * @param oldName
+     *            - old name of the column
+     * @param newName
+     *            - new name of the column
+     * 
+     *            public synchronized void renameColumn(String oldName, String newName) { if (keyDef.hasKey(oldName)) {
+     *            keyDef.changeKey(oldName, newName); } else if (valueDef.hasKey(oldName)) { valueDef.changeKey(oldName,
+     *            newName); } else { throw new IllegalArgumentException("no column named '" + oldName + "'"); }
+     * 
+     *            if(secondaryIndexDef.hasKey(oldName)) { keyDef.changeKey(oldName, newName); }
+     * 
+     *            if (oldName.equals(partitioningSpec.timeColumn)) { PartitioningSpec newSpec = new
+     *            PartitioningSpec(partitioningSpec.type, newName, partitioningSpec.valueColumn);
+     *            newSpec.setTimePartitioningSchema(partitioningSpec.getTimePartitioningSchema()); partitioningSpec =
+     *            newSpec; } else if (oldName.equals(partitioningSpec.valueColumn)) { PartitioningSpec newSpec = new
+     *            PartitioningSpec(partitioningSpec.type, partitioningSpec.timeColumn, newName);
+     *            newSpec.setTimePartitioningSchema(partitioningSpec.getTimePartitioningSchema()); partitioningSpec =
+     *            newSpec; }
+     * 
+     *            int idx = histoColumns.indexOf(oldName); if (idx != -1) { histoColumns.set(idx, newName); }
+     *            ydb.saveTableDefinition(this, keyDef.getList(), valueDef.getList()); }
+     */
+
+    /**
+     * Adds a value to a enum and writes the table definition to disk
+     * 
+     */
+    private Short addEnumValue(String columnName, String value) {
+        TableColumnDefinition tdef = getColumnDefinition(columnName);
+
+        TableColumnDefinition tdef1 = new TableColumnDefinition(tdef);
+        short x = tdef1.addEnumValue(value);
+
+        IndexedList<String, TableColumnDefinition> keyDef1 = keyDef;
+        IndexedList<String, TableColumnDefinition> valueDef1 = valueDef;
+        IndexedList<String, TableColumnDefinition> histoIdx1 = histoIdx;
+
+        int idx = keyDef.getIndex(columnName);
+        if (idx >= 0) {
+            keyDef1 = new IndexedList<>(keyDef);
+            keyDef1.set(idx, tdef1);
+        } else {
+            idx = valueDef.getIndex(columnName);
+            assert (idx >= 0);
+            valueDef1 = new IndexedList<>(valueDef);
+            valueDef1.set(idx, tdef1);
+        }
+        ydb.saveTableDefinition(this, keyDef1.getList(), valueDef1.getList());
+
+        idx = histoIdx.getIndex(columnName);
+        if (idx >= 0) {
+            histoIdx1 = new IndexedList<>(histoIdx);
+            histoIdx1.set(idx, tdef1);
+        }
+        keyDef = keyDef1;
+        valueDef = valueDef1;
+        histoIdx = histoIdx1;
+
+        computeTupleDef();
+
+        return x;
+    }
+
+    /**
+     * get the enum value corresponding to a column, creating it if it does not exist
+     * 
+     * @return
+     */
+    public Short addAndGetEnumValue(String columnName, String value) {
+        TableColumnDefinition tdef = getColumnDefinition(columnName);
+        if (tdef == null) {
+            throw new IllegalArgumentException("No column named '" + columnName + "'");
+        }
+        if (value == null) {
+            throw new NullPointerException("Enum value cannot be null");
+        }
+
+        Short enumValue = tdef.getEnumIndex(value);
+        if (enumValue == null) {
+            synchronized (this) {
+                enumValue = tdef.getEnumIndex(value);
+                if (enumValue == null) {
+                    enumValue = addEnumValue(columnName, value);
+                }
+            }
+        }
+        return enumValue;
+    }
+
+    /**
+     * Same as {@link #serializeValue(Tuple, Row)} but encodes the output in user provided byte array
+     * 
+     * @param tuple
+     * @param sertuple
+     * @param byteArray
+     */
+    public void serializeValue(Tuple tuple, Row sertuple, ByteArray byteArray) {
+        TupleDefinition tdef = tuple.getDefinition();
+        int length = byteArray.size();
+
+        for (int i = 0; i < tdef.size(); i++) {
+            ColumnDefinition tupleCd = tdef.getColumn(i);
+            if (keyDef.hasKey(tupleCd.getName())) {
+                continue;
+            }
+            int cidx = valueDef.getIndex(tupleCd.getName());
+            if (cidx == -1) { // call again this function after adding the
+                              // missing columns to the table
+                addMissingValueColumns(tdef);
+                byteArray.reset(length);
+                serializeValue(tuple, sertuple, byteArray);
+                return;
+            }
+            TableColumnDefinition tableCd = valueDef.get(cidx);
+            Object v = tuple.getColumn(i);
+            if (v == null) {
+                continue;
+            }
+            Object v1 = DataType.castAs(tupleCd.type, tableCd.type, v);
+            cidx = (tableCd.type.getTypeId() << 24) | cidx;
+            byteArray.addInt(cidx);
+            tableCd.serializeValue(byteArray, v1);
+
+            setSertupleValue(sertuple, tupleCd.getName(), v1);
+        }
+
+        // add values for all the autoincrements which are not part of the tuple
+        if (autoIncrementValues != null) {
+            for (TableColumnDefinition tcd : autoIncrementValues) {
+                if (!tuple.hasColumn(tcd.getName())) {
+                    long v = tcd.getSequence().next();
+                    int cidx = (tcd.type.getTypeId() << 24) | valueDef.getIndex(tcd.getName());
+                    byteArray.addInt(cidx);
+                    tcd.serializeValue(byteArray, v);
+                    setSertupleValue(sertuple, tcd.getName(), v);
+                }
+            }
+        }
+
+        // add a final -1 eof marker
+        byteArray.addInt(-1);
+
+    }
+
+    /**
+     * Transform the value part of the tuple into a byte array to be written on disk. Each column is preceded by a tag
+     * (the column index).
+     * <p>
+     * If there are columns in the tuple which are not in the valueDef, they are added and the TableDefinition is
+     * serialized on disk.
+     * <p>
+     * Columns whose values are null are not serialized but their definition is still added to the table definition if
+     * not present already.
+     * 
+     * @param tuple
+     * @param sertuple
+     *            - if not null, store all the values of the columns to this tuple as written to the database (possibly
+     *            after some data casting)
+     * @return the serialized version of the value part of the tuple
+     * 
+     */
+    public byte[] serializeValue(Tuple tuple, Row sertuple) {
+        ByteArray byteArray = new ByteArray();
+        serializeValue(tuple, sertuple, byteArray);
+        return byteArray.toArray();
+    }
+
+    private void setSertupleValue(Row sertuple, String colName, Object value) {
+        if (sertuple != null) {
+            int idx = sertuple.getIndex(colName);
+            if (idx >= 0) {
+                sertuple.set(idx, value);
+            }
+        }
+    }
+
+    public Tuple deserialize(byte[] k, byte[] v) {
+        TupleDefinition tdef = new TupleDefinition();
+        ArrayList<Object> cols = new ArrayList<>();
+        ByteArray byteArray = ByteArray.wrap(k);
+
+        try {
+            // deserialize the key
+            for (TableColumnDefinition tcd : keyDef) {
+                tdef.addColumn(tcd);
+                cols.add(tcd.deserializeValue(byteArray));
+            }
+
+            // deserialize the value
+            byteArray = ByteArray.wrap(v);
+            while (true) {
+                int cidx = byteArray.getInt(); // column index
+                if (cidx == -1) {
+                    break;
+                }
+                byte dt = (byte) (cidx >>> 24);
+                cidx &= 0xFFFFFF;
+                if (cidx >= valueDef.size()) {
+                    throw new DatabaseCorruptionException("Reference to index " + cidx
+                            + " found in table" + name + " but the table definition does not have this column");
+                }
+
+                TableColumnDefinition tcd = valueDef.get(cidx);
+                if (formatVersion >= 3 && tcd.getType().getTypeId() != dt) {
+                    throw new DatabaseCorruptionException(String.format(
+                            "Data type for table %s, column %s (id: %d) does not match the data read: expected %d, read: %d",
+                            name, tcd.getName(), cidx, tcd.getType().getTypeId(), dt));
+                }
+
+                Object o = tcd.deserializeValue(byteArray);
+                tdef.addColumn(tcd);
+                cols.add(o);
+            }
+        } catch (IOException e) {
+            throw new DatabaseCorruptionException(
+                    "Cannot deserialize row from " + name + " "
+                            + "(key:" + StringConverter.byteBufferToHexString(ByteBuffer.wrap(k))
+                            + ", value: " + StringConverter.byteBufferToHexString(ByteBuffer.wrap(v)) + ")",
+                    e);
+        }
+
+        return new Tuple(tdef, cols);
+    }
+
+    public boolean isCompressed() {
+        return compressed;
+    }
+
+    /**
+     * 
+     * returns column family name (RocksDB specific) where the table is stored.
+     * <p>
+     * Null means to use the default (which is actually called "default" in RocksDB)
+     */
+    public String getCfName() {
+        return cfName;
+    }
+
+    /**
+     * sets the column family name (RocksDB specific)
+     */
+    public void setCfName(String cfName) {
+        this.cfName = cfName;
+    }
+
+    /**
+     * @param cname
+     *            the column name
+     * @return true if cname is the first column of the key
+     */
+    public boolean isIndexedByKey(String cname) {
+        return keyDef.getIndex(cname) == 0;
+    }
+
+    /**
+     * Returns the column definition for the given column or null if there is no such column
+     * 
+     */
+    public TableColumnDefinition getColumnDefinition(String colName) {
+        TableColumnDefinition tcd = keyDef.get(colName);
+        if (tcd != null) {
+            return tcd;
+        }
+        return valueDef.get(colName);
+    }
+
+    public boolean hasPartitioning() {
+        return partitioningSpec.type != _type.NONE;
+    }
+
+    public PartitioningSpec getPartitioningSpec() {
+        return partitioningSpec;
+    }
+
+    public void setCompressed(boolean compressed) {
+        this.compressed = compressed;
+    }
+
+    public void setHistogramColumns(List<String> histoColumns) throws StreamSqlException {
+        if (keyDef.get(0).getType() != DataType.TIMESTAMP)
+            throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                    "Cannot only create histogram on tables with the first column of the primary key of type TIMESTAMP");
+
+        for (String hc : histoColumns) {
+            if (keyDef.getIndex(hc) == 0)
+                throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                        "Cannot create histogram on the first column of the primary key");
+            if (!tupleDef.hasColumn(hc))
+                throw new StreamSqlException(ErrCode.INVALID_HISTOGRAM_COLUMN,
+                        "Invalid column specified for histogram: " + hc);
+        }
+        this.histoColumns = histoColumns;
+        computeHistoIdx();
+    }
+
+    public void setSecondaryIndex(List<String> index) throws StreamSqlException {
+        if (index.isEmpty()) {
+            return;
+        }
+
+        for (String col : index) {
+            if (!tupleDef.hasColumn(col))
+                throw new StreamSqlException(ErrCode.INVALID_INDEX_COLUMN,
+                        "Invalid column specified for index: " + col);
+
+            TableColumnDefinition tcd = keyDef.get(col);
+            if (tcd == null) {
+                tcd = valueDef.get(col);
+            }
+        }
+        for (int i = 0; i < index.size() - 1; i++) {
+            String columnName = index.get(i);
+            ColumnDefinition cd = tupleDef.getColumn(columnName);
+            if (DataType.getSerializedSize(cd.getType()) < 0) {
+                throw new GenericStreamSqlException(
+                        "Secondary index on column " + columnName + " of type " + cd.getType()
+                                + " not supported except on the last position");
+            }
+        }
+        secondaryIndex = index;
+        computeHistoIdx();
+    }
+
+    public boolean hasHistogram() {
+        return histoColumns != null;
+    }
+
+    public BiMap<String, Short> getEnumValues(String columnName) {
+        TableColumnDefinition tcd = getColumnDefinition(columnName);
+        if (tcd == null) {
+            return null;
+        }
+        return tcd.getEnumValues();
+    }
+
+    public List<String> getHistogramColumns() {
+        return histoColumns;
+    }
+
+    public List<String> getSecondaryIndex() {
+        return secondaryIndex;
+    }
+
+    public <T extends Object> ColumnSerializer<T> getColumnSerializer(String columnName) {
+        TableColumnDefinition tcd = getColumnDefinition(columnName);
+        if (tcd == null) {
+            throw new IllegalArgumentException("Invalid column " + columnName);
+        }
+        return tcd.getSerializer();
+    }
+
+    public String getStorageEngineName() {
+        return storageEngineName;
+    }
+
+    public void setStorageEngineName(String storageEngineName) {
+        this.storageEngineName = storageEngineName;
+    }
+
+    public int getFormatVersion() {
+        return formatVersion;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(name).append("(").append(keyDef.toString()).append(", ").append(valueDef.toString())
+                .append(", primaryKey(").append(keyDef).append("))");
+        return sb.toString();
+    }
+
+    /**
+     * this method is used during table migration between two versions
+     * <p>
+     * It should not be used for other things.
+     */
+    public void changeDataType(String cname, DataType dataType) {
+        int idx = keyDef.getIndex(cname);
+        if (idx >= 0) {
+            TableColumnDefinition tcd = keyDef.get(idx);
+            keyDef.set(idx, new TableColumnDefinition(tcd, dataType));
+        } else {
+            idx = valueDef.getIndex(cname);
+            if (idx >= 0) {
+                TableColumnDefinition tcd = valueDef.get(idx);
+                valueDef.set(idx, new TableColumnDefinition(tcd, dataType));
+            } else {
+                throw new IllegalArgumentException("No column named " + cname);
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param colName
+     * @return true if the column is part of the primary key
+     */
+    public boolean hasKey(String colName) {
+        return keyDef.hasKey(colName);
+    }
+
+    public boolean isPartitionedByTime() {
+        return partitioningSpec.timeColumn != null;
+    }
+
+    public IndexedList<String, TableColumnDefinition> getHistoIdx() {
+        return histoIdx;
+    }
+
+    public boolean hasSecondaryIndex() {
+        return secondaryIndex != null;
+    }
+
+    /**
+     * Return true if the table is partitioned and the colName is used as partition column (either time or value)
+     * 
+     * @param colName
+     * @return
+     */
+    public boolean isPartitionedBy(String colName) {
+        return colName.equals(partitioningSpec.timeColumn)
+                || colName.equals(partitioningSpec.valueColumn);
+    }
+
+}
+```
+
+### `TableDefinitionConstructor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableDefinitionConstructor.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.yamcs.yarch.PartitioningSpec._type;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yaml.snakeyaml.LoaderOptions;
+import org.yaml.snakeyaml.constructor.AbstractConstruct;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.nodes.MappingNode;
+import org.yaml.snakeyaml.nodes.Node;
+import org.yaml.snakeyaml.nodes.SequenceNode;
+import org.yaml.snakeyaml.nodes.Tag;
+
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+/**
+ * Constructs {@link org.yamcs.yarch.TableDefinition} from .def yaml files.
+ * 
+ *
+ */
+public class TableDefinitionConstructor extends Constructor {
+    public static final String K_COMPRESSED = "compressed";
+    public static final String K_KEY_DEF = "keyDef";
+    public static final String K_VALUE_DEF = "valueDef";
+    public static final String K_DATA_DIR = "dataDir";
+    public static final String K_HISTOGRAM = "histogram";
+    public static final String K_ENUM_VALUE = "enumValues";
+    public static final String K_PARTITIONING_SPEC = "partitioningSpec";
+    public static final String K_TIME_COLUMN = "timeColumn";
+    public static final String K_VALUE_COLUMN = "valueColumn";
+    public static final String K_TIME_PARTITIONING_SCHEMA = "timePartitioningSchema";
+    public static final String K_STORAGE_ENGINE = "storageEngine";
+    public static final String K_PARTITION_STORAGE = "partitionStorage";
+    public static final String K_FORMAT_VERSION = "formatVersion";
+
+    public TableDefinitionConstructor() {
+        super(new LoaderOptions());
+        this.yamlConstructors.put(new Tag("TableDefinition"), new ConstructTableDefinition());
+        this.yamlConstructors.put(new Tag("TupleDefinition"), new ConstructTupleDefinition());
+        this.yamlConstructors.put(new Tag("PartitioningSpec"), new ConstructPartitioningSpec());
+    }
+
+    private class ConstructTableDefinition extends AbstractConstruct {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @Override
+        public Object construct(Node node) {
+            Map<String, Object> m = (Map) constructMapping((MappingNode) node);
+            TupleDefinition tkeyDef = (TupleDefinition) m.get(K_KEY_DEF);
+            TupleDefinition tvalueDef = (TupleDefinition) m.get(K_VALUE_DEF);
+
+            Map<String, BiMap<String, Short>> enumValues = new HashMap<>();
+            if (m.containsKey(K_ENUM_VALUE)) {
+                Map<String, Map<String, Integer>> t = (Map) m.get(K_ENUM_VALUE);
+                for (Entry<String, Map<String, Integer>> e : t.entrySet()) {
+                    BiMap<String, Short> b = HashBiMap.create();
+                    for (Entry<String, Integer> e1 : e.getValue().entrySet()) {
+                        b.put(e1.getKey(), (short) (int) e1.getValue());
+                    }
+                    enumValues.put(e.getKey(), b);
+                }
+            }
+            int formatVersion = 0;
+            if (m.containsKey(K_FORMAT_VERSION)) {
+                formatVersion = (Integer) m.get(K_FORMAT_VERSION);
+            }
+            List<TableColumnDefinition> keyDef = new ArrayList<>();
+            for (ColumnDefinition cd : tkeyDef.getColumnDefinitions()) {
+                TableColumnDefinition tcd = new TableColumnDefinition(cd);
+                tcd.setEnumValues(enumValues.get(cd.getName()));
+                keyDef.add(tcd);
+            }
+
+            List<TableColumnDefinition> valueDef = new ArrayList<>();
+            for (ColumnDefinition cd : tvalueDef.getColumnDefinitions()) {
+                TableColumnDefinition tcd = new TableColumnDefinition(cd);
+                tcd.setEnumValues(enumValues.get(cd.getName()));
+                valueDef.add(tcd);
+            }
+
+            TableDefinition tdef = new TableDefinition(formatVersion, keyDef, valueDef);
+            if (m.containsKey(K_HISTOGRAM)) {
+                List<String> h = (List<String>) m.get(K_HISTOGRAM);
+                try {
+                    tdef.setHistogramColumns(h);
+                } catch (StreamSqlException e) {
+                    throw new IllegalArgumentException(e);
+                }
+            }
+            try {
+                if (m.containsKey(K_PARTITIONING_SPEC)) {
+                    tdef.setPartitioningSpec((PartitioningSpec) m.get(K_PARTITIONING_SPEC));
+                } else {
+                    PartitioningSpec ps = PartitioningSpec.noneSpec();
+                    tdef.setPartitioningSpec(ps);
+                }
+            } catch (StreamSqlException e) {
+                throw new IllegalArgumentException(e);
+            }
+            if (m.containsKey(K_COMPRESSED)) {
+                tdef.setCompressed((Boolean) m.get(K_COMPRESSED));
+            }
+            if (m.containsKey(K_STORAGE_ENGINE)) {
+                tdef.setStorageEngineName((String) m.get(K_STORAGE_ENGINE));
+            } else {// before the storageEngine has been invented, we only had TokyoCabinet, so assume that if it's not
+                    // set then TokyoCabine is used
+                tdef.setStorageEngineName("TokyoCabinet");
+            }
+
+            return tdef;
+        }
+    }
+
+    private class ConstructTupleDefinition extends AbstractConstruct {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @Override
+        public Object construct(Node node) {
+            List<Object> l = (List) constructSequence((SequenceNode) node);
+
+            ArrayList<ColumnDefinition> cols = new ArrayList<>();
+            for (Object o : l) {
+                Map<String, Object> m = (Map) o;
+                Object o1 = m.get("idx");
+                if (!(o1 instanceof Integer)) {
+                    throw new IllegalArgumentException("idx not specified or not integer");
+                }
+                int idx = (Integer) o1;
+                if (idx > TupleDefinition.MAX_COLS) {
+                    throw new IllegalArgumentException("got idx=" + idx + " but max_cols=" + TupleDefinition.MAX_COLS);
+                }
+                String name = (String) m.get("name");
+                if (name == null) {
+                    throw new IllegalArgumentException("name not specified for column with index idx=" + idx);
+                }
+
+                DataType type;
+                // Old events.def files may have have a reference to this. It is the API-level message
+                // before existence of Db.Event, but its package changed since Yamcs 5.6.x
+                if ("PROTOBUF(org.yamcs.protobuf.Yamcs$Event)".equals(m.get("type"))) {
+                    type = DataType.byName("PROTOBUF(" + org.yamcs.protobuf.Event.class.getName() + ")");
+                } else {
+                    type = DataType.byName((String) m.get("type"));
+                }
+
+                ColumnDefinition cd = new ColumnDefinition(name, type);
+
+                for (int i = cols.size(); i < idx + 1; i++) {
+                    cols.add(null);
+                }
+                cols.set(idx, cd);
+            }
+            TupleDefinition td = new TupleDefinition();
+            for (int i = 0; i < cols.size(); i++) {
+                ColumnDefinition cd = cols.get(i);
+                if (cd == null) {
+                    throw new IllegalArgumentException("Column with idx " + i + " not specified");
+                }
+                td.addColumn(cd);
+            }
+            return td;
+        }
+    }
+
+    private class ConstructPartitioningSpec extends AbstractConstruct {
+        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @Override
+        public Object construct(Node node) {
+            Map<String, Object> m = (Map) constructMapping((MappingNode) node);
+            if (!m.containsKey("type")) {
+                throw new IllegalArgumentException("partitioning spec type not specified");
+            }
+
+            PartitioningSpec pspec;
+            PartitioningSpec._type type = PartitioningSpec._type.valueOf((String) m.get("type"));
+            if (type == _type.NONE) {
+                pspec = PartitioningSpec.noneSpec();
+            } else if (type == _type.TIME) {
+                String timeColumn = (String) m.get(K_TIME_COLUMN);
+                pspec = PartitioningSpec.timeSpec(timeColumn, getSchema(m));
+            } else if ((type == _type.VALUE)) {
+                String valueColumn = (String) m.get(K_VALUE_COLUMN);
+                pspec = PartitioningSpec.valueSpec(valueColumn);
+            } else if (type == _type.TIME_AND_VALUE) {
+                String timeColumn = (String) m.get(K_TIME_COLUMN);
+                String valueColumn = (String) m.get(K_VALUE_COLUMN);
+                pspec = PartitioningSpec.timeAndValueSpec(timeColumn, valueColumn, getSchema(m));
+            } else {
+                throw new IllegalArgumentException("Unknown partitioning type " + type);
+            }
+
+
+            return pspec;
+        }
+    }
+
+    private String getSchema(Map<String, Object> m) {
+        if (m.containsKey(K_TIME_PARTITIONING_SCHEMA)) {
+            return (String) m.get(K_TIME_PARTITIONING_SCHEMA);
+        } else {// this probably should indicate some sort of database corruption but we keep it for compatibility
+                // reasons
+            return "YYYY/DOY";
+        }
+    }
+
+}
+```
+
+### `TableReaderStream.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableReaderStream.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.concurrent.atomic.AtomicInteger;
+
+/**
+ * Implements skeleton for table streamer that uses PartitionManager to handle partitioning.
+ * 
+ */
+public class TableReaderStream extends Stream implements Runnable, TableVisitor {
+    static AtomicInteger count = new AtomicInteger(0);
+    TableWalker tblIterator;
+
+    protected TableDefinition tableDefinition;;
+    Thread thread;
+
+    public TableReaderStream(YarchDatabaseInstance ydb, TableDefinition tblDef, TableWalker iterator) {
+        super(ydb, tblDef.getName() + "_" + count.getAndIncrement(),
+                tblDef.getTupleDefinition());
+        this.tblIterator = iterator;
+        this.tableDefinition = tblDef;
+    }
+
+    @Override
+    public void doStart() {
+        thread = new Thread(this, "RdbTableReaderStream[" + getName() + "]");
+        thread.start();
+    }
+
+    @Override
+    public void run() {
+        log.debug("starting a table stream from table {} ", tableDefinition.getName());
+        try {
+            tblIterator.walk(this);
+        } catch (Exception e) {
+            log.error("got exception ", e);
+        } finally {
+            close();
+        }
+    }
+
+    @Override
+    public Action visit(byte[] key, byte[] value) {
+        emitTuple(dataToTuple(key, value));
+        return ACTION_CONTINUE;
+    }
+
+    protected Tuple dataToTuple(byte[] k, byte[] v) {
+        return tableDefinition.deserialize(k, v);
+    }
+
+    @Override
+    public void doClose() {
+        try {
+            tblIterator.close();
+        } catch (YarchException e) {
+            log.error("got exception ", e);
+        }
+        // when the thread is blocked on sending something (for example to a merge stream), if we don't call this, it
+        // will be hanging forever
+        if (Thread.currentThread() != thread) {
+            thread.interrupt();
+        }
+    }
+
+    public TableDefinition getTableDefinition() {
+        return tableDefinition;
+    }
+
+    // this is a lexicographic comparison which returns 0 if one of the array is
+    // a subarray of the other one
+    // it is useful when the filter key is shorter than the index key
+    protected int compare(byte[] a1, byte[] a2) {
+        for (int i = 0; i < a1.length && i < a2.length; i++) {
+            int d = (a1[i] & 0xFF) - (a2[i] & 0xFF);
+            if (d != 0) {
+                return d;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+### `TableVisitor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableVisitor.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public interface TableVisitor {
+    public enum ActionType {
+        NONE, DELETE, UPDATE_VAL, UPDATE_ROW
+    };
+
+    class Action {
+        final boolean stop;
+        byte[] updatedValue, updatedKey;
+
+        ActionType type;
+
+        private Action(ActionType type, boolean stop) {
+            this.type = type;
+            this.stop = stop;
+        }
+
+        public static Action updateAction(byte[] updatdeValue, boolean stop) {
+            Action a = new Action(ActionType.UPDATE_VAL, stop);
+            a.updatedValue = updatdeValue;
+            return a;
+        }
+
+        public static Action updateAction(byte[] updatedKey, byte[] updatedValue, boolean stop) {
+            Action a = new Action(ActionType.UPDATE_ROW, stop);
+            a.updatedKey = updatedKey;
+            a.updatedValue = updatedValue;
+            return a;
+        }
+
+        public boolean stop() {
+            return stop;
+        }
+
+        public ActionType action() {
+            return type;
+        }
+
+        public byte[] getUpdatedValue() {
+            return updatedValue;
+        }
+
+        public byte[] getUpdatedKey() {
+            return updatedKey;
+        }
+    }
+
+    public static final Action ACTION_STOP = new Action(ActionType.NONE, true);
+    public static final Action ACTION_CONTINUE = new Action(ActionType.NONE, false);
+    public static final Action ACTION_DELETE = new Action(ActionType.DELETE, false);
+    public static final Action ACTION_DELETE_STOP = new Action(ActionType.DELETE, true);
+    public static final Action ACTION_UPDATE = new Action(ActionType.UPDATE_VAL, false);
+    public static final Action ACTION_UPDATE_STOP = new Action(ActionType.UPDATE_VAL, false);
+
+    Action visit(byte[] key, byte[] value);
+}
+```
+
+### `TableWalker.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableWalker.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.Set;
+
+import org.yamcs.utils.TimeInterval;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Walks over one yarch table providing operations for select, udpdate, delete
+ *
+ * @author nm
+ *
+ */
+public interface TableWalker {
+
+    default void setPartitionFilter(TimeInterval partitionTimeFilter, Set<Object> partitionValueFilter) {
+        throw new UnsupportedOperationException();
+    }
+
+    void setPrimaryIndexRange(DbRange tableRange);
+
+    default void setSecondaryIndexRange(DbRange skRange) {
+        throw new UnsupportedOperationException();
+    }
+    
+    void walk(TableVisitor visitor) throws YarchException, StreamSqlException;
+
+    void close();
+
+    boolean isBatchUpdates();
+
+    void setBatchUpdates(boolean batchUpdates);
+
+}
+```
+
+### `TableWriter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TableWriter.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.concurrent.CompletableFuture;
+
+public abstract class TableWriter implements StreamSubscriber {         
+    public enum InsertMode {
+        /**
+         * insert rows whose key do not exist, ignore the others
+         */
+        INSERT,
+        /**
+         * insert rows as they come, overwriting old values if the key already exist
+         */
+        UPSERT,
+        /**
+         * like INSERT but if the row already exist, append to it all the columns that are not already there
+         */
+        INSERT_APPEND,
+        /**
+         * like INSERT_APPEND but if the row already exists, add all the columns from the new row, overwriting old values if necessary
+         */
+        UPSERT_APPEND,
+        /**
+         * like INSERT but do not update histograms.
+         * <p>
+         * used for bulk load when we know that the data cannot be in the table
+         */
+        LOAD,
+    }
+    
+    final protected Table table;
+    final protected InsertMode mode;
+    final protected YarchDatabaseInstance ydb;
+    final private CompletableFuture<Void> closeFuture = new CompletableFuture<Void>();
+    
+    public TableWriter(YarchDatabaseInstance ydb, Table table, InsertMode mode) {
+        this.table = table;
+        this.mode = mode;
+        this.ydb = ydb;
+    }
+    
+    /**
+     * future which will be called (completed) when the writer is closed.
+     * 
+     * @return
+     */
+    public CompletableFuture<Void> closeFuture() {
+        return closeFuture;
+    }
+
+    /**
+     * close writer and any open resources
+     * <p> call the close future after closing has been completed
+     */
+    public void close() {
+        doClose();
+        closeFuture.complete(null);
+    }
+    
+    
+    protected abstract void doClose();
+}
+```
+
+### `TimePartitionInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TimePartitionInfo.java`
+
+
+```java
+package org.yamcs.yarch;
+
+public class TimePartitionInfo {
+    private String dir;
+    private long partitionStart;
+    private long partitionEnd;
+
+    public String getDir() {
+        return dir;
+    }
+    public void setDir(String dir) {
+        this.dir = dir;
+    }
+    public long getStart() {
+        return partitionStart;
+    }
+    public void setStart(long partitionStart) {
+        this.partitionStart = partitionStart;
+    }
+    public long getEnd() {
+        return partitionEnd;
+    }
+    public void setEnd(long partitionEnd) {
+        this.partitionEnd = partitionEnd;
+    }
+    
+    
+    @Override
+    public String toString() {
+        return "PartitionInfo [dir=" + dir + ", partitionStart="
+                + partitionStart + ", partitionEnd=" + partitionEnd + "]";
+    }
+   
+}
+```
+
+### `TimePartitionSchema.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TimePartitionSchema.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.TaiUtcConverter;
+import org.yamcs.utils.TaiUtcConverter.DateTimeComponents;
+
+/**
+ * Implements different schemes for partitioning by time.
+ * It gives back a partition start/end and a directory where data shall be stored.
+ * 
+ * Currently the following are implemented:
+ * YYYY
+ * YYYY/DOY
+ * YYYY/MM
+ * 
+ * @author nm
+ *
+ */
+public abstract class TimePartitionSchema {
+    /**
+     * returns the directory where this instant shall be written.
+     * This is likely to be expensive operation - since instant has to be converted into a calendar taking into accounts
+     * leap seconds and all the rest.
+     *
+     * @param instant
+     */
+    public abstract TimePartitionInfo getPartitionInfo(long instant);
+
+    /**
+     * Parses a string of the shape "A/B/..." into a PartitionInfo.
+     * It is used by the storage engines to parse the partitions from disk at startup.
+     *
+     * Returns null if the given string does not match the expected directory.
+     */
+    public abstract TimePartitionInfo parseDir(String dir);
+
+    private String name;
+
+    static public TimePartitionSchema getInstance(String schema) {
+        TimePartitionSchema tps;
+        if ("YYYY/DOY".equalsIgnoreCase(schema)) {
+            tps = new YYYYDOY();
+        } else if ("YYYY/MM".equalsIgnoreCase(schema)) {
+            tps = new YYYYMM();
+        } else if ("YYYY".equalsIgnoreCase(schema)) {
+            tps = new YYYY();
+        } else {
+            throw new IllegalArgumentException("Invalid time partitioning schema '" + schema
+                    + "'. Supported schemas are: YYYY/DOY, YYYY/MM and YYYY");
+        }
+
+        tps.name = schema;
+        return tps;
+    }
+
+    static class YYYYDOY extends TimePartitionSchema {
+        Pattern p = Pattern.compile("(\\d{4,})/(\\d{3})");
+
+        @Override
+        public TimePartitionInfo getPartitionInfo(long instant) {
+            DateTimeComponents dtc = TimeEncoding.toUtc(instant);
+            return getPartitionInfo(dtc.getYear(), dtc.getDoy());
+        }
+
+        @Override
+        public TimePartitionInfo parseDir(String dir) {
+            Matcher m = p.matcher(dir);
+            if (m.matches()) {
+                int year = Integer.parseInt(m.group(1));
+                int doy = Integer.parseInt(m.group(2));
+                return getPartitionInfo(year, doy);
+            } else {
+                return null;
+            }
+        }
+
+        private TimePartitionInfo getPartitionInfo(int year, int doy) {
+            TimePartitionInfo pinfo = new TimePartitionInfo();
+            String start = String.format("%04d/%03dT00:00:00Z", year, doy);
+            int endy = year;
+            int endd = doy+1;
+            
+            if((endd==366 && !TaiUtcConverter.isLeap(year)) || endd==367) {
+                endd=1;
+                endy++;
+            }
+            
+            String end = String.format("%04d/%03dT00:00:00Z", endy, endd);
+            
+            pinfo.setStart(TimeEncoding.parse(start));
+            pinfo.setEnd(TimeEncoding.parse(end));
+            pinfo.setDir(String.format("%04d/%03d", year, doy));
+            return pinfo;
+        }
+
+    }
+
+    static class YYYYMM extends TimePartitionSchema {
+        Pattern p = Pattern.compile("(\\d{4,})/(\\d{2})");
+
+        @Override
+        public TimePartitionInfo getPartitionInfo(long instant) {
+            DateTimeComponents dtc = TimeEncoding.toUtc(instant);
+            return getPartitionInfo(dtc.getYear(), dtc.getMonth());
+        }
+
+        @Override
+        public TimePartitionInfo parseDir(String dir) {
+            Matcher m = p.matcher(dir);
+            if (m.matches()) {
+                int year = Integer.parseInt(m.group(1));
+                int month = Integer.parseInt(m.group(2));
+                return getPartitionInfo(year, month);
+            } else {
+                return null;
+            }
+        }
+
+        private TimePartitionInfo getPartitionInfo(int year, int month) {
+            TimePartitionInfo pinfo = new TimePartitionInfo();
+
+            String start = String.format("%04d-%02d-01T00:00:00Z", year, month);
+            int endm = month+1;
+            int endy = year;
+            if (endm == 13) {
+                endm = 1;
+                endy++;
+            }
+            String end = String.format("%04d-%02d-01T00:00:00Z", endy, endm);
+            pinfo.setStart(TimeEncoding.parse(start));
+            pinfo.setEnd(TimeEncoding.parse(end));
+
+            pinfo.setDir(String.format("%04d/%02d", year, month));
+            return pinfo;
+        }
+    }
+
+    static class YYYY extends TimePartitionSchema {
+        Pattern p = Pattern.compile("(\\d{4,})");
+
+        @Override
+        public TimePartitionInfo getPartitionInfo(long instant) {
+            DateTimeComponents dtc = TimeEncoding.toUtc(instant);
+            return getPartitionInfo(dtc.getYear());
+        }
+
+        @Override
+        public TimePartitionInfo parseDir(String dir) {
+            Matcher m = p.matcher(dir);
+            if (m.matches()) {
+                int year = Integer.parseInt(m.group(1));
+                return getPartitionInfo(year);
+            } else {
+                return null;
+            }
+        }
+
+        private TimePartitionInfo getPartitionInfo(int year) {
+            TimePartitionInfo pinfo = new TimePartitionInfo();
+            String start = String.format("%04d-01-01T00:00:00Z", year);
+            String end = String.format("%04d-01-01T00:00:00Z", year + 1);
+            pinfo.setStart(TimeEncoding.parse(start));
+            pinfo.setEnd(TimeEncoding.parse(end));
+            pinfo.setDir(String.format("%04d", year));
+            return pinfo;
+        }
+    }
+
+    /**
+     * name for the partitioning schema (YYYY/DOY, YYYY/MM, etc)
+     * 
+     * @return the name of the partitioning schema
+     */
+    public String getName() {
+        return name;
+    }
+
+}
+```
+
+### `Tuple.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/Tuple.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+/**
+ * Contains the tuple value (as an array of Columns) together with a pointer to its definition
+ * 
+ */
+public class Tuple {
+    private TupleDefinition definition;
+    List<Object> columns;
+
+    /**
+     * Create a new tuple with no column.
+     * <p>
+     * Can be used by the {@link #addColumn(String, DataType, Object)} methods
+     *
+     */
+    public Tuple() {
+        this.definition = new TupleDefinition();
+        this.columns = new ArrayList<>();
+    }
+
+    public Tuple(TupleDefinition definition, List<Object> columns) {
+        if (definition.size() != columns.size()) {
+            throw new IllegalArgumentException("columns size does not match the definition size");
+        }
+        this.setDefinition(definition);
+        this.columns = columns;
+    }
+
+    public Tuple(TupleDefinition definition, Object[] columns) {
+        this(definition, new ArrayList<>(Arrays.asList(columns)));
+    }
+
+    /**
+     * Create a tuple with all the column values set to null.
+     * 
+     * @param tdef
+     */
+    public Tuple(TupleDefinition tdef) {
+        columns = new ArrayList<>(Collections.nCopies(tdef.size(), null));
+    }
+
+    public void setDefinition(TupleDefinition definition) {
+        this.definition = definition;
+    }
+
+    public TupleDefinition getDefinition() {
+        return definition;
+    }
+
+    public List<?> getColumns() {
+        return columns;
+    }
+
+    public void setColumns(List<Object> cols) {
+        this.columns = cols;
+    }
+
+    public void setColumn(int index, Object value) {
+        columns.set(index, value);
+    }
+
+    public void setColumn(String colName, Object value) {
+        columns.set(getColumnIndex(colName), value);
+    }
+
+    /**
+     * returns the index of the column with name or -1 if there is no such column
+     * 
+     * @param colName
+     *            - the name of the column
+     * @return the index of the column with name or -1 if there is no such column
+     */
+    public int getColumnIndex(String colName) {
+        return definition.getColumnIndex(colName);
+    }
+
+    /**
+     * Returns the value of the column with the given name or null if there is no value
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T getColumn(String colName) {
+        int i = definition.getColumnIndex(colName);
+        if (i == -1) {
+            return null;
+        }
+        return (T) columns.get(i);
+    }
+
+    /**
+     * Get the value of column as long.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public long getLongColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    public long getTimestampColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    /**
+     * Get the value of column as boolean.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public boolean getBooleanColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    /**
+     * Get the value of column as byte.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public byte getByteColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    /**
+     * Get the value of column as short.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public short getShortColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    /**
+     * Get the value of column as int.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public int getIntColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    /**
+     * Get the value of column as double.
+     * <p>
+     * Throws exception if the column does not exist or is of different type
+     * 
+     * @param colName
+     * @return
+     */
+    public double getDoubleColumn(String colName) {
+        return getColumn(colName);
+    }
+
+    public ColumnDefinition getColumnDefinition(String colName) {
+        int i = definition.getColumnIndex(colName);
+        if (i == -1) {
+            throw new IllegalArgumentException("invalid column " + colName);
+        }
+        return definition.getColumn(i);
+    }
+
+    public ColumnDefinition getColumnDefinition(int i) {
+        return definition.getColumn(i);
+    }
+
+    public boolean hasColumn(String colName) {
+        return (definition.getColumnIndex(colName) != -1);
+    }
+
+    public Object getColumn(int i) {
+        return columns.get(i);
+    }
+
+    /**
+     * Add a TIMESTAMP column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addTimestampColumn(String colName, long colValue) {
+        addColumn(colName, DataType.TIMESTAMP, colValue);
+    }
+
+    /**
+     * Add a INT column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addColumn(String colName, int colValue) {
+        addColumn(colName, DataType.INT, colValue);
+    }
+
+    /**
+     * Add a BOOLEAN column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addColumn(String colName, boolean colValue) {
+        addColumn(colName, DataType.BOOLEAN, colValue);
+    }
+
+    /**
+     * Add a LONG column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addColumn(String colName, long colValue) {
+        addColumn(colName, DataType.LONG, colValue);
+    }
+
+    /**
+     * Add a STRING column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addColumn(String colName, String colValue) {
+        addColumn(colName, DataType.STRING, colValue);
+    }
+
+    /**
+     * Add an ENUM column
+     * 
+     * @param colName
+     * @param colValue
+     */
+    public void addEnumColumn(String colName, String colValue) {
+        addColumn(colName, DataType.ENUM, colValue);
+    }
+
+    public void addColumn(String colName, DataType type, Object colValue) {
+        definition.addColumn(colName, type);
+        columns.add(colValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T removeColumn(String colName) {
+        int idx = definition.removeColumn(colName);
+        if (idx != -1) {
+            return (T) columns.remove(idx);
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 
+     * @return return the number of columns
+     */
+    public int size() {
+        return columns.size();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        sb.append("(");
+        for (Object c : columns) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(String.valueOf(c));
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+}
+```
+
+### `TupleDataType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TupleDataType.java`
+
+
+```java
+package org.yamcs.yarch;
+
+
+public class TupleDataType extends DataType {
+    private final TupleDefinition td;
+    protected TupleDataType(TupleDefinition td) {
+        super(_type.TUPLE, TUPLE_ID);
+        this.td = td;
+    }
+
+    public String toString() {
+        return name();
+    }
+
+    public String name() {
+        return "TUPLE("+td.toString()+")";
+    }
+
+}
+```
+
+### `TupleDefinition.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/TupleDefinition.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class TupleDefinition {
+    private ArrayList<ColumnDefinition> columnDefinitions = new ArrayList<>();
+    private HashMap<String, Integer> columnNameIndex = new HashMap<>();
+    public static final int MAX_COLS = 32000;
+
+    public List<ColumnDefinition> getColumnDefinitions() {
+        return columnDefinitions;
+    }
+
+    public void addColumn(String name, DataType type) {
+        ColumnDefinition c = new ColumnDefinition(name, type);
+        addColumn(c);
+    }
+
+    public void addColumn(ColumnDefinition c) {
+        if (columnNameIndex.containsKey(c.getName())) {
+            throw new IllegalArgumentException("Tuple has already a column '" + c.getName() + "'");
+        }
+        columnDefinitions.add(c);
+        columnNameIndex.put(c.getName(), columnDefinitions.size() - 1);
+    }
+
+    public int removeColumn(String name) {
+        Integer idx = columnNameIndex.remove(name);
+        if (idx != null) {
+            columnDefinitions.remove((int) idx);
+
+            // Left-shift subsequent indexes
+            for (var entry : columnNameIndex.entrySet()) {
+                if (entry.getValue() > idx) {
+                    entry.setValue(entry.getValue() - 1);
+                }
+            }
+            return idx;
+        } else {
+            return -1;
+        }
+    }
+
+    /**
+     * returns the index of the column with name or -1 if there is no such column
+     * 
+     * @param name
+     * @return the index of the column with name or -1 if there is no such column
+     */
+    public int getColumnIndex(String name) {
+        Integer i = columnNameIndex.get(name);
+        if (i == null) {
+            return -1;
+        } else {
+            return i;
+        }
+    }
+
+    public boolean hasColumn(String name) {
+        return columnNameIndex.containsKey(name);
+    }
+
+    /**
+     * Get a column definition by name
+     * 
+     * @param name
+     * @return the column definition of the named column or null if the table does not have a column by that name
+     */
+    public ColumnDefinition getColumn(String name) {
+        Integer i = columnNameIndex.get(name);
+        if (i == null) {
+            return null;
+        } else {
+            return columnDefinitions.get(i);
+        }
+    }
+
+    public ColumnDefinition getColumn(int index) {
+        return columnDefinitions.get(index);
+    }
+
+    /**
+     * renames the column - this should not be used when the tuple is in used as there is no synchronization around it.
+     * 
+     * @param oldName
+     * @param newName
+     */
+    void renameColumn(String oldName, String newName) {
+        int idx = columnNameIndex.remove(oldName);
+        ColumnDefinition oldCd = columnDefinitions.get(idx);
+
+        ColumnDefinition newCd = new ColumnDefinition(newName, oldCd.type);
+        columnDefinitions.set(idx, newCd);
+        columnNameIndex.put(newName, idx);
+    }
+
+    /**
+     * Returns a string "(col1 type, col2 type2, ....)" suitable to be used in create stream
+     * 
+     */
+    public String getStringDefinition() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        boolean first = true;
+        for (ColumnDefinition cd : getColumnDefinitions()) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(cd.getStringDefinition());
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    /**
+     * Returns a string "col1 type, col2 type2, ...." (without parenthesis) suitable to be used in create table
+     * 
+     */
+    public String getStringDefinition1() {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (ColumnDefinition cd : getColumnDefinitions()) {
+            if (!first) {
+                sb.append(", ");
+            } else {
+                first = false;
+            }
+            sb.append(cd.getStringDefinition());
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 
+     * @return number of columns part of the tuple
+     */
+    public int size() {
+        return columnDefinitions.size();
+    }
+
+    /**
+     * 
+     * @return a copy of the tuple definition that can be used to add columns
+     */
+    public TupleDefinition copy() {
+        TupleDefinition ntd = new TupleDefinition();
+        ntd.columnDefinitions.addAll(columnDefinitions);
+        ntd.columnNameIndex.putAll(columnNameIndex);
+        return ntd;
+    }
+
+    @Override
+    public String toString() {
+        return getStringDefinition();
+    }
+}
+```
+
+### `WindowProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/WindowProcessor.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.yarch.streamsql.WindowSpecification;
+
+public abstract class WindowProcessor {
+    protected List<CompiledAggregateExpression> aggList;
+    TupleDefinition aggOutputDef;
+    final static protected List<Tuple> EMPTY_RETURN = new ArrayList<>(0);
+    public TupleDefinition aggInputDef;
+
+    public static WindowProcessor getInstance(WindowSpecification spec, TupleDefinition aggInputDef,
+            List<CompiledAggregateExpression> aggList, TupleDefinition aggregateOutputDef) {
+        WindowProcessor wp;
+        switch (spec.type) {
+        case FIELD:
+            DataType ft = spec.getFieldType();
+            if (ft == DataType.TIMESTAMP)
+                wp = new LongFieldBasedWP(spec);
+            else if (ft == DataType.INT)
+                wp = new IntFieldBasedWP(spec);
+            else
+                throw new IllegalArgumentException("datatype " + ft + " not supported for field based windows");
+            break;
+        case INFINITE:
+            wp = new InfiniteWindowProcessor(spec);
+            break;
+        case TIME:
+        case TUPLES:
+        default:
+            throw new IllegalArgumentException(spec.type + " not implemented");
+        }
+        wp.aggList = aggList;
+        wp.aggOutputDef = aggregateOutputDef;
+        wp.aggInputDef = aggInputDef;
+
+        return wp;
+    }
+
+    public abstract List<Tuple> newData(Tuple tuple);
+
+    /**
+     * Called when the input stream closes, the window has the opportunity to emit some tuples before closure
+     */
+    protected abstract List<Tuple> streamClosed();
+}
+
+abstract class SlidingWindowProcessor extends WindowProcessor {
+    List<Tuple> windowTuples = new ArrayList<>();
+    boolean noOverlap; // if there is no overlap between the windows, some optimizations are possible
+
+    public SlidingWindowProcessor(WindowSpecification spec) {
+        this.noOverlap = (spec.size.compareTo(spec.advance) <= 0);
+    }
+    /**
+     * When windows closes, returns a list with the tuples to be emitted, otherwise returns null
+     */
+    public List<Tuple> newData(Tuple tuple) {
+        List<Tuple> ret = EMPTY_RETURN;
+
+        if (windowTuples.isEmpty()) {
+            setFirstTuple(tuple);
+        } else if (isOutsideWindow(tuple)) {
+            // windows closed
+            if (aggList != null) {
+                Object[] v = new Object[aggList.size()];
+                for (int i = 0; i < aggList.size(); i++) {
+                    v[i] = aggList.get(i).getValue();
+                }
+                ret = Arrays.asList(new Tuple(aggOutputDef, v));
+            } else {// TODO
+                throw new IllegalStateException("not implemented");
+            }
+            if (noOverlap) {
+                if (aggList != null) {
+                    for (CompiledAggregateExpression cae : aggList) {
+                        cae.clear();
+                    }
+                } else {
+                    ret = windowTuples;
+                }
+                windowTuples = new ArrayList<Tuple>();
+                setFirstTuple(tuple);
+            } else {// TODO
+                throw new IllegalStateException("not implemented");
+            }
+        }
+        windowTuples.add(tuple);
+        if (aggList != null) {
+            for (CompiledAggregateExpression cae : aggList) {
+                cae.newData(tuple);
+            }
+        }
+        return ret;
+    }
+
+    @Override
+    protected List<Tuple> streamClosed() {
+        return EMPTY_RETURN;
+    }
+
+    abstract protected void setFirstTuple(Tuple tuple);
+
+    abstract protected boolean isOutsideWindow(Tuple tuple);
+}
+
+class LongFieldBasedWP extends SlidingWindowProcessor {
+    final long size, advance;
+    long firstValue;
+    final String field;
+
+    public LongFieldBasedWP(WindowSpecification spec) {
+        super(spec);
+        this.size = spec.size.longValue();
+        this.advance = spec.advance.longValue();
+        this.field = spec.field;
+    }
+
+    @Override
+    protected boolean isOutsideWindow(Tuple tuple) {
+        long nv = (Long) tuple.getColumn(field);
+        return nv >= firstValue + size;
+    }
+
+    @Override
+    protected void setFirstTuple(Tuple tuple) {
+        firstValue = (Long) tuple.getColumn(field);
+    }
+}
+
+class IntFieldBasedWP extends SlidingWindowProcessor {
+    final int size, advance;
+    int firstValue;
+    final String field;
+
+    public IntFieldBasedWP(WindowSpecification spec) {
+        super(spec);
+        this.size = spec.size.intValue();
+        this.advance = spec.advance.intValue();
+        this.field = spec.field;
+    }
+
+    @Override
+    protected boolean isOutsideWindow(Tuple tuple) {
+        int nv = (Integer) tuple.getColumn(field);
+        return nv >= (firstValue + size);
+    }
+
+    @Override
+    protected void setFirstTuple(Tuple tuple) {
+        firstValue = (Integer) tuple.getColumn(field);
+    }
+}
+
+
+class InfiniteWindowProcessor extends WindowProcessor {
+
+    public InfiniteWindowProcessor(WindowSpecification spec) {
+    }
+
+    @Override
+    public List<Tuple> newData(Tuple tuple) {
+        if (aggList != null) {
+            for (CompiledAggregateExpression cae : aggList) {
+                cae.newData(tuple);
+            }
+        }
+        return EMPTY_RETURN;
+    }
+
+    @Override
+    protected List<Tuple> streamClosed() {
+        List<Tuple> ret = EMPTY_RETURN;
+        if (aggList != null) {
+            Object[] v = new Object[aggList.size()];
+            for (int i = 0; i < aggList.size(); i++) {
+                v[i] = aggList.get(i).getValue();
+            }
+            ret = Arrays.asList(new Tuple(aggOutputDef, v));
+        }
+        return ret;
+    }
+
+}
+```
+
+### `YarchDatabase.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchDatabase.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanRegistrationException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.NotCompliantMBeanException;
+import javax.management.ObjectName;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+/**
+ * Handles all tables/streams/indexes for a Yamcs server
+ * 
+ */
+public class YarchDatabase {
+    YarchDatabase instance;
+    // note that this home variable is currently changed in the
+    // org.yamcs.cli.CheckConfig
+    // to avoid errors when running check config in parallel with a running
+    // yamcs server
+    private static String home;
+    static YConfiguration config;
+
+    private static Map<String, StorageEngine> storageEngines = new HashMap<>();
+    public static final String RDB_ENGINE_NAME = "rocksdb2";
+    private static final String DEFAULT_STORAGE_ENGINE = RDB_ENGINE_NAME;
+    private static final String defaultStorageEngineName;
+
+    static {
+        config = YConfiguration.getConfiguration("yamcs");
+        if (config.containsKey("dataDir")) {
+            Path dataDir = Path.of(config.getString("dataDir")).toAbsolutePath().normalize();
+            home = dataDir.toString();
+        }
+
+        List<String> se;
+        if (config.containsKey("storageEngines")) {
+            se = config.getList("storageEngines");
+        } else {
+            se = Arrays.asList(RDB_ENGINE_NAME);
+        }
+        if (config.containsKey("defaultStorageEngine")) {
+            defaultStorageEngineName = config.getString("defaultStorageEngine");
+            if (!RDB_ENGINE_NAME.equalsIgnoreCase(defaultStorageEngineName)) {
+                throw new ConfigurationException("Unknown storage engine: " + defaultStorageEngineName);
+            }
+        } else {
+            defaultStorageEngineName = DEFAULT_STORAGE_ENGINE;
+        }
+
+        if (se != null) {
+            for (String s : se) {
+                if (RDB_ENGINE_NAME.equalsIgnoreCase(s)) {
+                    storageEngines.put(RDB_ENGINE_NAME, RdbStorageEngine.getInstance());
+                } else {
+                    throw new ConfigurationException("Unknown storage engine '" + se + "'");
+                }
+            }
+        }
+
+        MBeanServer mbeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            mbeanServer.registerMBean(new BackupControl(), new ObjectName("org.yamcs:name=Backup"));
+        } catch (InstanceAlreadyExistsException | MBeanRegistrationException | NotCompliantMBeanException
+                | MalformedObjectNameException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    static Map<String, YarchDatabaseInstance> databases = new HashMap<>();
+
+    /**
+     * 
+     * @param yamcsInstance
+     * 
+     */
+    public static synchronized YarchDatabaseInstance getInstance(String yamcsInstance) {
+        if (yamcsInstance == null) {
+            throw new NullPointerException("yamcsInstance cannot be null");
+        }
+
+        YarchDatabaseInstance instance = databases.get(yamcsInstance);
+        if (instance == null) {
+            try {
+                instance = new YarchDatabaseInstance(yamcsInstance);
+            } catch (YarchException e) {
+                throw new RuntimeException("Cannot create database '" + yamcsInstance + "'", e);
+            }
+            databases.put(yamcsInstance, instance);
+        }
+        return instance;
+    }
+
+    /**
+     * Returns the names of the loaded databases.
+     */
+    public static Set<String> getDatabases() {
+        return databases.keySet();
+    }
+
+    static public boolean hasInstance(String dbname) {
+        return databases.containsKey(dbname);
+    }
+
+    public static boolean instanceExistsOnDisk(String yamcsInstance) {
+        File dir = new File(getHome(), yamcsInstance);
+        return dir.exists() && dir.isDirectory();
+    }
+
+    /**
+     * to be used for testing
+     * 
+     * @param dbName
+     *            database name to be removed
+     **/
+    public static void removeInstance(String dbName) {
+        YarchDatabaseInstance ydb = databases.remove(dbName);
+        if (ydb != null) {
+            ydb.close();
+        }
+    }
+
+    public static void setHome(String home) {
+        YarchDatabase.home = home;
+    }
+
+    public static String getHome() {
+        return home;
+    }
+
+    public static String getDataDir() {
+        return home;
+    }
+
+    public static StorageEngine getDefaultStorageEngine() {
+        return storageEngines.get(defaultStorageEngineName);
+    }
+
+    public static StorageEngine getStorageEngine(String storageEngineName) {
+        return storageEngines.get(storageEngineName);
+    }
+
+    public static Collection<StorageEngine> getStorageEngines() {
+        return storageEngines.values();
+    }
+
+    public static Set<String> getStorageEngineNames() {
+        return storageEngines.keySet();
+    }
+
+    public static String getDefaultStorageEngineName() {
+        return defaultStorageEngineName;
+    }
+}
+```
+
+### `YarchDatabaseInstance.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchDatabaseInstance.java`
+
+
+```java
+package org.yamcs.yarch;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.management.ManagementService;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.streamsql.ResultListener;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+import org.yamcs.yarch.streamsql.StreamSqlParser;
+import org.yamcs.yarch.streamsql.StreamSqlResult;
+import org.yamcs.yarch.streamsql.StreamSqlStatement;
+import org.yamcs.yarch.streamsql.TokenMgrError;
+import org.yaml.snakeyaml.Yaml;
+
+/**
+ * Handles tables and streams for one Yamcs Instance
+ * 
+ * <p>
+ * Synchronisation policy: to avoid problems with stream disappearing when clients connect to them, all the
+ * creation/closing/subscription to streams/tables shall be done while acquiring a lock on the YarchDatabase object.
+ * This is done in the StreamSqlStatement.java
+ * 
+ * <p>
+ * Delivery of tuples does not require locking, this means subscription can change while delivering (for that a
+ * concurrent list is used in Stream.java)
+ * 
+ * @author nm
+ *
+ */
+public class YarchDatabaseInstance {
+    public static String PART_CONF_KEY = "dataPartitioningByTime";
+    private static final Logger log = LoggerFactory.getLogger(YarchDatabaseInstance.class.getName());
+
+    Map<String, TableDefinition> tables = new HashMap<>();
+    transient Map<String, Stream> streams = new HashMap<>();
+
+    // the tablespace where the data from this yarch instance is stored
+    String tablespaceName;
+
+    final ManagementService managementService;
+    TimePartitionSchema timePartitioningSchema;
+    // yamcs instance name
+    private String instanceName;
+
+    YarchDatabaseInstance(String instanceName) throws YarchException {
+        this.instanceName = instanceName;
+        managementService = ManagementService.getInstance();
+
+        String instConfName = "yamcs." + instanceName;
+        YConfiguration yconf;
+        if (YConfiguration.isDefined(instConfName)) {
+            yconf = YConfiguration.getConfiguration(instConfName);
+            if (yconf.containsKey("tablespace")) {
+                tablespaceName = yconf.getString("tablespace");
+            } else {
+                tablespaceName = instanceName;
+            }
+
+            if (yconf.containsKey(PART_CONF_KEY)) {
+                String schema = yconf.getString(PART_CONF_KEY);
+                if (!"none".equalsIgnoreCase(schema)) {
+                    timePartitioningSchema = TimePartitionSchema.getInstance(schema);
+                }
+            }
+        } else {
+            yconf = YConfiguration.getConfiguration("yamcs");
+            tablespaceName = instanceName;
+        }
+        migrateTableDefinitions();
+        loadTables();
+    }
+
+    public PartitionManager getPartitionManager(TableDefinition tblDef) {
+        return getStorageEngine(tblDef).getPartitionManager(this, tblDef);
+    }
+
+    /**
+     * Tablespaces are used by {@link RdbStorageEngine} to store data. Returns the default tablespace name that is used
+     * by all tables and also the parameter archive of this yamcs instance
+     * 
+     */
+    public String getTablespaceName() {
+        return tablespaceName;
+    }
+
+    /**
+     * 
+     * @return the instance name
+     */
+    public String getName() {
+        return instanceName;
+    }
+
+    public String getYamcsInstance() {
+        return instanceName;
+    }
+
+    /**
+     * loads all the tables via the storage engine
+     * 
+     * @throws YarchException
+     */
+    void loadTables() throws YarchException {
+        for (StorageEngine storageEngine : YarchDatabase.getStorageEngines()) {
+            List<TableDefinition> list = storageEngine.loadTables(this);
+            for (TableDefinition tblDef : list) {
+                tblDef.setDb(this);
+                managementService.registerTable(instanceName, tblDef);
+                tables.put(tblDef.getName(), tblDef);
+            }
+        }
+
+    }
+
+    private void migrateTableDefinitions() throws YarchException {
+
+        File dir = new File(getRoot());
+
+        if (!dir.exists()) {
+            return;
+        }
+        File[] dirFiles = dir.listFiles();
+        if (dirFiles == null) {
+            return;
+        }
+
+        dirFiles = Arrays.stream(dirFiles).filter(f -> f.getName().endsWith(".def")).toArray(size -> new File[size]);
+        if (dirFiles.length == 0) {
+            return;
+        }
+        File oldTblDefs = new File(dir.getAbsolutePath(), "old-tbl-defs");
+        oldTblDefs.mkdir();
+
+        for (File f : dirFiles) {
+            try {
+                TableDefinition tblDef = deserializeTableDefinition(f);
+                StorageEngine storageEngine = getStorageEngine(tblDef);
+                if (storageEngine == null) {
+                    throw new YarchException("Do not have a storage engine '" + tblDef.getStorageEngineName()
+                            + "'. Check storageEngines key in yamcs.yaml");
+                }
+                log.debug("Migrating table definition {} from {}", tblDef.getName(), f);
+                storageEngine.migrateTableDefinition(this, tblDef);
+
+                f.renameTo(new File(oldTblDefs.getAbsolutePath() + File.separator + f.getName()));
+            } catch (IOException e) {
+                log.warn("Exception while reading the table definition from {}: ", f, e);
+                throw new YarchException("Exception while reading the table definition from " + f + ": ", e);
+            } catch (ClassNotFoundException e) {
+                log.warn("Exception while reading the table definition from {}: ", f, e);
+                throw new YarchException("Exception while reading the table definition from " + f + ": ", e);
+            }
+        }
+    }
+
+    @Deprecated // table definitions are stored now by the storage engine
+    TableDefinition deserializeTableDefinition(File f) throws IOException, ClassNotFoundException {
+        if (f.length() == 0) {
+            throw new IOException("Cannot load table definition from empty file " + f);
+        }
+        String fn = f.getName();
+        String tblName = fn.substring(0, fn.length() - 4);
+        Yaml yaml = new Yaml(new TableDefinitionConstructor());
+        FileInputStream fis = new FileInputStream(f);
+        Object o = yaml.load(fis);
+        if (!(o instanceof TableDefinition)) {
+            fis.close();
+            throw new IOException("Cannot load table definition from " + f + ": object is " + o.getClass().getName()
+                    + "; should be " + TableDefinition.class.getName());
+        }
+        TableDefinition tblDef = (TableDefinition) o;
+        fis.close();
+
+        tblDef.setName(tblName);
+        tblDef.setDb(this);
+
+        // temporary upgrade to version 2 from version 1 - should be removed in a future version
+        if (tblDef.getFormatVersion() == 1) {
+            log.info("Converting {} from format version 1 to format version 2", tblDef.getName());
+            if ("pp".equals(tblDef.getName())) {
+                changeParaValueType(tblDef);
+            }
+        }
+
+        log.debug("Loaded table definition {} from {}", tblName, fn);
+        return tblDef;
+    }
+
+    static void changeParaValueType(TableDefinition tblDef) {
+        List<TableColumnDefinition> l = tblDef.getValueDefinition();
+        for (int i = 0; i < l.size(); i++) {
+            ColumnDefinition cd = l.get(i);
+            if ("PROTOBUF(org.yamcs.protobuf.Pvalue$ParameterValue)".equals(cd.getType().name())) {
+                tblDef.changeDataType(cd.getName(), DataType.PARAMETER_VALUE);
+            }
+        }
+    }
+
+    /**
+     * saves the table definition (called after it changes)
+     * <p>
+     * All the properties should be read from the table, but for the columns properties the lists passed as arguments
+     * should be used. This is because the method is called with modified column content which is not reflected in the
+     * table definition until the data is saved in the database.
+     * 
+     * @param valueColumns
+     * @param keyColumns
+     * 
+     * @param algorithmDef
+     */
+    void saveTableDefinition(TableDefinition tblDef, List<TableColumnDefinition> keyColumns,
+            List<TableColumnDefinition> valueColumns) {
+        try {
+            getStorageEngine(tblDef).saveTableDefinition(this, tblDef, keyColumns, valueColumns);
+        } catch (Exception e) {
+            YamcsServer.getServer().getCrashHandler(instanceName).handleCrash("Archive",
+                    "Cannot save table definition for" + tblDef.getName() + " :" + e);
+            log.error("Got exception when writing table definition to {} ", tblDef.getName(), e);
+        }
+    }
+
+    /**
+     * add a table to the dictionary throws exception if a table or a stream with the same name already exist
+     * 
+     * @param tbldef
+     *            - table definition
+     * @throws YarchException
+     *             - thrown in case a table or a stream with the same name already exists or if there was an error in
+     *             creating the table
+     * 
+     */
+    public void createTable(TableDefinition tbldef) throws YarchException {
+        checkExisting(tbldef.getName());
+
+        StorageEngine se = YarchDatabase.getStorageEngine(tbldef.getStorageEngineName());
+        if (se == null) {
+            throw new YarchException("Invalid storage engine '" + tbldef.getStorageEngineName()
+                    + "' specified. Valid names are: " + YarchDatabase.getStorageEngineNames());
+        }
+        se.createTable(this, tbldef);
+
+        tables.put(tbldef.getName(), tbldef);
+        tbldef.setDb(this);
+        saveTableDefinition(tbldef, tbldef.getKeyDefinition(), tbldef.getValueDefinition());
+        if (managementService != null) {
+            managementService.registerTable(instanceName, tbldef);
+        }
+    }
+
+    /**
+     * Adds a stream to the dictionary making it "official"
+     * 
+     * @param stream
+     * @throws YarchException
+     */
+    public synchronized void addStream(Stream stream) throws YarchException {
+        checkExisting(stream.getName());
+        streams.put(stream.getName(), stream);
+        if (managementService != null) {
+            managementService.registerStream(instanceName, stream);
+        }
+    }
+
+    public synchronized void renameTable(String name, String newName) {
+        checkExisting(newName);
+        TableDefinition tblDef = tables.get(name);
+        if (tblDef == null) {
+            throw new YarchException("A table named '" + name + "' does not exists");
+        }
+        getStorageEngine(tblDef).renameTable(this, tblDef, newName);
+        tables.put(newName, tblDef);
+        tables.remove(name);
+    }
+
+    private void checkExisting(String name) {
+        if (tables.containsKey(name)) {
+            throw new YarchException("A table named '" + name + "' already exists");
+        }
+        if (streams.containsKey(name)) {
+            throw new YarchException("A stream named '" + name + "' already exists");
+        }
+    }
+
+    public TableDefinition getTable(String name) {
+        return tables.get(name);
+    }
+
+    public boolean streamOrTableExists(String name) {
+        if (streams.containsKey(name)) {
+            return true;
+        }
+        if (tables.containsKey(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    public Stream getStream(String name) {
+        return streams.get(name);
+    }
+
+    public synchronized void dropTable(String tblName) {
+        log.info("Dropping table {}", tblName);
+        TableDefinition tbl = tables.remove(tblName);
+        if (tbl == null) {
+            throw new YarchException("There is no table named '" + tblName + "'");
+        }
+        if (managementService != null) {
+            managementService.unregisterTable(instanceName, tblName);
+        }
+        getStorageEngine(tbl).dropTable(this, tbl);
+    }
+
+    public synchronized void removeStream(String name) {
+        Stream s = streams.remove(name);
+        if ((s != null) && (managementService != null)) {
+            managementService.unregisterStream(instanceName, name);
+        }
+    }
+
+    public StorageEngine getStorageEngine(TableDefinition tbldef) {
+        return YarchDatabase.getStorageEngine(tbldef.getStorageEngineName());
+    }
+
+    public Collection<Stream> getStreams() {
+        return streams.values();
+    }
+
+    public Collection<TableDefinition> getTableDefinitions() {
+        return tables.values();
+    }
+
+    /**
+     * Returns the root directory for this database instance. It is usually home/instance_name.
+     */
+    public String getRoot() {
+        return YarchDatabase.getHome() + File.separator + instanceName;
+    }
+
+    public StreamSqlStatement createStatement(String query, Object... args) throws StreamSqlException, ParseException {
+        StreamSqlParser parser = new StreamSqlParser(new java.io.StringReader(query));
+        parser.setArgs(args);
+        try {
+            return parser.OneStatement();
+        } catch (TokenMgrError e) {
+            throw new ParseException(e.getMessage());
+        }
+    }
+
+    public void execute(StreamSqlStatement stmt, ResultListener resultListener, long limit) throws StreamSqlException {
+        stmt.execute(this, resultListener, limit);
+    }
+
+    public void execute(StreamSqlStatement stmt, ResultListener resultListener) throws StreamSqlException {
+        stmt.execute(this, resultListener, Long.MAX_VALUE);
+    }
+
+    public StreamSqlResult execute(StreamSqlStatement stmt) throws StreamSqlException {
+        return stmt.execute(this);
+    }
+
+    /**
+     * Executes a query and returns a result.
+     * <p>
+     * If the result contains streaming data (select from table or stream) you have to close the result
+     * 
+     * @param query
+     * @param args
+     * @return
+     * @throws StreamSqlException
+     * @throws ParseException
+     */
+    public StreamSqlResult execute(String query, Object... args) throws StreamSqlException, ParseException {
+        StreamSqlStatement stmt = createStatement(query, args);
+        return execute(stmt);
+    }
+
+    /**
+     * Same as {@link #execute(StreamSqlStatement)} but it embeds any exception into a {@link YarchException}
+     */
+    public StreamSqlResult executeUnchecked(StreamSqlStatement stmt) {
+        try {
+            return execute(stmt);
+        } catch (StreamSqlException e) {
+            throw new YarchException(e);
+        }
+    }
+
+    /**
+     * Same as {@link #execute(String, Object...)} but it embeds any exception into a {@link YarchException}
+     * 
+     * @param query
+     * @param args
+     * @return
+     */
+    public StreamSqlResult executeUnchecked(String query, Object... args) {
+        StreamSqlStatement stmt;
+        try {
+            stmt = createStatement(query, args);
+            return execute(stmt);
+        } catch (StreamSqlException | ParseException e) {
+            throw new YarchException(e);
+        }
+    }
+
+    public void executeDiscardingResult(String query, Object... args) throws StreamSqlException, ParseException {
+        StreamSqlStatement stmt = createStatement(query, args);
+        execute(stmt, new ResultListener() { // Discards everything
+
+            @Override
+            public void next(Tuple tuple) {
+            }
+
+            @Override
+            public void completeExceptionally(Throwable t) {
+            }
+
+            @Override
+            public void complete() {
+            }
+        });
+    }
+
+    public void close() {
+        // make a copy such that we don't get ConcurrentModificationException when stream.close will cause it to be
+        // removed from the map
+        List<Stream> l = new ArrayList<>(streams.values());
+        for (Stream s : l) {
+            s.close();
+        }
+    }
+
+    public ProtobufDatabase getProtobufDatabase() throws YarchException {
+        return YarchDatabase.getDefaultStorageEngine().getProtobufDatabase(this);
+    }
+
+    /**
+     * 
+     * Return the time partitioning schema configured (dataPartitioningByTime) if any.
+     * <p>
+     * If not configured, return null.
+     */
+    public TimePartitionSchema getDefaultPartitioningSchema() {
+        return timePartitioningSchema;
+    }
+
+    public Sequence getSequence(String name, boolean create) throws YarchException {
+        return YarchDatabase.getDefaultStorageEngine().getSequence(this, name, create);
+    }
+
+    public List<SequenceInfo> getSequencesInfo() {
+        return YarchDatabase.getDefaultStorageEngine().getSequencesInfo(this);
+
+    }
+
+    public static void addSpec(Spec spec) {
+        spec.addOption(YarchDatabaseInstance.PART_CONF_KEY, OptionType.STRING)
+                .withChoices("none", "YYYY", "YYYY/MM", "YYYY/DOY")
+                .withDefault("none").withDescription(
+                        "Parition the tm, pp, events, alarms, cmdhistory tables and the parameter archive by time. "
+                                + "This means storing the data corresponding to the time interval in a different RocksDB database");
+
+        spec.addOption("tablespace", OptionType.STRING);
+    }
+
+    /**
+     * Get the time partitioning schema configured in the passed config, or the instance schema
+     * 
+     * <p>
+     * returns null of "none" is configured in the config or if there is no configuration in the config or at instance
+     * level
+     */
+    public TimePartitionSchema getTimePartitioningSchema(YConfiguration config) {
+
+        if (config.containsKey(YarchDatabaseInstance.PART_CONF_KEY)) {
+            String schema = config.getString(YarchDatabaseInstance.PART_CONF_KEY);
+            if (!"none".equalsIgnoreCase(schema)) {
+                return TimePartitionSchema.getInstance(schema);
+            } else {
+                return null;
+            }
+        }
+        return timePartitioningSchema;
+    }
+}
+```
+
+### `YarchException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/yarch/YarchException.java`
+
+
+```java
+package org.yamcs.yarch;
+
+
+public class YarchException extends RuntimeException {
+    public YarchException(String string) {
+        super(string);
+    }
+    public YarchException(Throwable t) {
+        super(t);
+    }
+    public YarchException(String msg, Throwable cause) {
+        super(msg, cause);
+    }
+}
+```

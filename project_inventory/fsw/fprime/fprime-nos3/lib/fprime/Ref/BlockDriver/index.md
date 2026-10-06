@@ -3,28 +3,205 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--BlockDriver.cpp
-file--BlockDriver.fpp
-file--BlockDriver.hpp
-file--CMakeLists.txt
-file--README
-file--Tlm.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.cpp`](file--BlockDriver.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.fpp`](file--BlockDriver.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.hpp`](file--BlockDriver.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/Tlm.fppi`](file--Tlm.fppi) — UTF-8 텍스트 파일 본문 포함
+### `BlockDriver.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.cpp`
+
+
+```cpp
+#include <Ref/BlockDriver/BlockDriver.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Ref {
+
+    BlockDriver::BlockDriver(const char* compName) :
+        BlockDriverComponentBase(compName), m_cycles(0)
+    {}
+
+    BlockDriver::~BlockDriver() {}
+
+    void BlockDriver::BufferIn_handler(FwIndexType portNum, Drv::DataBuffer& buffer) {
+        // just a pass-through
+        this->BufferOut_out(0,buffer);
+    }
+
+    void BlockDriver::Sched_handler(FwIndexType portNum, U32 context) {
+        this->tlmWrite_BD_Cycles(this->m_cycles++);
+    }
+
+    void BlockDriver::PingIn_handler(
+            const FwIndexType portNum,
+            U32 key
+        )
+      {
+        // call ping output port
+        this->PingOut_out(0,key);
+      }
+
+}
+```
+
+### `BlockDriver.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.fpp`
+
+
+```fpp
+module Ref {
+
+  @ An example block driver component with data buffers and interrupts
+  active component BlockDriver {
+
+    # ----------------------------------------------------------------------
+    # General ports
+    # ----------------------------------------------------------------------
+
+    import Drv.Tick
+
+    @ The rate group scheduler input
+    async input port Sched: Svc.Sched
+
+    @ The input data buffer port
+    async input port BufferIn: Drv.DataBuffer
+
+    @ The output data buffer port
+    output port BufferOut: Drv.DataBuffer
+
+    @ Input ping port
+    async input port PingIn: Svc.Ping
+
+    @ Output ping port
+    output port PingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Time get port
+    time get port Time
+
+    @ Telemetry port
+    telemetry port Tlm
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Tlm.fppi"
+
+  }
+
+}
+```
+
+### `BlockDriver.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/BlockDriver.hpp`
+
+
+```cpp
+#ifndef REF_BLOCK_DRIVER_IMPL_HPP
+#define REF_BLOCK_DRIVER_IMPL_HPP
+
+#include <Ref/BlockDriver/BlockDriverComponentAc.hpp>
+
+namespace Ref {
+
+    class BlockDriver final : public BlockDriverComponentBase  {
+
+    public:
+
+        // Only called by derived class
+        BlockDriver(const char* compName);
+
+        ~BlockDriver();
+
+    private:
+
+        // downcalls for input ports
+        void BufferIn_handler(FwIndexType portNum, Drv::DataBuffer& buffer);
+        void Sched_handler(FwIndexType portNum, U32 context);
+        //! Handler implementation for PingIn
+        //!
+        void PingIn_handler(
+            const FwIndexType portNum, /*!< The port number*/
+            U32 key /*!< Value to return to pinger*/
+        );
+
+        // cycle count
+        U32 m_cycles;
+
+    };
+}
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BlockDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BlockDriver.cpp"
+)
+
+register_fprime_module()
+
+### Unit Tests ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BlockDriver.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BlockDriverTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/BlockDriverTester.cpp"
+)
+set(UT_MOD_DEPS
+  STest
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `README`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/README`
+
+
+```text
+This is a demonstration component for a simple device driver. It takes a buffer as input and loops it back to the output. 
+It also generates a timing "interrupt" to drive the rate groups.
+```
+
+### `Tlm.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/Tlm.fppi`
+
+
+```text
+@ Driver cycle count
+telemetry BD_Cycles: U32 id 0
+```

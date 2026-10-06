@@ -3,106 +3,8069 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 parser/index
-file--AggregateUtil.java
-file--BitBuffer.java
-file--BitReader.java
-file--BitWriter.java
-file--BooleanArray.java
-file--ByteArray.java
-file--ByteArrayUtils.java
-file--ByteArrayWrapper.java
-file--ByteSupplier.java
-file--DatabaseCorruptionException.java
-file--DataRateMeter.java
-file--DecodingException.java
-file--DeprecationInfo.java
-file--DoubleArray.java
-file--ExceptionUtil.java
-file--FileUtils.java
-file--FloatArray.java
-file--GlobFileFinder.java
-file--GpsCcsdsTime.java
-file--IndexedList.java
-file--IntArray.java
-file--IntHashSet.java
-file--InvalidRequestException.java
-file--LongArray.java
-file--MathUtil.java
-file--MilStd1750A.java
-file--Mimetypes.java
-file--MutableLong.java
-file--ParameterFormatter.java
-file--PartitionedTimeInterval.java
-file--PeekingIterator.java
-file--PerfTimer.java
-file--SDNotify.java
-file--ServiceUtil.java
-file--SortedIntArray.java
-file--StringConverter.java
-file--TaiUtcConverter.java
-file--TimeEncoding.java
-file--TimeInterval.java
-file--TimestampUtil.java
-file--UnsignedLong.java
-file--ValueComparator.java
-file--ValueHelper.java
-file--ValueUtility.java
-file--VarIntUtil.java
-file--YObjectLoader.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/parser/`](parser/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/AggregateUtil.java`](file--AggregateUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitBuffer.java`](file--BitBuffer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitReader.java`](file--BitReader.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitWriter.java`](file--BitWriter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BooleanArray.java`](file--BooleanArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArray.java`](file--ByteArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArrayUtils.java`](file--ByteArrayUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArrayWrapper.java`](file--ByteArrayWrapper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteSupplier.java`](file--ByteSupplier.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DatabaseCorruptionException.java`](file--DatabaseCorruptionException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DataRateMeter.java`](file--DataRateMeter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DecodingException.java`](file--DecodingException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DeprecationInfo.java`](file--DeprecationInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DoubleArray.java`](file--DoubleArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ExceptionUtil.java`](file--ExceptionUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/FileUtils.java`](file--FileUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/FloatArray.java`](file--FloatArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/GlobFileFinder.java`](file--GlobFileFinder.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/GpsCcsdsTime.java`](file--GpsCcsdsTime.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IndexedList.java`](file--IndexedList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IntArray.java`](file--IntArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IntHashSet.java`](file--IntHashSet.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/InvalidRequestException.java`](file--InvalidRequestException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/LongArray.java`](file--LongArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MathUtil.java`](file--MathUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MilStd1750A.java`](file--MilStd1750A.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/Mimetypes.java`](file--Mimetypes.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MutableLong.java`](file--MutableLong.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ParameterFormatter.java`](file--ParameterFormatter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PartitionedTimeInterval.java`](file--PartitionedTimeInterval.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PeekingIterator.java`](file--PeekingIterator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PerfTimer.java`](file--PerfTimer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/SDNotify.java`](file--SDNotify.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ServiceUtil.java`](file--ServiceUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/SortedIntArray.java`](file--SortedIntArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/StringConverter.java`](file--StringConverter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TaiUtcConverter.java`](file--TaiUtcConverter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimeEncoding.java`](file--TimeEncoding.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimeInterval.java`](file--TimeInterval.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimestampUtil.java`](file--TimestampUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/UnsignedLong.java`](file--UnsignedLong.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueComparator.java`](file--ValueComparator.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueHelper.java`](file--ValueHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueUtility.java`](file--ValueUtility.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/VarIntUtil.java`](file--VarIntUtil.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/YObjectLoader.java`](file--YObjectLoader.java) — UTF-8 텍스트 파일 본문 포함
+### `AggregateUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/AggregateUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.commanding.PartialArgumentValue;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.PartialParameterValue;
+import org.yamcs.parameter.RawEngValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PathElement;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+import com.google.common.base.Splitter;
+
+/**
+ * operations to aggregates or arrays
+ * 
+ * @author nm
+ *
+ */
+public class AggregateUtil {
+    /**
+     * finds the first occurrence of . or [ after the last /
+     * 
+     * @param s
+     * @return the position of the first occurrence of . or [ after the last slash; returns -1 if not found
+     */
+    public static int findSeparator(String s) {
+        int found = -1;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (found == -1 && ((c == '.') || (c == '['))) {
+                found = i;
+            } else if (c == '/') {
+                found = -1;
+            }
+        }
+        return found;
+    }
+
+    /**
+     * Parses a reference of shape
+     * 
+     * <pre>
+     * /a/b/c/x.y[3][4].z
+     * </pre>
+     * 
+     * into an array of PathElement: {"a/b/c/x", "y"[3,4], "z"}
+     * 
+     * @param name
+     * @return
+     */
+    public static PathElement[] parseReference(String name) {
+        List<PathElement> tmp = new ArrayList<>();
+        for (String ps : Splitter.on('.').omitEmptyStrings().split(name)) {
+            tmp.add(PathElement.fromString(ps));
+        }
+        return tmp.toArray(new PathElement[0]);
+    }
+
+    /**
+     * Verify that the path exists in the parameter type
+     * 
+     * @param parameterType
+     * @param path
+     * @return
+     */
+    public static boolean verifyPath(ParameterType parameterType, PathElement[] path) {
+        ParameterType ptype = parameterType;
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                if (!(ptype instanceof AggregateParameterType)) {
+                    return false;
+                }
+                Member m = ((AggregateParameterType) ptype).getMember(pe.getName());
+                if (m == null) {
+                    return false;
+                }
+                ptype = (ParameterType) m.getType();
+            }
+            if (pe.getIndex() != null) {
+                int[] idx = pe.getIndex();
+                if (!(ptype instanceof ArrayParameterType)) {
+                    return false;
+                }
+                ArrayParameterType at = (ArrayParameterType) ptype;
+                if (at.getNumberOfDimensions() != idx.length) {
+                    return false;
+                }
+                ptype = (ParameterType) at.getElementType();
+            }
+        }
+        return true;
+    }
+
+    public static ParameterType getMemberType(ParameterType parameterType, PathElement[] path) {
+        ParameterType ptype = parameterType;
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                if (!(ptype instanceof AggregateParameterType)) {
+                    return null;
+                }
+                Member m = ((AggregateParameterType) ptype).getMember(pe.getName());
+                if (m == null) {
+                    return null;
+                }
+                ptype = (ParameterType) m.getType();
+            }
+            if (pe.getIndex() != null) {
+                int[] idx = pe.getIndex();
+                if (!(ptype instanceof ArrayParameterType)) {
+                    return null;
+                }
+                ArrayParameterType at = (ArrayParameterType) ptype;
+                if (at.getNumberOfDimensions() != idx.length) {
+                    return null;
+                }
+                ptype = (ParameterType) at.getElementType();
+            }
+        }
+        return ptype;
+    }
+
+    /**
+     * Create a parameter value with a member from the passed parameter value as found following the path.
+     * 
+     * Returns null if there is no such member.
+     * 
+     * @param rev
+     * @param path
+     * @return
+     */
+    public static <T extends RawEngValue> T extractMember(T rev, PathElement[] path) {
+        Value engValue = rev.getEngValue();
+        Value rawValue = rev.getRawValue();
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                engValue = ((AggregateValue) engValue).getMemberValue(pe.getName());
+                if (rawValue != null) {
+                    rawValue = ((AggregateValue) rawValue).getMemberValue(pe.getName());
+                }
+            }
+            int[] idx = pe.getIndex();
+            if (idx != null) {
+                ArrayValue av = (ArrayValue) engValue;
+                if (!av.hasElement(idx)) {
+                    return null;
+                }
+                engValue = av.getElementValue(idx);
+                if (engValue == null) {
+                    return null;
+                }
+                if (rawValue != null) {
+                    rawValue = ((ArrayValue) rawValue).getElementValue(idx);
+                }
+            }
+        }
+        if (rev instanceof ParameterValue) {
+            ParameterValue pv = (ParameterValue) rev;
+            PartialParameterValue pv1 = new PartialParameterValue(pv.getParameter(), path);
+            pv1.setEngValue(engValue);
+            pv1.setRawValue(rawValue);
+            pv1.setGenerationTime(rev.getGenerationTime());
+            pv1.setAcquisitionTime(pv.getAcquisitionTime());
+            pv1.setAcqStatus(pv.getAcqStatus());
+            pv1.setExpireMillis(pv.getExpireMillis());
+            return (T) pv1;
+        } else {
+            ArgumentValue av = (ArgumentValue) rev;
+            PartialArgumentValue av1 = new PartialArgumentValue(av.getArgument(), path);
+            av1.setEngValue(engValue);
+            av1.setRawValue(rawValue);
+            av1.setGenerationTime(rev.getGenerationTime());
+            return (T) av;
+        }
+    }
+
+    /**
+     * Patches a parameter value with a new value for one member of an aggregate or array
+     * 
+     * Currently this does not extend an array
+     * 
+     * @param pv
+     * @param patch
+     * @throws IllegalArgumentException
+     *             if the member to be updated or the array element does not exist
+     */
+    public static void updateMember(ParameterValue pv, PartialParameterValue patch) {
+        Value engValue = pv.getEngValue();
+        Value rawValue = pv.getRawValue();
+        PathElement[] path = patch.getPath();
+
+        for (int i = 0; i < path.length - 1; i++) {
+            PathElement pe = path[i];
+            if (pe.getName() != null) {
+                engValue = ((AggregateValue) engValue).getMemberValue(pe.getName());
+                if (rawValue != null) {
+                    rawValue = ((AggregateValue) rawValue).getMemberValue(pe.getName());
+                }
+            }
+            int[] idx = pe.getIndex();
+            if (idx != null) {
+                ArrayValue av = (ArrayValue) engValue;
+                if (!av.hasElement(idx)) {
+                    throw new IllegalArgumentException("Invalid path element (array element does not exist) ");
+                }
+                engValue = av.getElementValue(idx);
+                if (engValue == null) {
+                    throw new IllegalArgumentException("Invalid path element");
+                }
+                if (rawValue != null) {
+                    rawValue = ((ArrayValue) rawValue).getElementValue(idx);
+                }
+            }
+        }
+        PathElement pe = path[path.length - 1];
+        if (pe.getIndex() == null) {
+            ((AggregateValue) engValue).setMemberValue(pe.getName(), patch.getEngValue());
+            if (rawValue != null && patch.getRawValue() != null) {
+                ((AggregateValue) rawValue).setMemberValue(pe.getName(), patch.getRawValue());
+            }
+        } else {
+            if (pe.getName() != null) {
+                engValue = ((AggregateValue) engValue).getMemberValue(pe.getName());
+                if (rawValue != null) {
+                    rawValue = ((AggregateValue) rawValue).getMemberValue(pe.getName());
+                }
+            }
+            ((ArrayValue) engValue).setElementValue(pe.getIndex(), patch.getEngValue());
+            if (rawValue != null && patch.getRawValue() != null) {
+                ((ArrayValue) rawValue).setElementValue(pe.getIndex(), patch.getRawValue());
+            }
+        }
+    }
+
+    /**
+     * This function is used to retrieve values from hierarchical aggregates.
+     * 
+     * It is equivalent with a chain of getMemberValue() calls:
+     * 
+     * <pre>
+     *   getMemberValue(getMemberValue(getMemberValue(value, path[0]),path[1])...,path[n])
+     * </pre>
+     * 
+     * It returns null if the path does not lead to a valid aggregate member.
+     * 
+     * @param path
+     *            - the path to be traversed, can be empty.
+     * @return the member value found by traversing the path or null if no such member exists. In case the path is
+     *         empty, this value itself will be returned.
+     */
+    public static Value getMemberValue(Value value, PathElement[] path) {
+        Value v = value;
+        for (int i = 0; i < path.length; i++) {
+            PathElement pe = path[i];
+            String name = pe.getName();
+            int[] idx = pe.getIndex();
+            if (v instanceof AggregateValue) {
+                if (name == null) {
+                    return null;
+                }
+                v = ((AggregateValue) v).getMemberValue(name);
+            } else if (name != null) {
+                return null;
+            }
+
+            if (v instanceof ArrayValue) {
+                if (idx == null) {
+                    return null;
+                }
+                v = ((ArrayValue) v).getElementValue(idx);
+            } else if (idx != null) {
+                return null;
+            }
+
+            if (v == null) {
+                return null;
+            }
+
+        }
+        return v;
+    }
+
+    public static String toString(PathElement[] path) {
+        StringBuilder sb = new StringBuilder();
+        for (PathElement pe : path) {
+            if (pe.getName() != null) {
+                sb.append(".").append(pe.getName());
+            }
+            if (pe.getIndex() != null) {
+                for (int x : pe.getIndex()) {
+                    sb.append("[").append(x).append("]");
+                }
+            }
+        }
+        return sb.toString();
+    }
+
+    public static AggregateParameterType createParameterType(String name, AggregateValue v) {
+        AggregateParameterType.Builder apt = new AggregateParameterType.Builder();
+        apt.setName(name);
+        AggregateMemberNames amn = v.getMemberNames();
+        for (int i = 0; i < amn.size(); i++) {
+            apt.addMember(new Member(amn.get(i)));
+        }
+        return apt.build();
+    }
+}
+```
+
+### `BitBuffer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitBuffer.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.nio.ByteOrder;
+
+/**
+ * Allows to read and write bits from a byte array (byte[]) keeps a bit position and the extractions are relative to the
+ * position. It allows also to provide an offset (in bytes) inside the byte array and then the bit position is relative
+ * to the offset.
+ * <p>
+ * Supported operations are
+ * <ul>
+ * <li>extract up to 64 bits into a long
+ * <li>big endian or little endian
+ * <li>extract a byte array (throws exception if the position is not at the beginning of a byte)
+ * <li>extract a byte (throws exception if the position is not at the beginning of a byte)
+ * </ul>
+ * 
+ * Note on the Little Endian: it is designed to work on x86 architecture which uses internally little endian byte _and_
+ * bit ordering but when accessing memory, full bytes are transferred in big endian order.
+ * <p>
+ * For example when in C you have a 32 bit structure:
+ * 
+ * <pre>
+ * struct S {
+ *    unsigned int a: 3;
+ *    unsigned int b: 12;
+ *    unsigned int c: 17;
+ * }
+ * </pre>
+ * 
+ * and you pack that in a packet by just reading the corresponding 4 bytes memory, you will get the following
+ * representation (0 is the most significant bit):
+ * 
+ * <pre>
+ * b7  b8 b9  b10 b11 a0  a1  a2
+ * c16 b0 b1  b2  b3  b4  b5  b6
+ * c8  c9 c10 c11 c12 c13 c14 c15
+ * c0 c1  c2  c3  c4  c5  c6  c7
+ * </pre>
+ * 
+ * To read this with this BitBuffer you would naturally do like this:
+ * 
+ * <pre>
+ * BitBuffer bb = new BitBuffer(..., 0);
+ * bb.setOrder(LITTLE_ENDIAN);
+ * 
+ * a = bb.getBits(3);
+ * b = bb.getBits(12);
+ * c = bb.getBits(17);
+ * </pre>
+ * 
+ * Note how the first call (when the bb.position=0) reads the 3 bits at position 5 instead of those at position 0
+ * 
+ * @author nm
+ *
+ */
+public class BitBuffer {
+    final byte[] b;
+    int position;
+    ByteOrder byteOrder;
+    final int offset;
+
+    /**
+     * Creates a new bit buffer that wraps array b starting at offset 0
+     */
+    public BitBuffer(byte[] b) {
+        this(b, 0);
+    }
+
+    /**
+     * Creates a new bit buffer that wraps the array b starting at offset (in bytes)
+     */
+    public BitBuffer(byte[] b, int offset) {
+        this.b = b;
+        this.position = 0;
+        this.byteOrder = ByteOrder.BIG_ENDIAN;
+        this.offset = offset;
+    }
+
+    /**
+     * reads numBits from the buffer and returns them into a long on the rightmost position.
+     * 
+     * @param numBits
+     *            has to be max 64.
+     */
+    public long getBits(int numBits) {
+        if (numBits > 64) {
+            throw new IllegalArgumentException("Invalid numBits " + numBits + " max value: 64");
+        }
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+            return getBitsLE(numBits);
+        }
+        long r = 0;
+
+        int bytepos = position >> 3;
+        int n = numBits;
+        int fbb = -position & 0x7; // how many bits are from position until the end of the byte
+        if (fbb > 0) {
+
+            if (n <= fbb) { // the value fits entirely within the first byte
+                position += numBits;
+                return (b[idx(bytepos)] >>> (fbb - n)) & ((1 << n) - 1);
+            } else {
+                r = b[idx(bytepos)] & ((1 << fbb) - 1);
+                n -= fbb;
+                bytepos++;
+            }
+        }
+        while (n > 8) {
+            r = (r << 8) | (b[idx(bytepos)] & 0xFF);
+            n -= 8;
+            bytepos++;
+        }
+        r = (r << n) | ((b[idx(bytepos)] & 0xFF) >>> (8 - n));
+
+        position += numBits;
+        return r;
+    }
+
+    private long getBitsLE(int numBits) {
+        long r = 0;
+
+        int bytepos = (position + numBits - 1) >> 3;
+        int n = numBits;
+        int lbb = (position + numBits) & 0x7; // how many bits are to be read from the last byte (which is the most
+                                              // significant)
+        if (lbb > 0) {
+            if (lbb >= n) {// the value fits entirely within one byte
+                position += numBits;
+                return (b[idx(bytepos)] >> (lbb - n)) & ((1 << n) - 1);
+            } else {
+                r = b[idx(bytepos)] & ((1 << lbb) - 1);
+                n -= lbb;
+                bytepos--;
+            }
+        }
+        while (n > 8) {
+            r = (r << 8) | (b[idx(bytepos)] & 0xFF);
+            n -= 8;
+            bytepos--;
+        }
+
+        r = (r << n) | ((b[idx(bytepos)] & 0xFF) >>> (8 - n));
+
+        position += numBits;
+        return r;
+    }
+
+    /**
+     * put the least significant numBits from value into the buffer, increasing the position with numBits
+     */
+    public void putBits(long value, int numBits) {
+        if (numBits > 64) {
+            throw new IllegalArgumentException("Invalid numBits " + numBits + " max value: 64");
+        }
+        // cleanup the first 64-numBits bits just in case
+        long v = (numBits < 64) ? value & ((1L << numBits) - 1) : value;
+
+        if (byteOrder == ByteOrder.LITTLE_ENDIAN) {
+            putBitsLE(v, numBits);
+            return;
+        }
+
+        int bytepos = position >> 3;
+        int n = numBits;
+        int fbb = -position & 0x7; // how many bits are from position until the end of the byte
+        if (fbb > 0) {
+            if (n <= fbb) { // the value fits entirely within the first byte
+                int m = fbb - n;
+                position += numBits;
+                b[idx(bytepos)] &= ~(((1 << n) - 1) << m);
+                b[idx(bytepos)] |= (v << m);
+
+                return;
+            } else {
+                n -= fbb;
+                b[idx(bytepos)] &= -1 << fbb;
+                b[idx(bytepos)] |= (v >>> n);
+                v = v & ((1L << n) - 1);
+                bytepos++;
+            }
+        }
+        while (n > 8) {
+            n -= 8;
+            b[idx(bytepos)] = (byte) (v >>> n);
+            v = v & ((1L << n) - 1);
+            bytepos++;
+        }
+
+        b[idx(bytepos)] &= ((1 << (8 - n)) - 1);
+        b[idx(bytepos)] |= v << (8 - n);
+
+        position += numBits;
+
+    }
+
+    private void putBitsLE(long value, int numBits) {
+        int bytepos = (position + numBits - 1) >> 3;
+        int n = numBits;
+        int lbb = (position + numBits) & 0x7; // how many bits are to be written in the last byte (which is the most
+                                              // significant)
+        long v = value;
+        if (lbb > 0) {
+            if (lbb >= n) {// the value fits entirely within one byte
+                int m = lbb - n;
+                b[idx(bytepos)] &= ~(((1 << n) - 1) << m);
+                b[idx(bytepos)] |= (v << m);
+
+                position += numBits;
+                return;
+            } else {
+                n -= lbb;
+                b[idx(bytepos)] &= ~((1 << lbb) - 1);
+                b[idx(bytepos)] |= (v >>> n);
+                v = v & ((1L << n) - 1);
+                bytepos--;
+            }
+        }
+        while (n > 8) {
+            n -= 8;
+            b[idx(bytepos)] = (byte) (v >>> n);
+            v = v & ((1L << n) - 1);
+            bytepos--;
+        }
+        b[idx(bytepos)] &= ((1 << (8 - n)) - 1);
+        b[idx(bytepos)] |= v << (8 - n);
+
+        position += numBits;
+    }
+
+    /**
+     * Copy bytes into the buffer from the given source array. The bit buffer has to be positioned at a byte boyndary.
+     */
+    public void put(byte[] src, int offset, int length) {
+        ensureByteBoundary();
+        int bytePos = idx(position >> 3);
+
+        System.arraycopy(src, offset, b, bytePos, length);
+        position += (length << 3);
+    }
+
+    /**
+     * copy the content of the source array into the buffer works only if the position is at the byte boundary
+     */
+    public void put(byte[] src) {
+        put(src, 0, src.length);
+    }
+
+    /**
+     * fast write byte in the buffer works only if the position is at byte boundary
+     */
+    public void putByte(byte c) {
+        ensureByteBoundary();
+        b[idx(position >> 3)] = c;
+        position += 8;
+    }
+
+    /**
+     * get position in bits
+     * 
+     * @return current position in bits
+     */
+    public int getPosition() {
+        return position;
+    }
+
+    /**
+     * set position in bits
+     */
+    public void setPosition(int position) {
+        if (position < 0) {
+            throw new IllegalArgumentException("Position may not be negative");
+        }
+        this.position = position;
+    }
+
+    public void setByteOrder(ByteOrder order) {
+        this.byteOrder = order;
+    }
+
+    public ByteOrder getByteOrder() {
+        return byteOrder;
+    }
+
+    private void ensureByteBoundary() {
+        if ((position & 0x7) != 0) {
+            throw new IllegalStateException("bit position not at byte boundary");
+        }
+    }
+
+    /**
+     * fast getByte - only works when position%8 = 0 - otherwise throws an IllegalStateException advances the position
+     * by 8 bits
+     * 
+     * @return the byte at the current position
+     */
+    public byte getByte() {
+        ensureByteBoundary();
+
+        int bytePos = position >> 3;
+        position += 8;
+        return b[idx(bytePos)];
+    }
+
+    /**
+     * Copies bytes from the buffer to the given destination array. Works only when position%8 = 0 - otherwise throws an
+     * IllegalStateException
+     * 
+     * @param dst
+     *            destination array
+     */
+    public void getByteArray(byte[] dst) {
+        ensureByteBoundary();
+        int bytePos = idx(position >> 3);
+
+        System.arraycopy(b, bytePos, dst, 0, dst.length);
+        position += (dst.length << 3);
+    }
+
+    /**
+     * returns the size of the buffer (from the offset to the end of the byte array) in bits
+     * 
+     * @return size in bits
+     */
+    public int sizeInBits() {
+        return (b.length - offset) << 3;
+    }
+
+    /**
+     * returns the backing array length in bytes!
+     * 
+     * @return array length
+     */
+    public int arrayLength() {
+        return b.length;
+    }
+
+    private int idx(int bytePos) {
+        return bytePos + offset;
+    }
+
+    /**
+     * Creates a new BitBuffer backed by the same array but with the offset set at the current position of this buffer
+     * Works only when position%8 = 0 - otherwise throws an IllegalStateException
+     * 
+     * @return new bit buffer
+     */
+    public BitBuffer slice() {
+        ensureByteBoundary();
+        return new BitBuffer(b, idx(position >> 3));
+    }
+
+    /**
+     * returns the array backing the BitBuffer
+     */
+    public byte[] array() {
+        return b;
+    }
+
+    /**
+     * Returns the offset inside the byte array where this buffer starts
+     */
+    public int offset() {
+        return offset;
+    }
+
+    /**
+     * Returns the remaining bytes from position until the end of the buffer. Works only when position%8 = 0 - otherwise
+     * throws an IllegalStateException
+     */
+    public int remainingBytes() {
+        ensureByteBoundary();
+        return b.length - offset - (position >> 3);
+    }
+
+    /**
+     * Move the  position by specified number of bits
+     * 
+     * @param numBits
+     */
+    public void skip(int numBits) {
+        position+=numBits;
+    }
+}
+```
+
+### `BitReader.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitReader.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.nio.ByteBuffer;
+
+/**
+ * BitReader is a wrapper around the ByteBuffer that allows to read individual bits.
+ * 
+ * All the readings are performed from a temporary long;
+ *  
+ * @author nm
+ *
+ */
+public class BitReader {
+    private int bitShift; //bit offset from the right inside the b
+    private long b; //current element
+    final private ByteBuffer bb;
+    
+    /**
+     * Construct the BitReader as a wrapper around bb
+     *
+     * @param bb
+     */
+    public BitReader(ByteBuffer bb) {
+        this.bb = bb;
+        bitShift = 64;
+        b = bb.getLong();
+    }
+  
+
+    public long readLong(int numBits) {
+        int k = numBits-bitShift;
+        if(k<0) {
+            return doRead(numBits);
+        } else {
+            long x= doRead(bitShift)<<k;
+            if(k>0) {
+            	bitShift = 64;
+            	b = bb.getLong();
+            	x|=doRead(k);
+            }
+            return x;
+        }
+    }
+    
+    public int read(int numBits) {
+        return (int)readLong(numBits);
+    }
+    
+    private long doRead(int numBits) {
+        bitShift-=numBits;
+        long mask = (1L<<numBits) -1;
+        return (b>>bitShift)&mask;
+    }
+}
+```
+
+### `BitWriter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BitWriter.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.nio.ByteBuffer;
+
+/**
+ * Wrapper around a ByteBuffer that allows to write individual bits or group of bits
+ * 
+ * All the writings/readings are performed to a temporary long  which is stored into the backing ByteBuffer when it is "full"
+ * 
+ * Don't forget to call flush after the last write, such that the long is written to the backing ByteBuffer
+ *  
+ * @author nm
+ *
+ */
+public class BitWriter {
+    
+    private int bitShift; //bit offset from the right inside the current int
+    final private ByteBuffer bb;
+    
+    //we put all the bits in the b, when it is full we save it in the array a and increase the offset
+    private long b; //current element
+    
+    /**
+     * Constructs a BitWriter around an existing ByteBuffer
+     *
+     * @param bb
+     */
+    public BitWriter(ByteBuffer bb) {
+        this.bb = bb;
+        bitShift = 64;
+        b = 0;
+    }
+  
+
+    /**
+     * write the least significant numBits of x into the BitBuffer
+     * 
+     * Note that there is no check that the bits will actually fit into the ByteBuffer, they will be stored in the temporary field. 
+     *  A buffer overflow exception will happen when the temporary field is full and flushed to the buffer 
+     * 
+     * @param x
+     * @param numBits
+     */
+    public void write(int x, int numBits) {
+        int k = numBits-bitShift;
+        if(k<0) {
+            doWrite(x, numBits);
+        } else {
+            doWrite(x>>k, bitShift);
+            if(k>0) {
+            	bitShift = 64;
+            	bb.putLong(b);
+            	b = 0;
+            	doWrite(x, k);
+            }
+        }
+    }
+    
+    //here we know that numBits<bitShift
+    private void doWrite(int x, int numBits) {     
+        bitShift-=numBits;
+        long mask = (1L<<numBits) -1;
+        b |= ((x&mask) << bitShift);
+    }
+    
+
+    /**
+     * flush the temporary long to the ByteBuffer
+     * do not call this method twice!!
+     */
+    public void flush() {
+    	if(bitShift!=64) {
+    		bb.putLong(b);
+    	}
+    }
+}
+```
+
+### `BooleanArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/BooleanArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+/**
+ * an array that stores the bits in a long[] - each long stores 64 values
+ *
+ */
+public class BooleanArray {
+    public static int DEFAULT_CAPACITY = 5;
+    private int length = 0;
+    private long[] a;
+
+    public BooleanArray() {
+        a = new long[DEFAULT_CAPACITY];
+    }
+
+    public BooleanArray(int length) {
+        a = new long[idx(length) + 1];
+    }
+
+    /**
+     * 
+     * 
+     * @param a
+     * @param length
+     */
+    private BooleanArray(long[] a, int length) {
+        this.a = a;
+        this.length = length;
+    }
+
+    /**
+     * Inserts the given value in the specified position in the array. Shift all the existing elements at position and
+     * the subsequent ones to the right
+     * 
+     * @param pos
+     * @param b
+     */
+    public void add(int pos, boolean b) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+        ensureCapacity(length + 1);
+
+        if (pos < length) { // shift all bits to the right
+            int idxpos = idx(pos);
+            long u = a[idxpos];
+            long co = u >>> 63;
+            long mask = -1L >>> pos;
+            long v = u & mask;
+            u &= ~mask;
+            a[idxpos] = (v << 1) | u;
+
+            int idxlast = 1 + idx(length + 1);
+            for (int i = idxpos + 1; i < idxlast; i++) {
+                long t = a[i] >>> 63;
+                a[i] = co | (a[i] << 1);
+                co = t;
+            }
+        }
+        length++;
+        if (b) {
+            set(pos);
+        } else {
+            clear(pos);
+        }
+    }
+
+    public long[] toLongArray() {
+        return Arrays.copyOf(a, idx(length) + 1);
+    }
+
+    private void set(int pos) {
+        int idx = idx(pos);
+        a[idx] |= (1L << pos);
+    }
+
+    private void clear(int pos) {
+        int idx = idx(pos);
+        a[idx] &= ~(1L << pos);
+    }
+
+    private void ensureCapacity(int minBitCapacity) {
+        int minCapacity = idx(minBitCapacity) + 1;
+        if (minCapacity <= a.length) {
+            return;
+        }
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    private static int idx(int pos) {
+        return pos >> 6;
+    }
+
+    private void rangeCheck(int pos) {
+        if (pos >= length)
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+    }
+
+    /**
+     * Get value on position pos
+     * 
+     * @param pos
+     * @return
+     */
+    public boolean get(int pos) {
+        rangeCheck(pos);
+        int idx = idx(pos);
+        return ((a[idx] & (1L << pos)) != 0);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    /**
+     * Add value at the end of the array
+     * 
+     * @param b
+     */
+    public void add(boolean b) {
+        ensureCapacity(length + 1);
+        if (b) {
+            set(length);
+        } else {
+            clear(length);
+        }
+        length++;
+    }
+
+    /**
+     * Create a BooleanArray from the given
+     */
+    public static BooleanArray valueOf(long[] a, int length) {
+        return new BooleanArray(Arrays.copyOf(a, idx(length) + 1), length);
+    }
+}
+```
+
+### `ByteArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.util.Arrays;
+
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.MessageLite;
+
+/**
+ * byte array which grows and also supports writing/reading int, double, etc.
+ * 
+ * All non byte operations are big endian.
+ * 
+ * @author nm
+ *
+ */
+public class ByteArray {
+    public static int DEFAULT_CAPACITY = 10;
+    private byte[] a;
+    private int length;
+    private int position = 0;
+
+    /**
+     * Creates a sorted int array with a default initial capacity
+     */
+    public ByteArray() {
+        a = new byte[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates an IntArray with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public ByteArray(int capacity) {
+        a = new byte[capacity];
+    }
+
+    private ByteArray(byte[] a1) {
+        a = a1;
+        length = a1.length;
+    }
+
+    /**
+     * Creates the ByteArray with the backing array
+     * 
+     * @param array
+     * @return a new object containing all the values from the passed array
+     */
+    public static ByteArray wrap(byte... array) {
+        return new ByteArray(array);
+    }
+
+    public void ensureRemaining(int size) {
+        ensureCapacity(length + size);
+    }
+
+    /**
+     * add value to the array
+     * 
+     * @param x
+     *            - value to be added
+     */
+    public void add(byte x) {
+        ensureCapacity(length + 1);
+        a[length] = x;
+        length++;
+    }
+
+    public void addShort(short x) {
+        ensureCapacity(length + 2);
+        ByteArrayUtils.encodeUnsignedShort(x, a, length);
+        length += 2;
+    }
+
+    public void addInt(int x) {
+        ensureCapacity(length + 4);
+        ByteArrayUtils.encodeInt(x, a, length);
+        length += 4;
+    }
+
+    public void addLong(long x) {
+        ensureCapacity(length + 8);
+        ByteArrayUtils.encodeLong(x, a, length);
+        length += 8;
+    }
+
+    public void add(byte[] v) {
+        ensureCapacity(length + v.length);
+        System.arraycopy(v, 0, a, length, v.length);
+        length += v.length;
+    }
+
+    public void addDouble(double x) {
+        ensureCapacity(length + 8);
+        ByteArrayUtils.encodeLong(Double.doubleToRawLongBits(x), a, length);
+        length += 8;
+    }
+
+    /**
+     * Writes a protobuf message to the buffer. The message will be prefixed by its size in 4 bytes big endian.
+     * 
+     * @param msg
+     */
+    public void addSizePrefixedProto(MessageLite msg) {
+        int size = msg.getSerializedSize();
+        ensureCapacity(length + size + 4);
+        addInt(size);
+        try {
+            msg.writeTo(CodedOutputStream.newInstance(a, length, size));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        length += size;
+    }
+
+    /**
+     * Writes a string preceded by its size in two bytes big endian.
+     * <p>
+     * The encoded byte array does not contain null characters
+     * 
+     * @see DataOutputStream#writeUTF(String)
+     * 
+     * @param v
+     */
+    public void addSizePrefixedUTF(String v) {
+        ensureCapacity(length + v.length() + 2);
+
+        int pos = length;
+        length += 2;
+        addUTF(v);
+
+        ByteArrayUtils.encodeUnsignedShort(length - pos - 2, a, pos);
+    }
+
+    /**
+     * Writes a string encoded in UTF as per {@link DataOutputStream#writeUTF(String)} terminated with a null character
+     * 
+     * @param v
+     */
+    public void addNullTerminatedUTF(String v) {
+        int strlen = v.length();
+        ensureCapacity(length + strlen + 1);
+        addUTF(v);
+        add((byte) 0);
+    }
+
+    private void addUTF(String v) {
+        int strlen = v.length();
+        int len = 0;
+        int c;
+
+        for (int i = 0; i < strlen; i++) {
+            c = v.charAt(i);
+            if ((c > 0) && (c < 0x80)) {
+                add((byte) c);
+                len++;
+            } else if (c < 0x0800) {// this cover also the null characters (c=0)
+                add((byte) (0xC0 | ((c >> 6) & 0x1F)));
+                add((byte) (0x80 | ((c >> 0) & 0x3F)));
+                len += 2;
+            } else {
+                add((byte) (0xE0 | ((c >> 12) & 0x0F)));
+                add((byte) (0x80 | ((c >> 6) & 0x3F)));
+                add((byte) (0x80 | ((c >> 0) & 0x3F)));
+                len += 3;
+            }
+        }
+
+        if (len > 0xFFFF) {
+            throw new BufferOverflowException();
+        }
+    }
+
+    public void insert(int pos, byte x) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+        ensureCapacity(length + 1);
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+    }
+
+    public void set(int pos, byte x) {
+        rangeCheck(pos + 1);
+        a[pos] = x;
+    }
+
+    public void setInt(int pos, int x) {
+        rangeCheck(pos + 4);
+        ByteArrayUtils.encodeInt(x, a, pos);
+    }
+
+    public byte get() {
+        rangeCheck(position + 1);
+        return a[position++];
+    }
+
+    public short getShort() {
+        rangeCheck(position + 2);
+        short x = ByteArrayUtils.decodeShort(a, position);
+        position += 2;
+        return x;
+    }
+
+    public int getInt() {
+        rangeCheck(position + 4);
+        int x = ByteArrayUtils.decodeInt(a, position);
+        position += 4;
+        return x;
+    }
+
+    public long getLong() {
+        rangeCheck(position + 8);
+        long x = ByteArrayUtils.decodeLong(a, position);
+        position += 8;
+        return x;
+    }
+
+    public double getDouble() {
+        return Double.longBitsToDouble(getLong());
+    }
+
+    public String getSizePrefixedUTF() throws DecodingException {
+        int len = getShort() & 0xFFFF;
+        return getUTF(position + len, false);
+    }
+
+    public String getNullTerminatedUTF() throws DecodingException {
+        String s = getUTF(length, true);
+        rangeCheck(position + 1);
+        position++;
+        return s;
+    }
+
+    public void get(byte[] bp) {
+        rangeCheck(position + bp.length);
+        System.arraycopy(a, position, bp, 0, bp.length);
+        position += bp.length;
+    }
+
+    public <T extends MessageLite.Builder> void getSizePrefixedProto(T builder) {
+        int size = getInt();
+        try {
+            builder.mergeFrom(CodedInputStream.newInstance(a, position, size));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        position += size;
+    }
+
+    private String getUTF(int limit, boolean nullTerminated) throws DecodingException {
+        char[] ca = new char[limit - position];
+        int k = 0;
+        int i = position;
+
+        while (i < limit) {
+            if (nullTerminated && a[i] == 0) {
+                break;
+            }
+
+            int char2, char3;
+            int c = a[i++] & 0xFF;
+            int c4 = c >> 4;
+            if (c4 <= 7) {
+                ca[k++] = (char) c;
+            } else if (c4 == 12 || c4 == 13) {
+                if (i + 1 > limit) {
+                    throw new DecodingException("invalid UTF8 string at byte" + (i - 1));
+                }
+                char2 = a[i++] & 0xFF;
+                ca[k++] = (char) (((c & 0x1F) << 6) |
+                        (char2 & 0x3F));
+            } else if (c4 == 14) {
+                if (i + 2 > limit) {
+                    throw new DecodingException("invalid UTF8 string at byte" + (i - 1));
+                }
+                char2 = a[i++] & 0xFF;
+                char3 = a[i++] & 0xFF;
+                ca[k++] = (char) (((c & 0x0F) << 12) |
+                        ((char2 & 0x3F) << 6) |
+                        ((char3 & 0x3F) << 0));
+            } else {
+                throw new DecodingException("invalid UTF8 string at byte" + (i - 1));
+            }
+        }
+        position = i;
+
+        // The number of chars produced may be less than utflen
+        return new String(ca, 0, k);
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return the element at the specified position
+     */
+    public byte get(int pos) {
+        rangeCheck(pos);
+        return a[pos];
+    }
+
+    public boolean isEmpty() {
+        return a.length == 0;
+    }
+
+    /**
+     * 
+     * @return a copy of the underlying byte array with the current length
+     */
+    public byte[] toArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    private void rangeCheck(int pos) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+    }
+
+    /**
+     * Returns the index of the first occurrence of the specified element in the
+     * array, or -1 if the array does not contain the element.
+     * 
+     * @param x
+     *            element which is searched for
+     * 
+     * @return the index of the first occurrence of the specified element in
+     *         this list, or -1 if this list does not contain the element.
+     */
+    public int indexOf(byte x) {
+        for (int i = 0; i < length; i++) {
+            if (a[i] == x)
+                return i;
+        }
+        return -1;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        ByteArray other = (ByteArray) obj;
+        if (length != other.length)
+            return false;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    public void reset() {
+        this.length = 0;
+    }
+
+    public void reset(int length) {
+        if (length > a.length) {
+            throw new IllegalArgumentException("length larger than buffer length");
+        }
+        this.length = length;
+    }
+
+    /**
+     * get the backing array
+     * 
+     * @return the backing array
+     */
+    public byte[] array() {
+        return a;
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length) {
+            return;
+        }
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+        if (n == -1) {
+            return "[]";
+        }
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n)
+                return b.append(']').toString();
+            b.append(", ");
+        }
+    }
+
+    public int position() {
+        return position;
+    }
+
+}
+```
+
+### `ByteArrayUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArrayUtils.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+public class ByteArrayUtils {
+    public static final byte[] EMPTY = new byte[0];
+
+    /**
+     * If the array is considered binary representation of an integer, add 1 to the integer and returns the
+     * corresponding binary representation.
+     * 
+     * In case an overflow is detected (if the initial array was all 0XFF) an IllegalArgumentException is thrown.
+     * 
+     * @param a
+     * @return a+1
+     */
+    static public byte[] plusOne(byte[] a) {
+        byte[] b = Arrays.copyOf(a, a.length);
+        int i = b.length - 1;
+        while (i >= 0 && b[i] == -1) {
+            b[i] = 0;
+            i--;
+        }
+        if (i == -1) {
+            throw new IllegalArgumentException("overflow");
+        } else {
+            b[i] = (byte) (1 + ((b[i] & 0xFF)));
+        }
+        return b;
+    }
+
+    static public byte[] minusOne(byte[] a) {
+        byte[] b = Arrays.copyOf(a, a.length);
+        int i = b.length - 1;
+        while (i >= 0 && b[i] == 0) {
+            b[i] = (byte) 0xFF;
+            i--;
+        }
+        if (i == -1) {
+            throw new IllegalArgumentException("underflow");
+        } else {
+            b[i] = (byte) (((b[i] & 0xFF) - 1));
+        }
+        return b;
+    }
+
+    /**
+     * lexicographic comparison which returns 0 if one of the array is a subarray of the other one
+     * 
+     * @param a1
+     * @param a2
+     */
+    static public int compare(byte[] a1, byte[] a2) {
+        for (int i = 0; i < a1.length && i < a2.length; i++) {
+            int d = (a1[i] & 0xFF) - (a2[i] & 0xFF);
+            if (d != 0) {
+                return d;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * write an long into a byte array at offset and returns the array
+     */
+    public static byte[] encodeLong(long x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 56);
+        a[offset + 1] = (byte) (x >> 48);
+        a[offset + 2] = (byte) (x >> 40);
+        a[offset + 3] = (byte) (x >> 32);
+        a[offset + 4] = (byte) (x >> 24);
+        a[offset + 5] = (byte) (x >> 16);
+        a[offset + 6] = (byte) (x >> 8);
+        a[offset + 7] = (byte) (x);
+
+        return a;
+    }
+
+    public static byte[] encodeLongLE(long x, byte[] a, int offset) {
+        a[offset] = (byte) (x);
+        a[offset + 1] = (byte) (x >> 8);
+        a[offset + 2] = (byte) (x >> 16);
+        a[offset + 3] = (byte) (x >> 24);
+        a[offset + 4] = (byte) (x >> 32);
+        a[offset + 5] = (byte) (x >> 40);
+        a[offset + 6] = (byte) (x >> 48);
+        a[offset + 7] = (byte) (x >> 56);
+
+        return a;
+    }
+
+    /**
+     * write a long into a byte array of 8 bytes
+     * 
+     * @param x
+     * @return
+     */
+    public static byte[] encodeLong(long x) {
+        byte[] toReturn = new byte[8];
+        return encodeLong(x, toReturn, 0);
+    }
+
+    /**
+     * write a long into a byte array of 8 bytes, in little endian
+     */
+    public static byte[] encodeLongLE(long x) {
+        byte[] toReturn = new byte[8];
+        return encodeLongLE(x, toReturn, 0);
+    }
+
+    // ----------------- 8 bytes(long) encoding/decoding
+
+    public static long decodeLong(byte[] a, int offset) {
+        return ((a[offset] & 0xFFl) << 56) +
+                ((a[offset + 1] & 0xFFl) << 48) +
+                ((a[offset + 2] & 0xFFl) << 40) +
+                ((a[offset + 3] & 0xFFl) << 32) +
+                ((a[offset + 4] & 0xFFl) << 24) +
+                ((a[offset + 5] & 0xFFl) << 16) +
+                ((a[offset + 6] & 0xFFl) << 8) +
+                ((a[offset + 7] & 0xFFl));
+    }
+
+    public static long decodeLongLE(byte[] a, int offset) {
+        return ((a[offset] & 0xFFl) +
+                ((a[offset + 1] & 0xFFl) << 8) +
+                ((a[offset + 2] & 0xFFl) << 16) +
+                ((a[offset + 3] & 0xFFl) << 24) +
+                ((a[offset + 4] & 0xFFl) << 32) +
+                ((a[offset + 5] & 0xFFl) << 40) +
+                ((a[offset + 6] & 0xFFl) << 48) +
+                ((a[offset + 7] & 0xFFl) << 56));
+    }
+
+    // ----------------- 7 bytes encoding/decoding
+    public static long decodeUnsigned7Bytes(byte[] a, int offset) {
+        return ((a[offset] & 0xFFl) << 48) +
+                ((a[offset + 1] & 0xFFl) << 40) +
+                ((a[offset + 2] & 0xFFl) << 32) +
+                ((a[offset + 3] & 0xFFl) << 24) +
+                ((a[offset + 4] & 0xFFl) << 16) +
+                ((a[offset + 5] & 0xFFl) << 8) +
+                ((a[offset + 6] & 0xFFl));
+    }
+
+    // ----------------- 6 bytes encoding/decoding
+    public static byte[] encodeUnsigned6Bytes(long x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 40);
+        a[offset + 1] = (byte) (x >> 32);
+        a[offset + 2] = (byte) (x >> 24);
+        a[offset + 3] = (byte) (x >> 16);
+        a[offset + 4] = (byte) (x >> 8);
+        a[offset + 5] = (byte) (x);
+
+        return a;
+    }
+
+    /**
+     * Decode 6 bytes as an unsigned integer
+     * 
+     * @param a
+     * @param offset
+     * @return
+     */
+    public static long decodeUnsigned6Bytes(byte[] a, int offset) {
+        return ((a[offset] & 0xFFl) << 40) +
+                ((a[offset + 1] & 0xFFl) << 32) +
+                ((a[offset + 2] & 0xFFl) << 24) +
+                ((a[offset + 3] & 0xFFl) << 16) +
+                ((a[offset + 4] & 0xFFl) << 8) +
+                ((a[offset + 5] & 0xFFl));
+    }
+
+    /**
+     * Decode 6 bytes as a signed integer in two's complement encoding
+     * 
+     * @param a
+     * @param offset
+     * @return
+     */
+    public static long decode6Bytes(byte[] a, int offset) {
+        long x = decodeUnsigned6Bytes(a, offset);
+        if (a[offset] < 0) {
+            return x - 0x10000_00000000l;
+        } else {
+            return x;
+        }
+    }
+
+    // ----------------- 5 bytes encoding/decoding
+    /**
+     * Decode 5 bytes as a signed integer in two's complement encoding
+     * 
+     * @param a
+     * @param offset
+     * @return
+     */
+    public static long decode5Bytes(byte[] a, int offset) {
+        long x = decodeUnsigned5Bytes(a, offset);
+        if (a[offset] < 0) {
+            return x - 0x100_00000000l;
+        } else {
+            return x;
+        }
+    }
+
+    public static byte[] encodeUnsigned5Bytes(long x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 32);
+        a[offset + 1] = (byte) (x >> 24);
+        a[offset + 2] = (byte) (x >> 16);
+        a[offset + 3] = (byte) (x >> 8);
+        a[offset + 4] = (byte) (x);
+
+        return a;
+    }
+
+    public static long decodeUnsigned5Bytes(byte[] a, int offset) {
+        return ((a[offset] & 0xFFl) << 32) +
+                ((a[offset + 1] & 0xFFl) << 24) +
+                ((a[offset + 2] & 0xFFl) << 16) +
+                ((a[offset + 3] & 0xFFl) << 8) +
+                ((a[offset + 4] & 0xFFl));
+    }
+
+    // ----------------- 4 bytes(int) encoding/decoding (int32/uint32)
+    /**
+     * write an int into a byte array at offset and returns the array
+     */
+    public static byte[] encodeInt(int x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 24);
+        a[offset + 1] = (byte) (x >> 16);
+        a[offset + 2] = (byte) (x >> 8);
+        a[offset + 3] = (byte) (x);
+
+        return a;
+    }
+
+    public static byte[] encodeIntLE(int x, byte[] a, int offset) {
+        a[offset + 3] = (byte) (x >> 24);
+        a[offset + 2] = (byte) (x >> 16);
+        a[offset + 1] = (byte) (x >> 8);
+        a[offset] = (byte) (x);
+
+        return a;
+    }
+
+    public static byte[] encodeUnsignedIntLE(long x, byte[] a, int offset) {
+        a[offset + 3] = (byte) (x >> 24);
+        a[offset + 2] = (byte) (x >> 16);
+        a[offset + 1] = (byte) (x >> 8);
+        a[offset] = (byte) (x);
+
+        return a;
+    }
+
+    public static byte[] encodeInt(int x) {
+        byte[] toReturn = new byte[4];
+        return encodeInt(x, toReturn, 0);
+    }
+
+    public static byte[] encodeIntLE(int x) {
+        byte[] toReturn = new byte[4];
+        return encodeIntLE(x, toReturn, 0);
+    }
+
+    public static int decodeInt(byte[] a, int offset) {
+        return ((a[offset] & 0xFF) << 24) +
+                ((a[offset + 1] & 0xFF) << 16) +
+                ((a[offset + 2] & 0xFF) << 8) +
+                ((a[offset + 3] & 0xFF));
+    }
+
+    public static int decodeIntLE(byte[] a, int offset) {
+        return ((a[offset + 3] & 0xFF) << 24) +
+                ((a[offset + 2] & 0xFF) << 16) +
+                ((a[offset + 1] & 0xFF) << 8) +
+                ((a[offset] & 0xFF));
+    }
+
+    public static long decodeUnsignedIntLE(byte[] a, int offset) {
+        return ((long) (a[offset + 3] & 0xFF) << 24) +
+                ((a[offset + 2] & 0xFF) << 16) +
+                ((a[offset + 1] & 0xFF) << 8) +
+                ((a[offset] & 0xFF));
+    }
+
+    // ----------------- 3 bytes encoding/decoding
+    public static byte[] encodeUnsigned3Bytes(int x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 16);
+        a[offset + 1] = (byte) (x >> 8);
+        a[offset + 2] = (byte) (x);
+
+        return a;
+    }
+
+    public static int decodeUnsigned3Bytes(byte[] a, int offset) {
+        return ((a[offset] & 0xFF) << 16) +
+                ((a[offset + 1] & 0xFF) << 8) +
+                ((a[offset + 2] & 0xFF));
+    }
+
+    public static int decodeUnsigned3BytesLE(byte[] a, int offset) {
+        return ((a[offset + 2] & 0xFF) << 16) +
+                ((a[offset + 1] & 0xFF) << 8) +
+                ((a[offset] & 0xFF));
+    }
+
+    // ----------------- 2 bytes(short) encoding/decoding (int16/uint16)
+    public static byte[] encodeUnsignedShort(int x, byte[] a, int offset) {
+        a[offset] = (byte) (x >> 8);
+        a[offset + 1] = (byte) (x);
+
+        return a;
+    }
+
+    public static byte[] encodeUnsignedShort(int x) {
+        byte[] toReturn = new byte[2];
+        return encodeUnsignedShort(x, toReturn, 0);
+    }
+
+    public static byte[] encodeUnsignedShortLE(int x, byte[] a, int offset) {
+        a[offset + 1] = (byte) (x >> 8);
+        a[offset] = (byte) (x);
+        return a;
+    }
+
+    public static byte[] encodeUnsignedShortLE(int x) {
+        byte[] toReturn = new byte[2];
+        return encodeUnsignedShortLE(x, toReturn, 0);
+    }
+
+    public static short decodeShort(byte[] a, int offset) {
+        int x = ((a[offset] & 0xFF) << 8) +
+                ((a[offset + 1] & 0xFF));
+        return (short) x;
+    }
+
+    public static short decodeShortLE(byte[] a, int offset) {
+        int x = ((a[offset + 1] & 0xFF) << 8) +
+                (a[offset] & 0xFF);
+        return (short) x;
+    }
+
+    public static int decodeUnsignedShort(byte[] a, int offset) {
+        int x = ((a[offset] & 0xFF) << 8) +
+                ((a[offset + 1] & 0xFF));
+        return x;
+    }
+
+    /**
+     * Decode unsigned short
+     * 
+     * @param a
+     * @param offset
+     * @return
+     */
+    public static int decodeUnsignedShortLE(byte[] a, int offset) {
+        return ((a[offset + 1] & 0xFF) << 8) +
+                ((a[offset] & 0xFF));
+    }
+
+    // ----------------- Single byte encoding/decoding (int8/uint8)
+    public static byte[] encodeUnsignedByte(short x, byte[] a, int offset) {
+        return encodeByte(x, a, offset);
+    }
+
+    public static byte[] encodeByte(short x, byte[] a, int offset) {
+        a[offset] = (byte) x;
+
+        return a;
+    }
+
+    public static short decodeUnsignedByte(byte[] a, int offset) {
+        return (short) (a[offset] & 0xFF);
+    }
+
+    public static byte decodeByte(byte[] a, int offset) {
+        return a[offset];
+    }
+}
+```
+
+### `ByteArrayWrapper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteArrayWrapper.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+/**
+ * Wrapper around byte array that allows usage as hashmap keys
+ * @author nm
+ *
+ */
+public class ByteArrayWrapper {
+    private final byte[] data;
+
+    public ByteArrayWrapper(byte[] buf) {
+        this.data = buf;
+    }
+    
+    public byte[] getData() {
+        return data;
+    }
+    
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof ByteArrayWrapper)) {
+            return false;
+        }
+        return Arrays.equals(data, ((ByteArrayWrapper)other).data);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(data);
+    }
+    
+    @Override
+    public String toString() {
+        return StringConverter.arrayToHexString(data);
+    }
+}
+```
+
+### `ByteSupplier.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ByteSupplier.java`
+
+
+```java
+package org.yamcs.utils;
+
+@FunctionalInterface
+public interface ByteSupplier {
+    /**
+     * Gets a result.
+     *
+     * @return a result
+     */
+    byte getAsByte();
+}
+```
+
+### `DatabaseCorruptionException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DatabaseCorruptionException.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * used to signal inconsistencies found in the database
+ * @author nm
+ *
+ */
+public class DatabaseCorruptionException extends RuntimeException {
+    public DatabaseCorruptionException(String message) {
+        super(message);
+    }
+    
+    public DatabaseCorruptionException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DatabaseCorruptionException(Throwable cause) {
+        super(cause);
+    }
+}
+```
+
+### `DataRateMeter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DataRateMeter.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import com.codahale.metrics.Clock;
+import com.codahale.metrics.EWMA;
+
+/**
+ * Like the {@link com.codahale.metrics.Meter} but gives the data rates at 5 seconds mean rates
+ * 
+ * @author nm
+ *
+ */
+public class DataRateMeter {
+
+    private final AtomicLong lastTick;
+    private final Clock clock;
+    private final long startTime;
+
+    private final EWMA rate = new EWMA(1, 2, TimeUnit.SECONDS);
+    private static final long TICK_INTERVAL = TimeUnit.SECONDS.toNanos(2);
+
+    public DataRateMeter() {
+        this.clock = Clock.defaultClock();
+        this.startTime = this.clock.getTick();
+        this.lastTick = new AtomicLong(startTime);
+    }
+
+    public void mark(long n) {
+        tickIfNecessary();
+        rate.update(n);
+    }
+
+    private void tickIfNecessary() {
+        final long oldTick = lastTick.get();
+        final long newTick = clock.getTick();
+        final long age = newTick - oldTick;
+        if (age > TICK_INTERVAL) {
+            final long newIntervalStartTick = newTick - age % TICK_INTERVAL;
+            if (lastTick.compareAndSet(oldTick, newIntervalStartTick)) {
+                final long requiredTicks = age / TICK_INTERVAL;
+                for (long i = 0; i < requiredTicks; i++) {
+                    rate.tick();
+                }
+            }
+        }
+    }
+
+    public double getFiveSecondsRate() {
+        tickIfNecessary();
+        return rate.getRate(TimeUnit.SECONDS);
+    }
+}
+```
+
+### `DecodingException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DecodingException.java`
+
+
+```java
+package org.yamcs.utils;
+
+public class DecodingException extends Exception {
+    public DecodingException() {
+        super();
+    }
+    public DecodingException(String message) {
+        super(message);
+    }
+    public DecodingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DecodingException(Throwable cause) {
+        super(cause);
+    }
+}
+```
+
+### `DeprecationInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DeprecationInfo.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
+/**
+ * Annotation used to mark service that have been deprecated.
+ * Information can be provided on how to resolve the problem (i.e. write the replacement service).
+ *  
+ * The information will be printed in the yamcs logs when the service is loaded.
+ * 
+ * @author nm
+ *
+ */
+@Retention(value=RetentionPolicy.RUNTIME)
+public @interface DeprecationInfo {
+    String info();
+}
+```
+
+### `DoubleArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/DoubleArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+/**
+ * expandable double array
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class DoubleArray {
+
+    public static int DEFAULT_CAPACITY = 10;
+    private double[] a;
+    private int length;
+
+    // caches the hashCode
+    private int hash;
+
+    /**
+     * Creates a sorted int array with a default initial capacity
+     */
+    public DoubleArray() {
+        a = new double[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates an IntArray with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public DoubleArray(int capacity) {
+        a = new double[capacity];
+    }
+
+    /**
+     * Creates the IntArray by copying all values from the input array and sorting them
+     * 
+     * @param array
+     */
+    private DoubleArray(double... array) {
+        length = array.length;
+        a = array;
+    }
+
+    /**
+     * add value to the array
+     * 
+     * @param x
+     */
+    public void add(double x) {
+        ensureCapacity(length + 1);
+        a[length] = x;
+        length++;
+    }
+
+    public void add(int pos, double x) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+        ensureCapacity(length + 1);
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return
+     */
+    public double get(int pos) {
+        rangeCheck(pos);
+
+        return a[pos];
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length)
+            return;
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity)
+            newCapacity = minCapacity;
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public boolean isEmpty() {
+        return a.length == 0;
+    }
+
+    public double[] toArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    public void set(int pos, double x) {
+        rangeCheck(pos);
+        a[pos] = x;
+    }
+
+    private void rangeCheck(int pos) {
+        if (pos >= length)
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+    }
+
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n)
+                return b.append(']').toString();
+            b.append(", ");
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && length > 0) {
+            h = 1;
+
+            for (int i = 0; i < length; i++) {
+                long bits = Double.doubleToLongBits(a[i]);
+                h = 31 * h + (int) (bits ^ (bits >>> 32));
+            }
+            hash = h;
+        }
+        return h;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        DoubleArray other = (DoubleArray) obj;
+        if (length != other.length)
+            return false;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    public static DoubleArray wrap(double[] doubles) {
+        return new DoubleArray(doubles);
+    }
+
+    public double[] array() {
+        return a;
+    }
+
+}
+```
+
+### `ExceptionUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ExceptionUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutionException;
+
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class ExceptionUtil {
+    public static Throwable unwind(Throwable t) {
+        while (((t instanceof ExecutionException) || (t instanceof CompletionException) || (t instanceof UncheckedExecutionException))
+                && t.getCause() != null) {
+            t = t.getCause();
+        }
+        return t;
+    }
+
+}
+```
+
+### `FileUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/FileUtils.java`
+
+
+```java
+package org.yamcs.utils;
+
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.CopyOption;
+import java.nio.file.FileVisitResult;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
+
+public class FileUtils {
+
+    public static void copyRecursively(Path source, Path target, CopyOption... options) throws IOException {
+        Files.walkFileTree(source, new SimpleFileVisitor<Path>() {
+
+            @Override
+            public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
+                Files.createDirectories(target.resolve(source.relativize(dir)));
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.copy(file, target.resolve(source.relativize(file)), options);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    public static void deleteRecursively(Path dirToRemove) throws IOException {
+        if (!Files.exists(dirToRemove)) {
+            return;
+        }
+        Files.walkFileTree(dirToRemove, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                Files.delete(dir);
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    public static void deleteRecursivelyIfExists(Path path) throws IOException {
+        if (Files.exists(path)) {
+            deleteRecursively(path);
+        }
+    }
+
+    public static void deleteContents(Path directory) throws IOException {
+        Files.walkFileTree(directory, new SimpleFileVisitor<Path>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                Files.delete(file);
+                return FileVisitResult.CONTINUE;
+            }
+
+            @Override
+            public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
+                if (!dir.equals(directory)) {
+                    Files.delete(dir);
+                }
+                return FileVisitResult.CONTINUE;
+            }
+        });
+    }
+
+    /**
+     * Writes bytes to a file in two phases via a temporary file in the same folder. This will either succeed or fail
+     * and leave the original file in place.
+     */
+    public static void writeAtomic(Path file, byte[] bytes) throws IOException {
+        Path swpFile = file.resolveSibling(file.getFileName() + ".yswp");
+        try (FileOutputStream out = new FileOutputStream(swpFile.toFile())) {
+            out.write(bytes);
+            out.flush();
+
+            // Force nothing left in system buffers
+            // In case of a full disk this will throw a SyncFailedException
+            out.getFD().sync();
+
+            Files.move(swpFile, file, ATOMIC_MOVE);
+        }
+    }
+
+    /**
+     * Return the extension for a file. Always in lowercase.
+     */
+    public static String getFileExtension(Path file) {
+        var fileName = file.getFileName().toString();
+        var idx = fileName.lastIndexOf('.');
+        if (idx != -1 && idx != fileName.length() - 1) {
+            return fileName.substring(idx + 1).toLowerCase();
+        } else {
+            return null;
+        }
+    }
+}
+```
+
+### `FloatArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/FloatArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+/**
+ * float array
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class FloatArray {
+    public static final int DEFAULT_CAPACITY = 10;
+    private float[] a;
+    private int length;
+
+    // caches the hashCode
+    private int hash;
+
+    /**
+     * Creates a sorted int array with a default initial capacity
+     * 
+     */
+    public FloatArray() {
+        a = new float[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates an IntArray with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public FloatArray(int capacity) {
+        a = new float[capacity];
+    }
+
+    /**
+     * Creates the IntArray by copying all values from the input array and sorting them
+     * 
+     * @param array
+     */
+    private FloatArray(float... array) {
+        length = array.length;
+        a = array;
+    }
+
+    /**
+     * add value to the array
+     * 
+     * @param x
+     *            - value to be added
+     */
+    public void add(float x) {
+        ensureCapacity(length + 1);
+        a[length] = x;
+        length++;
+    }
+
+    public void add(int pos, float x) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+        ensureCapacity(length + 1);
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return
+     */
+    public float get(int pos) {
+        rangeCheck(pos);
+
+        return a[pos];
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length)
+            return;
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity)
+            newCapacity = minCapacity;
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public boolean isEmpty() {
+        return a.length == 0;
+    }
+
+    public float[] toArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    public void set(int pos, float x) {
+        rangeCheck(pos);
+        a[pos] = x;
+    }
+
+    private void rangeCheck(int pos) {
+        if (pos >= length)
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+    }
+
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n)
+                return b.append(']').toString();
+            b.append(", ");
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && length > 0) {
+            h = 1;
+
+            for (int i = 0; i < length; i++) {
+                h = 31 * h + Float.floatToRawIntBits(a[i]);
+            }
+            hash = h;
+        }
+        return h;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        FloatArray other = (FloatArray) obj;
+        if (length != other.length)
+            return false;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    public static FloatArray wrap(float[] floats) {
+        return new FloatArray(floats);
+    }
+
+    public float[] array() {
+        return a;
+    }
+
+}
+```
+
+### `GlobFileFinder.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/GlobFileFinder.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.PathMatcher;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.stream.Stream;
+
+/**
+ * Finds a list of files according to a glob pattern.
+ * <p>
+ * Not thread safe!
+ * 
+ * @author nm
+ *
+ */
+public class GlobFileFinder {
+
+    // Unlikely escape patterns for a glob wildcards
+    private static final String GLOB_ANY = "*";
+    private static final String GLOB_ANY_ESCAPE = "__GLOB_ANY__";
+    private static final String GLOB_ANY_SINGLE = "?";
+    private static final String GLOB_ANY_SINGLE_ESCAPE = "__GLOB_SINGLE_ANY__";
+
+    List<Path> result;
+    long ioLimit = 1000;
+    long ioCount;
+
+    /**
+     * Calls {@link #find(Path, String)} for the current working directory.
+     */
+    public List<Path> find(String pattern) {
+        Path start = FileSystems.getDefault().getPath("");
+        return find(start, pattern);
+    }
+
+    /**
+     * Find a list of regular files (not directories) which match glob pattern.
+     * <p>
+     * The pattern can contain {@code { }, *, ?, [ ]}.
+     * <p>
+     * {@code **} for recursive directory matching is not supported.
+     * <p>
+     * The find will limit the number of operations in order to avoid too much I/O due to a pattern requiring lot of I/O
+     * operations. An I/O operation is roughly file stat.
+     * 
+     * @param pattern
+     *            glob pattern
+     * 
+     * @return Matched files
+     */
+    public List<Path> find(Path start, String pattern) {
+        result = new ArrayList<Path>();
+        ioCount = 0;
+
+        // Use a Path to split the pattern in segments.
+        // On windows, Path refuses some glob symbols, so temporarily escape them.
+        pattern = escapePattern(pattern);
+        Path patternPath = start.getFileSystem().getPath(pattern);
+        List<String> plist = new ArrayList<>();
+        patternPath.forEach(segment -> {
+            plist.add(restorePattern(segment.toString()));
+        });
+
+        ListIterator<String> pitr = plist.listIterator();
+        if (pitr.hasNext()) {
+            Path current = patternPath.isAbsolute() ? patternPath.getRoot() : start;
+            findMatchingFiles(current, pitr);
+        }
+        return result;
+    }
+
+    /**
+     * Set the maximum number of IO operations performed when matching a pattern.
+     * 
+     * @param ioLimit
+     */
+    public void setIoLimit(int ioLimit) {
+        this.ioLimit = ioLimit;
+    }
+
+    private void findMatchingFiles(Path current, ListIterator<String> pitr) throws UncheckedIOException {
+        if (!pitr.hasNext()) {
+            if (Files.isRegularFile(current)) {
+                result.add(current);
+            }
+            return;
+        }
+
+        String segment = pitr.next();
+
+        if (isPattern(segment)) {
+            PathMatcher matcher = current.getFileSystem().getPathMatcher("glob:" + segment);
+            try (Stream<Path> files = Files.list(current)) {
+                files.filter(p -> incrIoCount())
+                        .map(p -> p.getFileName())
+                        .filter(p -> matcher.matches(p))
+                        .map(p -> current.resolve(p))
+                        .filter(p -> Files.isDirectory(p) == pitr.hasNext())
+                        .forEach(p -> findMatchingFiles(p, pitr));
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        } else if (Files.exists(current.resolve(segment))) {
+            incrIoCount();
+            findMatchingFiles(current.resolve(segment), pitr);
+        }
+        pitr.previous();
+    }
+
+    private boolean incrIoCount() {
+        if (++ioCount >= ioLimit) {
+            throw new IllegalArgumentException("Pattern requires too many I/O operations");
+        }
+        return true;
+    }
+
+    /**
+     * Escape '?' and '*' glob symbols to form a 'legal'-appearing path.
+     */
+    private static String escapePattern(String pattern) {
+        pattern = pattern.replace(GLOB_ANY, GLOB_ANY_ESCAPE);
+        pattern = pattern.replace(GLOB_ANY_SINGLE, GLOB_ANY_SINGLE_ESCAPE);
+        return pattern;
+    }
+
+    /**
+     * Restore a glob that previously passed through {@link #escapePattern(String)}
+     */
+    private static String restorePattern(String pattern) {
+        pattern = pattern.replace(GLOB_ANY_ESCAPE, GLOB_ANY);
+        pattern = pattern.replace(GLOB_ANY_SINGLE_ESCAPE, GLOB_ANY_SINGLE);
+        return pattern;
+    }
+
+    private static boolean isPattern(String p) {
+        return Arrays.asList('*', '?', '[', '{').stream().anyMatch(c -> p.indexOf(c) >= 0);
+    }
+}
+```
+
+### `GpsCcsdsTime.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/GpsCcsdsTime.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * Auxiliary class for GPS CCSDS time.
+ * 
+ * @author mu
+ *
+ */
+public class GpsCcsdsTime {
+    public final int coarseTime;
+    public final byte fineTime;
+    
+    public GpsCcsdsTime(int coarseTime, byte fineTime) {
+        this.coarseTime = coarseTime;
+        this.fineTime = fineTime;
+    }
+}
+```
+
+### `IndexedList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IndexedList.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * List which is indexed by a key in addition to its natural integer index
+ * <p>
+ * Does not allow removal
+ * 
+ * @author nm
+ *
+ */
+public class IndexedList<K, V> implements Iterable<V> {
+    protected ArrayList<V> values = new ArrayList<>();
+    protected HashMap<K, Integer> keys = new HashMap<>();
+
+    public IndexedList() {
+        values = new ArrayList<>();
+        keys = new HashMap<>();
+    }
+
+    public IndexedList(IndexedList<K, V> list) {
+        values = new ArrayList<>(list.values);
+        keys = new HashMap<>(list.keys);
+    }
+
+    public IndexedList(int size) {
+        values = new ArrayList<>(size);
+        keys = new HashMap<>(size * 2);
+    }
+
+    public void add(K key, V value) {
+        if (keys.containsKey(key)) {
+            throw new IllegalArgumentException("An entry '" + key + "' already exists");
+        }
+        values.add(value);
+        keys.put(key, values.size() - 1);
+    }
+
+    /**
+     * returns the index of the element with key or -1 if there is no such element
+     * 
+     * @param key
+     * @return returns the index of the element with key or -1 if there is no such element
+     */
+    public int getIndex(K key) {
+        Integer idx = keys.get(key);
+        if (idx == null) {
+            return -1;
+        } else {
+            return idx;
+        }
+    }
+
+    /**
+     * 
+     * @param key
+     * @return true if the list contains the key
+     */
+    public boolean hasKey(K key) {
+        return keys.containsKey(key);
+    }
+
+    /**
+     * Returns the value mapped to the key or null if there is no such element
+     * 
+     * @param key
+     * @return
+     */
+    public V get(K key) {
+        Integer idx = keys.get(key);
+        if (idx == null) {
+            return null;
+        }
+        return values.get(idx);
+    }
+
+    /**
+     * 
+     * @see List#get(int)
+     * @param idx
+     * @return
+     */
+    public V get(int idx) {
+        return values.get(idx);
+    }
+
+    @Override
+    public Iterator<V> iterator() {
+        return values.iterator();
+    }
+
+    /**
+     * 
+     * @return returns the size of the list.
+     */
+    public int size() {
+        return values.size();
+    }
+
+    public void changeKey(K oldKey, K newKey) {
+        Integer x = keys.remove(oldKey);
+        if (x==null) {
+            throw new IllegalArgumentException("key inexistent");
+        }
+        keys.put(newKey, x);
+    }
+
+    public List<V> getList() {
+        return Collections.unmodifiableList(values);
+    }
+
+    public void set(int idx, V value) {
+        values.set(idx, value);
+    }
+
+    public String toString() {
+        return values.toString();
+    }
+}
+```
+
+### `IntArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IntArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
+import java.util.stream.IntStream;
+
+/**
+ * expandable array of ints
+ * 
+ */
+public class IntArray implements Iterable<Integer> {
+    public static final int DEFAULT_CAPACITY = 10;
+    private int[] a;
+    private int length;
+
+    // caches the hashCode
+    private int hash;
+
+    /**
+     * Creates a sorted int array with a default initial capacity
+     */
+    public IntArray() {
+        a = new int[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates an IntArray with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public IntArray(int capacity) {
+        a = new int[capacity];
+    }
+
+    private IntArray(int[] a1) {
+        a = a1;
+        length = a1.length;
+    }
+
+    /**
+     * Creates the IntArray with the backing array
+     * 
+     * @param array
+     * @return a new object containing all the values from the passed array
+     */
+    public static IntArray wrap(int... array) {
+        return new IntArray(array);
+    }
+
+    /**
+     * add value to the array
+     * 
+     * @param x
+     *            * - value to be added
+     */
+    public void add(int x) {
+        hash = 0;
+        ensureCapacity(length + 1);
+        a[length] = x;
+        length++;
+    }
+
+    public void add(int pos, int x) {
+        if (pos > length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+        hash = 0;
+        ensureCapacity(length + 1);
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return the element at the specified position
+     */
+    public int get(int pos) {
+        rangeCheck(pos);
+
+        return a[pos];
+    }
+
+    /**
+     * Remove element at position shifting all subsequent elements to the left
+     * 
+     * @param pos
+     * @return the element removed
+     */
+    public int remove(int pos) {
+        rangeCheck(pos);
+        hash = 0;
+        int r = a[pos];
+
+        System.arraycopy(a, pos + 1, a, pos, length - pos - 1);
+        length--;
+        return r;
+
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length) {
+            return;
+        }
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public IntStream stream() {
+        return Arrays.stream(a, 0, length);
+    }
+
+    public boolean isEmpty() {
+        return a.length == 0;
+    }
+
+    public int[] toArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    /**
+     * @return the size of the array (which is smaller or equal than the length of the underlying int[] array)
+     */
+    public int size() {
+        return length;
+    }
+
+    public void set(int pos, int x) {
+        rangeCheck(pos);
+        hash = 0;
+        a[pos] = x;
+    }
+
+    private void rangeCheck(int pos) {
+        if (pos >= length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+    }
+
+    /**
+     * Returns the index of the first occurrence of the specified element in the array, or -1 if the array does not
+     * contain the element.
+     * 
+     * @param x
+     *            element which is searched for
+     * 
+     * @return the index of the first occurrence of the specified element in this list, or -1 if this list does not
+     *         contain the element.
+     */
+    public int indexOf(int x) {
+        for (int i = 0; i < length; i++) {
+            if (a[i] == x)
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * get the backing array
+     * 
+     * @return the backing array
+     */
+    public int[] array() {
+        return a;
+    }
+
+    /**
+     * Assuming that the array is sorted, performs a binary search and returns the position of the found element.
+     * 
+     * See {@link Arrays#binarySearch(int[], int)} for details.
+     * 
+     * If the array is not sorted, the behaviour is undefined.
+     * 
+     * @param x
+     *            - the value to be searched for
+     * @return
+     */
+    public int binarySearch(int x) {
+        return Arrays.binarySearch(a, 0, length, x);
+    }
+
+    /**
+     * return the number of elements of the intersection of the two arrays
+     * <p>
+     * both this and input have to be sorted
+     */
+    public int intersectionSize(IntArray input) {
+        int count = 0;
+        int idx1 = 0;
+        int idx2 = 0;
+
+        while (idx1 < this.length && idx2 < input.length) {
+            if (this.a[idx1] < input.a[idx2]) {
+                idx1++;
+            } else if (this.a[idx1] > input.a[idx2]) {
+                idx2++;
+            } else {
+                count++;
+                idx1++;
+                idx2++;
+            }
+        }
+
+        return count;
+    }
+
+    /**
+     * Assuming that a1 and a2 are sorted, returns a new array storing the union.
+     * <p>
+     * sizeHint is the expected size of the returned array
+     */
+    public static IntArray union(IntArray a1, IntArray a2, int sizeHint) {
+        IntArray union = new IntArray(sizeHint);
+        int idx1 = 0;
+        int idx2 = 0;
+
+        while (idx1 < a1.length && idx2 < a2.length) {
+            if (a1.a[idx1] < a2.a[idx2]) {
+                union.add(a1.a[idx1]);
+                idx1++;
+            } else if (a1.a[idx1] > a2.a[idx2]) {
+                union.add(a2.a[idx2]);
+                idx2++;
+            } else {
+                union.add(a1.a[idx1]);
+                idx1++;
+                idx2++;
+            }
+        }
+        while (idx1 < a1.length) {
+            union.add(a1.a[idx1]);
+            idx1++;
+        }
+
+        while (idx2 < a2.length) {
+            union.add(a2.a[idx2]);
+            idx2++;
+        }
+        return union;
+    }
+
+    public void sort() {
+        Arrays.sort(a, 0, length);
+        hash = 0;
+    }
+
+    /**
+     * Sort the array concurrently swapping the elements in the list such that the correspondence is kept.
+     * 
+     * The list has to contain the same number of elements as the array
+     * 
+     * @param list
+     */
+    public void sort(List<?> list) {
+        if (list.size() != length) {
+            throw new IllegalArgumentException("The list has not the same number of elements as the array");
+        }
+        if (length == 0) {
+            return;
+        }
+        quickSort(0, length - 1, list);
+    }
+
+    private void quickSort(int lo, int hi, List<?> list) {
+        int pi = partition(lo, hi, list);
+        if (lo < pi - 1) {
+            quickSort(lo, pi - 1, list);
+        }
+        if (pi < hi) {
+            quickSort(pi, hi, list);
+        }
+    }
+
+    private int partition(int lo, int hi, List<?> list) {
+        int pivot = a[(lo + hi) >>> 1];
+
+        int i = lo, j = hi;
+
+        while (i <= j) {
+            while (a[i] < pivot)
+                i++;
+
+            while (a[j] > pivot)
+                j--;
+
+            if (i <= j) {
+                swap(i, j, list);
+                i++;
+                j--;
+            }
+        }
+
+        return i;
+    }
+
+    private void swap(int i, int j, List<?> list) {
+        int tmp = a[i];
+        a[i] = a[j];
+        a[j] = tmp;
+        Collections.swap(list, i, j);
+        hash = 0;
+    }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && length > 0) {
+            h = 1;
+
+            for (int i = 0; i < length; i++) {
+                h = 31 * h + a[i];
+            }
+            hash = h;
+        }
+        return h;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        IntArray other = (IntArray) obj;
+        if (length != other.length)
+            return false;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i])
+                return false;
+        }
+
+        return true;
+    }
+
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+        if (n == -1) {
+            return "[]";
+        }
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n)
+                return b.append(']').toString();
+            b.append(", ");
+        }
+    }
+
+
+    /**
+     * Compares two arrays. Assuming that the arrays a1 and a2 are sorted, it returns
+     * <ul>
+     * <li>0 if a1 == a2</li>
+     * <li>1 if a1 is a subset of a2</li>
+     * <li>2 if a2 is a subset of a1</li>
+     * <li>-1 otherwise</li>
+     * </ul>
+     * 
+     * If the arrays are not sorted the return is meaningless.
+     * 
+     * @param a1
+     *            - first array
+     * @param a2
+     *            - second array
+     */
+    public static int compare(IntArray a1, IntArray a2) {
+        int i1 = 0;
+        int i2 = 0;
+        int c = 0;
+        while (i1 < a1.size() && i2 < a2.size()) {
+            int x1 = a1.get(i1);
+            int x2 = a2.get(i2);
+            if (x1 == x2) {
+                i1++;
+                i2++;
+                continue;
+            }
+            if (x1 > x2) {
+                if (c == 0) {
+                    c = 1;
+                } else if (c == 2) {
+                    c = -1;
+                    break;
+                }
+                i2++;
+            } else { // x1 < x2
+                if (c == 0) {
+                    c = 2;
+                } else if (c == 1) {
+                    c = -1;
+                    break;
+                }
+                i1++;
+            }
+        }
+
+        if (c != -1) {
+            if (i1 < a1.size()) {
+                c = (c == 0) ? 2 : -1;
+            } else if (i2 < a2.size()) {
+                c = (c == 0) ? 1 : -1;
+            }
+        }
+        return c;
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        return new IntArrayIterator();
+    }
+
+    private class IntArrayIterator implements PrimitiveIterator.OfInt {
+        private int idx = 0;
+
+        @Override
+        public boolean hasNext() {
+            return idx < length;
+        }
+
+        @Override
+        public int nextInt() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return a[idx++];
+        }
+    }
+}
+```
+
+### `IntHashSet.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/IntHashSet.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+import java.util.NoSuchElementException;
+import java.util.PrimitiveIterator;
+
+public class IntHashSet implements Iterable<Integer> {
+    private int[] table;
+    private int size;
+    private static final int DEFAULT_CAPACITY = 16;
+    private static final int EMPTY = Integer.MIN_VALUE;
+    private static final int DELETED = Integer.MAX_VALUE; // Marker for deleted slots
+    private boolean containsMinValue;
+
+    /**
+     * Constructs a new IntHashSet and initializes it with values from the given IntArray.
+     *
+     * @param a
+     *            the IntArray containing initial values for the set
+     */
+    public IntHashSet(IntArray a) {
+        table = new int[a.size() * 2];
+        Arrays.fill(table, EMPTY);
+        size = 0;
+        containsMinValue = false;
+        for (int i = 0; i < a.size(); i++) {
+            add(a.get(i));
+        }
+    }
+
+    /**
+     * Constructs an empty IntHashSet with the default capacity.
+     */
+    public IntHashSet() {
+        table = new int[DEFAULT_CAPACITY];
+        Arrays.fill(table, EMPTY);
+        size = 0;
+        containsMinValue = false;
+    }
+
+    private int hash(int value) {
+        return (value & 0x7FFFFFFF) % table.length;
+    }
+
+    private void rehash() {
+        int[] oldTable = table;
+        table = new int[oldTable.length * 2];
+        Arrays.fill(table, EMPTY);
+        size = 0;
+        containsMinValue = false;
+
+        for (int value : oldTable) {
+            if (value != EMPTY && value != DELETED) {
+                add(value);
+            }
+        }
+    }
+
+    /**
+     * Adds a value to the set if it is not already present.
+     *
+     * @param value
+     *            the value to be added
+     * @return true if the value was added, false if it was already present
+     */
+    public boolean add(int value) {
+        if (value == EMPTY) {
+            if (containsMinValue) {
+                return false;
+            } else {
+                containsMinValue = true;
+                size++;
+                return true;
+            }
+        }
+
+        if (size >= table.length / 2) {
+            rehash();
+        }
+
+        int index = hash(value);
+        while (table[index] != EMPTY && table[index] != DELETED) {
+            if (table[index] == value) {
+                return false; // Duplicate found
+            }
+            index = (index + 1) % table.length;
+        }
+
+        table[index] = value;
+        size++;
+        return true;
+    }
+
+    /**
+     * Checks whether the set contains the given value.
+     *
+     * @param value
+     *            the value to check for presence in the set
+     * @return true if the value is present, false otherwise
+     */
+    public boolean contains(int value) {
+        if (value == EMPTY) {
+            return containsMinValue;
+        }
+
+        int index = hash(value);
+        while (table[index] != EMPTY) {
+            if (table[index] == value) {
+                return true;
+            }
+            index = (index + 1) % table.length;
+        }
+        return false;
+    }
+
+    /**
+     * Removes the specified value from the set if it exists.
+     *
+     * @param value
+     *            the value to remove
+     * @return true if the set contained the value and it was removed, false otherwise
+     */
+    public boolean remove(int value) {
+        if (value == EMPTY) {
+            if (containsMinValue) {
+                containsMinValue = false;
+                size--;
+                return true;
+            }
+            return false;
+        }
+
+        int index = hash(value);
+        while (table[index] != EMPTY) {
+            if (table[index] == value) {
+                table[index] = DELETED;
+                size--;
+                return true;
+            }
+            index = (index + 1) % table.length;
+        }
+        return false;
+    }
+
+    /**
+     * Returns the number of elements currently in the set.
+     *
+     * @return the number of elements in the set
+     */
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Returns an iterator over the elements in this set.
+     *
+     * @return an iterator for iterating over the set's values
+     */
+    @Override
+    public PrimitiveIterator.OfInt iterator() {
+        return new IntHashSetIterator();
+    }
+
+    private class IntHashSetIterator implements PrimitiveIterator.OfInt {
+        private int index = 0;
+        private boolean minValueReturned = !containsMinValue;
+
+        @Override
+        public boolean hasNext() {
+            if (!minValueReturned) {
+                return true;
+            }
+            while (index < table.length) {
+                if (table[index] != EMPTY && table[index] != DELETED) {
+                    return true;
+                }
+                index++;
+            }
+            return false;
+        }
+
+        @Override
+        public int nextInt() {
+            if (!minValueReturned) {
+                minValueReturned = true;
+                return EMPTY; // Special case for EMPTY (Integer.MIN_VALUE)
+            }
+            while (index < table.length) {
+                int value = table[index++];
+                if (value != EMPTY && value != DELETED) {
+                    return value;
+                }
+            }
+            throw new NoSuchElementException();
+        }
+    }
+
+    /**
+     * Creates and returns a copy of this IntHashSet.
+     *
+     * @return a new IntHashSet containing the same elements as this set
+     */
+    public IntHashSet clone() {
+        IntHashSet r = new IntHashSet();
+        r.size = size;
+        r.table = Arrays.copyOf(table, table.length);
+        r.containsMinValue = containsMinValue;
+        return r;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        boolean first = true;
+
+        if (containsMinValue) {
+            sb.append(EMPTY);
+            first = false;
+        }
+
+        for (int value : table) {
+            if (value != EMPTY && value != DELETED) {
+                if (!first) {
+                    sb.append(", ");
+                }
+                sb.append(value);
+                first = false;
+            }
+        }
+        sb.append("}");
+        return sb.toString();
+    }
+}
+```
+
+### `InvalidRequestException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/InvalidRequestException.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * Exception thrown by services when receiving an invalid request usually via the http api, case in which it transformed
+ * into HTTP Bad Request
+ * 
+ */
+public class InvalidRequestException extends RuntimeException {
+    public InvalidRequestException(String message) {
+        super(message);
+    }
+}
+```
+
+### `LongArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/LongArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+
+/**
+ * long array
+ * 
+ */
+public class LongArray {
+
+    public static int DEFAULT_CAPACITY = 10;
+    private long[] a;
+    private int length;
+
+    // caches the hashCode
+    private int hash;
+
+    /**
+     * Creates an long array with a default initial capacity
+     */
+    public LongArray() {
+        a = new long[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates an IntArray with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public LongArray(int capacity) {
+        a = new long[capacity];
+    }
+
+    private LongArray(long[] a1) {
+        a = a1;
+        length = a1.length;
+    }
+
+    /**
+     * Creates the IntArray with the backing array
+     * 
+     * @param array
+     */
+    public static LongArray wrap(long... array) {
+        return new LongArray(array);
+    }
+
+    /**
+     * add value to the array
+     * 
+     * @param x
+     *            - value to be added
+     */
+    public void add(long x) {
+        ensureCapacity(length + 1);
+        a[length] = x;
+        length++;
+    }
+
+    public void add(int pos, long x) {
+        if (pos > length)
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        ensureCapacity(length + 1);
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return
+     */
+    public long get(int pos) {
+        rangeCheck(pos);
+
+        return a[pos];
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length)
+            return;
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity)
+            newCapacity = minCapacity;
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public boolean isEmpty() {
+        return a.length == 0;
+    }
+
+    public long[] toArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    public void set(int pos, long x) {
+        rangeCheck(pos);
+        a[pos] = x;
+    }
+
+    public void sort() {
+        Arrays.sort(a, 0, length);
+    }
+    private void rangeCheck(int pos) {
+        if (pos >= length)
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+    }
+
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && length > 0) {
+            h = 1;
+
+            for (int i = 0; i < length; i++) {
+                int ah = (int) (a[i] ^ (a[i] >>> 32));
+                h = 31 * h + ah;
+            }
+            hash = h;
+        }
+        return h;
+
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+
+        if (obj == null)
+            return false;
+
+        if (getClass() != obj.getClass())
+            return false;
+
+        LongArray other = (LongArray) obj;
+        if (length != other.length)
+            return false;
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i])
+                return false;
+        }
+
+        return true;
+    }
+
+
+
+    /**
+     * get the backing array. It's length will be &ge; than the size of the array.
+     * 
+     * @return
+     */
+    public long[] array() {
+        return a;
+    }
+
+    public String toString() {
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n)
+                return b.append(']').toString();
+            b.append(", ");
+        }
+    }
+
+
+}
+```
+
+### `MathUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MathUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * Provides some of the operations that are required for XTCE MathOperation but are not part of standard java Math.
+ * 
+ * @author nm
+ *
+ */
+public class MathUtil {
+    public static double acosh(double x) {
+        return Math.log(x + Math.sqrt(x * x - 1.0));
+    }
+
+    public static double asinh(double x) {
+        return Math.log(x + Math.sqrt(x * x - 1.0));
+    }
+
+    public static double atanh(double x) {
+        return 0.5 * Math.log((x + 1.0) / (x - 1.0));
+    }
+
+    public static double factorial(double v) {
+        if (v < 0) {
+            throw new IllegalArgumentException("Value must be positive");
+        }
+        double result = 1;
+        for (int i = 2; i <= v; i++) {
+            result = result * i;
+        }
+
+        return result;
+    }
+
+}
+```
+
+### `MilStd1750A.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MilStd1750A.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * Some Mil1750A encoding/decoding functions.
+ * 
+ * http://www.mssl.ucl.ac.uk/swift/docs/mil-std-1750a.pdf
+ * 
+ * @author nm
+ *
+ */
+public class MilStd1750A {
+    public static long MAX_FLOAT_VALUE = 0x7FFFFF_7F_FFFFL;
+    public static long MIN_FLOAT_VALUE = 0xFFFFFF_7F_FFFFL;
+    public static int MAX_FLOAT32_VALUE = 0x7FFFFF_7F;
+    public static int MIN_FLOAT32_VALUE = 0xFFFFFF_7F;
+
+    /**
+     * Encode double value to 48 bits 1750A floating point number.
+     * If the number is too large or too small, the {@link #MAX_FLOAT_VALUE} respectively {@link #MIN_FLOAT_VALUE} are
+     * returned
+     * 
+     * This performs some bit operations to transform from IEEE 754 binary representation to STD 1750 binary
+     * representation.
+     * No Math.pow or other expensive operations are used.
+     * 
+     * @param value
+     *            - double number
+     * @return encoded 48 bits number (the first 16 bits of the long are 0)
+     */
+    public static long encode48(double value) {
+
+        long x = Double.doubleToRawLongBits(value);
+        if (x == 0) {
+            return 0;
+        }
+
+        // IEEE 754 numbers have an implicit 1 in front of the mantissa (that's why we do the "| 0x10...")
+        // MILSTD don't so automatically we increase the exponent with 1
+        // you know of course that the IEEE 754 exponents are biased with 1023 and 1023-1=1022 :)
+        int e = (int) (((x >> 52) & 0x7FF) - 1022);
+        long m = (x & 0xF_FFFF_FFFF_FFFFL) | 0x10_0000_0000_0000L;
+
+        if (x < 0) {
+            // this is a negative number, however in IEEE 754 the sign is at the beginning of the number and the
+            // mantissa is positive
+            // in the MILSTD we have to encode the sign in the mantissa
+            // the trick is that we know there is a 1 in front of the mantissa (we added it above) - therefore when we
+            // change sign (m=-m) the first digit will become 0 - that is true in all cases with one exception
+            if (m == 0x10_0000_0000_0000L) {
+                // exception: when we change sign this mantissa stays the same
+                // that means there will be two binary 1 (the sign plus the first bit of the mantissa) at the beginning
+                // of the MILSTD number which is not allowed.
+                // therefore we shift it to the left and decrease the exponent
+                m = m << 1;
+                e--;
+            }
+            m = -m;
+        } // for positive numbers we do nothing because the mantissa is already normalised
+          // (first bit = sign = 0, second bit = implicit IEEE = 1)
+
+        if (e > 127) {
+            return x > 0 ? MAX_FLOAT_VALUE : MIN_FLOAT_VALUE;
+        } else if (e < -128) {
+            return 0;
+        }
+        m = m >> 14;
+
+        return ((m << 8) & 0xFFFFFF_00_0000L) | ((e << 16) & 0xFF_0000) | (m & 0xFFFF);
+    }
+
+    /**
+     * Decodes a MIL-STD 1750A 48 bit number into a double.
+     * 
+     * @param milstd
+     *            - number to be decoded. Only the last 48 bits are considered, the first 16 are ignored.
+     * @return - the decoded value
+     */
+    public static double decode48(long milstd) {
+        long m = ((milstd >> 8) & 0xFFFFFF_0000L) | (milstd & 0xFFFF);
+        if (m == 0) {
+            return 0;
+        }
+
+        // we convert the MILSTD exponent to byte such that it can become negative and then add the IEEE bias
+        long e = (byte) (milstd >> 16) + 1023;
+
+        long sign = (m >> 39) << 63;
+
+        if (sign != 0) {
+            m = (-m) & 0xFFFFFFFFFFL;
+        }
+        // we have to find the first bit 1 from the left
+        // and shift m such that the first bit becomes the implicit 1 of IEEE
+        int k = Long.numberOfLeadingZeros(m) - 24;
+        m = m << (13 + k);
+        e = e - k;
+
+        long l = sign | (e << 52) | (m & 0xF_FFFF_FFFF_FFFFL);
+        return Double.longBitsToDouble(l);
+    }
+
+    /**
+     * Encodes a double into a MIL-STD 1750A 32 bit number.
+     * 
+     * If the number to be encoded is too large or too small,
+     * the {@link #MAX_FLOAT32_VALUE} respectively {@link #MIN_FLOAT32_VALUE} are returned
+     * 
+     * @param value
+     * @return
+     */
+    public static int encode32(double value) {
+        return (int) (encode48(value) >> 16);
+    }
+
+    /**
+     * 
+     * Decodes a 32 bit MIL-STD 1750A number into a double.
+     * 
+     * @param milstd
+     * @return
+     */
+    public static double decode32(int milstd) {
+        return decode48(((long) milstd) << 16);
+    }
+
+}
+```
+
+### `Mimetypes.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/Mimetypes.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * Maps files to Internet media types based on their file extension.
+ * <p>
+ * The mapping is read from a file {@code mime.types} which must be available in the classpath root.
+ */
+public class Mimetypes {
+
+    public static final String OCTET_STREAM = "application/octet-stream";
+
+    private static Mimetypes INSTANCE;
+
+    private Map<String, String> mimetypeByExtension = new HashMap<>();
+
+    private Mimetypes() {
+    }
+
+    public static synchronized Mimetypes getInstance() {
+        if (INSTANCE == null) {
+            try {
+                INSTANCE = new Mimetypes();
+                InputStream in = Mimetypes.class.getResourceAsStream("/mime.types");
+                if (in == null) {
+                    throw new FileNotFoundException("Cannot find the mime.types file in the classpath");
+                }
+                INSTANCE.load(in);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return INSTANCE;
+    }
+
+    public String getMimetype(Path file) {
+        String filename = file.getFileName().toString();
+        int idx = filename.lastIndexOf('.');
+        if (idx != -1) {
+            String extension = filename.substring(idx + 1).toLowerCase();
+            String mimetype = mimetypeByExtension.get(extension);
+            return (mimetype != null) ? mimetype : OCTET_STREAM;
+        }
+        return OCTET_STREAM;
+    }
+
+    public String getMimetype(File file) {
+        return getMimetype(file.toPath());
+    }
+
+    public String getMimetype(String filename) {
+        return getMimetype(Paths.get(filename));
+    }
+
+    private void load(InputStream in) throws IOException {
+        try (var reader = new BufferedReader(new InputStreamReader(in))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("#")) {
+                    continue;
+                }
+                String[] parts = line.split("\\s+");
+                for (int i = 1; i < parts.length; i++) {
+                    mimetypeByExtension.put(parts[i], parts[0]);
+                }
+            }
+        }
+    }
+}
+```
+
+### `MutableLong.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/MutableLong.java`
+
+
+```java
+package org.yamcs.utils;
+
+public class MutableLong {
+    long v;
+    public MutableLong(long v) {
+        this.v = v;
+    }
+    public long getLong() {
+        return v;
+    };
+    public void setLong(long v) {
+        this.v = v;
+    }
+
+    public void increment() {
+        v++;
+    }
+}
+```
+
+### `ParameterFormatter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ParameterFormatter.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueWithId;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+import com.csvreader.CsvWriter;
+
+/**
+ * Formats in tab separated format parameters. The list of the possible parameters has to be known in advance.
+ * 
+ */
+public class ParameterFormatter implements Closeable {
+
+    public enum Header {
+        QUALIFIED_NAME,
+        SHORT_NAME,
+        NONE;
+    }
+
+    protected Writer writer;
+    protected boolean printTime = true;
+    protected boolean printRaw = false;
+    protected boolean printMonitoring = false;
+    protected boolean printUnique = false;
+    protected boolean keepValues = false; // if set to true print the latest known value of a parameter even for
+                                          // parameters not retrieved in a packet
+    protected Header header = Header.NONE;
+    protected boolean allParametersPresent = false; // true = print only those lines that contain all parameters' values
+    protected int timewindow = -1; // [ms], -1 = no window at all
+
+    String previousLine;
+    long lastLineInstant;
+    protected int unsavedLineCount;
+
+    Map<NamedObjectId, ParameterValue> subscribedParameters = new LinkedHashMap<>();
+    protected int linesSaved, linesReceived;
+    protected boolean first = true;
+    static char DEFAULT_COLUMN_SEPARATOR = '\t';
+    CsvWriter csvWriter;
+    char columnSeparator = DEFAULT_COLUMN_SEPARATOR;
+
+    public ParameterFormatter(Writer writer, Collection<NamedObjectId> paramList) {
+        this(writer, paramList, DEFAULT_COLUMN_SEPARATOR);
+    }
+
+    public ParameterFormatter(Writer writer, Collection<NamedObjectId> paramList, char columnSeparator) {
+        this.writer = writer;
+        for (NamedObjectId id : paramList) {
+            subscribedParameters.put(id, null);
+        }
+        this.columnSeparator = columnSeparator;
+        if (writer != null) {
+            csvWriter = new CsvWriter(writer, this.columnSeparator);
+        }
+    }
+
+    public void updateWriter(OutputStream outputStream, Charset charset) {
+        if (csvWriter != null) {
+            csvWriter.close();
+        }
+        csvWriter = new CsvWriter(outputStream, columnSeparator, charset);
+    }
+
+    public void setPrintRaw(boolean printRaw) {
+        this.printRaw = printRaw;
+    }
+
+    public void setPrintMonitoring(boolean printMonitoring) {
+        this.printMonitoring = printMonitoring;
+    }
+
+    public void setPrintTime(boolean printTime) {
+        this.printTime = printTime;
+    }
+
+    public void setPrintUnique(boolean printUnique) {
+        this.printUnique = printUnique;
+    }
+
+    public void setWriteHeader(Header header) {
+        this.header = header;
+    }
+
+    public void setAllParametersPresent(boolean allParametersPresent) {
+        this.allParametersPresent = allParametersPresent;
+    }
+
+    public void setKeepValues(boolean keepValues) {
+        this.keepValues = keepValues;
+    }
+
+    public void setTimeWindow(int timewindow) {
+        this.timewindow = timewindow;
+    }
+
+    public void resetTimeWindow() {
+        this.timewindow = -1;
+    }
+
+    private void writeHeader() throws IOException {
+        List<String> h = new ArrayList<>();
+        if (printTime) {
+            h.add("Time");
+        }
+        for (NamedObjectId noid : subscribedParameters.keySet()) {
+            String name = noid.getName();
+            if (header == Header.SHORT_NAME) {
+                var idx = name.lastIndexOf('/');
+                if (idx != -1) {
+                    name = name.substring(idx + 1);
+                }
+            }
+            h.add(name);
+            if (printRaw) {
+                h.add(name + "_RAW");
+            }
+            if (printMonitoring) {
+                h.add(name + "_MONITORING");
+            }
+        }
+        csvWriter.writeRecord(h.toArray(new String[0]));
+    }
+
+    /**
+     * adds new parameters - if they are written to the output buffer or not depends on the settings
+     * 
+     * @param params
+     * @throws IOException
+     */
+    public void writeParameters(List<ParameterValueWithId> params) throws IOException {
+
+        Set<NamedObjectId> alreadyAdded = new HashSet<>();
+
+        while (!params.isEmpty()) {
+            List<ParameterValueWithId> remaining = new ArrayList<>();
+            alreadyAdded.clear();
+            
+            long t = params.get(0).getParameterValue().getGenerationTime();
+            if ((timewindow == -1) || (t - lastLineInstant > timewindow)) {
+                writeParameters();
+                lastLineInstant = t;
+
+                if (!keepValues) {
+                    for (Entry<NamedObjectId, ParameterValue> entry : subscribedParameters.entrySet()) {
+                        entry.setValue(null);
+                    }
+                }
+            }
+
+            for (var pvwid: params) {
+                if(alreadyAdded.contains(pvwid.getId())) {
+                    remaining.add(pvwid);
+                } else {
+                    alreadyAdded.add(pvwid.getId());
+                    subscribedParameters.put(pvwid.getId(), pvwid.getParameterValue());    
+                }
+            }
+            linesReceived++;
+            ++unsavedLineCount;
+            params = remaining;
+        }
+    }
+
+    protected void writeParameters() throws IOException {
+        if (first) {
+            if (header != Header.NONE) {
+                writeHeader();
+            }
+            first = false;
+        }
+        if (unsavedLineCount == 0) {
+            return;
+        }
+        List<String> l = new ArrayList<>();
+        StringBuilder sb = new StringBuilder();
+        boolean skip = false;
+        for (Entry<NamedObjectId, ParameterValue> entry : subscribedParameters.entrySet()) {
+            ParameterValue pv = entry.getValue();
+            if (pv != null) {
+                Value ev = pv.getEngValue();
+                if (ev != null) {
+                    sb.append(ev.toString());
+                    l.add(ev.toString());
+                } else {
+                    System.err.println("got parameter without an engineering value for " + entry.getKey());
+                    // skip=true;
+                }
+                if (printRaw) {
+                    Value rv = pv.getRawValue();
+                    if (rv != null) {
+                        sb.append(rv.toString());
+                        l.add(rv.toString());
+                    } else {
+                        l.add("");
+                    }
+                }
+                if (printMonitoring) {
+                    MonitoringResult mr = pv.getMonitoringResult();
+                    if (mr != null) {
+                        sb.append(mr.name());
+                        l.add(mr.name());
+                    } else {
+                        l.add("");
+                    }
+                }
+            } else {
+                if (allParametersPresent) {
+                    skip = true;
+                    break;
+                } else {
+                    l.add("");
+                    if (printRaw) {
+                        l.add("");
+                    }
+                }
+            }
+        }
+
+        if (!skip) {
+            final String line = sb.toString();
+            if (!printUnique || !line.equals(previousLine)) {
+                if (printTime) {
+                    l.add(0, TimeEncoding.toString(lastLineInstant));
+                }
+                csvWriter.writeRecord(l.toArray(new String[0]));
+                previousLine = line;
+                linesSaved++;
+            } else {
+                skip = true;
+            }
+        }
+        unsavedLineCount = 0;
+    }
+
+    public void flush() {
+        csvWriter.flush();
+    }
+
+    @Override
+    public void close() throws IOException {
+        writeParameters();// write the remaining parameters
+        csvWriter.close();
+    }
+
+    public int getLinesSaved() {
+        return linesSaved;
+    }
+
+    public int getLinesReceived() {
+        return linesReceived;
+    }
+
+}
+```
+
+### `PartitionedTimeInterval.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PartitionedTimeInterval.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * A list of sorted, non overlapping {@link TimeInterval}
+ * <p>
+ * The intervals are considered closed at start and open at end [start, end)
+ * <p>
+ * It is implemented as a copy on write array and it is thread safe.
+ * 
+ * @author nm
+ *
+ */
+public class PartitionedTimeInterval<T extends TimeInterval> implements Iterable<T> {
+    private TimeInterval[] intervals;
+    final transient ReentrantLock lock = new ReentrantLock();
+
+    public PartitionedTimeInterval() {
+        intervals = new TimeInterval[0];
+    }
+
+    /**
+     * Insert a new time interval in the list, if it doesn't overlap with the
+     * existing intervals.
+     * 
+     * If it overlaps but the overlap is within the tolerance (on either end),
+     * it modifies it such as to fit perfectly
+     * 
+     * If it overlaps and the overlap is not within the tolerance margin, then
+     * it doesn't do anything and it returns null;
+     * 
+     * This operation assumes that the lengths of the interval is at least twice
+     * the tolerance.
+     * 
+     * @return returns the possibly modified inserted interval
+     */
+    public T insert(T x, long tolerance) {
+        lock.lock();
+        try {
+            TimeInterval[] tmp = intervals;
+            if (tmp.length == 0) {
+                tmp = new TimeInterval[1];
+                tmp[0] = x;
+                intervals = tmp;
+                return x;
+            }
+            if (!x.hasStart() && !x.hasEnd()) {
+                return null;
+            }
+
+            if (!x.hasStart()) {
+                return insertFirst(tmp, x, tolerance);
+            }
+
+            if (!x.hasEnd()) {
+                return insertLast(tmp, x, tolerance);
+            }
+            // here timeInterval has both start and stop
+            // do a binary search for the start
+
+            int low = 0;
+            int high = tmp.length - 1;
+
+            while (low <= high) {
+                int mid = (low + high) >>> 1;
+                TimeInterval ti = tmp[mid];
+
+                if (ti.hasStart() && ti.getStart() + tolerance > x.getStart()) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            }
+            // we have to put it on position low
+            if (low == 0) {
+                return insertFirst(tmp, x, tolerance);
+            } else if (low == tmp.length) {
+                return insertLast(tmp, x, tolerance);
+            }
+            TimeInterval prev = tmp[low - 1];
+
+            if (prev.getEnd() - tolerance > x.getStart()) {
+                return null;
+            }
+            if (prev.getEnd() + tolerance > x.getStart()) {
+                x.setStart(prev.getEnd());
+            }
+            TimeInterval next = tmp[low];
+            if (x.getEnd() - tolerance > next.getStart()) {
+                return null;
+            }
+            if (x.getEnd() + tolerance > next.getStart()) {
+                x.setEnd(next.getStart());
+            }
+            TimeInterval[] newIntervals = new TimeInterval[tmp.length + 1];
+
+            System.arraycopy(tmp, 0, newIntervals, 0, low);
+            newIntervals[low] = x;
+            System.arraycopy(tmp, low, newIntervals, low + 1, tmp.length - low);
+            intervals = newIntervals;
+            return x;
+
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    /**
+     * Inserts an interval in the list if it doesn't overlap with an existing one.
+     * 
+     * @return returns the interval inserted
+     */
+    public T insert(T timeInterval) {
+        return insert(timeInterval, 0);
+    }
+
+    private T insertFirst(TimeInterval[] tmp, T x, long tolerance) {
+        TimeInterval t0 = tmp[0];
+        if (!t0.hasStart()) {
+            return null;
+        }
+        if (x.getEnd() - tolerance <= t0.getStart()) {
+            if (x.getEnd() + tolerance > t0.getStart()) {
+                x.setEnd(t0.getStart());
+            }
+            TimeInterval[] newIntervals = new TimeInterval[tmp.length + 1];
+            newIntervals[0] = x;
+            System.arraycopy(tmp, 0, newIntervals, 1, tmp.length);
+            intervals = newIntervals;
+            return x;
+        } else {
+            return null;
+        }
+    }
+
+    private T insertLast(TimeInterval[] tmp, T x, long tolerance) {
+        TimeInterval tn = tmp[tmp.length - 1];
+        if (!tn.hasEnd()) {
+            return null;
+        }
+        if (tn.getEnd() - tolerance <= x.getStart()) {
+            if (tn.getEnd() + tolerance > x.getStart()) {
+                x.setStart(tn.getEnd());
+            }
+            TimeInterval[] newIntervals = Arrays.copyOf(tmp, tmp.length + 1);
+            newIntervals[tmp.length] = x;
+            intervals = newIntervals;
+            return x;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Creates an iterator that iterates over all the timeintervals overlapping
+     * with timeInterval The timeInterval is considered closed at both ends
+     * [start, stop]
+     */
+    public Iterator<T> overlappingIterator(TimeInterval timeInterval) {
+        return new TimeInterval.FilterOverlappingIterator<>(timeInterval, iterator());
+    }
+
+    /**
+     * Creates an iterator that iterates over all the timeintervals overlapping
+     * with timeInterval The timeInterval is considered closed at both ends
+     * [start, stop]
+     */
+    public Iterator<T> overlappingReverseIterator(TimeInterval timeInterval) {
+        return new TimeInterval.FilterOverlappingIterator<>(timeInterval, reverseIterator());
+    }
+
+    /**
+     * returns an interval where t would fit or null if there is no such
+     * interval
+     * 
+     * @return ti such that ti.getStart() &lt;= t &lt; ti.getEnd()
+     */
+    @SuppressWarnings("unchecked")
+    public T getFit(long t) {
+        TimeInterval[] tmp = intervals;
+        int low = 0;
+        int high = tmp.length - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            TimeInterval ti = tmp[mid];
+
+            if (ti.hasStart() && ti.getStart() > t) {
+                high = mid - 1;
+            } else {
+                low = mid + 1;
+            }
+        }
+        if (low == 0) {
+            return null;
+        }
+        TimeInterval ti = tmp[low - 1];
+        if (ti.hasEnd() && ti.getEnd() <= t) {
+            return null;
+        } else {
+            return (T) ti;
+        }
+    }
+
+    public int size() {
+        return intervals.length;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return new AscendingIterator<>(intervals);
+    }
+
+    public Iterator<T> reverseIterator() {
+        return new DescendingIterator<>(intervals);
+    }
+
+    public TimeInterval get(int i) {
+        return intervals[i];
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+
+    static class AscendingIterator<T> implements Iterator<T> {
+        TimeInterval[] snapshot;
+        int cur = 0;
+
+        AscendingIterator(TimeInterval[] intervals) {
+            this.snapshot = intervals;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur < snapshot.length;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return (T) snapshot[cur++];
+        }
+    }
+
+    static class DescendingIterator<T> implements Iterator<T> {
+        TimeInterval[] snapshot;
+        int cur;
+
+        DescendingIterator(TimeInterval[] intervals) {
+            this.snapshot = intervals;
+            this.cur = snapshot.length - 1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur >= 0;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            return (T) snapshot[cur--];
+        }
+    }
+
+
+}
+```
+
+### `PeekingIterator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PeekingIterator.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * An interface for an iterator that allows peeking at the current value.
+ * <p>
+ * The advantage over the standard java iterator is that because the value can be looked at, it can be used in priority
+ * queues to run multiple of them in parallel.
+ * 
+ * @param <T>
+ *            the type of elements returned by this iterator
+ */
+public interface PeekingIterator<T> {
+
+    /**
+     * Returns {@code true} if the iterator has more elements.
+     * <p>
+     * This method allows to verify whether the iterator has a valid value to be fetched.
+     *
+     * @return {@code true} if the iterator has more elements or {@code false} otherwise
+     */
+    boolean isValid();
+
+    /**
+     * Returns the current value from the iterator without advancing.
+     * <p>
+     * This method can only be called if {@link #isValid()} returns {@code true}. If called after {@link #isValid()}
+     * returns {@code false}, this method will throw an exception.
+     *
+     * @return the current element
+     * @throws IllegalStateException
+     *             if {@link #isValid()} returns {@code false}
+     */
+    T value();
+
+    /**
+     * Moves the iterator to the next element.
+     * <p>
+     * If {@link #isValid()} returns {@code false}, calling this method has no effect.
+     */
+    void next();
+}
+```
+
+### `PerfTimer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/PerfTimer.java`
+
+
+```java
+package org.yamcs.utils;
+
+/**
+ * A simple timer that can be inserted in the code to measure the performance of certain operations.
+ * <p>
+ * Relies on System.nanoTime() called before and after the operation.
+ * <p>
+ * Prints on the standard output from time to time the number of nanoseconds per operation
+ */
+public class PerfTimer {
+    final int numOps;
+    final String name;
+    int count;
+    long before;
+    long min = Long.MAX_VALUE;;
+    long max = Long.MIN_VALUE;;
+    long sum;
+    double sum2;
+    
+    /**
+     * name will be printed in the output
+     * <p>
+     * numOps is how many operations it should time and print the result for
+     */
+    public PerfTimer(String name, int numOps) {
+        this.name = name;
+        this.numOps = numOps;
+    }
+
+    public void before() {
+        this.before = System.nanoTime();
+    }
+
+    public void after() {
+        long elapsed = System.nanoTime() - before;
+        sum += elapsed;
+        sum2 += elapsed * elapsed;
+
+        if (elapsed < min) {
+            min = elapsed;
+        }
+        if (elapsed > max) {
+            max = elapsed;
+        }
+        count += 1;
+        if (count == numOps) {
+            computeAndPrintStats();
+            resetStats();
+        }
+    }
+
+    private void computeAndPrintStats() {
+        long avg = sum / numOps;
+        double variance = (sum2 / numOps) - (avg * avg);
+        long mdev = (long) Math.sqrt(variance);
+
+        System.out.println(String.format("%-30s: min/avg/max/mdev: %d/%d/%d/%d ns/op",
+                name, min, avg, max, mdev));
+    }
+
+    private void resetStats() {
+        min = Long.MAX_VALUE;
+        max = Long.MIN_VALUE;
+        sum = 0;
+        sum2 = 0;
+        count = 0;
+    }
+}
+```
+
+### `SDNotify.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/SDNotify.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+import org.yamcs.logging.Log;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelOutboundHandlerAdapter;
+import io.netty.channel.epoll.EpollDomainDatagramChannel;
+import io.netty.channel.epoll.EpollEventLoopGroup;
+import io.netty.channel.unix.DomainDatagramPacket;
+import io.netty.channel.unix.DomainSocketAddress;
+
+/**
+ * Helper utility for sending systemd notification events about state changes.
+ * <p>
+ * The primary use case is to send a notification to the systemd notification when Yamcs has finished starting. This can
+ * be used when Yamcs runs as a service unit with {@code Type=notify} in its definition file.
+ * <p>
+ * See https://www.freedesktop.org/software/systemd/man/sd_notify.html
+ */
+public class SDNotify {
+
+    private static final Log log = new Log(SDNotify.class);
+
+    // If started through systemd with Type=notify, Yamcs will have NOTIFY_SOCKET
+    // env set to the path of an AF_UNIX socket.
+    private static final String NOTIFY_SOCKET = System.getenv("NOTIFY_SOCKET");
+
+    /**
+     * Tell the service manager that Yamcs has finished starting.
+     * <p>
+     * <strong>This method requires that {@link #isSupported()} returns {@code true}.</strong>
+     */
+    public static void sendStartupNotification() throws IOException {
+        notify("READY=1", "MAINPID=" + ProcessHandle.current().pid());
+    }
+
+    /**
+     * Tell the service manager that Yamcs is beginning its shutdown.
+     * <p>
+     * <strong>This method requires that {@link #isSupported()} returns {@code true}.</strong>
+     */
+    public static void sendStoppingNotification() {
+        try {
+            notify("STOPPING=1");
+        } catch (IOException e) {
+            // Ignore
+        }
+    }
+
+    private static void notify(String... notifications) throws IOException {
+        if (!isSupported()) {
+            throw new IllegalStateException("NOTIFY_SOCKET environment variable is not set");
+        }
+
+        var recipient = new DomainSocketAddress(NOTIFY_SOCKET);
+        var group = new EpollEventLoopGroup(1);
+        try {
+            try {
+                var bootstrap = new Bootstrap();
+                bootstrap.group(group).channel(EpollDomainDatagramChannel.class)
+                        .handler(new ChannelOutboundHandlerAdapter());
+
+                var file = File.createTempFile("netty", "dsocket");
+                file.delete();
+                var domainSocketAddress = new DomainSocketAddress(file);
+                var channel = bootstrap.bind(domainSocketAddress).sync().channel();
+                if (log.isDebugEnabled()) {
+                    for (var notification : notifications) {
+                        log.debug("Writing: " + notification);
+                    }
+                }
+                var message = String.join("\n", notifications);
+                var buf = Unpooled.copiedBuffer(message, StandardCharsets.UTF_8);
+                var packet = new DomainDatagramPacket(buf, recipient);
+                channel.writeAndFlush(packet).sync();
+                file.delete();
+            } finally {
+                group.shutdownGracefully().sync();
+            }
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    public static boolean isSupported() {
+        return NOTIFY_SOCKET != null;
+    }
+}
+```
+
+### `ServiceUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ServiceUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+
+import com.google.common.util.concurrent.Service;
+import com.google.common.util.concurrent.UncheckedExecutionException;
+
+public class ServiceUtil {
+
+    /**
+     * Awaits a service to be running but throw an {@link UncheckedExecutionException} instead of an
+     * {@link IllegalStateException}
+     * <p>
+     * To be used when the only reason for a service not to be in the RUNNING state is because it failed to start (not
+     * because an illegal state transition has been attempted)
+     * 
+     * @param service
+     */
+    public static void awaitServiceRunning(Service service) {
+        try {
+            service.awaitRunning();
+        } catch (IllegalStateException e) {
+            throw new UncheckedExecutionException(ExceptionUtil.unwind(e.getCause()));
+        }
+    }
+
+    public static void awaitServiceTerminated(Service service, int numSeconds, Log log) {
+        try {
+            service.awaitTerminated(numSeconds, TimeUnit.SECONDS);
+        } catch (TimeoutException e) {
+            log.error("Service {} did not stop in {} seconds", service.getClass().getName(),
+                    YamcsServer.SERVICE_STOP_GRACE_TIME);
+        } catch (IllegalStateException e) {
+            log.error("Service {} was in a bad state: {}", service.getClass().getName(), e.toString());
+        }
+    }
+}
+```
+
+### `SortedIntArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/SortedIntArray.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.Serializable;
+import java.util.Arrays;
+import java.util.PrimitiveIterator;
+import java.util.function.IntConsumer;
+
+/**
+ * sorted int array
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class SortedIntArray implements Serializable {
+    static final long serialVersionUID = 1L;
+
+    public static int DEFAULT_CAPACITY = 10;
+    private int[] a;
+    private int length;
+
+    // caches the hashCode
+    private int hash;
+
+    /**
+     * Creates a sorted int array with a default initial capacity
+     * 
+     */
+    public SortedIntArray() {
+        a = new int[DEFAULT_CAPACITY];
+    }
+
+    /**
+     * Creates a sorted int array with a given initial capacity
+     * 
+     * @param capacity
+     */
+    public SortedIntArray(int capacity) {
+        a = new int[capacity];
+    }
+
+    /**
+     * Creates the SortedIntArray by copying all values from the input array and sorting them
+     * 
+     * @param array
+     */
+    public SortedIntArray(int... array) {
+        length = array.length;
+        a = Arrays.copyOf(array, length);
+        Arrays.sort(a);
+    }
+
+    public SortedIntArray(IntArray pids) {
+        length = pids.size();
+        a = Arrays.copyOf(pids.array(), length);
+        Arrays.sort(a);
+    }
+
+    /**
+     * Inserts value to the array and return the position on which has been inserted.
+     * <p>
+     * In case <code>x</code> is already present in the array, this function inserts the new value at a position after
+     * the values already present
+     * 
+     * @param x
+     *            - value to be inserted
+     * @return the position on which the value has been inserted
+     */
+    public int insert(int x) {
+
+        int pos = Arrays.binarySearch(a, 0, length, x);
+        if (pos < 0) {
+            pos = -pos - 1;
+        } else { // make sure we insert after the last value
+            while (pos < length && a[pos] == x) {
+                pos++;
+            }
+        }
+
+        ensureCapacity(length + 1);
+
+        System.arraycopy(a, pos, a, pos + 1, length - pos);
+        a[pos] = x;
+        length++;
+        hash = 0;
+        return pos;
+    }
+
+    /**
+     * performs a binary search in the array.
+     * 
+     * @see java.util.Arrays#binarySearch(int[], int)
+     * @param x
+     * @return result of the binarySearch, @see java.util.Arrays#binarySearch(int[], int)
+     */
+    public int search(int x) {
+        return Arrays.binarySearch(a, 0, length, x);
+    }
+
+    /**
+     * returns idx such that
+     * 
+     * <pre>
+     * a[i] >= x iif i >= idx
+     * </pre>
+     * 
+     */
+    public int lowerBound(int x) {
+        int idx = Arrays.binarySearch(a, 0, length, x);
+        if (idx < 0) {
+            return -(idx + 1);
+        } else {
+            while (idx > 0 && a[idx - 1] == x) {
+                idx--;
+            }
+        }
+        return idx;
+    }
+
+    /**
+     * returns idx such that
+     * 
+     * <pre>
+     * a[i] <= x iif i <= idx
+     * </pre>
+     */
+    public int higherBound(int x) {
+        int idx = Arrays.binarySearch(a, 0, length, x);
+        if (idx < 0) {
+            return -(idx + 1) - 1;
+        } else {
+            while (idx < length - 1 && a[idx + 1] == x) {
+                idx++;
+            }
+            return idx;
+        }
+    }
+
+    /**
+     * get element at position
+     * 
+     * @param pos
+     * @return the element at position
+     */
+    public int get(int pos) {
+        if (pos >= length) {
+            throw new IndexOutOfBoundsException("Index: " + pos + " length: " + length);
+        }
+
+        return a[pos];
+    }
+
+    private void ensureCapacity(int minCapacity) {
+        if (minCapacity <= a.length) {
+            return;
+        }
+
+        int capacity = a.length;
+        int newCapacity = capacity + (capacity >> 1);
+        if (newCapacity < minCapacity) {
+            newCapacity = minCapacity;
+        }
+
+        a = Arrays.copyOf(a, newCapacity);
+    }
+
+    public boolean isEmpty() {
+        return length == 0;
+    }
+
+    public int[] getArray() {
+        return Arrays.copyOf(a, length);
+    }
+
+    public int size() {
+        return length;
+    }
+
+    /**
+     * Constructs an ascending iterator starting from a specified value (inclusive)
+     * 
+     * @param startFrom
+     * @return an iterator starting from the specified value
+     */
+    public PrimitiveIterator.OfInt getAscendingIterator(int startFrom) {
+        return new PrimitiveIterator.OfInt() {
+            int pos;
+            {
+                pos = search(startFrom);
+                if (pos < 0) {
+                    pos = -pos - 1;
+                }
+            }
+
+            @Override
+            public boolean hasNext() {
+                return pos < length;
+            }
+
+            @Override
+            public int nextInt() {
+                return a[pos++];
+
+            }
+        };
+    }
+
+    /**
+     * Constructs an descending iterator starting from a specified value (exclusive)
+     * 
+     * @param startFrom
+     * @return an descending iterator starting from the specified value
+     */
+    public PrimitiveIterator.OfInt getDescendingIterator(int startFrom) {
+        return new PrimitiveIterator.OfInt() {
+            int pos;
+            {
+                pos = search(startFrom);
+                if (pos < 0) {
+                    pos = -pos - 1;
+                }
+                pos--;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return pos >= 0;
+            }
+
+            @Override
+            public int nextInt() {
+                return a[pos--];
+
+            }
+        };
+    }
+
+    public void forEach(IntConsumer action) {
+        for (int i = 0; i < length; i++) {
+            action.accept(a[i]);
+        }
+    }
+
+    /**
+     * Performs a binary search and returns true if this array contains the value.
+     * 
+     * @param x
+     *            - value to check
+     * @return true of the array contains the specified value
+     * 
+     */
+    public boolean contains(int x) {
+        return Arrays.binarySearch(a, 0, length, x) >= 0;
+    }
+
+    public static SortedIntArray decodeFromVarIntArray(byte[] buf) {
+        if (buf.length == 0) {
+            return new SortedIntArray(0);
+        }
+        SortedIntArray sia = new SortedIntArray();
+
+        VarIntUtil.ArrayDecoder ad = VarIntUtil.newArrayDecoder(buf);
+        int s = 0;
+        while (ad.hasNext()) {
+            s += ad.next();
+            sia.insert(s);
+        }
+        return sia;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null) {
+            return false;
+        }
+
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        SortedIntArray other = (SortedIntArray) obj;
+        if (length != other.length) {
+            return false;
+        }
+
+        for (int i = 0; i < length; i++) {
+            if (a[i] != other.a[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Change the elements of the array by adding x to each element
+     */
+    public void addToAll(int x) {
+        for (int i = 0; i < length; i++) {
+            a[i] += x;
+        }
+    }
+
+    /**
+     * Add x to the elements of the array whose value is greater than v
+     */
+    public void addIfGreaterThan(int v, int x) {
+        for (int i = length - 1; i >= 0; i--) {
+            if (a[i] > v) {
+                a[i] += x;
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Add x to the elements of the array whose value is greater or equal than v
+     */
+    public void addIfGreaterOrEqualThan(int v, int x) {
+        for (int i = length - 1; i >= 0; i--) {
+            if (a[i] >= v) {
+                a[i] += x;
+            } else {
+                break;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (length == 0) {
+            return "[]";
+        }
+
+        StringBuilder b = new StringBuilder();
+        int n = length - 1;
+
+        b.append('[');
+        for (int i = 0;; i++) {
+            b.append(a[i]);
+            if (i == n) {
+                return b.append(']').toString();
+            }
+            b.append(", ");
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int h = hash;
+        if (h == 0 && length > 0) {
+            h = 1;
+
+            for (int i = 0; i < length; i++) {
+                h = 31 * h + a[i];
+            }
+            hash = h;
+        }
+        return h;
+    }
+
+}
+```
+
+### `StringConverter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/StringConverter.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.protobuf.Yamcs.AggregateValue;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.protobuf.Yamcs.Value;
+
+public class StringConverter {
+
+    private static final BigInteger B64 = BigInteger.ZERO.setBit(64);
+
+    public static String toString(Value rv) {
+        switch (rv.getType()) {
+        case BINARY:
+            return byteBufferToHexString(rv.getBinaryValue().asReadOnlyByteBuffer());
+        case DOUBLE:
+            return Double.toString(rv.getDoubleValue());
+        case FLOAT:
+            return Float.toString(rv.getFloatValue());
+        case SINT32:
+            return Integer.toString(rv.getSint32Value());
+        case UINT32:
+            return Long.toString(rv.getUint32Value() & 0xFFFFFFFFL);
+        case SINT64:
+            return Long.toString(rv.getSint64Value());
+        case UINT64:
+            if (rv.getUint64Value() >= 0) {
+                return Long.toString(rv.getUint64Value());
+            } else {
+                return BigInteger.valueOf(rv.getUint64Value()).add(B64).toString();
+            }
+        case STRING:
+            return rv.getStringValue();
+        case BOOLEAN:
+            return Boolean.toString(rv.getBooleanValue());
+        case TIMESTAMP:
+            return TimeEncoding.toOrdinalDateTime(rv.getTimestampValue());
+        case ENUMERATED:
+            return rv.getStringValue();
+        case ARRAY:
+            return "[" + rv.getArrayValueList().stream()
+                    .map(value -> toString(value))
+                    .collect(Collectors.joining(", ")) + "]";
+        case AGGREGATE:
+            AggregateValue agg = rv.getAggregateValue();
+            return "{" + IntStream.range(0, agg.getNameCount())
+                    .mapToObj(i -> agg.getName(i) + ": " + toString(agg.getValue(i)))
+                    .collect(Collectors.joining(", ")) + "}";
+        default:
+            throw new IllegalStateException("unknown type " + rv.getType());
+        }
+    }
+
+    public static String arrayToHexString(byte[] b, int offset, int length) {
+        return arrayToHexString(b, offset, length, false);
+    }
+
+    public static String arrayToHexString(byte[] b, int offset, int length, boolean beautify) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = offset; i < offset + length; i++) {
+            if (beautify && (i - offset) % 32 == 0) {
+                sb.append(String.format("\n0x%04X: ", (i - offset)));
+            }
+            sb.append(String.format("%02X", b[i] & 0xFF));
+            /*String s = Integer.toString(b[i] & 0xFF, 16);
+            if (s.length() == 1) {
+                s = "0" + s;
+            }
+            sb.append(s.toUpperCase());*/
+            if (beautify && (i - offset) % 2 == 1) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String arrayToHexString(byte[] b) {
+        if (b == null) {
+            return "null";
+        }
+        return arrayToHexString(b, 0, b.length);
+    }
+
+    public static String arrayToHexString(byte[] b, boolean beautify) {
+        return arrayToHexString(b, 0, b.length, beautify);
+    }
+
+    public static String byteBufferToHexString(ByteBuffer bb) {
+        bb.mark();
+        StringBuilder sb = new StringBuilder();
+        int offset = 0;
+        while (bb.hasRemaining()) {
+            if (offset % 33 == 0) {
+                sb.append("\n");
+            }
+            String s = Integer.toString(bb.get() & 0xFF, 16);
+            offset++;
+            if (s.length() == 1) {
+                sb.append("0");
+            }
+            sb.append(s.toUpperCase());
+        }
+        bb.reset();
+        return sb.toString();
+    }
+
+    /**
+     * Convert a hex string into a byte array. If the string has an odd number of hex digits, it is padded with 0 at the
+     * <b>beginning</b>.
+     * 
+     * @param s
+     *            - string to be converted
+     * @return binary array representation of the hex string
+     */
+    public static byte[] hexStringToArray(String s) {
+        if ((s.length() & 1) == 1) {
+            s = "0" + s;
+        }
+        ;
+        byte[] b = new byte[s.length() >> 1];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = (byte) (Integer.parseInt(s.substring(2 * i, 2 * i + 2), 16) & 0xFF);
+        }
+        return b;
+    }
+
+    /**
+     * Convert a NamedObjectId to a pretty string for use in log messages etc. This gives a better formatting than the
+     * default protobuf-generated toString.
+     */
+    public static String idToString(NamedObjectId id) {
+        if (id == null) {
+            return "null";
+        }
+        if (id.hasNamespace()) {
+            return "'" + id.getName() + "' (namespace: '" + id.getNamespace() + "')";
+        } else {
+            return "'" + id.getName() + "' (no namespace)";
+        }
+    }
+
+    /**
+     * Convert a list of NamedObjectId to a pretty string for use in log messages etc. This gives a better formatting
+     * than the default protobuf-generated toString.
+     */
+    public static String idListToString(List<NamedObjectId> idList) {
+        if (idList == null) {
+            return "null";
+        }
+        StringBuilder buf = new StringBuilder("[");
+        boolean first = true;
+        for (NamedObjectId id : idList) {
+            if (first) {
+                first = false;
+            } else {
+                buf.append(", ");
+            }
+            buf.append(idToString(id));
+        }
+        return buf.append("]").toString();
+    }
+
+    public static String toString(CommandId cmdId) {
+        return cmdId.getOrigin() + ":" + cmdId.getSequenceNumber();
+    }
+}
+```
+
+### `TaiUtcConverter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TaiUtcConverter.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.time.Instant;
+
+import com.google.protobuf.Timestamp;
+
+/**
+ * Utility class to convert between TAI and UTC. It reads the UTC-TAI.history (available at
+ * http://hpiers.obspm.fr/eoppc/bul/bulc/UTC-TAI.history)
+ * <p>
+ * It only supports added leap seconds not removed ones (negative leap seconds have never happened and probably never
+ * will).
+ * <p>
+ * It only works correctly with the times after 1972 when the difference between TAI and UTC is an integer number of
+ * seconds.
+ * <p>
+ * Most of the code is copied or inspired from the TAI C library http://cr.yp.to/libtai.html
+ *
+ *
+ */
+public class TaiUtcConverter {
+
+    static String UTC_TAI_HISTORY_FN = "UTC-TAI.history";
+
+    static final int[] times365 = new int[] { 0, 365, 730, 1095 };
+    static final int[] times36524 = new int[] { 0, 36524, 73048, 109572 };
+    static final int[] montab = { 0, 31, 61, 92, 122, 153, 184, 214, 245, 275, 306, 337 };
+    /* month length after february is (306 * m + 5) / 10 */
+
+    static final int[] PREVIOUS_MONTH_END_DAY = { 0, 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+    static final int[] PREVIOUS_MONTH_END_DAY_LS = { 0, 0, 31, 60, 91, 121, 152, 182, 213, 244, 274, 305, 335 };
+
+    static final long OE9 = 1_000_000_000;
+    static final long OE6 = 1_000_000;
+
+    // Timestamp for "0001-01-01T00:00:00Z"
+    static final long PROTOBUF_SECONDS_MIN = -62135596800L;
+
+    // Timestamp for "9999-12-31T23:59:59Z"
+    static final long PROTOBUF_SECONDS_MAX = 253402300799L;
+
+    long[] timesecs; // TAI time in seconds when leap seconds are added
+    int diffTaiUtc; // the difference between the TAI and UTC at the last interval
+
+    // Unprocessed input parsed from UTC-TAI.history file.
+    List<ValidityLine> lines = new ArrayList<>();
+
+    public TaiUtcConverter() throws IOException, ParseException {
+        this(TaiUtcConverter.class.getResourceAsStream("/" + UTC_TAI_HISTORY_FN));
+    }
+
+    public TaiUtcConverter(InputStream utcTaiHistory) throws IOException, ParseException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(utcTaiHistory));
+        String line = null;
+        // 1974 Jan. 1 - 1975 Jan. 1 13s
+        String dp = "\\s?(\\d+)?\\s+(\\w{3})\\.?\\s+(\\d+)";
+
+        Pattern p = Pattern.compile(dp + "\\s*\\.?\\-\\s*(" + dp + ")?\\s*(\\d+)s\\s*");
+
+        ArrayList<Long> tmp1 = new ArrayList<>();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy MMM dd", Locale.ENGLISH);
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+        diffTaiUtc = -1;
+        int lineNum = 0;
+        String prevYear = null;
+        while ((line = reader.readLine()) != null) {
+            lineNum++;
+            Matcher m = p.matcher(line);
+            if (m.matches()) {
+
+                String year = m.group(1);
+                if (year == null) {
+                    year = prevYear;
+                }
+                Date d = sdf.parse(year + " " + m.group(2) + " " + m.group(3));
+
+                int ls = Integer.valueOf(m.group(8));
+                if (diffTaiUtc == -1) {
+                    // In 1972 there were 10 leap seconds added at once,
+                    // we distribute them over them over the previous 10 days
+                    // UTC before 1972 is not defined with leap seconds so it's all approximative
+                    for (int i = 1; i < ls; i++) {
+                        tmp1.add(d.getTime() - 86400_000 * (ls - i));
+                    }
+                } else if (ls != diffTaiUtc + 1) {
+                    throw new RuntimeException("Error reading line " + lineNum
+                            + " of UTC-TAI.history: only positive leap seconds are supported");
+                }
+
+                tmp1.add(d.getTime());
+
+                diffTaiUtc = ls;
+                prevYear = year;
+                lines.add(new ValidityLine(d.getTime(), ls));
+            }
+        }
+        timesecs = new long[tmp1.size()];
+        for (int i = 0; i < timesecs.length; i++) {
+            timesecs[i] = tmp1.get(i) / 1000 + diffTaiUtc - timesecs.length + i;
+        }
+    }
+
+    // converts Modified Julian Day to calendar day
+    private void caldateFromMjd(DateTimeComponents cd, long day) {
+        int year;
+        int month;
+        int yday;
+
+        year = (int) (day / 146097);
+        day %= 146097L;
+        day += 678881L;
+        while (day >= 146097L) {
+            day -= 146097L;
+            ++year;
+        }
+
+        /* year * 146097 + day - 678881 is MJD; 0 <= day < 146097 */
+        /* 2000-03-01, MJD 51604, is year 5, day 0 */
+
+        year *= 4;
+        if (day == 146096L) {
+            year += 3;
+            day = 36524;
+        } else {
+            year += day / 36524L;
+            day %= 36524L;
+        }
+        year *= 25;
+        year += day / 1461;
+        day %= 1461;
+        year *= 4;
+
+        yday = (day < 306) ? 1 : 0;
+        if (day == 1460) {
+            year += 3;
+            day = 365;
+        } else {
+            year += day / 365;
+            day %= 365;
+        }
+        yday += day;
+
+        day *= 10;
+        month = (int) ((day + 5) / 306);
+        day = (day + 5) % 306;
+        day /= 10;
+        if (month >= 10) {
+            yday -= 306;
+            ++year;
+            month -= 10;
+        } else {
+            yday += 59;
+            month += 2;
+        }
+
+        cd.year = year;
+        cd.month = month + 1;
+        cd.day = (int) (day + 1);
+
+        cd.doy = yday + 1;
+    }
+
+    // converts calendar date to Modified Julian Day
+    // doy is ignored
+    private long caldateToMjd(DateTimeComponents dtc) {
+        int y;
+        int m;
+        long d;
+
+        d = dtc.day - 678882;
+        m = dtc.month - 1;
+        y = dtc.year;
+
+        d += 146097L * (y / 400);
+        y %= 400;
+
+        if (m >= 2) {
+            m -= 2;
+        } else {
+            m += 10;
+            --y;
+        }
+
+        y += (m / 12);
+        m %= 12;
+        if (m < 0) {
+            m += 12;
+            --y;
+        }
+
+        d += montab[m];
+
+        d += 146097L * (y / 400);
+        y %= 400;
+        if (y < 0) {
+            y += 400;
+            d -= 146097L;
+        }
+
+        d += times365[y & 3];
+        y >>= 2;
+
+        d += 1461L * (y % 25);
+        y /= 25;
+
+        d += times36524[y & 3];
+
+        return d;
+    }
+
+    Timestamp instantToProtobuf(long t) {
+        return instantToProtobuf(Instant.get(t));
+    }
+
+    /**
+     * Converts instant to protobuf timestamp by smearing 24 hours around leap seconds.
+     * 
+     * This class limits the range of the passed timestamp to the max valid ranges of the protobuf timestamps:
+     * 0001-01-01T00:00:00Z - 9999-12-31T23:59:59Z
+     * <p>
+     * A value larger that the max value is changed to the max value and a value smaller than that the minimum is set to
+     * the minimum.
+     * 
+     * @param t
+     * @return
+     */
+    Timestamp instantToProtobuf(Instant instant) {
+        Timestamp.Builder timestamp = Timestamp.newBuilder();
+        long millis = instant.getMillis();
+        int picos = instant.getPicos();
+
+        long u = millis / 1000;
+        int ls = diffTaiUtc;
+        int nanosec = (int) (1_000_000 * (millis - 1000 * u) + picos / 1000);
+
+        int i;
+        for (i = timesecs.length - 1; i >= 0; i--) {
+            if (u >= timesecs[i]) {
+                break;
+            }
+            ls--;
+        }
+        if ((i >= 0) && (u - timesecs[i] < 43200)) {
+            ls--;
+            long d = 43200 + u - timesecs[i]; // number of seconds since the smearing starts
+            nanosec -= (d * OE9 + nanosec) / 86401;
+        } else if ((i + 1 < timesecs.length) && (timesecs[i + 1] - u < 43200)) {
+            long d = 43200 + u - timesecs[i + 1]; // number of seconds since the smearing starts
+            nanosec -= (d * OE9 + nanosec) / 86401;
+        }
+        if (nanosec < 0) {
+            nanosec += OE9;
+            ls++;
+        }
+        long sec = u - ls;
+        if (sec > PROTOBUF_SECONDS_MAX) {
+            sec = PROTOBUF_SECONDS_MAX;
+        } else if (sec < PROTOBUF_SECONDS_MIN) {
+            sec = PROTOBUF_SECONDS_MIN;
+        }
+        timestamp.setSeconds(sec);
+        timestamp.setNanos(nanosec);
+
+        return timestamp.build();
+    }
+
+    long protobufToInstant(Timestamp ts) {
+        return protobufToHresInstant(ts).getMillis();
+    }
+
+    Instant protobufToHresInstant(Timestamp ts) {
+        int nanosec = ts.getNanos();
+        long u = ts.getSeconds() + diffTaiUtc;
+        int i;
+        for (i = timesecs.length - 1; i >= 0; i--) {
+            if (u > timesecs[i]) {
+                break;
+            }
+            u--;
+        }
+        if ((i >= 0) && (u - timesecs[i] <= 43200)) {
+            u--;
+            long d = 43200 + u - timesecs[i];
+            nanosec += (d * OE9 + nanosec) / 86400;
+        } else if ((i + 1 < timesecs.length) && (timesecs[i + 1] - u <= 43200)) {
+            long d = 43200 + u - timesecs[i + 1];
+            nanosec += (d * OE9 + nanosec) / 86400;
+        }
+
+        return Instant.get(u * 1000, nanosec * 1000l);
+    }
+
+    DateTimeComponents instantToUtc(long t) {
+        DateTimeComponents dtc = new DateTimeComponents();
+        long u;
+        int leap;
+        long s;
+
+        u = t / 1000;
+        int millisec = (int) (t % 1000);
+
+        if (millisec < 0) {
+            millisec += 1000;
+            u -= 1;
+        }
+
+        dtc.millisec = millisec;
+
+        // leap = leapsecs_sub(&t2);
+        leap = 0;
+        int ls = diffTaiUtc;
+
+        for (int i = timesecs.length - 1; i >= 0; i--) {
+            if (u > timesecs[i]) {
+                break;
+            }
+            if (u == timesecs[i]) {
+                leap = 1;
+                break;
+            }
+            ls--;
+        }
+        u -= ls;
+
+        s = u % 86400L;
+
+        if (s < 0) {
+            s += 86400L;
+            u -= 86400L;
+        }
+        dtc.second = (int) ((s % 60) + leap);
+
+        s /= 60;
+        dtc.minute = (int) (s % 60);
+        s /= 60;
+        dtc.hour = (int) s;
+
+        u /= 86400L;
+        long mjd = 40587 + u;
+
+        caldateFromMjd(dtc, mjd);
+
+        return dtc;
+    }
+
+    /**
+     * transforms Instant to Unix time expressed in milliseconds since 1970
+     * 
+     * @param t
+     * @return
+     */
+    long instantToUnix(long t) {
+        long u = t / 1000;
+        int ls = diffTaiUtc;
+        for (int i = timesecs.length - 1; i >= 0; i--) {
+            if (u >= timesecs[i]) {
+                break;
+            }
+            ls--;
+        }
+        return t - ls * 1000;
+    }
+
+    /**
+     * Converts UTC to instant. WARNING: DOY is ignored.
+     * 
+     * @param dtc
+     * @return
+     */
+    long utcToInstant(DateTimeComponents dtc) {
+        long day = caldateToMjd(dtc);
+
+        long s = (long) (dtc.hour * 60 + dtc.minute);
+        s = s * 60 + dtc.second + (day - 40587) * 86400L;
+
+        int ls = diffTaiUtc;
+        for (int i = timesecs.length - 1; i >= 0; i--) {
+            long u = timesecs[i] - ls + 1;
+            if (s > u) {
+                break;
+            }
+            if ((s < u) || (dtc.second == 60)) {
+                ls--;
+            }
+        }
+        s += ls;
+
+        return dtc.millisec + 1000 * s;
+    }
+
+    /**
+     * transforms UNIX time expressed in milliseconds since 1970 to instant
+     * 
+     * @param t
+     * @return
+     */
+    long unixToInstant(long t) {
+        long u = t / 1000;
+        int ls = diffTaiUtc;
+        for (int i = timesecs.length - 1; i >= 0; i--) {
+            if (u >= timesecs[i] - ls + 1) {
+                break;
+            }
+            ls--;
+        }
+        return t + ls * 1000;
+    }
+
+    public static boolean isLeap(final int year) {
+        return ((year % 4) == 0) && (((year % 400) == 0) || ((year % 100) != 0));
+    }
+
+    public static class DateTimeComponents {
+        int year;
+        int month; // month starting with 1
+        int day;
+        int hour;
+        int minute;
+        int second;
+        int millisec;
+        int doy;
+
+        /**
+         * Constructs a new DateTimeComponents
+         * 
+         * @param year
+         * @param month
+         * @param day
+         * @param hour
+         * @param minute
+         * @param second
+         * @param millisec
+         */
+        public DateTimeComponents(int year, int month, int day, int hour,
+                int minute, int second, int millisec) {
+            this.year = year;
+            this.month = month;
+            this.day = day;
+            this.hour = hour;
+            this.minute = minute;
+            this.second = second;
+            this.millisec = millisec;
+        }
+
+        private DateTimeComponents() {
+        }
+
+        public DateTimeComponents(int year, int doy, int hour, int minute,
+                int second, int millisec) {
+            this.year = year;
+            this.doy = doy;
+            this.hour = hour;
+            this.minute = minute;
+            this.second = second;
+            this.millisec = millisec;
+
+            if (isLeap(year)) {
+                this.month = (doy < 32) ? 1 : (10 * doy + 313) / 306;
+                this.day = doy - PREVIOUS_MONTH_END_DAY_LS[this.month];
+            } else {
+                this.month = (doy < 32) ? 1 : (10 * doy + 323) / 306;
+                this.day = doy - PREVIOUS_MONTH_END_DAY[this.month];
+            }
+
+        }
+
+        public int getYear() {
+            return year;
+        }
+
+        public int getDoy() {
+            return doy;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public int getDay() {
+            return day;
+        }
+
+        public int getHour() {
+            return hour;
+        }
+
+        public int getMinute() {
+            return minute;
+        }
+
+        public int getSecond() {
+            return second;
+        }
+
+        public int getMillisec() {
+            return millisec;
+        }
+
+        @Override
+        public String toString() {
+            return "DateTimeComponents [year=" + year + ", month=" + month
+                    + ", day=" + day + ", hour=" + hour + ", minute=" + minute
+                    + ", second=" + second + ", millisec=" + millisec
+                    + ", doy=" + doy + "]";
+        }
+
+        public String toIso8860String() {
+            return String.format("%04d-%02d-%02dT%02d:%02d:%02d.%03d", year, month, day, hour, minute, second,
+                    millisec);
+        }
+    }
+
+    public static final class ValidityLine {
+        public final long unixMillis;
+        public final int seconds; // TAI - UTC seconds
+
+        private ValidityLine(long unixMillis, int seconds) {
+            this.unixMillis = unixMillis;
+            this.seconds = seconds;
+        }
+    }
+}
+```
+
+### `TimeEncoding.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimeEncoding.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.yamcs.time.Instant;
+import org.yamcs.utils.TaiUtcConverter.ValidityLine;
+
+import com.google.protobuf.Timestamp;
+
+/**
+ *
+ * This class provides times in terms of milliseconds since 1970TAI
+ * 
+ */
+public class TimeEncoding {
+    public static final long INVALID_INSTANT = Long.MIN_VALUE;
+
+    public static final long MAX_INSTANT = Long.MAX_VALUE - 1;
+    public static final long MIN_INSTANT = Long.MIN_VALUE + 1;
+
+    // these two are used for open intervals
+    public static final long NEGATIVE_INFINITY = MIN_INSTANT - 1;
+    public static final long POSITIVE_INFINITY = MAX_INSTANT + 1;
+
+    static final long GPS_EPOCH_YAMCS_EPOCH_DELTA = 315964819000L;
+    static final long TAI_EPOCH_YAMCS_EPOCH_DELTA = -378691200000L;
+    static final long J2000_EPOCH_YAMCS_EPOCH_DELTA = 946727967816L;
+
+    static final long GPS_TAI_DELTA = 19000;
+
+    static TaiUtcConverter taiUtcConverter;
+    static Pattern iso8601Pattern = Pattern
+            .compile("(\\d+)\\-(\\d{2})\\-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3})\\d{0,9})?Z?");
+    static Pattern doyPattern = Pattern.compile("(\\d+)\\/(\\d+)T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3})\\d{0,9})?Z?");
+
+    static Pattern iso8601PatternHres = Pattern
+            .compile("(\\d+)\\-(\\d{2})\\-(\\d{2})T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3})(\\d{0,9}))?Z?");
+    static Pattern doyPatternHres = Pattern
+            .compile("(\\d+)\\/(\\d+)T(\\d{2}):(\\d{2}):(\\d{2})(\\.(\\d{3})(\\d{0,9}))?Z?");
+
+    public static void setUp() {
+        try {
+            taiUtcConverter = new TaiUtcConverter();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void setUp(InputStream in) {
+        try {
+            taiUtcConverter = new TaiUtcConverter(in);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Returns the current operating system time but converted to Yamcs instant.
+     * 
+     * @return
+     */
+    public static long getWallclockTime() {
+        return taiUtcConverter.unixToInstant(System.currentTimeMillis());
+    }
+
+    /**
+     * Sane as {@link #getWallclockTime()} but returns a high resolution instant.
+     * <p>
+     * Currently java does not make it easy to get a high resolution time so the returned object has always the
+     * picosecond field set to 0.
+     * 
+     * @return
+     */
+    public static Instant getWallclockHresTime() {
+        long millis = taiUtcConverter.unixToInstant(System.currentTimeMillis());
+        return Instant.get(millis);
+    }
+
+    private static void formatOn2Digits(int x, StringBuilder sb) {
+        if (x < 10) {
+            sb.append("0").append(x);
+        } else {
+            sb.append(x);
+        }
+    }
+
+    private static void formatOn3Digits(int x, StringBuilder sb) {
+        if (x < 10) {
+            sb.append("00").append(x);
+        } else if (x < 100) {
+            sb.append("0").append(x);
+        } else {
+            sb.append(x);
+        }
+    }
+
+    private static void formatOn4Digits(int x, StringBuilder sb) {
+        if (x < 10) {
+            sb.append("000").append(x);
+        } else if (x < 100) {
+            sb.append("00").append(x);
+        } else if (x < 1000) {
+            sb.append("0").append(x);
+        } else {
+            sb.append(x);
+        }
+    }
+
+    /**
+     * Returns the instant formatted as UTC yyyy-MM-DDTHH:mm:ss.SSSZ
+     * <p>
+     * If the value is smalle than {@link #MIN_INSTANT} it returns -inf
+     *
+     * If the value is larger than {@link #MAX_INSTANT} it returns +inf
+     * 
+     * @param instant
+     * @return
+     */
+    public static String toString(long instant) {
+        if (instant < MIN_INSTANT) {
+            return "-inf";
+        }
+        if (instant > MAX_INSTANT) {
+            return "+inf";
+        }
+
+        TaiUtcConverter.DateTimeComponents dtc = taiUtcConverter.instantToUtc(instant);
+        StringBuilder sb = new StringBuilder();
+        formatOn4Digits(dtc.year, sb);
+        sb.append("-");
+        formatOn2Digits(dtc.month, sb);
+        sb.append("-");
+        formatOn2Digits(dtc.day, sb);
+        sb.append("T");
+        formatOn2Digits(dtc.hour, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.minute, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.second, sb);
+        sb.append(".");
+        formatOn3Digits(dtc.millisec, sb);
+        return sb.append("Z").toString();
+    }
+
+    /**
+     * Returns the instant formatted as UTC yyyy-DDDTHH:mm:ss.SSS
+     * 
+     * @param instant
+     * @return
+     */
+    public static String toOrdinalDateTime(long instant) {
+        TaiUtcConverter.DateTimeComponents dtc = taiUtcConverter.instantToUtc(instant);
+        StringBuilder sb = new StringBuilder();
+        formatOn4Digits(dtc.year, sb);
+        sb.append("-");
+        formatOn3Digits(dtc.doy, sb);
+        sb.append("T");
+        formatOn2Digits(dtc.hour, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.minute, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.second, sb);
+        sb.append(".");
+        formatOn3Digits(dtc.millisec, sb);
+        return sb.toString();
+    }
+
+    /**
+     * Returns the instant in UTC time scale formatted as YYYY-DDDTHHhMMmSSsSSS so that is leads to an MS Windows
+     * compatible filename
+     * 
+     * @param instant
+     * @return
+     */
+    public static String toWinCompatibleDateTime(long instant) {
+        TaiUtcConverter.DateTimeComponents dtc = taiUtcConverter.instantToUtc(instant);
+        StringBuilder sb = new StringBuilder();
+        formatOn4Digits(dtc.year, sb);
+        sb.append("-");
+        formatOn3Digits(dtc.doy, sb);
+        sb.append("T");
+        formatOn2Digits(dtc.hour, sb);
+        sb.append("h");
+        formatOn2Digits(dtc.minute, sb);
+        sb.append("m");
+        formatOn2Digits(dtc.second, sb);
+        sb.append("s");
+        formatOn3Digits(dtc.millisec, sb);
+        return sb.toString();
+    }
+
+    public static String toCombinedFormat(long instant) {
+        TaiUtcConverter.DateTimeComponents dtc = taiUtcConverter.instantToUtc(instant);
+        StringBuilder sb = new StringBuilder();
+        formatOn4Digits(dtc.year, sb);
+        sb.append("-");
+        formatOn2Digits(dtc.month, sb);
+        sb.append("-");
+        formatOn2Digits(dtc.day, sb);
+        sb.append("/");
+        formatOn3Digits(dtc.doy, sb);
+        sb.append("T");
+        formatOn2Digits(dtc.hour, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.minute, sb);
+        sb.append(":");
+        formatOn2Digits(dtc.second, sb);
+        sb.append(".");
+        formatOn3Digits(dtc.millisec, sb);
+        return sb.toString();
+    }
+
+    /**
+     * we assume coarseTime to be always positive (corresponding to uint32_t in C)
+     * 
+     * @param coarseTime
+     *            number of seconds from GPS epoch
+     * @param fineTime
+     *            number of 1/256 seconds
+     * @return
+     */
+    public static long fromGpsCcsdsTime(int coarseTime, byte fineTime) {
+        long c = ((long) coarseTime) & 0xFFFFFFFFL;
+        return GPS_EPOCH_YAMCS_EPOCH_DELTA + c * 1000 + 1000 * (0xFF & fineTime) / 256;
+    }
+
+    /**
+     * Conversion from instant to GPS time.
+     * 
+     * @param instant
+     *            yamcs time
+     * @return GPS time
+     */
+    public static GpsCcsdsTime toGpsTime(final long instant) {
+        long shiftedMillis = instant - GPS_EPOCH_YAMCS_EPOCH_DELTA;
+        int coarseTime = (int) (shiftedMillis / 1000);
+        byte fineTime = (byte) (((shiftedMillis % 1000) * 256 / 1000));
+        return new GpsCcsdsTime(coarseTime, fineTime);
+    }
+
+    /**
+     * Conversion from current instant to GPS time. Current time is the *nix time this function is called.
+     * 
+     * @return GPS time
+     */
+    public static GpsCcsdsTime getCurrentGpsTime() {
+        return toGpsTime(TimeEncoding.getWallclockTime());
+    }
+
+    /**
+     * Conversion from instant to GPS time (milliseconds since the GPS epoch).
+     * 
+     * @param instant
+     *            TimeEncoding instant
+     *
+     * @return GPS time
+     */
+    public static long toGpsTimeMillisec(final long instant) {
+        return instant - GPS_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    public static long fromGpsYearSecMillis(int year, int secOfYear, int millis) {
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        cal.clear();
+        cal.set(Calendar.YEAR, year);
+        cal.add(Calendar.SECOND, secOfYear);
+        cal.add(Calendar.MILLISECOND, millis);
+
+        return GPS_TAI_DELTA + cal.getTimeInMillis();
+    }
+
+    public static TaiUtcConverter.DateTimeComponents toUtc(long instant) {
+        return taiUtcConverter.instantToUtc(instant);
+    }
+
+    public static long fromUtc(TaiUtcConverter.DateTimeComponents dtc) {
+        return taiUtcConverter.utcToInstant(dtc);
+    }
+
+    public static List<ValidityLine> getTaiUtcConversionTable() {
+        return taiUtcConverter.lines;
+    }
+
+    /**
+     * parses an ISO 8601 UTC date into an instant
+     * 
+     * @param s
+     *            - string to be parsed
+     * @return - internal Yamcs timestamp
+     * @throws IllegalArgumentException
+     *             if the time cannot be parsed
+     */
+    public static long parse(String s) {
+        TaiUtcConverter.DateTimeComponents dtc;
+        Matcher m = iso8601Pattern.matcher(s);
+
+        if (m.matches()) {
+
+            int year = Integer.parseInt(m.group(1));
+            int month = Integer.parseInt(m.group(2));
+            int day = Integer.parseInt(m.group(3));
+            int hour = Integer.parseInt(m.group(4));
+            int minute = Integer.parseInt(m.group(5));
+            int second = Integer.parseInt(m.group(6));
+            int millisec = 0;
+            if (m.group(7) != null) {
+                millisec = Integer.parseInt(m.group(8));
+            }
+            dtc = new TaiUtcConverter.DateTimeComponents(year, month, day, hour, minute, second, millisec);
+        } else {
+            m = doyPattern.matcher(s);
+            if (m.matches()) {
+                int year = Integer.parseInt(m.group(1));
+                int doy = Integer.parseInt(m.group(2));
+                int hour = Integer.parseInt(m.group(3));
+                int minute = Integer.parseInt(m.group(4));
+                int second = Integer.parseInt(m.group(5));
+                int millisec = 0;
+                if (m.group(6) != null) {
+                    millisec = Integer.parseInt(m.group(7));
+                }
+
+                dtc = new TaiUtcConverter.DateTimeComponents(year, doy, hour, minute, second, millisec);
+
+            } else {
+                throw new IllegalArgumentException(
+                        "Cannot parse '" + s + "' with the pattern '" + iso8601Pattern + " or " + doyPattern);
+            }
+        }
+        return taiUtcConverter.utcToInstant(dtc);
+    }
+
+    public static Instant parseHres(String s) {
+
+        TaiUtcConverter.DateTimeComponents dtc;
+        Matcher m = iso8601PatternHres.matcher(s);
+        int picos = 0;
+
+        if (m.matches()) {
+
+            int year = Integer.parseInt(m.group(1));
+            int month = Integer.parseInt(m.group(2));
+            int day = Integer.parseInt(m.group(3));
+            int hour = Integer.parseInt(m.group(4));
+            int minute = Integer.parseInt(m.group(5));
+            int second = Integer.parseInt(m.group(6));
+            int millisec = 0;
+
+            if (m.group(7) != null) {
+                millisec = Integer.parseInt(m.group(8));
+                picos = getPicos(m.group(9));
+            }
+
+            dtc = new TaiUtcConverter.DateTimeComponents(year, month, day, hour, minute, second, millisec);
+        } else {
+            m = doyPatternHres.matcher(s);
+            if (m.matches()) {
+                int year = Integer.parseInt(m.group(1));
+                int doy = Integer.parseInt(m.group(2));
+                int hour = Integer.parseInt(m.group(3));
+                int minute = Integer.parseInt(m.group(4));
+                int second = Integer.parseInt(m.group(5));
+                int millisec = 0;
+                if (m.group(6) != null) {
+                    millisec = Integer.parseInt(m.group(7));
+                    picos = getPicos(m.group(9));
+                }
+
+                dtc = new TaiUtcConverter.DateTimeComponents(year, doy, hour, minute, second, millisec);
+
+            } else {
+                throw new IllegalArgumentException(
+                        "Cannot parse '" + s + "' with the pattern '" + iso8601Pattern + " or " + doyPattern);
+            }
+        }
+        long millis = taiUtcConverter.utcToInstant(dtc);
+        return Instant.get(millis, picos);
+    }
+
+    // get the number of picoseconds from a max to 9 digits number aligned at left
+    static private int getPicos(String ps) {
+        if (ps.length() == 0) {
+            return 0;
+        }
+        int r = Integer.parseInt(ps);
+
+        for (int i = ps.length(); i < 9; i++) {
+            r *= 10;
+        }
+        return r;
+    }
+
+    /**
+     * Transforms UNIX time (milliseconds since 1970, picos in millisecond) to high resolution instant
+     * 
+     * @param millis
+     *            milliseconds since 1970 (without leap seconds)
+     * @param picos
+     *            picoseconds in milliseconds - can be negative or larger than 10^9 (but has to fit into a 32 bit signed
+     *            integer).
+     * 
+     * @return
+     */
+    public static Instant fromUnixPicos(long millis, int picos) {
+        return Instant.get(taiUtcConverter.unixToInstant(millis), picos);
+    }
+
+    /**
+     * Transforms UNIX time (milliseconds since 1970) to instant
+     * 
+     * @param milliseconds
+     * @return
+     */
+    public static long fromUnixMillisec(long milliseconds) {
+        return taiUtcConverter.unixToInstant(milliseconds);
+    }
+
+    /**
+     * Transforms UNIX time expressed in seconds and microseconds since 1970 to instant WARNING: this conversion will
+     * lose precision (microsecond to millisecond)
+     *
+     * @param seconds
+     * @param microseconds
+     * @return
+     */
+    public static long fromUnixTime(long seconds, int microseconds) {
+        long millisec = seconds * 1000 + microseconds / 1000;
+        return taiUtcConverter.unixToInstant(millisec);
+    }
+
+    /**
+     * Transforms instant to UNIX time expressed in milliseconds since 1970
+     * 
+     * @param instant
+     * @return
+     */
+    public static long toUnixMillisec(long instant) {
+        return taiUtcConverter.instantToUnix(instant);
+    }
+
+    /**
+     * Transforms a {@link java.util.Calendar} from UNIX (millisec since 1970) to instant
+     */
+    public static long fromCalendar(Calendar cal) {
+        return fromUnixMillisec(cal.getTimeInMillis());
+    }
+
+    /**
+     * Transforms a {@link java.util.Date} from UNIX (millisec since 1970) to instant
+     */
+    public static long fromDate(Date date) {
+        return fromUnixMillisec(date.getTime());
+    }
+
+    /**
+     * Transforms a {@link java.time.Instant} from UNIX (millisec since 1970) to instant
+     */
+    public static long fromJavaInstant(java.time.Instant instant) {
+        return fromUnixMillisec(instant.toEpochMilli());
+    }
+
+    /**
+     * Transforms instant into a {@link java.util.Calendar} containing milliseconds since 1970
+     * 
+     * @param instant
+     *            Yamcs instant
+     */
+    public static Calendar toCalendar(long instant) {
+        if (instant == TimeEncoding.INVALID_INSTANT) {
+            return null;
+        }
+        long t = taiUtcConverter.instantToUnix(instant);
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(t);
+        return cal;
+    }
+
+    /**
+     * Transforms instant into a {@link java.time.Instant} containing milliseconds since 1970
+     * 
+     * @param instant
+     *            Yamcs instant
+     */
+    public static java.time.Instant toJavaInstant(long instant) {
+        if (instant == TimeEncoding.INVALID_INSTANT) {
+            return null;
+        }
+        long t = taiUtcConverter.instantToUnix(instant);
+        return java.time.Instant.ofEpochMilli(t);
+    }
+
+    /**
+     * JavaGps is number of milliseconds since 1970 that assumes no leap seconds from 1970 to GPS Epoch, and then
+     * continues with the leap seconds.
+     * 
+     * @param instant
+     * @return
+     */
+    public static long getJavaGpsFromInstant(long instant) {
+        return instant - 19000;
+    }
+
+    public static long getInstantfromJavaGps(long javagps) {
+        return javagps + 19000;
+    }
+
+    /**
+     *
+     * @param gpstime
+     *            number of millisec from GPS epoch
+     * @return
+     */
+    public static long fromGpsMillisec(long gpstime) {
+        return gpstime + GPS_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    public static long fromTaiMillisec(long taitime) {
+        return taitime + TAI_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    public static long toTaiMillisec(long instant) {
+        return instant - TAI_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    public static long fromJ2000Millisec(long j2000time) {
+        return j2000time + J2000_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    public static long toJ2000Millisec(long instant) {
+        return instant - J2000_EPOCH_YAMCS_EPOCH_DELTA;
+    }
+
+    /**
+     * Transforms protobuf Timestamp to instant. The conversion will do the "unsmearing" around the leap seconds and
+     * will also lose precision (nanoseconds to milliseconds).
+     *
+     * @see <a href="https://developers.google.com/time/smear">https://developers.google.com/time/smear</a>
+     * 
+     * @param ts
+     *            - the timestamp to be converted
+     * @return
+     */
+    public static long fromProtobufTimestamp(Timestamp ts) {
+        return taiUtcConverter.protobufToInstant(ts);
+    }
+
+    /**
+     * Transforms protobuf Timestamp to high resolution instant. The conversion will do the "unsmearing" around the leap
+     * seconds.
+     *
+     * @see <a href="https://developers.google.com/time/smear">https://developers.google.com/time/smear</a>
+     *
+     * @param ts
+     *            - the timestamp to be converted
+     * @return
+     */
+    public static Instant fromProtobufHresTimestamp(Timestamp ts) {
+        return taiUtcConverter.protobufToHresInstant(ts);
+    }
+
+    /**
+     * Transforms the instant to protobuf timestamp performing the smearing around the leap seconds.
+     * 
+     * @see <a href="https://developers.google.com/time/smear">https://developers.google.com/time/smear</a>
+     *
+     * @param instant
+     *            - the instant to be converted
+     * @return
+     */
+    public static Timestamp toProtobufTimestamp(long instant) {
+        return taiUtcConverter.instantToProtobuf(Instant.get(instant));
+    }
+
+    /**
+     * Transforms the instant to protobuf timestamp performing the smearing around the leap seconds.
+     *
+     * @see <a href="https://developers.google.com/time/smear">https://developers.google.com/time/smear</a>
+     *
+     * @param instant
+     *            - the instant to be converted
+     * @return
+     */
+    public static Timestamp toProtobufTimestamp(Instant instant) {
+        return taiUtcConverter.instantToProtobuf(instant);
+    }
+
+    /**
+     * returns true if the {@link #setUp()} method has been called to load the leap second table.
+     * <p>
+     * If this method returns false, any call to the UTC conversion functions will throw a NullPointerException
+     */
+    public static boolean isSetUp() {
+        return taiUtcConverter != null;
+    }
+}
+```
+
+### `TimeInterval.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimeInterval.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+/**
+ * Time interval where both ends can be open.
+ */
+public class TimeInterval {
+    private long start;
+    private long end;
+    private boolean hasStart = false;
+    private boolean hasEnd = false;
+
+    public TimeInterval(long start, long end) {
+        // do not change these (they set both the start/end and hasStart/hasEnd)
+        setStart(start);
+        setEnd(end);
+    }
+
+    /**
+     * Creates a TimeInterval with no start and no end
+     */
+    public TimeInterval() {
+    }
+
+    public TimeInterval(TimeInterval other) {
+        this.start = other.start;
+        this.end = other.end;
+        this.hasStart = other.hasStart;
+        this.hasEnd = other.hasEnd;
+    }
+
+    /**
+     * creates a TimeInterval with no start but with an end
+     */
+    public static TimeInterval openStart(long end) {
+        TimeInterval ti = new TimeInterval();
+        ti.setEnd(end);
+        return ti;
+    }
+
+    public static TimeInterval openEnd(long start) {
+        TimeInterval ti = new TimeInterval();
+        ti.setStart(start);
+        return ti;
+    }
+
+    public boolean hasStart() {
+        return hasStart;
+    }
+
+    public boolean hasEnd() {
+        return hasEnd;
+    }
+
+    public void setStart(long start) {
+        hasStart = true;
+        this.start = start;
+    }
+
+    public long getStart() {
+        return start;
+    }
+
+    public void setEnd(long end) {
+        hasEnd = true;
+        this.end = end;
+    }
+
+    public long getEnd() {
+        return end;
+    }
+
+    /**
+     * Checks that [this.start, this.end) contains t
+     */
+    public boolean contains0(long t) {
+        return !((hasStart && t < start) || (hasEnd && t >= end));
+    }
+
+    /**
+     * Checks that [this.start, this.end] overlaps with [t1.start, t1.end)
+     * 
+     */
+    boolean overlaps1(TimeInterval t1) {
+        return !((t1.hasStart && hasEnd && t1.start > end) ||
+                (t1.hasEnd && hasStart && start >= t1.end));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        if (hasStart) {
+            sb.append(start);
+        }
+        sb.append(",");
+        if (hasEnd) {
+            sb.append(end);
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    public String toStringEncoded() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("(");
+        if (hasStart) {
+            sb.append(TimeEncoding.toString(start));
+        }
+        sb.append(",");
+        if (hasEnd) {
+            sb.append(TimeEncoding.toString(end));
+        }
+        sb.append(")");
+        return sb.toString();
+    }
+
+    /**
+     * Filters an input iterator to the intervals that match the given timeInterval
+     *
+     */
+    public static class FilterOverlappingIterator<T extends TimeInterval> implements Iterator<T> {
+        TimeInterval timeInterval;
+        T next;
+        Iterator<T> it;
+
+        /**
+         * Creates a new Interator that iterates the elements of inputIterator and outputs only those that overalp with
+         * timeInterval.
+         * 
+         * The timeInterval is considered closed at both ends [start, end] whereas the elements of the inputIterator are
+         * considered closed at start but open at end [start, end)
+         * 
+         * The inputIterator is assumed to contain elements sorted by the start.
+         * 
+         */
+        public FilterOverlappingIterator(TimeInterval timeInterval, Iterator<T> inputIterator) {
+            this.timeInterval = timeInterval;
+            this.it = inputIterator;
+            while (it.hasNext()) {
+                T n = it.next();
+                if (timeInterval.overlaps1(n)) {
+                    next = n;
+                    break;
+                }
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return next != null;
+        }
+
+        @Override
+        public T next() {
+            if (next == null) {
+                throw new NoSuchElementException();
+            }
+            T r = next;
+            getNext();
+            return r;
+        }
+
+        private void getNext() {
+            if (it.hasNext()) {
+                next = it.next();
+                if (timeInterval.hasEnd() && next.hasStart() && timeInterval.getEnd() < next.getStart()) {
+                    next = null;
+                }
+            } else {
+                next = null;
+            }
+        }
+    }
+
+}
+```
+
+### `TimestampUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/TimestampUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.time.Instant;
+
+import com.google.protobuf.Timestamp;
+
+public class TimestampUtil {
+    /**
+     * 
+     * @return current (now) protobuf timestamp
+     */
+    public static Timestamp currentTimestamp() {
+        Instant now = Instant.now();
+        return Timestamp.newBuilder().setSeconds(now.getEpochSecond()).setNanos(now.getNano()).build();
+    }
+
+    /**
+     * Converts java time in milliseconds to protobuf Timestamp
+     * 
+     * @param timeMillisec
+     *            java timestamp to be converted
+     * @return
+     */
+    public static Timestamp java2Timestamp(long timeMillisec) {
+        long sec = timeMillisec / 1000;
+        int ms = (int) (timeMillisec - sec * 1000);
+        return Timestamp.newBuilder().setSeconds(sec).setNanos(ms * 1000_000).build();
+    }
+
+    /**
+     * Converts protobuf Timestamp into java time in milliseconds Note: this loses precision (nanoseconds to
+     * milliseconds)
+     * 
+     * @param ts
+     *            protobuf timestamp to be converted
+     * @return
+     */
+    public static long timestamp2Java(Timestamp ts) {
+        return ts.getSeconds() * 1000 + ts.getNanos() / 1000_000;
+    }
+}
+```
+
+### `UnsignedLong.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/UnsignedLong.java`
+
+
+```java
+package org.yamcs.utils;
+
+public class UnsignedLong {
+    /**
+     * Converts unsigned long to double 
+     * copied from guava 
+     **/
+    public static double toDouble(long x) {
+        double d = (double) (x & 0x7fffffffffffffffL);
+        if (x < 0) {
+            d += 0x1.0p63;
+        }
+        return d;
+    }
+
+}
+```
+
+### `ValueComparator.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueComparator.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.util.Comparator;
+
+import org.yamcs.parameter.Value;
+
+public class ValueComparator implements Comparator<Value> {
+
+    @Override
+    public int compare(Value a, Value b) {
+        return ValueUtility.compare(a, b);
+    }
+}
+```
+
+### `ValueHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueHelper.java`
+
+
+```java
+package org.yamcs.utils;
+
+import org.yamcs.protobuf.Yamcs.AggregateValue;
+import org.yamcs.protobuf.Yamcs.Value;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+import com.google.protobuf.ByteString;
+
+public class ValueHelper {
+    /**
+     * returns a SINT32 Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(int x) {
+        return Value.newBuilder().setType(Type.SINT32).setSint32Value(x).build();
+    }
+
+    static public Value newUnsignedValue(int x) {
+        return Value.newBuilder().setType(Type.UINT32).setUint32Value(x).build();
+    }
+
+    /**
+     * returns a DOUBLE Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(double x) {
+        return Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(x).build();
+    }
+
+    /**
+     * returns a FLOAT Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(float x) {
+        return Value.newBuilder().setType(Type.FLOAT).setFloatValue(x).build();
+    }
+
+    /**
+     * returns a STRING Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(String x) {
+        return Value.newBuilder().setType(Type.STRING).setStringValue(x).build();
+    }
+
+    /**
+     * returns a BINARY Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(byte[] x) {
+        return Value.newBuilder().setType(Type.BINARY).setBinaryValue(ByteString.copyFrom(x)).build();
+    }
+
+    /**
+     * returns a BOOLEAN Value
+     * @param x
+     * @return
+     */
+    static public Value newValue(boolean x) {
+        return Value.newBuilder().setType(Type.BOOLEAN).setBooleanValue(x).build();
+    }
+
+    /**
+     * returns a TIMESTAMP Value
+     * @param x
+     * @return
+     */
+    public static Value newTimestampValue(long  x) {
+        return Value.newBuilder().setType(Type.TIMESTAMP).setTimestampValue(x).build();
+    }
+
+    /**
+     * returns new array value
+     * @return
+     */
+    public static Value newArrayValue(Value...values) {
+        Value.Builder vb = Value.newBuilder();
+        vb.setType(Type.ARRAY);
+        if(values.length==0) {
+            return vb.build();
+        }
+        Value v0 = values[0];
+        for(Value v: values) {
+            if(v.getType()!=v0.getType()) {
+                throw new IllegalArgumentException("Element arrays have to be all of the same type");
+            }
+            vb.addArrayValue(v);
+        }
+        return vb.build();
+    }
+    
+    /**
+     * returns new aggregate value
+     * The passed arguments have to be of type String, Value, String Value...
+     * @return
+     */
+    public static Value newAggregateValue(Object...objs) {
+        if(objs.length%2!=0) {
+            throw new IllegalArgumentException("This function requires an even number of arguments (String, Value)*");
+        }
+        AggregateValue.Builder agb = AggregateValue.newBuilder();
+        
+        for(int i =0; i<objs.length; i+=2) {
+            if(!(objs[i] instanceof String)) {
+                throw new IllegalArgumentException("Invalid type "+objs[i].getClass()+" of argument "+i+" should be String");
+            }
+            String name = (String)objs[i];
+        
+            if(!(objs[i+1] instanceof Value)) {
+                throw new IllegalArgumentException("Invalid type "+objs[i+1].getClass()+" of argument "+(i+1)+" should be Value");
+            }
+            Value value = (Value)objs[i+1];
+            agb.addName(name);
+            agb.addValue(value);
+        }
+        
+        return Value.newBuilder().setType(Type.AGGREGATE).setAggregateValue(agb.build()).build();
+    }
+}
+```
+
+### `ValueUtility.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/ValueUtility.java`
+
+
+```java
+package org.yamcs.utils;
+
+import org.yamcs.protobuf.Yamcs.Value.Builder;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.DoubleConsumer;
+import java.util.function.LongConsumer;
+
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.BinaryValue;
+import org.yamcs.parameter.BooleanValue;
+import org.yamcs.parameter.DoubleValue;
+import org.yamcs.parameter.EnumeratedValue;
+import org.yamcs.parameter.FloatValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.SInt32Value;
+import org.yamcs.parameter.SInt64Value;
+import org.yamcs.parameter.StringValue;
+import org.yamcs.parameter.TimestampValue;
+import org.yamcs.parameter.UInt32Value;
+import org.yamcs.parameter.UInt64Value;
+import org.yamcs.parameter.Value;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.DataType;
+
+import com.google.protobuf.ByteString;
+
+public class ValueUtility {
+    public static Value getUint32Value(int x) {
+        return new UInt32Value(x);
+    }
+
+    public static Value getSint32Value(int x) {
+        return new SInt32Value(x);
+    }
+
+    public static Value getUint64Value(long x) {
+        return new UInt64Value(x);
+    }
+
+    public static Value getSint64Value(long x) {
+        return new SInt64Value(x);
+    }
+
+    public static Value getStringValue(String x) {
+        return new StringValue(x);
+    }
+
+    public static Value getBinaryValue(byte[] x) {
+        return new BinaryValue(x);
+    }
+
+    public static Value getTimestampValue(long x) {
+        return new TimestampValue(x);
+    }
+
+    public static Value getBooleanValue(boolean b) {
+        return b ? BooleanValue.TRUE : BooleanValue.FALSE;
+    }
+
+    public static Value getFloatValue(float f) {
+        return new FloatValue(f);
+    }
+
+    public static Value getDoubleValue(double d) {
+        return new DoubleValue(d);
+    }
+
+    public static org.yamcs.protobuf.Yamcs.Value getDoubleGbpValue(double d) {
+        return org.yamcs.protobuf.Yamcs.Value.newBuilder().setType(Type.DOUBLE).setDoubleValue(d).build();
+    }
+
+    public static org.yamcs.protobuf.Yamcs.Value getStringGbpValue(String s) {
+        return org.yamcs.protobuf.Yamcs.Value.newBuilder().setType(Type.STRING).setStringValue(s).build();
+    }
+
+    public static org.yamcs.protobuf.Yamcs.Value getUint32GbpValue(int x) {
+        return org.yamcs.protobuf.Yamcs.Value.newBuilder().setType(Type.UINT32).setUint32Value(x).build();
+    }
+
+    public static Value getColumnValue(ColumnDefinition cd, Object v) {
+        switch (cd.getType().val) {
+        case INT:
+            return getSint32Value((Integer) v);
+        case SHORT:
+            return getUint32Value((Short) v);
+        case BYTE:
+            return getUint32Value((Byte) v);
+        case STRING:
+        case ENUM:
+            return getStringValue((String) v);
+        case TIMESTAMP:
+            return getTimestampValue((Long) v);
+        case BINARY:
+            return getBinaryValue((byte[]) v);
+        case BOOLEAN:
+            return getBooleanValue((Boolean) v);
+        case DOUBLE:
+            return getDoubleValue((Double) v);
+        case PARAMETER_VALUE:
+            return ((ParameterValue) v).getEngValue();
+        case ARRAY:
+        case PROTOBUF:
+        case TUPLE:
+        default:
+            throw new IllegalArgumentException("cannot convert type to value " + cd.getType());
+        }
+    }
+
+    public static Object getYarchValue(Value v) {
+        switch (v.getType()) {
+        case BINARY:
+            return v.getBinaryValue();
+        case SINT32:
+            return v.getSint32Value();
+        case UINT32:
+            return v.getUint32Value();
+        case DOUBLE:
+            return v.getDoubleValue();
+        case FLOAT:
+            return (double) v.getFloatValue();
+        case STRING:
+            return v.getStringValue();
+        case TIMESTAMP:
+            return v.getTimestampValue();
+        case BOOLEAN:
+            return v.getBooleanValue();
+        case SINT64:
+            return v.getSint64Value();
+        case UINT64:
+            return v.getUint64Value();
+        case ENUMERATED:
+            return v.getStringValue();
+        default:
+            throw new IllegalArgumentException("cannot values of type " + v.getType());
+        }
+
+    }
+
+    public static Object getYarchValue(org.yamcs.protobuf.Yamcs.Value v) {
+        switch (v.getType()) {
+        case BINARY:
+            return v.getBinaryValue().toByteArray();
+        case SINT32:
+            return v.getSint32Value();
+        case UINT32:
+            return v.getUint32Value();
+        case DOUBLE:
+            return v.getDoubleValue();
+        case FLOAT:
+            return (double) v.getFloatValue();
+        case STRING:
+            return v.getStringValue();
+        case TIMESTAMP:
+            return v.getTimestampValue();
+        case BOOLEAN:
+            return v.getBooleanValue();
+        case SINT64:
+            return v.getSint64Value();
+        case UINT64:
+            return v.getUint64Value();
+        case ENUMERATED:
+            return v.getStringValue();
+        default:
+            throw new IllegalArgumentException("cannot values of type " + v.getType());
+        }
+
+    }
+
+    public static DataType getYarchType(Type type) {
+        switch (type) {
+        case BINARY:
+            return DataType.BINARY;
+        case SINT32:
+        case UINT32:
+            return DataType.INT;
+        case DOUBLE:
+            return DataType.DOUBLE;
+        case FLOAT:
+            return DataType.DOUBLE;
+        case STRING:
+            return DataType.STRING;
+        case TIMESTAMP:
+            return DataType.TIMESTAMP;
+        case UINT64:
+        case SINT64:
+            return DataType.LONG;
+        case BOOLEAN:
+            return DataType.BOOLEAN;
+        case ENUMERATED:
+            return DataType.ENUM;
+        default:
+            throw new IllegalArgumentException("cannot values of type " + type);
+        }
+    }
+
+    public static boolean equals(Value a, Value b) {
+        if (a == b) {
+            return true;
+        }
+
+        if (a == null ^ b == null)
+            return false;
+
+        if (a.getType() != b.getType())
+            return false;
+
+        switch (a.getType()) {
+        case BINARY:
+            return Arrays.equals(a.getBinaryValue(), b.getBinaryValue());
+        case BOOLEAN:
+            return a.getBooleanValue() == b.getBooleanValue();
+        case DOUBLE:
+            return a.getDoubleValue() == b.getDoubleValue();
+        case FLOAT:
+            return a.getFloatValue() == b.getFloatValue();
+        case SINT32:
+            return a.getSint32Value() == b.getSint32Value();
+        case SINT64:
+            return a.getSint64Value() == b.getSint64Value();
+        case STRING:
+            return a.getStringValue().equals(b.getStringValue());
+        case TIMESTAMP:
+            return a.getTimestampValue() == b.getTimestampValue();
+        case UINT32:
+            return a.getUint32Value() == b.getUint32Value();
+        case UINT64:
+            return a.getUint64Value() == b.getUint64Value();
+        case ENUMERATED:
+            return a.getUint64Value() == b.getUint64Value();
+        default:
+            throw new IllegalArgumentException("Unexpected type " + a.getType());
+        }
+    }
+
+    // Not perfect. Should also compare compatible types
+    public static int compare(Value a, Value b) {
+        if (a == null ^ b == null)
+            return (a == null) ? -1 : 1;
+        if (a == null && b == null)
+            return 0;
+        if (a.getType() != b.getType())
+            return a.getType().compareTo(b.getType());
+
+        switch (a.getType()) {
+        case BINARY:
+            return String.valueOf(a).compareTo(String.valueOf(b)); // TODO ?
+        case BOOLEAN:
+            return Boolean.compare(a.getBooleanValue(), b.getBooleanValue());
+        case DOUBLE:
+            return Double.compare(a.getDoubleValue(), b.getDoubleValue());
+        case FLOAT:
+            return Float.compare(a.getFloatValue(), b.getFloatValue());
+        case SINT32:
+            return Integer.compare(a.getSint32Value(), b.getSint32Value());
+        case SINT64:
+            return Long.compare(a.getSint64Value(), b.getSint64Value());
+        case STRING:
+            return a.getStringValue().compareTo(b.getStringValue());
+        case TIMESTAMP:
+            return Long.compare(a.getTimestampValue(), b.getTimestampValue());
+        case UINT32:
+            return Integer.compareUnsigned(a.getUint32Value(), b.getUint32Value());
+        case UINT64:
+            return Long.compareUnsigned(a.getUint64Value(), b.getUint64Value());
+        case ENUMERATED:
+            return Long.compareUnsigned(a.getUint64Value(), b.getUint64Value());
+        default:
+            throw new IllegalArgumentException("Unexpected type " + a.getType());
+        }
+    }
+
+    public static org.yamcs.protobuf.Yamcs.Value toGbp(Value v) {
+        org.yamcs.protobuf.Yamcs.Value.Builder b = org.yamcs.protobuf.Yamcs.Value.newBuilder();
+        b.setType(v.getType());
+
+        switch (v.getType()) {
+        case BINARY:
+            return b.setBinaryValue(ByteString.copyFrom(v.getBinaryValue())).build();
+        case BOOLEAN:
+            return b.setBooleanValue(v.getBooleanValue()).build();
+        case DOUBLE:
+            return b.setDoubleValue(v.getDoubleValue()).build();
+        case FLOAT:
+            return b.setFloatValue(v.getFloatValue()).build();
+        case SINT32:
+            return b.setSint32Value(v.getSint32Value()).build();
+        case SINT64:
+            return b.setSint64Value(v.getSint64Value()).build();
+        case STRING:
+            return b.setStringValue(v.getStringValue()).build();
+        case TIMESTAMP:
+            return b.setTimestampValue(v.getTimestampValue())
+                    .setStringValue(TimeEncoding.toString(v.getTimestampValue()))
+                    .build();
+        case UINT32:
+            return b.setUint32Value(v.getUint32Value()).build();
+        case UINT64:
+            return b.setUint64Value(v.getUint64Value()).build();
+        case AGGREGATE:
+            return b.setAggregateValue(toGbp((AggregateValue) v)).build();
+        case ARRAY:
+            fillInArray(b, (ArrayValue) v);
+            return b.build();
+        case ENUMERATED:
+            EnumeratedValue ev = (EnumeratedValue) v;
+            return b.setSint64Value(ev.getSint64Value()).setStringValue(ev.getStringValue()).build();
+        default:
+            throw new IllegalArgumentException("Unexpected type " + v.getType());
+        }
+    }
+
+    private static void fillInArray(Builder b, ArrayValue av) {
+        int n = av.flatLength();
+        for (int i = 0; i < n; i++) {
+            b.addArrayValue(toGbp(av.getElementValue(i)));
+        }
+    }
+
+    public static org.yamcs.protobuf.Yamcs.AggregateValue toGbp(AggregateValue v) {
+        int n = v.numMembers();
+        org.yamcs.protobuf.Yamcs.AggregateValue.Builder b = org.yamcs.protobuf.Yamcs.AggregateValue.newBuilder();
+        for (int i = 0; i < n; i++) {
+            Value mv = v.getMemberValue(i);
+            if (mv != null) {
+                b.addName(v.getMemberName(i));
+                b.addValue(toGbp(mv));
+            }
+        }
+
+        return b.build();
+    }
+
+    public static Value fromGpb(org.yamcs.protobuf.Yamcs.Value v) {
+        switch (v.getType()) {
+        case BINARY:
+            return new BinaryValue(v.getBinaryValue().toByteArray());
+        case BOOLEAN:
+            return new BooleanValue(v.getBooleanValue());
+        case DOUBLE:
+            return new DoubleValue(v.getDoubleValue());
+        case FLOAT:
+            return new FloatValue(v.getFloatValue());
+        case SINT32:
+            return new SInt32Value(v.getSint32Value());
+        case SINT64:
+            return new SInt64Value(v.getSint64Value());
+        case STRING:
+            return new StringValue(v.getStringValue());
+        case TIMESTAMP:
+            if (v.hasTimestampValue()) {
+                return new TimestampValue(v.getTimestampValue());
+            } else if (v.hasStringValue()) {
+                return new TimestampValue(TimeEncoding.parse(v.getStringValue()));
+            } else {
+                throw new IllegalArgumentException("No string or timestamp value provided ");
+            }
+
+        case UINT32:
+            return new UInt32Value(v.getUint32Value());
+        case UINT64:
+            return new UInt64Value(v.getUint64Value());
+        case ARRAY:
+            return fromGbpArray(v);
+        case AGGREGATE:
+            return fromGbpAggregate(v);
+        case ENUMERATED:
+            return new EnumeratedValue(v.getSint64Value(), v.getStringValue());
+        default:
+            throw new IllegalArgumentException("Unexpected type " + v.getType());
+        }
+    }
+
+    private static Value fromGbpAggregate(org.yamcs.protobuf.Yamcs.Value v) {
+        org.yamcs.protobuf.Yamcs.AggregateValue pbav = v.getAggregateValue();
+        if (pbav.getNameCount() != pbav.getValueCount()) {
+            throw new IllegalArgumentException("Invalid aggregate value, name count different than value count");
+        }
+        AggregateMemberNames amn = AggregateMemberNames.get(pbav.getNameList().toArray(new String[0]));
+        AggregateValue av = new AggregateValue(amn);
+        for (int i = 0; i < pbav.getNameCount(); i++) {
+            av.setMemberValue(pbav.getName(i), fromGpb(pbav.getValue(i)));
+        }
+
+        return av;
+    }
+
+    private static Value fromGbpArray(org.yamcs.protobuf.Yamcs.Value v) {
+        if (v.getArrayValueCount() == 0) {
+            return new ArrayValue(new int[] { 0 }, Type.UINT32);
+        }
+        List<org.yamcs.protobuf.Yamcs.Value> vlist = v.getArrayValueList();
+        org.yamcs.protobuf.Yamcs.Value v0 = vlist.get(0);
+        int n = vlist.size();
+        ArrayValue av = new ArrayValue(new int[] { n }, v0.getType());
+
+        for (int i = 0; i < n; i++) {
+            org.yamcs.protobuf.Yamcs.Value vi = vlist.get(i);
+            if (vi.getType() != v0.getType()) {
+                throw new IllegalArgumentException("Array elements have all to be of the same type");
+            }
+            av.setElementValue(i, fromGpb(vi));
+        }
+        return av;
+    }
+
+    /**
+     * if the passed on value is INT32, SINT32, INT64 or SINT64, invoke the function on the long value and return true
+     * if v is of other types return false
+     * 
+     * @param v
+     * @param c
+     * @return
+     */
+    public static boolean processAsLong(Value v, LongConsumer c) {
+        switch (v.getType()) {
+        case SINT32:
+            c.accept(v.getSint32Value());
+            return true;
+        case SINT64:
+            c.accept(v.getSint64Value());
+            return true;
+        case UINT32:
+            c.accept(v.getUint32Value() & 0xFFFFFFFFL);
+            return true;
+        case UINT64:
+            c.accept(v.getUint64Value());
+            return true;
+        default:
+            return false;
+        }
+    }
+
+
+    /**
+     * if the passed on value is float, double or integer invoke the function on the double value and return true
+     * <p>
+     * if v is of other types return false
+     * 
+     * @param v
+     *            - the value to be processed
+     * @param c
+     *            - the function to be invoked with the value transformed to a primitive double
+     * @return
+     */
+    public static boolean processAsDouble(Value v, DoubleConsumer c) {
+        switch (v.getType()) {
+        case DOUBLE:
+            c.accept(v.getDoubleValue());
+            return true;
+        case FLOAT:
+            c.accept(v.getFloatValue());
+            return true;
+        case SINT32:
+            c.accept(v.getSint32Value());
+            return true;
+        case SINT64:
+            c.accept(v.getSint64Value());
+            return true;
+        case UINT32:
+            c.accept(v.getUint32Value() & 0xFFFFFFFFL);
+            return true;
+        case UINT64:
+            c.accept(UnsignedLong.toDouble(v.getUint64Value()));
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    /**
+     * if the passed on value is FLOAT or DOUBLE, invoke the function on the double value and return true
+     * if v is of other types return false
+     * 
+     * @param v
+     * @param c
+     * @return
+     */
+    public static boolean processAsDouble1(Value v, DoubleConsumer c) {
+        switch (v.getType()) {
+        case DOUBLE:
+            c.accept(v.getDoubleValue());
+            return true;
+        case FLOAT:
+            c.accept(v.getFloatValue());
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    public static EnumeratedValue getEnumeratedValue(long longValue, String stringValue) {
+        return new EnumeratedValue(longValue, stringValue);
+    }
+
+    /**
+     * 
+     * @param sizeInBits
+     * @param signed
+     * @param v
+     * @return
+     */
+    public static Value getIntValue(int sizeInBits, boolean signed, long v) {
+        if (signed) {
+            if (sizeInBits <= 32) {
+                return getSint32Value((int) v);
+            } else {
+                return getSint64Value(v);
+            }
+        } else {
+            if (sizeInBits <= 32) {
+                return getUint32Value((int) v);
+            } else {
+                return getUint64Value(v);
+            }
+        }
+    }
+
+    public static Value getFloatValue(int sizeInBits, double v) {
+        if (sizeInBits <= 32) {
+            return getFloatValue((float) v);
+        } else {
+            return getDoubleValue(v);
+        }
+    }
+}
+```
+
+### `VarIntUtil.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/VarIntUtil.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
+public class VarIntUtil {
+    /**
+     * Encodes x as varint in the buffer at position pos and returns the new position
+     * 
+     * @param buf
+     * @param x
+     * @return the decoded integer
+     */
+    static public int writeVarInt32(byte[] buf, int pos, int x) {
+        while ((x & ~0x7F) != 0) {
+            buf[pos++] = ((byte) ((x & 0x7F) | 0x80));
+            x >>>= 7;
+        }
+        buf[pos++] = (byte) (x & 0x7F);
+
+        return pos;
+    }
+
+    public static void writeVarInt32(ByteBuffer bb, int x) {
+        while ((x & ~0x7F) != 0) {
+            bb.put((byte) ((x & 0x7F) | 0x80));
+            x >>>= 7;
+        }
+        bb.put((byte) (x & 0x7F));
+    }
+
+    public static void writeVarInt64(ByteBuffer bb, long x) {
+        while ((x & ~0x7F) != 0) {
+            bb.put((byte) ((x & 0x7F) | 0x80));
+            x >>>= 7;
+        }
+        bb.put((byte) (x & 0x7F));
+    }
+
+    public static int readVarInt32(ByteBuffer bb) throws DecodingException {
+        byte b = bb.get();
+        int v = b & 0x7F;
+        for (int shift = 7; (b & 0x80) != 0; shift += 7) {
+            if (shift > 28)
+                throw new DecodingException("Invalid VarInt32: more than 5 bytes!");
+
+            b = bb.get();
+            v |= (b & 0x7F) << shift;
+
+        }
+        return v;
+    }
+
+    public static long readVarInt64(ByteBuffer bb) {
+        byte b = bb.get();
+        long v = b & 0x7F;
+        for (int shift = 7; (b & 0x80) != 0; shift += 7) {
+            b = bb.get();
+            v |= (b & 0x7F) << shift;
+        }
+        return v;
+    }
+
+    public static void writeSignedVarint32(ByteBuffer bb, int x) {
+        writeVarInt32(bb, encodeZigZag(x));
+    }
+
+    public static int readSignedVarInt32(ByteBuffer bb) throws DecodingException {
+        return decodeZigZag(readVarInt32(bb));
+    }
+
+    // same as above but better for negative numbers
+    static public int encodeSigned(byte[] buf, int pos, int x) {
+        return writeVarInt32(buf, pos, encodeZigZag(x));
+    }
+
+    /**
+     * decodes an array of varints
+     */
+    public static class ArrayDecoder {
+        int pos = 0;
+        final byte[] buf;
+
+        private ArrayDecoder(byte[] buf) {
+            this.buf = buf;
+        }
+
+        /**
+         * Returns true if the array contains another element. If the array is corrupted, this will return true and
+         * next() will throw an BufferOverflow exception
+         * 
+         * @return
+         */
+        public boolean hasNext() {
+            return pos < buf.length;
+        }
+
+        public int next() {
+            byte b = buf[pos++];
+            int v = b & 0x7F;
+            for (int shift = 7; (b & 0x80) != 0; shift += 7) {
+                b = buf[pos++];
+                v |= (b & 0x7F) << shift;
+            }
+            return v;
+        }
+    }
+
+    public static class SignedArrayDecoder extends ArrayDecoder {
+        private SignedArrayDecoder(byte[] buf) {
+            super(buf);
+        }
+
+        public int next() {
+            return decodeZigZag(super.next());
+        }
+    }
+
+    static public ArrayDecoder newArrayDecoder(byte[] buf) {
+        return new ArrayDecoder(buf);
+    }
+
+    // used to transform small signed integers into unsigned (see protobuf docs)
+    public static int decodeZigZag(int x) {
+        return (x >>> 1) ^ -(x & 1);
+    }
+
+    public static int encodeZigZag(int x) {
+        return (x << 1) ^ (x >> 31);
+    }
+
+    public static void writeSizeDelimitedString(ByteBuffer bb, String s) {
+        byte[] b = s.getBytes(StandardCharsets.UTF_8);
+        writeVarInt32(bb, b.length);
+        bb.put(b);
+    }
+
+    public static String readSizeDelimitedString(ByteBuffer bb) throws DecodingException {
+        int l = readVarInt32(bb);
+        byte[] b = new byte[l];
+        bb.get(b);
+        return new String(b, StandardCharsets.UTF_8);
+    }
+
+    // return a zigzag encoding of deltas of deltas
+    // -> if the values in x are close to each-other or are increasing by a constant factor (think counters)
+    // this result in an array of small numbers
+    public static int[] encodeDeltaDeltaZigZag(int x[]) {
+        int n = x.length;
+        int[] ddz = new int[n];
+        if (n > 0) {
+            ddz[0] = encodeZigZag(x[0]);
+            int d = 0;
+            for (int i = 1; i < n; i++) {
+                int d1 = x[i] - x[i - 1];
+                ddz[i] = encodeZigZag(d1 - d);
+                d = d1;
+            }
+        }
+        return ddz;
+    }
+
+    // this is the reverse of the above
+    public static int[] decodeDeltaDeltaZigZag(int ddz[]) {
+        int n = ddz.length;
+        int[] x = new int[n];
+        if (n > 0) {
+            x[0] = decodeZigZag(ddz[0]);
+            int d = 0;
+            for (int i = 1; i < n; i++) {
+                d = d + decodeZigZag(ddz[i]);
+                x[i] = x[i - 1] + d;
+            }
+        }
+        return x;
+    }
+
+    // encoding of SortedIntArray in deltas of deltas
+    public static int[] encodeDeltaDeltaZigZag(SortedIntArray a) {
+        int n = a.size();
+        int[] ddz = new int[n];
+        if (n > 0) {
+            ddz[0] = encodeZigZag(a.get(0));
+            int d = 0;
+            for (int i = 1; i < n; i++) {
+                int d1 = a.get(i) - a.get(i - 1);
+                ddz[i] = encodeZigZag(d1 - d);
+                d = d1;
+            }
+        }
+        return ddz;
+    }
+
+    public static int[] encodeDeltaDeltaZigZag(IntArray a) {
+        int n = a.size();
+        int[] ddz = new int[n];
+        if (n > 0) {
+            ddz[0] = encodeZigZag(a.get(0));
+            int d = 0;
+            for (int i = 1; i < n; i++) {
+                int d1 = a.get(i) - a.get(i - 1);
+                ddz[i] = encodeZigZag(d1 - d);
+                d = d1;
+            }
+        }
+        return ddz;
+    }
+
+    /**
+     * get the number of bytes necessary to encode value
+     * 
+     * @param value
+     * @return
+     */
+    public static int getEncodedSize(int value) {
+        if (value < 128)
+            return 1;
+        if (value < 16384)
+            return 2;
+        if (value < 2097152)
+            return 3;
+        if (value < 268435456)
+            return 4;
+        return 5;
+    }
+
+    /**
+     * Encode an int array as a sequence of varints representing the deltas between the subsequent elements of the input
+     * array.
+     * 
+     * It is best if the array is sorted in ascending order (because encoding negative numbers in varint is not
+     * efficient).
+     * 
+     * @param s
+     * @return
+     */
+    public static byte[] encodeDeltaIntArray(IntArray s) {
+        int[] a = s.array();
+        int length = s.size();
+        byte[] buf = new byte[length * 5];
+
+        if (length == 0) {
+            return buf;
+        }
+
+        int pos = VarIntUtil.writeVarInt32(buf, 0, a[0]);
+
+        for (int i = 1; i < length; i++) {
+            pos = VarIntUtil.writeVarInt32(buf, pos, (a[i] - a[i - 1]));
+        }
+        if (pos == buf.length) {
+            return buf;
+        } else {
+            return Arrays.copyOf(buf, pos);
+        }
+    }
+
+    /**
+     * The reverse of the {@link #encodeDeltaIntArray(IntArray)} method.
+     * 
+     * @param buf
+     * @return
+     */
+    public static IntArray decodeDeltaIntArray(byte[] buf) {
+        if (buf.length == 0) {
+            return new IntArray(0);
+        }
+        IntArray sia = new IntArray();
+
+        ArrayDecoder ad = newArrayDecoder(buf);
+        int s = 0;
+        while (ad.hasNext()) {
+            s += ad.next();
+            sia.add(s);
+        }
+        return sia;
+    }
+
+}
+```
+
+### `YObjectLoader.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/utils/YObjectLoader.java`
+
+
+```java
+package org.yamcs.utils;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+
+public class YObjectLoader<T> {
+    static Logger log = LoggerFactory.getLogger(YamcsServer.class);
+
+    /**
+     * Loads classes defined in the yamcs server or client configuration properties
+     * 
+     * @param className
+     * @param args
+     * @return an object of the given class instantiated with the given parameters
+     * @throws ConfigurationException
+     */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    static public <T> T loadObject(String className, Object... args) throws ConfigurationException {
+        try {
+            Class ic = Class.forName(className);
+            Constructor<T> constructor = null;
+            Constructor[] constructors = ic.getConstructors();
+            for (Constructor c : constructors) {
+                Class<?>[] params = c.getParameterTypes();
+                if (params.length != args.length) {
+                    continue;
+                }
+                boolean ok = true;
+                for (int i = 0; i < params.length; i++) {
+                    if ((args[i] != null) && !params[i].isAssignableFrom(args[i].getClass())) {
+                        if (args[i] instanceof YConfiguration) {
+                            YConfiguration yc = (YConfiguration) args[i];
+                            boolean isDeprecated = c.getDeclaredAnnotation(Deprecated.class) != null;
+                            if (params[i].isAssignableFrom(yc.getRoot().getClass()) && !isDeprecated) {
+                                log.warn("Class {} uses a Map<String, Object> in the constructor. "
+                                        + "Use YConfiguration instead", className);
+                                args[i] = yc.getRoot();
+                                continue;
+                            }
+                        }
+                        ok = false;
+                        break;
+                    }
+                }
+                if (ok) {
+                    constructor = c;
+                    break;
+                }
+            }
+            if (constructor == null) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("Cannot find a constructor for class '" + className + "' and arguments (");
+                boolean first = true;
+                for (Object o : args) {
+                    if (!first) {
+                        sb.append(", ");
+                    } else {
+                        first = false;
+                    }
+                    if (o == null) {
+                        sb.append("java.lang.Object");
+                    } else {
+                        sb.append(o.getClass().getName());
+                    }
+                }
+                sb.append(")");
+                throw new ConfigurationException(sb.toString());
+            } else {
+                checkDeprecated(ic);
+                return constructor.newInstance(args);
+            }
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getCause();
+            if (t instanceof ConfigurationException) {
+                throw (ConfigurationException) t;
+            } else if (t instanceof ExceptionInInitializerError) {
+                throw new ConfigurationException(
+                        "Cannot instantiate object from class " + className + ": " + t.getCause(), t.getCause());
+            } else {
+                throw new ConfigurationException("Cannot instantiate object from class " + className + ": " + t, t);
+            }
+        } catch (ConfigurationException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ConfigurationException("Cannot instantiate object from class " + className + ": " + e, e);
+        }
+    }
+
+    /**
+     * loads an object defined like this: class: org.yamcs.... args: key1: value1 key2: value2
+     * 
+     * "args" can also be called "config" or can be missing. The value of args can also be a list or a scalar type. args
+     * can also be called config or spec.
+     * 
+     * If args is present, then a constructor with the given type is invoked otherwise the constructor without any
+     * argument is invoked.
+     * 
+     * 
+     * @param conf
+     * @return a new object
+     * @throws IOException
+     * @throws ConfigurationException
+     */
+    static public <T> T loadObject(Map<String, Object> conf) throws ConfigurationException, IOException {
+        String className = YConfiguration.getString(conf, "class");
+        Object args = getArgs(conf);
+
+        if (args != null) {
+            return loadObject(className, args);
+        } else {
+            return loadObject(className);
+        }
+    }
+
+    /**
+     * same as the method above but loads a constructor with the firstArg as the first argument
+     * 
+     * @param conf
+     * @param firstArg
+     * @return a newly created object
+     * @throws ConfigurationException
+     * @throws IOException
+     */
+    static public <T> T loadObject(Map<String, Object> conf, Object firstArg)
+            throws ConfigurationException, IOException {
+        String className = YConfiguration.getString(conf, "class");
+        Object args = getArgs(conf);
+
+        if (args != null) {
+            return loadObject(className, firstArg, args);
+        } else {
+            return loadObject(className, firstArg);
+        }
+    }
+
+    /**
+     * same as the method above but loads a constructor with firstArg and secondArg as the first two arguments
+     * 
+     * @param conf
+     * @param firstArg
+     * @param secondArg
+     * @return a newly created object
+     * @throws ConfigurationException
+     * @throws IOException
+     */
+    static public <T> T loadObject(Map<String, Object> conf, Object firstArg, Object secondArg)
+            throws ConfigurationException, IOException {
+        String className = YConfiguration.getString(conf, "class");
+        Object args = getArgs(conf);
+
+        if (args != null) {
+            return loadObject(className, firstArg, secondArg, args);
+        } else {
+            return loadObject(className, firstArg, secondArg);
+        }
+    }
+
+    static private Object getArgs(Map<String, Object> conf) {
+        if (conf.containsKey("config")) {
+            return conf.get("config");
+        } else if (conf.containsKey("args")) {
+            return conf.get("args");
+        } else if (conf.containsKey("spec")) {
+            return conf.get("spec");
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings({ "rawtypes" })
+    static private void checkDeprecated(Class objclass) {
+        checkAndPrintDeprecatedWarning("The class " + objclass.getName() + " is deprecated", objclass);
+
+        Class c = objclass.getSuperclass();
+        while (c != null) {
+            checkAndPrintDeprecatedWarning(
+                    "The class " + c.getName() + " extended by " + objclass.getName() + " is deprecated", c);
+            c = c.getSuperclass();
+        }
+        for (Class i : objclass.getInterfaces()) {
+            checkAndPrintDeprecatedWarning(
+                    "The class " + objclass.getName() + " implements interface " + i.getName() + " which is deprecated",
+                    i);
+        }
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    static void checkAndPrintDeprecatedWarning(String prefix, Class objclass) {
+        DeprecationInfo di = (DeprecationInfo) objclass.getAnnotation(DeprecationInfo.class);
+        if (di != null) {
+            log.warn("{}: {}", prefix, di.info());
+        } else {
+            Annotation a = objclass.getAnnotation(Deprecated.class);
+            if (a != null) {
+                log.warn("{}. Please check the javadoc for alternatives.", prefix);
+            }
+        }
+
+    }
+
+}
+```

@@ -3,14 +3,54 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/auth/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `auth.proto`
 
-file--auth.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/auth/auth.proto`
+
+
+```text
+syntax="proto2";
+
+package yamcs.protobuf.auth;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "AuthProto";
+option java_multiple_files = true;
+
+import "yamcs/protobuf/iam/iam.proto";
+
+message AuthInfo {
+
+  optional bool requireAuthentication = 1;
+
+  // If true, the server is supportive of SPNEGO negotiation
+  optional bool spnego = 2;
+  
+  // OpenID Connect information. If used, the server expects
+  // web applications to generate an OAuth2 code directly against
+  // the upstream OpenID Connect server.
+  optional OpenIDConnectInfo openid = 3;
+}
+
+message OpenIDConnectInfo {
+  // The value provided when registering Yamcs against an OpenID server
+  optional string clientId = 1;
+
+  // Endpoint for for authentication or consent
+  optional string authorizationEndpoint = 2;
+
+  // Scope for authorization requests (value to be interpreted by client-side web application) 
+  optional string scope = 3;
+}
+
+// Naming conventions for this message follow RFC6749 - OAuth 2.0 Authorization Framework
+message TokenResponse {
+  optional string access_token = 1;
+  optional string token_type = 2;
+  optional int32 expires_in = 3; // In seconds
+  optional string refresh_token = 4;
+  optional iam.UserInfo user = 5;
+}
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/protobuf/auth/auth.proto`](file--auth.proto) — UTF-8 텍스트 파일 본문 포함

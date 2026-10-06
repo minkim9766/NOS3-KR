@@ -3,20 +3,159 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Tester.cpp`
 
-file--Tester.cpp
-file--Tester.hpp
-file--TesterHelpers.cpp
-file--TestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Empty/test/ut/Tester.cpp
+// \author tiffany
+// \brief  cpp file for Empty test harness implementation class
+// ======================================================================
+
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+Tester ::Tester() : EmptyGTestBase("Tester", Tester::MAX_HISTORY_SIZE), component("Empty") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+Tester ::~Tester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void Tester ::test() {
+    // Nothing else to test in an empty component
+}
 ```
 
-## 항목
+### `Tester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/Tester.cpp`](file--Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/Tester.hpp`](file--Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/TesterHelpers.cpp`](file--TesterHelpers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/TestMain.cpp`](file--TestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Empty/test/ut/Tester.hpp
+// \author tiffany
+// \brief  hpp file for Empty test harness implementation class
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "EmptyGTestBase.hpp"
+#include "FppTest/component/empty/Empty.hpp"
+
+class Tester : public EmptyGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+    //! Construct object Tester
+    //!
+    Tester();
+
+    //! Destroy object Tester
+    //!
+    ~Tester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    Empty component;
+};
+
+#endif
+```
+
+### `TesterHelpers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/TesterHelpers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Empty/test/ut/TesterHelpers.cpp
+// \author Auto-generated
+// \brief  cpp file for Empty component test harness base class
+//
+// NOTE: this file was automatically generated
+//
+// ======================================================================
+#include "Tester.hpp"
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void Tester ::connectPorts() {}
+
+void Tester ::initComponents() {
+    this->init();
+    this->component.init(Tester::TEST_INSTANCE_ID);
+}
+```
+
+### `TestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/empty/test/ut/TestMain.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// TestMain.cpp
+// ----------------------------------------------------------------------
+
+#include "Tester.hpp"
+
+TEST(Nominal, ToDo) {
+    Tester tester;
+    tester.test();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

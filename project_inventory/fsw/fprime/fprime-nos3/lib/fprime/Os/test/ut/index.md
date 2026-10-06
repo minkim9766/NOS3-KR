@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -18,25 +18,241 @@ mutex/index
 queue/index
 rawtime/index
 task/index
-file--IntervalTimerTest.cpp
-file--OsMutexBasicLockableTest.cpp
-file--OsTestMain.cpp
-file--OsValidateFileTest.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/condition/`](condition/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/cpu/`](cpu/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/directory/`](directory/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/file/`](file/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/filesystem/`](filesystem/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/memory/`](memory/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/mutex/`](mutex/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/`](queue/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/rawtime/`](rawtime/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/task/`](task/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/IntervalTimerTest.cpp`](file--IntervalTimerTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsMutexBasicLockableTest.cpp`](file--OsMutexBasicLockableTest.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsTestMain.cpp`](file--OsTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsValidateFileTest.cpp`](file--OsValidateFileTest.cpp) — UTF-8 텍스트 파일 본문 포함
+### `IntervalTimerTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/IntervalTimerTest.cpp`
+
+
+```cpp
+#include <Os/IntervalTimer.hpp>
+#include <Os/Task.hpp>
+#include <cstdio>
+#include "gtest/gtest.h"
+
+extern "C" {
+void intervalTimerTest();
+}
+
+void intervalTimerTest() {
+    // Os::RawTime is already tested thoroughly, here we only test the IntervalTimer
+
+    // We are using RawTimes to get upper and lower bounds for what the interval should be
+    // This test expects functional RawTime (i.e. not Stubs)
+
+    Os::IntervalTimer timer;
+
+    Os::RawTime minStart;
+    Os::RawTime minStop;
+    Os::RawTime maxStart;
+    Os::RawTime maxStop;
+
+    maxStart.now();  // max bound
+    timer.start();   // actual timer under test
+    minStart.now();  // low bound
+
+    // Delay 5ms (5000us) for good measure's sake, value should not affect test
+    Os::Task::delay(Fw::TimeInterval(0, 5000));
+
+    minStop.now();  // low bound
+    timer.stop();   // actual timer under test
+    maxStop.now();  // max bound
+
+    Fw::TimeInterval testInterval;
+    Fw::TimeInterval minInterval;
+    Fw::TimeInterval maxInterval;
+
+    ASSERT_EQ(maxStop.getTimeInterval(maxStart, maxInterval), Os::RawTime::Status::OP_OK);
+    ASSERT_EQ(minStop.getTimeInterval(minStart, minInterval), Os::RawTime::Status::OP_OK);
+    ASSERT_EQ(timer.getTimeInterval(testInterval), Os::RawTime::Status::OP_OK);
+
+    // Compare intervals to make sure the IntervalTimer is returning within the bounds
+    // Note: this also tests the comparison operators of Fw::TimeInterval
+    ASSERT_TRUE(testInterval >= minInterval) << "Test interval: " << testInterval << " min interval: " << minInterval;
+    ASSERT_TRUE(testInterval <= maxInterval) << "Test interval: " << testInterval << " max interval: " << maxInterval;
+}
+```
+
+### `OsMutexBasicLockableTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsMutexBasicLockableTest.cpp`
+
+
+```cpp
+#include <gtest/gtest.h>
+
+#include <Fw/Types/Assert.hpp>
+#include <Os/Mutex.hpp>
+
+#include <mutex>
+
+// This is exclusively a compile-time check
+void testMutexBasicLockableTest() {
+    Os::Mutex mux;
+
+    {
+        std::lock_guard<Os::Mutex> lock(mux);
+    }
+
+    ASSERT_TRUE(true);  // if runs will pass
+}
+
+extern "C" {
+void mutexBasicLockableTest();
+}
+
+void mutexBasicLockableTest() {
+    testMutexBasicLockableTest();
+}
+```
+
+### `OsTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsTestMain.cpp`
+
+
+```cpp
+#include "gtest/gtest.h"
+
+extern "C" {
+void intervalTimerTest();
+void validateFileTest(const char* filename);
+void mutexBasicLockableTest();
+}
+const char* filename;
+// The interval timer unit test is timed off a 1 sec thread delay. Mac OS allows a large amount of
+// scheduling jitter to conserve energy, which rarely causes this sleep to be slightly shorter
+// (~0.99 s) or longer (~10 sec) than requested, causing the test to fail. The interval timer should
+// be rewritten to not directly utilize the OS clock, but in the mean time disabling this test on
+// Mac OS prevents intermittent unit test failures.
+TEST(Nominal, IntervalTimerTest) {
+    intervalTimerTest();
+}
+TEST(Nominal, ValidateFileTest) {
+    validateFileTest(filename);
+}
+
+TEST(Nominal, MutexBasicLockableTest) {
+    mutexBasicLockableTest();
+}
+
+int main(int argc, char* argv[]) {
+    filename = argv[0];
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `OsValidateFileTest.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/OsValidateFileTest.cpp`
+
+
+```cpp
+#include <Fw/Types/Assert.hpp>
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+#include <Os/ValidateFile.hpp>
+#include <Utils/Hash/HashBuffer.hpp>
+#include "gtest/gtest.h"
+
+#include <cstdio>
+
+void testValidateFile(const char* fileName) {
+    Os::ValidateFile::Status validateStatus;
+    Os::FileSystem::Status fsStatus;
+    const char nonexistentFileName[] = "thisfiledoesnotexist";
+    const char hashFileName[] = "hashed.hashed";
+    const char hardtoaccessHashFileName[] = "thisdirdoesnotexist/hashed.hashed";
+
+    // Create a hash file:
+    printf("Creating hash for file %s in %s\n", fileName, hashFileName);
+    validateStatus = Os::ValidateFile::createValidation(
+        fileName, hashFileName);  //!< create a validation of the file 'filename' and store it in
+    if (Os::ValidateFile::VALIDATION_OK != validateStatus) {
+        printf("\tFailed to hash file %s into hash file %s.\n", fileName, hashFileName);
+        printf("\tReturn status: %d\n", validateStatus);
+        fflush(stdout);
+        EXPECT_TRUE(0);
+        return;
+    }
+
+    // Create a hash of a file that doesn't exist:
+    printf("Creating hash for file %s in %s\n", nonexistentFileName, hashFileName);
+    validateStatus = Os::ValidateFile::createValidation(
+        nonexistentFileName, hashFileName);  //!< create a validation of the file 'filename' and store it in
+    if (Os::ValidateFile::FILE_DOESNT_EXIST != validateStatus) {
+        printf("\tFile %s was found and hashed, but it shouldn't exist.\n", nonexistentFileName);
+        printf("\tReturn status: %d\n", validateStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+
+    // Create a hash of a file that doesn't exist:
+    printf("Creating hash for file %s in %s\n", fileName, hardtoaccessHashFileName);
+    validateStatus = Os::ValidateFile::createValidation(
+        fileName, hardtoaccessHashFileName);  //!< create a validation of the file 'filename' and store it in
+    if (Os::ValidateFile::VALIDATION_FILE_DOESNT_EXIST != validateStatus) {
+        printf("\tFile %s was found and hashed, but hash %s  shouldn't exist.\n", fileName, hardtoaccessHashFileName);
+        printf("\tReturn status: %d\n", validateStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+
+    // Get file size:
+    printf("Checking file size of %s.\n", hashFileName);
+    FwSizeType fileSize = 0;
+    fsStatus = Os::FileSystem::getFileSize(hashFileName, fileSize);
+    if (Os::FileSystem::OP_OK != fsStatus) {
+        printf("\tFailed to get file size of %s\n", hashFileName);
+        printf("\tReturn status: %d\n", fsStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+    Utils::HashBuffer buf;
+    EXPECT_TRUE(static_cast<FwSizeType>(fileSize) == buf.getBuffCapacity());
+
+    // Validate file:
+    printf("Validating file %s against hash file %s\n", fileName, hashFileName);
+    validateStatus = Os::ValidateFile::validate(
+        fileName, hashFileName);  //!< create a validation of the file 'filename' and store it in
+    if (Os::ValidateFile::VALIDATION_OK != validateStatus) {
+        printf("\tFailed to validate file %s against hash file %s.\n", fileName, hashFileName);
+        printf("\tReturn status: %d\n", validateStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+
+    // Validate bad file:
+    printf("Validating file %s against hash file %s\n", fileName, fileName);
+    validateStatus =
+        Os::ValidateFile::validate(fileName, fileName);  //!< create a validation of the file 'filename' and store it in
+    if (Os::ValidateFile::VALIDATION_FAIL != validateStatus) {
+        printf("\tSucceeded in validating file %s against hash file %s. But this should fail.\n", fileName, fileName);
+        printf("\tReturn status: %d\n", validateStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+
+    // Remove hash file:
+    printf("Removing hash file %s\n", hashFileName);
+    fsStatus = Os::FileSystem::removeFile(hashFileName);
+    if (Os::FileSystem::OP_OK != fsStatus) {
+        printf("\tFailed to remove file (%s)\n", hashFileName);
+        printf("\tReturn status: %d\n", fsStatus);
+        EXPECT_TRUE(0);
+        return;
+    }
+}
+
+extern "C" {
+void validateFileTest(const char* filename);
+}
+
+void validateFileTest(const char* filename) {
+    testValidateFile(filename);
+}
+```

@@ -3,22 +3,402 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `communications.md`
 
-file--communications.md
-file--data-handler.md
-file--framing.md
-file--gds-app.md
-file--gds-function.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/communications.md`
+
+
+````markdown
+# Communication Plugin
+
+Communication Plugins allow users to swap out the mechanism used to send and receive raw bytes between the GDS and an F Prime deployment. These plugins provide a customizable interface for connecting to various communication layers, such as TCP/IP sockets, serial ports (UART), or custom radios.
+
+By subclassing `BaseAdapter`, developers can integrate GDS with mission-specific or non-standard hardware interfaces while maintaining compatibility with the rest of the GDS infrastructure.
+
+The F Prime [`IpAdapter`](https://github.com/nasa/fprime-gds/blob/0b749b54b8ff8c6b5a379a6e0adb5acacc7a3d30/src/fprime_gds/common/communication/adapters/ip.py#L46) is an example of a communication plugin supporting tcp.
+
+Communication is a `SELECTION` type plugin meaning only one communication plugin will run. It will be selected by the user.
+
+## Usage
+
+The Communication Plugin is responsible for performing byte-level I/O between the GDS and the F Prime deployment. This includes:
+
+- Reading incoming byte streams
+- Writing outgoing data packets
+
+This plugin runs in the communications process in the GDS.
+
+## Considerations
+
+- The plugin runs in the main GDS communication process.
+- Blocking or slow I/O in `read()` or `write()` will delay the rest of the GDS.
+- This plugin does **not** parse data—it only transmits raw bytes. Framing/parsing should be handled by a [Framing Plugin](./framing.md).
+
+## Required Interface
+
+To create a custom communication plugin, subclass the [`BaseAdapter`](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/common/communication/adapters/base.py#L16) class and implement the `read()` and `write()` methods.
+
+```python
+from fprime_gds.common.communication.adapters.base import BaseAdapter
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(BaseAdapter)
+class ExampleAdapter(BaseAdapter):
+    """Example adapter that connects to a TCP socket."""
+
+    def __init__(self):
+        import socket
+        self.sock = socket.create_connection(("localhost", 50000))
+
+    def read(self) -> bytes:
+        """Read raw bytes from the communication channel."""
+        return self.sock.recv(4096)
+
+    def write(self, frame: bytes):
+        """Send raw bytes to the communication channel."""
+        self.sock.sendall(frame)
 ```
 
-## 항목
+> [!NOTE]
+> These methods may be called frequently and must not block unnecessarily. Use non-blocking I/O or short timeouts to maintain system responsiveness.
+````
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/communications.md`](file--communications.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/data-handler.md`](file--data-handler.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/framing.md`](file--framing.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/gds-app.md`](file--gds-app.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/gds-function.md`](file--gds-function.md) — UTF-8 텍스트 파일 본문 포함
+### `data-handler.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/data-handler.md`
+
+
+````markdown
+# Data Handler Plugin
+
+Data Handler Plugins allow users to register custom consumers for decoded F Prime data types, such as telemetry, events, or channels. These plugins are useful for logging, transforming, forwarding, or visualizing data as it flows through the system.
+
+Each handler is dynamically registered to specific data descriptors (e.g., telemetry, events) and all custom data handlers run in a single custom data handler process. This allows these plugins to process decoded data without interfering with the core GDS runtime.
+
+An example [`OpenMCTPush`](https://github.com/fprime-community/fprime-openmct/blob/devel/src/fprime_openmct/data_push.py) plugin shows how to use a `DataHandler` to push data to another service (in this case via ZeroMQ).
+
+Data Handler plugins are `FEATURE` plugins.  All will run unless individually disabled by the user.
+
+
+## Usage
+
+To use a Data Handler plugin, implement the `data_callback()` method, which is invoked whenever a matching decoded data item is received. You can register for specific descriptor types  by returning them in the `get_descriptor()` method.
+
+Typical use cases include:
+
+- Writing telemetry or events to an external database
+- Sending selected data to a dashboard or network client
+- Logging filtered data to files
+
+## Considerations
+
+- Data Handler plugins run in the `CustomDataHandler` process.
+- Each handler is registered only for the descriptor types it advertises.
+- The decoded `data` object passed to `data_callback()` is specific to the descriptor type.
+
+## Required Interface
+
+To create a Data Handler plugin, subclass the [`DataHandlerPlugin`](https://github.com/nasa/fprime-gds/blob/devel/src/fprime_gds/common/handlers.py#L33) base class and implement the following:
+
+- `get_handled_descriptors() -> list[str]`:  
+  Return a list of descriptor types this plugin wants to receive. Use the following to determine which descriptors to support:
+
+| Descriptor String | Data                 |
+|-------------------|----------------------|
+| "FW_PACKET_TELEM" | F Prime channels     |
+| "FW_PACKET_LOG"   | F Prime events       |
+| "FW_PACKET_FILE"  | F Prime file packets |
+
+
+- `data_callback(data, source)`:  
+  Handle incoming decoded data. The `data` type depends on the descriptor. The `source` argument is unused GDS plugins.
+
+```python
+from fprime_gds.common.handlers import DataHandlerPlugin
+from fprime_gds.common.plugins import gds_plugin
+
+@gds_plugin(DataHandlerPlugin)
+class EventLogger(DataHandlerPlugin):
+    """Logs all event data to a file."""
+
+    def get_descriptor(self):
+        return ["FW_PACKET_LOG"]
+
+    def data_callback(self, data, source):
+        with open("event_log.txt", "a") as f:
+            f.write(f"{data}\n")
+```
+
+This plugin will be called for every decoded event received by the system.
+
+> [!NOTE]
+> The decoded data passed to data_callback() is an instance of the decoded object — for example, a ChannelTelemetry, Event, or CustomType depending on the descriptor.
+````
+
+### `framing.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/framing.md`
+
+
+````markdown
+# Framing Plugin
+
+Communication with an F Prime deployment happens via a communication protocol that passes byte streams, buffers, or packets. The framing plugin is used to assemble packets from the byte data, and then extract the F Prime data units from within the assembled payload. This plugin allows users to adapt the framing logic for different communication protocols (e.g., CCSDS). It does not decode F Prime data—only extracts F Prime packets from a protocol-specific frame.
+
+The [F Prime framing plugin](https://github.com/nasa/fprime-gds/blob/0b749b54b8ff8c6b5a379a6e0adb5acacc7a3d30/src/fprime_gds/common/communication/framing.py#L94) is an example of the framing plugin implementing the F Prime framing protocol.
+
+Framing is a `SELECTION` type plugin meaning only one framing plugin will run. It will be selected by the user.
+
+
+## Usage
+
+The Framing GDS Plugin allows users to customize how raw byte streams are framed and deframed during communication with an F Prime deployment over a direct link. This is particularly useful when integrating with hardware or protocols that require a specific framing strategy.
+
+## Considerations
+
+- The framing plugin runs inside the GDS communication thread.
+- Poorly performing or blocking implementations can delay all communications.
+
+## Required Interface
+
+To create a custom framing plugin, subclass the [`FramerDeframer`](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/common/communication/framing.py#L24) class and implement the following methods:
+
+- `def deframe(self, data: bytes, no_copy=False) -> Tuple[bytes, bytes, bytes]`:  
+  Parses incoming byte data into complete packets. Returns a tuple of:
+  (1) the extracted packet (or `None` if incomplete), 
+  (2) remaining bytes to be parsed, and 
+  (3) any discarded data.
+
+
+- `def frame(self, data: bytes) -> bytes`:  
+  Prepares an outgoing packet for transmission. This may include adding headers, checksums, or escape sequences.
+
+```python title="null_framing.py"
+from typing import Tuple
+from fprime_gds.common.communication.framing import FramerDeframer
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(FramerDeframer)
+class NullFramer(FramerDeframer):
+    """ No-op framer/deframer plugin """
+    def frame(self, data: bytes) -> bytes:
+        return data
+
+    def deframe(self, data: bytes) -> Tuple[bytes, bytes, bytes]:
+        return data, b"", b""
+```
+````
+
+### `gds-app.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/gds-app.md`
+
+
+````markdown
+# App Plugin
+
+GDS App Plugins allow users to extend the functionality of the F Prime Ground Data System by running custom Python applications in a separate process. These plugins are launched and managed by the GDS infrastructure and can be used to integrate new behaviors, data processors, UIs, or bridges to external systems.
+
+Each GDS App runs independently and a may communicate with the rest of the GDS through inter-process communication. This separation helps isolate potentially blocking or experimental functionality from core GDS processes.
+
+An example [`OpenMCT`](https://github.com/fprime-community/fprime-openmct/blob/devel/src/fprime_openmct/launch_plugin.py) shows how to use a GDS App plugin to launch another service (in this case `fprime-openmct-launch`, which is a script provided by the package).
+
+GDS Apps are `FEATURE` plugins.  All will run unless individually disabled by the user.
+
+
+## Usage
+
+GDS App Plugins are used to build custom applications that run alongside the GDS. These may include:
+
+- Custom dashboards or telemetry visualizers
+- Background processors for specific telemetry or event types
+- External data bridges (e.g., logging to a database, forwarding to a network endpoint)
+
+The plugin must define a subclass of `GdsApp` and be decorated with `@gds_plugin(GdsApp)`.
+
+## Considerations
+
+- GDS App Plugins are launched in separate processes by the GDS framework.
+- Improper plugin behavior (e.g., crashes or blocking) won't directly impact the core GDS, but may result in lost functionality or data.
+- The plugin is responsible for managing its own I/O and shutdown behavior.
+- Output from the plugin is not redirected or captured by GDS unless explicitly implemented.
+
+## Required Interface
+
+To create a custom App Plugin, subclass the [`GdsApp`](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/executables/apps.py#L76) class and implement the `get_process_invocation()` method. This method returns a list of command-line arguments that will be used by GDS to launch your app as a separate process.
+
+The process is started using `subprocess.Popen()`, so the returned list must represent a valid system command.
+
+```python
+from fprime_gds.executables.apps import GdsApp
+from fprime_gds.common.plugins import gds_plugin
+
+@gds_plugin(GdsApp)
+class CustomAppPlugin(GdsApp):
+    """Launches a custom Python script as a separate process."""
+
+    def get_process_invocation(self) -> list[str]:
+        return ["python3", "my_custom_app.py", "--verbose"]
+```
+
+This will cause the GDS to launch my_custom_app.py as a standalone process when the system starts. Any output or behavior of the script is entirely handled within that process and is not managed by the GDS unless your script implements its own communication mechanisms (e.g., sockets, files, etc.).
+
+> [!NOTE]
+> You are responsible for ensuring that your command works in the deployed environment and that any required files or dependencies are present.
+
+
+# App Plugin
+
+GDS App Plugins allow users to extend the functionality of the F Prime Ground Data System by running custom Python applications in a separate process. These plugins are launched and managed by the GDS infrastructure and can be used to integrate new behaviors, data processors, UIs, or bridges to external systems.
+
+Each GDS App runs independently and communicates with the rest of the GDS through inter-process communication. This separation helps isolate potentially blocking or experimental functionality from core GDS processes.
+
+## Usage
+
+GDS App Plugins are used to build custom applications that run alongside the GDS. These may include:
+
+- Custom dashboards or telemetry visualizers
+- Background processors for specific telemetry or event types
+- External data bridges (e.g., logging to a database, forwarding to a network endpoint)
+
+The plugin must define a subclass of `GdsApp` or use the convenience subclass `GdsStandardApp`, and be decorated with `@gds_plugin(GdsApp)`.
+
+## Considerations
+
+- GDS App Plugins are launched in separate processes by the GDS framework.
+- Misbehaving plugins may impact system monitoring if they crash, exit early, or consume excessive resources.
+- Plugins do not automatically communicate with the GDS unless they explicitly use shared resources such as the standard pipeline.
+- Use `GdsStandardApp` for most use cases where GDS data is consumed in a standard way.
+
+## Required Interface
+
+There are two approaches to GDS App plugins.
+
+## Option 1: Low-Level Interface (`GdsApp`)
+
+To fully control how your plugin is launched, subclass the [`GdsApp`](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/executables/apps.py#L76) base class and implement the `get_process_invocation()` method. This lets you run any external process.
+
+```python
+from fprime_gds.executables.apps import GdsApp
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(GdsApp)
+class MyExternalProcessPlugin(GdsApp):
+    """Launches a custom script in its own process."""
+
+    def get_process_invocation(self) -> list[str]:
+        return ["python3", "my_script.py", "--log=telemetry.txt"]
+```
+
+## Option 2: Recommended Interface (GdsStandardApp)
+
+For most applications that want to interact with GDS data, subclassing [`GdsStandardApp`](https://github.com/fprime-community/fprime-gds/blob/devel/src/fprime_gds/executables/apps.py#L166) is recommended. This helper class handles:
+
+- Wiring up the standard GDS data pipeline
+- Parsing and forwarding common CLI arguments
+- Invoking your application’s `start()` method inside a proper runtime environment
+
+Required Methods
+
+You must implement:
+
+    start(self, pipeline: StandardPipeline) -> None:
+    Main logic of your application. Called after GDS is initialized and connected. Passed a StandardPipeline
+
+You may optionally implement:
+
+    init(self) -> None:
+    Called before the pipeline is created. Useful for setting up internal state or environment configuration.
+
+    get_additional_arguments(self) -> Dict[Tuple[str], Dict]:
+    Return additional CLI arguments your app needs. These are injected into the GDS CLI parser.  It is a map of argument flags to Argparse add_argument keyword arguments.  These arguments are passed to the constructor.
+
+Example
+
+```python
+from fprime_gds.executables.apps import GdsStandardApp
+from fprime_gds.common.plugins import gds_plugin
+
+@gds_plugin(GdsApp)
+class MyCustomApp(GdsStandardApp):
+    """ Custom application """
+
+    def __init__(self, custom_rate, **kwargs):
+        super().__init__(**kwargs)
+        self.custom_rate = custom_rate
+
+    def start(self, pipeline):
+        print("App started: " + self.custom_rate)
+
+    
+    def get_additional_arguments(self):
+        from argparse import ArgumentParser
+        return {("--custom-rate",): {
+            "type": int,
+            "default": 10,
+            "help": "Polling rate (Hz)"
+        }
+```
+
+> [!NOTE]
+> You do not need to implement get_process_invocation() when using GdsStandardApp. It is handled automatically.
+
+### Example: Data Handlers
+
+A process to run custom data handler plugins shows an example of a GdsStandardApp: [CustomDataHandlers](https://github.com/nasa/fprime-gds/blob/0b749b54b8ff8c6b5a379a6e0adb5acacc7a3d30/src/fprime_gds/executables/apps.py#L285-L323).  It uses `init` to set up the plugin system before parsing arguments, and uses `start` to attach data handlers to the standard pipeline.
+
+### Summary
+
+| Use Case                                               | Base Class        | Notes                                                                 |
+|--------------------------------------------------------|-------------------|-----------------------------------------------------------------------|
+| Launch an external process (e.g., script or binary)    | `GdsApp`          | Manually constructs a command via `get_process_invocation()`          |
+| Build an app that uses the GDS StandardPipeline        | `GdsStandardApp`  | Recommended for most plugins that process telemetry, events, etc.     |
+| Add custom CLI arguments for your plugin               | `GdsStandardApp`  | Override `get_additional_arguments()`                                 |
+| Perform setup before pipeline creation                 | `GdsStandardApp`  | Override `init()` to customize environment or internal state          |
+| Create a headless service that does not use GDS data   | `GdsApp`          | For example, network bridges, monitors, or external loggers           |
+
+````
+
+### `gds-function.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/gds-function.md`
+
+
+````markdown
+# GDS Function Plugin
+
+GDS Function Plugins allow advanced users to inject custom logic directly into the GDS runtime process. These plugins are executed once at system startup and can be used for runtime introspection, dynamic registration, instrumentation, or one-time configuration.
+
+Unlike GDS Apps, GDS Function Plugins do **not** run in a separate process. They execute inside the main GDS process and run once.
+
+GDS Functions are `FEATURE` plugins.  All will run unless individually disabled by the user.
+
+
+## Usage
+
+This plugin is used to run custom one-time logic during the startup of the GDS. Typically, this is used to launch a process where the user needs more control than [GdsApp Plugins](./gds-app.md) allow.
+
+## Considerations
+
+- Runs during GDS startup, before the main loop begins
+- Executes in the **same process** as the main GDS
+- Blocking or long-running logic will delay GDS startup
+
+## Required Interface
+
+To create a custom GDS Function Plugin, subclass the [`GdsFunction`](https://github.com/nasa/fprime-gds/blob/devel/src/fprime_gds/executables/apps.py#L52) class and implement the `run()` method. This method will be called once, during GDS initialization.
+
+```python
+from fprime_gds.executables.apps import GdsFunction
+from fprime_gds.plugin.definitions import gds_plugin
+
+@gds_plugin(GdsFunction)
+class ExampleStartupHook(GdsFunction):
+    """Prints a message during GDS startup."""
+
+    def run(self):
+        print("Custom GDS function plugin initialized!")
+```
+````

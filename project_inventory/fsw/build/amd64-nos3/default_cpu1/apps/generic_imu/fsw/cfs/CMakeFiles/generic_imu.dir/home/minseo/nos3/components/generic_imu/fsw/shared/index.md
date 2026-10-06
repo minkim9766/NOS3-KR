@@ -3,18 +3,22 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_imu_device.c.gcno`
 
-file--generic_imu_device.c.gcno
-file--generic_imu_device.c.o
-file--generic_imu_device.c.o.d
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.gcno`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.gcno`](file--generic_imu_device.c.gcno) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.o`](file--generic_imu_device.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.o.d`](file--generic_imu_device.c.o.d) — 빌드 산출물 (경로만)
+### `generic_imu_device.c.o`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.o`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `generic_imu_device.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_imu/fsw/cfs/CMakeFiles/generic_imu.dir/home/minseo/nos3/components/generic_imu/fsw/shared/generic_imu_device.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

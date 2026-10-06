@@ -3,16 +3,243 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-user/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-user.component.html`
 
-file--edit-user.component.html
-file--edit-user.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-user/edit-user.component.html`
+
+
+```html
+@if (user$ | async; as user) {
+  <app-admin-page>
+    <app-admin-toolbar [label]="'Edit user: ' + (user.displayName || user.name)" />
+
+    <div class="form-content ya-form">
+      <form [formGroup]="form" novalidate autocomplete="off">
+        <ya-field label="Username">
+          <input disabled type="text" [value]="user.name" />
+        </ya-field>
+
+        <ya-field label="Display name">
+          <input formControlName="displayName" type="text" />
+          @if (user.identities && user.identities.length > 0) {
+            <span class="hint">
+              This user has an external identity. Changes to this field may get overwritten on next
+              login.
+            </span>
+          }
+        </ya-field>
+
+        <ya-field label="Email">
+          <input formControlName="email" type="text" />
+          @if (user.identities && user.identities.length > 0) {
+            <span class="hint">
+              This user has an external identity. Changes to this field may get overwritten on next
+              login.
+            </span>
+          }
+        </ya-field>
+
+        <ya-field label="Active">
+          <mat-slide-toggle formControlName="active" />
+          <br />
+          <span class="hint">
+            Inactive users are considered "blocked". They are not or no longer able to login.
+          </span>
+        </ya-field>
+
+        <ya-field label="Superuser">
+          <mat-slide-toggle formControlName="superuser" />
+          <br />
+          <span class="hint">
+            Superusers bypass any permission checks. This attribute is intended for system
+            administrators only.
+          </span>
+        </ya-field>
+
+        <ya-field-divider />
+
+        <ya-button (click)="showAddRolesDialog()" icon="add_circle">Add roles</ya-button>
+
+        @if (roleItems$ | async; as roleItems) {
+          <table yaDataTable style="margin-top: 16px; width: 100%">
+            <tr>
+              <th>Role</th>
+              <th></th>
+            </tr>
+            @if (!roleItems.length) {
+              <tr>
+                <td colspan="2">No rows to display</td>
+              </tr>
+            }
+            @for (item of roleItems; track item) {
+              <tr>
+                <td>{{ item.label }}</td>
+                <td style="text-align: right">
+                  <ya-text-action icon="delete" (click)="deleteItem(item)">DELETE</ya-text-action>
+                </td>
+              </tr>
+            }
+          </table>
+        }
+      </form>
+
+      <p>&nbsp;</p>
+      <ya-toolbar appearance="bottom">
+        <ya-button (click)="location.back()">Cancel</ya-button>
+        <ya-button
+          appearance="primary"
+          (click)="onConfirm()"
+          [disabled]="!(dirty$ | async) || !form.valid">
+          SAVE CHANGES
+        </ya-button>
+      </ya-toolbar>
+    </div>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `edit-user.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-user/edit-user.component.html`](file--edit-user.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-user/edit-user.component.ts`](file--edit-user.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-user/edit-user.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  EditUserRequest,
+  MessageService,
+  UserInfo,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import {
+  AddRolesDialogComponent,
+  RoleItem,
+} from '../add-roles-dialog/add-roles-dialog.component';
+
+@Component({
+  templateUrl: './edit-user.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class EditUserComponent implements OnDestroy {
+  form: UntypedFormGroup;
+  user$: Promise<UserInfo>;
+  private user: UserInfo;
+
+  roleItems$ = new BehaviorSubject<RoleItem[]>([]);
+
+  dirty$ = new BehaviorSubject<boolean>(false);
+  private formSubscription: Subscription;
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    readonly location: Location,
+  ) {
+    title.setTitle('Edit user');
+    const username = route.snapshot.paramMap.get('username')!;
+    this.user$ = yamcs.yamcsClient.getUser(username);
+    this.user$.then((user) => {
+      this.user = user;
+      this.form = formBuilder.group({
+        displayName: new UntypedFormControl(user.displayName),
+        email: new UntypedFormControl(user.email),
+        active: new UntypedFormControl(user.active),
+        superuser: new UntypedFormControl(user.superuser),
+      });
+      this.formSubscription = this.form.valueChanges.subscribe(() => {
+        this.dirty$.next(true);
+      });
+      const roleItems: RoleItem[] = [];
+      if (user.roles) {
+        for (const role of user.roles) {
+          roleItems.push({
+            label: role.name,
+            role: role,
+          });
+        }
+      }
+      this.updateRoleItems(roleItems, false);
+    });
+  }
+
+  showAddRolesDialog() {
+    const dialogRef = this.dialog.open(AddRolesDialogComponent, {
+      data: {
+        items: this.roleItems$.value,
+      },
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((roleItems) => {
+      if (roleItems) {
+        this.updateRoleItems([...this.roleItems$.value, ...roleItems]);
+      }
+    });
+  }
+
+  private updateRoleItems(items: RoleItem[], dirty = true) {
+    items.sort((i1, i2) =>
+      i1.label < i2.label ? -1 : i1.label > i2.label ? 1 : 0,
+    );
+    this.roleItems$.next(items);
+    this.dirty$.next(dirty);
+  }
+
+  deleteItem(item: RoleItem) {
+    this.updateRoleItems(this.roleItems$.value.filter((i) => i !== item));
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    const options: EditUserRequest = {
+      roleAssignment: {
+        roles: this.roleItems$.value
+          .filter((item) => item.role)
+          .map((item) => item.role!.name),
+      },
+    };
+    if (formValue.displayName !== this.user.displayName) {
+      options.displayName = formValue.displayName;
+    }
+    if (formValue.email !== this.user.email) {
+      options.email = formValue.email;
+    }
+    if (formValue.active !== this.user.active) {
+      options.active = formValue.active;
+    }
+    if (formValue.superuser !== this.user.superuser) {
+      options.superuser = formValue.superuser;
+    }
+
+    this.yamcs.yamcsClient
+      .editUser(this.user.name, options)
+      .then(() => this.router.navigate(['..'], { relativeTo: this.route }))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.formSubscription?.unsubscribe();
+  }
+}
+```

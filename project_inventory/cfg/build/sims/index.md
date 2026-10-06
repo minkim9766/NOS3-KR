@@ -3,30 +3,58 @@
 
 **경로:** `cfg/build/sims/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `nos3-simulator-multipleGDS.xml`
 
-file--nos3-simulator-multipleGDS.xml
-file--nos3-simulator.shmem.xml
-file--nos3-simulator.sockets.xml
-file--nos3-simulator.xml
-file--nos_engine_server_config.json
-file--sc-1-nos3-simulator.xml
-file--sc-2-nos3-simulator.xml
-file--sc-3-nos3-simulator.xml
-file--sim_log_config.xml
-```
+**경로:** `cfg/build/sims/nos3-simulator-multipleGDS.xml`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`cfg/build/sims/nos3-simulator-multipleGDS.xml`](file--nos3-simulator-multipleGDS.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/nos3-simulator.shmem.xml`](file--nos3-simulator.shmem.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/nos3-simulator.sockets.xml`](file--nos3-simulator.sockets.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/nos3-simulator.xml`](file--nos3-simulator.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/nos_engine_server_config.json`](file--nos_engine_server_config.json) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/sc-1-nos3-simulator.xml`](file--sc-1-nos3-simulator.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/sc-2-nos3-simulator.xml`](file--sc-2-nos3-simulator.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/sc-3-nos3-simulator.xml`](file--sc-3-nos3-simulator.xml) — 빌드 산출물 (경로만)
-- [`cfg/build/sims/sim_log_config.xml`](file--sim_log_config.xml) — 빌드 산출물 (경로만)
+### `nos3-simulator.shmem.xml`
+
+**경로:** `cfg/build/sims/nos3-simulator.shmem.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-simulator.sockets.xml`
+
+**경로:** `cfg/build/sims/nos3-simulator.sockets.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos3-simulator.xml`
+
+**경로:** `cfg/build/sims/nos3-simulator.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `nos_engine_server_config.json`
+
+**경로:** `cfg/build/sims/nos_engine_server_config.json`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc-1-nos3-simulator.xml`
+
+**경로:** `cfg/build/sims/sc-1-nos3-simulator.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc-2-nos3-simulator.xml`
+
+**경로:** `cfg/build/sims/sc-2-nos3-simulator.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sc-3-nos3-simulator.xml`
+
+**경로:** `cfg/build/sims/sc-3-nos3-simulator.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sim_log_config.xml`
+
+**경로:** `cfg/build/sims/sim_log_config.xml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

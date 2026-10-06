@@ -3,28 +3,1042 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ArrayParameterCacheTest.java`
 
-file--ArrayParameterCacheTest.java
-file--ArrayValueTest.java
-file--LastValueCacheTest.java
-file--LocalParameterManagerTest.java
-file--ParameterValueListTest.java
-file--SubsriptionArrayTest.java
-file--ValueArrayTest.java
-file--ValueTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ArrayParameterCacheTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameterarchive.TestUtils;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+
+public class ArrayParameterCacheTest {
+    Parameter p1 = new Parameter("p1");
+    Parameter p2 = new Parameter("p2");
+
+    @BeforeAll
+    public static void before() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void test1() {
+        ParameterCacheConfig pcc = new ParameterCacheConfig(true, true, 1000, 4096);
+
+        ArrayParameterCache pcache = new ArrayParameterCache("test", pcc); // 1 second
+        assertNull(pcache.getLastValue(p1));
+
+        ParameterValue p1v1 = getStringParameterValue(p1, 10);
+        p1v1.setExpireMillis(1000);
+
+        ParameterValue p2v1 = getFloatParameterValue(p2, 10);
+        p2v1.setInvalid();
+        pcache.update(Arrays.asList(p1v1, p2v1));
+
+        TestUtils.checkEquals(p1v1, pcache.getLastValue(p1));
+        TestUtils.checkEquals(p2v1, pcache.getLastValue(p2));
+
+        ParameterValue p1v2 = getStringParameterValue(p1, 20);
+        p1v2.setExpireMillis(1000);
+
+        pcache.update(Arrays.asList(p1v2));
+
+        TestUtils.checkEquals(p1v2, pcache.getLastValue(p1));
+        TestUtils.checkEquals(p2v1, pcache.getLastValue(p2));
+
+        List<ParameterValue> pvlist = pcache.getValues(Arrays.asList(p1, p2));
+
+        checkEquals(pvlist, p1v2, p2v1);
+
+        pvlist = pcache.getValues(Arrays.asList(p2, p1));
+        checkEquals(pvlist, p2v1, p1v1);
+
+    }
+
+    @Test
+    public void testNoCacheAll() {
+        ParameterCacheConfig pcc = new ParameterCacheConfig(true, false, 1000, 4096);
+
+        ArrayParameterCache pcache = new ArrayParameterCache("test", pcc); // 1 second
+        ParameterValue p1v0 = getStringParameterValue(p1, 0);
+        pcache.update(Arrays.asList(p1v0));
+        assertNull(pcache.getLastValue(p1));
+
+        ParameterValue p1v1 = getStringParameterValue(p1, 10);
+        ParameterValue p2v1 = getFloatParameterValue(p2, 10);
+        pcache.update(Arrays.asList(p1v1, p2v1));
+
+        TestUtils.checkEquals(p1v1, pcache.getLastValue(p1));
+        assertNull(pcache.getLastValue(p2));
+
+        ParameterValue p2v2 = getStringParameterValue(p2, 20);
+        pcache.update(Arrays.asList(p2v2));
+
+        TestUtils.checkEquals(p2v2, pcache.getLastValue(p2));
+
+        List<ParameterValue> pvlist = pcache.getValues(Arrays.asList(p1, p2));
+        checkEquals(pvlist, p1v1, p2v2);
+
+        pvlist = pcache.getValues(Arrays.asList(p2, p1));
+        checkEquals(pvlist, p2v2, p1v1);
+
+    }
+
+    @Test
+    public void testCircularity() {
+        ParameterCacheConfig pcc = new ParameterCacheConfig(true, true, 1000, 4096);
+        ArrayParameterCache pcache = new ArrayParameterCache("test", pcc);
+        assertNull(pcache.getLastValue(p1));
+        List<ParameterValue> expectedPVlist = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            ParameterValue pv = getUint64ParameterValue(p1, i * 100L);
+            pv.setInvalid();
+            expectedPVlist.add(pv);
+            pcache.update(Arrays.asList(pv));
+        }
+        ParameterValue pv0 = expectedPVlist.get(0);
+
+        List<ParameterValue> pvlist = pcache.getAllValues(p1);
+        assertEquals(10, pvlist.size());
+        for (int i = 0; i < 10; i++) {
+            assertEquals(pv0.getStatus().hashCode(), pvlist.get(i).getStatus().hashCode());
+            TestUtils.checkEquals(expectedPVlist.get(9 - i), pvlist.get(i));
+        }
+
+        for (int i = 10; i < 16; i++) {
+            ParameterValue pv = getUint64ParameterValue(p1, i * 100L);
+            expectedPVlist.add(pv);
+            pcache.update(Arrays.asList(pv));
+        }
+
+        pvlist = pcache.getAllValues(p1);
+
+        assertEquals(16, pvlist.size());
+        for (int i = 0; i < 16; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(15 - i), pvlist.get(i));
+        }
+
+        ParameterValue pv = getUint64ParameterValue(p1, 16 * 100L);
+        pcache.update(Arrays.asList(pv));
+        expectedPVlist.add(pv);
+
+        pvlist = pcache.getAllValues(p1);
+        assertEquals(16, pvlist.size());
+        for (int i = 0; i < 16; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(16 - i), pvlist.get(i));
+        }
+    }
+
+    @Test
+    public void test5() {
+        ParameterCacheConfig pcc = new ParameterCacheConfig(true, true, 2000, 4096);
+        ArrayParameterCache pcache = new ArrayParameterCache("test", pcc); // should keep at least 200 samples
+        assertNull(pcache.getLastValue(p1));
+        List<ParameterValue> expectedPVlist = new ArrayList<>();
+        for (int i = 0; i < 256; i++) {
+            ParameterValue pv = getUint64ParameterValue(p1, i * 10L);
+            expectedPVlist.add(pv);
+            pcache.update(Arrays.asList(pv));
+        }
+
+        List<ParameterValue> pvlist = pcache.getAllValues(p1);
+        assertEquals(256, pvlist.size());
+        for (int i = 0; i < 256; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(255 - i), pvlist.get(i));
+        }
+        ParameterValue pv = getUint64ParameterValue(p1, 256 * 10L);
+        pcache.update(Arrays.asList(pv));
+        expectedPVlist.add(pv);
+
+        pv = getUint64ParameterValue(p1, 257 * 10L);
+        pcache.update(Arrays.asList(pv));
+        expectedPVlist.add(pv);
+
+        pvlist = pcache.getAllValues(p1);
+        assertEquals(256, pvlist.size());
+        for (int i = 0; i < 256; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(257 - i), pvlist.get(i));
+        }
+
+    }
+
+    @Test
+    public void testMaxSize() {
+        ParameterCacheConfig pcc = new ParameterCacheConfig(true, true, 2000, 128);
+        ArrayParameterCache pcache = new ArrayParameterCache("test", pcc); // should keep max 128 samples
+        assertNull(pcache.getLastValue(p1));
+        List<ParameterValue> expectedPVlist = new ArrayList<>();
+        for (int i = 0; i < 256; i++) {
+            ParameterValue pv = getUint64ParameterValue(p1, i * 10L);
+            expectedPVlist.add(pv);
+            pcache.update(Arrays.asList(pv));
+        }
+
+        List<ParameterValue> pvlist = pcache.getAllValues(p1);
+        assertEquals(128, pvlist.size());
+        for (int i = 0; i < 128; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(255 - i), pvlist.get(i));
+        }
+        ParameterValue pv = getUint64ParameterValue(p1, 256 * 10L);
+        pcache.update(Arrays.asList(pv));
+        expectedPVlist.add(pv);
+
+        pv = getUint64ParameterValue(p1, 257 * 10L);
+        pcache.update(Arrays.asList(pv));
+        expectedPVlist.add(pv);
+
+        pvlist = pcache.getAllValues(p1);
+        assertEquals(128, pvlist.size());
+        for (int i = 0; i < 128; i++) {
+            TestUtils.checkEquals(expectedPVlist.get(257 - i), pvlist.get(i));
+        }
+
+    }
+
+    ParameterValue getUint64ParameterValue(Parameter p, long t) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(t);
+        pv.setAcquisitionTime(t + 5);
+        pv.setEngineeringValue(ValueUtility.getUint64Value(t));
+        return pv;
+    }
+
+    ParameterValue getFloatParameterValue(Parameter p, long t) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(t);
+        pv.setEngineeringValue(ValueUtility.getFloatValue((float) t));
+        return pv;
+    }
+
+    ParameterValue getStringParameterValue(Parameter p, long timestamp) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setGenerationTime(timestamp);
+        pv.setEngineeringValue(ValueUtility.getStringValue(p.getName() + "_" + timestamp));
+        return pv;
+    }
+
+    public static void checkEquals(List<ParameterValue> actual, ParameterValue... expected) {
+        assertEquals(expected.length, actual.size());
+        for (int i = 0; i < expected.length; i++) {
+            ParameterValue pv = expected[i];
+            TestUtils.checkEquals(pv, actual.get(i));
+        }
+    }
+}
 ```
 
-## 항목
+### `ArrayValueTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ArrayParameterCacheTest.java`](file--ArrayParameterCacheTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ArrayValueTest.java`](file--ArrayValueTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/LastValueCacheTest.java`](file--LastValueCacheTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/LocalParameterManagerTest.java`](file--LocalParameterManagerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ParameterValueListTest.java`](file--ParameterValueListTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/SubsriptionArrayTest.java`](file--SubsriptionArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ValueArrayTest.java`](file--ValueArrayTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ValueTest.java`](file--ValueTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ArrayValueTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.Test;
+
+public class ArrayValueTest {
+
+    @Test
+    public void testFlattenUnflatten2() {
+        int[] dim = new int[] { 4, 2 };
+        int[] idx = new int[] { 2, 1 };
+        int flatidx = ArrayValue.flatIndex(dim, idx);
+        assertEquals(5, flatidx);
+
+        int[] idx1 = new int[2];
+        ArrayValue.unFlattenIndex(flatidx, dim, idx1);
+
+        assertArrayEquals(idx, idx1);
+
+        int[][] x = new int[3][5];
+        x[0] = new int[5];
+    }
+
+    @Test
+    public void testFlattenUnflatten3() {
+        int[] dim = new int[] { 4, 2, 2 };
+        int[] idx = new int[] { 1, 1, 0 };
+        int flatidx = ArrayValue.flatIndex(dim, idx);
+        assertEquals(6, flatidx);
+
+        int[] idx1 = new int[3];
+        ArrayValue.unFlattenIndex(flatidx, dim, idx1);
+
+        assertArrayEquals(idx, idx1);
+    }
+
+    @Test
+    public void testFlattenUnflatten4() {
+        int[] dim = new int[] { 4, 2, 2, 3 };
+        int[] idx = new int[4];
+        for (int i = 0; i < 40; i++) {
+            ArrayValue.unFlattenIndex(i, dim, idx);
+        }
+    }
+}
+```
+
+### `LastValueCacheTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/LastValueCacheTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.Arrays;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.LastValueCache.ParamBuffer;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.Parameter;
+
+public class LastValueCacheTest {
+    static Parameter p0, p1;
+    static ParameterValue p0v0, p1v0, p1v1, p1v2, p1v3;
+
+    @BeforeAll
+    static public void beforeTest() {
+        TimeEncoding.setUp();
+
+        p0 = new Parameter("p0");
+        p0.setDataSource(DataSource.CONSTANT);
+        p0v0 = new ParameterValue(p0);
+
+        p1 = new Parameter("p1");
+        p1v0 = new ParameterValue(p1);
+        p1v1 = new ParameterValue(p1);
+        p1v2 = new ParameterValue(p1);
+        p1v3 = new ParameterValue(p1);
+    }
+
+    @Test
+    public void test0() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            LastValueCache lvc = new LastValueCache(Arrays.asList(p0v0));
+            lvc.enableBuffering(p0, 3);
+        });
+    }
+
+    @Test
+    public void testPb1() {
+        ParamBuffer pb = new ParamBuffer(3);
+
+        pb.add(p1v0);
+        assertEquals(p1v0, pb.nthFromEnd(0));
+        assertNull(pb.nthFromEnd(1));
+
+        pb.add(p1v1);
+        assertEquals(p1v1, pb.nthFromEnd(0));
+        assertEquals(p1v0, pb.nthFromEnd(1));
+
+    }
+
+    @Test
+    public void test1() {
+        LastValueCache lvc = new LastValueCache(Arrays.asList(p0v0));
+        assertEquals(1, lvc.size());
+        assertEquals(p0v0, lvc.getValue(p0));
+
+        lvc.add(p1v0);
+        assertEquals(2, lvc.size());
+
+        assertEquals(p1v0, lvc.getValue(p1));
+
+        lvc.add(p1v1);
+        assertEquals(2, lvc.size());
+        assertEquals(p1v1, lvc.getValue(p1));
+
+    }
+
+    @Test
+    public void test2() {
+        assertThrows(IllegalStateException.class, () -> {
+            LastValueCache lvc = new LastValueCache(Arrays.asList(p0v0));
+            lvc.getValueFromEnd(p1, 1);
+        });
+    }
+
+    @Test
+    public void test3() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            LastValueCache lvc = new LastValueCache(Arrays.asList(p0v0));
+            lvc.enableBuffering(p1, 2);
+            lvc.getValueFromEnd(p1, -2);
+        });
+    }
+
+    @Test
+    public void test4() {
+        LastValueCache lvc = new LastValueCache(Arrays.asList(p0v0));
+        lvc.enableBuffering(p1, 3);
+        assertNull(lvc.getValueFromEnd(p1, 2));
+
+        lvc.add(p1v0);
+        assertEquals(p1v0, lvc.getValue(p1));
+        assertEquals(p1v0, lvc.getValueFromEnd(p1, 0));
+        assertNull(lvc.getValueFromEnd(p1, 2));
+
+        lvc.add(p1v1);
+        lvc.add(p1v2);
+        assertEquals(p1v2, lvc.getValueFromEnd(p1, 0));
+        assertEquals(p1v1, lvc.getValueFromEnd(p1, 1));
+        assertEquals(p1v0, lvc.getValueFromEnd(p1, 2));
+
+        lvc.enableBuffering(p1, 4);
+        lvc.add(p1v3);
+        assertEquals(p1v3, lvc.getValueFromEnd(p1, 0));
+        assertEquals(p1v2, lvc.getValueFromEnd(p1, 1));
+        assertEquals(p1v1, lvc.getValueFromEnd(p1, 2));
+        assertEquals(p1v0, lvc.getValueFromEnd(p1, 3));
+    }
+}
+```
+
+### `LocalParameterManagerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/LocalParameterManagerTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.yamcs.Processor;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.protobuf.Yamcs;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Parameter;
+
+public class LocalParameterManagerTest {
+    Mdb mdb;
+    MyParamProcessor paraProc;
+    LocalParameterManager localParamMgr;
+    Parameter p1, p2, p4, p7, p9;
+    @Mock
+    private Processor mockProcessor;
+
+    @Mock
+    ParameterProcessorManager ppm;
+
+    ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+
+    @BeforeAll
+    static public void setupTime() {
+        YConfiguration.setupTest(null);
+        MdbFactory.reset();
+
+    }
+
+    @BeforeEach
+    public void beforeTest() throws Exception {
+        MockitoAnnotations.openMocks(this);
+
+        localParamMgr = new LocalParameterManager();
+        mdb = MdbFactory.createInstanceByConfig("refmdb");
+        when(mockProcessor.getMdb()).thenReturn(mdb);
+        when(mockProcessor.getParameterProcessorManager()).thenReturn(ppm);
+        when(mockProcessor.getTimer()).thenReturn(timer);
+
+        localParamMgr.init(mockProcessor, YConfiguration.emptyConfig(), null);
+        paraProc = new MyParamProcessor();
+        localParamMgr.setParameterProcessor(paraProc);
+
+        p1 = mdb.getParameter("/REFMDB/SUBSYS1/LocalPara1");
+        p2 = localParamMgr.getParameter(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/LocalPara2").build());
+
+        p4 = mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue4");
+        p7 = mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue7");
+        p9 = mdb.getParameter("/REFMDB/SUBSYS1/LocalParaTime9");
+
+        assertNotNull(p1);
+        assertNotNull(p2);
+    }
+
+    @Test
+    public void test() throws Exception {
+        assertFalse(
+                localParamMgr.canProvide(NamedObjectId.newBuilder().setName("/REFMDB/SUBSYS1/FloatPara11_2").build()));
+        localParamMgr.startProviding(p1);
+
+        ParameterValue pv1 = new ParameterValue(p1);
+        pv1.setEngValue(ValueUtility.getUint32Value(3));
+        ParameterValue pv2 = new ParameterValue(p2);
+        pv2.setEngValue(ValueUtility.getDoubleValue(2.72));
+
+        List<ParameterValue> pvList = Arrays.asList(pv1, pv2);
+
+        localParamMgr.updateParameters(pvList);
+        Collection<ParameterValue> pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertNotNull(pvs);
+
+        assertEquals(1, pvs.size());
+        ParameterValue pv = pvs.iterator().next();
+        assertEquals(p1, pv.getParameter());
+
+        localParamMgr.stopProviding(p1);
+        localParamMgr.updateParameters(pvList);
+        pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertNull(pvs);
+
+        localParamMgr.startProviding(p1);
+        localParamMgr.startProviding(p2);
+        localParamMgr.updateParameters(pvList);
+        pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(2, pvs.size());
+
+        localParamMgr.stopProviding(p2);
+        localParamMgr.updateParameters(pvList);
+        pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(1, pvs.size());
+        pv = pvs.iterator().next();
+        assertEquals(p1, pv.getParameter());
+
+        localParamMgr.startProvidingAll();
+
+        localParamMgr.updateParameters(pvList);
+        pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(2, pvs.size());
+    }
+
+    @Test
+    public void testTypeConversion() throws Exception {
+        localParamMgr.startProviding(p2);
+        ParameterValue pv2 = new ParameterValue(p2);
+        pv2.setEngValue(ValueUtility.getUint32Value(3));
+        localParamMgr.updateParameters(Arrays.asList(pv2));
+
+        List<ParameterValue> pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(3.0, pvs.get(0).getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testTypeConversion2() throws Exception {
+        localParamMgr.startProviding(p4);
+        ParameterValue pv4 = new ParameterValue(p4);
+        AggregateParameterType p4type = (AggregateParameterType) p4.getParameterType();
+        AggregateValue sentv = new AggregateValue(p4type.getMemberNames());
+        sentv.setMemberValue("member1", ValueUtility.getSint64Value(32)); // will be converted to UINT32
+        sentv.setMemberValue("member2", ValueUtility.getSint64Value(10)); // will be converted to FLOAT
+        pv4.setEngValue(sentv);
+        localParamMgr.updateParameters(Arrays.asList(pv4));
+
+        List<ParameterValue> pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(1, pvs.size());
+        AggregateValue rcvd = (AggregateValue) pvs.get(0).getEngValue();
+        assertEquals(32, rcvd.getMemberValue("member1").getUint32Value());
+        assertEquals(10, rcvd.getMemberValue("member2").getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testTypeConversion7() throws Exception {
+        localParamMgr.startProviding(p7);
+        ParameterValue pv7 = new ParameterValue(p7);
+        ArrayValue sentv = new ArrayValue(new int[] { 2 }, Yamcs.Value.Type.SINT32);
+        sentv.setElementValue(0, ValueUtility.getSint32Value(1));// will be converted to FLOAT
+        sentv.setElementValue(1, ValueUtility.getSint32Value(2));// will be converted to FLOAT
+        pv7.setEngValue(sentv);
+        localParamMgr.updateParameters(Arrays.asList(pv7));
+
+        List<ParameterValue> pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(1, pvs.size());
+        ArrayValue rcvd = (ArrayValue) pvs.get(0).getEngValue();
+        assertEquals(1, rcvd.getElementValue(0).getFloatValue(), 1e-5);
+        assertEquals(2, rcvd.getElementValue(1).getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void testTypeConversion9() throws Exception {
+        String ts = "2020-03-09T12:09:00Z";
+
+        localParamMgr.startProviding(p9);
+        ParameterValue pv9 = new ParameterValue(p9);
+        pv9.setEngValue(ValueUtility.getStringValue(ts));
+        localParamMgr.updateParameters(Arrays.asList(pv9));
+
+        List<ParameterValue> pvs = paraProc.received.poll(5, TimeUnit.SECONDS);
+        assertEquals(1, pvs.size());
+        TimestampValue tv = (TimestampValue) pvs.get(0).getEngValue();
+        assertEquals(TimeEncoding.parse(ts), tv.getTimestampValue());
+    }
+
+    @Test
+    public void testInvalidConversion1() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            localParamMgr.startProviding(p1);
+            ParameterValue pv1 = new ParameterValue(p1);
+            pv1.setEngValue(ValueUtility.getUint64Value(Integer.MAX_VALUE * 2 + 1)); // out of range for UINT32
+            localParamMgr.updateParameters(Arrays.asList(pv1));
+        });
+    }
+
+    class MyParamProcessor implements ParameterProcessor {
+        BlockingQueue<List<ParameterValue>> received = new LinkedBlockingQueue<>();
+
+        @Override
+        public void process(ProcessingContext data) {
+            try {
+                received.put(new ArrayList<>(data.getTmParams()));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+### `ParameterValueListTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ParameterValueListTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+
+public class ParameterValueListTest {
+
+    @BeforeAll
+    public static void beforeClass() {
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void test1() {
+        int n = 10000;
+        Parameter[] params = new Parameter[n];
+        List<ParameterValue> pvalues = new ArrayList<>(n + 1);
+        for (int i = 0; i < n; i++) {
+            params[i] = new Parameter("parameter" + i);
+            ParameterValue pv = new ParameterValue(params[i]);
+            pvalues.add(pv);
+        }
+        ParameterValue pv2bis = new ParameterValue(params[2]);
+        pvalues.add(pv2bis);
+
+        // bulk create
+        ParameterValueList pvlist1 = new ParameterValueList(pvalues);
+        assertEquals(n + 1, pvlist1.getSize());
+
+        assertEquals(pvalues.get(n), pvlist1.getLast());
+        assertEquals(pvalues.get(0), pvlist1.getFirst());
+
+        ParameterValue pv10 = pvlist1.getLastInserted(params[10]);
+        assertEquals(pvalues.get(10), pv10);
+
+        ParameterValue pv2 = pvlist1.getLastInserted(params[2]);
+        assertEquals(pvalues.get(n), pv2);
+        assertEquals(pvalues.get(2), pvlist1.getFirstInserted(params[2]));
+
+        assertEquals(1, pvlist1.count(params[0]));
+        assertEquals(2, pvlist1.count(params[2]));
+
+        List<ParameterValue> foreachresult1 = new ArrayList<>();
+        pvlist1.forEach(params[1], (ParameterValue pv) -> foreachresult1.add(pv));
+        assertEquals(Arrays.asList(pvalues.get(1)), foreachresult1);
+
+        List<ParameterValue> foreachresult2 = new ArrayList<>();
+        pvlist1.forEach(params[2], (ParameterValue pv) -> foreachresult2.add(pv));
+        assertEquals(Arrays.asList(pvalues.get(2), pvalues.get(n)), foreachresult2);
+
+        List<ParameterValue> pvalues1 = new ArrayList<>(pvalues);
+        pvalues1.removeAll(pvlist1);
+        assertTrue(pvalues1.isEmpty());
+
+        //////////// one by one
+        ParameterValueList pvlist2 = new ParameterValueList();
+
+        for (ParameterValue pv : pvalues) {
+            pvlist2.add(pv);
+        }
+        assertEquals(n + 1, pvlist2.getSize());
+
+        List<ParameterValue> pvalues2 = new ArrayList<>(pvalues);
+        pvalues2.removeAll(pvlist2);
+        assertTrue(pvalues2.isEmpty());
+
+        // add all
+        ParameterValueList pvlist3 = new ParameterValueList();
+        pvlist3.addAll(pvalues);
+        assertEquals(n + 1, pvlist3.getSize());
+        List<ParameterValue> pvalues3 = new ArrayList<>(pvalues);
+        pvalues3.removeAll(pvlist3);
+        assertTrue(pvalues3.isEmpty());
+
+    }
+
+    @Test
+    public void testRemove() {
+        Parameter p = new Parameter("parameter");
+        ParameterValue pv1 = new ParameterValue(p);
+        pv1.setStringValue("pv1");
+        ParameterValue pv2 = new ParameterValue(p);
+        pv2.setStringValue("pv2");
+
+        ParameterValueList pvlist = new ParameterValueList();
+        pvlist.add(pv1);
+        assertEquals(1, pvlist.getSize());
+
+        assertEquals(pv1, pvlist.removeFirst(p));
+        assertEquals(0, pvlist.getSize());
+        pvlist.add(pv1);
+        assertEquals(pv1, pvlist.removeLast(p));
+        assertEquals(0, pvlist.getSize());
+
+        pvlist.add(pv1);
+        pvlist.add(pv2);
+
+        assertEquals(pv1, pvlist.removeFirst(p));
+        assertEquals(1, pvlist.getSize());
+        assertEquals(pv2, pvlist.getLastInserted(p));
+        pvlist.add(pv1);
+
+        assertEquals(pv1, pvlist.removeLast(p));
+        assertEquals(1, pvlist.getSize());
+        assertEquals(pv2, pvlist.getLastInserted(p));
+
+        assertEquals(pv2, pvlist.removeLast(p));
+        assertEquals(0, pvlist.getSize());
+    }
+
+    @Test
+    public void testRemoveMany() {
+        int n = 10;
+        int m = 5;
+
+        Parameter[] params = new Parameter[2 * n];
+        List<ParameterValue> pvalues = new ArrayList<>(n * m);
+        for (int i = 0; i < 2 * n; i++) {
+            params[i] = new Parameter("parameter" + i);
+        }
+
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < 2 * n; i++) {
+                ParameterValue pv = new ParameterValue(params[i]);
+                pv.setStringValue(i + ":" + j);
+                pvalues.add(pv);
+            }
+        }
+
+        // bulk create with collisions
+        ParameterValueList pvlist = new ParameterValueList(4, pvalues);
+        assertEquals(2 * n * m, pvlist.getSize());
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                ParameterValue pv = pvlist.removeFirst(params[i]);
+                assertEquals(pvalues.get(j * 2 * n + i), pv);
+            }
+            for (int i = n; i < 2 * n; i++) {
+                ParameterValue pv = pvlist.removeLast(params[i]);
+                assertEquals(pvalues.get((m - j - 1) * 2 * n + i), pv);
+            }
+            assertEquals(2 * n * (m - j - 1), pvlist.getSize());
+        }
+    }
+
+    @Test
+    public void testIterator() {
+        Parameter p = new Parameter("p1");
+        ParameterValue pv1 = new ParameterValue(p);
+        pv1.setStringValue("pv1");
+
+        ParameterValue pv2 = new ParameterValue(p);
+        pv2.setStringValue("pv2");
+
+        ParameterValueList pvlist = new ParameterValueList();
+
+        Iterator<ParameterValue> it = pvlist.iterator();
+        assertFalse(it.hasNext());
+
+        pvlist.add(pv1);
+        it = pvlist.iterator();
+        assertTrue(it.hasNext());
+        assertEquals(pv1, it.next());
+        assertFalse(it.hasNext());
+
+        pvlist.removeFirst(p);
+
+        pvlist.add(pv2);
+        pvlist.add(pv1);
+        it = pvlist.iterator();
+
+        assertTrue(it.hasNext());
+        assertEquals(pv2, it.next());
+        assertTrue(it.hasNext());
+        assertEquals(pv1, it.next());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testTailIterator() {
+        Parameter p = new Parameter("p1");
+        ParameterValue pv1 = new ParameterValue(p);
+        pv1.setStringValue("pv1");
+
+        ParameterValue pv2 = new ParameterValue(p);
+        pv2.setStringValue("pv2");
+
+        ParameterValueList pvlist = new ParameterValueList();
+
+        Iterator<ParameterValue> it = pvlist.tailIterator();
+        assertFalse(it.hasNext());
+
+        pvlist.add(pv1);
+
+        assertTrue(it.hasNext());
+        assertEquals(pv1, it.next());
+        assertFalse(it.hasNext());
+
+        pvlist.add(pv2);
+        pvlist.add(pv1);
+
+        assertTrue(it.hasNext());
+        assertEquals(pv2, it.next());
+        assertTrue(it.hasNext());
+        assertEquals(pv1, it.next());
+        assertFalse(it.hasNext());
+    }
+
+    @Test
+    public void testIterator1() {
+        int n = 10000;
+        Parameter[] params = new Parameter[n];
+        List<ParameterValue> pvalues = new ArrayList<>(n + 1);
+        for (int i = 0; i < n; i++) {
+            params[i] = new Parameter("parameter" + i);
+            ParameterValue pv = new ParameterValue(params[i]);
+            pvalues.add(pv);
+        }
+
+        ParameterValue pv2bis = new ParameterValue(params[2]);
+        pvalues.add(pv2bis);
+
+        ParameterValueList pvlist = new ParameterValueList(pvalues);
+
+        Iterator<ParameterValue> it = pvlist.iterator();
+        for (int i = 0; i < n; i++) {
+            assertTrue(it.hasNext());
+            ParameterValue pv = it.next();
+            assertEquals(pvalues.get(i), pv);
+        }
+        assertTrue(it.hasNext());
+        ParameterValue pv = it.next();
+        assertEquals(pv2bis, pv);
+        assertFalse(it.hasNext());
+
+        pvlist.removeLast(params[2]);
+        it = pvlist.iterator();
+        for (int i = 0; i < n; i++) {
+            assertTrue(it.hasNext());
+            pv = it.next();
+            assertEquals(pvalues.get(i), pv);
+        }
+
+        assertFalse(it.hasNext());
+    }
+}
+```
+
+### `SubsriptionArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/SubsriptionArrayTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+
+public class SubsriptionArrayTest {
+
+    @Test
+    public void test() {
+        SubscriptionArray s = new SubscriptionArray();
+        s.add(1);
+        assertArrayEquals(new int[] { 1 }, s.getArray());
+
+        s.add(1);
+        assertEquals(1, s.size());
+
+        s.add(3);
+        assertEquals(2, s.size());
+        s.add(4);
+
+        s.add(2);
+        assertArrayEquals(new int[] { 1, 2, 3, 4 }, s.getArray());
+
+        assertTrue(s.remove(3));
+        assertArrayEquals(new int[] { 1, 2, 4 }, s.getArray());
+
+        assertFalse(s.remove(3));
+        assertArrayEquals(new int[] { 1, 2, 4 }, s.getArray());
+    }
+}
+```
+
+### `ValueArrayTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ValueArrayTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class ValueArrayTest {
+
+    @Test
+    public void testInt() {
+        ValueArray va0 = new ValueArray(Type.UINT32, new int[] { 1, 3 });
+        ValueArray va1 = new ValueArray(Type.UINT32, new int[] { 2 });
+
+        ValueArray merged = ValueArray.merge(new int[] { 0, 1, 0 }, va0, va1);
+        assertArrayEquals(new int[] { 1, 2, 3 }, merged.getIntArray());
+    }
+}
+```
+
+### `ValueTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/parameter/ValueTest.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class ValueTest {
+    int n = 10000000;
+    int m = 50;
+    Value[] newValues;
+    org.yamcs.protobuf.Yamcs.Value[] oldValues;
+
+    public void testNewV() {
+        long t0 = System.currentTimeMillis();
+
+        Value[] values = new Value[n];
+        newValues = values;
+        for (int i = 0; i < n; i++) {
+            values[i] = new UInt32Value(i);
+        }
+
+        long s = 0;
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                if (values[i].getType() == Type.UINT32) {
+                    s += values[i].getUint32Value();
+                }
+            }
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println("new values: s: " + s + " in " + (t1 - t0) + " millisec");
+
+    }
+
+    public void testOldV() {
+        long t0 = System.currentTimeMillis();
+        org.yamcs.protobuf.Yamcs.Value[] values = new org.yamcs.protobuf.Yamcs.Value[n];
+        oldValues = values;
+        for (int i = 0; i < n; i++) {
+            values[i] = org.yamcs.protobuf.Yamcs.Value.newBuilder().setUint32Value(i).setType(Type.UINT32).build();
+        }
+
+        long s = 0;
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                if (values[i].getType() == Type.UINT32) {
+                    s += values[i].getUint32Value();
+                }
+            }
+        }
+        long t1 = System.currentTimeMillis();
+        System.out.println("old values s: " + s + " in " + (t1 - t0) + " millisec");
+
+    }
+
+    @Test
+    @Disabled
+    public void test() throws Exception {
+        testOldV();
+        testNewV();
+    }
+}
+```

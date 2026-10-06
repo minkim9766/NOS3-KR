@@ -3,16 +3,122 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/compare-parameter-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `compare-parameter-dialog.component.html`
 
-file--compare-parameter-dialog.component.html
-file--compare-parameter-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/compare-parameter-dialog/compare-parameter-dialog.component.html`
+
+
+```html
+<mat-dialog-content class="ya-form">
+  <ya-field label="Search parameter for comparison">
+    <input type="text" [formControl]="parameter" [matAutocomplete]="auto" />
+    <mat-autocomplete class="ya-autocomplete" #auto>
+      @for (option of filteredOptions | async; track option) {
+        <mat-option [value]="option | memberPath">
+          {{ option | memberPath }}
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </ya-field>
+
+  <ya-field label="Color">
+    <app-color-palette #palette />
+  </ya-field>
+
+  <ya-field label="Thickness">
+    <app-thickness #thickness [color]="palette.selectedColor" />
+  </ya-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="select()" [disabled]="!parameter.valid">ADD</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `compare-parameter-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/compare-parameter-dialog/compare-parameter-dialog.component.html`](file--compare-parameter-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/compare-parameter-dialog/compare-parameter-dialog.component.ts`](file--compare-parameter-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/compare-parameter-dialog/compare-parameter-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  Parameter,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { Observable } from 'rxjs';
+import { debounceTime, map, switchMap } from 'rxjs/operators';
+import { ColorPaletteComponent } from '../color-palette/color-palette.component';
+import { ThicknessComponent } from '../thickness/thickness.component';
+
+@Component({
+  selector: 'app-compare-parameter-dialog',
+  templateUrl: './compare-parameter-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ColorPaletteComponent, WebappSdkModule, ThicknessComponent],
+})
+export class CompareParameterDialogComponent implements OnInit {
+  parameter = new UntypedFormControl(null, [Validators.required]);
+
+  filteredOptions: Observable<Parameter[]>;
+
+  @ViewChild('palette', { static: true })
+  palette: ColorPaletteComponent;
+
+  @ViewChild('thickness', { static: true })
+  thickness: ThicknessComponent;
+
+  constructor(
+    private dialogRef: MatDialogRef<CompareParameterDialogComponent>,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {}
+
+  ngOnInit() {
+    const excludedParameters = this.data.exclude as Parameter[];
+    this.filteredOptions = this.parameter.valueChanges.pipe(
+      debounceTime(300),
+      switchMap((val) =>
+        this.yamcs.yamcsClient.getParameters(this.yamcs.instance!, {
+          q: val,
+          limit: 10,
+          searchMembers: true,
+        }),
+      ),
+      map((page) => page.parameters || []),
+      map((candidates) => {
+        return candidates.filter((candidate) => {
+          for (const excludedParameter of excludedParameters) {
+            const qualifiedName = utils.getMemberPath(candidate);
+            if (excludedParameter.qualifiedName === qualifiedName) {
+              return false;
+            }
+          }
+          return true;
+        });
+      }),
+    );
+  }
+
+  select() {
+    this.dialogRef.close({
+      qualifiedName: this.parameter.value,
+      color: this.palette.selectedColor,
+      thickness: this.thickness.selectedThickness,
+    });
+  }
+}
+```

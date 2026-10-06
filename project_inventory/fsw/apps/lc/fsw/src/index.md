@@ -3,40 +3,5864 @@
 
 **경로:** `fsw/apps/lc/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lc_action.c`
 
-file--lc_action.c
-file--lc_action.h
-file--lc_app.c
-file--lc_app.h
-file--lc_cmds.c
-file--lc_cmds.h
-file--lc_custom.c
-file--lc_custom.h
-file--lc_utils.c
-file--lc_utils.h
-file--lc_verify.h
-file--lc_version.h
-file--lc_watch.c
-file--lc_watch.h
+**경로:** `fsw/apps/lc/fsw/src/lc_action.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Functions used for CFS Limit Checker actionpoint processing
+ */
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_app.h"
+#include "lc_action.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_custom.h"
+
+#include <string.h>
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Sample one or all actionpoints                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SampleAPs(uint16 StartIndex, uint16 EndIndex)
+{
+    uint16 TableIndex;
+    uint8  CurrentAPState;
+
+    /*
+    ** If we're specifying a single actionpoint, make sure it's
+    ** current state is valid for a sample request
+    */
+    if (StartIndex == EndIndex)
+    {
+        CurrentAPState = LC_OperData.ARTPtr[StartIndex].CurrentState;
+
+        if ((CurrentAPState != LC_ACTION_NOT_USED) && (CurrentAPState != LC_APSTATE_PERMOFF))
+        {
+            /*
+            ** Sample the specified actionpoint
+            */
+            LC_SampleSingleAP(StartIndex);
+        }
+        else
+        {
+            /*
+            **  Actionpoint isn't currently operational
+            */
+            CFE_EVS_SendEvent(LC_APSAMPLE_CURR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Sample AP error, invalid current AP state: AP = %d, State = %d", StartIndex,
+                              CurrentAPState);
+        }
+    }
+    else
+    {
+        /*
+        ** Sample selected actionpoints
+        */
+        for (TableIndex = StartIndex; TableIndex <= EndIndex; TableIndex++)
+        {
+            LC_SampleSingleAP(TableIndex);
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Sample a single actionpoint                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SampleSingleAP(uint16 APNumber)
+{
+    uint8 CurrentAPState;
+    uint8 PreviousResult;
+    uint8 CurrentResult;
+    char  EventText[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+
+    /*
+    ** We only do the sample if the actionpoint is active
+    ** or passive. Other states are ignored since this
+    ** routine is called in a loop to process ALL actionpoints.
+    */
+    CurrentAPState = LC_OperData.ARTPtr[APNumber].CurrentState;
+
+    if ((CurrentAPState == LC_APSTATE_ACTIVE) || (CurrentAPState == LC_APSTATE_PASSIVE))
+    {
+        /*
+        ** Evaluate the actionpoint and update the results
+        ** as needed
+        */
+        LC_AppData.APSampleCount++;
+
+        PreviousResult = LC_OperData.ARTPtr[APNumber].ActionResult;
+
+        CurrentResult = LC_EvaluateRPN(APNumber);
+
+        LC_OperData.ARTPtr[APNumber].ActionResult = CurrentResult;
+
+        /*****************************************
+        ** If actionpoint fails current evaluation
+        ******************************************/
+        if (CurrentResult == LC_ACTION_FAIL)
+        {
+            LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount++;
+            LC_OperData.ARTPtr[APNumber].CumulativeFailCount++;
+
+            if (PreviousResult == LC_ACTION_PASS)
+            {
+                /*
+                **  We failed this time, but we passed last time
+                */
+                LC_OperData.ARTPtr[APNumber].PassToFailCount++;
+
+                /*
+                **  Send only a limited number of Pass to Fail events
+                */
+                if (LC_OperData.ARTPtr[APNumber].PassToFailCount <= LC_OperData.ADTPtr[APNumber].MaxPassFailEvents)
+                {
+                    CFE_EVS_SendEvent(LC_AP_PASSTOFAIL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "AP state change from PASS to FAIL: AP = %d", APNumber);
+                    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent++;
+                }
+            }
+
+            if (LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount >= LC_OperData.ADTPtr[APNumber].MaxFailsBeforeRTS)
+            {
+                /*
+                ** We have failed enough times to request the RTS
+                */
+                if (CurrentAPState == LC_APSTATE_ACTIVE)
+                {
+                    /*
+                    ** Actions go to passive after they've failed
+                    */
+                    LC_OperData.ARTPtr[APNumber].CurrentState = LC_APSTATE_PASSIVE;
+
+                    if (LC_AppData.CurrentLCState == LC_STATE_ACTIVE)
+                    {
+                        /*
+                        ** If the LC application state is active, request the
+                        ** specified RTS be executed
+                        */
+                        LC_ExecuteRTS(LC_OperData.ADTPtr[APNumber].RTSId);
+
+                        LC_OperData.ARTPtr[APNumber].CumulativeRTSExecCount++;
+
+                        LC_AppData.RTSExecCount++;
+
+                        /*
+                        ** Copy event text specific to this action and
+                        ** add our trailer with AP specific info making
+                        ** sure we won't exceed our character buffer.
+                        */
+                        snprintf(EventText, CFE_MISSION_EVS_MAX_MESSAGE_LENGTH, "%s %s",
+                                 LC_OperData.ADTPtr[APNumber].EventText, LC_AP_EVENT_TAIL_STR);
+
+                        CFE_EVS_SendEvent(LC_OperData.ADTPtr[APNumber].EventID, LC_OperData.ADTPtr[APNumber].EventType,
+                                          EventText, APNumber, LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount,
+                                          LC_OperData.ADTPtr[APNumber].RTSId);
+
+                        LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent++;
+                    }
+                    else
+                    {
+                        /*
+                        ** The LC application state is passive so we don't
+                        ** do the RTS request. We bump the passive RTS execution
+                        ** counter and send out a generic event message
+                        */
+                        LC_AppData.PassiveRTSExecCount++;
+
+                        CFE_EVS_SendEvent(LC_PASSIVE_FAIL_DBG_EID, CFE_EVS_EventType_DEBUG,
+                                          "AP failed while LC App passive: AP = %d, FailCount = %d, RTS = %d", APNumber,
+                                          (int)LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount,
+                                          LC_OperData.ADTPtr[APNumber].RTSId);
+                    }
+                }
+                else
+                {
+                    /*
+                    ** The actionpoint failed while the actionpoint state is passive
+                    */
+                    LC_OperData.ARTPtr[APNumber].PassiveAPCount++;
+                    LC_AppData.PassiveRTSExecCount++;
+
+                    /*
+                    **  Send only a limited number of AP is Passive events
+                    */
+                    if (LC_OperData.ARTPtr[APNumber].PassiveAPCount <= LC_OperData.ADTPtr[APNumber].MaxPassiveEvents)
+                    {
+                        CFE_EVS_SendEvent(LC_AP_PASSIVE_FAIL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                          "AP failed while passive: AP = %d, FailCount = %d, RTS = %d", APNumber,
+                                          (int)LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount,
+                                          LC_OperData.ADTPtr[APNumber].RTSId);
+                        LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent++;
+                    }
+                }
+
+            } /* end (ConsecutiveFailCount >= MaxFailsBeforeRTS) if */
+
+        } /* end (CurrentResult == LC_ACTION_FAIL) if */
+
+        /******************************************
+        ** If actionpoint passes current evaluation
+        *******************************************/
+        else if (CurrentResult == LC_ACTION_PASS)
+        {
+            if (PreviousResult == LC_ACTION_FAIL)
+            {
+                /*
+                **  We passed this time, but we failed last time
+                */
+                LC_OperData.ARTPtr[APNumber].FailToPassCount++;
+
+                /*
+                **  Send only a limited number of Fail to Pass events
+                */
+                if (LC_OperData.ARTPtr[APNumber].FailToPassCount <= LC_OperData.ADTPtr[APNumber].MaxFailPassEvents)
+                {
+                    CFE_EVS_SendEvent(LC_AP_FAILTOPASS_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                      "AP state change from FAIL to PASS: AP = %d", APNumber);
+                    LC_OperData.ARTPtr[APNumber].CumulativeEventMsgsSent++;
+                }
+            }
+            /*
+            ** Clear consecutive failure counter for this AP
+            */
+            LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = 0;
+        }
+
+        /*
+        ** If actionpoint is not measured or has gone stale
+        */
+        else if (CurrentResult == LC_ACTION_STALE)
+        {
+            /*
+            ** Make sure the consecutive fail count is zeroed
+            */
+            LC_OperData.ARTPtr[APNumber].ConsecutiveFailCount = 0;
+        }
+        else
+        {
+            /*
+            ** We got back a LC_ACTION_ERROR result, send event
+            */
+            CFE_EVS_SendEvent(LC_ACTION_ERROR_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "AP evaluated to error: AP = %d, Result = %d", APNumber, CurrentResult);
+        }
+
+    } /* end CurrentAPState if */
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Evaluate the Reverse Polish Notation (RPN) equation for an      */
+/* actionpoint                                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+/*
+ * StackPtr is an index into an array RPNStack (see LC_EvaluateRPN)
+ * which contains values to be used in an RPN function.  This macro
+ * validates the StackPtr to confirm that another operand is present
+ * in the RPMStack array, then returns the next element.
+ */
+#define POP_RPN_DATA ((StackPtr <= 0) ? (IllegalRPN = true) : (RPNStack[--StackPtr]))
+uint8 LC_EvaluateRPN(uint16 APNumber)
+{
+    bool   Done;
+    bool   IllegalRPN;
+    bool   IllegalOperand;
+    uint8  EvalResult = LC_ACTION_ERROR;
+    int32  RPNEquationPtr;
+    int32  StackPtr;
+    uint16 RPNData;
+    uint16 RPNStack[LC_MAX_RPN_EQU_SIZE];
+    uint16 Operand1;
+    uint16 Operand2;
+
+    StackPtr       = 0;
+    RPNEquationPtr = 0;
+    IllegalRPN     = false;
+    IllegalOperand = false;
+    Done           = false;
+
+    /*
+    ** Keep going till we're done or till we get an error
+    */
+    while ((Done == false) && (IllegalRPN == false) && (IllegalOperand == false))
+    {
+        /*
+        **  Pick off each piece of the RPN equation and handle
+        **  one at a time
+        */
+        RPNData = LC_OperData.ADTPtr[APNumber].RPNEquation[RPNEquationPtr++];
+
+        /*
+        **  The data is either an RPN operator or a watchpoint number
+        */
+        switch (RPNData)
+        {
+            /*
+            **  If the data is an RPN operator then each operand is
+            **  either a watchpoint evaluation result or it is the
+            **  result of a previous RPN operation
+            */
+            case LC_RPN_AND:
+                Operand2 = POP_RPN_DATA;
+                Operand1 = POP_RPN_DATA;
+                if ((Operand1 == LC_WATCH_FALSE) || (Operand2 == LC_WATCH_FALSE))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_FALSE;
+                }
+                else if ((Operand1 == LC_WATCH_ERROR) || (Operand2 == LC_WATCH_ERROR))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_ERROR;
+                }
+                else if ((Operand1 == LC_WATCH_STALE) || (Operand2 == LC_WATCH_STALE))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_STALE;
+                }
+                else
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_TRUE;
+                }
+                break;
+
+            case LC_RPN_OR:
+                Operand2 = POP_RPN_DATA;
+                Operand1 = POP_RPN_DATA;
+                if ((Operand1 == LC_WATCH_TRUE) || (Operand2 == LC_WATCH_TRUE))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_TRUE;
+                }
+                else if ((Operand1 == LC_WATCH_ERROR) || (Operand2 == LC_WATCH_ERROR))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_ERROR;
+                }
+                else if ((Operand1 == LC_WATCH_STALE) || (Operand2 == LC_WATCH_STALE))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_STALE;
+                }
+                else
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_FALSE;
+                }
+                break;
+
+            case LC_RPN_XOR:
+                Operand2 = POP_RPN_DATA;
+                Operand1 = POP_RPN_DATA;
+                if ((Operand1 == LC_WATCH_ERROR) || (Operand2 == LC_WATCH_ERROR))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_ERROR;
+                }
+                else if ((Operand1 == LC_WATCH_STALE) || (Operand2 == LC_WATCH_STALE))
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_STALE;
+                }
+                else
+                {
+                    RPNStack[StackPtr++] = (Operand1 != Operand2);
+                }
+                break;
+
+            case LC_RPN_NOT:
+                Operand1 = POP_RPN_DATA;
+                if (Operand1 == LC_WATCH_ERROR)
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_ERROR;
+                }
+                else if (Operand1 == LC_WATCH_STALE)
+                {
+                    RPNStack[StackPtr++] = LC_WATCH_STALE;
+                }
+                else
+                {
+                    RPNStack[StackPtr++] = (Operand1 == LC_WATCH_FALSE);
+                }
+                break;
+
+            case LC_RPN_EQUAL:
+                EvalResult = POP_RPN_DATA;
+                if ((EvalResult == LC_WATCH_ERROR) || (EvalResult == LC_WATCH_STALE))
+                {
+                    IllegalOperand = true;
+                }
+                else if (StackPtr == 0)
+                {
+                    Done = true;
+                }
+                else
+                {
+                    IllegalRPN = true;
+                }
+                break;
+
+            /*
+            **  If the data is a watchpoint number then the operand is
+            **  the current value of that watchpoint result
+            */
+            default:
+                if (RPNData < LC_MAX_WATCHPOINTS)
+                {
+                    RPNStack[StackPtr++] = LC_OperData.WRTPtr[RPNData].WatchResult;
+                }
+                else
+                {
+                    IllegalRPN = true;
+                }
+                break;
+
+        } /* end switch */
+
+        /*
+        ** If still not done and have no errors - check for the end of the buffer
+        */
+        if ((Done == false) && (IllegalRPN == false) && (IllegalOperand == false))
+        {
+            if (RPNEquationPtr >= LC_MAX_RPN_EQU_SIZE)
+            {
+                IllegalRPN = true;
+            }
+        }
+
+    } /* end while */
+
+    if (IllegalRPN == true)
+    {
+        CFE_EVS_SendEvent(LC_INVALID_RPN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "AP has illegal RPN expression: AP = %d, LastOperand = %d, StackPtr = %d", APNumber,
+                          (int)(RPNEquationPtr - 1), (int)StackPtr);
+
+        EvalResult = LC_ACTION_ERROR;
+    }
+    else if (EvalResult == LC_WATCH_ERROR)
+    {
+        EvalResult = LC_ACTION_ERROR;
+    }
+    else if (EvalResult == LC_WATCH_STALE)
+    {
+        EvalResult = LC_ACTION_STALE;
+    }
+    else if (EvalResult == LC_WATCH_FALSE)
+    {
+        EvalResult = LC_ACTION_PASS;
+    }
+    else if (EvalResult == LC_WATCH_TRUE)
+    {
+        EvalResult = LC_ACTION_FAIL;
+    }
+
+    return EvalResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate the actionpoint definition table (ADT)                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 LC_ValidateADT(void *TableData)
+{
+    LC_ADTEntry_t *TableArray = (LC_ADTEntry_t *)TableData;
+
+    int32 EntryResult = LC_ADTVAL_NO_ERR;
+    int32 TableResult = CFE_SUCCESS;
+    int32 TableIndex;
+
+    uint8  DefaultState;
+    uint16 RTSId;
+    uint16 MaxFailsBeforeRTS;
+    uint16 EventType;
+
+    uint16 *RPNPtr;
+    int32   RPNIndex      = 0;
+    int32   RPNStackDepth = 0;
+
+    int32 GoodCount   = 0;
+    int32 BadCount    = 0;
+    int32 UnusedCount = 0;
+
+    /*
+    ** Verify each entry in the pending actionpoint definition table
+    */
+    for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+    {
+        DefaultState      = TableArray[TableIndex].DefaultState;
+        RTSId             = TableArray[TableIndex].RTSId;
+        MaxFailsBeforeRTS = TableArray[TableIndex].MaxFailsBeforeRTS;
+        RPNPtr            = TableArray[TableIndex].RPNEquation;
+        EventType         = TableArray[TableIndex].EventType;
+
+        if (DefaultState == LC_ACTION_NOT_USED)
+        {
+            /*
+            ** Unused table entry
+            */
+            UnusedCount++;
+        }
+        else if ((DefaultState != LC_APSTATE_ACTIVE) && (DefaultState != LC_APSTATE_PASSIVE) &&
+                 (DefaultState != LC_APSTATE_DISABLED) && (DefaultState != LC_APSTATE_PERMOFF))
+        {
+            /*
+            ** Invalid default state
+            */
+            BadCount++;
+            EntryResult = LC_ADTVAL_ERR_DEFSTATE;
+        }
+        else if (RTSId > LC_MAX_VALID_ADT_RTSID)
+        {
+            /*
+            ** Bad RTS ID (limit set by configuration parameter,
+            ** see lc_platform_cfg.h)
+            */
+            BadCount++;
+            EntryResult = LC_ADTVAL_ERR_RTSID;
+        }
+        else if (MaxFailsBeforeRTS == 0)
+        {
+            /*
+            ** Bad fail count
+            */
+            BadCount++;
+            EntryResult = LC_ADTVAL_ERR_FAILCNT;
+        }
+        else if ((EventType != CFE_EVS_EventType_DEBUG) && (EventType != CFE_EVS_EventType_INFORMATION) &&
+                 (EventType != CFE_EVS_EventType_ERROR) && (EventType != CFE_EVS_EventType_CRITICAL))
+        {
+            /*
+            ** Invalid event type
+            */
+            BadCount++;
+            EntryResult = LC_ADTVAL_ERR_EVTTYPE;
+        }
+        else
+        {
+            /*
+            ** Validate reverse polish equation syntax
+            */
+            EntryResult = LC_ValidateRPN(RPNPtr, &RPNIndex, &RPNStackDepth);
+
+            if (EntryResult != LC_ADTVAL_NO_ERR)
+            {
+                BadCount++;
+            }
+            else
+            {
+                GoodCount++;
+            }
+        }
+
+        /*
+        ** Generate detailed event for "first" error
+        */
+        if ((EntryResult != LC_ADTVAL_NO_ERR) && (TableResult == CFE_SUCCESS))
+        {
+            if (EntryResult == LC_ADTVAL_ERR_RPN)
+            {
+                CFE_EVS_SendEvent(LC_ADTVAL_RPNERR_EID, CFE_EVS_EventType_ERROR,
+                                  "ADT verify RPN err: AP = %d, Index = %d, StackDepth = %d", (int)TableIndex,
+                                  (int)RPNIndex, (int)RPNStackDepth);
+            }
+            else
+            {
+                CFE_EVS_SendEvent(LC_ADTVAL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "ADT verify err: AP = %d, Err = %d, State = %d, RTS = %d, FailCnt = %d, EvtType = %d",
+                                  (int)TableIndex, (int)EntryResult, DefaultState, RTSId, MaxFailsBeforeRTS, EventType);
+            }
+
+            TableResult = EntryResult;
+        }
+
+    } /* end TableIndex for */
+
+    /*
+    ** Generate informational event with error totals
+    */
+    CFE_EVS_SendEvent(LC_ADTVAL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "ADT verify results: good = %d, bad = %d, unused = %d", (int)GoodCount, (int)BadCount,
+                      (int)UnusedCount);
+
+    return TableResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate a reverse polish notation (RPN) equation               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 LC_ValidateRPN(const uint16 *RPNPtr, int32 *IndexValue, int32 *StackDepthValue)
+{
+    int32  Result = LC_ADTVAL_NO_ERR;
+    int32  BufferIndex;
+    int32  StackDepth;
+    uint16 BufferItem;
+
+    /*
+    ** Each equation consists only of watchpoint ID numbers
+    ** and polish symbols (and, or, equal, etc).
+    **
+    ** Each watchpoint ID increases the stack depth and
+    ** each polish symbol (except "not" which has no
+    ** effect) decreases the stack depth.
+    **
+    ** The stack depth must never become negative and the
+    ** depth must equal 1 when the "=" symbol is found.
+    **
+    ** The last symbol in the equation is assumed to be
+    ** the "=" symbol, and the test does not examine any
+    ** further data.
+    */
+    StackDepth = 0;
+
+    for (BufferIndex = 0; BufferIndex < LC_MAX_RPN_EQU_SIZE; BufferIndex++)
+    {
+        BufferItem = RPNPtr[BufferIndex];
+
+        if ((BufferItem == LC_RPN_AND) || (BufferItem == LC_RPN_OR) || (BufferItem == LC_RPN_XOR))
+        {
+            /*
+            ** Depth test will fail if we haven't already counted 2
+            ** watchpoint ID values
+            */
+            StackDepth--;
+        }
+        else if (BufferItem == LC_RPN_NOT)
+        {
+            /*
+            ** Depth test will fail if this is 1st symbol
+            */
+        }
+        else if (BufferItem == LC_RPN_EQUAL)
+        {
+            /*
+            ** Equation ends when LC_RPN_EQUAL is found
+            */
+            break;
+        }
+        else if (BufferItem < LC_MAX_WATCHPOINTS)
+        {
+            /*
+            ** Valid watchpoint ID
+            */
+            StackDepth++;
+        }
+        else
+        {
+            /*
+            ** Not a valid polish symbol or watchpoint ID
+            */
+            break;
+        }
+
+        /*
+        ** Must have more watchpoint ID's than polish symbols
+        */
+        if (StackDepth <= 0)
+        {
+            break;
+        }
+    }
+
+    /*
+    ** Check for valid Reverse Polish Notation equation
+    */
+    if ((BufferItem == LC_RPN_EQUAL) && (StackDepth == 1))
+    {
+        Result = LC_ADTVAL_NO_ERR;
+    }
+    else
+    {
+        Result = LC_ADTVAL_ERR_RPN;
+
+        /*
+        ** Provide additional error information
+        */
+        *IndexValue      = BufferIndex;
+        *StackDepthValue = StackDepth;
+    }
+
+    return Result;
+}
 ```
 
-## 항목
+### `lc_action.h`
 
-- [`fsw/apps/lc/fsw/src/lc_action.c`](file--lc_action.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_action.h`](file--lc_action.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_app.c`](file--lc_app.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_app.h`](file--lc_app.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_cmds.c`](file--lc_cmds.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_cmds.h`](file--lc_cmds.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_custom.c`](file--lc_custom.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_custom.h`](file--lc_custom.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_utils.c`](file--lc_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_utils.h`](file--lc_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_verify.h`](file--lc_verify.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_version.h`](file--lc_version.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_watch.c`](file--lc_watch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/fsw/src/lc_watch.h`](file--lc_watch.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/lc/fsw/src/lc_action.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle actionpoint processing
+ */
+#ifndef LC_ACTION_H
+#define LC_ACTION_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include "cfe.h"
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/**
+ * \name LC Actionpoint Event Trailer
+ * \{
+ */
+
+#define LC_AP_EVENT_TAIL_STR ": AP = %d, FailCount = %d, RTS = %d" /**< \brief AP event trailer string */
+
+#define LC_AP_EVENT_TAIL_LEN 36 /**< \brief Length of string including NUL */
+
+/**\}*/
+
+/*************************************************************************
+ * Exported Functions
+ *************************************************************************/
+
+/**
+ * \brief Sample actionpoints
+ *
+ *  \par Description
+ *       Support function for #LC_SampleAPReq that will sample the
+ *       selected actionpoints.  The start and end arguments define
+ *       which actionpoint(s) the command will sample.  If both the
+ *       start and end arguments are set to #LC_ALL_ACTIONPOINTS,
+ *       the command will be interpreted as a request to sample all
+ *       actionpoints (heritage).  Otherwise, the start index must
+ *       be less than or equal to the end index, and both must be
+ *       within the bounds of the actionpoint table.  The calling
+ *       function ensures that the start index and the end index are
+ *       within the bounds of the actionpoint table.  If StartIndex >
+ *       EndIndex, the function will (intentionally) silently fail.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   StartIndex   The first actionpoint to sample
+ *                             (zero based actionpoint table index)
+ *
+ *  \param [in]   EndIndex     The last actionpoint to sample
+ *                             (zero based actionpoint table index)
+ *
+ *  \sa #LC_SampleAPReq
+ */
+void LC_SampleAPs(uint16 StartIndex, uint16 EndIndex);
+
+/**
+ * \brief Validate actionpoint definition table (ADT)
+ *
+ *  \par Description
+ *       This function is called by table services when a validation of
+ *       the actionpoint definition table is required
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   *TableData     Pointer to the table data to validate
+ *
+ *  \return Actionpoint definition table validation status
+ *  \retval #CFE_SUCCESS            \copydoc CFE_SUCCESS
+ *  \retval #LC_ADTVAL_ERR_DEFSTATE \copydoc LC_ADTVAL_ERR_DEFSTATE
+ *  \retval #LC_ADTVAL_ERR_RTSID    \copydoc LC_ADTVAL_ERR_RTSID
+ *  \retval #LC_ADTVAL_ERR_FAILCNT  \copydoc LC_ADTVAL_ERR_FAILCNT
+ *  \retval #LC_ADTVAL_ERR_EVTTYPE  \copydoc LC_ADTVAL_ERR_EVTTYPE
+ *  \retval #LC_ADTVAL_ERR_RPN      \copydoc LC_ADTVAL_ERR_RPN
+ *
+ *  \sa #LC_ValidateWDT
+ */
+int32 LC_ValidateADT(void *TableData);
+
+/**
+ * \brief Sample single actionpoint
+ *
+ *  \par Description
+ *       Support function for actionpoint processing that will sample
+ *       a single actionpoint and handle the result as needed.
+ *
+ *       The sample is only performed if the actionpoint is active or
+ *       passive.  Other states are ignored since this routine is
+ *       called in a loop to process ALL actionpoints.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   APNumber     The actionpoint number to sample (zero
+ *                             based actionpoint definition table index)
+ */
+void LC_SampleSingleAP(uint16 APNumber);
+
+/**
+ * \brief Evaluate RPN
+ *
+ *  \par Description
+ *       Support function for actionpoint processing that evaluates
+ *       the reverse polish notation (RPN) equation for the specified
+ *       actionpoint and returns the result
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   APNumber     The actionpoint number to evaluate (zero
+ *                             based actionpoint definition table index)
+ *
+ *  \return Reverse polish notation result
+ *  \retval #LC_ACTION_PASS  \copydoc LC_ACTION_PASS
+ *  \retval #LC_ACTION_FAIL  \copydoc LC_ACTION_FAIL
+ *  \retval #LC_ACTION_STALE \copydoc LC_ACTION_STALE
+ *  \retval #LC_ACTION_ERROR \copydoc LC_ACTION_ERROR
+ */
+uint8 LC_EvaluateRPN(uint16 APNumber);
+
+/**
+ * \brief Validate RPN expression
+ *
+ *  \par Description
+ *       Support function for actionpoint definition table validation
+ *       that checks a reverse polish notation (RPN) equation for
+ *       possible errors.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   RPNPtr            Pointer to the RPN equation
+ *
+ *  \param [in]   IndexValue        A pointer where to store the equation
+ *                                  index value if an error is detected
+ *
+ *  \param [in]   StackDepthValue   A pointer where to store the equation
+ *                                  stack depth value if an error is detected
+ *
+ *  \return Actionpoint definition table reverse polish notation validation status
+ *  \retval #LC_ADTVAL_NO_ERR  \copydoc LC_ADTVAL_NO_ERR
+ *  \retval #LC_ADTVAL_ERR_RPN \copydoc LC_ADTVAL_ERR_RPN
+ *
+ *  \sa #LC_ValidateADT
+ */
+int32 LC_ValidateRPN(const uint16 *RPNPtr, int32 *IndexValue, int32 *StackDepthValue);
+
+#endif
+```
+
+### `lc_app.c`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_app.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   The CFS Limit Checker (LC) is a table driven application
+ *   that provides telemetry monitoring and autonomous response
+ *   capabilities to Core Flight Executive (cFE) based systems.
+ */
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_app.h"
+#include "lc_events.h"
+#include "lc_msgids.h"
+#include "lc_perfids.h"
+#include "lc_version.h"
+#include "lc_cmds.h"
+#include "lc_action.h"
+#include "lc_watch.h"
+#include "lc_utils.h"
+#include "cfe_platform_cfg.h"
+#include "lc_platform_cfg.h"
+#include "lc_mission_cfg.h" /* Leave these two last to make sure all   */
+#include "lc_verify.h"      /* LC configuration parameters are checked */
+
+/************************************************************************
+** LC Global Data
+*************************************************************************/
+LC_OperData_t LC_OperData;
+LC_AppData_t  LC_AppData;
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* LC application entry point and main process loop                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void LC_AppMain(void)
+{
+    int32            Status      = CFE_SUCCESS;
+    bool             Initialized = false;
+    uint32           RunStatus   = CFE_ES_RunStatus_APP_RUN;
+    CFE_SB_Buffer_t *BufPtr      = NULL;
+
+    /*
+    ** Performance Log, Start
+    */
+    CFE_ES_PerfLogEntry(LC_APPMAIN_PERF_ID);
+
+    /*
+    ** Perform application specific initialization
+    */
+    Status = LC_AppInit();
+
+    /*
+    ** Check for start-up error...
+    */
+    if (Status != CFE_SUCCESS)
+    {
+        /*
+        ** Set run status to terminate main loop
+        */
+        RunStatus   = CFE_ES_RunStatus_APP_ERROR;
+        Initialized = false;
+    }
+    else
+    {
+        Initialized = true;
+    }
+
+    /*
+    ** Application main loop
+    */
+    while (CFE_ES_RunLoop(&RunStatus) == true)
+    {
+        /*
+        ** Performance Log, Stop
+        */
+        CFE_ES_PerfLogExit(LC_APPMAIN_PERF_ID);
+
+        /*
+        ** Pend on the arrival of the next Software Bus message
+        */
+        Status = CFE_SB_ReceiveBuffer(&BufPtr, LC_OperData.CmdPipe, LC_SB_TIMEOUT);
+
+        /*
+        ** Performance Log, Start
+        */
+        CFE_ES_PerfLogEntry(LC_APPMAIN_PERF_ID);
+
+        /*
+        ** Process the software bus message
+        */
+        if (Status == CFE_SB_TIME_OUT)
+        {
+            /* Note: these routine actions are generally done in the
+             * housekeeping cycle.  If we are not getting messages as
+             * expected, the routine actions are done here instead. */
+            Status = LC_PerformMaintenance();
+        }
+        else if (Status == CFE_SUCCESS)
+        {
+            Status = LC_AppPipe(BufPtr);
+        }
+
+        /*
+        ** Note: If there were some reason to exit the task
+        **       normally (without error) then we would set
+        **       RunStatus = CFE_ES_APP_EXIT
+        */
+        if (Status != CFE_SUCCESS)
+        {
+            /*
+            ** Set request to terminate main loop
+            */
+            RunStatus = CFE_ES_RunStatus_APP_ERROR;
+        }
+
+    } /* end CFS_ES_RunLoop while */
+
+    /*
+    ** Check for "fatal" process error...
+    */
+    if (Status != CFE_SUCCESS)
+    {
+        /*
+        ** Send an event describing the reason for the termination
+        */
+        CFE_EVS_SendEvent(LC_TASK_EXIT_EID, CFE_EVS_EventType_CRITICAL, "Task terminating, err = 0x%08X",
+                          (unsigned int)Status);
+
+        /*
+        ** In case cFE Event Services is not working
+        */
+        CFE_ES_WriteToSysLog("LC task terminating, err = 0x%08X\n", (unsigned int)Status);
+    }
+
+    /*
+    ** Performance Log, Stop
+    */
+    CFE_ES_PerfLogExit(LC_APPMAIN_PERF_ID);
+
+    /*
+    ** Do not update CDS if inactive or startup was incomplete
+    */
+    if ((Initialized == true) && (LC_OperData.HaveActiveCDS) && (LC_AppData.CDSSavedOnExit == LC_CDS_SAVED))
+    {
+        LC_UpdateTaskCDS();
+    }
+
+    /*
+    ** Exit the application
+    */
+    CFE_ES_ExitApp(RunStatus);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* LC initialization                                               */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_AppInit(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    /*
+    ** Zero out the global data structures...
+    */
+    memset(&LC_OperData, 0, sizeof(LC_OperData));
+    memset(&LC_AppData, 0, sizeof(LC_AppData));
+
+    /*
+    ** Initialize event services
+    */
+    Status = LC_EvsInit();
+
+    /*
+    ** Initialize software bus
+    */
+    if (Status == CFE_SUCCESS)
+    {
+        Status = LC_SbInit();
+    }
+
+    /*
+    ** Initialize table services
+    */
+    if (Status == CFE_SUCCESS)
+    {
+        Status = LC_TableInit();
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+        ** If we get here, all is good
+        ** Issue the application startup event message
+        */
+        CFE_EVS_SendEvent(LC_INIT_INF_EID, CFE_EVS_EventType_INFORMATION, "LC Initialized. Version %d.%d.%d.%d",
+                          LC_MAJOR_VERSION, LC_MINOR_VERSION, LC_REVISION, LC_MISSION_REV);
+    }
+
+    return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Initialize event services interface                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_EvsInit(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    /*
+    ** If an application event filter table is added
+    ** in the future, initialize it here
+    */
+
+    /*
+    **  Register for event services
+    */
+    Status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("LC App: Error Registering For Event Services, RC = 0x%08X\n", (unsigned int)Status);
+    }
+
+    return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Initialize the software bus interface                           */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_SbInit(void)
+{
+    int32 Status = CFE_SUCCESS;
+
+    /*
+    ** Initialize housekeeping packet...
+    */
+    CFE_MSG_Init(&LC_OperData.HkPacket.TlmHeader.Msg, CFE_SB_ValueToMsgId(LC_HK_TLM_MID), sizeof(LC_HkPacket_t));
+
+    /*
+    ** Create Software Bus message pipe...
+    */
+    Status = CFE_SB_CreatePipe(&LC_OperData.CmdPipe, LC_PIPE_DEPTH, LC_PIPE_NAME);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_CR_PIPE_ERR_EID, CFE_EVS_EventType_ERROR, "Error Creating LC Pipe, RC=0x%08X",
+                          (unsigned int)Status);
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+        ** Subscribe to Housekeeping request messages...
+        */
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(LC_SEND_HK_MID), LC_OperData.CmdPipe);
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_SUB_HK_REQ_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error Subscribing to HK Request, MID=0x%08X, RC=0x%08X", LC_SEND_HK_MID,
+                              (unsigned int)Status);
+        }
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+        ** Subscribe to LC ground command messages...
+        */
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(LC_CMD_MID), LC_OperData.CmdPipe);
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_SUB_GND_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error Subscribing to GND CMD, MID=0x%08X, RC=0x%08X", LC_CMD_MID, (unsigned int)Status);
+        }
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        /*
+        ** Subscribe to LC internal actionpoint sample messages...
+        */
+        Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(LC_SAMPLE_AP_MID), LC_OperData.CmdPipe);
+        if (Status != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_SUB_SAMPLE_CMD_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error Subscribing to Sample CMD, MID=0x%08X, RC=0x%08X", LC_SAMPLE_AP_MID,
+                              (unsigned int)Status);
+        }
+    }
+
+    return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Table initialization - includes Critical Data Store (CDS)       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_TableInit(void)
+{
+    int32 Result;
+
+/*
+** LC task use of Critical Data Store (CDS)
+**
+**    Global application data (LC_AppData)
+**    Watchpint results dump only table data
+**    Actionpoint results dump only table data
+**
+** cFE Table Services use of CDS for LC task
+**
+**    Watchpint definition loadable table data
+**    Actionpoint definition loadable table data
+**
+** LC table initialization logic re CDS
+**
+**    If LC cannot create all the CDS storage at startup, then LC
+**    will disable LC use of CDS and continue.
+**
+**    If LC cannot register definition tables as critical, then LC
+**    will disable LC use of CDS and re-register tables as non-critical.
+**
+**    If LC cannot register definition and results tables at startup,
+**    then LC will terminate - table use is a required function.
+**
+**    If LC can create all the CDS storage and register definition
+**    tables as critical, then LC will write to CDS regardless of
+**    whether LC was able to read from CDS at startup.
+**
+**    If LC cannot restore everything from CDS at startup, then LC
+**    will initialize everything - load default definition tables,
+**    init results table contents, init global application data.
+*/
+
+/* lc_platform_cfg.h */
+#ifdef LC_SAVE_TO_CDS
+    LC_OperData.HaveActiveCDS = true;
+#endif
+
+    /*
+    ** Maintain a detailed record of table initialization results
+    */
+    if (LC_OperData.HaveActiveCDS)
+    {
+        LC_OperData.TableResults |= LC_CDS_ENABLED;
+    }
+
+    /*
+    ** Create watchpoint and actionpoint result tables
+    */
+    if ((Result = LC_CreateResultTables()) != CFE_SUCCESS)
+    {
+        return Result;
+    }
+
+    /*
+    ** If CDS is enabled - create the 3 CDS areas managed by the LC task
+    **  (continue with init, but disable CDS if unable to create all 3)
+    */
+    if (LC_OperData.HaveActiveCDS)
+    {
+        if (LC_CreateTaskCDS() != CFE_SUCCESS)
+        {
+            LC_OperData.HaveActiveCDS = false;
+        }
+    }
+
+    /*
+    ** Create wp/ap definition tables - critical if CDS enabled
+    */
+    if ((Result = LC_CreateDefinitionTables()) != CFE_SUCCESS)
+    {
+        return Result;
+    }
+
+    /*
+    ** CDS still active only if we created 3 CDS areas and 2 critical tables
+    */
+    if (LC_OperData.HaveActiveCDS)
+    {
+        LC_OperData.TableResults |= LC_CDS_CREATED;
+    }
+
+    /*
+    ** If any CDS area or critical table is not restored - initialize everything.
+    **  (might be due to reset type, CDS disabled or corrupt, table restore error)
+    */
+    if (((LC_OperData.TableResults & LC_WRT_CDS_RESTORED) == LC_WRT_CDS_RESTORED) &&
+        ((LC_OperData.TableResults & LC_ART_CDS_RESTORED) == LC_ART_CDS_RESTORED) &&
+        ((LC_OperData.TableResults & LC_APP_CDS_RESTORED) == LC_APP_CDS_RESTORED) &&
+        ((LC_OperData.TableResults & LC_WDT_TBL_RESTORED) == LC_WDT_TBL_RESTORED) &&
+        ((LC_OperData.TableResults & LC_ADT_TBL_RESTORED) == LC_ADT_TBL_RESTORED))
+    {
+        LC_OperData.TableResults |= LC_CDS_RESTORED;
+
+        /*
+        ** Get a pointer to the watchpoint definition table data...
+        */
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.WDTPtr, LC_OperData.WDTHandle);
+
+        if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(LC_WDT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting WDT address, RC=0x%08X",
+                              (unsigned int)Result);
+            return Result;
+        }
+
+        /*
+        ** Get a pointer to the actionpoint definition table data
+        */
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.ADTPtr, LC_OperData.ADTHandle);
+
+        if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(LC_ADT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting ADT address, RC=0x%08X",
+                              (unsigned int)Result);
+            return Result;
+        }
+    }
+    else
+    {
+        Result = LC_LoadDefaultTables();
+        if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            return Result;
+        }
+    }
+
+    /*
+    ** Create watchpoint hash tables -- also subscribes to watchpoint packets
+    */
+    LC_CreateHashTable();
+
+    /*
+    ** Display results of CDS initialization (if enabled at startup)
+    */
+    if ((LC_OperData.TableResults & LC_CDS_ENABLED) == LC_CDS_ENABLED)
+    {
+        if ((LC_OperData.TableResults & LC_CDS_RESTORED) == LC_CDS_RESTORED)
+        {
+            CFE_EVS_SendEvent(LC_CDS_RESTORED_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Previous state restored from Critical Data Store");
+        }
+        else if ((LC_OperData.TableResults & LC_CDS_UPDATED) == LC_CDS_UPDATED)
+        {
+            CFE_EVS_SendEvent(LC_CDS_UPDATED_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Default state loaded and written to CDS, activity mask = 0x%08X",
+                              (unsigned int)LC_OperData.TableResults);
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(LC_CDS_DISABLED_INF_EID, CFE_EVS_EventType_INFORMATION,
+                          "LC use of Critical Data Store disabled, activity mask = 0x%08X",
+                          (unsigned int)LC_OperData.TableResults);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Startup initialization - create WP and AP results tables        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_CreateResultTables(void)
+{
+    int32  Result;
+    uint32 DataSize;
+    uint32 OptionFlags;
+
+    /*
+    ** Set "dump only" table option flags
+    */
+    OptionFlags = CFE_TBL_OPT_SNGL_BUFFER | CFE_TBL_OPT_DUMP_ONLY;
+
+    /*
+    ** Register the Watchpoint Results Table (WRT) - "dump only" tables
+    ** cannot be critical with CDS use managed by CFE Table Services.
+    */
+    DataSize = LC_MAX_WATCHPOINTS * sizeof(LC_WRTEntry_t);
+    Result   = CFE_TBL_Register(&LC_OperData.WRTHandle, LC_WRT_TABLENAME, DataSize, OptionFlags, NULL);
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_WRT_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, "Error registering WRT, RC=0x%08X",
+                          (unsigned int)Result);
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.WRTPtr, LC_OperData.WRTHandle);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_WRT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting WRT address, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        LC_OperData.TableResults |= LC_WRT_TBL_CREATED;
+
+        /*
+        ** Register the Actionpoint Results Table (ART) - "dump only" tables
+        ** cannot be critical with CDS use managed by CFE Table Services.
+        */
+        DataSize = LC_MAX_ACTIONPOINTS * sizeof(LC_ARTEntry_t);
+        Result   = CFE_TBL_Register(&LC_OperData.ARTHandle, LC_ART_TABLENAME, DataSize, OptionFlags, NULL);
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_ART_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, "Error registering ART, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.ARTPtr, LC_OperData.ARTHandle);
+
+        if (Result != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_ART_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting ART address, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        LC_OperData.TableResults |= LC_ART_TBL_CREATED;
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Startup initialization - create WP and AP definition tables     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_CreateDefinitionTables(void)
+{
+    int32  Result;
+    uint32 DataSize;
+    uint32 OptionFlags = CFE_TBL_OPT_DEFAULT;
+
+    /*
+    ** If CDS is still enabled, try to register the 2 definition tables as critical
+    **  (if error, continue with init - but disable CDS and re-register as non-critical)
+    */
+    if (LC_OperData.HaveActiveCDS)
+    {
+        OptionFlags = CFE_TBL_OPT_DEFAULT | CFE_TBL_OPT_CRITICAL;
+    }
+
+    /*
+    ** Register the Watchpoint Definition Table (WDT)
+    */
+    DataSize = LC_MAX_WATCHPOINTS * sizeof(LC_WDTEntry_t);
+    Result   = CFE_TBL_Register(&LC_OperData.WDTHandle, LC_WDT_TABLENAME, DataSize, OptionFlags, LC_ValidateWDT);
+
+    if ((LC_OperData.HaveActiveCDS) && ((Result != CFE_TBL_INFO_RECOVERED_TBL) && (Result != CFE_SUCCESS)))
+    {
+        LC_OperData.HaveActiveCDS = false;
+        OptionFlags               = CFE_TBL_OPT_DEFAULT;
+
+        CFE_EVS_SendEvent(LC_WDT_REGISTER_CRIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error registering WDT as critical table, retrying with default options, RC=0x%08X",
+                          (unsigned int)Result);
+
+        /*
+        ** Re-register the Watchpoint Definition Table (WDT) non-critical
+        */
+        Result = CFE_TBL_Register(&LC_OperData.WDTHandle, LC_WDT_TABLENAME, DataSize, OptionFlags, LC_ValidateWDT);
+    }
+
+    if (Result == CFE_TBL_INFO_RECOVERED_TBL)
+    {
+        LC_OperData.TableResults |= LC_WDT_CRITICAL_TBL;
+        LC_OperData.TableResults |= LC_WDT_TBL_RESTORED;
+        Result = CFE_SUCCESS;
+    }
+    else if (Result == CFE_SUCCESS)
+    {
+        if (LC_OperData.HaveActiveCDS)
+        {
+            LC_OperData.TableResults |= LC_WDT_CRITICAL_TBL;
+        }
+        else
+        {
+            LC_OperData.TableResults |= LC_WDT_NOT_CRITICAL;
+        }
+    }
+    else
+    {
+        /*
+        ** Task initialization fails without this table
+        **
+        */
+        CFE_EVS_SendEvent(LC_WDT_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, "Error registering WDT, RC=0x%08X",
+                          (unsigned int)Result);
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Register the Actionpoint Definition Table (ADT)
+        */
+        DataSize = LC_MAX_ACTIONPOINTS * sizeof(LC_ADTEntry_t);
+        Result   = CFE_TBL_Register(&LC_OperData.ADTHandle, LC_ADT_TABLENAME, DataSize, OptionFlags, LC_ValidateADT);
+
+        if ((LC_OperData.HaveActiveCDS) && ((Result != CFE_TBL_INFO_RECOVERED_TBL) && (Result != CFE_SUCCESS)))
+        {
+            LC_OperData.HaveActiveCDS = false;
+            OptionFlags               = CFE_TBL_OPT_DEFAULT;
+
+            CFE_EVS_SendEvent(LC_ADT_REGISTER_CRIT_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error registering ADT as critical table, retrying with default options, RC=0x%08X",
+                              (unsigned int)Result);
+
+            /*
+            ** Re-register the Actionpoint Definition Table (ADT) non-critical
+            */
+            Result = CFE_TBL_Register(&LC_OperData.ADTHandle, LC_ADT_TABLENAME, DataSize, OptionFlags, LC_ValidateADT);
+        }
+
+        if (Result == CFE_TBL_INFO_RECOVERED_TBL)
+        {
+            LC_OperData.TableResults |= LC_ADT_CRITICAL_TBL;
+            LC_OperData.TableResults |= LC_ADT_TBL_RESTORED;
+            Result = CFE_SUCCESS;
+        }
+        else if (Result == CFE_SUCCESS)
+        {
+            if (LC_OperData.HaveActiveCDS)
+            {
+                LC_OperData.TableResults |= LC_ADT_CRITICAL_TBL;
+            }
+            else
+            {
+                LC_OperData.TableResults |= LC_ADT_NOT_CRITICAL;
+            }
+        }
+        else
+        {
+            /*
+            ** Task initialization fails without this table
+            */
+            CFE_EVS_SendEvent(LC_ADT_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR, "Error registering ADT, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** In case we created a critical WDT and then created a non-critical ADT
+        */
+        if (((LC_OperData.TableResults & LC_WDT_CRITICAL_TBL) == LC_WDT_CRITICAL_TBL) &&
+            ((LC_OperData.TableResults & LC_ADT_NOT_CRITICAL) == LC_ADT_NOT_CRITICAL))
+        {
+            /*
+            ** Un-register the critical watchpoint Definition Table (WDT)
+            */
+            CFE_TBL_Unregister(LC_OperData.WDTHandle);
+
+            /*
+            ** Re-register the Watchpoint Definition Table (WDT) non-critical
+            */
+            DataSize    = LC_MAX_WATCHPOINTS * sizeof(LC_WDTEntry_t);
+            OptionFlags = CFE_TBL_OPT_DEFAULT;
+            Result = CFE_TBL_Register(&LC_OperData.WDTHandle, LC_WDT_TABLENAME, DataSize, OptionFlags, LC_ValidateWDT);
+            if (Result == CFE_SUCCESS)
+            {
+                LC_OperData.TableResults |= LC_WDT_NOT_CRITICAL;
+            }
+            else
+            {
+                /*
+                ** Task initialization fails without this table
+                */
+                CFE_EVS_SendEvent(LC_WDT_REREGISTER_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Error re-registering WDT, RC=0x%08X", (unsigned int)Result);
+            }
+        }
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Startup initialization - create Critical Data Store (CDS)       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_CreateTaskCDS(void)
+{
+    int32  Result;
+    uint32 DataSize;
+
+    /*
+    ** Create CDS and try to restore Watchpoint Results Table (WRT) data
+    */
+    DataSize = LC_MAX_WATCHPOINTS * sizeof(LC_WRTEntry_t);
+    Result   = CFE_ES_RegisterCDS(&LC_OperData.WRTDataCDSHandle, DataSize, LC_WRT_CDSNAME);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Normal result after a power on reset (cold boot) - continue with next CDS area
+        */
+        LC_OperData.TableResults |= LC_WRT_CDS_CREATED;
+    }
+    else if (Result == CFE_ES_CDS_ALREADY_EXISTS)
+    {
+        /*
+        ** Normal result after a processor reset (warm boot) - try to restore previous data
+        */
+        LC_OperData.TableResults |= LC_WRT_CDS_CREATED;
+
+        Result = CFE_ES_RestoreFromCDS(LC_OperData.WRTPtr, LC_OperData.WRTDataCDSHandle);
+
+        if (Result == CFE_SUCCESS)
+        {
+            LC_OperData.TableResults |= LC_WRT_CDS_RESTORED;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(LC_WRT_CDS_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error registering WRT CDS Area, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    /*
+    ** Create CDS and try to restore Actionpoint Results Table (ART) data
+    */
+    DataSize = LC_MAX_ACTIONPOINTS * sizeof(LC_ARTEntry_t);
+    Result   = CFE_ES_RegisterCDS(&LC_OperData.ARTDataCDSHandle, DataSize, LC_ART_CDSNAME);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Normal result after a power on reset (cold boot) - continue with next CDS area
+        */
+        LC_OperData.TableResults |= LC_ART_CDS_CREATED;
+    }
+    else if (Result == CFE_ES_CDS_ALREADY_EXISTS)
+    {
+        /*
+        ** Normal result after a processor reset (warm boot) - try to restore previous data
+        */
+        LC_OperData.TableResults |= LC_ART_CDS_CREATED;
+
+        Result = CFE_ES_RestoreFromCDS(LC_OperData.ARTPtr, LC_OperData.ARTDataCDSHandle);
+
+        if (Result == CFE_SUCCESS)
+        {
+            LC_OperData.TableResults |= LC_ART_CDS_RESTORED;
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(LC_ART_CDS_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error registering ART CDS Area, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    /*
+    ** Create CDS and try to restore Application (APP) data
+    */
+    DataSize = sizeof(LC_AppData_t);
+    Result   = CFE_ES_RegisterCDS(&LC_OperData.AppDataCDSHandle, DataSize, LC_APPDATA_CDSNAME);
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Normal result after a power on reset (cold boot) - continue with next CDS area
+        */
+        LC_OperData.TableResults |= LC_APP_CDS_CREATED;
+    }
+    else if (Result == CFE_ES_CDS_ALREADY_EXISTS)
+    {
+        /*
+        ** Normal result after a processor reset (warm boot) - try to restore previous data
+        */
+        LC_OperData.TableResults |= LC_APP_CDS_CREATED;
+
+        Result = CFE_ES_RestoreFromCDS(&LC_AppData, LC_OperData.AppDataCDSHandle);
+
+        if ((Result == CFE_SUCCESS) && (LC_AppData.CDSSavedOnExit == LC_CDS_SAVED))
+        {
+            /*
+            ** Success - only if previous session saved CDS data at least once
+            */
+            LC_OperData.TableResults |= LC_APP_CDS_RESTORED;
+
+            /*
+            ** May need to override the restored application state
+            */
+
+#if LC_STATE_WHEN_CDS_RESTORED != LC_STATE_FROM_CDS
+            LC_AppData.CurrentLCState = LC_STATE_WHEN_CDS_RESTORED;
+#endif
+        }
+    }
+    else
+    {
+        CFE_EVS_SendEvent(LC_APP_CDS_REGISTER_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Error registering application data CDS Area, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Startup initialization - load default WP/AP definition tables   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_LoadDefaultTables(void)
+{
+    int32 Result;
+
+    /*
+    ** Load default watchpoint definition table (WDT)
+    */
+    Result = CFE_TBL_Load(LC_OperData.WDTHandle, CFE_TBL_SRC_FILE, LC_WDT_FILENAME);
+
+    if (Result == CFE_SUCCESS)
+    {
+        LC_OperData.TableResults |= LC_WDT_DEFAULT_TBL;
+    }
+    else
+    {
+        /*
+        ** Task initialization fails without this table
+        */
+        CFE_EVS_SendEvent(LC_WDT_LOAD_ERR_EID, CFE_EVS_EventType_ERROR, "Error (RC=0x%08X) Loading WDT with '%s'",
+                          (unsigned int)Result, LC_WDT_FILENAME);
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Get a pointer to the watchpoint definition table data...
+        */
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.WDTPtr, LC_OperData.WDTHandle);
+
+        if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(LC_WDT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting WDT address, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if ((Result == CFE_SUCCESS) || (Result == CFE_TBL_INFO_UPDATED))
+    {
+        /*
+        ** Load default actionpoint definition table (ADT)
+        */
+        Result = CFE_TBL_Load(LC_OperData.ADTHandle, CFE_TBL_SRC_FILE, LC_ADT_FILENAME);
+
+        if (Result == CFE_SUCCESS)
+        {
+            LC_OperData.TableResults |= LC_ADT_DEFAULT_TBL;
+        }
+        else
+        {
+            /*
+            ** Task initialization fails without this table
+            */
+            CFE_EVS_SendEvent(LC_ADT_LOAD_ERR_EID, CFE_EVS_EventType_ERROR, "Error (RC=0x%08X) Loading ADT with '%s'",
+                              (unsigned int)Result, LC_ADT_FILENAME);
+        }
+    }
+
+    if (Result == CFE_SUCCESS)
+    {
+        /*
+        ** Get a pointer to the actionpoint definition table data
+        */
+        Result = CFE_TBL_GetAddress((void *)&LC_OperData.ADTPtr, LC_OperData.ADTHandle);
+
+        if ((Result != CFE_SUCCESS) && (Result != CFE_TBL_INFO_UPDATED))
+        {
+            CFE_EVS_SendEvent(LC_ADT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting ADT address, RC=0x%08X",
+                              (unsigned int)Result);
+        }
+    }
+
+    if ((Result == CFE_SUCCESS) || (Result == CFE_TBL_INFO_UPDATED))
+    {
+        /*
+        ** Initialize the watchpoint and actionpoint result table data
+        */
+        LC_ResetResultsWP(0, LC_MAX_WATCHPOINTS - 1, false);
+        LC_OperData.TableResults |= LC_WRT_DEFAULT_DATA;
+
+        LC_ResetResultsAP(0, LC_MAX_ACTIONPOINTS - 1, false);
+        LC_OperData.TableResults |= LC_ART_DEFAULT_DATA;
+
+        /*
+        ** Reset application data counters reported in housekeeping
+        */
+        LC_ResetCounters();
+
+        /*
+        ** Set LC operational state to configured startup value
+        */
+        LC_AppData.CurrentLCState = LC_STATE_POWER_ON_RESET;
+        LC_OperData.TableResults |= LC_APP_DEFAULT_DATA;
+
+        /*
+        ** If CDS is enabled - try to update the 3 CDS areas managed by the LC task
+        **  (continue, but disable CDS if unable to update all 3)
+        */
+        if (LC_OperData.HaveActiveCDS)
+        {
+            if (LC_UpdateTaskCDS() == CFE_SUCCESS)
+            {
+                LC_OperData.TableResults |= LC_CDS_UPDATED;
+            }
+            else
+            {
+                LC_OperData.HaveActiveCDS = false;
+            }
+        }
+    }
+
+    return Result;
+}
+```
+
+### `lc_app.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_app.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Unit specification for the Core Flight System (CFS)
+ *   Limit Checker (LC) Application.
+ */
+#ifndef LC_APP_H
+#define LC_APP_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe.h"
+#include "lc_msg.h"
+#include "lc_tbl.h"
+
+/************************************************************************
+ * Macro Definitions
+ ************************************************************************/
+
+/**
+ * \name LC CDS Buffer Strings
+ * \{
+ */
+#define LC_WRT_CDSNAME     "LC_CDS_WRT"
+#define LC_ART_CDSNAME     "LC_CDS_ART"
+#define LC_APPDATA_CDSNAME "LC_CDS_AppData"
+/**\}*/
+
+/**
+ * \name LC Command Pipe Parameters
+ * \{
+ */
+#define LC_PIPE_NAME "LC_CMD_PIPE"
+/**\}*/
+
+/**
+ * \name Table and CDS Initialization Results
+ * \{
+ */
+#define LC_CDS_ENABLED  0x00000001
+#define LC_CDS_CREATED  0x00000002
+#define LC_CDS_RESTORED 0x00000004
+#define LC_CDS_UPDATED  0x00000008
+
+#define LC_WRT_DEFAULT_DATA 0x00000010
+#define LC_WRT_CDS_CREATED  0x00000020
+#define LC_WRT_CDS_RESTORED 0x00000040
+#define LC_WRT_TBL_CREATED  0x00000080
+
+#define LC_ART_DEFAULT_DATA 0x00000100
+#define LC_ART_CDS_CREATED  0x00000200
+#define LC_ART_CDS_RESTORED 0x00000400
+#define LC_ART_TBL_CREATED  0x00000800
+
+#define LC_APP_DEFAULT_DATA 0x00001000
+#define LC_APP_CDS_CREATED  0x00002000
+#define LC_APP_CDS_RESTORED 0x00004000
+
+#define LC_WDT_DEFAULT_TBL  0x00010000
+#define LC_WDT_CRITICAL_TBL 0x00020000
+#define LC_WDT_TBL_RESTORED 0x00040000
+#define LC_WDT_NOT_CRITICAL 0x00080000
+
+#define LC_ADT_DEFAULT_TBL  0x00100000
+#define LC_ADT_CRITICAL_TBL 0x00200000
+#define LC_ADT_TBL_RESTORED 0x00400000
+#define LC_ADT_NOT_CRITICAL 0x00800000
+/**\}*/
+
+/**
+ * \brief Wakeup for LC
+ *
+ * \par Description
+ *      Wakes up LC every 1 second for routine maintenance whether a
+ *      message was received or not.
+ */
+#define LC_SB_TIMEOUT 1000
+
+/**
+ * \name Hash table definitions - presumes MessageID as hash function input
+ * \{
+ */
+#define LC_HASH_TABLE_ENTRIES 256    /**< \brief Hash table number of entries */
+#define LC_HASH_TABLE_MASK    0x00FF /**< \brief Hash table mask */
+/**\}*/
+
+/** \brief Linked list of Watchpoints that reference the same MessageID */
+typedef struct LC_WListTag
+{
+    struct LC_WListTag *Next; /**< \brief Next linked list element */
+
+    uint16 WatchIndex; /**< \brief Watchpoint table index   */
+    uint16 Spare;      /**< \brief Structure alignment pad  */
+} LC_WatchPtList_t;
+
+/** \brief Linked list of MessageID's with same hash function result */
+typedef struct LC_MListTag
+{
+    struct LC_MListTag *Next; /**< \brief Next linked list element */
+
+    CFE_SB_MsgId_t MessageID; /**< \brief MessageID for this link  */
+    uint16         Spare;     /**< \brief Structure alignment pad  */
+
+    LC_WatchPtList_t *WatchPtList; /**< \brief Watchpoint list for this MessageID */
+} LC_MessageList_t;
+
+/************************************************************************
+ * Type Definitions
+ ************************************************************************/
+
+/**
+ *  \brief LC Operational Data Structure
+ *
+ *  The operational data is not saved to the CDS
+ */
+typedef struct
+{
+    CFE_SB_PipeId_t CmdPipe; /**< \brief Command pipe ID                      */
+
+    LC_WDTEntry_t *WDTPtr; /**< \brief Watchpoint  Definition Table Pointer */
+    LC_ADTEntry_t *ADTPtr; /**< \brief Actionpoint Definition Table Pointer */
+
+    LC_WRTEntry_t *WRTPtr; /**< \brief Watchpoint  Results Table Pointer    */
+    LC_ARTEntry_t *ARTPtr; /**< \brief Actionpoint Results Table Pointer    */
+
+    CFE_TBL_Handle_t WDTHandle; /**< \brief Watchpoint  Definition Table Handle  */
+    CFE_TBL_Handle_t ADTHandle; /**< \brief Actionpoint Definition Table Handle  */
+
+    CFE_TBL_Handle_t WRTHandle; /**< \brief Watchpoint  Results Table Handle     */
+    CFE_TBL_Handle_t ARTHandle; /**< \brief Actionpoint Results Table Handle     */
+
+    CFE_ES_CDSHandle_t WRTDataCDSHandle; /**< \brief Watchpoint  Results Table CDS Handle */
+    CFE_ES_CDSHandle_t ARTDataCDSHandle; /**< \brief Actionpoint Results Table CDS Handle */
+
+    CFE_ES_CDSHandle_t AppDataCDSHandle; /**< \brief Application Data CDS Handle          */
+
+    uint16 WatchpointCount; /**< \brief Count of in-use watchpoints defined
+                                        in the Watchpoint Definition Table   */
+
+    uint16 MessageIDsCount; /**< \brief Count of unique MessageIDs referenced
+                                        in the Watchpoint Definition Table   */
+
+    LC_HkPacket_t HkPacket; /**< \brief Housekeeping telemetry packet        */
+
+    uint32 TableResults; /**< \brief Table and CDS initialization results */
+
+    LC_MessageList_t *HashTable[LC_HASH_TABLE_ENTRIES]; /**< \brief Each entry in the hash
+                                                                   table is a linked list
+                                                                   of all the MessageID's
+                                                                   that the hash function
+                                                                   converts to each index  */
+
+    LC_MessageList_t MessageLinks[LC_MAX_WATCHPOINTS]; /**< \brief Message linked list elements */
+    LC_WatchPtList_t WatchPtLinks[LC_MAX_WATCHPOINTS]; /**< \brief WatchPoint linked list elements */
+
+    bool HaveActiveCDS; /**< \brief Critical Data Store in use flag      */
+} LC_OperData_t;
+
+/**
+ *  \brief LC Application Data Structure
+ *
+ *  The application data is saved and restored from the CDS
+ *  when the app is configured to use it
+ */
+typedef struct
+{
+    uint16 CmdCount;    /**< \brief Command Counter                        */
+    uint16 CmdErrCount; /**< \brief Command Error Counter                  */
+
+    uint32 APSampleCount;       /**< \brief Total count of Actionpoints sampled    */
+    uint32 MonitoredMsgCount;   /**< \brief Total count of messages monitored      */
+    uint32 RTSExecCount;        /**< \brief Total count of RTS sequences initiated */
+    uint16 PassiveRTSExecCount; /**< \brief Total count of RTS sequences not
+                                            initiated because the LC state is
+                                            set to #LC_STATE_PASSIVE or the state
+                                            of the actionpoint that failed is set to
+                                            #LC_APSTATE_PASSIVE                    */
+
+    uint16 CDSSavedOnExit; /**< \brief Variable that tells us if we exited clean or not */
+    uint8  CurrentLCState; /**< \brief Current LC application operating state */
+} LC_AppData_t;
+
+/************************************************************************
+ * Exported Data
+ ************************************************************************/
+
+extern LC_OperData_t LC_OperData; /**< \brief Operational data */
+extern LC_AppData_t  LC_AppData;  /**< \brief Application data */
+
+/************************************************************************
+ * Exported Functions
+ ************************************************************************/
+
+/**
+ * \brief CFS Limit Checker (LC) application entry point
+ *
+ *  \par Description
+ *       Limit Checker application entry point and main process loop.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ */
+void LC_AppMain(void);
+
+/**
+ * \brief Initialize the CFS Limit Checker (LC) application
+ *
+ *  \par Description
+ *       Limit Checker application initialization routine. This
+ *       function performs all the required startup steps to
+ *       initialize (or restore from CDS) LC data structures and get
+ *       the application registered with the cFE services so it can
+ *       begin to receive command messages.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_AppInit(void);
+
+/**
+ * \brief Initialize Event Services
+ *
+ *  \par Description
+ *       This function performs the steps required to setup
+ *       cFE Events Services for use by the LC application
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_EvsInit(void);
+
+/**
+ * \brief Initialize Software Bus
+ *
+ *  \par Description
+ *       This function performs the steps required to setup the
+ *       cFE software bus for use by the LC application
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_SbInit(void);
+
+/**
+ * \brief Initialize Table Services (includes CDS)
+ *
+ *  \par Description
+ *       This function creates the tables used by the LC application and
+ *       establishes the initial table values based on the configuration
+ *       setting that enables the use of Critical Data Store (CDS) and
+ *       the availability of stored data to restore.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa LC_SAVE_TO_CDS
+ */
+int32 LC_TableInit(void);
+
+/**
+ * \brief Create Watchpoint and Actionpoint Result Tables
+ *
+ *  \par Description
+ *       This function creates the dump only result tables used by the LC
+ *       application.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa #LC_TableInit
+ */
+int32 LC_CreateResultTables(void);
+
+/**
+ * \brief Create Watchpoint and Actionpoint Definition Tables
+ *
+ *  \par Description
+ *       This function creates the loadable definition tables used by the
+ *       LC application.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa #LC_TableInit
+ */
+int32 LC_CreateDefinitionTables(void);
+
+/**
+ * \brief Create Result Table and Application Data CDS Areas
+ *
+ *  \par Description
+ *       This function creates the loadable definition tables used by the
+ *       LC application.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa #LC_TableInit
+ */
+int32 LC_CreateTaskCDS(void);
+
+/**
+ * \brief Load Default Table Values
+ *
+ *  \par Description
+ *       This function loads the definition tables from table files named
+ *       in the LC platform configuration header file.  The function also
+ *       initializes the contents of the dump only results tables and
+ *       initializes the global application data structure.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa #LC_TableInit
+ */
+int32 LC_LoadDefaultTables(void);
+
+#endif
+```
+
+### `lc_cmds.c`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_cmds.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) command handling routines
+ */
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_app.h"
+#include "lc_cmds.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_action.h"
+#include "lc_watch.h"
+#include "lc_platform_cfg.h"
+#include "lc_utils.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process a command pipe message                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 LC_AppPipe(const CFE_SB_Buffer_t *BufPtr)
+{
+    int32             Status      = CFE_SUCCESS;
+    CFE_SB_MsgId_t    MessageID   = CFE_SB_INVALID_MSG_ID;
+    CFE_MSG_FcnCode_t CommandCode = 0;
+
+    CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        /*
+        ** Sample actionpoints request
+        */
+        case LC_SAMPLE_AP_MID:
+            LC_SampleAPReq(BufPtr);
+            break;
+
+        /*
+        ** Housekeeping telemetry request
+        ** (only routine that can return a critical error indicator)
+        */
+        case LC_SEND_HK_MID:
+            Status = LC_HousekeepingReq((CFE_MSG_CommandHeader_t *)BufPtr);
+            break;
+
+        /*
+        ** LC application commands...
+        */
+        case LC_CMD_MID:
+
+            CFE_MSG_GetFcnCode(&BufPtr->Msg, &CommandCode);
+            switch (CommandCode)
+            {
+                case LC_NOOP_CC:
+                    LC_NoopCmd(BufPtr);
+                    break;
+
+                case LC_RESET_CC:
+                    LC_ResetCmd(BufPtr);
+                    break;
+
+                case LC_SET_LC_STATE_CC:
+                    LC_SetLCStateCmd(BufPtr);
+                    break;
+
+                case LC_SET_AP_STATE_CC:
+                    LC_SetAPStateCmd(BufPtr);
+                    break;
+
+                case LC_SET_AP_PERMOFF_CC:
+                    LC_SetAPPermOffCmd(BufPtr);
+                    break;
+
+                case LC_RESET_AP_STATS_CC:
+                    LC_ResetAPStatsCmd(BufPtr);
+                    break;
+
+                case LC_RESET_WP_STATS_CC:
+                    LC_ResetWPStatsCmd(BufPtr);
+                    break;
+
+                default:
+                    CFE_EVS_SendEvent(LC_CC_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Invalid command code: ID = 0x%08lX, CC = %d",
+                                      (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode);
+
+                    LC_AppData.CmdErrCount++;
+                    break;
+
+            } /* end CommandCode switch */
+            break;
+
+        /*
+        ** All other message ID's should be monitor
+        ** packets
+        */
+        default:
+            LC_CheckMsgForWPs(MessageID, BufPtr);
+            break;
+
+    } /* end MessageID switch */
+
+    return Status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Sample Actionpoints Request                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SampleAPReq(const CFE_SB_Buffer_t *BufPtr)
+{
+    LC_SampleAP_t *LC_SampleAP    = (LC_SampleAP_t *)BufPtr;
+    size_t         ExpectedLength = sizeof(LC_SampleAP_t);
+    uint16         WatchIndex;
+    bool           ValidSampleCmd = false;
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        /*
+        ** Ignore AP sample requests if disabled at the application level
+        */
+        if (LC_AppData.CurrentLCState != LC_STATE_DISABLED)
+        {
+            /*
+            ** Range check the actionpoint array index arguments
+            */
+            if ((LC_SampleAP->StartIndex == LC_ALL_ACTIONPOINTS) && (LC_SampleAP->EndIndex == LC_ALL_ACTIONPOINTS))
+            {
+                /*
+                ** Allow special "sample all" heritage values
+                */
+                LC_SampleAPs(0, LC_MAX_ACTIONPOINTS - 1);
+                ValidSampleCmd = true;
+            }
+            else if ((LC_SampleAP->StartIndex <= LC_SampleAP->EndIndex) &&
+                     (LC_SampleAP->EndIndex < LC_MAX_ACTIONPOINTS))
+            {
+                /*
+                ** Start is less or equal to end, and end is within the array
+                */
+                LC_SampleAPs(LC_SampleAP->StartIndex, LC_SampleAP->EndIndex);
+                ValidSampleCmd = true;
+            }
+            else
+            {
+                /*
+                ** At least one actionpoint array index is out of range
+                */
+                CFE_EVS_SendEvent(LC_APSAMPLE_APNUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Sample AP error: invalid AP number, start = %d, end = %d", LC_SampleAP->StartIndex,
+                                  LC_SampleAP->EndIndex);
+            }
+
+            /*
+            ** Optionally update the age of watchpoint results
+            */
+            if ((LC_SampleAP->UpdateAge != 0) && (ValidSampleCmd))
+            {
+                for (WatchIndex = 0; WatchIndex < LC_MAX_WATCHPOINTS; WatchIndex++)
+                {
+                    if (LC_OperData.WRTPtr[WatchIndex].CountdownToStale != 0)
+                    {
+                        LC_OperData.WRTPtr[WatchIndex].CountdownToStale--;
+
+                        if (LC_OperData.WRTPtr[WatchIndex].CountdownToStale == 0)
+                        {
+                            LC_OperData.WRTPtr[WatchIndex].WatchResult = LC_WATCH_STALE;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Housekeeping request                                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 LC_HousekeepingReq(const CFE_MSG_CommandHeader_t *MsgPtr)
+{
+    int32  Result;
+    size_t ExpectedLength = sizeof(LC_NoArgsCmd_t);
+    uint16 TableIndex;
+    uint16 HKIndex;
+    uint8  ByteData;
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength((CFE_MSG_Message_t *)MsgPtr, ExpectedLength))
+    {
+        /*
+        ** Update HK variables
+        */
+        LC_OperData.HkPacket.CmdCount            = LC_AppData.CmdCount;
+        LC_OperData.HkPacket.CmdErrCount         = LC_AppData.CmdErrCount;
+        LC_OperData.HkPacket.APSampleCount       = LC_AppData.APSampleCount;
+        LC_OperData.HkPacket.MonitoredMsgCount   = LC_AppData.MonitoredMsgCount;
+        LC_OperData.HkPacket.RTSExecCount        = LC_AppData.RTSExecCount;
+        LC_OperData.HkPacket.PassiveRTSExecCount = LC_AppData.PassiveRTSExecCount;
+        LC_OperData.HkPacket.CurrentLCState      = LC_AppData.CurrentLCState;
+        LC_OperData.HkPacket.WPsInUse            = LC_OperData.WatchpointCount;
+
+        /*
+        ** Clear out the active actionpoint count, it will get
+        ** recomputed below
+        */
+        LC_OperData.HkPacket.ActiveAPs = 0;
+
+        /*
+        ** Update packed watch results
+        ** (4 watch results in one 8-bit byte)
+        */
+        for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex += 4)
+        {
+            HKIndex = TableIndex / 4;
+
+            /*
+            ** Pack in first result
+            */
+            switch (LC_OperData.WRTPtr[TableIndex + 3].WatchResult)
+            {
+                case LC_WATCH_STALE:
+                    ByteData = LC_HKWR_STALE << 6;
+                    break;
+
+                case LC_WATCH_FALSE:
+                    ByteData = LC_HKWR_FALSE << 6;
+                    break;
+
+                case LC_WATCH_TRUE:
+                    ByteData = LC_HKWR_TRUE << 6;
+                    break;
+
+                /*
+                ** We should never get an undefined watch result,
+                ** but we'll set an error result if we do
+                */
+                case LC_WATCH_ERROR:
+                default:
+                    ByteData = LC_HKWR_ERROR << 6;
+                    break;
+            }
+
+            /*
+            ** Pack in second result
+            */
+            switch (LC_OperData.WRTPtr[TableIndex + 2].WatchResult)
+            {
+                case LC_WATCH_STALE:
+                    ByteData = (ByteData | (LC_HKWR_STALE << 4));
+                    break;
+
+                case LC_WATCH_FALSE:
+                    ByteData = (ByteData | (LC_HKWR_FALSE << 4));
+                    break;
+
+                case LC_WATCH_TRUE:
+                    ByteData = (ByteData | (LC_HKWR_TRUE << 4));
+                    break;
+
+                case LC_WATCH_ERROR:
+                default:
+                    ByteData = (ByteData | (LC_HKWR_ERROR << 4));
+                    break;
+            }
+
+            /*
+            ** Pack in third result
+            */
+            switch (LC_OperData.WRTPtr[TableIndex + 1].WatchResult)
+            {
+                case LC_WATCH_STALE:
+                    ByteData = (ByteData | (LC_HKWR_STALE << 2));
+                    break;
+
+                case LC_WATCH_FALSE:
+                    ByteData = (ByteData | (LC_HKWR_FALSE << 2));
+                    break;
+
+                case LC_WATCH_TRUE:
+                    ByteData = (ByteData | (LC_HKWR_TRUE << 2));
+                    break;
+
+                case LC_WATCH_ERROR:
+                default:
+                    ByteData = (ByteData | (LC_HKWR_ERROR << 2));
+                    break;
+            }
+
+            /*
+            ** Pack in fourth and last result
+            */
+            switch (LC_OperData.WRTPtr[TableIndex].WatchResult)
+            {
+                case LC_WATCH_STALE:
+                    ByteData = (ByteData | LC_HKWR_STALE);
+                    break;
+
+                case LC_WATCH_FALSE:
+                    ByteData = (ByteData | LC_HKWR_FALSE);
+                    break;
+
+                case LC_WATCH_TRUE:
+                    ByteData = (ByteData | LC_HKWR_TRUE);
+                    break;
+
+                case LC_WATCH_ERROR:
+                default:
+                    ByteData = (ByteData | LC_HKWR_ERROR);
+                    break;
+            }
+
+            /*
+            ** Update houskeeping watch results array
+            */
+            LC_OperData.HkPacket.WPResults[HKIndex] = ByteData;
+
+        } /* end watch results for loop */
+
+        /*
+        ** Update packed action results
+        ** (2 action state/result pairs (4 bits each) in one 8-bit byte)
+        */
+        for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex += 2)
+        {
+            HKIndex = TableIndex / 2;
+
+            /*
+            ** Pack in first actionpoint, current state
+            */
+            switch (LC_OperData.ARTPtr[TableIndex + 1].CurrentState)
+            {
+                case LC_ACTION_NOT_USED:
+                    ByteData = LC_HKAR_STATE_NOT_USED << 6;
+                    break;
+
+                case LC_APSTATE_ACTIVE:
+                    ByteData = LC_HKAR_STATE_ACTIVE << 6;
+                    LC_OperData.HkPacket.ActiveAPs++;
+                    break;
+
+                case LC_APSTATE_PASSIVE:
+                    ByteData = LC_HKAR_STATE_PASSIVE << 6;
+                    break;
+
+                case LC_APSTATE_DISABLED:
+                    ByteData = LC_HKAR_STATE_DISABLED << 6;
+                    break;
+
+                /*
+                ** Permanantly disabled actionpoints get reported
+                ** as unused. We should never get an undefined
+                ** action state, but we'll set to not used if we do.
+                */
+                case LC_APSTATE_PERMOFF:
+                default:
+                    ByteData = LC_HKAR_STATE_NOT_USED << 6;
+                    break;
+            }
+
+            /*
+            ** Pack in first actionpoint, action result
+            */
+            switch (LC_OperData.ARTPtr[TableIndex + 1].ActionResult)
+            {
+                case LC_ACTION_STALE:
+                    ByteData = (ByteData | (LC_HKAR_STALE << 4));
+                    break;
+
+                case LC_ACTION_PASS:
+                    ByteData = (ByteData | (LC_HKAR_PASS << 4));
+                    break;
+
+                case LC_ACTION_FAIL:
+                    ByteData = (ByteData | (LC_HKAR_FAIL << 4));
+                    break;
+
+                /*
+                ** We should never get an undefined action result,
+                ** but we'll set an error result if we do
+                */
+                case LC_ACTION_ERROR:
+                default:
+                    ByteData = (ByteData | (LC_HKAR_ERROR << 4));
+                    break;
+            }
+
+            /*
+            ** Pack in second actionpoint, current state
+            */
+            switch (LC_OperData.ARTPtr[TableIndex].CurrentState)
+            {
+                case LC_ACTION_NOT_USED:
+                    ByteData = (ByteData | (LC_HKAR_STATE_NOT_USED << 2));
+                    break;
+
+                case LC_APSTATE_ACTIVE:
+                    ByteData = (ByteData | (LC_HKAR_STATE_ACTIVE << 2));
+                    LC_OperData.HkPacket.ActiveAPs++;
+                    break;
+
+                case LC_APSTATE_PASSIVE:
+                    ByteData = (ByteData | (LC_HKAR_STATE_PASSIVE << 2));
+                    break;
+
+                case LC_APSTATE_DISABLED:
+                    ByteData = (ByteData | (LC_HKAR_STATE_DISABLED << 2));
+                    break;
+
+                case LC_APSTATE_PERMOFF:
+                default:
+                    ByteData = (ByteData | (LC_HKAR_STATE_NOT_USED << 2));
+                    break;
+            }
+
+            /*
+            ** Pack in second actionpoint, action result
+            */
+            switch (LC_OperData.ARTPtr[TableIndex].ActionResult)
+            {
+                case LC_ACTION_STALE:
+                    ByteData = (ByteData | LC_HKAR_STALE);
+                    break;
+
+                case LC_ACTION_PASS:
+                    ByteData = (ByteData | LC_HKAR_PASS);
+                    break;
+
+                case LC_ACTION_FAIL:
+                    ByteData = (ByteData | LC_HKAR_FAIL);
+                    break;
+
+                case LC_ACTION_ERROR:
+                default:
+                    ByteData = (ByteData | LC_HKAR_ERROR);
+                    break;
+            }
+
+            /*
+            ** Update houskeeping action results array
+            */
+            LC_OperData.HkPacket.APResults[HKIndex] = ByteData;
+
+        } /* end action results for loop */
+
+        /*
+        ** Timestamp and send housekeeping packet
+        */
+        CFE_SB_TimeStampMsg(&LC_OperData.HkPacket.TlmHeader.Msg);
+        CFE_SB_TransmitMsg(&LC_OperData.HkPacket.TlmHeader.Msg, true);
+
+    } /* end LC_VerifyMsgLength if */
+
+    Result = LC_PerformMaintenance();
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Noop command                                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_NoopCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t ExpectedLength = sizeof(LC_NoArgsCmd_t);
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        LC_AppData.CmdCount++;
+
+        CFE_EVS_SendEvent(LC_NOOP_INF_EID, CFE_EVS_EventType_INFORMATION, "No-op command: Version %d.%d.%d.%d",
+                          LC_MAJOR_VERSION, LC_MINOR_VERSION, LC_REVISION, LC_MISSION_REV);
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset counters command                                          */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t ExpectedLength = sizeof(LC_NoArgsCmd_t);
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        LC_ResetCounters();
+
+        CFE_EVS_SendEvent(LC_RESET_DBG_EID, CFE_EVS_EventType_DEBUG, "Reset counters command");
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset housekeeping counters                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetCounters(void)
+{
+    LC_AppData.CmdCount    = 0;
+    LC_AppData.CmdErrCount = 0;
+
+    LC_AppData.APSampleCount       = 0;
+    LC_AppData.MonitoredMsgCount   = 0;
+    LC_AppData.RTSExecCount        = 0;
+    LC_AppData.PassiveRTSExecCount = 0;
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set LC state command                                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SetLCStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t           ExpectedLength = sizeof(LC_SetLCState_t);
+    LC_SetLCState_t *CmdPtr;
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        CmdPtr = ((LC_SetLCState_t *)BufPtr);
+
+        switch (CmdPtr->NewLCState)
+        {
+            case LC_STATE_ACTIVE:
+            case LC_STATE_PASSIVE:
+            case LC_STATE_DISABLED:
+                LC_AppData.CurrentLCState = CmdPtr->NewLCState;
+                LC_AppData.CmdCount++;
+
+                CFE_EVS_SendEvent(LC_LCSTATE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Set LC state command: new state = %d", CmdPtr->NewLCState);
+                break;
+
+            default:
+                CFE_EVS_SendEvent(LC_LCSTATE_ERR_EID, CFE_EVS_EventType_ERROR, "Set LC state error: invalid state = %d",
+                                  CmdPtr->NewLCState);
+
+                LC_AppData.CmdErrCount++;
+                break;
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set actionpoint state command                                   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SetAPStateCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t           ExpectedLength = sizeof(LC_SetAPState_t);
+    LC_SetAPState_t *CmdPtr;
+    uint32           TableIndex;
+    uint8            CurrentAPState;
+    bool             ValidState = true;
+    bool             CmdSuccess = false;
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        CmdPtr = ((LC_SetAPState_t *)BufPtr);
+
+        /*
+        ** Do a sanity check on the new actionpoint state
+        ** specified.
+        */
+        switch (CmdPtr->NewAPState)
+        {
+            case LC_APSTATE_ACTIVE:
+            case LC_APSTATE_PASSIVE:
+            case LC_APSTATE_DISABLED:
+                break;
+
+            default:
+                ValidState = false;
+                CFE_EVS_SendEvent(LC_APSTATE_NEW_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Set AP state error: AP = %d, Invalid new state = %d", CmdPtr->APNumber,
+                                  CmdPtr->NewAPState);
+
+                LC_AppData.CmdErrCount++;
+                break;
+        }
+
+        /*
+        ** Do the rest based on the actionpoint ID we were given
+        */
+        if (ValidState == true)
+        {
+            if ((CmdPtr->APNumber) == LC_ALL_ACTIONPOINTS)
+            {
+                /*
+                ** Set all actionpoints to the new state except those that are not
+                ** used or set permanently off
+                */
+                for (TableIndex = 0; TableIndex < LC_MAX_ACTIONPOINTS; TableIndex++)
+                {
+                    CurrentAPState = LC_OperData.ARTPtr[TableIndex].CurrentState;
+
+                    if ((CurrentAPState != LC_ACTION_NOT_USED) && (CurrentAPState != LC_APSTATE_PERMOFF))
+                    {
+                        LC_OperData.ARTPtr[TableIndex].CurrentState = CmdPtr->NewAPState;
+                    }
+                }
+
+                /*
+                ** Set flag that we succeeded
+                */
+                CmdSuccess = true;
+            }
+            else
+            {
+                if ((CmdPtr->APNumber) < LC_MAX_ACTIONPOINTS)
+                {
+                    TableIndex     = CmdPtr->APNumber;
+                    CurrentAPState = LC_OperData.ARTPtr[TableIndex].CurrentState;
+
+                    if ((CurrentAPState != LC_ACTION_NOT_USED) && (CurrentAPState != LC_APSTATE_PERMOFF))
+                    {
+                        /*
+                        ** Update state for single actionpoint specified
+                        */
+                        LC_OperData.ARTPtr[TableIndex].CurrentState = CmdPtr->NewAPState;
+
+                        CmdSuccess = true;
+                    }
+                    else
+                    {
+                        /*
+                        ** Actionpoints that are not used or set permanently
+                        ** off can only be changed by a table load
+                        */
+                        CFE_EVS_SendEvent(LC_APSTATE_CURR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                          "Set AP state error: AP = %d, Invalid current AP state = %d",
+                                          CmdPtr->APNumber, CurrentAPState);
+
+                        LC_AppData.CmdErrCount++;
+                    }
+                }
+                else
+                {
+                    /*
+                    **  Actionpoint number is out of range
+                    **  (it's zero based, since it's a table index)
+                    */
+                    CFE_EVS_SendEvent(LC_APSTATE_APNUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                                      "Set AP state error: Invalid AP number = %d", CmdPtr->APNumber);
+
+                    LC_AppData.CmdErrCount++;
+                }
+            }
+
+            /*
+            ** Update the command counter and send out event if command
+            ** executed
+            */
+            if (CmdSuccess == true)
+            {
+                LC_AppData.CmdCount++;
+
+                CFE_EVS_SendEvent(LC_APSTATE_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Set AP state command: AP = %d, New state = %d", CmdPtr->APNumber,
+                                  CmdPtr->NewAPState);
+            }
+
+        } /* end ValidState if */
+
+    } /* end LC_VerifyMsgLength if */
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Set actionpoint permanently off command                         */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_SetAPPermOffCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t             ExpectedLength = sizeof(LC_SetAPPermOff_t);
+    LC_SetAPPermOff_t *CmdPtr;
+    uint32             TableIndex;
+    uint8              CurrentAPState;
+
+    /*
+    ** Verify message packet length
+    */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        CmdPtr = ((LC_SetAPPermOff_t *)BufPtr);
+
+        if (((CmdPtr->APNumber) == LC_ALL_ACTIONPOINTS) || ((CmdPtr->APNumber) >= LC_MAX_ACTIONPOINTS))
+        {
+            /*
+            **  Invalid actionpoint number
+            **  (This command can't be invoked for all actionpoints)
+            */
+            CFE_EVS_SendEvent(LC_APOFF_APNUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Set AP perm off error: Invalid AP number = %d", CmdPtr->APNumber);
+
+            LC_AppData.CmdErrCount++;
+        }
+        else
+        {
+            TableIndex     = CmdPtr->APNumber;
+            CurrentAPState = LC_OperData.ARTPtr[TableIndex].CurrentState;
+
+            if (CurrentAPState != LC_APSTATE_DISABLED)
+            {
+                /*
+                ** Actionpoints can only be turned permanently off if
+                ** they are currently disabled
+                */
+                CFE_EVS_SendEvent(LC_APOFF_CURR_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Set AP perm off error, AP NOT Disabled: AP = %d, Current state = %d",
+                                  CmdPtr->APNumber, CurrentAPState);
+
+                LC_AppData.CmdErrCount++;
+            }
+            else
+            {
+                /*
+                ** Update state for actionpoint specified
+                */
+                LC_OperData.ARTPtr[TableIndex].CurrentState = LC_APSTATE_PERMOFF;
+
+                LC_AppData.CmdCount++;
+
+                CFE_EVS_SendEvent(LC_APOFF_INF_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Set AP permanently off command: AP = %d", CmdPtr->APNumber);
+            }
+
+        } /* end CmdPtr -> APNumber else */
+
+    } /* end LC_VerifyMsgLength if */
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset actionpoint statistics command                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetAPStatsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t             ExpectedLength = sizeof(LC_ResetAPStats_t);
+    LC_ResetAPStats_t *CmdPtr         = (LC_ResetAPStats_t *)BufPtr;
+    bool               CmdSuccess     = false;
+
+    /* verify message packet length */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        /* arg may be one or all AP's */
+        if (CmdPtr->APNumber == LC_ALL_ACTIONPOINTS)
+        {
+            LC_ResetResultsAP(0, LC_MAX_ACTIONPOINTS - 1, true);
+            CmdSuccess = true;
+        }
+        else if (CmdPtr->APNumber < LC_MAX_ACTIONPOINTS)
+        {
+            LC_ResetResultsAP(CmdPtr->APNumber, CmdPtr->APNumber, true);
+            CmdSuccess = true;
+        }
+        else
+        {
+            /* arg is out of range (zero based table index) */
+            LC_AppData.CmdErrCount++;
+
+            CFE_EVS_SendEvent(LC_APSTATS_APNUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Reset AP stats error: invalid AP number = %d", CmdPtr->APNumber);
+        }
+
+        if (CmdSuccess == true)
+        {
+            LC_AppData.CmdCount++;
+
+            CFE_EVS_SendEvent(LC_APSTATS_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset AP stats command: AP = %d",
+                              CmdPtr->APNumber);
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset selected AP statistics (utility function)                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetResultsAP(uint32 StartIndex, uint32 EndIndex, bool ResetStatsCmd)
+{
+    uint32 TableIndex;
+
+    /* reset selected entries in actionpoint results table */
+    for (TableIndex = StartIndex; TableIndex <= EndIndex; TableIndex++)
+    {
+        if (!ResetStatsCmd)
+        {
+            /* reset AP stats command does not modify AP state or most recent test result */
+            LC_OperData.ARTPtr[TableIndex].ActionResult = LC_ACTION_STALE;
+            LC_OperData.ARTPtr[TableIndex].CurrentState = LC_OperData.ADTPtr[TableIndex].DefaultState;
+        }
+
+        LC_OperData.ARTPtr[TableIndex].PassiveAPCount  = 0;
+        LC_OperData.ARTPtr[TableIndex].FailToPassCount = 0;
+        LC_OperData.ARTPtr[TableIndex].PassToFailCount = 0;
+
+        LC_OperData.ARTPtr[TableIndex].ConsecutiveFailCount    = 0;
+        LC_OperData.ARTPtr[TableIndex].CumulativeFailCount     = 0;
+        LC_OperData.ARTPtr[TableIndex].CumulativeRTSExecCount  = 0;
+        LC_OperData.ARTPtr[TableIndex].CumulativeEventMsgsSent = 0;
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset watchpoint statistics command                             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetWPStatsCmd(const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t             ExpectedLength = sizeof(LC_ResetWPStats_t);
+    LC_ResetWPStats_t *CmdPtr         = (LC_ResetWPStats_t *)BufPtr;
+    bool               CmdSuccess     = false;
+
+    /* verify message packet length */
+    if (LC_VerifyMsgLength(&BufPtr->Msg, ExpectedLength))
+    {
+        /* arg may be one or all WP's */
+        if (CmdPtr->WPNumber == LC_ALL_WATCHPOINTS)
+        {
+            LC_ResetResultsWP(0, LC_MAX_WATCHPOINTS - 1, true);
+            CmdSuccess = true;
+        }
+        else if (CmdPtr->WPNumber < LC_MAX_WATCHPOINTS)
+        {
+            LC_ResetResultsWP(CmdPtr->WPNumber, CmdPtr->WPNumber, true);
+            CmdSuccess = true;
+        }
+        else
+        {
+            /* arg is out of range (zero based table index) */
+            LC_AppData.CmdErrCount++;
+
+            CFE_EVS_SendEvent(LC_WPSTATS_WPNUM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Reset WP stats error: invalid WP number = %d", CmdPtr->WPNumber);
+        }
+
+        if (CmdSuccess == true)
+        {
+            LC_AppData.CmdCount++;
+
+            CFE_EVS_SendEvent(LC_WPSTATS_INF_EID, CFE_EVS_EventType_INFORMATION, "Reset WP stats command: WP = %d",
+                              CmdPtr->WPNumber);
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Reset selected WP statistics (utility function)                 */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ResetResultsWP(uint32 StartIndex, uint32 EndIndex, bool ResetStatsCmd)
+{
+    uint32 TableIndex;
+
+    /* reset selected entries in watchoint results table */
+    for (TableIndex = StartIndex; TableIndex <= EndIndex; TableIndex++)
+    {
+        if (!ResetStatsCmd)
+        {
+            /* reset WP stats command does not modify most recent test result */
+            LC_OperData.WRTPtr[TableIndex].WatchResult      = LC_WATCH_STALE;
+            LC_OperData.WRTPtr[TableIndex].CountdownToStale = 0;
+        }
+
+        LC_OperData.WRTPtr[TableIndex].EvaluationCount      = 0;
+        LC_OperData.WRTPtr[TableIndex].FalseToTrueCount     = 0;
+        LC_OperData.WRTPtr[TableIndex].ConsecutiveTrueCount = 0;
+        LC_OperData.WRTPtr[TableIndex].CumulativeTrueCount  = 0;
+
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Value                = 0;
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Seconds    = 0;
+        LC_OperData.WRTPtr[TableIndex].LastFalseToTrue.Timestamp.Subseconds = 0;
+
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Value                = 0;
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Seconds    = 0;
+        LC_OperData.WRTPtr[TableIndex].LastTrueToFalse.Timestamp.Subseconds = 0;
+    }
+
+    return;
+}
+```
+
+### `lc_cmds.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_cmds.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle command processing
+ */
+#ifndef LC_CMDS_H
+#define LC_CMDS_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include "cfe.h"
+
+/*************************************************************************
+ * Exported Functions
+ *************************************************************************/
+
+/**
+ * \brief Process a command pipe message
+ *
+ *  \par Description
+ *       Processes a single software bus command pipe message. Checks
+ *       the message and command IDs and calls the appropriate routine
+ *       to handle the message.
+ *
+ *       All messageIDs other than #LC_CMD_MID, #LC_SEND_HK_MID, and
+ *       #LC_SAMPLE_AP_MID are assumed to be monitor packets.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_AppPipe(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Reset HK counters
+ *
+ *  \par Description
+ *       Utility function that resets housekeeping counters to zero
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \sa #LC_ResetCmd
+ */
+void LC_ResetCounters(void);
+
+/**
+ * \brief Reset AP results
+ *
+ *  \par Description
+ *       Utility function that resets selected entries in actionpoint results table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   StartIndex    Start of area to reset (base zero)
+ *  \param [in]   EndIndex      End of area to reset (base zero)
+ *  \param [in]   ResetStatsCmd Reset AP stats command does not reset all fields
+ *
+ *  \sa #LC_ResetAPStatsCmd
+ */
+void LC_ResetResultsAP(uint32 StartIndex, uint32 EndIndex, bool ResetStatsCmd);
+
+/**
+ * \brief Reset WP results
+ *
+ *  \par Description
+ *       Utility function that resets selected entries in watchpoint results table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   StartIndex    Start of area to reset (base zero)
+ *  \param [in]   EndIndex      End of area to reset (base zero)
+ *  \param [in]   ResetStatsCmd Reset WP stats command does not reset all fields
+ *
+ *  \sa #LC_ResetWPStatsCmd
+ */
+void LC_ResetResultsWP(uint32 StartIndex, uint32 EndIndex, bool ResetStatsCmd);
+
+/**
+ * \brief Sample actionpoints request
+ *
+ *  \par Description
+ *       Processes an on-board sample actionpoints request message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This message does not affect the command execution counter
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ */
+void LC_SampleAPReq(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Housekeeping request
+ *
+ *  \par Description
+ *       Processes an on-board housekeeping request message.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This message does not affect the command execution counter
+ *
+ *  \param[in] MsgPtr Pointer to command header
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_HousekeepingReq(const CFE_MSG_CommandHeader_t *MsgPtr);
+
+/**
+ * \brief Noop command
+ *
+ *  \par Description
+ *       Processes a noop ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_NOOP_CC
+ */
+void LC_NoopCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Reset counters command
+ *
+ *  \par Description
+ *       Processes a reset counters ground command which will reset
+ *       the following LC application counters to zero:
+ *         - Command counter
+ *         - Command error counter
+ *         - Actionpoint sample counter
+ *         - Monitored message counter
+ *         - RTS execution counter
+ *         - Passive RTS execution counter
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_RESET_CC
+ */
+void LC_ResetCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Set LC state command
+ *
+ *  \par Description
+ *       Processes a set LC application state ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_SET_LC_STATE_CC
+ */
+void LC_SetLCStateCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Set AP state command
+ *
+ *  \par Description
+ *       Processes a set actionpoint state ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_SET_AP_STATE_CC
+ */
+void LC_SetAPStateCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Set AP permanently off command
+ *
+ *  \par Description
+ *       Processes a set actionpoint permanently off ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_SET_AP_PERMOFF_CC
+ */
+void LC_SetAPPermOffCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Reset AP statistics command
+ *
+ *  \par Description
+ *       Processes a reset actionpoint statistics ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_RESET_AP_STATS_CC
+ */
+void LC_ResetAPStatsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Reset WP statistics command
+ *
+ *  \par Description
+ *       Processes a reset watchpoint statistics ground command.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] BufPtr Pointer to Software Bus buffer
+ *
+ *  \sa #LC_RESET_WP_STATS_CC
+ */
+void LC_ResetWPStatsCmd(const CFE_SB_Buffer_t *BufPtr);
+
+#endif
+```
+
+### `lc_custom.c`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_custom.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) mission specific code, including the
+ *   custom function template.
+ */
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_custom.h"
+#include "lc_tbldefs.h"
+#include "lc_events.h"
+#include "lc_mission_cfg.h"
+#include "lc_msg.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Initiate an RTS request                                         */
+/*                                                                 */
+/* NOTE: For complete prolog information, see 'lc_custom.h'        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ExecuteRTS(uint16 RTSId)
+{
+    LC_RTSRequest_t RTSRequest;
+
+    memset(&RTSRequest, 0, sizeof(RTSRequest));
+
+    CFE_MSG_Init(&RTSRequest.CmdHeader.Msg, CFE_SB_ValueToMsgId(LC_RTS_REQ_MID), sizeof(LC_RTSRequest_t));
+
+    CFE_MSG_SetFcnCode(&RTSRequest.CmdHeader.Msg, LC_RTS_REQ_CC);
+
+    RTSRequest.RTSId = RTSId;
+
+    CFE_SB_TransmitMsg(&RTSRequest.CmdHeader.Msg, true);
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Mission specific custom function entry point                    */
+/*                                                                 */
+/* NOTE: For complete prolog information, see 'lc_custom.h'        */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+uint8 LC_CustomFunction(uint16 WatchIndex, uint32 ProcessedWPData, const CFE_SB_Buffer_t *BufPtr,
+                        uint32 WDTCustomFuncArg)
+{
+    uint8 EvalResult = LC_WATCH_FALSE;
+
+    /*
+    ** This function is the entry point for all watchpoints where
+    ** the OperatorID in the watchpoint definition table entry
+    ** is set to LC_OPER_CUSTOM.
+    **
+    ** For this reason The first step would normally be to
+    ** switch on the WatchIndex to figure out what watchpoint got
+    ** us here. As an alternate, a mission may choose to use the
+    ** WDTCustomFuncArg for this instead.
+    */
+    switch (WatchIndex)
+    {
+        case 0x0000:
+        case 0x0001:
+        default:
+            CFE_EVS_SendEvent(LC_CFCALL_ERR_EID, CFE_EVS_EventType_ERROR, "Unexpected LC_CustomFunction call: WP = %d",
+                              WatchIndex);
+            break;
+
+    } /* end WatchIndex switch */
+
+    return EvalResult;
+}
+```
+
+### `lc_custom.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_custom.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) mission specific
+ *   custom function template
+ */
+#ifndef LC_CUSTOM_H
+#define LC_CUSTOM_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include "cfe.h"
+
+/*************************************************************************
+ * Exported Functions
+ *************************************************************************/
+
+/**
+ * \brief Execute RTS
+ *
+ *  \par Description
+ *       Support function for actionpoint processing that is called
+ *       to send an RTS request when an actionpoint evaluation
+ *       determines it has failed
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   RTSId        ID of the RTS to request
+ */
+void LC_ExecuteRTS(uint16 RTSId);
+
+/**
+ * \brief Mission specific custom function
+ *
+ *  \par Description
+ *       This is the mission specific custom function entry point.
+ *       It gets called whenever the OperatorID in a watchpoint
+ *       definition table entry is set to #LC_OPER_CUSTOM and
+ *       must return one of the defined watchpoint evaluation
+ *       result types
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in] WatchIndex         The watchpoint number (zero based
+ *                                 watchpoint definition table index) for
+ *                                 the watchpoint definition that caused
+ *                                 the call
+ *
+ *  \param [in] ProcessedWPData    The watchpoint data extracted from
+ *                                 the message that it was contained
+ *                                 in. This is the data after any
+ *                                 sizing, bit-masking, and endianess
+ *                                 fixing that LC might have done
+ *                                 according to the watchpoint definition
+ *
+ *  \param [in] BufPtr         A #CFE_SB_Buffer_t* pointer that
+ *                                 references the software bus message that
+ *                                 contained the watchpoint data. If the
+ *                                 custom function needs the raw watchpoint
+ *                                 data, it can use this pointer and the
+ *                                 watchpoint definition to extract it.
+ *
+ *  \param [in] WDTCustomFuncArg   This is the custom function argument
+ *                                 for this watchpoint from the watchpoint
+ *                                 definition table. It can be used for
+ *                                 whatever purpose the mission developers
+ *                                 want. LC doesn't use it.
+ *
+ *  \return Watchpoint evaluation result
+ *  \retval #LC_WATCH_TRUE  \copydoc LC_WATCH_TRUE
+ *  \retval #LC_WATCH_FALSE \copydoc LC_WATCH_FALSE
+ *  \retval #LC_WATCH_ERROR \copydoc LC_WATCH_ERROR
+ *
+ *  \sa #LC_WDTEntry_t
+ */
+uint8 LC_CustomFunction(uint16 WatchIndex, uint32 ProcessedWPData, const CFE_SB_Buffer_t *BufPtr,
+                        uint32 WDTCustomFuncArg);
+
+#endif
+```
+
+### `lc_utils.c`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) utility functions
+ */
+
+/************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_app.h"
+#include "lc_cmds.h"
+#include "lc_msgids.h"
+#include "lc_events.h"
+#include "lc_version.h"
+#include "lc_action.h"
+#include "lc_watch.h"
+#include "lc_platform_cfg.h"
+#include "lc_utils.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Verify message packet length                                    */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool LC_VerifyMsgLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
+{
+    bool              result       = true;
+    CFE_MSG_FcnCode_t CommandCode  = 0;
+    size_t            ActualLength = 0;
+    CFE_SB_MsgId_t    MessageID    = CFE_SB_INVALID_MSG_ID;
+
+    /*
+    ** Verify the message packet length...
+    */
+
+    CFE_MSG_GetSize(MsgPtr, &ActualLength);
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(MsgPtr, &MessageID);
+        CFE_MSG_GetFcnCode(MsgPtr, &CommandCode);
+
+        switch (CFE_SB_MsgIdToValue(MessageID))
+        {
+            case LC_SEND_HK_MID:
+                /*
+                ** For a bad HK request, just send the event. We only increment
+                ** the error counter for ground commands and not internal messages.
+                */
+                CFE_EVS_SendEvent(LC_HKREQ_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Invalid HK request msg length: ID = 0x%08lX, CC = %d, Len = %d, Expected = %d",
+                                  (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode, (int)ActualLength,
+                                  (int)ExpectedLength);
+                break;
+
+            case LC_SAMPLE_AP_MID:
+                /*
+                ** Same thing as previous for a bad actionpoint sample request
+                */
+                CFE_EVS_SendEvent(LC_APSAMPLE_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Invalid AP sample msg length: ID = 0x%08lX, CC = %d, Len = %d, Expected = %d",
+                                  (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode, (int)ActualLength,
+                                  (int)ExpectedLength);
+                break;
+
+            default:
+                /*
+                ** All other cases, increment error counter
+                */
+                CFE_EVS_SendEvent(LC_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "Invalid msg length: ID = 0x%08lX, CC = %d, Len = %d, Expected = %d",
+                                  (unsigned long)CFE_SB_MsgIdToValue(MessageID), CommandCode, (int)ActualLength,
+                                  (int)ExpectedLength);
+                LC_AppData.CmdErrCount++;
+        }
+
+        result = false;
+    }
+
+    return result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Manage tables - chance to be dumped, reloaded, etc.             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_ManageTables(void)
+{
+    int32 Result;
+
+    /*
+    ** It is not necessary to release dump only table pointers before
+    **  calling cFE Table Services to manage the table
+    */
+    CFE_TBL_Manage(LC_OperData.WRTHandle);
+    CFE_TBL_Manage(LC_OperData.ARTHandle);
+
+    /*
+    ** Must release loadable table pointers before allowing updates
+    */
+    CFE_TBL_ReleaseAddress(LC_OperData.WDTHandle);
+    CFE_TBL_ReleaseAddress(LC_OperData.ADTHandle);
+
+    CFE_TBL_Manage(LC_OperData.WDTHandle);
+    CFE_TBL_Manage(LC_OperData.ADTHandle);
+
+    /*
+    ** Re-acquire the pointers and check for new table data
+    */
+    Result = CFE_TBL_GetAddress((void *)&LC_OperData.WDTPtr, LC_OperData.WDTHandle);
+
+    if (Result == CFE_TBL_INFO_UPDATED)
+    {
+        /*
+        ** Clear watchpoint results for previous table
+        */
+        LC_ResetResultsWP(0, LC_MAX_WATCHPOINTS - 1, false);
+
+        /*
+        ** Create watchpoint hash tables -- also subscribes to watchpoint packets
+        */
+        LC_CreateHashTable();
+    }
+    else if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_WDT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting WDT address, RC=0x%08X",
+                          (unsigned int)Result);
+        return Result;
+    }
+
+    Result = CFE_TBL_GetAddress((void *)&LC_OperData.ADTPtr, LC_OperData.ADTHandle);
+
+    if (Result == CFE_TBL_INFO_UPDATED)
+    {
+        /*
+        ** Clear actionpoint results for previous table
+        */
+        LC_ResetResultsAP(0, LC_MAX_ACTIONPOINTS - 1, false);
+    }
+    else if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_ADT_GETADDR_ERR_EID, CFE_EVS_EventType_ERROR, "Error getting ADT address, RC=0x%08X",
+                          (unsigned int)Result);
+        return Result;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Update Critical Data Store (CDS)                                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_UpdateTaskCDS(void)
+{
+    int32 Result;
+
+    /*
+    ** Copy the watchpoint results table (WRT) data to CDS
+    */
+    Result = CFE_ES_CopyToCDS(LC_OperData.WRTDataCDSHandle, LC_OperData.WRTPtr);
+
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_WRT_NO_SAVE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to update watchpoint results in CDS, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    /*
+    ** Copy the actionpoint results table (ART) data to CDS
+    */
+    Result = CFE_ES_CopyToCDS(LC_OperData.ARTDataCDSHandle, LC_OperData.ARTPtr);
+
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_ART_NO_SAVE_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to update actionpoint results in CDS, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    /*
+    ** Set the "data has been saved" indicator
+    */
+    LC_AppData.CDSSavedOnExit = LC_CDS_SAVED;
+
+    /*
+    ** Copy the global application data structure to CDS
+    */
+    Result = CFE_ES_CopyToCDS(LC_OperData.AppDataCDSHandle, &LC_AppData);
+
+    if (Result != CFE_SUCCESS)
+    {
+        CFE_EVS_SendEvent(LC_APP_NO_SAVE_START_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Unable to update application data in CDS, RC=0x%08X", (unsigned int)Result);
+        return Result;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Perform Background Maintenance Tasks                            */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+int32 LC_PerformMaintenance(void)
+{
+    int32 Result;
+
+    /*
+    ** Manage tables - allow cFE to perform dump, update, etc.
+    **  (an error here is fatal - LC must be able to access its tables)
+    */
+    Result = LC_ManageTables();
+
+    if (Result == CFE_SUCCESS)
+    {
+        if (LC_OperData.HaveActiveCDS)
+        {
+            /*
+            ** If CDS is enabled - update the 3 CDS areas managed by LC
+            **  (continue, but disable CDS if unable to update all 3)
+            */
+            if (LC_UpdateTaskCDS() != CFE_SUCCESS)
+            {
+                LC_OperData.HaveActiveCDS = false;
+            }
+        }
+    }
+
+    return Result;
+}
+```
+
+### `lc_utils.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Limit Checker (LC) utility functions
+ */
+#ifndef LC_UTILS_H
+#define LC_UTILS_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe.h"
+
+/**
+ * \brief Verify message length
+ *
+ *  \par Description
+ *       Checks if the actual length of a software bus message matches
+ *       the expected length and sends an error event if a mismatch
+ *       occures
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] MsgPtr         Pointer to Message
+ *  \param[in] ExpectedLength The expected length of the message
+ *                            based upon the command code
+ *
+ *  \return Boolean message length verification result
+ *  \retval true  Length verification passed
+ *  \retval false Length verification failed
+ *
+ *  \sa #LC_LEN_ERR_EID
+ */
+bool LC_VerifyMsgLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength);
+
+/**
+ * \brief Manage LC application tables
+ *
+ *  \par Description
+ *       Checks the status of the LC application tables and provides
+ *       an opportunity to dump or reload tables.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ *
+ *  \sa #LC_WDT_GETADDR_ERR_EID, #LC_ADT_GETADDR_ERR_EID
+ */
+int32 LC_ManageTables(void);
+
+/**
+ * \brief Write to Critical Data Store (CDS)
+ *
+ *  \par Description
+ *       This function updates the CDS areas containing the watchpoint
+ *       results table, the actionpoint results table and the LC
+ *       application global data.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_UpdateTaskCDS(void);
+
+/**
+ * \brief Perform Routine Maintenance
+ *
+ *  \par Description
+ *       This function manages LC tables and updates the Task CDS.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       This function is called during the housekeeping cycle and
+ *       if the software bus times out receiving a message.  The CDS
+ *       is updated only at these times.  One alternative was to do
+ *       the CDS update every time the results tables were modified
+ *       but that would result in the update ocurring several times
+ *       per second.  By doing the update in the housekeeping and
+ *       timeout cases, we cut down on the update frequency at the
+ *       cost of the stored data being a couple of seconds old when
+ *       a processor reset does occur.
+ *
+ *  \return Execution status, see \ref CFEReturnCodes
+ *  \retval #CFE_SUCCESS \copybrief CFE_SUCCESS
+ */
+int32 LC_PerformMaintenance(void);
+
+#endif
+```
+
+### `lc_verify.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Contains CFS Limit Checker (LC) macros that run preprocessor checks
+ *   on mission and platform configurable parameters
+ */
+#ifndef LC_VERIFY_H
+#define LC_VERIFY_H
+
+#include <stdint.h>
+
+/*************************************************************************
+ * Macro Definitions - defined in lc_mission_cfg.h
+ *************************************************************************/
+
+/*
+ * RTS request message ID
+ */
+#ifndef LC_RTS_REQ_MID
+#error LC_RTS_REQ_MID must be defined!
+#elif LC_RTS_REQ_MID < 1
+#error LC_RTS_REQ_MID must be greater than zero
+#elif LC_RTS_REQ_MID > CFE_PLATFORM_SB_HIGHEST_VALID_MSGID
+#error LC_RTS_REQ_MID must not exceed CFE_PLATFORM_SB_HIGHEST_VALID_MSGID
+#endif
+
+/*
+ * RTS request command code
+ */
+#ifndef LC_RTS_REQ_CC
+#error LC_RTS_REQ_CC must be defined!
+#elif LC_RTS_REQ_CC < 0
+#error LC_RTS_REQ_CC must not be less than zero
+#elif LC_RTS_REQ_CC > 127
+#error LC_RTS_REQ_CC must not exceed 127
+#endif
+
+/*************************************************************************
+ * Macro Definitions - defined in lc_platform_cfg.h
+ *************************************************************************/
+
+/*
+ * Application name
+ */
+#ifndef LC_APP_NAME
+#error LC_APP_NAME must be defined!
+#endif
+
+/*
+ * Command pipe depth
+ */
+#ifndef LC_PIPE_DEPTH
+#error LC_PIPE_DEPTH must be defined!
+#elif LC_PIPE_DEPTH < 1
+#error LC_PIPE_DEPTH must not be less than 1
+#elif LC_PIPE_DEPTH > UINT16_MAX
+#error LC_PIPE_DEPTH must not exceed UINT16_MAX
+#endif
+
+/*
+ * Maximum number of watchpoints
+ */
+#ifndef LC_MAX_WATCHPOINTS
+#error LC_MAX_WATCHPOINTS must be defined!
+#elif LC_MAX_WATCHPOINTS < 1
+#error LC_MAX_WATCHPOINTS must not be less than 1
+#elif LC_MAX_WATCHPOINTS > 65520
+#error LC_MAX_WATCHPOINTS must not exceed 65520 (OxFFF0)
+#elif LC_MAX_WATCHPOINTS % 4 != 0
+#error LC_MAX_WATCHPOINTS must be a multiple of 4
+#endif
+
+/*
+ * Maximum number of actionpoints
+ */
+#ifndef LC_MAX_ACTIONPOINTS
+#error LC_MAX_ACTIONPOINTS must be defined!
+#elif LC_MAX_ACTIONPOINTS < 1
+#error LC_MAX_ACTIONPOINTS must not be less than 1
+#elif LC_MAX_ACTIONPOINTS > UINT16_MAX
+#error LC_MAX_ACTIONPOINTS must not exceed UINT16_MAX
+#elif LC_MAX_ACTIONPOINTS % 2 != 0
+#error LC_MAX_ACTIONPOINTS must be a multiple of 2
+#endif
+
+/*
+ * LC state after power-on reset
+ */
+#ifndef LC_STATE_POWER_ON_RESET
+#error LC_STATE_POWER_ON_RESET must be defined!
+#elif (LC_STATE_POWER_ON_RESET != LC_STATE_ACTIVE) && (LC_STATE_POWER_ON_RESET != LC_STATE_PASSIVE) && \
+    (LC_STATE_POWER_ON_RESET != LC_STATE_DISABLED)
+#error LC_STATE_POWER_ON_RESET must be defined as a supported enumerated type
+#endif
+
+/*
+ * LC state when CDS is restored
+ */
+#ifndef LC_STATE_WHEN_CDS_RESTORED
+#error LC_STATE_WHEN_CDS_RESTORED must be defined!
+#elif (LC_STATE_WHEN_CDS_RESTORED != LC_STATE_ACTIVE) && (LC_STATE_WHEN_CDS_RESTORED != LC_STATE_PASSIVE) && \
+    (LC_STATE_WHEN_CDS_RESTORED != LC_STATE_DISABLED) && (LC_STATE_WHEN_CDS_RESTORED != LC_STATE_FROM_CDS)
+#error LC_STATE_WHEN_CDS_RESTORED must be defined as a supported enumerated type
+#endif
+
+/*
+ * Default watchpoint definition table filename
+ */
+#ifndef LC_WDT_FILENAME
+#error LC_WDT_FILENAME must be defined!
+#endif
+
+/*
+ * Default actionpoint definition table filename
+ */
+#ifndef LC_ADT_FILENAME
+#error LC_ADT_FILENAME must be defined!
+#endif
+
+/*
+ * RPN equation buffer size (in 16 bit words)
+ */
+#ifndef LC_MAX_RPN_EQU_SIZE
+#error LC_MAX_RPN_EQU_SIZE must be defined!
+#elif LC_MAX_RPN_EQU_SIZE < 2
+#error LC_MAX_RPN_EQU_SIZE must not be less than 2
+#elif LC_MAX_RPN_EQU_SIZE > 32
+#error LC_MAX_RPN_EQU_SIZE must not exceed 32
+#endif
+
+/*
+ * Maximum actionpoint event text string size
+ */
+#ifndef LC_MAX_ACTION_TEXT
+#error LC_MAX_ACTION_TEXT must be defined!
+#elif LC_MAX_ACTION_TEXT < 0
+#error LC_MAX_ACTION_TEXT must not be less than zero
+#elif LC_MAX_ACTION_TEXT > CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#error LC_MAX_ACTION_TEXT must not exceed CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#endif
+
+/* Note: LC_AP_EVENT_TAIL_LEN is defined in lc_action.h */
+#ifndef LC_AP_EVENT_TAIL_LEN
+#error LC_AP_EVENT_TAIL_LEN must be defined!
+#elif LC_AP_EVENT_TAIL_LEN < 0
+#error LC_AP_EVENT_TAIL_LEN must not be less than zero
+#elif LC_AP_EVENT_TAIL_LEN > CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#error LC_AP_EVENT_TAIL_LEN must not exceed CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#endif
+
+#if (LC_MAX_ACTION_TEXT + LC_AP_EVENT_TAIL_LEN) > CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#error The sum of LC_MAX_ACTION_TEXT + LC_AP_EVENT_TAIL_LEN must not exceed CFE_MISSION_EVS_MAX_MESSAGE_LENGTH
+#endif
+
+/*
+ * Maximum valid actionpoint definition table RTS ID
+ */
+#ifndef LC_MAX_VALID_ADT_RTSID
+#error LC_MAX_VALID_ADT_RTSID must be defined!
+#elif LC_MAX_VALID_ADT_RTSID < 0
+#error LC_MAX_VALID_ADT_RTSID must not be less than zero
+#elif LC_MAX_VALID_ADT_RTSID > UINT16_MAX
+#error LC_MAX_VALID_ADT_RTSID must not exceed UINT16_MAX
+#endif
+
+#endif
+```
+
+### `lc_version.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_version.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Contains version tags for the Core Flight System (CFS)
+ *   Limit Checker (LC) Application.
+ */
+#ifndef LC_VERSION_H
+#define LC_VERSION_H
+
+/**
+ * \defgroup cfslcversion CFS Limit Checker Version
+ * \ref cfsversions
+ * \{
+ */
+
+#define LC_MAJOR_VERSION 2  /**< \brief Major version number */
+#define LC_MINOR_VERSION 2  /**< \brief Minor version number */
+#define LC_REVISION      99 /**< \brief Revision number */
+
+/**\}*/
+
+#endif
+```
+
+### `lc_watch.c`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_watch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Functions used for CFS Limit Checker watchpoint processing
+ */
+
+/*************************************************************************
+** Includes
+*************************************************************************/
+#include "lc_app.h"
+#include "lc_watch.h"
+#include "lc_events.h"
+#include "lc_custom.h"
+#include "lc_perfids.h"
+#include "cfe_platform_cfg.h"
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* LC_GetHashTableIndex() - convert messageID to hash table index  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+uint32 LC_GetHashTableIndex(CFE_SB_MsgId_t MessageID)
+{
+    /*
+    **   The purpose of a hash function is to take the input value
+    ** and convert it to an index into the hash table. Assume that
+    ** the range of input values is much different (larger) than
+    ** the number of entries in the hash table. Then multiple input
+    ** values must resolve to the same output table index. This is ok
+    ** because each entry in the hash table is a linked list of all
+    ** the inputs with the same hash function result.
+    **
+    **   This particular hash function takes advantage of knowledge
+    ** regarding the format of the input values (cFE MessageID). By
+    ** ignoring the bits that define version number, packet type and
+    ** secondary header (high 5 bits of 16) we are left with the bits
+    ** (mask = 0x7FF) that can identify 2048 unique input telemetry
+    ** packets. Also, by using a fixed hash table size of 256 entries
+    ** and using only the lower 8 bits of the bitmask as the result
+    ** of the hash function, no single hash table entry will have more
+    ** than 8 elements in its linked list.
+    */
+    return ((uint32)(CFE_SB_MsgIdToValue(MessageID) & LC_HASH_TABLE_MASK));
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* LC_CreateHashTable() - create watchpoint hash table             */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+void LC_CreateHashTable(void)
+{
+    LC_WatchPtList_t *WatchPtLink;
+    CFE_SB_MsgId_t    LastMessageID;
+    CFE_SB_MsgId_t    MessageID;
+    int32             MessageLinkIndex;
+    int32             WatchPtTblIndex;
+    int32             Result;
+
+    /* Un-subscribe to any MessageID's referenced in previous Watchpoint Definition Table */
+    for (MessageLinkIndex = 0; MessageLinkIndex < LC_OperData.MessageIDsCount; MessageLinkIndex++)
+    {
+        MessageID = LC_OperData.MessageLinks[MessageLinkIndex].MessageID;
+
+        if ((Result = CFE_SB_Unsubscribe(MessageID, LC_OperData.CmdPipe)) != CFE_SUCCESS)
+        {
+            CFE_EVS_SendEvent(LC_UNSUB_WP_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error unsubscribing watchpoint: MID=0x%08lX, RC=0x%08X",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID), (unsigned int)Result);
+        }
+    }
+
+    /* Initialize hash table structures */
+    memset(LC_OperData.HashTable, 0, sizeof(LC_OperData.HashTable));
+    memset(LC_OperData.MessageLinks, 0, sizeof(LC_OperData.MessageLinks));
+    memset(LC_OperData.WatchPtLinks, 0, sizeof(LC_OperData.WatchPtLinks));
+
+    LC_OperData.MessageIDsCount = 0;
+    LC_OperData.WatchpointCount = 0;
+
+    LastMessageID = CFE_SB_INVALID_MSG_ID;
+    WatchPtLink   = (LC_WatchPtList_t *)NULL;
+
+    /* Process each entry in the Watchpoint Definition Table */
+    for (WatchPtTblIndex = 0; WatchPtTblIndex < LC_MAX_WATCHPOINTS; WatchPtTblIndex++)
+    {
+        /* Skip unused watchpoint table entries */
+        if (LC_OperData.WDTPtr[WatchPtTblIndex].DataType != LC_WATCH_NOT_USED)
+        {
+            MessageID = LC_OperData.WDTPtr[WatchPtTblIndex].MessageID;
+
+            /* Use optimized code path if same MessageID as last watchpoint */
+            if (CFE_SB_MsgId_Equal(LastMessageID, MessageID) && (WatchPtLink != (LC_WatchPtList_t *)NULL))
+            {
+                /* WatchPtLink points to last link in list for this Message ID */
+                WatchPtLink->Next = &LC_OperData.WatchPtLinks[LC_OperData.WatchpointCount++];
+
+                /* Add new link to end of list, point to new last link */
+                WatchPtLink = WatchPtLink->Next;
+            }
+            else
+            {
+                /* May add message list link and subscribe to MessageID */
+                WatchPtLink = LC_AddWatchpoint(MessageID);
+            }
+
+            /* Set watchpoint table index for this entry in list */
+            WatchPtLink->WatchIndex = WatchPtTblIndex;
+
+            LastMessageID = MessageID;
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* LC_AddWatchpoint() - add one watchpoint entry to hash table     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+LC_WatchPtList_t *LC_AddWatchpoint(CFE_SB_MsgId_t MessageID)
+{
+    LC_MessageList_t *MessageLink;
+    LC_WatchPtList_t *WatchPtLink;
+    bool              NeedSubscription;
+    int32             HashTableIndex;
+    int32             Result;
+
+    /* Hash function converts MessageID into hash table index */
+    HashTableIndex = LC_GetHashTableIndex(MessageID);
+
+    /* Subscribe only for first reference to each MessageID */
+    NeedSubscription = false;
+
+    /* Each hash table entry is a linked list of MessageID's with same hash result */
+    if (LC_OperData.HashTable[HashTableIndex] == (LC_MessageList_t *)NULL)
+    {
+        /* Get next unused MessageID linked list entry */
+        MessageLink = &LC_OperData.MessageLinks[LC_OperData.MessageIDsCount++];
+
+        /* Set first (and only) link in this hash table entry linked list */
+        LC_OperData.HashTable[HashTableIndex] = MessageLink;
+
+        /* Set the MessageID for this link */
+        MessageLink->MessageID = MessageID;
+
+        /* Subscribe to first link in list */
+        NeedSubscription = true;
+    }
+    else
+    {
+        /* Get start of linked list (all MID's with same hash result) */
+        MessageLink = LC_OperData.HashTable[HashTableIndex];
+
+        /* Find the link for this MessageID */
+        while (!CFE_SB_MsgId_Equal(MessageLink->MessageID, MessageID))
+        {
+            if (MessageLink->Next == (LC_MessageList_t *)NULL)
+            {
+                /* Reached end of list without finding MessageID */
+                MessageLink->Next = &LC_OperData.MessageLinks[LC_OperData.MessageIDsCount++];
+                MessageLink       = MessageLink->Next;
+
+                /* Add link with this MessageID (will exit loop) */
+                MessageLink->MessageID = MessageID;
+
+                /* Subscribe to new link in list */
+                NeedSubscription = true;
+            }
+            else
+            {
+                /* Try the next link in the list */
+                MessageLink = MessageLink->Next;
+            }
+        }
+    }
+
+    /* Subscribe only once to each MessageID */
+    if (NeedSubscription)
+    {
+        if ((Result = CFE_SB_Subscribe(MessageID, LC_OperData.CmdPipe)) != CFE_SUCCESS)
+        {
+            /* Signal the error, but continue */
+            CFE_EVS_SendEvent(LC_SUB_WP_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "Error subscribing watchpoint: MID=0x%08lX, RC=0x%08X",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID), (unsigned int)Result);
+        }
+    }
+
+    /* MessageLink points to the link for this MessageID */
+    if (MessageLink->WatchPtList == (LC_WatchPtList_t *)NULL)
+    {
+        /* Get next unused watchpoint linked list entry */
+        WatchPtLink = &LC_OperData.WatchPtLinks[LC_OperData.WatchpointCount++];
+
+        /* Set the start (and only) link in the watchpoint link list */
+        MessageLink->WatchPtList = WatchPtLink;
+    }
+    else
+    {
+        /* Find the end of the watchpoint linked list */
+        WatchPtLink = MessageLink->WatchPtList;
+
+        while (WatchPtLink->Next != (LC_WatchPtList_t *)NULL)
+        {
+            WatchPtLink = WatchPtLink->Next;
+        }
+
+        /* Add the new watchpoint link to the end of the list */
+        WatchPtLink->Next = &LC_OperData.WatchPtLinks[LC_OperData.WatchpointCount++];
+        WatchPtLink       = WatchPtLink->Next;
+    }
+
+    /* Return pointer to last link in watchpoint linked list */
+
+    return WatchPtLink;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Handle a message with possible watchpoints                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_CheckMsgForWPs(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr)
+{
+    CFE_TIME_SysTime_t Timestamp;
+    LC_MessageList_t * MessageList;
+    LC_WatchPtList_t * WatchPtList;
+    bool               WatchPtFound = false;
+
+    Timestamp.Seconds    = 0;
+    Timestamp.Subseconds = 0;
+
+    /* Do nothing if disabled at the application level */
+    if (LC_AppData.CurrentLCState != LC_STATE_DISABLED)
+    {
+        /* Use message timestamp - if none, use current time */
+        CFE_MSG_GetMsgTime(&BufPtr->Msg, &Timestamp);
+
+        if ((Timestamp.Seconds == 0) && (Timestamp.Subseconds == 0))
+        {
+            Timestamp = CFE_TIME_GetTime();
+        }
+
+        /* Performance Log (start time counter) */
+        CFE_ES_PerfLogEntry(LC_WDT_SEARCH_PERF_ID);
+
+        /* Get start of linked list (all MID's with same hash result) */
+        MessageList = LC_OperData.HashTable[LC_GetHashTableIndex(MessageID)];
+
+        /* NULL when list is empty or end of list */
+        while (MessageList != (LC_MessageList_t *)NULL)
+        {
+            /* Compare this linked list entry for matching MessageID */
+            if (CFE_SB_MsgId_Equal(MessageList->MessageID, MessageID))
+            {
+                /* Stop the search - we found it */
+                break;
+            }
+
+            /* Max of 8 links per design */
+            MessageList = MessageList->Next;
+        }
+
+        /* Should be true - else wouldn't subscribe to MessageID */
+        if (MessageList != (LC_MessageList_t *)NULL)
+        {
+            /* Get linked list of WP's that reference MessageID */
+            WatchPtList = MessageList->WatchPtList;
+
+            /* NULL when list is empty or end of list */
+            while (WatchPtList != (LC_WatchPtList_t *)NULL)
+            {
+                WatchPtFound = true;
+
+                /* Verify that WP packet offset is within actual packet */
+                if (LC_WPOffsetValid(WatchPtList->WatchIndex, BufPtr) == true)
+                {
+                    LC_ProcessWP(WatchPtList->WatchIndex, BufPtr, Timestamp);
+                }
+
+                /* No limit to how many WP's can reference one MessageID */
+                WatchPtList = WatchPtList->Next;
+            }
+        }
+
+        /* Performance Log (stop time counter) */
+        CFE_ES_PerfLogExit(LC_WDT_SEARCH_PERF_ID);
+
+        if (WatchPtFound == true)
+        {
+            LC_AppData.MonitoredMsgCount++;
+        }
+        else
+        {
+            /* MessageID with no defined watchpoints */
+            CFE_EVS_SendEvent(LC_MID_INF_EID, CFE_EVS_EventType_INFORMATION,
+                              "Msg with unreferenced message ID rcvd: ID = 0x%08lX",
+                              (unsigned long)CFE_SB_MsgIdToValue(MessageID));
+        }
+    }
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Process a single watchpoint                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_ProcessWP(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr, CFE_TIME_SysTime_t Timestamp)
+{
+    uint8 *WPDataPtr;
+    uint8  PreviousResult;
+    uint8  WPEvalResult;
+    uint32 SizedWPData;
+    uint32 MaskedWPData;
+    uint32 StaleCounter;
+    bool   SizedDataValid;
+
+    /*
+    ** Setup the pointer and get the massaged data
+    */
+    WPDataPtr = ((uint8 *)BufPtr) + LC_OperData.WDTPtr[WatchIndex].WatchpointOffset;
+
+    SizedDataValid = LC_GetSizedWPData(WatchIndex, WPDataPtr, &SizedWPData);
+    if (SizedDataValid == true)
+    {
+        /*
+        ** Get the last evalution result for this watchpoint
+        */
+        PreviousResult = LC_OperData.WRTPtr[WatchIndex].WatchResult;
+
+        /*
+        ** Apply the defined bitmask for this watchpoint and then
+        ** call the mission defined custom function or do our own
+        ** relational comparison.
+        */
+        MaskedWPData = SizedWPData & LC_OperData.WDTPtr[WatchIndex].BitMask;
+
+        if (LC_OperData.WDTPtr[WatchIndex].OperatorID == LC_OPER_CUSTOM)
+        {
+            WPEvalResult =
+                LC_CustomFunction(WatchIndex, MaskedWPData, BufPtr, LC_OperData.WDTPtr[WatchIndex].CustomFuncArgument);
+        }
+        else
+        {
+            WPEvalResult = LC_OperatorCompare(WatchIndex, MaskedWPData);
+        }
+
+        /*
+        ** Update the watch result
+        */
+        LC_OperData.WRTPtr[WatchIndex].WatchResult = WPEvalResult;
+
+        /*
+        ** Update the watchpoint statistics based on the evaluation
+        ** result
+        */
+        LC_OperData.WRTPtr[WatchIndex].EvaluationCount++;
+
+        if (WPEvalResult == LC_WATCH_TRUE)
+        {
+            LC_OperData.WRTPtr[WatchIndex].CumulativeTrueCount++;
+            LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount++;
+            StaleCounter                                    = LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale;
+            LC_OperData.WRTPtr[WatchIndex].CountdownToStale = StaleCounter;
+
+            if ((PreviousResult == LC_WATCH_FALSE) || (PreviousResult == LC_WATCH_STALE))
+            {
+                LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.DataType = LC_OperData.WDTPtr[WatchIndex].DataType;
+
+                LC_OperData.WRTPtr[WatchIndex].FalseToTrueCount++;
+
+                LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Value = MaskedWPData;
+
+                LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Seconds = Timestamp.Seconds;
+
+                LC_OperData.WRTPtr[WatchIndex].LastFalseToTrue.Timestamp.Subseconds = Timestamp.Subseconds;
+            }
+        }
+        else if (WPEvalResult == LC_WATCH_FALSE)
+        {
+            LC_OperData.WRTPtr[WatchIndex].ConsecutiveTrueCount = 0;
+            StaleCounter                                        = LC_OperData.WDTPtr[WatchIndex].ResultAgeWhenStale;
+            LC_OperData.WRTPtr[WatchIndex].CountdownToStale     = StaleCounter;
+
+            if ((PreviousResult == LC_WATCH_TRUE) || (PreviousResult == LC_WATCH_STALE))
+            {
+                LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.DataType = LC_OperData.WDTPtr[WatchIndex].DataType;
+
+                LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Value = MaskedWPData;
+
+                LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Seconds = Timestamp.Seconds;
+
+                LC_OperData.WRTPtr[WatchIndex].LastTrueToFalse.Timestamp.Subseconds = Timestamp.Subseconds;
+            }
+        }
+        else
+        {
+            /*
+            ** WPEvalResult is STALE or ERROR
+            */
+            LC_OperData.WRTPtr[WatchIndex].CountdownToStale = 0;
+        }
+
+    } /* end SizedDataValid if */
+
+    return;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Perform a watchpoint relational comparison                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+uint8 LC_OperatorCompare(uint16 WatchIndex, uint32 ProcessedWPData)
+{
+    uint8          EvalResult;
+    LC_MultiType_t WatchpointValue;
+    LC_MultiType_t ComparisonValue;
+
+    /*
+     * The "ProcessedWPData" has been already normalized to be
+     * 32 bits wide and in the native CPU byte order.  For actual
+     * comparison, it needs to be truncated back down to the same
+     * size as the reference value.
+     */
+    switch (LC_OperData.WDTPtr[WatchIndex].DataType)
+    {
+        case LC_DATA_UBYTE:
+        case LC_DATA_BYTE:
+            WatchpointValue.Unsigned8 = ProcessedWPData & 0xFF;
+            break;
+
+        case LC_DATA_WORD_BE:
+        case LC_DATA_WORD_LE:
+        case LC_DATA_UWORD_BE:
+        case LC_DATA_UWORD_LE:
+            WatchpointValue.Unsigned16 = ProcessedWPData & 0xFFFF;
+            break;
+
+        case LC_DATA_DWORD_BE:
+        case LC_DATA_DWORD_LE:
+        case LC_DATA_UDWORD_BE:
+        case LC_DATA_UDWORD_LE:
+        case LC_DATA_FLOAT_BE:
+        case LC_DATA_FLOAT_LE:
+        default:
+            WatchpointValue.Unsigned32 = ProcessedWPData;
+            break;
+    }
+    ComparisonValue = LC_OperData.WDTPtr[WatchIndex].ComparisonValue;
+
+    /*
+    ** Handle the comparison appropriately depending on the data type
+    ** Any endian difference was handled when the watchpoint
+    ** data was extracted from the SB message
+    */
+    switch (LC_OperData.WDTPtr[WatchIndex].DataType)
+    {
+        /*
+        ** Signed integer types will get sign extended
+        */
+        case LC_DATA_BYTE:
+            EvalResult = LC_SignedCompare(WatchIndex, WatchpointValue.Signed8, ComparisonValue.Signed8);
+            break;
+
+        case LC_DATA_WORD_BE:
+        case LC_DATA_WORD_LE:
+            EvalResult = LC_SignedCompare(WatchIndex, WatchpointValue.Signed16, ComparisonValue.Signed16);
+            break;
+
+        case LC_DATA_DWORD_BE:
+        case LC_DATA_DWORD_LE:
+            EvalResult = LC_SignedCompare(WatchIndex, WatchpointValue.Signed32, ComparisonValue.Signed32);
+            break;
+
+        /*
+        ** Unsigned integer types will get zero extended
+        */
+        case LC_DATA_UBYTE:
+            EvalResult = LC_UnsignedCompare(WatchIndex, WatchpointValue.Unsigned8, ComparisonValue.Unsigned8);
+            break;
+
+        case LC_DATA_UWORD_BE:
+        case LC_DATA_UWORD_LE:
+            EvalResult = LC_UnsignedCompare(WatchIndex, WatchpointValue.Unsigned16, ComparisonValue.Unsigned16);
+            break;
+
+        case LC_DATA_UDWORD_BE:
+        case LC_DATA_UDWORD_LE:
+            EvalResult = LC_UnsignedCompare(WatchIndex, WatchpointValue.Unsigned32, ComparisonValue.Unsigned32);
+            break;
+
+        /*
+        ** Floating point values are handled separately
+        */
+        case LC_DATA_FLOAT_BE:
+        case LC_DATA_FLOAT_LE:
+            EvalResult = LC_FloatCompare(WatchIndex, &WatchpointValue, &ComparisonValue);
+            break;
+
+        default:
+            /*
+            ** This should have been caught before now, but we'll
+            ** handle it just in case we ever get here.
+            */
+            CFE_EVS_SendEvent(LC_WP_DATATYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "WP has undefined data type: WP = %d, DataType = %d", WatchIndex,
+                              LC_OperData.WDTPtr[WatchIndex].DataType);
+
+            EvalResult = LC_WATCH_ERROR;
+            break;
+    }
+
+    return EvalResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Perform a watchpoint signed integer comparison                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+uint8 LC_SignedCompare(uint16 WatchIndex, int32 WPValue, int32 CompareValue)
+{
+    uint8 EvalResult;
+    uint8 OperatorID;
+
+    OperatorID = LC_OperData.WDTPtr[WatchIndex].OperatorID;
+
+    switch (OperatorID)
+    {
+        case LC_OPER_LE:
+            EvalResult = (WPValue <= CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_LT:
+            EvalResult = (WPValue < CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_EQ:
+            EvalResult = (WPValue == CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_NE:
+            EvalResult = (WPValue != CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_GT:
+            EvalResult = (WPValue > CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_GE:
+            EvalResult = (WPValue >= CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        default:
+            /*
+            ** This should have been caught before now, but we'll
+            ** handle it just in case we ever get here.
+            */
+            CFE_EVS_SendEvent(LC_WP_OPERID_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "WP has invalid operator ID: WP = %d, OperID = %d", WatchIndex, OperatorID);
+
+            EvalResult = LC_WATCH_ERROR;
+            break;
+    }
+
+    return EvalResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Perform a watchpoint unsigned integer comparison                */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+uint8 LC_UnsignedCompare(uint16 WatchIndex, uint32 WPValue, uint32 CompareValue)
+{
+    uint8 EvalResult;
+    uint8 OperatorID;
+
+    OperatorID = LC_OperData.WDTPtr[WatchIndex].OperatorID;
+
+    switch (OperatorID)
+    {
+        case LC_OPER_LE:
+            EvalResult = (WPValue <= CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_LT:
+            EvalResult = (WPValue < CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_EQ:
+            EvalResult = (WPValue == CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_NE:
+            EvalResult = (WPValue != CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_GT:
+            EvalResult = (WPValue > CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        case LC_OPER_GE:
+            EvalResult = (WPValue >= CompareValue) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+            break;
+
+        default:
+            /*
+            ** This should have been caught before now, but we'll
+            ** handle it just in case we ever get here.
+            */
+            CFE_EVS_SendEvent(LC_WP_OPERID_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "WP has invalid operator ID: WP = %d, OperID = %d", WatchIndex, OperatorID);
+
+            EvalResult = LC_WATCH_ERROR;
+            break;
+    }
+
+    return EvalResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Perform a floating point number comparison                      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+uint8 LC_FloatCompare(uint16 WatchIndex, LC_MultiType_t *WPMultiType, LC_MultiType_t *CompareMultiType)
+{
+    uint8 EvalResult;
+    uint8 OperatorID;
+    float WPFloat;
+    float CompareFloat;
+    float Diff;
+
+    OperatorID = LC_OperData.WDTPtr[WatchIndex].OperatorID;
+
+    /*
+    ** Before we do any comparison, check the watchpoint value for
+    ** a floating point NAN (not-a-number). NAN comparisons don't
+    ** work and can generate floating point exceptions. By contrast
+    ** comparisons with infinite numbers will behave as they should
+    ** so we don't try to catch those (we would rather they generate
+    ** watchpoint violations).
+    **
+    ** The comparison (threshold) value comes from the Watchpoint
+    ** Definition Table (WDT) and any weird values should get nailed
+    ** during table validation.
+    */
+    if (LC_Uint32IsNAN(WPMultiType->Unsigned32) == false)
+    {
+        WPFloat      = WPMultiType->Float32;
+        CompareFloat = CompareMultiType->Float32;
+
+        switch (OperatorID)
+        {
+            case LC_OPER_LE:
+                EvalResult = (WPFloat <= CompareFloat) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            case LC_OPER_LT:
+                EvalResult = (WPFloat < CompareFloat) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            case LC_OPER_EQ:
+                Diff       = (WPFloat > CompareFloat) ? (WPFloat - CompareFloat) : (CompareFloat - WPFloat);
+                EvalResult = (Diff <= (float)LC_FLOAT_TOLERANCE) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            case LC_OPER_NE:
+                Diff       = (WPFloat > CompareFloat) ? (WPFloat - CompareFloat) : (CompareFloat - WPFloat);
+                EvalResult = (Diff > (float)LC_FLOAT_TOLERANCE) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            case LC_OPER_GT:
+                EvalResult = (WPFloat > CompareFloat) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            case LC_OPER_GE:
+                EvalResult = (WPFloat >= CompareFloat) ? LC_WATCH_TRUE : LC_WATCH_FALSE;
+                break;
+
+            default:
+                /*
+                ** This should have been caught before now, but we'll
+                ** handle it just in case we ever get here.
+                */
+                CFE_EVS_SendEvent(LC_WP_OPERID_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "WP has invalid operator ID: WP = %d, OperID = %d", WatchIndex, OperatorID);
+
+                EvalResult = LC_WATCH_ERROR;
+                break;
+
+        } /*  end of switch  */
+
+    } /* end LC_WPIsNAN if */
+    else
+    {
+        CFE_EVS_SendEvent(LC_WP_NAN_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "WP data value is a float NAN: WP = %d, Value = 0x%08X", WatchIndex,
+                          (unsigned int)WPMultiType->Unsigned32);
+
+        EvalResult = LC_WATCH_ERROR;
+    }
+
+    return EvalResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Checks if a defined watchpoint offset will send us past the     */
+/* end of the received message                                     */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool LC_WPOffsetValid(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr)
+{
+    size_t         MsgLength = 0;
+    uint32         Offset;
+    uint32         NumOfDataBytes = 0;
+    bool           OffsetValid    = true;
+    CFE_SB_MsgId_t MessageID      = CFE_SB_INVALID_MSG_ID;
+
+    /*
+    ** Check the message length against the watchpoint
+    ** offset and data type to make sure we won't
+    ** try to read past it.
+    */
+    switch (LC_OperData.WDTPtr[WatchIndex].DataType)
+    {
+        case LC_DATA_BYTE:
+        case LC_DATA_UBYTE:
+            NumOfDataBytes = sizeof(uint8);
+            break;
+
+        case LC_DATA_WORD_BE:
+        case LC_DATA_WORD_LE:
+        case LC_DATA_UWORD_BE:
+        case LC_DATA_UWORD_LE:
+            NumOfDataBytes = sizeof(uint16);
+            break;
+
+        case LC_DATA_DWORD_BE:
+        case LC_DATA_DWORD_LE:
+        case LC_DATA_UDWORD_BE:
+        case LC_DATA_UDWORD_LE:
+            NumOfDataBytes = sizeof(uint32);
+            break;
+
+        case LC_DATA_FLOAT_BE:
+        case LC_DATA_FLOAT_LE:
+            NumOfDataBytes = sizeof(float);
+            break;
+
+        default:
+            /*
+            ** This should have been caught before now, but we'll
+            ** handle it just in case we ever get here.
+            */
+            CFE_EVS_SendEvent(LC_WP_DATATYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "WP has undefined data type: WP = %d, DataType = %d", WatchIndex,
+                              LC_OperData.WDTPtr[WatchIndex].DataType);
+
+            LC_OperData.WRTPtr[WatchIndex].WatchResult      = LC_WATCH_ERROR;
+            LC_OperData.WRTPtr[WatchIndex].CountdownToStale = 0;
+
+            return false;
+            break;
+
+    } /* end switch */
+
+    CFE_MSG_GetSize(&BufPtr->Msg, &MsgLength);
+
+    Offset = LC_OperData.WDTPtr[WatchIndex].WatchpointOffset;
+
+    if ((Offset + NumOfDataBytes) > MsgLength)
+    {
+        OffsetValid = false;
+
+        CFE_MSG_GetMsgId(&BufPtr->Msg, &MessageID);
+
+        CFE_EVS_SendEvent(LC_WP_OFFSET_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "WP offset error: MID = 0x%08lX, WP = %d, Offset = %d, DataSize = %d, MsgLen = %d",
+                          (unsigned long)CFE_SB_MsgIdToValue(MessageID), WatchIndex, (int)Offset, (int)NumOfDataBytes,
+                          (int)MsgLength);
+
+        LC_OperData.WRTPtr[WatchIndex].WatchResult      = LC_WATCH_ERROR;
+        LC_OperData.WRTPtr[WatchIndex].CountdownToStale = 0;
+    }
+
+    return OffsetValid;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Copy a single watchpoint datum and simultaneously byteswap it   */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void LC_CopyBytesWithSwap(LC_MultiType_t *DestBuffer, const uint8 *SrcPtr, LC_MultiType_t *SwapMap, uint32 NumBytes)
+{
+    while (NumBytes > 0)
+    {
+        --NumBytes;
+        DestBuffer->RawByte[NumBytes] = SrcPtr[SwapMap->RawByte[NumBytes] & 0x3];
+    }
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Get sized watchpoint data                                       */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool LC_GetSizedWPData(uint16 WatchIndex, const uint8 *WPDataPtr, uint32 *SizedDataPtr)
+{
+    bool           Success = true;
+    LC_MultiType_t ConvBuffer;
+    LC_MultiType_t TempBuffer;
+
+    ConvBuffer.Unsigned32 = 0;
+    TempBuffer.Unsigned32 = 0;
+
+    /*
+    ** Get the watchpoint data value (which may be on a misaligned
+    ** address boundary) and put it into an unsigned 32 properly
+    ** handling endian and sign extension issues
+    */
+    switch (LC_OperData.WDTPtr[WatchIndex].DataType)
+    {
+        case LC_DATA_BYTE:
+            TempBuffer.Unsigned8 = *WPDataPtr;
+            ConvBuffer.Signed32  = TempBuffer.Signed8; /* Extend signed 8 bit value to 32 bits */
+            break;
+
+        case LC_DATA_UBYTE:
+            ConvBuffer.Unsigned32 = *WPDataPtr; /* Extend unsigned 8 bit value to 32 bits */
+            break;
+
+        case LC_DATA_WORD_BE:
+            ConvBuffer.Unsigned16 = LC_16BIT_BE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(int16));
+            ConvBuffer.Signed32 = TempBuffer.Signed16; /* Extend signed 16 bit value to 32 bits */
+            break;
+
+        case LC_DATA_WORD_LE:
+            ConvBuffer.Unsigned16 = LC_16BIT_LE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(int16));
+            ConvBuffer.Signed32 = TempBuffer.Signed16; /* Extend signed 16 bit value to 32 bits */
+            break;
+
+        case LC_DATA_UWORD_BE:
+            ConvBuffer.Unsigned16 = LC_16BIT_BE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(uint16));
+            ConvBuffer.Unsigned32 = TempBuffer.Unsigned16; /* Extend unsigned 16 bit value to 32 bits */
+            break;
+
+        case LC_DATA_UWORD_LE:
+            ConvBuffer.Unsigned16 = LC_16BIT_LE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(uint16));
+            ConvBuffer.Unsigned32 = TempBuffer.Unsigned16; /* Extend unsigned 16 bit value to 32 bits */
+            break;
+
+        case LC_DATA_DWORD_BE:
+        case LC_DATA_UDWORD_BE:
+        case LC_DATA_FLOAT_BE:
+            ConvBuffer.Unsigned32 = LC_32BIT_BE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(uint32));
+            ConvBuffer.Unsigned32 = TempBuffer.Unsigned32; /* Straight copy - no extension (signed or unsigned) */
+            break;
+
+        case LC_DATA_DWORD_LE:
+        case LC_DATA_UDWORD_LE:
+        case LC_DATA_FLOAT_LE:
+            ConvBuffer.Unsigned32 = LC_32BIT_LE_VAL;
+            LC_CopyBytesWithSwap(&TempBuffer, WPDataPtr, &ConvBuffer, sizeof(uint32));
+            ConvBuffer.Unsigned32 = TempBuffer.Unsigned32; /* Straight copy - no extension (signed or unsigned) */
+            break;
+
+        default:
+            /*
+            ** This should have been caught before now, but we'll
+            ** handle it just in case we ever get here.
+            */
+            CFE_EVS_SendEvent(LC_WP_DATATYPE_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "WP has undefined data type: WP = %d, DataType = %d", WatchIndex,
+                              LC_OperData.WDTPtr[WatchIndex].DataType);
+
+            LC_OperData.WRTPtr[WatchIndex].WatchResult      = LC_WATCH_ERROR;
+            LC_OperData.WRTPtr[WatchIndex].CountdownToStale = 0;
+
+            Success = false;
+            break;
+
+    } /* end switch */
+
+    /*
+    ** Set result value
+    */
+    *SizedDataPtr = ConvBuffer.Unsigned32;
+
+    /*
+    ** Return success flag
+    */
+
+    return Success;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Validate the watchpoint definition table (WDT)                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32 LC_ValidateWDT(void *TableData)
+{
+    LC_WDTEntry_t *TableArray = (LC_WDTEntry_t *)TableData;
+
+    int32 EntryResult = LC_WDTVAL_NO_ERR;
+    int32 TableResult = CFE_SUCCESS;
+    int32 TableIndex;
+
+    uint8          DataType;
+    uint8          OperatorID;
+    CFE_SB_MsgId_t MessageID;
+    uint32         CompareValue;
+
+    int32 GoodCount   = 0;
+    int32 BadCount    = 0;
+    int32 UnusedCount = 0;
+
+    /*
+    ** Verify each entry in the pending watchpoint definition table
+    */
+    for (TableIndex = 0; TableIndex < LC_MAX_WATCHPOINTS; TableIndex++)
+    {
+        DataType     = TableArray[TableIndex].DataType;
+        OperatorID   = TableArray[TableIndex].OperatorID;
+        MessageID    = TableArray[TableIndex].MessageID;
+        CompareValue = TableArray[TableIndex].ComparisonValue.Unsigned32;
+
+        if (DataType == LC_WATCH_NOT_USED)
+        {
+            /*
+            ** Unused table entry
+            */
+            UnusedCount++;
+        }
+        else if ((DataType != LC_DATA_BYTE) && (DataType != LC_DATA_UBYTE) && (DataType != LC_DATA_WORD_BE) &&
+                 (DataType != LC_DATA_WORD_LE) && (DataType != LC_DATA_UWORD_BE) && (DataType != LC_DATA_UWORD_LE) &&
+                 (DataType != LC_DATA_DWORD_BE) && (DataType != LC_DATA_DWORD_LE) && (DataType != LC_DATA_UDWORD_BE) &&
+                 (DataType != LC_DATA_UDWORD_LE) && (DataType != LC_DATA_FLOAT_BE) && (DataType != LC_DATA_FLOAT_LE))
+        {
+            /*
+            ** Invalid data type
+            */
+            BadCount++;
+            EntryResult = LC_WDTVAL_ERR_DATATYPE;
+        }
+        else if ((OperatorID != LC_OPER_LT) && (OperatorID != LC_OPER_LE) && (OperatorID != LC_OPER_NE) &&
+                 (OperatorID != LC_OPER_EQ) && (OperatorID != LC_OPER_GE) && (OperatorID != LC_OPER_GT) &&
+                 (OperatorID != LC_OPER_CUSTOM))
+        {
+            /*
+            ** Invalid operator
+            */
+            BadCount++;
+            EntryResult = LC_WDTVAL_ERR_OPER;
+        }
+        else if (!CFE_SB_IsValidMsgId(MessageID))
+        {
+            /*
+            ** Bad message ID
+            */
+            BadCount++;
+            EntryResult = LC_WDTVAL_ERR_MID;
+        }
+        else if ((DataType == LC_DATA_FLOAT_BE) || (DataType == LC_DATA_FLOAT_LE))
+        {
+            /*
+            ** Check the floating point comparison value for
+            ** NAN (not-a-number) or infinite values
+            */
+            if (LC_Uint32IsNAN(CompareValue) == true)
+            {
+                BadCount++;
+                EntryResult = LC_WDTVAL_ERR_FPNAN;
+            }
+            else if (LC_Uint32IsInfinite(CompareValue) == true)
+            {
+                BadCount++;
+                EntryResult = LC_WDTVAL_ERR_FPINF;
+            }
+            else
+            {
+                /*
+                ** We passed all checks for this floating point entry
+                */
+                GoodCount++;
+            }
+        }
+        else
+        {
+            /*
+            ** We passed all checks for this non-floating point entry
+            */
+            GoodCount++;
+        }
+
+        /*
+        ** Generate detailed event for "first" error
+        */
+        if ((EntryResult != LC_WDTVAL_NO_ERR) && (TableResult == CFE_SUCCESS))
+        {
+            if ((EntryResult == LC_WDTVAL_ERR_FPNAN) || (EntryResult == LC_WDTVAL_ERR_FPINF))
+            {
+                CFE_EVS_SendEvent(LC_WDTVAL_FPERR_EID, CFE_EVS_EventType_ERROR,
+                                  "WDT verify float err: WP = %d, Err = %d, ComparisonValue = 0x%08X", (int)TableIndex,
+                                  (int)EntryResult, (unsigned int)CompareValue);
+            }
+            else
+            {
+                CFE_EVS_SendEvent(LC_WDTVAL_ERR_EID, CFE_EVS_EventType_ERROR,
+                                  "WDT verify err: WP = %d, Err = %d, DType = %d, Oper = %d, MID = 0x%08lX",
+                                  (int)TableIndex, (int)EntryResult, DataType, OperatorID,
+                                  (unsigned long)CFE_SB_MsgIdToValue(MessageID));
+            }
+
+            TableResult = EntryResult;
+        }
+
+    } /* end TableIndex for */
+
+    /*
+    ** Generate informational event with error totals
+    */
+    CFE_EVS_SendEvent(LC_WDTVAL_INF_EID, CFE_EVS_EventType_INFORMATION,
+                      "WDT verify results: good = %d, bad = %d, unused = %d", (int)GoodCount, (int)BadCount,
+                      (int)UnusedCount);
+
+    return TableResult;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Test if a 32 bit integer's value would be a floating point      */
+/* NAN (not-a-number). Assumes IEEE-754 floating point format      */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool LC_Uint32IsNAN(uint32 Data)
+{
+    bool   Result = false;
+    uint32 Exponent;
+    uint32 Fraction;
+
+    /*
+    ** Check if the exponent field is all 1's
+    */
+    Exponent = Data & LC_IEEE_EXPONENT_MASK;
+
+    if (Exponent == LC_IEEE_EXPONENT_MASK)
+    {
+        /*
+        ** If the fraction field is also non-zero,
+        ** it's a NAN
+        */
+        Fraction = Data & LC_IEEE_FRACTION_MASK;
+
+        if (Fraction > 0)
+        {
+            Result = true;
+        }
+    }
+
+    return Result;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+/*                                                                 */
+/* Test if a 32 bit integer's value would be an infinite           */
+/* (positive or negative) floating point number. Assumes           */
+/* IEEE-754 floating point format                                  */
+/*                                                                 */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+bool LC_Uint32IsInfinite(uint32 Data)
+{
+    bool   Result = false;
+    uint32 Exponent;
+    uint32 Fraction;
+
+    /*
+    ** Check if the exponent field is all 1's
+    */
+    Exponent = Data & LC_IEEE_EXPONENT_MASK;
+
+    if (Exponent == LC_IEEE_EXPONENT_MASK)
+    {
+        /*
+        ** If the fraction field is also zero,
+        ** it's infinite
+        */
+        Fraction = Data & LC_IEEE_FRACTION_MASK;
+
+        if (Fraction == 0)
+        {
+            Result = true;
+        }
+    }
+
+    return Result;
+}
+```
+
+### `lc_watch.h`
+
+**경로:** `fsw/apps/lc/fsw/src/lc_watch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFS Limit Checker (LC) routines that
+ *   handle watchpoint processing
+ */
+#ifndef LC_WATCH_H
+#define LC_WATCH_H
+
+/*************************************************************************
+ * Includes
+ *************************************************************************/
+#include "cfe.h"
+#include "lc_app.h"
+
+/*************************************************************************
+ * Constants
+ *************************************************************************/
+
+/**
+ * \name Values used when converting watchpoint values to correctly sized data
+ * \{
+ */
+#define LC_16BIT_BE_VAL 0x0001     /**< \brief 16 bit big endian conversion value */
+#define LC_16BIT_LE_VAL 0x0100     /**< \brief 16 bit little endian conversion value */
+#define LC_32BIT_BE_VAL 0x00010203 /**< \brief 32 bit big endian conversion value */
+#define LC_32BIT_LE_VAL 0x03020100 /**< \brief 32 bit little endian conversion value */
+/**\}*/
+
+/**
+ * \name Fields of the single-precision IEEE-754 floating point format
+ * \{
+ */
+#define LC_IEEE_EXPONENT_MASK 0x7F800000 /**< \brief IEEE-754 floating point exponent mask */
+#define LC_IEEE_FRACTION_MASK 0x007FFFFF /**< \brief IEEE-754 floating point fraction mask */
+/**\}*/
+
+/*************************************************************************
+ * Exported Functions
+ *************************************************************************/
+
+/**
+ * \brief Check message for watchpoints
+ *
+ *  \par Description
+ *       Processes a single software bus command pipe message that
+ *       doesn't match any LC predefined command or message ids,
+ *       which indicates it's probably a watchpoint message.
+ *       It will search the watchpoint definition table for matches
+ *       to this MessageID and handle them as needed.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] MessageID Message ID
+ *  \param[in] BufPtr    Pointer to Software Bus buffer
+ *
+ *  \sa #LC_ProcessWP
+ */
+void LC_CheckMsgForWPs(CFE_SB_MsgId_t MessageID, const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Validate watchpoint definition table (WDT)
+ *
+ *  \par Description
+ *       This function is called by table services when a validation of
+ *       the watchpoint definition table is required
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param[in] TableData Pointer to the table data to validate
+ *
+ *  \return Watchpoint definition table validation result
+ *  \retval #CFE_SUCCESS            \copydoc CFE_SUCCESS
+ *  \retval #LC_WDTVAL_ERR_DATATYPE \copydoc LC_WDTVAL_ERR_DATATYPE
+ *  \retval #LC_WDTVAL_ERR_OPER     \copydoc LC_WDTVAL_ERR_OPER
+ *  \retval #LC_WDTVAL_ERR_MID      \copydoc LC_WDTVAL_ERR_MID
+ *  \retval #LC_WDTVAL_ERR_FPNAN    \copydoc LC_WDTVAL_ERR_FPNAN
+ *  \retval #LC_WDTVAL_ERR_FPINF    \copydoc LC_WDTVAL_ERR_FPINF
+ *
+ *  \sa #LC_ValidateADT
+ */
+int32 LC_ValidateWDT(void *TableData);
+
+/**
+ * \brief Create watchpoint hash table
+ *
+ *  \par Description
+ *       Creates a hash table to optimize the process of getting direct
+ *       access to all the watchpoint table entries that reference a
+ *       particular MessageID without having to search the entire table.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \sa #LC_GetHashTableIndex, #LC_AddWatchpoint
+ */
+void LC_CreateHashTable(void);
+
+/**
+ * \brief Process a single watchpoint
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will
+ *       evaluate a single watchpoint
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   WatchIndex  The watchpoint number to evaluate (zero
+ *                            based watchpoint definition table index)
+ *
+ *  \param [in]   BufPtr      Pointer to Software Bus buffer
+ *
+ *  \param [in]   Timestamp   A #CFE_TIME_SysTime_t timestamp to use
+ *                            to update the watchpoint results data
+ *                            if a state transition is detected
+ */
+void LC_ProcessWP(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr, CFE_TIME_SysTime_t Timestamp);
+
+/**
+ * \brief Operator comparison
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will perform
+ *       the watchpoint data comparison based upon the operator and
+ *       data type specified in the watchpoint definition table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in] WatchIndex         The watchpoint number to compare (zero
+ *                                 based watchpoint definition table index)
+ *
+ *  \param [in] ProcessedWPData    The watchpoint data extracted from
+ *                                 the message that it was contained
+ *                                 in. This is the data after any
+ *                                 sizing, bit-masking, and endianess
+ *                                 fixing that LC might have done
+ *                                 according to the watchpoint definition
+ *
+ *  \return Operation comparison result from #LC_SignedCompare, #LC_UnsignedCompare, #LC_FloatCompare
+ *  \retval #LC_WATCH_ERROR \copydoc LC_WATCH_ERROR
+ */
+uint8 LC_OperatorCompare(uint16 WatchIndex, uint32 ProcessedWPData);
+
+/**
+ * \brief Signed comparison
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will perform
+ *       a signed watchpoint data comparison based upon the operator
+ *       specified in the watchpoint definition table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in] WatchIndex    The watchpoint number to compare (zero
+ *                            based watchpoint definition table index)
+ *
+ *  \param [in] WPValue       The watchpoint data extracted from
+ *                            the message that it was contained
+ *                            in. This is the data after any
+ *                            sizing, bit-masking, and endianess
+ *                            fixing that LC might have done
+ *                            according to the watchpoint definition
+ *
+ *  \param [in] CompareValue  The comparison value specified in the
+ *                            watchpoint definition table (sign
+ *                            extended, if needed, in an int32)
+ *
+ *  \return Comparison result
+ *  \retval #LC_WATCH_TRUE  \copydoc LC_WATCH_TRUE
+ *  \retval #LC_WATCH_FALSE \copydoc LC_WATCH_FALSE
+ *  \retval #LC_WATCH_ERROR \copydoc LC_WATCH_ERROR
+ */
+uint8 LC_SignedCompare(uint16 WatchIndex, int32 WPValue, int32 CompareValue);
+
+/**
+ * \brief Unsigned comparison
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will perform
+ *       an unsigned watchpoint data comparison based upon the operator
+ *       specified in the watchpoint definition table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in] WatchIndex    The watchpoint number to compare (zero
+ *                            based watchpoint definition table index)
+ *
+ *  \param [in] WPValue       The watchpoint data extracted from
+ *                            the message that it was contained
+ *                            in. This is the data after any
+ *                            sizing, bit-masking, and endianess
+ *                            fixing that LC might have done
+ *                            according to the watchpoint definition
+ *
+ *  \param [in] CompareValue  The comparison value specified in the
+ *                            watchpoint definition table (zero
+ *                            extended, if needed, in an uint32)
+ *
+ *  \return Comparison result
+ *  \retval #LC_WATCH_TRUE  \copydoc LC_WATCH_TRUE
+ *  \retval #LC_WATCH_FALSE \copydoc LC_WATCH_FALSE
+ *  \retval #LC_WATCH_ERROR \copydoc LC_WATCH_ERROR
+ */
+uint8 LC_UnsignedCompare(uint16 WatchIndex, uint32 WPValue, uint32 CompareValue);
+
+/**
+ * \brief Float comparison
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will perform
+ *       an floating point watchpoint data comparison based upon the operator
+ *       specified in the watchpoint definition table
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in] WatchIndex        The watchpoint number to compare (zero
+ *                                based watchpoint definition table index)
+ *
+ *  \param [in] WPMultiType       The watchpoint data extracted from
+ *                                the message that it was contained
+ *                                in. Stored in a multi-type union.
+ *                                This is the data after any sizing,
+ *                                bit-masking, and endianess fixing
+ *                                that LC might have done according
+ *                                to the watchpoint definition
+ *
+ *  \param [in] CompareMultiType  The comparison value specified in the
+ *                                watchpoint definition table. Stored
+ *                                in a muti-type union so it can easily
+ *                                be accessed as a uint32 for validity
+ *                                checks
+ *
+ *  \return Comparison result
+ *  \retval #LC_WATCH_TRUE  \copydoc LC_WATCH_TRUE
+ *  \retval #LC_WATCH_FALSE \copydoc LC_WATCH_FALSE
+ *  \retval #LC_WATCH_ERROR \copydoc LC_WATCH_ERROR
+ */
+uint8 LC_FloatCompare(uint16 WatchIndex, LC_MultiType_t *WPMultiType, LC_MultiType_t *CompareMultiType);
+
+/**
+ * \brief Watchpoint offset valid
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will check if
+ *       the watchpoint offset specified in the definition table would
+ *       extend past the message that contains the watchpoint data
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]   WatchIndex  The watchpoint number to check (zero
+ *                            based watchpoint definition table index)
+ *
+ *  \param [in]   BufPtr      Pointer to Software Bus buffer
+ *
+ *  \return Offset validation result
+ *  \retval true Offset is within the message size
+ *  \retval false Offset extends past message end
+ */
+bool LC_WPOffsetValid(uint16 WatchIndex, const CFE_SB_Buffer_t *BufPtr);
+
+/**
+ * \brief Get sized data
+ *
+ *  \par Description
+ *       Support function for watchpoint processing that will extract
+ *       the watchpoint data from a software bus message based upon the
+ *       data type specified in the watchpoint definition table and
+ *       store it in a uint32. If there are any endian differences between
+ *       LC and the watchpoint data, this is where it will get fixed up.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]  WatchIndex     The watchpoint number to extract (zero
+ *                              based watchpoint definition table index)
+ *
+ *  \param [in]  WPDataPtr      A pointer to the first byte of the
+ *                              watchpoint data as it exists in the
+ *                              software bus message it was received in
+ *
+ *  \param [in]  SizedDataPtr   A pointer to where the extracted watchpoint
+ *                              data should be stored
+ *
+ *  \return Boolean execution status result
+ *  \retval true No error
+ *  \retval false An error occurred
+ */
+bool LC_GetSizedWPData(uint16 WatchIndex, const uint8 *WPDataPtr, uint32 *SizedDataPtr);
+
+/**
+ * \brief Check uint32 for float NAN
+ *
+ *  \par Description
+ *       Utility function for watchpoint processing that will test if
+ *       a uint32 value would result in a NAN (not-a-number) value if
+ *       it was interpreted as a float.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]  Data     The uint32 value to check
+ *
+ *  \return Boolean is a float NAN result
+ *  \retval true Value is a float NAN
+ *  \retval false Value is not a float NAN
+ */
+bool LC_Uint32IsNAN(uint32 Data);
+
+/**
+ * \brief Check uint32 for float infinite
+ *
+ *  \par Description
+ *       Utility function for watchpoint processing that will test if
+ *       a uint32 value would result in an infinite value if
+ *       it was interpreted as a float.
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]  Data     The uint32 value to check
+ *
+ *  \return Boolean is a float infinite result
+ *  \retval true Value is an inifinite float
+ *  \retval valse Value is not an inifinite float
+ */
+bool LC_Uint32IsInfinite(uint32 Data);
+
+/**
+ * \brief Convert messageID into hash table index
+ *
+ *  \par Description
+ *       Utility function for watchpoint processing that converts a
+ *       messageID into an index into the watchpoint hash table.
+ *
+ *       The following code supports use of the watchpoint hash table:
+ *
+ *       1) #LC_GetHashTableIndex - convert messageID to hash table index
+ *       2) #LC_CreateHashTable   - after load Watchpoint Definition Table
+ *       3) #LC_AddWatchpoint     - add one watchpoint to hash table
+ *       4) #LC_CheckMsgForWPs    - process all WP's that reference messageID
+ *
+ *       The following data structures support the hash table:
+ *
+ *       1) Hash table (256 entries)
+ *       2) Array of links for messageID linked lists (LC_MAX_WATCHPOINTS)
+ *       3) Array of links for watchpoint linked lists (LC_MAX_WATCHPOINTS)
+ *
+ *       Rather than search the entire Watchpoint Definition Table to find
+ *       the watchpoints that reference a particular messageID, LC does
+ *       the following:
+ *
+ *       1) Call hash table function (convert messageID to hash table index)
+ *       2) Get messageID linked list from indexed hash table entry
+ *       3) Search messageID list (max 8) for matching messageID
+ *       4) Get watchpoint linked list from matching messageID link
+ *       5) Done - only watchpoints that reference messageID are in list
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]  MessageID   SoftwareBus packet message ID
+ *
+ *  \return Index into watchpoint hash table
+ */
+uint32 LC_GetHashTableIndex(CFE_SB_MsgId_t MessageID);
+
+/**
+ * \brief Add one watchpoint linked list entry during creation of hash table
+ *
+ *  \par Description
+ *       Utility function that adds another link to the watchpoint linked list
+ *       for the specified messageID. The function will also add a messageID
+ *       linked list entry to the hash table if this is the first reference
+ *       to that messageID. The function will also subscribe to the messageID
+ *       if this is the first reference to that messageID. The function will
+ *       return a pointer to the watchpoint linked list entry just added.
+ *
+ *       The following code supports use of the watchpoint hash table:
+ *
+ *       1) #LC_GetHashTableIndex - convert messageID to hash table index
+ *       2) #LC_CreateHashTable   - after load Watchpoint Definition Table
+ *       3) #LC_AddWatchpoint     - add one watchpoint to hash table
+ *       4) #LC_CheckMsgForWPs    - process all WP's that reference messageID
+ *
+ *       The following data structures support the hash table:
+ *
+ *       1) Hash table (256 entries)
+ *       2) Array of links for messageID linked lists (LC_MAX_WATCHPOINTS)
+ *       3) Array of links for watchpoint linked lists (LC_MAX_WATCHPOINTS)
+ *
+ *       Rather than search the entire Watchpoint Definition Table to find
+ *       the watchpoints that reference a particular messageID, LC does
+ *       the following:
+ *
+ *       1) Call hash table function (convert messageID to hash table index)
+ *       2) Get messageID linked list from indexed hash table entry
+ *       3) Search messageID list (max 8) for matching messageID
+ *       4) Get watchpoint linked list from matching messageID link
+ *       5) Done - only watchpoints that reference messageID are in list
+ *
+ *  \par Assumptions, External Events, and Notes:
+ *       None
+ *
+ *  \param [in]  MessageID   SoftwareBus packet message ID
+ *
+ *  \return Pointer to the watchpoint linked list entry just added
+ */
+LC_WatchPtList_t *LC_AddWatchpoint(const CFE_SB_MsgId_t MessageID);
+
+#endif
+```

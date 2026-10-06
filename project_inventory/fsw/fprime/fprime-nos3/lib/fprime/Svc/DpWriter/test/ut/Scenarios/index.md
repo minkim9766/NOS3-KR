@@ -3,16 +3,140 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Random.cpp`
 
-file--Random.cpp
-file--Random.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/Random.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Random.hpp
+// \author Rob Bocchino
+// \brief  Random scenario
+//
+// \copyright
+// Copyright (C) 2024 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "Svc/DpWriter/test/ut/Scenarios/Random.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "Svc/DpWriter/test/ut/Rules/Rules.hpp"
+
+namespace Svc {
+
+namespace Scenarios {
+
+namespace Random {
+
+// ----------------------------------------------------------------------
+// Rule definitions
+// ----------------------------------------------------------------------
+
+Rules::BufferSendIn::BufferTooSmallForData bufferSendInBufferTooSmallForData;
+Rules::BufferSendIn::BufferTooSmallForPacket bufferSendInBufferTooSmallForPacket;
+Rules::BufferSendIn::FileOpenError bufferSendInFileOpenError;
+Rules::BufferSendIn::FileWriteError bufferSendInFileWriteError;
+Rules::BufferSendIn::InvalidBuffer bufferSendInInvalidBuffer;
+Rules::BufferSendIn::InvalidHeader bufferSendInInvalidHeader;
+Rules::BufferSendIn::InvalidHeaderHash bufferSendInInvalidHeaderHash;
+Rules::BufferSendIn::OK bufferSendInOK;
+Rules::CLEAR_EVENT_THROTTLE::OK clearEventThrottleOK;
+Rules::FileOpenStatus::Error fileOpenStatusError;
+Rules::FileOpenStatus::OK fileOpenStatusOK;
+Rules::FileWriteStatus::Error fileWriteStatusError;
+Rules::FileWriteStatus::OK fileWriteStatusOK;
+Rules::SchedIn::OK schedInOK;
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void Tester ::run(U32 maxNumSteps) {
+    STest::Rule<TestState>* rules[] = {&bufferSendInBufferTooSmallForData,
+                                       &bufferSendInBufferTooSmallForPacket,
+                                       &bufferSendInFileOpenError,
+                                       &bufferSendInFileWriteError,
+                                       &bufferSendInInvalidBuffer,
+                                       &bufferSendInInvalidHeader,
+                                       &bufferSendInInvalidHeaderHash,
+                                       &bufferSendInOK,
+                                       &clearEventThrottleOK,
+                                       &fileOpenStatusError,
+                                       &fileOpenStatusOK,
+                                       &fileWriteStatusError,
+                                       &fileWriteStatusOK,
+                                       &schedInOK};
+    STest::RandomScenario<TestState> scenario("RandomScenario", rules,
+                                              sizeof(rules) / sizeof(STest::RandomScenario<TestState>*));
+    STest::BoundedScenario<TestState> boundedScenario("BoundedRandomScenario", scenario, maxNumSteps);
+    const U32 numSteps = boundedScenario.run(this->testState);
+    printf("Ran %u steps.\n", numSteps);
+}
+
+}  // namespace Random
+
+}  // namespace Scenarios
+
+}  // namespace Svc
 ```
 
-## 항목
+### `Random.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/Random.cpp`](file--Random.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/Random.hpp`](file--Random.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/Random.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Random.hpp
+// \author Rob Bocchino
+// \brief  Random scenario
+//
+// \copyright
+// Copyright (C) 2024 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_Random_HPP
+#define Svc_Random_HPP
+
+#include "Svc/DpWriter/test/ut/TestState/TestState.hpp"
+
+namespace Svc {
+
+namespace Scenarios {
+
+namespace Random {
+
+class Tester {
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the random scenario
+    void run(U32 maxNumSteps  //!< The maximum number of steps
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! Test state
+    TestState testState;
+};
+
+}  // namespace Random
+
+}  // namespace Scenarios
+
+}  // namespace Svc
+
+#endif
+```

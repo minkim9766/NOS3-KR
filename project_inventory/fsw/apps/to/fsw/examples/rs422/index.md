@@ -3,18 +3,397 @@
 
 **경로:** `fsw/apps/to/fsw/examples/rs422/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `MISSION_to_types.h`
 
-file--MISSION_to_types.h
-file--to_custom.c
-file--to_platform_cfg.h
+**경로:** `fsw/apps/to/fsw/examples/rs422/MISSION_to_types.h`
+
+
+```c
+/******************************************************************************/
+/** \file  MISSION_to_types.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Command and telemetry data strucutres for TO application (RS422)
+*
+*   \par
+*       This header file contains definitions of command and telemetry data
+*       structures for TO applications for the UDP transport protocol example.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Make use of the setup.sh script to move / link this file to the
+*     {MISSION_HOME}/apps/inc/ folder.
+*     - Standard command messages are defined in to_cmds.h
+*     - Default HK Telemetry structure is defined in to_hktlm.h
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*     - 2015-09-22 | Guy de Carufel | Moved hktlm to to_hktlm.h
+*******************************************************************************/
+#ifndef _MISSION_TO_TYPES_H_
+#define _MISSION_TO_TYPES_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "../to/fsw/src/to_hktlm.h"
+
+/*
+** Defines
+*/
+
+/* Define enable / disable commands */
+typedef struct
+{
+    CFE_MSG_CommandHeader_t	ucCmdHeader;
+   int32    iFileDesc;       /**< File Descriptor of Port to use. */
+} TO_EnableOutputCmd_t;
+
+
+typedef struct
+{
+    CFE_MSG_CommandHeader_t	ucCmdHeader;
+} TO_DisableOutputCmd_t;
+
+
+
+/*************** Telemetry **************/
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t ucTlmHeader;
+} TO_InData_t;
+
+typedef struct
+{
+    CFE_MSG_TelemetryHeader_t ucTlmHeader;
+    uint32  uiCounter;
+} TO_OutData_t;
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _MISSION_TO_TYPES_H_ */
+
+/*==============================================================================
+** End of file MISSION_to_types.h
+**============================================================================*/
 ```
 
-## 항목
+### `to_custom.c`
 
-- [`fsw/apps/to/fsw/examples/rs422/MISSION_to_types.h`](file--MISSION_to_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/examples/rs422/to_custom.c`](file--to_custom.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/to/fsw/examples/rs422/to_platform_cfg.h`](file--to_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/to/fsw/examples/rs422/to_custom.c`
+
+
+```c
+/******************************************************************************/
+/** \file  to_custom.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*  
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Function Definitions for Custom Layer of TO Application for RS422
+*
+*   \par
+*     This file defines the functions for a custom implementation of the custom
+*     layer of the TO application over an RS422 serial port. 
+*
+*   \par API Functions Defined:
+*     - TO_CustomInit() - Initialize the transport protocol
+*     - TO_CustomAppCmds() - Process custom App Commands
+*     - TO_CustomEnableOutputCmd() - Enable telemetry output
+*     - TO_CustomDisableOutputCmd() - Disable telemetry output
+*     - TO_CustomCleanup() - Cleanup callback to close transport channel.
+*     - TO_CustomProcessData() - Send output data over transport protocol.
+*
+*   \par Private Functions Defined:
+*     - TO_SendDataTypePktCmd() - Send Test packet (Reference to_lab app)
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - All input messages are CCSDS messages
+*     - Both CI and TO makes use of the same RS422 device
+*     - All config macros defined in to_platform_cfg.h
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+
+/*
+** Pragmas
+*/
+
+/*
+** Include Files
+*/
+#include "cfe.h"
+#include "cfe_msgids.h"
+#include "network_includes.h"
+#include "trans_rs422.h"
+
+#include "to_app.h"
+
+/*
+** Local Defines
+*/
+
+/*
+** Local Structure Declarations
+*/
+typedef struct
+{
+    int32   iFileDesc;      /**< File Descriptor of serial port */
+} TO_CustomData_t;
+
+/*
+** External Global Variables
+*/
+extern TO_AppData_t g_TO_AppData; 
+
+/*
+** Global Variables
+*/
+TO_CustomData_t g_TO_CustomData;
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Definitions
+*/
+extern void TO_SendDataTypePktCmd(CFE_MSG_Message_t *);
+
+/*******************************************************************************
+** Custom Application Functions 
+*******************************************************************************/
+
+/******************************************************************************/
+/** \brief Custom Initialization
+*******************************************************************************/
+int32 TO_CustomInit(void)
+{
+    int32 iStatus = TO_SUCCESS;
+    
+    /* Set Critical Message Ids which must always be
+     * in config table. */
+    g_TO_AppData.criticalMid[0] = CFE_ES_SHELL_TLM_MID;
+    g_TO_AppData.criticalMid[1] = CFE_EVS_EVENT_MSG_MID;
+    g_TO_AppData.criticalMid[2] = CFE_SB_ALLSUBS_TLM_MID;
+
+    /* Route 0: Serial */
+    g_TO_AppData.routes[0].usExists = 1;
+    
+    /* Tie route 0 to CF channel 0 */
+    g_TO_AppData.routes[0].sCfChnlIdx = 0;
+    
+    return iStatus;
+}
+
+/******************************************************************************/
+/** \brief Process of custom app commands 
+*******************************************************************************/
+int32 TO_CustomAppCmds(CFE_MSG_Message_t* pMsg)
+{
+    int32 iStatus = TO_SUCCESS;
+    uint32 uiCmdCode = CFE_MSG_GetFcnCode(pMsg, CFE_MSG_FcnCode_t *FcnCode);
+    switch (uiCmdCode)
+    {
+        case TO_SEND_DATA_TYPE_CC:
+            TO_SendDataTypePktCmd(pMsg);
+            break;
+        
+        default:
+            iStatus = TO_ERROR;
+            break;
+    }
+
+    return iStatus;
+}
+
+/******************************************************************************/
+/** \brief Process of output telemetry
+*******************************************************************************/
+int32 TO_CustomProcessData(CFE_MSG_Message_t * pMsg, int32 size, int32 iTblIdx,
+                           uint16 usRouteId)
+{
+    int32 iSentSize = 0;
+    int32 iStatus = TO_SUCCESS;
+    
+    if (usRouteId == 0)
+    {
+        iSentSize = IO_TransRS422Write(g_TO_CustomData.iFileDesc, 
+                                       (uint8 *) pMsg, 
+                                       size);
+        if (iSentSize < 0)
+        {
+            CFE_EVS_SendEvent(TO_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "TO RS422 sendto errno %d. "
+                              "Telemetry output disabled.", errno);
+            g_TO_AppData.usOutputEnabled = 0;
+            iStatus = TO_ERROR;
+        }
+        else if (iSentSize != size)
+        {
+            CFE_EVS_SendEvent(TO_CUSTOM_ERR_EID, CFE_EVS_EventType_ERROR,
+                              "TO RS422 sent incomplete message.");
+            iStatus = TO_ERROR;
+        }
+    }
+
+    return iSentSize;
+}
+
+
+/******************************************************************************/
+/** \brief Custom Cleanup 
+*******************************************************************************/
+void TO_CustomCleanup(void)
+{
+    /* Nothing to do here. The fileDescriptor is closed in CI. */
+    return;
+}
+
+/******************************************************************************/
+/** \brief Enable Output Command Response
+*******************************************************************************/
+int32 TO_CustomEnableOutputCmd(CFE_MSG_Message_t *cmdpMsg)
+{
+    int32 routeMask = 0x0001;
+    
+    TO_EnableOutputCmd_t * pCustomCmd = (TO_EnableOutputCmd_t *) cmdpMsg;
+    g_TO_CustomData.iFileDesc = pCustomCmd->iFileDesc; 
+    TO_SetRouteAsConfigured(0);
+    
+    return routeMask;
+}
+
+/******************************************************************************/
+/** \brief Disable Output Command Response
+*******************************************************************************/
+int32 TO_CustomDisableOutputCmd(CFE_MSG_Message_t *cmdpMsg)
+{
+    /* Disable */
+    g_TO_AppData.usOutputEnabled = 0;
+    return TO_SUCCESS;
+}
+
+
+/*******************************************************************************
+** Non standard custom Commands
+*******************************************************************************/
+
+
+/*==============================================================================
+** End of file to_custom.c
+**============================================================================*/
+```
+
+### `to_platform_cfg.h`
+
+**경로:** `fsw/apps/to/fsw/examples/rs422/to_platform_cfg.h`
+
+
+```c
+/******************************************************************************/
+/** \file  to_platform_cfg.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Sample config file for TO Application with RS422 device
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - Make use of the setup.sh script to move / link this file to the 
+*       {MISSION_HOME}/apps/to/fsw/platform_inc folder.
+*
+*   \par Modification History:
+*     - 2015-01-09 | Guy de Carufel | Code Started
+*******************************************************************************/
+    
+#ifndef _TO_PLATFORM_CFG_H_
+#define _TO_PLATFORM_CFG_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*
+** Pragmas
+*/
+
+/*
+** Local Defines
+*/
+#define TO_SCH_PIPE_DEPTH  10
+#define TO_CMD_PIPE_DEPTH  10
+#define TO_TLM_PIPE_DEPTH  10
+
+#define TO_NUM_CRITICAL_MIDS   3
+
+#define TO_MAX_TBL_ENTRIES    100
+#define TO_WAKEUP_TIMEOUT     500
+
+#define TO_CONFIG_TABLENAME "to_config"
+#define TO_CONFIG_FILENAME "/cf/to_config.tbl"
+
+#define TO_GROUP_NUMBER_MASK    0xFF000000
+#define TO_MULTI_GROUP_MASK     0x00FFFFFF
+
+#define TO_CF_THROTTLE_SEM_NAME "CFTOSemId"
+
+/*
+** Include Files
+*/
+
+/*
+** Local Structure Declarations
+*/
+
+/*
+** External Global Variables
+*/
+
+/*
+** Global Variables
+*/
+
+/*
+** Local Variables
+*/
+
+/*
+** Local Function Prototypes
+*/
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _TO_PLATFORM_CFG_H_ */
+
+/*==============================================================================
+** End of file to_platform_cfg.h
+**============================================================================*/
+    
+```

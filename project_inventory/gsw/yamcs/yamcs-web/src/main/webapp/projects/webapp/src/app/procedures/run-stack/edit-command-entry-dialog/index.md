@@ -3,20 +3,332 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommandStepTemplateProvider.ts`
 
-file--CommandStepTemplateProvider.ts
-file--edit-command-entry-dialog.component.css
-file--edit-command-entry-dialog.component.html
-file--edit-command-entry-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/CommandStepTemplateProvider.ts`
+
+
+```typescript
+import {
+  CommandOptionType,
+  CommandStep,
+  utils,
+  Value,
+} from '@yamcs/webapp-sdk';
+import { TemplateProvider } from '../../../commanding/command-sender/command-form/TemplateProvider';
+
+export class CommandStepTemplateProvider implements TemplateProvider {
+  constructor(private step: CommandStep) {}
+
+  getAssignment(argumentName: string) {
+    for (const argName in this.step.args) {
+      if (argName === argumentName) {
+        const value = this.step.args[argName];
+        return utils.toValue(value);
+      }
+    }
+  }
+
+  getOption(id: string, expectedType: CommandOptionType) {
+    for (const extraId in this.step.extra || {}) {
+      if (extraId === id) {
+        const value = this.step.extra![extraId];
+        switch (expectedType) {
+          case 'BOOLEAN':
+            return this.getBooleanOption(value);
+          case 'NUMBER':
+            return this.getNumberOption(value);
+          case 'STRING':
+            return this.getStringOption(value);
+          case 'TIMESTAMP':
+            return this.getStringOption(value);
+        }
+      }
+    }
+  }
+
+  private getBooleanOption(value: Value) {
+    if (value.type === 'BOOLEAN') {
+      return value;
+    }
+  }
+
+  private getNumberOption(value: Value) {
+    switch (value.type) {
+      case 'SINT32':
+      case 'UINT32':
+      case 'SINT64':
+      case 'UINT64':
+        return value;
+    }
+  }
+
+  private getStringOption(value: Value) {
+    if (value.type === 'STRING') {
+      return value;
+    }
+  }
+
+  getComment() {
+    return this.step.comment;
+  }
+
+  getStream() {
+    return this.step.stream;
+  }
+
+  getAdvancementParams() {
+    return this.step.advancement;
+  }
+}
 ```
 
-## 항목
+### `edit-command-entry-dialog.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/CommandStepTemplateProvider.ts`](file--CommandStepTemplateProvider.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.css`](file--edit-command-entry-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.html`](file--edit-command-entry-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.ts`](file--edit-command-entry-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.css`
+
+
+```css
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 0;
+  position: relative;
+}
+
+.wrapper {
+  position: relative;
+  height: calc(100% - 48px);
+  overflow: auto;
+  font:
+    400 12px / 20px Roboto,
+    sans-serif;
+}
+
+.command-table-wrapper {
+  position: absolute;
+  overflow: auto;
+  /* 24 + 32 */
+  top: 56px;
+  bottom: 1em;
+  left: 0;
+  right: 0;
+}
+
+.command-detail {
+  max-width: 600px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  height: 64px;
+  left: 0;
+  right: 0;
+  border-top: 1px solid #d3d3d3;
+}
+
+.disabled .label {
+  opacity: 0.6;
+}
+
+div.names {
+  display: flex;
+}
+
+div.names > div {
+  padding-right: 25px;
+}
+
+div.names > div:not(:first-child) {
+  padding-left: 25px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+div.names h2 {
+  margin: 0;
+}
+
+div.names ::ng-deep .text-action {
+  line-height: 0;
+}
+```
+
+### `edit-command-entry-dialog.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.html`
+
+
+```html
+@if (!(selectedCommand$ | async)) {
+  <div class="wrapper">
+    <form [formGroup]="selectCommandForm" class="ya-form">
+      <h2>Select command</h2>
+      <div class="command-table-wrapper">
+        <app-command-selector #commandSelector formControlName="command" />
+      </div>
+    </form>
+  </div>
+  <div class="footer">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <ya-button mat-dialog-close>CANCEL</ya-button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </div>
+}
+
+@if (selectedCommand$ | async; as command) {
+  <div class="wrapper">
+    <div class="command-detail">
+      <div class="names" style="margin-bottom: 0.5em">
+        <div>
+          @if (command.qualifiedName | spaceSystemName; as spaceSystem) {
+            <ya-text-action [padding]="false" (click)="returnToList(spaceSystem)">
+              {{ spaceSystem }}
+            </ya-text-action>
+          }
+          <h2>{{ command.name }}</h2>
+        </div>
+        @for (alias of command.alias || []; track alias) {
+          <div>
+            {{ alias.namespace }}
+            <br />
+            <h2>{{ alias.name }}</h2>
+          </div>
+        }
+      </div>
+      <app-command-form
+        #commandForm
+        [command]="command"
+        [templateProvider]="templateProvider"
+        [stackMode]="true" />
+    </div>
+  </div>
+  <div class="footer">
+    <mat-toolbar>
+      <mat-toolbar-row>
+        <ya-button mat-dialog-close>CANCEL</ya-button>
+        &nbsp;&nbsp;
+        <ya-button appearance="primary" (click)="handleOK()" [disabled]="!commandForm.form.valid">
+          {{ okLabel }}
+        </ya-button>
+      </mat-toolbar-row>
+    </mat-toolbar>
+  </div>
+}
+```
+
+### `edit-command-entry-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/edit-command-entry-dialog/edit-command-entry-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectorRef, Component, Inject, ViewChild } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  AdvancementParams,
+  Command,
+  Value,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { CommandFormComponent } from '../../../commanding/command-sender/command-form/command-form.component';
+import { CommandSelectorComponent } from '../../../shared/command-selector/command-selector.component';
+import { AdvanceAckHelpComponent } from '../advance-ack-help/advance-ack-help.component';
+import { StackedCommandEntry } from '../stack-file/StackedEntry';
+import { CommandStepTemplateProvider } from './CommandStepTemplateProvider';
+
+export interface CommandResult {
+  command: Command;
+  args: { [key: string]: any };
+  extra: { [key: string]: Value };
+  comment?: string;
+  stream?: string;
+  advancement?: AdvancementParams;
+}
+
+@Component({
+  templateUrl: './edit-command-entry-dialog.component.html',
+  styleUrl: './edit-command-entry-dialog.component.css',
+  imports: [
+    AdvanceAckHelpComponent,
+    CommandFormComponent,
+    CommandSelectorComponent,
+    WebappSdkModule,
+  ],
+})
+export class EditCommandEntryDialogComponent {
+  okLabel = 'OK';
+
+  @ViewChild('commandSelector')
+  commandSelector: CommandSelectorComponent;
+
+  @ViewChild('commandForm')
+  commandForm: CommandFormComponent;
+
+  // Captured in separate subject to avoid referencing
+  // the form nested in *ngIf from outside the *ngIf.
+  commandFormValid$ = new BehaviorSubject<boolean>(false);
+
+  selectCommandForm: UntypedFormGroup;
+
+  selectedCommand$ = new BehaviorSubject<Command | null>(null);
+  templateProvider: CommandStepTemplateProvider | null;
+
+  constructor(
+    private dialogRef: MatDialogRef<EditCommandEntryDialogComponent>,
+    readonly yamcs: YamcsService,
+    formBuilder: UntypedFormBuilder,
+    private changeDetection: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    if (data?.entry) {
+      const entry = data.entry as StackedCommandEntry;
+      this.templateProvider = new CommandStepTemplateProvider(entry.model);
+      this.selectedCommand$.next(entry.command ?? null);
+    }
+    if (data?.okLabel) {
+      this.okLabel = data?.okLabel;
+    }
+
+    this.selectCommandForm = formBuilder.group({
+      command: ['', Validators.required],
+    });
+
+    this.selectCommandForm.valueChanges.subscribe(() => {
+      const command = this.selectCommandForm.value['command'];
+      this.selectedCommand$.next(command || null);
+    });
+  }
+
+  handleOK() {
+    const commandConfig = this.commandForm.getResult();
+
+    const result: CommandResult = {
+      command: this.selectedCommand$.value!,
+      args: commandConfig.args,
+      extra: commandConfig.extra,
+      comment: commandConfig.comment,
+      stream: commandConfig.stream,
+      advancement: commandConfig.advancement,
+    };
+    this.dialogRef.close(result);
+  }
+
+  returnToList(system: string) {
+    this.templateProvider = null;
+    this.selectedCommand$.next(null);
+    this.changeDetection.detectChanges(); // Ensure ngIf resolves and #commandSelector is set
+    this.selectCommandForm.reset();
+    this.commandSelector.changeSystem(system === '/' ? '' : system);
+  }
+}
+```

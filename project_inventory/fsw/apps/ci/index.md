@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/ci/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,20 +11,88 @@
 analysis/index
 docs/index
 fsw/index
-file--.git
-file--.gitignore
-file--CMakeLists.txt
-file--Command_Ingest_NOSA.pdf
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/ci/analysis/`](analysis/index) — 폴더
-- [`fsw/apps/ci/docs/`](docs/index) — 폴더
-- [`fsw/apps/ci/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/ci/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/Command_Ingest_NOSA.pdf`](file--Command_Ingest_NOSA.pdf) — 바이너리 (경로만)
-- [`fsw/apps/ci/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/apps/ci/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/ci
+```
+
+### `.gitignore`
+
+**경로:** `fsw/apps/ci/.gitignore`
+
+
+```text
+.cproject
+.project
+.settings/
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/ci/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CI C)
+
+include_directories(fsw/mission_inc)
+include_directories(fsw/platform_inc)
+include_directories(fsw/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+include_directories(${MISSION_SOURCE_DIR}/apps/inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/to/fsw/platform_inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/to/fsw/mission_inc)
+include_directories(${MISSION_SOURCE_DIR}/apps/to/fsw/src)
+include_directories(${MISSION_SOURCE_DIR}/apps/io_lib/fsw/public_inc/)
+include_directories(${APPLICATION_PLATFORM_INC_LIST})
+
+include_directories(${MISSION_SOURCE_DIR}/../components/cryptolib/include)
+
+include_directories(fsw/examples/${CI_TRANSPORT})
+include_directories(${MISSION_SOURCE_DIR}/apps/to/fsw/examples/${TO_TRANSPORT})
+aux_source_directory(fsw/src APP_SRC_FILES)
+aux_source_directory(fsw/examples/${CI_TRANSPORT} APP_SRC_FILES)
+
+# Create the app module
+add_cfe_app(ci ${APP_SRC_FILES})
+```
+
+### `Command_Ingest_NOSA.pdf`
+
+**경로:** `fsw/apps/ci/Command_Ingest_NOSA.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `README.md`
+
+**경로:** `fsw/apps/ci/README.md`
+
+
+```markdown
+# Command Ingest
+
+NASA core Flight System Command Ingest Application
+
+## Description
+
+Command Ingest (CI) application is a core Flight System (cFS) application that is a plug in to the Core Flight Executive (cFE) component of the cFS.
+
+The cFS is a platform and project independent reusable software framework and set of reusable applications developed by NASA Goddard Space Flight Center. This framework is used as the basis for the flight software for satellite data systems and instruments, but can be used on other embedded systems. More information on the cFS can be found at http://cfs.gsfc.nasa.gov
+
+The Command Ingest (CI) Application is responsible for receiving commands from an external source (such as a ground station) over a transport channel, and to forward the command to the appropriate application over the cFE Software Bus (SB).
+
+## License
+
+This software is licensed under the NASA Open Source Agreement. 
+http://ti.arc.nasa.gov/opensource/nosa
+```

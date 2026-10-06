@@ -3,18 +3,192 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 band-multi-select/index
-file--properties.ts
-file--StyleTable.css
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/band-multi-select/`](band-multi-select/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/properties.ts`](file--properties.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/StyleTable.css`](file--StyleTable.css) — UTF-8 텍스트 파일 본문 포함
+### `properties.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/properties.ts`
+
+
+```typescript
+// Stores CSS colors mapped to their #RRGGBB hex equivalent
+// For example, we also allow things like: "red", and "rgb(255, 0, 0)"
+// in addition to #ff0000. But at HTML-level we require #ff0000
+// (restriction of HTML color input type).
+const colorCache: { [key: string]: string } = {};
+
+export function convertColor(cssColor: string) {
+  let hex = colorCache[cssColor];
+  if (!hex) {
+    const ctx = document.createElement('canvas').getContext('2d')!;
+    ctx.fillStyle = cssColor;
+    hex = String(ctx.fillStyle);
+    colorCache[cssColor] = hex;
+  }
+  return hex;
+}
+
+export enum PropertyInputType {
+  BOOLEAN,
+  COLOR,
+  NUMBER,
+  SELECT,
+  TEXT,
+}
+
+export interface PropertyInfo<T> {
+  inputType: PropertyInputType;
+  defaultValue: T | undefined;
+}
+
+export class BooleanProperty implements PropertyInfo<boolean> {
+  inputType = PropertyInputType.BOOLEAN;
+  defaultValue: boolean;
+  constructor(defaultValue: boolean) {
+    this.defaultValue = defaultValue;
+  }
+}
+
+export class ColorProperty implements PropertyInfo<string> {
+  inputType = PropertyInputType.COLOR;
+  defaultValue: string;
+  constructor(defaultValue: string) {
+    this.defaultValue = defaultValue;
+  }
+}
+
+export class NumberProperty implements PropertyInfo<number> {
+  inputType = PropertyInputType.NUMBER;
+  defaultValue: number | undefined;
+  constructor(defaultValue?: number) {
+    this.defaultValue = defaultValue;
+  }
+}
+
+export class TextProperty implements PropertyInfo<string> {
+  inputType = PropertyInputType.TEXT;
+  defaultValue: string;
+  constructor(defaultValue: string) {
+    this.defaultValue = defaultValue;
+  }
+}
+
+export class SelectProperty<T extends string> implements PropertyInfo<T> {
+  inputType = PropertyInputType.SELECT;
+  defaultValue: T;
+  constructor(defaultValue: T) {
+    this.defaultValue = defaultValue;
+  }
+}
+
+export type PropertyInfoSet = { [key: string]: PropertyInfo<any> };
+
+/**
+ * Adds missing properties, and converts string values to type-specific values
+ * depending on the provided info model.
+ */
+export function resolveProperties(
+  info: PropertyInfoSet,
+  properties: { [key: string]: string },
+) {
+  const defaultProperties: { [key: string]: any } = {};
+  for (const p in info) {
+    defaultProperties[p] = info[p].defaultValue;
+  }
+  return { ...defaultProperties, ...convertStringTypes(info, properties) };
+}
+
+export function removeUnsetProperties(properties: { [key: string]: any }) {
+  for (const key in properties) {
+    if (properties[key] === null || properties[key] === '') {
+      delete properties[key];
+    }
+  }
+}
+
+function convertStringTypes(
+  info: PropertyInfoSet,
+  properties: { [key: string]: string },
+) {
+  const result: { [key: string]: any } = {};
+  for (const key in properties) {
+    const propertyInfo = info[key];
+    if (!propertyInfo) {
+      continue;
+    }
+    if (propertyInfo.inputType === PropertyInputType.BOOLEAN) {
+      result[key] = properties[key] === 'true';
+    } else if (propertyInfo.inputType === PropertyInputType.NUMBER) {
+      result[key] = Number(properties[key]);
+    } else if (propertyInfo.inputType === PropertyInputType.COLOR) {
+      result[key] = convertColor(properties[key]);
+    } else if (propertyInfo.inputType === PropertyInputType.TEXT) {
+      result[key] = properties[key];
+    } else if (propertyInfo.inputType === PropertyInputType.SELECT) {
+      result[key] = properties[key];
+    } else {
+      console.warn(
+        `Unexpected property input type for ${key}`,
+        propertyInfo?.inputType,
+      );
+      result[key] = properties[key];
+    }
+  }
+  return result;
+}
+```
+
+### `StyleTable.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/StyleTable.css`
+
+
+```css
+.style-table {
+  width: 100%;
+  overflow: auto;
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+.style-table th,
+.style-table td {
+  border-top: 1px solid rgba(0, 0, 0, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.style-table th {
+  background-color: var(--y-background-color);
+  text-align: left;
+  font-weight: 500;
+  color: black;
+  width: 150px;
+  vertical-align: top;
+}
+
+.style-table .property {
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  line-height: 12px;
+  color: black;
+  width: 150px;
+}
+
+.style-table .disabled .property {
+  font-style: italic;
+  color: grey;
+}
+
+.style-table .widget .hint {
+  margin-left: 10px;
+}
+```

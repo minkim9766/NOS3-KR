@@ -3,18 +3,126 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stacked-command-entry.component.css`
 
-file--stacked-command-entry.component.css
-file--stacked-command-entry.component.html
-file--stacked-command-entry.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.css`
+
+
+```css
+:host {
+  display: block;
+  position: relative;
+}
+
+.advance-on {
+  color: rgba(0, 0, 0, 0.654);
+  font-size: 12px;
+}
+
+.advance-on > * {
+  vertical-align: middle;
+}
+
+.advance-on > mat-icon {
+  transform: rotate(180deg);
+  font-size: 12px;
+  height: 12px;
+  width: 12px;
+}
+
+table.args {
+  margin: 0;
+  margin-left: 18px;
+  font-size: 10px;
+}
+
+table.args td {
+  padding: 0;
+  border: 0;
+}
+
+table.args td.key {
+  min-width: 120px;
+  white-space: nowrap;
+}
+
+table.args td.value {
+  color: grey;
+  padding-left: 10px;
+}
 ```
 
-## 항목
+### `stacked-command-entry.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.css`](file--stacked-command-entry.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.html`](file--stacked-command-entry.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.ts`](file--stacked-command-entry.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.html`
+
+
+```html
+@if (entry(); as entry) {
+  <app-entry-label icon="rss_feed" [text]="'Command: ' + entry.name" />
+  @for (item of entry.extra | keyvalue; track item) {
+    <span>[{{ item.key }}: {{ item.value | value }}]</span>
+  }
+  <table class="args">
+    @for (arg of entry.args | keyvalue: insertionOrder; track arg) {
+      <tr>
+        <td class="key" width="1">
+          {{ arg.key }}
+        </td>
+        <td class="value">
+          <ya-value [value]="arg.value | tovalue" />
+        </td>
+      </tr>
+    }
+  </table>
+  @if (entry.advancement) {
+    <div class="advance-on">
+      <mat-icon>reply</mat-icon>
+      @if (entry.advancement.acknowledgment) {
+        <span>
+          Advance when {{ entry.advancement.acknowledgment | acknowledgmentName }}
+          {{ entry.advancement.wait != null ? "+ " + entry.advancement.wait + " ms" : null }}
+        </span>
+      } @else if (entry.advancement.wait != null) {
+        <span>Advance after {{ entry.advancement.wait }} ms</span>
+      }
+    </div>
+  }
+}
+```
+
+### `stacked-command-entry.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stacked-command-entry/stacked-command-entry.component.ts`
+
+
+```typescript
+import { KeyValue } from '@angular/common';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AcknowledgmentNamePipe } from '../acknowledgment-name.pipe';
+import { EntryLabel } from '../entry-label/entry-label.component';
+import { StackedCommandEntry } from '../stack-file/StackedEntry';
+
+@Component({
+  selector: 'app-stacked-command-entry',
+  templateUrl: './stacked-command-entry.component.html',
+  styleUrl: './stacked-command-entry.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AcknowledgmentNamePipe, EntryLabel, WebappSdkModule],
+})
+export class StackedCommandEntryComponent {
+  entry = input.required<StackedCommandEntry>();
+
+  // KeyValuePipe comparator that preserves original order.
+  // (default KeyValuePipe is to sort A-Z, but that's undesired for args).
+  insertionOrder = (
+    a: KeyValue<string, any>,
+    b: KeyValue<string, any>,
+  ): number => {
+    return 0;
+  };
+}
+```

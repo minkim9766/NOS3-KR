@@ -3,20 +3,521 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ActiveRateGroupTester.cpp`
 
-file--ActiveRateGroupTester.cpp
-file--ActiveRateGroupTester.hpp
-file--ActiveRateGroupTestMain.cpp
-file--Readme.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.cpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test component for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ *
+ */
+
+#include <gtest/gtest.h>
+#include <Fw/Test/UnitTest.hpp>
+#include <Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.hpp>
+#include <config/ActiveRateGroupCfg.hpp>
+
+#include <cstdio>
+#include <cstring>
+
+namespace Svc {
+ActiveRateGroupTester::ActiveRateGroupTester(Svc::ActiveRateGroup& inst)
+    : ActiveRateGroupGTestBase("testerbase", 100), m_impl(inst), m_causeOverrun(false), m_callOrder(0) {
+    this->clearPortCalls();
+}
+
+void ActiveRateGroupTester::clearPortCalls() {
+    memset(this->m_callLog, 0, sizeof(this->m_callLog));
+    this->m_callOrder = 0;
+}
+
+ActiveRateGroupTester::~ActiveRateGroupTester() {}
+
+void ActiveRateGroupTester::from_RateGroupMemberOut_handler(FwIndexType portNum, U32 context) {
+    ASSERT_TRUE(portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(m_impl.m_RateGroupMemberOut_OutputPort)));
+    this->m_callLog[portNum].portCalled = true;
+    this->m_callLog[portNum].contextVal = context;
+    this->m_callLog[portNum].order = this->m_callOrder++;
+    // we can cause an overrun by calling the cycle port in the middle of the rate
+    // group execution
+    if (this->m_causeOverrun) {
+        Os::RawTime zero;
+        this->invoke_to_CycleIn(0, zero);
+        this->m_causeOverrun = false;
+    }
+}
+
+void ActiveRateGroupTester ::from_PingOut_handler(const FwIndexType portNum, U32 key) {
+    this->pushFromPortEntry_PingOut(key);
+}
+
+void ActiveRateGroupTester::runNominal(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance) {
+    TEST_CASE(101.1.1, "Run nominal rate group execution");
+
+    // clear events
+    this->clearEvents();
+    this->clearTlm();
+    // call the preamble
+    this->m_impl.preamble();
+    // verify "task started" event
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_RateGroupStarted_SIZE(1);
+
+    Os::RawTime time;
+    time.now();
+
+    // clear port call log
+    this->clearPortCalls();
+    // verify cycle start flag is NOT set
+    ASSERT_FALSE(this->m_impl.m_cycleStarted);
+    // call active rate group with time val
+    this->invoke_to_CycleIn(0, time);
+    // verify cycle started flag is set
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // call doDispatch() for ActiveRateGroup
+    REQUIREMENT("ARG-001");
+    this->m_impl.doDispatch();
+    // verify cycle started flag is reset
+    ASSERT_FALSE(this->m_impl.m_cycleStarted);
+    // check calls
+    REQUIREMENT("ARG-002");
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+         portNum++) {
+        ASSERT_TRUE(this->m_callLog[portNum].portCalled);
+        ASSERT_EQ(this->m_callLog[portNum].contextVal, contexts[portNum]);
+        ASSERT_EQ(this->m_callLog[portNum].order, portNum);
+    }
+    // Timer should be non-zero
+    REQUIREMENT("ARG-003");
+
+    // Should have gotten write of size
+    ASSERT_TLM_SIZE(1);
+    // Should not have slip
+    ASSERT_EVENTS_RateGroupCycleSlip_SIZE(0);
+    // Should not have increased cycle slip counter
+    ASSERT_TLM_RgCycleSlips_SIZE(0);
+}
+
+void ActiveRateGroupTester::runCycleOverrun(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance) {
+    TEST_CASE(101.2.1, "Run cycle slip scenario");
+    // call the preamble
+    this->m_impl.preamble();
+    // verify "task started" event
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_RateGroupStarted_SIZE(1);
+
+    // NOTE: The value of the timestamp is not relevant to this test ?
+    Os::RawTime zero_time;
+
+    // run some more cycles to verify that event is sent and telemetry is updated
+    for (FwIndexType cycle = 0; cycle < ACTIVE_RATE_GROUP_OVERRUN_THROTTLE; cycle++) {
+        // clear events
+        this->clearEvents();
+        // clear port call log
+        this->clearPortCalls();
+        // clear telemetry log
+        this->clearTlm();
+        // verify cycle start flag is NOT set on first cycle
+        if (0 == cycle) {
+            ASSERT_FALSE(this->m_impl.m_cycleStarted);
+        } else {
+            ASSERT_TRUE(this->m_impl.m_cycleStarted);
+        }
+        // set flag to cause overrun
+        this->m_causeOverrun = true;
+        // call active rate group with timer val
+        this->invoke_to_CycleIn(0, zero_time);
+        // verify cycle started flag is set
+        ASSERT_TRUE(this->m_impl.m_cycleStarted);
+        // call doDispatch() for ActiveRateGroup
+        this->m_impl.doDispatch();
+        // verify cycle started flag is still set
+        ASSERT_TRUE(this->m_impl.m_cycleStarted);
+        // verify cycle count
+        ASSERT_EQ(this->m_impl.m_cycles, static_cast<U32>(cycle) + 1);
+
+        // check calls
+        for (FwIndexType portNum = 0;
+             portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+             portNum++) {
+            ASSERT_TRUE(this->m_callLog[portNum].portCalled == true);
+        }
+        REQUIREMENT("ARG-004");
+        // verify overrun event
+        ASSERT_EVENTS_RateGroupCycleSlip_SIZE(1);
+        ASSERT_EVENTS_RateGroupCycleSlip(0, static_cast<U32>(cycle));
+
+        // verify cycle slip counter is counting up
+        ASSERT_EQ(this->m_impl.m_overrunThrottle, cycle + 1);
+
+        // check to see if max time was put out
+        if (this->tlmHistory_RgMaxTime->size() == 1) {
+            ASSERT_TLM_SIZE(2);
+        } else {
+            ASSERT_TLM_SIZE(1);
+        }
+        ASSERT_TLM_RgCycleSlips_SIZE(1);
+        ASSERT_TLM_RgCycleSlips(0, static_cast<U32>(cycle) + 1);
+    }
+
+    // Running one more time should show event throttled
+
+    // clear events
+    this->clearEvents();
+    // clear port call log
+    this->clearPortCalls();
+    // clear telemetry log
+    this->clearTlm();
+    // verify cycle start flag is NOT set on first cycle
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // set flag to cause overrun
+    this->m_causeOverrun = true;
+    // call active rate group with timer val
+    this->invoke_to_CycleIn(0, zero_time);
+    // verify cycle started flag is set from previous cycle slip
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // call doDispatch() for ActiveRateGroup
+    this->m_impl.doDispatch();
+    // verify cycle started flag is still set
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // verify cycle count
+    ASSERT_EQ(this->m_impl.m_cycles, static_cast<U32>(ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) + 1);
+    // check calls
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+         portNum++) {
+        ASSERT_TRUE(this->m_callLog[portNum].portCalled == true);
+    }
+    // verify overrun event is NOT sent since throttled
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_EVENTS_RateGroupCycleSlip_SIZE(0);
+
+    // verify cycle slip counter is counting up
+    ASSERT_EQ(this->m_impl.m_overrunThrottle, ACTIVE_RATE_GROUP_OVERRUN_THROTTLE);
+
+    // verify channel updated
+    // check to see if max time was put out
+    if (this->tlmHistory_RgMaxTime->size() == 1) {
+        ASSERT_TLM_SIZE(2);
+    } else {
+        ASSERT_TLM_SIZE(1);
+    }
+    ASSERT_TLM_RgCycleSlips_SIZE(1);
+    ASSERT_TLM_RgCycleSlips(0, static_cast<U32>(ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) + 1);
+
+    // A good cycle should count down the throttle value
+
+    // clear events
+    this->clearEvents();
+    // clear port call log
+    this->clearPortCalls();
+    // clear telemetry log
+    this->clearTlm();
+    // verify cycle start flag is NOT set on first cycle
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // set flag to prevent overrun
+    this->m_causeOverrun = false;
+    // call active rate group with timer val
+    this->invoke_to_CycleIn(0, zero_time);
+    // verify cycle started flag is set from previous cycle slip
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // call doDispatch() for ActiveRateGroup
+    this->m_impl.doDispatch();
+    // verify cycle started flag is not set
+    ASSERT_FALSE(this->m_impl.m_cycleStarted);
+    // verify cycle count
+    ASSERT_EQ(this->m_impl.m_cycles, static_cast<U32>(ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) + 2);
+    // check calls
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+         portNum++) {
+        ASSERT_TRUE(this->m_callLog[portNum].portCalled == true);
+    }
+
+    // verify overrun event is NOT sent since good cycle
+    ASSERT_EVENTS_SIZE(0);
+    ASSERT_EVENTS_RateGroupCycleSlip_SIZE(0);
+    // verify cycle slip counter is counting down
+    ASSERT_EQ(this->m_impl.m_overrunThrottle, ACTIVE_RATE_GROUP_OVERRUN_THROTTLE - 1);
+
+    // verify channel not updated
+    ASSERT_TLM_SIZE(0);
+    ASSERT_TLM_RgCycleSlips_SIZE(0);
+
+    // Now one more slip to verify event is sent again
+
+    // clear events
+    this->clearEvents();
+    // clear port call log
+    this->clearPortCalls();
+    // clear telemetry log
+    this->clearTlm();
+    // verify cycle start flag is set on cycle
+    ASSERT_FALSE(this->m_impl.m_cycleStarted);
+    // set flag to cause overrun
+    this->m_causeOverrun = true;
+    // call active rate group with timer val
+    this->invoke_to_CycleIn(0, zero_time);
+    // verify cycle started flag is set from port call
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // call doDispatch() for ActiveRateGroup
+    this->m_impl.doDispatch();
+    // verify cycle started flag is still set
+    ASSERT_TRUE(this->m_impl.m_cycleStarted);
+    // verify cycle count
+    ASSERT_EQ(this->m_impl.m_cycles, static_cast<U32>(ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) + 3);
+    // check calls
+    for (FwIndexType portNum = 0;
+         portNum < static_cast<FwIndexType>(FW_NUM_ARRAY_ELEMENTS(this->m_impl.m_RateGroupMemberOut_OutputPort));
+         portNum++) {
+        ASSERT_TRUE(this->m_callLog[portNum].portCalled == true);
+    }
+    // verify overrun event is sent
+    ASSERT_EVENTS_SIZE(1);
+    ASSERT_EVENTS_RateGroupCycleSlip_SIZE(1);
+    // verify cycle slip counter is counting up
+    ASSERT_EQ(this->m_impl.m_overrunThrottle, ACTIVE_RATE_GROUP_OVERRUN_THROTTLE);
+
+    // verify channel updated
+    // check to see if max time was put out
+    if (this->tlmHistory_RgMaxTime->size() == 1) {
+        ASSERT_TLM_SIZE(2);
+    } else {
+        ASSERT_TLM_SIZE(1);
+    }
+    ASSERT_TLM_RgCycleSlips_SIZE(1);
+    ASSERT_TLM_RgCycleSlips(0, static_cast<U32>(ACTIVE_RATE_GROUP_OVERRUN_THROTTLE) + 2);
+}
+
+void ActiveRateGroupTester::runPingTest() {
+    // invoke ping port
+    this->invoke_to_PingIn(0, 0x123);
+    // dispatch message
+    this->m_impl.doDispatch();
+    // look for return port call
+    ASSERT_FROM_PORT_HISTORY_SIZE(1);
+    // look for key
+    ASSERT_from_PingOut(0, 0x123);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `ActiveRateGroupTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.cpp`](file--ActiveRateGroupTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.hpp`](file--ActiveRateGroupTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTestMain.cpp`](file--ActiveRateGroupTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/Readme.txt`](file--Readme.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.hpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test component header for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ *
+ */
+
+#ifndef ACTIVERATEGROUP_TEST_UT_ACTIVERATEGROUPTESTER_HPP_
+#define ACTIVERATEGROUP_TEST_UT_ACTIVERATEGROUPTESTER_HPP_
+
+#include <ActiveRateGroupGTestBase.hpp>
+#include <Svc/ActiveRateGroup/ActiveRateGroup.hpp>
+
+namespace Svc {
+
+class ActiveRateGroupTester : public ActiveRateGroupGTestBase {
+  public:
+    ActiveRateGroupTester(Svc::ActiveRateGroup& inst);
+    virtual ~ActiveRateGroupTester();
+
+    void runNominal(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance);
+    void runCycleOverrun(U32 contexts[], FwIndexType numContexts, FwEnumStoreType instance);
+    void runPingTest();
+
+  private:
+    void from_RateGroupMemberOut_handler(FwIndexType portNum, U32 context);
+
+    //! Handler for from_PingOut
+    //!
+    void from_PingOut_handler(const FwIndexType portNum, /*!< The port number*/
+                              U32 key                    /*!< Value to return to pinger*/
+    );
+
+    Svc::ActiveRateGroup& m_impl;
+
+    void clearPortCalls();
+
+    struct {
+        bool portCalled;
+        U32 contextVal;
+        FwIndexType order;
+    } m_callLog[Svc::ActiveRateGroupComponentBase::NUM_RATEGROUPMEMBEROUT_OUTPUT_PORTS];
+
+    bool m_causeOverrun;      //!< flag to cause an overrun during a rate group member port call
+    FwIndexType m_callOrder;  //!< tracks order of port call.
+};
+
+} /* namespace Svc */
+
+#endif /* ACTIVERATEGROUP_TEST_UT_ACTIVERATEGROUPTESTER_HPP_ */
+```
+
+### `ActiveRateGroupTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/ActiveRateGroupTestMain.cpp`
+
+
+```cpp
+/*
+ * \author Tim Canham
+ * \file
+ * \brief
+ *
+ * This file is the test driver for the active rate group unit test.
+ *
+ * Code Generated Source Code Header
+ *
+ *   Copyright 2014-2015, by the California Institute of Technology.
+ *   ALL RIGHTS RESERVED. United States Government Sponsorship
+ *   acknowledged.
+ *
+ */
+
+#include <Fw/Obj/SimpleObjRegistry.hpp>
+#include <Svc/ActiveRateGroup/ActiveRateGroup.hpp>
+#include <Svc/ActiveRateGroup/test/ut/ActiveRateGroupTester.hpp>
+
+#include <gtest/gtest.h>
+
+#if FW_OBJECT_REGISTRATION == 1
+static Fw::SimpleObjRegistry simpleReg;
+#endif
+
+void connectPorts(Svc::ActiveRateGroup& impl, Svc::ActiveRateGroupTester& tester) {
+    tester.connect_to_CycleIn(0, impl.get_CycleIn_InputPort(0));
+
+    for (FwIndexType portNum = 0; portNum < Svc::ActiveRateGroup::CONNECTION_COUNT_MAX; portNum++) {
+        impl.set_RateGroupMemberOut_OutputPort(portNum, tester.get_from_RateGroupMemberOut(portNum));
+    }
+
+    impl.set_Log_OutputPort(0, tester.get_from_Log(0));
+    impl.set_LogText_OutputPort(0, tester.get_from_LogText(0));
+
+    impl.set_Tlm_OutputPort(0, tester.get_from_Tlm(0));
+    impl.set_Time_OutputPort(0, tester.get_from_Time(0));
+
+    impl.set_PingOut_OutputPort(0, tester.get_from_PingOut(0));
+    tester.connect_to_PingIn(0, impl.get_PingIn_InputPort(0));
+
+#if FW_PORT_TRACING
+    // Fw::PortBase::setTrace(true);
+#endif
+
+    // simpleReg.dump();
+}
+
+TEST(ActiveRateGroupTest, NominalSchedule) {
+    for (FwEnumStoreType inst = 0; inst < 3; inst++) {
+        U32 contexts[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX];
+        for (U32 i = 0; i < Svc::ActiveRateGroup::CONNECTION_COUNT_MAX; i++) {
+            contexts[i] = i + 1;
+        }
+
+        Svc::ActiveRateGroup impl("ActiveRateGroup");
+        impl.configure(contexts, FW_NUM_ARRAY_ELEMENTS(contexts));
+
+        Svc::ActiveRateGroupTester tester(impl);
+
+        tester.init();
+        impl.init(10, inst);
+
+        // connect ports
+        connectPorts(impl, tester);
+
+        tester.runNominal(contexts, FW_NUM_ARRAY_ELEMENTS(contexts), inst);
+    }
+}
+
+TEST(ActiveRateGroupTest, CycleOverrun) {
+    for (FwEnumStoreType inst = 0; inst < 3; inst++) {
+        U32 contexts[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX];
+        for (U32 i = 0; i < Svc::ActiveRateGroup::CONNECTION_COUNT_MAX; i++) {
+            contexts[i] = i + 1;
+        }
+
+        Svc::ActiveRateGroup impl("ActiveRateGroup");
+        impl.configure(contexts, FW_NUM_ARRAY_ELEMENTS(contexts));
+
+        Svc::ActiveRateGroupTester tester(impl);
+
+        tester.init();
+        impl.init(10, inst);
+
+        // connect ports
+        connectPorts(impl, tester);
+
+        tester.runCycleOverrun(contexts, FW_NUM_ARRAY_ELEMENTS(contexts), inst);
+    }
+}
+
+TEST(ActiveRateGroupTest, PingPort) {
+    U32 contexts[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX];
+    for (FwIndexType i = 0; i < Svc::ActiveRateGroup::CONNECTION_COUNT_MAX; i++) {
+        contexts[i] = i + 1;
+    }
+
+    Svc::ActiveRateGroup impl("ActiveRateGroup");
+    impl.configure(contexts, FW_NUM_ARRAY_ELEMENTS(contexts));
+    Svc::ActiveRateGroupTester tester(impl);
+
+    tester.init();
+    impl.init(10, 0);
+
+    connectPorts(impl, tester);
+    tester.runPingTest();
+}
+
+int main(int argc, char* argv[]) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Readme.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ActiveRateGroup/test/ut/Readme.txt`
+
+
+```text
+This test can be run by executing the following:
+
+From Svc/ActiveRateGroup:
+
+"make ut run_ut"
+
+Note that the Ref application needs to be built first. 
+The test will return a pass/fail error code depending on the
+success of the test. 
+```

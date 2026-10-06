@@ -3,24 +3,1062 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ArrayTest.hpp`
 
-file--ArrayTest.hpp
-file--ComponentTest.hpp
-file--EnumTest.hpp
-file--PortTest.hpp
-file--README.md
-file--StringTest.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/ArrayTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ArrayTest.hpp
+// \author T. Chieu
+// \brief  hpp file for ArrayTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_ARRAY_TEST_HPP
+#define FPP_TEST_ARRAY_TEST_HPP
+
+#include "Fw/Types/SerialBuffer.hpp"
+
+#include "STest/Pick/Pick.hpp"
+#include "gtest/gtest.h"
+
+#include <sstream>
+
+namespace FppTest {
+
+    namespace Array {
+
+        // Set default values for an array type
+        template <typename ArrayType>
+        void setDefaultVals
+            (typename ArrayType::ElementType (&a)[ArrayType::SIZE]) {}
+
+        // Set test values for an array type
+        template <typename ArrayType>
+        void setTestVals
+            (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+
+        template <typename ArrayType>
+        ArrayType getMultiElementConstructedArray
+            (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+
+        // Get the serialized size of an array
+        template <typename ArrayType>
+        U32 getSerializedSize
+            (typename ArrayType::ElementType (&a)[ArrayType::SIZE]) {
+            return ArrayType::SERIALIZED_SIZE;
+        }
+
+    } // namespace Array
+
+} // namespace FppTest
+
+
+// Test an array class
+template <typename ArrayType>
+class ArrayTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+        FppTest::Array::setDefaultVals<ArrayType>(defaultVals);
+        FppTest::Array::setTestVals<ArrayType>(testVals);
+        ASSERT_FALSE(valsAreEqual());
+    };
+
+    bool valsAreEqual() {
+        for (U32 i = 0; i < ArrayType::SIZE; i++) {
+            if (defaultVals[i] != testVals[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    typename ArrayType::ElementType defaultVals[ArrayType::SIZE];
+    typename ArrayType::ElementType testVals[ArrayType::SIZE];
+};
+
+TYPED_TEST_SUITE_P(ArrayTest);
+
+// Test array constants and default constructor
+TYPED_TEST_P(ArrayTest, Default) {
+    TypeParam a;
+
+    // Constants
+    ASSERT_EQ(TypeParam::SIZE, 3);
+
+    // Default constructor
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a[i], this->defaultVals[i]);
+    }
+}
+
+// Test array constructors
+TYPED_TEST_P(ArrayTest, Constructors) {
+    // Array constructor
+    TypeParam a1(this->testVals);
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a1[i], this->testVals[i]);
+    }
+
+    // Single element constructor
+    TypeParam a2(this->testVals[0]);
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a2[i], this->testVals[0]);
+    }
+
+    // Multiple element constructor
+    TypeParam a3 = FppTest::Array::getMultiElementConstructedArray<TypeParam>
+        (this->testVals);
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a3[i], this->testVals[i]);
+    }
+
+    // Copy constructor
+    TypeParam a4(a1);
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a4[i], a1[i]);
+    }
+}
+
+// Test array subscript operator
+TYPED_TEST_P(ArrayTest, SubscriptOp) {
+    TypeParam a;
+
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        a[i] = this->testVals[0];
+        ASSERT_EQ(a[i], this->testVals[0]);
+    }
+}
+
+// Test array assignment operator
+TYPED_TEST_P(ArrayTest, AssignmentOp) {
+    TypeParam a1, a2;
+
+    // Array assignment
+    a1 = this->testVals;
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a1[i], this->testVals[i]);
+    }
+
+    // Copy assignment
+    TypeParam& a1Ref = a1;
+    a1 = a1Ref;
+    ASSERT_EQ(&a1, &a1Ref);
+
+    a1 = a2;
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a2[i], a1[i]);
+    }
+
+    // Single element assignment
+    a1 = this->testVals[0];
+    for (U32 i = 0; i < TypeParam::SIZE; i++) {
+        ASSERT_EQ(a1[i], this->testVals[0]);
+    }
+}
+
+// Test array equality and inequality operators
+TYPED_TEST_P(ArrayTest, EqualityOp) {
+    TypeParam a1, a2;
+
+    ASSERT_TRUE(a1 == a2);
+    ASSERT_FALSE(a1 != a2);
+
+    a2 = this->testVals;
+
+    ASSERT_FALSE(a1 == a2);
+    ASSERT_TRUE(a1 != a2);
+
+    a1 = a2;
+
+    ASSERT_TRUE(a1 == a2);
+    ASSERT_FALSE(a1 != a2);
+}
+
+// Test array serialization and deserialization
+TYPED_TEST_P(ArrayTest, Serialization) {
+    TypeParam a(this->testVals);
+
+    U32 serializedSize = 
+        FppTest::Array::getSerializedSize<TypeParam>(this->testVals);
+    Fw::SerializeStatus status;
+
+    // Test successful serialization
+    TypeParam aCopy;
+    U8 data[TypeParam::SERIALIZED_SIZE];
+    Fw::SerialBuffer buf(data, sizeof(data));
+
+    // Serialize
+    status = buf.serialize(a);
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(
+        buf.getBuffLength(), 
+        serializedSize        
+    );
+
+    // Deserialize
+    status = buf.deserialize(aCopy);
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(a, aCopy);
+
+    // Test unsuccessful serialization
+    TypeParam aCopy2;
+    U8 data2[serializedSize-1];
+    Fw::SerialBuffer buf2(data2, sizeof(data2));
+
+    // Serialize
+    status = buf2.serialize(a);
+    
+    ASSERT_NE(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_NE(
+        buf2.getBuffLength(), 
+        serializedSize        
+    );
+
+    // Deserialize
+    status = buf2.deserialize(aCopy2);
+
+    ASSERT_NE(status, Fw::FW_SERIALIZE_OK);
+}
+
+// Register all test patterns
+REGISTER_TYPED_TEST_SUITE_P(ArrayTest,
+    Default,
+    Constructors,
+    SubscriptOp,
+    AssignmentOp,
+    EqualityOp,
+    Serialization
+);
+
+#endif
 ```
 
-## 항목
+### `ComponentTest.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/ArrayTest.hpp`](file--ArrayTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/ComponentTest.hpp`](file--ComponentTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/EnumTest.hpp`](file--EnumTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/PortTest.hpp`](file--PortTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/StringTest.hpp`](file--StringTest.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/ComponentTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ComponentTest.hpp
+// \author T. Chieu
+// \brief  hpp file for component test classes
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_COMPONENT_TEST_HPP
+#define FPP_TEST_COMPONENT_TEST_HPP
+
+#include "Tester.hpp"
+
+#include "gtest/gtest.h"
+
+template <typename FormalParamType>
+class ComponentCommandTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentCommandTest);
+
+TYPED_TEST_P(ComponentCommandTest, CommandTest) {
+    this->tester.testCommand(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentCommandTest,
+    CommandTest
+);
+
+template <typename FormalParamType>
+class ComponentAsyncCommandTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentAsyncCommandTest);
+
+TYPED_TEST_P(ComponentAsyncCommandTest, AsyncCommandTest) {
+    this->tester.testAsyncCommand(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentAsyncCommandTest,
+    AsyncCommandTest
+);
+
+template <typename FormalParamType>
+class ComponentEventTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentEventTest);
+
+TYPED_TEST_P(ComponentEventTest, EventTest) {
+    this->tester.connectTimeGetOut();
+    this->tester.testEvent(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentEventTest,
+    EventTest
+);
+
+template <typename FormalParamType>
+class ComponentTelemetryTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentTelemetryTest);
+
+TYPED_TEST_P(ComponentTelemetryTest, TelemetryTest) {
+    this->tester.connectTimeGetOut();
+    this->tester.testTelemetry(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentTelemetryTest,
+    TelemetryTest
+);
+
+template <typename FormalParamType>
+class ComponentParamCommandTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentParamCommandTest);
+
+TYPED_TEST_P(ComponentParamCommandTest, ParamTest) {
+    this->tester.testParamCommand(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentParamCommandTest,
+    ParamTest
+);
+
+template <typename FormalParamType>
+class ComponentExternalParamCommandTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentExternalParamCommandTest);
+
+TYPED_TEST_P(ComponentExternalParamCommandTest, ExternalParamTest) {
+    this->tester.testExternalParamCommand(0, this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentExternalParamCommandTest,
+    ExternalParamTest
+);
+
+template <typename FormalParamType>
+class ComponentInternalInterfaceTest : public ::testing::Test {
+protected:
+    Tester tester;
+    FormalParamType data;
+};
+
+TYPED_TEST_SUITE_P(ComponentInternalInterfaceTest);
+
+TYPED_TEST_P(ComponentInternalInterfaceTest, InternalInterfaceTest) {
+    this->tester.testInternalInterface(this->data);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(ComponentInternalInterfaceTest,
+    InternalInterfaceTest);
+
+#endif
+```
+
+### `EnumTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/EnumTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  EnumTest.hpp
+// \author T. Chieu
+// \brief  hpp file for EnumTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_ENUM_TEST_HPP
+#define FPP_TEST_ENUM_TEST_HPP
+
+#include "Fw/Types/SerialBuffer.hpp"
+
+#include "STest/Pick/Pick.hpp"
+#include "gtest/gtest.h"
+
+#include <limits>
+
+namespace FppTest {
+
+    namespace Enum {
+
+        // Get the default value of an enum
+        template <typename EnumType>
+        typename EnumType::T getDefaultValue() {
+            return static_cast<typename EnumType::T>(0);
+        }
+
+        // Get a valid value of an enum
+        template <typename EnumType>
+        typename EnumType::T getValidValue() {
+            U32 val = STest::Pick::startLength(
+                0, 
+                EnumType::NUM_CONSTANTS
+            );
+
+            return static_cast<typename EnumType::T>(val);
+        }
+
+        // Get an invalid value of an enum
+        template <typename EnumType>
+        typename EnumType::T getInvalidValue() {
+            U8 sign = 0;
+            if (std::numeric_limits<typename EnumType::SerialType>::min() < 0) {
+                sign = static_cast<U8>(STest::Pick::lowerUpper(0, 1));
+            }
+
+            switch (sign) {
+                case 0:
+                    return static_cast<typename EnumType::T>(STest::Pick::lowerUpper(
+                        EnumType::NUM_CONSTANTS,
+                        static_cast<U32>(
+                            std::numeric_limits<typename EnumType::SerialType>::max()
+                        )
+                    ));
+                default:
+                    return static_cast<typename EnumType::T>(
+                        static_cast<I32>(
+                          STest::Pick::lowerUpper(
+                            1,
+                            static_cast<U32>((-1) *
+                                static_cast<I32>(std::numeric_limits<typename EnumType::SerialType>::min() + 1)
+                            )
+                          )
+                      ) * (-1)
+                    );
+            }
+        }
+
+    } // namespace Enum
+
+} // namespace FppTest
+
+// Test core enum interface
+template <typename EnumType>
+class EnumTest : public ::testing::Test {};
+
+TYPED_TEST_SUITE_P(EnumTest);
+
+// Test enum constants and default construction
+TYPED_TEST_P(EnumTest, Default) {
+    TypeParam e;
+
+    // Constants
+    ASSERT_EQ(
+        TypeParam::SERIALIZED_SIZE, 
+        sizeof(typename TypeParam::SerialType)
+    );
+
+    // Default constructor
+    ASSERT_EQ(e.e, FppTest::Enum::getDefaultValue<TypeParam>());
+}
+
+// Test enum constructors
+TYPED_TEST_P(EnumTest, Constructors) {
+    typename TypeParam::T validVal = FppTest::Enum::getValidValue<TypeParam>();
+
+    // Raw enum value constructor
+    TypeParam e1(validVal);
+    ASSERT_EQ(e1.e, validVal);
+
+    // Copy constructor
+    TypeParam e2(e1);
+    ASSERT_EQ(e2.e, validVal);
+}
+
+// Test enum assignment operator
+TYPED_TEST_P(EnumTest, AssignmentOp) {
+    TypeParam e1;
+    TypeParam e2;
+
+    typename TypeParam::T validVal = FppTest::Enum::getValidValue<TypeParam>();
+
+    // Raw enum value assignment
+    e1 = validVal;
+    ASSERT_EQ(e1.e, validVal);
+    
+    // Object assignment
+    e2 = e1;
+    ASSERT_EQ(e2.e, validVal);
+}
+
+// Test enum equality and inequality operator
+TYPED_TEST_P(EnumTest, EqualityOp) {
+    // Initialize two distinct valid values
+    typename TypeParam::T validVal1 = FppTest::Enum::getValidValue<TypeParam>();
+    typename TypeParam::T validVal2 = FppTest::Enum::getValidValue<TypeParam>();
+    while (validVal1 == validVal2) {
+        validVal2 = FppTest::Enum::getValidValue<TypeParam>();
+    }
+
+    TypeParam e1;
+    TypeParam e2;
+    TypeParam e3(validVal1);
+    TypeParam e4(validVal2);
+
+    // operator==
+    ASSERT_TRUE(e3 == validVal1);
+    ASSERT_TRUE(e4 == validVal2);
+    ASSERT_FALSE(e3 == validVal2);
+    ASSERT_FALSE(e4 == validVal1);
+
+    ASSERT_TRUE(e1 == e2);
+    ASSERT_FALSE(e3 == e4);
+
+    // operator!=
+    ASSERT_TRUE(e3 != validVal2);
+    ASSERT_TRUE(e4 != validVal1);
+    ASSERT_FALSE(e3 != validVal1);
+    ASSERT_FALSE(e4 != validVal2);
+
+    ASSERT_TRUE(e3 != e4);
+    ASSERT_FALSE(e1 != e2);
+}
+
+// Test enum isValid() function
+TYPED_TEST_P(EnumTest, IsValidFunction) {
+    TypeParam validEnum = FppTest::Enum::getValidValue<TypeParam>();
+    TypeParam invalidEnum = FppTest::Enum::getInvalidValue<TypeParam>();
+
+    ASSERT_TRUE(validEnum.isValid());
+    ASSERT_FALSE(invalidEnum.isValid());
+}
+
+// Test enum serialization and deserialization
+TYPED_TEST_P(EnumTest, Serialization) {
+    TypeParam validEnum = FppTest::Enum::getValidValue<TypeParam>();
+    TypeParam invalidEnum = FppTest::Enum::getInvalidValue<TypeParam>();
+
+    // Copy of enums to test after serialization
+    TypeParam validEnumCopy;
+    TypeParam invalidEnumCopy;
+
+    Fw::SerializeStatus status;
+    U8 data[TypeParam::SERIALIZED_SIZE * 2];
+    Fw::SerialBuffer buf(data, sizeof(data));
+
+    // Serialize the enums
+    status = buf.serialize(validEnum);
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(buf.getBuffLength(), sizeof(typename TypeParam::SerialType));
+
+    status = buf.serialize(invalidEnum);
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(buf.getBuffLength(), sizeof(typename TypeParam::SerialType) * 2);
+
+    // Deserialize the enums
+    status = buf.deserialize(validEnumCopy);
+
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(validEnumCopy, validEnum);
+
+    status = buf.deserialize(invalidEnumCopy);
+
+    ASSERT_EQ(status, Fw::FW_DESERIALIZE_FORMAT_ERROR);
+}
+
+// Register all test patterns
+REGISTER_TYPED_TEST_SUITE_P(EnumTest,
+    Default,
+    Constructors,
+    AssignmentOp,
+    EqualityOp,
+    IsValidFunction,
+    Serialization
+);
+
+#endif
+```
+
+### `PortTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/PortTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PortTest.hpp
+// \author T. Chieu
+// \brief  hpp file for PortTest class
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_PORT_TEST_HPP
+#define FPP_TEST_PORT_TEST_HPP
+
+#include "Tester.hpp"
+#include "FppTest/component/active/TypedPortIndexEnumAc.hpp"
+
+#include "gtest/gtest.h"
+
+// Typed port tests (sync and guarded)
+template <typename PortType>
+class TypedPortTest : public ::testing::Test {
+protected:
+    Tester tester;
+    PortType port;
+};
+
+TYPED_TEST_SUITE_P(TypedPortTest);
+
+TYPED_TEST_P(TypedPortTest, SyncPort) {
+    this->tester.testSyncPortInvoke(TypedPortIndex::TYPED, this->port);
+    this->tester.testSyncPortCheck(this->port);
+}
+
+TYPED_TEST_P(TypedPortTest, GuardedPort) {
+    this->tester.testGuardedPortInvoke(TypedPortIndex::TYPED, this->port);
+    this->tester.testGuardedPortCheck(this->port);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(TypedPortTest,
+    SyncPort,
+    GuardedPort
+);
+
+// Typed async port tests
+template <typename PortType>
+class TypedAsyncPortTest : public ::testing::Test {
+protected:
+    Tester tester;
+    PortType port;
+};
+
+TYPED_TEST_SUITE_P(TypedAsyncPortTest);
+
+TYPED_TEST_P(TypedAsyncPortTest, AsyncPort) {
+    this->tester.testAsyncPortInvoke(TypedPortIndex::TYPED, this->port);
+    this->tester.doDispatch();
+    this->tester.testAsyncPortCheck(this->port);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(TypedAsyncPortTest,
+    AsyncPort
+);
+
+// Serial port tests (sync and guarded)
+template <typename PortType>
+class SerialPortTest : public ::testing::Test {
+protected:
+    Tester tester;
+    PortType port;
+};
+
+TYPED_TEST_SUITE_P(SerialPortTest);
+
+TYPED_TEST_P(SerialPortTest, ToSerialSync) {
+    this->tester.testSyncPortInvoke(TypedPortIndex::SERIAL, this->port);
+    this->tester.testSyncPortCheckSerial(this->port);
+}
+
+TYPED_TEST_P(SerialPortTest, FromSerialSync) {
+    this->tester.testSyncPortInvokeSerial(TypedPortIndex::SERIAL, this->port);
+    this->tester.testSyncPortCheck(this->port);
+}
+
+TYPED_TEST_P(SerialPortTest, ToSerialGuarded) {
+    this->tester.testGuardedPortInvoke(TypedPortIndex::SERIAL, this->port);
+    this->tester.testGuardedPortCheckSerial(this->port);
+}
+
+TYPED_TEST_P(SerialPortTest, FromSerialGuarded) {
+    this->tester.testGuardedPortInvokeSerial(TypedPortIndex::SERIAL, this->port);
+    this->tester.testGuardedPortCheck(this->port);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(SerialPortTest,
+    ToSerialSync,
+    FromSerialSync,
+    ToSerialGuarded,
+    FromSerialGuarded
+);
+
+// Serial async port tests
+template <typename PortType>
+class SerialAsyncPortTest : public ::testing::Test {
+protected:
+    Tester tester;
+    PortType port;
+};
+
+TYPED_TEST_SUITE_P(SerialAsyncPortTest);
+
+TYPED_TEST_P(SerialAsyncPortTest, ToSerialAsync) {
+    this->tester.testAsyncPortInvoke(TypedPortIndex::SERIAL, this->port);
+    this->tester.doDispatch();
+    this->tester.testAsyncPortCheckSerial(this->port);
+}
+
+TYPED_TEST_P(SerialAsyncPortTest, FromSerialAsync) {
+    this->tester.testAsyncPortInvokeSerial(TypedPortIndex::SERIAL, this->port);
+    this->tester.testAsyncPortCheck(this->port);
+}
+
+REGISTER_TYPED_TEST_SUITE_P(SerialAsyncPortTest,
+    ToSerialAsync,
+    FromSerialAsync
+);
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/README.md`
+
+
+````markdown
+# FppTest/typed_tests
+
+This directory contains the following type-parameterized test suites for 
+C++ code generated by the FPP autocoder.
+
+* `ArrayTest`: Tests an array class
+* `EnumTest`: Tests an enum class
+* `PortTest`: Tests typed-to-typed, typed-to-serial, serial-to-typed, and 
+serial-to-serial port connections
+* `StringTest`: Tests string classes, i.e., subclasses of `Fw::StringBase`.
+
+**Note on the StringTest suite:**
+In an earlier version of the C++ back end, FPP generated string classes.
+In that version, the `StringTest` suite was used to provide code coverage for those
+classes.
+The code generation strategy for strings has changed, and FPP no longer generates
+string classes.
+However, we have retained the `StringTest` suite.
+It can be used to test other string implementations, e.g., the string
+implementations in `Fw/Types`.
+
+## Instantiating a Test Suite
+
+To use a type-parameterized test suite, instantiate it with a list of types:
+
+```c++
+#include "FppTest/typed_tests/TestSuite.hpp"
+
+using TestTypes = ::testing::Types<
+    Type1,
+    Type2,
+    Type3
+>;
+INSTANTIATE_TYPED_TEST_SUITE_P(InstanceName, 
+                               TestSuite, 
+                               TestTypes);
+```
+
+## Implementing Specializations
+
+In addition to instantiating the test suite, you may also need to implement some
+explicit specializations for template functions if the behavior of your class
+differs from the provided default implementation.
+
+### `EnumTest` Suite
+
+- `getDefaultValue()`: Returns the default value of an enum type. The default
+implementation returns 0.
+
+  ```c++
+  // Function signature
+  template <typename EnumType>
+  typename EnumType::T FppTest::Enum::getDefaultValue();
+  ```
+
+- `getValidValue()`: Returns a random valid enum value. The default implementation
+assumes the values of the enum have been implicitly defined, i.e. it returns
+a value in the interval `[0, EnumType::NUM_CONSTANTS-1]`.
+
+  ```c++
+  // Function signature
+  template <typename EnumType>
+  typename EnumType::T FppTest::Enum::getValidValue();
+  ```
+
+- `getInvalidValue()`: Returns an random invalid enum value. The default
+implementation assumes the values of the enum have been implicitly defined,
+i.e. it returns a value either in the interval `[min, -1]` (if the serial
+representation type is signed) or in the interval
+`[EnumType::NUM_CONSTANTS, max]`, where `min` and `max` are the minimum
+and maximum values of the serial representation type, respectively.
+
+  ```c++
+  // Function signature
+  template <typename EnumType>
+  typename EnumType::T FppTest::Enum::getInvalidValue();
+  ```
+
+### `ArrayTest` Suite
+
+The following functions MUST be implemented for your array type!
+
+- `setTestVals()`: Sets test values for an array. There is no default
+implementation, so this function must be implemented for your array type!
+In addition, these test values must be different from the default values.
+
+  ```c++
+  // Function signature
+  template <typename ArrayType>
+  void FppTest::Array::setTestVals
+      (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+  ```
+
+- `getMultiElementConstructedArray()`: Returns an array constructed using its
+multiple element constructor. There is no default implementation, so this
+function must be implemented for your array type!
+
+  ```c++
+  // Function signature
+  template <typename ArrayType>
+  ArrayType FppTest::Array::getMultiElementConstructedArray
+      (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+  ```
+
+The following functions may or may not need to be implemented:
+
+- `setDefaultVals()`: Sets the default values for an array. The default
+implementation is empty (i.e. the values are either zero-initialized or 
+default-initialized).
+
+  ```c++
+  // Function signature
+  template <typename ArrayType>
+  void FppTest::Array::setDefaultVals
+      (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+  ```
+
+- `getSerializedSize()`: Returns the serialized size of an array. The default
+implementation returns the `SERIALIZED_SIZE` of the array type. In particular,
+this function will need to be implemented for arrays containing string values.
+
+  ```c++
+  // Function signature
+  template <typename ArrayType>
+  U32 FppTest::Array::getSerializedSize
+      (typename ArrayType::ElementType (&a)[ArrayType::SIZE]);
+  ```
+
+## Example
+
+For example, to use the `ArrayTest` suite with array types `U32Array`, an array
+of three U32 values, and `F32Array`, an array of four F32 values:
+
+```c++
+#include "FppTest/typed_tests/ArrayTest.hpp"
+
+// Instantiate the test suite with a list of types
+using ArrayTypes = ::testing::Types<
+    U32Array,
+    F32Array
+>;
+INSTANTIATE_TYPED_TEST_SUITE_P(ExampleInstance, 
+                               ArrayTest, 
+                               ArrayTypes);
+
+// Explicit specializations for setTestVals()
+template <>
+void FppTest::Array::setTestVals<U32Array>
+    (U32Array::ElementType (&a)[U32Array::SIZE]) {
+    for (U32 i = 0; i < U32Array::SIZE; i++) {
+        a[i] = i;
+    }
+}
+
+template <>
+void FppTest::Array::setTestVals<F32Array>
+    (F32Array::ElementType (&a)[F32Array::SIZE]) {
+    for (U32 i = 0; i < F32Array::SIZE; i++) {
+        a[i] = static_cast<F32>(i);
+    }
+}
+
+// Explicit specializations for getMultiElementConstructedArray()
+template<>
+U32Array FppTest::Array::getMultiElementConstructedArray<U32Array>
+    (U32Array::ElementType (&a)[U32Array::SIZE]) {
+    return U32Array(a[0], a[1], a[2]);
+}
+
+template<>
+F32Array FppTest::Array::getMultiElementConstructedArray<F32Array>
+    (F32Array::ElementType (&a)[F32Array::SIZE]) {
+    return F32Array(a[0], a[1], a[2], a[3]);
+}
+```
+
+````
+
+### `StringTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/typed_tests/StringTest.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  StringTest.hpp
+// \author T. Chieu
+// \brief  hpp file for StringTest class
+//
+// \copyright
+// Copyright (C) 2009-2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_STRING_TEST_HPP
+#define FPP_TEST_STRING_TEST_HPP
+
+#include "FppTest/utils/Utils.hpp"
+
+#include "Fw/Types/String.hpp"
+#include "Fw/Types/StringUtils.hpp"
+
+#include "gtest/gtest.h"
+
+// Test a string type
+template <class StringType>
+class StringTest : public ::testing::Test {
+protected:
+    void SetUp() override {
+
+        FppTest::Utils::setString(this->src, sizeof this->src);
+
+        char fwStrBuf1[Fw::StringBase::BUFFER_SIZE(Fw::String::STRING_SIZE)];
+        FppTest::Utils::setString(fwStrBuf1, sizeof(fwStrBuf1));
+        fwStr = fwStrBuf1;
+
+        // Truncate fwStr for comparison
+        char fwStrBuf2[bufferSize];
+        Fw::StringUtils::string_copy(fwStrBuf2, fwStr.toChar(), static_cast<FwSizeType>(sizeof fwStrBuf2));
+        fwSubstr = fwStrBuf2;
+    }
+
+    static constexpr FwSizeType size = StringType::STRING_SIZE;
+    static constexpr FwSizeType bufferSize = Fw::StringBase::BUFFER_SIZE(size);
+    char src[bufferSize];
+
+    Fw::String fwStr;
+    Fw::String fwSubstr;
+};
+
+TYPED_TEST_SUITE_P(StringTest);
+
+// Test string capacity and default constructor
+TYPED_TEST_P(StringTest, Default) {
+    TypeParam str;
+
+    // Capacity
+    const FwSizeType bufferSizeObject = this->bufferSize;
+    ASSERT_EQ(str.getCapacity(), bufferSizeObject);
+
+    // Serialized size
+    ASSERT_EQ(
+        TypeParam::SERIALIZED_SIZE, 
+        Fw::StringBase::STATIC_SERIALIZED_SIZE(this->size)
+    );
+
+    // Default constructors
+    ASSERT_STREQ(str.toChar(), "");
+}
+
+// Test string constructors
+TYPED_TEST_P(StringTest, Constructors) {
+    // Char array constructor
+    TypeParam str1(this->src);
+    ASSERT_STREQ(str1.toChar(), this->src);
+
+    // Copy constructor
+    TypeParam str2(str1);
+    ASSERT_STREQ(str2.toChar(), str1.toChar());
+
+    // Fw::StringBase constructor
+    TypeParam str3(this->fwStr);
+    ASSERT_STREQ(str3.toChar(), this->fwSubstr.toChar());
+}
+
+// Test string assignment operator
+TYPED_TEST_P(StringTest, AssignmentOp) {
+    TypeParam str1;
+    TypeParam str2;
+    TypeParam str3;
+
+    // Char array assignment
+    str1 = this->src;
+    ASSERT_STREQ(str1.toChar(), this->src);
+
+    // Copy assignment
+    TypeParam& strRef = str1;
+    str1 = strRef;
+    ASSERT_EQ(&str1, &strRef);
+    
+    str2 = str1;
+    ASSERT_STREQ(str1.toChar(), str1.toChar());
+
+    // Fw::StringBase assignment
+    Fw::StringBase& sbRef = str1;
+    str1 = sbRef;
+    ASSERT_EQ(&str1, &sbRef);
+
+    str3 = this->fwStr;
+    ASSERT_STREQ(str3.toChar(), this->fwSubstr.toChar());
+}
+
+// Register all test patterns
+REGISTER_TYPED_TEST_SUITE_P(StringTest,
+    Default,
+    Constructors,
+    AssignmentOp
+);
+
+#endif
+```

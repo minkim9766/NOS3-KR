@@ -3,34 +3,3732 @@
 
 **경로:** `fsw/cfe/modules/evs/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_evs.c`
 
-file--cfe_evs.c
-file--cfe_evs_dispatch.c
-file--cfe_evs_dispatch.h
-file--cfe_evs_log.c
-file--cfe_evs_log.h
-file--cfe_evs_module_all.h
-file--cfe_evs_task.c
-file--cfe_evs_task.h
-file--cfe_evs_utils.c
-file--cfe_evs_utils.h
-file--cfe_evs_verify.h
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**
+**  File: cfe_evs.c
+**
+**  Title: Event Services API library
+**
+**  Purpose: This module defines the library functions of the
+**           Event Services API
+**
+*/
+
+/* Include Files */
+#include "cfe_evs_module_all.h" /* All EVS internal definitions and API */
+
+#include <stdarg.h>
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_EVS_Register(const void *Filters, uint16 NumEventFilters, uint16 FilterScheme)
+{
+    uint16               FilterLimit;
+    uint16               i;
+    int32                Status;
+    CFE_ES_AppId_t       AppID;
+    CFE_EVS_BinFilter_t *AppFilters;
+    EVS_AppData_t *      AppDataPtr;
+
+    /* Query and verify the caller's AppID */
+    Status = EVS_GetCurrentContext(&AppDataPtr, &AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        /* Clear and configure entry */
+        memset(AppDataPtr, 0, sizeof(EVS_AppData_t));
+
+        /* Verify filter arguments */
+        if (FilterScheme != CFE_EVS_EventFilter_BINARY)
+        {
+            Status = CFE_EVS_UNKNOWN_FILTER;
+        }
+        else if ((NumEventFilters != 0) && (Filters == NULL))
+        {
+            Status = CFE_ES_BAD_ARGUMENT;
+        }
+        else
+        {
+            /* Initialize application event data */
+            AppDataPtr->ActiveFlag           = true;
+            AppDataPtr->EventTypesActiveFlag = CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG;
+            AppDataPtr->SquelchTokens        = CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST * 1000;
+
+            /* Set limit for number of provided filters */
+            if (NumEventFilters < CFE_PLATFORM_EVS_MAX_EVENT_FILTERS)
+            {
+                FilterLimit = NumEventFilters;
+            }
+            else
+            {
+                FilterLimit = CFE_PLATFORM_EVS_MAX_EVENT_FILTERS;
+                CFE_ES_WriteToSysLog("%s: Filter limit truncated to %d\n", __func__, (int)FilterLimit);
+            }
+
+            if (Filters != NULL)
+            {
+                AppFilters = (CFE_EVS_BinFilter_t *)Filters;
+
+                /* Copy provided filters */
+                for (i = 0; i < FilterLimit; i++)
+                {
+                    AppDataPtr->BinFilters[i].EventID = AppFilters[i].EventID;
+                    AppDataPtr->BinFilters[i].Mask    = AppFilters[i].Mask;
+                    AppDataPtr->BinFilters[i].Count   = 0;
+                }
+            }
+
+            /* Initialize remainder of filters as unused */
+            for (i = FilterLimit; i < CFE_PLATFORM_EVS_MAX_EVENT_FILTERS; i++)
+            {
+                AppDataPtr->BinFilters[i].EventID = CFE_EVS_FREE_SLOT;
+                AppDataPtr->BinFilters[i].Mask    = 0;
+                AppDataPtr->BinFilters[i].Count   = 0;
+            }
+
+            EVS_AppDataSetUsed(AppDataPtr, AppID);
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_EVS_SendEvent(uint16 EventID, uint16 EventType, const char *Spec, ...)
+{
+    int32              Status;
+    CFE_ES_AppId_t     AppID;
+    CFE_TIME_SysTime_t Time;
+    va_list            Ptr;
+    EVS_AppData_t *    AppDataPtr;
+
+    if (Spec == NULL)
+    {
+        return CFE_EVS_INVALID_PARAMETER;
+    }
+
+    /* Query and verify the caller's AppID */
+    Status = EVS_GetCurrentContext(&AppDataPtr, &AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+        {
+            /* Handler for events from apps not registered with EVS */
+            Status = EVS_NotRegistered(AppDataPtr, AppID);
+        }
+        else if (EVS_IsFiltered(AppDataPtr, EventID, EventType) == false)
+        {
+            if (EVS_CheckAndIncrementSquelchTokens(AppDataPtr) == true)
+            {
+                /* Get current spacecraft time */
+                Time = CFE_TIME_GetTime();
+
+                /* Send the event packets */
+                va_start(Ptr, Spec);
+                EVS_GenerateEventTelemetry(AppDataPtr, EventID, EventType, &Time, Spec, Ptr);
+                va_end(Ptr);
+            }
+            else
+            {
+                Status = CFE_EVS_APP_SQUELCHED;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_EVS_SendEventWithAppID(uint16 EventID, uint16 EventType, CFE_ES_AppId_t AppID, const char *Spec, ...)
+{
+    int32              Status = CFE_SUCCESS;
+    CFE_TIME_SysTime_t Time;
+    va_list            Ptr;
+    EVS_AppData_t *    AppDataPtr;
+
+    if (Spec == NULL)
+    {
+        return CFE_EVS_INVALID_PARAMETER;
+    }
+
+    AppDataPtr = EVS_GetAppDataByID(AppID);
+    if (AppDataPtr == NULL)
+    {
+        Status = CFE_EVS_APP_ILLEGAL_APP_ID;
+    }
+    else if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+    {
+        /* Handler for events from apps not registered with EVS */
+        Status = EVS_NotRegistered(AppDataPtr, AppID);
+    }
+    else if (EVS_IsFiltered(AppDataPtr, EventID, EventType) == false)
+    {
+        if (EVS_CheckAndIncrementSquelchTokens(AppDataPtr) == true)
+        {
+            /* Get current spacecraft time */
+            Time = CFE_TIME_GetTime();
+
+            /* Send the event packets */
+            va_start(Ptr, Spec);
+            EVS_GenerateEventTelemetry(AppDataPtr, EventID, EventType, &Time, Spec, Ptr);
+            va_end(Ptr);
+        }
+        else
+        {
+            Status = CFE_EVS_APP_SQUELCHED;
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_EVS_SendTimedEvent(CFE_TIME_SysTime_t Time, uint16 EventID, uint16 EventType, const char *Spec, ...)
+{
+    int32          Status;
+    CFE_ES_AppId_t AppID;
+    va_list        Ptr;
+    EVS_AppData_t *AppDataPtr;
+
+    if (Spec == NULL)
+    {
+        return CFE_EVS_INVALID_PARAMETER;
+    }
+
+    /* Query and verify the caller's AppID */
+    Status = EVS_GetCurrentContext(&AppDataPtr, &AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+        {
+            /* Handler for events from apps not registered with EVS */
+            Status = EVS_NotRegistered(AppDataPtr, AppID);
+        }
+        else if (EVS_IsFiltered(AppDataPtr, EventID, EventType) == false)
+        {
+            if (EVS_CheckAndIncrementSquelchTokens(AppDataPtr) == true)
+            {
+                /* Send the event packets */
+                va_start(Ptr, Spec);
+                EVS_GenerateEventTelemetry(AppDataPtr, EventID, EventType, &Time, Spec, Ptr);
+                va_end(Ptr);
+            }
+            else
+            {
+                Status = CFE_EVS_APP_SQUELCHED;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ResetFilter(uint16 EventID)
+{
+    int32            Status;
+    EVS_BinFilter_t *FilterPtr = NULL;
+    CFE_ES_AppId_t   AppID;
+    EVS_AppData_t *  AppDataPtr;
+
+    /* Query and verify the caller's AppID */
+    Status = EVS_GetCurrentContext(&AppDataPtr, &AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+        {
+            Status = CFE_EVS_APP_NOT_REGISTERED;
+        }
+        else
+        {
+            FilterPtr = EVS_FindEventID(EventID, AppDataPtr->BinFilters);
+
+            if (FilterPtr != NULL)
+            {
+                FilterPtr->Count = 0;
+            }
+            else
+            {
+                Status = CFE_EVS_EVT_NOT_REGISTERED;
+            }
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_EVS_ResetAllFilters(void)
+{
+    int32          Status;
+    CFE_ES_AppId_t AppID;
+    uint32         i;
+    EVS_AppData_t *AppDataPtr;
+
+    /* Query and verify the caller's AppID */
+    Status = EVS_GetCurrentContext(&AppDataPtr, &AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+        {
+            Status = CFE_EVS_APP_NOT_REGISTERED;
+        }
+        else
+        {
+            for (i = 0; i < CFE_PLATFORM_EVS_MAX_EVENT_FILTERS; i++)
+            {
+                AppDataPtr->BinFilters[i].Count = 0;
+            }
+        }
+    }
+
+    return Status;
+}
 ```
 
-## 항목
+### `cfe_evs_dispatch.c`
 
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs.c`](file--cfe_evs.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_dispatch.c`](file--cfe_evs_dispatch.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_dispatch.h`](file--cfe_evs_dispatch.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_log.c`](file--cfe_evs_log.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_log.h`](file--cfe_evs_log.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_module_all.h`](file--cfe_evs_module_all.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_task.c`](file--cfe_evs_task.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_task.h`](file--cfe_evs_task.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_utils.c`](file--cfe_evs_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_utils.h`](file--cfe_evs_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/fsw/src/cfe_evs_verify.h`](file--cfe_evs_verify.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_dispatch.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Event services message dispatcher
+ */
+
+/* Include Files */
+#include "cfe_evs_module_all.h" /* All EVS internal definitions and API */
+
+#include <string.h>
+
+/*
+** Local function prototypes.
+*/
+void CFE_EVS_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr, CFE_SB_MsgId_t MsgId);
+bool CFE_EVS_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength);
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_EVS_ProcessCommandPacket(const CFE_SB_Buffer_t *SBBufPtr)
+{
+    CFE_SB_MsgId_t MessageID = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetMsgId(&SBBufPtr->Msg, &MessageID);
+
+    /* Process all SB messages */
+    switch (CFE_SB_MsgIdToValue(MessageID))
+    {
+        case CFE_EVS_CMD_MID:
+            /* EVS task specific command */
+            CFE_EVS_ProcessGroundCommand(SBBufPtr, MessageID);
+            break;
+
+        case CFE_EVS_SEND_HK_MID:
+            /* Housekeeping request */
+            CFE_EVS_ReportHousekeepingCmd((const CFE_EVS_SendHkCmd_t *)SBBufPtr);
+            break;
+
+        default:
+            /* Unknown command -- should never occur */
+            CFE_EVS_Global.EVS_TlmPkt.Payload.CommandErrorCounter++;
+            EVS_SendEvent(CFE_EVS_ERR_MSGID_EID, CFE_EVS_EventType_ERROR, "Invalid command packet, Message ID = 0x%08X",
+                          (unsigned int)CFE_SB_MsgIdToValue(MessageID));
+            break;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * This function processes a command, verifying that it is valid and of
+ *  proper length.
+ *
+ *-----------------------------------------------------------------*/
+void CFE_EVS_ProcessGroundCommand(const CFE_SB_Buffer_t *SBBufPtr, CFE_SB_MsgId_t MsgId)
+{
+    /* status will get reset if it passes length check */
+    int32             Status  = CFE_STATUS_WRONG_MSG_LENGTH;
+    CFE_MSG_FcnCode_t FcnCode = 0;
+
+    CFE_MSG_GetFcnCode(&SBBufPtr->Msg, &FcnCode);
+
+    /* Process "known" EVS task ground commands */
+    switch (FcnCode)
+    {
+        case CFE_EVS_NOOP_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_NoopCmd_t)))
+            {
+                Status = CFE_EVS_NoopCmd((const CFE_EVS_NoopCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_RESET_COUNTERS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_ResetCountersCmd_t)))
+            {
+                Status = CFE_EVS_ResetCountersCmd((const CFE_EVS_ResetCountersCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_ENABLE_EVENT_TYPE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_EnableEventTypeCmd_t)))
+            {
+                Status = CFE_EVS_EnableEventTypeCmd((const CFE_EVS_EnableEventTypeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_DISABLE_EVENT_TYPE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_DisableEventTypeCmd_t)))
+            {
+                Status = CFE_EVS_DisableEventTypeCmd((const CFE_EVS_DisableEventTypeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_SET_EVENT_FORMAT_MODE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_SetEventFormatModeCmd_t)))
+            {
+                Status = CFE_EVS_SetEventFormatModeCmd((const CFE_EVS_SetEventFormatModeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_ENABLE_APP_EVENT_TYPE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_EnableAppEventTypeCmd_t)))
+            {
+                Status = CFE_EVS_EnableAppEventTypeCmd((const CFE_EVS_EnableAppEventTypeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_DISABLE_APP_EVENT_TYPE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_DisableAppEventTypeCmd_t)))
+            {
+                Status = CFE_EVS_DisableAppEventTypeCmd((const CFE_EVS_DisableAppEventTypeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_ENABLE_APP_EVENTS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_EnableAppEventsCmd_t)))
+            {
+                Status = CFE_EVS_EnableAppEventsCmd((const CFE_EVS_EnableAppEventsCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_DISABLE_APP_EVENTS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_DisableAppEventsCmd_t)))
+            {
+                Status = CFE_EVS_DisableAppEventsCmd((const CFE_EVS_DisableAppEventsCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_RESET_APP_COUNTER_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_ResetAppCounterCmd_t)))
+            {
+                Status = CFE_EVS_ResetAppCounterCmd((const CFE_EVS_ResetAppCounterCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_SET_FILTER_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_SetFilterCmd_t)))
+            {
+                Status = CFE_EVS_SetFilterCmd((const CFE_EVS_SetFilterCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_ENABLE_PORTS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_EnablePortsCmd_t)))
+            {
+                Status = CFE_EVS_EnablePortsCmd((const CFE_EVS_EnablePortsCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_DISABLE_PORTS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_DisablePortsCmd_t)))
+            {
+                Status = CFE_EVS_DisablePortsCmd((const CFE_EVS_DisablePortsCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_RESET_FILTER_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_ResetFilterCmd_t)))
+            {
+                Status = CFE_EVS_ResetFilterCmd((const CFE_EVS_ResetFilterCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_RESET_ALL_FILTERS_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_ResetAllFiltersCmd_t)))
+            {
+                Status = CFE_EVS_ResetAllFiltersCmd((const CFE_EVS_ResetAllFiltersCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_ADD_EVENT_FILTER_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_AddEventFilterCmd_t)))
+            {
+                Status = CFE_EVS_AddEventFilterCmd((const CFE_EVS_AddEventFilterCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_DELETE_EVENT_FILTER_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_DeleteEventFilterCmd_t)))
+            {
+                Status = CFE_EVS_DeleteEventFilterCmd((const CFE_EVS_DeleteEventFilterCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_WRITE_APP_DATA_FILE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_WriteAppDataFileCmd_t)))
+            {
+                Status = CFE_EVS_WriteAppDataFileCmd((const CFE_EVS_WriteAppDataFileCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_SET_LOG_MODE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_SetLogModeCmd_t)))
+            {
+                Status = CFE_EVS_SetLogModeCmd((const CFE_EVS_SetLogModeCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_CLEAR_LOG_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_ClearLogCmd_t)))
+            {
+                Status = CFE_EVS_ClearLogCmd((const CFE_EVS_ClearLogCmd_t *)SBBufPtr);
+            }
+            break;
+
+        case CFE_EVS_WRITE_LOG_DATA_FILE_CC:
+
+            if (CFE_EVS_VerifyCmdLength(&SBBufPtr->Msg, sizeof(CFE_EVS_WriteLogDataFileCmd_t)))
+            {
+                Status = CFE_EVS_WriteLogDataFileCmd((const CFE_EVS_WriteLogDataFileCmd_t *)SBBufPtr);
+            }
+            break;
+
+        /* default is a bad command code as it was not found above */
+        default:
+
+            EVS_SendEvent(CFE_EVS_ERR_CC_EID, CFE_EVS_EventType_ERROR, "Invalid command code -- ID = 0x%08x, CC = %u",
+                          (unsigned int)CFE_SB_MsgIdToValue(MsgId), (unsigned int)FcnCode);
+            Status = CFE_STATUS_BAD_COMMAND_CODE;
+
+            break;
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        CFE_EVS_Global.EVS_TlmPkt.Payload.CommandCounter++;
+    }
+    else if (Status < 0) /* Negative values indicate errors */
+    {
+        CFE_EVS_Global.EVS_TlmPkt.Payload.CommandErrorCounter++;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * This function validates the length of a command structure, and
+ * generates an error event if is not the expected length.
+ *
+ *-----------------------------------------------------------------*/
+bool CFE_EVS_VerifyCmdLength(const CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength)
+{
+    bool              result       = true;
+    CFE_MSG_Size_t    ActualLength = 0;
+    CFE_MSG_FcnCode_t FcnCode      = 0;
+    CFE_SB_MsgId_t    MsgId        = CFE_SB_INVALID_MSG_ID;
+
+    CFE_MSG_GetSize(MsgPtr, &ActualLength);
+
+    /*
+    ** Verify the command packet length
+    */
+    if (ExpectedLength != ActualLength)
+    {
+        CFE_MSG_GetMsgId(MsgPtr, &MsgId);
+        CFE_MSG_GetFcnCode(MsgPtr, &FcnCode);
+
+        EVS_SendEvent(CFE_EVS_LEN_ERR_EID, CFE_EVS_EventType_ERROR,
+                      "Invalid msg length: ID = 0x%X,  CC = %u, Len = %u, Expected = %u",
+                      (unsigned int)CFE_SB_MsgIdToValue(MsgId), (unsigned int)FcnCode, (unsigned int)ActualLength,
+                      (unsigned int)ExpectedLength);
+        result = false;
+    }
+
+    return result;
+}
+```
+
+### `cfe_evs_dispatch.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_dispatch.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Event Services API - Dispatch API
+ */
+
+#ifndef CFE_EVS_DISPATCH_H
+#define CFE_EVS_DISPATCH_H
+
+/********************************** Include Files  ************************************/
+#include "common_types.h"
+#include "cfe_evs_api_typedefs.h"
+#include "cfe_sb_api_typedefs.h"
+#include "cfe_msg_api_typedefs.h"
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Command Pipe Processing
+ *
+ * This function processes packets received on the EVS command pipe.
+ */
+void CFE_EVS_ProcessCommandPacket(const CFE_SB_Buffer_t *SBBufPtr);
+
+#endif /* CFE_EVS_DISPATCH_H */
+```
+
+### `cfe_evs_log.c`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_log.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File: cfe_evs_log.c
+**
+**  Title: Event Services API - Log Control Interfaces
+**
+**  Purpose: This module defines the top level functions of the
+**           Event Services Log control interfaces
+**
+*/
+
+/* Include Files */
+#include "cfe_evs_module_all.h" /* All EVS internal definitions and API */
+
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void EVS_AddLog(CFE_EVS_LongEventTlm_t *EVS_PktPtr)
+{
+    /* Serialize access to event log control variables */
+    OS_MutSemTake(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+    if ((CFE_EVS_Global.EVS_LogPtr->LogFullFlag == true) &&
+        (CFE_EVS_Global.EVS_LogPtr->LogMode == CFE_EVS_LogMode_DISCARD))
+    {
+        /* If log is full and in discard mode, just count the event */
+        CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter++;
+    }
+    else
+    {
+        if (CFE_EVS_Global.EVS_LogPtr->LogFullFlag == true)
+        {
+            /* If log is full and in wrap mode, count it and store it */
+            CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter++;
+        }
+
+        /* Copy the event data to the next available entry in the log */
+        memcpy(&CFE_EVS_Global.EVS_LogPtr->LogEntry[CFE_EVS_Global.EVS_LogPtr->Next], EVS_PktPtr, sizeof(*EVS_PktPtr));
+
+        CFE_EVS_Global.EVS_LogPtr->Next++;
+
+        if (CFE_EVS_Global.EVS_LogPtr->Next >= CFE_PLATFORM_EVS_LOG_MAX)
+        {
+            /* This is important, even if we are in discard mode */
+            CFE_EVS_Global.EVS_LogPtr->Next = 0;
+        }
+
+        /* Log count cannot exceed the number of entries in the log */
+        if (CFE_EVS_Global.EVS_LogPtr->LogCount < CFE_PLATFORM_EVS_LOG_MAX)
+        {
+            CFE_EVS_Global.EVS_LogPtr->LogCount++;
+
+            if (CFE_EVS_Global.EVS_LogPtr->LogCount == CFE_PLATFORM_EVS_LOG_MAX)
+            {
+                /* The full flag and log count are somewhat redundant */
+                CFE_EVS_Global.EVS_LogPtr->LogFullFlag = true;
+            }
+        }
+    }
+
+    OS_MutSemGive(CFE_EVS_Global.EVS_SharedDataMutexID);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void EVS_ClearLog(void)
+{
+    /* Serialize access to event log control variables */
+    OS_MutSemTake(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+    /* Clears everything but LogMode (overwrite vs discard) */
+    CFE_EVS_Global.EVS_LogPtr->Next               = 0;
+    CFE_EVS_Global.EVS_LogPtr->LogCount           = 0;
+    CFE_EVS_Global.EVS_LogPtr->LogFullFlag        = false;
+    CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter = 0;
+
+    memset(CFE_EVS_Global.EVS_LogPtr->LogEntry, 0, sizeof(CFE_EVS_Global.EVS_LogPtr->LogEntry));
+
+    OS_MutSemGive(CFE_EVS_Global.EVS_SharedDataMutexID);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_WriteLogDataFileCmd(const CFE_EVS_WriteLogDataFileCmd_t *data)
+{
+    const CFE_EVS_LogFileCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Result;
+    int32                               LogIndex;
+    int32                               OsStatus;
+    int32                               BytesWritten;
+    osal_id_t                           LogFileHandle = OS_OBJECT_ID_UNDEFINED;
+    uint32                              i;
+    CFE_FS_Header_t                     LogFileHdr;
+    char                                LogFilename[OS_MAX_PATH_LEN];
+
+    /*
+    ** Copy the filename into local buffer with default name/path/extension if not specified
+    */
+    Result = CFE_FS_ParseInputFileNameEx(LogFilename, CmdPtr->LogFilename, sizeof(LogFilename),
+                                         sizeof(CmdPtr->LogFilename), CFE_PLATFORM_EVS_DEFAULT_LOG_FILE,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Result != CFE_SUCCESS)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_CRLOGFILE_EID, CFE_EVS_EventType_ERROR,
+                      "Write Log File Command Error: CFE_FS_ParseInputFileNameEx() = 0x%08X", (unsigned int)Result);
+    }
+    else
+    {
+        /* Create the log file */
+        OsStatus =
+            OS_OpenCreate(&LogFileHandle, LogFilename, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+        if (OsStatus != OS_SUCCESS)
+        {
+            EVS_SendEvent(CFE_EVS_ERR_CRLOGFILE_EID, CFE_EVS_EventType_ERROR,
+                          "Write Log File Command Error: OS_OpenCreate = %ld, filename = %s", (long)OsStatus,
+                          LogFilename);
+            Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+
+    if (Result == OS_SUCCESS)
+    {
+        /* Result will be overridden if everything works */
+        Result = CFE_EVS_FILE_WRITE_ERROR;
+
+        /* Initialize cFE file header for an event log file */
+        CFE_FS_InitHeader(&LogFileHdr, "cFE EVS Log File", CFE_FS_SubType_EVS_EVENTLOG);
+
+        /* Write the file header to the log file */
+        BytesWritten = CFE_FS_WriteHeader(LogFileHandle, &LogFileHdr);
+
+        if (BytesWritten == sizeof(LogFileHdr))
+        {
+            /* Serialize access to event log control variables */
+            OS_MutSemTake(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+            /* Is the log full? -- Doesn't matter if wrap mode is enabled */
+            if (CFE_EVS_Global.EVS_LogPtr->LogCount == CFE_PLATFORM_EVS_LOG_MAX)
+            {
+                /* Start with log entry that will be overwritten next (oldest) */
+                LogIndex = CFE_EVS_Global.EVS_LogPtr->Next;
+            }
+            else
+            {
+                /* Start with the first entry in the log (oldest) */
+                LogIndex = 0;
+            }
+
+            /* Write all the "in-use" event log entries to the file */
+            for (i = 0; i < CFE_EVS_Global.EVS_LogPtr->LogCount; i++)
+            {
+                OsStatus = OS_write(LogFileHandle, &CFE_EVS_Global.EVS_LogPtr->LogEntry[LogIndex],
+                                    sizeof(CFE_EVS_Global.EVS_LogPtr->LogEntry[LogIndex]));
+
+                if (OsStatus == sizeof(CFE_EVS_Global.EVS_LogPtr->LogEntry[LogIndex]))
+                {
+                    LogIndex++;
+
+                    if (LogIndex >= CFE_PLATFORM_EVS_LOG_MAX)
+                    {
+                        LogIndex = 0;
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            OS_MutSemGive(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+            /* Process command handler success result */
+            if (i == CFE_EVS_Global.EVS_LogPtr->LogCount)
+            {
+                EVS_SendEvent(CFE_EVS_WRLOG_EID, CFE_EVS_EventType_DEBUG,
+                              "Write Log File Command: %d event log entries written to %s",
+                              (int)CFE_EVS_Global.EVS_LogPtr->LogCount, LogFilename);
+                Result = CFE_SUCCESS;
+            }
+            else
+            {
+                EVS_SendEvent(CFE_EVS_ERR_WRLOGFILE_EID, CFE_EVS_EventType_ERROR,
+                              "Write Log File Command Error: OS_write = %ld, filename = %s", (long)OsStatus,
+                              LogFilename);
+            }
+        }
+        else
+        {
+            EVS_SendEvent(CFE_EVS_WRITE_HEADER_ERR_EID, CFE_EVS_EventType_ERROR,
+                          "Write File Header to Log File Error: WriteHdr RC: %d, Expected: %d, filename = %s",
+                          (int)BytesWritten, (int)sizeof(LogFileHdr), LogFilename);
+        }
+
+        OS_close(LogFileHandle);
+    }
+
+    return Result;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_SetLogModeCmd(const CFE_EVS_SetLogModeCmd_t *data)
+{
+    const CFE_EVS_SetLogMode_Payload_t *CmdPtr = &data->Payload;
+    int32                               Status;
+
+    if ((CmdPtr->LogMode == CFE_EVS_LogMode_OVERWRITE) || (CmdPtr->LogMode == CFE_EVS_LogMode_DISCARD))
+    {
+        /* Serialize access to event log control variables */
+        OS_MutSemTake(CFE_EVS_Global.EVS_SharedDataMutexID);
+        CFE_EVS_Global.EVS_LogPtr->LogMode = CmdPtr->LogMode;
+        OS_MutSemGive(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+        EVS_SendEvent(CFE_EVS_LOGMODE_EID, CFE_EVS_EventType_DEBUG, "Set Log Mode Command: Log Mode = %d",
+                      (int)CmdPtr->LogMode);
+
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        Status = CFE_EVS_INVALID_PARAMETER;
+        EVS_SendEvent(CFE_EVS_ERR_LOGMODE_EID, CFE_EVS_EventType_ERROR, "Set Log Mode Command Error: Log Mode = %d",
+                      (int)CmdPtr->LogMode);
+    }
+
+    return Status;
+}
+```
+
+### `cfe_evs_log.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_log.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Title:    Event Services API Log Control Interfaces.
+ *
+ *  Purpose:
+ *            Unit specification for the event services log control interfaces.
+ *
+ *  Contents:
+ *       I.  macro and constant type definitions
+ *      II.  EVM internal structures
+ *     III.  function prototypes
+ *
+ *  Design Notes:
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *
+ *  Notes:
+ */
+
+#ifndef CFE_EVS_LOG_H
+#define CFE_EVS_LOG_H
+
+/********************* Include Files  ************************/
+
+#include "cfe_evs_msg.h" /* EVS public definitions */
+
+/* ==============   Section I: Macro and Constant Type Definitions   =========== */
+
+/* ==============   Section II: Internal Structures ============ */
+
+/* ==============   Section III: Function Prototypes =========== */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief This routine adds an event packet to the internal event log.
+ */
+void EVS_AddLog(CFE_EVS_LongEventTlm_t *EVS_PktPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief This routine clears the contents of the internal event log.
+ */
+void EVS_ClearLog(void);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine writes the contents of the internal event log to a file
+ */
+int32 CFE_EVS_WriteLogDataFileCmd(const CFE_EVS_WriteLogDataFileCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the internal event log mode.
+ */
+int32 CFE_EVS_SetLogModeCmd(const CFE_EVS_SetLogModeCmd_t *data);
+
+#endif /* CFE_EVS_LOG_H */
+```
+
+### `cfe_evs_module_all.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_module_all.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Encapsulates all EVS module internal header files, as well
+ * as the public API from all other CFE core modules, OSAL, and PSP.
+ *
+ * This simplifies the set of include files that need to be put at the
+ * start of every source file.
+ */
+
+#ifndef CFE_EVS_MODULE_ALL_H
+#define CFE_EVS_MODULE_ALL_H
+
+/********************* Include Files  ************************/
+
+#include "cfe.h" /* All CFE+OSAL public API definitions */
+#include "cfe_platform_cfg.h"
+
+#include "cfe_msgids.h"
+#include "cfe_perfids.h"
+
+#include "cfe_evs_core_internal.h"
+
+#include "cfe_evs_eventids.h" /* EVS event IDs */
+#include "cfe_evs_task.h"     /* EVS internal definitions */
+#include "cfe_evs_log.h"      /* EVS log file definitions */
+#include "cfe_evs_utils.h"    /* EVS utility function definitions */
+#include "cfe_evs_dispatch.h"
+
+#endif /* CFE_EVS_MODULE_ALL_H */
+```
+
+### `cfe_evs_task.c`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_task.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File: cfe_evs_task.c
+**
+**  Title: Event Service API Management Control Interfaces
+**
+**  Purpose: This module defines the top level functions of the
+**           cFE Event Service task defining the control, command,
+**           and telemetry interfaces
+**
+*/
+
+/* Include Files */
+#include "cfe_evs_module_all.h" /* All EVS internal definitions and API */
+#include "cfe_version.h"        /* cFE version definitions */
+#include "cfe_evs_verify.h"
+
+#include <string.h>
+
+#include "cfe_es_resetdata_typedef.h" /* Definition of CFE_ES_ResetData_t */
+
+/* Global Data */
+CFE_EVS_Global_t CFE_EVS_Global;
+
+/* Defines */
+#define CFE_EVS_PANIC_DELAY 500 /**< \brief Task delay before PSP panic */
+
+/*
+** Local function prototypes.
+*/
+void CFE_EVS_ProcessGroundCommand(CFE_SB_Buffer_t *SBBufPtr, CFE_SB_MsgId_t MsgId);
+bool CFE_EVS_VerifyCmdLength(CFE_MSG_Message_t *MsgPtr, size_t ExpectedLength);
+
+/* Function Definitions */
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_EarlyInit(void)
+{
+    int32               OsStatus;
+    int32               Status;
+    int32               PspStatus;
+    uint32              resetAreaSize = 0;
+    cpuaddr             resetAreaAddr;
+    CFE_ES_ResetData_t *CFE_EVS_ResetDataPtr = (CFE_ES_ResetData_t *)NULL;
+
+    memset(&CFE_EVS_Global, 0, sizeof(CFE_EVS_Global));
+
+    /* Initialize housekeeping packet */
+    CFE_MSG_Init(CFE_MSG_PTR(CFE_EVS_Global.EVS_TlmPkt.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_EVS_HK_TLM_MID),
+                 sizeof(CFE_EVS_Global.EVS_TlmPkt));
+
+    /* Elements stored in the hk packet that have non-zero default values */
+    CFE_EVS_Global.EVS_TlmPkt.Payload.MessageFormatMode = CFE_PLATFORM_EVS_DEFAULT_MSG_FORMAT_MODE;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort        = CFE_PLATFORM_EVS_PORT_DEFAULT;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.LogMode           = CFE_PLATFORM_EVS_DEFAULT_LOG_MODE;
+
+    CFE_EVS_Global.EVS_EventBurstMax = CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST;
+
+    /* Get a pointer to the CFE reset area from the BSP */
+    PspStatus = CFE_PSP_GetResetArea(&resetAreaAddr, &resetAreaSize);
+
+    /* Panic on error */
+    if (PspStatus != CFE_PSP_SUCCESS)
+    {
+        /* Can't log evs messages without the reset area */
+        Status = CFE_EVS_RESET_AREA_POINTER;
+        CFE_ES_WriteToSysLog("%s: Call to CFE_PSP_GetResetArea failed, RC=0x%08x\n", __func__, (unsigned int)PspStatus);
+
+        /* Delay to allow message to be read */
+        OS_TaskDelay(CFE_EVS_PANIC_DELAY);
+
+        CFE_PSP_Panic(CFE_PSP_PANIC_MEMORY_ALLOC);
+    }
+    else if (resetAreaSize < sizeof(CFE_ES_ResetData_t))
+    {
+        /* Got the pointer but the size is wrong */
+        Status = CFE_EVS_RESET_AREA_POINTER;
+        CFE_ES_WriteToSysLog("%s: Unexpected size from CFE_PSP_GetResetArea: expected = 0x%08lX, actual = 0x%08lX\n",
+                             __func__, (unsigned long)sizeof(CFE_ES_ResetData_t), (unsigned long)resetAreaSize);
+
+        /* Delay to allow message to be read */
+        OS_TaskDelay(CFE_EVS_PANIC_DELAY);
+
+        CFE_PSP_Panic(CFE_PSP_PANIC_MEMORY_ALLOC);
+    }
+    else
+    {
+        CFE_EVS_ResetDataPtr = (CFE_ES_ResetData_t *)resetAreaAddr;
+        /* Save pointer to the EVS portion of the CFE reset area */
+        CFE_EVS_Global.EVS_LogPtr = &CFE_EVS_ResetDataPtr->EVS_Log;
+
+        /* Create semaphore to serialize access to event log */
+        OsStatus = OS_MutSemCreate(&CFE_EVS_Global.EVS_SharedDataMutexID, "CFE_EVS_DataMutex", 0);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            CFE_ES_WriteToSysLog("%s: OS_MutSemCreate failed, RC=%ld\n", __func__, (long)OsStatus);
+
+            /* Delay to allow message to be read */
+            OS_TaskDelay(CFE_EVS_PANIC_DELAY);
+
+            CFE_PSP_Panic(CFE_PSP_PANIC_STARTUP_SEM);
+            Status = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+        else
+        {
+            /* Convert to CFE success type */
+            Status = CFE_SUCCESS;
+        }
+
+        /* Report log as enabled */
+        CFE_EVS_Global.EVS_TlmPkt.Payload.LogEnabled = true;
+
+        /* Clear event log if power-on reset or bad contents */
+        if (CFE_ES_GetResetType(NULL) == CFE_PSP_RST_TYPE_POWERON)
+        {
+            CFE_ES_WriteToSysLog("%s: Event Log cleared following power-on reset\n", __func__);
+            EVS_ClearLog();
+            CFE_EVS_Global.EVS_LogPtr->LogMode = CFE_PLATFORM_EVS_DEFAULT_LOG_MODE;
+        }
+        else if (((CFE_EVS_Global.EVS_LogPtr->LogMode != CFE_EVS_LogMode_OVERWRITE) &&
+                  (CFE_EVS_Global.EVS_LogPtr->LogMode != CFE_EVS_LogMode_DISCARD)) ||
+                 ((CFE_EVS_Global.EVS_LogPtr->LogFullFlag != false) &&
+                  (CFE_EVS_Global.EVS_LogPtr->LogFullFlag != true)) ||
+                 (CFE_EVS_Global.EVS_LogPtr->Next >= CFE_PLATFORM_EVS_LOG_MAX))
+        {
+            CFE_ES_WriteToSysLog("%s: Event Log cleared, n=%d, c=%d, f=%d, m=%d, o=%d\n", __func__,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->Next, (int)CFE_EVS_Global.EVS_LogPtr->LogCount,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->LogFullFlag, (int)CFE_EVS_Global.EVS_LogPtr->LogMode,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter);
+            EVS_ClearLog();
+            CFE_EVS_Global.EVS_LogPtr->LogMode = CFE_PLATFORM_EVS_DEFAULT_LOG_MODE;
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: Event Log restored, n=%d, c=%d, f=%d, m=%d, o=%d\n", __func__,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->Next, (int)CFE_EVS_Global.EVS_LogPtr->LogCount,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->LogFullFlag, (int)CFE_EVS_Global.EVS_LogPtr->LogMode,
+                                 (int)CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter);
+        }
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_CleanUpApp(CFE_ES_AppId_t AppID)
+{
+    int32          Status = CFE_SUCCESS;
+    EVS_AppData_t *AppDataPtr;
+
+    /* Query and verify the caller's AppID */
+    AppDataPtr = EVS_GetAppDataByID(AppID);
+    if (AppDataPtr == NULL)
+    {
+        Status = CFE_EVS_APP_ILLEGAL_APP_ID;
+    }
+    else if (EVS_AppDataIsMatch(AppDataPtr, AppID))
+    {
+        EVS_AppDataSetFree(AppDataPtr);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_EVS_TaskMain(void)
+{
+    int32            Status;
+    CFE_SB_Buffer_t *SBBufPtr;
+
+    CFE_ES_PerfLogEntry(CFE_MISSION_EVS_MAIN_PERF_ID);
+
+    Status = CFE_EVS_TaskInit();
+
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Application Init Failed,RC=0x%08X\n", __func__, (unsigned int)Status);
+        CFE_ES_PerfLogExit(CFE_MISSION_EVS_MAIN_PERF_ID);
+        /* Note: CFE_ES_ExitApp will not return */
+        CFE_ES_ExitApp(CFE_ES_RunStatus_CORE_APP_INIT_ERROR);
+    }
+
+    /*
+     * Wait for other apps to start.
+     * It is important that the core apps are present before this starts receiving
+     * messages from the command pipe, as some of those handlers might depend on
+     * the other core apps.
+     */
+    CFE_ES_WaitForSystemState(CFE_ES_SystemState_CORE_READY, CFE_PLATFORM_CORE_MAX_STARTUP_MSEC);
+
+    /* Main loop */
+    while (Status == CFE_SUCCESS)
+    {
+        /* Increment the Main task Execution Counter */
+        CFE_ES_IncrementTaskCounter();
+
+        CFE_ES_PerfLogExit(CFE_MISSION_EVS_MAIN_PERF_ID);
+
+        /* Pend on receipt of packet */
+        Status = CFE_SB_ReceiveBuffer(&SBBufPtr, CFE_EVS_Global.EVS_CommandPipe, CFE_SB_PEND_FOREVER);
+
+        CFE_ES_PerfLogEntry(CFE_MISSION_EVS_MAIN_PERF_ID);
+
+        if (Status == CFE_SUCCESS)
+        {
+            /* Process cmd pipe msg */
+            CFE_EVS_ProcessCommandPacket(SBBufPtr);
+        }
+        else
+        {
+            CFE_ES_WriteToSysLog("%s: Error reading cmd pipe,RC=0x%08X\n", __func__, (unsigned int)Status);
+        }
+
+    } /* end while */
+
+    /* while loop exits only if CFE_SB_ReceiveBuffer returns error */
+    CFE_ES_ExitApp(CFE_ES_RunStatus_CORE_APP_RUNTIME_ERROR);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_TaskInit(void)
+{
+    int32          Status;
+    CFE_ES_AppId_t AppID;
+
+    /* Query and verify the AppID */
+    Status = CFE_ES_GetAppID(&AppID);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_ES_GetAppID Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /* Register EVS task for event services */
+    Status = CFE_EVS_Register(NULL, 0, CFE_EVS_EventFilter_BINARY);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_EVS_Register Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /* Create software bus command pipe */
+    Status = CFE_SB_CreatePipe(&CFE_EVS_Global.EVS_CommandPipe, CFE_EVS_PIPE_DEPTH, CFE_EVS_PIPE_NAME);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Call to CFE_SB_CreatePipe Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /* Subscribe to command and telemetry requests coming in on the command pipe */
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_EVS_CMD_MID), CFE_EVS_Global.EVS_CommandPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Subscribing to Cmds Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    Status = CFE_SB_Subscribe(CFE_SB_ValueToMsgId(CFE_EVS_SEND_HK_MID), CFE_EVS_Global.EVS_CommandPipe);
+    if (Status != CFE_SUCCESS)
+    {
+        CFE_ES_WriteToSysLog("%s: Subscribing to HK Request Failed:RC=0x%08X\n", __func__, (unsigned int)Status);
+        return Status;
+    }
+
+    /* Write the AppID to the global location, now that the rest of initialization is done */
+    CFE_EVS_Global.EVS_AppID = AppID;
+    EVS_SendEvent(CFE_EVS_STARTUP_EID, CFE_EVS_EventType_INFORMATION, "cFE EVS Initialized: %s", CFE_VERSION_STRING);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_NoopCmd(const CFE_EVS_NoopCmd_t *data)
+{
+    EVS_SendEvent(CFE_EVS_NOOP_EID, CFE_EVS_EventType_INFORMATION, "No-op Cmd Rcvd: %s", CFE_VERSION_STRING);
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ClearLogCmd(const CFE_EVS_ClearLogCmd_t *data)
+{
+    EVS_ClearLog();
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ReportHousekeepingCmd(const CFE_EVS_SendHkCmd_t *data)
+{
+    uint32                i, j;
+    EVS_AppData_t *       AppDataPtr;
+    CFE_EVS_AppTlmData_t *AppTlmDataPtr;
+
+    /* Copy hk variables that are maintained in the event log */
+    CFE_EVS_Global.EVS_TlmPkt.Payload.LogFullFlag        = CFE_EVS_Global.EVS_LogPtr->LogFullFlag;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.LogMode            = CFE_EVS_Global.EVS_LogPtr->LogMode;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.LogOverflowCounter = CFE_EVS_Global.EVS_LogPtr->LogOverflowCounter;
+
+    /* Write event state data for registered apps to telemetry packet */
+    AppDataPtr    = CFE_EVS_Global.AppData;
+    AppTlmDataPtr = CFE_EVS_Global.EVS_TlmPkt.Payload.AppData;
+    for (i = 0, j = 0; j < CFE_MISSION_ES_MAX_APPLICATIONS && i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+    {
+        if (EVS_AppDataIsUsed(AppDataPtr))
+        {
+            AppTlmDataPtr->AppID                      = EVS_AppDataGetID(AppDataPtr);
+            AppTlmDataPtr->AppEnableStatus            = AppDataPtr->ActiveFlag;
+            AppTlmDataPtr->AppMessageSentCounter      = AppDataPtr->EventCount;
+            AppTlmDataPtr->AppMessageSquelchedCounter = AppDataPtr->SquelchedCount;
+
+            ++j;
+            ++AppTlmDataPtr;
+        }
+        ++AppDataPtr;
+    }
+
+    /* Clear unused portion of event state data in telemetry packet */
+    for (i = j; i < CFE_MISSION_ES_MAX_APPLICATIONS; i++)
+    {
+        AppTlmDataPtr->AppID                      = CFE_ES_APPID_UNDEFINED;
+        AppTlmDataPtr->AppEnableStatus            = false;
+        AppTlmDataPtr->AppMessageSentCounter      = 0;
+        AppTlmDataPtr->AppMessageSquelchedCounter = 0;
+    }
+
+    CFE_SB_TimeStampMsg(CFE_MSG_PTR(CFE_EVS_Global.EVS_TlmPkt.TelemetryHeader));
+
+    CFE_SB_TransmitMsg(CFE_MSG_PTR(CFE_EVS_Global.EVS_TlmPkt.TelemetryHeader), true);
+
+    return CFE_STATUS_NO_COUNTER_INCREMENT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ResetCountersCmd(const CFE_EVS_ResetCountersCmd_t *data)
+{
+    /* Status of commands processed by EVS task */
+    CFE_EVS_Global.EVS_TlmPkt.Payload.CommandCounter      = 0;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.CommandErrorCounter = 0;
+
+    /* EVS telemetry counters */
+    CFE_EVS_Global.EVS_TlmPkt.Payload.MessageSendCounter     = 0;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.MessageTruncCounter    = 0;
+    CFE_EVS_Global.EVS_TlmPkt.Payload.UnregisteredAppCounter = 0;
+
+    EVS_SendEvent(CFE_EVS_RSTCNT_EID, CFE_EVS_EventType_DEBUG, "Reset Counters Command Received");
+
+    /* NOTE: Historically the reset counters command does _NOT_ increment the command counter */
+
+    return CFE_STATUS_NO_COUNTER_INCREMENT;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_SetFilterCmd(const CFE_EVS_SetFilterCmd_t *data)
+{
+    const CFE_EVS_AppNameEventIDMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    EVS_BinFilter_t *                              FilterPtr;
+    int32                                          Status;
+    EVS_AppData_t *                                AppDataPtr;
+    char                                           LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        FilterPtr = EVS_FindEventID(CmdPtr->EventID, AppDataPtr->BinFilters);
+
+        if (FilterPtr != NULL)
+        {
+            /* Set application filter mask */
+            FilterPtr->Mask = CmdPtr->Mask;
+
+            EVS_SendEvent(CFE_EVS_SETFILTERMSK_EID, CFE_EVS_EventType_DEBUG,
+                          "Set Filter Mask Command Received with AppName=%s, EventID=0x%08x, Mask=0x%04x", LocalName,
+                          (unsigned int)CmdPtr->EventID, (unsigned int)CmdPtr->Mask);
+        }
+        else
+        {
+            EVS_SendEvent(CFE_EVS_ERR_EVTIDNOREGS_EID, CFE_EVS_EventType_ERROR,
+                          "%s Event ID %d not registered for filtering: CC = %lu ", LocalName, (int)CmdPtr->EventID,
+                          (long unsigned int)CFE_EVS_SET_FILTER_CC);
+
+            Status = CFE_EVS_EVT_NOT_REGISTERED;
+        }
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_SET_FILTER_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_SET_FILTER_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_SET_FILTER_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_EnablePortsCmd(const CFE_EVS_EnablePortsCmd_t *data)
+{
+    const CFE_EVS_BitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               ReturnCode;
+
+    /* Need to check for an out of range bitmask, since oue bit masks are only 4 bits */
+    if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                      "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                      (long unsigned int)CFE_EVS_ENABLE_PORTS_CC);
+        ReturnCode = CFE_EVS_INVALID_PARAMETER;
+    }
+    else
+    {
+        /* Process command data */
+        CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort |= CmdPtr->BitMask;
+
+        EVS_SendEvent(CFE_EVS_ENAPORT_EID, CFE_EVS_EventType_DEBUG,
+                      "Enable Ports Command Received with Port Bit Mask = 0x%02x", (unsigned int)CmdPtr->BitMask);
+        ReturnCode = CFE_SUCCESS;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_DisablePortsCmd(const CFE_EVS_DisablePortsCmd_t *data)
+{
+    const CFE_EVS_BitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               ReturnCode;
+
+    /* Need to check for an out of range bitmask, since oue bit masks are only 4 bits */
+    if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                      "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                      (long unsigned int)CFE_EVS_DISABLE_PORTS_CC);
+        ReturnCode = CFE_EVS_INVALID_PARAMETER;
+    }
+    else
+    {
+        /* Process command data */
+        CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort &= ~CmdPtr->BitMask;
+
+        EVS_SendEvent(CFE_EVS_DISPORT_EID, CFE_EVS_EventType_DEBUG,
+                      "Disable Ports Command Received with Port Bit Mask = 0x%02x", (unsigned int)CmdPtr->BitMask);
+
+        ReturnCode = CFE_SUCCESS;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_EnableEventTypeCmd(const CFE_EVS_EnableEventTypeCmd_t *data)
+{
+    uint32                              i;
+    const CFE_EVS_BitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               ReturnCode;
+    EVS_AppData_t *                     AppDataPtr;
+
+    /* Need to check for an out of range bitmask, since our bit masks are only 4 bits */
+    if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                      "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                      (long unsigned int)CFE_EVS_ENABLE_EVENT_TYPE_CC);
+        ReturnCode = CFE_EVS_INVALID_PARAMETER;
+    }
+    else
+    {
+        AppDataPtr = CFE_EVS_Global.AppData;
+        for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+        {
+            /* Make sure application is registered for event services */
+            if (EVS_AppDataIsUsed(AppDataPtr))
+            {
+                EVS_EnableTypes(AppDataPtr, CmdPtr->BitMask);
+            }
+            ++AppDataPtr;
+        }
+
+        EVS_SendEvent(CFE_EVS_ENAEVTTYPE_EID, CFE_EVS_EventType_DEBUG,
+                      "Enable Event Type Command Received with Event Type Bit Mask = 0x%02x",
+                      (unsigned int)CmdPtr->BitMask);
+
+        ReturnCode = CFE_SUCCESS;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_DisableEventTypeCmd(const CFE_EVS_DisableEventTypeCmd_t *data)
+{
+    uint32                              i;
+    const CFE_EVS_BitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               ReturnCode;
+    EVS_AppData_t *                     AppDataPtr;
+
+    /* Need to check for an out of range bitmask, since our bit masks are only 4 bits */
+    if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                      "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                      (long unsigned int)CFE_EVS_DISABLE_EVENT_TYPE_CC);
+        ReturnCode = CFE_EVS_INVALID_PARAMETER;
+    }
+
+    else
+    {
+        AppDataPtr = CFE_EVS_Global.AppData;
+        for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+        {
+            /* Make sure application is registered for event services */
+            if (EVS_AppDataIsUsed(AppDataPtr))
+            {
+                EVS_DisableTypes(AppDataPtr, CmdPtr->BitMask);
+            }
+            ++AppDataPtr;
+        }
+
+        EVS_SendEvent(CFE_EVS_DISEVTTYPE_EID, CFE_EVS_EventType_DEBUG,
+                      "Disable Event Type Command Received with Event Type Bit Mask = 0x%02x",
+                      (unsigned int)CmdPtr->BitMask);
+
+        ReturnCode = CFE_SUCCESS;
+    }
+
+    return ReturnCode;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_SetEventFormatModeCmd(const CFE_EVS_SetEventFormatModeCmd_t *data)
+{
+    const CFE_EVS_SetEventFormatMode_Payload_t *CmdPtr = &data->Payload;
+    int32                                       Status;
+
+    if ((CmdPtr->MsgFormat == CFE_EVS_MsgFormat_SHORT) || (CmdPtr->MsgFormat == CFE_EVS_MsgFormat_LONG))
+    {
+        CFE_EVS_Global.EVS_TlmPkt.Payload.MessageFormatMode = CmdPtr->MsgFormat;
+
+        EVS_SendEvent(CFE_EVS_SETEVTFMTMOD_EID, CFE_EVS_EventType_DEBUG,
+                      "Set Event Format Mode Command Received with Mode = 0x%02x", (unsigned int)CmdPtr->MsgFormat);
+        Status = CFE_SUCCESS;
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLEGALFMTMOD_EID, CFE_EVS_EventType_ERROR,
+                      "Set Event Format Mode Command: Invalid Event Format Mode = 0x%02x",
+                      (unsigned int)CmdPtr->MsgFormat);
+        Status = CFE_EVS_INVALID_PARAMETER;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_EnableAppEventTypeCmd(const CFE_EVS_EnableAppEventTypeCmd_t *data)
+{
+    const CFE_EVS_AppNameBitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    EVS_AppData_t *                            AppDataPtr;
+    int32                                      Status;
+    char                                       LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Need to check for an out of range bitmask, since our bit masks are only 4 bits */
+        if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+        {
+            EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                          "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                          (long unsigned int)CFE_EVS_ENABLE_APP_EVENT_TYPE_CC);
+            Status = CFE_EVS_INVALID_PARAMETER;
+        }
+        else
+        {
+            EVS_EnableTypes(AppDataPtr, CmdPtr->BitMask);
+        }
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_ENABLE_APP_EVENT_TYPE_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ENABLE_APP_EVENT_TYPE_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ENABLE_APP_EVENT_TYPE_CC);
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        EVS_SendEvent(CFE_EVS_ENAAPPEVTTYPE_EID, CFE_EVS_EventType_DEBUG,
+                      "Enable App Event Type Command Received with AppName = %s, EventType Bit Mask = 0x%02x",
+                      LocalName, CmdPtr->BitMask);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_DisableAppEventTypeCmd(const CFE_EVS_DisableAppEventTypeCmd_t *data)
+{
+    EVS_AppData_t *                            AppDataPtr;
+    const CFE_EVS_AppNameBitMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                                      Status;
+    char                                       LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Need to check for an out of range bitmask, since our bit masks are only 4 bits */
+        if (CmdPtr->BitMask == 0x0 || CmdPtr->BitMask > 0x0F)
+        {
+            EVS_SendEvent(CFE_EVS_ERR_INVALID_BITMASK_EID, CFE_EVS_EventType_ERROR,
+                          "Bit Mask = 0x%08x out of range: CC = %lu", (unsigned int)CmdPtr->BitMask,
+                          (long unsigned int)CFE_EVS_DISABLE_APP_EVENT_TYPE_CC);
+            Status = CFE_EVS_INVALID_PARAMETER;
+        }
+        else
+        {
+            EVS_DisableTypes(AppDataPtr, CmdPtr->BitMask);
+        }
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS,: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_DISABLE_APP_EVENT_TYPE_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DISABLE_APP_EVENT_TYPE_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DISABLE_APP_EVENT_TYPE_CC);
+    }
+
+    if (Status == CFE_SUCCESS)
+    {
+        EVS_SendEvent(CFE_EVS_DISAPPENTTYPE_EID, CFE_EVS_EventType_DEBUG,
+                      "Disable App Event Type Command Received with AppName = %s, EventType Bit Mask = 0x%02x",
+                      LocalName, (unsigned int)CmdPtr->BitMask);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_EnableAppEventsCmd(const CFE_EVS_EnableAppEventsCmd_t *data)
+{
+    EVS_AppData_t *                     AppDataPtr;
+    const CFE_EVS_AppNameCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Status;
+    char                                LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        AppDataPtr->ActiveFlag = true;
+
+        EVS_SendEvent(CFE_EVS_ENAAPPEVT_EID, CFE_EVS_EventType_DEBUG,
+                      "Enable App Events Command Received with AppName = %s", LocalName);
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_ENABLE_APP_EVENTS_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ENABLE_APP_EVENTS_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ENABLE_APP_EVENTS_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_DisableAppEventsCmd(const CFE_EVS_DisableAppEventsCmd_t *data)
+{
+    EVS_AppData_t *                     AppDataPtr;
+    const CFE_EVS_AppNameCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Status;
+    char                                LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        AppDataPtr->ActiveFlag = false;
+
+        EVS_SendEvent(CFE_EVS_DISAPPEVT_EID, CFE_EVS_EventType_DEBUG,
+                      "Disable App Events Command Received with AppName = %s", LocalName);
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_DISABLE_APP_EVENTS_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DISABLE_APP_EVENTS_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Disable App Events Command: Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DISABLE_APP_EVENTS_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ResetAppCounterCmd(const CFE_EVS_ResetAppCounterCmd_t *data)
+{
+    EVS_AppData_t *                     AppDataPtr;
+    const CFE_EVS_AppNameCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Status;
+    char                                LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        AppDataPtr->EventCount     = 0;
+        AppDataPtr->SquelchedCount = 0;
+
+        EVS_SendEvent(CFE_EVS_RSTEVTCNT_EID, CFE_EVS_EventType_DEBUG,
+                      "Reset Event Counter Command Received with AppName = %s", LocalName);
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_RESET_APP_COUNTER_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_APP_COUNTER_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Reset Event Counter Command: Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_APP_COUNTER_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ResetFilterCmd(const CFE_EVS_ResetFilterCmd_t *data)
+{
+    const CFE_EVS_AppNameEventIDCmd_Payload_t *CmdPtr = &data->Payload;
+    EVS_BinFilter_t *                          FilterPtr;
+    int32                                      Status;
+    EVS_AppData_t *                            AppDataPtr;
+    char                                       LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        FilterPtr = EVS_FindEventID(CmdPtr->EventID, AppDataPtr->BinFilters);
+
+        if (FilterPtr != NULL)
+        {
+            FilterPtr->Count = 0;
+
+            EVS_SendEvent(CFE_EVS_RSTFILTER_EID, CFE_EVS_EventType_DEBUG,
+                          "Reset Filter Command Received with AppName = %s, EventID = 0x%08x", LocalName,
+                          (unsigned int)CmdPtr->EventID);
+        }
+        else
+        {
+            EVS_SendEvent(CFE_EVS_ERR_EVTIDNOREGS_EID, CFE_EVS_EventType_ERROR,
+                          "%s Event ID %d not registered for filtering: CC = %lu", LocalName, (int)CmdPtr->EventID,
+                          (long unsigned int)CFE_EVS_RESET_FILTER_CC);
+
+            Status = CFE_EVS_EVT_NOT_REGISTERED;
+        }
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_RESET_FILTER_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_FILTER_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_FILTER_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_ResetAllFiltersCmd(const CFE_EVS_ResetAllFiltersCmd_t *data)
+{
+    EVS_AppData_t *                     AppDataPtr;
+    const CFE_EVS_AppNameCmd_Payload_t *CmdPtr = &data->Payload;
+    int32                               Status;
+    uint32                              i;
+    char                                LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        for (i = 0; i < CFE_PLATFORM_EVS_MAX_EVENT_FILTERS; i++)
+        {
+            AppDataPtr->BinFilters[i].Count = 0;
+        }
+
+        EVS_SendEvent(CFE_EVS_RSTALLFILTER_EID, CFE_EVS_EventType_DEBUG,
+                      "Reset All Filters Command Received with AppName = %s", LocalName);
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_RESET_ALL_FILTERS_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_ALL_FILTERS_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_RESET_ALL_FILTERS_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_AddEventFilterCmd(const CFE_EVS_AddEventFilterCmd_t *data)
+{
+    const CFE_EVS_AppNameEventIDMaskCmd_Payload_t *CmdPtr = &data->Payload;
+    EVS_BinFilter_t *                              FilterPtr;
+    int32                                          Status;
+    EVS_AppData_t *                                AppDataPtr;
+    char                                           LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        /* Check to see if this event is already registered for filtering */
+        FilterPtr = EVS_FindEventID(CmdPtr->EventID, AppDataPtr->BinFilters);
+
+        /* FilterPtr != NULL means that this Event ID was found as already being registered */
+        if (FilterPtr != NULL)
+        {
+            EVS_SendEvent(CFE_EVS_EVT_FILTERED_EID, CFE_EVS_EventType_ERROR,
+                          "Add Filter Command:AppName = %s, EventID = 0x%08x is already registered for filtering",
+                          LocalName, (unsigned int)CmdPtr->EventID);
+
+            Status = CFE_EVS_EVT_NOT_REGISTERED;
+        }
+        else
+        {
+            /* now check to see if there is a free slot */
+            FilterPtr = EVS_FindEventID(CFE_EVS_FREE_SLOT, AppDataPtr->BinFilters);
+
+            if (FilterPtr != NULL)
+            {
+                /* Add Filter Contents */
+                FilterPtr->EventID = CmdPtr->EventID;
+                FilterPtr->Mask    = CmdPtr->Mask;
+                FilterPtr->Count   = 0;
+
+                EVS_SendEvent(CFE_EVS_ADDFILTER_EID, CFE_EVS_EventType_DEBUG,
+                              "Add Filter Command Received with AppName = %s, EventID = 0x%08x, Mask = 0x%04x",
+                              LocalName, (unsigned int)CmdPtr->EventID, (unsigned int)CmdPtr->Mask);
+            }
+            else
+            {
+                EVS_SendEvent(CFE_EVS_ERR_MAXREGSFILTER_EID, CFE_EVS_EventType_ERROR,
+                              "Add Filter Command: number of registered filters has reached max = %d",
+                              CFE_PLATFORM_EVS_MAX_EVENT_FILTERS);
+
+                Status = CFE_EVS_APP_FILTER_OVERLOAD;
+            }
+        } /* end else*/
+    }     /* end if (Status == CFE_SUCCESS) */
+
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_ADD_EVENT_FILTER_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ADD_EVENT_FILTER_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_ADD_EVENT_FILTER_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_DeleteEventFilterCmd(const CFE_EVS_DeleteEventFilterCmd_t *data)
+{
+    const CFE_EVS_AppNameEventIDCmd_Payload_t *CmdPtr = &data->Payload;
+    EVS_BinFilter_t *                          FilterPtr;
+    int32                                      Status;
+    EVS_AppData_t *                            AppDataPtr;
+    char                                       LocalName[OS_MAX_API_NAME];
+
+    /* Copy appname from command, ensures NULL termination */
+    CFE_SB_MessageStringGet(LocalName, (char *)CmdPtr->AppName, NULL, sizeof(LocalName), sizeof(CmdPtr->AppName));
+
+    /* Retrieve application data */
+    Status = EVS_GetApplicationInfo(&AppDataPtr, LocalName);
+
+    if (Status == CFE_SUCCESS)
+    {
+        FilterPtr = EVS_FindEventID(CmdPtr->EventID, AppDataPtr->BinFilters);
+
+        if (FilterPtr != NULL)
+        {
+            /* Clear Filter Contents */
+            FilterPtr->EventID = CFE_EVS_FREE_SLOT;
+            FilterPtr->Mask    = CFE_EVS_NO_MASK;
+            FilterPtr->Count   = 0;
+
+            EVS_SendEvent(CFE_EVS_DELFILTER_EID, CFE_EVS_EventType_DEBUG,
+                          "Delete Filter Command Received with AppName = %s, EventID = 0x%08x", LocalName,
+                          (unsigned int)CmdPtr->EventID);
+        }
+        else
+        {
+            EVS_SendEvent(CFE_EVS_ERR_EVTIDNOREGS_EID, CFE_EVS_EventType_ERROR,
+                          "%s Event ID %d not registered for filtering: CC = %lu", LocalName, (int)CmdPtr->EventID,
+                          (long unsigned int)CFE_EVS_DELETE_EVENT_FILTER_CC);
+            Status = CFE_EVS_EVT_NOT_REGISTERED;
+        }
+    }
+    else if (Status == CFE_EVS_APP_NOT_REGISTERED)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_APPNOREGS_EID, CFE_EVS_EventType_ERROR, "%s not registered with EVS: CC = %lu",
+                      LocalName, (long unsigned int)CFE_EVS_DELETE_EVENT_FILTER_CC);
+    }
+    else if (Status == CFE_EVS_APP_ILLEGAL_APP_ID)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_ILLAPPIDRANGE_EID, CFE_EVS_EventType_ERROR,
+                      "Illegal application ID retrieved for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DELETE_EVENT_FILTER_CC);
+    }
+    else
+    {
+        EVS_SendEvent(CFE_EVS_ERR_NOAPPIDFOUND_EID, CFE_EVS_EventType_ERROR,
+                      "Unable to retrieve application ID for %s: CC = %lu", LocalName,
+                      (long unsigned int)CFE_EVS_DELETE_EVENT_FILTER_CC);
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 CFE_EVS_WriteAppDataFileCmd(const CFE_EVS_WriteAppDataFileCmd_t *data)
+{
+    int32                               Result;
+    osal_id_t                           FileHandle = OS_OBJECT_ID_UNDEFINED;
+    int32                               OsStatus;
+    int32                               BytesWritten;
+    uint32                              EntryCount = 0;
+    uint32                              i;
+    static CFE_EVS_AppDataFile_t        AppDataFile;
+    CFE_FS_Header_t                     FileHdr;
+    EVS_AppData_t *                     AppDataPtr;
+    const CFE_EVS_AppDataCmd_Payload_t *CmdPtr = &data->Payload;
+    char                                LocalName[OS_MAX_PATH_LEN];
+
+    /*
+    ** Copy the filename into local buffer with default name/path/extension if not specified
+    */
+    Result = CFE_FS_ParseInputFileNameEx(LocalName, CmdPtr->AppDataFilename, sizeof(LocalName),
+                                         sizeof(CmdPtr->AppDataFilename), CFE_PLATFORM_EVS_DEFAULT_APP_DATA_FILE,
+                                         CFE_FS_GetDefaultMountPoint(CFE_FS_FileCategory_BINARY_DATA_DUMP),
+                                         CFE_FS_GetDefaultExtension(CFE_FS_FileCategory_BINARY_DATA_DUMP));
+
+    if (Result != CFE_SUCCESS)
+    {
+        EVS_SendEvent(CFE_EVS_ERR_CRDATFILE_EID, CFE_EVS_EventType_ERROR,
+                      "Write App Data Command Error: CFE_FS_ParseInputFileNameEx() = 0x%08X", (unsigned int)Result);
+    }
+    else
+    {
+        /* Create Application Data File */
+        OsStatus = OS_OpenCreate(&FileHandle, LocalName, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+
+        if (OsStatus != OS_SUCCESS)
+        {
+            EVS_SendEvent(CFE_EVS_ERR_CRDATFILE_EID, CFE_EVS_EventType_ERROR,
+                          "Write App Data Command Error: OS_OpenCreate = %ld, filename = %s", (long)OsStatus,
+                          LocalName);
+            Result = CFE_STATUS_EXTERNAL_RESOURCE_FAIL;
+        }
+    }
+
+    if (Result == OS_SUCCESS)
+    {
+        /* Result will be overridden if everything works */
+        Result = CFE_EVS_FILE_WRITE_ERROR;
+
+        /* Initialize cFE file header */
+        CFE_FS_InitHeader(&FileHdr, "EVS Application Data File", CFE_FS_SubType_EVS_APPDATA);
+
+        /* Write cFE file header to the App File */
+        BytesWritten = CFE_FS_WriteHeader(FileHandle, &FileHdr);
+
+        if (BytesWritten == sizeof(CFE_FS_Header_t))
+        {
+            AppDataPtr = CFE_EVS_Global.AppData;
+            for (i = 0; i < CFE_PLATFORM_ES_MAX_APPLICATIONS; i++)
+            {
+                /* Only have data for apps that are registered */
+                if (EVS_AppDataIsUsed(AppDataPtr))
+                {
+                    /* Clear application file data record */
+                    memset(&AppDataFile, 0, sizeof(CFE_EVS_AppDataFile_t));
+
+                    /* Copy application data to application file data record */
+                    CFE_ES_GetAppName(AppDataFile.AppName, EVS_AppDataGetID(AppDataPtr), sizeof(AppDataFile.AppName));
+                    AppDataFile.ActiveFlag           = AppDataPtr->ActiveFlag;
+                    AppDataFile.EventCount           = AppDataPtr->EventCount;
+                    AppDataFile.EventTypesActiveFlag = AppDataPtr->EventTypesActiveFlag;
+                    AppDataFile.SquelchedCount       = AppDataPtr->SquelchedCount;
+
+                    /* Copy application filter data to application file data record */
+                    memcpy(AppDataFile.Filters, AppDataPtr->BinFilters,
+                           CFE_PLATFORM_EVS_MAX_EVENT_FILTERS * sizeof(EVS_BinFilter_t));
+
+                    /* Write application data record to file */
+                    OsStatus = OS_write(FileHandle, &AppDataFile, sizeof(CFE_EVS_AppDataFile_t));
+
+                    if (OsStatus == sizeof(CFE_EVS_AppDataFile_t))
+                    {
+                        EntryCount++;
+                    }
+                    else
+                    {
+                        EVS_SendEvent(CFE_EVS_ERR_WRDATFILE_EID, CFE_EVS_EventType_ERROR,
+                                      "Write App Data Command Error: OS_write = %ld, filename = %s", (long)OsStatus,
+                                      LocalName);
+                        break;
+                    }
+                }
+                ++AppDataPtr;
+            }
+
+            /* Process command handler success result */
+            if (i == CFE_PLATFORM_ES_MAX_APPLICATIONS)
+            {
+                EVS_SendEvent(CFE_EVS_WRDAT_EID, CFE_EVS_EventType_DEBUG,
+                              "Write App Data Command: %d application data entries written to %s", (int)EntryCount,
+                              LocalName);
+                Result = CFE_SUCCESS;
+            }
+        }
+
+        OS_close(FileHandle);
+    }
+
+    return Result;
+}
+```
+
+### `cfe_evs_task.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_task.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Title:    Event Services API - Management Control Interfaces.
+ *
+ *  Purpose:
+ *            Unit specification for the event services management control interfaces.
+ *
+ *  Contents:
+ *       I.  macro and constant type definitions
+ *      II.  EVS internal structures
+ *     III.  function prototypes
+ *
+ *  Design Notes:
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *
+ */
+
+#ifndef CFE_EVS_TASK_H
+#define CFE_EVS_TASK_H
+
+/********************************** Include Files  ************************************/
+#include "common_types.h"
+#include "cfe_platform_cfg.h"
+#include "cfe_mission_cfg.h"
+#include "osconfig.h"
+#include "cfe_time.h"
+#include "cfe_evs_api_typedefs.h"
+#include "cfe_evs_log_typedef.h"
+#include "cfe_sb_api_typedefs.h"
+#include "cfe_evs_eventids.h"
+
+/*********************  Macro and Constant Type Definitions   ***************************/
+
+#define CFE_EVS_MSG_TRUNCATED        '$'
+#define CFE_EVS_FREE_SLOT            (-1)
+#define CFE_EVS_NO_MASK              0
+#define CFE_EVS_PIPE_DEPTH           32
+#define CFE_EVS_MAX_EVENT_SEND_COUNT 65535
+#define CFE_EVS_MAX_FILTER_COUNT     65535
+#define CFE_EVS_MAX_SQUELCH_COUNT    255
+#define CFE_EVS_PIPE_NAME            "EVS_CMD_PIPE"
+#define CFE_EVS_MAX_PORT_MSG_LENGTH  (CFE_MISSION_EVS_MAX_MESSAGE_LENGTH + OS_MAX_API_NAME + 30)
+
+/* Since CFE_EVS_MAX_PORT_MSG_LENGTH is the size of the buffer that is sent to
+ * print out (using OS_printf), we need to check to make sure that the buffer
+ * size the OS uses is big enough. This check has to be made here because it is
+ * the first spot after CFE_EVS_MAX_PORT_MSG_LENGTH is defined */
+#if OS_BUFFER_SIZE < CFE_EVS_MAX_PORT_MSG_LENGTH
+#error CFE_EVS_MAX_PORT_MSG_LENGTH cannot be greater than OS_BUFFER_SIZE!
+#endif
+
+/************************  Internal Structure Definitions  *****************************/
+
+typedef struct
+{
+    uint16 EventID; /* Numerical event identifier */
+    uint16 Mask;    /* Binary filter mask */
+    uint16 Count;   /* Binary filter counter */
+    uint16 Padding; /* Structure padding */
+} EVS_BinFilter_t;
+
+typedef struct
+{
+    CFE_ES_AppId_t AppID;
+    CFE_ES_AppId_t UnregAppID;
+
+    EVS_BinFilter_t BinFilters[CFE_PLATFORM_EVS_MAX_EVENT_FILTERS]; /* Array of binary filters */
+
+    uint8     ActiveFlag;                /* Application event service active flag */
+    uint8     EventTypesActiveFlag;      /* Application event types active flag */
+    uint16    EventCount;                /* Application event counter */
+    OS_time_t LastSquelchCreditableTime; /* Time of last squelch token return */
+    int32     SquelchTokens;             /* Application event squelch token counter */
+    uint8     SquelchedCount;            /* Application events squelched counter */
+} EVS_AppData_t;
+
+typedef struct
+{
+    char            AppName[OS_MAX_API_NAME]; /* Application name */
+    uint8           ActiveFlag;               /* Application event service active flag */
+    uint8           EventTypesActiveFlag;     /* Application event types active flag */
+    uint16          EventCount;               /* Application event counter */
+    uint8           SquelchedCount;           /* Application events squelched counter */
+    uint8           Spare[3];
+    EVS_BinFilter_t Filters[CFE_PLATFORM_EVS_MAX_EVENT_FILTERS]; /* Application event filters */
+} CFE_EVS_AppDataFile_t;
+
+/* Global data structure */
+typedef struct
+{
+    EVS_AppData_t AppData[CFE_PLATFORM_ES_MAX_APPLICATIONS]; /* Application state data and event filters */
+
+    CFE_EVS_Log_t *EVS_LogPtr; /* Pointer to the EVS log in the ES Reset area*/
+                               /* see cfe_es_global.h */
+
+    /*
+    ** EVS task data
+    */
+    CFE_EVS_HousekeepingTlm_t EVS_TlmPkt;
+    CFE_SB_PipeId_t           EVS_CommandPipe;
+    osal_id_t                 EVS_SharedDataMutexID;
+    CFE_ES_AppId_t            EVS_AppID;
+    uint32                    EVS_EventBurstMax;
+} CFE_EVS_Global_t;
+
+/*
+ *  Global variable specific to EVS module
+ */
+extern CFE_EVS_Global_t CFE_EVS_Global;
+
+/*****************************  Function Prototypes   **********************************/
+
+/*
+ * Functions used within this module and by the unit test
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Task Initialization
+ *
+ * This function performs any necessary EVS task initialization.
+ */
+int32 CFE_EVS_TaskInit(void);
+
+/*
+ * EVS Message Handler Functions
+ */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * Request for housekeeping status telemetry packet.
+ */
+int32 CFE_EVS_ReportHousekeepingCmd(const CFE_EVS_SendHkCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This function processes "noop" commands received on the EVS command pipe.
+ */
+int32 CFE_EVS_NoopCmd(const CFE_EVS_NoopCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This function processes "clear log" commands received on the EVS command pipe.
+ */
+int32 CFE_EVS_ClearLogCmd(const CFE_EVS_ClearLogCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This function resets all the global counter variables that are part of the task telemetry.
+ */
+int32 CFE_EVS_ResetCountersCmd(const CFE_EVS_ResetCountersCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the filter mask for the given event_id in the
+ * calling task's filter array
+ */
+int32 CFE_EVS_SetFilterCmd(const CFE_EVS_SetFilterCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the command given ports to an enabled state
+ * @note Shifting is done so the value not masked off is placed in the ones spot:
+ * necessary for comparing with true.
+ */
+int32 CFE_EVS_EnablePortsCmd(const CFE_EVS_EnablePortsCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the command given ports to a disabled state
+ * @note Shifting is done so the value not masked off is placed in the ones spot:
+ * necessary for comparing with true.
+ */
+int32 CFE_EVS_DisablePortsCmd(const CFE_EVS_DisablePortsCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the given event types to an enabled state across all
+ * registered applications
+ */
+int32 CFE_EVS_EnableEventTypeCmd(const CFE_EVS_EnableEventTypeCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the given event types to a disabled state across all
+ * registered applications
+ */
+int32 CFE_EVS_DisableEventTypeCmd(const CFE_EVS_DisableEventTypeCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the Event Format Mode
+ */
+int32 CFE_EVS_SetEventFormatModeCmd(const CFE_EVS_SetEventFormatModeCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the given event type for the given application identifier to an
+ * enabled state
+ */
+int32 CFE_EVS_EnableAppEventTypeCmd(const CFE_EVS_EnableAppEventTypeCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the given event type for the given application identifier to a
+ * disabled state
+ */
+int32 CFE_EVS_DisableAppEventTypeCmd(const CFE_EVS_DisableAppEventTypeCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine enables application events for the given application identifier
+ */
+int32 CFE_EVS_EnableAppEventsCmd(const CFE_EVS_EnableAppEventsCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine disables application events for the given application identifier
+ */
+int32 CFE_EVS_DisableAppEventsCmd(const CFE_EVS_DisableAppEventsCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the application event counter to zero for the given
+ * application identifier
+ */
+int32 CFE_EVS_ResetAppCounterCmd(const CFE_EVS_ResetAppCounterCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets the application event filter counter to zero for the given
+ * application identifier and event identifier
+ */
+int32 CFE_EVS_ResetFilterCmd(const CFE_EVS_ResetFilterCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine adds the given event filter for the given application
+ * identifier and event identifier.
+ */
+int32 CFE_EVS_AddEventFilterCmd(const CFE_EVS_AddEventFilterCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine deletes the event filter for the given application
+ * identifier and event identifier
+ */
+int32 CFE_EVS_DeleteEventFilterCmd(const CFE_EVS_DeleteEventFilterCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine writes all application data to a file for all applications that
+ * have registered with the EVS.  The application data includes the Application ID,
+ * Active Flag, Event Count, Event Types Active Flag, and Filter Data.
+ */
+int32 CFE_EVS_WriteAppDataFileCmd(const CFE_EVS_WriteAppDataFileCmd_t *data);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Message Handler Function
+ *
+ * This routine sets all application event filter counters to zero for the given
+ * application identifier
+ */
+int32 CFE_EVS_ResetAllFiltersCmd(const CFE_EVS_ResetAllFiltersCmd_t *data);
+
+#endif /* CFE_EVS_TASK_H */
+```
+
+### `cfe_evs_utils.c`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  File: cfe_evs_utils.c
+**
+**  Title: Event Services Utility functions
+**
+**  Purpose: This module defines the utility functions of the
+**           Event Services Task and API
+**
+*/
+
+/* Include Files */
+#include "cfe_evs_module_all.h" /* All EVS internal definitions and API */
+#include "cfe_evs_utils.h"
+
+#include <stdio.h>
+#include <string.h>
+
+/* Local Function Prototypes */
+void EVS_SendViaPorts(CFE_EVS_LongEventTlm_t *EVS_PktPtr);
+void EVS_OutputPort(uint8 PortNum, char *Message);
+
+/* Function Definitions */
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+EVS_AppData_t *EVS_GetAppDataByID(CFE_ES_AppId_t AppID)
+{
+    uint32         AppIndex;
+    EVS_AppData_t *AppDataPtr;
+
+    if (CFE_ES_AppID_ToIndex(AppID, &AppIndex) == CFE_SUCCESS && AppIndex < CFE_PLATFORM_ES_MAX_APPLICATIONS)
+    {
+        AppDataPtr = &CFE_EVS_Global.AppData[AppIndex];
+    }
+    else
+    {
+        AppDataPtr = NULL;
+    }
+
+    return AppDataPtr;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 EVS_GetCurrentContext(EVS_AppData_t **AppDataOut, CFE_ES_AppId_t *AppIDOut)
+{
+    CFE_ES_AppId_t AppID;
+    EVS_AppData_t *AppDataPtr;
+    int32          Status;
+
+    /* Get the caller's AppID */
+    Status = CFE_ES_GetAppID(&AppID);
+    if (Status == CFE_SUCCESS)
+    {
+        AppDataPtr = EVS_GetAppDataByID(AppID);
+    }
+    else
+    {
+        AppDataPtr = NULL;
+    }
+
+    if (AppDataPtr == NULL)
+    {
+        /* use EVS error/status code */
+        Status = CFE_EVS_APP_ILLEGAL_APP_ID;
+    }
+
+    if (AppIDOut)
+    {
+        *AppIDOut = AppID;
+    }
+    if (AppDataOut)
+    {
+        *AppDataOut = AppDataPtr;
+    }
+
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 EVS_GetApplicationInfo(EVS_AppData_t **AppDataOut, const char *pAppName)
+{
+    int32          Status;
+    CFE_ES_AppId_t AppID;
+    EVS_AppData_t *AppDataPtr;
+
+    Status = CFE_ES_GetAppIDByName(&AppID, pAppName);
+    if (Status != CFE_SUCCESS)
+    {
+        AppDataPtr = NULL;
+    }
+    else
+    {
+        AppDataPtr = EVS_GetAppDataByID(AppID);
+        if (AppDataPtr == NULL)
+        {
+            /*
+             * should not happen - it means the CFE_ES_GetAppIDByName()
+             * returned a success code with an AppID which was in subsequently
+             * not accepted by CFE_ES_AppID_ToIndex()
+             */
+            Status = CFE_EVS_APP_ILLEGAL_APP_ID;
+        }
+        else if (!EVS_AppDataIsMatch(AppDataPtr, AppID))
+        {
+            /* Avoid outputting a bad pointer */
+            AppDataPtr = NULL;
+            Status     = CFE_EVS_APP_NOT_REGISTERED;
+        }
+    }
+
+    *AppDataOut = AppDataPtr;
+    return Status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 EVS_NotRegistered(EVS_AppData_t *AppDataPtr, CFE_ES_AppId_t CallerID)
+{
+    char AppName[OS_MAX_API_NAME];
+
+    /* Send only one "not registered" event per application */
+    if (!CFE_RESOURCEID_TEST_EQUAL(AppDataPtr->UnregAppID, CallerID))
+    {
+        /* Increment count of "not registered" applications */
+        CFE_EVS_Global.EVS_TlmPkt.Payload.UnregisteredAppCounter++;
+
+        /* Indicate that "not registered" event has been sent for this app */
+        AppDataPtr->UnregAppID = CallerID;
+
+        /* Get the name of the "not registered" app */
+        CFE_ES_GetAppName(AppName, CallerID, sizeof(AppName));
+
+        /* Send the "not registered" event */
+        EVS_SendEvent(CFE_EVS_ERR_UNREGISTERED_EVS_APP, CFE_EVS_EventType_ERROR,
+                      "App %s not registered with Event Services. Unable to send event.", AppName);
+
+        /* Write the "not registered" info to the system log */
+        CFE_ES_WriteToSysLog("%s: App %s not registered with Event Services. Unable to send event.\n", __func__,
+                             AppName);
+    }
+
+    return CFE_EVS_APP_NOT_REGISTERED;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool EVS_IsFiltered(EVS_AppData_t *AppDataPtr, uint16 EventID, uint16 EventType)
+{
+    EVS_BinFilter_t *FilterPtr;
+    bool             Filtered = false;
+    char             AppName[OS_MAX_API_NAME];
+
+    if (AppDataPtr->ActiveFlag == false)
+    {
+        /* All events are disabled for this application */
+        Filtered = true;
+    }
+    else
+        switch (EventType)
+        {
+            case CFE_EVS_EventType_DEBUG:
+
+                if ((AppDataPtr->EventTypesActiveFlag & CFE_EVS_DEBUG_BIT) == 0)
+                {
+                    /* Debug events are disabled for this application */
+                    Filtered = true;
+                }
+                break;
+
+            case CFE_EVS_EventType_INFORMATION:
+
+                if ((AppDataPtr->EventTypesActiveFlag & CFE_EVS_INFORMATION_BIT) == 0)
+                {
+                    /* Informational events are disabled for this application */
+                    Filtered = true;
+                }
+                break;
+
+            case CFE_EVS_EventType_ERROR:
+
+                if ((AppDataPtr->EventTypesActiveFlag & CFE_EVS_ERROR_BIT) == 0)
+                {
+                    /* Error events are disabled for this application */
+                    Filtered = true;
+                }
+                break;
+
+            case CFE_EVS_EventType_CRITICAL:
+
+                if ((AppDataPtr->EventTypesActiveFlag & CFE_EVS_CRITICAL_BIT) == 0)
+                {
+                    /* Critical events are disabled for this application */
+                    Filtered = true;
+                }
+                break;
+
+            default:
+
+                /* Invalid Event Type */
+                Filtered = true;
+                break;
+        }
+
+    /* Is this type of event enabled for this application? */
+    if (Filtered == false)
+    {
+        FilterPtr = EVS_FindEventID(EventID, AppDataPtr->BinFilters);
+
+        /* Does this event ID have an event filter table entry? */
+        if (FilterPtr != NULL)
+        {
+            if ((FilterPtr->Mask & FilterPtr->Count) != 0)
+            {
+                /* This iteration of the event ID is filtered */
+                Filtered = true;
+            }
+
+            if (FilterPtr->Count < CFE_EVS_MAX_FILTER_COUNT)
+            {
+                /* Maintain event iteration count */
+                FilterPtr->Count++;
+
+                /* Is it time to lock this filter? */
+                if (FilterPtr->Count == CFE_EVS_MAX_FILTER_COUNT)
+                {
+                    CFE_ES_GetAppName(AppName, EVS_AppDataGetID(AppDataPtr), sizeof(AppName));
+
+                    EVS_SendEvent(CFE_EVS_FILTER_MAX_EID, CFE_EVS_EventType_INFORMATION,
+                                  "Max filter count reached, AppName = %s, EventID = 0x%08x: Filter locked until reset",
+                                  AppName, (unsigned int)EventID);
+                }
+            }
+        }
+    }
+
+    return Filtered;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool EVS_CheckAndIncrementSquelchTokens(EVS_AppData_t *AppDataPtr)
+{
+    bool      NotSquelched     = true;
+    bool      SendSquelchEvent = false;
+    OS_time_t CurrentTime      = {0};
+    int64     DeltaTimeMs;
+    int64     CreditCount;
+    char      AppName[OS_MAX_API_NAME];
+
+    /* Set maximum token credits to burst size */
+    const int32 UPPER_THRESHOLD = CFE_EVS_Global.EVS_EventBurstMax * 1000;
+    /*
+     * Set lower threshold to stop decrementing
+     * Make this -CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST to add some hysteresis
+     * Events will resume (CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST /
+     * CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC + 1 /
+     * CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC) seconds after flooding stops if
+     * saturated
+     */
+    const int32 LOWER_THRESHOLD = -CFE_EVS_Global.EVS_EventBurstMax * 1000;
+
+    /*
+     * Set this to 1000 to avoid integer division while computing CreditCount
+     */
+    const int32 EVENT_COST = 1000;
+
+    if (CFE_EVS_Global.EVS_EventBurstMax != 0)
+    {
+        /*
+         * We use a timer here since configurations are not guaranteed to send EVS HK wakeups at 1Hz
+         * Use a non-settable timer to prevent this from breaking w/ time changes
+         */
+        OS_MutSemTake(CFE_EVS_Global.EVS_SharedDataMutexID);
+        CFE_PSP_GetTime(&CurrentTime);
+        DeltaTimeMs = OS_TimeGetTotalMilliseconds(OS_TimeSubtract(CurrentTime, AppDataPtr->LastSquelchCreditableTime));
+
+        /* Calculate how many tokens to credit in elapsed time since last creditable event */
+        CreditCount = DeltaTimeMs * CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC;
+
+        /*
+         * Don't immediately credit < 1 event worth of credits; defer until
+         * enough time that CreditCount > EVENT_COST
+         *
+         * This prevents condition where credits would creep down slowly
+         * through the range which squelch event messages are emitted causing
+         * those events to be spammed instead, defeating the suppression.
+         */
+        if (CreditCount >= EVENT_COST)
+        {
+            /* Update last squelch returned time if we credited any tokens */
+            AppDataPtr->LastSquelchCreditableTime = CurrentTime;
+
+            /*
+             * Add Credits, to a maximum of UPPER_THRESHOLD
+             * Shouldn't rollover, as calculations are done in int64 space due to
+             * promotion rules then bounded before demotion
+             */
+            if (AppDataPtr->SquelchTokens + CreditCount > UPPER_THRESHOLD)
+            {
+                AppDataPtr->SquelchTokens = UPPER_THRESHOLD;
+            }
+            else
+            {
+                AppDataPtr->SquelchTokens += (int32)CreditCount;
+            }
+        }
+
+        if (AppDataPtr->SquelchTokens <= 0)
+        {
+            if (AppDataPtr->SquelchedCount < CFE_EVS_MAX_SQUELCH_COUNT)
+            {
+                AppDataPtr->SquelchedCount++;
+            }
+            NotSquelched = false;
+
+            /*
+             * Send squelch event message if cross threshold. This has to be a
+             * range between -EVENT_COST and 0 due to non-whole event-cost credits being
+             * returned allowing 0 to be skipped over. This is solved by
+             * checking a range and ensuring EVENT_COST credits are returned at minimum.
+             */
+            if (AppDataPtr->SquelchTokens > -EVENT_COST && CreditCount < EVENT_COST)
+            {
+                /* Set flag and send event later, since we still own mutex */
+                SendSquelchEvent = true;
+            }
+        }
+
+        /*
+         * Subtract event cost
+         */
+        if (AppDataPtr->SquelchTokens - EVENT_COST < LOWER_THRESHOLD)
+        {
+            AppDataPtr->SquelchTokens = LOWER_THRESHOLD;
+        }
+        else
+        {
+            AppDataPtr->SquelchTokens -= EVENT_COST;
+        }
+
+        OS_MutSemGive(CFE_EVS_Global.EVS_SharedDataMutexID);
+
+        if (SendSquelchEvent)
+        {
+            CFE_ES_GetAppName(AppName, EVS_AppDataGetID(AppDataPtr), sizeof(AppName));
+            EVS_SendEvent(CFE_EVS_SQUELCHED_ERR_EID, CFE_EVS_EventType_ERROR, "Events squelched, AppName = %s",
+                          AppName);
+        }
+    }
+    return NotSquelched;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+EVS_BinFilter_t *EVS_FindEventID(uint16 EventID, EVS_BinFilter_t *FilterArray)
+{
+    uint32 i;
+
+    for (i = 0; i < CFE_PLATFORM_EVS_MAX_EVENT_FILTERS; i++)
+    {
+        if (FilterArray[i].EventID == EventID)
+        {
+            return &FilterArray[i];
+        }
+    }
+
+    return (EVS_BinFilter_t *)NULL;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void EVS_EnableTypes(EVS_AppData_t *AppDataPtr, uint8 BitMask)
+{
+    uint8 EventTypeBits = (CFE_EVS_DEBUG_BIT | CFE_EVS_INFORMATION_BIT | CFE_EVS_ERROR_BIT | CFE_EVS_CRITICAL_BIT);
+
+    /* Enable selected event type bits from bitmask */
+    AppDataPtr->EventTypesActiveFlag |= (BitMask & EventTypeBits);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void EVS_DisableTypes(EVS_AppData_t *AppDataPtr, uint8 BitMask)
+{
+    uint8 EventTypeBits = (CFE_EVS_DEBUG_BIT | CFE_EVS_INFORMATION_BIT | CFE_EVS_ERROR_BIT | CFE_EVS_CRITICAL_BIT);
+
+    /* Disable selected event type bits from bitmask */
+    AppDataPtr->EventTypesActiveFlag &= ~(BitMask & EventTypeBits);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void EVS_GenerateEventTelemetry(EVS_AppData_t *AppDataPtr, uint16 EventID, uint16 EventType,
+                                const CFE_TIME_SysTime_t *TimeStamp, const char *MsgSpec, va_list ArgPtr)
+{
+    CFE_EVS_LongEventTlm_t  LongEventTlm;  /* The "long" flavor is always generated, as this is what is logged */
+    CFE_EVS_ShortEventTlm_t ShortEventTlm; /* The "short" flavor is only generated if selected */
+    int                     ExpandedLength;
+
+    memset(&LongEventTlm, 0, sizeof(LongEventTlm));
+    memset(&ShortEventTlm, 0, sizeof(ShortEventTlm));
+
+    /* Initialize EVS event packets */
+    CFE_MSG_Init(CFE_MSG_PTR(LongEventTlm.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_EVS_LONG_EVENT_MSG_MID),
+                 sizeof(LongEventTlm));
+    LongEventTlm.Payload.PacketID.EventID   = EventID;
+    LongEventTlm.Payload.PacketID.EventType = EventType;
+
+    /* vsnprintf() returns the total expanded length of the formatted string */
+    /* vsnprintf() copies and zero terminates portion that fits in the buffer */
+    ExpandedLength =
+        vsnprintf((char *)LongEventTlm.Payload.Message, sizeof(LongEventTlm.Payload.Message), MsgSpec, ArgPtr);
+
+    /*
+     * If vsnprintf is bigger than message size, mark with truncation character
+     * Note negative returns (error from vsnprintf) will just leave the message as-is
+     */
+    if (ExpandedLength >= (int)sizeof(LongEventTlm.Payload.Message))
+    {
+        /* Mark character before zero terminator to indicate truncation */
+        LongEventTlm.Payload.Message[sizeof(LongEventTlm.Payload.Message) - 2] = CFE_EVS_MSG_TRUNCATED;
+        CFE_EVS_Global.EVS_TlmPkt.Payload.MessageTruncCounter++;
+    }
+
+    /* Obtain task and system information */
+    CFE_ES_GetAppName((char *)LongEventTlm.Payload.PacketID.AppName, EVS_AppDataGetID(AppDataPtr),
+                      sizeof(LongEventTlm.Payload.PacketID.AppName));
+    LongEventTlm.Payload.PacketID.SpacecraftID = CFE_PSP_GetSpacecraftId();
+    LongEventTlm.Payload.PacketID.ProcessorID  = CFE_PSP_GetProcessorId();
+
+    /* Set the packet timestamp */
+    CFE_MSG_SetMsgTime(CFE_MSG_PTR(LongEventTlm.TelemetryHeader), *TimeStamp);
+
+    /* Write event to the event log */
+    EVS_AddLog(&LongEventTlm);
+
+    /* Send event via selected ports */
+    EVS_SendViaPorts(&LongEventTlm);
+
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.MessageFormatMode == CFE_EVS_MsgFormat_LONG)
+    {
+        /* Send long event via SoftwareBus */
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(LongEventTlm.TelemetryHeader), true);
+    }
+    else if (CFE_EVS_Global.EVS_TlmPkt.Payload.MessageFormatMode == CFE_EVS_MsgFormat_SHORT)
+    {
+        /*
+         * Initialize the short format event message from data that was already
+         * gathered in the long format message (short format is a subset)
+         *
+         * This goes out on a separate message ID.
+         */
+        CFE_MSG_Init(CFE_MSG_PTR(ShortEventTlm.TelemetryHeader), CFE_SB_ValueToMsgId(CFE_EVS_SHORT_EVENT_MSG_MID),
+                     sizeof(ShortEventTlm));
+        CFE_MSG_SetMsgTime(CFE_MSG_PTR(ShortEventTlm.TelemetryHeader), *TimeStamp);
+        ShortEventTlm.Payload.PacketID = LongEventTlm.Payload.PacketID;
+        CFE_SB_TransmitMsg(CFE_MSG_PTR(ShortEventTlm.TelemetryHeader), true);
+    }
+
+    /* Increment message send counters (prevent rollover) */
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.MessageSendCounter < CFE_EVS_MAX_EVENT_SEND_COUNT)
+    {
+        CFE_EVS_Global.EVS_TlmPkt.Payload.MessageSendCounter++;
+    }
+
+    if (AppDataPtr->EventCount < CFE_EVS_MAX_EVENT_SEND_COUNT)
+    {
+        AppDataPtr->EventCount++;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * This routine sends a string event message out all enabled
+ * output ports
+ *
+ *-----------------------------------------------------------------*/
+void EVS_SendViaPorts(CFE_EVS_LongEventTlm_t *EVS_PktPtr)
+{
+    char               PortMessage[CFE_EVS_MAX_PORT_MSG_LENGTH];
+    char               TimeBuffer[CFE_TIME_PRINTED_STRING_SIZE];
+    CFE_TIME_SysTime_t PktTime;
+
+    CFE_MSG_GetMsgTime(CFE_MSG_PTR(EVS_PktPtr->TelemetryHeader), &PktTime);
+    CFE_TIME_Print(TimeBuffer, PktTime);
+
+    snprintf(PortMessage, CFE_EVS_MAX_PORT_MSG_LENGTH, "EVS Port1 %u/%u/%s %u: %s", 
+             (unsigned int)EVS_PktPtr->Payload.PacketID.SpacecraftID,
+             (unsigned int)EVS_PktPtr->Payload.PacketID.ProcessorID, EVS_PktPtr->Payload.PacketID.AppName,
+             (unsigned int)EVS_PktPtr->Payload.PacketID.EventID, EVS_PktPtr->Payload.Message);
+
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort & CFE_EVS_PORT1_BIT)
+    {
+        /* Send string event out port #1 */
+        EVS_OutputPort(1, PortMessage);
+    }
+
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort & CFE_EVS_PORT2_BIT)
+    {
+        /* Send string event out port #2 */
+        EVS_OutputPort(2, PortMessage);
+    }
+
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort & CFE_EVS_PORT3_BIT)
+    {
+        /* Send string event out port #3 */
+        EVS_OutputPort(3, PortMessage);
+    }
+
+    if (CFE_EVS_Global.EVS_TlmPkt.Payload.OutputPort & CFE_EVS_PORT4_BIT)
+    {
+        /* Send string event out port #4 */
+        EVS_OutputPort(4, PortMessage);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ *-----------------------------------------------------------------*/
+void EVS_OutputPort(uint8 PortNum, char *Message)
+{
+    OS_printf("EVS Port%u %s\n", PortNum, Message);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 EVS_SendEvent(uint16 EventID, uint16 EventType, const char *Spec, ...)
+{
+    CFE_TIME_SysTime_t Time;
+    va_list            Ptr;
+    EVS_AppData_t *    AppDataPtr;
+
+    /*
+     * Must check that EVS_AppID is valid, which can happen if this is called
+     * by some other thread before CFE_EVS_TaskInit() runs
+     */
+    AppDataPtr = EVS_GetAppDataByID(CFE_EVS_Global.EVS_AppID);
+
+    /* Unlikely, but possible that an EVS event filter was added by command */
+    /* Note that we do not squelch events coming from EVS to prevent event recursion,
+     * and EVS is assumed to be "well-behaved" */
+    if (EVS_AppDataIsMatch(AppDataPtr, CFE_EVS_Global.EVS_AppID) &&
+        EVS_IsFiltered(AppDataPtr, EventID, EventType) == false)
+    {
+        /* Get current spacecraft time */
+        Time = CFE_TIME_GetTime();
+
+        /* Send the event packets */
+        va_start(Ptr, Spec);
+        EVS_GenerateEventTelemetry(AppDataPtr, EventID, EventType, &Time, Spec, Ptr);
+        va_end(Ptr);
+    }
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_evs_utils.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Title:    Event Services Task and API - Utility functions.
+ *
+ *  Purpose:
+ *            Unit specification for the event services utility functions.
+ *
+ *  Contents:
+ *       I.  macro and constant type definitions
+ *      II.  EVS utility internal structures
+ *     III.  function prototypes
+ *
+ *  Design Notes:
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *
+ */
+
+#ifndef CFE_EVS_UTILS_H
+#define CFE_EVS_UTILS_H
+
+/********************* Include Files  ************************/
+
+#include "cfe_evs_task.h" /* EVS internal definitions */
+#include "cfe_resourceid.h"
+#include "cfe_es_api_typedefs.h"
+#include "cfe_time_api_typedefs.h"
+
+/* ==============   Section I: Macro and Constant Type Definitions   =========== */
+
+/* ==============   Section II: Internal Structures ============ */
+
+/* ==============   Section III: Function Prototypes =========== */
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the EVS app record for the given ID
+ *
+ * This only obtains a pointer to where the record should be, it does
+ * not check/confirm that the record actually is for the given AppID.
+ * Use EVS_AppDataIsMatch() to determine if the record is valid.
+ *
+ * @sa EVS_AppDataIsMatch()
+ *
+ * @param[in]   AppID   AppID to find
+ * @returns Pointer to app table entry, or NULL if ID is invalid.
+ */
+EVS_AppData_t *EVS_GetAppDataByID(CFE_ES_AppId_t AppID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Obtain the context information for the currently running app
+ *
+ * Obtains both the AppData record (pointer) and AppID for the current context.
+ *
+ * @param[out]   AppDataOut     Location to store App Data record pointer
+ * @param[out]   AppIDOut       Location to store AppID
+ * @returns CFE_SUCCESS if successful, or relevant error code.
+ */
+int32 EVS_GetCurrentContext(EVS_AppData_t **AppDataOut, CFE_ES_AppId_t *AppIDOut);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if an EVS app record is in use or free/empty
+ *
+ * This routine checks if the EVS app entry is in use or if it is free
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @param[in]   AppDataPtr   pointer to app table entry
+ * @returns true if the entry is in use/configured, or false if it is free/empty
+ */
+static inline bool EVS_AppDataIsUsed(EVS_AppData_t *AppDataPtr)
+{
+    return CFE_RESOURCEID_TEST_DEFINED(AppDataPtr->AppID);
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Get the ID value from an EVS table entry
+ *
+ * This routine converts the table entry back to an abstract ID.
+ *
+ * @param[in]   AppDataPtr   pointer to app table entry
+ * @returns AppID of entry
+ */
+static inline CFE_ES_AppId_t EVS_AppDataGetID(EVS_AppData_t *AppDataPtr)
+{
+    /*
+     * The initial implementation does not store the ID in the entry;
+     * the ID is simply the zero-based index into the table.
+     */
+    return AppDataPtr->AppID;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Marks an EVS table entry as used (not free)
+ *
+ * This sets the internal field(s) within this entry, and marks
+ * it as being associated with the given app ID.
+ *
+ * As this dereferences fields within the record, global data must be
+ * locked prior to invoking this function.
+ *
+ * @param[in]   AppDataPtr   pointer to app table entry
+ * @param[in]   AppID       the app ID of this entry
+ */
+static inline void EVS_AppDataSetUsed(EVS_AppData_t *AppDataPtr, CFE_ES_AppId_t AppID)
+{
+    AppDataPtr->AppID = AppID;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Set an EVS table entry free (not used)
+ *
+ * This clears the internal field(s) within this entry, and allows the
+ * memory to be re-used in the future.
+ *
+ * @param[in]   AppDataPtr   pointer to app table entry
+ */
+static inline void EVS_AppDataSetFree(EVS_AppData_t *AppDataPtr)
+{
+    AppDataPtr->AppID = CFE_ES_APPID_UNDEFINED;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if an EVS record is a match for the given AppID
+ *
+ * This routine confirms that the previously-located record is valid
+ * and matches the expected app ID.
+ *
+ * @param[in]   AppDataPtr   pointer to app table entry
+ * @param[in]   AppID       expected app ID
+ * @returns true if the entry matches the given app ID
+ */
+static inline bool EVS_AppDataIsMatch(EVS_AppData_t *AppDataPtr, CFE_ES_AppId_t AppID)
+{
+    return (AppDataPtr != NULL && CFE_RESOURCEID_TEST_EQUAL(AppDataPtr->AppID, AppID));
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Retrieve app details by app name
+ *
+ * This routine returns the application ID and
+ * status specifying the validity of the ID
+ */
+int32 EVS_GetApplicationInfo(EVS_AppData_t **AppDataOut, const char *pAppName);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Generate "not registered" error event
+ *
+ * This routine sends one "not registered" event per application
+ * Assumptions and Notes:
+ */
+int32 EVS_NotRegistered(EVS_AppData_t *AppDataPtr, CFE_ES_AppId_t CallerID);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if event is filtered
+ *
+ * This routine returns true if the given event identifier and event type
+ * is filtered for the given application identifier.  Otherwise a value of
+ * false is returned.
+ */
+bool EVS_IsFiltered(EVS_AppData_t *AppDataPtr, uint16 EventID, uint16 EventType);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Check if event is squelched
+ *
+ * This routine returns false if the squelch token counter has become negative.
+ * Otherwise a value of true is returned. In addition, it updates the squelch
+ * token counter based on time, and emits an event message if squelched.
+ *
+ * If #CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST == 0, this function returns true and is otherwise a no-op
+ */
+bool EVS_CheckAndIncrementSquelchTokens(EVS_AppData_t *AppDataPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Find the filter record corresponding to the given event ID
+ *
+ * This routine searches and returns an index to the given Event ID with the
+ * given application filter array.
+ */
+EVS_BinFilter_t *EVS_FindEventID(uint16 EventID, EVS_BinFilter_t *FilterArray);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Enable event types
+ *
+ * This routine enables event types selected in BitMask
+ */
+void EVS_EnableTypes(EVS_AppData_t *AppDataPtr, uint8 BitMask);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Disable event types
+ *
+ * This routine disables event types selected in BitMask
+ */
+void EVS_DisableTypes(EVS_AppData_t *AppDataPtr, uint8 BitMask);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Send all configured telemetry for an event
+ *
+ * This routine sends an EVS event message out the software bus and all
+ * enabled output ports
+ * @note This always generates a "long" style message for logging purposes.
+ * If configured for long events the same message is sent on the software bus as well.
+ * If configured for short events, a separate short message is generated using a subset
+ * of the information from the long message.
+ */
+void EVS_GenerateEventTelemetry(EVS_AppData_t *AppDataPtr, uint16 EventID, uint16 EventType,
+                                const CFE_TIME_SysTime_t *Time, const char *MsgSpec, va_list ArgPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * @brief Internal function to send an event
+ *
+ * This routine allows EVS to send events without having to verify
+ * that the caller has a valid AppID and has registered with EVS.
+ * This routine also does not need to acquire the mutex semaphore,
+ * which can be time consuming on some platforms.
+ */
+int32 EVS_SendEvent(uint16 EventID, uint16 EventType, const char *Spec, ...);
+
+#endif /* CFE_EVS_UTILS_H */
+```
+
+### `cfe_evs_verify.h`
+
+**경로:** `fsw/cfe/modules/evs/fsw/src/cfe_evs_verify.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Purpose:
+ *   This header file performs compile time checking for EVS configuration
+ *   parameters.
+ *
+ * Author:   K.Audra(Microtel)
+ *
+ * Notes:
+ *
+ */
+
+#ifndef CFE_EVS_VERIFY_H
+#define CFE_EVS_VERIFY_H
+
+/* NOTE: Besides the checks in this file, there is one more in cfe_evs_task.h.
+ * The check is not here because it is checking a local #define based on a
+ * configuration parameter
+ */
+
+#if CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG > 0x0F
+#error CFE_PLATFORM_EVS_DEFAULT_TYPE_FLAG cannot be more than 0x0F!
+#endif
+
+#if (CFE_PLATFORM_EVS_DEFAULT_LOG_MODE != 0) && (CFE_PLATFORM_EVS_DEFAULT_LOG_MODE != 1)
+#error CFE_PLATFORM_EVS_DEFAULT_LOG_MODE can only be 0 (Overwrite) or 1 (Discard)!
+#endif
+
+#if (CFE_PLATFORM_EVS_DEFAULT_MSG_FORMAT_MODE != CFE_EVS_MsgFormat_LONG) && \
+    (CFE_PLATFORM_EVS_DEFAULT_MSG_FORMAT_MODE != CFE_EVS_MsgFormat_SHORT)
+#error CFE_EVS_DEFAULT_MSG_FORMAT can only be CFE_EVS_MsgFormat_LONG or CFE_EVS_MsgFormat_SHORT !
+#endif
+
+#if CFE_PLATFORM_EVS_PORT_DEFAULT > 0x0F
+#error CFE_PLATFORM_EVS_PORT_DEFAULT cannot be greater than 0x0F!
+#endif
+
+#if CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST > INT32_MAX / 1000
+#error CFE_PLATFORM_EVS_MAX_APP_EVENTS_PER_SEC cannot be greater than INT32_MAX/1000
+#endif
+
+#if CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC > CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST
+#error CFE_PLATFORM_EVS_APP_EVENTS_PER_SEC must be <= CFE_PLATFORM_EVS_MAX_APP_EVENT_BURST
+#endif
+
+/*
+** Validate task stack size...
+*/
+#if CFE_PLATFORM_EVS_START_TASK_STACK_SIZE < 2048
+#error CFE_PLATFORM_EVS_START_TASK_STACK_SIZE must be greater than or equal to 2048
+#endif
+
+#endif /* CFE_EVS_VERIFY_H */
+```

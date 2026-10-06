@@ -3,28 +3,705 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Attribute.java`
 
-file--Attribute.java
-file--CommandHistoryConsumer.java
-file--CommandHistoryFilter.java
-file--CommandHistoryProvider.java
-file--CommandHistoryPublisher.java
-file--CommandHistoryRequestManager.java
-file--StreamCommandHistoryProvider.java
-file--StreamCommandHistoryPublisher.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/Attribute.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import org.yamcs.parameter.Value;
+
+public class Attribute {
+    final String key;
+    final Value value;
+
+    public Attribute(String key, Value value) {
+        this.key = key;
+        this.value = value;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public Value getValue() {
+        return value;
+    }
+
+    public String toString() {
+        return key + ": " + value;
+    }
+}
 ```
 
-## 항목
+### `CommandHistoryConsumer.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/Attribute.java`](file--Attribute.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryConsumer.java`](file--CommandHistoryConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryFilter.java`](file--CommandHistoryFilter.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryProvider.java`](file--CommandHistoryProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryPublisher.java`](file--CommandHistoryPublisher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryRequestManager.java`](file--CommandHistoryRequestManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/StreamCommandHistoryProvider.java`](file--StreamCommandHistoryProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/StreamCommandHistoryPublisher.java`](file--StreamCommandHistoryPublisher.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryConsumer.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import java.util.List;
+
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandId;
+
+/**
+ * Interface implemented by all the classes that want to receive command history events.
+ *
+ */
+public interface CommandHistoryConsumer {
+    /**
+     * Called when a new command matching the filters has been added to the history
+     * 
+     * @param pc
+     */
+    void addedCommand(PreparedCommand pc);
+
+    void updatedCommand(CommandId cmdId, long time, List<Attribute> attrs);
+
+}
+```
+
+### `CommandHistoryFilter.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryFilter.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import org.yamcs.cmdhistory.CommandHistoryRequestManager.CommandHistoryEntry;
+import org.yamcs.protobuf.Commanding.CommandId;
+
+public class CommandHistoryFilter {
+    private String commandsOrigin;
+    private long commandsSince;
+    public int subscriptionId;
+
+    public CommandHistoryFilter(int subscriptionId, String commandsOrigin, long commandsSince) {
+        this.subscriptionId = subscriptionId;
+        this.commandsOrigin = commandsOrigin;
+        this.commandsSince = commandsSince;
+    }
+
+    public boolean matches(CommandHistoryEntry che) {
+        CommandId cmdId = che.getCommandId();
+        if (cmdId.getGenerationTime() < commandsSince) {
+            return false;
+        }
+        if ((commandsOrigin != null) && (!commandsOrigin.equals("*")) && (!commandsOrigin.equals(cmdId.getOrigin()))) {
+            return false;
+        }
+
+        return true;
+    }
+}
+```
+
+### `CommandHistoryProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryProvider.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import com.google.common.util.concurrent.Service;
+
+/**
+ * Interface implemented by all classes that provide command history to the {@link CommandHistoryRequestManager}
+ * 
+ * @author nm
+ *
+ */
+public interface CommandHistoryProvider extends Service {
+    public void setCommandHistoryRequestManager(CommandHistoryRequestManager chrm);
+}
+```
+
+### `CommandHistoryPublisher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryPublisher.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Commanding.CommandId;
+
+/**
+ * Used by the commanding applications to save commands and commands acknowledgements into a history.
+ * 
+ * @author nm
+ *
+ */
+public interface CommandHistoryPublisher {
+    /**
+     * provides acknowledgment status during execution of command
+     *
+     */
+    enum AckStatus {
+        NA, SCHEDULED, PENDING, OK, NOK, TIMEOUT, CANCELLED, DISABLED
+    };
+
+    public final static String CommandComplete_KEY = "CommandComplete";
+    public final static String TransmissionConstraints_KEY = "TransmissionConstraints";
+    public final static String AcknowledgeQueued_KEY = "Acknowledge_Queued";
+    public final static String AcknowledgeReleased_KEY = "Acknowledge_Released";
+
+    /**
+     * Used by the links to add entries in the command history when the command has been sent via the link.
+     */
+    public final static String AcknowledgeSent_KEY = "Acknowledge_Sent";
+    public final static String Verifier_KEY_PREFIX = "Verifier";
+    public final static String CcsdsSeq_KEY = "ccsds-seqcount";
+    public final static String Queue_KEY = "queue";
+
+    // these are used when publishing acks
+    public final static String SUFFIX_STATUS = "_Status";
+    public final static String SUFFIX_TIME = "_Time";
+    public final static String SUFFIX_MESSAGE = "_Message";
+    public final static String SUFFIX_RETURN = "_Return";
+
+    public abstract void publish(CommandId cmdId, String key, String value);
+
+    public abstract void publish(CommandId cmdId, String key, int value);
+
+    public abstract void publish(CommandId cmdId, String key, long value);
+
+    public abstract void publish(CommandId cmdId, String key, byte[] binary);
+
+    public default void publish(CommandId cmdId, String key, ParameterValue returnPv) {
+    };
+
+    public abstract void addCommand(PreparedCommand pc);
+
+    default void publishAck(CommandId cmdId, String key, long time, AckStatus state) {
+        publishAck(cmdId, key, time, state, null, null);
+    }
+
+    default void publishAck(CommandId cmdId, String key, long time, AckStatus state, String message) {
+        publishAck(cmdId, key, time, state, message, null);
+    }
+
+    /**
+     * Publish an acknowledgement status to the command history.
+     * <p>
+     * Entries (corresponding to command history columns) are created:
+     * <ul>
+     * <li>key_Time</li>
+     * <li>key_Status</li>
+     * <li>key_Message</li>
+     * <li>key_Return</li>
+     * </ul>
+     */
+    default void publishAck(CommandId cmdId, String key, long time, AckStatus state,
+            String message, ParameterValue returnPv) {
+        publish(cmdId, key + SUFFIX_STATUS, state.toString());
+        publish(cmdId, key + SUFFIX_TIME, time);
+
+        if (message != null) {
+            publish(cmdId, key + SUFFIX_MESSAGE, message);
+        }
+        if (returnPv != null) {
+            publish(cmdId, key + SUFFIX_RETURN, returnPv);
+        }
+    }
+
+    default void commandFailed(CommandId cmdId, long time, String reason) {
+        publishAck(cmdId, CommandComplete_KEY, time, AckStatus.NOK, reason);
+    }
+
+}
+```
+
+### `CommandHistoryRequestManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/CommandHistoryRequestManager.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.Processor;
+import org.yamcs.commanding.InvalidCommandId;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.parameter.Value;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.yarch.Stream;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * Part of processors: handles filtered requests for command history.
+ * 
+ * We handle two kind of subscriptions:
+ * <ul>
+ * <li>subscription to specific commands
+ * <li>subscription to all the commands but filtered on source and time.
+ * </ul>
+ * 
+ * It receives commands from the cmd_history stream
+ * 
+ * @author nm
+ *
+ */
+public class CommandHistoryRequestManager extends AbstractService {
+    private ConcurrentHashMap<CommandId, CommandHistoryEntry> activeCommands = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<CommandId, ConcurrentLinkedQueue<CommandHistoryConsumer>> cmdSubcriptions = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<CommandHistoryFilter, CommandHistoryConsumer> historySubcriptions = new ConcurrentHashMap<>();
+
+    // once the command becomes inactive, remove it from the activeCommands map after this number of seconds
+    static final int REMOVAL_TIME = 30;
+
+    Stream realtimeCmdHistoryStream;
+
+    static AtomicInteger subscriptionIdGenerator = new AtomicInteger();
+    final Log log;
+    AtomicInteger extendedId = new AtomicInteger();
+    final String instance;
+    final Processor processor;
+
+    public CommandHistoryRequestManager(Processor processor) throws ConfigurationException {
+        this.processor = processor;
+        this.instance = processor.getInstance();
+        log = new Log(this.getClass(), instance);
+        log.setContext(processor.getName());
+    }
+
+    /**
+     * Add a consumer to the subscriber list for a command
+     * 
+     * @param cmdId
+     * @param consumer
+     * @return all the entries existing so far for the command
+     * @throws InvalidCommandId
+     */
+    public org.yamcs.protobuf.Commanding.CommandHistoryEntry subscribeCommand(CommandId cmdId,
+            CommandHistoryConsumer consumer) throws InvalidCommandId {
+        CommandHistoryEntry che = activeCommands.get(cmdId);
+        if (che != null) {
+            cmdSubcriptions.putIfAbsent(cmdId, new ConcurrentLinkedQueue<CommandHistoryConsumer>());
+            cmdSubcriptions.get(cmdId).add(consumer);
+            return che.toProto();
+        }
+        log.warn("Received subscribe command for a command not in my active list: ({})", cmdId);
+        throw new InvalidCommandId("command " + cmdId + " is not in the list of active commands", cmdId);
+    }
+
+    /**
+     * removes a consumer from the subscribers for a command (if existing).
+     * 
+     * @param cmdId
+     * @param consumer
+     */
+    public void unsubscribeCommand(CommandId cmdId, CommandHistoryConsumer consumer) {
+        ConcurrentLinkedQueue<CommandHistoryConsumer> l = cmdSubcriptions.get(cmdId);
+        if (l != null) {
+            l.remove(consumer);
+        }
+    }
+
+    /**
+     * Called by the CommandHistory consumers when they want to receive all updates corresponding to a command.
+     */
+    public CommandHistoryFilter subscribeCommandHistory(String commandsOrigin, long commandsSince,
+            CommandHistoryConsumer consumer) {
+        log.debug("commandsOrigin={}", commandsOrigin);
+        CommandHistoryFilter filter = new CommandHistoryFilter(subscriptionIdGenerator.getAndIncrement(),
+                commandsOrigin, commandsSince);
+        historySubcriptions.put(filter, consumer);
+        return filter;
+    }
+
+    /**
+     * Called by the CommandHistory consumers to remove the subscription
+     * 
+     * @param id
+     */
+    public CommandHistoryFilter unsubscribeCommandHistory(int id) {
+        for (CommandHistoryFilter f : historySubcriptions.keySet()) {
+            if (f.subscriptionId == id) {
+                historySubcriptions.remove(f);
+                return f;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Called by the CommandHistoryImpl to move the subscription from another command history manager to this one
+     * 
+     * @param filter
+     */
+    public void addSubscription(CommandHistoryFilter filter, CommandHistoryConsumer consumer) {
+        historySubcriptions.put(filter, consumer);
+
+    }
+
+    /**
+     * Called when a new command has to be added to the command history (i.e. when a users sends a telecommand)
+     */
+    public void addCommand(PreparedCommand pc) {
+        if (activeCommands.containsKey(pc.getCommandId())) {
+            // this happens since Yamcs 5.4.4 - the StreamCommandHistoryProvider will send the command here but also
+            // comes directly from the command queue manager
+            return;
+        }
+        log.debug("addCommand cmdId={}", pc);
+        CommandHistoryEntry che = new CommandHistoryEntry(pc.getCommandId());
+
+        // deliver to clients
+        for (Iterator<CommandHistoryFilter> it = historySubcriptions.keySet().iterator(); it.hasNext();) {
+            CommandHistoryFilter filter = it.next();
+            if (filter.matches(che)) {
+                historySubcriptions.get(filter).addedCommand(pc);
+            }
+        }
+
+        activeCommands.put(pc.getCommandId(), che);
+    }
+
+    /**
+     * send updates.
+     * 
+     * @param cmdId
+     * @param attrs
+     * 
+     */
+    public void updateCommand(CommandId cmdId, List<Attribute> attrs)  {
+        log.debug("updateCommand cmdId: {} attrs: {}", attrs);
+        CommandHistoryEntry che = activeCommands.get(cmdId);
+        if (che == null) {
+            // If the commandId is valid, add the command in the active list, this case happens if an old command
+            // history is updated.
+            che = new CommandHistoryEntry(cmdId);
+            activeCommands.put(cmdId, che);
+        }
+        che.updateCommand(attrs);
+
+
+        long changeDate = processor.getCurrentTime();
+        for (Iterator<CommandHistoryFilter> it = historySubcriptions.keySet().iterator(); it.hasNext();) {
+            CommandHistoryFilter filter = it.next();
+            if (filter.matches(che)) {
+                historySubcriptions.get(filter).updatedCommand(cmdId, changeDate, attrs);
+            }
+        }
+        ConcurrentLinkedQueue<CommandHistoryConsumer> consumers = cmdSubcriptions.get(cmdId);
+
+        if (consumers != null) {
+            for (Iterator<CommandHistoryConsumer> it = consumers.iterator(); it.hasNext();) {
+                it.next().updatedCommand(cmdId, changeDate, attrs);
+            }
+        }
+    }
+
+    /**
+     * Called when there can be no more events for this command.
+     * <p>
+     * We remove it from the active commands only after a few seconds because some tools may subscribe to it after
+     * being sent and if there was no verifier, the command would immediately disappear so the subscription would fail.
+     */
+    public void commandFinished(CommandId cmdId) {
+        processor.getTimer().schedule(() -> {
+            activeCommands.remove(cmdId);
+            cmdSubcriptions.remove(cmdId);
+        }, REMOVAL_TIME, TimeUnit.SECONDS);
+ }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        notifyStopped();
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    static class CommandHistoryEntry {
+        final CommandId cmdId;
+        Map<String, Value> attributes = new HashMap<>();
+
+        public CommandHistoryEntry(CommandId cmdId) {
+            this.cmdId = cmdId;
+        }
+
+        public synchronized void updateCommand(List<Attribute> attrs) {
+            for (var a : attrs) {
+                attributes.put(a.key, a.value);
+            }
+        }
+
+        public synchronized org.yamcs.protobuf.Commanding.CommandHistoryEntry toProto() {
+            var cheb = org.yamcs.protobuf.Commanding.CommandHistoryEntry.newBuilder().setCommandId(cmdId);
+
+            for (var me : attributes.entrySet()) {
+                CommandHistoryAttribute cha = CommandHistoryAttribute.newBuilder().setName(me.getKey())
+                        .setValue(ValueUtility.toGbp(me.getValue())).build();
+                cheb.addAttr(cha).build();
+            }
+            return cheb.build();
+        }
+
+        public CommandId getCommandId() {
+            return cmdId;
+        }
+    }
+}
+```
+
+### `StreamCommandHistoryProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/StreamCommandHistoryProvider.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * 
+ * provides command history from streams
+ * 
+ * @author nm
+ *
+ */
+public class StreamCommandHistoryProvider extends AbstractService implements CommandHistoryProvider, StreamSubscriber {
+    CommandHistoryRequestManager chrm;
+    Stream realtimeCmdHistoryStream;
+    String yamcsInstance;
+
+    public StreamCommandHistoryProvider(String yamcsInstance) {
+        this.yamcsInstance = yamcsInstance;
+    }
+
+    @Override
+    public void setCommandHistoryRequestManager(CommandHistoryRequestManager chrm) {
+        this.chrm = chrm;
+    }
+
+    @Override
+    public void onTuple(Stream s, Tuple tuple) {
+        // Skip stream update for 'first' tuple (username is set only in first message).
+        if (!tuple.hasColumn(PreparedCommand.CNAME_USERNAME)) {
+            int i = StandardTupleDefinitions.TC.getColumnDefinitions().size();
+            CommandId cmdId = PreparedCommand.getCommandId(tuple);
+            List<ColumnDefinition> columns = tuple.getDefinition().getColumnDefinitions();
+            List<Attribute> l = new ArrayList<>(columns.size() - i);
+            while (i < columns.size()) {
+                ColumnDefinition cd = columns.get(i++);
+                String name = cd.getName();
+                if (!PreparedCommand.isProtectedColumn(name)) {
+                    Value v = ValueUtility.getColumnValue(cd, tuple.getColumn(name));
+                    l.add(new Attribute(name, v));
+                }
+            }
+            chrm.updateCommand(cmdId, l);
+        }
+    }
+
+    @Override
+    public void streamClosed(Stream stream) {
+        notifyFailed(new Exception("Stream " + stream.getName() + " closed"));
+    }
+
+    @Override
+    protected void doStart() {
+        String instance = chrm.getInstance();
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(chrm.getInstance());
+        Stream realtimeCmdHistoryStream = ydb.getStream(StreamCommandHistoryPublisher.REALTIME_CMDHIST_STREAM_NAME);
+        if (realtimeCmdHistoryStream == null) {
+            String msg = "Cannot find stream '" + StreamCommandHistoryPublisher.REALTIME_CMDHIST_STREAM_NAME
+                    + " in instance " + instance;
+            notifyFailed(new ConfigurationException(msg));
+        } else {
+            realtimeCmdHistoryStream.addSubscriber(this);
+            notifyStarted();
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        realtimeCmdHistoryStream.removeSubscriber(this);
+        notifyStopped();
+    }
+
+}
+```
+
+### `StreamCommandHistoryPublisher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/cmdhistory/StreamCommandHistoryPublisher.java`
+
+
+```java
+package org.yamcs.cmdhistory;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+/**
+ * Injects the command history updates in the command history stream
+ * 
+ * @author nm
+ *
+ */
+public class StreamCommandHistoryPublisher implements CommandHistoryPublisher {
+    static public final String REALTIME_CMDHIST_STREAM_NAME = "cmdhist_realtime";
+    static public final String DUMP_CMDHIST_STREAM_NAME = "cmdhist_dump";
+
+    Stream stream;
+    final String instance;
+
+    public StreamCommandHistoryPublisher(String archiveInstance) {
+        this.instance = archiveInstance;
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(archiveInstance);
+        stream = ydb.getStream(REALTIME_CMDHIST_STREAM_NAME);
+    }
+
+    @Override
+    public void publish(CommandId cmdId, String key, String value) {
+        TupleDefinition td = StandardTupleDefinitions.TC.copy();
+        td.addColumn(key, DataType.STRING);
+
+        Tuple t = new Tuple(td, new Object[] {
+                cmdId.getGenerationTime(),
+                cmdId.getOrigin(),
+                cmdId.getSequenceNumber(),
+                cmdId.getCommandName(),
+                value
+        });
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void publish(CommandId cmdId, String key, long instant) {
+        TupleDefinition td = StandardTupleDefinitions.TC.copy();
+        td.addColumn(key, DataType.TIMESTAMP);
+
+        Tuple t = new Tuple(td, new Object[] {
+                cmdId.getGenerationTime(),
+                cmdId.getOrigin(),
+                cmdId.getSequenceNumber(),
+                cmdId.getCommandName(),
+                instant
+        });
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void publish(CommandId cmdId, String key, int value) {
+        publish(cmdId, key, DataType.INT, value);
+    }
+
+    @Override
+    public void publish(CommandId cmdId, String key, byte[] binary) {
+        publish(cmdId, key, DataType.BINARY, binary);
+    }
+
+    public void publish(CommandId cmdId, String key, DataType dt, Object value) {
+        TupleDefinition td = StandardTupleDefinitions.TC.copy();
+        td.addColumn(key, dt);
+
+        Tuple t = new Tuple(td, new Object[] {
+                cmdId.getGenerationTime(),
+                cmdId.getOrigin(),
+                cmdId.getSequenceNumber(),
+                cmdId.getCommandName(),
+                value
+        });
+        stream.emitTuple(t);
+    }
+
+    @Override
+    public void publishAck(CommandId cmdId, String key, long time, AckStatus state,
+            String message, ParameterValue resultPv) {
+        TupleDefinition td = StandardTupleDefinitions.TC.copy();
+        td.addColumn(key + SUFFIX_STATUS, DataType.STRING);
+        td.addColumn(key + SUFFIX_TIME, DataType.TIMESTAMP);
+        List<Object> vals = new ArrayList<>(Arrays.asList(cmdId.getGenerationTime(), cmdId.getOrigin(),
+                cmdId.getSequenceNumber(), cmdId.getCommandName(), state.toString(),
+                time));
+
+        if (message != null) {
+            td.addColumn(key + SUFFIX_MESSAGE, DataType.STRING);
+            vals.add(message);
+        }
+        if (resultPv != null) {
+            td.addColumn(key + SUFFIX_RETURN, DataType.PARAMETER_VALUE);
+            vals.add(resultPv);
+        }
+        stream.emitTuple(new Tuple(td, vals));
+    }
+
+    @Override
+    public void addCommand(PreparedCommand pc) {
+        stream.emitTuple(pc.toTuple());
+    }
+
+    public String getInstance() {
+        return instance;
+    }
+
+    public Stream getStream() {
+        return stream;
+    }
+
+}
+```

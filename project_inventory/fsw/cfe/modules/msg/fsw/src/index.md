@@ -3,40 +3,1707 @@
 
 **경로:** `fsw/cfe/modules/msg/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_msg_ccsdsext.c`
 
-file--cfe_msg_ccsdsext.c
-file--cfe_msg_ccsdspri.c
-file--cfe_msg_defaults.h
-file--cfe_msg_init.c
-file--cfe_msg_initdefaulthdr_pri.c
-file--cfe_msg_initdefaulthdr_priext.c
-file--cfe_msg_msgid_shared.c
-file--cfe_msg_msgid_v1.c
-file--cfe_msg_msgid_v2.c
-file--cfe_msg_priv.h
-file--cfe_msg_sechdr_checksum.c
-file--cfe_msg_sechdr_fc.c
-file--cfe_msg_sechdr_time.c
-file--cfe_msg_verify.c
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_ccsdsext.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ * Message CCSDS extended header implementations
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_msg_defaults.h"
+#include "cfe_error.h"
+#include "cfe_psp.h"
+
+/* CCSDS Extended definitions */
+#define CFE_MSG_EDSVER_SHIFT  11     /**< \brief CCSDS EDS version shift */
+#define CFE_MSG_EDSVER_MASK   0xF800 /**< \brief CCSDS EDS version mask */
+#define CFE_MSG_ENDIAN_MASK   0x0400 /**< \brief CCSDS endiam mask, little endian when set */
+#define CFE_MSG_PLAYBACK_MASK 0x0200 /**< \brief CCSDS playback flag, playback when set */
+#define CFE_MSG_SUBSYS_MASK   0x01FF /**< \brief CCSDS Subsystem mask */
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_MSG_SetDefaultCCSDSExt(CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_MSG_SetEDSVersion(MsgPtr, (CFE_MSG_EDSVersion_t)CFE_PLATFORM_EDSVER);
+
+#if (CFE_PLATFORM_ENDIAN == CCSDS_LITTLE_ENDIAN)
+    CFE_MSG_SetEndian(MsgPtr, CFE_MSG_Endian_Little);
+#else
+    CFE_MSG_SetEndian(MsgPtr, CFE_MSG_Endian_Big);
+#endif
+
+    /* Default bits of the subsystem, for whatever isn't set by MsgId */
+    CFE_MSG_SetSubsystem(MsgPtr, (CFE_MSG_Subsystem_t)CFE_PLATFORM_DEFAULT_SUBSYS);
+    CFE_MSG_SetSystem(MsgPtr, (CFE_MSG_System_t)CFE_PSP_GetSpacecraftId());
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetEDSVersion(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_EDSVersion_t *Version)
+{
+    if (MsgPtr == NULL || Version == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Ext.Subsystem, Version, CFE_MSG_EDSVER_MASK);
+    *Version >>= CFE_MSG_EDSVER_SHIFT;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetEDSVersion(CFE_MSG_Message_t *MsgPtr, CFE_MSG_EDSVersion_t Version)
+{
+    if (MsgPtr == NULL || (Version > (CFE_MSG_EDSVER_MASK >> CFE_MSG_EDSVER_SHIFT)))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Ext.Subsystem, Version << CFE_MSG_EDSVER_SHIFT, CFE_MSG_EDSVER_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetEndian(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Endian_t *Endian)
+{
+    if (MsgPtr == NULL || Endian == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if ((MsgPtr->CCSDS.Ext.Subsystem[0] & (CFE_MSG_ENDIAN_MASK >> 8)) != 0)
+    {
+        *Endian = CFE_MSG_Endian_Little;
+    }
+    else
+    {
+        *Endian = CFE_MSG_Endian_Big;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetEndian(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Endian_t Endian)
+{
+    CFE_Status_t status = CFE_SUCCESS;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if (Endian == CFE_MSG_Endian_Little)
+    {
+        MsgPtr->CCSDS.Ext.Subsystem[0] |= CFE_MSG_ENDIAN_MASK >> 8;
+    }
+    else if (Endian == CFE_MSG_Endian_Big)
+    {
+        MsgPtr->CCSDS.Ext.Subsystem[0] &= ~(CFE_MSG_ENDIAN_MASK >> 8);
+    }
+    else
+    {
+        status = CFE_MSG_BAD_ARGUMENT;
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetPlaybackFlag(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_PlaybackFlag_t *PlayFlag)
+{
+    if (MsgPtr == NULL || PlayFlag == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if ((MsgPtr->CCSDS.Ext.Subsystem[0] & (CFE_MSG_PLAYBACK_MASK >> 8)) != 0)
+    {
+        *PlayFlag = CFE_MSG_PlayFlag_Playback;
+    }
+    else
+    {
+        *PlayFlag = CFE_MSG_PlayFlag_Original;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetPlaybackFlag(CFE_MSG_Message_t *MsgPtr, CFE_MSG_PlaybackFlag_t PlayFlag)
+{
+    CFE_Status_t status = CFE_SUCCESS;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if (PlayFlag == CFE_MSG_PlayFlag_Playback)
+    {
+        MsgPtr->CCSDS.Ext.Subsystem[0] |= CFE_MSG_PLAYBACK_MASK >> 8;
+    }
+    else if (PlayFlag == CFE_MSG_PlayFlag_Original)
+    {
+        MsgPtr->CCSDS.Ext.Subsystem[0] &= ~(CFE_MSG_PLAYBACK_MASK >> 8);
+    }
+    else
+    {
+        status = CFE_MSG_BAD_ARGUMENT;
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetSubsystem(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Subsystem_t *Subsystem)
+{
+    if (MsgPtr == NULL || Subsystem == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Ext.Subsystem, Subsystem, CFE_MSG_SUBSYS_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetSubsystem(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Subsystem_t Subsystem)
+{
+    if (MsgPtr == NULL || ((Subsystem & ~CFE_MSG_SUBSYS_MASK) != 0))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Ext.Subsystem, Subsystem, CFE_MSG_SUBSYS_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetSystem(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_System_t *System)
+{
+    if (MsgPtr == NULL || System == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    *System = (MsgPtr->CCSDS.Ext.SystemId[0] << 8) + MsgPtr->CCSDS.Ext.SystemId[1];
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetSystem(CFE_MSG_Message_t *MsgPtr, CFE_MSG_System_t System)
+{
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    MsgPtr->CCSDS.Ext.SystemId[0] = (System >> 8) & 0xFF;
+    MsgPtr->CCSDS.Ext.SystemId[1] = System & 0xFF;
+
+    return CFE_SUCCESS;
+}
 ```
 
-## 항목
+### `cfe_msg_ccsdspri.c`
 
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_ccsdsext.c`](file--cfe_msg_ccsdsext.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_ccsdspri.c`](file--cfe_msg_ccsdspri.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_defaults.h`](file--cfe_msg_defaults.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_init.c`](file--cfe_msg_init.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_initdefaulthdr_pri.c`](file--cfe_msg_initdefaulthdr_pri.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_initdefaulthdr_priext.c`](file--cfe_msg_initdefaulthdr_priext.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_shared.c`](file--cfe_msg_msgid_shared.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_v1.c`](file--cfe_msg_msgid_v1.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_v2.c`](file--cfe_msg_msgid_v2.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_priv.h`](file--cfe_msg_priv.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_checksum.c`](file--cfe_msg_sechdr_checksum.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_fc.c`](file--cfe_msg_sechdr_fc.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_time.c`](file--cfe_msg_sechdr_time.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/msg/fsw/src/cfe_msg_verify.c`](file--cfe_msg_verify.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_ccsdspri.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ * Message CCSDS Primary header implementations
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_msg_defaults.h"
+#include "cfe_error.h"
+
+/* CCSDS Primary Standard definitions */
+#define CFE_MSG_SIZE_OFFSET    7      /**< \brief CCSDS size offset */
+#define CFE_MSG_CCSDSVER_MASK  0xE000 /**< \brief CCSDS version mask */
+#define CFE_MSG_CCSDSVER_SHIFT 13     /**< \brief CCSDS version shift */
+#define CFE_MSG_TYPE_MASK      0x1000 /**< \brief CCSDS type mask, command when set */
+#define CFE_MSG_SHDR_MASK      0x0800 /**< \brief CCSDS secondary header mask, exists when set*/
+#define CFE_MSG_APID_MASK      0x07FF /**< \brief CCSDS ApID mask */
+#define CFE_MSG_SEGFLG_MASK    0xC000 /**< \brief CCSDS segmentation flag mask, all set = complete packet */
+#define CFE_MSG_SEGFLG_CNT     0x0000 /**< \brief CCSDS Segment continuation flag */
+#define CFE_MSG_SEGFLG_FIRST   0x4000 /**< \brief CCSDS Segment first flag */
+#define CFE_MSG_SEGFLG_LAST    0x8000 /**< \brief CCSDS Segment last flag */
+#define CFE_MSG_SEGFLG_UNSEG   0xC000 /**< \brief CCSDS Unsegmented flag */
+#define CFE_MSG_SEQCNT_MASK    0x3FFF /**< \brief CCSDS Sequence count mask */
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_MSG_SetDefaultCCSDSPri(CFE_MSG_Message_t *MsgPtr)
+{
+    /* cFS standard is for secondary header to be present */
+    CFE_MSG_SetHasSecondaryHeader(MsgPtr, true);
+
+    /* cFS standard for CCSDS Version */
+    CFE_MSG_SetHeaderVersion(MsgPtr, CFE_MISSION_CCSDSVER);
+
+    /* Default bits of the APID, for whatever isn't set by MsgId */
+    CFE_MSG_SetApId(MsgPtr, CFE_PLATFORM_DEFAULT_APID);
+
+    /* Default to complete packets */
+    CFE_MSG_SetSegmentationFlag(MsgPtr, CFE_MSG_SegFlag_Unsegmented);
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetHeaderVersion(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_HeaderVersion_t *Version)
+{
+    if (MsgPtr == NULL || Version == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Pri.StreamId, Version, CFE_MSG_CCSDSVER_MASK);
+    *Version >>= CFE_MSG_CCSDSVER_SHIFT;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetHeaderVersion(CFE_MSG_Message_t *MsgPtr, CFE_MSG_HeaderVersion_t Version)
+{
+    if (MsgPtr == NULL || (Version > (CFE_MSG_CCSDSVER_MASK >> CFE_MSG_CCSDSVER_SHIFT)))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Pri.StreamId, Version << CFE_MSG_CCSDSVER_SHIFT, CFE_MSG_CCSDSVER_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetType(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Type_t *Type)
+{
+    if (MsgPtr == NULL || Type == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if ((MsgPtr->CCSDS.Pri.StreamId[0] & (CFE_MSG_TYPE_MASK >> 8)) != 0)
+    {
+        *Type = CFE_MSG_Type_Cmd;
+    }
+    else
+    {
+        *Type = CFE_MSG_Type_Tlm;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetType(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Type_t Type)
+{
+    CFE_Status_t status = CFE_SUCCESS;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if (Type == CFE_MSG_Type_Cmd)
+    {
+        MsgPtr->CCSDS.Pri.StreamId[0] |= CFE_MSG_TYPE_MASK >> 8;
+    }
+    else if (Type == CFE_MSG_Type_Tlm)
+    {
+        MsgPtr->CCSDS.Pri.StreamId[0] &= ~(CFE_MSG_TYPE_MASK >> 8);
+    }
+    else
+    {
+        status = CFE_MSG_BAD_ARGUMENT;
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetHasSecondaryHeader(const CFE_MSG_Message_t *MsgPtr, bool *HasSecondary)
+{
+    if (MsgPtr == NULL || HasSecondary == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    *HasSecondary = (MsgPtr->CCSDS.Pri.StreamId[0] & (CFE_MSG_SHDR_MASK >> 8)) != 0;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetHasSecondaryHeader(CFE_MSG_Message_t *MsgPtr, bool HasSecondary)
+{
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if (HasSecondary)
+    {
+        MsgPtr->CCSDS.Pri.StreamId[0] |= CFE_MSG_SHDR_MASK >> 8;
+    }
+    else
+    {
+        MsgPtr->CCSDS.Pri.StreamId[0] &= ~(CFE_MSG_SHDR_MASK >> 8);
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetApId(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_ApId_t *ApId)
+{
+    if (MsgPtr == NULL || ApId == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Pri.StreamId, ApId, CFE_MSG_APID_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetApId(CFE_MSG_Message_t *MsgPtr, CFE_MSG_ApId_t ApId)
+{
+    if (MsgPtr == NULL || ((ApId & ~CFE_MSG_APID_MASK) != 0))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Pri.StreamId, ApId, CFE_MSG_APID_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetSegmentationFlag(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_SegmentationFlag_t *SegFlag)
+{
+    uint16 rawval;
+
+    if (MsgPtr == NULL || SegFlag == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Pri.Sequence, &rawval, CFE_MSG_SEGFLG_MASK);
+
+    switch (rawval)
+    {
+        case CFE_MSG_SEGFLG_CNT:
+            *SegFlag = CFE_MSG_SegFlag_Continue;
+            break;
+        case CFE_MSG_SEGFLG_FIRST:
+            *SegFlag = CFE_MSG_SegFlag_First;
+            break;
+        case CFE_MSG_SEGFLG_LAST:
+            *SegFlag = CFE_MSG_SegFlag_Last;
+            break;
+        case CFE_MSG_SEGFLG_UNSEG:
+        default:
+            *SegFlag = CFE_MSG_SegFlag_Unsegmented;
+    }
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetSegmentationFlag(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SegmentationFlag_t SegFlag)
+{
+    uint16       rawval = 0;
+    CFE_Status_t status = CFE_SUCCESS;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    switch (SegFlag)
+    {
+        case CFE_MSG_SegFlag_Continue:
+            rawval = CFE_MSG_SEGFLG_CNT;
+            break;
+        case CFE_MSG_SegFlag_First:
+            rawval = CFE_MSG_SEGFLG_FIRST;
+            break;
+        case CFE_MSG_SegFlag_Last:
+            rawval = CFE_MSG_SEGFLG_LAST;
+            break;
+        case CFE_MSG_SegFlag_Unsegmented:
+            rawval = CFE_MSG_SEGFLG_UNSEG;
+            break;
+        case CFE_MSG_SegFlag_Invalid:
+        default:
+            status = CFE_MSG_BAD_ARGUMENT;
+    }
+
+    if (status == CFE_SUCCESS)
+    {
+        CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Pri.Sequence, rawval, CFE_MSG_SEGFLG_MASK);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetSequenceCount(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t *SeqCnt)
+{
+    if (MsgPtr == NULL || SeqCnt == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_GetHeaderField(MsgPtr->CCSDS.Pri.Sequence, SeqCnt, CFE_MSG_SEQCNT_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetSequenceCount(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t SeqCnt)
+{
+    if (MsgPtr == NULL || ((SeqCnt & ~CFE_MSG_SEQCNT_MASK) != 0))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    CFE_MSG_SetHeaderField(MsgPtr->CCSDS.Pri.Sequence, SeqCnt, CFE_MSG_SEQCNT_MASK);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_MSG_SequenceCount_t CFE_MSG_GetNextSequenceCount(CFE_MSG_SequenceCount_t SeqCnt)
+{
+    SeqCnt++;
+
+    if (SeqCnt > CFE_MSG_SEQCNT_MASK)
+    {
+        SeqCnt = 0;
+    }
+
+    return SeqCnt;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetSize(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t *Size)
+{
+    if (MsgPtr == NULL || Size == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    *Size = (MsgPtr->CCSDS.Pri.Length[0] << 8) + MsgPtr->CCSDS.Pri.Length[1] + CFE_MSG_SIZE_OFFSET;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetSize(CFE_MSG_Message_t *MsgPtr, CFE_MSG_Size_t Size)
+{
+    if (MsgPtr == NULL || Size < CFE_MSG_SIZE_OFFSET || Size > (0xFFFF + CFE_MSG_SIZE_OFFSET))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Size is CCSDS header is total packet size - CFE_MSG_SIZE_OFFSET (7) */
+    Size -= CFE_MSG_SIZE_OFFSET;
+
+    MsgPtr->CCSDS.Pri.Length[0] = (Size >> 8) & 0xFF;
+    MsgPtr->CCSDS.Pri.Length[1] = Size & 0xFF;
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_defaults.h`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_defaults.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Message header defaults, used to initialize messages
+ *  - Avoid including outside this module
+ */
+
+#ifndef CFE_MSG_DEFAULTS_H
+#define CFE_MSG_DEFAULTS_H
+
+/*
+ * Includes
+ */
+#include "cfe_platform_cfg.h"
+#include "cfe_mission_cfg.h"
+#include "cfe_msg_api_typedefs.h"
+
+/*
+ * Defines
+ */
+
+/* Backwards compatibility */
+#ifndef CFE_PLATFORM_DEFAULT_APID
+#define CFE_PLATFORM_DEFAULT_APID 0 /**< \brief Default APID, for bits not in MsgId */
+#endif
+
+#ifndef CFE_MISSION_CCSDSVER
+#define CFE_MISSION_CCSDSVER 0 /**< \brief Default CCSDS Version */
+#endif
+
+#ifndef CFE_PLATFORM_DEFAULT_SUBSYS
+#define CFE_PLATFORM_DEFAULT_SUBSYS 0 /**< \brief Default SubSystem, for bits not in MsgId */
+#endif
+
+#ifndef CFE_PLATFORM_EDSVER
+#define CFE_PLATFORM_EDSVER 1 /**< \brief Default EDS version, cFS historically = 1 */
+#endif
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Set CCSDS Primary header defaults
+ *
+ * \par DESCRIPTION
+ *     Only sets the constant defaults.  Internal function assumes
+ *     pointer is valid.
+ *
+ * \param[out]     MsgPtr  Message to set
+ */
+void CFE_MSG_SetDefaultCCSDSPri(CFE_MSG_Message_t *MsgPtr);
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Set CCSDS Extended header defaults
+ *
+ * \par DESCRIPTION
+ *     Only sets the constant defaults. Internal function assumes
+ *     pointer is valid.
+ *
+ * \param[out]     MsgPtr  Message to set
+ */
+void CFE_MSG_SetDefaultCCSDSExt(CFE_MSG_Message_t *MsgPtr);
+
+#endif /* CFE_MSG_DEFAULTS_H */
+```
+
+### `cfe_msg_init.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_init.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ * Message initialization
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_msg_defaults.h"
+#include "cfe_time.h"
+#include "string.h"
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_Init(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t MsgId, CFE_MSG_Size_t Size)
+{
+    int32 status;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Clear and set defaults */
+    memset(MsgPtr, 0, Size);
+    CFE_MSG_InitDefaultHdr(MsgPtr);
+
+    /* Set values input */
+    status = CFE_MSG_SetMsgId(MsgPtr, MsgId);
+    if (status == CFE_SUCCESS)
+    {
+        status = CFE_MSG_SetSize(MsgPtr, Size);
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_UpdateHeader(CFE_MSG_Message_t *MsgPtr, CFE_MSG_SequenceCount_t SeqCnt)
+{
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Sequence count is in the basic CCSDS Primary Hdr, so all msgs have it */
+    CFE_MSG_SetSequenceCount(MsgPtr, SeqCnt);
+
+    /*
+     * TLM packets have a timestamp in the secondary header.
+     * This may fail if this is not a TLM packet (that is OK)
+     */
+    CFE_MSG_SetMsgTime(MsgPtr, CFE_TIME_GetTime());
+
+    /*
+     * CMD packets have a checksum in the secondary header.
+     * This may fail if this is not a CMD packet (that is OK)
+     */
+    CFE_MSG_GenerateChecksum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_initdefaulthdr_pri.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_initdefaulthdr_pri.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ * Message default header initialization - implementation without CCSDS
+ * extended header
+ */
+#include "cfe_msg_hdr.h"
+#include "cfe_msg_defaults.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_MSG_InitDefaultHdr(CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_MSG_SetDefaultCCSDSPri(MsgPtr);
+}
+```
+
+### `cfe_msg_initdefaulthdr_priext.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_initdefaulthdr_priext.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ * Message default header initialization - implementation without CCSDS
+ * extended header
+ */
+#include "cfe_msg_hdr.h"
+#include "cfe_msg_defaults.h"
+
+/*----------------------------------------------------------------
+ *
+ * Application-scope internal function
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void CFE_MSG_InitDefaultHdr(CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_MSG_SetDefaultCCSDSPri(MsgPtr);
+    CFE_MSG_SetDefaultCCSDSExt(MsgPtr);
+}
+```
+
+### `cfe_msg_msgid_shared.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_shared.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Message id access functions, shared cFS implementation
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_error.h"
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetTypeFromMsgId(CFE_SB_MsgId_t MsgId, CFE_MSG_Type_t *Type)
+{
+    CFE_MSG_Message_t msg;
+    int32             Status;
+
+    /* Memset to initialize avoids possible GCC bug 53119 */
+    memset(&msg, 0, sizeof(msg));
+
+    if (Type == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    Status = CFE_MSG_SetMsgId(&msg, MsgId);
+    if (Status == CFE_SUCCESS)
+    {
+        Status = CFE_MSG_GetType(&msg, Type);
+    }
+
+    return Status;
+}
+```
+
+### `cfe_msg_msgid_v1.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_v1.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Message id access functions, cFS version 1 implementation
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_error.h"
+#include "cfe_platform_cfg.h"
+#include "cfe_sb.h"
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetMsgId(const CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t *MsgId)
+{
+    CFE_SB_MsgId_Atom_t msgidval;
+
+    if (MsgPtr == NULL || MsgId == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    msgidval = (MsgPtr->CCSDS.Pri.StreamId[0] << 8) + MsgPtr->CCSDS.Pri.StreamId[1];
+    *MsgId   = CFE_SB_ValueToMsgId(msgidval);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetMsgId(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t MsgId)
+{
+    CFE_SB_MsgId_Atom_t msgidval = CFE_SB_MsgIdToValue(MsgId);
+
+    if (MsgPtr == NULL || msgidval > CFE_PLATFORM_SB_HIGHEST_VALID_MSGID)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Shift and mask bytes to be endian agnostic */
+    MsgPtr->CCSDS.Pri.StreamId[0] = (msgidval >> 8) & 0xFF;
+    MsgPtr->CCSDS.Pri.StreamId[1] = msgidval & 0xFF;
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_msgid_v2.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_msgid_v2.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Message id access functions
+ *
+ * cFS default version 2 implementation using CCSDS headers
+ *
+ * Message Id:
+ *   7 bits from the primary header APID (0x7F of 0x7FF)
+ *   1 bit for the command/telemetry flag
+ *   0 bits from the Playback flag
+ *   8 bits from the secondary header APID qualifier (Subsystem) (0xFF of 0x01FF)
+ *   0 bits from the secondary header APID qualifier as the System
+ *   = 16 bits total
+ *
+ *              Byte 1              Byte 0
+ *        7 6 5 4 3 2 1 0     7      6 5 4 3 2 1 0
+ *       +-+-+-+-+-+-+-+-+|--------|+-+-+-+-+-+-+-+
+ *       | APID Qualifier |C/T flg | Pri Hdr APID |
+ *       +-+-+-+-+-+-+-+-+|--------|+-+-+-+-+-+-+-+
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_error.h"
+#include "cfe_sb.h"
+#include "cfe_platform_cfg.h"
+
+/* cFS MsgId definitions */
+#define CFE_MSG_MSGID_APID_MASK   0x007F /**< \brief CCSDS ApId mask for MsgId */
+#define CFE_MSG_MSGID_TYPE_MASK   0x0080 /**< \brief Message type mask for MsgId, set = cmd */
+#define CFE_MSG_MSGID_SUBSYS_MASK 0xFF00 /**< \brief Subsystem mask for MsgId */
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetMsgId(const CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t *MsgId)
+{
+    CFE_SB_MsgId_Atom_t msgidval;
+    CFE_MSG_Type_t      type;
+
+    if (MsgPtr == NULL || MsgId == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, assumes tlm if invalid */
+    CFE_MSG_GetType(MsgPtr, &type);
+
+    /* Set message ID bits from CCSDS header fields */
+    msgidval = MsgPtr->CCSDS.Pri.StreamId[1] & CFE_MSG_MSGID_APID_MASK;
+    if (type == CFE_MSG_Type_Cmd)
+    {
+        msgidval |= CFE_MSG_MSGID_TYPE_MASK;
+    }
+    msgidval |= (MsgPtr->CCSDS.Ext.Subsystem[1] << 8) & CFE_MSG_MSGID_SUBSYS_MASK;
+
+    *MsgId = CFE_SB_ValueToMsgId(msgidval);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetMsgId(CFE_MSG_Message_t *MsgPtr, CFE_SB_MsgId_t MsgId)
+{
+    CFE_SB_MsgId_Atom_t msgidval = CFE_SB_MsgIdToValue(MsgId);
+
+    if (MsgPtr == NULL || msgidval > CFE_PLATFORM_SB_HIGHEST_VALID_MSGID)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Clear and set PID_MSGID_MASK bits */
+    MsgPtr->CCSDS.Pri.StreamId[1] =
+        (MsgPtr->CCSDS.Pri.StreamId[1] & ~CFE_MSG_MSGID_APID_MASK) | (msgidval & CFE_MSG_MSGID_APID_MASK);
+
+    /* Set APIDQ Subsystem bits */
+    MsgPtr->CCSDS.Ext.Subsystem[1] = ((msgidval & CFE_MSG_MSGID_SUBSYS_MASK) >> 8);
+
+    /* Set type, ignores return since no failure action */
+    if ((msgidval & CFE_MSG_MSGID_TYPE_MASK) != 0)
+    {
+        CFE_MSG_SetType(MsgPtr, CFE_MSG_Type_Cmd);
+    }
+    else
+    {
+        CFE_MSG_SetType(MsgPtr, CFE_MSG_Type_Tlm);
+    }
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_priv.h`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_priv.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Message private header
+ *  - Avoid including outside this module
+ */
+
+#ifndef CFE_MSG_PRIV_H
+#define CFE_MSG_PRIV_H
+
+/*
+ * Includes
+ */
+#include "common_types.h"
+#include "cfe_msg_hdr.h"
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief get generic header field (uint8 array[2])
+ *
+ * \par DESCRIPTION
+ *     Big endian get of header field given mask.  Only sets bits
+ *     in value that are part of mask.
+ *
+ * \param[in]      Word Header value to set
+ * \param[out]     Val  Value to set
+ * \param[in]      Mask Mask used for set
+ */
+static inline void CFE_MSG_GetHeaderField(const uint8 *Word, uint16 *Val, uint16 Mask)
+{
+    *Val = (Word[0] << 8 | Word[1]) & Mask;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Set generic header field (uint8 array[2])
+ *
+ * \par DESCRIPTION
+ *     Big endian set of header field given value and mask.  Only sets bits
+ *     from value that are part of mask.
+ *
+ * \param[in, out] Word Header value to set
+ * \param[in]      Val  Value to set
+ * \param[in]      Mask Mask used for set
+ */
+static inline void CFE_MSG_SetHeaderField(uint8 *Word, uint16 Val, uint16 Mask)
+{
+    Word[0] = (Word[0] & ~(Mask >> 8)) | ((Val & Mask) >> 8);
+    Word[1] = ((Word[1] & ~Mask) | (Val & Mask)) & 0xFF;
+}
+
+/*---------------------------------------------------------------------------------------*/
+/**
+ * \brief Initialize default header - implemented based on selected header format
+ *
+ * \par DESCRIPTION
+ *     Sets the constant defaults for the entire header. Internal function
+ *     assumes pointer is valid.
+ *
+ * \param[out]     MsgPtr  Message to set
+ */
+void CFE_MSG_InitDefaultHdr(CFE_MSG_Message_t *MsgPtr);
+
+#endif /* CFE_MSG_PRIV_H */
+```
+
+### `cfe_msg_sechdr_checksum.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_checksum.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Checksum field access functions
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+
+/*----------------------------------------------------------------
+ *
+ * Internal helper routine only, not part of API.
+ *
+ * Computes checksum -
+ * MsgPtr is Message pointer to checksum
+ * Return Value is Calculated checksum
+ *
+ *-----------------------------------------------------------------*/
+CFE_MSG_Checksum_t CFE_MSG_ComputeCheckSum(const CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_MSG_Size_t     PktLen  = 0;
+    const uint8 *      BytePtr = MsgPtr->Byte;
+    CFE_MSG_Checksum_t chksum  = 0xFF;
+
+    /* Message already checked, no error case reachable */
+    CFE_MSG_GetSize(MsgPtr, &PktLen);
+
+    while (PktLen--)
+    {
+        chksum ^= *(BytePtr++);
+    }
+
+    return chksum;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GenerateChecksum(CFE_MSG_Message_t *MsgPtr)
+{
+    CFE_Status_t             status;
+    CFE_MSG_Type_t           type;
+    bool                     hassechdr = false;
+    CFE_MSG_CommandHeader_t *cmd       = (CFE_MSG_CommandHeader_t *)MsgPtr;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Cmd || !hassechdr)
+    {
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    /* Zero checksum so new checksum will be correct */
+    cmd->Sec.Checksum = 0;
+
+    /* Compute using aligned MsgPtr and set, suppress false style warning */
+    /* cppcheck-suppress redundantAssignment */
+    cmd->Sec.Checksum = CFE_MSG_ComputeCheckSum(MsgPtr);
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_ValidateChecksum(const CFE_MSG_Message_t *MsgPtr, bool *IsValid)
+{
+    CFE_Status_t   status;
+    CFE_MSG_Type_t type;
+    bool           hassechdr = false;
+
+    if (MsgPtr == NULL || IsValid == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Cmd || !hassechdr)
+    {
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    /* Compute, valid if == 0 */
+    *IsValid = (CFE_MSG_ComputeCheckSum(MsgPtr) == 0);
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_sechdr_fc.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_fc.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Function code field access functions
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+
+#define CFE_MSG_FC_MASK 0x7F /**< \brief Function code mask */
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetFcnCode(const CFE_MSG_Message_t *MsgPtr, CFE_MSG_FcnCode_t *FcnCode)
+{
+    CFE_Status_t             status;
+    CFE_MSG_Type_t           type;
+    bool                     hassechdr = false;
+    CFE_MSG_CommandHeader_t *cmd       = (CFE_MSG_CommandHeader_t *)MsgPtr;
+
+    if (MsgPtr == NULL || FcnCode == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Cmd || !hassechdr)
+    {
+        *FcnCode = 0;
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    *FcnCode = cmd->Sec.FunctionCode & CFE_MSG_FC_MASK;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetFcnCode(CFE_MSG_Message_t *MsgPtr, CFE_MSG_FcnCode_t FcnCode)
+{
+    CFE_Status_t             status;
+    CFE_MSG_Type_t           type;
+    bool                     hassechdr = false;
+    CFE_MSG_CommandHeader_t *cmd       = (CFE_MSG_CommandHeader_t *)MsgPtr;
+
+    if (MsgPtr == NULL || (FcnCode > CFE_MSG_FC_MASK))
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Cmd || !hassechdr)
+    {
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    cmd->Sec.FunctionCode = FcnCode;
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_sechdr_time.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_sechdr_time.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+ *  Time field access functions - cFS default 32 bit seconds, 16 bit subseconds
+ *  in big endian format
+ */
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_error.h"
+#include <string.h>
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_SetMsgTime(CFE_MSG_Message_t *MsgPtr, CFE_TIME_SysTime_t NewTime)
+{
+    CFE_Status_t               status;
+    CFE_MSG_Type_t             type;
+    bool                       hassechdr = false;
+    CFE_MSG_TelemetryHeader_t *tlm       = (CFE_MSG_TelemetryHeader_t *)MsgPtr;
+
+    if (MsgPtr == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Tlm || !hassechdr)
+    {
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    /* Set big endian time field with default 32/16 layout */
+    tlm->Sec.Time[0] = (NewTime.Seconds >> 24) & 0xFF;
+    tlm->Sec.Time[1] = (NewTime.Seconds >> 16) & 0xFF;
+    tlm->Sec.Time[2] = (NewTime.Seconds >> 8) & 0xFF;
+    tlm->Sec.Time[3] = NewTime.Seconds & 0xFF;
+    tlm->Sec.Time[4] = (NewTime.Subseconds >> 24) & 0xFF;
+    tlm->Sec.Time[5] = (NewTime.Subseconds >> 16) & 0xFF;
+
+    return CFE_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_GetMsgTime(const CFE_MSG_Message_t *MsgPtr, CFE_TIME_SysTime_t *Time)
+{
+    CFE_Status_t               status;
+    CFE_MSG_Type_t             type;
+    bool                       hassechdr = false;
+    CFE_MSG_TelemetryHeader_t *tlm       = (CFE_MSG_TelemetryHeader_t *)MsgPtr;
+
+    if (MsgPtr == NULL || Time == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /* Ignore return, pointer already checked */
+    CFE_MSG_GetHasSecondaryHeader(MsgPtr, &hassechdr);
+
+    status = CFE_MSG_GetType(MsgPtr, &type);
+    if (status != CFE_SUCCESS || type != CFE_MSG_Type_Tlm || !hassechdr)
+    {
+        memset(Time, 0, sizeof(*Time));
+        return CFE_MSG_WRONG_MSG_TYPE;
+    }
+
+    /* Get big endian time fields with default 32/16 layout */
+    Time->Subseconds = (tlm->Sec.Time[4] << 24) + (tlm->Sec.Time[5] << 16);
+    Time->Seconds    = (tlm->Sec.Time[0] << 24) + (tlm->Sec.Time[1] << 16) + (tlm->Sec.Time[2] << 8) + tlm->Sec.Time[3];
+
+    return CFE_SUCCESS;
+}
+```
+
+### `cfe_msg_verify.c`
+
+**경로:** `fsw/cfe/modules/msg/fsw/src/cfe_msg_verify.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+#include "cfe_msg.h"
+#include "cfe_msg_priv.h"
+#include "cfe_msg_defaults.h"
+#include "cfe_time.h"
+
+/*----------------------------------------------------------------
+ *
+ * Implemented per public API
+ * See description in header file for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+CFE_Status_t CFE_MSG_Verify(const CFE_MSG_Message_t *MsgPtr, bool *VerifyStatus)
+{
+    if (MsgPtr == NULL || VerifyStatus == NULL)
+    {
+        return CFE_MSG_BAD_ARGUMENT;
+    }
+
+    /*
+     * In the default implementation, there is not anything to check here.
+     * Only commands have a checksum, but the value of that checksum was historically
+     * not enforced by CFE.
+     *
+     * This is mainly a hook for user expansion, in case a custom implementation
+     * has message verification capability.
+     */
+    *VerifyStatus = true;
+
+    return CFE_SUCCESS;
+}
+```

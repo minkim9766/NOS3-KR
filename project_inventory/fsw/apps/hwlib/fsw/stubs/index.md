@@ -3,28 +3,563 @@
 
 **경로:** `fsw/apps/hwlib/fsw/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `libcan.c`
 
-file--libcan.c
-file--libgpio.c
-file--libi2c.c
-file--libsocket.c
-file--libspi.c
-file--libtrq.c
-file--libtrq_ioctl.h
-file--libuart.c
+**경로:** `fsw/apps/hwlib/fsw/stubs/libcan.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libcan.h"
+
+/* The `libsocketcan` library wraps many of the netlink operations to control a SocketCAN interface
+ * Documentation here: https://lalten.github.io/libsocketcan/Documentation/html/group__extern.html */
+
+// Bring CAN network interface
+int32_t can_init_dev(can_info_t* device) 
+{
+  return CAN_SUCCESS;
+}
+
+// Call the `libsocketcan` function to set each CAN mode on/off
+int32_t can_set_modes(can_info_t* device) 
+{
+  return CAN_SUCCESS;
+}
+
+// Write a can_frame  from `device->tx_Frame` to CAN bus from SocketCAN socket specified by `device`
+int32_t can_write(can_info_t* device) 
+{  
+  return CAN_SUCCESS;
+}
+
+// Read a can_frame from SocketCAN interface specified by `device` into `device->rx_frame`
+// Does a nonblocking read call
+int32_t can_read(can_info_t* device) 
+{		
+  return CAN_SUCCESS;
+}
+
+// Bring CAN network interface down
+int32_t can_close_device(can_info_t* device) 
+{
+  return CAN_SUCCESS;
+}
+
+// Perform non-blocking can transaction
+int32_t can_master_transaction(can_info_t* device) 
+{
+  return CAN_SUCCESS;
+}
 ```
 
-## 항목
+### `libgpio.c`
 
-- [`fsw/apps/hwlib/fsw/stubs/libcan.c`](file--libcan.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libgpio.c`](file--libgpio.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libi2c.c`](file--libi2c.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libsocket.c`](file--libsocket.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libspi.c`](file--libspi.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libtrq.c`](file--libtrq.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libtrq_ioctl.h`](file--libtrq_ioctl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/hwlib/fsw/stubs/libuart.c`](file--libuart.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/hwlib/fsw/stubs/libgpio.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libgpio.h"
+
+int32_t gpio_init(gpio_info_t* device) 
+{    
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_read(gpio_info_t* device, uint8_t* value)
+{
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_write(gpio_info_t* device, uint8_t value)
+{
+    return GPIO_SUCCESS;
+}
+
+int32_t gpio_close(gpio_info_t* device)
+{
+    return GPIO_SUCCESS;
+}
+```
+
+### `libi2c.c`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libi2c.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include <errno.h>
+#include <string.h>
+
+#include "libi2c.h"
+
+/* Call to configure a specific i2c device from /dev
+** i2c_bus- struct with bus configuration
+** speed  - currently unused
+*/
+int32_t i2c_master_init(i2c_bus_info_t* device)
+{
+    return I2C_SUCCESS;
+}
+
+int32_t i2c_master_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, void * rxbuf, uint8_t rxlen, uint16_t timeout)
+{
+    return I2C_SUCCESS;
+}
+
+int32_t i2c_read_transaction(i2c_bus_info_t* device, uint8_t addr, void * rxbuf, uint8_t rxlen, uint8_t timeout)
+{
+    return I2C_SUCCESS;
+}
+
+int32_t i2c_write_transaction(i2c_bus_info_t* device, uint8_t addr, void * txbuf, uint8_t txlen, uint8_t timeout)
+{
+    return I2C_SUCCESS;
+}
+
+int32_t i2c_multiple_transaction(i2c_bus_info_t* device, uint8_t addr, struct i2c_rdwr_ioctl_data* rdwr_data, uint16_t timeout)
+{
+    return I2C_SUCCESS;
+}
+```
+
+### `libsocket.c`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libsocket.c`
+
+
+```c
+#include "libsocket.h"
+
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <fcntl.h>
+#include <errno.h>
+
+// Creates an endpoint for communication
+// Binds stream, server sockets to localhost and port number
+//
+// Inputs:
+//      socket_info->address_family
+//      socket_info->type
+//      socket_info->port_num (used for stream sockets)
+//      socket_info->block
+//
+// Outputs:
+//      socket_info->sockfd
+//      socket_info->created
+//      socket_info->bound  
+int32_t socket_create(socket_info_t* socket_info)
+{
+    return SOCKET_SUCCESS;
+}
+
+// Listens on a connection on a socket
+//
+// Inputs:
+//      socket_info->bound
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->listening
+int32_t socket_listen(socket_info_t* socket_info)
+{
+    return SOCKET_SUCCESS;
+}
+
+// Accepts a connection on a socket
+//
+// Inputs:
+//      socket_info->listening
+//      socket_info->sockfd
+//
+// Outputs:
+//      socket_info->connected
+//      socket_info->sockfd
+int32_t socket_accept(socket_info_t* socket_info)
+{
+    return SOCKET_SUCCESS;
+} 
+
+// Initiates a connection to a remote ip address and port number
+//
+// Inputs:
+//      socket_info->created
+//      socket_info->category
+//      socket_info->address_family
+//      socket_info->sockfd
+//      remote_ip_address (the remote ip address)
+//      remote_port_num (the remote port number)
+//
+// Outputs:
+//      socket_info->connected
+int32_t socket_connect(socket_info_t* socket_info, char* remote_ip_address, int remote_port_num)
+{
+    return SOCKET_SUCCESS;
+}
+
+int32_t socket_send(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_sent, char* remote_ip_address, int remote_port_num)
+{
+    return SOCKET_SUCCESS;
+}
+
+int32_t socket_recv(socket_info_t* socket_info, uint8_t* buffer, size_t buflen, size_t* bytes_recvd)
+{
+    return SOCKET_SUCCESS;
+}
+
+int32_t socket_close(socket_info_t* socket_info)
+{
+    return SOCKET_SUCCESS;
+}
+```
+
+### `libspi.c`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libspi.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libspi.h"
+
+spi_mutex_t spi_bus_mutex[MAX_SPI_BUSES];
+
+int32_t spi_init_dev(spi_info_t* device)
+{
+  return SPI_SUCCESS;
+}
+
+int32_t spi_set_mode(spi_info_t* device)
+{
+  return SPI_SUCCESS;
+}
+
+int32_t spi_get_mode(spi_info_t* device)
+{
+  return SPI_SUCCESS;
+}
+
+int32_t spi_write(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  return SPI_SUCCESS;  
+}
+
+int32_t spi_read(spi_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  return SPI_SUCCESS; 
+}
+
+int32_t spi_transaction(spi_info_t* device, uint8_t *txBuff, uint8_t * rxBuffer, uint32_t length, uint16_t delay, uint8_t bits, uint8_t deselect)
+{
+  return SPI_SUCCESS;
+}
+
+int32_t spi_select_chip(spi_info_t* device)
+{
+  return SPI_SUCCESS;
+}
+
+int32_t spi_close_device(spi_info_t* device)
+{
+  return SPI_SUCCESS;
+}
+```
+
+### `libtrq.c`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libtrq.c`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include <fcntl.h>
+#include "libtrq.h"
+#include "libtrq_ioctl.h"
+
+#define TRQ_FNAME_SIZE 50
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_time_high(): Configure the time high per period in nanoseconds for a TRQ device. Time high lengths
+ *                      may not exceed a device's period length. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      uint32_t    new_time    -   New time high length for the device period in nanoseconds
+ *
+ * Outputs:             trq_info_t *device      -   High time set to new_time if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_time_high(trq_info_t* device, uint32_t new_time) 
+{
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_period():    Configure the period length for a TRQ device in nanoseconds. Note that timer time high 
+ *                      is set to zero before this function is called. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *
+ * Outputs:             returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_period(trq_info_t* device) 
+{
+    return TRQ_SUCCESS;
+}
+
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_set_direction():    Configure the direction of the TRQ device. 
+ *
+ * Inputs:              trq_info_t *device      -   TRQ device info structure 
+ *                      bool        direction   -   New direction desired for device
+ *
+ * Outputs:             trq_info_t *device      -   positive_direction set to direction if successful
+ *                      returns int32_t         -   TRQ_ERROR on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_set_direction(trq_info_t* device, bool direction) 
+{
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_init():          Opens a TRQ device and initializes it. This function can also be
+ *                      used on an already opened TRQ number to reset it. 
+ *
+ * Inputs:              trq_info_t *device  -   TRQ Device info structure to initialize   
+ * 
+ * Outputs:             trq_info_t *device  -   Info structure contains AXI timer device file descriptor. 
+ *                      returns int32_t     -   <0 on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_init(trq_info_t* device) 
+{
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ *
+ * trq_command():   Change TQR period, time high, or direction.
+ *
+ * Inputs:              trq_info_t* device      -   TQR device info structure to modify
+ *                      uint8_t percent_high    -   Percent of the period to be high (0-100)
+ *                      bool pos_dir            -   Direction - True for positive, False for negative
+ *
+ * Outputs:             trq_info_t *device      -   Parameters set to new values if successful
+ *                      returns int32_t         -   TRQ_ERROR_* type on failure, TRQ_SUCCESS on success
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+int32_t trq_command(trq_info_t *device, uint8_t percent_high, bool pos_dir)
+{
+    return TRQ_SUCCESS;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *
+ * trq_close():         Disables and closes an active TRQ device. 
+ * 
+ * Inputs:              trq_info_t *device - TRQ device info structure for TRQ device to disable
+ *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+void trq_close(trq_info_t* device)
+{
+    return;
+}
+```
+
+### `libtrq_ioctl.h`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libtrq_ioctl.h`
+
+
+```c
+/* Copyright (C) 2009 - 2019 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+
+/* IOCTL commands */
+#include <sys/ioctl.h>
+
+#define TMRCTR_MAGIC                            15
+
+#define TMRCTR_START                _IO(    TMRCTR_MAGIC, 0         )
+#define TMRCTR_STOP                 _IO(    TMRCTR_MAGIC, 1         )
+#define TMRCTR_PWM_ENABLE           _IO(    TMRCTR_MAGIC, 2         )
+#define TMRCTR_PWM_SET_PERIOD       _IOW(   TMRCTR_MAGIC, 3,    long)
+#define TMRCTR_PWM_SET_HIGH_TIME    _IOW(   TMRCTR_MAGIC, 4,    long)
+#define TMRCTR_PWM_DISABLE          _IO(    TMRCTR_MAGIC, 5         )
+#define TMRCTR_SELFTEST             _IO(    TMRCTR_MAGIC, 6         )
+#define TMRCTR_SETOPTION            _IOW(   TMRCTR_MAGIC, 7,    long)
+#define TMRCTR_GETOPTION            _IOR(   TMRCTR_MAGIC, 8,    long)
+#define TMRCTR_RESET                _IO(    TMRCTR_MAGIC, 9         )
+#define TMRCTR_SET_RESET_VALUE      _IOW(   TMRCTR_MAGIC, 10,   long)
+#define TMRCTR_GET_VALUE            _IOR(   TMRCTR_MAGIC, 11,   long)
+#define TMRCTR_GET_CAPTURE_VALUE    _IOR(   TMRCTR_MAGIC, 12,   long)
+#define TMRCTR_CHECK_UPDATE         _IOR(   TMRCTR_MAGIC, 13,   long)
+#define TMRCTR_TMR_SELECT           _IOW(   TMRCTR_MAGIC, 14,   long)
+
+/* IOCTL Errors */
+#define TMRCTR_BAD_CMD            (-1)
+
+```
+
+### `libuart.c`
+
+**경로:** `fsw/apps/hwlib/fsw/stubs/libuart.c`
+
+
+```c
+/* Copyright (C) 2009 - 2018 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+any warranty that the software will be error free.
+
+In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+documentation or services provided hereunder
+
+ITC Team
+NASA IV&V
+ivv-itc@lists.nasa.gov
+*/
+
+#include "libuart.h"
+
+int32_t uart_init_port(uart_info_t* device)
+{
+  return UART_SUCCESS;
+}
+
+int32_t uart_bytes_available(uart_info_t* device)
+{
+  return 1;
+}
+
+int32_t uart_flush(uart_info_t* device)
+{
+  return UART_SUCCESS;
+}
+
+int32_t uart_read_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  return numBytes;
+}
+
+int32_t uart_write_port(uart_info_t* device, uint8_t data[], const uint32_t numBytes)
+{
+  return numBytes;
+}
+
+int32_t uart_close_port(uart_info_t* device)
+{
+  return UART_SUCCESS;
+}
+```

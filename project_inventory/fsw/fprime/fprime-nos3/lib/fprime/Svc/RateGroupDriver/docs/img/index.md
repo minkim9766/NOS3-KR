@@ -3,16 +3,16 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `RateGroupDriverBDD.jpg`
 
-file--RateGroupDriverBDD.jpg
-file--RateGroupDriverPortCallSequence.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/img/RateGroupDriverBDD.jpg`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/img/RateGroupDriverBDD.jpg`](file--RateGroupDriverBDD.jpg) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/img/RateGroupDriverPortCallSequence.jpg`](file--RateGroupDriverPortCallSequence.jpg) — 바이너리 (경로만)
+### `RateGroupDriverPortCallSequence.jpg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/RateGroupDriver/docs/img/RateGroupDriverPortCallSequence.jpg`
+
+바이너리 파일입니다. 본문은 생략했습니다.

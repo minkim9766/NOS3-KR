@@ -3,18 +3,292 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-alarms-table.component.html`
 
-file--parameter-alarms-table.component.html
-file--parameter-alarms-table.component.ts
-file--parameter-alarms.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+    <ng-container matColumnDef="severity">
+      <th mat-header-cell *matHeaderCellDef>Severity</th>
+      <td mat-cell *matCellDef="let alarm">
+        <app-alarm-level [level]="alarm.severity" [grayscale]="true" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="start">
+      <th mat-header-cell *matHeaderCellDef>Start</th>
+      <td mat-cell *matCellDef="let alarm">{{ (alarm.triggerTime | datetime) || "-" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="stop">
+      <th mat-header-cell *matHeaderCellDef>Stop</th>
+      <td mat-cell *matCellDef="let alarm">
+        {{ (alarm.updateTime | datetime) || "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="triggerValue">
+      <th mat-header-cell *matHeaderCellDef>Trip value</th>
+      <td mat-cell *matCellDef="let alarm" class="wrap200">
+        @if (alarm.parameterDetail; as parameterDetail) {
+          {{ parameterDetail.triggerValue.engValue | value }}
+          @if (parameterDetail.triggerValue.rangeCondition === "LOW") {
+            <span>&#8595;</span>
+          }
+          @if (parameterDetail.triggerValue.rangeCondition === "HIGH") {
+            <span>&#8593;</span>
+          }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="duration">
+      <th mat-header-cell *matHeaderCellDef>Duration</th>
+      <td mat-cell *matCellDef="let alarm">
+        @if (alarm.updateTime) {
+          {{ (durationFor(alarm) | duration) || "-" }}
+        }
+        @if (alarm.clearInfo?.clearedBy) {
+          (cleared by {{ alarm.clearInfo?.clearedBy }})
+          @if (alarm.clearInfo?.clearMessage) {
+            <mat-icon [matTooltip]="alarm.clearInfo?.clearMessage">comment</mat-icon>
+          }
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="violations">
+      <th mat-header-cell *matHeaderCellDef style="text-align: right">Violations</th>
+      <td mat-cell *matCellDef="let alarm" style="text-align: right">
+        @if (alarm.violations) {
+          {{ alarm.violations | number }}
+          ({{ (alarm.violations / alarm.count) * 100 | number: "1.2-2" }}%)
+        } @else {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row">
+        <ya-text-action icon="show_chart" (click)="showChart(row)">Show chart</ya-text-action>
+        <ya-text-action icon="view_headline" (click)="showData(row)">Show data</ya-text-action>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
 ```
 
-## 항목
+### `parameter-alarms-table.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms-table.component.html`](file--parameter-alarms-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms-table.component.ts`](file--parameter-alarms-table.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms.datasource.ts`](file--parameter-alarms.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms-table.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
+import { Alarm, WebappSdkModule, YamcsService, utils } from '@yamcs/webapp-sdk';
+import { addHours } from 'date-fns';
+import { AlarmLevelComponent } from '../../../shared/alarm-level/alarm-level.component';
+import { ParameterAlarmsDataSource } from './parameter-alarms.datasource';
+
+@Component({
+  selector: 'app-parameter-alarms-table',
+  templateUrl: './parameter-alarms-table.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlarmLevelComponent, WebappSdkModule],
+})
+export class ParameterAlarmsTableComponent {
+  @Input()
+  dataSource: ParameterAlarmsDataSource;
+
+  displayedColumns = [
+    'severity',
+    'start',
+    'stop',
+    'duration',
+    'triggerValue',
+    'violations',
+    'actions',
+  ];
+
+  constructor(
+    private router: Router,
+    readonly yamcs: YamcsService,
+  ) {}
+
+  durationFor(alarm: Alarm) {
+    if (!alarm.updateTime) {
+      return undefined;
+    }
+    return (
+      utils.toDate(alarm.updateTime).getTime() -
+      utils.toDate(alarm.triggerTime).getTime()
+    );
+  }
+
+  showChart(alarm: Alarm) {
+    const startIso = alarm.triggerTime;
+    const stopIso = alarm.updateTime || alarm.clearInfo?.clearTime;
+
+    let start: string;
+    let stop: string;
+    if (stopIso) {
+      start = startIso;
+      stop = stopIso;
+    } else {
+      start = startIso;
+      stop = addHours(utils.toDate(startIso), 1).toISOString();
+    }
+
+    this.router.navigate(
+      [
+        '/telemetry/parameters' + alarm.parameterDetail?.triggerValue.id.name,
+        '-',
+        'chart',
+      ],
+      {
+        queryParams: {
+          c: this.yamcs.context,
+          interval: 'CUSTOM',
+          customStart: start,
+          customStop: stop,
+        },
+      },
+    );
+  }
+
+  showData(alarm: Alarm) {
+    const startIso = alarm.triggerTime;
+    const stopIso = alarm.updateTime || alarm.clearInfo?.clearTime;
+
+    let start: string;
+    let stop: string;
+    if (stopIso) {
+      start = startIso;
+      stop = stopIso;
+    } else {
+      start = startIso;
+      stop = addHours(utils.toDate(startIso), 1).toISOString();
+    }
+
+    this.router.navigate(
+      [
+        '/telemetry/parameters' + alarm.parameterDetail?.triggerValue.id.name,
+        '-',
+        'data',
+      ],
+      {
+        queryParams: {
+          c: this.yamcs.context,
+          interval: 'CUSTOM',
+          customStart: start,
+          customStop: stop,
+        },
+      },
+    );
+  }
+}
+```
+
+### `parameter-alarms.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-alarms-table/parameter-alarms.datasource.ts`
+
+
+```typescript
+import { CollectionViewer } from '@angular/cdk/collections';
+import { DataSource } from '@angular/cdk/table';
+import { Alarm, GetAlarmsOptions, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class ParameterAlarmsDataSource extends DataSource<Alarm> {
+  pageSize = 100;
+  offscreenRecord: Alarm | null;
+
+  alarms$ = new BehaviorSubject<Alarm[]>([]);
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    private yamcs: YamcsService,
+    private qualifiedName: string,
+  ) {
+    super();
+  }
+
+  connect(collectionViewer: CollectionViewer) {
+    return this.alarms$;
+  }
+
+  isEmpty() {
+    return this.alarms$.value.length === 0;
+  }
+
+  loadAlarms(options: GetAlarmsOptions) {
+    this.loading$.next(true);
+    return this.loadPage({
+      ...options,
+      limit: this.pageSize + 1, // One extra to detect hasMore
+    }).then((alarms) => {
+      this.loading$.next(false);
+      this.alarms$.next(alarms);
+    });
+  }
+
+  hasMore() {
+    return this.offscreenRecord != null;
+  }
+
+  /**
+   * Fetches a page of data and keeps track of one invisible record that will
+   * allow to deterimine if there are further page(s) and which stop date should
+   * be used for the next page (start/stop are inclusive).
+   */
+  private loadPage(options: GetAlarmsOptions) {
+    return this.yamcs.yamcsClient
+      .getAlarmsForParameter(this.yamcs.instance!, this.qualifiedName, options)
+      .then((alarms) => {
+        if (alarms.length > this.pageSize) {
+          this.offscreenRecord = alarms.splice(alarms.length - 1, 1)[0];
+        } else {
+          this.offscreenRecord = null;
+        }
+        return alarms;
+      });
+  }
+
+  /**
+   * Loads the next page of data starting at where the previous page was cut off.
+   * This not 100% waterproof as data may have arrived with generation time between
+   * the last visible data and the offscreen record. This is unlikely to cause
+   * practical problems.
+   */
+  loadMoreData(options: GetAlarmsOptions) {
+    if (!this.offscreenRecord) {
+      return;
+    }
+    this.loadPage({
+      ...options,
+      stop: this.offscreenRecord.triggerTime,
+      limit: this.pageSize + 1, // One extra to detect hasMore
+    }).then((alarms) => {
+      const combinedAlarms = this.alarms$.getValue().concat(alarms);
+      this.alarms$.next(combinedAlarms);
+    });
+  }
+
+  disconnect() {
+    this.alarms$.complete();
+    this.loading$.complete();
+  }
+}
+```

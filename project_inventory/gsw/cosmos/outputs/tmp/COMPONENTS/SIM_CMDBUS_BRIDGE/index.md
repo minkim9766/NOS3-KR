@@ -3,16 +3,21 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/SIM_CMDBUS_BRIDGE/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/SIM_CMDBUS_BRIDGE/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/SIM_CMDBUS_BRIDGE/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/SIM_CMDBUS_BRIDGE/target.txt`
+
+
+```text
+
+```

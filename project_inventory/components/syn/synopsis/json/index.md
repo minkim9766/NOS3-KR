@@ -3,7 +3,7 @@
 
 **경로:** `components/syn/synopsis/json/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,23 +12,459 @@
 cmake/index
 single_include/index
 test/index
-file--.git
-file--CMakeLists.txt
-file--LICENSE.MIT
-file--meson.build
-file--README.md
-file--update.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/synopsis/json/.github/`](.github/index) — 폴더
-- [`components/syn/synopsis/json/cmake/`](cmake/index) — 폴더
-- [`components/syn/synopsis/json/single_include/`](single_include/index) — 폴더
-- [`components/syn/synopsis/json/test/`](test/index) — 폴더
-- [`components/syn/synopsis/json/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/LICENSE.MIT`](file--LICENSE.MIT) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/meson.build`](file--meson.build) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/synopsis/json/update.py`](file--update.py) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `components/syn/synopsis/json/.git`
+
+
+```text
+gitdir: ../../../../.git/modules/components/syn/modules/synopsis/modules/json
+```
+
+### `CMakeLists.txt`
+
+**경로:** `components/syn/synopsis/json/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 3.1)
+
+##
+## PROJECT
+## name and version
+##
+project(nlohmann_json VERSION 3.11.2 LANGUAGES CXX)
+
+##
+## MAIN_PROJECT CHECK
+## determine if nlohmann_json is built as a subproject (using add_subdirectory) or if it is the main project
+##
+set(MAIN_PROJECT OFF)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    set(MAIN_PROJECT ON)
+endif()
+
+##
+## INCLUDE
+##
+##
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+include(ExternalProject)
+
+##
+## OPTIONS
+##
+
+if (POLICY CMP0077)
+    # Allow CMake 3.13+ to override options when using FetchContent / add_subdirectory.
+    cmake_policy(SET CMP0077 NEW)
+endif ()
+
+# VERSION_GREATER_EQUAL is not available in CMake 3.1
+if(${MAIN_PROJECT} AND (${CMAKE_VERSION} VERSION_EQUAL 3.13 OR ${CMAKE_VERSION} VERSION_GREATER 3.13))
+    set(JSON_BuildTests_INIT ON)
+else()
+    set(JSON_BuildTests_INIT OFF)
+endif()
+option(JSON_BuildTests                     "Build the unit tests when BUILD_TESTING is enabled." ${JSON_BuildTests_INIT})
+option(JSON_CI                             "Enable CI build targets." OFF)
+option(JSON_Diagnostics                    "Use extended diagnostic messages." OFF)
+option(JSON_GlobalUDLs                     "Place use-defined string literals in the global namespace." ON)
+option(JSON_ImplicitConversions            "Enable implicit conversions." ON)
+option(JSON_DisableEnumSerialization       "Disable default integer enum serialization." OFF)
+option(JSON_LegacyDiscardedValueComparison "Enable legacy discarded value comparison." OFF)           
+option(JSON_Install                        "Install CMake targets during install step." ${MAIN_PROJECT})
+option(JSON_MultipleHeaders                "Use non-amalgamated version of the library." OFF)
+option(JSON_SystemInclude                  "Include as system headers (skip for clang-tidy)." OFF)
+
+if (JSON_CI)
+    include(ci)
+endif ()
+
+##
+## CONFIGURATION
+##
+include(GNUInstallDirs)
+
+set(NLOHMANN_JSON_TARGET_NAME               ${PROJECT_NAME})
+set(NLOHMANN_JSON_CONFIG_INSTALL_DIR        "${CMAKE_INSTALL_DATADIR}/cmake/${PROJECT_NAME}" CACHE INTERNAL "")
+set(NLOHMANN_JSON_INCLUDE_INSTALL_DIR       "${CMAKE_INSTALL_INCLUDEDIR}")
+set(NLOHMANN_JSON_TARGETS_EXPORT_NAME       "${PROJECT_NAME}Targets")
+set(NLOHMANN_JSON_CMAKE_CONFIG_TEMPLATE     "cmake/config.cmake.in")
+set(NLOHMANN_JSON_CMAKE_CONFIG_DIR          "${CMAKE_CURRENT_BINARY_DIR}")
+set(NLOHMANN_JSON_CMAKE_VERSION_CONFIG_FILE "${NLOHMANN_JSON_CMAKE_CONFIG_DIR}/${PROJECT_NAME}ConfigVersion.cmake")
+set(NLOHMANN_JSON_CMAKE_PROJECT_CONFIG_FILE "${NLOHMANN_JSON_CMAKE_CONFIG_DIR}/${PROJECT_NAME}Config.cmake")
+set(NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE "${NLOHMANN_JSON_CMAKE_CONFIG_DIR}/${PROJECT_NAME}Targets.cmake")
+set(NLOHMANN_JSON_PKGCONFIG_INSTALL_DIR     "${CMAKE_INSTALL_DATADIR}/pkgconfig")
+
+if (JSON_MultipleHeaders)
+    set(NLOHMANN_JSON_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/include/")
+    message(STATUS "Using the multi-header code from ${NLOHMANN_JSON_INCLUDE_BUILD_DIR}")
+else()
+    set(NLOHMANN_JSON_INCLUDE_BUILD_DIR "${PROJECT_SOURCE_DIR}/single_include/")
+    message(STATUS "Using the single-header code from ${NLOHMANN_JSON_INCLUDE_BUILD_DIR}")
+endif()
+
+if (NOT JSON_ImplicitConversions)
+    message(STATUS "Implicit conversions are disabled")
+endif()
+
+if (JSON_DisableEnumSerialization)
+    message(STATUS "Enum integer serialization is disabled")
+endif()
+
+if (JSON_LegacyDiscardedValueComparison)
+    message(STATUS "Legacy discarded value comparison enabled")
+endif()
+
+if (JSON_Diagnostics)
+    message(STATUS "Diagnostics enabled")
+endif()
+
+if (JSON_SystemInclude)
+    set(NLOHMANN_JSON_SYSTEM_INCLUDE "SYSTEM")
+endif()
+
+##
+## TARGET
+## create target and add include path
+##
+add_library(${NLOHMANN_JSON_TARGET_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${NLOHMANN_JSON_TARGET_NAME} ALIAS ${NLOHMANN_JSON_TARGET_NAME})
+if (${CMAKE_VERSION} VERSION_LESS "3.8.0")
+    target_compile_features(${NLOHMANN_JSON_TARGET_NAME} INTERFACE cxx_range_for)
+else()
+    target_compile_features(${NLOHMANN_JSON_TARGET_NAME} INTERFACE cxx_std_11)
+endif()
+
+target_compile_definitions(
+    ${NLOHMANN_JSON_TARGET_NAME}
+    INTERFACE
+    $<$<NOT:$<BOOL:${JSON_GlobalUDLs}>>:JSON_USE_GLOBAL_UDLS=0>
+    $<$<NOT:$<BOOL:${JSON_ImplicitConversions}>>:JSON_USE_IMPLICIT_CONVERSIONS=0>
+    $<$<BOOL:${JSON_DisableEnumSerialization}>:JSON_DISABLE_ENUM_SERIALIZATION=1>
+    $<$<BOOL:${JSON_Diagnostics}>:JSON_DIAGNOSTICS=1>
+    $<$<BOOL:${JSON_LegacyDiscardedValueComparison}>:JSON_USE_LEGACY_DISCARDED_VALUE_COMPARISON=1>
+)
+
+target_include_directories(
+    ${NLOHMANN_JSON_TARGET_NAME}
+    ${NLOHMANN_JSON_SYSTEM_INCLUDE} INTERFACE
+    $<BUILD_INTERFACE:${NLOHMANN_JSON_INCLUDE_BUILD_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
+
+## add debug view definition file for msvc (natvis)
+if (MSVC)
+    set(NLOHMANN_ADD_NATVIS TRUE)
+    set(NLOHMANN_NATVIS_FILE "nlohmann_json.natvis")
+    target_sources(
+        ${NLOHMANN_JSON_TARGET_NAME}
+        INTERFACE
+            $<INSTALL_INTERFACE:${NLOHMANN_NATVIS_FILE}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/${NLOHMANN_NATVIS_FILE}>
+    )
+endif()
+
+# Install a pkg-config file, so other tools can find this.
+CONFIGURE_FILE(
+    "${CMAKE_CURRENT_SOURCE_DIR}/cmake/pkg-config.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+)
+
+##
+## TESTS
+## create and configure the unit test target
+##
+if (JSON_BuildTests)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+##
+## INSTALL
+## install header files, generate and install cmake config files for find_package()
+##
+include(CMakePackageConfigHelpers)
+# use a custom package version config file instead of
+# write_basic_package_version_file to ensure that it's architecture-independent
+# https://github.com/nlohmann/json/issues/1697
+configure_file(
+    "cmake/nlohmann_jsonConfigVersion.cmake.in"
+    ${NLOHMANN_JSON_CMAKE_VERSION_CONFIG_FILE}
+    @ONLY
+)
+configure_file(
+    ${NLOHMANN_JSON_CMAKE_CONFIG_TEMPLATE}
+    ${NLOHMANN_JSON_CMAKE_PROJECT_CONFIG_FILE}
+    @ONLY
+)
+
+if(JSON_Install)
+    install(
+        DIRECTORY ${NLOHMANN_JSON_INCLUDE_BUILD_DIR}
+        DESTINATION ${NLOHMANN_JSON_INCLUDE_INSTALL_DIR}
+    )
+    install(
+        FILES ${NLOHMANN_JSON_CMAKE_PROJECT_CONFIG_FILE} ${NLOHMANN_JSON_CMAKE_VERSION_CONFIG_FILE}
+        DESTINATION ${NLOHMANN_JSON_CONFIG_INSTALL_DIR}
+    )
+    if (NLOHMANN_ADD_NATVIS)
+        install(
+            FILES ${NLOHMANN_NATVIS_FILE}
+            DESTINATION .
+    )
+    endif()
+    export(
+        TARGETS ${NLOHMANN_JSON_TARGET_NAME}
+        NAMESPACE ${PROJECT_NAME}::
+        FILE ${NLOHMANN_JSON_CMAKE_PROJECT_TARGETS_FILE}
+    )
+    install(
+        TARGETS ${NLOHMANN_JSON_TARGET_NAME}
+        EXPORT ${NLOHMANN_JSON_TARGETS_EXPORT_NAME}
+        INCLUDES DESTINATION ${NLOHMANN_JSON_INCLUDE_INSTALL_DIR}
+    )
+    install(
+        EXPORT ${NLOHMANN_JSON_TARGETS_EXPORT_NAME}
+        NAMESPACE ${PROJECT_NAME}::
+        DESTINATION ${NLOHMANN_JSON_CONFIG_INSTALL_DIR}
+    )
+    install(
+        FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+        DESTINATION ${NLOHMANN_JSON_PKGCONFIG_INSTALL_DIR}
+    )
+endif()
+```
+
+### `LICENSE.MIT`
+
+**경로:** `components/syn/synopsis/json/LICENSE.MIT`
+
+
+```text
+MIT License 
+
+Copyright (c) 2013-2022 Niels Lohmann
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+### `meson.build`
+
+**경로:** `components/syn/synopsis/json/meson.build`
+
+
+```text
+project('nlohmann_json',
+    'cpp',
+    version : '3.11.2',
+    license : 'MIT',
+)
+
+nlohmann_json_dep = declare_dependency(
+    include_directories: include_directories('single_include')
+)
+
+nlohmann_json_multiple_headers = declare_dependency(
+    include_directories: include_directories('include')
+)
+
+if not meson.is_subproject()
+install_headers('single_include/nlohmann/json.hpp', subdir: 'nlohmann')
+install_headers('single_include/nlohmann/json_fwd.hpp', subdir: 'nlohmann')
+
+pkgc = import('pkgconfig')
+pkgc.generate(name: 'nlohmann_json',
+    version: meson.project_version(),
+    description: 'JSON for Modern C++'
+)
+endif
+```
+
+### `README.md`
+
+**경로:** `components/syn/synopsis/json/README.md`
+
+
+```markdown
+# Release-tracking repository for nlohmann/json
+
+Goal is to provide a lightweight and autonomous repository tracking every
+releases of [nlohmann/json](https://github.com/nlohmann/json).
+
+It is meant to be used with CMake
+[FetchContent](https://cmake.org/cmake/help/v3.11/module/FetchContent.html).
+
+You can always replace the URL by the official repository:
+<https://github.com/nlohmann/json>.
+The only differences are:
+
+* The download size: ~500KB vs ~150MB (300× difference)
+* Some options are not available. See [the unsupported options section](#Unsupported-options).
+
+## Example
+
+~~~cmake
+include(FetchContent)
+
+# Optional: set this to ON if your target publicly links to nlohmann_json and needs to install() 
+# set(JSON_Install ON)
+
+FetchContent_Declare(json
+  GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
+  GIT_PROGRESS TRUE
+  GIT_SHALLOW TRUE
+  GIT_TAG v3.11.2)
+
+FetchContent_MakeAvailable(json)
+
+target_link_libraries(foo PRIVATE nlohmann_json::nlohmann_json)
+~~~
+
+## Unsupported options
+
+The following options are currently not supported. This is done on purpose
+because they do not really make sense for a mirror repository, or they have not
+been thoroughly tested. Consider using the official repository if you need these
+options.
+
+* `JSON_CI`
+* `JSON_BuildTests`
+
+## Updates
+
+This repository is fully autonomous. It updates itself every week using github
+actions.
+
+### Thanks
+
+This repository is based on: [astoeckel/json](https://github.com/astoeckel/json).
+
+### Addressed `nlohmann/json` issues:
+
+* [#2073](https://github.com/nlohmann/json/issues/2073),
+* [#732](https://github.com/nlohmann/json/issues/732),
+* [#620](https://github.com/nlohmann/json/issues/620),
+* [#556](https://github.com/nlohmann/json/issues/556),
+* [#482](https://github.com/nlohmann/json/issues/482),
+* [#96](https://github.com/nlohmann/json/issues/96)
+
+```
+
+### `update.py`
+
+**경로:** `components/syn/synopsis/json/update.py`
+
+
+```python
+#!/usr/bin/env python3
+
+import sys, os
+import json
+import subprocess
+import urllib.request
+import hashlib
+
+# Go to the directory this script is stored in
+os.chdir(os.path.dirname(os.path.realpath(__file__)))
+
+# Download release data
+releases = json.loads(str(urllib.request.urlopen('https://api.github.com/repos/nlohmann/json/releases').read(), 'utf-8'))
+
+# Fetch all releases and the corresponding URL
+release_url_map = []
+for release in releases:
+  for asset in release['assets']:
+    if asset['name'] == 'json.hpp':
+      release_url_map.append((release['tag_name'], asset['browser_download_url'], release['body']))
+
+# List all git tags
+process = subprocess.Popen(['git', 'tag'], stdout=subprocess.PIPE)
+tags, _ = process.communicate()
+tags = set(filter(None, str(tags, 'utf-8').split("\n")))
+print("Releases already contained in this repository are " + str(tags))
+
+# Go over the release_url_map in reverse order; if a release is not yet a Git
+# tag, download the file, commit and add a tag
+for tag, url, body in release_url_map[::-1]:
+  if tag in tags:
+    continue
+
+  print("Downloading release " + tag)
+  if tag >= "v3.10.5":
+      os.system("rm -rf ./tmp")
+      os.system("rm -rf ./include")
+      os.system("git clone https://github.com/nlohmann/json ./tmp --depth 1 --branch {}".format(tag));
+      os.system("cp -rf ./tmp/single_include .")
+      os.system("cp -rf ./tmp/include/nlohmann/json_fwd.hpp ./single_include/nlohmann/")
+      os.system("cp -rf ./tmp/cmake .")
+      os.system("cp -rf ./tmp/CMakeLists.txt .")
+      os.system("cp -rf ./tmp/meson.build .")
+      os.system("cp -rf ./tmp/LICENSE.MIT .")
+      os.system("rm -rf ./tmp")
+      os.makedirs('./cmake', mode=0o777, exist_ok=True)
+      os.makedirs('./test', mode=0o777, exist_ok=True)
+      with open("./cmake/ci.cmake", "w") as f:
+        f .write("message(FATAL_ERROR \"The JSON_CI option is not available" \
+                 "when using the nlohmann_json_cmake_fetchcontent repository.\")")
+      with open("./test/CMakeLists.txt", "w") as f:
+        f.write("message(FATAL_ERROR \"The JSON_CI option is not available" \
+                "when using the nlohmann_json_cmake_fetchcontent repository.\")")
+      os.system("git add .")
+  else:
+      os.makedirs('./include', mode=0o777, exist_ok=True)
+      os.makedirs('./include/nlohmann', mode=0o777, exist_ok=True)
+      data = urllib.request.urlopen(url).read();
+      with open('./include/nlohmann/json.hpp', 'wb') as f:
+        f.write(data)
+
+      # Try to download the json_fwd.hpp header -- only exists since release
+      # v3.1.0
+      has_json_fwd = False
+      try:
+        json_fwd_url = 'https://github.com/nlohmann/json/raw/{}/include/nlohmann/json_fwd.hpp'.format(tag);
+        print("Trying to download " + json_fwd_url)
+        data = urllib.request.urlopen(json_fwd_url).read();
+        with open('./include/nlohmann/json_fwd.hpp', 'wb') as f:
+          f.write(data)
+        has_json_fwd = True
+      except:
+        pass
+
+      subprocess.call(['git', 'add', './include/nlohmann/json.hpp'])
+      if has_json_fwd:
+        subprocess.call(['git', 'add', './include/nlohmann/json_fwd.hpp'])
+  # Update the nlohman json options.
+  subprocess.call([ 'sed', '-i', '-e', 's/library.\" ON/library.\" OFF/g', './CMakeLists.txt'])
+  subprocess.call(['git', 'add', './CMakeLists.txt'])
+
+  # Update the README.md:
+  subprocess.call([ 'sed', '-i', '-e', 's/GIT_TAG .*)/GIT_TAG '+ tag + ')/g', './README.md'])
+  subprocess.call(['git', 'add', './README.md'])
+
+  # Commit:
+  subprocess.call(['git', 'commit', '-m', 'Upstream release ' + tag])
+  subprocess.call(['git', 'tag', '-a', tag, '-m', body])
+```

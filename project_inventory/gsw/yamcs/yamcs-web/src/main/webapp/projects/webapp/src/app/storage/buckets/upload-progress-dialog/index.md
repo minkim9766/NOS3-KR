@@ -3,20 +3,133 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `upload-progress-dialog.component.css`
 
-file--upload-progress-dialog.component.css
-file--upload-progress-dialog.component.html
-file--upload-progress-dialog.component.ts
-file--Upload.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.css`
+
+
+```css
+tr.failed td {
+  color: red;
+}
+
+h3.mat-mdc-dialog-title {
+  background-color: #24292e;
+  color: #fff;
+  margin: 0;
+  padding-left: 5px;
+  font-size: 16px;
+  line-height: 40px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+.table-wrapper {
+  height: 150px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  padding: 5px;
+}
 ```
 
-## 항목
+### `upload-progress-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.css`](file--upload-progress-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.html`](file--upload-progress-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.ts`](file--upload-progress-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/Upload.ts`](file--Upload.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.html`
+
+
+```html
+<h3 mat-dialog-title>
+  <div style="float: right">
+    <button mat-icon-button mat-dialog-close><mat-icon>close</mat-icon></button>
+  </div>
+  Uploads
+</h3>
+
+<mat-dialog-content>
+  <div #tableWrapper class="table-wrapper">
+    <table style="font-size: small; width: 100%">
+      @for (upload of uploads$ | async; track upload) {
+        <tr [class.failed]="upload.err">
+          <td>{{ upload.filename }}</td>
+          <td style="width: 100px; text-align: center">
+            @if (upload.complete && !upload.err) {
+              Finished
+            }
+            @if (upload.complete && upload.err) {
+              <mat-icon class="icon14" style="vertical-align: middle" [matTooltip]="upload.err">
+                error
+              </mat-icon>
+              Failed
+            }
+            @if (!upload.complete) {
+              <ya-dots />
+            }
+          </td>
+        </tr>
+      }
+    </table>
+  </div>
+</mat-dialog-content>
+```
+
+### `upload-progress-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/upload-progress-dialog.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  Inject,
+  ViewChild,
+} from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { Observable } from 'rxjs';
+import { debounceTime } from 'rxjs/operators';
+import { Upload } from './Upload';
+
+@Component({
+  selector: 'app-upload-progress-dialog',
+  templateUrl: './upload-progress-dialog.component.html',
+  styleUrl: './upload-progress-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class UploadProgressDialogComponent {
+  uploads$: Observable<Upload[]>;
+
+  @ViewChild('tableWrapper', { static: true })
+  tableWrapper: ElementRef;
+
+  constructor(
+    dialogRef: MatDialogRef<UploadProgressDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.uploads$ = data.uploads$.pipe(
+      debounceTime(500), // limit updates in the case of batch uploads
+    );
+  }
+}
+```
+
+### `Upload.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/upload-progress-dialog/Upload.ts`
+
+
+```typescript
+export interface Upload {
+  filename: string;
+  promise: Promise<Response>;
+
+  complete?: boolean;
+  err?: string;
+}
+```

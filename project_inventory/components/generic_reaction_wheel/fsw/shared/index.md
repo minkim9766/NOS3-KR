@@ -3,16 +3,138 @@
 
 **경로:** `components/generic_reaction_wheel/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_reaction_wheel_device.c`
 
-file--generic_reaction_wheel_device.c
-file--generic_reaction_wheel_device.h
+**경로:** `components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_reaction_wheel_device.c
+**
+** Purpose:
+**   This file contains the source code for the GENERIC_REACTION_WHEEL device.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_reaction_wheel_device.h"
+
+/************************************************************************
+** Get current momentum data from the UART
+*************************************************************************/
+int32_t GetCurrentMomentum(uart_info_t *wheel, double *momentum)
+{
+    uint8_t DataBuffer[1024];
+    int32_t DataLen;
+    char   *reply;
+
+    char   *request = "CURRENT_MOMENTUM";
+    int32_t status  = uart_write_port(wheel, (uint8_t *)request, strlen(request));
+    if (status < 0)
+    {
+        OS_printf("GetCurrentMomentum: Error writing to UART=%d\n", status);
+    }
+    /* check how many bytes are waiting on the uart */
+    DataLen = uart_bytes_available(wheel);
+    if (DataLen > 0)
+    {
+        /* grab the bytes */
+        status = uart_read_port(wheel, DataBuffer, DataLen);
+        if (status < 0)
+        {
+            OS_printf("GetCurrentMomentum: Error reading from UART=%d\n", status);
+        }
+        else
+        {
+            DataBuffer[DataLen] = 0; // Ensure null termination
+            reply               = (char *)DataBuffer;
+            if (strncmp(reply, "CURRENT_MOMENTUM=", 17) == 0)
+            {
+                *momentum = atof(&reply[17]);
+            }
+            else
+            {
+                status = 0;
+            }
+        }
+    }
+
+    return status;
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+/*                                                                            */
+/* SetRWTorque();                                                             */
+/*                                                                            */
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * **/
+int32_t SetRWTorque(uart_info_t *wheel, double torque)
+{
+    int32_t status;
+    char    request[22];
+
+    sprintf(request, "SET_TORQUE=%10.4f", torque);
+    status = uart_write_port(wheel, (uint8_t *)request, strlen(request));
+    // OS_printf("Generic Reaction Wheel: Sending command:%s\n", request);
+    if (status < 0)
+    {
+        OS_printf("Generic Reaction Wheel: Error writing to UART=%d\n", status);
+    }
+    else
+    {
+        /* Read the reply */
+        uint8_t DataBuffer[1024];
+        int32_t DataLen;
+        /* check how many bytes are waiting on the uart */
+        DataLen = uart_bytes_available(wheel);
+        if (DataLen > 0)
+        {
+            uart_read_port(wheel, DataBuffer, DataLen);
+            DataBuffer[DataLen] = 0; // Ensure null termination
+            // OS_printf("Generic Reaction Wheel: Response on UART=%s\n", (char *)DataBuffer);
+        }
+        else if (DataLen == 0)
+        {
+            // Datalen should be greater than 0 bytes if not sim response is not operating correctly
+            // OS_printf("Generic Reaction Wheel: Response on Uart is %d bytes", DataLen);
+            status = OS_ERROR;
+        }
+    }
+
+    return status;
+} /* End of SetRWTorque */
 ```
 
-## 항목
+### `generic_reaction_wheel_device.h`
 
-- [`components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c`](file--generic_reaction_wheel_device.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.h`](file--generic_reaction_wheel_device.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_reaction_wheel_device.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_REACTION_WHEEL device.
+**
+*******************************************************************************/
+#ifndef _GENERIC_REACTION_WHEEL_DEVICE_H_
+#define _GENERIC_REACTION_WHEEL_DEVICE_H_
+
+/*
+** Required header files.
+*/
+#include "device_cfg.h"
+#include "hwlib.h"
+#include "generic_reaction_wheel_platform_cfg.h"
+
+/* Forward declarations */
+int32_t GetCurrentMomentum(uart_info_t *wheel, double *momentum);
+int32_t SetRWTorque(uart_info_t *wheel, double torque);
+
+#endif /* _SAMPLE_DEVICE_H_ */
+```

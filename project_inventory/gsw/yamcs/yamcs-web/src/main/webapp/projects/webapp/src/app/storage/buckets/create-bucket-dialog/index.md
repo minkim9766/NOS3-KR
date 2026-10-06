@@ -3,16 +3,83 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-bucket-dialog.component.html`
 
-file--create-bucket-dialog.component.html
-file--create-bucket-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/create-bucket-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Create bucket</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Bucket name">
+      <input type="text" formControlName="name" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-bucket-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/create-bucket-dialog.component.html`](file--create-bucket-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/create-bucket-dialog.component.ts`](file--create-bucket-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/create-bucket-dialog/create-bucket-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  MessageService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-create-bucket-dialog',
+  templateUrl: './create-bucket-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class CreateBucketDialogComponent {
+  form: UntypedFormGroup;
+
+  private storageClient: StorageClient;
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateBucketDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+    private messageService: MessageService,
+  ) {
+    this.storageClient = yamcs.createStorageClient();
+    this.form = formBuilder.group({
+      name: ['', Validators.required],
+    });
+  }
+
+  save() {
+    this.storageClient
+      .createBucket({
+        name: this.form.value['name'],
+      })
+      .then(() => this.dialogRef.close(true))
+      .catch((err) => {
+        this.dialogRef.close(false);
+        this.messageService.showError(err);
+      });
+  }
+}
+```

@@ -3,20 +3,199 @@
 
 **경로:** `fsw/cfe/modules/cfe_testcase/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_cfe_test_msgids.h`
 
-file--default_cfe_test_msgids.h
-file--default_cfe_test_tbl.h
-file--default_cfe_test_topicids.h
-file--default_cfe_testcase_msgids.h
+**경로:** `fsw/cfe/modules/cfe_testcase/config/default_cfe_test_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Test app (CFE_TEST) Application Message IDs
+ */
+#ifndef CFE_TEST_MSGIDS_H
+#define CFE_TEST_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_test_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_TEST_CMD_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TEST_CMD_MSG /* 0x1802 */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_TEST_HK_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TEST_HK_TLM_MSG /* 0x0802 */
+
+#endif
 ```
 
-## 항목
+### `default_cfe_test_tbl.h`
 
-- [`fsw/cfe/modules/cfe_testcase/config/default_cfe_test_msgids.h`](file--default_cfe_test_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/config/default_cfe_test_tbl.h`](file--default_cfe_test_tbl.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/config/default_cfe_test_topicids.h`](file--default_cfe_test_topicids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/cfe_testcase/config/default_cfe_testcase_msgids.h`](file--default_cfe_testcase_msgids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/cfe_testcase/config/default_cfe_test_tbl.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Test Table struct definition
+ */
+
+#ifndef CFE_TEST_TBL_H
+#define CFE_TEST_TBL_H
+
+/*
+ * Test table structure
+ */
+typedef struct
+{
+    uint16 Int1;
+    uint16 Int2;
+} TBL_TEST_Table_t;
+
+#endif /* CFE_TEST_TBL_H */
+```
+
+### `default_cfe_test_topicids.h`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/config/default_cfe_test_topicids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Test app (CFE_TESTCASE) Application Topic IDs
+ */
+#ifndef CFE_TESTCASE_TOPICIDS_H
+#define CFE_TESTCASE_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE TEST command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TEST_CMD_MSG 2
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE TEST telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TEST_HK_TLM_MSG 2
+
+#endif
+```
+
+### `default_cfe_testcase_msgids.h`
+
+**경로:** `fsw/cfe/modules/cfe_testcase/config/default_cfe_testcase_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Test app (CFE_TEST) Application Message IDs
+ */
+#ifndef CFE_TEST_MSGIDS_H
+#define CFE_TEST_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_test_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_TEST_CMD_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TEST_CMD_MSG /* 0x1802 */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_TEST_HK_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TEST_HK_TLM_MSG /* 0x0802 */
+
+#endif
+```

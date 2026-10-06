@@ -3,22 +3,209 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--SerializableFile.cpp
-file--SerializableFile.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/SerializableFile.cpp`](file--SerializableFile.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/SerializableFile.hpp`](file--SerializableFile.hpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+test.ser
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+if (BUILD_TESTING)
+    add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/test/TestSerializable")
+endif()
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SerializableFile.cpp"
+)
+set(MOD_DEPS
+    Fw/Types
+    Os
+)
+register_fprime_module()
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/Test.cpp"
+)
+set(UT_MOD_DEPS
+  Fw/SerializableFile
+  Fw/SerializableFile/test/TestSerializable
+  Fw/Types
+  Utils/Hash
+  Os
+)
+register_fprime_ut()
+```
+
+### `SerializableFile.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/SerializableFile.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SerializableFile.cpp
+// \author dinkel
+// \brief  cpp file for SerializableFile
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/SerializableFile/SerializableFile.hpp"
+#include "Fw/Types/Assert.hpp"
+#include "Os/File.hpp"
+
+namespace Fw {
+
+SerializableFile::SerializableFile(MemAllocator* allocator, FwSizeType maxSerializedSize)
+    : m_allocator(allocator),
+      m_recoverable(false),  // for compiler; not used
+      m_actualSize(maxSerializedSize),
+      m_buffer(static_cast<U8*>(this->m_allocator->allocate(0, m_actualSize, m_recoverable)), m_actualSize) {
+    // assert if allocator returns smaller size
+    FW_ASSERT(maxSerializedSize == m_actualSize, static_cast<FwAssertArgType>(maxSerializedSize),
+              static_cast<FwAssertArgType>(m_actualSize));
+    FW_ASSERT(nullptr != m_buffer.getBuffAddr());
+}
+
+SerializableFile::~SerializableFile() {
+    this->m_allocator->deallocate(0, this->m_buffer.getBuffAddr());
+}
+
+SerializableFile::Status SerializableFile::load(const char* fileName, Serializable& serializable) {
+    Os::File file;
+    Os::File::Status status;
+    status = file.open(fileName, Os::File::OPEN_READ);
+    if (Os::File::OP_OK != status) {
+        return FILE_OPEN_ERROR;
+    }
+
+    FwSizeType length = this->m_buffer.getBuffCapacity();
+    status = file.read(this->m_buffer.getBuffAddr(), length, Os::File::WaitType::NO_WAIT);
+    if (Os::File::OP_OK != status) {
+        file.close();
+        return FILE_READ_ERROR;
+    }
+    file.close();
+
+    this->reset();
+    SerializeStatus serStatus;
+    serStatus = this->m_buffer.setBuffLen(length);
+    FW_ASSERT(FW_SERIALIZE_OK == serStatus, serStatus);
+    serStatus = serializable.deserialize(this->m_buffer);
+    if (FW_SERIALIZE_OK != serStatus) {
+        return DESERIALIZATION_ERROR;
+    }
+
+    return SerializableFile::OP_OK;
+}
+
+SerializableFile::Status SerializableFile::save(const char* fileName, Serializable& serializable) {
+    this->reset();
+    SerializeStatus serStatus = serializable.serialize(this->m_buffer);
+    FW_ASSERT(FW_SERIALIZE_OK == serStatus, serStatus);
+
+    Os::File file;
+    Os::File::Status status;
+    status = file.open(fileName, Os::File::OPEN_WRITE);
+    if (Os::File::OP_OK != status) {
+        return FILE_OPEN_ERROR;
+    }
+
+    FwSizeType length = this->m_buffer.getBuffLength();
+    status = file.write(this->m_buffer.getBuffAddr(), length);
+    if ((Os::File::OP_OK != status) || (length != this->m_buffer.getBuffLength())) {
+        file.close();
+        return FILE_WRITE_ERROR;
+    }
+
+    file.close();
+
+    return SerializableFile::OP_OK;
+}
+
+void SerializableFile::reset() {
+    this->m_buffer.resetSer();    //!< reset to beginning of buffer to reuse for serialization
+    this->m_buffer.resetDeser();  //!< reset deserialization to beginning
+}
+}  // namespace Fw
+```
+
+### `SerializableFile.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/SerializableFile.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SerializableFile.hpp
+// \author dinkel
+// \brief  hpp file for SerializableFile
+//
+// \copyright
+// Copyright 2009-2016, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Fw_SerializableFile_HPP
+#define Fw_SerializableFile_HPP
+
+#include <Fw/Types/MemAllocator.hpp>
+#include <Fw/Types/SerialBuffer.hpp>
+#include <Fw/Types/Serializable.hpp>
+
+namespace Fw {
+
+//! The type of a packet header
+class SerializableFile {
+  public:
+    enum Status { OP_OK, FILE_OPEN_ERROR, FILE_WRITE_ERROR, FILE_READ_ERROR, DESERIALIZATION_ERROR };
+
+    // NOTE!: This should not be used with an allocator that can return a smaller buffer than requested
+    SerializableFile(MemAllocator* allocator, FwSizeType maxSerializedSize);
+    ~SerializableFile();
+
+    Status load(const char* fileName, Serializable& serializable);
+    Status save(const char* fileName, Serializable& serializable);
+
+  private:
+    void reset();
+    MemAllocator* m_allocator;
+    bool m_recoverable;       // don't care; for allocator
+    FwSizeType m_actualSize;  // for checking
+    SerialBuffer m_buffer;
+};
+}  // namespace Fw
+
+#endif
+```

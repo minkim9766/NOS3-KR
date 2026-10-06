@@ -3,16 +3,559 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FormalParamTypes.cpp`
 
-file--FormalParamTypes.cpp
-file--FormalParamTypes.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/FormalParamTypes.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FormalParamTypes.cpp
+// \author T. Chieu
+// \brief  cpp file for formal param types
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <cstdint>
+
+#include "FormalParamTypes.hpp"
+#include "FppTest/utils/Utils.hpp"
+#include "Fw/Types/StringTemplate.hpp"
+#include "STest/Pick/Pick.hpp"
+
+namespace FppTest {
+
+namespace Types {
+
+// ----------------------------------------------------------------------
+// Primitive types
+// ----------------------------------------------------------------------
+
+BoolType::BoolType() {
+    val = static_cast<bool>(STest::Pick::lowerUpper(0, 1));
+}
+
+U32Type::U32Type() {
+    val = STest::Pick::any();
+}
+
+I32Type::I32Type() {
+    val = static_cast<I32>(STest::Pick::lowerUpper(0, INT32_MAX));
+}
+
+F32Type::F32Type() {
+    val = static_cast<F32>(STest::Pick::any());
+}
+
+PrimitiveTypes::PrimitiveTypes() {
+    val1 = STest::Pick::any();
+    val2 = STest::Pick::any();
+    val3 = static_cast<F32>(STest::Pick::any());
+    val4 = static_cast<F32>(STest::Pick::any());
+    val5 = static_cast<bool>(STest::Pick::lowerUpper(0, 1));
+    val6 = static_cast<bool>(STest::Pick::lowerUpper(0, 1));
+}
+
+// ----------------------------------------------------------------------
+// FPP types
+// ----------------------------------------------------------------------
+
+EnumType::EnumType() {
+    val = getRandomFormalParamEnum();
+}
+
+EnumTypes::EnumTypes() {
+    val1 = getRandomFormalParamEnum();
+    val2 = getRandomFormalParamEnum();
+    val3 = getRandomFormalParamEnum();
+    val4 = getRandomFormalParamEnum();
+}
+
+ArrayType::ArrayType() {
+    getRandomFormalParamArray(val);
+}
+
+ArrayTypes::ArrayTypes() {
+    getRandomFormalParamArray(val1);
+    getRandomFormalParamArray(val2);
+    getRandomFormalStringArray(val3);
+    getRandomFormalStringArray(val4);
+    getRandomFormalStringArray(val5);
+    getRandomFormalStringArray(val6);
+}
+
+StructType::StructType() {
+    val = getRandomFormalParamStruct();
+}
+
+StructTypes::StructTypes() {
+    val1 = getRandomFormalParamStruct();
+    val2 = getRandomFormalParamStruct();
+}
+
+// ----------------------------------------------------------------------
+// String types
+// ----------------------------------------------------------------------
+
+PortStringType::PortStringType() {
+    setRandomString(val);
+}
+
+PortStringTypes::PortStringTypes() {
+    setRandomString(val1);
+    setRandomString(val2);
+    setRandomString(val3);
+    setRandomString(val4);
+}
+
+InternalInterfaceStringType::InternalInterfaceStringType() {
+    setRandomString(val);
+}
+
+InternalInterfaceStringTypes::InternalInterfaceStringTypes() {
+    setRandomString(val1);
+    setRandomString(val2);
+}
+
+CmdStringType::CmdStringType() {
+    setRandomString(val, FW_CMD_STRING_MAX_SIZE);
+}
+
+CmdStringTypes::CmdStringTypes() {
+    setRandomString(val1, FW_CMD_STRING_MAX_SIZE / 2);
+    setRandomString(val2, FW_CMD_STRING_MAX_SIZE / 2);
+}
+
+LogStringType::LogStringType() {
+    setRandomString(val, FW_LOG_STRING_MAX_SIZE);
+}
+
+LogStringTypes::LogStringTypes() {
+    setRandomString(val1, FW_LOG_STRING_MAX_SIZE / 2);
+    setRandomString(val2, FW_LOG_STRING_MAX_SIZE / 2);
+}
+
+TlmStringType::TlmStringType() {
+    setRandomString(val, FW_TLM_STRING_MAX_SIZE);
+}
+
+TlmStringTypes::TlmStringTypes() {
+    setRandomString(val1, FW_TLM_STRING_MAX_SIZE / 2);
+    setRandomString(val2, FW_TLM_STRING_MAX_SIZE / 2);
+}
+
+PrmStringType::PrmStringType() {
+    setRandomString(val, FW_PARAM_STRING_MAX_SIZE);
+}
+
+PrmStringTypes::PrmStringTypes() {
+    setRandomString(val1, FW_PARAM_STRING_MAX_SIZE / 2);
+    setRandomString(val2, FW_PARAM_STRING_MAX_SIZE / 2);
+}
+
+StringType::StringType() {
+    setRandomString(val, decltype(val)::STRING_SIZE);
+}
+
+AliasStringArrayType::AliasStringArrayType() {
+    getRandomFormalStringArray(val);
+}
+
+StringTypes::StringTypes() {
+    setRandomString(val1, decltype(val1)::STRING_SIZE / 2);
+    setRandomString(val2, decltype(val2)::STRING_SIZE / 2);
+}
+
+// ----------------------------------------------------------------------
+// Serial type
+// ----------------------------------------------------------------------
+
+SerialType::SerialType() : val(data, sizeof(data)) {
+    U32 len = STest::Pick::lowerUpper(1, SERIAL_ARGS_BUFFER_CAPACITY);
+
+    for (U32 i = 0; i < len; i++) {
+        data[i] = Utils::getNonzeroU8();
+    }
+}
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+
+void setRandomString(Fw::StringBase& str) {
+    char buf[str.getCapacity()];
+    Utils::setString(buf, sizeof(buf));
+    str = buf;
+}
+
+void setRandomString(Fw::StringBase& str, U32 size) {
+    char buf[size];
+    Utils::setString(buf, size);
+    str = buf;
+}
+
+FormalParamEnum getRandomFormalParamEnum() {
+    FormalParamEnum e;
+
+    e = static_cast<FormalParamEnum::T>(STest::Pick::lowerUpper(0, FormalParamEnum::NUM_CONSTANTS - 1));
+
+    return e;
+}
+
+void getRandomFormalParamArray(FormalParamArray& a) {
+    for (U32 i = 0; i < FormalParamArray::SIZE; i++) {
+        a[i] = STest::Pick::any();
+    }
+}
+
+void getRandomFormalStringArray(FormalAliasStringArray& a) {
+    for (U32 i = 0; i < FormalParamArray::SIZE; i++) {
+        setRandomString(a[i], static_cast<U32>(a[i].getCapacity()));
+    }
+}
+
+FormalParamStruct getRandomFormalParamStruct() {
+    FormalParamStruct s;
+
+    char buf[s.get_y().getCapacity()];
+    Utils::setString(buf, sizeof(buf));
+
+    Fw::StringTemplate<80> str(buf);
+
+    Utils::setString(buf, sizeof(buf));
+    Fw::StringTemplate<80> str2(buf);
+
+    s.set(STest::Pick::any(), str, str2);
+
+    return s;
+}
+
+}  // namespace Types
+
+}  // namespace FppTest
 ```
 
-## 항목
+### `FormalParamTypes.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/FormalParamTypes.cpp`](file--FormalParamTypes.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/FormalParamTypes.hpp`](file--FormalParamTypes.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/component/types/FormalParamTypes.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FormalParamTypes.hpp
+// \author T. Chieu
+// \brief  hpp file for formal param types
+//
+// \copyright
+// Copyright (C) 2009-2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef FPP_TEST_FORMAL_PARAM_TYPES_HPP
+#define FPP_TEST_FORMAL_PARAM_TYPES_HPP
+
+#include "Fw/Cmd/CmdString.hpp"
+#include "Fw/Log/LogString.hpp"
+#include "Fw/Prm/PrmString.hpp"
+#include "Fw/Tlm/TlmString.hpp"
+#include "Fw/Types/InternalInterfaceString.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Fw/Types/StringTemplate.hpp"
+
+#include "FppTest/component/active/FormalParamArrayArrayAc.hpp"
+#include "FppTest/component/active/FormalParamEnumEnumAc.hpp"
+#include "FppTest/component/active/FormalParamStructSerializableAc.hpp"
+#include "FppTest/component/active/StringArgsPortAc.hpp"
+#include "FppTest/component/active/FormalAliasArrayAliasAc.hpp"
+#include "FppTest/component/active/FormalAliasEnumAliasAc.hpp"
+#include "FppTest/component/active/FormalAliasStringAliasAc.hpp"
+#include "FppTest/component/active/FormalAliasStringArrayArrayAc.hpp"
+#include "FppTest/utils/Utils.hpp"
+
+#define SERIAL_ARGS_BUFFER_CAPACITY 256
+
+namespace FppTest {
+
+namespace Types {
+
+template <typename ArgType, typename ReturnType>
+struct FormalParamsWithReturn {
+    ArgType args;
+};
+
+// Empty type
+struct Empty {};
+
+template <typename ArgType>
+using FormalParams = FormalParamsWithReturn<ArgType, Empty>;
+
+// ----------------------------------------------------------------------
+// Primitive types
+// ----------------------------------------------------------------------
+
+struct BoolType {
+    BoolType();
+
+    bool val;
+};
+
+struct U32Type {
+    U32Type();
+
+    U32 val;
+};
+
+struct I32Type {
+    I32Type();
+
+    I32 val;
+};
+
+struct F32Type {
+    F32Type();
+
+    F32 val;
+};
+
+struct PrimitiveTypes {
+    PrimitiveTypes();
+
+    U32 val1;
+    U32 val2;
+    F32 val3;
+    F32 val4;
+    bool val5;
+    bool val6;
+};
+
+// ----------------------------------------------------------------------
+// FPP types
+// ----------------------------------------------------------------------
+
+struct EnumType {
+    EnumType();
+
+    FormalParamEnum val;
+};
+
+struct EnumTypes {
+    EnumTypes();
+
+    FormalParamEnum val1;
+    FormalParamEnum val2;
+    FormalAliasEnum val3;
+    FormalAliasEnum val4;
+};
+
+struct ArrayType {
+    ArrayType();
+
+    FormalParamArray val;
+};
+
+struct ArrayTypes {
+    ArrayTypes();
+
+    FormalParamArray val1;
+    FormalParamArray val2;
+    FormalAliasArray val3;
+    FormalAliasArray val4;
+    FormalAliasStringArray val5;
+    FormalAliasStringArray val6;
+};
+
+struct StructType {
+    StructType();
+
+    FormalParamStruct val;
+};
+
+struct StructTypes {
+    StructTypes();
+
+    FormalParamStruct val1;
+    FormalParamStruct val2;
+};
+
+// ----------------------------------------------------------------------
+// String types
+// ----------------------------------------------------------------------
+
+using String1 = Fw::StringTemplate<80>;
+using String2 = Fw::StringTemplate<100>;
+
+struct PortStringType {
+    PortStringType();
+
+    String1 val;
+};
+
+struct PortStringTypes {
+    PortStringTypes();
+
+    String1 val1;
+    String1 val2;
+    String2 val3;
+    String2 val4;
+};
+
+struct InternalInterfaceStringType {
+    InternalInterfaceStringType();
+
+    Fw::InternalInterfaceString val;
+};
+
+struct InternalInterfaceStringTypes {
+    InternalInterfaceStringTypes();
+
+    Fw::InternalInterfaceString val1;
+    Fw::InternalInterfaceString val2;
+};
+
+struct CmdStringType {
+    CmdStringType();
+
+    Fw::CmdStringArg val;
+};
+
+struct CmdStringTypes {
+    CmdStringTypes();
+
+    Fw::CmdStringArg val1;
+    Fw::CmdStringArg val2;
+};
+
+struct LogStringType {
+    LogStringType();
+
+    Fw::LogStringArg val;
+};
+
+struct LogStringTypes {
+    LogStringTypes();
+
+    Fw::LogStringArg val1;
+    Fw::LogStringArg val2;
+};
+
+struct TlmStringType {
+    TlmStringType();
+
+    Fw::TlmString val;
+};
+
+struct TlmStringTypes {
+    TlmStringTypes();
+
+    Fw::TlmString val1;
+    Fw::TlmString val2;
+};
+
+struct PrmStringType {
+    PrmStringType();
+
+    Fw::ParamString val;
+};
+
+struct PrmStringTypes {
+    PrmStringTypes();
+
+    Fw::ParamString val1;
+    Fw::ParamString val2;
+};
+
+struct StringType {
+    StringType();
+
+    String1 val;
+};
+
+struct AliasStringArrayType {
+    AliasStringArrayType();
+
+    FormalAliasStringArray val;
+};
+
+struct StringTypes {
+    StringTypes();
+
+    String1 val1;
+    String1 val2;
+};
+
+// ----------------------------------------------------------------------
+// Serial type
+// ----------------------------------------------------------------------
+
+struct SerialType {
+    SerialType();
+
+    U8 data[SERIAL_ARGS_BUFFER_CAPACITY];
+    Fw::SerialBuffer val;
+};
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+
+void setRandomString(Fw::StringBase& str);
+void setRandomString(Fw::StringBase& str, U32 size);
+FormalParamEnum getRandomFormalParamEnum();
+void getRandomFormalParamArray(FormalParamArray& a);
+FormalParamStruct getRandomFormalParamStruct();
+void getRandomFormalStringArray(FormalAliasStringArray& a);
+
+// ----------------------------------------------------------------------
+// Typedefs
+// ----------------------------------------------------------------------
+
+typedef FormalParams<Empty> NoParams;
+typedef FormalParams<BoolType> BoolParam;
+typedef FormalParams<U32Type> U32Param;
+typedef FormalParams<I32Type> I32Param;
+typedef FormalParams<F32Type> F32Param;
+typedef FormalParams<PrimitiveTypes> PrimitiveParams;
+typedef FormalParams<EnumType> EnumParam;
+typedef FormalParams<EnumTypes> EnumParams;
+typedef FormalParams<ArrayType> ArrayParam;
+typedef FormalParams<ArrayTypes> ArrayParams;
+typedef FormalParams<StructType> StructParam;
+typedef FormalParams<StructTypes> StructParams;
+typedef FormalParams<PortStringType> PortStringParam;
+typedef FormalParams<PortStringTypes> PortStringParams;
+typedef FormalParams<InternalInterfaceStringType> InternalInterfaceStringParam;
+typedef FormalParams<InternalInterfaceStringTypes> InternalInterfaceStringParams;
+typedef FormalParams<CmdStringType> CmdStringParam;
+typedef FormalParams<CmdStringTypes> CmdStringParams;
+typedef FormalParams<LogStringType> LogStringParam;
+typedef FormalParams<LogStringTypes> LogStringParams;
+typedef FormalParams<TlmStringType> TlmStringParam;
+typedef FormalParams<TlmStringTypes> TlmStringParams;
+typedef FormalParams<PrmStringType> PrmStringParam;
+typedef FormalParams<PrmStringTypes> PrmStringParams;
+typedef FormalParams<SerialType> SerialParam;
+
+typedef FormalParamsWithReturn<Empty, BoolType> NoParamReturn;
+typedef FormalParamsWithReturn<PrimitiveTypes, U32Type> PrimitiveReturn;
+typedef FormalParamsWithReturn<EnumTypes, EnumType> EnumReturn;
+typedef FormalParamsWithReturn<StringTypes, StringType> StringReturn;
+typedef FormalParamsWithReturn<StringTypes, FormalAliasString> StringAliasReturn;
+typedef FormalParamsWithReturn<ArrayTypes, ArrayType> ArrayReturn;
+typedef FormalParamsWithReturn<ArrayTypes, FormalAliasStringArray> ArrayStringAliasReturn;
+typedef FormalParamsWithReturn<StructTypes, StructType> StructReturn;
+
+}  // namespace Types
+
+}  // namespace FppTest
+
+#endif
+```

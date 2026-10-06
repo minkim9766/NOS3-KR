@@ -3,16 +3,18 @@
 
 **경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 etc/index
-file--mdb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/etc/`](etc/index) — 폴더
-- [`gsw/yamcs/examples/replication2/src/main/yamcs/mdb`](file--mdb) — 심볼릭 링크 → `../../../../simulation/src/main/yamcs/mdb` (대상 미포함)
+### `mdb`
+
+**경로:** `gsw/yamcs/examples/replication2/src/main/yamcs/mdb`
+
+심볼릭 링크 대상: `../../../../simulation/src/main/yamcs/mdb` (대상 미포함)

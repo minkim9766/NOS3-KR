@@ -3,26 +3,1540 @@
 
 **경로:** `fsw/psp/fsw/mcp750-vxworks/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 bsp-integration/index
-file--cfe_psp_exception.c
-file--cfe_psp_memory.c
-file--cfe_psp_ssr.c
-file--cfe_psp_start.c
-file--cfe_psp_support.c
-file--cfe_psp_watchdog.c
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/fsw/mcp750-vxworks/src/bsp-integration/`](bsp-integration/index) — 폴더
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_exception.c`](file--cfe_psp_exception.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_memory.c`](file--cfe_psp_memory.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_ssr.c`](file--cfe_psp_ssr.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_start.c`](file--cfe_psp_start.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_support.c`](file--cfe_psp_support.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_watchdog.c`](file--cfe_psp_watchdog.c) — UTF-8 텍스트 파일 본문 포함
+### `cfe_psp_exception.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_exception.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+**
+** File:  cfe_psp_exception.c
+**
+**      MCP750 vxWorks 6.2 Version
+**
+** Purpose:
+**   cFE PSP Exception related functions.
+**
+** History:
+**   2007/05/29  A. Cudmore      | vxWorks 6.2 MCP750 version
+**   2016/04/07  M.Grubb         | Updated for PSP version 1.3
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+#include <vxWorks.h>
+#include <sysLib.h>
+#include "fppLib.h"
+#include "excLib.h"
+#include "taskLib.h"
+#include "arch/ppc/vxPpcLib.h"
+#include "arch/ppc/esfPpc.h"
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_exceptionstorage_types.h"
+#include "cfe_psp_exceptionstorage_api.h"
+#include "cfe_psp_memory.h"
+
+#include "target_config.h"
+
+/*
+**
+** LOCAL FUNCTION PROTOTYPES
+**
+*/
+
+void CFE_PSP_ExceptionHook(TASK_ID task_id, int vector, void *vpEsf);
+
+/***************************************************************************
+ **                        FUNCTIONS DEFINITIONS
+ ***************************************************************************/
+
+/*
+**
+**   Purpose: This function Initializes the task exceptions and adds a hook
+**              into the VxWorks exception handling.  The below hook is called
+**              for every exception that VxWorks catches.
+**
+**   Notes: if desired - to attach a custom handler put following code in
+**          this function:  excConnect ((VOIDFUNCPTR*)VECTOR, ExceptionHandler);
+**
+*/
+
+void CFE_PSP_AttachExceptions(void)
+{
+    excHookAdd(CFE_PSP_ExceptionHook);
+    OS_printf("CFE_PSP: Attached cFE Exception Handler. Context Size = %lu bytes.\n",
+              (unsigned long)sizeof(CFE_PSP_Exception_ContextDataEntry_t));
+    CFE_PSP_Exception_Reset();
+}
+
+/*
+**
+** Purpose: Make the proper call to CFE_ES_EXCEPTION_FUNCTION (defined in
+**          cfe_es_platform.cfg)
+**
+** Notes:   pEsf - pointer to exception stack frame.
+**          fppSave - When it makes this call, it captures the last floating
+**                      point context - which may not be valid.  If a floating
+**                      point exception occurs you can be almost 100% sure
+**                      that this will reflect the proper context.  But if another
+**                      type of exception occurred then this has the possibility
+**                      of not being valid.  Specifically if a task that is not
+**                      enabled for floating point causes a non-floating point
+**                      exception, then the meaning of the floating point context
+**                      will not be valid.  If the task is enabled for floating point,
+**                      then it will be valid.
+**
+*/
+void CFE_PSP_ExceptionHook(TASK_ID task_id, int vector, void *vpEsf)
+{
+    CFE_PSP_Exception_LogData_t *Buffer;
+
+    Buffer = CFE_PSP_Exception_GetNextContextBuffer();
+    if (Buffer != NULL)
+    {
+        /*
+         * Immediately get a snapshot of the timebase when exception occurred
+         *
+         * This is because the remainder of exception processing might be done
+         * in a cleanup job as a low priority background task, and might be
+         * considerably delayed from the time the actual exception occurred.
+         */
+        vxTimeBaseGet(&Buffer->context_info.timebase_upper, &Buffer->context_info.timebase_lower);
+
+        Buffer->sys_task_id         = task_id;
+        Buffer->context_info.vector = vector;
+
+        /*
+         * Save Exception Stack frame
+         */
+        memcpy(&Buffer->context_info.esf, vpEsf, sizeof(Buffer->context_info.esf));
+
+        /*
+         * Save floating point registers
+         */
+        fppSave(&Buffer->context_info.fp);
+
+        /*
+         * Save total size of context info.
+         * (This PSP always fills the entire structure)
+         */
+        Buffer->context_size = sizeof(Buffer->context_info);
+
+        CFE_PSP_Exception_WriteComplete();
+    }
+
+    if (GLOBAL_CFE_CONFIGDATA.SystemNotify != NULL)
+    {
+        /* notify the CFE of the event */
+        GLOBAL_CFE_CONFIGDATA.SystemNotify();
+    }
+}
+
+/*
+**
+**   Purpose: This function sets a default exception environment that can be used
+**
+**   Notes: The exception environment is local to each task Therefore this must be
+**          called for each task that that wants to do floating point and catch exceptions
+*/
+void CFE_PSP_SetDefaultExceptionEnvironment(void)
+{
+    vxMsrSet(vxMsrGet() | _PPC_MSR_EE | /* enable the external interrupt */
+             _PPC_MSR_FP |              /* enable floating point */
+             _PPC_MSR_ME |              /* major hardware failures */
+             _PPC_MSR_FE0 |             /* floating point exception 0 */
+             _PPC_MSR_FE1 |             /* generate unrecoverable floating point exceptions */
+             _PPC_MSR_DR);              /* enable data address translation (dbats?) */
+
+    vxFpscrSet(vxFpscrGet() | _PPC_FPSCR_VE | /* enable exceptions for invalid operations */
+               _PPC_FPSCR_OE |                /* enable overflow exceptions */
+               _PPC_FPSCR_NI |                /* Non-IEEE mode for denormalized numbers */
+               _PPC_FPSCR_ZE);                /* enable divide by zero exceptions */
+
+    vxFpscrSet(vxFpscrGet() | _PPC_FPSCR_XE | /* fp inexact exc enable */
+               _PPC_FPSCR_UE);                /* fp underflow enable */
+}
+
+/*
+ * Purpose: Translate a stored exception log entry into a summary string
+ */
+int32 CFE_PSP_ExceptionGetSummary_Impl(const CFE_PSP_Exception_LogData_t *Buffer, char *ReasonBuf, uint32 ReasonSize)
+{
+    const char *TaskName;
+
+    /*
+    ** Get the vxWorks task name
+    */
+    TaskName = taskName(Buffer->sys_task_id);
+
+    if (TaskName == NULL)
+    {
+        TaskName = "NULL";
+    }
+
+    snprintf(ReasonBuf, ReasonSize, "Vector=0x%06X, vxWorks Task Name=%s, Task ID=0x%08X", Buffer->context_info.vector,
+             TaskName, Buffer->sys_task_id);
+
+    return CFE_PSP_SUCCESS;
+}
+```
+
+### `cfe_psp_memory.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_memory.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_memory.c
+**
+**      MCP750 vxWorks 6.x Version
+**
+** Purpose:
+**   cFE PSP Memory related functions. This is the implementation of the cFE
+**   memory areas that have to be preserved, and the API that is designed to allow
+**   access to them. It also contains memory related routines to return the
+**   address of the kernel code used in the cFE checksum.
+**
+** History:
+**   2006/09/29  A. Cudmore      | vxWorks 6.2 MCP750 version
+**   2016/04/07  M.Grubb         | Updated for PSP version 1.3
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <string.h>
+#include <vxWorks.h>
+#include <sysLib.h>
+#include <moduleLib.h>
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+#include "target_config.h"
+
+/*
+**  External Declarations
+*/
+extern unsigned int GetWrsKernelTextStart(void);
+extern unsigned int GetWrsKernelTextEnd(void);
+
+/*
+** Global variables
+*/
+
+/*
+** Pointer to the vxWorks USER_RESERVED_MEMORY area
+** The sizes of each memory area is defined in os_processor.h for this architecture.
+*/
+CFE_PSP_ReservedMemoryMap_t CFE_PSP_ReservedMemoryMap;
+
+CFE_PSP_MemoryBlock_t MCP750_ReservedMemBlock;
+
+/*
+*********************************************************************************
+** CDS related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function fetches the size of the OS Critical Data Store area.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_GetCDSSize(uint32 *SizeOfCDS)
+{
+    int32 return_code;
+
+    if (SizeOfCDS == NULL)
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        *SizeOfCDS  = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize;
+        return_code = CFE_PSP_SUCCESS;
+    }
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function writes to the CDS Block.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_WriteToCDS(const void *PtrToDataToWrite, uint32 CDSOffset, uint32 NumBytes)
+{
+    uint8 *CopyPtr;
+    int32  return_code;
+
+    if (PtrToDataToWrite == NULL)
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        if ((CDSOffset < CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize) &&
+            ((CDSOffset + NumBytes) <= CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize))
+        {
+            CopyPtr = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr;
+            CopyPtr += CDSOffset;
+            memcpy(CopyPtr, (char *)PtrToDataToWrite, NumBytes);
+
+            return_code = CFE_PSP_SUCCESS;
+        }
+        else
+        {
+            return_code = CFE_PSP_ERROR;
+        }
+
+    } /* end if PtrToDataToWrite == NULL */
+
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**   This function reads from the CDS Block
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_ReadFromCDS(void *PtrToDataToRead, uint32 CDSOffset, uint32 NumBytes)
+{
+    uint8 *CopyPtr;
+    int32  return_code;
+
+    if (PtrToDataToRead == NULL)
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        if ((CDSOffset < CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize) &&
+            ((CDSOffset + NumBytes) <= CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize))
+        {
+            CopyPtr = CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr;
+            CopyPtr += CDSOffset;
+            memcpy((char *)PtrToDataToRead, CopyPtr, NumBytes);
+
+            return_code = CFE_PSP_SUCCESS;
+        }
+        else
+        {
+            return_code = CFE_PSP_ERROR;
+        }
+
+    } /* end if PtrToDataToWrite == NULL */
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES Reset Area related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**     This function returns the location and size of the ES Reset information area.
+**     This area is preserved during a processor reset and is used to store the
+**     ER Log, System Log and reset related variables
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetResetArea(cpuaddr *PtrToResetArea, uint32 *SizeOfResetArea)
+{
+    int32 return_code;
+
+    if ((PtrToResetArea == NULL) || (SizeOfResetArea == NULL))
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        *PtrToResetArea  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.ResetMemory.BlockPtr);
+        *SizeOfResetArea = CFE_PSP_ReservedMemoryMap.ResetMemory.BlockSize;
+        return_code      = CFE_PSP_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES User Reserved Area related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the location and size of the memory used for the cFE
+**     User reserved area.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetUserReservedArea(cpuaddr *PtrToUserArea, uint32 *SizeOfUserArea)
+{
+    int32 return_code;
+
+    if ((PtrToUserArea == NULL) || (SizeOfUserArea == NULL))
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        *PtrToUserArea  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockPtr);
+        *SizeOfUserArea = CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockSize;
+        return_code     = CFE_PSP_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES Volatile disk memory related functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the location and size of the memory used for the cFE
+**     volatile disk.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetVolatileDiskMem(cpuaddr *PtrToVolDisk, uint32 *SizeOfVolDisk)
+{
+    int32 return_code;
+
+    if ((PtrToVolDisk == NULL) || (SizeOfVolDisk == NULL))
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        *PtrToVolDisk  = (cpuaddr)(CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockPtr);
+        *SizeOfVolDisk = CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockSize;
+        return_code    = CFE_PSP_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*
+*********************************************************************************
+** ES BSP Top Level Reserved memory initialization
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function performs the top level reserved memory initialization.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_InitProcessorReservedMemory(uint32 RestartType)
+{
+    int32 return_code;
+
+    if (RestartType != CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        OS_printf("CFE_PSP: Clearing Processor Reserved Memory.\n");
+        memset(MCP750_ReservedMemBlock.BlockPtr, 0, MCP750_ReservedMemBlock.BlockSize);
+
+        /*
+        ** Set the default reset type in case a watchdog reset occurs
+        */
+        CFE_PSP_ReservedMemoryMap.BootPtr->bsp_reset_type = CFE_PSP_RST_TYPE_PROCESSOR;
+    }
+    return_code = CFE_PSP_SUCCESS;
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Set up the CFE_PSP_ReservedMemoryMap global data structure
+**    This only sets the pointers, it does not initialize the data.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void CFE_PSP_SetupReservedMemoryMap(void)
+{
+    cpuaddr start_addr;
+    cpuaddr end_addr;
+
+    /*
+    ** Note: this uses a "cpuaddr" (integer address) as an intermediate
+    ** to avoid warnings about alignment.  The output of sysMemTop()
+    ** should be aligned to hold any data type, being the very start
+    ** of the memory space.
+    */
+    start_addr = (cpuaddr)sysMemTop();
+    end_addr   = start_addr;
+
+    memset(&CFE_PSP_ReservedMemoryMap, 0, sizeof(CFE_PSP_ReservedMemoryMap));
+
+    CFE_PSP_ReservedMemoryMap.BootPtr = (CFE_PSP_ReservedMemoryBootRecord_t *)end_addr;
+    end_addr += sizeof(CFE_PSP_ReservedMemoryBootRecord_t);
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    CFE_PSP_ReservedMemoryMap.ExceptionStoragePtr = (CFE_PSP_ExceptionStorage_t *)end_addr;
+    end_addr += sizeof(CFE_PSP_ExceptionStorage_t);
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    CFE_PSP_ReservedMemoryMap.ResetMemory.BlockPtr  = (void *)end_addr;
+    CFE_PSP_ReservedMemoryMap.ResetMemory.BlockSize = GLOBAL_CONFIGDATA.CfeConfig->ResetAreaSize;
+    end_addr += CFE_PSP_ReservedMemoryMap.ResetMemory.BlockSize;
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockPtr = (void *)end_addr;
+    CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockSize =
+        GLOBAL_CONFIGDATA.CfeConfig->RamDiskSectorSize * GLOBAL_CONFIGDATA.CfeConfig->RamDiskTotalSectors;
+    end_addr += CFE_PSP_ReservedMemoryMap.VolatileDiskMemory.BlockSize;
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    CFE_PSP_ReservedMemoryMap.CDSMemory.BlockPtr  = (void *)end_addr;
+    CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize = GLOBAL_CONFIGDATA.CfeConfig->CdsSize;
+    end_addr += CFE_PSP_ReservedMemoryMap.CDSMemory.BlockSize;
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockPtr  = (void *)end_addr;
+    CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockSize = GLOBAL_CONFIGDATA.CfeConfig->UserReservedSize;
+    end_addr += CFE_PSP_ReservedMemoryMap.UserReservedMemory.BlockSize;
+    end_addr = (end_addr + CFE_PSP_MEMALIGN_MASK) & ~CFE_PSP_MEMALIGN_MASK;
+
+    /* The total size of the entire block is the difference in address */
+    MCP750_ReservedMemBlock.BlockPtr  = (void *)start_addr;
+    MCP750_ReservedMemBlock.BlockSize = end_addr - start_addr;
+
+    OS_printf("CFE_PSP: MCP750 Reserved Memory Block at 0x%08lx, Total Size = 0x%lx\n",
+              (unsigned long)MCP750_ReservedMemBlock.BlockPtr, (unsigned long)MCP750_ReservedMemBlock.BlockSize);
+
+    /*
+     * Set up the "RAM" entry in the memory table.
+     */
+    CFE_PSP_MemRangeSet(0, CFE_PSP_MEM_RAM, 0, 0x8000000, CFE_PSP_MEM_SIZE_DWORD, CFE_PSP_MEM_ATTR_READWRITE);
+}
+
+/******************************************************************************
+ *
+ * No action on MCP750 - reserved block is statically allocated at sysMemTop.
+ * Implemented for API consistency with other PSPs.
+ */
+void CFE_PSP_DeleteProcessorReservedMemory(void) {}
+
+/*
+*********************************************************************************
+** ES BSP kernel memory segment functions
+*********************************************************************************
+*/
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the start and end address of the kernel text segment.
+**     It may not be implemented on all architectures.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetKernelTextSegmentInfo(cpuaddr *PtrToKernelSegment, uint32 *SizeOfKernelSegment)
+{
+    int32   return_code;
+    cpuaddr StartAddress;
+    cpuaddr EndAddress;
+
+    if (SizeOfKernelSegment == NULL)
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        /*
+        ** Get the kernel start and end
+        ** addresses from the BSP, because the
+        ** symbol table does not contain the symbols we need for this
+        */
+        StartAddress = (cpuaddr)GetWrsKernelTextStart();
+        EndAddress   = (cpuaddr)GetWrsKernelTextEnd();
+
+        *PtrToKernelSegment  = StartAddress;
+        *SizeOfKernelSegment = (uint32)(EndAddress - StartAddress);
+
+        return_code = CFE_PSP_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    This function returns the start and end address of the CFE text segment.
+**     It may not be implemented on all architectures.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+int32 CFE_PSP_GetCFETextSegmentInfo(cpuaddr *PtrToCFESegment, uint32 *SizeOfCFESegment)
+{
+    int32       return_code;
+    STATUS      status;
+    MODULE_ID   cFEModuleId;
+    MODULE_INFO cFEModuleInfo;
+    cpuaddr     GetModuleIdAddr;
+    MODULE_ID (*GetModuldIdFunc)(void);
+
+    if (PtrToCFESegment == NULL || SizeOfCFESegment == NULL)
+    {
+        return_code = CFE_PSP_ERROR;
+    }
+    else
+    {
+        /*
+         * First attempt to call a function called GetCfeCoreModuleID().
+         *
+         * If CFE core was started via the "startCfeCore" routine, this
+         * provides the actual module ID that was loaded by that routine,
+         * no matter what it is actually named.  This is provided by the
+         * support/integration code compiled directly into the VxWorks kernel
+         * image.
+         *
+         * The prototype should be:
+         *     MODULE_ID GetCfeCoreModuleID(void);
+         */
+        cFEModuleId     = NULL;
+        GetModuleIdAddr = 0;
+        return_code     = OS_SymbolLookup(&GetModuleIdAddr, "GetCfeCoreModuleID");
+        if (return_code == OS_SUCCESS && GetModuleIdAddr != 0)
+        {
+            GetModuldIdFunc = (MODULE_ID(*)(void))GetModuleIdAddr;
+            cFEModuleId     = GetModuldIdFunc();
+        }
+
+        /*
+         * If the above did not yield a valid module ID,
+         * then attempt to find the module ID by name.
+         * This assumes the core executable name as built by CMake
+         */
+        if (cFEModuleId == NULL)
+        {
+            cFEModuleId = moduleFindByName((char *)GLOBAL_CONFIGDATA.Default_CoreFilename);
+        }
+
+        if (cFEModuleId == NULL)
+        {
+            return_code = CFE_PSP_ERROR;
+        }
+        else
+        {
+            status = moduleInfoGet(cFEModuleId, &cFEModuleInfo);
+            if (status != ERROR)
+            {
+                *PtrToCFESegment  = (cpuaddr)(cFEModuleInfo.segInfo.textAddr);
+                *SizeOfCFESegment = (uint32)(cFEModuleInfo.segInfo.textSize);
+                return_code       = CFE_PSP_SUCCESS;
+            }
+            else
+            {
+                return_code = CFE_PSP_SUCCESS;
+            }
+        }
+    }
+
+    return return_code;
+}
+```
+
+### `cfe_psp_ssr.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_ssr.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_ssr.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  Alan Cudmore    | Initial version,
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "vxWorks.h"
+#include "sysLib.h"
+#include "taskLib.h"
+#include "ramDrv.h"
+#include "dosFsLib.h"
+#include "errnoLib.h"
+#include "usrLib.h"
+#include "cacheLib.h"
+#include "drv/hdisk/ataDrv.h"
+#include "cacheLib.h"
+#include "xbdBlkDev.h"
+#include "xbdRamDisk.h"
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+/******************************************************************************
+**
+**  Purpose:
+**    Initializes the Solid State Recorder device. For the MCP750, this simply
+**    initializes the Hard disk device.
+
+**
+**  Arguments:
+**    bus, device, device name
+**
+**  Return:
+**    (none)
+*/
+
+int32 CFE_PSP_InitSSR(uint32 bus, uint32 device, char *DeviceName)
+{
+    int32    ReturnCode;
+    device_t xbd;
+
+    xbd = ataXbdDevCreate(bus, device, 0, 0, DeviceName);
+
+    if (xbd == NULLDEV)
+    {
+        ReturnCode = CFE_PSP_ERROR;
+    }
+    else
+    {
+        ReturnCode = CFE_PSP_SUCCESS;
+    }
+
+    return ReturnCode;
+}
+```
+
+### `cfe_psp_start.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_start.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_start.c
+**
+** Purpose:
+**   cFE PSP main entry point.
+**
+** History:
+**   2004/09/23  J.P. Swinski    | Initial version,
+**   2004/10/01  P.Kutt          | Replaced OS API task delay with VxWorks functions
+**                                 since OS API is initialized later.
+**   2016/04/07  M.Grubb         | Updated for PSP version 1.3
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "vxWorks.h"
+#include "sysLib.h"
+#include "taskLib.h"
+#include "ramDrv.h"
+#include "dosFsLib.h"
+#include "xbdBlkDev.h"
+#include "errnoLib.h"
+#include "usrLib.h"
+#include "cacheLib.h"
+#include "drv/hdisk/ataDrv.h"
+/* #include "config.h" */
+#include "mcpx750.h"
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+#include "cfe_psp_module.h"
+
+/*
+**  External Declarations
+*/
+IMPORT void sysPciWrite32(UINT32, UINT32);
+
+/*
+ * The preferred way to obtain the CFE tunable values at runtime is via
+ * the dynamically generated configuration object.  This allows a single build
+ * of the PSP to be completely CFE-independent.
+ */
+#include "target_config.h"
+
+#define CFE_PSP_MAIN_FUNCTION       (*GLOBAL_CONFIGDATA.CfeConfig->SystemMain)
+#define CFE_PSP_NONVOL_STARTUP_FILE (GLOBAL_CONFIGDATA.CfeConfig->NonvolStartupFile)
+
+/******************************************************************************
+**
+**  Purpose:
+**    Application startup entry point from OSAL BSP.
+**
+**  Arguments:
+**    (none)
+**
+**  Return:
+**    (none)
+*/
+void OS_Application_Startup(void)
+{
+    int       TicksPerSecond;
+    uint32    reset_type;
+    uint32    reset_subtype;
+    osal_id_t fs_id;
+    char      reset_register;
+    int32     Status;
+
+    /*
+    ** Initialize the OS API
+    */
+    Status = OS_API_Init();
+    if (Status != OS_SUCCESS)
+    {
+        /* irrecoverable error if OS_API_Init() fails. */
+        /* note: use printf here, as OS_printf may not work */
+        printf("CFE_PSP: OS_API_Init() failure\n");
+        CFE_PSP_Panic(Status);
+
+        /*
+         * normally CFE_PSP_Panic() does not return, except
+         * during unit testing.  This return avoids executing
+         * the rest of this function in that case.
+         */
+        return;
+    }
+
+    /*
+    ** Set up the virtual FS mapping for the "/cf" directory
+    ** On this platform it will use the CF:0 physical device.
+    */
+    Status = OS_FileSysAddFixedMap(&fs_id, "CF:0", "/cf");
+    if (Status != OS_SUCCESS)
+    {
+        /* Print for informational purposes --
+         * startup can continue, but loads may fail later, depending on config. */
+        OS_printf("CFE_PSP: OS_FileSysAddFixedMap() failure: %d\n", (int)Status);
+    }
+
+    /*
+    ** Delay for one second.
+    */
+    TicksPerSecond = sysClkRateGet();
+    (void)taskDelay(TicksPerSecond);
+
+    /*
+    ** This starts up the hardware timer on the board that
+    ** will be used to get the local time
+    */
+    sysPciWrite32(0xFC0011D0, 0x0D6937E5);
+
+    /*
+    ** Setup the pointer to the reserved area in vxWorks.
+    ** This must be done before any of the reset variables are used.
+    */
+    CFE_PSP_SetupReservedMemoryMap();
+
+    /*
+    ** Initialize the statically linked modules (if any)
+    */
+    CFE_PSP_ModuleInit();
+
+    /*
+    ** Determine Reset type by reading the hardware reset register.
+    */
+    reset_register = *(SYS_REG_BLRR);
+    OS_printf("CFE_PSP: Reset Register = %02X\n", reset_register);
+
+    if (reset_register & SYS_REG_BLRR_PWRON)
+    {
+        OS_printf("CFE_PSP: POWERON Reset: Power Switch ON.\n");
+        reset_type    = CFE_PSP_RST_TYPE_POWERON;
+        reset_subtype = CFE_PSP_RST_SUBTYPE_POWER_CYCLE;
+    }
+    else if (reset_register & SYS_REG_BLRR_PBRST)
+    {
+        OS_printf("CFE_PSP: POWERON Reset: CPCI Push Button Reset.\n");
+        reset_type    = CFE_PSP_RST_TYPE_POWERON;
+        reset_subtype = CFE_PSP_RST_SUBTYPE_PUSH_BUTTON;
+    }
+    else if (reset_register & SYS_REG_BLRR_FBTN)
+    {
+        OS_printf("CFE_PSP: POWERON Reset: Front Panel Push Button Reset.\n");
+        reset_type    = CFE_PSP_RST_SUBTYPE_PUSH_BUTTON;
+        reset_subtype = 3;
+    }
+    else if (reset_register & SYS_REG_BLRR_WDT2)
+    {
+        OS_printf("CFE_PSP: PROCESSOR Reset: Watchdog level 2 Reset.\n");
+        reset_type    = CFE_PSP_RST_TYPE_PROCESSOR;
+        reset_subtype = CFE_PSP_RST_SUBTYPE_HW_WATCHDOG;
+    }
+    else if (reset_register & SYS_REG_BLRR_SWSRST)
+    {
+        OS_printf("CFE_PSP: PROCESSOR Reset: Software Soft Reset.\n");
+        reset_type    = CFE_PSP_RST_TYPE_PROCESSOR;
+        reset_subtype = CFE_PSP_RST_SUBTYPE_RESET_COMMAND;
+    }
+    else if (reset_register & SYS_REG_BLRR_SWHRST)
+    {
+        /*
+        ** For a Software hard reset, we want to look at the special
+        ** BSP reset variable to determine if we wanted a
+        ** Power ON or a Processor reset. Because the vxWorks sysToMonitor and
+        ** reboot functions use this reset type, we want to use this for a software
+        ** commanded processor or Power on reset.
+        */
+        if (CFE_PSP_ReservedMemoryMap.BootPtr->bsp_reset_type == CFE_PSP_RST_TYPE_POWERON)
+        {
+            OS_printf("CFE_PSP: POWERON Reset: Software Hard Reset.\n");
+            reset_type    = CFE_PSP_RST_TYPE_POWERON;
+            reset_subtype = CFE_PSP_RST_SUBTYPE_RESET_COMMAND;
+        }
+        else
+        {
+            OS_printf("CFE_PSP: PROCESSOR Reset: Software Hard Reset.\n");
+            reset_type    = CFE_PSP_RST_TYPE_PROCESSOR;
+            reset_subtype = CFE_PSP_RST_SUBTYPE_RESET_COMMAND;
+        }
+    }
+    else
+    {
+        OS_printf("CFE_PSP: POWERON Reset: UNKNOWN Reset.\n");
+        reset_type    = CFE_PSP_RST_TYPE_POWERON;
+        reset_subtype = CFE_PSP_RST_SUBTYPE_UNDEFINED_RESET;
+    }
+
+    /*
+     * If CFE fails to boot with a processor reset,
+     * then make sure next time it uses a power on reset.
+     */
+    if (reset_type == CFE_PSP_RST_TYPE_PROCESSOR)
+    {
+        CFE_PSP_ReservedMemoryMap.BootPtr->bsp_reset_type = CFE_PSP_RST_TYPE_POWERON;
+    }
+
+    /*
+    ** Initialize the reserved memory
+    */
+    CFE_PSP_InitProcessorReservedMemory(reset_type);
+
+    /*
+    ** Call cFE entry point. This will return when cFE startup
+    ** is complete.
+    */
+    CFE_PSP_MAIN_FUNCTION(reset_type, reset_subtype, 1, CFE_PSP_NONVOL_STARTUP_FILE);
+}
+```
+
+### `cfe_psp_support.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_support.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/******************************************************************************
+** File:  cfe_psp_support.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2005/06/05  Alan Cudmore    | Initial version,
+**
+******************************************************************************/
+
+/*
+**  Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "vxWorks.h"
+#include "sysLib.h"
+#include "taskLib.h"
+#include "ramDrv.h"
+#include "dosFsLib.h"
+#include "errnoLib.h"
+#include "usrLib.h"
+#include "cacheLib.h"
+#include "drv/hdisk/ataDrv.h"
+#include "cacheLib.h"
+#include "rebootLib.h"
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_memory.h"
+
+#include "target_config.h"
+
+#define CFE_PSP_CPU_ID        (GLOBAL_CONFIGDATA.Default_CpuId)
+#define CFE_PSP_CPU_NAME      (GLOBAL_CONFIGDATA.Default_CpuName)
+#define CFE_PSP_SPACECRAFT_ID (GLOBAL_CONFIGDATA.Default_SpacecraftId)
+
+/*
+ * Track the overall "reserved memory block" at the start of RAM.
+ * This single large block is then subdivided into separate areas for CFE use.
+ */
+extern CFE_PSP_MemoryBlock_t MCP750_ReservedMemBlock;
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to the processor reset.
+**
+**  Arguments:
+**    reset_type  : Type of reset.
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_Restart(uint32 reset_type)
+{
+    if (reset_type == CFE_PSP_RST_TYPE_POWERON)
+    {
+        CFE_PSP_ReservedMemoryMap.BootPtr->bsp_reset_type = CFE_PSP_RST_TYPE_POWERON;
+        CFE_PSP_FlushCaches(1, MCP750_ReservedMemBlock.BlockPtr, MCP750_ReservedMemBlock.BlockSize);
+        reboot(BOOT_CLEAR);
+    }
+    else
+    {
+        CFE_PSP_ReservedMemoryMap.BootPtr->bsp_reset_type = CFE_PSP_RST_TYPE_PROCESSOR;
+        CFE_PSP_FlushCaches(1, MCP750_ReservedMemBlock.BlockPtr, MCP750_ReservedMemBlock.BlockSize);
+        reboot(BOOT_NORMAL);
+    }
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to abort the cFE startup process and return
+**    back to the OS.
+**
+**  Arguments:
+**    ErrorCode  : Reason for Exiting.
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_Panic(int32 ErrorCode)
+{
+    printf("CFE_PSP_Panic Called with error code = 0x%08X. Exiting.\n", (unsigned int)ErrorCode);
+    exit(-1); /* Need to improve this */
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Provides a common interface to flush the processor caches. This routine
+**    is in the BSP because it is sometimes implemented in hardware and
+**    sometimes taken care of by the RTOS.
+**
+**  Arguments:
+**
+**  Return:
+**    (none)
+*/
+
+void CFE_PSP_FlushCaches(uint32 type, void *address, uint32 size)
+{
+    if (type == 1)
+    {
+        cacheTextUpdate(address, size);
+    }
+}
+
+/*
+**
+** Purpose:
+**         return the processor ID.
+**
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+**
+** Return Values: Processor ID
+*/
+uint32 CFE_PSP_GetProcessorId(void)
+{
+    return CFE_PSP_CPU_ID;
+}
+
+/*
+**
+** Purpose:
+**         return the spacecraft ID.
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: Spacecraft ID
+*/
+uint32 CFE_PSP_GetSpacecraftId(void)
+{
+    return CFE_PSP_SPACECRAFT_ID;
+}
+
+/*
+**
+** Purpose:
+**         return the processor name.
+**
+** Parameters:
+**
+** Global Inputs: None
+**
+** Global Outputs: None
+**
+**
+** Return Values: Processor name
+*/
+const char *CFE_PSP_GetProcessorName(void)
+{
+    return CFE_PSP_CPU_NAME;
+}
+```
+
+### `cfe_psp_watchdog.c`
+
+**경로:** `fsw/psp/fsw/mcp750-vxworks/src/cfe_psp_watchdog.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/************************************************************************************************
+** File:  cfe_psp_watchdog.c
+**
+** Purpose:
+**   This file contains glue routines between the cFE and the OS Board Support Package ( BSP ).
+**   The functions here allow the cFE to interface functions that are board and OS specific
+**   and usually don't fit well in the OS abstraction layer.
+**
+** History:
+**   2009/07/20  A. Cudmore    | Initial version,
+**
+*************************************************************************************************/
+
+/*
+**  Include Files
+*/
+
+/*
+** cFE includes
+*/
+#include "common_types.h"
+#include "osapi.h"
+
+/*
+**  System Include Files
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include "vxWorks.h"
+#include "sysLib.h"
+#include "vxLib.h"
+#include "taskLib.h"
+#include "ramDrv.h"
+#include "dosFsLib.h"
+#include "errnoLib.h"
+#include "usrLib.h"
+#include "cacheLib.h"
+#include "mcpx750.h"
+#include "drv/hdisk/ataDrv.h"
+
+/*
+** Types and prototypes for this module
+*/
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+
+/*
+** Global data
+*/
+
+/*
+** The watchdog time in milliseconds
+*/
+uint32 CFE_PSP_WatchdogValue = CFE_PSP_WATCHDOG_MAX;
+
+/******************************************************************************
+**
+**  Purpose:
+**    To setup the timer resolution and/or other settings custom to this platform.
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogInit(void)
+{
+    /*
+    ** Just set it to a value right now
+    ** The pc-linux desktop platform does not actually implement a watchdog
+    ** timeout ( but could with a signal )
+    */
+    CFE_PSP_WatchdogValue = CFE_PSP_WATCHDOG_MAX;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Enable the watchdog timer
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogEnable(void)
+{
+    /* Arm the WDT2 control register */
+    PCI_OUT_BYTE(0xFEFF0068, 0x55);
+
+    /* The enable/disable bit is bit 15, a setting of 1 enables the timer.*/
+    PCI_OUT_LONG(0xFEFF0068, 0xFFFFFFAA);
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Disable the watchdog timer
+**
+**  Arguments:
+**
+**  Return:
+*/
+void CFE_PSP_WatchdogDisable(void)
+{
+    /* Arm the WDT2 control register */
+    PCI_OUT_BYTE(0xFEFF0068, 0x55);
+
+    /* The enable/disable bit is bit 15, a setting of 0 disables the timer.*/
+    PCI_OUT_LONG(0xFEFF0068, 0xFFFF7FAA);
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Load the watchdog timer with a count that corresponds to the millisecond
+**    time given in the parameter.
+**
+**  Arguments:
+**    None.
+**
+**  Return:
+**    None
+**
+**  Note:
+**    Currently an ExpireTime value of zero will result in the minimum reset time
+**    of 4.5 seconds. All other ExpireTime values will result in a reset time of
+**    5.5 seconds. See comments below.
+*/
+void CFE_PSP_WatchdogService(void)
+{
+    /* Arm the WDT2 control register */
+    PCI_OUT_BYTE(0xFEFF0068, 0x55);
+
+    /*
+    ** The mcp750 watchdog register is settable to time values between 0 to 1.024
+    ** seconds in increments of 16us. The resolution can be set to less than 16us, but
+    ** the result is a max time of less than 1 second.
+    ** This setting is always added to the fixed delay of 4.5 seconds internal to the
+    ** board. So essentially the watchdog timer on this board can be programmed to
+    ** expire between 4.5 seconds and 5.5 seconds.
+    ** The actual watchdog timer counter is the upper 16 bits of the data word.
+    ** The enable/disable bit is bit 15, a setting of 1 enables the timer.
+    ** The 32 bit word shown below may get byte swapped and/or word swapped before it
+    ** gets to the actual register on the board.
+    */
+    if (CFE_PSP_WatchdogValue == CFE_PSP_WATCHDOG_MIN)
+    {
+        PCI_OUT_LONG(0xFEFF0068, 0x0000FFAA);
+    }
+    else
+    {
+        PCI_OUT_LONG(0xFEFF0068, 0xFFFFFFAA);
+    }
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Get the current watchdog value.
+**
+**  Arguments:
+**    none
+**
+**  Return:
+**    the current watchdog value
+**
+**  Notes:
+**
+*/
+uint32 CFE_PSP_WatchdogGet(void)
+{
+    return CFE_PSP_WatchdogValue;
+}
+
+/******************************************************************************
+**
+**  Purpose:
+**    Get the current watchdog value.
+**
+**  Arguments:
+**    The new watchdog value
+**
+**  Return:
+**    nothing
+**
+**  Notes:
+**
+*/
+void CFE_PSP_WatchdogSet(uint32 WatchdogValue)
+{
+    CFE_PSP_WatchdogValue = WatchdogValue;
+}
+```

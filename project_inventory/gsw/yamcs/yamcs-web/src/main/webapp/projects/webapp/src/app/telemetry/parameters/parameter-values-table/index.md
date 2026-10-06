@@ -3,18 +3,137 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-values-table.component.css`
 
-file--parameter-values-table.component.css
-file--parameter-values-table.component.html
-file--parameter-values-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.css`
+
+
+```css
+tr {
+  cursor: pointer;
+}
 ```
 
-## 항목
+### `parameter-values-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.css`](file--parameter-values-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.html`](file--parameter-values-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.ts`](file--parameter-values-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.html`
+
+
+```html
+@if (dataSource) {
+  <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+    <ng-container matColumnDef="severity">
+      <th mat-header-cell *matHeaderCellDef>Severity</th>
+      <td mat-cell *matCellDef="let pval">
+        @if (pval.monitoringResult) {
+          <app-alarm-level [level]="pval.monitoringResult" />
+        }
+        @if (!pval.monitoringResult) {
+          <span>-</span>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="generationTime">
+      <th mat-header-cell *matHeaderCellDef>Generation time</th>
+      <td mat-cell *matCellDef="let pval">{{ (pval.generationTime | datetime) ?? "-" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="receptionTime">
+      <th mat-header-cell *matHeaderCellDef>Reception time</th>
+      <td mat-cell *matCellDef="let pval">{{ (pval.acquisitionTime | datetime) ?? "-" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="rawValue">
+      <th mat-header-cell *matHeaderCellDef>Raw</th>
+      <td mat-cell *matCellDef="let pval" class="wrap200">
+        <ya-value [value]="pval.rawValue" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="engValue">
+      <th mat-header-cell *matHeaderCellDef>Eng</th>
+      <td mat-cell *matCellDef="let pval" class="wrap200">
+        <ya-value [value]="pval.engValue" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="rangeCondition">
+      <th mat-header-cell *matHeaderCellDef>Range condition</th>
+      <td mat-cell *matCellDef="let pval">{{ pval.rangeCondition || "-" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="acquisitionStatus">
+      <th mat-header-cell *matHeaderCellDef>Acquisition status</th>
+      <td mat-cell *matCellDef="let pval">{{ pval.acquisitionStatus || "-" }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let row"></td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="selectValue(row)"
+      [class.selected]="(selectedValue | async) === row"></tr>
+  </table>
+}
+```
+
+### `parameter-values-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameters/parameter-values-table/parameter-values-table.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
+import {
+  BaseComponent,
+  ParameterValue,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+import { AlarmLevelComponent } from '../../../shared/alarm-level/alarm-level.component';
+import { ParameterDataDataSource } from '../parameter-data-tab/parameter-data.datasource';
+
+@Component({
+  selector: 'app-parameter-values-table',
+  templateUrl: './parameter-values-table.component.html',
+  styleUrl: './parameter-values-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AlarmLevelComponent, WebappSdkModule],
+})
+export class ParameterValuesTableComponent extends BaseComponent {
+  @Input()
+  dataSource: ParameterDataDataSource;
+
+  @Output()
+  selectedValue = new EventEmitter<ParameterValue>();
+
+  displayedColumns = [
+    'severity',
+    'generationTime',
+    // 'receptionTime', // Only works for pcache, not parchive.
+    'rawValue',
+    'engValue',
+    'rangeCondition',
+    'acquisitionStatus',
+    'actions',
+  ];
+
+  selectValue(value: ParameterValue) {
+    this.selectedValue.emit(value);
+    this.openDetailPane();
+  }
+}
+```

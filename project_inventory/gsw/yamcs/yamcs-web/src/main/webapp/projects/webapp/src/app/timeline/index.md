@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -30,31 +30,124 @@ spacer/index
 time-ruler/index
 timeline-chart/index
 view-list/index
-file--timeline.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/`](band-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/command-band/`](command-band/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band/`](create-band/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-band-wizard-step/`](create-band-wizard-step/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-item-dialog/`](create-item-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/create-view/`](create-view/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-band/`](edit-band/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-band-dialog/`](edit-band-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-item/`](edit-item/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-item-dialog/`](edit-item-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/`](edit-view/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view-dialog/`](edit-view-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-band/`](item-band/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/item-list/`](item-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/jump-to-dialog/`](jump-to-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-plot/`](parameter-plot/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/`](parameter-states/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/spacer/`](spacer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/`](time-ruler/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/timeline-chart/`](timeline-chart/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/view-list/`](view-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/timeline.routes.ts`](file--timeline.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `timeline.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/timeline.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { BandListComponent } from './band-list/band-list.component';
+import { CreateCommandBandComponent } from './command-band/create-command-band/create-command-band.component';
+import { CreateBandComponent } from './create-band/create-band.component';
+import { CreateViewComponent } from './create-view/create-view.component';
+import { EditBandComponent } from './edit-band/edit-band.component';
+import { EditItemComponent } from './edit-item/edit-item.component';
+import { EditViewComponent } from './edit-view/edit-view.component';
+import { CreateItemBandComponent } from './item-band/create-item-band/create-item-band.component';
+import { ItemListComponent } from './item-list/item-list.component';
+import { CreateParameterPlotComponent } from './parameter-plot/create-parameter-plot/create-parameter-plot.component';
+import { CreateParameterStatesComponent } from './parameter-states/create-parameter-states/create-parameter-states.component';
+import { CreateSpacerComponent } from './spacer/create-spacer/create-spacer.component';
+import { CreateTimeRulerComponent } from './time-ruler/create-time-ruler/create-time-ruler.component';
+import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
+import { ViewListComponent } from './view-list/view-list.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'chart',
+      },
+      {
+        path: 'chart',
+        component: TimelineChartComponent,
+      },
+      {
+        path: 'views',
+        pathMatch: 'full',
+        component: ViewListComponent,
+      },
+      {
+        path: 'views/create',
+        pathMatch: 'full',
+        component: CreateViewComponent,
+      },
+      {
+        path: 'views/:view',
+        pathMatch: 'full',
+        component: EditViewComponent,
+      },
+      {
+        path: 'bands',
+        pathMatch: 'full',
+        component: BandListComponent,
+      },
+      {
+        path: 'bands/create',
+        pathMatch: 'full',
+        component: CreateBandComponent,
+      },
+      {
+        path: 'bands/create/item-band',
+        pathMatch: 'full',
+        component: CreateItemBandComponent,
+      },
+      {
+        path: 'bands/create/spacer',
+        pathMatch: 'full',
+        component: CreateSpacerComponent,
+      },
+      {
+        path: 'bands/create/time-ruler',
+        pathMatch: 'full',
+        component: CreateTimeRulerComponent,
+      },
+      {
+        path: 'bands/create/parameter-plot',
+        pathMatch: 'full',
+        component: CreateParameterPlotComponent,
+      },
+      {
+        path: 'bands/create/parameter-states',
+        pathMatch: 'full',
+        component: CreateParameterStatesComponent,
+      },
+      {
+        path: 'bands/create/command-band',
+        pathMatch: 'full',
+        component: CreateCommandBandComponent,
+      },
+      {
+        path: 'bands/:band',
+        pathMatch: 'full',
+        component: EditBandComponent,
+      },
+      {
+        path: 'items',
+        pathMatch: 'full',
+        component: ItemListComponent,
+      },
+      {
+        path: 'items/:item',
+        pathMatch: 'full',
+        component: EditItemComponent,
+      },
+    ],
+  },
+];
+```

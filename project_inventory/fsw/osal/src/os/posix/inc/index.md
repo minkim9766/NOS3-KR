@@ -3,48 +3,999 @@
 
 **경로:** `fsw/osal/src/os/posix/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `os-impl-binsem.h`
 
-file--os-impl-binsem.h
-file--os-impl-condvar.h
-file--os-impl-console.h
-file--os-impl-countsem.h
-file--os-impl-dirs.h
-file--os-impl-files.h
-file--os-impl-gettime.h
-file--os-impl-idmap.h
-file--os-impl-io.h
-file--os-impl-loader.h
-file--os-impl-mutex.h
-file--os-impl-network.h
-file--os-impl-queues.h
-file--os-impl-select.h
-file--os-impl-sockets.h
-file--os-impl-tasks.h
-file--os-impl-timebase.h
-file--os-posix.h
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-binsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_BINSEM_H
+#define OS_IMPL_BINSEM_H
+
+#include "osconfig.h"
+#include <pthread.h>
+#include <signal.h>
+
+/* Binary Semaphores */
+typedef struct
+{
+    pthread_mutex_t       id;
+    pthread_cond_t        cv;
+    volatile sig_atomic_t flush_request;
+    volatile sig_atomic_t current_value;
+} OS_impl_binsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+#endif /* OS_IMPL_BINSEM_H */
 ```
 
-## 항목
+### `os-impl-condvar.h`
 
-- [`fsw/osal/src/os/posix/inc/os-impl-binsem.h`](file--os-impl-binsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-condvar.h`](file--os-impl-condvar.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-console.h`](file--os-impl-console.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-countsem.h`](file--os-impl-countsem.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-dirs.h`](file--os-impl-dirs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-files.h`](file--os-impl-files.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-gettime.h`](file--os-impl-gettime.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-idmap.h`](file--os-impl-idmap.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-io.h`](file--os-impl-io.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-loader.h`](file--os-impl-loader.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-mutex.h`](file--os-impl-mutex.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-network.h`](file--os-impl-network.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-queues.h`](file--os-impl-queues.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-select.h`](file--os-impl-select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-sockets.h`](file--os-impl-sockets.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-tasks.h`](file--os-impl-tasks.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-impl-timebase.h`](file--os-impl-timebase.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/posix/inc/os-posix.h`](file--os-posix.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-condvar.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_CONDVAR_H
+#define OS_IMPL_CONDVAR_H
+
+#include "osconfig.h"
+#include <pthread.h>
+
+/* CondVares */
+typedef struct
+{
+    pthread_mutex_t mut;
+    pthread_cond_t  cv;
+} OS_impl_condvar_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_condvar_internal_record_t OS_impl_condvar_table[OS_MAX_CONDVARS];
+
+#endif /* OS_IMPL_CONDVAR_H */
+```
+
+### `os-impl-console.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-console.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_CONSOLE_H
+#define OS_IMPL_CONSOLE_H
+
+#include <stdbool.h>
+#include "osconfig.h"
+#include <unistd.h>
+#include <semaphore.h>
+
+/* Console device */
+typedef struct
+{
+    sem_t data_sem;
+} OS_impl_console_internal_record_t;
+
+extern OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+#endif /* OS_IMPL_CONSOLE_H */
+```
+
+### `os-impl-countsem.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-countsem.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_COUNTSEM_H
+#define OS_IMPL_COUNTSEM_H
+
+#include "osconfig.h"
+#include <semaphore.h>
+
+typedef struct
+{
+    sem_t id;
+} OS_impl_countsem_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+#endif /* OS_IMPL_COUNTSEM_H */
+```
+
+### `os-impl-dirs.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-dirs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_DIRS_H
+#define OS_IMPL_DIRS_H
+
+#include "osconfig.h"
+#include <fcntl.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+typedef struct
+{
+    DIR *dp;
+} OS_impl_dir_internal_record_t;
+
+/*
+ * The directory handle table.
+ */
+extern OS_impl_dir_internal_record_t OS_impl_dir_table[OS_MAX_NUM_OPEN_DIRS];
+
+#endif /* OS_IMPL_DIRS_H */
+```
+
+### `os-impl-files.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-files.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_FILES_H
+#define OS_IMPL_FILES_H
+
+#include "os-impl-io.h"
+
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+/*
+ * These two constants (EUID and EGID) are local cache of the
+ * euid and egid of the user running the OSAL application.  They
+ * assist the "stat" implementation in determination of permissions.
+ *
+ * For an OS that does not have multiple users, these could be
+ * defined as 0.  Otherwise they should be populated via the system
+ * geteuid/getegid calls.
+ */
+extern uid_t OS_IMPL_SELF_EUID;
+extern gid_t OS_IMPL_SELF_EGID;
+
+extern const int OS_IMPL_REGULAR_FILE_FLAGS;
+
+#endif /* OS_IMPL_FILES_H */
+```
+
+### `os-impl-gettime.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-gettime.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_GETTIME_H
+#define OS_IMPL_GETTIME_H
+
+#include "osconfig.h"
+#include <time.h>
+
+/**
+ * \brief Identifies the clock ID for OSAL clock operations on POSIX
+ *
+ * This is the POSIX clock ID that will be used to implement
+ * OS_GetLocalTime() and OS_SetLocalTime().
+ */
+#define OSAL_GETTIME_SOURCE_CLOCK CLOCK_REALTIME
+
+#endif /* OS_IMPL_GETTIME_H */
+```
+
+### `os-impl-idmap.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-idmap.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_IDMAP_H
+#define OS_IMPL_IDMAP_H
+
+#include "osconfig.h"
+#include "osapi-idmap.h"
+#include <pthread.h>
+
+typedef struct
+{
+    pthread_mutex_t mutex;
+    pthread_cond_t  cond;
+} OS_impl_objtype_lock_t;
+
+/* Tables where the lock state information is stored */
+extern OS_impl_objtype_lock_t *const OS_impl_objtype_lock_table[OS_OBJECT_TYPE_USER];
+
+#endif /* OS_IMPL_IDMAP_H */
+```
+
+### `os-impl-io.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-io.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_IO_H
+#define OS_IMPL_IO_H
+
+#include "osconfig.h"
+#include "common_types.h"
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+
+typedef struct
+{
+    int  fd;
+    bool selectable;
+} OS_impl_file_internal_record_t;
+
+/*
+ * The global file handle table.
+ *
+ * This is shared by all OSAL entities that perform low-level I/O.
+ */
+extern OS_impl_file_internal_record_t OS_impl_filehandle_table[OS_MAX_NUM_OPEN_FILES];
+
+#endif /* OS_IMPL_IO_H */
+```
+
+### `os-impl-loader.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-loader.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_LOADER_H
+#define OS_IMPL_LOADER_H
+
+#include "osconfig.h"
+#include <dlfcn.h>
+
+/*
+ * A local lookup table for posix-specific information.
+ * This is not directly visible to the outside world.
+ */
+typedef struct
+{
+    /* cppcheck-suppress unusedStructMember */
+    void *dl_handle;
+} OS_impl_module_internal_record_t;
+
+/*
+ * The storage table is only instantiated when OS_MAX_MODULES is nonzero.
+ * It is allowed to be zero to save memory in statically linked apps.
+ * However even in that case it is still relevant to include the
+ * OS_SymbolLookup_Impl() function for symbol lookups.
+ *
+ * If neither loading nor symbol lookups are desired then this file
+ * shouldn't be used at all -- a no-op version should be used instead.
+ */
+extern OS_impl_module_internal_record_t OS_impl_module_table[OS_MAX_MODULES];
+
+#endif /* OS_IMPL_LOADER_H */
+```
+
+### `os-impl-mutex.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-mutex.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_MUTEX_H
+#define OS_IMPL_MUTEX_H
+
+#include "osconfig.h"
+#include <pthread.h>
+
+/* Mutexes */
+typedef struct
+{
+    pthread_mutex_t id;
+} OS_impl_mutex_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_mutex_internal_record_t OS_impl_mutex_table[OS_MAX_MUTEXES];
+
+#endif /* OS_IMPL_MUTEX_H */
+```
+
+### `os-impl-network.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-network.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_NETWORK_H
+#define OS_IMPL_NETWORK_H
+
+#include <unistd.h>
+
+#endif /* OS_IMPL_NETWORK_H */
+```
+
+### `os-impl-queues.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-queues.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_QUEUES_H
+#define OS_IMPL_QUEUES_H
+
+#include "osconfig.h"
+#include <mqueue.h>
+
+/* queues */
+typedef struct
+{
+    mqd_t id;
+} OS_impl_queue_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+#endif /* OS_IMPL_QUEUES_H */
+```
+
+### `os-impl-select.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-select.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_SELECT_H
+#define OS_IMPL_SELECT_H
+
+#include "os-impl-io.h"
+
+#include <sys/select.h>
+#include <sys/time.h>
+
+#endif /* OS_IMPL_SELECT_H */
+```
+
+### `os-impl-sockets.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-sockets.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_SOCKETS_H
+#define OS_IMPL_SOCKETS_H
+
+#include "os-impl-io.h"
+
+#include <fcntl.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+
+#define OS_NETWORK_SUPPORTS_IPV6
+
+/*
+ * Socket descriptors should be usable with the select() API
+ */
+#define OS_IMPL_SOCKET_SELECTABLE true
+
+/*
+ * A full POSIX-compliant I/O layer should support using
+ * nonblocking I/O calls in combination with select().
+ */
+#define OS_IMPL_SOCKET_FLAGS O_NONBLOCK
+
+#endif /* OS_IMPL_SOCKETS_H */
+```
+
+### `os-impl-tasks.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-tasks.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_TASKS_H
+#define OS_IMPL_TASKS_H
+
+#include "os-shared-task.h"
+
+#include "osconfig.h"
+#include <pthread.h>
+
+/*tasks */
+typedef struct
+{
+    pthread_t id;
+} OS_impl_task_internal_record_t;
+
+/* Tables where the OS object information is stored */
+extern OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+int32 OS_Posix_InternalTaskCreate_Impl(pthread_t *pthr, osal_priority_t priority, size_t stacksz,
+                                       PthreadFuncPtr_t entry, void *entry_arg);
+
+#endif /* OS_IMPL_TASKS_H */
+```
+
+### `os-impl-timebase.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-impl-timebase.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ */
+
+#ifndef OS_IMPL_TIMEBASE_H
+#define OS_IMPL_TIMEBASE_H
+
+#include "osconfig.h"
+#include <pthread.h>
+#include <signal.h>
+
+typedef struct
+{
+    pthread_t       handler_thread;
+    pthread_mutex_t handler_mutex;
+    timer_t         host_timerid;
+    int             assigned_signal;
+    sigset_t        sigset;
+    sig_atomic_t    reset_flag;
+    struct timespec softsleep;
+} OS_impl_timebase_internal_record_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+extern OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+#endif /* OS_IMPL_TIMEBASE_H */
+```
+
+### `os-posix.h`
+
+**경로:** `fsw/osal/src/os/posix/inc/os-posix.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * \ingroup  posix
+ *
+ * Purpose: This file contains definitions that are shared across the POSIX
+ *          OSAL implementation.  This file is private to the POSIX port and it
+ *          may contain POSIX-specific definitions.
+ */
+
+#ifndef OS_POSIX_H
+#define OS_POSIX_H
+
+/****************************************************************************************
+                                    COMMON INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <limits.h>
+#include <signal.h>
+#include <time.h>
+#include <errno.h>
+#include <pthread.h>
+#include <mqueue.h>
+#include <fcntl.h>
+#include <semaphore.h>
+#include <sys/types.h>
+#include <sys/signal.h>
+
+/*
+ * Use the global definitions from the shared layer
+ */
+#include "os-shared-globaldefs.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                    TYPEDEFS
+ ***************************************************************************************/
+
+typedef void *(*PthreadFuncPtr_t)(void *arg);
+
+typedef struct
+{
+    int PriorityMax;
+    int PriorityMin;
+} POSIX_PriorityLimits_t;
+
+typedef struct
+{
+    bool                   EnableTaskPriorities;
+    osal_blockcount_t      TruncateQueueDepth;
+    uint32                 ClockAccuracyNsec;
+    pthread_key_t          ThreadKey;
+    sigset_t               MaximumSigMask;
+    sigset_t               NormalSigMask;
+    size_t                 PageSize;
+    POSIX_PriorityLimits_t PriLimits;
+    int                    SelectedRtScheduler;
+} POSIX_GlobalVars_t;
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+extern POSIX_GlobalVars_t POSIX_GlobalVars;
+
+/****************************************************************************************
+                       POSIX IMPLEMENTATION FUNCTION PROTOTYPES
+ ***************************************************************************************/
+
+int32 OS_Posix_TaskAPI_Impl_Init(void);
+int32 OS_Posix_QueueAPI_Impl_Init(void);
+int32 OS_Posix_BinSemAPI_Impl_Init(void);
+int32 OS_Posix_CountSemAPI_Impl_Init(void);
+int32 OS_Posix_MutexAPI_Impl_Init(void);
+int32 OS_Posix_CondVarAPI_Impl_Init(void);
+int32 OS_Posix_ModuleAPI_Impl_Init(void);
+int32 OS_Posix_TimeBaseAPI_Impl_Init(void);
+int32 OS_Posix_StreamAPI_Impl_Init(void);
+int32 OS_Posix_DirAPI_Impl_Init(void);
+int32 OS_Posix_FileSysAPI_Impl_Init(void);
+
+int32 OS_Posix_TableMutex_Init(osal_objtype_t idtype);
+
+void OS_Posix_CompAbsDelayTime(uint32 msecs, struct timespec *tm);
+
+#endif /* OS_POSIX_H */
+```

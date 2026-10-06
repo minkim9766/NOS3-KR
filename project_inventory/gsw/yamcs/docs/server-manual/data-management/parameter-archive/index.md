@@ -3,18 +3,181 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/data-management/parameter-archive/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `archive-filling.rst`
 
-file--archive-filling.rst
-file--index.rst
-file--internals.rst
+**경로:** `gsw/yamcs/docs/server-manual/data-management/parameter-archive/archive-filling.rst`
+
+
+```rst
+Archive Filling
+===============
+
+There are two fillers that can be used to populate Parameter Archive:
+
+Realtime Filling
+    The RealtimeFillerTask will subscribe to a realtime processor and write the parameter values to the archive.
+
+Backfilling
+    The ArchiveFillerTask will create from time to time replays from the raw data in the :doc:`../archive/telemetry-packets` and :doc:`../archive/parameters` tables of the Generic Archive.
+
+Due to the fact that data is stored in segments, one segment being a value in the (key, value) RocksDB, it is not efficient to write one row (data corresponding to one timestamp) at a time. It is much more efficient to collect data and write entire or at least partial segments at a time.
+
+The realtime filler will write the partial segments to the archive at each configurable interval. When retrieving data from the Parameter Archive, the latest (near realtime) data will be missing from the archive. That is why Yamcs uses the processor parameter cache to retrieve the near-realtime values.
+
+The backFiller is by default enabled and it can also be used to issue rebuild requests over HTTP. The realtimeFiller has to be enabled in the configuration and the flushInterval (how often to flush the data in the archive) has to be specified. The flushInterval has to be smaller than the duration configured in the parameter cache.
+
+The backFiller is configured with a so called warmupTime (by default 60 seconds) which means that when it performs a replay, it starts the replay earlier by the specified warmupTime amount. The reason is that if there are any algorithms that depend on some parameters in the past for computing the current value, this should give them the chance to warmup. The data generated during the warmup is not stored in the archive (because it is part of the previous segment).
 ```
 
-## 항목
+### `index.rst`
 
-- [`gsw/yamcs/docs/server-manual/data-management/parameter-archive/archive-filling.rst`](file--archive-filling.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/parameter-archive/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/data-management/parameter-archive/internals.rst`](file--internals.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/data-management/parameter-archive/index.rst`
+
+
+```rst
+Parameter Archive
+=================
+
+.. toctree::
+    :maxdepth: 1
+
+    archive-filling
+    internals
+
+The Parameter Archive stores time ordered parameter values. The parameter archive is column oriented and is optimized for accessing a (relatively small) number of parameters over longer periods of time.
+
+The Parameter Archive stores for each parameter tuples of (t\ :sub:`i`, ev\ :sub:`i`, rv\ :sub:`i`, ps\ :sub:`i`) where:
+
+t\ :sub:`i`
+    the *generation* timestamp of the value. The *reception* timestamp is not stored in the Parameter Archive.
+ev\ :sub:`i`
+    the engineering value of the parameter at the given time.
+rv\ :sub:`i`
+    the raw value of the parameter at the given time.
+ps\ :sub:`i`
+    the parameter status of the parameter at the given time.
+
+The parameter status includes attributes such as out-of-limits indicators (alarms) and processing status. Yamcs Mission Database provides a mechanism through which a parameter can change its alarm ranges depending on the context. For this reason the Parameter Archive also stores the parameter status and the applicable alarm ranges at the given time.
+
+In order to speed up the retrieval, the Parameter Archive stores data in segments of approximately 70 minutes. That means that all engineering values for one parameter for the 70 minutes are stored together; same for raw values, parameter status and timestamps.
+
+Having all the data inside one segment of the same type offers possibility for good compression especially if the values do not change much or at all (as it is often the case).
+
+While this structure is good for fast retrieval, it does not allow updating data very efficiently and in any case not in realtime. This is why the Parameter Archive is filled in batch mode. Data is accumulated in memory and flushed to disk periodically using different filling strategies.
+```
+
+### `internals.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/data-management/parameter-archive/internals.rst`
+
+
+```rst
+Parameter Archive Internals
+===========================
+
+The Parameter Archive stores for each parameter tuples (t\ :sub:`i`, ev\ :sub:`i`, rv\ :sub:`i`, ps\ :sub:`i`). In Yamcs the timestamp is 8 bytes long, the raw and engineering values are of usual types (signed/unsigned 32/64 integer, 32/64 floating point, string, boolean, binary) and the parameter status is a protobuf message.
+
+In a typical space data stream there are many parameters that do not change very often (like an device ON/OFF status). For these, the space required to store the timestamp can greatly exceed in size the space required for storing the value (if simple compression is used).
+
+In fact since the timestamps are 8 bytes long, they equal or exceed in size the parameter values almost in all cases, even for parameters that do change.
+
+To reduce the size of the archive, some alternative parameter archives may choose to store only the values when they change with respect to the previous value. Often, like in the above "device ON/OFF" example, the exact timestamps of the non-changing parameter values, received in between actual (but rare) value changes are not very important. One has to take care that gaps in the data are not mistaken for non-changing parameter values.
+
+Storing the values on change only will reduce the space required not only for the value but also (and more importantly) for the timestamp.
+
+However, we know that more often than not parameters are not sampled individually but in packets or frames, and many (if not all) the parameters from one packet share the same timestamp.
+
+Usually some of the parameters in these packets are counters or other things that do change with each sampling of the value. It follows that at least for storing those ever changing parameter values, one has to store the timestamps anyway.
+
+This is why, in Yamcs we do not adopt the "store on change only" strategy but a different one: we store the timestamps in one record and make reference to that record from all the parameters sharing those same timestamps. Of course it wouldn't make any sense to reference one singe timestamp value, instead we store multiple values in a segment and reference the time segment from all value segments that are related to it.
+
+
+Archive Structure
+-----------------
+
+We have established that the Yamcs Parameter Archive stores rows of data of shape:
+(t, pv\ :sub:`0`, pv\ :sub:`1`, pv\ :sub:`2`,...,  pv\ :sub:`n`)
+
+Where pv\ :sub:`0`, pv\ :sub:`1`, pv\ :sub:`2`..pv\ :sub:`n` are parameter values (for different parameters) all sharing the same timestamp t. One advantage of seeing the data this way is that we do keep together parameters extracted from the same packet (and having the same timestamp). It is sometimes useful for operators to know a specific parameter from which packet has been extracted (e.g. which APID, packet ID in a CCSDS packet structure).
+
+The Parameter Archive partitions the data at two levels:
+
+1. time partitioned in partitions of 2\ :sup:`31` milliseconds duration (~ 25 days). Each partition is stored in its own ColumnDataFamily in RocksDB (which means separate files and the possibility to remove an entire partition at a time).
+
+2. Inside each partition, data is segmented in segments of 2\ :sup:`22` milliseconds (~ 70 minutes) duration. One data segment contains all the engineering values or raw values or parameter status for one parameter. A time segment contains all the corresponding timestamps.
+
+This means that each parameter requires each ~70 minutes three segments for storing the raw, engineering and status plus a segment containing the timestamps. The timestamp segment is shared with other parameters. In order to be able to efficiently compress and work with the data, one segment stores data of one type only.
+
+Each (parameter_fqn, eng_type, raw_type) combination is given an unique 4 bytes parameter_id (fqn = fully qualified name). We do this in order to be able to accommodate changes in parameter definitions in subsequent versions of the mission database.
+
+The parameter_id ``0`` is reserved for the timestamp.
+
+A ParameterGroup represents a list of parameter_id which share the same timestamp.
+
+Each ParameterGroup is given a ParameterGroup_id
+
+
+Column Families
+---------------
+
+For storing metadata we have 2 CFs:
+
+meta_p2pid
+    contains the mapping between the fully-qualified parameter name and parameter_id and type
+
+meta_pgid2pg
+    contains the mapping between ParameterGroup_id and parameter_id
+
+For storing parameter values and timestamps we have 1CF per partition: :samp:`data_{partition_id}` where ``partition_id`` is basetimestamp (i.e. the start timestamp of the 2\ :sup:`31` long partitions) in hexadecimal (without 0x in front)
+
+Inside the data partitions we store (key, value) records where:
+
+key
+    parameter_id, ParameterGroup_id, segment_start_time, type (the type = 0, 1 or 2 for the eng value, raw value or parameter status)
+
+value
+    ValueSegment or TimeSegment (if parameter_id = 0)
+
+We can notice from this organization, that inside one partition, the segments containing data for one parameter follows in the RocksDB files in sequence of engvalue\ :sub:`segment_1`, rawvalue\ :sub:`segment_1`, parameterstatus\ :sub:`segment_1`, engvalue\ :sub:`segment_2`, rawvalue\ :sub:`segment_2`, ...
+
+
+Segment Encoding
+----------------
+
+The segments are compressed in different ways depending on their types.
+
+SortedTimeSegment
+    Stores the timestamps as uint32 deltas from the beginning of the segment. The data is first encoded into deltas of deltas, then it's zigzag encoded (such that it becomes positive) and then it's encoded with FastPFOR and VarInt. FastPFOR encodes blocks of 128 bytes so VarInt encoding is used for the remaining data.
+
+    Storing timestamps as deltas of deltas helps if the data is sampled at regular intervals (especially by a real-time system). In this case the encoded deltas of deltas become very close to 0 and that compresses very well.
+
+    Description of the VarInt and zigzag encoding can be found in `Protocol Buffer docs <https://developers.google.com/protocol-buffers/docs/encoding>`_.
+
+    Description and implementation of the FastPFOR algorithm can be found at `<https://github.com/lemire/JavaFastPFOR>`_.
+
+IntSegment
+    Stores int32 or uint32 encoded same way as the time segment.
+
+FloatSegment
+    Stores 32 bits floating point numbers encoded using the algorithm described in the `Facebook Gorilla paper <http://www.vldb.org/pvldb/vol8/p1816-teller.pdf>`_ (slightly modified to work on 32 bits).
+
+ParameterStatusSegment, StringSegment and BinarySegment
+    These are all stored either raw, as an enumeration, or run-length encoded, depending on which results in smaller compressed size.
+
+DoubleSegment and LongSegment
+    These are only stored as raw for the moment - compression remains to be implemented. For DoubleSegment we can employ the same approach like for 32 bits (since the original approach is in fact designed for compressing 64 bits floating point numbers).
+
+
+Future Work
+-----------
+
+Segment Compression
+    Compression for DoubleSegment and LongSegment. DoubleSegment is straightforward, for LongSegment one has to dig into the FastPFOR algorithm to understand how to change it for 64 bits.
+
+Archive Filling
+    It would be desirable to backfill only parts of the archive. Indeed, some ground generated data may not suffer necessarily of gaps and could be just realtime filled. Currently there is no possibility to specify what parts of the archive to be back-filled.
+  
+    Another useful feature would be to trigger the back filling automatically when gaps are filled in Yamcs database tables.
+```

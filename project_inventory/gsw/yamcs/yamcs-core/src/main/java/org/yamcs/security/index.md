@@ -3,104 +3,5805 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractHttpRequestAuthModule.java`
 
-file--AbstractHttpRequestAuthModule.java
-file--Account.java
-file--ApiKeyAuthModule.java
-file--ApplicationCredentials.java
-file--AuthenticationException.java
-file--AuthenticationInfo.java
-file--AuthenticationToken.java
-file--AuthModule.java
-file--AuthorizationException.java
-file--AuthorizationInfo.java
-file--ClearanceListener.java
-file--CryptoUtils.java
-file--Directory.java
-file--DirectoryAuthModule.java
-file--DirectoryDb.java
-file--Group.java
-file--HttpsUrlConnectionUtils.java
-file--IPAddressAuthModule.java
-file--JaasConfiguration.java
-file--KerberosAuthModule.java
-file--LdapAuthModule.java
-file--ObjectPrivilege.java
-file--ObjectPrivilegeType.java
-file--OpenIDAuthenticationInfo.java
-file--OpenIDAuthModule.java
-file--OpenIDBackChannelHandler.java
-file--OpenIDBackChannelLogoutRequest.java
-file--PasswordHasher.java
-file--PBKDF2PasswordHasher.java
-file--RemoteUserAuthModule.java
-file--Role.java
-file--SecurityStore.java
-file--ServiceAccount.java
-file--SessionExpiredException.java
-file--SessionListener.java
-file--SessionManager.java
-file--SingleUserAuthModule.java
-file--SpnegoAuthModule.java
-file--SystemPrivilege.java
-file--SystemUserAuthenticationInfo.java
-file--ThirdPartyAuthorizationCode.java
-file--User.java
-file--UserCache.java
-file--UsernamePasswordToken.java
-file--UserSession.java
-file--YamlAuthModule.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AbstractHttpRequestAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * Base class for an {@link AuthModule} that identifies users based on an incoming HTTP request.
+ */
+public abstract class AbstractHttpRequestAuthModule implements AuthModule {
+
+    /**
+     * Returns true if this AuthModule is capable of handling the given HTTP request.
+     */
+    public abstract boolean handles(ChannelHandlerContext ctx, HttpRequest request);
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof HttpRequestToken) {
+            var ctx = ((HttpRequestToken) token).ctx;
+            var request = ((HttpRequestToken) token).request;
+            if (handles(ctx, request)) {
+                return getAuthenticationInfo(ctx, request);
+            }
+        }
+        return null;
+    }
+
+    public abstract AuthenticationInfo getAuthenticationInfo(
+            ChannelHandlerContext ctx, HttpRequest request) throws AuthenticationException;
+
+    /**
+     * Data holder for passing an {@link HttpRequest} to a login call.
+     */
+    public static class HttpRequestToken implements AuthenticationToken {
+
+        private ChannelHandlerContext ctx;
+        private HttpRequest request;
+
+        public HttpRequestToken(ChannelHandlerContext ctx, HttpRequest request) {
+            this.ctx = ctx;
+            this.request = request;
+        }
+    }
+}
 ```
 
-## 항목
+### `Account.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AbstractHttpRequestAuthModule.java`](file--AbstractHttpRequestAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Account.java`](file--Account.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ApiKeyAuthModule.java`](file--ApiKeyAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ApplicationCredentials.java`](file--ApplicationCredentials.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationException.java`](file--AuthenticationException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationInfo.java`](file--AuthenticationInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationToken.java`](file--AuthenticationToken.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthModule.java`](file--AuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthorizationException.java`](file--AuthorizationException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthorizationInfo.java`](file--AuthorizationInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ClearanceListener.java`](file--ClearanceListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/CryptoUtils.java`](file--CryptoUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Directory.java`](file--Directory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/DirectoryAuthModule.java`](file--DirectoryAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/DirectoryDb.java`](file--DirectoryDb.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Group.java`](file--Group.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/HttpsUrlConnectionUtils.java`](file--HttpsUrlConnectionUtils.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/IPAddressAuthModule.java`](file--IPAddressAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/JaasConfiguration.java`](file--JaasConfiguration.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/KerberosAuthModule.java`](file--KerberosAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/LdapAuthModule.java`](file--LdapAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ObjectPrivilege.java`](file--ObjectPrivilege.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ObjectPrivilegeType.java`](file--ObjectPrivilegeType.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDAuthenticationInfo.java`](file--OpenIDAuthenticationInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDAuthModule.java`](file--OpenIDAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDBackChannelHandler.java`](file--OpenIDBackChannelHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDBackChannelLogoutRequest.java`](file--OpenIDBackChannelLogoutRequest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/PasswordHasher.java`](file--PasswordHasher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/PBKDF2PasswordHasher.java`](file--PBKDF2PasswordHasher.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/RemoteUserAuthModule.java`](file--RemoteUserAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Role.java`](file--Role.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SecurityStore.java`](file--SecurityStore.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ServiceAccount.java`](file--ServiceAccount.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionExpiredException.java`](file--SessionExpiredException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionListener.java`](file--SessionListener.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionManager.java`](file--SessionManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SingleUserAuthModule.java`](file--SingleUserAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SpnegoAuthModule.java`](file--SpnegoAuthModule.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SystemPrivilege.java`](file--SystemPrivilege.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SystemUserAuthenticationInfo.java`](file--SystemUserAuthenticationInfo.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ThirdPartyAuthorizationCode.java`](file--ThirdPartyAuthorizationCode.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/User.java`](file--User.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UserCache.java`](file--UserCache.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UsernamePasswordToken.java`](file--UsernamePasswordToken.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UserSession.java`](file--UserSession.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/YamlAuthModule.java`](file--YamlAuthModule.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Account.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+import org.yamcs.security.protobuf.AccountRecord;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * A {@link User} or an {@link ServiceAccount}
+ */
+public abstract class Account {
+
+    protected long id;
+    protected String name;
+    protected String displayName;
+    protected boolean active; // Inactive users are considered "blocked"
+    protected long createdBy; // Id of the user that created this user
+    protected long creationTime = TimeEncoding.INVALID_INSTANT;
+    protected long confirmationTime = TimeEncoding.INVALID_INSTANT;
+    protected long lastLoginTime = TimeEncoding.INVALID_INSTANT;
+
+    public Account(String name, Account createdBy) {
+        this.name = Objects.requireNonNull(name);
+        if (createdBy != null) {
+            this.createdBy = createdBy.id;
+        }
+        creationTime = TimeEncoding.getWallclockTime();
+    }
+
+    Account(AccountRecord record) {
+        id = record.getId();
+        name = record.getName();
+        if (record.hasDisplayName() && !record.getDisplayName().isEmpty()) {
+            displayName = record.getDisplayName();
+        }
+        active = record.getActive();
+        if (record.hasCreatedBy()) {
+            createdBy = record.getCreatedBy();
+        }
+        creationTime = TimeEncoding.fromProtobufTimestamp(record.getCreationTime());
+        if (record.hasConfirmationTime()) {
+            confirmationTime = TimeEncoding.fromProtobufTimestamp(record.getConfirmationTime());
+        }
+        if (record.hasLastLoginTime()) {
+            lastLoginTime = TimeEncoding.fromProtobufTimestamp(record.getLastLoginTime());
+        }
+    }
+
+    Account(Tuple tuple) {
+        id = tuple.getLongColumn(DirectoryDb.ACCOUNT_CNAME_ID);
+        name = tuple.getColumn(DirectoryDb.ACCOUNT_CNAME_NAME);
+        displayName = tuple.getColumn(DirectoryDb.ACCOUNT_CNAME_DISPLAY_NAME);
+        active = tuple.getBooleanColumn(DirectoryDb.ACCOUNT_CNAME_ACTIVE);
+        if (tuple.hasColumn(DirectoryDb.ACCOUNT_CNAME_CREATION_TIME)) {
+            creationTime = tuple.getTimestampColumn(DirectoryDb.ACCOUNT_CNAME_CREATION_TIME);
+        }
+        if (tuple.hasColumn(DirectoryDb.ACCOUNT_CNAME_CONFIRMATION_TIME)) {
+            confirmationTime = tuple.getTimestampColumn(DirectoryDb.ACCOUNT_CNAME_CONFIRMATION_TIME);
+        }
+        if (tuple.hasColumn(DirectoryDb.ACCOUNT_CNAME_LAST_LOGIN_TIME)) {
+            lastLoginTime = tuple.getTimestampColumn(DirectoryDb.ACCOUNT_CNAME_LAST_LOGIN_TIME);
+        }
+    }
+
+    /**
+     * True if this is a built-in account (i.e. one that is not stored)
+     */
+    public boolean isBuiltIn() {
+        return "System".equals(name) || "guest".equals(name);
+    }
+
+    /**
+     * Identifying attribute, e.g. a username or an application name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        if (displayName == null || displayName.isEmpty()) {
+            this.displayName = null;
+        } else {
+            this.displayName = displayName;
+        }
+    }
+
+    void setId(int id) {
+        this.id = id;
+    }
+
+    void updateLoginData() {
+        lastLoginTime = TimeEncoding.getWallclockTime();
+    }
+
+    public long getCreatedBy() {
+        return createdBy;
+    }
+
+    public long getCreationTime() {
+        return creationTime;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public long getConfirmationTime() {
+        return confirmationTime;
+    }
+
+    public long getLastLoginTime() {
+        return lastLoginTime;
+    }
+
+    public void confirm() {
+        active = true;
+        confirmationTime = TimeEncoding.getWallclockTime();
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    protected AccountRecord.Builder newRecordBuilder() {
+        AccountRecord.Builder b = AccountRecord.newBuilder();
+        b.setId(Long.valueOf(id).intValue());
+        b.setName(name);
+        if (displayName != null) {
+            b.setDisplayName(displayName);
+        }
+        b.setActive(active);
+        if (createdBy > 0) {
+            b.setCreatedBy(Long.valueOf(createdBy).intValue());
+        }
+        b.setCreationTime(TimeEncoding.toProtobufTimestamp(creationTime));
+        if (confirmationTime != TimeEncoding.INVALID_INSTANT) {
+            b.setConfirmationTime(TimeEncoding.toProtobufTimestamp(confirmationTime));
+        }
+        if (lastLoginTime != TimeEncoding.INVALID_INSTANT) {
+            b.setLastLoginTime(TimeEncoding.toProtobufTimestamp(lastLoginTime));
+        }
+        return b;
+    }
+
+    protected Tuple toTuple(boolean forUpdate) {
+        var tuple = new Tuple();
+        if (!forUpdate) {
+            if (id > 0) { // Else, rely on autoincrement
+                tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_ID, id);
+            }
+        }
+        tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_NAME, name);
+        tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_DISPLAY_NAME, displayName);
+        tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_ACTIVE, active);
+        if (createdBy > 0) {
+            tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_CREATED_BY, createdBy);
+        } else {
+            tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_CREATED_BY, null);
+        }
+        tuple.addTimestampColumn(DirectoryDb.ACCOUNT_CNAME_CREATION_TIME, creationTime);
+        if (confirmationTime != TimeEncoding.INVALID_INSTANT) {
+            tuple.addTimestampColumn(DirectoryDb.ACCOUNT_CNAME_CONFIRMATION_TIME, confirmationTime);
+        }
+        if (lastLoginTime != TimeEncoding.INVALID_INSTANT) {
+            tuple.addTimestampColumn(DirectoryDb.ACCOUNT_CNAME_LAST_LOGIN_TIME, lastLoginTime);
+        }
+        return tuple;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Account)) {
+            return false;
+        }
+        Account other = (Account) obj;
+        return id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("[name=%s, id=%s]", name, id);
+    }
+}
+```
+
+### `ApiKeyAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ApiKeyAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * Identifies logins based on an API key, this should be used only for calling programs.
+ * <p>
+ * This AuthModule is currently restricted to generating and verifying in-memory API keys.
+ */
+public class ApiKeyAuthModule extends AbstractHttpRequestAuthModule implements AuthModule {
+
+    private static final String X_API_KEY = "x-api-key";
+
+    @Override
+    public Spec getSpec() {
+        return new Spec();
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        throw new UnsupportedOperationException(
+                getClass() + " is a built-in. Remove it from etc/security.yaml");
+    }
+
+    @Override
+    public boolean handles(ChannelHandlerContext ctx, HttpRequest request) {
+        return request.headers().contains(X_API_KEY);
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(ChannelHandlerContext ctx, HttpRequest request)
+            throws AuthenticationException {
+        var securityStore = YamcsServer.getServer().getSecurityStore();
+        var apiKey = request.headers().get(X_API_KEY);
+
+        var username = securityStore.getUsernameForApiKey(apiKey);
+        if (username == null) {
+            throw new AuthenticationException("Invalid API key");
+        } else if (username.equals(securityStore.getSystemUser().getName())) {
+            return new SystemUserAuthenticationInfo(this);
+        } else {
+            return new AuthenticationInfo(this, username);
+        }
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        // Don't add anything
+        return new AuthorizationInfo();
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+}
+```
+
+### `ApplicationCredentials.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ApplicationCredentials.java`
+
+
+```java
+package org.yamcs.security;
+
+/**
+ * Credentials for identifying as an application, for example the singleton application that represents a service
+ * account.
+ */
+public class ApplicationCredentials implements AuthenticationToken {
+
+    private final String applicationId;
+    private final String applicationSecret;
+
+    private String become;
+
+    public ApplicationCredentials(String applicationId, String applicationSecret) {
+        this.applicationId = applicationId;
+        this.applicationSecret = applicationSecret;
+    }
+
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    public String getApplicationSecret() {
+        return applicationSecret;
+    }
+
+    public void setBecome(String become) {
+        this.become = become;
+    }
+
+    public String getBecome() {
+        return become;
+    }
+}
+```
+
+### `AuthenticationException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationException.java`
+
+
+```java
+package org.yamcs.security;
+
+/**
+ * Thrown when an {@link AuthModule} failed to perform the authentication process (backend not available, password does
+ * not match, ...).
+ */
+@SuppressWarnings("serial")
+public class AuthenticationException extends Exception {
+
+    public AuthenticationException(String message) {
+        super(message);
+    }
+
+    public AuthenticationException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public AuthenticationException(Throwable t) {
+        super(t);
+    }
+}
+```
+
+### `AuthenticationInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationInfo.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+
+/**
+ * Data holder for information related to a verified authentication attempt.
+ * <p>
+ * The default implementation retains only the verified username, extending classes may add other information such as
+ * externally issued tickets.
+ */
+public class AuthenticationInfo {
+
+    private AuthModule authenticator;
+    private String username;
+    private String displayName;
+    private String email;
+    private Map<String, String> externalIdentities = new HashMap<>(2);
+
+    public AuthenticationInfo(AuthModule authenticator, String username) {
+        this.authenticator = Objects.requireNonNull(authenticator);
+        this.username = Objects.requireNonNull(username);
+    }
+
+    /**
+     * The {@link AuthModule} that verified this authentication attempt.
+     */
+    public AuthModule getAuthenticator() {
+        return authenticator;
+    }
+
+    public boolean isKerberos() {
+        return (authenticator instanceof KerberosAuthModule)
+                || (authenticator instanceof SpnegoAuthModule);
+    }
+
+    /**
+     * The username of the user that was verified.
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Map<String, String> getExternalIdentities() {
+        return externalIdentities;
+    }
+
+    public void addExternalIdentity(String provider, String externalIdentity) {
+        externalIdentities.put(provider, externalIdentity);
+    }
+
+    @Override
+    public String toString() {
+        return username;
+    }
+}
+```
+
+### `AuthenticationToken.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthenticationToken.java`
+
+
+```java
+package org.yamcs.security;
+
+/**
+ * Tag interface that represent any kind of token submitted during login for identifying an application or user.
+ */
+public interface AuthenticationToken {
+}
+```
+
+### `AuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.http.auth.AuthHandler;
+
+/**
+ * Interface implemented by the Authentication and Authorization modules.
+ * 
+ * The AuthModule has to associate to each user AuthenticationInfo that may contain contextual security properties.
+ * Based on this {@link AuthHandler} will generate a JWT token which is passed between the client and the server with
+ * each request.
+ * 
+ * @author nm
+ */
+public interface AuthModule {
+
+    /**
+     * Returns the valid configuration of the input args of this AuthModule.
+     * 
+     * @return the argument specification.
+     */
+    Spec getSpec();
+
+    /**
+     * Initialize this AuthModule.
+     * 
+     * @param args
+     *            The configured arguments for this AuthModule. If {@link #getSpec()} is implemented then this contains
+     *            the arguments after being validated (including any defaults).
+     * @throws InitException
+     *             When something goes wrong during the execution of this method.
+     */
+    void init(YConfiguration args) throws InitException;
+
+    /**
+     * Identify the subject based on the given information.
+     * 
+     * @param token
+     * @return an info object containing the principal of the subject, or {@code null} if the login failed
+     */
+    AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException;
+
+    /**
+     * Hook that is called on all AuthModules when a login attempt was successful.
+     * <p>
+     * An example use case is an LDAP AuthModule that queries for additional user information after a successful
+     * Kerberos login.
+     * <p>
+     * The default implementation does nothing.
+     */
+    default void authenticationSucceeded(AuthenticationInfo authenticationInfo) {
+    }
+
+    /**
+     * Retrieve access control information based on the given AuthenticationInfo. This AuthenticationInfo may have been
+     * generated by a different AuthModule.
+     * 
+     * @return an info object containing role/privilege information of the subject
+     */
+    AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException;
+
+    /**
+     * Verify if previously generated authentication info is (still) valid. For example, if the authentication info
+     * references an externally issued expiring ticket, this can be validated here.
+     * <p>
+     * This method is called very frequently, so implementations must take care to limit external requests.
+     * 
+     * @param authenticationInfo
+     *            information relevant to the authentication process
+     * 
+     * @return true if the authentication info is valid, false otherwise
+     * 
+     */
+    boolean verifyValidity(AuthenticationInfo authenticationInfo);
+}
+```
+
+### `AuthorizationException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthorizationException.java`
+
+
+```java
+package org.yamcs.security;
+
+/**
+ * Thrown when an {@link AuthModule} failed to perform the authorization process.
+ */
+@SuppressWarnings("serial")
+public class AuthorizationException extends Exception {
+
+    public AuthorizationException(String message) {
+        super(message);
+    }
+
+    public AuthorizationException(String message, Throwable t) {
+        super(message, t);
+    }
+
+    public AuthorizationException(Throwable t) {
+        super(t);
+    }
+}
+```
+
+### `AuthorizationInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/AuthorizationInfo.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Collection of roles, system and/or object privileges.
+ */
+public class AuthorizationInfo {
+
+    private boolean superuser;
+    private Set<String> roles = new HashSet<>();
+    private Set<SystemPrivilege> systemPrivileges = new HashSet<>();
+    private Set<ObjectPrivilege> objectPrivileges = new HashSet<>();
+
+    public void grantSuperuser() {
+        superuser = true;
+    }
+
+    public boolean isSuperuser() {
+        return superuser;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public Set<SystemPrivilege> getSystemPrivileges() {
+        return systemPrivileges;
+    }
+
+    public Set<ObjectPrivilege> getObjectPrivileges() {
+        return objectPrivileges;
+    }
+
+    public void addRole(String role) {
+        roles.add(role);
+    }
+
+    public void addSystemPrivilege(SystemPrivilege privilege) {
+        systemPrivileges.add(privilege);
+    }
+
+    public void addObjectPrivilege(ObjectPrivilege privilege) {
+        objectPrivileges.add(privilege);
+    }
+}
+```
+
+### `ClearanceListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ClearanceListener.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.security.protobuf.Clearance;
+
+@FunctionalInterface
+public interface ClearanceListener {
+
+    void onChange(Clearance clearance);
+}
+```
+
+### `CryptoUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/CryptoUtils.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.util.Base64;
+
+import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+
+public class CryptoUtils {
+
+    private static final SecureRandom RNG = new SecureRandom();
+
+    private static final String HMAC_SHA1_ALGORITHM = "HmacSHA1";
+
+    private static final String PASSWORD_CHARS;
+    static {
+        String lower = "abcdefghijklmnopqrstuvwxyz";
+        String upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String number = "0123456789";
+        String misc = "!@#$%&*()_+-=[]?";
+        PASSWORD_CHARS = lower + upper + number + misc;
+    }
+
+    /**
+     * Generates a difficult to guess random key via SecureRandom using the HmacSHA1 algorithm
+     */
+    public static byte[] generateRandomSecretKey() {
+        try {
+            KeyGenerator keyGen = KeyGenerator.getInstance(HMAC_SHA1_ALGORITHM);
+            keyGen.init(RNG);
+            SecretKey secretKey = keyGen.generateKey();
+            return secretKey.getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            // Should not happen. HmacSHA1 is available in any JDK
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    /**
+     * Generates a random strong password.
+     */
+    public static String generateRandomPassword(int length) {
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int idx = RNG.nextInt(PASSWORD_CHARS.length());
+            sb.append(PASSWORD_CHARS.charAt(idx));
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Calculates an hmac as specified in RFC2104.
+     */
+    public static byte[] calculateHmac(String data, byte[] secret) {
+        return calculateHmac(data.getBytes(StandardCharsets.UTF_8), secret);
+    }
+
+    /**
+     * Calculates an hmac as specified in RFC2104.
+     */
+    public static byte[] calculateHmac(byte[] data, byte[] secret) {
+        try {
+            SecretKeySpec signingKey = new SecretKeySpec(secret, HMAC_SHA1_ALGORITHM);
+            Mac mac = Mac.getInstance(HMAC_SHA1_ALGORITHM);
+            mac.init(signingKey);
+            return mac.doFinal(data);
+        } catch (NoSuchAlgorithmException e) {
+            // Should not happen. HmacSHA1 is available in any JDK
+            throw new UnsupportedOperationException(e);
+        } catch (InvalidKeyException e) {
+            // Should not happen. Key is specified in this method
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    /**
+     * Generates an OAuth 2.0 Proof Key for Code Exchange (PKCE) code challenge and verifier (RFC6736)
+     * 
+     * <pre>
+     * code_challenge = BASE64URLENCODE(SHA256(ASCII(code_verifier)))
+     * </pre>
+     */
+    public static PKCE generatePKCE() {
+        byte[] codeVerifierBytes = new byte[32];
+        RNG.nextBytes(codeVerifierBytes);
+        PKCE pkce = new PKCE();
+        pkce.codeVerifier = Base64.getUrlEncoder().withoutPadding().encodeToString(codeVerifierBytes);
+        try {
+            byte[] bytes = pkce.codeVerifier.getBytes(StandardCharsets.US_ASCII);
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(bytes, 0, bytes.length);
+            byte[] codeChallengeBytes = messageDigest.digest();
+            pkce.codeChallenge = Base64.getUrlEncoder().withoutPadding().encodeToString(codeChallengeBytes);
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnsupportedOperationException(e);
+        }
+        return pkce;
+    }
+
+    public static final class PKCE {
+        public String codeChallenge;
+        public String codeVerifier;
+    }
+}
+```
+
+### `Directory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Directory.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import org.yamcs.InitException;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.security.protobuf.AccountCollection;
+import org.yamcs.security.protobuf.GroupCollection;
+import org.yamcs.yarch.ProtobufDatabase;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.YarchException;
+
+/**
+ * Stores user, group and application information in the Yamcs database.
+ */
+public class Directory {
+
+    // Reserve first few ids for potential future use
+    // (also not to overlap with system and guest users which are not currently in the directory)
+    public static final long ID_START = 5;
+
+    // MIGRATION NOTICE:
+    //
+    // Users and groups used to be stored in "ProtobufDatabase", but we're slowly phasing that
+    // out in favor of tables in the Yamcs DB, now that this has the functionality we need.
+    //
+    // Current phase: upgrade on startup from ProtobufDB to Yamcs DB, no backwards compatibility.
+    //
+    // Next planned phases:
+    // - determine IDs from database sequence, instead of AtomicInteger
+    // - remove ProtobufDB (long-term, no rush)
+
+    private static final Log log = new Log(Directory.class);
+    private static final String ACCOUNT_COLLECTION = "accounts";
+    private static final String GROUP_COLLECTION = "groups";
+    private static final PasswordHasher hasher = new PBKDF2PasswordHasher();
+
+    // Reserve first few ids for potential future use
+    // (also not to overlap with system and guest users which are not currently in the directory)
+    @Deprecated
+    private AtomicInteger accountIdSequence = new AtomicInteger((int) ID_START);
+    @Deprecated
+    private AtomicInteger groupIdSequence = new AtomicInteger((int) ID_START);
+
+    private Map<String, Role> roles = new ConcurrentHashMap<>();
+
+    private DirectoryDb db;
+    private ProtobufDatabase protobufDatabase;
+
+    public Directory() throws InitException {
+        try {
+            db = new DirectoryDb();
+            YarchDatabaseInstance yarch = YarchDatabase.getInstance(YamcsServer.GLOBAL_INSTANCE);
+            protobufDatabase = yarch.getProtobufDatabase();
+
+            if (db.listAccounts().isEmpty()) {
+                migrateFromProtobufDatabase();
+            }
+
+            // Determine ID from memory (as opposed to using the DB sequence)
+            for (var account : db.listAccounts()) {
+                if (account instanceof User) {
+                    accountIdSequence.set((int) Math.max(accountIdSequence.get(), account.getId()));
+                } else if (account instanceof ServiceAccount) {
+                    accountIdSequence.set((int) Math.max(accountIdSequence.get(), account.getId()));
+                }
+            }
+            for (var group : db.listGroups()) {
+                groupIdSequence.set((int) Math.max(groupIdSequence.get(), group.getId()));
+            }
+        } catch (YarchException | IOException e) {
+            throw new InitException(e);
+        }
+
+        loadRoles();
+    }
+
+    /**
+     * Users and groups used to be stored in "ProtobufDatabase", but that is being phased out in favor of tables in the
+     * Yamcs DB, now that this has the functionality we need.
+     *
+     * This migration is to be kept around for a long time, to allow people with old Yamcs versions to upgrade.
+     */
+    private void migrateFromProtobufDatabase() throws IOException {
+        var yarch = YarchDatabase.getInstance(YamcsServer.GLOBAL_INSTANCE);
+        var groupCollection = protobufDatabase.get(GROUP_COLLECTION, GroupCollection.class);
+        if (groupCollection != null) {
+            var idSequence = yarch.getTable("group").getColumnDefinition("id").getSequence();
+            idSequence.reset(groupCollection.getSeq() + 1);
+
+            for (var rec : groupCollection.getRecordsList()) {
+                db.addGroup(new Group(rec));
+            }
+        }
+
+        var accountCollection = protobufDatabase.get(ACCOUNT_COLLECTION, AccountCollection.class);
+        if (accountCollection != null) {
+            var idSequence = yarch.getTable("account").getColumnDefinition("id").getSequence();
+            idSequence.reset(accountCollection.getSeq() + 1);
+
+            for (var rec : accountCollection.getRecordsList()) {
+                if (rec.hasUserDetail()) {
+                    db.addAccount(new User(rec));
+                } else if (rec.hasServiceDetail()) {
+                    db.addAccount(new ServiceAccount(rec));
+                } else {
+                    throw new IllegalStateException("Unexpected account type");
+                }
+            }
+        }
+    }
+
+    public synchronized void addUser(User user) throws IOException {
+        verifyDirectoryUser(user);
+        String username = user.getName();
+        if (db.findAccountByName(username) != null) {
+            throw new IllegalArgumentException("Name '" + username + "' is already taken");
+        }
+        if (username.isEmpty() || username.contains(":")) {
+            throw new IllegalArgumentException("Invalid username '" + username + "'");
+        }
+        int id = accountIdSequence.incrementAndGet();
+        user.setId(id);
+        for (Role role : roles.values()) {
+            if (role.isDefaultRole()) {
+                user.addRole(role.getName(), false);
+            }
+        }
+        log.info("Saving new user {}", user);
+        setUserPrivileges(user);
+        db.addAccount(user);
+    }
+
+    public synchronized void updateUserProperties(User user) {
+        if (user.isBuiltIn()) {
+            throw new UnsupportedOperationException();
+        }
+        setUserPrivileges(user);
+        db.updateAccount(user);
+    }
+
+    private void setUserPrivileges(User user) {
+        user.clearDirectoryPrivileges();
+        for (String roleName : user.getRoles()) {
+            Role role = getRole(roleName);
+            if (role != null) {
+                for (SystemPrivilege privilege : role.getSystemPrivileges()) {
+                    user.addSystemPrivilege(privilege, false);
+                }
+                for (ObjectPrivilege privilege : role.getObjectPrivileges()) {
+                    user.addObjectPrivilege(privilege, false);
+                }
+            }
+        }
+    }
+
+    public synchronized void deleteUser(User user) throws IOException {
+        verifyDirectoryUser(user);
+        log.info("Removing user {}", user);
+        var groups = db.listGroups();
+        for (var group : groups) {
+            if (group.removeMember(user.getId())) {
+                db.updateGroup(group);
+            }
+        }
+        db.deleteAccount(user);
+    }
+
+    public synchronized void addGroup(Group group) {
+        String groupName = group.getName();
+        if (db.findGroupByName(groupName) != null) {
+            throw new IllegalArgumentException("Group '" + groupName + "' already exists");
+        }
+        int id = groupIdSequence.incrementAndGet();
+        group.setId(id);
+
+        log.info("Saving new group {}", group);
+        db.addGroup(group);
+    }
+
+    public synchronized void renameGroup(String from, String to) {
+        if (db.findGroupByName(to) != null) {
+            throw new IllegalArgumentException("Group '" + to + "' already exists");
+        }
+        var group = db.findGroupByName(from);
+        group.setName(to);
+        db.updateGroup(group);
+    }
+
+    public synchronized void updateGroupProperties(Group group) {
+        db.updateGroup(group);
+    }
+
+    public synchronized void deleteGroup(Group group) {
+        db.deleteGroup(group);
+    }
+
+    /**
+     * Creates a new service account. The service account is assumed to represent one application only, for which
+     * automatically generated credentials are returned. These may be used to identify as that application, for example
+     * to generate access tokens.
+     */
+    public synchronized ApplicationCredentials addServiceAccount(ServiceAccount service) throws IOException {
+        String serviceName = service.getName();
+        if (db.findAccountByName(serviceName) != null) {
+            throw new IllegalArgumentException("Name '" + serviceName + "' is already taken");
+        }
+        int id = accountIdSequence.incrementAndGet();
+        service.setId(id);
+
+        String applicationId = UUID.randomUUID().toString();
+        String applicationSecret = CryptoUtils.generateRandomPassword(10);
+        String applicationHash = hasher.createHash(applicationSecret.toCharArray());
+        service.setApplicationId(applicationId);
+        service.setApplicationHash(applicationHash);
+
+        log.info("Saving new service account {}", service);
+        db.addAccount(service);
+
+        return new ApplicationCredentials(applicationId, applicationSecret /* not the hash */);
+    }
+
+    public synchronized void deleteServiceAccount(ServiceAccount service) {
+        db.deleteAccount(service);
+    }
+
+    public synchronized void updateApplicationProperties(ServiceAccount service) {
+        db.updateAccount(service);
+    }
+
+    private void verifyDirectoryUser(User user) {
+        if (user.isBuiltIn()) {
+            throw new IllegalArgumentException("Not a directory user");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadRoles() {
+        if (YConfiguration.isDefined("roles")) {
+            YConfiguration yconf = YConfiguration.getConfiguration("roles");
+            Map<String, Object> roleConfig = yconf.getRoot();
+            for (String roleName : roleConfig.keySet()) {
+                Role role = new Role(roleName);
+                if (!YConfiguration.isNull(roleConfig, roleName)) {
+                    Map<String, Object> roleDef = YConfiguration.getMap(roleConfig, roleName);
+                    roleDef.forEach((typeString, objects) -> {
+                        if (typeString.equals("System")) {
+                            for (String name : (List<String>) objects) {
+                                role.addSystemPrivilege(new SystemPrivilege(name));
+                            }
+                        } else if (typeString.equals("default")) {
+                            role.setDefaultRole((Boolean) objects);
+                        } else {
+                            ObjectPrivilegeType type = new ObjectPrivilegeType(typeString);
+                            for (String object : (List<String>) objects) {
+                                role.addObjectPrivilege(new ObjectPrivilege(type, object));
+                            }
+                        }
+                    });
+                }
+                roles.put(role.getName(), role);
+            }
+        }
+    }
+
+    /**
+     * Validates the provided password against the stored password hash of a user.
+     * 
+     * @return true if the password is correct, false otherwise
+     */
+    public boolean validateUserPassword(String username, char[] password) {
+        var account = db.findAccountByName(username);
+        if (account instanceof User && ((User) account).getHash() != null) {
+            return hasher.validatePassword(password, ((User) account).getHash());
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Validates the provided password against the stored password hash of an application.
+     * <p>
+     * Currently this is only functional for service accounts (which map to one and only one application), but some day
+     * we may also want to support user applications.
+     */
+    public boolean validateApplicationPassword(String applicationId, char[] password) {
+        var account = getAccountForApplication(applicationId);
+        if (account == null) {
+            throw new IllegalArgumentException("No such application");
+        }
+
+        if (account instanceof ServiceAccount) {
+            return hasher.validatePassword(password, ((ServiceAccount) account).getApplicationHash());
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public void changePassword(User user, char[] password) {
+        if (user.isExternallyManaged()) {
+            throw new IllegalArgumentException("The identity of this user is not managed by Yamcs");
+        }
+        if (!validateUserPassword(user.getName(), password)) {
+            String hash = hasher.createHash(password);
+            user.setHash(hash);
+            db.updateAccount(user);
+        }
+    }
+
+    public Account getAccount(String name) {
+        User user = getUser(name);
+        return user != null ? user : getServiceAccount(name);
+    }
+
+    public User getUser(long id) {
+        var account = db.findAccount(id);
+        var userAccount = (account instanceof User) ? (User) account : null;
+        if (userAccount != null) {
+            setUserPrivileges(userAccount);
+        }
+        return userAccount;
+    }
+
+    public User getUser(String username) {
+        var account = db.findAccountByName(username);
+        var userAccount = (account instanceof User) ? (User) account : null;
+        if (userAccount != null) {
+            setUserPrivileges(userAccount);
+        }
+        return userAccount;
+    }
+
+    public List<User> getUsers() {
+        return db.listAccounts().stream()
+                .filter(account -> account instanceof User)
+                .map(account -> (User) account)
+                .collect(Collectors.toList());
+    }
+
+    public Account getAccountForApplication(String applicationId) {
+        return db.findServiceAccountForApplicationId(applicationId);
+    }
+
+    public Group getGroup(String name) {
+        return db.findGroupByName(name);
+    }
+
+    public List<Group> getGroups() {
+        return db.listGroups();
+    }
+
+    public List<Group> getGroups(User user) {
+        return getGroups().stream()
+                .filter(g -> g.hasMember(user.getId()))
+                .collect(Collectors.toList());
+    }
+
+    public ServiceAccount getServiceAccount(String name) {
+        var account = db.findAccountByName(name);
+        return (account instanceof ServiceAccount)
+                ? (ServiceAccount) account
+                : null;
+    }
+
+    public List<ServiceAccount> getServiceAccounts() {
+        return db.listAccounts().stream()
+                .filter(account -> account instanceof ServiceAccount)
+                .map(account -> (ServiceAccount) account)
+                .collect(Collectors.toList());
+    }
+
+    public List<Role> getRoles() {
+        return new ArrayList<>(roles.values());
+    }
+
+    public Role getRole(String name) {
+        return roles.get(name);
+    }
+}
+```
+
+### `DirectoryAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/DirectoryAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+
+/**
+ * Identifies users and service accounts based on authentication information stored in the Yamcs {@link Directory}.
+ */
+public class DirectoryAuthModule implements AuthModule {
+
+    @Override
+    public Spec getSpec() {
+        return new Spec();
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        throw new UnsupportedOperationException(
+                getClass() + " is a built-in. Remove it from etc/security.yaml");
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        Directory directory = YamcsServer.getServer().getSecurityStore().getDirectory();
+        if (token instanceof UsernamePasswordToken) {
+            String username = ((UsernamePasswordToken) token).getPrincipal();
+            User user = directory.getUser(username);
+            if (user != null && !user.isExternallyManaged() && user.getHash() != null) {
+                char[] password = ((UsernamePasswordToken) token).getPassword();
+                if (directory.validateUserPassword(username, password)) {
+                    return new AuthenticationInfo(this, user.getName());
+                } else {
+                    throw new AuthenticationException("Password does not match");
+                }
+            }
+        } else if (token instanceof ApplicationCredentials) {
+            String applicationId = ((ApplicationCredentials) token).getApplicationId();
+            String applicationSecret = ((ApplicationCredentials) token).getApplicationSecret();
+            String become = ((ApplicationCredentials) token).getBecome();
+            Account account = directory.getAccountForApplication(applicationId);
+            if (account != null) {
+                if (directory.validateApplicationPassword(applicationId, applicationSecret.toCharArray())) {
+                    if (become == null) {
+                        return new AuthenticationInfo(this, account.getName());
+                    } else { // TODO add a role, currently we assume all applications can do 'become'.
+                        Account becomeAccount = directory.getAccount(become);
+                        if (becomeAccount != null) {
+                            return new AuthenticationInfo(this, become);
+                        } else {
+                            throw new AuthenticationException("Unknown account " + become);
+                        }
+                    }
+                } else {
+                    throw new AuthenticationException("Secret does not match");
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        // Don't add anything. The directory itself already takes care of this.
+        return new AuthorizationInfo();
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+}
+```
+
+### `DirectoryDb.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/DirectoryDb.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.InitException;
+import org.yamcs.YamcsServer;
+import org.yamcs.security.protobuf.ServiceAccountRecordDetail;
+import org.yamcs.security.protobuf.UserAccountRecordDetail;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.query.Query;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Stores users and groups in the Yamcs DB.
+ */
+public class DirectoryDb {
+
+    private static final String ACCOUNT_TABLE_NAME = "account";
+    public static final String ACCOUNT_CNAME_ID = "id";
+    public static final String ACCOUNT_CNAME_NAME = "name";
+    public static final String ACCOUNT_CNAME_DISPLAY_NAME = "display_name";
+    public static final String ACCOUNT_CNAME_ACTIVE = "active";
+    public static final String ACCOUNT_CNAME_CREATED_BY = "created_by";
+    public static final String ACCOUNT_CNAME_CREATION_TIME = "creation_time";
+    public static final String ACCOUNT_CNAME_CONFIRMATION_TIME = "confirmation_time";
+    public static final String ACCOUNT_CNAME_LAST_LOGIN_TIME = "last_login_time";
+    public static final String ACCOUNT_CNAME_USER_DETAIL = "user_detail";
+    public static final String ACCOUNT_CNAME_SERVICE_DETAIL = "service_detail";
+
+    private static final String GROUP_TABLE_NAME = "group";
+    public static final String GROUP_CNAME_ID = "id";
+    public static final String GROUP_CNAME_NAME = "name";
+    public static final String GROUP_CNAME_DESCRIPTION = "description";
+    public static final String GROUP_CNAME_MEMBERS = "members";
+
+    private YarchDatabaseInstance ydb;
+    private ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    public DirectoryDb() throws InitException {
+        ydb = YarchDatabase.getInstance(YamcsServer.GLOBAL_INSTANCE);
+        try {
+            if (ydb.getTable(ACCOUNT_TABLE_NAME) == null) {
+                var q = Query.createTable(ACCOUNT_TABLE_NAME)
+                        .withColumn(ACCOUNT_CNAME_ID, DataType.LONG)
+                        .withColumn(ACCOUNT_CNAME_NAME, DataType.STRING)
+                        .withColumn(ACCOUNT_CNAME_DISPLAY_NAME, DataType.STRING)
+                        .withColumn(ACCOUNT_CNAME_ACTIVE, DataType.BOOLEAN)
+                        .withColumn(ACCOUNT_CNAME_CREATED_BY, DataType.LONG)
+                        .withColumn(ACCOUNT_CNAME_CREATION_TIME, DataType.TIMESTAMP)
+                        .withColumn(ACCOUNT_CNAME_CONFIRMATION_TIME, DataType.TIMESTAMP)
+                        .withColumn(ACCOUNT_CNAME_LAST_LOGIN_TIME, DataType.TIMESTAMP)
+                        .withColumn(ACCOUNT_CNAME_USER_DETAIL, DataType.protobuf(UserAccountRecordDetail.class))
+                        .withColumn(ACCOUNT_CNAME_SERVICE_DETAIL, DataType.protobuf(ServiceAccountRecordDetail.class))
+                        .autoIncrement(ACCOUNT_CNAME_ID)
+                        .primaryKey(ACCOUNT_CNAME_ID);
+                ydb.execute(q.toStatement());
+
+                // Reserve first few ids for potential future use
+                // (also not to overlap with system and guest users which are not currently in the directory)
+                var idSequence = ydb.getTable(ACCOUNT_TABLE_NAME).getColumnDefinition(ACCOUNT_CNAME_ID).getSequence();
+                idSequence.reset(5);
+            }
+
+            if (ydb.getTable(GROUP_TABLE_NAME) == null) {
+                var q = Query.createTable(GROUP_TABLE_NAME)
+                        .withColumn(GROUP_CNAME_ID, DataType.LONG)
+                        .withColumn(GROUP_CNAME_NAME, DataType.STRING)
+                        .withColumn(GROUP_CNAME_DESCRIPTION, DataType.STRING)
+                        .withColumn(GROUP_CNAME_MEMBERS, DataType.array(DataType.LONG))
+                        .autoIncrement(GROUP_CNAME_ID)
+                        .primaryKey(GROUP_CNAME_ID);
+                ydb.execute(q.toStatement());
+
+                // Reserve first few ids for potential future use
+                var idSequence = ydb.getTable(GROUP_TABLE_NAME).getColumnDefinition(GROUP_CNAME_ID).getSequence();
+                idSequence.reset(5);
+            }
+        } catch (StreamSqlException | ParseException e) {
+            throw new InitException(e);
+        }
+    }
+
+    public void deleteAccounts() {
+        rwlock.writeLock().lock();
+        try {
+            var stmt = Query.deleteFromTable(ACCOUNT_TABLE_NAME).toStatement();
+            ydb.execute(stmt);
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public List<Account> listAccounts() {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(ACCOUNT_TABLE_NAME).toStatement();
+            var result = ydb.execute(stmt);
+            var accounts = new ArrayList<Account>();
+            result.forEachRemaining(tuple -> {
+                if (tuple.hasColumn(ACCOUNT_CNAME_USER_DETAIL)) {
+                    accounts.add(new User(tuple));
+                } else if (tuple.hasColumn(ACCOUNT_CNAME_SERVICE_DETAIL)) {
+                    accounts.add(new ServiceAccount(tuple));
+                }
+            });
+            result.close();
+            return accounts;
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public Account findAccount(long id) {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(ACCOUNT_TABLE_NAME)
+                    .where(ACCOUNT_CNAME_ID, id)
+                    .toStatement();
+            var result = ydb.execute(stmt);
+            var accounts = new ArrayList<Account>();
+            result.forEachRemaining(tuple -> {
+                if (tuple.hasColumn(ACCOUNT_CNAME_USER_DETAIL)) {
+                    accounts.add(new User(tuple));
+                } else if (tuple.hasColumn(ACCOUNT_CNAME_SERVICE_DETAIL)) {
+                    accounts.add(new ServiceAccount(tuple));
+                }
+            });
+            result.close();
+            if (accounts.size() == 1) {
+                return accounts.get(0);
+            } else if (accounts.size() > 1) {
+                throw new RuntimeException("Too many results");
+            } else {
+                return null;
+            }
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public Account findAccountByName(String name) {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(ACCOUNT_TABLE_NAME)
+                    .where(ACCOUNT_CNAME_NAME, name)
+                    .toStatement();
+            var result = ydb.execute(stmt);
+            var accounts = new ArrayList<Account>();
+            result.forEachRemaining(tuple -> {
+                if (tuple.hasColumn(ACCOUNT_CNAME_USER_DETAIL)) {
+                    accounts.add(new User(tuple));
+                } else if (tuple.hasColumn(ACCOUNT_CNAME_SERVICE_DETAIL)) {
+                    accounts.add(new ServiceAccount(tuple));
+                }
+            });
+            result.close();
+            if (accounts.size() == 1) {
+                return accounts.get(0);
+            } else if (accounts.size() > 1) {
+                throw new RuntimeException("Too many results");
+            } else {
+                return null;
+            }
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public ServiceAccount findServiceAccountForApplicationId(String applicationId) {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(ACCOUNT_TABLE_NAME)
+                    .where(ACCOUNT_CNAME_SERVICE_DETAIL + ".applicationId", applicationId)
+                    .toStatement();
+            var result = ydb.execute(stmt);
+            var accounts = new ArrayList<ServiceAccount>();
+            result.forEachRemaining(tuple -> accounts.add(new ServiceAccount(tuple)));
+            result.close();
+            if (accounts.size() == 1) {
+                return accounts.get(0);
+            } else if (accounts.size() > 1) {
+                throw new RuntimeException("Too many results");
+            } else {
+                return null;
+            }
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void addAccount(Account account) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = account.toTuple(false /* not forUpdate */);
+            var q = Query.insertIntoTable(ACCOUNT_TABLE_NAME, tuple);
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException | ParseException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void updateAccount(Account account) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = account.toTuple(true /* forUpdate */);
+            var q = Query.updateTable(ACCOUNT_TABLE_NAME)
+                    .set(tuple)
+                    .where(ACCOUNT_CNAME_ID, account.getId());
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException | ParseException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void deleteAccount(Account account) {
+        rwlock.writeLock().lock();
+        try {
+            var q = Query.deleteFromTable(ACCOUNT_TABLE_NAME)
+                    .where(ACCOUNT_CNAME_ID, account.getId());
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void deleteGroups() {
+        rwlock.writeLock().lock();
+        try {
+            var stmt = Query.deleteFromTable(GROUP_TABLE_NAME).toStatement();
+            ydb.execute(stmt);
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public List<Group> listGroups() {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(GROUP_TABLE_NAME).toStatement();
+            var result = ydb.execute(stmt);
+            var groups = new ArrayList<Group>();
+            result.forEachRemaining(tuple -> groups.add(new Group(tuple)));
+            result.close();
+            return groups;
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public Group findGroupByName(String name) {
+        rwlock.readLock().lock();
+        try {
+            var stmt = Query.selectTable(GROUP_TABLE_NAME)
+                    .where(GROUP_CNAME_NAME, name)
+                    .toStatement();
+            var result = ydb.execute(stmt);
+            var groups = new ArrayList<Group>();
+            result.forEachRemaining(tuple -> groups.add(new Group(tuple)));
+            result.close();
+            if (groups.size() == 1) {
+                return groups.get(0);
+            } else if (groups.size() > 1) {
+                throw new RuntimeException("Too many results");
+            } else {
+                return null;
+            }
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    public void addGroup(Group group) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = group.toTuple(false /* not forUpdate */);
+            var q = Query.insertIntoTable(GROUP_TABLE_NAME, tuple);
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException | ParseException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void updateGroup(Group group) {
+        rwlock.writeLock().lock();
+        try {
+            var tuple = group.toTuple(true /* forUpdate */);
+            var q = Query.updateTable(GROUP_TABLE_NAME)
+                    .set(tuple)
+                    .where(GROUP_CNAME_ID, group.getId());
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException | ParseException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    public void deleteGroup(Group group) {
+        rwlock.writeLock().lock();
+        try {
+            var q = Query.deleteFromTable(GROUP_TABLE_NAME)
+                    .where(GROUP_CNAME_ID, group.getId());
+            ydb.execute(q.toStatement());
+        } catch (StreamSqlException e) {
+            throw new RuntimeException(e);
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+}
+```
+
+### `Group.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Group.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.yamcs.security.protobuf.GroupRecord;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * A group is way to manage a set of users.
+ */
+public class Group {
+
+    private long id;
+    private String name;
+    private String description;
+    private List<Long> members = new ArrayList<>();
+
+    public Group(String name) {
+        this.name = name;
+    }
+
+    public Group(GroupRecord record) {
+        id = record.getId();
+        name = record.getName();
+        if (record.hasDescription() && !record.getDescription().isEmpty()) {
+            description = record.getDescription();
+        }
+        var memberIds = record.getMembersList().stream()
+                .map(Long::valueOf)
+                .collect(Collectors.toList());
+        members.addAll(memberIds);
+    }
+
+    public Group(Tuple tuple) {
+        id = tuple.getLongColumn(DirectoryDb.GROUP_CNAME_ID);
+        name = tuple.getColumn(DirectoryDb.GROUP_CNAME_NAME);
+        description = tuple.getColumn(DirectoryDb.GROUP_CNAME_DESCRIPTION);
+        List<Long> memberIds = tuple.getColumn(DirectoryDb.GROUP_CNAME_MEMBERS);
+        if (memberIds != null) {
+            members.addAll(memberIds);
+        }
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    void setId(long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        if (description == null || description.isEmpty()) {
+            this.description = null;
+        } else {
+            this.description = description;
+        }
+    }
+
+    public List<Long> getMembers() {
+        return new ArrayList<>(members);
+    }
+
+    public void addMember(long memberId) {
+        this.members.add(memberId);
+    }
+
+    public boolean removeMember(long memberId) {
+        return members.remove(memberId);
+    }
+
+    public boolean hasMember(long memberId) {
+        return members.contains(memberId);
+    }
+
+    public void setMembers(Set<Long> memberIds) {
+        members.clear();
+        members.addAll(memberIds);
+    }
+
+    public GroupRecord toRecord() {
+        GroupRecord.Builder b = GroupRecord.newBuilder();
+        b.setId(Long.valueOf(id).intValue());
+        b.setName(name);
+        b.addAllMembers(members.stream()
+                .map(Long::intValue)
+                .collect(Collectors.toList()));
+        if (description != null) {
+            b.setDescription(description);
+        }
+        return b.build();
+    }
+
+    public Tuple toTuple(boolean forUpdate) {
+        var tuple = new Tuple();
+        if (!forUpdate) {
+            if (id > 0) { // Else, rely on autoincrement
+                tuple.addColumn(DirectoryDb.GROUP_CNAME_ID, id);
+            }
+        }
+        tuple.addColumn(DirectoryDb.GROUP_CNAME_NAME, name);
+        tuple.addColumn(DirectoryDb.GROUP_CNAME_DESCRIPTION, description);
+        tuple.addColumn(DirectoryDb.GROUP_CNAME_MEMBERS, DataType.array(DataType.LONG), members);
+
+        return tuple;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Group)) {
+            return false;
+        }
+        Group other = (Group) obj;
+        return id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+### `HttpsUrlConnectionUtils.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/HttpsUrlConnectionUtils.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+public class HttpsUrlConnectionUtils {
+
+    private static final HostnameVerifier NO_HOSTNAME_VERIFICATION = (hostname, session) -> true;
+
+    private static final TrustManager[] TRUST_ALL_CERTS = new TrustManager[] { new X509TrustManager() {
+        @Override
+        public X509Certificate[] getAcceptedIssuers() {
+            return null;
+        }
+
+        @Override
+        public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+
+        @Override
+        public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+            // Ignore
+        }
+    } };
+
+    /**
+     * Disables SSL and hostname verification for the provided {@link HttpsURLConnection}
+     */
+    public static void makeInsecure(HttpsURLConnection conn) throws NoSuchAlgorithmException, KeyManagementException {
+        var ctx = SSLContext.getInstance("TLS");
+        ctx.init(null, TRUST_ALL_CERTS, new SecureRandom());
+        ((HttpsURLConnection) conn).setSSLSocketFactory(ctx.getSocketFactory());
+        ((HttpsURLConnection) conn).setHostnameVerifier(NO_HOSTNAME_VERIFICATION);
+    }
+}
+```
+
+### `IPAddressAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/IPAddressAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.net.Inet4Address;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.ipfilter.IpFilterRule;
+import io.netty.handler.ipfilter.IpFilterRuleType;
+import io.netty.handler.ipfilter.IpSubnetFilterRule;
+
+/**
+ * An AuthModule that enforces a login of one fixed user account, where the remote IP address must match one of the
+ * configured IP address rules.
+ */
+public class IPAddressAuthModule extends AbstractHttpRequestAuthModule {
+
+    protected static final String OPTION_ADDRESS = "address";
+    protected static final String OPTION_USERNAME = "username";
+    protected static final String OPTION_NAME = "name";
+    protected static final String OPTION_EMAIL = "email";
+    protected static final String OPTION_SUPERUSER = "superuser";
+    protected static final String OPTION_PRIVILEGES = "privileges";
+
+    private List<IpFilterRule> rules = new ArrayList<>();
+
+    private AuthenticationInfo authenticationInfo;
+    private AuthorizationInfo authorizationInfo;
+
+    @Override
+    public Spec getSpec() {
+        var spec = new Spec();
+        spec.addOption(OPTION_ADDRESS, OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withRequired(true);
+        spec.addOption(OPTION_USERNAME, OptionType.STRING).withRequired(true);
+        spec.addOption(OPTION_NAME, OptionType.STRING);
+        spec.addOption(OPTION_EMAIL, OptionType.STRING);
+        spec.addOption(OPTION_SUPERUSER, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(OPTION_PRIVILEGES, OptionType.ANY);
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        var username = args.getString(OPTION_USERNAME);
+        authenticationInfo = new AuthenticationInfo(this, username);
+
+        var name = args.getString(OPTION_NAME, null);
+        authenticationInfo.setDisplayName(name);
+
+        var email = args.getString(OPTION_EMAIL, null);
+        authenticationInfo.setEmail(email);
+
+        authorizationInfo = new AuthorizationInfo();
+        if (args.getBoolean(OPTION_SUPERUSER)) {
+            authorizationInfo.grantSuperuser();
+        }
+        if (args.containsKey(OPTION_PRIVILEGES)) {
+            var privilegeConfigs = args.getConfig(OPTION_PRIVILEGES);
+            for (var privilegeName : privilegeConfigs.getKeys()) {
+                var objects = privilegeConfigs.<String> getList(privilegeName);
+                if (privilegeName.equals("System")) {
+                    for (var object : objects) {
+                        authorizationInfo.addSystemPrivilege(new SystemPrivilege(object));
+                    }
+                } else {
+                    var type = new ObjectPrivilegeType(privilegeName);
+                    for (var object : objects) {
+                        authorizationInfo.addObjectPrivilege(new ObjectPrivilege(type, object));
+                    }
+                }
+            }
+        }
+
+        try {
+            for (var address : args.<String> getList(OPTION_ADDRESS)) {
+                if (address.indexOf('/') > 0) {
+                    var parts = address.split("\\/");
+                    var ipAddress = InetAddress.getByName(parts[0]);
+                    var cidrPrefix = Integer.parseInt(parts[1]);
+                    rules.add(new IpSubnetFilterRule(ipAddress, cidrPrefix, IpFilterRuleType.ACCEPT));
+                } else {
+                    var ipAddress = InetAddress.getByName(address);
+                    if (ipAddress instanceof Inet4Address) {
+                        rules.add(new IpSubnetFilterRule(ipAddress, 32, IpFilterRuleType.ACCEPT));
+                    } else if (ipAddress instanceof Inet6Address) {
+                        rules.add(new IpSubnetFilterRule(ipAddress, 128, IpFilterRuleType.ACCEPT));
+                    } else {
+                        throw new IllegalArgumentException("Only IPv4 and IPv6 addresses are supported");
+                    }
+                }
+            }
+        } catch (UnknownHostException e) {
+            throw new InitException(e);
+        }
+    }
+
+    @Override
+    public boolean handles(ChannelHandlerContext ctx, HttpRequest request) {
+        var remoteAddress = ctx.channel().remoteAddress();
+        return accept((InetSocketAddress) remoteAddress);
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(
+            ChannelHandlerContext ctx, HttpRequest request) throws AuthenticationException {
+        var remoteAddress = ctx.channel().remoteAddress();
+        if (accept((InetSocketAddress) remoteAddress)) {
+            return authenticationInfo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        var incomingUsername = authenticationInfo.getUsername();
+        if (incomingUsername.equals(this.authenticationInfo.getUsername())) {
+            return authorizationInfo;
+        } else {
+            return new AuthorizationInfo();
+        }
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return authenticationInfo.equals(authenticationInfo);
+    }
+
+    private boolean accept(InetSocketAddress remoteAddress) {
+        for (var rule : rules) {
+            if (rule.matches(remoteAddress)) {
+                return rule.ruleType() == IpFilterRuleType.ACCEPT;
+            }
+        }
+        return false;
+    }
+}
+```
+
+### `JaasConfiguration.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/JaasConfiguration.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.Configuration;
+
+/**
+ * Wrapper around the (weird) JAAS configuration API.
+ */
+public class JaasConfiguration extends Configuration {
+
+    private static final JaasConfiguration INSTANCE = new JaasConfiguration();
+
+    private Map<String, AppConfigurationEntry[]> entries = new HashMap<>();
+
+    private JaasConfiguration() {
+    }
+
+    public static synchronized void addEntry(String name, AppConfigurationEntry entry) {
+        if (INSTANCE.entries.containsKey(name)) {
+            throw new UnsupportedOperationException(); // Probably no need for this.
+        }
+        INSTANCE.entries.put(name, new AppConfigurationEntry[] { entry });
+        Configuration.setConfiguration(INSTANCE);
+    }
+
+    @Override
+    public AppConfigurationEntry[] getAppConfigurationEntry(String name) {
+        AppConfigurationEntry[] matched = entries.get(name);
+        return matched != null ? matched : new AppConfigurationEntry[0];
+    }
+}
+```
+
+### `KerberosAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/KerberosAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
+
+import java.io.IOException;
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.AccountNotFoundException;
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+
+/**
+ * Does password-based login against a Kerberos host.
+ */
+public class KerberosAuthModule implements AuthModule {
+
+    private static final Logger log = LoggerFactory.getLogger(KerberosAuthModule.class);
+    private static final String JAAS_ENTRY_NAME = "Yamcs";
+    private static final String JAAS_KRB5 = "com.sun.security.auth.module.Krb5LoginModule";
+
+    @Override
+    public Spec getSpec() {
+        var spec = new Spec();
+        spec.addOption("debug", OptionType.BOOLEAN).withDefault(false);
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        Map<String, String> jaasOpts = new HashMap<>();
+        jaasOpts.put("useKeyTab", "false");
+        jaasOpts.put("useTicketCache", "false");
+        jaasOpts.put("debug", Boolean.toString(args.getBoolean("debug")));
+
+        AppConfigurationEntry jaasEntry = new AppConfigurationEntry(JAAS_KRB5, REQUIRED, jaasOpts);
+        JaasConfiguration.addEntry(JAAS_ENTRY_NAME, jaasEntry);
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof UsernamePasswordToken) {
+            return authenticateByPassword((UsernamePasswordToken) token);
+        } else {
+            return null;
+        }
+    }
+
+    private AuthenticationInfo authenticateByPassword(UsernamePasswordToken token) throws AuthenticationException {
+        String username = token.getPrincipal();
+        char[] password = token.getPassword();
+        try {
+            LoginContext userLogin = new LoginContext(JAAS_ENTRY_NAME, new UserPassCallbackHandler(username, password));
+            userLogin.login();
+            AuthenticationInfo authenticationInfo = new AuthenticationInfo(this, username);
+            Principal identity = userLogin.getSubject().getPrincipals().iterator().next();
+            authenticationInfo.addExternalIdentity(getClass().getName(), identity.getName());
+            return authenticationInfo;
+        } catch (AccountNotFoundException e) {
+            return null;
+        } catch (LoginException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) {
+        return new AuthorizationInfo();
+    }
+
+    private static class UserPassCallbackHandler implements CallbackHandler {
+        private char[] password;
+        private String username;
+
+        public UserPassCallbackHandler(String name, char[] password) {
+            super();
+            this.username = name;
+            this.password = password;
+        }
+
+        @Override
+        public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+            for (Callback callback : callbacks) {
+                if (callback instanceof NameCallback && username != null) {
+                    NameCallback nc = (NameCallback) callback;
+                    nc.setName(username);
+                } else if (callback instanceof PasswordCallback) {
+                    PasswordCallback pc = (PasswordCallback) callback;
+                    pc.setPassword(password);
+                } else {
+                    log.warn("Unrecognized callback " + callback);
+                }
+            }
+        }
+    }
+}
+```
+
+### `LdapAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/LdapAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import javax.naming.Context;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.InitialDirContext;
+import javax.naming.directory.SearchControls;
+import javax.naming.directory.SearchResult;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+public class LdapAuthModule implements AuthModule {
+
+    private Log log = new Log(LdapAuthModule.class);
+
+    private boolean tls;
+    private String providerUrl;
+    private Hashtable<String, String> yamcsEnv;
+
+    private String userBase;
+    private String nameAttribute;
+    private String userFilter;
+    private String[] displayNameAttributes;
+    private String[] emailAttributes;
+    private String[] searchAttributes;
+    private List<GroupMapping> groupMappings = new ArrayList<>();
+
+    private List<String> groupBase;
+    private String groupFilter;
+    private String groupFilterUserAttribute;
+
+    private boolean requiredIfKerberos;
+
+    private Cache<String, LdapUserInfo> infoCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(24, TimeUnit.HOURS)
+            .build();
+
+    @Override
+    public Spec getSpec() {
+        Spec attributesSpec = new Spec();
+        attributesSpec.addOption("name", OptionType.STRING)
+                .withDefault("uid");
+        attributesSpec.addOption("email", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault(Arrays.asList("mail", "email", "userPrincipalName"));
+        attributesSpec.addOption("displayName", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault("cn");
+
+        Spec groupMappingSpec = new Spec();
+        groupMappingSpec.addOption("dn", OptionType.STRING).withRequired(true);
+        groupMappingSpec.addOption("role", OptionType.STRING);
+        groupMappingSpec.addOption("superuser", OptionType.BOOLEAN);
+        groupMappingSpec.requireOneOf("role", "superuser");
+
+        Spec spec = new Spec();
+        spec.addOption("host", OptionType.STRING).withRequired(true);
+        spec.addOption("port", OptionType.INTEGER);
+        spec.addOption("user", OptionType.STRING);
+        spec.addOption("password", OptionType.STRING).withSecret(true);
+        spec.requireTogether("user", "password");
+        spec.addOption("tls", OptionType.BOOLEAN);
+        spec.addOption("userBase", OptionType.STRING).withRequired(true);
+        spec.addOption("attributes", OptionType.MAP)
+                .withSpec(attributesSpec)
+                .withApplySpecDefaults(true);
+        spec.addOption("userFilter", OptionType.STRING);
+        spec.addOption("groupMappings", OptionType.LIST)
+                .withElementType(OptionType.MAP)
+                .withSpec(groupMappingSpec);
+
+        spec.addOption("groupBase", OptionType.LIST_OR_ELEMENT).withElementType(OptionType.STRING);
+        spec.addOption("groupFilter", OptionType.STRING);
+        spec.addOption("groupFilterUserAttribute", OptionType.STRING);
+        spec.requireTogether("groupBase", "groupFilter", "groupFilterUserAttribute");
+
+        spec.addOption("requiredIfKerberos", OptionType.BOOLEAN).withDefault(false);
+
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        String host = args.getString("host");
+
+        tls = args.getBoolean("tls", false);
+        if (tls) {
+            int port = args.getInt("port", 636);
+            providerUrl = String.format("ldaps://%s:%s", host, port);
+        } else {
+            int port = args.getInt("port", 389);
+            providerUrl = String.format("ldap://%s:%s", host, port);
+        }
+
+        userBase = args.getString("userBase");
+
+        YConfiguration attributesArgs = args.getConfig("attributes");
+        nameAttribute = attributesArgs.getString("name");
+
+        userFilter = args.getString("userFilter", "(" + nameAttribute + "={0})");
+        if (!userFilter.contains("{0}")) {
+            throw new InitException("LDAP user filter should contain the {0} character sequence, "
+                    + "which will be replaced with the attempted username");
+        }
+
+        displayNameAttributes = attributesArgs.getList("displayName").toArray(new String[0]);
+        emailAttributes = attributesArgs.getList("email").toArray(new String[0]);
+
+        groupBase = args.containsKey("groupBase") ? args.getList("groupBase") : null;
+        groupFilter = args.getString("groupFilter", null);
+        groupFilterUserAttribute = args.getString("groupFilterUserAttribute", null);
+
+        if (args.containsKey("groupMappings")) {
+            for (var mappingConfig : args.getConfigList("groupMappings")) {
+                var groupMapping = new GroupMapping();
+                groupMapping.dn = mappingConfig.getString("dn");
+                groupMapping.role = mappingConfig.getString("role", null);
+                groupMapping.superuser = mappingConfig.getBoolean("superuser", false);
+                groupMappings.add(groupMapping);
+            }
+        }
+
+        var concat = new HashSet<String>();
+        concat.add(nameAttribute);
+        concat.addAll(attributesArgs.getList("displayName"));
+        concat.addAll(attributesArgs.getList("email"));
+        concat.add("memberOf");
+        if (groupFilterUserAttribute != null) {
+            concat.add(groupFilterUserAttribute);
+        }
+        searchAttributes = concat.toArray(new String[0]);
+
+        requiredIfKerberos = args.getBoolean("requiredIfKerberos");
+
+        yamcsEnv = new Hashtable<>();
+        yamcsEnv.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        yamcsEnv.put(Context.PROVIDER_URL, providerUrl);
+
+        // Referral is needed to support querying of memberOf attribute that is
+        // generated through use of dynlist overlay.
+        yamcsEnv.put(Context.REFERRAL, "follow");
+
+        yamcsEnv.put(Context.SECURITY_AUTHENTICATION, "simple");
+        if (args.containsKey("user")) {
+            yamcsEnv.put(Context.SECURITY_PRINCIPAL, args.getString("user"));
+        }
+        if (args.containsKey("password")) {
+            yamcsEnv.put(Context.SECURITY_CREDENTIALS, args.getString("password"));
+        }
+        if (tls) {
+            yamcsEnv.put(Context.SECURITY_PROTOCOL, "ssl");
+        }
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof UsernamePasswordToken) {
+            String username = ((UsernamePasswordToken) token).getPrincipal();
+            char[] password = ((UsernamePasswordToken) token).getPassword();
+
+            LdapUserInfo info;
+            try {
+                info = searchUserInfo(username);
+            } catch (NamingException e) {
+                log.warn("Failed to search LDAP for user {}", username, e);
+                return null;
+            }
+
+            if (info == null) {
+                return null;
+            }
+
+            bindUser(info.dn, password);
+            AuthenticationInfo authenticationInfo = new AuthenticationInfo(this, info.uid);
+            authenticationInfo.addExternalIdentity(getClass().getName(), info.dn);
+            authenticationInfo.setDisplayName(info.cn);
+            authenticationInfo.setEmail(info.email);
+            return authenticationInfo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void authenticationSucceeded(AuthenticationInfo authenticationInfo) {
+        if (authenticationInfo.isKerberos()) {
+            // Note to future self: If we ever want to support multiple LDAP and
+            // kerberos modules, then it may become useful to compare the user dn
+            // with the kerberos realm before querying LDAP.
+            String username = authenticationInfo.getUsername();
+            try {
+                LdapUserInfo info = searchUserInfo(username);
+                if (info == null) {
+                    log.warn("User {} not found in LDAP", username);
+                } else {
+                    authenticationInfo.addExternalIdentity(getClass().getName(), info.dn);
+                    authenticationInfo.setDisplayName(info.cn);
+                    authenticationInfo.setEmail(info.email);
+                }
+            } catch (NamingException e) {
+                log.warn("Failed to search LDAP for user {}", username, e);
+            }
+        }
+    }
+
+    private LdapUserInfo searchUserInfo(String username) throws NamingException {
+        LdapUserInfo info = infoCache.getIfPresent(username);
+        if (info != null) {
+            return info;
+        }
+
+        DirContext ctx = null;
+        try {
+            ctx = new InitialDirContext(yamcsEnv);
+            var controls = new SearchControls();
+            controls.setReturningAttributes(searchAttributes);
+            controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+            var filter = userFilter.replace("{0}", username);
+            var searchResult = getSingleResult(ctx, userBase, filter, controls);
+            if (searchResult == null) {
+                return null;
+            }
+            info = new LdapUserInfo();
+            // Use the uid from LDAP, just to prevent case sensitivity issues.
+            info.uid = (String) searchResult.getAttributes().get(nameAttribute).get();
+            info.dn = searchResult.getNameInNamespace();
+            info.cn = findAttribute(searchResult, displayNameAttributes);
+            info.email = findAttribute(searchResult, emailAttributes);
+            info.memberOf = findListAttribute(searchResult, new String[] { "memberOf" });
+
+            if (groupBase != null) {
+                controls = new SearchControls();
+                controls.setSearchScope(SearchControls.SUBTREE_SCOPE);
+                var lookup = findAttribute(searchResult, new String[] { groupFilterUserAttribute });
+                if (lookup == null && "dn".equalsIgnoreCase(groupFilterUserAttribute)) {
+                    lookup = searchResult.getNameInNamespace();
+                }
+                if (lookup != null) {
+                    filter = groupFilter.replace("{0}", lookup);
+                    for (var groupBaseElement : groupBase) {
+                        var answer = ctx.search(groupBaseElement, filter, controls);
+                        while (answer.hasMore()) {
+                            searchResult = answer.next();
+                            info.memberOf.add(searchResult.getNameInNamespace());
+                        }
+                        answer.close();
+                    }
+                }
+            }
+
+            infoCache.put(username, info);
+            return info;
+        } finally {
+            if (ctx != null) {
+                ctx.close();
+            }
+        }
+    }
+
+    private void bindUser(String dn, char[] password) throws AuthenticationException {
+        // Never bind with empty password, because on many LDAP servers
+        // this would make a successful "unauthenticated" simple bind.
+        // https://datatracker.ietf.org/doc/html/rfc4513#section-5.1.2
+        if (password.length == 0) {
+            throw new AuthenticationException("Invalid password (empty)");
+        }
+
+        var env = new Hashtable<String, String>();
+        env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
+        env.put(Context.PROVIDER_URL, providerUrl);
+        env.put("com.sun.jndi.ldap.connect.pool", "true");
+        env.put(Context.SECURITY_AUTHENTICATION, "simple");
+        env.put(Context.SECURITY_PRINCIPAL, dn);
+        env.put(Context.SECURITY_CREDENTIALS, new String(password));
+        if (tls) {
+            env.put(Context.SECURITY_PROTOCOL, "ssl");
+        }
+        try {
+            DirContext ctx = new InitialDirContext(env);
+            ctx.close();
+        } catch (javax.naming.AuthenticationException e) {
+            log.warn("Bind failed for dn '{}'", dn, e);
+            throw new AuthenticationException("Invalid password");
+        } catch (NamingException e) {
+            throw new AuthenticationException(e);
+        }
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        AuthorizationInfo authz = new AuthorizationInfo();
+
+        var principal = authenticationInfo.getUsername();
+        var info = infoCache.getIfPresent(principal);
+
+        if (authenticationInfo.isKerberos() && requiredIfKerberos && info == null) {
+            throw new AuthorizationException("Cannot link Kerberos user with LDAP directory");
+        }
+
+        if (info != null) {
+            for (var groupMapping : groupMappings) {
+                for (var dn : info.memberOf) {
+                    if (groupMapping.dn.equalsIgnoreCase(dn)) {
+                        if (groupMapping.role != null) {
+                            authz.addRole(groupMapping.role);
+                        }
+                        if (groupMapping.superuser) {
+                            authz.grantSuperuser();
+                        }
+                    }
+                }
+            }
+        }
+
+        return authz;
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+
+    private SearchResult getSingleResult(DirContext ctx, String searchBase, String filter, SearchControls controls)
+            throws NamingException {
+        var answer = ctx.search(searchBase, filter, controls);
+        if (answer.hasMore()) {
+            var result = answer.next();
+            answer.close();
+            return result;
+        }
+        return null;
+    }
+
+    private String findAttribute(SearchResult result, String[] possibleNames) throws NamingException {
+        for (String attrId : possibleNames) {
+            Attribute attr = result.getAttributes().get(attrId);
+            if (attr != null) {
+                return (String) attr.get();
+            }
+        }
+        return null;
+    }
+
+    private List<String> findListAttribute(SearchResult result, String[] possibleNames) throws NamingException {
+        for (String attrId : possibleNames) {
+            var values = new ArrayList<String>();
+            var attr = result.getAttributes().get(attrId);
+            if (attr != null) {
+                var valueEnumeration = attr.getAll();
+                while (valueEnumeration.hasMoreElements()) {
+                    values.add((String) valueEnumeration.next());
+                }
+                return values;
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private static final class GroupMapping {
+        String dn;
+        String role;
+        boolean superuser;
+    }
+
+    private static final class LdapUserInfo {
+        String uid;
+        String dn;
+        String cn;
+        String email;
+        List<String> memberOf;
+    }
+}
+```
+
+### `ObjectPrivilege.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ObjectPrivilege.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+/**
+ * An object privilege is the right to perform a particular action on an object. The object is assumed to be
+ * identifiable by a single string. The object may also be expressed as a regular expression, in which case Yamcs will
+ * perform pattern matching when doing authorization checks.
+ */
+public class ObjectPrivilege {
+
+    private ObjectPrivilegeType type;
+    private String object;
+
+    public ObjectPrivilege(ObjectPrivilegeType type, String object) {
+        this.type = type;
+        this.object = object;
+    }
+
+    public ObjectPrivilegeType getType() {
+        return type;
+    }
+
+    public String getObject() {
+        return object;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ObjectPrivilege) {
+            ObjectPrivilege other = (ObjectPrivilege) obj;
+            return Objects.equals(type, other.type) && Objects.equals(object, other.object);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, object);
+    }
+
+    @Override
+    public String toString() {
+        return type + " " + object;
+    }
+}
+```
+
+### `ObjectPrivilegeType.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ObjectPrivilegeType.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+/**
+ * Type qualifier for grouping object privileges.
+ * <p>
+ * This is not an enum because of extensibility reasons.
+ */
+public class ObjectPrivilegeType {
+
+    public static final ObjectPrivilegeType ManageBucket = new ObjectPrivilegeType("ManageBucket");
+    public static final ObjectPrivilegeType CommandHistory = new ObjectPrivilegeType("CommandHistory");
+    public static final ObjectPrivilegeType Stream = new ObjectPrivilegeType("Stream");
+    public static final ObjectPrivilegeType Command = new ObjectPrivilegeType("Command");
+    public static final ObjectPrivilegeType ReadAlgorithm = new ObjectPrivilegeType("ReadAlgorithm");
+    public static final ObjectPrivilegeType ReadBucket = new ObjectPrivilegeType("ReadBucket");
+    public static final ObjectPrivilegeType ReadPacket = new ObjectPrivilegeType("ReadPacket");
+    public static final ObjectPrivilegeType ReadParameter = new ObjectPrivilegeType("ReadParameter");
+    public static final ObjectPrivilegeType WriteParameter = new ObjectPrivilegeType("WriteParameter");
+
+    private String type;
+
+    public ObjectPrivilegeType(String type) {
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ObjectPrivilegeType) {
+            return Objects.equals(type, ((ObjectPrivilegeType) obj).getType());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type);
+    }
+
+    @Override
+    public String toString() {
+        return type;
+    }
+}
+```
+
+### `OpenIDAuthenticationInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDAuthenticationInfo.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+import com.google.gson.JsonObject;
+
+public class OpenIDAuthenticationInfo extends AuthenticationInfo {
+
+    // Make available for extensions that maybe want to add roles.
+    public String idToken;
+    public String accessToken;
+    public String refreshToken;
+
+    // Redirect URI for use in outgoing requests
+    public String redirectUri;
+
+    // When the ID Token expires
+    public long expiresAt;
+
+    private final ExternalSubject issuerSub; // Subject Identifier at the issuer
+    private final ExternalSession issuerSid; // Session ID at the issuer (optional)
+
+    public OpenIDAuthenticationInfo(AuthModule authenticator, String redirectUri,
+            String idToken, String accessToken, String refreshToken, String username,
+            JsonObject claims) {
+        super(authenticator, username);
+        this.redirectUri = redirectUri;
+        this.idToken = idToken;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+
+        expiresAt = claims.get("exp").getAsLong() * 1000L;
+
+        var iss = claims.get("iss").getAsString();
+        var sub = claims.get("sub").getAsString();
+        issuerSub = new ExternalSubject(iss, sub);
+
+        if (claims.has("sid")) {
+            var sid = claims.get("sid").getAsString();
+            issuerSid = new ExternalSession(iss, sid);
+        } else {
+            this.issuerSid = null;
+        }
+
+        // According to OpenID spec, only the combination of "iss" with "sub" is a
+        // reasonably unique identifier.
+        var externalId = new JsonObject();
+        externalId.addProperty("iss", iss);
+        externalId.addProperty("sub", sub);
+        addExternalIdentity(authenticator.getClass().getName(), externalId.toString());
+    }
+
+    /**
+     * Returns the subject of the ID Token
+     */
+    public ExternalSubject getIssuerSub() {
+        return issuerSub;
+    }
+
+    /**
+     * Returns the session id for the ID Token. This may be null, if the ID Token did not contains this claim.
+     */
+    public ExternalSession getIssuerSid() {
+        return issuerSid;
+    }
+
+    public interface ExternalClaim {
+    }
+
+    /**
+     * Identifies a user at the Open ID Provider.
+     */
+    public static class ExternalSubject implements ExternalClaim {
+
+        private final String iss;
+        private final String sub;
+
+        public ExternalSubject(String iss, String sub) {
+            this.iss = iss;
+            this.sub = sub;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ExternalSubject)) {
+                return false;
+            }
+            var other = (ExternalSubject) obj;
+            return Objects.equals(iss, other.iss)
+                    && Objects.equals(sub, other.sub);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(iss, sub);
+        }
+
+        @Override
+        public String toString() {
+            return "[sub=" + sub + "]";
+        }
+    }
+
+    /**
+     * Identifies a user at the Open ID Provider.
+     */
+    public static class ExternalSession implements ExternalClaim {
+
+        private final String iss;
+        private final String sid;
+
+        public ExternalSession(String iss, String sid) {
+            this.iss = iss;
+            this.sid = sid;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof ExternalSession)) {
+                return false;
+            }
+            var other = (ExternalSession) obj;
+            return Objects.equals(iss, other.iss)
+                    && Objects.equals(sid, other.sid);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(iss, sid);
+        }
+
+        @Override
+        public String toString() {
+            return "[sid=" + sid + "]";
+        }
+    }
+}
+```
+
+### `OpenIDAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import static com.google.common.collect.Multimaps.synchronizedMultimap;
+import static java.nio.charset.StandardCharsets.UTF_8;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.http.HttpServer;
+import org.yamcs.http.auth.JwtHelper;
+import org.yamcs.http.auth.JwtHelper.JwtDecodeException;
+import org.yamcs.logging.Log;
+import org.yamcs.security.OpenIDAuthenticationInfo.ExternalClaim;
+import org.yamcs.security.OpenIDAuthenticationInfo.ExternalSession;
+import org.yamcs.security.OpenIDAuthenticationInfo.ExternalSubject;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+/**
+ * AuthModule that identifies users against an external identity provider compliant with OpenID Connect (OIDC).
+ * <p>
+ * See https://openid.net/connect/
+ */
+public class OpenIDAuthModule implements AuthModule, SessionListener {
+
+    private static final Log log = new Log(OpenIDAuthModule.class);
+    private OpenIDBackChannelHandler backChannelHandler;
+
+    private String clientId;
+    private String clientSecret;
+    private String authorizationEndpoint;
+    private String tokenEndpoint;
+    private String scope;
+
+    private String[] nameAttributes;
+    private String[] displayNameAttributes;
+    private String[] emailAttributes;
+
+    private boolean verifyTls;
+
+    // Map external sub and/or sid to Yamcs sessions.
+    // This structure allows handling OIDC backchannel logout requests
+    private Multimap<ExternalClaim, UserSession> sessionsByClaim = synchronizedMultimap(
+            ArrayListMultimap.create());
+
+    @Override
+    public Spec getSpec() {
+        Spec attributesSpec = new Spec();
+        attributesSpec.addOption("name", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault(Arrays.asList("preferred_username", "nickname", "email"));
+        attributesSpec.addOption("email", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault("email");
+        attributesSpec.addOption("displayName", OptionType.LIST_OR_ELEMENT)
+                .withElementType(OptionType.STRING)
+                .withDefault("name");
+
+        Spec spec = new Spec();
+        spec.addOption("authorizationEndpoint", OptionType.STRING).withRequired(true);
+        spec.addOption("tokenEndpoint", OptionType.STRING).withRequired(true);
+        spec.addOption("clientId", OptionType.STRING).withRequired(true);
+        spec.addOption("clientSecret", OptionType.STRING).withRequired(true).withSecret(true);
+        spec.addOption("scope", OptionType.STRING).withDefault("openid profile email");
+        spec.addOption("attributes", OptionType.MAP).withSpec(attributesSpec)
+                .withApplySpecDefaults(true);
+        spec.addOption("verifyTls", OptionType.BOOLEAN).withDefault(true);
+
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        authorizationEndpoint = args.getString("authorizationEndpoint");
+        tokenEndpoint = args.getString("tokenEndpoint");
+        scope = args.getString("scope");
+        clientId = args.getString("clientId");
+        clientSecret = args.getString("clientSecret");
+
+        YConfiguration attributesArgs = args.getConfig("attributes");
+        nameAttributes = attributesArgs.getList("name").toArray(new String[0]);
+        displayNameAttributes = attributesArgs.getList("displayName").toArray(new String[0]);
+        emailAttributes = attributesArgs.getList("email").toArray(new String[0]);
+
+        verifyTls = args.getBoolean("verifyTls");
+
+        backChannelHandler = new OpenIDBackChannelHandler(this);
+
+        var httpServer = YamcsServer.getServer().getGlobalService(HttpServer.class);
+        httpServer.addRoute("openid", () -> backChannelHandler);
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof ThirdPartyAuthorizationCode) {
+            String code = ((ThirdPartyAuthorizationCode) token).getPrincipal();
+            if (code.startsWith("oidc ")) {
+                String jwt = code.substring(5);
+                try {
+                    JsonObject clientInfo = JwtHelper.decodeUnverified(jwt);
+                    return authenticateByCode(clientInfo);
+                } catch (JwtDecodeException e) {
+                    throw new AuthenticationException("Invalid JWT", e);
+                }
+            }
+        }
+        return null;
+    }
+
+    private AuthenticationInfo authenticateByCode(JsonObject clientInfo) throws AuthenticationException {
+        String oidcCode = clientInfo.get("code").getAsString();
+        String redirectUri = clientInfo.get("redirect_uri").getAsString();
+
+        try {
+            URL url = new URL(tokenEndpoint);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            var authorizationHeader = generateAuthorizationHeader(clientId, clientSecret);
+            conn.setRequestProperty("Authorization", authorizationHeader);
+
+            if (!verifyTls && (conn instanceof HttpsURLConnection)) {
+                try {
+                    HttpsUrlConnectionUtils.makeInsecure((HttpsURLConnection) conn);
+                } catch (NoSuchAlgorithmException | KeyManagementException e) {
+                    throw new AuthenticationException("Failed to configure HTTPS connection", e);
+                }
+            }
+
+            Map<String, String> formData = new HashMap<>();
+            formData.put("grant_type", "authorization_code");
+            formData.put("code", oidcCode);
+
+            // OIDC requires the same redirect_uri to be used as was used to get the code from
+            // the authorization endpoint. There's not actually a redirect going to happen.
+            formData.put("redirect_uri", redirectUri);
+
+            conn.setDoOutput(true);
+            byte[] b = encodeRequestBody(formData);
+            conn.getOutputStream().write(b);
+
+            int statusCode = conn.getResponseCode();
+            if (statusCode == 200) {
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), UTF_8));
+                JsonObject response = new Gson().fromJson(in, JsonObject.class);
+
+                String idToken = response.get("id_token").getAsString();
+                String accessToken = response.get("access_token").getAsString();
+                JsonObject claims = JwtHelper.decodeUnverified(idToken);
+
+                var refreshTokenElement = response.get("refresh_token");
+                String refreshToken = (refreshTokenElement != null) ? refreshTokenElement.getAsString() : null;
+
+                String username = findAttribute(claims, nameAttributes);
+
+                var authInfo = new OpenIDAuthenticationInfo(
+                        this, redirectUri, idToken, accessToken, refreshToken, username, claims);
+                authInfo.setEmail(findAttribute(claims, emailAttributes));
+                authInfo.setDisplayName(findAttribute(claims, displayNameAttributes));
+                return authInfo;
+            } else {
+                Reader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), UTF_8));
+                JsonObject response = new Gson().fromJson(in, JsonObject.class);
+                throw new AuthenticationException(response.toString());
+            }
+        } catch (IOException | JwtDecodeException e) {
+            throw new AuthenticationException(e.getMessage(), e);
+        }
+    }
+
+    private String findAttribute(JsonObject claims, String[] possibleNames) {
+        for (String attrId : possibleNames) {
+            JsonElement el = claims.get(attrId);
+            if (el != null) {
+                return (String) el.getAsString();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        return new AuthorizationInfo();
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        if (authenticationInfo instanceof OpenIDAuthenticationInfo) {
+            var info = (OpenIDAuthenticationInfo) authenticationInfo;
+            var now = System.currentTimeMillis();
+            var expired = info.expiresAt > 0 && info.expiresAt < now;
+            if (expired && info.refreshToken != null) {
+                return refreshToken(info);
+            }
+            return true; // Only enforce refresh check if we have a refresh token
+        }
+
+        return false;
+    }
+
+    private boolean refreshToken(OpenIDAuthenticationInfo info) {
+        try {
+            URL url = new URL(tokenEndpoint);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+
+            var authorizationHeader = generateAuthorizationHeader(clientId, clientSecret);
+            conn.setRequestProperty("Authorization", authorizationHeader);
+
+            if (!verifyTls && (conn instanceof HttpsURLConnection)) {
+                HttpsUrlConnectionUtils.makeInsecure((HttpsURLConnection) conn);
+            }
+
+            Map<String, String> formData = new HashMap<>();
+            formData.put("grant_type", "refresh_token");
+            formData.put("refresh_token", info.refreshToken);
+
+            // OIDC requires the same redirect_uri to be used as was used to get the code from
+            // the authorization endpoint. There's not actually a redirect going to happen.
+            formData.put("redirect_uri", info.redirectUri);
+
+            conn.setDoOutput(true);
+            byte[] b = encodeRequestBody(formData);
+            conn.getOutputStream().write(b);
+
+            int statusCode = conn.getResponseCode();
+            if (statusCode == 200) {
+                Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), UTF_8));
+                JsonObject response = new Gson().fromJson(in, JsonObject.class);
+
+                info.idToken = response.get("id_token").getAsString();
+                info.accessToken = response.get("access_token").getAsString();
+                var claims = JwtHelper.decodeUnverified(info.idToken);
+                info.expiresAt = claims.get("exp").getAsLong() * 1000L;
+
+                var refreshTokenElement = response.get("refresh_token");
+                info.refreshToken = (refreshTokenElement != null) ? refreshTokenElement.getAsString() : null;
+            } else {
+                Reader in = new BufferedReader(new InputStreamReader(conn.getErrorStream(), UTF_8));
+                JsonObject response = new Gson().fromJson(in, JsonObject.class);
+                log.error("Received error from identity provider: " + response);
+                return false;
+            }
+
+            return true;
+        } catch (IOException | NoSuchAlgorithmException | KeyManagementException | JwtDecodeException e) {
+            log.error("Failed to refresh", e);
+            return false;
+        }
+    }
+
+    @Override
+    public void onCreated(UserSession session) {
+        if (session.getAuthenticationInfo() instanceof OpenIDAuthenticationInfo) {
+            var authInfo = (OpenIDAuthenticationInfo) session.getAuthenticationInfo();
+
+            sessionsByClaim.put(authInfo.getIssuerSub(), session);
+            var issuerSid = authInfo.getIssuerSid();
+            if (issuerSid != null) {
+                sessionsByClaim.put(issuerSid, session);
+            }
+        }
+    }
+
+    @Override
+    public void onExpired(UserSession session) {
+        if (session.getAuthenticationInfo() instanceof OpenIDAuthenticationInfo) {
+            var authInfo = (OpenIDAuthenticationInfo) session.getAuthenticationInfo();
+
+            var sub = authInfo.getIssuerSub();
+            sessionsByClaim.removeAll(sub);
+            var sid = authInfo.getIssuerSid();
+            if (sid != null) {
+                sessionsByClaim.removeAll(sid);
+            }
+        }
+    }
+
+    @Override
+    public void onInvalidated(UserSession session) {
+        if (session.getAuthenticationInfo() instanceof OpenIDAuthenticationInfo) {
+            var authInfo = (OpenIDAuthenticationInfo) session.getAuthenticationInfo();
+
+            var sub = authInfo.getIssuerSub();
+            sessionsByClaim.removeAll(sub);
+            var sid = authInfo.getIssuerSid();
+            if (sid != null) {
+                sessionsByClaim.removeAll(sid);
+            }
+        }
+    }
+
+    /**
+     * Log out all Yamcs sessions for the provided OpenID subject.
+     */
+    public void logoutByOidcSubject(String iss, String sub) {
+        var sessions = sessionsByClaim.get(new ExternalSubject(iss, sub));
+
+        var sessionIds = new HashSet<String>();
+        synchronized (sessionsByClaim) {
+            sessions.forEach(session -> sessionIds.add(session.getId()));
+        }
+
+        var sessionManager = YamcsServer.getServer().getSecurityStore().getSessionManager();
+        for (var sessionId : sessionIds) {
+            sessionManager.invalidateSession(sessionId);
+        }
+    }
+
+    /**
+     * Log out all Yamcs sessions for the provided OpenID session.
+     */
+    public void logoutByOidcSessionId(String iss, String sid) {
+        var sessions = sessionsByClaim.get(new ExternalSession(iss, sid));
+
+        var sessionIds = new HashSet<String>();
+        synchronized (sessionsByClaim) {
+            sessions.forEach(session -> sessionIds.add(session.getId()));
+        }
+
+        var sessionManager = YamcsServer.getServer().getSecurityStore().getSessionManager();
+        for (var sessionId : sessionIds) {
+            sessionManager.invalidateSession(sessionId);
+        }
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public String getAuthorizationEndpoint() {
+        return authorizationEndpoint;
+    }
+
+    public String getScope() {
+        return scope;
+    }
+
+    static String generateAuthorizationHeader(String clientId, String clientSecret) {
+        // See https://datatracker.ietf.org/doc/html/rfc6749#section-2.3.1
+        var encodedClientId = URLEncoder.encode(clientId, UTF_8);
+        var encodedSecret = URLEncoder.encode(clientSecret, UTF_8);
+        var auth = Base64.getEncoder().encodeToString(
+                (encodedClientId + ":" + encodedSecret).getBytes(UTF_8));
+        return "Basic " + auth;
+    }
+
+    private static byte[] encodeRequestBody(Map<String, String> params) {
+        StringBuilder postData = new StringBuilder();
+        for (Entry<String, String> param : params.entrySet()) {
+            if (postData.length() != 0) {
+                postData.append('&');
+            }
+            postData.append(URLEncoder.encode(param.getKey(), UTF_8));
+            postData.append('=');
+            postData.append(URLEncoder.encode(param.getValue(), UTF_8));
+        }
+        return postData.toString().getBytes(UTF_8);
+    }
+}
+```
+
+### `OpenIDBackChannelHandler.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDBackChannelHandler.java`
+
+
+```java
+package org.yamcs.security;
+
+import static io.netty.handler.codec.http.HttpHeaderNames.CACHE_CONTROL;
+import static io.netty.handler.codec.http.HttpHeaderValues.NO_STORE;
+import static io.netty.handler.codec.http.HttpResponseStatus.OK;
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.BodyHandler;
+import org.yamcs.http.HandlerContext;
+import org.yamcs.http.NotFoundException;
+import org.yamcs.http.auth.JwtHelper;
+import org.yamcs.http.auth.JwtHelper.JwtDecodeException;
+
+import io.netty.handler.codec.http.DefaultHttpResponse;
+
+public class OpenIDBackChannelHandler extends BodyHandler {
+
+    private OpenIDAuthModule authModule;
+
+    public OpenIDBackChannelHandler(OpenIDAuthModule authModule) {
+        this.authModule = authModule;
+    }
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        var path = ctx.getPathWithoutContext();
+        if (path.equals("/openid/backchannel-logout")) {
+            handleBackChannelLogout(ctx);
+            return;
+        }
+        throw new NotFoundException();
+    }
+
+    private void handleBackChannelLogout(HandlerContext ctx) {
+        ctx.requirePOST();
+        ctx.requireFormEncoding();
+
+        var request = new OpenIDBackChannelLogoutRequest(ctx);
+
+        var logoutToken = request.getLogoutToken();
+        try {
+            var claims = JwtHelper.decodeUnverified(logoutToken);
+            var iss = claims.get("iss").getAsString();
+
+            // Either sub or sid has to be present.
+            //
+            // If only sub is present, the logout should impact all
+            // Yamcs sessions for that user identity.
+            //
+            // If both sub and sid are present, the logout should
+            // cover only the Yamcs sessions matching the OpenID sid.
+
+            String sub = null;
+            if (claims.has("sub")) {
+                sub = claims.get("sub").getAsString();
+            }
+
+            String sid = null;
+            if (claims.has("sid")) {
+                sid = claims.get("sid").getAsString();
+            }
+
+            if (sid != null) {
+                log.debug("Back-channel logout for sid={}", sid);
+                authModule.logoutByOidcSessionId(iss, sid);
+            } else {
+                log.debug("Back-channel logout for sub={}", sub);
+                authModule.logoutByOidcSubject(iss, sub);
+            }
+        } catch (JwtDecodeException e) {
+            throw new BadRequestException(e);
+        }
+
+        var response = new DefaultHttpResponse(HTTP_1_1, OK);
+        response.headers().set(CACHE_CONTROL, NO_STORE);
+        ctx.sendResponse(response);
+    }
+}
+```
+
+### `OpenIDBackChannelLogoutRequest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/OpenIDBackChannelLogoutRequest.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.HandlerContext;
+import org.yamcs.http.auth.FormData;
+
+public class OpenIDBackChannelLogoutRequest extends FormData {
+
+    /**
+     * REQUIRED. Logout Token from the OP for the RP identifying the End-User to be logged out.
+     */
+    private static final String LOGOUT_TOKEN = "logout_token";
+
+    public OpenIDBackChannelLogoutRequest(HandlerContext ctx) throws BadRequestException {
+        super(ctx);
+        requireParameter(LOGOUT_TOKEN);
+    }
+
+    public String getLogoutToken() {
+        return parameters.get(LOGOUT_TOKEN);
+    }
+}
+```
+
+### `PasswordHasher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/PasswordHasher.java`
+
+
+```java
+package org.yamcs.security;
+
+public interface PasswordHasher {
+
+    String createHash(char[] password);
+
+    /**
+     * Validates a password using a hash.
+     *
+     * @param password
+     *            the password to check
+     * @param expectedHash
+     *            the hash of the valid password
+     * @return true if the password is correct, false if not
+     */
+    boolean validatePassword(char[] password, String expectedHash);
+}
+```
+
+### `PBKDF2PasswordHasher.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/PBKDF2PasswordHasher.java`
+
+
+```java
+/*
+ * Copyright (c) 2013, Taylor Hornby
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ * this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ */
+package org.yamcs.security;
+
+import java.math.BigInteger;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
+import org.yamcs.logging.Log;
+
+public class PBKDF2PasswordHasher implements PasswordHasher {
+
+    public static final Log log = new Log(PBKDF2PasswordHasher.class);
+    public static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
+
+    // The following constants may be changed without breaking existing hashes.
+    public static final int SALT_BYTE_SIZE = 24;
+    public static final int HASH_BYTE_SIZE = 24;
+    public static final int PBKDF2_ITERATIONS = 1000;
+
+    public static final int ITERATION_INDEX = 0;
+    public static final int SALT_INDEX = 1;
+    public static final int PBKDF2_INDEX = 2;
+
+    /**
+     * Returns a salted PBKDF2 hash of the password.
+     *
+     * @param password
+     *            the password to hash
+     * @return a salted PBKDF2 hash of the password
+     */
+    @Override
+    public String createHash(char[] password) {
+        // Generate a random salt
+        SecureRandom random = new SecureRandom();
+        byte[] salt = new byte[SALT_BYTE_SIZE];
+        random.nextBytes(salt);
+
+        // Hash the password
+        byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);
+        // format iterations:salt:hash
+        return PBKDF2_ITERATIONS + ":" + toHex(salt) + ":" + toHex(hash);
+    }
+
+    /**
+     * Validates a password using a hash.
+     *
+     * @param password
+     *            the password to check
+     * @param correctHash
+     *            the hash of the valid password
+     * @return true if the password is correct, false if not
+     */
+    @Override
+    public boolean validatePassword(char[] password, String correctHash) {
+        // Decode the hash into its parameters
+        String[] params = correctHash.split(":");
+        int iterations;
+        try {
+            iterations = Integer.parseInt(params[ITERATION_INDEX]);
+        } catch (NumberFormatException e) {
+            log.warn("Password cannot be validated as it does not appear to be hashed");
+            return false;
+        }
+        byte[] salt = fromHex(params[SALT_INDEX]);
+        byte[] hash = fromHex(params[PBKDF2_INDEX]);
+        // Compute the hash of the provided password, using the same salt,
+        // iteration count, and hash length
+        byte[] testHash = pbkdf2(password, salt, iterations, hash.length);
+        // Compare the hashes in constant time. The password is correct if
+        // both hashes match.
+        return slowEquals(hash, testHash);
+    }
+
+    /**
+     * Compares two byte arrays in length-constant time. This comparison method is used so that password hashes cannot
+     * be extracted from an on-line system using a timing attack and then attacked off-line.
+     * 
+     * @param a
+     *            the first byte array
+     * @param b
+     *            the second byte array
+     * @return true if both byte arrays are the same, false if not
+     */
+    private static boolean slowEquals(byte[] a, byte[] b) {
+        int diff = a.length ^ b.length;
+        for (int i = 0; i < a.length && i < b.length; i++) {
+            diff |= a[i] ^ b[i];
+        }
+        return diff == 0;
+    }
+
+    /**
+     * Computes the PBKDF2 hash of a password.
+     *
+     * @param password
+     *            the password to hash.
+     * @param salt
+     *            the salt
+     * @param iterations
+     *            the iteration count (slowness factor)
+     * @param bytes
+     *            the length of the hash to compute in bytes
+     * @return the PBDKF2 hash of the password
+     */
+    private static byte[] pbkdf2(char[] password, byte[] salt, int iterations, int bytes) {
+        try {
+            PBEKeySpec spec = new PBEKeySpec(password, salt, iterations, bytes * 8);
+            SecretKeyFactory skf;
+            skf = SecretKeyFactory.getInstance(PBKDF2_ALGORITHM);
+            return skf.generateSecret(spec).getEncoded();
+        } catch (NoSuchAlgorithmException e) {
+            throw new UnsupportedOperationException(e);
+        } catch (InvalidKeySpecException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    /**
+     * Converts a string of hexadecimal characters into a byte array.
+     *
+     * @param hex
+     *            the hex string
+     * @return the hex string decoded into a byte array
+     */
+    private static byte[] fromHex(String hex) {
+        byte[] binary = new byte[hex.length() / 2];
+        for (int i = 0; i < binary.length; i++) {
+            binary[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
+        }
+        return binary;
+    }
+
+    /**
+     * Converts a byte array into a hexadecimal string.
+     *
+     * @param array
+     *            the byte array to convert
+     * @return a length*2 character string encoding the byte array
+     */
+    private static String toHex(byte[] array) {
+        BigInteger bi = new BigInteger(1, array);
+        String hex = bi.toString(16);
+        int paddingLength = (array.length * 2) - hex.length();
+        if (paddingLength > 0) {
+            return String.format("%0" + paddingLength + "d", 0) + hex;
+        } else {
+            return hex;
+        }
+    }
+}
+```
+
+### `RemoteUserAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/RemoteUserAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.http.HttpRequest;
+
+/**
+ * AuthModule that identifies users based on an HTTP header property. This can be used when Yamcs is well-protected from
+ * spoofing attempts and authentication is done on a reverse proxy, like Apache or Nginx.
+ */
+public class RemoteUserAuthModule extends AbstractHttpRequestAuthModule {
+
+    protected static final String OPTION_HEADER = "header";
+
+    private String usernameHeader;
+
+    @Override
+    public Spec getSpec() {
+        var spec = new Spec();
+        spec.addOption(OPTION_HEADER, OptionType.STRING).withDefault("X-REMOTE-USER");
+        return spec;
+    }
+
+    public String getHeader() {
+        return usernameHeader;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        usernameHeader = args.getString(OPTION_HEADER);
+    }
+
+    @Override
+    public boolean handles(ChannelHandlerContext ctx, HttpRequest request) {
+        return request.headers().contains(usernameHeader);
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(
+            ChannelHandlerContext ctx, HttpRequest request) throws AuthenticationException {
+        var username = request.headers().get(usernameHeader);
+        if (username != null) {
+            return new AuthenticationInfo(this, username);
+        }
+        return null;
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        return new AuthorizationInfo();
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+}
+```
+
+### `Role.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/Role.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Collection of system and object privileges.
+ */
+public class Role {
+
+    private String name;
+    private String description;
+    private Set<SystemPrivilege> systemPrivileges = new HashSet<>();
+    private Set<ObjectPrivilege> objectPrivileges = new HashSet<>();
+    private boolean defaultRole = false;
+
+    public Role(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void addSystemPrivilege(SystemPrivilege privilege) {
+        systemPrivileges.add(privilege);
+    }
+
+    public void addObjectPrivilege(ObjectPrivilege privilege) {
+        objectPrivileges.add(privilege);
+    }
+
+    public Set<SystemPrivilege> getSystemPrivileges() {
+        return systemPrivileges;
+    }
+
+    public Set<ObjectPrivilege> getObjectPrivileges() {
+        return objectPrivileges;
+    }
+
+    public void setSystemPrivileges(Set<SystemPrivilege> privileges) {
+        systemPrivileges.clear();
+        systemPrivileges.addAll(privileges);
+    }
+
+    public void setObjectPrivileges(Set<ObjectPrivilege> privileges) {
+        objectPrivileges.clear();
+        objectPrivileges.addAll(privileges);
+    }
+
+    public boolean isDefaultRole() {
+        return defaultRole;
+    }
+
+    public void setDefaultRole(boolean defaultRole) {
+        this.defaultRole = defaultRole;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Role)) {
+            return false;
+        }
+        Role other = (Role) obj;
+        return name == other.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+### `SecurityStore.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SecurityStore.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.ValidationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * Responsible for Identity and Access Management (IAM).
+ * <p>
+ * Some security properties can be tweaked in security.yaml
+ */
+public class SecurityStore {
+
+    private static final Log log = new Log(SecurityStore.class);
+
+    /**
+     * Whether authorization is checked.
+     */
+    private boolean enabled;
+
+    /**
+     * Baked-in user for system operations. Not manageable through a directory, not available for login.
+     */
+    private User systemUser;
+
+    /**
+     * Baked-in user for guest access.
+     */
+    private User guestUser;
+
+    /**
+     * Stores users, groups and applications in the Yamcs database.
+     */
+    private Directory directory;
+
+    /**
+     * Tracks user sessions.
+     */
+    private SessionManager sessionManager;
+
+    /**
+     * If true, successful login attempts of users that were not previously known by Yamcs (e.g. when authenticating to
+     * Yamcs), are by default inactivated.
+     */
+    private boolean blockUnknownUsers;
+
+    /**
+     * The maximum time that an access token can be used. When expired (or better: before being expired), a new token
+     * may be requested, typically with a refresh token.
+     */
+    private int accessTokenLifespan;
+
+    private UserCache userCache = new UserCache();
+
+    /**
+     * Establish the identity of a user (authentication) and can attribute additional user roles (authorization). These
+     * are only used during the login process.
+     */
+    private List<AuthModule> authModules = new ArrayList<>();
+
+    private Set<SystemPrivilege> systemPrivileges = new CopyOnWriteArraySet<>();
+    private Set<ObjectPrivilegeType> objectPrivilegeTypes = new CopyOnWriteArraySet<>();
+
+    /**
+     * In-memory API keys. These are experimental, and used to provide authorization to calling programs.
+     */
+    private Map<String, String> apiKey2username = new ConcurrentHashMap<>();
+
+    // Perform login procedures from a single thread
+    private ExecutorService loginExecutor = Executors.newSingleThreadExecutor();
+
+    public SecurityStore() throws InitException {
+        YConfiguration config;
+        try {
+            config = readConfig();
+        } catch (ValidationException e) {
+            throw new InitException(e);
+        }
+        enabled = config.getBoolean("enabled");
+
+        // Create the system and guest user. These are not stored in the directory,
+        // and can not be used to log in directly.
+        generatePredefinedUsers(config);
+        generatePredefinedPrivileges();
+
+        directory = new Directory();
+        sessionManager = new SessionManager();
+        blockUnknownUsers = config.getBoolean("blockUnknownUsers");
+        accessTokenLifespan = config.getInt("accessTokenLifespan");
+
+        if (directory.getUsers().isEmpty()) {
+            try {
+                generateDefaultAdminUser();
+            } catch (IOException e) {
+                throw new InitException("Could not create default admin user", e);
+            }
+        }
+
+        if (config.containsKey("authModules")) {
+            for (YConfiguration moduleConfig : config.getConfigList("authModules")) {
+                AuthModule authModule = loadAuthModule(moduleConfig);
+                authModules.add(authModule);
+
+                if (authModule instanceof SessionListener) {
+                    sessionManager.addSessionListener((SessionListener) authModule);
+                }
+            }
+        }
+
+        // Add last, so external modules have a chance to redefine the user named 'admin'.
+        authModules.add(new DirectoryAuthModule());
+        authModules.add(new ApiKeyAuthModule());
+    }
+
+    /**
+     * Generates the system and the guest user. These users are not manageable via the directory and can not be used to
+     * log in directly.
+     */
+    private void generatePredefinedUsers(YConfiguration config) {
+        systemUser = new User("System", null);
+        systemUser.setId(1);
+        systemUser.setDisplayName("System");
+        systemUser.setSuperuser(true);
+
+        YConfiguration guestConfig = config.getConfig("guest");
+        String username = guestConfig.getString("username");
+        guestUser = new User(username, systemUser);
+        guestUser.setId(2);
+        guestUser.setDisplayName(guestConfig.getString("displayName", username));
+        guestUser.setSuperuser(guestConfig.getBoolean("superuser"));
+        guestUser.setActive(!enabled);
+        if (guestConfig.containsKey("privileges")) {
+            YConfiguration privilegeConfigs = guestConfig.getConfig("privileges");
+            for (String privilegeName : privilegeConfigs.getKeys()) {
+                List<String> objects = privilegeConfigs.getList(privilegeName);
+                if (privilegeName.equals("System")) {
+                    for (String object : objects) {
+                        guestUser.addSystemPrivilege(new SystemPrivilege(object), false);
+                    }
+                } else {
+                    ObjectPrivilegeType type = new ObjectPrivilegeType(privilegeName);
+                    for (String object : objects) {
+                        guestUser.addObjectPrivilege(new ObjectPrivilege(type, object), false);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Generate a default admin user. This user is stored in the directory and can be used for log in.
+     * 
+     * TODO mark password as expired.
+     */
+    private void generateDefaultAdminUser() throws IOException {
+        User adminUser = new User("admin", systemUser);
+        adminUser.setDisplayName("Administrator");
+        adminUser.setSuperuser(true);
+        adminUser.setEmail("admin@example.com");
+        adminUser.setActive(true);
+        adminUser.confirm();
+        directory.addUser(adminUser);
+        directory.changePassword(adminUser, "admin".toCharArray());
+    }
+
+    private void generatePredefinedPrivileges() {
+        systemPrivileges.add(SystemPrivilege.ChangeMissionDatabase);
+        systemPrivileges.add(SystemPrivilege.CommandOptions);
+        systemPrivileges.add(SystemPrivilege.ControlAccess);
+        systemPrivileges.add(SystemPrivilege.ControlActivities);
+        systemPrivileges.add(SystemPrivilege.ControlAlarms);
+        systemPrivileges.add(SystemPrivilege.ControlArchiving);
+        systemPrivileges.add(SystemPrivilege.ControlCommandClearances);
+        systemPrivileges.add(SystemPrivilege.ControlCommandQueue);
+        systemPrivileges.add(SystemPrivilege.ControlLinks);
+        systemPrivileges.add(SystemPrivilege.ControlFileTransfers);
+        systemPrivileges.add(SystemPrivilege.ControlProcessor);
+        systemPrivileges.add(SystemPrivilege.ControlServices);
+        systemPrivileges.add(SystemPrivilege.ControlTimeline);
+        systemPrivileges.add(SystemPrivilege.ControlTimeCorrelation);
+        systemPrivileges.add(SystemPrivilege.CreateInstances);
+        systemPrivileges.add(SystemPrivilege.GetMissionDatabase);
+        systemPrivileges.add(SystemPrivilege.ManageAnyBucket);
+        systemPrivileges.add(SystemPrivilege.ManageParameterLists);
+        systemPrivileges.add(SystemPrivilege.ModifyCommandHistory);
+        systemPrivileges.add(SystemPrivilege.ReadActivities);
+        systemPrivileges.add(SystemPrivilege.ReadAlarms);
+        systemPrivileges.add(SystemPrivilege.ReadCommandHistory);
+        systemPrivileges.add(SystemPrivilege.ReadFileTransfers);
+        systemPrivileges.add(SystemPrivilege.ReadEvents);
+        systemPrivileges.add(SystemPrivilege.ReadLinks);
+        systemPrivileges.add(SystemPrivilege.ReadSystemInfo);
+        systemPrivileges.add(SystemPrivilege.ReadTables);
+        systemPrivileges.add(SystemPrivilege.ReadTimeline);
+        systemPrivileges.add(SystemPrivilege.WriteEvents);
+        systemPrivileges.add(SystemPrivilege.WriteTables);
+
+        objectPrivilegeTypes.add(ObjectPrivilegeType.Command);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.CommandHistory);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.ManageBucket);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.ReadAlgorithm);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.ReadBucket);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.ReadPacket);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.ReadParameter);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.Stream);
+        objectPrivilegeTypes.add(ObjectPrivilegeType.WriteParameter);
+    }
+
+    /**
+     * Returns true if security features are activated.
+     */
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void addSystemPrivilege(SystemPrivilege privilege) {
+        systemPrivileges.add(privilege);
+    }
+
+    public void addObjectPrivilegeType(ObjectPrivilegeType privilegeType) {
+        objectPrivilegeTypes.add(privilegeType);
+    }
+
+    private AuthModule loadAuthModule(YConfiguration moduleConfig) throws InitException {
+        String moduleClass = moduleConfig.getString("class");
+        YConfiguration moduleArgs = YConfiguration.emptyConfig();
+        if (moduleConfig.containsKey("args")) {
+            moduleArgs = moduleConfig.getConfig("args");
+        }
+        log.debug("Loading AuthModule " + moduleClass);
+        try {
+            AuthModule authModule = YObjectLoader.loadObject(moduleClass);
+            Spec spec = authModule.getSpec();
+            if (log.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = moduleArgs.getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                log.debug("Raw args for {}: {}", moduleClass, safeArgs);
+            }
+
+            moduleArgs = spec.validate((YConfiguration) moduleArgs);
+
+            if (log.isDebugEnabled()) {
+                Map<String, Object> unsafeArgs = moduleArgs.getRoot();
+                Map<String, Object> safeArgs = spec.maskSecrets(unsafeArgs);
+                log.debug("Initializing {} with resolved args: {}", moduleClass, safeArgs);
+            }
+            authModule.init(moduleArgs);
+            return authModule;
+        } catch (ValidationException e) {
+            throw new InitException(e);
+        }
+    }
+
+    private YConfiguration readConfig() throws ValidationException {
+        Spec moduleSpec = new Spec();
+        moduleSpec.addOption("class", OptionType.STRING).withRequired(true);
+        moduleSpec.addOption("args", OptionType.ANY);
+
+        Spec guestSpec = new Spec();
+        guestSpec.addOption("username", OptionType.STRING).withDefault("guest");
+        guestSpec.addOption("displayName", OptionType.STRING);
+        guestSpec.addOption("superuser", OptionType.BOOLEAN).withDefault(true);
+        guestSpec.addOption("privileges", OptionType.ANY);
+
+        Spec spec = new Spec();
+        spec.addOption("blockUnknownUsers", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("authModules", OptionType.LIST).withElementType(OptionType.MAP).withSpec(moduleSpec);
+
+        boolean securityConfigured = YConfiguration.isDefined("security");
+        spec.addOption("enabled", OptionType.BOOLEAN).withDefault(securityConfigured);
+        spec.addOption("guest", OptionType.MAP).withSpec(guestSpec)
+                .withApplySpecDefaults(true);
+        spec.addOption("accessTokenLifespan", OptionType.INTEGER).withDefault(500_000); // Just over 8 minutes
+
+        YConfiguration yconf = YConfiguration.emptyConfig();
+        if (securityConfigured) {
+            yconf = YConfiguration.getConfiguration("security");
+        }
+        yconf = spec.validate(yconf);
+        return yconf;
+    }
+
+    public Directory getDirectory() {
+        return directory;
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
+    }
+
+    public List<AuthModule> getAuthModules() {
+        return authModules;
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends AuthModule> T getAuthModule(Class<T> clazz) {
+        for (AuthModule authModule : authModules) {
+            if (authModule.getClass() == clazz) {
+                return (T) authModule;
+            }
+        }
+        return null;
+    }
+
+    public Set<SystemPrivilege> getSystemPrivileges() {
+        return systemPrivileges;
+    }
+
+    public Set<ObjectPrivilegeType> getObjectPrivilegeTypes() {
+        return objectPrivilegeTypes;
+    }
+
+    /**
+     * Returns the lifespan of access tokens (in milliseconds)
+     */
+    public int getAccessTokenLifespan() {
+        return accessTokenLifespan;
+    }
+
+    /**
+     * Returns the system user. This user object is only intended for internal use when actions require a user, yet
+     * cannot be linked to an actual user. The System user is granted all privileges.
+     */
+    public User getSystemUser() {
+        return systemUser;
+    }
+
+    public User getGuestUser() {
+        return guestUser;
+    }
+
+    /**
+     * Performs the login process. Depending on how Yamcs is configured, this may involve reaching out to an external
+     * identity provider. If the login attempt is successful, the associated user is imported or resynchronized in the
+     * Yamcs internal user database.
+     * <p>
+     * This method does not return a {@link User} object. Use {@link #getDirectory()}.
+     * 
+     * @return a future that resolves to the {@link AuthenticationInfo} when the login was successful. This contains the
+     *         username as well as any other principals or credentials specific to a custom identity provider.
+     */
+    public CompletableFuture<AuthenticationInfo> login(AuthenticationToken token) {
+        CompletableFuture<AuthenticationInfo> f = new CompletableFuture<>();
+        CompletableFuture.runAsync(() -> {
+            // 1. Authenticate. Stops on first match.
+            AuthenticationInfo authenticationInfo = null;
+            for (AuthModule authModule : authModules) {
+                try {
+                    authenticationInfo = authModule.getAuthenticationInfo(token);
+                    if (authenticationInfo != null) {
+                        log.debug("User successfully authenticated by {}", authModule.getClass().getName());
+                        break;
+                    } else {
+                        log.trace("User does not exist according to {}", authModule.getClass().getName());
+                    }
+                } catch (AuthenticationException e) {
+                    log.info("{} aborted the login process", authModule.getClass().getName());
+                    f.completeExceptionally(e);
+                    return;
+                } catch (Exception e) {
+                    log.info("{} threw an unexpected exception", authModule.getClass().getName());
+                    f.completeExceptionally(e);
+                    return;
+                }
+            }
+
+            if (authenticationInfo == null) {
+                log.info("Cannot identify account for token");
+                f.completeExceptionally(new AuthenticationException("Cannot identify account for token"));
+                return;
+            }
+
+            // 1.b. Notify all modules of successful login.
+            // They may choose to bring some additions to the AuthenticationInfo
+            for (AuthModule authModule : authModules) {
+                try {
+                    authModule.authenticationSucceeded(authenticationInfo);
+                } catch (Exception e) {
+                    log.info("{} threw an unexpected exception", authModule.getClass().getName());
+                    f.completeExceptionally(e);
+                    return;
+                }
+            }
+
+            // Access that can not be tied to a specific user
+            if (authenticationInfo instanceof SystemUserAuthenticationInfo) {
+                userCache.putUserInCache(systemUser);
+                f.complete(authenticationInfo);
+                return;
+            }
+
+            // Disallow using the username of built-in users
+            if (isReservedUsername(authenticationInfo.getUsername())) {
+                log.warn("Denying access to {}. Username is reserved.", authenticationInfo.getUsername());
+                f.completeExceptionally(new AuthenticationException("Access denied"));
+                return;
+            }
+
+            User user = directory.getUser(authenticationInfo.getUsername());
+            if (user == null) {
+                User createdBy = systemUser;
+                user = new User(authenticationInfo.getUsername(), createdBy);
+
+                if (!blockUnknownUsers) {
+                    user.confirm();
+                }
+                try {
+                    directory.addUser(user);
+                } catch (IOException e) {
+                    f.completeExceptionally(e);
+                    return;
+                }
+            }
+
+            if (!user.isActive()) {
+                log.warn("Denying access to {}. Account is not active.", user);
+                f.completeExceptionally(new AuthenticationException("Access denied"));
+                return;
+            }
+
+            // 2. Authorize. All modules get the opportunity.
+            for (AuthModule authModule : authModules) {
+                try {
+                    AuthorizationInfo authzInfo = authModule.getAuthorizationInfo(authenticationInfo);
+                    if (authzInfo != null) {
+                        if (authzInfo.isSuperuser()) { // Only override directory if 'true'
+                            user.setSuperuser(true);
+                        }
+                        for (var role : authzInfo.getRoles()) {
+                            user.addRole(role, true);
+                        }
+                        for (SystemPrivilege privilege : authzInfo.getSystemPrivileges()) {
+                            user.addSystemPrivilege(privilege, true);
+                        }
+                        for (ObjectPrivilege privilege : authzInfo.getObjectPrivileges()) {
+                            user.addObjectPrivilege(privilege, true);
+                        }
+                    }
+                } catch (AuthorizationException e) {
+                    log.info("{} aborted the login process", authModule.getClass().getName());
+                    f.completeExceptionally(e);
+                    return;
+                } catch (Exception e) {
+                    log.info("{} threw an unexpected exception", authModule.getClass().getName());
+                    f.completeExceptionally(e);
+                    return;
+                }
+            }
+
+            log.info("Successfully logged in {}", user);
+
+            user.updateLoginData();
+            if (!authenticationInfo.getExternalIdentities().isEmpty()) {
+                authenticationInfo.getExternalIdentities().forEach(user::addIdentity);
+                if (authenticationInfo.getDisplayName() != null) {
+                    user.setDisplayName(authenticationInfo.getDisplayName());
+                }
+                if (authenticationInfo.getEmail() != null) {
+                    user.setEmail(authenticationInfo.getEmail());
+                }
+            }
+            try {
+                directory.updateUserProperties(user);
+                userCache.putUserInCache(user);
+                f.complete(authenticationInfo);
+            } catch (Throwable e) {
+                f.completeExceptionally(e);
+            }
+        }, loginExecutor);
+        return f;
+    }
+
+    public User getUserFromCache(String username) {
+        return userCache.getUserFromCache(username);
+    }
+
+    private boolean isReservedUsername(String username) {
+        if (systemUser.getName().equals(username)) {
+            return true;
+        } else if (guestUser.getName().equals(username)) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        for (AuthModule authModule : authModules) {
+            if (authenticationInfo != null && authModule.equals(authenticationInfo.getAuthenticator())) {
+                return authModule.verifyValidity(authenticationInfo);
+            }
+        }
+        return true;
+    }
+
+    public String getUsernameForApiKey(String apiKey) {
+        return apiKey2username.get(apiKey);
+    }
+
+    public String generateApiKey(String username) {
+        var apiKey = UUID.randomUUID().toString();
+        apiKey2username.put(apiKey, username);
+        return apiKey;
+    }
+
+    public void removeApiKey(String apiKey) {
+        apiKey2username.remove(apiKey);
+    }
+}
+```
+
+### `ServiceAccount.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ServiceAccount.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.security.protobuf.AccountRecord;
+import org.yamcs.security.protobuf.ServiceAccountRecordDetail;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * Represents an non-human service or application registered with Yamcs.
+ * <p>
+ * The service account is assumed to represent one application only.
+ * <p>
+ * Note that currently service accounts are only used for impersonation purposes. This is a strong feature equivalent to
+ * the superuser attribute that should only be used for confidential applications.
+ * <p>
+ * In future iterations we may want to add weaker and more selective service accounts, for example by subjecting service
+ * accounts to the same permission checks as regular users.
+ */
+public class ServiceAccount extends Account {
+
+    // Client credentials can be used in the oauth2 layer to generate access tokens
+    // for the single application that this service account represents.
+    private String applicationId;
+    private String applicationHash;
+
+    public ServiceAccount(String name, User createdBy) {
+        super(name, createdBy);
+    }
+
+    ServiceAccount(AccountRecord record) {
+        super(record);
+        ServiceAccountRecordDetail serviceDetail = record.getServiceDetail();
+        applicationId = serviceDetail.getApplicationId();
+        applicationHash = serviceDetail.getApplicationHash();
+    }
+
+    ServiceAccount(Tuple tuple) {
+        super(tuple);
+        ServiceAccountRecordDetail serviceDetail = tuple.getColumn(DirectoryDb.ACCOUNT_CNAME_SERVICE_DETAIL);
+        applicationId = serviceDetail.getApplicationId();
+        applicationHash = serviceDetail.getApplicationHash();
+    }
+
+    public String getApplicationId() {
+        return applicationId;
+    }
+
+    void setApplicationId(String applicationId) {
+        this.applicationId = applicationId;
+    }
+
+    void setApplicationHash(String applicationHash) {
+        this.applicationHash = applicationHash;
+    }
+
+    String getApplicationHash() {
+        return applicationHash;
+    }
+
+    AccountRecord toRecord() {
+        var serviceDetailb = ServiceAccountRecordDetail.newBuilder();
+        serviceDetailb.setApplicationId(applicationId);
+        serviceDetailb.setApplicationHash(applicationHash);
+        return newRecordBuilder().setServiceDetail(serviceDetailb).build();
+    }
+
+    @Override
+    public Tuple toTuple(boolean forUpdate) {
+        var tuple = super.toTuple(forUpdate);
+
+        var serviceDetailb = ServiceAccountRecordDetail.newBuilder();
+        serviceDetailb.setApplicationId(applicationId);
+        serviceDetailb.setApplicationHash(applicationHash);
+
+        tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_SERVICE_DETAIL,
+                DataType.protobuf(ServiceAccountRecordDetail.class), serviceDetailb.build());
+
+        return tuple;
+    }
+}
+```
+
+### `SessionExpiredException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionExpiredException.java`
+
+
+```java
+package org.yamcs.security;
+
+@SuppressWarnings("serial")
+public class SessionExpiredException extends Exception {
+
+}
+```
+
+### `SessionListener.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionListener.java`
+
+
+```java
+package org.yamcs.security;
+
+public interface SessionListener {
+
+    void onCreated(UserSession session);
+
+    void onExpired(UserSession session);
+
+    void onInvalidated(UserSession session);
+}
+```
+
+### `SessionManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SessionManager.java`
+
+
+```java
+package org.yamcs.security;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
+
+import java.security.SecureRandom;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.stream.Collectors;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+
+/**
+ * Implementation-agnostic session store. Sessions have a limited lifespan, but can be renewed before expiring.
+ * <p>
+ * In a future iteration, UserSession could be split into UserSession and ClientSession for covering implementations
+ * that support SSO across multiple clients (e.g. OIDC).
+ */
+public class SessionManager {
+
+    protected static final Log log = new Log(SessionManager.class);
+    private static final SecureRandom RG = new SecureRandom();
+
+    /**
+     * Time before a session is considered to be expired.
+     * 
+     * In terms of OAuth this corresponds to the lifetime of a refresh token.
+     */
+    private static final long SESSION_IDLE = 30 * 60 * 1000L; // 30 minutes
+
+    private ConcurrentMap<String, UserSession> sessions = new ConcurrentHashMap<>();
+    private CopyOnWriteArraySet<SessionListener> sessionListeners = new CopyOnWriteArraySet<>();
+
+    public SessionManager() {
+        YamcsServer yamcs = YamcsServer.getServer();
+        yamcs.getThreadPoolExecutor().scheduleWithFixedDelay(this::purgeExpiredSessions, 10, 10, SECONDS);
+    }
+
+    public UserSession createSession(AuthenticationInfo authenticationInfo, String ipAddress, String hostname) {
+        String sessionId = generateSessionId();
+        UserSession session = new UserSession(sessionId, authenticationInfo, ipAddress, hostname, SESSION_IDLE);
+        sessions.put(sessionId, session);
+        sessionListeners.forEach(l -> l.onCreated(session));
+        return session;
+    }
+
+    public UserSession getSession(String id) {
+        return sessions.get(id);
+    }
+
+    public Collection<UserSession> getSessions() {
+        return sessions.values();
+    }
+
+    public void renewSession(String id) throws SessionExpiredException {
+        UserSession session = sessions.get(id);
+        if (session == null) {
+            throw new SessionExpiredException();
+        }
+        session.touch();
+    }
+
+    public void invalidateSession(String id) {
+        var session = sessions.get(id);
+        if (session != null) {
+            log.info("Session invalidated: {}", session);
+            sessions.remove(session.getId());
+            sessionListeners.forEach(l -> l.onInvalidated(session));
+        }
+    }
+
+    public void addSessionListener(SessionListener listener) {
+        sessionListeners.add(listener);
+    }
+
+    public void removeSessionListener(SessionListener listener) {
+        sessionListeners.remove(listener);
+    }
+
+    private String generateSessionId() {
+        // Generate something that is url-safe
+        byte[] bytes = new byte[10];
+        RG.nextBytes(bytes);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytes);
+    }
+
+    private void purgeExpiredSessions() {
+        Set<UserSession> toExpire = sessions.values().stream()
+                .filter(session -> session.isExpired())
+                .collect(Collectors.toSet());
+        for (UserSession expiredSession : toExpire) {
+            log.info("Session expired: {}", expiredSession);
+            sessions.remove(expiredSession.getId());
+            sessionListeners.forEach(l -> l.onExpired(expiredSession));
+        }
+    }
+}
+```
+
+### `SingleUserAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SingleUserAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.Experimental;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.YObjectLoader;
+
+/**
+ * An AuthModule that enforces a login of one fixed user account
+ */
+@Experimental
+public class SingleUserAuthModule implements AuthModule {
+
+    protected static final String OPTION_USERNAME = "username";
+    protected static final String OPTION_PASSWORD = "password";
+    protected static final String OPTION_NAME = "name";
+    protected static final String OPTION_EMAIL = "email";
+    protected static final String OPTION_SUPERUSER = "superuser";
+    protected static final String OPTION_PRIVILEGES = "privileges";
+    protected static final String OPTION_HASHER = "hasher";
+
+    private AuthenticationInfo authenticationInfo;
+    private AuthorizationInfo authorizationInfo;
+
+    private PasswordHasher passwordHasher;
+    private String expectedHash;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption(OPTION_USERNAME, OptionType.STRING).withRequired(true);
+        spec.addOption(OPTION_PASSWORD, OptionType.STRING).withRequired(true).withSecret(true);
+        spec.addOption(OPTION_NAME, OptionType.STRING);
+        spec.addOption(OPTION_EMAIL, OptionType.STRING);
+        spec.addOption(OPTION_SUPERUSER, OptionType.BOOLEAN).withDefault(false);
+        spec.addOption(OPTION_PRIVILEGES, OptionType.ANY);
+        spec.addOption(OPTION_HASHER, OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        String username = args.getString(OPTION_USERNAME);
+        authenticationInfo = new AuthenticationInfo(this, username);
+
+        expectedHash = args.getString(OPTION_PASSWORD);
+
+        String name = args.getString(OPTION_USERNAME, username);
+        authenticationInfo.setDisplayName(name);
+
+        String email = args.getString(OPTION_EMAIL, null);
+        authenticationInfo.setEmail(email);
+
+        authorizationInfo = new AuthorizationInfo();
+        if (args.getBoolean(OPTION_SUPERUSER)) {
+            authorizationInfo.grantSuperuser();
+        }
+        if (args.containsKey(OPTION_PRIVILEGES)) {
+            var privilegeConfigs = args.getConfig(OPTION_PRIVILEGES);
+            for (String privilegeName : privilegeConfigs.getKeys()) {
+                List<String> objects = privilegeConfigs.getList(privilegeName);
+                if (privilegeName.equals("System")) {
+                    for (String object : objects) {
+                        authorizationInfo.addSystemPrivilege(new SystemPrivilege(object));
+                    }
+                } else {
+                    var type = new ObjectPrivilegeType(privilegeName);
+                    for (String object : objects) {
+                        authorizationInfo.addObjectPrivilege(new ObjectPrivilege(type, object));
+                    }
+                }
+            }
+        }
+
+        if (args.containsKey(OPTION_HASHER)) {
+            String className = args.getString(OPTION_HASHER);
+            passwordHasher = YObjectLoader.loadObject(className);
+        }
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof UsernamePasswordToken) {
+            String username = ((UsernamePasswordToken) token).getPrincipal();
+            char[] password = ((UsernamePasswordToken) token).getPassword();
+
+            if (!username.equals(authenticationInfo.getUsername())) {
+                return null;
+            }
+
+            if (passwordHasher != null) {
+                if (!passwordHasher.validatePassword(password, expectedHash)) {
+                    throw new AuthenticationException("Password does not match");
+                }
+            } else {
+                if (!Arrays.equals(expectedHash.toCharArray(), password)) {
+                    throw new AuthenticationException("Password does not match");
+                }
+            }
+            return authenticationInfo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        String incomingUsername = authenticationInfo.getUsername();
+        if (incomingUsername.equals(this.authenticationInfo.getUsername())) {
+            return authorizationInfo;
+        } else {
+            return new AuthorizationInfo();
+        }
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return this.authenticationInfo.equals(authenticationInfo);
+    }
+}
+```
+
+### `SpnegoAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SpnegoAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+import static javax.security.auth.login.AppConfigurationEntry.LoginModuleControlFlag.REQUIRED;
+
+import java.io.IOException;
+import java.security.PrivilegedAction;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.UnsupportedCallbackException;
+import javax.security.auth.login.AppConfigurationEntry;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+import org.ietf.jgss.GSSContext;
+import org.ietf.jgss.GSSCredential;
+import org.ietf.jgss.GSSException;
+import org.ietf.jgss.GSSManager;
+import org.ietf.jgss.Oid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.http.BadRequestException;
+import org.yamcs.http.HandlerContext;
+import org.yamcs.http.HttpHandler;
+import org.yamcs.http.InternalServerErrorException;
+import org.yamcs.http.UnauthorizedException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpResponse;
+import io.netty.handler.codec.http.HttpResponseStatus;
+import io.netty.handler.codec.http.HttpUtil;
+import io.netty.util.CharsetUtil;
+
+/**
+ * Implements SPNEGO authentication against an external Kerberos host.
+ * <p>
+ * Upon succesful authentication, Kerberos issues a 'ticket' with limited lifetime. {@link SpnegoAuthModule} maps this
+ * ticket to an internally generated authorization code which can be used for repeat identity checks against the
+ * {@link SecurityStore}.
+ * 
+ * @author nm
+ */
+public class SpnegoAuthModule extends HttpHandler implements AuthModule {
+
+    private static final Logger log = LoggerFactory.getLogger(SpnegoAuthModule.class);
+    private static final String JAAS_ENTRY_NAME = "YamcsHTTP";
+    private static final String JAAS_KRB5 = "com.sun.security.auth.module.Krb5LoginModule";
+    private static final String NEGOTIATE = "Negotiate";
+    private static final long AUTH_CODE_VALIDITY = 10000;
+
+    private static Oid spnegoOid;
+    private static Oid krb5Oid;
+    static {
+        try {
+            spnegoOid = new Oid("1.3.6.1.5.5.2");
+            krb5Oid = new Oid("1.2.840.113554.1.2.2");
+        } catch (GSSException e) {
+            throw new ConfigurationException(e);
+        }
+    }
+    private static Oid[] SUPPORTED_OIDS = new Oid[] { spnegoOid, krb5Oid };
+
+    private String realm;
+    private boolean stripRealm; // if true, realm will be stripped from the username
+
+    private Map<String, SpnegoAuthenticationInfo> code2info = new ConcurrentHashMap<>();
+
+    private LoginContext yamcsLogin;
+    private GSSManager gssManager;
+    private GSSCredential yamcsCred;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("keytab", OptionType.STRING).withRequired(true);
+        spec.addOption("principal", OptionType.STRING).withRequired(true);
+        spec.addOption("stripRealm", OptionType.BOOLEAN).withDefault(true);
+        spec.addOption("debug", OptionType.BOOLEAN).withDefault(false);
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        String userPrincipal = args.getString("principal");
+        int idx = userPrincipal.lastIndexOf('@');
+        if (idx < 0) {
+            throw new InitException("SPNEGO principal should take the form HTTP/<host>.<domain>@<REALM>");
+        }
+
+        String servicePrincipal = userPrincipal.substring(0, idx);
+        realm = userPrincipal.substring(idx + 1);
+        stripRealm = args.getBoolean("stripRealm");
+
+        Map<String, String> jaasOpts = new HashMap<>();
+        jaasOpts.put("useKeyTab", "true");
+        jaasOpts.put("storeKey", "true");
+        jaasOpts.put("keyTab", args.getString("keytab"));
+        jaasOpts.put("useTicketCache", "true");
+        jaasOpts.put("principal", servicePrincipal);
+        jaasOpts.put("debug", Boolean.toString(args.getBoolean("debug")));
+
+        AppConfigurationEntry jaasEntry = new AppConfigurationEntry(JAAS_KRB5, REQUIRED, jaasOpts);
+        JaasConfiguration.addEntry(JAAS_ENTRY_NAME, jaasEntry);
+
+        try {
+            yamcsLogin = new LoginContext(JAAS_ENTRY_NAME, new DummyCallbackHandler());
+            yamcsLogin.login();
+            gssManager = GSSManager.getInstance();
+        } catch (LoginException e) {
+            throw new InitException(String.format("Cannot login %s to Kerberos", userPrincipal), e);
+        }
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof ThirdPartyAuthorizationCode) {
+            return authenticateByCode((ThirdPartyAuthorizationCode) token);
+        } else {
+            return null;
+        }
+    }
+
+    private AuthenticationInfo authenticateByCode(ThirdPartyAuthorizationCode code) throws AuthenticationException {
+        SpnegoAuthenticationInfo authInfo = code2info.get(code.getPrincipal());
+        long now = System.currentTimeMillis();
+        if ((authInfo == null) || (now - authInfo.created) > AUTH_CODE_VALIDITY) {
+            throw new AuthenticationException("Invalid authorization code");
+        } else {
+            return authInfo;
+        }
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        // The lifetime of the client's TGT cannot be verified based on
+        // SPNEGO ticket alone, and checking the same ticket multiple times
+        // result in a replay error.
+        //
+        // Returning true here means that we accept requests as long as the
+        // access token is valid. SPNEGO logins don't get a refresh token, so
+        // they will be forced to request a new authorization token whenever
+        // necessary.
+        return true;
+    }
+
+    @Override
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) {
+        return new AuthorizationInfo();
+    }
+
+    private synchronized GSSCredential getGSSCredential() throws GSSException {
+        if (yamcsCred == null || yamcsCred.getRemainingLifetime() == 0) {
+            yamcsCred = Subject.doAs(yamcsLogin.getSubject(), (PrivilegedAction<GSSCredential>) () -> {
+                try {
+                    GSSCredential clientCred = gssManager.createCredential(null, 3600, SUPPORTED_OIDS,
+                            GSSCredential.ACCEPT_ONLY);
+                    return clientCred;
+                } catch (Exception e) {
+                    log.warn("Failed to get GSS credential", e);
+                }
+                return null;
+            });
+        }
+        return yamcsCred;
+    }
+
+    @Override
+    public boolean requireAuth() {
+        return false;
+    }
+
+    @Override
+    public void handle(HandlerContext ctx) {
+        String negotiateHeader = ctx.getCredentials(NEGOTIATE);
+        if (negotiateHeader != null) {
+            try {
+                byte[] spnegoToken = Base64.getDecoder().decode(negotiateHeader);
+                GSSCredential cred = getGSSCredential();
+                if (cred == null) {
+                    throw new InternalServerErrorException("Unexpected GSS error");
+                }
+
+                GSSContext yamcsContext = gssManager.createContext(cred);
+                yamcsContext.acceptSecContext(spnegoToken, 0, spnegoToken.length);
+                if (yamcsContext.isEstablished()) {
+                    if (yamcsContext.getSrcName() == null) {
+                        log.warn("Unknown user. No TGT?");
+                        throw new UnauthorizedException();
+                    }
+                    String userPrincipal = yamcsContext.getSrcName().toString();
+                    log.debug("GSS context initiator {}", userPrincipal);
+
+                    if (!userPrincipal.endsWith("@" + realm)) {
+                        log.warn("User {} does not match realm {}", userPrincipal, realm);
+                        throw new UnauthorizedException();
+                    }
+                    String username = userPrincipal;
+                    if (stripRealm) {
+                        username = userPrincipal.substring(0, userPrincipal.length() - realm.length() - 1);
+                    }
+
+                    SpnegoAuthenticationInfo authInfo = new SpnegoAuthenticationInfo(this, username);
+                    authInfo.addExternalIdentity(getClass().getName(), userPrincipal);
+                    String authorizationCode = CryptoUtils.generateRandomPassword(10);
+                    code2info.put(authorizationCode, authInfo);
+
+                    ByteBuf buf = Unpooled.copiedBuffer(authorizationCode, CharsetUtil.UTF_8);
+                    HttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.OK, buf);
+                    HttpUtil.setContentLength(res, buf.readableBytes());
+                    ctx.sendResponse(res).addListener(ChannelFutureListener.CLOSE);
+                } else {
+                    log.warn("Context is not established, multiple rounds needed???");
+                    throw new UnauthorizedException();
+                }
+            } catch (IllegalArgumentException e) {
+                throw new BadRequestException("Failed to base64 decode the SPNEGO token");
+            } catch (GSSException e) {
+                log.warn("Failed to establish context with the SPNEGO token from header '{}': ",
+                        negotiateHeader, e);
+                throw new UnauthorizedException();
+            }
+        } else {
+            ByteBuf buf = Unpooled.copiedBuffer(HttpResponseStatus.UNAUTHORIZED.toString() + "\r\n", CharsetUtil.UTF_8);
+            HttpResponse res = new DefaultFullHttpResponse(HTTP_1_1, HttpResponseStatus.UNAUTHORIZED, buf);
+            HttpUtil.setContentLength(res, buf.readableBytes());
+            res.headers().set(HttpHeaderNames.WWW_AUTHENTICATE, NEGOTIATE);
+            ctx.sendResponse(res).addListener(ChannelFutureListener.CLOSE);
+        }
+    }
+
+    private static class SpnegoAuthenticationInfo extends AuthenticationInfo {
+
+        long created; // date of creation
+
+        public SpnegoAuthenticationInfo(AuthModule authenticator, String username) {
+            super(authenticator, username);
+            this.created = System.currentTimeMillis();
+        }
+    }
+
+    private static class DummyCallbackHandler implements CallbackHandler {
+
+        @Override
+        public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+            return;
+        }
+    }
+}
+```
+
+### `SystemPrivilege.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SystemPrivilege.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+/**
+ * A system privilege is the right to perform a particular action or to perform an action on any object of a particular
+ * type.
+ * <p>
+ * There is no 'wildcard' that represent all system privileges. For such behaviour you should instead consider granting
+ * a user the 'superuser' attribute.
+ * <p>
+ * This is not an enum because of extensibility reasons.
+ */
+public class SystemPrivilege {
+
+    /**
+     * Allows to control any processor.
+     */
+    public static final SystemPrivilege ControlProcessor = new SystemPrivilege("ControlProcessor");
+
+    // Not used. Deprecate?
+    public static final SystemPrivilege ReadCommandHistory = new SystemPrivilege("ReadCommandHistory");
+
+    /**
+     * Allows to modify command history.
+     */
+    public static final SystemPrivilege ModifyCommandHistory = new SystemPrivilege("ModifyCommandHistory");
+
+    /**
+     * Allows to control activities
+     */
+    public static final SystemPrivilege ControlActivities = new SystemPrivilege("ControlActivities");
+
+    /**
+     * Allows to control the state of command queues.
+     */
+    public static final SystemPrivilege ControlCommandQueue = new SystemPrivilege("ControlCommandQueue");
+
+    /**
+     * Allows to clear users for commanding.
+     */
+    public static final SystemPrivilege ControlCommandClearances = new SystemPrivilege("ControlCommandClearances");
+
+    /**
+     * Allows to control file transfers.
+     */
+    public static final SystemPrivilege ControlFileTransfers = new SystemPrivilege("ControlFileTransfers");
+
+    /**
+     * Allows to read file transfer information.
+     */
+    public static final SystemPrivilege ReadFileTransfers = new SystemPrivilege("ReadFileTransfers");
+
+    /**
+     * Allows to create, update and delete parameter lists.
+     */
+    public static final SystemPrivilege ManageParameterLists = new SystemPrivilege("ManageParameterLists");
+
+    /**
+     * Allows specifying command options (extra attributes in the command history, disable/modify verifiers)
+     */
+    public static final SystemPrivilege CommandOptions = new SystemPrivilege("CommandOptions");
+
+    /**
+     * Allows to read the entire Mission Database.
+     */
+    public static final SystemPrivilege GetMissionDatabase = new SystemPrivilege("GetMissionDatabase");
+
+    /**
+     * Allows to read activity state
+     */
+    public static final SystemPrivilege ReadActivities = new SystemPrivilege("ReadActivities");
+
+    /**
+     * Allows to read alarm state
+     */
+    public static final SystemPrivilege ReadAlarms = new SystemPrivilege("ReadAlarms");
+
+    /**
+     * Allows to manage alarms
+     */
+    public static final SystemPrivilege ControlAlarms = new SystemPrivilege("ControlAlarms");
+
+    /**
+     * Allows to manage archiving properties of Yamcs.
+     */
+    public static final SystemPrivilege ControlArchiving = new SystemPrivilege("ControlArchiving");
+
+    /**
+     * Allows to read link state.
+     */
+    public static final SystemPrivilege ReadLinks = new SystemPrivilege("ReadLinks");
+
+    /**
+     * Allows to control the lifecycle of any link.
+     */
+    public static final SystemPrivilege ControlLinks = new SystemPrivilege("ControlLinks");
+
+    /**
+     * Allows to control the lifecycle of services
+     */
+    public static final SystemPrivilege ControlServices = new SystemPrivilege("ControlServices");
+
+    /**
+     * Allows to create instances.
+     */
+    public static final SystemPrivilege CreateInstances = new SystemPrivilege("CreateInstances");
+
+    /**
+     * Allows to manage buckets of any kind
+     */
+    public static final SystemPrivilege ManageAnyBucket = new SystemPrivilege("ManageAnyBucket");
+
+    /**
+     * Allows to control access (users, groups, roles, ...)
+     */
+    public static final SystemPrivilege ControlAccess = new SystemPrivilege("ControlAccess");
+
+    /**
+     * Allows to read any event.
+     */
+    public static final SystemPrivilege ReadEvents = new SystemPrivilege("ReadEvents");
+
+    /**
+     * Allows to manually create events.
+     */
+    public static final SystemPrivilege WriteEvents = new SystemPrivilege("WriteEvents");
+
+    /**
+     * Allows to manually add records to tables.
+     */
+    public static final SystemPrivilege WriteTables = new SystemPrivilege("WriteTables");
+
+    /**
+     * Allows to read tables.
+     */
+    public static final SystemPrivilege ReadTables = new SystemPrivilege("ReadTables");
+
+    /**
+     * Allows to change online the MDB (calibrators, alarms and algorithms)
+     */
+    public static final SystemPrivilege ChangeMissionDatabase = new SystemPrivilege("ChangeMissionDatabase");
+
+    /**
+     * Allows to control time correlation
+     */
+    public static final SystemPrivilege ControlTimeCorrelation = new SystemPrivilege("ControlTimeCorrelation");
+
+    /**
+     * Allows to view the timeline
+     */
+    public static final SystemPrivilege ReadTimeline = new SystemPrivilege("ReadTimeline");
+
+    /**
+     * Allows to modify the timeline
+     */
+    public static final SystemPrivilege ControlTimeline = new SystemPrivilege("ControlTimeline");
+
+    /**
+     * Allows to view system information (OS, JVM, threads, replication, ...)
+     */
+    public static final SystemPrivilege ReadSystemInfo = new SystemPrivilege("ReadSystemInfo");
+
+    private String name;
+
+    public SystemPrivilege(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof SystemPrivilege) {
+            return Objects.equals(name, ((SystemPrivilege) obj).name);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+    @Override
+    public String toString() {
+        return name;
+    }
+}
+```
+
+### `SystemUserAuthenticationInfo.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/SystemUserAuthenticationInfo.java`
+
+
+```java
+package org.yamcs.security;
+
+import org.yamcs.YamcsServer;
+
+/**
+ * Special {@link AuthenticationInfo} that can be used by {@link AuthModule}s to identify some access as the System
+ * user.
+ */
+public class SystemUserAuthenticationInfo extends AuthenticationInfo {
+
+    public SystemUserAuthenticationInfo(AuthModule authenticator) {
+        super(authenticator, YamcsServer.getServer().getSecurityStore().getSystemUser().getName());
+    }
+
+    @Override
+    public void setDisplayName(String displayName) {
+        throw new UnsupportedOperationException("Protected user");
+    }
+
+    @Override
+    public void setEmail(String email) {
+        throw new UnsupportedOperationException("Protected user");
+    }
+
+    @Override
+    public void addExternalIdentity(String provider, String externalIdentity) {
+        throw new UnsupportedOperationException("Protected user");
+    }
+}
+```
+
+### `ThirdPartyAuthorizationCode.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/ThirdPartyAuthorizationCode.java`
+
+
+```java
+package org.yamcs.security;
+
+/**
+ * Represents a token (or 'authorization_code' in oauth terms) issued by an <em>external</em> identity server. This is
+ * used in situations where Yamcs does not itself perform the authentication.
+ * <p>
+ * The type of code is an implementation choice of the AuthModule. It may directly represent an externally issued token,
+ * although ideally the AuthModule should not expose such information, and instead manage an internal mapping via
+ * self-issued transient tokens.
+ * <p>
+ * See {@link SpnegoAuthModule} for a representative example
+ */
+public class ThirdPartyAuthorizationCode implements AuthenticationToken {
+
+    private String code;
+
+    public ThirdPartyAuthorizationCode(String code) {
+        this.code = code;
+    }
+
+    public String getPrincipal() {
+        return code;
+    }
+}
+```
+
+### `User.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/User.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+import org.yamcs.security.protobuf.AccountRecord;
+import org.yamcs.security.protobuf.Clearance;
+import org.yamcs.security.protobuf.ExternalIdentity;
+import org.yamcs.security.protobuf.UserAccountRecordDetail;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Tuple;
+
+/**
+ * A user contains identifying information and a convenient set of methods to perform access control.
+ * <p>
+ * Users may be assigned two kinds of different privileges:
+ * 
+ * <ul>
+ * <li>System privileges that grant the user the right to perform an action on any object.
+ * <li>Object privileges that grant the user the right to perform an action on a specific object.
+ * </ul>
+ * 
+ * Additionally a special attribute {@code superuser} may have been granted to a user. Users with this attribute are not
+ * subjected to privilege checking (i.e. they are allowed everything, even without being assigned privileges).
+ */
+public class User extends Account {
+
+    private String email;
+    private String hash; // Password hash, only for internal users
+
+    private boolean superuser;
+    private Clearance clearance;
+
+    private Map<String, String> identitiesByProvider = new HashMap<>();
+
+    // Roles coming from Yamcs DB
+    private Set<String> roles = new HashSet<>();
+
+    // Roles that come from external authorization systems
+    private Set<String> externalRoles = new HashSet<>();
+
+    // Keep track of external privileges separately. It allows us to rebuild the effective
+    // privileges when the roles change.
+    private Set<SystemPrivilege> externalSystemPrivileges = new HashSet<>();
+    private Map<ObjectPrivilegeType, Set<ObjectPrivilege>> externalObjectPrivileges = new HashMap<>();
+
+    // Effective privileges (= external privileges + privileges from directory roles
+    private Set<SystemPrivilege> systemPrivileges = new HashSet<>();
+    private Map<ObjectPrivilegeType, Set<ObjectPrivilege>> objectPrivileges = new HashMap<>();
+
+    private Set<ClearanceListener> clearanceListeners = new CopyOnWriteArraySet<>();
+
+    private final String PRIVILEGE_OPS_NAME_PREFIX = "ops://";
+
+    public User(String username, User createdBy) {
+        super(username, createdBy);
+    }
+
+    User(AccountRecord record) {
+        super(record);
+        UserAccountRecordDetail userDetail = record.getUserDetail();
+        if (userDetail.hasHash()) {
+            hash = userDetail.getHash();
+        }
+        if (userDetail.hasEmail()) {
+            email = userDetail.getEmail();
+        }
+        superuser = userDetail.getSuperuser();
+        for (ExternalIdentity identity : userDetail.getIdentitiesList()) {
+            identitiesByProvider.put(identity.getProvider(), identity.getIdentity());
+        }
+        roles.addAll(userDetail.getRolesList());
+        if (userDetail.hasClearance()) {
+            clearance = userDetail.getClearance();
+        }
+    }
+
+    User(Tuple tuple) {
+        super(tuple);
+        UserAccountRecordDetail userDetail = tuple.getColumn(DirectoryDb.ACCOUNT_CNAME_USER_DETAIL);
+        if (userDetail.hasHash()) {
+            hash = userDetail.getHash();
+        }
+        if (userDetail.hasEmail()) {
+            email = userDetail.getEmail();
+        }
+        superuser = userDetail.getSuperuser();
+        for (ExternalIdentity identity : userDetail.getIdentitiesList()) {
+            identitiesByProvider.put(identity.getProvider(), identity.getIdentity());
+        }
+        roles.addAll(userDetail.getRolesList());
+        if (userDetail.hasClearance()) {
+            clearance = userDetail.getClearance();
+        }
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public boolean isExternallyManaged() {
+        return !identitiesByProvider.isEmpty();
+    }
+
+    public void addIdentity(String provider, String identity) {
+        identitiesByProvider.put(provider, identity);
+    }
+
+    public Set<Entry<String, String>> getIdentityEntrySet() {
+        return identitiesByProvider.entrySet();
+    }
+
+    public void deleteIdentity(String provider) {
+        identitiesByProvider.remove(provider);
+    }
+
+    public Clearance getClearance() {
+        return clearance;
+    }
+
+    public void setClearance(Clearance clearance) {
+        this.clearance = clearance;
+        clearanceListeners.forEach(l -> l.onChange(clearance));
+    }
+
+    public Set<String> getRoles() {
+        var merged = new HashSet<>(roles);
+        merged.addAll(externalRoles);
+        return Collections.unmodifiableSet(merged);
+    }
+
+    public void setRoles(Collection<String> roles) {
+        this.roles.clear();
+        this.roles.addAll(roles);
+    }
+
+    /**
+     * Add a role to this user. If marked as external, this role assignment is not persisted to Yamcs DB.
+     */
+    public void addRole(String role, boolean external) {
+        if (external) {
+            externalRoles.add(role);
+        } else {
+            roles.add(role);
+        }
+    }
+
+    public void deleteRole(String role) {
+        roles.remove(role);
+    }
+
+    public boolean isSuperuser() {
+        return superuser;
+    }
+
+    public void setSuperuser(boolean superuser) {
+        this.superuser = superuser;
+    }
+
+    public void setEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            this.email = null;
+        } else {
+            this.email = email;
+        }
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public Set<SystemPrivilege> getSystemPrivileges() {
+        return systemPrivileges;
+    }
+
+    public Map<ObjectPrivilegeType, Set<ObjectPrivilege>> getObjectPrivileges() {
+        return objectPrivileges;
+    }
+
+    public Set<ObjectPrivilege> getObjectPrivileges(ObjectPrivilegeType type) {
+        Set<ObjectPrivilege> privilegesForType = objectPrivileges.get(type);
+        return privilegesForType != null ? privilegesForType : Collections.emptySet();
+    }
+
+    public void addSystemPrivilege(SystemPrivilege systemPrivilege, boolean external) {
+        if (external) {
+            externalSystemPrivileges.add(systemPrivilege);
+        }
+        systemPrivileges.add(systemPrivilege);
+    }
+
+    public void addObjectPrivilege(ObjectPrivilege objectPrivilege, boolean external) {
+        if (external) {
+            Set<ObjectPrivilege> externalPrivilegesForType = externalObjectPrivileges.get(objectPrivilege.getType());
+            if (externalPrivilegesForType == null) {
+                externalPrivilegesForType = new HashSet<>();
+                externalObjectPrivileges.put(objectPrivilege.getType(), externalPrivilegesForType);
+            }
+            externalPrivilegesForType.add(objectPrivilege);
+        }
+
+        Set<ObjectPrivilege> privilegesForType = objectPrivileges.get(objectPrivilege.getType());
+        if (privilegesForType == null) {
+            privilegesForType = new HashSet<>();
+            objectPrivileges.put(objectPrivilege.getType(), privilegesForType);
+        }
+        privilegesForType.add(objectPrivilege);
+    }
+
+    /**
+     * Resets user privileges to only those that are externally defined.
+     */
+    public void clearDirectoryPrivileges() {
+        systemPrivileges.clear();
+        systemPrivileges.addAll(externalSystemPrivileges);
+
+        objectPrivileges.clear();
+        objectPrivileges.putAll(externalObjectPrivileges);
+    }
+
+    public boolean hasSystemPrivilege(SystemPrivilege systemPrivilege) {
+        if (superuser) {
+            return true;
+        }
+
+        return systemPrivileges.contains(systemPrivilege);
+    }
+
+    public boolean hasObjectPrivilege(ObjectPrivilegeType type, String object) {
+        if (superuser) {
+            return true;
+        }
+
+        for (ObjectPrivilege privilege : getObjectPrivileges(type)) {
+            if (object.matches(privilege.getObject())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Special privilege check helper method for parameter permissions, allowing to check against both the qualified
+     * name of a parameter and its OPS name (if any), returning true when the user has the privilege
+     * (OPS name: in XTCE defined as alias for namespace "MDB:OPS Name")
+     *
+     * @param type parameter privilege type (either ObjectPrivilegeType.ReadParameter or ObjectPrivilegeType.WriteParameter)
+     * @param parameter parameter to check against
+     * @return whether the user has the given privilege type for the parameter
+     */
+    public boolean hasParameterPrivilege(ObjectPrivilegeType type, Parameter parameter) {
+        if (type != ObjectPrivilegeType.ReadParameter && type != ObjectPrivilegeType.WriteParameter) {
+            throw new IllegalStateException("Type can only one of the parameter object privilege types");
+        }
+        String opsName = parameter.getOpsName();
+        return hasObjectPrivilege(type, parameter.getQualifiedName())
+                || (opsName != null && hasObjectPrivilege(type, PRIVILEGE_OPS_NAME_PREFIX + opsName));
+    }
+
+    public void addClearanceListener(ClearanceListener listener) {
+        clearanceListeners.add(listener);
+    }
+
+    public void removeClearanceListener(ClearanceListener listener) {
+        clearanceListeners.remove(listener);
+    }
+
+    AccountRecord toRecord() {
+        UserAccountRecordDetail.Builder userDetailb = UserAccountRecordDetail.newBuilder();
+        if (hash != null) {
+            userDetailb.setHash(hash);
+        }
+        if (email != null) {
+            userDetailb.setEmail(email);
+        }
+        userDetailb.addAllRoles(roles);
+        userDetailb.setSuperuser(superuser);
+        identitiesByProvider.forEach((provider, identity) -> {
+            userDetailb.addIdentities(ExternalIdentity.newBuilder()
+                    .setProvider(provider)
+                    .setIdentity(identity));
+        });
+        if (clearance != null) {
+            userDetailb.setClearance(clearance);
+        }
+
+        return newRecordBuilder().setUserDetail(userDetailb).build();
+    }
+
+    @Override
+    public Tuple toTuple(boolean forUpdate) {
+        var tuple = super.toTuple(forUpdate);
+
+        var userDetailb = UserAccountRecordDetail.newBuilder();
+        if (hash != null) {
+            userDetailb.setHash(hash);
+        }
+        if (email != null) {
+            userDetailb.setEmail(email);
+        }
+        userDetailb.addAllRoles(roles);
+        userDetailb.setSuperuser(superuser);
+        identitiesByProvider.forEach((provider, identity) -> {
+            userDetailb.addIdentities(ExternalIdentity.newBuilder()
+                    .setProvider(provider)
+                    .setIdentity(identity));
+        });
+        if (clearance != null) {
+            userDetailb.setClearance(clearance);
+
+        }
+        tuple.addColumn(DirectoryDb.ACCOUNT_CNAME_USER_DETAIL,
+                DataType.protobuf(UserAccountRecordDetail.class), userDetailb.build());
+
+        return tuple;
+    }
+}
+```
+
+### `UserCache.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UserCache.java`
+
+
+```java
+package org.yamcs.security;
+
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+
+public class UserCache {
+
+    private Cache<String, User> cache = CacheBuilder.newBuilder()
+            .build();
+
+    public User getUserFromCache(String username) {
+        return cache.getIfPresent(username);
+    }
+
+    public void putUserInCache(User user) {
+        cache.put(user.getName(), user);
+    }
+
+    public void removeUserFromCache(String username) {
+        cache.invalidate(username);
+    }
+}
+```
+
+### `UsernamePasswordToken.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UsernamePasswordToken.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Objects;
+
+/**
+ * A password-based token, usually associated with BASIC AUTH requests (convenient through curl)
+ */
+public class UsernamePasswordToken implements AuthenticationToken {
+
+    private String username;
+    private char[] password;
+
+    public UsernamePasswordToken(String username, char[] password) {
+        this.username = Objects.requireNonNull(username);
+        this.password = password;
+    }
+
+    public String getPrincipal() {
+        return username;
+    }
+
+    public char[] getPassword() {
+        return password;
+    }
+
+    @Override
+    public String toString() {
+        return username;
+    }
+}
+```
+
+### `UserSession.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/UserSession.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import java.util.TreeSet;
+
+/**
+ * Covers a user session. Current assumption is that all such sessions use the refresh flow.
+ */
+public class UserSession {
+
+    private String id;
+    private AuthenticationInfo authenticationInfo;
+    private String ipAddress;
+    private String hostname;
+    private Instant startTime;
+    private Instant lastAccessTime;
+    private Set<String> clients = new TreeSet<>();
+    private long lifespan;
+
+    public UserSession(String id, AuthenticationInfo authenticationInfo,
+            String ipAddress, String hostname, long lifespan) {
+        this.id = id;
+        this.authenticationInfo = authenticationInfo;
+        this.ipAddress = ipAddress;
+        this.hostname = hostname;
+        this.lifespan = lifespan;
+        startTime = Instant.now();
+        lastAccessTime = startTime;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getLogin() {
+        return authenticationInfo.getUsername();
+    }
+
+    public AuthenticationInfo getAuthenticationInfo() {
+        return authenticationInfo;
+    }
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    public Instant getLastAccessTime() {
+        return lastAccessTime;
+    }
+
+    public Set<String> getClients() {
+        return clients;
+    }
+
+    public void setLifespan(long lifespan) {
+        this.lifespan = lifespan;
+    }
+
+    public boolean isExpired() {
+        return System.currentTimeMillis() - lastAccessTime.toEpochMilli() > lifespan;
+    }
+
+    public Instant getExpirationTime() {
+        return lastAccessTime.plus(lifespan, ChronoUnit.MILLIS);
+    }
+
+    void touch() {
+        lastAccessTime = Instant.now();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof UserSession)) {
+            return false;
+        }
+        var other = (UserSession) obj;
+        return id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s [login=%s]", id, authenticationInfo.getUsername());
+    }
+}
+```
+
+### `YamlAuthModule.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/security/YamlAuthModule.java`
+
+
+```java
+package org.yamcs.security;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.YObjectLoader;
+
+public class YamlAuthModule implements AuthModule {
+
+    private boolean required;
+    private PasswordHasher passwordHasher;
+    private Map<String, Map<String, Object>> userDefs = new HashMap<>();
+    private Map<String, Map<String, Object>> roleDefs = new HashMap<>();
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("required", OptionType.BOOLEAN).withDefault(false);
+        spec.addOption("hasher", OptionType.STRING);
+        return spec;
+    }
+
+    @Override
+    public void init(YConfiguration args) throws InitException {
+        required = args.getBoolean("required");
+        if (args.containsKey("hasher")) {
+            String className = args.getString("hasher");
+            passwordHasher = YObjectLoader.loadObject(className);
+        }
+
+        // Read from users.yaml
+        if (YConfiguration.isDefined("users")) {
+            YConfiguration yconf = YConfiguration.getConfiguration("users");
+            Map<String, Object> userConfig = yconf.getRoot();
+            for (String username : userConfig.keySet()) {
+                if (!YConfiguration.isNull(userConfig, username)) {
+                    userDefs.put(username, YConfiguration.getMap(userConfig, username));
+                } else {
+                    userDefs.put(username, Collections.emptyMap());
+                }
+            }
+        }
+
+        // Read from roles.yaml
+        if (YConfiguration.isDefined("roles")) {
+            YConfiguration yconf = YConfiguration.getConfiguration("roles");
+            Map<String, Object> roleConfig = yconf.getRoot();
+            for (String role : roleConfig.keySet()) {
+                if (!YConfiguration.isNull(roleConfig, role)) {
+                    roleDefs.put(role, YConfiguration.getMap(roleConfig, role));
+                }
+            }
+        }
+    }
+
+    @Override
+    public AuthenticationInfo getAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if (token instanceof UsernamePasswordToken) {
+            String username = ((UsernamePasswordToken) token).getPrincipal();
+            char[] password = ((UsernamePasswordToken) token).getPassword();
+
+            Map<String, Object> userDef = userDefs.get(username);
+            if (userDef == null || !userDef.containsKey("password")
+                    || YConfiguration.getString(userDef, "password").trim().isEmpty()) {
+                return null;
+            }
+
+            // Verify password
+            String expected = YConfiguration.getString(userDef, "password");
+            if (passwordHasher != null) {
+                if (!passwordHasher.validatePassword(password, expected)) {
+                    throw new AuthenticationException("Password does not match");
+                }
+            } else {
+                if (!Arrays.equals(expected.toCharArray(), password)) {
+                    throw new AuthenticationException("Password does not match");
+                }
+            }
+
+            AuthenticationInfo authenticationInfo = new AuthenticationInfo(this, username);
+            authenticationInfo.addExternalIdentity(getClass().getName(), username);
+
+            String displayName = YConfiguration.getString(userDef, "displayName", "").trim();
+            if (!displayName.isEmpty()) {
+                authenticationInfo.setDisplayName(displayName);
+            }
+
+            String email = YConfiguration.getString(userDef, "email", "").trim();
+            if (!email.isEmpty()) {
+                authenticationInfo.setEmail(email);
+            }
+
+            return authenticationInfo;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public AuthorizationInfo getAuthorizationInfo(AuthenticationInfo authenticationInfo) throws AuthorizationException {
+        String principal = authenticationInfo.getUsername();
+
+        AuthorizationInfo authz = new AuthorizationInfo();
+
+        Map<String, Object> userDef = userDefs.get(principal);
+        if (userDef == null) {
+            if (required) {
+                throw new AuthorizationException("Cannot find user '" + principal + "' in users.yaml");
+            }
+        } else {
+            if (YConfiguration.getBoolean(userDef, "superuser", false)) {
+                authz.grantSuperuser();
+            }
+            if (userDef.containsKey("roles")) {
+                List<String> roles = YConfiguration.getList(userDef, "roles");
+                for (String role : roles) {
+
+                    // Add privileges for this role
+                    if (roleDefs.containsKey(role)) {
+                        Map<String, Object> types = roleDefs.get(role);
+                        types.forEach((typeString, objects) -> {
+                            if (typeString.equals("System")) {
+                                for (String name : (List<String>) objects) {
+                                    authz.addSystemPrivilege(new SystemPrivilege(name));
+                                }
+                            } else if (!typeString.equals("default")) {
+                                ObjectPrivilegeType type = new ObjectPrivilegeType(typeString);
+                                for (String object : (List<String>) objects) {
+                                    authz.addObjectPrivilege(new ObjectPrivilege(type, object));
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }
+
+        return authz;
+    }
+
+    @Override
+    public boolean verifyValidity(AuthenticationInfo authenticationInfo) {
+        return true;
+    }
+}
+```

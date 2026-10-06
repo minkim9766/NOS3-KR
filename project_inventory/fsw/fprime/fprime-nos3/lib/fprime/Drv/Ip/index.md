@@ -3,38 +3,1869 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--IpSocket.cpp
-file--IpSocket.hpp
-file--SocketComponentHelper.cpp
-file--SocketComponentHelper.hpp
-file--TcpClientSocket.cpp
-file--TcpClientSocket.hpp
-file--TcpServerSocket.cpp
-file--TcpServerSocket.hpp
-file--UdpSocket.cpp
-file--UdpSocket.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.cpp`](file--IpSocket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.hpp`](file--IpSocket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.cpp`](file--SocketComponentHelper.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.hpp`](file--SocketComponentHelper.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.cpp`](file--TcpClientSocket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.hpp`](file--TcpClientSocket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.cpp`](file--TcpServerSocket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.hpp`](file--TcpServerSocket.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.cpp`](file--UdpSocket.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.hpp`](file--UdpSocket.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Posix SOCKETS)
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/IpSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TcpClientSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TcpServerSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/UdpSocket.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/SocketComponentHelper.cpp"
+)
+
+set(MOD_DEPS
+    Os
+    Fw/Buffer
+)
+
+register_fprime_module()
+
+# The PortSelector library and testing helper is only needed on Testing build
+if (BUILD_TESTING)
+    add_library(SocketTestHelper STATIC
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/PortSelector.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/SocketTestHelper.cpp")
+    target_include_directories(SocketTestHelper PUBLIC
+            "${FPRIME_FRAMEWORK_PATH}/STest"
+            "${FPRIME_FRAMEWORK_PATH}/googletest/googletest/include"
+    )
+    add_dependencies(SocketTestHelper STest Fw_Buffer)
+    target_link_libraries(SocketTestHelper STest Fw_Buffer)
+endif()
+
+set(UT_MOD_DEPS
+    SocketTestHelper
+)
+
+### UTs ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestTcp.cpp"
+)
+register_fprime_ut("Drv_Ip_Tcp_test")
+
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TestUdp.cpp"
+)
+register_fprime_ut("Drv_Ip_Udp_test")
+
+```
+
+### `IpSocket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  IpSocket.cpp
+// \author mstarch, crsmith
+// \brief  cpp file for IpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <sys/time.h>
+#include <Drv/Ip/IpSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+#include <cstring>
+
+// This implementation has primarily implemented to isolate
+// the socket interface from the F' Fw::Buffer class.
+// There is a macro in VxWorks (m_data) that collides with
+// the m_data member in Fw::Buffer.
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include <errnoLib.h>
+#include <fioLib.h>
+#include <hostLib.h>
+#include <inetLib.h>
+#include <ioLib.h>
+#include <sockLib.h>
+#include <socket.h>
+#include <sysLib.h>
+#include <taskLib.h>
+#include <vxWorks.h>
+#include <cstring>
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#include <cerrno>
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+namespace Drv {
+
+IpSocket::IpSocket() : m_timeoutSeconds(0), m_timeoutMicroseconds(0), m_port(0) {
+    ::memset(m_hostname, 0, sizeof(m_hostname));
+}
+
+SocketIpStatus IpSocket::configure(const char* const hostname,
+                                   const U16 port,
+                                   const U32 timeout_seconds,
+                                   const U32 timeout_microseconds) {
+    FW_ASSERT(timeout_microseconds < 1000000, static_cast<FwAssertArgType>(timeout_microseconds));
+    FW_ASSERT(this->isValidPort(port), static_cast<FwAssertArgType>(port));
+    FW_ASSERT(hostname != nullptr);
+    this->m_timeoutSeconds = timeout_seconds;
+    this->m_timeoutMicroseconds = timeout_microseconds;
+    this->m_port = port;
+    (void)Fw::StringUtils::string_copy(this->m_hostname, hostname, static_cast<FwSizeType>(SOCKET_MAX_HOSTNAME_SIZE));
+    return SOCK_SUCCESS;
+}
+
+bool IpSocket::isValidPort(U16 port) {
+    return true;
+}
+
+SocketIpStatus IpSocket::setupTimeouts(int socketFd) {
+// Get the IP address from host
+#ifdef TGT_OS_TYPE_VXWORKS
+    // No timeouts set on Vxworks
+#else
+    // Set timeout socket option
+    struct timeval timeout;
+    timeout.tv_sec = static_cast<time_t>(this->m_timeoutSeconds);
+    timeout.tv_usec = static_cast<suseconds_t>(this->m_timeoutMicroseconds);
+    // set socket write to timeout after 1 sec
+    if (setsockopt(socketFd, SOL_SOCKET, SO_SNDTIMEO, reinterpret_cast<char*>(&timeout), sizeof(timeout)) < 0) {
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+#endif
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus IpSocket::addressToIp4(const char* address, void* ip4) {
+    FW_ASSERT(address != nullptr);
+    FW_ASSERT(ip4 != nullptr);
+    // Get the IP address from host
+#ifdef TGT_OS_TYPE_VXWORKS
+    int ip = inet_addr(address);
+    if (ip == ERROR) {
+        return SOCK_INVALID_IP_ADDRESS;
+    }
+    // from sin_addr, which has one struct
+    // member s_addr, which is unsigned int
+    *reinterpret_cast<unsigned long*>(ip4) = ip;
+#else
+    // First IP address to socket sin_addr
+    if (not ::inet_pton(AF_INET, address, ip4)) {
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+#endif
+    return SOCK_SUCCESS;
+}
+
+void IpSocket::close(const SocketDescriptor& socketDescriptor) {
+    (void)::close(socketDescriptor.fd);
+}
+
+void IpSocket::shutdown(const SocketDescriptor& socketDescriptor) {
+    errno = 0;
+    int status = ::shutdown(socketDescriptor.fd, SHUT_RDWR);
+    // If shutdown fails, go straight to the hard-shutdown
+    if (status != 0) {
+        this->close(socketDescriptor);
+    }
+}
+
+SocketIpStatus IpSocket::open(SocketDescriptor& socketDescriptor) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    errno = 0;
+    // Open a TCP socket for incoming commands, and outgoing data if not using UDP
+    status = this->openProtocol(socketDescriptor);
+    if (status != SOCK_SUCCESS) {
+        socketDescriptor.fd = -1;
+        return status;
+    }
+    return status;
+}
+
+SocketIpStatus IpSocket::send(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) {
+    FW_ASSERT(data != nullptr);
+    FW_ASSERT(size > 0);
+
+    U32 total = 0;
+    I32 sent = 0;
+    // Attempt to send out data and retry as necessary
+    for (U32 i = 0; (i < SOCKET_MAX_ITERATIONS) && (total < size); i++) {
+        errno = 0;
+        // Send using my specific protocol
+        sent = this->sendProtocol(socketDescriptor, data + total, size - total);
+        // Error is EINTR or timeout just try again
+        if (((sent == -1) && (errno == EINTR)) || (sent == 0)) {
+            continue;
+        }
+        // Error bad file descriptor is a close along with reset
+        else if ((sent == -1) && ((errno == EBADF) || (errno == ECONNRESET))) {
+            return SOCK_DISCONNECTED;
+        }
+        // Error returned, and it wasn't an interrupt nor a disconnect
+        else if (sent == -1) {
+            return SOCK_SEND_ERROR;
+        }
+        FW_ASSERT(sent > 0, static_cast<FwAssertArgType>(sent));
+        total += static_cast<U32>(sent);
+    }
+    // Failed to retry enough to send all data
+    if (total < size) {
+        return SOCK_INTERRUPTED_TRY_AGAIN;
+    }
+    // Ensure we sent everything
+    FW_ASSERT(total == size, static_cast<FwAssertArgType>(total), static_cast<FwAssertArgType>(size));
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus IpSocket::recv(const SocketDescriptor& socketDescriptor, U8* data, U32& req_read) {
+    // TODO: Uncomment FW_ASSERT for socketDescriptor.fd once we fix TcpClientTester to not pass in uninitialized
+    // socketDescriptor
+    //  FW_ASSERT(socketDescriptor.fd != -1, static_cast<FwAssertArgType>(socketDescriptor.fd));
+    FW_ASSERT(data != nullptr);
+
+    I32 bytes_received_or_status;  // Stores the return value from recvProtocol
+
+    // Loop primarily for EINTR. Other conditions should lead to an earlier exit.
+    for (U32 i = 0; i < SOCKET_MAX_ITERATIONS; i++) {
+        errno = 0;
+        // Pass the current value of req_read (max buffer size) to recvProtocol.
+        // recvProtocol returns bytes read or -1 on error.
+        bytes_received_or_status = this->recvProtocol(socketDescriptor, data, req_read);
+
+        if (bytes_received_or_status > 0) {
+            // Successfully read data
+            req_read = static_cast<U32>(bytes_received_or_status);
+            return SOCK_SUCCESS;
+        } else if (bytes_received_or_status == 0) {
+            // Handle zero return based on protocol-specific behavior
+            req_read = 0;
+            return this->handleZeroReturn();
+        } else {  // bytes_received_or_status == -1, an error occurred
+            if ((errno == EAGAIN) || (errno == EWOULDBLOCK)) {
+                // Non-blocking socket would block, or SO_RCVTIMEO timeout occurred.
+                req_read = 0;
+                return SOCK_NO_DATA_AVAILABLE;
+            } else if ((errno == ECONNRESET) || (errno == EBADF)) {
+                // Connection reset or bad file descriptor.
+                req_read = 0;
+                return SOCK_DISCONNECTED;  // Or a more specific error like SOCK_READ_ERROR
+            } else {
+                // Other socket read error.
+                req_read = 0;
+                return SOCK_READ_ERROR;
+            }
+        }
+    }
+    // If the loop completes, it means SOCKET_MAX_ITERATIONS of EINTR occurred.
+    req_read = 0;
+    return SOCK_INTERRUPTED_TRY_AGAIN;
+}
+
+SocketIpStatus IpSocket::handleZeroReturn() {
+    // For TCP (which IpSocket primarily serves as a base for, or when not overridden),
+    // a return of 0 from ::recv means the peer has performed an orderly shutdown.
+    return SOCK_DISCONNECTED;
+}
+
+}  // namespace Drv
+```
+
+### `IpSocket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/IpSocket.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  IpSocket.hpp
+// \author mstarch
+// \brief  hpp file for IpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_IP_IPHELPER_HPP_
+#define DRV_IP_IPHELPER_HPP_
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Os/Mutex.hpp>
+#include <config/IpCfg.hpp>
+
+namespace Drv {
+
+struct SocketDescriptor final {
+    int fd = -1;        //!< Used for all sockets to track the communication file descriptor
+    int serverFd = -1;  //!< Used for server sockets to track the listening file descriptor
+};
+
+/**
+ * \brief Status enumeration for socket return values
+ */
+enum SocketIpStatus {
+    SOCK_SUCCESS = 0,                        //!< Socket operation successful
+    SOCK_FAILED_TO_GET_SOCKET = -1,          //!< Socket open failed
+    SOCK_FAILED_TO_GET_HOST_IP = -2,         //!< Host IP lookup failed
+    SOCK_INVALID_IP_ADDRESS = -3,            //!< Bad IP address supplied
+    SOCK_FAILED_TO_CONNECT = -4,             //!< Failed to connect socket
+    SOCK_FAILED_TO_SET_SOCKET_OPTIONS = -5,  //!< Failed to configure socket
+    SOCK_INTERRUPTED_TRY_AGAIN = -6,         //!< Interrupted status for retries
+    SOCK_READ_ERROR = -7,                    //!< Failed to read socket
+    SOCK_DISCONNECTED = -8,                  //!< Failed to read socket with disconnect
+    SOCK_FAILED_TO_BIND = -9,                //!< Failed to bind to socket
+    SOCK_FAILED_TO_LISTEN = -10,             //!< Failed to listen on socket
+    SOCK_FAILED_TO_ACCEPT = -11,             //!< Failed to accept connection
+    SOCK_SEND_ERROR = -13,                   //!< Failed to send after configured retries
+    SOCK_NOT_STARTED = -14,                  //!< Socket has not been started
+    SOCK_FAILED_TO_READ_BACK_PORT = -15,     //!< Failed to read back port from connection
+    SOCK_NO_DATA_AVAILABLE = -16,            //!< No data available or read operation would block
+    SOCK_ANOTHER_THREAD_OPENING = -17,       //!< Another thread is opening
+    SOCK_AUTO_CONNECT_DISABLED = -18,        //!< Automatic connections are disabled
+    SOCK_INVALID_CALL = -19                  //!< Operation is invalid
+};
+
+/**
+ * \brief Helper base-class for setting up Berkeley sockets
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpHelper
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class IpSocket {
+  public:
+    IpSocket();
+    virtual ~IpSocket() {};
+    /**
+     * \brief configure the ip socket with host and transmission timeouts
+     *
+     * Configures the IP handler (Tcp, Tcp server, and Udp) to use the given hostname and port. When multiple ports are
+     * used for send/receive these settings affect the send direction (as is the case for udp). Hostname DNS translation
+     * is left up to the caller and thus hostname must be an IP address in dot-notation of the form "x.x.x.x". Port
+     * cannot be set to 0 as dynamic port assignment is not supported.
+     *
+     * Note: for UDP sockets this is equivalent to `configureSend` and only sets up the transmission direction of the
+     * socket.  A separate call to `configureRecv` is required to receive on the socket and should be made before the
+     * `open` call has been made.
+     *
+     * \param hostname: socket uses for outgoing transmissions (and incoming when tcp). Must be of form x.x.x.x
+     * \param port: port socket uses for outgoing transmissions (and incoming when tcp). Must NOT be 0.
+     * \param send_timeout_seconds: send timeout seconds portion
+     * \param send_timeout_microseconds: send timeout microseconds portion. Must be less than 1000000
+     * \return status of configure
+     */
+    virtual SocketIpStatus configure(const char* hostname,
+                                     const U16 port,
+                                     const U32 send_timeout_seconds,
+                                     const U32 send_timeout_microseconds);
+
+    /**
+     * \brief open the IP socket for communications
+     *
+     * This will open the IP socket for communication. This method error checks and validates properties set using the
+     * `configure` method.  Tcp sockets will open bidirectional communication assuming the `configure` function was
+     * previously called. Udp sockets allow `configureRecv` and `configure`/`configureSend` calls to configure for
+     * each direction separately and may be operated in a single-direction or bidirectional mode. This call returns a
+     * status of SOCK_SEND means the port is ready for transmissions and any other status should be treated as an error
+     * with the socket not capable of sending nor receiving. This method will properly close resources on any
+     * unsuccessful status.
+     *
+     * In the case of server components (TcpServer) this function will block until a client has connected.
+     *
+     * Note: delegates to openProtocol for protocol specific implementation
+     *
+     * \param socketDescriptor: socket descriptor to update with opened port
+     * \return status of open
+     */
+    SocketIpStatus open(SocketDescriptor& socketDescriptor);
+    /**
+     * \brief send data out the IP socket from the given buffer
+     *
+     * Sends data out of the IpSocket. This outgoing transmission will be retried several times if the transmission
+     * fails to send all the data. Retries are globally configured in the `IpCfg.hpp` header. Should the
+     * socket be unavailable, SOCK_DISCONNECTED is returned and the socket should be reopened using the `open` call.
+     * This can happen even when the socket has already been opened should a transmission error/closure be detected.
+     * Unless an error is received, all data will have been transmitted.
+     *
+     * Note: delegates to `sendProtocol` to send the data
+     *
+     * \param fd: file descriptor to send to
+     * \param data: pointer to data to send
+     * \param size: size of data to send
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    virtual SocketIpStatus send(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size);
+    /**
+     * \brief receive data from the IP socket from the given buffer
+     *
+     * Receives data from the IpSocket. Should the socket be unavailable, SOCK_DISCONNECTED will be returned and
+     * the socket should be reopened using the `open` call. This can happen even when the socket has already been opened
+     * should a transmission error/closure be detected. Since this blocks until data is available, it will retry as long
+     * as EINTR is set and less than a max number of iterations has passed. This function will block to receive data and
+     * will retry (up to a configured set of retries) as long as EINTR is returned.
+     *
+     * Note: delegates to `recvProtocol` to send the data
+     *
+     * \param socketDescriptor: socket descriptor to recv from
+     * \param data: pointer to data to fill with received data
+     * \param size: maximum size of data buffer to fill
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    SocketIpStatus recv(const SocketDescriptor& fd, U8* const data, U32& size);
+
+    /**
+     * \brief closes the socket
+     *
+     * Closes the socket opened by the open call. In this case of the TcpServer, this does NOT close server's listening
+     * port but will close the active client connection.
+     *
+     * \param socketDescriptor: socket descriptor to close
+     */
+    void close(const SocketDescriptor& socketDescriptor);
+
+    /**
+     * \brief shutdown the socket
+     *
+     * Shuts down the socket opened by the open call. In this case of the TcpServer, this does shut down server's
+     * listening port, but rather shuts down the active client.
+     *
+     * A shut down begins the termination of communication. The underlying socket will coordinate a clean shutdown, and
+     * it is safe to close the socket once a recv with 0 size has returned or an appropriate timeout has been reached.
+     *
+     * \param socketDescriptor: socket descriptor to shutdown
+     */
+    void shutdown(const SocketDescriptor& socketDescriptor);
+
+  protected:
+    /**
+     * \brief Check if the given port is valid for the socket
+     *
+     * Some ports should be allowed for sockets and disabled on others (e.g. port 0 is a valid tcp server port but not a
+     * client. This will check the port and return "true" if the port is valid, or "false" otherwise. In the default
+     * implementation, all ports are considered valid.
+     *
+     * \param port: port to check
+     * \return true if valid, false otherwise
+     */
+    virtual bool isValidPort(U16 port);
+
+    /**
+     * \brief setup the socket timeout properties of the opened outgoing socket
+     * \param socketDescriptor: socket descriptor to setup
+     * \return status of timeout setup
+     */
+    SocketIpStatus setupTimeouts(int socketFd);
+
+    /**
+     * \brief converts a given address in dot form x.x.x.x to an ip address. ONLY works for IPv4.
+     * \param address: address to convert
+     * \param ip4: IPv4 representation structure to fill
+     * \return: status of conversion
+     */
+    static SocketIpStatus addressToIp4(const char* address, void* ip4);
+    /**
+     * \brief Protocol specific open implementation, called from open.
+     * \param socketDescriptor: (output) socket descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    virtual SocketIpStatus openProtocol(SocketDescriptor& fd) = 0;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: socket descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    virtual I32 sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) = 0;
+
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: socket descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    virtual I32 recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) = 0;
+
+    /**
+     * \brief Handle zero return from recvProtocol
+     *
+     * This method is called when recvProtocol returns 0. The default implementation
+     * treats this as a disconnection (appropriate for TCP). Subclasses can override
+     * this to provide different behavior.
+     *
+     * @return SocketIpStatus Status to return from recv
+     */
+    virtual SocketIpStatus handleZeroReturn();
+
+    U32 m_timeoutSeconds;
+    U32 m_timeoutMicroseconds;
+    U16 m_port;                                 //!< IP address port used
+    char m_hostname[SOCKET_MAX_HOSTNAME_SIZE];  //!< Hostname to supply
+};
+}  // namespace Drv
+
+#endif /* DRV_SOCKETIPDRIVER_SOCKETHELPER_HPP_ */
+```
+
+### `SocketComponentHelper.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SocketComponentHelper.cpp
+// \author mstarch, crsmith
+// \brief  cpp file for SocketComponentHelper implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/Ip/SocketComponentHelper.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <cerrno>
+
+namespace Drv {
+
+SocketComponentHelper::SocketComponentHelper() {}
+
+SocketComponentHelper::~SocketComponentHelper() {}
+
+void SocketComponentHelper::start(const Fw::StringBase& name,
+                                  const FwTaskPriorityType priority,
+                                  const Os::Task::ParamType stack,
+                                  const Os::Task::ParamType cpuAffinity) {
+    FW_ASSERT(m_task.getState() ==
+              Os::Task::State::NOT_STARTED);  // It is a coding error to start this task multiple times
+    this->m_stop = false;
+    // Note: the first step is for the IP socket to open the port
+    Os::Task::Arguments arguments(name, SocketComponentHelper::readTask, this, priority, stack, cpuAffinity);
+    Os::Task::Status stat = m_task.start(arguments);
+    FW_ASSERT(Os::Task::OP_OK == stat, static_cast<FwAssertArgType>(stat));
+}
+
+SocketIpStatus SocketComponentHelper::open() {
+    SocketIpStatus status = SOCK_ANOTHER_THREAD_OPENING;
+    OpenState local_open = OpenState::OPEN;
+    // Scope to guard lock
+    {
+        Os::ScopeLock scopeLock(m_lock);
+        if (this->m_open == OpenState::NOT_OPEN) {
+            this->m_open = OpenState::OPENING;
+            local_open = this->m_open;
+        } else {
+            local_open = OpenState::SKIP;
+        }
+    }
+    if (local_open == OpenState::OPENING) {
+        FW_ASSERT(this->m_descriptor.fd == -1);  // Ensure we are not opening an opened socket
+        status = this->getSocketHandler().open(this->m_descriptor);
+        // Lock scope
+        {
+            Os::ScopeLock scopeLock(m_lock);
+            if (Drv::SOCK_SUCCESS == status) {
+                this->m_open = OpenState::OPEN;
+            } else {
+                this->m_open = OpenState::NOT_OPEN;
+                this->m_descriptor.fd = -1;
+            }
+        }
+        // Notify connection on success outside locked scope
+        if (Drv::SOCK_SUCCESS == status) {
+            this->connected();
+        }
+    }
+
+    return status;
+}
+
+bool SocketComponentHelper::isOpened() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    bool is_open = this->m_open == OpenState::OPEN;
+    return is_open;
+}
+
+void SocketComponentHelper::setAutomaticOpen(bool auto_open) {
+    Os::ScopeLock scopedLock(this->m_lock);
+    this->m_reopen = auto_open;
+}
+
+SocketIpStatus SocketComponentHelper::reopen() {
+    SocketIpStatus status = SOCK_SUCCESS;
+    if (not this->isOpened()) {
+        // Check for auto-open before attempting to reopen
+        bool reopen = false;
+        {
+            Os::ScopeLock scopedLock(this->m_lock);
+            reopen = this->m_reopen;
+        }
+        // Open a network connection if it has not already been open
+        if (not reopen) {
+            status = SOCK_AUTO_CONNECT_DISABLED;
+        } else {
+            status = this->open();
+            if (status == SocketIpStatus::SOCK_ANOTHER_THREAD_OPENING) {
+                status = SocketIpStatus::SOCK_SUCCESS;
+            }
+        }
+    }
+    return status;
+}
+
+SocketIpStatus SocketComponentHelper::send(const U8* const data, const U32 size) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    this->m_lock.lock();
+    SocketDescriptor descriptor = this->m_descriptor;
+    this->m_lock.unlock();
+    // Prevent transmission before connection, or after a disconnect
+    if (descriptor.fd == -1) {
+        status = this->reopen();
+        // if reopen wasn't successful, pass the that up to the caller
+        if (status != SOCK_SUCCESS) {
+            return status;
+        }
+        // Refresh local copy after reopen
+        this->m_lock.lock();
+        descriptor = this->m_descriptor;
+        this->m_lock.unlock();
+    }
+    status = this->getSocketHandler().send(descriptor, data, size);
+    if (status == SOCK_DISCONNECTED) {
+        this->close();
+    }
+    return status;
+}
+
+void SocketComponentHelper::shutdown() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    this->getSocketHandler().shutdown(this->m_descriptor);
+}
+
+void SocketComponentHelper::close() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    this->getSocketHandler().close(this->m_descriptor);
+    this->m_descriptor.fd = -1;
+    this->m_open = OpenState::NOT_OPEN;
+}
+
+Os::Task::Status SocketComponentHelper::join() {
+    return m_task.join();
+}
+
+void SocketComponentHelper::stop() {
+    // Scope to protect lock
+    {
+        Os::ScopeLock scopeLock(m_lock);
+        this->m_stop = true;
+    }
+    this->shutdown();  // Break out of any receives and fully shutdown
+}
+
+bool SocketComponentHelper::running() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    bool running = not this->m_stop;
+    return running;
+}
+
+SocketIpStatus SocketComponentHelper::recv(U8* data, U32& size) {
+    SocketIpStatus status = SOCK_SUCCESS;
+    // Check for previously disconnected socket
+    this->m_lock.lock();
+    SocketDescriptor descriptor = this->m_descriptor;
+    this->m_lock.unlock();
+    if (descriptor.fd == -1) {
+        return SOCK_DISCONNECTED;
+    }
+    status = this->getSocketHandler().recv(descriptor, data, size);
+    if (status == SOCK_DISCONNECTED) {
+        this->close();
+    }
+    return status;
+}
+
+void SocketComponentHelper::readLoop() {
+    SocketIpStatus status = SOCK_SUCCESS;
+    do {
+        // Prevent transmission before connection, or after a disconnect
+        if ((not this->isOpened()) and this->running()) {
+            status = this->reopen();
+            // When reopen is disabled, just break as this is a exit condition for the loop
+            if (status == SOCK_AUTO_CONNECT_DISABLED) {
+                break;
+            }
+            // If the reconnection failed in any other way, warn, wait, and retry
+            else if (status != SOCK_SUCCESS) {
+                Fw::Logger::log("[WARNING] Failed to open port with status %d and errno %d\n", status, errno);
+                (void)Os::Task::delay(SOCKET_RETRY_INTERVAL);
+                continue;
+            }
+        }
+        // If the network connection is open, read from it
+        if (this->isOpened() and this->running()) {
+            Fw::Buffer buffer = this->getBuffer();
+            U8* data = buffer.getData();
+            FW_ASSERT(data);
+            FW_ASSERT_NO_OVERFLOW(buffer.getSize(), U32);
+            U32 size = static_cast<U32>(buffer.getSize());
+            // recv blocks, so it may have been a while since its done an isOpened check
+            status = this->recv(data, size);
+            if ((status != SOCK_SUCCESS) && (status != SOCK_INTERRUPTED_TRY_AGAIN) &&
+                (status != SOCK_NO_DATA_AVAILABLE)) {
+                Fw::Logger::log("[WARNING] Failed to recv from port with status %d and errno %d\n", status, errno);
+                this->close();
+                buffer.setSize(0);
+            } else {
+                // Send out received data
+                buffer.setSize(size);
+            }
+            this->sendBuffer(buffer, status);
+        }
+    }
+    // This will loop until stopped. If auto-open is disabled, this will break when reopen returns disabled status
+    while (this->running());
+    // Close the socket
+    this->close();  // Close the port entirely
+}
+
+void SocketComponentHelper::readTask(void* pointer) {
+    FW_ASSERT(pointer);
+    SocketComponentHelper* self = reinterpret_cast<SocketComponentHelper*>(pointer);
+    self->readLoop();
+}
+}  // namespace Drv
+```
+
+### `SocketComponentHelper.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/SocketComponentHelper.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SocketComponentHelper.hpp
+// \author mstarch
+// \brief  hpp file for SocketComponentHelper implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_SocketComponentHelper_HPP
+#define DRV_SocketComponentHelper_HPP
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Fw/Buffer/Buffer.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Task.hpp>
+
+namespace Drv {
+/**
+ * \brief supports a task to read a given socket adaptation
+ *
+ * Defines an Os::Task task to read a socket and send out the data. This represents the task itself, which is capable of
+ * reading the data from the socket, sending the data out, and reopening the connection should a non-retry error occur.
+ *
+ */
+class SocketComponentHelper {
+  public:
+    enum OpenState { NOT_OPEN, OPENING, OPEN, SKIP };
+    /**
+     * \brief constructs the socket read task
+     */
+    SocketComponentHelper();
+
+    /**
+     * \brief destructor of the socket read task
+     */
+    virtual ~SocketComponentHelper();
+
+    /**
+     * \brief start the socket read task to start producing data
+     *
+     * Starts up the socket reading task and when reopen was configured, will open up the socket.
+     *
+     * \note: users must now use `setAutomaticOpen` to configure the socket to automatically open connections. The
+     *        default behavior is to automatically open connections.
+     *
+     * \param name: name of the task
+     * \param priority: priority of the started task. See: Os::Task::start. Default: TASK_PRIORITY_DEFAULT, not
+     * prioritized
+     * \param stack: stack size provided to the task. See: Os::Task::start. Default: TASK_DEFAULT, posix threads default
+     * \param cpuAffinity: cpu affinity provided to task. See: Os::Task::start. Default: TASK_DEFAULT, don't care
+     */
+    void start(const Fw::StringBase& name,
+               const FwTaskPriorityType priority = Os::Task::TASK_PRIORITY_DEFAULT,
+               const Os::Task::ParamType stack = Os::Task::TASK_DEFAULT,
+               const Os::Task::ParamType cpuAffinity = Os::Task::TASK_DEFAULT);
+
+    /**
+     * \brief open the socket for communications
+     *
+     * Typically the socket read task will open the connection and keep it open. However, in cases where the socket is
+     * not automatically opening, this call will open the socket. This will block until the socket is opened.
+     *
+     * Note: this just delegates to the handler
+     *
+     * \return status of open, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus open();
+
+    /**
+     * \brief check if IP socket has previously been opened
+     *
+     * Check if this IpSocket has previously been opened. In the case of Udp this will check for outgoing transmissions
+     * and (if configured) incoming transmissions as well. This does not guarantee errors will not occur when using this
+     * socket as the remote component may have disconnected.
+     *
+     * \return true if socket is open, false otherwise
+     */
+    bool isOpened();
+
+    /**
+     * \brief set socket to automatically open connections when true, or not when false
+     *
+     * When passed `true`, this instructs the socket to automatically open a socket and reopen socket failed
+     * connections. When passed `false` the user must explicitly call the `open` method to open the socket initially and
+     * when a socket fails.
+     *
+     * \param auto_open: true to automatically open and reopen sockets, false otherwise
+     */
+    void setAutomaticOpen(bool auto_open);
+
+    /**
+     * \brief send data to the IP socket from the given buffer
+     *
+     *
+     * \param data: pointer to data to send
+     * \param size: size of data to send
+     * \return status of send, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus send(const U8* const data, const U32 size);
+
+    /**
+     * \brief receive data from the IP socket from the given buffer
+     *
+     *
+     * \param data: pointer to data to fill with received data
+     * \param size: maximum size of data buffer to fill
+     * \return status of the send, SOCK_DISCONNECTED to reopen, SOCK_SUCCESS on success, something else on error
+     */
+    SocketIpStatus recv(U8* data, U32& size);
+
+    /**
+     * \brief close the socket communications
+     *
+     * Close the client connection. This will ensure that the resources used are cleaned-up.
+     *
+     * Note: this just delegates to the handler
+     */
+    void close();
+
+    /**
+     * \brief shutdown the socket communications
+     *
+     * Shutdown communication. This will begin the process of cleanly closing communications. This process will be
+     * finished with a receive of 0 size and should be followed by a close.
+     *
+     * Note: this just delegates to the handler
+     */
+    void shutdown();
+
+    /**
+     * \brief is the read loop running
+     */
+    bool running();
+
+    /**
+     * \brief stop the socket read task and close the associated socket.
+     *
+     * Called to stop the socket read task. It is an error to call this before the thread has been started using the
+     * startSocketTask call. This will stop the read task and close the client socket.
+     */
+    void stop();
+
+    /**
+     * \brief joins to the stopping read task to wait for it to close
+     *
+     * Called to join with the read socket task. This will block and return after the task has been stopped with a call
+     * to the stopSocketTask method.
+     * \param value_ptr: a pointer to fill with data. Passed to the Os::Task::join call. NULL to ignore.
+     * \return: Os::Task::Status passed back from the Os::Task::join call.
+     */
+    Os::Task::Status join();
+
+  protected:
+    /**
+     * \brief receive off the TCP socket
+     */
+    virtual void readLoop();
+    /**
+     * \brief returns a reference to the socket handler
+     *
+     * Gets a reference to the current socket handler in order to operate generically on the IpSocket instance. Used for
+     * receive, and open calls.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return IpSocket reference
+     */
+    virtual IpSocket& getSocketHandler() = 0;
+
+    /**
+     * \brief returns a buffer to fill with data
+     *
+     * Gets a reference to a buffer to fill with data. This allows the component to determine how to provide a
+     * buffer and the socket read task just fills said buffer.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return Fw::Buffer to fill with data
+     */
+    virtual Fw::Buffer getBuffer() = 0;
+
+    /**
+     * \brief sends a buffer to be filled with data
+     *
+     * Sends the buffer gotten by getBuffer that has now been filled with data. This is used to delegate to the
+     * component how to send back the buffer.
+     *
+     * Note: this must be implemented by the inheritor
+     *
+     * \return Fw::Buffer filled with data to send out
+     */
+    virtual void sendBuffer(Fw::Buffer buffer, SocketIpStatus status) = 0;
+
+    /**
+     * \brief called when the IPv4 system has been connected
+     */
+    virtual void connected() = 0;
+
+    /**
+     * \brief a task designed to read from the socket and output incoming data
+     *
+     * \param pointer: pointer to "this" component
+     */
+    static void readTask(void* pointer);
+
+  private:
+    /**
+     * \brief Re-open port if it has been disconnected
+     *
+     * This function is a helper to handle the situations where this code needs to safely reopen a socket. User code
+     * should connect using the `open` call. This is for opening/reopening in situations where automatic open is
+     * performed within this socket helper.
+     *
+     * \return status of reconnect, SOCK_SUCCESS for success, something else on error
+     */
+    SocketIpStatus reopen();
+
+  protected:
+    Os::Task m_task;
+    Os::Mutex m_lock;
+    SocketDescriptor m_descriptor;
+    bool m_reopen = true;                    //!< Force reopen on disconnect
+    bool m_stop = true;                      //!< Stops the task when set to true
+    OpenState m_open = OpenState::NOT_OPEN;  //!< Have we successfully opened
+};
+}  // namespace Drv
+#endif  // DRV_SocketComponentHelper_HPP
+```
+
+### `TcpClientSocket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpClientSocket.cpp
+// \author mstarch
+// \brief  cpp file for TcpClientSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/Ip/TcpClientSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include <errnoLib.h>
+#include <fioLib.h>
+#include <hostLib.h>
+#include <inetLib.h>
+#include <ioLib.h>
+#include <sockLib.h>
+#include <socket.h>
+#include <sysLib.h>
+#include <taskLib.h>
+#include <vxWorks.h>
+#include <cstring>
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+#include <cstdio>
+#include <cstring>
+
+namespace Drv {
+
+TcpClientSocket::TcpClientSocket() : IpSocket() {}
+
+bool TcpClientSocket::isValidPort(U16 port) {
+    return port != 0;
+}
+
+SocketIpStatus TcpClientSocket::openProtocol(SocketDescriptor& socketDescriptor) {
+    int socketFd = -1;
+    struct sockaddr_in address;
+
+    // Acquire a socket, or return error
+    if ((socketFd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+    // Set up the address port and name
+    address.sin_family = AF_INET;
+    address.sin_port = htons(this->m_port);
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast<U8>(sizeof(struct sockaddr_in));
+#endif
+
+    // First IP address to socket sin_addr
+    if (IpSocket::addressToIp4(m_hostname, &(address.sin_addr)) != SOCK_SUCCESS) {
+        ::close(socketFd);
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+
+    // Now apply timeouts
+    if (IpSocket::setupTimeouts(socketFd) != SOCK_SUCCESS) {
+        ::close(socketFd);
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+
+    // TCP requires connect to the socket to allow for communication
+    if (::connect(socketFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0) {
+        ::close(socketFd);
+        return SOCK_FAILED_TO_CONNECT;
+    }
+    socketDescriptor.fd = socketFd;
+    Fw::Logger::log("Connected to %s:%hu as a tcp client\n", m_hostname, m_port);
+    return SOCK_SUCCESS;
+}
+
+I32 TcpClientSocket::sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) {
+    return static_cast<I32>(::send(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS));
+}
+
+I32 TcpClientSocket::recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) {
+    return static_cast<I32>(::recv(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS));
+}
+
+}  // namespace Drv
+```
+
+### `TcpClientSocket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpClientSocket.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpClientSocket.hpp
+// \author mstarch
+// \brief  cpp file for TcpClientSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_TCPCLIENT_TCPHELPER_HPP_
+#define DRV_TCPCLIENT_TCPHELPER_HPP_
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <config/IpCfg.hpp>
+
+namespace Drv {
+/**
+ * \brief Helper for setting up Tcp using Berkeley sockets as a client
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpClientSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class TcpClientSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket tcp implementation
+     */
+    TcpClientSocket();
+
+  protected:
+    /**
+     * \brief Check if the given port is valid for the socket
+     *
+     * Some ports should be allowed for sockets and disabled on others (e.g. port 0 is a valid tcp server port but not a
+     * client. This will check the port and return "true" if the port is valid, or "false" otherwise. In the tcp client
+     * implementation, all ports are considered valid except for "0".
+     *
+     * \param port: port to check
+     * \return true if valid, false otherwise
+     */
+    bool isValidPort(U16 port) override;
+
+    /**
+     * \brief Tcp specific implementation for opening a client socket.
+     * \param socketDescriptor: (output) descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor& socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) override;
+};
+}  // namespace Drv
+
+#endif /* DRV_TCPCLIENT_TCPHELPER_HPP_ */
+```
+
+### `TcpServerSocket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpServerSocket.cpp
+// \author mstarch
+// \brief  cpp file for TcpServerSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <Drv/Ip/TcpServerSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include <errnoLib.h>
+#include <fioLib.h>
+#include <hostLib.h>
+#include <inetLib.h>
+#include <ioLib.h>
+#include <sockLib.h>
+#include <socket.h>
+#include <sysLib.h>
+#include <taskLib.h>
+#include <vxWorks.h>
+#include <cstring>
+#elif defined TGT_OS_TYPE_LINUX || TGT_OS_TYPE_DARWIN
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#else
+#error OS not supported for IP Socket Communications
+#endif
+
+#include <cstring>
+
+namespace Drv {
+
+TcpServerSocket::TcpServerSocket() : IpSocket() {}
+
+U16 TcpServerSocket::getListenPort() {
+    U16 port = this->m_port;
+    return port;
+}
+
+SocketIpStatus TcpServerSocket::startup(SocketDescriptor& socketDescriptor) {
+    int serverFd = -1;
+    struct sockaddr_in address;
+    // Acquire a socket, or return error
+    if ((serverFd = ::socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+    // Set up the address port and name
+    address.sin_family = AF_INET;
+    address.sin_port = htons(this->m_port);
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast<U8>(sizeof(struct sockaddr_in));
+#endif
+    // First IP address to socket sin_addr
+    if (IpSocket::addressToIp4(m_hostname, &(address.sin_addr)) != SOCK_SUCCESS) {
+        ::close(serverFd);
+        return SOCK_INVALID_IP_ADDRESS;
+    };
+
+    // TCP requires bind to an address to the socket
+    if (::bind(serverFd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_BIND;
+    }
+
+    socklen_t size = sizeof(address);
+    if (::getsockname(serverFd, reinterpret_cast<struct sockaddr*>(&address), &size) == -1) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_READ_BACK_PORT;
+    }
+    // TCP requires listening on the socket. Since we only expect a single client, set the TCP backlog (second argument)
+    // to 1 to prevent queuing of multiple clients.
+    if (::listen(serverFd, 1) < 0) {
+        ::close(serverFd);
+        return SOCK_FAILED_TO_LISTEN;  // What we have here is a failure to communicate
+    }
+    Fw::Logger::log("Listening for single client at %s:%hu\n", m_hostname, m_port);
+    FW_ASSERT(serverFd != -1);
+    socketDescriptor.serverFd = serverFd;
+    this->m_port = ntohs(address.sin_port);
+    return SOCK_SUCCESS;
+}
+
+void TcpServerSocket::terminate(const SocketDescriptor& socketDescriptor) {
+    (void)::close(socketDescriptor.serverFd);
+}
+
+SocketIpStatus TcpServerSocket::openProtocol(SocketDescriptor& socketDescriptor) {
+    int clientFd = -1;
+    int serverFd = socketDescriptor.serverFd;
+
+    // Check for not started yet, may be true in the case of start-up reconnect attempts
+    if (serverFd == -1) {
+        return SOCK_NOT_STARTED;
+    }
+
+    // TCP requires accepting on the socket to get the client socket file descriptor.
+    clientFd = ::accept(serverFd, nullptr, nullptr);
+    if (clientFd < 0) {
+        return SOCK_FAILED_TO_ACCEPT;  // What we have here is a failure to communicate
+    }
+    // Setup client send timeouts
+    if (IpSocket::setupTimeouts(clientFd) != SOCK_SUCCESS) {
+        ::close(clientFd);
+        return SOCK_FAILED_TO_SET_SOCKET_OPTIONS;
+    }
+
+    Fw::Logger::log("Accepted client at %s:%hu\n", m_hostname, m_port);
+    socketDescriptor.fd = clientFd;
+    return SOCK_SUCCESS;
+}
+
+I32 TcpServerSocket::sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) {
+    return static_cast<I32>(::send(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS));
+}
+
+I32 TcpServerSocket::recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) {
+    I32 size_buf;
+    // recv will return 0 if the client has done an orderly shutdown
+    size_buf = static_cast<I32>(::recv(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS));
+    return size_buf;
+}
+
+}  // namespace Drv
+```
+
+### `TcpServerSocket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/TcpServerSocket.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpServerSocket.hpp
+// \author mstarch
+// \brief  hpp file for TcpServerSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_TCPSERVER_TCPHELPER_HPP_
+#define DRV_TCPSERVER_TCPHELPER_HPP_
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <config/IpCfg.hpp>
+
+namespace Drv {
+
+/**
+ * \brief Helper for setting up Tcp using Berkeley sockets as a server
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. TcpServerSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class TcpServerSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket tcp implementation
+     */
+    TcpServerSocket();
+
+    /**
+     * \brief Opens the server socket and listens, does not block.
+     *
+     * Opens the server's listening socket such that this server can listen for incoming client requests. Given the
+     * nature of this component, only one (1) client can be handled at a time. After this call succeeds, clients may
+     * connect. This call does not block, block occurs on `open` while waiting to accept incoming clients.
+     * \param socketDescriptor: server descriptor will be written here
+     * \return status of the server socket setup.
+     */
+    SocketIpStatus startup(SocketDescriptor& socketDescriptor);
+
+    /**
+     * \brief close the server socket created by the `startup` call
+     *
+     * Calls the close function on the server socket. No shutdown is performed on the server socket, as that is left to
+     * the individual client sockets.
+     *
+     * \param socketDescriptor:  descriptor to close
+     */
+    void terminate(const SocketDescriptor& socketDescriptor);
+
+    /**
+     * \brief get the port being listened on
+     *
+     * Most useful when listen was configured to use port "0", this will return the port used for listening after a port
+     * has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getListenPort();
+
+  protected:
+    /**
+     * \brief Tcp specific implementation for opening a client socket connected to this server.
+     * \param socketDescriptor: (output) descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor& socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) override;
+};
+}  // namespace Drv
+
+#endif /* DRV_TCPSERVER_TCPHELPER_HPP_ */
+```
+
+### `UdpSocket.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  UdpSocket.cpp
+// \author mstarch
+// \brief  cpp file for UdpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include <Drv/Ip/UdpSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <Fw/Logger/Logger.hpp>
+#include <Fw/Types/Assert.hpp>
+#include <Fw/Types/StringUtils.hpp>
+
+#ifdef TGT_OS_TYPE_VXWORKS
+#include <errnoLib.h>
+#include <fioLib.h>
+#include <hostLib.h>
+#include <inetLib.h>
+#include <ioLib.h>
+#include <sockLib.h>
+#include <socket.h>
+#include <sysLib.h>
+#include <taskLib.h>
+#include <vxWorks.h>
+#include <cstring>
+#else
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <unistd.h>
+#endif
+
+#include <cerrno>
+#include <cstring>
+#include <new>
+
+namespace Drv {
+
+UdpSocket::UdpSocket() : IpSocket(), m_recv_configured(false) {
+    (void)::memset(&m_addr_send, 0, sizeof(m_addr_send));
+    (void)::memset(&m_addr_recv, 0, sizeof(m_addr_recv));
+}
+
+UdpSocket::~UdpSocket() = default;
+
+SocketIpStatus UdpSocket::configure(const char* const hostname,
+                                    const U16 port,
+                                    const U32 timeout_seconds,
+                                    const U32 timeout_microseconds) {
+    FW_ASSERT(0);  // Must use configureSend and/or configureRecv
+    return SocketIpStatus::SOCK_INVALID_CALL;
+}
+
+SocketIpStatus UdpSocket::configureSend(const char* const hostname,
+                                        const U16 port,
+                                        const U32 timeout_seconds,
+                                        const U32 timeout_microseconds) {
+    FW_ASSERT(hostname != nullptr);
+    FW_ASSERT(this->isValidPort(port));
+    FW_ASSERT(timeout_microseconds < 1000000);
+    return IpSocket::configure(hostname, port, timeout_seconds, timeout_microseconds);
+}
+
+SocketIpStatus UdpSocket::configureRecv(const char* hostname, const U16 port) {
+    FW_ASSERT(hostname != nullptr);
+    FW_ASSERT(this->isValidPort(port));
+    FW_ASSERT(Fw::StringUtils::string_length(hostname, SOCKET_MAX_HOSTNAME_SIZE) < SOCKET_MAX_HOSTNAME_SIZE);
+
+    // Initialize the receive address structure
+    (void)::memset(&m_addr_recv, 0, sizeof(m_addr_recv));
+    m_addr_recv.sin_family = AF_INET;
+    m_addr_recv.sin_port = htons(port);
+
+    // Convert hostname to IP address
+    SocketIpStatus status = IpSocket::addressToIp4(hostname, &m_addr_recv.sin_addr);
+    if (status != SOCK_SUCCESS) {
+        return status;
+    }
+
+    this->m_recv_configured = true;
+    return SOCK_SUCCESS;
+}
+
+U16 UdpSocket::getRecvPort() {
+    return ntohs(this->m_addr_recv.sin_port);
+}
+
+SocketIpStatus UdpSocket::bind(const int fd) {
+    FW_ASSERT(fd != -1);
+    struct sockaddr_in address = this->m_addr_recv;
+
+    // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+    address.sin_len = static_cast<U8>(sizeof(struct sockaddr_in));
+#endif
+    // UDP (for receiving) requires bind to an address to the socket
+    if (::bind(fd, reinterpret_cast<struct sockaddr*>(&address), sizeof(address)) < 0) {
+        return SOCK_FAILED_TO_BIND;
+    }
+
+    socklen_t size = sizeof(address);
+    if (::getsockname(fd, reinterpret_cast<struct sockaddr*>(&address), &size) == -1) {
+        return SOCK_FAILED_TO_READ_BACK_PORT;
+    }
+
+    // Update m_addr_recv with the actual port assigned (for ephemeral port support)
+    this->m_addr_recv.sin_port = address.sin_port;
+
+    return SOCK_SUCCESS;
+}
+
+SocketIpStatus UdpSocket::openProtocol(SocketDescriptor& socketDescriptor) {
+    if (this->m_port == 0 && !this->m_recv_configured) {
+        return SOCK_INVALID_CALL;  // Neither send nor receive is configured
+    }
+
+    SocketIpStatus status = SOCK_SUCCESS;
+    int socketFd = -1;
+
+    // Initialize address structure to zero before use
+    struct sockaddr_in address;
+    (void)::memset(&address, 0, sizeof(address));
+
+    U16 port = this->m_port;
+    U16 recv_port = ntohs(this->m_addr_recv.sin_port);
+
+    // Acquire a socket, or return error
+    if ((socketFd = ::socket(AF_INET, SOCK_DGRAM, 0)) == -1) {
+        return SOCK_FAILED_TO_GET_SOCKET;
+    }
+
+    // May not be sending in all cases
+    if (port != 0) {
+        // Set up the address port and name
+        address.sin_family = AF_INET;
+        address.sin_port = htons(this->m_port);
+
+        // OS specific settings
+#if defined TGT_OS_TYPE_VXWORKS || TGT_OS_TYPE_DARWIN
+        address.sin_len = static_cast<U8>(sizeof(struct sockaddr_in));
+#endif
+
+        // First IP address to socket sin_addr
+        status = IpSocket::addressToIp4(m_hostname, &(address.sin_addr));
+        if (status != SOCK_SUCCESS) {
+            Fw::Logger::log("Failed to resolve hostname %s: %d\n", m_hostname, static_cast<I32>(status));
+            ::close(socketFd);
+            return status;
+        };
+
+        // Now apply timeouts
+        status = this->setupTimeouts(socketFd);
+        if (status != SOCK_SUCCESS) {
+            ::close(socketFd);
+            return status;
+        }
+        FW_ASSERT(sizeof(this->m_addr_send) == sizeof(address), static_cast<FwAssertArgType>(sizeof(this->m_addr_send)),
+                  static_cast<FwAssertArgType>(sizeof(address)));
+        (void)memcpy(&this->m_addr_send, &address, sizeof(this->m_addr_send));
+    }
+
+    // Only bind if configureRecv was called (including ephemeral)
+    if (this->m_recv_configured) {
+        status = this->bind(socketFd);
+
+        if (status != SOCK_SUCCESS) {
+            (void)::close(socketFd);  // Closing FD as a retry will reopen send side
+            return status;
+        }
+    }
+
+    // Log message for UDP
+    char recv_addr[INET_ADDRSTRLEN];
+    const char* recv_addr_str = inet_ntop(AF_INET, &(this->m_addr_recv.sin_addr), recv_addr, INET_ADDRSTRLEN);
+    if (recv_addr_str == nullptr) {
+        (void)Fw::StringUtils::string_copy(recv_addr, "INVALID_ADDR", INET_ADDRSTRLEN);
+    }
+
+    if ((port == 0) && (recv_port > 0)) {
+        Fw::Logger::log("Setup to only receive udp at %s:%hu\n", recv_addr, recv_port);
+    } else if ((port > 0) && (recv_port == 0)) {
+        Fw::Logger::log("Setup to only send udp at %s:%hu\n", m_hostname, port);
+    } else if ((port > 0) && (recv_port > 0)) {
+        Fw::Logger::log("Setup to receive udp at %s:%hu and send to %s:%hu\n", recv_addr, recv_port, m_hostname, port);
+    }
+
+    FW_ASSERT(status == SOCK_SUCCESS, static_cast<FwAssertArgType>(status));
+    socketDescriptor.fd = socketFd;
+    return status;
+}
+
+I32 UdpSocket::sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) {
+    FW_ASSERT(this->m_addr_send.sin_family != 0);  // Make sure the address was previously setup
+    FW_ASSERT(socketDescriptor.fd >= 0);           // File descriptor should be valid
+    FW_ASSERT(data != nullptr);                    // Data pointer should not be null
+
+    return static_cast<I32>(::sendto(socketDescriptor.fd, data, size, SOCKET_IP_SEND_FLAGS,
+                                     reinterpret_cast<struct sockaddr*>(&this->m_addr_send),
+                                     sizeof(this->m_addr_send)));
+}
+
+I32 UdpSocket::recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) {
+    FW_ASSERT(this->m_addr_recv.sin_family != 0);  // Make sure the address was previously setup
+    FW_ASSERT(socketDescriptor.fd >= 0);           // File descriptor should be valid
+    FW_ASSERT(data != nullptr);                    // Data pointer should not be null
+
+    // Initialize sender address structure to zero
+    struct sockaddr_in sender_addr;
+    (void)::memset(&sender_addr, 0, sizeof(sender_addr));
+
+    socklen_t sender_addr_len = sizeof(sender_addr);
+    I32 received = static_cast<I32>(::recvfrom(socketDescriptor.fd, data, size, SOCKET_IP_RECV_FLAGS,
+                                               reinterpret_cast<struct sockaddr*>(&sender_addr), &sender_addr_len));
+    // If we have not configured a send port, set it to the source of the last received packet
+    if (received >= 0 && this->m_addr_send.sin_port == 0) {
+        this->m_addr_send = sender_addr;
+        this->m_port = ntohs(sender_addr.sin_port);
+        Fw::Logger::log("Configured send port to %hu as specified by the last received packet.\n", this->m_port);
+    }
+    return received;
+}
+
+SocketIpStatus UdpSocket::send(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) {
+    // Note: socketDescriptor.fd can be -1 in some test cases
+    FW_ASSERT((size == 0) || (data != nullptr));
+
+    // Special case for zero-length datagrams in UDP
+    if (size == 0) {
+        errno = 0;
+        I32 sent = this->sendProtocol(socketDescriptor, data, 0);
+        if (sent == -1) {
+            if (errno == EINTR) {
+                // For zero-length datagrams, we'll just try once more if interrupted
+                errno = 0;
+                sent = this->sendProtocol(socketDescriptor, data, 0);
+            }
+
+            if (sent == -1) {
+                if ((errno == EBADF) || (errno == ECONNRESET)) {
+                    return SOCK_DISCONNECTED;
+                } else {
+                    return SOCK_SEND_ERROR;
+                }
+            }
+        }
+        // For zero-length datagrams in UDP, success is either 0 or a non-negative value
+        return SOCK_SUCCESS;
+    }
+
+    // For non-zero-length data, delegate to the base class implementation
+    return IpSocket::send(socketDescriptor, data, size);
+}
+
+SocketIpStatus UdpSocket::handleZeroReturn() {
+    // For UDP, a return of 0 from recvfrom means a 0-byte datagram was received.
+    // This is a success case for UDP, not a disconnection.
+    return SOCK_SUCCESS;
+}
+
+}  // namespace Drv
+```
+
+### `UdpSocket.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ip/UdpSocket.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  UdpSocket.hpp
+// \author mstarch
+// \brief  hpp file for UdpSocket core implementation classes
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#ifndef DRV_IP_UDPSOCKET_HPP_
+#define DRV_IP_UDPSOCKET_HPP_
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <config/IpCfg.hpp>
+
+// Include system headers for sockaddr_in
+#ifdef TGT_OS_TYPE_VXWORKS
+#include <inetLib.h>
+#include <socket.h>
+#else
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#endif
+
+namespace Drv {
+
+/**
+ * \brief Helper for setting up Udp using Berkeley sockets as a client
+ *
+ * Certain IP headers have conflicting definitions with the m_data member of various types in fprime. UdpSocket
+ * separates the ip setup from the incoming Fw::Buffer in the primary component class preventing this collision.
+ */
+class UdpSocket : public IpSocket {
+  public:
+    /**
+     * \brief Constructor for client socket udp implementation
+     */
+    UdpSocket();
+    /**
+     * \brief to cleanup state created at instantiation
+     */
+    virtual ~UdpSocket();
+
+    /**
+     * \brief configure is disabled
+     *
+     * \warning configure is disabled for UdpSocket. Use configureSend and configureRecv instead.
+     */
+    SocketIpStatus configure(const char* hostname,
+                             const U16 port,
+                             const U32 send_timeout_seconds,
+                             const U32 send_timeout_microseconds) override;
+
+    /**
+     * \brief configure the udp socket for outgoing transmissions
+     *
+     * Configures the UDP handler to use the given hostname and port for outgoing transmissions. Incoming hostname
+     * and port are configured using the `configureRecv` function call for UDP as it requires separate host/port pairs
+     * for outgoing and incoming transmissions. Hostname DNS translation is left up to the caller and thus hostname must
+     * be an IP address in dot-notation of the form "x.x.x.x". If port is set to 0, the socket will be configured for
+     * ephemeral send (dynamic reply-to) and will use the sender's address from the first received datagram for replies.
+     * It is possible to configure the UDP port as a single-direction send port only.
+     *
+     * Note: delegates to `IpSocket::configure`
+     *
+     * \param hostname: socket uses for outgoing transmissions. Must be of form x.x.x.x
+     * \param port: port socket uses for outgoing transmissions. Can be 0 for ephemeral reply-to mode.
+     * \param send_timeout_seconds: send timeout seconds portion
+     * \param send_timeout_microseconds: send timeout microseconds portion. Must be less than 1000000
+     * \return status of configure
+     */
+    SocketIpStatus configureSend(const char* hostname,
+                                 const U16 port,
+                                 const U32 send_timeout_seconds,
+                                 const U32 send_timeout_microseconds);
+
+    /**
+     * \brief configure the udp socket for incoming transmissions
+     *
+     * Configures the UDP handler to use the given hostname and port for incoming transmissions. Outgoing hostname
+     * and port are configured using the `configureSend` function call for UDP as it requires separate host/port pairs
+     * for outgoing and incoming transmissions. Hostname DNS translation is left up to the caller and thus hostname must
+     * be an IP address in dot-notation of the form "x.x.x.x". It is possible to configure the UDP port as a
+     * single-direction receive port only.
+     *
+     * \param hostname: socket uses for incoming transmissions. Must be of form x.x.x.x
+     * \param port: port socket uses for incoming transmissions. Can be 0 for ephemeral port assignment.
+     * \return status of configure
+     */
+    SocketIpStatus configureRecv(const char* hostname, const U16 port);
+
+    /**
+     * \brief get the port being received on
+     *
+     * Most useful when receive was configured to use port "0", this will return the port used for receiving data after
+     * a port has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getRecvPort();
+
+    /**
+     * \brief UDP-specific implementation of send that handles zero-length datagrams correctly.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data pointer to send
+     * \param size: size of data to send
+     * \return: status of the send operation
+     */
+    SocketIpStatus send(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) override;
+
+  protected:
+    /**
+     * \brief bind the UDP to a port such that it can receive packets at the previously configured port
+     * \param socketDescriptor: socket descriptor used in bind
+     * \return status of the bind
+     */
+    SocketIpStatus bind(const int fd);
+    /**
+     * \brief udp specific implementation for opening a socket.
+     * \param socketDescriptor: (output) file descriptor opened. Only valid on SOCK_SUCCESS. Otherwise will be invalid
+     * \return status of open
+     */
+    SocketIpStatus openProtocol(SocketDescriptor& socketDescriptor) override;
+    /**
+     * \brief Protocol specific implementation of send.  Called directly with retry from send.
+     * \param socketDescriptor: descriptor to send to
+     * \param data: data to send
+     * \param size: size of data to send
+     * \return: size of data sent, or -1 on error.
+     */
+    I32 sendProtocol(const SocketDescriptor& socketDescriptor, const U8* const data, const U32 size) override;
+    /**
+     * \brief Protocol specific implementation of recv.  Called directly with error handling from recv.
+     * \param socketDescriptor: descriptor to recv from
+     * \param data: data pointer to fill
+     * \param size: size of data buffer
+     * \return: size of data received, or -1 on error.
+     */
+    I32 recvProtocol(const SocketDescriptor& socketDescriptor, U8* const data, const U32 size) override;
+    /**
+     * \brief Handle zero return from recvProtocol for UDP
+     *
+     * For UDP, a return of 0 from recvfrom means a 0-byte datagram was received,
+     * which is a success case, not a disconnection.
+     *
+     * @return SocketIpStatus Status to return from recv
+     */
+    SocketIpStatus handleZeroReturn() override;
+
+  private:
+    struct sockaddr_in m_addr_send;  //!< UDP server address for sending
+    struct sockaddr_in m_addr_recv;  //!< UDP server address for receiving
+    bool m_recv_configured;          //!< True if configureRecv was called
+};
+}  // namespace Drv
+
+#endif /* DRV_IP_UDPSOCKET_HPP_ */
+```

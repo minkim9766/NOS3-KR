@@ -3,14 +3,27 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/memory/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonMemoryTests.cpp`
 
-file--CommonMemoryTests.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/memory/CommonMemoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubMemoryTests.cpp
+// \brief tests using stub implementation for Os::Memory interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Darwin/Memory.hpp"
+#include "Os/Memory.hpp"
+
+TEST(Basic, Usage) {
+    Os::Memory::Usage usage_output;
+    Os::Memory::getUsage(usage_output);
+
+    ASSERT_GT(usage_output.used, 0);
+    ASSERT_GT(usage_output.total, 0);
+}
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/memory/CommonMemoryTests.cpp`](file--CommonMemoryTests.cpp) — UTF-8 텍스트 파일 본문 포함

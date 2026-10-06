@@ -3,18 +3,227 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activity.component.css`
 
-file--activity.component.css
-file--activity.component.html
-file--activity.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.css`
+
+
+```css
+.activity-header {
+  height: 100px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: flex;
+}
+
+.activity-header-left {
+  flex: 1 1 auto;
+  align-self: center;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+.activity-header-left .title {
+  font-size: larger;
+}
+
+.activity-header-left .subtitle {
+  font-size: smaller;
+  color: gray;
+}
+
+.activity-header-right {
+  flex: 1 1 auto;
+  align-self: center;
+  text-align: right;
+  margin-left: 24px;
+  margin-right: 24px;
+}
+
+.tab-content-wrapper {
+  position: absolute;
+  /* tab height + border + header */
+  top: calc(36px + 1px + 100px);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.tab-content-wrapper.noscroll {
+  overflow: hidden;
+}
 ```
 
-## 항목
+### `activity.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.css`](file--activity.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.html`](file--activity.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.ts`](file--activity.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.html`
+
+
+```html
+@if (activity$ | async; as activity) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        <ya-page-icon-button
+          routerLink=".."
+          [queryParams]="{ c: yamcs.context }"
+          icon="arrow_back" />
+        Activity details
+      </ng-template>
+
+      @if (activity.type === "MANUAL" && activity.status === "RUNNING" && mayControlActivities()) {
+        <ya-page-button (clicked)="setSuccessful(activity)" icon="thumb_up">
+          Set successful
+        </ya-page-button>
+        <ya-page-button (clicked)="setFailed(activity)" icon="thumb_down">
+          Set failed
+        </ya-page-button>
+      }
+      @if (mayControlActivities()) {
+        <ya-page-button
+          [disabled]="!!activity.stop"
+          (clicked)="cancelActivity(activity)"
+          icon="cancel">
+          Cancel
+        </ya-page-button>
+      }
+    </ya-instance-toolbar>
+
+    <div class="activity-header">
+      <div class="activity-header-left">
+        <span class="title">{{ activity.detail }}</span>
+        <br />
+        <span class="subtitle">ID: {{ activity.id }}</span>
+        <br />
+        <span class="subtitle">Started {{ activity.start | datetime }}</span>
+        <br />
+      </div>
+      <div class="activity-header-right">
+        <app-activity-status [activity]="activity" />
+      </div>
+    </div>
+
+    <ya-page-tabs>
+      <a
+        routerLink="log"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [class.active]="rla.isActive"
+        [queryParams]="{ c: yamcs.context }">
+        Activity log
+      </a>
+      <a
+        routerLink="details"
+        routerLinkActive
+        #rlb="routerLinkActive"
+        [class.active]="rlb.isActive"
+        [queryParams]="{ c: yamcs.context }">
+        Details
+      </a>
+    </ya-page-tabs>
+    <div class="tab-content-wrapper">
+      <router-outlet />
+    </div>
+  </ya-instance-page>
+}
+```
+
+### `activity.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity/activity.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  input,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import {
+  Activity,
+  AuthService,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Observable, tap } from 'rxjs';
+import { SetFailedDialogComponent } from '../set-failed-dialog/set-failed-dialog.component';
+import { ActivityStatusComponent } from '../shared/activity-status.component';
+import { ActivityService } from '../shared/activity.service';
+
+@Component({
+  templateUrl: './activity.component.html',
+  styleUrl: './activity.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ActivityStatusComponent, WebappSdkModule],
+})
+export class ActivityComponent implements OnInit, OnDestroy {
+  activityId = input.required<string>();
+  activity$: Observable<Activity | null>;
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private authService: AuthService,
+    private dialog: MatDialog,
+    private activityService: ActivityService,
+  ) {
+    this.activity$ = activityService.activity$.pipe(
+      tap((activity) => {
+        if (activity) {
+          title.setTitle(activity.detail);
+        }
+      }),
+    );
+  }
+
+  ngOnInit() {
+    this.activityService.connect(this.activityId());
+  }
+
+  mayControlActivities() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlActivities');
+  }
+
+  setSuccessful(activity: Activity) {
+    this.yamcs.yamcsClient
+      .completeManualActivity(this.yamcs.instance!, activity.id)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  setFailed(activity: Activity) {
+    this.dialog
+      .open(SetFailedDialogComponent, {
+        width: '400px',
+        data: { activity },
+      })
+      .afterClosed()
+      .subscribe((result) => {
+        if (result) {
+          this.yamcs.yamcsClient
+            .completeManualActivity(this.yamcs.instance!, activity.id, {
+              failureReason: result.failureReason,
+            })
+            .catch((err) => this.messageService.showError(err));
+        }
+      });
+  }
+
+  cancelActivity(activity: Activity) {
+    this.yamcs.yamcsClient
+      .cancelActivity(this.yamcs.instance!, activity.id)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.activityService.disconnect();
+  }
+}
+```

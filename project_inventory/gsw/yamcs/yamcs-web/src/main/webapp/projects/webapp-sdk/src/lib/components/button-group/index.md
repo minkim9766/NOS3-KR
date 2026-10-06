@@ -3,18 +3,52 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `button-group.component.css`
 
-file--button-group.component.css
-file--button-group.component.html
-file--button-group.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.css`
+
+
+```css
+:host {
+  display: inline-flex;
+  align-items: center;
+}
+
+:host ::ng-deep > *:not(:last-child) {
+  /**
+   * Collapse borders
+   */
+  margin-right: -1px;
+}
 ```
 
-## 항목
+### `button-group.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.css`](file--button-group.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.html`](file--button-group.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.ts`](file--button-group.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.html`
+
+
+```html
+<ng-content />
+```
+
+### `button-group.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/button-group/button-group.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-button-group',
+  templateUrl: './button-group.component.html',
+  styleUrl: './button-group.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-button-group',
+  },
+})
+export class YaButtonGroup {}
+```

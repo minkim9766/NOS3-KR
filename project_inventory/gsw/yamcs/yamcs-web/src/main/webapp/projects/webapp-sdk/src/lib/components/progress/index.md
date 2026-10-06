@@ -3,18 +3,117 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `progress.component.css`
 
-file--progress.component.css
-file--progress.component.html
-file--progress.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.css`
+
+
+```css
+/*
+ * Careful: the label should appear on top of the fill.
+ */
+.progress {
+  display: inline-block;
+  min-width: 100px;
+  min-height: 16px;
+  position: relative;
+  text-align: center;
+  margin-right: 5px;
+  background-color: #eee;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--y-accent);
+  background: linear-gradient(
+    to bottom,
+    var(--y-accent),
+    #bce3dd 50%,
+    var(--y-accent)
+  );
+}
+
+.progress-label {
+  all: unset !important;
+  position: absolute !important;
+  top: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  margin: 0 auto !important;
+}
 ```
 
-## 항목
+### `progress.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.css`](file--progress.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.html`](file--progress.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.ts`](file--progress.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.html`
+
+
+```html
+<div class="progress" [style.width]="width">
+  <div class="fill" [style.width]="100 * (boundedRatio$ | async)! + '%'"></div>
+  @if ((ratio$ | async) !== null) {
+    <div class="progress-label">
+      {{ ratio$ | async | percent: format }}
+    </div>
+  }
+  <span>&nbsp;</span>
+</div>
+```
+
+### `progress.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/progress/progress.component.ts`
+
+
+```typescript
+import { AsyncPipe, PercentPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'ya-progress',
+  templateUrl: './progress.component.html',
+  styleUrl: './progress.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, PercentPipe],
+})
+export class YaProgress implements OnChanges {
+  @Input()
+  value: number;
+
+  @Input()
+  total: number;
+
+  @Input()
+  width: string;
+
+  format = '1.1';
+
+  ratio$ = new BehaviorSubject<number | null>(null);
+  boundedRatio$ = new BehaviorSubject<number>(0);
+
+  ngOnChanges() {
+    const ratio = this.value / this.total;
+    if (ratio === null || ratio === undefined) {
+      this.ratio$.next(null);
+      this.boundedRatio$.next(0);
+      return;
+    }
+
+    this.ratio$.next(ratio);
+    this.boundedRatio$.next(Math.max(0, Math.min(1, ratio)));
+  }
+}
+```

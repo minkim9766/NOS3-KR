@@ -3,18 +3,70 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
-file--Makefile
-file--send_dps.seq
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/.gitignore`
+
+
+```text
+*.bin
 ```
 
-## 항목
+### `Makefile`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/send_dps.seq`](file--send_dps.seq) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/Makefile`
+
+
+```make
+
+%.bin: %.seq ../../../../../Ref/build-artifacts/Linux/Ref/dict/RefTopologyDictionary.json
+	fprime-seqgen --dictionary ../../../../../Ref/build-artifacts/Linux/Ref/dict/RefTopologyDictionary.json $< $@
+
+all: $(patsubst %.seq, %.bin, $(wildcard *.seq))
+
+install: all
+	mkdir -p ../../../../../Ref/seq
+	cp *.bin ../../../../../Ref/seq
+
+clean:
+	rm -f *.bin
+```
+
+### `send_dps.seq`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpCatalog/test/ut/seq/send_dps.seq`
+
+
+```text
+; Sequence to create and send some DPs
+
+
+; Have signal generator generate a DP
+R00:00:00 Ref.SG1.Settings, 1, 10, 1, TRIANGLE
+R00:00:02 Ref.SG1.Toggle
+R00:00:05 Ref.SG1.Dp, IMMEDIATE, 10, 10
+R00:00:15 Ref.SG1.Dp, ASYNC, 15, 2
+R00:00:20 Ref.SG1.Dp, IMMEDIATE, 20, 6
+R00:00:25 Ref.SG1.Dp, ASYNC, 25, 2
+R00:00:30 Ref.SG1.Dp, IMMEDIATE, 30, 7
+
+R00:00:00 Ref.cmdDisp.CMD_NO_OP_STRING, "Wait for Build"
+
+; Build the catalog
+R00:00:35 Ref.dpCat.BUILD_CATALOG
+; Send the files
+R00:00:00 Ref.dpCat.START_XMIT_CATALOG, WAIT
+
+; try to send again
+R00:00:00 Ref.dpCat.START_XMIT_CATALOG, WAIT
+
+R00:00:00 Ref.cmdDisp.CMD_NO_OP_STRING, "Wait for 2nd Build"
+
+
+; Build the catalog
+R00:00:00 Ref.dpCat.BUILD_CATALOG
+; Send the files
+R00:00:00 Ref.dpCat.START_XMIT_CATALOG, WAIT
+```

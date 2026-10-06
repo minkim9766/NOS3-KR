@@ -3,16 +3,166 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `packet-query-list.component.html`
 
-file--packet-query-list.component.html
-file--packet-query-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/packet-query-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Packets" />
+
+  <ya-panel>
+    <app-packets-page-tabs />
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="ya-data-table expand"
+      style="margin-top: 16px">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef style="min-width: 200px">Name</th>
+        <td mat-cell *matCellDef="let item">
+          <a
+            routerLink="/telemetry/packets"
+            [queryParams]="{
+              filter: item.query.filter,
+              name: item.query.name,
+              link: item.query.link,
+              c: yamcs.context,
+            }">
+            {{ item.name }}
+          </a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="visibility">
+        <th mat-header-cell *matHeaderCellDef>Visibility</th>
+        <td mat-cell *matCellDef="let item">
+          {{ item.shared ? "Shared" : "Private" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let item">
+          <ya-more>
+            <button mat-menu-item (click)="openEditQueryDialog(item)">Edit query</button>
+            <button mat-menu-item (click)="openDeleteQueryDialog(item)">Delete query</button>
+          </ya-more>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `packet-query-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/packet-query-list.component.html`](file--packet-query-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/packet-query-list.component.ts`](file--packet-query-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/packet-query-list.component.ts`
+
+
+```typescript
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  MessageService,
+  Query,
+  WebappSdkModule,
+  YamcsService,
+  YaSelectOption,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { EditPacketQueryDialogComponent } from '../edit-packet-query-dialog/edit-packet-query-dialog.component';
+import { PacketsPageTabsComponent } from '../packets-page-tabs/packets-page-tabs.component';
+
+@Component({
+  selector: 'app-packet-query-list',
+  templateUrl: './packet-query-list.component.html',
+  imports: [PacketsPageTabsComponent, WebappSdkModule],
+})
+export class PacketQueryListComponent {
+  displayedColumns = ['name', 'visibility', 'actions'];
+
+  dataSource = new MatTableDataSource<Query>();
+
+  nameOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'ANY', label: 'Any name' },
+  ]);
+
+  linkOptions$ = new BehaviorSubject<YaSelectOption[]>([
+    { id: 'ANY', label: 'Any link' },
+  ]);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+  ) {
+    this.refreshTable();
+
+    this.yamcs.yamcsClient
+      .getPacketNames(this.yamcs.instance!)
+      .then((message) => {
+        for (const name of message.packets || []) {
+          this.nameOptions$.next([
+            ...this.nameOptions$.value,
+            {
+              id: name,
+              label: name,
+            },
+          ]);
+        }
+        for (const name of message.links || []) {
+          this.linkOptions$.next([
+            ...this.linkOptions$.value,
+            {
+              id: name,
+              label: name,
+            },
+          ]);
+        }
+      });
+  }
+
+  private refreshTable() {
+    this.yamcs.yamcsClient
+      .getQueries(this.yamcs.instance!, 'packets')
+      .then((queries) => (this.dataSource.data = queries))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  openEditQueryDialog(query: Query) {
+    this.dialog
+      .open(EditPacketQueryDialogComponent, {
+        width: '800px',
+        data: {
+          query,
+          nameOptions: this.nameOptions$.value,
+          linkOptions: this.linkOptions$.value,
+        },
+      })
+      .afterClosed()
+      .subscribe((res) => {
+        if (res) {
+          this.refreshTable();
+          this.messageService.showInfo('Query updated');
+        }
+      });
+  }
+
+  openDeleteQueryDialog(query: Query) {
+    if (confirm(`Are you sure you want to delete query ${query.name}`)) {
+      this.yamcs.yamcsClient
+        .deleteQuery(this.yamcs.instance!, 'packets', query.id)
+        .then(() => this.refreshTable())
+        .catch((err) => this.messageService.showError(err));
+    }
+  }
+}
+```

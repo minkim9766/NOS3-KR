@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ java/index
 proto/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/main/java/`](java/index) — 폴더
-- [`gsw/yamcs/yamcs-api/src/main/proto/`](proto/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

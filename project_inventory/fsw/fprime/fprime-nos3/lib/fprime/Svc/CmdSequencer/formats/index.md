@@ -3,18 +3,568 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AMPCSSequence.cpp`
 
-file--AMPCSSequence.cpp
-file--AMPCSSequence.hpp
-file--README.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/AMPCSSequence.cpp`
+
+
+```cpp
+// \title  AMPCSSequence.cpp
+// \author Rob Bocchino
+// \brief  AMPCSSequence implementation
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/formats/AMPCSSequence.hpp"
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/Types/Assert.hpp"
+#include "Os/FileSystem.hpp"
+extern "C" {
+#include "Utils/Hash/libcrc/lib_crc.h"
+}
+
+namespace Svc {
+
+AMPCSSequence ::AMPCSSequence(CmdSequencerComponentImpl& component) : CmdSequencerComponentImpl::Sequence(component) {}
+
+bool AMPCSSequence ::loadFile(const Fw::StringBase& fileName) {
+    // Make sure there is a buffer allocated
+    FW_ASSERT(this->m_buffer.getBuffAddr());
+
+    Fw::CmdStringArg crcFileName(fileName);
+    crcFileName += ".CRC32";
+
+    this->m_header.m_timeBase = TimeBase::TB_DONT_CARE;
+    this->m_header.m_timeContext = FW_CONTEXT_DONT_CARE;
+
+    const bool status = this->readCRCFile(crcFileName) and this->getFileSize(fileName) and
+                        this->readSequenceFile(fileName) and this->validateCRC() and
+                        this->m_header.validateTime(this->m_component) and this->validateRecords();
+
+    return status;
+}
+
+bool AMPCSSequence ::readCRCFile(Fw::CmdStringArg& crcFileName) {
+    bool result;
+
+    this->setFileName(crcFileName);
+
+    Os::File::Status status = this->m_crcFile.open(crcFileName.toChar(), Os::File::OPEN_READ);
+
+    if (status == Os::File::OP_OK) {
+        result = this->readCRC() and this->deserializeCRC();
+    } else if (status == Os::File::DOESNT_EXIST) {
+        this->m_events.fileNotFound();
+        result = false;
+    } else {
+        this->m_events.fileReadError();
+        result = false;
+    }
+
+    this->m_crcFile.close();
+    return result;
+}
+
+bool AMPCSSequence ::getFileSize(const Fw::StringBase& seqFileName) {
+    bool status = true;
+    FwSizeType fileSize;
+    this->setFileName(seqFileName);
+    const Os::FileSystem::Status fileStatus = Os::FileSystem::getFileSize(this->m_fileName.toChar(), fileSize);
+    if (fileStatus == Os::FileSystem::OP_OK and fileSize >= static_cast<FwSizeType>(sizeof(this->m_sequenceHeader))) {
+        this->m_header.m_fileSize =
+            static_cast<U32>(fileSize - static_cast<FwSizeType>(sizeof(this->m_sequenceHeader)));
+    } else {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER_SIZE, fileStatus);
+        status = false;
+    }
+    return status;
+}
+
+bool AMPCSSequence ::readSequenceFile(const Fw::StringBase& seqFileName) {
+    bool result;
+
+    this->setFileName(seqFileName);
+    Os::File::Status status = this->m_sequenceFile.open(this->m_fileName.toChar(), Os::File::OPEN_READ);
+
+    if (status == Os::File::OP_OK) {
+        result = this->readOpenSequenceFile();
+    } else if (status == Os::File::DOESNT_EXIST) {
+        this->m_events.fileNotFound();
+        result = false;
+    } else {
+        this->m_events.fileReadError();
+        result = false;
+    }
+
+    this->m_sequenceFile.close();
+    return result;
+}
+
+bool AMPCSSequence ::validateCRC() {
+    bool result = true;
+    if (this->m_crc.m_stored != this->m_crc.m_computed) {
+        this->m_events.fileCRCFailure(this->m_crc.m_stored, this->m_crc.m_computed);
+        result = false;
+    }
+    return result;
+}
+
+bool AMPCSSequence ::validateRecords() {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Sequence::Record record;
+
+    // Deserialize all records and count the records
+    const U32 loopBound = static_cast<U32>(buffer.getBuffLeft());
+    U32 numRecords = 0;
+    for (; numRecords < loopBound; ++numRecords) {
+        if (not this->hasMoreRecords()) {
+            break;
+        }
+        Fw::SerializeStatus status = this->deserializeRecord(record);
+        if (status != Fw::FW_SERIALIZE_OK) {
+            this->m_events.recordInvalid(numRecords, status);
+            return false;
+        }
+    }
+    // Set the number of records
+    this->m_header.m_numRecords = numRecords;
+    // Reset deserialization
+    this->reset();
+
+    return true;
+}
+
+bool AMPCSSequence ::hasMoreRecords() const {
+    return this->m_buffer.getBuffLeft() > 0;
+}
+
+void AMPCSSequence ::nextRecord(Sequence::Record& record) {
+    Fw::SerializeStatus status = this->deserializeRecord(record);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+}
+
+void AMPCSSequence ::reset() {
+    this->m_buffer.resetDeser();
+}
+
+void AMPCSSequence ::clear() {
+    this->m_buffer.resetSer();
+}
+
+bool AMPCSSequence ::readCRC() {
+    Os::File& file = this->m_crcFile;
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    bool status = true;
+    Fw::SerializeStatus ser_status;
+
+    FwSizeType readLen = static_cast<FwSizeType>(sizeof(U32));
+    ser_status = buffer.setBuffLen(static_cast<Fw::Serializable::SizeType>(readLen));
+    FW_ASSERT(ser_status == Fw::FW_SERIALIZE_OK, ser_status);
+
+    U8* const addr = buffer.getBuffAddr();
+    Os::File::Status fileStatus = file.read(addr, readLen);
+
+    if (fileStatus != Os::File::OP_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_CRC, fileStatus);
+        status = false;
+    }
+
+    return status;
+}
+
+bool AMPCSSequence ::deserializeCRC() {
+    bool status = true;
+    Fw::SerializeStatus serializeStatus = this->m_buffer.deserialize(this->m_crc.m_stored);
+    if (serializeStatus != Fw::FW_SERIALIZE_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_CRC, serializeStatus);
+        status = false;
+    }
+    return status;
+}
+
+bool AMPCSSequence ::readOpenSequenceFile() {
+    this->m_buffer.resetSer();
+    this->m_crc.init();
+    bool status = this->readSequenceHeader();
+    if (status) {
+        this->m_crc.update(this->m_sequenceHeader, sizeof(this->m_sequenceHeader));
+        status = this->readRecords();
+    }
+    if (status) {
+        U8* const buffAddr = this->m_buffer.getBuffAddr();
+        const FwSizeType buffLen = this->m_buffer.getBuffLength();
+        FW_ASSERT(buffLen == this->m_header.m_fileSize, static_cast<FwAssertArgType>(buffLen),
+                  static_cast<FwAssertArgType>(this->m_header.m_fileSize));
+        this->m_crc.update(buffAddr, buffLen);
+        this->m_crc.finalize();
+    }
+    return status;
+}
+
+bool AMPCSSequence ::readSequenceHeader() {
+    Os::File& file = this->m_sequenceFile;
+
+    bool status = true;
+
+    FwSizeType readLen = sizeof this->m_sequenceHeader;
+    const Os::File::Status fileStatus = file.read(this->m_sequenceHeader, readLen);
+
+    if (fileStatus != Os::File::OP_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER, fileStatus);
+        status = false;
+    }
+
+    if (status and readLen != sizeof this->m_sequenceHeader) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_HEADER_SIZE, static_cast<I32>(readLen));
+        status = false;
+    }
+
+    return status;
+}
+
+bool AMPCSSequence ::readRecords() {
+    Os::File& file = this->m_sequenceFile;
+    const FwSizeType size = this->m_header.m_fileSize;
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    U8* const addr = buffer.getBuffAddr();
+
+    // Check file size
+    if (size > this->m_buffer.getBuffCapacity()) {
+        this->m_events.fileSizeError(static_cast<U32>(size));
+        return false;
+    }
+
+    FwSizeType readLen = size;
+    const Os::File::Status fileStatus = file.read(addr, readLen);
+    // Check read status
+    if (fileStatus != Os::File::OP_OK) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA, fileStatus);
+        return false;
+    }
+    // Check read size
+    const FwSizeType readLenUint = static_cast<FwSizeType>(readLen);
+    if (readLenUint != size) {
+        this->m_events.fileInvalid(CmdSequencer_FileReadStage::READ_SEQ_DATA_SIZE, static_cast<I32>(readLen));
+        return false;
+    }
+    // set buffer size
+    const Fw::SerializeStatus serializeStatus = buffer.setBuffLen(size);
+    FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+    return true;
+}
+
+Fw::SerializeStatus AMPCSSequence ::deserializeRecord(Sequence::Record& record) {
+    Record::CmdLength::t cmdLength;
+
+    Fw::SerializeStatus status = this->deserializeTimeFlag(record.m_descriptor);
+
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->deserializeTime(record.m_timeTag);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->deserializeCmdLength(cmdLength);
+    }
+    if (status == Fw::FW_SERIALIZE_OK) {
+        status = this->translateCommand(record.m_command, cmdLength);
+    }
+
+    return status;
+}
+
+Fw::SerializeStatus AMPCSSequence ::deserializeTimeFlag(Sequence::Record::Descriptor& descriptor) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Record::TimeFlag::Serial::t timeFlagSerial;
+    Fw::SerializeStatus status = buffer.deserializeTo(timeFlagSerial);
+    if (status == Fw::FW_SERIALIZE_OK) {
+        switch (timeFlagSerial) {
+            case Record::TimeFlag::ABSOLUTE:
+                descriptor = Sequence::Record::ABSOLUTE;
+                break;
+            case Record::TimeFlag::RELATIVE:
+                descriptor = Sequence::Record::RELATIVE;
+                break;
+            default:
+                status = Fw::FW_DESERIALIZE_FORMAT_ERROR;
+                break;
+        }
+    }
+    return status;
+}
+
+Fw::SerializeStatus AMPCSSequence ::deserializeTime(Fw::Time& timeTag) {
+    Record::Time::t time;
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Fw::SerializeStatus status = buffer.deserializeTo(time);
+    if (status == Fw::FW_SERIALIZE_OK) {
+        timeTag.set(time, 0);
+    }
+    return status;
+}
+
+Fw::SerializeStatus AMPCSSequence ::deserializeCmdLength(Record::CmdLength::t& cmdLength) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    Fw::SerializeStatus status = buffer.deserializeTo(cmdLength);
+    if (status == Fw::FW_SERIALIZE_OK and cmdLength > buffer.getBuffLeft()) {
+        // Not enough data left
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    if (status == Fw::FW_SERIALIZE_OK and
+        sizeof(FwPacketDescriptorType) + sizeof(U16) + cmdLength > Fw::ComBuffer::SERIALIZED_SIZE) {
+        // Record size is too big for com buffer
+        status = Fw::FW_DESERIALIZE_SIZE_MISMATCH;
+    }
+    return status;
+}
+
+Fw::SerializeStatus AMPCSSequence ::translateCommand(Fw::ComBuffer& comBuffer, const Record::CmdLength::t cmdLength) {
+    Fw::SerializeBufferBase& buffer = this->m_buffer;
+    comBuffer.resetSer();
+    // Serialize the command packet descriptor
+    const FwPacketDescriptorType cmdDescriptor = Fw::ComPacketType::FW_PACKET_COMMAND;
+    Fw::SerializeStatus status = comBuffer.serializeFrom(cmdDescriptor);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Zero-extend the two-byte AMPCS opcode by (sizeof(FwOpcodeType) - 2) bytes
+    FW_ASSERT(sizeof(FwOpcodeType) >= 2);
+    U32 sizeOfZeros = 0;
+    const FwIndexType bytesToExtend = sizeof(FwOpcodeType) - 2;
+    const U8 zeros = 0;
+    for (FwIndexType i = 0; i < bytesToExtend; i++) {
+        status = comBuffer.serializeFrom(zeros);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+        sizeOfZeros += static_cast<U32>(sizeof(zeros));
+    }
+    // Set the buffer length
+    const U32 fixedBuffLen = static_cast<U32>(comBuffer.getBuffLength());
+    FW_ASSERT(fixedBuffLen == sizeof(cmdDescriptor) + sizeOfZeros, static_cast<FwAssertArgType>(fixedBuffLen));
+    const U32 totalBuffLen = fixedBuffLen + cmdLength;
+    status = comBuffer.setBuffLen(totalBuffLen);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // Copy the opcode and argument bytes
+    FwSizeType size = cmdLength;
+    U8* const addr = comBuffer.getBuffAddr();
+    FW_ASSERT(addr != nullptr);
+    // true means "don't serialize the length"
+    status = buffer.deserialize(&addr[fixedBuffLen], size, Fw::Serialization::OMIT_LENGTH);
+    return status;
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `AMPCSSequence.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/AMPCSSequence.cpp`](file--AMPCSSequence.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/AMPCSSequence.hpp`](file--AMPCSSequence.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/AMPCSSequence.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AMPCSSequence.hpp
+// \author Bocchino
+// \brief  AMPCSSequence interface
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_AMPCSSequence_HPP
+#define Svc_AMPCSSequence_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+//! \class AMPCSSequence
+//! \brief A sequence in AMPCS format
+class AMPCSSequence : public CmdSequencerComponentImpl::Sequence {
+  public:
+    //! AMPCS sequence header
+    struct SequenceHeader {
+        struct Constants {
+            typedef enum {
+                //! The sequence header size in bytes
+                SIZE = 4
+            } t;
+        };
+
+        typedef U8 t[Constants::SIZE];
+    };
+
+    //! AMPCS sequence record
+    struct Record {
+        //! Time flag
+        struct TimeFlag {
+            //! The time flag type
+            typedef enum { ABSOLUTE = 0x00, RELATIVE = 0xFF } t;
+
+            //! The serial representation of a time flag
+            struct Serial {
+                typedef U8 t;
+            };
+        };
+
+        //! Time
+        struct Time {
+            //! The type of the time field
+            typedef U32 t;
+        };
+
+        //! Command length
+        struct CmdLength {
+            //! The type of the command length field
+            typedef U16 t;
+        };
+
+        //! Opcode
+        struct Opcode {
+            //! The type of an AMPCS command opcode
+            typedef U16 t;
+        };
+    };
+
+  public:
+    //! Construct an AMPCSSequence
+    AMPCSSequence(CmdSequencerComponentImpl& component  //!< The enclosing component
+    );
+
+  public:
+    //! Load a sequence file
+    //! \return Success or failure
+    bool loadFile(const Fw::StringBase& fileName  //!< The file name
+    );
+
+    //! Query whether the sequence has any more records
+    //! \return Yes or no
+    bool hasMoreRecords() const;
+
+    //! Get the next record in the sequence.
+    //! Asserts on failure
+    void nextRecord(Sequence::Record& record  //!< The returned record
+    );
+
+    //! Reset the sequence to the beginning.
+    //! After calling this, hasMoreRecords should return true, unless
+    //! the sequence has no records.
+    void reset();
+
+    //! Clear the sequence records.
+    //! After calling this, hasMoreRecords should return false.
+    void clear();
+
+  private:
+    //! Read a CRC file
+    //! \return Success or failure
+    bool readCRCFile(Fw::CmdStringArg& crcFileName  //!< The CRC file name
+    );
+
+    //! Read the CRC out of an open CRC file
+    //! \return Success or failure
+    bool readCRC();
+
+    //! Deserialize the CRC
+    //! \return Success or failure
+    bool deserializeCRC();
+
+    //! Get the aggregate size of the command records
+    //! \return Success or failure
+    bool getFileSize(const Fw::StringBase& seqFileName  //!< The sequence file name
+    );
+
+    //! Read a sequence file
+    //! \return Success or failure
+    bool readSequenceFile(const Fw::StringBase& seqFileName  //!< The sequence file name
+    );
+
+    //! Read an open sequence file
+    //! \return Success or failure
+    bool readOpenSequenceFile();
+
+    //! Read the sequence header from the sequence file
+    //! into the buffer
+    //! \return Success or failure
+    bool readSequenceHeader();
+
+    //! Read records into buffer
+    //! \return Success or failure
+    bool readRecords();
+
+    //! Validate the CRC
+    //! \return Success or failure
+    bool validateCRC();
+
+    //! Deserialize a record from a buffer
+    //! \return Serialize status
+    Fw::SerializeStatus deserializeRecord(Sequence::Record& record  //!< The record
+    );
+
+    //! Deserialize the time flag field and convert it into a record descriptor
+    //! \return Serialize status
+    Fw::SerializeStatus deserializeTimeFlag(Sequence::Record::Descriptor& descriptor  //!< The descriptor
+    );
+
+    //! Deserialize the time field and convert it into a time tag
+    //! \return Serialize status
+    Fw::SerializeStatus deserializeTime(Fw::Time& timeTag  //!< The time tag
+    );
+
+    //! Deserialize the command length field
+    //! \return Serialize status
+    Fw::SerializeStatus deserializeCmdLength(Record::CmdLength::t& cmdLength  //!< The command length
+    );
+
+    //! Translate a serialized AMPCS command to a serialized F Prime command
+    //! \return Serialize status
+    Fw::SerializeStatus translateCommand(Fw::ComBuffer& comBuffer,             //!< The com buffer
+                                         const Record::CmdLength::t cmdLength  //!< The command length
+    );
+
+    //! Validate the sequence records in the buffer
+    //! \return Success or failure
+    bool validateRecords();
+
+  private:
+    //! The sequence header
+    SequenceHeader::t m_sequenceHeader;
+
+    //! The CRC values
+    CmdSequencerComponentImpl::FPrimeSequence::CRC m_crc;
+
+    //! The CRC file
+    Os::File m_crcFile;
+
+    //! The sequence file
+    Os::File m_sequenceFile;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/formats/README.md`
+
+
+```markdown
+# Svc::CmdSequencer Formats
+
+This directory contains alternate format implementations for the command
+sequencer.
+To use one of these formats, instantiate the class into an object
+and pass the object into the `setSequenceFormat` function of
+the `CmdSequencer` object.
+
+Note that if you call `allocateBuffer` on the `CmdSequencer` object,
+you need to do that *after* setting the sequence format.
+Otherwise the buffer will get allocated for the default format.
+```

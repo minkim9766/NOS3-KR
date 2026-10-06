@@ -3,18 +3,22 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `code.xlsx`
 
-file--code.xlsx
-file--design.xlsx
-file--unit_test.xls
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/code.xlsx`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/code.xlsx`](file--code.xlsx) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/design.xlsx`](file--design.xlsx) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/unit_test.xls`](file--unit_test.xls) — 바이너리 (경로만)
+### `design.xlsx`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/design.xlsx`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `unit_test.xls`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferManager/docs/Checklist/unit_test.xls`
+
+바이너리 파일입니다. 본문은 생략했습니다.

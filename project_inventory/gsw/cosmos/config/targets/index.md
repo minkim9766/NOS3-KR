@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/config/targets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -21,16 +21,4 @@ SYSTEM/index
 TO_DEBUG/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/config/targets/CFDP/`](CFDP/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP_TEST/`](CFDP_TEST/index) — 폴더
-- [`gsw/cosmos/config/targets/CFS/`](CFS/index) — 폴더
-- [`gsw/cosmos/config/targets/CI_DEBUG/`](CI_DEBUG/index) — 폴더
-- [`gsw/cosmos/config/targets/CMD_UTIL/`](CMD_UTIL/index) — 폴더
-- [`gsw/cosmos/config/targets/MISSION/`](MISSION/index) — 폴더
-- [`gsw/cosmos/config/targets/PDU/`](PDU/index) — 폴더
-- [`gsw/cosmos/config/targets/SIM_42_TRUTH/`](SIM_42_TRUTH/index) — 폴더
-- [`gsw/cosmos/config/targets/SIM_CMDBUS_BRIDGE/`](SIM_CMDBUS_BRIDGE/index) — 폴더
-- [`gsw/cosmos/config/targets/SYSTEM/`](SYSTEM/index) — 폴더
-- [`gsw/cosmos/config/targets/TO_DEBUG/`](TO_DEBUG/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

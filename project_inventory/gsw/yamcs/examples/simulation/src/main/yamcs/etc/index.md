@@ -3,28 +3,374 @@
 
 **경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 scripts/index
-file--command-queue.yaml
-file--extra_streams.sql
-file--logging.properties
-file--processor.yaml
-file--tse.yaml
-file--yamcs.simulator.yaml
-file--yamcs.yaml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/scripts/`](scripts/index) — 폴더
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/command-queue.yaml`](file--command-queue.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/extra_streams.sql`](file--extra_streams.sql) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/logging.properties`](file--logging.properties) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/processor.yaml`](file--processor.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/tse.yaml`](file--tse.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/yamcs.simulator.yaml`](file--yamcs.simulator.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/simulation/src/main/yamcs/etc/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+### `command-queue.yaml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/command-queue.yaml`
+
+
+```yaml
+# Definition of command queues. Each queue has a name,
+# and optionally a preferred startup state.
+#
+# There are three possible states: 
+#   - enabled means the commands are sent immediately
+#   - blocked means the commands are accepted into the queue but need to be 
+#     manually sent 
+#   - disabled means the commands are rejected
+
+supervised:
+  state: blocked
+  minLevel: critical
+
+# If no state is configured, the queue will start with the same state that
+# it had on a previous run, defaulting to enabled.
+default:
+  #state: enabled
+```
+
+### `extra_streams.sql`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/extra_streams.sql`
+
+
+```text
+-- create stream tc_sim as select * from tc_realtime where cmdName like '/YSS/SIMULATOR/%'
+-- create stream tc_tse as select * from tc_realtime where cmdName like '/TSE/%'
+
+create table if not exists invalid_tm(rectime timestamp, seqNum long, packet binary, primary key(rectime, seqNum))
+insert into invalid_tm select * from invalid_tm_stream
+```
+
+### `logging.properties`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/logging.properties`
+
+
+```text
+#rename this file to logging.properties in order to debug the SLE functionality
+
+
+handlers = java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.level = ALL
+java.util.logging.ConsoleHandler.formatter = org.yamcs.logging.ConsoleFormatter
+
+#org.yamcs.archive.YarchReplay.level = ALL
+#org.yamcs.parameter.ParameterRetrievalService.level = ALL
+#org.yamcs.parameterarchive.level = FINE
+
+#this will cause the events to be also logged
+org.yamcs.events.EventProducer.level = ALL
+
+```
+
+### `processor.yaml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/processor.yaml`
+
+
+```yaml
+# this file defines the different processors
+# A processor is where TM/TC processing happens inside Yamcs.
+#
+# Each processor uses a source of TM packets, one or more sources of parameters and a command releaser
+#  all of these are optional
+#
+# Note that when you are adding a telemetryProvider, you are implicitly adding also a XtceTmProcessor that provides parameters
+
+realtime:
+  services:
+    - class: org.yamcs.StreamTmPacketProvider
+    - class: org.yamcs.StreamTcCommandReleaser
+    - class: org.yamcs.tctm.StreamParameterProvider
+    - class: org.yamcs.algorithms.AlgorithmManager
+    # implements provider of parameters from sys_param stream (these are collected and sent on this stream by SystemParametersService service)
+    - class: org.yamcs.parameter.LocalParameterManager
+  config:
+    generateEvents: true #generate events for errors in TM decoding and running algorithms
+    subscribeAll: true
+    # save the value of the parameters when the processor is closed and restore them when a processor with the same name starts
+    # only the parameters with the persistence flag set will be saved
+    persistParameters: true
+    #check alarms and also enable the alarm server (that keeps track of unacknowledged alarms)
+    alarm:
+      parameterCheck: true
+      parameterServer: enabled
+      eventServer: enabled
+    tmProcessor:
+      #if container entries fit outside the binary packet, setting this to true will cause the error to be ignored, otherwise an exception will be printed in the yamcs logs
+      ignoreOutOfContainerEntries: false
+    #record all the parameters that have initial values at the start of the processor
+    recordInitialValues: true
+    #record the local values
+    recordLocalValues: true
+
+
+#used to perform step by step archive replays to displays,etc
+# initiated via web interface or Yamcs Studio.
+# should be renamed to ArchiveReplay
+Archive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+
+#used by the ParameterArchive when rebuilding the parameter archive
+# no need for parameter cache
+ParameterArchive:
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+#used for performing archive retrievals via replays (e.g. parameter-extractor.sh)
+# we do not want cache in order to extract the minimum data necessary
+ArchiveRetrieval:
+  config:
+    subscribeContainerArchivePartitions: false
+  services: 
+    - class: org.yamcs.tctm.ReplayService
+    - class: org.yamcs.algorithms.AlgorithmManager
+
+```
+
+### `tse.yaml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/tse.yaml`
+
+
+```yaml
+tctm:
+  port: 8135
+
+telnet:
+  port: 8023
+
+instruments:
+  - name: tenma
+    class: org.yamcs.tse.SerialPortDriver
+    args:
+      path: /dev/tty.usbmodem14141
+      # Note: this instrument does not terminate responses.
+      # Use a very short timeout to compensate (still within spec)
+      # responseTermination: "\n"
+      responseTimeout: 100
+
+  - name: simulator
+    class: org.yamcs.tse.TcpIpDriver
+    args:
+      host: localhost
+      port: 10023
+      responseTermination: "\r\n"
+      interceptors:
+        - class: org.yamcs.tse.LoggingInterceptor
+
+  - name: rigol
+    class: org.yamcs.tse.TcpIpDriver
+    args:
+      host: 192.168.88.185
+      port: 5555
+      responseTermination: "\n"
+```
+
+### `yamcs.simulator.yaml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/yamcs.simulator.yaml`
+
+
+```yaml
+dataPartitioningByTime: YYYY/MM
+
+services:
+  - class: org.yamcs.archive.XtceTmRecorder
+  - class: org.yamcs.archive.ParameterRecorder
+  - class: org.yamcs.archive.AlarmRecorder
+  - class: org.yamcs.archive.EventRecorder
+  - class: org.yamcs.archive.ReplayServer
+  - class: org.yamcs.archive.CcsdsTmIndex
+    args:
+      streams:
+        - tm_realtime
+        - tm_dump
+  - class: org.yamcs.parameter.SystemParametersService
+    args:
+      producers: ['jvm', 'fs', 'diskstats', 'rocksdb']
+
+  - class: org.yamcs.ProcessorCreatorService
+    args: 
+      name: "realtime"
+      type: "realtime" 
+  - class: org.yamcs.archive.CommandHistoryRecorder
+  - class: org.yamcs.timeline.TimelineService
+  - class: org.yamcs.plists.ParameterListService
+  - class: org.yamcs.parameterarchive.ParameterArchive
+  - class: org.yamcs.simulator.SimulatorCommander
+    args:
+      telnet:
+        port: 10023
+      tctm:
+        tmPort: 10015
+        tcPort: 10025
+        losPort: 10115
+        tm2Port: 10016
+      # Simulator can send some packets to test the performance of Yamcs. 
+      # Make sure the yamcs.simulator.yaml, mdb section contains a database generator for these packets, such that they are processed by Yamcs
+      # if numPackets is greater than 0, the simulator will send <numPackets> packets of size <packetSize> at each <interval> (in ms)
+      perfTest: 
+        numPackets: 0 
+        packetSize: 1476 #length of the performance testing packets
+        interval: 10
+
+dataLinks:
+  - name: tm_realtime
+    class: org.yamcs.tctm.TcpTmDataLink
+    stream: tm_realtime
+    host: localhost
+    port: 10015
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000      
+  - name: tm2_realtime
+    class: org.yamcs.tctm.TcpTmDataLink
+    stream: tm2_realtime
+    host: localhost
+    port: 10016
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000
+    # the packet input stream is responsible for chunking the stream into packets (this is not required for UDP links where one datagram = one packet)
+    # for historical reasons the default packet input stream (used for the tm_realtime link above) is CcsdsPacketInputStream which chunks the packets based on 
+    # CCSDS Space Packet definition (i.e. the packet length is in the 5th and 6th bytes of the primary header)
+    # the GenericPacketInputStream can be used to read any kind of packet where the length is encoded in big endian somewhere at the beginning of the packet
+    packetInputStreamClassName: org.yamcs.tctm.GenericPacketInputStream
+    packetInputStreamArgs: 
+        maxPacketLength: 1000  #max size of the packet 
+        lengthFieldOffset: 0   # where to read the length from 
+        lengthFieldLength: 2   # the number of the bytes that contain the packet length
+        # adjust the length read from the offset defined above by this number of bytes. 
+        # we use 2 here because the simulator sets the length of the packet without the lenght itself
+        lengthAdjustment: 2
+        initialBytesToStrip: 0 # number of bytes to remove from the beginning
+
+      # the packet preprocessor gets the packets read by the packet input stream defined above and extracts a timestamp and a sequence count from it
+      # for historical reasons the default packet preprocessor (used for the tm_realtime link above) is the IssPacketPreprocessor that reads packets 
+      # according to the ISS (International Space Station) definition
+      # The generic packet preprocessor reads a timestamp in number of milliseconds since 1970 as well as a 4 bytes sequence count 
+    packetPreprocessorClassName: org.yamcs.tctm.GenericPacketPreprocessor
+    packetPreprocessorArgs:
+        timestampOffset: 2 #where to read the 8 bytes timestamp offset from
+        seqCountOffset: 10 #where to read the 4 bytes sequence count from
+        errorDetection: #last two bytes are used for the error detection
+          type: "CRC-16-CCIIT" 
+  - name: tm_dump
+    class: org.yamcs.tctm.TcpTmDataLink
+    stream: tm_dump
+    host: localhost
+    port: 10115
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000
+  - name: tc_sim
+    class: org.yamcs.tctm.TcpTcDataLink
+    stream: tc_sim
+    host: localhost
+    port: 10025
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000
+    commandPostprocessorClassName: org.yamcs.tctm.IssCommandPostprocessor
+    commandPostprocessorArgs:
+        errorDetection:
+          type: 16-SUM
+        enforceEvenNumberOfBytes: true
+        
+  - name: TSE
+    class: org.yamcs.tse.TseDataLink
+    host: localhost
+    port: 8135
+    # Give the embedded simulator some time to boot up
+    initialDelay: 2000
+
+mdb:
+  # Configuration of the active loaders
+  # Valid loaders are: sheet, xtce or fully qualified name of the class
+  - type: "sheet"
+    spec: "mdb/simulator-ccsds.xls"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/landing.xls"
+  - type: "org.yamcs.tse.TseLoader"
+    subLoaders:
+      - type: "sheet"
+        spec: "mdb/tse/simulator.xls"
+
+#Configuration for streams created at server startup
+streamConfig:
+  tm:
+    - name: "tm_realtime"
+      processor: "realtime"
+    - name: "tm2_realtime"
+      rootContainer: "/YSS/SIMULATOR/tm2_container"
+      processor: "realtime"
+    - name: "tm_dump"
+  invalidTm: "invalid_tm_stream"
+  cmdHist: ["cmdhist_realtime", "cmdhist_dump"]
+  event: ["events_realtime", "events_dump"]
+  param: ["pp_realtime", "pp_tse", "sys_param", "proc_param"]
+  parameterAlarm: ["alarms_realtime"]
+  eventAlarm: ["event_alarms_realtime"]
+  tc: 
+     - name: tc_sim
+       processor: realtime
+       tcPatterns: ["/YSS/SIMULATOR/.*"]
+     - name: tc_tse
+       processor: realtime
+
+      
+  sqlFile: "etc/extra_streams.sql"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/examples/simulation/src/main/yamcs/etc/yamcs.yaml`
+
+
+```yaml
+# System-wide services
+services:
+  - class: org.yamcs.http.HttpServer
+
+#instances (or domains). One yarch database will be created for each of them
+# instance specific properties go into the file yamcs.{instance}.yaml
+instances:
+  - simulator
+
+dataDir: /storage/yamcs-data
+
+#set the serverId if you want something else than hostname to be used in system parameters generated by yamcs
+#serverId: yamcs1
+
+# Secret key unique to a particular Yamcs installation.
+# This is used to provide cryptographic signing.
+secretKey: "changeme"
+
+yamcs-web:
+  tag: "Example: simulation"
+  collapseInitializedArguments: false
+
+# The buckets 'displays' and 'stacks' are used
+# by yamcs-web. Here we choose to map them to
+# the filesystem.
+buckets:
+  - name: displays
+    path: displays
+
+  - name: stacks
+    path: stacks
+
+```

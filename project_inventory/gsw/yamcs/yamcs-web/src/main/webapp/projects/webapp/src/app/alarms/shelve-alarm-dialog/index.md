@@ -3,16 +3,121 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `shelve-alarm-dialog.component.html`
 
-file--shelve-alarm-dialog.component.html
-file--shelve-alarm-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/shelve-alarm-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Shelve</h2>
+
+<mat-dialog-content>
+  <p>
+    @if (data.alarms.length === 1) {
+      {{ data.alarms[0].id.namespace }}
+      @if (data.alarms[0].id.name) {
+        /{{ data.alarms[0].id.name }}
+      }
+    }
+    @if (data.alarms.length !== 1) {
+      {{ data.alarms.length }} selected alarms.
+    }
+  </p>
+  <form [formGroup]="formGroup" class="ya-form">
+    <ya-field label="Duration">
+      <ya-select formControlName="duration" [options]="durationOptions" />
+    </ya-field>
+
+    <ya-field label="Comment">
+      <textarea formControlName="comment" rows="5" style="resize: none"></textarea>
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="shelve()" [disabled]="!formGroup.valid">OK</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `shelve-alarm-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/shelve-alarm-dialog.component.html`](file--shelve-alarm-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/shelve-alarm-dialog.component.ts`](file--shelve-alarm-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/alarms/shelve-alarm-dialog/shelve-alarm-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { UntypedFormBuilder, UntypedFormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  Alarm,
+  ShelveAlarmOptions,
+  WebappSdkModule,
+  YaSelectOption,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-shelve-alarm-dialog',
+  templateUrl: './shelve-alarm-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ShelveAlarmDialogComponent {
+  formGroup: UntypedFormGroup;
+
+  durationOptions: YaSelectOption[] = [
+    { id: 'PT15M', label: '15 minutes' },
+    { id: 'PT30M', label: '30 minutes' },
+    { id: 'PT1H', label: '1 hour' },
+    { id: 'PT2H', label: '2 hours' },
+    { id: 'P1D', label: '1 day' },
+    { id: 'UNLIMITED', label: 'unlimited' },
+  ];
+
+  constructor(
+    private dialogRef: MatDialogRef<ShelveAlarmDialogComponent>,
+    formBuilder: UntypedFormBuilder,
+    private yamcs: YamcsService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.formGroup = formBuilder.group({
+      duration: 'PT2H',
+      comment: undefined,
+    });
+  }
+
+  async shelve() {
+    const alarms = this.data.alarms as Alarm[];
+    const comment = this.formGroup.get('comment')!.value;
+    let duration = null;
+    if (this.formGroup.get('duration')!.value !== 'UNLIMITED') {
+      const durationString = this.formGroup.get('duration')!.value;
+      duration = utils.convertDurationToMillis(durationString);
+    }
+
+    for (const alarm of alarms) {
+      const options: ShelveAlarmOptions = {};
+      if (comment) {
+        options.comment = comment;
+      }
+      if (duration) {
+        options.shelveDuration = duration;
+      }
+      const alarmName =
+        alarm.id.namespace + (alarm.id.name ? '/' + alarm.id.name : '');
+      this.yamcs.yamcsClient.shelveAlarm(
+        this.yamcs.instance!,
+        this.yamcs.processor!,
+        alarmName,
+        alarm.seqNum,
+        options,
+      );
+    }
+    this.dialogRef.close();
+  }
+}
+```

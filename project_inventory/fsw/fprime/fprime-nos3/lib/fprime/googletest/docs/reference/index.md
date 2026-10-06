@@ -3,22 +3,3102 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `actions.md`
 
-file--actions.md
-file--assertions.md
-file--matchers.md
-file--mocking.md
-file--testing.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/actions.md`
+
+
+````markdown
+# Actions Reference
+
+[**Actions**](../gmock_for_dummies.md#actions-what-should-it-do) specify what a
+mock function should do when invoked. This page lists the built-in actions
+provided by GoogleTest. All actions are defined in the `::testing` namespace.
+
+## Returning a Value
+
+| Action                            | Description                                   |
+| :-------------------------------- | :-------------------------------------------- |
+| `Return()`                        | Return from a `void` mock function.           |
+| `Return(value)`                   | Return `value`. If the type of `value` is     different to the mock function's return type, `value` is converted to the latter type <i>at the time the expectation is set</i>, not when the action is executed. |
+| `ReturnArg<N>()`                  | Return the `N`-th (0-based) argument.         |
+| `ReturnNew<T>(a1, ..., ak)`       | Return `new T(a1, ..., ak)`; a different      object is created each time. |
+| `ReturnNull()`                    | Return a null pointer.                        |
+| `ReturnPointee(ptr)`              | Return the value pointed to by `ptr`.         |
+| `ReturnRef(variable)`             | Return a reference to `variable`.             |
+| `ReturnRefOfCopy(value)`          | Return a reference to a copy of `value`; the  copy lives as long as the action. |
+| `ReturnRoundRobin({a1, ..., ak})` | Each call will return the next `ai` in the list, starting at the beginning when the end of the list is reached. |
+
+## Side Effects
+
+| Action                             | Description                             |
+| :--------------------------------- | :-------------------------------------- |
+| `Assign(&variable, value)` | Assign `value` to variable. |
+| `DeleteArg<N>()` | Delete the `N`-th (0-based) argument, which must be a pointer. |
+| `SaveArg<N>(pointer)` | Save the `N`-th (0-based) argument to `*pointer`. |
+| `SaveArgPointee<N>(pointer)` | Save the value pointed to by the `N`-th (0-based) argument to `*pointer`. |
+| `SetArgReferee<N>(value)` | Assign `value` to the variable referenced by the `N`-th (0-based) argument. |
+| `SetArgPointee<N>(value)` | Assign `value` to the variable pointed by the `N`-th (0-based) argument. |
+| `SetArgumentPointee<N>(value)` | Same as `SetArgPointee<N>(value)`. Deprecated. Will be removed in v1.7.0. |
+| `SetArrayArgument<N>(first, last)` | Copies the elements in source range [`first`, `last`) to the array pointed to by the `N`-th (0-based) argument, which can be either a pointer or an iterator. The action does not take ownership of the elements in the source range. |
+| `SetErrnoAndReturn(error, value)` | Set `errno` to `error` and return `value`. |
+| `Throw(exception)` | Throws the given exception, which can be any copyable value. Available since v1.1.0. |
+
+## Using a Function, Functor, or Lambda as an Action
+
+In the following, by "callable" we mean a free function, `std::function`,
+functor, or lambda.
+
+| Action                              | Description                            |
+| :---------------------------------- | :------------------------------------- |
+| `f` | Invoke `f` with the arguments passed to the mock function, where `f` is a callable. |
+| `Invoke(f)` | Invoke `f` with the arguments passed to the mock function, where `f` can be a global/static function or a functor. |
+| `Invoke(object_pointer, &class::method)` | Invoke the method on the object with the arguments passed to the mock function. |
+| `InvokeWithoutArgs(f)` | Invoke `f`, which can be a global/static function or a functor. `f` must take no arguments. |
+| `InvokeWithoutArgs(object_pointer, &class::method)` | Invoke the method on the object, which takes no arguments. |
+| `InvokeArgument<N>(arg1, arg2, ..., argk)` | Invoke the mock function's `N`-th (0-based) argument, which must be a function or a functor, with the `k` arguments. |
+
+The return value of the invoked function is used as the return value of the
+action.
+
+When defining a callable to be used with `Invoke*()`, you can declare any unused
+parameters as `Unused`:
+
+```cpp
+using ::testing::Invoke;
+double Distance(Unused, double x, double y) { return sqrt(x*x + y*y); }
+...
+EXPECT_CALL(mock, Foo("Hi", _, _)).WillOnce(Invoke(Distance));
 ```
 
-## 항목
+`Invoke(callback)` and `InvokeWithoutArgs(callback)` take ownership of
+`callback`, which must be permanent. The type of `callback` must be a base
+callback type instead of a derived one, e.g.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/actions.md`](file--actions.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/assertions.md`](file--assertions.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/matchers.md`](file--matchers.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/mocking.md`](file--mocking.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/testing.md`](file--testing.md) — UTF-8 텍스트 파일 본문 포함
+```cpp
+  BlockingClosure* done = new BlockingClosure;
+  ... Invoke(done) ...;  // This won't compile!
+
+  Closure* done2 = new BlockingClosure;
+  ... Invoke(done2) ...;  // This works.
+```
+
+In `InvokeArgument<N>(...)`, if an argument needs to be passed by reference,
+wrap it inside `std::ref()`. For example,
+
+```cpp
+using ::testing::InvokeArgument;
+...
+InvokeArgument<2>(5, string("Hi"), std::ref(foo))
+```
+
+calls the mock function's #2 argument, passing to it `5` and `string("Hi")` by
+value, and `foo` by reference.
+
+## Default Action
+
+| Action        | Description                                            |
+| :------------ | :----------------------------------------------------- |
+| `DoDefault()` | Do the default action (specified by `ON_CALL()` or the built-in one). |
+
+{: .callout .note}
+**Note:** due to technical reasons, `DoDefault()` cannot be used inside a
+composite action - trying to do so will result in a run-time error.
+
+## Composite Actions
+
+| Action                         | Description                                 |
+| :----------------------------- | :------------------------------------------ |
+| `DoAll(a1, a2, ..., an)`       | Do all actions `a1` to `an` and return the result of `an` in each invocation. The first `n - 1` sub-actions must return void and will receive a  readonly view of the arguments. |
+| `IgnoreResult(a)`              | Perform action `a` and ignore its result. `a` must not return void. |
+| `WithArg<N>(a)`                | Pass the `N`-th (0-based) argument of the mock function to action `a` and perform it. |
+| `WithArgs<N1, N2, ..., Nk>(a)` | Pass the selected (0-based) arguments of the mock function to action `a` and perform it. |
+| `WithoutArgs(a)`               | Perform action `a` without any arguments. |
+
+## Defining Actions
+
+| Macro                              | Description                             |
+| :--------------------------------- | :-------------------------------------- |
+| `ACTION(Sum) { return arg0 + arg1; }` | Defines an action `Sum()` to return the sum of the mock function's argument #0 and #1. |
+| `ACTION_P(Plus, n) { return arg0 + n; }` | Defines an action `Plus(n)` to return the sum of the mock function's argument #0 and `n`. |
+| `ACTION_Pk(Foo, p1, ..., pk) { statements; }` | Defines a parameterized action `Foo(p1, ..., pk)` to execute the given `statements`. |
+
+The `ACTION*` macros cannot be used inside a function or class.
+````
+
+### `assertions.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/assertions.md`
+
+
+````markdown
+# Assertions Reference
+
+This page lists the assertion macros provided by GoogleTest for verifying code
+behavior. To use them, include the header `gtest/gtest.h`.
+
+The majority of the macros listed below come as a pair with an `EXPECT_` variant
+and an `ASSERT_` variant. Upon failure, `EXPECT_` macros generate nonfatal
+failures and allow the current function to continue running, while `ASSERT_`
+macros generate fatal failures and abort the current function.
+
+All assertion macros support streaming a custom failure message into them with
+the `<<` operator, for example:
+
+```cpp
+EXPECT_TRUE(my_condition) << "My condition is not true";
+```
+
+Anything that can be streamed to an `ostream` can be streamed to an assertion
+macro—in particular, C strings and string objects. If a wide string (`wchar_t*`,
+`TCHAR*` in `UNICODE` mode on Windows, or `std::wstring`) is streamed to an
+assertion, it will be translated to UTF-8 when printed.
+
+## Explicit Success and Failure {#success-failure}
+
+The assertions in this section generate a success or failure directly instead of
+testing a value or expression. These are useful when control flow, rather than a
+Boolean expression, determines the test's success or failure, as shown by the
+following example:
+
+```c++
+switch(expression) {
+  case 1:
+    ... some checks ...
+  case 2:
+    ... some other checks ...
+  default:
+    FAIL() << "We shouldn't get here.";
+}
+```
+
+### SUCCEED {#SUCCEED}
+
+`SUCCEED()`
+
+Generates a success. This *does not* make the overall test succeed. A test is
+considered successful only if none of its assertions fail during its execution.
+
+The `SUCCEED` assertion is purely documentary and currently doesn't generate any
+user-visible output. However, we may add `SUCCEED` messages to GoogleTest output
+in the future.
+
+### FAIL {#FAIL}
+
+`FAIL()`
+
+Generates a fatal failure, which returns from the current function.
+
+Can only be used in functions that return `void`. See
+[Assertion Placement](../advanced.md#assertion-placement) for more information.
+
+### ADD_FAILURE {#ADD_FAILURE}
+
+`ADD_FAILURE()`
+
+Generates a nonfatal failure, which allows the current function to continue
+running.
+
+### ADD_FAILURE_AT {#ADD_FAILURE_AT}
+
+`ADD_FAILURE_AT(`*`file_path`*`,`*`line_number`*`)`
+
+Generates a nonfatal failure at the file and line number specified.
+
+## Generalized Assertion {#generalized}
+
+The following assertion allows [matchers](matchers.md) to be used to verify
+values.
+
+### EXPECT_THAT {#EXPECT_THAT}
+
+`EXPECT_THAT(`*`value`*`,`*`matcher`*`)` \
+`ASSERT_THAT(`*`value`*`,`*`matcher`*`)`
+
+Verifies that *`value`* matches the [matcher](matchers.md) *`matcher`*.
+
+For example, the following code verifies that the string `value1` starts with
+`"Hello"`, `value2` matches a regular expression, and `value3` is between 5 and
+10:
+
+```cpp
+#include "gmock/gmock.h"
+
+using ::testing::AllOf;
+using ::testing::Gt;
+using ::testing::Lt;
+using ::testing::MatchesRegex;
+using ::testing::StartsWith;
+
+...
+EXPECT_THAT(value1, StartsWith("Hello"));
+EXPECT_THAT(value2, MatchesRegex("Line \\d+"));
+ASSERT_THAT(value3, AllOf(Gt(5), Lt(10)));
+```
+
+Matchers enable assertions of this form to read like English and generate
+informative failure messages. For example, if the above assertion on `value1`
+fails, the resulting message will be similar to the following:
+
+```
+Value of: value1
+  Actual: "Hi, world!"
+Expected: starts with "Hello"
+```
+
+GoogleTest provides a built-in library of matchers—see the
+[Matchers Reference](matchers.md). It is also possible to write your own
+matchers—see [Writing New Matchers Quickly](../gmock_cook_book.md#NewMatchers).
+The use of matchers makes `EXPECT_THAT` a powerful, extensible assertion.
+
+*The idea for this assertion was borrowed from Joe Walnes' Hamcrest project,
+which adds `assertThat()` to JUnit.*
+
+## Boolean Conditions {#boolean}
+
+The following assertions test Boolean conditions.
+
+### EXPECT_TRUE {#EXPECT_TRUE}
+
+`EXPECT_TRUE(`*`condition`*`)` \
+`ASSERT_TRUE(`*`condition`*`)`
+
+Verifies that *`condition`* is true.
+
+### EXPECT_FALSE {#EXPECT_FALSE}
+
+`EXPECT_FALSE(`*`condition`*`)` \
+`ASSERT_FALSE(`*`condition`*`)`
+
+Verifies that *`condition`* is false.
+
+## Binary Comparison {#binary-comparison}
+
+The following assertions compare two values. The value arguments must be
+comparable by the assertion's comparison operator, otherwise a compiler error
+will result.
+
+If an argument supports the `<<` operator, it will be called to print the
+argument when the assertion fails. Otherwise, GoogleTest will attempt to print
+them in the best way it can—see
+[Teaching GoogleTest How to Print Your Values](../advanced.md#teaching-googletest-how-to-print-your-values).
+
+Arguments are always evaluated exactly once, so it's OK for the arguments to
+have side effects. However, the argument evaluation order is undefined and
+programs should not depend on any particular argument evaluation order.
+
+These assertions work with both narrow and wide string objects (`string` and
+`wstring`).
+
+See also the [Floating-Point Comparison](#floating-point) assertions to compare
+floating-point numbers and avoid problems caused by rounding.
+
+### EXPECT_EQ {#EXPECT_EQ}
+
+`EXPECT_EQ(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_EQ(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`==`*`val2`*.
+
+Does pointer equality on pointers. If used on two C strings, it tests if they
+are in the same memory location, not if they have the same value. Use
+[`EXPECT_STREQ`](#EXPECT_STREQ) to compare C strings (e.g. `const char*`) by
+value.
+
+When comparing a pointer to `NULL`, use `EXPECT_EQ(`*`ptr`*`, nullptr)` instead
+of `EXPECT_EQ(`*`ptr`*`, NULL)`.
+
+### EXPECT_NE {#EXPECT_NE}
+
+`EXPECT_NE(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_NE(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`!=`*`val2`*.
+
+Does pointer equality on pointers. If used on two C strings, it tests if they
+are in different memory locations, not if they have different values. Use
+[`EXPECT_STRNE`](#EXPECT_STRNE) to compare C strings (e.g. `const char*`) by
+value.
+
+When comparing a pointer to `NULL`, use `EXPECT_NE(`*`ptr`*`, nullptr)` instead
+of `EXPECT_NE(`*`ptr`*`, NULL)`.
+
+### EXPECT_LT {#EXPECT_LT}
+
+`EXPECT_LT(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_LT(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`<`*`val2`*.
+
+### EXPECT_LE {#EXPECT_LE}
+
+`EXPECT_LE(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_LE(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`<=`*`val2`*.
+
+### EXPECT_GT {#EXPECT_GT}
+
+`EXPECT_GT(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_GT(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`>`*`val2`*.
+
+### EXPECT_GE {#EXPECT_GE}
+
+`EXPECT_GE(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_GE(`*`val1`*`,`*`val2`*`)`
+
+Verifies that *`val1`*`>=`*`val2`*.
+
+## String Comparison {#c-strings}
+
+The following assertions compare two **C strings**. To compare two `string`
+objects, use [`EXPECT_EQ`](#EXPECT_EQ) or [`EXPECT_NE`](#EXPECT_NE) instead.
+
+These assertions also accept wide C strings (`wchar_t*`). If a comparison of two
+wide strings fails, their values will be printed as UTF-8 narrow strings.
+
+To compare a C string with `NULL`, use `EXPECT_EQ(`*`c_string`*`, nullptr)` or
+`EXPECT_NE(`*`c_string`*`, nullptr)`.
+
+### EXPECT_STREQ {#EXPECT_STREQ}
+
+`EXPECT_STREQ(`*`str1`*`,`*`str2`*`)` \
+`ASSERT_STREQ(`*`str1`*`,`*`str2`*`)`
+
+Verifies that the two C strings *`str1`* and *`str2`* have the same contents.
+
+### EXPECT_STRNE {#EXPECT_STRNE}
+
+`EXPECT_STRNE(`*`str1`*`,`*`str2`*`)` \
+`ASSERT_STRNE(`*`str1`*`,`*`str2`*`)`
+
+Verifies that the two C strings *`str1`* and *`str2`* have different contents.
+
+### EXPECT_STRCASEEQ {#EXPECT_STRCASEEQ}
+
+`EXPECT_STRCASEEQ(`*`str1`*`,`*`str2`*`)` \
+`ASSERT_STRCASEEQ(`*`str1`*`,`*`str2`*`)`
+
+Verifies that the two C strings *`str1`* and *`str2`* have the same contents,
+ignoring case.
+
+### EXPECT_STRCASENE {#EXPECT_STRCASENE}
+
+`EXPECT_STRCASENE(`*`str1`*`,`*`str2`*`)` \
+`ASSERT_STRCASENE(`*`str1`*`,`*`str2`*`)`
+
+Verifies that the two C strings *`str1`* and *`str2`* have different contents,
+ignoring case.
+
+## Floating-Point Comparison {#floating-point}
+
+The following assertions compare two floating-point values.
+
+Due to rounding errors, it is very unlikely that two floating-point values will
+match exactly, so `EXPECT_EQ` is not suitable. In general, for floating-point
+comparison to make sense, the user needs to carefully choose the error bound.
+
+GoogleTest also provides assertions that use a default error bound based on
+Units in the Last Place (ULPs). To learn more about ULPs, see the article
+[Comparing Floating Point Numbers](https://randomascii.wordpress.com/2012/02/25/comparing-floating-point-numbers-2012-edition/).
+
+### EXPECT_FLOAT_EQ {#EXPECT_FLOAT_EQ}
+
+`EXPECT_FLOAT_EQ(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_FLOAT_EQ(`*`val1`*`,`*`val2`*`)`
+
+Verifies that the two `float` values *`val1`* and *`val2`* are approximately
+equal, to within 4 ULPs from each other.
+
+### EXPECT_DOUBLE_EQ {#EXPECT_DOUBLE_EQ}
+
+`EXPECT_DOUBLE_EQ(`*`val1`*`,`*`val2`*`)` \
+`ASSERT_DOUBLE_EQ(`*`val1`*`,`*`val2`*`)`
+
+Verifies that the two `double` values *`val1`* and *`val2`* are approximately
+equal, to within 4 ULPs from each other.
+
+### EXPECT_NEAR {#EXPECT_NEAR}
+
+`EXPECT_NEAR(`*`val1`*`,`*`val2`*`,`*`abs_error`*`)` \
+`ASSERT_NEAR(`*`val1`*`,`*`val2`*`,`*`abs_error`*`)`
+
+Verifies that the difference between *`val1`* and *`val2`* does not exceed the
+absolute error bound *`abs_error`*.
+
+## Exception Assertions {#exceptions}
+
+The following assertions verify that a piece of code throws, or does not throw,
+an exception. Usage requires exceptions to be enabled in the build environment.
+
+Note that the piece of code under test can be a compound statement, for example:
+
+```cpp
+EXPECT_NO_THROW({
+  int n = 5;
+  DoSomething(&n);
+});
+```
+
+### EXPECT_THROW {#EXPECT_THROW}
+
+`EXPECT_THROW(`*`statement`*`,`*`exception_type`*`)` \
+`ASSERT_THROW(`*`statement`*`,`*`exception_type`*`)`
+
+Verifies that *`statement`* throws an exception of type *`exception_type`*.
+
+### EXPECT_ANY_THROW {#EXPECT_ANY_THROW}
+
+`EXPECT_ANY_THROW(`*`statement`*`)` \
+`ASSERT_ANY_THROW(`*`statement`*`)`
+
+Verifies that *`statement`* throws an exception of any type.
+
+### EXPECT_NO_THROW {#EXPECT_NO_THROW}
+
+`EXPECT_NO_THROW(`*`statement`*`)` \
+`ASSERT_NO_THROW(`*`statement`*`)`
+
+Verifies that *`statement`* does not throw any exception.
+
+## Predicate Assertions {#predicates}
+
+The following assertions enable more complex predicates to be verified while
+printing a more clear failure message than if `EXPECT_TRUE` were used alone.
+
+### EXPECT_PRED* {#EXPECT_PRED}
+
+`EXPECT_PRED1(`*`pred`*`,`*`val1`*`)` \
+`EXPECT_PRED2(`*`pred`*`,`*`val1`*`,`*`val2`*`)` \
+`EXPECT_PRED3(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`)` \
+`EXPECT_PRED4(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`)` \
+`EXPECT_PRED5(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`,`*`val5`*`)`
+
+`ASSERT_PRED1(`*`pred`*`,`*`val1`*`)` \
+`ASSERT_PRED2(`*`pred`*`,`*`val1`*`,`*`val2`*`)` \
+`ASSERT_PRED3(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`)` \
+`ASSERT_PRED4(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`)` \
+`ASSERT_PRED5(`*`pred`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`,`*`val5`*`)`
+
+Verifies that the predicate *`pred`* returns `true` when passed the given values
+as arguments.
+
+The parameter *`pred`* is a function or functor that accepts as many arguments
+as the corresponding macro accepts values. If *`pred`* returns `true` for the
+given arguments, the assertion succeeds, otherwise the assertion fails.
+
+When the assertion fails, it prints the value of each argument. Arguments are
+always evaluated exactly once.
+
+As an example, see the following code:
+
+```cpp
+// Returns true if m and n have no common divisors except 1.
+bool MutuallyPrime(int m, int n) { ... }
+...
+const int a = 3;
+const int b = 4;
+const int c = 10;
+...
+EXPECT_PRED2(MutuallyPrime, a, b);  // Succeeds
+EXPECT_PRED2(MutuallyPrime, b, c);  // Fails
+```
+
+In the above example, the first assertion succeeds, and the second fails with
+the following message:
+
+```
+MutuallyPrime(b, c) is false, where
+b is 4
+c is 10
+```
+
+Note that if the given predicate is an overloaded function or a function
+template, the assertion macro might not be able to determine which version to
+use, and it might be necessary to explicitly specify the type of the function.
+For example, for a Boolean function `IsPositive()` overloaded to take either a
+single `int` or `double` argument, it would be necessary to write one of the
+following:
+
+```cpp
+EXPECT_PRED1(static_cast<bool (*)(int)>(IsPositive), 5);
+EXPECT_PRED1(static_cast<bool (*)(double)>(IsPositive), 3.14);
+```
+
+Writing simply `EXPECT_PRED1(IsPositive, 5);` would result in a compiler error.
+Similarly, to use a template function, specify the template arguments:
+
+```cpp
+template <typename T>
+bool IsNegative(T x) {
+  return x < 0;
+}
+...
+EXPECT_PRED1(IsNegative<int>, -5);  // Must specify type for IsNegative
+```
+
+If a template has multiple parameters, wrap the predicate in parentheses so the
+macro arguments are parsed correctly:
+
+```cpp
+ASSERT_PRED2((MyPredicate<int, int>), 5, 0);
+```
+
+### EXPECT_PRED_FORMAT* {#EXPECT_PRED_FORMAT}
+
+`EXPECT_PRED_FORMAT1(`*`pred_formatter`*`,`*`val1`*`)` \
+`EXPECT_PRED_FORMAT2(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`)` \
+`EXPECT_PRED_FORMAT3(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`)` \
+`EXPECT_PRED_FORMAT4(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`)`
+\
+`EXPECT_PRED_FORMAT5(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`,`*`val5`*`)`
+
+`ASSERT_PRED_FORMAT1(`*`pred_formatter`*`,`*`val1`*`)` \
+`ASSERT_PRED_FORMAT2(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`)` \
+`ASSERT_PRED_FORMAT3(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`)` \
+`ASSERT_PRED_FORMAT4(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`)`
+\
+`ASSERT_PRED_FORMAT5(`*`pred_formatter`*`,`*`val1`*`,`*`val2`*`,`*`val3`*`,`*`val4`*`,`*`val5`*`)`
+
+Verifies that the predicate *`pred_formatter`* succeeds when passed the given
+values as arguments.
+
+The parameter *`pred_formatter`* is a *predicate-formatter*, which is a function
+or functor with the signature:
+
+```cpp
+testing::AssertionResult PredicateFormatter(const char* expr1,
+                                            const char* expr2,
+                                            ...
+                                            const char* exprn,
+                                            T1 val1,
+                                            T2 val2,
+                                            ...
+                                            Tn valn);
+```
+
+where *`val1`*, *`val2`*, ..., *`valn`* are the values of the predicate
+arguments, and *`expr1`*, *`expr2`*, ..., *`exprn`* are the corresponding
+expressions as they appear in the source code. The types `T1`, `T2`, ..., `Tn`
+can be either value types or reference types; if an argument has type `T`, it
+can be declared as either `T` or `const T&`, whichever is appropriate. For more
+about the return type `testing::AssertionResult`, see
+[Using a Function That Returns an AssertionResult](../advanced.md#using-a-function-that-returns-an-assertionresult).
+
+As an example, see the following code:
+
+```cpp
+// Returns the smallest prime common divisor of m and n,
+// or 1 when m and n are mutually prime.
+int SmallestPrimeCommonDivisor(int m, int n) { ... }
+
+// Returns true if m and n have no common divisors except 1.
+bool MutuallyPrime(int m, int n) { ... }
+
+// A predicate-formatter for asserting that two integers are mutually prime.
+testing::AssertionResult AssertMutuallyPrime(const char* m_expr,
+                                             const char* n_expr,
+                                             int m,
+                                             int n) {
+  if (MutuallyPrime(m, n)) return testing::AssertionSuccess();
+
+  return testing::AssertionFailure() << m_expr << " and " << n_expr
+      << " (" << m << " and " << n << ") are not mutually prime, "
+      << "as they have a common divisor " << SmallestPrimeCommonDivisor(m, n);
+}
+
+...
+const int a = 3;
+const int b = 4;
+const int c = 10;
+...
+EXPECT_PRED_FORMAT2(AssertMutuallyPrime, a, b);  // Succeeds
+EXPECT_PRED_FORMAT2(AssertMutuallyPrime, b, c);  // Fails
+```
+
+In the above example, the final assertion fails and the predicate-formatter
+produces the following failure message:
+
+```
+b and c (4 and 10) are not mutually prime, as they have a common divisor 2
+```
+
+## Windows HRESULT Assertions {#HRESULT}
+
+The following assertions test for `HRESULT` success or failure. For example:
+
+```cpp
+CComPtr<IShellDispatch2> shell;
+ASSERT_HRESULT_SUCCEEDED(shell.CoCreateInstance(L"Shell.Application"));
+CComVariant empty;
+ASSERT_HRESULT_SUCCEEDED(shell->ShellExecute(CComBSTR(url), empty, empty, empty, empty));
+```
+
+The generated output contains the human-readable error message associated with
+the returned `HRESULT` code.
+
+### EXPECT_HRESULT_SUCCEEDED {#EXPECT_HRESULT_SUCCEEDED}
+
+`EXPECT_HRESULT_SUCCEEDED(`*`expression`*`)` \
+`ASSERT_HRESULT_SUCCEEDED(`*`expression`*`)`
+
+Verifies that *`expression`* is a success `HRESULT`.
+
+### EXPECT_HRESULT_FAILED {#EXPECT_HRESULT_FAILED}
+
+`EXPECT_HRESULT_FAILED(`*`expression`*`)` \
+`EXPECT_HRESULT_FAILED(`*`expression`*`)`
+
+Verifies that *`expression`* is a failure `HRESULT`.
+
+## Death Assertions {#death}
+
+The following assertions verify that a piece of code causes the process to
+terminate. For context, see [Death Tests](../advanced.md#death-tests).
+
+These assertions spawn a new process and execute the code under test in that
+process. How that happens depends on the platform and the variable
+`::testing::GTEST_FLAG(death_test_style)`, which is initialized from the
+command-line flag `--gtest_death_test_style`.
+
+*   On POSIX systems, `fork()` (or `clone()` on Linux) is used to spawn the
+    child, after which:
+    *   If the variable's value is `"fast"`, the death test statement is
+        immediately executed.
+    *   If the variable's value is `"threadsafe"`, the child process re-executes
+        the unit test binary just as it was originally invoked, but with some
+        extra flags to cause just the single death test under consideration to
+        be run.
+*   On Windows, the child is spawned using the `CreateProcess()` API, and
+    re-executes the binary to cause just the single death test under
+    consideration to be run - much like the `"threadsafe"` mode on POSIX.
+
+Other values for the variable are illegal and will cause the death test to fail.
+Currently, the flag's default value is
+**`"fast"`**.
+
+If the death test statement runs to completion without dying, the child process
+will nonetheless terminate, and the assertion fails.
+
+Note that the piece of code under test can be a compound statement, for example:
+
+```cpp
+EXPECT_DEATH({
+  int n = 5;
+  DoSomething(&n);
+}, "Error on line .* of DoSomething()");
+```
+
+### EXPECT_DEATH {#EXPECT_DEATH}
+
+`EXPECT_DEATH(`*`statement`*`,`*`matcher`*`)` \
+`ASSERT_DEATH(`*`statement`*`,`*`matcher`*`)`
+
+Verifies that *`statement`* causes the process to terminate with a nonzero exit
+status and produces `stderr` output that matches *`matcher`*.
+
+The parameter *`matcher`* is either a [matcher](matchers.md) for a `const
+std::string&`, or a regular expression (see
+[Regular Expression Syntax](../advanced.md#regular-expression-syntax))—a bare
+string *`s`* (with no matcher) is treated as
+[`ContainsRegex(s)`](matchers.md#string-matchers), **not**
+[`Eq(s)`](matchers.md#generic-comparison).
+
+For example, the following code verifies that calling `DoSomething(42)` causes
+the process to die with an error message that contains the text `My error`:
+
+```cpp
+EXPECT_DEATH(DoSomething(42), "My error");
+```
+
+### EXPECT_DEATH_IF_SUPPORTED {#EXPECT_DEATH_IF_SUPPORTED}
+
+`EXPECT_DEATH_IF_SUPPORTED(`*`statement`*`,`*`matcher`*`)` \
+`ASSERT_DEATH_IF_SUPPORTED(`*`statement`*`,`*`matcher`*`)`
+
+If death tests are supported, behaves the same as
+[`EXPECT_DEATH`](#EXPECT_DEATH). Otherwise, verifies nothing.
+
+### EXPECT_DEBUG_DEATH {#EXPECT_DEBUG_DEATH}
+
+`EXPECT_DEBUG_DEATH(`*`statement`*`,`*`matcher`*`)` \
+`ASSERT_DEBUG_DEATH(`*`statement`*`,`*`matcher`*`)`
+
+In debug mode, behaves the same as [`EXPECT_DEATH`](#EXPECT_DEATH). When not in
+debug mode (i.e. `NDEBUG` is defined), just executes *`statement`*.
+
+### EXPECT_EXIT {#EXPECT_EXIT}
+
+`EXPECT_EXIT(`*`statement`*`,`*`predicate`*`,`*`matcher`*`)` \
+`ASSERT_EXIT(`*`statement`*`,`*`predicate`*`,`*`matcher`*`)`
+
+Verifies that *`statement`* causes the process to terminate with an exit status
+that satisfies *`predicate`*, and produces `stderr` output that matches
+*`matcher`*.
+
+The parameter *`predicate`* is a function or functor that accepts an `int` exit
+status and returns a `bool`. GoogleTest provides two predicates to handle common
+cases:
+
+```cpp
+// Returns true if the program exited normally with the given exit status code.
+::testing::ExitedWithCode(exit_code);
+
+// Returns true if the program was killed by the given signal.
+// Not available on Windows.
+::testing::KilledBySignal(signal_number);
+```
+
+The parameter *`matcher`* is either a [matcher](matchers.md) for a `const
+std::string&`, or a regular expression (see
+[Regular Expression Syntax](../advanced.md#regular-expression-syntax))—a bare
+string *`s`* (with no matcher) is treated as
+[`ContainsRegex(s)`](matchers.md#string-matchers), **not**
+[`Eq(s)`](matchers.md#generic-comparison).
+
+For example, the following code verifies that calling `NormalExit()` causes the
+process to print a message containing the text `Success` to `stderr` and exit
+with exit status code 0:
+
+```cpp
+EXPECT_EXIT(NormalExit(), testing::ExitedWithCode(0), "Success");
+```
+````
+
+### `matchers.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/matchers.md`
+
+
+````markdown
+# Matchers Reference
+
+A **matcher** matches a *single* argument. You can use it inside `ON_CALL()` or
+`EXPECT_CALL()`, or use it to validate a value directly using two macros:
+
+| Macro                                | Description                           |
+| :----------------------------------- | :------------------------------------ |
+| `EXPECT_THAT(actual_value, matcher)` | Asserts that `actual_value` matches `matcher`. |
+| `ASSERT_THAT(actual_value, matcher)` | The same as `EXPECT_THAT(actual_value, matcher)`, except that it generates a **fatal** failure. |
+
+{: .callout .warning}
+**WARNING:** Equality matching via `EXPECT_THAT(actual_value, expected_value)`
+is supported, however note that implicit conversions can cause surprising
+results. For example, `EXPECT_THAT(some_bool, "some string")` will compile and
+may pass unintentionally.
+
+**BEST PRACTICE:** Prefer to make the comparison explicit via
+`EXPECT_THAT(actual_value, Eq(expected_value))` or `EXPECT_EQ(actual_value,
+expected_value)`.
+
+Built-in matchers (where `argument` is the function argument, e.g.
+`actual_value` in the example above, or when used in the context of
+`EXPECT_CALL(mock_object, method(matchers))`, the arguments of `method`) are
+divided into several categories. All matchers are defined in the `::testing`
+namespace unless otherwise noted.
+
+## Wildcard
+
+Matcher                     | Description
+:-------------------------- | :-----------------------------------------------
+`_`                         | `argument` can be any value of the correct type.
+`A<type>()` or `An<type>()` | `argument` can be any value of type `type`.
+
+## Generic Comparison
+
+| Matcher                | Description                                         |
+| :--------------------- | :-------------------------------------------------- |
+| `Eq(value)` or `value` | `argument == value`                                 |
+| `Ge(value)`            | `argument >= value`                                 |
+| `Gt(value)`            | `argument > value`                                  |
+| `Le(value)`            | `argument <= value`                                 |
+| `Lt(value)`            | `argument < value`                                  |
+| `Ne(value)`            | `argument != value`                                 |
+| `IsFalse()`            | `argument` evaluates to `false` in a Boolean context. |
+| `IsTrue()`             | `argument` evaluates to `true` in a Boolean context. |
+| `IsNull()`             | `argument` is a `NULL` pointer (raw or smart).      |
+| `NotNull()`            | `argument` is a non-null pointer (raw or smart).    |
+| `Optional(m)`          | `argument` is `optional<>` that contains a value matching `m`. (For testing whether an `optional<>` is set, check for equality with `nullopt`. You may need to use `Eq(nullopt)` if the inner type doesn't have `==`.)|
+| `VariantWith<T>(m)`    | `argument` is `variant<>` that holds the alternative of type T with a value matching `m`. |
+| `Ref(variable)`        | `argument` is a reference to `variable`.            |
+| `TypedEq<type>(value)` | `argument` has type `type` and is equal to `value`. You may need to use this instead of `Eq(value)` when the mock function is overloaded. |
+
+Except `Ref()`, these matchers make a *copy* of `value` in case it's modified or
+destructed later. If the compiler complains that `value` doesn't have a public
+copy constructor, try wrap it in `std::ref()`, e.g.
+`Eq(std::ref(non_copyable_value))`. If you do that, make sure
+`non_copyable_value` is not changed afterwards, or the meaning of your matcher
+will be changed.
+
+`IsTrue` and `IsFalse` are useful when you need to use a matcher, or for types
+that can be explicitly converted to Boolean, but are not implicitly converted to
+Boolean. In other cases, you can use the basic
+[`EXPECT_TRUE` and `EXPECT_FALSE`](assertions.md#boolean) assertions.
+
+## Floating-Point Matchers {#FpMatchers}
+
+| Matcher                          | Description                        |
+| :------------------------------- | :--------------------------------- |
+| `DoubleEq(a_double)`             | `argument` is a `double` value approximately equal to `a_double`, treating two NaNs as unequal. |
+| `FloatEq(a_float)`               | `argument` is a `float` value approximately equal to `a_float`, treating two NaNs as unequal. |
+| `NanSensitiveDoubleEq(a_double)` | `argument` is a `double` value approximately equal to `a_double`, treating two NaNs as equal. |
+| `NanSensitiveFloatEq(a_float)`   | `argument` is a `float` value approximately equal to `a_float`, treating two NaNs as equal. |
+| `IsNan()`   | `argument` is any floating-point type with a NaN value. |
+
+The above matchers use ULP-based comparison (the same as used in googletest).
+They automatically pick a reasonable error bound based on the absolute value of
+the expected value. `DoubleEq()` and `FloatEq()` conform to the IEEE standard,
+which requires comparing two NaNs for equality to return false. The
+`NanSensitive*` version instead treats two NaNs as equal, which is often what a
+user wants.
+
+| Matcher                                           | Description              |
+| :------------------------------------------------ | :----------------------- |
+| `DoubleNear(a_double, max_abs_error)`             | `argument` is a `double` value close to `a_double` (absolute error <= `max_abs_error`), treating two NaNs as unequal. |
+| `FloatNear(a_float, max_abs_error)`               | `argument` is a `float` value close to `a_float` (absolute error <= `max_abs_error`), treating two NaNs as unequal. |
+| `NanSensitiveDoubleNear(a_double, max_abs_error)` | `argument` is a `double` value close to `a_double` (absolute error <= `max_abs_error`), treating two NaNs as equal. |
+| `NanSensitiveFloatNear(a_float, max_abs_error)`   | `argument` is a `float` value close to `a_float` (absolute error <= `max_abs_error`), treating two NaNs as equal. |
+
+## String Matchers
+
+The `argument` can be either a C string or a C++ string object:
+
+| Matcher                 | Description                                        |
+| :---------------------- | :------------------------------------------------- |
+| `ContainsRegex(string)`  | `argument` matches the given regular expression.  |
+| `EndsWith(suffix)`       | `argument` ends with string `suffix`.             |
+| `HasSubstr(string)`      | `argument` contains `string` as a sub-string.     |
+| `IsEmpty()`              | `argument` is an empty string.                    |
+| `MatchesRegex(string)`   | `argument` matches the given regular expression with the match starting at the first character and ending at the last character. |
+| `StartsWith(prefix)`     | `argument` starts with string `prefix`.           |
+| `StrCaseEq(string)`      | `argument` is equal to `string`, ignoring case.   |
+| `StrCaseNe(string)`      | `argument` is not equal to `string`, ignoring case. |
+| `StrEq(string)`          | `argument` is equal to `string`.                  |
+| `StrNe(string)`          | `argument` is not equal to `string`.              |
+| `WhenBase64Unescaped(m)` | `argument` is a base-64 escaped string whose unescaped string matches `m`. |
+
+`ContainsRegex()` and `MatchesRegex()` take ownership of the `RE` object. They
+use the regular expression syntax defined
+[here](../advanced.md#regular-expression-syntax). All of these matchers, except
+`ContainsRegex()` and `MatchesRegex()` work for wide strings as well.
+
+## Container Matchers
+
+Most STL-style containers support `==`, so you can use `Eq(expected_container)`
+or simply `expected_container` to match a container exactly. If you want to
+write the elements in-line, match them more flexibly, or get more informative
+messages, you can use:
+
+| Matcher                                   | Description                      |
+| :---------------------------------------- | :------------------------------- |
+| `BeginEndDistanceIs(m)` | `argument` is a container whose `begin()` and `end()` iterators are separated by a number of increments matching `m`. E.g. `BeginEndDistanceIs(2)` or `BeginEndDistanceIs(Lt(2))`. For containers that define a `size()` method, `SizeIs(m)` may be more efficient. |
+| `ContainerEq(container)` | The same as `Eq(container)` except that the failure message also includes which elements are in one container but not the other. |
+| `Contains(e)` | `argument` contains an element that matches `e`, which can be either a value or a matcher. |
+| `Contains(e).Times(n)` | `argument` contains elements that match `e`, which can be either a value or a matcher, and the number of matches is `n`, which can be either a value or a matcher. Unlike the plain `Contains` and `Each` this allows to check for arbitrary occurrences including testing for absence with `Contains(e).Times(0)`. |
+| `Each(e)` | `argument` is a container where *every* element matches `e`, which can be either a value or a matcher. |
+| `ElementsAre(e0, e1, ..., en)` | `argument` has `n + 1` elements, where the *i*-th element matches `ei`, which can be a value or a matcher. |
+| `ElementsAreArray({e0, e1, ..., en})`, `ElementsAreArray(a_container)`, `ElementsAreArray(begin, end)`, `ElementsAreArray(array)`, or `ElementsAreArray(array, count)` | The same as `ElementsAre()` except that the expected element values/matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
+| `IsEmpty()` | `argument` is an empty container (`container.empty()`). |
+| `IsSubsetOf({e0, e1, ..., en})`, `IsSubsetOf(a_container)`, `IsSubsetOf(begin, end)`, `IsSubsetOf(array)`, or `IsSubsetOf(array, count)` | `argument` matches `UnorderedElementsAre(x0, x1, ..., xk)` for some subset `{x0, x1, ..., xk}` of the expected matchers. |
+| `IsSupersetOf({e0, e1, ..., en})`, `IsSupersetOf(a_container)`, `IsSupersetOf(begin, end)`, `IsSupersetOf(array)`, or `IsSupersetOf(array, count)` | Some subset of `argument` matches `UnorderedElementsAre(`expected matchers`)`. |
+| `Pointwise(m, container)`, `Pointwise(m, {e0, e1, ..., en})` | `argument` contains the same number of elements as in `container`, and for all i, (the i-th element in `argument`, the i-th element in `container`) match `m`, which is a matcher on 2-tuples. E.g. `Pointwise(Le(), upper_bounds)` verifies that each element in `argument` doesn't exceed the corresponding element in `upper_bounds`. See more detail below. |
+| `SizeIs(m)` | `argument` is a container whose size matches `m`. E.g. `SizeIs(2)` or `SizeIs(Lt(2))`. |
+| `UnorderedElementsAre(e0, e1, ..., en)` | `argument` has `n + 1` elements, and under *some* permutation of the elements, each element matches an `ei` (for a different `i`), which can be a value or a matcher. |
+| `UnorderedElementsAreArray({e0, e1, ..., en})`, `UnorderedElementsAreArray(a_container)`, `UnorderedElementsAreArray(begin, end)`, `UnorderedElementsAreArray(array)`, or `UnorderedElementsAreArray(array, count)` | The same as `UnorderedElementsAre()` except that the expected element values/matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
+| `UnorderedPointwise(m, container)`, `UnorderedPointwise(m, {e0, e1, ..., en})` | Like `Pointwise(m, container)`, but ignores the order of elements. |
+| `WhenSorted(m)` | When `argument` is sorted using the `<` operator, it matches container matcher `m`. E.g. `WhenSorted(ElementsAre(1, 2, 3))` verifies that `argument` contains elements 1, 2, and 3, ignoring order. |
+| `WhenSortedBy(comparator, m)` | The same as `WhenSorted(m)`, except that the given comparator instead of `<` is used to sort `argument`. E.g. `WhenSortedBy(std::greater(), ElementsAre(3, 2, 1))`. |
+
+**Notes:**
+
+*   These matchers can also match:
+    1.  a native array passed by reference (e.g. in `Foo(const int (&a)[5])`),
+        and
+    2.  an array passed as a pointer and a count (e.g. in `Bar(const T* buffer,
+        int len)` -- see [Multi-argument Matchers](#MultiArgMatchers)).
+*   The array being matched may be multi-dimensional (i.e. its elements can be
+    arrays).
+*   `m` in `Pointwise(m, ...)` and `UnorderedPointwise(m, ...)` should be a
+    matcher for `::std::tuple<T, U>` where `T` and `U` are the element type of
+    the actual container and the expected container, respectively. For example,
+    to compare two `Foo` containers where `Foo` doesn't support `operator==`,
+    one might write:
+
+    ```cpp
+    MATCHER(FooEq, "") {
+      return std::get<0>(arg).Equals(std::get<1>(arg));
+    }
+    ...
+    EXPECT_THAT(actual_foos, Pointwise(FooEq(), expected_foos));
+    ```
+
+## Member Matchers
+
+| Matcher                         | Description                                |
+| :------------------------------ | :----------------------------------------- |
+| `Field(&class::field, m)`       | `argument.field` (or `argument->field` when `argument` is a plain pointer) matches matcher `m`, where `argument` is an object of type _class_. |
+| `Field(field_name, &class::field, m)` | The same as the two-parameter version, but provides a better error message. |
+| `Key(e)`                        | `argument.first` matches `e`, which can be either a value or a matcher. E.g. `Contains(Key(Le(5)))` can verify that a `map` contains a key `<= 5`. |
+| `Pair(m1, m2)`                  | `argument` is an `std::pair` whose `first` field matches `m1` and `second` field matches `m2`. |
+| `FieldsAre(m...)`                   | `argument` is a compatible object where each field matches piecewise with the matchers `m...`. A compatible object is any that supports the `std::tuple_size<Obj>`+`get<I>(obj)` protocol. In C++17 and up this also supports types compatible with structured bindings, like aggregates. |
+| `Property(&class::property, m)` | `argument.property()` (or `argument->property()` when `argument` is a plain pointer) matches matcher `m`, where `argument` is an object of type _class_. The method `property()` must take no argument and be declared as `const`. |
+| `Property(property_name, &class::property, m)` | The same as the two-parameter version, but provides a better error message.
+
+**Notes:**
+
+*   You can use `FieldsAre()` to match any type that supports structured
+    bindings, such as `std::tuple`, `std::pair`, `std::array`, and aggregate
+    types. For example:
+
+    ```cpp
+    std::tuple<int, std::string> my_tuple{7, "hello world"};
+    EXPECT_THAT(my_tuple, FieldsAre(Ge(0), HasSubstr("hello")));
+
+    struct MyStruct {
+      int value = 42;
+      std::string greeting = "aloha";
+    };
+    MyStruct s;
+    EXPECT_THAT(s, FieldsAre(42, "aloha"));
+    ```
+
+*   Don't use `Property()` against member functions that you do not own, because
+    taking addresses of functions is fragile and generally not part of the
+    contract of the function.
+
+## Matching the Result of a Function, Functor, or Callback
+
+| Matcher          | Description                                       |
+| :--------------- | :------------------------------------------------ |
+| `ResultOf(f, m)` | `f(argument)` matches matcher `m`, where `f` is a function or functor. |
+| `ResultOf(result_description, f, m)` | The same as the two-parameter version, but provides a better error message.
+
+## Pointer Matchers
+
+| Matcher                   | Description                                     |
+| :------------------------ | :---------------------------------------------- |
+| `Address(m)`              | the result of `std::addressof(argument)` matches `m`. |
+| `Pointee(m)`              | `argument` (either a smart pointer or a raw pointer) points to a value that matches matcher `m`. |
+| `Pointer(m)`              | `argument` (either a smart pointer or a raw pointer) contains a pointer that matches `m`. `m` will match against the raw pointer regardless of the type of `argument`. |
+| `WhenDynamicCastTo<T>(m)` | when `argument` is passed through `dynamic_cast<T>()`, it matches matcher `m`. |
+
+## Multi-argument Matchers {#MultiArgMatchers}
+
+Technically, all matchers match a *single* value. A "multi-argument" matcher is
+just one that matches a *tuple*. The following matchers can be used to match a
+tuple `(x, y)`:
+
+Matcher | Description
+:------ | :----------
+`Eq()`  | `x == y`
+`Ge()`  | `x >= y`
+`Gt()`  | `x > y`
+`Le()`  | `x <= y`
+`Lt()`  | `x < y`
+`Ne()`  | `x != y`
+
+You can use the following selectors to pick a subset of the arguments (or
+reorder them) to participate in the matching:
+
+| Matcher                    | Description                                     |
+| :------------------------- | :---------------------------------------------- |
+| `AllArgs(m)`               | Equivalent to `m`. Useful as syntactic sugar in `.With(AllArgs(m))`. |
+| `Args<N1, N2, ..., Nk>(m)` | The tuple of the `k` selected (using 0-based indices) arguments matches `m`, e.g. `Args<1, 2>(Eq())`. |
+
+## Composite Matchers
+
+You can make a matcher from one or more other matchers:
+
+| Matcher                          | Description                             |
+| :------------------------------- | :-------------------------------------- |
+| `AllOf(m1, m2, ..., mn)` | `argument` matches all of the matchers `m1` to `mn`. |
+| `AllOfArray({m0, m1, ..., mn})`, `AllOfArray(a_container)`, `AllOfArray(begin, end)`, `AllOfArray(array)`, or `AllOfArray(array, count)` | The same as `AllOf()` except that the matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
+| `AnyOf(m1, m2, ..., mn)` | `argument` matches at least one of the matchers `m1` to `mn`. |
+| `AnyOfArray({m0, m1, ..., mn})`, `AnyOfArray(a_container)`, `AnyOfArray(begin, end)`, `AnyOfArray(array)`, or `AnyOfArray(array, count)` | The same as `AnyOf()` except that the matchers come from an initializer list, STL-style container, iterator range, or C-style array. |
+| `Not(m)` | `argument` doesn't match matcher `m`. |
+| `Conditional(cond, m1, m2)` | Matches matcher `m1` if `cond` evaluates to true, else matches `m2`.|
+
+## Adapters for Matchers
+
+| Matcher                 | Description                           |
+| :---------------------- | :------------------------------------ |
+| `MatcherCast<T>(m)`     | casts matcher `m` to type `Matcher<T>`. |
+| `SafeMatcherCast<T>(m)` | [safely casts](../gmock_cook_book.md#SafeMatcherCast) matcher `m` to type `Matcher<T>`. |
+| `Truly(predicate)`      | `predicate(argument)` returns something considered by C++ to be true, where `predicate` is a function or functor. |
+
+`AddressSatisfies(callback)` and `Truly(callback)` take ownership of `callback`,
+which must be a permanent callback.
+
+## Using Matchers as Predicates {#MatchersAsPredicatesCheat}
+
+| Matcher                       | Description                                 |
+| :---------------------------- | :------------------------------------------ |
+| `Matches(m)(value)` | evaluates to `true` if `value` matches `m`. You can use `Matches(m)` alone as a unary functor. |
+| `ExplainMatchResult(m, value, result_listener)` | evaluates to `true` if `value` matches `m`, explaining the result to `result_listener`. |
+| `Value(value, m)` | evaluates to `true` if `value` matches `m`. |
+
+## Defining Matchers
+
+| Macro                                | Description                           |
+| :----------------------------------- | :------------------------------------ |
+| `MATCHER(IsEven, "") { return (arg % 2) == 0; }` | Defines a matcher `IsEven()` to match an even number. |
+| `MATCHER_P(IsDivisibleBy, n, "") { *result_listener << "where the remainder is " << (arg % n); return (arg % n) == 0; }` | Defines a matcher `IsDivisibleBy(n)` to match a number divisible by `n`. |
+| `MATCHER_P2(IsBetween, a, b, absl::StrCat(negation ? "isn't" : "is", " between ", PrintToString(a), " and ", PrintToString(b))) { return a <= arg && arg <= b; }` | Defines a matcher `IsBetween(a, b)` to match a value in the range [`a`, `b`]. |
+
+**Notes:**
+
+1.  The `MATCHER*` macros cannot be used inside a function or class.
+2.  The matcher body must be *purely functional* (i.e. it cannot have any side
+    effect, and the result must not depend on anything other than the value
+    being matched and the matcher parameters).
+3.  You can use `PrintToString(x)` to convert a value `x` of any type to a
+    string.
+4.  You can use `ExplainMatchResult()` in a custom matcher to wrap another
+    matcher, for example:
+
+    ```cpp
+    MATCHER_P(NestedPropertyMatches, matcher, "") {
+      return ExplainMatchResult(matcher, arg.nested().property(), result_listener);
+    }
+    ```
+````
+
+### `mocking.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/mocking.md`
+
+
+````markdown
+# Mocking Reference
+
+This page lists the facilities provided by GoogleTest for creating and working
+with mock objects. To use them, include the header
+`gmock/gmock.h`.
+
+## Macros {#macros}
+
+GoogleTest defines the following macros for working with mocks.
+
+### MOCK_METHOD {#MOCK_METHOD}
+
+`MOCK_METHOD(`*`return_type`*`,`*`method_name`*`, (`*`args...`*`));` \
+`MOCK_METHOD(`*`return_type`*`,`*`method_name`*`, (`*`args...`*`),
+(`*`specs...`*`));`
+
+Defines a mock method *`method_name`* with arguments `(`*`args...`*`)` and
+return type *`return_type`* within a mock class.
+
+The parameters of `MOCK_METHOD` mirror the method declaration. The optional
+fourth parameter *`specs...`* is a comma-separated list of qualifiers. The
+following qualifiers are accepted:
+
+| Qualifier                  | Meaning                                      |
+| -------------------------- | -------------------------------------------- |
+| `const`                    | Makes the mocked method a `const` method. Required if overriding a `const` method. |
+| `override`                 | Marks the method with `override`. Recommended if overriding a `virtual` method. |
+| `noexcept`                 | Marks the method with `noexcept`. Required if overriding a `noexcept` method. |
+| `Calltype(`*`calltype`*`)` | Sets the call type for the method, for example `Calltype(STDMETHODCALLTYPE)`. Useful on Windows. |
+| `ref(`*`qualifier`*`)`     | Marks the method with the given reference qualifier, for example `ref(&)` or `ref(&&)`. Required if overriding a method that has a reference qualifier. |
+
+Note that commas in arguments prevent `MOCK_METHOD` from parsing the arguments
+correctly if they are not appropriately surrounded by parentheses. See the
+following example:
+
+```cpp
+class MyMock {
+ public:
+  // The following 2 lines will not compile due to commas in the arguments:
+  MOCK_METHOD(std::pair<bool, int>, GetPair, ());              // Error!
+  MOCK_METHOD(bool, CheckMap, (std::map<int, double>, bool));  // Error!
+
+  // One solution - wrap arguments that contain commas in parentheses:
+  MOCK_METHOD((std::pair<bool, int>), GetPair, ());
+  MOCK_METHOD(bool, CheckMap, ((std::map<int, double>), bool));
+
+  // Another solution - use type aliases:
+  using BoolAndInt = std::pair<bool, int>;
+  MOCK_METHOD(BoolAndInt, GetPair, ());
+  using MapIntDouble = std::map<int, double>;
+  MOCK_METHOD(bool, CheckMap, (MapIntDouble, bool));
+};
+```
+
+`MOCK_METHOD` must be used in the `public:` section of a mock class definition,
+regardless of whether the method being mocked is `public`, `protected`, or
+`private` in the base class.
+
+### EXPECT_CALL {#EXPECT_CALL}
+
+`EXPECT_CALL(`*`mock_object`*`,`*`method_name`*`(`*`matchers...`*`))`
+
+Creates an [expectation](../gmock_for_dummies.md#setting-expectations) that the
+method *`method_name`* of the object *`mock_object`* is called with arguments
+that match the given matchers *`matchers...`*. `EXPECT_CALL` must precede any
+code that exercises the mock object.
+
+The parameter *`matchers...`* is a comma-separated list of
+[matchers](../gmock_for_dummies.md#matchers-what-arguments-do-we-expect) that
+correspond to each argument of the method *`method_name`*. The expectation will
+apply only to calls of *`method_name`* whose arguments match all of the
+matchers. If `(`*`matchers...`*`)` is omitted, the expectation behaves as if
+each argument's matcher were a [wildcard matcher (`_`)](matchers.md#wildcard).
+See the [Matchers Reference](matchers.md) for a list of all built-in matchers.
+
+The following chainable clauses can be used to modify the expectation, and they
+must be used in the following order:
+
+```cpp
+EXPECT_CALL(mock_object, method_name(matchers...))
+    .With(multi_argument_matcher)  // Can be used at most once
+    .Times(cardinality)            // Can be used at most once
+    .InSequence(sequences...)      // Can be used any number of times
+    .After(expectations...)        // Can be used any number of times
+    .WillOnce(action)              // Can be used any number of times
+    .WillRepeatedly(action)        // Can be used at most once
+    .RetiresOnSaturation();        // Can be used at most once
+```
+
+See details for each modifier clause below.
+
+#### With {#EXPECT_CALL.With}
+
+`.With(`*`multi_argument_matcher`*`)`
+
+Restricts the expectation to apply only to mock function calls whose arguments
+as a whole match the multi-argument matcher *`multi_argument_matcher`*.
+
+GoogleTest passes all of the arguments as one tuple into the matcher. The
+parameter *`multi_argument_matcher`* must thus be a matcher of type
+`Matcher<std::tuple<A1, ..., An>>`, where `A1, ..., An` are the types of the
+function arguments.
+
+For example, the following code sets the expectation that
+`my_mock.SetPosition()` is called with any two arguments, the first argument
+being less than the second:
+
+```cpp
+using ::testing::_;
+using ::testing::Lt;
+...
+EXPECT_CALL(my_mock, SetPosition(_, _))
+    .With(Lt());
+```
+
+GoogleTest provides some built-in matchers for 2-tuples, including the `Lt()`
+matcher above. See [Multi-argument Matchers](matchers.md#MultiArgMatchers).
+
+The `With` clause can be used at most once on an expectation and must be the
+first clause.
+
+#### Times {#EXPECT_CALL.Times}
+
+`.Times(`*`cardinality`*`)`
+
+Specifies how many times the mock function call is expected.
+
+The parameter *`cardinality`* represents the number of expected calls and can be
+one of the following, all defined in the `::testing` namespace:
+
+| Cardinality         | Meaning                                             |
+| ------------------- | --------------------------------------------------- |
+| `AnyNumber()`       | The function can be called any number of times.     |
+| `AtLeast(n)`        | The function call is expected at least *n* times.   |
+| `AtMost(n)`         | The function call is expected at most *n* times.    |
+| `Between(m, n)`     | The function call is expected between *m* and *n* times, inclusive. |
+| `Exactly(n)` or `n` | The function call is expected exactly *n* times. If *n* is 0, the call should never happen. |
+
+If the `Times` clause is omitted, GoogleTest infers the cardinality as follows:
+
+*   If neither [`WillOnce`](#EXPECT_CALL.WillOnce) nor
+    [`WillRepeatedly`](#EXPECT_CALL.WillRepeatedly) are specified, the inferred
+    cardinality is `Times(1)`.
+*   If there are *n* `WillOnce` clauses and no `WillRepeatedly` clause, where
+    *n* >= 1, the inferred cardinality is `Times(n)`.
+*   If there are *n* `WillOnce` clauses and one `WillRepeatedly` clause, where
+    *n* >= 0, the inferred cardinality is `Times(AtLeast(n))`.
+
+The `Times` clause can be used at most once on an expectation.
+
+#### InSequence {#EXPECT_CALL.InSequence}
+
+`.InSequence(`*`sequences...`*`)`
+
+Specifies that the mock function call is expected in a certain sequence.
+
+The parameter *`sequences...`* is any number of [`Sequence`](#Sequence) objects.
+Expected calls assigned to the same sequence are expected to occur in the order
+the expectations are declared.
+
+For example, the following code sets the expectation that the `Reset()` method
+of `my_mock` is called before both `GetSize()` and `Describe()`, and `GetSize()`
+and `Describe()` can occur in any order relative to each other:
+
+```cpp
+using ::testing::Sequence;
+Sequence s1, s2;
+...
+EXPECT_CALL(my_mock, Reset())
+    .InSequence(s1, s2);
+EXPECT_CALL(my_mock, GetSize())
+    .InSequence(s1);
+EXPECT_CALL(my_mock, Describe())
+    .InSequence(s2);
+```
+
+The `InSequence` clause can be used any number of times on an expectation.
+
+See also the [`InSequence` class](#InSequence).
+
+#### After {#EXPECT_CALL.After}
+
+`.After(`*`expectations...`*`)`
+
+Specifies that the mock function call is expected to occur after one or more
+other calls.
+
+The parameter *`expectations...`* can be up to five
+[`Expectation`](#Expectation) or [`ExpectationSet`](#ExpectationSet) objects.
+The mock function call is expected to occur after all of the given expectations.
+
+For example, the following code sets the expectation that the `Describe()`
+method of `my_mock` is called only after both `InitX()` and `InitY()` have been
+called.
+
+```cpp
+using ::testing::Expectation;
+...
+Expectation init_x = EXPECT_CALL(my_mock, InitX());
+Expectation init_y = EXPECT_CALL(my_mock, InitY());
+EXPECT_CALL(my_mock, Describe())
+    .After(init_x, init_y);
+```
+
+The `ExpectationSet` object is helpful when the number of prerequisites for an
+expectation is large or variable, for example:
+
+```cpp
+using ::testing::ExpectationSet;
+...
+ExpectationSet all_inits;
+// Collect all expectations of InitElement() calls
+for (int i = 0; i < element_count; i++) {
+  all_inits += EXPECT_CALL(my_mock, InitElement(i));
+}
+EXPECT_CALL(my_mock, Describe())
+    .After(all_inits);  // Expect Describe() call after all InitElement() calls
+```
+
+The `After` clause can be used any number of times on an expectation.
+
+#### WillOnce {#EXPECT_CALL.WillOnce}
+
+`.WillOnce(`*`action`*`)`
+
+Specifies the mock function's actual behavior when invoked, for a single
+matching function call.
+
+The parameter *`action`* represents the
+[action](../gmock_for_dummies.md#actions-what-should-it-do) that the function
+call will perform. See the [Actions Reference](actions.md) for a list of
+built-in actions.
+
+The use of `WillOnce` implicitly sets a cardinality on the expectation when
+`Times` is not specified. See [`Times`](#EXPECT_CALL.Times).
+
+Each matching function call will perform the next action in the order declared.
+For example, the following code specifies that `my_mock.GetNumber()` is expected
+to be called exactly 3 times and will return `1`, `2`, and `3` respectively on
+the first, second, and third calls:
+
+```cpp
+using ::testing::Return;
+...
+EXPECT_CALL(my_mock, GetNumber())
+    .WillOnce(Return(1))
+    .WillOnce(Return(2))
+    .WillOnce(Return(3));
+```
+
+The `WillOnce` clause can be used any number of times on an expectation. Unlike
+`WillRepeatedly`, the action fed to each `WillOnce` call will be called at most
+once, so may be a move-only type and/or have an `&&`-qualified call operator.
+
+#### WillRepeatedly {#EXPECT_CALL.WillRepeatedly}
+
+`.WillRepeatedly(`*`action`*`)`
+
+Specifies the mock function's actual behavior when invoked, for all subsequent
+matching function calls. Takes effect after the actions specified in the
+[`WillOnce`](#EXPECT_CALL.WillOnce) clauses, if any, have been performed.
+
+The parameter *`action`* represents the
+[action](../gmock_for_dummies.md#actions-what-should-it-do) that the function
+call will perform. See the [Actions Reference](actions.md) for a list of
+built-in actions.
+
+The use of `WillRepeatedly` implicitly sets a cardinality on the expectation
+when `Times` is not specified. See [`Times`](#EXPECT_CALL.Times).
+
+If any `WillOnce` clauses have been specified, matching function calls will
+perform those actions before the action specified by `WillRepeatedly`. See the
+following example:
+
+```cpp
+using ::testing::Return;
+...
+EXPECT_CALL(my_mock, GetName())
+    .WillRepeatedly(Return("John Doe"));  // Return "John Doe" on all calls
+
+EXPECT_CALL(my_mock, GetNumber())
+    .WillOnce(Return(42))        // Return 42 on the first call
+    .WillRepeatedly(Return(7));  // Return 7 on all subsequent calls
+```
+
+The `WillRepeatedly` clause can be used at most once on an expectation.
+
+#### RetiresOnSaturation {#EXPECT_CALL.RetiresOnSaturation}
+
+`.RetiresOnSaturation()`
+
+Indicates that the expectation will no longer be active after the expected
+number of matching function calls has been reached.
+
+The `RetiresOnSaturation` clause is only meaningful for expectations with an
+upper-bounded cardinality. The expectation will *retire* (no longer match any
+function calls) after it has been *saturated* (the upper bound has been
+reached). See the following example:
+
+```cpp
+using ::testing::_;
+using ::testing::AnyNumber;
+...
+EXPECT_CALL(my_mock, SetNumber(_))  // Expectation 1
+    .Times(AnyNumber());
+EXPECT_CALL(my_mock, SetNumber(7))  // Expectation 2
+    .Times(2)
+    .RetiresOnSaturation();
+```
+
+In the above example, the first two calls to `my_mock.SetNumber(7)` match
+expectation 2, which then becomes inactive and no longer matches any calls. A
+third call to `my_mock.SetNumber(7)` would then match expectation 1. Without
+`RetiresOnSaturation()` on expectation 2, a third call to `my_mock.SetNumber(7)`
+would match expectation 2 again, producing a failure since the limit of 2 calls
+was exceeded.
+
+The `RetiresOnSaturation` clause can be used at most once on an expectation and
+must be the last clause.
+
+### ON_CALL {#ON_CALL}
+
+`ON_CALL(`*`mock_object`*`,`*`method_name`*`(`*`matchers...`*`))`
+
+Defines what happens when the method *`method_name`* of the object
+*`mock_object`* is called with arguments that match the given matchers
+*`matchers...`*. Requires a modifier clause to specify the method's behavior.
+*Does not* set any expectations that the method will be called.
+
+The parameter *`matchers...`* is a comma-separated list of
+[matchers](../gmock_for_dummies.md#matchers-what-arguments-do-we-expect) that
+correspond to each argument of the method *`method_name`*. The `ON_CALL`
+specification will apply only to calls of *`method_name`* whose arguments match
+all of the matchers. If `(`*`matchers...`*`)` is omitted, the behavior is as if
+each argument's matcher were a [wildcard matcher (`_`)](matchers.md#wildcard).
+See the [Matchers Reference](matchers.md) for a list of all built-in matchers.
+
+The following chainable clauses can be used to set the method's behavior, and
+they must be used in the following order:
+
+```cpp
+ON_CALL(mock_object, method_name(matchers...))
+    .With(multi_argument_matcher)  // Can be used at most once
+    .WillByDefault(action);        // Required
+```
+
+See details for each modifier clause below.
+
+#### With {#ON_CALL.With}
+
+`.With(`*`multi_argument_matcher`*`)`
+
+Restricts the specification to only mock function calls whose arguments as a
+whole match the multi-argument matcher *`multi_argument_matcher`*.
+
+GoogleTest passes all of the arguments as one tuple into the matcher. The
+parameter *`multi_argument_matcher`* must thus be a matcher of type
+`Matcher<std::tuple<A1, ..., An>>`, where `A1, ..., An` are the types of the
+function arguments.
+
+For example, the following code sets the default behavior when
+`my_mock.SetPosition()` is called with any two arguments, the first argument
+being less than the second:
+
+```cpp
+using ::testing::_;
+using ::testing::Lt;
+using ::testing::Return;
+...
+ON_CALL(my_mock, SetPosition(_, _))
+    .With(Lt())
+    .WillByDefault(Return(true));
+```
+
+GoogleTest provides some built-in matchers for 2-tuples, including the `Lt()`
+matcher above. See [Multi-argument Matchers](matchers.md#MultiArgMatchers).
+
+The `With` clause can be used at most once with each `ON_CALL` statement.
+
+#### WillByDefault {#ON_CALL.WillByDefault}
+
+`.WillByDefault(`*`action`*`)`
+
+Specifies the default behavior of a matching mock function call.
+
+The parameter *`action`* represents the
+[action](../gmock_for_dummies.md#actions-what-should-it-do) that the function
+call will perform. See the [Actions Reference](actions.md) for a list of
+built-in actions.
+
+For example, the following code specifies that by default, a call to
+`my_mock.Greet()` will return `"hello"`:
+
+```cpp
+using ::testing::Return;
+...
+ON_CALL(my_mock, Greet())
+    .WillByDefault(Return("hello"));
+```
+
+The action specified by `WillByDefault` is superseded by the actions specified
+on a matching `EXPECT_CALL` statement, if any. See the
+[`WillOnce`](#EXPECT_CALL.WillOnce) and
+[`WillRepeatedly`](#EXPECT_CALL.WillRepeatedly) clauses of `EXPECT_CALL`.
+
+The `WillByDefault` clause must be used exactly once with each `ON_CALL`
+statement.
+
+## Classes {#classes}
+
+GoogleTest defines the following classes for working with mocks.
+
+### DefaultValue {#DefaultValue}
+
+`::testing::DefaultValue<T>`
+
+Allows a user to specify the default value for a type `T` that is both copyable
+and publicly destructible (i.e. anything that can be used as a function return
+type). For mock functions with a return type of `T`, this default value is
+returned from function calls that do not specify an action.
+
+Provides the static methods `Set()`, `SetFactory()`, and `Clear()` to manage the
+default value:
+
+```cpp
+// Sets the default value to be returned. T must be copy constructible.
+DefaultValue<T>::Set(value);
+
+// Sets a factory. Will be invoked on demand. T must be move constructible.
+T MakeT();
+DefaultValue<T>::SetFactory(&MakeT);
+
+// Unsets the default value.
+DefaultValue<T>::Clear();
+```
+
+### NiceMock {#NiceMock}
+
+`::testing::NiceMock<T>`
+
+Represents a mock object that suppresses warnings on
+[uninteresting calls](../gmock_cook_book.md#uninteresting-vs-unexpected). The
+template parameter `T` is any mock class, except for another `NiceMock`,
+`NaggyMock`, or `StrictMock`.
+
+Usage of `NiceMock<T>` is analogous to usage of `T`. `NiceMock<T>` is a subclass
+of `T`, so it can be used wherever an object of type `T` is accepted. In
+addition, `NiceMock<T>` can be constructed with any arguments that a constructor
+of `T` accepts.
+
+For example, the following code suppresses warnings on the mock `my_mock` of
+type `MockClass` if a method other than `DoSomething()` is called:
+
+```cpp
+using ::testing::NiceMock;
+...
+NiceMock<MockClass> my_mock("some", "args");
+EXPECT_CALL(my_mock, DoSomething());
+... code that uses my_mock ...
+```
+
+`NiceMock<T>` only works for mock methods defined using the `MOCK_METHOD` macro
+directly in the definition of class `T`. If a mock method is defined in a base
+class of `T`, a warning might still be generated.
+
+`NiceMock<T>` might not work correctly if the destructor of `T` is not virtual.
+
+### NaggyMock {#NaggyMock}
+
+`::testing::NaggyMock<T>`
+
+Represents a mock object that generates warnings on
+[uninteresting calls](../gmock_cook_book.md#uninteresting-vs-unexpected). The
+template parameter `T` is any mock class, except for another `NiceMock`,
+`NaggyMock`, or `StrictMock`.
+
+Usage of `NaggyMock<T>` is analogous to usage of `T`. `NaggyMock<T>` is a
+subclass of `T`, so it can be used wherever an object of type `T` is accepted.
+In addition, `NaggyMock<T>` can be constructed with any arguments that a
+constructor of `T` accepts.
+
+For example, the following code generates warnings on the mock `my_mock` of type
+`MockClass` if a method other than `DoSomething()` is called:
+
+```cpp
+using ::testing::NaggyMock;
+...
+NaggyMock<MockClass> my_mock("some", "args");
+EXPECT_CALL(my_mock, DoSomething());
+... code that uses my_mock ...
+```
+
+Mock objects of type `T` by default behave the same way as `NaggyMock<T>`.
+
+### StrictMock {#StrictMock}
+
+`::testing::StrictMock<T>`
+
+Represents a mock object that generates test failures on
+[uninteresting calls](../gmock_cook_book.md#uninteresting-vs-unexpected). The
+template parameter `T` is any mock class, except for another `NiceMock`,
+`NaggyMock`, or `StrictMock`.
+
+Usage of `StrictMock<T>` is analogous to usage of `T`. `StrictMock<T>` is a
+subclass of `T`, so it can be used wherever an object of type `T` is accepted.
+In addition, `StrictMock<T>` can be constructed with any arguments that a
+constructor of `T` accepts.
+
+For example, the following code generates a test failure on the mock `my_mock`
+of type `MockClass` if a method other than `DoSomething()` is called:
+
+```cpp
+using ::testing::StrictMock;
+...
+StrictMock<MockClass> my_mock("some", "args");
+EXPECT_CALL(my_mock, DoSomething());
+... code that uses my_mock ...
+```
+
+`StrictMock<T>` only works for mock methods defined using the `MOCK_METHOD`
+macro directly in the definition of class `T`. If a mock method is defined in a
+base class of `T`, a failure might not be generated.
+
+`StrictMock<T>` might not work correctly if the destructor of `T` is not
+virtual.
+
+### Sequence {#Sequence}
+
+`::testing::Sequence`
+
+Represents a chronological sequence of expectations. See the
+[`InSequence`](#EXPECT_CALL.InSequence) clause of `EXPECT_CALL` for usage.
+
+### InSequence {#InSequence}
+
+`::testing::InSequence`
+
+An object of this type causes all expectations encountered in its scope to be
+put in an anonymous sequence.
+
+This allows more convenient expression of multiple expectations in a single
+sequence:
+
+```cpp
+using ::testing::InSequence;
+{
+  InSequence seq;
+
+  // The following are expected to occur in the order declared.
+  EXPECT_CALL(...);
+  EXPECT_CALL(...);
+  ...
+  EXPECT_CALL(...);
+}
+```
+
+The name of the `InSequence` object does not matter.
+
+### Expectation {#Expectation}
+
+`::testing::Expectation`
+
+Represents a mock function call expectation as created by
+[`EXPECT_CALL`](#EXPECT_CALL):
+
+```cpp
+using ::testing::Expectation;
+Expectation my_expectation = EXPECT_CALL(...);
+```
+
+Useful for specifying sequences of expectations; see the
+[`After`](#EXPECT_CALL.After) clause of `EXPECT_CALL`.
+
+### ExpectationSet {#ExpectationSet}
+
+`::testing::ExpectationSet`
+
+Represents a set of mock function call expectations.
+
+Use the `+=` operator to add [`Expectation`](#Expectation) objects to the set:
+
+```cpp
+using ::testing::ExpectationSet;
+ExpectationSet my_expectations;
+my_expectations += EXPECT_CALL(...);
+```
+
+Useful for specifying sequences of expectations; see the
+[`After`](#EXPECT_CALL.After) clause of `EXPECT_CALL`.
+````
+
+### `testing.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/reference/testing.md`
+
+
+````markdown
+# Testing Reference
+
+<!--* toc_depth: 3 *-->
+
+This page lists the facilities provided by GoogleTest for writing test programs.
+To use them, include the header `gtest/gtest.h`.
+
+## Macros
+
+GoogleTest defines the following macros for writing tests.
+
+### TEST {#TEST}
+
+<pre>
+TEST(<em>TestSuiteName</em>, <em>TestName</em>) {
+  ... <em>statements</em> ...
+}
+</pre>
+
+Defines an individual test named *`TestName`* in the test suite
+*`TestSuiteName`*, consisting of the given statements.
+
+Both arguments *`TestSuiteName`* and *`TestName`* must be valid C++ identifiers
+and must not contain underscores (`_`). Tests in different test suites can have
+the same individual name.
+
+The statements within the test body can be any code under test.
+[Assertions](assertions.md) used within the test body determine the outcome of
+the test.
+
+### TEST_F {#TEST_F}
+
+<pre>
+TEST_F(<em>TestFixtureName</em>, <em>TestName</em>) {
+  ... <em>statements</em> ...
+}
+</pre>
+
+Defines an individual test named *`TestName`* that uses the test fixture class
+*`TestFixtureName`*. The test suite name is *`TestFixtureName`*.
+
+Both arguments *`TestFixtureName`* and *`TestName`* must be valid C++
+identifiers and must not contain underscores (`_`). *`TestFixtureName`* must be
+the name of a test fixture class—see
+[Test Fixtures](../primer.md#same-data-multiple-tests).
+
+The statements within the test body can be any code under test.
+[Assertions](assertions.md) used within the test body determine the outcome of
+the test.
+
+### TEST_P {#TEST_P}
+
+<pre>
+TEST_P(<em>TestFixtureName</em>, <em>TestName</em>) {
+  ... <em>statements</em> ...
+}
+</pre>
+
+Defines an individual value-parameterized test named *`TestName`* that uses the
+test fixture class *`TestFixtureName`*. The test suite name is
+*`TestFixtureName`*.
+
+Both arguments *`TestFixtureName`* and *`TestName`* must be valid C++
+identifiers and must not contain underscores (`_`). *`TestFixtureName`* must be
+the name of a value-parameterized test fixture class—see
+[Value-Parameterized Tests](../advanced.md#value-parameterized-tests).
+
+The statements within the test body can be any code under test. Within the test
+body, the test parameter can be accessed with the `GetParam()` function (see
+[`WithParamInterface`](#WithParamInterface)). For example:
+
+```cpp
+TEST_P(MyTestSuite, DoesSomething) {
+  ...
+  EXPECT_TRUE(DoSomething(GetParam()));
+  ...
+}
+```
+
+[Assertions](assertions.md) used within the test body determine the outcome of
+the test.
+
+See also [`INSTANTIATE_TEST_SUITE_P`](#INSTANTIATE_TEST_SUITE_P).
+
+### INSTANTIATE_TEST_SUITE_P {#INSTANTIATE_TEST_SUITE_P}
+
+`INSTANTIATE_TEST_SUITE_P(`*`InstantiationName`*`,`*`TestSuiteName`*`,`*`param_generator`*`)`
+\
+`INSTANTIATE_TEST_SUITE_P(`*`InstantiationName`*`,`*`TestSuiteName`*`,`*`param_generator`*`,`*`name_generator`*`)`
+
+Instantiates the value-parameterized test suite *`TestSuiteName`* (defined with
+[`TEST_P`](#TEST_P)).
+
+The argument *`InstantiationName`* is a unique name for the instantiation of the
+test suite, to distinguish between multiple instantiations. In test output, the
+instantiation name is added as a prefix to the test suite name
+*`TestSuiteName`*.
+
+The argument *`param_generator`* is one of the following GoogleTest-provided
+functions that generate the test parameters, all defined in the `::testing`
+namespace:
+
+<span id="param-generators"></span>
+
+| Parameter Generator | Behavior                                             |
+| ------------------- | ---------------------------------------------------- |
+| `Range(begin, end [, step])` | Yields values `{begin, begin+step, begin+step+step, ...}`. The values do not include `end`. `step` defaults to 1. |
+| `Values(v1, v2, ..., vN)`    | Yields values `{v1, v2, ..., vN}`.          |
+| `ValuesIn(container)` or `ValuesIn(begin,end)` | Yields values from a C-style array, an STL-style container, or an iterator range `[begin, end)`. |
+| `Bool()`                     | Yields sequence `{false, true}`.            |
+| `Combine(g1, g2, ..., gN)`   | Yields as `std::tuple` *n*-tuples all combinations (Cartesian product) of the values generated by the given *n* generators `g1`, `g2`, ..., `gN`. |
+
+The optional last argument *`name_generator`* is a function or functor that
+generates custom test name suffixes based on the test parameters. The function
+must accept an argument of type
+[`TestParamInfo<class ParamType>`](#TestParamInfo) and return a `std::string`.
+The test name suffix can only contain alphanumeric characters and underscores.
+GoogleTest provides [`PrintToStringParamName`](#PrintToStringParamName), or a
+custom function can be used for more control:
+
+```cpp
+INSTANTIATE_TEST_SUITE_P(
+    MyInstantiation, MyTestSuite,
+    ::testing::Values(...),
+    [](const ::testing::TestParamInfo<MyTestSuite::ParamType>& info) {
+      // Can use info.param here to generate the test suffix
+      std::string name = ...
+      return name;
+    });
+```
+
+For more information, see
+[Value-Parameterized Tests](../advanced.md#value-parameterized-tests).
+
+See also
+[`GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST`](#GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST).
+
+### TYPED_TEST_SUITE {#TYPED_TEST_SUITE}
+
+`TYPED_TEST_SUITE(`*`TestFixtureName`*`,`*`Types`*`)`
+
+Defines a typed test suite based on the test fixture *`TestFixtureName`*. The
+test suite name is *`TestFixtureName`*.
+
+The argument *`TestFixtureName`* is a fixture class template, parameterized by a
+type, for example:
+
+```cpp
+template <typename T>
+class MyFixture : public ::testing::Test {
+ public:
+  ...
+  using List = std::list<T>;
+  static T shared_;
+  T value_;
+};
+```
+
+The argument *`Types`* is a [`Types`](#Types) object representing the list of
+types to run the tests on, for example:
+
+```cpp
+using MyTypes = ::testing::Types<char, int, unsigned int>;
+TYPED_TEST_SUITE(MyFixture, MyTypes);
+```
+
+The type alias (`using` or `typedef`) is necessary for the `TYPED_TEST_SUITE`
+macro to parse correctly.
+
+See also [`TYPED_TEST`](#TYPED_TEST) and
+[Typed Tests](../advanced.md#typed-tests) for more information.
+
+### TYPED_TEST {#TYPED_TEST}
+
+<pre>
+TYPED_TEST(<em>TestSuiteName</em>, <em>TestName</em>) {
+  ... <em>statements</em> ...
+}
+</pre>
+
+Defines an individual typed test named *`TestName`* in the typed test suite
+*`TestSuiteName`*. The test suite must be defined with
+[`TYPED_TEST_SUITE`](#TYPED_TEST_SUITE).
+
+Within the test body, the special name `TypeParam` refers to the type parameter,
+and `TestFixture` refers to the fixture class. See the following example:
+
+```cpp
+TYPED_TEST(MyFixture, Example) {
+  // Inside a test, refer to the special name TypeParam to get the type
+  // parameter.  Since we are inside a derived class template, C++ requires
+  // us to visit the members of MyFixture via 'this'.
+  TypeParam n = this->value_;
+
+  // To visit static members of the fixture, add the 'TestFixture::'
+  // prefix.
+  n += TestFixture::shared_;
+
+  // To refer to typedefs in the fixture, add the 'typename TestFixture::'
+  // prefix. The 'typename' is required to satisfy the compiler.
+  typename TestFixture::List values;
+
+  values.push_back(n);
+  ...
+}
+```
+
+For more information, see [Typed Tests](../advanced.md#typed-tests).
+
+### TYPED_TEST_SUITE_P {#TYPED_TEST_SUITE_P}
+
+`TYPED_TEST_SUITE_P(`*`TestFixtureName`*`)`
+
+Defines a type-parameterized test suite based on the test fixture
+*`TestFixtureName`*. The test suite name is *`TestFixtureName`*.
+
+The argument *`TestFixtureName`* is a fixture class template, parameterized by a
+type. See [`TYPED_TEST_SUITE`](#TYPED_TEST_SUITE) for an example.
+
+See also [`TYPED_TEST_P`](#TYPED_TEST_P) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests) for more
+information.
+
+### TYPED_TEST_P {#TYPED_TEST_P}
+
+<pre>
+TYPED_TEST_P(<em>TestSuiteName</em>, <em>TestName</em>) {
+  ... <em>statements</em> ...
+}
+</pre>
+
+Defines an individual type-parameterized test named *`TestName`* in the
+type-parameterized test suite *`TestSuiteName`*. The test suite must be defined
+with [`TYPED_TEST_SUITE_P`](#TYPED_TEST_SUITE_P).
+
+Within the test body, the special name `TypeParam` refers to the type parameter,
+and `TestFixture` refers to the fixture class. See [`TYPED_TEST`](#TYPED_TEST)
+for an example.
+
+See also [`REGISTER_TYPED_TEST_SUITE_P`](#REGISTER_TYPED_TEST_SUITE_P) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests) for more
+information.
+
+### REGISTER_TYPED_TEST_SUITE_P {#REGISTER_TYPED_TEST_SUITE_P}
+
+`REGISTER_TYPED_TEST_SUITE_P(`*`TestSuiteName`*`,`*`TestNames...`*`)`
+
+Registers the type-parameterized tests *`TestNames...`* of the test suite
+*`TestSuiteName`*. The test suite and tests must be defined with
+[`TYPED_TEST_SUITE_P`](#TYPED_TEST_SUITE_P) and [`TYPED_TEST_P`](#TYPED_TEST_P).
+
+For example:
+
+```cpp
+// Define the test suite and tests.
+TYPED_TEST_SUITE_P(MyFixture);
+TYPED_TEST_P(MyFixture, HasPropertyA) { ... }
+TYPED_TEST_P(MyFixture, HasPropertyB) { ... }
+
+// Register the tests in the test suite.
+REGISTER_TYPED_TEST_SUITE_P(MyFixture, HasPropertyA, HasPropertyB);
+```
+
+See also [`INSTANTIATE_TYPED_TEST_SUITE_P`](#INSTANTIATE_TYPED_TEST_SUITE_P) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests) for more
+information.
+
+### INSTANTIATE_TYPED_TEST_SUITE_P {#INSTANTIATE_TYPED_TEST_SUITE_P}
+
+`INSTANTIATE_TYPED_TEST_SUITE_P(`*`InstantiationName`*`,`*`TestSuiteName`*`,`*`Types`*`)`
+
+Instantiates the type-parameterized test suite *`TestSuiteName`*. The test suite
+must be registered with
+[`REGISTER_TYPED_TEST_SUITE_P`](#REGISTER_TYPED_TEST_SUITE_P).
+
+The argument *`InstantiationName`* is a unique name for the instantiation of the
+test suite, to distinguish between multiple instantiations. In test output, the
+instantiation name is added as a prefix to the test suite name
+*`TestSuiteName`*.
+
+The argument *`Types`* is a [`Types`](#Types) object representing the list of
+types to run the tests on, for example:
+
+```cpp
+using MyTypes = ::testing::Types<char, int, unsigned int>;
+INSTANTIATE_TYPED_TEST_SUITE_P(MyInstantiation, MyFixture, MyTypes);
+```
+
+The type alias (`using` or `typedef`) is necessary for the
+`INSTANTIATE_TYPED_TEST_SUITE_P` macro to parse correctly.
+
+For more information, see
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests).
+
+### FRIEND_TEST {#FRIEND_TEST}
+
+`FRIEND_TEST(`*`TestSuiteName`*`,`*`TestName`*`)`
+
+Within a class body, declares an individual test as a friend of the class,
+enabling the test to access private class members.
+
+If the class is defined in a namespace, then in order to be friends of the
+class, test fixtures and tests must be defined in the exact same namespace,
+without inline or anonymous namespaces.
+
+For example, if the class definition looks like the following:
+
+```cpp
+namespace my_namespace {
+
+class MyClass {
+  friend class MyClassTest;
+  FRIEND_TEST(MyClassTest, HasPropertyA);
+  FRIEND_TEST(MyClassTest, HasPropertyB);
+  ... definition of class MyClass ...
+};
+
+}  // namespace my_namespace
+```
+
+Then the test code should look like:
+
+```cpp
+namespace my_namespace {
+
+class MyClassTest : public ::testing::Test {
+  ...
+};
+
+TEST_F(MyClassTest, HasPropertyA) { ... }
+TEST_F(MyClassTest, HasPropertyB) { ... }
+
+}  // namespace my_namespace
+```
+
+See [Testing Private Code](../advanced.md#testing-private-code) for more
+information.
+
+### SCOPED_TRACE {#SCOPED_TRACE}
+
+`SCOPED_TRACE(`*`message`*`)`
+
+Causes the current file name, line number, and the given message *`message`* to
+be added to the failure message for each assertion failure that occurs in the
+scope.
+
+For more information, see
+[Adding Traces to Assertions](../advanced.md#adding-traces-to-assertions).
+
+See also the [`ScopedTrace` class](#ScopedTrace).
+
+### GTEST_SKIP {#GTEST_SKIP}
+
+`GTEST_SKIP()`
+
+Prevents further test execution at runtime.
+
+Can be used in individual test cases or in the `SetUp()` methods of test
+environments or test fixtures (classes derived from the
+[`Environment`](#Environment) or [`Test`](#Test) classes). If used in a global
+test environment `SetUp()` method, it skips all tests in the test program. If
+used in a test fixture `SetUp()` method, it skips all tests in the corresponding
+test suite.
+
+Similar to assertions, `GTEST_SKIP` allows streaming a custom message into it.
+
+See [Skipping Test Execution](../advanced.md#skipping-test-execution) for more
+information.
+
+### GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST {#GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST}
+
+`GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST(`*`TestSuiteName`*`)`
+
+Allows the value-parameterized test suite *`TestSuiteName`* to be
+uninstantiated.
+
+By default, every [`TEST_P`](#TEST_P) call without a corresponding
+[`INSTANTIATE_TEST_SUITE_P`](#INSTANTIATE_TEST_SUITE_P) call causes a failing
+test in the test suite `GoogleTestVerification`.
+`GTEST_ALLOW_UNINSTANTIATED_PARAMETERIZED_TEST` suppresses this failure for the
+given test suite.
+
+## Classes and types
+
+GoogleTest defines the following classes and types to help with writing tests.
+
+### AssertionResult {#AssertionResult}
+
+`::testing::AssertionResult`
+
+A class for indicating whether an assertion was successful.
+
+When the assertion wasn't successful, the `AssertionResult` object stores a
+non-empty failure message that can be retrieved with the object's `message()`
+method.
+
+To create an instance of this class, use one of the factory functions
+[`AssertionSuccess()`](#AssertionSuccess) or
+[`AssertionFailure()`](#AssertionFailure).
+
+### AssertionException {#AssertionException}
+
+`::testing::AssertionException`
+
+Exception which can be thrown from
+[`TestEventListener::OnTestPartResult`](#TestEventListener::OnTestPartResult).
+
+### EmptyTestEventListener {#EmptyTestEventListener}
+
+`::testing::EmptyTestEventListener`
+
+Provides an empty implementation of all methods in the
+[`TestEventListener`](#TestEventListener) interface, such that a subclass only
+needs to override the methods it cares about.
+
+### Environment {#Environment}
+
+`::testing::Environment`
+
+Represents a global test environment. See
+[Global Set-Up and Tear-Down](../advanced.md#global-set-up-and-tear-down).
+
+#### Protected Methods {#Environment-protected}
+
+##### SetUp {#Environment::SetUp}
+
+`virtual void Environment::SetUp()`
+
+Override this to define how to set up the environment.
+
+##### TearDown {#Environment::TearDown}
+
+`virtual void Environment::TearDown()`
+
+Override this to define how to tear down the environment.
+
+### ScopedTrace {#ScopedTrace}
+
+`::testing::ScopedTrace`
+
+An instance of this class causes a trace to be included in every test failure
+message generated by code in the scope of the lifetime of the `ScopedTrace`
+instance. The effect is undone with the destruction of the instance.
+
+The `ScopedTrace` constructor has the following form:
+
+```cpp
+template <typename T>
+ScopedTrace(const char* file, int line, const T& message)
+```
+
+Example usage:
+
+```cpp
+::testing::ScopedTrace trace("file.cc", 123, "message");
+```
+
+The resulting trace includes the given source file path and line number, and the
+given message. The `message` argument can be anything streamable to
+`std::ostream`.
+
+See also [`SCOPED_TRACE`](#SCOPED_TRACE).
+
+### Test {#Test}
+
+`::testing::Test`
+
+The abstract class that all tests inherit from. `Test` is not copyable.
+
+#### Public Methods {#Test-public}
+
+##### SetUpTestSuite {#Test::SetUpTestSuite}
+
+`static void Test::SetUpTestSuite()`
+
+Performs shared setup for all tests in the test suite. GoogleTest calls
+`SetUpTestSuite()` before running the first test in the test suite.
+
+##### TearDownTestSuite {#Test::TearDownTestSuite}
+
+`static void Test::TearDownTestSuite()`
+
+Performs shared teardown for all tests in the test suite. GoogleTest calls
+`TearDownTestSuite()` after running the last test in the test suite.
+
+##### HasFatalFailure {#Test::HasFatalFailure}
+
+`static bool Test::HasFatalFailure()`
+
+Returns true if and only if the current test has a fatal failure.
+
+##### HasNonfatalFailure {#Test::HasNonfatalFailure}
+
+`static bool Test::HasNonfatalFailure()`
+
+Returns true if and only if the current test has a nonfatal failure.
+
+##### HasFailure {#Test::HasFailure}
+
+`static bool Test::HasFailure()`
+
+Returns true if and only if the current test has any failure, either fatal or
+nonfatal.
+
+##### IsSkipped {#Test::IsSkipped}
+
+`static bool Test::IsSkipped()`
+
+Returns true if and only if the current test was skipped.
+
+##### RecordProperty {#Test::RecordProperty}
+
+`static void Test::RecordProperty(const std::string& key, const std::string&
+value)` \
+`static void Test::RecordProperty(const std::string& key, int value)`
+
+Logs a property for the current test, test suite, or entire invocation of the
+test program. Only the last value for a given key is logged.
+
+The key must be a valid XML attribute name, and cannot conflict with the ones
+already used by GoogleTest (`name`, `file`, `line`, `status`, `time`,
+`classname`, `type_param`, and `value_param`).
+
+`RecordProperty` is `public static` so it can be called from utility functions
+that are not members of the test fixture.
+
+Calls to `RecordProperty` made during the lifespan of the test (from the moment
+its constructor starts to the moment its destructor finishes) are output in XML
+as attributes of the `<testcase>` element. Properties recorded from a fixture's
+`SetUpTestSuite` or `TearDownTestSuite` methods are logged as attributes of the
+corresponding `<testsuite>` element. Calls to `RecordProperty` made in the
+global context (before or after invocation of `RUN_ALL_TESTS` or from the
+`SetUp`/`TearDown` methods of registered `Environment` objects) are output as
+attributes of the `<testsuites>` element.
+
+#### Protected Methods {#Test-protected}
+
+##### SetUp {#Test::SetUp}
+
+`virtual void Test::SetUp()`
+
+Override this to perform test fixture setup. GoogleTest calls `SetUp()` before
+running each individual test.
+
+##### TearDown {#Test::TearDown}
+
+`virtual void Test::TearDown()`
+
+Override this to perform test fixture teardown. GoogleTest calls `TearDown()`
+after running each individual test.
+
+### TestWithParam {#TestWithParam}
+
+`::testing::TestWithParam<T>`
+
+A convenience class which inherits from both [`Test`](#Test) and
+[`WithParamInterface<T>`](#WithParamInterface).
+
+### TestSuite {#TestSuite}
+
+Represents a test suite. `TestSuite` is not copyable.
+
+#### Public Methods {#TestSuite-public}
+
+##### name {#TestSuite::name}
+
+`const char* TestSuite::name() const`
+
+Gets the name of the test suite.
+
+##### type_param {#TestSuite::type_param}
+
+`const char* TestSuite::type_param() const`
+
+Returns the name of the parameter type, or `NULL` if this is not a typed or
+type-parameterized test suite. See [Typed Tests](../advanced.md#typed-tests) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests).
+
+##### should_run {#TestSuite::should_run}
+
+`bool TestSuite::should_run() const`
+
+Returns true if any test in this test suite should run.
+
+##### successful_test_count {#TestSuite::successful_test_count}
+
+`int TestSuite::successful_test_count() const`
+
+Gets the number of successful tests in this test suite.
+
+##### skipped_test_count {#TestSuite::skipped_test_count}
+
+`int TestSuite::skipped_test_count() const`
+
+Gets the number of skipped tests in this test suite.
+
+##### failed_test_count {#TestSuite::failed_test_count}
+
+`int TestSuite::failed_test_count() const`
+
+Gets the number of failed tests in this test suite.
+
+##### reportable_disabled_test_count {#TestSuite::reportable_disabled_test_count}
+
+`int TestSuite::reportable_disabled_test_count() const`
+
+Gets the number of disabled tests that will be reported in the XML report.
+
+##### disabled_test_count {#TestSuite::disabled_test_count}
+
+`int TestSuite::disabled_test_count() const`
+
+Gets the number of disabled tests in this test suite.
+
+##### reportable_test_count {#TestSuite::reportable_test_count}
+
+`int TestSuite::reportable_test_count() const`
+
+Gets the number of tests to be printed in the XML report.
+
+##### test_to_run_count {#TestSuite::test_to_run_count}
+
+`int TestSuite::test_to_run_count() const`
+
+Get the number of tests in this test suite that should run.
+
+##### total_test_count {#TestSuite::total_test_count}
+
+`int TestSuite::total_test_count() const`
+
+Gets the number of all tests in this test suite.
+
+##### Passed {#TestSuite::Passed}
+
+`bool TestSuite::Passed() const`
+
+Returns true if and only if the test suite passed.
+
+##### Failed {#TestSuite::Failed}
+
+`bool TestSuite::Failed() const`
+
+Returns true if and only if the test suite failed.
+
+##### elapsed_time {#TestSuite::elapsed_time}
+
+`TimeInMillis TestSuite::elapsed_time() const`
+
+Returns the elapsed time, in milliseconds.
+
+##### start_timestamp {#TestSuite::start_timestamp}
+
+`TimeInMillis TestSuite::start_timestamp() const`
+
+Gets the time of the test suite start, in ms from the start of the UNIX epoch.
+
+##### GetTestInfo {#TestSuite::GetTestInfo}
+
+`const TestInfo* TestSuite::GetTestInfo(int i) const`
+
+Returns the [`TestInfo`](#TestInfo) for the `i`-th test among all the tests. `i`
+can range from 0 to `total_test_count() - 1`. If `i` is not in that range,
+returns `NULL`.
+
+##### ad_hoc_test_result {#TestSuite::ad_hoc_test_result}
+
+`const TestResult& TestSuite::ad_hoc_test_result() const`
+
+Returns the [`TestResult`](#TestResult) that holds test properties recorded
+during execution of `SetUpTestSuite` and `TearDownTestSuite`.
+
+### TestInfo {#TestInfo}
+
+`::testing::TestInfo`
+
+Stores information about a test.
+
+#### Public Methods {#TestInfo-public}
+
+##### test_suite_name {#TestInfo::test_suite_name}
+
+`const char* TestInfo::test_suite_name() const`
+
+Returns the test suite name.
+
+##### name {#TestInfo::name}
+
+`const char* TestInfo::name() const`
+
+Returns the test name.
+
+##### type_param {#TestInfo::type_param}
+
+`const char* TestInfo::type_param() const`
+
+Returns the name of the parameter type, or `NULL` if this is not a typed or
+type-parameterized test. See [Typed Tests](../advanced.md#typed-tests) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests).
+
+##### value_param {#TestInfo::value_param}
+
+`const char* TestInfo::value_param() const`
+
+Returns the text representation of the value parameter, or `NULL` if this is not
+a value-parameterized test. See
+[Value-Parameterized Tests](../advanced.md#value-parameterized-tests).
+
+##### file {#TestInfo::file}
+
+`const char* TestInfo::file() const`
+
+Returns the file name where this test is defined.
+
+##### line {#TestInfo::line}
+
+`int TestInfo::line() const`
+
+Returns the line where this test is defined.
+
+##### is_in_another_shard {#TestInfo::is_in_another_shard}
+
+`bool TestInfo::is_in_another_shard() const`
+
+Returns true if this test should not be run because it's in another shard.
+
+##### should_run {#TestInfo::should_run}
+
+`bool TestInfo::should_run() const`
+
+Returns true if this test should run, that is if the test is not disabled (or it
+is disabled but the `also_run_disabled_tests` flag has been specified) and its
+full name matches the user-specified filter.
+
+GoogleTest allows the user to filter the tests by their full names. Only the
+tests that match the filter will run. See
+[Running a Subset of the Tests](../advanced.md#running-a-subset-of-the-tests)
+for more information.
+
+##### is_reportable {#TestInfo::is_reportable}
+
+`bool TestInfo::is_reportable() const`
+
+Returns true if and only if this test will appear in the XML report.
+
+##### result {#TestInfo::result}
+
+`const TestResult* TestInfo::result() const`
+
+Returns the result of the test. See [`TestResult`](#TestResult).
+
+### TestParamInfo {#TestParamInfo}
+
+`::testing::TestParamInfo<T>`
+
+Describes a parameter to a value-parameterized test. The type `T` is the type of
+the parameter.
+
+Contains the fields `param` and `index` which hold the value of the parameter
+and its integer index respectively.
+
+### UnitTest {#UnitTest}
+
+`::testing::UnitTest`
+
+This class contains information about the test program.
+
+`UnitTest` is a singleton class. The only instance is created when
+`UnitTest::GetInstance()` is first called. This instance is never deleted.
+
+`UnitTest` is not copyable.
+
+#### Public Methods {#UnitTest-public}
+
+##### GetInstance {#UnitTest::GetInstance}
+
+`static UnitTest* UnitTest::GetInstance()`
+
+Gets the singleton `UnitTest` object. The first time this method is called, a
+`UnitTest` object is constructed and returned. Consecutive calls will return the
+same object.
+
+##### original_working_dir {#UnitTest::original_working_dir}
+
+`const char* UnitTest::original_working_dir() const`
+
+Returns the working directory when the first [`TEST()`](#TEST) or
+[`TEST_F()`](#TEST_F) was executed. The `UnitTest` object owns the string.
+
+##### current_test_suite {#UnitTest::current_test_suite}
+
+`const TestSuite* UnitTest::current_test_suite() const`
+
+Returns the [`TestSuite`](#TestSuite) object for the test that's currently
+running, or `NULL` if no test is running.
+
+##### current_test_info {#UnitTest::current_test_info}
+
+`const TestInfo* UnitTest::current_test_info() const`
+
+Returns the [`TestInfo`](#TestInfo) object for the test that's currently
+running, or `NULL` if no test is running.
+
+##### random_seed {#UnitTest::random_seed}
+
+`int UnitTest::random_seed() const`
+
+Returns the random seed used at the start of the current test run.
+
+##### successful_test_suite_count {#UnitTest::successful_test_suite_count}
+
+`int UnitTest::successful_test_suite_count() const`
+
+Gets the number of successful test suites.
+
+##### failed_test_suite_count {#UnitTest::failed_test_suite_count}
+
+`int UnitTest::failed_test_suite_count() const`
+
+Gets the number of failed test suites.
+
+##### total_test_suite_count {#UnitTest::total_test_suite_count}
+
+`int UnitTest::total_test_suite_count() const`
+
+Gets the number of all test suites.
+
+##### test_suite_to_run_count {#UnitTest::test_suite_to_run_count}
+
+`int UnitTest::test_suite_to_run_count() const`
+
+Gets the number of all test suites that contain at least one test that should
+run.
+
+##### successful_test_count {#UnitTest::successful_test_count}
+
+`int UnitTest::successful_test_count() const`
+
+Gets the number of successful tests.
+
+##### skipped_test_count {#UnitTest::skipped_test_count}
+
+`int UnitTest::skipped_test_count() const`
+
+Gets the number of skipped tests.
+
+##### failed_test_count {#UnitTest::failed_test_count}
+
+`int UnitTest::failed_test_count() const`
+
+Gets the number of failed tests.
+
+##### reportable_disabled_test_count {#UnitTest::reportable_disabled_test_count}
+
+`int UnitTest::reportable_disabled_test_count() const`
+
+Gets the number of disabled tests that will be reported in the XML report.
+
+##### disabled_test_count {#UnitTest::disabled_test_count}
+
+`int UnitTest::disabled_test_count() const`
+
+Gets the number of disabled tests.
+
+##### reportable_test_count {#UnitTest::reportable_test_count}
+
+`int UnitTest::reportable_test_count() const`
+
+Gets the number of tests to be printed in the XML report.
+
+##### total_test_count {#UnitTest::total_test_count}
+
+`int UnitTest::total_test_count() const`
+
+Gets the number of all tests.
+
+##### test_to_run_count {#UnitTest::test_to_run_count}
+
+`int UnitTest::test_to_run_count() const`
+
+Gets the number of tests that should run.
+
+##### start_timestamp {#UnitTest::start_timestamp}
+
+`TimeInMillis UnitTest::start_timestamp() const`
+
+Gets the time of the test program start, in ms from the start of the UNIX epoch.
+
+##### elapsed_time {#UnitTest::elapsed_time}
+
+`TimeInMillis UnitTest::elapsed_time() const`
+
+Gets the elapsed time, in milliseconds.
+
+##### Passed {#UnitTest::Passed}
+
+`bool UnitTest::Passed() const`
+
+Returns true if and only if the unit test passed (i.e. all test suites passed).
+
+##### Failed {#UnitTest::Failed}
+
+`bool UnitTest::Failed() const`
+
+Returns true if and only if the unit test failed (i.e. some test suite failed or
+something outside of all tests failed).
+
+##### GetTestSuite {#UnitTest::GetTestSuite}
+
+`const TestSuite* UnitTest::GetTestSuite(int i) const`
+
+Gets the [`TestSuite`](#TestSuite) object for the `i`-th test suite among all
+the test suites. `i` can range from 0 to `total_test_suite_count() - 1`. If `i`
+is not in that range, returns `NULL`.
+
+##### ad_hoc_test_result {#UnitTest::ad_hoc_test_result}
+
+`const TestResult& UnitTest::ad_hoc_test_result() const`
+
+Returns the [`TestResult`](#TestResult) containing information on test failures
+and properties logged outside of individual test suites.
+
+##### listeners {#UnitTest::listeners}
+
+`TestEventListeners& UnitTest::listeners()`
+
+Returns the list of event listeners that can be used to track events inside
+GoogleTest. See [`TestEventListeners`](#TestEventListeners).
+
+### TestEventListener {#TestEventListener}
+
+`::testing::TestEventListener`
+
+The interface for tracing execution of tests. The methods below are listed in
+the order the corresponding events are fired.
+
+#### Public Methods {#TestEventListener-public}
+
+##### OnTestProgramStart {#TestEventListener::OnTestProgramStart}
+
+`virtual void TestEventListener::OnTestProgramStart(const UnitTest& unit_test)`
+
+Fired before any test activity starts.
+
+##### OnTestIterationStart {#TestEventListener::OnTestIterationStart}
+
+`virtual void TestEventListener::OnTestIterationStart(const UnitTest& unit_test,
+int iteration)`
+
+Fired before each iteration of tests starts. There may be more than one
+iteration if `GTEST_FLAG(repeat)` is set. `iteration` is the iteration index,
+starting from 0.
+
+##### OnEnvironmentsSetUpStart {#TestEventListener::OnEnvironmentsSetUpStart}
+
+`virtual void TestEventListener::OnEnvironmentsSetUpStart(const UnitTest&
+unit_test)`
+
+Fired before environment set-up for each iteration of tests starts.
+
+##### OnEnvironmentsSetUpEnd {#TestEventListener::OnEnvironmentsSetUpEnd}
+
+`virtual void TestEventListener::OnEnvironmentsSetUpEnd(const UnitTest&
+unit_test)`
+
+Fired after environment set-up for each iteration of tests ends.
+
+##### OnTestSuiteStart {#TestEventListener::OnTestSuiteStart}
+
+`virtual void TestEventListener::OnTestSuiteStart(const TestSuite& test_suite)`
+
+Fired before the test suite starts.
+
+##### OnTestStart {#TestEventListener::OnTestStart}
+
+`virtual void TestEventListener::OnTestStart(const TestInfo& test_info)`
+
+Fired before the test starts.
+
+##### OnTestPartResult {#TestEventListener::OnTestPartResult}
+
+`virtual void TestEventListener::OnTestPartResult(const TestPartResult&
+test_part_result)`
+
+Fired after a failed assertion or a `SUCCEED()` invocation. If you want to throw
+an exception from this function to skip to the next test, it must be an
+[`AssertionException`](#AssertionException) or inherited from it.
+
+##### OnTestEnd {#TestEventListener::OnTestEnd}
+
+`virtual void TestEventListener::OnTestEnd(const TestInfo& test_info)`
+
+Fired after the test ends.
+
+##### OnTestSuiteEnd {#TestEventListener::OnTestSuiteEnd}
+
+`virtual void TestEventListener::OnTestSuiteEnd(const TestSuite& test_suite)`
+
+Fired after the test suite ends.
+
+##### OnEnvironmentsTearDownStart {#TestEventListener::OnEnvironmentsTearDownStart}
+
+`virtual void TestEventListener::OnEnvironmentsTearDownStart(const UnitTest&
+unit_test)`
+
+Fired before environment tear-down for each iteration of tests starts.
+
+##### OnEnvironmentsTearDownEnd {#TestEventListener::OnEnvironmentsTearDownEnd}
+
+`virtual void TestEventListener::OnEnvironmentsTearDownEnd(const UnitTest&
+unit_test)`
+
+Fired after environment tear-down for each iteration of tests ends.
+
+##### OnTestIterationEnd {#TestEventListener::OnTestIterationEnd}
+
+`virtual void TestEventListener::OnTestIterationEnd(const UnitTest& unit_test,
+int iteration)`
+
+Fired after each iteration of tests finishes.
+
+##### OnTestProgramEnd {#TestEventListener::OnTestProgramEnd}
+
+`virtual void TestEventListener::OnTestProgramEnd(const UnitTest& unit_test)`
+
+Fired after all test activities have ended.
+
+### TestEventListeners {#TestEventListeners}
+
+`::testing::TestEventListeners`
+
+Lets users add listeners to track events in GoogleTest.
+
+#### Public Methods {#TestEventListeners-public}
+
+##### Append {#TestEventListeners::Append}
+
+`void TestEventListeners::Append(TestEventListener* listener)`
+
+Appends an event listener to the end of the list. GoogleTest assumes ownership
+of the listener (i.e. it will delete the listener when the test program
+finishes).
+
+##### Release {#TestEventListeners::Release}
+
+`TestEventListener* TestEventListeners::Release(TestEventListener* listener)`
+
+Removes the given event listener from the list and returns it. It then becomes
+the caller's responsibility to delete the listener. Returns `NULL` if the
+listener is not found in the list.
+
+##### default_result_printer {#TestEventListeners::default_result_printer}
+
+`TestEventListener* TestEventListeners::default_result_printer() const`
+
+Returns the standard listener responsible for the default console output. Can be
+removed from the listeners list to shut down default console output. Note that
+removing this object from the listener list with
+[`Release()`](#TestEventListeners::Release) transfers its ownership to the
+caller and makes this function return `NULL` the next time.
+
+##### default_xml_generator {#TestEventListeners::default_xml_generator}
+
+`TestEventListener* TestEventListeners::default_xml_generator() const`
+
+Returns the standard listener responsible for the default XML output controlled
+by the `--gtest_output=xml` flag. Can be removed from the listeners list by
+users who want to shut down the default XML output controlled by this flag and
+substitute it with custom one. Note that removing this object from the listener
+list with [`Release()`](#TestEventListeners::Release) transfers its ownership to
+the caller and makes this function return `NULL` the next time.
+
+### TestPartResult {#TestPartResult}
+
+`::testing::TestPartResult`
+
+A copyable object representing the result of a test part (i.e. an assertion or
+an explicit `FAIL()`, `ADD_FAILURE()`, or `SUCCESS()`).
+
+#### Public Methods {#TestPartResult-public}
+
+##### type {#TestPartResult::type}
+
+`Type TestPartResult::type() const`
+
+Gets the outcome of the test part.
+
+The return type `Type` is an enum defined as follows:
+
+```cpp
+enum Type {
+  kSuccess,          // Succeeded.
+  kNonFatalFailure,  // Failed but the test can continue.
+  kFatalFailure,     // Failed and the test should be terminated.
+  kSkip              // Skipped.
+};
+```
+
+##### file_name {#TestPartResult::file_name}
+
+`const char* TestPartResult::file_name() const`
+
+Gets the name of the source file where the test part took place, or `NULL` if
+it's unknown.
+
+##### line_number {#TestPartResult::line_number}
+
+`int TestPartResult::line_number() const`
+
+Gets the line in the source file where the test part took place, or `-1` if it's
+unknown.
+
+##### summary {#TestPartResult::summary}
+
+`const char* TestPartResult::summary() const`
+
+Gets the summary of the failure message.
+
+##### message {#TestPartResult::message}
+
+`const char* TestPartResult::message() const`
+
+Gets the message associated with the test part.
+
+##### skipped {#TestPartResult::skipped}
+
+`bool TestPartResult::skipped() const`
+
+Returns true if and only if the test part was skipped.
+
+##### passed {#TestPartResult::passed}
+
+`bool TestPartResult::passed() const`
+
+Returns true if and only if the test part passed.
+
+##### nonfatally_failed {#TestPartResult::nonfatally_failed}
+
+`bool TestPartResult::nonfatally_failed() const`
+
+Returns true if and only if the test part non-fatally failed.
+
+##### fatally_failed {#TestPartResult::fatally_failed}
+
+`bool TestPartResult::fatally_failed() const`
+
+Returns true if and only if the test part fatally failed.
+
+##### failed {#TestPartResult::failed}
+
+`bool TestPartResult::failed() const`
+
+Returns true if and only if the test part failed.
+
+### TestProperty {#TestProperty}
+
+`::testing::TestProperty`
+
+A copyable object representing a user-specified test property which can be
+output as a key/value string pair.
+
+#### Public Methods {#TestProperty-public}
+
+##### key {#key}
+
+`const char* key() const`
+
+Gets the user-supplied key.
+
+##### value {#value}
+
+`const char* value() const`
+
+Gets the user-supplied value.
+
+##### SetValue {#SetValue}
+
+`void SetValue(const std::string& new_value)`
+
+Sets a new value, overriding the previous one.
+
+### TestResult {#TestResult}
+
+`::testing::TestResult`
+
+Contains information about the result of a single test.
+
+`TestResult` is not copyable.
+
+#### Public Methods {#TestResult-public}
+
+##### total_part_count {#TestResult::total_part_count}
+
+`int TestResult::total_part_count() const`
+
+Gets the number of all test parts. This is the sum of the number of successful
+test parts and the number of failed test parts.
+
+##### test_property_count {#TestResult::test_property_count}
+
+`int TestResult::test_property_count() const`
+
+Returns the number of test properties.
+
+##### Passed {#TestResult::Passed}
+
+`bool TestResult::Passed() const`
+
+Returns true if and only if the test passed (i.e. no test part failed).
+
+##### Skipped {#TestResult::Skipped}
+
+`bool TestResult::Skipped() const`
+
+Returns true if and only if the test was skipped.
+
+##### Failed {#TestResult::Failed}
+
+`bool TestResult::Failed() const`
+
+Returns true if and only if the test failed.
+
+##### HasFatalFailure {#TestResult::HasFatalFailure}
+
+`bool TestResult::HasFatalFailure() const`
+
+Returns true if and only if the test fatally failed.
+
+##### HasNonfatalFailure {#TestResult::HasNonfatalFailure}
+
+`bool TestResult::HasNonfatalFailure() const`
+
+Returns true if and only if the test has a non-fatal failure.
+
+##### elapsed_time {#TestResult::elapsed_time}
+
+`TimeInMillis TestResult::elapsed_time() const`
+
+Returns the elapsed time, in milliseconds.
+
+##### start_timestamp {#TestResult::start_timestamp}
+
+`TimeInMillis TestResult::start_timestamp() const`
+
+Gets the time of the test case start, in ms from the start of the UNIX epoch.
+
+##### GetTestPartResult {#TestResult::GetTestPartResult}
+
+`const TestPartResult& TestResult::GetTestPartResult(int i) const`
+
+Returns the [`TestPartResult`](#TestPartResult) for the `i`-th test part result
+among all the results. `i` can range from 0 to `total_part_count() - 1`. If `i`
+is not in that range, aborts the program.
+
+##### GetTestProperty {#TestResult::GetTestProperty}
+
+`const TestProperty& TestResult::GetTestProperty(int i) const`
+
+Returns the [`TestProperty`](#TestProperty) object for the `i`-th test property.
+`i` can range from 0 to `test_property_count() - 1`. If `i` is not in that
+range, aborts the program.
+
+### TimeInMillis {#TimeInMillis}
+
+`::testing::TimeInMillis`
+
+An integer type representing time in milliseconds.
+
+### Types {#Types}
+
+`::testing::Types<T...>`
+
+Represents a list of types for use in typed tests and type-parameterized tests.
+
+The template argument `T...` can be any number of types, for example:
+
+```
+::testing::Types<char, int, unsigned int>
+```
+
+See [Typed Tests](../advanced.md#typed-tests) and
+[Type-Parameterized Tests](../advanced.md#type-parameterized-tests) for more
+information.
+
+### WithParamInterface {#WithParamInterface}
+
+`::testing::WithParamInterface<T>`
+
+The pure interface class that all value-parameterized tests inherit from.
+
+A value-parameterized test fixture class must inherit from both [`Test`](#Test)
+and `WithParamInterface`. In most cases that just means inheriting from
+[`TestWithParam`](#TestWithParam), but more complicated test hierarchies may
+need to inherit from `Test` and `WithParamInterface` at different levels.
+
+This interface defines the type alias `ParamType` for the parameter type `T` and
+has support for accessing the test parameter value via the `GetParam()` method:
+
+```
+static const ParamType& GetParam()
+```
+
+For more information, see
+[Value-Parameterized Tests](../advanced.md#value-parameterized-tests).
+
+## Functions
+
+GoogleTest defines the following functions to help with writing and running
+tests.
+
+### InitGoogleTest {#InitGoogleTest}
+
+`void ::testing::InitGoogleTest(int* argc, char** argv)` \
+`void ::testing::InitGoogleTest(int* argc, wchar_t** argv)` \
+`void ::testing::InitGoogleTest()`
+
+Initializes GoogleTest. This must be called before calling
+[`RUN_ALL_TESTS()`](#RUN_ALL_TESTS). In particular, it parses the command line
+for the flags that GoogleTest recognizes. Whenever a GoogleTest flag is seen, it
+is removed from `argv`, and `*argc` is decremented.
+
+No value is returned. Instead, the GoogleTest flag variables are updated.
+
+The `InitGoogleTest(int* argc, wchar_t** argv)` overload can be used in Windows
+programs compiled in `UNICODE` mode.
+
+The argument-less `InitGoogleTest()` overload can be used on Arduino/embedded
+platforms where there is no `argc`/`argv`.
+
+### AddGlobalTestEnvironment {#AddGlobalTestEnvironment}
+
+`Environment* ::testing::AddGlobalTestEnvironment(Environment* env)`
+
+Adds a test environment to the test program. Must be called before
+[`RUN_ALL_TESTS()`](#RUN_ALL_TESTS) is called. See
+[Global Set-Up and Tear-Down](../advanced.md#global-set-up-and-tear-down) for
+more information.
+
+See also [`Environment`](#Environment).
+
+### RegisterTest {#RegisterTest}
+
+```cpp
+template <typename Factory>
+TestInfo* ::testing::RegisterTest(const char* test_suite_name, const char* test_name,
+                                  const char* type_param, const char* value_param,
+                                  const char* file, int line, Factory factory)
+```
+
+Dynamically registers a test with the framework.
+
+The `factory` argument is a factory callable (move-constructible) object or
+function pointer that creates a new instance of the `Test` object. It handles
+ownership to the caller. The signature of the callable is `Fixture*()`, where
+`Fixture` is the test fixture class for the test. All tests registered with the
+same `test_suite_name` must return the same fixture type. This is checked at
+runtime.
+
+The framework will infer the fixture class from the factory and will call the
+`SetUpTestSuite` and `TearDownTestSuite` methods for it.
+
+Must be called before [`RUN_ALL_TESTS()`](#RUN_ALL_TESTS) is invoked, otherwise
+behavior is undefined.
+
+See
+[Registering tests programmatically](../advanced.md#registering-tests-programmatically)
+for more information.
+
+### RUN_ALL_TESTS {#RUN_ALL_TESTS}
+
+`int RUN_ALL_TESTS()`
+
+Use this function in `main()` to run all tests. It returns `0` if all tests are
+successful, or `1` otherwise.
+
+`RUN_ALL_TESTS()` should be invoked after the command line has been parsed by
+[`InitGoogleTest()`](#InitGoogleTest).
+
+This function was formerly a macro; thus, it is in the global namespace and has
+an all-caps name.
+
+### AssertionSuccess {#AssertionSuccess}
+
+`AssertionResult ::testing::AssertionSuccess()`
+
+Creates a successful assertion result. See
+[`AssertionResult`](#AssertionResult).
+
+### AssertionFailure {#AssertionFailure}
+
+`AssertionResult ::testing::AssertionFailure()`
+
+Creates a failed assertion result. Use the `<<` operator to store a failure
+message:
+
+```cpp
+::testing::AssertionFailure() << "My failure message";
+```
+
+See [`AssertionResult`](#AssertionResult).
+
+### StaticAssertTypeEq {#StaticAssertTypeEq}
+
+`::testing::StaticAssertTypeEq<T1, T2>()`
+
+Compile-time assertion for type equality. Compiles if and only if `T1` and `T2`
+are the same type. The value it returns is irrelevant.
+
+See [Type Assertions](../advanced.md#type-assertions) for more information.
+
+### PrintToString {#PrintToString}
+
+`std::string ::testing::PrintToString(x)`
+
+Prints any value `x` using GoogleTest's value printer.
+
+See
+[Teaching GoogleTest How to Print Your Values](../advanced.md#teaching-googletest-how-to-print-your-values)
+for more information.
+
+### PrintToStringParamName {#PrintToStringParamName}
+
+`std::string ::testing::PrintToStringParamName(TestParamInfo<T>& info)`
+
+A built-in parameterized test name generator which returns the result of
+[`PrintToString`](#PrintToString) called on `info.param`. Does not work when the
+test parameter is a `std::string` or C string. See
+[Specifying Names for Value-Parameterized Test Parameters](../advanced.md#specifying-names-for-value-parameterized-test-parameters)
+for more information.
+
+See also [`TestParamInfo`](#TestParamInfo) and
+[`INSTANTIATE_TEST_SUITE_P`](#INSTANTIATE_TEST_SUITE_P).
+````

@@ -3,18 +3,21 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 interfaces/index
 tests/index
-file--cfdp_test_defines.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/interfaces/`](interfaces/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/tests/`](tests/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/cfdp_test_defines.rb`](file--cfdp_test_defines.rb) — UTF-8 텍스트 파일 본문 포함
+### `cfdp_test_defines.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/cfdp_test_defines.rb`
+
+
+```ruby
+```

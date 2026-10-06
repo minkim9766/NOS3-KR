@@ -3,18 +3,79 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--ngsw-config.json
-file--tsconfig.app.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/`](src/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/ngsw-config.json`](file--ngsw-config.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/tsconfig.app.json`](file--tsconfig.app.json) — UTF-8 텍스트 파일 본문 포함
+### `ngsw-config.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/ngsw-config.json`
+
+
+```json
+{
+  "$schema": "../../node_modules/@angular/service-worker/config/schema.json",
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "resources": {
+        "files": [
+          "/*.css",
+          "/*.js",
+          "/*.png",
+          "/*.svg",
+          "/*.woff2",
+          "/icons/*",
+          "/index.html",
+          "/manifest.webmanifest"
+        ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "urls": ["/api"],
+      "cacheConfig": {
+        "maxSize": 0,
+        "maxAge": "0u",
+        "strategy": "freshness"
+      }
+    },
+    {
+      "name": "auth",
+      "urls": ["/auth"],
+      "cacheConfig": {
+        "maxSize": 0,
+        "maxAge": "0u",
+        "strategy": "freshness"
+      }
+    }
+  ]
+}
+```
+
+### `tsconfig.app.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/tsconfig.app.json`
+
+
+```json
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../out-tsc/app",
+    "types": []
+  },
+  "files": ["src/main.ts"],
+  "include": ["src/**/*.d.ts"]
+}
+```

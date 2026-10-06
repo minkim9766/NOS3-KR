@@ -3,26 +3,2759 @@
 
 **경로:** `components/onair/fsw/test/onair/data_handling/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `__init__.py`
 
-file--__init__.py
-file--test_csv_parser.py
-file--test_on_air_data_source.py
-file--test_parser_util.py
-file--test_redis_adapter.py
-file--test_sbn_adapter.py
-file--test_tlm_json_parser.py
+**경로:** `components/onair/fsw/test/onair/data_handling/__init__.py`
+
+
+```python
 ```
 
-## 항목
+### `test_csv_parser.py`
 
-- [`components/onair/fsw/test/onair/data_handling/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_csv_parser.py`](file--test_csv_parser.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_on_air_data_source.py`](file--test_on_air_data_source.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_parser_util.py`](file--test_parser_util.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_redis_adapter.py`](file--test_redis_adapter.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_sbn_adapter.py`](file--test_sbn_adapter.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/test/onair/data_handling/test_tlm_json_parser.py`](file--test_tlm_json_parser.py) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/onair/fsw/test/onair/data_handling/test_csv_parser.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test CSV Parser Functionality """
+import pytest
+from unittest.mock import MagicMock
+
+import onair.data_handling.csv_parser as csv_parser
+from onair.data_handling.csv_parser import DataSource
+
+@pytest.fixture
+def setup_teardown():
+    pytest.cut = DataSource.__new__(DataSource)
+    yield 'setup_teardown'
+
+# process_data_per_data_file tests
+def test_CSV_process_data_file_sets_sim_data_to_parse_csv_data_return_and_frame_index_to_zero(mocker, setup_teardown):
+    # Arrange
+    arg_data_file = MagicMock()
+
+    forced_return_parse_csv_data = MagicMock()
+
+    mocker.patch.object(pytest.cut, "parse_csv_data", return_value=forced_return_parse_csv_data)
+
+    # Act
+    pytest.cut.process_data_file(arg_data_file)
+
+    # Assert
+    assert pytest.cut.sim_data == forced_return_parse_csv_data
+    assert pytest.cut.frame_index == 0
+
+# CSV parse_csv_data tests
+def test_CSV_parse_csv_data_returns_empty_list_when_parsed_dataset_is_empty(mocker, setup_teardown):
+    # Arrange
+    arg_dataFile = MagicMock()
+
+    fake_file_iterator = MagicMock()
+    fake_csv_file = MagicMock()
+    fake_csv_file.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+    fake_dataset = []
+    forced_return_contains = MagicMock()
+    fake_second_data_set = MagicMock()
+    fake_second_data_set.columns = MagicMock()
+    fake_second_data_set.columns.values = set()
+
+    expected_result = []
+
+    mocker.patch(csv_parser.__name__ + '.open', return_value = fake_csv_file)
+    mocker.patch(csv_parser.__name__ + '.csv.reader', return_value = fake_dataset)
+    mocker.patch(csv_parser.__name__ + '.floatify_input')
+
+    # Act
+    result = pytest.cut.parse_csv_data(arg_dataFile)
+
+    # Assert
+    assert csv_parser.open.call_count == 1
+    assert csv_parser.open.call_args_list[0].args == (arg_dataFile, 'r')
+    assert csv_parser.open.call_args_list[0].kwargs == ({'newline':''})
+    assert csv_parser.csv.reader.call_count == 1
+    assert csv_parser.csv.reader.call_args_list[0].args == (fake_file_iterator, )
+    assert csv_parser.csv.reader.call_args_list[0].kwargs == ({'delimiter':','})
+    assert csv_parser.floatify_input.call_count == 0
+
+    assert result == expected_result
+
+def test_CSV_parse_csv_data_returns_empty_list_when_parsed_dataset_is_just_headers(mocker, setup_teardown):
+    # Arrange
+    arg_dataFile = MagicMock()
+
+    fake_file_iterator = MagicMock()
+    fake_csv_file = MagicMock()
+    fake_csv_file.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+    fake_dataset = [['fake column header', 'another fake column header']]
+    forced_return_contains = MagicMock()
+    fake_second_data_set = MagicMock()
+    fake_second_data_set.columns = MagicMock()
+    fake_second_data_set.columns.values = set()
+
+    expected_result = []
+
+    mocker.patch(csv_parser.__name__ + '.open', return_value = fake_csv_file)
+    mocker.patch(csv_parser.__name__ + '.csv.reader', return_value = fake_dataset)
+    mocker.patch(csv_parser.__name__ + '.floatify_input')
+
+    # Act
+    result = pytest.cut.parse_csv_data(arg_dataFile)
+
+    # Assert
+    assert csv_parser.open.call_count == 1
+    assert csv_parser.open.call_args_list[0].args == (arg_dataFile, 'r')
+    assert csv_parser.csv.reader.call_count == 1
+    assert csv_parser.csv.reader.call_args_list[0].args == (fake_file_iterator, )
+    assert csv_parser.csv.reader.call_args_list[0].kwargs == ({'delimiter':','})
+    assert csv_parser.floatify_input.call_count == 0
+
+    assert result == expected_result
+
+
+def test_CSV_parse_csv_data_returns_list_of_row_values_when_parsed_dataset(mocker, setup_teardown):
+    # Arrange
+    arg_dataFile = MagicMock()
+
+    fake_file_iterator = MagicMock()
+    fake_csv_file = MagicMock()
+    fake_csv_file.configure_mock(**{'__enter__.return_value': fake_file_iterator})
+    fake_dataset = [['fake column header', 'another fake column header']]
+    expected_result_list = []
+    num_fake_rows = pytest.gen.randint(1, 10) # arbitrary, from 1 to 10
+    for i in range(num_fake_rows):
+        fake_row_values = []
+        for j in range(pytest.gen.randint(1,10)): # arbitrary, from 1 to 10 row values
+            fake_row_values.append(pytest.gen.randint(1, 10)) # arbitrary, from 1 to 10 as a value in row
+        fake_dataset.append([i, fake_row_values])
+        expected_result_list.append(fake_row_values)
+
+    mocker.patch(csv_parser.__name__ + '.open', return_value = fake_csv_file)
+    mocker.patch(csv_parser.__name__ + '.csv.reader', return_value = fake_dataset)
+    mocker.patch(csv_parser.__name__ + '.floatify_input', side_effect = expected_result_list)
+
+    # Act
+    result = pytest.cut.parse_csv_data(arg_dataFile)
+
+    # Assert
+    assert csv_parser.open.call_count == 1
+    assert csv_parser.open.call_args_list[0].args == (arg_dataFile, 'r')
+    assert csv_parser.csv.reader.call_count == 1
+    assert csv_parser.csv.reader.call_args_list[0].args == (fake_file_iterator, )
+    assert csv_parser.csv.reader.call_args_list[0].kwargs == ({'delimiter':','})
+    assert csv_parser.floatify_input.call_count == num_fake_rows
+
+    assert result == expected_result_list
+
+# CSV parse_meta_data tests
+def test_CSV_parse_meta_data_file_returns_call_to_extract_meta_data_handle_ss_breakdown(mocker, setup_teardown):
+    # Arrange
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    expected_result = MagicMock()
+
+    mocker.patch(csv_parser.__name__ + '.extract_meta_data_handle_ss_breakdown', return_value=expected_result)
+    mocker.patch(csv_parser.__name__ + '.len')
+
+    # Act
+    result = pytest.cut.parse_meta_data_file(arg_configFile, arg_ss_breakdown)
+
+    # Assert
+    assert csv_parser.extract_meta_data_handle_ss_breakdown.call_count == 1
+    assert csv_parser.extract_meta_data_handle_ss_breakdown.call_args_list[0].args == (arg_configFile, arg_ss_breakdown, )
+    assert csv_parser.len.call_count == 0
+    assert result == expected_result
+
+# CSV get_vehicle_metadata tests
+def test_CSV_get_vehicle_metadata_returns_list_of_headers_and_list_of_test_assignments(setup_teardown):
+    # Arrange
+    fake_all_headers = MagicMock()
+    fake_test_assignments = MagicMock()
+    fake_binning_configs = {}
+    fake_binning_configs['test_assignments'] = fake_test_assignments
+
+    expected_result = (fake_all_headers, fake_test_assignments)
+
+    pytest.cut.all_headers = fake_all_headers
+    pytest.cut.binning_configs = fake_binning_configs
+
+    # Act
+    result = pytest.cut.get_vehicle_metadata()
+
+    # Assert
+    assert result == expected_result
+
+# CSV get_next test
+def test_CSV_get_next_increments_index_and_returns_current_frame_of_data(setup_teardown):
+    # Arrange
+    fake_frame_index = 10
+    fake_sim_data = []
+    for i in range(fake_frame_index + 1):
+        fake_sim_data.append(MagicMock())
+
+    expected_result = fake_sim_data[fake_frame_index]
+
+    pytest.cut.frame_index = fake_frame_index
+    pytest.cut.sim_data = fake_sim_data
+
+    # Act
+    result = pytest.cut.get_next()
+
+    # Assert
+    assert result == expected_result
+    assert pytest.cut.frame_index == fake_frame_index + 1
+
+# CSV has_more test
+def test_CSV_has_more_returns_true_when_index_less_than_number_of_frames(setup_teardown):
+    # Arrange
+    fake_frame_index = 10
+    fake_sim_data = []
+    for i in range(fake_frame_index + 1):
+        fake_sim_data.append(MagicMock())
+
+    expected_result = True
+
+    pytest.cut.frame_index = 5
+    pytest.cut.sim_data = fake_sim_data
+
+    # Act
+    result = pytest.cut.has_more()
+
+    # Assert
+    assert result == expected_result
+
+def test_CSV_has_more_returns_false_when_index_equal_than_number_of_frames(setup_teardown):
+    # Arrange
+    fake_frame_index = 10
+    fake_sim_data = []
+    for i in range(fake_frame_index):
+        fake_sim_data.append(MagicMock())
+
+    expected_result = False
+
+    pytest.cut.frame_index = fake_frame_index
+    pytest.cut.sim_data = fake_sim_data
+
+    # Act
+    result = pytest.cut.has_more()
+
+    # Assert
+    assert result == expected_result
+```
+
+### `test_on_air_data_source.py`
+
+**경로:** `components/onair/fsw/test/onair/data_handling/test_on_air_data_source.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test OnAir Parser Functionality """
+import pytest
+from unittest.mock import MagicMock
+
+from onair.data_handling.on_air_data_source import OnAirDataSource
+
+
+class FakeOnAirDataSource(OnAirDataSource):
+    def process_data_file(self, data_file):
+        super().process_data_file(data_file)
+
+    def parse_meta_data_file(self, configFile, ss_breakdown):
+        super().parse_meta_data_file(configFile, ss_breakdown)
+
+    def get_next(self):
+        return super().get_next()
+
+    def has_more(self):
+        return super().has_more()
+
+class IncompleteOnAirDataSource(OnAirDataSource):
+    pass
+
+class BadFakeOnAirDataSource(OnAirDataSource):
+    def process_data_file(self, data_file):
+        return super().process_data_file(data_file)
+
+    def parse_meta_data_file(self, configFile, ss_breakdown):
+        return super().parse_meta_data_file(configFile, ss_breakdown)
+
+    def get_next(self):
+        return super().get_next()
+
+    def has_more(self):
+        return super().has_more()
+
+@pytest.fixture
+def setup_teardown():
+    pytest.cut = FakeOnAirDataSource.__new__(FakeOnAirDataSource)
+    yield 'setup_teardown'
+
+# __init__ tests
+def test_OnAirDataSource__init__sets_instance_variables_as_expected_and_calls_parse_meta_data_file_and_process_data_file(setup_teardown, mocker):
+    # Arrange
+    arg_rawDataFile = MagicMock()
+    arg_metadataFile = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    fake_configs = {}
+    fake_configs['subsystem_assignments'] = MagicMock()
+    fake_configs['test_assignments'] = MagicMock()
+    fake_configs['description_assignments'] = MagicMock()
+    fake_configs['data_labels'] = MagicMock()
+
+    mocker.patch.object(pytest.cut, 'parse_meta_data_file', return_value=fake_configs)
+    mocker.patch.object(pytest.cut, 'process_data_file')
+
+    # Act
+    pytest.cut.__init__(arg_rawDataFile, arg_metadataFile, arg_ss_breakdown)
+
+    # Assert
+    assert pytest.cut.raw_data_file == arg_rawDataFile
+    assert pytest.cut.meta_data_file == arg_metadataFile
+    assert pytest.cut.all_headers == fake_configs['data_labels']
+    assert pytest.cut.sim_data == {}
+    assert pytest.cut.parse_meta_data_file.call_count == 1
+    assert pytest.cut.parse_meta_data_file.call_args_list[0].args == (arg_metadataFile, arg_ss_breakdown, )
+    assert pytest.cut.process_data_file.call_count == 1
+    assert pytest.cut.process_data_file.call_args_list[0].args == (arg_rawDataFile, )
+    # assert pytest.cut.binning_configs == fake_configs
+    assert pytest.cut.binning_configs['subsystem_assignments'] == fake_configs['subsystem_assignments']
+    assert pytest.cut.binning_configs['test_assignments'] == fake_configs['test_assignments']
+    assert pytest.cut.binning_configs['description_assignments'] == fake_configs['description_assignments']
+
+# abstract methods tests
+def test_OnAirDataSource_raises_error_because_of_unimplemented_abstract_methods():
+    # Arrange - None
+    # Act
+    with pytest.raises(TypeError) as e_info:
+        cut = OnAirDataSource.__new__(OnAirDataSource)
+
+    # Assert
+    assert "Can't instantiate abstract class OnAirDataSource with" in e_info.__str__()
+    assert "process_data_file" in e_info.__str__()
+    assert "parse_meta_data_file" in e_info.__str__()
+    assert "get_next" in e_info.__str__()
+    assert "has_more" in e_info.__str__()
+
+# Incomplete plugin call tests
+def test_OnAirDataSource_raises_error_when_an_inherited_class_is_instantiated_because_abstract_methods_are_not_implemented_by_that_class():
+    # Arrange - None
+    # Act
+    with pytest.raises(TypeError) as e_info:
+        cut = IncompleteOnAirDataSource.__new__(IncompleteOnAirDataSource)
+
+    # Assert
+    assert "Can't instantiate abstract class IncompleteOnAirDataSource with" in e_info.__str__()
+    assert "process_data_file" in e_info.__str__()
+    assert "parse_meta_data_file" in e_info.__str__()
+    assert "get_next" in e_info.__str__()
+    assert "has_more" in e_info.__str__()
+
+def test_OnAirDataSource_raises_error_when_an_inherited_class_calls_abstract_method_process_data_file():
+    # Act
+    cut = BadFakeOnAirDataSource.__new__(BadFakeOnAirDataSource)
+
+    # populate list with the functions that should raise exceptions when called.
+    with pytest.raises(NotImplementedError) as e_info:
+        cut.process_data_file(None)
+    assert "NotImplementedError" in e_info.__str__()
+
+def test_OnAirDataSource_raises_error_when_an_inherited_class_calls_abstract_method_parse_meta_data_file():
+    # Act
+    cut = BadFakeOnAirDataSource.__new__(BadFakeOnAirDataSource)
+
+    # populate list with the functions that should raise exceptions when called.
+    with pytest.raises(NotImplementedError) as e_info:
+        cut.parse_meta_data_file(None, None)
+    assert "NotImplementedError" in e_info.__str__()
+
+def test_OnAirDataSource_raises_error_when_an_inherited_class_calls_abstract_method_get_next():
+    # Act
+    cut = BadFakeOnAirDataSource.__new__(BadFakeOnAirDataSource)
+
+    # populate list with the functions that should raise exceptions when called.
+    with pytest.raises(NotImplementedError) as e_info:
+        cut.get_next()
+    assert "NotImplementedError" in e_info.__str__()
+
+def test_OnAirDataSource_raises_error_when_an_inherited_class_calls_abstract_method_has_more():
+    # Act
+    cut = BadFakeOnAirDataSource.__new__(BadFakeOnAirDataSource)
+
+    # populate list with the functions that should raise exceptions when called.
+    with pytest.raises(NotImplementedError) as e_info:
+        cut.has_more()
+    assert "NotImplementedError" in e_info.__str__()
+```
+
+### `test_parser_util.py`
+
+**경로:** `components/onair/fsw/test/onair/data_handling/test_parser_util.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test Parser Util Functionality """
+import pytest
+from unittest.mock import MagicMock
+
+import onair.data_handling.parser_util as parser_util
+
+# extract_meta_data_handle_ss_breakdown
+def test_parser_util_extract_meta_data_handle_ss_breakdown_returns_call_to_extract_meta_data_file_given_metadata_file_and_csv_set_to_True_when_given_ss_breakdown_does_not_resolve_to_False(mocker):
+    # Arrange
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = True if pytest.gen.randint(0, 1) else MagicMock()
+
+    expected_result = MagicMock()
+
+    mocker.patch(parser_util.__name__ + '.extract_meta_data', return_value=expected_result)
+    mocker.patch(parser_util.__name__ + '.len')
+
+    # Act
+    result = parser_util.extract_meta_data_handle_ss_breakdown(arg_configFile, arg_ss_breakdown)
+
+    # Assert
+    assert parser_util.extract_meta_data.call_count == 1
+    assert parser_util.extract_meta_data.call_args_list[0].args == (arg_configFile, )
+    assert parser_util.len.call_count == 0
+    assert result == expected_result
+
+def test_parser_util_extract_meta_data_handle_ss_breakdown_returns_call_to_extract_meta_data_file_given_metadata_file_and_csv_set_to_True_with_dict_def_of_subsystem_assigments_def_of_call_to_process_filepath_given_configFile_and_kwarg_csv_set_to_True_set_to_empty_list_when_len_of_call_value_dict_def_of_subsystem_assigments_def_of_call_to_process_filepath_given_configFile_and_kwarg_csv_set_to_True_is_0_when_given_ss_breakdown_evaluates_to_False(mocker):
+    # Arrange
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = False if pytest.gen.randint(0, 1) else 0
+
+    forced_return_extract_meta_data = {}
+    forced_return_len = 0
+    fake_empty_processed_filepath = MagicMock()
+    forced_return_extract_meta_data['subsystem_assignments'] = fake_empty_processed_filepath
+
+    expected_result = []
+
+    mocker.patch(parser_util.__name__ + '.extract_meta_data', return_value=forced_return_extract_meta_data)
+    mocker.patch(parser_util.__name__ + '.len', return_value=forced_return_len)
+
+    # Act
+    result = parser_util.extract_meta_data_handle_ss_breakdown(arg_configFile, arg_ss_breakdown)
+
+    # Assert
+    assert parser_util.extract_meta_data.call_count == 1
+    assert parser_util.extract_meta_data.call_args_list[0].args == (arg_configFile, )
+    assert parser_util.len.call_count == 1
+    assert parser_util.len.call_args_list[0].args == (fake_empty_processed_filepath, )
+    assert result['subsystem_assignments'] == expected_result
+
+def test_parser_util_extract_meta_data_handle_ss_breakdown_returns_call_to_extract_meta_data_given_metadata_file_and_csv_set_to_True_with_dict_def_subsystem_assignments_def_of_call_to_process_filepath_given_configFile_and_kwarg_csv_set_to_True_set_to_single_item_list_str_MISSION_for_each_item_when_given_ss_breakdown_evaluates_to_False(mocker):
+    # Arrange
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = False if pytest.gen.randint(0, 1) else 0
+
+    forced_return_extract_meta_data = {}
+    forced_return_process_filepath = MagicMock()
+    fake_processed_filepath = []
+    num_fake_processed_filepaths = pytest.gen.randint(1,10) # arbitrary, from 1 to 10 (0 has own test)
+    for i in range(num_fake_processed_filepaths):
+        fake_processed_filepath.append(i)
+    forced_return_extract_meta_data['subsystem_assignments'] = fake_processed_filepath
+    forced_return_len = num_fake_processed_filepaths
+
+    expected_result = []
+    for i in range(num_fake_processed_filepaths):
+        expected_result.append(['MISSION'])
+
+    mocker.patch(parser_util.__name__ + '.extract_meta_data', return_value=forced_return_extract_meta_data)
+    mocker.patch(parser_util.__name__ + '.len', return_value=forced_return_len)
+
+    # Act
+    result = parser_util.extract_meta_data_handle_ss_breakdown(arg_configFile, arg_ss_breakdown)
+
+    # Assert
+    assert parser_util.extract_meta_data.call_count == 1
+    assert parser_util.extract_meta_data.call_args_list[0].args == (arg_configFile, )
+    assert parser_util.len.call_count == 1
+    assert parser_util.len.call_args_list[0].args == (fake_processed_filepath, )
+    assert result['subsystem_assignments'] == expected_result
+
+# extract_meta_data tests
+def test_parser_util_extract_meta_data_raises_error_when_given_blank_meta_data_file():
+    # Arrange
+    arg_meta_data_file = ''
+
+    # Act
+    with pytest.raises(AssertionError) as e_info:
+        result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert e_info.match('')
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_configs_len_equal_to_zero(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    fake_subsystem_assignments = MagicMock()
+    fake_tests = MagicMock()
+    fake_descs = MagicMock()
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+    forced_return_len = 0
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.len', return_value=forced_return_len)
+    mocker.patch(parser_util.__name__ + '.str2lst')
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert parser_util.len.call_count == 1
+    assert parser_util.len.call_args_list[0].args == (fake_subsystem_assignments, )
+    assert parser_util.str2lst.call_count == 0
+    assert result == forced_return_parse_tlm
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_configs_len_equal_to_one(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    fake_subsystem_assignments = [MagicMock()]
+    fake_test_assign = MagicMock()
+    fake_tests = [[[fake_test_assign]]]
+    fake_descs = [MagicMock()]
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.str2lst')
+
+    expected_ss_assigns = [[fake_ss_assign] for fake_ss_assign in fake_subsystem_assignments]
+    expected_result = {}
+    expected_result['subsystem_assignments'] = expected_ss_assigns
+    expected_result['test_assignments'] = [[[fake_test_assign]]]
+    expected_result['description_assignments'] = fake_descs.copy()
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert parser_util.str2lst.call_count == 0
+    assert result == expected_result
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_len_configs_greater_than_one(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    len_configs = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10 (0 and 1 have own tests)
+    fake_subsystem_assignments = [MagicMock()] * len_configs
+    fake_test_assign = MagicMock()
+    fake_tests = [[[fake_test_assign]]] * len_configs
+    fake_descs = [MagicMock()] * len_configs
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.str2lst')
+
+    expected_ss_assigns = [[fake_ss_assign] for fake_ss_assign in fake_subsystem_assignments]
+    expected_result = {}
+    expected_result['subsystem_assignments'] = expected_ss_assigns
+    expected_result['test_assignments'] = [[[fake_test_assign]]] * len_configs
+    expected_result['description_assignments'] = fake_descs.copy()
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert parser_util.str2lst.call_count == 0
+    assert result == expected_result
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_len_configs_greater_than_one_and_NOOPs_contained_in_test_assigns(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    len_configs = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10 (0 and 1 have own tests)
+    num_noops = pytest.gen.randint(2, 10)
+    len_configs = len_configs + num_noops
+    fake_subsystem_assignments = [MagicMock()] * len_configs
+    fake_test_assign = MagicMock()
+    noop_test_assign = 'NOOP'
+    fake_tests = [[[fake_test_assign]]] * (len_configs - num_noops) + [[[noop_test_assign]]] * num_noops
+    fake_descs = [MagicMock()] * len_configs
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.str2lst')
+
+    expected_ss_assigns = [[fake_ss_assign] for fake_ss_assign in fake_subsystem_assignments]
+    expected_result = {}
+    expected_result['subsystem_assignments'] = expected_ss_assigns
+    expected_result['test_assignments'] = [[[fake_test_assign]]] * (len_configs - num_noops) + [[[noop_test_assign]]] * num_noops
+    expected_result['description_assignments'] = fake_descs.copy()
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert parser_util.str2lst.call_count == 0
+    assert result == expected_result
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_len_configs_greater_than_one_and_len_test_assigns_greater_than_one(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    len_configs = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10 (0 and 1 have own tests)
+    fake_subsystem_assignments = [MagicMock()] * len_configs
+    fake_tests= []
+    fake_descs = [MagicMock()] * len_configs
+    for i in range(len_configs):
+        len_test_assigns = pytest.gen.randint(1, 10) # arbitrary, from 1 to 10
+        fake_test_assigns = [[MagicMock(), MagicMock()]] * len_test_assigns
+        fake_tests.append(fake_test_assigns)
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+    forced_return_str2lst = [MagicMock()]
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.str2lst', return_value=forced_return_str2lst)
+
+    expected_ss_assigns = [[fake_ss_assign] for fake_ss_assign in fake_subsystem_assignments]
+    expected_result = {}
+    expected_result['subsystem_assignments'] = expected_ss_assigns
+    expected_result['test_assignments'] = []
+    expected_result['description_assignments'] = fake_descs.copy()
+
+    expected_str2lst_args = []
+    expected_str2lst_call_count = 0
+    for test_assigns in fake_tests:
+        expected_test_assign = []
+        for j in range(len(test_assigns)):
+            expected_test_assign.append([test_assigns[j][0]] + forced_return_str2lst)
+            expected_str2lst_args.append(test_assigns[j][1])
+            expected_str2lst_call_count += 1
+        expected_result['test_assignments'].append(expected_test_assign)
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert parser_util.str2lst.call_count == expected_str2lst_call_count
+    for i in range(expected_str2lst_call_count):
+        assert parser_util.str2lst.call_args_list[i].args == (expected_str2lst_args[i], )
+    assert result == expected_result
+
+def test_parser_util_extract_meta_data_returns_expected_dicts_dict_when_configFiles_len_configs_greater_than_one_and_subsystem_NONE_exists(mocker):
+    # Arrange
+    arg_meta_data_file = MagicMock()
+
+    len_configs = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10 (0 and 1 have own tests)
+    fake_subsystem_assignments = []
+    fake_tests = []
+    fake_tests_copy = []
+    fake_descs = []
+
+    expected_subsystem_assignments = []
+    for i in range(len_configs):
+        if pytest.gen.randint(0, 1) == 1:
+            fake_ss_assign = MagicMock()
+            fake_subsystem_assignments.append(fake_ss_assign)
+            expected_subsystem_assignments.append([fake_ss_assign])
+        else:
+            fake_subsystem_assignments.append('NONE')
+            expected_subsystem_assignments.append([])
+        fake_test_assign = MagicMock()
+        fake_tests.append([[fake_test_assign]])
+        fake_tests_copy.append([[fake_test_assign]])
+        fake_descs.append(MagicMock())
+
+    rand_index = pytest.gen.randint(0, len_configs-1) # arbitrary index in fake_subsystem_assignments
+    fake_subsystem_assignments[rand_index] = 'NONE'
+    expected_subsystem_assignments[rand_index] = []
+
+    forced_return_parse_tlm = {'subsystem_assignments' : fake_subsystem_assignments,
+                                'test_assignments' : fake_tests,
+                                'description_assignments' : fake_descs}
+
+    mocker.patch(parser_util.__name__ + '.parseTlmConfJson', return_value=forced_return_parse_tlm)
+    mocker.patch(parser_util.__name__ + '.str2lst')
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = expected_subsystem_assignments
+    expected_result['test_assignments'] = fake_tests_copy
+    expected_result['description_assignments'] = fake_descs.copy()
+
+    # Act
+    result = parser_util.extract_meta_data(arg_meta_data_file)
+
+    # Assert
+    assert parser_util.parseTlmConfJson.call_count == 1
+    assert parser_util.parseTlmConfJson.call_args_list[0].args == (arg_meta_data_file, )
+    assert result == expected_result
+
+# floatify_input tests
+def test_parser_util_flotify_input_returns_empty_list_when_given__input_is_vacant(mocker):
+    # Arrange
+    arg__input = [] # empty list, no iterations
+    arg_remove_str = False
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert result == []
+
+def test_parser_util_flotify_input_raises_exception_when_float_returns_non_ValueError_exception(mocker):
+    # Arrange
+    arg__input = [str(MagicMock())] # list of single str list, 1 iteration
+    arg_remove_str = False
+
+    exception_message = str(MagicMock())
+    fake_exception = Exception(exception_message)
+
+    mocker.patch('builtins.float', side_effect=[fake_exception])
+
+    # Act
+    with pytest.raises(Exception) as e_info:
+        parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert e_info.match(exception_message)
+
+def test_parser_util_flotify_input_returns_list_of_size_one_that_contains_the_call_to_float_when_no_Exception_is_thrown_and_given__input_is_str(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = False
+
+    fake_item = str(MagicMock())
+    arg__input.append(fake_item) # list of single str, one iteration
+
+    expected_result = MagicMock()
+
+    mocker.patch('builtins.float', return_value=expected_result)
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert float.call_count == 1
+    assert float.call_args_list[0].args == (arg__input[0], )
+    assert result == [expected_result]
+
+def test_parser_util_flotify_input_returns_list_of_size_one_that_contains_the_second_call_to_float_after_replace_call_when_single_Exception_is_thrown(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = False
+
+    fake_item = MagicMock()
+    arg__input.append(fake_item) # list of one item, one iteration
+
+    expected_result = MagicMock()
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=[ValueError])
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', return_value=expected_result)
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert parser_util.float.call_count == 1
+    assert parser_util.float.call_args_list[0].args == (arg__input[0], )
+    assert parser_util.convert_str_to_timestamp.call_count == 1
+    assert parser_util.convert_str_to_timestamp.call_args_list[0].args == (fake_item, )
+    assert result == [expected_result]
+
+def test_parser_util_flotify_input_returns_list_of_size_one_that_contains_0_dot_0_when_two_Exceptions_are_thrown_and_remove_str_is_False(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = False
+
+    fake_item = MagicMock()
+    arg__input.append(fake_item) # list of one item, one iteration
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=[ValueError])
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', side_effect=[Exception])
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert parser_util.float.call_count == 1
+    assert parser_util.float.call_args_list[0].args == (arg__input[0], )
+    assert parser_util.convert_str_to_timestamp.call_count == 1
+    assert parser_util.convert_str_to_timestamp.call_args_list[0].args == (arg__input[0], )
+    assert result == [0.0]
+
+def test_parser_util_flotify_input_default_arg_remove_str_is_False(mocker):
+    # Arrange
+    arg__input = []
+
+    fake_item = MagicMock()
+    arg__input.append(fake_item) # list of one item, one iteration
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=[ValueError])
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', side_effect=[Exception])
+
+    # Act
+    result = parser_util.floatify_input(arg__input)
+
+    # Assert
+    assert result == [0.0] # shows flow was correct for remove_str being False
+
+def test_parser_util_flotify_input_returns_empty_list_when_two_Exceptions_are_thrown_and_remove_str_is_True(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = True
+
+    fake_item = MagicMock()
+    arg__input.append(fake_item) # list of one item, one iteration
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=[ValueError])
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', side_effect=[Exception])
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert parser_util.float.call_count == 1
+    assert parser_util.float.call_args_list[0].args == (arg__input[0], )
+    assert parser_util.convert_str_to_timestamp.call_count == 1
+    assert parser_util.convert_str_to_timestamp.call_args_list[0].args == (fake_item, )
+    assert result == []
+
+def test_parser_util_flotify_input_returns_call_to_float_that_was_given___input_item_when_type_of_item_is_not_str_and_there_is_single_item(mocker):
+    # Arrange
+    arg__input = []
+
+    fake_item = MagicMock()
+    arg__input.append(fake_item) # list of one item, one iteration
+
+    expected_result = MagicMock()
+
+    mocker.patch(parser_util.__name__ + '.float', return_value=expected_result)
+
+    # Act
+    result = parser_util.floatify_input(arg__input)
+
+    # Assert
+    assert result == [expected_result] # shows flow was correct for remove_str being False
+
+def test_parser_util_flotify_input_returns_expected_values_for_given__input_that_is_multi_typed_when_remove_str_is_True(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = True
+
+    side_effects_for_float = []
+    side_effects_for_convert_str = []
+    expected_result = []
+
+    num_fakes = pytest.gen.randint(0, 10) # arbitrary, from 0 to 10
+
+    for i in range(num_fakes):
+        rand_type_of_item = pytest.gen.sample(['str', 'str_need_replace', 'str_fail_replace', 'other'], 1)[0]
+
+        if rand_type_of_item == 'str':
+            arg__input.append(MagicMock())
+            resultant_float = MagicMock()
+            side_effects_for_float.append(resultant_float)
+            expected_result.append(resultant_float)
+        elif rand_type_of_item == 'str_need_replace':
+            fake_input = MagicMock()
+            arg__input.append(fake_input)
+            resultant_float = MagicMock()
+            side_effects_for_float.append(ValueError)
+            side_effects_for_convert_str.append(resultant_float)
+            expected_result.append(resultant_float)
+        elif rand_type_of_item == 'str_fail_replace':
+            fake_input = MagicMock()
+            arg__input.append(fake_input)
+            resultant_float = MagicMock()
+            side_effects_for_float.append(ValueError)
+            side_effects_for_convert_str.append(Exception)
+        else:
+            arg__input.append(MagicMock())
+            resultant_float = MagicMock()
+            side_effects_for_float.append(resultant_float)
+            expected_result.append(resultant_float)
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=side_effects_for_float)
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', side_effect=side_effects_for_convert_str)
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert result == expected_result
+
+def test_parser_util_flotify_input_returns_expected_values_for_given__input_that_is_multi_typed_when_remove_str_is_False(mocker):
+    # Arrange
+    arg__input = []
+    arg_remove_str = False
+
+    side_effects_for_float = []
+    side_effects_for_convert_str = []
+    expected_result = []
+
+    num_fakes = pytest.gen.randint(0, 10) # arbitrary, from 0 to 10
+
+    for i in range(num_fakes):
+        rand_type_of_item = pytest.gen.sample(['str', 'str_need_replace', 'str_fail_replace', 'other'], 1)[0]
+
+        if rand_type_of_item == 'str':
+            arg__input.append(MagicMock())
+            resultant_float = MagicMock()
+            side_effects_for_float.append(resultant_float)
+            expected_result.append(resultant_float)
+        elif rand_type_of_item == 'str_need_replace':
+            fake_input = MagicMock()
+            arg__input.append(fake_input)
+            resultant_float = MagicMock()
+            side_effects_for_float.append(ValueError)
+            side_effects_for_convert_str.append(resultant_float)
+            expected_result.append(resultant_float)
+        elif rand_type_of_item == 'str_fail_replace':
+            fake_input = MagicMock()
+            arg__input.append(fake_input)
+            resultant_float = MagicMock()
+            side_effects_for_float.append(ValueError)
+            side_effects_for_convert_str.append(Exception)
+            expected_result.append(0.0)
+        else: # other
+            arg__input.append(MagicMock())
+            resultant_float = MagicMock()
+            side_effects_for_float.append(resultant_float)
+            expected_result.append(resultant_float)
+
+    mocker.patch(parser_util.__name__ + '.float', side_effect=side_effects_for_float)
+    mocker.patch(parser_util.__name__ + '.convert_str_to_timestamp', side_effect=side_effects_for_convert_str)
+
+    # Act
+    result = parser_util.floatify_input(arg__input, arg_remove_str)
+
+    # Assert
+    assert result == expected_result
+
+# convert_str_to_timestamp
+def test_parser_util_convert_str_to_timestamp_returns_datetime_strptime_timestamp_on_success(mocker):
+    # Arrange
+    arg_time_str = str(MagicMock())
+
+    fake_datetime = MagicMock()
+    fake_timestamp = MagicMock()
+    fake_dt_module = MagicMock()
+    fake_dt_dt = MagicMock()
+
+    mocker.patch(parser_util.__name__ + '.datetime', fake_dt_module)
+    mocker.patch.object(fake_dt_module, 'datetime', fake_dt_dt)
+    mocker.patch.object(fake_dt_dt, 'strptime', return_value=fake_datetime)
+    mocker.patch.object(fake_datetime, 'timestamp', return_value=fake_timestamp)
+    # Act
+    result = parser_util.convert_str_to_timestamp(arg_time_str)
+
+    # Assert
+    assert fake_dt_module.datetime.strptime.call_count == 1
+    assert fake_dt_module.datetime.strptime.call_args_list[0].args == (arg_time_str, '%Y-%j-%H:%M:%S.%f')
+    assert fake_datetime.timestamp.call_count == 1
+    assert result == fake_timestamp
+
+def test_parser_util_convert_str_to_timestamp_returns_datetime_timestamp_when_strptime_raises_error(mocker):
+    # Arrange
+    arg_time_str = '59:20'
+
+    fake_timestamp = MagicMock()
+    fake_dt_module = MagicMock()
+
+    class Fake_Datetime():
+        timestamp_call_count = 0
+        def __init__(self, year, month, day, hour, minute, second, subsecond):
+            assert year == 2000
+            assert month == 1
+            assert day == 1
+            assert hour == 1
+            assert minute == 59
+            assert second == 20
+            assert subsecond == 0
+
+        def strptime(arg1, arg2):
+            raise Exception
+
+        def timestamp(self):
+            Fake_Datetime.timestamp_call_count = self.timestamp_call_count + 1
+            return fake_timestamp
+
+    mocker.patch(parser_util.__name__ + '.datetime', fake_dt_module)
+    mocker.patch.object(fake_dt_module, 'datetime', Fake_Datetime)
+
+    # Act
+    result = parser_util.convert_str_to_timestamp(arg_time_str)
+
+    # Assert
+    assert Fake_Datetime.timestamp_call_count == 1
+    assert result == fake_timestamp
+
+def test_parser_util_convert_str_to_timestamp_raises_error_when_both_strptime_and_datetime_raise_errors(mocker):
+    # Arrange
+    arg_time_str = str(MagicMock())
+
+    fake_datetime = MagicMock()
+    fake_timestamp = MagicMock()
+    fake_dt_module = MagicMock()
+    fake_dt_dt = MagicMock()
+
+    class Fake_Datetime():
+        def __init__(self, year, month, day, hour, minute, second, subsecond):
+            raise Exception
+
+        def strptime(arg1, arg2):
+            raise Exception
+
+        def timestamp():
+            assert False
+
+    mocker.patch(parser_util.__name__ + '.datetime', fake_dt_module)
+    mocker.patch.object(fake_dt_module, 'datetime', Fake_Datetime)
+
+    # Act
+    with pytest.raises(Exception) as e_info:
+        parser_util.convert_str_to_timestamp(arg_time_str)
+
+    # Assert
+    assert e_info.match('')
+```
+
+### `test_redis_adapter.py`
+
+**경로:** `components/onair/fsw/test/onair/data_handling/test_redis_adapter.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+import pytest
+from unittest.mock import MagicMock
+
+import onair.data_handling.redis_adapter as redis_adapter
+from onair.data_handling.redis_adapter import DataSource
+from onair.data_handling.on_air_data_source import OnAirDataSource
+from onair.data_handling.on_air_data_source import ConfigKeyError
+
+import redis
+import threading
+
+# __init__ tests
+def test_redis_adapter_DataSource__init__sets_redis_values_then_connects_and_subscribes_to_subscriptions(mocker):
+    # Arrange
+    expected_address = 'localhost'
+    expected_port = 6379
+    expected_db = 0
+    expected_server = None
+    expected_subscriptions = MagicMock()
+
+    arg_data_file = MagicMock()
+    arg_meta_file = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    fake_new_data_lock = MagicMock()
+
+    cut = DataSource.__new__(DataSource)
+    cut.subscriptions = expected_subscriptions
+    fake_order = MagicMock()
+    fake_order.__len__.return_value = \
+        pytest.gen.randint(1, 10) # from 1 to 10 arbitrary
+    cut.order = fake_order
+
+    mocker.patch.object(OnAirDataSource, '__init__', new=MagicMock())
+    mocker.patch('threading.Lock', return_value=fake_new_data_lock)
+    mocker.patch.object(cut, 'connect')
+    mocker.patch.object(cut, 'subscribe')
+
+    # Act
+    cut.__init__(arg_data_file, arg_meta_file, arg_ss_breakdown)
+
+    # Assert
+    assert OnAirDataSource.__init__.call_count == 1
+    assert OnAirDataSource.__init__.call_args_list[0].args == (arg_data_file, arg_meta_file, arg_ss_breakdown)
+    assert cut.address == expected_address
+    assert cut.port == expected_port
+    assert cut.db == expected_db
+    assert cut.server == expected_server
+    assert cut.new_data_lock == fake_new_data_lock
+    assert cut.new_data == False
+    assert cut.currentData == [{'headers':fake_order,
+                                'data':list('-' * len(fake_order))},
+                               {'headers':fake_order,
+                                'data':list('-' * len(fake_order))}]
+    assert cut.double_buffer_read_index == 0
+    assert cut.connect.call_count == 1
+    assert cut.connect.call_args_list[0].args == ()
+    assert cut.subscribe.call_count == 1
+    assert cut.subscribe.call_args_list[0].args == (expected_subscriptions, )
+
+# connect tests
+def test_redis_adapter_DataSource_connect_establishes_server_with_initialized_attributes(mocker):
+    # Arrange
+    expected_address = MagicMock()
+    expected_port = MagicMock()
+    expected_db = MagicMock()
+    fake_server = MagicMock()
+
+    cut = DataSource.__new__(DataSource)
+    cut.address = expected_address
+    cut.port = expected_port
+    cut.db = expected_db
+
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+    mocker.patch('redis.Redis', return_value=fake_server)
+
+    # Act
+    cut.connect()
+
+    # Assert
+    assert redis_adapter.print_msg.call_count == 2
+    assert redis_adapter.print_msg.call_args_list[0].args == ('Redis adapter connecting to server...',)
+    assert redis.Redis.call_count == 1
+    assert redis.Redis.call_args_list[0].args == (expected_address, expected_port, expected_db)
+    assert fake_server.ping.call_count == 1
+    assert redis_adapter.print_msg.call_args_list[1].args == ('... connected!',)
+    assert cut.server == fake_server
+
+def test_redis_adapter_DataSource_fails_to_connect_to_server(mocker):
+    # Arrange
+    expected_address = MagicMock()
+    expected_port = MagicMock()
+    expected_db = MagicMock()
+    fake_server = MagicMock()
+
+    cut = DataSource.__new__(DataSource)
+    cut.address = expected_address
+    cut.port = expected_port
+    cut.db = expected_db
+
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+    mocker.patch('redis.Redis', return_value=fake_server)
+    mocker.patch.object(fake_server, 'ping', return_value=False)
+
+    # Act
+    cut.connect()
+
+    # Assert
+    assert redis_adapter.print_msg.call_count == 1
+    assert redis_adapter.print_msg.call_args_list[0].args == ("Redis adapter connecting to server...",)
+    assert redis.Redis.call_count == 1
+    assert redis.Redis.call_args_list[0].args == (expected_address, expected_port, expected_db)
+    assert fake_server.ping.call_count == 1
+    assert cut.server == fake_server
+
+# subscribe_message tests
+def test_redis_adapter_DataSource_subscribe_subscribes_to_each_given_subscription_and_starts_listening_when_server_available(mocker):
+    # Arrange
+    arg_subscriptions = [MagicMock()] * pytest.gen.randint(1, 10) # 1 to 10 arbitrary
+
+    fake_server = MagicMock()
+    fake_pubsub = MagicMock()
+    fake_thread = MagicMock()
+
+    cut = DataSource.__new__(DataSource)
+    cut.server = fake_server
+
+    mocker.patch.object(fake_server, 'ping', return_value=True)
+    mocker.patch.object(fake_server, 'pubsub', return_value=fake_pubsub)
+    mocker.patch.object(fake_pubsub, 'subscribe')
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+    mocker.patch('threading.Thread', return_value=fake_thread)
+    mocker.patch.object(fake_thread, 'start')
+
+    # Act
+    cut.subscribe(arg_subscriptions)
+
+    # Assert
+    assert fake_server.ping.call_count == 1
+    assert fake_server.pubsub.call_count == 1
+    assert fake_pubsub.subscribe.call_count == len(arg_subscriptions)
+    for i in range(len(arg_subscriptions)):
+        assert fake_pubsub.subscribe.call_args_list[i].args == (arg_subscriptions[i],)
+        assert redis_adapter.print_msg.call_args_list[i].args == (f"Subscribing to channel: {arg_subscriptions[i]}",)
+    assert threading.Thread.call_count == 1
+    assert threading.Thread.call_args_list[0].kwargs == ({'target': cut.message_listener})
+    assert fake_thread.start.call_count == 1
+    assert cut.pubsub == fake_pubsub
+
+def test_redis_adapter_DataSource_subscribe_states_no_subscriptions_given_when_empty(mocker):
+    # Arrange
+    arg_subscriptions = []
+    fake_server = MagicMock()
+    initial_pubsub = MagicMock()
+    fake_subscription = MagicMock()
+    fake_thread = MagicMock()
+    cut = DataSource.__new__(DataSource)
+    cut.server = fake_server
+    cut.pubsub = initial_pubsub
+
+    mocker.patch.object(fake_server, 'ping', return_value=False)
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+    mocker.patch.object(fake_server, 'pubsub')
+    mocker.patch('threading.Thread')
+    mocker.patch.object(fake_thread, 'start')
+
+    # Act
+    cut.subscribe(arg_subscriptions)
+
+    # Assert
+    assert fake_server.ping.call_count == 0
+    assert fake_server.pubsub.call_count == 0
+    assert threading.Thread.call_count == 0
+    assert fake_thread.start.call_count == 0
+    assert cut.pubsub == initial_pubsub
+    assert redis_adapter.print_msg.call_args_list[0].args == ("No subscriptions given!",)
+
+# Note the self.server.ping during runtime will error, not actually return False, but that means code will never run
+# this unit test is for completeness of coverage
+def test_redis_adapter_DataSource_subscribe_states_no_subscriptions_given_when_server_does_not_respond_to_ping(mocker):
+    # Arrange
+    arg_channel = [MagicMock()]
+    fake_server = MagicMock()
+    initial_pubsub = MagicMock()
+    fake_subscription = MagicMock()
+    fake_thread = MagicMock()
+    cut = DataSource.__new__(DataSource)
+    cut.server = fake_server
+    cut.pubsub = initial_pubsub
+
+    mocker.patch.object(fake_server, 'ping', return_value=False)
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+    mocker.patch.object(fake_server, 'pubsub')
+    mocker.patch('threading.Thread')
+    mocker.patch.object(fake_thread, 'start')
+
+    # Act
+    cut.subscribe(arg_channel)
+
+    # Assert
+    assert fake_server.ping.call_count == 1
+    assert fake_server.pubsub.call_count == 0
+    assert threading.Thread.call_count == 0
+    assert fake_thread.start.call_count == 0
+    assert cut.pubsub == initial_pubsub
+    assert redis_adapter.print_msg.call_args_list[0].args == ("No subscriptions given!",)
+
+# get_next tests
+def test_redis_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_0():
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data = True
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = 0
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.currentData = []
+    cut.currentData.append({'data': MagicMock()})
+    cut.currentData.append({'data': expected_result})
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.new_data == False
+    assert cut.double_buffer_read_index == 1
+    assert result == expected_result
+
+def test_redis_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_1():
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data = True
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = 1
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.currentData = []
+    cut.currentData.append({'data': expected_result})
+    cut.currentData.append({'data': MagicMock()})
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.new_data == False
+    assert cut.double_buffer_read_index == 0
+    assert result == expected_result
+
+def test_redis_adapter_DataSource_get_next_when_called_multiple_times_when_new_data_is_true():
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.randint(0,1)
+    cut.new_data_lock = MagicMock()
+    cut.currentData = [MagicMock(), MagicMock()]
+    pre_call_index = cut.double_buffer_read_index
+    expected_data = []
+
+    # Act
+    results = []
+    num_calls = pytest.gen.randint(2,10) # arbitrary, 2 to 10
+    for i in range(num_calls):
+        cut.new_data = True
+        fake_new_data = MagicMock()
+        if cut.double_buffer_read_index == 0:
+            cut.currentData[1] = {'data': fake_new_data}
+        else:
+            cut.currentData[0] = {'data': fake_new_data}
+        expected_data.append(fake_new_data)
+        results.append(cut.get_next())
+
+    # Assert
+    assert cut.new_data == False
+    for i in range(num_calls):
+        results[i] = expected_data[i]
+    assert cut.double_buffer_read_index == (num_calls + pre_call_index) % 2
+
+def test_redis_adapter_DataSource_get_next_waits_until_data_is_available(mocker):
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = pytest.gen.randint(0,1)
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.new_data = None
+    cut.currentData = []
+    if pre_call_index == 0:
+        cut.currentData.append({'data': MagicMock()})
+        cut.currentData.append({'data': expected_result})
+    else:
+        cut.currentData.append({'data': expected_result})
+        cut.currentData.append({'data': MagicMock()})
+
+    num_falses = pytest.gen.randint(1, 10)
+    side_effect_list = [False] * num_falses
+    side_effect_list.append(True)
+
+    mocker.patch.object(cut, 'has_data', side_effect=side_effect_list)
+    mocker.patch(redis_adapter.__name__ + '.time.sleep')
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.has_data.call_count == num_falses + 1
+    assert redis_adapter.time.sleep.call_count == num_falses
+    assert cut.new_data == False
+    if pre_call_index == 0:
+        assert cut.double_buffer_read_index == 1
+    elif pre_call_index == 1:
+        assert cut.double_buffer_read_index == 0
+    else:
+        assert False
+
+    assert result == expected_result
+
+# has_more tests
+def test_redis_adapter_DataSource_has_more_always_returns_True():
+    cut = DataSource.__new__(DataSource)
+    assert cut.has_more() == True
+
+# message_listener tests
+def test_redis_adapter_DataSource_message_listener_warns_of_exit_and_does_not_run_for_loop_when_listen_returns_StopIteration(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+
+    cut.pubsub = MagicMock(name="cut.pubsub")
+    fake_listener = MagicMock(name='fake_listener')
+    fake_listener.__next__.side_effect = StopIteration
+    mocker.patch.object(cut.pubsub, 'listen', side_effect=[fake_listener])
+    mocker.patch(redis_adapter.__name__ + '.json.loads')
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 0
+    assert redis_adapter.print_msg.call_count == 1
+    assert redis_adapter.print_msg.call_args_list[0].args == ("Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_prints_warning_when_receiving_non_message_type(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+
+    cut.pubsub = MagicMock()
+    ignored_message_types = ['subscribe', 'unsubscribe', 'psubscribe', 'punsubscribe', 'pmessage']
+    fake_message = {}
+    fake_message['type'] = pytest.gen.choice(ignored_message_types)
+    fake_message['channel'] = str(MagicMock(name='fake_message')).encode('utf-8')
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    mocker.patch(redis_adapter.__name__ + '.json.loads')
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 0
+    assert redis_adapter.print_msg.call_count == 2
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+        f"Redis adapter: channel '{fake_message['channel'].decode()}' received " \
+                           f"message type: {fake_message['type']}.", ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[1].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_prints_warning_when_data_not_json_format_and_does_not_update_frame(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+
+    cut.pubsub = MagicMock()
+    fake_message = {}
+    fake_message['type'] = 'message'
+    fake_message['channel'] = str(
+        MagicMock(name='fake_message_channel')).encode('utf-8')
+    fake_message['data'] = str(MagicMock(name='fake_message_data'))
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    mocker.patch(redis_adapter.__name__ + '.json.loads', side_effect=ValueError)
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 1
+    assert redis_adapter.json.loads.call_args_list[0].args == (
+        fake_message['data'], )
+    assert redis_adapter.print_msg.call_count == 2
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+        f'Subscribed channel `{fake_message["channel"].decode()}\' message ' \
+         'received but is not in json format.\nMessage:\n' \
+        f'{fake_message["data"]}', ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[1].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_warns_user_when_processed_data_did_not_contain_time(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.choice([0 , 1])
+    cut.currentData = {0: {'headers': [], 'data': []},
+                       1: {'headers': [], 'data': []}}
+    cut.pubsub = MagicMock()
+    cut.new_data_lock = MagicMock()
+    cut.new_data = False
+
+    fake_message = {}
+    fake_message['type'] = 'message'
+    fake_message['channel'] = str(
+        MagicMock(name='fake_message_channel')).encode('utf-8')
+    fake_message['data'] = '{}' # empty_message
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    mocker.patch(redis_adapter.__name__ + '.json.loads', return_value={})
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 1
+    assert redis_adapter.json.loads.call_args_list[0].args == (
+        fake_message['data'], )
+    assert redis_adapter.print_msg.call_count == 2
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+        f'Message from channel `{fake_message["channel"].decode()}\' ' \
+        f'did not contain `time\' key\nMessage:\n{fake_message["data"]}', \
+         ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[1].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_warns_of_received_key_that_does_not_exist_in_header(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.choice([0 , 1])
+    cut.currentData = {0: {'headers': ['time'],
+                           'data': ['-']},
+                       1: {'headers': ['time'],
+                           'data': ['-']}}
+    cut.pubsub = MagicMock()
+    cut.new_data_lock = MagicMock()
+    cut.new_data = False
+
+    fake_message = {}
+    fake_message['type'] = 'message'
+    fake_message['channel'] = str(
+        MagicMock(name='fake_message_channel')).encode('utf-8')
+    fake_message['data'] = '{"time":0, "unknown_key":0}'
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    mocker.patch(redis_adapter.__name__ + '.json.loads', return_value={"time":0, "unknown_key":0})
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 1
+    assert redis_adapter.json.loads.call_args_list[0].args == (
+        fake_message['data'], )
+    assert redis_adapter.print_msg.call_count == 2
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+         f"Unused key `unknown_key' in message " \
+         f'from channel `{fake_message["channel"].decode()}.\'', ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[1].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_warns_of_expected_keys_that_do_not_appear_in_message(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.choice([0 , 1])
+    cut.pubsub = MagicMock()
+    cut.new_data_lock = MagicMock()
+    cut.new_data = False
+
+    fake_message = {}
+    fake_message['type'] = 'message'
+    fake_message['channel'] = str(
+        MagicMock(name='fake_message_channel')).encode('utf-8')
+    cut.currentData = {0: {'headers': ['time',
+                                      f'{fake_message["channel"].decode()}' \
+                                       '.missing_key'],
+                           'data': ['-', '-']},
+                       1: {'headers': ['time',
+                                      f'{fake_message["channel"].decode()}' \
+                                       '.missing_key'],
+                           'data': ['-', '-']}}
+    fake_message['data'] = '{}'
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    mocker.patch(redis_adapter.__name__ + '.json.loads', return_value={})
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 1
+    assert redis_adapter.json.loads.call_args_list[0].args == (
+        fake_message['data'], )
+    assert redis_adapter.print_msg.call_count == 3
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+        f'Message from channel `{fake_message["channel"].decode()}\' ' \
+        f'did not contain `{fake_message["channel"].decode()}.missing_key\'' \
+        f' key\nMessage:\n{fake_message["data"]}', \
+         ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[1].args == (
+        f'Message from channel `{fake_message["channel"].decode()}\' ' \
+        f'did not contain `time\' key\nMessage:\n{fake_message["data"]}', \
+         ['WARNING'])
+    assert redis_adapter.print_msg.call_args_list[2].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+def test_redis_adapter_DataSource_message_listener_updates_new_data_with_received_data_by_channel_and_key_matched_to_frame_header(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.choice([0 , 1])
+    cut.pubsub = MagicMock()
+    cut.new_data_lock = MagicMock()
+    cut.new_data = False
+
+    fake_message = {}
+    fake_message['type'] = 'message'
+    fake_message['channel'] = str(
+        MagicMock(name='fake_message_channel')).encode('utf-8')
+    cut.currentData = {0: {'headers': ['time',
+                                      f'{fake_message["channel"].decode()}' \
+                                       '.correct_key', 'fakeotherchannel.x'],
+                           'data': ['-', '-', '0']},
+                       1: {'headers': ['time',
+                                      f'{fake_message["channel"].decode()}' \
+                                       '.correct_key', 'fakeotherchannel.x'],
+                           'data': ['-', '-', '0']}}
+    fake_message['data'] = '{}'
+    mocker.patch.object(cut.pubsub, 'listen', return_value=[fake_message])
+    fake_data = {
+        'time': pytest.gen.randint(1, 100), # from 1 to 100 arbitrary
+        'correct_key': pytest.gen.randint(1, 100), # from 1 to 100 arbitrary
+    }
+    mocker.patch(redis_adapter.__name__ + '.json.loads',
+                 return_value=fake_data)
+    mocker.patch(redis_adapter.__name__ + '.print_msg')
+
+    # Act
+    cut.message_listener()
+
+    # Assert
+    assert redis_adapter.json.loads.call_count == 1
+    assert redis_adapter.json.loads.call_args_list[0].args == (
+        fake_message['data'], )
+    assert cut.new_data == True
+    print(cut.currentData[cut.double_buffer_read_index])
+    assert cut.currentData[(cut.double_buffer_read_index + 1) % 2]['data'] == \
+        [fake_data['time'], fake_data['correct_key'], '-']
+    assert redis_adapter.print_msg.call_count == 1
+    assert redis_adapter.print_msg.call_args_list[0].args == (
+        "Redis subscription listener exited.", ['WARNING'])
+
+# has_data tests
+def test_redis_adapter_DataSource_has_data_returns_instance_new_data():
+    cut = DataSource.__new__(DataSource)
+    expected_result = MagicMock()
+    cut.new_data = expected_result
+
+    result = cut.has_data()
+
+    assert result == expected_result
+
+# redis_adapter parse_meta_data tests
+def test_redis_adapter_DataSource_parse_meta_data_file_raises_ConfigKeyError_when_order_is_not_in_config_file(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    expected_extracted_configs = MagicMock()
+    expected_subscriptions = [MagicMock()] * pytest.gen.randint(0, 10) # 0 to 10 arbitrary
+    fake_meta = {'fake_other_stuff': MagicMock(),
+                 'redis_subscriptions':expected_subscriptions}
+
+    mocker.patch(redis_adapter.__name__ + '.extract_meta_data_handle_ss_breakdown', return_value=expected_extracted_configs)
+    mocker.patch(redis_adapter.__name__ + '.parseJson', return_value=fake_meta)
+
+    exception_message = (f'Config file: \'{arg_configFile}\' ' \
+                          'missing required key \'order\'')
+
+    # Act
+    with pytest.raises(ConfigKeyError) as e_info:
+        cut.parse_meta_data_file(arg_configFile, arg_ss_breakdown, )
+
+    # Assert
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_count == 1
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_args_list[0].args == (arg_configFile, arg_ss_breakdown)
+    assert redis_adapter.parseJson.call_count == 1
+    assert redis_adapter.parseJson.call_args_list[0].args == (arg_configFile, )
+    assert e_info.match(exception_message)
+
+def test_redis_adapter_DataSource_parse_meta_data_file_returns_call_to_extract_meta_data_handle_ss_breakdown_and_sets_subscriptions_when_redis_subscriptions_occupied(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    expected_extracted_configs = MagicMock()
+    expected_subscriptions = [MagicMock()] * pytest.gen.randint(0, 10) # 0 to 10 arbitrary
+    fake_meta = {'fake_other_stuff': MagicMock(),
+                 'order': MagicMock(),
+                 'redis_subscriptions':expected_subscriptions}
+
+    mocker.patch(redis_adapter.__name__ + '.extract_meta_data_handle_ss_breakdown', return_value=expected_extracted_configs)
+    mocker.patch(redis_adapter.__name__ + '.parseJson', return_value=fake_meta)
+
+    # Act
+    result = cut.parse_meta_data_file(arg_configFile, arg_ss_breakdown, )
+
+    # Assert
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_count == 1
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_args_list[0].args == (arg_configFile, arg_ss_breakdown)
+    assert redis_adapter.parseJson.call_count == 1
+    assert redis_adapter.parseJson.call_args_list[0].args == (arg_configFile, )
+    assert cut.subscriptions == expected_subscriptions
+    assert result == expected_extracted_configs
+
+def test_redis_adapter_DataSource_parse_meta_data_file_returns_call_to_extract_meta_data_handle_ss_breakdown_and_sets_subscriptions_to_empty_when_none_given(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_configFile = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    fake_configs = {'fake_other_stuff': MagicMock()}
+    fake_meta = {'order': MagicMock()}
+
+    mocker.patch(redis_adapter.__name__ + '.extract_meta_data_handle_ss_breakdown', return_value=fake_configs)
+    mocker.patch(redis_adapter.__name__ + '.parseJson', return_value=fake_meta)
+
+    # Act
+    result = cut.parse_meta_data_file(arg_configFile, arg_ss_breakdown, )
+
+    # Assert
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_count == 1
+    assert redis_adapter.extract_meta_data_handle_ss_breakdown.call_args_list[0].args == (arg_configFile, arg_ss_breakdown)
+    assert redis_adapter.parseJson.call_count == 1
+    assert redis_adapter.parseJson.call_args_list[0].args == (arg_configFile, )
+    assert cut.subscriptions == []
+    assert result == fake_configs
+
+# redis_adapter get_vehicle_metadata tests
+def test_redis_adapter_DataSource_get_vehicle_metadata_returns_list_of_headers_and_list_of_test_assignments():
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    fake_all_headers = MagicMock()
+    fake_test_assignments = MagicMock()
+    fake_binning_configs = {}
+    fake_binning_configs['test_assignments'] = fake_test_assignments
+
+    expected_result = (fake_all_headers, fake_test_assignments)
+
+    cut.all_headers = fake_all_headers
+    cut.binning_configs = fake_binning_configs
+
+    # Act
+    result = cut.get_vehicle_metadata()
+
+    # Assert
+    assert result == expected_result
+
+# redis_adapter process_data_file tests
+def test_redis_adapter_DataSource_process_data_file_does_nothing():
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_data_file = MagicMock()
+
+    expected_result = None
+
+    # Act
+    result = cut.process_data_file(arg_data_file)
+
+    # Assert
+    assert result == expected_result
+```
+
+### `test_sbn_adapter.py`
+
+**경로:** `components/onair/fsw/test/onair/data_handling/test_sbn_adapter.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+# testing packages
+import pytest
+from unittest.mock import MagicMock, PropertyMock
+
+# mock dependencies of sbn_adapter.py
+import sys
+sys.modules['sbn_python_client'] = MagicMock()
+sys.modules['message_headers'] = MagicMock()
+
+import onair.data_handling.sbn_adapter as sbn_adapter
+from onair.data_handling.sbn_adapter import DataSource
+from onair.data_handling.on_air_data_source import OnAirDataSource
+from onair.data_handling.on_air_data_source import ConfigKeyError
+
+import threading
+import datetime
+import copy
+import json
+
+# __init__ tests
+def test_sbn_adapter_DataSource__init__sets_values_then_connects(mocker):
+    # Arrange
+    arg_data_file = MagicMock()
+    arg_meta_file = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    fake_new_data_lock = MagicMock()
+
+    cut = DataSource.__new__(DataSource)
+
+    mocker.patch.object(OnAirDataSource, '__init__', new=MagicMock())
+    mocker.patch('threading.Lock', return_value=fake_new_data_lock)
+    mocker.patch.object(cut, 'connect')
+
+    # Act
+    cut.__init__(arg_data_file, arg_meta_file, arg_ss_breakdown)
+
+    # Assert
+    assert OnAirDataSource.__init__.call_count == 1
+    assert OnAirDataSource.__init__.call_args_list[0].args == (arg_data_file, arg_meta_file, arg_ss_breakdown)
+    assert cut.new_data_lock == fake_new_data_lock
+    assert cut.new_data == False
+    assert cut.double_buffer_read_index == 0
+    assert cut.connect.call_count == 1
+    assert cut.connect.call_args_list[0].args == ()
+
+# connect tests
+def test_sbn_adapter_DataSource_connect_starts_listener_thread_and_subscribes_to_messages(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    mocker.patch(sbn_adapter.__name__+'.time.sleep')
+    mocker.patch(sbn_adapter.__name__+'.os.chdir')
+    mocker.patch(sbn_adapter.__name__+'.sbn.sbn_load_and_init')
+    fake_listener_thread = MagicMock()
+    mocker.patch(sbn_adapter.__name__+'.threading.Thread', return_value = fake_listener_thread)
+    mocker.patch(sbn_adapter.__name__+'.sbn.subscribe')
+
+    
+    fake_msgID_lookup_table = {}
+    n_ids = pytest.gen.randint(0,9)
+    while len(fake_msgID_lookup_table) < n_ids:
+        fake_id = pytest.gen.randint(0,1000)
+        fake_msgID_lookup_table[fake_id] = "na"
+    
+    cut.__setattr__('msgID_lookup_table',fake_msgID_lookup_table)
+    
+    # Act
+    cut.connect()
+
+    # Assert
+    assert sbn_adapter.time.sleep.call_count == 1
+    assert sbn_adapter.os.chdir.call_count == 2
+    assert sbn_adapter.os.chdir.call_args_list[0].args == ("cf",)
+    assert sbn_adapter.os.chdir.call_args_list[1].args == ("../",)
+    assert sbn_adapter.threading.Thread.call_count == 1
+    assert fake_listener_thread.start.call_count == 1
+    assert sbn_adapter.sbn.subscribe.call_count == n_ids
+
+    subbed_message_ids = set()
+    for call in sbn_adapter.sbn.subscribe.call_args_list:
+        for arg in call.args:
+            subbed_message_ids.add(arg)
+
+    assert subbed_message_ids == set(fake_msgID_lookup_table.keys())
+
+# gather_field_names tests
+def test_sbn_adapter_DataSource_gather_field_names_returns_field_name_if_type_not_defined_in_message_headers_and_no_subfields_available(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+
+    field_name = MagicMock()
+    field_type = MagicMock()
+
+    # field type was not defined in message_headers.py and has no subfields of its own
+    field_type.__str__ = MagicMock()
+    field_type.__str__.return_value = 'fooble'
+    del field_type._fields_
+
+    # Act
+    result = cut.gather_field_names(field_name, field_type)
+
+    # Assert
+    assert result == [field_name]
+
+def test_sbn_adapter_Data_Source_gather_field_names_returns_nested_list_for_nested_structure(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+
+    # parent field has two child fields.
+    # The first child field has a grandchild field
+    parent_field_name = "parent_field"
+    parent_field_type = MagicMock()
+    child1_field_name = "child1_field"
+    child1_field_type = MagicMock()
+    child2_field_name = "child2_field"
+    child2_field_type = MagicMock()
+    gchild_field_name = "gchild_field"
+    gchild_field_type = MagicMock()
+
+    gchild_field_type.__str__ = MagicMock()
+    gchild_field_type.__str__.return_value = "message_headers.mock_data_type"
+    del gchild_field_type._fields_
+
+    child2_field_type.__str__ = MagicMock()
+    child2_field_type.__str__.return_value = "message_headers.mock_data_type"
+    del child2_field_type._fields_
+
+    child1_field_type.__str__ = MagicMock()
+    child1_field_type.__str__.return_value = "message_headers.mock_data_type"
+    child1_field_type._fields_ = [(gchild_field_name, gchild_field_type)]
+
+    parent_field_type.__str__ = MagicMock()
+    parent_field_type.__str__.return_value = "message_headers.mock_data_type"
+    parent_field_type._fields_ = [(child1_field_name, child1_field_type),
+                                               (child2_field_name, child2_field_type)]
+
+    # act
+    result = cut.gather_field_names(parent_field_name, parent_field_type)
+
+    # assert
+    assert isinstance(result, list)
+    assert len(result) == 2
+    assert set(result) == set([parent_field_name + '.' + child2_field_name, 
+                               parent_field_name + '.' + child1_field_name+ '.' +gchild_field_name])
+
+# parse_meta_data_file tests
+def test_sbn_adapter_DataSource_parse_meta_data_file_calls_rasies_ConfigKeyError_when_channels_not_in_config(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_meta_data_file = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    mocker.patch(sbn_adapter.__name__ + '.json.loads', return_value = {})
+
+    # Act
+    with pytest.raises(ConfigKeyError) as e_info:
+        cut.parse_meta_data_file(arg_meta_data_file,arg_ss_breakdown)
+
+def test_sbn_adapter_DataSource_parse_meta_data_file_populates_lookup_table_and_current_data_on_ideal_config(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    arg_meta_data_file = MagicMock()
+    arg_ss_breakdown = MagicMock()
+
+    ideal_config = {
+        "channels": {
+            "0x1": ["AppName1", "DataStruct1"],
+            "0x2": ["AppName2", "DataStruct2"]
+        }
+    }
+    
+    mock_struct_1 = MagicMock()
+    mock_struct_1.__name__ = "DataStruct1"
+    mock_struct_1._fields_ = [('TlmHeader', 'type0'), ('field1', 'type1')]
+
+    mock_struct_2 = MagicMock()
+    mock_struct_2.__name__ = "DataStruct2"
+    mock_struct_2._fields_ = [('field0', 'type0'), ('field1', 'type1')]
+
+    mocker.patch('message_headers.DataStruct1', mock_struct_1)
+    mocker.patch('message_headers.DataStruct2', mock_struct_2)
+
+    mocker.patch('builtins.open', mocker.mock_open(read_data=json.dumps(ideal_config)))
+    mocker.patch('json.loads', return_value=ideal_config)
+    expected_configs = MagicMock()
+    mocker.patch(sbn_adapter.__name__ + '.extract_meta_data_handle_ss_breakdown', return_value = expected_configs)
+
+    # Act
+    cut.parse_meta_data_file(arg_meta_data_file, arg_ss_breakdown)
+    print(cut.currentData)
+
+    # Assert
+    assert cut.msgID_lookup_table == {1: ['AppName1', mock_struct_1], 2: ['AppName2', mock_struct_2]}
+    assert len(cut.currentData) == 2
+    assert len(cut.currentData[0]['headers']) == 2
+    assert len(cut.currentData[1]['headers']) == 2
+    assert cut.currentData[0]['headers'] == ['AppName1.field1', 'AppName2.field1']
+    assert cut.currentData[0]['data'] == [[0], [0]]
+    assert cut.currentData[1]['headers'] == ['AppName1.field1', 'AppName2.field1']
+    assert cut.currentData[1]['data'] == [[0], [0]]
+
+# process_data_file tests
+def test_sbn_adapter_DataSource_process_data_file_does_nothing(mocker):
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_process_data_file_does_nothing
+    cut = DataSource.__new__(DataSource)
+    arg_data_file = MagicMock()
+
+    expected_result = None
+
+    # Act
+    result = cut.process_data_file(arg_data_file)
+
+    # Assert
+    assert result == expected_result
+
+# get_vehicle_metadata tests
+def test_sbn_adapter_DataSource_get_vehicle_metadata_returns_list_of_headers_and_list_of_test_assignments():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_get_vehicle_metadata_returns_list_of_headers_and_list_of_test_assignments
+    
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    fake_all_headers = MagicMock()
+    fake_test_assignments = MagicMock()
+    fake_binning_configs = {}
+    fake_binning_configs['test_assignments'] = fake_test_assignments
+
+    expected_result = (fake_all_headers, fake_test_assignments)
+
+    cut.all_headers = fake_all_headers
+    cut.binning_configs = fake_binning_configs
+
+    # Act
+    result = cut.get_vehicle_metadata()
+
+    # Assert
+    assert result == expected_result
+
+
+# get_next tests
+def test_sbn_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_0():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_0
+
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data = True
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = 0
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.currentData = []
+    cut.currentData.append({'data': MagicMock()})
+    cut.currentData.append({'data': expected_result})
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.new_data == False
+    assert cut.double_buffer_read_index == 1
+    assert result == expected_result
+
+def test_sbn_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_1():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_get_next_returns_expected_data_when_new_data_is_true_and_double_buffer_read_index_is_1
+
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data = True
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = 1
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.currentData = []
+    cut.currentData.append({'data': expected_result})
+    cut.currentData.append({'data': MagicMock()})
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.new_data == False
+    assert cut.double_buffer_read_index == 0
+    assert result == expected_result
+
+def test_sbn_adapter_DataSource_get_next_when_called_multiple_times_when_new_data_is_true():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_get_next_when_called_multiple_times_when_new_data_is_true
+    
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.randint(0,1)
+    cut.new_data_lock = MagicMock()
+    cut.currentData = [MagicMock(), MagicMock()]
+    pre_call_index = cut.double_buffer_read_index
+    expected_data = []
+
+    # Act
+    results = []
+    num_calls = pytest.gen.randint(2,10) # arbitrary, 2 to 10
+    for i in range(num_calls):
+        cut.new_data = True
+        fake_new_data = MagicMock()
+        if cut.double_buffer_read_index == 0:
+            cut.currentData[1] = {'data': fake_new_data}
+        else:
+            cut.currentData[0] = {'data': fake_new_data}
+        expected_data.append(fake_new_data)
+        results.append(cut.get_next())
+
+    # Assert
+    assert cut.new_data == False
+    for i in range(num_calls):
+        results[i] = expected_data[i]
+    assert cut.double_buffer_read_index == (num_calls + pre_call_index) % 2
+
+def test_sbn_adapter_DataSource_get_next_waits_until_new_data_is_available(mocker):
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_get_next_waits_until_new_data_is_available
+    
+    # Arrange
+    # Renew DataSource to ensure test independence
+    cut = DataSource.__new__(DataSource)
+    cut.new_data_lock = MagicMock()
+    cut.double_buffer_read_index = pytest.gen.randint(0,1)
+    pre_call_index = cut.double_buffer_read_index
+    expected_result = MagicMock()
+    cut.new_data = None
+    cut.currentData = []
+    if pre_call_index == 0:
+        cut.currentData.append({'data': MagicMock()})
+        cut.currentData.append({'data': expected_result})
+    else:
+        cut.currentData.append({'data': expected_result})
+        cut.currentData.append({'data': MagicMock()})
+
+    num_falses = pytest.gen.randint(1, 10)
+    side_effect_list = [False] * num_falses
+    side_effect_list.append(True)
+
+    mocker.patch.object(cut, 'has_data', side_effect=side_effect_list)
+    mocker.patch(sbn_adapter.__name__ + '.time.sleep')
+
+    # Act
+    result = cut.get_next()
+
+    # Assert
+    assert cut.has_data.call_count == num_falses + 1
+    assert sbn_adapter.time.sleep.call_count == num_falses
+    assert cut.new_data == False
+    if pre_call_index == 0:
+        assert cut.double_buffer_read_index == 1
+    elif pre_call_index == 1:
+        assert cut.double_buffer_read_index == 0
+    else:
+        assert False
+
+    assert result == expected_result
+
+# has_more tests
+def test_sbn_adapter_DataSource_has_more_always_returns_True():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_has_more_always_returns_True
+    cut = DataSource.__new__(DataSource)
+    assert cut.has_more() == True
+
+# mesage_listener_thread tests
+def test_sbn_adapter_message_listener_thread_calls_get_current_data(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    expected_app_name = MagicMock()
+    expected_data_struct = MagicMock()
+    fake_msg_id = "1234"
+    fake_lookup_table = {fake_msg_id: (expected_app_name, expected_data_struct)}
+    cut.__setattr__('msgID_lookup_table', fake_lookup_table)
+
+    fake_generic_recv_msg_p = MagicMock()
+    fake_generic_recv_msg_p.contents = MagicMock()
+    fake_generic_recv_msg_p.contents.TlmHeader.Primary.StreamId = fake_msg_id
+
+    fake_recv_msg_p = MagicMock()
+    fake_recv_msg_p.contents = 'not heyy'
+
+
+    def mock_POINTER_func(struct):
+        if struct == sbn_adapter.sbn.sbn_data_generic_t:
+            def return_func():
+                return fake_generic_recv_msg_p
+
+        elif struct == expected_data_struct:
+            def return_func():
+                return fake_recv_msg_p
+            
+        else:
+            raise ValueError(f"Unexpected Struct {struct} used.")
+        
+        return return_func #return pointers wrapped in a function b/c that's how ctypes does it
+    
+    mocker.patch(sbn_adapter.__name__ + ".POINTER", side_effect = mock_POINTER_func)
+
+    # for exiting the while loop
+    intentional_exception = KeyboardInterrupt('[TEST]: Exiting infinite loop')
+    mocker.patch.object(cut, 'get_current_data', side_effect = [intentional_exception])
+
+    # Act
+    with pytest.raises(KeyboardInterrupt) as e_info:
+        cut.message_listener_thread()
+    
+    # Assert
+    assert cut.get_current_data.call_count == 1
+    assert fake_recv_msg_p.contents == fake_generic_recv_msg_p.contents
+    assert cut.get_current_data.call_args_list
+    expected_call = (fake_recv_msg_p.contents, expected_data_struct, expected_app_name)
+    assert cut.get_current_data.call_args_list[0].args == expected_call
+
+# get_current_data tests
+def test_sbn_adapter_Data_Source_get_current_data_calls_gather_field_names_correctly(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.randint(0,1)
+    n = pytest.gen.randint(1,9)
+    cut.currentData =  [{'headers':[f'field_{i}' for i in range(n)],'data':[[0] for x in range(n)]}, 
+                        {'headers':[f'field_{i}' for i in range(n)],'data':[[0] for x in range(n)]}]
+    cut.new_data_lock = MagicMock()
+
+    arg_recv_msg = MagicMock()
+    arg_recv_msg._fields_ = [(MagicMock(), MagicMock()) for x in range(n)]
+    arg_recv_msg._fields_.insert(0, 'header')
+    arg_recv_msg.TlmHeader.Secondary = MagicMock()
+    arg_recv_msg.TlmHeader.Secondary.Seconds = pytest.gen.randint(0,9)
+    arg_recv_msg.TlmHeader.Secondary.Subseconds = pytest.gen.randint(0,9)
+
+    arg_data_struct = MagicMock()
+    arg_app_name = MagicMock()
+    
+    mocker.patch.object(cut, 'gather_field_names', return_value = [])
+
+    # Act
+    cut.get_current_data(arg_recv_msg, arg_data_struct, arg_app_name)
+
+    # Assert
+    assert cut.gather_field_names.call_count == n
+    assert len(cut.gather_field_names.call_args_list) == n
+    for i in range(n):
+        expected_args = arg_recv_msg._fields_[i+1]
+        assert cut.gather_field_names.call_args_list[i].args == expected_args
+
+def test_sbn_adapter_DataSource_get_current_data_unpacks_sub_fields_correctly(mocker):
+    # Arrange
+    cut = DataSource.__new__(DataSource)
+    cut.double_buffer_read_index = pytest.gen.randint(0,2)
+    cut.new_data_lock = MagicMock()
+    cut.new_data = MagicMock()
+
+    #  Message structure & data for 'fake_app'
+    arg_app_name = 'fake_app'
+
+    arg_recv_msg = MagicMock()
+    arg_recv_msg._fields_ = [("TlmHeader", MagicMock()), ("field1", MagicMock())]
+    arg_recv_msg.TlmHeader.Secondary.Seconds = 0
+    arg_recv_msg.TlmHeader.Secondary.Subseconds = 1
+    arg_recv_msg.field1.temperature = 89
+    arg_recv_msg.field1.voltage = 5
+    arg_recv_msg.field1.velocity.x = 1
+    arg_recv_msg.field1.velocity.y = 2
+
+    fake_field_names = [
+        "field1.temperature",
+        "field1.voltage",
+        "field1.velocity.x",
+        "field1.velocity.y"
+    ]
+    mocker.patch.object(cut, 'gather_field_names', return_value = fake_field_names)
+
+    # initialize double buffer
+    cut.__setattr__('currentData', [{'headers':[], 'data': []}, {'headers':[], 'data': []}])
+    for x in range(0,2):
+        for name in fake_field_names:
+            cut.currentData[x]['headers'].append(arg_app_name + '.' + name)
+            cut.currentData[x]['data'].append([0])
+
+    expected_data = {'headers':[arg_app_name+'.'+"field1.temperature",
+                                arg_app_name+'.'+"field1.voltage",
+                                arg_app_name+'.'+"field1.velocity.x",
+                                arg_app_name+'.'+"field1.velocity.y"],
+                     'data':['89','5','1','2'] }
+    
+    arg_data_struct = MagicMock()
+
+    # Act
+    cut.get_current_data(arg_recv_msg, arg_data_struct, arg_app_name)
+
+    # Assert
+    assert cut.currentData[(cut.double_buffer_read_index + 1) %2] == expected_data
+    assert cut.new_data == True
+
+# has_data tests
+def test_sbn_adapter_DataSource_has_data_returns_instance_new_data():
+    # copied from test_redis_adapter.py
+    # test_redis_adapter_DataSource_has_data_returns_instance_new_data
+    cut = DataSource.__new__(DataSource)
+    expected_result = MagicMock()
+    cut.new_data = expected_result
+
+    result = cut.has_data()
+
+    assert result == expected_result
+```
+
+### `test_tlm_json_parser.py`
+
+**경로:** `components/onair/fsw/test/onair/data_handling/test_tlm_json_parser.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+""" Test TLM Json Parser Functionality """
+import pytest
+from unittest.mock import MagicMock
+
+import onair.data_handling.tlm_json_parser as tlm_json_parser
+
+# parseTlmConfJson tests
+def test_tlm_json_parser_parseTlmConfJson_returns_configs_with_empty_dicts_when_reorg_dict_is_empty(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_data = MagicMock()
+    fake_organized_data = {}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = []
+    expected_result['test_assignments'] = []
+    expected_result['description_assignments'] = []
+    expected_result['data_labels'] = []
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_only_one_label_and_order_key_does_not_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_data = MagicMock()
+    fake_label = MagicMock()
+    fake_subsystem = MagicMock()
+    fake_limits = MagicMock()
+    fake_mnemonics = MagicMock()
+    fake_description = MagicMock()
+    fake_organized_data = {}
+    fake_organized_data[fake_label] = {'subsystem' : fake_subsystem,
+                                       'tests' : {fake_mnemonics : fake_limits},
+                                       'description' : fake_description}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = [fake_subsystem]
+    expected_result['test_assignments'] = [[[fake_mnemonics, fake_limits]]]
+    expected_result['description_assignments'] = [fake_description]
+    expected_result['data_labels'] = [fake_label]
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_only_one_label_and_limits_test_and_description_keys_do_not_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_data = MagicMock()
+    fake_label = MagicMock()
+    fake_subsystem = MagicMock()
+    fake_organized_data = {}
+    fake_organized_data[fake_label] = {'subsystem' : fake_subsystem}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = [fake_subsystem]
+    expected_result['test_assignments'] = [[['NOOP']]]
+    expected_result['description_assignments'] = [['No description']]
+    expected_result['data_labels'] = [fake_label]
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_multiple_labels_and_limits_test_and_description_keys_do_not_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_data = MagicMock()
+    fake_organized_data = {}
+    fake_subsystems = []
+    fake_labels = []
+    num_labels = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10
+    for i in range(num_labels):
+        fake_label = MagicMock()
+        fake_subsystem = MagicMock()
+        fake_subsystems.append(fake_subsystem)
+        fake_labels.append(fake_label)
+        fake_organized_data[fake_label] = {'subsystem' : fake_subsystem}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = fake_subsystems
+    expected_result['test_assignments'] = [[['NOOP']]] * num_labels
+    expected_result['description_assignments'] = [['No description']] * num_labels
+    expected_result['data_labels'] = fake_labels
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_only_one_label_and_order_key_does_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_label = MagicMock()
+    fake_data = {'order' : [fake_label]}
+    fake_subsystem = MagicMock()
+    fake_limits = MagicMock()
+    fake_mnemonics = MagicMock()
+    fake_description = MagicMock()
+    fake_organized_data = {}
+    fake_organized_data[fake_label] = {'subsystem' : fake_subsystem,
+                                       'tests' : {fake_mnemonics : fake_limits},
+                                       'description' : fake_description}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = [fake_subsystem]
+    expected_result['test_assignments'] = [[[fake_mnemonics, fake_limits]]]
+    expected_result['description_assignments'] = [fake_description]
+    expected_result['data_labels'] = [fake_label]
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_more_than_one_label_and_order_key_does_not_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    fake_data = MagicMock()
+    num_elems = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10
+    fake_labels = [MagicMock() for i in range(num_elems)]
+    fake_subsystem = MagicMock()
+    fake_limits = MagicMock()
+    fake_mnemonics = MagicMock()
+    fake_description = MagicMock()
+    fake_organized_data = {}
+    for label in fake_labels:
+        fake_organized_data[label] = {'subsystem' : fake_subsystem,
+                                      'tests' : {fake_mnemonics : fake_limits},
+                                      'description' : fake_description}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = [fake_subsystem] * num_elems
+    expected_result['test_assignments'] = [[[fake_mnemonics, fake_limits]]] * num_elems
+    expected_result['description_assignments'] = [fake_description] * num_elems
+    expected_result['data_labels'] = fake_labels
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_more_than_one_label_and_order_key_does_exist(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    num_elems = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10
+    fake_label = []
+    fake_subsystem = []
+    fake_limits = []
+    fake_mnemonics = []
+    fake_description = []
+    for i in range(num_elems):
+        fake_label.append(MagicMock())
+        fake_subsystem.append(MagicMock())
+        fake_limits.append(MagicMock())
+        fake_mnemonics.append(MagicMock())
+        fake_description.append(MagicMock())
+    fake_order = fake_label.copy()
+    pytest.gen.shuffle(fake_order)
+    fake_data = {'order' : fake_order}
+
+    desired_order = {}
+    for i in range(num_elems):
+        desired_order[fake_order[i]] = i
+
+    ordering_list = []
+    for label in fake_label:
+        ordering_list.append(desired_order[label])
+
+    ordered_subsys = [y for x, y in sorted(zip(ordering_list, fake_subsystem))]
+    ordered_mnemonics = [y for x, y in sorted(zip(ordering_list, fake_mnemonics))]
+    ordered_limits = [y for x, y in sorted(zip(ordering_list, fake_limits))]
+    ordered_descs = [y for x, y in sorted(zip(ordering_list, fake_description))]
+    ordered_labels = [y for x, y in sorted(zip(ordering_list, fake_label))]
+
+    fake_organized_data = {}
+    for i in range(num_elems):
+        fake_organized_data[fake_label[i]] = {'subsystem' : fake_subsystem[i],
+                                              'tests' : {fake_mnemonics[i] : fake_limits[i]},
+                                              'description' : fake_description[i]}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = []
+    expected_result['test_assignments'] = []
+    expected_result['description_assignments'] = []
+    expected_result['data_labels'] = ordered_labels
+    for i in range(num_elems):
+        expected_result['subsystem_assignments'].append(ordered_subsys[i])
+        expected_result['test_assignments'].append([[ordered_mnemonics[i], ordered_limits[i]]])
+        expected_result['description_assignments'].append(ordered_descs[i])
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+def test_tlm_json_parser_parseTlmConfJson_returns_expected_configs_dict_when_reorg_dict_contains_more_than_one_label_and_limits_are_interpreted_as_empty_lists(mocker):
+    # Arrange
+    arg_file_path = MagicMock()
+
+    num_elems = pytest.gen.randint(2, 10) # arbitrary, from 2 to 10
+    fake_label = []
+    fake_subsystem = []
+    fake_limits = []
+    fake_mnemonics = []
+    fake_description = []
+    for i in range(num_elems):
+        fake_label.append(MagicMock())
+        fake_subsystem.append(MagicMock())
+        fake_limits.append(MagicMock())
+        fake_mnemonics.append(MagicMock())
+        fake_description.append(MagicMock())
+    fake_order = fake_label.copy()
+    pytest.gen.shuffle(fake_order)
+    fake_data = {'order' : fake_order}
+
+    desired_order = {}
+    for i in range(num_elems):
+        desired_order[fake_order[i]] = i
+
+    ordering_list = []
+    for label in fake_label:
+        ordering_list.append(desired_order[label])
+
+    ordered_subsys = [y for x, y in sorted(zip(ordering_list, fake_subsystem))]
+    ordered_mnemonics = [y for x, y in sorted(zip(ordering_list, fake_mnemonics))]
+    ordered_limits = [y for x, y in sorted(zip(ordering_list, fake_limits))]
+    ordered_descs = [y for x, y in sorted(zip(ordering_list, fake_description))]
+    ordered_labels = [y for x, y in sorted(zip(ordering_list, fake_label))]
+
+    fake_organized_data = {}
+    for i in range(num_elems):
+        fake_organized_data[fake_label[i]] = {'subsystem' : fake_subsystem[i],
+                                              'tests' : {fake_mnemonics[i] : fake_limits[i]},
+                                              'description' : fake_description[i]}
+
+    mocker.patch(tlm_json_parser.__name__ + '.parseJson', return_value=fake_data)
+    mocker.patch(tlm_json_parser.__name__ + '.reorganizeTlmDict', return_value=fake_organized_data)
+
+    expected_result = {}
+    expected_result['subsystem_assignments'] = []
+    expected_result['test_assignments'] = []
+    expected_result['description_assignments'] = []
+    expected_result['data_labels'] = ordered_labels
+    for i in range(num_elems):
+        expected_result['subsystem_assignments'].append(ordered_subsys[i])
+        expected_result['test_assignments'].append([[ordered_mnemonics[i], ordered_limits[i]]])
+        expected_result['description_assignments'].append(ordered_descs[i])
+
+    # Act
+    result = tlm_json_parser.parseTlmConfJson(arg_file_path)
+
+    # Assert
+    assert tlm_json_parser.parseJson.call_count == 1
+    assert tlm_json_parser.parseJson.call_args_list[0].args == (arg_file_path, )
+    assert tlm_json_parser.reorganizeTlmDict.call_count == 1
+    assert tlm_json_parser.reorganizeTlmDict.call_args_list[0].args == (fake_data, )
+    assert result == expected_result
+
+# reorganizeTlmDict tests
+def test_tlm_json_parser_reorganizeTlmDict_raises_error_when_arg_data_does_not_contain_subsystems_key():
+    # Arrange
+    arg_data_len = pytest.gen.randint(0, 10) # arbitrary, from 0 to 10
+    arg_data = {}
+    [arg_data.update({MagicMock() : MagicMock()}) for i in range(arg_data_len)]
+
+    # Assert
+    with pytest.raises(KeyError) as e_info:
+        result = tlm_json_parser.reorganizeTlmDict(arg_data)
+
+    # Act
+    assert e_info.match('subsystems')
+
+def test_tlm_json_parser_reorganizeTlmDict_returns_empty_dict_when_arg_data_subsystems_exists_and_is_empty():
+    # Arrange
+    arg_data = {'subsystems' : {}}
+
+    # Assert
+    result = tlm_json_parser.reorganizeTlmDict(arg_data)
+
+    # Act
+    assert result == {}
+
+def test_tlm_json_parser_reorganizeTlmDict_returns_empty_dict_when_arg_data_subsystems_exists_and_all_keys_map_to_empty():
+    # Arrange
+    arg_data = {'subsystems' : {}}
+
+    num_fake_subsystems = pytest.gen.randint(1, 10) # arbitrary, from 1 to 10
+    fake_subsystems = [MagicMock() for i in range(num_fake_subsystems)]
+
+    for fs in fake_subsystems:
+        arg_data['subsystems'][fs] = {}
+
+    # Assert
+    result = tlm_json_parser.reorganizeTlmDict(arg_data)
+
+    # Act
+    assert result == {}
+
+def test_tlm_json_parser_reorganizeTlmDict_returns_expected_dict_when_arg_data_subsystems_exists_and_is_not_empty():
+    # Arrange
+    arg_data = {'subsystems' : {}}
+
+    num_fake_subsystems = pytest.gen.randint(1, 10) # arbitrary, from 1 to 10, 0 has own test
+    fake_subsystems = [MagicMock() for i in range(num_fake_subsystems)]
+
+    expected_result = {}
+
+    for fs in fake_subsystems:
+        arg_data['subsystems'][fs] = {}
+        num_fake_labels = pytest.gen.randint(1, 10) # arbitrary, from 1 to 10, 0 has own test
+        for i in range(num_fake_labels):
+            fake_label = i
+            fake_label_value = MagicMock()
+            arg_data['subsystems'][fs][fake_label] = fake_label_value
+            expected_result[fake_label] = fake_label_value
+            expected_result[fake_label]['subsystem'] = fs
+
+    # Assert
+    result = tlm_json_parser.reorganizeTlmDict(arg_data)
+
+    # Act
+    assert result == expected_result
+
+# str2lst tests
+def test_tlm_json_parser_str2lst_returns_call_to_ast_literal_eval_which_receive_given_string(mocker):
+    # Arrange
+    arg_string = str(MagicMock())
+
+    expected_result = MagicMock()
+
+    mocker.patch(tlm_json_parser.__name__ + '.ast.literal_eval', return_value=expected_result)
+
+    # Act
+    result = tlm_json_parser.str2lst(arg_string)
+
+    # Assert
+    assert tlm_json_parser.ast.literal_eval.call_count == 1
+    assert tlm_json_parser.ast.literal_eval.call_args_list[0].args == (arg_string, )
+    assert result == expected_result
+
+def test_tlm_json_parser_str2lst_prints_message_when_ast_literal_eval_receives_given_string_but_raises_exception(mocker):
+    # Arrange
+    arg_string = str(MagicMock())
+
+    mocker.patch(tlm_json_parser.__name__ + '.ast.literal_eval', side_effect=Exception)
+    mocker.patch(tlm_json_parser.__name__ + '.print')
+
+    # Act
+    result = tlm_json_parser.str2lst(arg_string)
+
+    # Assert
+    assert tlm_json_parser.ast.literal_eval.call_count == 1
+    assert tlm_json_parser.ast.literal_eval.call_args_list[0].args == (arg_string, )
+    assert tlm_json_parser.print.call_count == 1
+    assert tlm_json_parser.print.call_args_list[0].args == ("Unable to process string representation of list", )
+    assert result == None
+
+# parseJson tests
+def test_tlm_json_parser_parseJson_opens_given_path_and_returns_data_returned_by_json(mocker):
+    # Arrange
+    arg_path = MagicMock()
+
+    fake_file = MagicMock()
+    fake_file_str = MagicMock()
+    fake_file_data = MagicMock()
+
+    mocker.patch(tlm_json_parser.__name__ + '.open', return_value=fake_file)
+    mocker.patch.object(fake_file, 'read', return_value=fake_file_str)
+    mocker.patch(tlm_json_parser.__name__ + '.json.loads', return_value=fake_file_data)
+    mocker.patch.object(fake_file, 'close')
+
+    # Act
+    result = tlm_json_parser.parseJson(arg_path)
+
+    # Assert
+    assert tlm_json_parser.open.call_count == 1
+    assert tlm_json_parser.open.call_args_list[0].args == (arg_path, 'rb')
+    assert fake_file.read.call_count == 1
+    assert tlm_json_parser.json.loads.call_count == 1
+    assert tlm_json_parser.json.loads.call_args_list[0].args == (fake_file_str, )
+    assert fake_file.close.call_count == 1
+    assert result == fake_file_data
+```

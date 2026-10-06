@@ -3,76 +3,4250 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ArrayArgTest.java`
 
-file--ArrayArgTest.java
-file--ArrayInArrayArgTest.java
-file--ArrayTmTest.java
-file--BogusSat2Test.java
-file--CcsdsGreenBookCommandEncodingTest.java
-file--CcsdsGreenBookTmTest.java
-file--ContainerEntryTest.java
-file--DataEncodingUtilsTest.java
-file--DataTypeProcessorTest.java
-file--EmptyMatchCriteriaTest.java
-file--EnumArgTest.java
-file--IndirectParameterRefBinaryDecodingTest.java
-file--JavaExpressionCalibratorFactoryTest.java
-file--MdbFactoryTest.java
-file--ParameterValidityRangesTest.java
-file--PathElementTest.java
-file--ProcessorDataTest.java
-file--RefMdbCommandEncodingTest.java
-file--RefSolverTest.java
-file--RefXtceCommandingTest.java
-file--RefXtceDecodingTest.java
-file--SpreadsheetLoaderTest.java
-file--TestMdbLoadingSpeed.java
-file--VariableBinaryCommandEncodingTest.java
-file--VariableBinaryDecodingTest.java
-file--VariableBinaryXtceTest.java
-file--XmlLoaderTest.java
-file--XtceAssemblerTest.java
-file--XtceBooleansTest.java
-file--XtceFilesetTest.java
-file--XtceStringDecodingTest.java
-file--XtceStringEncodingTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayArgTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+/**
+ * Tests that a command containing an array argument
+ */
+public class ArrayArgTest {
+
+    private Mdb mdb;
+    private MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory
+                .createInstanceByConfig("ArrayArgCommandTest");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void testCommandEncoding() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("length", "5");
+        args.put("array1", "[1,2,3,4,5]");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("00050102030405", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testCommandEncodingAutomaticLength() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("array1", "[1,2,3,4,5]");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("00050102030405", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testCommandEncodingInvalidLength() throws IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("length", "3");// length does not match the array length
+        args.put("array1", "[1,2,3,4,5]");
+        assertThrows(ErrorInCommand.class, () -> buildCommand(mc, args));
+    }
+
+    @Test
+    public void testMaxLengthExceeded() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("array1", "[1,2,3,4,5,6]");
+        assertThrows(ErrorInCommand.class, () -> buildCommand(mc, args));
+    }
+
+    @Test
+    public void testNativeArrayArgument() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("length", 5);
+        args.put("array1", Arrays.asList(1, 2, 3, 4, 5));
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("00050102030405", StringConverter.arrayToHexString(b));
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
 ```
 
-## 항목
+### `ArrayInArrayArgTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayArgTest.java`](file--ArrayArgTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayInArrayArgTest.java`](file--ArrayInArrayArgTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayTmTest.java`](file--ArrayTmTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/BogusSat2Test.java`](file--BogusSat2Test.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/CcsdsGreenBookCommandEncodingTest.java`](file--CcsdsGreenBookCommandEncodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/CcsdsGreenBookTmTest.java`](file--CcsdsGreenBookTmTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ContainerEntryTest.java`](file--ContainerEntryTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/DataEncodingUtilsTest.java`](file--DataEncodingUtilsTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/DataTypeProcessorTest.java`](file--DataTypeProcessorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/EmptyMatchCriteriaTest.java`](file--EmptyMatchCriteriaTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/EnumArgTest.java`](file--EnumArgTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/IndirectParameterRefBinaryDecodingTest.java`](file--IndirectParameterRefBinaryDecodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/JavaExpressionCalibratorFactoryTest.java`](file--JavaExpressionCalibratorFactoryTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/MdbFactoryTest.java`](file--MdbFactoryTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ParameterValidityRangesTest.java`](file--ParameterValidityRangesTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/PathElementTest.java`](file--PathElementTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ProcessorDataTest.java`](file--ProcessorDataTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefMdbCommandEncodingTest.java`](file--RefMdbCommandEncodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefSolverTest.java`](file--RefSolverTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefXtceCommandingTest.java`](file--RefXtceCommandingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefXtceDecodingTest.java`](file--RefXtceDecodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/SpreadsheetLoaderTest.java`](file--SpreadsheetLoaderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/TestMdbLoadingSpeed.java`](file--TestMdbLoadingSpeed.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryCommandEncodingTest.java`](file--VariableBinaryCommandEncodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryDecodingTest.java`](file--VariableBinaryDecodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryXtceTest.java`](file--VariableBinaryXtceTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XmlLoaderTest.java`](file--XmlLoaderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceAssemblerTest.java`](file--XtceAssemblerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceBooleansTest.java`](file--XtceBooleansTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceFilesetTest.java`](file--XtceFilesetTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceStringDecodingTest.java`](file--XtceStringDecodingTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceStringEncodingTest.java`](file--XtceStringEncodingTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayInArrayArgTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+public class ArrayInArrayArgTest {
+
+    private Mdb mdb;
+    private MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory
+                .createInstanceByConfig("ArrayInArrayArgCommandTest");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void testCommandEncoding() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/ArrayInArrayArgTest/cmd1");
+        Map<String, Object> args = new LinkedHashMap<>();
+
+        args.put("outer_array_length", "2");
+
+        Map<String, Object> a1 = new LinkedHashMap<>();
+        a1.put("inner_array_length", 2);
+        a1.put("inner_array", Arrays.asList(0xAB, 0xCD));
+
+        Map<String, Object> a2 = new LinkedHashMap<>();
+        a2.put("inner_array_length", 1);
+        a2.put("inner_array", Arrays.asList(0x88));
+        args.put("outer_array", Arrays.asList(a1, a2));
+
+        // test with all array lengths set
+        byte[] b = metaCommandProcessor.buildCommand(mc, args, 0).getCmdPacket();
+        assertEquals("00020200AB00CD010088", StringConverter.arrayToHexString(b));
+
+        // test with the a2 length not set
+        a2.remove("inner_array_length");
+        b = metaCommandProcessor.buildCommand(mc, args, 0).getCmdPacket();
+        assertEquals("00020200AB00CD010088", StringConverter.arrayToHexString(b));
+
+        // test with the a2 length set to the wrong value
+        a2.put("inner_array_length", 5);
+        assertThrows(ErrorInCommand.class, () -> {
+            metaCommandProcessor.buildCommand(mc, args, 0);
+        });
+
+        // test with the a2 length set to the wrong type
+        a2.put("inner_array_length", "s");
+        assertThrows(ErrorInCommand.class, () -> {
+            metaCommandProcessor.buildCommand(mc, args, 0);
+        });
+
+        // test with no length set
+        a2.remove("inner_array_length");
+        a1.remove("inner_array_length");
+        args.remove("outer_array_length");
+        b = metaCommandProcessor.buildCommand(mc, args, 0).getCmdPacket();
+        assertEquals("00020200AB00CD010088", StringConverter.arrayToHexString(b));
+
+        // test with outer length set to the wrong value
+        args.put("outer_array_length", 20);
+        assertThrows(ErrorInCommand.class, () -> {
+            metaCommandProcessor.buildCommand(mc, args, 0);
+        });
+    }
+
+}
+```
+
+### `ArrayTmTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ArrayTmTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+
+public class ArrayTmTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+    static ProcessorData pdata;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("ArrayTmTest");
+        pdata = new ProcessorData("test", mdb, new ProcessorConfig());
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    public void testEmptyArray() {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(0);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("n"));
+        assertEquals(0, pv.getEngValue().getUint32Value());
+
+        pv = pvl.getFirstInserted(param("array1"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 0 }, ev.getDimensions());
+        assertEquals(Type.UINT32, ev.getElementType());
+
+        ArrayValue rv = (ArrayValue) pv.getRawValue();
+        assertArrayEquals(new int[] { 0 }, rv.getDimensions());
+        assertEquals(Type.UINT32, rv.getElementType());
+    }
+
+    @Test
+    public void testEmptyArray2() {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(0);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet2"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("n"));
+        assertEquals(0, pv.getEngValue().getUint32Value());
+
+        pv = pvl.getFirstInserted(param("array2"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 0 }, ev.getDimensions());
+        assertEquals(Type.DOUBLE, ev.getElementType());
+
+        ArrayValue rv = (ArrayValue) pv.getRawValue();
+        assertArrayEquals(new int[] { 0 }, rv.getDimensions());
+        assertEquals(Type.UINT32, rv.getElementType());
+    }
+
+    @Test
+    public void testEmptyArray3() {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(0);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet3"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("n"));
+        assertEquals(0, pv.getEngValue().getUint32Value());
+
+        pv = pvl.getFirstInserted(param("array3"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 0 }, ev.getDimensions());
+        assertEquals(Type.AGGREGATE, ev.getElementType());
+
+        ArrayValue rv = (ArrayValue) pv.getRawValue();
+        assertArrayEquals(new int[] { 0 }, rv.getDimensions());
+        assertEquals(Type.AGGREGATE, rv.getElementType());
+    }
+
+    @Test
+    public void testEmptyArray4() {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(0);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet4"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("n"));
+        assertEquals(0, pv.getEngValue().getUint32Value());
+
+        pv = pvl.getFirstInserted(param("array4"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 0 }, ev.getDimensions());
+        assertEquals(Type.AGGREGATE, ev.getElementType());
+
+        ArrayValue rv = (ArrayValue) pv.getRawValue();
+        assertArrayEquals(new int[] { 0 }, rv.getDimensions());
+        assertEquals(Type.AGGREGATE, rv.getElementType());
+    }
+
+    @Test
+    public void test1ElementArray() {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(1);
+        bb.putInt(5);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("array1"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 1 }, ev.getDimensions());
+        assertEquals(5, ev.getElementValue(0).getUint32Value());
+    }
+
+    @Test
+    public void test1ElementArray4() {
+        ByteBuffer bb = ByteBuffer.allocate(12);
+        bb.putInt(1);
+        bb.putInt(5);
+        bb.putInt(3);
+        ContainerProcessingResult cpr = processPacket(bb.array(), mdb.getSequenceContainer("/ArrayTmTest/packet4"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("array4"));
+        ArrayValue ev = (ArrayValue) pv.getEngValue();
+        assertArrayEquals(new int[] { 1 }, ev.getDimensions());
+        AggregateValue aggrv = (AggregateValue) ev.getElementValue(0);
+
+        assertEquals(5, aggrv.getMemberValue("m1").getUint32Value());
+        assertEquals("trei", aggrv.getMemberValue("m2").getStringValue());
+    }
+
+    private Parameter param(String name) {
+        return mdb.getParameter("/ArrayTmTest/" + name);
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf, SequenceContainer sc) {
+        return extractor.processPacket(buf, now, now, 0, sc);
+    }
+}
+```
+
+### `BogusSat2Test.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/BogusSat2Test.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.ByteBuffer;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.AncillaryData;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.ValueEnumeration;
+
+public class BogusSat2Test {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("BogusSAT2");
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    public void test1() {
+        byte[] buf = new byte[] { 0x08, 0x23, // CCSDS_Packet_ID {version=0, type = 0, SecHdrFlag = 1, apid=0x23
+                (byte) 0xC0, 0x56, // CCSDS_Packet_Sequence {GroupFlags=3, count = 0x56}
+                0, 5, // length 5
+                0x35, 0x10, 0x20, 0x03, 0x05, // PUS_Data_Field_Header {Spare1 = 0, Version=3, Spare4=5, Service = 0x10,
+                                              // Subservice=0x20, SeqCount = 3, Destination=5}
+                0, 0 };
+        ContainerProcessingResult cpr = processPacket(buf);
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(4, pvl.size());
+        ParameterValue pushdr = pvl.getFirstInserted(mdb.getParameter("/BogusSAT/PUS_Data_Field_Header"));
+        assertTrue(pushdr.getEngValue() instanceof AggregateValue);
+        AggregateValue v = (AggregateValue) pushdr.getEngValue();
+        assertEquals(3, v.getMemberValue("SeqCount").getUint32Value());
+    }
+
+    @Test
+    public void test2() {
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+        byte[] x = new byte[4];
+        ByteBuffer.wrap(x).putFloat(15);
+        byte[] buf = new byte[] { 0x00, 0x02, // CCSDS_Packet_ID {version=0, type = 0, SecHdrFlag = 0, apid=2
+                (byte) 0xC0, 0x56, // CCSDS_Packet_Sequence {GroupFlags=3, count = 0x56}
+                0, 5, // length 5
+                0x0, 0x1, 0x1, 0x1, 0x0, // Solar_Array_Voltage_1_State=OFF, Voltage_1(not present), Voltage_2_State=1,
+                                         // Voltage_2=16
+                x[0], x[1], x[2], x[3], // Battery_Voltage
+                x[0], x[1], x[2], x[3] }; // Battery Current
+        ContainerProcessingResult cpr = processPacket(buf);
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(8, pvl.size());
+        assertNull(pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/BusElectronics/Solar_Array_Voltage_1")));
+        assertNotNull(pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/BusElectronics/Solar_Array_Voltage_2")));
+        ParameterValue pv = pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/BusElectronics/Battery_Current"));
+        assertEquals(15.0, pv.getEngValue().getFloatValue(), 1e-5);
+    }
+
+    @Test
+    public void test6() {
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+        byte[] x = new byte[4];
+        float xfloat = 16;
+        ByteBuffer.wrap(x).putFloat(xfloat);
+        byte[] buf = new byte[] { 0x00, 0x06, // CCSDS_Packet_ID {version=0, type = 0, SecHdrFlag = 0, apid=6
+                (byte) 0xC0, 0x56, // CCSDS_Packet_Sequence {GroupFlags=3, count = 0x56}
+                0, 5, // length 5
+                0x1, // Payload_1_State
+                0x1, // Solar_Array_Voltage_1_State
+                // Container3
+                0x0, 0x0, 0x0, 0x5, // enum_binary
+                x[0], x[1], x[2], x[3], // enum_float32
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0, // enum_float64
+                0x1, 0x2, // enum_int16_twoscomp
+                0x1, 0x2, // enum_int16_onescomp
+
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0, // PAYLOAD_ANTENNA_POINTING_ARRAY1 (array of 9 doubles)
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0, 0, 0, 0, 1,
+                0x0,
+                (byte) 0xC0, 0x0, 0, 0, // PAYLOAD_ANTENNA_POINTING_ARRAY2 (array of 9 floats)
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+
+                (byte) 0xC0, 0x0, 0, 0, // PAYLOAD_ANTENNA_POINTING_ARRAY2 (array of 9 doubles) repeated
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) 0xC0, 0x0, 0, 0,
+                (byte) x[0], x[1], x[2], x[3],
+                // IncludedContainer1
+                (byte) 0xC0, 0x0, 0, 1, // Basic_uint32
+                (byte) 0x80, 0x0, 0, 6, // Basic_int32_signmag
+                (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xFA, // Basic_int32_twoscomp
+                (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, (byte) 0xF9, // Basic_int32_onescomp
+        };
+
+        ContainerProcessingResult cpr = processPacket(buf);
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(17, pvl.size());
+
+        ParameterValue pv = pvl
+                .getFirstInserted(mdb.getParameter("/BogusSAT/SC001/Payload1/PAYLOAD_ANTENNA_POINTING_ARRAY1"));
+        ArrayValue v = (ArrayValue) pv.getEngValue();
+        assertEquals(9, v.flatLength());
+        assertEquals(-2.0, v.getElementValue(0).getDoubleValue(), 1E-5);
+
+        pv = pvl.getLastInserted(mdb.getParameter("/BogusSAT/SC001/Payload1/PAYLOAD_ANTENNA_POINTING_ARRAY2"));
+        v = (ArrayValue) pv.getEngValue();
+        assertEquals(9, v.flatLength());
+        assertEquals(xfloat, v.getElementValue(8).getFloatValue(), 1E-5);
+
+        pv = pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/Payload1/Basic_int32_signmag"));
+        assertEquals(-6, pv.getRawValue().getSint32Value());
+
+        pv = pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/Payload1/Basic_int32_twoscomp"));
+        assertEquals(-6, pv.getRawValue().getSint32Value());
+
+        pv = pvl.getFirstInserted(mdb.getParameter("/BogusSAT/SC001/Payload1/Basic_int32_onescomp"));
+        assertEquals(-6, pv.getRawValue().getSint32Value());
+
+    }
+
+    @Test
+    public void testAbstractMetaCommand() {
+        MetaCommand mc = mdb.getMetaCommand("/BogusSAT/CCSDSTelecommand");
+        assertTrue(mc.isAbstract());
+    }
+
+    @Test
+    public void testAggregatePtypeNameDescription() {
+        AggregateParameterType pt = (AggregateParameterType) mdb
+                .getParameterType("/BogusSAT/SC001/Onboard_Processor_Config/Config_Log_Levels_Type");
+
+        assertEquals("Test Long Description", pt.getLongDescription());
+        List<AncillaryData> l = pt.getAncillaryData();
+        assertEquals(1, l.size());
+        AncillaryData ad = l.get(0);
+        assertEquals("TEST_ANC_DATA", ad.getName());
+        assertEquals("1", ad.getValue());
+    }
+
+    @Test
+    public void testEnumDescription() {
+        EnumeratedParameterType ept = (EnumeratedParameterType) mdb
+                .getParameterType("/BogusSAT/LOG_MSGS/ERRORCODE_Type");
+        ValueEnumeration ve = ept.enumValue(123l);
+        assertEquals("Detailed description of error case A", ve.getDescription());
+    }
+
+    @Test
+    public void testArchivePartition() {
+        SequenceContainer seq = mdb.getSequenceContainer("/BogusSAT/SC001/Payload1/IncludedContainer1");
+        assertFalse(seq.useAsArchivePartition());
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf) {
+        return extractor.processPacket(buf, now, now, 0);
+    }
+}
+```
+
+### `CcsdsGreenBookCommandEncodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/CcsdsGreenBookCommandEncodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.CheckWindow;
+import org.yamcs.xtce.CheckWindow.TimeWindowIsRelativeToType;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Significance.Levels;
+
+public class CcsdsGreenBookCommandEncodingTest {
+    static Mdb mdb;
+    static MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("ccsds-green-book");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void test1() throws ErrorInCommand {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/SpaceVehicle/PWHTMR");
+        assertEquals(32, mc.getCommandContainer().getSizeInBits());
+        Map<String, Object> args = new HashMap<>();
+        args.put("TimerStartStop", "TIMER_START");
+
+        byte[] b = metaCommandProcessor.buildCommand(mc, args, 0).getCmdPacket();
+        assertEquals(Levels.CRITICAL, mc.getDefaultSignificance().getConsequenceLevel());
+
+        assertEquals("FF0000001E000001", StringConverter.arrayToHexString(b));
+
+        List<CommandVerifier> vl = mc.getCommandVerifiers();
+
+        assertEquals(2, vl.size());
+        CommandVerifier cv = vl.get(0);
+        assertEquals(CommandVerifier.Type.CONTAINER, cv.getType());
+        CheckWindow cw = cv.getCheckWindow();
+        assertEquals(-1, cw.getTimeToStartChecking());
+        assertEquals(600000, cw.getTimeToStopChecking());
+        assertEquals(TimeWindowIsRelativeToType.LAST_VERIFIER, cw.getTimeWindowIsRelativeTo());
+    }
+}
+```
+
+### `CcsdsGreenBookTmTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/CcsdsGreenBookTmTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+
+public class CcsdsGreenBookTmTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void setupTimeencoding() {
+        TimeEncoding.setUp();
+        mdb = MdbFactory.createInstanceByConfig("ccsds-green-book");
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+    }
+
+    @Test
+    public void testIncludeCondition() throws Exception {
+        byte[] buf = new byte[] { 24, (byte) 0x01, 0, 0, // Header1 SecH -> no secondary header
+                0, 0, // PBATMTEMP
+                0, 0 }; // PSWHLTIMFLG
+        extractor.provideAll();
+        ContainerProcessingResult cpr = processPacket(buf);
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(6, pvl.size());
+        ParameterValue pvSech = pvl.getFirstInserted(mdb.getParameter("/SpaceVehicle/SecH"));
+        assertEquals(0, pvSech.getRawValue().getUint32Value());
+    }
+
+    @Test
+    public void test1() throws Exception {
+        byte[] buf = new byte[] { 24, (byte) 0x81, 0, 12, // Header1
+                0x16, (byte) 0x92, 0x5E, (byte) 0x80, // Seconds
+                0, 50, // Milliseconds
+                0, 0, // PBATMTEMP
+                0, 0 }; // PSWHLTIMFLG
+        extractor.provideAll();
+        ContainerProcessingResult cpr = processPacket(buf);
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(8, pvl.size());
+        ParameterValue pvSec = pvl.getFirstInserted(mdb.getParameter("/SpaceVehicle/Seconds"));
+        assertEquals("1970-01-01T00:00:00.000Z", pvSec.getEngValue().toString());
+
+        ParameterValue pvMillisec = pvl.getFirstInserted(mdb.getParameter("/SpaceVehicle/MilliSeconds"));
+        assertEquals("1970-01-01T00:00:00.050Z", pvMillisec.getEngValue().toString());
+    }
+
+    @Test
+    public void test2() throws Exception {
+        Parameter psec = mdb.getParameter("/SpaceVehicle/MilliSeconds");
+
+        byte[] buf = new byte[] { 24, (byte) 0x81, 0, 12, // Header1
+                0x16, (byte) 0x92, 0x5E, (byte) 0x80, // Seconds
+                0, 50, // Milliseconds
+                0, 0, // PBATMTEMP
+                0, 0 }; // PSWHLTIMFLG
+
+        extractor.startProviding(psec);
+        ContainerProcessingResult cpr = processPacket(buf);
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(6, pvl.size());
+        ParameterValue pvSec = pvl.getFirstInserted(mdb.getParameter("/SpaceVehicle/Seconds"));
+        assertEquals("1970-01-01T00:00:00.000Z", pvSec.getEngValue().toString());
+
+        ParameterValue pvMillisec = pvl.getFirstInserted(psec);
+        assertEquals("1970-01-01T00:00:00.050Z", pvMillisec.getEngValue().toString());
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf) {
+        return extractor.processPacket(buf, now, now, 0);
+    }
+}
+```
+
+### `ContainerEntryTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ContainerEntryTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.TimeEncoding;
+
+public class ContainerEntryTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+    MetaCommandProcessor metaCommandProcessor;
+    static ProcessorData pdata;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("container-entry");
+        pdata = new ProcessorData("test", mdb, new ProcessorConfig());
+    }
+
+    @Test
+    public void testPartialSubscription() {
+        extractor = new XtceTmExtractor(mdb);
+        var p2 = mdb.getParameter("/ce/p2");
+        extractor.startProviding(p2);
+        byte[] buf = new byte[] { 0, 1 };
+        ContainerProcessingResult cpr = extractor.processPacket(buf, now, now, 0, mdb.getSequenceContainer("/ce/sc2"));
+        assertEquals(1, cpr.getParameterResult().getFirstInserted(p2).getEngValue().getUint32Value());
+    }
+}
+```
+
+### `DataEncodingUtilsTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/DataEncodingUtilsTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.IntegerDataEncoding;
+
+public class DataEncodingUtilsTest {
+    @Test
+    public void testGetRawIntegerValue() {
+        IntegerDataEncoding ide = new IntegerDataEncoding.Builder().setSizeInBits(48).build();
+        var v = DataEncodingUtils.getRawIntegerValue(ide, 0x0102030405060708L);
+        assertEquals(0x030405060708L, v.getUint64Value());
+    }
+}
+```
+
+### `DataTypeProcessorTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/DataTypeProcessorTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.util.function.LongToIntFunction;
+
+import org.junit.jupiter.api.Test;
+
+public class DataTypeProcessorTest {
+
+    private static final long[][] UNSIGNED_TESTS = {
+            { 1, 1 },
+            { 2, 2 },
+            { 255, 8 },
+            { 256, 9 },
+            { 0xFFFFFFFFL, 32 },
+            { 0x100000000L, 33 },
+            { 0xFFFFFFFFFFFFFFFFL, 64 }
+    };
+
+    private static final long[][] SIGNED_TESTS = {
+            { 0x7FFFFFFFFFFFFFFFL, 64 },
+            { 0x3FFFFFFFFFFFFFFFL, 63 },
+            { 0x1FFFFFFFFFFFFFFFL, 62 },
+            { 0x00000000000000FF, 9 },
+            { 0x0000000000000003, 3 },
+            { 0x0000000000000001, 2 },
+            { 0x0000000000000000, 1 },
+
+            { -1, 1 },
+            { -2, 2 },
+            { -3, 3 },
+            { -4, 3 },
+            { -127, 8 },
+            { -128, 8 },
+            { -129, 9 },
+            { -32768, 16 },
+            { -32769, 17 },
+            { Long.MIN_VALUE, 64 },
+    };
+    @Test
+    public void testUnsignedSizeInBits() {
+        runTests("DataTypeProcessor unsigned", UNSIGNED_TESTS,
+                v -> DataTypeProcessor.unsignedSizeInBits(v));
+    }
+
+    @Test
+    public void testSignedSizeInBits() {
+        runTests("DataTypeProcessor signed", SIGNED_TESTS,
+                v -> DataTypeProcessor.signedSizeInBits(v));
+    }
+
+    private void runTests(String caption, long[][] tests, LongToIntFunction func) {
+        int failures = 0;
+        for (int i = 0; i < tests.length; ++i) {
+            long value = tests[i][0];
+            int expected = (int) tests[i][1];
+            if (!checkResult(caption, expected, value, func)) {
+                ++failures;
+            }
+        }
+
+        if (failures > 0) {
+            fail(String.format("%d failures for %s tests", failures, caption));
+        }
+    }
+
+    private boolean checkResult(String caption, int expected, long v, LongToIntFunction func) {
+        int actual = func.applyAsInt(v);
+        if (expected == actual) {
+            return true;
+        } else {
+            System.out.println(String.format("%s: v=%d (%016X), expected %d but was %d",
+                    caption, v, v, expected, actual));
+            return false;
+        }
+    }
+
+}
+```
+
+### `EmptyMatchCriteriaTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/EmptyMatchCriteriaTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+
+public class EmptyMatchCriteriaTest {
+    @Test
+    public void test() {
+        YConfiguration.setupTest(null);
+        Mdb mdb = MdbFactory.createInstanceByConfig("empty-match-criteria");
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        long now = TimeEncoding.getWallclockTime();
+
+        extractor.startProviding(mdb.getParameter("/EMC/para2"));
+        byte[] buf = new byte[16];
+        ByteBuffer bb = ByteBuffer.wrap(buf);
+        bb.putDouble(1.0);
+        bb.putDouble(2.0);
+        ContainerProcessingResult cpr = extractor.processPacket(buf, now, now, 0);
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(mdb.getParameter("/EMC/para2"));
+        assertEquals(2.0, pv.getEngValue().getDoubleValue(), 1e-5);
+    }
+}
+```
+
+### `EnumArgTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/EnumArgTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.MetaCommand;
+
+public class EnumArgTest {
+
+    private Mdb mdb;
+    private MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeEach
+    public void setup() throws DatabaseLoadException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("EnumArgCommandTest");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void testCommandEncoding() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/EnumArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("phase", "ASCENT");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("02", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testCommandEncoding_stateNumber() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/EnumArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("phase", 2);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("02", StringConverter.arrayToHexString(b));
+    }
+
+    /*
+     * Not allowed because there is no string state "2", and it is not safe to assume that numeric value is intended.
+     */
+    @Test
+    public void testCommandEncoding_stringStateNumber() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/EnumArgTest/cmd1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("phase", "2");
+        assertThrows(ErrorInCommand.class, () -> buildCommand(mc, args));
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
+```
+
+### `IndirectParameterRefBinaryDecodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/IndirectParameterRefBinaryDecodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+/**
+ * Tests that a packet containing indirect parameter entry can be decoded correctly.
+ */
+public class IndirectParameterRefBinaryDecodingTest {
+
+    private static final String ID_QN = "/Example/id";
+    private static final String[] PARAM_QNs = {
+            "/Example/example_param1",
+            "/Example/example_param2",
+    };
+
+    private Mdb mdb;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory
+                .createInstanceByConfig("indirect-param-ref");
+
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testProcessPacket() throws IOException {
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+
+        float[] paramValues = { 1.23F, 4.56F };
+        long now = TimeEncoding.getWallclockTime();
+
+        for (int i = 0; i < 2; i++) {
+            byte[] packet = createPacket(i + 1, paramValues[i]);
+            ParameterValueList result = extractor.processPacket(packet, now, now, 0).getParameterResult();
+
+            assertEquals(2, result.getSize());
+            assertEquals(i + 1, result.get(mdb.getParameter(ID_QN), 0).getEngValue().toLong());
+            assertEquals(paramValues[i],
+                    result.get(mdb.getParameter(PARAM_QNs[i]), 0).getEngValue().toDouble());
+
+        }
+    }
+
+    @Test
+    public void testProcessPacket2() throws IOException {
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+
+        float[] paramValues = { 1.23F, 4.56F };
+        long now = TimeEncoding.getWallclockTime();
+
+        byte[] packet = createPacket2(1, paramValues[0], 2, paramValues[1]);
+
+        ParameterValueList result = extractor
+                .processPacket(packet, now, now, 0, mdb.getSequenceContainer("/Example/id_value_pair2"))
+                .getParameterResult();
+
+        assertEquals(4, result.getSize());
+        assertEquals(paramValues[0],
+                result.get(mdb.getParameter(PARAM_QNs[0]), 0).getEngValue().toDouble());
+        assertEquals(paramValues[1],
+                result.get(mdb.getParameter(PARAM_QNs[1]), 0).getEngValue().toDouble());
+
+    }
+
+    private byte[] createPacket(int id, float value) throws IOException {
+        ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(arrayStream);
+
+        out.writeInt(id);
+        out.writeFloat(value);
+
+        return arrayStream.toByteArray();
+    }
+
+    private byte[] createPacket2(int id1, float value1, int id2, float value2) throws IOException {
+        ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(arrayStream);
+
+        out.writeInt(id1);
+        out.writeFloat(value1);
+        out.writeInt(id2);
+        out.writeFloat(value2);
+
+        return arrayStream.toByteArray();
+    }
+}
+```
+
+### `JavaExpressionCalibratorFactoryTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/JavaExpressionCalibratorFactoryTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.JavaExpressionCalibrator;
+
+public class JavaExpressionCalibratorFactoryTest {
+    @Test
+    public void test1() {
+        JavaExpressionCalibrator jec = new JavaExpressionCalibrator("v+3");
+        NumericCalibrator c = (NumericCalibrator) JavaExpressionNumericCalibratorFactory.compile(jec);
+        assertEquals(7, c.calibrate(4), 1e-5);
+    }
+
+    @Test
+    public void test2() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            JavaExpressionCalibrator jec = new JavaExpressionCalibrator("\"blabala\"");
+            NumericCalibrator c = (NumericCalibrator) JavaExpressionNumericCalibratorFactory.compile(jec);
+            assertEquals(7, c.calibrate(4), 1e-5);
+        });
+    }
+
+    @Test
+    public void test3() {
+        JavaExpressionCalibrator jec = new JavaExpressionCalibrator("v>0?v+5:v-5");
+        NumericCalibrator c = (NumericCalibrator) JavaExpressionNumericCalibratorFactory.compile(jec);
+        assertEquals(9, c.calibrate(4), 1e-5);
+        assertEquals(-7, c.calibrate(-2), 1e-5);
+    }
+}
+```
+
+### `MdbFactoryTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/MdbFactoryTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.util.NameReference;
+import org.yamcs.xtce.util.NameReference.Type;
+import org.yamcs.xtce.util.ReferenceFinder;
+import org.yamcs.xtce.util.ReferenceFinder.FoundReference;
+
+public class MdbFactoryTest {
+
+    /*
+     * This test constructs the following tree:
+     * a [p1]
+     * - b1 [p1]
+     * - b2
+     * - c1 [p1]
+     * - b3
+     * 
+     */
+    @Test
+    public void testNamespaces() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+
+        ReferenceFinder refFinder = new ReferenceFinder(s -> {
+        });
+        Map<String, Object> m = new HashMap<>();
+        m.put("type", "sheet");
+        m.put("spec", "mdb/refmdb.xls");
+
+        List<YConfiguration> mdbConfigs = Arrays.asList(YConfiguration.wrap(m));
+        Mdb mdb = MdbFactory.createInstance(mdbConfigs, true, true);
+
+        SequenceContainer pkt1 = mdb.getSequenceContainer("/REFMDB/SUBSYS1/PKT1");
+        assertNotNull(pkt1);
+        // assertEquals(pkt1, db.getSequenceContainer("/REFMDB", "SUBSYS1/PKT1")); // Not supported yet
+        assertEquals(pkt1, mdb.getSequenceContainer("/REFMDB/SUBSYS1", "PKT1"));
+
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/IntegerPara1_1");
+        assertNotNull(p);
+        assertEquals(p, mdb.getParameter("/REFMDB/SUBSYS1", "IntegerPara1_1"));
+
+        SpaceSystem ss = mdb.getSpaceSystem("/REFMDB/SUBSYS1");
+        assertNotNull(ss);
+        assertEquals(ss, mdb.getSpaceSystem("/REFMDB", "SUBSYS1"));
+
+        FoundReference rr = refFinder.findReference(mdb.getRootSpaceSystem(),
+                new NameReference("/REFMDB/SUBSYS1/IntegerPara1_1", Type.PARAMETER), ss);
+        assertNotNull(rr);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1", rr.getNameDescription().getQualifiedName());
+
+        rr = refFinder.findReference(mdb.getRootSpaceSystem(),
+                new NameReference("../SUBSYS1/IntegerPara1_1", Type.PARAMETER), ss);
+        assertNotNull(rr);
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1", rr.getNameDescription().getQualifiedName());
+    }
+}
+```
+
+### `ParameterValidityRangesTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ParameterValidityRangesTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.nio.ByteBuffer;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.utils.TimeEncoding;
+
+public class ParameterValidityRangesTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("ranges-test");
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    public void test1() {
+        byte[] buf = new byte[8];
+        ByteBuffer.wrap(buf).putDouble(90);
+        ContainerProcessingResult cpr = processPacket(buf);
+        ParameterValue pv = cpr.getParameterResult()
+                .getFirstInserted(mdb.getParameter("/Example/latitude"));
+        assertTrue(pv.isNominal());
+
+        ByteBuffer.wrap(buf).putDouble(90.01);
+        cpr = processPacket(buf);
+        ParameterValue pv1 = cpr.getParameterResult()
+                .getFirstInserted(mdb.getParameter("/Example/latitude"));
+        assertTrue(pv1.isInvalid());
+
+        ByteBuffer.wrap(buf).putDouble(-90.01);
+        cpr = processPacket(buf);
+        ParameterValue pv2 = cpr.getParameterResult()
+                .getFirstInserted(mdb.getParameter("/Example/latitude"));
+        assertTrue(pv2.isInvalid());
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf) {
+        return extractor.processPacket(buf, now, now, 0);
+    }
+}
+```
+
+### `PathElementTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/PathElementTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.PathElement;
+
+public class PathElementTest {
+    @Test
+    public void test1() {
+        PathElement pe = PathElement.fromString("a[3][4]");
+        assertEquals("a", pe.getName());
+        assertArrayEquals(new int[] { 3, 4 }, pe.getIndex());
+    }
+
+    @Test
+    public void test2() {
+        PathElement pe = PathElement.fromString("[3]");
+        assertEquals(null, pe.getName());
+        assertArrayEquals(new int[] { 3 }, pe.getIndex());
+    }
+
+    @Test
+    public void test3() {
+        PathElement pe = PathElement.fromString("xyz");
+        assertEquals("xyz", pe.getName());
+        assertArrayEquals(null, pe.getIndex());
+    }
+
+    @Test
+    public void test4() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            PathElement pe = PathElement.fromString("xyz[");
+            assertEquals(null, pe.getName());
+            assertArrayEquals(new int[] { 3 }, pe.getIndex());
+        });
+    }
+}
+```
+
+### `ProcessorDataTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/ProcessorDataTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.LastValueCache;
+import org.yamcs.parameter.ParameterValue;
+
+public class ProcessorDataTest {
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+    }
+
+    @Test
+    public void testInitialValue() {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refmdb");
+
+        ProcessorData pdata = new ProcessorData("test", mdb, new ProcessorConfig());
+        LastValueCache lvc = pdata.getLastValueCache();
+
+        ParameterValue pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue1"));
+        assertEquals(3.14, pv.getEngValue().getFloatValue(), 1e-5);
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue2"));
+        assertEquals(42, pv.getEngValue().getUint32Value());
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue3"));
+        assertEquals("string4 initial value", pv.getEngValue().getStringValue());
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue4"));
+        AggregateValue av = (AggregateValue) pv.getEngValue();
+        assertEquals(42, av.getMemberValue("member1").getUint32Value());
+        assertEquals(2.72, av.getMemberValue("member2").getFloatValue(), 1e-5);
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue5"));
+        ArrayValue arrv = (ArrayValue) pv.getEngValue();
+        assertEquals(4, arrv.flatLength());
+        assertEquals(3.3, arrv.getElementValue(2).getFloatValue(), 1e-5);
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue6"));
+        av = (AggregateValue) pv.getEngValue();
+        assertEquals(1, av.getMemberValue("member1").getUint32Value());
+
+        pv = lvc.getValue(mdb.getParameter("/REFMDB/SUBSYS1/LocalParaWithInitialValue7"));
+        arrv = (ArrayValue) pv.getEngValue();
+        assertEquals(1, arrv.flatLength());
+        assertEquals(-10.12, arrv.getElementValue(0).getFloatValue(), 1e-5);
+    }
+}
+```
+
+### `RefMdbCommandEncodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefMdbCommandEncodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.python.google.common.collect.ImmutableMap;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.parameter.Value;
+import org.yamcs.tctm.CcsdsPacket;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.BooleanDataType;
+import org.yamcs.xtce.MetaCommand;
+
+public class RefMdbCommandEncodingTest {
+    static Mdb mdb;
+    static MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("refmdb");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void intArgTcAbs() throws ErrorInCommand {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/INT_ARG_TC_ABS");
+        Map<String, Object> args = new HashMap<>();
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals("ABCD901408081808", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void floatCommand() throws ErrorInCommand {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("float_arg", "-30");
+        args.put("double_arg", "1");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertTrue(b[0] != 0);
+    }
+
+    @Test
+    public void nativeFloatCommand() throws ErrorInCommand {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("float_arg", -30);
+        args.put("double_arg", 1);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertTrue(b[0] != 0);
+    }
+
+    @Test
+    public void floatCommandDefault() {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC");
+        boolean errorInCommand = false;
+
+        try {
+            // should complain that parameter has not been assigned
+            Map<String, Object> args = new HashMap<>();
+            buildCommand(mc, args).getCmdPacket();
+        } catch (ErrorInCommand e) {
+            errorInCommand = true;
+        }
+
+        assertTrue(errorInCommand);
+    }
+
+    @Test
+    public void stringCommand() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/STRING_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("string_arg", "aaaa");
+        args.put("terminatedString_arg", "bbbb");
+        args.put("prependedSizeString_arg", "cccc");
+        args.put("fixedString_arg", "dddd");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expectedResult = {
+                97, 97, 97, 97, 0, // aaaa
+                97, 98, 99, 100, 101, 102, 0, // abcdef - string2_arg default value
+                98, 98, 98, 98, 0x2C, // bbbb
+                0, 4, 99, 99, 99, 99, // cccc
+                100, 100, 100, 100, 0, 0 // dddd
+        };
+        assertEquals(StringConverter.arrayToHexString(expectedResult), StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void cgsLikeStringCommand() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CGS_LIKE_STRING_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("string_arg1", "aaaa");
+        args.put("string_arg2", "bbbb");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expectedResult = {
+                0, 4, 97, 97, 97, 97, 0, 0, // aaaa
+                98, 98, 98, 98, 0x2C, 0 // bbbb
+
+        };
+        assertEquals(StringConverter.arrayToHexString(expectedResult), StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void binaryCommand() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/BINARY_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("binary_arg1", "0102");
+        args.put("binary_arg2", "0A1B");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expectedResult = {
+                0x01, 0x02, 0, 0, 0,
+                0x0A, 0x1B, 0, 0, 0, 0
+
+        };
+        assertEquals(StringConverter.arrayToHexString(expectedResult), StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void littleEndianUint() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/LE_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("p2", "0x12");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+        assertEquals(0x0A0B, bb.getShort());
+        assertEquals(0x12, bb.getShort());
+    }
+
+    @Test
+    public void booleanCommandTrue() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/BOOLEAN_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("bool_arg1", BooleanDataType.DEFAULT_ONE_STRING_VALUE);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals(0b11000000, b[0] & 0xFF);
+    }
+
+    @Test
+    public void booleanCommandFalseTrue() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/BOOLEAN_ARG_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("bool_arg1", BooleanDataType.DEFAULT_ZERO_STRING_VALUE);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        // - assigned false
+        // - default argument assignemnt true
+        assertEquals(0b01000000, b[0] & 0xFF);
+    }
+
+    @Test
+    public void int64CommandArgumentRange() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/INT64_ARG_TC");
+
+        try {
+            Map<String, Object> args = getArgAssignment("p1", "0X0102030405060707", "p2",
+                    "0xF102030405060708", "p3", "-18374120213919168760");
+            buildCommand(mc, args).getCmdPacket();
+            fail("Should throw an exception");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Cannot assign value to p1"));
+        }
+
+        try {
+            Map<String, Object> args = getArgAssignment("p1", "0X0102030405060708", "p2",
+                    "0xF10203040506070A", "p3", "-18374120213919168760");
+            buildCommand(mc, args).getCmdPacket();
+            fail("Should throw an exception");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Cannot assign value to p2"));
+        }
+
+        try {
+            Map<String, Object> args = getArgAssignment("p1", "0X0102030405060708", "p2",
+                    "0xF102030405060708", "p3", "-0X0102030405060707");
+            buildCommand(mc, args).getCmdPacket();
+            fail("Should throw an exception");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("Cannot assign value to p3"));
+        }
+    }
+
+    @Test
+    public void int64CommandArgumentEncoding() throws ErrorInCommand {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/INT64_ARG_TC");
+        Map<String, Object> args = getArgAssignment("p1", "0X0102030405060708", "p2", "0xF102030405060708",
+                "p3", "-0X0102030405060708");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals("0102030405060708F102030405060708FEFDFCFBFAF9F8F8", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testStringEncodedTc() throws Exception {
+        MetaCommand mc = MdbFactory.createInstanceByConfig("refmdb")
+                .getMetaCommand("/REFMDB/SUBSYS1/STRING_ENCODED_ARG_TC");
+        assertNotNull(mc);
+        Map<String, Object> args = new HashMap<>();
+        args.put("uint_arg", "1");
+        args.put("int_arg", "-2"); // with calibration applied
+        args.put("float_arg", "-3.01");
+        args.put("string_arg", "string with \n special chars \"");
+        args.put("binary_arg", "010A");
+        args.put("enumerated_arg", "value1");
+        args.put("boolean_arg", "False");
+
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        String result = new String(b);
+        String expected = "1,-3,-3.01,string with \n special chars \",010A,1,False,";
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    public void testCustomCalibTc() throws Exception {
+        MetaCommand mc = MdbFactory.createInstanceByConfig("refmdb")
+                .getMetaCommand("/REFMDB/SUBSYS1/CUSTOM_CALIB_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("p1", "10");
+        args.put("p2", "20.08553692318766774092");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals("0000000D0003", StringConverter.arrayToHexString(b));
+    }
+
+    private Map<String, Object> getArgAssignment(String... v) {
+        if ((v.length & 0x1) != 0) {
+            throw new IllegalArgumentException("Please pass an even number of arguments: arg1,value1,arg2,value2...");
+        }
+        Map<String, Object> args = new HashMap<>();
+        for (int i = 0; i < v.length; i += 2) {
+            args.put(v[i], v[i + 1]);
+        }
+        return args;
+    }
+
+    @Test
+    public void testOneIntArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC");
+        assertNotNull(mc);
+        byte[] b = buildCommand(mc, new HashMap<>()).getCmdPacket();
+        assertEquals("ABCDEFAB", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testFixedValue() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/FIXED_VALUE_TC");
+        assertNotNull(mc);
+        byte[] b = buildCommand(mc, new HashMap<>()).getCmdPacket();
+        assertEquals("ABCD901408081808", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testIntegerArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/INT_ARG_TC");
+        assertNotNull(mc);
+        byte[] b = buildCommand(mc, new HashMap<>()).getCmdPacket();
+        assertEquals("ABCD901408081808", StringConverter.arrayToHexString(b));
+    }
+
+    @Test
+    public void testFloatArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/FLOAT_ARG_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("float_arg", "-10.23");
+        args.put("double_arg", "25.4");
+
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        assertEquals(16, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+
+        assertEquals(-10.23, bb.getFloat(), 1e-5);
+
+        assertEquals(25.4d, bb.getDouble(), 1e-20);
+    }
+
+    @Test
+    public void testLittleEndianFloatArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/LE_FLOAT_INT_ARG_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("float_arg", "1.0");
+        args.put("uint_arg1", "2");
+        args.put("uint_arg2", "3");
+
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(12, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+
+        assertEquals(1.0, bb.getFloat(), 1e-5);
+        assertEquals(2, bb.getInt());
+        assertEquals(3, bb.getInt());
+    }
+
+    @Test
+    public void testCcsdsTc() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CCSDS_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("uint8_arg", "1");
+        args.put("uint16_arg", "2");
+        args.put("int32_arg", "-3");
+        args.put("uint64_arg", "4");
+
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(31, b.length);
+
+        CcsdsPacket p = new CcsdsPacket(b);
+
+        assertEquals(100, p.getAPID());
+        assertEquals(0xABCDEFAB, ByteArrayUtils.decodeInt(b, 12));
+        assertEquals(1, p.getTimeId());
+        assertEquals(true, p.getChecksumIndicator());
+
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        assertEquals(1, bb.get(16));
+        assertEquals(2, bb.getShort(17));
+        assertEquals(-3, bb.getInt(19));
+        assertEquals(4, bb.getLong(23));
+    }
+
+    @Test
+    public void testValidIntegerRange() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CCSDS_TC");
+        assertNotNull(mc);
+        Map<String, Object> args = new HashMap<>();
+        args.put("uint8_arg", "5");
+        args.put("uint16_arg", "2");
+        args.put("int32_arg", "-3");
+        args.put("uint64_arg", "4");
+        ErrorInCommand e = null;
+        try {
+            buildCommand(mc, args);
+        } catch (ErrorInCommand e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertTrue(e.getMessage().contains("not in the range"));
+    }
+
+    @Test
+    public void testCalibration() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CALIB_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("p1", "1");
+        args.put("p2", "1");
+        args.put("p3", "-3.2");
+        args.put("p4", "value2");
+
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(9, b.length);
+
+        ByteBuffer bb = ByteBuffer.wrap(b);
+
+        assertEquals(3, bb.getShort(0));
+        assertEquals(2, bb.getShort(2));
+        assertEquals(-5.4, bb.getFloat(4), 1e-5);
+
+        int p4 = (bb.get(8) & 0xFF) >> 6;
+
+        assertEquals(2, p4);
+    }
+
+    @Test
+    public void testInvalidEnum() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CALIB_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("p1", "1");
+        args.put("p2", "1");
+        args.put("p3", "-3.2");
+        args.put("p4", "invalidenum");
+
+        ErrorInCommand e = null;
+        try {
+            buildCommand(mc, args);
+        } catch (ErrorInCommand e1) {
+            e = e1;
+        }
+        assertNotNull(e);
+        assertTrue(e.getMessage().contains("Cannot assign value to p4"));
+    }
+
+    @Test
+    public void testExceptionOnReassigningInheritanceArgument() {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/CCSDS_TC");
+        Map<String, Object> args = new HashMap<>();
+        args.put("uint8_arg", "2");
+        args.put("uint16_arg", "2");
+        args.put("int32_arg", "2");
+        args.put("uint64_arg", "2");
+        args.put("ccsds-apid", "123"); // Already assigned by parent
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args);
+        });
+    }
+
+    @Test
+    public void testTimeArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/TIME_ARG_TC");
+        assertNotNull(mc);
+        String tstring = "2020-01-01T00:00:00.123Z";
+        long tlong = TimeEncoding.parse(tstring);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("t1", tstring);
+        CommandBuildResult cbr = buildCommand(mc, args);
+        Value v1 = cbr.args.get(mc.getArgument("t1")).getEngValue();
+
+        assertEquals(tlong, v1.getTimestampValue());
+        byte[] cmdb = cbr.getCmdPacket();
+        assertEquals(4, cmdb.length);
+        int gpsTime = ByteArrayUtils.decodeInt(cmdb, 0);
+        assertEquals(TimeEncoding.toGpsTimeMillisec(tlong) / 1000, gpsTime);
+    }
+
+    @Test
+    public void testAggregateArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/AGGR_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "{member1: 3, member2: 'value2'}");
+        CommandBuildResult cbr = buildCommand(mc, args);
+
+        byte[] cmdb = cbr.getCmdPacket();
+        assertEquals("0380", StringConverter.arrayToHexString(cmdb));
+    }
+
+    @Test
+    public void testNativeAggregateArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/REFMDB/SUBSYS1/AGGR_TC");
+        assertNotNull(mc);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", ImmutableMap.of("member1", 3, "member2", "value2"));
+        CommandBuildResult cbr = buildCommand(mc, args);
+
+        byte[] cmdb = cbr.getCmdPacket();
+        assertEquals("0380", StringConverter.arrayToHexString(cmdb));
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
+```
+
+### `RefSolverTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefSolverTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.BooleanParameterType;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.Parameter;
+
+public class RefSolverTest {
+
+    @Test
+    public void test1() {
+        Mdb mdb = MdbFactory.createInstanceByConfig("xtce-refsolver");
+        Parameter para = mdb.getParameter("/refsolver1/bool1");
+        BooleanParameterType ptype = (BooleanParameterType) para.getParameterType();
+        IntegerDataEncoding encoding = (IntegerDataEncoding) ptype.getEncoding();
+        assertEquals(12, encoding.getSizeInBits());
+    }
+}
+```
+
+### `RefXtceCommandingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefXtceCommandingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeQueued_KEY;
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.AcknowledgeReleased_KEY;
+import static org.yamcs.cmdhistory.CommandHistoryPublisher.TransmissionConstraints_KEY;
+
+import java.nio.ByteBuffer;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.cmdhistory.CommandHistoryProvider;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.cmdhistory.CommandHistoryRequestManager;
+import org.yamcs.commanding.CommandReleaser;
+import org.yamcs.commanding.CommandingManager;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.parameter.LocalParameterManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.Value;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.security.User;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.MetaCommand;
+
+/**
+ * Tests command encoding with the ref-xtce.xml
+ */
+public class RefXtceCommandingTest {
+    static Mdb mdb;
+    static User user;
+
+    CommandingManager commandingManager;
+    MetaCommandProcessor metaCommandProcessor;
+    Processor proc;
+    MyCommandReleaser cmdReleaser;
+    MyCmdHistPublisher cmdHistPublisher;
+    MyCmdHistoryProvider cmdHistProvider;
+
+    LocalParameterManager localParaMgr;
+
+    @BeforeAll
+    public static void beforeClass() throws Exception {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.getInstance("refxtce");
+        user = new User("test", null);
+    }
+
+    @BeforeEach
+    public void before() throws Exception {
+        cmdReleaser = new MyCommandReleaser();
+        cmdHistPublisher = new MyCmdHistPublisher();
+        cmdHistProvider = new MyCmdHistoryProvider();
+        localParaMgr = new LocalParameterManager();
+
+        proc = ProcessorFactory.create("refxtce", "test", cmdHistProvider, cmdHistPublisher, cmdReleaser, localParaMgr);
+        commandingManager = proc.getCommandingManager();
+        metaCommandProcessor = commandingManager.getMetaCommandProcessor();
+        proc.start();
+    }
+
+    @AfterEach
+    public void after() {
+        proc.stopAsync();
+    }
+
+    @Test
+    public void testAbsTimeArg() throws ErrorInCommand {
+        // encode command
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command1");
+
+        String tstring = "2020-01-01T00:00:00.123Z";
+        long tlong = TimeEncoding.parse(tstring);
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("t1", tstring);
+        args.put("t2", tstring);
+        CommandBuildResult cbr = buildCommand(mc, args);
+        Value v1 = cbr.args.get(mc.getArgument("t1")).getEngValue();
+        assertEquals(tlong, v1.getTimestampValue());
+
+        Value v2 = cbr.args.get(mc.getArgument("t2")).getEngValue();
+        assertEquals(tlong, v2.getTimestampValue());
+
+        byte[] cmdb = cbr.getCmdPacket();
+        assertEquals(8, cmdb.length);
+
+        int gpsTime = ByteArrayUtils.decodeInt(cmdb, 0);
+        assertEquals(TimeEncoding.toGpsTimeMillisec(tlong) / 1000, gpsTime);
+
+        int unixTime = ByteArrayUtils.decodeInt(cmdb, 4);
+        assertEquals(Instant.parse(tstring).toEpochMilli() / 1000, unixTime);
+
+    }
+
+    @Test
+    public void testAggregateCmdArgIncompleteValue() {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command2");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "{m1: 0}");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testAggregateCmdArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command2");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "{m1: 42, m2: 23.4}");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(12, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        assertEquals(42, bb.getInt());
+        assertEquals(23.4, bb.getDouble(), 1e-5);
+    }
+
+    @Test
+    public void testAggregateCmdArgInitialValue() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command4");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "{m1: 42}");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(12, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        assertEquals(42, bb.getInt());
+        assertEquals(3.14, bb.getDouble(), 1e-5);
+    }
+
+    @Test
+    public void testAggregateCmdArgInitialValue2() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command4");
+        Map<String, Object> args = new HashMap<>();
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(12, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        assertEquals(7, bb.getInt());
+        assertEquals(3.14, bb.getDouble(), 1e-5);
+    }
+
+    @Test
+    public void testAggregateCmdArgOutOfRange() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command2");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "{m1: 42, m2: 123.4}");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testBinaryArgCmd() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command3");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "010203AB");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(6, b.length);
+        assertEquals(4, ByteBuffer.wrap(b).getShort());
+        assertEquals("010203AB", StringConverter.arrayToHexString(b, 2, 4));
+    }
+
+    @Test
+    public void testBinaryArgCmdTooLong() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command3");
+        Map<String, Object> args = new HashMap<>();
+        // max allowed length for arg1 is 10, the value below has 11 bytes, it will throw an exception
+        args.put("arg1", "0102030405060708090A0B");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testBinaryArgCmdTooShort() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command3");
+        Map<String, Object> args = new HashMap<>();
+        // min allowed length for arg1 is 2, the value below has 1 byte, it will throw an exception
+        args.put("arg1", "01");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testCmdWithArg() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/command_with_algo");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("arg1", "3.14");
+        args.put("arg2", "150");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        assertEquals(4, b.length);
+        ByteBuffer bb = ByteBuffer.wrap(b);
+        assertEquals(31, bb.getShort());
+        assertEquals(0x3859, bb.getShort());
+    }
+
+    @Test
+    public void testTransmissionConstraint1Fail() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_constraint1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "PENDING",
+                TransmissionConstraints_KEY, "NOK",
+                AcknowledgeReleased_KEY, "NOK");
+        assertNull(cmdReleaser.getCmd(2000));
+    }
+
+    @Test
+    public void testTransmissionConstraint1OK() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_constraint1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(42));
+
+        localParaMgr.sync();
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK");
+        verifyCmdHist(TransmissionConstraints_KEY, "OK");
+        verifyCmdHist(AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+    }
+
+    @Test
+    public void testTransmissionConstraint2OK() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_constraint2");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "15");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "OK",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+    }
+
+    @Test
+    public void testVerifier1Timeout() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "SCHEDULED",
+                AcknowledgeReleased_KEY, "OK");
+
+        assertNotNull(cmdReleaser.getCmd(2000));
+
+        verifyCmdHist("Verifier_Complete", "PENDING",
+                "Verifier_Complete", "TIMEOUT");
+    }
+
+    @Test
+    public void testVerifier1OK() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "SCHEDULED",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+
+        verifyCmdHist("Verifier_Complete", "PENDING");
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(47));
+
+        verifyCmdHist("Verifier_Complete", "OK");
+    }
+
+    @Test
+    public void testVerifier2Timeout() throws Exception {
+        // set first a value
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(30));
+
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier2");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "PENDING",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+        // update the value
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(31));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(32));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(33));
+
+        verifyCmdHist("Verifier_Complete", "TIMEOUT");
+    }
+
+    @Test
+    public void testVerifier2OK() throws Exception {
+        // set first a value
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(30));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para2"), ValueUtility.getUint32Value(13));
+
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier2");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "3");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "PENDING",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+        // update the value
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(47));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(32));
+
+        verifyCmdHist("Verifier_Complete", "OK");
+        CmdHistEntry che = cmdHistPublisher.getCmdHist(3000);
+        assertEquals("Verifier_Complete_Return", che.key);
+        ParameterValue returnPv = (ParameterValue) che.value;
+        assertEquals(13, returnPv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testVerifier3OK() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier3");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "101");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "PENDING",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(101));
+
+        verifyCmdHist("Verifier_Complete", "OK");
+    }
+
+    @Test
+    public void testVerifier4OK() throws Exception {
+        MetaCommand cmd = mdb.getMetaCommand("/RefXtce/cmd_with_verifier4");
+
+        Map<String, Object> args = new HashMap<>();
+        args.put("arg1", "101");
+        PreparedCommand pc = commandingManager.buildCommand(cmd, args, "localhost", 1, user);
+        commandingManager.sendCommand(user, pc);
+
+        verifyCmdHist(AcknowledgeQueued_KEY, "OK",
+                TransmissionConstraints_KEY, "NA",
+                "Verifier_Complete", "PENDING",
+                AcknowledgeReleased_KEY, "OK");
+        assertNotNull(cmdReleaser.getCmd(2000));
+        localParaMgr.updateParameter(mdb.getParameter("/RefXtce/local_para1"), ValueUtility.getUint32Value(101));
+
+        verifyCmdHist("Verifier_Complete", "OK");
+    }
+
+    private void verifyCmdHist(String... keyValue) throws InterruptedException {
+        if (keyValue.length % 2 != 0) {
+            throw new IllegalArgumentException(
+                    "An array with an even number of elements [ke1,value1, key2,value2...] is needed");
+        }
+        for (int i = 0; i < keyValue.length; i += 2) {
+            String key = keyValue[i];
+            String value = keyValue[i + 1];
+            CmdHistEntry status = cmdHistPublisher.getCmdHist(3000);
+            assertEquals(key + "_Status", status.key);
+            assertEquals(value, status.value);
+
+            CmdHistEntry time = cmdHistPublisher.getCmdHist(1000);
+            assertEquals(key + "_Time", time.key);
+
+        }
+
+    }
+
+    private CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList)
+            throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+
+    static class MyCommandReleaser extends AbstractProcessorService implements CommandReleaser {
+        BlockingQueue<PreparedCommand> cmdList = new ArrayBlockingQueue<>(100);
+
+        PreparedCommand getCmd(long timeout) throws InterruptedException {
+            return cmdList.poll(timeout, TimeUnit.MILLISECONDS);
+        }
+
+        @Override
+        public void init(Processor proc, YConfiguration config, Object spec) {
+            super.init(proc, config, spec);
+        }
+
+        @Override
+        public void releaseCommand(PreparedCommand preparedCommand) {
+            cmdList.add(preparedCommand);
+        }
+
+        @Override
+        public void setCommandHistory(CommandHistoryPublisher commandHistory) {
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+
+    }
+
+    static class CmdHistEntry {
+        final CommandId cmdId;
+        final String key;
+        final Object value;
+
+        CmdHistEntry(CommandId cmdId, String key, Object value) {
+            this.cmdId = cmdId;
+            this.key = key;
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "CmdHistEntry [cmdId=" + cmdId.getCommandName() + ", key=" + key + ", value=" + value + "]";
+        }
+    }
+
+    public static class MyCmdHistPublisher extends AbstractProcessorService implements CommandHistoryPublisher {
+        BlockingQueue<CmdHistEntry> entries = new ArrayBlockingQueue<>(100);
+
+        CmdHistEntry getCmdHist(long timeout) throws InterruptedException {
+            return entries.poll(timeout, TimeUnit.MILLISECONDS);
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, long value) {
+            entries.add(new CmdHistEntry(cmdId, key, value));
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, String value) {
+            if (Queue_KEY.equals(key)) {
+                return;
+            }
+            entries.add(new CmdHistEntry(cmdId, key, value));
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, int value) {
+            entries.add(new CmdHistEntry(cmdId, key, value));
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, byte[] value) {
+            entries.add(new CmdHistEntry(cmdId, key, value));
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, ParameterValue value) {
+            entries.add(new CmdHistEntry(cmdId, key, value));
+        }
+
+        @Override
+        public void addCommand(PreparedCommand pc) {
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+    }
+
+    public static class MyCmdHistoryProvider extends AbstractProcessorService implements CommandHistoryProvider {
+
+        @Override
+        public void setCommandHistoryRequestManager(CommandHistoryRequestManager chrm) {
+        }
+
+        @Override
+        protected void doStart() {
+            notifyStarted();
+        }
+
+        @Override
+        protected void doStop() {
+            notifyStopped();
+        }
+
+    }
+}
+```
+
+### `RefXtceDecodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/RefXtceDecodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ArrayValue;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.SequenceContainer;
+
+public class RefXtceDecodingTest {
+    static Mdb mdb;
+    static MetaCommandProcessor metaCommandProcessor;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("refxtce");
+        metaCommandProcessor = new MetaCommandProcessor(new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    public void testBinaryLeadingSize() {
+        byte[] buf = new byte[] { 0x03, 0x01, 0x02, 0x03 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/RefXtce/packet1"));
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(mdb.getParameter("/RefXtce/param1"));
+        assertEquals("010203", StringConverter.arrayToHexString(pv.getEngValue().getBinaryValue()));
+    }
+
+    @Test
+    public void testFixedSizeArray() {
+        byte[] buf = new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/RefXtce/packet3"));
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(mdb.getParameter("/RefXtce/param8"));
+        ArrayValue av = (ArrayValue) pv.getEngValue();
+        assertEquals(4, av.flatLength());
+        assertEquals(0x0102, av.getElementValue(0).getUint32Value());
+        assertEquals(0x0304, av.getElementValue(1).getUint32Value());
+        assertEquals(0x0506, av.getElementValue(2).getUint32Value());
+        assertEquals(0x0708, av.getElementValue(3).getUint32Value());
+    }
+
+    @Test
+    public void testNumericStringEncoding() {
+        byte[] buf = new byte[] { '1', '0', '0', 0, 0, 0,
+                '-', '3', '.', '1', '4', 0 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/RefXtce/packet4"));
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv9 = pvl.getFirstInserted(mdb.getParameter("/RefXtce/param9"));
+        assertEquals("100", pv9.getRawValue().getStringValue());
+        assertEquals(100, pv9.getEngValue().getUint32Value());
+        ParameterValue pv10 = pvl.getFirstInserted(mdb.getParameter("/RefXtce/param10"));
+        assertEquals("-3.14", pv10.getRawValue().getStringValue());
+        assertEquals(-3.14, pv10.getEngValue().getFloatValue(), 1e-5);
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf, SequenceContainer sc) {
+        return extractor.processPacket(buf, now, now, 0, sc);
+    }
+}
+```
+
+### `SpreadsheetLoaderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/SpreadsheetLoaderTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.xtce.AbsoluteTimeParameterType;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.FloatDataEncoding;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.IndirectParameterRefEntry;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.IntegerDataType;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SequenceEntry;
+import org.yamcs.xtce.TimeEpoch;
+import org.yamcs.xtce.ValueEnumeration;
+
+public class SpreadsheetLoaderTest {
+    Mdb mdb;
+
+    @BeforeEach
+    public void setupMdb() {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        mdb = MdbFactory.getInstance("refmdb");
+    }
+
+    @Test
+    public void testParameterAliases() throws Exception {
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/IntegerPara1_1");
+        assertNotNull(p);
+        String aliasPathname = p.getAlias("MDB:Pathname");
+        assertEquals("/ccsds-default/PKT1/IntegerPara1_1", aliasPathname);
+
+        String aliasParam = p.getAlias("MDB:AliasParam");
+        assertEquals("AliasParam1", aliasParam);
+    }
+
+    @Test
+    public void testCommandAliases() throws Exception {
+        MetaCommand cmd1 = mdb.getMetaCommand("/REFMDB/SUBSYS1/ONE_INT_ARG_TC");
+        assertNotNull(cmd1);
+        String alias = cmd1.getAlias("MDB:Alias1");
+        assertEquals("AlternativeName1", alias);
+
+        MetaCommand cmd2 = mdb.getMetaCommand("/REFMDB/SUBSYS1/FIXED_VALUE_TC");
+        assertNotNull(cmd1);
+        alias = cmd2.getAlias("MDB:Alias1");
+        assertEquals("AlternativeName2", alias);
+    }
+
+    @Test
+    public void testCommandVerifiers() throws Exception {
+        MetaCommand cmd1 = mdb.getMetaCommand("/REFMDB/SUBSYS1/CONT_VERIF_TC");
+        assertNotNull(cmd1);
+        assertTrue(cmd1.hasCommandVerifiers());
+        List<CommandVerifier> verifiers = cmd1.getCommandVerifiers();
+        assertEquals(2, verifiers.size());
+    }
+
+    @Test
+    public void testAlgorithmAliases() throws Exception {
+        Algorithm algo = mdb.getAlgorithm("/REFMDB/SUBSYS1/sliding_window");
+        assertNotNull(algo);
+        String alias = algo.getAlias("namespace1");
+        assertEquals("/alternative/name1", alias);
+
+        algo = mdb.getAlgorithm("/REFMDB/SUBSYS1/float_ypr");
+        assertNotNull(algo);
+        alias = algo.getAlias("namespace1");
+        assertEquals("another alternative name", alias);
+    }
+
+    @Test
+    public void testContainerAliases() throws Exception {
+        SequenceContainer container = mdb.getSequenceContainer("/REFMDB/SUBSYS1/PKT1_2");
+        assertNotNull(container);
+        String alias = container.getAlias("MDB:Pathname");
+        assertEquals("REFMDB\\ACQ\\PKTS\\PKT12", alias);
+    }
+
+    @Test
+    public void testReferenceAliases() throws Exception {
+        Algorithm a = mdb.getAlgorithm("/REFMDB/SUBSYS1/algo_ext_spacesys");
+        assertNotNull(a);
+        List<InputParameter> lin = a.getInputSet();
+        assertEquals(1, lin.size());
+        assertEquals("/REFMDB/col-packet_id", lin.get(0).getParameterInstance().getParameter().getQualifiedName());
+        List<OutputParameter> lout = a.getOutputSet();
+        assertEquals(1, lout.size());
+        assertEquals("/REFMDB/algo_ext_spacesys_out", lout.get(0).getParameter().getQualifiedName());
+    }
+
+    @Test
+    public void testTimeParam() throws Exception {
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/TimePara6_1");
+        assertEquals(TimeEpoch.CommonEpochs.GPS,
+                ((AbsoluteTimeParameterType) p.getParameterType()).getReferenceTime().getEpoch().getCommonEpoch());
+
+        p = mdb.getParameter("/REFMDB/SUBSYS1/TimePara6_2");
+        assertEquals(0.0039062500, ((AbsoluteTimeParameterType) p.getParameterType()).getScale(), 1e-5);
+    }
+
+    @Test
+    public void testContextCalib() throws Exception {
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/FloatPara1_10_3");
+        FloatParameterType ptype = (FloatParameterType) p.getParameterType();
+        FloatDataEncoding encoding = (FloatDataEncoding) ptype.getEncoding();
+
+        assertEquals(1, encoding.getContextCalibratorList().size());
+    }
+
+    @Test
+    public void testAggregates() throws Exception {
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/aggregate_para1");
+        AggregateParameterType ptype = (AggregateParameterType) p.getParameterType();
+        IntegerParameterType mtype = (IntegerParameterType) ptype.getMember("member1").getType();
+        IntegerDataEncoding enc = (IntegerDataEncoding) mtype.getEncoding();
+        assertEquals(8, enc.getSizeInBits());
+
+        FloatParameterType ftype = (FloatParameterType) ptype.getMember("member3").getType();
+        assertEquals(32, ftype.getSizeInBits());
+    }
+
+    @Test
+    public void testArrays() throws Exception {
+        Parameter p = mdb.getParameter("/REFMDB/SUBSYS1/array_para1");
+        ArrayParameterType ptype = (ArrayParameterType) p.getParameterType();
+        AggregateParameterType mtype = (AggregateParameterType) ptype.getElementType();
+        IntegerDataType itype = (IntegerDataType) mtype.getMember("member1").getType();
+        IntegerDataEncoding enc = (IntegerDataEncoding) itype.getEncoding();
+        assertEquals(8, enc.getSizeInBits());
+    }
+
+    @Test
+    public void testIndirectRefEntry() throws Exception {
+        SequenceContainer se = mdb.getSequenceContainer("/REFMDB/SUBSYS1/PKT9");
+        List<SequenceEntry> l = se.getEntryList();
+        assertEquals(2, l.size());
+        IndirectParameterRefEntry ipre = (IndirectParameterRefEntry) l.get(1);
+        assertEquals("OB_ID", ipre.getAliasNameSpace());
+        assertEquals(mdb.getParameter("/REFMDB/SUBSYS1/pkt9_pid"), ipre.getParameterRef().getParameter());
+    }
+
+    @Test
+    public void testEnumerationDescription() throws Exception {
+        EnumeratedParameterType ept = (EnumeratedParameterType) mdb.getParameterType("/REFMDB/SUBSYS1/enum1");
+        ValueEnumeration ve = ept.enumValue("one_why not");
+        assertEquals("testing the description of the enumeration label", ve.getDescription());
+    }
+}
+```
+
+### `TestMdbLoadingSpeed.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/TestMdbLoadingSpeed.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+
+public class TestMdbLoadingSpeed {
+
+    @Test
+    @Disabled
+    public void test1() {
+        for (int i = 0; i < 100; i++) {
+            long t0 = System.currentTimeMillis();
+            SpreadsheetLoader sl = new SpreadsheetLoader("/home/nm/git/scs/mdb/arbitrary-binary.xls");
+            sl.load();
+
+            long t1 = System.currentTimeMillis();
+
+            System.out.println("took " + (t1 - t0) + " ms");
+        }
+    }
+}
+```
+
+### `VariableBinaryCommandEncodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryCommandEncodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+/**
+ * Tests that a command containing a variable-length binary argument can be encoded correctly.
+ */
+public class VariableBinaryCommandEncodingTest {
+
+    private Mdb mdb;
+    private MetaCommandProcessor metaCommandProcessor;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("VariableBinaryTest");
+        metaCommandProcessor = new MetaCommandProcessor(new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @Test
+    public void testCommandEncoding() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/VariableBinaryTest/Command");
+        Map<String, Object> args = new HashMap<>();
+
+        byte[] data = new byte[] { 1, 2, 3, 4, 5 };
+        args.put("size", Integer.toString(data.length));
+        args.put("data", StringConverter.arrayToHexString(data));
+        args.put("value", "3.14");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = createPacket(data, 3.14F, true);
+
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    public void testCommandEncodingWithoutSize() throws ErrorInCommand, IOException {
+        MetaCommand mc = mdb.getMetaCommand("/VariableBinaryTest/Command1");
+        Map<String, Object> args = new HashMap<>();
+
+        byte[] data = new byte[] { 1, 2, 3, 4, 5 };
+        StringBuilder builder = new StringBuilder();
+        for (byte b : data) {
+            builder.append(String.format("%02X", b));
+        }
+        args.put("data", builder.toString());
+        args.put("value", "3.14");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = createPacket(data, 3.14F, false);
+
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    public void testCommandEncodingWithoutSizeTooSmall() {
+        MetaCommand mc = mdb.getMetaCommand("/VariableBinaryTest/Command1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("data", "01");
+        args.put("value", "3.14");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testCommandEncodingWithoutSizeTooLong() {
+        MetaCommand mc = mdb.getMetaCommand("/VariableBinaryTest/Command1");
+        Map<String, Object> args = new HashMap<>();
+        args.put("data", "01020304050607");
+        args.put("value", "3.14");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    private byte[] createPacket(byte[] data, float value, boolean withSize) throws IOException {
+        ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(arrayStream);
+        if (withSize) {
+            out.writeShort(data.length);
+        }
+        out.write(data);
+        out.writeInt(Float.floatToIntBits(value));
+
+        return arrayStream.toByteArray();
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
+```
+
+### `VariableBinaryDecodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryDecodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+/**
+ * Tests that a packet containing a binary data type with variable size can be unpacked correctly.
+ */
+public class VariableBinaryDecodingTest {
+
+    private static final String SIZE_QN = "/VariableBinaryTest/size";
+    private static final String DATA_QN = "/VariableBinaryTest/data";
+    private static final String VALUE_QN = "/VariableBinaryTest/value";
+
+    private Mdb mdb;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory
+                .createInstanceByConfig("VariableBinaryTest");
+
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testProcessPacket() throws IOException {
+        XtceTmExtractor extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+
+        byte[] data = new byte[] { 1, 2, 3, 4, 5 };
+        byte[] b = createPacket(data, 3.14F);
+        long now = TimeEncoding.getWallclockTime();
+        ContainerProcessingResult result = extractor.processPacket(b, now,
+                now, 0);
+
+        ParameterValueList pvl = result.getParameterResult();
+        assertEquals(1, pvl.count(mdb.getParameter(SIZE_QN)));
+        assertEquals(1, pvl.count(mdb.getParameter(DATA_QN)));
+        assertEquals(1, pvl.count(mdb.getParameter(VALUE_QN)));
+        pvl.forEach(pv -> {
+            if (pv.getParameterQualifiedName().equals(SIZE_QN)) {
+                assertEquals(data.length * 8,
+                        pv.getEngValue().getSint32Value());
+            } else if (pv.getParameterQualifiedName().equals(DATA_QN)) {
+                assertArrayEquals(data, pv.getEngValue().getBinaryValue());
+            } else if (pv.getParameterQualifiedName().equals(VALUE_QN)) {
+                assertEquals(3.14F, pv.getEngValue().getFloatValue(), 1E-6F);
+            }
+        });
+    }
+
+    private byte[] createPacket(byte[] data, float value) throws IOException {
+        ByteArrayOutputStream arrayStream = new ByteArrayOutputStream();
+        DataOutputStream out = new DataOutputStream(arrayStream);
+
+        out.writeShort(data.length * 8);
+        out.write(data);
+        out.writeInt(Float.floatToIntBits(value));
+
+        return arrayStream.toByteArray();
+    }
+}
+```
+
+### `VariableBinaryXtceTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/VariableBinaryXtceTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentType;
+import org.yamcs.xtce.BinaryArgumentType;
+import org.yamcs.xtce.BinaryDataEncoding;
+import org.yamcs.xtce.DataEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.xml.XtceLoadException;
+
+/**
+ * Tests that an XTCE document with a variable-length binary data types can be parsed successfully.
+ */
+public class VariableBinaryXtceTest {
+
+    private static final String SIZE_QN = "/VariableBinaryTest/size";
+    private static final String DATA_QN = "/VariableBinaryTest/data";
+
+    private static final String COMMAND_QN = "/VariableBinaryTest/Command";
+
+    private Mdb mdb;
+
+    @BeforeEach
+    public void setup() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("VariableBinaryTest");
+
+        TimeEncoding.setUp();
+    }
+
+    @Test
+    public void testReadXtce() throws URISyntaxException, XtceLoadException,
+            XMLStreamException, IOException {
+
+        Parameter dataParameter = mdb.getParameter(DATA_QN);
+        ParameterType parameterType = dataParameter.getParameterType();
+        DataEncoding de = parameterType.getEncoding();
+        assertTrue(de instanceof BinaryDataEncoding);
+        BinaryDataEncoding bde = (BinaryDataEncoding) de;
+        assertTrue(bde.isVariableSize());
+
+        Parameter sizeParameter = mdb.getParameter(SIZE_QN);
+        assertEquals(sizeParameter.getQualifiedName(), bde.getDynamicSize().getDynamicInstanceRef().getName());
+
+        Argument dataArgument = mdb.getMetaCommand(COMMAND_QN)
+                .getArgument("data");
+        ArgumentType argumentType = dataArgument.getArgumentType();
+        assertTrue(argumentType instanceof BinaryArgumentType);
+        BinaryArgumentType binaryType = (BinaryArgumentType) argumentType;
+        de = binaryType.getEncoding();
+        assertTrue(de instanceof BinaryDataEncoding);
+        bde = (BinaryDataEncoding) de;
+        assertTrue(bde.isVariableSize());
+
+        Argument sizeArgument = mdb.getMetaCommand(COMMAND_QN)
+                .getArgument("size");
+        assertEquals(sizeArgument.getName(), bde.getDynamicSize().getDynamicInstanceRef().getName());
+    }
+}
+```
+
+### `XmlLoaderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XmlLoaderTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.ByteOrder;
+import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.xtce.AbsoluteTimeParameterType;
+import org.yamcs.xtce.Argument;
+import org.yamcs.xtce.ArgumentAssignment;
+import org.yamcs.xtce.BinaryArgumentType;
+import org.yamcs.xtce.BinaryDataEncoding;
+import org.yamcs.xtce.CommandContainer;
+import org.yamcs.xtce.CommandVerifier;
+import org.yamcs.xtce.Comparison;
+import org.yamcs.xtce.ComparisonList;
+import org.yamcs.xtce.Container;
+import org.yamcs.xtce.ContextCalibrator;
+import org.yamcs.xtce.DataEncoding;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.FloatDataEncoding;
+import org.yamcs.xtce.FloatDataEncoding.Encoding;
+import org.yamcs.xtce.FloatParameterType;
+import org.yamcs.xtce.IntegerDataEncoding;
+import org.yamcs.xtce.IntegerParameterType;
+import org.yamcs.xtce.MathOperationCalibrator;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterInstanceRef;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.PolynomialCalibrator;
+import org.yamcs.xtce.RateInStream;
+import org.yamcs.xtce.ReferenceTime;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SequenceEntry;
+import org.yamcs.xtce.Significance;
+import org.yamcs.xtce.Significance.Levels;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.StringArgumentType;
+import org.yamcs.xtce.StringDataEncoding;
+import org.yamcs.xtce.StringDataEncoding.SizeType;
+import org.yamcs.xtce.StringParameterType;
+import org.yamcs.xtce.TimeEpoch;
+import org.yamcs.xtce.TransmissionConstraint;
+import org.yamcs.xtce.UnitType;
+
+public class XmlLoaderTest {
+
+    @Test
+    public void test1() throws Exception {
+        Mdb mdb = MdbFactory.createInstanceByConfig("ccsds-green-book");
+        Parameter pmt = mdb.getParameter("/SpaceVehicle/MissionTime");
+        assertTrue(pmt.getParameterType() instanceof AbsoluteTimeParameterType);
+
+        Parameter cst = mdb.getParameter("/SpaceVehicle/CheckSum");
+        assertTrue(cst.getParameterType() instanceof IntegerParameterType);
+        IntegerParameterType ipt = (IntegerParameterType) cst.getParameterType();
+        assertEquals(8, ipt.getEncoding().getSizeInBits());
+        assertEquals(DataSource.DERIVED, cst.getDataSource());
+
+        Parameter pms = mdb.getParameter("/SpaceVehicle/Seconds");
+        assertTrue(pms.getParameterType() instanceof AbsoluteTimeParameterType);
+        AbsoluteTimeParameterType ptype = (AbsoluteTimeParameterType) pms.getParameterType();
+        ReferenceTime rtime = ptype.getReferenceTime();
+        assertEquals(TimeEpoch.CommonEpochs.TAI, rtime.getEpoch().getCommonEpoch());
+
+        DataEncoding encoding = ptype.getEncoding();
+        assertTrue(encoding instanceof IntegerDataEncoding);
+        assertEquals(32, ((IntegerDataEncoding) encoding).getSizeInBits());
+
+        MetaCommand cmd1 = mdb.getMetaCommand("/SpaceVehicle/PWHTMR");
+        CommandContainer cc = cmd1.getCommandContainer();
+        List<SequenceEntry> sel = cc.getEntryList();
+        assertEquals(3, sel.size());
+
+        assertEquals("Header", cc.getBaseContainer().getName());
+        assertTrue(cc.getRestrictionCriteria() instanceof ComparisonList);
+    }
+
+    @Test
+    public void testBogusSat() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("BogusSAT");
+
+        SpaceSystem sc001 = mdb.getSpaceSystem("/BogusSAT/SC001");
+        assertNotNull(sc001);
+
+        SpaceSystem busElectronics = sc001.getSubsystem("BusElectronics");
+        assertNotNull(busElectronics);
+        SpaceSystem payload1 = sc001.getSubsystem("Payload1");
+        assertNotNull(payload1);
+        SpaceSystem payload2 = sc001.getSubsystem("Payload2");
+        assertNotNull(payload2);
+
+        Parameter p = busElectronics.getParameter("Bus_Fault_Message");
+        assertNotNull(p);
+        assertEquals(p.getParameterType().getClass(), StringParameterType.class);
+        StringParameterType sp = (StringParameterType) p.getParameterType();
+        assertEquals(sp.getEncoding().getClass(), StringDataEncoding.class);
+        StringDataEncoding sde = (StringDataEncoding) sp.getEncoding();
+        assertEquals(SizeType.FIXED, sde.getSizeType());
+        assertEquals(128, sde.getSizeInBits());
+
+        p = payload1.getParameter("Payload_Fault_Message");
+        assertNotNull(p);
+        assertEquals(p.getParameterType().getClass(), StringParameterType.class);
+        sp = (StringParameterType) p.getParameterType();
+        assertEquals(sp.getEncoding().getClass(), StringDataEncoding.class);
+        sde = (StringDataEncoding) sp.getEncoding();
+        assertEquals(SizeType.TERMINATION_CHAR, sde.getSizeType());
+        assertEquals(0, sde.getTerminationChar());
+
+        SequenceContainer sc = busElectronics.getSequenceContainer("SensorHistoryRecord");
+        assertNotNull(sc);
+        RateInStream ris = sc.getRateInStream();
+        assertNotNull(ris);
+        assertEquals(10000, ris.getMaxInterval());
+        assertEquals(100, ris.getMinInterval());
+
+        Parameter p1 = busElectronics.getParameter("Battery_Current");
+        FloatParameterType fpt1 = (FloatParameterType) p1.getParameterType();
+        assertEquals(0.2, fpt1.getInitialValue(), 1e-5);
+
+        Parameter p2 = payload1.getParameter("Basic_MilFloat32");
+        FloatParameterType fpt2 = (FloatParameterType) p2.getParameterType();
+        FloatDataEncoding fde2 = (FloatDataEncoding) fpt2.getEncoding();
+        assertEquals(Encoding.MILSTD_1750A, fde2.getEncoding());
+        assertEquals(32, fde2.getSizeInBits());
+
+        Parameter p3 = payload1.getParameter("Basic_MilFloat48");
+        FloatParameterType fpt3 = (FloatParameterType) p3.getParameterType();
+        FloatDataEncoding fde3 = (FloatDataEncoding) fpt3.getEncoding();
+        assertEquals(Encoding.MILSTD_1750A, fde2.getEncoding());
+        assertEquals(48, fde3.getSizeInBits());
+
+        MetaCommand mc = payload1.getMetaCommand("Adjust_Payload_1_Config");
+        assertNotNull(mc);
+        CommandContainer cc = mc.getCommandContainer();
+        assertEquals("Adjust_Payload_1_Config_Container", cc.getName());
+        Container basec = cc.getBaseContainer();
+        assertEquals("CCSDSPUSCommandPacket", basec.getName());
+
+        Parameter pssl = busElectronics.getParameter("SunSensorLevel");
+        FloatParameterType ptype = (FloatParameterType) pssl.getParameterType();
+        IntegerDataEncoding encoding = (IntegerDataEncoding) ptype.getEncoding();
+        PolynomialCalibrator cal = (PolynomialCalibrator) encoding.getDefaultCalibrator();
+        assertArrayEquals(new double[] { -10.0, 5.0 }, cal.getCoefficients(), 1E-10);
+
+        List<ContextCalibrator> ctxc = encoding.getContextCalibratorList();
+        assertEquals(2, ctxc.size());
+
+        mc = busElectronics.getMetaCommand("Cmd1");
+        List<ArgumentAssignment> l = mc.getArgumentAssignmentList();
+        assertEquals(1, l.size());
+        ArgumentAssignment argasign = l.get(0);
+        assertEquals("CmdId", argasign.getArgumentName());
+        assertEquals("1", argasign.getArgumentValue());
+
+        Argument sarg = mc.getArgument("STRING_FV");
+        assertEquals("blabla", sarg.getInitialValue());
+        StringArgumentType sargType = (StringArgumentType) sarg.getArgumentType();
+        StringDataEncoding sencoding = (StringDataEncoding) sargType.getEncoding();
+        assertEquals(SizeType.FIXED, sencoding.getSizeType());
+        assertEquals(320, sencoding.getSizeInBits());
+
+        Argument barg = mc.getArgument("BINARY_FV");
+        BinaryArgumentType bargType = (BinaryArgumentType) barg.getArgumentType();
+        BinaryDataEncoding bencoding = (BinaryDataEncoding) bargType.getEncoding();
+        assertEquals(SizeType.FIXED, sencoding.getSizeType());
+        assertEquals(128, bencoding.getSizeInBits());
+
+        IntegerParameterType ptype2 = (IntegerParameterType) mdb.getParameterType("/BogusSAT/CCSDSPacketLengthType");
+        List<UnitType> unitl = ptype2.getUnitSet();
+        assertEquals(1, unitl.size());
+    }
+
+    @Test
+    public void testMathOpCal() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("BogusSAT");
+        SpaceSystem busElectronics = mdb.getSpaceSystem("/BogusSAT/SC001/BusElectronics");
+
+        FloatParameterType ptype = (FloatParameterType) busElectronics.getParameterType("Float_MathOpCal_2_Type");
+        FloatDataEncoding encoding = (FloatDataEncoding) ptype.getEncoding();
+        MathOperationCalibrator c = (MathOperationCalibrator) encoding.getDefaultCalibrator();
+
+        NumericCalibrator cproc = (NumericCalibrator) MathOperationCalibratorFactory.compile(c);
+        double value = 3;
+        double expectedResult = 64 * (Math.log(1.234 * value) / Math.log(2));
+        assertEquals(expectedResult, cproc.calibrate(value), 1E-10);
+
+        ptype = (FloatParameterType) busElectronics.getParameterType("Float_MathOpCal_7_Type");
+        encoding = (FloatDataEncoding) ptype.getEncoding();
+        c = (MathOperationCalibrator) encoding.getDefaultCalibrator();
+
+        cproc = MathOperationCalibratorFactory.compile(c);
+        value = 20;
+        double x1 = Math.pow((5 - 3), 3.0) + 92;
+        double x2 = Math.abs(-4.0 / Math.log10(x1));
+        double x3 = Math.atan(Math.acos(Math.sin(Math.acos(Math.cos(Math.asin(5 - x2 - 2.0))))));
+        double x4 = (x3 + 19.0) % 8.0;
+        expectedResult = Math.pow(4.0, x4);
+        assertEquals(expectedResult, cproc.calibrate(value), 1E-10);
+
+        ptype = (FloatParameterType) busElectronics.getParameterType("Float_MathOpCal_9_Type");
+        encoding = (FloatDataEncoding) ptype.getEncoding();
+        c = (MathOperationCalibrator) encoding.getDefaultCalibrator();
+
+        cproc = MathOperationCalibratorFactory.compile(c);
+        value = 50;
+        x1 = Math.cos(Math.cos(90 - 1) + 89) + 45;
+        expectedResult = Math.sinh(Math.cosh(Math.tanh(Math.tan(x1))));
+        assertEquals(expectedResult, cproc.calibrate(value), 1E-10);
+
+    }
+
+    @Test
+    public void testBogusSat2() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("BogusSAT2");
+
+        ParameterType ptype = mdb.getParameterType("/BogusSAT/CCSDSAPIDType");
+        assertEquals(2047, ((Long) ptype.getInitialValue()).intValue());
+
+        ptype = mdb.getParameterType("/BogusSAT/TM_CHECKSUMType");
+        assertEquals("CRC", (String) ptype.getInitialValue());
+
+        Parameter p = mdb.getParameter("/BogusSAT/LOG_MSGS/RECORDFLAG");
+
+        assertEquals(3735928559L, ((Long) p.getInitialValue()).longValue());
+        IntegerParameterType itype = (IntegerParameterType) mdb.getParameterType("/BogusSAT/LittleEndianInteger1");
+        assertEquals(ByteOrder.LITTLE_ENDIAN, itype.getEncoding().getByteOrder());
+
+        FloatParameterType ftype = (FloatParameterType) mdb.getParameterType("/BogusSAT/LittleEndianFloat1");
+        assertEquals(ByteOrder.LITTLE_ENDIAN, ftype.getEncoding().getByteOrder());
+    }
+
+    @Test
+    public void testXtceCommandSignificance() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refxtce");
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/vital_command");
+        Significance significance = mc.getDefaultSignificance();
+        assertEquals("no particular reason", significance.getReasonForWarning());
+        assertEquals(Levels.DISTRESS, significance.getConsequenceLevel());
+    }
+
+    @Test
+    public void testPersistence() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refxtce");
+        Parameter p1 = mdb.getParameter("/RefXtce/local_para1");
+        assertTrue(p1.isPersistent());
+
+        Parameter p2 = mdb.getParameter("/RefXtce/local_para2");
+        assertFalse(p2.isPersistent());
+    }
+
+    @Test
+    public void testTransmissionConstraint() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refxtce");
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/cmd_with_constraint1");
+        List<TransmissionConstraint> tcList = mc.getTransmissionConstraintList();
+        assertEquals(1, tcList.size());
+        TransmissionConstraint tc0 = tcList.get(0);
+        assertEquals(1234, tc0.getTimeout());
+        ComparisonList matchCriteria = (ComparisonList) tc0.getMatchCriteria();
+        assertEquals(1, matchCriteria.getComparisonList().size());
+        Comparison c0 = matchCriteria.getComparisonList().get(0);
+        assertEquals(mdb.getParameter("/RefXtce/local_para1"), ((ParameterInstanceRef) c0.getRef()).getParameter());
+    }
+
+    @Test
+    public void testCommandVerification() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("refxtce");
+        MetaCommand mc = mdb.getMetaCommand("/RefXtce/cmd_with_verifier1");
+        List<CommandVerifier> cvList = mc.getCommandVerifiers();
+        assertEquals(1, cvList.size());
+        CommandVerifier cv0 = cvList.get(0);
+        assertEquals(100, cv0.getCheckWindow().getTimeToStartChecking());
+        assertEquals(1000, cv0.getCheckWindow().getTimeToStopChecking());
+
+        Comparison c0 = (Comparison) cv0.getMatchCriteria();
+        assertEquals(mdb.getParameter("/RefXtce/local_para1"), ((ParameterInstanceRef) c0.getRef()).getParameter());
+    }
+
+    @Test
+    public void testAutoPart() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("BogusSAT2");
+        assertTrue(mdb.getSequenceContainer("/BogusSAT/CCSDSPUSTelemetryPacket").useAsArchivePartition());
+        assertFalse(mdb.getSequenceContainer("/BogusSAT/SC001/ECSS_Service_1_Subservice_1").useAsArchivePartition());
+    }
+
+    @Test
+    public void testNoAutoPart() throws XMLStreamException, IOException {
+        Mdb mdb = MdbFactory.createInstanceByConfig("BogusSAT2-noautopart");
+        assertFalse(
+                mdb.getSequenceContainer("/BogusSAT/SC001/BusElectronics/SensorHistoryRecord").useAsArchivePartition());
+        assertTrue(mdb.getSequenceContainer("/BogusSAT/CCSDSPUSTelemetryPacket").useAsArchivePartition());
+    }
+}
+```
+
+### `XtceAssemblerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceAssemblerTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.nio.ByteOrder;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Container;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+import org.yamcs.xtce.SequenceEntry;
+import org.yamcs.xtce.SpaceSystem;
+import org.yamcs.xtce.xml.XtceAliasSet;
+
+public class XtceAssemblerTest {
+    String name;
+    Field field;
+
+    static void writeMdb(Mdb mdb, String filename, String topSS, Predicate<String> filter) throws IOException {
+        String xml = new XtceAssembler().toXtce(mdb, topSS, filter);
+        File f = new File(filename);
+
+        try (FileWriter fw = new FileWriter(f)) {
+            fw.write(xml);
+        }
+    }
+
+    @Test
+    public void test1() throws Exception {
+        verify("src/test/resources/xtce/BogusSAT-2.xml");
+    }
+
+    @Test
+    public void test2() throws Exception {
+        verify("src/test/resources/xtce/ref-xtce.xml");
+    }
+
+    private void verify(String filename) throws Exception {
+        Map<String, Object> m1 = new HashMap<>();
+        m1.put("type", "xtce");
+        m1.put("spec", filename);
+
+        List<YConfiguration> mdbConfigs1 = Arrays.asList(YConfiguration.wrap(m1));
+        Mdb mdb1 = MdbFactory.createInstance(mdbConfigs1, false, false);
+
+        String xml = new XtceAssembler().toXtce(mdb1);
+        File f = File.createTempFile("test1", ".xml");
+
+        try (FileWriter fw = new FileWriter(f, StandardCharsets.UTF_8)) {
+            fw.write(xml);
+        }
+
+        Map<String, Object> m2 = new HashMap<>();
+        m2.put("type", "xtce");
+        m2.put("spec", f.getAbsolutePath());
+        List<YConfiguration> mdbConfigs2 = Arrays.asList(YConfiguration.wrap(m2));
+        Mdb mdb2 = MdbFactory.createInstance(mdbConfigs2, false, false);
+        f.delete();
+
+        compareDatabases(mdb1, mdb2);
+    }
+
+    private void compareDatabases(Mdb mdb1, Mdb mdb2) throws Exception {
+        for (SpaceSystem ss1 : mdb1.getSpaceSystems()) {
+            if (ss1.getName().startsWith(Mdb.YAMCS_SPACESYSTEM_NAME)) {
+                continue;
+            }
+            SpaceSystem ss2 = mdb2.getSpaceSystem(ss1.getQualifiedName());
+            assertNotNull(ss2, "Cannot find " + ss1.getQualifiedName() + " in db2");
+            compareSpaceSystems(ss1, ss2);
+        }
+    }
+
+    private void compareSpaceSystems(SpaceSystem ss1, SpaceSystem ss2) throws Exception {
+        for (Parameter p1 : ss1.getParameters()) {
+            Parameter p2 = ss2.getParameter(p1.getName());
+            assertNotNull(p2, "Cannot find " + p1.getQualifiedName() + " in ss2");
+            name = p1.getQualifiedName();
+            compareObjects(p1, p2);
+        }
+
+        for (SequenceContainer sc1 : ss1.getSequenceContainers()) {
+            SequenceContainer sc2 = ss2.getSequenceContainer(sc1.getName());
+            assertNotNull(sc2, "Cannot find " + sc1.getQualifiedName() + " in ss2");
+            compareContainer(sc1, sc2);
+        }
+
+        for (MetaCommand mc1 : ss1.getMetaCommands()) {
+            MetaCommand mc2 = ss2.getMetaCommand(mc1.getName());
+            name = mc1.getQualifiedName();
+            assertNotNull(mc2, "Cannot find " + mc1.getQualifiedName() + " in ss2");
+            compareObjects(mc1, mc2);
+            compareContainer(mc1.getCommandContainer(), mc2.getCommandContainer());
+        }
+
+        for (Algorithm algo1 : ss1.getAlgorithms()) {
+            Algorithm algo2 = ss2.getAlgorithm(algo1.getName());
+            assertNotNull(algo2, "Cannot find " + algo1.getQualifiedName() + " in ss2");
+            compareObjects(algo1, algo2);
+        }
+    }
+
+    private void compareContainer(Container sc1, Container sc2) throws Exception {
+        assertEquals(sc1.getEntryList().size(), sc2.getEntryList().size(),
+                name + ": " + sc1.getQualifiedName() + " has a different number of entries");
+        for (int i = 0; i < sc1.getEntryList().size(); i++) {
+            SequenceEntry se1 = sc1.getEntryList().get(i);
+            SequenceEntry se2 = sc2.getEntryList().get(i);
+            name = sc1.getName() + " " + se1 + "\n";
+            compareObjects(se1, se2);
+        }
+
+        if (sc1.getBaseContainer() != null) {
+            assertEquals(sc1.getBaseContainer().getQualifiedName(), sc2.getBaseContainer().getQualifiedName());
+            if (sc1.getRestrictionCriteria() != null) {
+                compareObjects(sc1.getRestrictionCriteria(), sc2.getRestrictionCriteria());
+            }
+        }
+        compareLists(sc1.getAncillaryData(), sc2.getAncillaryData());
+    }
+
+    private void compareLists(List<?> l1, List<?> l2) throws Exception {
+        if (l1 == null) {
+            assertNull(l2);
+            return;
+        } else {
+            assertNotNull(l2);
+        }
+
+        assertEquals(l1.size(), l2.size(), name);
+        for (int i = 0; i < l1.size(); i++) {
+            compareObjects(l1.get(i), l2.get(i));
+        }
+    }
+
+    private void compareMaps(Map<?, ?> m1, Map<?, ?> m2) throws Exception {
+        if (m1 == null) {
+            assertNull(m2);
+            return;
+        } else {
+            assertNotNull(m2);
+        }
+
+        for (Map.Entry<?, ?> me : m1.entrySet()) {
+            Object v1 = me.getValue();
+            Object v2 = m2.get(me.getKey());
+            if (v1 == null && v2 != null) {
+                fail(name + " value for key " + me.getKey() + " should be null");
+            }
+            if (v1 != null && v2 == null) {
+                fail(name + " value for key " + me.getKey() + " should not be null");
+            }
+            compareObjects(v1, v2);
+        }
+    }
+
+    private void compareAliases(XtceAliasSet set1, XtceAliasSet set2) {
+        assertTrue(set1.getAliases().equals(set2.getAliases()));
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void compareObjects(Object o1, Object o2) throws Exception {
+        Class c1 = o1.getClass();
+        Class c2 = o2.getClass();
+        while (true) {
+            assertEquals(c1, c2);
+            Field[] fa = c1.getDeclaredFields();
+            for (Field f : fa) {
+                field = f;
+                f.setAccessible(true);
+                Object o1c = f.get(o1);
+                Object o2c = f.get(o2);
+                if (o1c == null) {
+                    assertNull(o2c, name + " " + o1 + " field: " + f.getName());
+                } else if (o2c == null) {
+                    fail(name + " " + o2 + " field: " + f.getName() + " is null, expected " + o1c);
+                } else if (o1c instanceof List<?>) {
+                    assertTrue(o2c instanceof List);
+                    name = name + ": " + f.getName();
+                    compareLists((List<?>) o1c, (List<?>) o2c);
+                } else if (o1c instanceof Map<?, ?>) {
+                    assertTrue(o2c instanceof Map);
+                    name = name + ": " + f.getName();
+                    compareMaps((Map<?, ?>) o1c, (Map<?, ?>) o2c);
+                } else if (o1c instanceof Comparable<?>) {
+                    assertEquals(o1c, o2c, name + " " + o1 + " field: " + f.getName());
+                } else if (o1c instanceof ByteOrder) {
+                    assertEquals(o1c, o2c, name + " " + o1 + " field: " + f.getName());
+                } else if (o1c instanceof XtceAliasSet) {
+                    compareAliases((XtceAliasSet) o1c, (XtceAliasSet) o2c);
+                } else if (o1c instanceof MetaCommand || o1c instanceof Container || o1c instanceof Parameter) {
+                    // these are already compared above
+                } else if (o1c instanceof org.slf4j.jul.JDK14LoggerAdapter) {
+                    // ignore
+                } else {
+                    compareObjects(o1c, o2c);
+                }
+
+            }
+            c1 = c1.getSuperclass();
+            c2 = c2.getSuperclass();
+            if (c1 == null) {
+                break;
+            }
+        }
+    }
+
+}
+```
+
+### `XtceBooleansTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceBooleansTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.MetaCommand;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+
+public class XtceBooleansTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+    MetaCommandProcessor metaCommandProcessor;
+    static ProcessorData pdata;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("xtce-booleans");
+        pdata = new ProcessorData("test", mdb, new ProcessorConfig());
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+        metaCommandProcessor = new MetaCommandProcessor(pdata);
+    }
+
+    @Test
+    public void testNumericParaFalse() {
+        byte[] buf = new byte[] { 0 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/Booleans/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("bool1"));
+        assertEquals(false, pv.getEngValue().getBooleanValue());
+    }
+
+    @Test
+    public void testNumericParaTrue() {
+        byte[] buf = new byte[] { 5 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/Booleans/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("bool1"));
+        assertEquals(true, pv.getEngValue().getBooleanValue());
+    }
+
+    @Test
+    public void testStringParaTrue() {
+        byte[] buf = new byte[] { 'Y', 'e', 's', '!' };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/Booleans/packet2"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("bool2"));
+        assertEquals(true, pv.getEngValue().getBooleanValue());
+    }
+
+    @Test
+    public void testStringParaFalse() {
+        byte[] buf = new byte[] { 'N', 'o', 'o', 'o' };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/Booleans/packet2"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(1, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("bool2"));
+        assertEquals(false, pv.getEngValue().getBooleanValue());
+    }
+
+    @Test
+    public void testNumericCmdTrue() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool1", "True");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 1 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    @Disabled("Test to be enabled only when BooleanDataType deprecated handling is removed")
+    public void testNumericCmdTrueCaseSensitive() {
+        assertThrows(ErrorInCommand.class, () -> {
+            MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+            Map<String, Object> args = new HashMap<>();
+
+            args.put("bool1", "true");
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testNumericCmdFalse() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool1", "False");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 0 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    @Disabled("Test to be enabled only when BooleanDataType deprecated handling is removed")
+    public void testNumericCmdFalseCaseSensitive() {
+        assertThrows(ErrorInCommand.class, () -> {
+            MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+            Map<String, Object> args = new HashMap<>();
+
+            args.put("bool1", "false");
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    public void testStringCmdTrue() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command2");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool2", "yes!");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 'y', 'e', 's', '!' };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    public void testStringCmdFalse() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command2");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool2", "nooo");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 'n', 'o', 'o', 'o' };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    public void testNativeTrueArgument() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool1", true);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 1 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    public void testNativeFalseArgument() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/Booleans/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("bool1", false);
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 0 };
+        assertArrayEquals(expected, b);
+    }
+
+    private Parameter param(String name) {
+        return mdb.getParameter("/Booleans/" + name);
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf, SequenceContainer sc) {
+        return extractor.processPacket(buf, now, now, 0, sc);
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
+```
+
+### `XtceFilesetTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceFilesetTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.Test;
+
+public class XtceFilesetTest {
+    @Test
+    public void testXtceFileset() throws Exception {
+        Mdb mdb = MdbFactory.createInstanceByConfig("xtce-fileset");
+        assertNotNull(mdb.getSpaceSystem("/a1"));
+        assertNotNull(mdb.getSpaceSystem("/a2"));
+        assertNotNull(mdb.getSpaceSystem("/b"));
+    }
+}
+```
+
+### `XtceStringDecodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceStringDecodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.YConfiguration;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.parameter.ParameterValueList;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceContainer;
+
+public class XtceStringDecodingTest {
+    static Mdb mdb;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("xtce-strings-tm");
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    // null terminated string in fixed size buffer
+    public void testFixedSizeString1() {
+        byte[] buf = new byte[] { 'a', 'b', 0, 0, 0, 0, 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string1"));
+        assertEquals("ab", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    // null terminated string in fixed size buffer but the string is as long as the buffer so there is no terminator
+    public void testFixedSizeString1_noterminator() {
+        byte[] buf = new byte[] { 'a', 'b', 'c', 'd', 'e', 'f', 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet1"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string1"));
+        assertEquals("abcdef", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+
+    }
+
+    @Test
+    // fixed size string in fixed size buffer
+    public void testFixedSizeString2() {
+        byte[] buf = new byte[] { 'a', 'b', 'c', 'd', 'e', 'f', 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet2"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string2"));
+        assertEquals("abcdef", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    // null terminated string in undefined buffer
+    public void testFixedSizeString3() {
+        byte[] buf = new byte[] { 'a', 'b', 0, 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet3"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string3"));
+        assertEquals("ab", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    // non terminated string in undefined buffer -> error
+    public void testFixedSizeString3_no_terminator() {
+        byte[] buf = new byte[] { 'a', 'b', 'c', 'd', 'e', 'f', 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet3"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(0, pvl.size());
+        assertNotNull(cpr.exception);
+    }
+
+    @Test
+    // prefixed size string in buffer whose size is given by another parameter and a prefix-size encoding
+    public void testFixedSizeString4() {
+        byte[] buf = new byte[] {
+                0x00, 0x06, // buffer size
+                0x03, // string size
+                'a', 'b', 'c', // string
+                'x', 'x', // filler at the end of the buffer
+                0x01, 0x02 // uint16_param1 coming after the string
+        };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet4"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(3, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string4"));
+        assertEquals("abc", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    // prefixed size string in undefined buffer
+    public void testFixedSizeString5() {
+        byte[] buf = new byte[] { 0x00, 0x02, 'a', 'b', 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet5"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(2, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string5"));
+        assertEquals("ab", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    @Test
+    // prefixed size string in undefined buffer, exceeding the max size
+    public void testFixedSizeString5_too_long() {
+        byte[] buf = new byte[] { 0x00, 0x05, 'a', 'b', 'c', 'd', 'e', 0x01, 0x02 };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet5"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(0, pvl.size());
+        assertNotNull(cpr.exception);
+    }
+
+    @Test
+    // prefixed size string in buffer whose size is given by another parameter which occupies the entire buffer
+    public void testFixedSizeString6() {
+        byte[] buf = new byte[] {
+                0x00, 0x06, // buffer size
+                'a', 'b', 'c', 'd', 'e', 'f', // the entire 6 byte buffer is the string
+                0x01, 0x02 // uint16_param1 coming after the string
+        };
+        ContainerProcessingResult cpr = processPacket(buf, mdb.getSequenceContainer("/StringsTm/packet6"));
+
+        ParameterValueList pvl = cpr.getParameterResult();
+        assertEquals(3, pvl.size());
+        ParameterValue pv = pvl.getFirstInserted(param("string6"));
+        assertEquals("abcdef", pv.getEngValue().getStringValue());
+        pv = pvl.getFirstInserted(param("uint16_param1"));
+        assertEquals(0x0102, pv.getEngValue().getUint32Value());
+    }
+
+    private Parameter param(String name) {
+        return mdb.getParameter("/StringsTm/" + name);
+    }
+
+    private ContainerProcessingResult processPacket(byte[] buf, SequenceContainer sc) {
+        return extractor.processPacket(buf, now, now, 0, sc);
+    }
+}
+```
+
+### `XtceStringEncodingTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/mdb/XtceStringEncodingTest.java`
+
+
+```java
+package org.yamcs.mdb;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.ConfigurationException;
+import org.yamcs.ErrorInCommand;
+import org.yamcs.ProcessorConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.MetaCommandProcessor.CommandBuildResult;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.MetaCommand;
+
+public class XtceStringEncodingTest {
+    static Mdb mdb;
+    static MetaCommandProcessor metaCommandProcessor;
+    long now = TimeEncoding.getWallclockTime();
+    XtceTmExtractor extractor;
+
+    @BeforeAll
+    public static void beforeClass() throws ConfigurationException {
+        YConfiguration.setupTest(null);
+        mdb = MdbFactory.createInstanceByConfig("xtce-strings-cmd");
+        metaCommandProcessor = new MetaCommandProcessor(
+                new ProcessorData("test", mdb, new ProcessorConfig()));
+    }
+
+    @BeforeEach
+    public void before() {
+        extractor = new XtceTmExtractor(mdb);
+        extractor.provideAll();
+    }
+
+    @Test
+    // null terminated string in fixed size buffer
+    public void testFixedSizeString1() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string1", "abc");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = { 'a', 'b', 'c', 0, 0, 0, 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // null terminated string in fixed size buffer but the string is as long as the buffer so there is no terminator
+    public void testFixedSizeString1_noterminator() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command1");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string1", "abcdef");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = new byte[] { 'a', 'b', 'c', 'd', 'e', 'f', 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // fixed size string in fixed size buffer
+    public void testFixedSizeString2() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command2");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string2", "abcdef");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = new byte[] { 'a', 'b', 'c', 'd', 'e', 'f', 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // null terminated string in undefined buffer
+    public void testFixedSizeString3() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command3");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string3", "ab");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = new byte[] { 'a', 'b', 0, 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // null terminated string in undefined buffer - max size
+    public void testFixedSizeString3_max() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command3");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string3", "abcde");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+        byte[] expected = new byte[] { 'a', 'b', 'c', 'd', 'e', 0, 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // null terminated string in undefined buffer exceeding the size
+    public void testFixedSizeString3_too_long() {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command3");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string3", "abcdef");
+        args.put("para1", "258");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    // prefixed size string in buffer whose size is given by another argument
+    public void testFixedSizeString4() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command4");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("buf_length", "6");
+        args.put("string4", "abc");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expected = new byte[] {
+                0x00, 0x06, // buffer size
+                0x03, // string size
+                'a', 'b', 'c', // string
+                0, 0, // filler at the end of the buffer
+                0x01, 0x02 // uint16_param1 coming after the string
+        };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // prefixed size string in buffer whose size is given by another argument which is too long
+    public void testFixedSizeString4_too_long() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command4");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("buf_length", "7");
+        args.put("string4", "ab");
+        args.put("para1", "258");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    // too long prefixed size string in buffer whose size is given by another argument
+    public void testFixedSizeString4_too_long2() {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command4");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("buf_length", "4");
+        args.put("string4", "abcd");
+        args.put("para1", "258");
+        assertThrows(ErrorInCommand.class, () -> {
+            buildCommand(mc, args).getCmdPacket();
+        });
+    }
+
+    @Test
+    // prefixed size string in undefined buffer
+    public void testFixedSizeString5() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command5");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string5", "ab");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expected = new byte[] { 0x00, 0x02, 'a', 'b', 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    @Test
+    // prefixed size string in undefined buffer exceeding max size
+    public void testFixedSizeString5_too_long() {
+        assertThrows(ErrorInCommand.class, () -> {
+            MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command5");
+            Map<String, Object> args = new HashMap<>();
+
+            args.put("string5", "abcde");
+            args.put("para1", "258");
+            byte[] b = buildCommand(mc, args).getCmdPacket();
+
+            byte[] expected = new byte[] { 0x00, 0x02, 'a', 'b', 0x01, 0x02 };
+            assertArrayEquals(expected, b);
+        });
+    }
+
+    @Test
+    public void testStringEncodedAsBinary() throws Exception {
+        MetaCommand mc = mdb.getMetaCommand("/StringsCmd/command6");
+        Map<String, Object> args = new HashMap<>();
+
+        args.put("string6", "ab");
+        args.put("para1", "258");
+        byte[] b = buildCommand(mc, args).getCmdPacket();
+
+        byte[] expected = new byte[] { 'a', 'b', 0, 0, 0, 0x01, 0x02 };
+        assertArrayEquals(expected, b);
+    }
+
+    CommandBuildResult buildCommand(MetaCommand mc, Map<String, Object> argAssignmentList) throws ErrorInCommand {
+        return metaCommandProcessor.buildCommand(mc, argAssignmentList, 0);
+    }
+}
+```

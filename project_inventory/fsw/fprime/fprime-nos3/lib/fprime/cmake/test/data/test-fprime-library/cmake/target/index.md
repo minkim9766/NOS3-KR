@@ -3,16 +3,57 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/target/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sub.cmake`
 
-file--sub.cmake
-file--test.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/target/sub.cmake`
+
+
+```cmake
+####
+# target/sub.cmake:
+#
+# This target sets up a sub-build target for testing purposes.
+####
+function(sub_add_global_target TARGET)
+    add_custom_target("${TARGET}"
+        COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/sub-test"
+        COMMAND ${CMAKE_COMMAND} -E touch "${FPRIME_BINARY_DIR}/sub-test"
+    )
+endfunction(sub_add_global_target)
+
+function(sub_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+endfunction(sub_add_deployment_target)
+
+function(sub_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+endfunction(sub_add_module_target)
 ```
 
-## 항목
+### `test.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/target/sub.cmake`](file--sub.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/target/test.cmake`](file--test.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/test-fprime-library/cmake/target/test.cmake`
+
+
+```cmake
+####
+# target/test.cmake:
+#
+# This target sets up a test target for testing purposes.
+####
+
+
+function(test_add_global_target TARGET)
+    add_custom_target("${TARGET}" COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/global-test")
+endfunction(test_add_global_target)
+
+function(test_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+    add_custom_target("${MODULE}_${TARGET}" COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/deployment-test")
+endfunction(test_add_deployment_target)
+
+function(test_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    run_ac_set("${MODULE}" autocoder/test)
+    add_custom_target("${MODULE}_${TARGET}" COMMAND ${CMAKE_COMMAND} -E touch "${CMAKE_BINARY_DIR}/${MODULE}-test"
+                      DEPENDS ${AUTOCODER_GENERATED_OTHER})
+endfunction(test_add_module_target)
+```

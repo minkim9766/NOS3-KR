@@ -3,20 +3,184 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `test_autocoder.cmake`
 
-file--test_autocoder.cmake
-file--test_chained_autocoder.cmake
-file--test_recursion.cmake
-file--test_rerun_autocoder.cmake
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_autocoder.cmake`
+
+
+```cmake
+####
+# target/test_recursion.cmake:
+#
+# This target sets up a test target for checking the right recursive dependencies come in
+####
+include(autocoder/autocoder)
+
+function(test_autocoder_add_global_target TARGET)
+endfunction(test_autocoder_add_global_target)
+
+function(test_autocoder_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+endfunction(test_autocoder_add_deployment_target)
+
+function(test_autocoder_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    run_ac_set("${MODULE}" "autocoder/test_target_autocoder")
+    # Use the variable from this run as set by the autocoder
+    add_custom_target("${MODULE}_test_autocode" DEPENDS "${AUTOCODER_GENERATED_OTHER}")
+    add_dependencies("${MODULE}" "${MODULE}_test_autocode")
+endfunction(test_autocoder_add_module_target)
 ```
 
-## 항목
+### `test_chained_autocoder.cmake`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_autocoder.cmake`](file--test_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_chained_autocoder.cmake`](file--test_chained_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_recursion.cmake`](file--test_recursion.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_rerun_autocoder.cmake`](file--test_rerun_autocoder.cmake) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_chained_autocoder.cmake`
+
+
+```cmake
+####
+# target/test_chained_autocoder.cmake:
+#
+# This target sets up a test target for checking that chained autocoders work correctly
+####
+include(autocoder/autocoder)
+
+function(test_chained_autocoder_add_global_target TARGET)
+endfunction(test_chained_autocoder_add_global_target)
+
+function(test_chained_autocoder_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+endfunction(test_chained_autocoder_add_deployment_target)
+
+function(test_chained_autocoder_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    # Run both autocoders in sequence: target autocoder first, then chained autocoder
+    run_ac_set("${MODULE}" "autocoder/test_target_autocoder" "autocoder/test_chained_autocoder")
+    
+    # Use the variable from this run as set by the autocoders
+    add_custom_target("${MODULE}_test_chained_autocode" DEPENDS "${AUTOCODER_GENERATED_OTHER}")
+    add_dependencies("${MODULE}" "${MODULE}_test_chained_autocode")
+endfunction(test_chained_autocoder_add_module_target)
+```
+
+### `test_recursion.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_recursion.cmake`
+
+
+```cmake
+####
+# target/test_recursion.cmake:
+#
+# This target sets up a test target for checking the right recursive dependencies come in
+####
+include(utilities)
+# Current full dependency list for TestDeployment (mostly via Svc_CmdDispatcher)
+set(EXPECTED_FULL_DEPENDENCIES
+    Fw
+    Fw_Buffer
+    Fw_Cmd
+    Fw_Com
+    Fw_Comp
+    Fw_CompQueued
+    Fw_Fpy
+    Fw_Log
+    Fw_Logger
+    Fw_Obj
+    Fw_Port
+    Fw_Prm
+    Fw_StringFormat_snprintf
+    Fw_Time
+    Fw_Tlm
+    Fw_Types
+    Os
+    Os_Console
+    Os_Console_Posix
+    Os_Console_Posix_Implementation
+    Os_Cpu
+    Os_Cpu_${FPRIME_PLATFORM}
+    Os_Cpu_${FPRIME_PLATFORM}_Implementation
+    Os_File
+    Os_File_Posix
+    Os_File_Posix_Implementation
+    Os_Generic_PriorityQueue
+    Os_Generic_PriorityQueue_Implementation
+    Os_Generic_Types
+    Os_Memory
+    Os_Memory_${FPRIME_PLATFORM}
+    Os_Memory_${FPRIME_PLATFORM}_Implementation
+    Os_Mutex
+    Os_Mutex_Posix
+    Os_Mutex_Posix_Implementation
+    Os_Posix_Shared
+    Os_Queue
+    Os_RawTime
+    Os_RawTime_Posix
+    Os_RawTime_Posix_Implementation
+    Os_Task
+    Os_Task_Posix
+    Os_Task_Posix_Implementation
+    Svc_CmdDispatcher
+    Svc_Ping
+    Svc_Sched
+    TestDeployment
+    TestLibrary2_TestComponent
+    TestLibrary_TestComponent
+    UnixPlatformTypes
+    Utils_Hash
+    __fprime_config
+    default_config
+)
+
+function(test_recursion_add_global_target TARGET)
+endfunction(test_recursion_add_global_target)
+
+function(test_recursion_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+    list(SORT FULL_DEPENDENCY_LIST)
+    list(SORT EXPECTED_FULL_DEPENDENCIES)
+    string(REPLACE ";" "\n    " EXPECTED_FULL_DEPENDENCIES_SEP "${EXPECTED_FULL_DEPENDENCIES}")
+    string(REPLACE ";" "\n    " FULL_DEPENDENCY_LIST_SEP "${FULL_DEPENDENCY_LIST}")
+    # Write lists to file
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/test_recursion_expected.txt" "${EXPECTED_FULL_DEPENDENCIES_SEP}")
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/test_recursion_found.txt" "${FULL_DEPENDENCY_LIST_SEP}")
+    execute_process(COMMAND diff
+            "${CMAKE_CURRENT_BINARY_DIR}/test_recursion_expected.txt"
+            "${CMAKE_CURRENT_BINARY_DIR}/test_recursion_found.txt"
+        OUTPUT_VARIABLE DIFF_OUTPUT
+        RESULT_VARIABLE DIFF_RESULT
+    )
+    fprime_cmake_ASSERT("diff (Expected vs Found:\n${DIFF_OUTPUT}" DIFF_RESULT EQUAL 0)
+endfunction(test_recursion_add_deployment_target)
+
+function(test_recursion_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+endfunction(test_recursion_add_module_target)
+```
+
+### `test_rerun_autocoder.cmake`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/cmake/target/test_rerun_autocoder.cmake`
+
+
+```cmake
+####
+# target/test_chained_autocoder.cmake:
+#
+# This target sets up a test target for checking that chained autocoders work correctly
+####
+include(autocoder/autocoder)
+
+function(test_rerun_autocoder_add_global_target TARGET)
+endfunction(test_rerun_autocoder_add_global_target)
+
+function(test_rerun_autocoder_add_deployment_target MODULE TARGET SOURCES DIRECT_DEPENDENCIES FULL_DEPENDENCY_LIST)
+endfunction(test_rerun_autocoder_add_deployment_target)
+
+function(test_rerun_autocoder_add_module_target MODULE TARGET SOURCES DEPENDENCIES)
+    run_ac_set("${MODULE}" "autocoder/test_build_autocoder")
+    add_custom_target(
+        "${MODULE}_test_rerun_autocoder"
+        DEPENDS "${AUTOCODER_GENERATED_BUILD_SOURCES}"
+        COMMAND "${CMAKE_COMMAND}" -E touch "${CMAKE_CURRENT_BINARY_DIR}/test-rerun-autocoder.txt"
+        COMMENT "Creating test-rerun-autocoder.txt"
+    )
+    add_dependencies("${MODULE}" "${MODULE}_test_rerun_autocoder")
+endfunction(test_rerun_autocoder_add_module_target)
+```

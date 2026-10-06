@@ -3,26 +3,751 @@
 
 **경로:** `gsw/yamcs/docs/http-api/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `.gitignore`
 
-file--.gitignore
-file--conf.py
-file--filtering.rst
-file--Makefile
-file--overview.rst
-file--partial-responses.rst
-file--websocket.rst
+**경로:** `gsw/yamcs/docs/http-api/.gitignore`
+
+
+```text
+/_build/
+.autogen
+/*/**/*.rst
+/index.rst
 ```
 
-## 항목
+### `conf.py`
 
-- [`gsw/yamcs/docs/http-api/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/conf.py`](file--conf.py) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/filtering.rst`](file--filtering.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/overview.rst`](file--overview.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/partial-responses.rst`](file--partial-responses.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/http-api/websocket.rst`](file--websocket.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/http-api/conf.py`
+
+
+```python
+from xml.etree import ElementTree as ET
+
+tree = ET.ElementTree()
+tree.parse("../../pom.xml")
+yamcs_version_el = tree.getroot().find("{http://maven.apache.org/POM/4.0.0}version")
+
+project = "Yamcs"
+copyright = "2006-present, Space Applications Services"
+author = "Yamcs Team"
+version = yamcs_version_el.text
+release = version
+source_suffix = ".rst"
+language = "en"
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+pygments_style = "sphinx"
+
+extensions = [
+    "sphinx.ext.extlinks",
+    "sphinxcontrib.yamcs",
+]
+
+# Force-disable conversion of -- to en-dash
+smartquotes = False
+
+extlinks = {
+    "source": ("https://github.com/yamcs/yamcs/blob/master/%s", "GitHub: %s"),
+}
+
+html_theme = "nature"
+html_theme_options = {
+    "sidebarwidth": "300px",
+}
+html_show_sourcelink = False
+
+latex_elements = {
+    "papersize": "a4paper",
+    "figure_align": "htbp",
+    "extraclassoptions": "openany",
+}
+
+# Grouping the document tree into LaTeX files. List of tuples
+# (source start file, target name, title,
+#  author, documentclass [howto, manual, or own class]).
+latex_documents = [
+    (
+        "index",
+        f"yamcs-http-api-{release}.tex",
+        "Yamcs HTTP API",
+        "Space Applications Services",
+        "manual",
+    ),
+]
+
+latex_show_pagerefs = True
+
+latex_show_urls = "footnote"
+
+yamcs_api_protobin = (
+    "../../yamcs-api/target/generated-resources/protobuf/yamcs-api.protobin"
+)
+yamcs_api_destdir = "."
+yamcs_api_title = "Yamcs HTTP API"
+yamcs_api_additional_docs = [
+    "overview.rst",
+    "filtering.rst",
+    "partial-responses.rst",
+    "websocket.rst",
+]
+```
+
+### `filtering.rst`
+
+**경로:** `gsw/yamcs/docs/http-api/filtering.rst`
+
+
+```rst
+Filtering
+=========
+
+Some list methods provide a ``filter`` option. This option can be use to provide a query expression to filter based on the fields of each list item. Methods providing this option allow to use ``POST`` in addition to ``GET``, to avoid encoding of lengthy queries in the query parameter.
+
+The filter syntax allows for two kinds of search: text search, and field search.
+
+
+Text Search
+-----------
+
+A single word is matched against the full resource. It is up to the specific resource implementation to determine which fields are considered for this comparison, usually all textual fields. The search is case-insensitive, exact, and may be partial.
+
+For example, search resources that match the text `wombat`:
+
+.. code-block:: text
+   
+   wombat
+
+To find resources that match both the text `icy` and the text `wombat` (at the same time), provide them both separated by whitespace:
+
+.. code-block:: text
+   :caption: Separated by space
+
+   icy wombat
+
+.. code-block:: text
+   :caption: Separated by newline
+
+   icy
+   wombat
+
+Search terms may be enclosed in double quotes, which allows the search to include special characters.
+
+The previous example is identical to:
+
+.. code-block:: text
+
+   "icy"
+   "wombat"
+
+If you would rather search for the exact sequence `icy wombat`, use double quotes around the full search term:
+
+.. code-block:: text
+
+   "icy wombat"
+
+To search resources that `do not` match the text `wombat`, negate the term by prefixing with the minus sign:
+
+.. code-block:: text
+
+   -wombat
+
+
+Logical Operators
+^^^^^^^^^^^^^^^^^
+
+Logical operators ``AND``, ``OR`` and ``NOT`` can be used to form more complicated queries. These operators must be specified in uppercase, else they are considered to be search terms.
+
+For example:
+
+.. code-block:: text
+
+   wombat OR hippo
+
+.. code-block:: text
+
+   NOT hippo OR (icy AND wombat)
+
+NOT has highest precedence, followed by OR, then AND. Where needed, use parenthesis to avoid any confusion.
+
+Use of the `AND` operator is optional, as this is the default behavior when multiple terms are provided.
+
+
+Line Comments
+^^^^^^^^^^^^^
+
+Queries can span any number of lines. Lines can be commented out using the `--` prefix.
+
+The following example searches for resources that textually match with both `wombat` and `gorilla`.
+
+.. code-block:: text
+
+   wombat
+   --hippo
+   gorilla
+
+
+Field Search
+------------
+
+Each filterable resource defines a number of fields that can be used to filter directly. This allows for better targeting than with text search, and will generally perform better.
+
+The available filterable fields vary from one resource to another, and are documented on their respective pages (for example, see: :doc:`events/list-events`).
+
+Field search requires a comparison query of the form: `FIELD OPERATOR VALUE`. For example, to filter resources that have the field `foo` set to `wombat`, use any of the following:
+
+.. code-block:: text
+
+   foo=wombat
+   foo = wombat
+   foo = "wombat"
+
+Each field has a specified type: string, number, boolean, binary or enum. The following sections describe the operators for each of these types.
+
+
+String Field Comparison Operators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following operators can be used in string field comparisons.
+
+.. list-table::
+   :widths: 25 25 50
+
+   * - =
+     - foo = "wombat"
+     - The field `foo` equals `wombat`
+   * - !=
+     - foo != "wombat"
+     - The field `foo` does not equal `wombat`
+   * - <
+     - foo < "wombat"
+     - The field `foo` is alphabetically before `wombat`
+   * - <=
+     - foo <= "wombat"
+     - The field `foo` equals `wombat`, or is alphabetically before `wombat`
+   * - >
+     - foo > "wombat"
+     - The field `foo` is alphabetically after `wombat`
+   * - >=
+     - foo >= "wombat"
+     - The field `foo` equals `wombat`, or is alphabetically after `wombat`
+   * - :
+     - foo:"wombat"
+     - The field `foo` contains the substring `wombat`
+   * - =~
+     - foo =~ "bat$"
+     - The field `foo` ends with the substring `bat`
+   * - !~
+     - foo !~ "bat$"
+     - The field `foo` does not end with the substring `bat`
+
+The operators `=~` and `!~` allow to match the field against the provided regular expression. The match is unanchored, so use the prefix `^` and the suffix `$` when you want to match the full field value.
+
+Regular expressions are case-sensitive. To enable case-insensitive matching, you can use an embedded flag expression:
+
+.. code-block::
+
+   foo =~ "(?i)bat$"
+
+Regular expressions must be double-quoted. For the other operators, double quotes are optional, unless you want to match special characters.
+
+
+Number Field Comparison Operators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following operators can be used in number field comparisons:
+
+.. list-table::
+   :widths: 25 25 50
+
+   * - =
+     - foo = 123.45
+     - The field `foo` equals `123.45`
+   * - !=
+     - foo != 123.45
+     - The field `foo` does not equal `123.45`
+   * - <
+     - foo < 123.45
+     - The field `foo` is smaller than `123.45`
+   * - <=
+     - foo <= 123.45
+     - The field `foo` equals `123.45`, or is smaller than `123.45`
+   * - >
+     - foo > 123.45
+     - The field `foo` is greater than `123.45`
+   * - >=
+     - foo >= 123.45
+     - The field `foo` equals `123.45`, or is greater than `123.45`
+
+The comparison value may be double-quoted.
+
+
+Boolean Field Comparison Operators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following operators can be used in boolean field comparisons:
+
+.. list-table::
+   :widths: 25 25 50
+
+   * - =
+     - foo = true
+     - The field `foo` is `true`
+   * - !=
+     - foo != true
+     - The field `foo` is not `true` (so, null or false)
+
+The comparison values `true` and `false` are case-insensitive, and may be double-quoted.
+
+
+Binary Field Comparison Operators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The following operators can be used in binary field comparisons:
+
+.. list-table::
+   :widths: 25 25 50
+
+   * - =
+     - foo = aabb
+     - The field `foo` is two bytes long, `0xAA` and `0xBB`
+   * - !=
+     - foo != aabb
+     - The field `foo` does not match `0xAABB`
+   * - :
+     - foo:aabb
+     - The field `foo` contains the binary `0xAABB`
+
+The provided hexstring is case-insensitive, and may be double-quoted.
+
+
+Enum Field Comparison Operators
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Assume a field `foo` of the following enum type:
+
+.. code-block:: java
+
+   enum Severity {
+     INFO,
+     WATCH,
+     WARNING,
+     DISTRESS,
+     CRITICAL,
+     SEVERE;
+   }
+
+The following operators can be used in enum field comparisons.
+
+.. list-table::
+   :widths: 25 25 50
+
+   * - =
+     - foo = INFO
+     - The field `foo` equals `INFO`
+   * - !=
+     - foo != INFO
+     - The field `foo` does not equal `INFO`
+   * - <
+     - foo < WATCH
+     - The field `foo` is before `WATCH`, using enum order
+   * - <=
+     - foo <= WATCH
+     - The field `foo` is `WATCH`, or before `WATCH`, using enum order
+   * - >
+     - foo > WATCH
+     - The field `foo` is after `WATCH`, using enum order
+   * - >=
+     - foo >= WATCH
+     - The field `foo` is `WATCH`, or after `WATCH`, using enum order
+
+The provided enum constant is case-insensitive, and may be double-quoted.
+```
+
+### `Makefile`
+
+**경로:** `gsw/yamcs/docs/http-api/Makefile`
+
+
+```make
+# Minimal makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line.
+SPHINXOPTS    =
+SPHINXBUILD   = sphinx-build
+SOURCEDIR     = .
+BUILDDIR      = _build
+
+# Put it first so that "make" without argument is like "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+.PHONY: clean help Makefile
+
+clean: Makefile
+	@if [ -f "$(SOURCEDIR)/.autogen" ]; then \
+		rm -rf `cat $(SOURCEDIR)/.autogen`; \
+	fi
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+```
+
+### `overview.rst`
+
+**경로:** `gsw/yamcs/docs/http-api/overview.rst`
+
+
+```rst
+API Overview
+============
+
+Yamcs provides an HTTP API allowing external tools to integrate with Yamcs resources. Most HTTP endpoints send and expect JSON messages.
+
+.. hint::
+
+    If you develop in Python consider using the `Python Client <https://docs.yamcs.org/python-yamcs-client/>`_ which provides an idiomatic mapping for most of the operations documented here.
+
+
+.. rubric:: HTTP Verbs
+
+The supported HTTP verbs are:
+
+GET
+    Retrieve a resource
+POST
+    Create a new resource
+PATCH
+    Update an existing resource
+DELETE
+    Delete a resource
+
+
+.. rubric:: Time
+
+All timestamps are returned as UTC and formatted according to ISO 8601. For example:
+
+    2015-08-26T08:08:40.724Z
+    2015-08-26
+
+
+.. rubric:: Error Handling
+
+When an exception is caught while handling an HTTP request, the server provides feedback to the client by returning a generic exception message:
+
+.. code-block:: typescript
+
+    {
+      "exception" : {
+        "type": string, // Short message
+        "msg": string // Long message
+      }
+    }
+
+
+Clients should check on whether the status code is between 200 and 299, and if not, interpret the response with the above structure.
+
+
+.. rubric:: CORS
+
+Cross-origin Resource Sharing (CORS) allows access to the Yamcs HTTP API from a remotely hosted web page. This is the HTML5 way of bypassing the self-origin policy typically enforced by browsers. With CORS, the browser will issue a preflight request to Yamcs to verify that it allows browser requests from the originating web page.
+
+CORS is off by default on Yamcs Server, but available through configuration.
+
+
+.. rubric:: JSON
+
+All API methods are designed for JSON-over-HTTP. Matching type definitions in this documentation are written in TypeScript syntax because of its high readability. Note however that we do not currently mark parameters as optional (``?``).
+
+
+.. rubric:: Protobuf
+
+As an alternative to JSON, most endpoints also support Google Protocol Buffers for a lighter footprint. To mark a request as Protobuf, set this HTTP header::
+
+    Content-Type: application/protobuf
+
+If you also want to server to respond with Protobuf messages, add the ``Accept`` header::
+
+    Accept: application/protobuf
+
+The proto files are :source:`available on GitHub <yamcs-api/src/main/proto/yamcs/protobuf>`. Using the ``protoc`` compiler, client code can be generated for Java, Python, C++ and more.
+
+If the response status is not between ``200`` and ``299``, deserialize the response as of type ``yamcs.api.ExceptionMessage``.
+```
+
+### `partial-responses.rst`
+
+**경로:** `gsw/yamcs/docs/http-api/partial-responses.rst`
+
+
+```rst
+Partial Responses
+=================
+
+To reduce the size of an HTTP response message, it is possible to restrict returned fields by providing the query parameter ``fields``, or alternatively by setting the HTTP header ``X-Yamcs-Fields``. This is also called a `field mask`.
+
+Field names are applicable to the top-level response message, and multiple fields can be separated by commas. Methods that return a list of messages apply the mask to each of the listed resources. Field paths can be of arbitrary depth separated by dots. Only the last part can refer to a repeated field.
+
+Some examples:
+
+Return information on the `simulator` instance, but include only the ``name`` and ``state`` fields:
+
+.. code-block::
+
+    curl 'localhost:8090/api/instances/simulator?fields=name,state'
+
+Return a list of all instances, but include only the ``name`` and ``state`` fields:
+
+.. code-block::
+
+    curl 'localhost:8090/api/instances?fields=name,state'
+```
+
+### `websocket.rst`
+
+**경로:** `gsw/yamcs/docs/http-api/websocket.rst`
+
+
+```rst
+WebSocket
+=========
+
+Yamcs provides a WebSocket API for data subscriptions. A typical use case would be a display tool subscribing to parameter updates. But you could also subscribe to realtime events, alarms or even raw packets.
+
+WebSocket allows to upgrade a regular HTTP connection to a bi-directional communication channel. Yamcs supports an RPC-style API over this channel where clients choose what topics they want to subscribe (or unsubscribe) by sending a request in a specific format.
+
+
+Connection
+----------
+
+WebSocket calls should use a URL of the form ``http://localhost:8090/api/websocket``
+
+We suggest using a generic library for establishing a WebSocket connection because the protocol is quite involving.
+
+On the server-side, Yamcs supports two WebSocket subprotocols:
+
+1. Textual WebSocket frames encoded in JSON
+2. Binary WebSocket frames encoded in Google Protocol Buffers
+
+To select one or the other specify this header on your WebSocket upgrade request::
+
+    Sec-WebSocket-Protocol: protobuf
+
+or::
+
+    Sec-WebSocket-Protocol: json
+
+When unspecified, the server defaults to JSON. These two formats are functionally identical.
+
+.. note::
+    For readability purposes, the next sections focus on JSON.
+
+
+Client Message
+--------------
+
+A message sent by the client to Yamcs must always have this general form:
+
+.. code-block:: typescript
+
+    {
+      "type": string,
+      "options": any | undefined,
+      "id": number | undefined,
+      "call": number | undefined
+    }
+
+Where:
+
+type
+    The message type. Typically this is the topic to subscribe to, but it could also be a built-in like ``cancel``.
+
+options
+    Options specific to the type.
+
+id
+    An optional client-side message identifier. If you specify this, then Yamcs will return it in reply messages. This purpose of this property is to allow clients to correlate replies with the original request. This is necessary because Yamcs does not guarantee in-order delivery of replies with respect to client requests.
+
+    We recommend to use an incrementing number. Yamcs does not currently check on continuity, but it is something we may consider later on.
+
+call
+    Where applicable, this must contain the call associated with this message. This should only be used when the client is streaming multiple messages handled by the same call. Client-streaming is rarely used, so chances are that you will never need to use this option.
+
+
+Built-in Client messages
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. rubric:: Cancel
+
+.. code-block:: typescript
+
+    {
+      "type": "cancel",
+      "options": {
+        "call": number
+      }
+    }
+
+This message allows to cancel an ongoing call. The call to cancel must be specified as part of the message options.
+
+
+.. rubric:: State
+
+.. code-block:: typescript
+
+    {
+      "type": "state"
+    }
+
+In response to this message, Yamcs will dump a snapshot of the active calls on the current connection. This is intended for debugging reasons.
+
+
+Server Messages
+---------------
+
+A message sent by the Yamcs to the client will always have this general form:
+
+.. code-block:: typescript
+
+    {
+      "type": string,
+      "call": number | undefined,
+      "seq": number | undefined,
+      "data": any
+    }
+
+Where:
+
+type
+    The message type. Typically this is the topic that was subscribed to, but it could also be a built-in like ``reply``.
+
+call
+    Where applicable, this contains the call identifier for this message. For the typical case of server-streams, all server messages for a single client request, have the same call identifier.
+
+seq
+   This is a sequence counter scoped to the call. The purpose of this is so that client could detect when some messages have been skipped. Yamcs applies a WebSocket-wide mechanism whereby frames are dropped if the client is not reading fast enough. If enough frames are dropped, the client connection may even be closed.
+
+data
+    Data associated with this type of server message.
+
+
+Built-in Server messages
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. rubric:: Reply
+
+.. code-block:: typescript
+
+    {
+      "type": "reply",
+      "call": number,
+      "seq": number,
+      "data": {
+        "reply_to": number,
+        "exception": any | undefined
+      }
+    }
+
+This message is sent by the server in response to a topic request. Yamcs guarantees that this reply message is sent before any other topic messages. The field ``reply_to`` contains a reference to the ``id`` from the original client message. If there was an error in handling the request, the reply will provide exception details. This is an object that follows the same structure as exceptions on the regular HTTP API.
+
+.. rubric:: State
+
+.. code-block:: typescript
+
+    {
+      "type": "state",
+      "data": {
+        "calls": [
+          {
+            "call": number,
+            "type": string,
+            "options": any | undefined
+          },
+          ...
+        ]
+      }
+    }
+
+This message is sent in response to a request of type ``state``. It dumps a list of all active calls. The intended use is for debugging issues. Client that support reconnection cannot rely on this information because it will no longer be present when a new connection is established.
+
+
+Example
+-------
+
+A simple Hello World example would be to subscribe to time updates coming from the server. Assuming that your Yamcs server has an instance called ``myproject``, you would send a message like this indicating your interest:
+
+.. code-block:: json
+
+    {
+      "type": "time",
+      "id": 1,
+      "options": {
+        "instance": "myproject"
+      }
+    }
+
+To confirm your request, Yamcs will first send you a reply that looks somewhat like this:
+
+.. code-block:: json
+
+    {
+      "type": "reply",
+      "call": 3,
+      "seq": 72,
+      "data": {
+        "@type": "/yamcs.api.Reply",
+        "reply_to": 1
+      }
+    }
+
+As the client, we note that the server has assigned the call identifier ``3`` to this subscription.
+
+.. note::
+    The property ``@type`` is an artifact generated by Yamcs JSON backend. It specifies the equivalent Protobuf message type of the ``data`` object (Yamcs generates JSON based on Protobuf definitions). You may ignore this property because each message ``type`` uses only a single ``data`` message.
+
+
+Next we receive continued time updates, each in a WebSocket frame:
+
+.. code-block:: json
+
+    {
+      "type": "time",
+      "call": 3,
+      "seq": 73,
+      "data": {
+        "@type": "/google.protobuf.Timestamp",
+        "value": "2020-05-14T06:44:32.654Z"
+      }
+    }
+
+.. code-block:: json
+
+    {
+      "type": "time",
+      "call": 3,
+      "seq": 74,
+      "data": {
+        "@type": "/google.protobuf.Timestamp",
+        "value": "2020-05-14T06:44:33.656Z"
+      }
+    }
+
+Note that each of these updates can be linked to the call identifier ``3``. If you had multiple subscriptions going on, this would allow you to couple messages to the correct local handler.
+
+Once you're no longer interested to receive updates for this particular call, you can cancel it like this:
+
+.. code-block:: json
+
+    {
+      "type": "cancel",
+      "options": {
+        "call": 3
+      }
+    }
+
+Of course, if you have no plans to use this connection for other calls, you could as well have closed it altogether.
+```

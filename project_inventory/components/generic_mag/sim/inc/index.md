@@ -3,22 +3,253 @@
 
 **경로:** `components/generic_mag/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_mag_42_data_provider.hpp`
 
-file--generic_mag_42_data_provider.hpp
-file--generic_mag_data_point.hpp
-file--generic_mag_data_provider.hpp
-file--generic_mag_hardware_model.hpp
-file--generic_mag_shmem_data_provider.hpp
+**경로:** `components/generic_mag/sim/inc/generic_mag_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_MAG42DATAPROVIDER_HPP
+#define NOS3_GENERIC_MAG42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_mag_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_mag42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_mag42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_mag42DataProvider(void) {};
+        Generic_mag42DataProvider& operator=(const Generic_mag42DataProvider&) {return *this;};
+
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_mag_data_point.hpp`
 
-- [`components/generic_mag/sim/inc/generic_mag_42_data_provider.hpp`](file--generic_mag_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/inc/generic_mag_data_point.hpp`](file--generic_mag_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/inc/generic_mag_data_provider.hpp`](file--generic_mag_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/inc/generic_mag_hardware_model.hpp`](file--generic_mag_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_mag/sim/inc/generic_mag_shmem_data_provider.hpp`](file--generic_mag_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_mag/sim/inc/generic_mag_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_MAGDATAPOINT_HPP
+#define NOS3_GENERIC_MAGDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_magDataPoint : public SimIDataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_magDataPoint(double count);
+        Generic_magDataPoint(int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_magDataPoint(double mag_x, double mag_y, double mag_z);
+        ~Generic_magDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        std::vector<float> getValues(void) const {parse_data_point(); return _generic_mag_data;}
+    
+    private:
+        /* Disallow these */
+        Generic_magDataPoint(void) {};
+        Generic_magDataPoint(const Generic_magDataPoint&) {};
+
+        // Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        // Private data
+        mutable Sim42DataPoint _dp;
+        int16_t _sc;
+        // mutable below so parsing can be on demand:
+        mutable bool _not_parsed;
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable std::vector<float> _generic_mag_data;
+        static const int numAxes = 3;
+    };
+}
+
+#endif
+```
+
+### `generic_mag_data_provider.hpp`
+
+**경로:** `components/generic_mag/sim/inc/generic_mag_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_MAGDATAPROVIDER_HPP
+#define NOS3_GENERICMAGDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_mag_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_magDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_magDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_magDataProvider(void) {};
+        Generic_magDataProvider& operator=(const Generic_magDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `generic_mag_hardware_model.hpp`
+
+**경로:** `components/generic_mag/sim/inc/generic_mag_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_MAGHARDWAREMODEL_HPP
+#define NOS3_GENERIC_MAGHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Spi/Client/SpiSlave.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <generic_mag_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+
+/*
+** Defines
+*/
+#define GENERIC_MAG_SIM_SUCCESS 0
+#define GENERIC_MAG_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_magHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_magHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_magHardwareModel(void);
+        void prepare_generic_mag_data_from_42(std::vector<uint8_t>& out_data); 
+
+    private:
+        /* Private helper methods */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+
+        /* Private data members */
+        class SpiSlaveConnection*                           _spi_slave_connection;
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_mag_dp; /* Only needed if the sim has a data provider */
+
+        /* Internal state data */
+        std::uint8_t                                        _enabled;
+        const float                                         _nano_conversion = 1000000000;
+        const float                                         _mag_conv = 21474;
+        const float                                         _mag_range = 100000;
+    };
+
+    class SpiSlaveConnection : public NosEngine::Spi::SpiSlave
+    {
+    public:
+        SpiSlaveConnection(Generic_magHardwareModel* mag, int chip_select, std::string connection_string, std::string bus_name);
+        size_t spi_read(uint8_t *rbuf, size_t rlen);
+        size_t spi_write(const uint8_t *wbuf, size_t wlen);
+    private:
+        Generic_magHardwareModel*  _mag;
+        std::vector<uint8_t>       _spi_out_data;
+    };
+}
+
+#endif
+```
+
+### `generic_mag_shmem_data_provider.hpp`
+
+**경로:** `components/generic_mag/sim/inc/generic_mag_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_MAGSHMEMDATAPROVIDER_HPP
+#define NOS3_GENERIC_MAGSHMEMDATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_mag_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class Generic_magShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_magShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_magShmemDataProvider(void) {};
+        Generic_magShmemDataProvider& operator=(const Generic_magShmemDataProvider&) {return *this;};
+
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

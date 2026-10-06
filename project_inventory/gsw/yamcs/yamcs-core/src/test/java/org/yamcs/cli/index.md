@@ -3,30 +3,693 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractCliTest.java`
 
-file--AbstractCliTest.java
-file--BackupCliTest.java
-file--ConfCheckTest.java
-file--ExitException.java
-file--MdbTest.java
-file--PasswordHashTest.java
-file--RocksDbTest.java
-file--UsersCliTest.java
-file--YamcsCliTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/AbstractCliTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.yamcs.FileBasedConfigurationResolver;
+import org.yamcs.YConfiguration;
+
+import com.beust.jcommander.internal.Console;
+
+public abstract class AbstractCliTest {
+    PrintStream psout;
+    static MockConsole mconsole = new MockConsole();
+
+    @BeforeAll
+    public static void beforeClass() {
+        Command.console = mconsole;
+        Command.exitFunction = status -> {
+            throw new ExitException(status);
+        };
+    }
+
+    @BeforeEach
+    public void resetOutput() {
+        mconsole.reset();
+    }
+
+    /**
+     * runs main and returns the exitCode
+     */
+    int runMain(String... args) {
+        try {
+            YamcsAdminCli.main(args);
+        } catch (ExitException e) {
+            return e.exitStatus;
+        }
+        return 0;
+    }
+
+    // create a temporary directory containing a yamcs.yaml and a yamcs-data
+    static Path createTmpEtcData() throws IOException {
+        Path etcdata = Files.createTempDirectory("etcdata-");
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(etcdata.resolve("yamcs.yaml").toFile()))) {
+            writer.write("dataDir: " + etcdata.toAbsolutePath().resolve("yamcs-data"));
+        }
+
+        YConfiguration.setResolver(new FileBasedConfigurationResolver(etcdata));
+        YConfiguration.clearConfigs();
+        return etcdata;
+    }
+
+    static class MockConsole implements Console {
+        char[] password1;
+        char[] password2;
+
+        StringBuilder sb = new StringBuilder();
+        boolean firstPassword = true;
+
+        void setPassword(char[] password1, char[] password2) {
+            this.password1 = password1;
+            this.password2 = password2;
+            firstPassword = true;
+        }
+
+        public String output() {
+            return sb.toString();
+        }
+
+        void reset() {
+            sb.setLength(0);
+        }
+
+        @Override
+        public void print(String msg) {
+            sb.append(msg);
+        }
+
+        @Override
+        public void println(String msg) {
+            // System.out.println("b");
+            sb.append(msg).append("\n");
+        }
+
+        @Override
+        public char[] readPassword(boolean echoInput) {
+            if (firstPassword) {
+                firstPassword = false;
+                return password1;
+            } else {
+                return password2;
+            }
+        }
+    }
+
+    // this replaces System.exit(status) called from the CLI commands
+    @SuppressWarnings("serial")
+    public static class ExitException extends Error {
+        final int exitStatus;
+
+        public ExitException(int status) {
+            super();
+            this.exitStatus = status;
+        }
+    }
+
+}
 ```
 
-## 항목
+### `BackupCliTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/AbstractCliTest.java`](file--AbstractCliTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/BackupCliTest.java`](file--BackupCliTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/ConfCheckTest.java`](file--ConfCheckTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/ExitException.java`](file--ExitException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/MdbTest.java`](file--MdbTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/PasswordHashTest.java`](file--PasswordHashTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/RocksDbTest.java`](file--RocksDbTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/UsersCliTest.java`](file--UsersCliTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/YamcsCliTest.java`](file--YamcsCliTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/BackupCliTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Random;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
+import org.yamcs.buckets.BucketManager;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.rocksdb.RdbBucket;
+import org.yamcs.yarch.rocksdb.RdbBucketDatabase;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+import org.yamcs.yarch.rocksdb.Tablespace;
+
+public class BackupCliTest extends AbstractCliTest {
+    static Path etcdata;
+
+    @BeforeAll
+    public static void createDb() throws IOException {
+        RocksDB.loadLibrary();
+        etcdata = createTmpEtcData();
+        BucketManager.setMockup();
+    }
+
+    @AfterAll
+    public static void cleanup() throws IOException {
+        RdbStorageEngine.getInstance().shutdown();
+        FileUtils.deleteRecursively(etcdata);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        TimeEncoding.setUp();
+
+        // create some data
+        Random r = new Random();
+        byte[] obj1 = new byte[1024];
+        byte[] obj2 = new byte[1024];
+        r.nextBytes(obj1);
+        r.nextBytes(obj2);
+        String dataDir = etcdata.toString();
+        String backupDir = etcdata.resolve("backup").toString();
+        String restore1Dir = etcdata.resolve("restore1").toString();
+        String restore2Dir = etcdata.resolve("restore2").toString();
+
+        Tablespace tbl = new Tablespace("test");
+        tbl.setCustomDataDir(dataDir + File.separator + "test.rdb");
+        tbl.loadDb(false);
+        var bdb = new RdbBucketDatabase("test", tbl);
+        var bucket = bdb.createBucket("mybucket");
+        bucket.putObject("obj1", "binary", null, obj1);
+        tbl.close();
+
+        // create backup 1 containing obj1
+        runMain("--debug", "backup", "create", "--backup-dir", backupDir, "--data-dir", dataDir, "test");
+        assertTrue(mconsole.output().contains("Backup performed successfully"));
+        verifyBackupList(backupDir, 1);
+
+        tbl.loadDb(false);
+
+        bucket.putObject("obj2", "binary", null, obj2);
+
+        tbl.close();
+
+        // create backup 2 containing obj1 and obj2
+        mconsole.reset();
+        runMain("--debug", "backup", "create", "--backup-dir", backupDir, "--data-dir", dataDir, "test");
+        assertTrue(mconsole.output().contains("Backup performed successfully"));
+
+        verifyBackupList(backupDir, 1, 2);
+
+        // restore backup1
+        RdbBucket rbucket1 = restoreBackup(backupDir, restore1Dir, 1);
+        byte[] robj1 = rbucket1.getObject("obj1");
+        assertArrayEquals(obj1, robj1);
+        assertNull(rbucket1.getObject("obj2"));
+        rbucket1.getTablespace().close();
+
+        // restore backup 2
+        RdbBucket rbucket2 = restoreBackup(backupDir, restore2Dir, 2);
+        robj1 = rbucket2.getObject("obj1");
+        assertArrayEquals(obj1, robj1);
+
+        byte[] robj2 = rbucket2.getObject("obj2");
+        assertArrayEquals(obj2, robj2);
+        rbucket2.getTablespace().close();
+
+        // create backup 3
+        mconsole.reset();
+        runMain("--debug", "backup", "create", "--backup-dir", backupDir, "--data-dir", dataDir, "test");
+        assertTrue(mconsole.output().contains("Backup performed successfully"));
+
+        verifyBackupList(backupDir, 1, 2, 3);
+
+        // delete backup 2
+        mconsole.reset();
+        runMain("--debug", "backup", "delete", "--backup-dir", backupDir, "2");
+
+        assertTrue(mconsole.output().contains("Deleted backup 2"));
+
+        verifyBackupList(backupDir, 1, 3);
+
+        // purge backup
+        mconsole.reset();
+        runMain("--debug", "backup", "purge", "--backup-dir", backupDir, "--keep", "1");
+
+        assertTrue(mconsole.output().contains("Purged operation successful"));
+        verifyBackupList(backupDir, 3);
+    }
+
+    void verifyBackupList(String backupDir, int... id) {
+        mconsole.reset();
+        runMain("--debug", "backup", "list", "--backup-dir", backupDir);
+        String[] lines = mconsole.output().split("\n");
+        assertEquals(id.length + 1, lines.length);
+        for (int i = 0; i < id.length; i++) {
+            assertTrue(lines[i + 1].startsWith(Integer.toString(id[i])));
+        }
+    }
+
+    RdbBucket restoreBackup(String backupDir, String restoreDir, int id) throws RocksDBException, IOException {
+        mconsole.reset();
+        runMain("backup", "restore", "--backup-dir", backupDir, "--restore-dir", restoreDir,
+                Integer.toString(id));
+        Tablespace rtbl = new Tablespace("restore" + id);
+        rtbl.setCustomDataDir(restoreDir);
+        rtbl.loadDb(false);
+
+        RdbBucketDatabase bdb = new RdbBucketDatabase("restore" + id, rtbl);
+        RdbBucket rbucket = bdb.getBucket("mybucket");
+        assertNotNull(rbucket);
+        return rbucket;
+    }
+}
+```
+
+### `ConfCheckTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/ConfCheckTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.utils.FileUtils;
+
+public class ConfCheckTest extends AbstractCliTest {
+
+    @BeforeEach
+    public void resetConfig() {
+        YConfiguration.setupTest(null);
+    }
+
+    @Test
+    public void testConfCheckOK() throws Exception {
+        int exitStatus = runMain("--etc-dir", "src/test/resources/YamcsServer", "confcheck");
+        assertEquals(0, exitStatus);
+        String out = mconsole.output();
+        assertTrue(out.contains("Configuration OK"));
+    }
+
+    @Test
+    public void testConfCheckNOK1() throws Exception {
+        Path etcdir = createTmpEtcData();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(etcdir.resolve("yamcs.yaml").toFile()))) {
+            writer.write("services:\n");
+            writer.write("  - class: bogus\n");
+        }
+        try {
+            YamcsAdminCli yamcsCli = new YamcsAdminCli();
+
+            yamcsCli.parse(new String[] { "confcheck" });
+
+            yamcsCli.validate();
+            yamcsCli.execute();
+        } finally {
+            FileUtils.deleteRecursively(etcdir);
+        }
+        String out = mconsole.output();
+
+        assertTrue(out.contains("Cannot instantiate object from class bogus"));
+        assertTrue(out.contains("Configuration Invalid"));
+    }
+
+    @Test
+    public void testConfCheckNOK2() throws Exception {
+        Path etcdir = createTmpEtcData();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(etcdir.resolve("yamcs.yaml").toFile()))) {
+            writer.write("services:\n");
+            writer.write("  - class: org.yamcs.http.HttpServer\n");
+            writer.write("    args: {bogus: 0}");
+        }
+        try {
+            YamcsAdminCli yamcsCli = new YamcsAdminCli();
+
+            yamcsCli.parse(new String[] { "confcheck" });
+
+            yamcsCli.validate();
+            yamcsCli.execute();
+        } finally {
+            FileUtils.deleteRecursively(etcdir);
+        }
+        String out = mconsole.output();
+        assertTrue(out.contains("Unknown argument bogus"));
+        assertTrue(out.contains("Configuration Invalid"));
+    }
+}
+```
+
+### `ExitException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/ExitException.java`
+
+
+```java
+package org.yamcs.cli;
+
+@SuppressWarnings("serial")
+public class ExitException extends RuntimeException {
+
+    public ExitException() {
+        // TODO Auto-generated constructor stub
+    }
+
+    public ExitException(String message) {
+        super(message);
+        // TODO Auto-generated constructor stub
+    }
+
+    public ExitException(Throwable cause) {
+        super(cause);
+    }
+
+    public ExitException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ExitException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
+    }
+}
+```
+
+### `MdbTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/MdbTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+
+public class MdbTest extends AbstractCliTest {
+    @BeforeEach
+    public void resetConfig() {
+        YConfiguration.setupTest(null);
+    }
+
+    @Test
+    public void testMdbPrintCli() throws Exception {
+        YamcsAdminCli yamcsCli = new YamcsAdminCli();
+        yamcsCli.parse(new String[] { "mdb", "print", "refmdb" });
+        yamcsCli.validate();
+        yamcsCli.execute();
+
+        String out = mconsole.output();
+        assertTrue(out.contains("SpaceSystem /REFMDB"));
+        assertTrue(out.contains("SequenceContainer name: PKT3"));
+        assertTrue(out.contains("Algorithm name: ctx_param_test"));
+        assertTrue(out.contains("MetaCommand name: CALIB_TC"));
+    }
+
+    @Test
+    public void testMdbVerifyCli() throws Exception {
+        YConfiguration.setupTest("src/test/resources/");
+
+        YamcsAdminCli yamcsCli = new YamcsAdminCli();
+        yamcsCli.parse(new String[] { "mdb", "verify", "refmdb" });
+        yamcsCli.validate();
+        yamcsCli.execute();
+        String out = mconsole.output();
+        assertTrue(out.contains("MDB loaded successfully"));
+    }
+}
+```
+
+### `PasswordHashTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/PasswordHashTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.security.PBKDF2PasswordHasher;
+import org.yamcs.security.PasswordHasher;
+
+public class PasswordHashTest extends AbstractCliTest {
+
+    @Test
+    public void testPasswordNotMatching() throws Exception {
+        mconsole.setPassword("pass1".toCharArray(), "pass2".toCharArray());
+        int exitStatus = runMain("--etc-dir", "src/test/resources/YamcsServer", "password-hash");
+        assertEquals(-1, exitStatus);
+        assertTrue(mconsole.output().contains("Password confirmation does not match"));
+    }
+
+    @Test
+    public void testOK() {
+        char[] pass = "pass-word".toCharArray();
+        mconsole.setPassword(pass, pass);
+        assertEquals(0, runMain("--etc-dir", "src/test/resources/YamcsServer", "password-hash"));
+        PasswordHasher hasher = new PBKDF2PasswordHasher();
+
+        String out = mconsole.output();
+        assertTrue(hasher.validatePassword(pass, out.split("\\n")[2]));
+    }
+}
+```
+
+### `RocksDbTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/RocksDbTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Random;
+
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDB;
+import org.yamcs.utils.ByteArrayUtils;
+import org.yamcs.utils.FileUtils;
+
+public class RocksDbTest extends AbstractCliTest {
+
+    @Test
+    public void testRocksdbCompaction() throws Exception {
+        Path etcdata = createTmpEtcData();
+        try {
+            int n = 10_000;
+            YamcsAdminCli yamcsCli = new YamcsAdminCli();
+            String rdbDir = etcdata + "/yamcs-data";
+            try (RocksDB db = RocksDB.open(rdbDir)) {
+                byte[] key = new byte[10];
+                byte[] value = new byte[1024];
+                Random r = new Random();
+                for (int i = 0; i < n; i++) {
+                    ByteArrayUtils.encodeInt(n - i, key, 0);
+                    r.nextBytes(value);
+                    db.put(key, value);
+                }
+            }
+
+            yamcsCli.parse(new String[] { "rocksdb", "compact", "--dbDir", rdbDir, "--sizeMB", "1" });
+            yamcsCli.validate();
+            yamcsCli.execute();
+
+            boolean allSstFilesSmallerThan1Mb = Files.list(etcdata.resolve("yamcs-data"))
+                    .filter(p -> p.toString().endsWith(".sst"))
+                    .allMatch(p -> {
+                        try {// allow a bit of margin 1.3MB instead of 1MB
+                            return Files.size(p) < 1.3 * 1024 * 1024;
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    });
+            assertTrue(allSstFilesSmallerThan1Mb);
+
+        } finally {
+            FileUtils.deleteRecursively(etcdata);
+        }
+    }
+
+    @Test
+    public void testRocksdbHelp() throws Exception {
+        assertEquals(0, runMain("rocksdb", "--help"));
+        assertTrue(mconsole.output().contains("bench      Benchmark rocksdb storage engine"));
+    }
+}
+```
+
+### `UsersCliTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/UsersCliTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.rocksdb.RocksDB;
+import org.yamcs.security.Directory;
+import org.yamcs.security.User;
+import org.yamcs.utils.FileUtils;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+public class UsersCliTest extends AbstractCliTest {
+    static Path etcdata;
+
+    @BeforeAll
+    public static void createDb() throws IOException {
+        RocksDB.loadLibrary();
+        etcdata = createTmpEtcData();
+    }
+
+    @AfterAll
+    public static void cleanup() throws IOException {
+        RdbStorageEngine.getInstance().shutdown();
+        FileUtils.deleteRecursively(etcdata);
+    }
+
+    @Test
+    public void test1() throws Exception {
+        YamcsAdminCli yamcsCli = new YamcsAdminCli();
+
+        Directory directory = new Directory();
+        User user = new User("test1", null);
+        user.setDisplayName("Mr Test1");
+        directory.addUser(user);
+
+        yamcsCli.parse(new String[] { "users", "list" });
+        yamcsCli.validate();
+        yamcsCli.execute();
+
+        String out = mconsole.output();
+        assertTrue(out.contains("test1     Mr Test1"));
+
+        mconsole.reset();
+        yamcsCli.parse(new String[] { "users", "describe", "test1" });
+        yamcsCli.validate();
+        yamcsCli.execute();
+        out = mconsole.output();
+
+        assertTrue(out.contains("username:      test1"));
+        assertTrue(out.contains("display name:  Mr Test1"));
+
+        char[] password = "test1-pass".toCharArray();
+        mconsole.reset();
+        mconsole.setPassword(password, password);
+        yamcsCli.parse(new String[] { "users", "reset-password", "test1" });
+        yamcsCli.validate();
+        yamcsCli.execute();
+
+        // make a new directory to read the users from the rocksdb database
+        directory = new Directory();
+        assertTrue(directory.validateUserPassword("test1", password));
+    }
+
+    @Test
+    public void testInvalidUser() {
+        assertEquals(-1, runMain("--etc-dir", etcdata.toString(), "users", "describe", "test2"));
+        assertTrue(mconsole.output().contains("invalid user '[test2]'"));
+    }
+}
+```
+
+### `YamcsCliTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/cli/YamcsCliTest.java`
+
+
+```java
+package org.yamcs.cli;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YamcsVersion;
+
+public class YamcsCliTest extends AbstractCliTest {
+    @Test
+    public void testGetUsage() throws Exception {
+        YamcsAdminCli yamcsCli = new YamcsAdminCli();
+        String usage = yamcsCli.getUsage();
+        assertTrue(usage.contains("backup           Perform and restore backups"));
+        assertTrue(usage.contains("users            User operations"));
+
+        mconsole.reset();
+        assertEquals(1, runMain());
+        assertEquals(usage + "\n", mconsole.output());
+
+        mconsole.reset();
+        assertEquals(0, runMain("-h"));
+
+        assertEquals(usage + "\n", mconsole.output());
+    }
+
+    @Test
+    public void testVersion() throws Exception {
+        int exitStatus = runMain("--version");
+        assertEquals(0, exitStatus);
+        String out = mconsole.output();
+        assertTrue(out.contains("yamcs " + YamcsVersion.VERSION + ", build " + YamcsVersion.REVISION));
+    }
+
+    @Test
+    public void testInvalidCommand() throws Exception {
+        int exitStatus = runMain("bogus");
+        assertEquals(1, exitStatus);
+        String out = mconsole.output();
+        assertTrue(out.contains("'bogus' is not a valid command "));
+    }
+
+    @Test
+    public void testInvalidOption() throws Exception {
+        assertEquals(1, runMain("--bogus"));
+        assertTrue(mconsole.output().contains("Unknown option '--bogus'"));
+    }
+}
+```

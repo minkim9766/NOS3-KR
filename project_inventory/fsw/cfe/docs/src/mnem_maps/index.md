@@ -3,32 +3,566 @@
 
 **경로:** `fsw/cfe/docs/src/mnem_maps/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_es_cmd_mnem_map`
 
-file--cfe_es_cmd_mnem_map
-file--cfe_es_tlm_mnem_map
-file--cfe_evs_cmd_mnem_map
-file--cfe_evs_tlm_mnem_map
-file--cfe_sb_cmd_mnem_map
-file--cfe_sb_tlm_mnem_map
-file--cfe_tbl_cmd_mnem_map
-file--cfe_tbl_tlm_mnem_map
-file--cfe_time_cmd_mnem_map
-file--cfe_time_tlm_mnem_map
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_es_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+ES_NOOP=$sc_$cpu_ES_NOOP \
+ES_RESETCTRS=$sc_$cpu_ES_ResetCtrs \
+ES_RESET="$sc_$cpu_ES_ProcessorReset, $sc_$cpu_ES_PowerOnReset" \
+ES_SHELL=$sc_$cpu$_ES_Shell \
+ES_STARTAPP=$sc_$cpu_ES_StartApp \
+ES_STOPAPP=$sc_$cpu_ES_StopApp \
+ES_RESTARTAPP=$sc_$cpu_ES_ResetApp \
+ES_RELOADAPP=$sc_$cpu_ES_ReloadApp \
+ES_QUERYAPP=$sc_$cpu_ES_QueryApp \
+ES_WRITEAPPINFO2FILE=$sc_$cpu_ES_WriteAppInfo2File \
+ES_CLEARSYSLOG=$sc_$cpu_ES_ClearSysLog \
+ES_WRITESYSLOG2FILE=$sc_$cpu_ES_WriteSysLog2File \
+ES_CLEARERLOG=$sc_$cpu_ES_ClearERLog \
+ES_WRITEERLOG2FILE=$sc_$cpu_ES_WriteERLog2File \
+ES_STARTLADATA=$sc_$cpu_ES_StartLAData \
+ES_STOPLADATA=$sc_$cpu_ES_StopLAData \
+ES_LAFILTERMASK=$sc_$cpu_ES_LAFilterMask \
+ES_LATRIGGERMASK=$sc_$cpu_ES_LATriggerMask \
+ES_OVERWRITESYSLOGMODE=$sc_$cpu_ES_OverwriteSysLogMode \
+ES_RESETPRCNT=$sc_$cpu_ES_ResetPRCnt \
+ES_SETMAXPRCNT=$sc_$cpu_ES_SetMaxPRCnt \
+ES_DELETECDS=$sc_$cpu_ES_DeleteCDS \
+ES_DUMPCDSREG=$sc_$cpu_ES_WriteCDS2File \
+ES_TLMPOOLSTATS=$sc_$cpu_ES_PoolStats \
+ES_WRITETASKINFO2FILE=$sc_$cpu_ES_WriteTaskInfo2File
 ```
 
-## 항목
+### `cfe_es_tlm_mnem_map`
 
-- [`fsw/cfe/docs/src/mnem_maps/cfe_es_cmd_mnem_map`](file--cfe_es_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_es_tlm_mnem_map`](file--cfe_es_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_evs_cmd_mnem_map`](file--cfe_evs_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_evs_tlm_mnem_map`](file--cfe_evs_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_sb_cmd_mnem_map`](file--cfe_sb_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_sb_tlm_mnem_map`](file--cfe_sb_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_tbl_cmd_mnem_map`](file--cfe_tbl_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_tbl_tlm_mnem_map`](file--cfe_tbl_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_time_cmd_mnem_map`](file--cfe_time_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/docs/src/mnem_maps/cfe_time_tlm_mnem_map`](file--cfe_time_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_es_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+ES_CMDPC=$sc_$cpu_ES_CMDPC \
+ES_CMDEC=$sc_$cpu_ES_CMDEC \
+ES_CKSUM=$sc_$cpu_ES_CKSUM \
+ES_CFEMAJORVER=$sc_$cpu_ES_CFEMAJORVER \
+ES_CFEMINORVER=$sc_$cpu_ES_CFEMINORVER \
+ES_CFEREVISION=$sc_$cpu_ES_CFEREVISION \
+ES_CFEMISSIONREV=$sc_$cpu_ES_CFEMISSIONREV \
+ES_CFESUBMINORVER=$sc_$cpu_ES_CFESUBMINORVER \
+ES_OSMAJORVER=$sc_$cpu_ES_OSMAJORVER \
+ES_OSMINORVER=$sc_$cpu_ES_OSMINORVER \
+ES_OSREVISION=$sc_$cpu_ES_OSREVISION \
+ES_OSMISSIONREV=$sc_$cpu_ES_OSMISSIONREV \
+ES_PSPMAJORVER=$sc_$cpu_ES_PSPMAJORVER \
+ES_PSPMINORVER=$sc_$cpu_ES_PSPMINORVER \
+ES_PSPREVISION=$sc_$cpu_ES_PSPREVISION \
+ES_PSPMISSIONREV=$sc_$cpu_ES_PSPMISSIONREV \
+ES_PAD1=$sc_$cpu_ES_PAD1 \
+ES_PAD2=$sc_$cpu_ES_PAD2 \
+ES_PAD3=$sc_$cpu_ES_PAD3 \
+ES_SYSLOGBYTEUSED=$sc_$cpu_ES_SYSLOGBYTEUSED \
+ES_SYSLOGSIZE=$sc_$cpu_ES_SYSLOGSIZE \
+ES_SYSLOGENTRIES=$sc_$cpu_ES_SYSLOGENTRIES \
+ES_SYSLOGMODE=$sc_$cpu_ES_SYSLOGMODE \
+ES_ERLOGINDEX=$sc_$cpu_ES_ERLOGINDEX \
+ES_ERLOGENTRIES=$sc_$cpu_ES_ERLOGENTRIES \
+ES_REGCOREAPPS=$sc_$cpu_ES_RegCoreApps \
+ES_REGEXTAPPS=$sc_$cpu_ES_RegExtApps \
+ES_REGTASKS=$sc_$cpu_ES_RegTasks \
+ES_REGLIBS=$sc_$cpu_ES_RegLibs \
+ES_RESETTYPE=$sc_$cpu_ES_ResetType \
+ES_RESETSUBTYPE=$sc_$cpu_ES_ResetSubtype \
+ES_PROCRESETCNT=$sc_$cpu_ES_ProcResetCnt \
+ES_MAXPROCRESETS=$sc_$cpu_ES_MaxProcResets \
+ES_BOOTSOURCE=$sc_$cpu_ES_BootSource \
+ES_PERFSTATE=$sc_$cpu_ES_PerfState \
+ES_PERFMODE=$sc_$cpu_ES_PerfMode \
+ES_PERFTRIGCNT=$sc_$cpu_ES_PerfTrigCnt \
+ES_PERFFLTRMASK=$sc_$cpu_ES_PerfFltrMask[MaskCnt] \
+ES_PERFTRIGMASK=$sc_$cpu_ES_PerfTrigMask[MaskCnt] \
+ES_PERFDATASTART=$sc_$cpu_ES_PerfDataStart \
+ES_PERFDATAEND=$sc_$cpu_ES_PerfDataEnd \
+ES_PERFDATACNT=$sc_$cpu_ES_PerfDataCnt \
+ES_PERFDATA2WRITE=$sc_$cpu_ES_PerfData2Write \
+ES_HEAPBYTESFREE=$sc_$cpu_ES_HeapBytesFree \
+ES_HEAPBLKSFREE=$sc_$cpu_ES_HeapBlocksFree \
+ES_HEAPMAXBLK=$sc_$cpu_ES_HeapMaxBlkSize \
+ES_APP_ID=$sc_$cpu_ES_AppID \
+ES_APPTYPE=$sc_$cpu_ES_AppType \
+ES_APPNAME=$sc_$cpu_ES_AppName[OS_MAX_API_NAME] \
+ES_APPENTRYPT=$sc_$cpu_ES_AppEntryPt[OS_MAX_API_NAME] \
+ES_APPFILENAME=$sc_$cpu_ES_AppFilename[OS_MAX_PATH_LEN] \
+ES_STACKSIZE=$sc_$cpu_ES_StackSize \
+ES_MODULEID=$sc_$cpu_ES_ModuleID \
+ES_ADDRVALID=$sc_$cpu_ES_AddrsValid \
+ES_CODEADDR=$sc_$cpu_ES_CodeAddress \
+ES_CODESIZE=$sc_$cpu_ES_CodeSize \
+ES_DATAADDR=$sc_$cpu_ES_DataAddress \
+ES_DATASIZE=$sc_$cpu_ES_DataSize \
+ES_BSSADDR=$sc_$cpu_ES_BSSAddress \
+ES_BSSSIZE=$sc_$cpu_ES_BSSSize \
+ES_STARTADDR=$sc_$cpu_ES_StartAddr \
+ES_EXCEPTNACTN=$sc_$cpu_ES_ExceptnActn \
+ES_PRIORITY=$sc_$cpu_ES_Priority \
+ES_MAINTASKID=$sc_$cpu_ES_MainTaskId \
+ES_MAINTASKEXECNT=$sc_$cpu_ES_ExecutionCtr \
+ES_MAINTASKNAME=$sc_$cpu_ES_MainTaskName[OS_MAX_API_NAME] \
+ES_CHILDTASKS=$sc_$cpu_ES_ChildTasks \
+ES_POOLHANDLE=$sc_$cpu_ES_PoolHandle \
+ES_POOLSIZE=$sc_$cpu_ES_PoolSize \
+ES_BLKSREQ=$sc_$cpu_ES_BlksREQ \
+ES_BLKERRCTR=$sc_$cpu_ES_BlkErrCTR \
+ES_FREEBYTES=$sc_$cpu_ES_FreeBytes \
+ES_BLKSTATS=$sc_$cpu_ES_BlkStats[BLK_SIZES]
+```
+
+### `cfe_evs_cmd_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_evs_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+EVS_NOOP=$sc_$cpu_EVS_NOOP \
+EVS_RESETCTRS=$sc_$cpu_EVS_ResetCtrs \
+EVS_ENAEVENTTYPE="$sc_$cpu_EVS_EnaEventType, $sc_$cpu_EVS_EnaEventTypeMask" \
+EVS_DISEVENTTYPE="$sc_$cpu_EVS_DisEventType, $sc_$cpu_EVS_DisEventTypeMask" \
+EVS_SETEVTFMT=$sc_$cpu_EVS_SetEvtFmt \
+EVS_ENAAPPEVTTYPE="$sc_$cpu_EVS_EnaAppEvtType, $sc_$cpu_EVS_EnaAppEvtTypeMask" \
+EVS_DISAPPEVTTYPE="$sc_$cpu_EVS_DisAppEvtType, $sc_$cpu_EVS_DisAppEvtTypeMask" \
+EVS_ENAAPPEVGEN=$sc_$cpu_EVS_EnaAppEvGen \
+EVS_DISAPPEVGEN=$sc_$cpu_EVS_DisAppEvGen \
+EVS_RSTAPPCTRS=$sc_$cpu_EVS_RstAppCtrs \
+EVS_SETBINFLTRMASK=$sc_$cpu_EVS_SetBinFltrMask \
+EVS_ENAPORT="$sc_$cpu_EVS_EnaPort, $sc_$cpu_EVS_EnaPortMask" \
+EVS_DISPORT="$sc_$cpu_EVS_DisPort, $sc_$cpu_EVS_DisPortMask" \
+EVS_RSTBINFLTRCTR=$sc_$cpu_EVS_RstBinFltrCtr \
+EVS_RSTALLFLTRS=$sc_$cpu_EVS_RstAllFltrs \
+EVS_ADDEVTFLTR=$sc_$cpu_EVS_AddEvtFltr \
+EVS_DELEVTFLTR=$sc_$cpu_EVS_DelEvtFltr \
+EVS_WRITEAPPDATA2FILE=$sc_$cpu_EVS_WriteAppData2File \
+EVS_WRITELOG2FILE=$sc_$cpu_EVS_WriteLog2File \
+EVS_SETLOGMODE=$sc_$cpu_EVS_SetLogMode \
+EVS_CLRLOG=$sc_$cpu_EVS_ClrLog
+```
+
+### `cfe_evs_tlm_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_evs_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+EVS_CMDPC=$sc_$cpu_EVS_CMDPC \
+EVS_CMDEC=$sc_$cpu_EVS_CMDEC \
+EVS_MSGFMTMODE=$sc_$cpu_EVS_MSGFMTMODE \
+EVS_MSGTRUNC=$sc_$cpu_EVS_MSGTRUNC \
+EVS_UNREGAPPC=$sc_$cpu_EVS_UNREGAPPC \
+EVS_OUTPUTPORT=$sc_$cpu_EVS_OUTPUTPORT \
+EVS_LOGFULL=$sc_$cpu_EVS_LOGFULL \
+EVS_LOGMODE=$sc_$cpu_EVS_LOGMODE \
+EVS_MSGSENTC=$sc_$cpu_EVS_MSGSENTC \
+EVS_LOGOVERFLOWC=$sc_$cpu_EVS_LOGOVERFLOWC \
+EVS_LOGENABLED=$sc_$cpu_EVS_LOGENABLED \
+EVS_HK_SPARE1=$sc_$cpu_EVS_HK_SPARE1 \
+EVS_HK_SPARE2=$sc_$cpu_EVS_HK_SPARE2 \
+EVS_HK_SPARE3=$sc_$cpu_EVS_HK_SPARE3 \
+EVS_MEMPOOLHDL=$sc_$cpu_EVS_MemPoolHdl \
+EVS_APP=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS] \
+EVS_APPID=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPID \
+EVS_APPMSGSENTC=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPMSGSENTC \
+EVS_APPENASTAT=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].APPENASTAT \
+EVS_SQUELCHEDC=$sc_$cpu_EVS_APP[CFE_PLATFORM_ES_MAX_APPLICATIONS].SQUELCHEDC \
+EVS_APPNAME=$sc_$cpu_EVS_APPNAME[OS_MAX_API_NAME] \
+EVS_EVENTID=$sc_$cpu_EVS_EVENTID \
+EVS_EVENTTYPE=$sc_$cpu_EVS_EVENTTYPE \
+EVS_SCID=$sc_$cpu_EVS_SCID \
+EVS_PROCESSORID=$sc_$cpu_EVS_PROCESSORID \
+EVS_EVENT=$sc_$cpu_EVS_EVENT[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH] \
+EVS_SPARE1=$sc_$cpu_EVS_SPARE1 \
+EVS_SPARE2=$sc_$cpu_EVS_SPARE2
+```
+
+### `cfe_sb_cmd_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_sb_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+SB_NOOP=$sc_$cpu_SB_NOOP \
+SB_RESETCTRS=$sc_$cpu_SB_ResetCtrs \
+SB_DUMPSTATS=$sc_$cpu_SB_DumpStats \
+SB_WRITEROUTING2FILE=$sc_$cpu_SB_WriteRouting2File \
+SB_ENAROUTE=$sc_$cpu_SB_EnaRoute \
+SB_DISROUTE=$sc_$cpu_SB_DisRoute \
+SB_DUMPNETWORK=$sc_$cpu_SB_DumpNetwork \
+SB_WRITEPIPE2FILE=$sc_$cpu_SB_WritePipe2File \
+SB_WRITEMAP2FILE=$sc_$cpu_SB_WriteMap2File \
+SB_ENASUBRPTG=$sc_$cpu_SB_EnaSubRptg \
+SB_DISSUBRPTG=$sc_$cpu_SB_DisSubRptg \
+SB_SENDPREVSUBS=$sc_$cpu_SB_SendPrevSubs
+```
+
+### `cfe_sb_tlm_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_sb_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+SB_CMDPC=$sc_$cpu_SB_CMDPC \
+SB_CMDEC=$sc_$cpu_SB_CMDEC \
+SB_NOSUBEC=$sc_$cpu_SB_NoSubEC \
+SB_MSGSNDEC=$sc_$cpu_SB_MsgSndEC \
+SB_MSGRECEC=$sc_$cpu_SB_MsgRecEC \
+SB_INTERNALEC=$sc_$cpu_SB_InternalEC \
+SB_NEWPIPEEC=$sc_$cpu_SB_NewPipeEC \
+SB_SUBSCREC=$sc_$cpu_SB_SubscrEC \
+SB_PIPEOPTSEC=$sc_$cpu_SB_PipeOptsEC \
+SB_DUPSUBCNT=$sc_$cpu_SB_DupSubCnt \
+SB_GETPIPEIDBYNAMEEC=$sc_$cpu_SB_GetPipeIDByNameEC \
+SB_SPARE2ALIGN=$sc_$cpu_SB_Spare2Align[2] \
+SB_PIPEOVREC=$sc_$cpu_SB_PipeOvrEC \
+SB_MSGLIMEC=$sc_$cpu_SB_MsgLimEC \
+SB_MEMPOOLHANDLE=$sc_$cpu_SB_MemPoolHdl \
+SB_MEMINUSE=$sc_$cpu_SB_MemInUse \
+SB_UNMARKEDMEM=$sc_$cpu_SB_UnMarkedMem \
+SB_PDPIPEID=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDPIPEID \
+SB_PDSPARE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDSPARE \
+SB_PDDEPTH=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDDEPTH \
+SB_PDINUSE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDINUSE \
+SB_PDPKINUSE=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES].SB_PDPKINUSE \
+SB_SMMIDIU=$sc_$cpu_SB_Stat.SB_SMMIDIU \
+SB_SMPMIDIU=$sc_$cpu_SB_Stat.SB_SMPMIDIU \
+SB_SMMMIDALW=$sc_$cpu_SB_Stat.SB_SMMMIDALW \
+SB_SMPIU=$sc_$cpu_SB_Stat.SB_SMPIU \
+SB_SMPPIU=$sc_$cpu_SB_Stat.SB_SMPPIU \
+SB_SMMPALW=$sc_$cpu_SB_Stat.SB_SMMPALW \
+SB_SMBMIU=$sc_$cpu_SB_Stat.SB_SMBMIU \
+SB_SMPBMIU=$sc_$cpu_SB_Stat.SB_SMPBMIU \
+SB_SMMBMALW=$sc_$cpu_SB_Stat.SB_SMMBMALW \
+SB_SMSIU=$sc_$cpu_SB_Stat.SB_SMSIU \
+SB_SMPSIU=$sc_$cpu_SB_Stat.SB_SMPSIU \
+SB_SMMSALW=$sc_$cpu_SB_Stat.SB_SMMSALW \
+SB_SMELEIU=$sc_$cpu_SB_Stat.SB_SMELEIU \
+SB_SMPELEIU=$sc_$cpu_SB_Stat.SB_SMPELEIU \
+SB_SMMELEA=$sc_$cpu_SB_Stat.SB_SMMELEA \
+SB_SMSBBIU=$sc_$cpu_SB_Stat.SB_SMSBBIU \
+SB_SMPSBBIU=$sc_$cpu_SB_Stat.SB_SMPSBBIU \
+SB_SMMPDALW=$sc_$cpu_SB_Stat.SB_SMMPDALW \
+SB_SMPDS=$sc_$cpu_SB_Stat.SB_SMPDS[CFE_PLATFORM_SB_MAX_PIPES]
+```
+
+### `cfe_tbl_cmd_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_tbl_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TBL_NOOP=$sc_$cpu_TBL_NOOP \
+TBL_RESETCTRS=$sc_$cpu_TBL_ResetCtrs \
+TBL_LOAD=$sc_$cpu_TBL_Load \
+TBL_DUMP=$sc_$cpu_TBL_DUMP \
+TBL_VALIDATE=$sc_$cpu_TBL_VALIDATE \
+TBL_ACTIVATE=$sc_$cpu_TBL_ACTIVATE \
+TBL_WRITEREG2FILE=$sc_$cpu_TBL_WriteReg2File \
+TBL_TLMREG=$sc_$cpu_TBL_TLMReg \
+TBL_DELETECDS=$sc_$cpu_TBL_DeleteCDS \
+TBL_LOADABORT=$sc_$cpu_TBL_LOADABORT
+
+```
+
+### `cfe_tbl_tlm_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_tbl_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TBL_CMDPC=$sc_$cpu_TBL_CMDPC \
+TBL_CMDEC=$sc_$cpu_TBL_CMDEC \
+TBL_NUMTABLES=$sc_$cpu_TBL_NumTables \
+TBL_NUMUPDATESPEND=$sc_$cpu_TBL_NumUpdatesPend \
+TBL_VALCOMPLTDCTR=$sc_$cpu_TBL_ValCompltdCtr \
+TBL_LASTVALCRC=$sc_$cpu_TBL_LastValCRC \
+TBL_LASTVALS=$sc_$cpu_TBl_LastValS \
+TBL_LASTVALBUF=$sc_$cpu_TBL_LastValBuf \
+TBL_LASTVALTBLNAME=$sc_$cpu_TBL_LastValTblName[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_VALSUCCESSCTR=$sc_$cpu_TBL_ValSuccessCtr \
+TBL_VALFAILEDCTR=$sc_$cpu_TBL_ValFailedCtr \
+TBL_VALREQCTR=$sc_$cpu_TBL_ValReqCtr \
+TBL_NUMFREESHRBUF=$sc_$cpu_TBL_NumFreeShrBuf \
+TBL_BYTEALIGNPAD1=$sc_$cpu_TBL_ByteAlignPad1 \
+TBL_MEMPOOLHANDLE=$sc_$cpu_TBL_MemPoolHandle \
+TBL_LASTUPDTIME="$sc_$cpu_TBL_LastUpdTime, $sc_$cpu_TBL_SECONDS, $sc_$cpu_TBL_SUBSECONDS" \
+TBL_LASTUPDTBLNAME=$sc_$cpu_TBL_LastUpdTblName[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_LASTFILELOADED=$sc_$cpu_TBL_LastFileLoaded[OS_MAX_PATH_LEN] \
+TBL_LASTFILEDUMPED=$sc_$cpu_TBL_LastFileDumped[OS_MAX_PATH_LEN] \
+TBL_LASTTABLELOADED=$sc_$cpu_TBL_LastTableLoaded[CFE_TBL_MAX_FULL_NAME_LEN] \
+TBL_BYTEALIGNPAD2=$sc_$cpu_TBL_ByteAlignPad2 \
+TBL_SIZE=$sc_$cpu_TBL_SIZE \
+TBL_CRC=$sc_$cpu_TBL_CRC \
+TBL_ACTBUFADD=$sc_$cpu_TBL_ActBufAdd \
+TBL_IACTBUFADD=$sc_$cpu_TBL_IActBufAdd \
+TBL_VALFUNCPTR=$sc_$cpu_TBL_ValFuncPtr \
+TBL_TIMELASTUPD="$sc_$cpu_TBL_TimeLastUpd, $sc_$cpu_TBL_TLUSECONDS, $sc_$cpu_TBL_TLUSUBSECONDS" \
+TBL_FILECSECONDS=$sc_$cpu_TBL_FILECSECONDS \
+TBL_FILECSUBSECONDS=$sc_$cpu_TBL_FILECSUBSECONDS \
+TBL_LOADEDONCE=$sc_$cpu_TBL_LoadedOnce \
+TBL_UPDATEPNDNG=$sc_$cpu_TBL_UpdatePndng \
+TBL_DUMPONLY=$sc_$cpu_TBL_DumpOnly \
+TBL_DBLBUFFERED=$sc_$cpu_TBL_DblBuffered \
+TBL_NAME=$sc_$cpu_TBL_Name[CFE_TB_MAX_FULL_NAME_LEN] \
+TBL_LASTFILEUPD=$sc_$cpu_TBL_LastFileUpd[OS_MAX_PATH_LEN] \
+TBL_OWNERAPP=$sc_$cpu_TBL_OwnerApp[OS_MAX_API_NAME] \
+TBL_CRITICAL=$sc_$cpu_TBL_Spare3 \
+TBL_SPARE4=$sc_$cpu_TBL_Spare4
+```
+
+### `cfe_time_cmd_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_time_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TIME_NOOP=$sc_$cpu_TIME_NOOP \
+TIME_RESETCTRS=$sc_$cpu_TIME_ResetCtrs \
+TIME_REQUESTDIAG=$sc_$cpu_TIME_RequestDiag \
+TIME_SETSOURCE=$sc_$cpu_TIME_SetSource \
+TIME_SETSTATE=$sc_$cpu_TIME_SetState \
+TIME_ADDCLOCKLAT=$sc_$cpu_TIME_AddClockLat \
+TIME_SUBCLOCKLAT=$sc_$cpu_TIME_SubClockLat \
+TIME_SETCLOCK=$sc_$cpu_TIME_SetClock \
+TIME_SETCLOCKMET=$sc_$cpu_TIME_SetClockMET \
+TIME_SETCLOCKSTCF=$sc_$cpu_TIME_SetClockSTCF \
+TIME_SETCLOCKLEAP=$sc_$cpu_TIME_SetClockLeap \
+TIME_ADDSTCFADJ=$sc_$cpu_TIME_AddSTCFAdj \
+TIME_SUBSTCFADJ=$sc_$cpu_TIME_SubSTCFAdj \
+TIME_ADD1HZSTCF=$sc_$cpu_TIME_Add1HzSTCF \
+TIME_SUB1HZSTCF=$sc_$cpu_TIME_Sub1HzSTCF \
+TIME_STOPADD1HZ=$sc_$cpu_TIME_StopAdd1Hz \
+TIME_STOPSUB1HZ=$sc_$cpu_TIME_StopSub1Hz \
+TIME_SETSIGNAL=$sc_$cpu_TIME_SetSignal
+```
+
+### `cfe_time_tlm_mnem_map`
+
+**경로:** `fsw/cfe/docs/src/mnem_maps/cfe_time_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) Avoid style formatting, historically caused warnings
+# 6) Multiple items should be surrounded by quotes: "a, b"
+#---------------------------------------------------------------------------
+ALIASES += \
+TIME_CMDPC=$sc_$cpu_TIME_CMDPC \
+TIME_CMDEC=$sc_$cpu_TIME_CMDEC \
+TIME_STATEFLG="$sc_$cpu_TIME_StateFlg, $sc_$cpu_TIME_FlagSet, $sc_$cpu_TIME_FlagFly, $sc_$cpu_TIME_FlagSrc, $sc_$cpu_TIME_FlagPri, $sc_$cpu_TIME_FlagSfly, $sc_$cpu_TIME_FlagCfly, $sc_$cpu_TIME_FlagAdjd, $sc_$cpu_TIME_Flag1Hzd, $sc_$cpu_TIME_FlagClat, $sc_$cpu_TIME_FlagSorC, $sc_$cpu_TIME_FlagNIU" \
+TIME_APISTATE=$sc_$cpu_TIME_APIState \
+TIME_LEAPSECS=$sc_$cpu_TIME_LeapSecs \
+TIME_METSECS=$sc_$cpu_TIME_METSecs \
+TIME_METSUBSECS=$sc_$cpu_TIME_METSubsecs \
+TIME_STCFSECS=$sc_$cpu_TIME_STCFSecs \
+TIME_STCFSUBSECS=$sc_$cpu_TIME_STCFSubsecs \
+TIME_1HZADJSECS=$sc_$cpu_TIME_1HzAdjSecs \
+TIME_1HZADJSSECS=$sc_$cpu_TIME_1HzAdjSSecs \
+TIME_1HZDLYSECS=$sc_$cpu_TIME_1HzAdjSecs \
+TIME_1HZDLYSSECS=$sc_$cpu_TIME_1HzAdjSSecs \
+TIME_TMETS="$sc_$cpu_TIME_DTMETS, $sc_$cpu_TIME_DTMETSs" \
+TIME_STCFS="$sc_$cpu_TIME_DSTCFS, $sc_$cpu_TIME_DSTCFSS" \
+TIME_LATENTS="$sc_$cpu_TIME_DLatentS, $sc_$cpu_TIME_DLatentSs" \
+TIME_TVALIDS="$sc_$cpu_TIME_DTValidS, $sc_$cpu_TIME_DTValidSs" \
+TIME_LEAPS=$sc_$cpu_TIME_DLeapS \
+TIME_APISTATE=$sc_$cpu_TIME_DAPIState \
+TIME_ELAPSEDS="$sc_$cpu_TIME_DElapsedS, $sc_$cpu_TIME_DElapsedSs" \
+TIME_LOCALS="$sc_$cpu_TIME_DLocalS, $sc_$cpu_TIME_DLocalSs" \
+TIME_METS="$sc_$cpu_TIME_DMETS, $sc_$cpu_TIME_DMETSs" \
+TIME_TAIS="$sc_$cpu_TIME_DTAIS, $sc_$cpu_TIME_DTAISS" \
+TIME_UTCS="$sc_$cpu_TIME_DUTCS, $sc_$cpu_TIME_DUTCSS" \
+TIME_VALID=$sc_$cpu_TIME_DValid \
+TIME_FLYWHEEL=$sc_$cpu_TIME_DFlywheel \
+TIME_SOURCE=$sc_$cpu_TIME_DSource \
+TIME_SIGNAL=$sc_$cpu_TIME_DSignal \
+TIME_SRVFLY=$sc_$cpu_TIME_DSrvFly \
+TIME_CMD2FLY=$sc_$cpu_TIME_DCMD2Fly \
+TIME_STATEFLAGS="$sc_$cpu_TIME_DStateFlags, $sc_$cpu_TIME_DFlagSet, $sc_$cpu_TIME_DFlagFly, $sc_$cpu_TIME_DFlagSrc, $sc_$cpu_TIME_DFlagPri, $sc_$cpu_TIME_DFlagSfly, $sc_$cpu_TIME_DFlagCfly, $sc_$cpu_TIME_DFlagAdjd, $sc_$cpu_TIME_DFlag1Hzd, $sc_$cpu_TIME_DFlagClat, $sc_$cpu_TIME_DFlagSorC, $sc_$cpu_TIME_DFlagNIU" \
+TIME_ADJUSTDIR=$sc_$cpu_TIME_DAdjustDir \
+TIME_1HZADJDIR=$sc_$cpu_TIME_D1HzAdjDir \
+TIME_LATENTDIR=$sc_$cpu_TIME_DLatentDir \
+TIME_ADJUSTS="$sc_$cpu_TIME_DAdjustS, $sc_$cpu_TIME_DAdjustSs" \
+TIME_1HZADJS="$sc_$cpu_TIME_D1HzAdjS, $sc_$cpu_TIME_D1HzAdjSs" \
+TIME_TTS="$sc_$cpu_TIME_DTTS, $sc_$cpu_TIME_DTTSs" \
+TIME_TDS="$sc_$cpu_TIME_DTDS, $sc_$cpu_TIME_DTDSs" \
+TIME_VERIFYCNT=$sc_$cpu_TIME_DVerifyCNT \
+TIME_VERIFYER=$sc_$cpu_TIME_DVerifyER \
+TIME_TSDETCNT=$sc_$cpu_TIME_DTSDetCNT \
+TIME_TATTCNT=$sc_$cpu_TIME_DTatTCNT \
+TIME_TSISRCNT=$sc_$cpu_TIME_DTsISRCNT \
+TIME_TSISRERR=$sc_$cpu_TIME_DTsISRERR \
+TIME_TSTASKCNT=$sc_$cpu_TIME_DTsTaskCNT \
+TIME_VERSIONCNT=$sc_$cpu_TIME_DVersionCNT \
+TIME_1HZISRCNT=$sc_$cpu_TIME_D1HzISRCNT \
+TIME_1HZTASKCNT=$sc_$cpu_TIME_D1HzTaskCNT \
+TIME_LOGICALMET=$sc_$cpu_TIME_DLogicalMET \
+TIME_MINWINDOW=$sc_$cpu_TIME_DMinWindow \
+TIME_MAXWINDOW=$sc_$cpu_TIME_DMaxWindow \
+TIME_WRAPS="$sc_$cpu_TIME_DWrapS, $sc_$cpu_TIME_DWrapSs" \
+TIME_MAXSS=$sc_$cpu_TIME_DMaxSs \
+TIME_MINSS=$sc_$cpu_TIME_DMinSs \
+TIME_ATASTSTAT=$sc_$cpu_TIME_DataStStat
+```

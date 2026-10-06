@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -18,35 +18,376 @@ SignalGen/index
 test/index
 Top/index
 TypeDemo/index
-file--.gitignore
-file--CMakeLists.txt
-file--config.json
-file--fprime-gds.yml
-file--gds.ini
-file--Main.cpp
-file--PrmDb.dat
-file--README.md
-file--settings.ini
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/BlockDriver/`](BlockDriver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/DpDemo/`](DpDemo/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PingReceiver/`](PingReceiver/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/RecvBuffApp/`](RecvBuffApp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SendBuffApp/`](SendBuffApp/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/`](SignalGen/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Top/`](Top/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/TypeDemo/`](TypeDemo/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/config.json`](file--config.json) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/fprime-gds.yml`](file--fprime-gds.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/gds.ini`](file--gds.ini) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/Main.cpp`](file--Main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/PrmDb.dat`](file--PrmDb.dat) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/settings.ini`](file--settings.ini) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/.gitignore`
+
+
+```text
+Ref.log
+ThreadedTCP.log
+stdout
+isf_dict
+commands/
+channels/
+events/
+dict/
+DpCat
+seq
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/CMakeLists.txt`
+
+
+```cmake
+####
+# 'Ref' Deployment:
+#
+# This sets up the build for the 'Ref' Application, including the custom reference
+# components. In addition, it imports FPrime.cmake, which includes the core F Prime
+# components.
+####
+
+# Allow CMake 3.0 - 4.0 projects to set the VERSION variable in the `project` call
+cmake_policy(SET CMP0048 NEW)
+# CMake basic setup: version consistent with requirements.txt, and define a project 
+cmake_minimum_required(VERSION 3.26)
+project(Ref VERSION 1.0.0 LANGUAGES C CXX)
+
+# Find the fprime package and include the core codebase
+set(FPRIME_INCLUDE_FRAMEWORK_CODE ON)
+find_package(FPrime REQUIRED PATHS "${CMAKE_CURRENT_LIST_DIR}/..")
+
+add_compile_options(
+    $<$<COMPILE_LANGUAGE:CXX>:-Wold-style-cast>
+    -Wall
+    -Wconversion
+    -Wdouble-promotion
+    -Werror
+    -Wextra
+    -Wno-unused-parameter
+    -Wno-vla
+    -Wshadow
+    -pedantic
+)
+
+# Add subdirectories for the Ref project specific components
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/PingReceiver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/RecvBuffApp/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SendBuffApp/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/SignalGen/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/TypeDemo/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DpDemo/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/BlockDriver/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Top/")
+
+register_fprime_deployment(
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/Main.cpp"
+    DEPENDS
+        ${PROJECT_NAME}_Top
+)
+# The following compile options will only apply to the deployment executable.
+# The extra warnings trigger in core F Prime so we don't apply them there.
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wall)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wextra)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Werror)
+target_compile_options("${PROJECT_NAME}" PUBLIC -pedantic)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wshadow)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wconversion)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wsign-conversion)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wformat-security)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wnon-virtual-dtor)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wold-style-cast)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Woverloaded-virtual)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wno-unused-parameter)
+target_compile_options("${PROJECT_NAME}" PUBLIC -Wundef)
+```
+
+### `config.json`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/config.json`
+
+
+```json
+{
+    "Drv.BlockDriver" : "Ref.blockDrv",
+    "Svc.ActiveRateGroup" : "Ref.rateGroup1Comp",
+    "Svc.CommandDispatcher" : "Ref.cmdDisp",
+    "Svc.CmdSequencer" : "Ref.cmdSeq",
+    "Svc.FileDownlink" : "Ref.fileDownlink",
+    "Svc.FileManager" : "Ref.fileManager",
+    "Svc.FileUplink" : "Ref.fileUplink",
+    "Ref.PingReceiver" : "Ref.pingRcvr",
+    "Svc.ActiveLogger" : "Ref.eventLogger",
+    "Svc.TlmChan" : "Ref.tlmSend",
+    "Svc.PrmDb" : "Ref.prmDb",
+    "Svc.DpCatalog" : "Ref.dpCat",
+    "Svc.DpManager" : "Ref.dpMgr",
+    "Svc.DpWriter" : "Ref.dpWriter",
+    "Svc.ComQueue" : "Ref.comQueue",
+    "Ref.TypeDemo" : "Ref.typeDemo",
+    "Svc.Health" : "Ref.health",
+    "Ref.SignalGen" : "Ref.SG1",
+    "Ref.SendBuff" : "Ref.sendBuffComp",
+    "Drv.TcpClient" : "Ref.comDriver",
+    "Svc.AssertFatalAdapter" : "Ref.fatalAdapter",
+    "Svc.FatalHandler" : "Ref.fatalHandler",
+    "Svc.BufferManager" : "Ref.commsBufferManager",
+    "Svc.PosixTime" : "Ref.posixTime",
+    "Svc.RateGroupDriver" : "Ref.rateGroupDriverComp",
+    "Ref.RecvBuff" : "Ref.recvBuffComp",
+    "Svc.Version" : "Ref.version",
+    "Svc.PassiveTextLogger" : "Ref.textLogger",
+    "Svc.SystemResources" : "Ref.systemResources",
+    "Svc.BufferManager" : "Ref.dpBufferManager",
+    "Svc.FrameAccumulator" : "Ref.frameAccumulator",
+    "Svc.FprimeDeframer" : "Ref.deframer",
+    "Svc.FprimeRouter" : "Ref.fprimeRouter",
+    "Svc.FprimeFramer" : "Ref.fprimeFramer",
+    "Svc.ComStub" : "Ref.comStub"
+}
+```
+
+### `fprime-gds.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/fprime-gds.yml`
+
+
+```yaml
+command-line-options:
+  scid: 0x0044 
+  framing-selection: space-packet-space-data-link
+```
+
+### `gds.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/gds.ini`
+
+
+```text
+[misc]
+test: test config value [IN FILE]
+```
+
+### `Main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/Main.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Main.cpp
+// \author mstarch
+// \brief main program for reference application. Intended for CLI-based systems (Linux, macOS)
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+// Used to access topology functions
+#include <Ref/Top/RefTopology.hpp>
+// Used for signal handling shutdown
+#include <signal.h>
+// Used for command line argument processing
+#include <getopt.h>
+// Used for printf functions
+#include <cstdlib>
+// Used to get the Os::Console
+#include <Os/Os.hpp>
+
+
+/**
+ * \brief print commandline help message
+ *
+ * This will print a command line help message including the available command line arguments.
+ *
+ * @param app: name of application
+ */
+void print_usage(const char* app) {
+    (void)printf("Usage: ./%s [options]\n-a\thostname/IP address\n-p\tport_number\n", app);
+}
+
+/**
+ * \brief shutdown topology cycling on signal
+ *
+ * The reference topology allows for a simulated cycling of the rate groups. This simulated cycling needs to be stopped
+ * in order for the program to shutdown. This is done via handling signals such that it is performed via Ctrl-C
+ *
+ * @param signum
+ */
+static void signalHandler(int signum) {
+    Ref::stopRateGroups();
+}
+
+/**
+ * \brief execute the program
+ *
+ * This F´ program is designed to run in standard environments (e.g. Linux/macOs running on a laptop). Thus it uses
+ * command line inputs to specify how to connect.
+ *
+ * @param argc: argument count supplied to program
+ * @param argv: argument values supplied to program
+ * @return: 0 on success, something else on failure
+ */
+int main(int argc, char* argv[]) {
+    Os::init();
+    U16 port_number = 0;
+    I32 option = 0;
+    char* hostname = nullptr;
+
+    // Loop while reading the getopt supplied options
+    while ((option = getopt(argc, argv, "hp:a:")) != -1) {
+        switch (option) {
+            // Handle the -a argument for address/hostname
+            case 'a':
+                hostname = optarg;
+                break;
+            // Handle the -p port number argument
+            case 'p':
+                port_number = static_cast<U16>(atoi(optarg));
+                break;
+            // Cascade intended: help output
+            case 'h':
+            // Cascade intended: help output
+            case '?':
+            // Default case: output help and exit
+            default:
+                print_usage(argv[0]);
+                return (option == 'h') ? 0 : 1;
+        }
+    }
+    // Object for communicating state to the reference topology
+    Ref::TopologyState inputs;
+    inputs.hostname = hostname;
+    inputs.port = port_number;
+
+    // Setup program shutdown via Ctrl-C
+    signal(SIGINT, signalHandler);
+    signal(SIGTERM, signalHandler);
+    (void)printf("Hit Ctrl-C to quit\n");
+
+    // Setup, cycle, and teardown topology
+    Ref::setupTopology(inputs);
+    Ref::startRateGroups(Fw::TimeInterval(1, 0));  // Program loop cycling rate groups at 1Hz
+    Ref::teardownTopology(inputs);
+    (void)printf("Exiting...\n");
+    return 0;
+}
+```
+
+### `PrmDb.dat`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/PrmDb.dat`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/README.md`
+
+
+````markdown
+# Ref the Reference Application
+
+The purpose of this application is to demonstrate a completely assembled application for use on Linux, and macOS.  This allows the user to get
+up and running quickly, test the installation, and work with the code before embedded hardware may be available. Should the user be interested in
+cross-compiling, please see the [F Prime LED Tutorial](https://fprime.jpl.nasa.gov/latest/tutorials-led-blinker/docs/led-blinker/).
+
+## Prerequisites
+
+Understanding the reference application has a few minimal prerequisites.
+
+**Installing F´**
+
+Please follow the [install guide for F´](../docs/getting-started/installing-fprime.md).
+
+## Building and Running the Ref Application
+
+To get started with creating the Ref application we will first need to clone the nasa/fprime repository. We then can change directories into the project's
+Ref directory so that we have a place to build the Ref application.
+
+```
+git clone https://github.com/nasa/fprime
+cd fprime/Ref
+```
+
+With the repository cloned and the project's Ref directory entered we can now create a python virtual environment, activate that environment, and then
+install the project requirements.
+
+```
+python3 -m venv fprime-venv
+. fprime-venv/bin/activate
+pip install -r ../requirements.txt
+```
+
+In order to build the Ref application, or any other F´ application, we need to generate a build directory.  F´ uses CMake under the hood,
+which requires a directory to work in. To generate a build directory, we will use the `fprime-util` (a wrapper for CMake to streamline standard 
+F´ processes). This can be done with the following commands:
+
+```
+fprime-util generate
+```
+
+Now that the build directory has been generated, the user need not run `fprime-util generate` again unless the build directory has been removed.
+
+The next step is to build the Ref application's code. This is done for the current system that the user is running on. This is handled by CMake
+and will produce a binary that can be run on the user's system. This is accomplished by using the `build` subcommand of `fprime-util`.
+
+## Running the F´ Ground System and Code
+
+F´ ships with a browser-based test ground system. This system is designed to help developers of F´
+projects quickly test and work with F´ code without much overhead. This ground system can be run
+with the following commands. Please note: the Ref application's binary will also be run
+automatically. This allows for quick testing on Linux and macOS. Before running the GDS, make sure
+that you have built the Ref example.
+
+```
+cd fprime/Ref
+fprime-gds
+```
+
+The user may now explore the "Commanding", "Event", and "Channels" tabs to see the F´ code in action.  The "Logs" tab has logs for the running
+application should an error arise.  See: Logs -> Ref.log to see standard output of the Ref app.
+
+To run the ground system without starting the Ref app:
+```
+cd fprime/Ref
+fprime-gds --no-app
+```
+
+The ref app may then be run independently from the created 'bin' directory.
+
+```
+cd fprime/Ref/build-artifacts/<platform>/bin/
+./Ref -a 127.0.0.1 -p 50000
+```
+
+## Quick Tips
+
+- The F´ GDS defaults to port 50000. More information can be found with `fprime-gds --help`
+- The F´ utility's build command can build individual components too.
+- The 'generate' command can take a toolchain argument for quickly generating a cross-compile `fprime-util generate raspberrypi` for example.
+
+Further work with the F´ utility can be found in the [HelloWorld tutorial](../docs/tutorials/index.md) tutorial.
+
+````
+
+### `settings.ini`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/settings.ini`
+
+
+```text
+; Ref requires no specific settings thus the [fprime] configuration block is empty
+; For more information: https://fprime.jpl.nasa.gov/latest/docs/user-manual/framework/settings/
+[fprime]
+framework_path: ..
+```

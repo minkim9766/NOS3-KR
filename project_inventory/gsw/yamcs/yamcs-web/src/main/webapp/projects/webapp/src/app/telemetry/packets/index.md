@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,43 @@ packet/index
 packet-list/index
 packet-query-list/index
 packets-page-tabs/index
-file--packets.resolvers.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/create-packet-query-dialog/`](create-packet-query-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/edit-packet-query-dialog/`](edit-packet-query-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/`](packet/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-list/`](packet-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet-query-list/`](packet-query-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets-page-tabs/`](packets-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets.resolvers.ts`](file--packets.resolvers.ts) — UTF-8 텍스트 파일 본문 포함
+### `packets.resolvers.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packets.resolvers.ts`
+
+
+```typescript
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { ParseFilterSubscription, YamcsService } from '@yamcs/webapp-sdk';
+
+/**
+ * Resolver that waits for the ParseFilter subscription to be
+ * fully established.
+ *
+ * This can be used to avoid timing issues for the initial
+ * filter parse.
+ */
+export const resolveParseFilterSubscription: ResolveFn<
+  ParseFilterSubscription
+> = (route, state) => {
+  const yamcs = inject(YamcsService);
+  const subscription = yamcs.yamcsClient.createParseFilterSubscription(
+    {
+      resource: 'packets',
+      filter: '',
+    },
+    () => null,
+  );
+
+  return new Promise((resolve, reject) => {
+    subscription.addReplyListener(() => {
+      resolve(subscription);
+    });
+  });
+};
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/cfe/modules/evs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,17 +12,129 @@ config/index
 eds/index
 fsw/index
 ut-coverage/index
-file--arch_build.cmake
-file--CMakeLists.txt
-file--mission_build.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/evs/config/`](config/index) — 폴더
-- [`fsw/cfe/modules/evs/eds/`](eds/index) — 폴더
-- [`fsw/cfe/modules/evs/fsw/`](fsw/index) — 폴더
-- [`fsw/cfe/modules/evs/ut-coverage/`](ut-coverage/index) — 폴더
-- [`fsw/cfe/modules/evs/arch_build.cmake`](file--arch_build.cmake) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/evs/mission_build.cmake`](file--mission_build.cmake) — UTF-8 텍스트 파일 본문 포함
+### `arch_build.cmake`
+
+**경로:** `fsw/cfe/modules/evs/arch_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# EVS Core Module platform build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the EVS configuration
+set(EVS_PLATFORM_CONFIG_FILE_LIST
+  cfe_evs_internal_cfg.h
+  cfe_evs_msgids.h
+  cfe_evs_platform_cfg.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(EVS_CFGFILE ${EVS_PLATFORM_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${EVS_CFGFILE}" NAME_WE)
+  if (DEFINED EVS_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE "${EVS_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE "${CMAKE_CURRENT_LIST_DIR}/config/default_${EVS_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${EVS_CFGFILE}"
+    FALLBACK_FILE       ${DEFAULT_SOURCE}
+  )
+endforeach()
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/evs/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# cFE Event Services (EVS) module CMake build recipe
+#
+##################################################################
+
+project(CFE_EVS C)
+
+# Event services source files
+set(evs_SOURCES
+    fsw/src/cfe_evs.c
+    fsw/src/cfe_evs_log.c
+    fsw/src/cfe_evs_task.c
+    fsw/src/cfe_evs_utils.c
+    fsw/src/cfe_evs_dispatch.c
+)
+add_library(evs STATIC ${evs_SOURCES})
+
+target_include_directories(evs PUBLIC fsw/inc)
+target_link_libraries(evs PRIVATE core_private)
+
+# Add unit test coverage subdirectory
+if(ENABLE_UNIT_TESTS)
+    add_subdirectory(ut-coverage)
+endif(ENABLE_UNIT_TESTS)
+
+cfs_app_check_intf(${DEP}
+    cfe_evs_msg.h
+    cfe_evs_eventids.h
+)
+```
+
+### `mission_build.cmake`
+
+**경로:** `fsw/cfe/modules/evs/mission_build.cmake`
+
+
+```cmake
+###########################################################
+#
+# EVS Core Module mission build setup
+#
+# This file is evaluated as part of the "prepare" stage
+# and can be used to set up prerequisites for the build,
+# such as generating header files
+#
+###########################################################
+
+# The list of header files that control the EVS configuration
+set(EVS_MISSION_CONFIG_FILE_LIST
+  cfe_evs_mission_cfg.h
+  cfe_evs_interface_cfg.h
+  cfe_evs_extern_typedefs.h
+  cfe_evs_fcncodes.h
+  cfe_evs_msgdefs.h
+  cfe_evs_msg.h
+  cfe_evs_msgstruct.h
+  cfe_evs_topicids.h
+)
+
+# Create wrappers around the all the config header files
+# This makes them individually overridable by the missions, without modifying
+# the distribution default copies
+foreach(EVS_CFGFILE ${EVS_MISSION_CONFIG_FILE_LIST})
+  get_filename_component(CFGKEY "${EVS_CFGFILE}" NAME_WE)
+  if (DEFINED EVS_CFGFILE_SRC_${CFGKEY})
+    set(DEFAULT_SOURCE GENERATED_FILE "${EVS_CFGFILE_SRC_${CFGKEY}}")
+  else()
+    set(DEFAULT_SOURCE FALLBACK_FILE "${CMAKE_CURRENT_LIST_DIR}/config/default_${EVS_CFGFILE}")
+  endif()
+  generate_config_includefile(
+    FILE_NAME           "${EVS_CFGFILE}"
+    ${DEFAULT_SOURCE}
+  )
+endforeach()
+```

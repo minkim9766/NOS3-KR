@@ -3,24 +3,152 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--ChronoTime.cpp
-file--ChronoTime.fpp
-file--ChronoTime.hpp
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.cpp`](file--ChronoTime.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.fpp`](file--ChronoTime.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.hpp`](file--ChronoTime.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `ChronoTime.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChronoTime.cpp
+// \author mstarch
+// \brief  cpp file for ChronoTime component implementation class
+// ======================================================================
+
+#include "Svc/ChronoTime/ChronoTime.hpp"
+#include <chrono>
+#include "Fw/FPrimeBasicTypes.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+ChronoTime ::ChronoTime(const char* const compName) : ChronoTimeComponentBase(compName) {}
+
+ChronoTime ::~ChronoTime() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void ChronoTime ::timeGetPort_handler(FwIndexType portNum, Fw::Time& time) {
+    const auto time_now = std::chrono::system_clock::now();
+    time.set(TimeBase::TB_WORKSTATION_TIME,
+             static_cast<U32>(std::chrono::duration_cast<std::chrono::seconds>(time_now.time_since_epoch()).count()),
+             static_cast<U32>(
+                 std::chrono::duration_cast<std::chrono::microseconds>(time_now.time_since_epoch()).count() % 1000000));
+}
+
+}  // namespace Svc
+```
+
+### `ChronoTime.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.fpp`
+
+
+```fpp
+module Svc {
+    @ A time component using C++11 chrono library
+    passive component ChronoTime {
+        import Time
+    }
+}
+```
+
+### `ChronoTime.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/ChronoTime.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  ChronoTime.hpp
+// \author mstarch
+// \brief  hpp file for ChronoTime component implementation class
+// ======================================================================
+
+#ifndef Svc_ChronoTime_HPP
+#define Svc_ChronoTime_HPP
+
+#include "Svc/ChronoTime/ChronoTimeComponentAc.hpp"
+
+namespace Svc {
+
+class ChronoTime final : public ChronoTimeComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct ChronoTime object
+    ChronoTime(const char* const compName  //!< The component name
+    );
+
+    //! Destroy ChronoTime object
+    ~ChronoTime();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for timeGetPort
+    //!
+    //! Port to retrieve time
+    void timeGetPort_handler(FwIndexType portNum,  //!< The port number
+                             Fw::Time& time        //!< Reference to Time object
+                             ) override;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/ChronoTime/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/user-manual/cmake/cmake-api/
+#
+####
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/ChronoTime.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/ChronoTime.cpp"
+)
+
+register_fprime_module()
+
+set(UT_AUTO_HELPERS ON)
+set(UT_SOURCE_FILES
+        "${CMAKE_CURRENT_LIST_DIR}/ChronoTime.fpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/ChronoTimeTester.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test/ut/ChronoTimeTestMain.cpp"
+)
+register_fprime_ut()
+```

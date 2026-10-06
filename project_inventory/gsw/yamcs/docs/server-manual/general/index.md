@@ -3,22 +3,325 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/general/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _images/index
-file--architecture.rst
-file--index.rst
-file--model.rst
-file--time.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/general/_images/`](_images/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/general/architecture.rst`](file--architecture.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/general/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/general/model.rst`](file--model.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/general/time.rst`](file--time.rst) — UTF-8 텍스트 파일 본문 포함
+### `architecture.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/general/architecture.rst`
+
+
+```rst
+Server Architecture
+===================
+
+The Yamcs server runs as a single Java process and it incorporates an embedded HTTP server implemented using `Netty <netty.io>`_.
+
+The main components are depicted in the diagram below.
+
+.. image:: _images/yamcs-server.png
+    :alt: Yamcs Server Architecture
+    :align: center
+
+
+Instances
+---------
+
+The Yamcs instances provide means for one Yamcs server to monitor/control different payloads or satellites or version of the payloads or satellites at the same time.
+
+Most of the components of Yamcs are instance-specific.
+
+
+Data Links
+----------
+
+Data Links are components that connect to the target system (instruments, ground stations, lab equipment, etc). One Yamcs instance will contain multiple data links. There are three types of data received/sent via Data Links:
+
+* Telemetry packets. These are usually binary chunks of data which have to be split into parameters according to the definition into a Mission Database.
+* Telecommands. These are usually the reverse of the telemetry packets.
+* Parameters. These are historically (:abbr:`ISS (International Space Station)` ground segment) called also processed parameters to indicate they are processed (e.g. calibrated, checked against limits) by another center. 
+
+Connecting via a protocol to a target system means implementing a specific data link for that protocol. In Yamcs there are some built-in Data Links for UDP and TCP. :abbr:`SLE (Space Link Extension)` data links are also implemented in a plugin.
+
+The pre-processors run inside the TM data links and are responsible for doing basic packet processing (e.g. verifying a CRC or checksum) which is not described in the Mission Database.
+  
+The post-processor runs inside the TC data link and are responsible for doing command processing (e.g. computing a CRC or checksum) which is not described in the Mission Database.
+
+Please note in the picture above that while for telecommands there is a link sending realtime data, for telemetry we also have a data link retrieving dump data - this is data that has been recorded somewhere (on the spacecraft or some other intermediate point) and dumped later. Usually there is no continuous visibility of the spacecraft from the ground and thus most spacecrafts are capable of recording data onboard. The dump data will not be sent to the realtime displays (because the display shows the realtime data coming in parallel) but it will be sent to the archive where it has to be merged with the old data and with the realtime incoming data.
+
+Yamcs does not define the dump data as a special type of data, it is the configuration of which data is sent on which stream and which stream is connected to which processor (see below what streams and processors are) that determines what dump data is.
+
+
+The CCSDS standards specify a higher level entity called transport frame. Typically the telemetry transfer frames are fixed size and the variable size packets are encoded in the fixed size frames using a well defined procedure. The packets can be multiplexed on the same transmission channel with other types of data such as a video bitstream. The frames allows also multiplexing realtime data with dump data. In order to maintain a constant bitrate required for RF communication, the standards also define the idle data to be sent when no other data is available. 
+
+In Yamcs, all the CCSDS frame processing is performed at the level of Data Links - when frame processing is used, there is a data link that receives the frame (e.g. via :abbr:`SLE (Space Link Extension)`) and then demultiplexes it into multiple sub-links which in turn apply the pre-processor for TM and send the data on the streams to the processors and archive. There is a sub-link (or more) for realtime data and similarly a sub-link (or more) for dump data. Yamcs handles packets and parameters, other type of data (e.g. video) could be sent to external systems for processing and storage.
+
+ 
+Streams
+-------
+
+Streams are components inside Yamcs that transport tuples. They are used to de-couple the producers from the consumers, for example the Data Links from the Processors. The de-coupling allows the user to change the data while being passed from one component to another.
+
+
+Processors
+----------
+
+The Yamcs processor is where most of the monitoring and control functions takes place: packets get transformed into parameters, limits are monitored, alarms are generated, commands are generated and verified, etc. There can be multiple processors in one instance, typically one permanently processing realtime data and other created on demand for replays. 
+
+In particular, the Parameter Archive will create regularly a processor for parameter archive consolidation. This is required in order to process the data received in dump mode (see above) which does not pass through a realtime processor.
+
+
+Mission Database (MDB)
+----------------------
+
+The Mission Database contains the description of the telecommands and telemetry including calibration curves, algorithms, limits, alarms, constraints, command pre and post verification.
+
+
+Services
+--------
+
+A service in Yamcs is a Java class that implements the :javadoc:`org.yamcs.YamcsService` interface. The services can be:
+
+* global meaning they run only once at the level of the server; their definition can be found in :file:`etc/yamcs.yaml`. One such service is the :doc:`../services/global/http-server`.
+* instance specific meaning that they run once for each Yamcs instance where they are included; their definition can be found in :file:`etc/yamcs.{instance}.yaml`.
+* processor specific meaning they run at the level of the processor; their definition can be found in :file:`etc/processor.yaml`.
+ 
+User can define their own services by adding a jar with an implemented java class into the Yamcs :file:`lib/ext` directory.
+
+
+Plugins
+-------
+
+A plugin in Yamcs is a Java class that implements the :javadoc:`org.yamcs.Plugin` interface. The plugin classes are loaded by the Yamcs server at startup before starting any instance.
+
+Although not required, it is advised that the user creates a plugin with each jar containing mission specific functionality. This will allow to see in the Yamcs web the version of the plugin loaded; the plugin is also the place where the user can register new API endpoints.
+
+
+Stream Archive
+--------------
+
+The Stream Archive is where tuples can be stored. This is a realtime archive, data is inserted as soon as it is received from a stream. It is optimized for storing data sorted by time.
+
+
+Parameter Archive
+-----------------
+
+The Parameter Archive contains values of parameters and is optimized for retrieving the value for a limited set of parameters over longer time intervals. The archive is not realtime but is obtained by creating regular replays transforming data from the stream archive via a processor. Whereas the basic storage unit of the stream archive corresponds to data at one specific time instant (e.g. a telemetry packet, a set of parameters with the same timestamp), the basic storage unit of the parameter archive is a set of values of one parameter over a time interval. 
+
+
+Buckets
+-------
+
+Buckets are used for storing general data objects. For example the CFDP service will store there all the files received from the on-board system. As for most Yamcs components, there is an :apidoc:`HTTP API <buckets>` allowing the user to work with buckets (get, upload, delete objects).
+
+
+Extension points
+----------------
+
+In the diagram above, there are some components that have a build symbol; these is where we expect mission specific functionality to be added:
+
+* new data links have to be implemented if the connection to the target system uses a protocol that is not implemented in Yamcs.
+* packet pre-processor and command post-processor are components where the user can implement some specific TM/TC headers, time formats etc. 
+* the Mission Database (MDB) contains the description of telecommands and telemetry and is entirely mission specific. 
+* user defined streams can implement command routing or basic operations on packets (e.g. extracting CLCW from a TM packet).
+* user defined services can add complete new functionality; an example of such functionality is to assemble telemetry packets into files (this is what the CFDP service does, but if the user's system does not use CFDP, a new service can be developed).
+* finally plugins can be used to group together all the mission specific functionality.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/general/index.rst`
+
+
+```rst
+General Information
+===================
+
+
+Yamcs Server, or short Yamcs, is a central component for monitoring and controlling remote devices. Yamcs stores and processes packets, and provides an interface for end-user applications to subscribe to realtime or archived data. Typical use cases for such applications include telemetry displays and commanding tools.
+
+.. image:: _images/typical-deployment.png
+    :alt: Typical Deployment
+    :align: center
+
+Yamcs ships with an embedded web server for administering the server, the mission databases or for basic monitoring tasks. For more advanced requirements, Yamcs exposes its functionality over a well-documented HTTP-based API.
+
+Yamcs is implemented entirely in Java, but it does rely on an external storage engine for actual data archiving. Currently the storage engine is `RocksDB <http://rocksdb.org/>`_. The preferred target platform is Linux x64, but Yamcs can also be made to run on Mac OS X and Windows.
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    model
+    architecture
+    time
+```
+
+### `model.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/general/model.rst`
+
+
+```rst
+Monitoring and Control Model
+============================
+
+Yamcs implements a fairly traditional Monitoring and Control Model. The remote system is represented through a set of **parameters** which are sampled at regular intervals.  
+
+Yamcs assumes that parameters are not sent individually but in groups which usually (but not necessarily) are some sort of binary packets. Yamcs supports basic parameter types (int, long, float, double, boolean, timestamp, string, binary) and also aggregate types (aka structs in C language) and arrays.
+
+Parameters can either be received directly from the remote device or can be computed locally by **algorithms**. Algorithms in Yamcs can be implemented in Javascript or Python. Other languages that have :abbr:`JVM (Java Virtual Machine)` based implementations could also be supported without too much trouble.
+
+Following XTCE conventions, Yamcs distinguishes between:
+
+telemetered parameters
+    coming from remote devices
+
+derived parameters
+    computed by algorithms inside Yamcs
+
+local parameters
+    set by end-user applications
+
+constant parameters
+    constant values defined in the mission database
+
+In addition to these XTCE-inspired parameter types, Yamcs defines:
+
+system parameters
+    parameters generated by components inside Yamcs
+
+command and command history parameters
+    Specially-scoped parameters that can be used in the context of command verifiers.
+
+The parameters have limits associated to them and when those limits are exceeded, an **alarm** is triggered. The limits can change depending on the **context** which represent the state of the remote device. The context itself is derived from the value of other parameters.
+
+An operator is informed of the triggered alarm in various ways depending on the end user application connected to Yamcs (e.g. red background in a display, audible alarm, SMS, phone call, etc). After understanding the problem, the operator **acknowledges** the alarm, which means that it informs Yamcs that the alarm will be taken care of. This action - depending again on the remote end user application connected to Yamcs - means that other operators are not bothered anymore by the alarm.   
+
+After the alarm has been acknowledged and the parameter goes back into limits, the alarm is **cleared** which means it is not triggered anymore.  
+Before the alarm is acknowledged by an operator, it will stay triggered even if the parameter goes back into limits. An exception to this case is auto-acknowledging alarms which are cleared automatically when the parameter that triggered them goes back in limits.  
+
+As parameters are expected to be sampled regularly, they also have an expiration time. After the time is exceeded, the parameters become expired. This means that the state of the remote device is considered unknown.
+
+The remote device is controlled through the use of **(tele)-commands**. A telecommand is made up of a name and a number of **command arguments**. In order for a command to be allowed to be sent, the **command transmission constraints** (if any) have to be met. The constraints are expressed by the state of parameters (e.g. a command can be sent only if a subsystem is switched on). Some commands can have an elevated **significance**, which may mean that a special privilege or an extra confirmation is required to send the command.
+
+Once the command has been sent, it passes through a series of execution stages. XTCE pre-defines a series of stages (TransferredToRange, SentFromRange, Received, Accepted, etc). Yamcs does not enforce the use of these predefined stages, the user is free to choose any number of random stages. Each stage is associated to a **command verifier**. This is an algorithm that will decide if the command has passed that stage or not. It is also possible to specify that the stage has passed when a specific packet has been received.
+
+The command text (command name and argument values), the binary packet (if binary formatted) and the different stages of the execution of the command are recorded in the **command history**.
+
+Yamcs does not limit the information that can be added to the command history. This can be extended with and arbitrary number of (key, timestamp, value) attributes.
+```
+
+### `time.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/general/time.rst`
+
+
+```rst
+Time in Yamcs
+=============
+
+The text below documents several aspects of working with time in Yamcs.
+
+
+Time Encoding
+-------------
+
+Yamcs uses signed eight-byte integers (long in Java) for representing milliseconds since 1-Jan-1970 00:00:00 TAI, including leap seconds. The Yamcs time in milliseconds is the UNIX time (in milliseconds) + leap seconds. 
+
+To convert accurately between TAI and UTC, a leap second table is used. Yamcs parses this information from the configuration file :file:`etc/UTC-TAI.history` in :abbr:`IERS (International Earth Rotation and Reference Systems Service)` format:
+
+* https://hpiers.obspm.fr/iers/bul/bulc/UTC-TAI.history
+
+Upcoming leap seconds are announced biannually in Bulletin C publications:
+
+* https://www.iers.org/IERS/EN/Publications/Bulletins/bulletins.html
+
+The user is responsible for updating manually this file if it changes (when new leap seconds are added). Fortunately this is not very often and new leap seconds are announced well in advance. For example there has been no new leap second between 2017 and 2023.
+
+.. note::
+
+    If the file is not present, Yamcs uses the leap second information that was valid at the time of the software release.
+
+
+.. rubric:: When a leap second is announced
+
+#. Download the latest :file:`UTC-TAI.history` file from IERS.
+#. Deploy this file to :file:`etc/UTC-TAI.history` under the Yamcs directory.
+#. Restart Yamcs
+#. Verify the leap second table in :doc:`Admin Area <../web-interface/admin/leap-seconds>`.
+
+Yamcs also has a high resolution time implemented in the class :javadoc:`org.yamcs.time.Instant`. This is represented as :math:`8+4` bytes milliseconds and picoseconds of the millisecond. It is not widely used - in Java it is not even easily possible to get the time with a resolution better than millisecond. 
+
+The higher resolution time is sent sometimes from external systems. For example a Ground Station may timestamp the incoming packets with a microsecond or nanosecond precise time (derived from an atomic clock). This time is available as the Earth Reception Time via the yamcs-sle plugin.
+
+The class that allows working with times, offering conversion functionality between the Yamcs time and UTC is :javadoc:`org.yamcs.utils.TimeEncoding`.
+
+
+Wall clock time
+---------------
+
+The wall clock time is the computer time converted to Yamcs format. The ``getWallclockTime()`` function in ``TimeEncoding`` can be used to get the current wallclock time. In practice, in 2024, the following is true:
+
+.. code-block:: java
+
+   TimeEncoding.getWallclockTime() = System.currentTimeMillis() + 37000.
+
+Note that Linux usually does time *smearing* around the leap seconds. This shortens the duration of the second for several hours prior and several hours post the the leap second, to accommodate the extra second. Yamcs does not take the smearing into account, therefore the ``getWallclockTime()`` does not return entirely accurate times when the smearing takes place.
+
+
+Mission Time
+------------
+
+The mission time in Yamcs is the *current* time. For a realtime mission that would be the wall clock time. For a simulation it would be the simulation time.
+
+The mission time is specific to a Yamcs instance and is given by the  :javadoc:`org.yamcs.time.TimeService` configured in that instance. The time service is configured using the ``timeService`` keyword in :file:`etc/yamcs.{instance}.yaml`.
+
+There are two time services implemented as part of standard Yamcs:
+
+* :javadoc:`org.yamcs.time.RealtimeTimeService` - it uses always the wall clock time (the computer time) as the mission time.
+* :javadoc:`org.yamcs.time.SimulationTimeService` - this allows to run a simulated time at arbitrary speeds. The time can be set externally via the :apidoc:`HTTP API <time/set-time>` or from a TM data link. Since Yamcs 5.6.1 it is possible to synchronize the mission time between two instances on two different Yamcs servers via the replication service.
+
+Plugins may come with their own implementation of a time service.
+
+
+Processor Time
+--------------
+
+The processor time is the time visible in the Yamcs web application. For realtime processors it is the same as the mission time. For replay processors is the time of the replay, extracted from the packets or parameters as they are read from the archive.
+
+
+Reception Time
+--------------
+
+The reception time is the time associated to data (packets, parameters, events) as it comes into Yamcs. The reception time is always set to mission time.
+
+
+Generation Time
+---------------
+
+The generation time is the time when the data has been generated.
+
+For telemetry packets, it is set by the pre-processor, normally with a time extracted from the packet. However it can be set to the mission time if the ``useLocalGenerationTime`` option is set to true.
+
+The timeEncoding option is used on the TM links to configure how to extract the time from the packet - which means how to convert a number (or more numbers) extracted from the packet to a Yamcs time. The various options for time decoding are documented in the :doc:`../links/packet-preprocessor`
+
+Spacecrafts that have no means to synchronize time (e.g. no access to GPS) will usually use a free running on-board clock (initialized to 0 at startup) to timestamp the packets. In these cases, the on-board time needs to be correlated with the mission time. The :doc:`../services/instance/time-correlation` can be used for this purpose.
+
+Finally, the TM links have an option ``updateSimulationTime`` which can be used to set the mission time to the time extracted from the packet. This works if the SimulationTimeService is used. 
+
+
+Earth Reception Time
+--------------------
+
+The earth reception time is the time a TM packet has been received in a ground station. The TM links are responsible for setting this on the packet inside Yamcs. For example the :abbr:`SLE (Space Link Extension)` TM link (part of the yamcs-sle plugin) will receive the earth reception time via the SLE protocol. 
+
+The earth reception time is a high resolution time which may be used in the process of time correlation.
+```

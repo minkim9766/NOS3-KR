@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,14 +11,55 @@
 cmd_tlm/index
 lib/index
 procedures/index
-file--cmd_tlm_server.txt
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFDP/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP/lib/`](lib/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP/procedures/`](procedures/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt`](file--cmd_tlm_server.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `cmd_tlm_server.txt`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/cmd_tlm_server.txt`
+
+
+```text
+# This is a segment of the main cmd_tlm_server.txt that will be used with
+# AUTO_INTERFACE_TARGETS or INTERFACE_TARGET
+
+INTERFACE CFDP_INT interfaces/visiona_cfdp_interface.rb
+  TARGET CFDP
+  DISABLE_DISCONNECT
+```
+
+### `target.txt`
+
+**경로:** `gsw/cosmos/config/targets/CFDP/target.txt`
+
+
+```text
+# Requires for additinal .rb files
+REQUIRE cfdp_defines.rb
+
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+
+# Ignored Parameters
+IGNORE_PARAMETER FUNC_ID
+
+# Ignored Items
+#IGNORE_ITEM CCSDS_STREAMID
+#IGNORE_ITEM CCSDS_SEQUENCE
+#IGNORE_ITEM CCSDS_LENGTH
+
+# Explicitly define command and telemetry files
+# If not given then all the files in cmd/tlm will be processed in
+# alphabetical order
+#COMMANDS cfdp_cmd.txt
+#TELEMETRY cfdp_tlm.txt
+```

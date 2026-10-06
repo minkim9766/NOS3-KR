@@ -3,18 +3,511 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `home.component.css`
 
-file--home.component.css
-file--home.component.html
-file--home.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.css`
+
+
+```css
+.status .spin {
+  animation: yspin 2s infinite linear;
+}
+
+.status .success {
+  color: #00c752;
+}
+
+.status .warning {
+  color: var(--y-warning-color);
+}
+
+.status .failed {
+  color: var(--y-error-color);
+}
+
+.status .offline {
+  color: lightgrey;
+}
+
+.alert {
+  color: var(--y-error-color) !important;
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg) scaleX(-1);
+    transform: rotate(359deg) scaleX(-1);
+  }
+}
 ```
 
-## 항목
+### `home.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.css`](file--home.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.html`](file--home.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.ts`](file--home.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.html`
+
+
+```html
+<ya-message-bar #messageBar />
+
+<app-appbase-toolbar label="Instances">
+  @if (isCreateInstanceEnabled()) {
+    <ya-page-button routerLink="create-instance" icon="add_box">Create instance</ya-page-button>
+  }
+  @if (mayControlServices()) {
+    <ya-page-button
+      [disabled]="!isGroupStartEnabled()"
+      (clicked)="startSelectedInstances()"
+      icon="play_arrow">
+      Start
+    </ya-page-button>
+  }
+  @if (mayControlServices()) {
+    <ya-page-button
+      [disabled]="!isGroupStopEnabled()"
+      (clicked)="stopSelectedInstances()"
+      icon="stop">
+      Stop
+    </ya-page-button>
+  }
+  @if (mayControlServices()) {
+    <ya-page-button
+      [disabled]="!isGroupRestartEnabled()"
+      (clicked)="restartSelectedInstances()"
+      icon="sync_problem">
+      Restart
+    </ya-page-button>
+  }
+</app-appbase-toolbar>
+
+<ya-panel>
+  <ya-filter-bar>
+    <ya-search-filter
+      [formControl]="filterControl"
+      placeholder="Filter instances"
+      (onArrowDown)="selectNext()"
+      (onArrowUp)="selectPrevious()"
+      (onEnter)="applySelection()" />
+  </ya-filter-bar>
+
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="ya-data-table expand"
+    matSort
+    matSortActive="name"
+    matSortDirection="asc"
+    matSortDisableClear>
+    <ng-container cdkColumnDef="select">
+      <th
+        mat-header-cell
+        *cdkHeaderCellDef
+        class="checkbox"
+        (click)="cb.toggle(); $event.stopPropagation()">
+        <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+      </th>
+      <td
+        mat-cell
+        *cdkCellDef="let item"
+        class="checkbox"
+        (click)="cb.toggle(); $event.stopPropagation()">
+        <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" [item]="item" />
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef class="status"></th>
+      <td mat-cell *matCellDef="let row" class="status">
+        @if (row.state === "INITIALIZED") {
+          <mat-icon class="warning" [matTooltip]="row.state">adjust</mat-icon>
+        }
+        @if (row.state === "RUNNING") {
+          <mat-icon class="success" [matTooltip]="row.state">check_circle</mat-icon>
+        }
+        @if (row.state === "FAILED") {
+          <mat-icon class="failed" [matTooltip]="row.state">highlight_off</mat-icon>
+        }
+        @if (row.state === "OFFLINE") {
+          <mat-icon class="offline" [matTooltip]="row.state">lens</mat-icon>
+        }
+        @if (row.state === "INITIALIZING" || row.state === "STARTING" || row.state === "STOPPING") {
+          <mat-icon class="spin" [matTooltip]="row.state">cached</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="name">
+      <th mat-header-cell *cdkHeaderCellDef mat-sort-header>Instance</th>
+      <td mat-cell *cdkCellDef="let row">
+        @if (row.state !== "OFFLINE") {
+          <a
+            routerLink="/instance"
+            [queryParams]="{
+              c: row.processors?.length ? row.name + '__' + (row | defaultProcessor) : row.name,
+            }"
+            (click)="$event.stopPropagation()">
+            <ya-highlight [text]="row.name" [term]="filterControl.value" />
+          </a>
+        }
+        @if (row.state === "OFFLINE") {
+          <span>{{ row.name }}</span>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="processor">
+      <th mat-header-cell *cdkHeaderCellDef mat-sort-header>Default processor</th>
+      <td mat-cell *cdkCellDef="let row">
+        {{ row | defaultProcessor | nvl: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="labels">
+      <th mat-header-cell *cdkHeaderCellDef mat-sort-header>Labels</th>
+      <td mat-cell *cdkCellDef="let row">
+        <ya-labels [dict]="row.labels" />
+        @if (!row.labels) {
+          -
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="template">
+      <th mat-header-cell *cdkHeaderCellDef mat-sort-header>Template</th>
+      <td mat-cell *cdkCellDef="let row">
+        {{ row.template || "-" }}
+        @if (row.templateChanged) {
+          <mat-icon matTooltip="Template has changed">warning_amber</mat-icon>
+        }
+      </td>
+    </ng-container>
+
+    <ng-container cdkColumnDef="state">
+      <th mat-header-cell *cdkHeaderCellDef mat-sort-header>State</th>
+      <td mat-cell *cdkCellDef="let row">
+        {{ row.state }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef class="expand"></th>
+      <td mat-cell *matCellDef="let instance">
+        @if (mayControlServices()) {
+          <ya-more>
+            <button
+              mat-menu-item
+              (click)="startInstance(instance)"
+              [disabled]="instance.state !== 'OFFLINE'">
+              Start
+            </button>
+            <button
+              mat-menu-item
+              (click)="stopInstance(instance)"
+              [disabled]="instance.state === 'OFFLINE'">
+              Stop
+            </button>
+            <button
+              mat-menu-item
+              (click)="restartInstance(instance)"
+              [disabled]="instance.state === 'OFFLINE'">
+              Restart
+            </button>
+          </ya-more>
+        }
+        @if (instance.failureCause; as failureCause) {
+          <span class="alert">
+            {{ failureCause }}
+          </span>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *cdkRowDef="let row; columns: displayedColumns"
+      [class.selected]="selection.isSelected(row)"
+      (click)="toggleOne(row)"></tr>
+  </table>
+
+  <mat-paginator [pageSize]="100" [hidePageSize]="true" [showFirstLastButtons]="true" />
+</ya-panel>
+```
+
+### `home.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/appbase/home/home.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  Instance,
+  InstancesSubscription,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { AppAppBaseToolbar } from '../appbase-toolbar/appbase-toolbar.component';
+
+@Component({
+  templateUrl: './home.component.html',
+  styleUrl: './home.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppAppBaseToolbar, WebappSdkModule],
+})
+export class HomeComponent implements AfterViewInit, OnDestroy {
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  private instancesByName: { [key: string]: Instance } = {};
+
+  dataSource = new MatTableDataSource<Instance>([]);
+  selection = new SelectionModel<Instance>(true, []);
+
+  instancesSubscription: InstancesSubscription;
+
+  displayedColumns = [
+    'select',
+    'status',
+    'name',
+    'processor',
+    'labels',
+    'template',
+    // 'state',
+    'actions',
+  ];
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    private authService: AuthService,
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private config: ConfigService,
+  ) {
+    title.setTitle('Instances');
+
+    this.dataSource.filterPredicate = (instance, filter) => {
+      return instance.name.toLowerCase().indexOf(filter) >= 0;
+    };
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+
+      for (const item of this.selection.selected) {
+        if (this.dataSource.filteredData.indexOf(item) === -1) {
+          this.selection.deselect(item);
+        }
+      }
+    });
+
+    this.yamcs.yamcsClient.getInstances().then((instances) => {
+      for (const instance of instances) {
+        this.instancesByName[instance.name] = instance;
+      }
+      this.dataSource.data = Object.values(this.instancesByName);
+
+      this.instancesSubscription =
+        this.yamcs.yamcsClient.createInstancesSubscription((instance) => {
+          this.instancesByName[instance.name] = instance;
+          this.dataSource.data = Object.values(this.instancesByName);
+        });
+    });
+
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  toggleOne(row: Instance) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  startSelectedInstances() {
+    for (const instance of this.selection.selected) {
+      if (instance.state === 'OFFLINE') {
+        this.startInstance(instance);
+      }
+    }
+  }
+
+  startInstance(instance: Instance) {
+    this.yamcs.yamcsClient
+      .startInstance(instance.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  restartSelectedInstances() {
+    for (const instance of this.selection.selected) {
+      if (instance.state !== 'OFFLINE') {
+        this.restartInstance(instance);
+      }
+    }
+  }
+
+  restartInstance(instance: Instance) {
+    this.yamcs.yamcsClient.restartInstance(instance.name).catch((err) => {
+      this.messageService.showError(err);
+    });
+  }
+
+  stopSelectedInstances() {
+    for (const instance of this.selection.selected) {
+      if (instance.state !== 'OFFLINE') {
+        this.stopInstance(instance);
+      }
+    }
+  }
+
+  stopInstance(instance: Instance) {
+    this.yamcs.yamcsClient
+      .stopInstance(instance.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  isGroupStartEnabled() {
+    // Allow if at least one of the selected items is startable
+    for (const instance of this.selection.selected) {
+      if (instance.state === 'OFFLINE') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isGroupStopEnabled() {
+    // Allow if at least one of the selected items is stoppable
+    for (const instance of this.selection.selected) {
+      if (instance.state !== 'OFFLINE') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isGroupRestartEnabled() {
+    // Allow if at least one of the selected items is restartable
+    for (const instance of this.selection.selected) {
+      if (instance.state !== 'OFFLINE') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  mayControlServices() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlServices');
+  }
+
+  isCreateInstanceEnabled() {
+    const user = this.authService.getUser()!;
+    return (
+      this.config.hasTemplates() && user.hasSystemPrivilege('CreateInstances')
+    );
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem =
+        this.selection.selected[this.selection.selected.length - 1];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.filteredData;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.clear();
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue() && this.selection.selected.length === 1) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.data;
+      if (items.indexOf(item) !== -1 && item.state !== 'OFFLINE') {
+        if (item.processors?.length) {
+          this.router.navigate(['/instance'], {
+            queryParams: {
+              c: item.name + '__' + utils.getDefaultProcessor(item),
+            },
+          });
+        } else {
+          this.router.navigate(['/instance'], {
+            queryParams: { c: item.name },
+          });
+        }
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.instancesSubscription?.cancel();
+  }
+}
+```

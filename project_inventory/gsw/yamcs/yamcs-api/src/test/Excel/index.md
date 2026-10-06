@@ -3,14 +3,10 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/test/Excel/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Yamcs-PostMissionAnalysis-example.xlsm`
 
-file--Yamcs-PostMissionAnalysis-example.xlsm
-```
+**경로:** `gsw/yamcs/yamcs-api/src/test/Excel/Yamcs-PostMissionAnalysis-example.xlsm`
 
-## 항목
-
-- [`gsw/yamcs/yamcs-api/src/test/Excel/Yamcs-PostMissionAnalysis-example.xlsm`](file--Yamcs-PostMissionAnalysis-example.xlsm) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

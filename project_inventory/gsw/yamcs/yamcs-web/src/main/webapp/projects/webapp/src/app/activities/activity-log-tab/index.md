@@ -3,18 +3,270 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activity-log-tab.component.css`
 
-file--activity-log-tab.component.css
-file--activity-log-tab.component.html
-file--activity-log-tab.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.css`
+
+
+```css
+.log-container {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  position: absolute;
+  top: 48px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  padding-left: 12px;
+}
+
+.log-actions {
+  height: 24px;
+  margin: 12px;
+  display: flex;
+}
+
+.log-actions ya-button {
+  margin-right: 7px;
+}
+
+.extra-bar-container {
+  padding: 12px;
+  border-bottom: 1.1px solid rgba(0, 0, 0, 0.08);
+}
+
+.extra-bar {
+  height: 24px;
+  line-height: 24px;
+}
+
+.separator {
+  border-right: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+table.logs {
+  line-height: 12px;
+}
+
+table.logs td {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+  vertical-align: top;
+}
+
+table.logs td.time {
+  opacity: 0.8;
+}
+
+table.logs tr.service td {
+  font-weight: bold;
+}
+
+table.logs td.message {
+  white-space: pre-wrap;
+}
+
+.top,
+.bottom {
+  visibility: hidden;
+  line-height: 0;
+}
+
+.warning {
+  color: var(--y-warning-color) !important;
+}
+
+.error {
+  color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `activity-log-tab.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.css`](file--activity-log-tab.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.html`](file--activity-log-tab.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.ts`](file--activity-log-tab.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.html`
+
+
+```html
+<div class="log-actions">
+  <ya-button (click)="top.scrollIntoView()" icon="vertical_align_top">Jump to top</ya-button>
+  <ya-button (click)="bottom.scrollIntoView()" icon="vertical_align_bottom">
+    Jump to bottom
+  </ya-button>
+</div>
+
+<div #logContainer class="log-container">
+  <div #top class="top"></div>
+  <table class="logs mono" style="width: 100%">
+    @for (log of logs$ | async; track log; let index = $index) {
+      <tr
+        [class.activity]="log.source === 'ACTIVITY'"
+        [class.service]="log.source === 'SERVICE'"
+        [class.warning]="log.level === 'WARNING'"
+        [class.error]="log.level === 'ERROR'">
+        <td style="text-align: right" width="1">{{ index + 1 }}</td>
+        <td class="time" style="white-space: nowrap" width="1">
+          [{{ log.time | datetime: false }}]
+        </td>
+        <td class="message">{{ log.message }}</td>
+      </tr>
+    }
+    @if (activity$ | async; as activity) {
+      @if (!activity.stop) {
+        <tr>
+          <td colspan="3"><ya-dots /></td>
+        </tr>
+      }
+    }
+  </table>
+  <div #bottom class="bottom"></div>
+</div>
+```
+
+### `activity-log-tab.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/activity-log-tab/activity-log-tab.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+  input,
+} from '@angular/core';
+import {
+  Activity,
+  ActivityLog,
+  ActivityLogSubscription,
+  MessageService,
+  Synchronizer,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ActivityService } from '../shared/activity.service';
+
+@Component({
+  templateUrl: './activity-log-tab.component.html',
+  styleUrl: './activity-log-tab.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivityLogTabComponent implements OnDestroy {
+  activityId = input.required<string>();
+  activity$: Observable<Activity | null>;
+
+  // Separate archived and realtime logs, so that we can sort them correctly.
+  //
+  // - Archived logs arrive in correct order (based on persistence key).
+  // - Realtime logs arrive in correct order, but are removed if they are identical to
+  // an archived log.
+  private archivedLogs: ActivityLog[] = [];
+  private realtimeLogs: ActivityLog[] = [];
+
+  logs$ = new BehaviorSubject<ActivityLog[]>([]);
+  private dirty$ = new BehaviorSubject<boolean>(false);
+
+  private syncSubscription: Subscription;
+  private activityLogSubscription: ActivityLogSubscription;
+
+  @ViewChild('logContainer')
+  logContainer: ElementRef<HTMLDivElement>;
+
+  @ViewChild('top')
+  topAnchor: ElementRef<HTMLDivElement>;
+
+  @ViewChild('bottom')
+  bottomAnchor: ElementRef<HTMLDivElement>;
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private syncService: Synchronizer,
+    activityService: ActivityService,
+  ) {
+    this.activity$ = activityService.activity$;
+  }
+
+  ngOnInit() {
+    const { yamcs } = this;
+    this.activityLogSubscription =
+      yamcs.yamcsClient.createActivityLogSubscription(
+        {
+          instance: yamcs.instance!,
+          activity: this.activityId(),
+        },
+        (newLog) => {
+          // Discard logs we're already aware of from a REST response
+          // (would be better to solve this with a seqnum)
+          for (const log of this.archivedLogs) {
+            if (
+              newLog.time === log.time &&
+              newLog.level === log.level &&
+              newLog.message === log.message &&
+              newLog.source === log.source
+            ) {
+              return;
+            }
+          }
+          this.realtimeLogs.push(newLog);
+          this.dirty$.next(true);
+        },
+      );
+
+    yamcs.yamcsClient
+      .getActivityLog(yamcs.instance!, this.activityId())
+      .then((logs) => {
+        this.archivedLogs = logs.filter((newLog) => {
+          // Discard logs we're already aware of from the WebSocket subscription
+          // (would be better to solve this with a seqnum)
+          for (const log of this.realtimeLogs) {
+            if (
+              newLog.time === log.time &&
+              newLog.level === log.level &&
+              newLog.message === log.message &&
+              newLog.source === log.source
+            ) {
+              return false;
+            }
+          }
+          return true;
+        });
+        this.emitLogs();
+      })
+      .catch((err) => this.messageService.showError(err));
+
+    this.syncSubscription = this.syncService.syncFast(() => {
+      if (this.dirty$.value) {
+        this.emitLogs();
+        this.dirty$.next(false);
+      }
+    });
+  }
+
+  private emitLogs() {
+    this.logs$.next([...this.archivedLogs, ...this.realtimeLogs]);
+
+    if (this.logContainer) {
+      const { nativeElement: el } = this.logContainer;
+      const isAtBottom =
+        Math.abs(el.scrollHeight - el.clientHeight - el.scrollTop) <= 1;
+      if (isAtBottom) {
+        setTimeout(() => {
+          // T/O to allow for page update
+          this.bottomAnchor.nativeElement.scrollIntoView();
+        });
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    this.activityLogSubscription?.cancel();
+    this.syncSubscription?.unsubscribe();
+  }
+}
+```

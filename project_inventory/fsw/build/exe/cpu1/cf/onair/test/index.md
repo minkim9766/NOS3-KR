@@ -3,20 +3,25 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 onair/index
 plugins/index
-file--__init__.py
-file--test_driver.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/test/onair/`](onair/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/plugins/`](plugins/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/test/__init__.py`](file--__init__.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/test/test_driver.py`](file--test_driver.py) — 빌드 산출물 (경로만)
+### `__init__.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/__init__.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `test_driver.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/test/test_driver.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

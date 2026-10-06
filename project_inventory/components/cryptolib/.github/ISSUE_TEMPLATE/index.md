@@ -3,18 +3,118 @@
 
 **경로:** `components/cryptolib/.github/ISSUE_TEMPLATE/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `1-BUG_REPORT.yml`
 
-file--1-BUG_REPORT.yml
-file--2-FEATURE_REQUEST.yml
-file--config.yml
+**경로:** `components/cryptolib/.github/ISSUE_TEMPLATE/1-BUG_REPORT.yml`
+
+
+```yaml
+name: "🐛 Bug Report"
+description: Create a new ticket for a bug.
+title: "🐛 [BUG] - <title>"
+labels: [
+  "bug"
+]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: "Description"
+      description: Please enter an explicit description of your issue
+      placeholder: Short and explicit description of your incident...
+    validations:
+      required: true
+  - type: input
+    id: reprod-url
+    attributes:
+      label: "Branch Name"
+      description: Please enter the branch / link to fork
+      placeholder: ex. 'dev' or https://github.com/USERNAME/REPO-NAME
+    validations:
+      required: false
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Reproduction steps"
+      description: Please enter an explicit description of your issue
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "Screenshots"
+      description: If applicable, add screenshots to help explain your problem.
+      value: |
+        ![DESCRIPTION](LINK.png)
+      render: bash
+    validations:
+      required: false
+  - type: textarea
+    id: logs
+    attributes:
+      label: "Logs"
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: bash
+    validations:
+      required: false
+  - type: dropdown
+    id: os
+    attributes:
+      label: "OS"
+      description: What is the impacted environment ?
+      multiple: true
+      options:
+        - Windows
+        - Linux
+        - Mac
+    validations:
+      required: true
 ```
 
-## 항목
+### `2-FEATURE_REQUEST.yml`
 
-- [`components/cryptolib/.github/ISSUE_TEMPLATE/1-BUG_REPORT.yml`](file--1-BUG_REPORT.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/.github/ISSUE_TEMPLATE/2-FEATURE_REQUEST.yml`](file--2-FEATURE_REQUEST.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/.github/ISSUE_TEMPLATE/config.yml`](file--config.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/cryptolib/.github/ISSUE_TEMPLATE/2-FEATURE_REQUEST.yml`
+
+
+```yaml
+name: "💡 Feature Request"
+description: Create a new ticket for a new feature request
+title: "💡 [REQUEST] - <title>"
+labels: [
+  "question"
+]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: Provide a brief explanation of the feature
+      placeholder: Describe in a few lines your feature request
+    validations:
+      required: true
+  - type: textarea
+    id: basic_example
+    attributes:
+      label: "Use Case"
+      description: Indicate here some basic examples of your feature.
+      placeholder: A few specific words about your feature request.
+    validations:
+      required: true
+```
+
+### `config.yml`
+
+**경로:** `components/cryptolib/.github/ISSUE_TEMPLATE/config.yml`
+
+
+```yaml
+blank_issues_enabled: false
+```

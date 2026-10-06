@@ -3,16 +3,55 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `view-object-metadata-dialog.component.html`
 
-file--view-object-metadata-dialog.component.html
-file--view-object-metadata-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/view-object-metadata-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Object Metadata</h2>
+
+<mat-dialog-content>
+  <table yaDataTable class="expand">
+    <tr>
+      <th width="1">Key</th>
+      <th>Value</th>
+    </tr>
+    @for (entry of data.metadata | keyvalue; track entry) {
+      <tr>
+        <td>{{ entry.key }}</td>
+        <td>{{ entry.value ?? "-" }}</td>
+      </tr>
+    }
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CLOSE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `view-object-metadata-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/view-object-metadata-dialog.component.html`](file--view-object-metadata-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/view-object-metadata-dialog.component.ts`](file--view-object-metadata-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/view-object-metadata-dialog/view-object-metadata-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-view-object-metadata-dialog',
+  templateUrl: './view-object-metadata-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class ViewObjectMetadataDialogComponent {
+  constructor(
+    private dialogRef: MatDialogRef<ViewObjectMetadataDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {}
+}
+```

@@ -3,16 +3,59 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `timeline-tooltip.component.css`
 
-file--timeline-tooltip.component.css
-file--timeline-tooltip.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/timeline-tooltip.component.css`
+
+
+```css
+.ya-tooltip {
+  position: absolute;
+  display: none;
+  white-space: pre;
+  color: #fff;
+  border-radius: 2px;
+  max-width: 250px;
+  padding-left: 8px;
+  padding-right: 8px;
+  margin-top: 14px;
+  background: rgba(97, 97, 97, 0.9);
+  font-family: "Roboto Mono", monospace;
+  font-size: 10px;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
 ```
 
-## 항목
+### `timeline-tooltip.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/timeline-tooltip.component.css`](file--timeline-tooltip.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/timeline-tooltip.component.ts`](file--timeline-tooltip.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/timeline-tooltip/timeline-tooltip.component.ts`
+
+
+```typescript
+import { Component, ElementRef, ViewChild } from '@angular/core';
+
+@Component({
+  template: '<div #tt class="ya-tooltip"></div>',
+  styleUrl: './timeline-tooltip.component.css',
+})
+export class TimelineTooltipComponent {
+  @ViewChild('tt', { static: true })
+  tt: ElementRef<HTMLDivElement>;
+
+  show(text: string, left: number, top: number) {
+    const el = this.tt.nativeElement;
+    el.style.left = left + 'px';
+    el.style.top = top + 'px';
+    el.style.display = 'block';
+    el.innerText = text;
+  }
+
+  hide() {
+    const el = this.tt.nativeElement;
+    el.style.display = 'none';
+  }
+}
+```

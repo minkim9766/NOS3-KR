@@ -3,16 +3,114 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/interval/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `interval.component.html`
 
-file--interval.component.html
-file--interval.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/interval/interval.component.html`
+
+
+```html
+{{ interval$ | async }}
 ```
 
-## 항목
+### `interval.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/interval/interval.component.html`](file--interval.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/interval/interval.component.ts`](file--interval.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/interval/interval.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+export type RangeForm = 'inside' | 'outside';
+
+@Component({
+  selector: 'ya-interval',
+  templateUrl: './interval.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe],
+})
+export class YaInterval implements OnChanges {
+  @Input()
+  left: number | string;
+
+  @Input()
+  right: number | string;
+
+  @Input()
+  leftInclusive = true;
+
+  @Input()
+  rightInclusive = true;
+
+  @Input()
+  singleValueIfEqual = false;
+
+  @Input()
+  outside = false;
+
+  interval$ = new BehaviorSubject<string | null>(null);
+
+  ngOnChanges() {
+    const result = this.outside
+      ? this.printOutsideForm()
+      : this.printInsideForm();
+    this.interval$.next(result);
+  }
+
+  private printInsideForm() {
+    let result;
+    if (
+      this.singleValueIfEqual &&
+      this.left !== undefined &&
+      this.left === this.right
+    ) {
+      result = String(this.left);
+    } else {
+      result = '(-∞';
+      if (this.left !== undefined) {
+        result = this.leftInclusive ? '[' : '(';
+        result += this.left;
+      }
+
+      result += ', ';
+
+      if (this.right !== undefined) {
+        result += this.right;
+        result += this.rightInclusive ? ']' : ')';
+      } else {
+        result += '+∞)';
+      }
+    }
+    return result;
+  }
+
+  private printOutsideForm() {
+    let result = '';
+    if (this.left !== undefined) {
+      result += '(-∞, ';
+      result += this.left;
+      result += this.leftInclusive ? ')' : ']';
+
+      if (this.right !== undefined) {
+        result += ', ';
+      }
+    }
+
+    if (this.right !== undefined) {
+      result += this.rightInclusive ? '(' : '[';
+      result += this.right;
+      result += ', +∞)';
+    }
+
+    return result;
+  }
+}
+```

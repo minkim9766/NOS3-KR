@@ -3,14 +3,16 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/MISSION/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `target.txt`
 
-file--target.txt
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/MISSION/target.txt`
+
+
+```text
+#
+# Required Libraries
+#
+#REQUIRE 'mission_lib.rb'
 ```
-
-## 항목
-
-- [`gsw/cosmos/outputs/tmp/config/targets/MISSION/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함

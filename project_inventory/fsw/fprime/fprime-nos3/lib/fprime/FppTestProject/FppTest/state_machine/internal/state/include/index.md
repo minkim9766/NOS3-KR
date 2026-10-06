@@ -3,56 +3,1102 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fppi`
 
-file--Basic.fppi
-file--BasicGuard.fppi
-file--BasicGuardString.fppi
-file--BasicGuardTestAbsType.fppi
-file--BasicGuardTestArray.fppi
-file--BasicGuardTestEnum.fppi
-file--BasicGuardTestStruct.fppi
-file--BasicGuardU32.fppi
-file--BasicInternal.fppi
-file--BasicSelf.fppi
-file--BasicString.fppi
-file--BasicTestAbsType.fppi
-file--BasicTestArray.fppi
-file--BasicTestEnum.fppi
-file--BasicTestStruct.fppi
-file--BasicU32.fppi
-file--Internal.fppi
-file--Polymorphism.fppi
-file--StateToChild.fppi
-file--StateToChoice.fppi
-file--StateToSelf.fppi
-file--StateToState.fppi
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Basic.fppi`
+
+
+```text
+@ A basic state machine
+state machine Basic {
+
+  @ Action a
+  action a
+
+  @ Signal s
+  signal s
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, a } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
 ```
 
-## 항목
+### `BasicGuard.fppi`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Basic.fppi`](file--Basic.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuard.fppi`](file--BasicGuard.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardString.fppi`](file--BasicGuardString.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestAbsType.fppi`](file--BasicGuardTestAbsType.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestArray.fppi`](file--BasicGuardTestArray.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestEnum.fppi`](file--BasicGuardTestEnum.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestStruct.fppi`](file--BasicGuardTestStruct.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardU32.fppi`](file--BasicGuardU32.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicInternal.fppi`](file--BasicInternal.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicSelf.fppi`](file--BasicSelf.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicString.fppi`](file--BasicString.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestAbsType.fppi`](file--BasicTestAbsType.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestArray.fppi`](file--BasicTestArray.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestEnum.fppi`](file--BasicTestEnum.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestStruct.fppi`](file--BasicTestStruct.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicU32.fppi`](file--BasicU32.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Internal.fppi`](file--Internal.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Polymorphism.fppi`](file--Polymorphism.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToChild.fppi`](file--StateToChild.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToChoice.fppi`](file--StateToChoice.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToSelf.fppi`](file--StateToSelf.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToState.fppi`](file--StateToState.fppi) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuard.fppi`
+
+
+```text
+@ A basic state machine with a guard
+state machine BasicGuard { 
+
+  @ Action a
+  action a
+
+  @ Guard g
+  guard g
+
+  @ Signal s
+  signal s
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s if g do { a, a } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicGuardString.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardString.fppi`
+
+
+```text
+constant basicGuardStringSize = 80
+
+@ A basic state machine with a string guard
+state machine BasicGuardString { 
+
+
+  @ Action a
+  action a: string
+
+  @ Guard g
+  guard g: string
+
+  @ Signal s
+  signal s: string size basicGuardStringSize
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicGuardTestAbsType.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestAbsType.fppi`
+
+
+```text
+@ A basic state machine with a TestAbsType guard
+state machine BasicGuardTestAbsType { 
+
+  @ Action a
+  action a: SmHarness.TestAbsType
+
+  @ Guard g
+  guard g: SmHarness.TestAbsType
+
+  @ Signal s
+  signal s: SmHarness.TestAbsType
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicGuardTestArray.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestArray.fppi`
+
+
+```text
+@ A basic state machine with a TestArray guard
+state machine BasicGuardTestArray { 
+
+  @ Action a
+  action a: SmHarness.TestArray
+
+  @ Guard g
+  guard g: SmHarness.TestArray
+
+  @ Signal s
+  signal s: SmHarness.TestArray
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicGuardTestEnum.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestEnum.fppi`
+
+
+```text
+    @ A basic state machine with a TestEnum guard
+state machine BasicGuardTestEnum { 
+
+  @ Action a
+  action a: SmHarness.TestEnum
+
+  @ Guard g
+  guard g: SmHarness.TestEnum
+
+  @ Signal s
+  signal s: SmHarness.TestEnum
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicGuardTestStruct.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardTestStruct.fppi`
+
+
+```text
+@ A basic state machine with a TestStruct guard
+state machine BasicGuardTestStruct { 
+
+  @ Action a
+  action a: SmHarness.TestStruct
+
+  @ Guard g
+  guard g: SmHarness.TestStruct
+
+  @ Signal s
+  signal s: SmHarness.TestStruct
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicGuardU32.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicGuardU32.fppi`
+
+
+```text
+@ A basic state machine with a U32 guard
+state machine BasicGuardU32 { 
+
+  @ Action a
+  action a: U32
+
+  @ Guard g
+  guard g: U32
+
+  @ Signal s
+  signal s: U32
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ State transition
+    on s if g do { a } enter T
+
+  }
+
+  @ State T
+  state T
+
+}
+```
+
+### `BasicInternal.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicInternal.fppi`
+
+
+```text
+@ A basic state machine with an internal transition
+state machine BasicInternal {
+
+  @ Action a
+  action a
+
+  @ Signal s
+  signal s
+
+  @ Initial transition
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Enter S
+    entry do { a }
+
+    @ Internal transition
+    on s do { a }
+
+  }
+
+}
+```
+
+### `BasicSelf.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicSelf.fppi`
+
+
+```text
+@ A basic state machine with a self transition
+state machine BasicSelf {
+
+  @ Action a
+  action a
+
+  @ Signal s
+  signal s
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Entry
+    entry do { a }
+
+    @ Exit
+    exit do { a, a }
+
+    @ State transition
+    on s do { a, a, a } enter S
+
+  }
+
+}
+```
+
+### `BasicString.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicString.fppi`
+
+
+```text
+constant basicStringSize = 80
+
+@ A basic state machine with string actions
+state machine BasicString {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: string
+
+  @ Signal s
+  signal s: string
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicTestAbsType.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestAbsType.fppi`
+
+
+```text
+@ A basic state machine with TestAbsType actions
+state machine BasicTestAbsType {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: SmHarness.TestAbsType
+
+  @ Signal s
+  signal s: SmHarness.TestAbsType
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicTestArray.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestArray.fppi`
+
+
+```text
+@ A basic state machine with TestArray actions
+state machine BasicTestArray {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: SmHarness.TestArray
+
+  @ Signal s
+  signal s: SmHarness.TestArray
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicTestEnum.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestEnum.fppi`
+
+
+```text
+@ A basic state machine with TestEnum actions
+state machine BasicTestEnum {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: SmHarness.TestEnum
+
+  @ Signal s
+  signal s: SmHarness.TestEnum
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicTestStruct.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicTestStruct.fppi`
+
+
+```text
+@ A basic state machine with TestStruct actions
+state machine BasicTestStruct {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: SmHarness.TestStruct
+
+  @ Signal s
+  signal s: SmHarness.TestStruct
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `BasicU32.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/BasicU32.fppi`
+
+
+```text
+@ A basic state machine with U32 actions
+state machine BasicU32 {
+
+  @ Action a
+  action a
+
+  @ Action b
+  action b: U32
+
+  @ Signal s
+  signal s: U32
+
+  initial enter S
+
+  @ State S
+  state S {
+
+    @ Exit
+    exit do { a }
+
+    @ State transition
+    on s do { a, b } enter T
+
+  }
+
+  @ State T
+  state T {
+
+    @ Entry
+    entry do { a, a, a }
+
+  }
+
+}
+```
+
+### `Internal.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Internal.fppi`
+
+
+```text
+@ A hierarchical state machine with an internal transition
+state machine Internal {
+
+  @ Action a
+  action a
+
+  @ Signal for internal transition in S1
+  signal S1_internal
+
+  @ Signal for transition from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ State S2
+    state S2 {
+
+      @ Transition from S2 to S3
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3
+
+    @ Internal transition
+    on S1_internal do { a }
+
+  }
+
+}
+```
+
+### `Polymorphism.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/Polymorphism.fppi`
+
+
+```text
+@ A hierarchical state machine with behavioral polymorphism
+state machine Polymorphism {
+
+  @ Signal for polymorphic transition
+  signal poly
+
+  @ Signal for transition from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ Polymorphic state transition
+    on poly enter S4
+
+    @ State S2
+    state S2 {
+
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3 {
+
+      @ Polymorphic state transition
+      @ This transition overrides the transition in S1
+      on poly enter S5
+
+    }
+
+  }
+
+  @ State S4
+  state S4
+
+  @ State S5
+  state S5
+
+}
+```
+
+### `StateToChild.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToChild.fppi`
+
+
+```text
+@ A state machine for testing state-to-child transitions
+state machine StateToChild {
+
+  @ Exit S2
+  action exitS2
+
+  @ Exit S3
+  action exitS3
+
+  @ Action a
+  action a
+
+  @ Enter S2
+  action enterS2
+
+  @ Enter S3
+  action enterS3
+
+  @ Signal for going from S1 to S2
+  signal S1_to_S2
+
+  @ Signal for going from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ State S2
+    state S2 {
+
+      @ Enter S2
+      entry do { enterS2 }
+
+      @ Exit S2
+      exit do { exitS2 }
+
+      @ State transition to S3
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3 {
+
+      @ Enter S3
+      entry do { enterS3 }
+
+      @ Exit S3
+      exit do { exitS3 }
+
+    }
+
+    @ State transition to S2
+    on S1_to_S2 do { a } enter S2
+
+  }
+
+}
+```
+
+### `StateToChoice.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToChoice.fppi`
+
+
+```text
+@ A state machine for testing state-to-choice transitions
+@ with hierarchy
+state machine StateToChoice {
+
+  @ Exit S1
+  action exitS1
+
+  @ Exit S2
+  action exitS2
+
+  @ Exit S3
+  action exitS3
+
+  @ Action a
+  action a
+
+  @ Enter S1
+  action enterS1
+
+  @ Enter S2
+  action enterS2
+
+  @ Enter S3
+  action enterS3
+
+  @ Enter S4
+  action enterS4
+
+  @ Guard g
+  guard g
+
+  @ Signal for going from S1 to S4
+  signal S1_to_S4
+
+  @ Signal for going from S1 to C
+  signal S1_to_C
+
+  @ Signal for going from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ Enter S1
+    entry do { enterS1 }
+
+    @ Exit S1
+    exit do { exitS1 }
+
+    @ State S2
+    state S2 {
+
+      @ Enter S2
+      entry do { enterS2 }
+
+      @ Exit S2
+      exit do { exitS2 }
+
+      @ State transition to S3
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3 {
+
+      @ Enter S3
+      entry do { enterS3 }
+
+      @ Exit S3
+      exit do { exitS3 }
+
+    }
+
+    @ State transition to S4
+    on S1_to_S4 do { a } enter S4
+
+    @ State transition to C
+    on S1_to_C do { a } enter S4.C
+
+  }
+
+  @ State S4
+  state S4 {
+
+    @ Initial transition
+    initial enter C
+
+    @ Enter S4
+    entry do { enterS4 }
+
+    @ Choice C
+    choice C { if g enter S5 else enter S6 }
+
+    @ State S5
+    state S5
+
+    @ State S6
+    state S6
+
+  }
+
+}
+```
+
+### `StateToSelf.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToSelf.fppi`
+
+
+```text
+@ A state machine for testing state-to-self transitions
+@ with hierarchy
+state machine StateToSelf {
+
+  @ Exit S1
+  action exitS1
+
+  @ Exit S2
+  action exitS2
+
+  @ Exit S3
+  action exitS3
+
+  @ Action a
+  action a
+
+  @ Enter S1
+  action enterS1
+
+  @ Enter S2
+  action enterS2
+
+  @ Enter S3
+  action enterS3
+
+  @ Signal for going from S1 to S1
+  signal S1_to_S1
+
+  @ Signal for going from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ Enter S1
+    entry do { enterS1 }
+
+    @ Exit S1
+    exit do { exitS1 }
+
+    @ State S2
+    state S2 {
+
+      @ Enter S2
+      entry do { enterS2 }
+
+      @ Exit S2
+      exit do { exitS2 }
+
+      @ State transition to S3
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3 {
+
+      @ Enter S3
+      entry do { enterS3 }
+
+      @ Exit S3
+      exit do { exitS3 }
+
+    }
+
+    @ State transition to S1
+    on S1_to_S1 do { a } enter S1
+
+  }
+
+}
+```
+
+### `StateToState.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal/state/include/StateToState.fppi`
+
+
+```text
+@ A state machine for testing state-to-state transitions
+@ with hierarchy
+state machine StateToState {
+
+  @ Exit S1
+  action exitS1
+
+  @ Exit S2
+  action exitS2
+
+  @ Exit S3
+  action exitS3
+
+  @ Action a
+  action a
+
+  @ Enter S1
+  action enterS1
+
+  @ Enter S2
+  action enterS2
+
+  @ Enter S3
+  action enterS3
+
+  @ Enter S4
+  action enterS4
+
+  @ Enter S5
+  action enterS5
+
+  @ Signal for going from S1 to S4
+  signal S1_to_S4
+
+  @ Signal for going from S1 to S5
+  signal S1_to_S5
+
+  @ Signal for going from S2 to S3
+  signal S2_to_S3
+
+  @ Initial transition
+  initial enter S1
+
+  @ State S1
+  state S1 {
+
+    @ Initial transition
+    initial enter S2
+
+    @ Enter S1
+    entry do { enterS1 }
+
+    @ Exit S1
+    exit do { exitS1 }
+
+    @ State S2
+    state S2 {
+
+      @ Enter S2
+      entry do { enterS2 }
+
+      @ Exit S2
+      exit do { exitS2 }
+
+      @ State transition to S3
+      on S2_to_S3 enter S3
+
+    }
+
+    @ State S3
+    state S3 {
+
+      @ Enter S3
+      entry do { enterS3 }
+
+      @ Exit S3
+      exit do { exitS3 }
+
+    }
+
+    @ State transition to S4
+    on S1_to_S4 do { a } enter S4
+
+    @ State transition to S5
+    on S1_to_S5 do { a } enter S4.S5
+
+  }
+
+  @ State S4
+  state S4 {
+
+    @ Initial transition
+    initial enter S5
+
+    @ Enter S4
+    entry do { enterS4 }
+
+    @ State S5
+    state S5 {
+
+      @ Enter S5
+      entry do { enterS5 }
+
+    }
+
+  }
+
+}
+```

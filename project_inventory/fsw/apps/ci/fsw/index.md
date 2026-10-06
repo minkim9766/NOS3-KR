@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/ci/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,11 +16,4 @@ src/index
 unit_test/index
 ```
 
-## 항목
-
-- [`fsw/apps/ci/fsw/examples/`](examples/index) — 폴더
-- [`fsw/apps/ci/fsw/for_build/`](for_build/index) — 폴더
-- [`fsw/apps/ci/fsw/mission_inc/`](mission_inc/index) — 폴더
-- [`fsw/apps/ci/fsw/platform_inc/`](platform_inc/index) — 폴더
-- [`fsw/apps/ci/fsw/src/`](src/index) — 폴더
-- [`fsw/apps/ci/fsw/unit_test/`](unit_test/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

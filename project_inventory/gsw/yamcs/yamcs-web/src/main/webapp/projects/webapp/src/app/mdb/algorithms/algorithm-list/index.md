@@ -3,18 +3,294 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-list.component.html`
 
-file--algorithm-list.component.html
-file--algorithm-list.component.ts
-file--algorithms.datasource.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithm-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Algorithms" />
+  <span #top></span>
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter
+        [formControl]="filterControl"
+        placeholder="Filter algorithms"
+        (onArrowDown)="selectNext()"
+        (onArrowUp)="selectPrevious()"
+        (onEnter)="applySelection()" />
+      <ya-column-chooser #columnChooser [columns]="columns" preferenceKey="algorithms" />
+    </ya-filter-bar>
+
+    @if (dataSource) {
+      <table mat-table class="ya-data-table expand" [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let algorithm">
+            <a
+              [routerLink]="['/mdb/algorithms', algorithm.qualifiedName]"
+              [queryParams]="{ c: yamcs.context }">
+              <ya-highlight
+                [text]="shortName ? algorithm.name : algorithm.qualifiedName"
+                [term]="filterControl.value" />
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let algorithm">{{ algorithm.type || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="language">
+          <th mat-header-cell *matHeaderCellDef>Language</th>
+          <td mat-cell *matCellDef="let algorithm">{{ algorithm.language || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="scope">
+          <th mat-header-cell *matHeaderCellDef>Scope</th>
+          <td mat-cell *matCellDef="let algorithm">{{ algorithm.scope || "-" }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="shortDescription">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let algorithm" class="wrap200">
+            {{ algorithm.shortDescription || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let row"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnChooser.displayedColumns$ | async"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: columnChooser.displayedColumns$ | async"
+          [class.selected]="selection.isSelected(row)"></tr>
+      </table>
+    }
+    <mat-paginator
+      [pageSize]="pageSize"
+      [hidePageSize]="true"
+      [showFirstLastButtons]="true"
+      [length]="dataSource.totalSize$ | async" />
+  </ya-panel>
+
+  <ng-template #empty>
+    <ya-panel>
+      The Mission Database for
+      <i>{{ yamcs.instance }}</i>
+      does not define any algorithms.
+    </ya-panel>
+  </ng-template>
+</ya-instance-page>
 ```
 
-## 항목
+### `algorithm-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithm-list.component.html`](file--algorithm-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithm-list.component.ts`](file--algorithm-list.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithms.datasource.ts`](file--algorithms.datasource.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithm-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatPaginator } from '@angular/material/paginator';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  Algorithm,
+  GetAlgorithmsOptions,
+  MessageService,
+  WebappSdkModule,
+  YaColumnInfo,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { AlgorithmsDataSource } from './algorithms.datasource';
+
+@Component({
+  templateUrl: './algorithm-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AlgorithmListComponent implements AfterViewInit {
+  shortName = false;
+  pageSize = 100;
+
+  @ViewChild('top', { static: true })
+  top: ElementRef;
+
+  @ViewChild(MatPaginator, { static: true })
+  paginator: MatPaginator;
+
+  filterControl = new UntypedFormControl();
+
+  dataSource: AlgorithmsDataSource;
+
+  columns: YaColumnInfo[] = [
+    { id: 'name', label: 'Name', alwaysVisible: true },
+    { id: 'type', label: 'Type', visible: true },
+    { id: 'language', label: 'Language', visible: true },
+    { id: 'scope', label: 'Scope', visible: true },
+    { id: 'shortDescription', label: 'Description' },
+    { id: 'actions', label: '', alwaysVisible: true },
+  ];
+
+  selection = new SelectionModel<Algorithm>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Algorithms');
+    this.dataSource = new AlgorithmsDataSource(yamcs);
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    this.filterControl.setValue(queryParams.get('filter'));
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.paginator.pageIndex = 0;
+      this.updateDataSource();
+    });
+
+    if (queryParams.has('page')) {
+      this.paginator.pageIndex = Number(queryParams.get('page'));
+    }
+    this.updateDataSource();
+    this.paginator.page.subscribe(() => {
+      this.updateDataSource();
+      this.top.nativeElement.scrollIntoView();
+    });
+  }
+
+  private updateDataSource() {
+    this.updateURL();
+    const options: GetAlgorithmsOptions = {
+      pos: this.paginator.pageIndex * this.pageSize,
+      limit: this.pageSize,
+    };
+    const filterValue = this.filterControl.value;
+    if (filterValue) {
+      options.q = filterValue.toLowerCase();
+    }
+    this.dataSource
+      .loadAlgorithms(options)
+      .then(() => {
+        this.selection.clear();
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        page: this.paginator.pageIndex || null,
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+
+  selectNext() {
+    const items = this.dataSource.algorithms$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.min(items.indexOf(currentItem) + 1, items.length - 1);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  selectPrevious() {
+    const items = this.dataSource.algorithms$.value;
+    let idx = 0;
+    if (this.selection.hasValue()) {
+      const currentItem = this.selection.selected[0];
+      if (items.indexOf(currentItem) !== -1) {
+        idx = Math.max(items.indexOf(currentItem) - 1, 0);
+      }
+    }
+    this.selection.select(items[idx]);
+  }
+
+  applySelection() {
+    if (this.selection.hasValue()) {
+      const item = this.selection.selected[0];
+      const items = this.dataSource.algorithms$.value;
+      if (items.indexOf(item) !== -1) {
+        this.router.navigate(['/mdb/algorithms', item.qualifiedName], {
+          queryParams: { c: this.yamcs.context },
+        });
+      }
+    }
+  }
+}
+```
+
+### `algorithms.datasource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/algorithms/algorithm-list/algorithms.datasource.ts`
+
+
+```typescript
+import { DataSource } from '@angular/cdk/table';
+import {
+  Algorithm,
+  GetAlgorithmsOptions,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+export class AlgorithmsDataSource extends DataSource<Algorithm> {
+  algorithms$ = new BehaviorSubject<Algorithm[]>([]);
+  totalSize$ = new BehaviorSubject<number>(0);
+  loading$ = new BehaviorSubject<boolean>(false);
+
+  constructor(private yamcs: YamcsService) {
+    super();
+  }
+
+  connect() {
+    return this.algorithms$;
+  }
+
+  loadAlgorithms(options: GetAlgorithmsOptions) {
+    this.loading$.next(true);
+    return this.yamcs.yamcsClient
+      .getAlgorithms(this.yamcs.instance!, options)
+      .then((page) => {
+        this.loading$.next(false);
+        this.totalSize$.next(page.totalSize);
+        this.algorithms$.next(page.algorithms || []);
+      });
+  }
+
+  disconnect() {
+    this.algorithms$.complete();
+    this.totalSize$.complete();
+    this.loading$.complete();
+  }
+}
+```

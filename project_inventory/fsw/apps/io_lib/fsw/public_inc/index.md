@@ -3,38 +3,2028 @@
 
 **경로:** `fsw/apps/io_lib/fsw/public_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cop1.h`
 
-file--cop1.h
-file--io_lib.h
-file--io_lib_events.h
-file--io_lib_utils.h
-file--network_includes.h
-file--tc_sync.h
-file--tctf.h
-file--tm_sdlp.h
-file--tm_sync.h
-file--tmtf.h
-file--trans_rs422.h
-file--trans_select.h
-file--trans_udp.h
+**경로:** `fsw/apps/io_lib/fsw/public_inc/cop1.h`
+
+
+```c
+/*******************************************************************************
+ * File: cop1.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provides the interface functionality for the receiver side of the Communications
+ *   Operation Procedure-1 (COP-1), i.e. the Frame Acceptance and Reporting
+ *   Mechanism-1 (FARM-1)
+ *
+ * Reference(s):
+ *   - _Communications Operation Procedure-1_, CCSDS 232.1-B-2
+ *
+ * Notes:
+ *   -Setter functions have not been provided for all the fields in the Communications
+ *    Link Control Word (CLCW).  The value for the virtual channel ID is set when the
+ *    CLCW is initialized.  Most other values are updated internally when processing
+ *    a transfer frame.  Values set outside of the COP1 procedure have setters
+ *    provided.
+ *
+ *
+ * History:
+ *   03/16/2015  Alan Asp, Odyssey Space Research, LLC
+ *    * Created
+ *
+ ******************************************************************************/
+
+#ifndef _COP1_H_
+#define _COP1_H_
+
+#include "io_lib.h"
+#include "tctf.h"
+
+
+#define COP1_SLIDING_WINDOW_WIDTH 126
+
+#define COP1_SUCCESS          0
+#define COP1_BADINPUT_ERR    -1
+#define COP1_INVALID_TF_ERR  -2
+#define COP1_FARM1_ERR       -3
+
+typedef struct
+{
+    uint8 Status;     /* CLCW info and status  */
+    uint8 Channel;    /* virtual channel ID    */
+    uint8 Flags;      /* flags                 */
+    uint8 Report;     /* report value, a.k.a the Next Expected Frame Sequence Number, N(R) */
+} COP1_Clcw_t;
+
+
+int32   COP1_InitClcw(COP1_Clcw_t *clcwPtr, uint16 vcId);
+int32   COP1_ProcessFrame(uint8* toBuffer, COP1_Clcw_t *clcwPtr, TCTF_Hdr_t *tfPtr,
+                       TCTF_ChannelService_t *channelService);
+
+
+uint16  COP1_GetClcwCtrlWordType(COP1_Clcw_t *clcwPtr);
+
+uint16  COP1_GetClcwVersion(COP1_Clcw_t *clcwPtr);
+
+void    COP1_SetClcwStatus(COP1_Clcw_t *clcwPtr, uint16 value);
+uint16  COP1_GetClcwStatus(COP1_Clcw_t *clcwPtr);
+
+uint16  COP1_GetClcwCopEffect(COP1_Clcw_t *clcwPtr);
+
+uint16  COP1_GetClcwVcId(COP1_Clcw_t *clcwPtr);
+
+void    COP1_SetClcwNoRf(COP1_Clcw_t *clcwPtr, bool value);
+bool COP1_GetClcwNoRf(COP1_Clcw_t *clcwPtr);
+
+void    COP1_SetClcwNoBitlock(COP1_Clcw_t *clcwPtr, bool value);
+bool COP1_GetClcwNoBitlock(COP1_Clcw_t *clcwPtr);
+
+bool COP1_GetClcwLockout(COP1_Clcw_t *clcwPtr);
+
+bool COP1_GetClcwWait(COP1_Clcw_t *clcwPtr);
+
+bool COP1_GetClcwRetransmit(COP1_Clcw_t *clcwPtr);
+
+uint16  COP1_GetClcwFarmbCtr(COP1_Clcw_t *clcwPtr);
+
+uint8   COP1_GetClcwReport(COP1_Clcw_t *clcwPtr);
+
+
+#endif /* _COP1_H_ */
 ```
 
-## 항목
+### `io_lib.h`
 
-- [`fsw/apps/io_lib/fsw/public_inc/cop1.h`](file--cop1.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/io_lib.h`](file--io_lib.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/io_lib_events.h`](file--io_lib_events.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/io_lib_utils.h`](file--io_lib_utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/network_includes.h`](file--network_includes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/tc_sync.h`](file--tc_sync.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/tctf.h`](file--tctf.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/tm_sdlp.h`](file--tm_sdlp.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/tm_sync.h`](file--tm_sync.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/tmtf.h`](file--tmtf.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/trans_rs422.h`](file--trans_rs422.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/trans_select.h`](file--trans_select.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/fsw/public_inc/trans_udp.h`](file--trans_udp.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/io_lib/fsw/public_inc/io_lib.h`
+
+
+```c
+/************************************************************************
+** File: io_lib.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Purpose: 
+**  The IO Lib header file 
+**
+** Notes:
+**
+** History:
+**   Apr, 2015  Guy de Carufel
+**    * Created
+**
+*************************************************************************/
+#ifndef _IO_LIB_H_
+#define _IO_LIB_H_
+
+#include "cfe.h"
+#include "common_types.h"
+#include "network_includes.h"
+#include "crypto.h"
+
+#ifdef _VXWORKS_OS_
+/* For vxworks, include ioLib for ioctl suport */
+#include <ioLib.h>
+
+/* In VxWorks inet_aton() returns OK and ERORR
+ * in VxWorks ERROR = -1, OK = 0 
+ * */
+#define INET_ATON_ERROR ERROR
+
+#else
+/* If not vxworks, include termios and select.h */
+#include <termios.h>
+#include <sys/select.h>
+
+/* In Linux inet_aton() returns 0 for error and non-zero for ok */
+#define INET_ATON_ERROR 0
+
+#endif
+
+#include "io_lib_events.h"
+
+
+#define IO_LIB_MAJOR_VERSION    1
+#define IO_LIB_MINOR_VERSION    0
+#define IO_LIB_REVISION         0
+#define IO_LIB_MISSION_REV      0
+
+#define IO_LIB_SUCCESS          0
+#define IO_LIB_ERROR           -1
+
+#define IO_TRANS_PEND_FOREVER    -1
+
+typedef struct
+{
+    /* CFE Event table */
+    CFE_EVS_BinFilter_t  EventTbl[IO_LIB_EVT_CNT];
+} IO_LIB_LibData_t;
+
+
+int32 IO_LibInit(void);
+
+#endif /* _io_lib_h_ */
+
+/************************/
+/*  End of File Comment */
+/************************/
+```
+
+### `io_lib_events.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/io_lib_events.h`
+
+
+```c
+/*=======================================================================================
+** File Name:  io_lib_events.h
+**
+** Copyright 2017 United States Government as represented by the Administrator
+** of the National Aeronautics and Space Administration.  No copyright is
+** claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Title:  ID Header File for IO_LIB Application
+**
+** $Author:    Guy de Carufel
+** $Revision:  $
+** $Date:      2015-01-09
+**
+** Purpose:  This header file contains definitions of IO_LIB Events.
+**
+** Modification History:
+**   Date | Author | Description
+**   ---------------------------
+**   2015-01-09 | Guy de Carufel | Build #: Code Started
+**
+**=====================================================================================*/
+    
+#ifndef _IO_LIB_EVENTS_H_
+#define _IO_LIB_EVENTS_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/* Event IDs */
+typedef enum
+{
+    IO_LIB_RESERVED_EID             = 0,
+    IO_LIB_INF_EID                  = 1,
+    IO_LIB_ERR_EID                  = 2,
+    IO_LIB_FORMAT_INF_EID           = 3,
+    IO_LIB_SERVICE_INF_EID          = 4,
+    IO_LIB_FORMAT_ERR_EID           = 5,
+    IO_LIB_SERVICE_ERR_EID          = 6,
+    IO_LIB_TRANS_UDP_EID            = 7,
+    IO_LIB_TRANS_RS422_EID          = 8,
+    IO_LIB_TRANS_SELECT_EID         = 9,
+    IO_LIB_COP1_EID                 = 10,
+    IO_LIB_TM_SDLP_EID              = 11,
+    IO_LIB_EVT_CNT 
+} IO_LIB_Events_t;
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif 
+
+/*=======================================================================================
+** End of file io_lib_events.h
+**=====================================================================================*/
+    
+```
+
+### `io_lib_utils.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/io_lib_utils.h`
+
+
+```c
+/******************************************************************************/
+/** \file  io_lib_utils.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*  
+*   \brief Header file of IO Library utilities
+*
+*   \par Description:
+*     Provides common utilities used by IO libraries.
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Utilties are intended for use by other IO_LIB functions but may also
+*       be called directly by applications if required.
+*
+*   \par Modification History:
+*     - 2015-12-08 | Guy de Carufel | OSR | Code Started 
+*******************************************************************************/
+
+#ifndef _IO_LIB_UTILS_
+#define _IO_LIB_UTILS_
+
+#include "io_lib.h"
+
+/******************************************************************************/
+/** \brief PseudoRandomize Buffer 
+*
+*   \par Description/Algorithm
+*       Perform a XOR on buffer with supplied pseudo-random sequence (255 bits).
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Sequence must be 255 bits long (stored in 32 byte array)
+*       - Sequence can be generated using IO_LIB_UTIL_GenPseudoRandomSeq 
+*       - This function is derived from CCSDS TC_SYNC and TM_SYNC specs. 
+*
+*   \param[in,out] pBuff      Pointer to the Buffer to randomize
+*   \param[in]     buffSize   Size of buffer in bytes
+*   \param[in]     pPrSeq     Pointer to 32-byte pseudo-random seq. array
+*
+*   \return IO_LIB_SUCCESS             
+*
+*   \see 
+*       #IO_LIB_UTIL_GenPseudoRandomSeq
+*******************************************************************************/
+int32 IO_LIB_UTIL_PseudoRandomize(uint8 *pBuff, uint16 buffSize, uint8 *pPrSeq);
+
+
+/******************************************************************************/
+/** \brief Generate a 255-bit pseudo-random sequence
+*
+*   \par Description/Algorithm
+*       Generates a pseudo-random sequence, implemented as a 8-bit Fibonacci 
+*       Linear feedback shift register based on supplied polynomial and seed.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Implemented as a 8-bit Fibonacci Linear feedback shift register 
+*       - Length of the pSeqBuff is 32 bytes (to hold 255 bits + 1st bit of next
+*         cycle)
+*       - The supplied polynomial must be an 8-bit polynomial Hex value.
+*         eg: poly = 0xa9 for (x^8 + x^7 + x^5 + x^3 + 1) w/ x^8 ommitted
+*       - Seed is the initial shift registry value (eg. 0xff)
+*       - Function to be called by other libraries requiring an 
+*         8-bit pseudo-random sequence.
+*
+*   \param[in,out] pSeqBuff   Pointer to buffer holding pseudo-random sequence. 
+*   \param[in]     poly       8-bit polynomial (eg. 0xa9: x^8+x^7+x^5+x^3+1)
+*   \param[in]     seed       Initial value of shift register (eg.0xff)
+*
+*   \return IO_LIB_SUCCESS             
+*
+*   \see 
+*       #IO_LIB_UTIL_PseudoRandomize
+*******************************************************************************/
+int32 IO_LIB_UTIL_GenPseudoRandomSeq(uint8 *pSeqBuff, uint8 poly, uint8 seed);
+
+#endif /* _IO_LIB_UTILS_ */
+
+/*==============================================================================
+** End of file io_lib_utils.h
+**============================================================================*/
+```
+
+### `network_includes.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/network_includes.h`
+
+
+```c
+/*
+**  GSC-18128-1, "Core Flight Executive Version 6.7"
+**
+**  Copyright (c) 2006-2019 United States Government as represented by
+**  the Administrator of the National Aeronautics and Space Administration.
+**  All Rights Reserved.
+**
+**  Licensed under the Apache License, Version 2.0 (the "License");
+**  you may not use this file except in compliance with the License.
+**  You may obtain a copy of the License at
+**
+**    http://www.apache.org/licenses/LICENSE-2.0
+**
+**  Unless required by applicable law or agreed to in writing, software
+**  distributed under the License is distributed on an "AS IS" BASIS,
+**  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+**  See the License for the specific language governing permissions and
+**  limitations under the License.
+*/
+
+/******************************************************************************
+** File: network_includes.h
+**
+** Purpose:
+**   This header file contains the correct set of network include
+**   files, which are dependant on the operating system.
+**
+** Author:   R.McGraw/SSI
+**
+** Notes:
+**
+******************************************************************************/
+
+#ifndef _network_includes_
+#define _network_includes_
+
+#ifdef _VXWORKS_OS_
+    #include <vxWorks.h>
+    #include <selectLib.h>
+    #include <sockLib.h>
+    #include <inetLib.h>
+    #include <arpLib.h>
+    #include <netinet/in.h>
+    #include <netinet/tcp.h>
+
+#elif  _RTEMS_OS_
+    #define _USING_RTEMS_INCLUDES_
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <netinet/in.h>
+    #include <netinet/tcp.h>
+    #include <fcntl.h>
+    #define _HAVE_FCNTL_
+    #ifndef MSG_DONTWAIT
+      #define MSG_DONTWAIT 0
+    #endif
+#elif  _MAC_OS_
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <netinet/in.h>
+    #include <netinet/tcp.h>
+    #include <fcntl.h>
+    #define _HAVE_FCNTL_
+
+#elif  _LINUX_OS_
+    #include <unistd.h>
+    #include <sys/types.h>
+    #include <sys/socket.h>
+    #include <arpa/inet.h>
+    #include <netinet/in.h>
+    #include <netinet/tcp.h>
+    #include <fcntl.h>
+    #define _HAVE_FCNTL_
+    #ifndef MSG_DONTWAIT
+      #define MSG_DONTWAIT 0
+    #endif
+
+#else
+    #error "No OS defined!"
+#endif
+
+#endif /* _network_includes_ */
+```
+
+### `tc_sync.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/tc_sync.h`
+
+
+```c
+/******************************************************************************/
+/** \file  tc_sync.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Provides the TC Channel Synchronization service.
+*
+*   \par References:
+*     - "TC Synchronization and Channel Coding", CCSDS 231.0-B-2,
+*       Issue 2, September 2010
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Only receiving end services are provided
+*     - This service provides the synchronization and pseudo-randomization 
+*       services for TC Transfer Frames (TCTF) 
+*     - BCH Decoding of the transfer frame is not covered in this librarly.
+*       The associated error-correction/detection should be performed
+*       in a seperate decoding library.
+*     - the pseudo-randomization uses a Fibonacci LFSR with seed of 0xff and 
+*       polynomial of x^8 + x^6 + x^4 + x^3 + x^2 + x + 1. Period of 255 bits.
+*     - User may use either GetTransferFrame function if full CLTU is 
+*       available, or build transfer frame incrementally by calling 
+*       piecewise functions.
+*
+*   \par Modification History:
+*     - 2015-12-08 | Guy de Carufel | OSR | Code Started 
+*******************************************************************************/
+
+#ifndef _IO_TC_SYNC_
+#define _IO_TC_SYNC_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*******************************************************************************
+** Includes
+*******************************************************************************/
+#include "io_lib.h"
+
+
+/*******************************************************************************
+** Macro Definitions
+*******************************************************************************/
+#define TC_SYNC_FOUND_TAIL_SEQ    1
+#define TC_SYNC_SUCCESS           0
+#define TC_SYNC_INVALID_POINTER  -1
+#define TC_SYNC_INVALID_LENGTH   -2
+#define TC_SYNC_INVALID_CLTU     -3
+
+#define TC_SYNC_START_SEQ_SIZE          2
+#define TC_SYNC_CODE_BLOCK_SIZE         8
+#define TC_SYNC_CODE_BLOCK_DATA_SIZE    7
+#define TC_SYNC_TAIL_SEQ_SIZE           8
+
+/*******************************************************************************
+** Function Declarations
+*******************************************************************************/
+/******************************************************************************/
+/** \brief Initialize the static Pseudo-Random sequence
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Generates a pseudo-random sequence with poly:0x5f and seed:0xff
+*       - Called by IO_LibInit
+
+*   \return TC_SYNC_SUCCESS             Always successful.
+*
+*   \see 
+*       #IO_LibInit
+*       #IO_LIB_UTIL_GenPseudoRandomSeq
+*******************************************************************************/
+int32 TC_SYNC_LibInit(void);
+
+
+/******************************************************************************/
+/** \brief Perform TC Synchronization
+*
+*   \par Description/Algorithm
+*     Extract the Transfer frame (including fill bytes) from a Communication
+*     Linke Transfer Unit (CLTU). 
+*
+*   \par Assumptions, External Events, and Notes:
+*     - Use this function if you have full CLTU available, otherwise build
+*       the transfer frame piecewise functions (see below).
+*     - The input is a full Communication Link Transfer Unit (CLTU)
+*     - Any error check / detection should be done prior to calling this fnct.
+*     - The transfer frame within the CLTU may have been randomized. Use
+*       derandomize = true for output transfer frame to be de-randomized.
+*     - The size of the transfer frame buffer must be able to hold full TF.
+*     - The CLTU must hold both a CLTU start and tail sequence.
+*     - The parity byte within the CLTU code blocks are ignored.
+*     - The full TF, including any fill bytes, are copied into the TF Buffer.
+*
+*   \param[out] pTfBuff      Pointer to the buffer to store transfer frame.     
+*   \param[in]  pCltu        Pointer to the CLTU.
+*   \param[in]  tfBuffSize   The size in octets of TF buffer
+*   \param[in]  cltuLength   The size in octets of CLTU.
+*   \param[in]  derandomize  Whether the frame should be de-randomized         
+*
+*   \return transfer frame size        Number of octets copied to TF buffer
+*   \return TC_SYNC_INVALID_POINTER    If any input pointer is NULL
+*   \return TC_SYNC_INVALID_LENGTH     If the transfer frame buffer is 
+*                                      too small to hold full TF in CLTU.
+*   \return TC_SYNC_INVALID_CLTU       If the CLTU has invalid start sequence,
+*                                      or no tail sequence found.
+*
+*   \see 
+*       #TC_SYNC_CheckStartSeq
+*       #TC_SYNC_GetCodeBlockData
+*       #TC_SYNC_DeRandomizeFrame
+*******************************************************************************/
+int32 TC_SYNC_GetTransferFrame(uint8 *pTfBuff, uint8 *pCltu, 
+                               uint16 tfBuffSize, uint16 cltuLength, 
+                               bool derandomize);
+
+
+/******************************************************************************/
+/** \brief Check CLTU Start Sequence (piecewise function)
+*
+*   \par Description/Algorithm
+*     Verify that start sequence is correct. Increments the cltuOffset past the
+*     start sequence.
+*
+*   \par Assumptions, External Events, and Notes:
+*     - The cltuOffset will be incremented by the start sequence size.
+*       It should have a value of zero when function is called, although this 
+*       is not enfforced.
+*
+*   \param[in]       pSeq        Pointer to the sequence to check.     
+*   \param[in, out]  pCltuOffset Pointer to the cltu cursor offset.
+*
+*   \return TC_SYNC_SUCCESS          Start Sequence is correct.
+*   \return TC_SYNC_INVALID_POINTER  If any input pointer is NULL
+*   \return TC_SYNC_INVALID_CLTU     If the CLTU has invalid start sequence
+*
+*   \see 
+*       #TC_SYNC_GetTransferFrame
+*******************************************************************************/
+int32 TC_SYNC_CheckStartSeq(uint8 *pSeq, uint16 *pCltuOffset);
+
+
+/******************************************************************************/
+/** \brief Get data from a CLTU code block (piecewise function)
+*
+*   \par Description/Algorithm
+*     Get transfer frame data from a CLTU code block and increment TF and CLTU
+*     cursor offsets. 
+*
+*   \par Assumptions, External Events, and Notes:
+*     - The code block data may be encoded and / or randomized
+*     - Any error check / detection should be done prior to calling this fnct.
+*     - The codeBlock is assumed to be a full code block in size.
+*     - The user should call this function for every code block received until
+*       a tail sequence code block is found.
+*     - The parity byte within the CLTU code blocks are ignored.
+*     - Full code block data (including any fill bytes) are copied to TF.
+*
+*   \param[out]    pTfBuff       Pointer to the transfer frame buffer.
+*   \param[in]     pCodeBlock    Pointer to the CLTU code block.
+*   \param[in,out] pTfOffset     Pointer to the current TF cursor offset.
+*   \param[in,out] pCltuOffset   Pointer to the current CLTU cursor offset.
+*   \param[in]     tfBuffSize    Size of the TF Buffer.
+*   \param[in]     cltuMaxLength Max length of CLTU.
+*
+*   \return TC_SYNC_FOUND_TAIL_SEQ   CLTU Tail sequence found.
+*   \return TC_SYNC_SUCCESS          Non-tail Code Block data copied.
+*   \return TC_SYNC_INVALID_POINTER  If any input pointer is NULL
+*   \return TC_SYNC_INVALID_CLTU     End of cltu length reached w/o tail seq.
+*   \return TC_SYNC_INVALID_LENGTH   TF Buffer is full.
+*
+*   \see 
+*       #TC_SYNC_GetTransferFrame
+*******************************************************************************/
+int32 TC_SYNC_GetCodeBlockData(uint8 *pTfBuff, uint8 *pCodeBlock,
+                               uint16 *pTfOffset, uint16 *pCltuOffset,
+                               uint16 tfBuffSize, uint16 cltuMaxLength);
+
+
+/******************************************************************************/
+/** \brief Perform TC Frame De-Randomization (piecewise function) 
+*
+*   \par Description/Algorithm
+*      Perform the standard CCSDS TC_Sync channel de-randomization.
+*
+*   \par Assumptions, External Events, and Notes:
+*      - The presence or absence of pseudo-randomization is fixed for a
+*        physical channel and is a managed property.
+*
+*   \param[in,out] pFrame     The input frame to de-randomize
+*   \param[in]     frameSize  The size of the frame in bytes
+*
+*   \return TC_SYNC_SUCCESS   Always successful.
+*
+*   \see 
+*       #TC_SYNC_GetTransferFrame
+*       #IO_LIB_UTIL_PseudoRandomize
+*******************************************************************************/
+int32 TC_SYNC_DeRandomizeFrame(uint8 *pFrame, uint16 frameSize);
+
+#endif /* _TC_SYNC_H_ */
+
+/*==============================================================================
+** End of file tc_sync.h
+**============================================================================*/
+```
+
+### `tctf.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/tctf.h`
+
+
+```c
+/*******************************************************************************
+ * File: tctf.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provides the interface functionality for the receiver side of the Telecommand
+ *   Space Data Link Transfer Frame
+ *
+ * Reference(s):
+ *   - _TC Space Data Link Protocol_, CCSDS 232.0-B-2
+ *
+ * History:
+ *   04/02/2015, A. Asp, Odyssey Space Research, LLC
+ *    -Created
+ *
+ ******************************************************************************/
+
+#ifndef _TC_TRANSFER_FRAME_H_
+#define _TC_TRANSFER_FRAME_H_
+
+
+#include "io_lib.h"
+
+#define TCTF_FRAME_ERROR_CONTROL_INCLUDED  false  /* Set for each mission. true = each TF
+                                                     has a frame error control field,
+                                                     false = otherwise */
+
+
+/*------------------------------------------------------------------------------
+ * Items below should not require user updates
+ */
+
+#define TCTF_PRIHDR_SIZE               5   /* avoid using 'sizeof' in case of padding */
+#define TCTF_FRAME_ERROR_CONTROL_SIZE  2   /* number of octets for the frame
+                                              error control field */
+#define TCTF_SEGHDR_SIZE               1   /* number of octets for the segment header */
+
+
+/* NOTE: Refer to CCSDS 232.0-B-3 on the following definition of services */
+/* Define values to specify the service type to be used */
+typedef enum
+{
+    TCTF_SERVICE_MAPP = 0,  /* MAP Packet             */
+    TCTF_SERVICE_VCP  = 1,  /* Virtual Channel Packet */
+    TCTF_SERVICE_MAPA = 2,  /* MAP Access             */
+    TCTF_SERVICE_VCA  = 3,  /* Virtual Channel Access */
+    TCTF_SERVICE_VCF  = 4,  /* Virtual Channel Frame  */
+    TCTF_SERVICE_MCF  = 5   /* Master Channel Frame   */
+} TCTF_Service_t;
+
+
+typedef struct
+{
+    uint8 Octet[4];   /* Transfer frame version, flags, ids, length   */
+    uint8 Sequence;   /* Sequence number                              */
+    uint8 SegHdr;     /* Segment header, (use is specific to each vc) */
+} TCTF_Hdr_t;
+
+#define TCTF_HDR_SIZE   sizeof(TCTF_Hdr_t)
+
+
+/*
+ * Define multiplexing channel information related to expected transfer frames.
+ * The segment header is required for services with more than one MAP and
+ * services which transfer service data units (SDUs) larger than permitted in
+ * a transfer frame.
+ * Note that the error control field's presence if fixed over physical channel
+ */
+typedef struct
+{
+    uint16  Service;               /* Service type                          */
+    uint16  PacketVersionNumber;   /* always 0 for current version of CCSDS */
+    uint16  SpacecraftId;          /* Spacecraft ID stored in TC header     */
+    uint16  VirtualChannelId;      /* Virtual ID stored in TC header        */
+    uint16  MapId;                 /* Map ID stored in Segment Header       */
+    bool HasSegHdr;             /* Wether a Segment header is present    */
+    bool HasFrameErrCtl;        /* If frame has err ctrl field           */
+} TCTF_ChannelService_t;
+
+
+typedef enum
+{
+    TCTF_DATA_FRAME    = 0,
+    TCTF_CONTROL_FRAME = 1
+} TCTF_Frame_t;
+
+typedef enum
+{
+    TCTF_CONTINUING_SEGMENT = 0,
+    TCTF_FIRST_SEGMENT      = 1,
+    TCTF_LAST_SEGMENT       = 2,
+    TCTF_NO_SEGMENTATION    = 3,
+    TCTF_NO_SEGHDR          = 255
+} TCTF_Sequence_t;
+
+
+
+uint16  TCTF_GetVersion(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetBypassFlag(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetCtlCmdFlag(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetScId(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetVcId(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetLength(TCTF_Hdr_t *tfPtr);
+uint8   TCTF_GetSeqNum(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetSegHdrSeqFlags(TCTF_Hdr_t *tfPtr);
+uint16  TCTF_GetSegHdrMapId(TCTF_Hdr_t *tfPtr);
+
+uint16  TCTF_GetPayloadLength(TCTF_Hdr_t *tfPtr, TCTF_ChannelService_t *channelService);
+uint16  TCTF_CopyData(uint8 *toBuffer, TCTF_Hdr_t *tfPtr, TCTF_ChannelService_t *channelService);
+
+bool TCTF_IsValidTf(TCTF_Hdr_t *tfPtr, TCTF_ChannelService_t *channelService);
+
+
+#endif /* _TC_TRANSFER_FRAME_H_ */
+```
+
+### `tm_sdlp.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/tm_sdlp.h`
+
+
+```c
+/******************************************************************************/
+/** \file  tm_sdlp.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Alan A Asp, Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Header file for TM_SDLP Protocol
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*       - This library provides a service interface to the TMTF protocol.
+*       - This implementation is based on Chapter 4 - without SDLS option.
+*       - The VCA service is user defined
+*       - The maximum frame length is user defined, and is dependent on the
+*         channel coding startegy used.
+*       - User may use the IO_LIB_UTIL_GenPseudoRandomSeq to generate an idle 
+*         data sequence.
+*
+*   \par Modification History:
+*     - 2015-04-26 | Alan A. Asp | OSR | Code Started (originally in tmtf.h)
+*     - 2015-10-22 | Guy de Carufel | OSR | Migrated from tmtf.h. 
+*           Major revision: structs, idle data, overflow, API.
+*******************************************************************************/
+
+#ifndef _TM_SDLP_H_
+#define _TM_SDLP_H_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*******************************************************************************
+** Includes
+*******************************************************************************/
+#include "io_lib.h"
+#include "tmtf.h"
+#include "crypto.h"
+
+
+/*******************************************************************************
+** Macro Definitions
+*******************************************************************************/
+#define TM_SDLP_SUCCESS                (0)
+#define TM_SDLP_ERROR                 (-1)
+#define TM_SDLP_INVALID_POINTER       (-2)
+#define TM_SDLP_INVALID_LENGTH        (-3)
+#define TM_SDLP_FRAME_NOT_INIT        (-4)
+#define TM_SDLP_FRAME_NOT_READY       (-5)
+#define TM_SDLP_OVERFLOW_FULL         (-6)
+
+/*******************************************************************************
+** Structure definitions
+*******************************************************************************/
+/** Following Structure is the user defined managed / configuration parameters 
+ *  for all Transfer Frames over the physical channel. */
+typedef struct
+{
+    uint16  scId;                /* Spacecraft ID (10 bits)                   */
+    uint16  frameLength;         /* The length of the frame                   */
+    uint8   hasErrCtrl;          /* Has the Error Control Field               */
+} TM_SDLP_GlobalConfig_t;
+    
+
+/** Following Structure is the user defined managed / configuration parameters  
+    for a a specific Channel (Master or virtual) */
+typedef struct
+{
+    uint8   vcId;                /* Virtual channel ID (3 bits)               */
+    uint8   dataType;            /* Type-0: VCP_SDU(packet), Type-1: VCA_SDU  */
+    uint8   fshFlag;             /* The Sec Hdr flag                          */
+    uint8   ocfFlag;             /* The value of the OCF flag (0/1)           */
+    uint8   secHdrLength;        /* length of the secondary header data (1-63)*/
+    uint8   isMaster;            /* Master Channel:1, Virtual Channel:0       */
+    uint16  overflowSize;        /* Size of overflow buffer                   */
+} TM_SDLP_ChannelConfig_t;
+
+
+/** Working parameters for overflow buffer */
+typedef struct
+{
+    uint16  buffSize;            /* Overflow buffer size                      */
+    uint16  freeOctets;          /* number of free octets remaining in buffer */
+    uint16  partialOctets;       /* Partial octets at the start of the 
+                                    overflow queue                            */
+    uint8 *dataStart;            /* Pointer to start of data (queue start)    */
+    uint8 *dataEnd;              /* Pointer to end of data (queue end)        */
+    uint8 *buffer;               /* Pointer to overflow buffer                */
+} TM_SDLP_OverflowInfo_t;
+
+
+/** Working paramters of frame */
+typedef struct
+{
+    uint16  dataFieldLength;     /* Length of the data field                  */
+    uint16  dataFieldOffset;     /* offset in octets from the start of frame 
+                                    to the data field                         */
+    uint16  ocfOffset;           /* Offset in octets from the start of frame 
+                                    to the OCF                                */
+    uint16  errCtrlOffset;       /* Offset in octets from the start of frame 
+                                    to the Err Ctrl field                     */
+    uint16  freeOctets;          /* Number of free octets remaining in the 
+                                    data field                                */
+    uint16  currentDataOffset;   /* Offset to next free data field octet from 
+                                    start of frame                            */
+    uint32  mutexId;             /* The mutex ID to protect the TF buffer 
+                                    and overflow buffer                       */
+    bool isFirstHdrPtrSet;    /* Indicates if the TF first header pointer 
+                                    has been set                              */
+    bool isReady;             /* Indicates the TF is ready to add data     */
+    bool isInitialized;       /* Indicates the TF is initialized           */
+    TM_SDLP_OverflowInfo_t  overflowInfo;   /* Overflow Info Structure        */
+    TM_SDLP_GlobalConfig_t  *globConfig;    /* Pointer to global config       */
+    TM_SDLP_ChannelConfig_t *chnlConfig;    /* Pointer to channel config      */
+    TMTF_PriHdr_t           *frame;         /* Pointer to Transfer frame      */
+} TM_SDLP_FrameInfo_t;
+
+
+
+/*******************************************************************************
+** Function Declarations
+*******************************************************************************/
+/******************************************************************************/
+/** \brief Initialize the Idle Packet
+*
+*   \par Description/Algorithm
+*       Initializes an Idle Data Buffer with a repeating pattern sequence. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The Idle Packet is of type CFE_MSG_Message_t with a CCSDS Primary Hdr.
+*       - The MID of the Idle Buffer Message is set to a SSP Idle Packet (0x3ff)
+*       - The message has no secondary header.
+*       - User may use the IO_LIB_UTIL_GenPseudoRandomSeq function to generate 
+*         idle data pattern. Pattern should be "sufficiently" random.
+*       - The Idle packet buffer length must be at least as large as the 
+*         frameLength.
+*       - The IdlePacket is used in both AddIdlePacket and SetOidFrame
+*       - The Length parameter in the CCSDS HDR is not constant.
+*
+*   \param[in,out] pIdlePacket      Pointer to the Idle Buffer with CCSDS HDR.
+*   \param[in]     pIdlePattern     A bit pattern to repeat in idle data
+*   \param[in]     bufferLength     Length of the Idle Buffer in bytes.
+*   \param[in]     patternBitLength Length of the repeating pattern in bits.
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_POINTER     If a input pointer is NULL
+*   \return TM_SDLP_INVALID_LENGTH      If an input length is invalid
+*
+*   \see 
+*       #TM_SDLP_AddData
+*       #TM_SDLP_AddIdlePacket
+*       #TM_SDLP_SetOidFrame
+*       #IO_LIB_UTIL_GenPseudoRandomSeq
+*******************************************************************************/
+int32 TM_SDLP_InitIdlePacket(CFE_MSG_Message_t *pIdlePacket, uint8 *pIdlePattern,
+                             uint16 bufferLength, uint32 patternBitLength);
+
+/******************************************************************************/
+/** \brief Initialize a specific Channel
+*
+*   \par Description/Algorithm
+*       This function will populate the Channel and overflow info structures 
+*       based on provided configuration data and buffer pointers.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - User is responsible for setting the Packet order flag (1 bit),
+*         The Segment Length (2 bits) and TF First Header Pointer Field if the
+*         VCA_SDU data type is used [TM_SDLP 4.1.2.7]. Set these after calling
+*         this function.
+*       - The idle data sequence must be >= as frame data field length.
+*
+*   \param[out] pFrameInfo     Pointer to the Frame info/working struct.
+*   \param[out] pTfBuffer      Pointer to the Transfer Frame buffer 
+*   \param[out] pOfBuffer      Pointer to the Overflow buffer
+*   \param[in] pGlobalConfig   Pointer to the Global configuration struct.
+*   \param[in] pChannelConfig  Pointer to the Channel configuration struct.
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_POINTER     If a input pointer is NULL
+*   \return TM_SDLP_INVALID_LENGTH      If frame length is too short
+*
+*   \see
+*       #TMTF_SetPacketOrderFlag
+*       #TMTF_SetSegmentLengthId
+*       #TMTF_SetFirstHdrPtr
+*******************************************************************************/
+int32 TM_SDLP_InitChannel(TM_SDLP_FrameInfo_t *pFrameInfo, 
+                          uint8 *pTfBuffer, uint8 *pOfBuffer,
+                          TM_SDLP_GlobalConfig_t *pGlobalConfig, 
+                          TM_SDLP_ChannelConfig_t *pChannelConfig);
+
+                          
+/******************************************************************************/
+/** \brief Check if frame currently has data
+*
+*   \par Description/Algorithm
+*       This function will return whether the frame has data or not
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Function does not check if frame has been initalized or started.
+*
+*   \param[in] pFrameInfo  Pointer to the Frame info/working struct.
+*
+*   \return Frame has Data (0=no, 1=yes)
+*   \return TM_SDLP_INVALID_POINTER    If a input pointer is NULL
+*
+*   \see 
+*       #TM_SDLP_AddData
+*******************************************************************************/
+int32 TM_SDLP_FrameHasData(TM_SDLP_FrameInfo_t *pFrameInfo);
+
+
+/******************************************************************************/
+/** \brief Add a Packet to Transfer Frame
+*
+*   \par Description/Algorithm
+*       This function will add a CFE packet to a provided transfer frame.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - A CFE packet is a Virtual Channel Packet Proto. Data Unit (VCP-PDU)
+*       - This function calls TM_SDLP_AddData
+*       - Multiversion multiplexing is not-implemented [4.2.2.3]
+*
+*   \param[in,out] pFrameInfo  Pointer to the Frame info/working struct.
+*   \param[in]     pPacket  Pointer to the CFE Packet (VCPDU)
+*
+*   \return Frame FreeOctets
+*   \return TM_SDLP_INVALID_POINTER    If a input pointer is NULL
+*   \return TM_SDLP_FRAME_NOT_INIT     If frame has not been initialized
+*   \return TM_SDLP_FRAME_NOT_READY    If frame has not been started
+*   \return TM_SDLP_OVERFLOW_FULL      Data dropped. The overflow buffer is full
+*
+*   \see 
+*       #TM_SDLP_AddData
+*******************************************************************************/
+int32 TM_SDLP_AddPacket(TM_SDLP_FrameInfo_t *pFrameInfo,
+                        CFE_MSG_Message_t *pPacket);
+                           
+
+
+/******************************************************************************/
+/** \brief Add an Idle packet to transfer frame
+*
+*   \par Description/Algorithm
+*       Copies an idle packet as specified in Space Packet Protocol to fill all
+*       free octets in TF data field. The data of the idle packet is based on 
+*       the supplied idle pattern.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The Idle packet may be segmented if the TF data field does not have 
+*         enough space left by saving the extra octets to the overflow buffer.
+*       - The minium idle packet length is 7 Octets (6 hdr, 1 data).
+*       - This function calls TM_SDLP_AddData
+*       - The supplied Packet must have the IdlePacket MID.
+*       - User may use InitIdlePacket to initialize the Idle Data with a 
+*         user specified repeating pattern.
+*
+*   \param[in,out] pFrameInfo    Pointer to the Frame info/working struct.
+*   \param[in]     pIdlePacket   Pointer to the idle Buffer
+*
+*   \return TM_SDLP_SUCCESS            If successful (no free octets).
+*   \return TM_SDLP_INVALID_POINTER    If a input pointer is NULL
+*   \return TM_SDLP_FRAME_NOT_INIT     If frame has not been initialized
+*   \return TM_SDLP_FRAME_NOT_READY    If frame has not been started
+*   \return TM_SDLP_OVERFLOW_FULL      Data dropped. The overflow buffer is full
+*
+*   \see 
+*       #TM_SDLP_AddData
+*       #TM_SDLP_GenPseudoRandomSeq
+*******************************************************************************/
+int32 TM_SDLP_AddIdlePacket(TM_SDLP_FrameInfo_t *pFrameInfo,
+                            CFE_MSG_Message_t *pIdlePacket);
+
+
+/******************************************************************************/
+/** \brief Add a Virtual Channel Access (VCA) PDU to the Transfer Frame
+*
+*   \par Description/Algorithm
+*       Copies a VCA data buffer to the TF data field at the next free octet.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The user is responsible for setting the FirstHdrPtr of the TF.
+*       - The dataLength should be the same for all PDUs added to a specific TF
+*
+*   \param[in,out] pFrameInfo  Pointer to the Frame info/working struct.
+*   \param[in]     pData       Pointer to data buffer
+*   \param[in]     dataLength  Length of data to copy
+*
+*   \return Frame FreeOctets
+*   \return TM_SDLP_INVALID_POINTER    If a input pointer is NULL
+*   \return TM_SDLP_FRAME_NOT_INIT     If frame has not been initialized
+*   \return TM_SDLP_FRAME_NOT_READY    If frame has not been started
+*   \return TM_SDLP_OVERFLOW_FULL      Data dropped. The overflow buffer is full
+*
+*   \see
+*       #TM_SDLP_AddData
+*******************************************************************************/
+int32 TM_SDLP_AddVcaData(TM_SDLP_FrameInfo_t *pFrameInfo, uint8 *pData, 
+                         uint16 dataLength);
+
+
+/******************************************************************************/
+/** \brief Start a transfer frame  
+*
+*   \par Description/Algorithm
+*       Start a new transfer frame by copying any data from the overflow buffer
+*       into the empty transfer frame buffer. This readies the frame to accept
+*       new data.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The transfer frame has no data in it's data field prior to call. 
+*
+*   \param[in,out] pFrameInfo   Pointer to the Frame info/working struct.
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_POINTER     If a input pointer is NULL
+*   \return TM_SDLP_ERROR               Data field is not empty
+*
+*   \see 
+*       #TM_SDLP_AddIdlePacket
+*******************************************************************************/
+int32 TM_SDLP_StartFrame(TM_SDLP_FrameInfo_t *pFrameInfo);
+
+
+/******************************************************************************/
+/** \brief Set a Frame with Only Idle Data (OID)
+*
+*   \par Description/Algorithm
+*       Copies the Idle Pattern of an Only Idle Data (OID) frame into the 
+*       frame data field and sets the first header pointer to the appropriate
+*       value. 
+*
+*   \par Assumptions, External Events, and Notes:
+*       - The user is responsible for providing an idle buffer with
+*         sufficient randomness.
+*       - The pIdlePacket is of type CFE_MSG_Message_t; Only the user data of 
+*         the message is copied into the TF data field.
+*       - It is recommended that a dedicated VC hold the OID frame.
+*
+*   \param[in,out] pFrameInfo    Pointer to the Frame info/working struct.
+*   \param[in]     pIdlePacket   Pointer to the idle buffer.
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_POINTER     If a input pointer is NULL
+*
+*   \see 
+*******************************************************************************/
+int32 TM_SDLP_SetOidFrame(TM_SDLP_FrameInfo_t *pFrameInfo,
+                          CFE_MSG_Message_t *pIdlePacket);
+
+
+
+/******************************************************************************/
+/** \brief Complete a Frame to ready for transmission
+*
+*   \par Description/Algorithm
+*       Fills out the final TF information include the frame counters, adds the
+*       OCF if available, updates the first header pointer if not set, and
+*       executes the error control field computation if included.
+*
+*   \par Assumptions, External Events, and Notes:
+*       - This function represents the Virtual Channel Frame (VCF) Service or
+*         the Master Channel Frame (MCF) Service, depending on the input
+*         FrameInfo.
+*       - User is responsible for filling frame with idle data if it is
+*         incomplete prior to call. Call AddIdlePacket or SetOidFrame.
+*
+*   \param[in,out] pFrameInfo   Pointer to the Frame info/working struct.
+*   \param[in,out] pMcFrameCnt  Pointer to Master Channel Frame Count.
+*   \param[in]     pOcf         Pointer to Operational Control Field
+*
+*   \return TM_SDLP_SUCCESS             If successful.
+*   \return TM_SDLP_INVALID_POINTER     If a input pointer is NULL
+*
+*   \see 
+*       #TM_SDLP_AddIdlePacket
+*       #TM_SDLP_SetOidFrame
+*******************************************************************************/
+int32 TM_SDLP_CompleteFrame(TM_SDLP_FrameInfo_t *pFrameInfo,
+                            uint8 *pMcFrameCnt, uint8 *pOcf);
+
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _TM_SDLP_H_ */
+
+/*==============================================================================
+** End of file tm_sdlp.h
+**============================================================================*/
+```
+
+### `tm_sync.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/tm_sync.h`
+
+
+```c
+/******************************************************************************/
+/** \file  tm_sync.h
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+*   \author Guy de Carufel (Odyssey Space Research), NASA, JSC, ER6
+*
+*   \brief Provides the TM Channel Synchronization service.
+*
+*   \par References:
+*     - "TM Synchronization and Channel Coding", CCSDS 131.0-B-2,
+*       Issue 2, August 2011
+*
+*   \par Limitations, Assumptions, External Events, and Notes:
+*     - Only sending end services are provided
+*     - This service provides the synchronization and pseudo-randomization 
+*       services for frames, such as Transfer Frames or AOS TF.
+*     - The fixed synchronization header is the Attached Sync Marker (ASM)
+*     - Coding of the transfer frame (eg. Read-solomon coding) is not covered in
+*       this librarly. 
+*     - Emplementing certain coding algorithms (eg. Turbo, LDPC) may require a
+*       licence
+*     - Define a code specific ASM header in the coding library.
+*     - the pseudo-randomization uses a Fibonacci LFSR with seed of 0xff and 
+*       polynomial of x^8 + x^7 + x^5 + x^3 + 1. Period of 255 bits.
+*
+*   \par Modification History:
+*     - 2015-10-29 | Guy de Carufel | OSR | Code Started 
+*******************************************************************************/
+
+#ifndef _IO_TM_SYNC_
+#define _IO_TM_SYNC_
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/*******************************************************************************
+** Includes
+*******************************************************************************/
+#include "io_lib.h"
+
+
+/*******************************************************************************
+** Macro Definitions
+*******************************************************************************/
+/* The following AMS is used for uncoded data, convolutional, Reed-Solomon,
+ * concatenated and rate-7/8 LDPC coded data. */
+#define TM_SYNC_ASM_STR "1ACFFC1D" 
+#define TM_SYNC_ASM_SIZE 4
+
+#define TM_SYNC_SUCCESS           0
+#define TM_SYNC_INVALID_POINTER  -1
+#define TM_SYNC_INVALID_ASM_SIZE -2
+#define TM_SYNC_RANDOMIZE_ERROR  -3
+
+
+/*******************************************************************************
+** Function Declarations
+*******************************************************************************/
+/******************************************************************************/
+/** \brief Initialize the static Pseudo-Random sequence
+*
+*   \par Assumptions, External Events, and Notes:
+*       - Generates a pseudo-random sequence with poly:0xa9 and seed:0xff 
+
+*   \return TM_SYNC_SUCCESS             Always successful.
+*
+*   \see 
+*       #IO_LibInit
+*       #IO_LIB_UTIL_GenPseudoRandomSeq
+*******************************************************************************/
+int32 TM_SYNC_LibInit(void);
+
+
+/******************************************************************************/
+/** \brief Perform TM Synchronization
+*
+*   \par Description/Algorithm
+*     Build the Channel Access Data UNIT (CADU) by appending the AMS to the 
+*     frame.
+*
+*   \par Assumptions, External Events, and Notes:
+*     - The frame being passed in may have already been coded (eg. Reed-solomon)
+*       Or the coding may be performed after sync. (eg. convolutional coding)
+*     - In the case of uncoded frame, pass the TM_SYNC_ASM_UNCODED as the asmHdr
+*       and TM_SYNC_ASM_UNCODED_SIZE as the asmSize parameters.
+*     - The frame must starts at pBuff + asmSize.
+*     - The size of the buffer must be asmSize + frameSize
+*
+*   \param[out] pBuff     Pointer to the buffer where CADU is stored.           
+*   \param[in]  asmStr    The string representing the ASM to append             
+*   \param[in]  asmSize   The size in octets of the final ASM (ASM Str size/2) 
+*   \param[in]  frameSize The size of the frame to synchronize                  
+*   \param[in]  randomize Whether the frame should be pseudo-randomized         
+*
+*   \return Size of CADU               Size of the CADU (asmSize + frameSize)
+*   \return TM_SYNC_INVALID_ASM_LENGTH If the ASM length is not an even number 
+*                                      or is < 4, as all ASM header are at least
+*                                      4 bytes.
+*   \return TM_SYNC_INVALID_POINTER    If any input pointer is NULL
+*
+*   \see 
+*       #TM_SYNC_PseudoRandomize
+*******************************************************************************/
+int32 TM_SYNC_Synchronize(uint8 *pBuff, char *asmStr, uint8 asmSize, 
+                          uint16 frameSize, bool randomize);
+
+
+
+/******************************************************************************/
+/** \brief Perform TM Frame PseudoRandomization 
+*
+*   \par Description/Algorithm
+*      Perform the standard CCSDS TM_Sync channel pseudo randomization.
+*
+*   \par Assumptions, External Events, and Notes:
+*      - The presence or absence of pseudo-randomization is fixed for a
+*        physical channel and is a managed property, known by receiver.
+*
+*   \param[in,out] pFrame     The input frame to randomize
+*   \param[in]     frameSize  The size of the frame in bytes
+*
+*   \return TM_SYNC_SUCCESS   Always successful.
+*
+*   \see 
+*       #TM_SYNC_Synchronize
+*******************************************************************************/
+int32 TM_SYNC_PseudoRandomize(uint8 *pFrame, uint16 frameSize);
+
+#endif /* _TM_SYNC_H_ */
+
+/*==============================================================================
+** End of file tm_sync.h
+**============================================================================*/
+```
+
+### `tmtf.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/tmtf.h`
+
+
+```c
+/*******************************************************************************
+ * File: tmtf.h
+ *
+ * Copyright 2017 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration.  No copyright is
+ * claimed in the United States under Title 17, U.S. Code.
+ * All Other Rights Reserved.
+ *
+ * Purpose:
+ *   Provide the Transfer Frame format API for the TM_SDLP Service.
+ *
+ * Reference(s):
+ *   - _TM Space Data Link Protocol_, CCSDS 132.0-B-1_ (Issue 1, Sept. 2003)
+ *   - _Space Packet Protocol_, CCSDS 133.0-B-1_ (Issue 1, Sept. 2003)
+ *   - _A Painless Guide To CRC Error Detection Algorithm_ (Version 3, 1993),
+ *      Ross N. Williams.  http://www.ross.net/crc/download/crc_v3.txt
+ *
+ * Notes:
+ *  -The TM Transfer Frame is the protocol data unit (PDU) of the Telemetry 
+ *   Space Data Link Protocol (TM-SDLP).
+ *
+ * History:
+ *   04/26/2015, A. Asp, Odyssey Space Research, LLC
+ *    -Created
+ *   10/22/2015, G. de Carufel, Odyssey Space Research, LLC
+ *    -Moved all services to tm_sdlp.h
+ *
+ ******************************************************************************/
+
+#ifndef _TM_TRANSFER_FRAME_H_
+#define _TM_TRANSFER_FRAME_H_
+
+#include "common_types.h"
+
+/*------------------------------------------------------------------------------
+ * Items below should not require user updates
+ */
+
+/* Return codes */
+#define TMTF_SUCCESS            (0)
+#define TMTF_ERROR             (-1)
+#define TMTF_INVALID_POINTER   (-2)
+#define TMTF_INVALID_SECHDR    (-3)
+#define TMTF_INVALID_LENGTH    (-4)
+
+/* Fixed parameters to compute CRC */
+#define TMTF_CRC_INIT_REGISTRY  0xffffU
+#define TMTF_CRC_POLYNOMIAL     0x11021UL
+
+/* Max number of virtual channels */
+#define TMTF_MAX_VC                 8  
+
+/* Fixed values */
+#define TMTF_VERSION                1
+#define TMTF_FSH_VERSION            0
+
+#define TMTF_PRIHDR_LENGTH          6  
+#define TMTF_SECHDR_MAX_LENGTH      63 
+#define TMTF_OCF_LENGTH             4  
+#define TMTF_ERR_CTRL_FIELD_LENGTH  2  
+#define TMTF_NO_FIRST_HDR_PTR       (0x07 << 8 | 0xFF)
+#define TMTF_OID_FIRST_HDR_PTR      (0x07 << 8 | 0xFE)
+
+
+typedef struct
+{
+    uint8 Id[2];               /* MC id, VC id, OCF flag      */
+    uint8 McFrameCount;        /* Master Channel Frame Count  */
+    uint8 VcFrameCount;        /* Virtual Channel Frame Count */
+    uint8 DataFieldStatus[2];  /* TF Data Field Status        */
+} TMTF_PriHdr_t;
+
+/*
+ * Function: TMTF_LibInit
+ *
+ * Purpose:
+ *   Initialize the static TMTF CRC Table
+ *
+ * Arguments:
+ *
+ * Return:
+ *   TMTF_SUCCESS          Always returns success.
+ *
+ * Notes:
+ *   - Called by IO_LibInit()
+ */
+int32 TMTF_LibInit(void);
+
+
+
+/*
+ * Function: TMTF_SetVersion
+ *
+ * Purpose:
+ *   Sets the version number for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the version number
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ * Notes:
+ *   For CCSDS 132.0-B-1, Sept. 2003, the Transfer Frame Version Number
+ *   shall be set to binary '00'.
+ *
+ */
+int32 TMTF_SetVersion(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetScId
+ *
+ * Purpose:
+ *   Set spacecraft ID for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the spacecraft ID
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetScId(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetVcId
+ *
+ * Purpose:
+ *   Set virtual channel ID for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the virtual channel ID
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetVcId(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetOcfFlag
+ *
+ * Purpose:
+ *   Set operational control field flag for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : bool value to set the flag
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetOcfFlag(TMTF_PriHdr_t *tfPtr, bool val);
+
+
+/*
+ * Function: TMTF_GetMcId
+ *
+ * Purpose:
+ *   Get the Master Channel Id (Version Num + SCID) 
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *
+ * Return:
+ *   Master Channel ID (VersionNumber + SCID) 
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_GetMcId(TMTF_PriHdr_t *tfPtr);
+
+/*
+ * Function: TMTF_GetGlobalVcId
+ *
+ * Purpose:
+ *   Get the global VC Id (MCID + VCID) (not including OCF)
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *
+ * Return:
+ *   Global Virtual Channel ID (MCID + VCID) 
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_GetGlobalVcId(TMTF_PriHdr_t *tfPtr);
+
+
+
+/*
+ * Function: TMTF_SetMcFrameCount
+ *
+ * Purpose:
+ *   Set master channel frame count for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the master channel frame count
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetMcFrameCount(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetVcFrameCount
+ *
+ * Purpose:
+ *   Set virtual channel frame count for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the virtual channel frame count
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetVcFrameCount(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_IncrVcFrameCount
+ *
+ * Purpose:
+ *   Increment virtual channel frame count for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_IncrVcFrameCount(TMTF_PriHdr_t *tfPtr);
+
+
+/*
+ * Function: TMTF_SetSecHdrFlag
+ *
+ * Purpose:
+ *   Set flag indicating the presence or absence of the secondary header for
+ *   the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : bool value to set the flag
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetSecHdrFlag(TMTF_PriHdr_t *tfPtr, bool val);
+
+
+/*
+ * Function: TMTF_SetSyncFlag
+ *
+ * Purpose:
+ *   Set the sync flag for the transfer frame
+ *     false = octet-synchronized and forward ordered packets or Idle Data inserted
+ *     true  = VCA_SDU inserted
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : bool value to set the flag
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetSyncFlag(TMTF_PriHdr_t *tfPtr, bool val);
+
+
+/*
+ * Function: TMTF_SetPacketOrderFlag
+ *
+ * Purpose:
+ *   Set the packet order flag for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : bool value to set the flag
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetPacketOrderFlag(TMTF_PriHdr_t *tfPtr, bool val);
+
+
+/*
+ * Function: TMTF_SetSegLengthId
+ *
+ * Purpose:
+ *   Set the segment length ID for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the segment length ID
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ */
+int32 TMTF_SetSegLengthId(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetFirstHdrPtr
+ *
+ * Purpose:
+ *   Set the location of the first header pointer for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the first header pointer
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *
+ * Notes:
+ *  -Constants TMTF_NO_FIRST_HDR_PTR and TMTF_OID_FIRST_HDR_PTR defined to be used
+ *   for 'val' in situations where there's no first header pointer in the current
+ *   TF and there's only idle data in the packet, respectively.
+ *
+ */
+int32 TMTF_SetFirstHdrPtr(TMTF_PriHdr_t *tfPtr, uint16 val);
+
+
+/*
+ * Function: TMTF_SetSecHdrLength
+ *
+ * Purpose:
+ *   Set the size of the secondary header for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr: pointer to the transfer frame
+ *   val  : value to set the length of the secondary header.  This value is one
+ *          octet less than the actual length of the secondary header.
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value was set
+ *   TMTF_INVALID_POINTER  if the input pointer is NULL
+ *   TMTF_INVALID_SECHDR   if the secondary header flag is not set
+ *   TMTF_INVALID_LENGTH   if the length is too short (0 octets) or too long (> 63 octets)
+ *
+ */
+int32 TMTF_SetSecHdrLength(TMTF_PriHdr_t *tfPtr, uint8 val);
+
+
+/*
+ * Function: TMTF_SetSecHdrData
+ *
+ * Purpose:
+ *   Set the Data of the secondary header for the transfer frame
+ *
+ * Arguments:
+ *   tfPtr : pointer to the transfer frame
+ *   data  : pointer to the data to be copied to the secondary header data field
+ *   length: number of octets to copy
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the data is copied
+ *   TMTF_INVALID_POINTER  if an input pointer is NULL
+ *   TMTF_INVALID_SECHDR   if the secondary header flag is not set
+ *   TMTF_INVALID_LENGTH   if the length of the data being copied is larger than
+ *                           the secondary header data field
+ *
+ * Notes:
+ *
+ */
+int32 TMTF_SetSecHdrData(TMTF_PriHdr_t *tfPtr, uint8 *data, uint8 length);
+
+
+/*
+ * Function: TMTF_SetOcf
+ *
+ * Purpose:
+ *   Copies the input data to the Operational Control Field (OCF) of the TF
+ *
+ * Arguments:
+ *   tfPtr : pointer to the transfer frame
+ *   data  : pointer to the data to be copied
+ *   offset: number of octets from the start of the frame to the OCF
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the data is copied
+ *   TMTF_INVALID_POINTER  if an input pointer is NULL
+ *   TMTF_ERROR            if the OCF flag is not set for the frame
+ *
+ * Notes:
+ *
+ */
+int32 TMTF_SetOcf(TMTF_PriHdr_t *tfPtr, uint8 *data, uint16 offset);
+
+
+
+/*
+ * Function: TMTF_UpdateErrCtrlField
+ *
+ * Purpose:
+ *   Calculates the value of the error control field and copies it to the TF trailer
+ *
+ * Arguments:
+ *   tfPtr : pointer to the transfer frame
+ *   offset: number of octets from the start of the frame to the error control field
+ *
+ * Return:
+ *   TMTF_SUCCESS          if the value is successfully calculated and copied
+ *   TMTF_INVALID_POINTER  if an input pointer is NULL
+ *
+ * Notes:
+ *
+ */
+int32 TMTF_UpdateErrCtrlField(TMTF_PriHdr_t *tfPtr, uint16 offset);
+
+#endif
+```
+
+### `trans_rs422.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/trans_rs422.h`
+
+
+```c
+/*******************************************************************************
+* File: trans_rs422.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to communicate over an RS-422 serial port. 
+*   Suports VXWorks and POSIX OS.
+*
+* Notes:
+*   1. The serial port is set to non-blocking to prevent lock-up if link is 
+*   interrupted and/or not all of the expected message is received. 
+*   2. The VTIME and VMIN take presendence over NON_BLOCKING. If VMIN and 
+*   VTIME > 0 (recommended), timer will only start if at least one byte is 
+*   received. Read will return after at least VMIN bytes are received,
+*   or VTIME timeout. VTIME is an intercharacter timout in this case. Use the 
+*   ReadTimeout function or use select with timeout at a higher level before 
+*   calling the TransRS422Read function to prevent indefinite blocking. 
+*
+* History:
+*   Apr 07, 2015  Guy de Carufel
+*    * Created
+*
+******************************************************************************/
+
+#ifndef _IO_TRANS_RS422_
+#define _IO_TRANS_RS422_
+
+#include "io_lib.h"
+
+/* Possible timeout + minBytes settings:
+ * min = 0, timeout = 0: return immediately with available bytes. 
+ *                       (Polling. Not recommended.)
+ * min = 0, timeout > 0: Timer starts on read(). return on timeout or any #bytes
+ * min > 0, timeout = 0: block until less of min or requested size
+ * min > 0, timeout > 0: Timer starts on first byte. return on timeout or 
+ *                       lesser of min or requested size. (Recommended.)
+ * Recommended setting:
+ * Set min = hdrSize (primary header size).
+ * Set timeout > 0 (eg: 100ms) to prevent excessive polling. */
+
+/* The following cflag are always set: CS8, CLOCAL, CREAD.
+ * RTS/CTS (CRTSCTS) Hardware flow control is not enabled by default. 
+ * Add other flags in cFlags or set to 0x0 */
+
+/* The IGNPAR (ignore parity) is always used for iflag */
+
+/* Device is open as O_NONBLOCK to prevent locking on smaller than expected
+ * messages. */
+
+#define PORT_NAME_SIZE 20
+
+#define IO_TRANS_RS422_ERROR            -1
+#define IO_TRANS_RS422_BADINPUT_ERR     -2
+#define IO_TRANS_RS422_BADDEVICE_ERR    -3
+#define IO_TRANS_RS422_BAUDRATE_ERR     -4
+#define IO_TRANS_RS422_OPEN_ERR         -5
+#define IO_TRANS_RS422_SETATTR_ERR      -6
+
+
+#ifdef _VXWORKS_OS_
+/* Open the serial port as read / write (default to non-blocking */
+#define IO_TRANS_RS422_OPEN_FLAGS   O_RDWR
+
+#else
+/* Open the serial port as read / write non-blocking. 
+ * O_NOCTTY is No controlling TTY (eg: can't send CTRL-C) */
+#define IO_TRANS_RS422_OPEN_FLAGS  (O_RDWR | O_NOCTTY | O_NONBLOCK)
+#endif
+
+
+
+/* Structures */
+typedef struct {
+    char   device[PORT_NAME_SIZE]; /**< Device name (eg: "/dev/ttyS1") */
+    int32  baudRate;               /**< Baud Rate in bytes per second. */
+    int32  cFlags;                 /**< Any serial port flags to set. */        
+    int32  timeout;                /**< Timeout on read (in ms). */
+    int32  minBytes;               /**< Minimum number of bytes to return 
+                                        on a single read. */
+} IO_TransRS422Config_t;
+
+/* Prototypes */
+int32 IO_TransRS422Init(IO_TransRS422Config_t * configIn);
+int32 IO_TransRS422Close(int32 fd);
+int32 IO_TransRS422ReadTimeout(int32 fd, uint8 *buffer, int32 numBytes, 
+                               int32 timeout);
+int32 IO_TransRS422Read(int32 fd, uint8 *buffer, int32 numBytes);
+int32 IO_TransRS422Write(int32 fd, uint8 *msg, int32 size);
+
+#endif
+```
+
+### `trans_select.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/trans_select.h`
+
+
+```c
+/*******************************************************************************
+* File: trans_select.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to do synchronous I/O multiplexing with 
+*   different devices (UDP, RS422) with the use of the POSIX select library.
+*
+* Notes:
+*   1. Use this library if you want to read on multiple devices simultaneously
+*   2. For output, select will return the first available device. It will not
+*   send over multiple devices, but simply returns the next available device.
+*
+* History:
+*   June 1, 2015  Guy de Carufel
+*    * Created
+*
+******************************************************************************/
+#ifndef _IO_TRANS_SELECT_
+#define _IO_TRANS_SELECT_
+
+#include "io_lib.h"
+
+/* Select is used to do synchronous I/O multiplexing over multiple devices. */
+/* The user is responsible for calling the appropriate device based on the 
+ * return of select. Here is the general pattern to use with select:
+ *
+ * 1. Initialize the Select Device set with IO_TransSelectInitSet()
+ * 2. Initialize all devices
+ * 3. Add each device to the select fd_set through IO_TransSelectAddFd()
+ * 4. Call TransSelectInput() or TransSelectOutput()
+ *    Use IO_TRANS_PEND_FOREVER for infinite timeout.
+ * 5. Call TransSelectInActiveSet() to verify if fd is the active fd. 
+ *
+ * X. If a device is closed, remove it from the set with
+ * IO_TransSelectRemoveFd()*/
+
+/* All Devices must be set as non-blocking to work with select. */
+
+#define IO_TRANS_SELECT_NO_ERROR                     0
+#define IO_TRANS_SELECT_ERROR                       -1
+#define IO_TRANS_SELECT_EMPTY_SET_ERR               -2
+#define IO_TRANS_SELECT_NULL_SET_ERR                -3
+#define IO_TRANS_SELECT_INVALID_TIMEOUT_ERR         -4
+#define IO_TRANS_SELECT_BAD_FD_ERR                  -5
+
+
+/* Structures */
+typedef struct {
+    int32   iMaxFdNum;       /**< The largest FD number  */
+    fd_set  fdSetFull;       /**< The full FD set        */
+    fd_set  fdSetActive;     /**< The active FD set      */
+} IO_TransSelect_t;
+
+/* Prototypes */
+int32 IO_TransSelectClear(IO_TransSelect_t *pSet); 
+int32 IO_TransSelectAddFd(IO_TransSelect_t *pSet, int32 fd); 
+int32 IO_TransSelectRemoveFd(IO_TransSelect_t *pSet, int32 fd);
+int32 IO_TransSelectFdInFull(IO_TransSelect_t *pSet, int32 fd);
+int32 IO_TransSelectFdInActive(IO_TransSelect_t *pSet, int32 fd);
+int32 IO_TransSelectInput(IO_TransSelect_t *pSet, int32 timeoutUSec);
+int32 IO_TransSelectOutput(IO_TransSelect_t *pSet, int32 timeoutUSec);
+
+#endif
+```
+
+### `trans_udp.h`
+
+**경로:** `fsw/apps/io_lib/fsw/public_inc/trans_udp.h`
+
+
+```c
+/*******************************************************************************
+* File: trans_udp.c
+*
+*   Copyright 2017 United States Government as represented by the Administrator
+*   of the National Aeronautics and Space Administration.  No copyright is
+*   claimed in the United States under Title 17, U.S. Code.
+*   All Other Rights Reserved.
+*
+* Purpose:
+*   Provides the functionality to communicate over a UDP socket. 
+*   Supports POSIX.
+*
+* Reference:
+*
+* Notes:
+*   1. Socket set to blocking with timeouts.
+*   2. Set timeouts to IO_TRANS_PEND_FOREVER or 0 to block forever.
+*   3. Timeouts for socket do not affect behavior of select if used.
+*   4. Use the IO_TransUdpRcv function if used with trans_select library.
+*
+* History:
+*   Apr 07, 2015  Guy de Carufel * Created
+*   June 2, 2015  Guy de Carufel * Revised API
+*
+******************************************************************************/
+#ifndef _IO_TRANS_UDP_
+#define _IO_TRANS_UDP_
+
+#include "io_lib.h"
+
+#define IO_TRANS_UDP_NO_ERROR             0
+#define IO_TRANS_UDP_BAD_INPUT_ERROR     -1
+#define IO_TRANS_UDP_SOCKETCREATE_ERROR  -2
+#define IO_TRANS_UDP_SOCKETOPT_ERROR     -3
+#define IO_TRANS_UDP_SOCKETBIND_ERROR    -4
+
+/* INADDR_NONE: 0xffffffff */
+#define IO_TRANS_UDP_INADDR_NONE     "255.255.255.255"
+/* INADDR_ANY:  0x0 */
+#define IO_TRANS_UDP_INADDR_ANY      "0.0.0.0"
+/* INADDR_LOOPBACK */
+#define IO_TRANS_UDP_INADDR_LOOPBACK "127.0.0.1"
+#define IO_TRANS_UDP_INPORT_ANY INPORT_ANY
+
+/* Structures */
+/** Config structure of UDP */
+typedef struct {
+    char           cAddr[16];    /**< -- Address IP (V4)             */
+    uint16         usPort;       /**< -- Port number                 */
+    int32          timeoutRcv;   /**< -- Timeout on receive (in ms). */
+    int32          timeoutSnd;   /**< -- Timeout on send    (in ms). */
+} IO_TransUdpConfig_t;
+
+/** The Working structure for the UDP */
+typedef struct {
+    int32  sockId;                  /**< -- Socket Id                   */
+    struct sockaddr_in sockAddr;    /**< -- Socket Addr (Working)       */
+    struct sockaddr_in srcAddr;     /**< -- Source Socket Address (In)  */
+    struct sockaddr_in destAddr;    /**< -- Dest. Socket Address (Out)  */
+} IO_TransUdp_t;
+
+/* Prototypes */
+int32 IO_TransUdpInit(IO_TransUdpConfig_t *config, IO_TransUdp_t * udp);
+int32 IO_TransUdpCreateSocket(IO_TransUdp_t *udp);
+int32 IO_TransUdpConfigSocket(IO_TransUdpConfig_t * config, IO_TransUdp_t *udp);
+int32 IO_TransUdpBindSocket(IO_TransUdp_t *udp);
+int32 IO_TransUdpCloseSocket(IO_TransUdp_t *udp);
+int32 IO_TransUdpSetDestAddr(IO_TransUdp_t *udp, char * ipAddr, uint16 port);
+int32 IO_TransUdpRcvTimeout(IO_TransUdp_t * udp, uint8 * buffer, int32 size, 
+                            int32 selectTimeout);
+int32 IO_TransUdpRcv(IO_TransUdp_t * udp, uint8 * buffer, int32 size);
+int32 IO_TransUdpSnd(IO_TransUdp_t * udp, uint8 * msgPtr, int32 size);
+
+#endif 
+```

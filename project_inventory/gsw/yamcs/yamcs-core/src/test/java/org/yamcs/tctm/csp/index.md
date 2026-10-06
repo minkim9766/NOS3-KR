@@ -3,16 +3,118 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CspCommandPostprocessorTest.java`
 
-file--CspCommandPostprocessorTest.java
-file--CspPacketTest.java
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/CspCommandPostprocessorTest.java`
+
+
+```java
+package org.yamcs.tctm.csp;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.yamcs.utils.StringConverter.hexStringToArray;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.cmdhistory.CommandHistoryPublisher;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.protobuf.Commanding.CommandId;
+
+public class CspCommandPostprocessorTest {
+
+    @Test
+    public void testCrc() {
+        var packet = hexStringToArray("8E62250000");
+
+        var postprocessor = new CspCommandPostprocessor();
+        postprocessor.setCommandHistoryPublisher(new DummyCommandHistoryPublisher());
+
+        var processed = postprocessor.process(new PreparedCommand(packet));
+        assertArrayEquals(hexStringToArray("8E62250000"), processed);
+
+        CspPacket.setCrcFlag(packet, true);
+        processed = postprocessor.process(new PreparedCommand(packet));
+        assertArrayEquals(hexStringToArray("8E62250100527D5351"), processed);
+    }
+
+    private static class DummyCommandHistoryPublisher implements CommandHistoryPublisher {
+
+        @Override
+        public void publish(CommandId cmdId, String key, String value) {
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, int value) {
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, long value) {
+        }
+
+        @Override
+        public void publish(CommandId cmdId, String key, byte[] binary) {
+        }
+
+        @Override
+        public void addCommand(PreparedCommand pc) {
+        }
+    }
+}
 ```
 
-## 항목
+### `CspPacketTest.java`
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/CspCommandPostprocessorTest.java`](file--CspCommandPostprocessorTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/CspPacketTest.java`](file--CspPacketTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/csp/CspPacketTest.java`
+
+
+```java
+package org.yamcs.tctm.csp;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+
+import org.junit.jupiter.api.Test;
+
+public class CspPacketTest {
+
+    @Test
+    public void testFields() {
+        var bytes = new byte[] { (byte) 0x90, (byte) 0x40, (byte) 0x60, (byte) 0x00, (byte) 0x32 };
+        var packet = new CspPacket(bytes);
+        assertEquals(2, packet.getPriority());
+        assertEquals(8, packet.getSource());
+        assertEquals(4, packet.getDestination());
+        assertEquals(32, packet.getSourcePort());
+        assertEquals(1, packet.getDestinationPort());
+        assertFalse(packet.getHmacFlag());
+        assertFalse(packet.getXteaFlag());
+        assertFalse(packet.getRdpFlag());
+        assertFalse(packet.getCrcFlag());
+    }
+
+    @Test
+    public void testFieldsLE() {
+        var bytes = new byte[] { (byte) 0x89, (byte) 0x88, (byte) 0x0D, (byte) 0x00 };
+
+        // Verify that a provided ByteBuffer is allowed
+        // to be in Little Endian order.
+        var bb = ByteBuffer.wrap(bytes);
+        bb.order(ByteOrder.LITTLE_ENDIAN);
+
+        var header = new CspPacket(bb);
+        assertEquals(2, header.getPriority());
+        assertEquals(4, header.getSource());
+        assertEquals(24, header.getDestination());
+        assertEquals(13, header.getSourcePort());
+        assertEquals(32, header.getDestinationPort());
+        assertFalse(header.getHmacFlag());
+        assertFalse(header.getXteaFlag());
+        assertFalse(header.getRdpFlag());
+        assertFalse(header.getCrcFlag());
+    }
+}
+```

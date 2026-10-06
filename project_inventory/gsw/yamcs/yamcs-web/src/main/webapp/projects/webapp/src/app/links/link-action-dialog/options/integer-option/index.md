@@ -3,18 +3,144 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `integer-option.component.css`
 
-file--integer-option.component.css
-file--integer-option.component.html
-file--integer-option.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.css`
+
+
+```css
+:host.ng-invalid:not(.ng-pristine) ::ng-deep input {
+  border-color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `integer-option.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.css`](file--integer-option.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.html`](file--integer-option.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.ts`](file--integer-option.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.html`
+
+
+```html
+@if (option(); as option) {
+  <ya-field
+    [label]="option.name"
+    [hint]="option.required ? undefined : '(optional)'"
+    [class.error]="err.invalid$ | async">
+    <ya-meta>integer</ya-meta>
+
+    @if (option.description?.length) {
+      <ya-help>
+        @for (description of option.description; track description) {
+          <p>{{ description }}</p>
+        }
+      </ya-help>
+    }
+
+    <ya-errors #err [controlName]="option.name" />
+
+    <input [formControl]="formControl" type="text" autocomplete="off" />
+  </ya-field>
+}
+```
+
+### `integer-option.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/integer-option/integer-option.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  forwardRef,
+  input,
+} from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Option, WebappSdkModule, validators } from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-integer-option',
+  templateUrl: './integer-option.component.html',
+  styleUrl: './integer-option.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => IntegerOptionComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => IntegerOptionComponent),
+      multi: true,
+    },
+  ],
+})
+export class IntegerOptionComponent
+  implements ControlValueAccessor, Validator, OnInit, OnDestroy
+{
+  option = input.required<Option>();
+
+  formControl = new FormControl<string | null>(null);
+
+  private validators: ValidatorFn[] = [];
+  private onChange = (_: string | null) => {};
+  private subscriptions: Subscription[] = [];
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.formControl.valueChanges.subscribe((value) => {
+        if (value === null || value === '') {
+          this.onChange(null);
+        } else {
+          this.onChange(value);
+        }
+      }),
+    );
+
+    if (this.option().required) {
+      this.validators.push(Validators.required);
+    }
+    this.validators.push(validators.requireInteger);
+  }
+
+  writeValue(obj: any) {
+    this.formControl.setValue(obj);
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    for (const validator of this.validators) {
+      const errors = validator(control);
+      if (errors) {
+        return errors;
+      }
+    }
+    return null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
+```

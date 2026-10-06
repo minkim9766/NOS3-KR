@@ -3,16 +3,103 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `download-dump-dialog.component.html`
 
-file--download-dump-dialog.component.html
-file--download-dump-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/download-dump-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Download Packet Dump</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Start">
+      <ya-date-time-input formControlName="start" />
+    </ya-field>
+    <ya-field label="Stop">
+      <ya-date-time-input formControlName="stop" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-download-button
+    (click)="closeDialog()"
+    [link]="downloadURL$ | async"
+    [disabled]="!form.valid"
+    appearance="primary">
+    DOWNLOAD
+  </ya-download-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `download-dump-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/download-dump-dialog.component.html`](file--download-dump-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/download-dump-dialog.component.ts`](file--download-dump-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/archive/download-dump-dialog/download-dump-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { WebappSdkModule, YamcsService, utils } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  selector: 'app-download-dump-dialog',
+  templateUrl: './download-dump-dialog.component.html',
+  imports: [WebappSdkModule],
+})
+export class DownloadDumpDialogComponent {
+  downloadURL$ = new BehaviorSubject<string | null>(null);
+
+  form: UntypedFormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<DownloadDumpDialogComponent>,
+    private yamcs: YamcsService,
+    formBuilder: UntypedFormBuilder,
+    @Inject(MAT_DIALOG_DATA) data: any,
+  ) {
+    this.form = formBuilder.group({
+      start: [null, Validators.required],
+      stop: [null, Validators.required],
+    });
+
+    this.form.valueChanges.subscribe((value) => {
+      if (this.form.valid) {
+        const url = yamcs.yamcsClient.getPacketsDownloadURL(yamcs.instance!, {
+          start: utils.toISOString(value.start),
+          stop: utils.toISOString(value.stop),
+          format: 'raw',
+        });
+        this.downloadURL$.next(url);
+      } else {
+        this.downloadURL$.next(null);
+      }
+    });
+
+    let start = data.start;
+    let stop = data.stop;
+    if (!start || !stop) {
+      stop = this.yamcs.getMissionTime();
+      start = utils.subtractDuration(stop, 'PT1H');
+    }
+    this.form.setValue({
+      start: utils.toISOString(start),
+      stop: utils.toISOString(stop),
+    });
+  }
+
+  closeDialog() {
+    this.dialogRef.close();
+  }
+}
+```

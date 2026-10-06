@@ -3,44 +3,13518 @@
 
 **경로:** `fsw/apps/cf/unit-test/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 stubs/index
 utilities/index
-file--cf_app_tests.c
-file--cf_cfdp_dispatch_tests.c
-file--cf_cfdp_r_tests.c
-file--cf_cfdp_s_tests.c
-file--cf_cfdp_sbintf_tests.c
-file--cf_cfdp_tests.c
-file--cf_chunk_tests.c
-file--cf_clist_tests.c
-file--cf_cmd_tests.c
-file--cf_codec_tests.c
-file--cf_crc_tests.c
-file--cf_timer_tests.c
-file--cf_utils_tests.c
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/cf/unit-test/stubs/`](stubs/index) — 폴더
-- [`fsw/apps/cf/unit-test/utilities/`](utilities/index) — 폴더
-- [`fsw/apps/cf/unit-test/cf_app_tests.c`](file--cf_app_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cfdp_dispatch_tests.c`](file--cf_cfdp_dispatch_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cfdp_r_tests.c`](file--cf_cfdp_r_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cfdp_s_tests.c`](file--cf_cfdp_s_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cfdp_sbintf_tests.c`](file--cf_cfdp_sbintf_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cfdp_tests.c`](file--cf_cfdp_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_chunk_tests.c`](file--cf_chunk_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_clist_tests.c`](file--cf_clist_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_cmd_tests.c`](file--cf_cmd_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_codec_tests.c`](file--cf_codec_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_crc_tests.c`](file--cf_crc_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_timer_tests.c`](file--cf_timer_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/cf_utils_tests.c`](file--cf_utils_tests.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/cf/unit-test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `cf_app_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_app_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_events.h"
+#include "cf_app.h"
+#include "cf_cmd.h"
+
+/*******************************************************************************
+**
+**  cf_app_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_app_tests_Setup(void)
+{
+    cf_tests_Setup();
+}
+
+void CF_App_Tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  cf_app_tests helpers
+**
+*******************************************************************************/
+
+/* NOTE: UT_UpdatedDefaultHandler_CFE_SB_ReceiveBuffer is an update to the provided version that can be made to
+ * correctly mimic the behavior needed.
+ * In this case, values not equal to CFE_SUCCESS should return NULL.  Provided CFE_SB stub as of caelum-rc3 tag does
+ * not provide this ability
+ * see https://github.com/nasa/cFE/issues/1617 (closed as wontfix label)
+ */
+void UT_UpdatedDefaultHandler_CFE_SB_ReceiveBuffer(void *UserObj, UT_EntryKey_t FuncKey,
+                                                   const UT_StubContext_t *Context)
+{
+    CFE_SB_Buffer_t **BufPtr = UT_Hook_GetArgValueByName(Context, "BufPtr", CFE_SB_Buffer_t **);
+
+    UT_Stub_CopyToLocal(UT_KEY(CFE_SB_ReceiveBuffer), BufPtr, sizeof(*BufPtr));
+}
+
+/*******************************************************************************
+**
+**  CF_HkCmd tests - full coverage
+**
+*******************************************************************************/
+
+void Test_CF_HkCmd(void)
+{
+    /* Act */
+    CF_HkCmd();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_SetMsgTime, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitMsg, 1);
+    UtAssert_STUB_COUNT(CFE_TIME_GetTime, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_CheckTables tests - full coverage
+**
+*******************************************************************************/
+
+void Test_CF_CheckTables_DoNotReleaseAddressBecauseEngineIsEnabled(void)
+{
+    /* Arrange */
+    CF_AppData.engine.enabled = 1;
+
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 0);
+}
+
+void Test_CF_CheckTables_CallTo_CFE_TBL_ReleaseAddress_ReturnsNot_CFE_SUCCESS_SendEvent(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_ReleaseAddress), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_CheckTables_CallTo_CFE_TBL_Manage_ReturnsNot_CFE_SUCCESS_SendEvent(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Manage), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_Manage, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_ReturnsNot_CFE_SUCCESS_Or_CFE_TBL_INFO_UPDATED_SendEvent(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_Manage, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_GetAddress, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_SUCCESS(void)
+{
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_Manage, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_GetAddress, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED(void)
+{
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
+
+    /* Act */
+    CF_CheckTables();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_TBL_ReleaseAddress, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_Manage, 1);
+    UtAssert_STUB_COUNT(CFE_TBL_GetAddress, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+/*******************************************************************************
+**
+**  CF_ValidateConfigTable tests - full coverage
+**
+*******************************************************************************/
+
+/* CF_ValidateConfigTable tests specific items */
+
+/* CF_ValidateConfigTable tests specific global variables */
+CF_ConfigTable_t dummy_table;
+
+/* CF_ValidateConfigTable tests specific functions */
+void cf_config_table_tests_set_dummy_table_to_nominal(void)
+{
+    /* all values for dummy_table.ticks_per_second nominal except 0 */
+    dummy_table.ticks_per_second = Any_uint32_Except(0);
+    /* all values (except 0) & 3ff == 0 are nominal (1024 byte aligned) */
+    dummy_table.rx_crc_calc_bytes_per_wakeup = Any_uint32_Except(0) << 10;
+    /* all values less than sizeof(CF_CFDP_PduFileDataContent_t) are nominal */
+    dummy_table.outgoing_file_chunk_size = Any_uint16_LessThan(sizeof(CF_CFDP_PduFileDataContent_t));
+}
+
+void Setup_cf_config_table_tests(void)
+{
+    cf_app_tests_Setup();
+    cf_config_table_tests_set_dummy_table_to_nominal();
+}
+
+/* end CF_ValidateConfigTable tests specific items */
+
+void Test_CF_ValidateConfigTable_FailBecauseTableTicksPerSecondIs0(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t *arg_table = &dummy_table;
+    int32             result;
+
+    arg_table->ticks_per_second = 0;
+
+    /* Act */
+    result = CF_ValidateConfigTable(arg_table);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, -1);
+}
+
+void Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIs0(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t *arg_table = &dummy_table;
+    int32             result;
+
+    arg_table->ticks_per_second             = 1;
+    arg_table->rx_crc_calc_bytes_per_wakeup = 0;
+
+    /* Act */
+    result = CF_ValidateConfigTable(arg_table);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, -2);
+}
+
+void Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIsNot1024ByteAligned(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t *arg_table = &dummy_table;
+    int32             result;
+
+    arg_table->ticks_per_second = 1;
+    arg_table->rx_crc_calc_bytes_per_wakeup =
+        (Any_uint32() << 10) +
+        (Any_uint32_LessThan_or_EqualTo(0x3FE) +
+         1); /* Any_uint32_LessThan_or_EqualTo(0x3FE) + 1 is 0x001 to 0x3FF, forcing no 1024 byte alignment */
+
+    /* Act */
+    result = CF_ValidateConfigTable(arg_table);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, -2);
+}
+
+void Test_CF_ValidateConfigTable_FailBecauseOutgoingFileChunkSmallerThanDataArray(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t *arg_table = &dummy_table;
+    int32             result;
+
+    /* outgoing_file_chunk_size set to greater than sizeof(CF_CFDP_PduFileDataContent_t) */
+    arg_table->ticks_per_second             = 1;
+    arg_table->rx_crc_calc_bytes_per_wakeup = 0x0400; /* 1024 aligned */
+    arg_table->outgoing_file_chunk_size     = sizeof(CF_CFDP_PduFileDataContent_t) + 1;
+
+    /* Act */
+    result = CF_ValidateConfigTable(arg_table);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, -3);
+}
+
+void Test_CF_ValidateConfigTable_Success(void)
+{
+    /* Arange */
+    CF_ConfigTable_t *arg_table = &dummy_table;
+    int32             result;
+
+    arg_table->ticks_per_second             = 1;
+    arg_table->rx_crc_calc_bytes_per_wakeup = 0x0400; /* 1024 aligned */
+    arg_table->outgoing_file_chunk_size     = sizeof(CF_CFDP_PduFileDataContent_t);
+
+    /* Act */
+    result = CF_ValidateConfigTable(arg_table);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, CFE_SUCCESS);
+}
+
+/*******************************************************************************
+**
+**  CF_TableInit tests - full coverage
+**
+*******************************************************************************/
+
+void Test_CF_TableInit_FailBecause_CFE_TBL_Register_DidNotReturnSuccess(void)
+{
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_TBL_REG);
+}
+
+void Test_CF_TableInit_FailBecause_CFE_TBL_Load_DidNotReturnSuccess(void)
+{
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Load), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_TBL_LOAD);
+}
+
+void Test_CF_TableInit_FailBecause_CFE_TBL_Manage_DidNotReturnSuccess(void)
+{
+    int32 result = -1;
+
+    /* Arrange */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Manage), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_TBL_MANAGE);
+}
+
+void Test_CF_TableInit_FailBecause_CFE_TBL_GetAddress_DidNotReturnSuccess(void)
+{
+    int32 result = -1;
+
+    /* Arrange */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_TBL_GETADDR);
+}
+
+void Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_SUCCESS_SuccessAndDoNotSendEvent(void)
+{
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), CFE_SUCCESS);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED_SuccessAndDoNotSendEvent(void)
+{
+    /* Arrange */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_GetAddress), CFE_TBL_INFO_UPDATED);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TableInit(), CFE_SUCCESS);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+/*******************************************************************************
+**
+**  CF_Init tests - full coverage
+**
+*******************************************************************************/
+
+void Test_CF_Init_CallTo_CFE_EVS_Register_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus(void)
+{
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
+}
+
+void Test_CF_Init_CallTo_CFE_SB_CreatePipe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus(void)
+{
+    /* Arrange */
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_CreatePipe), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
+}
+
+void Test_CF_Init_FirstCallTo_CFE_SB_Subscribe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus(void)
+{
+    /* Arrange */
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_SB_Subscribe), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
+    UtAssert_STUB_COUNT(CFE_SB_Subscribe, 1);
+    UtAssert_STUB_COUNT(CFE_ES_WriteToSysLog, 1);
+}
+
+/* NOTE: multi call test for CFE_SB_Subscribe would be helpful but not necessary for coverage */
+
+void Test_CF_Init_CallTo_CF_TableInit_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus(void)
+{
+    /* Arrange */
+    int32 result = -1;
+
+    /* Arrange unstubbable: CF_TableInit */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_TBL_Register), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
+    UtAssert_STUB_COUNT(CFE_SB_Subscribe, 3);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_Init_CallTo_CF_CFDP_InitEngine_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus(void)
+{
+    /* Arrange */
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_InitEngine), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
+    UtAssert_STUB_COUNT(CFE_SB_Subscribe, 3);
+    UtAssert_STUB_COUNT(CF_CFDP_InitEngine, 1);
+}
+
+void Test_CF_Init_CallTo_CFE_EVS_SendEvent_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus(void)
+{
+    /* Arrange */
+    int32 result = -1;
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_SendEvent), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_Register, 1);
+    UtAssert_STUB_COUNT(CFE_SB_CreatePipe, 1);
+    UtAssert_STUB_COUNT(CFE_SB_Subscribe, 3);
+    UtAssert_STUB_COUNT(CF_CFDP_InitEngine, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_Init_Success(void)
+{
+    /* Act */
+    UtAssert_INT32_EQ(CF_Init(), CFE_SUCCESS);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_WakeUp tests
+**
+*******************************************************************************/
+
+void Test_CF_WakeUp(void)
+{
+    /* Arrange */
+    /* No Arrange Required */
+
+    /* Act */
+    CF_WakeUp();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_CycleEngine, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_ProcessMsg tests
+**
+*******************************************************************************/
+
+void Test_CF_ProcessMsg_ProcessGroundCommand(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t sbbuf;
+    CFE_SB_MsgId_t  forced_MsgID = CFE_SB_ValueToMsgId(CF_CMD_MID);
+
+    memset(&sbbuf, 0, sizeof(sbbuf));
+
+    /* CFE_MSG_GetMsgId uses return by ref */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+
+    /* Act */
+    CF_ProcessMsg(&sbbuf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetMsgId, 1);
+    UtAssert_STUB_COUNT(CF_ProcessGroundCommand, 1);
+}
+
+void Test_CF_ProcessMsg_WakeUp(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t sbbuf;
+    CFE_SB_MsgId_t  forced_MsgID = CFE_SB_ValueToMsgId(CF_WAKE_UP_MID);
+
+    memset(&sbbuf, 0, sizeof(sbbuf));
+
+    /* CFE_MSG_GetMsgId uses return by ref */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+
+    /* Act */
+    CF_ProcessMsg(&sbbuf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetMsgId, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_CycleEngine, 1);
+}
+
+void Test_CF_ProcessMsg_SendHk(void)
+{
+    CFE_SB_Buffer_t sbbuf;
+    CFE_SB_MsgId_t  forced_MsgID = CFE_SB_ValueToMsgId(CF_SEND_HK_MID);
+
+    memset(&sbbuf, 0, sizeof(sbbuf));
+
+    /* CFE_MSG_GetMsgId uses return by ref */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+
+    /* Act */
+    CF_ProcessMsg(&sbbuf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetMsgId, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CFE_MSG_SetMsgTime, 1); /* Confirms CF_HkCmd path was taken */
+}
+
+void Test_CF_ProcessMsg_UnrecognizedCommandEnterDefaultPath(void)
+{
+    /* Arrange */
+    CFE_SB_MsgId_t   forced_MsgID = CFE_SB_INVALID_MSG_ID;
+    CFE_SB_Buffer_t *arg_msg      = NULL;
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+
+    /* Act */
+    CF_ProcessMsg(arg_msg);
+
+    /* Assert */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_CMD_LENGTH);
+}
+
+/*******************************************************************************
+**
+**  CF_AppMain tests
+**
+*******************************************************************************/
+
+void Test_CF_AppMain_CallTo_CF_Init_DoNotReturn_CFE_SUCCESS_Set_CF_AppData_run_status_To_CFE_ES_RunStatus_APP_ERROR(
+    void)
+{
+    /* Arrange */
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), false);
+
+    UT_SetDefaultReturnValue(UT_KEY(CFE_EVS_Register), -1);
+
+    /* Act */
+    CF_AppMain();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 2);
+    UtAssert_STUB_COUNT(CFE_ES_RunLoop, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_UINT32_EQ(CF_AppData.run_status, CFE_ES_RunStatus_APP_ERROR);
+}
+
+void Test_CF_AppMain_CFE_SB_ReceiveBuffer_Cases(void)
+{
+    CFE_SB_Buffer_t  sbbuf;
+    CFE_SB_Buffer_t *sbbufptr = NULL;
+
+    memset(&sbbuf, 0, sizeof(sbbuf));
+
+    /* Run loop once */
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), false);
+
+    /* Unit under test does not use the buffer in this case */
+    UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &sbbufptr, sizeof(sbbufptr), false);
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, -1);
+
+    /* Act */
+    UtAssert_VOIDCALL(CF_AppMain());
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 4);
+    UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
+    UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
+
+    /* Event from CF_Init and CF_AppMain */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_INF_INIT);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[1], CF_EID_ERR_INIT_MSG_RECV);
+
+    /* Reset, return CFE_SUCCESS from CFE_SB_ReceiveBuffer and buffer NULL */
+    UT_CF_ResetEventCapture();
+    UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &sbbufptr, sizeof(sbbufptr), false);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+
+    UtAssert_VOIDCALL(CF_AppMain());
+
+    /* Event from CF_Init and CF_AppMain */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_INF_INIT);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[1], CF_EID_ERR_INIT_MSG_RECV);
+
+    /* Reset, return non-error codes and non-NULL buffer */
+    UT_CF_ResetEventCapture();
+    UT_ResetState(UT_KEY(CFE_ES_RunLoop));
+    sbbufptr = &sbbuf;
+    UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &sbbufptr, sizeof(sbbufptr), false);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, CFE_SB_TIME_OUT);
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, CFE_SB_NO_MESSAGE);
+
+    UtAssert_VOIDCALL(CF_AppMain());
+
+    /* Event from CF_Init */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_INF_INIT);
+    UtAssert_STUB_COUNT(CFE_ES_RunLoop, 3);
+}
+
+void Test_CF_AppMain_RunLoopCallTo_CFE_SB_ReceiveBuffer_Returns_CFE_SUCCESS_AndValid_msg_Call_CF_ProcessMsg(void)
+{
+    /* Arrange */
+    CFE_SB_MsgId_t   forced_MsgID = CFE_SB_INVALID_MSG_ID;
+    CFE_SB_Buffer_t  fake_msg;
+    CFE_SB_Buffer_t *dummy_msg = &fake_msg;
+
+    UT_SetDeferredRetcode(UT_KEY(CFE_ES_RunLoop), 1, true);
+    UT_SetDefaultReturnValue(UT_KEY(CFE_ES_RunLoop), false);
+
+    /* Actual data not used, just address is needed */
+    UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &dummy_msg, sizeof(dummy_msg), false);
+
+    /* Arrange unstubbable: CF_ProcessMsg, invalid ID */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetMsgId), &forced_MsgID, sizeof(forced_MsgID), false);
+
+    /* Act */
+    CF_AppMain();
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 4);
+    UtAssert_STUB_COUNT(CFE_ES_RunLoop, 2);
+    UtAssert_STUB_COUNT(CFE_ES_ExitApp, 1);
+    /* Assert for CF_Init call and CF_ProcessMsg */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    /* Assert for CF_ProcessMsg */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+/*******************************************************************************
+**
+**  cf_app_tests UtTest_Add groups
+**
+*******************************************************************************/
+
+void add_CF_HkCmd_tests(void)
+{
+    UtTest_Add(Test_CF_HkCmd, cf_app_tests_Setup, CF_App_Tests_Teardown, "Test_CF_HkCmd");
+}
+
+void add_CF_CheckTables_tests(void)
+{
+    UtTest_Add(Test_CF_CheckTables_DoNotReleaseAddressBecauseEngineIsEnabled, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_CheckTables_DoNotReleaseAddressBecauseEngineIsEnabled");
+    UtTest_Add(Test_CF_CheckTables_CallTo_CFE_TBL_ReleaseAddress_ReturnsNot_CFE_SUCCESS_SendEvent,
+               Setup_cf_config_table_tests, CF_App_Tests_Teardown,
+               "Test_CF_CheckTables_CallTo_CFE_TBL_ReleaseAddress_ReturnsNot_CFE_SUCCESS_SendEvent");
+    UtTest_Add(Test_CF_CheckTables_CallTo_CFE_TBL_Manage_ReturnsNot_CFE_SUCCESS_SendEvent, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_CheckTables_CallTo_CFE_TBL_Manage_ReturnsNot_CFE_SUCCESS_SendEvent");
+    UtTest_Add(
+        Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_ReturnsNot_CFE_SUCCESS_Or_CFE_TBL_INFO_UPDATED_SendEvent,
+        Setup_cf_config_table_tests, CF_App_Tests_Teardown,
+        "Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_ReturnsNot_CFE_SUCCESS_Or_CFE_TBL_INFO_UPDATED_SendEvent");
+    UtTest_Add(Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_SUCCESS, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_SUCCESS");
+    UtTest_Add(Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_CheckTables_CallTo_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED");
+}
+
+void add_CF_ValidateConfigTable_tests(void)
+{
+    UtTest_Add(Test_CF_ValidateConfigTable_FailBecauseTableTicksPerSecondIs0, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_ValidateConfigTable_FailBecauseTableTicksPerSecondIs0");
+    UtTest_Add(Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIs0, Setup_cf_config_table_tests,
+               CF_App_Tests_Teardown, "Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIs0");
+    UtTest_Add(Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIsNot1024ByteAligned,
+               Setup_cf_config_table_tests, CF_App_Tests_Teardown,
+               "Test_CF_ValidateConfigTable_FailBecauseCalcBytesPerWakeupIsNot1024ByteAligned");
+    UtTest_Add(Test_CF_ValidateConfigTable_FailBecauseOutgoingFileChunkSmallerThanDataArray,
+               Setup_cf_config_table_tests, CF_App_Tests_Teardown,
+               "Test_CF_ValidateConfigTable_FailBecauseOutgoingFileChunkSmallerThanDataArray");
+    UtTest_Add(Test_CF_ValidateConfigTable_Success, Setup_cf_config_table_tests, CF_App_Tests_Teardown,
+               "Test_CF_ValidateConfigTable_Success");
+}
+
+void add_CF_TableInit_tests(void)
+{
+    UtTest_Add(Test_CF_TableInit_FailBecause_CFE_TBL_Register_DidNotReturnSuccess, cf_app_tests_Setup,
+               CF_App_Tests_Teardown, "Test_CF_TableInit_FailBecause_CFE_TBL_Register_DidNotReturnSuccess");
+    UtTest_Add(Test_CF_TableInit_FailBecause_CFE_TBL_Load_DidNotReturnSuccess, cf_app_tests_Setup,
+               CF_App_Tests_Teardown, "Test_CF_TableInit_FailBecause_CFE_TBL_Load_DidNotReturnSuccess");
+    UtTest_Add(Test_CF_TableInit_FailBecause_CFE_TBL_Manage_DidNotReturnSuccess, cf_app_tests_Setup,
+               CF_App_Tests_Teardown, "Test_CF_TableInit_FailBecause_CFE_TBL_Manage_DidNotReturnSuccess");
+    UtTest_Add(Test_CF_TableInit_FailBecause_CFE_TBL_GetAddress_DidNotReturnSuccess, cf_app_tests_Setup,
+               CF_App_Tests_Teardown, "Test_CF_TableInit_FailBecause_CFE_TBL_GetAddress_DidNotReturnSuccess");
+    UtTest_Add(Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_SUCCESS_SuccessAndDoNotSendEvent,
+               cf_app_tests_Setup, CF_App_Tests_Teardown,
+               "Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_SUCCESS_SuccessAndDoNotSendEvent");
+    UtTest_Add(Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED_SuccessAndDoNotSendEvent,
+               cf_app_tests_Setup, CF_App_Tests_Teardown,
+               "Test_CF_TableInit_When_CFE_TBL_GetAddress_Returns_CFE_TBL_INFO_UPDATED_SuccessAndDoNotSendEvent");
+}
+
+void add_CF_Init_tests(void)
+{
+    UtTest_Add(
+        Test_CF_Init_CallTo_CFE_EVS_Register_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_Init_CallTo_CFE_EVS_Register_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus");
+    UtTest_Add(
+        Test_CF_Init_CallTo_CFE_SB_CreatePipe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_Init_CallTo_CFE_SB_CreatePipe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus");
+    UtTest_Add(
+        Test_CF_Init_FirstCallTo_CFE_SB_Subscribe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_Init_FirstCallTo_CFE_SB_Subscribe_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus");
+    UtTest_Add(Test_CF_Init_CallTo_CF_TableInit_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus, cf_app_tests_Setup,
+               CF_App_Tests_Teardown, "Test_CF_Init_CallTo_CF_TableInit_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus");
+    UtTest_Add(Test_CF_Init_CallTo_CF_CFDP_InitEngine_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus, cf_app_tests_Setup,
+               CF_App_Tests_Teardown,
+               "Test_CF_Init_CallTo_CF_CFDP_InitEngine_ReturnsNot_CFE_SUCCESS_ReturnErrorStatus");
+    UtTest_Add(
+        Test_CF_Init_CallTo_CFE_EVS_SendEvent_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_Init_CallTo_CFE_EVS_SendEvent_ReturnsNot_CFE_SUCCESS_Call_CFE_ES_WriteToSysLog_ReturnErrorStatus");
+    UtTest_Add(Test_CF_Init_Success, cf_app_tests_Setup, CF_App_Tests_Teardown, "Test_CF_Init_Success");
+}
+
+void add_CF_WakeUp_tests(void)
+{
+    UtTest_Add(Test_CF_WakeUp, cf_app_tests_Setup, CF_App_Tests_Teardown, "Test_CF_WakeUp");
+}
+
+void add_CF_ProcessMsg_tests(void)
+{
+    UtTest_Add(Test_CF_ProcessMsg_ProcessGroundCommand, cf_app_tests_Setup, CF_App_Tests_Teardown,
+               "Test_CF_ProcessMsg_ProcessGroundCommand");
+    UtTest_Add(Test_CF_ProcessMsg_WakeUp, cf_app_tests_Setup, CF_App_Tests_Teardown, "Test_CF_ProcessMsg_WakeUp");
+    UtTest_Add(Test_CF_ProcessMsg_SendHk, cf_app_tests_Setup, CF_App_Tests_Teardown, "Test_CF_ProcessMsg_SendHk");
+    UtTest_Add(Test_CF_ProcessMsg_UnrecognizedCommandEnterDefaultPath, cf_app_tests_Setup, CF_App_Tests_Teardown,
+               "Test_CF_ProcessMsg_UnrecognizedCommandEnterDefaultPath");
+}
+
+void add_CF_AppMain_tests(void)
+{
+    UtTest_Add(
+        Test_CF_AppMain_CallTo_CF_Init_DoNotReturn_CFE_SUCCESS_Set_CF_AppData_run_status_To_CFE_ES_RunStatus_APP_ERROR,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_AppMain_CallTo_CF_Init_DoNotReturn_CFE_SUCCESS_Set_CF_AppData_run_status_To_CFE_ES_RunStatus_APP_"
+        "ERROR");
+    UtTest_Add(Test_CF_AppMain_CFE_SB_ReceiveBuffer_Cases, cf_app_tests_Setup, CF_App_Tests_Teardown,
+               "Test_CF_AppMain_CFE_SB_ReceiveBuffer_Cases");
+    UtTest_Add(
+        Test_CF_AppMain_RunLoopCallTo_CFE_SB_ReceiveBuffer_Returns_CFE_SUCCESS_AndValid_msg_Call_CF_ProcessMsg,
+        cf_app_tests_Setup, CF_App_Tests_Teardown,
+        "Test_CF_AppMain_RunLoopCallTo_CFE_SB_ReceiveBuffer_Returns_CFE_SUCCESS_AndValid_msg_Call_CF_ProcessMsg");
+}
+
+/*******************************************************************************
+**
+**  cf_app_tests test UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    TestUtil_InitializeRandomSeed();
+
+    add_CF_HkCmd_tests();
+
+    add_CF_CheckTables_tests();
+
+    add_CF_ValidateConfigTable_tests();
+
+    add_CF_TableInit_tests();
+
+    add_CF_Init_tests();
+
+    add_CF_WakeUp_tests();
+
+    add_CF_ProcessMsg_tests();
+
+    add_CF_AppMain_tests();
+}
+```
+
+### `cf_cfdp_dispatch_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cfdp_dispatch_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_cfdp.h"
+#include "cf_app.h"
+#include "cf_events.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_s.h"
+#include "cf_cfdp_dispatch.h"
+
+static void UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_t setup, CF_Logical_PduBuffer_t **pdu_buffer_p,
+                                                 CF_Channel_t **channel_p, CF_History_t **history_p,
+                                                 CF_Transaction_t **txn_p, CF_ConfigTable_t **config_table_p)
+{
+    /*
+     * fake objects used to pass into CF app during unit tests.
+     * These are declared static so they can be returned
+     */
+    static CF_Logical_PduBuffer_t ut_pdu_buffer;
+    static CF_History_t           ut_history;
+    static CF_Transaction_t       ut_transaction;
+    static CF_ConfigTable_t       ut_config_table;
+
+    /*
+     * always clear all objects, regardless of what was asked for.
+     * this helps ensure that a test does not depend on preexisting data
+     * in the buffer (each test should set up its buffers in full)
+     */
+    memset(&ut_pdu_buffer, 0, sizeof(ut_pdu_buffer));
+    memset(&ut_history, 0, sizeof(ut_history));
+    memset(&ut_transaction, 0, sizeof(ut_transaction));
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+
+    /* certain pointers should be connected even if they were not asked for,
+     * as internal code may assume these are set (test cases may un-set) */
+    ut_transaction.history  = &ut_history;
+    CF_AppData.config_table = &ut_config_table;
+
+    if (pdu_buffer_p)
+    {
+        if (setup == UT_CF_Setup_TX || setup == UT_CF_Setup_RX)
+        {
+            *pdu_buffer_p = &ut_pdu_buffer;
+        }
+        else
+        {
+            *pdu_buffer_p = NULL;
+        }
+    }
+    if (channel_p)
+    {
+        /*
+         * note that for channels, many CF app functions assume
+         * that when channel is passed as a pointer, that it is a member
+         * of the array within CF_AppData, and the channel number can
+         * be obtained by pointer arithmetic.
+         * this arithmetic will break if the pointer is not actually
+         * a member of that array, so for now it must be so.
+         * This always uses the same channel for now.
+         */
+        *channel_p = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    }
+    if (history_p)
+    {
+        *history_p = &ut_history;
+    }
+    if (txn_p)
+    {
+        *txn_p = &ut_transaction;
+    }
+    if (config_table_p)
+    {
+        *config_table_p = &ut_config_table;
+    }
+
+    /* reset the event ID capture between each sub-case */
+    UT_CF_ResetEventCapture();
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_dispatch_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cfdp_dispatch_tests_Setup(void)
+{
+    cf_tests_Setup();
+
+    /* make sure global data is wiped between tests */
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+}
+
+void cf_cfdp_dispatch_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  Unit-specific test implementation
+**
+*******************************************************************************/
+
+void Test_CF_CFDP_R_DispatchRecv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph, const
+     * CF_CFDP_R_SubstateDispatchTable_t *dispatch, CF_CFDP_StateRecvFunc_t fd_fn);
+     */
+    CF_Transaction_t *                   t;
+    CF_Logical_PduBuffer_t *             ph;
+    CF_CFDP_R_SubstateDispatchTable_t    dispatch;
+    CF_CFDP_FileDirectiveDispatchTable_t fddt;
+
+    memset(&dispatch, 0, sizeof(dispatch));
+    memset(&fddt, 0, sizeof(fddt));
+
+    /* just using CF_CFDP_R[12]_Recv here because they are stubs in this context */
+    fddt.fdirective[CF_CFDP_FileDirective_METADATA] = CF_CFDP_R1_Recv;
+    dispatch.state[CF_RxSubState_EOF]               = &fddt;
+
+    /* nominal (file directive) */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.pdu_type = 0;
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, NULL));
+
+    /* nominal (file data) */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.pdu_type = 1;
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, NULL));
+
+    /* directive code beyond range */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_INVALID_MAX;
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, NULL));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_DC_INV);
+
+    /* file data with error */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.pdu_type = 1;
+    UT_SetDeferredRetcode(UT_KEY(CF_TxnStatus_IsError), 1, true);
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, NULL));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.dropped, 1);
+
+    /* test actual dispatch */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_METADATA;
+    t->state_data.r.sub_state     = CF_RxSubState_EOF;
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, CF_CFDP_R2_Recv));
+    UtAssert_STUB_COUNT(CF_CFDP_R1_Recv, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_R2_Recv, 0);
+
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.pdu_type   = 1;
+    t->state_data.r.sub_state = CF_RxSubState_EOF;
+    UtAssert_VOIDCALL(CF_CFDP_R_DispatchRecv(t, ph, &dispatch, CF_CFDP_R2_Recv));
+    UtAssert_STUB_COUNT(CF_CFDP_R1_Recv, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_R2_Recv, 1);
+}
+
+void Test_CF_CFDP_S_DispatchRecv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_DispatchRecv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph,
+                                   const CF_CFDP_S_SubstateRecvDispatchTable_t *dispatch)
+     */
+    CF_Transaction_t *                    t;
+    CF_Logical_PduBuffer_t *              ph;
+    CF_CFDP_S_SubstateRecvDispatchTable_t dispatch;
+    CF_CFDP_FileDirectiveDispatchTable_t  fddt;
+
+    memset(&dispatch, 0, sizeof(dispatch));
+    memset(&fddt, 0, sizeof(fddt));
+
+    /* just using CF_CFDP_S[12]_Recv here because they are stubs in this context */
+    fddt.fdirective[CF_CFDP_FileDirective_METADATA] = CF_CFDP_S1_Recv;
+    dispatch.substate[CF_TxSubState_EOF]            = &fddt;
+
+    /* nominal, no handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchRecv(t, ph, &dispatch));
+
+    /* directive code beyond range */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_INVALID_MAX;
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchRecv(t, ph, &dispatch));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_DC_INV);
+
+    /* file data PDU, not expected in this type of txn */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.pdu_type = 1;
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchRecv(t, ph, &dispatch));
+
+    /* test actual dispatch */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_METADATA;
+    t->state_data.s.sub_state     = CF_TxSubState_EOF;
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchRecv(t, ph, &dispatch));
+    UtAssert_STUB_COUNT(CF_CFDP_S1_Recv, 1);
+}
+
+void Test_CF_CFDP_S_DispatchTransmit(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_DispatchTransmit(CF_Transaction_t *t, const CF_CFDP_S_SubstateSendDispatchTable_t *dispatch);
+     */
+    CF_Transaction_t *                    t;
+    CF_CFDP_S_SubstateSendDispatchTable_t dispatch;
+
+    /* The CF_CFDP_S2_Tx is just used as a convenient stub to target */
+    memset(&dispatch, 0, sizeof(dispatch));
+    dispatch.substate[CF_TxSubState_EOF] = CF_CFDP_S2_Tx;
+
+    /* nominal, no handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchTransmit(t, &dispatch));
+
+    /* test actual dispatch */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state_data.s.sub_state = CF_TxSubState_EOF;
+    UtAssert_VOIDCALL(CF_CFDP_S_DispatchTransmit(t, &dispatch));
+    UtAssert_STUB_COUNT(CF_CFDP_S2_Tx, 1);
+}
+
+void Test_CF_CFDP_TxStateDispatch(void)
+{
+    /* Test case for:
+     * void CF_CFDP_TxStateDispatch(CF_Transaction_t *t, const CF_CFDP_TxnSendDispatchTable_t *dispatch);
+     */
+    CF_Transaction_t *             t;
+    CF_CFDP_TxnSendDispatchTable_t dispatch;
+
+    memset(&dispatch, 0, sizeof(dispatch));
+
+    dispatch.tx[CF_TxnState_S1] = CF_CFDP_S1_Tx;
+
+    /* nominal, no handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_TxStateDispatch(t, &dispatch));
+
+    /* nominal, with handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_S1;
+    UtAssert_VOIDCALL(CF_CFDP_TxStateDispatch(t, &dispatch));
+    UtAssert_STUB_COUNT(CF_CFDP_S1_Tx, 1);
+}
+
+void Test_CF_CFDP_RxStateDispatch(void)
+{
+    /* Test case for:
+     * void CF_CFDP_RxStateDispatch(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph, const
+     * CF_CFDP_TxnRecvDispatchTable_t *dispatch);
+     */
+    CF_Transaction_t *             t;
+    CF_Logical_PduBuffer_t *       ph;
+    CF_CFDP_TxnRecvDispatchTable_t dispatch;
+
+    memset(&dispatch, 0, sizeof(dispatch));
+
+    dispatch.rx[CF_TxnState_R1] = CF_CFDP_R1_Recv;
+
+    /* nominal, no handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_RxStateDispatch(t, ph, &dispatch));
+
+    /* nominal, with handler */
+    UT_CFDP_Dispatch_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_R1;
+    UtAssert_VOIDCALL(CF_CFDP_RxStateDispatch(t, ph, &dispatch));
+    UtAssert_STUB_COUNT(CF_CFDP_R1_Recv, 1);
+}
+
+/*******************************************************************************
+**
+** cf_cfdp_dispatch_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_R_DispatchRecv, cf_cfdp_dispatch_tests_Setup, cf_cfdp_dispatch_tests_Teardown,
+               "CF_CFDP_R_DispatchRecv");
+
+    UtTest_Add(Test_CF_CFDP_S_DispatchRecv, cf_cfdp_dispatch_tests_Setup, cf_cfdp_dispatch_tests_Teardown,
+               "CF_CFDP_S_DispatchRecv");
+    UtTest_Add(Test_CF_CFDP_S_DispatchTransmit, cf_cfdp_dispatch_tests_Setup, cf_cfdp_dispatch_tests_Teardown,
+               "CF_CFDP_S_DispatchTransmit");
+
+    UtTest_Add(Test_CF_CFDP_TxStateDispatch, cf_cfdp_dispatch_tests_Setup, cf_cfdp_dispatch_tests_Teardown,
+               "CF_CFDP_TxStateDispatch");
+    UtTest_Add(Test_CF_CFDP_RxStateDispatch, cf_cfdp_dispatch_tests_Setup, cf_cfdp_dispatch_tests_Teardown,
+               "CF_CFDP_RxStateDispatch");
+}
+```
+
+### `cf_cfdp_r_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cfdp_r_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_cfdp.h"
+#include "cf_app.h"
+#include "cf_events.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_s.h"
+
+static void UT_CFDP_R_SetupBasicRxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    /* placeholder, nothing for now in this module */
+}
+
+static void UT_CFDP_R_SetupBasicTxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    /* Make it so a call to CF_CFDP_ConstructPduBuffer returns the same PDU buffer */
+    UT_SetHandlerFunction(UT_KEY(CF_CFDP_ConstructPduHeader), UT_AltHandler_GenericPointerReturn, pdu_buffer);
+}
+
+static void UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_t setup, CF_Logical_PduBuffer_t **pdu_buffer_p,
+                                          CF_Channel_t **channel_p, CF_History_t **history_p, CF_Transaction_t **txn_p,
+                                          CF_ConfigTable_t **config_table_p)
+{
+    /*
+     * fake objects used to pass into CF app during unit tests.
+     * These are declared static so they can be returned
+     */
+    static CF_Logical_PduBuffer_t ut_pdu_buffer;
+    static CF_History_t           ut_history;
+    static CF_Transaction_t       ut_transaction;
+    static CF_ConfigTable_t       ut_config_table;
+
+    /*
+     * always clear all objects, regardless of what was asked for.
+     * this helps ensure that a test does not depend on preexisting data
+     * in the buffer (each test should set up its buffers in full)
+     */
+    memset(&ut_pdu_buffer, 0, sizeof(ut_pdu_buffer));
+    memset(&ut_history, 0, sizeof(ut_history));
+    memset(&ut_transaction, 0, sizeof(ut_transaction));
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+
+    /* certain pointers should be connected even if they were not asked for,
+     * as internal code may assume these are set (test cases may un-set) */
+    ut_transaction.history  = &ut_history;
+    CF_AppData.config_table = &ut_config_table;
+
+    if (pdu_buffer_p)
+    {
+        if (setup == UT_CF_Setup_TX || setup == UT_CF_Setup_RX)
+        {
+            *pdu_buffer_p = &ut_pdu_buffer;
+        }
+        else
+        {
+            *pdu_buffer_p = NULL;
+        }
+    }
+    if (channel_p)
+    {
+        /*
+         * note that for channels, many CF app functions assume
+         * that when channel is passed as a pointer, that it is a member
+         * of the array within CF_AppData, and the channel number can
+         * be obtained by pointer arithmetic.
+         * this arithmetic will break if the pointer is not actually
+         * a member of that array, so for now it must be so.
+         * This always uses the same channel for now.
+         */
+        *channel_p = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    }
+    if (history_p)
+    {
+        *history_p = &ut_history;
+    }
+    if (txn_p)
+    {
+        *txn_p = &ut_transaction;
+    }
+    if (config_table_p)
+    {
+        *config_table_p = &ut_config_table;
+    }
+
+    if (setup == UT_CF_Setup_TX)
+    {
+        UT_CFDP_R_SetupBasicTxState(&ut_pdu_buffer);
+    }
+    else if (setup == UT_CF_Setup_RX)
+    {
+        UT_CFDP_R_SetupBasicRxState(&ut_pdu_buffer);
+    }
+
+    /* reset the event ID capture between each sub-case */
+    UT_CF_ResetEventCapture();
+
+    /* Capture calls to CF_CFDP_SetTxnState() to capture transaction status */
+    UT_SetHandlerFunction(UT_KEY(CF_CFDP_SetTxnStatus), UT_AltHandler_CaptureTransactionStatus, &ut_history.txn_stat);
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_r_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cfdp_r_tests_Setup(void)
+{
+    cf_tests_Setup();
+
+    /* make sure global data is wiped between tests */
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+}
+
+void cf_cfdp_r_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  Unit-specific test implementation
+**
+*******************************************************************************/
+
+void Test_CF_CFDP_R1_Recv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+
+    UtAssert_VOIDCALL(CF_CFDP_R1_Recv(t, ph));
+}
+
+void Test_CF_CFDP_R2_Recv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+
+    UtAssert_VOIDCALL(CF_CFDP_R2_Recv(t, ph));
+}
+
+void Test_CF_CFDP_R_Tick(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R_Tick(CF_Transaction_t *t, int *cont);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+    int               cont;
+
+    /* nominal, not in R2 state - just ticks */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 1);
+
+    /* not in R2 state, timer expired */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* nominal, in R2 state */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_R2;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 2);
+
+    /* in R2 state, timer expired */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_R2;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_TRUE(t->flags.rx.inactivity_fired);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_INACTIVITY_DETECTED);
+
+    /* in R2 state, send_ack set */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_ack         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_SendAck, 1);
+    UtAssert_BOOL_FALSE(t->flags.rx.send_ack);
+
+    /* same as above, but SendAck fails */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendAck), 1, CF_SendRet_NO_MSG);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_ack         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_ack);
+
+    /* in R2 state, send_nak set */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_nak         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_FALSE(t->flags.rx.send_nak);
+
+    /* same as above, but CF_CFDP_R_SubstateSendNak fails */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendNak), 1, CF_SendRet_NO_MSG);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_nak         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_nak);
+
+    /* in R2 state, send_fin set */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_fin         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_FALSE(t->flags.rx.send_fin);
+
+    /* same as above, but CF_CFDP_R2_SubstateSendFin fails */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendFin), 1, CF_SendRet_NO_MSG);
+    t->state                     = CF_TxnState_R2;
+    t->flags.rx.send_fin         = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+
+    /* in R2 state, ack_timer_armed set */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_R2;
+    t->flags.com.ack_timer_armed = true;
+    t->flags.rx.inactivity_fired = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 3);
+
+    /* in R2 state, ack_timer_armed set, timer expires */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_R2;
+    t->flags.com.ack_timer_armed = true;
+    t->flags.rx.inactivity_fired = true;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 1);
+    UtAssert_BOOL_TRUE(t->flags.rx.complete);
+
+    /* in R2 state, ack_timer_armed set, timer expires, finack substate */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_R2;
+    t->flags.com.ack_timer_armed        = true;
+    t->flags.rx.inactivity_fired        = true;
+    t->flags.rx.complete                = true;
+    t->state_data.r.sub_state           = CF_RxSubState_WAIT_FOR_FIN_ACK;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 2);
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+
+    /* same as above, but acknak limit reached */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_R2;
+    t->flags.com.ack_timer_armed        = true;
+    t->flags.rx.inactivity_fired        = true;
+    t->flags.rx.complete                = true;
+    t->state_data.r.sub_state           = CF_RxSubState_WAIT_FOR_FIN_ACK;
+    t->state_data.r.r2.acknak_count     = 9;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 2);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.ack_limit, 1);
+
+    /* in R2 state, ack_timer_armed set, timer expires, not in finack substate */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_R2;
+    t->flags.com.ack_timer_armed        = true;
+    t->flags.rx.inactivity_fired        = true;
+    t->flags.rx.complete                = true;
+    t->state_data.r.sub_state           = CF_RxSubState_EOF;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 3);
+    UtAssert_BOOL_FALSE(t->flags.rx.send_fin);
+}
+
+void Test_CF_CFDP_R_Cancel(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R_Cancel(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, calls reset */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R_Cancel(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* trigger send_fin on R2 */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_R2;
+    UtAssert_VOIDCALL(CF_CFDP_R_Cancel(t));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+
+    /* for coverage, this should also go to reset */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state                  = CF_TxnState_R2;
+    t->state_data.r.sub_state = CF_RxSubState_WAIT_FOR_FIN_ACK;
+    UtAssert_VOIDCALL(CF_CFDP_R_Cancel(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 2);
+}
+
+void Test_CF_CFDP_R_Init(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R_Init(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state_data.r.sub_state = CF_RxSubState_NUM_STATES; /* bogus; will get reset */
+    UtAssert_VOIDCALL(CF_CFDP_R_Init(t));
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+
+    /* nominal, R2 state, no md_recv (creates tempfile) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_R2;
+    UtAssert_VOIDCALL(CF_CFDP_R_Init(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_R_TEMP_FILE);
+
+    /* nominal, R2 state, with md_recv (no tempfile) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state            = CF_TxnState_R2;
+    t->flags.rx.md_recv = true;
+    UtAssert_VOIDCALL(CF_CFDP_R_Init(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* failure of file open, class 1 */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedOpenCreate), 1, -1);
+    t->state = CF_TxnState_R1;
+    UtAssert_VOIDCALL(CF_CFDP_R_Init(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_CREAT);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* failure of file open, class 2 */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedOpenCreate), 1, -1);
+    t->state = CF_TxnState_R2;
+    UtAssert_VOIDCALL(CF_CFDP_R_Init(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_CREAT);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open, 2);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+}
+
+void Test_CF_CFDP_R2_SetFinTxnStatus(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_SetFinTxnStatus(CF_Transaction_t *t, CF_CFDP_ConditionCode_t cc);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, should save whatever cc is passed, and set "send_fin" */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R2_SetFinTxnStatus(t, CF_CFDP_ConditionCode_INVALID_FILE_STRUCTURE));
+    UtAssert_STUB_COUNT(CF_CFDP_SetTxnStatus, 1);
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+}
+
+void Test_CF_CFDP_R1_Reset(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R1_Reset(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, this just resets */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R1_Reset(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+}
+
+void Test_CF_CFDP_R2_Reset(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_Reset(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, sets "send_fin" to 1, does not reset */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Reset(t));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 0);
+
+    /* test the various conditions that do cause reset */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state_data.r.sub_state = CF_RxSubState_WAIT_FOR_FIN_ACK;
+    UtAssert_VOIDCALL(CF_CFDP_R2_Reset(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state_data.r.r2.eof_cc = CF_CFDP_ConditionCode_INVALID_TRANSMISSION_MODE; /* not NO_ERROR */
+    UtAssert_VOIDCALL(CF_CFDP_R2_Reset(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 2);
+
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_TxnStatus_IsError), 1, true);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Reset(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 3);
+
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.canceled = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_Reset(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 4);
+}
+
+void Test_CF_CFDP_R_CheckCrc(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R_CheckCrc(CF_Transaction_t *t, uint32 expected_crc);
+     */
+    CF_Transaction_t *t;
+
+    /* crc mismatch, class 1 */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state      = CF_TxnState_R1;
+    t->crc.result = 0xdeadbeef;
+    UtAssert_INT32_EQ(CF_CFDP_R_CheckCrc(t, 0x1badc0de), 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_CRC);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.crc_mismatch, 1);
+
+    /* crc mismatch, class 2 */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->state      = CF_TxnState_R2;
+    t->crc.result = 0xdeadbeef;
+    UtAssert_INT32_EQ(CF_CFDP_R_CheckCrc(t, 0x2badc0de), 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_CRC);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.crc_mismatch, 2);
+
+    /* crc match */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    t->crc.result = 0xc0ffee;
+    UtAssert_INT32_EQ(CF_CFDP_R_CheckCrc(t, 0xc0ffee), 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void Test_CF_CFDP_R2_Complete(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_Complete(CF_Transaction_t *t, int ok_to_send_nak);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 0));
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+
+    /* test with error cc */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_TxnStatus_IsError), 1, true);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 0));
+
+    /* nominal, send nak */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, &config);
+    config->chan[t->chan_num].nak_limit = 2;
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 1));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_nak);
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.acknak_count, 1);
+
+    /* same call again should trigger nak_limit */
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 1));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+    UtAssert_BOOL_TRUE(t->flags.rx.complete);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_NAK_LIMIT);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.nak_limit, 1);
+
+    /* test with md_recv - with no more setup this only sets filedata state */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, &config);
+    config->chan[t->chan_num].nak_limit = 2;
+    t->flags.rx.md_recv                 = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 0));
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+
+    /* with md_recv and eof_recv this should set send_fin */
+    t->flags.rx.eof_recv = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 1));
+    UtAssert_BOOL_FALSE(t->flags.rx.send_nak);
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+    UtAssert_BOOL_TRUE(t->flags.rx.complete);
+
+    /* with gaps, this should send nak */
+    UT_SetDeferredRetcode(UT_KEY(CF_ChunkList_ComputeGaps), 1, 1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Complete(t, 1));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_nak);
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.acknak_count, 1);
+}
+
+void Test_CF_CFDP_R_ProcessFd(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R_ProcessFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *              t;
+    CF_Logical_PduBuffer_t *        ph;
+    CF_Logical_PduFileDataHeader_t *fd;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    fd           = &ph->int_header.fd;
+    fd->data_len = 100;
+    UT_SetDefaultReturnValue(UT_KEY(CF_WrappedWrite), fd->data_len);
+    UtAssert_INT32_EQ(CF_CFDP_R_ProcessFd(t, ph), 0);
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 100);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.file_data_bytes, 100);
+    UtAssert_STUB_COUNT(CF_WrappedLseek, 0);
+    UtAssert_STUB_COUNT(CF_WrappedWrite, 1);
+
+    /* call again, but for something at a different offset */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    fd           = &ph->int_header.fd;
+    fd->data_len = 100;
+    fd->offset   = 200;
+    UT_SetDefaultReturnValue(UT_KEY(CF_WrappedLseek), fd->offset);
+    UtAssert_INT32_EQ(CF_CFDP_R_ProcessFd(t, ph), 0);
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 300);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.file_data_bytes, 200);
+    UtAssert_STUB_COUNT(CF_WrappedLseek, 1);
+    UtAssert_STUB_COUNT(CF_WrappedWrite, 2);
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 300);
+
+    /* call again, but with a failed write */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    fd                         = &ph->int_header.fd;
+    fd->data_len               = 100;
+    fd->offset                 = 300;
+    t->state_data.r.cached_pos = 300;
+    UT_SetDefaultReturnValue(UT_KEY(CF_WrappedWrite), -1);
+    UtAssert_INT32_EQ(CF_CFDP_R_ProcessFd(t, ph), -1);
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 300);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_WRITE);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* call again, but with a failed lseek */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    fd                         = &ph->int_header.fd;
+    fd->data_len               = 100;
+    fd->offset                 = 200;
+    t->state_data.r.cached_pos = 300;
+    UT_SetDefaultReturnValue(UT_KEY(CF_WrappedLseek), -1);
+    UtAssert_INT32_EQ(CF_CFDP_R_ProcessFd(t, ph), -1);
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 300);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_SEEK_FD);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_SIZE_ERROR);
+
+    /* these stats should have been updated during the course of this test */
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].counters.fault.file_write, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].counters.fault.file_seek, 1);
+}
+
+void Test_CF_CFDP_R_SubstateRecvEof(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduEof_t *   eof;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateRecvEof(t, ph), 0);
+
+    /* with md_recv and a matching size */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof                 = &ph->int_header.eof;
+    t->flags.rx.md_recv = true;
+    eof->size           = 200;
+    t->fsize            = 200;
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateRecvEof(t, ph), 0);
+
+    /* with md_recv and a different size */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof                 = &ph->int_header.eof;
+    t->flags.rx.md_recv = true;
+    eof->size           = 100;
+    t->fsize            = 300;
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateRecvEof(t, ph), CF_RxEofRet_FSIZE_MISMATCH);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_SIZE_MISMATCH);
+
+    /* with failure of CF_CFDP_RecvEof() */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_RecvEof), -1);
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateRecvEof(t, ph), CF_RxEofRet_BAD_EOF);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_PDU_EOF);
+
+    /* these counters should have been updated during the test */
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].counters.fault.file_size_mismatch, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].counters.recv.error, 1);
+}
+
+void Test_CF_CFDP_R1_SubstateRecvEof(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R1_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduEof_t *   eof;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof           = &ph->int_header.eof;
+    eof->crc      = 0xf007ba11;
+    t->crc.result = eof->crc;
+    eof->size     = 0xccc;
+    t->fsize      = eof->size;
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvEof(t, ph));
+    UtAssert_BOOL_TRUE(t->keep);
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* failure in CF_CFDP_R_SubstateRecvEof - not a stub, but calls CF_CFDP_RecvEof, which is. */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvEof), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvEof(t, ph));
+    UtAssert_BOOL_FALSE(t->keep);
+
+    /* failure in CF_CFDP_R_CheckCrc */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof           = &ph->int_header.eof;
+    eof->crc      = 0xf007ba11;
+    t->crc.result = ~eof->crc;
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvEof(t, ph));
+    UtAssert_BOOL_FALSE(t->keep);
+}
+
+void Test_CF_CFDP_R2_SubstateRecvEof(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_SubstateRecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduEof_t *   eof;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof           = &ph->int_header.eof;
+    eof->crc      = 0xf007ba11;
+    t->crc.result = eof->crc;
+    eof->size     = 0xbbb;
+    t->fsize      = 0xbbb;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvEof(t, ph));
+    UtAssert_BOOL_TRUE(t->flags.rx.eof_recv);
+    UtAssert_BOOL_TRUE(t->flags.rx.send_ack);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.eof_crc, eof->crc);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.eof_size, eof->size);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.eof_cc, eof->cc);
+
+    /* non-success condition code - this resets the transaction */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof     = &ph->int_header.eof;
+    eof->cc = CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvEof(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* eof already recvd - noop */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->flags.rx.eof_recv = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvEof(t, ph));
+    UtAssert_BOOL_TRUE(t->flags.rx.eof_recv);         /* unchanged */
+    UtAssert_BOOL_FALSE(t->flags.rx.send_ack);        /* unchanged */
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1); /* unchanged */
+
+    /* failure in CF_CFDP_R_SubstateRecvEof - not a stub, but calls CF_CFDP_RecvEof, which is. */
+    /* This will follow the CF_RxEofRet_BAD_EOF processing path, which just sets state to FILEDATA */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvEof), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvEof(t, ph));
+    UtAssert_UINT32_EQ(t->state_data.r.sub_state, CF_RxSubState_FILEDATA);
+
+    /* failure in CF_CFDP_R_SubstateRecvEof - set up for file size mismatch error */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    eof                 = &ph->int_header.eof;
+    eof->size           = 0xddd;
+    t->fsize            = 0xbbb;
+    t->flags.rx.md_recv = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvEof(t, ph));
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_SIZE_ERROR);
+}
+
+void Test_CF_CFDP_R1_SubstateRecvFileData(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R1_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CRC_Digest, 1);
+
+    /* failure in CF_CFDP_RecvFd */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvFd), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* failure in CF_CFDP_R_ProcessFd (via failure of CF_WrappedWrite) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedWrite), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R1_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 2);
+}
+
+void Test_CF_CFDP_R2_SubstateRecvFileData(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_SubstateRecvFileData(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->state_data.r.r2.acknak_count = 1; /* make nonzero so it can be checked */
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_ChunkListAdd, 1);
+    UtAssert_ZERO(t->state_data.r.r2.acknak_count); /* this resets the counter */
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 1);
+
+    /* with fd_nak_sent flag */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->state_data.r.r2.acknak_count = 1; /* make nonzero so it can be checked */
+    t->flags.rx.fd_nak_sent         = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 2);
+    UtAssert_ZERO(t->state_data.r.r2.acknak_count); /* this resets the counter */
+
+    /* with rx.complete flag */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->state_data.r.r2.acknak_count = 1; /* make nonzero so it can be checked */
+    t->flags.rx.complete            = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ArmAckTimer, 2);    /* does NOT increment here */
+    UtAssert_ZERO(t->state_data.r.r2.acknak_count); /* this resets the counter */
+
+    /* failure in CF_CFDP_RecvFd (bad packet) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvFd), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvFileData(t, ph));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin); /* this just goes to FIN */
+
+    /* failure in CF_CFDP_R_ProcessFd (via failure of CF_WrappedWrite) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_TxnStatus_IsError), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedWrite), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_SubstateRecvFileData(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1); /* this resets the transaction */
+}
+
+void Test_CF_CFDP_R2_GapCompute(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_GapCompute(const CF_ChunkList_t *chunks, const CF_Chunk_t *c, void *opaque);
+     */
+    CF_ChunkList_t      chunks;
+    CF_Chunk_t          c;
+    CF_GapComputeArgs_t args;
+    CF_Logical_PduNak_t nak;
+
+    memset(&chunks, 0, sizeof(chunks));
+    memset(&c, 0, sizeof(c));
+    memset(&args, 0, sizeof(args));
+    memset(&nak, 0, sizeof(nak));
+    args.nak = &nak;
+
+    /* nominal */
+    c.offset        = 11000;
+    c.size          = 100;
+    nak.scope_start = 10000;
+    nak.scope_end   = 20000;
+    UtAssert_VOIDCALL(CF_CFDP_R2_GapCompute(&chunks, &c, &args));
+    UtAssert_UINT32_EQ(nak.segment_list.num_segments, 1);
+
+    /* the offset start/end should be normalized to the scope start/end */
+    UtAssert_UINT32_EQ(nak.segment_list.segments[0].offset_start, 1000);
+    UtAssert_UINT32_EQ(nak.segment_list.segments[0].offset_end, 1100);
+
+    /* confirm that CF_PDU_MAX_SEGMENTS is not exceeded */
+    nak.segment_list.num_segments = CF_PDU_MAX_SEGMENTS;
+    UtAssert_VOIDCALL(CF_CFDP_R2_GapCompute(&chunks, &c, &args));
+    UtAssert_UINT32_EQ(nak.segment_list.num_segments, CF_PDU_MAX_SEGMENTS);
+}
+
+void Test_CF_CFDP_R_SubstateSendNak(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R_SubstateSendNak(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_ChunkWrapper_t       chunks;
+
+    memset(&chunks, 0, sizeof(chunks));
+
+    /* no packet available */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), -1);
+
+    /* with md_recv flag false, this should request one by sending a blank NAK */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), 0);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_R_REQUEST_MD);
+    UtAssert_STUB_COUNT(CF_CFDP_SendNak, 1);
+
+    /* same, but with failure of CF_CFDP_SendNak */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendNak), 1, CF_SendRet_NO_MSG);
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), -1);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_R_REQUEST_MD);
+    UtAssert_STUB_COUNT(CF_CFDP_SendNak, 2);
+
+    /* with md_recv flag true, this should call gap compute to assemble the NAK */
+    /* this requires the chunks list to be set up, and by default compute_gaps will
+       return 0 (no gaps) so the transaction goes to complete */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    t->flags.rx.md_recv      = true;
+    t->chunks                = &chunks;
+    chunks.chunks.count      = 1;
+    chunks.chunks.max_chunks = 2;
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), 0);
+    UtAssert_STUB_COUNT(CF_ChunkList_ComputeGaps, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_SendNak, 2); /* did not increment */
+    UtAssert_BOOL_TRUE(t->flags.rx.complete);
+
+    /* same, but return nonzero number of gaps */
+    /* this also should use the max chunks instead of count */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_ChunkList_ComputeGaps), 1, 1);
+    t->flags.rx.md_recv      = true;
+    t->chunks                = &chunks;
+    chunks.chunks.count      = 3;
+    chunks.chunks.max_chunks = 2;
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), 0);
+    UtAssert_STUB_COUNT(CF_CFDP_SendNak, 3);
+    UtAssert_BOOL_TRUE(t->flags.rx.fd_nak_sent);
+
+    /* same, nonzero number of gaps, but get failure in SendNak */
+    /* this also should use the max chunks instead of count */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_ChunkList_ComputeGaps), 1, 1);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendNak), 1, CF_SendRet_NO_MSG);
+    t->flags.rx.md_recv = true;
+    t->chunks           = &chunks;
+    UtAssert_INT32_EQ(CF_CFDP_R_SubstateSendNak(t), -1);
+    UtAssert_BOOL_TRUE(t->flags.rx.fd_nak_sent); /* this flag is still set, even when it fails to send? */
+}
+
+void Test_CF_CFDP_R2_CalcCrcChunk(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R2_CalcCrcChunk(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+
+    /* nominal with zero size file */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), 0);
+    UtAssert_BOOL_TRUE(t->flags.com.crc_calc);
+
+    /* nominal with non zero size file, runs the loop */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    config->rx_crc_calc_bytes_per_wakeup = 100;
+    t->fsize                             = 70;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, t->fsize);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), 0);
+    UtAssert_BOOL_TRUE(t->flags.com.crc_calc);
+
+    /* force a CRC mismatch */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    t->crc.result              = 0xabadf00d;
+    t->state_data.r.r2.eof_crc = 0xdeadbeef;
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), 0);
+    UtAssert_BOOL_TRUE(t->flags.com.crc_calc);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_CHECKSUM_FAILURE);
+
+    /* nominal with file larger than rx_crc_calc_bytes_per_wakeup */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    config->rx_crc_calc_bytes_per_wakeup = CF_R2_CRC_CHUNK_SIZE;
+    t->fsize                             = CF_R2_CRC_CHUNK_SIZE + 100;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, CF_R2_CRC_CHUNK_SIZE);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), -1); /*  -1 because its incomplete */
+    UtAssert_BOOL_FALSE(t->flags.com.crc_calc);
+
+    /* nominal with file size larger than CF_R2_CRC_CHUNK_SIZE (this will do 2 reads) */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    config->rx_crc_calc_bytes_per_wakeup = CF_R2_CRC_CHUNK_SIZE * 2;
+    t->fsize                             = CF_R2_CRC_CHUNK_SIZE + 100;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, CF_R2_CRC_CHUNK_SIZE);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, 100);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), 0);
+    UtAssert_BOOL_TRUE(t->flags.com.crc_calc);
+
+    /* nominal with seek required */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    t->state_data.r.r2.rx_crc_calc_bytes = 10;
+    t->state_data.r.cached_pos           = 20;
+    config->rx_crc_calc_bytes_per_wakeup = 100;
+    t->fsize                             = 50;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 1, t->state_data.r.r2.rx_crc_calc_bytes);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, t->fsize - t->state_data.r.r2.rx_crc_calc_bytes);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), 0);
+    UtAssert_BOOL_TRUE(t->flags.com.crc_calc);
+
+    /* failure of read */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    config->rx_crc_calc_bytes_per_wakeup = 100;
+    t->fsize                             = 50;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, -1);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_READ);
+    UtAssert_BOOL_FALSE(t->flags.com.crc_calc);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_SIZE_ERROR);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_read, 1);
+
+    /* failure of lseek */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+    t->state_data.r.r2.rx_crc_calc_bytes = 20;
+    t->state_data.r.cached_pos           = 10;
+    config->rx_crc_calc_bytes_per_wakeup = 100;
+    t->fsize                             = 50;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 1, -1);
+    UtAssert_INT32_EQ(CF_CFDP_R2_CalcCrcChunk(t), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_SEEK_CRC);
+    UtAssert_BOOL_FALSE(t->flags.com.crc_calc);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_SIZE_ERROR);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek, 1);
+}
+
+void Test_CF_CFDP_R2_SubstateSendFin(void)
+{
+    /* Test case for:
+     * int CF_CFDP_R2_SubstateSendFin(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_R2_SubstateSendFin(t), 0);
+
+    /* crc failure - can get this by having rx_crc_calc_bytes_per_wakeup less than fsize */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->fsize = 100;
+    UtAssert_INT32_EQ(CF_CFDP_R2_SubstateSendFin(t), -1);
+
+    /* failure in CF_CFDP_SendFin */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendFin), 1, CF_SendRet_NO_MSG);
+    UtAssert_INT32_EQ(CF_CFDP_R2_SubstateSendFin(t), -1);
+
+    /* non-success transaction status code */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_TxnStatus_IsError), 1, true);
+    UtAssert_INT32_EQ(CF_CFDP_R2_SubstateSendFin(t), 0);
+
+    /* already calculated crc */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.crc_calc = true;
+    UtAssert_INT32_EQ(CF_CFDP_R2_SubstateSendFin(t), 0);
+}
+
+void Test_CF_CFDP_R2_Recv_fin_ack(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_Recv_fin_ack(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Recv_fin_ack(t, ph));
+    UtAssert_BOOL_TRUE(t->flags.rx.send_fin);
+
+    /* failure in CF_CFDP_RecvAck */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvAck), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_Recv_fin_ack(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_PDU_FINACK);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error, 1);
+}
+
+void Test_CF_CFDP_R2_RecvMd(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R2_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->state_data.r.cached_pos      = 1;
+    t->state_data.r.r2.acknak_count = 1;
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+    UtAssert_UINT32_EQ(t->state_data.r.cached_pos, 0);
+    UtAssert_UINT32_EQ(t->flags.rx.md_recv, 1);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.acknak_count, 0);
+
+    /* md_recv already set */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->flags.rx.md_recv = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+
+    /* eof already received, file size match */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->fsize                    = 100;
+    t->state_data.r.r2.eof_size = 100;
+    t->flags.rx.eof_recv        = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+
+    /* eof already received, file size different */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    t->fsize                    = 100;
+    t->state_data.r.r2.eof_size = 120;
+    t->flags.rx.eof_recv        = true;
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_EOF_MD_SIZE);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILE_SIZE_ERROR);
+
+    /* OS_mv failure */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(OS_mv), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_RENAME);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* reopen failure */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedOpenCreate), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_OPEN);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* CF_CFDP_RecvMd failure */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvMd), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_R2_RecvMd(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_PDU_MD);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error, 1);
+}
+
+void Test_CF_CFDP_R_SendInactivityEvent(void)
+{
+    /* Test case for:
+     * void CF_CFDP_R_SendInactivityEvent(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_R_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_R_SendInactivityEvent(t));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.inactivity_timer, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_R_INACT_TIMER);
+}
+
+/*******************************************************************************
+**
+** cf_cfdp_r_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_R1_Recv, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R1_Recv");
+    UtTest_Add(Test_CF_CFDP_R2_Recv, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R2_Recv");
+    UtTest_Add(Test_CF_CFDP_R_Tick, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R_Tick");
+    UtTest_Add(Test_CF_CFDP_R_Cancel, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R_Cancel");
+    UtTest_Add(Test_CF_CFDP_R_Init, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R_Init");
+    UtTest_Add(Test_CF_CFDP_R2_SetFinTxnStatus, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_SetFinTxnStatus");
+    UtTest_Add(Test_CF_CFDP_R1_Reset, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R1_Reset");
+    UtTest_Add(Test_CF_CFDP_R2_Reset, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R2_Reset");
+    UtTest_Add(Test_CF_CFDP_R_CheckCrc, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R_CheckCrc");
+    UtTest_Add(Test_CF_CFDP_R2_Complete, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R2_Complete");
+    UtTest_Add(Test_CF_CFDP_R_ProcessFd, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R_ProcessFd");
+    UtTest_Add(Test_CF_CFDP_R_SubstateRecvEof, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R_SubstateRecvEof");
+    UtTest_Add(Test_CF_CFDP_R1_SubstateRecvEof, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R1_SubstateRecvEof");
+    UtTest_Add(Test_CF_CFDP_R2_SubstateRecvEof, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_SubstateRecvEof");
+    UtTest_Add(Test_CF_CFDP_R1_SubstateRecvFileData, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R1_SubstateRecvFileData");
+    UtTest_Add(Test_CF_CFDP_R2_SubstateRecvFileData, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_SubstateRecvFileData");
+    UtTest_Add(Test_CF_CFDP_R2_GapCompute, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R2_GapCompute");
+    UtTest_Add(Test_CF_CFDP_R_SubstateSendNak, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R_SubstateSendNak");
+    UtTest_Add(Test_CF_CFDP_R2_CalcCrcChunk, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_CalcCrcChunk");
+    UtTest_Add(Test_CF_CFDP_R2_SubstateSendFin, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_SubstateSendFin");
+    UtTest_Add(Test_CF_CFDP_R2_Recv_fin_ack, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R2_Recv_fin_ack");
+    UtTest_Add(Test_CF_CFDP_R2_RecvMd, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown, "CF_CFDP_R2_RecvMd");
+    UtTest_Add(Test_CF_CFDP_R_SendInactivityEvent, cf_cfdp_r_tests_Setup, cf_cfdp_r_tests_Teardown,
+               "CF_CFDP_R_SendInactivityEvent");
+}
+```
+
+### `cf_cfdp_s_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cfdp_s_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_cfdp.h"
+#include "cf_app.h"
+#include "cf_events.h"
+
+#include "cf_cfdp_r.h"
+#include "cf_cfdp_s.h"
+
+static void UT_CFDP_S_SetupBasicRxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    static CF_DecoderState_t ut_decoder;
+    static uint8             bytes[CF_CFDP_MAX_HEADER_SIZE];
+
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_decoder.base                    = bytes;
+    ut_decoder.codec_state.is_valid    = true;
+    ut_decoder.codec_state.max_size    = sizeof(bytes);
+    ut_decoder.codec_state.next_offset = 0;
+
+    pdu_buffer->pdec = &ut_decoder;
+}
+
+static void UT_CFDP_S_SetupBasicTxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    /* to support generating file data PDUs, not just headers, this must have a bigger buffer */
+    static CF_EncoderState_t ut_encoder;
+    static uint8             bytes[CF_MAX_PDU_SIZE];
+
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_encoder.base                    = bytes;
+    ut_encoder.codec_state.is_valid    = true;
+    ut_encoder.codec_state.max_size    = sizeof(bytes);
+    ut_encoder.codec_state.next_offset = 0;
+
+    pdu_buffer->penc = &ut_encoder;
+
+    /* Make it so a call to CF_CFDP_ConstructPduBuffer returns the same PDU buffer */
+    UT_SetHandlerFunction(UT_KEY(CF_CFDP_ConstructPduHeader), UT_AltHandler_GenericPointerReturn, pdu_buffer);
+}
+
+static void UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_t setup, CF_Logical_PduBuffer_t **pdu_buffer_p,
+                                          CF_Channel_t **channel_p, CF_History_t **history_p, CF_Transaction_t **txn_p,
+                                          CF_ConfigTable_t **config_table_p)
+{
+    /*
+     * fake objects used to pass into CF app during unit tests.
+     * These are declared static so they can be returned
+     */
+    static CF_Logical_PduBuffer_t ut_pdu_buffer;
+    static CF_History_t           ut_history;
+    static CF_Transaction_t       ut_transaction;
+    static CF_ConfigTable_t       ut_config_table;
+
+    /*
+     * always clear all objects, regardless of what was asked for.
+     * this helps ensure that a test does not depend on preexisting data
+     * in the buffer (each test should set up its buffers in full)
+     */
+    memset(&ut_pdu_buffer, 0, sizeof(ut_pdu_buffer));
+    memset(&ut_history, 0, sizeof(ut_history));
+    memset(&ut_transaction, 0, sizeof(ut_transaction));
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+
+    /* certain pointers should be connected even if they were not asked for,
+     * as internal code may assume these are set (test cases may un-set) */
+    ut_transaction.history  = &ut_history;
+    ut_history.txn_stat     = CF_TxnStatus_UNDEFINED;
+    CF_AppData.config_table = &ut_config_table;
+
+    if (pdu_buffer_p)
+    {
+        if (setup == UT_CF_Setup_TX || setup == UT_CF_Setup_RX)
+        {
+            *pdu_buffer_p = &ut_pdu_buffer;
+        }
+        else
+        {
+            *pdu_buffer_p = NULL;
+        }
+    }
+    if (channel_p)
+    {
+        /*
+         * note that for channels, many CF app functions assume
+         * that when channel is passed as a pointer, that it is a member
+         * of the array within CF_AppData, and the channel number can
+         * be obtained by pointer arithmetic.
+         * this arithmetic will break if the pointer is not actually
+         * a member of that array, so for now it must be so.
+         * This always uses the same channel for now.
+         */
+        *channel_p = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    }
+    if (history_p)
+    {
+        *history_p = &ut_history;
+    }
+    if (txn_p)
+    {
+        *txn_p = &ut_transaction;
+    }
+    if (config_table_p)
+    {
+        *config_table_p = &ut_config_table;
+    }
+
+    if (setup == UT_CF_Setup_TX)
+    {
+        UT_CFDP_S_SetupBasicTxState(&ut_pdu_buffer);
+    }
+    else if (setup == UT_CF_Setup_RX)
+    {
+        UT_CFDP_S_SetupBasicRxState(&ut_pdu_buffer);
+    }
+
+    /* reset the event ID capture between each sub-case */
+    UT_CF_ResetEventCapture();
+
+    /* Capture calls to CF_CFDP_SetTxnState() to capture transaction status */
+    UT_SetHandlerFunction(UT_KEY(CF_CFDP_SetTxnStatus), UT_AltHandler_CaptureTransactionStatus, &ut_history.txn_stat);
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_s_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cfdp_s_tests_Setup(void)
+{
+    cf_tests_Setup();
+
+    /* make sure global data is wiped between tests */
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+}
+
+void cf_cfdp_s_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  Unit-specific test implementation
+**
+*******************************************************************************/
+
+void Test_CF_CFDP_S1_Recv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S1_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* class 1 recv is really a noop, it basically drops all packets.
+       nothing to verify, just call for coverage */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S1_Recv(t, ph));
+}
+
+void Test_CF_CFDP_S2_Recv(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_Recv(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* class 2 recv just invokes a dispatcher to functions that should be
+       tested separately.  nothing to verify here. */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_Recv(t, ph));
+}
+
+void Test_CF_CFDP_S1_Tx(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S1_Tx(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S1_Tx(t));
+}
+
+void Test_CF_CFDP_S2_Tx(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_Tx(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_Tx(t));
+}
+
+void Test_CF_CFDP_S_Tick(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_Tick(CF_Transaction_t *t, int *cont);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+    int               cont;
+
+    cont = 0;
+
+    /* nominal, not in CF_TxnState_S2 (noop) */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+
+    /* nominal, in CF_TxnState_S2, no timer expiry */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_S2;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 1);
+
+    /* nominal, in CF_TxnState_S2, with timer expiry */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, 1);
+    t->state = CF_TxnState_S2;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_INACT_TIMER);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.inactivity_timer, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* in CF_TxnState_S2, ack_timer_armed */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                     = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed = true;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 3); /* called twice! */
+
+    /* in CF_TxnState_S2, ack_timer_armed + expiry */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 2, 1);
+    t->state                     = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed = true;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 4);
+
+    /* in CF_TxnState_S2, ack_timer_armed + expiry + finack substate */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 2, 1);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed        = true;
+    t->state_data.s.sub_state           = CF_TxSubState_WAIT_FOR_EOF_ACK;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_SendEof, 1);
+
+    /* same, with acklimit reached */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 2, 1);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed        = true;
+    t->state_data.s.sub_state           = CF_TxSubState_WAIT_FOR_EOF_ACK;
+    t->state_data.s.s2.acknak_count     = 9;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_ACK_LIMIT);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.ack_limit, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 2);
+
+    /* same, with CF_CFDP_S_SendEof no message */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 2, 1);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed        = true;
+    t->state_data.s.sub_state           = CF_TxSubState_WAIT_FOR_EOF_ACK;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendEof), 1, CF_SendRet_NO_MSG);
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+
+    /* same, with CF_CFDP_S_SendEof Error */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 2, 1);
+    config->chan[t->chan_num].ack_limit = 10;
+    t->state                            = CF_TxnState_S2;
+    t->flags.com.ack_timer_armed        = true;
+    t->state_data.s.sub_state           = CF_TxSubState_WAIT_FOR_EOF_ACK;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendEof), 1, CF_SendRet_ERROR);
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 3);
+
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state                  = CF_TxnState_S2;
+    t->state_data.s.sub_state = CF_TxSubState_SEND_FIN_ACK;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick(t, &cont));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 4);
+}
+
+void Test_CF_CFDP_S_Tick_Nak(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_Tick_Nak(CF_Transaction_t *t, int *cont);
+     */
+    CF_Transaction_t *t;
+    int               cont;
+
+    cont = 0;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick_Nak(t, &cont));
+    UtAssert_ZERO(cont);
+
+    /* CF_CFDP_S_CheckAndRespondNak returns 1 */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UtAssert_VOIDCALL(CF_CFDP_S_Tick_Nak(t, &cont));
+    UtAssert_NONZERO(cont);
+}
+
+void Test_CF_CFDP_S_Cancel(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_Cancel(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_Cancel(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_EOF);
+
+    /* already EOF state */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state_data.s.sub_state = CF_TxSubState_EOF;
+    UtAssert_VOIDCALL(CF_CFDP_S_Cancel(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_EOF);
+}
+
+void Test_CF_CFDP_S_SendEof(void)
+{
+    /* Test case for:
+     * CF_SendRet_t CF_CFDP_S_SendEof(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendEof(t), CF_SendRet_SUCCESS);
+
+    /* with CRC calc */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.crc_calc = true;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendEof(t), CF_SendRet_SUCCESS);
+
+    /* confirm retcode from CF_CFDP_SendEof is carried through */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendEof), 1, CF_SendRet_NO_MSG);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendEof(t), CF_SendRet_NO_MSG);
+}
+
+void Test_CF_CFDP_S1_SubstateSendEof(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S1_SubstateSendEof(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, should reset */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S1_SubstateSendEof(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* should not reset transaction if error */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendEof), 1, CF_SendRet_NO_MSG);
+    UtAssert_VOIDCALL(CF_CFDP_S1_SubstateSendEof(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1); /* no increment */
+}
+
+void Test_CF_CFDP_S2_SubstateSendEof(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_SubstateSendEof(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, this dequeues a transaction so q_size must be nonzero */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    CF_AppData.hk.channel_hk[t->chan_num].q_size[t->flags.com.q_index] = 10;
+    UtAssert_VOIDCALL(CF_CFDP_S2_SubstateSendEof(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_WAIT_FOR_EOF_ACK);
+    UtAssert_BOOL_TRUE(t->flags.com.ack_timer_armed);
+}
+
+void Test_CF_CFDP_S_SendFileData(void)
+{
+    /* Test case for:
+     * int32 CF_CFDP_S_SendFileData(CF_Transaction_t *t, uint32 foffs, uint32 bytes_to_read, uint8 calc_crc);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+    uint32            cumulative_read;
+    uint32            read_size;
+    uint32            offset;
+
+    cumulative_read = 0;
+    offset          = 0;
+    read_size       = 100;
+
+    /* failure of CF_CFDP_ConstructPduHeader */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), 0);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+
+    /* nominal, smaller than chunk, no crc */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = 150;
+    t->fsize                         = 300;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, read_size);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, false), read_size);
+    cumulative_read += read_size;
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+
+    /* nominal, larger than PDU, no crc */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE * 2;
+    t->fsize                         = CF_MAX_PDU_SIZE * 2;
+    read_size                        = CF_MAX_PDU_SIZE;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, read_size);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size * 2, false), read_size);
+    cumulative_read += read_size;
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+    UtAssert_STUB_COUNT(CF_CRC_Digest, 0);
+
+    /* nominal, larger than chunk, with crc */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = 50;
+    read_size                        = 100;
+    t->fsize                         = 300;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, config->outgoing_file_chunk_size);
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), config->outgoing_file_chunk_size);
+    cumulative_read += config->outgoing_file_chunk_size;
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+    UtAssert_STUB_COUNT(CF_CRC_Digest, 1);
+
+    /* no message available */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendFd), 1, CF_SendRet_NO_MSG);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, read_size);
+    config->outgoing_file_chunk_size = read_size;
+    t->fsize                         = 300;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), 0);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+
+    /* other send error */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendFd), 1, CF_SendRet_ERROR);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, read_size);
+    config->outgoing_file_chunk_size = read_size;
+    t->fsize                         = 300;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_SEND_FD);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+
+    /* read w/failure */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, -1);
+    config->outgoing_file_chunk_size = read_size;
+    t->fsize                         = 300;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), -1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_read, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_READ);
+
+    /* require lseek */
+    offset = 25;
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 1, offset);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, read_size);
+    config->outgoing_file_chunk_size = read_size;
+    t->fsize                         = 300;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), read_size);
+    cumulative_read += read_size;
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+
+    /* lseek w/failure */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 1, -1);
+    config->outgoing_file_chunk_size = read_size;
+    t->fsize                         = 300;
+    UtAssert_INT32_EQ(CF_CFDP_S_SendFileData(t, offset, read_size, true), -1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.sent.file_data_bytes, cumulative_read);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_SEEK_FD);
+}
+
+void Test_CF_CFDP_S_SubstateSendFileData(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_SubstateSendFileData(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+
+    /* nominal, zero bytes processed */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFileData(t));
+
+    /* nominal, whole file at once */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE;
+    t->state_data.s.sub_state        = CF_TxSubState_FILEDATA;
+    t->fsize                         = CF_MAX_PDU_SIZE / 2;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, t->fsize);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFileData(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_EOF);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_UNDEFINED);
+
+    /* nominal, less than whole file at once */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE / 2;
+    t->state_data.s.sub_state        = CF_TxSubState_FILEDATA;
+    t->fsize                         = CF_MAX_PDU_SIZE;
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, config->outgoing_file_chunk_size);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFileData(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_FILEDATA);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_UNDEFINED);
+
+    /* error during read */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFileData(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_EOF);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+}
+
+void Test_CF_CFDP_S_CheckAndRespondNak(void)
+{
+    /* Test case for:
+     * int CF_CFDP_S_CheckAndRespondNak(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+    CF_ChunkWrapper_t chunks;
+    CF_Chunk_t        ut_chunk;
+    CF_ConfigTable_t *config;
+
+    memset(&chunks, 0, sizeof(chunks));
+    memset(&ut_chunk, 0, sizeof(ut_chunk));
+
+    ut_chunk.offset = 0;
+    ut_chunk.size   = CF_MAX_PDU_SIZE / 2;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), 0);
+
+    /* with md_need_send flag set */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), 1);
+    UtAssert_STUB_COUNT(CF_CFDP_SendMd, 1);
+    UtAssert_BOOL_FALSE(t->flags.tx.md_need_send);
+
+    /* with md_need_send flag set, but failed */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendMd), 1, CF_SendRet_ERROR);
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), -1);
+    UtAssert_BOOL_TRUE(t->flags.tx.md_need_send); /* still set */
+
+    /* with md_need_send flag set, but no message */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendMd), 1, CF_SendRet_NO_MSG);
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), 1);
+    UtAssert_BOOL_TRUE(t->flags.tx.md_need_send); /* still set */
+
+    /* with chunklist - this will send file data, which needs to be set up for */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE;
+    t->fsize                         = ut_chunk.size;
+    t->chunks                        = &chunks;
+    UT_SetHandlerFunction(UT_KEY(CF_ChunkList_GetFirstChunk), UT_AltHandler_GenericPointerReturn, &ut_chunk);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, ut_chunk.size);
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), 1);
+
+    /* with chunklist - failure to send file data */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE;
+    t->fsize                         = ut_chunk.size;
+    t->chunks                        = &chunks;
+    UT_SetHandlerFunction(UT_KEY(CF_ChunkList_GetFirstChunk), UT_AltHandler_GenericPointerReturn, &ut_chunk);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedRead), 1, -1);
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), -1);
+
+    /* with chunklist but CF_CFDP_S_SendFileData returning 0 (nothing to send) */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->outgoing_file_chunk_size = CF_MAX_PDU_SIZE;
+    t->fsize                         = ut_chunk.size;
+    t->chunks                        = &chunks;
+    UT_SetHandlerFunction(UT_KEY(CF_ChunkList_GetFirstChunk), UT_AltHandler_GenericPointerReturn, &ut_chunk);
+    UT_ResetState(UT_KEY(CF_CFDP_ConstructPduHeader)); /* Returns NULL by default */
+    UtAssert_INT32_EQ(CF_CFDP_S_CheckAndRespondNak(t), 0);
+}
+
+void Test_CF_CFDP_S2_SubstateSendFileData(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_SubstateSendFileData(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal, just invokes CF_CFDP_S_SubstateSendFileData */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_SubstateSendFileData(t));
+
+    /* If CF_CFDP_S_CheckAndRespondNak returns > 0 */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UtAssert_VOIDCALL(CF_CFDP_S2_SubstateSendFileData(t));
+
+    /* failure in CF_CFDP_S_CheckAndRespondNak, resets transaction */
+    /* easiest way to trigger is via SendMd failure */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.tx.md_need_send = true;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendMd), 1, CF_SendRet_ERROR);
+    UtAssert_VOIDCALL(CF_CFDP_S2_SubstateSendFileData(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+}
+
+void Test_CF_CFDP_S_SubstateSendMetadata(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_SubstateSendMetadata(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* with no setup, OS_FileOpenCheck returns SUCCESS (true) */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_ALREADY_OPEN);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open, 1);
+
+    /* file already open */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    OS_OpenCreate(&t->fd, "ut", 0, 0); /* sets fd */
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_FILEDATA);
+
+    /* this retval is sticky and applies for the rest of the test cases */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileOpenCheck), OS_ERROR);
+
+    /* OS_FileOpenCheck does not succeed, then WrappedOpenCreate fails */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedOpenCreate), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_OPEN);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_open, 2);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* first CF_WrappedLseek fails */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_SEEK_END);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek, 1);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* second CF_WrappedLseek fails */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_WrappedLseek), 2, -1);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_SEEK_BEG);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.fault.file_seek, 2);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* CF_CFDP_SendMd fails w/ ERROR */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendMd), 1, CF_SendRet_ERROR);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_SEND_MD);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* CF_CFDP_SendMd fails w/ NO_MSG (no event here) */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendMd), 1, CF_SendRet_NO_MSG);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_UNDEFINED);
+
+    /* everything works */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendMetadata(t));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_FILEDATA);
+}
+
+void Test_CF_CFDP_S_SubstateSendFinAck(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S_SubstateSendFinAck(CF_Transaction_t *t);
+     */
+    CF_Transaction_t *t;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFinAck(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+
+    /* CF_SendRet_NO_MSG status */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendAck), 1, CF_SendRet_NO_MSG);
+    UtAssert_VOIDCALL(CF_CFDP_S_SubstateSendFinAck(t));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1); /* not incremented */
+}
+
+void Test_CF_CFDP_S2_EarlyFin(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_EarlyFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_EarlyFin(t, ph));
+}
+
+void Test_CF_CFDP_S2_Fin(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_Fin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_Fin(t, ph));
+}
+
+void Test_CF_CFDP_S2_Nak(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_Nak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduNak_t *   nak;
+
+    /* no segments */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_PDU_NAK);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error, 1);
+
+    /* nominal, re-send md request (0,0) */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    nak                            = &ph->int_header.nak;
+    nak->segment_list.num_segments = 1;
+    nak->segment_list.segments[0]  = (CF_Logical_SegmentRequest_t) {0, 0};
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak(t, ph));
+    UtAssert_BOOL_TRUE(t->flags.tx.md_need_send);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.nak_segment_requests, 1);
+
+    /* nominal, nonzero offsets */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    nak                            = &ph->int_header.nak;
+    nak->segment_list.num_segments = 2;
+    nak->segment_list.segments[0]  = (CF_Logical_SegmentRequest_t) {0, 200};
+    nak->segment_list.segments[1]  = (CF_Logical_SegmentRequest_t) {200, 300};
+    t->fsize                       = 300;
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak(t, ph));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.nak_segment_requests, 3);
+
+    /* bad segments */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    nak                            = &ph->int_header.nak;
+    nak->segment_list.num_segments = 3;
+    nak->segment_list.segments[0]  = (CF_Logical_SegmentRequest_t) {200, 100};
+    nak->segment_list.segments[1]  = (CF_Logical_SegmentRequest_t) {100, 400};
+    nak->segment_list.segments[2]  = (CF_Logical_SegmentRequest_t) {400, 0};
+    t->fsize                       = 300;
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak(t, ph));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.nak_segment_requests, 6);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_INVALID_SR);
+
+    /* bad decode */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvNak), 1, -1);
+    nak                            = &ph->int_header.nak;
+    nak->segment_list.num_segments = 1;
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak(t, ph));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error, 2);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_PDU_NAK);
+}
+
+void Test_CF_CFDP_S2_Nak_Arm(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_Nak_Arm(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_Nak_Arm(t, ph));
+}
+
+void Test_CF_CFDP_S2_WaitForEofAck(void)
+{
+    /* Test case for:
+     * void CF_CFDP_S2_WaitForEofAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_S2_WaitForEofAck(t, ph));
+    UtAssert_UINT32_EQ(t->state_data.s.sub_state, CF_TxSubState_WAIT_FOR_FIN);
+    UtAssert_BOOL_FALSE(t->flags.com.ack_timer_armed);
+
+    /* failure of CF_CFDP_RecvAck */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvAck), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_S2_WaitForEofAck(t, ph));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_S_PDU_EOF);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.error, 1);
+
+    /* with error status */
+    UT_CFDP_S_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDefaultReturnValue(UT_KEY(CF_TxnStatus_IsError), true);
+    UtAssert_VOIDCALL(CF_CFDP_S2_WaitForEofAck(t, ph));
+    UtAssert_STUB_COUNT(CF_CFDP_ResetTransaction, 1);
+}
+
+/*******************************************************************************
+**
+** cf_cfdp_s_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_S1_Recv, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S1_Recv");
+    UtTest_Add(Test_CF_CFDP_S2_Recv, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_Recv");
+    UtTest_Add(Test_CF_CFDP_S1_Tx, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S1_Tx");
+    UtTest_Add(Test_CF_CFDP_S2_Tx, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_Tx");
+    UtTest_Add(Test_CF_CFDP_S_Tick, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S_Tick");
+    UtTest_Add(Test_CF_CFDP_S_Tick_Nak, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S_Tick_Nak");
+    UtTest_Add(Test_CF_CFDP_S_Cancel, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S_Cancel");
+    UtTest_Add(Test_CF_CFDP_S_SendEof, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S_SendEof");
+    UtTest_Add(Test_CF_CFDP_S1_SubstateSendEof, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S1_SubstateSendEof");
+    UtTest_Add(Test_CF_CFDP_S2_SubstateSendEof, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S2_SubstateSendEof");
+    UtTest_Add(Test_CF_CFDP_S_SendFileData, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S_SendFileData");
+    UtTest_Add(Test_CF_CFDP_S_SubstateSendFileData, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S_SubstateSendFileData");
+    UtTest_Add(Test_CF_CFDP_S_CheckAndRespondNak, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S_CheckAndRespondNak");
+    UtTest_Add(Test_CF_CFDP_S2_SubstateSendFileData, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S2_SubstateSendFileData");
+    UtTest_Add(Test_CF_CFDP_S_SubstateSendMetadata, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S_SubstateSendMetadata");
+    UtTest_Add(Test_CF_CFDP_S_SubstateSendFinAck, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S_SubstateSendFinAck");
+    UtTest_Add(Test_CF_CFDP_S2_EarlyFin, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_EarlyFin");
+    UtTest_Add(Test_CF_CFDP_S2_Fin, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_Fin");
+    UtTest_Add(Test_CF_CFDP_S2_Nak, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_Nak");
+    UtTest_Add(Test_CF_CFDP_S2_Nak_Arm, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown, "CF_CFDP_S2_Nak_Arm");
+    UtTest_Add(Test_CF_CFDP_S2_WaitForEofAck, cf_cfdp_s_tests_Setup, cf_cfdp_s_tests_Teardown,
+               "CF_CFDP_S2_WaitForEofAck");
+}
+```
+
+### `cf_cfdp_sbintf_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cfdp_sbintf_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_events.h"
+#include "cf_cfdp_sbintf.h"
+#include "cf_cfdp_pdu.h"
+
+static union
+{
+    CF_PduCmdMsg_t  cf_msg;
+    CFE_SB_Buffer_t sb_buf;
+    uint8           bytes[CF_MAX_PDU_SIZE];
+} UT_r_msg;
+
+static union
+{
+    CF_PduTlmMsg_t  cf_msg;
+    CFE_SB_Buffer_t sb_buf;
+    uint8           bytes[CF_MAX_PDU_SIZE];
+} UT_s_msg;
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests local utility functions
+**
+*******************************************************************************/
+
+static void UT_CFDP_SetupBasicRxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    static CF_DecoderState_t ut_decoder;
+    static uint8             bytes[CF_CFDP_MAX_HEADER_SIZE];
+    CFE_SB_Buffer_t *        bufptr;
+    CFE_MSG_Size_t           sz;
+    CFE_MSG_Type_t           msg_type = CFE_MSG_Type_Cmd;
+
+    memset(pdu_buffer, 0, sizeof(*pdu_buffer));
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_decoder.base                    = bytes;
+    ut_decoder.codec_state.is_valid    = true;
+    ut_decoder.codec_state.max_size    = sizeof(bytes);
+    ut_decoder.codec_state.next_offset = 0;
+
+    pdu_buffer->pdec = &ut_decoder;
+
+    /* setup for a potential call to CFE_SB_ReceiveBuffer() */
+    bufptr = &UT_r_msg.sb_buf;
+    UT_SetDataBuffer(UT_KEY(CFE_SB_ReceiveBuffer), &bufptr, sizeof(bufptr), true);
+
+    /* setup for a potential call to CFE_MSG_GetSize() */
+    sz = sizeof(UT_r_msg) + CF_PDU_ENCAPSULATION_EXTRA_TRAILING_BYTES;
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &sz, sizeof(sz), true);
+
+    /* setup for a potential call to CFE_MSG_GetType() */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetType), &msg_type, sizeof(msg_type), false);
+}
+
+static void UT_CFDP_SetupBasicTxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    static CF_EncoderState_t ut_encoder;
+    static uint8             bytes[CF_CFDP_MAX_HEADER_SIZE];
+
+    CFE_SB_Buffer_t *bufptr;
+
+    memset(pdu_buffer, 0, sizeof(*pdu_buffer));
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_encoder.base                    = bytes;
+    ut_encoder.codec_state.is_valid    = true;
+    ut_encoder.codec_state.max_size    = sizeof(bytes);
+    ut_encoder.codec_state.next_offset = 0;
+
+    pdu_buffer->penc = &ut_encoder;
+
+    /* setup for a potential call to CFE_SB_AllocateMessageBuffer() */
+    bufptr = &UT_s_msg.sb_buf;
+    UT_SetDataBuffer(UT_KEY(CFE_SB_AllocateMessageBuffer), &bufptr, sizeof(bufptr), true);
+}
+
+static void UT_CFDP_SetupBasicTestState(UT_CF_Setup_t setup, CF_Logical_PduBuffer_t **pdu_buffer_p,
+                                        CF_Channel_t **channel_p, CF_History_t **history_p, CF_Transaction_t **txn_p,
+                                        CF_ConfigTable_t **config_table_p)
+{
+    /*
+     * fake objects used to pass into CF app during unit tests.
+     * These are declared static so they can be returned
+     */
+    static CF_History_t     ut_history;
+    static CF_Transaction_t ut_transaction;
+    static CF_ConfigTable_t ut_config_table;
+
+    /*
+     * always clear all objects, regardless of what was asked for.
+     * this helps ensure that a test does not depend on preexisting data
+     * in the buffer (each test should set up its buffers in full)
+     */
+    memset(&ut_history, 0, sizeof(ut_history));
+    memset(&ut_transaction, 0, sizeof(ut_transaction));
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+
+    /* certain pointers should be connected even if they were not asked for,
+     * as internal code may assume these are set (test cases may un-set) */
+    ut_transaction.history  = &ut_history;
+    CF_AppData.config_table = &ut_config_table;
+
+    if (pdu_buffer_p)
+    {
+        if (setup == UT_CF_Setup_TX)
+        {
+            *pdu_buffer_p = &CF_AppData.engine.out.tx_pdudata;
+        }
+        else if (setup == UT_CF_Setup_RX)
+        {
+            *pdu_buffer_p = &CF_AppData.engine.in.rx_pdudata;
+        }
+        else
+        {
+            *pdu_buffer_p = NULL;
+        }
+    }
+    if (channel_p)
+    {
+        /*
+         * note that for channels, many CF app functions assume
+         * that when channel is passed as a pointer, that it is a member
+         * of the array within CF_AppData, and the channel number can
+         * be obtained by pointer arithmetic.
+         * this arithmetic will break if the pointer is not actually
+         * a member of that array, so for now it must be so.
+         * This always uses the same channel for now.
+         */
+        *channel_p = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    }
+    if (history_p)
+    {
+        *history_p = &ut_history;
+    }
+    if (txn_p)
+    {
+        *txn_p = &ut_transaction;
+    }
+    if (config_table_p)
+    {
+        *config_table_p = &ut_config_table;
+    }
+
+    if (setup == UT_CF_Setup_TX)
+    {
+        /* transmit is likely to invoke CF_CFDP_ConstructPduHeader()
+            which in turn requires MsgOutGet to work */
+        UT_CFDP_SetupBasicTxState(&CF_AppData.engine.out.tx_pdudata);
+    }
+    else if (setup == UT_CF_Setup_RX)
+    {
+        /* most calls on the RX side will do some sort of decode, so set up for that. */
+        UT_CFDP_SetupBasicRxState(&CF_AppData.engine.in.rx_pdudata);
+        ut_config_table.chan[UT_CFDP_CHANNEL].rx_max_messages_per_wakeup = 1;
+    }
+
+    /* reset the event ID capture between each sub-case */
+    UT_CF_ResetEventCapture();
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cfdp_tests_Setup(void)
+{
+    cf_tests_Setup();
+
+    /*
+     * Also clear the app global. No test case should depend on data
+     * previously left in here.
+     */
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+}
+
+void cf_cfdp_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  Test cases
+**
+*******************************************************************************/
+
+void Test_CF_CFDP_ReceiveMessage(void)
+{
+    /* Test case for:
+     * void CF_CFDP_ReceiveMessage(CF_Channel_t *c);
+     */
+    CF_Channel_t *          c;
+    CF_ConfigTable_t *      config;
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CFE_MSG_Type_t          msg_type = CFE_MSG_Type_Tlm;
+    size_t *                msg_size_buf;
+
+    /* no-config - the max per wakeup will be 0, and this is a noop */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, NULL, NULL, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+
+    /* failure in CFE_SB_ReceiveBuffer */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, NULL, NULL, &config);
+    config->chan[UT_CFDP_CHANNEL].rx_max_messages_per_wakeup = 1;
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_ReceiveBuffer), 1, CFE_SB_NO_MESSAGE);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+
+    /* Set up with a zero size input message, this should fail decoding */
+    msg_size_buf = 0;
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvPh), 1, -1);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &msg_size_buf, sizeof(msg_size_buf), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetType), &msg_type, sizeof(msg_type), false);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UT_ResetState(UT_KEY(CF_CFDP_RecvPh));
+    UT_ResetState(UT_KEY(CFE_MSG_GetSize));
+    UT_ResetState(UT_KEY(CFE_MSG_GetType));
+
+    /*
+     *  - CF_CFDP_RecvPh() succeeds
+     *  - CF_FindTransactionBySequenceNumber() returns NULL
+     *  - CF_CFDP_FindUnusedTransaction() needs to return non-NULL
+     */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, NULL, &c, NULL, &t, &config);
+    UT_SetHandlerFunction(UT_KEY(CF_FindUnusedTransaction), UT_AltHandler_GenericPointerReturn, t);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UtAssert_STUB_COUNT(CF_CFDP_DispatchRecv, 1); /* should be dispatched */
+    UtAssert_UINT32_EQ(t->history->dir, CF_Direction_RX);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.dc, CF_CFDP_FinDeliveryCode_INCOMPLETE);
+    UtAssert_UINT32_EQ(t->state_data.r.r2.fs, CF_CFDP_FinFileStatus_DISCARDED);
+
+    /* failure in CF_CFDP_RecvPh - nothing really happens here */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, NULL, &c, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvPh), 1, -1);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+
+    /* Test the path where the function recieves a telemetry packet on it's pipe */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, NULL, &c, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvPh), 1, -1);
+    /* Override message type to take the command branch of the if then/else clause */
+    UT_ResetState(UT_KEY(CFE_MSG_GetType)); /* clears the previous cmd type */
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetType), &msg_type, sizeof(msg_type), false);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+
+    /*
+     *  - CF_CFDP_RecvPh() succeeds
+     *  - CF_FindTransactionBySequenceNumber() returns non-NULL
+     */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, NULL, &c, NULL, &t, &config);
+    t->state = CF_TxnState_R2;
+    UT_SetHandlerFunction(UT_KEY(CF_FindTransactionBySequenceNumber), UT_AltHandler_GenericPointerReturn, t);
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UtAssert_STUB_COUNT(CF_CFDP_DispatchRecv, 2);              /* should be dispatched */
+    UT_ResetState(UT_KEY(CF_FindTransactionBySequenceNumber)); /* clears it */
+
+    /* FIN handling special case */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, &c, NULL, &t, &config);
+    config->local_eid             = 123;
+    ph->pdu_header.source_eid     = config->local_eid;
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_FIN;
+    c->cur                        = t;
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_SendAck, 1);
+    UtAssert_NULL(c->cur); /* cleared */
+
+    /* FIN handling special case, but failure of CF_CFDP_RecvFin */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, &c, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_RecvFin), 1, -1);
+    config->local_eid             = 123;
+    ph->pdu_header.source_eid     = config->local_eid;
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_FIN;
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious, 1); /* no increment */
+    UtAssert_STUB_COUNT(CF_CFDP_SendAck, 1);                                             /* no increment */
+    UtAssert_NULL(c->cur);                                                               /* cleared */
+
+    /* FIN handling special case, but failure of CF_CFDP_SendAck */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, &c, NULL, &t, &config);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_SendAck), 1, CF_SendRet_NO_MSG);
+    config->local_eid             = 123;
+    ph->pdu_header.source_eid     = config->local_eid;
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_FIN;
+    c->cur                        = t;
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[t->chan_num].counters.recv.spurious, 2); /* this does get increment */
+    UtAssert_ADDRESS_EQ(c->cur, t);                                                      /* not changed */
+
+    /* recv but not the correct destination_eid */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, &c, NULL, &t, &config);
+    config->local_eid              = 123;
+    ph->pdu_header.destination_eid = ~config->local_eid;
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_INVALID_DST_EID);
+
+    /* recv correct destination_eid but CF_MAX_SIMULTANEOUS_RX hit */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, &c, NULL, &t, &config);
+    CF_AppData.hk.channel_hk[t->chan_num].q_size[CF_QueueIdx_RX] = CF_MAX_SIMULTANEOUS_RX;
+    config->local_eid                                            = 123;
+    ph->pdu_header.destination_eid                               = config->local_eid;
+    UtAssert_VOIDCALL(CF_CFDP_ReceiveMessage(c));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_RX_DROPPED);
+}
+
+void Test_CF_CFDP_Send(void)
+{
+    /* Test case for:
+     * void CF_CFDP_Send(uint8 chan_num, const CF_Logical_PduBuffer_t *ph)
+     */
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, NULL, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_Send(UT_CFDP_CHANNEL, ph));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].counters.sent.pdu, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_SetSize, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 1);
+}
+
+void Test_CF_CFDP_MsgOutGet(void)
+{
+    /* Test case for:
+        CF_Logical_PduBuffer_t *CF_CFDP_MsgOutGet(const CF_Transaction_t *t, bool silent)
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+    CF_Channel_t *    c;
+
+    /* nominal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NOT_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_STUB_COUNT(CFE_SB_ReleaseMessageBuffer, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* This should discard the old message, and get a new one */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NOT_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_STUB_COUNT(CFE_SB_ReleaseMessageBuffer, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* test the various throttling mechanisms */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, &config);
+    config->chan[UT_CFDP_CHANNEL].max_outgoing_messages_per_wakeup = 3;
+    UtAssert_NOT_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, NULL, &t, NULL);
+    c->sem_id = OS_ObjectIdFromInteger(123);
+    UtAssert_NOT_NULL(CF_CFDP_MsgOutGet(t, false));
+    UT_SetDefaultReturnValue(UT_KEY(OS_CountSemTimedWait), OS_ERROR_TIMEOUT);
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, false));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_NO_MSG);
+
+    /* transaction is suspended */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.suspended = 1;
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* channel is frozen */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].frozen = 1;
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, false));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].frozen = 0;
+
+    /* no msg available from SB */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, false));
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_NO_MSG);
+
+    /* same, but the silent flag should supress the event */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NULL(CF_CFDP_MsgOutGet(t, true));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_ReceiveMessage, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_ReceiveMessage");
+
+    UtTest_Add(Test_CF_CFDP_MsgOutGet, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_MsgOutGet");
+    UtTest_Add(Test_CF_CFDP_Send, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_Send");
+}
+```
+
+### `cf_cfdp_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cfdp_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_events.h"
+#include "cf_cfdp.h"
+#include "cf_cfdp_s.h"
+#include "cf_cfdp_pdu.h"
+#include "cf_cfdp_sbintf.h"
+#include "cf_cfdp_dispatch.h"
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests local utility functions
+**
+*******************************************************************************/
+
+static void UT_CFDP_SetupBasicRxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    static CF_DecoderState_t ut_decoder;
+    static uint8             bytes[CF_CFDP_MAX_HEADER_SIZE];
+
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_decoder.base                    = bytes;
+    ut_decoder.codec_state.is_valid    = true;
+    ut_decoder.codec_state.max_size    = sizeof(bytes);
+    ut_decoder.codec_state.next_offset = 0;
+
+    pdu_buffer->pdec = &ut_decoder;
+}
+
+static void UT_CFDP_SetupBasicTxState(CF_Logical_PduBuffer_t *pdu_buffer)
+{
+    static CF_EncoderState_t ut_encoder;
+    static uint8             bytes[CF_CFDP_MAX_HEADER_SIZE];
+
+    memset(bytes, 0, sizeof(bytes));
+
+    ut_encoder.base                    = bytes;
+    ut_encoder.codec_state.is_valid    = true;
+    ut_encoder.codec_state.max_size    = sizeof(bytes);
+    ut_encoder.codec_state.next_offset = 0;
+
+    pdu_buffer->penc = &ut_encoder;
+}
+
+static void UT_CFDP_SetupBasicTestState(UT_CF_Setup_t setup, CF_Logical_PduBuffer_t **pdu_buffer_p,
+                                        CF_Channel_t **channel_p, CF_History_t **history_p, CF_Transaction_t **txn_p,
+                                        CF_ConfigTable_t **config_table_p)
+{
+    /*
+     * fake objects used to pass into CF app during unit tests.
+     * These are declared static so they can be returned
+     */
+    static CF_Logical_PduBuffer_t ut_pdu_buffer;
+    static CF_History_t           ut_history;
+    static CF_Transaction_t       ut_transaction;
+    static CF_ConfigTable_t       ut_config_table;
+
+    /*
+     * always clear all objects, regardless of what was asked for.
+     * this helps ensure that a test does not depend on preexisting data
+     * in the buffer (each test should set up its buffers in full)
+     */
+    memset(&ut_pdu_buffer, 0, sizeof(ut_pdu_buffer));
+    memset(&ut_history, 0, sizeof(ut_history));
+    memset(&ut_transaction, 0, sizeof(ut_transaction));
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+
+    /* certain pointers should be connected even if they were not asked for,
+     * as internal code may assume these are set (test cases may un-set) */
+    ut_transaction.history  = &ut_history;
+    CF_AppData.config_table = &ut_config_table;
+
+    if (pdu_buffer_p)
+    {
+        if (setup == UT_CF_Setup_TX || setup == UT_CF_Setup_RX)
+        {
+            *pdu_buffer_p = &ut_pdu_buffer;
+        }
+        else
+        {
+            *pdu_buffer_p = NULL;
+        }
+    }
+    if (channel_p)
+    {
+        /*
+         * note that for channels, many CF app functions assume
+         * that when channel is passed as a pointer, that it is a member
+         * of the array within CF_AppData, and the channel number can
+         * be obtained by pointer arithmetic.
+         * this arithmetic will break if the pointer is not actually
+         * a member of that array, so for now it must be so.
+         * This always uses the same channel for now.
+         */
+        *channel_p = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    }
+    if (history_p)
+    {
+        *history_p = &ut_history;
+    }
+    if (txn_p)
+    {
+        *txn_p = &ut_transaction;
+    }
+    if (config_table_p)
+    {
+        *config_table_p = &ut_config_table;
+    }
+
+    if (setup == UT_CF_Setup_TX)
+    {
+        UT_CFDP_SetupBasicTxState(&ut_pdu_buffer);
+
+        /* make sure that a potential call to CF_CFDP_MsgOutGet() returns this buffer */
+        UT_SetHandlerFunction(UT_KEY(CF_CFDP_MsgOutGet), UT_AltHandler_GenericPointerReturn, &ut_pdu_buffer);
+    }
+    else if (setup == UT_CF_Setup_RX)
+    {
+        UT_CFDP_SetupBasicRxState(&ut_pdu_buffer);
+    }
+
+    /* reset the event ID capture between each sub-case */
+    UT_CF_ResetEventCapture();
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cfdp_tests_Setup(void)
+{
+    cf_tests_Setup();
+
+    /*
+     * Also clear the app global. No test case should depend on data
+     * previously left in here.
+     */
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+}
+
+void cf_cfdp_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests Implementation-specific tests
+**
+*******************************************************************************/
+
+void Test_CF_CFDP_CF_CFDP_EncodeStart(void)
+{
+    /* Test case for:
+     * void CF_CFDP_EncodeStart(CF_EncoderState_t *penc, CFE_SB_Buffer_t *msgbuf, CF_Logical_PduBuffer_t *ph,
+     *                size_t msgbuf_size)
+     */
+    CF_EncoderState_t enc;
+    struct
+    {
+        uint32 hdr;
+        uint32 data;
+    } msg;
+    CF_Logical_PduBuffer_t pdubuf;
+
+    memset(&msg, 0xEE, sizeof(msg));
+    memset(&enc, 0, sizeof(enc));
+
+    /* nominal */
+    /* This should deduct for the size of the SB header, but
+     * do not want to hardcode the specific number here */
+
+    CF_CFDP_EncodeStart(&enc, &msg, &pdubuf, sizeof(msg.hdr), sizeof(msg));
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&enc));
+    UtAssert_UINT32_LT(CF_CODEC_GET_REMAIN(&enc), sizeof(msg));
+    UtAssert_ZERO(CF_CODEC_GET_POSITION(&enc));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_SIZE(&enc), CF_CODEC_GET_REMAIN(&enc));
+
+    /* too small */
+    CF_CFDP_EncodeStart(&enc, &msg, &pdubuf, sizeof(msg.hdr), sizeof(msg.hdr) - 1);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&enc));
+}
+
+void Test_CF_CFDP_CF_CFDP_DecodeStart(void)
+{
+    /* Test case for:
+     * void CF_CFDP_DecodeStart(CF_DecoderState_t *pdec, CFE_SB_Buffer_t *msgbuf, CF_Logical_PduBuffer_t *ph,
+     *                size_t msgbuf_size)
+     */
+    CF_DecoderState_t dec;
+    struct
+    {
+        uint32 hdr;
+        uint32 data;
+    } msg;
+    CF_Logical_PduBuffer_t pdubuf;
+
+    memset(&msg, 0xEE, sizeof(msg));
+    memset(&dec, 0, sizeof(dec));
+
+    /* nominal */
+    /* This should deduct for the size of the SB header, but
+     * do not want to hardcode the specific number here */
+
+    CF_CFDP_DecodeStart(&dec, &msg, &pdubuf, sizeof(msg.hdr), sizeof(msg));
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&dec));
+    UtAssert_UINT32_LT(CF_CODEC_GET_REMAIN(&dec), sizeof(msg));
+    UtAssert_ZERO(CF_CODEC_GET_POSITION(&dec));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_SIZE(&dec), CF_CODEC_GET_REMAIN(&dec));
+
+    /* too small */
+    CF_CFDP_DecodeStart(&dec, &msg, &pdubuf, sizeof(msg.hdr), sizeof(msg.hdr) - 1);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&dec));
+}
+
+void Test_CF_CFDP_ArmAckTimer(void)
+{
+    /* Test case for:
+     * void CF_CFDP_ArmAckTimer(CF_Transaction_t *t)
+     */
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, &config);
+
+    /* nominal call */
+    UtAssert_VOIDCALL(CF_CFDP_ArmAckTimer(t));
+}
+
+void Test_CF_CFDP_RecvPh(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvPh(uint8 chan_num, const CFE_SB_Buffer_t *msgbuf, CF_Logical_PduBuffer_t **pph)
+     */
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal, file directive */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, NULL, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvPh(UT_CFDP_CHANNEL, ph), 0);
+
+    /* nominal, file data */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, NULL, NULL);
+    ph->pdu_header.pdu_type = 1;
+    UtAssert_INT32_EQ(CF_CFDP_RecvPh(UT_CFDP_CHANNEL, ph), 0);
+
+    /* decode error, fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, NULL, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvPh(UT_CFDP_CHANNEL, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_SHORT_HEADER);
+
+    /* decode error, large file bit set */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, NULL, NULL);
+    ph->pdu_header.large_flag = true;
+    UtAssert_INT32_EQ(CF_CFDP_RecvPh(UT_CFDP_CHANNEL, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_LARGE_FILE);
+
+    /* decode error, insufficient storage for EID or seq num */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, NULL, NULL);
+    UT_SetDeferredRetcode(UT_KEY(CF_CFDP_DecodeHeader), 1, -1);
+    UtAssert_INT32_EQ(CF_CFDP_RecvPh(UT_CFDP_CHANNEL, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_TRUNCATION);
+}
+
+void Test_CF_CFDP_RecvMd(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvMd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+    CF_Transaction_t *      t;
+    CF_History_t *          h;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduMd_t *    md;
+    const char              src[]  = "mds";
+    const char              dest[] = "mdd";
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    md                           = &ph->int_header.md;
+    md->size                     = 10;
+    md->dest_filename.length     = sizeof(dest) - 1;
+    md->dest_filename.data_ptr   = dest;
+    md->source_filename.length   = sizeof(src) - 1;
+    md->source_filename.data_ptr = src;
+    UtAssert_INT32_EQ(CF_CFDP_RecvMd(t, ph), 0);
+    UtAssert_UINT32_EQ(t->fsize, md->size);
+    UtAssert_STRINGBUF_EQ(md->dest_filename.data_ptr, md->dest_filename.length, h->fnames.dst_filename,
+                          sizeof(h->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(md->source_filename.data_ptr, md->source_filename.length, h->fnames.src_filename,
+                          sizeof(h->fnames.src_filename));
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvMd(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_MD_SHORT);
+
+    /* decode errors: LV dest filename too long */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    md                       = &ph->int_header.md;
+    md->dest_filename.length = CF_FILENAME_MAX_LEN + 1;
+    UtAssert_INT32_EQ(CF_CFDP_RecvMd(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_INVALID_DST_LEN);
+
+    /* decode errors: LV source filename too long */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    md                         = &ph->int_header.md;
+    md->source_filename.length = CF_FILENAME_MAX_LEN + 1;
+    UtAssert_INT32_EQ(CF_CFDP_RecvMd(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_INVALID_SRC_LEN);
+}
+
+void Test_CF_CFDP_RecvFd(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call, no crc */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvFd(t, ph), 0);
+
+    /* nominal call, with crc */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.crc_flag    = 1;
+    ph->int_header.fd.data_len = 10 + sizeof(CF_CFDP_uint32_t);
+    UtAssert_INT32_EQ(CF_CFDP_RecvFd(t, ph), 0);
+    UtAssert_UINT32_EQ(ph->int_header.fd.data_len, 10);
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvFd(t, ph), -1);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_PROTOCOL_ERROR);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_FD_SHORT);
+
+    /* deode errors: crc part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.crc_flag    = 1;
+    ph->int_header.fd.data_len = sizeof(CF_CFDP_uint32_t) - 1;
+    UtAssert_INT32_EQ(CF_CFDP_RecvFd(t, ph), -1);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(ph->pdec));
+
+    /* with segment metadata (unimplemented) */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    ph->pdu_header.segment_meta_flag = 1;
+    UtAssert_INT32_EQ(CF_CFDP_RecvFd(t, ph), -1);
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_PROTOCOL_ERROR);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_FD_UNSUPPORTED);
+}
+
+void Test_CF_CFDP_RecvEof(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvEof(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvEof(t, ph), 0);
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvEof(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_EOF_SHORT);
+}
+
+void Test_CF_CFDP_RecvAck(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvAck(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvAck(t, ph), 0);
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvAck(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_ACK_SHORT);
+}
+
+void Test_CF_CFDP_RecvFin(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvFin(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvFin(t, ph), 0);
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvFin(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_FIN_SHORT);
+}
+
+void Test_CF_CFDP_RecvNak(void)
+{
+    /* Test case for:
+     * int CF_CFDP_RecvNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph)
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_RecvNak(t, ph), 0);
+
+    /* deode errors: fixed part */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_INT32_EQ(CF_CFDP_RecvNak(t, ph), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_PDU_NAK_SHORT);
+}
+
+void Test_CF_CFDP_RecvDrop(void)
+{
+    /* Test case for:
+     * void CF_CFDP_RecvDrop(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_RecvDrop(t, ph));
+}
+
+void Test_CF_CFDP_RecvIdle(void)
+{
+    /* Test case for:
+     * void CF_CFDP_RecvIdle(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_History_t *          h;
+    CF_Logical_PduBuffer_t *ph;
+    CF_ChunkWrapper_t       ut_unused_chunks;
+
+    /* setup for FindUnusedChunks */
+    memset(&ut_unused_chunks, 0, sizeof(ut_unused_chunks));
+    CF_AppData.engine.channels[UT_CFDP_CHANNEL].cs[CF_Direction_RX] = &ut_unused_chunks.cl_node;
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[0]             = 4;
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Pop), UT_AltHandler_GenericPointerReturn, &ut_unused_chunks.cl_node);
+
+    /* nominal call, file data, class 1 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->pdu_header.pdu_type = 1; /* follow file data path */
+    ph->pdu_header.txm_mode = 1; /* class 1 */
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_DROP);
+
+    /* nominal call, file data, class 2 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->pdu_header.pdu_type = 1; /* follow file data path */
+    ph->pdu_header.txm_mode = 0; /* class 2 */
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_R2);
+
+    /* nominal call, file metadata, class 1 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_METADATA;
+    ph->pdu_header.txm_mode       = 1; /* class 1 */
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_R1);
+
+    /* nominal call, file metadata, class 2 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_METADATA;
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_R2);
+
+    /* decode error in RecvMd */
+    /* This will proceed to call CF_CFDP_ResetTransaction() which needs
+     * the q_size to be nonzero */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_METADATA;
+    CF_CODEC_SET_DONE(ph->pdec);
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_IDLE);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_IDLE_MD);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, &ph, NULL, &h, &t, NULL);
+    ph->fdirective.directive_code = CF_CFDP_FileDirective_INVALID_MIN;
+    UtAssert_VOIDCALL(CF_CFDP_RecvIdle(t, ph));
+    UtAssert_INT32_EQ(t->state, CF_TxnState_IDLE);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_FD_UNHANDLED);
+}
+
+void Test_CF_CFDP_CopyStringFromLV(void)
+{
+    /* Test case for:
+     * int CF_CFDP_CopyStringFromLV(char *buf, size_t buf_maxsz, const CF_Logical_Lv_t *src_lv)
+     */
+    char            buf[20];
+    const char      refstr[] = "refstr";
+    CF_Logical_Lv_t input;
+
+    input.data_ptr = refstr;
+    input.length   = sizeof(refstr) - 1;
+
+    /* nominal call */
+    UtAssert_INT32_EQ(CF_CFDP_CopyStringFromLV(buf, sizeof(buf), &input), input.length);
+}
+
+void Test_CF_CFDP_ConstructPduHeader(void)
+{
+    /* Test case for:
+CF_Logical_PduBuffer_t *CF_CFDP_ConstructPduHeader(const CF_Transaction_t *t, CF_CFDP_FileDirective_t directive_code,
+                                                   CF_EntityId_t src_eid, CF_EntityId_t dst_eid, bool towards_sender,
+                                                   CF_TransactionSeq_t tsn, bool silent);
+*/
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduHeader_t *hdr;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NULL(CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_ACK, 3, 2, true, 42, false));
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_NULL(CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_ACK, 3, 2, true, 42, true));
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_S1;
+    UtAssert_NOT_NULL(CF_CFDP_ConstructPduHeader(t, CF_CFDP_FileDirective_ACK, 3, 2, true, 42, false));
+    hdr = &ph->pdu_header;
+    UtAssert_UINT32_EQ(hdr->version, 1);
+    UtAssert_UINT32_EQ(hdr->pdu_type, 0);
+    UtAssert_UINT32_EQ(hdr->direction, 1);
+    UtAssert_UINT32_EQ(hdr->txm_mode, 1);
+    UtAssert_UINT32_EQ(hdr->eid_length, 1);
+    UtAssert_UINT32_EQ(hdr->txn_seq_length, 1);
+    UtAssert_UINT32_EQ(hdr->source_eid, 3);
+    UtAssert_UINT32_EQ(hdr->destination_eid, 2);
+    UtAssert_UINT32_EQ(hdr->sequence_num, 42);
+    UtAssert_UINT32_EQ(ph->fdirective.directive_code, CF_CFDP_FileDirective_ACK);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_GetValueEncodedSize), 5);
+    t->state = CF_TxnState_S2;
+    UtAssert_NOT_NULL(CF_CFDP_ConstructPduHeader(t, 0, 7, 6, false, 44, false));
+    hdr = &ph->pdu_header;
+    UtAssert_UINT32_EQ(hdr->version, 1);
+    UtAssert_UINT32_EQ(hdr->pdu_type, 1);
+    UtAssert_UINT32_EQ(hdr->direction, 0);
+    UtAssert_UINT32_EQ(hdr->txm_mode, 0);
+    UtAssert_UINT32_EQ(hdr->eid_length, 5);
+    UtAssert_UINT32_EQ(hdr->txn_seq_length, 5);
+    UtAssert_UINT32_EQ(hdr->source_eid, 7);
+    UtAssert_UINT32_EQ(hdr->destination_eid, 6);
+    UtAssert_UINT32_EQ(hdr->sequence_num, 44);
+}
+
+void Test_CF_CFDP_SendMd(void)
+{
+    /* Test case for:
+        CF_SendRet_t     CF_CFDP_SendMd(CF_Transaction_t *t);
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_History_t *          h;
+    CF_Logical_PduMd_t *    md;
+
+    /* setup without a tx message */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendMd(t), CF_SendRet_NO_MSG);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, &h, &t, NULL);
+    md = &ph->int_header.md;
+    strncpy(h->fnames.dst_filename, "dst1", sizeof(h->fnames.dst_filename));
+    strncpy(h->fnames.src_filename, "src1", sizeof(h->fnames.src_filename));
+    t->state = CF_TxnState_S1;
+    t->fsize = 1234;
+    UtAssert_INT32_EQ(CF_CFDP_SendMd(t), CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(md->size, t->fsize);
+    UtAssert_STRINGBUF_EQ(md->dest_filename.data_ptr, md->dest_filename.length, h->fnames.dst_filename,
+                          sizeof(h->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(md->source_filename.data_ptr, md->source_filename.length, h->fnames.src_filename,
+                          sizeof(h->fnames.src_filename));
+
+    /* Class 2, also hit maximum string length */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, &h, &t, NULL);
+    md = &ph->int_header.md;
+    memset(h->fnames.dst_filename, 0xFF, sizeof(h->fnames.dst_filename));
+    strncpy(h->fnames.src_filename, "src2", sizeof(h->fnames.src_filename));
+    t->state = CF_TxnState_S2;
+    t->fsize = 5678;
+    UtAssert_INT32_EQ(CF_CFDP_SendMd(t), CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(md->size, t->fsize);
+    UtAssert_UINT32_EQ(md->dest_filename.length, sizeof(h->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(md->source_filename.data_ptr, md->source_filename.length, h->fnames.src_filename,
+                          sizeof(h->fnames.src_filename));
+}
+
+void Test_CF_CFDP_SendFd(void)
+{
+    /* Test case for:
+        CF_SendRet_t     CF_CFDP_SendFd(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+    */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendFd(t, ph), CF_SendRet_SUCCESS);
+
+    /* Hit CF_CFDP_SetPduLength condition where final_pos < the header_encoded_length */
+    ph->pdu_header.header_encoded_length = CF_CODEC_GET_POSITION(ph->penc) + 1;
+    ph->pdu_header.data_encoded_length   = 0;
+
+    UtAssert_INT32_EQ(CF_CFDP_SendFd(t, ph), CF_SendRet_SUCCESS);
+
+    UtAssert_UINT32_EQ(ph->pdu_header.data_encoded_length, 0);
+}
+
+void Test_CF_CFDP_SendEof(void)
+{
+    /* Test case for:
+        CF_SendRet_t     CF_CFDP_SendEof(CF_Transaction_t *t);
+     */
+
+    CF_Transaction_t *      t;
+    CF_History_t *          h;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduEof_t *   eof;
+
+    /* setup without a tx message */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendEof(t), CF_SendRet_NO_MSG);
+
+    /* nominal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    eof = &ph->int_header.eof;
+    UtAssert_INT32_EQ(CF_CFDP_SendEof(t), CF_SendRet_SUCCESS);
+    UtAssert_ZERO(eof->tlv_list.num_tlv);
+
+    /* test with a transaction error status, which should append a TLV */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, &h, &t, NULL);
+    eof = &ph->int_header.eof;
+    UT_SetDefaultReturnValue(UT_KEY(CF_TxnStatus_To_ConditionCode), CF_CFDP_ConditionCode_FILESTORE_REJECTION);
+    UtAssert_INT32_EQ(CF_CFDP_SendEof(t), CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(eof->tlv_list.num_tlv, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_Send, 2);
+}
+
+void Test_CF_CFDP_SendAck(void)
+{
+    /* Test case for:
+        CF_SendRet_t CF_CFDP_SendAck(CF_Transaction_t *t, CF_CFDP_AckTxnStatus_t ts, CF_CFDP_FileDirective_t dir_code,
+                                    CF_CFDP_ConditionCode_t cc, CF_EntityId_t peer_eid, CF_TransactionSeq_t tsn);
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduAck_t *   ack;
+
+    /* setup without a tx message */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_ACTIVE, CF_CFDP_FileDirective_EOF,
+                                      CF_CFDP_ConditionCode_NO_ERROR, 1, 42),
+                      CF_SendRet_NO_MSG);
+
+    /* nominal as receiver */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    ack      = &ph->int_header.ack;
+    t->state = CF_TxnState_R2;
+    UtAssert_INT32_EQ(CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_ACTIVE, CF_CFDP_FileDirective_EOF,
+                                      CF_CFDP_ConditionCode_NO_ERROR, 1, 42),
+                      CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(ack->ack_directive_code, CF_CFDP_FileDirective_EOF);
+    UtAssert_UINT32_EQ(ack->ack_subtype_code, 1);
+    UtAssert_UINT32_EQ(ack->txn_status, CF_CFDP_AckTxnStatus_ACTIVE);
+    UtAssert_UINT32_EQ(ack->cc, CF_CFDP_ConditionCode_NO_ERROR);
+
+    /* nominal as sender */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    ack      = &ph->int_header.ack;
+    t->state = CF_TxnState_S2;
+    UtAssert_INT32_EQ(CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_ACTIVE, CF_CFDP_FileDirective_EOF,
+                                      CF_CFDP_ConditionCode_NO_ERROR, 1, 42),
+                      CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(ack->ack_directive_code, CF_CFDP_FileDirective_EOF);
+    UtAssert_UINT32_EQ(ack->ack_subtype_code, 1);
+    UtAssert_UINT32_EQ(ack->txn_status, CF_CFDP_AckTxnStatus_ACTIVE);
+    UtAssert_UINT32_EQ(ack->cc, CF_CFDP_ConditionCode_NO_ERROR);
+
+    /* still success path but with non-nominal values */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    ack      = &ph->int_header.ack;
+    t->state = CF_TxnState_R2;
+    UtAssert_INT32_EQ(CF_CFDP_SendAck(t, CF_CFDP_AckTxnStatus_TERMINATED, CF_CFDP_FileDirective_FIN,
+                                      CF_CFDP_ConditionCode_FILESTORE_REJECTION, 1, 42),
+                      CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(ack->ack_directive_code, CF_CFDP_FileDirective_FIN);
+    UtAssert_UINT32_EQ(ack->ack_subtype_code, 1);
+    UtAssert_UINT32_EQ(ack->txn_status, CF_CFDP_AckTxnStatus_TERMINATED);
+    UtAssert_UINT32_EQ(ack->cc, CF_CFDP_ConditionCode_FILESTORE_REJECTION);
+}
+
+void Test_CF_CFDP_SendFin(void)
+{
+    /* Test case for:
+        CF_SendRet_t CF_CFDP_SendFin(CF_Transaction_t *t, CF_CFDP_FinDeliveryCode_t dc, CF_CFDP_FinFileStatus_t fs,
+                                    CF_CFDP_ConditionCode_t cc);
+     */
+
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+    CF_Logical_PduFin_t *   fin;
+
+    /* setup without a tx message */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendFin(t, CF_CFDP_FinDeliveryCode_COMPLETE, CF_CFDP_FinFileStatus_RETAINED,
+                                      CF_CFDP_ConditionCode_NO_ERROR),
+                      CF_SendRet_NO_MSG);
+
+    /* nominal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    fin = &ph->int_header.fin;
+    UtAssert_INT32_EQ(CF_CFDP_SendFin(t, CF_CFDP_FinDeliveryCode_COMPLETE, CF_CFDP_FinFileStatus_RETAINED,
+                                      CF_CFDP_ConditionCode_NO_ERROR),
+                      CF_SendRet_SUCCESS);
+    UtAssert_ZERO(fin->tlv_list.num_tlv);
+    UtAssert_UINT32_EQ(fin->delivery_code, CF_CFDP_FinDeliveryCode_COMPLETE);
+    UtAssert_UINT32_EQ(fin->file_status, CF_CFDP_FinFileStatus_RETAINED);
+    UtAssert_UINT32_EQ(fin->cc, CF_CFDP_ConditionCode_NO_ERROR);
+
+    /* test with an alternate condition code, which should append a TLV */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    fin = &ph->int_header.fin;
+    UtAssert_INT32_EQ(CF_CFDP_SendFin(t, CF_CFDP_FinDeliveryCode_INCOMPLETE, CF_CFDP_FinFileStatus_DISCARDED,
+                                      CF_CFDP_ConditionCode_FILESTORE_REJECTION),
+                      CF_SendRet_SUCCESS);
+    UtAssert_UINT32_EQ(fin->delivery_code, CF_CFDP_FinDeliveryCode_INCOMPLETE);
+    UtAssert_UINT32_EQ(fin->file_status, CF_CFDP_FinFileStatus_DISCARDED);
+    UtAssert_UINT32_EQ(fin->cc, CF_CFDP_ConditionCode_FILESTORE_REJECTION);
+    UtAssert_UINT32_EQ(fin->tlv_list.num_tlv, 1);
+    UtAssert_STUB_COUNT(CF_CFDP_Send, 2);
+}
+
+void Test_CF_CFDP_SendNak(void)
+{
+    /* Test case for:
+        CF_SendRet_t CF_CFDP_SendNak(CF_Transaction_t *t, CF_Logical_PduBuffer_t *ph);
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendNak(t, ph), CF_SendRet_NO_MSG);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_S2;
+    UtAssert_INT32_EQ(CF_CFDP_SendNak(t, ph), CF_SendRet_SUCCESS);
+
+    UtAssert_STUB_COUNT(CF_CFDP_Send, 1);
+}
+
+void Test_CF_CFDP_AppendTlv(void)
+{
+    /* Test case for:
+        void CF_CFDP_AppendTlv(CF_Logical_TlvList_t *ptlv_list, CF_CFDP_TlvType_t tlv_type)
+
+        This helper is used by EOF and FIN to set TLV values
+    */
+    CF_Logical_PduBuffer_t *ph;
+    CF_ConfigTable_t *      config;
+    CF_Logical_TlvList_t *  tlv_list;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, NULL, &config);
+    config->local_eid = 123;
+    tlv_list          = &ph->int_header.eof.tlv_list;
+
+    UtAssert_VOIDCALL(CF_CFDP_AppendTlv(tlv_list, 1));
+    UtAssert_NULL(tlv_list->tlv[0].data.data_ptr);
+    UtAssert_UINT32_EQ(tlv_list->tlv[0].length, 0);
+    UtAssert_UINT32_EQ(tlv_list->num_tlv, 1);
+
+    UtAssert_VOIDCALL(CF_CFDP_AppendTlv(tlv_list, CF_CFDP_TLV_TYPE_ENTITY_ID));
+    UtAssert_UINT32_EQ(tlv_list->tlv[1].data.eid, config->local_eid);
+    UtAssert_UINT32_EQ(tlv_list->num_tlv, 2);
+
+    /* call w/max should be no-op */
+    tlv_list->num_tlv = CF_PDU_MAX_TLV;
+    UtAssert_VOIDCALL(CF_CFDP_AppendTlv(tlv_list, 1));
+    UtAssert_UINT32_EQ(tlv_list->num_tlv, CF_PDU_MAX_TLV);
+}
+
+void Test_CF_CFDP_FindUnusedTransaction(void)
+{
+    /* Test case for:
+        CF_Transaction_t *CF_CFDP_FindUnusedTransaction(CF_Channel_t *c)
+     */
+    CF_Transaction_t *      t;
+    CF_Logical_PduBuffer_t *ph;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, &ph, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_SendNak(t, ph), CF_SendRet_NO_MSG);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, &ph, NULL, NULL, &t, NULL);
+    t->state = CF_TxnState_S2;
+    UtAssert_INT32_EQ(CF_CFDP_SendNak(t, ph), CF_SendRet_SUCCESS);
+
+    UtAssert_STUB_COUNT(CF_CFDP_Send, 1);
+}
+
+void Test_CF_CFDP_InitEngine(void)
+{
+    /* Test case for:
+     * int32 CF_CFDP_InitEngine(void)
+     */
+    CF_ConfigTable_t *config;
+
+    /* nominal call, no sem */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), 0);
+    UtAssert_BOOL_TRUE(CF_AppData.engine.enabled);
+    UtAssert_STUB_COUNT(CF_FreeTransaction, CF_NUM_TRANSACTIONS_PER_CHANNEL * CF_NUM_CHANNELS);
+
+    /* nominal call, with sem */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    config->chan[0].sem_name[0] = 'u';
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), 0);
+    UtAssert_BOOL_TRUE(CF_AppData.engine.enabled);
+
+    /* failure of OS_CountSemGetIdByName for non-name reason */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    config->chan[0].sem_name[0] = 'u';
+    UT_SetDefaultReturnValue(UT_KEY(OS_CountSemGetIdByName), OS_ERROR);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), OS_ERROR);
+    UtAssert_BOOL_FALSE(CF_AppData.engine.enabled);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_SEM);
+
+    /* Max retries of OS_CountSemGetIdByName - sem was never created at all  */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    config->chan[0].sem_name[0] = 'u';
+    UT_SetDefaultReturnValue(UT_KEY(OS_CountSemGetIdByName), OS_ERR_NAME_NOT_FOUND);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), OS_ERR_NAME_NOT_FOUND);
+    UtAssert_BOOL_FALSE(CF_AppData.engine.enabled);
+    UT_CF_AssertEventID(CF_EID_ERR_INIT_SEM);
+
+    /* Retry of OS_CountSemGetIdByName, when sem was created late, and thus
+     * got return OS_ERR_NAME_NOT_FOUND followed by OS_SUCCESS */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    config->chan[0].sem_name[0] = 'u';
+    UT_SetDefaultReturnValue(UT_KEY(OS_CountSemGetIdByName), OS_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(OS_CountSemGetIdByName), 1, OS_ERR_NAME_NOT_FOUND);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), 0);
+    UtAssert_BOOL_TRUE(CF_AppData.engine.enabled);
+
+    /* failure of CFE_SB_CreatePipe */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_CreatePipe), 1, CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_BOOL_FALSE(CF_AppData.engine.enabled);
+
+    /* failure of CFE_SB_SubscribeLocal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, NULL, &config);
+    UT_SetDeferredRetcode(UT_KEY(CFE_SB_SubscribeLocal), 1, CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_INT32_EQ(CF_CFDP_InitEngine(), CFE_STATUS_EXTERNAL_RESOURCE_FAIL);
+    UtAssert_BOOL_FALSE(CF_AppData.engine.enabled);
+}
+
+void Test_CF_CFDP_TxFile(void)
+{
+    /* Test case for:
+     * int32 CF_CFDP_TxFile(const char *src_filename, const char *dst_filename,
+                            CF_CFDP_Class_t cfdp_class, uint8 keep, uint8 chan, uint8 priority, CF_EntityId_t dest_id);
+
+     */
+    const char        src[]  = "tsrc";
+    const char        dest[] = "tdest";
+    CF_History_t *    h;
+    CF_Transaction_t *t;
+    CF_Channel_t *    c;
+    CF_ChunkWrapper_t chunk_wrap;
+
+    memset(&chunk_wrap, 0, sizeof(chunk_wrap));
+
+    /* nominal call */
+    /* make sure call to CF_FindUnusedTransaction() returns this buffer */
+    /* Also need to set up for call to CF_CFDP_FindUnusedChunks which calls CF_CList_Pop */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, &h, &t, NULL);
+    UT_SetHandlerFunction(UT_KEY(CF_FindUnusedTransaction), UT_AltHandler_GenericPointerReturn, t);
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Pop), UT_AltHandler_GenericPointerReturn, &chunk_wrap.cl_node);
+    c->cs[CF_Direction_TX] = &chunk_wrap.cl_node;
+    UtAssert_INT32_EQ(CF_CFDP_TxFile(src, dest, CF_CFDP_CLASS_1, 1, UT_CFDP_CHANNEL, 0, 1), 0);
+    UtAssert_STRINGBUF_EQ(dest, -1, h->fnames.dst_filename, sizeof(h->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(src, -1, h->fnames.src_filename, sizeof(h->fnames.src_filename));
+    UtAssert_UINT32_EQ(c->num_cmd_tx, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_S_START_SEND);
+
+    /* same but for class 2 (for branch coverage) */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, &h, &t, NULL);
+    UT_SetHandlerFunction(UT_KEY(CF_FindUnusedTransaction), UT_AltHandler_GenericPointerReturn, t);
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Pop), UT_AltHandler_GenericPointerReturn, &chunk_wrap.cl_node);
+    c->cs[CF_Direction_TX] = &chunk_wrap.cl_node;
+    UtAssert_INT32_EQ(CF_CFDP_TxFile(src, dest, CF_CFDP_CLASS_2, 1, UT_CFDP_CHANNEL, 0, 1), 0);
+    UtAssert_STRINGBUF_EQ(dest, -1, h->fnames.dst_filename, sizeof(h->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(src, -1, h->fnames.src_filename, sizeof(h->fnames.src_filename));
+    UtAssert_UINT32_EQ(c->num_cmd_tx, 2);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_S_START_SEND);
+
+    /* max TX */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, &h, &t, NULL);
+    c->num_cmd_tx = CF_MAX_COMMANDED_PLAYBACK_FILES_PER_CHAN;
+    UtAssert_INT32_EQ(CF_CFDP_TxFile(src, dest, CF_CFDP_CLASS_1, 1, UT_CFDP_CHANNEL, 0, 1), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_MAX_CMD_TX);
+}
+
+void Test_CF_CFDP_PlaybackDir(void)
+{
+    /* Test case for:
+     * int32 CF_CFDP_PlaybackDir(const char *src_filename,
+                                 const char *dst_filename, CF_CFDP_Class_t cfdp_class, uint8 keep,
+                                 uint8 chan, uint8 priority, uint16 dest_id);
+     */
+    const char     src[]  = "psrc";
+    const char     dest[] = "pdest";
+    CF_Playback_t *pb;
+    CF_Channel_t * c;
+    uint8          i;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, NULL, NULL, NULL);
+    pb = &c->playback[0];
+    memset(pb, 0, sizeof(*pb));
+    UtAssert_INT32_EQ(CF_CFDP_PlaybackDir(src, dest, CF_CFDP_CLASS_1, 1, UT_CFDP_CHANNEL, 0, 1), 0);
+    UtAssert_STRINGBUF_EQ(dest, -1, pb->fnames.dst_filename, sizeof(pb->fnames.dst_filename));
+    UtAssert_STRINGBUF_EQ(src, -1, pb->fnames.src_filename, sizeof(pb->fnames.src_filename));
+    UtAssert_BOOL_TRUE(pb->diropen);
+    UtAssert_BOOL_TRUE(pb->busy);
+
+    /* OS_DirectoryOpen fail */
+    memset(pb, 0, sizeof(*pb));
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryOpen), 1, OS_ERROR);
+    UtAssert_INT32_EQ(CF_CFDP_PlaybackDir(src, dest, CF_CFDP_CLASS_1, 1, UT_CFDP_CHANNEL, 0, 1), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_OPENDIR);
+
+    /* no non-busy entries */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, NULL, NULL, NULL);
+    for (i = 0; i < CF_MAX_COMMANDED_PLAYBACK_DIRECTORIES_PER_CHAN; ++i)
+    {
+        pb       = &c->playback[i];
+        pb->busy = 1;
+    }
+    UtAssert_INT32_EQ(CF_CFDP_PlaybackDir(src, dest, CF_CFDP_CLASS_1, 1, UT_CFDP_CHANNEL, 0, 1), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_DIR_SLOT);
+}
+
+static int32 Ut_Hook_CycleTx_SetRanOne(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                       const UT_StubContext_t *Context)
+{
+    CF_CFDP_CycleTx_args_t *args = UT_Hook_GetArgValueByName(Context, "context", CF_CFDP_CycleTx_args_t *);
+
+    if (CallCount == 1)
+    {
+        args->ran_one = 1;
+    }
+
+    return StubRetcode;
+}
+
+void Test_CF_CFDP_CycleTx(void)
+{
+    /* Test case for:
+     * void CF_CFDP_CycleTx(CF_Channel_t *c)
+     */
+    CF_Channel_t *    c;
+    CF_Transaction_t *t;
+    CF_ConfigTable_t *config;
+    CF_Transaction_t  t2;
+
+    memset(&t2, 0, sizeof(t2));
+
+    /* need to set dequeue_enabled so it enters the actual logic */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, NULL, &t, &config);
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[0] = 10;
+    CF_AppData.engine.enabled                           = 1;
+    config->chan[UT_CFDP_CHANNEL].dequeue_enabled       = 1;
+
+    /* nominal call, w/c->cur non-null */
+    c->cur = t;
+    UtAssert_VOIDCALL(CF_CFDP_CycleTx(c));
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 0);
+
+    /* nominal call, w/c->cur null, but queue empty */
+    UtAssert_VOIDCALL(CF_CFDP_CycleTx(c));
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 1);
+
+    /* nominal call, w/c->cur null, queue not empty */
+    UT_ResetState(UT_KEY(CF_CList_Traverse));
+    UT_SetHookFunction(UT_KEY(CF_CList_Traverse), Ut_Hook_CycleTx_SetRanOne, false);
+    c->qs[CF_QueueIdx_PEND] = &t2.cl_node;
+    UtAssert_VOIDCALL(CF_CFDP_CycleTx(c));
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 2);
+}
+
+static int32 Ut_Hook_StateHandler_SetQIndex(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                            const UT_StubContext_t *Context)
+{
+    CF_Transaction_t *t  = UT_Hook_GetArgValueByName(Context, "t", CF_Transaction_t *);
+    t->flags.com.q_index = 0;
+    return StubRetcode;
+}
+
+void Test_CF_CFDP_CycleTxFirstActive(void)
+{
+    /* Test case for:
+       int CF_CFDP_CycleTxFirstActive(CF_CListNode_t *node, void *context);
+     */
+    CF_CFDP_CycleTx_args_t args;
+    CF_Transaction_t *     t;
+
+    memset(&args, 0, sizeof(args));
+
+    /* suspended, should return 0 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.suspended = 1;
+    UtAssert_INT32_EQ(CF_CFDP_CycleTxFirstActive(&t->cl_node, &args), 0);
+
+    /* nominal, with c->cur set non-null, should skip loop and return 1 */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &args.c, NULL, &t, NULL);
+    t->flags.com.q_index = CF_QueueIdx_TXA; /* must be this */
+    args.c->cur          = t;
+    UtAssert_INT32_EQ(CF_CFDP_CycleTxFirstActive(&t->cl_node, &args), 1);
+    UtAssert_BOOL_TRUE(args.ran_one);
+
+    /* nominal, with c->cur set null, should do loop and return 1 */
+    /* will call the handler for this state, which is a stub */
+    /* need to use a hook function or else this is infinite loop */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->state             = CF_TxnState_S1;
+    t->flags.com.q_index = CF_QueueIdx_TXA; /* must be this */
+    args.c->cur          = NULL;
+    UT_SetHookFunction(UT_KEY(CF_CFDP_TxStateDispatch), Ut_Hook_StateHandler_SetQIndex, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_CycleTxFirstActive(&t->cl_node, &args), 1);
+}
+
+static void DoTickFnClearCont(CF_Transaction_t *t, int *cont)
+{
+    *cont = 0;
+}
+
+static void DoTickFnSetCur(CF_Transaction_t *t, int *cont)
+{
+    CF_AppData.engine.channels[t->chan_num].cur = t;
+}
+
+void Test_CF_CFDP_DoTick(void)
+{
+    /* Test case for:
+     * int CF_CFDP_DoTick(CF_CListNode_t *node, void *context);
+     */
+    CF_Transaction_t *  t;
+    CF_Transaction_t    t2;
+    CF_CFDP_Tick_args_t args;
+
+    memset(&args, 0, sizeof(args));
+    memset(&t2, 0, sizeof(t2));
+    args.fn = DoTickFnClearCont;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &args.c, NULL, &t, NULL);
+    args.c->cur = &t2;
+    args.cont   = true;
+    UtAssert_INT32_EQ(CF_CFDP_DoTick(&t->cl_node, &args), CF_CLIST_CONT);
+    UtAssert_BOOL_TRUE(args.cont);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &args.c, NULL, &t, NULL);
+    args.c->cur = t;
+    UtAssert_INT32_EQ(CF_CFDP_DoTick(&t->cl_node, &args), CF_CLIST_CONT);
+    UtAssert_BOOL_FALSE(args.cont);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &args.c, NULL, &t, NULL);
+    t->flags.com.suspended = 1;
+    args.cont              = true;
+    UtAssert_INT32_EQ(CF_CFDP_DoTick(&t->cl_node, &args), CF_CLIST_CONT);
+    UtAssert_BOOL_TRUE(args.cont);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &args.c, NULL, &t, NULL);
+    args.fn = DoTickFnSetCur;
+    UtAssert_INT32_EQ(CF_CFDP_DoTick(&t->cl_node, &args), CF_CLIST_EXIT);
+    UtAssert_BOOL_TRUE(args.early_exit);
+}
+
+void Test_CF_CFDP_ProcessPollingDirectories(void)
+{
+    /* Test case for:
+     * void CF_CFDP_ProcessPollingDirectories(CF_Channel_t *c)
+     */
+    CF_Channel_t *    c;
+    CF_ConfigTable_t *config;
+    CF_PollDir_t *    pdcfg;
+    CF_Poll_t *       poll;
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, NULL, NULL, &config);
+    pdcfg = &config->chan[UT_CFDP_CHANNEL].polldir[0];
+    poll  = &c->poll[0];
+
+    /* nominal call, w/engine disabled (noop) */
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].poll_counter, 0);
+
+    /* nominal call, w/engine enabled, polldir enabled but interval_sec == 0 */
+    CF_AppData.engine.enabled = 1;
+    pdcfg->enabled            = 1;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].poll_counter, 0);
+
+    /* with interval_sec nonzero the timer should get set, but not tick */
+    pdcfg->interval_sec = 1;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_TRUE(poll->timer_set);
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 0);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].poll_counter, 1);
+
+    /* call again should tick */
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_TRUE(poll->timer_set);
+    UtAssert_STUB_COUNT(CF_Timer_Tick, 1);
+
+    /* call again timer should expire and start a playback */
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, true);
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_FALSE(poll->timer_set);
+    UtAssert_BOOL_TRUE(poll->pb.busy);
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].poll_counter, 1);
+
+    /* make an error occur in CF_CFDP_PlaybackDir_Initiate() */
+    poll->pb.busy   = false; /* above would have set it true */
+    poll->timer_set = true;
+    UT_SetDeferredRetcode(UT_KEY(CF_Timer_Expired), 1, true);
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryOpen), 1, OS_ERROR);
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_TRUE(poll->timer_set);
+    UT_CF_AssertEventID(CF_EID_ERR_CFDP_OPENDIR);
+
+    /* Test case where the impl calls through to CF_CFDP_ProcessPlaybackDirectory()
+     *
+     * NOTE: with diropen set false, this will not attempt
+     * to start a new transaction here (that case is covered in another test)
+     */
+    poll->pb.busy    = false;
+    poll->pb.diropen = false;
+    poll->pb.num_ts  = 1;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_FALSE(poll->pb.busy);
+
+    poll->pb.busy   = true;
+    poll->pb.num_ts = 0;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_BOOL_FALSE(poll->pb.busy); /* because num_ts == 0 */
+
+    /* test that call to CF_CFDP_UpdatePollPbCounted will decrement back to 0 again */
+    pdcfg->enabled = 0;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPollingDirectories(c));
+    UtAssert_UINT32_EQ(CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].poll_counter, 0);
+}
+
+void Test_CF_CFDP_ProcessPlaybackDirectory(void)
+{
+    /* Test case for:
+     * void CF_CFDP_ProcessPlaybackDirectory(CF_Channel_t *c, CF_Playback_t *p)
+     */
+    CF_Transaction_t *t;
+    CF_History_t *    h;
+    CF_Channel_t *    c;
+    CF_ConfigTable_t *config;
+    CF_Playback_t     pb;
+    os_dirent_t       dirent[3];
+    CF_ChunkWrapper_t chunk_wrap;
+
+    memset(&chunk_wrap, 0, sizeof(chunk_wrap));
+    memset(&pb, 0, sizeof(pb));
+    memset(dirent, 0, sizeof(dirent));
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, &h, &t, &config);
+    CF_AppData.engine.enabled = 1;
+
+    /* diropen is true but num_ts is high so operations are restricted */
+    pb.busy    = 1;
+    pb.num_ts  = CF_NUM_TRANSACTIONS_PER_PLAYBACK + 1;
+    pb.diropen = true;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPlaybackDirectory(c, &pb));
+    UtAssert_BOOL_TRUE(pb.busy);
+    UtAssert_BOOL_TRUE(pb.diropen);
+
+    /*
+     * enter the loop, but error calling OS_DirectoryRead().
+     * This should end up calling OS_DirectoryClose().
+     */
+    pb.busy    = 1;
+    pb.diropen = true;
+    pb.num_ts  = 0;
+    OS_DirectoryOpen(&pb.dir_id, "ut");
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 1, OS_ERROR);
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPlaybackDirectory(c, &pb));
+    UtAssert_STUB_COUNT(OS_DirectoryClose, 1);
+    UtAssert_BOOL_FALSE(pb.busy);
+    UtAssert_BOOL_FALSE(pb.diropen);
+
+    /* nominal, but path is "." or ".." ...
+     * this initially does not start a new transaction - those files are ignored.
+     * note that this does a while loop here, so have to prepare all the entries at once.
+     * After bypassing . and .. this will start a new transaction on pass 3.
+     *  - this calls CF_FindUnusedTransaction() so that must return non-NULL.
+     *  - this also calls CF_CFDP_FindUnusedChunks() and that pops an entry
+     */
+    pb.busy    = 1;
+    pb.diropen = true;
+    pb.num_ts  = 0;
+    strcpy(dirent[0].FileName, ".");  /* ignored */
+    strcpy(dirent[1].FileName, ".."); /* ignored */
+    strcpy(dirent[2].FileName, "ut"); /* valid file */
+    OS_DirectoryOpen(&pb.dir_id, "ut");
+    UT_SetDataBuffer(UT_KEY(OS_DirectoryRead), dirent, sizeof(dirent), false);
+    UT_SetDeferredRetcode(UT_KEY(OS_DirectoryRead), 4, OS_ERROR); /* end of dir */
+    UT_SetHandlerFunction(UT_KEY(CF_FindUnusedTransaction), UT_AltHandler_GenericPointerReturn, t);
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Pop), UT_AltHandler_GenericPointerReturn, &chunk_wrap.cl_node);
+    c->cs[CF_Direction_TX] = &chunk_wrap.cl_node;
+    UtAssert_VOIDCALL(CF_CFDP_ProcessPlaybackDirectory(c, &pb));
+    UtAssert_BOOL_TRUE(pb.busy);
+    UtAssert_BOOL_FALSE(pb.diropen);
+    UtAssert_STRINGBUF_EQ(h->fnames.src_filename, sizeof(h->fnames.src_filename), "/ut", -1);
+    UtAssert_STRINGBUF_EQ(h->fnames.dst_filename, sizeof(h->fnames.dst_filename), "/ut", -1);
+    UT_CF_AssertEventID(CF_EID_INF_CFDP_S_START_SEND);
+}
+
+static int32 Ut_Hook_TickTransactions_SetEarlyExit(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                                   const UT_StubContext_t *Context)
+{
+    CF_CFDP_Tick_args_t *args = UT_Hook_GetArgValueByName(Context, "context", CF_CFDP_Tick_args_t *);
+
+    /* set flag on the second call */
+    if ((CallCount & 1) == 1)
+    {
+        args->early_exit = 1;
+    }
+
+    return StubRetcode;
+}
+
+static int32 Ut_Hook_TickTransactions_SetCont(void *UserObj, int32 StubRetcode, uint32 CallCount,
+                                              const UT_StubContext_t *Context)
+{
+    CF_CFDP_Tick_args_t *args = UT_Hook_GetArgValueByName(Context, "context", CF_CFDP_Tick_args_t *);
+
+    /* every other call do not set "cont" flag */
+    if ((CallCount & 1) == 0)
+    {
+        args->cont = 1;
+    }
+
+    return StubRetcode;
+}
+
+void Test_CF_CFDP_TickTransactions(void)
+{
+    /* Test case for:
+        void CF_CFDP_TickTransactions(CF_Channel_t *c);
+     */
+
+    CF_Channel_t *c;
+
+    /* nominal */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, NULL, NULL, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_TickTransactions(c));
+    UtAssert_STUB_COUNT(CF_CList_Traverse, CF_TickType_NUM_TYPES);
+    UtAssert_UINT32_EQ(c->tick_type, CF_TickType_RX);
+
+    /* invoke "early exit" block via hook */
+    /* The flag is set on the second call, so this should increment tick_type */
+    UT_ResetState(UT_KEY(CF_CList_Traverse));
+    UT_SetHookFunction(UT_KEY(CF_CList_Traverse), Ut_Hook_TickTransactions_SetEarlyExit, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_TickTransactions(c));
+    UtAssert_UINT32_EQ(c->tick_type, CF_TickType_TXW_NORM);
+
+    /* this should resume where it left from the last call,
+     * and then reset the tick_type  */
+    UtAssert_VOIDCALL(CF_CFDP_TickTransactions(c));
+    UtAssert_UINT32_EQ(c->tick_type, CF_TickType_RX);
+
+    UT_ResetState(UT_KEY(CF_CList_Traverse));
+    UT_SetHookFunction(UT_KEY(CF_CList_Traverse), Ut_Hook_TickTransactions_SetCont, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_TickTransactions(c));
+    UtAssert_UINT32_EQ(c->tick_type, CF_TickType_RX);
+}
+
+void Test_CF_CFDP_CycleEngine(void)
+{
+    /* Test case for:
+     * void CF_CFDP_CycleEngine(void)
+     */
+    CF_Channel_t *c;
+
+    /* nominal with engine disabled, noop */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, &c, NULL, NULL, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_CycleEngine());
+
+    /* enabled but frozen */
+    CF_AppData.engine.enabled                        = 1;
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].frozen = 1;
+    UtAssert_VOIDCALL(CF_CFDP_CycleEngine());
+
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].frozen = 0;
+    UtAssert_VOIDCALL(CF_CFDP_CycleEngine());
+}
+
+void Test_CF_CFDP_ResetTransaction(void)
+{
+    /* Test case for:
+     * void CF_CFDP_ResetTransaction(CF_Transaction_t *t, int keep_history)
+     */
+
+    CF_Transaction_t *t;
+    CF_History_t *    h;
+    CF_Channel_t *    c;
+    CF_Playback_t     pb;
+
+    memset(&pb, 0, sizeof(pb));
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[t->flags.com.q_index] = 10;
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 1));
+    UtAssert_STUB_COUNT(CF_FreeTransaction, 1);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, &h, &t, NULL);
+    t->fd    = OS_ObjectIdFromInteger(1);
+    h->dir   = CF_Direction_TX;
+    t->state = CF_TxnState_S1;
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 1));
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 0));
+    UtAssert_STUB_COUNT(CF_FreeTransaction, 3);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_RX, NULL, NULL, &h, &t, NULL);
+    t->fd    = OS_ObjectIdFromInteger(1);
+    h->dir   = CF_Direction_RX;
+    t->state = CF_TxnState_R1;
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 1));
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 0));
+    UtAssert_STUB_COUNT(CF_FreeTransaction, 5);
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->fd    = OS_ObjectIdFromInteger(1);
+    h->dir   = CF_Direction_TX;
+    t->keep  = 1;
+    t->state = CF_TxnState_S1;
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 1));
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 0));
+    UtAssert_STUB_COUNT(CF_FreeTransaction, 7);
+
+    /* coverage completeness:
+     * test decrement of c->num_cmd_tx
+     * test decrement of playback num_ts
+     * test reset of "cur" pointer
+     */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, &c, &h, &t, NULL);
+    pb.num_ts          = 10;
+    t->p               = &pb;
+    c->cur             = t;
+    t->flags.tx.cmd_tx = 5;
+    c->num_cmd_tx      = 8;
+    h->dir             = CF_Direction_TX;
+    t->state           = CF_TxnState_S1;
+    UtAssert_VOIDCALL(CF_CFDP_ResetTransaction(t, 1));
+    UtAssert_NULL(c->cur);
+    UtAssert_UINT32_EQ(pb.num_ts, 9);
+    UtAssert_UINT32_EQ(c->num_cmd_tx, 7);
+    UtAssert_STUB_COUNT(CF_FreeTransaction, 8);
+}
+
+void Test_CF_CFDP_SetTxnStatus(void)
+{
+    /* Test case for:
+     * void CF_CFDP_SetTxnStatus(CF_Transaction_t *t, CF_TxnStatus_t txn_stat)
+     */
+
+    CF_Transaction_t *t;
+
+    /* nominal call */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+    UtAssert_VOIDCALL(CF_CFDP_SetTxnStatus(t, CF_TxnStatus_NO_ERROR));
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_NO_ERROR);
+
+    /* set an error */
+    UtAssert_VOIDCALL(CF_CFDP_SetTxnStatus(t, CF_TxnStatus_FILESTORE_REJECTION));
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+
+    /* confirm errors are "sticky"  */
+    UT_SetDefaultReturnValue(UT_KEY(CF_TxnStatus_IsError), true);
+    UtAssert_VOIDCALL(CF_CFDP_SetTxnStatus(t, CF_TxnStatus_NO_ERROR));
+    UtAssert_INT32_EQ(t->history->txn_stat, CF_TxnStatus_FILESTORE_REJECTION);
+}
+
+void Test_CF_CFDP_SendEotPkt(void)
+{
+    CF_EotPktBuf_t  PktBuf;
+    CF_EotPktBuf_t *PktBufPtr;
+
+    CF_Transaction_t *t;
+    CF_Playback_t     pb;
+
+    memset(&pb, 0, sizeof(pb));
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_NONE, NULL, NULL, NULL, &t, NULL);
+
+    /* Test case where CF_EotPktBuf_t is NULL */
+    UtAssert_VOIDCALL(CF_CFDP_SendEotPkt(t));
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 0);
+    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 0);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 0);
+
+    /* setup for a call to CFE_SB_AllocateMessageBuffer() */
+    PktBufPtr = &PktBuf;
+    memset(PktBufPtr, 0, sizeof(*PktBufPtr));
+    UT_SetDataBuffer(UT_KEY(CFE_SB_AllocateMessageBuffer), &PktBufPtr, sizeof(PktBufPtr), true);
+
+    /* Execute the function being tested */
+    /* nominal call */
+    UtAssert_VOIDCALL(CF_CFDP_SendEotPkt(t));
+
+    /* Verify results */
+    UtAssert_STUB_COUNT(CFE_MSG_Init, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TimeStampMsg, 1);
+    UtAssert_STUB_COUNT(CFE_SB_TransmitBuffer, 1);
+}
+
+void Test_CF_CFDP_DisableEngine(void)
+{
+    /* Test case for:
+     * void CF_CFDP_DisableEngine(void)
+     */
+
+    /* nominal call */
+    CF_AppData.engine.enabled = 1;
+    UtAssert_VOIDCALL(CF_CFDP_DisableEngine());
+    UtAssert_STUB_COUNT(CFE_SB_DeletePipe, CF_NUM_CHANNELS);
+    UtAssert_BOOL_FALSE(CF_AppData.engine.enabled);
+
+    /* nominal call with playbacks and polls active */
+    CF_AppData.engine.channels[UT_CFDP_CHANNEL].playback[0].busy = 1;
+    OS_DirectoryOpen(&CF_AppData.engine.channels[UT_CFDP_CHANNEL].playback[0].dir_id, "ut");
+    CF_AppData.engine.channels[UT_CFDP_CHANNEL].poll[0].pb.busy = 1;
+    OS_DirectoryOpen(&CF_AppData.engine.channels[UT_CFDP_CHANNEL].poll[0].pb.dir_id, "ut");
+    UtAssert_VOIDCALL(CF_CFDP_DisableEngine());
+    UtAssert_STUB_COUNT(OS_DirectoryClose, 2);
+}
+
+void Test_CF_CFDP_CloseFiles(void)
+{
+    /* Test case for:
+     * int CF_CFDP_CloseFiles(CF_CListNode_t *n, void *context)
+     */
+    CF_Transaction_t *t;
+
+    /* nominal call, no file */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    UtAssert_INT32_EQ(CF_CFDP_CloseFiles(&t->cl_node, NULL), CF_CLIST_CONT);
+
+    /* nominal call, w/ file */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->fd = OS_ObjectIdFromInteger(1);
+    UtAssert_INT32_EQ(CF_CFDP_CloseFiles(&t->cl_node, NULL), CF_CLIST_CONT);
+}
+
+void Test_CF_CFDP_CancelTransaction(void)
+{
+    /* Test case for:
+     * void CF_CFDP_CancelTransaction(CF_Transaction_t *t)
+     */
+    CF_Transaction_t *t;
+
+    /* nominal; cover both "flags.com.canceled" branches in here */
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.canceled = 1;
+    UtAssert_VOIDCALL(CF_CFDP_CancelTransaction(t));
+
+    UT_CFDP_SetupBasicTestState(UT_CF_Setup_TX, NULL, NULL, NULL, &t, NULL);
+    t->flags.com.canceled = 0;
+    UtAssert_VOIDCALL(CF_CFDP_CancelTransaction(t));
+}
+
+/*******************************************************************************
+**
+**  cf_cfdp_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_InitEngine, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_InitEngine");
+    UtTest_Add(Test_CF_CFDP_CycleEngine, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_CycleEngine");
+    UtTest_Add(Test_CF_CFDP_ProcessPlaybackDirectory, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "Test_CF_CFDP_ProcessPlaybackDirectory");
+    UtTest_Add(Test_CF_CFDP_ProcessPollingDirectories, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "Test_CF_CFDP_ProcessPollingDirectories");
+    UtTest_Add(Test_CF_CFDP_CycleTx, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "Test_CF_CFDP_CycleTx");
+    UtTest_Add(Test_CF_CFDP_CycleTxFirstActive, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "Test_CF_CFDP_CycleTxFirstActive");
+    UtTest_Add(Test_CF_CFDP_DoTick, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_DoTick");
+    UtTest_Add(Test_CF_CFDP_TickTransactions, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_TickTransactions");
+    UtTest_Add(Test_CF_CFDP_ResetTransaction, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_ResetTransaction");
+    UtTest_Add(Test_CF_CFDP_SetTxnStatus, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SetTxnStatus");
+    UtTest_Add(Test_CF_CFDP_SendEotPkt, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "Test_CF_CFDP_SendEotPkt");
+    UtTest_Add(Test_CF_CFDP_CancelTransaction, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "CF_CFDP_CancelTransaction");
+    UtTest_Add(Test_CF_CFDP_DisableEngine, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_DisableEngine");
+    UtTest_Add(Test_CF_CFDP_CloseFiles, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_CloseFiles");
+    UtTest_Add(Test_CF_CFDP_CancelTransaction, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "CF_CFDP_CancelTransaction");
+    UtTest_Add(Test_CF_CFDP_TxFile, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_TxFile");
+    UtTest_Add(Test_CF_CFDP_PlaybackDir, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_PlaybackDir");
+    UtTest_Add(Test_CF_CFDP_ArmAckTimer, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_ArmAckTimer");
+
+    UtTest_Add(Test_CF_CFDP_CF_CFDP_EncodeStart, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "CF_CFDP_CF_CFDP_EncodeStart");
+    UtTest_Add(Test_CF_CFDP_CF_CFDP_DecodeStart, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "CF_CFDP_CF_CFDP_DecodeStart");
+
+    UtTest_Add(Test_CF_CFDP_RecvDrop, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvDrop");
+    UtTest_Add(Test_CF_CFDP_RecvIdle, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvIdle");
+    UtTest_Add(Test_CF_CFDP_RecvPh, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvPh");
+    UtTest_Add(Test_CF_CFDP_RecvMd, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvMd");
+    UtTest_Add(Test_CF_CFDP_RecvFd, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvFd");
+    UtTest_Add(Test_CF_CFDP_RecvEof, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvEof");
+    UtTest_Add(Test_CF_CFDP_RecvAck, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvAck");
+    UtTest_Add(Test_CF_CFDP_RecvFin, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvFin");
+    UtTest_Add(Test_CF_CFDP_RecvNak, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_RecvNak");
+    UtTest_Add(Test_CF_CFDP_CopyStringFromLV, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_CopyStringFromLV");
+
+    UtTest_Add(Test_CF_CFDP_ConstructPduHeader, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown,
+               "CF_CFDP_ConstructPduHeader");
+    UtTest_Add(Test_CF_CFDP_SendMd, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendMd");
+    UtTest_Add(Test_CF_CFDP_SendFd, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendFd");
+    UtTest_Add(Test_CF_CFDP_SendEof, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendEof");
+    UtTest_Add(Test_CF_CFDP_SendAck, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendAck");
+    UtTest_Add(Test_CF_CFDP_SendFin, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendFin");
+    UtTest_Add(Test_CF_CFDP_SendNak, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_SendNak");
+    UtTest_Add(Test_CF_CFDP_AppendTlv, cf_cfdp_tests_Setup, cf_cfdp_tests_Teardown, "CF_CFDP_AppendTlv");
+}
+```
+
+### `cf_chunk_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_chunk_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_chunk.h"
+
+/* Gap function test function and context */
+#define TEST_CF_MAX_GAPS 3
+typedef struct
+{
+    uint32     count;
+    CF_Chunk_t chunks[TEST_CF_MAX_GAPS];
+} Test_CF_compute_gap_context_t;
+
+Test_CF_compute_gap_context_t Test_CF_compute_gap_context;
+
+void Test_CF_compute_gap_fn(const CF_ChunkList_t *CList, const CF_Chunk_t *Chunk, void *Opaque)
+{
+    UtAssert_ADDRESS_EQ(CList, Opaque);
+
+    if (Test_CF_compute_gap_context.count < TEST_CF_MAX_GAPS)
+    {
+        Test_CF_compute_gap_context.chunks[Test_CF_compute_gap_context.count].size   = Chunk->size;
+        Test_CF_compute_gap_context.chunks[Test_CF_compute_gap_context.count].offset = Chunk->offset;
+    }
+    ++Test_CF_compute_gap_context.count;
+}
+
+/* Fill a chunk list */
+void UT_CF_Chunk_SetupFull(CF_ChunkList_t *CList)
+{
+    CF_ChunkIdx_t cidx;
+
+    /*
+     * Set up nonzero values for size and calculate a "realistic" offsets w/ size
+     *   Size: just set to index+1 so it's uniquely identifiable
+     *   Offset: calculated using size and gap of 10
+     *
+     *  1    2     3     4     5
+     * 0-1 11-13 23-26 36-40 50-55
+     */
+    CList->chunks[0].offset = 0;
+    for (cidx = 0; cidx < CList->max_chunks; cidx++)
+    {
+        CList->chunks[cidx].size = cidx + 1;
+
+        if (cidx > 0)
+        {
+            CList->chunks[cidx].offset = CList->chunks[cidx - 1].offset + CList->chunks[cidx - 1].size + 10;
+        }
+    }
+
+    /* Set count to max since list is now full */
+    CList->count = CList->max_chunks;
+}
+
+/* Print the chunk list to the UT log (test debug helper) */
+void UT_CF_Chunk_Print(CF_ChunkList_t *CList)
+{
+    CF_ChunkIdx_t cidx;
+
+    UtPrintf("Chunk list: index{offset, size}");
+    for (cidx = 0; cidx < CList->count; cidx++)
+    {
+        UtPrintf("%u{%u, %u}", (unsigned int)cidx, (unsigned int)CList->chunks[cidx].offset,
+                 (unsigned int)CList->chunks[cidx].size);
+    }
+
+    UtPrintf("Chunk list: index{start-end}");
+    for (cidx = 0; cidx < CList->count; cidx++)
+    {
+        UtPrintf("%u{%u-%u}", (unsigned int)cidx, (unsigned int)CList->chunks[cidx].offset,
+                 (unsigned int)(CList->chunks[cidx].offset + CList->chunks[cidx].size));
+    }
+}
+
+/*
+ * Test routines
+ */
+
+/*
+ * Cover nominal create (which resets), add cases (empty, front, end, replace smallest)
+ * Note out of order sizes are to fully cover CF_Chunks_FindSmallestSize
+ */
+void Test_CF_Chunk_CreateAddReset(void)
+{
+    CF_ChunkList_t clist;
+    CF_Chunk_t     chunks[3];
+
+    /* Set nonzero values and test CF_ChunkListInit */
+    memset(&clist, 0xFF, sizeof(clist));
+    memset(chunks, 0xFF, sizeof(chunks));
+    UtAssert_VOIDCALL(CF_ChunkListInit(&clist, sizeof(chunks) / sizeof(chunks[0]), chunks));
+    UtAssert_UINT32_EQ(clist.count, 0);
+    UtAssert_UINT32_EQ(clist.max_chunks, sizeof(chunks) / sizeof(chunks[0]));
+    /* Spot check chunks clear */
+    UtAssert_UINT32_EQ(chunks[1].size, 0);
+    UtAssert_UINT32_EQ(chunks[1].offset, 0);
+
+    /* Add to empty list */
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 5, 1));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 5);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 1);
+    UtAssert_UINT32_EQ(clist.count, 1);
+
+    /* Add to end of list */
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 10, 1));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 5);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 1);
+    UtAssert_UINT32_EQ(clist.count, 2);
+
+    /* Add to front of list */
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 0, 2));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 5);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 10);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 1);
+    UtAssert_UINT32_EQ(clist.count, 3);
+
+    /* Force 1 to drop (first smallest), with new at the end */
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 20, 2));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 2);
+    UtAssert_UINT32_EQ(clist.count, 3);
+
+    /* Nominal combine previous (no overlap, at the end) */
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 22, 2));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 4);
+    UtAssert_UINT32_EQ(clist.count, 3);
+}
+
+/* Cover combination cases */
+void Test_CF_Chunk_Combine(void)
+{
+    CF_ChunkList_t clist;
+    CF_Chunk_t     chunks[5];
+
+    /* Initialize list (note already tested) */
+    CF_ChunkListInit(&clist, sizeof(chunks) / sizeof(chunks[0]), chunks);
+
+    UtPrintf("Initial chunk list state for reference");
+    UT_CF_Chunk_SetupFull(&clist);
+    UT_CF_Chunk_Print(&clist);
+
+    UtPrintf("Add chunk that won't add since list full and new chunk is smallest");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 2, 1)); /* 2-3 */
+    UT_CF_Chunk_Print(&clist);
+    /* Confirm 0 and 1 didn't change */
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 11);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 2);
+    UtAssert_UINT32_EQ(clist.count, 5);
+
+    UT_CF_Chunk_SetupFull(&clist);
+    UtPrintf("Add chunk that replaces chunk 0 as the smallest chunk");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 2, 2)); /* 2-4 */
+    UT_CF_Chunk_Print(&clist);
+    /* Confirm 0 replaced and 1 didn't change */
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 2);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 11);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 2);
+    UtAssert_UINT32_EQ(clist.count, 5);
+
+    UT_CF_Chunk_SetupFull(&clist);
+    UtPrintf("Add chunk that combines with chunk 1 w/ no overlap");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 10, 1)); /* 10-11 */
+    UT_CF_Chunk_Print(&clist);
+    /* 0 and 2 unchanged, 1 combined */
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 3);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 23);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 3);
+    UtAssert_UINT32_EQ(clist.count, 5);
+
+    UT_CF_Chunk_SetupFull(&clist);
+    UtPrintf("Add chunk that should completely replace chunk 2 and 3, both as Next");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 20, 21)); /* 20-41 */
+    UT_CF_Chunk_Print(&clist);
+    /* 1 unchanged, 2 combined, 4 in slot 3 */
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 11);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 21);
+    UtAssert_UINT32_EQ(clist.chunks[3].offset, 50);
+    UtAssert_UINT32_EQ(clist.chunks[3].size, 5);
+    UtAssert_UINT32_EQ(clist.count, 4);
+
+    UT_CF_Chunk_SetupFull(&clist);
+    UtPrintf("Add chunk that combines with chunk 1, 2 and 3, (prev, next, next)");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 12, 25)); /* 12-37 */
+    UT_CF_Chunk_Print(&clist);
+    /* 0 unchanged, 1 combined, 4 in slot 2 */
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 1);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 11);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 29);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 50);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 5);
+    UtAssert_UINT32_EQ(clist.count, 3);
+
+    UT_CF_Chunk_SetupFull(&clist);
+    UtPrintf("Add chunk that is a subset of 3 (should just drop)");
+    UtAssert_VOIDCALL(CF_ChunkListAdd(&clist, 37, 2)); /* 37-39 */
+    UT_CF_Chunk_Print(&clist);
+    /* 1, 2, and 3 unchanged */
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 11);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 2);
+    UtAssert_UINT32_EQ(clist.chunks[2].offset, 23);
+    UtAssert_UINT32_EQ(clist.chunks[2].size, 3);
+    UtAssert_UINT32_EQ(clist.chunks[3].offset, 36);
+    UtAssert_UINT32_EQ(clist.chunks[3].size, 4);
+    UtAssert_UINT32_EQ(clist.count, 5);
+}
+
+void Test_CF_Chunk_GetRmFirst(void)
+{
+    CF_ChunkList_t clist;
+    CF_Chunk_t     chunks[2];
+
+    /* Initialize list (note already tested) */
+    CF_ChunkListInit(&clist, sizeof(chunks) / sizeof(chunks[0]), chunks);
+
+    /* Get first with empty list */
+    UtAssert_ADDRESS_EQ(CF_ChunkList_GetFirstChunk(&clist), NULL);
+
+    /* Note CF_ChunkList_RemoveFromFirst can not be called on empty list (as documented) */
+
+    /* Add two (already tested) */
+    CF_ChunkListAdd(&clist, 0, 10);
+    CF_ChunkListAdd(&clist, 20, 10);
+
+    /* Get first with non-empty list */
+    UtAssert_ADDRESS_EQ(CF_ChunkList_GetFirstChunk(&clist), chunks);
+
+    /* Remove part from first non-empty list */
+    UtAssert_VOIDCALL(CF_ChunkList_RemoveFromFirst(&clist, 5));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 5);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 5);
+    UtAssert_UINT32_EQ(clist.chunks[1].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[1].size, 10);
+    UtAssert_UINT32_EQ(clist.count, 2);
+
+    /* Remove the rest of first from non-empty list */
+    UtAssert_VOIDCALL(CF_ChunkList_RemoveFromFirst(&clist, 5));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 10);
+    UtAssert_UINT32_EQ(clist.count, 1);
+
+    /* Add back in, do large remove, confirm only first chunk removed */
+    CF_ChunkListAdd(&clist, 0, 10);
+    UtAssert_VOIDCALL(CF_ChunkList_RemoveFromFirst(&clist, 50));
+    UtAssert_UINT32_EQ(clist.chunks[0].offset, 20);
+    UtAssert_UINT32_EQ(clist.chunks[0].size, 10);
+    UtAssert_UINT32_EQ(clist.count, 1);
+}
+
+void Test_CF_Chunk_ComputeGaps(void)
+{
+    CF_ChunkList_t clist;
+    CF_Chunk_t     chunks[5];
+    CF_ChunkSize_t total;
+
+    /* Initialize list (note already tested) */
+    CF_ChunkListInit(&clist, sizeof(chunks) / sizeof(chunks[0]), chunks);
+
+    /* Empty list with function callback */
+    total = 10;
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, total, 0, Test_CF_compute_gap_fn, &clist), 1);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].size, total);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.count, 1);
+
+    /* Empty list no callback */
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, total, 0, NULL, NULL), 1);
+
+    /* Add three with gaps 0-4, 10-19, 30-49 */
+    CF_ChunkListAdd(&clist, 5, 5);
+    CF_ChunkListAdd(&clist, 20, 10);
+    CF_ChunkListAdd(&clist, 50, 10);
+
+    /* Check 0-45, reports 3 gaps and breaks on total limit */
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, 25, 0, Test_CF_compute_gap_fn, &clist), 2);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].size, 5);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].size, 10);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.count, 2);
+
+    /* Same with no callback */
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, 45, 0, NULL, NULL), 3);
+
+    /* Check 25-75, end while loop at end of chunk list */
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, 75, 25, Test_CF_compute_gap_fn, &clist), 2);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].size, 20);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].offset, 30);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].size, 15);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].offset, 60);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.count, 2);
+
+    /* Check 0-75, limit by TEST_CF_MAX_GAPS */
+    memset(&Test_CF_compute_gap_context, 0, sizeof(Test_CF_compute_gap_context));
+    UtAssert_UINT32_EQ(CF_ChunkList_ComputeGaps(&clist, TEST_CF_MAX_GAPS, 75, 0, Test_CF_compute_gap_fn, &clist), 3);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].size, 5);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[0].offset, 0);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].size, 10);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[1].offset, 10);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[2].size, 20);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.chunks[2].offset, 30);
+    UtAssert_UINT32_EQ(Test_CF_compute_gap_context.count, 3);
+}
+
+/* Add tests */
+void UtTest_Setup(void)
+{
+    /* Full coverage with just this section of tests */
+    TEST_CF_ADD(Test_CF_Chunk_CreateAddReset);
+    TEST_CF_ADD(Test_CF_Chunk_Combine);
+    TEST_CF_ADD(Test_CF_Chunk_GetRmFirst);
+    TEST_CF_ADD(Test_CF_Chunk_ComputeGaps);
+}
+```
+
+### `cf_clist_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_clist_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_clist.h"
+
+/*******************************************************************************
+**
+**  cf_clist_tests local utility functions
+**
+*******************************************************************************/
+
+int UT_CListFn(CF_CListNode_t *node, void *context)
+{
+    int  status = CF_CLIST_CONT;
+    int *param  = context;
+
+    /* Passing in a negative value will exit when zero is hit */
+    (*param)++;
+    if (*param == 0)
+    {
+        status = CF_CLIST_EXIT;
+    }
+
+    return status;
+}
+
+int UT_CListFn_Rm(CF_CListNode_t *node, void *context)
+{
+    (*((int *)context))--;
+    node->next = node;
+    node->prev = node;
+    return CF_CLIST_CONT;
+}
+
+/*******************************************************************************
+**
+**  Tests
+**
+*******************************************************************************/
+
+void Test_CF_CList_InitNode(void)
+{
+    CF_CListNode_t node;
+
+    memset(&node, 0, sizeof(node));
+
+    UtAssert_VOIDCALL(CF_CList_InitNode(&node));
+    UtAssert_ADDRESS_EQ(&node, node.next);
+    UtAssert_ADDRESS_EQ(&node, node.prev);
+}
+
+void Test_CF_CList_InsertFront(void)
+{
+    CF_CListNode_t  node[3];
+    CF_CListNode_t *head = NULL;
+
+    memset(node, 0, sizeof(node));
+
+    /* Already tested, so OK to use to initialize */
+    CF_CList_InitNode(&node[0]);
+
+    /* Insert to empty list */
+    UtAssert_VOIDCALL(CF_CList_InsertFront(&head, &node[0]));
+    UtAssert_ADDRESS_EQ(head, node);
+
+    /* Insert to single node list */
+    UtAssert_VOIDCALL(CF_CList_InsertFront(&head, &node[1]));
+    UtAssert_ADDRESS_EQ(head, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[1]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+
+    /* Insert to list with 2 nodes */
+    UtAssert_VOIDCALL(CF_CList_InsertFront(&head, &node[2]));
+    UtAssert_ADDRESS_EQ(head, &node[2]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[1]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[0]);
+}
+
+void Test_CF_CList_InsertBack(void)
+{
+    CF_CListNode_t  node[3];
+    CF_CListNode_t *head = NULL;
+
+    memset(node, 0, sizeof(node));
+
+    /* Already tested, so OK to use to initialize */
+    CF_CList_InitNode(&node[0]);
+
+    /* Insert to empty list */
+    UtAssert_VOIDCALL(CF_CList_InsertBack(&head, &node[0]));
+    UtAssert_ADDRESS_EQ(head, node);
+
+    /* Insert to single node list */
+    UtAssert_VOIDCALL(CF_CList_InsertBack(&head, &node[1]));
+    UtAssert_ADDRESS_EQ(head, &node[0]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[1]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+
+    /* Insert to list with 2 nodes */
+    UtAssert_VOIDCALL(CF_CList_InsertBack(&head, &node[2]));
+    UtAssert_ADDRESS_EQ(head, &node[0]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[1]);
+}
+
+void Test_CF_CList_Pop(void)
+{
+    CF_CListNode_t  node[3];
+    CF_CListNode_t *head = NULL;
+
+    memset(node, 0, sizeof(node));
+
+    /* Already tested, so OK to use to initialize */
+    CF_CList_InitNode(&node[0]);
+    CF_CList_InsertBack(&head, &node[0]);
+    CF_CList_InsertBack(&head, &node[1]);
+    CF_CList_InsertBack(&head, &node[2]);
+
+    /* Pop leaves 2 nodes */
+    UtAssert_ADDRESS_EQ(CF_CList_Pop(&head), &node[0]);
+    UtAssert_ADDRESS_EQ(head, &node[1]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[1]);
+
+    /* Pop leaves 1 node */
+    UtAssert_ADDRESS_EQ(CF_CList_Pop(&head), &node[1]);
+    UtAssert_ADDRESS_EQ(head, &node[2]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[2]);
+
+    /* Pop leaves empty list */
+    UtAssert_ADDRESS_EQ(CF_CList_Pop(&head), &node[2]);
+    UtAssert_ADDRESS_EQ(head, NULL);
+
+    /* Pop a NULL list */
+    UtAssert_ADDRESS_EQ(CF_CList_Pop(&head), NULL);
+}
+
+void Test_CF_CList_Remove(void)
+{
+    CF_CListNode_t  node[3];
+    CF_CListNode_t *head = NULL;
+
+    memset(node, 0, sizeof(node));
+
+    /* Already tested, so OK to use to initialize */
+    CF_CList_InitNode(&node[0]);
+    CF_CList_InsertBack(&head, &node[0]);
+    CF_CList_InsertBack(&head, &node[1]);
+    CF_CList_InsertBack(&head, &node[2]);
+
+    /* Note Pop tests exercise removing from the front, and null */
+
+    /* Remove from the middle */
+    UtAssert_VOIDCALL(CF_CList_Remove(&head, &node[1]));
+    UtAssert_ADDRESS_EQ(head, &node[0]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[0]);
+
+    /* Remove from the end */
+    UtAssert_VOIDCALL(CF_CList_Remove(&head, &node[2]));
+    UtAssert_ADDRESS_EQ(head, &node[0]);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[0]);
+}
+
+void Test_CF_CList_InsertAfter(void)
+{
+    CF_CListNode_t  node[4];
+    CF_CListNode_t *head = node;
+
+    memset(node, 0, sizeof(node));
+
+    /* Already tested, so OK to use to initialize */
+    CF_CList_InitNode(&node[0]);
+
+    /* Insert to a single node list */
+    UtAssert_VOIDCALL(CF_CList_InsertAfter(&head, &node[0], &node[1]));
+    UtAssert_ADDRESS_EQ(head, node);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[1]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+
+    /* Insert at the end of a 2 node list to confirm head node gets updated correctly */
+    UtAssert_VOIDCALL(CF_CList_InsertAfter(&head, &node[1], &node[2]));
+    UtAssert_ADDRESS_EQ(head, node);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[1]);
+
+    /* Insert in the middle */
+    UtAssert_VOIDCALL(CF_CList_InsertAfter(&head, &node[1], &node[3]));
+    UtAssert_ADDRESS_EQ(head, node);
+    UtAssert_ADDRESS_EQ(node[0].next, &node[1]);
+    UtAssert_ADDRESS_EQ(node[0].prev, &node[2]);
+    UtAssert_ADDRESS_EQ(node[1].next, &node[3]);
+    UtAssert_ADDRESS_EQ(node[1].prev, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].next, &node[0]);
+    UtAssert_ADDRESS_EQ(node[2].prev, &node[3]);
+    UtAssert_ADDRESS_EQ(node[3].next, &node[2]);
+    UtAssert_ADDRESS_EQ(node[3].prev, &node[1]);
+}
+
+void Test_CF_CList_Traverse(void)
+{
+    CF_CListNode_t node[2];
+    int            context;
+
+    memset(node, 0, sizeof(node));
+
+    /* Null won't call function */
+    context = 0;
+    UtAssert_VOIDCALL(CF_CList_Traverse(NULL, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 0);
+
+    /* Single node success */
+    context      = 0;
+    node[0].next = &node[0];
+    UtAssert_VOIDCALL(CF_CList_Traverse(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 1);
+
+    /* Two nodes nominal */
+    context      = 0;
+    node[0].next = &node[1];
+    node[1].next = &node[0];
+    UtAssert_VOIDCALL(CF_CList_Traverse(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 2);
+
+    /* Two nodes, force exit on first call */
+    context      = -1;
+    node[0].next = &node[1];
+    UtAssert_VOIDCALL(CF_CList_Traverse(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 0);
+
+    /* Two nodes, self delete */
+    context      = 0;
+    node[0].next = &node[1];
+    node[1].next = &node[1]; /* This would be the state after a real remove */
+    UtAssert_VOIDCALL(CF_CList_Traverse(node, UT_CListFn_Rm, &context));
+    UtAssert_INT32_EQ(context, -2);
+}
+
+void Test_CF_CList_Traverse_R(void)
+{
+    CF_CListNode_t node[3];
+    int            context;
+
+    memset(node, 0, sizeof(node));
+
+    /* Null won't call function */
+    context = 0;
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(NULL, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 0);
+
+    /* Null previous also skips logic */
+    context = 0;
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 0);
+
+    /* Single node success */
+    context      = 0;
+    node[0].prev = &node[0];
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 1);
+
+    /* Two nodes nominal */
+    context      = 0;
+    node[0].prev = &node[1];
+    node[1].prev = &node[0];
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 2);
+
+    /* Two nodes, force exit on first call */
+    context      = -1;
+    node[0].prev = &node[1];
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(node, UT_CListFn, &context));
+    UtAssert_INT32_EQ(context, 0);
+
+    /* Two nodes, self delete */
+    context      = 0;
+    node[0].prev = &node[2];
+    node[1].prev = &node[1]; /* Self point to cause end */
+    node[2].prev = &node[1];
+    UtAssert_VOIDCALL(CF_CList_Traverse_R(node, UT_CListFn_Rm, &context));
+    UtAssert_INT32_EQ(context, -2);
+}
+
+/* Add tests */
+void UtTest_Setup(void)
+{
+    TEST_CF_ADD(Test_CF_CList_InitNode);
+    TEST_CF_ADD(Test_CF_CList_InsertFront);
+    TEST_CF_ADD(Test_CF_CList_InsertBack);
+    TEST_CF_ADD(Test_CF_CList_Pop);
+    TEST_CF_ADD(Test_CF_CList_Remove);
+    TEST_CF_ADD(Test_CF_CList_InsertAfter);
+    TEST_CF_ADD(Test_CF_CList_Traverse);
+    TEST_CF_ADD(Test_CF_CList_Traverse_R);
+}
+```
+
+### `cf_cmd_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_cmd_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_cmd.h"
+#include "cf_events.h"
+#include "cf_test_alt_handler.h"
+
+/*
+ * In order to properly instantiate buffers to pass to functions that
+ * accept a CFE_SB_Buffer_t, a union must be used to align the
+ * data.
+ */
+
+typedef union
+{
+    CF_UnionArgsCmd_t ua;
+    CFE_SB_Buffer_t   buf;
+} CF_UT_cmd_unionargs_buf_t;
+
+typedef union
+{
+    CF_SetParamCmd_t sp;
+    CFE_SB_Buffer_t  buf;
+} CF_UT_cmd_set_param_args_buf_t;
+
+typedef union
+{
+    CF_GetParamCmd_t gp;
+    CFE_SB_Buffer_t  buf;
+} CF_UT_cmd_get_param_args_buf_t;
+
+typedef union
+{
+    CF_TxFileCmd_t  tf;
+    CFE_SB_Buffer_t buf;
+} CF_UT_cmd_tx_file_buf_t;
+
+typedef union
+{
+    CF_PlaybackDirCmd_t pd;
+    CFE_SB_Buffer_t     buf;
+} CF_UT_cmd_playback_dir_buf_t;
+
+typedef union
+{
+    CF_TransactionCmd_t xact;
+    CFE_SB_Buffer_t     buf;
+} CF_UT_cmd_transaction_buf_t;
+
+typedef union
+{
+    CF_WriteQueueCmd_t wq;
+    CFE_SB_Buffer_t    buf;
+} CF_UT_cmd_write_q_buf_t;
+
+/*******************************************************************************
+**
+**  cf_cmd_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_cmd_tests_Setup(void)
+{
+    cf_tests_Setup();
+}
+
+void cf_cmd_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  cf_cmd_tests specific Any functions  NOTE:Some of these may be better as global
+**
+*******************************************************************************/
+
+CF_CFDP_Class_t Any_cfdp_class_t(void)
+{
+    return (CF_CFDP_Class_t)AnyCoinFlip();
+}
+
+CF_EntityId_t Any_CF_EntityId_t(void)
+{
+    return (CF_EntityId_t)Any_uint8();
+}
+
+/* uint8 used for Any_cf_channel likely there will never be that many channels */
+uint8 Any_cf_channel(void)
+{
+    return Any_uint8_LessThan(CF_NUM_CHANNELS);
+}
+
+/* uint8 used for Any_cf_polldir likely there will never be that many polldirs */
+uint8 Any_cf_polldir(void)
+{
+    return Any_uint8_LessThan(CF_MAX_POLLING_DIR_PER_CHAN);
+}
+
+/* bool_arg_t_barg should only be 0 or 1 (Boolean) */
+uint8 Any_bool_arg_t_barg(void)
+{
+    return AnyCoinFlip();
+}
+
+uint8 Any_queue_Except_q_pend(void)
+{
+    /* q_pend = 0, q_active = 1, q_history = 2, q_all = 3 */
+    return (rand() % 2) + 1; /* 0-2, + 1 -> 1-3 */
+}
+
+CF_TransactionSeq_t Any_CF_TransactionSeq_t(void)
+{
+    return (CF_TransactionSeq_t)Any_uint32();
+}
+
+/*******************************************************************************
+**
+**  cf_cmd_tests dummy test functions
+**
+*******************************************************************************/
+
+typedef struct
+{
+    CF_Transaction_t *t;
+    void *            context;
+} Dummy_CF_TsnChanAction_fn_t_context_t;
+
+int Dummy_chan_action_fn_t(uint8 chan_num, void *context)
+{
+    /* This one does not need to save its context, just call default so count works */
+    return UT_DEFAULT_IMPL(Dummy_chan_action_fn_t);
+}
+
+void Dummy_CF_TsnChanAction_fn_t(CF_Transaction_t *t, void *context)
+{
+    Dummy_CF_TsnChanAction_fn_t_context_t *ctxt =
+        UT_CF_GetContextBuffer(UT_KEY(Dummy_CF_TsnChanAction_fn_t), Dummy_CF_TsnChanAction_fn_t_context_t);
+
+    if (ctxt)
+    {
+        ctxt->t       = t;
+        ctxt->context = context;
+    }
+
+    UT_DEFAULT_IMPL(Dummy_CF_TsnChanAction_fn_t);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdNoop tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdNoop_SendNoopEventAndAcceptCommand(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg = NULL;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdNoop(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_NOOP);
+    /* Assert to show counter incremented */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdReset tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdReset_tests_WhenCommandByteIsEqTo_5_SendEventAndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = 5; /* 5 is size of 'names' */
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_RESET_INVALID);
+    /* Assert incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdReset_tests_WhenCommandByteIsGreaterThan_5_SendEventAndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = Any_uint8_GreaterThan(5); /* 5 is size of 'names' */
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_RESET_INVALID);
+    /* Assert incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdReset_tests_WhenCommandByteIs_command_AndResetHkCmdAndErrCountSendEvent(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = CF_Reset_command;
+
+    CF_AppData.hk.counters.cmd = Any_uint16_Except(0);
+    CF_AppData.hk.counters.err = Any_uint16_Except(0);
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_RESET);
+    UtAssert_ZERO(CF_AppData.hk.counters.cmd);
+    UtAssert_ZERO(CF_AppData.hk.counters.err);
+}
+
+void Test_CF_CmdReset_tests_WhenCommandByteIs_fault_ResetAllHkFaultCountSendEventAndAcceptCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+    int                       i         = 0;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = CF_Reset_fault;
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.fault.file_open          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_read          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_seek          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_write         = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_rename        = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.directory_read     = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.crc_mismatch       = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_size_mismatch = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.nak_limit          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.ack_limit          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.inactivity_timer   = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.spare              = Any_uint16_Except(0);
+    }
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_RESET);
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_open);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_read);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_seek);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_write);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_rename);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.directory_read);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.crc_mismatch);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.file_size_mismatch);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.nak_limit);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.ack_limit);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.inactivity_timer);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.fault.spare);
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.fault, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.fault),
+                             "fault channel %d was completely cleared to 0", i);
+    }
+    /* Assert to show counter incremented */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdReset_tests_WhenCommandByteIs_up_AndResetAllHkRecvCountSendEventAndAcceptCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+    int                       i         = 0;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = CF_Reset_up;
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.recv.file_data_bytes      = Any_uint64_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.pdu                  = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.error                = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.spurious             = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.dropped              = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.nak_segment_requests = Any_uint32_Except(0);
+    }
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_RESET);
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.file_data_bytes);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.pdu);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.error);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.spurious);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.pdu);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.recv.nak_segment_requests);
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.recv, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.recv),
+                             "recv channel %d was completely cleared to 0", i);
+    }
+    /* Assert to show counter incremented */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdReset_tests_SWhenCommandByteIs_down_AndResetAllHkSentCountendEventAcceptCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+    uint8                     i         = 0;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = CF_Reset_down;
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.sent.file_data_bytes      = Any_uint64_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.sent.nak_segment_requests = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.sent.pdu                  = Any_uint32_Except(0);
+    }
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_RESET);
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.sent.file_data_bytes);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.sent.nak_segment_requests);
+        UtAssert_ZERO(CF_AppData.hk.channel_hk[i].counters.sent.pdu);
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.sent, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.sent),
+                             "sent channel %d was completely cleared to 0", i);
+    }
+    /* Assert to show counter incremented */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdReset_tests_WhenCommandByteIs_all_AndResetAllMemValuesSendEvent(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+    int                       i         = 0;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    dummy_msg->data.byte[0] = CF_Reset_all;
+
+    CF_AppData.hk.counters.cmd = Any_uint16_Except(0);
+    CF_AppData.hk.counters.err = Any_uint16_Except(0);
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.fault.file_open          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_read          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_seek          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_write         = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_rename        = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.directory_read     = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.crc_mismatch       = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.file_size_mismatch = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.nak_limit          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.ack_limit          = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.inactivity_timer   = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.fault.spare              = Any_uint16_Except(0);
+    }
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.recv.file_data_bytes      = Any_uint64_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.pdu                  = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.error                = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.spurious             = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.dropped              = Any_uint16_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.recv.nak_segment_requests = Any_uint32_Except(0);
+    }
+
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        CF_AppData.hk.channel_hk[i].counters.sent.file_data_bytes      = Any_uint64_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.sent.nak_segment_requests = Any_uint32_Except(0);
+        CF_AppData.hk.channel_hk[i].counters.sent.pdu                  = Any_uint32_Except(0);
+    }
+
+    /* Act */
+    CF_CmdReset(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_RESET);
+
+    UtAssert_ZERO(CF_AppData.hk.counters.cmd);
+    UtAssert_ZERO(CF_AppData.hk.counters.err);
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.fault, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.fault),
+                             "fault channel %d was completely cleared to 0", i);
+    }
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.recv, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.recv),
+                             "recv channel %d was completely cleared to 0", i);
+    }
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        UtAssert_MemCmpValue(&CF_AppData.hk.channel_hk[i].counters.sent, 0,
+                             sizeof(&CF_AppData.hk.channel_hk[i].counters.sent),
+                             "sent channel %d was completely cleared to 0", i);
+    }
+}
+
+/*******************************************************************************
+**
+**  CF_CmdTxFile tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdTxFile(void)
+{
+    /* Test case for:
+     * void CF_CmdTxFile(CFE_SB_Buffer_t *msg);
+     */
+    CF_UT_cmd_tx_file_buf_t utbuf;
+    CF_TxFileCmd_t *        msg = &utbuf.tf;
+
+    memset(&CF_AppData.hk.counters, 0, sizeof(CF_AppData.hk.counters));
+
+    /* nominal, all zero should pass checks, just calls CF_CFDP_TxFile */
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = CF_CFDP_CLASS_1;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_TX_FILE);
+
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = CF_CFDP_CLASS_2;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_TX_FILE);
+
+    /* out of range arguments: bad class */
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = 10;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = -10;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 2);
+
+    /* out of range arguments: bad channel */
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->chan_num = CF_NUM_CHANNELS;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 3);
+
+    /* out of range arguments: bad keep */
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->keep = 15;
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 4);
+
+    /* CF_CFDP_TxFile fails*/
+    UT_CF_ResetEventCapture();
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_TxFile), -1);
+    memset(msg, 0, sizeof(*msg));
+    UtAssert_VOIDCALL(CF_CmdTxFile(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_TX_FILE);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 5);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdPlaybackDir tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdPlaybackDir(void)
+{
+    /* Test case for:
+     * void CF_CmdPlaybackDir(CFE_SB_Buffer_t *msg);
+     */
+    CF_UT_cmd_playback_dir_buf_t utbuf;
+    CF_PlaybackDirCmd_t *        msg = &utbuf.pd;
+
+    memset(&CF_AppData.hk.counters, 0, sizeof(CF_AppData.hk.counters));
+
+    /* nominal, all zero should pass checks, just calls CF_CFDP_PlaybackDir */
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = CF_CFDP_CLASS_1;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = CF_CFDP_CLASS_2;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 2);
+
+    /* out of range arguments: bad class */
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = 10;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->cfdp_class = -10;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 2);
+
+    /* out of range arguments: bad channel */
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->chan_num = CF_NUM_CHANNELS;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 3);
+
+    /* out of range arguments: bad keep */
+    UT_CF_ResetEventCapture();
+    memset(msg, 0, sizeof(*msg));
+    msg->keep = 15;
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_BAD_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 4);
+
+    /* CF_CFDP_PlaybackDir fails*/
+    UT_CF_ResetEventCapture();
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_PlaybackDir), -1);
+    memset(msg, 0, sizeof(*msg));
+    UtAssert_VOIDCALL(CF_CmdPlaybackDir(&utbuf.buf));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_PLAYBACK_DIR);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 5);
+}
+
+/*******************************************************************************
+**
+**  CF_DoChanAction tests
+**
+*******************************************************************************/
+
+void Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAny_fn_returns_1_Return_1(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context    = &dummy_context;
+    uint8                     random_fn_call = Any_uint8_LessThan(CF_NUM_CHANNELS) + 1;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = CF_ALL_CHANNELS;
+
+    UT_SetDeferredRetcode(UT_KEY(Dummy_chan_action_fn_t), random_fn_call, 1);
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, CF_NUM_CHANNELS);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 1, "CF_DoChanAction returned %d and should be 1 (an fn returned 1)", local_result);
+}
+
+void Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAll_fn_return_1_Return_1(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = CF_ALL_CHANNELS;
+
+    UT_SetDefaultReturnValue(UT_KEY(Dummy_chan_action_fn_t), 1);
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, CF_NUM_CHANNELS);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 1, "CF_DoChanAction returned %d and should be 1 (an fn returned 1)", local_result);
+}
+
+void Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenNo_fn_returns_0_Return_0(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = CF_ALL_CHANNELS;
+
+    UT_SetDefaultReturnValue(UT_KEY(Dummy_chan_action_fn_t), 0);
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, CF_NUM_CHANNELS);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 0, "CF_DoChanAction returned %d and should be 0 (all fn returned 0)", local_result);
+}
+
+void Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_1_Return_1(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = Any_cf_channel();
+
+    UT_SetDefaultReturnValue(UT_KEY(Dummy_chan_action_fn_t), 1);
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 1, "CF_DoChanAction returned %d and should be 1 (fn returned 1)", local_result);
+}
+
+void Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_0_Return_1(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = Any_cf_channel();
+
+    UT_SetDefaultReturnValue(UT_KEY(Dummy_chan_action_fn_t), 0);
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 0, "CF_DoChanAction returned %d and should be 0 (fn returned 0)", local_result);
+}
+
+void Test_CF_DoChanAction_WhenChanNumberEq_CF_NUM_CHANNELS_Return_neg1_And_SendEvent_(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[0] = CF_NUM_CHANNELS;
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_CHAN_PARAM);
+
+    UtAssert_True(local_result == -1,
+                  "CF_DoChanAction returned %d and should be -1 (cmd->data.byte[0] >= CF_NUM_CHANNELS)", local_result);
+}
+
+void Test_CF_DoChanAction_WhenBadChannelNumber_Return_neg1_And_SendEvent(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd    = &utbuf.ua;
+    const char *              arg_errstr = "CANNOT TEST SENT TO SEND EVENT";
+    CF_ChanActionFn_t         arg_fn     = &Dummy_chan_action_fn_t;
+    int                       dummy_context;
+    void *                    arg_context = &dummy_context;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* force CF_ALL_CHANNELS to not be a selection possibility */
+    arg_cmd->data.byte[0] = CF_ALL_CHANNELS;
+    int catastrophe_count = 0;
+    while (arg_cmd->data.byte[0] == CF_ALL_CHANNELS)
+    {
+        if (catastrophe_count == 10) /* 10 is arbitrary */
+        {
+            UtAssert_Message(UTASSERT_CASETYPE_ABORT, __FILE__, __LINE__,
+                             "CANNOT make arg_cmd->data.byte[0] != CF_ALL_CHANNELS in 10 tries");
+        }
+
+        arg_cmd->data.byte[0] = Any_uint8_GreaterThan_or_EqualTo(CF_NUM_CHANNELS);
+        ++catastrophe_count;
+    }
+
+    /* Act */
+    local_result = CF_DoChanAction(arg_cmd, arg_errstr, arg_fn, arg_context);
+
+    UT_GetStubCount(UT_KEY(Dummy_chan_action_fn_t));
+    UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(Dummy_chan_action_fn_t, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_CHAN_PARAM);
+
+    UtAssert_True(local_result == -1,
+                  "CF_DoChanAction returned %d and should be -1 (cmd->data.byte[0] >= CF_NUM_CHANNELS)", local_result);
+}
+
+/*******************************************************************************
+**
+**  CF_DoFreezeThaw tests
+**
+*******************************************************************************/
+
+void Test_CF_DoFreezeThaw_Set_frozen_ToGiven_context_barg_AndReturn_0(void)
+{
+    /* Arrange */
+    uint8                          arg_chan_num = Any_cf_channel();
+    CF_ChanAction_BoolArg_t        dummy_context;
+    const CF_ChanAction_BoolArg_t *arg_context;
+    int                            local_result;
+
+    dummy_context.barg = Any_bool_arg_t_barg();
+
+    arg_context = &dummy_context;
+
+    /* set frozen to opposite to ensure change was done - not required for test,
+     * but it is helpful for verification that the function did the change */
+    CF_AppData.hk.channel_hk[arg_chan_num].frozen = !dummy_context.barg;
+
+    /* Act */
+    local_result = CF_DoFreezeThaw(arg_chan_num, arg_context);
+
+    /* Assert */
+    UtAssert_True(CF_AppData.hk.channel_hk[arg_chan_num].frozen == dummy_context.barg,
+                  "CF_DoFreezeThaw set frozen to %d and should be %d (context->barg))",
+                  CF_AppData.hk.channel_hk[arg_chan_num].frozen, dummy_context.barg);
+    UtAssert_True(local_result == 0, "CF_DoFreezeThaw returned %d and should be 0 (only returns 0)", local_result);
+}
+
+/**************************************************************************
+**
+**  CF_CmdFreeze tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdFreeze_Set_frozen_To_1_AndAcceptCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoFreezeThaw via CF_DoChanAction */
+    uint8 dummy_chan_num = Any_cf_channel();
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_chan_num;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdFreeze(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoFreezeThaw */
+    UtAssert_True(CF_AppData.hk.channel_hk[dummy_chan_num].frozen == 1,
+                  "CF_DoFreezeThaw set frozen to %d and should be 1 (freeze = 1))",
+                  CF_AppData.hk.channel_hk[dummy_chan_num].frozen);
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d", CF_AppData.hk.counters.cmd,
+                  initial_hk_cmd_counter);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_FREEZE);
+}
+
+void Test_CF_CmdFreeze_Set_frozen_To_1_AndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoFreezeThaw via CF_DoChanAction */
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = CF_NUM_CHANNELS + 1;
+
+    CF_AppData.hk.counters.cmd = 0;
+
+    /* Act */
+    CF_CmdFreeze(arg_msg);
+
+    /* Assert */
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_FREEZE);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdThaw tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdThaw_Set_frozen_To_0_AndAcceptCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoFreezeThaw via CF_DoChanAction */
+    uint8 dummy_chan_num = Any_cf_channel();
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_chan_num;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdThaw(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoFreezeThaw */
+    UtAssert_True(CF_AppData.hk.channel_hk[dummy_chan_num].frozen == 0,
+                  "CF_DoFreezeThaw set frozen to %d and should be 0 (thaw = 0))",
+                  CF_AppData.hk.channel_hk[dummy_chan_num].frozen);
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d", CF_AppData.hk.counters.cmd,
+                  initial_hk_cmd_counter);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_THAW);
+}
+
+void Test_CF_CmdThaw_Set_frozen_To_0_AndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoFreezeThaw via CF_DoChanAction */
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = CF_NUM_CHANNELS + 1;
+
+    CF_AppData.hk.counters.cmd = 0;
+
+    /* Act */
+    CF_CmdThaw(arg_msg);
+
+    /* Assert */
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_THAW);
+}
+
+/*******************************************************************************
+**
+**  CF_FindTransactionBySequenceNumberAllChannels tests
+**
+*******************************************************************************/
+
+void Test_CF_FindTransactionBySequenceNumberAllChannels_WhenNoTransactionFoundReturn_NULL(void)
+{
+    /* Arrange */
+    CF_TransactionSeq_t arg_ts  = Any_CF_TransactionSeq_t();
+    CF_EntityId_t       arg_eid = Any_CF_EntityId_t();
+    CF_Transaction_t *  local_result;
+    CF_Transaction_t *  expected_result = NULL;
+
+    CF_FindTransactionBySequenceNumber_context_t context_CF_CFDP_FTBSN;
+
+    context_CF_CFDP_FTBSN.forced_return = NULL;
+
+    UT_SetDataBuffer(UT_KEY(CF_FindTransactionBySequenceNumber), &context_CF_CFDP_FTBSN, sizeof(context_CF_CFDP_FTBSN),
+                     false);
+
+    /* Act */
+    local_result = CF_FindTransactionBySequenceNumberAllChannels(arg_ts, arg_eid);
+
+    UT_GetStubCount(UT_KEY(CF_FindTransactionBySequenceNumber));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_FindTransactionBySequenceNumber, CF_NUM_CHANNELS);
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_FTBSN.c, CF_AppData.engine.channels);
+    UtAssert_UINT32_EQ(context_CF_CFDP_FTBSN.transaction_sequence_number, arg_ts);
+    UtAssert_UINT32_EQ(context_CF_CFDP_FTBSN.src_eid, arg_eid);
+    UtAssert_ADDRESS_EQ(local_result, expected_result);
+}
+
+void Test_CF_FindTransactionBySequenceNumberAllChannels_Return_TransactionFound(void)
+{
+    /* Arrange */
+    CF_TransactionSeq_t arg_ts                   = Any_CF_TransactionSeq_t();
+    CF_EntityId_t       arg_eid                  = Any_CF_EntityId_t();
+    uint8               number_transaction_match = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    CF_Transaction_t    dummy_return_value;
+    CF_Transaction_t *  local_result;
+    CF_Transaction_t *  expected_result = &dummy_return_value;
+
+    CF_FindTransactionBySequenceNumber_context_t contexts_CF_CFDP_FTBSN[CF_NUM_CHANNELS];
+
+    /* set non-matching transactions */
+    int i = 0;
+    for (i = 0; i < number_transaction_match; ++i)
+    {
+        contexts_CF_CFDP_FTBSN[i].forced_return = NULL;
+    }
+    /* set matching transaction */
+    contexts_CF_CFDP_FTBSN[i].forced_return = &dummy_return_value;
+
+    UT_SetDataBuffer(UT_KEY(CF_FindTransactionBySequenceNumber), &contexts_CF_CFDP_FTBSN,
+                     sizeof(contexts_CF_CFDP_FTBSN), false);
+
+    /* Act */
+    local_result = CF_FindTransactionBySequenceNumberAllChannels(arg_ts, arg_eid);
+
+    UT_GetStubCount(UT_KEY(CF_FindTransactionBySequenceNumber));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_FindTransactionBySequenceNumber, number_transaction_match + 1);
+    for (i = 0; i < number_transaction_match; ++i)
+    {
+        UtAssert_ADDRESS_EQ(contexts_CF_CFDP_FTBSN[i].c, CF_AppData.engine.channels + i);
+        UtAssert_UINT32_EQ(contexts_CF_CFDP_FTBSN[i].transaction_sequence_number, arg_ts);
+        UtAssert_UINT32_EQ(contexts_CF_CFDP_FTBSN[i].src_eid, arg_eid);
+    }
+    UtAssert_ADDRESS_EQ(contexts_CF_CFDP_FTBSN[i].c, CF_AppData.engine.channels + i);
+    UtAssert_UINT32_EQ(contexts_CF_CFDP_FTBSN[i].transaction_sequence_number, arg_ts);
+    UtAssert_UINT32_EQ(contexts_CF_CFDP_FTBSN[i].src_eid, arg_eid);
+    UtAssert_ADDRESS_EQ(local_result, expected_result);
+}
+
+/*******************************************************************************
+**
+**  CF_TsnChanAction tests
+**
+*******************************************************************************/
+
+void Test_CF_TsnChanAction_SendEvent_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionNotFoundAndReturn_neg1_Fail(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+    CF_TransactionCmd_t *       arg_cmd = &utbuf.xact;
+    char                        dummy_cmdstr[10]; /* 10 is arbitrary */
+    const char                  arg_cmdstr[10];   /* 10 is arbitrary */
+    CF_TsnChanAction_fn_t       arg_fn = &Dummy_CF_TsnChanAction_fn_t;
+    int                         dummy_context;
+    void *                      arg_context = &dummy_context;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    AnyRandomStringOfLettersOfLengthCopy(dummy_cmdstr, 10);
+    memcpy((char *)arg_cmdstr, &dummy_cmdstr, 10);
+
+    arg_cmd->chan = CF_COMPOUND_KEY;
+
+    /* Arrange unstubbable: CF_FindTransactionBySequenceNumberAllChannels */
+    CF_FindTransactionBySequenceNumber_context_t contexts_CF_CFDP_FTBSN[CF_NUM_CHANNELS];
+
+    /* set non-matching transactions */
+    int i = 0;
+    for (i = 0; i < CF_NUM_CHANNELS; ++i)
+    {
+        contexts_CF_CFDP_FTBSN[i].forced_return = NULL;
+    }
+
+    UT_SetDataBuffer(UT_KEY(CF_FindTransactionBySequenceNumber), &contexts_CF_CFDP_FTBSN,
+                     sizeof(contexts_CF_CFDP_FTBSN), false);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TsnChanAction(arg_cmd, arg_cmdstr, arg_fn, arg_context), -1);
+
+    UT_GetStubCount(UT_KEY(Dummy_CF_TsnChanAction_fn_t));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_TRANS_NOT_FOUND);
+
+    UtAssert_STUB_COUNT(Dummy_CF_TsnChanAction_fn_t, 0);
+}
+
+void Test_CF_TsnChanAction_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionFoundRun_fn_AndReturn_CFE_SUCCESS(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t           utbuf;
+    CF_TransactionCmd_t *                 arg_cmd = &utbuf.xact;
+    char                                  dummy_cmdstr[10]; /* 10 is arbitrary */
+    const char                            arg_cmdstr[10];   /* 10 is arbitrary */
+    CF_TsnChanAction_fn_t                 arg_fn = &Dummy_CF_TsnChanAction_fn_t;
+    int                                   dummy_context;
+    void *                                arg_context = &dummy_context;
+    CF_Transaction_t                      dummy_t;
+    Dummy_CF_TsnChanAction_fn_t_context_t context_Dummy_CF_TsnChanAction_fn_t;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    AnyRandomStringOfLettersOfLengthCopy(dummy_cmdstr, 10);
+    memcpy((char *)arg_cmdstr, &dummy_cmdstr, 10);
+
+    arg_cmd->chan = CF_COMPOUND_KEY;
+
+    UT_SetDataBuffer(UT_KEY(Dummy_CF_TsnChanAction_fn_t), &context_Dummy_CF_TsnChanAction_fn_t,
+                     sizeof(context_Dummy_CF_TsnChanAction_fn_t), false);
+
+    /* Arrange unstubbable: CF_FindTransactionBySequenceNumberAllChannels */
+    CF_FindTransactionBySequenceNumber_context_t context_CF_CFDP_FTBSN;
+
+    /* set matching transaction */
+    context_CF_CFDP_FTBSN.forced_return = &dummy_t;
+
+    UT_SetDataBuffer(UT_KEY(CF_FindTransactionBySequenceNumber), &context_CF_CFDP_FTBSN, sizeof(context_CF_CFDP_FTBSN),
+                     false);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TsnChanAction(arg_cmd, arg_cmdstr, arg_fn, arg_context), 1);
+
+    UT_GetStubCount(UT_KEY(Dummy_CF_TsnChanAction_fn_t));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(Dummy_CF_TsnChanAction_fn_t, 1);
+    UtAssert_ADDRESS_EQ(context_Dummy_CF_TsnChanAction_fn_t.t, &dummy_t);
+    UtAssert_ADDRESS_EQ(context_Dummy_CF_TsnChanAction_fn_t.context, arg_context);
+}
+
+void Test_CF_TsnChanAction_cmd_chan_Eq_CF_ALL_CHANNELS_Return_CF_TraverseAllTransactions_All_Channels(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t                       utbuf;
+    CF_TransactionCmd_t *                             arg_cmd = &utbuf.xact;
+    char                                              dummy_cmdstr[10]; /* 10 is arbitrary */
+    const char                                        arg_cmdstr[10];   /* 10 is arbitrary */
+    CF_TsnChanAction_fn_t                             arg_fn = &Dummy_CF_TsnChanAction_fn_t;
+    int                                               dummy_context;
+    void *                                            arg_context     = &dummy_context;
+    int                                               expected_result = Any_int();
+    CF_TraverseAllTransactions_All_Channels_context_t context_CF_TATAC;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    AnyRandomStringOfLettersOfLengthCopy(dummy_cmdstr, 10);
+    memcpy((char *)arg_cmdstr, &dummy_cmdstr, 10);
+
+    context_CF_TATAC.forced_return = expected_result;
+
+    arg_cmd->chan = CF_ALL_CHANNELS;
+
+    UT_SetDataBuffer(UT_KEY(CF_TraverseAllTransactions_All_Channels), &context_CF_TATAC, sizeof(context_CF_TATAC),
+                     false);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TsnChanAction(arg_cmd, arg_cmdstr, arg_fn, arg_context), expected_result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+void Test_CF_TsnChanAction_cmd_chan_IsASingleChannel(void)
+{
+    /* Arrange */
+    CF_TransactionCmd_t cmd;
+    int                 result = 1;
+
+    memset(&cmd, 0, sizeof(cmd));
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_TraverseAllTransactions), result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TsnChanAction(&cmd, NULL, NULL, NULL), result);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_STUB_COUNT(CF_TraverseAllTransactions, 1);
+}
+
+void Test_CF_TsnChanAction_cmd_FailBecause_cmd_chan_IsInvalid(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+    CF_TransactionCmd_t *       arg_cmd       = &utbuf.xact;
+    const char                  arg_cmdstr[1] = "";
+    CF_TsnChanAction_fn_t       arg_fn        = &Dummy_CF_TsnChanAction_fn_t;
+    int                         dummy_context;
+    void *                      arg_context = &dummy_context;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    arg_cmd->chan = Any_uint8_BetweenExcludeMax(CF_NUM_CHANNELS, CF_COMPOUND_KEY);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TsnChanAction(arg_cmd, arg_cmdstr, arg_fn, arg_context), -1);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_TSN_CHAN_INVALID);
+}
+
+/*******************************************************************************
+**
+**  CF_DoSuspRes_Txn tests
+**
+*******************************************************************************/
+
+void Test_CF_DoSuspRes_Txn_Set_context_same_To_1_suspended_Eq_action(void)
+{
+    /* Arrange */
+    CF_Transaction_t            dummy_t;
+    CF_Transaction_t *          arg_t = &dummy_t;
+    CF_ChanAction_SuspResArg_t  dummy_context;
+    CF_ChanAction_SuspResArg_t *arg_context = &dummy_context;
+
+    /* set same to 0 to ensure change was done - not required for test,
+     * but it is helpful for verification that the function did the change */
+    arg_context->same   = 0;
+    arg_context->action = AnyCoinFlip();
+
+    arg_t->flags.com.suspended = arg_context->action;
+
+    /* Act */
+    CF_DoSuspRes_Txn(arg_t, arg_context);
+
+    /* Assert */
+    UtAssert_True(arg_context->same == 1, "CF_DoSuspRes_Txn set context->same to %d and should be 1 (direct set)",
+                  arg_context->same);
+}
+
+void Test_CF_DoSuspRes_Txn_When_suspended_NotEqTo_action_Set_suspended_To_action(void)
+{
+    /* Arrange */
+    CF_Transaction_t            dummy_t;
+    CF_Transaction_t *          arg_t = &dummy_t;
+    CF_ChanAction_SuspResArg_t  dummy_context;
+    CF_ChanAction_SuspResArg_t *arg_context = &dummy_context;
+
+    /* set same to 0 to ensure change was done - not required for test,
+     * but it is helpful for verification that the function did the change */
+    arg_context->same   = 0;
+    arg_context->action = AnyCoinFlip();
+
+    arg_t->flags.com.suspended = !arg_context->action;
+
+    /* Act */
+    CF_DoSuspRes_Txn(arg_t, arg_context);
+
+    /* Assert */
+    UtAssert_True(arg_t->flags.com.suspended == arg_context->action,
+                  "CF_DoSuspRes_Txn set arg_t->flags.com.suspended to %d and should be %d (context->action)",
+                  arg_t->flags.com.suspended, arg_context->action);
+}
+
+/*******************************************************************************
+**
+**  CF_DoSuspRes tests
+**
+*******************************************************************************/
+
+static void UT_AltHandler_CF_TraverseAllTransactions_SetSuspResArg(void *UserObj, UT_EntryKey_t FuncKey,
+                                                                   const UT_StubContext_t *Context)
+{
+    CF_ChanAction_SuspResArg_t *context = UT_Hook_GetArgValueByName(Context, "context", CF_ChanAction_SuspResArg_t *);
+    CF_ChanAction_SuspResArg_t *utargs  = UserObj;
+
+    if (context != NULL && utargs != NULL)
+    {
+        /* Update the caller-supplied context with the UT-supplied value */
+        /* only "same" flag is an output, action is an input */
+        context->same = utargs->same;
+    }
+}
+
+void Test_CF_DoSuspRes(void)
+{
+    /* Test case for:
+     * void CF_DoSuspRes(CF_TransactionCmd_t *cmd, uint8 action)
+     */
+
+    CF_UT_cmd_transaction_buf_t utbuf;
+    CF_TransactionCmd_t *       cmd = &utbuf.xact;
+    CF_ChanAction_SuspResArg_t  utargs;
+
+    memset(&CF_AppData.hk.counters, 0, sizeof(CF_AppData.hk.counters));
+    memset(&utargs, 0, sizeof(utargs));
+    memset(cmd, 0, sizeof(*cmd));
+
+    /* nominal */
+    /* With no setup, CF_TsnChanAction() invokes CF_TraverseAllTransactions stub, which returns 0 */
+    /* this should increment the reject counter because it did not match any transactions */
+    UtAssert_VOIDCALL(CF_DoSuspRes(cmd, 0));
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+
+    /* set up to match 1 transaction, should be accepted, but should not generate an event */
+    UT_CF_ResetEventCapture();
+    UT_SetDeferredRetcode(UT_KEY(CF_TraverseAllTransactions), 1, 1);
+    UtAssert_VOIDCALL(CF_DoSuspRes(cmd, 1));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_SUSPRES);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+
+    /* Output the CF_ChanAction_SuspResArg_t back to the caller, to set the "same" flag to 1 */
+    /* this gets the case where it attempts to set to the same value, and is rejected due to that */
+    UT_CF_ResetEventCapture();
+    UT_SetDeferredRetcode(UT_KEY(CF_TraverseAllTransactions), 1, 1);
+    utargs.same = 1;
+    UT_SetHandlerFunction(UT_KEY(CF_TraverseAllTransactions), UT_AltHandler_CF_TraverseAllTransactions_SetSuspResArg,
+                          &utargs);
+    UtAssert_VOIDCALL(CF_DoSuspRes(cmd, 0));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_SUSPRES_SAME);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 2);
+
+    /* Output the CF_ChanAction_SuspResArg_t back to the caller, to set the "same" flag to 1 */
+    /* however this time CF_TraverseAllTransactions reports it matched multiple transactions, so it should NOT reject it
+     */
+    UT_CF_ResetEventCapture();
+    UT_SetDeferredRetcode(UT_KEY(CF_TraverseAllTransactions), 1, 10);
+    UtAssert_VOIDCALL(CF_DoSuspRes(cmd, 1));
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_SUSPRES);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 2);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdSuspend tests
+**
+*******************************************************************************/
+
+/* Test_CF_CmdSuspend_Call_CF_DoSuspRes_WithGiven_msg_And_action_1 */
+void Test_CF_CmdSuspend_Call_CF_DoSuspRes_WithGiven_msg_And_action_1(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Set to invalid channel */
+    utbuf.xact.chan = CF_NUM_CHANNELS;
+
+    /* Act */
+    CF_CmdSuspend(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_ERR_CMD_TSN_CHAN_INVALID);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[1], CF_EID_ERR_CMD_SUSPRES_CHAN);
+
+    /* Assert incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdResume tests
+**
+*******************************************************************************/
+
+/* Test_CF_CmdResume_Call_CF_DoSuspRes_WithGiven_msg_And_action_0 */
+void Test_CF_CmdResume_Call_CF_DoSuspRes_WithGiven_msg_And_action_0(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Invalid channel */
+    utbuf.xact.chan = CF_NUM_CHANNELS;
+
+    /* Act */
+    CF_CmdResume(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 2);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_ERR_CMD_TSN_CHAN_INVALID);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[1], CF_EID_ERR_CMD_SUSPRES_CHAN);
+
+    /* Assert incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdCancel_Txn tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdCancel_Txn_Call_CF_CFDP_CancelTransaction_WithGiven_t(void)
+{
+    /* Arrange */
+    CF_Transaction_t  dummy_t;
+    CF_Transaction_t *arg_t       = &dummy_t;
+    void *            arg_ignored = NULL;
+    CF_Transaction_t *context_CF_CFDP_CancelTransaction;
+
+    UT_SetDataBuffer(UT_KEY(CF_CFDP_CancelTransaction), &context_CF_CFDP_CancelTransaction,
+                     sizeof(context_CF_CFDP_CancelTransaction), false);
+
+    /* Act */
+    CF_CmdCancel_Txn(arg_t, arg_ignored);
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_CancelTransaction, arg_t);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdCancel tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdCancel_Success(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Nominally returns number of transactions affected, cause failure */
+    UT_SetDefaultReturnValue(UT_KEY(CF_TraverseAllTransactions), 1);
+
+    /* Act */
+    CF_CmdCancel(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_TraverseAllTransactions, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_CANCEL);
+}
+
+void Test_CF_CmdCancel_Failure(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Nominally returns number of transactions affected, cause failure */
+    UT_SetDefaultReturnValue(UT_KEY(CF_TraverseAllTransactions), 0);
+
+    /* Act */
+    CF_CmdCancel(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_TraverseAllTransactions, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_CANCEL_CHAN);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdAbandon_Txn tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdAbandon_Txn_Call_CF_CFDP_ResetTransaction_WithGiven_t_And_0(void)
+{
+    /* Arrange */
+    CF_Transaction_t                   dummy_t;
+    CF_Transaction_t *                 arg_t       = &dummy_t;
+    void *                             arg_ignored = NULL;
+    CF_CFDP_ResetTransaction_context_t context_CF_CFDP_ResetTransaction;
+
+    UT_SetDataBuffer(UT_KEY(CF_CFDP_ResetTransaction), &context_CF_CFDP_ResetTransaction,
+                     sizeof(context_CF_CFDP_ResetTransaction), false);
+
+    /* Act */
+    CF_CmdAbandon_Txn(arg_t, arg_ignored);
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_ResetTransaction.t, arg_t);
+    UtAssert_True(context_CF_CFDP_ResetTransaction.keep_history == 0,
+                  "CF_CFDP_CancelTransaction was called with int %d and should be 0 (constant in call)",
+                  context_CF_CFDP_ResetTransaction.keep_history);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdAbandon tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdAbandon_Success(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Nominally returns number of transactions affected, cause failure */
+    UT_SetDefaultReturnValue(UT_KEY(CF_TraverseAllTransactions), 1);
+
+    /* Act */
+    CF_CmdAbandon(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_TraverseAllTransactions, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_ABANDON);
+}
+
+void Test_CF_CmdAbandon_Failure(void)
+{
+    /* Arrange */
+    CF_UT_cmd_transaction_buf_t utbuf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Nominally returns number of transactions acted on, force failure */
+    UT_SetDefaultReturnValue(UT_KEY(CF_TraverseAllTransactions), 0);
+
+    /* Act */
+    CF_CmdAbandon(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_TraverseAllTransactions, 1);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ABANDON_CHAN);
+}
+
+/*******************************************************************************
+**
+**  CF_DoEnableDisableDequeue tests
+**
+*******************************************************************************/
+
+void Test_CF_DoEnableDisableDequeue_Set_chan_num_EnabledFlagTo_context_barg(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t         dummy_config_table;
+    uint8                    arg_chan_num = Any_cf_channel();
+    CF_ChanAction_BoolArg_t  dummy_context;
+    CF_ChanAction_BoolArg_t *arg_context = &dummy_context;
+
+    CF_AppData.config_table = &dummy_config_table;
+    dummy_context.barg      = Any_bool_arg_t_barg();
+
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    /* Act */
+    CF_DoEnableDisableDequeue(arg_chan_num, arg_context);
+
+    /* Assert */
+    UtAssert_True(CF_AppData.config_table->chan[arg_chan_num].dequeue_enabled == dummy_context.barg,
+                  "Channel %u dequeue_enabled is %u and should be %u (context->barg)", arg_chan_num,
+                  CF_AppData.config_table->chan[arg_chan_num].dequeue_enabled, dummy_context.barg);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdEnableDequeue tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdEnableDequeue_Success(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoEnableDisableDequeue via CF_DoChanAction */
+    CF_ConfigTable_t dummy_config_table;
+    uint8            dummy_chan_num = Any_cf_channel();
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_chan_num;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdEnableDequeue(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoFreezeThaw */
+    UtAssert_True(CF_AppData.config_table->chan[dummy_chan_num].dequeue_enabled == 1,
+                  "CF_CmdEnableDequeue set dequeue_enabled to %d and should be 1 (barg = 1))",
+                  CF_AppData.config_table->chan[dummy_chan_num].dequeue_enabled);
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d\nACCEPTANCE OF COMMAND (+1) SHOULD BE "
+                  "THE BEHAVIOR BUT IT IS NOT",
+                  CF_AppData.hk.counters.cmd, initial_hk_cmd_counter);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_ENABLE_DEQUEUE);
+}
+
+void Test_CF_CmdEnableDequeue_Failure(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoEnableDisableDequeue via CF_DoChanAction */
+    CF_ConfigTable_t dummy_config_table;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = CF_NUM_CHANNELS + 1;
+
+    CF_AppData.hk.counters.err = 0;
+
+    /* Act */
+    CF_CmdEnableDequeue(arg_msg);
+
+    /* Assert */
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ENABLE_DEQUEUE);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdDisableDequeue tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdDisableDequeue_Success(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoEnableDisableDequeue via CF_DoChanAction */
+    CF_ConfigTable_t dummy_config_table;
+    uint8            dummy_chan_num = Any_cf_channel();
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_chan_num;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdDisableDequeue(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoFreezeThaw */
+    UtAssert_True(CF_AppData.config_table->chan[dummy_chan_num].dequeue_enabled == 0,
+                  "CF_CmdEnableDequeue set dequeue_enabled to %d and should be 0 (barg = 0))",
+                  CF_AppData.config_table->chan[dummy_chan_num].dequeue_enabled);
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d", CF_AppData.hk.counters.cmd,
+                  initial_hk_cmd_counter);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_DISABLE_DEQUEUE);
+}
+
+void Test_CF_CmdDisableDequeue_Failure(void)
+{
+    /* Arrange */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    /* Arrange unstubbable: CF_DoEnableDisableDequeue via CF_DoChanAction */
+    CF_ConfigTable_t dummy_config_table;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = CF_NUM_CHANNELS + 1;
+
+    CF_AppData.hk.counters.err = 0;
+
+    /* Act */
+    CF_CmdDisableDequeue(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoFreezeThaw */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_DISABLE_DEQUEUE);
+}
+
+/*******************************************************************************
+**
+**  CF_DoEnableDisablePolldir tests
+**
+*******************************************************************************/
+
+void Test_CF_DoEnableDisablePolldir_When_CF_ALL_CHANNELS_SetAllPolldirsInChannelEnabledTo_context_barg(void)
+{
+    /* Arrange */
+    uint8                       arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t   utbuf;
+    CF_UnionArgsCmd_t *         dummy_msg = &utbuf.ua;
+    CF_ChanAction_BoolMsgArg_t  dummy_context;
+    CF_ChanAction_BoolMsgArg_t *arg_context = &dummy_context;
+    CF_ConfigTable_t            dummy_config_table;
+    uint8                       expected_enabled;
+    int                         local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    dummy_msg->data.byte[1] = CF_ALL_CHANNELS;
+
+    dummy_context.msg  = dummy_msg;
+    dummy_context.barg = Any_bool_arg_t_barg();
+    expected_enabled   = dummy_context.barg;
+
+    /* Act */
+    local_result = CF_DoEnableDisablePolldir(arg_chan_num, arg_context);
+
+    /* Assert */
+    uint8 current_polldir = 0;
+
+    for (current_polldir = 0; current_polldir < CF_MAX_POLLING_DIR_PER_CHAN; ++current_polldir)
+    {
+        UtAssert_True(CF_AppData.config_table->chan[arg_chan_num].polldir[current_polldir].enabled == expected_enabled,
+                      "Channel %u Polldir %u set to %u and should be %u (context->barg)", arg_chan_num, current_polldir,
+                      CF_AppData.config_table->chan[arg_chan_num].polldir[current_polldir].enabled, expected_enabled);
+    }
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 0, "CF_DoEnableDisablePolldir returned %d and should be 0", local_result);
+}
+
+void Test_CF_DoEnableDisablePolldir_WhenSetToSpecificPolldirSetPolldirFrom_context_ChannelEnabledTo_context_barg(void)
+{
+    /* Arrange */
+    uint8                       arg_chan_num  = Any_cf_channel();
+    uint8                       dummy_polldir = Any_cf_polldir();
+    CF_UT_cmd_unionargs_buf_t   utbuf;
+    CF_UnionArgsCmd_t *         dummy_msg = &utbuf.ua;
+    CF_ChanAction_BoolMsgArg_t  dummy_context;
+    CF_ChanAction_BoolMsgArg_t *arg_context = &dummy_context;
+    CF_ConfigTable_t            dummy_config_table;
+    uint8                       expected_enabled;
+    int                         local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    dummy_msg->data.byte[1] = dummy_polldir;
+
+    dummy_context.msg  = dummy_msg;
+    dummy_context.barg = Any_bool_arg_t_barg();
+    expected_enabled   = dummy_context.barg;
+
+    /* Act */
+    local_result = CF_DoEnableDisablePolldir(arg_chan_num, arg_context);
+
+    /* Assert */
+    UtAssert_True(CF_AppData.config_table->chan[arg_chan_num].polldir[dummy_polldir].enabled == expected_enabled,
+                  "Channel %u Polldir %u set to %u and should be %u (context->barg)", arg_chan_num, dummy_polldir,
+                  CF_AppData.config_table->chan[arg_chan_num].polldir[dummy_polldir].enabled, expected_enabled);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    UtAssert_True(local_result == 0, "CF_DoEnableDisablePolldir returned %d and should be 0", local_result);
+}
+
+void Test_CF_DoEnableDisablePolldir_FailPolldirEq_CF_MAX_POLLING_DIR_PER_CHAN_AndSendEvent(void)
+{
+    /* Arrange */
+    uint8                       arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t   utbuf;
+    CF_UnionArgsCmd_t *         dummy_msg = &utbuf.ua;
+    CF_ChanAction_BoolMsgArg_t  dummy_context;
+    CF_ChanAction_BoolMsgArg_t *arg_context = &dummy_context;
+    CF_ConfigTable_t            dummy_config_table;
+    int                         local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    dummy_msg->data.byte[1] = CF_MAX_POLLING_DIR_PER_CHAN;
+
+    dummy_context.msg  = dummy_msg;
+    dummy_context.barg = Any_bool_arg_t_barg();
+
+    /* Act */
+    local_result = CF_DoEnableDisablePolldir(arg_chan_num, arg_context);
+
+    /* Assert */
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_POLLDIR_INVALID);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_True(local_result == -1, "CF_DoEnableDisablePolldir returned %d and should be -1", local_result);
+}
+
+void Test_CF_DoEnableDisablePolldir_FailAnyBadPolldirSendEvent(void)
+{
+    /* Arrange */
+    uint8                       arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t   utbuf;
+    CF_UnionArgsCmd_t *         dummy_msg = &utbuf.ua;
+    CF_ChanAction_BoolMsgArg_t  dummy_context;
+    CF_ChanAction_BoolMsgArg_t *arg_context = &dummy_context;
+    CF_ConfigTable_t            dummy_config_table;
+    int                         local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    dummy_msg->data.byte[1] = CF_MAX_POLLING_DIR_PER_CHAN;
+
+    dummy_context.msg  = dummy_msg;
+    dummy_context.barg = Any_bool_arg_t_barg();
+
+    /* Act */
+    local_result = CF_DoEnableDisablePolldir(arg_chan_num, arg_context);
+
+    /* Assert */
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_POLLDIR_INVALID);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_True(local_result == -1, "CF_DoEnableDisablePolldir returned %d and should be -1", local_result);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdEnablePolldir tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdEnablePolldir_SuccessWhenActionSuccess(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t          dummy_config_table;
+    uint8                     dummy_channel = Any_cf_channel();
+    uint8                     dummy_polldir = Any_cf_polldir();
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    /* Arrange unstubbable: CF_DoEnableDisablePolldir */
+    dummy_msg->data.byte[1] = dummy_polldir;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdEnablePolldir(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    UtAssert_True(CF_AppData.config_table->chan[dummy_channel].polldir[dummy_polldir].enabled == 1,
+                  "Channel %u Polldir %u set to %u and should be 1 (context->barg)", dummy_channel, dummy_polldir,
+                  CF_AppData.config_table->chan[dummy_channel].polldir[dummy_polldir].enabled);
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d", CF_AppData.hk.counters.cmd,
+                  initial_hk_cmd_counter);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_ENABLE_POLLDIR);
+}
+
+void Test_CF_CmdEnablePolldir_FailWhenActionFail(void)
+{
+    /* Arrange */
+    uint8 dummy_channel = Any_cf_channel();
+    uint8 error_polldir = Any_uint8_BetweenInclusive(CF_MAX_POLLING_DIR_PER_CHAN, CF_ALL_CHANNELS - 1);
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    /* Arrange unstubbable: CF_DoEnableDisablePolldir */
+    dummy_msg->data.byte[1] = error_polldir;
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdEnablePolldir(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.err == (uint16)(initial_hk_err_counter + 1),
+                  "CF_AppData.hk.counters.err is %d and should be 1 more than %d", CF_AppData.hk.counters.err,
+                  initial_hk_err_counter);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ENABLE_POLLDIR);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdDisablePolldir tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdDisablePolldir_SuccessWhenActionSuccess(void)
+{
+    /* Arrange */
+    CF_ConfigTable_t          dummy_config_table;
+    uint8                     dummy_channel = Any_cf_channel();
+    uint8                     dummy_polldir = Any_cf_polldir();
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    /* Arrange unstubbable: CF_DoEnableDisablePolldir */
+    dummy_msg->data.byte[1] = dummy_polldir;
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdDisablePolldir(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    UtAssert_True(CF_AppData.config_table->chan[dummy_channel].polldir[dummy_polldir].enabled == 0,
+                  "Channel %u Polldir %u set to %u and should be 0 (context->barg)", dummy_channel, dummy_polldir,
+                  CF_AppData.config_table->chan[dummy_channel].polldir[dummy_polldir].enabled);
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.cmd == (uint16)(initial_hk_cmd_counter + 1),
+                  "CF_AppData.hk.counters.cmd is %d and should be 1 more than %d", CF_AppData.hk.counters.cmd,
+                  initial_hk_cmd_counter);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_DISABLE_POLLDIR);
+}
+
+void Test_CF_CmdDisablePolldir_FailWhenActionFail(void)
+{
+    /* Arrange */
+    uint8 dummy_channel = Any_cf_channel();
+    uint8 error_polldir = Any_uint8_BetweenInclusive(CF_MAX_POLLING_DIR_PER_CHAN, CF_ALL_CHANNELS - 1);
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    /* Arrange unstubbable: CF_DoEnableDisablePolldir */
+    dummy_msg->data.byte[1] = error_polldir;
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdDisablePolldir(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    /* Assert for incremented counter*/
+    UtAssert_True(CF_AppData.hk.counters.err == (uint16)(initial_hk_err_counter + 1),
+                  "CF_AppData.hk.counters.err is %d and should be 1 more than %d", CF_AppData.hk.counters.err,
+                  initial_hk_err_counter);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_DISABLE_POLLDIR);
+}
+
+/*******************************************************************************
+**
+**  CF_PurgeHistory tests
+**
+*******************************************************************************/
+
+void Test_CF_PurgeHistory_Call_CF_CFDP_ResetHistory_AndReturn_CLIST_CONT(void)
+{
+    /* Arrange */
+    CF_History_t                   dummy_h;
+    CF_CListNode_t *               arg_n = &dummy_h.cl_node;
+    CF_Channel_t                   dummy_c;
+    CF_Channel_t *                 arg_c = &dummy_c;
+    int                            local_result;
+    CF_CFDP_ResetHistory_context_t context_CF_CFDP_ResetHistory;
+
+    UT_SetDataBuffer(UT_KEY(CF_ResetHistory), &context_CF_CFDP_ResetHistory, sizeof(context_CF_CFDP_ResetHistory),
+                     false);
+
+    /* Act */
+    local_result = CF_PurgeHistory(arg_n, arg_c);
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_ResetHistory.c, arg_c);
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_ResetHistory.h, &dummy_h);
+    UtAssert_True(local_result == CF_CLIST_CONT, "CF_PurgeHistory returned %d and should be %d (CF_CLIST_CONT)",
+                  local_result, CF_CLIST_CONT);
+}
+
+/*******************************************************************************
+**
+**  CF_PurgeTransaction tests
+**
+*******************************************************************************/
+
+void Test_CF_PurgeTransaction_Call_CF_CFDP_ResetTransaction_AndReturn_CLIST_CONT(void)
+{
+    /* Arrange */
+    CF_Transaction_t                   dummy_t;
+    CF_CListNode_t *                   arg_n = &dummy_t.cl_node;
+    int                                dummy_ignored;
+    void *                             arg_ignored = &dummy_ignored;
+    int                                local_result;
+    CF_CFDP_ResetTransaction_context_t context_CF_CFDP_ResetTransaction;
+
+    UT_SetDataBuffer(UT_KEY(CF_CFDP_ResetTransaction), &context_CF_CFDP_ResetTransaction,
+                     sizeof(context_CF_CFDP_ResetTransaction), false);
+
+    /* Act */
+    local_result = CF_PurgeTransaction(arg_n, arg_ignored);
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(context_CF_CFDP_ResetTransaction.t, &dummy_t);
+    UtAssert_True(context_CF_CFDP_ResetTransaction.keep_history == 0,
+                  "CF_CFDP_ResetTransaction received keep_history %u and should be 0 (constant)",
+                  context_CF_CFDP_ResetTransaction.keep_history);
+    UtAssert_True(local_result == CF_CLIST_CONT, "CF_PurgeHistory returned %d and should be %d (CF_CLIST_CONT)",
+                  local_result, CF_CLIST_CONT);
+}
+
+/*******************************************************************************
+**
+**  CF_DoPurgeQueue tests
+**
+*******************************************************************************/
+
+void Test_CF_DoPurgeQueue_PendOnly(void)
+{
+    /* Arrange */
+    uint8                               arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t           utbuf;
+    CF_UnionArgsCmd_t *                 arg_cmd = &utbuf.ua;
+    CF_Channel_t *                      dummy_c;
+    CF_CListNode_t                      dummy_start;
+    CF_CListNode_t *                    expected_start = &dummy_start;
+    int                                 local_result;
+    CF_CList_Traverse_POINTER_context_t context_CF_CList_Traverse;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[1] = 0; /* pend */
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_POINTER,
+                          &context_CF_CList_Traverse);
+
+    dummy_c                       = &CF_AppData.engine.channels[arg_chan_num];
+    dummy_c->qs[CF_QueueIdx_PEND] = expected_start;
+
+    /* Act */
+    local_result = CF_DoPurgeQueue(arg_chan_num, arg_cmd);
+
+    UT_GetStubCount(UT_KEY(CF_CList_Traverse));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 1);
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse.start, expected_start);
+    UtAssert_True(context_CF_CList_Traverse.fn == CF_PurgeTransaction,
+                  "context_CF_CList_Traverse.fn ==  CF_PurgeTransaction");
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse.context, NULL);
+    UtAssert_True(local_result == 0, "CF_DoPurgeQueue returned %d and should be 0", local_result);
+}
+
+void Test_CF_DoPurgeQueue_HistoryOnly(void)
+{
+    /* Arrange */
+    uint8                               arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t           utbuf;
+    CF_UnionArgsCmd_t *                 arg_cmd = &utbuf.ua;
+    CF_Channel_t *                      dummy_c;
+    CF_CListNode_t                      dummy_start;
+    CF_CListNode_t *                    expected_start = &dummy_start;
+    int                                 local_result;
+    CF_CList_Traverse_POINTER_context_t context_CF_CList_Traverse;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[1] = 1; /* history */
+
+    /* set correct context type for CF_CList_Traverse stub */
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_POINTER,
+                          &context_CF_CList_Traverse);
+
+    dummy_c                       = &CF_AppData.engine.channels[arg_chan_num];
+    dummy_c->qs[CF_QueueIdx_HIST] = expected_start;
+
+    /* Act */
+    local_result = CF_DoPurgeQueue(arg_chan_num, arg_cmd);
+
+    UT_GetStubCount(UT_KEY(CF_CList_Traverse));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 1);
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse.start, expected_start);
+    UtAssert_True(context_CF_CList_Traverse.fn == (CF_CListFn_t)CF_PurgeHistory,
+                  "context_CF_CList_Traverse.fn ==  (CF_CListFn_t )CF_PurgeHistory");
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse.context, dummy_c);
+    UtAssert_True(local_result == 0, "CF_DoPurgeQueue returned %d and should be 0", local_result);
+}
+
+void Test_CF_DoPurgeQueue_Both(void)
+{
+    /* Arrange */
+    uint8                               arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t           utbuf;
+    CF_UnionArgsCmd_t *                 arg_cmd = &utbuf.ua;
+    CF_Channel_t *                      dummy_c;
+    CF_CListNode_t                      dummy_pend_start;
+    CF_CListNode_t *                    expected_pend_start = &dummy_pend_start;
+    CF_CListNode_t                      dummy_history_start;
+    CF_CListNode_t *                    expected_history_start = &dummy_history_start;
+    int                                 local_result;
+    CF_CList_Traverse_POINTER_context_t context_CF_CList_Traverse[2];
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[1] = 2; /* both */
+
+    /* set correct context type for CF_CList_Traverse stub */
+    /* this must use data buffer hack to pass multiple contexts */
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_POINTER, NULL);
+    UT_SetDataBuffer(UT_KEY(CF_CList_Traverse), context_CF_CList_Traverse, sizeof(context_CF_CList_Traverse), false);
+
+    dummy_c                       = &CF_AppData.engine.channels[arg_chan_num];
+    dummy_c->qs[CF_QueueIdx_PEND] = expected_pend_start;
+    dummy_c->qs[CF_QueueIdx_HIST] = expected_history_start;
+
+    /* Act */
+    local_result = CF_DoPurgeQueue(arg_chan_num, arg_cmd);
+
+    UT_GetStubCount(UT_KEY(CF_CList_Traverse));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 2);
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse[0].start, expected_pend_start);
+    UtAssert_True(context_CF_CList_Traverse[0].fn == CF_PurgeTransaction,
+                  "context_CF_CList_Traverse[0].fn ==  CF_PurgeTransaction");
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse[0].context, NULL);
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse[1].start, expected_history_start);
+    UtAssert_True(context_CF_CList_Traverse[1].fn == (CF_CListFn_t)CF_PurgeHistory,
+                  "context_CF_CList_Traverse[1].fn ==  (CF_CListFn_t )CF_PurgeHistory");
+    UtAssert_ADDRESS_EQ(context_CF_CList_Traverse[1].context, dummy_c);
+    UtAssert_True(local_result == 0, "CF_DoPurgeQueue returned %d and should be 0", local_result);
+}
+
+void Test_CF_DoPurgeQueue_GivenBad_data_byte_1_SendEventAndReturn_neg1(void)
+{
+    /* Arrange */
+    uint8                     arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd = &utbuf.ua;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[1] = 3; /* 3 is first default value */
+
+    /* Act */
+    local_result = CF_DoPurgeQueue(arg_chan_num, arg_cmd);
+
+    UT_GetStubCount(UT_KEY(CF_CList_Traverse));
+
+    /* Assert */
+    UtAssert_True(local_result == -1, "CF_DoPurgeQueue returned %d and should be -1", local_result);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_PURGE_ARG);
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 0);
+}
+
+void Test_CF_DoPurgeQueue_AnyGivenBad_data_byte_1_SendEventAndReturn_neg1(void)
+{
+    /* Arrange */
+    uint8                     arg_chan_num = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       arg_cmd = &utbuf.ua;
+    int                       local_result;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    arg_cmd->data.byte[1] = Any_uint8_GreaterThan_or_EqualTo(3);
+
+    /* Act */
+    local_result = CF_DoPurgeQueue(arg_chan_num, arg_cmd);
+
+    UT_GetStubCount(UT_KEY(CF_CList_Traverse));
+
+    /* Assert */
+    UtAssert_True(local_result == -1, "CF_DoPurgeQueue returned %d and should be -1", local_result);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_PURGE_ARG);
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 0);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdPurgeQueue tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdPurgeQueue_FailWhenActionFail(void)
+{
+    /* Arrange */
+    uint8                     dummy_channel = Any_cf_channel();
+    uint8                     error_purge   = 3; /* Shortest return from CF_DoPurgeQueue */
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    /* Arrange unstubbable: CF_DoPurgeQueue */
+    dummy_msg->data.byte[1] = error_purge;
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdPurgeQueue(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    /* Assert for incremented counter */
+    UtAssert_True(CF_AppData.hk.counters.err == (uint16)(initial_hk_err_counter + 1),
+                  "CF_AppData.hk.counters.err is %d and should be 1 more than %d", CF_AppData.hk.counters.err,
+                  initial_hk_err_counter);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_PURGE_QUEUE);
+}
+
+void Test_CF_CmdPurgeQueue_SuccessWhenActionSuccess(void)
+{
+    /* Arrange */
+    uint8                     dummy_channel = Any_cf_channel();
+    CF_UT_cmd_unionargs_buf_t utbuf;
+    CF_UnionArgsCmd_t *       dummy_msg = &utbuf.ua;
+    CFE_SB_Buffer_t *         arg_msg   = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* Arrange unstubbable: CF_DoChanAction */
+    dummy_msg->data.byte[0] = dummy_channel;
+
+    CF_AppData.hk.counters.cmd = 0;
+
+    /* Act */
+    CF_CmdPurgeQueue(arg_msg);
+
+    /* Assert */
+    /* Assert for CF_DoEnableDisablePolldir */
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_PURGE_QUEUE);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdWriteQueue tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdWriteQueue_When_chan_Eq_CF_NUM_CAHNNELS_SendEventAndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* invalid channel */
+    dummy_wq->chan = CF_NUM_CHANNELS;
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_CHAN);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_chan_GreaterThan_CF_NUM_CAHNNELS_SendEventAndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* invalid channel */
+    dummy_wq->chan = Any_uint8_GreaterThan(CF_NUM_CHANNELS);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_CHAN);
+
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_WhenUpAndPendingQueueSendEventAndRejectCommand(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* invalid combination up direction, pending queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_pend;
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_ARGS);
+
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_Is_type_up_And_queue_IsNot_q_pend_SendEventAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination up direction, NOT pending queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = Any_queue_Except_q_pend(); /* 0 is q_pend */
+
+    /* invalid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Negative();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WrappedOpenCreate, 1);
+    UtAssert_INT32_EQ(context_CF_WrappedOpenCreate.access, OS_WRITE_ONLY);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_OPEN);
+
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_IsNot_type_up_And_queue_Is_q_pend_SendEventAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination down direction, pending queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_pend;
+
+    /* invalid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Negative();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WrappedOpenCreate, 1);
+    UtAssert_INT32_EQ(context_CF_WrappedOpenCreate.access, OS_WRITE_ONLY);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_OPEN);
+
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_wq_IsAllAnd_queue_IsAll_fd_Is_0_Call_CF_WrappedClose_SendEventCloseAndRejectCommandWhen_CF_WriteTxnQueueDataToFile_Fails(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_all;
+    dummy_wq->queue = CF_Queue_all;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = 0;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteTxnQueueDataToFile */
+    int32                                forced_return_CF_WriteTxnQueueDataToFile = Any_int32_Except(0);
+    CF_WriteTxnQueueDataToFile_context_t context_CF_WriteTxnQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteTxnQueueDataToFile), &context_CF_WriteTxnQueueDataToFile,
+                     sizeof(context_CF_WriteTxnQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEQ_RX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteTxnQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventClosesAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteTxnQueueDataToFile */
+    int32                                forced_return_CF_WriteTxnQueueDataToFile = Any_int32_Except(0);
+    CF_WriteTxnQueueDataToFile_context_t context_CF_WriteTxnQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteTxnQueueDataToFile), &context_CF_WriteTxnQueueDataToFile,
+                     sizeof(context_CF_WriteTxnQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEQ_RX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsHistory_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_history;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteHistoryQueueDataToFile */
+    int32                                    forced_return_CF_WriteHistoryQueueDataToFile = Any_int32_Except(0);
+    CF_WriteHistoryQueueDataToFile_context_t context_CF_WriteHistoryQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteHistoryQueueDataToFile), &context_CF_WriteHistoryQueueDataToFile,
+                     sizeof(context_CF_WriteHistoryQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEHIST_RX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnFirstCallAnd_wq_IsDownAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteTxnQueueDataToFile */
+    int32                                forced_return_CF_WriteTxnQueueDataToFile = Any_int32_Except(0);
+    CF_WriteTxnQueueDataToFile_context_t context_CF_WriteTxnQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteTxnQueueDataToFile), &context_CF_WriteTxnQueueDataToFile,
+                     sizeof(context_CF_WriteTxnQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEQ_TX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnSecondCallAnd_wq_IsDownAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteTxnQueueDataToFile */
+    int32                                forced_return_CF_WriteTxnQueueDataToFile_1st_call = 0;
+    int32                                forced_return_CF_WriteTxnQueueDataToFile_2nd_call = Any_int32_Except(0);
+    CF_WriteTxnQueueDataToFile_context_t context_CF_WriteTxnQueueDataToFile[2];
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteTxnQueueDataToFile), &context_CF_WriteTxnQueueDataToFile,
+                     sizeof(context_CF_WriteTxnQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile_1st_call);
+    UT_SetDeferredRetcode(UT_KEY(CF_WriteTxnQueueDataToFile), 2, forced_return_CF_WriteTxnQueueDataToFile_2nd_call);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEQ_TX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsPend_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_pend;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteTxnQueueDataToFile */
+    int32                                forced_return_CF_WriteTxnQueueDataToFile = Any_int32_Except(0);
+    CF_WriteTxnQueueDataToFile_context_t context_CF_WriteTxnQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteTxnQueueDataToFile), &context_CF_WriteTxnQueueDataToFile,
+                     sizeof(context_CF_WriteTxnQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEQ_PEND);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsHistory_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand(
+    void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_history;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* invalid result from CF_WriteHistoryQueueDataToFile */
+    int32                                    forced_return_CF_WriteHistoryQueueDataToFile = Any_int32_Except(0);
+    CF_WriteHistoryQueueDataToFile_context_t context_CF_WriteHistoryQueueDataToFile;
+
+    UT_SetDataBuffer(UT_KEY(CF_WriteHistoryQueueDataToFile), &context_CF_WriteHistoryQueueDataToFile,
+                     sizeof(context_CF_WriteHistoryQueueDataToFile), false);
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    int32 context_CF_WrappedClose_fd;
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedClose), &context_CF_WrappedClose_fd, sizeof(context_CF_WrappedClose_fd), false);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WQ_WRITEHIST_TX);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 1);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_AllAnd_q_All(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_all;
+    dummy_wq->queue = CF_Queue_all;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    /* valid result from CF_WriteHistoryQueueDataToFile */
+    int32 forced_return_CF_WriteHistoryQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 4);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_AllAnd_q_History(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_all;
+    dummy_wq->queue = CF_Queue_history;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteHistoryQueueDataToFile */
+    int32 forced_return_CF_WriteHistoryQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 2);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Active(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_all;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 3);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Pend(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_all;
+    dummy_wq->queue = CF_Queue_pend;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_UpAnd_q_All(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_all;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    /* valid result from CF_WriteHistoryQueueDataToFile */
+    int32 forced_return_CF_WriteHistoryQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_UpAnd_q_History(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_history;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteHistoryQueueDataToFile */
+    int32 forced_return_CF_WriteHistoryQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteHistoryQueueDataToFile), forced_return_CF_WriteHistoryQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_UpAnd_q_Active(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_up;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+/* Test_CF_CmdWriteQueue_Success_type_UpAnd_q_Pend IS an error and is handled by a previous test */
+
+void Test_CF_CmdWriteQueue_Success_type_DownAnd_q_All(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_all;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 3);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_DownAnd_q_History(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_history;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Active(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_active;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 2);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Pend(void)
+{
+    /* Arrange */
+    CF_UT_cmd_write_q_buf_t utbuf;
+    CF_WriteQueueCmd_t *    dummy_wq = &utbuf.wq;
+    CFE_SB_Buffer_t *       arg_msg  = &utbuf.buf;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    /* valid channel */
+    dummy_wq->chan = Any_uint8_LessThan(CF_NUM_CHANNELS);
+
+    /* valid combination all direction, all queue */
+    dummy_wq->type  = CF_Type_down;
+    dummy_wq->queue = CF_Queue_pend;
+
+    /* valid result from CF_WrappedCreat */
+    strncpy(dummy_wq->filename, AnyRandomStringOfLettersOfLength(10), 10);
+
+    CF_WrappedOpenCreate_context_t context_CF_WrappedOpenCreate;
+
+    context_CF_WrappedOpenCreate.forced_return = Any_int_Positive();
+
+    UT_SetDataBuffer(UT_KEY(CF_WrappedOpenCreate), &context_CF_WrappedOpenCreate, sizeof(context_CF_WrappedOpenCreate),
+                     false);
+
+    /* valid result from CF_WriteTxnQueueDataToFile */
+    int32 forced_return_CF_WriteTxnQueueDataToFile = 0;
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_WriteTxnQueueDataToFile), forced_return_CF_WriteTxnQueueDataToFile);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdWriteQueue(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_WriteTxnQueueDataToFile, 1);
+    UtAssert_STUB_COUNT(CF_WriteHistoryQueueDataToFile, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_WQ);
+    UtAssert_STUB_COUNT(CF_WrappedClose, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdValidateChunkSize tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdValidateChunkSize_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1(void)
+{
+    /* Arrange */
+    uint8  arg_chan_num = Any_uint8(); /* value labeled as 'ignored' in func def */
+    uint32 arg_val      = sizeof(CF_CFDP_PduFileDataContent_t) + 1;
+    int    local_result;
+
+    /* Act */
+    local_result = CF_CmdValidateChunkSize(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 1, "CF_CmdValidateChunkSize returned %d and should be 1 (failed)", local_result);
+}
+
+void Test_CF_CmdValidateChunkSize_Any_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1(void)
+{
+    /* Arrange */
+    uint8  arg_chan_num = Any_uint8(); /* value labeled as 'ignored' in func def */
+    uint32 arg_val      = Any_uint32_GreaterThan(sizeof(CF_CFDP_PduFileDataContent_t));
+    int    local_result;
+
+    /* Act */
+    local_result = CF_CmdValidateChunkSize(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 1, "CF_CmdValidateChunkSize returned %d and should be 1 (failed)", local_result);
+}
+
+void Test_CF_CmdValidateChunkSize_val_SizeOf_pdu_fd_data_t_SuccessAndReturn_0(void)
+{
+    /* Arrange */
+    uint8  arg_chan_num = Any_uint8(); /* value labeled as 'ignored' in func def */
+    uint32 arg_val      = sizeof(CF_CFDP_PduFileDataContent_t);
+    int    local_result;
+
+    /* Act */
+    local_result = CF_CmdValidateChunkSize(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 0, "CF_CmdValidateChunkSize returned %d and should be 0 (success)", local_result);
+}
+
+void Test_CF_CmdValidateChunkSize_val_LessThanOrEqSizeOf_pdu_fd_data_t_SuccessAndReturn_0(void)
+{
+    /* Arrange */
+    uint8  arg_chan_num = Any_uint8(); /* value labeled as 'ignored' in func def */
+    uint32 arg_val      = Any_uint32_LessThan_or_EqualTo(sizeof(CF_CFDP_PduFileDataContent_t));
+    int    local_result;
+
+    /* Act */
+    local_result = CF_CmdValidateChunkSize(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 0, "CF_CmdValidateChunkSize returned %d and should be 0 (success)", local_result);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdValidateMaxOutgoing tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_IsNot_0_Return_0_Success(void)
+{
+    /* Arrange */
+    uint32 arg_val      = Any_uint32_Except(0);
+    uint8  arg_chan_num = Any_uint8(); /* Any_uint8() used here because it shows value does not matter in this test */
+    int    local_result;
+
+    /* Act */
+    local_result = CF_CmdValidateMaxOutgoing(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 0, "CF_CmdValidateMaxOutgoing returned %d and should be 0 (Success)", local_result);
+}
+
+void Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_But_sem_name_IsNot_NULL_Return_0_Success(void)
+{
+    /* Arrange */
+    uint32 arg_val      = 0;
+    uint8  arg_chan_num = Any_cf_chan_num(); /* Any_cf_chan_num used here because value matters to this test */
+    CF_ConfigTable_t dummy_config_table;
+    int              local_result;
+
+    CF_AppData.config_table = &dummy_config_table;
+    memset(CF_AppData.config_table->chan[arg_chan_num].sem_name, (char)Any_uint8_Except(0), 1);
+
+    /* Act */
+    local_result = CF_CmdValidateMaxOutgoing(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 0, "CF_CmdValidateMaxOutgoing returned %d and should be 0 (Success)", local_result);
+}
+
+void Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_And_sem_name_Is_NULL_Return_1_Fail(void)
+{
+    /* Arrange */
+    uint32 arg_val      = 0;
+    uint8  arg_chan_num = Any_cf_chan_num(); /* Any_cf_chan_num used here because value matters to this test */
+    CF_ConfigTable_t dummy_config_table;
+    int              local_result;
+
+    CF_AppData.config_table = &dummy_config_table;
+    memset(CF_AppData.config_table->chan[arg_chan_num].sem_name, (char)0, 1);
+
+    /* Act */
+    local_result = CF_CmdValidateMaxOutgoing(arg_val, arg_chan_num);
+
+    /* Assert */
+    UtAssert_True(local_result == 1, "CF_CmdValidateMaxOutgoing returned %d and should be 1 (Success)", local_result);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdGetSetParam tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdGetSetParam(void)
+{
+    /* Test cases for:
+     * void CF_CmdGetSetParam(uint8 is_set, CF_GetSet_ValueID_t param_id, uint32 value, uint8 chan_num);
+     */
+
+    /* Arrange */
+    CF_ConfigTable_t    ut_config_table;
+    CF_GetSet_ValueID_t param_id;
+    uint16              expected_count;
+
+    memset(&ut_config_table, 0, sizeof(ut_config_table));
+    memset(&CF_AppData.hk.counters, 0, sizeof(CF_AppData.hk.counters));
+    CF_AppData.config_table = &ut_config_table;
+    expected_count          = 0;
+
+    /* Nominal: "set" for each parameter */
+    for (param_id = 0; param_id < CF_GetSet_ValueID_MAX; ++param_id)
+    {
+        UT_CF_ResetEventCapture();
+        UtAssert_VOIDCALL(CF_CmdGetSetParam(1, param_id, 1 + param_id, UT_CFDP_CHANNEL));
+        UT_CF_AssertEventID(CF_EID_INF_CMD_GETSET1);
+        UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, ++expected_count);
+    }
+
+    /* each of the config parameters should have actually been set to a different value */
+    UtAssert_UINT32_EQ(ut_config_table.ticks_per_second, 1);
+    UtAssert_UINT32_EQ(ut_config_table.rx_crc_calc_bytes_per_wakeup, 2);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].ack_timer_s, 3);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].nak_timer_s, 4);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].inactivity_timer_s, 5);
+    UtAssert_UINT32_EQ(ut_config_table.outgoing_file_chunk_size, 6);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].ack_limit, 7);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].nak_limit, 8);
+    UtAssert_UINT32_EQ(ut_config_table.local_eid, 9);
+    UtAssert_UINT32_EQ(ut_config_table.chan[UT_CFDP_CHANNEL].max_outgoing_messages_per_wakeup, 10);
+
+    /* Nominal: "get" for each parameter */
+    for (param_id = 0; param_id < CF_GetSet_ValueID_MAX; ++param_id)
+    {
+        UT_CF_ResetEventCapture();
+        UtAssert_VOIDCALL(CF_CmdGetSetParam(0, param_id, 1, UT_CFDP_CHANNEL));
+        UT_CF_AssertEventID(CF_EID_INF_CMD_GETSET2);
+        UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, ++expected_count);
+    }
+
+    /* Bad param ID */
+    UT_CF_ResetEventCapture();
+    UtAssert_VOIDCALL(CF_CmdGetSetParam(0, CF_GetSet_ValueID_MAX, 0, UT_CFDP_CHANNEL));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GETSET_PARAM);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+
+    /* Bad channel ID */
+    UT_CF_ResetEventCapture();
+    UtAssert_VOIDCALL(CF_CmdGetSetParam(0, 0, 0, CF_NUM_CHANNELS + 1));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GETSET_CHAN);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 2);
+
+    /* Validation fail */
+    UT_CF_ResetEventCapture();
+    UtAssert_VOIDCALL(CF_CmdGetSetParam(1, CF_GetSet_ValueID_outgoing_file_chunk_size,
+                                        100 + sizeof(CF_CFDP_PduFileDataContent_t), UT_CFDP_CHANNEL));
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GETSET_VALIDATE);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 3);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdSetParam tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdSetParam_Call_CF_CmdGetSetParam_With_cmd_key_And_cmd_value(void)
+{
+    /* Arrange */
+    CF_UT_cmd_set_param_args_buf_t utbuf;
+    CF_ConfigTable_t               dummy_config_table;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&dummy_config_table, 0, sizeof(dummy_config_table));
+
+    utbuf.sp.key      = CF_GetSet_ValueID_ticks_per_second;
+    utbuf.sp.value    = 1;
+    utbuf.sp.chan_num = 0;
+
+    CF_AppData.config_table = &dummy_config_table;
+
+    /* Act */
+    CF_CmdSetParam(&utbuf.buf);
+
+    /* Assert */
+    UtAssert_UINT32_EQ(CF_AppData.config_table->ticks_per_second, utbuf.sp.value);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_INF_CMD_GETSET1);
+    /* Assert for incremented counter() */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdGetParam tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdGetParam_Call_CF_CmdGetSetParam_With_cmd_data_byte_0_AndConstantValue_0(void)
+{
+    /* Arrange */
+    CF_UT_cmd_get_param_args_buf_t utbuf;
+    CF_ConfigTable_t               config_table;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+    memset(&config_table, 0, sizeof(config_table));
+
+    utbuf.gp.key      = CF_GetSet_ValueID_ticks_per_second;
+    utbuf.gp.chan_num = 0;
+
+    CF_AppData.config_table = &config_table;
+
+    /* Act */
+    CF_CmdGetParam(&utbuf.buf);
+
+    /* Assert */
+    /* Note actual value not tested, just flow */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UtAssert_UINT32_EQ(UT_CF_CapturedEventIDs[0], CF_EID_INF_CMD_GETSET2);
+    /* Assert for incremented counter() */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdEnableEngine tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdEnableEngine_WithEngineNotEnableInitSuccessAndIncrementCmdCounter(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg                          = NULL;
+    uint32           forced_return_CF_CFDP_InitEngine = CFE_SUCCESS;
+
+    CF_AppData.engine.enabled = 0; /* 0 is not enabled */
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_InitEngine), forced_return_CF_CFDP_InitEngine);
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdEnableEngine(arg_msg);
+
+    UT_GetStubCount(UT_KEY(CF_CFDP_InitEngine));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_InitEngine, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_ENABLE_ENGINE);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdEnableEngine_WithEngineNotEnableFailsInitSendEventAndIncrementErrCounter(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg                          = NULL;
+    uint32           forced_return_CF_CFDP_InitEngine = Any_uint32_Except(CFE_SUCCESS);
+
+    CF_AppData.engine.enabled = 0; /* 0 is not enabled */
+
+    UT_SetDefaultReturnValue(UT_KEY(CF_CFDP_InitEngine), forced_return_CF_CFDP_InitEngine);
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdEnableEngine(arg_msg);
+
+    UT_GetStubCount(UT_KEY(CF_CFDP_InitEngine));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_InitEngine, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ENABLE_ENGINE);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdEnableEngine_WithEngineEnableFailsSendEventAndIncrementErrCounter(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg = NULL;
+
+    CF_AppData.engine.enabled = 1; /* 1 is enabled */
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdEnableEngine(arg_msg);
+
+    UT_GetStubCount(UT_KEY(CF_CFDP_InitEngine));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_InitEngine, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ENG_ALREADY_ENA);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+}
+
+/*******************************************************************************
+**
+**  CF_CmdDisableEngine tests
+**
+*******************************************************************************/
+
+void Test_CF_CmdDisableEngine_SuccessWhenEngineEnabledAndIncrementCmdCounter(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg = NULL;
+
+    CF_AppData.engine.enabled = 1; /* 1 is enabled */
+
+    uint16 initial_hk_cmd_counter = Any_uint16();
+
+    CF_AppData.hk.counters.cmd = initial_hk_cmd_counter;
+
+    /* Act */
+    CF_CmdDisableEngine(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_DisableEngine, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_DISABLE_ENGINE);
+
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, (initial_hk_cmd_counter + 1) & 0xFFFF);
+}
+
+void Test_CF_CmdDisableEngine_WhenEngineDisabledAndIncrementErrCounterThenFail(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t *arg_msg = NULL;
+
+    CF_AppData.engine.enabled = 0; /* 0 is not enabled */
+
+    uint16 initial_hk_err_counter = Any_uint16();
+
+    CF_AppData.hk.counters.err = initial_hk_err_counter;
+
+    /* Act */
+    CF_CmdDisableEngine(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CFDP_DisableEngine, 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_ENG_ALREADY_DIS);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, (initial_hk_err_counter + 1) & 0xFFFF);
+    UtAssert_True(CF_AppData.hk.counters.err == (uint16)(initial_hk_err_counter + 1),
+                  "CF_AppData.hk.counters.err is %d and should be 1 more than %d", CF_AppData.hk.counters.err,
+                  initial_hk_err_counter);
+}
+
+/*******************************************************************************
+**
+**  CF_ProcessGroundCommand tests
+**
+*******************************************************************************/
+
+void Test_CF_ProcessGroundCommand_When_cmd_EqTo_CF_NUM_COMMANDS_FailAndSendEvent(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t   utbuf;
+    CFE_SB_Buffer_t * arg_msg                          = &utbuf;
+    CFE_MSG_FcnCode_t forced_return_CFE_MSG_GetFcnCode = CF_NUM_COMMANDS;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_return_CFE_MSG_GetFcnCode,
+                     sizeof(forced_return_CFE_MSG_GetFcnCode), false);
+    /* CFE_MSG_GetSize does not matter for Test_CF_ProcessGroundCommand_When_cmd_EqTo_CF_NUM_COMMANDS_FailAndSendEvent
+     */
+
+    /* Act */
+    CF_ProcessGroundCommand(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GCMD_CC);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+void Test_CF_ProcessGroundCommand_When_cmd_GreaterThan_CF_NUM_COMMANDS_FailAndSendEvent(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t   utbuf;
+    CFE_SB_Buffer_t * arg_msg                          = &utbuf;
+    CFE_MSG_FcnCode_t forced_return_CFE_MSG_GetFcnCode = CF_NUM_COMMANDS + 1;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_return_CFE_MSG_GetFcnCode,
+                     sizeof(forced_return_CFE_MSG_GetFcnCode), false);
+    /* CFE_MSG_GetSize does not matter for Test_CF_ProcessGroundCommand_When_cmd_EqTo_CF_NUM_COMMANDS_FailAndSendEvent
+     */
+
+    /* Act */
+    CF_ProcessGroundCommand(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GCMD_CC);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+void Test_CF_ProcessGroundCommand_Receives_cmd_AndLengthDoesNotMatchExpectedForThatCommandSendEventAndFailure(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t   utbuf;
+    CFE_SB_Buffer_t * arg_msg                          = &utbuf;
+    CFE_MSG_FcnCode_t forced_return_CFE_MSG_GetFcnCode = CF_NOOP_CC;
+    CFE_MSG_Size_t    forced_return_CFE_MSG_GetSize    = sizeof(CF_NoArgsCmd_t) + 1; /* Invalid size */
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_return_CFE_MSG_GetFcnCode,
+                     sizeof(forced_return_CFE_MSG_GetFcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_return_CFE_MSG_GetSize, sizeof(forced_return_CFE_MSG_GetSize),
+                     false);
+
+    /* Act */
+    CF_ProcessGroundCommand(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_GetSize, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_GCMD_LEN);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 1);
+}
+
+void Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x00_AndCall_CF_CmdNoop_With_msg(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t   utbuf;
+    CFE_SB_Buffer_t * arg_msg                          = &utbuf;
+    CFE_MSG_FcnCode_t forced_return_CFE_MSG_GetFcnCode = CF_NOOP_CC;
+    CFE_MSG_Size_t    forced_return_CFE_MSG_GetSize    = sizeof(CF_NoArgsCmd_t); /* Valid size */
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_return_CFE_MSG_GetFcnCode,
+                     sizeof(forced_return_CFE_MSG_GetFcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_return_CFE_MSG_GetSize, sizeof(forced_return_CFE_MSG_GetSize),
+                     false);
+
+    /* Act */
+    CF_ProcessGroundCommand(arg_msg);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_GetSize, 1);
+    /* Assert for CF_CmdNoop */
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+    UT_CF_AssertEventID(CF_EID_INF_CMD_NOOP);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 1);
+}
+
+/* Hit a NULL entry to exercise that conditional and no action */
+void Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x0C_AndDoNothingBecause_fns_12_Is_NULL(void)
+{
+    /* Arrange */
+    CFE_SB_Buffer_t   utbuf;
+    CFE_MSG_FcnCode_t forced_return_CFE_MSG_GetFcnCode = 0x0C; /* 0x0C forces a null slot */
+    CFE_MSG_Size_t    forced_return_CFE_MSG_GetSize    = 0;
+
+    memset(&utbuf, 0, sizeof(utbuf));
+
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetFcnCode), &forced_return_CFE_MSG_GetFcnCode,
+                     sizeof(forced_return_CFE_MSG_GetFcnCode), false);
+    UT_SetDataBuffer(UT_KEY(CFE_MSG_GetSize), &forced_return_CFE_MSG_GetSize, sizeof(forced_return_CFE_MSG_GetSize),
+                     false);
+
+    /* Act */
+    CF_ProcessGroundCommand(&utbuf);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_MSG_GetFcnCode, 1);
+    UtAssert_STUB_COUNT(CFE_MSG_GetSize, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+    /* Assert for incremented counter */
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.cmd, 0);
+    UtAssert_UINT32_EQ(CF_AppData.hk.counters.err, 0);
+}
+
+/*******************************************************************************
+**
+**  cf_cmd tests UtTest_Add groups
+**
+*******************************************************************************/
+
+void add_CF_CmdNoop_tests(void)
+{
+    UtTest_Add(Test_CF_CmdNoop_SendNoopEventAndAcceptCommand, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdNoop_SendNoopEventAndAcceptCommand");
+}
+
+void add_CF_CmdReset_tests(void)
+{
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIsEqTo_5_SendEventAndRejectCommand, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdReset_tests_WhenCommandByteIsEqTo_5_SendEventAndRejectCommand");
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIsGreaterThan_5_SendEventAndRejectCommand, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdReset_tests_WhenCommandByteIsGreaterThan_5_SendEventAndRejectCommand");
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIs_command_AndResetHkCmdAndErrCountSendEvent, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdReset_tests_WhenCommandByteIs_command_AndResetHkCmdAndErrCountSendEvent");
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIs_fault_ResetAllHkFaultCountSendEventAndAcceptCommand,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdReset_tests_WhenCommandByteIs_fault_ResetAllHkFaultCountSendEventAndAcceptCommand");
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIs_up_AndResetAllHkRecvCountSendEventAndAcceptCommand,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdReset_tests_WhenCommandByteIs_up_AndResetAllHkRecvCountSendEventAndAcceptCommand");
+    UtTest_Add(Test_CF_CmdReset_tests_SWhenCommandByteIs_down_AndResetAllHkSentCountendEventAcceptCommand,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdReset_tests_SWhenCommandByteIs_down_AndResetAllHkSentCountendEventAcceptCommand");
+    UtTest_Add(Test_CF_CmdReset_tests_WhenCommandByteIs_all_AndResetAllMemValuesSendEvent, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdReset_tests_WhenCommandByteIs_all_AndResetAllMemValuesSendEvent");
+}
+
+void add_CF_CmdTxFile_tests(void)
+{
+    UtTest_Add(Test_CF_CmdTxFile, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "CF_CmdTxFile");
+}
+
+void add_CF_CmdPlaybackDir_tests(void)
+{
+    UtTest_Add(Test_CF_CmdPlaybackDir, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "CF_CmdPlaybackDir");
+}
+
+void add_CF_DoChanAction_tests(void)
+{
+    UtTest_Add(Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAny_fn_returns_1_Return_1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAny_fn_returns_1_Return_1");
+    UtTest_Add(Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAll_fn_return_1_Return_1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenAll_fn_return_1_Return_1");
+    UtTest_Add(Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenNo_fn_returns_0_Return_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoChanAction_CF_ALL_CHANNELS_WhenNo_fn_returns_0_Return_0");
+    UtTest_Add(Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_1_Return_1, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_1_Return_1");
+    UtTest_Add(Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_0_Return_1, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoChanAction_WhenChannel_fn_ActionReturns_0_Return_1");
+    UtTest_Add(Test_CF_DoChanAction_WhenChanNumberEq_CF_NUM_CHANNELS_Return_neg1_And_SendEvent_, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_DoChanAction_WhenChanNumberEq_CF_NUM_CHANNELS_Return_neg1_And_SendEvent_");
+    UtTest_Add(Test_CF_DoChanAction_WhenBadChannelNumber_Return_neg1_And_SendEvent, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoChanAction_WhenBadChannelNumber_Return_neg1_And_SendEvent");
+}
+
+void add_CF_DoFreezeThaw_tests(void)
+{
+    UtTest_Add(Test_CF_DoFreezeThaw_Set_frozen_ToGiven_context_barg_AndReturn_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoFreezeThaw_Set_frozen_ToGiven_context_barg_AndReturn_0");
+}
+
+void add_CF_CmdFreeze_tests(void)
+{
+    UtTest_Add(Test_CF_CmdFreeze_Set_frozen_To_1_AndAcceptCommand, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdFreeze_Set_frozen_To_1_AndAcceptCommand");
+    UtTest_Add(Test_CF_CmdFreeze_Set_frozen_To_1_AndRejectCommand, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdFreeze_Set_frozen_To_1_AndRejectCommand");
+}
+
+void add_CF_CmdThaw_tests(void)
+{
+    UtTest_Add(Test_CF_CmdThaw_Set_frozen_To_0_AndAcceptCommand, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdThaw_Set_frozen_To_0_AndAcceptCommand");
+    UtTest_Add(Test_CF_CmdThaw_Set_frozen_To_0_AndRejectCommand, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdThaw_Set_frozen_To_0_AndRejectCommand");
+}
+
+void add_CF_FindTransactionBySequenceNumberAllChannels_tests(void)
+{
+    UtTest_Add(Test_CF_FindTransactionBySequenceNumberAllChannels_WhenNoTransactionFoundReturn_NULL, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_FindTransactionBySequenceNumberAllChannels_WhenNoTransactionFoundReturn_NULL");
+    UtTest_Add(Test_CF_FindTransactionBySequenceNumberAllChannels_Return_TransactionFound, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_FindTransactionBySequenceNumberAllChannels_Return_TransactionFound");
+}
+
+void add_CF_TsnChanAction_tests(void)
+{
+    UtTest_Add(Test_CF_TsnChanAction_SendEvent_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionNotFoundAndReturn_neg1_Fail,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_TsnChanAction_SendEvent_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionNotFoundAndReturn_neg1_Fail");
+    UtTest_Add(Test_CF_TsnChanAction_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionFoundRun_fn_AndReturn_CFE_SUCCESS,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_TsnChanAction_cmd_chan_Eq_CF_COMPOUND_KEY_TransactionFoundRun_fn_AndReturn_CFE_SUCCESS");
+    UtTest_Add(Test_CF_TsnChanAction_cmd_chan_Eq_CF_ALL_CHANNELS_Return_CF_TraverseAllTransactions_All_Channels,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_TsnChanAction_cmd_chan_Eq_CF_ALL_CHANNELS_Return_CF_TraverseAllTransactions_All_Channels");
+    UtTest_Add(Test_CF_TsnChanAction_cmd_chan_IsASingleChannel, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_TsnChanAction_cmd_chan_IsASingleChannel");
+    UtTest_Add(Test_CF_TsnChanAction_cmd_FailBecause_cmd_chan_IsInvalid, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_TsnChanAction_cmd_FailBecause_cmd_chan_IsInvalid");
+}
+
+void add_CF_DoSuspRes_Txn_tests(void)
+{
+    UtTest_Add(Test_CF_DoSuspRes_Txn_Set_context_same_To_1_suspended_Eq_action, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoSuspRes_Txn_Set_context_same_To_1_suspended_Eq_action");
+    UtTest_Add(Test_CF_DoSuspRes_Txn_When_suspended_NotEqTo_action_Set_suspended_To_action, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoSuspRes_Txn_When_suspended_NotEqTo_action_Set_suspended_To_action");
+}
+
+void add_CF_DoSuspRes_tests(void)
+{
+    UtTest_Add(Test_CF_DoSuspRes, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "CF_DoSuspRes");
+}
+
+void add_CF_CmdSuspend_tests(void)
+{
+    UtTest_Add(Test_CF_CmdSuspend_Call_CF_DoSuspRes_WithGiven_msg_And_action_1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdSuspend_Call_CF_DoSuspRes_WithGiven_msg_And_action_1");
+}
+
+void add_CF_CmdResume_tests(void)
+{
+    UtTest_Add(Test_CF_CmdResume_Call_CF_DoSuspRes_WithGiven_msg_And_action_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdResume_Call_CF_DoSuspRes_WithGiven_msg_And_action_0");
+}
+
+void add_CF_CmdCancel_Txn_tests(void)
+{
+    UtTest_Add(Test_CF_CmdCancel_Txn_Call_CF_CFDP_CancelTransaction_WithGiven_t, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdCancel_Txn_Call_CF_CFDP_CancelTransaction_WithGiven_t");
+}
+
+void add_CF_CmdCancel_tests(void)
+{
+    UtTest_Add(Test_CF_CmdCancel_Failure, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "Test_CF_CmdCancel_Failure");
+    UtTest_Add(Test_CF_CmdCancel_Success, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "Test_CF_CmdCancel_Success");
+}
+
+void add_CF_CmdAbandon_Txn_tests(void)
+{
+    UtTest_Add(Test_CF_CmdAbandon_Txn_Call_CF_CFDP_ResetTransaction_WithGiven_t_And_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdAbandon_Txn_Call_CF_CFDP_ResetTransaction_WithGiven_t_And_0");
+}
+
+void add_CF_CmdAbandon_tests(void)
+{
+    UtTest_Add(Test_CF_CmdAbandon_Failure, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "Test_CF_CmdAbandon_Failure");
+    UtTest_Add(Test_CF_CmdAbandon_Success, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "Test_CF_CmdAbandon_Success");
+}
+
+void add_CF_DoEnableDisableDequeue_tests(void)
+{
+    UtTest_Add(Test_CF_DoEnableDisableDequeue_Set_chan_num_EnabledFlagTo_context_barg, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoEnableDisableDequeue_Set_chan_num_EnabledFlagTo_context_barg");
+}
+
+void add_CF_CmdEnableDequeue_tests(void)
+{
+    UtTest_Add(Test_CF_CmdEnableDequeue_Success, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdEnableDequeue_Success");
+    UtTest_Add(Test_CF_CmdEnableDequeue_Failure, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdEnableDequeue_Failure");
+}
+
+void add_CF_CmdDisableDequeue_tests(void)
+{
+    UtTest_Add(Test_CF_CmdDisableDequeue_Success, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdDisableDequeue_Success");
+    UtTest_Add(Test_CF_CmdDisableDequeue_Failure, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdDisableDequeue_Failure");
+}
+
+void add_CF_DoEnableDisablePolldir_tests(void)
+{
+    UtTest_Add(Test_CF_DoEnableDisablePolldir_When_CF_ALL_CHANNELS_SetAllPolldirsInChannelEnabledTo_context_barg,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoEnableDisablePolldir_When_CF_ALL_CHANNELS_SetAllPolldirsInChannelEnabledTo_context_barg");
+    UtTest_Add(
+        Test_CF_DoEnableDisablePolldir_WhenSetToSpecificPolldirSetPolldirFrom_context_ChannelEnabledTo_context_barg,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_DoEnableDisablePolldir_WhenSetToSpecificPolldirSetPolldirFrom_context_ChannelEnabledTo_context_barg");
+    UtTest_Add(Test_CF_DoEnableDisablePolldir_FailPolldirEq_CF_MAX_POLLING_DIR_PER_CHAN_AndSendEvent,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoEnableDisablePolldir_FailPolldirEq_CF_MAX_POLLING_DIR_PER_CHAN_AndSendEvent");
+    UtTest_Add(Test_CF_DoEnableDisablePolldir_FailAnyBadPolldirSendEvent, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoEnableDisablePolldir_FailAnyBadPolldirSendEvent");
+}
+
+void add_CF_CmdEnablePolldir_tests(void)
+{
+    UtTest_Add(Test_CF_CmdEnablePolldir_SuccessWhenActionSuccess, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdEnablePolldir_SuccessWhenActionSuccess");
+    UtTest_Add(Test_CF_CmdEnablePolldir_FailWhenActionFail, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdEnablePolldir_FailWhenActionFail");
+}
+
+void add_CF_CmdDisablePolldir_tests(void)
+{
+    UtTest_Add(Test_CF_CmdDisablePolldir_SuccessWhenActionSuccess, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdDisablePolldir_SuccessWhenActionSuccess");
+    UtTest_Add(Test_CF_CmdDisablePolldir_FailWhenActionFail, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdDisablePolldir_FailWhenActionFail");
+}
+
+void add_CF_PurgeHistory_tests(void)
+{
+    UtTest_Add(Test_CF_PurgeHistory_Call_CF_CFDP_ResetHistory_AndReturn_CLIST_CONT, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_PurgeHistory_Call_CF_CFDP_ResetHistory_AndReturn_CLIST_CONT");
+}
+
+void add_CF_PurgeTransaction_tests(void)
+{
+    UtTest_Add(Test_CF_PurgeTransaction_Call_CF_CFDP_ResetTransaction_AndReturn_CLIST_CONT, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_PurgeTransaction_Call_CF_CFDP_ResetTransaction_AndReturn_CLIST_CONT");
+}
+
+void add_CF_DoPurgeQueue_tests(void)
+{
+    UtTest_Add(Test_CF_DoPurgeQueue_PendOnly, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoPurgeQueue_PendOnly");
+    UtTest_Add(Test_CF_DoPurgeQueue_HistoryOnly, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_DoPurgeQueue_HistoryOnly");
+    UtTest_Add(Test_CF_DoPurgeQueue_Both, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "Test_CF_DoPurgeQueue_Both");
+    UtTest_Add(Test_CF_DoPurgeQueue_GivenBad_data_byte_1_SendEventAndReturn_neg1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoPurgeQueue_GivenBad_data_byte_1_SendEventAndReturn_neg1");
+    UtTest_Add(Test_CF_DoPurgeQueue_AnyGivenBad_data_byte_1_SendEventAndReturn_neg1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_DoPurgeQueue_AnyGivenBad_data_byte_1_SendEventAndReturn_neg1");
+}
+
+void add_CF_CmdPurgeQueue_tests(void)
+{
+    UtTest_Add(Test_CF_CmdPurgeQueue_FailWhenActionFail, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdPurgeQueue_FailWhenActionFail");
+    UtTest_Add(Test_CF_CmdPurgeQueue_SuccessWhenActionSuccess, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdPurgeQueue_SuccessWhenActionSuccess");
+}
+
+void add_CF_CmdWriteQueue_tests(void)
+{
+    UtTest_Add(Test_CF_CmdWriteQueue_When_chan_Eq_CF_NUM_CAHNNELS_SendEventAndRejectCommand, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdWriteQueue_When_chan_Eq_CF_NUM_CAHNNELS_SendEventAndRejectCommand");
+    UtTest_Add(Test_CF_CmdWriteQueue_When_chan_GreaterThan_CF_NUM_CAHNNELS_SendEventAndRejectCommand,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_When_chan_GreaterThan_CF_NUM_CAHNNELS_SendEventAndRejectCommand");
+    UtTest_Add(Test_CF_CmdWriteQueue_WhenUpAndPendingQueueSendEventAndRejectCommand, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdWriteQueue_WhenUpAndPendingQueueSendEventAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_Is_type_up_And_queue_IsNot_q_pend_SendEventAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_Is_type_up_And_queue_IsNot_q_pend_"
+        "SendEventAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_IsNot_type_up_And_queue_Is_q_pend_SendEventAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WrappedCreat_Fails_type_IsNot_type_up_And_queue_Is_q_pend_"
+        "SendEventAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_wq_IsAllAnd_queue_IsAll_fd_Is_0_Call_CF_WrappedClose_SendEventCloseAndRejectCommandWhen_CF_WriteTxnQueueDataToFile_Fails,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_wq_IsAllAnd_queue_IsAll_fd_Is_0_Call_CF_WrappedClose_"
+        "SendEventCloseAndRejectCommandWhen_CF_WriteTxnQueueDataToFile_Fails");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteTxnQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventClosesAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteTxnQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsActive_fd_IsPositive_Call_"
+        "CF_"
+        "WrappedClose_SendEventClosesAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsHistory_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsUpAnd_queue_IsHistory_fd_IsPositive_"
+        "Call_CF_WrappedClose_SendEventCloseAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnFirstCallAnd_wq_IsDownAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnFirstCallAnd_wq_IsDownAnd_queue_IsActive_fd_"
+        "IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnSecondCallAnd_wq_IsDownAnd_queue_IsActive_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteHistoryDataToFile_FailsOnSecondCallAnd_wq_IsDownAnd_queue_IsActive_fd_"
+        "IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsPend_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsPend_fd_IsPositive_"
+        "Call_CF_WrappedClose_SendEventCloseAndRejectCommand");
+    UtTest_Add(
+        Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsHistory_fd_IsPositive_Call_CF_WrappedClose_SendEventCloseAndRejectCommand,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_CmdWriteQueue_When_CF_WriteHistoryQueueDataToFile_FailsAnd_wq_IsDownAnd_queue_IsHistory_fd_IsPositive_"
+        "Call_CF_WrappedClose_SendEventCloseAndRejectCommand");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_AllAnd_q_All, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_AllAnd_q_All");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_AllAnd_q_History, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_AllAnd_q_History");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Active, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Active");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Pend, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_AllAnd_q_Pend");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_UpAnd_q_All, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_UpAnd_q_All");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_UpAnd_q_History, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_UpAnd_q_History");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_UpAnd_q_Active, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_UpAnd_q_Active");
+    /* see Test_CF_CmdWriteQueue_WhenUpAndPendingQueueSendEventAndRejectCommand */
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_DownAnd_q_All, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_DownAnd_q_All");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_DownAnd_q_History, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_DownAnd_q_History");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Active, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Active");
+    UtTest_Add(Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Pend, cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdWriteQueue_Success_type_DownAnd_q_Pend");
+}
+
+void add_CF_CmdValidateChunkSize_tests(void)
+{
+    UtTest_Add(Test_CF_CmdValidateChunkSize_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdValidateChunkSize_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1");
+    UtTest_Add(Test_CF_CmdValidateChunkSize_Any_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdValidateChunkSize_Any_val_GreaterThan_pdu_fd_data_t_FailAndReturn_1");
+    UtTest_Add(Test_CF_CmdValidateChunkSize_val_SizeOf_pdu_fd_data_t_SuccessAndReturn_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdValidateChunkSize_val_SizeOf_pdu_fd_data_t_SuccessAndReturn_0");
+    UtTest_Add(Test_CF_CmdValidateChunkSize_val_LessThanOrEqSizeOf_pdu_fd_data_t_SuccessAndReturn_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdValidateChunkSize_val_LessThanOrEqSizeOf_pdu_fd_data_t_SuccessAndReturn_0");
+}
+
+void add_CF_CmdValidateMaxOutgoing_tests(void)
+{
+    UtTest_Add(Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_IsNot_0_Return_0_Success, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_IsNot_0_Return_0_Success");
+    UtTest_Add(Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_But_sem_name_IsNot_NULL_Return_0_Success,
+               cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+               "Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_But_sem_name_IsNot_NULL_Return_0_Success");
+    UtTest_Add(Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_And_sem_name_Is_NULL_Return_1_Fail, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdValidateMaxOutgoing_WhenGiven_val_Is_0_And_sem_name_Is_NULL_Return_1_Fail");
+}
+
+void add_CF_CmdGetSetParam_tests(void)
+{
+    UtTest_Add(Test_CF_CmdGetSetParam, cf_cmd_tests_Setup, cf_cmd_tests_Teardown, "CF_CmdGetSetParam");
+}
+
+void add_CF_CmdSetParam_tests(void)
+{
+    UtTest_Add(Test_CF_CmdSetParam_Call_CF_CmdGetSetParam_With_cmd_key_And_cmd_value, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdSetParam_Call_CF_CmdGetSetParam_With_cmd_key_And_cmd_value");
+}
+
+void add_CF_CmdGetParam_tests(void)
+{
+    UtTest_Add(Test_CF_CmdGetParam_Call_CF_CmdGetSetParam_With_cmd_data_byte_0_AndConstantValue_0, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdGetParam_Call_CF_CmdGetSetParam_With_cmd_data_byte_0_AndConstantValue_0");
+}
+
+void add_CF_CmdEnableEngine_tests(void)
+{
+    UtTest_Add(Test_CF_CmdEnableEngine_WithEngineNotEnableInitSuccessAndIncrementCmdCounter, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdEnableEngine_WithEngineNotEnableInitSuccessAndIncrementCmdCounter");
+    UtTest_Add(Test_CF_CmdEnableEngine_WithEngineNotEnableFailsInitSendEventAndIncrementErrCounter, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_CmdEnableEngine_WithEngineNotEnableFailsInitSendEventAndIncrementErrCounter");
+    UtTest_Add(Test_CF_CmdEnableEngine_WithEngineEnableFailsSendEventAndIncrementErrCounter, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdEnableEngine_WithEngineEnableFailsSendEventAndIncrementErrCounter");
+}
+
+void add_CF_CmdDisableEngine_tests(void)
+{
+    UtTest_Add(Test_CF_CmdDisableEngine_SuccessWhenEngineEnabledAndIncrementCmdCounter, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdDisableEngine_SuccessWhenEngineEnabledAndIncrementCmdCounter");
+    UtTest_Add(Test_CF_CmdDisableEngine_WhenEngineDisabledAndIncrementErrCounterThenFail, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_CmdDisableEngine_WhenEngineDisabledAndIncrementErrCounterThenFail");
+}
+
+void add_CF_ProcessGroundCommand_tests(void)
+{
+    UtTest_Add(Test_CF_ProcessGroundCommand_When_cmd_EqTo_CF_NUM_COMMANDS_FailAndSendEvent, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_ProcessGroundCommand_When_cmd_EqTo_CF_NUM_COMMANDS_FailAndSendEvent");
+    UtTest_Add(Test_CF_ProcessGroundCommand_When_cmd_GreaterThan_CF_NUM_COMMANDS_FailAndSendEvent, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_ProcessGroundCommand_When_cmd_GreaterThan_CF_NUM_COMMANDS_FailAndSendEvent");
+    UtTest_Add(
+        Test_CF_ProcessGroundCommand_Receives_cmd_AndLengthDoesNotMatchExpectedForThatCommandSendEventAndFailure,
+        cf_cmd_tests_Setup, cf_cmd_tests_Teardown,
+        "Test_CF_ProcessGroundCommand_Receives_cmd_AndLengthDoesNotMatchExpectedForThatCommandSendEventAndFailure");
+    UtTest_Add(Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x00_AndCall_CF_CmdNoop_With_msg, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown, "Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x00_AndCall_CF_CmdNoop_With_msg");
+    UtTest_Add(Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x0C_AndDoNothingBecause_fns_12_Is_NULL, cf_cmd_tests_Setup,
+               cf_cmd_tests_Teardown,
+               "Test_CF_ProcessGroundCommand_ReceivesCmdCode_0x0C_AndDoNothingBecause_fns_12_Is_NULL");
+}
+
+/*******************************************************************************
+**
+**  cf_cmd_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    TestUtil_InitializeRandomSeed();
+
+    add_CF_CmdNoop_tests();
+
+    add_CF_CmdReset_tests();
+
+    add_CF_CmdTxFile_tests();
+
+    add_CF_CmdPlaybackDir_tests();
+
+    add_CF_DoChanAction_tests();
+
+    add_CF_DoFreezeThaw_tests();
+
+    add_CF_CmdFreeze_tests();
+
+    add_CF_CmdThaw_tests();
+
+    add_CF_FindTransactionBySequenceNumberAllChannels_tests();
+
+    add_CF_TsnChanAction_tests();
+
+    add_CF_DoSuspRes_Txn_tests();
+
+    add_CF_DoSuspRes_tests();
+
+    add_CF_CmdSuspend_tests();
+
+    add_CF_CmdResume_tests();
+
+    add_CF_CmdCancel_Txn_tests();
+
+    add_CF_CmdCancel_tests();
+
+    add_CF_CmdAbandon_Txn_tests();
+
+    add_CF_CmdAbandon_tests();
+
+    add_CF_DoEnableDisableDequeue_tests();
+
+    add_CF_CmdEnableDequeue_tests();
+
+    add_CF_CmdDisableDequeue_tests();
+
+    add_CF_DoEnableDisablePolldir_tests();
+
+    add_CF_CmdEnablePolldir_tests();
+
+    add_CF_CmdDisablePolldir_tests();
+
+    add_CF_PurgeHistory_tests();
+
+    add_CF_PurgeTransaction_tests();
+
+    add_CF_DoPurgeQueue_tests();
+
+    add_CF_CmdPurgeQueue_tests();
+
+    add_CF_CmdWriteQueue_tests();
+
+    add_CF_CmdValidateChunkSize_tests();
+
+    add_CF_CmdValidateMaxOutgoing_tests();
+
+    add_CF_CmdGetSetParam_tests();
+
+    add_CF_CmdSetParam_tests();
+
+    add_CF_CmdGetParam_tests();
+
+    add_CF_CmdEnableEngine_tests();
+
+    add_CF_CmdDisableEngine_tests();
+
+    add_CF_ProcessGroundCommand_tests();
+}
+```
+
+### `cf_codec_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_codec_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_codec.h"
+
+static void UT_CF_SetupEncodeState(CF_EncoderState_t *state, void *bytes, size_t sz)
+{
+    memset(state, 0, sizeof(*state));
+
+    state->base = (uint8 *)bytes;
+    CF_CFDP_CodecReset(&state->codec_state, sz);
+}
+
+static void UT_CF_SetupDecodeState(CF_DecoderState_t *state, const void *bytes, size_t sz)
+{
+    memset(state, 0, sizeof(*state));
+
+    state->base = (const uint8 *)bytes;
+    CF_CFDP_CodecReset(&state->codec_state, sz);
+}
+
+void Test_CF_CFDP_GetValueEncodedSize(void)
+{
+    /* Test for:
+     * uint8 CF_CFDP_GetValueEncodedSize(uint64 Value)
+     */
+
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(0), 1);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(1), 1);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(126), 1);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT8_MAX), 1);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT8_MAX + 1), 2);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT16_MAX), 2);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT16_MAX + 1), 3);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(16777215), 3);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(16777216), 4);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT32_MAX), 4);
+
+    /*
+     * This next case uses UINT64_C macro to force promotion so the +1 is done as 64-bit,
+     * otherwise the UINT32_MAX is a 32-bit value and +1 results in 0.
+     */
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT32_MAX + UINT64_C(1)), 5);
+    UtAssert_UINT32_EQ(CF_CFDP_GetValueEncodedSize(UINT64_MAX), 8);
+}
+
+void Test_CF_EncodeIntegerInSize(void)
+{
+    /* Test for:
+     * void CF_EncodeIntegerInSize(CF_EncoderState_t *state, uint64 value, uint8 encode_size);
+     */
+    CF_EncoderState_t state;
+    uint8             bytes[10];
+    const uint8       expected_2[] = {0x12, 0x34};
+    const uint8       expected_4[] = {0x00, 0x00, 0x12, 0x34};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_EncodeIntegerInSize(&state, 0x1234, 2);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_EncodeIntegerInSize(&state, 0x1234, sizeof(expected_2));
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_2));
+    UtAssert_MemCmp(bytes, expected_2, sizeof(expected_2), "Encoded Bytes 2");
+    UtAssert_MemCmpValue(bytes + sizeof(expected_2), 0xEE, sizeof(bytes) - sizeof(expected_2), "Remainder unchanged");
+
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_EncodeIntegerInSize(&state, 0x1234, sizeof(expected_4));
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_4));
+    UtAssert_MemCmp(bytes, expected_4, sizeof(expected_4), "Encoded Bytes 4");
+    UtAssert_MemCmpValue(bytes + sizeof(expected_4), 0xEE, sizeof(bytes) - sizeof(expected_4), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeHeaderWithoutSize(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeHeaderWithoutSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh);
+     */
+    CF_EncoderState_t      state;
+    CF_Logical_PduHeader_t in;
+    uint8                  bytes[10];
+    const uint8            expected[] = {0x3c, 0xEE, 0xEE, 0x00, 0x44, 0x55, 0x66};
+
+    memset(&in, 0, sizeof(in));
+    in.version         = 1;
+    in.direction       = 1;
+    in.pdu_type        = 1;
+    in.txm_mode        = 1;
+    in.txn_seq_length  = 1;
+    in.eid_length      = 1;
+    in.source_eid      = 0x44;
+    in.sequence_num    = 0x55;
+    in.destination_eid = 0x66;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeHeaderWithoutSize(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal, 1 byte EID/TSN */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeHeaderWithoutSize(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeHeaderFinalSize(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeHeaderFinalSize(CF_EncoderState_t *state, CF_Logical_PduHeader_t *plh)
+     */
+    CF_EncoderState_t      state;
+    CF_Logical_PduHeader_t in;
+    uint8                  bytes[10];
+    const uint8            expected[] = {0xEE, 0x12, 0x34, 0xEE};
+
+    memset(&in, 0, sizeof(in));
+    in.data_encoded_length = 0x1234;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeHeaderFinalSize(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal, set to indicate base header has been encoded */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    state.codec_state.next_offset = sizeof(CF_CFDP_PduHeader_t);
+    CF_CFDP_EncodeHeaderFinalSize(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+
+    /* also a noop, but gets full branch coverage */
+    CF_CFDP_EncodeHeaderFinalSize(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_EncodeFileDirectiveHeader(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeFileDirectiveHeader(CF_EncoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir);
+     */
+    CF_EncoderState_t                   state;
+    CF_Logical_PduFileDirectiveHeader_t in;
+    uint8                               bytes[10];
+    const uint8                         expected[] = {0x07};
+
+    memset(&in, 0, sizeof(in));
+    in.directive_code = 7;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeFileDirectiveHeader(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeFileDirectiveHeader(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeLV(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeLV(CF_EncoderState_t *state, CF_Logical_Lv_t *pllv);
+     */
+    CF_EncoderState_t state;
+    CF_Logical_Lv_t   in;
+    uint8             bytes[10];
+    const uint8       ref[]             = {0x45, 0x67, 0x89};
+    const uint8       expected[]        = {0x03, 0x45, 0x67, 0x89};
+    const uint8       expected_nodata[] = {0x00};
+
+    memset(&in, 0, sizeof(in));
+    in.length   = sizeof(ref);
+    in.data_ptr = ref;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeLV(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+
+    /* setup where data does not fit */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(expected) - 1);
+    CF_CFDP_EncodeLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+
+    /* setup where caller did not include data but should have */
+    in.data_ptr = NULL;
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+
+    /* setup where caller did not include data validly */
+    in.length = 0;
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeLV(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_nodata));
+    UtAssert_MemCmp(bytes, expected_nodata, sizeof(expected_nodata), "Encoded Bytes");
+}
+
+void Test_CF_CFDP_EncodeTLV(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeTLV(CF_EncoderState_t *state, CF_Logical_Tlv_t *pltlv);
+     */
+    CF_EncoderState_t state;
+    CF_Logical_Tlv_t  in;
+    uint8             bytes[10];
+    const uint8       expected_tlv[]    = {0x06, 0x01, 0x77};
+    const uint8       expected_other[]  = {0x01, 0x03, 'a', 'b', 'c'};
+    const uint8       expected_nodata[] = {0x01, 0x00};
+
+    memset(&in, 0, sizeof(in));
+    in.type     = CF_CFDP_TLV_TYPE_ENTITY_ID;
+    in.length   = 1;
+    in.data.eid = 0x77;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_tlv));
+    UtAssert_MemCmp(bytes, expected_tlv, sizeof(expected_tlv), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected_tlv), 0xEE, sizeof(bytes) - sizeof(expected_tlv),
+                         "Remainder unchanged");
+
+    /* setup non-EID */
+    in.type          = 1;
+    in.length        = 3;
+    in.data.data_ptr = "abc";
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_other));
+    UtAssert_MemCmp(bytes, expected_other, sizeof(expected_other), "Encoded Bytes");
+
+    /* setup where data does not fit */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(expected_other) - 1);
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+
+    /* setup where caller did not include data but should have */
+    in.data.data_ptr = NULL;
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+
+    /* setup where caller did not include data validly */
+    in.length = 0;
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeTLV(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_nodata));
+    UtAssert_MemCmp(bytes, expected_nodata, sizeof(expected_nodata), "Encoded Bytes");
+}
+
+void Test_CF_CFDP_EncodeSegmentRequest(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeSegmentRequest(CF_EncoderState_t *state, CF_Logical_SegmentRequest_t *plseg);
+     */
+    CF_EncoderState_t           state;
+    CF_Logical_SegmentRequest_t in;
+    uint8                       bytes[10];
+    const uint8                 expected[] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+
+    memset(&in, 0, sizeof(in));
+    in.offset_start = 0x11223344;
+    in.offset_end   = 0x55667788;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeSegmentRequest(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeSegmentRequest(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeAllTlv(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeAllTlv(CF_EncoderState_t *state, CF_Logical_TlvList_t *pltlv);
+     */
+    CF_EncoderState_t    state;
+    CF_Logical_TlvList_t in;
+    uint8                bytes[10];
+    const uint8          expected[] = {0x06, 0x01, 0x88, 0x06, 0x01, 0x99};
+
+    memset(&in, 0, sizeof(in));
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop.
+     * this does not set the error because num is 0 - so it works. */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeAllTlv(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    in.num_tlv         = 2;
+    in.tlv[0].type     = CF_CFDP_TLV_TYPE_ENTITY_ID;
+    in.tlv[0].length   = 1;
+    in.tlv[0].data.eid = 0x88;
+    in.tlv[1].type     = CF_CFDP_TLV_TYPE_ENTITY_ID;
+    in.tlv[1].length   = 1;
+    in.tlv[1].data.eid = 0x99;
+    CF_CFDP_EncodeAllTlv(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeAllTlv(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeAllSegments(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeAllSegments(CF_EncoderState_t *state, CF_Logical_SegmentList_t *plseg);
+     */
+    CF_EncoderState_t        state;
+    CF_Logical_SegmentList_t in;
+    uint8                    bytes[20];
+    const uint8              expected[] = {0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02,
+                              0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04};
+
+    memset(&in, 0, sizeof(in));
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop.
+     * this does not set the error because num is 0 - so it works. */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeAllSegments(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    in.num_segments             = 2;
+    in.segments[0].offset_start = 0x1;
+    in.segments[0].offset_end   = 0x2;
+    in.segments[1].offset_start = 0x3;
+    in.segments[1].offset_end   = 0x4;
+    CF_CFDP_EncodeAllSegments(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeAllSegments(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeMd(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeMd(CF_EncoderState_t *state, CF_Logical_PduMd_t *plmd);
+     */
+    CF_EncoderState_t  state;
+    CF_Logical_PduMd_t in;
+    uint8              bytes[20];
+    const uint8        expected[] = {0x00, 0x00, 0x00, 0x12, 0x34, 0x03, 's', 'r', 'c', 0x04, 'd', 'e', 's', 't'};
+
+    memset(&in, 0, sizeof(in));
+    in.size                     = 0x1234;
+    in.dest_filename.length     = 4;
+    in.dest_filename.data_ptr   = "dest";
+    in.source_filename.length   = 3;
+    in.source_filename.data_ptr = "src";
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeMd(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeMd(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeFileDataHeader(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeFileDataHeader(CF_EncoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t
+     * *plfd);
+     */
+    CF_EncoderState_t              state;
+    CF_Logical_PduFileDataHeader_t in;
+    uint8                          bytes[20];
+    const uint8                    expected_basic[] = {0x00, 0x00, 0x00, 0x13};
+    const uint8 expected_meta[] = {0x41, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x11, 0x00, 0x00, 0x00, 0x13};
+
+    memset(&in, 0, sizeof(in));
+    in.offset   = 0x13;
+    in.data_len = 4;
+    in.data_ptr = "data";
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeFileDataHeader(&state, false, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal, no metadata */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeFileDataHeader(&state, false, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_basic));
+    UtAssert_MemCmp(bytes, expected_basic, sizeof(expected_basic), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected_basic), 0xEE, sizeof(bytes) - sizeof(expected_basic),
+                         "Remainder unchanged");
+
+    /* setup nominal, with metadata */
+    in.continuation_state                    = 1;
+    in.segment_list.num_segments             = 1;
+    in.segment_list.segments[0].offset_start = 0;
+    in.segment_list.segments[0].offset_end   = 0x11;
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeFileDataHeader(&state, true, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected_meta));
+    UtAssert_MemCmp(bytes, expected_meta, sizeof(expected_meta), "Encoded Bytes");
+}
+
+void Test_CF_CFDP_EncodeEof(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeEof(CF_EncoderState_t *state, CF_Logical_PduEof_t *pleof);
+     */
+    CF_EncoderState_t   state;
+    CF_Logical_PduEof_t in;
+    uint8               bytes[20];
+    const uint8         expected[] = {0x10, 0x12, 0x34, 0x56, 0x78, 0x00, 0x00, 0x45, 0x67, 0x06, 0x01, 0xaa};
+
+    memset(&in, 0, sizeof(in));
+    in.crc                      = 0x12345678;
+    in.size                     = 0x4567;
+    in.cc                       = 1;
+    in.tlv_list.num_tlv         = 1;
+    in.tlv_list.tlv[0].type     = CF_CFDP_TLV_TYPE_ENTITY_ID;
+    in.tlv_list.tlv[0].length   = 1;
+    in.tlv_list.tlv[0].data.eid = 0xaa;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeEof(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeEof(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeFin(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeFin(CF_EncoderState_t *state, CF_Logical_PduFin_t *plfin);
+     */
+    CF_EncoderState_t   state;
+    CF_Logical_PduFin_t in;
+    uint8               bytes[10];
+    const uint8         expected[] = {0x16};
+
+    memset(&in, 0, sizeof(in));
+    in.cc            = 1;
+    in.delivery_code = 1;
+    in.file_status   = 2;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeFin(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeFin(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeAck(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeAck(CF_EncoderState_t *state, CF_Logical_PduAck_t *plack);
+     */
+    CF_EncoderState_t   state;
+    CF_Logical_PduAck_t in;
+    uint8               bytes[10];
+    const uint8         expected[] = {0x51, 0x23};
+
+    memset(&in, 0, sizeof(in));
+    in.ack_directive_code = 5;
+    in.ack_subtype_code   = 1;
+    in.cc                 = 2;
+    in.txn_status         = 3;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeAck(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeAck(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeNak(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeNak(CF_EncoderState_t *state, CF_Logical_PduNak_t *plnak);
+     */
+    CF_EncoderState_t   state;
+    CF_Logical_PduNak_t in;
+    uint8               bytes[30];
+    const uint8         expected[] = {0x00, 0x00, 0x01, 0x02, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x05,
+                              0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08};
+
+    memset(&in, 0, sizeof(in));
+    in.scope_start                           = 0x0102;
+    in.scope_end                             = 0x0304;
+    in.segment_list.num_segments             = 2;
+    in.segment_list.segments[0].offset_start = 0x5;
+    in.segment_list.segments[0].offset_end   = 0x6;
+    in.segment_list.segments[1].offset_start = 0x7;
+    in.segment_list.segments[1].offset_end   = 0x8;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeNak(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeNak(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_CFDP_EncodeCrc(void)
+{
+    /* Test for:
+     * void CF_CFDP_EncodeCrc(CF_EncoderState_t *state, uint32 *pcrc);
+     */
+    CF_EncoderState_t state;
+    uint32            in;
+    uint8             bytes[10];
+    const uint8       expected[] = {0xde, 0xad, 0xbe, 0xef};
+
+    memset(&in, 0, sizeof(in));
+    in = 0xdeadbeef;
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(bytes, 0xEE, sizeof(bytes));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupEncodeState(&state, bytes, 0);
+    CF_CFDP_EncodeCrc(&state, &in);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(bytes, 0xEE, sizeof(bytes), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupEncodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_EncodeCrc(&state, &in);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(expected));
+    UtAssert_MemCmp(bytes, expected, sizeof(expected), "Encoded Bytes");
+    UtAssert_MemCmpValue(bytes + sizeof(expected), 0xEE, sizeof(bytes) - sizeof(expected), "Remainder unchanged");
+}
+
+void Test_CF_DecodeIntegerInSize(void)
+{
+    /* Test for:
+     * uint64 CF_DecodeIntegerInSize(CF_DecoderState_t *state, uint8 decode_size);
+     */
+    CF_DecoderState_t      state;
+    CF_Logical_PduHeader_t out;
+    const uint8            bytes_2[] = {0x12, 0x34};
+    const uint8            bytes_4[] = {0x00, 0x56, 0x78, 0x9a};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes_2, 0);
+    UtAssert_ZERO(CF_DecodeIntegerInSize(&state, 2));
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal, 2 byte int */
+    UT_CF_SetupDecodeState(&state, bytes_2, sizeof(bytes_2));
+    UtAssert_UINT32_EQ(CF_DecodeIntegerInSize(&state, sizeof(bytes_2)), 0x1234);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_2));
+
+    /* setup nominal, 4 byte int */
+    UT_CF_SetupDecodeState(&state, bytes_4, sizeof(bytes_4));
+    UtAssert_UINT32_EQ(CF_DecodeIntegerInSize(&state, sizeof(bytes_4)), 0x56789a);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_4));
+}
+
+void Test_CF_CFDP_DecodeHeader(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeHeader(CF_DecoderState_t *state, CF_Logical_PduHeader_t *plh);
+     */
+    CF_DecoderState_t      state;
+    CF_Logical_PduHeader_t out;
+    const uint8            bytes[]   = {0x3c, 0x01, 0x02, 0x00, 0x44, 0x55, 0x66};
+    const uint8            bad_eid[] = {0x3c, 0x01, 0x02, 0x73, 0x44, 0x55, 0x66};
+    const uint8            bad_tsn[] = {0x3c, 0x01, 0x02, 0x37, 0x44, 0x55, 0x66};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    UtAssert_INT32_EQ(CF_CFDP_DecodeHeader(&state, &out), 0);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    UtAssert_INT32_EQ(CF_CFDP_DecodeHeader(&state, &out), 0);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.version, 1);
+    UtAssert_UINT32_EQ(out.direction, 1);
+    UtAssert_UINT32_EQ(out.pdu_type, 1);
+    UtAssert_UINT32_EQ(out.txm_mode, 1);
+    UtAssert_UINT32_EQ(out.eid_length, 1);
+    UtAssert_UINT32_EQ(out.txn_seq_length, 1);
+    UtAssert_UINT32_EQ(out.data_encoded_length, 0x0102);
+    UtAssert_UINT32_EQ(out.source_eid, 0x44);
+    UtAssert_UINT32_EQ(out.sequence_num, 0x55);
+    UtAssert_UINT32_EQ(out.destination_eid, 0x66);
+    UtAssert_UINT32_EQ(out.header_encoded_length, sizeof(bytes));
+
+    /*
+     * Check for EID that would be truncated
+     */
+    UT_CF_SetupDecodeState(&state, bad_eid, sizeof(bad_eid));
+    UtAssert_INT32_EQ(CF_CFDP_DecodeHeader(&state, &out), -1);
+
+    /*
+     * Check for TSN that would be truncated
+     */
+    UT_CF_SetupDecodeState(&state, bad_tsn, sizeof(bad_tsn));
+    UtAssert_INT32_EQ(CF_CFDP_DecodeHeader(&state, &out), -1);
+}
+
+void Test_CF_CFDP_DecodeFileDirectiveHeader(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeFileDirectiveHeader(CF_DecoderState_t *state, CF_Logical_PduFileDirectiveHeader_t *pfdir);
+     */
+    CF_DecoderState_t                   state;
+    CF_Logical_PduFileDirectiveHeader_t out;
+    const uint8                         bytes[] = {0x08};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeFileDirectiveHeader(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeFileDirectiveHeader(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.directive_code, CF_CFDP_FileDirective_NAK);
+}
+
+void Test_CF_CFDP_DecodeLV(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeLV(CF_DecoderState_t *state, CF_Logical_Lv_t *pllv);
+     */
+    CF_DecoderState_t state;
+    CF_Logical_Lv_t   out;
+    const uint8       bytes[]     = {0x03, 0x45, 0x67, 0x89};
+    const uint8       bad_input[] = {0x32, 0x45, 0x67, 0x89, 0xaa};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeLV(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeLV(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.length, 3);
+    UtAssert_ADDRESS_EQ(out.data_ptr, &bytes[1]);
+
+    /* The bad input has a long length that would go beyond the end */
+    UT_CF_SetupDecodeState(&state, bad_input, sizeof(bad_input));
+    CF_CFDP_DecodeLV(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeTLV(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeTLV(CF_DecoderState_t *state, CF_Logical_Tlv_t *pltlv);
+     */
+    CF_DecoderState_t state;
+    CF_Logical_Tlv_t  out;
+    const uint8       bytes_tlv[]   = {0x06, 0x01, 0x77};
+    const uint8       bytes_other[] = {0x01, 0x02, 0x88, 0x99};
+    const uint8       bad_input[]   = {0x06, 0x21, 0x88, 0x99};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes_tlv, 0);
+    CF_CFDP_DecodeTLV(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes_tlv, sizeof(bytes_tlv));
+    CF_CFDP_DecodeTLV(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_tlv));
+    UtAssert_UINT32_EQ(out.type, CF_CFDP_TLV_TYPE_ENTITY_ID);
+    UtAssert_UINT32_EQ(out.length, 1);
+    UtAssert_UINT32_EQ(out.data.eid, 0x77);
+
+    /* non-EID TLVs are defined by the protocol but not yet used by CF */
+    UT_CF_SetupDecodeState(&state, bytes_other, sizeof(bytes_other));
+    CF_CFDP_DecodeTLV(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_other));
+    UtAssert_UINT32_EQ(out.type, 1);
+    UtAssert_UINT32_EQ(out.length, 2);
+    UtAssert_ADDRESS_EQ(out.data.data_ptr, &bytes_other[2]);
+
+    /* The bad input has a long length that would go beyond the end */
+    UT_CF_SetupDecodeState(&state, bad_input, sizeof(bad_input));
+    CF_CFDP_DecodeTLV(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeSegmentRequest(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeSegmentRequest(CF_DecoderState_t *state, CF_Logical_SegmentRequest_t *plseg);
+     */
+    CF_DecoderState_t           state;
+    CF_Logical_SegmentRequest_t out;
+    const uint8                 bytes[] = {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeSegmentRequest(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeSegmentRequest(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.offset_start, 0x11223344);
+    UtAssert_UINT32_EQ(out.offset_end, 0x55667788);
+}
+
+void Test_CF_CFDP_DecodeAllTlv(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeAllTlv(CF_DecoderState_t *state, CF_Logical_TlvList_t *pltlv, uint8 limit);
+     */
+    CF_DecoderState_t    state;
+    CF_Logical_TlvList_t out;
+    const uint8          bytes[]                              = {0x06, 0x01, 0x88, 0x06, 0x01, 0x99};
+    const uint8          bad_input[]                          = {0x06, 0x07, 0x88, 0x06, 0x03, 0x99, 0xaa};
+    const uint8          long_input[2 * (CF_PDU_MAX_TLV + 1)] = {0};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop
+     * as there are no fixed fields here, this succeeds. */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeAllTlv(&state, &out, CF_PDU_MAX_TLV);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_ZERO(out.num_tlv);
+
+    /* setup nominal, but limit to single TLV */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeAllTlv(&state, &out, 1);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), 3);
+    UtAssert_UINT32_EQ(CF_CODEC_GET_REMAIN(&state), 3);
+    UtAssert_UINT32_EQ(out.num_tlv, 1);
+    UtAssert_UINT32_EQ(out.tlv[0].type, CF_CFDP_TLV_TYPE_ENTITY_ID);
+    UtAssert_UINT32_EQ(out.tlv[0].length, 1);
+    UtAssert_UINT32_EQ(out.tlv[0].data.eid, 0x88);
+
+    /* setup nominal, do all */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeAllTlv(&state, &out, CF_PDU_MAX_TLV);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.num_tlv, 2);
+    UtAssert_UINT32_EQ(out.tlv[0].type, CF_CFDP_TLV_TYPE_ENTITY_ID);
+    UtAssert_UINT32_EQ(out.tlv[0].length, 1);
+    UtAssert_UINT32_EQ(out.tlv[0].data.eid, 0x88);
+    UtAssert_UINT32_EQ(out.tlv[1].type, CF_CFDP_TLV_TYPE_ENTITY_ID);
+    UtAssert_UINT32_EQ(out.tlv[1].length, 1);
+    UtAssert_UINT32_EQ(out.tlv[1].data.eid, 0x99);
+
+    /* The bad input has a long length that would go beyond the end */
+    UT_CF_SetupDecodeState(&state, bad_input, sizeof(bad_input));
+    CF_CFDP_DecodeAllTlv(&state, &out, CF_PDU_MAX_TLV);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+
+    UT_CF_SetupDecodeState(&state, long_input, sizeof(long_input));
+    CF_CFDP_DecodeAllTlv(&state, &out, 1 + CF_PDU_MAX_TLV);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeAllSegments(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeAllSegments(CF_DecoderState_t *state, CF_Logical_SegmentList_t *plseg, uint8 limit);
+     */
+    CF_DecoderState_t        state;
+    CF_Logical_SegmentList_t out;
+    const uint8              bytes[] = {0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x02,
+                           0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04};
+    const uint8              long_input[8 * (CF_PDU_MAX_SEGMENTS + 1)] = {0};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop
+     * as there are no fixed fields here, this succeeds. */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeAllSegments(&state, &out, CF_PDU_MAX_SEGMENTS);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_ZERO(out.num_segments);
+
+    /* setup nominal, but limit to single segment */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeAllSegments(&state, &out, 1);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), 8);
+    UtAssert_UINT32_EQ(CF_CODEC_GET_REMAIN(&state), 8);
+    UtAssert_UINT32_EQ(out.num_segments, 1);
+    UtAssert_UINT32_EQ(out.segments[0].offset_start, 0x1);
+    UtAssert_UINT32_EQ(out.segments[0].offset_end, 0x2);
+
+    /* setup nominal, do all */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeAllSegments(&state, &out, CF_PDU_MAX_SEGMENTS);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.num_segments, 2);
+    UtAssert_UINT32_EQ(out.segments[0].offset_start, 0x1);
+    UtAssert_UINT32_EQ(out.segments[0].offset_end, 0x2);
+    UtAssert_UINT32_EQ(out.segments[1].offset_start, 0x3);
+    UtAssert_UINT32_EQ(out.segments[1].offset_end, 0x4);
+
+    UT_CF_SetupDecodeState(&state, long_input, sizeof(long_input));
+    CF_CFDP_DecodeAllSegments(&state, &out, 1 + CF_PDU_MAX_SEGMENTS);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeMd(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeMd(CF_DecoderState_t *state, CF_Logical_PduMd_t *plmd);
+     */
+    CF_DecoderState_t  state;
+    CF_Logical_PduMd_t out;
+    const uint8        bytes[]     = {0x00, 0x00, 0x00, 0x12, 0x34, 0x03, 's', 'r', 'c', 0x04, 'd', 'e', 's', 't'};
+    const uint8        bad_input[] = {0x00, 0x00, 0x00, 0x12, 0x34, 0x56, 's', 'r', 'c', 0x04, 'd', 'e', 's', 't'};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeMd(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeMd(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.size, 0x1234);
+    UtAssert_ADDRESS_EQ(out.source_filename.data_ptr, &bytes[6]);
+    UtAssert_UINT32_EQ(out.source_filename.length, 3);
+    UtAssert_ADDRESS_EQ(out.dest_filename.data_ptr, &bytes[10]);
+    UtAssert_UINT32_EQ(out.dest_filename.length, 4);
+
+    /* The bad input has a long length that would go beyond the end */
+    UT_CF_SetupDecodeState(&state, bad_input, sizeof(bad_input));
+    CF_CFDP_DecodeMd(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeFileDataHeader(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeFileDataHeader(CF_DecoderState_t *state, bool with_meta, CF_Logical_PduFileDataHeader_t
+     * *plfd);
+     */
+    CF_DecoderState_t              state;
+    CF_Logical_PduFileDataHeader_t out;
+    const uint8                    bytes_basic[] = {0x00, 0x00, 0x00, 0x13, 0xdd};
+    const uint8 bytes_meta[]  = {0x41, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x00, 0x00, 0x00, 0x13, 0xcc};
+    const uint8 bad_input_1[] = {0xff, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x00, 0x00, 0x00, 0x13, 0xcc};
+    const uint8 bad_input_2[] = {0x41, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes_basic, 0);
+    CF_CFDP_DecodeFileDataHeader(&state, false, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    /* Note - this will set the segment count to 0, so the bytes will be changed */
+
+    /* setup nominal, no metadata */
+    UT_CF_SetupDecodeState(&state, bytes_basic, sizeof(bytes_basic));
+    CF_CFDP_DecodeFileDataHeader(&state, false, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_basic));
+    UtAssert_UINT32_EQ(out.offset, 0x13);
+    UtAssert_UINT32_EQ(out.data_len, 1);
+    UtAssert_ADDRESS_EQ(out.data_ptr, &bytes_basic[4]);
+
+    /* setup nominal, with metadata */
+    UT_CF_SetupDecodeState(&state, bytes_meta, sizeof(bytes_meta));
+    CF_CFDP_DecodeFileDataHeader(&state, true, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes_meta));
+    UtAssert_UINT32_EQ(out.continuation_state, 1);
+    UtAssert_UINT32_EQ(out.segment_list.num_segments, 1);
+    UtAssert_UINT32_EQ(out.segment_list.segments[0].offset_start, 0x01020304);
+    UtAssert_UINT32_EQ(out.segment_list.segments[0].offset_end, 0x05060708);
+    UtAssert_UINT32_EQ(out.offset, 0x13);
+    UtAssert_UINT32_EQ(out.data_len, 1);
+    UtAssert_ADDRESS_EQ(out.data_ptr, &bytes_meta[13]);
+
+    /* The bad input has a long length that would go beyond the end */
+    /* first has too many segments */
+    UT_CF_SetupDecodeState(&state, bad_input_1, sizeof(bad_input_1));
+    CF_CFDP_DecodeFileDataHeader(&state, true, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    /* next has a truncated segment */
+    UT_CF_SetupDecodeState(&state, bad_input_2, sizeof(bad_input_2));
+    CF_CFDP_DecodeFileDataHeader(&state, true, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeEof(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeEof(CF_DecoderState_t *state, CF_Logical_PduEof_t *pleof);
+     */
+    CF_DecoderState_t   state;
+    CF_Logical_PduEof_t out;
+    const uint8         bytes[]     = {0x10, 0x12, 0x34, 0x56, 0x78, 0x00, 0x00, 0x45, 0x67, 0x06, 0x01, 0xaa};
+    const uint8         bad_input[] = {0x10, 0x12, 0x34, 0x56, 0x78, 0x00, 0x00, 0x45, 0x67, 0x06, 0x06, 0xaa, 0xbb};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeEof(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeEof(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.crc, 0x12345678);
+    UtAssert_UINT32_EQ(out.size, 0x4567);
+    UtAssert_UINT32_EQ(out.cc, 1);
+    UtAssert_UINT32_EQ(out.tlv_list.num_tlv, 1);
+    UtAssert_UINT32_EQ(out.tlv_list.tlv[0].type, CF_CFDP_TLV_TYPE_ENTITY_ID);
+    UtAssert_UINT32_EQ(out.tlv_list.tlv[0].length, 1);
+    UtAssert_UINT32_EQ(out.tlv_list.tlv[0].data.eid, 0xaa);
+
+    /* The bad input has a long length that would go beyond the end */
+    UT_CF_SetupDecodeState(&state, bad_input, sizeof(bad_input));
+    CF_CFDP_DecodeEof(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+}
+
+void Test_CF_CFDP_DecodeFin(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeFin(CF_DecoderState_t *state, CF_Logical_PduFin_t *plfin);
+     */
+    CF_DecoderState_t   state;
+    CF_Logical_PduFin_t out;
+    const uint8         bytes[] = {0x16};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeFin(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeFin(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.cc, 1);
+    UtAssert_UINT32_EQ(out.delivery_code, 1);
+    UtAssert_UINT32_EQ(out.file_status, 2);
+}
+
+void Test_CF_CFDP_DecodeAck(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeAck(CF_DecoderState_t *state, CF_Logical_PduAck_t *plack);
+     */
+    CF_DecoderState_t   state;
+    CF_Logical_PduAck_t out;
+    const uint8         bytes[] = {0x51, 0x23};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeAck(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeAck(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.ack_directive_code, 5);
+    UtAssert_UINT32_EQ(out.ack_subtype_code, 1);
+    UtAssert_UINT32_EQ(out.cc, 2);
+    UtAssert_UINT32_EQ(out.txn_status, 3);
+}
+
+void Test_CF_CFDP_DecodeNak(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeNak(CF_DecoderState_t *state, CF_Logical_PduNak_t *plnak);
+     */
+    CF_DecoderState_t   state;
+    CF_Logical_PduNak_t out;
+    const uint8         bytes[] = {0x00, 0x00, 0x01, 0x02, 0x00, 0x00, 0x03, 0x04, 0x00, 0x00, 0x00, 0x05,
+                           0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x07, 0x00, 0x00, 0x00, 0x08};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, bytes, 0);
+    CF_CFDP_DecodeNak(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeNak(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out.scope_start, 0x0102);
+    UtAssert_UINT32_EQ(out.scope_end, 0x0304);
+    UtAssert_UINT32_EQ(out.segment_list.num_segments, 2);
+    UtAssert_UINT32_EQ(out.segment_list.segments[0].offset_start, 0x5);
+    UtAssert_UINT32_EQ(out.segment_list.segments[0].offset_end, 0x6);
+    UtAssert_UINT32_EQ(out.segment_list.segments[1].offset_start, 0x7);
+    UtAssert_UINT32_EQ(out.segment_list.segments[1].offset_end, 0x8);
+}
+
+void Test_CF_CFDP_DecodeCrc(void)
+{
+    /* Test for:
+     * void   CF_CFDP_DecodeCrc(CF_DecoderState_t *state, uint32 *pcrc);
+     */
+    CF_DecoderState_t state;
+    uint32            out;
+    const uint8       bytes[] = {0xde, 0xad, 0xbe, 0xef};
+
+    /* fill with nonzero bytes so it is evident what was set */
+    memset(&out, 0xEE, sizeof(out));
+
+    /* call w/zero state should be noop */
+    UT_CF_SetupDecodeState(&state, "", 0);
+    CF_CFDP_DecodeCrc(&state, &out);
+    UtAssert_BOOL_FALSE(CF_CODEC_IS_OK(&state));
+    UtAssert_MemCmpValue(&out, 0xEE, sizeof(out), "Bytes unchanged");
+
+    /* setup nominal */
+    UT_CF_SetupDecodeState(&state, bytes, sizeof(bytes));
+    CF_CFDP_DecodeCrc(&state, &out);
+    UtAssert_BOOL_TRUE(CF_CODEC_IS_OK(&state));
+    UtAssert_UINT32_EQ(CF_CODEC_GET_POSITION(&state), sizeof(bytes));
+    UtAssert_UINT32_EQ(out, 0xdeadbeef);
+}
+
+/*******************************************************************************
+**
+**  cf_codec_tests UtTest_Add groups
+**
+*******************************************************************************/
+
+void Add_CF_Encode_tests(void)
+{
+    UtTest_Add(Test_CF_EncodeIntegerInSize, NULL, NULL, "CF_EncodeIntegerInSize");
+    UtTest_Add(Test_CF_CFDP_EncodeHeaderWithoutSize, NULL, NULL, "CF_CFDP_EncodeHeaderWithoutSize");
+    UtTest_Add(Test_CF_CFDP_EncodeHeaderFinalSize, NULL, NULL, "CF_CFDP_EncodeHeaderFinalSize");
+    UtTest_Add(Test_CF_CFDP_EncodeFileDirectiveHeader, NULL, NULL, "CF_CFDP_EncodeFileDirectiveHeader");
+    UtTest_Add(Test_CF_CFDP_EncodeLV, NULL, NULL, "CF_CFDP_EncodeLV");
+    UtTest_Add(Test_CF_CFDP_EncodeTLV, NULL, NULL, "CF_CFDP_EncodeTLV");
+    UtTest_Add(Test_CF_CFDP_EncodeSegmentRequest, NULL, NULL, "CF_CFDP_EncodeSegmentRequest");
+    UtTest_Add(Test_CF_CFDP_EncodeAllTlv, NULL, NULL, "CF_CFDP_EncodeAllTlv");
+    UtTest_Add(Test_CF_CFDP_EncodeAllSegments, NULL, NULL, "CF_CFDP_EncodeAllSegments");
+    UtTest_Add(Test_CF_CFDP_EncodeMd, NULL, NULL, "CF_CFDP_EncodeMd");
+    UtTest_Add(Test_CF_CFDP_EncodeFileDataHeader, NULL, NULL, "CF_CFDP_EncodeFileDataHeader");
+    UtTest_Add(Test_CF_CFDP_EncodeEof, NULL, NULL, "CF_CFDP_EncodeEof");
+    UtTest_Add(Test_CF_CFDP_EncodeFin, NULL, NULL, "CF_CFDP_EncodeFin");
+    UtTest_Add(Test_CF_CFDP_EncodeAck, NULL, NULL, "CF_CFDP_EncodeAck");
+    UtTest_Add(Test_CF_CFDP_EncodeNak, NULL, NULL, "CF_CFDP_EncodeNak");
+    UtTest_Add(Test_CF_CFDP_EncodeCrc, NULL, NULL, "CF_CFDP_EncodeCrc");
+}
+
+void Add_CF_Decode_tests(void)
+{
+    UtTest_Add(Test_CF_DecodeIntegerInSize, NULL, NULL, "CF_DecodeIntegerInSize");
+    UtTest_Add(Test_CF_CFDP_DecodeHeader, NULL, NULL, "CF_CFDP_DecodeHeader");
+    UtTest_Add(Test_CF_CFDP_DecodeFileDirectiveHeader, NULL, NULL, "CF_CFDP_DecodeFileDirectiveHeader");
+    UtTest_Add(Test_CF_CFDP_DecodeLV, NULL, NULL, "CF_CFDP_DecodeLV");
+    UtTest_Add(Test_CF_CFDP_DecodeTLV, NULL, NULL, "CF_CFDP_DecodeTLV");
+    UtTest_Add(Test_CF_CFDP_DecodeSegmentRequest, NULL, NULL, "CF_CFDP_DecodeSegmentRequest");
+    UtTest_Add(Test_CF_CFDP_DecodeAllTlv, NULL, NULL, "CF_CFDP_DecodeAllTlv");
+    UtTest_Add(Test_CF_CFDP_DecodeAllSegments, NULL, NULL, "CF_CFDP_DecodeAllSegments");
+    UtTest_Add(Test_CF_CFDP_DecodeMd, NULL, NULL, "CF_CFDP_DecodeMd");
+    UtTest_Add(Test_CF_CFDP_DecodeFileDataHeader, NULL, NULL, "CF_CFDP_DecodeFileDataHeader");
+    UtTest_Add(Test_CF_CFDP_DecodeEof, NULL, NULL, "CF_CFDP_DecodeEof");
+    UtTest_Add(Test_CF_CFDP_DecodeFin, NULL, NULL, "CF_CFDP_DecodeFin");
+    UtTest_Add(Test_CF_CFDP_DecodeAck, NULL, NULL, "CF_CFDP_DecodeAck");
+    UtTest_Add(Test_CF_CFDP_DecodeNak, NULL, NULL, "CF_CFDP_DecodeNak");
+    UtTest_Add(Test_CF_CFDP_DecodeCrc, NULL, NULL, "CF_CFDP_DecodeCrc");
+}
+
+/*******************************************************************************
+**
+**  cf_codec_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    UtTest_Add(Test_CF_CFDP_GetValueEncodedSize, NULL, NULL, "CF_CFDP_GetValueEncodedSize");
+
+    Add_CF_Encode_tests();
+    Add_CF_Decode_tests();
+}
+```
+
+### `cf_crc_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_crc_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+
+void Test_CF_CRC_Start(void)
+{
+    /* Arrange */
+    CF_Crc_t c;
+
+    memset(&c, 0xFF, sizeof(c));
+
+    /* Act */
+    UtAssert_VOIDCALL(CF_CRC_Start(&c));
+
+    /* Assert */
+    UtAssert_ZERO(c.working);
+    UtAssert_ZERO(c.result);
+    UtAssert_ZERO(c.index);
+}
+
+void Test_CF_CRC_Digest(void)
+{
+    CF_Crc_t c;
+    uint8    data[] = {1, 2, 3, 4, 5};
+
+    /* Already tested, so OK to use */
+    CF_CRC_Start(&c);
+
+    /* Zero length should leave c as zeros */
+    UtAssert_VOIDCALL(CF_CRC_Digest(&c, NULL, 0));
+    UtAssert_ZERO(c.working);
+    UtAssert_ZERO(c.result);
+    UtAssert_ZERO(c.index);
+
+    /* Digest data and confirm */
+    UtAssert_VOIDCALL(CF_CRC_Digest(&c, data, sizeof(data)));
+    UtAssert_UINT32_EQ(c.working, (data[1] << 24) + (data[2] << 16) + (data[3] << 8) + data[4]);
+    UtAssert_UINT32_EQ(c.result, (data[0] << 24) + (data[1] << 16) + (data[2] << 8) + data[3]);
+    UtAssert_UINT32_EQ(c.index, 1);
+}
+
+void Test_CF_CRC_Finalize(void)
+{
+    CF_Crc_t c;
+    uint8    data[] = {1, 2, 3, 4, 5};
+
+    /* Already tested, so OK to use */
+    CF_CRC_Start(&c);
+
+    /* Test with clear c */
+    UtAssert_VOIDCALL(CF_CRC_Finalize(&c));
+    UtAssert_ZERO(c.working);
+    UtAssert_ZERO(c.result);
+    UtAssert_ZERO(c.index);
+
+    /* Already tested, so OK to use */
+    CF_CRC_Digest(&c, data, sizeof(data));
+
+    /* Test with filled in c */
+    UtAssert_VOIDCALL(CF_CRC_Finalize(&c));
+    UtAssert_ZERO(c.working);
+    UtAssert_UINT32_EQ(c.result, ((data[0] + data[4]) << 24) + (data[1] << 16) + (data[2] << 8) + data[3]);
+    UtAssert_ZERO(c.index);
+}
+
+void UtTest_Setup(void)
+{
+    TEST_CF_ADD(Test_CF_CRC_Start);
+    TEST_CF_ADD(Test_CF_CRC_Digest);
+    TEST_CF_ADD(Test_CF_CRC_Finalize);
+}
+```
+
+### `cf_timer_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_timer_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_timer.h"
+
+/*******************************************************************************
+**
+**  cf_timer_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_timer_tests_Setup(void)
+{
+    cf_tests_Setup();
+}
+
+void cf_timer_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  CF_Timer_Sec2Ticks tests
+**
+*******************************************************************************/
+
+void Test_CF_Timer_Sec2Ticks_ReturnExpectedValue(void)
+{
+    /* Arrange */
+    CF_Timer_Seconds_t arg_sec                = Any_uint32();
+    uint32             dummy_ticks_per_second = Any_uint32();
+    CF_ConfigTable_t   dummy_config_table;
+
+    CF_AppData.config_table                   = &dummy_config_table;
+    CF_AppData.config_table->ticks_per_second = dummy_ticks_per_second;
+
+    /* Act */
+    UtAssert_UINT32_EQ(CF_Timer_Sec2Ticks(arg_sec), arg_sec * dummy_ticks_per_second);
+}
+
+/*******************************************************************************
+**
+**  CF_Timer_InitRelSec tests
+**
+*******************************************************************************/
+
+void Test_CF_Timer_InitRelSec_ReceiveExpectedValue(void)
+{
+    /* Arrange */
+    uint32      arg_rel_sec = Any_uint32();
+    CF_Timer_t  dummy_timer;
+    CF_Timer_t *arg_t = &dummy_timer;
+
+    /* Arrange unstubbalbe: CF_Timer_Sec2Ticks in same file */
+    uint32           dummy_ticks_per_second = Any_uint32();
+    CF_ConfigTable_t dummy_config_table;
+
+    CF_AppData.config_table                   = &dummy_config_table;
+    CF_AppData.config_table->ticks_per_second = dummy_ticks_per_second;
+
+    arg_t->tick = dummy_ticks_per_second;
+
+    /* Act */
+    CF_Timer_InitRelSec(arg_t, arg_rel_sec);
+
+    /* Assert */
+    UtAssert_UINT32_EQ(arg_t->tick, arg_rel_sec * dummy_ticks_per_second);
+}
+
+/*******************************************************************************
+**
+**  CF_Timer_Expired tests
+**
+*******************************************************************************/
+
+void Test_CF_Timer_Expired_When_t_tick_Is_0_Return_1(void)
+{
+    /* Arrange */
+    CF_Timer_t dummy_timer;
+    dummy_timer.tick                  = 0;
+    const CF_Timer_t *arg_t           = &dummy_timer;
+    int               expected_result = 1;
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Timer_Expired(arg_t), expected_result);
+}
+
+void Test_CF_Timer_Expired_When_t_tick_Is_1_Return_0(void)
+{
+    /* Arrange */
+    CF_Timer_t dummy_timer;
+    dummy_timer.tick                  = 1;
+    const CF_Timer_t *arg_t           = &dummy_timer;
+    int               expected_result = 0;
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Timer_Expired(arg_t), expected_result);
+}
+
+void Test_CF_Timer_Expired_When_t_tick_IsAnyIntegerExcept_0_Return_0(void)
+{
+    /* Arrange */
+    CF_Timer_t dummy_timer;
+    dummy_timer.tick                  = Any_int_Except(0);
+    const CF_Timer_t *arg_t           = &dummy_timer;
+    int               expected_result = 0;
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_Timer_Expired(arg_t), expected_result);
+}
+
+/*******************************************************************************
+**
+**  CF_Timer_Tick tests
+**
+*******************************************************************************/
+
+void Test_CF_Timer_Tick_When_t_tick_Is_non0_Decrement_t_tick(void)
+{
+    /* Arrange */
+    uint32      initial_tick = Any_uint32_Except(0);
+    CF_Timer_t  dummy_t;
+    CF_Timer_t *arg_t = &dummy_t;
+
+    arg_t->tick = initial_tick;
+
+    /* Act */
+    CF_Timer_Tick(arg_t);
+
+    /* Assert */
+    UtAssert_UINT32_EQ(arg_t->tick, initial_tick - 1);
+}
+
+/*******************************************************************************
+**
+**  cf_timer_tests UtTest_Add groups
+**
+*******************************************************************************/
+
+void add_CF_Timer_Sec2Ticks_tests(void)
+{
+    UtTest_Add(Test_CF_Timer_Sec2Ticks_ReturnExpectedValue, cf_timer_tests_Setup, cf_timer_tests_Teardown,
+               "Test_CF_Timer_Sec2Ticks_ReturnExpectedValue");
+}
+
+void add_CF_Timer_InitRelSec_tests(void)
+{
+    UtTest_Add(Test_CF_Timer_InitRelSec_ReceiveExpectedValue, cf_timer_tests_Setup, cf_timer_tests_Teardown,
+               "Test_CF_Timer_InitRelSec_ReceiveExpectedValue");
+}
+
+void add_CF_Timer_Expired_tests(void)
+{
+    UtTest_Add(Test_CF_Timer_Expired_When_t_tick_Is_0_Return_1, cf_timer_tests_Setup, cf_timer_tests_Teardown,
+               "Test_CF_Timer_Expired_When_t_tick_Is_0_Return_1");
+
+    UtTest_Add(Test_CF_Timer_Expired_When_t_tick_Is_1_Return_0, cf_timer_tests_Setup, cf_timer_tests_Teardown,
+               "Test_CF_Timer_Expired_When_t_tick_Is_1_Return_0");
+
+    UtTest_Add(Test_CF_Timer_Expired_When_t_tick_IsAnyIntegerExcept_0_Return_0, cf_timer_tests_Setup,
+               cf_timer_tests_Teardown, "Test_CF_Timer_Expired_When_t_tick_IsAnyIntegerExcept_0_Return_0");
+}
+
+void add_CF_Timer_Tick_tests(void)
+{
+    UtTest_Add(Test_CF_Timer_Tick_When_t_tick_Is_non0_Decrement_t_tick, cf_timer_tests_Setup, cf_timer_tests_Teardown,
+               "Test_CF_Timer_Tick_When_t_tick_Is_non0_Decrement_t_tick");
+}
+
+/*******************************************************************************
+**
+**  cf_timer_tests test UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    TestUtil_InitializeRandomSeed();
+
+    add_CF_Timer_Sec2Ticks_tests();
+
+    add_CF_Timer_InitRelSec_tests();
+
+    add_CF_Timer_Expired_tests();
+
+    add_CF_Timer_Tick_tests();
+}
+```
+
+### `cf_utils_tests.c`
+
+**경로:** `fsw/apps/cf/unit-test/cf_utils_tests.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,447-1, and identified as “CFS CFDP (CF)
+ * Application version 3.0.0”
+ *
+ * Copyright (c) 2019 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/* cf testing includes */
+#include "cf_test_utils.h"
+#include "cf_test_alt_handler.h"
+#include "cf_utils.h"
+#include "cf_events.h"
+
+/* A value that may be passed to stubs accepting osal_id_t values */
+#define UT_CF_OS_OBJID OS_ObjectIdFromInteger(1)
+
+typedef struct
+{
+    CF_Transaction_t *t;
+    void *            context;
+} UT_Callback_CF_TraverseAllTransactions_context_t;
+
+/*******************************************************************************
+**
+**  cf_utils_tests Setup and Teardown
+**
+*******************************************************************************/
+
+void cf_utils_tests_Setup(void)
+{
+    cf_tests_Setup();
+}
+
+void cf_utils_tests_Teardown(void)
+{
+    cf_tests_Teardown();
+}
+
+/*******************************************************************************
+**
+**  cf_utils_tests specific Any functions  NOTE:Some of these may be better as global
+**
+*******************************************************************************/
+
+CF_QueueIdx_t Any_cf_queue_index_t(void)
+{
+    return (CF_QueueIdx_t)Any_uint16_LessThan(CF_QueueIdx_NUM);
+}
+
+CF_Direction_t Any_direction_t(void)
+{
+    return (CF_Direction_t)Any_uint8_LessThan(CF_Direction_NUM);
+}
+
+CF_CFDP_ConditionCode_t Any_condition_code_t(void)
+{
+    uint8 codes[13] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 14, 15};
+    return (CF_CFDP_ConditionCode_t)Any_uint8_FromThese(codes, sizeof(codes) / sizeof(codes[0]));
+}
+
+void local_handler_OS_close(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    int32 status;
+
+    UT_Stub_GetInt32StatusCode(Context, &status);
+}
+
+/*******************************************************************************
+**
+**  cf_utils_tests dummy test functions
+**
+*******************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ * A UT-specific callback that can be used with CF_TraverseAllTransactions
+ *
+ *-----------------------------------------------------------------*/
+static void UT_Callback_CF_TraverseAllTransactions(CF_Transaction_t *t, void *context)
+{
+    UT_Callback_CF_TraverseAllTransactions_context_t *ctxt = UT_CF_GetContextBuffer(
+        UT_KEY(UT_Callback_CF_TraverseAllTransactions), UT_Callback_CF_TraverseAllTransactions_context_t);
+
+    if (ctxt)
+    {
+        ctxt->t       = t;
+        ctxt->context = context;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ * A simple handler that just sets the "t" output in the state object
+ *
+ *-----------------------------------------------------------------*/
+static void UT_AltHandler_CF_CList_Traverse_SeqArg_SetTxn(void *UserObj, UT_EntryKey_t FuncKey,
+                                                          const UT_StubContext_t *Context)
+{
+    CF_Traverse_TransSeqArg_t *arg = UT_Hook_GetArgValueByName(Context, "context", CF_Traverse_TransSeqArg_t *);
+    arg->t                         = UserObj;
+}
+
+/*******************************************************************************
+**
+**  cf_utils.h function tests
+**
+*******************************************************************************/
+
+void Test_CF_ResetHistory(void)
+{
+    /* Test case for:
+     * void CF_ResetHistory(CF_Channel_t *c, CF_History_t *h)
+     */
+    CF_History_t h;
+
+    memset(&h, 0, sizeof(h));
+
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[CF_QueueIdx_HIST] = 4;
+
+    /* nominal call */
+    UtAssert_VOIDCALL(CF_ResetHistory(&CF_AppData.engine.channels[UT_CFDP_CHANNEL], &h));
+}
+
+void Test_CF_FindUnusedTransaction(void)
+{
+    /* Test case for:
+     * CF_Transaction_t *CF_FindUnusedTransaction(CF_Channel_t *c)
+     */
+    CF_Channel_t *   c;
+    CF_Transaction_t txn;
+    CF_History_t     hist;
+
+    memset(&hist, 0, sizeof(hist));
+    memset(&txn, 0, sizeof(txn));
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+    c                                                                  = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[CF_QueueIdx_FREE] = 2;
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[CF_QueueIdx_HIST_FREE] = 1;
+    CF_AppData.hk.channel_hk[UT_CFDP_CHANNEL].q_size[CF_QueueIdx_HIST]      = 1;
+
+    UtAssert_NULL(CF_FindUnusedTransaction(c));
+
+    c->qs[CF_QueueIdx_FREE]      = &txn.cl_node;
+    c->qs[CF_QueueIdx_HIST_FREE] = &hist.cl_node;
+    c->qs[CF_QueueIdx_HIST]      = NULL;
+    UtAssert_ADDRESS_EQ(CF_FindUnusedTransaction(c), &txn);
+    UtAssert_ADDRESS_EQ(txn.history, &hist);
+
+    c->qs[CF_QueueIdx_FREE]      = &txn.cl_node;
+    c->qs[CF_QueueIdx_HIST_FREE] = NULL;
+    c->qs[CF_QueueIdx_HIST]      = &hist.cl_node;
+    UtAssert_ADDRESS_EQ(CF_FindUnusedTransaction(c), &txn);
+    UtAssert_ADDRESS_EQ(txn.history, &hist);
+}
+
+void Test_CF_FreeTransaction(void)
+{
+    /* Test case for:
+     * void CF_FreeTransaction(CF_Transaction_t *t)
+     */
+    CF_Transaction_t *t;
+
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+    t = &CF_AppData.engine.transactions[UT_CFDP_CHANNEL];
+
+    UtAssert_VOIDCALL(CF_FreeTransaction(t));
+
+    UtAssert_UINT32_EQ(t->state, CF_TxnState_IDLE);
+    UtAssert_UINT32_EQ(t->flags.com.q_index, CF_QueueIdx_FREE);
+}
+
+void Test_CF_FindTransactionBySequenceNumber_Impl(void)
+{
+    /* Test case for:
+     * int CF_FindTransactionBySequenceNumber_Impl(CF_CListNode_t *n, CF_Traverse_TransSeqArg_t *context)
+     */
+    CF_Traverse_TransSeqArg_t ctxt;
+    CF_Transaction_t          txn;
+    CF_History_t              hist;
+
+    memset(&txn, 0, sizeof(txn));
+    memset(&hist, 0, sizeof(hist));
+    memset(&ctxt, 0, sizeof(ctxt));
+
+    txn.history = &hist;
+
+    /* non-matching eid and non-matching sequence */
+    hist.src_eid                     = 12;
+    ctxt.src_eid                     = 34;
+    hist.seq_num                     = 56;
+    ctxt.transaction_sequence_number = 78;
+    UtAssert_INT32_EQ(CF_FindTransactionBySequenceNumber_Impl(&txn.cl_node, &ctxt), 0);
+    UtAssert_NULL(ctxt.t);
+
+    /* matching eid and non-matching sequence */
+    hist.src_eid                     = 13;
+    ctxt.src_eid                     = 13;
+    hist.seq_num                     = 56;
+    ctxt.transaction_sequence_number = 78;
+    UtAssert_INT32_EQ(CF_FindTransactionBySequenceNumber_Impl(&txn.cl_node, &ctxt), 0);
+    UtAssert_NULL(ctxt.t);
+
+    /* non-matching eid and matching sequence */
+    hist.src_eid                     = 12;
+    ctxt.src_eid                     = 34;
+    hist.seq_num                     = 57;
+    ctxt.transaction_sequence_number = 57;
+    UtAssert_INT32_EQ(CF_FindTransactionBySequenceNumber_Impl(&txn.cl_node, &ctxt), 0);
+    UtAssert_NULL(ctxt.t);
+
+    /* matching eid and matching sequence */
+    hist.src_eid                     = 23;
+    ctxt.src_eid                     = 23;
+    hist.seq_num                     = 67;
+    ctxt.transaction_sequence_number = 67;
+    UtAssert_INT32_EQ(CF_FindTransactionBySequenceNumber_Impl(&txn.cl_node, &ctxt), 1);
+    UtAssert_ADDRESS_EQ(ctxt.t, &txn);
+}
+
+void Test_CF_FindTransactionBySequenceNumber(void)
+{
+    /* Test case for:
+     * CF_Transaction_t *CF_FindTransactionBySequenceNumber(CF_Channel_t *c, CF_TransactionSeq_t
+     * transaction_sequence_number, CF_EntityId_t src_eid)
+     */
+
+    CF_Transaction_t *t;
+    CF_Channel_t *    c;
+
+    memset(&CF_AppData, 0, sizeof(CF_AppData));
+    c = &CF_AppData.engine.channels[UT_CFDP_CHANNEL];
+
+    UtAssert_NULL(CF_FindTransactionBySequenceNumber(c, 12, 34));
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 4); /* this checks 4 different queues */
+
+    t = &CF_AppData.engine.transactions[UT_CFDP_CHANNEL];
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_SeqArg_SetTxn, t);
+    UtAssert_ADDRESS_EQ(CF_FindTransactionBySequenceNumber(c, 12, 34), t);
+}
+
+/* CF_DequeueTransaction tests */
+
+void Test_cf_dequeue_transaction_Call_CF_CList_Remove_AndDecrement_q_size(void)
+{
+    /* Arrange */
+    CF_Transaction_t arg_t;
+    uint8            dummy_chan_num = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    CF_CListNode_t **expected_head;
+    CF_CListNode_t * expected_cl_node;
+    uint16           initial_q_size = Any_uint16_Except(0); /* 0 will CF_Assert */
+
+    CF_CList_Remove_context_t context_clist_remove;
+
+    memset(&arg_t, 0, sizeof(arg_t));
+
+    UT_SetDataBuffer(UT_KEY(CF_CList_Remove), &context_clist_remove, sizeof(context_clist_remove), false);
+
+    arg_t.chan_num   = dummy_chan_num;
+    expected_head    = &CF_AppData.engine.channels[arg_t.chan_num].qs[arg_t.flags.com.q_index];
+    expected_cl_node = &arg_t.cl_node;
+
+    CF_AppData.hk.channel_hk[arg_t.chan_num].q_size[arg_t.flags.com.q_index] = initial_q_size;
+
+    /* Act */
+    CF_DequeueTransaction(&arg_t);
+
+    uint16 updated_q_size = CF_AppData.hk.channel_hk[arg_t.chan_num].q_size[arg_t.flags.com.q_index];
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(context_clist_remove.head, expected_head);
+    UtAssert_ADDRESS_EQ(context_clist_remove.node, expected_cl_node);
+    UtAssert_True(updated_q_size == initial_q_size - 1, "q_size is %d and that is 1 less than initial value %d",
+                  updated_q_size, initial_q_size);
+}
+
+/* CF_MoveTransaction tests */
+
+void Test_cf_move_transaction_Call_CF_CList_InsertBack_AndSet_q_index_ToGiven_q(void)
+{
+    /* Arrange */
+    CF_Transaction_t  dummy_t;
+    CF_Transaction_t *arg_t          = &dummy_t;
+    uint8             dummy_chan_num = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    CF_CListNode_t ** expected_remove_head;
+    CF_CListNode_t *  expected_remove_node;
+    CF_CListNode_t ** expected_insert_back_head;
+    CF_CListNode_t *  expected_insert_back_node;
+    CF_QueueIdx_t     arg_q = Any_cf_queue_index_t();
+
+    memset(&dummy_t, 0, sizeof(dummy_t));
+
+    arg_t->chan_num = dummy_chan_num;
+
+    CF_CList_Remove_context_t context_clist_remove;
+    UT_SetDataBuffer(UT_KEY(CF_CList_Remove), &context_clist_remove, sizeof(context_clist_remove), false);
+
+    expected_remove_head = &CF_AppData.engine.channels[arg_t->chan_num].qs[arg_t->flags.com.q_index];
+    expected_remove_node = &arg_t->cl_node;
+
+    CF_CList_InsertBack_context_t context_clist_insert_back;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertBack), &context_clist_insert_back, sizeof(context_clist_insert_back), false);
+
+    expected_insert_back_head = &CF_AppData.engine.channels[arg_t->chan_num].qs[arg_q];
+    expected_insert_back_node = &arg_t->cl_node;
+
+    /* Queue size needes to be >= 1 */
+    CF_AppData.hk.channel_hk[arg_t->chan_num].q_size[arg_t->flags.com.q_index] = 1;
+
+    /* Act */
+    CF_MoveTransaction(arg_t, arg_q);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Remove, 1);
+    UtAssert_ADDRESS_EQ(context_clist_remove.head, expected_remove_head);
+    UtAssert_ADDRESS_EQ(context_clist_remove.node, expected_remove_node);
+    UtAssert_STUB_COUNT(CF_CList_InsertBack, 1);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.head, expected_insert_back_head);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.node, expected_insert_back_node);
+    UtAssert_True(arg_t->flags.com.q_index == arg_q,
+                  "t->flags.com.q_index set to %u and should equal passed in q value %u", arg_t->flags.com.q_index,
+                  arg_q);
+}
+
+/* CF_CList_Remove_Ex tests */
+
+void Test_CF_CList_Remove_Ex_Call_CF_CList_Remove_AndDecrement_q_size(void)
+{
+    /* Arrange */
+    CF_Channel_t *   arg_c     = &CF_AppData.engine.channels[Any_uint32_LessThan(CF_NUM_CHANNELS)];
+    CF_QueueIdx_t    arg_index = Any_cf_queue_index_t();
+    CF_CListNode_t   dummy_node;
+    CF_CListNode_t * arg_node = &dummy_node;
+    CF_CListNode_t **expected_remove_head;
+    CF_CListNode_t * expected_remove_node;
+    uint16           initial_q_size = Any_uint16_Except(0);
+
+    CF_CList_Remove_context_t context_clist_remove;
+    UT_SetDataBuffer(UT_KEY(CF_CList_Remove), &context_clist_remove, sizeof(context_clist_remove), false);
+
+    expected_remove_head = &arg_c->qs[arg_index];
+    expected_remove_node = arg_node;
+
+    CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index] = initial_q_size;
+
+    /* Act */
+    CF_CList_Remove_Ex(arg_c, arg_index, arg_node);
+
+    uint16 updated_q_size = CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index];
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Remove, 1);
+    UtAssert_ADDRESS_EQ(context_clist_remove.head, expected_remove_head);
+    UtAssert_ADDRESS_EQ(context_clist_remove.node, expected_remove_node);
+    UtAssert_True(updated_q_size == initial_q_size - 1, "q_size is %d and that is 1 less than initial value %d",
+                  updated_q_size, initial_q_size);
+}
+
+/* CF_CList_InsertAfter_Ex tests */
+
+void Test_CF_CList_InsertAfter_Ex_Call_CF_CList_InsertAfter_AndIncrement_q_size(void)
+{
+    /* Arrange */
+    CF_Channel_t *   arg_c     = &CF_AppData.engine.channels[Any_uint32_LessThan(CF_NUM_CHANNELS)];
+    CF_QueueIdx_t    arg_index = Any_cf_queue_index_t();
+    CF_CListNode_t   dummy_start;
+    CF_CListNode_t * arg_start = &dummy_start;
+    CF_CListNode_t   dummy_after;
+    CF_CListNode_t * arg_after                  = &dummy_after;
+    uint16           initial_q_size             = Any_uint16();
+    CF_CListNode_t **expected_insert_after_head = &arg_c->qs[arg_index];
+
+    CF_CList_InsertAfter_context_t context_CF_CList_InsertAfter;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertAfter), &context_CF_CList_InsertAfter, sizeof(context_CF_CList_InsertAfter),
+                     false);
+
+    CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index] = initial_q_size;
+
+    /* Act */
+    CF_CList_InsertAfter_Ex(arg_c, arg_index, arg_start, arg_after);
+
+    uint16 updated_q_size = CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index];
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_InsertAfter, 1);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.head, expected_insert_after_head);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.start, arg_start);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.after, arg_after);
+    UtAssert_True(updated_q_size == (uint16)(initial_q_size + 1),
+                  "q_size is %d and that is 1 more than initial value %d", updated_q_size, initial_q_size);
+}
+
+/* CF_CList_InsertBack_Ex tests */
+
+void Test_CF_CList_InsertBack_Ex_Call_CF_CList_InsertBack_AndIncrement_q_size(void)
+{
+    /* Arrange */
+    CF_Channel_t *   arg_c     = &CF_AppData.engine.channels[Any_uint32_LessThan(CF_NUM_CHANNELS)];
+    CF_QueueIdx_t    arg_index = Any_cf_queue_index_t();
+    CF_CListNode_t   dummy_node;
+    CF_CListNode_t * arg_node       = &dummy_node;
+    uint16           initial_q_size = Any_uint16();
+    CF_CListNode_t **expected_insert_back_head;
+    CF_CListNode_t * expected_insert_back_node;
+
+    CF_CList_InsertBack_context_t context_clist_insert_back;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertBack), &context_clist_insert_back, sizeof(context_clist_insert_back), false);
+
+    expected_insert_back_head = &arg_c->qs[arg_index];
+    expected_insert_back_node = arg_node;
+
+    CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index] = initial_q_size;
+
+    /* Act */
+    CF_CList_InsertBack_Ex(arg_c, arg_index, arg_node);
+
+    uint16 updated_q_size = CF_AppData.hk.channel_hk[arg_c - CF_AppData.engine.channels].q_size[arg_index];
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_InsertBack, 1);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.head, expected_insert_back_head);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.node, expected_insert_back_node);
+    UtAssert_True(updated_q_size == (uint16)(initial_q_size + 1),
+                  "q_size is %d and that is 1 more than initial value %d", updated_q_size, initial_q_size);
+}
+
+/*******************************************************************************
+**
+**  CF_Traverse_WriteHistoryQueueEntryToFile tests
+**
+*******************************************************************************/
+
+void Test_CF_Traverse_WriteHistoryQueueEntryToFile(void)
+{
+    /* Test case for:
+     * int CF_Traverse_WriteHistoryQueueEntryToFile(CF_CListNode_t *n, void *arg);
+     */
+    CF_History_t                      hist;
+    CF_Traverse_WriteHistoryFileArg_t args;
+
+    memset(&hist, 0, sizeof(hist));
+    memset(&args, 0, sizeof(args));
+
+    /* nominal, if everything works, should continue */
+    hist.dir        = CF_Direction_TX;
+    args.filter_dir = CF_Direction_TX;
+    UtAssert_INT32_EQ(CF_Traverse_WriteHistoryQueueEntryToFile(&hist.cl_node, &args), CF_CLIST_CONT);
+    UtAssert_UINT32_EQ(args.counter, 1);
+    UtAssert_BOOL_FALSE(args.error);
+
+    /* filter disabled (anything goes) */
+    hist.dir        = CF_Direction_RX;
+    args.filter_dir = CF_Direction_NUM;
+    UtAssert_INT32_EQ(CF_Traverse_WriteHistoryQueueEntryToFile(&hist.cl_node, &args), CF_CLIST_CONT);
+    UtAssert_UINT32_EQ(args.counter, 2);
+    UtAssert_BOOL_FALSE(args.error);
+
+    /* filter no match (does not write) */
+    hist.dir        = CF_Direction_RX;
+    args.filter_dir = CF_Direction_TX;
+    UtAssert_INT32_EQ(CF_Traverse_WriteHistoryQueueEntryToFile(&hist.cl_node, &args), CF_CLIST_CONT);
+    UtAssert_UINT32_EQ(args.counter, 2); /* no increment */
+    UtAssert_BOOL_FALSE(args.error);
+
+    /* Setup for failure */
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, -1);
+    hist.dir        = CF_Direction_RX;
+    args.filter_dir = CF_Direction_RX;
+    UtAssert_INT32_EQ(CF_Traverse_WriteHistoryQueueEntryToFile(&hist.cl_node, &args), CF_CLIST_EXIT);
+    UtAssert_UINT32_EQ(args.counter, 2); /* no increment */
+    UtAssert_BOOL_TRUE(args.error);
+}
+
+/*******************************************************************************
+**
+**  CF_Traverse_WriteTxnQueueEntryToFile tests
+**
+*******************************************************************************/
+
+void Test_CF_Traverse_WriteTxnQueueEntryToFile(void)
+{
+    /* Test case for:
+     * int CF_Traverse_WriteTxnQueueEntryToFile(CF_CListNode_t *n, void *arg);
+     */
+    CF_Transaction_t              txn;
+    CF_History_t                  hist;
+    CF_Traverse_WriteTxnFileArg_t args;
+
+    memset(&txn, 0, sizeof(txn));
+    memset(&hist, 0, sizeof(hist));
+    memset(&args, 0, sizeof(args));
+    txn.history = &hist;
+
+    /* nominal, if everything works, should continue */
+    UtAssert_INT32_EQ(CF_Traverse_WriteTxnQueueEntryToFile(&txn.cl_node, &args), CF_CLIST_CONT);
+    UtAssert_UINT32_EQ(args.counter, 1);
+    UtAssert_BOOL_FALSE(args.error);
+
+    /* Setup for failure */
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, -1);
+    UtAssert_INT32_EQ(CF_Traverse_WriteTxnQueueEntryToFile(&txn.cl_node, &args), CF_CLIST_EXIT);
+    UtAssert_UINT32_EQ(args.counter, 1); /* no increment */
+    UtAssert_BOOL_TRUE(args.error);
+}
+
+/*******************************************************************************
+**
+**  CF_WriteHistoryEntryToFile tests
+**
+*******************************************************************************/
+
+void Test_CF_WriteHistoryEntryToFile(void)
+{
+    /* Test case for:
+     * int CF_WriteHistoryEntryToFile(osal_id_t fd, const CF_History_t *h)
+     */
+    osal_id_t    arg_fd = OS_ObjectIdFromInteger(1);
+    CF_History_t h;
+
+    memset(&h, 0, sizeof(h));
+    strcpy(h.fnames.src_filename, "sf");
+    strcpy(h.fnames.dst_filename, "df");
+
+    /* Successful write - need to set up for 3 successful calls to OS_write() */
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, 44);
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, strlen(h.fnames.src_filename) + 6);
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, strlen(h.fnames.dst_filename) + 6);
+    UtAssert_INT32_EQ(CF_WriteHistoryEntryToFile(arg_fd, &h), 0);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+
+    /* Unsuccessful write */
+    UT_CF_ResetEventCapture();
+    UT_SetDeferredRetcode(UT_KEY(OS_write), 1, -1);
+    UtAssert_INT32_EQ(CF_WriteHistoryEntryToFile(arg_fd, &h), -1);
+    UT_CF_AssertEventID(CF_EID_ERR_CMD_WHIST_WRITE);
+}
+
+/*******************************************************************************
+**
+**  CF_WriteQueueDataToFile tests
+**
+*******************************************************************************/
+
+void Test_CF_WriteTxnQueueDataToFile(void)
+{
+    /* Arrange */
+    osal_id_t      arg_fd = OS_ObjectIdFromInteger(1);
+    CF_Channel_t   ch;
+    CF_CListNode_t node;
+
+    memset(&node, 0, sizeof(node));
+    memset(&ch, 0, sizeof(ch));
+    ch.qs[CF_QueueIdx_TXA] = &node;
+
+    /* Act */
+    /* with no configuration, this should return no error (0) */
+    UtAssert_INT32_EQ(CF_WriteTxnQueueDataToFile(arg_fd, &ch, CF_QueueIdx_TXA), 0);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_WriteHistoryQueueDataToFile tests
+**
+*******************************************************************************/
+
+void Test_CF_WriteHistoryQueueDataToFile(void)
+{
+    /* Arrange */
+    osal_id_t      arg_fd = OS_ObjectIdFromInteger(1);
+    CF_Channel_t   ch;
+    CF_CListNode_t node;
+
+    memset(&node, 0, sizeof(node));
+    memset(&ch, 0, sizeof(ch));
+    ch.qs[CF_QueueIdx_HIST] = &node;
+
+    /* Act */
+    /* with no configuration, this should return no error (0) */
+    UtAssert_INT32_EQ(CF_WriteHistoryQueueDataToFile(arg_fd, &ch, CF_QueueIdx_HIST), 0);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_PrioSearch tests
+**
+*******************************************************************************/
+
+void Test_CF_PrioSearch_When_t_PrioIsGreaterThanContextPrioReturn_CLIST_CONT(void)
+{
+    /* Arrange */
+    CF_Transaction_t          dummy_t;
+    CF_CListNode_t *          arg_node = &dummy_t.cl_node;
+    CF_Traverse_PriorityArg_t dummy_p;
+    void *                    arg_context = (void *)&dummy_p;
+    int32                     result;
+
+    dummy_t.priority = Any_uint8_Except(0);
+    dummy_p.priority = Any_uint8_LessThan(dummy_t.priority);
+
+    /* Act */
+    result = CF_PrioSearch(arg_node, arg_context);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, CF_CLIST_CONT);
+}
+
+void Test_CF_PrioSearch_When_t_PrioIsEqToContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT(void)
+{
+    /* Arrange */
+    CF_Transaction_t          dummy_t;
+    CF_CListNode_t *          arg_node = &dummy_t.cl_node;
+    CF_Traverse_PriorityArg_t dummy_p;
+    void *                    arg_context = (void *)&dummy_p;
+    int32                     result;
+
+    memset(&dummy_p, 0, sizeof(dummy_p));
+
+    /* NOTE: these are inverted from previous test! */
+    dummy_t.priority = Any_uint8_Except(0);
+    dummy_p.priority = dummy_t.priority;
+
+    /* Act */
+    result = CF_PrioSearch(arg_node, arg_context);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, CF_CLIST_EXIT);
+    UtAssert_ADDRESS_EQ(dummy_p.t, &dummy_t);
+}
+
+void Test_CF_PrioSearch_When_t_PrioIsLessThanContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT(void)
+{
+    /* Arrange */
+    CF_Transaction_t          dummy_t;
+    CF_CListNode_t *          arg_node = &dummy_t.cl_node;
+    CF_Traverse_PriorityArg_t dummy_p;
+    void *                    arg_context = (void *)&dummy_p;
+    int32                     result;
+
+    memset(&dummy_p, 0, sizeof(dummy_p));
+
+    /* NOTE: these are inverted from previous test! */
+    dummy_p.priority = Any_uint8_Except(0);
+    dummy_t.priority = Any_uint8_LessThan(dummy_p.priority);
+
+    /* Act */
+    result = CF_PrioSearch(arg_node, arg_context);
+
+    /* Assert */
+    UtAssert_INT32_EQ(result, CF_CLIST_EXIT);
+    UtAssert_ADDRESS_EQ(dummy_p.t, &dummy_t);
+}
+
+/*******************************************************************************
+**
+**  CF_InsertSortPrio tests
+**
+*******************************************************************************/
+
+void Test_CF_InsertSortPrio_Call_CF_CList_InsertBack_Ex_ListIsEmpty_AndSet_q_index_To_q(void)
+{
+    /* Arrange */
+    CF_Transaction_t  dummy_t;
+    CF_Transaction_t *arg_t = &dummy_t;
+    CF_QueueIdx_t     arg_q = Any_cf_queue_index_t();
+    CF_Channel_t *    dummy_c;
+    CF_CListNode_t ** expected_insert_back_head;
+    CF_CListNode_t *  expected_insert_back_node;
+
+    /* dummy_t settings to bypass CF_Assert */
+    dummy_t.chan_num = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    dummy_t.state    = Any_uint8_Except(CF_TxnState_IDLE);
+
+    CF_CList_InsertBack_context_t context_clist_insert_back;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertBack), &context_clist_insert_back, sizeof(context_clist_insert_back), false);
+
+    /* setting (&CF_AppData.engine.channels[arg_t->chan_num])->qs[arg_q] to NULL
+     * makes the list empty */
+    dummy_c            = &CF_AppData.engine.channels[arg_t->chan_num];
+    dummy_c->qs[arg_q] = NULL;
+
+    expected_insert_back_head = &dummy_c->qs[arg_q];
+    expected_insert_back_node = &arg_t->cl_node;
+
+    /* Act */
+    CF_InsertSortPrio(arg_t, arg_q);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_InsertBack, 1);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.head, expected_insert_back_head);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.node, expected_insert_back_node);
+    UtAssert_True(arg_t->flags.com.q_index == arg_q,
+                  "arg_t->flags.com.q_index set to %d and should be %d (CF_QueueIdx_t q)", arg_t->flags.com.q_index,
+                  arg_q);
+}
+
+void Test_CF_InsertSortPrio_Call_CF_CList_InsertAfter_Ex_AndSet_q_index_To_q(void)
+{
+    /* Arrange */
+    CF_Transaction_t  dummy_p_t;
+    CF_Transaction_t  dummy_t;
+    CF_Transaction_t *arg_t = &dummy_t;
+    CF_QueueIdx_t     arg_q = Any_cf_queue_index_t();
+    CF_CListNode_t *  dummy_qs;
+    CF_Channel_t *    dummy_c;
+    CF_CListNode_t *  expected_end;
+    CF_CListFn_t      expected_fn;
+    CF_CListNode_t ** expected_insert_after_head;
+    CF_CListNode_t ** expected_insert_after_start;
+    CF_CListNode_t ** expected_insert_after_after;
+
+    CF_CList_Traverse_R_context_t context_cf_clist_traverse_r;
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse_R), UT_AltHandler_CF_CList_Traverse_R_PRIO,
+                          &context_cf_clist_traverse_r);
+
+    /* dummy_t settings to bypass CF_Assert */
+    dummy_t.chan_num = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    dummy_t.state    = Any_uint8_Except(CF_TxnState_IDLE);
+
+    /* setting (&CF_AppData.engine.channels[arg_t->chan_num])->qs[arg_q] to
+     * &dummy_qs makes the list NOT empty */
+    dummy_c            = &CF_AppData.engine.channels[arg_t->chan_num];
+    dummy_c->qs[arg_q] = (CF_CListNode_t *)&dummy_qs;
+
+    /* setup CF_Traverse_PriorityArg_t altered value */
+    context_cf_clist_traverse_r.context_t = &dummy_p_t;
+
+    /* Arrange for CF_CList_InsertAfter_Ex */
+    CF_CList_InsertAfter_context_t context_CF_CList_InsertAfter;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertAfter), &context_CF_CList_InsertAfter, sizeof(context_CF_CList_InsertAfter),
+                     false);
+
+    /* set expected values */
+    expected_end                = dummy_c->qs[arg_q];
+    expected_fn                 = CF_PrioSearch;
+    expected_insert_after_head  = (CF_CListNode_t **)&dummy_c->qs[arg_q];
+    expected_insert_after_start = (CF_CListNode_t **)&dummy_p_t.cl_node;
+    expected_insert_after_after = (CF_CListNode_t **)&arg_t->cl_node;
+
+    /* Act */
+    CF_InsertSortPrio(arg_t, arg_q);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse_R, 1);
+    UtAssert_ADDRESS_EQ(context_cf_clist_traverse_r.end, expected_end);
+    UtAssert_True(context_cf_clist_traverse_r.fn == expected_fn, "context_cf_clist_traverse_r.fn ==  expected_fn");
+    UtAssert_STUB_COUNT(CF_CList_InsertAfter, 1);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.head, (CF_CListNode_t **)expected_insert_after_head);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.start, (CF_CListNode_t *)expected_insert_after_start);
+    UtAssert_ADDRESS_EQ(context_CF_CList_InsertAfter.after, (CF_CListNode_t *)expected_insert_after_after);
+    UtAssert_True(arg_t->flags.com.q_index == arg_q, "t->flags.com.q_index is %u and should be %u (q)",
+                  arg_t->flags.com.q_index, arg_q);
+}
+
+void Test_CF_InsertSortPrio_When_p_t_Is_NULL_Call_CF_CList_InsertBack_Ex(void)
+{
+    /* Arrange */
+    CF_Transaction_t  dummy_t;
+    CF_Transaction_t *arg_t = &dummy_t;
+    CF_QueueIdx_t     arg_q = Any_cf_queue_index_t();
+    CF_CListNode_t *  dummy_qs;
+    CF_Channel_t *    dummy_c;
+    CF_CListNode_t *  expected_end;
+    CF_CListFn_t      expected_fn;
+    CF_CListNode_t ** expected_insert_back_head;
+    CF_CListNode_t *  expected_insert_back_node;
+
+    CF_CList_Traverse_R_context_t context_cf_clist_traverse_r;
+    UT_SetDataBuffer(UT_KEY(CF_CList_Traverse_R), &context_cf_clist_traverse_r, sizeof(context_cf_clist_traverse_r),
+                     false);
+
+    /* dummy_t settings to bypass CF_Assert */
+    dummy_t.chan_num = Any_uint8_LessThan(CF_NUM_CHANNELS);
+    dummy_t.state    = Any_uint8_Except(CF_TxnState_IDLE);
+
+    /* setting (&CF_AppData.engine.channels[arg_t->chan_num])->qs[arg_q] to
+     * &dummy_qs makes the list NOT empty */
+    dummy_c            = &CF_AppData.engine.channels[arg_t->chan_num];
+    dummy_c->qs[arg_q] = (CF_CListNode_t *)&dummy_qs;
+
+    /* setup CF_Traverse_PriorityArg_t altered value */
+    context_cf_clist_traverse_r.context_t = NULL;
+
+    /* set expected values */
+    expected_end              = dummy_c->qs[arg_q];
+    expected_fn               = CF_PrioSearch;
+    expected_insert_back_head = &dummy_c->qs[arg_q];
+    expected_insert_back_node = &arg_t->cl_node;
+
+    /* Arrange for CF_CList_InsertBack_Ex */
+    CF_CList_InsertBack_context_t context_clist_insert_back;
+    UT_SetDataBuffer(UT_KEY(CF_CList_InsertBack), &context_clist_insert_back, sizeof(context_clist_insert_back), false);
+
+    /* Act */
+    CF_InsertSortPrio(arg_t, arg_q);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CF_CList_Traverse_R, 1);
+    UtAssert_ADDRESS_EQ(context_cf_clist_traverse_r.end, expected_end);
+    UtAssert_True(context_cf_clist_traverse_r.fn == expected_fn, "context_cf_clist_traverse_r.fn ==  expected_fn");
+    UtAssert_STUB_COUNT(CF_CList_InsertAfter, 0);
+    UtAssert_STUB_COUNT(CF_CList_InsertBack, 1);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.head, expected_insert_back_head);
+    UtAssert_ADDRESS_EQ(context_clist_insert_back.node, expected_insert_back_node);
+    UtAssert_True(arg_t->flags.com.q_index == arg_q, "t->flags.com.q_index is %u and should be %u (q)",
+                  arg_t->flags.com.q_index, arg_q);
+}
+
+/*******************************************************************************
+**
+**  CF_TraverseAllTransactions_Impl tests
+**
+*******************************************************************************/
+
+void Test_CF_TraverseAllTransactions_Impl_GetContainer_t_Call_args_fn_AndAdd_1_ToCounter(void)
+{
+    /* Arrange */
+    CF_Transaction_t      dummy_t;
+    CF_CListNode_t *      arg_n = &dummy_t.cl_node;
+    CF_TraverseAll_Arg_t  dummy_args;
+    CF_TraverseAll_Arg_t *arg_args;
+    int                   dummy_context_val;
+    void *                dummy_context        = &dummy_context_val;
+    int                   initial_args_counter = Any_int();
+    CF_Transaction_t *    expected_t;
+    void *                expected_context;
+    int32                 result;
+
+    dummy_args.fn      = UT_Callback_CF_TraverseAllTransactions;
+    dummy_args.context = dummy_context;
+    dummy_args.counter = initial_args_counter;
+
+    arg_args = &dummy_args;
+
+    /* set expected values */
+    expected_t       = &dummy_t;
+    expected_context = dummy_context;
+
+    UT_Callback_CF_TraverseAllTransactions_context_t func_ptr_context;
+    UT_SetDataBuffer(UT_KEY(UT_Callback_CF_TraverseAllTransactions), &func_ptr_context, sizeof(func_ptr_context),
+                     false);
+
+    /* Act */
+    result = CF_TraverseAllTransactions_Impl(arg_n, arg_args);
+
+    /* Assert */
+    UtAssert_ADDRESS_EQ(func_ptr_context.t, expected_t);
+    UtAssert_ADDRESS_EQ(func_ptr_context.context, expected_context);
+    UtAssert_True(arg_args->counter == initial_args_counter + 1,
+                  "CF_TraverseAllTransactions_Impl set args->counter to %d which is 1 more than initial value %d",
+                  arg_args->counter, initial_args_counter);
+    UtAssert_INT32_EQ(result, CF_CLIST_CONT);
+}
+
+/*******************************************************************************
+**
+**  CF_TraverseAllTransactions tests
+**
+*******************************************************************************/
+
+void Test_CF_TraverseAllTransactions_CallOtherFunction_CF_Q_RX_TimesAndReturn_args_counter(void)
+{
+    /* Arrange */
+    CF_Channel_t    dummy_c;
+    CF_Channel_t *  arg_c;
+    int             dummy_context;
+    void *          arg_context    = &dummy_context;
+    uint8           expected_count = CF_QueueIdx_RX - CF_QueueIdx_PEND + 1;
+    CF_CListNode_t *expected_qs_nodes[expected_count];
+
+    CF_TraverseAllTransactions_fn_t arg_fn = UT_Callback_CF_TraverseAllTransactions;
+
+    int i = 0;
+    for (i = 0; i < expected_count; ++i)
+    {
+        dummy_c.qs[i] = (CF_CListNode_t *)&expected_qs_nodes[i];
+    }
+
+    /* set context */
+    CF_CList_Traverse_TRAVERSE_ALL_ARGS_T_context_t contexts_cf_clist_traverse[expected_count];
+
+    /* this must use data buffer hack to pass multiple contexts */
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_TRAVERSE_ALL_ARGS_T, NULL);
+    UT_SetDataBuffer(UT_KEY(CF_CList_Traverse), contexts_cf_clist_traverse, sizeof(contexts_cf_clist_traverse), false);
+
+    /* finalize arguments */
+    arg_c = &dummy_c;
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TraverseAllTransactions(arg_c, arg_fn, arg_context), expected_count);
+
+    /* Assert */
+    for (i = 0; i < expected_count; ++i)
+    {
+        UtAssert_ADDRESS_EQ(contexts_cf_clist_traverse[i].start, (CF_CListNode_t *)&expected_qs_nodes[i]);
+        UtAssert_True(contexts_cf_clist_traverse[i].fn == (CF_CListFn_t)CF_TraverseAllTransactions_Impl,
+                      "contexts_cf_clist_traverse[i].fn ==  (CF_CListFn_t ) CF_TraverseAllTransactions_Impl");
+        UtAssert_True(contexts_cf_clist_traverse[i].context_fn == UT_Callback_CF_TraverseAllTransactions,
+                      "contexts_cf_clist_traverse[i].context_fn ==  UT_Callback_CF_TraverseAllTransactions");
+        UtAssert_ADDRESS_EQ(contexts_cf_clist_traverse[i].context_context, arg_context);
+        /* NOTE: checking the context count really only verifies
+        ** CF_CList_Traverse stub works properly -- this could be removed,
+        ** should it? Although it is the only thing showing diff in the contexts */
+        UtAssert_True(contexts_cf_clist_traverse[i].context_counter == i + 1,
+                      "CF_CList_Traverse context_counter[%u] is %d and should be %d (+1 from previous)", i,
+                      contexts_cf_clist_traverse[i].context_counter, i + 1);
+    }
+}
+
+/*******************************************************************************
+**
+**  CF_TraverseAllTransactions_All_Channels tests
+**
+*******************************************************************************/
+
+void Test_CF_TraverseAllTransactions_All_Channels_ReturnTotalTraversals(void)
+{
+    /* Arrange */
+    int   dummy_context;
+    void *arg_context       = &dummy_context;
+    uint8 per_channel_count = CF_QueueIdx_RX - CF_QueueIdx_PEND + 1;
+    int   expected_result   = per_channel_count * CF_NUM_CHANNELS;
+
+    CF_TraverseAllTransactions_fn_t arg_fn = NULL;
+    UT_SetHandlerFunction(UT_KEY(CF_CList_Traverse), UT_AltHandler_CF_CList_Traverse_TRAVERSE_ALL_ARGS_T, NULL);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_TraverseAllTransactions_All_Channels(arg_fn, arg_context), expected_result);
+}
+
+/*******************************************************************************
+**
+**  CF_WrappedOpen tests
+**
+*******************************************************************************/
+
+void Test_CF_WrappedOpen_Call_OS_OpenCreate_WithGivenArgumentsAndReturnItsReturnValue(void)
+{
+    /* Arrange */
+    osal_id_t  dummy_fd;
+    osal_id_t *arg_fd = &dummy_fd;
+    char       dummy_fname;
+    char *     arg_fname                   = &dummy_fname;
+    int32      arg_flags                   = Any_uint32();
+    int32      arg_access                  = Any_uint32();
+    int32      forced_return_OS_OpenCreate = Any_int32();
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_OpenCreate), forced_return_OS_OpenCreate);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_WrappedOpenCreate(arg_fd, arg_fname, arg_flags, arg_access), forced_return_OS_OpenCreate);
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 2);
+    UtAssert_STUB_COUNT(OS_OpenCreate, 1);
+}
+
+/*******************************************************************************
+**
+**  CF_WrappedClose tests
+**
+*******************************************************************************/
+
+void Test_CF_WrappedClose_DoNotReceive_OS_SUCCESS_From_OS_close_EventSent(void)
+{
+    /* Arrange */
+    UT_SetDefaultReturnValue(UT_KEY(OS_close), Any_int32_Except(OS_SUCCESS));
+
+    /* Act */
+    UtAssert_VOIDCALL(CF_WrappedClose(UT_CF_OS_OBJID));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 2);
+    UtAssert_STUB_COUNT(OS_close, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 1);
+}
+
+void Test_CF_WrappedClose_Receive_OS_SUCCESS_From_OS_close_NoEventSent(void)
+{
+    /* Arrange */
+    UT_SetHandlerFunction(UT_KEY(OS_close), local_handler_OS_close, NULL);
+    UT_SetDefaultReturnValue(UT_KEY(OS_close), OS_SUCCESS);
+
+    /* Act */
+    UtAssert_VOIDCALL(CF_WrappedClose(UT_CF_OS_OBJID));
+
+    /* Assert */
+    UtAssert_STUB_COUNT(CFE_ES_PerfLogAdd, 2);
+    UtAssert_STUB_COUNT(OS_close, 1);
+    UtAssert_STUB_COUNT(CFE_EVS_SendEvent, 0);
+}
+
+/*******************************************************************************
+**
+**  CF_WrappedRead tests
+**
+*******************************************************************************/
+
+void Test_CF_WrappedRead_CallsOS_read_WithGivenArgumentsAndReturnItsReturnValue(void)
+{
+    /* Arrange */
+    uint32 arg_read_size = Any_uint32_LessThan_or_EqualTo(10); /* 10 is arbitrary to make test fast */
+    uint8  dummy_buf[10] = {0};                                /* 10 to match max read size of 10 (arbitrary) */
+    void * arg_buf       = &dummy_buf;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_read), arg_read_size);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_WrappedRead(UT_CF_OS_OBJID, arg_buf, arg_read_size), arg_read_size);
+}
+
+/*******************************************************************************
+**
+**  CF_WrappedWrite tests
+**
+*******************************************************************************/
+
+void Test_CF_WrappedWrite_Call_OS_write_WithGivenArgumentsAndReturnItsReturnValue(void)
+{
+    /* Arrange */
+    uint8  dummy_buf;
+    void * arg_buf         = &dummy_buf;
+    uint32 test_write_size = Any_uint32();
+    int32  expected_result = Any_int32();
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_write), expected_result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_WrappedWrite(UT_CF_OS_OBJID, arg_buf, test_write_size), expected_result);
+}
+
+/*******************************************************************************
+**
+**  CF_WrappedLseek tests
+**
+*******************************************************************************/
+
+void Test_CF_WrappedLseek_Call_OS_lseek_WithGivenArgumentsAndReturnItsReturnValue(void)
+{
+    /* Arrange */
+    uint32 test_offset     = Any_uint32();
+    int    test_mode       = Any_int();
+    int32  expected_result = Any_int32();
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_lseek), expected_result);
+
+    /* Act */
+    UtAssert_INT32_EQ(CF_WrappedLseek(UT_CF_OS_OBJID, test_offset, test_mode), expected_result);
+}
+
+void Test_CF_TxnStatus_IsError(void)
+{
+    /* Test function for:
+     * bool CF_TxnStatus_IsError(CF_TxnStatus_t txn_stat)
+     */
+    UtAssert_BOOL_FALSE(CF_TxnStatus_IsError(CF_TxnStatus_UNDEFINED));
+    UtAssert_BOOL_FALSE(CF_TxnStatus_IsError(CF_TxnStatus_NO_ERROR));
+    UtAssert_BOOL_TRUE(CF_TxnStatus_IsError(CF_TxnStatus_INACTIVITY_DETECTED));
+    UtAssert_BOOL_TRUE(CF_TxnStatus_IsError(CF_TxnStatus_MAX));
+}
+
+void Test_CF_TxnStatus_To_ConditionCode(void)
+{
+    /* Test function for:
+     * CF_CFDP_ConditionCode_t CF_TxnStatus_To_ConditionCode(CF_TxnStatus_t txn_stat)
+     */
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_UNDEFINED), CF_CFDP_ConditionCode_NO_ERROR);
+
+    /* for the 4-bit condition codes these should be numerically equivalent to status codes */
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_NO_ERROR), CF_CFDP_ConditionCode_NO_ERROR);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_POS_ACK_LIMIT_REACHED),
+                      CF_CFDP_ConditionCode_POS_ACK_LIMIT_REACHED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_KEEP_ALIVE_LIMIT_REACHED),
+                      CF_CFDP_ConditionCode_KEEP_ALIVE_LIMIT_REACHED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_INVALID_TRANSMISSION_MODE),
+                      CF_CFDP_ConditionCode_INVALID_TRANSMISSION_MODE);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_FILESTORE_REJECTION),
+                      CF_CFDP_ConditionCode_FILESTORE_REJECTION);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_FILE_CHECKSUM_FAILURE),
+                      CF_CFDP_ConditionCode_FILE_CHECKSUM_FAILURE);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_FILE_SIZE_ERROR),
+                      CF_CFDP_ConditionCode_FILE_SIZE_ERROR);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_NAK_LIMIT_REACHED),
+                      CF_CFDP_ConditionCode_NAK_LIMIT_REACHED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_INACTIVITY_DETECTED),
+                      CF_CFDP_ConditionCode_INACTIVITY_DETECTED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_INVALID_FILE_STRUCTURE),
+                      CF_CFDP_ConditionCode_INVALID_FILE_STRUCTURE);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_CHECK_LIMIT_REACHED),
+                      CF_CFDP_ConditionCode_CHECK_LIMIT_REACHED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_UNSUPPORTED_CHECKSUM_TYPE),
+                      CF_CFDP_ConditionCode_UNSUPPORTED_CHECKSUM_TYPE);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_SUSPEND_REQUEST_RECEIVED),
+                      CF_CFDP_ConditionCode_SUSPEND_REQUEST_RECEIVED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_CANCEL_REQUEST_RECEIVED),
+                      CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED);
+
+    /* Other extended translations */
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_ACK_LIMIT_NO_FIN),
+                      CF_CFDP_ConditionCode_INACTIVITY_DETECTED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_ACK_LIMIT_NO_EOF),
+                      CF_CFDP_ConditionCode_INACTIVITY_DETECTED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_PROTOCOL_ERROR),
+                      CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED);
+    UtAssert_INT32_EQ(CF_TxnStatus_To_ConditionCode(CF_TxnStatus_MAX), CF_CFDP_ConditionCode_CANCEL_REQUEST_RECEIVED);
+}
+
+void Test_CF_TxnStatus_From_ConditionCode(void)
+{
+    /* Test function for:
+     * CF_TxnStatus_t CF_TxnStatus_From_ConditionCode(CF_CFDP_ConditionCode_t cc)
+     */
+    int32 i;
+
+    /* for the 4-bit condition codes these should be numerically equivalent to status codes */
+    for (i = 0; i <= 15; ++i)
+    {
+        UtAssert_INT32_EQ(CF_TxnStatus_From_ConditionCode(i), i);
+    }
+}
+
+/*******************************************************************************
+**
+**  cf_utils_tests UtTest_Add groups
+**
+*******************************************************************************/
+
+void add_cf_utils_h_tests(void)
+{
+    UtTest_Add(Test_CF_ResetHistory, cf_utils_tests_Setup, cf_utils_tests_Teardown, "CF_ResetHistory");
+    UtTest_Add(Test_CF_FindUnusedTransaction, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_FindUnusedTransaction");
+    UtTest_Add(Test_CF_FreeTransaction, cf_utils_tests_Setup, cf_utils_tests_Teardown, "CF_FreeTransaction");
+    UtTest_Add(Test_CF_FindTransactionBySequenceNumber_Impl, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_FindTransactionBySequenceNumber_Impl");
+    UtTest_Add(Test_CF_FindTransactionBySequenceNumber, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_FindTransactionBySequenceNumber");
+
+    /* CF_DequeueTransaction tests */
+    UtTest_Add(Test_cf_dequeue_transaction_Call_CF_CList_Remove_AndDecrement_q_size, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_cf_dequeue_transaction_Call_CF_CList_Remove_AndDecrement_q_size");
+    /* end CF_DequeueTransaction tests */
+
+    /* CF_MoveTransaction tests */
+    UtTest_Add(Test_cf_move_transaction_Call_CF_CList_InsertBack_AndSet_q_index_ToGiven_q, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_cf_move_transaction_Call_CF_CList_InsertBack_AndSet_q_index_ToGiven_q");
+    /* end CF_MoveTransaction tests */
+
+    /* CF_CList_Remove_Ex tests */
+    UtTest_Add(Test_CF_CList_Remove_Ex_Call_CF_CList_Remove_AndDecrement_q_size, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_CList_Remove_Ex_Call_CF_CList_Remove_AndDecrement_q_size");
+    /* end CF_CList_Remove_Ex tests */
+
+    /* CF_CList_InsertAfter_Ex tests */
+    UtTest_Add(Test_CF_CList_InsertAfter_Ex_Call_CF_CList_InsertAfter_AndIncrement_q_size, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_CList_InsertAfter_Ex_Call_CF_CList_InsertAfter_AndIncrement_q_size");
+    /* end CF_CList_InsertAfter_Ex tests */
+
+    /* CF_CList_InsertBack_Ex tests */
+    UtTest_Add(Test_CF_CList_InsertBack_Ex_Call_CF_CList_InsertBack_AndIncrement_q_size, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_CList_InsertBack_Ex_Call_CF_CList_InsertBack_AndIncrement_q_size");
+    /* end CF_CList_InsertBack_Ex tests */
+
+    UtTest_Add(Test_CF_TxnStatus_IsError, cf_utils_tests_Setup, cf_utils_tests_Teardown, "CF_TxnStatus_IsError");
+    UtTest_Add(Test_CF_TxnStatus_To_ConditionCode, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_TxnStatus_To_ConditionCode");
+    UtTest_Add(Test_CF_TxnStatus_From_ConditionCode, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_TxnStatus_From_ConditionCode");
+}
+
+void add_CF_Traverse_WriteHistoryToFile_tests(void)
+{
+    UtTest_Add(Test_CF_Traverse_WriteHistoryQueueEntryToFile, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_Traverse_WriteHistoryQueueEntryToFile");
+}
+
+void add_CF_Traverse_WriteAllTxnToFile_tests(void)
+{
+    UtTest_Add(Test_CF_Traverse_WriteTxnQueueEntryToFile, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "CF_Traverse_WriteTxnQueueEntryToFile");
+}
+
+void add_CF_WriteTxnQueueDataToFile_tests(void)
+{
+    UtTest_Add(Test_CF_WriteTxnQueueDataToFile, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_WriteTxnQueueDataToFile");
+}
+
+void add_CF_WriteHistoryQueueDataToFile_tests(void)
+{
+    UtTest_Add(Test_CF_WriteHistoryQueueDataToFile, cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_WriteHistoryQueueDataToFile");
+}
+
+void add_CF_PrioSearch_tests(void)
+{
+    UtTest_Add(Test_CF_PrioSearch_When_t_PrioIsGreaterThanContextPrioReturn_CLIST_CONT, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_PrioSearch_When_t_PrioIsGreaterThanContextPrioReturn_CLIST_CONT");
+    UtTest_Add(Test_CF_PrioSearch_When_t_PrioIsEqToContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT,
+               cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_PrioSearch_When_t_PrioIsEqToContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT");
+    UtTest_Add(Test_CF_PrioSearch_When_t_PrioIsLessThanContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT,
+               cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_PrioSearch_When_t_PrioIsLessThanContextPrio_Set_context_t_To_t_AndReturn_CLIST_EXIT");
+}
+
+void add_CF_InsertSortPrio_tests(void)
+{
+    UtTest_Add(Test_CF_InsertSortPrio_Call_CF_CList_InsertBack_Ex_ListIsEmpty_AndSet_q_index_To_q, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown,
+               "Test_CF_InsertSortPrio_Call_CF_CList_InsertBack_Ex_ListIsEmpty_AndSet_q_index_To_q");
+    UtTest_Add(Test_CF_InsertSortPrio_Call_CF_CList_InsertAfter_Ex_AndSet_q_index_To_q, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_InsertSortPrio_Call_CF_CList_InsertAfter_Ex_AndSet_q_index_To_q");
+    UtTest_Add(Test_CF_InsertSortPrio_When_p_t_Is_NULL_Call_CF_CList_InsertBack_Ex, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_InsertSortPrio_When_p_t_Is_NULL_Call_CF_CList_InsertBack_Ex");
+}
+
+void add_CF_TraverseAllTransactions_Impl_tests(void)
+{
+    UtTest_Add(Test_CF_TraverseAllTransactions_Impl_GetContainer_t_Call_args_fn_AndAdd_1_ToCounter,
+               cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_TraverseAllTransactions_Impl_GetContainer_t_Call_args_fn_AndAdd_1_ToCounter");
+}
+
+void add_CF_TraverseAllTransactions_tests(void)
+{
+    UtTest_Add(Test_CF_TraverseAllTransactions_CallOtherFunction_CF_Q_RX_TimesAndReturn_args_counter,
+               cf_utils_tests_Setup, cf_utils_tests_Teardown,
+               "Test_CF_TraverseAllTransactions_CallOtherFunction_CF_Q_RX_TimesAndReturn_args_counter");
+}
+
+void add_CF_TraverseAllTransactions_All_Channels_tests(void)
+{
+    UtTest_Add(Test_CF_TraverseAllTransactions_All_Channels_ReturnTotalTraversals, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_TraverseAllTransactions_All_Channels_ReturnTotalTraversals");
+}
+
+void add_CF_WrappedOpen_tests(void)
+{
+    UtTest_Add(Test_CF_WrappedOpen_Call_OS_OpenCreate_WithGivenArgumentsAndReturnItsReturnValue, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown,
+               "Test_CF_WrappedOpen_Call_OS_OpenCreate_WithGivenArgumentsAndReturnItsReturnValue");
+}
+
+void add_CF_WrappedClose_tests(void)
+{
+    UtTest_Add(Test_CF_WrappedClose_DoNotReceive_OS_SUCCESS_From_OS_close_EventSent, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_WrappedClose_DoNotReceive_OS_SUCCESS_From_OS_close_EventSent");
+    UtTest_Add(Test_CF_WrappedClose_Receive_OS_SUCCESS_From_OS_close_NoEventSent, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_WrappedClose_Receive_OS_SUCCESS_From_OS_close_NoEventSent");
+}
+
+void add_CF_WrappedRead_tests(void)
+{
+    UtTest_Add(Test_CF_WrappedRead_CallsOS_read_WithGivenArgumentsAndReturnItsReturnValue, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_WrappedRead_CallsOS_read_WithGivenArgumentsAndReturnItsReturnValue");
+}
+
+void add_CF_WrappedWrite_tests(void)
+{
+    UtTest_Add(Test_CF_WrappedWrite_Call_OS_write_WithGivenArgumentsAndReturnItsReturnValue, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_WrappedWrite_Call_OS_write_WithGivenArgumentsAndReturnItsReturnValue");
+}
+
+void add_CF_WrappedLseek_tests(void)
+{
+    UtTest_Add(Test_CF_WrappedLseek_Call_OS_lseek_WithGivenArgumentsAndReturnItsReturnValue, cf_utils_tests_Setup,
+               cf_utils_tests_Teardown, "Test_CF_WrappedLseek_Call_OS_lseek_WithGivenArgumentsAndReturnItsReturnValue");
+}
+
+/*******************************************************************************
+**
+**  cf_utils_tests UtTest_Setup
+**
+*******************************************************************************/
+
+void UtTest_Setup(void)
+{
+    TestUtil_InitializeRandomSeed();
+
+    add_cf_utils_h_tests();
+
+    add_CF_Traverse_WriteHistoryToFile_tests();
+
+    add_CF_Traverse_WriteAllTxnToFile_tests();
+
+    add_CF_WriteTxnQueueDataToFile_tests();
+
+    add_CF_WriteHistoryQueueDataToFile_tests();
+
+    add_CF_PrioSearch_tests();
+
+    add_CF_InsertSortPrio_tests();
+
+    add_CF_TraverseAllTransactions_Impl_tests();
+
+    add_CF_TraverseAllTransactions_tests();
+
+    add_CF_TraverseAllTransactions_All_Channels_tests();
+
+    add_CF_WrappedOpen_tests();
+
+    add_CF_WrappedClose_tests();
+
+    add_CF_WrappedRead_tests();
+
+    add_CF_WrappedWrite_tests();
+
+    add_CF_WrappedLseek_tests();
+}
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/cf/unit-test/CMakeLists.txt`
+
+
+```cmake
+##################################################################
+#
+# Unit Test build recipe
+#
+# This CMake file contains the recipe for building cFS app unit tests.
+# It is invoked from the parent directory when unit tests are enabled.
+#
+# Alan S. Gibson, GSFC-587
+#
+# By convention this cmake file as written requires:
+#
+# 1. For each source file in an app there must be a
+#    corresponding <src_filename>_test.c file in the
+#    ${PROJECT_SOURCE_DIR}/unit-test directory
+#    (the same directory that this cmake file should exist in)
+#
+# 2. For each source file in an app there must be a
+#    corresponding <src_filename>_stub.c file in the
+#    ${PROJECT_SOURCE_DIR}/unit-test/stubs directory
+#
+# Optionally you may have:
+#
+# 1. ${PROJECT_SOURCE_DIR}/unit-test/utilities directory that
+#    contains any test specific utility files
+#
+# 2. ${PROJECT_SOURCE_DIR}/unit-test/inc directory that
+#    contains any test specific header files
+#
+##################################################################
+
+# cf_internal is a stub library for all of the internal calls within CF
+# The "utilities" files are just some common helper code and hooks that are useful for
+# many test cases, so they are also put in here (just a convenient spot to do so).
+# All "stubs" files in here should be auto-generated using UtAssert generate_stubs.pl tool
+# From the top-level directory of CF these can be regenerated with a command like:
+#   ../../osal/ut_assert/scripts/generate_stubs.pl ./unit-test/stubs fsw/src/*.h
+add_cfe_coverage_stubs(cf_internal
+  utilities/cf_test_utils.c
+  utilities/cf_test_alt_handler.c
+
+  stubs/cf_app_global.c
+  stubs/cf_app_stubs.c
+  stubs/cf_cfdp_handlers.c
+  stubs/cf_cfdp_dispatch_stubs.c
+  stubs/cf_cfdp_r_stubs.c
+  stubs/cf_cfdp_s_stubs.c
+  stubs/cf_cfdp_stubs.c
+  stubs/cf_cfdp_sbintf_handlers.c
+  stubs/cf_cfdp_sbintf_stubs.c
+  stubs/cf_chunk_handlers.c
+  stubs/cf_chunk_stubs.c
+  stubs/cf_clist_handlers.c
+  stubs/cf_clist_stubs.c
+  stubs/cf_cmd_handlers.c
+  stubs/cf_cmd_stubs.c
+  stubs/cf_codec_handlers.c
+  stubs/cf_codec_stubs.c
+  stubs/cf_crc_stubs.c
+  stubs/cf_timer_stubs.c
+  stubs/cf_utils_handlers.c
+  stubs/cf_utils_stubs.c
+)
+
+target_link_libraries(coverage-cf_internal-stubs ut_core_api_stubs ut_assert)
+target_include_directories(coverage-cf_internal-stubs PUBLIC utilities)
+target_include_directories(coverage-cf_internal-stubs PUBLIC ../fsw/inc)
+target_include_directories(coverage-cf_internal-stubs PUBLIC ../fsw/src)
+
+# Generate a dedicated "testrunner" executable for each test file
+# Accomplish this by cycling through all the app's source files,
+# there must be a *_tests file for each
+foreach(SRCFILE ${APP_SRC_FILES})
+
+    # Get the base sourcefile name as a module name without path or the
+    # extension, this will be used as the base name of the unit test file.
+    get_filename_component(UNIT_NAME "${SRCFILE}" NAME_WE)
+
+    # Use the module name to make the tests' name by adding _tests to the end
+    set(TESTS_NAME "${UNIT_NAME}_tests")
+
+    # Get the tests' sourcefile name with unit test path and extension
+    set(TESTS_SOURCE_FILE "${PROJECT_SOURCE_DIR}/unit-test/${TESTS_NAME}.c")
+
+    # Create the coverage test executable
+    # Note: This renders a target named "coverage-cf-${UNIT_NAME}-testrunner"
+    add_cfe_coverage_test(cf "${UNIT_NAME}" "${TESTS_SOURCE_FILE}" "${CFS_CF_SOURCE_DIR}/${SRCFILE}")
+
+    # CF test cases should be linked with stubs for other internal CF units
+    add_cfe_coverage_dependency(cf "${UNIT_NAME}" cf_internal)
+
+endforeach()
+```

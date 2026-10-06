@@ -3,18 +3,851 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `packet.component.css`
 
-file--packet.component.css
-file--packet.component.html
-file--packet.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.css`
+
+
+```css
+.table-wrapper {
+  position: relative;
+  overflow: auto;
+  height: 100%;
+}
+
+tr.container td {
+  background-color: #f0f0f0;
+}
+
+tr.container:hover td {
+  background-color: #f0f0f0 !important;
+}
+
+tr.expandable td {
+  cursor: pointer;
+}
+
+td.vtop {
+  vertical-align: top;
+}
+
+td.icon {
+  padding: 0;
+  line-height: 25px;
+  text-align: right;
+}
+
+th.entry,
+td.entry {
+  padding-left: 7px;
+}
+
+td.right {
+  text-align: right;
+}
+
+th.no-left-padding,
+td.no-left-padding {
+  padding-left: 5px;
+}
+
+.icon12 {
+  vertical-align: middle;
+}
 ```
 
-## 항목
+### `packet.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.css`](file--packet.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.html`](file--packet.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.ts`](file--packet.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.html`
+
+
+```html
+@if (packet$ | async; as packet) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        <ya-page-icon-button
+          routerLink="/telemetry/packets"
+          [queryParams]="{ c: yamcs.context }"
+          icon="arrow_back" />
+        {{ packet.id.name }} / {{ packet.generationTime }} / {{ packet.sequenceNumber }}
+      </ng-template>
+
+      <ya-page-button (clicked)="expandAll()" icon="unfold_more">Expand all</ya-page-button>
+      <ya-page-button (clicked)="collapseAll()" icon="unfold_less">Collapse all</ya-page-button>
+    </ya-instance-toolbar>
+
+    <ya-detail-pane [alwaysOpen]="true">
+      <ya-detail-toolbar [alwaysOpen]="true">
+        Hex view
+        <span style="flex: 1 1 auto"></span>
+        <ya-more>
+          <button mat-menu-item (click)="copyHex(packet.packet)">Copy hex</button>
+          <button mat-menu-item (click)="copyBinary(packet.packet)">Copy binary</button>
+        </ya-more>
+      </ya-detail-toolbar>
+
+      <div style="padding: 0 16px 16px 16px">
+        <app-hex #hex [base64String]="packet.packet" />
+      </div>
+    </ya-detail-pane>
+
+    <div class="table-wrapper">
+      <ya-panel>
+        @if ((messages$ | async)?.length) {
+          <h4>Warnings</h4>
+          <table yaDataTable class="expand">
+            @for (message of messages$ | async; track message) {
+              <tr>
+                <td class="iconcol"><mat-icon class="icon12">warning</mat-icon></td>
+                <td class="expand">{{ message }}</td>
+              </tr>
+            }
+          </table>
+          <div class="section-divider">
+            <mat-divider />
+          </div>
+        }
+        <table
+          mat-table
+          [dataSource]="dataSource"
+          class="ya-data-table expand"
+          multiTemplateDataRows>
+          <ng-container matColumnDef="icon">
+            <th mat-header-cell *matHeaderCellDef width="1"></th>
+            <td mat-cell *matCellDef="let node" class="vtop">
+              @if (node.type === "CONTAINER") {
+                <ya-icon-action
+                  [icon]="node.expanded ? 'expand_more' : 'chevron_right'"
+                  [padding]="false" />
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="location">
+            <th mat-header-cell *matHeaderCellDef class="no-left-padding" width="1">Loc</th>
+            <td mat-cell *matCellDef="let node" class="vtop right no-left-padding">
+              @if (
+                node.type === "SIMPLE_PARAMETER" ||
+                node.type === "AGGREGATE_PARAMETER" ||
+                node.type === "ARRAY_PARAMETER"
+              ) {
+                {{ node.location }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="size">
+            <th mat-header-cell *matHeaderCellDef width="1">Bits</th>
+            <td mat-cell *matCellDef="let node" class="vtop right">
+              @if (
+                node.type === "SIMPLE_PARAMETER" ||
+                node.type === "AGGREGATE_PARAMETER" ||
+                node.type === "ARRAY_PARAMETER"
+              ) {
+                {{ node.size }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="expand-aggray">
+            <th mat-header-cell *matHeaderCellDef width="1" class="icon"></th>
+            <td mat-cell *matCellDef="let node" class="icon vtop">
+              @if (node.type === "AGGREGATE_PARAMETER" || node.type === "ARRAY_PARAMETER") {
+                <ya-icon-action [icon]="node.expanded ? 'expand_more' : 'chevron_right'" />
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="entry">
+            <th mat-header-cell *matHeaderCellDef class="entry">Entry</th>
+            <td mat-cell *matCellDef="let node" class="entry vtop">
+              @if (
+                node.type === "SIMPLE_PARAMETER" ||
+                node.type === "AGGREGATE_PARAMETER" ||
+                node.type === "ARRAY_PARAMETER"
+              ) {
+                <a
+                  [routerLink]="'/telemetry/parameters' + node.parameter.qualifiedName"
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{
+                    node.parameter.qualifiedName
+                      | relativize: (node.relto.qualifiedName | spaceSystemName)
+                  }}
+                </a>
+              }
+              @if (node.type === "SIMPLE_VALUE") {
+                @for (x of [].constructor(node.depth); track x; let last = $last) {
+                  <mat-icon class="icon12" style="visibility: hidden">chevron_right</mat-icon>
+                }
+                <a
+                  [routerLink]="
+                    '/telemetry/parameters' + node.parameter.qualifiedName + node.offset
+                  "
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{ node.name }}
+                </a>
+              }
+              @if (node.type === "AGGREGATE_VALUE") {
+                @for (x of [].constructor(node.depth); track x; let last = $last) {
+                  <mat-icon class="icon12" [style.visibility]="last ? 'visible' : 'hidden'">
+                    {{ node.expanded ? "expand_more" : "chevron_right" }}
+                  </mat-icon>
+                }
+                <a
+                  [routerLink]="
+                    '/telemetry/parameters' + node.parameter.qualifiedName + node.offset
+                  "
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{ node.name }}
+                </a>
+              }
+              @if (node.type === "ARRAY_VALUE") {
+                @for (x of [].constructor(node.depth); track x; let last = $last) {
+                  <mat-icon class="icon12" [style.visibility]="last ? 'visible' : 'hidden'">
+                    {{ node.expanded ? "expand_more" : "chevron_right" }}
+                  </mat-icon>
+                }
+                <a
+                  [routerLink]="
+                    '/telemetry/parameters' + node.parameter.qualifiedName + node.offset
+                  "
+                  [queryParams]="{ c: yamcs.context }"
+                  class="ya-link">
+                  {{ node.name }}
+                </a>
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="type">
+            <th mat-header-cell *matHeaderCellDef>Type</th>
+            <td mat-cell *matCellDef="let node" class="mono vtop">
+              @if (node.type === "CONTAINER") {
+                container
+              }
+              @if (node.type === "SIMPLE_PARAMETER") {
+                {{ node.parameter.type.engType }}
+              }
+              @if (node.type === "AGGREGATE_PARAMETER") {
+                {{ node.parameter.type.engType }}
+              }
+              @if (node.type === "ARRAY_PARAMETER") {
+                {{
+                  fillTypeWithValueDimension(node.parameter.type.engType, node.engValue?.arrayValue)
+                }}
+              }
+              @if (node.type === "SIMPLE_VALUE") {
+                {{ node.parameterType.engType }}
+              }
+              @if (node.type === "AGGREGATE_VALUE") {
+                {{ node.parameterType.engType }}
+              }
+              @if (node.type === "ARRAY_VALUE") {
+                {{
+                  fillTypeWithValueDimension(node.parameterType.engType, node.engValue?.arrayValue)
+                }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="rawValue">
+            <th mat-header-cell *matHeaderCellDef>Raw value</th>
+            <td mat-cell *matCellDef="let node" class="vtop wrap200">
+              @if (node.rawValue; as value) {
+                @if (node.type === "SIMPLE_PARAMETER") {
+                  <ya-value [value]="value" />
+                }
+                @if (node.type === "SIMPLE_VALUE") {
+                  <ya-value [value]="value" />
+                }
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="engValue">
+            <th mat-header-cell *matHeaderCellDef>Engineering value</th>
+            <td mat-cell *matCellDef="let node" class="vtop wrap200">
+              @if (node.engValue; as value) {
+                @if (node.type === "SIMPLE_PARAMETER") {
+                  <ya-value [value]="value" />
+                  @if (node.parameter.type?.unitSet; as unitSet) {
+                    {{ unitSet | units }}
+                  }
+                }
+                @if (node.type === "SIMPLE_VALUE") {
+                  <ya-value [value]="value" />
+                  @if (node.parameterType.unitSet; as unitSet) {
+                    {{ unitSet | units }}
+                  }
+                }
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="containerName">
+            <th mat-header-cell *matHeaderCellDef class="no-left-padding"></th>
+            <td mat-cell *matCellDef="let node" [attr.colspan]="4" class="no-left-padding">
+              @if (node.type === "CONTAINER") {
+                {{ node.container.qualifiedName }}
+              }
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="expand"></th>
+            <td mat-cell *matCellDef="let node" class="icon">
+              @if (
+                node.type === "SIMPLE_PARAMETER" ||
+                node.type === "AGGREGATE_PARAMETER" ||
+                node.type === "ARRAY_PARAMETER"
+              ) {
+                <ya-more [padding]="false">
+                  <button mat-menu-item (click)="selectBitRange(node)">Select in hex view</button>
+                </ya-more>
+              }
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr
+            mat-row
+            *matRowDef="let node; columns: containerColumns; when: isContainer"
+            class="expandable container"
+            (click)="toggleRow(node)"></tr>
+          <tr
+            mat-row
+            *matRowDef="let node; columns: displayedColumns; when: isNoContainer"
+            [class.expandable]="isExpandable(node)"
+            (mouseover)="highlightBitRange(node)"
+            (mouseout)="clearHighlightedBitRange()"
+            (click)="toggleRow(node)"></tr>
+        </table>
+      </ya-panel>
+    </div>
+  </ya-instance-page>
+}
+```
+
+### `packet.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/packets/packet/packet.component.ts`
+
+
+```typescript
+import { Clipboard } from '@angular/cdk/clipboard';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+  input,
+} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute } from '@angular/router';
+import {
+  BaseComponent,
+  BitRange,
+  Container,
+  ExtractPacketResponse,
+  ExtractedParameter,
+  Packet,
+  Parameter,
+  ParameterType,
+  Value,
+  WebappSdkModule,
+  YaSelectOption,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { HexComponent } from '../../../shared/hex/hex.component';
+
+export interface INode {
+  parent?: Node;
+  expanded: boolean;
+  rawValue?: Value;
+  engValue?: Value;
+}
+
+export interface ContainerNode extends INode {
+  type: 'CONTAINER';
+  container: Container;
+}
+
+export interface SimpleParameterNode extends INode {
+  type: 'SIMPLE_PARAMETER';
+  location: number;
+  size: number;
+  parameter: Parameter;
+  relto: Container;
+}
+
+export interface AggregateParameterNode extends INode {
+  type: 'AGGREGATE_PARAMETER';
+  location: number;
+  size: number;
+  parameter: Parameter;
+  relto: Container;
+}
+
+export interface ArrayParameterNode extends INode {
+  type: 'ARRAY_PARAMETER';
+  location: number;
+  size: number;
+  parameter: Parameter;
+  relto: Container;
+}
+
+export interface SimpleValueNode extends INode {
+  type: 'SIMPLE_VALUE';
+  parameter: Parameter;
+  name: string;
+  offset: string;
+  parameterType: ParameterType;
+  depth: number;
+}
+
+export interface ArrayValueNode extends INode {
+  type: 'ARRAY_VALUE';
+  parameter: Parameter;
+  name: string;
+  offset: string;
+  parameterType: ParameterType;
+  depth: number;
+}
+
+export interface AggregateValueNode extends INode {
+  type: 'AGGREGATE_VALUE';
+  parameter: Parameter;
+  name: string;
+  offset: string;
+  parameterType: ParameterType;
+  depth: number;
+}
+
+export type Node =
+  | ContainerNode
+  | SimpleParameterNode
+  | AggregateParameterNode
+  | ArrayParameterNode
+  | SimpleValueNode
+  | AggregateValueNode
+  | ArrayValueNode;
+
+@Component({
+  templateUrl: './packet.component.html',
+  styleUrl: './packet.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [HexComponent, WebappSdkModule],
+})
+export class PacketComponent extends BaseComponent implements OnInit {
+  packetName = input.required<string>({ alias: 'packet' });
+
+  packet$ = new BehaviorSubject<Packet | null>(null);
+
+  messages$ = new BehaviorSubject<string[]>([]);
+
+  private allNodes: Node[] = [];
+  dataSource = new MatTableDataSource<Node>();
+
+  _hex?: HexComponent;
+
+  displayedColumns = [
+    'icon',
+    'location',
+    'size',
+    'expand-aggray',
+    'entry',
+    'type',
+    'rawValue',
+    'engValue',
+    'actions',
+  ];
+
+  containerColumns = [
+    'icon',
+    'containerName',
+    'type',
+    'rawValue',
+    'engValue',
+    'actions',
+  ];
+
+  typeOptions: YaSelectOption[] = [
+    { id: 'ANY', label: 'Any type' },
+    { id: 'aggregate', label: 'aggregate' },
+    { id: 'array', label: 'array' },
+    { id: 'binary', label: 'binary' },
+    { id: 'boolean', label: 'boolean' },
+    { id: 'enumeration', label: 'enumeration' },
+    { id: 'float', label: 'float' },
+    { id: 'integer', label: 'integer' },
+    { id: 'string', label: 'string' },
+    { id: 'time', label: 'time' },
+  ];
+
+  constructor(
+    readonly route: ActivatedRoute,
+    private clipboard: Clipboard,
+  ) {
+    super();
+  }
+
+  ngOnInit(): void {
+    const pname = this.packetName();
+    const gentime = this.route.snapshot.paramMap.get('gentime')!;
+    const seqno = Number(this.route.snapshot.paramMap.get('seqno')!);
+    this.setTitle(pname);
+
+    this.yamcs.yamcsClient
+      .getPacket(this.yamcs.instance!, pname, gentime, seqno)
+      .then((packet) => this.packet$.next(packet))
+      .catch((err) => this.messageService.showError(err));
+
+    this.yamcs.yamcsClient
+      .extractPacket(this.yamcs.instance!, pname, gentime, seqno)
+      .then((result) => this.processResponse(result))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  private processResponse(result: ExtractPacketResponse) {
+    this.messages$.next(result.messages || []);
+
+    let prevContainerNode: ContainerNode | undefined;
+    for (const pval of result.parameterValues || []) {
+      if (
+        pval.entryContainer.qualifiedName !==
+        prevContainerNode?.container.qualifiedName
+      ) {
+        const containerNode: ContainerNode = {
+          type: 'CONTAINER',
+          container: pval.entryContainer,
+          expanded: false,
+        };
+        this.allNodes.push(containerNode);
+
+        prevContainerNode = containerNode;
+      }
+
+      this.addParameterNodes(prevContainerNode, pval, this.allNodes);
+    }
+
+    // Expand last container
+    if (prevContainerNode) {
+      prevContainerNode.expanded = true;
+    }
+
+    this.updateDataSource();
+  }
+
+  private addParameterNodes(
+    parent: ContainerNode,
+    pval: ExtractedParameter,
+    nodes: Node[],
+  ) {
+    const { parameter, location, rawValue, engValue, size } = pval;
+    if (parameter.type?.engType.endsWith('[]')) {
+      const arrayNode: Node = {
+        type: 'ARRAY_PARAMETER',
+        parent,
+        expanded: false,
+        parameter,
+        location,
+        rawValue,
+        engValue,
+        size,
+        relto: parent.container,
+      };
+      nodes.push(arrayNode);
+
+      //  Nodes for array entries
+      const rawValues = rawValue?.arrayValue || [];
+      const engValues = engValue?.arrayValue || [];
+      const entryType = parameter.type!.arrayInfo!.type;
+      for (let i = 0; i < engValues.length; i++) {
+        this.addValueNode(
+          arrayNode,
+          parameter,
+          entryType,
+          '[' + i + ']',
+          '[' + i + ']',
+          1,
+          rawValues[i],
+          engValues[i],
+          nodes,
+        );
+      }
+    } else if (parameter.type?.engType === 'aggregate') {
+      const aggregateNode: Node = {
+        type: 'AGGREGATE_PARAMETER',
+        parent,
+        expanded: false,
+        parameter,
+        location,
+        rawValue,
+        engValue,
+        size,
+        relto: parent.container,
+      };
+      nodes.push(aggregateNode);
+
+      // Nodes for aggregate members
+      const rawAggregateValue = rawValue.aggregateValue!;
+      const engAggregateValue = engValue.aggregateValue!;
+      for (let i = 0; i < engAggregateValue.name.length; i++) {
+        const memberType = parameter.type!.member[i].type as ParameterType;
+        this.addValueNode(
+          aggregateNode,
+          parameter,
+          memberType,
+          engAggregateValue.name[i],
+          '.' + engAggregateValue.name[i],
+          1,
+          rawAggregateValue.value[i],
+          engAggregateValue.value[i],
+          nodes,
+        );
+      }
+    } else {
+      nodes.push({
+        type: 'SIMPLE_PARAMETER',
+        parent,
+        expanded: false,
+        parameter,
+        location,
+        rawValue,
+        engValue,
+        size,
+        relto: parent.container,
+      });
+    }
+  }
+
+  private addValueNode(
+    parent: Node,
+    parameter: Parameter,
+    parameterType: ParameterType,
+    name: string,
+    offset: string,
+    depth: number,
+    rawValue: Value,
+    engValue: Value,
+    nodes: Node[],
+  ) {
+    if (parameterType.engType.endsWith('[]')) {
+      const node: ArrayValueNode = {
+        type: 'ARRAY_VALUE',
+        parent,
+        expanded: false,
+        parameter,
+        parameterType,
+        name,
+        offset,
+        rawValue,
+        engValue,
+        depth,
+      };
+      nodes.push(node);
+
+      //  Nodes for array entries
+      const rawValues = rawValue?.arrayValue || [];
+      const engValues = engValue?.arrayValue || [];
+      for (let i = 0; i < engValues.length; i++) {
+        this.addValueNode(
+          node,
+          parameter,
+          parameterType.arrayInfo!.type,
+          '[' + i + ']',
+          offset + '[' + i + ']',
+          depth + 1,
+          rawValues[i],
+          engValues[i],
+          nodes,
+        );
+      }
+    } else if (parameterType.engType === 'aggregate') {
+      const node: AggregateValueNode = {
+        type: 'AGGREGATE_VALUE',
+        parent,
+        expanded: false,
+        parameter,
+        parameterType,
+        name,
+        offset,
+        rawValue,
+        engValue,
+        depth,
+      };
+      nodes.push(node);
+
+      //  Nodes for aggregate members
+      const rawAggregateValue = rawValue.aggregateValue!;
+      const engAggregateValue = engValue.aggregateValue!;
+      for (let i = 0; i < engAggregateValue.name.length; i++) {
+        const memberType = parameterType.member[i].type as ParameterType;
+
+        this.addValueNode(
+          node,
+          parameter,
+          memberType,
+          engAggregateValue.name[i],
+          offset + '.' + engAggregateValue.name[i],
+          depth + 1,
+          rawAggregateValue.value[i],
+          engAggregateValue.value[i],
+          nodes,
+        );
+      }
+    } else {
+      nodes.push({
+        type: 'SIMPLE_VALUE',
+        parent,
+        expanded: false,
+        parameter,
+        parameterType,
+        name,
+        offset,
+        rawValue,
+        engValue,
+        depth,
+      });
+    }
+  }
+
+  get hex() {
+    return this._hex;
+  }
+
+  @ViewChild('hex')
+  set hex(_hex: HexComponent | undefined) {
+    this._hex = _hex;
+  }
+
+  highlightBitRange(node: Node) {
+    if (
+      node.type === 'SIMPLE_PARAMETER' ||
+      node.type === 'AGGREGATE_PARAMETER' ||
+      node.type === 'ARRAY_PARAMETER'
+    ) {
+      this.hex?.setHighlight(new BitRange(node.location, node.size));
+    }
+  }
+
+  clearHighlightedBitRange() {
+    this.hex?.setHighlight(null);
+  }
+
+  selectBitRange(node: Node) {
+    if (
+      node.type === 'SIMPLE_PARAMETER' ||
+      node.type === 'AGGREGATE_PARAMETER' ||
+      node.type === 'ARRAY_PARAMETER'
+    ) {
+      this.hex?.setSelection(new BitRange(node.location, node.size));
+    }
+  }
+
+  toggleRow(node: Node) {
+    if (this.isExpandable(node)) {
+      if (node.expanded) {
+        this.collapseNode(node);
+      } else {
+        node.expanded = true;
+      }
+    }
+    this.updateDataSource();
+  }
+
+  collapseNode(node: Node) {
+    for (const child of this.allNodes) {
+      if (child.parent === node) {
+        this.collapseNode(child);
+      }
+    }
+    node.expanded = false;
+    this.updateDataSource();
+  }
+
+  expandAll() {
+    for (const node of this.allNodes) {
+      if (this.isExpandable(node)) {
+        node.expanded = true;
+      }
+    }
+    this.updateDataSource();
+  }
+
+  collapseAll() {
+    for (const node of this.allNodes) {
+      node.expanded = false;
+    }
+    this.updateDataSource();
+  }
+
+  isExpandable(node: Node) {
+    return (
+      node.type === 'CONTAINER' ||
+      node.type === 'AGGREGATE_PARAMETER' ||
+      node.type === 'ARRAY_PARAMETER' ||
+      node.type === 'AGGREGATE_VALUE' ||
+      node.type === 'ARRAY_VALUE'
+    );
+  }
+
+  /**
+   * Renders only visible nodes
+   */
+  private updateDataSource() {
+    const filteredNodes: Node[] = [];
+    for (const node of this.allNodes) {
+      if (!node.parent || node.parent?.expanded) {
+        filteredNodes.push(node);
+      }
+    }
+    this.dataSource.data = filteredNodes;
+  }
+
+  isContainer(index: number, node: Node) {
+    return node.type === 'CONTAINER';
+  }
+
+  isNoContainer(index: number, node: Node) {
+    return node.type !== 'CONTAINER';
+  }
+
+  copyHex(base64: string) {
+    const hex = utils.convertBase64ToHex(base64);
+    if (this.clipboard.copy(hex)) {
+      this.messageService.showInfo('Hex copied');
+    } else {
+      this.messageService.showInfo('Hex copy failed');
+    }
+  }
+
+  copyBinary(base64: string) {
+    const raw = window.atob(base64);
+    if (this.clipboard.copy(raw)) {
+      this.messageService.showInfo('Binary copied');
+    } else {
+      this.messageService.showInfo('Binary copy failed');
+    }
+  }
+
+  fillTypeWithValueDimension(engType: string, arrayValue?: Value[]) {
+    // Note: in case of an array of arrays, we should set the last
+    // [] occurrence only.
+    if (engType.endsWith('[]')) {
+      const length = arrayValue?.length || 0;
+      engType = engType.substring(0, engType.length - 2) + '[' + length + ']';
+    }
+
+    // Any nested array can vary
+    return engType.replaceAll('[]', '[?]');
+  }
+}
+```

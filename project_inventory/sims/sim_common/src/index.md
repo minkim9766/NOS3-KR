@@ -3,36 +3,2050 @@
 
 **경로:** `sims/sim_common/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `all_simulators.cpp`
 
-file--all_simulators.cpp
-file--ascii_msg_server.cpp
-file--sim_42data_point.cpp
-file--sim_cmdbus_bridge.cpp
-file--sim_config.cpp
-file--sim_coordinate_transformations.cpp
-file--sim_data_42socket_provider.cpp
-file--sim_data_provider_factory.cpp
-file--sim_data_shmem_provider.cpp
-file--sim_hardware_model_factory.cpp
-file--sim_shmem_data_point.cpp
-file--single_simulator.cpp
+**경로:** `sims/sim_common/src/all_simulators.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <iostream>
+#include <vector>
+#include <thread>
+#include <ItcLogger/Logger.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+    ItcLogger::Logger *sim_logger;
+}
+
+int
+main(int argc, char *argv[])
+{
+    // Determine the configuration and run all simulators
+    Nos3::SimConfig sc(argc, argv);
+    std::vector<std::thread *> threads;
+    std::vector<std::string> names = sc.get_simulator_names();
+    if (names.size() > 0) {
+        for(std::vector<std::string>::size_type i = 1; i < names.size(); i++) {
+            Nos3::sim_logger->info("main:  Spawning thread for simulator \"%s\"", names[i].c_str());
+            threads.push_back(new std::thread(std::bind(&Nos3::SimConfig::run_simulator, sc, names[i]), NULL)); // Spawn thread to run simulator
+        }
+
+        sc.run_simulator(names[0]); // run the first simulator name in the main thread
+    }
+}
 ```
 
-## 항목
+### `ascii_msg_server.cpp`
 
-- [`sims/sim_common/src/all_simulators.cpp`](file--all_simulators.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/ascii_msg_server.cpp`](file--ascii_msg_server.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_42data_point.cpp`](file--sim_42data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_cmdbus_bridge.cpp`](file--sim_cmdbus_bridge.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_config.cpp`](file--sim_config.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_coordinate_transformations.cpp`](file--sim_coordinate_transformations.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_data_42socket_provider.cpp`](file--sim_data_42socket_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_data_provider_factory.cpp`](file--sim_data_provider_factory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_data_shmem_provider.cpp`](file--sim_data_shmem_provider.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_hardware_model_factory.cpp`](file--sim_hardware_model_factory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/sim_shmem_data_point.cpp`](file--sim_shmem_data_point.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/src/single_simulator.cpp`](file--single_simulator.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `sims/sim_common/src/ascii_msg_server.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <sys/time.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
+#include <netdb.h>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <ascii_msg_server.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+
+    AsciiMsgServer::AsciiMsgServer(const uint16_t port)
+        : _port(port),
+          _socket_fd(-1)
+    {
+        for (int i=0 ; i<MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            _client_conn[i].fd = -1;
+            reset_buffer(_client_conn[i]);
+        }
+    }
+
+    AsciiMsgServer::~AsciiMsgServer(void)
+    {
+        sim_logger->info("Ascii Msg Server: closing");
+
+        // Stop incoming connections
+        close(_socket_fd);
+
+        // Close all active client connections
+        for (int i=0 ; i<MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            if (_client_conn[i].fd > 0)
+                close(_client_conn[i].fd);
+        }
+    }
+
+    /*************************************************************************
+     * Public methods
+     *************************************************************************/
+
+     bool AsciiMsgServer::init()
+     {
+         bool ok_to_continue = true;
+
+         /**
+           * Create the client connection listener socket
+         **/
+         _socket_fd = socket(AF_INET, SOCK_STREAM, 0);
+
+         if (_socket_fd == -1)
+         {
+             sim_logger->error("Ascii Msg Server socket creation failed:  %s", strerror(errno));
+             ok_to_continue = false;
+         }
+         else
+         {
+             sim_logger->debug("ASCII Msg Server socket successfully created");
+         }
+
+         /**
+           * Bind the listener socket to the specified address
+         **/
+         if (ok_to_continue)
+         {
+             struct sockaddr_in server;
+             bzero(&server, sizeof(server));
+
+             server.sin_family = AF_INET;
+             server.sin_addr.s_addr = htonl(INADDR_ANY);
+             server.sin_port = htons(_port);
+
+             int bind_result = bind(_socket_fd, (sockaddr*)&server, sizeof(server));
+
+             if (bind_result != 0)
+             {
+                 sim_logger->error("socket bind failed: %s", strerror(errno));
+                 ok_to_continue = false;
+             }
+             else if (ok_to_continue)
+             {
+                  sim_logger->debug("Socket successfully bound");
+             }
+         }
+
+         /**
+           * Start listening for incoming connection requests
+         **/
+         if (ok_to_continue)
+         {
+             int listen_result = listen(_socket_fd, 5);
+
+             if (listen_result != 0)
+             {
+                 sim_logger->error("listen failed:  %s", strerror(errno));
+                 ok_to_continue = false;
+             }
+             else if (ok_to_continue)
+             {
+                 sim_logger->info("ASCII Msg Server listening on port %d", _port);
+             }
+         }
+
+         return ok_to_continue;
+     }
+
+     bool AsciiMsgServer::listen_for_data()
+     {
+         int prev_msg_queue_size = _rcv_msg_queue.size();
+
+         fd_set read_fds;
+
+         /**
+           * Wait for any data to become available on both the main socket and all
+           * active client connections.
+         **/
+         bool select_success = wait_for_data(read_fds);
+
+         /**
+           * Service the main socket to handle any new client connection requests
+         **/
+         bool connection_request = FD_ISSET(_socket_fd, &read_fds);
+
+         if (select_success && connection_request)
+         {
+             sockaddr_in client;
+             socklen_t client_addr_len = sizeof(client);
+
+             int client_fd = accept(_socket_fd, (sockaddr*)&client, &client_addr_len);
+
+             // Ignore EAGAIN.  Since we're using select, we only get EAGAIN when
+             // the application is shutting down.
+             if (client_fd < 0 && errno != EAGAIN)
+             {
+                 sim_logger->error("Ascii Msg Server socket accept failed: %s: %d", strerror(errno), errno);
+             }
+             else if (client_fd > 0)
+             {
+                 bool client_accepted = false;
+
+                 for (uint32_t i=0; i<MAX_CLIENT_CONNECTIONS ; ++i)
+                 {
+                     if (_client_conn[i].fd == -1)
+                     {
+                         _client_conn[i].fd = client_fd;
+                         reset_buffer(_client_conn[i]);
+
+                         client_accepted = true;
+
+                         sim_logger->debug("Added new client connection fd=%d", client_fd);
+
+                         break;
+                     }
+                 }
+
+                 if (! client_accepted)
+                 {
+                     sim_logger->error("Max number of client connections exceeded (%d).  "
+                        "Rejecting connection request.", MAX_CLIENT_CONNECTIONS);
+                 }
+             }
+         }
+
+         /**
+           * Service any data available on client connection sockets
+         **/
+         if (select_success)
+         {
+             for (uint32_t i=0; i<MAX_CLIENT_CONNECTIONS ; ++i)
+             {
+                 // Only want active connections
+                 if (_client_conn[i].fd < 0)
+                    continue;
+
+                 bool data_available = FD_ISSET(_client_conn[i].fd, &read_fds);
+
+                 if (data_available)
+                 {
+                     read_socket_data(_client_conn[i]);
+                 }
+             }
+         }
+
+         /**
+           * If the message queue size changed since we read it at the begning
+           * of the function, then a new message was succesfully received on
+           * one of the client connections.
+         **/
+         return (prev_msg_queue_size != (int) _rcv_msg_queue.size());
+     }
+
+    /*************************************************************************
+    * Private helper methods
+    *************************************************************************/
+
+    bool AsciiMsgServer::wait_for_data (fd_set &read_fds)
+    {
+        /**
+          * Initialize the structs needed for select.  select also requires the
+          * max file descriptor.
+          *
+          * We add the fild descriptor for the connection socket and client
+          * sockets.
+        **/
+        int max_fd = _socket_fd;
+
+        FD_ZERO(&read_fds);
+        FD_SET(_socket_fd, &read_fds);
+
+        for (uint32_t i = 0 ; i < MAX_CLIENT_CONNECTIONS ; ++i)
+        {
+            int fd = _client_conn[i].fd;
+
+            // Only process active connections
+            if (fd < 0)
+                continue;
+
+            FD_SET(fd, &read_fds);
+
+            if(fd > max_fd)
+                max_fd = fd;
+        }
+
+        /**
+          * Wait for read data available on connection request socket and client
+          * sockets.  No timeout needed since a signal will interrupt this call.
+        **/
+        int result = select(max_fd+1, &read_fds, NULL, NULL, NULL);
+
+        if (result < 0)
+        {
+            // Log error if select returned error but not from a signal.
+            if (errno != EINTR)
+            {
+                sim_logger->error("Ascii Msg Server 'select' error: %d/%d %s\n",
+                    result, errno, strerror(errno));
+            }
+            else // we're shutting down if we get EINTR
+            {
+                sim_logger->info("Ascii Msg Server: 'select' EINTR, prepare for shutdown");
+            }
+        }
+
+        // specify if select was succesful so we can evaluate the fd_set
+        return result > -1;
+     }
+
+     void AsciiMsgServer::read_socket_data(ClientConnection &client_conn)
+     {
+        int num_bytes = 0;
+
+        /**
+          * Calculate number of bytes avaialable in the client connection receive
+          * buffer.  If the buffer is empty then the tail is pointing to the first
+          * element and all bytes are avaialable
+        **/
+        int buffer_size = client_conn.rcv_buff + sizeof(client_conn.rcv_buff) - client_conn.buff_tail;
+
+        sim_logger->debug("Ascii Msg Server: read_socket_data: client=%d status=%d", client_conn.fd, buffer_size);
+
+        if (buffer_size > 0)
+        {
+            num_bytes = read(client_conn.fd, client_conn.buff_tail, buffer_size);
+
+            if (num_bytes > 0) // Got data, try to parse messages
+            {
+                client_conn.buff_tail += num_bytes;
+                parse_message(client_conn);
+            }
+            else if (num_bytes < 0) // Error occured, reset the receive buffer
+            {
+                sim_logger->error("Ascii Msg Server: socket 'read' error:  %s\n", strerror(errno));
+
+                // Reset buffer pointers
+                reset_buffer(client_conn);
+            }
+            else // Client disconnect
+            {
+                sim_logger->debug("Ascii Msg Server: Client disconnect for fd=%d", client_conn.fd);
+
+                close(client_conn.fd);
+                client_conn.fd = -1;
+            }
+        }
+        else
+        {
+            sim_logger->error("Ascii Msg Server: receive buffer full for client fd %d.  Dumping buffer...", client_conn.fd);
+
+            reset_buffer(client_conn);
+        }
+     }
+
+     void AsciiMsgServer::parse_message(ClientConnection &client_conn)
+     {
+         char* curr_char = client_conn.rcv_buff;
+
+         // Keeps track of the character that starts the next incomplete message
+         // in the receive buffer.  When a message is found, this pointer is updated
+         // to one character past new line character of the found message.
+         char *next_msg_start = client_conn.rcv_buff;
+
+         /**
+           * Search for the new line character.  This is our message delimiter.
+           * If found, we copy the buffer from the last msg -> tail to a string
+           * and add it to the mssage queue.
+           *
+           * The last_msg pointer is then moved to 1 character past the newline
+           * character in the array.  This allows us to keep searching for more
+           * messsages in case multiple messages were returned in a single read call.
+         **/
+         while (curr_char < client_conn.buff_tail)
+         {
+             if (*curr_char == '\n')
+             {
+                 // Don't add 1 here because we don't want to include the new line
+                 // character as part of the message.
+                 int message_size = curr_char - next_msg_start;
+
+                 if (message_size > 0)
+                 {
+                     std::string msg(next_msg_start, message_size);
+
+                     _rcv_msg_queue.push(msg);
+
+                     sim_logger->debug("New msg %d/%ld", message_size, msg.size());
+                 }
+
+                 // New line character is the end of this message.  So next
+                 // character is the start of the next message.
+                 next_msg_start = curr_char + 1;
+             }
+
+             curr_char++;
+         }
+
+         sim_logger->debug("Ascii Msg Server: ---Buffer status: base=%p next_msg=%p tail=%p",
+            client_conn.rcv_buff, next_msg_start, client_conn.buff_tail);
+
+         /**
+           * If there are any remaining bytes in the buffer, then we didn't find
+           * a new line character for them.  Move the reamining bytes to the begining
+           * of the buffer and set the tail to one past the last remaining byte.
+           * This will allow subsequent reads to append their data to the remaining
+           * bytes.
+         **/
+         int remaining_bytes = 0;
+
+         if (next_msg_start != client_conn.buff_tail)
+         {
+             remaining_bytes = client_conn.buff_tail - next_msg_start;
+
+             sim_logger->debug("Ascii Msg Server: %d bytes remaining in buffer", remaining_bytes);
+
+             memmove(client_conn.rcv_buff, next_msg_start, remaining_bytes);
+
+             client_conn.buff_tail = client_conn.rcv_buff + remaining_bytes;
+        }
+
+        // Update our tail - will go back to beginning of buffer if remaining bytes is 0
+        client_conn.buff_tail = client_conn.rcv_buff + remaining_bytes;
+
+        sim_logger->debug("Ascii Msg Server: ++++Buffer update: base=%p tail=%p",
+           client_conn.rcv_buff, client_conn.buff_tail);
+     }
+
+    void AsciiMsgServer::reset_buffer(ClientConnection &client_conn)
+    {
+        client_conn.buff_tail = client_conn.rcv_buff;
+
+        memset(client_conn.rcv_buff, '\0', sizeof(client_conn.rcv_buff));
+    }
+}
+```
+
+### `sim_42data_point.cpp`
+
+**경로:** `sims/sim_common/src/sim_42data_point.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <iomanip>
+#include <limits>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+
+    Sim42DataPoint::Sim42DataPoint(std::vector<std::string> &message) : _lines(message)
+    {
+        for (std::vector<std::string>::const_iterator iter = _lines.begin(); iter != _lines.end(); iter++) {
+            size_t equals = iter->find("=");
+            if (equals != std::string::npos) {
+                std::string key(iter->substr(0, equals));
+                boost::trim(key);
+                std::string value(iter->substr(equals+1));
+                boost::trim(value);
+                _key_values.insert({key, value});
+            } else if(iter->compare(0, 4, "TIME") == 0) {
+                std::string value(iter->substr(4));
+                boost::trim(value);
+                _key_values.insert({"TIME", value});
+                parse_time(value);
+                long Month, Day;
+                DOY2MD(std::stol(_key_values["YEAR"]), std::stol(_key_values["DOY"]), &Month, &Day);
+                _key_values.insert({"MONTH", std::to_string(Month)});
+                _key_values.insert({"DAY", std::to_string(Day)});
+                _key_values.insert({"ABSTIME", 
+                    std::to_string(DateToTime(std::stol(_key_values["YEAR"]), Month, Day, 
+                    std::stol(_key_values["HOUR"]), std::stol(_key_values["MINUTE"]), std::stod(_key_values["SECOND"])))});
+            } else {
+                std::string key(*iter);
+                boost::trim(key);
+                _key_values.insert({key, ""});
+            }
+        }
+        sim_logger->trace("Sim42DataPoint::Sim42DataPoint:  Constructed data point with:  %s", to_string().c_str());
+        sim_logger->trace("Sim42DataPoint::Sim42DataPoint - key/values:");
+        for (std::map<std::string, std::string>::const_iterator iter = _key_values.begin(); iter != _key_values.end(); iter++) {
+            sim_logger->trace("  %s, %s", iter->first.c_str(), iter->second.c_str());
+        }
+    }
+
+    /*************************************************************************
+     * Accessors
+     *************************************************************************/
+
+    void Sim42DataPoint::parse_time(const std::string& value)
+    {
+        std::vector<std::string> tokens;
+        std::istringstream iss(value);
+        std::string token;
+        while (std::getline(iss, token, '-')) {
+            tokens.push_back(token);
+        }
+        std::string key = "YEAR";
+        _key_values.insert({key, tokens[0]});
+        key = "DOY";
+        _key_values.insert({key, tokens[1]});
+        std::string time(tokens[2]);
+
+        tokens.clear();
+        std::istringstream iss2(time);
+        while (std::getline(iss2, token, ':')) {
+            tokens.push_back(token);
+        }
+        key = "HOUR";
+        _key_values.insert({key, tokens[0]});
+        key = "MINUTE";
+        _key_values.insert({key, tokens[1]});
+        key = "SECOND";
+        _key_values.insert({key, tokens[2]});
+    }
+
+    /**********************************************************************/
+    /*  Find Month, Day, given Day of Year                                */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*   This function is agnostic to the TT-to-UTC offset.  You get out  */
+    /*   what you put in.                                                 */
+    void Sim42DataPoint::DOY2MD(long Year, long DayOfYear, long *Month, long *Day)
+    {
+        long K;
+
+        if (Year % 4 == 0) {
+            K = 1;
+        }
+        else {
+            K = 2;
+        }
+
+        if (DayOfYear < 32) {
+            *Month = 1;
+        }
+        else {
+            *Month = (long) (9.0*(K+DayOfYear)/275.0+0.98);
+        }
+
+        *Day = DayOfYear - 275*(*Month)/9 + K*(((*Month)+9)/12) + 30;
+
+    }
+
+    /**********************************************************************/
+    /*  Convert Year, Month, Day, Hour, Minute and Second to              */
+    /*  "Time", i.e. seconds elapsed since J2000 epoch.                   */
+    /*  Year, Month, Day assumed in Gregorian calendar. (Not true < 1582) */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*  This function is agnostic to the TT-to-UTC offset.  You get out   */
+    /*  what you put in.                                                  */
+
+    double Sim42DataPoint::DateToTime(long Year, long Month, long Day,
+                long Hour, long Minute, double Second)
+    {
+        long A,B;
+        double Days;
+        
+        if (Month < 3) {
+            Year--;
+            Month+=12;
+        }
+
+        A = Year/100;
+        B = 2 - A + A/4;
+
+        /* Days since J2000 Epoch (01 Jan 2000 12:00:00.0) */
+        Days = floor(365.25*(Year-2000))
+                    + floor(30.6001*(Month+1))
+                    + Day + B - 50.5;
+
+        /* Add fractional day */
+        return(86400.0*Days + 3600.0*((double) Hour)
+            + 60.0*((double) Minute) + Second);
+    }
+
+    std::string Sim42DataPoint::to_string(void) const
+    {
+        std::stringstream ss;
+
+        ss << std::fixed << std::setfill(' ');
+        ss << "42 Data Point: ";
+        for (std::vector<std::string>::const_iterator it = _lines.begin(); it != _lines.end(); ++it) {
+            ss << *it;
+        }
+        return ss.str();
+    }
+
+    std::string Sim42DataPoint::get_value_for_key(std::string key) {
+        return _key_values[key];
+    }
+
+    /*************************************************************************
+     * Static methods
+     *************************************************************************/
+
+    void Sim42DataPoint::parse_double_vector(const std::string& text, std::vector<double>& dv) 
+    {
+        dv.clear();
+        std::string t = text;
+        t.erase(std::remove(t.begin(), t.end(), '['), t.end());
+        t.erase(std::remove(t.begin(), t.end(), ']'), t.end());
+        std::istringstream iss(t);
+        for (std::string s; iss >> s; )
+            dv.push_back(std::stod(s));
+    }
+    
+
+}
+```
+
+### `sim_cmdbus_bridge.cpp`
+
+**경로:** `sims/sim_common/src/sim_cmdbus_bridge.cpp`
+
+
+```cpp
+#include <signal.h>
+#include <sstream>
+
+#include <boost/property_tree/json_parser.hpp>
+
+#include <sim_cmdbus_bridge.hpp>
+
+namespace Nos3
+{
+    REGISTER_HARDWARE_MODEL(SimCmdBusBridge,"SIM_CMDBUS_BRIDGE");
+
+    ItcLogger::Logger *sim_logger;
+
+    SimCmdBusBridge::SimCmdBusBridge(const boost::property_tree::ptree& config)
+    :   SimIHardwareModel(config),
+        _msg_svr(
+            config.get("simulator.hardware-model.server-PORT", 12020))
+    {
+        if (! _msg_svr.init())
+        {
+            throw std::runtime_error("Command bus bridge server failed to initialize");
+        }
+    }
+
+    SimCmdBusBridge::~SimCmdBusBridge()
+    {}
+
+    void SimCmdBusBridge::run(void)
+    {
+        while (_keep_running.load())
+        {
+            /* This will block until
+             * 1) New client connection
+             * 2) New message from connected client
+             * 3) OS signal interrupts the program
+            **/
+            bool data_available = _msg_svr.listen_for_data();
+
+            if (data_available)
+            {
+                std::string msg;
+                while (_msg_svr.get_next_message(msg))
+                {
+                    process_msg(msg);
+                }
+            }
+        }
+    }
+
+    void SimCmdBusBridge::process_msg(std::string &msg)
+    {
+        /**
+          * Try to parse the string as a JSON message.  If this fails
+          * then don't process it.
+        **/
+        try
+        {
+            std::stringstream stream(msg);
+            boost::property_tree::ptree pt;
+            std::string node_name = "";
+            std::string cmd = "";
+
+            boost::property_tree::read_json(stream, pt);
+
+            /**
+              * Determine if the node name specified in the message exists
+              * on the command bus.  If it does, send the message.
+            **/
+            try
+            {
+                node_name = pt.get<std::string>("node");
+                cmd = pt.get<std::string>("cmd");
+
+                sim_logger->info("Received new message destined for %s with command %s",
+                    node_name.c_str(), cmd.c_str());
+                
+                // Add 1 since C++ string size does not include null termination character.
+                // We want this character sent so the buffer on the receive side is
+                // interpreted as a valid C string.
+                _command_node->send_non_confirmed_message_async(node_name, cmd.size()+1, cmd.c_str());;
+            }
+            catch(const std::exception& e)
+            {
+                sim_logger->error("Unable to send message to %s: %s", node_name.c_str(), e.what());
+            }
+            catch(...)
+            {
+                sim_logger->error("Unable to send message to %s: unspecified error", node_name.c_str());
+            }
+        }
+        catch(const std::exception& parse_ex)
+        {
+            sim_logger->error("Could not parse message '%s' as JSON: %s", msg.c_str(), parse_ex.what());
+        }
+    }
+}
+
+//==============================================================================
+// Main
+//==============================================================================
+
+Nos3::SimConfig* sim_cfg;
+
+void signal_handler(int signum)
+{
+    signum = signum; // TODO: unused-parameter
+    sim_cfg->stop_simulator();
+}
+
+int main(int argc, char *argv[])
+{
+    signal(SIGINT, signal_handler);
+
+    std::string simulator_name = "cmdbus-bridge";
+
+    // Determine the configuration and run the simulator
+    sim_cfg = new Nos3::SimConfig(argc, argv);
+
+    Nos3::sim_logger->info("main:  %s simulator starting", simulator_name.c_str());
+
+    try
+    {
+        sim_cfg->run_simulator(simulator_name);
+    }
+    catch(const std::exception& e)
+    {
+        Nos3::sim_logger->error("main: exception caught: %s", e.what());
+    }
+    catch(...)
+    {
+        Nos3::sim_logger->error("Unspecified exception\n");
+    }
+
+    delete sim_cfg;
+    Nos3::sim_logger->info("main:  %s simulator terminating", simulator_name.c_str());
+}
+```
+
+### `sim_config.cpp`
+
+**경로:** `sims/sim_common/src/sim_config.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <iostream>
+#include <dlfcn.h>
+
+#include <boost/program_options/variables_map.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/exception/diagnostic_information.hpp>
+#include <boost/property_tree/xml_parser.hpp>
+#include <boost/foreach.hpp>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_hardware_model_factory.hpp>
+#include <sim_i_hardware_model.hpp>
+
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+
+    SimConfig::SimConfig(int argc, char *argv[]) : _hardware_model(0)
+    {
+        parse_options(argc, argv);
+
+        std::string log_config_file = _config.get("nos3-configuration.common.log-config-file", "sim_log_config.xml");
+        if(boost::filesystem::exists(log_config_file)) // key should exist, but specify default just in case
+        {
+            ItcLogger::Logger::configure(log_config_file.c_str());
+        }
+
+        sim_logger = ItcLogger::Logger::get(SIM_LOGGER);
+        //sim_logger->debug("SimConfig::SimConfig:  Constructing simulator configuration with %d arguments.", argc - 1);
+        sim_logger->debug("SimConfig::SimConfig:  sim_logger is NOW valid.");
+        //sim_logger->debug("SimConfig::SimConfig:  Configuration values:\n%s", to_string().c_str());
+    }
+
+    SimConfig::~SimConfig()
+    {
+        if (_hardware_model)
+            delete _hardware_model;
+    }
+
+    /*************************************************************************
+     * Accessors
+     *************************************************************************/
+
+    void SimConfig::run_simulator(std::string simulator_name)
+    {
+        sim_logger->debug("SimConfig::run_simulator:  SimConfig is created, logger is valid, and run_simulator is starting.");
+
+        boost::property_tree::ptree config = get_config_for_simulator(simulator_name);
+        if (config.get("simulator.active", false)) 
+        {
+            std::string model_type = config.get("simulator.hardware-model.type", "");
+
+            // Create an instance of the simulator hardware model and run it
+            _hardware_model = SimHardwareModelFactory::Instance().Create(model_type, config);
+            _hardware_model->run();
+        } 
+        else 
+        {
+            sim_logger->warning("SimConfig::run_simulator:  Simulator \"%s\" is not active in \"%s\".  Not running.\nTry --help", simulator_name.c_str(), _config_filename.c_str());
+        }
+    }
+
+    void SimConfig::stop_simulator()
+    {
+        _hardware_model->stop();
+    }
+
+	std::vector<std::string> SimConfig::get_simulator_names(void) const
+	{
+		std::vector<std::string> simulator_names;
+        if (_config.get_child_optional("nos3-configuration.simulators")) 
+        {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, _config.get_child("nos3-configuration.simulators")) 
+            {
+                std::string name = v.second.get("name", "");
+                if (name.compare("") != 0) {
+    				simulator_names.push_back(v.second.get("name", ""));
+                }
+			}
+		}
+		return simulator_names;
+	}
+	
+    boost::property_tree::ptree SimConfig::get_config_for_simulator(std::string simulator_name) const
+    {
+        boost::property_tree::ptree sim_config;
+
+        if (boost::optional<const boost::property_tree::ptree &> common = _config.get_child_optional("nos3-configuration.common"))
+        {
+            sim_config.add_child("common", common.get());
+        }
+
+        if (_config.get_child_optional("nos3-configuration.simulators")) 
+        {
+            BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, _config.get_child("nos3-configuration.simulators")) 
+            {
+                // v.first is the name of the child.
+                // v.second is the child tree.
+                if (simulator_name.compare(v.second.get("name", "")) == 0) 
+                {
+                    sim_config.add_child("simulator", v.second);
+                    std::string library = v.second.get("library", "");
+                    if (library.compare("") == 0) 
+                    {
+                        library = "lib" + simulator_name + "_sim.so"; // guess a name
+                    }
+                    sim_logger->info("SimConfig::get_config_for_simulator:  Loading plug-in library %s", library.c_str());
+                    if (dlopen(library.c_str(), RTLD_LAZY | RTLD_LOCAL) == NULL)
+                    {   // Try to load the library so any plug-ins get registered
+                        sim_logger->warning("SimConfig::get_config_for_simulator:  WARNING, did NOT load plug-in library %s.  Error: %s", library.c_str(), dlerror());
+                    }
+                    break;
+                }
+            }
+        }
+
+        if (sim_logger->is_level_enabled(ItcLogger::LOGGER_DEBUG)) 
+        {
+            sim_logger->debug("SimConfig::get_config_for_simulator:  Configuration for simulator \"%s\" is:\n", simulator_name.c_str());
+            std::ostringstream oss;
+            #if BOOST_VERSION / 100 % 1000 < 56
+                write_xml(oss, sim_config, boost::property_tree::xml_writer_make_settings<char>(' ', 4));
+            #else
+                write_xml(oss, sim_config, boost::property_tree::xml_writer_make_settings<std::string>(' ', 4));
+            #endif
+            sim_logger->debug("\n%s", oss.str().c_str());
+        }
+
+        return sim_config;
+    }
+
+    boost::property_tree::ptree SimConfig::get_config(void) const
+    {
+        return _config;
+    }
+
+    std::string SimConfig::get_simulator(void) const
+    {
+        return _simulator;
+    }
+
+    std::string SimConfig::to_string(void) const
+    {
+        std::ostringstream oss;
+
+        oss << "config-filename=" << _config_filename << std::endl;
+        #if BOOST_VERSION / 100 % 1000 < 56
+            write_xml(oss, _config, boost::property_tree::xml_writer_make_settings<char>(' ', 4));
+        #else
+            write_xml(oss, _config, boost::property_tree::xml_writer_make_settings<std::string>(' ', 4));
+        #endif
+
+        return oss.str();
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+    void SimConfig::parse_options(int argc, char *argv[])
+    {
+        try
+        {
+            // Generic options that can be on the command line
+            boost::program_options::options_description generic("Generic options");
+            generic.add_options()
+            ("help,h", "produce help message")
+            ("config-file,f",
+             boost::program_options::value<std::string>(&_config_filename)->
+             default_value("nos3-simulator.xml"), "configuration file")
+            ("simulator,s", 
+             boost::program_options::value<std::string>(&_simulator), "simulator to run (-s is not required)")
+            ;
+
+            // Options that can be on the command line or (more likely) in a configuration file
+            boost::program_options::options_description config("Configuration");
+            // Logging
+            std::string cmd_line_log_config_filename;
+            config.add_options()
+            ("log-config-file,l",
+             boost::program_options::value<std::string>(&cmd_line_log_config_filename)->
+             default_value("sim_log_config.xml")->
+             composing(), "specify log configuration file name");
+
+            generic.add(config);
+
+            // Positional options
+            boost::program_options::positional_options_description pd;
+            pd.add("simulator", 1);
+
+            // Ok, the option descriptions are created... now go get the options!
+            boost::program_options::variables_map vm;
+            //boost::program_options::store(boost::program_options::parse_command_line(argc, argv, generic.add(config)), vm);
+            boost::program_options::store(boost::program_options::command_line_parser(argc, argv).options(generic).positional(pd).run(), vm);
+            boost::program_options::notify(vm);
+
+            // Ok, that's all the options that can be specified on the command line... now go get any others (and all but the first one if they are
+            // not specified on the command line) from a config file
+
+            if(boost::filesystem::exists(_config_filename))
+            {
+                boost::property_tree::xml_parser::read_xml(_config_filename, _config, boost::property_tree::xml_parser::trim_whitespace);
+            }
+
+            // Set the common.log-config-file value in the ptree... order:  command line, config file, default
+            std::string cfg_file_log_config_filename = _config.get("nos3-configuration.common.log-config-file", "");
+            if (cmd_line_log_config_filename.compare("") != 0) 
+            { // Use command line if specified
+                _config.put("nos3-configuration.common.log-config-file", cmd_line_log_config_filename);
+            } 
+            else if (cfg_file_log_config_filename.compare("") == 0) 
+            { // Use default if command line and config file not specified
+                _config.put("nos3-configuration.common.log-config-file", "sim_log_config.xml");
+            }
+
+            if (vm.count("help")) {
+                std::cout << generic << std::endl;
+                exit(1);
+            }
+        }
+        catch(boost::exception const &e)
+        {
+            std::cerr << "SimConfig::parse_options:  Error during option parsing prior to logger availability.  Error:  " <<
+                      boost::diagnostic_information(e) << std::endl << "Try --help" << std::endl;
+            exit(3);
+        }
+        catch(std::exception &e)
+        {
+            std::cerr << "SimConfig::parse_options:  Error during option parsing prior to logger availability.  Error:  " <<
+                      e.what() << std::endl << "Try --help" << std::endl;
+            exit(4);
+        }
+        catch(...)
+        {
+            std::cerr << "SimConfig::parse_options:  Exception of unknown type." << std::endl << "Try --help" << std::endl;
+            exit(5);
+        }
+    }
+
+}
+```
+
+### `sim_coordinate_transformations.cpp`
+
+**경로:** `sims/sim_common/src/sim_coordinate_transformations.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <cmath>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_coordinate_transformations.hpp>
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+    const SimCoordinateTransformations::SimConstants SimCoordinateTransformations::SIM_CONSTANTS;
+
+    /*************************************************************************
+     * Static Methods
+     *************************************************************************/
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    void SimCoordinateTransformations::AbsTime2YMDHMS(double abs_time, int32_t& year, int32_t& month, int32_t& day,
+                                 int32_t& hour, int32_t& minute, double& second)
+    {
+        JD2YMDHMS(AbsTimeToJD(abs_time), year, month, day, hour, minute, second);
+    }
+
+    /**********************************************************************/
+    /* AbsTime is elapsed seconds since J2000 epoch                       */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    double SimCoordinateTransformations::AbsTimeToJD(double abs_time)
+    {
+        return (abs_time/86400.0 + 2451545.0);
+    }
+
+    /**********************************************************************/
+    /* AbsTime is elapsed seconds since J2000 epoch                       */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+    double SimCoordinateTransformations::JDToAbsTime(double jd)
+    {
+        return ((jd - 2451545.0) * 86400.0);
+    }
+
+    /**********************************************************************/
+    /* Convert Julian Day to Year, Month, Day, Hour, Minute, and Second   */
+    /* Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.   */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+
+    void SimCoordinateTransformations::JD2YMDHMS(double jd, int32_t& year, int32_t& month, int32_t& day,
+                                 int32_t& hour, int32_t& minute, double& second)
+    {
+          double Z,F,A,B,C,D,E,alpha;
+            double FD;
+
+          Z= floor(jd+0.5);
+          F=(jd+0.5)-Z;
+
+          if (Z < 2299161.0) 
+          {
+             A = Z;
+          }
+          else 
+          {
+             alpha = floor((Z-1867216.25)/36524.25);
+             A = Z+1.0+alpha - floor(alpha/4.0);
+          }
+
+          B = A + 1524.0;
+          C = floor((B-122.1)/365.25);
+          D = floor(365.25*C);
+          E = floor((B-D)/30.6001);
+
+          FD = B - D - floor(30.6001*E) + F;
+          day = (int32_t) FD;
+
+          if (E < 14.0) 
+          {
+             month = (int32_t) (E - 1.0);
+             year = (int32_t) (C - 4716.0);
+          }
+          else 
+          {
+             month = (int32_t) (E - 13.0);
+             year = (int32_t) (C - 4715.0);
+          }
+
+            FD = FD - floor(FD);
+            FD = FD * 24.0;
+            hour = (int32_t) FD;
+            FD = FD - floor(FD);
+            FD = FD * 60.0;
+            minute = (int32_t) FD;
+            FD = FD - floor(FD);
+            second = FD * 60.0;
+
+    }
+
+    /**********************************************************************/
+    /*  Find Month, Day, given Day of Year                                */
+    /*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+    /*  Chapter 7, pp. 62, 66                                             */
+
+    void SimCoordinateTransformations::DOY2MD(int16_t Year, int16_t DayOfYear, int16_t &Month, int16_t &Day)
+    {
+          int16_t K;
+
+          if (Year % 4 == 0) 
+          {
+              if (Year % 100 == 0) 
+              {
+                  if (Year % 400 == 0)
+                  {
+                      K = 1;
+                  }
+                  else 
+                  {
+                      K = 2;
+                  }
+              }
+              else
+              {
+                  K = 1;
+              }
+          }
+          else 
+          {
+             K = 2;
+          }
+
+          if (DayOfYear < 32) 
+          {
+             Month = 1;
+          }
+          else 
+          {
+             Month = (int16_t) (9.0*(K+DayOfYear)/275.0+0.98);
+          }
+
+          Day = DayOfYear - 275*(Month)/9 + K*(((Month)+9)/12) + 30;
+
+    }
+
+    /**********************************************************************/
+    /* Convert Year, Month, Day, Hour, Minute and Second to               */
+    /* "Absolute Time", i.e. seconds elapsed since J2000 epoch.           */
+    /* J2000 = 2451545.0 TT  =  01 Jan 2000 12:00:00.00 TT                */
+    /* Year, Month, Day assumed in Gregorian calendar. (Not true < 1582)  */
+    /* Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.   */
+    /* This function is agnostic to the TT-to-UTC offset.  You get out    */
+    /* what you put in. */
+
+    double SimCoordinateTransformations::DateToAbsTime(int32_t Year, int32_t Month, int32_t Day, int32_t Hour,
+       int32_t Minute, double Second)
+    {
+          int32_t A,B;
+          double Days;
+
+          if (Month < 3) 
+          {
+             Year--;
+             Month+=12;
+          }
+
+          A = Year/100;
+          B = 2 - A + A/4;
+
+          /* Days since J2000 Epoch (01 Jan 2000 12:00:00.0) */
+          Days = floor(365.25*(Year+4716))
+                      + floor(30.6001*(Month+1))
+                      + Day + B - 1524.5 - 2451545.0;
+
+          /* Add fractional day */
+          return(86400.0*Days + 3600.0*((double) Hour)
+             + 60.0*((double) Minute) + Second);
+    }
+
+    /**********************************************************************/
+    /* GPS Epoch is 6 Jan 1980 00:00:00.0 which is JD = 2444244.5         */
+    /* GPS Time is expressed in weeks and seconds                         */
+    /* GPS Time rolls over every 1024 weeks                               */
+    /* This function requires JD in TT                                    */
+    void SimCoordinateTransformations::JDToGpsTime(double JD, int32_t &GpsRollover, int16_t &GpsWeek, double &GpsSecond)
+    {
+          double DaysSinceEpoch, DaysSinceRollover, DaysSinceWeek;
+
+          DaysSinceEpoch = JD - 2444244.5;
+          GpsRollover = (int32_t) (DaysSinceEpoch/7168.0);
+          DaysSinceRollover = DaysSinceEpoch - 7168.0*((double) GpsRollover);
+          GpsWeek = (int32_t) (DaysSinceRollover/7.0);
+          DaysSinceWeek = DaysSinceRollover - 7.0*((double) GpsWeek);
+          GpsSecond = DaysSinceWeek*86400.0;
+    }
+
+    /* This function yields JD in TT                                      */
+    void SimCoordinateTransformations::GpsTimeToJD(int32_t GpsRollover, int16_t GpsWeek, double GpsSecond, double &JD)
+    {
+        JD = GpsRollover * 7168.0 + GpsWeek * 7.0 + GpsSecond/86400.0 + 2444244.5;
+    }
+
+    /* Fundamentals of Astrodynamics and Applications, 3rd edition, David A. Vallado,
+     * Space Technology Library, Microcosm Press / Springer, Hawthorne, CA / New York, NY, 2007.
+     * Section 3.4, Algorithm 12, p. 179 */
+    void SimCoordinateTransformations::ECEF2LLA(double x, double y, double z, double& phi_gd, double& lambda, double& h_ellp)
+    {
+        sim_logger->trace("SimCoordinateTransformations::ECEF2LLA:  Inputs: x = %12.4f, y = %12.4f, z = %12.4f",
+            x, y, z);
+        double r_I = x / SIM_CONSTANTS.R_plus;
+        double r_J = y / SIM_CONSTANTS.R_plus;
+        double r_K_sat = z / SIM_CONSTANTS.R_plus;
+
+        sim_logger->trace("SimCoordinateTransformations::ECEF2LLA:  Converted: r_I = %12.4f, r_J = %12.4f, r_K_sat = %12.4f",
+            r_I, r_J, r_K_sat);
+
+        double r_delta_sat, sin_alpha, cos_alpha, r, delta, r_delta, r_K, phi_gd_old, sin_phi_gd, C_plus, tan_phi_gd;
+        double tolerance = 0.000000001;
+
+        r = sqrt(r_I * r_I + r_J * r_J + r_K_sat * r_K_sat);
+        r_delta_sat = sqrt(r_I * r_I + r_J * r_J);
+        sin_alpha = r_J / r_delta_sat;
+        cos_alpha = r_I / r_delta_sat;
+
+        if (sin_alpha >= 0) 
+        { // 1st or 2nd quadrant, 0 <= alpha <= PI
+            lambda = acos(cos_alpha); // Result of acos is between 0 and PI
+        } 
+        else 
+        { // 3rd or 4th quadrant, 0 -PI < alpha < PI
+            lambda = asin(sin_alpha); // Result of asin is between -PI/2 and 0, so this is only correct if we are in 4th quadrant
+            if (cos_alpha < 0) 
+            { // 3rd quadrant, so we need to fix the result
+                lambda = -1 * SIM_CONSTANTS.PI - lambda;
+            }
+        }
+        lambda = lambda * 180.0 / SIM_CONSTANTS.PI; // convert to degrees for output
+
+        delta = asin(r_K_sat / r);
+        sim_logger->trace("SimCoordinateTransformations::ECEF2LLA:  Fixed Computations: r_delta_sat = %12.4f (%12.4f m), alpha = %12.8f, delta = %12.8f",
+            r_delta_sat, r_delta_sat * SIM_CONSTANTS.R_plus, lambda, delta * 180.0 / SIM_CONSTANTS.PI);
+
+
+        phi_gd = delta;
+        r_delta = r_delta_sat;
+        r_K = r_K_sat;
+
+        do {
+            sin_phi_gd = sin(phi_gd);
+
+            C_plus = 1 / sqrt(1 - SIM_CONSTANTS.e_plus * SIM_CONSTANTS.e_plus * sin_phi_gd * sin_phi_gd);
+            tan_phi_gd = (r_K + C_plus * SIM_CONSTANTS.e_plus * SIM_CONSTANTS.e_plus * sin_phi_gd) / r_delta;
+
+            phi_gd_old = phi_gd;
+            phi_gd = atan(tan_phi_gd);
+
+            sim_logger->trace("SimCoordinateTransformations::ECEF2LLA:  Iteration: C_plus = %12.8f, phi_gd = %12.8f (phi_gd_old = %12.8f), phi_gd - phi_gd_old = %12.8f",
+                C_plus, phi_gd * 180.0 / SIM_CONSTANTS.PI, phi_gd_old * 180.0 / SIM_CONSTANTS.PI, phi_gd - phi_gd_old);
+        } while ((phi_gd - phi_gd_old) > tolerance);
+
+        h_ellp = (r_delta / cos(phi_gd) - C_plus) * SIM_CONSTANTS.R_plus;
+
+        phi_gd = phi_gd * 180.0 / SIM_CONSTANTS.PI; // convert to degrees for output
+
+        sim_logger->trace("SimCoordinateTransformations::ECEF2LLA:  Outputs: lambda = %12.8f, phi_gd = %12.8f, h_ellp = %12.4f",
+            lambda, phi_gd, h_ellp);
+    }
+
+    /*
+    ** HELPERS FOR IN SUN CALCULATIONS - pulled from utilities.rb
+    */
+
+    /*
+    ** Q2C - Turns Quaternion Vector into Matrix form
+    */
+    void SimCoordinateTransformations::Q2C(std::vector<double> quaternion, std::vector<std::vector<double>>& matrix)
+    {  
+        //calculate necessary numbers
+        double twoQ00 = 2.0*quaternion[0]*quaternion[0];
+        double twoQ11 = 2.0*quaternion[1]*quaternion[1];
+        double twoQ22 = 2.0*quaternion[2]*quaternion[2];
+        double twoQ01 = 2.0*quaternion[0]*quaternion[1];
+        double twoQ02 = 2.0*quaternion[0]*quaternion[2];
+        double twoQ03 = 2.0*quaternion[0]*quaternion[3];
+        double twoQ12 = 2.0*quaternion[1]*quaternion[2];
+        double twoQ13 = 2.0*quaternion[1]*quaternion[3];
+        double twoQ23 = 2.0*quaternion[2]*quaternion[3];
+        
+        //initialize output to an identity matrix 
+        matrix.resize(3, std::vector<double>(3));
+
+        matrix[0][0] = 1.0;
+        matrix[1][1] = 1.0;
+        matrix[2][2] = 1.0;
+
+        matrix[0][0] = 1.0-(twoQ11+twoQ22);
+        matrix[0][1] = twoQ01+twoQ23;
+        matrix[0][2] = twoQ02-twoQ13;
+        matrix[1][0] = twoQ01-twoQ23;
+        matrix[1][1] = 1.0-(twoQ22+twoQ00);
+        matrix[1][2] = twoQ12+twoQ03;
+        matrix[2][0] = twoQ02+twoQ13;
+        matrix[2][1] = twoQ12-twoQ03;
+        matrix[2][2] = 1.0-(twoQ00+twoQ11);
+    }
+
+    /*
+    ** MTxV - Multiplies Matrix Transverse by Vector
+    */
+    void SimCoordinateTransformations::MTxV(std::vector<std::vector<double>> matrix, std::vector<double> vector, std::vector<double>& output)
+    {   
+        output.resize(3);
+
+        output[0] = matrix[0][0]*vector[0] + matrix[1][0]*vector[1] + matrix[2][0]*vector[2];
+        output[1] = matrix[0][1]*vector[0] + matrix[1][1]*vector[1] + matrix[2][1]*vector[2];
+        output[2] = matrix[0][2]*vector[0] + matrix[1][2]*vector[1] + matrix[2][2]*vector[2];
+    }
+
+    /*
+    ** Calculate the Dot Product of the input Vectors
+    */
+    double SimCoordinateTransformations::dot(std::vector<double> u, std::vector<double> v)
+    {
+        return u[0]*v[0] + u[1]*v[1] + u[2]*v[2];
+    }
+
+    /*
+    ** norm - Gives the scalar value of a vector
+    */
+    double SimCoordinateTransformations::norm(std::vector<double> u)
+    {
+        return sqrt(dot(u,u));
+    }
+
+    /*
+    ** SxV - Multiplies a Vector by a Scalar and gives the resultant Vector
+    */
+    void SimCoordinateTransformations::SxV(double scalar, std::vector<double> vector, std::vector<double>& output)
+    {   
+        output.resize(3);
+
+        output[0] = scalar*vector[0];
+        output[1] = scalar*vector[1];
+        output[2] = scalar*vector[2];
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+
+}
+```
+
+### `sim_data_42socket_provider.cpp`
+
+**경로:** `sims/sim_common/src/sim_data_42socket_provider.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <unistd.h>
+//#include <fcntl.h>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    //REGISTER_DATA_PROVIDER(SimData42SocketProvider,"42SOCKET");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+
+    SimData42SocketProvider::SimData42SocketProvider(const boost::property_tree::ptree& config)
+        : SimIDataProvider(config),
+          _server_host(config.get("simulator.hardware-model.data-provider.hostname", "localhost")),
+          _server_command_port(config.get("simulator.hardware-model.data-provider.command-port", 0)), // default is no command port needed (0)... e.g. for sensor only hardware like IMUs, Star Trackers, etc.
+          _max_connection_attempts(config.get("simulator.hardware-model.data-provider.max-connection-attempts", 5)),
+          _retry_wait_seconds(config.get("simulator.hardware-model.data-provider.retry-wait-seconds", 5)),
+          _absolute_start_time(config.get("common.absolute-start-time", 552110400.0)), _telemetry_socket_client_thread(NULL), _not_terminating(true), _command_port_connected(false)
+    {
+        SimData42SocketProvider::connect_command_socket_as_42_socket_client();
+    }
+
+    SimData42SocketProvider::~SimData42SocketProvider(void)
+    {
+        _not_terminating = false;
+        if (_telemetry_socket_client_thread != NULL) {
+            _telemetry_socket_client_thread->join();
+            delete _telemetry_socket_client_thread;
+        }
+        close(_telemetry_socket_fd); // close the socket
+        close(_command_socket_fd); // close the socket
+    }
+
+    /*************************************************************************
+     * Non-mutating public worker methods
+     *************************************************************************/
+
+     void SimData42SocketProvider::send_command_to_socket(const std::string& message)
+     {
+        if (_command_port_connected) {
+            ssize_t bytes_sent = send(_command_socket_fd, message.c_str(), message.length(), 0);
+            if (bytes_sent == (ssize_t)message.length()) {
+                sim_logger->debug("SimData42SocketProvider::send_command_to_socket:  Successfully sent command to host %s, port %u.  Command %s", _server_host.c_str(), _server_command_port, message.c_str());
+            } else {
+                sim_logger->error("SimData42SocketProvider::send_command_to_socket:  Unsuccessful sending command to host %s, port %u.  Bytes to send %lu, bytes sent/return value %lu.  Command %s",
+                    _server_host.c_str(), _server_command_port, message.length(), bytes_sent, message.c_str());
+            }
+        } else {
+            sim_logger->error("SimData42SocketProvider::send_command_to_socket:  Not connected.  Not sending command to host %s, port %u.  Command %s", _server_host.c_str(), _server_command_port, message.c_str());
+        }
+     }
+
+    /*************************************************************************
+     * Protected mutating worker methods
+     *************************************************************************/
+
+    void SimData42SocketProvider::connect_reader_thread_as_42_socket_client(std::string server_host, uint16_t server_telemetry_port)
+    {
+        bool connected = connect_as_42_socket_client(server_host, server_telemetry_port, _telemetry_socket_fd);
+        if (connected) {
+            _telemetry_socket_client_thread = new std::thread(std::bind(&SimData42SocketProvider::telemetry_socket_reader, this), NULL); // Spawn thread to listen to/read from socket
+            sim_logger->debug("SimData42SocketProvider::connect_reader_thread_as_42_socket_client:  Successfully connected TELEMETRY host %s, port %u to 42 and started listener thread!",
+                server_host.c_str(), server_telemetry_port);
+        } else {
+            sim_logger->error("SimData42SocketProvider::connect_reader_thread_as_42_socket_client:  Unable to connect TELEMETRY host %s, port %u to 42, no thread will be started to listen :-(",
+                server_host.c_str(), server_telemetry_port);
+        }
+        return;
+    }
+
+    /*************************************************************************
+     * Private helper methods
+     *************************************************************************/
+
+    void SimData42SocketProvider::connect_command_socket_as_42_socket_client(void)
+    {
+        if (_server_command_port > 0) {
+            _command_port_connected = connect_as_42_socket_client(_server_host, _server_command_port, _command_socket_fd);
+            if (_command_port_connected) sim_logger->debug("SimData42SocketProvider::SimData42SocketProvider:  Successfully connected COMMAND host %s, port %u to 42!", _server_host.c_str(), _server_command_port);
+            else sim_logger->error("SimData42SocketProvider::SimData42SocketProvider:  Unable to connect COMMAND host %s, port %u to 42 :-(", _server_host.c_str(), _server_command_port);
+        } else sim_logger->debug("SimData42SocketProvider::SimData42SocketProvider:  No COMMAND port (%u) to 42 requested, none connected.", _server_command_port);
+    }
+
+    bool SimData42SocketProvider::connect_as_42_socket_client(std::string a_42_host, uint16_t a_42_port, int &socket_fd)
+    {
+        // http://stackoverflow.com/questions/8257714/how-to-convert-an-int-to-string-in-c/8257728#8257728
+        int length = (int)((ceil(log10(a_42_port))+1)*sizeof(char));
+        char a_42_port_string[length];
+        snprintf(a_42_port_string, length, "%ud", a_42_port);
+
+        // http://beej.us/guide/bgnet/output/html/singlepage/bgnet.html
+        struct addrinfo hints, *servinfo, *p;
+        int rv;
+
+        memset(&hints, 0, sizeof hints);
+        hints.ai_family = AF_UNSPEC;
+        hints.ai_socktype = SOCK_STREAM;
+
+        for (int i = 0; i < _max_connection_attempts + 1; i++)
+        {
+            if ((rv = getaddrinfo(a_42_host.c_str(), a_42_port_string, &hints, &servinfo)) != 0)
+            {
+                sim_logger->error("SimData42SocketProvider::connect_as_42_socket_client:  Error getting address for host %s, port %u: %s", a_42_host.c_str(), a_42_port, gai_strerror(rv));
+                return false;
+            }
+
+            // loop through all the results and connect to the first we can
+            for(p = servinfo; p != NULL; p = p->ai_next)
+            {
+                if ((socket_fd = socket(p->ai_family, p->ai_socktype, p->ai_protocol)) == -1)
+                {
+                    sim_logger->warning("SimData42SocketProvider::connect_as_42_socket_client:  Continuing, but could not create socket for host %s, port %u: %s", a_42_host.c_str(), a_42_port, strerror(errno));
+                    continue;
+                }
+                if (connect(socket_fd, p->ai_addr, p->ai_addrlen) == -1)
+                {
+                    close(socket_fd);
+                    sim_logger->warning("SimData42SocketProvider::connect_as_42_socket_client:  Continuing, but could not connect socket for host %s, port %u: %s", a_42_host.c_str(), a_42_port, strerror(errno));
+                    continue;
+                } else break; // got a good connection
+            }
+
+            if (p != NULL) // got a good connection
+            {
+                break;
+            } else
+            {
+                if (i == _max_connection_attempts)
+                {
+                    sim_logger->error("SimData42SocketProvider::connect_as_42_socket_client:  Maximum number of connection attempts reached.   Host %s, port %u failed to connect!", a_42_host.c_str(), a_42_port);
+                    return false;
+                }
+                else
+                {
+                    sim_logger->warning("SimData42SocketProvider::connect_as_42_socket_client:  Warning... failed to connect host %s, port %d... retrying in %u seconds.", a_42_host.c_str(), a_42_port,
+                                        _retry_wait_seconds);
+                    sleep(_retry_wait_seconds);
+                }
+            }
+        }
+        return true; // connection succeeded... may have taken a while, but it succeeded
+    }
+
+    void SimData42SocketProvider::telemetry_socket_reader(void)
+    {
+        std::vector<std::string> message;
+
+        while (_not_terminating)
+        {
+            read_telemetry_socket_data(message);
+
+            {
+                std::lock_guard<std::mutex> lock(_data_point_mutex);
+                Sim42DataPoint dp(message);
+                _data_point = dp;
+                // Lock is released when scope ends
+            }
+
+            //sim_logger->debug("SimData42SocketProvider::socket_reader:  Data Point=%s\n", _data_point.to_formatted_string().c_str());
+        }
+    }
+
+    void SimData42SocketProvider::read_telemetry_socket_data(std::vector<std::string>& message)
+    {
+        long Done = 0;
+        char line[512] = "Blank";
+        char *LineIsValid;
+
+        message.clear();
+        while(!Done)
+        {
+            LineIsValid = rgets(line, 511, _telemetry_socket_fd);
+            sim_logger->trace("SimData42SocketProvider::read_socket_data:  Line=%s", line);
+            if (LineIsValid == NULL)
+            {
+                Done = 1;
+            } else {
+                message.push_back(line);
+                if (!strncmp(line,"[ENDMSG]",8)) Done = 1;
+            }
+        }
+    }
+
+    char SimData42SocketProvider::rgetc(int fd)
+    {
+        char buf;
+        if (read(fd, &buf, 1) != 1)
+            return EOF;
+        return buf;
+    }
+
+    char* SimData42SocketProvider::rgets(char *s, int n, int fd) /* K&R, 2nd, p. 165 */
+    {
+        register int c;
+        register char *cs;
+
+        cs = s;
+        while (--n > 0 && (c = rgetc(fd)) != EOF) // ssize_t read(int fd, void *buf, size_t count);
+            if ((*cs++ = c) == '\n')
+                break;
+        *cs = '\0';
+        if (cs != s) *(cs-1) = '\0'; // Hack off the \n
+        return (c == EOF && cs == s) ? NULL : s;
+    }
+
+}
+```
+
+### `sim_data_provider_factory.cpp`
+
+**경로:** `sims/sim_common/src/sim_data_provider_factory.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+// See:  http://www.codeproject.com/Articles/751869/Abstract-Factory-Step-by-Step-Implementation-in-Cp
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_data_provider_factory.hpp>
+#include <sim_i_data_provider_maker.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+	SimDataProviderFactory& SimDataProviderFactory::Instance()
+	{
+		// So called Meyers Singleton implementation,
+		// In C++ 11 it is in fact thread-safe
+		// In older versions you should ensure thread-safety here
+		static SimDataProviderFactory factory;
+		return factory;
+	}
+
+	void SimDataProviderFactory::RegisterMaker(const std::string& key, SimIDataProviderMaker* maker)
+	{
+		// Validate uniquness and add to the map
+		if (_makers.find(key) != _makers.end())
+		{
+            if (sim_logger != nullptr) 
+			{
+                sim_logger->warning("SimDataProviderFactory::RegisterMaker:  Ignoring key.  Multiple data providers for given key:  %s",
+                    key.c_str());
+            }
+		} 
+		else 
+		{
+            _makers[key] = maker;
+            if (sim_logger != nullptr) 
+			{
+                sim_logger->info("SimDataProviderFactory::RegisterMaker:  Registered data provider for key %s", key.c_str());
+            }
+		}
+	}
+
+    SimIDataProvider* SimDataProviderFactory::Create(const std::string& key, const boost::property_tree::ptree& config) const
+	{
+		// Look up the maker by nodes name
+		std::map<std::string, SimIDataProviderMaker*>::const_iterator i = _makers.find(key);
+		if (i == _makers.end())
+		{
+            sim_logger->fatal("SimDataProviderFactory::Create:  Unrecognized data provider key:  %s", key.c_str());
+			throw new std::runtime_error("SimDataProviderFactory::Create:  Unrecognized data provider key:  " + key);
+		}
+		sim_logger->info("SimDataProviderFactory::Create:  Creating data provider for key %s", key.c_str());
+		SimIDataProviderMaker* maker = i->second;
+		// Invoke create polymorphically
+		return maker->Create(config);
+	}
+}
+```
+
+### `sim_data_shmem_provider.cpp`
+
+**경로:** `sims/sim_common/src/sim_data_shmem_provider.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <sim_data_shmem_provider.hpp>
+
+#include <ItcLogger/Logger.hpp>
+
+namespace Nos3
+{
+    REGISTER_DATA_PROVIDER(SimDataShmemProvider,"SHMEMPROVIDER");
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors / Destructors
+     *************************************************************************/
+    SimDataShmemProvider::SimDataShmemProvider(const boost::property_tree::ptree& config) : SimIDataProvider(config)
+    {
+        const std::string shm_name = config.get("simulator.hardware-model.shared-memory-name", "Blackboard");
+        const size_t shm_size = sizeof(BlackboardData);
+        bip::shared_memory_object shm(bip::open_or_create, shm_name.c_str(), bip::read_write);
+        shm.truncate(shm_size);
+        bip::mapped_region shm_region(shm, bip::read_write);
+        _shm_region = std::move(shm_region); // don't let this go out of scope/get destroyed
+        _blackboard_data = static_cast<BlackboardData*>(_shm_region.get_address());    
+    }
+}
+```
+
+### `sim_hardware_model_factory.cpp`
+
+**경로:** `sims/sim_common/src/sim_hardware_model_factory.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+// See:  http://www.codeproject.com/Articles/751869/Abstract-Factory-Step-by-Step-Implementation-in-Cp
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_hardware_model_factory.hpp>
+#include <sim_i_hardware_model_maker.hpp>
+#include <sim_i_hardware_model.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+	SimHardwareModelFactory& SimHardwareModelFactory::Instance()
+	{
+		// So called Meyers Singleton implementation,
+		// In C++ 11 it is in fact thread-safe
+		// In older versions you should ensure thread-safety here
+		static SimHardwareModelFactory factory;
+		return factory;
+	}
+
+	void SimHardwareModelFactory::RegisterMaker(const std::string& key, SimIHardwareModelMaker* maker)
+	{
+		// Validate uniquness and add to the map
+		if (_makers.find(key) != _makers.end())
+		{
+            if (sim_logger != nullptr) 
+			{
+                sim_logger->warning("SimHardwareModelFactory::RegisterMaker:  Ignoring key.  Multiple hardware models for given key:  %s",
+                    key.c_str());
+            }
+		} 
+		else 
+		{
+            _makers[key] = maker;
+            if (sim_logger != nullptr) 
+			{
+                sim_logger->info("SimHardwareModelFactory::RegisterMaker:  Registered hardware model for key %s", key.c_str());
+            }
+		}
+	}
+
+	SimIHardwareModel* SimHardwareModelFactory::Create(const std::string& key, const boost::property_tree::ptree& config) const
+	{
+		// Look up the maker by nodes name
+		std::map<std::string, SimIHardwareModelMaker*>::const_iterator i = _makers.find(key);
+		if (i == _makers.end())
+		{
+            sim_logger->fatal("SimHardwareModelFactory::Create:  Unrecognized hardware model key:  %s", key.c_str());
+			throw new std::runtime_error("SimHardwareModelFactory::Create:  Unrecognized hardware model key:  " + key);
+		}
+		sim_logger->info("SimHardwareModelFactory::Create:  Creating hardware model for key %s", key.c_str());
+		SimIHardwareModelMaker* maker = i->second;
+		// Invoke create polymorphically
+		return maker->Create(config);
+	}
+}
+```
+
+### `sim_shmem_data_point.cpp`
+
+**경로:** `sims/sim_common/src/sim_shmem_data_point.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2017 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <iomanip>
+#include <limits>
+
+#include <boost/algorithm/string.hpp>
+#include <boost/tokenizer.hpp>
+#include <boost/lexical_cast.hpp>
+
+#include <ItcLogger/Logger.hpp>
+
+#include <sim_shmem_data_point.hpp>
+
+namespace Nos3
+{
+
+    extern ItcLogger::Logger *sim_logger;
+
+    /*************************************************************************
+     * Constructors
+     *************************************************************************/
+    SimShmemDataPoint::SimShmemDataPoint(double svb[3], double bvb[3], double Hvb[3], double GyroRate[3], int CSSValid[6], double CSSIllum[6], int FSSValid, 
+        double FSSSunAng[2], int STValid, double STqn[4], double GPSPosN[3], double GPSVelN[3], double AccelAcc[3], double WhlH[3])
+    {
+        _svb[0] = svb[0];
+        _svb[1] = svb[1];
+        _svb[2] = svb[2];
+        _bvb[0] = bvb[0];
+        _bvb[1] = bvb[1];
+        _bvb[2] = bvb[2];
+        _Hvb[0] = Hvb[0];
+        _Hvb[1] = Hvb[1];
+        _Hvb[2] = Hvb[2];
+        _GyroRate[0] = GyroRate[0];
+        _GyroRate[1] = GyroRate[1];
+        _GyroRate[2] = GyroRate[2];
+        _CSSValid[0] = CSSValid[0];
+        _CSSValid[1] = CSSValid[1];
+        _CSSValid[2] = CSSValid[2];
+        _CSSValid[3] = CSSValid[3];
+        _CSSValid[4] = CSSValid[4];
+        _CSSValid[5] = CSSValid[5];
+        _CSSIllum[0] = CSSIllum[0];
+        _CSSIllum[1] = CSSIllum[1];
+        _CSSIllum[2] = CSSIllum[2];
+        _CSSIllum[3] = CSSIllum[3];
+        _CSSIllum[4] = CSSIllum[4];
+        _CSSIllum[5] = CSSIllum[5];
+        _FSSValid = FSSValid;
+        _FSSSunAng[0] = FSSSunAng[0];
+        _FSSSunAng[1] = FSSSunAng[1];
+        _STValid = STValid;
+        _STqn[0] = STqn[0];
+        _STqn[1] = STqn[1];
+        _STqn[2] = STqn[2];
+        _STqn[3] = STqn[3];
+        _GPSPosN[0] = GPSPosN[0];
+        _GPSPosN[1] = GPSPosN[1];
+        _GPSPosN[2] = GPSPosN[2];
+        _GPSVelN[0] = GPSVelN[0];
+        _GPSVelN[1] = GPSVelN[1];
+        _GPSVelN[2] = GPSVelN[2];
+        _AccelAcc[0] = AccelAcc[0];
+        _AccelAcc[1] = AccelAcc[1];
+        _AccelAcc[2] = AccelAcc[2];
+        _WhlH[0] = WhlH[0];
+        _WhlH[1] = WhlH[1];
+        _WhlH[2] = WhlH[2];
+    }
+}
+```
+
+### `single_simulator.cpp`
+
+**경로:** `sims/sim_common/src/single_simulator.cpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2021 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <iostream>
+#include <ItcLogger/Logger.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+    ItcLogger::Logger *sim_logger;
+}
+
+int
+main(int argc, char *argv[])
+{
+    // Determine the configuration and run the simulator
+    Nos3::SimConfig sc(argc, argv);
+    std::string simulator_name = sc.get_simulator();
+    Nos3::sim_logger->info("main:  \"%s\" simulator starting", simulator_name.c_str());
+    sc.run_simulator(simulator_name);
+    Nos3::sim_logger->info("main:  \"%s\" simulator terminating", simulator_name.c_str());
+    return 0;
+}
+```

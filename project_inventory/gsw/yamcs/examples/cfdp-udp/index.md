@@ -3,18 +3,73 @@
 
 **경로:** `gsw/yamcs/examples/cfdp-udp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/examples/cfdp-udp/src/`](src/index) — 폴더
-- [`gsw/yamcs/examples/cfdp-udp/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/examples/cfdp-udp/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/examples/cfdp-udp/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs.examples</groupId>
+    <artifactId>examples</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>cfdp-udp</artifactId>
+  <packaging>jar</packaging>
+
+  <name>Yamcs :: Examples :: CFDP-UDP</name>
+  <description>
+    Example demonstrating the use of the CCSDS File Delivery Protocol over UDP.
+  </description>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>simulator</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-web</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```
+
+### `README.md`
+
+**경로:** `gsw/yamcs/examples/cfdp-udp/README.md`
+
+
+```markdown
+This example demonstrates the usage of the CCSDS File Delivery Protocol over UDP. 
+
+It expects two external UDP connections (incoming and outgoing) that sends and receives the raw CFDP PDUs.
+The _yamcs.cfdp.yaml_ configuration file defines the TM/TC UDP links, processors, and streams that make it possible.
+
+Be sure to check the _src/main/yamcs/etc/extra_streams.sql_ to see how the CFDP packets are inserted/extracted in the TM/TC streams,
+as well as _src/main/yamcs/cfdp-pdu.xls_ that describes the packet structure and data types for insertion into the MDB container.
+```

@@ -3,14 +3,78 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/resources/auth/templates/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `authorize.html`
 
-file--authorize.html
+**경로:** `gsw/yamcs/yamcs-core/src/main/resources/auth/templates/authorize.html`
+
+
+```html
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Yamcs Mission Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Yamcs Mission Control">
+  <meta name="application-name" content="Yamcs">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="apple-touch-icon" sizes="180x180" href="{{ contextPath }}/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ contextPath }}/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="{{ contextPath }}/favicon-16x16.png">
+  <link rel="mask-icon" href="{{ contextPath }}/safari-pinned-tab.svg" color="#0000001">
+  <link rel="shortcut icon" href="{{ contextPath }}/favicon.ico">
+  <link rel="stylesheet" href="{{ contextPath }}/auth/assets/auth.css">
+</head>
+
+<body>
+  <div class="wrapper">
+    <div class="grid">
+      <div class="logo">
+        <a href="{{ contextPath }}/">
+          <img src="{{ contextPath }}/auth/assets/yamcs300.png" style="width: 200px">
+        </a>
+      </div>
+      <div class="login-panel">
+        <div class="login-form">
+          <h3>Sign in to your account</h3>
+          <form method="post" onsubmit="login.disabled = true; return true;" action="{{ contextPath }}/auth/actions/login">
+            <label>
+              Username
+              <input type="text" name="username" autofocus autocomplete="off">
+            </label>
+            <br>
+            <label>
+              Password
+              <input type="password" name="password" autocomplete="off">
+            </label>
+
+            <br>
+
+            {% if errorMessage %}
+            <p class="error-message">
+              {{ errorMessage }}
+            </p>
+            {% endif %}
+
+            <input type="hidden" name="client_id" value="{{ request.client_id | escape }}">
+            <input type="hidden" name="redirect_uri" value="{{ request.redirect_uri | escape }}">
+          
+            {% if request.state %}
+            <input type="hidden" name="state" value="{{ request.state | escape }}">
+            {% endif %}
+          
+            <div style="text-align: right">
+              <input name="login" type="submit" value="Sign in">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
 ```
-
-## 항목
-
-- [`gsw/yamcs/yamcs-core/src/main/resources/auth/templates/authorize.html`](file--authorize.html) — UTF-8 텍스트 파일 본문 포함

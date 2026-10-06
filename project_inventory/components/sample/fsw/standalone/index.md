@@ -3,22 +3,471 @@
 
 **경로:** `components/sample/fsw/standalone/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 build/index
-file--CMakeLists.txt
-file--device_cfg.h
-file--sample_checkout.c
-file--sample_checkout.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/sample/fsw/standalone/build/`](build/index) — 폴더
-- [`components/sample/fsw/standalone/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/standalone/device_cfg.h`](file--device_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/standalone/sample_checkout.c`](file--sample_checkout.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/sample/fsw/standalone/sample_checkout.h`](file--sample_checkout.h) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `components/sample/fsw/standalone/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+
+project (sample_checkout)
+
+if (NOT DEFINED TGTNAME)
+  message(FATAL_ERROR "TGTNAME must be defined on the cmake command line (e.g. \"-DTGTNAME=cpu1\")")
+endif()
+
+include(../../../ComponentSettings.cmake)
+
+if(${TGTNAME} STREQUAL cpu1)
+  find_path(_ITC_CMAKE_MODULES_
+    NAMES FindITC_Common.cmake
+    PATHS ${ITC_CMAKE_MODULES}
+            ${ITC_DEV_ROOT}/cmake/modules
+            $ENV{ITC_DEV_ROOT}/cmake/modules
+            /usr/local/cmake/modules
+            /usr/cmake/modules)
+  if(NOT _ITC_CMAKE_MODULES_)
+    message(WARNING "Unable to find ITC CMake Modules")
+  endif()
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+  find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+endif()
+
+include_directories("./")
+include_directories("../cfs/platform_inc")
+include_directories("../cfs/src")
+include_directories("../shared")
+include_directories("../../../../fsw/apps/hwlib/fsw/public_inc")
+
+set(sample_checkout_src
+  sample_checkout.c 
+  ../shared/sample_device.c
+)
+
+if(${TGTNAME} STREQUAL cpu1)
+  include_directories("../../../../fsw/apps/hwlib/sim/inc")
+  set(sample_checkout_src 
+    ${sample_checkout_src}
+    ../../../../fsw/apps/hwlib/sim/src/libuart.c
+    ../../../../fsw/apps/hwlib/sim/src/libcan.c
+    ../../../../fsw/apps/hwlib/sim/src/libi2c.c
+    ../../../../fsw/apps/hwlib/sim/src/libspi.c
+    ../../../../fsw/apps/hwlib/sim/src/nos_link.c
+  )
+  set(sample_checkout_libs
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+  )
+endif()
+if(${TGTNAME} STREQUAL cpu2)
+  set(sample_checkout_src 
+    ${sample_checkout_src}
+    ../../../../fsw/apps/hwlib/fsw/linux/libuart.c
+  )
+endif()
+
+add_executable(sample_checkout ${sample_checkout_src})
+target_link_libraries(sample_checkout ${sample_checkout_libs})
+
+if(${TGTNAME} STREQUAL cpu1)
+  set_target_properties(sample_checkout PROPERTIES COMPILE_FLAGS "-g" LINK_FLAGS "-g")
+endif()
+```
+
+### `device_cfg.h`
+
+**경로:** `components/sample/fsw/standalone/device_cfg.h`
+
+
+```c
+#ifndef _SAMPLE_CHECKOUT_DEVICE_CFG_H_
+#define _SAMPLE_CHECKOUT_DEVICE_CFG_H_
+
+/*
+** SAMPLE Checkout Configuration
+*/
+#define SAMPLE_CFG
+/* Note: NOS3 uart requires matching handle and bus number */
+#define SAMPLE_CFG_STRING      "/dev/usart_16"
+#define SAMPLE_CFG_HANDLE      16
+#define SAMPLE_CFG_BAUDRATE_HZ 115200
+#define SAMPLE_CFG_MS_TIMEOUT  250
+#define SAMPLE_CFG_DEBUG
+
+#endif /* _SAMPLE_CHECKOUT_DEVICE_CFG_H_ */
+```
+
+### `sample_checkout.c`
+
+**경로:** `components/sample/fsw/standalone/sample_checkout.c`
+
+
+```c
+/*******************************************************************************
+** File: sample_checkout.c
+**
+** Purpose:
+**   This checkout can be run without cFS and is used to quickly develop and
+**   test functions required for a specific component.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "sample_checkout.h"
+
+/*
+** Global Variables
+*/
+uart_info_t              SampleUart;
+SAMPLE_Device_HK_tlm_t   SampleHK;
+SAMPLE_Device_Data_tlm_t SampleData;
+
+/*
+** Component Functions
+*/
+void print_help(void)
+{
+    printf(PROMPT "command [args]\n"
+                  "---------------------------------------------------------------------\n"
+                  "help                               - Display help                    \n"
+                  "exit                               - Exit app                        \n"
+                  "noop                               - No operation command to device  \n"
+                  "  n                                - ^                               \n"
+                  "hk                                 - Request device housekeeping     \n"
+                  "  h                                - ^                               \n"
+                  "sample                             - Request sample data             \n"
+                  "  s                                - ^                               \n"
+                  "cfg #                              - Send configuration #            \n"
+                  "  c #                              - ^                               \n"
+                  "\n");
+}
+
+int get_command(const char *str)
+{
+    int  status = CMD_UNKNOWN;
+    char lcmd[MAX_INPUT_TOKEN_SIZE];
+    strncpy(lcmd, str, MAX_INPUT_TOKEN_SIZE);
+
+    /* Convert command to lower case */
+    to_lower(lcmd);
+
+    if (strcmp(lcmd, "help") == 0)
+    {
+        status = CMD_HELP;
+    }
+    else if (strcmp(lcmd, "exit") == 0)
+    {
+        status = CMD_EXIT;
+    }
+    else if (strcmp(lcmd, "noop") == 0)
+    {
+        status = CMD_NOOP;
+    }
+    else if (strcmp(lcmd, "n") == 0)
+    {
+        status = CMD_NOOP;
+    }
+    else if (strcmp(lcmd, "hk") == 0)
+    {
+        status = CMD_HK;
+    }
+    else if (strcmp(lcmd, "h") == 0)
+    {
+        status = CMD_HK;
+    }
+    else if (strcmp(lcmd, "sample") == 0)
+    {
+        status = CMD_SAMPLE;
+    }
+    else if (strcmp(lcmd, "s") == 0)
+    {
+        status = CMD_SAMPLE;
+    }
+    else if (strcmp(lcmd, "cfg") == 0)
+    {
+        status = CMD_CFG;
+    }
+    else if (strcmp(lcmd, "c") == 0)
+    {
+        status = CMD_CFG;
+    }
+    return status;
+}
+
+int process_command(int cc, int num_tokens, char tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE])
+{
+    int32_t  status      = OS_SUCCESS;
+    int32_t  exit_status = OS_SUCCESS;
+    uint32_t config;
+
+    /* Process command */
+    switch (cc)
+    {
+        case CMD_HELP:
+            print_help();
+            break;
+
+        case CMD_EXIT:
+            exit_status = OS_ERROR;
+            break;
+
+        case CMD_NOOP:
+            if (check_number_arguments(num_tokens, 0) == OS_SUCCESS)
+            {
+                status = SAMPLE_CommandDevice(&SampleUart, SAMPLE_DEVICE_NOOP_CMD, 0);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("NOOP command success\n");
+                }
+                else
+                {
+                    OS_printf("NOOP command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_HK:
+            if (check_number_arguments(num_tokens, 0) == OS_SUCCESS)
+            {
+                status = SAMPLE_RequestHK(&SampleUart, &SampleHK);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("SAMPLE_RequestHK command success\n");
+                }
+                else
+                {
+                    OS_printf("SAMPLE_RequestHK command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_SAMPLE:
+            if (check_number_arguments(num_tokens, 0) == OS_SUCCESS)
+            {
+                status = SAMPLE_RequestData(&SampleUart, &SampleData);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("SAMPLE_RequestData command success\n");
+                }
+                else
+                {
+                    OS_printf("SAMPLE_RequestData command failed!\n");
+                }
+            }
+            break;
+
+        case CMD_CFG:
+            if (check_number_arguments(num_tokens, 1) == OS_SUCCESS)
+            {
+                config = atoi(tokens[0]);
+                status = SAMPLE_CommandDevice(&SampleUart, SAMPLE_DEVICE_CFG_CMD, config);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("Configuration command success with value %u\n", config);
+                }
+                else
+                {
+                    OS_printf("Configuration command failed!\n");
+                }
+            }
+            break;
+
+        default:
+            OS_printf("Invalid command format, type 'help' for more info\n");
+            break;
+    }
+    return exit_status;
+}
+
+int main(int argc, char *argv[])
+{
+    int     status = OS_SUCCESS;
+    char    input_buf[MAX_INPUT_BUF];
+    char    input_tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE];
+    int     num_input_tokens;
+    int     cmd;
+    char   *token_ptr;
+    uint8_t run_status = OS_SUCCESS;
+
+/* Initialize HWLIB */
+#ifdef _NOS_ENGINE_LINK_
+    nos_init_link();
+#endif
+
+    /* Open device specific protocols */
+    SampleUart.deviceString = SAMPLE_CFG_STRING;
+    SampleUart.handle       = SAMPLE_CFG_HANDLE;
+    SampleUart.isOpen       = PORT_CLOSED;
+    SampleUart.baud         = SAMPLE_CFG_BAUDRATE_HZ;
+    status                  = uart_init_port(&SampleUart);
+    if (status == OS_SUCCESS)
+    {
+        printf("UART device %s configured with baudrate %d \n", SampleUart.deviceString, SampleUart.baud);
+    }
+    else
+    {
+        printf("UART device %s failed to initialize! \n", SampleUart.deviceString);
+        run_status = OS_ERROR;
+    }
+
+    /* Main loop */
+    print_help();
+    while (run_status == OS_SUCCESS)
+    {
+        num_input_tokens = -1;
+        cmd              = CMD_UNKNOWN;
+
+        /* Read user input */
+        printf(PROMPT);
+        fgets(input_buf, MAX_INPUT_BUF, stdin);
+
+        /* Tokenize line buffer */
+        token_ptr = strtok(input_buf, " \t\n");
+        while ((num_input_tokens < MAX_INPUT_TOKENS) && (token_ptr != NULL))
+        {
+            if (num_input_tokens == -1)
+            {
+                /* First token is command */
+                cmd = get_command(token_ptr);
+            }
+            else
+            {
+                strncpy(input_tokens[num_input_tokens], token_ptr, MAX_INPUT_TOKEN_SIZE);
+            }
+            token_ptr = strtok(NULL, " \t\n");
+            num_input_tokens++;
+        }
+
+        /* Process command if valid */
+        if (num_input_tokens >= 0)
+        {
+            /* Process command */
+            run_status = process_command(cmd, num_input_tokens, input_tokens);
+        }
+    }
+
+    // Close the device
+    uart_close_port(&SampleUart);
+
+#ifdef _NOS_ENGINE_LINK_
+    nos_destroy_link();
+#endif
+
+    OS_printf("Cleanly exiting sample application...\n\n");
+    return 1;
+}
+
+/*
+** Generic Functions
+*/
+int check_number_arguments(int actual, int expected)
+{
+    int status = OS_SUCCESS;
+    if (actual != expected)
+    {
+        status = OS_ERROR;
+        OS_printf("Invalid command format, type 'help' for more info\n");
+    }
+    return status;
+}
+
+void to_lower(char *str)
+{
+    char *ptr = str;
+    while (*ptr)
+    {
+        *ptr = tolower((unsigned char)*ptr);
+        ptr++;
+    }
+    return;
+}
+```
+
+### `sample_checkout.h`
+
+**경로:** `components/sample/fsw/standalone/sample_checkout.h`
+
+
+```c
+/*******************************************************************************
+** File: sample_checkout.h
+**
+** Purpose:
+**   This is the header file for the SAMPLE checkout.
+**
+*******************************************************************************/
+#ifndef _SAMPLE_CHECKOUT_H_
+#define _SAMPLE_CHECKOUT_H_
+
+/*
+** Includes
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <time.h>
+
+#include "hwlib.h"
+#include "device_cfg.h"
+#include "sample_device.h"
+
+#if TGTNAME == cpu1
+#include "nos_link.h"
+#endif
+
+/*
+** Standard Defines
+*/
+#define PROMPT               "sample> "
+#define MAX_INPUT_BUF        512
+#define MAX_INPUT_TOKENS     64
+#define MAX_INPUT_TOKEN_SIZE 50
+#define TELEM_BUF_LEN        8
+
+/*
+** Command Defines
+*/
+#define CMD_UNKNOWN -1
+#define CMD_HELP    0
+#define CMD_EXIT    1
+#define CMD_NOOP    2
+#define CMD_HK      3
+#define CMD_SAMPLE  4
+#define CMD_CFG     5
+
+/*
+** Prototypes
+*/
+void print_help(void);
+int  get_command(const char *str);
+int  main(int argc, char *argv[]);
+
+/*
+** Generic Prototypes
+*/
+int  check_number_arguments(int actual, int expected);
+void to_lower(char *str);
+
+#endif /* _SAMPLE_CHECKOUT_H_ */
+```

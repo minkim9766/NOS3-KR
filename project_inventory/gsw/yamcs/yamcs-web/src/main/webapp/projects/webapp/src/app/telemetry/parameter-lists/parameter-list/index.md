@@ -3,16 +3,116 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-list.component.html`
 
-file--parameter-list.component.html
-file--parameter-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/parameter-list.component.html`
+
+
+```html
+@if (plist$ | async; as plist) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        <ya-page-icon-button
+          routerLink=".."
+          [queryParams]="{ c: yamcs.context }"
+          icon="arrow_back" />
+        {{ plist.name }}
+      </ng-template>
+
+      @if (mayManageParameterLists()) {
+        <ya-page-button routerLink="edit" [queryParams]="{ c: yamcs.context }" icon="edit">
+          Edit list
+        </ya-page-button>
+      }
+    </ya-instance-toolbar>
+
+    <ya-page-tabs>
+      <a
+        routerLink="realtime"
+        routerLinkActive
+        #rla="routerLinkActive"
+        [class.active]="rla.isActive"
+        [queryParams]="{ c: yamcs.context }">
+        Realtime
+      </a>
+      @if (config.tmArchive) {
+        <a
+          routerLink="data"
+          routerLinkActive
+          #rlb="routerLinkActive"
+          [class.active]="rlb.isActive"
+          [queryParams]="{ c: yamcs.context }">
+          Historical data
+        </a>
+      }
+    </ya-page-tabs>
+
+    <div class="tab-content-wrapper">
+      <router-outlet />
+    </div>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `parameter-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/parameter-list.component.html`](file--parameter-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/parameter-list.component.ts`](file--parameter-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/parameter-list/parameter-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  AuthService,
+  ConfigService,
+  ParameterList,
+  WebappSdkModule,
+  WebsiteConfig,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+@Component({
+  templateUrl: './parameter-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ParameterListComponent {
+  config: WebsiteConfig;
+  plist$ = new BehaviorSubject<ParameterList | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    private title: Title,
+    configService: ConfigService,
+  ) {
+    this.config = configService.getConfig();
+
+    route.paramMap.subscribe((params) => {
+      const plistId = params.get('list')!;
+      this.changeList(plistId);
+    });
+  }
+
+  mayManageParameterLists() {
+    return this.authService
+      .getUser()!
+      .hasSystemPrivilege('ManageParameterLists');
+  }
+
+  private changeList(id: string) {
+    this.yamcs.yamcsClient
+      .getParameterList(this.yamcs.instance!, id)
+      .then((plist) => {
+        this.plist$.next(plist);
+        this.title.setTitle(plist.name);
+      });
+  }
+}
+```

@@ -3,16 +3,26 @@
 
 **경로:** `fsw/tools/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 elf2cfetbl/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/tools/elf2cfetbl/`](elf2cfetbl/index) — 폴더
-- [`fsw/tools/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/tools/CMakeLists.txt`
+
+
+```cmake
+# CMake snippet for building the host-side tools.
+cmake_minimum_required(VERSION 2.6.4)
+project(CFETOOLS C)
+
+add_subdirectory(elf2cfetbl)
+
+```

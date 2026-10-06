@@ -3,26 +3,259 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--bootstrap.bash
-file--clean.bash
-file--config.xml
-file--helpers.bash
-file--pylama-ci.cfg
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/tests/`](tests/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/bootstrap.bash`](file--bootstrap.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/clean.bash`](file--clean.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/config.xml`](file--config.xml) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/helpers.bash`](file--helpers.bash) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/pylama-ci.cfg`](file--pylama-ci.cfg) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/ci/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `bootstrap.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/bootstrap.bash`
+
+
+```text
+#!/bin/bash
+####
+# bootstrap.bash:
+#
+# ** Assumes that the user is in the F prime root directory for F prime CI **
+#
+# Sets up the python environment for the CI system. This will read the latest Python and ensure
+# that we are ready to run all tools.
+####
+export USABLE_VENV="${FPRIME_DIR}/ci-venv"
+echo -e "${BLUE}Preparing VENV at: ${USABLE_VENV}${NOCOLOR}"
+deactivate
+rm -rf "${USABLE_VENV}"
+python3 -m venv "${USABLE_VENV}" || fail_and_stop "Failed to create VENV"
+. "${USABLE_VENV}/bin/activate" || fail_and_stop "Failed to source VENV"
+echo -e "Installing PIP Packages"
+# install dependencies based on the TEST_TYPE
+if [[ "${TEST_TYPE}" == "STATIC" ]]
+then
+    # Only pylama and pylint are needed for STATIC
+    pip install -U pylama pylama_pylint radon
+else
+    # These are required for all other tests
+    pip install fprime-tools fprime-gds || fail_and_stop "Failed to install fprime PIP module from ./Fw/Python"
+fi
+```
+
+### `clean.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/clean.bash`
+
+
+```text
+####
+# clean.bash:
+#
+# Cleans FPRIME_DIR if set, otherwise cleans ".". Note: only will work if the lock-out key
+# "CI_CLEAN_REPO" is set to "NO_REALLY_I_WANT_TO_NUKE_ALL_YOUR_BASE". This is to allow the CI system
+# to clean the repo over and over while protecting  innocent developers from nuking updates....again.
+####
+if [[ "${CI_CLEAN_REPO}" == "NO_REALLY_I_WANT_TO_NUKE_ALL_YOUR_BASE" ]]
+then
+    echo -e "${BLUE}Cleaning Repository at ${FPRIME_DIR:-.}${NOCOLOR}"
+    git clean -xdffe "ci-*" "${FPRIME_DIR:-.}" 1>/dev/null 2>/dev/null || fail_and_stop "Failed to clean git repository before testing"
+fi
+```
+
+### `config.xml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/config.xml`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `helpers.bash`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/helpers.bash`
+
+
+```text
+#!/bin/bash
+####
+# helpers.bash:
+#
+# Helpers used to make the CI system a bit nicer. It defines some methods, like pretty colors for
+# usage elsewhere.
+####
+export BLUE='\033[0;34m'
+export GREEN='\033[0;32m'
+export RED='\033[0;31m'
+export PURPLE='\033[0;95m'
+export NOCOLOR='\033[0m' # No Color
+
+####
+# archive_logs: create a log archive
+####
+function archive_logs()
+{
+    tar -czf "${FPRIME_DIR}/ci-logs.tar.gz" "${LOG_DIR}"/*
+}
+
+####
+# fail_and_stop:
+#
+# This function, when called outside a subshell, should print an error and stop the test. This will
+# allow fairly easy test failures.
+# :param message ($1): message to print to the error log
+####
+function fail_and_stop()
+{
+    echo -e "${RED}---------------- ERROR ----------------" 1>&2
+    echo    "${1}" 1>&2
+    echo -e "---------------------------------------${NOCOLOR}" 1>&2
+
+    # Look for an stderr log which is not empty
+    LASTLOG_ERR=$(ls -td $(find "${LOG_DIR}" -name "*err.log" -type f) | head -1)
+
+    if [ -f "${LASTLOG_ERR}" ]
+    then
+        # Check if a related stdout log exist
+        # Mac OS does not support negative length
+        # so LASTLOG_ERR::-7 cannot be used here
+        LASTLOG_ERR_LENGTH=${#LASTLOG_ERR}
+        LASTLOG_OUT="${LASTLOG_ERR:0:LASTLOG_ERR_LENGTH-7}out.log"
+
+        if [ -f "${LASTLOG_OUT}" ]
+        then
+            # Display stdout log
+            echo -e "${RED}---------------- STDOUT ---------------${NOCOLOR}" 1>&2
+            cat "${LASTLOG_OUT}" 1>&2
+            echo -e "${RED}---------------------------------------${NOCOLOR}" 1>&2
+        fi
+
+        # Display stderr log
+        echo -e "${RED}---------------- STDERR ---------------${NOCOLOR}" 1>&2
+        cat "${LASTLOG_ERR}" 1>&2
+        echo -e "${RED}---------------------------------------${NOCOLOR}" 1>&2
+
+        echo -e "${RED}---------------- END ERROR ------------" 1>&2
+        echo    "${1}" 1>&2
+        echo -e "---------------------------------------${NOCOLOR}" 1>&2
+    fi
+    archive_logs
+    exit 1
+}
+####
+# warn_and_cont:
+#
+# This function produces a warning block of test but exits with a success error code such that subsequent tests will run.
+####
+function warn_and_cont()
+{
+    echo -e "${PURPLE}--------------- WARNING --------------" 1>&2
+    echo    "${1}" 1>&2
+    echo -e "---------------------------------------${NOCOLOR}" 1>&2
+}
+
+export -f fail_and_stop
+export -f warn_and_cont
+export -f archive_logs
+```
+
+### `pylama-ci.cfg`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/pylama-ci.cfg`
+
+
+```text
+# pylama setup file for ci system
+
+[pylama]
+format = pylint,pyflakes,radon
+skip = Autocoders/*,ci-venv/*,mk/*,ptf/*,gtest/*,metrics/*,*/wxgui/*
+# should I also remove Ref/**,cmake/**,Utils/**
+linters = pylint,pyflakes,radon
+
+[pylama:pylint]
+# W0612 is for unused variables, pyflakes reports if a variable is assigned to and still unused which is more useful
+# W0511 reports TODO's
+# W0105 means a String statement has no effect (this occurs when docstrings are used as multiline comments)
+disable = C,R,W0612,W0511,W0105
+# Conventions and Refactor recommendations should be disabled for the CI system, but on when developing code
+# resolves import error for lxml packages
+extension-pkg-whitelist=lxml
+
+[pylama:radon]
+cc_min = C
+show_complexity = true
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/ci/README.md`
+
+
+````markdown
+# F´Continuous Integration
+
+> Note: The information below is historical. Modern F´ uses GitHub Action for all of its CI.
+
+F´continuous integration was developed to work with Jenkins. The continuous integration project is
+designed to checkout a new pull request that has been submitted to F´, merge it with the base 
+branch, and then build the merged construct. Then the unit tests are built and run against this
+merge. This proves that the build is ready for review and merge.
+
+## Jenkins Description
+
+The Jenkins setup exists in the `config.xml` file in this directory. It should be noted that the
+secrets (passwords, keys, etc.) have been stripped and should be replaced.
+
+The Jenkins CI is configured with the expressed purpose of checking the build and unit tests for
+a given pull request. It does not build on a set interval, nor does it build a specific branch
+(master, devel) but rather whatever branch the pull request was based on.
+
+The Jenkins CI is setup to be built inside a docker container. This docker container is used to
+encapsulate the exact build environment without needing to setup a specific Jenkins machine with
+this build environment. It needs to be run on a Docker capable Jenkins machine.
+
+Once Jenkins CI builds the Docker container from the Dockerfile, it runs the Python Test Framework, which includes the following test suites:
+
+ 1. Reference Build and Unit Tests
+ 2. Autocoder Unit Tests
+
+## Using Jenkins
+
+In order to use the existing Jenkins configuration, one can post it to the server of their choice
+using the following basic command. This command may need to be altered to supply credentials or
+setup proxies, but this is outside this guide.
+
+This `config.xml` contains `FILL-ME` tokens where various project specific configuration items
+belong. These mostly represent passwords, or other secrets that should not be exposed. A user can
+edit the config.xml file directly before POSTing the XML to the server. Alternatively, the user can
+POST the XML and make the edits in the Jenkins GUI.
+
+
+**POST Jenkins Config as New Job**
+```bash
+fprime>curl -X POST http://<jenkins host>/createItem?name=<job name>' --header "Content-Type: application/xml" -d mk/ci/config.xml
+```
+Here the user must supply the `<jenkins host>` and `<job name>` to create a job on the given host with the given job name.
+
+## Advanced Jenkins 
+
+### Daily and Manual Builds
+
+Some users like to have a repeating build of Jenkins on a Daily or Weekly schedule to ensure that
+the common branch (master, devel) are consistent and correct. This can be done by setting a
+scheduled build trigger and, if using the above `config.xml`, the `${ghprbActualCommit}` and
+`${ghprbTargetBranch}` environment variables should be set to the desired branch to build. This can be done
+in Jenkins's environment setup. This allows manual and scheduled builds without creating a separate
+job by defaulting the variables used by the Pull Request builder. The user could also setup a
+separate job to handle this.
+
+## Future Jenkins Work
+
+The following CI items are yet to be implemented:
+
+1. Run `Ref` App and ensure that it is stable
+2. Setup system level tests against `Ref`
+
+````

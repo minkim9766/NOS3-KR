@@ -3,34 +3,1678 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 parameter-legend/index
 parameter-series/index
-file--CrosshairPlugin.ts
-file--DyDataSource.ts
-file--dygraphs.ts
-file--DyPlotBuffer.ts
-file--GridPlugin.ts
-file--NamedParameterType.ts
-file--parameter-plot.component.css
-file--parameter-plot.component.html
-file--parameter-plot.component.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-legend/`](parameter-legend/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-series/`](parameter-series/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/CrosshairPlugin.ts`](file--CrosshairPlugin.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/DyDataSource.ts`](file--DyDataSource.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/dygraphs.ts`](file--dygraphs.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/DyPlotBuffer.ts`](file--DyPlotBuffer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/GridPlugin.ts`](file--GridPlugin.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/NamedParameterType.ts`](file--NamedParameterType.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.css`](file--parameter-plot.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.html`](file--parameter-plot.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.ts`](file--parameter-plot.component.ts) — UTF-8 텍스트 파일 본문 포함
+### `CrosshairPlugin.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/CrosshairPlugin.ts`
+
+
+```typescript
+/**
+ * Renders the crosshair on the axis only.
+ * The in-plot crosshair is drawn via a drawHighlightPointCallback
+ * in ParameterPlot because the underlaycallback is drawn
+ * on top of this plugin.
+ */
+export default class CrosshairPlugin {
+  private canvas: any;
+
+  constructor() {
+    this.canvas = document.createElement('canvas');
+  }
+
+  activate(g: any) {
+    g.graphDiv.appendChild(this.canvas);
+    return {
+      select: this.select,
+      deselect: this.deselect,
+    };
+  }
+
+  select(e: any) {
+    const width = e.dygraph.width_;
+    const height = e.dygraph.height_;
+    this.canvas.width = width;
+    this.canvas.height = height;
+    this.canvas.style.width = width + 'px'; // for IE
+    this.canvas.style.height = height + 'px'; // for IE
+
+    const ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, width, height);
+    ctx.strokeStyle = '#e1e1e1';
+
+    // Horizontal guides
+    ctx.beginPath();
+    for (const point of e.dygraph.selPoints_) {
+      const canvasy = Math.floor(point.canvasy) + 0.5; // crisper rendering
+      ctx.moveTo(0, canvasy);
+      ctx.lineTo(width, canvasy);
+    }
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  deselect(e: any) {
+    const ctx = this.canvas.getContext('2d');
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
+
+  destroy() {
+    this.canvas = null;
+  }
+
+  toString() {
+    return 'Crosshair Plugin';
+  }
+}
+```
+
+### `DyDataSource.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/DyDataSource.ts`
+
+
+```typescript
+import {
+  ConfigService,
+  NamedObjectId,
+  ParameterSubscription,
+  ParameterValue,
+  Sample,
+  Synchronizer,
+  YamcsService,
+  utils,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { DyPlotBuffer, DyPlotData, DyValueRange } from './DyPlotBuffer';
+import { NamedParameterType } from './NamedParameterType';
+import { CustomBarsValue, DySample, DySeries } from './dygraphs';
+
+/**
+ * Stores sample data for use in a ParameterPlot directly
+ * in DyGraphs native format.
+ *
+ * See http://dygraphs.com/data.html#array
+ */
+export class DyDataSource {
+  // If true, load more samples than needed
+  // (useful when horizontal scroll is allowed)
+  extendRequestedRange = true;
+
+  // How many samples to load at once
+  resolution = 6000;
+
+  public loading$ = new BehaviorSubject<boolean>(false);
+
+  data$ = new BehaviorSubject<DyPlotData>({
+    valueRange: [null, null],
+    samples: [],
+  });
+  minValue?: number;
+  maxValue?: number;
+
+  visibleStart: Date;
+  visibleStop: Date;
+
+  parameters$ = new BehaviorSubject<NamedParameterType[]>([]);
+  private plotBuffer: DyPlotBuffer;
+
+  private lastLoadPromise: Promise<any> | null;
+
+  // Realtime
+  private realtimeSubscription: ParameterSubscription;
+  private syncSubscription: Subscription;
+  // Added due to multi-param plots where realtime values are not guaranteed to arrive in the
+  // same delivery. Should probably have a server-side solution for this use cause though.
+  latestRealtimeValues = new Map<string, CustomBarsValue>();
+
+  private idMapping: { [key: number]: NamedObjectId };
+
+  constructor(
+    private yamcs: YamcsService,
+    synchronizer: Synchronizer,
+    private configService: ConfigService,
+  ) {
+    this.syncSubscription = synchronizer.syncFast(() => this.plotNow());
+
+    this.plotBuffer = new DyPlotBuffer(() => {
+      this.reloadVisibleRange();
+    });
+  }
+
+  private plotNow() {
+    if (this.plotBuffer.dirty && !this.loading$.getValue()) {
+      const plotData = this.plotBuffer.snapshot();
+      this.data$.next({
+        samples: plotData.samples,
+        valueRange: plotData.valueRange,
+      });
+      this.plotBuffer.dirty = false;
+    }
+  }
+
+  public addParameter(...parameter: NamedParameterType[]) {
+    this.parameters$.next([...this.parameters$.value, ...parameter]);
+
+    if (this.realtimeSubscription) {
+      const ids = parameter.map((p) => ({ name: p.qualifiedName }));
+      this.addToRealtimeSubscription(ids);
+    } else {
+      this.connectRealtime();
+    }
+  }
+
+  public removeParameter(qualifiedName: string) {
+    const parameters = this.parameters$.value.filter(
+      (p) => p.qualifiedName !== qualifiedName,
+    );
+    this.parameters$.next(parameters);
+  }
+
+  /**
+   * Triggers a new server request for samples.
+   * TODO should pass valueRange somehow
+   */
+  reloadVisibleRange() {
+    return this.updateWindow(this.visibleStart, this.visibleStop, [null, null]);
+  }
+
+  updateWindowOnly(start: Date, stop: Date) {
+    this.visibleStart = start;
+    this.visibleStop = stop;
+  }
+
+  updateWindow(start: Date, stop: Date, valueRange: DyValueRange) {
+    this.loading$.next(true);
+    // Load beyond the visible range to be able to show data
+    // when panning.
+    const delta = this.extendRequestedRange
+      ? stop.getTime() - start.getTime()
+      : 0;
+    const loadStart = new Date(start.getTime() - delta);
+    const loadStop = new Date(stop.getTime() + delta);
+
+    const parameters = this.parameters$.value;
+    const promises: Promise<any>[] = [];
+    for (const parameter of parameters) {
+      promises.push(
+        this.yamcs.yamcsClient.getParameterSamples(
+          this.yamcs.instance!,
+          parameter.qualifiedName,
+          {
+            start: loadStart.toISOString(),
+            stop: loadStop.toISOString(),
+            count: this.resolution,
+            fields: ['time', 'n', 'avg', 'min', 'max'],
+            gapTime: 300000,
+            source: this.configService.isParameterArchiveEnabled()
+              ? 'ParameterArchive'
+              : 'replay',
+          },
+        ),
+      );
+    }
+
+    const loadPromise = Promise.allSettled(promises);
+    this.lastLoadPromise = loadPromise;
+    return loadPromise.then((results) => {
+      // Effectively cancels past requests
+      if (this.lastLoadPromise === loadPromise) {
+        this.loading$.next(false);
+        this.plotBuffer.reset();
+        this.latestRealtimeValues.clear();
+        this.visibleStart = start;
+        this.visibleStop = stop;
+        this.minValue = undefined;
+        this.maxValue = undefined;
+        const dySeries = [];
+        for (let i = 0; i < results.length; i++) {
+          const result = results[i];
+          if (result.status === 'fulfilled') {
+            dySeries.push(this.processSamples(result.value));
+          } else {
+            console.warn(
+              `Failed to retrieve samples for ${parameters[i].qualifiedName}`,
+              result.reason,
+            );
+            dySeries.push([]);
+          }
+        }
+        const dySamples = this.mergeSeries(...dySeries);
+        this.plotBuffer.setArchiveData(dySamples);
+        this.plotBuffer.setValueRange(valueRange);
+        // Quick emit, don't wait on sync tick
+        this.plotNow();
+        this.lastLoadPromise = null;
+      }
+    });
+  }
+
+  private connectRealtime() {
+    const ids = this.parameters$.value.map((parameter) => ({
+      name: parameter.qualifiedName,
+    }));
+    this.realtimeSubscription =
+      this.yamcs.yamcsClient.createParameterSubscription(
+        {
+          instance: this.yamcs.instance!,
+          processor: this.yamcs.processor!,
+          id: ids,
+          sendFromCache: false,
+          updateOnExpiration: true,
+          abortOnInvalid: true,
+          action: 'REPLACE',
+        },
+        (data) => {
+          if (data.mapping) {
+            this.idMapping = {
+              ...this.idMapping,
+              ...data.mapping,
+            };
+          }
+          if (data.values && data.values.length) {
+            this.processRealtimeDelivery(data.values);
+          }
+        },
+      );
+  }
+
+  addToRealtimeSubscription(ids: NamedObjectId[]) {
+    // Ensure the initial reply is already received
+    this.realtimeSubscription.addReplyListener(() => {
+      this.realtimeSubscription.sendMessage({
+        instance: this.yamcs.instance!,
+        processor: this.yamcs.processor!,
+        id: ids,
+        sendFromCache: false,
+        updateOnExpiration: true,
+        abortOnInvalid: true,
+        action: 'ADD',
+      });
+    });
+  }
+
+  /**
+   * Emit merged snapsnot (may include values from a previous delivery)
+   */
+  private processRealtimeDelivery(pvals: ParameterValue[]) {
+    for (const pval of pvals) {
+      let dyValue: CustomBarsValue = null;
+      const value = utils.convertValueToNumber(pval.engValue);
+      if (value !== null) {
+        if (pval.acquisitionStatus === 'EXPIRED') {
+          // We get the last received timestamp.
+          // Consider gap to be just after that
+          /// t.setTime(t.getTime() + 1); // TODO Commented out because we need identical timestamps in case of multi param plots
+          dyValue = null; // Display as gap
+        } else if (pval.acquisitionStatus === 'ACQUIRED') {
+          dyValue = [value, value, value];
+        }
+      }
+      const id = this.idMapping[pval.numericId];
+      this.latestRealtimeValues.set(id.name, dyValue);
+    }
+
+    const t = new Date();
+    t.setTime(Date.parse(pvals[0].generationTime));
+
+    const dyValues: CustomBarsValue[] = this.parameters$.value.map(
+      (parameter) => {
+        return this.latestRealtimeValues.get(parameter.qualifiedName) || null;
+      },
+    );
+
+    const sample: any = [t, ...dyValues];
+    this.plotBuffer.addRealtimeValue(sample);
+  }
+
+  disconnect() {
+    this.data$.complete();
+    this.loading$.complete();
+    this.realtimeSubscription?.cancel();
+    this.syncSubscription?.unsubscribe();
+  }
+
+  private processSamples(samples: Sample[]) {
+    const dySamples: DySample[] = [];
+    for (const sample of samples) {
+      const t = new Date();
+      t.setTime(Date.parse(sample['time']));
+      if (sample.n > 0) {
+        const v = sample['avg'];
+        const min = sample['min'];
+        const max = sample['max'];
+
+        if (this.minValue === undefined) {
+          this.minValue = min;
+          this.maxValue = max;
+        } else {
+          if (this.minValue > min) {
+            this.minValue = min;
+          }
+          if (this.maxValue! < max) {
+            this.maxValue = max;
+          }
+        }
+        dySamples.push([t, [min, v, max]]);
+      } else {
+        dySamples.push([t, null]);
+      }
+    }
+    return dySamples;
+  }
+
+  /**
+   * Merges two or more DySample[] series together. This assumes that timestamps between
+   * the two series are identical, which is the case if server requests are done
+   * with the same date range.
+   *
+   * As a special case, we also allow a series to be fully empty (no samples, not even null),
+   * which can occur if a parameter is found to be invalid.
+   */
+  private mergeSeries(...series: DySeries[]) {
+    if (series.length === 1) {
+      return series[0];
+    }
+
+    // Find the expected length of each series.
+    // Series of zero length (which may be generated by webapp if a parameter is found to be
+    // invalid), are extended to be of the same length (with same timestamps, but null values).
+    let referenceSeries: DySeries | null = null;
+    for (let i = 0; i < series.length; i++) {
+      if (series[i].length > 0) {
+        referenceSeries = series[i];
+      }
+    }
+    if (referenceSeries !== null) {
+      for (let i = 0; i < series.length; i++) {
+        if (series[i].length === 0) {
+          series[i] = referenceSeries.map((s) => [s[0], null]);
+        }
+      }
+    }
+
+    // At this point, all series should have same length
+    let result: DySample[] = series[0];
+    for (let i = 1; i < series.length; i++) {
+      const merged: DySample[] = [];
+      let index1 = 0;
+      let index2 = 0;
+      let prev1: CustomBarsValue[] = [];
+      let prev2: CustomBarsValue | null = null;
+      const series1 = result;
+      const series2 = series[i];
+      while (index1 < series1.length || index2 < series2.length) {
+        const top1 = index1 < series1.length ? series1[index1] : null;
+        const top2 = index2 < series2.length ? series2[index2] : null;
+        if (top1 && top2) {
+          if (top1[0].getTime() === top2[0].getTime()) {
+            prev1 = top1.slice(1) as CustomBarsValue[];
+            prev2 = top2[1];
+            merged.push([top1[0], ...prev1, prev2] as any);
+            index1++;
+            index2++;
+          } else if (top1[0].getTime() < top2[0].getTime()) {
+            prev1 = top1.slice(1) as CustomBarsValue[];
+            merged.push([top1[0], ...prev1, prev2] as any);
+            index1++;
+          } else {
+            prev2 = top2[1];
+            merged.push([top2[0], ...prev1, prev2] as any);
+            index2++;
+          }
+        } else if (top1) {
+          prev1 = top1.slice(1) as CustomBarsValue[];
+          merged.push([top1[0], ...prev1, prev2] as any);
+          index1++;
+        } else if (top2) {
+          prev2 = top2[1];
+          merged.push([top2[0], ...prev1, prev2] as any);
+          index2++;
+        }
+      }
+      result = merged;
+    }
+    return result;
+  }
+}
+```
+
+### `dygraphs.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/dygraphs.ts`
+
+
+```typescript
+import { NamedParameterType } from './NamedParameterType';
+
+export type CustomBarsValue = [number, number, number] | null;
+
+/**
+ * Sample for a time-based plot.
+ * http://dygraphs.com/data.html#array
+ */
+export type DySample =
+  | [Date, CustomBarsValue]
+  | [Date, CustomBarsValue, CustomBarsValue]
+  | [Date, CustomBarsValue, CustomBarsValue, CustomBarsValue]
+  | [Date, CustomBarsValue, CustomBarsValue, CustomBarsValue, CustomBarsValue];
+
+export type DySeries = DySample[];
+
+/**
+ * Annotation for a sample on a time-based plot.
+ */
+export type DyAnnotation = {
+  series: string;
+  x: number;
+  shortText?: string;
+  text?: string;
+  icon?: string;
+  width?: number;
+  height?: number;
+  cssClass?: string;
+  tickHeight?: number;
+  tickWidth?: number;
+  tickColor?: string;
+  attachAtBottom?: boolean;
+};
+
+export type DyLegendData = {
+  series: DyLegendSeries[];
+  x: number;
+  xHTML: string;
+};
+
+export type DyLegendSeries = {
+  color: string;
+  dashHTML: string;
+  isVisible: boolean;
+  label: string;
+  labelHTML: string;
+  y: number;
+  yHTML: string;
+};
+
+export type TimestampTrackerData = {
+  timestamp: Date;
+  canvasx: number;
+};
+
+/**
+ * A range of data (which does not overlap with any other guideline)
+ */
+export interface AlarmZone {
+  y1: number;
+  y2: number;
+  y1IsLimit: boolean;
+  color: string;
+}
+
+export function analyzeStaticValueRanges(parameter: NamedParameterType) {
+  let minLow;
+  let maxHigh;
+  const staticAlarmZones = []; // Disjoint set of OOL alarm zones
+  if (parameter.type && parameter.type.defaultAlarm) {
+    const defaultAlarm = parameter.type.defaultAlarm;
+    if (defaultAlarm.staticAlarmRanges) {
+      let last_y = -Infinity;
+
+      // LOW LIMITS
+      for (let i = defaultAlarm.staticAlarmRanges.length - 1; i >= 0; i--) {
+        const range = defaultAlarm.staticAlarmRanges[i];
+        if (range.minInclusive !== undefined) {
+          const zone = {
+            y1: last_y,
+            y2: range.minInclusive,
+            y1IsLimit: false,
+            color: colorForLevel(range.level) || 'black',
+          };
+          staticAlarmZones.push(zone);
+          last_y = zone.y2;
+
+          if (minLow === undefined) {
+            minLow = range.minInclusive;
+          } else {
+            minLow = Math.min(minLow, range.minInclusive);
+          }
+        }
+      }
+
+      // HIGH LIMITS
+      last_y = Infinity;
+      for (let i = defaultAlarm.staticAlarmRanges.length - 1; i >= 0; i--) {
+        const range = defaultAlarm.staticAlarmRanges[i];
+        if (range.maxInclusive) {
+          const zone = {
+            y1: range.maxInclusive,
+            y2: last_y,
+            y1IsLimit: true,
+            color: colorForLevel(range.level) || 'black',
+          };
+          staticAlarmZones.push(zone);
+          last_y = zone.y1;
+
+          if (maxHigh === undefined) {
+            maxHigh = range.maxInclusive;
+          } else {
+            maxHigh = Math.max(maxHigh, range.maxInclusive);
+          }
+        }
+      }
+    }
+  }
+
+  const valueRange: [number | null, number | null] = [null, null]; // Null makes Dygraph choose
+  if (minLow !== undefined) {
+    valueRange[0] = minLow;
+  }
+  if (maxHigh !== undefined) {
+    valueRange[1] = maxHigh;
+  }
+  return { valueRange, staticAlarmZones };
+}
+
+function colorForLevel(level: string) {
+  switch (level) {
+    case 'WATCH':
+      return '#ffdddb';
+    case 'WARNING':
+      return '#ffc3c1';
+    case 'DISTRESS':
+      return '#ffaaa8';
+    case 'CRITICAL':
+      return '#c35e5c';
+    case 'SEVERE':
+      return '#a94442';
+    default:
+      console.error('Unknown level ' + level);
+  }
+}
+```
+
+### `DyPlotBuffer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/DyPlotBuffer.ts`
+
+
+```typescript
+import { DySample } from './dygraphs';
+
+export type WatermarkObserver = () => void;
+
+export type DyValueRange = [number | null, number | null];
+
+export interface DyPlotData {
+  valueRange: DyValueRange;
+  samples: DySample[];
+}
+
+/**
+ * Combines archive samples obtained via REST
+ * with realtime samples obtained via WebSocket.
+ *
+ * This class does not care about whether archive samples
+ * and realtime values are connected. Both sets are joined
+ * and sorted under all conditions.
+ */
+export class DyPlotBuffer {
+  public dirty = false;
+
+  private valueRange: DyValueRange = [null, null];
+
+  private archiveSamples: DySample[] = [];
+
+  private realtimeBuffer: (DySample | undefined)[];
+  private bufferSize = 500;
+  private bufferWatermark = 400;
+  private pointer = 0;
+  private alreadyWarned = false;
+
+  constructor(private watermarkObserver: WatermarkObserver) {
+    this.realtimeBuffer = Array(this.bufferSize).fill(undefined);
+  }
+
+  setArchiveData(samples: DySample[]) {
+    this.archiveSamples = samples ?? [];
+    this.dirty = true;
+  }
+
+  setValueRange(valueRange: DyValueRange) {
+    this.valueRange = valueRange;
+  }
+
+  addRealtimeValue(sample: DySample) {
+    if (this.pointer < this.bufferSize) {
+      this.realtimeBuffer[this.pointer] = sample;
+      if (
+        this.pointer >= this.bufferWatermark &&
+        this.watermarkObserver &&
+        !this.alreadyWarned
+      ) {
+        this.watermarkObserver();
+        this.alreadyWarned = true;
+      }
+      this.pointer = this.pointer + 1;
+    }
+    this.dirty = true;
+  }
+
+  reset() {
+    this.archiveSamples = [];
+    this.realtimeBuffer.fill(undefined);
+    this.pointer = 0;
+    this.alreadyWarned = false;
+    this.valueRange = [null, null];
+    this.dirty = true;
+  }
+
+  snapshot(): DyPlotData {
+    const realtimeSamples = this.realtimeBuffer.filter(
+      (s) => s !== undefined,
+    ) as DySample[];
+
+    // Archive sample data contains [null] points for future data (because of empty buckets)
+    // Filter these out so that they don't overlap with incoming realtime.
+    let archiveCutOff: number | null = null;
+    if (realtimeSamples.length > 0) {
+      archiveCutOff = realtimeSamples[0][0].getTime();
+    }
+
+    const splicedSamples = this.archiveSamples
+      .filter((s) => archiveCutOff === null || s[0].getTime() < archiveCutOff)
+      .concat(realtimeSamples)
+      .sort((s1, s2) => s1[0].getTime() - s2[0].getTime());
+    return {
+      valueRange: this.valueRange,
+      samples: splicedSamples,
+    };
+  }
+}
+```
+
+### `GridPlugin.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/GridPlugin.ts`
+
+
+```typescript
+import { AlarmZone } from './dygraphs';
+
+/**
+ * Draws the gridlines, i.e. the gray horizontal & vertical lines running the
+ * length of the chart.
+ *
+ * This source file is modified from the official Dygraphs GridPlugin:
+ * https://github.com/danvk/dygraphs/blob/master/src/plugins/grid.js
+ *
+ * The customization consists of adding awareness of alarm limits such that gridlines
+ * (drawn in underlay callback) are not drawn on top of them. (due to the opacity this
+ * leads to a weird color effect on the limit line).
+ */
+export default class GridPlugin {
+  private yLimits: number[] = [];
+
+  activate(g: any) {
+    return {
+      willDrawChart: this.willDrawChart,
+    };
+  }
+
+  setAlarmZones(alarmZones: AlarmZone[]) {
+    this.yLimits = [];
+    for (const zone of alarmZones) {
+      this.yLimits.push(zone.y1IsLimit ? zone.y1 : zone.y2);
+    }
+  }
+
+  willDrawChart(e: any) {
+    // Draw the new X/Y grid. Lines appear crisper when pixels are rounded to
+    // half-integers. This prevents them from drawing in two rows/cols.
+    const g = e.dygraph;
+    const ctx = e.drawingContext;
+    const layout = g.layout_;
+    const area = e.dygraph.plotter_.area;
+
+    if (g.getOptionForAxis('drawGrid', 'y')) {
+      const axes = ['y', 'y2'];
+      const strokeStyles: any[] = [];
+      const lineWidths: any[] = [];
+      const drawGrid: any[] = [];
+      const stroking: any[] = [];
+      const strokePattern: any[] = [];
+      for (let i = 0; i < axes.length; i++) {
+        drawGrid[i] = g.getOptionForAxis('drawGrid', axes[i]);
+        if (drawGrid[i]) {
+          strokeStyles[i] = g.getOptionForAxis('gridLineColor', axes[i]);
+          lineWidths[i] = g.getOptionForAxis('gridLineWidth', axes[i]);
+          strokePattern[i] = g.getOptionForAxis('gridLinePattern', axes[i]);
+          stroking[i] = strokePattern[i] && strokePattern[i].length >= 2;
+        }
+      }
+      const ticks = layout.yticks;
+      ctx.save();
+      // draw grids for the different y axes
+      for (const tick of ticks) {
+        if (!tick.has_tick) {
+          continue;
+        }
+        if (this.yLimits.indexOf(parseFloat(tick.label)) >= 0) {
+          continue;
+        }
+        const axis = tick.axis;
+        if (drawGrid[axis]) {
+          ctx.save();
+          if (stroking[axis]) {
+            if (ctx.setLineDash) {
+              ctx.setLineDash(strokePattern[axis]);
+            }
+          }
+          ctx.strokeStyle = strokeStyles[axis];
+          ctx.lineWidth = lineWidths[axis];
+
+          const x = this.halfUp(area.x);
+          const y = this.halfDown(area.y + tick.pos * area.h);
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.lineTo(x + area.w, y);
+          ctx.stroke();
+
+          ctx.restore();
+        }
+      }
+      ctx.restore();
+    }
+
+    // draw grid for x axis
+    if (g.getOptionForAxis('drawGrid', 'x')) {
+      const ticks = layout.xticks;
+      ctx.save();
+      const strokePattern = g.getOptionForAxis('gridLinePattern', 'x');
+      const stroking = strokePattern && strokePattern.length >= 2;
+      if (stroking) {
+        if (ctx.setLineDash) {
+          ctx.setLineDash(strokePattern);
+        }
+      }
+      ctx.strokeStyle = g.getOptionForAxis('gridLineColor', 'x');
+      ctx.lineWidth = g.getOptionForAxis('gridLineWidth', 'x');
+      for (const tick of ticks) {
+        if (!tick.has_tick) {
+          continue;
+        }
+        const x = this.halfUp(area.x + tick.pos * area.w);
+        const y = this.halfDown(area.y + area.h);
+        ctx.beginPath();
+        ctx.moveTo(x, y);
+        ctx.lineTo(x, area.y);
+        ctx.closePath();
+        ctx.stroke();
+      }
+      if (stroking) {
+        if (ctx.setLineDash) {
+          ctx.setLineDash([]);
+        }
+      }
+      ctx.restore();
+    }
+  }
+
+  private halfUp(x: number) {
+    return Math.round(x) + 0.5;
+  }
+
+  private halfDown(y: number) {
+    return Math.round(y) - 0.5;
+  }
+
+  toString() {
+    return 'Gridline Plugin';
+  }
+
+  destroy() {}
+}
+```
+
+### `NamedParameterType.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/NamedParameterType.ts`
+
+
+```typescript
+import { ParameterType } from '@yamcs/webapp-sdk';
+
+// TODO Added as a quick hack to support aggregate or array members into plots.
+// Perhaps a better solution is to really make use of named parameter types coming
+// from the server.
+
+// Remark that a "Parameter" is a kind-of "NamedParameterType"
+
+export interface NamedParameterType {
+  qualifiedName: string;
+  type?: ParameterType;
+}
+```
+
+### `parameter-plot.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.css`
+
+
+```css
+.legend-wrapper {
+  position: relative;
+  z-index: 50;
+}
+
+.timestamp-wrapper {
+  position: absolute;
+  z-index: 50;
+  bottom: 4px;
+}
+
+.graph-container {
+  overflow: hidden;
+}
+
+::ng-deep .annotation {
+  background-color: lightpink;
+  color: red !important;
+  opacity: 0.7;
+  border-color: red !important;
+}
+
+::ng-deep .dygraph-axis-label {
+  color: #aaa;
+}
+
+::ng-deep .dygraph-legend {
+  position: absolute;
+  font-size: 14px;
+  z-index: 10;
+  width: 250px;
+  /* labelsDivWidth */
+  /*
+  dygraphs determines these based on the presence of chart labels.
+  It might make more sense to create a wrapper div around the chart proper.
+  top: 0px;
+  right: 2px;
+  */
+  background: white;
+  line-height: normal;
+  text-align: left;
+  overflow: hidden;
+}
+
+/* styles for a solid line in the legend */
+
+::ng-deep .dygraph-legend-line {
+  display: inline-block;
+  position: relative;
+  bottom: 0.5ex;
+  padding-left: 1em;
+  height: 1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  /* border-bottom-color is set based on the series color */
+}
+
+/* styles for a dashed line in the legend, e.g. when strokePattern is set */
+
+::ng-deep .dygraph-legend-dash {
+  display: inline-block;
+  position: relative;
+  bottom: 0.5ex;
+  height: 1px;
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  /* border-bottom-color is set based on the series color */
+  /* margin-right is set based on the stroke pattern */
+  /* padding-left is set based on the stroke pattern */
+}
+
+::ng-deep .dygraph-roller {
+  position: absolute;
+  z-index: 10;
+}
+
+/* This class is shared by all annotations, including those with icons */
+
+::ng-deep .dygraph-annotation {
+  position: absolute;
+  z-index: 10;
+  overflow: hidden;
+}
+
+/* This class only applies to annotations without icons */
+
+/* Old class name: .dygraphDefaultAnnotation */
+
+::ng-deep .dygraph-default-annotation {
+  border: 1px solid black;
+  background-color: white;
+  text-align: center;
+}
+
+::ng-deep .dygraph-axis-label {
+  /* position: absolute; */
+  /* font-size: 14px; */
+  z-index: 10;
+  line-height: normal;
+  overflow: hidden;
+  color: black;
+  /* replaces old axisLabelColor option */
+}
+
+::ng-deep .dygraph-axis-label-x {
+}
+
+::ng-deep .dygraph-axis-label-y {
+}
+
+::ng-deep .dygraph-axis-label-y2 {
+}
+
+::ng-deep .dygraph-title {
+  font-weight: bold;
+  z-index: 10;
+  text-align: center;
+  /* font-size: based on titleHeight option */
+}
+
+::ng-deep .dygraph-xlabel {
+  text-align: center;
+  /* font-size: based on xLabelHeight option */
+}
+
+/* For y-axis label */
+
+::ng-deep .dygraph-label-rotate-left {
+  text-align: center;
+  transform: rotate(90deg);
+}
+
+/* For y2-axis label */
+
+::ng-deep .dygraph-label-rotate-right {
+  text-align: center;
+  transform: rotate(-90deg);
+}
+```
+
+### `parameter-plot.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.html`
+
+
+```html
+<div class="legend-wrapper">
+  <app-parameter-legend
+    [data]="legendData$ | async"
+    [backgroundColor]="plotAreaBackgroundColor"
+    [borderColor]="gridLineColor"
+    [closable]="removableSeries"
+    (close)="removeParameter($event)"
+    (select)="modifyParameter($event)" />
+</div>
+
+<div class="timestamp-wrapper">
+  <app-timestamp-tracker
+    [legendData]="legendData$ | async"
+    [timestampData]="timestampTrackerData$ | async" />
+</div>
+
+<div #graphContainer class="graph-container" [style.height]="height" [style.width]="width"></div>
+```
+
+### `parameter-plot.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/shared/parameter-plot/parameter-plot.component.ts`
+
+
+```typescript
+import { AsyncPipe } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ContentChildren,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  Output,
+  QueryList,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Formatter, Parameter, utils } from '@yamcs/webapp-sdk';
+import Dygraph from 'dygraphs';
+import { BehaviorSubject } from 'rxjs';
+import { ModifyParameterDialogComponent } from '../../telemetry/parameters/modify-parameter-dialog/modify-parameter-dialog.component';
+import { TimestampTrackerComponent } from '../timestamp-tracker/timestamp-tracker.component';
+import CrosshairPlugin from './CrosshairPlugin';
+import { DyDataSource } from './DyDataSource';
+import GridPlugin from './GridPlugin';
+import { NamedParameterType } from './NamedParameterType';
+import {
+  DyLegendData,
+  TimestampTrackerData,
+  analyzeStaticValueRanges,
+} from './dygraphs';
+import { ParameterLegendComponent } from './parameter-legend/parameter-legend.component';
+import { ParameterSeriesComponent } from './parameter-series/parameter-series.component';
+
+@Component({
+  selector: 'app-parameter-plot',
+  templateUrl: './parameter-plot.component.html',
+  styleUrl: './parameter-plot.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AsyncPipe, ParameterLegendComponent, TimestampTrackerComponent],
+})
+export class ParameterPlotComponent implements AfterViewInit, OnDestroy {
+  @Input()
+  dataSource: DyDataSource;
+
+  @Input()
+  fillGraph = false;
+
+  @Input()
+  xGrid = false;
+
+  @Input()
+  xAxis = true;
+
+  @Input()
+  xAxisLineWidth = 1;
+
+  @Input()
+  xAxisHeight: number;
+
+  @Input()
+  duration = 'PT1H';
+
+  @Input()
+  height = '100%';
+
+  @Input()
+  width = '100%';
+
+  @Input()
+  removableSeries = false;
+
+  @Input()
+  stop = new Date();
+
+  @Input()
+  crosshair: 'horizontal' | 'vertical' | 'both' | 'none' = 'vertical';
+
+  axisBackgroundColor = '#fafafa';
+  axisLineColor = '#e1e1e1';
+  gridLineColor = '#f2f2f2';
+  plotAreaBackgroundColor = '#fff';
+  highlightColor = '#e1e1e1';
+
+  @Output()
+  onVisibleRange = new EventEmitter<[Date, Date]>();
+
+  @Output()
+  onManualRangeChange = new EventEmitter<void>();
+
+  @ContentChildren(ParameterSeriesComponent)
+  seriesComponents: QueryList<ParameterSeriesComponent>;
+
+  @ViewChild('graphContainer', { static: true })
+  graphContainer: ElementRef;
+
+  dygraph: any;
+
+  private parameters: NamedParameterType[] = [];
+  private parameterConfig = new Map<string, ParameterSeriesComponent>();
+
+  // Flag to prevent from reloading while the user is busy with a pan or zoom operation
+  private disableDataReload = false;
+
+  legendData$ = new BehaviorSubject<DyLegendData | null>(null);
+  timestampTrackerData$ = new BehaviorSubject<TimestampTrackerData | null>(
+    null,
+  );
+
+  constructor(
+    private dialog: MatDialog,
+    private formatter: Formatter,
+  ) {}
+
+  ngAfterViewInit() {
+    this.dataSource.parameters$.value.forEach((p) => {
+      this.parameters.push(p);
+    });
+
+    this.seriesComponents.forEach((series) => {
+      this.parameterConfig.set(series.parameter, series);
+    });
+
+    const containingDiv = this.graphContainer.nativeElement as HTMLDivElement;
+
+    this.initDygraphs(containingDiv);
+    this.dataSource.data$.subscribe((data) => {
+      if (this.disableDataReload) {
+        return;
+      }
+
+      const dyOptions: { [key: string]: any } = {
+        file: data.samples.length ? data.samples : 'X\n',
+      };
+      if (this.dataSource.visibleStart) {
+        // May be undefined on subject initial []
+        dyOptions.dateWindow = [
+          this.dataSource.visibleStart.getTime(),
+          this.dataSource.visibleStop.getTime(),
+        ];
+        this.onVisibleRange.emit([
+          this.dataSource.visibleStart,
+          this.dataSource.visibleStop,
+        ]);
+      }
+      if (data.valueRange[0] !== null && data.valueRange[1] !== null) {
+        dyOptions.axes = {
+          y: { valueRange: data.valueRange },
+        };
+      } else {
+        const valueRange = analyzeStaticValueRanges(
+          this.parameters[0],
+        ).valueRange;
+        let lo = valueRange[0];
+        if (this.dataSource.minValue !== undefined) {
+          lo =
+            lo !== null
+              ? Math.min(lo, this.dataSource.minValue)
+              : this.dataSource.minValue;
+        }
+        let hi = valueRange[1];
+        if (this.dataSource.maxValue !== undefined) {
+          hi =
+            hi !== null
+              ? Math.max(hi, this.dataSource.maxValue)
+              : this.dataSource.maxValue;
+        }
+
+        // Prevent identical lo/hi
+        if (lo === hi && lo !== null) {
+          lo = Math.min(lo, 0);
+          hi = Math.max(hi!, 0);
+        }
+
+        // Add extra y padding for visual comfort
+        if (lo !== null && hi !== null) {
+          lo = lo - (hi - lo) * 0.1;
+          hi = hi + (hi - lo) * 0.1;
+        }
+
+        dyOptions.axes = {
+          y: { valueRange: [lo, hi] },
+        };
+      }
+      this.dygraph.updateOptions(dyOptions);
+    });
+
+    /*
+     * Trigger initial load
+     */
+    if (this.duration) {
+      const stop = this.stop;
+      const start = utils.subtractDuration(stop, this.duration);
+      this.dataSource.updateWindow(start, stop, [null, null]);
+    }
+    this.applyTheme();
+  }
+
+  private initDygraphs(containingDiv: HTMLDivElement) {
+    const seriesByLabel: { [key: string]: any } = {};
+
+    const configs = this.parameters.map(
+      (p) => this.parameterConfig.get(p.qualifiedName)!,
+    );
+    configs.forEach((config) => {
+      seriesByLabel[config.label || config.parameter] = {
+        color: config.color,
+        strokeWidth: config.strokeWidth,
+      };
+    });
+
+    const primaryParameter = this.parameters[0];
+    const primaryConfig = configs[0];
+    const rangeAnalysis = analyzeStaticValueRanges(primaryParameter);
+    const alarmZones = rangeAnalysis.staticAlarmZones;
+
+    let lastClickedGraph: any = null;
+
+    const dyOptions: { [key: string]: any } = {
+      legend: 'always',
+      fillGraph: this.fillGraph,
+      drawGrid: false,
+      drawPoints: false,
+      showRoller: false,
+      customBars: true,
+      gridLineColor: this.gridLineColor,
+      axisLineColor: this.axisLineColor,
+      axisLabelFontSize: 11,
+      digitsAfterDecimal: 6,
+      labels: [
+        'Generation Time',
+        ...configs.map((s) => s.label || s.parameter),
+      ],
+      rightGap: 0,
+      labelsUTC: this.formatter.isUTC(),
+      series: seriesByLabel,
+      axes: {
+        x: {
+          drawAxis: this.xAxis,
+          drawGrid: this.xGrid,
+          axisLineWidth: this.xAxisLineWidth || 0.0000001, // Dygraphs does not handle 0 correctly
+        },
+        y: {
+          axisLabelWidth: 50,
+          drawAxis: primaryConfig.axis,
+          drawGrid: primaryConfig.grid,
+          axisLineWidth: primaryConfig.axisLineWidth || 0.0000001, // Dygraphs does not handle 0 correctly
+          // includeZero: true,
+          valueRange: analyzeStaticValueRanges(primaryParameter).valueRange,
+        },
+      },
+      interactionModel: {
+        mousedown: (event: any, g: any, context: any) => {
+          context.initializeMouseDown(event, g, context);
+          if (event.altKey || event.shiftKey) {
+            (Dygraph as any).startZoom(event, g, context);
+          } else {
+            (Dygraph as any).startPan(event, g, context);
+          }
+        },
+        mousemove: (event: any, g: any, context: any) => {
+          if (context.isPanning) {
+            this.disableDataReload = true;
+            (Dygraph as any).movePan(event, g, context);
+          } else if (context.isZooming) {
+            this.disableDataReload = true;
+            (Dygraph as any).moveZoom(event, g, context);
+          }
+        },
+        mouseup: (event: any, g: any, context: any) => {
+          if (context.isPanning) {
+            (Dygraph as any).endPan(event, g, context);
+          } else if (context.isZooming) {
+            (Dygraph as any).endZoom(event, g, context);
+          }
+
+          const xAxisRange = g.xAxisRange();
+          const start = new Date(xAxisRange[0]);
+          const stop = new Date(xAxisRange[1]);
+
+          const yAxisRange = g.yAxisRanges()[0];
+          this.dataSource.updateWindow(start, stop, yAxisRange);
+          this.onManualRangeChange.emit();
+
+          this.disableDataReload = false;
+        },
+        click: (event: any, g: any, context: any) => {
+          lastClickedGraph = g;
+          event.preventDefault();
+          event.stopPropagation();
+        },
+        /*dblclick: (event: any, g: any, context: any) => {
+          // Reducing by 20% makes it 80% the original size, which means
+          // to restore to original size it must grow by 25%
+
+          if (!(event.offsetX && event.offsetY)) {
+            event.offsetX = event.layerX - event.target.offsetLeft;
+            event.offsetY = event.layerY - event.target.offsetTop;
+          }
+
+          const xPct = this.offsetToPercentage(event.offsetX);
+          if (event.ctrlKey) {
+            this.zoom(-.25, xPct);
+          } else {
+            this.zoom(.2, xPct);
+          }
+        },*/
+        mouseout: (event: any, g: any, context: any) => {
+          if (context.isPanning) {
+            const xAxisRange = g.xAxisRange();
+            const start = new Date(xAxisRange[0]);
+            const stop = new Date(xAxisRange[1]);
+
+            const yAxisRange = g.yAxisRanges()[0];
+            this.dataSource.updateWindow(start, stop, yAxisRange);
+          }
+          this.disableDataReload = false;
+        },
+        mousewheel: (event: any, g: any, context: any) => {
+          if (lastClickedGraph !== g) {
+            return;
+          }
+          const normal = event.detail ? event.detail * -1 : event.deltaY / 40;
+          // For me the normalized value shows 0.075 for one click. If I took
+          // that verbatim, it would be a 7.5%.
+          const percentage = normal / 50;
+
+          if (!(event.offsetX && event.offsetY)) {
+            event.offsetX = event.layerX - event.target.offsetLeft;
+            event.offsetY = event.layerY - event.target.offsetTop;
+          }
+
+          const xPct = this.offsetToPercentage(event.offsetX);
+          this.zoom(percentage, xPct);
+          event.preventDefault();
+          event.stopPropagation();
+        },
+      },
+      underlayCallback: (ctx: CanvasRenderingContext2D, area: any, g: any) => {
+        ctx.save();
+
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = this.plotAreaBackgroundColor;
+        ctx.fillRect(area.x, area.y, area.w, area.h);
+
+        // Colorize plot area
+        if (primaryConfig.alarmRanges === 'line') {
+          for (const zone of alarmZones) {
+            const zoneY = zone.y1IsLimit ? zone.y1 : zone.y2;
+            const y = g.toDomCoords(0, zoneY)[1];
+
+            ctx.strokeStyle = zone.color;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(area.x, y);
+            ctx.lineTo(area.x + area.w, y);
+            ctx.stroke();
+          }
+        } else if (primaryConfig.alarmRanges === 'fill') {
+          ctx.globalAlpha = 0.2;
+          for (const zone of alarmZones) {
+            if (zone.y2 === null) {
+              return;
+            }
+
+            let y1, y2;
+            if (zone.y1 === -Infinity) {
+              y1 = area.y + area.h;
+            } else {
+              y1 = g.toDomCoords(0, zone.y1)[1];
+            }
+
+            if (zone.y2 === Infinity) {
+              y2 = 0;
+            } else {
+              y2 = g.toDomCoords(0, zone.y2)[1];
+            }
+
+            ctx.fillStyle = zone.color;
+            ctx.fillRect(area.x, Math.min(y1, y2), area.w, Math.abs(y2 - y1));
+          }
+        }
+        ctx.restore();
+      },
+      drawHighlightPointCallback: (
+        g: any,
+        seriesName: string,
+        ctx: CanvasRenderingContext2D,
+        cx: number,
+        cy: number,
+        color: any,
+        radius: number,
+      ) => {
+        // Only draw for point of first series, because otherwise the line may
+        // get drawn on top of other points.
+        if ((primaryConfig.label || primaryConfig.parameter) === seriesName) {
+          ctx.save();
+          // ctx.clearRect(0, 0, g.width_, g.height_);
+          ctx.setLineDash([5, 5]);
+          ctx.strokeStyle = this.highlightColor;
+          ctx.lineWidth = 1;
+
+          this.timestampTrackerData$.next({
+            timestamp: new Date(g.selPoints_[0].xval),
+            canvasx: g.selPoints_[0].canvasx,
+          });
+
+          ctx.beginPath();
+          const canvasx = Math.floor(g.selPoints_[0].canvasx) + 0.5; // crisper rendering
+          if (this.crosshair === 'vertical' || this.crosshair === 'both') {
+            ctx.moveTo(canvasx, 0);
+            ctx.lineTo(canvasx, g.height_);
+          }
+          if (this.crosshair === 'horizontal' || this.crosshair === 'both') {
+            for (const point of g.selPoints_) {
+              const canvasy = Math.floor(point.canvasy) + 0.5; // crisper rendering
+              ctx.moveTo(0, canvasy);
+              ctx.lineTo(g.width_, canvasy);
+            }
+          }
+          ctx.stroke();
+          ctx.closePath();
+          ctx.restore();
+        }
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
+        ctx.fill();
+      },
+      legendFormatter: (data: DyLegendData) => {
+        for (const trace of data.series) {
+          if (trace.y === undefined) {
+            const rtValue = this.dataSource.latestRealtimeValues.get(
+              trace.label,
+            );
+            if (rtValue) {
+              trace.y = rtValue[1];
+              trace.yHTML = String(rtValue[1]);
+            }
+          }
+        }
+        this.legendData$.next(data);
+        return '';
+      },
+      plugins: [new CrosshairPlugin()],
+    };
+
+    if (this.xAxisHeight !== undefined) {
+      dyOptions.xAxisHeight = this.xAxisHeight;
+    }
+
+    // Install customized GridPlugin in global Dygraph object.
+    (Dygraph as any).Plugins['Grid'] = GridPlugin;
+    (Dygraph as any).PLUGINS = [
+      (Dygraph as any).Plugins['Legend'],
+      (Dygraph as any).Plugins['Axes'],
+      (Dygraph as any).Plugins['Annotations'],
+      (Dygraph as any).Plugins['ChartLabels'],
+      (Dygraph as any).Plugins['Grid'],
+      (Dygraph as any).Plugins['RangeSelector'],
+    ];
+
+    this.dygraph = new Dygraph(containingDiv, 'X\n', dyOptions);
+
+    const gridPluginInstance = this.dygraph.getPluginInstance_(
+      GridPlugin,
+    ) as GridPlugin;
+    gridPluginInstance.setAlarmZones(alarmZones);
+  }
+
+  getParameters() {
+    return this.parameters;
+  }
+
+  addParameter(
+    parameter: Parameter,
+    parameterConfig: ParameterSeriesComponent,
+  ) {
+    this.dataSource.addParameter(parameter);
+    this.parameters.push(parameter);
+    this.parameterConfig.set(parameter.qualifiedName, parameterConfig);
+
+    this.updateDygraphSeries();
+  }
+
+  removeParameter(label: string) {
+    const qualifiedName = label; // TODO
+    this.dataSource.removeParameter(qualifiedName);
+    this.parameters = this.parameters.filter(
+      (p) => p.qualifiedName !== qualifiedName,
+    );
+    this.parameterConfig.delete(qualifiedName);
+
+    this.updateDygraphSeries();
+  }
+
+  modifyParameter(label: string) {
+    const props = this.dygraph.getPropertiesForSeries(label);
+    const dialogRef = this.dialog.open(ModifyParameterDialogComponent, {
+      data: {
+        ...props,
+        strokeWidth: this.dygraph.getOption('strokeWidth', label),
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        const config = this.parameterConfig.get(label)!;
+        config.color = result.color;
+        config.strokeWidth = result.thickness;
+        this.updateDygraphSeries();
+      }
+    });
+  }
+
+  private updateDygraphSeries() {
+    const seriesByLabel: { [key: string]: any } = {};
+
+    const configs = this.parameters.map(
+      (p) => this.parameterConfig.get(p.qualifiedName)!,
+    );
+    configs.forEach((config) => {
+      seriesByLabel[config.label || config.parameter] = {
+        color: config.color,
+        strokeWidth: config.strokeWidth,
+      };
+    });
+
+    const dyOptions: { [key: string]: any } = {
+      labels: [
+        'Generation Time',
+        ...configs.map((s) => s.label || s.parameter),
+      ],
+      series: seriesByLabel,
+    };
+
+    // TODO when removing a series we get legend-related errors on hovering (before data is set)
+    // Visually it works though.
+    this.dataSource.reloadVisibleRange().then(() => {
+      this.dygraph.updateOptions(dyOptions, true /* block redraw */);
+    });
+  }
+
+  private applyTheme() {
+    if (this.dygraph) {
+      this.dygraph.updateOptions({
+        axisLineColor: this.axisLineColor,
+        gridLineColor: this.gridLineColor,
+      });
+    }
+
+    if (this.graphContainer) {
+      const container = this.graphContainer.nativeElement as HTMLDivElement;
+      container.style.backgroundColor = this.axisBackgroundColor;
+    }
+  }
+
+  public getDateRange() {
+    if (this.dygraph) {
+      const range = this.dygraph.xAxisRange();
+      return [new Date(range[0]), new Date(range[1])];
+    }
+  }
+
+  public zoomIn() {
+    this.zoom(0.2);
+  }
+
+  public zoomOut() {
+    this.zoom(-0.25);
+  }
+
+  public reset() {
+    const xAxisRange = this.dygraph.xAxisRange();
+    const start = new Date(xAxisRange[0]);
+    const stop = new Date(xAxisRange[1]);
+    this.dataSource.updateWindow(start, stop, [null, null]);
+  }
+
+  /**
+   *  Adjusts x by zoomInPercentage
+   */
+  zoom(zoomInPercentage: number, xBias = 0.5) {
+    this.dygraph.updateOptions({
+      dateWindow: this.adjustAxis(
+        this.dygraph.xAxisRange(),
+        zoomInPercentage,
+        xBias,
+      ),
+    });
+
+    const xAxisRange = this.dygraph.xAxisRange();
+    const start = new Date(xAxisRange[0]);
+    const stop = new Date(xAxisRange[1]);
+    this.dataSource.updateWindow(start, stop, [null, null]);
+    this.onManualRangeChange.emit();
+  }
+
+  updateWindowOnly(start: Date, stop: Date) {
+    this.dataSource.updateWindowOnly(start, stop);
+    this.dygraph.updateOptions({
+      dateWindow: [start, stop],
+    });
+  }
+
+  private adjustAxis(axis: any, zoomInPercentage: number, bias: number) {
+    const delta = axis[1] - axis[0];
+    const increment = delta * zoomInPercentage;
+    const foo = [increment * bias, increment * (1 - bias)];
+    return [axis[0] + foo[0], axis[1] - foo[1]];
+  }
+
+  // Take the offset of a mouse event on the dygraph canvas and
+  // convert it to a pair of percentages from the bottom left.
+  private offsetToPercentage(offsetX: number) {
+    // Calculate pixel offset of the leftmost date.
+    const xOffset = this.dygraph.toDomCoords(
+      this.dygraph.xAxisRange()[0],
+      null,
+    )[0];
+
+    // x y w and h are relative to the corner of the drawing area,
+    // so that the upper corner of the drawing area is (0, 0).
+    const x = offsetX - xOffset;
+
+    // Calcuate the rightmost pixel, effectively defining the width
+    const w =
+      this.dygraph.toDomCoords(this.dygraph.xAxisRange()[1], null)[0] - xOffset;
+
+    // Percentage from the left.
+    return w === 0 ? 0 : x / w;
+  }
+
+  ngOnDestroy() {
+    this.dygraph?.destroy();
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `components/onair/fsw/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,36 +13,874 @@ doc/index
 onair/index
 plugins/index
 test/index
-file--.git
-file--.gitignore
-file--.gitlab-ci.yml
-file--conftest.py
-file--COPYRIGHT
-file--Dockerfile
-file--driver.py
-file--environment.yml
-file--NOSA%20GSC-19165-1%20OnAIR.pdf
-file--OnAIR_logo.svg
-file--README.md
-file--redis-experiment-publisher.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/onair/fsw/.github/`](.github/index) — 폴더
-- [`components/onair/fsw/doc/`](doc/index) — 폴더
-- [`components/onair/fsw/onair/`](onair/index) — 폴더
-- [`components/onair/fsw/plugins/`](plugins/index) — 폴더
-- [`components/onair/fsw/test/`](test/index) — 폴더
-- [`components/onair/fsw/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/.gitlab-ci.yml`](file--.gitlab-ci.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/conftest.py`](file--conftest.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/COPYRIGHT`](file--COPYRIGHT) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/Dockerfile`](file--Dockerfile) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/driver.py`](file--driver.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/environment.yml`](file--environment.yml) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/NOSA GSC-19165-1 OnAIR.pdf`](file--NOSA%20GSC-19165-1%20OnAIR.pdf) — 바이너리 (경로만)
-- [`components/onair/fsw/OnAIR_logo.svg`](file--OnAIR_logo.svg) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/onair/fsw/redis-experiment-publisher.py`](file--redis-experiment-publisher.py) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `components/onair/fsw/.git`
+
+
+```text
+gitdir: ../../../.git/modules/components/onair/fsw
+```
+
+### `.gitignore`
+
+**경로:** `components/onair/fsw/.gitignore`
+
+
+```text
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
+#   However, in case of collaboration, if having platform-specific dependencies or dependencies
+#   having no cross-platform support, pipenv may install dependencies that don't work, or not
+#   install all needed dependencies.
+#Pipfile.lock
+
+# PEP 582; used by e.g. github.com/David-OConnor/pyflow
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# Visual Studio Code
+.vscode/
+
+# macOS
+.DS_Store
+```
+
+### `.gitlab-ci.yml`
+
+**경로:** `components/onair/fsw/.gitlab-ci.yml`
+
+
+```yaml
+variables:
+  GIT_CONFIG_PARAMETERS: "'url.https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/.insteadof=git@${CI_SERVER_HOST}:' 'url.https://gitlab-ci-token:${CI_JOB_TOKEN}@${CI_SERVER_HOST}/.insteadof=ssh://git@${CI_SERVER_HOST}/'"
+  GIT_SUBMODULE_STRATEGY: recursive
+  PYTHONPATH: src
+  RUN_PATH: src/test
+  RESULTS_PATH: src/test/results
+
+test-onair:
+  tags:
+    - app-builder
+  image: aetd-dockerlab.gsfc.nasa.gov/spar-lab/onair/onair-meta
+  stage: test
+  script:
+    - python3.11 -m pip install -r requirements_pip.txt
+    - pwd
+    - python3.11 driver.py -t
+    - coverage report    
+    - coverage xml
+  coverage: '/(?i)total.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/'
+  artifacts:
+  #  paths:
+  #    - cfs_fsw/build-sim/*
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+```
+
+### `conftest.py`
+
+**경로:** `components/onair/fsw/conftest.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator of
+# the National Aeronautics and Space Administration. No copyright is claimed in the
+# United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+import pytest
+import random
+from time import time
+from unittest.mock import MagicMock
+import sys
+
+def pytest_addoption(parser):
+  parser.addoption("--conftest-seed", action="store", type=int, default=None)
+
+def pytest_configure(config):
+  seed = config.getoption("--conftest-seed")
+  if config.getoption("--conftest-seed") == None:
+    seed = int(time())
+  pytest.gen = random.Random(seed)
+  print(f"Using --conftest-seed={seed}")
+
+  # Mock simdkalman for kalman_plugin testing
+  simdkalman = MagicMock()
+  sys.modules['simdkalman'] = simdkalman
+
+  # Mock sbn_client for sbn_adapter testing
+  sc = MagicMock()
+  sys.modules['sbn_client'] = sc
+
+  # Mock message_headers for sbn_adapter testing
+  mh = MagicMock()
+  mh.sample_data_tlm_t = MagicMock()
+  mh.sample_data_tlm_t.__name__ = 'mock_sample_data_tlm_t'
+  mh.sample_data_power_t = MagicMock()
+  mh.sample_data_power_t.__name__ = 'mock_sample_data_power_t'
+  mh.sample_data_thermal_t = MagicMock()
+  mh.sample_data_thermal_t.__name__ = 'mock_sample_data_thermal_t'
+  mh.sample_data_gps_t = MagicMock()
+  mh.sample_data_gps_t.__name__ = 'mock_sample_data_gps_t'
+  sys.modules['message_headers'] = mh
+```
+
+### `COPYRIGHT`
+
+**경로:** `components/onair/fsw/COPYRIGHT`
+
+
+```text
+Copyright © 2023 United States Government as represented by the Administrator of the National Aeronautics and Space Administration. No copyright is claimed in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+```
+
+### `Dockerfile`
+
+**경로:** `components/onair/fsw/Dockerfile`
+
+
+```text
+FROM ubuntu:20.04
+
+ARG USER_ID
+ARG GROUP_ID
+
+# Needed for a silent cmake install
+ARG DEBIAN_FRONTEND=noninteractive
+ENV TZ=America/New_York
+
+# Add the host's user/group ID so that the host can easily access files created by the guest
+# Checks if group_id already exists (thanks Romeo)
+RUN if ! grep -q ${GROUP_ID} /etc/group ; then groupadd -g ${GROUP_ID} dev_user; fi
+RUN useradd -l -u ${USER_ID} -g ${GROUP_ID} onair_dev
+# Add a home directory for the user
+RUN mkdir /home/onair_dev && \
+    chown onair_dev /home/onair_dev
+
+# TODO: add ssh with X forwarding
+
+# Install
+RUN \
+  apt-get update && \
+  apt-get -y upgrade
+
+# Bare minimum to build/run cFS
+RUN \
+  apt-get install sudo && \
+  apt-get install -y build-essential && \
+  apt-get install -y gcc-multilib && \
+  apt-get install -y git && \
+  apt-get install -y cmake && \
+  apt-get install -y xterm
+
+# lcov: needed for cFS unit tests
+# xxd: does hex dumps, just plain handy to have
+RUN \
+  apt-get install -y lcov && \
+  apt-get install -y xxd
+
+# OnAIR Dependencies
+RUN \
+  apt-get install -y wget
+
+# Ensure that all packages are up to date after new packages have been added above
+RUN \
+  apt-get update && \
+  apt-get -y upgrade && \
+  rm -rf /var/lib/apt/lists/*
+
+# Add user to sudoers so that they can up the mqueue depth
+RUN adduser onair_dev sudo
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+
+USER onair_dev
+
+# Install miniconda
+ENV CONDA_DIR /home/onair_dev/conda
+RUN \
+  mkdir -p $CONDA_DIR && \
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda.sh && \
+  bash ~/miniconda.sh -b -u -p $CONDA_DIR && \
+  rm -rf ~/miniconda.sh
+ENV PATH=$CONDA_DIR/bin:$PATH
+
+# Make OnAir requirements file accessible by onair_dev user
+COPY environment.yml /home/onair_dev/environment.yml
+RUN \
+  . $CONDA_DIR/etc/profile.d/conda.sh && \
+  conda init bash && \
+  . ~/.bashrc && \
+  conda env create -f /home/onair_dev/environment.yml && \
+  conda activate onair
+
+# Make sure that the onair conda environment is loaded
+RUN \
+  echo "conda activate onair" >> ~/.bashrc
+```
+
+### `driver.py`
+
+**경로:** `components/onair/fsw/driver.py`
+
+
+```python
+# GSC-19165-1, "The On-Board Artificial Intelligence Research (OnAIR) Platform"
+#
+# Copyright © 2023 United States Government as represented by the Administrator
+# of the National Aeronautics and Space Administration. No copyright is claimed
+# in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+#
+# Licensed under the NASA Open Source Agreement version 1.3
+# See "NOSA GSC-19165-1 OnAIR.pdf"
+
+"""
+Driver
+Source of the main function for the OnAIR repo
+"""
+import os
+import sys
+import argparse
+from datetime import datetime
+
+
+def main():
+    """
+    This is the standard naming format, for now.
+    filename.txt and filename_CONFIG.txt
+    Additional (for now), the files need to live in the following locations:
+     filename.txt: OnAIR/src/data/raw_telemetry_data/
+     filename_CONFIG.txt: OnAIR/src/data/telemetry_configs/
+    Check the .ini file for the filenames used
+    """
+
+    arg_parser = argparse.ArgumentParser(description='')
+    arg_parser.add_argument('configfile', nargs='?',
+                            default='./onair/config/default_config.ini',
+                            help='Config file to be used')
+    arg_parser.add_argument('--save', '-s', action='store_true',
+                            help='Should log files be saved?')
+    arg_parser.add_argument('--save_name', '--name', '-n',
+                            help='Name of saved log files')
+    arg_parser.add_argument('--mute', '-m', action='store_true',
+                            help='Mute all non-error output')
+
+    """
+    Testing specific arguments
+    """
+    arg_parser.add_argument('--test', '-t', action='store_true',
+                            help='Run tests')
+    arg_parser.add_argument('--verbose', '-v', action='count', default=0,
+                            help="Increase verbosity in tests")
+    arg_parser.add_argument('-k', action='store', dest='keyword', default="",
+                            metavar='EXPRESSION',
+                            help="Pass thru for pytest's -k option. Runs only"
+                                 " tests with names that match EXPRESSION.")
+    arg_parser.add_argument('--conftest-seed', action='store',
+                            type=int, default=None,
+                            help="Set the random seed for test values")
+    arg_parser.add_argument('--randomly-seed', action='store',
+                            type=int, default=None,
+                            help="Set the random seed for test run order")
+    args = arg_parser.parse_args()
+
+    """
+    In test mode, covergage must start before imports from onair,
+    otherwise lines are missed.
+    """
+    if args.test:
+        import coverage
+        cov = coverage.Coverage(source=['onair', 'plugins'], branch=True)
+        cov.start()
+
+    """
+    Imports from onair that load with or without test mode enabled.
+    """
+    from onair.src.util.cleanup import setup_folders
+    from onair.src.run_scripts.execution_engine import ExecutionEngine
+
+    if args.mute:
+        blockPrint()
+
+    init_global_paths(args.test)
+
+    """ Runs all unit tests """
+    if args.test:
+        import pytest
+        test_directory_name = "test"
+        pytest_args = [test_directory_name]
+
+        pytest_args.extend(['-v'] * args.verbose)
+        if args.conftest_seed:
+            pytest_args.extend([f"--conftest-seed={args.conftest_seed}"])
+        if args.randomly_seed:
+            pytest_args.extend([f"--randomly-seed={args.randomly_seed}"])
+        pytest_args.extend([f"-k {args.keyword}"])
+
+        pytest.main(pytest_args)
+        cov.stop()
+        cov.save()
+        cov.html_report()
+    else:
+        setup_folders(os.environ['RESULTS_PATH'])
+        if args.save_name:
+            save_name = args.save_name
+        else:
+            save_name = datetime.now().strftime("%m%d%Y_%H%M%S")
+        OnAIR = ExecutionEngine(args.configfile, save_name, args.save)
+        OnAIR.run_sim()
+
+
+def init_global_paths(test=False):
+    """
+    Initializes global paths, used throughout execution
+    """
+    run_path = 'onair/src/test' if test else './'
+    results_path = 'onair/src/test/results' if test else 'results/'
+
+    os.environ['BASE_PATH'] = os.path.dirname(os.path.realpath(__file__))
+    os.environ['RUN_PATH'] = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), run_path)
+    os.environ['RESULTS_PATH'] = os.path.join(os.path.dirname(
+        os.path.realpath(__file__)), results_path)
+    os.environ['SRC_ROOT_PATH'] = os.path.dirname(os.path.realpath(__file__))
+
+
+def blockPrint():
+    """ Disable terminal output """
+    sys.stdout = open(os.devnull, 'w')
+
+
+def enablePrint():
+    """ Restore terminal output """
+    sys.stdout = sys.__stdout__
+
+
+if __name__ == '__main__':
+    main()
+```
+
+### `environment.yml`
+
+**경로:** `components/onair/fsw/environment.yml`
+
+
+```yaml
+name: onair
+channels:
+  - default
+  - conda-forge
+dependencies:
+  - python>=3.8,<3.13
+  - numpy
+  - coverage
+  - pytest
+  - pytest-mock
+  - pytest-randomly
+  - pip
+  - pip:
+    - redis
+```
+
+### `NOSA GSC-19165-1 OnAIR.pdf`
+
+**경로:** `components/onair/fsw/NOSA GSC-19165-1 OnAIR.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `OnAIR_logo.svg`
+
+**경로:** `components/onair/fsw/OnAIR_logo.svg`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="80mm"
+   height="30mm"
+   viewBox="0 0 80 30"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.5 (2060ec1f9f, 2020-04-08)"
+   sodipodi:docname="OnAIR_logo.svg"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="55.3709"
+     inkscape:cy="288.05569"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1136"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(0,-267)">
+    <g
+       aria-label="OnAIR"
+       transform="matrix(0.26458333,0,0,0.26458333,-0.37797619,267.07798)"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:-10px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       id="flowRoot815">
+      <path
+         d="m 54.139734,23.639975 c -18.816,0 -31.392,10.752 -35.808,32.544 -4.32,21.696 3.936,32.256 22.848,32.256 h 8.832 c 18.912,0 31.392,-10.56 35.712,-32.256 4.416,-21.792 -3.936,-32.544 -22.752,-32.544 z m 6.528,11.328 c 12.48,0 16.608,6.336 13.632,21.12 -2.976,14.88 -9.504,21.024 -21.984,21.024 h -8.832 c -12.576,0 -16.8,-6.144 -13.824,-20.928 2.976,-14.88 9.696,-21.216 22.176,-21.216 z"
+         style="letter-spacing:-10px;fill:#0072b2;fill-opacity:1"
+         id="path892"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 99.339733,37.751975 c -5.088,0 -7.488,1.92 -8.736,7.872 l -8.544,42.816 h 10.176 l 7.871997,-39.456 c 0.192,-0.96 0.672,-1.44 1.536,-1.44 h 16.608 c 10.656,0 14.4,4.416 12.768,12.384 l -5.664,28.512 h 10.272 l 5.664,-28.512 c 2.88,-14.016 -3.84,-22.176 -21.024,-22.176 z"
+         style="letter-spacing:-10px;fill:#0072b2;fill-opacity:1"
+         id="path894"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 177.94762,36.311975 c 0.96,-1.536 2.112,-2.208 3.648,-2.208 1.536,0 2.496,0.672 2.784,2.208 l 9.216,52.128 h 12.576 l -10.368,-57.6 c -1.056,-6.048 -5.088,-8.352 -11.808,-8.352 -6.816,0 -11.616,2.304 -15.264,8.352 l -34.272,57.6 h 12.48 z"
+         style="letter-spacing:-10px;fill:#d55e00;fill-opacity:1"
+         id="path896"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 218.73148,23.639975 -12.96,64.8 h 11.328 l 12.96,-64.8 z"
+         style="letter-spacing:-10px;fill:#d55e00;fill-opacity:1"
+         id="path898"
+         inkscape:connector-curvature="0" />
+      <path
+         d="m 235.51531,23.639975 -2.304,11.328 h 35.52 c 6.24,0 8.256,3.936 7.392,8.544 -0.96,4.608 -4.416,9.024 -10.848,9.024 h -25.248 c -7.104,0 -10.752,2.976 -12.288,10.272 l -5.088,25.632 h 11.328 l 4.704,-23.424 c 0.192,-1.152 0.864,-1.632 1.92,-1.632 h 16.896 l 9.792,25.056 h 12.576 l -9.888,-25.92 c 10.464,-2.784 16.032,-11.424 17.664,-19.488 2.016,-10.368 -2.4,-19.392 -16.992,-19.392 z"
+         style="letter-spacing:-10px;fill:#0072b2;fill-opacity:1"
+         id="path900"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
+```
+
+### `README.md`
+
+**경로:** `components/onair/fsw/README.md`
+
+
+````markdown
+![Build](https://github.com/nasa/OnAIR/actions/workflows/unit-test.yml/badge.svg)
+[![CodeCov](https://codecov.io/gh/nasa/OnAIR/branch/main/graph/badge.svg?token=L0WVOTD5X9)](https://codecov.io/gh/nasa/OnAIR)
+
+![alt text](OnAIR_logo.svg "The OnAIR logo, italicized NASA worm style font in blue and orange")
+
+# The On-board Artificial Intelligence Research (OnAIR) Platform
+
+The On-board Artificial Intelligence Research (OnAIR) Platform is a framework that enables AI algorithms written in Python to interact with NASA's [cFS](https://github.com/nasa/cFS).
+It is intended to explore research concepts in autonomous operations in a simulated environment.
+
+## Generating environment
+
+Create a conda environment with the necessary packages
+
+    conda env create -f environment.yml
+
+## Redis example
+
+Using the redis_adapter.py as the DataSource, telemetry can be received through multiple Redis channels and inserted into the full data frame.
+
+### OnAIR config file (.ini)
+
+The redis_example.ini uses a very basic setup:
+ - meta : redis_example_CONFIG.json
+ - parser : onair/data_handling/redis_adapter.py
+ - plugins : one of each type, all of them 'generic' that do nothing
+
+### Telemetry config file (.json)
+
+The telemetry file defines the subscribed channels, data frame and subsystems.
+ - subscriptions : defines channel names where telemetry will be received
+ - order : designation of where each 'channel.telemetry_item' is to be put in full data frame (the data header)
+ - subsystems : data for each specific telemetry item (descriptions only for redis example)
+
+
+### Receipt of telemetry
+
+The Redis adapter expects any published telemetry on a channel to include:
+ - time
+ - every telemetry_item as described under "order" as 'channel.telemetry_item'
+
+All messages sent must be json format (key to value) and will warn when it is not then discard the message (outputting what was received first). Keys should match the required telemetry_item names with the addition of "time." Values should be floats.
+
+### Running the example
+
+If not already running, start a Redis server on 'localhost', port:6379 (typical defaults)
+```
+redis-server
+```
+
+Start up OnAIR with the redis_example.ini file:
+```
+python driver.py onair/config/redis_example.ini
+```
+You should see:
+```
+Redis Adapter ignoring file
+
+---- Redis adapter connecting to server...
+
+---- ... connected!
+
+---- Subscribing to channel: state_0
+
+---- Subscribing to channel: state_1
+
+---- Subscribing to channel: state_2
+
+---- Redis adapter: channel 'state_0' received message type: subscribe.
+
+---- Redis adapter: channel 'state_1' received message type: subscribe.
+
+---- Redis adapter: channel 'state_2' received message type: subscribe.
+
+***************************************************
+************    SIMULATION STARTED     ************
+***************************************************
+```
+
+In another process run the experimental publisher:
+```
+python redis-experiment-publisher.py
+```
+This will send telemetry every 2 seconds, one channel at random until all 3 channels have recieved data then repeat for a total of 9 times (all of which can be changed in the file). Its output should be similar to this:
+```
+Published data to state_0, [0, 0.1, 0.2]
+Published data to state_1, [1, 1.1, 1.2]
+Published data to state_2, [2, 2.1, 2.2]
+Completed 1 loops
+Published data to state_2, [3, 3.1, 3.2]
+Published data to state_1, [4, 4.1, 4.2]
+```
+And OnAir should begin receiving data similarly to this:
+```
+--------------------- STEP 1 ---------------------
+
+CURRENT DATA: [0, 0.1, 0.2, '-', '-', '-', '-']
+INTERPRETED SYSTEM STATUS: ---
+
+--------------------- STEP 2 ---------------------
+
+CURRENT DATA: [1, 0.1, 0.2, 1.1, 1.2, '-', '-']
+INTERPRETED SYSTEM STATUS: ---
+
+--------------------- STEP 3 ---------------------
+
+CURRENT DATA: [2, 0.1, 0.2, 1.1, 1.2, 2.1, 2.2]
+INTERPRETED SYSTEM STATUS: ---
+
+--------------------- STEP 4 ---------------------
+
+CURRENT DATA: [3, 0.1, 0.2, 1.1, 1.2, 3.1, 3.2]
+INTERPRETED SYSTEM STATUS: ---
+
+--------------------- STEP 5 ---------------------
+
+CURRENT DATA: [4, 0.1, 0.2, 4.1, 4.2, 3.1, 3.2]
+INTERPRETED SYSTEM STATUS: ---
+```
+
+## Running unit tests
+
+Instructions on how to run unit tests for OnAIR
+
+### Required python installs:
+pytest,
+pytest-mock,
+coverage
+
+### Optional python install:
+pytest-randomly
+
+### Running the unit tests from the driver.py file
+
+From the parent directory of your local repository:
+```
+python driver.py -t
+```
+
+#### A few optional settings for the driver.py file
+Options that may be added to the driver.py test run. Use these at your own discretion.
+
+`--conftest-seed=###` - set the random values seed for this run  
+`--randomly-seed=###` - set the random order seed for this run  
+`--verbose` or `-v` - set verbosity level, also -vv, -vvv, etc.  
+`-k KEYWORD` - only run tests that match the KEYWORD (see `pytest --help`)  
+
+NOTE: Running tests will output results using provided seeds, but each seed is random when not set directly.
+Example start of test output:
+```
+Using --conftest-seed=1691289424
+===== test session starts =======
+platform linux -- Python 3.11.2, pytest-7.2.0, pluggy-1.3.0
+Using --randomly-seed=1956010105
+```
+Copy and paste previously output seeds (or type them out) as the arguments to repeat results.
+
+### Running pytest directly from command line
+
+For the equivalent of the driver.py run:
+```
+python -m coverage run --branch --source=onair,plugins -m pytest ./test/
+```
+
+#### Command breakdown:
+
+`python -m` - invokes the python runtime on the library following the -m  
+`coverage run` - runs coverage data collection during testing, wrapping itself on the test runner used  
+`--branch` - includes code branching information in the coverage report  
+`--source=onair,plugins` - tells coverage where the code under test exists for reporting line hits  
+`-m pytest` - tells coverage what test runner (framework) to wrap  
+`./test` - run all tests found in this directory and subdirectories  
+
+#### A few optional settings for the command line
+Options that may be added to the command line test run. Use these at your own discretion.
+
+`--disable-warnings` - removes the warning reports, but displays count (i.e., 124 passed, 1 warning in 0.65s)  
+`-p no:randomly` - ONLY required to stop random order testing IFF pytest-randomly installed  
+`--conftest-seed=###` - set the random values seed for this run  
+`--randomly-seed=###` - set the random order seed for this run  
+`--verbose` or `-v` - set verbosity level, also -vv, -vvv, etc.  
+`-k KEYWORD` - only run tests that match the KEYWORD (see `pytest --help`)  
+
+NOTE: see note about seeds in driver.py section above
+
+### To view testing line coverage after run:
+NOTE: you may or may not need the `python -m` to run coverage report or html
+
+`coverage report` - prints basic results in terminal  
+or  
+`coverage html` - creates htmlcov/index.html, automatic when using driver.py for testing  
+
+then
+`<browser_here> htmlcov/index.html` - browsable coverage (i.e., `firefox htmlcov/index.html`)
+
+## Running with Core Flight System (cFS)
+OnAIR can be setup to subscribe to and recieve messages from cFS. For more information see [doc/cfs-onair-guide.md](doc/cfs-onair-guide.md)
+
+## License and Copyright
+
+Please refer to [NOSA GSC-19165-1 OnAIR.pdf](NOSA%20GSC-19165-1%20OnAIR.pdf) and [COPYRIGHT](COPYRIGHT).
+
+## Contributions
+
+Please open an issue if you find any problems.
+We are a small team, but will try to respond in a timely fashion.
+
+If you would like to contribute to the repository, GREAT!
+First you will need to complete the [Individual Contributor License Agreement (pdf)](doc/Indv_CLA_OnAIR.pdf).
+Then, email it to gsfc-softwarerequest@mail.nasa.gov with james.marshall-1@nasa.gov CCed.
+Please include your github username in the email.
+
+Next, please create an issue for the fix or feature and note that you intend to work on it.
+Fork the repository and create a branch with a name that starts with the issue number.
+Once done, submit your pull request and we'll take a look.
+You may want to make draft pull requests to solicit feedback on larger changes.
+````
+
+### `redis-experiment-publisher.py`
+
+**경로:** `components/onair/fsw/redis-experiment-publisher.py`
+
+
+```python
+import redis
+import time
+import random
+
+# Initialize the Redis connection
+redis_host = "localhost"
+redis_port = 6379
+# When your Redis server requires a password, fill it in here
+redis_password = ""
+# Connect to Redis
+r = redis.Redis(host=redis_host,
+                port=redis_port,
+                password=redis_password,
+                decode_responses=True)
+# List of channel names
+channels = ['state_0', 'state_1', 'state_2']
+# Publish messages on each channel in random order
+def publish_messages():
+    loop_count = 0
+    inner_loop_count = 0
+    max_loops = 9
+    while loop_count < max_loops:
+        random.shuffle(channels)
+        for channel in channels:
+            r.publish(channel, f'{{"time":{inner_loop_count}, ' \
+                               f'"x":{inner_loop_count+0.1}, ' \
+                               f'"y":{inner_loop_count+0.2}}}')
+            print(f"Published data to {channel}, " \
+                  f"[{inner_loop_count}, " \
+                  f"{inner_loop_count+0.1}, " \
+                  f"{inner_loop_count+0.2}]")
+            inner_loop_count += 1
+            time.sleep(2)
+        loop_count += 1
+        print(f"Completed {loop_count} loops")
+
+if __name__ == "__main__":
+    publish_messages()
+```

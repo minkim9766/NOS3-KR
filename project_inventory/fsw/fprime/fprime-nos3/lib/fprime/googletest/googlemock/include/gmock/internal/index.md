@@ -3,20 +3,930 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 custom/index
-file--gmock-internal-utils.h
-file--gmock-port.h
-file--gmock-pp.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/custom/`](custom/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-internal-utils.h`](file--gmock-internal-utils.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-port.h`](file--gmock-port.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-pp.h`](file--gmock-pp.h) — UTF-8 텍스트 파일 본문 포함
+### `gmock-internal-utils.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-internal-utils.h`
+
+
+```c
+// Copyright 2007, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Google Mock - a framework for writing C++ mock classes.
+//
+// This file defines some utilities useful for implementing Google
+// Mock.  They are subject to change without notice, so please DO NOT
+// USE THEM IN USER CODE.
+
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
+
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
+
+#include <stdio.h>
+
+#include <ostream>  // NOLINT
+#include <string>
+#include <type_traits>
+#include <vector>
+
+#include "gmock/internal/gmock-port.h"
+#include "gtest/gtest.h"
+
+namespace testing {
+
+template <typename>
+class Matcher;
+
+namespace internal {
+
+// Silence MSVC C4100 (unreferenced formal parameter) and
+// C4805('==': unsafe mix of type 'const int' and type 'const bool')
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4100)
+#pragma warning(disable : 4805)
+#endif
+
+// Joins a vector of strings as if they are fields of a tuple; returns
+// the joined string.
+GTEST_API_ std::string JoinAsKeyValueTuple(
+    const std::vector<const char*>& names, const Strings& values);
+
+// Converts an identifier name to a space-separated list of lower-case
+// words.  Each maximum substring of the form [A-Za-z][a-z]*|\d+ is
+// treated as one word.  For example, both "FooBar123" and
+// "foo_bar_123" are converted to "foo bar 123".
+GTEST_API_ std::string ConvertIdentifierNameToWords(const char* id_name);
+
+// GetRawPointer(p) returns the raw pointer underlying p when p is a
+// smart pointer, or returns p itself when p is already a raw pointer.
+// The following default implementation is for the smart pointer case.
+template <typename Pointer>
+inline const typename Pointer::element_type* GetRawPointer(const Pointer& p) {
+  return p.get();
+}
+// This overload version is for std::reference_wrapper, which does not work with
+// the overload above, as it does not have an `element_type`.
+template <typename Element>
+inline const Element* GetRawPointer(const std::reference_wrapper<Element>& r) {
+  return &r.get();
+}
+
+// This overloaded version is for the raw pointer case.
+template <typename Element>
+inline Element* GetRawPointer(Element* p) {
+  return p;
+}
+
+// MSVC treats wchar_t as a native type usually, but treats it as the
+// same as unsigned short when the compiler option /Zc:wchar_t- is
+// specified.  It defines _NATIVE_WCHAR_T_DEFINED symbol when wchar_t
+// is a native type.
+#if defined(_MSC_VER) && !defined(_NATIVE_WCHAR_T_DEFINED)
+// wchar_t is a typedef.
+#else
+#define GMOCK_WCHAR_T_IS_NATIVE_ 1
+#endif
+
+// In what follows, we use the term "kind" to indicate whether a type
+// is bool, an integer type (excluding bool), a floating-point type,
+// or none of them.  This categorization is useful for determining
+// when a matcher argument type can be safely converted to another
+// type in the implementation of SafeMatcherCast.
+enum TypeKind { kBool, kInteger, kFloatingPoint, kOther };
+
+// KindOf<T>::value is the kind of type T.
+template <typename T>
+struct KindOf {
+  enum { value = kOther };  // The default kind.
+};
+
+// This macro declares that the kind of 'type' is 'kind'.
+#define GMOCK_DECLARE_KIND_(type, kind) \
+  template <>                           \
+  struct KindOf<type> {                 \
+    enum { value = kind };              \
+  }
+
+GMOCK_DECLARE_KIND_(bool, kBool);
+
+// All standard integer types.
+GMOCK_DECLARE_KIND_(char, kInteger);
+GMOCK_DECLARE_KIND_(signed char, kInteger);
+GMOCK_DECLARE_KIND_(unsigned char, kInteger);
+GMOCK_DECLARE_KIND_(short, kInteger);           // NOLINT
+GMOCK_DECLARE_KIND_(unsigned short, kInteger);  // NOLINT
+GMOCK_DECLARE_KIND_(int, kInteger);
+GMOCK_DECLARE_KIND_(unsigned int, kInteger);
+GMOCK_DECLARE_KIND_(long, kInteger);                // NOLINT
+GMOCK_DECLARE_KIND_(unsigned long, kInteger);       // NOLINT
+GMOCK_DECLARE_KIND_(long long, kInteger);           // NOLINT
+GMOCK_DECLARE_KIND_(unsigned long long, kInteger);  // NOLINT
+
+#if GMOCK_WCHAR_T_IS_NATIVE_
+GMOCK_DECLARE_KIND_(wchar_t, kInteger);
+#endif
+
+// All standard floating-point types.
+GMOCK_DECLARE_KIND_(float, kFloatingPoint);
+GMOCK_DECLARE_KIND_(double, kFloatingPoint);
+GMOCK_DECLARE_KIND_(long double, kFloatingPoint);
+
+#undef GMOCK_DECLARE_KIND_
+
+// Evaluates to the kind of 'type'.
+#define GMOCK_KIND_OF_(type)                   \
+  static_cast< ::testing::internal::TypeKind>( \
+      ::testing::internal::KindOf<type>::value)
+
+// LosslessArithmeticConvertibleImpl<kFromKind, From, kToKind, To>::value
+// is true if and only if arithmetic type From can be losslessly converted to
+// arithmetic type To.
+//
+// It's the user's responsibility to ensure that both From and To are
+// raw (i.e. has no CV modifier, is not a pointer, and is not a
+// reference) built-in arithmetic types, kFromKind is the kind of
+// From, and kToKind is the kind of To; the value is
+// implementation-defined when the above pre-condition is violated.
+template <TypeKind kFromKind, typename From, TypeKind kToKind, typename To>
+using LosslessArithmeticConvertibleImpl = std::integral_constant<
+    bool,
+    // clang-format off
+      // Converting from bool is always lossless
+      (kFromKind == kBool) ? true
+      // Converting between any other type kinds will be lossy if the type
+      // kinds are not the same.
+    : (kFromKind != kToKind) ? false
+    : (kFromKind == kInteger &&
+       // Converting between integers of different widths is allowed so long
+       // as the conversion does not go from signed to unsigned.
+      (((sizeof(From) < sizeof(To)) &&
+        !(std::is_signed<From>::value && !std::is_signed<To>::value)) ||
+       // Converting between integers of the same width only requires the
+       // two types to have the same signedness.
+       ((sizeof(From) == sizeof(To)) &&
+        (std::is_signed<From>::value == std::is_signed<To>::value)))
+       ) ? true
+      // Floating point conversions are lossless if and only if `To` is at least
+      // as wide as `From`.
+    : (kFromKind == kFloatingPoint && (sizeof(From) <= sizeof(To))) ? true
+    : false
+    // clang-format on
+    >;
+
+// LosslessArithmeticConvertible<From, To>::value is true if and only if
+// arithmetic type From can be losslessly converted to arithmetic type To.
+//
+// It's the user's responsibility to ensure that both From and To are
+// raw (i.e. has no CV modifier, is not a pointer, and is not a
+// reference) built-in arithmetic types; the value is
+// implementation-defined when the above pre-condition is violated.
+template <typename From, typename To>
+using LosslessArithmeticConvertible =
+    LosslessArithmeticConvertibleImpl<GMOCK_KIND_OF_(From), From,
+                                      GMOCK_KIND_OF_(To), To>;
+
+// This interface knows how to report a Google Mock failure (either
+// non-fatal or fatal).
+class FailureReporterInterface {
+ public:
+  // The type of a failure (either non-fatal or fatal).
+  enum FailureType { kNonfatal, kFatal };
+
+  virtual ~FailureReporterInterface() {}
+
+  // Reports a failure that occurred at the given source file location.
+  virtual void ReportFailure(FailureType type, const char* file, int line,
+                             const std::string& message) = 0;
+};
+
+// Returns the failure reporter used by Google Mock.
+GTEST_API_ FailureReporterInterface* GetFailureReporter();
+
+// Asserts that condition is true; aborts the process with the given
+// message if condition is false.  We cannot use LOG(FATAL) or CHECK()
+// as Google Mock might be used to mock the log sink itself.  We
+// inline this function to prevent it from showing up in the stack
+// trace.
+inline void Assert(bool condition, const char* file, int line,
+                   const std::string& msg) {
+  if (!condition) {
+    GetFailureReporter()->ReportFailure(FailureReporterInterface::kFatal, file,
+                                        line, msg);
+  }
+}
+inline void Assert(bool condition, const char* file, int line) {
+  Assert(condition, file, line, "Assertion failed.");
+}
+
+// Verifies that condition is true; generates a non-fatal failure if
+// condition is false.
+inline void Expect(bool condition, const char* file, int line,
+                   const std::string& msg) {
+  if (!condition) {
+    GetFailureReporter()->ReportFailure(FailureReporterInterface::kNonfatal,
+                                        file, line, msg);
+  }
+}
+inline void Expect(bool condition, const char* file, int line) {
+  Expect(condition, file, line, "Expectation failed.");
+}
+
+// Severity level of a log.
+enum LogSeverity { kInfo = 0, kWarning = 1 };
+
+// Valid values for the --gmock_verbose flag.
+
+// All logs (informational and warnings) are printed.
+const char kInfoVerbosity[] = "info";
+// Only warnings are printed.
+const char kWarningVerbosity[] = "warning";
+// No logs are printed.
+const char kErrorVerbosity[] = "error";
+
+// Returns true if and only if a log with the given severity is visible
+// according to the --gmock_verbose flag.
+GTEST_API_ bool LogIsVisible(LogSeverity severity);
+
+// Prints the given message to stdout if and only if 'severity' >= the level
+// specified by the --gmock_verbose flag.  If stack_frames_to_skip >=
+// 0, also prints the stack trace excluding the top
+// stack_frames_to_skip frames.  In opt mode, any positive
+// stack_frames_to_skip is treated as 0, since we don't know which
+// function calls will be inlined by the compiler and need to be
+// conservative.
+GTEST_API_ void Log(LogSeverity severity, const std::string& message,
+                    int stack_frames_to_skip);
+
+// A marker class that is used to resolve parameterless expectations to the
+// correct overload. This must not be instantiable, to prevent client code from
+// accidentally resolving to the overload; for example:
+//
+//    ON_CALL(mock, Method({}, nullptr))...
+//
+class WithoutMatchers {
+ private:
+  WithoutMatchers() {}
+  friend GTEST_API_ WithoutMatchers GetWithoutMatchers();
+};
+
+// Internal use only: access the singleton instance of WithoutMatchers.
+GTEST_API_ WithoutMatchers GetWithoutMatchers();
+
+// Disable MSVC warnings for infinite recursion, since in this case the
+// recursion is unreachable.
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable : 4717)
+#endif
+
+// Invalid<T>() is usable as an expression of type T, but will terminate
+// the program with an assertion failure if actually run.  This is useful
+// when a value of type T is needed for compilation, but the statement
+// will not really be executed (or we don't care if the statement
+// crashes).
+template <typename T>
+inline T Invalid() {
+  Assert(false, "", -1, "Internal error: attempt to return invalid value");
+#if defined(__GNUC__) || defined(__clang__)
+  __builtin_unreachable();
+#elif defined(_MSC_VER)
+  __assume(0);
+#else
+  return Invalid<T>();
+#endif
+}
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+// Given a raw type (i.e. having no top-level reference or const
+// modifier) RawContainer that's either an STL-style container or a
+// native array, class StlContainerView<RawContainer> has the
+// following members:
+//
+//   - type is a type that provides an STL-style container view to
+//     (i.e. implements the STL container concept for) RawContainer;
+//   - const_reference is a type that provides a reference to a const
+//     RawContainer;
+//   - ConstReference(raw_container) returns a const reference to an STL-style
+//     container view to raw_container, which is a RawContainer.
+//   - Copy(raw_container) returns an STL-style container view of a
+//     copy of raw_container, which is a RawContainer.
+//
+// This generic version is used when RawContainer itself is already an
+// STL-style container.
+template <class RawContainer>
+class StlContainerView {
+ public:
+  typedef RawContainer type;
+  typedef const type& const_reference;
+
+  static const_reference ConstReference(const RawContainer& container) {
+    static_assert(!std::is_const<RawContainer>::value,
+                  "RawContainer type must not be const");
+    return container;
+  }
+  static type Copy(const RawContainer& container) { return container; }
+};
+
+// This specialization is used when RawContainer is a native array type.
+template <typename Element, size_t N>
+class StlContainerView<Element[N]> {
+ public:
+  typedef typename std::remove_const<Element>::type RawElement;
+  typedef internal::NativeArray<RawElement> type;
+  // NativeArray<T> can represent a native array either by value or by
+  // reference (selected by a constructor argument), so 'const type'
+  // can be used to reference a const native array.  We cannot
+  // 'typedef const type& const_reference' here, as that would mean
+  // ConstReference() has to return a reference to a local variable.
+  typedef const type const_reference;
+
+  static const_reference ConstReference(const Element (&array)[N]) {
+    static_assert(std::is_same<Element, RawElement>::value,
+                  "Element type must not be const");
+    return type(array, N, RelationToSourceReference());
+  }
+  static type Copy(const Element (&array)[N]) {
+    return type(array, N, RelationToSourceCopy());
+  }
+};
+
+// This specialization is used when RawContainer is a native array
+// represented as a (pointer, size) tuple.
+template <typename ElementPointer, typename Size>
+class StlContainerView< ::std::tuple<ElementPointer, Size> > {
+ public:
+  typedef typename std::remove_const<
+      typename std::pointer_traits<ElementPointer>::element_type>::type
+      RawElement;
+  typedef internal::NativeArray<RawElement> type;
+  typedef const type const_reference;
+
+  static const_reference ConstReference(
+      const ::std::tuple<ElementPointer, Size>& array) {
+    return type(std::get<0>(array), std::get<1>(array),
+                RelationToSourceReference());
+  }
+  static type Copy(const ::std::tuple<ElementPointer, Size>& array) {
+    return type(std::get<0>(array), std::get<1>(array), RelationToSourceCopy());
+  }
+};
+
+// The following specialization prevents the user from instantiating
+// StlContainer with a reference type.
+template <typename T>
+class StlContainerView<T&>;
+
+// A type transform to remove constness from the first part of a pair.
+// Pairs like that are used as the value_type of associative containers,
+// and this transform produces a similar but assignable pair.
+template <typename T>
+struct RemoveConstFromKey {
+  typedef T type;
+};
+
+// Partially specialized to remove constness from std::pair<const K, V>.
+template <typename K, typename V>
+struct RemoveConstFromKey<std::pair<const K, V> > {
+  typedef std::pair<K, V> type;
+};
+
+// Emit an assertion failure due to incorrect DoDefault() usage. Out-of-lined to
+// reduce code size.
+GTEST_API_ void IllegalDoDefault(const char* file, int line);
+
+template <typename F, typename Tuple, size_t... Idx>
+auto ApplyImpl(F&& f, Tuple&& args, IndexSequence<Idx...>)
+    -> decltype(std::forward<F>(f)(
+        std::get<Idx>(std::forward<Tuple>(args))...)) {
+  return std::forward<F>(f)(std::get<Idx>(std::forward<Tuple>(args))...);
+}
+
+// Apply the function to a tuple of arguments.
+template <typename F, typename Tuple>
+auto Apply(F&& f, Tuple&& args) -> decltype(ApplyImpl(
+    std::forward<F>(f), std::forward<Tuple>(args),
+    MakeIndexSequence<std::tuple_size<
+        typename std::remove_reference<Tuple>::type>::value>())) {
+  return ApplyImpl(std::forward<F>(f), std::forward<Tuple>(args),
+                   MakeIndexSequence<std::tuple_size<
+                       typename std::remove_reference<Tuple>::type>::value>());
+}
+
+// Template struct Function<F>, where F must be a function type, contains
+// the following typedefs:
+//
+//   Result:               the function's return type.
+//   Arg<N>:               the type of the N-th argument, where N starts with 0.
+//   ArgumentTuple:        the tuple type consisting of all parameters of F.
+//   ArgumentMatcherTuple: the tuple type consisting of Matchers for all
+//                         parameters of F.
+//   MakeResultVoid:       the function type obtained by substituting void
+//                         for the return type of F.
+//   MakeResultIgnoredValue:
+//                         the function type obtained by substituting Something
+//                         for the return type of F.
+template <typename T>
+struct Function;
+
+template <typename R, typename... Args>
+struct Function<R(Args...)> {
+  using Result = R;
+  static constexpr size_t ArgumentCount = sizeof...(Args);
+  template <size_t I>
+  using Arg = ElemFromList<I, Args...>;
+  using ArgumentTuple = std::tuple<Args...>;
+  using ArgumentMatcherTuple = std::tuple<Matcher<Args>...>;
+  using MakeResultVoid = void(Args...);
+  using MakeResultIgnoredValue = IgnoredValue(Args...);
+};
+
+template <typename R, typename... Args>
+constexpr size_t Function<R(Args...)>::ArgumentCount;
+
+bool Base64Unescape(const std::string& encoded, std::string* decoded);
+
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
+
+}  // namespace internal
+}  // namespace testing
+
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_INTERNAL_UTILS_H_
+```
+
+### `gmock-port.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-port.h`
+
+
+```c
+// Copyright 2008, Google Inc.
+// All rights reserved.
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//     * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//     * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//     * Neither the name of Google Inc. nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+// Low-level types and utilities for porting Google Mock to various
+// platforms.  All macros ending with _ and symbols defined in an
+// internal namespace are subject to change without notice.  Code
+// outside Google Mock MUST NOT USE THEM DIRECTLY.  Macros that don't
+// end with _ are part of Google Mock's public API and can be used by
+// code outside Google Mock.
+
+// IWYU pragma: private, include "gmock/gmock.h"
+// IWYU pragma: friend gmock/.*
+
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PORT_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PORT_H_
+
+#include <assert.h>
+#include <stdlib.h>
+#include <cstdint>
+#include <iostream>
+
+// Most of the utilities needed for porting Google Mock are also
+// required for Google Test and are defined in gtest-port.h.
+//
+// Note to maintainers: to reduce code duplication, prefer adding
+// portability utilities to Google Test's gtest-port.h instead of
+// here, as Google Mock depends on Google Test.  Only add a utility
+// here if it's truly specific to Google Mock.
+
+#include "gmock/internal/custom/gmock-port.h"
+#include "gtest/internal/gtest-port.h"
+
+#if GTEST_HAS_ABSL
+#include "absl/flags/declare.h"
+#include "absl/flags/flag.h"
+#endif
+
+// For MS Visual C++, check the compiler version. At least VS 2015 is
+// required to compile Google Mock.
+#if defined(_MSC_VER) && _MSC_VER < 1900
+#error "At least Visual C++ 2015 (14.0) is required to compile Google Mock."
+#endif
+
+// Macro for referencing flags.  This is public as we want the user to
+// use this syntax to reference Google Mock flags.
+#define GMOCK_FLAG_NAME_(name) gmock_##name
+#define GMOCK_FLAG(name) FLAGS_gmock_##name
+
+// Pick a command line flags implementation.
+#if GTEST_HAS_ABSL
+
+// Macros for defining flags.
+#define GMOCK_DEFINE_bool_(name, default_val, doc) \
+  ABSL_FLAG(bool, GMOCK_FLAG_NAME_(name), default_val, doc)
+#define GMOCK_DEFINE_int32_(name, default_val, doc) \
+  ABSL_FLAG(int32_t, GMOCK_FLAG_NAME_(name), default_val, doc)
+#define GMOCK_DEFINE_string_(name, default_val, doc) \
+  ABSL_FLAG(std::string, GMOCK_FLAG_NAME_(name), default_val, doc)
+
+// Macros for declaring flags.
+#define GMOCK_DECLARE_bool_(name) \
+  ABSL_DECLARE_FLAG(bool, GMOCK_FLAG_NAME_(name))
+#define GMOCK_DECLARE_int32_(name) \
+  ABSL_DECLARE_FLAG(int32_t, GMOCK_FLAG_NAME_(name))
+#define GMOCK_DECLARE_string_(name) \
+  ABSL_DECLARE_FLAG(std::string, GMOCK_FLAG_NAME_(name))
+
+#define GMOCK_FLAG_GET(name) ::absl::GetFlag(GMOCK_FLAG(name))
+#define GMOCK_FLAG_SET(name, value) \
+  (void)(::absl::SetFlag(&GMOCK_FLAG(name), value))
+
+#else  // GTEST_HAS_ABSL
+
+// Macros for defining flags.
+#define GMOCK_DEFINE_bool_(name, default_val, doc)  \
+  namespace testing {                               \
+  GTEST_API_ bool GMOCK_FLAG(name) = (default_val); \
+  }                                                 \
+  static_assert(true, "no-op to require trailing semicolon")
+#define GMOCK_DEFINE_int32_(name, default_val, doc)    \
+  namespace testing {                                  \
+  GTEST_API_ int32_t GMOCK_FLAG(name) = (default_val); \
+  }                                                    \
+  static_assert(true, "no-op to require trailing semicolon")
+#define GMOCK_DEFINE_string_(name, default_val, doc)         \
+  namespace testing {                                        \
+  GTEST_API_ ::std::string GMOCK_FLAG(name) = (default_val); \
+  }                                                          \
+  static_assert(true, "no-op to require trailing semicolon")
+
+// Macros for declaring flags.
+#define GMOCK_DECLARE_bool_(name)          \
+  namespace testing {                      \
+  GTEST_API_ extern bool GMOCK_FLAG(name); \
+  }                                        \
+  static_assert(true, "no-op to require trailing semicolon")
+#define GMOCK_DECLARE_int32_(name)            \
+  namespace testing {                         \
+  GTEST_API_ extern int32_t GMOCK_FLAG(name); \
+  }                                           \
+  static_assert(true, "no-op to require trailing semicolon")
+#define GMOCK_DECLARE_string_(name)                 \
+  namespace testing {                               \
+  GTEST_API_ extern ::std::string GMOCK_FLAG(name); \
+  }                                                 \
+  static_assert(true, "no-op to require trailing semicolon")
+
+#define GMOCK_FLAG_GET(name) ::testing::GMOCK_FLAG(name)
+#define GMOCK_FLAG_SET(name, value) (void)(::testing::GMOCK_FLAG(name) = value)
+
+#endif  // GTEST_HAS_ABSL
+
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PORT_H_
+```
+
+### `gmock-pp.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/include/gmock/internal/gmock-pp.h`
+
+
+```c
+#ifndef GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PP_H_
+#define GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PP_H_
+
+// Expands and concatenates the arguments. Constructed macros reevaluate.
+#define GMOCK_PP_CAT(_1, _2) GMOCK_PP_INTERNAL_CAT(_1, _2)
+
+// Expands and stringifies the only argument.
+#define GMOCK_PP_STRINGIZE(...) GMOCK_PP_INTERNAL_STRINGIZE(__VA_ARGS__)
+
+// Returns empty. Given a variadic number of arguments.
+#define GMOCK_PP_EMPTY(...)
+
+// Returns a comma. Given a variadic number of arguments.
+#define GMOCK_PP_COMMA(...) ,
+
+// Returns the only argument.
+#define GMOCK_PP_IDENTITY(_1) _1
+
+// Evaluates to the number of arguments after expansion.
+//
+//   #define PAIR x, y
+//
+//   GMOCK_PP_NARG() => 1
+//   GMOCK_PP_NARG(x) => 1
+//   GMOCK_PP_NARG(x, y) => 2
+//   GMOCK_PP_NARG(PAIR) => 2
+//
+// Requires: the number of arguments after expansion is at most 15.
+#define GMOCK_PP_NARG(...) \
+  GMOCK_PP_INTERNAL_16TH(  \
+      (__VA_ARGS__, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0))
+
+// Returns 1 if the expansion of arguments has an unprotected comma. Otherwise
+// returns 0. Requires no more than 15 unprotected commas.
+#define GMOCK_PP_HAS_COMMA(...) \
+  GMOCK_PP_INTERNAL_16TH(       \
+      (__VA_ARGS__, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0))
+
+// Returns the first argument.
+#define GMOCK_PP_HEAD(...) GMOCK_PP_INTERNAL_HEAD((__VA_ARGS__, unusedArg))
+
+// Returns the tail. A variadic list of all arguments minus the first. Requires
+// at least one argument.
+#define GMOCK_PP_TAIL(...) GMOCK_PP_INTERNAL_TAIL((__VA_ARGS__))
+
+// Calls CAT(_Macro, NARG(__VA_ARGS__))(__VA_ARGS__)
+#define GMOCK_PP_VARIADIC_CALL(_Macro, ...) \
+  GMOCK_PP_IDENTITY(                        \
+      GMOCK_PP_CAT(_Macro, GMOCK_PP_NARG(__VA_ARGS__))(__VA_ARGS__))
+
+// If the arguments after expansion have no tokens, evaluates to `1`. Otherwise
+// evaluates to `0`.
+//
+// Requires: * the number of arguments after expansion is at most 15.
+//           * If the argument is a macro, it must be able to be called with one
+//             argument.
+//
+// Implementation details:
+//
+// There is one case when it generates a compile error: if the argument is macro
+// that cannot be called with one argument.
+//
+//   #define M(a, b)  // it doesn't matter what it expands to
+//
+//   // Expected: expands to `0`.
+//   // Actual: compile error.
+//   GMOCK_PP_IS_EMPTY(M)
+//
+// There are 4 cases tested:
+//
+// * __VA_ARGS__ possible expansion has no unparen'd commas. Expected 0.
+// * __VA_ARGS__ possible expansion is not enclosed in parenthesis. Expected 0.
+// * __VA_ARGS__ possible expansion is not a macro that ()-evaluates to a comma.
+//   Expected 0
+// * __VA_ARGS__ is empty, or has unparen'd commas, or is enclosed in
+//   parenthesis, or is a macro that ()-evaluates to comma. Expected 1.
+//
+// We trigger detection on '0001', i.e. on empty.
+#define GMOCK_PP_IS_EMPTY(...)                                               \
+  GMOCK_PP_INTERNAL_IS_EMPTY(GMOCK_PP_HAS_COMMA(__VA_ARGS__),                \
+                             GMOCK_PP_HAS_COMMA(GMOCK_PP_COMMA __VA_ARGS__), \
+                             GMOCK_PP_HAS_COMMA(__VA_ARGS__()),              \
+                             GMOCK_PP_HAS_COMMA(GMOCK_PP_COMMA __VA_ARGS__()))
+
+// Evaluates to _Then if _Cond is 1 and _Else if _Cond is 0.
+#define GMOCK_PP_IF(_Cond, _Then, _Else) \
+  GMOCK_PP_CAT(GMOCK_PP_INTERNAL_IF_, _Cond)(_Then, _Else)
+
+// Similar to GMOCK_PP_IF but takes _Then and _Else in parentheses.
+//
+// GMOCK_PP_GENERIC_IF(1, (a, b, c), (d, e, f)) => a, b, c
+// GMOCK_PP_GENERIC_IF(0, (a, b, c), (d, e, f)) => d, e, f
+//
+#define GMOCK_PP_GENERIC_IF(_Cond, _Then, _Else) \
+  GMOCK_PP_REMOVE_PARENS(GMOCK_PP_IF(_Cond, _Then, _Else))
+
+// Evaluates to the number of arguments after expansion. Identifies 'empty' as
+// 0.
+//
+//   #define PAIR x, y
+//
+//   GMOCK_PP_NARG0() => 0
+//   GMOCK_PP_NARG0(x) => 1
+//   GMOCK_PP_NARG0(x, y) => 2
+//   GMOCK_PP_NARG0(PAIR) => 2
+//
+// Requires: * the number of arguments after expansion is at most 15.
+//           * If the argument is a macro, it must be able to be called with one
+//             argument.
+#define GMOCK_PP_NARG0(...) \
+  GMOCK_PP_IF(GMOCK_PP_IS_EMPTY(__VA_ARGS__), 0, GMOCK_PP_NARG(__VA_ARGS__))
+
+// Expands to 1 if the first argument starts with something in parentheses,
+// otherwise to 0.
+#define GMOCK_PP_IS_BEGIN_PARENS(...)                              \
+  GMOCK_PP_HEAD(GMOCK_PP_CAT(GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_R_, \
+                             GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_C __VA_ARGS__))
+
+// Expands to 1 is there is only one argument and it is enclosed in parentheses.
+#define GMOCK_PP_IS_ENCLOSED_PARENS(...)             \
+  GMOCK_PP_IF(GMOCK_PP_IS_BEGIN_PARENS(__VA_ARGS__), \
+              GMOCK_PP_IS_EMPTY(GMOCK_PP_EMPTY __VA_ARGS__), 0)
+
+// Remove the parens, requires GMOCK_PP_IS_ENCLOSED_PARENS(args) => 1.
+#define GMOCK_PP_REMOVE_PARENS(...) GMOCK_PP_INTERNAL_REMOVE_PARENS __VA_ARGS__
+
+// Expands to _Macro(0, _Data, e1) _Macro(1, _Data, e2) ... _Macro(K -1, _Data,
+// eK) as many of GMOCK_INTERNAL_NARG0 _Tuple.
+// Requires: * |_Macro| can be called with 3 arguments.
+//           * |_Tuple| expansion has no more than 15 elements.
+#define GMOCK_PP_FOR_EACH(_Macro, _Data, _Tuple)                        \
+  GMOCK_PP_CAT(GMOCK_PP_INTERNAL_FOR_EACH_IMPL_, GMOCK_PP_NARG0 _Tuple) \
+  (0, _Macro, _Data, _Tuple)
+
+// Expands to _Macro(0, _Data, ) _Macro(1, _Data, ) ... _Macro(K - 1, _Data, )
+// Empty if _K = 0.
+// Requires: * |_Macro| can be called with 3 arguments.
+//           * |_K| literal between 0 and 15
+#define GMOCK_PP_REPEAT(_Macro, _Data, _N)           \
+  GMOCK_PP_CAT(GMOCK_PP_INTERNAL_FOR_EACH_IMPL_, _N) \
+  (0, _Macro, _Data, GMOCK_PP_INTENRAL_EMPTY_TUPLE)
+
+// Increments the argument, requires the argument to be between 0 and 15.
+#define GMOCK_PP_INC(_i) GMOCK_PP_CAT(GMOCK_PP_INTERNAL_INC_, _i)
+
+// Returns comma if _i != 0. Requires _i to be between 0 and 15.
+#define GMOCK_PP_COMMA_IF(_i) GMOCK_PP_CAT(GMOCK_PP_INTERNAL_COMMA_IF_, _i)
+
+// Internal details follow. Do not use any of these symbols outside of this
+// file or we will break your code.
+#define GMOCK_PP_INTENRAL_EMPTY_TUPLE (, , , , , , , , , , , , , , , )
+#define GMOCK_PP_INTERNAL_CAT(_1, _2) _1##_2
+#define GMOCK_PP_INTERNAL_STRINGIZE(...) #__VA_ARGS__
+#define GMOCK_PP_INTERNAL_CAT_5(_1, _2, _3, _4, _5) _1##_2##_3##_4##_5
+#define GMOCK_PP_INTERNAL_IS_EMPTY(_1, _2, _3, _4)                             \
+  GMOCK_PP_HAS_COMMA(GMOCK_PP_INTERNAL_CAT_5(GMOCK_PP_INTERNAL_IS_EMPTY_CASE_, \
+                                             _1, _2, _3, _4))
+#define GMOCK_PP_INTERNAL_IS_EMPTY_CASE_0001 ,
+#define GMOCK_PP_INTERNAL_IF_1(_Then, _Else) _Then
+#define GMOCK_PP_INTERNAL_IF_0(_Then, _Else) _Else
+
+// Because of MSVC treating a token with a comma in it as a single token when
+// passed to another macro, we need to force it to evaluate it as multiple
+// tokens. We do that by using a "IDENTITY(MACRO PARENTHESIZED_ARGS)" macro. We
+// define one per possible macro that relies on this behavior. Note "_Args" must
+// be parenthesized.
+#define GMOCK_PP_INTERNAL_INTERNAL_16TH(_1, _2, _3, _4, _5, _6, _7, _8, _9, \
+                                        _10, _11, _12, _13, _14, _15, _16,  \
+                                        ...)                                \
+  _16
+#define GMOCK_PP_INTERNAL_16TH(_Args) \
+  GMOCK_PP_IDENTITY(GMOCK_PP_INTERNAL_INTERNAL_16TH _Args)
+#define GMOCK_PP_INTERNAL_INTERNAL_HEAD(_1, ...) _1
+#define GMOCK_PP_INTERNAL_HEAD(_Args) \
+  GMOCK_PP_IDENTITY(GMOCK_PP_INTERNAL_INTERNAL_HEAD _Args)
+#define GMOCK_PP_INTERNAL_INTERNAL_TAIL(_1, ...) __VA_ARGS__
+#define GMOCK_PP_INTERNAL_TAIL(_Args) \
+  GMOCK_PP_IDENTITY(GMOCK_PP_INTERNAL_INTERNAL_TAIL _Args)
+
+#define GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_C(...) 1 _
+#define GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_R_1 1,
+#define GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_R_GMOCK_PP_INTERNAL_IBP_IS_VARIADIC_C \
+  0,
+#define GMOCK_PP_INTERNAL_REMOVE_PARENS(...) __VA_ARGS__
+#define GMOCK_PP_INTERNAL_INC_0 1
+#define GMOCK_PP_INTERNAL_INC_1 2
+#define GMOCK_PP_INTERNAL_INC_2 3
+#define GMOCK_PP_INTERNAL_INC_3 4
+#define GMOCK_PP_INTERNAL_INC_4 5
+#define GMOCK_PP_INTERNAL_INC_5 6
+#define GMOCK_PP_INTERNAL_INC_6 7
+#define GMOCK_PP_INTERNAL_INC_7 8
+#define GMOCK_PP_INTERNAL_INC_8 9
+#define GMOCK_PP_INTERNAL_INC_9 10
+#define GMOCK_PP_INTERNAL_INC_10 11
+#define GMOCK_PP_INTERNAL_INC_11 12
+#define GMOCK_PP_INTERNAL_INC_12 13
+#define GMOCK_PP_INTERNAL_INC_13 14
+#define GMOCK_PP_INTERNAL_INC_14 15
+#define GMOCK_PP_INTERNAL_INC_15 16
+#define GMOCK_PP_INTERNAL_COMMA_IF_0
+#define GMOCK_PP_INTERNAL_COMMA_IF_1 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_2 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_3 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_4 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_5 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_6 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_7 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_8 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_9 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_10 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_11 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_12 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_13 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_14 ,
+#define GMOCK_PP_INTERNAL_COMMA_IF_15 ,
+#define GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, _element) \
+  _Macro(_i, _Data, _element)
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_0(_i, _Macro, _Data, _Tuple)
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_1(_i, _Macro, _Data, _Tuple) \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple)
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_2(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_1(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_3(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_2(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_4(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_3(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_5(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_4(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_6(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_5(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_7(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_6(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_8(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_7(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_9(_i, _Macro, _Data, _Tuple)    \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_8(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_10(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_9(GMOCK_PP_INC(_i), _Macro, _Data,    \
+                                    (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_11(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_10(GMOCK_PP_INC(_i), _Macro, _Data,   \
+                                     (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_12(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_11(GMOCK_PP_INC(_i), _Macro, _Data,   \
+                                     (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_13(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_12(GMOCK_PP_INC(_i), _Macro, _Data,   \
+                                     (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_14(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_13(GMOCK_PP_INC(_i), _Macro, _Data,   \
+                                     (GMOCK_PP_TAIL _Tuple))
+#define GMOCK_PP_INTERNAL_FOR_EACH_IMPL_15(_i, _Macro, _Data, _Tuple)   \
+  GMOCK_PP_INTERNAL_CALL_MACRO(_Macro, _i, _Data, GMOCK_PP_HEAD _Tuple) \
+  GMOCK_PP_INTERNAL_FOR_EACH_IMPL_14(GMOCK_PP_INC(_i), _Macro, _Data,   \
+                                     (GMOCK_PP_TAIL _Tuple))
+
+#endif  // GOOGLEMOCK_INCLUDE_GMOCK_INTERNAL_GMOCK_PP_H_
+```

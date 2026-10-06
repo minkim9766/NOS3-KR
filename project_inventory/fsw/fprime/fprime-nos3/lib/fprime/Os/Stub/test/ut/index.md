@@ -3,38 +3,1280 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `QueueRulesDefinitions.hpp`
 
-file--QueueRulesDefinitions.hpp
-file--StubConditionTests.cpp
-file--StubConsoleTests.cpp
-file--StubCpuTests.cpp
-file--StubDirectoryTests.cpp
-file--StubFileSystemTests.cpp
-file--StubFileTests.cpp
-file--StubMemoryTests.cpp
-file--StubMutexTests.cpp
-file--StubQueueTests.cpp
-file--StubRawTimeTests.cpp
-file--StubTaskTests.cpp
-file--StubTests.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/QueueRulesDefinitions.hpp`
+
+
+```cpp
+#ifndef OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
+#define OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
+#include "Os/Stub/test/Queue.hpp"
+
+using PriorityCompare = std::greater<FwQueuePriorityType>;
+constexpr FwSizeType QUEUE_MESSAGE_SIZE_UPPER_BOUND = Os::Stub::Queue::Test::STUB_QUEUE_TEST_MESSAGE_MAX_SIZE;
+constexpr FwSizeType QUEUE_DEPTH_UPPER_BOUND = 100;
+constexpr bool TESTS_SUPPORT_BLOCKING = false;
+
+#endif  // OS_STUB_TEST_UT_QUEUE_RULES_DEFINITIONS
 ```
 
-## 항목
+### `StubConditionTests.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/QueueRulesDefinitions.hpp`](file--QueueRulesDefinitions.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubConditionTests.cpp`](file--StubConditionTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubConsoleTests.cpp`](file--StubConsoleTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubCpuTests.cpp`](file--StubCpuTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubDirectoryTests.cpp`](file--StubDirectoryTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubFileSystemTests.cpp`](file--StubFileSystemTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubFileTests.cpp`](file--StubFileTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubMemoryTests.cpp`](file--StubMemoryTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubMutexTests.cpp`](file--StubMutexTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubQueueTests.cpp`](file--StubQueueTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubRawTimeTests.cpp`](file--StubRawTimeTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubTaskTests.cpp`](file--StubTaskTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubTests.cpp`](file--StubTests.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubConditionTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubConditionTests.cpp
+// \brief tests using stub implementation for Os::ConditionVariable interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Condition.hpp"
+#include "Os/Stub/test/ConditionVariable.hpp"
+#include "Os/Stub/test/Mutex.hpp"
+
+// Construction test
+TEST(Interface, Construction) {
+    Os::ConditionVariable variable;
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::CONSTRUCT_FN);
+}
+
+// Destruct test
+TEST(Interface, Destruction) {
+    delete (new Os::ConditionVariable);
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::DESTRUCT_FN);
+}
+
+// Wait test
+TEST(Interface, WaitNotHeld) {
+    Os::Mutex mutex;
+    Os::ConditionVariable variable;
+    auto status = variable.pend(mutex);
+    ASSERT_EQ(Os::ConditionVariable::Status::OP_OK, status);
+    ASSERT_EQ(Os::Stub::Mutex::Test::StaticData::data.lastCalled, Os::Stub::Mutex::Test::StaticData::CONSTRUCT_FN);
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::WAIT_FN);
+}
+
+// Wait test
+TEST(Interface, WaitHeld) {
+    Os::Mutex mutex;
+    Os::ConditionVariable variable;
+    mutex.lock();
+    auto status = variable.pend(mutex);
+    ASSERT_EQ(Os::ConditionVariable::Status::OP_OK, status);
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::WAIT_FN);
+}
+
+// Notify test
+TEST(Interface, Notify) {
+    Os::ConditionVariable variable;
+    variable.notify();
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::NOTIFY_FN);
+}
+
+// NotifyAll test
+TEST(Interface, NotifyAll) {
+    Os::ConditionVariable variable;
+    variable.notifyAll();
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::NOTIFY_ALL_FN);
+}
+
+TEST(Interface, Handle) {
+    Os::ConditionVariable variable;
+    ASSERT_EQ(variable.getHandle(), Os::Stub::ConditionVariable::Test::StaticData::data.handle);
+    ASSERT_EQ(Os::Stub::ConditionVariable::Test::StaticData::data.lastCalled,
+              Os::Stub::ConditionVariable::Test::StaticData::HANDLE_FN);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubConsoleTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubConsoleTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubFileTests.cpp
+// \brief tests using stub implementation for Os::File interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Console.hpp"
+#include "Os/Stub/test/Console.hpp"
+
+TEST(Interface, Construction) {
+    Os::Console console;
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::CONSTRUCT_FN);
+}
+TEST(Interface, ConstructionCopy) {
+    Os::Console console;
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::CONSTRUCT_FN);
+    Os::Console console2(console);
+    ASSERT_EQ(const_cast<Os::Stub::Console::Test::TestConsole*>(Os::Stub::Console::Test::StaticData::data.copyObject)
+                  ->getHandle(),
+              console.getHandle());
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled,
+              Os::Stub::Console::Test::StaticData::CONSTRUCT_COPY_FN);
+}
+TEST(Interface, Copy) {
+    Os::Console console;
+    Os::Console console2;
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::CONSTRUCT_FN);
+    console2 = console;
+    ASSERT_EQ(const_cast<Os::Stub::Console::Test::TestConsole*>(Os::Stub::Console::Test::StaticData::data.copyObject)
+                  ->getHandle(),
+              console.getHandle());
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled,
+              Os::Stub::Console::Test::StaticData::CONSTRUCT_COPY_FN);
+}
+
+TEST(Interface, Destruction) {
+    delete (new Os::Console);
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::DESTRUCT_FN);
+}
+
+TEST(Interface, Write) {
+    Os::Console console;
+    const char* message = "hello";
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::CONSTRUCT_FN);
+    console.write(message, 6);
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.lastCalled, Os::Stub::Console::Test::StaticData::WRITE_FN);
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.message, message);
+    ASSERT_EQ(Os::Stub::Console::Test::StaticData::data.size, 6);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubCpuTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubCpuTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubCpuTests.cpp
+// \brief tests using stub implementation for Os::Cpu interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Cpu.hpp"
+#include "Os/Stub/test/Cpu.hpp"
+#include "STest/Pick/Pick.hpp"
+
+TEST(Interface, Construction) {
+    Os::Cpu cpu;
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::CONSTRUCT_FN);
+}
+
+TEST(Interface, Destruction) {
+    delete (new Os::Cpu);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::DESTRUCT_FN);
+}
+
+TEST(Interface, Count) {
+    Os::Cpu cpu;
+    FwSizeType count = STest::Pick::lowerUpper(0, 10000);
+    FwSizeType count_copy = count;
+    Os::CpuInterface::Status status = Os::CpuInterface::Status::ERROR;
+    Os::Stub::Cpu::Test::StaticData::data.status_out = status;
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::CONSTRUCT_FN);
+    ASSERT_EQ(cpu.getCount(count), status);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::COUNT_FN);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.count, count_copy);
+    ASSERT_EQ(count, count_copy);
+}
+
+TEST(Interface, Ticks) {
+    Os::Cpu cpu;
+    FwSizeType index = STest::Pick::lowerUpper(0, 10000);
+    Os::Cpu::Ticks ticks;
+    ticks.used = STest::Pick::lowerUpper(0, 10000);
+    ticks.total = STest::Pick::lowerUpper(0, 10000);
+    Os::Cpu::Ticks ticks_copy = ticks;
+    Os::CpuInterface::Status status = Os::CpuInterface::Status::ERROR;
+    Os::Stub::Cpu::Test::StaticData::data.status_out = status;
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::CONSTRUCT_FN);
+    ASSERT_EQ(cpu.getTicks(ticks, index), status);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.lastCalled, Os::Stub::Cpu::Test::StaticData::TICKS_FN);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.index, index);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.ticks.total, ticks.total);
+    ASSERT_EQ(Os::Stub::Cpu::Test::StaticData::data.ticks.used, ticks.used);
+    ASSERT_EQ(ticks_copy.total, ticks.total);
+    ASSERT_EQ(ticks_copy.used, ticks.used);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubDirectoryTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubDirectoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubDirectoryTests.cpp
+// \brief stub implementation for Os::DirectoryInterface testing
+// This ensures the delegation of function calls happens properly
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/FileSystem.hpp"
+#include "Os/Stub/test/Directory.hpp"
+#include "Os/test/ut/directory/CommonTests.hpp"
+#include "Os/test/ut/directory/RulesHeaders.hpp"
+
+using namespace Os::Stub::Directory::Test;
+
+// Basic file tests
+class Interface : public ::testing::Test {
+  public:
+    //! Setup function delegating to UT setUp function
+    void SetUp() override { StaticData::data = StaticData(); }
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override { StaticData::data = StaticData(); }
+};
+
+// Ensure that Os::Directory properly calls the implementation constructor
+TEST_F(Interface, Construction) {
+    Os::Directory directory;
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CONSTRUCT_FN);
+}
+
+// Ensure that Os::Directory properly calls the implementation destructor
+TEST_F(Interface, Destruction) {
+    delete (new Os::Directory);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DESTRUCT_FN);
+}
+
+// Ensure that Os::Directory properly calls the implementation open()
+TEST_F(Interface, Open) {
+    Os::Directory directory;
+    directory.open("/does/not/matter", Os::Directory::OpenMode::CREATE_IF_MISSING);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::OPEN_FN);
+}
+
+// Ensure that Os::Directory properly calls the implementation rewind()
+TEST_F(Interface, Rewind) {
+    Os::Directory directory;
+    directory.open("/does/not/matter", Os::Directory::OpenMode::READ);
+    directory.rewind();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::REWIND_FN);
+}
+
+// Ensure that Os::Directory properly calls the implementation open()
+TEST_F(Interface, Read) {
+    Os::Directory directory;
+    directory.open("/does/not/matter", Os::Directory::OpenMode::READ);
+    char buffer[4];
+    directory.read(buffer, 4);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::READ_FN);
+}
+
+// Ensure that Os::Directory properly calls the implementation open()
+TEST_F(Interface, Close) {
+    Os::Directory directory;
+    directory.close();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CLOSE_FN);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubFileSystemTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubFileSystemTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubFileSystemTests.cpp
+// \brief stub implementation for Os::FileSystemInterface testing
+// This ensures the delegation of function calls happens properly
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Stub/test/FileSystem.hpp"
+#include "Os/test/ut/filesystem/CommonTests.hpp"
+#include "Os/test/ut/filesystem/RulesHeaders.hpp"
+
+using namespace Os::Stub::FileSystem::Test;
+
+// Basic file tests
+class Interface : public ::testing::Test {
+  public:
+    //! Setup function delegating to UT setUp function
+    void SetUp() override { StaticData::data = StaticData(); }
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override { StaticData::data = StaticData(); }
+};
+
+// Ensure that Os::FileSystem properly calls the implementation removeDirectory()
+TEST_F(Interface, RemoveDirectory) {
+    Os::FileSystem::removeDirectory("/does/not/matter");
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::REMOVE_DIR_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation removeFile()
+TEST_F(Interface, RemoveFile) {
+    Os::FileSystem::removeFile("/does/not/matter");
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::REMOVE_FILE_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation moveFile()
+TEST_F(Interface, Rename) {
+    Os::FileSystem::rename("/does/not/matter", "/does/not/matter");
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::RENAME_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation changeWorkingDirectory()
+TEST_F(Interface, GetWorkingDirectory) {
+    char unused[1];
+    Os::FileSystem::getWorkingDirectory(unused, 1);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_CWD_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation changeWorkingDirectory()
+TEST_F(Interface, ChangeWorkingDirectory) {
+    Os::FileSystem::changeWorkingDirectory("/does/not/matter");
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CHANGE_CWD_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation getFreeSpace()
+TEST_F(Interface, GetFreeSpace) {
+    FwSizeType totalBytes;
+    FwSizeType freeBytes;
+    Os::FileSystem::getFreeSpace("/does/not/matter", totalBytes, freeBytes);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_FREESPACE_FN);
+    ASSERT_EQ(StaticData::data.lastStatus, Os::FileSystem::Status::OP_OK);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation getHandle()
+TEST_F(Interface, GetHandle) {
+    ASSERT_NE(Os::FileSystem::getSingleton().getHandle(), nullptr);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_HANDLE_FN);
+}
+
+// Ensure that Os::FileSystem properly calls the implementation getPathType()
+TEST_F(Interface, GetPathType) {
+    Os::FileSystem::PathType pathType = Os::FileSystem::getPathType("/does/not/matter");
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_PATH_TYPE_FN);
+    ASSERT_EQ(pathType, Os::FileSystem::PathType::NOT_EXIST);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubFileTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubFileTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubFileTests.cpp
+// \brief tests using stub implementation for Os::File interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/File.hpp"
+#include "Os/Os.hpp"
+#include "Os/Stub/test/File.hpp"
+#include "Os/test/ut/file/CommonTests.hpp"
+#include "Os/test/ut/file/RulesHeaders.hpp"
+
+namespace Os {
+namespace Test {
+namespace FileTest {
+
+//! Set up for the test ensures that the test can run at all
+//!
+void setUp(bool requires_io) {
+    if (requires_io) {
+        GTEST_SKIP() << "Cannot run tests requiring functional i/o";
+    }
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setPositionResult(0);
+}
+std::vector<std::shared_ptr<const std::string> > FILES;
+//! Tear down for the tests cleans up the test file used
+//!
+void tearDown() {}
+
+class StubsTester : public Tester {
+    //! Check if the test file exists.
+    //! \return true if it exists, false otherwise.
+    //!
+    bool exists(const std::string& filename) const override {
+        for (size_t i = 0; i < FILES.size(); i++) {
+            if (filename == *FILES.at(i)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //! Get a filename, randomly if random is true, otherwise use a basic filename.
+    //! \param random: true if filename should be random, false if predictable
+    //! \return: filename to use for testing
+    //!
+    std::shared_ptr<const std::string> get_filename(bool random) const override {
+        std::shared_ptr<const std::string> filename =
+            std::shared_ptr<const std::string>(new std::string("DOES-NOT-MATTER"), std::default_delete<std::string>());
+        FILES.push_back(filename);
+        return filename;
+    }
+
+    //! Posix tester is fully functional
+    //! \return true
+    //!
+    bool functional() const override { return false; }
+};
+
+std::unique_ptr<Os::Test::FileTest::Tester> get_tester_implementation() {
+    return std::unique_ptr<Os::Test::FileTest::Tester>(new Os::Test::FileTest::StubsTester());
+}
+
+}  // namespace FileTest
+}  // namespace Test
+}  // namespace Os
+
+// Ensure that Os::File properly routes constructor calls to the `constructInternal` function.
+TEST_F(Interface, Construction) {
+    Os::File file;
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::CONSTRUCT_FN);
+}
+
+// Ensure that Os::File properly routes destructor calls to the `destructInternal` function.
+TEST_F(Interface, Destruction) {
+    delete (new Os::File);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::DESTRUCT_FN);
+}
+
+// Ensure that Os::File properly routes open calls to the `openInternal` function.
+TEST_F(Interface, Open) {
+    const char* path = "/does/not/matter";
+    Os::File file;
+    ASSERT_EQ(file.open(path, Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE), Os::File::Status::OP_OK);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::OPEN_FN);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.openPath, path);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.openMode, Os::File::OPEN_CREATE);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.openOverwrite, Os::File::OverwriteType::OVERWRITE);
+}
+
+// Ensure that Os::File properly routes close calls to the `closeInternal` function.
+TEST_F(Interface, Close) {
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    file.close();
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::CLOSE_FN);
+}
+
+// Ensure that Os::File properly routes close calls to the `sizeInternal` function.
+TEST_F(Interface, Size) {
+    FwSizeType sizeResult = std::numeric_limits<FwSizeType>::max();
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setSizeResult(30);
+    ASSERT_EQ(file.size(sizeResult), Os::File::OP_OK);
+    ASSERT_EQ(sizeResult, 30);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::SIZE_FN);
+}
+
+// Ensure that Os::File properly routes close calls to the `positionInternal` function.
+TEST_F(Interface, Position) {
+    FwSizeType positionResult = std::numeric_limits<FwSizeType>::max();
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setPositionResult(50);
+    ASSERT_EQ(file.position(positionResult), Os::File::OP_OK);
+    ASSERT_EQ(positionResult, 50);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::POSITION_FN);
+}
+
+// Ensure that Os::File properly routes preallocate calls to the `preallocateInternal` function.
+TEST_F(Interface, Preallocate) {
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OTHER_ERROR);
+    ASSERT_EQ(file.preallocate(0, 0), Os::File::Status::OTHER_ERROR);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::PREALLOCATE_FN);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.preallocateOffset, 0);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.preallocateLength, 0);
+}
+
+// Ensure that Os::File properly routes seek calls to the `seekInternal` function.
+TEST_F(Interface, Seek) {
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OTHER_ERROR);
+    ASSERT_EQ(file.seek(0, Os::File::SeekType::ABSOLUTE), Os::File::Status::OTHER_ERROR);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::SEEK_FN);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.seekOffset, 0);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.seekType, Os::File::SeekType::ABSOLUTE);
+}
+
+// Ensure that Os::File properly routes flush calls to the `flushInternal` function.
+TEST_F(Interface, Flush) {
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_CREATE, Os::File::OverwriteType::OVERWRITE),
+              Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OTHER_ERROR);
+    ASSERT_EQ(file.flush(), Os::File::Status::OTHER_ERROR);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::FLUSH_FN);
+}
+
+// Ensure that Os::File properly routes flush calls to the `flushInternal` function.
+TEST_F(Interface, Read) {
+    U8 buffer[] = {0xab, 0xcd, 0xef};
+    FwSizeType size = static_cast<FwSizeType>(sizeof buffer);
+    FwSizeType original_size = size;
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_READ, Os::File::OverwriteType::OVERWRITE), Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OTHER_ERROR);
+    ASSERT_EQ(file.read(buffer, size, Os::File::WaitType::WAIT), Os::File::Status::OTHER_ERROR);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::READ_FN);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.readBuffer, buffer);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.readSize, original_size);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.readWait, Os::File::WaitType::WAIT);
+}
+
+// Ensure that Os::File properly routes statuses returned from the `flushInternal` function back to the caller.
+TEST_F(Interface, Write) {
+    U8 buffer[] = {0xab, 0xcd, 0xef};
+    FwSizeType size = static_cast<FwSizeType>(sizeof buffer);
+    FwSizeType original_size = size;
+    Os::File file;
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OP_OK);
+    ASSERT_EQ(file.open("/does/not/matter", Os::File::OPEN_WRITE, Os::File::OverwriteType::OVERWRITE), Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::setNextStatus(Os::File::OTHER_ERROR);
+    ASSERT_EQ(file.write(buffer, size, Os::File::WaitType::WAIT), Os::File::Status::OTHER_ERROR);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.lastCalled, Os::Stub::File::Test::StaticData::WRITE_FN);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.writeBuffer, buffer);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.writeSize, original_size);
+    ASSERT_EQ(Os::Stub::File::Test::StaticData::data.writeWait, Os::File::WaitType::WAIT);
+}
+
+int main(int argc, char** argv) {
+    Os::init();
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubMemoryTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubMemoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubMemoryTests.cpp
+// \brief tests using stub implementation for Os::Memory interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Memory.hpp"
+#include "Os/Stub/test/Memory.hpp"
+#include "STest/Pick/Pick.hpp"
+
+TEST(Interface, Construction) {
+    Os::Memory memory;
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.lastCalled, Os::Stub::Memory::Test::StaticData::CONSTRUCT_FN);
+}
+
+TEST(Interface, Destruction) {
+    delete (new Os::Memory);
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.lastCalled, Os::Stub::Memory::Test::StaticData::DESTRUCT_FN);
+}
+
+TEST(Interface, Usage) {
+    Os::Memory memory;
+    Os::Memory::Usage usage;
+    usage.used = STest::Pick::lowerUpper(0, 10000);
+    usage.total = STest::Pick::lowerUpper(0, 10000);
+    Os::Memory::Usage usage_copy = usage;
+    Os::MemoryInterface::Status status = Os::MemoryInterface::Status::ERROR;
+    Os::Stub::Memory::Test::StaticData::data.status_out = status;
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.lastCalled, Os::Stub::Memory::Test::StaticData::CONSTRUCT_FN);
+    ASSERT_EQ(Os::Memory::getUsage(usage), status);
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.lastCalled, Os::Stub::Memory::Test::StaticData::USAGE_FN);
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.usage.total, usage.total);
+    ASSERT_EQ(Os::Stub::Memory::Test::StaticData::data.usage.used, usage.used);
+    ASSERT_EQ(usage_copy.total, usage.total);
+    ASSERT_EQ(usage_copy.used, usage.used);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubMutexTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubMutexTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubMutexTests.cpp
+// \brief stub implementation for Os::MutexInterface testing
+// This ensures the delegation of function calls happens properly
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Os/Stub/test/Mutex.hpp"
+#include "Os/test/ut/mutex/CommonTests.hpp"
+#include "Os/test/ut/mutex/RulesHeaders.hpp"
+
+using namespace Os::Stub::Mutex::Test;
+
+// Basic file tests
+class Interface : public ::testing::Test {
+  public:
+    //! Setup function delegating to UT setUp function
+    void SetUp() override { StaticData::data = StaticData(); }
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override { StaticData::data = StaticData(); }
+};
+
+// Ensure that Os::Mutex properly calls the implementation constructor
+TEST_F(Interface, Construction) {
+    Os::Mutex mutex;
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CONSTRUCT_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation destructor
+TEST_F(Interface, Destruction) {
+    delete (new Os::Mutex);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DESTRUCT_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation take()
+TEST_F(Interface, Take) {
+    Os::Mutex mutex;
+    StaticData::data.takeStatus = Os::Mutex::Status::ERROR_OTHER;
+    ASSERT_EQ(mutex.take(), StaticData::data.takeStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::TAKE_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation release()
+TEST_F(Interface, Release) {
+    Os::Mutex mutex;
+    StaticData::data.releaseStatus = Os::Mutex::Status::ERROR_OTHER;
+    ASSERT_EQ(mutex.release(), StaticData::data.releaseStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::RELEASE_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation lock()
+TEST_F(Interface, Lock) {
+    Os::Mutex mutex;
+    mutex.lock();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::TAKE_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation unLock()
+TEST_F(Interface, UnLock) {
+    Os::Mutex mutex;
+    mutex.unLock();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::RELEASE_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation unlock()
+TEST_F(Interface, UnlockAlias) {
+    Os::Mutex mutex;
+    mutex.unlock();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::RELEASE_FN);
+}
+
+// Ensure that Os::Mutex properly calls the implementation getHandle()
+TEST_F(Interface, GetHandle) {
+    Os::Mutex mutex;
+    ASSERT_EQ(mutex.getHandle(), nullptr);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_HANDLE_FN);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubQueueTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubQueueTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubFileTests.cpp
+// \brief tests using stub implementation for Os::File interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Os.hpp"
+#include "Os/Queue.hpp"
+#include "Os/Stub/test/Queue.hpp"
+#include "STest/Random/Random.hpp"
+
+void resetInjections() {
+    Os::Stub::Queue::Test::StaticData::data.createStatus = Os::QueueInterface::Status::OP_OK;
+    Os::Stub::Queue::Test::StaticData::data.sendStatus = Os::QueueInterface::Status::OP_OK;
+    Os::Stub::Queue::Test::StaticData::data.receiveStatus = Os::QueueInterface::Status::OP_OK;
+    Os::Stub::Queue::Test::StaticData::data.messages = -1;
+    Os::Stub::Queue::Test::StaticData::data.highWaterMark = -1;
+}
+
+// Construction test
+TEST(Interface, Construction) {
+    Os::Queue queue;
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::CONSTRUCT_FN);
+    resetInjections();
+}
+
+// Destruct test
+TEST(Interface, Destruction) {
+    delete (new Os::Queue);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::DESTRUCT_FN);
+    resetInjections();
+}
+
+// Create test
+TEST(Interface, Create) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    const FwSizeType messageSize =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    Os::Stub::Queue::Test::StaticData::data.createStatus = Os::QueueInterface::Status::INVALID_PRIORITY;
+    Os::QueueInterface::Status status = queue.create(name, depth, messageSize);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::CREATE_FN);
+    ASSERT_EQ(Os::QueueInterface::Status::INVALID_PRIORITY, status);
+    ASSERT_STREQ(name.toChar(), Os::Stub::Queue::Test::StaticData::data.name.toChar());
+    ASSERT_EQ(depth, Os::Stub::Queue::Test::StaticData::data.depth);
+    ASSERT_EQ(messageSize, Os::Stub::Queue::Test::StaticData::data.size);
+    resetInjections();
+}
+
+// Send test
+TEST(Interface, SendPointer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    const FwSizeType messageSize = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    const FwQueuePriorityType priority = STest::Random::lowerUpper(
+        0, FW_MIN(std::numeric_limits<FwQueuePriorityType>::max(), std::numeric_limits<U32>::max()));
+    U8 buffer[messageSize];
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, messageSize));
+    ASSERT_STREQ(name.toChar(), queue.getName().toChar());
+    Os::Stub::Queue::Test::StaticData::data.sendStatus = Os::QueueInterface::Status::EMPTY;
+    Os::QueueInterface::Status status =
+        queue.send(buffer, sizeof buffer, priority, Os::QueueInterface::BlockingType::BLOCKING);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::SEND_FN);
+    ASSERT_EQ(Os::QueueInterface::Status::EMPTY, status);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.buffer, &buffer[0]);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.size, messageSize);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.priority, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.blockType, Os::QueueInterface::BlockingType::BLOCKING);
+    ASSERT_EQ(depth, queue.getDepth());
+    ASSERT_EQ(messageSize, queue.getMessageSize());
+    resetInjections();
+}
+
+// Send test
+TEST(Interface, SendBuffer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    const FwSizeType messageSize = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    const FwQueuePriorityType priority = STest::Random::lowerUpper(
+        0, FW_MIN(std::numeric_limits<FwQueuePriorityType>::max(), std::numeric_limits<U32>::max()));
+    U8 storage[messageSize];
+    Fw::ExternalSerializeBuffer buffer(storage, sizeof storage);
+    Fw::String message = "hello";
+    buffer.serialize(message);
+
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, messageSize));
+    Os::Stub::Queue::Test::StaticData::data.sendStatus = Os::QueueInterface::Status::UNKNOWN_ERROR;
+    Os::QueueInterface::Status status = queue.send(buffer, priority, Os::QueueInterface::BlockingType::NONBLOCKING);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::SEND_FN);
+    ASSERT_EQ(Os::QueueInterface::Status::UNKNOWN_ERROR, status);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.buffer, storage);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.size, 7);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.priority, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.blockType, Os::QueueInterface::BlockingType::NONBLOCKING);
+    ASSERT_EQ(depth, queue.getDepth());
+    ASSERT_EQ(messageSize, queue.getMessageSize());
+
+    resetInjections();
+}
+
+// Receive test
+TEST(Interface, ReceivePointer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    const FwSizeType sizeOut = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    const FwQueuePriorityType priorityOut = STest::Random::lowerUpper(
+        0, FW_MIN(std::numeric_limits<FwQueuePriorityType>::max(), std::numeric_limits<U32>::max()));
+
+    FwSizeType size = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    FwQueuePriorityType priority;
+    U8 storage[size];
+
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, size));
+    Os::Stub::Queue::Test::StaticData::data.receiveStatus = Os::QueueInterface::Status::FULL;
+    Os::Stub::Queue::Test::StaticData::data.size = sizeOut;
+    Os::Stub::Queue::Test::StaticData::data.priority = priorityOut;
+    Os::QueueInterface::Status status =
+        queue.receive(storage, sizeof storage, Os::QueueInterface::BlockingType::NONBLOCKING, size, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::RECEIVE_FN);
+    ASSERT_EQ(Os::QueueInterface::Status::FULL, status);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.buffer, &storage[0]);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.capacity, sizeof storage);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.priority, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.blockType, Os::QueueInterface::BlockingType::NONBLOCKING);
+    ASSERT_EQ(size, sizeOut);
+    ASSERT_EQ(priority, priorityOut);
+    ASSERT_EQ(depth, queue.getDepth());
+    ASSERT_EQ(size, queue.getMessageSize());
+
+    resetInjections();
+}
+
+// Receive test
+TEST(Interface, ReceiveBuffer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    const FwSizeType sizeOut = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    const FwQueuePriorityType priorityOut = STest::Random::lowerUpper(
+        0, FW_MIN(std::numeric_limits<FwQueuePriorityType>::max(), std::numeric_limits<U32>::max()));
+
+    FwSizeType size = sizeof Os::Stub::Queue::Test::InjectableStlQueueHandle::Message::data;
+    FwQueuePriorityType priority;
+    U8 storage[size];
+    Fw::ExternalSerializeBuffer buffer(storage, sizeof storage);
+
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, size));
+    Os::Stub::Queue::Test::StaticData::data.receiveStatus = Os::QueueInterface::Status::FULL;
+    Os::Stub::Queue::Test::StaticData::data.size = sizeOut;
+    Os::Stub::Queue::Test::StaticData::data.priority = priorityOut;
+    Os::QueueInterface::Status status = queue.receive(buffer, Os::QueueInterface::BlockingType::NONBLOCKING, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::RECEIVE_FN);
+    ASSERT_EQ(Os::QueueInterface::Status::FULL, status);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.buffer, &storage[0]);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.capacity, sizeof storage);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.priority, priority);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.blockType, Os::QueueInterface::BlockingType::NONBLOCKING);
+    ASSERT_EQ(size, sizeOut);
+    ASSERT_EQ(priority, priorityOut);
+    ASSERT_EQ(depth, queue.getDepth());
+    ASSERT_EQ(size, queue.getMessageSize());
+
+    resetInjections();
+}
+
+TEST(Interface, MessageCount) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth = 1;
+    const FwSizeType messageSize = 1;
+    const FwSizeType messages =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, messageSize));
+    Os::Stub::Queue::Test::StaticData::data.messages = messages;
+    ASSERT_EQ(queue.getMessagesAvailable(), messages);
+
+    resetInjections();
+}
+
+TEST(Interface, MessageHighWaterMarkCount) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType depth = 100;
+    const FwSizeType messageSize = 200;
+    const FwSizeType highWater =
+        STest::Random::lowerUpper(std::numeric_limits<FwSizeType>::min(),
+                                  FW_MIN(std::numeric_limits<FwSizeType>::max(), std::numeric_limits<U32>::max()));
+    ASSERT_EQ(Os::QueueInterface::Status::OP_OK, queue.create(name, depth, messageSize));
+    Os::Stub::Queue::Test::StaticData::data.highWaterMark = highWater;
+    ASSERT_EQ(queue.getMessageHighWaterMark(), highWater);
+
+    resetInjections();
+}
+
+TEST(Interface, QueueHandle) {
+    Os::Queue queue;
+    ASSERT_EQ(queue.getHandle(), Os::Stub::Queue::Test::StaticData::data.handle);
+    ASSERT_EQ(Os::Stub::Queue::Test::StaticData::data.lastCalled, Os::Stub::Queue::Test::StaticData::HANDLE_FN);
+    resetInjections();
+}
+
+int main(int argc, char** argv) {
+    Os::init();
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubRawTimeTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubRawTimeTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubRawTimeTests.cpp
+// \brief stub implementation for Os::RawTimeInterface testing
+// This ensures the delegation of function calls happens properly
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Buffer/Buffer.hpp"
+#include "Fw/Types/Serializable.hpp"
+#include "Os/Stub/test/RawTime.hpp"
+#include "Os/test/ut/rawtime/CommonTests.hpp"
+#include "Os/test/ut/rawtime/RulesHeaders.hpp"
+
+using namespace Os::Stub::RawTime::Test;
+
+// Basic file tests
+class Interface : public ::testing::Test {
+  public:
+    //! Setup function delegating to UT setUp function
+    void SetUp() override { StaticData::data = StaticData(); }
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override { StaticData::data = StaticData(); }
+};
+
+// Ensure that Os::RawTime properly calls the implementation constructor
+TEST_F(Interface, Construction) {
+    Os::RawTime rawtime;
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CONSTRUCT_FN);
+}
+
+// Ensure that Os::RawTime properly calls the implementation constructor
+TEST_F(Interface, CopyConstruction) {
+    Os::RawTime rawtime;
+    Os::RawTime rawtime_copy(rawtime);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::COPY_CONSTRUCT_FN);
+}
+
+// Ensure that Os::RawTime properly calls the implementation destructor
+TEST_F(Interface, Destruction) {
+    delete (new Os::RawTime);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DESTRUCT_FN);
+}
+
+// Ensure that Os::RawTime properly calls the following delegate function
+TEST_F(Interface, Now) {
+    Os::RawTime rawtime;
+    ASSERT_EQ(rawtime.now(), Os::RawTime::Status::OP_OK);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_TIME_FN);
+}
+
+// Ensure that Os::RawTime properly calls the following delegate function
+TEST_F(Interface, GetTimeInterval) {
+    Os::RawTime rawtime;
+    Fw::TimeInterval unused;
+    ASSERT_EQ(rawtime.getTimeInterval(rawtime, unused), Os::RawTime::Status::OP_OK);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_INTERVAL_FN);
+}
+
+// Ensure that Os::RawTime properly calls the following delegate function
+TEST_F(Interface, Serialize) {
+    Os::RawTime rawtime;
+    Fw::Buffer buffer;
+    auto esb = buffer.getSerializer();
+    ASSERT_EQ(rawtime.serializeTo(esb), Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::SERIALIZE_FN);
+}
+
+// Ensure that Os::RawTime properly calls the following delegate function
+TEST_F(Interface, Deserialize) {
+    Os::RawTime rawtime;
+    Fw::Buffer buffer;
+    auto esb = buffer.getDeserializer();
+    ASSERT_EQ(rawtime.deserializeFrom(esb), Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DESERIALIZE_FN);
+}
+
+// Ensure that Os::RawTime properly calls the implementation getHandle()
+TEST_F(Interface, GetHandle) {
+    Os::RawTime rawtime;
+    rawtime.getHandle();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::GET_HANDLE_FN);
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubTaskTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubTaskTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Stub/test/ut/StubTaskTests.cpp
+// \brief tests using stub implementation for Os::Task interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Os.hpp"
+#include "Os/Stub/test/Task.hpp"
+#include "Os/test/ut/task/CommonTests.hpp"
+#include "Os/test/ut/task/RulesHeaders.hpp"
+
+using namespace Os::Stub::Task::Test;
+
+void testMethod(void* test) {}
+
+// Basic file tests
+class Interface : public ::testing::Test {
+  public:
+    //! Setup function delegating to UT setUp function
+    void SetUp() override { StaticData::data = StaticData(); }
+
+    //! Setup function delegating to UT tearDown function
+    void TearDown() override { StaticData::data = StaticData(); }
+};
+
+struct QuickRegistry : Os::TaskRegistry {
+    void addTask(Os::Task* task) override { this->m_task = task; }
+
+    void removeTask(Os::Task* task) override { this->m_task = nullptr; }
+    Os::Task* m_task = nullptr;
+};
+
+// Ensure that Os::Task properly calls the implementation constructor
+TEST_F(Interface, Construction) {
+    Os::Task task;
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::CONSTRUCT_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation destructor
+TEST_F(Interface, Destruction) {
+    delete (new Os::Task);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DESTRUCT_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation start
+TEST_F(Interface, Start) {
+    Os::Task task;
+    StaticData::data.startStatus = Os::Task::Status::UNKNOWN_ERROR;
+    Os::Task::Arguments arguments(Fw::String("Task"), &testMethod, nullptr);
+    ASSERT_EQ(task.start(arguments), StaticData::data.startStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::START_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation start with arguments
+TEST_F(Interface, StartOptionalArguments) {
+    Os::Task task;
+    StaticData::data.startStatus = Os::Task::Status::INVALID_STACK;
+    Os::Task::Arguments arguments(Fw::String("Task"), &testMethod, nullptr);
+    ASSERT_EQ(task.start(arguments), StaticData::data.startStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::START_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation onStart before calling start
+TEST_F(Interface, OnStart) {
+    Os::Task task;
+    StaticData::data.startStatus = Os::Task::Status::UNKNOWN_ERROR;
+    Os::Task::Arguments arguments(Fw::String("Task"), &testMethod, nullptr);
+    ASSERT_EQ(task.start(arguments), StaticData::data.startStatus);
+}
+
+// Ensure that Os::Task properly calls the implementation suspend
+TEST_F(Interface, Suspend) {
+    Os::Task task;
+    task.suspend();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::SUSPEND_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation resume
+TEST_F(Interface, Resume) {
+    Os::Task task;
+    StaticData::data.startStatus = Os::Task::Status::UNKNOWN_ERROR;
+    task.resume();
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::RESUME_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation join
+TEST_F(Interface, Join) {
+    Os::Task task;
+    StaticData::data.joinStatus = Os::Task::Status::JOIN_ERROR;
+    StaticData::data.startStatus = Os::Task::Status::JOIN_ERROR;
+    Os::Task::Arguments arguments(Fw::String("Task"), &testMethod, nullptr);
+    ASSERT_EQ(task.start(arguments), StaticData::data.startStatus);
+    task.invokeRoutine();
+    ASSERT_EQ(task.join(), StaticData::data.joinStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::JOIN_FN);
+}
+
+// Ensure that Os::Task properly calls the implementation getHandle
+TEST_F(Interface, GetHandle) {
+    Os::Task task;
+}
+
+// Ensure that Os::Task properly calls the implementation delay
+TEST_F(Interface, Delay) {
+    Os::Task task;
+    StaticData::data.delayStatus = Os::Task::Status::DELAY_ERROR;
+    ASSERT_EQ(Os::Task::delay(Fw::TimeInterval(0, 1)), StaticData::data.delayStatus);
+    ASSERT_EQ(StaticData::data.lastCalled, StaticData::LastFn::DELAY_FN);
+}
+
+// Ensure that Os::Task properly calls the registry removal function
+TEST_F(Interface, RegistryRemove) {
+    QuickRegistry registry;
+    Os::Task::registerTaskRegistry(&registry);
+    Os::Task* task = new Os::Task;
+    StaticData::data.startStatus = Os::Task::Status::OP_OK;
+    Os::Task::Arguments arguments(Fw::String("Task"), &testMethod, nullptr);
+    ASSERT_EQ(task->start(arguments), StaticData::data.startStatus);
+    Os::Test::Task::Tester::resetNumTasks();  // Reset task count for rules-based testing
+    ASSERT_EQ(registry.m_task, task);
+    delete task;
+    ASSERT_EQ(registry.m_task, nullptr);
+}
+
+int main(int argc, char** argv) {
+    Os::init();
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `StubTests.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Stub/test/ut/StubTests.cpp`
+
+
+```cpp
+#include <gtest/gtest.h>
+#include <Os/Condition.hpp>
+#include <Os/Console.hpp>
+#include <Os/Cpu.hpp>
+#include <Os/Directory.hpp>
+#include <Os/File.hpp>
+#include <Os/FileSystem.hpp>
+#include <Os/Memory.hpp>
+#include <Os/Mutex.hpp>
+#include <Os/Queue.hpp>
+#include <Os/RawTime.hpp>
+#include <Os/Task.hpp>
+
+TEST(Stub, File) {
+    Os::File _;
+}
+
+TEST(Stub, Task) {
+    Os::Task _;
+}
+
+TEST(Stub, Queue) {
+    Os::Queue _;
+}
+
+TEST(Stub, ConditionVariable) {
+    Os::ConditionVariable _;
+}
+
+TEST(Stub, Mutex) {
+    Os::Mutex _;
+}
+
+TEST(Stub, Console) {
+    Os::Console _;
+}
+
+TEST(Stub, FileSystem) {
+    Os::FileSystem::getSingleton();
+}
+
+TEST(Stub, Directory) {
+    Os::Directory _;
+}
+
+TEST(Stub, Cpu) {
+    Os::Cpu::getSingleton();
+}
+
+TEST(Stub, Memory) {
+    Os::Memory::getSingleton();
+}
+
+TEST(Stub, RawTime) {
+    Os::RawTime _;
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

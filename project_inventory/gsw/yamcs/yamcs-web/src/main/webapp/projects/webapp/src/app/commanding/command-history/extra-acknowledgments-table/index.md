@@ -3,18 +3,100 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `extra-acknowledgments-table.component.css`
 
-file--extra-acknowledgments-table.component.css
-file--extra-acknowledgments-table.component.html
-file--extra-acknowledgments-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.css`
+
+
+```css
+table {
+  width: auto;
+}
+
+table td {
+  border: none;
+  padding: 0;
+}
+
+table td:not(:first-child) {
+  padding-left: 10px;
+}
+
+table td {
+  font-size: 12px;
+  line-height: 16px;
+}
+
+table td {
+  color: rgba(0, 0, 0, 0.654);
+}
 ```
 
-## 항목
+### `extra-acknowledgments-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.css`](file--extra-acknowledgments-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.html`](file--extra-acknowledgments-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.ts`](file--extra-acknowledgments-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.html`
+
+
+```html
+<table>
+  @for (ack of command.extraAcks; track ack.name) {
+    <tr>
+      @if (showIcons) {
+        <td style="width: 16px">
+          <div style="display: flex; align-items: center">
+            <app-acknowledgment-icon [ack]="ack" />
+          </div>
+        </td>
+      }
+      <td style="width: 150px">{{ ack.name?.replace("Acknowledge_", "") }}</td>
+      <td style="width: 70px">{{ ack.status }}</td>
+      <td>
+        @switch (ack.status) {
+          @case ("SCHEDULED") {
+            <span>-</span>
+          }
+          @case ("PENDING") {
+            <span>-</span>
+          }
+          @default {
+            <span [matTooltip]="ack.time | datetime">
+              {{ ack.time | deltaWith: command.generationTime }}
+            </span>
+          }
+        }
+      </td>
+    </tr>
+  }
+</table>
+```
+
+### `extra-acknowledgments-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/extra-acknowledgments-table/extra-acknowledgments-table.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommandHistoryRecord, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AcknowledgmentIconComponent } from '../acknowledgment-icon/acknowledgment-icon.component';
+
+@Component({
+  selector: 'app-extra-acknowledgments-table',
+  templateUrl: './extra-acknowledgments-table.component.html',
+  styleUrl: './extra-acknowledgments-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AcknowledgmentIconComponent, WebappSdkModule],
+})
+export class ExtraAcknowledgmentsTableComponent {
+  @Input()
+  command: CommandHistoryRecord;
+
+  @Input()
+  inline = false;
+
+  @Input()
+  showIcons = true;
+}
+```

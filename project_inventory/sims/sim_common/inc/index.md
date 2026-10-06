@@ -3,48 +3,1525 @@
 
 **경로:** `sims/sim_common/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `ascii_msg_server.hpp`
 
-file--ascii_msg_server.hpp
-file--blackboard_data.hpp
-file--sim_42data_point.hpp
-file--sim_cmdbus_bridge.hpp
-file--sim_config.hpp
-file--sim_coordinate_transformations.hpp
-file--sim_data_42socket_provider.hpp
-file--sim_data_provider_factory.hpp
-file--sim_data_provider_maker.hpp
-file--sim_data_shmem_provider.hpp
-file--sim_hardware_model_factory.hpp
-file--sim_hardware_model_maker.hpp
-file--sim_i_data_point.hpp
-file--sim_i_data_provider.hpp
-file--sim_i_data_provider_maker.hpp
-file--sim_i_hardware_model.hpp
-file--sim_i_hardware_model_maker.hpp
-file--sim_shmem_data_point.hpp
+**경로:** `sims/sim_common/inc/ascii_msg_server.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_ASCIIMSGSERVER_HPP
+#define NOS3_ASCIIMSGSERVER_HPP
+
+#include <queue>
+#include <unistd.h>
+
+//#include <boost/shared_ptr.hpp>
+
+namespace Nos3
+{
+    /** \brief Class for receiving ASCII messages on a TCP/IP connection.
+     *
+     *  \details Messages boundaries are determined based on the carriage return
+     *  character.  Clients call listen_for_data and evaluate the return value
+     *  to determine whether valid messages were received by the server.  Messages
+     *  can be retrieved by calling get_next_message function.  This function
+     *  can be called as many times as needed to drain the receive message
+     *  queue.
+     */
+    class AsciiMsgServer
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        AsciiMsgServer(const uint16_t port);
+        ~AsciiMsgServer();
+
+        /** \brief Initialize the server and start listening for connections
+         *
+         *  \returns true if the server initializes succesfully, otherwise false.
+         */
+
+        bool init();
+
+        /** \brief Listen for messages from client connections
+         *
+         *  \details Uses a select call to block indefinately until one of the
+         *  falling occurs.
+         *    1) Receipt of a new client connection
+         *    2) Receipt of data from an existing client connection
+         *    3) A signal handler interrupts the select call
+         *
+         *  \returns true when the server has read one or more new messages from
+         *  a client connection.
+         */
+        bool listen_for_data();
+
+        /** \brief Get the next message received by the server
+         *
+         *  \returns true if the msg parameter was populated otherwise false.
+         *  A value of false indicates the server's receive message queue is 
+         *  empty.
+         */
+        bool get_next_message(std::string &msg)
+        {
+            bool queue_has_msg = ! _rcv_msg_queue.empty();
+
+            if (queue_has_msg)
+            {
+                msg = _rcv_msg_queue.front();
+                _rcv_msg_queue.pop();
+            }
+
+            return queue_has_msg;
+        }
+
+    private:
+
+        // Helper struct to handle client connection
+        struct ClientConnection
+        {
+            int fd;
+            char rcv_buff[256];
+            char *buff_tail;
+        };
+
+        // Private helper methods
+        bool open_socket();
+        bool wait_for_data (fd_set &read_fds);
+        void read_socket_data(ClientConnection &client_conn);
+        void parse_message(ClientConnection &client_conn);
+        void reset_buffer(ClientConnection &client_conn);
+
+        // Private data
+
+        // Connection data
+        uint16_t _port;
+
+        // File descriptor for the connection accept socket
+        int _socket_fd;
+
+        // A queue used to store data received via client connections
+        std::queue<std::string> _rcv_msg_queue;
+
+        // Helps track multiple client connection
+        static const int MAX_CLIENT_CONNECTIONS = 10;
+        ClientConnection _client_conn[MAX_CLIENT_CONNECTIONS];
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `blackboard_data.hpp`
 
-- [`sims/sim_common/inc/ascii_msg_server.hpp`](file--ascii_msg_server.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/blackboard_data.hpp`](file--blackboard_data.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_42data_point.hpp`](file--sim_42data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_cmdbus_bridge.hpp`](file--sim_cmdbus_bridge.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_config.hpp`](file--sim_config.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_coordinate_transformations.hpp`](file--sim_coordinate_transformations.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_data_42socket_provider.hpp`](file--sim_data_42socket_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_data_provider_factory.hpp`](file--sim_data_provider_factory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_data_provider_maker.hpp`](file--sim_data_provider_maker.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_data_shmem_provider.hpp`](file--sim_data_shmem_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_hardware_model_factory.hpp`](file--sim_hardware_model_factory.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_hardware_model_maker.hpp`](file--sim_hardware_model_maker.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_i_data_point.hpp`](file--sim_i_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_i_data_provider.hpp`](file--sim_i_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_i_data_provider_maker.hpp`](file--sim_i_data_provider_maker.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_i_hardware_model.hpp`](file--sim_i_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_i_hardware_model_maker.hpp`](file--sim_i_hardware_model_maker.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`sims/sim_common/inc/sim_shmem_data_point.hpp`](file--sim_shmem_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `sims/sim_common/inc/blackboard_data.hpp`
+
+
+```cpp
+#ifndef NOS3_BLACKBOARDDATA_HPP
+#define NOS3_BLACKBOARDDATA_HPP
+
+/*
+** Includes
+*/
+#include <boost/thread.hpp>
+
+/*
+** Defines
+*/
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    struct BlackboardData {
+        double svb[3];
+        double bvb[3];
+        double Hvb[3];
+        double GyroRate[3];
+        int    CSSValid[6];
+        double CSSIllum[6];
+        int    FSSValid;
+        double FSSSunAng[2];
+        int    STValid;
+        double STqn[4];
+        double AbsTime;
+        int    GPSWeek;
+        int    GPSSec;
+        double GPSFracSec;
+        double GPSPosN[3];
+        double GPSVelN[3];
+        double GPSPosW[3];
+        double GPSVelW[3];
+        double AccelAcc[3];
+        double WhlH[3];
+    };
+}
+
+#endif
+```
+
+### `sim_42data_point.hpp`
+
+**경로:** `sims/sim_common/inc/sim_42data_point.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIM42DATAPOINT_HPP
+#define NOS3_SIM42DATAPOINT_HPP
+
+#include <cstdint>
+#include <string>
+#include <vector>
+#include <map>
+
+#include <sim_i_data_point.hpp>
+
+namespace Nos3
+{
+
+    /** \brief Class to contain an entry of 42 simulation data.
+     *
+     */
+    class Sim42DataPoint : public SimIDataPoint
+    {
+    public:
+        /// @name Constructors
+        //@{
+        /** \brief Default constructor
+         *  Just has no lines of data.
+         */
+        Sim42DataPoint() {};
+        /** \brief Constructor from a text message of string lines.
+         *  Just sets the lines of data.
+         */
+        Sim42DataPoint(std::vector<std::string> &message);
+        //@}
+
+        /// @name Mutators
+        //@{
+        /// \brief Parses a string containing time of the form YEAR-DOY-HH:MM:SS.SSS
+        ///        and puts the results in the _key_value map.
+        void parse_time(const std::string& value);
+        //@}
+
+        /// @name Accessors
+        //@{
+        /// \brief Returns one long single string representation of the 42 simulation data point
+        /// @return     A long single string representation of the 42 simulation data point
+        std::string to_string(void) const;
+
+        /// \brief Returns the lines stored in the 42 simulation data point
+        /// @return     A vector of strings representing the 42 simulation data point
+        std::vector<std::string> get_lines(void) const {return _lines;}
+
+        /// \brief Returns the value for the key stored in the 42 simulation data point
+        /// @param key  The key to find
+        /// @return     The value corresponding to the input key
+        std::string get_value_for_key(std::string key);
+        //@}
+
+        /// @name Static Methods
+        //@{
+        static void parse_double_vector(const std::string& text, std::vector<double>& dv);            
+        static void DOY2MD(long Year, long DayOfYear, long *Month, long *Day);
+        static double DateToTime(long Year, long Month, long Day, long Hour, long Minute, double Second);
+        //@}
+
+    private:
+        // Private data
+        std::vector<std::string> _lines;
+        std::map<std::string, std::string> _key_values;
+    };
+
+}
+
+#endif
+
+```
+
+### `sim_cmdbus_bridge.hpp`
+
+**경로:** `sims/sim_common/inc/sim_cmdbus_bridge.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIM_CMDBUS_BRIDGE_HPP
+#define NOS3_SIM_CMDBUS_BRIDGE_HPP
+
+#include <ascii_msg_server.hpp>
+#include <sim_i_hardware_model.hpp>
+
+namespace Nos3
+{
+    class SimCmdBusBridge : public SimIHardwareModel
+    {
+    public:
+        SimCmdBusBridge(const boost::property_tree::ptree& config);
+        virtual ~SimCmdBusBridge();
+        
+        // Reads messages from the server and dispatchers them to the NOS
+        // command bus
+        virtual void run(void);
+
+    private:
+
+        // Helper methods
+        void process_msg(std::string &msg);
+
+        // Server to read JSON messages
+        AsciiMsgServer _msg_svr;
+    };
+}
+
+#endif
+```
+
+### `sim_config.hpp`
+
+**경로:** `sims/sim_common/inc/sim_config.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMCONFIG_HPP
+#define NOS3_SIMCONFIG_HPP
+
+#define SIM_LOGGER                "nos3.sim"
+
+#include <string>
+#include <vector>
+#include <stdint.h>
+
+#include <boost/property_tree/ptree.hpp>
+
+namespace Nos3
+{
+    class SimIHardwareModel;
+
+    /// \brief Class to describe the configuration for the simulation.
+    class SimConfig
+    {
+    public:
+        /// @name Constructors
+        //@{
+        /** \brief Constructor taking the number of arguments passed to the program and the arguments passed to the program.
+         * @param argc  The number of arguments.
+         * @param argv  The array of (string) arguments.
+         *
+         * The constructor takes care of creating the simulation configuration from a combination of the arguments
+         * passed on the command line, from a configuration file, and from defaults.
+         */
+        SimConfig(int argc, char *argv[]);
+        //@}
+
+        ~SimConfig();
+
+        /// @name Accessors
+        //@{
+
+        /// \brief Given a simulator name, this method determines the configuration for the simulator and runs it.
+        /// @param simulator  The name of the simulator to run.
+        void run_simulator(std::string simulator_name);
+
+        void stop_simulator();
+
+        /// \brief Given a simulator name, this method returns a property tree of common and simulator specific configuration data for the simulator.
+        /// @param simulator  The name of the simulator to create a property tree configuration for.
+        /// @return A property tree containing common and specific simulator configuration data for the named simulator.
+        boost::property_tree::ptree get_config_for_simulator(std::string simulator) const;
+
+        /// \brief Returns a copy of the property tree of all configuration data read from the command line and configuration file.
+        boost::property_tree::ptree get_config(void) const;
+		
+        /// \brief Returns a vector of strings containing the names of the simulators in the config file.
+		std::vector<std::string> get_simulator_names(void) const;
+
+        /// \brief Returns the name of the simulator specified on the command line.
+        std::string get_simulator(void) const;
+
+        /// \brief Returns a string representation of this object.
+        /// @return A string representing the data in this object.
+        std::string to_string(void) const;
+
+        //@}
+    private:
+        // Private helper methods
+        void        parse_options(int argc, char *argv[]);
+
+        // Private data
+        boost::property_tree::ptree _config;
+        std::string _config_filename;
+        std::string _simulator;
+        SimIHardwareModel* _hardware_model;
+    };
+
+}
+
+#endif
+
+```
+
+### `sim_coordinate_transformations.hpp`
+
+**경로:** `sims/sim_common/inc/sim_coordinate_transformations.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMCOORDINATETRANSFORMATIONS_HPP
+#define NOS3_SIMCOORDINATETRANSFORMATIONS_HPP
+
+#define SIM_LOGGER                "nos3.sim"
+
+#include <cstdint>
+#include <vector>
+#include <cmath>
+
+namespace Nos3
+{
+
+    /// \brief Class to provide some well known coordinate and time transformations
+    class SimCoordinateTransformations
+    {
+    public:
+
+        class SimConstants
+        {
+        public:
+            SimConstants()
+                :PI(4.0 * atan(1.0)),
+                R_plus(6378136.3), // meters, JGM-3 model, Vallado, section 3.2, p. 140
+                e_plus(0.081819221456) // Vallado, section 3.2, p. 140
+            {
+            }
+            const double PI;
+            const double R_plus;
+            const double e_plus;
+
+        };
+
+        /// @name Constructors
+        //@{
+        //@}
+
+        /// @name Static Methods
+        //@{
+        static void AbsTime2YMDHMS(double abs_time, int32_t& year, int32_t& month, int32_t& day,
+                                 int32_t& hour, int32_t& minute, double& second);
+        static double AbsTimeToJD(double abs_time);
+        static double JDToAbsTime(double jd);
+        static void JD2YMDHMS(double jd, int32_t& year, int32_t& month, int32_t& day,
+                                 int32_t& hour, int32_t& minute, double& second);
+        static void DOY2MD(int16_t Year, int16_t DayOfYear, int16_t &Month, int16_t &Day);
+        static double DateToAbsTime(int32_t Year, int32_t Month, int32_t Day, int32_t Hour, int32_t Minute, double Second);
+        static void JDToGpsTime(double JD, int32_t &GpsRollover, int16_t &GpsWeek, double &GpsSecond);
+        static void GpsTimeToJD(int32_t GpsRollover, int16_t GpsWeek, double GpsSecond, double &JD);
+
+        static void ECEF2LLA(double x, double y, double z, double& latitude, double& longitude, double& altitude);
+
+        static void Q2C(std::vector<double> quaternion, std::vector<std::vector<double>>& matrix);
+        static void MTxV(std::vector<std::vector<double>> matrix, std::vector<double> vector, std::vector<double>& output);
+        static double dot(std::vector<double> u, std::vector<double> v);
+        static double norm(std::vector<double> v);
+        static void SxV(double scalar, std::vector<double> vector, std::vector<double>& output);
+       //@}
+       
+       static const SimConstants SIM_CONSTANTS;
+    private:
+        // Private helper methods
+
+        // Private data
+
+    };
+
+}
+
+#endif
+
+```
+
+### `sim_data_42socket_provider.hpp`
+
+**경로:** `sims/sim_common/inc/sim_data_42socket_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2016 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMDATA42SOCKETPROVIDER_HPP
+#define NOS3_SIMDATA42SOCKETPROVIDER_HPP
+
+#include <thread>
+#include <mutex>
+
+#include <boost/shared_ptr.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /** \brief Class for a provider of simulation data that provides data from a 42 socket connection.
+     *
+     *  This class can concretely retrieve data from a 42 socket... but is still virtual because it is up
+     *  to a derived class to determine what 42 data it should be a provider of... the get_data_point()
+     *  method is still pure virtual.  Now it does need its derived class to perform
+     *  connect_reader_thread_as_42_socket_client(), otherwise the 42 data point will never be
+     *  set with any valid data... this allows the derived class to specify the endpoint
+     *  information, but places all the shared code for reading 42 data in this class.
+     */
+    class SimData42SocketProvider : public SimIDataProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sc  The configuration for the simulation
+        SimData42SocketProvider(const boost::property_tree::ptree& config);
+        ~SimData42SocketProvider(void);
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve simulation data.
+         *
+         * @returns                     A data point of simulation data.
+         */
+        virtual boost::shared_ptr<SimIDataPoint> get_data_point(void) const
+        {
+            boost::shared_ptr<Sim42DataPoint> dp;
+            {
+                std::lock_guard<std::mutex> lock(_data_point_mutex);
+                dp = boost::shared_ptr<Sim42DataPoint>(new Sim42DataPoint(_data_point));
+                // Lock is released when scope ends
+            }
+            return dp;
+        }
+
+        /** \brief Method to send a simulation command to 42.
+         *
+         * @param       message    Text command message to send.
+         */
+        void send_command_to_socket(const std::string& message);
+        //@}
+
+    protected:
+        /// @name Mutating protected worker methods
+        //@{
+        /** \brief Method to connect to a 42 socket and start reading data
+         *
+         * @param       server_host        The host name or IP address of the 42 server.
+         * @param       server_port        The port number of the 42 server.
+         */
+        void connect_reader_thread_as_42_socket_client(std::string server_host, uint16_t server_port);
+
+    private:
+        // Private helper methods
+        void connect_command_socket_as_42_socket_client(void);
+        bool connect_as_42_socket_client(std::string a_42_host, uint16_t a_42_port, int &socket_fd);
+        void telemetry_socket_reader(void);
+        void read_telemetry_socket_data(std::vector<std::string>& message);
+        static char rgetc(int fd);
+        static char *rgets(char *s, int n, int fd);
+
+        // Private data
+        // ... connection data
+        std::string _server_host;
+        std::string _server_telemetry_port;
+        uint16_t _server_command_port;
+        int _max_connection_attempts;
+        int _retry_wait_seconds;
+        int _telemetry_socket_fd;
+        int _command_socket_fd;
+        double _absolute_start_time;
+
+        // ... telemetry reader thread / thread state data
+        std::thread *_telemetry_socket_client_thread;
+        bool _not_terminating; // Used to signal the thread when we are terminating so the telemetry reader thread quits reading the socket
+
+        // ... command state data
+        bool _command_port_connected;
+
+        // ... a data point of data read from the socket
+        Sim42DataPoint _data_point;
+        mutable std::mutex _data_point_mutex;  // protects _data_point
+
+    };
+}
+
+#endif
+```
+
+### `sim_data_provider_factory.hpp`
+
+**경로:** `sims/sim_common/inc/sim_data_provider_factory.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMDATAPROVIDERFACTORY_HPP
+#define NOS3_SIMDATAPROVIDERFACTORY_HPP
+
+#include <map>
+
+#include <sim_i_data_provider_maker.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+	/// Abstract-Factory Pattern Implementation
+	class SimDataProviderFactory
+	{
+	public:
+		/// Factory is implemented as a Singleton
+		static SimDataProviderFactory& Instance();
+
+		/// Adds data provider maker with given key
+		void RegisterMaker(const std::string& key, SimIDataProviderMaker * maker);
+
+		/// Creates data provider for the given key from sim config
+		SimIDataProvider * Create(const std::string& key, const boost::property_tree::ptree& config) const;
+
+	private:
+		SimDataProviderFactory() {}
+
+		// Disable copying and assignment
+		SimDataProviderFactory(const SimDataProviderFactory& other);
+		SimDataProviderFactory& operator=(const SimDataProviderFactory& other);
+
+		/// Maps keys to makers
+		/// Note: using either the map or string makes our code not binary-compatible
+		/// Memory layout and implementation of these classes will change from compiler to compiler
+		std::map<std::string, SimIDataProviderMaker*> _makers;
+	};
+}
+
+#endif
+```
+
+### `sim_data_provider_maker.hpp`
+
+**경로:** `sims/sim_common/inc/sim_data_provider_maker.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMDATAPROVIDERMAKER_HPP
+#define NOS3_SIMDATAPROVIDERMAKER_HPP
+
+#include <sim_i_data_provider_maker.hpp>
+#include <sim_data_provider_factory.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+	/// Helper template to simplify the process of generating data provider maker
+	template<typename T>
+	class SimDataProviderMaker : public SimIDataProviderMaker
+	{
+	public:
+		/// When created, the data provider maker will automaticly register itself with the factory
+		/// Note - you are discouraged from using SimDataProviderMaker outside REGISTER_DATA_PROVIDER macro
+		/// For example, creating SimDataProviderMaker on the stack will end up badly
+		SimDataProviderMaker(const std::string& key)
+		{
+			SimDataProviderFactory::Instance().RegisterMaker(key, this);
+		}
+
+		virtual SimIDataProvider * Create(const boost::property_tree::ptree& config) const
+		{
+			// Create instance of T using constructor from ptree
+			// Assumes T has a constructor that accepts ptree
+			return new T(config);
+		}
+	};
+
+}
+
+#endif
+```
+
+### `sim_data_shmem_provider.hpp`
+
+**경로:** `sims/sim_common/inc/sim_data_shmem_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2025 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMDATASHMEMPROVIDER_HPP
+#define NOS3_SIMDATASHMEMPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/interprocess/sync/interprocess_mutex.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <sim_shmem_data_point.hpp>
+
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    /** \brief Class for a provider of simulation data that provides data from a shared memory connection.
+     */
+
+    class SimDataShmemProvider : public SimIDataProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sc  The configuration for the simulation
+        SimDataShmemProvider(const boost::property_tree::ptree& config);
+        ~SimDataShmemProvider(void) {}
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve simulation data.
+         *
+         * @returns                     A data point of simulation data.
+         */
+        virtual boost::shared_ptr<SimIDataPoint> get_data_point(void) const
+        {
+            boost::shared_ptr<SimShmemDataPoint> dp;
+            {
+                dp = boost::shared_ptr<SimShmemDataPoint>(
+                    new SimShmemDataPoint(_blackboard_data->svb, _blackboard_data->bvb, _blackboard_data->Hvb, 
+                                          _blackboard_data->GyroRate, _blackboard_data->CSSValid, _blackboard_data->CSSIllum, 
+                                          _blackboard_data->FSSValid, _blackboard_data->FSSSunAng, _blackboard_data->STValid,
+                                          _blackboard_data->STqn, _blackboard_data->GPSPosN, _blackboard_data->GPSVelN, 
+                                          _blackboard_data->AccelAcc, _blackboard_data->WhlH));
+            }
+            return dp;
+        }
+
+    private:
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```
+
+### `sim_hardware_model_factory.hpp`
+
+**경로:** `sims/sim_common/inc/sim_hardware_model_factory.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMHARDWAREMODELFACTORY_HPP
+#define NOS3_SIMHARDWAREMODELFACTORY_HPP
+
+#include <map>
+
+#include <sim_i_hardware_model_maker.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+	/// Abstract-Factory Pattern Implementation
+	class SimHardwareModelFactory
+	{
+	public:
+		/// Factory is implemented as a Singleton
+		static SimHardwareModelFactory& Instance();
+
+		/// Adds hardware model maker with given key
+		void RegisterMaker(const std::string& key, SimIHardwareModelMaker * maker);
+
+		/// Creates hardware model for the given key from sim config
+		SimIHardwareModel * Create(const std::string& key, const boost::property_tree::ptree& config) const;
+
+	private:
+		SimHardwareModelFactory() {}
+
+		// Disable copying and assignment
+		SimHardwareModelFactory(const SimHardwareModelFactory& other);
+		SimHardwareModelFactory& operator=(const SimHardwareModelFactory& other);
+
+		/// Maps keys to makers
+		/// Note: using either the map or string makes our code not binary-compatible
+		/// Memory layout and implementation of these classes will change from compiler to compiler
+		std::map<std::string, SimIHardwareModelMaker*> _makers;
+	};
+}
+
+#endif
+```
+
+### `sim_hardware_model_maker.hpp`
+
+**경로:** `sims/sim_common/inc/sim_hardware_model_maker.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMHARDWAREMODELMAKER_HPP
+#define NOS3_SIMHARDWAREMODELMAKER_HPP
+
+#include <sim_i_hardware_model_maker.hpp>
+#include <sim_hardware_model_factory.hpp>
+#include <sim_config.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+	/// Helper template to simplify the process of generating data provider maker
+	template<typename T>
+	class SimHardwareModelMaker : public SimIHardwareModelMaker
+	{
+	public:
+		/// When created, the hardware model maker will automaticly register itself with the factory
+		/// Note - you are discouraged from using SimHardwareModelMaker outside REGISTER_DATA_PROVIDER macro
+		/// For example, creating SimHardwareModelMaker on the stack will end up badly
+		SimHardwareModelMaker(const std::string& key)
+		{
+			SimHardwareModelFactory::Instance().RegisterMaker(key, this);
+		}
+
+		virtual SimIHardwareModel * Create(const boost::property_tree::ptree& config) const
+		{
+			// Create instance of T using constructor from ptree
+			// Assumes T has a constructor that accepts ptree
+			return new T(config);
+		}
+	};
+
+}
+
+#endif
+```
+
+### `sim_i_data_point.hpp`
+
+**경로:** `sims/sim_common/inc/sim_i_data_point.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMDATAPOINT_HPP
+#define NOS3_SIMDATAPOINT_HPP
+
+#include <cstdint>
+#include <string>
+
+namespace Nos3
+{
+
+    /** \brief Class to contain a point of simulation data for a specific time.
+     */
+    class SimIDataPoint
+    {
+    public:
+        /// @name Constructors
+        //@{
+        /** \brief Default constructor
+         */
+        SimIDataPoint() {};
+        /** \brief Default destructor
+         */
+        virtual ~SimIDataPoint() {};
+        //@}
+
+        /// @name Accessors
+        //@{
+        /// \brief Returns a string representation of the simulation data point
+        /// @return     A string representation of the simulation data point
+        virtual std::string to_string(void) const = 0;
+        //@}
+    private:
+        // Private data
+    };
+
+}
+
+#endif
+
+```
+
+### `sim_i_data_provider.hpp`
+
+**경로:** `sims/sim_common/inc/sim_i_data_provider.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMIDATAPROVIDER_HPP
+#define NOS3_SIMIDATAPROVIDER_HPP
+
+#include <sim_data_provider_maker.hpp>
+#define REGISTER_DATA_PROVIDER(T,K) static Nos3::SimDataProviderMaker<T> maker(K) // T = type, K = key
+
+#include <sim_config.hpp>
+#include <sim_i_data_point.hpp>
+
+namespace Nos3
+{
+    /// \brief Interface for a provider of simulation data.
+    class SimIDataProvider
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  sc  The configuration for the simulation
+        SimIDataProvider(__attribute__((unused)) const boost::property_tree::ptree& config) {};
+        /// \brief Destructor.
+        virtual ~SimIDataProvider() {};
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to retrieve sim data for the current time.  This method must be overridden in a derived class.
+         *
+         * @returns                     A data point for the current time.
+         */
+        virtual boost::shared_ptr<SimIDataPoint> get_data_point() const = 0;
+        //@}
+
+    };
+}
+
+#endif
+```
+
+### `sim_i_data_provider_maker.hpp`
+
+**경로:** `sims/sim_common/inc/sim_i_data_provider_maker.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMIDATAPROVIDERMAKER_HPP
+#define NOS3_SIMIDATAPROVIDERMAKER_HPP
+
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+	class SimIDataProvider;
+
+	// This class is a public parent of all data provider makers
+	// It represents a function to be invoked when creating a data provider
+	class SimIDataProviderMaker
+	{
+	public:
+		/// Accepts ptree to pass into data provider constructor
+		/// Returns data provider object
+		virtual SimIDataProvider * Create(const boost::property_tree::ptree& config) const = 0;
+
+		// Every C++ interface should define a public virtual destructor
+		// Why? http://stackoverflow.com/questions/270917/why-should-i-declare-a-virtual-destructor-for-an-abstract-class-in-c
+		virtual ~SimIDataProviderMaker() {}
+	};
+}
+
+#endif
+```
+
+### `sim_i_hardware_model.hpp`
+
+**경로:** `sims/sim_common/inc/sim_i_hardware_model.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMIHARDWAREMODEL_HPP
+#define NOS3_SIMIHARDWAREMODEL_HPP
+
+#include <atomic>
+#include <cstdint>
+#include <vector>
+#include <iomanip>
+
+#include <boost/property_tree/ptree.hpp>
+#include <boost/foreach.hpp>
+
+#include <ItcLogger/Logger.hpp>
+#include <Client/Bus.hpp>
+#include <Client/DataNode.hpp>
+#include <Utility/Buffer.hpp>
+#include <Utility/BufferOverlay.hpp>
+#include <Common/DataBufferOverlay.hpp>
+#include <Common/Message.hpp>
+
+#include <sim_hardware_model_maker.hpp>
+#define REGISTER_HARDWARE_MODEL(T,K) static Nos3::SimHardwareModelMaker<T> maker(K) // T = type, K = key
+#include <sim_i_data_provider.hpp>
+#include <sim_config.hpp>
+
+namespace Nos3
+{
+    extern ItcLogger::Logger *sim_logger;
+
+    /** \brief Interface for a hardware model.
+     *
+     */
+    class SimIHardwareModel
+    {
+    public:
+        /// @name Constructors / destructors
+        //@{
+        /// \brief Constructor taking a configuration object.
+        /// @param  provider_key The name of the data provider
+        /// @param  sc  The configuration for the simulation
+        SimIHardwareModel(const boost::property_tree::ptree& config) :
+            _keep_running(true),
+            _absolute_start_time(config.get("common.absolute-start-time", 552110400.0)),
+            _sim_microseconds_per_tick(config.get("common.sim-microseconds-per-tick", 1000000)),
+            _real_microseconds_per_tick(config.get("common.real-microseconds-per-tick", 1000000)),
+            _command_bus(nullptr),
+            _command_node(nullptr)
+        {
+            if (config.get_child_optional("simulator.hardware-model.connections")) 
+            {
+                BOOST_FOREACH(const boost::property_tree::ptree::value_type &v, config.get_child("simulator.hardware-model.connections")) 
+                {
+                    // v.first is the name of the child.
+                    // v.second is the child tree.
+                    if (v.second.get("type", "").compare("command") == 0) 
+                    {
+                        // Set up the command node for this hardware model
+                        _command_bus_name = v.second.get("bus-name", "command");
+                        _command_node_name = v.second.get("node-name", "SimIHardwareModel");
+                        _command_bus.reset(new NosEngine::Client::Bus(_hub, config.get("common.nos-connection-string", "tcp://127.0.0.1:12001"),
+                            _command_bus_name));
+                        _command_node = _command_bus->get_or_create_data_node(_command_node_name);
+                        _command_node->set_message_received_callback(std::bind(&SimIHardwareModel::command_callback, this, std::placeholders::_1));
+                        sim_logger->debug("SimIHardwareModel::SimIHardwareModel:  Command node %s now active on command bus %s.",
+                            _command_node_name.c_str(), _command_bus_name.c_str());
+                        break;
+                    }
+                }
+            }
+        }
+
+        /// \brief Destructor.
+        virtual ~SimIHardwareModel()
+        {
+            _command_bus.reset();
+        }
+        //@}
+
+        /// @name Mutating public worker methods
+        //@{
+
+        /** \brief Method to run the hardware model simulation.
+         */
+        virtual void run(void)
+        {
+            // Spin so the callbacks remain valid
+            while(_keep_running)
+            {
+                std::this_thread::sleep_for(std::chrono::microseconds(_real_microseconds_per_tick));
+            }
+        }
+
+        /** \brief Method to stop the simulator.  The run method should monitor
+         *  the flag set by this function and return when it is false.
+         */
+        void stop()
+        {
+            _keep_running.store(false);
+        }
+
+        /** \brief Method to determine what to do with a command to the simulator received on the command bus.  The default is to do nothing.
+         *
+         * @param       msg         The NOS Engine message sent with the command.
+         */
+        virtual void command_callback(NosEngine::Common::Message msg)
+        {
+            // default is no command handling... override me!!
+            NosEngine::Common::DataBufferOverlay dbf(const_cast<NosEngine::Utility::Buffer&>(msg.buffer));
+            sim_logger->debug("SimIHardwareModel::command_callback:  Received command: %s.  Doing nothing and returning UNIMPLEMENTED!", dbf.data);
+            _command_node->send_reply_message_async(msg, 14, "UNIMPLEMENTED!");
+        }
+        //@}
+
+        /// @name Non-mutating public worker methods
+        //@{
+        /** \brief Method to convert a vector of uint8_t to an ASCII hex string.
+         *
+         * @param       v   The buffer (vector) of bytes to be converted.
+         * @return          The string with the converted bytes.
+         */
+        static std::string  uint8_vector_to_hex_string(const std::vector<uint8_t> & v)
+        {
+            std::stringstream ss;
+            ss << std::hex << std::setfill('0');
+            std::vector<uint8_t>::const_iterator it;
+
+            for (it = v.begin(); it != v.end(); it++) 
+            {
+                ss << " 0x" << std::setw(2) << static_cast<unsigned>(*it);
+            }
+
+            return ss.str();
+        };
+        //@}
+
+        //@{
+        /** \brief Method to convert a vector of uint8_t to a string where each uint8_t is interpreted using its ASCII value.
+         *
+         * @param       v   The buffer (vector) of bytes to be converted.
+         * @return          The string with the converted bytes.
+         */
+        static std::string  uint8_vector_to_ascii_string(const std::vector<uint8_t> & v)
+        {
+            std::stringstream ss;
+            std::vector<uint8_t>::const_iterator it;
+
+            for (it = v.begin(); it != v.end(); it++) 
+            {
+                ss << static_cast<char>(*it);
+            }
+
+            return ss.str();
+        };
+        //@}
+        //@{
+        /** \brief Method to convert an ASCII string to a vector of uint8_t.
+         *
+         * @param  in_data  The string of characters to convert.
+         * @return          The buffer (vector) of converted bytes.
+         */
+        static std::vector<uint8_t> ascii_string_to_uint8_vector(const std::string& in_data)
+        {
+            std::vector<uint8_t> out_data;
+            for (size_t i = 0; i < in_data.length(); i++) {
+                out_data.push_back(in_data[i]);
+            }
+            return out_data;
+        }
+        //@}
+        //@{
+        /** \brief Method to convert a double to a vector of uint8_t.
+         *
+         * @param  in_data  The double to convert.
+         * @return          The buffer (vector) of converted bytes.
+         */
+        static std::vector<uint8_t> double_to_uint8_vector(const double& in_data)
+        {
+            int64_t ival;
+            static_assert(sizeof(double) == sizeof(int64_t), 
+                "On this platform, double is not 64 bits.  This will cause issues with sending telemetry to COSMOS."); // not portable, but no surprises on the COSMOS end either and our assumed platform has 64 bit doubles
+            std::memcpy(&ival, &in_data, sizeof(in_data));
+
+            std::vector<uint8_t> out_data;
+            for (size_t i = 0; i < sizeof(int64_t)/sizeof(uint8_t); i++) {
+                out_data.push_back((uint8_t)( (ival >> (7-i)*8) & 0x000000FF) );
+            }
+            
+            return out_data;
+        }
+        //@}
+        //@{
+        /** \brief Method to convert an int16_t to a vector of uint8_t.
+         *
+         * @param  in_data  The int16_t to convert.
+         * @return          The buffer (vector) of converted bytes.
+         */
+        static std::vector<uint8_t> int16_to_uint8_vector(const int16_t& in_data)
+        {
+            std::vector<uint8_t> out_data;
+            out_data.push_back((uint8_t)( (in_data >> 8) & 0x00FF) );
+            out_data.push_back((uint8_t)( (in_data     ) & 0x00FF) );
+            return out_data;
+        }
+        //@}
+		
+    protected:
+        // Protected data
+        std::atomic<bool>                            _keep_running;
+        const double                                 _absolute_start_time;
+        const int64_t                                _sim_microseconds_per_tick;
+        int64_t                                      _real_microseconds_per_tick;
+        NosEngine::Transport::TransportHub           _hub;
+        std::string                                  _command_bus_name;
+        std::string                                  _command_node_name;
+        std::unique_ptr<NosEngine::Client::Bus>      _command_bus;
+        NosEngine::Client::DataNode*                 _command_node;
+    };
+}
+
+#endif
+```
+
+### `sim_i_hardware_model_maker.hpp`
+
+**경로:** `sims/sim_common/inc/sim_i_hardware_model_maker.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2015 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMIHARDWAREMODELMAKER_HPP
+#define NOS3_SIMIHARDWAREMODELMAKER_HPP
+
+#include <sim_config.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+	class SimIHardwareModel;
+
+	// This class is a public parent of all hardware models
+	// It represents a function to be invoked when creating a hardware model
+	class SimIHardwareModelMaker
+	{
+	public:
+		/// Accepts ptree to pass into hardware model constructor
+		/// Returns hardware model object
+		virtual SimIHardwareModel * Create(const boost::property_tree::ptree& config) const = 0;
+
+		// Every C++ interface should define a public virtual destructor
+		// Why? http://stackoverflow.com/questions/270917/why-should-i-declare-a-virtual-destructor-for-an-abstract-class-in-c
+		virtual ~SimIHardwareModelMaker() {}
+	};
+}
+
+#endif
+```
+
+### `sim_shmem_data_point.hpp`
+
+**경로:** `sims/sim_common/inc/sim_shmem_data_point.hpp`
+
+
+```cpp
+/* Copyright (C) 2015 - 2025 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#ifndef NOS3_SIMSHMEMDATAPOINT_HPP
+#define NOS3_SIMSHMEMDATAPOINT_HPP
+
+#include <sim_i_data_point.hpp>
+
+namespace Nos3
+{
+
+    /** \brief Class to contain an entry of 42 simulation data.
+     *
+     */
+    class SimShmemDataPoint : public SimIDataPoint
+    {
+    public:
+        SimShmemDataPoint(double svb[3], double bvb[3], double Hvb[3], double GyroRate[3], int CSSValid[6], double CSSIllum[6], int FSSValid, 
+                          double FSSSunAng[2], int STValid, double STqn[4], double GPSPosN[3], double GPSVelN[3], double AccelAcc[3], double WhlH[3]);
+        double* get_svb() {return _svb;}
+        double* get_bvb() {return _bvb;}
+        double* get_Hvb() {return _Hvb;}
+        double* get_GyroRate() {return _GyroRate;}
+        int*    get_CSSValid() {return _CSSValid;}
+        double* get_CSSIllum() {return _CSSIllum;}
+        int      get_FSSValid() {return _FSSValid;}
+        double* get_FSSSunAng() {return _FSSSunAng;}
+        int      get_STValid() {return _STValid;}
+        double* get_STqn() {return _STqn;}
+        double* get_GPSPosN() {return _GPSPosN;}
+        double* get_GPSVelN() {return _GPSVelN;}
+        double* get_AccelAcc() {return _AccelAcc;}
+        double* get_WhlH() {return _WhlH;}
+        std::string to_string(void) const {std::string ret("SimShmemDataPoint"); return ret;}
+    protected:
+    private:
+        double _svb[3];
+        double _bvb[3];
+        double _Hvb[3];
+        double _GyroRate[3];
+        int    _CSSValid[6];
+        double _CSSIllum[6];
+        int    _FSSValid;
+        double _FSSSunAng[2];
+        int    _STValid;
+        double _STqn[4];
+        double _GPSPosN[3];
+        double _GPSVelN[3];
+        double _AccelAcc[3];
+        double _WhlH[3];
+    };
+}
+
+#endif
+```

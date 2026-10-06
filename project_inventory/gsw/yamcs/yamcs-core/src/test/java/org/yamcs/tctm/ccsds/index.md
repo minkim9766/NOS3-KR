@@ -3,28 +3,1509 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 error/index
-file--AosFrameDecoderTest.java
-file--CcsdsFrameDecoderTest.java
-file--Cop1TcPacketHandlerTest.java
-file--PacketDecoderTest.java
-file--RandomizerTest.java
-file--TmFrameDecoderTest.java
-file--UslpFrameDecoderTest.java
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/error/`](error/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/AosFrameDecoderTest.java`](file--AosFrameDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/CcsdsFrameDecoderTest.java`](file--CcsdsFrameDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/Cop1TcPacketHandlerTest.java`](file--Cop1TcPacketHandlerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/PacketDecoderTest.java`](file--PacketDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/RandomizerTest.java`](file--RandomizerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/TmFrameDecoderTest.java`](file--TmFrameDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/UslpFrameDecoderTest.java`](file--UslpFrameDecoderTest.java) — UTF-8 텍스트 파일 본문 포함
+### `AosFrameDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/AosFrameDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.TcTmException;
+
+public class AosFrameDecoderTest {
+
+    @Test
+    public void testFrame01() throws TcTmException {
+        byte[] data = intToByteArray(AOS_FRAME_01);
+
+        AosManagedParameters tmp = getParams();
+        AosFrameDecoder tfd = new AosFrameDecoder(tmp);
+
+        AosTransferFrame tf = tfd.decode(data, 0, data.length);
+        assertEquals(0xAB, tf.getSpacecraftId());
+        assertEquals(1, tf.getVirtualChannelId());
+        assertEquals(343, tf.getVcFrameSeq());
+
+        assertEquals(8, tf.getFirstHeaderPointer());
+
+        assertFalse(tf.hasOcf());
+
+        List<byte[]> pktList = new ArrayList<>();
+        PacketDecoder pd = new PacketDecoder(500, (byte[] p) -> pktList.add(p));
+
+        pd.process(tf.getData(), tf.getFirstHeaderPointer(), tf.getDataEnd() - tf.getFirstHeaderPointer());
+        assertTrue(pd.hasIncompletePacket());
+
+        assertTrue(pktList.isEmpty());
+    }
+
+    @Test
+    public void testCorruptedFrame01() {
+        assertThrows(TcTmException.class, () -> {
+            byte[] data = intToByteArray(AOS_FRAME_01);
+            data[10] = 12; // change a byte to break the crc
+
+            AosManagedParameters tmp = getParams();
+            AosFrameDecoder tfd = new AosFrameDecoder(tmp);
+
+            tfd.decode(data, 0, data.length);
+        });
+    }
+
+    AosManagedParameters getParams() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("spacecraftId", 3);
+        m.put("frameLength", 128);
+        m.put("errorDetection", "CRC16");
+        m.put("insertZoneLength", 0);
+        m.put("frameHeaderErrorControlPresent", false);
+
+        List<Map<String, Object>> vclist = new ArrayList<>();
+        m.put("virtualChannels", vclist);
+
+        Map<String, Object> vc0 = new HashMap<>();
+        vc0.put("vcId", 0);
+        vc0.put("ocfPresent", false);
+        vc0.put("service", "PACKET");
+        vc0.put("packetPreprocessorClassName", "org.yamcs.tctm.GenericPacketPreprocessor");
+
+        Map<String, Object> vc1 = new HashMap<>();
+        vc1.put("vcId", 1);
+        vc1.put("ocfPresent", false);
+        vc1.put("service", "PACKET");
+        vc1.put("packetPreprocessorClassName", "org.yamcs.tctm.GenericPacketPreprocessor");
+
+        vclist.add(vc0);
+        vclist.add(vc1);
+
+        YConfiguration config = YConfiguration.wrap(m);
+        return new AosManagedParameters(config);
+
+    }
+
+    public static byte[] intToByteArray(int[] b) {
+        byte[] data = new byte[b.length];
+        for (int i = 0; i < data.length; i++) {
+            data[i] = (byte) b[i];
+        }
+        return data;
+    }
+
+    // copied from channel-emulator unit tests
+    // https://github.com/nasa/channel-emulator/blob/master/test/aos_frame_test.cpp
+    int[] AOS_FRAME_01 = {
+            0x6a, 0xc1, 0x00, 0x01, 0x57, 0x00, 0x00, 0x00, 0xea, 0x00, 0x01, 0x8d, 0x21, 0x45, 0x00, 0x01,
+            0x88, 0x00, 0x00, 0x40, 0x00, 0x3f, 0x11, 0x8c, 0xc3, 0xc0, 0xa8, 0x64, 0x28, 0xc0, 0xa8, 0xc8,
+            0x28, 0x75, 0x30, 0x75, 0x31, 0x01, 0x74, 0x00, 0x00, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88, 0x88,
+            0x77, 0x88, 0x88, 0x88, 0x77, 0x88, 0x88, 0x88, 0x88, 0x88, 0x77, 0x88, 0x88, 0x88, 0x88, 0x77,
+            0x77, 0x55, 0x44, 0x44, 0x44, 0x44, 0x33, 0x44, 0x33, 0x44, 0x44, 0x55, 0x55, 0x66, 0x55, 0x88,
+            0x88, 0x88, 0x88, 0x88, 0x88, 0x77, 0x66, 0x77, 0x66, 0x66, 0x77, 0x66, 0x77, 0x66, 0x66, 0x66,
+            0x55, 0x55, 0x66, 0x66, 0x66, 0x77, 0x88, 0x88, 0x88, 0x77, 0x88, 0x88, 0x77, 0x77, 0x77, 0x77,
+            0x77, 0x66, 0x77, 0x77, 0x77, 0x77, 0x77, 0x88, 0x88, 0x88, 0x88, 0x77, 0x88, 0x77, 0x93, 0xfd
+    };
+}
+```
+
+### `CcsdsFrameDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/CcsdsFrameDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.rs.ReedSolomon;
+
+public class CcsdsFrameDecoderTest {
+    CcsdsFrameDecoder decoder;
+    ReedSolomon rs;
+    Random random = new Random();
+
+    @BeforeEach
+    public void setUp() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("codec", "RS");
+        m.put("errorCorrectionCapability", 16);
+        m.put("interleavingDepth", 5);
+        m.put("derandomize", false);
+        YConfiguration config = YConfiguration.wrap(m);
+        decoder = new CcsdsFrameDecoder(config);
+        rs = new ReedSolomon(2 * 16, 8, 112, 11, 0x187, 0);
+    }
+
+    @Test
+    public void testDecoderInitialization() {
+        assertEquals(5, decoder.interleavingDepth);
+        assertEquals(5 * 255, decoder.encodedFrameLength());
+        assertEquals(5 * 223, decoder.decodedFrameLength());
+    }
+
+    @Test
+    public void testDecodeFrameWithValidData() {
+        byte[] data = new byte[1115];
+        random.nextBytes(data);
+
+        byte[] encoded = encodeFrame(5, data);
+        assertEquals(1275, encoded.length);
+
+        // corrupt the data to the maximum correctable extent
+        for (int i = 0; i < 5 * 16; i++) {
+            encoded[i] = 0;
+        }
+
+
+        int decodedLength = decoder.decodeFrame(encoded, 0, encoded.length);
+        assertEquals(1115, decodedLength);
+
+        assertArrayEquals(data, Arrays.copyOfRange(encoded, 0, decodedLength));
+    }
+
+    @Test
+    public void testDecodeFrameWithUncorrectableData() {
+        byte[] data = new byte[1115];
+        random.nextBytes(data);
+
+        byte[] encoded = encodeFrame(5, data);
+        assertEquals(1275, encoded.length);
+
+        // make the data uncorrectable
+        for (int i = 0; i < 5 * 17; i++) {
+            encoded[i] = 0;
+        }
+
+        int decodedLength = decoder.decodeFrame(encoded, 0, encoded.length);
+        assertEquals(-1, decodedLength);
+
+    }
+
+    byte[] encodeFrame(int interleavingDepth, byte[] data) {
+        byte[] encoded = new byte[1275];
+        byte[] d = new byte[223];
+
+        for (int i = 0; i < interleavingDepth; i++) {
+            for (int j = 0; j < d.length; j++) {
+                d[j] = data[interleavingDepth * j + i];
+            }
+            byte[] parity = new byte[32];
+            rs.encode(d, parity);
+
+            for (int j = 0; j < d.length; j++) {
+                encoded[interleavingDepth * j + i] = d[j];
+            }
+
+            for (int j = 0; j < parity.length; j++) {
+                encoded[interleavingDepth * (d.length + j) + i] = parity[j];
+            }
+        }
+
+        return encoded;
+    }
+}
+```
+
+### `Cop1TcPacketHandlerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/Cop1TcPacketHandlerTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.commanding.PreparedCommand;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.protobuf.Commanding.CommandHistoryAttribute;
+import org.yamcs.protobuf.Commanding.CommandId;
+import org.yamcs.tctm.TcpTcDataLinkTest;
+import org.yamcs.tctm.ccsds.Cop1Monitor.AlertType;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueHelper;
+
+public class Cop1TcPacketHandlerTest {
+
+    Cop1TcPacketHandler fop1ph;
+
+    ScheduledThreadPoolExecutor executor;
+    static TcFrameFactory tcFrameFactory;
+    MyMonitor monitor;
+    int vcId = 0;
+    TcTransferFrame adf0, adf1, adf2;
+    static TcManagedParameters tcParams;
+    Semaphore dataAvailable;
+
+    @BeforeAll
+    public static void beforeClass() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("spacecraftId", 6);
+
+        m.put("maxFrameLength", 1000);
+        m.put("errorDetection", "NONE");
+        Map<String, Object> vc0 = new HashMap<>();
+        List<Map<String, Object>> l = new ArrayList<>();
+        l.add(vc0);
+        m.put("virtualChannels", l);
+        vc0.put("vcId", 0);
+        vc0.put("service", "PACKET");
+        vc0.put("clcwStream", "clcw");
+
+        tcParams = new TcManagedParameters(YConfiguration.wrap(m));
+        tcFrameFactory = new TcFrameFactory(tcParams.getVcParams(0));
+        TimeEncoding.setUp();
+        EventProducerFactory.setMockup(false);
+
+        // org.yamcs.LoggingUtils.enableLogging();
+    }
+
+    @BeforeEach
+    public void init() {
+        executor = new ScheduledThreadPoolExecutor(1);
+        monitor = new MyMonitor();
+
+        fop1ph = new Cop1TcPacketHandler("test", "test", tcParams.getVcParams(0), executor);
+        fop1ph.addMonitor(monitor);
+        fop1ph.setCommandHistoryPublisher(new TcpTcDataLinkTest.MyCmdHistPublisher(new Semaphore(0)));
+
+        dataAvailable = new Semaphore(0);
+        fop1ph.setDataAvailableSemaphore(dataAvailable);
+
+        adf0 = tcFrameFactory.makeDataFrame(100, 0);
+        adf1 = tcFrameFactory.makeDataFrame(101, 0);
+        adf2 = tcFrameFactory.makeDataFrame(102, 0);
+    }
+
+    @AfterEach
+    public void stop() {
+        executor.shutdown();
+    }
+
+    @Test
+    public void testInitWithVR_BCTimeout_tt0() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(3);
+        fop1ph.setTimeoutType(0);
+
+        fop1ph.initiateADWithVR(3).get();
+        verifyState(5);
+
+        // the BC should be transmitted 3 times
+        List<TcTransferFrame> l = getFrames(3, 1000);
+        assertEquals(3, l.size());
+
+        // after which an alert is sent
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.T1, monitor.alerts.get(0));
+        // and state changed into 6
+        verifyState(6);
+
+        for (TcTransferFrame bcf : l) {
+            assertTrue(bcf.isBypass());
+            assertTrue(bcf.isCmdControl());
+        }
+    }
+
+    @Test
+    public void testInitWithVR_BCTimeout_tt1() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(3);
+        fop1ph.setTimeoutType(1);
+
+        fop1ph.initiateADWithVR(3).get();
+        verifyState(5);
+
+        // the BC should be transmitted 3 times
+        List<TcTransferFrame> l = getFrames(3, 1000);
+        assertEquals(3, l.size());
+
+        // after which an alert is sent
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.T1, monitor.alerts.get(0));
+        // and state changed into 6
+        verifyState(6);
+
+        for (TcTransferFrame bcf : l) {
+            assertTrue(bcf.isBypass());
+            assertTrue(bcf.isCmdControl());
+        }
+    }
+
+    @Test
+    public void testInitWithCLCWCheck_Timeout_tt1() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(3);
+        fop1ph.setTimeoutType(1);
+
+        fop1ph.initiateAD(true).get();
+        verifyState(4);
+
+        // after which an alert is sent
+        assertTrue(monitor.suspendSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        // and state changed into 6
+        verifyState(6);
+        assertEquals(4, monitor.suspendedState);
+    }
+
+    @Test
+    public void testInitWithCLCWCheck_Timeout_tt0() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(3);
+        fop1ph.setTimeoutType(0);
+
+        fop1ph.initiateAD(true).get();
+        verifyState(4);
+
+        // after which an alert is sent
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.T1, monitor.alerts.get(0));
+        // and state changed into 6
+        verifyState(6);
+    }
+
+    @Test
+    public void testInitWithClwCheck() throws Exception {
+        fop1ph.setTimeoutType(0);
+        fop1ph.setVs(10);
+        fop1ph.initiateAD(true, 100);
+
+        verifyState(4);
+        assertTrue(monitor.alertSema.tryAcquire(1, TimeUnit.SECONDS));
+        assertEquals(AlertType.T1, monitor.alerts.get(0));
+        verifyState(6);
+
+        fop1ph.initiateAD(true);
+        verifyState(4);
+        fop1ph.onCLCW(getCLCW(false, false, false, 10));
+
+        verifyState(1);
+    }
+
+    @Test
+    public void testLockoutAndUnlock() throws Exception {
+        fop1ph.setVs(10);
+        fop1ph.initiateAD(false);
+        fop1ph.onCLCW(getCLCW(true, false, false, 10));
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.LOCKOUT, monitor.alerts.get(0));
+
+        fop1ph.initiateADWithUnlock();
+        synchWithExecutor();
+        assertEquals(5, monitor.state);
+        fop1ph.onCLCW(getCLCW(false, false, false, 10));
+
+        verifyState(1);
+    }
+
+    @Test
+    public void testWaitWithoutRetransmit() throws Exception {
+        fop1ph.setVs(10);
+        fop1ph.initiateAD(false);
+        fop1ph.onCLCW(getCLCW(false, true, false, 10));
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+
+        assertEquals(AlertType.CLCW, monitor.alerts.get(0));
+        verifyState(6);
+
+        fop1ph.initiateAD(false).get();
+        sendTcInOneFrame(3);
+
+        fop1ph.onCLCW(getCLCW(false, true, false, 10));
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.CLCW, monitor.alerts.get(1));
+        verifyState(6);
+    }
+
+    @Test
+    public void testWithTxLimit1() throws Exception {
+        fop1ph.setVs(10);
+        fop1ph.setTransmissionLimit(1);
+        fop1ph.initiateAD(false).get();
+
+        TcTransferFrame tf = sendTcInOneFrame(3);
+        assertEquals(10, tf.getVcFrameSeq());
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 10));
+
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        assertEquals(AlertType.LIMIT, monitor.alerts.get(0));
+        verifyState(6);
+
+    }
+
+    @Test
+    public void testInitWithVR_ADTimeout() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(3);
+        fop1ph.setTimeoutType(0);
+
+        fop1ph.initiateADWithVR(3).get();
+        TcTransferFrame tf = fop1ph.getFrame();
+        assertNotNull(tf);
+        assertTrue(tf.isBypass());
+        assertTrue(tf.isCmdControl());
+
+        // send the CLCW with the good nR
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+
+        synchWithExecutor();
+        assertEquals(1, monitor.state);
+
+        sendTcInOneFrame(100);
+        List<TcTransferFrame> l = getFrames(3, 1000);
+
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+
+        assertEquals(AlertType.T1, monitor.alerts.get(0));
+
+        verifyState(6);
+
+        assertEquals(2, l.size());
+        for (int i = 0; i < 2; i++) {
+            assertEquals(3, l.get(i).getVcFrameSeq());
+        }
+
+        fop1ph.terminateAD().get();
+    }
+
+    @Test
+    public void test2frames() throws Exception {
+        fop1ph.initiateADWithVR(3).get();
+        // send the CLCW with the good nR
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        assertNotNull(fop1ph.getFrame());
+
+        TcTransferFrame tf0 = sendTcInOneFrame(89);
+        fop1ph.onCLCW(getCLCW(false, false, false, 4));
+
+        TcTransferFrame tf1 = sendTcInOneFrame(90);
+        fop1ph.onCLCW(getCLCW(false, false, false, 5));
+
+        verifyState(1);
+        assertEquals(3, tf0.getVcFrameSeq());
+        assertEquals(4, tf1.getVcFrameSeq());
+
+        assertEquals(89, tf0.getCommands().get(0).getCommandId().getSequenceNumber());
+        assertEquals(90, tf1.getCommands().get(0).getCommandId().getSequenceNumber());
+
+        fop1ph.terminateAD().get();
+        verifyState(6);
+    }
+
+    @Test
+    public void test2framesAckWithDelay() throws Exception {
+        fop1ph.initiateADWithVR(3).get();
+        // send the CLCW with the good nR
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        synchWithExecutor();
+
+        assertNotNull(fop1ph.getFrame());
+
+        TcTransferFrame tf0 = sendTcInOneFrame(89);
+        TcTransferFrame tf1 = sendTcInOneFrame(90);
+
+        fop1ph.onCLCW(getCLCW(false, false, false, 4));
+        fop1ph.onCLCW(getCLCW(false, false, false, 5));
+
+        verifyState(1);
+        assertEquals(3, tf0.getVcFrameSeq());
+        assertEquals(4, tf1.getVcFrameSeq());
+    }
+
+    @Test
+    public void test2frames_OneAckMissing() throws Exception {
+        fop1ph.initiateADWithVR(3).get();
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+
+        assertNotNull(fop1ph.getFrame());
+
+        TcTransferFrame tf0 = sendTcInOneFrame(89);
+        TcTransferFrame tf1 = sendTcInOneFrame(90);
+
+        fop1ph.onCLCW(getCLCW(false, false, false, 5));
+
+        verifyState(1);
+        assertEquals(3, tf0.getVcFrameSeq());
+        assertEquals(4, tf1.getVcFrameSeq());
+    }
+
+    @Test
+    public void test2frames_retx() throws Exception {
+        fop1ph.initiateADWithVR(3).get();
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        synchWithExecutor();
+
+        assertNotNull(fop1ph.getFrame());
+
+        TcTransferFrame tf0 = sendTcInOneFrame(89);
+        TcTransferFrame tf1 = sendTcInOneFrame(90);
+
+        assertEquals(3, tf0.getVcFrameSeq());
+        assertEquals(4, tf1.getVcFrameSeq());
+
+        // ask for retransmit
+        fop1ph.onCLCW(getCLCW(false, false, true, 3));
+
+        verifyState(2);
+        List<TcTransferFrame> l = getFrames(2, 1000);
+        assertEquals(2, l.size());
+        assertEquals(tf0, l.get(0));
+        assertEquals(tf1, l.get(1));
+    }
+
+    @Test
+    public void test2frames_retx_invl() throws Exception {
+        fop1ph.initiateADWithVR(3).get();
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        synchWithExecutor();
+        assertNotNull(fop1ph.getFrame());
+
+        sendTcInOneFrame(89);
+        sendTcInOneFrame(90);
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 3));
+        synchWithExecutor();
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+
+        verifyState(6);
+        assertEquals(AlertType.SYNCH, monitor.alerts.get(0));
+    }
+
+    @Test
+    public void test2frames_retr_timeout() throws Exception {
+        fop1ph.setTimeoutType(0);
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(2);
+
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+
+        sendTcInOneFrame(89);
+        sendTcInOneFrame(90);
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 3));
+        List<TcTransferFrame> l = getFrames(2, 1000);
+        assertEquals(2, l.size());
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 3));
+        l = getFrames(2, 1000);
+        assertEquals(0, l.size());
+
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        verifyState(6);
+
+        fop1ph.terminateAD().get();
+    }
+
+    @Test
+    public void test2frames_timeout_retr() throws Exception {
+        fop1ph.setTimeoutType(0);
+        fop1ph.setT1Initial(100);
+        fop1ph.setTransmissionLimit(2);
+
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+
+        verifyState(1);
+
+        sendTcInOneFrame(89);
+        sendTcInOneFrame(90);
+
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        List<TcTransferFrame> l = getFrames(2, 1000);
+        assertEquals(2, l.size());
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 3));
+
+        assertTrue(monitor.alertSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+        verifyState(6);
+
+        fop1ph.terminateAD().get();
+    }
+
+    @Test
+    public void test3frames_retx() throws Exception {
+        fop1ph.setVs(255);
+        fop1ph.setTransmissionLimit(2);
+        fop1ph.initiateAD(false).get();
+        verifyState(1);
+
+        sendTcInOneFrame(89);
+        sendTcInOneFrame(90);
+        sendTcInOneFrame(91);
+
+        fop1ph.onCLCW(getCLCW(false, false, true, 0));
+        verifyState(2);
+        List<TcTransferFrame> l = getFrames(5, 1000);
+
+        assertEquals(2, l.size());
+        assertEquals(0, l.get(0).getVcFrameSeq());
+        assertEquals(1, l.get(1).getVcFrameSeq());
+    }
+
+    @Test
+    public void test2frames_wait() throws Exception {
+        fop1ph.setT1Initial(100);
+        fop1ph.initiateADWithVR(3).get();
+        fop1ph.onCLCW(getCLCW(false, false, false, 3));
+        synchWithExecutor();
+
+        assertNotNull(fop1ph.getFrame());
+
+        sendTcInOneFrame(89);
+        sendTcInOneFrame(90);
+
+        // send retransmit with wait
+        fop1ph.onCLCW(getCLCW(false, true, true, 3));
+        verifyState(3);
+
+        List<TcTransferFrame> l = getFrames(2, 1000);
+        assertTrue(l.isEmpty());
+
+        // retransmit with wait but ack one frame
+        fop1ph.onCLCW(getCLCW(false, true, true, 4));
+        verifyState(3);
+
+        l = getFrames(2, 1000);
+        assertTrue(l.isEmpty());
+
+        // retransmit without wait
+        fop1ph.onCLCW(getCLCW(false, false, true, 4));
+        synchWithExecutor();
+
+        verifyState(2);
+
+        l = getFrames(1, 1000);
+
+        assertEquals(1, l.size());
+        assertEquals(4, l.get(0).getVcFrameSeq());
+    }
+
+    @Test
+    public void testInvl_retx() throws Exception {
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+
+        sendTcInOneFrame(100);
+        fop1ph.onCLCW(getCLCW(false, false, true, 4));
+
+        verifyState(6);
+        assertEquals(AlertType.SYNCH, monitor.alerts.get(0));
+    }
+
+    @Test
+    public void testSuspendResume() throws Exception {
+        fop1ph.setTimeoutType(1);
+        fop1ph.setT1Initial(100);
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+
+        Fop1Exception e1 = null;
+        // try to resume while not suspended
+        try {
+            fop1ph.resume().get();
+        } catch (ExecutionException e) {
+            e1 = (Fop1Exception) e.getCause();
+        }
+        assertNotNull(e1);
+        sendTcInOneFrame(100);
+
+        List<TcTransferFrame> l = getFrames(2, 1000);
+        assertEquals(2, l.size());
+        assertTrue(monitor.suspendSema.tryAcquire(1, 1, TimeUnit.SECONDS));
+
+        verifyState(6);
+
+        assertTrue(monitor.suspended);
+        fop1ph.resume();
+        fop1ph.onCLCW(getCLCW(false, false, false, 4));
+
+        verifyState(1);
+    }
+
+    @Test
+    public void testBrokenSync() throws Exception {
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+
+        sendTcInOneFrame(100);
+
+        fop1ph.onCLCW(getCLCW(false, false, false, 5));
+        verifyState(6);
+
+        assertEquals(AlertType.NNR, monitor.alerts.get(0));
+    }
+
+    @Test
+    public void testBDFrame() throws Exception {
+        fop1ph.sendCommand(makeTc(true, 0, 100, 200));
+
+        TcTransferFrame tf = fop1ph.getFrame();
+        assertNotNull(tf);
+        assertEquals(1, tf.getCommands().size());
+        assertTrue(tf.isBypass());
+    }
+
+    @Test
+    public void testInvalidReq() throws Exception {
+        AtomicInteger errCount = new AtomicInteger();
+
+        fop1ph.suspendState = 1;
+
+        fop1ph.setVs(3).exceptionally(v -> {
+            errCount.incrementAndGet();
+            return null;
+        });
+        synchWithExecutor();
+        fop1ph.suspendState = 0;
+
+        fop1ph.setVs(3);
+        fop1ph.initiateAD(false).get();
+        synchWithExecutor();
+        assertEquals(1, monitor.state);
+
+        fop1ph.setVs(3).exceptionally(v -> {
+            errCount.incrementAndGet();
+            return null;
+        });
+
+        fop1ph.initiateADWithUnlock().exceptionally(v -> {
+            errCount.incrementAndGet();
+            return null;
+        });
+
+        fop1ph.initiateAD(false).exceptionally(v -> {
+            errCount.incrementAndGet();
+            return null;
+        });
+
+        fop1ph.initiateADWithVR(8).exceptionally(v -> {
+            errCount.incrementAndGet();
+            return null;
+        });
+
+        try {
+            fop1ph.setWindowWidth(1000);
+        } catch (Exception e) {
+            errCount.incrementAndGet();
+        }
+
+        try {
+            fop1ph.setTimeoutType(5);
+        } catch (Exception e) {
+            errCount.incrementAndGet();
+        }
+
+        try {
+            fop1ph.initiateADWithVR(-10);
+        } catch (Exception e) {
+            errCount.incrementAndGet();
+        }
+
+        synchWithExecutor();
+        assertEquals(1, monitor.state);
+
+        fop1ph.setWindowWidth(1);
+
+        synchWithExecutor();
+        assertEquals(8, errCount.get());
+    }
+
+    private void verifyState(int state) throws Exception {
+        synchWithExecutor();
+        assertEquals(state, monitor.state);
+    }
+
+    // execute an empty task in order to make sure the executor has finished executing
+    // whatever it was doing when this method is called
+    private void synchWithExecutor() throws Exception {
+        executor.submit(() -> {
+        }).get();
+    }
+
+    class MyDownstream {
+        boolean autoAckBC = true;
+        boolean autoAckAD = true;
+        boolean autoAckBD = true;
+        List<TcTransferFrame> bcList = new ArrayList<>();
+        List<TcTransferFrame> bdList = new ArrayList<>();
+        List<TcTransferFrame> adList = new ArrayList<>();
+        Semaphore bcSema = new Semaphore(0);
+        Semaphore bdSema = new Semaphore(0);
+        Semaphore adSema = new Semaphore(0);
+        CompletableFuture<Void> bcFuture, adFuture, bdFuture;
+
+        public CompletableFuture<Void> transmitBC(TcTransferFrame frame) {
+            bcList.add(frame);
+            bcFuture = new CompletableFuture<>();
+            bcSema.release();
+            if (autoAckBC) {
+                bcFuture.complete(null);
+            }
+            return bcFuture;
+        }
+
+        public CompletableFuture<Void> transmitAD(TcTransferFrame frame) {
+            adList.add(frame);
+            adFuture = new CompletableFuture<>();
+            adSema.release();
+            if (autoAckAD) {
+                adFuture.complete(null);
+            }
+            return adFuture;
+        }
+
+        public CompletableFuture<Void> transmitBD(TcTransferFrame frame) {
+            bdList.add(frame);
+            bdFuture = new CompletableFuture<>();
+            bdSema.release();
+            if (autoAckBD) {
+                bdFuture.complete(null);
+            }
+            return bdFuture;
+        }
+
+    }
+
+    private TcTransferFrame sendTcInOneFrame(int seqNum) throws Exception {
+        PreparedCommand pc = makeTc(false, 100, seqNum, 800);
+        fop1ph.sendCommand(pc);
+        synchWithExecutor();
+        TcTransferFrame tf = fop1ph.getFrame();
+        assertNotNull(tf);
+        assertEquals(pc, tf.getCommands().get(0));
+        return tf;
+    }
+
+    int getCLCW(boolean lockout, boolean wait, boolean retransmit, int nR) {
+        return (1 << 24) + (vcId << 18) + (bti(lockout) << 13) + (bti(wait) << 12) + (bti(retransmit) << 11) + nR;
+    }
+
+    private static int bti(boolean x) {
+        return x ? 1 : 0;
+    }
+
+    class MyMonitor implements Cop1Monitor {
+        boolean suspended;
+        int state;
+        int suspendedState;
+        List<AlertType> alerts = new ArrayList<>();
+        Semaphore alertSema = new Semaphore(0);
+        Semaphore suspendSema = new Semaphore(0);
+
+        @Override
+        public void suspended(int suspendedState) {
+            this.suspended = true;
+            this.suspendedState = suspendedState;
+            suspendSema.release();
+        }
+
+        @Override
+        public void alert(AlertType alert) {
+            alerts.add(alert);
+            alertSema.release();
+            // System.out.println("MONITOR: alert: " + alert);
+        }
+
+        @Override
+        public void stateChanged(int oldState, int newState) {
+            // System.out.println("MONITOR: Sate changed, new state: " + newState);
+            this.state = newState;
+        }
+
+        @Override
+        public void disabled() {
+        }
+    }
+
+    private PreparedCommand makeTc(boolean bypass, long t, int seqNum, int length) {
+        CommandId id = CommandId.newBuilder().setOrigin("test").setGenerationTime(t).setSequenceNumber(seqNum).build();
+        PreparedCommand pc = new PreparedCommand(id);
+        if (bypass) {
+            pc.addAttribute(CommandHistoryAttribute.newBuilder().setName(Cop1TcPacketHandler.OPTION_BYPASS.getId())
+                    .setValue(ValueHelper.newValue(true)).build());
+        }
+        pc.setBinary(new byte[length]);
+
+        return pc;
+    }
+
+    private List<TcTransferFrame> getFrames(int n, long maxTime) throws InterruptedException {
+        List<TcTransferFrame> l = new ArrayList<>();
+        int i = 0;
+        long t0 = System.currentTimeMillis();
+        while (i < n) {
+            TcTransferFrame tf = fop1ph.getFrame();
+            if (tf != null) {
+                l.add(tf);
+                i++;
+            } else {
+                if (System.currentTimeMillis() - t0 > maxTime) {
+                    break;
+                }
+                dataAvailable.tryAcquire(maxTime, TimeUnit.MILLISECONDS);
+            }
+        }
+        return l;
+    }
+
+}
+```
+
+### `PacketDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/PacketDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.tctm.TcTmException;
+import org.yamcs.utils.StringConverter;
+
+public class PacketDecoderTest {
+    List<byte[]> pl = new ArrayList<>();
+    PacketDecoder pd = new PacketDecoder(1000, (byte[] p) -> pl.add(p));
+
+    @BeforeEach
+    public void emptyList() {
+        pl.clear();
+        pd.skipIdlePackets(false);
+        pd.stripEncapsulationHeader(false);
+    }
+
+    @Test
+    public void testOneByteEncapsulation() throws TcTmException {
+        pd.process(new byte[] { (byte) 0xE0 }, 0, 1);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        byte[] p = pl.get(0);
+        assertArrayEquals(new byte[] { (byte) 0xE0 }, p);
+    }
+
+    @Test
+    public void testOneByteIdle() throws TcTmException {
+        pd.skipIdlePackets(true);
+        pd.process(new byte[] { (byte) 0xE0 }, 0, 1);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(0, pl.size());
+    }
+
+    @Test
+    public void testOneByteNoEncapsulationHeader() throws TcTmException {
+        pd.stripEncapsulationHeader(true);
+        pd.process(new byte[] { (byte) 0xE0 }, 0, 1);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        assertEquals(0, pl.get(0).length);
+    }
+
+    @Test
+    public void testTwoBytesEncapsulation() throws TcTmException {
+        pd.process(new byte[] { (byte) 0xE1, 2 }, 0, 2);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        byte[] p = pl.get(0);
+        assertArrayEquals(new byte[] { (byte) 0xE1, 2 }, p);
+    }
+
+    @Test
+    public void testFourBytesEncapsulation() throws TcTmException {
+        pd.process(new byte[] { (byte) 0xE2, 0, 0, 4 }, 0, 4);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        byte[] p = pl.get(0);
+        assertArrayEquals(new byte[] { (byte) 0xE2, 0, 0, 4 }, p);
+
+        pl.clear();
+        pd.process(new byte[] { (byte) 0xE2, 0 }, 0, 2);
+        assertTrue(pd.hasIncompletePacket());
+        assertEquals(0, pl.size());
+        pd.process(new byte[] { (byte) 0, 4 }, 0, 2);
+        assertFalse(pd.hasIncompletePacket());
+        p = pl.get(0);
+        assertArrayEquals(new byte[] { (byte) 0xE2, 0, 0, 4 }, p);
+    }
+
+    @Test
+    public void testEightBytesEncapsulation() throws TcTmException {
+        pd.process(new byte[] { (byte) 0xE3, 0, 0, 0,
+                0, 0, 0, 9 }, 0, 8);
+        assertTrue(pd.hasIncompletePacket());
+        assertEquals(0, pl.size());
+        pd.process(new byte[] { 10 }, 0, 1);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        byte[] p = pl.get(0);
+        assertArrayEquals(new byte[] { (byte) 0xE3, 0, 0, 0, 0, 0, 0, 9, 10 }, p);
+    }
+
+    @Test
+    public void testMinCcsds() throws TcTmException {
+        pd.process(new byte[] { 0, 0, 0, 0, 0 }, 0, 5);
+        assertTrue(pd.hasIncompletePacket());
+        assertEquals(0, pl.size());
+        pd.process(new byte[] { 0 }, 0, 1);
+        assertTrue(pd.hasIncompletePacket());
+        assertEquals(0, pl.size());
+        pd.process(new byte[] { 0 }, 0, 1);
+        assertFalse(pd.hasIncompletePacket());
+        assertEquals(1, pl.size());
+        byte[] p = pl.get(0);
+        assertArrayEquals(new byte[] { 0, 0, 0, 0, 0, 0, 0 }, p);
+
+    }
+
+    @Test
+    public void testInvalidTwoBytesEncapsulation() {
+        assertThrows(TcTmException.class, () -> {
+            pd.process(new byte[] { (byte) 0xE1, 1 }, 0, 2);
+        });
+    }
+
+    @Test
+    public void testInvalidFourBytesEncapsulation() {
+        assertThrows(TcTmException.class, () -> {
+            pd.process(new byte[] { (byte) 0xE2, 0, 0, 1 }, 0, 4);
+            assertFalse(pd.hasIncompletePacket());
+        });
+    }
+
+    @Test
+    public void test1() throws TcTmException {
+        String s = "6AC100000B00DD070000FE000020001A00000168E1920FBE00000058000004403FE2B7A442CAD2DDDC92FE000020001A00000168E19213A800000059000004413FE0085CE423378009CFFE000020001A00000168E19217910000005A000004423FDA6026360C2F916A9FFE000020001A00000168E1921B7A0000005B000004433FD46C1B899FD9179FAFFE000020001A00000168E1921F630000005C000004443FCC87A81DD59BA94A41FE000020001A00000168E192234C0000005D000004453FBFDC3EBECE2C50141BFE000020001A00000168E19227350000005E000004463F995EBAA84441E2CA87FE000020001A00000168E1922B1F0000005F00000447BFB33D1A94A4277A44ABE1F00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000007C00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        byte[] p = StringConverter.hexStringToArray(s);
+        pd.process(p, 10, 496);
+        assertFalse(pd.hasIncompletePacket());
+
+    }
+}
+```
+
+### `RandomizerTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/RandomizerTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.Test;
+
+public class RandomizerTest {
+
+    @Test
+    public void testTc() {
+        // System.out.println(StringConverter.arrayToHexString(Randomizer.tcseq, false));
+        String ccsdsRefSeq = "1111 1111 0011 1001 1001 1110 0101 1010 0110 1000";
+        assertEquals(ccsdsRefSeq, toBinaryString(Randomizer.tcseq, 5));
+    }
+
+    String toBinaryString(byte[] a, int n) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            int x = a[i] & 0xFF;
+            sb.append(fourbitsToString(x >> 4)).append(" ").append(fourbitsToString(x & 0xF));
+            if (i != n - 1) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    String fourbitsToString(int x) {
+        return String.format("%4s", Integer.toBinaryString(x)).replace(' ', '0');
+    }
+}
+```
+
+### `TmFrameDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/TmFrameDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.yamcs.tctm.ccsds.AosFrameDecoderTest.intToByteArray;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.TcTmException;
+
+public class TmFrameDecoderTest {
+
+    @Test
+    public void testFrame01() throws TcTmException {
+        byte[] data = intToByteArray(TM_FRAME_01);
+
+        TmManagedParameters tmp = getParams();
+        TmFrameDecoder tfd = new TmFrameDecoder(tmp);
+
+        TmTransferFrame tf = tfd.decode(data, 0, data.length);
+        assertEquals(758, tf.getSpacecraftId());
+        assertEquals(0, tf.getVirtualChannelId());
+        assertEquals(-1, tf.getShStart());
+
+        assertEquals(6, tf.getFirstHeaderPointer());
+
+        assertTrue(tf.hasOcf());
+        assertEquals(0x01000000, tf.getOcf());
+    }
+
+    @Test
+    public void testCorruptedFrame01() {
+        byte[] data = intToByteArray(TM_FRAME_01);
+        data[10] = 12; // change a byte to break the crc
+
+        TmManagedParameters tmp = getParams();
+        TmFrameDecoder tfd = new TmFrameDecoder(tmp);
+
+        assertThrows(TcTmException.class, () -> {
+            tfd.decode(data, 0, data.length);
+        });
+    }
+
+    TmManagedParameters getParams() {
+        Map<String, Object> m = new HashMap<>();
+        m.put("spacecraftId", 35);
+        m.put("frameLength", 1115);
+        m.put("errorDetection", "CRC16");
+
+        List<Map<String, Object>> vclist = new ArrayList<>();
+        m.put("virtualChannels", vclist);
+
+        Map<String, Object> vc0 = new HashMap<>();
+        vc0.put("vcId", 0);
+        vc0.put("ocfPresent", true);
+        vc0.put("service", "PACKET");
+        vc0.put("packetPreprocessorClassName", "org.yamcs.tctm.GenericPacketPreprocessor");
+
+        vclist.add(vc0);
+
+        YConfiguration config = YConfiguration.wrap(m);
+        return new TmManagedParameters(config);
+
+    }
+
+    // copied from SpacePyLibrary unit tests
+    // https://github.com/Stefan-Korner/SpacePyLibrary
+    int[] TM_FRAME_01 = {
+            0x2F, 0x61, 0x00, 0x00, 0x18, 0x00, 0x0C, 0xD2,
+            0xC0, 0x00, 0x00, 0x1A, 0x10, 0x03, 0x19, 0x16,
+            0x92, 0x5E, 0x92, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x89, 0xE4, 0x07,
+            0xFF, 0xC0, 0x00, 0x04, 0x27, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0xC9, 0x48, 0x01, 0x00, 0x00,
+            0x00, 0xBB, 0xD6 };
+}
+```
+
+### `UslpFrameDecoderTest.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/tctm/ccsds/UslpFrameDecoderTest.java`
+
+
+```java
+package org.yamcs.tctm.ccsds;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.yamcs.tctm.ccsds.AosFrameDecoderTest.intToByteArray;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
+import org.python.bouncycastle.util.Arrays;
+import org.yamcs.YConfiguration;
+import org.yamcs.tctm.TcTmException;
+
+public class UslpFrameDecoderTest {
+
+    @Test
+    public void testTfdzConstructionAllZeros() throws TcTmException {
+        byte[] data = intToByteArray(USLP_FRAME_TFDZ_CONSTR_000);
+        byte[] expected_tfdz = intToByteArray(TFDZ);
+
+        UslpManagedParameters tmp = getParams(false);
+        UslpFrameDecoder ufd = new UslpFrameDecoder(tmp);
+
+        DownlinkTransferFrame tf = ufd.decode(data, 0, data.length);
+        assertEquals(0xab, tf.getSpacecraftId());
+        assertEquals(1, tf.getVirtualChannelId());
+        assertEquals(11, tf.getDataStart());
+
+        assertEquals(tf.getFirstHeaderPointer(), tf.getDataStart());
+        byte[] tfdz = Arrays.copyOfRange(data, tf.getDataStart(), tf.getDataEnd());
+        assertArrayEquals(expected_tfdz, tfdz);
+    }
+
+    @Test
+    public void testTfdzConstructionAllOnes() throws TcTmException {
+        byte[] data = intToByteArray(USLP_FRAME_TFDZ_CONSTR_111);
+        byte[] expected_tfdz = intToByteArray(TFDZ);
+
+        UslpManagedParameters tmp = getParams(true);
+        UslpFrameDecoder ufd = new UslpFrameDecoder(tmp);
+
+        DownlinkTransferFrame tf = ufd.decode(data, 0, data.length);
+        assertEquals(0xab, tf.getSpacecraftId());
+        assertEquals(1, tf.getVirtualChannelId());
+        assertEquals(9, tf.getFirstHeaderPointer());
+
+        assertEquals(tf.getFirstHeaderPointer(), tf.getDataStart());
+        byte[] tfdz = Arrays.copyOfRange(data, tf.getDataStart(), tf.getDataEnd());
+        assertArrayEquals(expected_tfdz, tfdz);
+    }
+
+
+    UslpManagedParameters getParams(boolean variableFrameLength) {
+        Map<String, Object> m = new HashMap<>();
+        m.put("spacecraftId", 0xab);
+        if(variableFrameLength) {
+            m.put("minFrameLength", 10);
+            m.put("maxFrameLength", 30);
+        } else {
+            m.put("frameLength", 29);
+        }
+        m.put("errorDetection", "CRC16");
+
+        List<Map<String, Object>> vclist = new ArrayList<>();
+        m.put("virtualChannels", vclist);
+
+        Map<String, Object> vc0 = new HashMap<>();
+        vc0.put("vcId", 1);
+        vc0.put("ocfPresent", true);
+        vc0.put("service", "PACKET");
+        vc0.put("packetPreprocessorClassName", "org.yamcs.tctm.GenericPacketPreprocessor");
+
+        vclist.add(vc0);
+
+        YConfiguration config = YConfiguration.wrap(m);
+        return new UslpManagedParameters(config);
+
+    }
+
+    int[] TFDZ = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+
+    int[] USLP_FRAME_TFDZ_CONSTR_000 = {
+        0xC0, 0xA, 0xB8, 0x20, 0x0, 0x1C, 0x81, 0x1, 0x0, 0x0, 0x0, 
+        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 
+        0xF5, 0x29,
+    };
+
+    int[] USLP_FRAME_TFDZ_CONSTR_111 = {
+        0xC0, 0xA, 0xB8, 0x20, 0x0, 0x1A, 0x81, 0x1, 0xE0, 
+        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 
+        0xF5, 0x48,
+    };
+}
+```

@@ -3,28 +3,533 @@
 
 **경로:** `fsw/cfe/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build-documentation.yml`
 
-file--build-documentation.yml
-file--code-coverage.yml
-file--codeql-build.yml
-file--format-check.yml
-file--functional-tests.yml
-file--icbundle.yml
-file--run_fsw_cppcheck.sh
-file--static-analysis.yml
+**경로:** `fsw/cfe/.github/workflows/build-documentation.yml`
+
+
+```yaml
+name: cFS Documentation and Guides
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 10:45 PM UTC every Sunday
+    - cron:  '45 22 * * 0'
+
+
+jobs:
+  # Checks for duplicate actions. Skips push actions if there is a matching or
+  # duplicate pull-request action.
+  checks-for-duplicates:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'same_content'
+          skip_after_successful_duplicate: 'true'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
+  checkout-and-cache:
+    name: Custom checkout and cache for cFS documents
+    needs: checks-for-duplicates
+    if: ${{ needs.checks-for-duplicates.outputs.should_skip != 'true' || contains(github.ref, 'main') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout bundle
+        uses: actions/checkout@v3
+        with:
+          repository: nasa/cFS
+          submodules: true
+
+      - name: Checkout submodule
+        uses: actions/checkout@v3
+        with:
+          path: cfe
+
+      - name: Cache Source and Build
+        id: cache-src-bld
+        uses: actions/cache@v3
+        with:
+          path: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/*
+          key: cfs-doc-${{ github.run_number }}
+
+  build-cfe-usersguide:
+    needs: checkout-and-cache
+    name: Build and deploy cFE Docs
+    uses: nasa/cFS/.github/workflows/build-deploy-doc.yml@main
+    with:
+      target: "[\"cfe-usersguide\"]"
+      cache-key: cfs-doc-${{ github.run_number }}
+      buildpdf: ${{ github.event_name == 'push' && contains(github.ref, 'main')}}
+      deploy: false  # Note can't use cache with deploy, deploy in following job instead
+
+  build-mission-doc:
+    needs: checkout-and-cache
+    name: Build Mission Doc
+    #uses: nasa/cFS/.github/workflows/build-deploy-doc.yml
+    uses: nasa/cFS/.github/workflows/build-deploy-doc.yml@main
+    with:
+      target: "[\"mission-doc\"]"
+      cache-key: cfs-doc-${{ github.run_number }}
+      deploy: false
+      buildpdf: false # No need for mission pdf within cFE, done at bundle level
+
+  deploy-documentation:
+    needs: build-cfe-usersguide
+    if: ${{ github.event_name == 'push' && contains(github.ref, 'main')}}
+    name: Deploy documentation to gh-pages
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Move pdfs to deployment directory
+        run: mkdir deploy; mv */*.pdf deploy
+
+      - name: Deploy to GitHub
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: deploy
+          SINGLE_COMMIT: true
 ```
 
-## 항목
+### `code-coverage.yml`
 
-- [`fsw/cfe/.github/workflows/build-documentation.yml`](file--build-documentation.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/code-coverage.yml`](file--code-coverage.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/codeql-build.yml`](file--codeql-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/functional-tests.yml`](file--functional-tests.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/icbundle.yml`](file--icbundle.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/run_fsw_cppcheck.sh`](file--run_fsw_cppcheck.sh) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/.github/workflows/code-coverage.yml`
+
+
+```yaml
+name: "Code Coverage Analysis"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 11:00 PM UTC every Sunday
+    - cron:  '0 23 * * 0'
+
+env:
+  SIMULATION: native
+  ENABLE_UNIT_TESTS: true
+  OMIT_DEPRECATED: true
+  BUILDTYPE: debug
+
+jobs:
+
+  #Check for duplicate actions. Skips push actions if there is a matching or duplicate pull-request action.
+  check-for-duplicates:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'same_content'
+          skip_after_successful_duplicate: 'true'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
+  Local-Test-Build:
+    #Continue if check-for-duplicates found no duplicates. Always runs for pull-requests.
+    needs: check-for-duplicates
+    if: ${{ needs.check-for-duplicates.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+
+    steps:
+      - name: Install coverage tools
+        run: sudo apt-get install lcov -y
+
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout bundle
+        uses: actions/checkout@v3
+        with:
+          repository: nasa/cFS
+          submodules: true
+
+      - name: Checkout submodule
+        uses: actions/checkout@v3
+        with:
+          path: cfe
+
+      - name: Check versions
+        run: git submodule
+
+      # Setup the build system
+      - name: Set up for build
+        run: |
+          cp ./cfe/cmake/Makefile.sample Makefile
+          cp -r ./cfe/cmake/sample_defs sample_defs
+          make prep
+
+      # Build the code
+      - name: Build
+        run: |
+          make -C build/native/default_cpu1/config
+          make -C build/native/default_cpu1/core_api
+          make -C build/native/default_cpu1/core_private
+          make -C build/native/default_cpu1/es
+          make -C build/native/default_cpu1/evs
+          make -C build/native/default_cpu1/fs
+          make -C build/native/default_cpu1/msg
+          make -C build/native/default_cpu1/resourceid
+          make -C build/native/default_cpu1/sb
+          make -C build/native/default_cpu1/sbr
+          make -C build/native/default_cpu1/tbl
+          make -C build/native/default_cpu1/time
+
+      # Initialize lcov and test the code
+      - name: Test
+        run: |
+          lcov --capture --initial --directory build --output-file coverage_base.info
+          make -C build/native/default_cpu1/config test
+          make -C build/native/default_cpu1/core_api test
+          make -C build/native/default_cpu1/core_private test
+          make -C build/native/default_cpu1/es test
+          make -C build/native/default_cpu1/evs test
+          make -C build/native/default_cpu1/fs test
+          make -C build/native/default_cpu1/msg test
+          make -C build/native/default_cpu1/resourceid test
+          make -C build/native/default_cpu1/sb test
+          make -C build/native/default_cpu1/sbr test
+          make -C build/native/default_cpu1/tbl test
+          make -C build/native/default_cpu1/time test
+
+      - name: Calculate Coverage
+        run: |
+          lcov --capture --rc lcov_branch_coverage=1 --directory build --output-file coverage_test.info
+          lcov --rc lcov_branch_coverage=1 --add-tracefile coverage_base.info --add-tracefile coverage_test.info --output-file coverage_total.info
+          genhtml coverage_total.info --branch-coverage --output-directory lcov | tee lcov_out.txt
+
+      - name: Confirm Minimum Coverage
+        run: |
+          missed_branches=52
+          missed_lines=18
+          branch_nums=$(grep -A 3 "Overall coverage rate" lcov_out.txt | grep branches | grep -oP "[0-9]+[0-9]*")
+          line_nums=$(grep -A 3 "Overall coverage rate" lcov_out.txt | grep lines | grep -oP "[0-9]+[0-9]*")
+
+          branch_diff=$(echo $branch_nums | awk '{ print $4 - $3 }')
+          line_diff=$(echo $line_nums | awk '{ print $4 - $3 }')
+          if [ $branch_diff -gt $missed_branches ] || [ $line_diff -gt $missed_lines ]
+          then
+            grep -A 3 "Overall coverage rate" lcov_out.txt
+            echo "$branch_diff branches missed, $missed_branches allowed"
+            echo "$line_diff lines missed, $missed_lines allowed"
+            exit -1
+          fi
+```
+
+### `codeql-build.yml`
+
+**경로:** `fsw/cfe/.github/workflows/codeql-build.yml`
+
+
+```yaml
+name: "CodeQL Analysis"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 11:15 PM UTC every Sunday
+    - cron:  '15 23 * * 0'
+
+jobs:
+  codeql:
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: cfe
+      make: make -j8
+      test: true
+```
+
+### `format-check.yml`
+
+**경로:** `fsw/cfe/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 11:30 PM UTC every Sunday
+    - cron:  '30 23 * * 0'
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+```
+
+### `functional-tests.yml`
+
+**경로:** `fsw/cfe/.github/workflows/functional-tests.yml`
+
+
+```yaml
+name: "Functional Test"
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 11:45 PM UTC every Sunday
+    - cron:  '45 23 * * 0'
+
+env:
+  SIMULATION: native
+  ENABLE_UNIT_TESTS: true
+  OMIT_DEPRECATED: true
+  BUILDTYPE: release
+
+jobs:
+
+  #Check for duplicate actions. Skips push actions if there is a matching or duplicate pull-request action.
+  check-for-duplicates:
+    runs-on: ubuntu-latest
+    # Map a step output to a job output
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@master
+        with:
+          concurrent_skipping: 'same_content'
+          skip_after_successful_duplicate: 'true'
+          do_not_skip: '["pull_request", "workflow_dispatch", "schedule"]'
+
+  Local-Test-Build:
+    #Continue if check-for-duplicates found no duplicates. Always runs for pull-requests.
+    needs: check-for-duplicates
+    if: ${{ needs.check-for-duplicates.outputs.should_skip != 'true' }}
+    runs-on: ubuntu-20.04
+    timeout-minutes: 15
+
+    steps:
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout bundle
+        uses: actions/checkout@v3
+        with:
+          repository: nasa/cFS
+          submodules: true
+
+      - name: Checkout submodule
+        uses: actions/checkout@v3
+        with:
+          path: cfe
+
+      - name: Check versions
+        run: git submodule
+
+      # Setup the build system
+      - name: Set up for build
+        run: |
+          cp ./cfe/cmake/Makefile.sample Makefile
+          cp -r ./cfe/cmake/sample_defs sample_defs
+          make prep
+
+      # Setup the build system
+      - name: Make Install
+        run: make install
+
+      - name: List cpu1
+        run: ls build/exe/cpu1/
+
+      # Run cFS, send commands to set perf trigger and start perf data, and run functional tests
+      - name: Run cFS
+        run: |
+          ./core-cpu1 &
+          sleep 10
+          ../host/cmdUtil --pktid=0x1806 --cmdcode=17 --endian=LE --uint32=3 --uint32=0x40000000
+          ../host/cmdUtil --pktid=0x1806 --cmdcode=14 --endian=LE --uint32=2
+          ../host/cmdUtil --pktid=0x1806 --cmdcode=4 --endian=LE --string="20:CFE_TEST_APP" --string="20:CFE_TestMain" --string="64:cfe_testcase" --uint32=16384 --uint8=0 --uint8=0 --uint16=100
+
+          sleep 30
+          counter=0
+
+          while [[ ! -f cf/cfe_test.log ]]; do
+            temp=$(grep -c "BEGIN" cf/cfe_test.tmp)
+
+            if [ $temp -eq $counter ]; then
+              echo "Test is frozen. Quitting"
+              break
+            fi
+
+            counter=$(grep -c "BEGIN" cf/cfe_test.tmp)
+            echo "Waiting for CFE Tests"
+            sleep 120
+          done
+
+          ../host/cmdUtil --endian=LE --pktid=0x1806 --cmdcode=2 --half=0x0002
+        working-directory: ./build/exe/cpu1/
+
+      - name: Archive cFS Startup Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cFS-startup-log-deprecate-true-${{ matrix.buildtype }}
+          path: ./build/exe/cpu1/cf/cfe_test.log
+
+      - name: Check for cFS Warnings
+        run: |
+          if [[ -z $(grep -i "SUMMARY.*FAIL::0.*TSF::0.*TTF::0" cf/cfe_test.log) ]]; then
+                  echo "Must resolve Test Failures in cFS Test App before submitting a pull request"
+                  echo ""
+                  grep -i '\[ FAIL]\|\[  TSF]\|\[  TTF]' cf/cfe_test.log
+                  exit -1
+          fi
+        working-directory: ./build/exe/cpu1/
+```
+
+### `icbundle.yml`
+
+**경로:** `fsw/cfe/.github/workflows/icbundle.yml`
+
+
+```yaml
+name: Integration Candidate Bundle Generation
+
+# Generate Integration Candidate branch for this repository.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_nums:
+        description: 'The pull request numbers to include (Comma separated)'
+        required: true
+        type: string
+
+jobs:
+  generate-ic-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y w3m
+      - name: Checkout IC Branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          ref: main
+      - name: Rebase IC Branch
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "cfs-program@list.nasa.gov"
+          git pull
+          git checkout integration-candidate
+          git rebase main
+      - name: Merge each PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          for pr in $prs
+          do
+            src_branch=$(hub pr show -f %H $pr)
+            pr_title=$(hub pr show -f %t $pr)
+            commit_msg=$'Merge pull request #'"${pr}"$' from '"${src_branch}"$'\n\n'"${pr_title}"
+            git fetch origin pull/$pr/head:origin/pull/$pr/head
+            git merge origin/pull/$pr/head --no-ff -m "$commit_msg"
+          done
+      - name: Update Changelog and Version.h files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rev_num=$(git rev-list v7.0.0-rc4.. --count)
+          changelog_entry=$'# Changelog\\n\\n## Development Build: v7.0.0-rc4+dev'${rev_num}
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          see_entry=$'\-\ See:'
+          for pr in $prs
+          do
+            pr_title=$(hub pr show -f %t $pr)
+            changelog_entry="${changelog_entry}"$'\\n- '"${pr_title@Q}"
+            see_entry="${see_entry}"$' <https://github.com/nasa/cFE/pull/'${pr}$'>'
+          done
+          changelog_entry="${changelog_entry}\n${see_entry}\n"
+          echo "s|# Changelog|$changelog_entry|"
+          sed -ir "s|Changelog|$changelog_entry|" CHANGELOG.md
+          
+          buildnumber_entry=$'#define CFE_BUILD_NUMBER   '${rev_num}$' /**< @brief Development: Number of development git commits since CFE_BUILD_BASELINE */'
+          sed -ir "s|define CFE_BUILD_NUMBER.*|$buildnumber_entry|" modules/core_api/fsw/inc/cfe_version.h
+      - name: Commit and Push Updates to IC Branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rev_num=$(git rev-list v7.0.0-rc4.. --count)
+          git add CHANGELOG.md
+          git add modules/core_api/fsw/inc/cfe_version.h
+          git commit -m "Updating documentation and version numbers for v7.0.0-rc4+dev${rev_num}"
+          git push -v origin integration-candidate
+```
+
+### `run_fsw_cppcheck.sh`
+
+**경로:** `fsw/cfe/.github/workflows/run_fsw_cppcheck.sh`
+
+
+```bash
+#!/bin/bash
+
+cppcheck_common_opts="--force --inline-suppr --std=c99 --language=c --enable=warning,performance,portability,style --suppress=variableScope --inconclusive"
+
+# When checking time, only the "server" config option is enabled for now.
+# Otherwise cppcheck attempts to check with both branches enabled and generates false errors
+cppcheck_time_opts="-UCFE_PLATFORM_TIME_CFG_CLIENT -DCFE_PLATFORM_TIME_CFG_SERVER"
+
+for mod in ${*}
+do
+    cppcheck ${cppcheck_common_opts} $(eval echo \$cppcheck_${mod}_opts) ./modules/${mod}/fsw
+done
+
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/cfe/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Static Analysis
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # 11:59 PM UTC every Sunday
+    - cron:  '59 23 * * 0'
+
+jobs:
+  static-analysis:
+    name: Run cppcheck
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+    with:
+      strict-dir-list: './modules/core_api/fsw ./modules/core_private/fsw ./modules/es/fsw ./modules/evs/fsw ./modules/fs/fsw ./modules/msg/fsw ./modules/resourceid/fsw ./modules/sb/fsw ./modules/sbr/fsw ./modules/tbl/fsw ./modules/time/fsw -UCFE_PLATFORM_TIME_CFG_CLIENT -DCFE_PLATFORM_TIME_CFG_SERVER'
+```

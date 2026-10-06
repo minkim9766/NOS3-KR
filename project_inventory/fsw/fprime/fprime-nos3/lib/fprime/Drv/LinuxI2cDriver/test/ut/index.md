@@ -3,18 +3,213 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `LinuxI2cDriverTester.cpp`
 
-file--LinuxI2cDriverTester.cpp
-file--LinuxI2cDriverTester.hpp
-file--main.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/LinuxI2cDriverTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxI2cDriver.hpp
+// \author tcanham
+// \brief  cpp file for LinuxI2cDriver test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "LinuxI2cDriverTester.hpp"
+
+#define INSTANCE 0
+#define MAX_HISTORY_SIZE 10
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+LinuxI2cDriverTester ::LinuxI2cDriverTester()
+    : LinuxI2cDriverGTestBase("Tester", MAX_HISTORY_SIZE), component("LinuxI2cDriver") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+LinuxI2cDriverTester ::~LinuxI2cDriverTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void LinuxI2cDriverTester ::sendData(U32 addr, U8* data, Fw::Buffer::SizeType size) {
+    Fw::Buffer dataBuff;
+    dataBuff.setdata(static_cast<PlatformPointerCastType>(data));
+    dataBuff.setsize(size);
+    this->invoke_to_write(0, addr, dataBuff);
+}
+
+void LinuxI2cDriverTester::open(const char* device) {
+    this->component.open(device);
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+void LinuxI2cDriverTester ::connectPorts() {
+    // write
+    this->connect_to_write(0, this->component.get_write_InputPort(0));
+}
+
+void LinuxI2cDriverTester ::initComponents() {
+    this->init();
+    this->component.init(INSTANCE);
+}
+
+}  // end namespace Drv
 ```
 
-## 항목
+### `LinuxI2cDriverTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/LinuxI2cDriverTester.cpp`](file--LinuxI2cDriverTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/LinuxI2cDriverTester.hpp`](file--LinuxI2cDriverTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/LinuxI2cDriverTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  LinuxI2cDriver/test/ut/Tester.hpp
+// \author tcanham
+// \brief  hpp file for LinuxI2cDriver test harness implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TESTER_HPP
+#define TESTER_HPP
+
+#include "Drv/LinuxI2cDriver/LinuxI2cDriver.hpp"
+#include "LinuxI2cDriverGTestBase.hpp"
+
+namespace Drv {
+
+class LinuxI2cDriverTester : public LinuxI2cDriverGTestBase {
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+  public:
+    //! Construct object LinuxI2cDriverTester
+    //!
+    LinuxI2cDriverTester();
+
+    //! Destroy object LinuxI2cDriverTester
+    //!
+    ~LinuxI2cDriverTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! To do
+    //!
+    void sendData(U32 addr, U8* data, Fw::Buffer::SizeType size);
+
+    void open(const char* device);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    //!
+    void connectPorts();
+
+    //! Initialize components
+    //!
+    void initComponents();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    //!
+    LinuxI2cDriver component;
+};
+
+}  // end namespace Drv
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/LinuxI2cDriver/test/ut/main.cpp`
+
+
+```cpp
+#include <unistd.h>
+#include <Fw/Types/StringUtils.hpp>
+#include <LinuxI2cDriverTester.hpp>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+
+TEST(TestNominal, Nominal) {
+    Drv::LinuxI2cDriverTester tester;
+}
+
+const char* help = "[-h] -d <I2C device> -a <I2C address> <byte 0> <byte1> ... <byteN>";
+
+int main(int argc, char* argv[]) {
+    int c;
+
+    U32 addr = 0;
+    char device[80];
+    device[0] = 0;
+
+    while ((c = getopt(argc, argv, "hd:a:")) != -1) {
+        switch (c) {
+            case 'h':
+                printf("test_ut %s\n", argv[0], help);
+                return 0;
+            case 'a':
+                addr = strtoul(optarg, 0, 0);
+                break;
+            case 'd':
+                (void)Fw::StringUtils::string_copy(device, optarg, sizeof(device));
+                break;
+            default:
+                printf("test_ut %s\n", argv[0], help);
+                return -1;
+        }
+    }
+
+    printf("Address: %d (0x%02X) Device: %s\n", addr, addr, device);
+
+    U8 data[12];
+
+    for (int i = optind; i < argc; i++) {
+        data[optind - i] = strtoul(argv[i], 0, 0);
+        printf("Data: %s 0x%02X\n", argv[i], data[optind - i]);
+    }
+
+    Drv::LinuxI2cDriverTester tester;
+    tester.open(device);
+
+    tester.sendData(addr, data, argc - optind);
+
+    return 0;
+}
+```

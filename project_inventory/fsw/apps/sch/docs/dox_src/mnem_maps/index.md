@@ -3,16 +3,90 @@
 
 **경로:** `fsw/apps/sch/docs/dox_src/mnem_maps/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfs_sch_cmd_mnem_map`
 
-file--cfs_sch_cmd_mnem_map
-file--cfs_sch_tlm_mnem_map
+**경로:** `fsw/apps/sch/docs/dox_src/mnem_maps/cfs_sch_cmd_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific command mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) If there are multiple mnemonics for a particular data point, they should
+#    be separated by the following ", \b \c " and enclosed in double quotes to 
+#    maintain proper formatting in the documentation.  For example:
+#        ES_RESET="$sc_$cpu_ES_ProcessorReset, \b \c $sc_$cpu_ES_PowerOnReset"
+#---------------------------------------------------------------------------
+ALIASES += \
+SCH_NOOP=$sc_$cpu_SCH_NOOP \
+SCH_RESETCTRS=$sc_$cpu_SCH_ResetCtrs \
+SCH_ENABLEENTRY=$sc_$cpu_SCH_EnableEntry \
+SCH_DISABLEENTRY=$sc_$cpu_SCH_DisableEntry \
+SCH_ENABLEGROUP=$sc_$cpu_SCH_EnableGroup \
+SCH_DISABLEGROUP=$sc_$cpu_SCH_DisableGroup \
+SCH_ENABLESYNC=$sc_$cpu_SCH_EnableSync \
+SCH_SENDDIAG=$sc_$cpu_SCH_SendDiagnostic
 ```
 
-## 항목
+### `cfs_sch_tlm_mnem_map`
 
-- [`fsw/apps/sch/docs/dox_src/mnem_maps/cfs_sch_cmd_mnem_map`](file--cfs_sch_cmd_mnem_map) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/docs/dox_src/mnem_maps/cfs_sch_tlm_mnem_map`](file--cfs_sch_tlm_mnem_map) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/docs/dox_src/mnem_maps/cfs_sch_tlm_mnem_map`
+
+
+```text
+#---------------------------------------------------------------------------
+# Each of the following assignment statements should have the documentation
+# mnemonic on the left followed by the mission specific telemetry mnemonic
+# on the right of the equals operator.
+#
+# FORMATTING DETAILS TO REMEMBER!
+# 1) ALIASES line MUST have "+=" as the operator
+# 2) There CANNOT be spaces around the "=" operator on assignment statements
+# 3) Each line, EXCEPT the last, MUST have the line continuation character "\"
+#    at the end
+# 4) NO comments, such as these, can be interspersed within the assignment
+#    statements
+# 5) If there are multiple mnemonics for a particular data point, they should
+#    be separated by the following ", \b \c " and enclosed in double quotes to 
+#    maintain proper formatting in the documentation.  For example:
+#        ES_RESET="$sc_$cpu_ES_ProcessorReset, \b \c $sc_$cpu_ES_PowerOnReset"
+#---------------------------------------------------------------------------
+ALIASES += \
+SCH_CMDPC=$sc_$cpu_SCH_CMDPC \
+SCH_CMDEC=$sc_$cpu_SCH_CMDEC \
+SCH_ACTSUCCESSCTR=$sc_$cpu_SCH_ActSuccessCtr \
+SCH_ACTFAILURECTR=$sc_$cpu_SCH_ActFailCtr \
+SCH_SLOTPROCCTR=$sc_$cpu_SCH_SlotProcCtr \
+SCH_SKIPSLOTCTR=$sc_$cpu_SCH_SlotSkipCtr \
+SCH_MULTSLOTCTR=$sc_$cpu_SCH_MultSlotCtr \
+SCH_SAMESLOTCTR=$sc_$cpu_SCH_SameSlotCtr \
+SCH_BADTBLDATACTR=$sc_$cpu_SCH_BadTblDataCtr \
+SCH_TBLPASSVERIFYCTR=$sc_$cpu_SCH_TblPassVerifyCtr \
+SCH_TBLFAILVERIFYCTR=$sc_$cpu_SCH_TblFailVerifyCtr \
+SCH_TBLPROCCTR=$sc_$cpu_SCH_TblProcCtr \
+SCH_VALIDMFCTR=$sc_$cpu_SCH_ValidMajorFrameCtr \
+SCH_MISSMFCTR=$sc_$cpu_SCH_MissedMajorFrameCtr \
+SCH_UNEXPCTDMFCTR=$sc_$cpu_SCH_UnexpectedMajorFrameCtr \
+SCH_MINORSINCETONE=$sc_$cpu_SCH_MinorFrameSinceTone \
+SCH_NEXTSLOT=$sc_$cpu_SCH_NextSlot \
+SCH_LASTSYNCMETSLOT=$sc_$cpu_SCH_LastSyncMETSlot \
+SCH_IGNOREMF=$sc_$cpu_SCH_IgnoreMajorFrame \
+SCH_UNEXPCTDMAJORFRAME=$sc_$cpu_SCH_UnexpectedMajorFrame \
+SCH_SYNCTOMET=$sc_$cpu_SCH_SyncToMET \
+SCH_MAJORFRAMESOURCE=$sc_$cpu_MajorFrameSource \
+SCH_SPARE1=$sc_$cpu_SCH_Spare1 \
+SCH_SPARE2=$sc_$cpu_SCH_Spare2 \
+SCH_ENTRYSTATES=$sc_$cpu_SCH_EntryStates \
+SCH_MSGIDS=$sc_$cpu_SCH_MsgIDs
+```

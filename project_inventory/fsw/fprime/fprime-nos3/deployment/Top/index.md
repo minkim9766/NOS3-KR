@@ -3,26 +3,1263 @@
 
 **경로:** `fsw/fprime/fprime-nos3/deployment/Top/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--deploymentPackets.fppi
-file--deploymentTopology.cpp
-file--deploymentTopology.hpp
-file--deploymentTopologyDefs.hpp
-file--instances.fpp
-file--topology.fpp
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/CMakeLists.txt`
+
+
+```cmake
+####
+# F Prime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/reference/api/cmake/API/
+#
+####
+
+#ITC SFTUFF:
+find_path(_ITC_CMAKE_MODULES_
+NAMES FindITC_Common.cmake
+PATHS ${ITC_CMAKE_MODULES}
+        ${ITC_DEV_ROOT}/cmake/modules
+        $ENV{ITC_DEV_ROOT}/cmake/modules
+        /usr/local/cmake/modules
+        /usr/cmake/modules)
+if(NOT _ITC_CMAKE_MODULES_)
+message(WARNING "Unable to find ITC CMake Modules")
+endif()
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+
+include_directories("../../../../../components/sample/fsw/shared")#sample_device.h
+include_directories("../../../../../components/sample/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/sample/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_mag/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/generic_mag/fsw/shared/")
+include_directories("../../../../../components/generic_mag/fsw/fprime/platform_inc")
+
+include_directories("../../../../../fsw/apps/hwlib/fsw/public_inc")
+
+include_directories("../../../../../fsw/apps/hwlib/sim/inc")
+
+include_directories("../../../../../components/generic_star_tracker/fsw/shared")
+include_directories("../../../../../components/generic_star_tracker/fsw/standalone") #device_cfg.
+include_directories("../../../../../components/generic_star_tracker/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_radio/fsw/shared")
+include_directories("../../../../../components/generic_radio/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_radio/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/arducam/fsw/shared/") #device.h
+include_directories("../../../../../components/arducam/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/arducam/fsw/fprime/platform_inc") #platform_cfg.h
+include_directories("../../../../../components/generic_thruster/fsw/shared")
+include_directories("../../../../../components/generic_thruster/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_thruster/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_torquer/fsw/shared")
+include_directories("../../../../../components/generic_torquer/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_torquer/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_css/fsw/shared")
+include_directories("../../../../../components/generic_css/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_css/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_eps/fsw/shared")
+include_directories("../../../../../components/generic_eps/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_eps/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_imu/fsw/shared")
+include_directories("../../../../../components/generic_imu/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/generic_imu/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_fss/fsw/shared")
+include_directories("../../../../../components/generic_fss/fsw/standalone/") #device_cfg.h
+include_directories("../../../../../components/generic_fss/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc")
+include_directories("../../../../../components/generic_reaction_wheel/fsw/shared")
+include_directories("../../../../../components/generic_reaction_wheel/fsw/standalone") #device_cfg.h
+
+include_directories("../../../../../components/novatel_oem615/fsw/shared")
+include_directories("../../../../../components/novatel_oem615/fsw/standalone") #device_cfg.h
+include_directories("../../../../../components/novatel_oem615/fsw/fprime/platform_inc")
+
+include_directories("../../../../../components/generic_adcs/fsw/fprime/src")
+include_directories("../../../../../components/generic_adcs/fsw/shared")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/deploymentPackets.xml"
+  "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/deploymentTopology.cpp"
+
+  #ITC STUFF
+  
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_registers.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_css/fsw/shared/generic_css_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_radio/fsw/shared/generic_radio_device.c" 
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/sample/fsw/shared/sample_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libuart.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libcan.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libspi.c"
+  # "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+set(MOD_DEPS
+  Fw/Logger
+  Svc/PosixTime
+  # Communication Implementations
+  Drv/Udp
+  Drv/TcpClient
+
+  #ITC Stuff
+  ${ITC_Common_LIBRARIES}
+  ${NOSENGINE_LIBRARIES}
+)
+
+register_fprime_module(
+    # AUTOCODER_INPUTS
+    #     "${CMAKE_CURRENT_LIST_DIR}/instances.fpp"
+    #     "${CMAKE_CURRENT_LIST_DIR}/topology.fpp"
+    # SOURCES
+    #     "${CMAKE_CURRENT_LIST_DIR}/deploymentTopology.cpp"
+    # DEPENDS
+    #     Fw_Logger
+)
+
+target_sources(${FPRIME_CURRENT_MODULE} PRIVATE 
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/arducam/fsw/shared/cam_registers.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_torquer/fsw/shared/generic_torquer_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_css/fsw/shared/generic_css_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_fss/fsw/shared/generic_fss_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_star_tracker/fsw/shared/generic_star_tracker_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_radio/fsw/shared/generic_radio_device.c" 
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/sample/fsw/shared/sample_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_thruster/fsw/shared/generic_thruster_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_adcs/fsw/shared/generic_adcs_utilities.c"
+
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_eps/fsw/shared/generic_eps_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_imu/fsw/shared/generic_imu_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_reaction_wheel/fsw/shared/generic_reaction_wheel_device.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../components/generic_mag/fsw/shared/generic_mag_device.c"
+  
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libtrq.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libsocket.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libuart.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libcan.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libi2c.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/libspi.c"
+  "${CMAKE_CURRENT_LIST_DIR}/../../../../../fsw/apps/hwlib/sim/src/nos_link.c"
+)
+
+target_include_directories(${FPRIME_CURRENT_MODULE} PRIVATE
+    "../../../../../components/sample/fsw/shared"
+    "../../../../../components/sample/fsw/standalone"
+    "../../../../../components/sample/fsw/fprime/platform_inc"
+    
+    "../../../../../fsw/apps/hwlib/fsw/public_inc"
+    
+    "../../../../../fsw/apps/hwlib/sim/inc"
+    
+    "../../../../../components/generic_star_tracker/fsw/shared"
+    "../../../../../components/generic_star_tracker/fsw/standalone/"
+    "../../../../../components/generic_star_tracker/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_radio/fsw/shared"
+    "../../../../../components/generic_radio/fsw/standalone" 
+    "../../../../../components/generic_radio/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_torquer/fsw/shared"
+    "../../../../../components/generic_torquer/fsw/standalone"
+    "../../../../../components/generic_torquer/fsw/fprime/platform_inc"
+    "../../../../../components/generic_css/fsw/shared"
+    "../../../../../components/generic_css/fsw/standalone"
+    "../../../../../components/generic_css/fsw/fprime/platform_inc"
+    "../../../../../components/generic_fss/fsw/shared/src"
+    "../../../../../components/generic_fss/fsw/standalone/"
+    "../../../../../components/generic_fss/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_eps/fsw/shared"
+    "../../../../../components/generic_eps/fsw/standalone"
+    "../../../../../components/generic_eps/fsw/fprime/platform_inc"
+    
+    "../../../../../components/arducam/fsw/shared/"
+    "../../../../../components/arducam/fsw/standalone/"
+    "../../../../../components/arducam/fsw/fprime/platform_inc"
+    "../../../../../components/generic_thruster/fsw/shared"
+    "../../../../../components/generic_thruster/fsw/standalone"
+    "../../../../../components/generic_thruster/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_imu/fsw/shared"
+    "../../../../../components/generic_imu/fsw/standalone"
+    "../../../../../components/generic_imu/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_mag/fsw/shared"
+    "../../../../../components/generic_mag/fsw/standalone"
+    "../../../../../components/generic_mag/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_reaction_wheel/fsw/shared"
+    "../../../../../components/generic_reaction_wheel/fsw/standalone"
+    "../../../../../components/generic_reaction_wheel/fsw/fprime/platform_inc"
+
+    "../../../../../components/novatel_oem615/fsw/shared"
+    "../../../../../components/novatel_oem615/fsw/standalone"
+    "../../../../../components/novatel_oem615/fsw/fprime/platform_inc"
+    
+    "../../../../../components/generic_adcs/fsw/fprime/src"
+    "../../../../../components/generic_adcs/fsw/shared"
+)
+
 ```
 
-## 항목
+### `deploymentPackets.fppi`
 
-- [`fsw/fprime/fprime-nos3/deployment/Top/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/deploymentPackets.fppi`](file--deploymentPackets.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.cpp`](file--deploymentTopology.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.hpp`](file--deploymentTopology.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/deploymentTopologyDefs.hpp`](file--deploymentTopologyDefs.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/instances.fpp`](file--instances.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/deployment/Top/topology.fpp`](file--topology.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/deploymentPackets.fppi`
+
+
+```text
+telemetry packets deploymentPackets {
+
+  packet CDH id 1 group 1 {
+    CdhCore.cmdDisp.CommandsDispatched
+
+    FileHandling.fileUplink.FilesReceived
+    FileHandling.fileUplink.PacketsReceived
+    FileHandling.fileDownlink.FilesSent
+    FileHandling.fileDownlink.PacketsSent
+    FileHandling.fileManager.CommandsExecuted
+
+    deployment.cmdSeq.CS_LoadCommands
+    deployment.cmdSeq.CS_CancelCommands
+    deployment.cmdSeq.CS_CommandsExecuted
+    deployment.cmdSeq.CS_SequencesCompleted
+    ComCcsds.comQueue.comQueueDepth
+    ComCcsds.comQueue.buffQueueDepth
+    ComCcsds.commsBufferManager.TotalBuffs
+    ComCcsds.commsBufferManager.CurrBuffs
+    ComCcsds.commsBufferManager.HiBuffs
+    #ComCcsds.tlmSend.SendLevel
+
+    deployment.rateGroup1.RgMaxTime
+    deployment.rateGroup2.RgMaxTime
+    deployment.rateGroup3.RgMaxTime
+    deployment.rateGroup4.RgMaxTime
+  }
+
+  packet CDHErrors id 2 group 1 {
+    CdhCore.$health.PingLateWarnings
+
+    FileHandling.fileUplink.Warnings
+    FileHandling.fileDownlink.Warnings
+    FileHandling.fileManager.Errors
+
+    deployment.cmdSeq.CS_Errors
+    ComCcsds.commsBufferManager.NoBuffs
+    ComCcsds.commsBufferManager.EmptyBuffs
+
+    deployment.rateGroup1.RgCycleSlips
+    deployment.rateGroup2.RgCycleSlips
+    deployment.rateGroup3.RgCycleSlips
+    deployment.rateGroup4.RgCycleSlips
+  }
+
+  packet SystemRes1 id 5 group 2 {
+    deployment.systemResources.MEMORY_TOTAL
+    deployment.systemResources.MEMORY_USED
+    deployment.systemResources.NON_VOLATILE_TOTAL
+    deployment.systemResources.NON_VOLATILE_FREE
+  }
+
+  packet SystemRes3 id 6 group 2 {
+    deployment.systemResources.CPU
+    deployment.systemResources.CPU_00
+    deployment.systemResources.CPU_01
+    deployment.systemResources.CPU_02
+    deployment.systemResources.CPU_03
+    deployment.systemResources.CPU_04
+    deployment.systemResources.CPU_05
+    deployment.systemResources.CPU_06
+    deployment.systemResources.CPU_07
+    deployment.systemResources.CPU_08
+    deployment.systemResources.CPU_09
+    deployment.systemResources.CPU_10
+    deployment.systemResources.CPU_11
+    deployment.systemResources.CPU_12
+    deployment.systemResources.CPU_13
+    deployment.systemResources.CPU_14
+    deployment.systemResources.CPU_15
+  }
+
+  packet DataProducts id 21 group 3 {
+    DataProducts.dpCat.CatalogDps
+    DataProducts.dpCat.DpsSent
+
+    DataProducts.dpMgr.NumSuccessfulAllocations
+    DataProducts.dpMgr.NumFailedAllocations
+    DataProducts.dpMgr.NumDataProducts
+    DataProducts.dpMgr.NumBytes
+
+    DataProducts.dpWriter.NumBuffersReceived
+    DataProducts.dpWriter.NumBytesWritten
+    DataProducts.dpWriter.NumSuccessfulWrites
+    DataProducts.dpWriter.NumFailedWrites
+    DataProducts.dpWriter.NumErrors
+
+    DataProducts.dpBufferManager.TotalBuffs
+    DataProducts.dpBufferManager.CurrBuffs
+    DataProducts.dpBufferManager.HiBuffs
+    DataProducts.dpBufferManager.NoBuffs
+    DataProducts.dpBufferManager.EmptyBuffs
+  }
+
+  packet Version1 id 22 group 2 {
+    CdhCore.version.FrameworkVersion
+    CdhCore.version.ProjectVersion
+  }
+
+  packet Version_Library1 id 23 group 2 {
+    CdhCore.version.LibraryVersion01
+    CdhCore.version.LibraryVersion02
+  }
+
+  packet Version_Library2 id 24 group 2 {
+    CdhCore.version.LibraryVersion03
+    CdhCore.version.LibraryVersion04
+  }
+
+  packet Version_Library3 id 25 group 2 {
+    CdhCore.version.LibraryVersion05
+    CdhCore.version.LibraryVersion06
+  }
+
+  packet Version_Library4 id 26 group 2 {
+    CdhCore.version.LibraryVersion07
+    CdhCore.version.LibraryVersion08
+  }
+
+  packet Version_Library5 id 27 group 2 {
+    CdhCore.version.LibraryVersion09
+    CdhCore.version.LibraryVersion10
+  }
+
+  packet Version_Custom1 id 28 group 2 {
+    CdhCore.version.CustomVersion01
+  }
+
+  packet Version_Custom2 id 29 group 2 {
+    CdhCore.version.CustomVersion02
+  }
+
+  packet Version_Custom3 id 30 group 2 {
+    CdhCore.version.CustomVersion03
+  }
+
+  packet Version_Custom4 id 31 group 2 {
+    CdhCore.version.CustomVersion04
+  }
+
+  packet Version_Custom5 id 32 group 2 {
+    CdhCore.version.CustomVersion05
+  }
+
+  packet Version_Custom6 id 33 group 2 {
+    CdhCore.version.CustomVersion06
+  }
+
+  packet Version_Custom7 id 34 group 2 {
+    CdhCore.version.CustomVersion07
+  }
+
+  packet Version_Custom8 id 35 group 2 {
+    CdhCore.version.CustomVersion08
+  }
+
+  packet Version_Custom9 id 36 group 2 {
+    CdhCore.version.CustomVersion09
+  }
+
+  packet Version_Custom10 id 37 group 2 {
+    CdhCore.version.CustomVersion10
+  }
+
+} omit {
+  CdhCore.cmdDisp.CommandErrors
+
+  Components.arducam.CommandCount
+  Components.arducam.CommandErrorCount
+
+  Components.generic_css.CommandCount
+  Components.generic_css.CommandErrorCount
+  Components.generic_css.DeviceCount
+  Components.generic_css.DeviceErrorCount
+  Components.generic_css.DeviceEnabled
+  Components.generic_css.ADCVoltage0
+  Components.generic_css.ADCVoltage1
+  Components.generic_css.ADCVoltage2
+  Components.generic_css.ADCVoltage3
+  Components.generic_css.ADCVoltage4
+  Components.generic_css.ADCVoltage5
+
+  Components.generic_eps.DeviceCount
+  Components.generic_eps.DeviceErrorCount
+  Components.generic_eps.CommandErrorCount
+  Components.generic_eps.CommandCount
+  Components.generic_eps.BatteryVoltage
+  Components.generic_eps.BatteryTemperature
+  Components.generic_eps.Bus3p3Voltage
+  Components.generic_eps.Bus5p0Voltage
+  Components.generic_eps.Bus12Voltage
+  Components.generic_eps.EPSTemperature
+  Components.generic_eps.SolarArrayVoltage
+  Components.generic_eps.SolarArrayTemperature
+  Components.generic_eps.RawBatteryVoltage
+  Components.generic_eps.RawBatteryTemperature
+  Components.generic_eps.RawBus3p3V
+  Components.generic_eps.RawBus5p0V
+  Components.generic_eps.RawBus12V
+  Components.generic_eps.RawEPSTemperature
+  Components.generic_eps.RawSAVoltage
+  Components.generic_eps.RawSATemperature
+  Components.generic_eps.SW0Voltage
+  Components.generic_eps.SW0Current
+  Components.generic_eps.RawSW0Voltage
+  Components.generic_eps.RawSW0Current
+  Components.generic_eps.SW0State
+  Components.generic_eps.SW0Flag
+  Components.generic_eps.SW1Voltage
+  Components.generic_eps.SW1Current
+  Components.generic_eps.RawSW1Voltage
+  Components.generic_eps.RawSW1Current
+  Components.generic_eps.SW1State
+  Components.generic_eps.SW1Flag
+  Components.generic_eps.SW2Voltage
+  Components.generic_eps.SW2Current
+  Components.generic_eps.RawSW2Voltage
+  Components.generic_eps.RawSW2Current
+  Components.generic_eps.SW2State
+  Components.generic_eps.SW2Flag
+  Components.generic_eps.SW3Voltage
+  Components.generic_eps.SW3Current
+  Components.generic_eps.RawSW3Voltage
+  Components.generic_eps.RawSW3Current
+  Components.generic_eps.SW3State
+  Components.generic_eps.SW3Flag
+  Components.generic_eps.SW4Voltage
+  Components.generic_eps.SW4Current
+  Components.generic_eps.RawSW4Voltage
+  Components.generic_eps.RawSW4Current
+  Components.generic_eps.SW4State
+  Components.generic_eps.SW4Flag
+  Components.generic_eps.SW5Voltage
+  Components.generic_eps.SW5Current
+  Components.generic_eps.RawSW5Voltage
+  Components.generic_eps.RawSW5Current
+  Components.generic_eps.SW5State
+  Components.generic_eps.SW5Flag
+  Components.generic_eps.SW6Voltage
+  Components.generic_eps.SW6Current
+  Components.generic_eps.RawSW6Voltage
+  Components.generic_eps.RawSW6Current
+  Components.generic_eps.SW6State
+  Components.generic_eps.SW6Flag
+  Components.generic_eps.SW7Voltage
+  Components.generic_eps.SW7Current
+  Components.generic_eps.RawSW7Voltage
+  Components.generic_eps.RawSW7Current
+  Components.generic_eps.SW7State
+  Components.generic_eps.SW7Flag
+
+  Components.generic_fss.CommandCount
+  Components.generic_fss.CommandErrorCount
+  Components.generic_fss.DeviceCount
+  Components.generic_fss.DeviceErrorCount
+  Components.generic_fss.DeviceEnabled
+  Components.generic_fss.ALPHA
+  Components.generic_fss.BETA
+  Components.generic_fss.ERRORCODE
+
+  Components.generic_imu.CommandCount
+  Components.generic_imu.CommandErrorCount
+  Components.generic_imu.DeviceCount
+  Components.generic_imu.DeviceErrorCount
+  Components.generic_imu.DeviceEnabled
+  Components.generic_imu.ReportedComponentCount
+  Components.generic_imu.DeviceStatus
+  Components.generic_imu.X_Axis_LinearAcc
+  Components.generic_imu.X_Axis_AngularAcc
+  Components.generic_imu.Y_Axis_LinearAcc
+  Components.generic_imu.Y_Axis_AngularAcc
+  Components.generic_imu.Z_Axis_LinearAcc
+  Components.generic_imu.Z_Axis_AngularAcc
+
+  Components.generic_mag.CommandCount
+  Components.generic_mag.CommandErrorCount
+  Components.generic_mag.DeviceCount
+  Components.generic_mag.DeviceErrorCount
+  Components.generic_mag.DeviceEnabled
+  Components.generic_mag.MagneticIntensityX
+  Components.generic_mag.MagneticIntensityY
+  Components.generic_mag.MagneticIntensityZ
+
+  Components.generic_radio.CommandCount
+  Components.generic_radio.CommandErrorCount
+  Components.generic_radio.DeviceCount
+  Components.generic_radio.DeviceErrorCount
+  Components.generic_radio.ReportedComponentCount
+  Components.generic_radio.DeviceConfig
+  Components.generic_radio.ProxySignal
+
+  Components.generic_reaction_wheel.CommandCount
+  Components.generic_reaction_wheel.CommandErrorCount
+  Components.generic_reaction_wheel.DeviceCountRW0
+  Components.generic_reaction_wheel.DeviceErrorCountRW0
+  Components.generic_reaction_wheel.DeviceEnabledRW0
+  Components.generic_reaction_wheel.RW0_Data
+  Components.generic_reaction_wheel.DeviceCountRW1
+  Components.generic_reaction_wheel.DeviceErrorCountRW1
+  Components.generic_reaction_wheel.DeviceEnabledRW1
+  Components.generic_reaction_wheel.RW1_Data
+  Components.generic_reaction_wheel.DeviceCountRW2
+  Components.generic_reaction_wheel.DeviceErrorCountRW2
+  Components.generic_reaction_wheel.DeviceEnabledRW2
+  Components.generic_reaction_wheel.RW2_Data
+
+  Components.generic_star_tracker.ReportedComponentCount
+  Components.generic_star_tracker.CommandCount
+  Components.generic_star_tracker.CommandErrorCount
+  Components.generic_star_tracker.DeviceCount
+  Components.generic_star_tracker.DeviceErrorCount
+  Components.generic_star_tracker.DeviceEnabled
+  Components.generic_star_tracker.Q0_Data
+  Components.generic_star_tracker.Q1_Data
+  Components.generic_star_tracker.Q2_Data
+  Components.generic_star_tracker.Q3_Data
+  Components.generic_star_tracker.IsValid
+
+  Components.generic_thruster.CommandCount
+  Components.generic_thruster.CommandErrorCount
+  Components.generic_thruster.DeviceCount
+  Components.generic_thruster.DeviceErrorCount
+  Components.generic_thruster.DeviceEnabled
+  Components.generic_thruster.Percentage_0
+  Components.generic_thruster.Percentage_1
+  Components.generic_thruster.Percentage_2
+  Components.generic_thruster.Percentage_3
+
+  Components.generic_torquer.DeviceCount
+  Components.generic_torquer.DeviceErrorCount
+  Components.generic_torquer.CommandErrorCount
+  Components.generic_torquer.CommandCount
+  Components.generic_torquer.DeviceEnabled
+  Components.generic_torquer.Direction_0
+  Components.generic_torquer.Percent_0
+  Components.generic_torquer.Direction_1
+  Components.generic_torquer.Percent_1
+  Components.generic_torquer.Direction_2
+  Components.generic_torquer.Percent_2
+
+  Components.generic_adcs.ingestIMUCount
+  Components.generic_adcs.ingestMagCount
+  Components.generic_adcs.ingestFSSCount
+  Components.generic_adcs.ingestCSSCount
+  Components.generic_adcs.ingestRWCount
+  Components.generic_adcs.ingestSTCount
+  Components.generic_adcs.ingestBDOT
+  Components.generic_adcs.ingestSUNSAFE
+  Components.generic_adcs.ingestPASSIVE
+  Components.generic_adcs.ADCSMode
+  Components.generic_adcs.INERTIALQUATERNIONX
+  Components.generic_adcs.INERTIALQUATERNIONY
+  Components.generic_adcs.INERTIALQUATERNIONZ
+  Components.generic_adcs.INERTIALQUATERNIONW
+  Components.generic_adcs.CommandCount
+  Components.generic_adcs.CommandErrorCount
+  Components.generic_adcs.ADCSMomentumManagement
+
+  Components.sampleSim.ReportedComponentCount
+  Components.sampleSim.DeviceConfig
+  Components.sampleSim.DeviceStatus
+  Components.sampleSim.DeviceCount
+  Components.sampleSim.DeviceErrorCount
+  Components.sampleSim.CommandCount
+  Components.sampleSim.CommandErrorCount
+  Components.sampleSim.DeviceEnabled
+
+  Components.novatel_oem615.Weeks
+  Components.novatel_oem615.SecondsIntoWeek
+  Components.novatel_oem615.Fractions
+  Components.novatel_oem615.ECEFX
+  Components.novatel_oem615.ECEFY
+  Components.novatel_oem615.ECEFZ
+  Components.novatel_oem615.VelX
+  Components.novatel_oem615.VelY
+  Components.novatel_oem615.VelZ
+  Components.novatel_oem615.lat
+  Components.novatel_oem615.lon
+  Components.novatel_oem615.alt
+
+}
+```
+
+### `deploymentTopology.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  deploymentTopology.cpp
+// \brief cpp file containing the topology instantiation code
+//
+// ======================================================================
+// Provides access to autocoded functions
+#include <deployment/Top/deploymentTopologyAc.hpp>
+// Note: Uncomment when using Svc:TlmPacketizer
+//#include <deployment/Top/deploymentPacketsAc.hpp>
+
+// Necessary project-specified types
+#include <Fw/Types/MallocAllocator.hpp>
+
+// Allows easy reference to objects in FPP/autocoder required namespaces
+using namespace deployment;
+
+// Instantiate a malloc allocator for cmdSeq buffer allocation
+Fw::MallocAllocator mallocator;
+
+// The reference topology divides the incoming clock signal (1Hz) into sub-signals: 1Hz, 1/2Hz, and 1/4Hz with 0 offset
+Svc::RateGroupDriver::DividerSet rateGroupDivisorsSet{{{10, 0}, {20, 0}, {40, 0}, {2, 0}}};
+
+// Rate groups may supply a context token to each of the attached children whose purpose is set by the project. The
+// reference topology sets each token to zero as these contexts are unused in this project.
+U32 rateGroup1Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup2Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup3Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+U32 rateGroup4Context[Svc::ActiveRateGroup::CONNECTION_COUNT_MAX] = {};
+
+enum TopologyConstants {
+    COMM_PRIORITY = 100,
+};
+
+/**
+ * \brief configure/setup components in project-specific way
+ *
+ * This is a *helper* function which configures/sets up each component requiring project specific input. This includes
+ * allocating resources, passing-in arguments, etc. This function may be inlined into the topology setup function if
+ * desired, but is extracted here for clarity.
+ */
+void configureTopology() {
+    // Rate group driver needs a divisor list
+    rateGroupDriver.configure(rateGroupDivisorsSet);
+
+    // Rate groups require context arrays.
+    rateGroup1.configure(rateGroup1Context, FW_NUM_ARRAY_ELEMENTS(rateGroup1Context));
+    rateGroup2.configure(rateGroup2Context, FW_NUM_ARRAY_ELEMENTS(rateGroup2Context));
+    rateGroup3.configure(rateGroup3Context, FW_NUM_ARRAY_ELEMENTS(rateGroup3Context));
+    rateGroup4.configure(rateGroup4Context, FW_NUM_ARRAY_ELEMENTS(rateGroup4Context));
+
+    // Command sequencer needs to allocate memory to hold contents of command sequences
+    cmdSeq.allocateBuffer(0, mallocator, 5 * 1024);
+}
+
+// Public functions for use in main program are namespaced with deployment name deployment
+namespace deployment {
+void setupTopology(const TopologyState& state) {
+    // Autocoded initialization. Function provided by autocoder.
+    initComponents(state);
+    // Autocoded id setup. Function provided by autocoder.
+    setBaseIds();
+    // Autocoded connection wiring. Function provided by autocoder.
+    connectComponents();
+    // Autocoded command registration. Function provided by autocoder.
+    regCommands();
+    // Autocoded configuration. Function provided by autocoder.
+    configComponents(state);
+    if (state.hostname != nullptr && state.port != 0) {
+        comDriver.configure(state.hostname, state.port);
+    }
+    // Project-specific component configuration. Function provided above. May be inlined, if desired.
+    configureTopology();
+    // Autocoded parameter loading. Function provided by autocoder.
+    loadParameters();
+    // Autocoded task kick-off (active components). Function provided by autocoder.
+    startTasks(state);
+    // Initialize socket communication if and only if there is a valid specification
+    if (state.hostname != nullptr && state.port != 0) {
+        Os::TaskString name("ReceiveTask");
+        // Uplink is configured for receive so a socket task is started
+        comDriver.start(name, COMM_PRIORITY, Default::STACK_SIZE);
+    }
+}
+
+void startRateGroups(Fw::TimeInterval interval) {
+    // The timer component drives the fundamental tick rate of the system.
+    // Svc::RateGroupDriver will divide this down to the slower rate groups.
+    // This call will block until the stopRateGroups() call is made.
+    // For this Linux demo, that call is made from a signal handler.
+    timer.startTimer(interval.getSeconds()*1000+interval.getUSeconds()/1000);
+}
+
+void stopRateGroups() {
+    timer.quit();
+}
+
+void teardownTopology(const TopologyState& state) {
+    // Autocoded (active component) task clean-up. Functions provided by topology autocoder.
+    stopTasks(state);
+    freeThreads(state);
+
+    // Other task clean-up.
+    comDriver.stop();
+    (void)comDriver.join();
+
+    // Resource deallocation
+    cmdSeq.deallocateBuffer(mallocator);
+
+    tearDownComponents(state);
+}
+};  // namespace deployment
+```
+
+### `deploymentTopology.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/deploymentTopology.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  deploymentTopology.hpp
+// \brief header file containing the topology instantiation definitions
+//
+// ======================================================================
+#ifndef DEPLOYMENT_DEPLOYMENTTOPOLOGY_HPP
+#define DEPLOYMENT_DEPLOYMENTTOPOLOGY_HPP
+// Included for access to deployment::TopologyState and deployment::ConfigObjects::pingEntries. These definitions are required by the
+// autocoder, but are also used in this hand-coded topology.
+#include <deployment/Top/deploymentTopologyDefs.hpp>
+
+// Remove unnecessary deployment:: qualifications
+using namespace deployment;
+namespace deployment {
+/**
+ * \brief initialize and run the F´ topology
+ *
+ * Initializes, configures, and runs the F´ topology. This is performed through a series of steps, some provided via
+ * autocoded functions, and others provided via the functions implementation. These steps are:
+ *
+ *   1. Call the autocoded `initComponents()` function initializing each component via the `component.init` method
+ *   2. Call the autocoded `setBaseIds()` function to set the base IDs (offset) for each component instance
+ *   3. Call the autocoded `connectComponents()` function to wire-together the topology of components
+ *   4. Configure components requiring custom configuration
+ *   5. Call the autocoded `loadParameters()` function to cause each component to load initial parameter values
+ *   6. Call the autocoded `startTasks()` function to start the active component tasks
+ *   7. Start tasks not owned by active components
+ *
+ * Step 4 and step 7 are custom and supplied by the project. The ordering of steps 1, 2, 3, 5, and 6 are critical for
+ * F´ topologies to function. Configuration (step 4) typically assumes a connect but not started topology and is thus
+ * inserted between step 3 and 5. Step 7 may come before or after the active component initializations. Since these
+ * custom tasks often start radio communication it is convenient to start them last.
+ *
+ * The state argument carries command line inputs used to setup the topology. For an explanation of the required type
+ * deployment::TopologyState see: deploymentTopologyDefs.hpp.
+ *
+ * \param state: object shuttling CLI arguments (e.g. hostname/port, or UART baudrate) needed to construct the topology
+ */
+void setupTopology(const TopologyState& state);
+
+/**
+ * \brief teardown the F´ topology
+ *
+ * Tears down the F´ topology in preparation for shutdown. This is done via a series of steps, some provided by
+ * autocoded functions, and others provided via the function implementation. These steps are:
+ *
+ *   1. Call the autocoded `stopTasks()` function to stop the tasks started by `startTasks()` (active components)
+ *   2. Call the autocoded `freeThreads()` function to join to the tasks started by `startTasks()`
+ *   3. Stop the tasks not owned by active components
+ *   4. Join to the tasks not owned by active components
+ *   5. Deallocate other resources
+ *
+ * Step 1, 2, 3, and 4 must occur in-order as the tasks must be stopped before being joined. These tasks must be stopped
+ * and joined before any active resources may be deallocated.
+ *
+ * For an explanation of the required type deployment::TopologyState see: deploymentTopologyDefs.hpp.
+ *
+ * \param state: state object provided to setupTopology
+ */
+void teardownTopology(const TopologyState& state);
+
+/**
+ * \brief cycle the rate group driver at a crude rate
+ *
+ * The reference topology does not have a true 1Hz input clock for the rate group driver because it is designed to
+ * operate across various computing endpoints (e.g. laptops) where a clear 1Hz source may not be easily and generically
+ * achieved. This function mimics the cycling via a Task::delay(milliseconds) loop that manually invokes the ISR call
+ * to the example block driver.
+ *
+ *
+ * This loop is stopped via a stopRateGroups call.
+ *
+ */
+void startRateGroups(Fw::TimeInterval interval = Fw::TimeInterval(1,0));
+
+/**
+ * \brief stop the rate groups 
+ *
+ * This stops the cycle started by startRateGroups.
+ */
+void stopRateGroups();
+
+} // namespace deployment
+#endif
+```
+
+### `deploymentTopologyDefs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/deploymentTopologyDefs.hpp`
+
+
+````cpp
+// ======================================================================
+// \title  deploymentTopologyDefs.hpp
+// \brief required header file containing the required definitions for the topology autocoder
+//
+// ======================================================================
+#ifndef DEPLOYMENT_DEPLOYMENTTOPOLOGYDEFS_HPP
+#define DEPLOYMENT_DEPLOYMENTTOPOLOGYDEFS_HPP
+
+// Subtopology PingEntries includes
+#include "Svc/Subtopologies/CdhCore/PingEntries.hpp"
+#include "Svc/Subtopologies/ComCcsds/PingEntries.hpp"
+#include "Svc/Subtopologies/DataProducts/PingEntries.hpp"
+#include "Svc/Subtopologies/FileHandling/PingEntries.hpp"
+
+// SubtopologyTopologyDefs includes
+#include "Svc/Subtopologies/CdhCore/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/ComCcsds/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/DataProducts/SubtopologyTopologyDefs.hpp"
+#include "Svc/Subtopologies/FileHandling/SubtopologyTopologyDefs.hpp"
+
+//ComCcsds Enum Includes
+#include "Svc/Subtopologies/ComCcsds/Ports_ComPacketQueueEnumAc.hpp"
+#include "Svc/Subtopologies/ComCcsds/Ports_ComBufferQueueEnumAc.hpp"
+
+// Include autocoded FPP constants
+#include "deployment/Top/FppConstantsAc.hpp"
+
+/**
+ * \brief required ping constants
+ *
+ * The topology autocoder requires a WARN and FATAL constant definition for each component that supports the health-ping
+ * interface. These are expressed as enum constants placed in a namespace named for the component instance. These
+ * are all placed in the PingEntries namespace.
+ *
+ * Each constant specifies how many missed pings are allowed before a WARNING_HI/FATAL event is triggered. In the
+ * following example, the health component will emit a WARNING_HI event if the component instance cmdDisp does not
+ * respond for 3 pings and will FATAL if responses are not received after a total of 5 pings.
+ *
+ * ```c++
+ * namespace PingEntries {
+ * namespace cmdDisp {
+ *     enum { WARN = 3, FATAL = 5 };
+ * }
+ * }
+ * ```
+ */
+namespace PingEntries {
+    namespace deployment_rateGroup1 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup2 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup3 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_rateGroup4 {enum { WARN = 3, FATAL = 5 };}
+    namespace deployment_cmdSeq {enum { WARN = 3, FATAL = 5 };}
+}  // namespace PingEntries
+
+// Definitions are placed within a namespace named after the deployment
+namespace deployment {
+
+/**
+ * \brief required type definition to carry state
+ *
+ * The topology autocoder requires an object that carries state with the name `deployment::TopologyState`. Only the type
+ * definition is required by the autocoder and the contents of this object are otherwise opaque to the autocoder. The
+ * contents are entirely up to the definition of the project. This deployment uses subtopologies.
+ */
+struct TopologyState {
+    const char* hostname;   //!< Hostname for TCP communication
+    U16 port;              //!< Port for TCP communication
+    CdhCore::SubtopologyState cdhCore;           //!< Subtopology state for CdhCore
+    ComCcsds::SubtopologyState comCcsds;         //!< Subtopology state for ComCcsds 
+    DataProducts::SubtopologyState dataProducts; //!< Subtopology state for DataProducts
+    FileHandling::SubtopologyState fileHandling; //!< Subtopology state for FileHandling
+};
+
+namespace PingEntries = ::PingEntries;
+}  // namespace deployment
+#endif
+````
+
+### `instances.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/instances.fpp`
+
+
+```fpp
+module deployment {
+
+  # ----------------------------------------------------------------------
+  # Base ID Convention
+  # ----------------------------------------------------------------------
+  #
+  # All Base IDs follow the 8-digit hex format: 0xDSSCCxxx
+  #
+  # Where:
+  #   D   = Deployment digit (1 for this deployment)
+  #   SS  = Subtopology digits (00 for main topology, 01-05 for subtopologies)
+  #   CC  = Component digits (00, 01, 02, etc.)
+  #   xxx = Reserved for internal component items (events, commands, telemetry)
+  #
+
+  # ----------------------------------------------------------------------
+  # Defaults
+  # ----------------------------------------------------------------------
+
+  module Default {
+    constant QUEUE_SIZE = 100
+    constant STACK_SIZE = 64 * 1024
+    constant QUEUE_SIZE_BIG = 20000
+  }
+
+  # ----------------------------------------------------------------------
+  # Active component instances
+  # ----------------------------------------------------------------------
+
+  instance rateGroup1: Svc.ActiveRateGroup base id 0x10001000 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 95
+
+  instance rateGroup2: Svc.ActiveRateGroup base id 0x10002000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 90
+
+  instance rateGroup3: Svc.ActiveRateGroup base id 0x10003000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 90
+  
+  instance rateGroup4: Svc.ActiveRateGroup base id 0xEB00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 90
+
+  instance cmdSeq: Svc.CmdSequencer base id 0x10004000 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 20
+
+   instance sampleSim: Components.SampleSim base id 0x0F00 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_mag: Components.Generic_mag base id 0xEF00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_star_tracker: Components.Generic_star_tracker base id 0xE000 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_radio: Components.Generic_radio base id 0xE100 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_css: Components.Generic_css base id 0xE300 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_eps: Components.Generic_eps base id 0xE200 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance arducam: Components.Arducam base id 0xF900 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_thruster: Components.Generic_thruster base id 0xE500 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_fss: Components.Generic_fss base id 0xE400 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_imu: Components.Generic_imu base id 0xE600 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_reaction_wheel: Components.Generic_reaction_wheel base id 0xE700 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance novatel_oem615: Components.novatel_oem615 base id 0xE800 \
+    queue size Default.QUEUE_SIZE \
+    stack size Default.STACK_SIZE \
+    priority 50
+    
+  instance generic_torquer: Components.Generic_torquer base id 0xE900 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 50
+
+  instance generic_adcs: Components.Generic_adcs base id 0xEA00 \
+    queue size Default.QUEUE_SIZE_BIG \
+    stack size Default.STACK_SIZE \
+    priority 45
+
+  # ----------------------------------------------------------------------
+  # Queued component instances
+  # ----------------------------------------------------------------------
+
+
+  # ----------------------------------------------------------------------
+  # Passive component instances
+  # ----------------------------------------------------------------------
+
+  #instance chronoTime: Svc.ChronoTime base id 0x10010000
+  instance nos3Time: Components.Nos3Time base id 0x4500
+
+  instance rateGroupDriver: Svc.RateGroupDriver base id 0x10011000
+
+  instance systemResources: Svc.SystemResources base id 0x10012000
+
+  instance timer: Svc.LinuxTimer base id 0x10013000
+  instance comDriver: Drv.TcpClient base id 0x10014000
+
+}
+```
+
+### `topology.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/deployment/Top/topology.fpp`
+
+
+```fpp
+module deployment {
+
+  # ----------------------------------------------------------------------
+  # Symbolic constants for port numbers
+  # ----------------------------------------------------------------------
+
+  enum Ports_RateGroups {
+    rateGroup1
+    rateGroup2
+    rateGroup3
+    rateGroup4
+  }
+
+  topology deployment {
+
+  # ----------------------------------------------------------------------
+  # Subtopology imports
+  # ----------------------------------------------------------------------
+    import CdhCore.Subtopology
+    import ComCcsds.Subtopology
+    import DataProducts.Subtopology
+    import FileHandling.Subtopology
+    
+  # ----------------------------------------------------------------------
+  # Instances used in the topology
+  # ----------------------------------------------------------------------
+    #instance chronoTime
+    instance rateGroup1
+    instance rateGroup2
+    instance rateGroup3
+    instance rateGroup4
+    instance rateGroupDriver
+    instance systemResources
+    instance timer
+    instance comDriver
+    instance cmdSeq
+    instance sampleSim
+    instance nos3Time
+    instance generic_mag
+    instance generic_star_tracker
+    instance generic_radio
+    instance generic_torquer
+    instance generic_css
+    instance generic_fss
+    instance generic_eps
+    instance arducam
+    instance generic_thruster
+    instance generic_imu
+    instance generic_reaction_wheel
+    instance novatel_oem615
+    instance generic_adcs
+
+  # ----------------------------------------------------------------------
+  # Pattern graph specifiers
+  # ----------------------------------------------------------------------
+
+    command connections instance CdhCore.cmdDisp
+    event connections instance CdhCore.events
+    telemetry connections instance CdhCore.tlmSend
+    text event connections instance CdhCore.textLogger
+    health connections instance CdhCore.$health
+    param connections instance FileHandling.prmDb
+    time connections instance nos3Time
+
+  # ----------------------------------------------------------------------
+  # Telemetry packets (only used when TlmPacketizer is used)
+  # ----------------------------------------------------------------------
+
+    # include "deploymentPackets.fppi"
+
+  # ----------------------------------------------------------------------
+  # Direct graph specifiers
+  # ----------------------------------------------------------------------
+
+    connections ComCcsds_CdhCore {
+      # Core events and telemetry to communication queue
+      CdhCore.events.PktSend -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.EVENTS]
+      CdhCore.tlmSend.PktSend -> ComCcsds.comQueue.comPacketQueueIn[ComCcsds.Ports_ComPacketQueue.TELEMETRY]
+
+      # Router to Command Dispatcher
+      ComCcsds.fprimeRouter.commandOut -> CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus -> ComCcsds.fprimeRouter.cmdResponseIn
+      
+    }
+
+    connections ComCcsds_FileHandling {
+      # File Downlink to Communication Queue
+      FileHandling.fileDownlink.bufferSendOut -> ComCcsds.comQueue.bufferQueueIn[ComCcsds.Ports_ComBufferQueue.FILE]
+      ComCcsds.comQueue.bufferReturnOut[ComCcsds.Ports_ComBufferQueue.FILE] -> FileHandling.fileDownlink.bufferReturn
+
+      # Router to File Uplink
+      ComCcsds.fprimeRouter.fileOut -> FileHandling.fileUplink.bufferSendIn
+      FileHandling.fileUplink.bufferSendOut -> ComCcsds.fprimeRouter.fileBufferReturnIn
+    }
+
+    connections Communications {
+      # ComDriver buffer allocations
+      comDriver.allocate      -> ComCcsds.commsBufferManager.bufferGetCallee
+      comDriver.deallocate    -> ComCcsds.commsBufferManager.bufferSendIn
+      
+      # ComDriver <-> ComStub (Uplink)
+      comDriver.$recv                     -> ComCcsds.comStub.drvReceiveIn
+      ComCcsds.comStub.drvReceiveReturnOut -> comDriver.recvReturnIn
+      
+      # ComStub <-> ComDriver (Downlink)
+      ComCcsds.comStub.drvSendOut      -> comDriver.$send
+      comDriver.ready         -> ComCcsds.comStub.drvConnected
+    }
+
+    connections FileHandling_DataProducts {
+      # Data Products to File Downlink
+      DataProducts.dpCat.fileOut -> FileHandling.fileDownlink.SendFile
+      FileHandling.fileDownlink.FileComplete -> DataProducts.dpCat.fileDone
+    }
+
+    connections RateGroups {
+      # timer to drive rate group
+      timer.CycleOut -> rateGroupDriver.CycleIn
+
+      # Rate group 1
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup1] -> rateGroup1.CycleIn
+      rateGroup1.RateGroupMemberOut[0] -> CdhCore.tlmSend.Run
+      rateGroup1.RateGroupMemberOut[1] -> FileHandling.fileDownlink.Run
+      rateGroup1.RateGroupMemberOut[2] -> systemResources.run
+      rateGroup1.RateGroupMemberOut[3] -> ComCcsds.comQueue.run
+      rateGroup1.RateGroupMemberOut[4] -> generic_imu.updateTlm
+      rateGroup1.RateGroupMemberOut[5] -> generic_star_tracker.updateTlm
+      rateGroup1.RateGroupMemberOut[6] -> generic_mag.updateTlm
+      rateGroup1.RateGroupMemberOut[7] -> generic_reaction_wheel.updateTlm
+      rateGroup1.RateGroupMemberOut[8] -> generic_fss.updateTlm
+      rateGroup1.RateGroupMemberOut[9] -> generic_css.updateTlm
+      rateGroup1.RateGroupMemberOut[10] -> generic_torquer.updateTlm
+      rateGroup1.RateGroupMemberOut[11] -> novatel_oem615.updateTlm
+
+
+      # Rate group 2
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup2] -> rateGroup2.CycleIn
+      rateGroup2.RateGroupMemberOut[0] -> cmdSeq.schedIn
+
+      # Rate group 3
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup3] -> rateGroup3.CycleIn
+      rateGroup3.RateGroupMemberOut[0] -> CdhCore.$health.Run
+      rateGroup3.RateGroupMemberOut[1] -> ComCcsds.commsBufferManager.schedIn
+      rateGroup3.RateGroupMemberOut[2] -> DataProducts.dpBufferManager.schedIn
+      rateGroup3.RateGroupMemberOut[3] -> DataProducts.dpWriter.schedIn
+      rateGroup3.RateGroupMemberOut[4] -> DataProducts.dpMgr.schedIn
+    
+
+      # Rate group 4
+      rateGroupDriver.CycleOut[Ports_RateGroups.rateGroup4] -> rateGroup4.CycleIn
+      rateGroup4.RateGroupMemberOut[0] -> generic_imu.updateData
+      rateGroup4.RateGroupMemberOut[1] -> generic_star_tracker.updateData
+      rateGroup4.RateGroupMemberOut[2] -> generic_mag.updateData
+      rateGroup4.RateGroupMemberOut[3] -> generic_reaction_wheel.updateData
+      rateGroup4.RateGroupMemberOut[4] -> generic_fss.updateData
+      rateGroup4.RateGroupMemberOut[5] -> generic_css.updateData
+      rateGroup4.RateGroupMemberOut[6] -> generic_adcs.updateData
+      rateGroup4.RateGroupMemberOut[7] -> novatel_oem615.updateData
+    }
+
+    connections CdhCore_cmdSeq {
+      # Command Sequencer
+      cmdSeq.comCmdOut -> CdhCore.cmdDisp.seqCmdBuff
+      CdhCore.cmdDisp.seqCmdStatus -> cmdSeq.cmdResponseIn
+    }
+
+    connections deployment {
+      # Add here connections to user-defined components
+      generic_imu.IMUout -> generic_adcs.IMUin
+      generic_mag.MAGout -> generic_adcs.MAGin
+      generic_fss.FSSout -> generic_adcs.FSSin
+      generic_css.CSSout -> generic_adcs.CSSin
+      generic_reaction_wheel.RWout -> generic_adcs.RWin
+      generic_star_tracker.STout -> generic_adcs.STin
+      novatel_oem615.GPSout -> generic_adcs.GPSin
+      generic_adcs.RWOUTout -> generic_reaction_wheel.RWin
+      generic_adcs.TORQout -> generic_torquer.TORQin
+    }
+
+  }
+
+}
+```

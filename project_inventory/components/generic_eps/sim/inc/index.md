@@ -3,22 +3,310 @@
 
 **경로:** `components/generic_eps/sim/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_eps_42_data_provider.hpp`
 
-file--generic_eps_42_data_provider.hpp
-file--generic_eps_data_point.hpp
-file--generic_eps_data_provider.hpp
-file--generic_eps_hardware_model.hpp
-file--generic_eps_shmem_data_provider.hpp
+**경로:** `components/generic_eps/sim/inc/generic_eps_42_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_EPS42DATAPROVIDER_HPP
+#define NOS3_GENERIC_EPS42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_eps_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+
+namespace Nos3
+{
+    /* Standard for a 42 data provider */
+    class Generic_eps42DataProvider : public SimData42SocketProvider
+    {
+    public:
+        /* Constructors */
+        Generic_eps42DataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_eps42DataProvider(void) {};
+        Generic_eps42DataProvider& operator=(const Generic_eps42DataProvider&) {return *this;};
+        int16_t _orb; // Which orbit number to parse out of 42 data
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+    };
+}
+
+#endif
 ```
 
-## 항목
+### `generic_eps_data_point.hpp`
 
-- [`components/generic_eps/sim/inc/generic_eps_42_data_provider.hpp`](file--generic_eps_42_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/sim/inc/generic_eps_data_point.hpp`](file--generic_eps_data_point.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/sim/inc/generic_eps_data_provider.hpp`](file--generic_eps_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/sim/inc/generic_eps_hardware_model.hpp`](file--generic_eps_hardware_model.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_eps/sim/inc/generic_eps_shmem_data_provider.hpp`](file--generic_eps_shmem_data_provider.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_eps/sim/inc/generic_eps_data_point.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_EPSDATAPOINT_HPP
+#define NOS3_GENERIC_EPSDATAPOINT_HPP
+
+#include <boost/shared_ptr.hpp>
+#include <sim_42data_point.hpp>
+
+namespace Nos3
+{
+    /* Standard for a data point used transfer data between a data provider and a hardware model */
+    class Generic_epsDataPoint : public Sim42DataPoint
+    {
+    public:
+        /* Constructors */
+        Generic_epsDataPoint(double count);
+        Generic_epsDataPoint(int16_t orbit, int16_t spacecraft, const boost::shared_ptr<Sim42DataPoint> dp);
+        Generic_epsDataPoint(int16_t orbit, int16_t spacecraft, bool in_sun, double sun_vector[3]);
+        ~Generic_epsDataPoint(void) {};
+
+        /* Accessors */
+        /* Provide the hardware model a way to get the specific data out of the data point */
+        std::string to_string(void) const;
+        double      get_sun_vector_x(void) const {parse_data_point(); return _sun_vector[0];}
+        double      get_sun_vector_y(void) const {parse_data_point(); return _sun_vector[1];}
+        double      get_sun_vector_z(void) const {parse_data_point(); return _sun_vector[2];}
+        bool        get_in_sun(void) const {parse_data_point(); return _in_sun;}
+    
+    private:
+        /* Disallow these */
+        Generic_epsDataPoint(void) {};
+        Generic_epsDataPoint(const Generic_epsDataPoint& sdp) : Sim42DataPoint(sdp) {};
+
+        /// @name Private mutators
+        inline void parse_data_point(void) const {if (_not_parsed) do_parsing();}
+        void do_parsing(void) const;
+
+        /* Specific data you need to get from the data provider to the hardware model */
+        /* You only get to this data through the accessors above */
+        mutable Sim42DataPoint _dp;
+        int16_t _orb;
+        int16_t _sc;
+        mutable bool _not_parsed;
+        mutable bool   _in_sun;
+        mutable double _sun_vector[3];
+    };
+}
+
+#endif
+```
+
+### `generic_eps_data_provider.hpp`
+
+**경로:** `components/generic_eps/sim/inc/generic_eps_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_EPSDATAPROVIDER_HPP
+#define NOS3_GENERIC_EPSDATAPROVIDER_HPP
+
+#include <boost/property_tree/xml_parser.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <generic_eps_data_point.hpp>
+#include <sim_i_data_provider.hpp>
+
+namespace Nos3
+{
+    class Generic_epsDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_epsDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_epsDataProvider(void) {};
+        Generic_epsDataProvider& operator=(const Generic_epsDataProvider&) {return *this;};
+
+        mutable double _request_count;
+    };
+}
+
+#endif
+```
+
+### `generic_eps_hardware_model.hpp`
+
+**경로:** `components/generic_eps/sim/inc/generic_eps_hardware_model.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_EPSHARDWAREMODEL_HPP
+#define NOS3_GENERIC_EPSHARDWAREMODEL_HPP
+
+/*
+** Includes
+*/
+#include <map>
+
+#include <boost/tuple/tuple.hpp>
+#include <boost/property_tree/ptree.hpp>
+
+#include <Client/Bus.hpp>
+#include <Client/DataNode.hpp>
+#include <I2C/Client/I2CSlave.hpp>
+
+#include <sim_i_data_provider.hpp>
+#include <generic_eps_data_point.hpp>
+#include <sim_i_hardware_model.hpp>
+
+#include <string>
+
+
+/*
+** Defines
+*/
+#define GENERIC_EPS_SIM_SUCCESS 0
+#define GENERIC_EPS_SIM_ERROR   1
+
+
+/*
+** Namespace
+*/
+namespace Nos3
+{
+    /* Standard for a hardware model */
+    class Generic_epsHardwareModel : public SimIHardwareModel
+    {
+    public:
+        /* Constructor and destructor */
+        Generic_epsHardwareModel(const boost::property_tree::ptree& config);
+        ~Generic_epsHardwareModel(void);
+        std::uint8_t determine_i2c_response_for_request(const std::vector<uint8_t>& in_data, std::vector<uint8_t>& out_data); 
+
+    private:
+        /* Private helper methods */
+        void command_callback(NosEngine::Common::Message msg); /* Handle backdoor commands and time tick to the simulator */
+        void eps_switch_update(const std::uint8_t sw_num, uint8_t sw_status);
+        std::uint8_t generic_eps_crc8(const std::vector<uint8_t>& crc_data, std::uint32_t crc_size);
+        void create_generic_eps_data(std::vector<uint8_t>& out_data); 
+        void update_battery_values(void);
+
+        /* Private data members */
+        class I2CSlaveConnection*                           _i2c_slave_connection;
+        
+        std::string                                         _command_bus_name;
+        std::unique_ptr<NosEngine::Client::Bus>             _command_bus; /* Standard */
+
+        SimIDataProvider*                                   _generic_eps_dp;
+
+        /* Time Bus */
+        std::unique_ptr<NosEngine::Client::Bus>             _time_bus;
+
+        /* Internal switch data */
+        struct Init_Switch_State
+        {
+            std::string   _node_name;
+            std::string   _voltage;
+            std::string   _current;
+            std::string   _state;
+        };
+
+        struct EPS_Rail
+        {
+            std::uint16_t _voltage;
+            std::uint16_t _current;
+            std::uint16_t _status;
+            std::uint16_t _temperature;
+            double        _battery_watthrs;
+        };
+
+        Init_Switch_State                                   _init_switch[8];
+        EPS_Rail                                            _switch[8];
+        EPS_Rail                                            _bus[5];
+                                                                /*
+                                                                0 - Battery
+                                                                1 - 3.3v
+                                                                2 - 5.0v
+                                                                3 - 12.0v
+                                                                4 - Solar Array
+                                                                */
+
+        std::uint8_t                                        _enabled;
+        std::uint8_t                                        _initialized_other_sims;
+
+        double                                              _power_per_main_panel;
+        double                                              _power_per_small_panel;
+        double                                              _max_battery;
+        double                                              _nominal_batt_voltage;
+
+        uint8_t                                              _solar_array_inhibit;
+
+        double                                              _charge_rate_modifer;
+        uint8_t                                              _posX_Panel_Inhibit;
+        uint8_t                                              _negX_Panel_Inhibit;
+        uint8_t                                              _posY_Panel_Inhibit;
+        uint8_t                                              _negY_Panel_Inhibit;
+        uint8_t                                              _negZ_Panel_Inhibit;
+    };
+
+    class I2CSlaveConnection : public NosEngine::I2C::I2CSlave
+    {
+    public:
+        I2CSlaveConnection(Generic_epsHardwareModel* hm, int bus_address, std::string connection_string, std::string bus_name);
+        size_t i2c_read(uint8_t *rbuf, size_t rlen);
+        size_t i2c_write(const uint8_t *wbuf, size_t wlen);
+    private:
+        Generic_epsHardwareModel* _hardware_model;
+        std::uint8_t _i2c_read_valid;
+        std::vector<uint8_t> _i2c_out_data;
+    };
+
+}
+
+#endif
+```
+
+### `generic_eps_shmem_data_provider.hpp`
+
+**경로:** `components/generic_eps/sim/inc/generic_eps_shmem_data_provider.hpp`
+
+
+```cpp
+#ifndef NOS3_GENERIC_EPS42DATAPROVIDER_HPP
+#define NOS3_GENERIC_EPS42DATAPROVIDER_HPP
+
+#include <boost/property_tree/ptree.hpp>
+#include <ItcLogger/Logger.hpp>
+#include <boost/interprocess/managed_shared_memory.hpp>
+#include <generic_eps_data_point.hpp>
+#include <sim_data_42socket_provider.hpp>
+#include <blackboard_data.hpp>
+
+namespace Nos3
+{
+    namespace bip = boost::interprocess;
+
+    class Generic_epsShmemDataProvider : public SimIDataProvider
+    {
+    public:
+        /* Constructors */
+        Generic_epsShmemDataProvider(const boost::property_tree::ptree& config);
+
+        /* Accessors */
+        boost::shared_ptr<SimIDataPoint> get_data_point(void) const;
+
+    private:
+        /* Disallow these */
+        ~Generic_epsShmemDataProvider(void) {};
+        Generic_epsShmemDataProvider& operator=(const Generic_epsShmemDataProvider&) {return *this;};
+
+        int16_t _orb; // Which orbit number to parse out of 42 data
+        int16_t _sc;  /* Which spacecraft number to parse out of 42 data */
+        bip::mapped_region _shm_region;
+        BlackboardData*    _blackboard_data;
+    };
+}
+
+#endif
+```

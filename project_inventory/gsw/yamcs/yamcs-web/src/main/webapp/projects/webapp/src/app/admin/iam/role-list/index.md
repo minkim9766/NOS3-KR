@@ -3,16 +3,138 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `role-list.component.html`
 
-file--role-list.component.html
-file--role-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role-list/role-list.component.html`
+
+
+```html
+<app-admin-page>
+  <app-admin-toolbar label="Roles" />
+
+  <ya-panel>
+    <ya-filter-bar>
+      <ya-search-filter [formControl]="filterControl" placeholder="Filter roles" />
+    </ya-filter-bar>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="ya-data-table expand"
+      matSort
+      matSortActive="name"
+      matSortDirection="asc"
+      matSortDisableClear>
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Role</th>
+        <td mat-cell *matCellDef="let role">
+          <a [routerLink]="role.name">{{ role.name }}</a>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="default">
+        <th mat-header-cell *matHeaderCellDef>Default</th>
+        <td mat-cell *matCellDef="let role">
+          {{ role.default ? "Yes" : "No" }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="expand"></th>
+        <td mat-cell *matCellDef="let row"></td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+    @if (!dataSource.data.length) {
+      <ya-empty-message>No rows to display</ya-empty-message>
+    }
+  </ya-panel>
+</app-admin-page>
 ```
 
-## 항목
+### `role-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role-list/role-list.component.html`](file--role-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role-list/role-list.component.ts`](file--role-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/role-list/role-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { UntypedFormControl } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import { RoleInfo, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+
+@Component({
+  templateUrl: './role-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class RoleListComponent implements AfterViewInit {
+  filterControl = new UntypedFormControl();
+
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = ['name', 'default', 'actions'];
+  dataSource = new MatTableDataSource<RoleInfo>();
+
+  constructor(
+    private yamcs: YamcsService,
+    title: Title,
+    private route: ActivatedRoute,
+    private router: Router,
+  ) {
+    title.setTitle('Roles');
+    this.dataSource.filterPredicate = (role, filter) => {
+      return role.name.toLowerCase().indexOf(filter) >= 0;
+    };
+  }
+
+  ngAfterViewInit() {
+    const queryParams = this.route.snapshot.queryParamMap;
+    if (queryParams.has('filter')) {
+      this.filterControl.setValue(queryParams.get('filter'));
+      this.dataSource.filter = queryParams.get('filter')!.toLowerCase();
+    }
+
+    this.filterControl.valueChanges.subscribe(() => {
+      this.updateURL();
+      const value = this.filterControl.value || '';
+      this.dataSource.filter = value.toLowerCase();
+    });
+
+    this.refresh();
+    this.dataSource.sort = this.sort;
+  }
+
+  private refresh() {
+    this.yamcs.yamcsClient.getRoles().then((roles) => {
+      this.dataSource.data = roles;
+    });
+  }
+
+  private updateURL() {
+    const filterValue = this.filterControl.value;
+    this.router.navigate([], {
+      replaceUrl: true,
+      relativeTo: this.route,
+      queryParams: {
+        filter: filterValue || null,
+      },
+      queryParamsHandling: 'merge',
+    });
+  }
+}
+```

@@ -3,22 +3,1096 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CommonTests.cpp`
 
-file--CommonTests.cpp
-file--CommonTests.hpp
-file--QueueRules.cpp
-file--QueueRules.hpp
-file--RulesHeaders.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/CommonTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/queue/CommonTests.cpp
+// \brief common test implementations
+// ======================================================================
+#include "Os/test/ut/queue/CommonTests.hpp"
+#include <gtest/gtest.h>
+#include "Fw/Types/String.hpp"
+#include "Os/Queue.hpp"
+#include "Os/test/ConcurrentRule.hpp"
+#include "Os/test/ut/queue/RulesHeaders.hpp"
+
+const FwSizeType RANDOM_BOUND = 10000;
+
+namespace Os {
+namespace Test {
+namespace Queue {
+FwSizeType Tester::QueueState::queues = 0;
+U64 Tester::QueueMessage::order_counter = 0;
+
+PriorityCompare const Tester::QueueMessageComparer::HELPER = PriorityCompare();
+
+Os::QueueInterface::Status Tester::shadow_create(FwSizeType depth, FwSizeType messageSize) {
+    Os::QueueInterface::Status status = Os::QueueInterface::ALREADY_CREATED;
+    if (not this->shadow.created) {
+        this->shadow.depth = depth;
+        this->shadow.messageSize = messageSize;
+        this->shadow.created = true;
+        status = Os::QueueInterface::OP_OK;
+        Tester::QueueState::queues++;
+    }
+    return status;
+}
+
+Os::QueueInterface::Status Tester::shadow_send(const U8* buffer,
+                                               FwSizeType size,
+                                               FwQueuePriorityType priority,
+                                               Os::QueueInterface::BlockingType blockType) {
+    this->shadow_check();
+    QueueMessage qm;
+    qm.priority = priority;
+    qm.size = size;
+    qm.order = QueueMessage::order_counter++;
+    // Overflow imminent, fail now!
+    assert(QueueMessage::order_counter != std::numeric_limits<U64>::max());
+
+    std::memcpy(qm.data, buffer, static_cast<size_t>(size));
+    if (size > this->shadow.messageSize) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    } else if ((this->shadow.queue.size() == this->shadow.depth) &&
+               (blockType == Os::QueueInterface::BlockingType::BLOCKING)) {
+        this->shadow.send_block = qm;
+        return QueueInterface::Status::OP_OK;
+    } else if (this->shadow.queue.size() == this->shadow.depth) {
+        return QueueInterface::Status::FULL;
+    } else {
+        this->shadow.queue.push(qm);
+        this->shadow.highMark = FW_MAX(this->shadow.highMark, this->shadow.queue.size());
+        return QueueInterface::Status::OP_OK;
+    }
+    return QueueInterface::Status::OP_OK;
+}
+
+void Tester::shadow_send_unblock() {
+    // Send the shadow send buffered message
+    this->shadow.queue.push(this->shadow.send_block);
+    this->shadow.highMark = FW_MAX(this->shadow.highMark, this->shadow.queue.size());
+}
+
+Os::QueueInterface::Status Tester::shadow_receive(U8* destination,
+                                                  FwSizeType capacity,
+                                                  QueueInterface::BlockingType blockType,
+                                                  FwSizeType& actualSize,
+                                                  FwQueuePriorityType& priority) {
+    this->shadow_check();
+    if (capacity < this->shadow.messageSize) {
+        return QueueInterface::Status::SIZE_MISMATCH;
+    } else if (this->shadow.queue.empty() && (blockType == QueueInterface::BlockingType::BLOCKING)) {
+        this->shadow.receive_block.destination = destination;
+        this->shadow.receive_block.size = &actualSize;
+        this->shadow.receive_block.priority = &priority;
+        return QueueInterface::Status::OP_OK;
+    } else if (this->shadow.queue.empty()) {
+        return QueueInterface::Status::EMPTY;
+    } else {
+        const QueueMessage& qm = shadow.queue.top();
+        std::memcpy(destination, qm.data, static_cast<size_t>(qm.size));
+        actualSize = qm.size;
+        priority = qm.priority;
+        shadow.queue.pop();
+    }
+    return QueueInterface::Status::OP_OK;
+}
+
+void Tester::shadow_receive_unblock() {
+    // Make sure outputs were stored in the shadow receive buffer
+    ASSERT_NE(this->shadow.receive_block.destination, nullptr);
+    ASSERT_NE(this->shadow.receive_block.size, nullptr);
+    ASSERT_NE(this->shadow.receive_block.priority, nullptr);
+
+    // Fill the outputs stored in the shadow receive buffer
+    const QueueMessage& qm = shadow.queue.top();
+    std::memcpy(this->shadow.receive_block.destination, qm.data, static_cast<size_t>(qm.size));
+    *this->shadow.receive_block.size = qm.size;
+    *this->shadow.receive_block.priority = qm.priority;
+    shadow.queue.pop();
+
+    // Clear the shadow receive buffer
+    this->shadow.receive_block.destination = nullptr;
+    this->shadow.receive_block.size = nullptr;
+    this->shadow.receive_block.priority = nullptr;
+}
+
+}  // namespace Queue
+}  // namespace Test
+}  // namespace Os
+
+TEST(InterfaceUninitialized, SendPointer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType messageSize = 200;
+    const FwQueuePriorityType priority = 127;
+    U8 buffer[messageSize];
+
+    Os::QueueInterface::Status status =
+        queue.send(buffer, sizeof buffer, priority, Os::QueueInterface::BlockingType::BLOCKING);
+    ASSERT_EQ(Os::QueueInterface::Status::UNINITIALIZED, status);
+}
+
+TEST(InterfaceUninitialized, SendBuffer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType messageSize = 200;
+    const FwQueuePriorityType priority = 127;
+    U8 storage[messageSize];
+    Fw::ExternalSerializeBuffer buffer(storage, sizeof storage);
+
+    Os::QueueInterface::Status status = queue.send(buffer, priority, Os::QueueInterface::BlockingType::BLOCKING);
+    ASSERT_EQ(Os::QueueInterface::Status::UNINITIALIZED, status);
+}
+
+TEST(InterfaceUninitialized, ReceivePointer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    FwSizeType size = 200;
+    FwQueuePriorityType priority;
+    U8 storage[size];
+
+    Os::QueueInterface::Status status =
+        queue.receive(storage, sizeof storage, Os::QueueInterface::BlockingType::NONBLOCKING, size, priority);
+    ASSERT_EQ(Os::QueueInterface::Status::UNINITIALIZED, status);
+}
+
+TEST(InterfaceUninitialized, ReceiveBuffer) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    FwSizeType size = 200;
+    FwQueuePriorityType priority;
+    U8 storage[size];
+    Fw::ExternalSerializeBuffer buffer(storage, sizeof storage);
+
+    Os::QueueInterface::Status status = queue.receive(buffer, Os::QueueInterface::BlockingType::NONBLOCKING, priority);
+    ASSERT_EQ(Os::QueueInterface::Status::UNINITIALIZED, status);
+}
+
+TEST(InterfaceInvalid, CreateInvalidDepth) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    ASSERT_DEATH_IF_SUPPORTED(queue.create(name, 0, 10), "Assert:.*Queue\\.cpp");
+}
+
+TEST(InterfaceInvalid, CreateInvalidSize) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    ASSERT_DEATH_IF_SUPPORTED(queue.create(name, 10, 0), "Assert:.*Queue\\.cpp");
+}
+
+TEST(InterfaceInvalid, SendPointerNull) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType messageSize = 200;
+    const FwQueuePriorityType priority = 127;
+    ASSERT_DEATH_IF_SUPPORTED(queue.send(nullptr, messageSize, priority, Os::QueueInterface::BlockingType::BLOCKING),
+                              "Assert:.*Queue\\.cpp");
+}
+
+TEST(InterfaceInvalid, SendInvalidEnum) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    const FwSizeType messageSize = 200;
+    const FwQueuePriorityType priority = 127;
+    Os::QueueInterface::BlockingType blockingType =
+        static_cast<Os::QueueInterface::BlockingType>(Os::QueueInterface::BlockingType::BLOCKING + 1);
+    ASSERT_DEATH_IF_SUPPORTED(queue.send(nullptr, messageSize, priority, blockingType), "Assert:.*Queue\\.cpp");
+}
+
+TEST(InterfaceInvalid, ReceivePointerNull) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    FwSizeType size = 200;
+    FwQueuePriorityType priority;
+    ASSERT_DEATH_IF_SUPPORTED(
+        queue.receive(nullptr, size, Os::QueueInterface::BlockingType::NONBLOCKING, size, priority),
+        "Assert:.*Queue\\.cpp");
+}
+
+TEST(InterfaceInvalid, ReceiveInvalidEnum) {
+    Os::Queue queue;
+    Fw::String name = "My queue";
+    FwSizeType size = 200;
+    FwQueuePriorityType priority;
+    Os::QueueInterface::BlockingType blockingType =
+        static_cast<Os::QueueInterface::BlockingType>(Os::QueueInterface::BlockingType::BLOCKING + 1);
+    ASSERT_DEATH_IF_SUPPORTED(queue.receive(nullptr, size, blockingType, size, priority), "Assert:.*Queue\\.cpp");
+}
+
+TEST(BasicRules, Create) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    // Nominal create
+    create_rule.action(tester);
+    // Repetitive create
+    create_rule.action(tester);
+}
+
+TEST(BasicRules, Send) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::SendNotFull send_rule;
+    create_rule.action(tester);
+    send_rule.action(tester);
+}
+
+TEST(BasicRules, Overflow) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::Overflow overflow_rule;
+    create_rule.action(tester);
+    overflow_rule.action(tester);
+}
+
+TEST(BasicRules, Recv) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::ReceiveEmptyNoBlock receive_rule;
+
+    create_rule.action(tester);
+    receive_rule.action(tester);
+}
+
+TEST(BasicRules, Underflow) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::Underflow underflow_rule;
+    create_rule.action(tester);
+    underflow_rule.action(tester);
+}
+
+TEST(BasicRules, SendRecv) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::SendNotFull send_rule;
+    Os::Test::Queue::Tester::ReceiveNotEmpty receive_rule;
+
+    create_rule.action(tester);
+    send_rule.action(tester);
+    receive_rule.action(tester);
+}
+
+TEST(BasicRules, OverflowUnderflow) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::Overflow overflow_rule;
+    Os::Test::Queue::Tester::SendFullNoBlock send_full_no_block;
+    Os::Test::Queue::Tester::Underflow underflow_rule;
+    Os::Test::Queue::Tester::ReceiveEmptyNoBlock receive_empty_no_block;
+    create_rule.action(tester);
+    overflow_rule.action(tester);
+    send_full_no_block.action(tester);
+    underflow_rule.action(tester);
+    receive_empty_no_block.apply(tester);
+}
+
+TEST(Blocking, SendBlock) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::Overflow overflow_rule;
+    AggregatedConcurrentRule<Os::Test::Queue::Tester> aggregator;
+    Os::Test::Queue::Tester::SendBlock block(aggregator);
+    Os::Test::Queue::Tester::ReceiveNotEmpty receive_not_empty(false);
+    ConcurrentWrapperRule<Os::Test::Queue::Tester> unblock(aggregator, receive_not_empty, "SendBlock", "SendUnblock");
+
+    create_rule.apply(tester);
+    overflow_rule.apply(tester);
+    aggregator.apply(tester);
+    aggregator.join();
+}
+
+TEST(Blocking, ReceiveBlock) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::Underflow overflow_rule;
+    AggregatedConcurrentRule<Os::Test::Queue::Tester> aggregator;
+    Os::Test::Queue::Tester::ReceiveBlock block(aggregator);
+    Os::Test::Queue::Tester::SendNotFull send_not_full(false);
+    ConcurrentWrapperRule<Os::Test::Queue::Tester> unblock(aggregator, send_not_full, "ReceiveBlock", "ReceiveUnblock");
+
+    create_rule.apply(tester);
+    overflow_rule.apply(tester);
+    aggregator.apply(tester);
+    aggregator.join();
+}
+
+TEST(Random, RandomNominal) {
+    Os::Test::Queue::Tester tester;
+    Os::Test::Queue::Tester::Create create_rule;
+    Os::Test::Queue::Tester::SendNotFull send_rule;
+    Os::Test::Queue::Tester::SendFullNoBlock send_full_no_block_rule;
+    Os::Test::Queue::Tester::ReceiveNotEmpty receive_rule;
+    Os::Test::Queue::Tester::ReceiveEmptyNoBlock receive_empty_no_block_rule;
+    Os::Test::Queue::Tester::Overflow overflow_rule;
+    Os::Test::Queue::Tester::Underflow underflow_rule;
+
+    // Place these rules into a list of rules
+    STest::Rule<Os::Test::Queue::Tester>* rules[] = {&create_rule,
+                                                     &send_rule,
+                                                     &receive_rule,
+                                                     &overflow_rule,
+                                                     &underflow_rule,
+                                                     &send_full_no_block_rule,
+                                                     &receive_empty_no_block_rule};
+
+    // Take the rules and place them into a random scenario
+    STest::RandomScenario<Os::Test::Queue::Tester> random("Random Rules", rules, FW_NUM_ARRAY_ELEMENTS(rules));
+
+    // Create a bounded scenario wrapping the random scenario
+    STest::BoundedScenario<Os::Test::Queue::Tester> bounded("Bounded Random Rules Scenario", random, RANDOM_BOUND);
+    // Run!
+    const U32 numSteps = bounded.run(tester);
+    printf("Ran %u steps.\n", numSteps);
+}
 ```
 
-## 항목
+### `CommonTests.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/CommonTests.cpp`](file--CommonTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/CommonTests.hpp`](file--CommonTests.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/QueueRules.cpp`](file--QueueRules.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/QueueRules.hpp`](file--QueueRules.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/RulesHeaders.hpp`](file--RulesHeaders.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/CommonTests.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/queue/CommonTests.hpp
+// \brief required header
+// ======================================================================
+#include "RulesHeaders.hpp"
+#ifndef OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+#define OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+#endif  // OS_TEST_UT_QUEUE_COMMON_TESTS_HPP
+```
+
+### `QueueRules.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/QueueRules.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/queue/QueueRules.cpp
+// \brief queue rule implementations
+// ======================================================================
+
+#include <memory>
+#include "CommonTests.hpp"
+#include "Fw/Types/String.hpp"
+
+struct PickedMessage {
+    FwSizeType size;
+    FwQueuePriorityType priority;
+    std::unique_ptr<U8[]> sent;
+    U8 received[QUEUE_MESSAGE_SIZE_UPPER_BOUND];
+
+    // Constructor
+    PickedMessage() : size(0), priority(0), sent(nullptr) {}
+
+    // Get raw pointer for API compatibility
+    U8* get_sent() const { return sent.get(); }
+};
+
+PickedMessage pick_message(FwSizeType max_size) {
+    PickedMessage message;
+
+    message.size = STest::Random::lowerUpper(1, max_size);
+    // Force priority to be in a smaller range to produce more same-priority messages
+    message.priority = STest::Random::lowerUpper(0, std::numeric_limits<I8>::max());
+
+    message.sent.reset(new U8[message.size]);
+    for (FwSizeType i = 0; i < message.size; i++) {
+        message.sent[i] = STest::Random::lowerUpper(0, std::numeric_limits<U8>::max());
+    }
+    return message;
+}
+
+void check_received(PickedMessage& message, PickedMessage& test) {
+    EXPECT_EQ(message.size, test.size);
+    EXPECT_EQ(message.priority, test.priority);
+    for (FwSizeType i = 0; i < message.size; i++) {
+        ASSERT_EQ(message.received[i], test.received[i]) << "at index " << i;
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Create
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::Create::Create() : STest::Rule<Os::Test::Queue::Tester>("Create") {}
+
+bool Os::Test::Queue::Tester::Create::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return true;
+}
+
+void Os::Test::Queue::Tester::Create::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    const bool created = state.is_shadow_created();
+    Fw::String name("nAmE");
+    FwSizeType depth = STest::Random::lowerUpper(1, QUEUE_DEPTH_UPPER_BOUND);
+    FwSizeType messageSize = STest::Random::lowerUpper(1, QUEUE_MESSAGE_SIZE_UPPER_BOUND);
+    QueueInterface::Status status = state.shadow_create(depth, messageSize);
+    QueueInterface::Status test_status = state.queue.create(name, depth, messageSize);
+    ASSERT_EQ(status, created ? QueueInterface::Status::ALREADY_CREATED : QueueInterface::Status::OP_OK);
+    ASSERT_EQ(status, test_status);
+    ASSERT_EQ(name, state.queue.getName());
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendNotFull
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::SendNotFull::SendNotFull(bool end_check)
+    : STest::Rule<Os::Test::Queue::Tester>("SendNotFull"), m_end_check(end_check) {}
+
+bool Os::Test::Queue::Tester::SendNotFull::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created and not state.is_shadow_full();
+}
+
+void Os::Test::Queue::Tester::SendNotFull::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    QueueInterface::BlockingType blocking =
+        (STest::Random::lowerUpper(0, 1) == 1) ? QueueInterface::BLOCKING : QueueInterface::NONBLOCKING;
+    PickedMessage pick = pick_message(state.shadow.messageSize);
+    // Prevent lock-up
+    ASSERT_LT(state.queue.getMessagesAvailable(), state.queue.getDepth());
+    ASSERT_FALSE(state.is_shadow_full());
+    QueueInterface::Status status = state.shadow_send(pick.get_sent(), pick.size, pick.priority, blocking);
+    QueueInterface::Status test_status = state.queue.send(pick.get_sent(), pick.size, pick.priority, blocking);
+    ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+    ASSERT_EQ(test_status, status);
+    if (this->m_end_check) {
+        state.shadow_check();
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendFullNoBlock
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::SendFullNoBlock::SendFullNoBlock() : STest::Rule<Os::Test::Queue::Tester>("SendFullNoBlock") {}
+
+bool Os::Test::Queue::Tester::SendFullNoBlock::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created and state.is_shadow_full();
+}
+
+void Os::Test::Queue::Tester::SendFullNoBlock::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    PickedMessage pick = pick_message(state.shadow.messageSize);
+    QueueInterface::Status status =
+        state.shadow_send(pick.get_sent(), pick.size, pick.priority, QueueInterface::NONBLOCKING);
+    QueueInterface::Status test_status =
+        state.queue.send(pick.get_sent(), pick.size, pick.priority, QueueInterface::NONBLOCKING);
+
+    ASSERT_EQ(status, QueueInterface::Status::FULL);
+    ASSERT_EQ(test_status, status);
+    state.shadow_check();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveNotEmpty
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::ReceiveNotEmpty::ReceiveNotEmpty(bool end_check)
+    : STest::Rule<Os::Test::Queue::Tester>("ReceiveNotEmpty"), m_end_check(end_check) {}
+
+bool Os::Test::Queue::Tester::ReceiveNotEmpty::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created and not state.is_shadow_empty();
+}
+
+void Os::Test::Queue::Tester::ReceiveNotEmpty::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    QueueInterface::BlockingType blocking =
+        (STest::Random::lowerUpper(0, 1) == 1) ? QueueInterface::BLOCKING : QueueInterface::NONBLOCKING;
+    PickedMessage message;
+    PickedMessage test;
+
+    // Prevent lock-up
+    ASSERT_GT(state.queue.getMessagesAvailable(), 0);
+    ASSERT_FALSE(state.is_shadow_empty());
+    QueueInterface::Status status = state.shadow_receive(message.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, blocking,
+                                                         message.size, message.priority);
+
+    QueueInterface::Status test_status =
+        state.queue.receive(test.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, blocking, test.size, test.priority);
+    ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+    ASSERT_EQ(status, test_status);
+    check_received(message, test);
+    if (this->m_end_check) {
+        state.shadow_check();
+    }
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveEmptyNoBlock
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::ReceiveEmptyNoBlock::ReceiveEmptyNoBlock()
+    : STest::Rule<Os::Test::Queue::Tester>("ReceiveEmptyNoBlock") {}
+
+bool Os::Test::Queue::Tester::ReceiveEmptyNoBlock::precondition(
+    const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created and state.is_shadow_empty();
+}
+
+void Os::Test::Queue::Tester::ReceiveEmptyNoBlock::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    PickedMessage message;
+    PickedMessage test;
+
+    QueueInterface::Status status =
+        state.shadow_receive(message.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND,
+                             QueueInterface::BlockingType::NONBLOCKING, message.size, message.priority);
+
+    QueueInterface::Status test_status =
+        state.queue.receive(test.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, QueueInterface::BlockingType::NONBLOCKING,
+                            test.size, test.priority);
+    ASSERT_EQ(status, QueueInterface::Status::EMPTY);
+    ASSERT_EQ(status, test_status);
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Overflow
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::Overflow::Overflow() : STest::Rule<Os::Test::Queue::Tester>("Overflow") {}
+
+bool Os::Test::Queue::Tester::Overflow::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.is_shadow_created();
+}
+
+void Os::Test::Queue::Tester::Overflow::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    while (not state.is_shadow_full()) {
+        PickedMessage pick = pick_message(state.shadow.messageSize);
+        QueueInterface::Status status =
+            state.shadow_send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::NONBLOCKING);
+        QueueInterface::Status test_status =
+            state.queue.send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::NONBLOCKING);
+        ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+        ASSERT_EQ(status, test_status);
+    }
+    PickedMessage pick = pick_message(state.shadow.messageSize);
+    QueueInterface::Status status =
+        state.shadow_send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::NONBLOCKING);
+    QueueInterface::Status test_status =
+        state.queue.send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::NONBLOCKING);
+    ASSERT_EQ(status, QueueInterface::Status::FULL);
+    ASSERT_EQ(status, test_status);
+    state.shadow_check();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Underflow
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::Underflow::Underflow() : STest::Rule<Os::Test::Queue::Tester>("Underflow") {}
+
+bool Os::Test::Queue::Tester::Underflow::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.is_shadow_created();
+}
+
+void Os::Test::Queue::Tester::Underflow::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    PickedMessage message;
+    PickedMessage test;
+    while (not state.is_shadow_empty()) {
+        QueueInterface::Status status =
+            state.shadow_receive(message.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND,
+                                 QueueInterface::BlockingType::NONBLOCKING, message.size, message.priority);
+
+        QueueInterface::Status test_status =
+            state.queue.receive(test.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND,
+                                QueueInterface::BlockingType::NONBLOCKING, test.size, test.priority);
+        ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+        ASSERT_EQ(status, test_status);
+        check_received(message, test);
+    }
+    QueueInterface::Status status =
+        state.shadow_receive(message.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND,
+                             QueueInterface::BlockingType::NONBLOCKING, message.size, message.priority);
+
+    QueueInterface::Status test_status =
+        state.queue.receive(test.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, QueueInterface::BlockingType::NONBLOCKING,
+                            test.size, test.priority);
+    ASSERT_EQ(status, QueueInterface::Status::EMPTY);
+    ASSERT_EQ(status, test_status);
+    state.shadow_check();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendBlock
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::SendBlock::SendBlock(AggregatedConcurrentRule<Os::Test::Queue::Tester>& runner)
+    : ConcurrentRule<Os::Test::Queue::Tester>("SendBlock", runner) {}
+
+bool Os::Test::Queue::Tester::SendBlock::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created && state.is_shadow_full();
+}
+
+void Os::Test::Queue::Tester::SendBlock::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    // Backend defined check
+    if (not TESTS_SUPPORT_BLOCKING) {
+        this->notify_other("SendUnblock");
+        return;
+    }
+    PickedMessage pick = pick_message(state.shadow.messageSize);
+    this->notify_other("SendUnblock");
+    QueueInterface::Status status =
+        state.shadow_send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::BLOCKING);
+    getLock().unlock();
+    QueueInterface::Status test_status =
+        state.queue.send(pick.get_sent(), pick.size, pick.priority, QueueInterface::BlockingType::BLOCKING);
+    getLock().lock();
+    // Condition should be set after block
+    ASSERT_TRUE(this->getCondition());
+    // Unblock the shadow queue send
+    state.shadow_send_unblock();
+
+    ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+    ASSERT_EQ(test_status, status);
+    state.shadow_check();
+}
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveBlock
+//
+// ------------------------------------------------------------------------------------------------------
+
+Os::Test::Queue::Tester::ReceiveBlock::ReceiveBlock(AggregatedConcurrentRule<Os::Test::Queue::Tester>& runner)
+    : ConcurrentRule<Os::Test::Queue::Tester>("ReceiveBlock", runner) {}
+
+bool Os::Test::Queue::Tester::ReceiveBlock::precondition(const Os::Test::Queue::Tester& state  //!< The test state
+) {
+    return state.shadow.created && state.is_shadow_empty();
+}
+
+void Os::Test::Queue::Tester::ReceiveBlock::action(Os::Test::Queue::Tester& state  //!< The test state
+) {
+    // Backend defined check
+    if (not TESTS_SUPPORT_BLOCKING) {
+        this->notify_other("ReceiveUnblock");
+        return;
+    }
+
+    PickedMessage message;
+    PickedMessage test;
+    this->notify_other("ReceiveUnblock");
+
+    QueueInterface::Status status =
+        state.shadow_receive(message.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, QueueInterface::BlockingType::BLOCKING,
+                             message.size, message.priority);
+    this->getLock().unlock();
+    QueueInterface::Status test_status =
+        state.queue.receive(test.received, QUEUE_MESSAGE_SIZE_UPPER_BOUND, QueueInterface::BlockingType::BLOCKING,
+                            test.size, test.priority);
+    this->getLock().lock();
+    // Condition should be set after block
+    ASSERT_TRUE(this->getCondition());
+    // Unblock the shadow queue send
+    state.shadow_receive_unblock();
+
+    ASSERT_EQ(status, QueueInterface::Status::OP_OK);
+    ASSERT_EQ(status, test_status);
+    check_received(message, test);
+}
+```
+
+### `QueueRules.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/QueueRules.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/queue/QueueRules.hpp
+// \brief queue rule definitions
+// ======================================================================
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Create
+//
+// ------------------------------------------------------------------------------------------------------
+struct Create : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Create();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendNotFull
+//
+// ------------------------------------------------------------------------------------------------------
+struct SendNotFull : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit SendNotFull(bool end_check = true);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+    bool m_end_check;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendFullNoBlock
+//
+// ------------------------------------------------------------------------------------------------------
+struct SendFullNoBlock : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    SendFullNoBlock();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveNotEmpty
+//
+// ------------------------------------------------------------------------------------------------------
+struct ReceiveNotEmpty : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit ReceiveNotEmpty(bool end_check = true);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+    bool m_end_check;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveEmptyNoBlock
+//
+// ------------------------------------------------------------------------------------------------------
+struct ReceiveEmptyNoBlock : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    ReceiveEmptyNoBlock();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Overflow
+//
+// ------------------------------------------------------------------------------------------------------
+struct Overflow : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Overflow();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  Underflow
+//
+// ------------------------------------------------------------------------------------------------------
+struct Underflow : public STest::Rule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    Underflow();
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+    );
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+    );
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  SendBlock
+//
+// ------------------------------------------------------------------------------------------------------
+struct SendBlock : public ConcurrentRule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit SendBlock(AggregatedConcurrentRule<Os::Test::Queue::Tester>& runner);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+                      ) override;
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+                ) override;
+};
+
+// ------------------------------------------------------------------------------------------------------
+// Rule:  ReceiveBlock
+//
+// ------------------------------------------------------------------------------------------------------
+struct ReceiveBlock : public ConcurrentRule<Os::Test::Queue::Tester> {
+    // ----------------------------------------------------------------------
+    // Construction
+    // ----------------------------------------------------------------------
+
+    //! Constructor
+    explicit ReceiveBlock(AggregatedConcurrentRule<Os::Test::Queue::Tester>& runner);
+
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Precondition
+    bool precondition(const Os::Test::Queue::Tester& state  //!< The test state
+                      ) override;
+
+    //! Action
+    void action(Os::Test::Queue::Tester& state  //!< The test state
+                ) override;
+};
+```
+
+### `RulesHeaders.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/test/ut/queue/RulesHeaders.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/test/ut/queue/RulesHeaders.cpp
+// \brief queue test rules headers
+// ======================================================================
+
+#ifndef OS_TEST_QUEUE_RULES_HEADERS__
+#define OS_TEST_QUEUE_RULES_HEADERS__
+
+#include <queue>
+#include <vector>
+#include "Os/Queue.hpp"
+#include "Os/test/ConcurrentRule.hpp"
+#include "STest/Rule/Rule.hpp"
+#include "STest/Scenario/BoundedScenario.hpp"
+#include "STest/Scenario/RandomScenario.hpp"
+#include "STest/Scenario/Scenario.hpp"
+
+#include "QueueRulesDefinitions.hpp"
+
+namespace Os {
+namespace Test {
+namespace Queue {
+
+constexpr FwSizeType DEPTH_BOUND = 100000;
+
+struct Tester {
+  public:
+    //! Constructor
+    Tester() = default;
+    virtual ~Tester() = default;
+
+    struct QueueMessage {
+        U8 data[QUEUE_MESSAGE_SIZE_UPPER_BOUND];
+        FwQueuePriorityType priority = 0;
+        FwSizeType size = 0;
+        U64 order = 0;
+        static U64 order_counter;
+    };
+
+    struct ReceiveMessage {
+        U8* destination = nullptr;
+        FwQueuePriorityType* priority = nullptr;
+        FwSizeType* size = nullptr;
+    };
+
+    struct QueueMessageComparer {
+        bool operator()(const QueueMessage& a, const QueueMessage& b) {
+            // Compare priority for unequal priority
+            if (a.priority != b.priority) {
+                return HELPER(a.priority, b.priority);
+            }
+            // Cannot have like ordered items
+            assert(a.order != b.order);
+            // Compare received order for unequal received orders
+            return a.order > b.order;
+        }
+
+      private:
+        static const PriorityCompare HELPER;
+    };
+
+    struct QueueState {
+        FwSizeType depth = 0;
+        FwSizeType messageSize = 0;
+        FwSizeType highMark = 0;
+        static FwSizeType queues;
+        QueueMessage send_block;
+        ReceiveMessage receive_block;
+
+        bool created = false;
+        std::priority_queue<QueueMessage, std::vector<QueueMessage>, QueueMessageComparer> queue;
+    };
+    QueueState shadow;
+    Os::Queue queue;
+
+    //! Shadow is created
+    bool is_shadow_created() const {
+        this->shadow_check();
+        return this->shadow.created;
+    }
+
+    //! Shadow queue is full
+    bool is_shadow_full() const {
+        this->shadow_check();
+        return this->shadow.queue.size() == this->shadow.depth;
+    }
+
+    //! Shadow is empty
+    bool is_shadow_empty() const {
+        this->shadow_check();
+        return this->shadow.queue.empty();
+    }
+
+    void shadow_check() const {
+        EXPECT_LE(this->shadow.queue.size(), this->shadow.depth) << "Shadow queue inconsistent.";
+        EXPECT_EQ(this->shadow.depth, this->queue.getDepth());
+        EXPECT_EQ(this->shadow.messageSize, this->queue.getMessageSize());
+        EXPECT_EQ(this->shadow.queue.size(), this->queue.getMessagesAvailable());
+        EXPECT_EQ(this->shadow.highMark, this->queue.getMessageHighWaterMark());
+    }
+
+    Os::QueueInterface::Status shadow_create(FwSizeType depth, FwSizeType messageSize);
+
+    //! Must be called before the queue send
+    Os::QueueInterface::Status shadow_send(const U8* buffer,
+                                           FwSizeType size,
+                                           FwQueuePriorityType priority,
+                                           Os::QueueInterface::BlockingType blockType);
+
+    //! Complete a previous blocking queue send
+    void shadow_send_unblock();
+
+    //! Must be called before the queue receive
+    Os::QueueInterface::Status shadow_receive(U8* destination,
+                                              FwSizeType capacity,
+                                              QueueInterface::BlockingType blockType,
+                                              FwSizeType& actualSize,
+                                              FwQueuePriorityType& priority);
+    //! Complete a previous blocking queue receive
+    void shadow_receive_unblock();
+
+  public:
+#include "QueueRules.hpp"
+};
+
+}  // namespace Queue
+}  // namespace Test
+}  // namespace Os
+
+#endif
+```

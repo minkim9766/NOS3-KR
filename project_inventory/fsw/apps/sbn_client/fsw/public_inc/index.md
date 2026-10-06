@@ -3,16 +3,223 @@
 
 **경로:** `fsw/apps/sbn_client/fsw/public_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_client_init.h`
 
-file--sbn_client_init.h
-file--sbn_client_wrappers.h
+**경로:** `fsw/apps/sbn_client/fsw/public_inc/sbn_client_init.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_init_h_
+#define _sbn_client_init_h_
+
+/******************************************************************************
+** File: sbn_client_init.h
+**
+** Purpose:
+**      This header file contains the definition of the cFS sbn_client app's 
+**      initialization function.  The init function must be called by a cFS
+**      multi-process app in order to use the features of cFE that sbn_client
+**      provides.
+**
+** Author:   A.Gibson/587
+**
+******************************************************************************/
+/****************** Function Prototypes **********************/
+
+/** @defgroup SBNCLIENTAPIInitialization sbn_client Init API
+ * @{
+ */
+
+/*****************************************************************************/
+/** 
+** \brief Initialized the client by connecting to SBN.
+**
+** \par Description
+**          This function must be called by a multi-process cFS app that wants
+**          to use the cFE SB functions that sbn_client makes available.  
+**          Without calling this, there will not be a communication channel set
+**          up with SBN running in a cFE instance.
+**
+** \par Assumptions, External Events, and Notes:
+**          There is a TCP/IP connection available to a cFE instance running
+**          SBN.  The port and IP of that instance is defined in 
+**          the sbn_client_defs.h file.
+**
+**
+** \return Execution status
+** \retval #CFE_SUCCESS  The client connected and is ready for use
+** \retval #SBN_CLIENT_BAD_SOCK_FD_EID  Connect to server failed
+** \retval #SBN_CLIENT_HEART_THREAD_CREATE_EID  Heartbeat thread failed init  
+** \retval #SBN_CLIENT_RECEIVE_THREAD_CREATE_EID  Receive thread failed init 
+** \retval #SBN_CLIENT_NO_STATUS_SET  Default setting, function has a problem 
+**
+*/
+int32 SBN_Client_Init(void);
+/**@}*/
+
+#endif /* _sbn_client_init_h_ */
+/*****************************************************************************/
 ```
 
-## 항목
+### `sbn_client_wrappers.h`
 
-- [`fsw/apps/sbn_client/fsw/public_inc/sbn_client_init.h`](file--sbn_client_init.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn_client/fsw/public_inc/sbn_client_wrappers.h`](file--sbn_client_wrappers.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn_client/fsw/public_inc/sbn_client_wrappers.h`
+
+
+```c
+/*
+** GSC-18396-1, “Software Bus Network Client for External Process”
+**
+** Copyright © 2019 United States Government as represented by
+** the Administrator of the National Aeronautics and Space Administration.
+** No copyright is claimed in the United States under Title 17, U.S. Code.
+** All Other Rights Reserved.
+**
+** Licensed under the NASA Open Source Agreement version 1.3
+** See "NOSA GSC-18396-1.pdf"
+*/
+
+#ifndef _sbn_client_wrappers_h_
+#define _sbn_client_wrappers_h_
+
+// #include <stdbool.h>
+#include <sbn_interfaces.h>
+
+
+
+/****************** Function Prototypes **********************/
+
+/** @defgroup SBNCLIENTAPISBPipe SBN_Client Pipe Management APIs
+ * @{
+ */
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_CreatePipe that creates a new 
+**        software bus pipe.
+**
+** \par Description see \ref CFEAPISBPipe
+**          \copybrief CFE_SB_CreatePipe
+**
+**/
+int32  __wrap_CFE_SB_CreatePipe(CFE_SB_PipeId_t *, uint16, const char *);
+
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_DeletePipe that 
+**
+** \par Description see \ref CFEAPISBPipe
+**          \copybrief CFE_SB_DeletePipe
+**
+**/
+int32  __wrap_CFE_SB_DeletePipe(CFE_SB_PipeId_t);
+/**@}*/
+
+/** @defgroup SBNCLIENTAPISBSubscription sbn_client Message Subscription Control APIs
+ * @{
+ */
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_Subscribe that 
+**
+** \par Description see \ref CFEAPISBSubscription
+**          \copybrief CFE_SB_Subscribe
+**
+**/
+int32  __wrap_CFE_SB_Subscribe(CFE_SB_MsgId_t, CFE_SB_PipeId_t);
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_SubscribeEx that 
+**
+** \par Description see \ref CFEAPISBSubscription
+**          CFE_SB_SubscribeEx not yet implemented.
+**
+**/
+int32  __wrap_CFE_SB_SubscribeEx(CFE_SB_MsgId_t, CFE_SB_PipeId_t, 
+                                CFE_SB_Qos_t, uint16);
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_SubscribeLocal that 
+**
+** \par Description see \ref CFEAPISBSubscription
+**          CFE_SB_SubscribeLocal not yet implemented.
+**
+**/
+int32  __wrap_CFE_SB_SubscribeLocal(CFE_SB_MsgId_t, CFE_SB_PipeId_t, uint16);
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_Unsubscribe that 
+**
+** \par Description see \ref CFEAPISBSubscription
+**          CFE_SB_Unsubscribe not yet implemented.
+**
+**/
+int32  __wrap_CFE_SB_Unsubscribe(CFE_SB_MsgId_t, CFE_SB_PipeId_t);
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_UnsubscribeLocal that 
+**
+** \par Description see \ref CFEAPISBSubscription
+**          CFE_SB_UnsubscribeLocal not yet implemented.
+**
+**/
+int32  __wrap_CFE_SB_UnsubscribeLocal(CFE_SB_MsgId_t, CFE_SB_PipeId_t);
+/**@}*/
+
+/** @defgroup SBNCLIENTAPISBMessage SBN_Client Send/Receive Message APIs
+ * @{
+ */
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_TransmitMsg that
+**
+** \par Description see \ref CFEAPISBMessage
+**          \copybrief CFE_SB_TransmitMsg
+**
+**/
+uint32 __wrap_CFE_SB_TransmitMsg(const CFE_MSG_Message_t *MsgPtr, bool IncrementSequenceCount);
+
+/*****************************************************************************/
+/** 
+** \brief SBN_Client replacement for CFE_SB_ReceiveBuffer that
+**
+** \par Description see \ref CFEAPISBMessage
+**          \copybrief CFE_SB_ReceiveBuffer
+**
+**/
+int32  __wrap_CFE_SB_ReceiveBuffer(CFE_SB_Buffer_t **BufPtr, CFE_SB_PipeId_t PipeId, int32 TimeOut);
+
+/*****************************************************************************/
+/** 
+** Zero Copy functions. Not implmented
+**
+**/
+CFE_SB_Buffer_t * __wrap_CFE_SB_AllocateMessageBuffer(size_t MsgSize);
+CFE_Status_t __wrap_CFE_SB_ReleaseMessageBuffer(CFE_SB_Buffer_t *BufPtr);
+CFE_Status_t __wrap_CFE_SB_TransmitBuffer(CFE_SB_Buffer_t *BufPtr, bool IncrementSequenceCount);
+/**@}*/
+
+#endif /* _sbn_client_wrappers_h_ */
+/*****************************************************************************/
+```

@@ -3,16 +3,57 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/TestSerializable/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--TestSerializable.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/TestSerializable/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/TestSerializable.fpp"
+)
+set(MOD_DEPS
+  Fw/Types
+  Fw/Comp
+  Fw/Port
+)
+
+register_fprime_module()
+
+# Sets MODULE_NAME to unique name based on path
+get_module_name(${CMAKE_CURRENT_LIST_DIR})
+
+# Exclude test module from all build
+set_target_properties(
+  ${MODULE_NAME}
+  PROPERTIES
+  EXCLUDE_FROM_ALL TRUE
+)
 ```
 
-## 항목
+### `TestSerializable.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/TestSerializable/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/TestSerializable/TestSerializable.fpp`](file--TestSerializable.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/SerializableFile/test/TestSerializable/TestSerializable.fpp`
+
+
+```fpp
+module Fw {
+
+  @ Test struct
+  struct Test {
+    element1: U32 @< Element 1
+    element2: I8 @< Element 2
+    element3: F64 @< Element 3
+  }
+
+}
+```

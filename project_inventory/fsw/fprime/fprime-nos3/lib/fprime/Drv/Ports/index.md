@@ -3,22 +3,124 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 DataTypes/index
-file--CMakeLists.txt
-file--GpioDriverPorts.fpp
-file--I2cDriverPorts.fpp
-file--SpiDriverPorts.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/DataTypes/`](DataTypes/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/GpioDriverPorts.fpp`](file--GpioDriverPorts.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/I2cDriverPorts.fpp`](file--I2cDriverPorts.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/SpiDriverPorts.fpp`](file--SpiDriverPorts.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/DataTypes/")
+
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/GpioDriverPorts.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/I2cDriverPorts.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SpiDriverPorts.fpp"
+)
+
+register_fprime_module()
+```
+
+### `GpioDriverPorts.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/GpioDriverPorts.fpp`
+
+
+```fpp
+module Drv {
+  enum GpioStatus {
+    OP_OK @< Operation succeeded
+    NOT_OPENED @< Pin was never opened
+    INVALID_MODE @< Operation not permitted with current configuration
+    UNKNOWN_ERROR @< An unknown error occurred
+  }
+}
+
+module Drv {
+
+  port GpioWrite(
+                  $state: Fw.Logic
+                ) -> GpioStatus
+
+}
+
+module Drv {
+
+  port GpioRead(
+                 ref $state: Fw.Logic
+               ) -> GpioStatus
+
+}
+```
+
+### `I2cDriverPorts.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/I2cDriverPorts.fpp`
+
+
+```fpp
+module Drv {
+
+  @ Write a set of bytes then read a set of bytes using the repeated start option
+  port I2cWriteRead(
+                     addr: U32 @< I2C slave device address
+                     ref writeBuffer: Fw.Buffer @< Buffer to write data to the i2c device
+                     ref readBuffer: Fw.Buffer @< Buffer to read back data from the i2c device, must set size when passing in read buffer
+                   ) -> Drv.I2cStatus
+
+}
+
+module Drv {
+
+  enum I2cStatus {
+    I2C_OK = 0 @< Transaction okay
+    I2C_ADDRESS_ERR = 1 @< I2C address invalid
+    I2C_WRITE_ERR = 2 @< I2C write failed
+    I2C_READ_ERR = 3 @< I2C read failed
+    I2C_OPEN_ERR = 4 @< I2C driver failed to open device
+    I2C_OTHER_ERR = 5 @< Other errors that don't fit
+  }
+
+}
+
+module Drv {
+
+  port I2c(
+            addr: U32 @< I2C slave device address
+            ref serBuffer: Fw.Buffer @< Buffer with data to read/write to/from
+          ) -> Drv.I2cStatus
+
+}
+```
+
+### `SpiDriverPorts.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/Ports/SpiDriverPorts.fpp`
+
+
+```fpp
+module Drv {
+
+  port SpiReadWrite(
+                     ref writeBuffer: Fw.Buffer
+                     ref readBuffer: Fw.Buffer
+                   )
+
+}
+```

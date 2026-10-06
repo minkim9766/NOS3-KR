@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/unit-test-coverage/shared/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,8 +13,4 @@ inc/index
 src/index
 ```
 
-## 항목
-
-- [`fsw/psp/unit-test-coverage/shared/adaptors/`](adaptors/index) — 폴더
-- [`fsw/psp/unit-test-coverage/shared/inc/`](inc/index) — 폴더
-- [`fsw/psp/unit-test-coverage/shared/src/`](src/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

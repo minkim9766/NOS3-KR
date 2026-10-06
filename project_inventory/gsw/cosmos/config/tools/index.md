@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/config/tools/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -22,17 +22,4 @@ tlm_grapher/index
 tlm_viewer/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/config/tools/cmd_tlm_server/`](cmd_tlm_server/index) — 폴더
-- [`gsw/cosmos/config/tools/data_viewer/`](data_viewer/index) — 폴더
-- [`gsw/cosmos/config/tools/handbook_creator/`](handbook_creator/index) — 폴더
-- [`gsw/cosmos/config/tools/launcher/`](launcher/index) — 폴더
-- [`gsw/cosmos/config/tools/limits_monitor/`](limits_monitor/index) — 폴더
-- [`gsw/cosmos/config/tools/opengl_builder/`](opengl_builder/index) — 폴더
-- [`gsw/cosmos/config/tools/script_runner/`](script_runner/index) — 폴더
-- [`gsw/cosmos/config/tools/table_manager/`](table_manager/index) — 폴더
-- [`gsw/cosmos/config/tools/test_runner/`](test_runner/index) — 폴더
-- [`gsw/cosmos/config/tools/tlm_extractor/`](tlm_extractor/index) — 폴더
-- [`gsw/cosmos/config/tools/tlm_grapher/`](tlm_grapher/index) — 폴더
-- [`gsw/cosmos/config/tools/tlm_viewer/`](tlm_viewer/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

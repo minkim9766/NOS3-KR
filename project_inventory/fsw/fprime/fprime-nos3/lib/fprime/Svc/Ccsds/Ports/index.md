@@ -3,16 +3,44 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/Ports/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--Ports.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/Ports/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/latest/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/Ports.fpp"
+)
 ```
 
-## 항목
+### `Ports.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/Ports/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/Ports/Ports.fpp`](file--Ports.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/Ports/Ports.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+
+    @ Port for requesting a sequence count for a given APID
+    port ApidSequenceCount (apid: ComCfg.APID, sequenceCount: U16) -> U16
+
+}
+}
+```

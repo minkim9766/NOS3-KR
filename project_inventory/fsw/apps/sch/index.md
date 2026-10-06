@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/sch/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,22 +11,179 @@
 docs/index
 fsw/index
 test_and_ground/index
-file--.git
-file--.gitattributes
-file--cfs-sch-app-OSS-readme.txt
-file--CMakeLists.txt
-file--Core%20Flight%20System%20%28CFS%29%20NOSA.pdf
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sch/docs/`](docs/index) — 폴더
-- [`fsw/apps/sch/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sch/test_and_ground/`](test_and_ground/index) — 폴더
-- [`fsw/apps/sch/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/.gitattributes`](file--.gitattributes) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/cfs-sch-app-OSS-readme.txt`](file--cfs-sch-app-OSS-readme.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/Core Flight System (CFS) NOSA.pdf`](file--Core%20Flight%20System%20%28CFS%29%20NOSA.pdf) — 바이너리 (경로만)
-- [`fsw/apps/sch/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/apps/sch/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/sch
+```
+
+### `.gitattributes`
+
+**경로:** `fsw/apps/sch/.gitattributes`
+
+
+```text
+*.h linguist-language=c
+
+*.css linguist-documentation=true
+*.htm linguist-documentation=true
+*.html linguist-documentation=true
+*.prc linguist-documentation=true
+```
+
+### `cfs-sch-app-OSS-readme.txt`
+
+**경로:** `fsw/apps/sch/cfs-sch-app-OSS-readme.txt`
+
+
+```text
+core Flight System (cFS) Scheduler Application (SCH) 
+Open Source Release Readme
+
+SCH Release 2.2.1 
+
+Date: 
+July 5, 2017
+
+Introduction:
+  The Scheduler application (SCH) is a core Flight System (cFS) application 
+  that is a plug in to the Core Flight Executive (cFE) component of the cFS.  
+  
+  The cFS is a platform and project independent reusable software framework and
+  set of reusable applications developed by NASA Goddard Space Flight Center.  
+  This framework is used as the basis for the flight software for satellite data 
+  systems and instruments, but can be used on other embedded systems.  More 
+  information on the cFS can be found at http://cfs.gsfc.nasa.gov
+  
+  The SCH application provides a method of generating software bus messages 
+  at pre-determined timing intervals. This allows the system to operate in a 
+  Time Division Multiplexed (TDM) fashion with deterministic behavior. The TDM 
+  major frame is defined by the Major Time Synchronization Signal used by the 
+  cFE TIME Services (typically 1 Hz) and the Minor Frame timing is defined 
+  via a SCH Configuration Parameter that identifies the number of Minor Frame 
+  Slots that are executed within each Major Frame.     
+
+  The SCH application is written in C and depends on the cFS Operating System 
+  Abstraction Layer (OSAL) and cFE components.  To build and run the SCH
+  application, follow the cFS Deployment Guide instructions contained in 
+  cFE-6.5.0a-OSS-release/docs.  There is additional SCH application specific 
+  configuration information contained in the application user's guide
+  available in cfs-sch-2.2.1-OSS-release/docs/users_guide
+  
+  There are also "Quick start" instructions provided in 
+  cFE-6.5.0a-OSS-release/cfe-OSS-readme.txt   
+  
+  The OSAL is available at http://sourceforge.net/projects/osal/ and 
+  github.com/nasa/
+  
+  The cFE is available at http://sourceforge.net/projects/coreflightexec
+
+  This software is licensed under the NASA Open Source Agreement. 
+  http://ti.arc.nasa.gov/opensource/nosa
+ 
+ 
+Software Included:
+  Scheduler application (SCH) 2.2.1
+  
+ 
+Software Required:
+
+ Operating System Abstraction Layer 4.2.0 or higher can be 
+ obtained at http://sourceforge.net/projects/osal or 
+ github.com/nasa/osal
+ 
+ core Flight Executive 6.5.0 or higher can be obtained at
+ http://sorceforge.net/projects/coreflightexec
+
+  
+Runtime Targets Supported:
+   The "out of the box" targets in the cFE 6.5.0 distribution include:
+     1. 32 bit x86 Linux ( CentOS 6.x )
+     2. Motorola MCP750 PowerPC vxWorks 6.4
+
+Other targets: 
+    Other targets are included, but may take additional work to
+    run. They are included as examples of other target 
+    environments.
+    1. mcf5235-rtems - This is for the Axiom MCF5235 Coldfire board running
+                       RTEMS 4.10. It requires a static loader component for the
+                       OS abstraction layer. The static loader is currently
+                       not available as open source, so this target is not
+                       considered complete. RTEMS 4.11 will have a dynamic
+                       loader which will be supported by a future release
+                       of the OS Abstraction Layer, completing the RTEMS support
+                       for the cFE.
+          
+                       Once RTEMS 4.11 is released, the goal is to support
+                       an RTEMS simulator platform such as SPARC/sis or 
+                       quemu.
+
+    2. mac-osx and pc-cygwin - These targets are included for examples. They
+                       will most likely be removed in the future. 
+                       The pc-linux target is highly recommended. If you 
+                       have a windows or mac computer it is relatively easy to 
+                       set up a free virtual machine environment with 32 bit 
+                       Cent OS 5.x.
+                       
+EOF                       
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sch/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_SCH C)
+
+include_directories(fsw/public_inc)
+include_directories(fsw/mission_inc)
+include_directories(fsw/platform_inc)
+include_directories(fsw/src)
+include_directories(${APPLICATION_PLATFORM_INC_LIST})
+
+aux_source_directory(fsw/src APP_SRC_FILES)
+aux_source_directory(fsw/tables APP_TABLE_FILES)
+
+# Create the app module
+add_cfe_app(sch ${APP_SRC_FILES})
+add_cfe_tables(sch ${APP_TABLE_FILES})
+```
+
+### `Core Flight System (CFS) NOSA.pdf`
+
+**경로:** `fsw/apps/sch/Core Flight System (CFS) NOSA.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `README.md`
+
+**경로:** `fsw/apps/sch/README.md`
+
+
+```markdown
+# Scheduler
+
+NASA core Flight System Scheduler Application
+
+## Description
+
+The Scheduler application (SCH) is a core Flight System (cFS) application that is a plug in to the Core Flight Executive (cFE) component of the cFS.
+
+The cFS is a platform and project independent reusable software framework and set of reusable applications developed by NASA Goddard Space Flight Center. This framework is used as the basis for the flight software for satellite data systems and instruments, but can be used on other embedded systems. More information on the cFS can be found at [http://cfs.gsfc.nasa.gov](http://cfs.gsfc.nasa.gov)
+
+The SCH application provides a method of generating software bus messages at pre-determined timing intervals. This allows the system to operate in a Time Division Multiplexed (TDM) fashion with deterministic behavior. The TDM major frame is defined by the Major Time Synchronization Signal used by the
+cFE TIME Services (typically 1 Hz). The Minor Frame timing (number of slots executed within each Major Frame) is also configurable.
+
+## License
+
+This software is licensed under the NASA Open Source Agreement. http://ti.arc.nasa.gov/opensource/nosa
+```

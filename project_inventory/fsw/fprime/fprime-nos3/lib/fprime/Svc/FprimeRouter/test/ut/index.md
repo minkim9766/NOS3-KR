@@ -3,18 +3,300 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FprimeRouterTester.cpp`
 
-file--FprimeRouterTester.cpp
-file--FprimeRouterTester.hpp
-file--FprimeRouterTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeRouterTester.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeRouter component test harness implementation class
+// ======================================================================
+
+#include "FprimeRouterTester.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeRouterTester ::FprimeRouterTester(bool disconnect_unknownData_port)
+    : FprimeRouterGTestBase("FprimeRouterTester", FprimeRouterTester::MAX_HISTORY_SIZE), component("FprimeRouter") {
+    this->initComponents();
+    if (disconnect_unknownData_port) {
+        this->connectPortsExceptUnknownData();  // hand-coded function connecting all ports except unknownData
+    } else {
+        this->connectPorts();  // autocoded function connecting all ports
+    }
+}
+
+FprimeRouterTester ::~FprimeRouterTester() {}
+
+// ----------------------------------------------------------------------
+// Test Cases
+// ----------------------------------------------------------------------
+
+void FprimeRouterTester ::testRouteComInterface() {
+    this->mockReceivePacketType(Fw::ComPacketType::FW_PACKET_COMMAND);
+    ASSERT_from_commandOut_SIZE(1);      // one command packet emitted
+    ASSERT_from_fileOut_SIZE(0);         // no file packet emitted
+    ASSERT_from_unknownDataOut_SIZE(0);  // no unknown data emitted
+    ASSERT_from_dataReturnOut_SIZE(1);   // data ownership should always be returned
+    ASSERT_from_bufferAllocate_SIZE(0);  // no buffer allocation for Com packets
+}
+
+void FprimeRouterTester ::testRouteFileInterface() {
+    this->mockReceivePacketType(Fw::ComPacketType::FW_PACKET_FILE);
+    ASSERT_from_commandOut_SIZE(0);      // no command packet emitted
+    ASSERT_from_fileOut_SIZE(1);         // one file packet emitted
+    ASSERT_from_unknownDataOut_SIZE(0);  // no unknown data emitted
+    ASSERT_from_dataReturnOut_SIZE(1);   // data ownership should always be returned
+    ASSERT_from_bufferAllocate_SIZE(1);  // file packet was copied into a new allocated buffer
+}
+
+void FprimeRouterTester ::testRouteUnknownPacket() {
+    this->mockReceivePacketType(Fw::ComPacketType::FW_PACKET_UNKNOWN);
+    ASSERT_from_commandOut_SIZE(0);      // no command packet emitted
+    ASSERT_from_fileOut_SIZE(0);         // no file packet emitted
+    ASSERT_from_unknownDataOut_SIZE(1);  // one unknown data emitted
+    ASSERT_from_dataReturnOut_SIZE(1);   // data ownership should always be returned
+    ASSERT_from_bufferAllocate_SIZE(1);  // unknown packet was copied into a new allocated buffer
+}
+
+void FprimeRouterTester ::testRouteUnknownPacketUnconnected() {
+    this->mockReceivePacketType(Fw::ComPacketType::FW_PACKET_UNKNOWN);
+    ASSERT_from_commandOut_SIZE(0);      // no command packet emitted
+    ASSERT_from_fileOut_SIZE(0);         // no file packet emitted
+    ASSERT_from_unknownDataOut_SIZE(0);  // zero unknown data emitted when port is unconnected
+    ASSERT_from_dataReturnOut_SIZE(1);   // data ownership should always be returned
+    ASSERT_from_bufferAllocate_SIZE(0);  // no buffer allocation when port is unconnected
+}
+
+void FprimeRouterTester ::testBufferReturn() {
+    U8 data[1];
+    Fw::Buffer buffer(data, sizeof(data));
+    this->invoke_to_fileBufferReturnIn(0, buffer);
+    ASSERT_from_bufferDeallocate_SIZE(1);  // incoming buffer should be deallocated
+    ASSERT_EQ(this->fromPortHistory_bufferDeallocate->at(0).fwBuffer.getData(), data);
+    ASSERT_EQ(this->fromPortHistory_bufferDeallocate->at(0).fwBuffer.getSize(), sizeof(data));
+}
+
+void FprimeRouterTester ::testCommandResponse() {
+    const U32 opcode = 0;
+    const U32 cmdSeq = 0;
+    const Fw::CmdResponse cmdResp(Fw::CmdResponse::OK);
+    this->invoke_to_cmdResponseIn(0, opcode, cmdSeq, cmdResp);
+    ASSERT_FROM_PORT_HISTORY_SIZE(0);
+}
+
+// ----------------------------------------------------------------------
+// Test Helper
+// ----------------------------------------------------------------------
+
+void FprimeRouterTester::mockReceivePacketType(Fw::ComPacketType packetType) {
+    const FwPacketDescriptorType descriptorType = packetType;
+    U8 data[sizeof descriptorType];
+    Fw::Buffer buffer(data, sizeof(data));
+    ComCfg::FrameContext context;
+    context.set_apid(static_cast<ComCfg::APID::T>(descriptorType));
+    this->invoke_to_dataIn(0, buffer, context);
+}
+
+void FprimeRouterTester::connectPortsExceptUnknownData() {
+    // Connect special output ports
+    this->component.set_logOut_OutputPort(0, this->get_from_logOut(0));
+    this->component.set_logTextOut_OutputPort(0, this->get_from_logTextOut(0));
+    this->component.set_timeCaller_OutputPort(0, this->get_from_timeCaller(0));
+    // Connect typed input ports
+    this->connect_to_cmdResponseIn(0, this->component.get_cmdResponseIn_InputPort(0));
+    this->connect_to_dataIn(0, this->component.get_dataIn_InputPort(0));
+    this->connect_to_fileBufferReturnIn(0, this->component.get_fileBufferReturnIn_InputPort(0));
+    // Connect typed output ports
+    this->component.set_bufferAllocate_OutputPort(0, this->get_from_bufferAllocate(0));
+    this->component.set_bufferDeallocate_OutputPort(0, this->get_from_bufferDeallocate(0));
+    this->component.set_commandOut_OutputPort(0, this->get_from_commandOut(0));
+    this->component.set_dataReturnOut_OutputPort(0, this->get_from_dataReturnOut(0));
+    this->component.set_fileOut_OutputPort(0, this->get_from_fileOut(0));
+}
+
+// ----------------------------------------------------------------------
+// Port handler overrides
+// ----------------------------------------------------------------------
+Fw::Buffer FprimeRouterTester::from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) {
+    this->pushFromPortEntry_bufferAllocate(size);
+    this->m_buffer.setData(this->m_buffer_slot);
+    this->m_buffer.setSize(size);
+    ::memset(this->m_buffer.getData(), 0, size);
+    return this->m_buffer;
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `FprimeRouterTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTester.cpp`](file--FprimeRouterTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTester.hpp`](file--FprimeRouterTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTestMain.cpp`](file--FprimeRouterTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeRouterTester.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeRouter component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeRouterTester_HPP
+#define Svc_FprimeRouterTester_HPP
+
+#include "Svc/FprimeRouter/FprimeRouter.hpp"
+#include "Svc/FprimeRouter/FprimeRouterGTestBase.hpp"
+
+#include <Fw/Com/ComPacket.hpp>
+
+namespace Svc {
+
+class FprimeRouterTester : public FprimeRouterGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FprimeRouterTester
+    //! \param disconnect_unknownData_port if set to true, the unknownData output port will not be connected
+    //! in the test harness setup. If false (default), all ports will be connected.
+    explicit FprimeRouterTester(bool disconnect_unknownData_port = false);
+
+    //! Destroy object FprimeRouterTester
+    ~FprimeRouterTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Route a com packet
+    void testRouteComInterface();
+
+    //! Route a file packet
+    void testRouteFileInterface();
+
+    //! Route a packet of unknown type
+    void testRouteUnknownPacket();
+
+    //! Route a packet of unknown type
+    void testRouteUnknownPacketUnconnected();
+
+    //! Deallocate a returning buffer
+    void testBufferReturn();
+
+    //! Invoke the command response input port
+    void testCommandResponse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect all ports
+    void connectPorts();
+
+    //! Connect all ports except unknownDataOut output port
+    void connectPortsExceptUnknownData();
+
+    //! Initialize components
+    void initComponents();
+
+    //! Mock the reception of a packet of a specific type
+    void mockReceivePacketType(Fw::ComPacketType packetType);
+
+    // ----------------------------------------------------------------------
+    // Port handler overrides
+    // ----------------------------------------------------------------------
+    //! Overriding bufferAllocate handler to be able to request a buffer in component tests
+    Fw::Buffer from_bufferAllocate_handler(FwIndexType portNum, FwSizeType size) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    FprimeRouter component;
+
+    Fw::Buffer m_buffer;  // buffer to be returned by mocked bufferAllocate call
+    U8 m_buffer_slot[64];
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FprimeRouterTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeRouter/test/ut/FprimeRouterTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeRouterTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeRouter component test main function
+// ======================================================================
+
+#include "FprimeRouterTester.hpp"
+
+#include <Fw/Test/UnitTest.hpp>
+
+TEST(FprimeRouter, TestComInterface) {
+    COMMENT("Route a com packet");
+    Svc::FprimeRouterTester tester;
+    tester.testRouteComInterface();
+}
+TEST(FprimeRouter, TestFileInterface) {
+    COMMENT("Route a file packet");
+    Svc::FprimeRouterTester tester;
+    tester.testRouteFileInterface();
+}
+TEST(FprimeRouter, TestUnknownInterface) {
+    COMMENT("Route a packet of unknown type");
+    Svc::FprimeRouterTester tester;
+    tester.testRouteUnknownPacket();
+}
+TEST(FprimeRouter, TestRouteUnknownPacketUnconnected) {
+    COMMENT("Attempt to route a packet of unknown type with no port connected");
+    Svc::FprimeRouterTester tester(true);
+    tester.testRouteUnknownPacketUnconnected();
+}
+TEST(FprimeRouter, TestBufferReturn) {
+    COMMENT("Deallocate a returning buffer");
+    Svc::FprimeRouterTester tester;
+    tester.testBufferReturn();
+}
+TEST(FprimeRouter, TestCommandResponse) {
+    COMMENT("Handle a command response (no-op)");
+    Svc::FprimeRouterTester tester;
+    tester.testCommandResponse();
+}
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

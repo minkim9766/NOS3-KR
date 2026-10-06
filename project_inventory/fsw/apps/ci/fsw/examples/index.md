@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/ci/fsw/examples/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,16 +13,188 @@ multi_tf/index
 rs422/index
 udp/index
 udp_tf/index
-file--README
-file--setup.sh
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/ci/fsw/examples/multi/`](multi/index) — 폴더
-- [`fsw/apps/ci/fsw/examples/multi_tf/`](multi_tf/index) — 폴더
-- [`fsw/apps/ci/fsw/examples/rs422/`](rs422/index) — 폴더
-- [`fsw/apps/ci/fsw/examples/udp/`](udp/index) — 폴더
-- [`fsw/apps/ci/fsw/examples/udp_tf/`](udp_tf/index) — 폴더
-- [`fsw/apps/ci/fsw/examples/README`](file--README) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/ci/fsw/examples/setup.sh`](file--setup.sh) — UTF-8 텍스트 파일 본문 포함
+### `README`
+
+**경로:** `fsw/apps/ci/fsw/examples/README`
+
+
+```text
+#   Author: Guy de Carufel (Odyssey Space Research)
+#   Date: Jan 26, 2016
+
+This directory holds example implementations of the custom layer for this application.
+
+To make use of an example, use the setup.sh 
+> ./setup.sh -h
+
+The normal setup is to copy the files in the appropriate locations and then modify then
+according to your mission needs.
+For the "ci_lab" application equivalent, use the udp example.
+>./setup.sh udp
+
+You can link to files in the examples in this directory rather than making copies 
+by using the -l option
+>./setup.sh -l udp
+
+
+DEVELOPERS NOTE:
+1. Always revert back to the udp example as a copy (not a link) before comitting to 
+the repo if you made changes to example files. 
+We want to keep the udp to_custom.c as the default example.
+>./setup.sh udp
+
+2. If you add examples, make sure to name the directory the same in both CI & TO. 
+
+
+USEFUL TIP: 
+Add the following to your .bashrc to update both CI/TO at the same time:
+
+setCustomLink() {
+    cd ${MISSION_HOME}/apps/ci/fsw/examples/
+    ./setup.sh -l $1
+    cd ${MISSION_HOME}/apps/to/fsw/examples/
+    ./setup.sh -l $1
+}
+
+setCustomCopy() {
+    cd ${MISSION_HOME}/apps/ci/fsw/examples/
+    ./setup.sh $1
+    cd ${MISSION_HOME}/apps/to/fsw/examples/
+    ./setup.sh $1
+}
+```
+
+### `setup.sh`
+
+**경로:** `fsw/apps/ci/fsw/examples/setup.sh`
+
+
+```bash
+#!/bin/bash
+#   Desc: This Script will copy or link example files to appropriate locations.
+#   Author: Guy de Carufel, Allen Brown (Odyssey Space Research)
+#   Date: May 11, 2016
+
+usage ()
+{
+    echo -e "\nHELP TEXT\n"
+    echo -e "\tScript to cp (or link) example files to appropriate locations."
+    echo -e "\tNOTE: Target will be overwritten if it already exists.\n"
+    echo -e "\tOption: -h         This help text."
+    echo -e "\tOption: -l         Create symbolic link instead of a copy."
+    echo -e "\tOption: -m {NAME}  Mission name. (default: MISSION_NAME env var)"
+    echo -e "\t                   (This controls the *_ci_types.h name.)"
+    echo -e "\tArg: example (dir) name."
+    echo -e "\n\tNote: Expects either a MISSION_HOME or APP_DIR env variable "
+    echo -e "\t      to locate apps/inc (which must exist)."
+    echo -e "\tNote: Either the MISSION_NAME env var or the -m option must be used."
+    
+    echo -e "\n\tExample:  ./setup.sh -l -m MY_MISSION udp"
+    echo -e "\n\tWill create following symbolic links:"
+    echo -e "\tln -s udp/ci_custom.c ../src/"
+    echo -e "\tln -s udp/ci_platform_cfg.h ../platform_inc/"
+    echo -e "\tln -s udp/MISSION_ci_types.h MISSION_HOME/apps/inc/MY_MISION_ci_types.h"
+    echo -e "\t(cp called instead of ln -s if -l option not used.)\n"
+}
+
+link=0
+
+while [ "$1" != "" ]; do
+
+    echo "===DEBUG In while loop, args: $@ ==="
+
+    case $1 in
+        -h | --help )       usage
+                            exit
+                            ;;
+        -l | --link )       link=1
+                            ;;
+        -m | --mission )    mission=$2
+                            shift
+                            ;;
+        * )                 break
+        
+    esac
+    shift
+done
+
+if [ $# -ne 1 ]; then
+    echo -e "\tA single argument required. eg. setup.sh udp"
+    usage
+    exit
+fi
+
+# Check the CFS_TST way
+if [ -z "$MISSION_HOME" ]; then
+	# Check the gsfc_build/"classic build" way (setvars.sh)
+	if [ -z "$APP_DIR" ]; then
+		echo -e "Either the env var MISSION_HOME (CFS_TST build)"
+		echo -e "  or APP_DIR (gsfc ""classic"" build) must be set."
+		exit 1
+	fi
+else
+	APP_DIR="${MISSION_HOME}/apps"
+fi
+
+if [ ! -d "$APP_DIR" ]; then
+    echo -e "\t$APP_DIR does not point to an existing directory."
+    exit
+fi
+
+if [ ! -d "$APP_DIR/inc" ]; then
+    echo -e "\t$APP_DIR/inc does not exist. Create directory first."
+    exit
+fi
+
+if [ -z "$mission" ]; then
+	if [ -z "$MISSION_NAME" ]; then
+		echo -e "Need a mission name from the -m option via the MISSION_NAME env var."
+		exit 1
+	else
+		mission=$MISSION_NAME
+	fi
+fi
+
+mission="${mission^^}"
+
+if [ ! -d "$PWD/$1" ]; then
+    echo -e "\tBad example name. ARG should be the name of the example directory."
+    exit
+fi
+
+echo -e "\tArguments supplied:"
+
+if [ "$link" -eq 1 ]; then
+    echo -e "\tOption: -l (create symbolic links)"
+fi
+echo -e "\tMission name: $mission"
+echo -e "\tExample name: $1\n"
+
+rm -f $PWD/../src/ci_custom.c
+rm -f $PWD/../platform_inc/ci_platform_cfg.h
+rm -f ${APP_DIR}/inc/${mission}_ci_types.h 
+echo -e "\tRemoved files:"
+echo -e "\t$PWD/../src/ci_custom.c"
+echo -e "\t$PWD/../platform_inc/ci_platform_cfg.h"
+echo -e "\t${APP_DIR}/inc/${mission}_ci_types.h\n"
+
+if [ "$link" -eq 1 ]; then
+    ln -sf $PWD/$1/ci_custom.c $PWD/../src/ci_custom.c
+    ln -sf $PWD/$1/ci_platform_cfg.h $PWD/../platform_inc/ci_platform_cfg.h
+    ln -sf $PWD/$1/MISSION_ci_types.h ${APP_DIR}/inc/${mission}_ci_types.h 
+    echo -e "\tCreating Symbolic links:"
+else
+    cp -f $PWD/$1/ci_custom.c $PWD/../src/ci_custom.c
+    cp -f $PWD/$1/ci_platform_cfg.h $PWD/../platform_inc/ci_platform_cfg.h
+    cp -f $PWD/$1/MISSION_ci_types.h ${APP_DIR}/inc/${mission}_ci_types.h
+    echo -e "\tFiles copied:"
+fi
+
+echo -e "\t$PWD/$1/ci_custom.c -> $PWD/../src/ci_custom.c"
+echo -e "\t$PWD/$1/ci_platform_cfg.h -> $PWD/../platform_inc/ci_platform_cfg.h"
+echo -e "\t$PWD/$1/MISSION_ci_types.h -> ${APP_DIR}/inc/${mission}_ci_types.h\n"
+```

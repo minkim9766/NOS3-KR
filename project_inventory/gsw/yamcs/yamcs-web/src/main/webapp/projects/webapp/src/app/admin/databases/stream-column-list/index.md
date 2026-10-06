@@ -3,16 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stream-column-list.component.html`
 
-file--stream-column-list.component.html
-file--stream-column-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/stream-column-list.component.html`
+
+
+```html
+@if (stream$ | async; as stream) {
+  <ya-panel>
+    <h3>Columns</h3>
+    <table yaDataTable class="expand">
+      <tr>
+        <th width="200">Column</th>
+        <th>Type</th>
+        <th class="expand"></th>
+      </tr>
+      @for (column of stream.columns; track column) {
+        <tr>
+          <td>{{ column.name }}</td>
+          <td>{{ column.type }}</td>
+          <td></td>
+        </tr>
+      }
+    </table>
+    <p>&nbsp;</p>
+    <h3>Subscribers</h3>
+    <table yaDataTable class="expand">
+      @for (subscriber of stream.subscribers; track subscriber) {
+        <tr>
+          <td class="expand">{{ subscriber }}</td>
+        </tr>
+      }
+    </table>
+  </ya-panel>
+}
 ```
 
-## 항목
+### `stream-column-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/stream-column-list.component.html`](file--stream-column-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/stream-column-list.component.ts`](file--stream-column-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/stream-column-list/stream-column-list.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { Stream, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './stream-column-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StreamColumnListComponent {
+  stream$: Promise<Stream>;
+
+  constructor(route: ActivatedRoute, yamcs: YamcsService) {
+    const parent = route.snapshot.parent!;
+    const database = parent.parent!.paramMap.get('database')!;
+    const name = parent.paramMap.get('stream')!;
+    this.stream$ = yamcs.yamcsClient.getStream(database, name);
+  }
+}
+```

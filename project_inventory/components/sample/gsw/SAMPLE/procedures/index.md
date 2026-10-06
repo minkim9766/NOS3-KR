@@ -3,16 +3,71 @@
 
 **경로:** `components/sample/gsw/SAMPLE/procedures/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 tests/index
-file--sample_test.rb
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/sample/gsw/SAMPLE/procedures/tests/`](tests/index) — 폴더
-- [`components/sample/gsw/SAMPLE/procedures/sample_test.rb`](file--sample_test.rb) — UTF-8 텍스트 파일 본문 포함
+### `sample_test.rb`
+
+**경로:** `components/sample/gsw/SAMPLE/procedures/sample_test.rb`
+
+
+```ruby
+require 'cosmos'
+require 'cosmos/script'
+require 'sample_lib.rb'
+
+class SAMPLE_Functional_Test < Cosmos::Test
+  def setup
+    safe_sample()
+  end
+
+  def test_application
+      start("tests/sample_app_test.rb")
+  end
+
+  def test_device
+    start("tests/sample_device_test.rb")
+  end
+
+  def teardown
+    safe_sample()
+  end
+end
+
+class SAMPLE_Automated_Scenario_Test < Cosmos::Test
+  def setup 
+    safe_sample()
+  end
+
+  def test_AST
+      start("tests/sample_ast_test.rb")
+  end
+
+  def teardown
+    safe_sample()
+  end
+end
+
+class Sample_Test < Cosmos::TestSuite
+  def initialize
+      super()
+      add_test('SAMPLE_Functional_Test')
+      add_test('SAMPLE_Automated_Scenario_Test')
+  end
+
+  def setup
+    safe_sample()
+  end
+  
+  def teardown
+    safe_sample()
+  end
+end
+```

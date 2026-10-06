@@ -3,16 +3,37 @@
 
 **경로:** `fsw/osal/src/bsp/generic-vxworks/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/osal/src/bsp/generic-vxworks/src/`](src/index) — 폴더
-- [`fsw/osal/src/bsp/generic-vxworks/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/osal/src/bsp/generic-vxworks/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for Generic VxWorks Board Support Package (BSP)
+#
+######################################################################
+
+add_library(osal_generic-vxworks_impl OBJECT
+	src/bsp_start.c
+	src/bsp_console.c
+)
+
+# The "-u" switch is required to ensure that the linker pulls in the OS_BSPMain entry point
+target_link_libraries(osal_public_api INTERFACE -uOS_BSPMain)
+
+# This BSP only works with "vxworks" OS layer.
+# Confirming this reduces risk of accidental misconfiguration
+set_property(TARGET osal_generic-vxworks_impl PROPERTY OSAL_EXPECTED_OSTYPE "vxworks")
+```

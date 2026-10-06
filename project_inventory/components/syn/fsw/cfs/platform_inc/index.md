@@ -3,16 +3,86 @@
 
 **경로:** `components/syn/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `syn_msgids.h`
 
-file--syn_msgids.h
-file--syn_platform_cfg.h
+**경로:** `components/syn/fsw/cfs/platform_inc/syn_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: syn_msgids.h  $
+**
+** Purpose:
+**  Define SYN Message IDs
+**
+*************************************************************************/
+#ifndef _SYN_MSGIDS_H_
+#define _SYN_MSGIDS_H_
+
+/* 
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define SYN_CMD_MID              0x18FC /* TODO: Change this for your app */ 
+
+/* 
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define SYN_REQ_HK_MID           0x18FD /* TODO: Change this for your app */
+
+/* 
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define SYN_HK_TLM_MID           0x08FC /* TODO: Change this for your app */
+#define SYN_DEVICE_TLM_MID       0x08FD /* TODO: Change this for your app */
+
+#endif /* _SYN_MSGIDS_H_ */
 ```
 
-## 항목
+### `syn_platform_cfg.h`
 
-- [`components/syn/fsw/cfs/platform_inc/syn_msgids.h`](file--syn_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/syn/fsw/cfs/platform_inc/syn_platform_cfg.h`](file--syn_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/syn/fsw/cfs/platform_inc/syn_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: syn_platform_cfg.h  $
+**
+** Purpose:
+**  Define syn Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _SYN_PLATFORM_CFG_H_
+#define _SYN_PLATFORM_CFG_H_
+
+/*
+** Default SYN Configuration
+*/
+#ifndef SYN_CFG
+    /* Notes: 
+    **   NOS3 uart requires matching handle and bus number
+    */
+    #define SYN_CFG_STRING           "usart_29"
+    #define SYN_CFG_HANDLE           29 
+    #define SYN_CFG_BAUDRATE_HZ      115200
+    #define SYN_CFG_MS_TIMEOUT       50            /* Max 255 */
+
+    /* SYNOPSIS Example Defines*/    
+    #define SYN_DATABASE_PATH "/data/owls/db_new.db"
+    #define SYN_DATABASE_CLEAN_PATH "/data/owls/db_blank.db"
+
+    #define NUMDPS 8  // This is a dumb counter for this example.  Users will need to handle how data is utilized within Synopsis.
+    #define MAX_DL_SIZE 100
+    #define MIN_DL_SIZE 0
+
+    /* Note: Debug flag disabled (commented out) by default */
+    //#define SYN_CFG_DEBUG
+#endif
+
+#endif /* _SYN_PLATFORM_CFG_H_ */
+```

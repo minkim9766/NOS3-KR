@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -24,19 +24,4 @@ to/index
 to_lab/index
 ```
 
-## 항목
-
-- [`fsw/apps/cf/`](cf/index) — 폴더
-- [`fsw/apps/ci/`](ci/index) — 폴더
-- [`fsw/apps/ci_lab/`](ci_lab/index) — 폴더
-- [`fsw/apps/ds/`](ds/index) — 폴더
-- [`fsw/apps/fm/`](fm/index) — 폴더
-- [`fsw/apps/hwlib/`](hwlib/index) — 폴더
-- [`fsw/apps/io_lib/`](io_lib/index) — 폴더
-- [`fsw/apps/lc/`](lc/index) — 폴더
-- [`fsw/apps/sbn/`](sbn/index) — 폴더
-- [`fsw/apps/sbn_client/`](sbn_client/index) — 폴더
-- [`fsw/apps/sc/`](sc/index) — 폴더
-- [`fsw/apps/sch/`](sch/index) — 폴더
-- [`fsw/apps/to/`](to/index) — 폴더
-- [`fsw/apps/to_lab/`](to_lab/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

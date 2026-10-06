@@ -3,14 +3,13 @@
 
 **경로:** `gsw/cosmos/config/tools/opengl_builder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `README.txt`
 
-file--README.txt
+**경로:** `gsw/cosmos/config/tools/opengl_builder/README.txt`
+
+
+```text
+This file is here to make sure this folder is included in the release.
 ```
-
-## 항목
-
-- [`gsw/cosmos/config/tools/opengl_builder/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함

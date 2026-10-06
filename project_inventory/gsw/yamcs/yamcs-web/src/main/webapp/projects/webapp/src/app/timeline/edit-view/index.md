@@ -3,16 +3,130 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-view.component.html`
 
-file--edit-view.component.html
-file--edit-view.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/edit-view.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button routerLink=".." [queryParams]="{ c: yamcs.context }" icon="arrow_back" />
+      Update view
+    </ng-template>
+  </ya-instance-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate autocomplete="off">
+      <ya-field label="Name" hint="(required)">
+        <input type="text" formControlName="name" />
+      </ya-field>
+
+      <ya-field-divider />
+
+      <h4>Bands</h4>
+      <app-band-multi-select formControlName="bands" />
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button routerLink=".." [queryParams]="{ c: yamcs.context }">Cancel</ya-button>
+      <ya-button
+        appearance="primary"
+        (click)="onConfirm()"
+        [disabled]="!(dirty$ | async) || !form.valid">
+        SAVE CHANGES
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `edit-view.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/edit-view.component.html`](file--edit-view.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/edit-view.component.ts`](file--edit-view.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/edit-view/edit-view.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  MessageService,
+  TimelineBand,
+  UpdateTimelineViewRequest,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { BandMultiSelectComponent } from '../shared/band-multi-select/band-multi-select.component';
+
+@Component({
+  templateUrl: './edit-view.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [BandMultiSelectComponent, WebappSdkModule],
+})
+export class EditViewComponent implements OnDestroy {
+  form: UntypedFormGroup;
+
+  dirty$ = new BehaviorSubject<boolean>(false);
+  private formSubscription: Subscription;
+
+  constructor(
+    title: Title,
+    readonly yamcs: YamcsService,
+    private messageService: MessageService,
+    private route: ActivatedRoute,
+    private router: Router,
+    readonly location: Location,
+    formBuilder: UntypedFormBuilder,
+  ) {
+    title.setTitle('Edit view');
+    const id = route.snapshot.paramMap.get('view')!;
+    this.form = formBuilder.group({
+      name: [null, Validators.required],
+      bands: [null, []],
+    });
+    yamcs.yamcsClient
+      .getTimelineView(yamcs.instance!, id)
+      .then((view) => {
+        this.form.setValue({
+          name: view.name,
+          bands: view.bands || [],
+        });
+        this.formSubscription = this.form.valueChanges.subscribe(() => {
+          this.dirty$.next(true);
+        });
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+    const options: UpdateTimelineViewRequest = {
+      name: formValue.name,
+      bands: formValue.bands.map((band: TimelineBand) => band.id),
+    };
+    const id = this.route.snapshot.paramMap.get('view')!;
+    this.yamcs.yamcsClient
+      .updateTimelineView(this.yamcs.instance!, id, options)
+      .then(() =>
+        this.router.navigateByUrl(`/timeline/views?c=${this.yamcs.context}`),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.formSubscription?.unsubscribe();
+  }
+}
+```

@@ -3,14 +3,10 @@
 
 **경로:** `cfg/build/temp_mission/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `nos3-mission.xml`
 
-file--nos3-mission.xml
-```
+**경로:** `cfg/build/temp_mission/nos3-mission.xml`
 
-## 항목
-
-- [`cfg/build/temp_mission/nos3-mission.xml`](file--nos3-mission.xml) — 빌드 산출물 (경로만)
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

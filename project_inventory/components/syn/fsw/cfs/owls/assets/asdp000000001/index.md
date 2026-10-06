@@ -3,7 +3,7 @@
 
 **경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,89 @@
 asdp/index
 predict/index
 validate/index
-file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/asdp/`](asdp/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/predict/`](predict/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/validate/`](validate/index) — 폴더
-- [`components/syn/fsw/cfs/owls/assets/asdp000000001/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`](file--2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json) — UTF-8 텍스트 파일 본문 포함
+### `2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`
+
+**경로:** `components/syn/fsw/cfs/owls/assets/asdp000000001/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_manifest.json`
+
+
+```json
+{
+  "type": "helm",
+  "priority_bin": 2,
+  "root_directory": "/data/MLIA_active_data/data_OWLS/WORK_DIR/wronk/publish_v3_processed/dhm/2019_06_21_dhm_false_low_unknown_grayscale_newport_01",
+  "total_size": 3500968,
+  "entries": [
+    {
+      "name": "processing_report",
+      "category": "validate",
+      "filesize": 950,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_processing_report.txt"
+    },
+    {
+      "name": "timestats_density",
+      "category": "validate",
+      "filesize": 2035,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_timestats_density.csv"
+    },
+    {
+      "name": "timestats_mean_intensity",
+      "category": "validate",
+      "filesize": 4417,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_timestats_mean_intensity.csv"
+    },
+    {
+      "name": "timestats_max_intensity",
+      "category": "validate",
+      "filesize": 2616,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_timestats_max_intensity.csv"
+    },
+    {
+      "name": "timestats_pixeldiff",
+      "category": "validate",
+      "filesize": 4122,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_timestats_pixeldiff.csv"
+    },
+    {
+      "name": "mhi_image_info",
+      "category": "validate",
+      "filesize": 511141,
+      "relative_path": "validate/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_mhi.jpg"
+    },
+    {
+      "name": "predicted_tracks",
+      "category": "predict",
+      "filesize": 2870830,
+      "relative_path": "predict"
+    },
+    {
+      "name": "track_mugshots",
+      "category": "asdp",
+      "filesize": 104448,
+      "relative_path": "asdp/mugshots"
+    },
+    {
+      "name": "diversity_descriptor",
+      "category": "metadata",
+      "filesize": 358,
+      "relative_path": "asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dd.csv"
+    },
+    {
+      "name": "science_utility",
+      "category": "metadata",
+      "filesize": 26,
+      "relative_path": "asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_sue.csv"
+    },
+    {
+      "name": "data_quality",
+      "category": "metadata",
+      "filesize": 25,
+      "relative_path": "asdp/2019_06_21_dhm_false_low_unknown_grayscale_newport_01_dqe.csv"
+    }
+  ],
+  "metadata": {}
+}
+```

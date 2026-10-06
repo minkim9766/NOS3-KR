@@ -3,26 +3,641 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AbstractEventProducer.java`
 
-file--AbstractEventProducer.java
-file--EventProducer.java
-file--EventProducerFactory.java
-file--MockupEventProducer.java
-file--QuietEventProducer.java
-file--Slf4jEventProducer.java
-file--StreamEventProducer.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/AbstractEventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Default implementation of an EventProducer that provides shortcut methods for sending message of different severity
+ * types.
+ */
+public abstract class AbstractEventProducer implements EventProducer {
+    private static final Logger log = LoggerFactory.getLogger(EventProducer.class);
+    protected boolean logAllMessages = true;
+    String source;
+    AtomicInteger seqNo = new AtomicInteger();
+
+    private boolean repeatedEventReduction; // Whether to check for message repetitions
+    private Event originalEvent; // Original evt of a series of repeated events
+    private Event lastRepeat; // Last evt of a series of repeated events
+    private int repeatCounter = 0;
+    private long repeatedEventTimeout = 60000; // how long in milliseconds to buffer repeated events
+
+    // Flushes the Event Buffer about every minute
+    private Timer flusher;
+
+    @Override
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Override
+    public void setSeqNo(int sn) {
+        this.seqNo.set(sn);
+    }
+
+    @Override
+    public void sendInfo(String msg) {
+        sendInfo(getInvokingClass(), msg);
+    }
+
+    @Override
+    public void sendWatch(String msg) {
+        sendWatch(getInvokingClass(), msg);
+    }
+
+    @Override
+    public void sendWarning(String msg) {
+        sendWarning(getInvokingClass(), msg);
+    }
+
+    @Override
+    public void sendCritical(String msg) {
+        sendCritical(getInvokingClass(), msg);
+    }
+
+    @Override
+    public void sendDistress(String msg) {
+        sendDistress(getInvokingClass(), msg);
+    }
+
+    @Override
+    public void sendSevere(String msg) {
+        sendSevere(getInvokingClass(), msg);
+    }
+
+    private String getInvokingClass() {
+        Throwable throwable = new Throwable();
+        String classname = throwable.getStackTrace()[2].getClassName();
+        int idx = classname.lastIndexOf('.');
+        return classname.substring(idx + 1);
+    }
+
+    @Override
+    public void sendEvent(EventSeverity severity, String type, String msg) {
+        if (logAllMessages) {
+            log.debug("event: {}; {}; {}", severity, type, msg);
+        }
+        Event.Builder eventb = newEvent().setSeverity(severity).setMessage(msg);
+        if (type != null) {
+            eventb.setType(type);
+        }
+        Event e = eventb.build();
+        if (!repeatedEventReduction) {
+            sendEvent(e);
+        } else {
+            sendEventWithRepeatReduction(e);
+        }
+    }
+
+    private synchronized void sendEventWithRepeatReduction(Event e) {
+        if (originalEvent == null) {
+            sendEvent(e);
+            originalEvent = e;
+        } else if (isRepeat(e)) {
+            if (flusher == null) { // Prevent buffering repeated events forever
+                flusher = new Timer(true);
+                flusher.scheduleAtFixedRate(new TimerTask() {
+                    @Override
+                    public void run() {
+                        flushEventBuffer(false);
+                    }
+                }, repeatedEventTimeout, repeatedEventTimeout);
+            }
+            lastRepeat = e;
+            repeatCounter++;
+        } else { // No more repeats
+            if (flusher != null) {
+                flusher.cancel();
+                flusher = null;
+            }
+            flushEventBuffer(true);
+            sendEvent(e);
+            originalEvent = e;
+            lastRepeat = null;
+        }
+    }
+
+    /**
+     * By default event repetitions are checked for possible reduction. Disable if 'realtime' events are required.
+     */
+    @Override
+    public synchronized void setRepeatedEventReduction(boolean repeatedEventReduction,
+            long repeatedEventTimeoutMillisec) {
+        this.repeatedEventReduction = repeatedEventReduction;
+        this.repeatedEventTimeout = repeatedEventTimeoutMillisec;
+        if (!repeatedEventReduction) {
+            if (flusher != null) {
+                flusher.cancel();
+                flusher = null;
+            }
+            flushEventBuffer(true);
+        }
+    }
+
+    protected synchronized void flushEventBuffer(boolean startNewSequence) {
+        if (repeatCounter > 1) {
+            sendEvent(Event.newBuilder(lastRepeat)
+                    .setMessage("Repeated " + repeatCounter + " times: " + lastRepeat.getMessage())
+                    .build());
+        } else if (repeatCounter == 1) {
+            sendEvent(lastRepeat);
+            lastRepeat = null;
+        }
+        if (startNewSequence) {
+            originalEvent = null;
+        }
+        repeatCounter = 0;
+    }
+
+    /**
+     * Checks whether the specified Event is a repeat of the previous Event.
+     */
+    private boolean isRepeat(Event e) {
+        if (originalEvent == e) {
+            return true;
+        }
+        return originalEvent.getMessage().equals(e.getMessage())
+                && originalEvent.getSeverity().equals(e.getSeverity())
+                && originalEvent.getSource().equals(e.getSource())
+                && originalEvent.hasType() == e.hasType()
+                && (!originalEvent.hasType() || originalEvent.getType().equals(e.getType()));
+    }
+
+    @Override
+    public Event.Builder newEvent() {
+        long t = getMissionTime();
+        return Event.newBuilder().setSource(source).setSeqNumber(seqNo.getAndIncrement()).setGenerationTime(t)
+                .setReceptionTime(t);
+    }
+
+    public abstract long getMissionTime();
+}
 ```
 
-## 항목
+### `EventProducer.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/AbstractEventProducer.java`](file--AbstractEventProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/EventProducer.java`](file--EventProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/EventProducerFactory.java`](file--EventProducerFactory.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/MockupEventProducer.java`](file--MockupEventProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/QuietEventProducer.java`](file--QuietEventProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/Slf4jEventProducer.java`](file--Slf4jEventProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/StreamEventProducer.java`](file--StreamEventProducer.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/EventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public interface EventProducer {
+
+    public abstract void setSource(String source);
+
+    public abstract void setSeqNo(int sn);
+
+    public abstract void sendEvent(EventSeverity severity, String type, String msg);
+
+    public abstract void sendEvent(Event event);
+
+    default void sendInfo(String type, String msg) {
+        sendEvent(EventSeverity.INFO, type, msg);
+    }
+
+    /**
+     * @deprecated It is not according to XTCE levels, please use {@link #sendCritical(String, String)} instead.
+     * 
+     */
+    @Deprecated
+    default void sendError(String type, String msg) {
+        sendEvent(EventSeverity.ERROR, type, msg);
+    }
+
+    /**
+     * Send a warning event with the given type and message
+     *
+     */
+    default void sendWarning(String type, String msg) {
+        sendEvent(EventSeverity.WARNING, type, msg);
+    }
+
+    /**
+     * Send a warning event with the given type and message
+     *
+     */
+    default void sendWatch(String type, String msg) {
+        sendEvent(EventSeverity.WATCH, type, msg);
+    }
+
+    /**
+     * Send a distress event with the given type and message
+     *
+     */
+    default void sendDistress(String type, String msg) {
+        sendEvent(EventSeverity.DISTRESS, type, msg);
+    }
+
+    /**
+     * Send a critical event with the given type and message
+     *
+     */
+    default void sendCritical(String type, String msg) {
+        sendEvent(EventSeverity.CRITICAL, type, msg);
+    }
+
+    /**
+     * Send a severe event with the given type and message
+     *
+     */
+    default void sendSevere(String type, String msg) {
+        sendEvent(EventSeverity.SEVERE, type, msg);
+    }
+
+    /**
+     * send an info event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendInfo(String msg);
+
+    /**
+     * send an warning event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendWarning(String msg);
+
+    /**
+     * send an watch event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendWatch(String msg);
+
+    /**
+     * send an distress event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendDistress(String msg);
+
+    /**
+     * send an critical event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendCritical(String msg);
+
+    /**
+     * send an severe event with the type automatically filled in as the caller class name
+     * 
+     * @param msg
+     *            - event message
+     */
+    void sendSevere(String msg);
+
+    /**
+     * Enable/disable repeated event reduction. If enabled, the events that are equal are not sent until the timeout
+     * expires, case in which an event containing the number of events skipped will be sent.
+     * 
+     * Two events are considered equal if their source, type, severity and message are equal. The sequence count and
+     * timestamp do not need to be equal.
+     * 
+     * The event sent in case the timeout is expired is a copy of the last event except that the message is replaced
+     * with "Repeated x times: original message"
+     * 
+     * @param repeatedEventReduction
+     *            if true - enable the reduction of events.
+     * @param repeatedEventTimeoutMillisec
+     *            - how long to keep quiet in case of equal events being sent
+     */
+    public abstract void setRepeatedEventReduction(boolean repeatedEventReduction, long repeatedEventTimeoutMillisec);
+
+    /**
+     * Creates a default Event Builder with these fields pre-filled: source, seqNo, receptionTime, generationTime
+     */
+    public abstract Event.Builder newEvent();
+
+    /**
+     * Closes the connection to the server; the producer is unusable after this is called
+     */
+    public void close();
+}
+```
+
+### `EventProducerFactory.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/EventProducerFactory.java`
+
+
+```java
+package org.yamcs.events;
+
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class EventProducerFactory {
+
+    /**
+     * set to true from the unit tests
+     */
+    private static boolean mockup = false;
+    private static Queue<Event> mockupQueue;
+
+    static Logger log = LoggerFactory.getLogger(EventProducerFactory.class);
+
+    /**
+     * Configure the factory to produce mockup objects, optionally queuing the events in a queue
+     * 
+     * @param queue
+     *            - if true then queue all messages in the mockupQueue queue.
+     */
+    public static void setMockup(boolean queue) {
+        mockup = true;
+        if (queue) {
+            mockupQueue = new ConcurrentLinkedQueue<>();
+        }
+    }
+
+    public static Queue<Event> getMockupQueue() {
+        return mockupQueue;
+    }
+
+    static public EventProducer getEventProducer() throws RuntimeException {
+        return getEventProducer(null);
+    }
+
+    /**
+     * @param instance
+     *            instance for which the producer is to be returned
+     * 
+     * @return an EventProducer
+     */
+    public static EventProducer getEventProducer(String instance) {
+        if (mockup) {
+            log.debug("Creating a ConsoleEventProducer with mockupQueue: " + mockupQueue);
+            return new MockupEventProducer(mockupQueue);
+
+        }
+        if (EventProducerFactory.class.getResource("/event-producer.yaml") != null) {
+            log.warn("event-producer.yaml is ignored. To post events from outside of Yamcs just use an HTTP client");
+        }
+
+        if (instance == null) {
+            return new Slf4jEventProducer();
+        } else {
+            return new StreamEventProducer(instance);
+        }
+    }
+
+    /**
+     *
+     * @param yamcsInstance
+     * @param source
+     *            source for the events
+     * @param repeatedEventTimeoutMillisec
+     *            suppress events that repeat in this interval
+     * @return an event producer for the given instance, source and with the repeated event reduction turned on.
+     */
+    public static EventProducer getEventProducer(String yamcsInstance, String source,
+            long repeatedEventTimeoutMillisec) {
+        EventProducer eventProducer = getEventProducer(yamcsInstance);
+        eventProducer.setRepeatedEventReduction(true, repeatedEventTimeoutMillisec);
+        eventProducer.setSource(source);
+
+        return eventProducer;
+    }
+}
+```
+
+### `MockupEventProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/MockupEventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import java.util.Queue;
+
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * saves events into a queue (to be used by unit tests)
+ * 
+ * 
+ * @author nm
+ *
+ */
+public class MockupEventProducer extends AbstractEventProducer {
+    Queue<Event> mockupQueue;
+
+    public MockupEventProducer(Queue<Event> mockupQueue) {
+        this.mockupQueue=mockupQueue;
+    }
+    
+
+    @Override
+    public void sendEvent(Event event) {
+        if(mockupQueue!=null) mockupQueue.add(event);
+    }
+
+
+    @Override
+    public void close() {
+    }
+    
+    @Override
+    public long getMissionTime() {       
+        return TimeEncoding.getWallclockTime();
+    }
+}
+```
+
+### `QuietEventProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/QuietEventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import org.yamcs.yarch.protobuf.Db.Event;
+
+/**
+ * Event producer that swallows the events
+ * @author nm
+ *
+ */
+public class QuietEventProducer extends AbstractEventProducer {
+
+    @Override
+    public void sendEvent(Event event) {
+        //do nothing
+    }
+
+    @Override
+    public void close() {
+        //do nothing
+    }
+
+    @Override
+    public long getMissionTime() {
+        return 0;
+    }
+
+}
+```
+
+### `Slf4jEventProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/Slf4jEventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Prints all events via java logging.
+ */
+public class Slf4jEventProducer extends AbstractEventProducer {
+
+    private static final Logger log = LoggerFactory.getLogger(Slf4jEventProducer.class);
+
+    public Slf4jEventProducer() {
+        this.logAllMessages = false;
+    }
+
+    @Override
+    public void sendEvent(Event event) {
+        StringBuilder buf = new StringBuilder();
+        if (event.hasSource()) {
+            buf.append("[").append(event.getSource()).append("]");
+        }
+        if (event.hasType()) {
+            buf.append("[").append(event.getType()).append("]");
+        }
+        if (event.hasSource() || event.hasType()) {
+            buf.append(" ");
+        }
+        buf.append(event.getMessage());
+        if (event.hasSeverity()) {
+            switch (event.getSeverity()) {
+            case WATCH:
+            case WARNING:
+                log.warn(buf.toString());
+                break;
+            case DISTRESS:
+            case CRITICAL:
+            case SEVERE:
+                log.error(buf.toString());
+                break;
+            default:
+                log.info(buf.toString());
+            }
+        }
+    }
+
+    @Override
+    public void close() {
+    }
+
+    @Override
+    public long getMissionTime() {
+        return TimeEncoding.getWallclockTime();
+    }
+}
+```
+
+### `StreamEventProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/events/StreamEventProducer.java`
+
+
+```java
+package org.yamcs.events;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.YamcsServer;
+import org.yamcs.archive.EventRecorder;
+import org.yamcs.yarch.protobuf.Db.Event;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+
+/**
+ * Event producer used from inside Yamcs to report events. It writes directly to the events_realtime stream
+ *
+ */
+public class StreamEventProducer extends AbstractEventProducer {
+    final Stream realtimeEventStream;
+    final TupleDefinition tdef;
+    final TimeService timeService;
+
+    public StreamEventProducer(String yamcsInstance) {
+        realtimeEventStream = YarchDatabase.getInstance(yamcsInstance)
+                .getStream(EventRecorder.REALTIME_EVENT_STREAM_NAME);
+        if (realtimeEventStream == null) {
+            throw new ConfigurationException("Cannot find a stream named '" + EventRecorder.REALTIME_EVENT_STREAM_NAME
+                    + "' in instance " + yamcsInstance);
+        }
+
+        tdef = realtimeEventStream.getDefinition();
+        timeService = YamcsServer.getTimeService(yamcsInstance);
+    }
+
+    @Override
+    public void sendEvent(Event event) {
+        Tuple t = new Tuple(tdef, new Object[] { event.getGenerationTime(),
+                event.getSource(), event.getSeqNumber(), event });
+
+        realtimeEventStream.emitTuple(t);
+    }
+
+    @Override
+    public void close() {
+        //no resource to release
+    }
+
+    @Override
+    public long getMissionTime() {
+        long t;
+        if (timeService == null) {
+            t = TimeEncoding.getWallclockTime();
+        } else {
+            t = timeService.getMissionTime();
+        }
+        return t;
+    }
+
+}
+```

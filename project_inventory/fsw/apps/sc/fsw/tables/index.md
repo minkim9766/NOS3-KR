@@ -3,142 +3,6419 @@
 
 **경로:** `fsw/apps/sc/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sc_ats1.c`
 
-file--sc_ats1.c
-file--sc_rts001.c
-file--sc_rts002.c
-file--sc_rts003.c
-file--sc_rts004.c
-file--sc_rts005.c
-file--sc_rts006.c
-file--sc_rts007.c
-file--sc_rts008.c
-file--sc_rts009.c
-file--sc_rts010.c
-file--sc_rts011.c
-file--sc_rts012.c
-file--sc_rts013.c
-file--sc_rts014.c
-file--sc_rts015.c
-file--sc_rts016.c
-file--sc_rts017.c
-file--sc_rts018.c
-file--sc_rts019.c
-file--sc_rts020.c
-file--sc_rts021.c
-file--sc_rts022.c
-file--sc_rts023.c
-file--sc_rts024.c
-file--sc_rts025.c
-file--sc_rts026.c
-file--sc_rts027.c
-file--sc_rts028.c
-file--sc_rts029.c
-file--sc_rts030.c
-file--sc_rts031.c
-file--sc_rts032.c
-file--sc_rts033.c
-file--sc_rts034.c
-file--sc_rts035.c
-file--sc_rts036.c
-file--sc_rts037.c
-file--sc_rts038.c
-file--sc_rts039.c
-file--sc_rts040.c
-file--sc_rts041.c
-file--sc_rts042.c
-file--sc_rts043.c
-file--sc_rts044.c
-file--sc_rts045.c
-file--sc_rts046.c
-file--sc_rts047.c
-file--sc_rts048.c
-file--sc_rts049.c
-file--sc_rts050.c
-file--sc_rts051.c
-file--sc_rts052.c
-file--sc_rts053.c
-file--sc_rts054.c
-file--sc_rts055.c
-file--sc_rts056.c
-file--sc_rts057.c
-file--sc_rts058.c
-file--sc_rts059.c
-file--sc_rts060.c
-file--sc_rts061.c
-file--sc_rts062.c
-file--sc_rts063.c
-file--sc_rts064.c
+**경로:** `fsw/apps/sc/fsw/tables/sc_ats1.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample ATS table 1
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command ATS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample ATS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time = SC_TEST_TIME + 30
+ * SC Enable RTS #1 command, execution time = SC_TEST_TIME + 35
+ * SC Start RTS #1 command, execution time = SC_TEST_TIME + 40
+ * SC Reset Counters command, execution time = SC_TEST_TIME + 100
+ *
+ * Before starting the sample ATS, set time = SC_TEST_TIME.  The
+ * user will then have 30 seconds to start the ATS before the
+ * first command in the sample ATS is scheduled to execute.
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Spacecraft sample ATS time offsets */
+#define SC_TEST_TIME (1000000)
+#define SC_CMD1_TIME (SC_TEST_TIME + 30)
+#define SC_CMD2_TIME (SC_TEST_TIME + 35)
+#define SC_CMD3_TIME (SC_TEST_TIME + 40)
+#define SC_CMD4_TIME (SC_TEST_TIME + 100)
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+#ifndef SC_ENABLE_RTS1_CKSUM
+#define SC_ENABLE_RTS1_CKSUM (0x8D)
+#endif
+#ifndef SC_START_RTS1_CKSUM
+#define SC_START_RTS1_CKSUM (0x8E)
+#endif
+#ifndef SC_RESET_COUNTERS_CKSUM
+#define SC_RESET_COUNTERS_CKSUM (0x8E)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_AtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_AtsEntryHeader_t hdr2;
+    SC_RtsCmd_t         cmd2;
+    SC_AtsEntryHeader_t hdr3;
+    SC_RtsCmd_t         cmd3;
+    SC_AtsEntryHeader_t hdr4;
+    SC_NoArgsCmd_t      cmd4;
+} SC_AtsStruct1_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_AtsStruct1_t ats;
+    uint16          buf[SC_ATS_BUFF_SIZE];
+} SC_AtsTable1_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_AtsStruct1_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_AtsTable1_t SC_Ats1 = {
+.ats = {
+    /* 1 */
+    .hdr1.CmdNumber  = 1,
+    .hdr1.TimeTag_MS = SC_CMD1_TIME >> 16,
+    .hdr1.TimeTag_LS = SC_CMD1_TIME & 0xFFFF,
+    .cmd1.CmdHeader  = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.CmdNumber  = 2,
+    .hdr2.TimeTag_MS = SC_CMD2_TIME >> 16,
+    .hdr2.TimeTag_LS = SC_CMD2_TIME & 0xFFFF,
+    .cmd2.CmdHeader  = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_ENABLE_RTS_CC, SC_ENABLE_RTS1_CKSUM),
+    .cmd2.RtsId      = 1,
+
+    /* 3 */
+    .hdr3.CmdNumber  = 3,
+    .hdr3.TimeTag_MS = SC_CMD3_TIME >> 16,
+    .hdr3.TimeTag_LS = SC_CMD3_TIME & 0xFFFF,
+    .cmd3.CmdHeader  = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_START_RTS_CC, SC_START_RTS1_CKSUM),
+    .cmd3.RtsId      = 1,
+
+    /* 4 */
+    .hdr4.CmdNumber  = 4,
+    .hdr4.TimeTag_MS = SC_CMD4_TIME >> 16,
+    .hdr4.TimeTag_LS = SC_CMD4_TIME & 0xFFFF,
+    .cmd4.CmdHeader  = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd4), SC_RESET_COUNTERS_CC, SC_RESET_COUNTERS_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Ats1, SC.ATS_TBL1, SC Example ATS_TBL1, sc_ats1.tbl)
 ```
 
-## 항목
+### `sc_rts001.c`
 
-- [`fsw/apps/sc/fsw/tables/sc_ats1.c`](file--sc_ats1.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts001.c`](file--sc_rts001.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts002.c`](file--sc_rts002.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts003.c`](file--sc_rts003.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts004.c`](file--sc_rts004.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts005.c`](file--sc_rts005.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts006.c`](file--sc_rts006.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts007.c`](file--sc_rts007.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts008.c`](file--sc_rts008.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts009.c`](file--sc_rts009.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts010.c`](file--sc_rts010.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts011.c`](file--sc_rts011.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts012.c`](file--sc_rts012.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts013.c`](file--sc_rts013.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts014.c`](file--sc_rts014.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts015.c`](file--sc_rts015.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts016.c`](file--sc_rts016.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts017.c`](file--sc_rts017.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts018.c`](file--sc_rts018.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts019.c`](file--sc_rts019.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts020.c`](file--sc_rts020.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts021.c`](file--sc_rts021.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts022.c`](file--sc_rts022.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts023.c`](file--sc_rts023.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts024.c`](file--sc_rts024.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts025.c`](file--sc_rts025.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts026.c`](file--sc_rts026.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts027.c`](file--sc_rts027.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts028.c`](file--sc_rts028.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts029.c`](file--sc_rts029.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts030.c`](file--sc_rts030.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts031.c`](file--sc_rts031.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts032.c`](file--sc_rts032.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts033.c`](file--sc_rts033.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts034.c`](file--sc_rts034.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts035.c`](file--sc_rts035.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts036.c`](file--sc_rts036.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts037.c`](file--sc_rts037.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts038.c`](file--sc_rts038.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts039.c`](file--sc_rts039.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts040.c`](file--sc_rts040.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts041.c`](file--sc_rts041.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts042.c`](file--sc_rts042.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts043.c`](file--sc_rts043.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts044.c`](file--sc_rts044.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts045.c`](file--sc_rts045.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts046.c`](file--sc_rts046.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts047.c`](file--sc_rts047.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts048.c`](file--sc_rts048.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts049.c`](file--sc_rts049.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts050.c`](file--sc_rts050.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts051.c`](file--sc_rts051.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts052.c`](file--sc_rts052.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts053.c`](file--sc_rts053.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts054.c`](file--sc_rts054.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts055.c`](file--sc_rts055.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts056.c`](file--sc_rts056.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts057.c`](file--sc_rts057.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts058.c`](file--sc_rts058.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts059.c`](file--sc_rts059.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts060.c`](file--sc_rts060.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts061.c`](file--sc_rts061.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts062.c`](file--sc_rts062.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts063.c`](file--sc_rts063.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sc/fsw/tables/sc_rts064.c`](file--sc_rts064.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts001.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 1
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC Enable RTS #2 command, execution time relative to prev cmd = 5
+ * SC Start RTS #2 command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+#ifndef SC_ENABLE_RTS2_CKSUM
+#define SC_ENABLE_RTS2_CKSUM (0x8E)
+#endif
+#ifndef SC_START_RTS2_CKSUM
+#define SC_START_RTS2_CKSUM (0x8D)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_RtsCmd_t         cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_RtsCmd_t         cmd3;
+} SC_RtsStruct001_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct001_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable001_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct001_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable001_t SC_Rts001 = {
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_ENABLE_RTS_CC, SC_ENABLE_RTS2_CKSUM),
+    .cmd2.RtsId = 2,
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_START_RTS_CC, SC_START_RTS2_CKSUM),
+    .cmd3.RtsId     = 2,
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts001, SC.RTS_TBL001, SC Example RTS_TBL001, sc_rts001.tbl)
+```
+
+### `sc_rts002.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts002.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 2
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct002_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct002_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable002_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct002_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable002_t SC_Rts002 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts002, SC.RTS_TBL002, SC Example RTS_TBL002, sc_rts002.tbl)
+```
+
+### `sc_rts003.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts003.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 3
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct003_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct003_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable003_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct003_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable003_t SC_Rts003 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts003, SC.RTS_TBL003, SC Example RTS_TBL003, sc_rts003.tbl)
+```
+
+### `sc_rts004.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts004.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 4
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct004_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct004_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable004_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct004_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable004_t SC_Rts004 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts004, SC.RTS_TBL004, SC Example RTS_TBL004, sc_rts004.tbl)
+```
+
+### `sc_rts005.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts005.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 5
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct005_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct005_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable005_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct005_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable005_t SC_Rts005 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts005, SC.RTS_TBL005, SC Example RTS_TBL005, sc_rts005.tbl)
+```
+
+### `sc_rts006.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts006.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 6
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct006_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct006_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable006_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct006_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable006_t SC_Rts006 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts006, SC.RTS_TBL006, SC Example RTS_TBL006, sc_rts006.tbl)
+```
+
+### `sc_rts007.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts007.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 7
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct007_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct007_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable007_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct007_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable007_t SC_Rts007 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts007, SC.RTS_TBL007, SC Example RTS_TBL007, sc_rts007.tbl)
+```
+
+### `sc_rts008.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts008.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct008_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct008_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable008_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct008_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable008_t SC_Rts008 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts008, SC.RTS_TBL008, SC Example RTS_TBL008, sc_rts008.tbl)
+```
+
+### `sc_rts009.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts009.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct009_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct009_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable009_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct009_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable009_t SC_Rts009 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts009, SC.RTS_TBL009, SC Example RTS_TBL009, sc_rts009.tbl)
+```
+
+### `sc_rts010.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts010.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct010_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct010_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable010_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct010_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable010_t SC_Rts010 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts010, SC.RTS_TBL010, SC Example RTS_TBL010, sc_rts010.tbl)
+```
+
+### `sc_rts011.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts011.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct011_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct011_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable011_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct011_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable011_t SC_Rts011 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts011, SC.RTS_TBL011, SC Example RTS_TBL011, sc_rts011.tbl)
+```
+
+### `sc_rts012.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts012.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct012_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct012_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable012_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct012_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable012_t SC_Rts012 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts012, SC.RTS_TBL012, SC Example RTS_TBL012, sc_rts012.tbl)
+```
+
+### `sc_rts013.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts013.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct013_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct013_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable013_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct013_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable013_t SC_Rts013 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts013, SC.RTS_TBL013, SC Example RTS_TBL013, sc_rts013.tbl)
+```
+
+### `sc_rts014.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts014.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct014_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct014_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable014_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct014_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable014_t SC_Rts014 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts014, SC.RTS_TBL014, SC Example RTS_TBL014, sc_rts014.tbl)
+```
+
+### `sc_rts015.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts015.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct015_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct015_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable015_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct015_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable015_t SC_Rts015 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts015, SC.RTS_TBL015, SC Example RTS_TBL015, sc_rts015.tbl)
+```
+
+### `sc_rts016.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts016.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct016_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct016_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable016_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct016_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable016_t SC_Rts016 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts016, SC.RTS_TBL016, SC Example RTS_TBL016, sc_rts016.tbl)
+```
+
+### `sc_rts017.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts017.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct017_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct017_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable017_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct017_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable017_t SC_Rts017 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts017, SC.RTS_TBL017, SC Example RTS_TBL017, sc_rts017.tbl)
+```
+
+### `sc_rts018.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts018.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct018_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct018_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable018_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct018_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable018_t SC_Rts018 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts018, SC.RTS_TBL018, SC Example RTS_TBL018, sc_rts018.tbl)
+```
+
+### `sc_rts019.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts019.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct019_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct019_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable019_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct019_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable019_t SC_Rts019 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts019, SC.RTS_TBL019, SC Example RTS_TBL019, sc_rts019.tbl)
+```
+
+### `sc_rts020.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts020.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct020_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct020_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable020_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct020_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable020_t SC_Rts020 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts020, SC.RTS_TBL020, SC Example RTS_TBL020, sc_rts020.tbl)
+```
+
+### `sc_rts021.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts021.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct021_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct021_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable021_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct021_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable021_t SC_Rts021 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts021, SC.RTS_TBL021, SC Example RTS_TBL021, sc_rts021.tbl)
+```
+
+### `sc_rts022.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts022.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct022_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct022_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable022_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct022_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable022_t SC_Rts022 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts022, SC.RTS_TBL022, SC Example RTS_TBL022, sc_rts022.tbl)
+```
+
+### `sc_rts023.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts023.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct023_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct023_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable023_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct023_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable023_t SC_Rts023 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts023, SC.RTS_TBL023, SC Example RTS_TBL023, sc_rts023.tbl)
+```
+
+### `sc_rts024.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts024.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct024_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct024_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable024_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct024_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable024_t SC_Rts024 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts024, SC.RTS_TBL024, SC Example RTS_TBL024, sc_rts024.tbl)
+```
+
+### `sc_rts025.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts025.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct025_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct025_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable025_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct025_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable025_t SC_Rts025 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts025, SC.RTS_TBL025, SC Example RTS_TBL025, sc_rts025.tbl)
+```
+
+### `sc_rts026.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts026.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct026_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct026_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable026_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct026_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable026_t SC_Rts026 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts026, SC.RTS_TBL026, SC Example RTS_TBL026, sc_rts026.tbl)
+```
+
+### `sc_rts027.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts027.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct027_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct027_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable027_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct027_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable027_t SC_Rts027 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts027, SC.RTS_TBL027, SC Example RTS_TBL027, sc_rts027.tbl)
+```
+
+### `sc_rts028.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts028.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct028_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct028_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable028_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct028_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable028_t SC_Rts028 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts028, SC.RTS_TBL028, SC Example RTS_TBL028, sc_rts028.tbl)
+```
+
+### `sc_rts029.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts029.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct029_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct029_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable029_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct029_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable029_t SC_Rts029 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts029, SC.RTS_TBL029, SC Example RTS_TBL029, sc_rts029.tbl)
+```
+
+### `sc_rts030.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts030.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct030_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct030_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable030_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct030_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable030_t SC_Rts030 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts030, SC.RTS_TBL030, SC Example RTS_TBL030, sc_rts030.tbl)
+```
+
+### `sc_rts031.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts031.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct031_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct031_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable031_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct031_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable031_t SC_Rts031 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts031, SC.RTS_TBL031, SC Example RTS_TBL031, sc_rts031.tbl)
+```
+
+### `sc_rts032.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts032.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct032_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct032_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable032_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct032_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable032_t SC_Rts032 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts032, SC.RTS_TBL032, SC Example RTS_TBL032, sc_rts032.tbl)
+```
+
+### `sc_rts033.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts033.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct033_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct033_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable033_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct033_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable033_t SC_Rts033 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts033, SC.RTS_TBL033, SC Example RTS_TBL033, sc_rts033.tbl)
+```
+
+### `sc_rts034.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts034.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct034_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct034_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable034_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct034_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable034_t SC_Rts034 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts034, SC.RTS_TBL034, SC Example RTS_TBL034, sc_rts034.tbl)
+```
+
+### `sc_rts035.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts035.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct035_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct035_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable035_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct035_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable035_t SC_Rts035 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts035, SC.RTS_TBL035, SC Example RTS_TBL035, sc_rts035.tbl)
+```
+
+### `sc_rts036.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts036.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct036_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct036_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable036_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct036_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable036_t SC_Rts036 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts036, SC.RTS_TBL036, SC Example RTS_TBL036, sc_rts036.tbl)
+```
+
+### `sc_rts037.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts037.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct037_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct037_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable037_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct037_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable037_t SC_Rts037 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts037, SC.RTS_TBL037, SC Example RTS_TBL037, sc_rts037.tbl)
+```
+
+### `sc_rts038.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts038.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct038_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct038_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable038_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct038_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable038_t SC_Rts038 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts038, SC.RTS_TBL038, SC Example RTS_TBL038, sc_rts038.tbl)
+```
+
+### `sc_rts039.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts039.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct039_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct039_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable039_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct039_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable039_t SC_Rts039 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts039, SC.RTS_TBL039, SC Example RTS_TBL039, sc_rts039.tbl)
+```
+
+### `sc_rts040.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts040.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct040_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct040_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable040_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct040_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable040_t SC_Rts040 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts040, SC.RTS_TBL040, SC Example RTS_TBL040, sc_rts040.tbl)
+```
+
+### `sc_rts041.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts041.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct041_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct041_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable041_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct041_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable041_t SC_Rts041 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts041, SC.RTS_TBL041, SC Example RTS_TBL041, sc_rts041.tbl)
+```
+
+### `sc_rts042.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts042.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct042_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct042_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable042_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct042_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable042_t SC_Rts042 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts042, SC.RTS_TBL042, SC Example RTS_TBL042, sc_rts042.tbl)
+```
+
+### `sc_rts043.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts043.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct043_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct043_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable043_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct043_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable043_t SC_Rts043 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts043, SC.RTS_TBL043, SC Example RTS_TBL043, sc_rts043.tbl)
+```
+
+### `sc_rts044.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts044.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct044_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct044_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable044_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct044_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable044_t SC_Rts044 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts044, SC.RTS_TBL044, SC Example RTS_TBL044, sc_rts044.tbl)
+```
+
+### `sc_rts045.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts045.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct045_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct045_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable045_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct045_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable045_t SC_Rts045 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts045, SC.RTS_TBL045, SC Example RTS_TBL045, sc_rts045.tbl)
+```
+
+### `sc_rts046.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts046.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct046_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct046_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable046_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct046_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable046_t SC_Rts046 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts046, SC.RTS_TBL046, SC Example RTS_TBL046, sc_rts046.tbl)
+```
+
+### `sc_rts047.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts047.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct047_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct047_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable047_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct047_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable047_t SC_Rts047 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts047, SC.RTS_TBL047, SC Example RTS_TBL047, sc_rts047.tbl)
+```
+
+### `sc_rts048.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts048.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct048_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct048_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable048_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct048_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable048_t SC_Rts048 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts048, SC.RTS_TBL048, SC Example RTS_TBL048, sc_rts048.tbl)
+```
+
+### `sc_rts049.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts049.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct049_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct049_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable049_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct049_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable049_t SC_Rts049 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts049, SC.RTS_TBL049, SC Example RTS_TBL049, sc_rts049.tbl)
+```
+
+### `sc_rts050.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts050.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct050_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct050_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable050_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct050_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable050_t SC_Rts050 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts050, SC.RTS_TBL050, SC Example RTS_TBL050, sc_rts050.tbl)
+```
+
+### `sc_rts051.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts051.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct051_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct051_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable051_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct051_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable051_t SC_Rts051 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts051, SC.RTS_TBL051, SC Example RTS_TBL051, sc_rts051.tbl)
+```
+
+### `sc_rts052.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts052.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct052_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct052_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable052_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct052_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable052_t SC_Rts052 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts052, SC.RTS_TBL052, SC Example RTS_TBL052, sc_rts052.tbl)
+```
+
+### `sc_rts053.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts053.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct053_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct053_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable053_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct053_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable053_t SC_Rts053 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts053, SC.RTS_TBL053, SC Example RTS_TBL053, sc_rts053.tbl)
+```
+
+### `sc_rts054.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts054.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct054_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct054_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable054_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct054_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable054_t SC_Rts054 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts054, SC.RTS_TBL054, SC Example RTS_TBL054, sc_rts054.tbl)
+```
+
+### `sc_rts055.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts055.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct055_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct055_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable055_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct055_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable055_t SC_Rts055 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts055, SC.RTS_TBL055, SC Example RTS_TBL055, sc_rts055.tbl)
+```
+
+### `sc_rts056.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts056.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct056_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct056_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable056_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct056_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable056_t SC_Rts056 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts056, SC.RTS_TBL056, SC Example RTS_TBL056, sc_rts056.tbl)
+```
+
+### `sc_rts057.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts057.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct057_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct057_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable057_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct057_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable057_t SC_Rts057 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts057, SC.RTS_TBL057, SC Example RTS_TBL057, sc_rts057.tbl)
+```
+
+### `sc_rts058.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts058.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct058_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct058_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable058_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct058_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable058_t SC_Rts058 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts058, SC.RTS_TBL058, SC Example RTS_TBL058, sc_rts058.tbl)
+```
+
+### `sc_rts059.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts059.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct059_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct059_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable059_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct059_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable059_t SC_Rts059 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts059, SC.RTS_TBL059, SC Example RTS_TBL059, sc_rts059.tbl)
+```
+
+### `sc_rts060.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts060.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct060_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct060_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable060_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct060_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable060_t SC_Rts060 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts060, SC.RTS_TBL060, SC Example RTS_TBL060, sc_rts060.tbl)
+```
+
+### `sc_rts061.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts061.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct061_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct061_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable061_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct061_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable061_t SC_Rts061 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts061, SC.RTS_TBL061, SC Example RTS_TBL061, sc_rts061.tbl)
+```
+
+### `sc_rts062.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts062.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct062_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct062_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable062_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct062_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable062_t SC_Rts062 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts062, SC.RTS_TBL062, SC Example RTS_TBL062, sc_rts062.tbl)
+```
+
+### `sc_rts063.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts063.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct063_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct063_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable063_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct063_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable063_t SC_Rts063 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts063, SC.RTS_TBL063, SC Example RTS_TBL063, sc_rts063.tbl)
+```
+
+### `sc_rts064.c`
+
+**경로:** `fsw/apps/sc/fsw/tables/sc_rts064.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,924-1, and identified as “Core Flight
+ * System (cFS) Stored Command Application version 3.1.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFS Stored Command (SC) sample RTS table 8
+ *
+ * The following source code demonstrates how to create a sample
+ * Stored Command RTS table using the software defined command structures.
+ * It's also possible to create this table via alternative tools
+ * (ground system) and or system agnostic data definitions (XTCE/EDS/JSON).
+ *
+ * This source file creates a sample RTS table that contains only
+ * the following commands that are scheduled as follows:
+ *
+ * SC NOOP command, execution time relative to start of RTS = 0
+ * SC NOOP command, execution time relative to prev cmd = 5
+ * SC NOOP command, execution time relative to prev cmd = 5
+ */
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+
+#include "sc_tbldefs.h"      /* defines SC table headers */
+#include "sc_platform_cfg.h" /* defines table buffer size */
+#include "sc_msgdefs.h"      /* defines SC command code values */
+#include "sc_msgids.h"       /* defines SC packet msg ID's */
+#include "sc_msg.h"          /* defines SC message structures */
+
+/* Checksum for each sample command */
+#ifndef SC_NOOP_CKSUM
+#define SC_NOOP_CKSUM (0x8F)
+#endif
+
+/* Custom table structure, modify as needed to add desired commands */
+typedef struct
+{
+    SC_RtsEntryHeader_t hdr1;
+    SC_NoArgsCmd_t      cmd1;
+    SC_RtsEntryHeader_t hdr2;
+    SC_NoArgsCmd_t      cmd2;
+    SC_RtsEntryHeader_t hdr3;
+    SC_NoArgsCmd_t      cmd3;
+} SC_RtsStruct064_t;
+
+/* Define the union to size the table correctly */
+typedef union
+{
+    SC_RtsStruct064_t rts;
+    uint16            buf[SC_RTS_BUFF_SIZE];
+} SC_RtsTable064_t;
+
+/* Helper macro to get size of structure elements */
+#define SC_MEMBER_SIZE(member) (sizeof(((SC_RtsStruct064_t *)0)->member))
+
+/* Used designated intializers to be verbose, modify as needed/desired */
+SC_RtsTable064_t SC_Rts064 = {   
+.rts = {
+    /* 1 */
+    .hdr1.TimeTag   = 0,
+    .cmd1.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd1), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 2 */
+    .hdr2.TimeTag   = 5,
+    .cmd2.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd2), SC_NOOP_CC, SC_NOOP_CKSUM),
+
+    /* 3 */
+    .hdr3.TimeTag   = 5,
+    .cmd3.CmdHeader = CFE_MSG_CMD_HDR_INIT(SC_CMD_MID, SC_MEMBER_SIZE(cmd3), SC_NOOP_CC, SC_NOOP_CKSUM),
+    }
+};
+
+/* Macro for table structure */
+CFE_TBL_FILEDEF(SC_Rts064, SC.RTS_TBL064, SC Example RTS_TBL064, sc_rts064.tbl)
+```

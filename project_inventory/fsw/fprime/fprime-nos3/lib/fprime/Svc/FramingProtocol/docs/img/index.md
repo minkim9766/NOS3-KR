@@ -3,20 +3,28 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `class_diagram_deframingProtocol.png`
 
-file--class_diagram_deframingProtocol.png
-file--class_diagram_framingProtocol.png
-file--deframingProtocol_impl_diagram.png
-file--framingProtocol_impl_diagram.png
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/class_diagram_deframingProtocol.png`
 
-## 항목
+바이너리 파일입니다. 본문은 생략했습니다.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/class_diagram_deframingProtocol.png`](file--class_diagram_deframingProtocol.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/class_diagram_framingProtocol.png`](file--class_diagram_framingProtocol.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/deframingProtocol_impl_diagram.png`](file--deframingProtocol_impl_diagram.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/framingProtocol_impl_diagram.png`](file--framingProtocol_impl_diagram.png) — 바이너리 (경로만)
+### `class_diagram_framingProtocol.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/class_diagram_framingProtocol.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `deframingProtocol_impl_diagram.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/deframingProtocol_impl_diagram.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `framingProtocol_impl_diagram.png`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/img/framingProtocol_impl_diagram.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.

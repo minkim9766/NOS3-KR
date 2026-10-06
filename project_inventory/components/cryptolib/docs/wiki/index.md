@@ -3,34 +3,623 @@
 
 **경로:** `components/cryptolib/docs/wiki/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 _static/index
-file--conf.py
-file--Environment_Building.md
-file--Home.md
-file--index.rst
-file--make.bat
-file--Makefile
-file--Releases.md
-file--requirements.txt
-file--Testing_Validation.md
-file--Usage.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/cryptolib/docs/wiki/_static/`](_static/index) — 폴더
-- [`components/cryptolib/docs/wiki/conf.py`](file--conf.py) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Environment_Building.md`](file--Environment_Building.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Home.md`](file--Home.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/make.bat`](file--make.bat) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Makefile`](file--Makefile) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Releases.md`](file--Releases.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/requirements.txt`](file--requirements.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Testing_Validation.md`](file--Testing_Validation.md) — UTF-8 텍스트 파일 본문 포함
-- [`components/cryptolib/docs/wiki/Usage.md`](file--Usage.md) — UTF-8 텍스트 파일 본문 포함
+### `conf.py`
+
+**경로:** `components/cryptolib/docs/wiki/conf.py`
+
+
+```python
+# Configuration file for the Sphinx documentation builder.
+#
+# For the full list of built-in configuration values, see the documentation:
+# https://www.sphinx-doc.org/en/master/usage/configuration.html
+
+# -- Project information -----------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+
+project = 'CryptoLib'
+copyright = '2025, NASA-JSTAR'
+author = 'JSTAR'
+release = '01/08/2025'
+
+# -- General configuration ---------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
+
+extensions = [
+    'myst_parser',
+]
+
+source_suffix = {
+    '.rst': 'restructuredtext',
+    '.md': 'markdown',
+}
+
+templates_path = ['_templates']
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# -- Options for HTML output -------------------------------------------------
+# https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
+
+html_theme = 'sphinx_rtd_theme'
+html_theme_options = {
+    "collapse_navigation": False,
+    "navigation_depth": 4,
+    "titles_only": False,
+}
+
+html_use_index = False
+html_static_path = ['_static']
+html_css_files = ['custom.css']
+```
+
+### `Environment_Building.md`
+
+**경로:** `components/cryptolib/docs/wiki/Environment_Building.md`
+
+
+```markdown
+# Environment
+
+Environment and dependency details may be found within `./support/Dockerfile`. If running via docker, dependencies will be installed automatically.
+
+If building locally, ensure all dependencies below are met.
+
+
+*Note:* Theses dependencies are for the default internal build, other builds may vary.
+
+## Dependencies
+### Running
+| __Apt:__        |                       |
+|-----------------|-----------------------|
+| autoconf        | automake              |
+| ca-certificates | cmake                 |
+| curl            | g++-multilib          |
+| gcc-multilib    | gettext               |
+| git             | gdb                   |
+| lcov            | libcurl4-openssl-dev  | 
+| libmariadb-dev  | libmariadb-dev-compat |
+| libtool         | unzip                 |
+| make            | python3-dev           |
+| python3-pip     | build-essential       |
+
+<br />
+
+| __Web:__           |                       |
+|--------------------|-----------------------|
+| libgpg-error 1.50  | libgcrypt 1.11.0      |
+
+<br />
+<br />
+
+### Documentation
+| __Apt:__            |                          |
+|---------------------|--------------------------|
+| python3-sphinx      | python3-sphinx-rtd-theme |
+| python3-myst-parser | 
+
+<br />
+<br />
+
+## Building
+There are numerous configurations when building CryptoLib.  References to necessary build flags can be found within `./support/scripts/`.  For example to build the current internal build:
+
+> Clone the CryptoLib repo. Switch to the desired branch. Currently, integration efforts are occurring in the _main_ branch.
+> * cd Cryptolib
+> * cmake -DCODECOV=1 -DDEBUG=1 -DTEST=1 -DTEST_ENC=1 .
+> * make
+> * make test
+
+This will build the internal debug environment, with code coverage, testing, and encryption testing.
+
+*Other Build Configurations:*
+> * KMC, Minimal, WolfSSL, and other configurations have convenience scripts which can be referenced within the `./support/scripts/` directory.
+
+*Code Coverage:*
+With the DCODECOV Flag set, users may produce code coverage results similarly to the code below:
+> * cmake -DMYSQL=1 -DENCTEST=1 -DDEBUG=1 -DCODECOV=1 ../
+> * make
+> * make gcov
+
+This will produce local coverage reports in /build/coverage, with the HTML results within /build/coverage/results/index.html
+
+*Cleanup:*
+> * make clean  -- Cleans Build
+> * make scrub  -- Cleans Code Coverage
+
+The two flags (DEBUG and TEST_ENC) can be used simultaneously, or separately. 
+
+*All Build Flags:*
+> * CODECOV -- "Code Coverage" -- Default OFF
+> * CRYPTO_LIBGCRYPT -- "Cryptography Module - Libgcrypt" -- Default ON
+> * CRYPTO_KMC -- "Cryptography Module - KMC" -- Default OFF
+> * CRYPTO_WOLFSSL -- "Cryptography Module - WolfSSL" -- Default OFF
+> * CRYPTO_CUSTOM -- "Cryptography Module - CUSTOM" -- Default OFF
+> * CRYPTO_CUSTOM_PATH -- "Cryptography Module - CUSTOM PATH" -- Default OFF
+> * DEBUG -- "Debug" -- Default OFF
+> * KEY_CUSTOM -- "Key Module - Custom"-- Default  OFF
+> * KEY_CUSTOM_PATH -- "Custom Key Path" -- Default OFF
+> * KEY_INTERNAL -- "Key Module - Internal" -- Default ON
+> * KEY_KMC -- "Key Module - KMC"-- Default  OFF
+> * MC_CUSTOM -- "Monitoring and Control - Custom" -- Default OFF
+> * MC_CUSTOM_PATH -- "Custom Monitoring and Control path" -- Default OFF
+> * MC_DISABLED -- "Monitoring and Control - Disabled" -- Default OFF
+> * MC_INTERNAL -- "Monitoring and Control - Internal" -- Default ON
+> * SA_CUSTOM -- "Security Association - Custom" -- Default OFF
+> * SA_CUSTOM_PATH -- "Custom Security Association Path" -- Default OFF
+> * SA_INTERNAL -- "Security Association - Internal" -- Default ON
+> * SA_MARIADB -- "Security Association - MariaDB" -- Default OFF
+> * SUPPORT -- "Support" -- Default OFF
+> * SYSTEM_INSTALL -- "SystemInstall" -- Default OFF
+> * TEST -- "Test" -- Default OFF
+> * SA_FILE -- "Save Security Association to File" -- Default OFF
+> * KEY_VALIDATION -- "Validate existence of key duplication"-- Default OFF
+
+> * KMC_MDB_RH "KMC-MDB-RedHat-Integration-Testing" -- Default OFF 
+> * KMC_MDB_DB "KMC-MDB-Debian-Integration-Testing" -- Default OFF 
+
+> * CRYPTO_EPROC "Enables building of Extended Procedures -- Default OFF (CURRENTLY A WIP - Not ready for Operations)
+```
+
+### `Home.md`
+
+**경로:** `components/cryptolib/docs/wiki/Home.md`
+
+
+```markdown
+![CryptoLib logo Final All orange](https://github.com/user-attachments/assets/acb15175-9ba5-44a5-ae86-c9615400fcb7)
+
+This documentation is designed to provide information on how to build, test, and utilize the CryptoLib library.
+
+# CryptoLib
+CryptoLib provides a C-based software-only implementation of the CCSDS Space Data Link Security Protocol (SDLS), and SDLS Extended Procedures (SDLS-EP) to secure communications between a spacecraft flight software and ground station. Originally designed as a Core Flight System (cFS) spacecraft library, CryptoLib has expanded in scope to allow generic support for multiple space and ground implementations.  At its core, CryptoLib can be configured to make use of multiple encryption libraries, including WolfSSL, LibGcrypt, and JPL's Key Management and Cryptography (KMC) encryption interfaces. 
+
+Specific communications protocols that are supported include:
+> * Telecommand (TC)
+> * Telemetry (TM)
+> * Advanced Orbiting Systems (AOS)
+
+CryptoLib includes a standalone module that allows for generic coupling with Ground Systems that lack SDLS support.
+
+## Documentation
+
+* [Environment and Building](Environment_Building.md)
+
+* [Releases](Releases.md)
+
+* [Testing and Validation](Testing_Validation.md)
+
+## Usage
+
+* [Usage](Usage.md)
+
+## References
+### Bluebook References
+
+* [SDLS](https://public.ccsds.org/Pubs/355x0b1.pdf)
+
+* [SDLS-EP](https://public.ccsds.org/Pubs/355x1b1.pdf)
+
+* [CCSDS Cryptographic Algorithms](https://public.ccsds.org/Pubs/352x0b2.pdf)
+
+### Greenbook References
+
+* [The Application of Security to CCSDS Protocols](https://public.ccsds.org/Pubs/350x0g3.pdf)
+
+```
+
+### `index.rst`
+
+**경로:** `components/cryptolib/docs/wiki/index.rst`
+
+
+```rst
+.. CryptoLib documentation master file, created by
+   sphinx-quickstart on Wed Jan  8 16:20:58 2025.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+CryptoLib documentation
+=======================
+
+.. toctree::
+   :maxdepth: 4
+   :caption: Contents:
+
+   Home.md
+   Environment_Building.md
+   Usage.md
+   Testing_Validation.md
+   Releases.md
+
+
+```
+
+### `make.bat`
+
+**경로:** `components/cryptolib/docs/wiki/make.bat`
+
+
+```text
+@ECHO OFF
+
+pushd %~dp0
+
+REM Command file for Sphinx documentation
+
+if "%SPHINXBUILD%" == "" (
+	set SPHINXBUILD=sphinx-build
+)
+set SOURCEDIR=.
+set BUILDDIR=_build
+
+%SPHINXBUILD% >NUL 2>NUL
+if errorlevel 9009 (
+	echo.
+	echo.The 'sphinx-build' command was not found. Make sure you have Sphinx
+	echo.installed, then set the SPHINXBUILD environment variable to point
+	echo.to the full path of the 'sphinx-build' executable. Alternatively you
+	echo.may add the Sphinx directory to PATH.
+	echo.
+	echo.If you don't have Sphinx installed, grab it from
+	echo.https://www.sphinx-doc.org/
+	exit /b 1
+)
+
+if "%1" == "" goto help
+
+%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+goto end
+
+:help
+%SPHINXBUILD% -M help %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+
+:end
+popd
+```
+
+### `Makefile`
+
+**경로:** `components/cryptolib/docs/wiki/Makefile`
+
+
+```make
+# Minimal makefile for Sphinx documentation
+#
+
+# You can set these variables from the command line, and also
+# from the environment for the first two.
+SPHINXOPTS    ?=
+SPHINXBUILD   ?= sphinx-build
+SOURCEDIR     = .
+BUILDDIR      = _build
+
+# Put it first so that "make" without argument is like "make help".
+help:
+	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+.PHONY: help Makefile
+
+# Catch-all target: route all unknown targets to Sphinx using the new
+# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
+%: Makefile
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+```
+
+### `Releases.md`
+
+**경로:** `components/cryptolib/docs/wiki/Releases.md`
+
+
+```markdown
+# Releases
+
+* [v1.3.1](https://github.com/nasa/CryptoLib/releases/tag/v1.3.1)
+
+* [v1.3.0](https://github.com/nasa/CryptoLib/releases/tag/v1.3.0)
+
+* [v1.2.3](https://github.com/nasa/CryptoLib/releases/tag/v1.2.3)
+
+* [v1.2.2](https://github.com/nasa/CryptoLib/releases/tag/v1.2.2)
+
+* [v1.2.1](https://github.com/nasa/CryptoLib/releases/tag/v1.2.1)
+
+* [v1.2.0](https://github.com/nasa/CryptoLib/releases/tag/v1.2.0)
+
+* [v1.1.1](https://github.com/nasa/CryptoLib/releases/tag/v1.1.1)
+
+* [v1.0.3](https://github.com/nasa/CryptoLib/releases/tag/v1.0.3)
+
+* [v1.0.2](https://github.com/nasa/CryptoLib/releases/tag/v1.0.2)
+
+* [v1.0.1](https://github.com/nasa/CryptoLib/releases/tag/v1.0.1)
+
+* [v1.0.0](https://github.com/nasa/CryptoLib/releases/tag/v1.0.0)
+
+* [v0.1.0](https://github.com/nasa/CryptoLib/releases/tag/v0.1-engineering-release)
+
+
+
+
+```
+
+### `requirements.txt`
+
+**경로:** `components/cryptolib/docs/wiki/requirements.txt`
+
+
+```text
+myst-parser
+sphinx>=8.0
+sphinx_rtd_theme
+```
+
+### `Testing_Validation.md`
+
+**경로:** `components/cryptolib/docs/wiki/Testing_Validation.md`
+
+
+```markdown
+# Testing and Validation
+
+## Version History
+
+| Version # | Author | Revision Date | Peer Reviewer | Revision Reason |
+| --------- | ------ | ------------- | ------------- | --------------- |
+| Test Plan and Procedures 11/19/2021 | R. Brown, D. Cutright, S. Zemerick | 11/19/2021 | Justin Morris, John Lucas | Initial |
+| 1.0   | R. Brown, D. Cutright, S. Zemerick | 12/02/2021 | Justin Morris, John Lucas | Scheduled Release |
+| 1.0.2 | R. Brown, D. Cutright, S. Zemerick | 01/31/2022 | Justin Morris, John Lucas | Scheduled Release |
+| 1.1.0 | R. Brown, D. Cutright, S. Zemerick | 03/11/2022 | Justin Morris, John Lucas | Scheduled Release |
+| 1.1.1 | R. Brown, J. Lucas, S.Zemerick | 09/20/2022 | Justin Morris | Wiki Updates |
+| 1.3.0 | R. Brown, D. Cutright | 12/13/2023 | J. Lucas | Scheduled Release | 
+| 1.3.1 | R.Brown | 01/10/2024 | J. Lucas | Scheduled Documentation Refresh | 
+***
+
+
+## Reference Documentation
+
+| # | Document | Title | Description |
+| - | -------- | ----- | ----------- |
+| 1 | CryptoLib_FY22_Task_Plan_draft01.docx | CryptoLib Task Plan, Draft 01, 10/29/2021 | Task Plan developed by both ITC and JPL MGSS |
+| 2 | 2021-11-05 CryptoLib Engineering Release Draft Docs Final.pdf | CryptoLib: 1st Engineering Release and API Draft Documentation 11/05/2021 | Engineering Release, API Documentation, and Task Plan Management Document |
+
+
+***
+
+## Introduction
+
+This Test Plan and Procedures document describes the CryptoLib V&V testing that will be performed by the NASA IV&V Independent Test Capability (ITC) Team.  The ITC Team is collaborating with the JPL AMMOS team to provide a telecommand (TC) CCSDS SDLS encryption C library.  This plan describes in detail the testing scope, testing methods, frameworks, and how the results will be managed and maintained.  This plan is meant to serve as a “living” document and will be updated as the Test Plan changes and matures.
+
+This wiki document maintains and tracks the methods necessary to adequately test CryptoLib.  The sections herein will be used to define an approach that will be used to fully test CryptoLib's functionality in different scenarios.  These scenarios include but are not limited to, unit testing, validation testing, and system testing.  
+
+***
+
+## CryptoLib Introduction
+
+The CryptoLib library is a C library with public API functions that are meant to be called from a library user. For example, for TC encryption, the user provides an unencrypted transfer frame (TF) to the Crypto_TC_ApplySecurity() function and the function returns an encrypted TF for uplinking to the spacecraft.  
+
+***
+
+## Testing Strategy
+
+The Testing Strategy for each category is described below. Each category will utilize a combination of test strategies that can include: 1) Compatibility Testing, 2) Unit Testing, 3) Validation Testing, 4) System Testing, 5) Regression Testing, and 6) Static Code Analysis using [Klocwork](https://www.perforce.com/products/klocwork). 
+
+***
+
+## API Functionality
+
+The API functionality will primarily be tested through Unit Tests.  Unit Tests are designed to test the inputs, outputs, and functionality of the API functions.  Also, Unit Tests will be executed automatically on the github.com server and serve as first-check regression testing for new functionality.  The Table below lists the API functions that are currently being Unit Tested.  Please note that this is a current snapshot and Unit Tests are added often. 
+
+Each of the unit tests are named in such a manner that what is being tested is mostly distinguishable by their naming convention.  Tests can easily be listed by calling the specific unit testing application with the –lists-tests flag.  These tests will be listed in set.name fashion.  As can be seen above the current tests are being utilized to test nominal paths, and the functionality of TC_ApplySecurity when functions like CryptoInit are not called, or bad information is passed.  They are also being utilized to test that encryption is being applied properly, and that libgcrypt is being utilized in a correct manner.  
+
+***
+
+## Compatibility Testing
+
+The codebase must be capable of building within the Ubuntu, and RedHat Operating Systems.
+
+The testing of CryptoLib within the Ubuntu operating system has all been automated through the use of GitHub’s Continuous Integration and Continuous Deployment (CI/CD) capabilities.  When code is pushed to main branches, or pull requests are created, several containers are created that test various builds with differing flags used to enable different features within the software – some of which include debug builds, MySQL capabilities, and the ability to swap between LibGCrypt and KMC capabilities.  Each of these automated containers verify the different types of builds and combination of builds, and in addition to this, verify that unit tests and validation tests properly execute and pass.  Code coverage is also automatically performed to guarantee that all functionality has been properly tested within the codebase.
+Redhat based tests will need to be run manually by a developer.  A KMC-centric container is in development which will allow for automated RHEL testing, however this is currently a manual process.
+
+Pass or fail criteria is based on the ability of the codebase to be built within the respective operating systems (cmake / make), as well as the ability to run unit and validation tests (make test).  The inability to do so will result in a failure of these scenarios.
+
+Testing begins upon the trigger of new code to a main branch of the CryptoLib repository, or upon a new pull request.  Additionally, a new tag or release of the codebase will trigger Test Entry automatically for Ubuntu through the GitHub automated CI/CD, and manual efforts for the CentOS environment.
+
+Testing is not performed in an automated fashion within feature or bug branches within the project repository.  This testing is done manually by developers prior to merging branches, or creating pull requests.  Automated testing resumes during and after a branch’s merge.
+
+***
+
+### Current Tests
+
+All Unit Testing, Performance Testing, and Validation testing files are stored in the following location:
+
+/util/src_util/  ut_*, pt_*, et_dt_*
+
+The results of tests are stored within the pipeline and noted on the front page of the repository when new functionality is added to the main or dev branches.
+
+***
+
+## Encryption / Decryption / Validation Functionality
+Standard AES-256 test vectors are being generated with predefined shared keys and known inputs to ensure that the functions Crypto_TC_ApplySecurity() and Crypto_TC_ProcessSecurity() correctly utilize the libgcrypt library.  Known and existing plaintext/ciphertext test vectors will be utilized as inputs and outputs, and a comparison will be performed to verify that the Crypto_TC_ApplySecurity() function is encrypting as expectedn and that Crypto_TC_ProcessSecurity is decryping as expected.  Please note that these tests are not designed to test the libgcrypt library, but instead, test ITC’s usage and configuration of the library.  
+
+The NIST test cases are found at [https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/CAVP-TESTING-BLOCK-CIPHER-MODES](https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/CAVP-TESTING-BLOCK-CIPHER-MODES).  The general idea will be to make use of these vectors within a testing framework that utilizes the Crypto_TC_ApplySecurity and Crypto_TC_ProcessSecurity functions.  The vector plain text will have an appended header and FECF trailer.  The test frame vector will then be digested by these functions and the payload output compared to the cipher text.  
+
+***
+
+### Validation Tests
+
+Validation testing has been automated within the project’s GitHub repository for the Ubuntu Operating System (OS).  Manual efforts are performed to verify testing within the RHEL environments.  Tests are run when code is committed to the main branches of the repository, or upon merge/pull request to these branches.
+
+The tests should be verified as having been performed successfully within the Ubuntu, RHEL OSes.  Manual tests need to be performed within RHEL when the code undergoes a release or tag.
+
+Tests pass if all subtests within a test set complete successfully with expected return values.  The entire test scenario is considered a failure, should any subtest within any test set has failed to successfully complete.
+
+Tests are performed automatically when merges or commits are made to the main branches of the repository.  These automated tests are only for the Ubuntu OS.  Other operating system tests are performed manually when there is a tag or release of the codebase.
+
+All automated test results are maintained within the project repository.  These are stored within the actions tab.  Snapshots of the repository are archived when a release or tag is generated for the repository.
+
+Validation testing is not automatically performed within feature or bug branches of the repository.  In order for this to be accomplished, changes to the workflow must be made within the branch to include it within the CI/CD Actions.  Otherwise, these tests must be manually performed.  All developers should perform due-diligence with running tests and verifying that they successfully pass before creating a pull-request, committing to a main repository, or when merging features or bug fixes.
+
+The validation tests make use of NIST vectors with known outputs to verify that TC_APPLYSECURITY and TC_PROCESSSECURITY generate the output that is expected via known output tests through the NIST standard, and referenced from the following page and document: [https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/CAVP-TESTING-BLOCK-CIPHER-MODES](https://csrc.nist.gov/projects/cryptographic-algorithm-validation-program/CAVP-TESTING-BLOCK-CIPHER-MODES). 
+
+***
+
+## System Testing
+
+| Item to Test | Test Description | 
+| ------------ | ---------------- | 
+| Ground to Spacecraft Communication | Ground -> CryptoLib -> TCP/UDP -> CryptoLib -> Spacecraft |
+| Spacecraft to Ground Communication | Spacecraft -> CryptoLib -> TCP/UDP -> CryptoLib -> Ground |
+
+This testing approach would utilize two instances of CryptoLib.  One side would make use of the library coupled with a ground station, and the second instance would make use of CryptoLib integrated within a spacecraft.  The overall test would verify the communication successfully from one instance to the other (and the reverse) through the CryptoLib software.  This testing would lay the groundwork for implementing the ability to swap out different SDLS implementations on spacecrafts and ground stations.
+
+The test would be performed on the Ubuntu OS within two instances.  One instance being configured for ground station usage, and the second configured for the spacecraft and integrated with representative flight software.
+
+System testing is considered to have passed, if all subtests within test sets complete successfully and return expected values from one instance to the next.  Any type of failure within any subtest or test set is considered a test failure. 
+
+This testing will need to be manually performed upon each release or tag of the repository once the system testing has been fully implemented.
+
+Test for a specific release will be stored within a test results directory that will be archived within that tag or release within the GitHub repository.  
+
+***
+
+## CCSDS SDLS Standard
+
+CryptoLib, and its functions all assume valid frames are passed into the system.  It is up to the user or calling program calling the API to verify and validate these frames as they are passed into the library.
+
+```
+
+### `Usage.md`
+
+**경로:** `components/cryptolib/docs/wiki/Usage.md`
+
+
+```markdown
+# Usage
+
+## Extended Procedures
+
+Extended Procedures is currently a work in progress, and is not considered mature enough for use in operations.
+
+To enable EP, utilize the -DCRYPTO_EPROC flag.
+
+## Apply/Process Functions
+
+### Crypto_TC_ApplySecurity
+
+int32 Crypto_TC_ApplySecurity(const uint8* p_in_frame, const uint16 in_frame_length, uint8 **pp_in_frame, uint16 *p_enc_frame_len)
+
+Performs various types of encryption on the passed input frame.  This could be, Encryption only, Authentication only, and Authenticated Encryption.
+
+**Function inputs:**
+  > **_p_in_frame_**: Frame to be encrypted.  Must match an expected format, and properly activated security association.  Proper formatting includes valid transfer frame version number.  Valid Spacecraft Id, Virtual Channel ID, Map ID, Command Control Flag, and an operational Security Association.
+
+  > **_in_frame_length_**:  The int16 length of p_in_frame.
+
+  > **_pp_in_frame_**: pointer to pointer of a uint8 buffer where data will be stored once fully encrypted.
+
+  > **_p_enc_frame_len_**: pointer to uint16 that will store the length of the pointed to pp_in_frame.
+
+**Function Return: Error / Success codes of functions:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+
+
+***
+
+
+### Crypto_TC_ProcessSecurity
+
+int32 Crypto_TC_ProcessSecurity(char* ingest, int* len_ingest, TC_t* tc_sdls_processed_frame)
+
+Loads the ingest frame into the global tc_frame while performing various types of decryption.  This could be decryption only, authentication only, or authenticated decryption.
+
+**Function Inputs:**
+  > **_ingest_**:  Pointer to a character array that holds the encrypted ingest frame.
+
+  > **_len_ingest_**:  Pointer to the integer that holds the length of the ingest frame.
+
+  > **_tc_sdls_processed_frame_**:  Pointer to the TC_t structure that holds the header, sec_header, pdu, pdu_len, and sec_trailer.  Many of these structure types themselves that are used to break apart and give various specific information about the processed frame.
+
+**Function Return Values:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+
+***
+
+### Crypto_TM_ApplySecurity
+
+int32_t Crypto_TM_ApplySecurity(SecurityAssociation_t uint8_t* pTfBuffer)
+
+Accepts a pointer to a plain-text telemetry frame, and performs the in-place encryption or authentication while populating SDLS fields as required.  The specifics of encryption or authentication are determined by bits set within the frame header, which are then used to correlate the appropriate security association.
+
+**Function Inputs**
+  > **_pTfBuffer_**: Pointer to the transfer frame buffer which will be used for in-place encryption or authentication. 
+
+**Function Return Values:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+*** 
+
+### Crypto_TM_ProcessSecurity
+
+int32_t Crypto_TM_ProcessSecurity(uint8_t* p_ingest, uint16_t len_ingest, uint8_t** pp_processed_frame, uint16_t* p_decrypted_length)
+
+Performs various types of decryption on the passed input frame.  This could be, Decryption only, Authentication only, and Authenticated Decryption.
+
+**Function inputs:**
+  > **_p_ingest_**: Frame to be decrypted.  Must match an expected format, and have a properly activated security association.  Proper formatting includes valid transfer frame version number, Spacecraft Id, Virtual Channel ID, and a Security Parameter Index (SPI) that is mapped to an operational Security Association.
+
+  > **_len_ingest_**:  The int16 length of p_ingest.
+
+  > **_pp_processed_frame_**: pointer to pointer of a uint8 buffer where data will be stored once fully decrypted.
+
+  > **_p_decrypted_length_**: pointer to uint16 that will store the length of the pointed to pp_processed_frame.
+
+**Function Return: Error / Success codes of functions:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+***
+
+### Crypto_AOS_ApplySecurity
+
+int32_t Crypto_AOS_ApplySecurity(SecurityAssociation_t uint8_t* pTfBuffer)
+
+Accepts a pointer to a plain-text telemetry frame, and performs the in-place encryption or authentication while populating SDLS fields as required.  The specifics of encryption or authentication are determined by bits set within the frame header, which are then used to correlate the appropriate security association.
+
+**Function Inputs**
+  > **_pTfBuffer_**: Pointer to the transfer frame buffer which will be used for in-place encryption or authentication. 
+
+**Function Return Values:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+*** 
+
+### Crypto_AOS_ProcessSecurity
+
+int32_t Crypto_AOS_ProcessSecurity(uint8_t* p_ingest, uint16_t len_ingest, uint8_t** pp_processed_frame, uint16_t* p_decrypted_length)
+
+Performs various types of decryption on the passed input frame.  This could be, Decryption only, Authentication only, and Authenticated Decryption.
+
+**Function inputs:**
+  > **_p_ingest_**: Frame to be decrypted.  Must match an expected format, and have a properly activated security association.  Proper formatting includes valid transfer frame version number, Spacecraft Id, Virtual Channel ID, and a Security Parameter Index (SPI) that is mapped to an operational Security Association.
+
+  > **_len_ingest_**:  The int16 length of p_ingest.
+
+  > **_pp_processed_frame_**: pointer to pointer of a uint8 buffer where data will be stored once fully decrypted.
+
+  > **_p_decrypted_length_**: pointer to uint16 that will store the length of the pointed to pp_processed_frame.
+
+**Function Return: Error / Success codes of functions:**
+  > All Error Codes and Status Codes can be found within the `include/crypto_error.h` header file.
+
+```

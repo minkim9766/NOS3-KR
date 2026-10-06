@@ -3,148 +3,5867 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Basic.fpp`
 
-file--Basic.fpp
-file--BasicGuard.fpp
-file--BasicGuardString.fpp
-file--BasicGuardStringTester.cpp
-file--BasicGuardStringTester.hpp
-file--BasicGuardTestAbsType.fpp
-file--BasicGuardTestAbsTypeTester.cpp
-file--BasicGuardTestAbsTypeTester.hpp
-file--BasicGuardTestArray.fpp
-file--BasicGuardTestArrayTester.cpp
-file--BasicGuardTestArrayTester.hpp
-file--BasicGuardTestEnum.fpp
-file--BasicGuardTestEnumTester.cpp
-file--BasicGuardTestEnumTester.hpp
-file--BasicGuardTester.cpp
-file--BasicGuardTester.hpp
-file--BasicGuardTestStruct.fpp
-file--BasicGuardTestStructTester.cpp
-file--BasicGuardTestStructTester.hpp
-file--BasicGuardU32.fpp
-file--BasicGuardU32Tester.cpp
-file--BasicGuardU32Tester.hpp
-file--BasicInternal.fpp
-file--BasicInternalTester.cpp
-file--BasicInternalTester.hpp
-file--BasicSelf.fpp
-file--BasicSelfTester.cpp
-file--BasicSelfTester.hpp
-file--BasicString.fpp
-file--BasicStringTester.cpp
-file--BasicStringTester.hpp
-file--BasicTestAbsType.fpp
-file--BasicTestAbsTypeTester.cpp
-file--BasicTestAbsTypeTester.hpp
-file--BasicTestArray.fpp
-file--BasicTestArrayTester.cpp
-file--BasicTestArrayTester.hpp
-file--BasicTestEnum.fpp
-file--BasicTestEnumTester.cpp
-file--BasicTestEnumTester.hpp
-file--BasicTester.cpp
-file--BasicTester.hpp
-file--BasicTestStruct.fpp
-file--BasicTestStructTester.cpp
-file--BasicTestStructTester.hpp
-file--BasicU32.fpp
-file--BasicU32Tester.cpp
-file--BasicU32Tester.hpp
-file--CMakeLists.txt
-file--Internal.fpp
-file--InternalTester.cpp
-file--InternalTester.hpp
-file--main.cpp
-file--Polymorphism.fpp
-file--PolymorphismTester.cpp
-file--PolymorphismTester.hpp
-file--StateToChild.fpp
-file--StateToChildTester.cpp
-file--StateToChildTester.hpp
-file--StateToChoice.fpp
-file--StateToChoiceTester.cpp
-file--StateToChoiceTester.hpp
-file--StateToSelf.fpp
-file--StateToSelfTester.cpp
-file--StateToSelfTester.hpp
-file--StateToState.fpp
-file--StateToStateTester.cpp
-file--StateToStateTester.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Basic.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    queued component Basic {
+
+      sync input port schedIn: Svc.Sched
+
+      include "../../internal/state/include/Basic.fppi"
+
+      state machine instance basic1: Basic
+
+      state machine instance basic2: Basic
+
+      state machine instance smStateBasic1: SmState.Basic priority 1 assert
+
+      state machine instance smStateBasic2: SmState.Basic priority 2 drop
+
+    }
+
+  }
+
+}
 ```
 
-## 항목
+### `BasicGuard.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Basic.fpp`](file--Basic.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuard.fpp`](file--BasicGuard.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardString.fpp`](file--BasicGuardString.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardStringTester.cpp`](file--BasicGuardStringTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardStringTester.hpp`](file--BasicGuardStringTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsType.fpp`](file--BasicGuardTestAbsType.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.cpp`](file--BasicGuardTestAbsTypeTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.hpp`](file--BasicGuardTestAbsTypeTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArray.fpp`](file--BasicGuardTestArray.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.cpp`](file--BasicGuardTestArrayTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.hpp`](file--BasicGuardTestArrayTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnum.fpp`](file--BasicGuardTestEnum.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.cpp`](file--BasicGuardTestEnumTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.hpp`](file--BasicGuardTestEnumTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTester.cpp`](file--BasicGuardTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTester.hpp`](file--BasicGuardTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStruct.fpp`](file--BasicGuardTestStruct.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.cpp`](file--BasicGuardTestStructTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.hpp`](file--BasicGuardTestStructTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32.fpp`](file--BasicGuardU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.cpp`](file--BasicGuardU32Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.hpp`](file--BasicGuardU32Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternal.fpp`](file--BasicInternal.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternalTester.cpp`](file--BasicInternalTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternalTester.hpp`](file--BasicInternalTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelf.fpp`](file--BasicSelf.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelfTester.cpp`](file--BasicSelfTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelfTester.hpp`](file--BasicSelfTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicString.fpp`](file--BasicString.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicStringTester.cpp`](file--BasicStringTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicStringTester.hpp`](file--BasicStringTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsType.fpp`](file--BasicTestAbsType.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.cpp`](file--BasicTestAbsTypeTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.hpp`](file--BasicTestAbsTypeTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArray.fpp`](file--BasicTestArray.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArrayTester.cpp`](file--BasicTestArrayTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArrayTester.hpp`](file--BasicTestArrayTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnum.fpp`](file--BasicTestEnum.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnumTester.cpp`](file--BasicTestEnumTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnumTester.hpp`](file--BasicTestEnumTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTester.cpp`](file--BasicTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTester.hpp`](file--BasicTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStruct.fpp`](file--BasicTestStruct.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStructTester.cpp`](file--BasicTestStructTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStructTester.hpp`](file--BasicTestStructTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32.fpp`](file--BasicU32.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32Tester.cpp`](file--BasicU32Tester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32Tester.hpp`](file--BasicU32Tester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Internal.fpp`](file--Internal.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/InternalTester.cpp`](file--InternalTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/InternalTester.hpp`](file--InternalTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/main.cpp`](file--main.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Polymorphism.fpp`](file--Polymorphism.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/PolymorphismTester.cpp`](file--PolymorphismTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/PolymorphismTester.hpp`](file--PolymorphismTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChild.fpp`](file--StateToChild.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChildTester.cpp`](file--StateToChildTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChildTester.hpp`](file--StateToChildTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoice.fpp`](file--StateToChoice.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoiceTester.cpp`](file--StateToChoiceTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoiceTester.hpp`](file--StateToChoiceTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelf.fpp`](file--StateToSelf.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelfTester.cpp`](file--StateToSelfTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelfTester.hpp`](file--StateToSelfTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToState.fpp`](file--StateToState.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToStateTester.cpp`](file--StateToStateTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToStateTester.hpp`](file--StateToStateTester.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuard.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuard {
+
+      state machine instance smStateBasicGuard: SmState.BasicGuard priority 2 block
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardString.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardString.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardString {
+
+      state machine instance smStateBasicGuardString: SmState.BasicGuardString priority 3 drop
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardStringTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardStringTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardStringTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardStringTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/FppConstantsAc.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardStringTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardStringTester ::BasicGuardStringTester(const char* const compName)
+    : BasicGuardStringComponentBase(compName),
+      m_smStateBasicGuardString_action_a_history(),
+      m_smStateBasicGuardString_guard_g() {}
+
+BasicGuardStringTester ::~BasicGuardStringTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardStringTester ::FppTest_SmState_BasicGuardString_action_a(SmId smId,
+                                                                        FppTest_SmState_BasicGuardString::Signal signal,
+                                                                        const Fw::StringBase& value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardString);
+    this->m_smStateBasicGuardString_action_a_history.push(signal, Fw::String(value));
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardStringTester ::FppTest_SmState_BasicGuardString_guard_g(SmId smId,
+                                                                       FppTest_SmState_BasicGuardString::Signal signal,
+                                                                       const Fw::StringBase& value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardString, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardString_guard_g.call(signal, Fw::String(value));
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardStringTester::testFalse() {
+    this->m_smStateBasicGuardString_action_a_history.clear();
+    this->m_smStateBasicGuardString_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardString_getState(), SmState_BasicGuardString::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value, SmState::basicGuardStringSize);
+    this->smStateBasicGuardString_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardString_getState(), SmState_BasicGuardString::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardString::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getSize(), 0);
+}
+
+void BasicGuardStringTester::testTrue() {
+    this->m_smStateBasicGuardString_action_a_history.clear();
+    this->m_smStateBasicGuardString_guard_g.reset();
+    this->m_smStateBasicGuardString_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardString_getState(), SmState_BasicGuardString::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value, SmState::basicGuardStringSize);
+    this->smStateBasicGuardString_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardString_getState(), SmState_BasicGuardString::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardString::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardString_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardString::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardString_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardStringTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardStringTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardStringTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardStringTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardString_HPP
+#define FppTest_SmInstanceState_BasicGuardString_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardStringComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardStringTester : public BasicGuardStringComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardString
+    using SmState_BasicGuardString = FppTest_SmState_BasicGuardString;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardStringTester object
+    BasicGuardStringTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardStringTester object
+    ~BasicGuardStringTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardString
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardString_action_a(SmId smId,  //!< The state machine id
+                                                   FppTest_SmState_BasicGuardString::Signal signal,  //!< The signal
+                                                   const Fw::StringBase& value                       //!< The value
+                                                   ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardString
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardString_guard_g(SmId smId,  //!< The state machine id
+                                                  FppTest_SmState_BasicGuardString::Signal signal,  //!< The signal
+                                                  const Fw::StringBase& value                       //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuardString
+    SmHarness::SignalValueHistory<SmState_BasicGuardString::Signal, Fw::String, historySize>
+        m_smStateBasicGuardString_action_a_history;
+
+    //! The guard g of smStateBasicGuardString
+    SmHarness::Guard<SmState_BasicGuardString::Signal, Fw::String, historySize> m_smStateBasicGuardString_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestAbsType.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsType.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardTestAbsType {
+
+      state machine instance smStateBasicGuardTestAbsType: SmState.BasicGuardTestAbsType priority 4 hook
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardTestAbsTypeTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestAbsTypeTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardTestAbsTypeTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardTestAbsTypeTester::BasicGuardTestAbsTypeTester(const char* const compName)
+    : BasicGuardTestAbsTypeComponentBase(compName),
+      m_value(),
+      m_smStateBasicGuardTestAbsType_action_a_history(),
+      m_smStateBasicGuardTestAbsType_guard_g() {}
+
+BasicGuardTestAbsTypeTester::~BasicGuardTestAbsTypeTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardTestAbsTypeTester::FppTest_SmState_BasicGuardTestAbsType_action_a(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestAbsType::Signal signal,
+    const SmHarness::TestAbsType& value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardTestAbsType);
+    this->m_smStateBasicGuardTestAbsType_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardTestAbsTypeTester::FppTest_SmState_BasicGuardTestAbsType_guard_g(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestAbsType::Signal signal,
+    const SmHarness::TestAbsType& value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardTestAbsType, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardTestAbsType_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Overflow hook implementations for internal state machines
+// ----------------------------------------------------------------------
+
+void BasicGuardTestAbsTypeTester::smStateBasicGuardTestAbsType_stateMachineOverflowHook(
+    SmId smId,
+    FwEnumStoreType signal,
+    Fw::SerializeBufferBase& buffer) {
+    this->m_hookCalled = true;
+    ASSERT_EQ(smId, SmId::smStateBasicGuardTestAbsType);
+    ASSERT_EQ(static_cast<SmState_BasicGuardTestAbsType::Signal>(signal), SmState_BasicGuardTestAbsType::Signal::s);
+    SmHarness::TestAbsType value;
+    const auto status = buffer.deserialize(value);
+    ASSERT_EQ(status, Fw::FW_SERIALIZE_OK);
+    ASSERT_EQ(buffer.getBuffLeft(), 0);
+    ASSERT_EQ(value, this->m_value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardTestAbsTypeTester::testFalse() {
+    this->m_smStateBasicGuardTestAbsType_action_a_history.clear();
+    this->m_smStateBasicGuardTestAbsType_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestAbsType_getState(), SmState_BasicGuardTestAbsType::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSize(), 0);
+    this->m_value = SmHarness::Pick::testAbsType();
+    this->smStateBasicGuardTestAbsType_sendSignal_s(this->m_value);
+    ASSERT_FALSE(this->m_hookCalled);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestAbsType_getState(), SmState_BasicGuardTestAbsType::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestAbsType::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getValues().getItemAt(0), this->m_value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestAbsTypeTester::testTrue() {
+    this->m_smStateBasicGuardTestAbsType_action_a_history.clear();
+    this->m_smStateBasicGuardTestAbsType_guard_g.reset();
+    this->m_smStateBasicGuardTestAbsType_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestAbsType_getState(), SmState_BasicGuardTestAbsType::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSize(), 0);
+    this->m_value = SmHarness::Pick::testAbsType();
+    this->smStateBasicGuardTestAbsType_sendSignal_s(this->m_value);
+    ASSERT_FALSE(this->m_hookCalled);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestAbsType_getState(), SmState_BasicGuardTestAbsType::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestAbsType::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_guard_g.getCallHistory().getValues().getItemAt(0), this->m_value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardTestAbsType::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestAbsType_action_a_history.getValues().getItemAt(0), this->m_value);
+}
+
+void BasicGuardTestAbsTypeTester::testOverflow() {
+    this->init(queueDepth, instanceId);
+    this->m_value = SmHarness::Pick::testAbsType();
+    for (FwSizeType i = 0; i < queueDepth; i++) {
+        this->smStateBasicGuardTestAbsType_sendSignal_s(this->m_value);
+        ASSERT_FALSE(this->m_hookCalled);
+    }
+    this->smStateBasicGuardTestAbsType_sendSignal_s(this->m_value);
+    ASSERT_TRUE(this->m_hookCalled);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardTestAbsTypeTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestAbsTypeTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardTestAbsTypeTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardTestAbsType_HPP
+#define FppTest_SmInstanceState_BasicGuardTestAbsType_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardTestAbsTypeTester : public BasicGuardTestAbsTypeComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardTestAbsType
+    using SmState_BasicGuardTestAbsType = FppTest_SmState_BasicGuardTestAbsType;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardTestAbsTypeTester object
+    BasicGuardTestAbsTypeTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardTestAbsTypeTester object
+    ~BasicGuardTestAbsTypeTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardTestAbsType
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardTestAbsType_action_a(
+        SmId smId,                                             //!< The state machine id
+        FppTest_SmState_BasicGuardTestAbsType::Signal signal,  //!< The signal
+        const SmHarness::TestAbsType& value                    //!< The value
+        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardTestAbsType
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardTestAbsType_guard_g(
+        SmId smId,                                             //!< The state machine id
+        FppTest_SmState_BasicGuardTestAbsType::Signal signal,  //!< The signal
+        const SmHarness::TestAbsType& value                    //!< The value
+    ) const override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Overflow hook implementations for internal state machines
+    // ----------------------------------------------------------------------
+
+    //! Overflow hook implementation for smStateBasicGuardTestAbsType
+    void smStateBasicGuardTestAbsType_stateMachineOverflowHook(SmId smId,               //!< The state machine ID
+                                                               FwEnumStoreType signal,  //!< The signal
+                                                               Fw::SerializeBufferBase& buffer  //!< The message buffer
+                                                               ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+    //! Test with queue overflow
+    void testOverflow();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The test value
+    SmHarness::TestAbsType m_value;
+
+    //! Whether the overflow hook was called
+    bool m_hookCalled = false;
+
+    //! The history associated with action a of smStateBasicGuardTestAbsType
+    SmHarness::SignalValueHistory<SmState_BasicGuardTestAbsType::Signal, SmHarness::TestAbsType, historySize>
+        m_smStateBasicGuardTestAbsType_action_a_history;
+
+    //! The guard g of smStateBasicGuardTestAbsType
+    SmHarness::Guard<SmState_BasicGuardTestAbsType::Signal, SmHarness::TestAbsType, historySize>
+        m_smStateBasicGuardTestAbsType_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestArray.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArray.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardTestArray {
+
+      state machine instance smStateBasicGuardTestArray: SmState.BasicGuardTestArray
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardTestArrayTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestArrayTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardTestArrayTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardTestArrayTester::BasicGuardTestArrayTester(const char* const compName)
+    : BasicGuardTestArrayComponentBase(compName),
+      m_smStateBasicGuardTestArray_action_a_history(),
+      m_smStateBasicGuardTestArray_guard_g() {}
+
+BasicGuardTestArrayTester::~BasicGuardTestArrayTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardTestArrayTester::FppTest_SmState_BasicGuardTestArray_action_a(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestArray::Signal signal,
+    const SmHarness::TestArray& value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardTestArray);
+    this->m_smStateBasicGuardTestArray_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardTestArrayTester::FppTest_SmState_BasicGuardTestArray_guard_g(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestArray::Signal signal,
+    const SmHarness::TestArray& value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardTestArray, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardTestArray_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardTestArrayTester::testFalse() {
+    this->m_smStateBasicGuardTestArray_action_a_history.clear();
+    this->m_smStateBasicGuardTestArray_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestArray_getState(), SmState_BasicGuardTestArray::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testArray();
+    this->smStateBasicGuardTestArray_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestArray_getState(), SmState_BasicGuardTestArray::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestArray::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestArrayTester::testTrue() {
+    this->m_smStateBasicGuardTestArray_action_a_history.clear();
+    this->m_smStateBasicGuardTestArray_guard_g.reset();
+    this->m_smStateBasicGuardTestArray_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestArray_getState(), SmState_BasicGuardTestArray::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testArray();
+    this->smStateBasicGuardTestArray_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestArray_getState(), SmState_BasicGuardTestArray::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestArray::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardTestArray::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestArray_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardTestArrayTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestArrayTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardTestArrayTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardTestArray_HPP
+#define FppTest_SmInstanceState_BasicGuardTestArray_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestArrayComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardTestArrayTester : public BasicGuardTestArrayComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardTestArray
+    using SmState_BasicGuardTestArray = FppTest_SmState_BasicGuardTestArray;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardTestArrayTester object
+    BasicGuardTestArrayTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardTestArrayTester object
+    ~BasicGuardTestArrayTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardTestArray
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardTestArray_action_a(
+        SmId smId,                                           //!< The state machine id
+        FppTest_SmState_BasicGuardTestArray::Signal signal,  //!< The signal
+        const SmHarness::TestArray& value                    //!< The value
+        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardTestArray
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardTestArray_guard_g(
+        SmId smId,                                           //!< The state machine id
+        FppTest_SmState_BasicGuardTestArray::Signal signal,  //!< The signal
+        const SmHarness::TestArray& value                    //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuardTestArray
+    SmHarness::SignalValueHistory<SmState_BasicGuardTestArray::Signal, SmHarness::TestArray, historySize>
+        m_smStateBasicGuardTestArray_action_a_history;
+
+    //! The guard g of smStateBasicGuardTestArray
+    SmHarness::Guard<SmState_BasicGuardTestArray::Signal, SmHarness::TestArray, historySize>
+        m_smStateBasicGuardTestArray_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestEnum.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnum.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardTestEnum {
+
+      state machine instance smStateBasicGuardTestEnum: SmState.BasicGuardTestEnum
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardTestEnumTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestEnumTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardTestEnumTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardTestEnumTester::BasicGuardTestEnumTester(const char* const compName)
+    : BasicGuardTestEnumComponentBase(compName),
+      m_smStateBasicGuardTestEnum_action_a_history(),
+      m_smStateBasicGuardTestEnum_guard_g() {}
+
+BasicGuardTestEnumTester::~BasicGuardTestEnumTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardTestEnumTester::FppTest_SmState_BasicGuardTestEnum_action_a(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestEnum::Signal signal,
+    const SmHarness::TestEnum& value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardTestEnum);
+    this->m_smStateBasicGuardTestEnum_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardTestEnumTester::FppTest_SmState_BasicGuardTestEnum_guard_g(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestEnum::Signal signal,
+    const SmHarness::TestEnum& value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardTestEnum, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardTestEnum_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardTestEnumTester::testFalse() {
+    this->m_smStateBasicGuardTestEnum_action_a_history.clear();
+    this->m_smStateBasicGuardTestEnum_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestEnum_getState(), SmState_BasicGuardTestEnum::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testEnum();
+    this->smStateBasicGuardTestEnum_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestEnum_getState(), SmState_BasicGuardTestEnum::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestEnum::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestEnumTester::testTrue() {
+    this->m_smStateBasicGuardTestEnum_action_a_history.clear();
+    this->m_smStateBasicGuardTestEnum_guard_g.reset();
+    this->m_smStateBasicGuardTestEnum_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestEnum_getState(), SmState_BasicGuardTestEnum::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testEnum();
+    this->smStateBasicGuardTestEnum_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestEnum_getState(), SmState_BasicGuardTestEnum::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestEnum::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardTestEnum::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestEnum_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardTestEnumTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestEnumTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardTestEnumTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardTestEnum_HPP
+#define FppTest_SmInstanceState_BasicGuardTestEnum_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestEnumComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardTestEnumTester : public BasicGuardTestEnumComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardTestEnum
+    using SmState_BasicGuardTestEnum = FppTest_SmState_BasicGuardTestEnum;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardTestEnumTester object
+    BasicGuardTestEnumTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardTestEnumTester object
+    ~BasicGuardTestEnumTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardTestEnum
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardTestEnum_action_a(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_BasicGuardTestEnum::Signal signal,  //!< The signal
+                                                     const SmHarness::TestEnum& value                    //!< The value
+                                                     ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardTestEnum
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardTestEnum_guard_g(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_BasicGuardTestEnum::Signal signal,  //!< The signal
+                                                    const SmHarness::TestEnum& value                    //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuardTestEnum
+    SmHarness::SignalValueHistory<SmState_BasicGuardTestEnum::Signal, SmHarness::TestEnum, historySize>
+        m_smStateBasicGuardTestEnum_action_a_history;
+
+    //! The guard g of smStateBasicGuardTestEnum
+    SmHarness::Guard<SmState_BasicGuardTestEnum::Signal, SmHarness::TestEnum, historySize>
+        m_smStateBasicGuardTestEnum_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardTester ::BasicGuardTester(const char* const compName)
+    : BasicGuardComponentBase(compName), m_smStateBasicGuard_action_a_history(), m_smStateBasicGuard_guard_g() {}
+
+BasicGuardTester ::~BasicGuardTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardTester ::FppTest_SmState_BasicGuard_action_a(SmId smId, FppTest_SmState_BasicGuard::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuard);
+    this->m_smStateBasicGuard_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardTester ::FppTest_SmState_BasicGuard_guard_g(SmId smId, FppTest_SmState_BasicGuard::Signal signal) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuard, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuard_guard_g.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardTester::testFalse() {
+    this->m_smStateBasicGuard_action_a_history.clear();
+    this->m_smStateBasicGuard_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuard_getState(), SmState_BasicGuard::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuard_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuard_guard_g.getCallHistory().getSize(), 0);
+    this->smStateBasicGuard_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuard_getState(), SmState_BasicGuard::State::S);
+    this->checkActionsAndGuards(0, 1);
+}
+
+void BasicGuardTester::testTrue() {
+    this->m_smStateBasicGuard_action_a_history.clear();
+    this->m_smStateBasicGuard_guard_g.reset();
+    this->m_smStateBasicGuard_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuard_getState(), SmState_BasicGuard::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuard_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuard_guard_g.getCallHistory().getSize(), 0);
+    this->smStateBasicGuard_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuard_getState(), SmState_BasicGuard::State::T);
+    this->checkActionsAndGuards(6, 1);
+}
+
+// ----------------------------------------------------------------------
+// Helper functions
+// ----------------------------------------------------------------------
+
+void BasicGuardTester::checkActionsAndGuards(FwIndexType expectedActionSize, FwIndexType expectedGuardSize) {
+    ASSERT_EQ(this->m_smStateBasicGuard_action_a_history.getSize(), expectedActionSize);
+    for (FwIndexType i = 0; i < expectedActionSize; i++) {
+        ASSERT_EQ(this->m_smStateBasicGuard_action_a_history.getItemAt(i), SmState_BasicGuard::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicGuard_guard_g.getCallHistory().getSize(), expectedGuardSize);
+    for (FwIndexType i = 0; i < expectedGuardSize; i++) {
+        ASSERT_EQ(this->m_smStateBasicGuard_guard_g.getCallHistory().getItemAt(i), SmState_BasicGuard::Signal::s);
+    }
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuard_HPP
+#define FppTest_SmInstanceState_BasicGuard_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardTester : public BasicGuardComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuard
+    using SmState_BasicGuard = FppTest_SmState_BasicGuard;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuard object
+    BasicGuardTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuard object
+    ~BasicGuardTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuard
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuard_action_a(SmId smId,                                 //!< The state machine id
+                                             FppTest_SmState_BasicGuard::Signal signal  //!< The signal
+                                             ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuard
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuard_guard_g(SmId smId,                                 //!< The state machine id
+                                            FppTest_SmState_BasicGuard::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Helper function for checking actions and guards
+    void checkActionsAndGuards(FwIndexType expectedActionSize,  //!< The expected action size
+                               FwIndexType expectedGuardSize    //!< The expected guard size
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuard
+    SmHarness::History<SmState_BasicGuard::Signal, historySize> m_smStateBasicGuard_action_a_history;
+
+    //! The guard g of smStateBasicGuard
+    SmHarness::NoArgGuard<SmState_BasicGuard::Signal, historySize> m_smStateBasicGuard_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardTestStruct.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStruct.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardTestStruct {
+
+      state machine instance smStateBasicGuardTestStruct: SmState.BasicGuardTestStruct
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardTestStructTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestStructTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardTestStructTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardTestStructTester::BasicGuardTestStructTester(const char* const compName)
+    : BasicGuardTestStructComponentBase(compName),
+      m_smStateBasicGuardTestStruct_action_a_history(),
+      m_smStateBasicGuardTestStruct_guard_g() {}
+
+BasicGuardTestStructTester::~BasicGuardTestStructTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardTestStructTester::FppTest_SmState_BasicGuardTestStruct_action_a(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestStruct::Signal signal,
+    const SmHarness::TestStruct& value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardTestStruct);
+    this->m_smStateBasicGuardTestStruct_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardTestStructTester::FppTest_SmState_BasicGuardTestStruct_guard_g(
+    SmId smId,
+    FppTest_SmState_BasicGuardTestStruct::Signal signal,
+    const SmHarness::TestStruct& value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardTestStruct, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardTestStruct_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardTestStructTester::testFalse() {
+    this->m_smStateBasicGuardTestStruct_action_a_history.clear();
+    this->m_smStateBasicGuardTestStruct_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestStruct_getState(), SmState_BasicGuardTestStruct::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testStruct();
+    this->smStateBasicGuardTestStruct_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestStruct_getState(), SmState_BasicGuardTestStruct::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestStruct::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getSize(), 0);
+}
+
+void BasicGuardTestStructTester::testTrue() {
+    this->m_smStateBasicGuardTestStruct_action_a_history.clear();
+    this->m_smStateBasicGuardTestStruct_guard_g.reset();
+    this->m_smStateBasicGuardTestStruct_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardTestStruct_getState(), SmState_BasicGuardTestStruct::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSize(), 0);
+    const auto value = SmHarness::Pick::testStruct();
+    this->smStateBasicGuardTestStruct_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardTestStruct_getState(), SmState_BasicGuardTestStruct::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardTestStruct::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardTestStruct::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardTestStruct_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardTestStructTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardTestStructTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardTestStructTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardTestStruct_HPP
+#define FppTest_SmInstanceState_BasicGuardTestStruct_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestStructComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardTestStructTester : public BasicGuardTestStructComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardTestStruct
+    using SmState_BasicGuardTestStruct = FppTest_SmState_BasicGuardTestStruct;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardTestStructTester object
+    BasicGuardTestStructTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardTestStructTester object
+    ~BasicGuardTestStructTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardTestStruct
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardTestStruct_action_a(
+        SmId smId,                                            //!< The state machine id
+        FppTest_SmState_BasicGuardTestStruct::Signal signal,  //!< The signal
+        const SmHarness::TestStruct& value                    //!< The value
+        ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardTestStruct
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardTestStruct_guard_g(
+        SmId smId,                                            //!< The state machine id
+        FppTest_SmState_BasicGuardTestStruct::Signal signal,  //!< The signal
+        const SmHarness::TestStruct& value                    //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuardTestStruct
+    SmHarness::SignalValueHistory<SmState_BasicGuardTestStruct::Signal, SmHarness::TestStruct, historySize>
+        m_smStateBasicGuardTestStruct_action_a_history;
+
+    //! The guard g of smStateBasicGuardTestStruct
+    SmHarness::Guard<SmState_BasicGuardTestStruct::Signal, SmHarness::TestStruct, historySize>
+        m_smStateBasicGuardTestStruct_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicGuardU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicGuardU32 {
+
+      state machine instance smStateBasicGuardU32: SmState.BasicGuardU32
+
+    }
+
+  }
+
+}
+```
+
+### `BasicGuardU32Tester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardU32Tester.cpp
+// \author bocchino
+// \brief  cpp file for BasicGuardU32Tester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicGuardU32Tester::BasicGuardU32Tester(const char* const compName)
+    : BasicGuardU32ComponentBase(compName),
+      m_smStateBasicGuardU32_action_a_history(),
+      m_smStateBasicGuardU32_guard_g() {}
+
+BasicGuardU32Tester::~BasicGuardU32Tester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicGuardU32Tester::FppTest_SmState_BasicGuardU32_action_a(SmId smId,
+                                                                 FppTest_SmState_BasicGuardU32::Signal signal,
+                                                                 U32 value) {
+    ASSERT_EQ(smId, SmId::smStateBasicGuardU32);
+    this->m_smStateBasicGuardU32_action_a_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool BasicGuardU32Tester::FppTest_SmState_BasicGuardU32_guard_g(SmId smId,
+                                                                FppTest_SmState_BasicGuardU32::Signal signal,
+                                                                U32 value) const {
+    FW_ASSERT(smId == SmId::smStateBasicGuardU32, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateBasicGuardU32_guard_g.call(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicGuardU32Tester::testFalse() {
+    this->m_smStateBasicGuardU32_action_a_history.clear();
+    this->m_smStateBasicGuardU32_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardU32_getState(), SmState_BasicGuardU32::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smStateBasicGuardU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardU32_getState(), SmState_BasicGuardU32::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardU32::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getSize(), 0);
+}
+
+void BasicGuardU32Tester::testTrue() {
+    this->m_smStateBasicGuardU32_action_a_history.clear();
+    this->m_smStateBasicGuardU32_guard_g.reset();
+    this->m_smStateBasicGuardU32_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicGuardU32_getState(), SmState_BasicGuardU32::State::S);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smStateBasicGuardU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicGuardU32_getState(), SmState_BasicGuardU32::State::T);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getSignals().getItemAt(0),
+              SmState_BasicGuardU32::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_guard_g.getCallHistory().getValues().getItemAt(0), value);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getSignals().getItemAt(0),
+              SmState_BasicGuardU32::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicGuardU32_action_a_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicGuardU32Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicGuardU32Tester.hpp
+// \author bocchino
+// \brief  hpp file for BasicGuardU32Tester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicGuardU32_HPP
+#define FppTest_SmInstanceState_BasicGuardU32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardU32ComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicGuardU32Tester : public BasicGuardU32ComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicGuardU32
+    using SmState_BasicGuardU32 = FppTest_SmState_BasicGuardU32;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicGuardU32Tester object
+    BasicGuardU32Tester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicGuardU32Tester object
+    ~BasicGuardU32Tester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicGuardU32
+    //!
+    //! Action a
+    void FppTest_SmState_BasicGuardU32_action_a(SmId smId,                                     //!< The state machine id
+                                                FppTest_SmState_BasicGuardU32::Signal signal,  //!< The signal
+                                                U32 value                                      //!< The value
+                                                ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_BasicGuardU32
+    //!
+    //! Guard g
+    bool FppTest_SmState_BasicGuardU32_guard_g(SmId smId,                                     //!< The state machine id
+                                               FppTest_SmState_BasicGuardU32::Signal signal,  //!< The signal
+                                               U32 value                                      //!< The value
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test with true guard
+    void testTrue();
+
+    //! Test with false guard
+    void testFalse();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicGuardU32
+    SmHarness::SignalValueHistory<SmState_BasicGuardU32::Signal, U32, historySize>
+        m_smStateBasicGuardU32_action_a_history;
+
+    //! The guard g of smStateBasicGuardU32
+    SmHarness::Guard<SmState_BasicGuardU32::Signal, U32, historySize> m_smStateBasicGuardU32_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicInternal.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternal.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicInternal {
+
+      state machine instance smStateBasicInternal: SmState.BasicInternal
+
+    }
+
+  }
+
+}
+```
+
+### `BasicInternalTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternalTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicInternalTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicInternalTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicInternalTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicInternalTester::BasicInternalTester(const char* const compName)
+    : BasicInternalComponentBase(compName), m_smStateBasicInternal_action_a_history() {}
+
+BasicInternalTester::~BasicInternalTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicInternalTester::FppTest_SmState_BasicInternal_action_a(SmId smId,
+                                                                 FppTest_SmState_BasicInternal::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateBasicInternal);
+    this->m_smStateBasicInternal_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicInternalTester::test() {
+    this->m_smStateBasicInternal_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicInternal_getState(), SmState_BasicInternal::State::S);
+    ASSERT_EQ(this->m_smStateBasicInternal_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicInternal_action_a_history.getItemAt(0),
+              SmState_BasicInternal::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    this->m_smStateBasicInternal_action_a_history.clear();
+    this->smStateBasicInternal_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicInternal_getState(), SmState_BasicInternal::State::S);
+    ASSERT_EQ(this->m_smStateBasicInternal_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicInternal_action_a_history.getItemAt(0), SmState_BasicInternal::Signal::s);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicInternalTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicInternalTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicInternalTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicInternalTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicInternal_HPP
+#define FppTest_SmInstanceState_BasicInternal_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicInternalComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicInternalTester : public BasicInternalComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicInternal
+    using SmState_BasicInternal = FppTest_SmState_BasicInternal;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicInternalTester object
+    BasicInternalTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicInternalTester object
+    ~BasicInternalTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicInternal
+    //!
+    //! Action a
+    void FppTest_SmState_BasicInternal_action_a(SmId smId,                                    //!< The state machine id
+                                                FppTest_SmState_BasicInternal::Signal signal  //!< The signal
+                                                ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicInternal
+    SmHarness::History<SmState_BasicInternal::Signal, historySize> m_smStateBasicInternal_action_a_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicSelf.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelf.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicSelf {
+
+      state machine instance smStateBasicSelf: SmState.BasicSelf
+
+    }
+
+  }
+
+}
+```
+
+### `BasicSelfTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelfTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicSelfTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicSelfTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicSelfTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicSelfTester::BasicSelfTester(const char* const compName)
+    : BasicSelfComponentBase(compName), m_smStateBasicSelf_action_a_history() {}
+
+BasicSelfTester::~BasicSelfTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicSelfTester::FppTest_SmState_BasicSelf_action_a(SmId smId, FppTest_SmState_BasicSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateBasicSelf);
+    this->m_smStateBasicSelf_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicSelfTester::test() {
+    this->m_smStateBasicSelf_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicSelf_getState(), SmState_BasicSelf::State::S);
+    ASSERT_EQ(this->m_smStateBasicSelf_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicSelf_action_a_history.getItemAt(0),
+              SmState_BasicSelf::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    this->m_smStateBasicSelf_action_a_history.clear();
+    this->smStateBasicSelf_sendSignal_s();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicSelf_getState(), SmState_BasicSelf::State::S);
+    const FwIndexType expectedSize = 6;
+    ASSERT_EQ(this->m_smStateBasicSelf_action_a_history.getSize(), expectedSize);
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(this->m_smStateBasicSelf_action_a_history.getItemAt(i), SmState_BasicSelf::Signal::s);
+    }
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicSelfTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicSelfTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicSelfTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicSelfTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicSelf_HPP
+#define FppTest_SmInstanceState_BasicSelf_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicSelfComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicSelfTester : public BasicSelfComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicSelf
+    using SmState_BasicSelf = FppTest_SmState_BasicSelf;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicSelfTester object
+    BasicSelfTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicSelfTester object
+    ~BasicSelfTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicSelf
+    //!
+    //! Action a
+    void FppTest_SmState_BasicSelf_action_a(SmId smId,                                //!< The state machine id
+                                            FppTest_SmState_BasicSelf::Signal signal  //!< The signal
+                                            ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicSelf
+    SmHarness::History<SmState_BasicSelf::Signal, historySize> m_smStateBasicSelf_action_a_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicString.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicString.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicString {
+
+      state machine instance smStateBasicString: SmState.BasicString
+
+    }
+
+  }
+
+}
+```
+
+### `BasicStringTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicStringTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicStringTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicStringTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal/state/FppConstantsAc.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicStringTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicStringTester ::BasicStringTester(const char* const compName)
+    : BasicStringComponentBase(compName),
+      m_smStateBasicString_action_a_history(),
+      m_smStateBasicString_action_b_history() {}
+
+BasicStringTester ::~BasicStringTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicStringTester ::FppTest_SmState_BasicString_action_a(SmId smId, FppTest_SmState_BasicString::Signal signal) {
+    this->m_smStateBasicString_action_a_history.push(signal);
+}
+
+void BasicStringTester ::FppTest_SmState_BasicString_action_b(SmId smId,
+                                                              FppTest_SmState_BasicString::Signal signal,
+                                                              const Fw::StringBase& value) {
+    this->m_smStateBasicString_action_b_history.push(signal, Fw::String(value));
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicStringTester::test() {
+    this->m_smStateBasicString_action_a_history.clear();
+    this->m_smStateBasicString_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicString_getState(), SmState_BasicString::State::S);
+    ASSERT_EQ(this->m_smStateBasicString_action_a_history.getSize(), 0);
+    Fw::String value;
+    SmHarness::Pick::string(value, SmState::basicStringSize);
+    this->smStateBasicString_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicString_getState(), SmState_BasicString::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicString_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicString_action_a_history.getItemAt(i), SmState_BasicString::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicString_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicString_action_b_history.getSignals().getItemAt(0), SmState_BasicString::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicString_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicStringTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicStringTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicStringTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicStringTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicString_HPP
+#define FppTest_SmInstanceState_BasicString_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicStringComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicStringTester : public BasicStringComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicStringTester object
+    BasicStringTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicStringTester object
+    ~BasicStringTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicString
+    using SmState_BasicString = FppTest_SmState_BasicString;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicString
+    //!
+    //! Action a
+    void FppTest_SmState_BasicString_action_a(SmId smId,                                  //!< The state machine id
+                                              FppTest_SmState_BasicString::Signal signal  //!< The signal
+                                              ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicString
+    //!
+    //! Action b
+    void FppTest_SmState_BasicString_action_b(SmId smId,                                   //!< The state machine id
+                                              FppTest_SmState_BasicString::Signal signal,  //!< The signal
+                                              const Fw::StringBase& value                  //!< The value
+                                              ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicString
+    SmHarness::History<SmState_BasicString::Signal, historySize> m_smStateBasicString_action_a_history;
+
+    //! The history associated with action b of smStateBasicString
+    SmHarness::SignalValueHistory<SmState_BasicString::Signal, Fw::String, historySize>
+        m_smStateBasicString_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicTestAbsType.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsType.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicTestAbsType {
+
+      state machine instance smStateBasicTestAbsType: SmState.BasicTestAbsType
+
+    }
+
+  }
+
+}
+```
+
+### `BasicTestAbsTypeTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestAbsTypeTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTestAbsTypeTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTestAbsTypeTester ::BasicTestAbsTypeTester(const char* const compName)
+    : BasicTestAbsTypeComponentBase(compName),
+      m_smStateBasicTestAbsType_action_a_history(),
+      m_smStateBasicTestAbsType_action_b_history() {}
+
+BasicTestAbsTypeTester ::~BasicTestAbsTypeTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTestAbsTypeTester ::FppTest_SmState_BasicTestAbsType_action_a(
+    SmId smId,
+    FppTest_SmState_BasicTestAbsType::Signal signal) {
+    this->m_smStateBasicTestAbsType_action_a_history.push(signal);
+}
+
+void BasicTestAbsTypeTester ::FppTest_SmState_BasicTestAbsType_action_b(SmId smId,
+                                                                        FppTest_SmState_BasicTestAbsType::Signal signal,
+                                                                        const SmHarness::TestAbsType& value) {
+    this->m_smStateBasicTestAbsType_action_b_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTestAbsTypeTester::test() {
+    this->m_smStateBasicTestAbsType_action_a_history.clear();
+    this->m_smStateBasicTestAbsType_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicTestAbsType_getState(), SmState_BasicTestAbsType::State::S);
+    ASSERT_EQ(this->m_smStateBasicTestAbsType_action_a_history.getSize(), 0);
+    const SmHarness::TestAbsType value = SmHarness::Pick::testAbsType();
+    this->smStateBasicTestAbsType_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicTestAbsType_getState(), SmState_BasicTestAbsType::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicTestAbsType_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicTestAbsType_action_a_history.getItemAt(i), SmState_BasicTestAbsType::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicTestAbsType_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicTestAbsType_action_b_history.getSignals().getItemAt(0),
+              SmState_BasicTestAbsType::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicTestAbsType_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicTestAbsTypeTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestAbsTypeTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTestAbsTypeTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicTestAbsType_HPP
+#define FppTest_SmInstanceState_BasicTestAbsType_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestAbsTypeComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicTestAbsTypeTester : public BasicTestAbsTypeComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTestAbsTypeTester object
+    BasicTestAbsTypeTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTestAbsTypeTester object
+    ~BasicTestAbsTypeTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicTestAbsType
+    using SmState_BasicTestAbsType = FppTest_SmState_BasicTestAbsType;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicTestAbsType
+    //!
+    //! Action a
+    void FppTest_SmState_BasicTestAbsType_action_a(SmId smId,  //!< The state machine id
+                                                   FppTest_SmState_BasicTestAbsType::Signal signal  //!< The signal
+                                                   ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicTestAbsType
+    //!
+    //! Action b
+    void FppTest_SmState_BasicTestAbsType_action_b(SmId smId,  //!< The state machine id
+                                                   FppTest_SmState_BasicTestAbsType::Signal signal,  //!< The signal
+                                                   const SmHarness::TestAbsType& value               //!< The value
+                                                   ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicTestAbsType
+    SmHarness::History<SmState_BasicTestAbsType::Signal, historySize> m_smStateBasicTestAbsType_action_a_history;
+
+    //! The history associated with action b of smStateBasicTestAbsType
+    SmHarness::SignalValueHistory<SmState_BasicTestAbsType::Signal, SmHarness::TestAbsType, historySize>
+        m_smStateBasicTestAbsType_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicTestArray.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArray.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicTestArray {
+
+      state machine instance smStateBasicTestArray: SmState.BasicTestArray
+
+    }
+
+  }
+
+}
+```
+
+### `BasicTestArrayTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArrayTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestArrayTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTestArrayTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicTestArrayTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTestArrayTester::BasicTestArrayTester(const char* const compName)
+    : BasicTestArrayComponentBase(compName),
+      m_smStateBasicTestArray_action_a_history(),
+      m_smStateBasicTestArray_action_b_history() {}
+
+BasicTestArrayTester::~BasicTestArrayTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTestArrayTester::FppTest_SmState_BasicTestArray_action_a(SmId smId,
+                                                                   FppTest_SmState_BasicTestArray::Signal signal) {
+    this->m_smStateBasicTestArray_action_a_history.push(signal);
+}
+
+void BasicTestArrayTester::FppTest_SmState_BasicTestArray_action_b(SmId smId,
+                                                                   FppTest_SmState_BasicTestArray::Signal signal,
+                                                                   const SmHarness::TestArray& value) {
+    this->m_smStateBasicTestArray_action_b_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTestArrayTester::test() {
+    this->m_smStateBasicTestArray_action_a_history.clear();
+    this->m_smStateBasicTestArray_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicTestArray_getState(), SmState_BasicTestArray::State::S);
+    ASSERT_EQ(this->m_smStateBasicTestArray_action_a_history.getSize(), 0);
+    const SmHarness::TestArray value = SmHarness::Pick::testArray();
+    this->smStateBasicTestArray_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicTestArray_getState(), SmState_BasicTestArray::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicTestArray_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicTestArray_action_a_history.getItemAt(i), SmState_BasicTestArray::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicTestArray_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicTestArray_action_b_history.getSignals().getItemAt(0),
+              SmState_BasicTestArray::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicTestArray_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicTestArrayTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestArrayTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestArrayTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTestArrayTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicTestArray_HPP
+#define FppTest_SmInstanceState_BasicTestArray_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestArrayComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicTestArrayTester : public BasicTestArrayComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTestArrayTester object
+    BasicTestArrayTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTestArrayTester object
+    ~BasicTestArrayTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicTestArray
+    using SmState_BasicTestArray = FppTest_SmState_BasicTestArray;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicTestArray
+    //!
+    //! Action a
+    void FppTest_SmState_BasicTestArray_action_a(SmId smId,  //!< The state machine id
+                                                 FppTest_SmState_BasicTestArray::Signal signal  //!< The signal
+                                                 ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicTestArray
+    //!
+    //! Action b
+    void FppTest_SmState_BasicTestArray_action_b(SmId smId,  //!< The state machine id
+                                                 FppTest_SmState_BasicTestArray::Signal signal,  //!< The signal
+                                                 const SmHarness::TestArray& value               //!< The value
+                                                 ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicTestArray
+    SmHarness::History<SmState_BasicTestArray::Signal, historySize> m_smStateBasicTestArray_action_a_history;
+
+    //! The history associated with action b of smStateBasicTestArray
+    SmHarness::SignalValueHistory<SmState_BasicTestArray::Signal, SmHarness::TestArray, historySize>
+        m_smStateBasicTestArray_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicTestEnum.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnum.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicTestEnum {
+
+      state machine instance smStateBasicTestEnum: SmState.BasicTestEnum
+
+    }
+
+  }
+
+}
+```
+
+### `BasicTestEnumTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnumTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestEnumTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTestEnumTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicTestEnumTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTestEnumTester::BasicTestEnumTester(const char* const compName)
+    : BasicTestEnumComponentBase(compName),
+      m_smStateBasicTestEnum_action_a_history(),
+      m_smStateBasicTestEnum_action_b_history() {}
+
+BasicTestEnumTester::~BasicTestEnumTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTestEnumTester::FppTest_SmState_BasicTestEnum_action_a(SmId smId,
+                                                                 FppTest_SmState_BasicTestEnum::Signal signal) {
+    this->m_smStateBasicTestEnum_action_a_history.push(signal);
+}
+
+void BasicTestEnumTester::FppTest_SmState_BasicTestEnum_action_b(SmId smId,
+                                                                 FppTest_SmState_BasicTestEnum::Signal signal,
+                                                                 const SmHarness::TestEnum& value) {
+    this->m_smStateBasicTestEnum_action_b_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTestEnumTester::test() {
+    this->m_smStateBasicTestEnum_action_a_history.clear();
+    this->m_smStateBasicTestEnum_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicTestEnum_getState(), SmState_BasicTestEnum::State::S);
+    ASSERT_EQ(this->m_smStateBasicTestEnum_action_a_history.getSize(), 0);
+    const SmHarness::TestEnum value = SmHarness::Pick::testEnum();
+    this->smStateBasicTestEnum_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicTestEnum_getState(), SmState_BasicTestEnum::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicTestEnum_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicTestEnum_action_a_history.getItemAt(i), SmState_BasicTestEnum::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicTestEnum_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicTestEnum_action_b_history.getSignals().getItemAt(0),
+              SmState_BasicTestEnum::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicTestEnum_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicTestEnumTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestEnumTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestEnumTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTestEnumTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicTestEnum_HPP
+#define FppTest_SmInstanceState_BasicTestEnum_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestEnumComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicTestEnumTester : public BasicTestEnumComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTestEnumTester object
+    BasicTestEnumTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTestEnumTester object
+    ~BasicTestEnumTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicTestEnum
+    using SmState_BasicTestEnum = FppTest_SmState_BasicTestEnum;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicTestEnum
+    //!
+    //! Action a
+    void FppTest_SmState_BasicTestEnum_action_a(SmId smId,                                    //!< The state machine id
+                                                FppTest_SmState_BasicTestEnum::Signal signal  //!< The signal
+                                                ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicTestEnum
+    //!
+    //! Action b
+    void FppTest_SmState_BasicTestEnum_action_b(SmId smId,                                     //!< The state machine id
+                                                FppTest_SmState_BasicTestEnum::Signal signal,  //!< The signal
+                                                const SmHarness::TestEnum& value               //!< The value
+                                                ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicTestEnum
+    SmHarness::History<SmState_BasicTestEnum::Signal, historySize> m_smStateBasicTestEnum_action_a_history;
+
+    //! The history associated with action b of smStateBasicTestEnum
+    SmHarness::SignalValueHistory<SmState_BasicTestEnum::Signal, SmHarness::TestEnum, historySize>
+        m_smStateBasicTestEnum_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTester ::BasicTester(const char* const compName)
+    : BasicComponentBase(compName), m_basic1_action_a_history(), m_smStateBasic1_action_a_history() {}
+
+BasicTester ::~BasicTester() {}
+
+// ----------------------------------------------------------------------
+// Handler implementations for typed input ports
+// ----------------------------------------------------------------------
+
+void BasicTester::schedIn_handler(FwIndexType portNum, U32 context) {
+    // Nothing to do
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTester ::FppTest_SmInstanceState_Basic_Basic_action_a(SmId smId,
+                                                                FppTest_SmInstanceState_Basic_Basic::Signal signal) {
+    ASSERT_TRUE((smId == SmId::basic1) || (smId == SmId::basic2));
+    if (smId == SmId::basic1) {
+        this->m_basic1_action_a_history.push(signal);
+    } else {
+        this->m_basic2_action_a_history.push(signal);
+    }
+}
+
+void BasicTester ::FppTest_SmState_Basic_action_a(SmId smId, FppTest_SmState_Basic::Signal signal) {
+    ASSERT_TRUE((smId == SmId::smStateBasic1) || (smId == SmId::smStateBasic2));
+    if (smId == SmId::smStateBasic1) {
+        this->m_smStateBasic1_action_a_history.push(signal);
+    } else {
+        this->m_smStateBasic2_action_a_history.push(signal);
+    }
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTester::test() {
+    this->m_basic1_action_a_history.clear();
+    this->m_smStateBasic1_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->basic1_getState(), Basic_Basic::State::S);
+    ASSERT_EQ(this->smStateBasic1_getState(), SmState_Basic::State::S);
+    ASSERT_EQ(this->m_basic1_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_basic2_action_a_history.getSize(), 0);
+    ASSERT_EQ(this->m_smStateBasic1_action_a_history.getSize(), 0);
+    {
+        // Send signal s to basic1
+        this->basic1_sendSignal_s();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->basic1_getState(), Basic_Basic::State::T);
+        const FwIndexType expectedSize = 6;
+        ASSERT_EQ(this->m_basic1_action_a_history.getSize(), expectedSize);
+        for (FwIndexType i = 0; i < expectedSize; i++) {
+            ASSERT_EQ(this->m_basic1_action_a_history.getItemAt(i), Basic_Basic::Signal::s);
+        }
+    }
+    {
+        // Send signal s to basic2
+        this->basic2_sendSignal_s();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->basic2_getState(), Basic_Basic::State::T);
+        const FwIndexType expectedSize = 6;
+        ASSERT_EQ(this->m_basic2_action_a_history.getSize(), expectedSize);
+        for (FwIndexType i = 0; i < expectedSize; i++) {
+            ASSERT_EQ(this->m_basic2_action_a_history.getItemAt(i), Basic_Basic::Signal::s);
+        }
+    }
+    {
+        // Send signal s to smStateBasic1
+        this->smStateBasic1_sendSignal_s();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStateBasic1_getState(), SmState_Basic::State::T);
+        const FwIndexType expectedSize = 6;
+        ASSERT_EQ(this->m_smStateBasic1_action_a_history.getSize(), expectedSize);
+        for (FwIndexType i = 0; i < expectedSize; i++) {
+            ASSERT_EQ(this->m_smStateBasic1_action_a_history.getItemAt(i), SmState_Basic::Signal::s);
+        }
+    }
+    {
+        // Send signal s to smStateBasic2
+        this->smStateBasic2_sendSignal_s();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStateBasic2_getState(), SmState_Basic::State::T);
+        const FwIndexType expectedSize = 6;
+        ASSERT_EQ(this->m_smStateBasic2_action_a_history.getSize(), expectedSize);
+        for (FwIndexType i = 0; i < expectedSize; i++) {
+            ASSERT_EQ(this->m_smStateBasic2_action_a_history.getItemAt(i), SmState_Basic::Signal::s);
+        }
+    }
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_Basic_HPP
+#define FppTest_SmInstanceState_Basic_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicTester : public BasicComponentBase {
+  private:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmInstanceState_Basic_Basic
+    using Basic_Basic = FppTest_SmInstanceState_Basic_Basic;
+
+    //! The type FppTest_SmState_Basic
+    using SmState_Basic = FppTest_SmState_Basic;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct Basic object
+    BasicTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy Basic object
+    ~BasicTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for schedIn
+    void schedIn_handler(FwIndexType portNum,  //!< The port number
+                         U32 context           //!< The call order
+                         ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmInstanceState_Basic_Basic
+    //!
+    //! Action a
+    void FppTest_SmInstanceState_Basic_Basic_action_a(
+        SmId smId,                                          //!< The state machine id
+        FppTest_SmInstanceState_Basic_Basic::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action a of state machine FppTest_SmState_Basic
+    //!
+    //! Action a
+    void FppTest_SmState_Basic_action_a(SmId smId,                            //!< The state machine id
+                                        FppTest_SmState_Basic::Signal signal  //!< The signal
+                                        ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of basic1
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic1_action_a_history;
+
+    //! The history associated with action a of basic2
+    SmHarness::History<Basic_Basic::Signal, historySize> m_basic2_action_a_history;
+
+    //! The history associated with action a of smStateBasic1
+    SmHarness::History<SmState_Basic::Signal, historySize> m_smStateBasic1_action_a_history;
+
+    //! The history associated with action a of smStateBasic2
+    SmHarness::History<SmState_Basic::Signal, historySize> m_smStateBasic2_action_a_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicTestStruct.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStruct.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicTestStruct {
+
+      state machine instance smStateBasicTestStruct: SmState.BasicTestStruct
+
+    }
+
+  }
+
+}
+```
+
+### `BasicTestStructTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStructTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestStructTester.cpp
+// \author bocchino
+// \brief  cpp file for BasicTestStructTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicTestStructTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicTestStructTester::BasicTestStructTester(const char* const compName)
+    : BasicTestStructComponentBase(compName),
+      m_smStateBasicTestStruct_action_a_history(),
+      m_smStateBasicTestStruct_action_b_history() {}
+
+BasicTestStructTester::~BasicTestStructTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicTestStructTester::FppTest_SmState_BasicTestStruct_action_a(SmId smId,
+                                                                     FppTest_SmState_BasicTestStruct::Signal signal) {
+    this->m_smStateBasicTestStruct_action_a_history.push(signal);
+}
+
+void BasicTestStructTester::FppTest_SmState_BasicTestStruct_action_b(SmId smId,
+                                                                     FppTest_SmState_BasicTestStruct::Signal signal,
+                                                                     const SmHarness::TestStruct& value) {
+    this->m_smStateBasicTestStruct_action_b_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicTestStructTester::test() {
+    this->m_smStateBasicTestStruct_action_a_history.clear();
+    this->m_smStateBasicTestStruct_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicTestStruct_getState(), SmState_BasicTestStruct::State::S);
+    ASSERT_EQ(this->m_smStateBasicTestStruct_action_a_history.getSize(), 0);
+    const SmHarness::TestStruct value = SmHarness::Pick::testStruct();
+    this->smStateBasicTestStruct_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicTestStruct_getState(), SmState_BasicTestStruct::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicTestStruct_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicTestStruct_action_a_history.getItemAt(i), SmState_BasicTestStruct::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicTestStruct_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicTestStruct_action_b_history.getSignals().getItemAt(0),
+              SmState_BasicTestStruct::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicTestStruct_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicTestStructTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicTestStructTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicTestStructTester.hpp
+// \author bocchino
+// \brief  hpp file for BasicTestStructTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicTestStruct_HPP
+#define FppTest_SmInstanceState_BasicTestStruct_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestStructComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicTestStructTester : public BasicTestStructComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicTestStructTester object
+    BasicTestStructTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicTestStructTester object
+    ~BasicTestStructTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicTestStruct
+    using SmState_BasicTestStruct = FppTest_SmState_BasicTestStruct;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicTestStruct
+    //!
+    //! Action a
+    void FppTest_SmState_BasicTestStruct_action_a(SmId smId,  //!< The state machine id
+                                                  FppTest_SmState_BasicTestStruct::Signal signal  //!< The signal
+                                                  ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicTestStruct
+    //!
+    //! Action b
+    void FppTest_SmState_BasicTestStruct_action_b(SmId smId,  //!< The state machine id
+                                                  FppTest_SmState_BasicTestStruct::Signal signal,  //!< The signal
+                                                  const SmHarness::TestStruct& value               //!< The value
+                                                  ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicTestStruct
+    SmHarness::History<SmState_BasicTestStruct::Signal, historySize> m_smStateBasicTestStruct_action_a_history;
+
+    //! The history associated with action b of smStateBasicTestStruct
+    SmHarness::SignalValueHistory<SmState_BasicTestStruct::Signal, SmHarness::TestStruct, historySize>
+        m_smStateBasicTestStruct_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `BasicU32.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component BasicU32 {
+
+      state machine instance smStateBasicU32: SmState.BasicU32
+
+    }
+
+  }
+
+}
+```
+
+### `BasicU32Tester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32Tester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicU32Tester.cpp
+// \author bocchino
+// \brief  cpp file for BasicU32Tester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicU32Tester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+BasicU32Tester::BasicU32Tester(const char* const compName)
+    : BasicU32ComponentBase(compName), m_smStateBasicU32_action_a_history(), m_smStateBasicU32_action_b_history() {}
+
+BasicU32Tester::~BasicU32Tester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void BasicU32Tester::FppTest_SmState_BasicU32_action_a(SmId smId, FppTest_SmState_BasicU32::Signal signal) {
+    this->m_smStateBasicU32_action_a_history.push(signal);
+}
+
+void BasicU32Tester::FppTest_SmState_BasicU32_action_b(SmId smId, FppTest_SmState_BasicU32::Signal signal, U32 value) {
+    this->m_smStateBasicU32_action_b_history.push(signal, value);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void BasicU32Tester::test() {
+    this->m_smStateBasicU32_action_a_history.clear();
+    this->m_smStateBasicU32_action_b_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateBasicU32_getState(), SmState_BasicU32::State::S);
+    ASSERT_EQ(this->m_smStateBasicU32_action_a_history.getSize(), 0);
+    const U32 value = STest::Pick::any();
+    this->smStateBasicU32_sendSignal_s(value);
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateBasicU32_getState(), SmState_BasicU32::State::T);
+    const FwIndexType expectedASize = 5;
+    ASSERT_EQ(this->m_smStateBasicU32_action_a_history.getSize(), expectedASize);
+    for (FwIndexType i = 0; i < expectedASize; i++) {
+        ASSERT_EQ(this->m_smStateBasicU32_action_a_history.getItemAt(i), SmState_BasicU32::Signal::s);
+    }
+    ASSERT_EQ(this->m_smStateBasicU32_action_b_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateBasicU32_action_b_history.getSignals().getItemAt(0), SmState_BasicU32::Signal::s);
+    ASSERT_EQ(this->m_smStateBasicU32_action_b_history.getValues().getItemAt(0), value);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `BasicU32Tester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/BasicU32Tester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BasicU32Tester.hpp
+// \author bocchino
+// \brief  hpp file for BasicU32Tester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_BasicU32_HPP
+#define FppTest_SmInstanceState_BasicU32_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicU32ComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class BasicU32Tester : public BasicU32ComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BasicU32Tester object
+    BasicU32Tester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy BasicU32Tester object
+    ~BasicU32Tester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_BasicU32
+    using SmState_BasicU32 = FppTest_SmState_BasicU32;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_BasicU32
+    //!
+    //! Action a
+    void FppTest_SmState_BasicU32_action_a(SmId smId,                               //!< The state machine id
+                                           FppTest_SmState_BasicU32::Signal signal  //!< The signal
+                                           ) override;
+
+    //! Implementation for action b of state machine FppTest_SmState_BasicU32
+    //!
+    //! Action b
+    void FppTest_SmState_BasicU32_action_b(SmId smId,                                //!< The state machine id
+                                           FppTest_SmState_BasicU32::Signal signal,  //!< The signal
+                                           U32 value                                 //!< The value
+                                           ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Run the test
+    void test();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateBasicU32
+    SmHarness::History<SmState_BasicU32::Signal, historySize> m_smStateBasicU32_action_a_history;
+
+    //! The history associated with action b of smStateBasicU32
+    SmHarness::SignalValueHistory<SmState_BasicU32::Signal, U32, historySize> m_smStateBasicU32_action_b_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/CMakeLists.txt`
+
+
+```cmake
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Basic.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuard.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardString.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestAbsType.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestArray.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestEnum.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestStruct.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardU32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicInternal.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicSelf.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicString.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestAbsType.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestArray.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestEnum.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestStruct.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Internal.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/Polymorphism.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChild.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChoice.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToSelf.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToState.fpp"
+)
+set(MOD_DEPS FppTest/state_machine/internal/harness)
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardStringTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestAbsTypeTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestArrayTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestEnumTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardTestStructTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicGuardU32Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicInternalTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicSelfTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicStringTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestAbsTypeTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestArrayTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestEnumTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicTestStructTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/BasicU32Tester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/InternalTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/PolymorphismTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChildTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToChoiceTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToSelfTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/StateToStateTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `Internal.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Internal.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component Internal {
+
+      state machine instance smStateInternal: SmState.Internal
+
+    }
+
+  }
+
+}
+```
+
+### `InternalTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/InternalTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  InternalTester.cpp
+// \author bocchino
+// \brief  cpp file for InternalTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/InternalTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+InternalTester::InternalTester(const char* const compName)
+    : InternalComponentBase(compName), m_smStateInternal_action_a_history() {}
+
+InternalTester::~InternalTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void InternalTester::FppTest_SmState_Internal_action_a(SmId smId, FppTest_SmState_Internal::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateInternal);
+    this->m_smStateInternal_action_a_history.push(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void InternalTester::testInit() {
+    this->m_smStateInternal_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S2);
+    ASSERT_EQ(this->m_smStateInternal_action_a_history.getSize(), 0);
+}
+
+void InternalTester::testS2_internal() {
+    this->m_smStateInternal_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S2);
+    this->smStateInternal_sendSignal_S1_internal();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S2);
+    ASSERT_EQ(this->m_smStateInternal_action_a_history.getSize(), 1);
+    ASSERT_EQ(this->m_smStateInternal_action_a_history.getItemAt(0), SmState_Internal::Signal::S1_internal);
+}
+
+void InternalTester::testS2_to_S3() {
+    this->m_smStateInternal_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S2);
+    this->smStateInternal_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S3);
+    ASSERT_EQ(this->m_smStateInternal_action_a_history.getSize(), 0);
+}
+
+void InternalTester::testS3_internal() {
+    this->m_smStateInternal_action_a_history.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S2);
+    {
+        this->smStateInternal_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S3);
+    }
+    {
+        this->smStateInternal_sendSignal_S1_internal();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(smStateInternal_getState(), SmState_Internal::State::S1_S3);
+        ASSERT_EQ(this->m_smStateInternal_action_a_history.getSize(), 1);
+        ASSERT_EQ(this->m_smStateInternal_action_a_history.getItemAt(0), SmState_Internal::Signal::S1_internal);
+    }
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `InternalTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/InternalTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  InternalTester.hpp
+// \author bocchino
+// \brief  hpp file for InternalTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_Internal_HPP
+#define FppTest_SmInstanceState_Internal_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/InternalComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class InternalTester : public InternalComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct InternalTester object
+    InternalTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy InternalTester object
+    ~InternalTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_Internal
+    using SmState_Internal = FppTest_SmState_Internal;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action a of state machine FppTest_SmState_Internal
+    //!
+    //! Action a
+    void FppTest_SmState_Internal_action_a(SmId smId,                               //!< The state machine id
+                                           FppTest_SmState_Internal::Signal signal  //!< The signal
+                                           ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test internal transition in S2
+    void testS2_internal();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test internal transition in S3
+    void testS3_internal();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The history associated with action a of smStateInternal
+    SmHarness::History<SmState_Internal::Signal, historySize> m_smStateInternal_action_a_history;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `main.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/main.cpp`
+
+
+```cpp
+// ----------------------------------------------------------------------
+// main.cpp
+// ----------------------------------------------------------------------
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/BasicGuardStringTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestAbsTypeTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestArrayTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestEnumTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTestStructTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicGuardU32Tester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicInternalTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicSelfTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicStringTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestAbsTypeTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestArrayTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestEnumTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTestStructTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/BasicU32Tester.hpp"
+#include "FppTest/state_machine/internal_instance/state/InternalTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/PolymorphismTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToChildTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToChoiceTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToSelfTester.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToStateTester.hpp"
+#include "STest/STest/Random/Random.hpp"
+
+TEST(Basic, Test) {
+    FppTest::SmInstanceState::BasicTester basic("basic");
+    basic.test();
+}
+
+TEST(BasicGuard, False) {
+    FppTest::SmInstanceState::BasicGuardTester basicGuard("basicGuard");
+    basicGuard.testFalse();
+}
+
+TEST(BasicGuard, True) {
+    FppTest::SmInstanceState::BasicGuardTester basicGuard("basicGuard");
+    basicGuard.testTrue();
+}
+
+TEST(BasicGuardString, False) {
+    FppTest::SmInstanceState::BasicGuardStringTester basicGuardString("basicGuardString");
+    basicGuardString.testFalse();
+}
+
+TEST(BasicGuardString, True) {
+    FppTest::SmInstanceState::BasicGuardStringTester basicGuardString("basicGuardString");
+    basicGuardString.testTrue();
+}
+
+TEST(BasicGuardTestAbsType, False) {
+    FppTest::SmInstanceState::BasicGuardTestAbsTypeTester basicGuardTestAbsType("basicGuardTestAbsType");
+    basicGuardTestAbsType.testFalse();
+}
+
+TEST(BasicGuardTestAbsType, Overflow) {
+    FppTest::SmInstanceState::BasicGuardTestAbsTypeTester basicGuardTestAbsType("basicGuardTestAbsType");
+    basicGuardTestAbsType.testOverflow();
+}
+
+TEST(BasicGuardTestAbsType, True) {
+    FppTest::SmInstanceState::BasicGuardTestAbsTypeTester basicGuardTestAbsType("basicGuardTestAbsType");
+    basicGuardTestAbsType.testTrue();
+}
+
+TEST(BasicGuardTestArray, False) {
+    FppTest::SmInstanceState::BasicGuardTestArrayTester basicGuardTestArray("basicGuardTestArray");
+    basicGuardTestArray.testFalse();
+}
+
+TEST(BasicGuardTestArray, True) {
+    FppTest::SmInstanceState::BasicGuardTestArrayTester basicGuardTestArray("basicGuardTestArray");
+    basicGuardTestArray.testTrue();
+}
+
+TEST(BasicGuardTestEnum, False) {
+    FppTest::SmInstanceState::BasicGuardTestEnumTester basicGuardTestEnum("basicGuardTestEnum");
+    basicGuardTestEnum.testFalse();
+}
+
+TEST(BasicGuardTestEnum, True) {
+    FppTest::SmInstanceState::BasicGuardTestEnumTester basicGuardTestEnum("basicGuardTestEnum");
+    basicGuardTestEnum.testTrue();
+}
+
+TEST(BasicGuardTestStruct, False) {
+    FppTest::SmInstanceState::BasicGuardTestStructTester basicGuardTestStruct("basicGuardTestStruct");
+    basicGuardTestStruct.testFalse();
+}
+
+TEST(BasicGuardTestStruct, True) {
+    FppTest::SmInstanceState::BasicGuardTestStructTester basicGuardTestStruct("basicGuardTestStruct");
+    basicGuardTestStruct.testTrue();
+}
+
+TEST(BasicGuardU32, False) {
+    FppTest::SmInstanceState::BasicGuardU32Tester basicGuardU32("basicGuardU32");
+    basicGuardU32.testFalse();
+}
+
+TEST(BasicGuardU32, True) {
+    FppTest::SmInstanceState::BasicGuardU32Tester basicGuardU32("basicGuardU32");
+    basicGuardU32.testTrue();
+}
+
+TEST(BasicInternal, Test) {
+    FppTest::SmInstanceState::BasicInternalTester basicInternal("basicInternal");
+    basicInternal.test();
+}
+
+TEST(BasicSelf, Test) {
+    FppTest::SmInstanceState::BasicSelfTester basicSelf("basicSelf");
+    basicSelf.test();
+}
+
+TEST(BasicString, Test) {
+    FppTest::SmInstanceState::BasicStringTester basicString("basicString");
+    basicString.test();
+}
+
+TEST(BasicTestAbsType, Test) {
+    FppTest::SmInstanceState::BasicTestAbsTypeTester basicTestAbsType("basicTestAbsType");
+    basicTestAbsType.test();
+}
+
+TEST(BasicTestArray, Test) {
+    FppTest::SmInstanceState::BasicTestArrayTester basicTestArray("basicTestArray");
+    basicTestArray.test();
+}
+
+TEST(BasicTestEnum, Test) {
+    FppTest::SmInstanceState::BasicTestEnumTester basicTestEnum("basicTestEnum");
+    basicTestEnum.test();
+}
+
+TEST(BasicTestStruct, Test) {
+    FppTest::SmInstanceState::BasicTestStructTester basicTestStruct("basicTestStruct");
+    basicTestStruct.test();
+}
+
+TEST(BasicU32, Test) {
+    FppTest::SmInstanceState::BasicU32Tester basicU32("basicU32");
+    basicU32.test();
+}
+
+TEST(Internal, Init) {
+    FppTest::SmInstanceState::InternalTester internal("internal");
+    internal.testInit();
+}
+
+TEST(Internal, S2_internal) {
+    FppTest::SmInstanceState::InternalTester internal("internal");
+    internal.testS2_internal();
+}
+
+TEST(Internal, S2_to_S3) {
+    FppTest::SmInstanceState::InternalTester internal("internal");
+    internal.testS2_to_S3();
+}
+
+TEST(Internal, S3_internal) {
+    FppTest::SmInstanceState::InternalTester internal("internal");
+    internal.testS3_internal();
+}
+
+TEST(Polymorphism, Init) {
+    FppTest::SmInstanceState::PolymorphismTester polymorphism("polymorphism");
+    polymorphism.testInit();
+}
+
+TEST(Polymorphism, S2_poly) {
+    FppTest::SmInstanceState::PolymorphismTester polymorphism("polymorphism");
+    polymorphism.testS2_poly();
+}
+
+TEST(Polymorphism, S2_to_S3) {
+    FppTest::SmInstanceState::PolymorphismTester polymorphism("polymorphism");
+    polymorphism.testS2_to_S3();
+}
+
+TEST(Polymorphism, S3_poly) {
+    FppTest::SmInstanceState::PolymorphismTester polymorphism("polymorphism");
+    polymorphism.testS3_poly();
+}
+
+TEST(StateToChild, Init) {
+    FppTest::SmInstanceState::StateToChildTester stateToChild("stateToChild");
+    stateToChild.testInit();
+}
+
+TEST(StateToChild, S2_to_S2) {
+    FppTest::SmInstanceState::StateToChildTester stateToChild("stateToChild");
+    stateToChild.testS2_to_S2();
+}
+
+TEST(StateToChild, S2_to_S3) {
+    FppTest::SmInstanceState::StateToChildTester stateToChild("stateToChild");
+    stateToChild.testS2_to_S3();
+}
+
+TEST(StateToChild, S3_to_S2) {
+    FppTest::SmInstanceState::StateToChildTester stateToChild("stateToChild");
+    stateToChild.testS3_to_S2();
+}
+
+TEST(StateToChoice, Init) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testInit();
+}
+
+TEST(StateToChoice, S2_to_C) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testS2_to_C();
+}
+
+TEST(StateToChoice, S2_to_S4) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testS2_to_S4();
+}
+
+TEST(StateToChoice, S2_to_S3) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testS2_to_S3();
+}
+
+TEST(StateToChoice, S3_to_C) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testS3_to_C();
+}
+
+TEST(StateToChoice, S3_to_S4) {
+    FppTest::SmInstanceState::StateToChoiceTester stateToChoice("stateToChoice");
+    stateToChoice.testS3_to_S4();
+}
+
+TEST(StateToSelf, Init) {
+    FppTest::SmInstanceState::StateToSelfTester stateToSelf("stateToSelf");
+    stateToSelf.testInit();
+}
+
+TEST(StateToSelf, S2_to_S1) {
+    FppTest::SmInstanceState::StateToSelfTester stateToSelf("stateToSelf");
+    stateToSelf.testS2_to_S1();
+}
+
+TEST(StateToSelf, S2_to_S3) {
+    FppTest::SmInstanceState::StateToSelfTester stateToSelf("stateToSelf");
+    stateToSelf.testS2_to_S3();
+}
+
+TEST(StateToSelf, S3_to_S1) {
+    FppTest::SmInstanceState::StateToSelfTester stateToSelf("stateToSelf");
+    stateToSelf.testS3_to_S1();
+}
+
+TEST(StateToState, Init) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testInit();
+}
+
+TEST(StateToState, S2_to_S3) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testS2_to_S3();
+}
+
+TEST(StateToState, S2_to_S4) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testS2_to_S4();
+}
+
+TEST(StateToState, S2_to_S5) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testS2_to_S5();
+}
+
+TEST(StateToState, S3_to_S4) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testS3_to_S4();
+}
+
+TEST(StateToState, S3_to_S5) {
+    FppTest::SmInstanceState::StateToStateTester stateToState("stateToState");
+    stateToState.testS3_to_S5();
+}
+
+// ----------------------------------------------------------------------
+// Main function
+// ----------------------------------------------------------------------
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `Polymorphism.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/Polymorphism.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component Polymorphism {
+
+      state machine instance smStatePolymorphism: SmState.Polymorphism
+
+    }
+
+  }
+
+}
+```
+
+### `PolymorphismTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/PolymorphismTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  PolymorphismTester.cpp
+// \author bocchino
+// \brief  cpp file for PolymorphismTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/PolymorphismTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+PolymorphismTester::PolymorphismTester(const char* const compName) : PolymorphismComponentBase(compName) {}
+
+PolymorphismTester::~PolymorphismTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void PolymorphismTester::testInit() {
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S2);
+}
+
+void PolymorphismTester::testS2_poly() {
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S2);
+    this->smStatePolymorphism_sendSignal_poly();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S4);
+}
+
+void PolymorphismTester::testS2_to_S3() {
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S2);
+    this->smStatePolymorphism_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S3);
+}
+
+void PolymorphismTester::testS3_poly() {
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S2);
+    {
+        this->smStatePolymorphism_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S1_S3);
+    }
+    {
+        this->smStatePolymorphism_sendSignal_poly();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStatePolymorphism_getState(), SmState_Polymorphism::State::S5);
+    }
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `PolymorphismTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/PolymorphismTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  PolymorphismTester.hpp
+// \author bocchino
+// \brief  hpp file for PolymorphismTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_Polymorphism_HPP
+#define FppTest_SmInstanceState_Polymorphism_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/PolymorphismComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class PolymorphismTester : public PolymorphismComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct PolymorphismTester object
+    PolymorphismTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy PolymorphismTester object
+    ~PolymorphismTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_Polymorphism
+    using SmState_Polymorphism = FppTest_SmState_Polymorphism;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test polymorphic transition in S2
+    void testS2_poly();
+
+    //! Test transition from S2 to S3
+    void testS2_to_S3();
+
+    //! Test polymorphic transition in S3
+    void testS3_poly();
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `StateToChild.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChild.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component StateToChild {
+
+      state machine instance smStateStateToChild: SmState.StateToChild
+
+    }
+
+  }
+
+}
+```
+
+### `StateToChildTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChildTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToChildTester.cpp
+// \author bocchino
+// \brief  cpp file for StateToChildTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/StateToChildTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+StateToChildTester::StateToChildTester(const char* const compName)
+    : StateToChildComponentBase(compName), m_smStateStateToChild_actionHistory() {}
+
+StateToChildTester::~StateToChildTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void StateToChildTester::FppTest_SmState_StateToChild_action_exitS2(SmId smId,
+                                                                    FppTest_SmState_StateToChild::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChild);
+    this->m_smStateStateToChild_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToChildTester::FppTest_SmState_StateToChild_action_exitS3(SmId smId,
+                                                                    FppTest_SmState_StateToChild::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChild);
+    this->m_smStateStateToChild_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToChildTester::FppTest_SmState_StateToChild_action_a(SmId smId, FppTest_SmState_StateToChild::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChild);
+    this->m_smStateStateToChild_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToChildTester::FppTest_SmState_StateToChild_action_enterS2(SmId smId,
+                                                                     FppTest_SmState_StateToChild::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChild);
+    this->m_smStateStateToChild_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToChildTester::FppTest_SmState_StateToChild_action_enterS3(SmId smId,
+                                                                     FppTest_SmState_StateToChild::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChild);
+    this->m_smStateStateToChild_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void StateToChildTester::testInit() {
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateStateToChild_getState(), SmState_StateToChild::State::S1_S2);
+    ASSERT_EQ(this->m_smStateStateToChild_actionHistory.getSize(), 1);
+    const auto& signals = this->m_smStateStateToChild_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChild_actionHistory.getValues();
+    ASSERT_EQ(signals.getItemAt(0), SmState_StateToChild::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S2);
+}
+
+void StateToChildTester::testS2_to_S2() {
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->smStateStateToChild_sendSignal_S1_to_S2();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToChild_getState(), SmState_StateToChild::State::S1_S2);
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_smStateStateToChild_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChild_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChild_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChild::Signal::S1_to_S2);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::ENTER_S2);
+}
+
+void StateToChildTester::testS2_to_S3() {
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->smStateStateToChild_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToChild_getState(), SmState_StateToChild::State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToChild_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChild_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChild_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChild::Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToChildTester::testS3_to_S2() {
+    this->m_smStateStateToChild_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToChild_actionHistory.clear();
+        this->smStateStateToChild_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStateStateToChild_getState(), SmState_StateToChild::State::S1_S3);
+    }
+    {
+        this->m_smStateStateToChild_actionHistory.clear();
+        this->smStateStateToChild_sendSignal_S1_to_S2();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+        ASSERT_EQ(this->smStateStateToChild_getState(), SmState_StateToChild::State::S1_S2);
+    }
+    const FwIndexType expectedSize = 3;
+    ASSERT_EQ(this->m_smStateStateToChild_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChild_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChild_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChild::Signal::S1_to_S2);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::ENTER_S2);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `StateToChildTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChildTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToChildTester.hpp
+// \author bocchino
+// \brief  hpp file for StateToChildTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_StateToChild_HPP
+#define FppTest_SmInstanceState_StateToChild_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToChildComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class StateToChildTester : public StateToChildComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct StateToChildTester object
+    StateToChildTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy StateToChildTester object
+    ~StateToChildTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_StateToChild
+    using SmState_StateToChild = FppTest_SmState_StateToChild;
+
+    //! Action IDs
+    enum class ActionId { EXIT_S2, EXIT_S3, A, ENTER_S2, ENTER_S3 };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action exitS2 of state machine FppTest_SmState_StateToChild
+    //!
+    //! Exit S2
+    void FppTest_SmState_StateToChild_action_exitS2(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToChild::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action exitS3 of state machine FppTest_SmState_StateToChild
+    //!
+    //! Exit S3
+    void FppTest_SmState_StateToChild_action_exitS3(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToChild::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action a of state machine FppTest_SmState_StateToChild
+    //!
+    //! Action a
+    void FppTest_SmState_StateToChild_action_a(SmId smId,                                   //!< The state machine id
+                                               FppTest_SmState_StateToChild::Signal signal  //!< The signal
+                                               ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmState_StateToChild
+    //!
+    //! Enter S2
+    void FppTest_SmState_StateToChild_action_enterS2(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToChild::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action enterS3 of state machine FppTest_SmState_StateToChild
+    //!
+    //! Enter S3
+    void FppTest_SmState_StateToChild_action_enterS3(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToChild::Signal signal  //!< The signal
+                                                     ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition from S2 to S2
+    void testS2_to_S2();
+
+    //! Test transition from S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition from S3 to S2
+    void testS3_to_S2();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The action history for smStateStateToChild
+    SmHarness::SignalValueHistory<SmState_StateToChild::Signal, ActionId, historySize>
+        m_smStateStateToChild_actionHistory;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `StateToChoice.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoice.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component StateToChoice {
+
+      state machine instance smStateStateToChoice: SmState.StateToChoice
+
+    }
+
+  }
+
+}
+```
+
+### `StateToChoiceTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoiceTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToChoiceTester.cpp
+// \author bocchino
+// \brief  cpp file for StateToChoiceTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/StateToChoiceTester.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+StateToChoiceTester::StateToChoiceTester(const char* const compName)
+    : StateToChoiceComponentBase(compName), m_smStateStateToChoice_actionHistory(), m_smStateStateToChoice_guard_g() {}
+
+StateToChoiceTester::~StateToChoiceTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_exitS1(SmId smId,
+                                                                      FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_exitS2(SmId smId,
+                                                                      FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_exitS3(SmId smId,
+                                                                      FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_a(SmId smId,
+                                                                 FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_enterS1(SmId smId,
+                                                                       FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_enterS2(SmId smId,
+                                                                       FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_enterS3(SmId smId,
+                                                                       FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToChoiceTester::FppTest_SmState_StateToChoice_action_enterS4(SmId smId,
+                                                                       FppTest_SmState_StateToChoice::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToChoice);
+    this->m_smStateStateToChoice_actionHistory.push(signal, ActionId::ENTER_S4);
+}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine guards
+// ----------------------------------------------------------------------
+
+bool StateToChoiceTester::FppTest_SmState_StateToChoice_guard_g(SmId smId,
+                                                                FppTest_SmState_StateToChoice::Signal signal) const {
+    FW_ASSERT(smId == SmId::smStateStateToChoice, static_cast<FwAssertArgType>(smId));
+    return this->m_smStateStateToChoice_guard_g.call(signal);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void StateToChoiceTester::testInit() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToChoiceTester::testS2_to_C() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->m_smStateStateToChoice_guard_g.reset();
+    this->m_smStateStateToChoice_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->smStateStateToChoice_sendSignal_S1_to_C();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S4_S5);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::S1_to_C);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoiceTester::testS2_to_S3() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->smStateStateToChoice_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToChoiceTester::testS2_to_S4() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->m_smStateStateToChoice_guard_g.reset();
+    this->m_smStateStateToChoice_guard_g.setReturnValue(true);
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->smStateStateToChoice_sendSignal_S1_to_S4();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S4_S5);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoiceTester::testS3_to_C() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->m_smStateStateToChoice_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToChoice_actionHistory.clear();
+        this->smStateStateToChoice_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    {
+        this->m_smStateStateToChoice_actionHistory.clear();
+        this->smStateStateToChoice_sendSignal_S1_to_C();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S4_S6);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::S1_to_C);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+void StateToChoiceTester::testS3_to_S4() {
+    this->m_smStateStateToChoice_actionHistory.clear();
+    this->m_smStateStateToChoice_guard_g.reset();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToChoice_actionHistory.clear();
+        this->smStateStateToChoice_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    {
+        this->m_smStateStateToChoice_actionHistory.clear();
+        this->smStateStateToChoice_sendSignal_S1_to_S4();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    ASSERT_EQ(this->smStateStateToChoice_getState(), SmState_StateToChoice::State::S4_S6);
+    const FwIndexType expectedSize = 4;
+    ASSERT_EQ(this->m_smStateStateToChoice_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToChoice_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToChoice_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToChoice::Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `StateToChoiceTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToChoiceTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToChoiceTester.hpp
+// \author bocchino
+// \brief  hpp file for StateToChoiceTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_StateToChoice_HPP
+#define FppTest_SmInstanceState_StateToChoice_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToChoiceComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class StateToChoiceTester : public StateToChoiceComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct StateToChoiceTester object
+    StateToChoiceTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy StateToChoiceTester object
+    ~StateToChoiceTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_StateToChoice
+    using SmState_StateToChoice = FppTest_SmState_StateToChoice;
+
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3, ENTER_S4 };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action exitS1 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Exit S1
+    void FppTest_SmState_StateToChoice_action_exitS1(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action exitS2 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Exit S2
+    void FppTest_SmState_StateToChoice_action_exitS2(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action exitS3 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Exit S3
+    void FppTest_SmState_StateToChoice_action_exitS3(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action a of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Action a
+    void FppTest_SmState_StateToChoice_action_a(SmId smId,                                    //!< The state machine id
+                                                FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                ) override;
+
+    //! Implementation for action enterS1 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Enter S1
+    void FppTest_SmState_StateToChoice_action_enterS1(SmId smId,  //!< The state machine id
+                                                      FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                      ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Enter S2
+    void FppTest_SmState_StateToChoice_action_enterS2(SmId smId,  //!< The state machine id
+                                                      FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                      ) override;
+
+    //! Implementation for action enterS3 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Enter S3
+    void FppTest_SmState_StateToChoice_action_enterS3(SmId smId,  //!< The state machine id
+                                                      FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                      ) override;
+
+    //! Implementation for action enterS4 of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Enter S4
+    void FppTest_SmState_StateToChoice_action_enterS4(SmId smId,  //!< The state machine id
+                                                      FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+                                                      ) override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard g of state machine FppTest_SmState_StateToChoice
+    //!
+    //! Guard g
+    bool FppTest_SmState_StateToChoice_guard_g(SmId smId,                                    //!< The state machine id
+                                               FppTest_SmState_StateToChoice::Signal signal  //!< The signal
+    ) const override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to C
+    void testS2_to_C();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S2 to S4
+    void testS2_to_S4();
+
+    //! Test transition S3 to C
+    void testS3_to_C();
+
+    //! Test transition S3 to S4
+    void testS3_to_S4();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The action history for SmStateStateToChoice
+    SmHarness::SignalValueHistory<SmState_StateToChoice::Signal, ActionId, historySize>
+        m_smStateStateToChoice_actionHistory;
+
+    //! The guard g for SmStateStateToChoice
+    SmHarness::NoArgGuard<SmState_StateToChoice::Signal, historySize> m_smStateStateToChoice_guard_g;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `StateToSelf.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelf.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component StateToSelf {
+
+      state machine instance smStateStateToSelf: SmState.StateToSelf
+
+    }
+
+  }
+
+}
+```
+
+### `StateToSelfTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelfTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToSelfTester.cpp
+// \author bocchino
+// \brief  cpp file for StateToSelfTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/StateToSelfTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+StateToSelfTester::StateToSelfTester(const char* const compName)
+    : StateToSelfComponentBase(compName), m_smStateStateToSelf_actionHistory() {}
+
+StateToSelfTester::~StateToSelfTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_exitS1(SmId smId,
+                                                                  FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_exitS2(SmId smId,
+                                                                  FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_exitS3(SmId smId,
+                                                                  FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_a(SmId smId, FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_enterS1(SmId smId,
+                                                                   FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_enterS2(SmId smId,
+                                                                   FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToSelfTester::FppTest_SmState_StateToSelf_action_enterS3(SmId smId,
+                                                                   FppTest_SmState_StateToSelf::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToSelf);
+    this->m_smStateStateToSelf_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void StateToSelfTester::testInit() {
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateStateToSelf_getState(), SmState_StateToSelf::State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToSelf_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToSelf_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToSelf_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToSelf::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToSelfTester::testS2_to_S1() {
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->smStateStateToSelf_sendSignal_S1_to_S1();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToSelf_getState(), SmState_StateToSelf::State::S1_S2);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToSelf_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToSelf_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToSelf_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToSelf::Signal::S1_to_S1);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S2);
+}
+
+void StateToSelfTester::testS2_to_S3() {
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->smStateStateToSelf_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToSelf_getState(), SmState_StateToSelf::State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToSelf_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToSelf_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToSelf_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToSelf::Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToSelfTester::testS3_to_S1() {
+    this->m_smStateStateToSelf_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToSelf_actionHistory.clear();
+        this->smStateStateToSelf_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    {
+        this->m_smStateStateToSelf_actionHistory.clear();
+        this->smStateStateToSelf_sendSignal_S1_to_S1();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    ASSERT_EQ(this->smStateStateToSelf_getState(), SmState_StateToSelf::State::S1_S2);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToSelf_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToSelf_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToSelf_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToSelf::Signal::S1_to_S1);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S2);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `StateToSelfTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToSelfTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToSelfTester.hpp
+// \author bocchino
+// \brief  hpp file for StateToSelfTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_StateToSelf_HPP
+#define FppTest_SmInstanceState_StateToSelf_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToSelfComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class StateToSelfTester : public StateToSelfComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct StateToSelfTester object
+    StateToSelfTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy StateToSelfTester object
+    ~StateToSelfTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_StateToSelf
+    using SmState_StateToSelf = FppTest_SmState_StateToSelf;
+
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3 };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+    //! Implementation for action exitS1 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Exit S1
+    void FppTest_SmState_StateToSelf_action_exitS1(SmId smId,                                  //!< The state machine id
+                                                   FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                   ) override;
+
+    //! Implementation for action exitS2 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Exit S2
+    void FppTest_SmState_StateToSelf_action_exitS2(SmId smId,                                  //!< The state machine id
+                                                   FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                   ) override;
+
+    //! Implementation for action exitS3 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Exit S3
+    void FppTest_SmState_StateToSelf_action_exitS3(SmId smId,                                  //!< The state machine id
+                                                   FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                   ) override;
+
+    //! Implementation for action a of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Action a
+    void FppTest_SmState_StateToSelf_action_a(SmId smId,                                  //!< The state machine id
+                                              FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                              ) override;
+
+    //! Implementation for action enterS1 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Enter S1
+    void FppTest_SmState_StateToSelf_action_enterS1(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Enter S2
+    void FppTest_SmState_StateToSelf_action_enterS2(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action enterS3 of state machine FppTest_SmState_StateToSelf
+    //!
+    //! Enter S3
+    void FppTest_SmState_StateToSelf_action_enterS3(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToSelf::Signal signal  //!< The signal
+                                                    ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to S1
+    void testS2_to_S1();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S3 to S1
+    void testS3_to_S1();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The action history for smStateStateToSelf
+    SmHarness::SignalValueHistory<SmState_StateToSelf::Signal, ActionId, historySize>
+        m_smStateStateToSelf_actionHistory;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```
+
+### `StateToState.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToState.fpp`
+
+
+```fpp
+module FppTest {
+
+  module SmInstanceState {
+
+    active component StateToState {
+
+      state machine instance smStateStateToState: SmState.StateToState
+
+    }
+
+  }
+
+}
+```
+
+### `StateToStateTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToStateTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToStateTester.cpp
+// \author bocchino
+// \brief  cpp file for StateToStateTester component implementation class
+// ======================================================================
+
+#include <gtest/gtest.h>
+
+#include "FppTest/state_machine/internal_instance/state/StateToStateTester.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+StateToStateTester::StateToStateTester(const char* const compName)
+    : StateToStateComponentBase(compName), m_smStateStateToState_actionHistory() {}
+
+StateToStateTester::~StateToStateTester() {}
+
+// ----------------------------------------------------------------------
+// Implementations for internal state machine actions
+// ----------------------------------------------------------------------
+
+void StateToStateTester::FppTest_SmState_StateToState_action_exitS1(SmId smId,
+                                                                    FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::EXIT_S1);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_exitS2(SmId smId,
+                                                                    FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::EXIT_S2);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_exitS3(SmId smId,
+                                                                    FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::EXIT_S3);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_a(SmId smId, FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::A);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_enterS1(SmId smId,
+                                                                     FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::ENTER_S1);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_enterS2(SmId smId,
+                                                                     FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::ENTER_S2);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_enterS3(SmId smId,
+                                                                     FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::ENTER_S3);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_enterS4(SmId smId,
+                                                                     FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::ENTER_S4);
+}
+
+void StateToStateTester::FppTest_SmState_StateToState_action_enterS5(SmId smId,
+                                                                     FppTest_SmState_StateToState::Signal signal) {
+    ASSERT_EQ(smId, SmId::smStateStateToState);
+    this->m_smStateStateToState_actionHistory.push(signal, ActionId::ENTER_S5);
+}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void StateToStateTester::testInit() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S1_S2);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::__FPRIME_AC_INITIAL_TRANSITION);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::ENTER_S1);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S2);
+}
+
+void StateToStateTester::testS2_to_S3() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToState_actionHistory.clear();
+    this->smStateStateToState_sendSignal_S2_to_S3();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S1_S3);
+    const FwIndexType expectedSize = 2;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::S2_to_S3);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::ENTER_S3);
+}
+
+void StateToStateTester::testS2_to_S4() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToState_actionHistory.clear();
+    this->smStateStateToState_sendSignal_S1_to_S4();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToStateTester::testS2_to_S5() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    this->m_smStateStateToState_actionHistory.clear();
+    this->smStateStateToState_sendSignal_S1_to_S5();
+    const auto status = this->doDispatch();
+    ASSERT_EQ(status, MSG_DISPATCH_OK);
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::S1_to_S5);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S2);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToStateTester::testS3_to_S4() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToState_actionHistory.clear();
+        this->smStateStateToState_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    {
+        this->m_smStateStateToState_actionHistory.clear();
+        this->smStateStateToState_sendSignal_S1_to_S4();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::S1_to_S4);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+void StateToStateTester::testS3_to_S5() {
+    this->m_smStateStateToState_actionHistory.clear();
+    this->init(queueDepth, instanceId);
+    {
+        this->m_smStateStateToState_actionHistory.clear();
+        this->smStateStateToState_sendSignal_S2_to_S3();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    {
+        this->m_smStateStateToState_actionHistory.clear();
+        this->smStateStateToState_sendSignal_S1_to_S5();
+        const auto status = this->doDispatch();
+        ASSERT_EQ(status, MSG_DISPATCH_OK);
+    }
+    ASSERT_EQ(this->smStateStateToState_getState(), SmState_StateToState::State::S4_S5);
+    const FwIndexType expectedSize = 5;
+    ASSERT_EQ(this->m_smStateStateToState_actionHistory.getSize(), expectedSize);
+    const auto& signals = this->m_smStateStateToState_actionHistory.getSignals();
+    const auto& actions = this->m_smStateStateToState_actionHistory.getValues();
+    for (FwIndexType i = 0; i < expectedSize; i++) {
+        ASSERT_EQ(signals.getItemAt(i), SmState_StateToState::Signal::S1_to_S5);
+    }
+    ASSERT_EQ(actions.getItemAt(0), ActionId::EXIT_S3);
+    ASSERT_EQ(actions.getItemAt(1), ActionId::EXIT_S1);
+    ASSERT_EQ(actions.getItemAt(2), ActionId::A);
+    ASSERT_EQ(actions.getItemAt(3), ActionId::ENTER_S4);
+    ASSERT_EQ(actions.getItemAt(4), ActionId::ENTER_S5);
+}
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+```
+
+### `StateToStateTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/FppTestProject/FppTest/state_machine/internal_instance/state/StateToStateTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  StateToStateTester.hpp
+// \author bocchino
+// \brief  hpp file for StateToStateTester component implementation class
+// ======================================================================
+
+#ifndef FppTest_SmInstanceState_StateToState_HPP
+#define FppTest_SmInstanceState_StateToState_HPP
+
+#include "FppTest/state_machine/internal/harness/Harness.hpp"
+#include "FppTest/state_machine/internal_instance/state/StateToStateComponentAc.hpp"
+
+namespace FppTest {
+
+namespace SmInstanceState {
+
+class StateToStateTester : public StateToStateComponentBase {
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The history size
+    static constexpr FwSizeType historySize = 10;
+
+    //! The queue depth
+    static constexpr FwSizeType queueDepth = 10;
+
+    //! The instance ID
+    static constexpr FwEnumStoreType instanceId = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct StateToStateTester object
+    StateToStateTester(const char* const compName  //!< The component name
+    );
+
+    //! Destroy StateToStateTester object
+    ~StateToStateTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type FppTest_SmState_StateToState
+    using SmState_StateToState = FppTest_SmState_StateToState;
+
+    //! Action IDs
+    enum class ActionId { EXIT_S1, EXIT_S2, EXIT_S3, A, ENTER_S1, ENTER_S2, ENTER_S3, ENTER_S4, ENTER_S5 };
+
+  private:
+    // ----------------------------------------------------------------------
+    // Implementations for internal state machine actions
+    // ----------------------------------------------------------------------
+    //! Implementation for action exitS1 of state machine FppTest_SmState_StateToState
+    //!
+    //! Exit S1
+    void FppTest_SmState_StateToState_action_exitS1(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action exitS2 of state machine FppTest_SmState_StateToState
+    //!
+    //! Exit S2
+    void FppTest_SmState_StateToState_action_exitS2(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action exitS3 of state machine FppTest_SmState_StateToState
+    //!
+    //! Exit S3
+    void FppTest_SmState_StateToState_action_exitS3(SmId smId,  //!< The state machine id
+                                                    FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                    ) override;
+
+    //! Implementation for action a of state machine FppTest_SmState_StateToState
+    //!
+    //! Action a
+    void FppTest_SmState_StateToState_action_a(SmId smId,                                   //!< The state machine id
+                                               FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                               ) override;
+
+    //! Implementation for action enterS1 of state machine FppTest_SmState_StateToState
+    //!
+    //! Enter S1
+    void FppTest_SmState_StateToState_action_enterS1(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action enterS2 of state machine FppTest_SmState_StateToState
+    //!
+    //! Enter S2
+    void FppTest_SmState_StateToState_action_enterS2(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action enterS3 of state machine FppTest_SmState_StateToState
+    //!
+    //! Enter S3
+    void FppTest_SmState_StateToState_action_enterS3(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action enterS4 of state machine FppTest_SmState_StateToState
+    //!
+    //! Enter S4
+    void FppTest_SmState_StateToState_action_enterS4(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                     ) override;
+
+    //! Implementation for action enterS5 of state machine FppTest_SmState_StateToState
+    //!
+    //! Enter S5
+    void FppTest_SmState_StateToState_action_enterS5(SmId smId,  //!< The state machine id
+                                                     FppTest_SmState_StateToState::Signal signal  //!< The signal
+                                                     ) override;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test initial transition
+    void testInit();
+
+    //! Test transition S2 to S3
+    void testS2_to_S3();
+
+    //! Test transition S2 to S4
+    void testS2_to_S4();
+
+    //! Test transition S2 to S5
+    void testS2_to_S5();
+
+    //! Test transition S3 to S4
+    void testS3_to_S4();
+
+    //! Test transition S3 to S5
+    void testS3_to_S5();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The action history for smStateStateToState
+    SmHarness::SignalValueHistory<SmState_StateToState::Signal, ActionId, historySize>
+        m_smStateStateToState_actionHistory;
+};
+
+}  // namespace SmInstanceState
+
+}  // namespace FppTest
+
+#endif
+```

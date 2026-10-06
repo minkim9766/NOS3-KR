@@ -3,32 +3,738 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--Commands.fppi
-file--Events.fppi
-file--FileManager.cpp
-file--FileManager.fpp
-file--FileManager.hpp
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.cpp`](file--FileManager.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.fpp`](file--FileManager.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.hpp`](file--FileManager.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+log.txt
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FileManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FileManager.cpp"
+)
+set(MOD_DEPS
+  Os
+  Fw/FilePacket
+  Utils/Hash
+  CFDP/Checksum
+)
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+  "${FPRIME_FRAMEWORK_PATH}/Svc/FileManager/FileManager.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FileManagerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FileManagerMain.cpp"
+)
+register_fprime_ut()
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Commands.fppi`
+
+
+```text
+@ Create a directory
+async command CreateDirectory(
+                               dirName: string size 256 @< The directory to create
+                             ) \
+  opcode 0x00
+
+@ Move a file
+async command MoveFile(
+                        sourceFileName: string size 256 @< The source file name
+                        destFileName: string size 256 @< The destination file name
+                      ) \
+  opcode 0x01
+
+@ Remove a directory, which must be empty
+async command RemoveDirectory(
+                               dirName: string size 256 @< The directory to remove
+                             ) \
+  opcode 0x02
+
+@ Remove a file
+async command RemoveFile(
+                          fileName: string size 256 @< The file to remove
+                          ignoreErrors: bool @< Ignore nonexistent files
+                        ) \
+  opcode 0x03
+
+@ Perform a Linux shell command and write the output to a log file.
+async command ShellCommand(
+                            $command: string size 256 @< The shell command string
+                            logFileName: string size 256 @< The name of the log file
+                          ) \
+  opcode 0x04
+
+@ Append 1 file's contents to the end of another.
+async command AppendFile(
+                          source: string size 256 @< The name of the file to take content from
+                          target: string size 256 @< The name of the file to append to
+                        ) \
+  opcode 0x05
+
+async command FileSize(
+                        fileName: string size 256 @< The file to get the size of
+                      ) \
+  opcode 0x06
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Events.fppi`
+
+
+```text
+@ An error occurred while attempting to create a directory
+event DirectoryCreateError(
+                            dirName: string size 256 @< The name of the directory
+                            status: U32 @< The error status
+                          ) \
+  severity warning high \
+  id 0x00 \
+  format "Could not create directory {}, returned status {}"
+
+@ An error occurred while attempting to remove a directory
+event DirectoryRemoveError(
+                            dirName: string size 256 @< The name of the directory
+                            status: U32 @< The error status
+                          ) \
+  severity warning high \
+  id 0x01 \
+  format "Could not remove directory {}, returned status {}"
+
+@ An error occurred while attempting to move a file
+event FileMoveError(
+                     sourceFileName: string size 256 @< The name of the source file
+                     destFileName: string size 256 @< The name of the destination file
+                     status: U32 @< The error status
+                   ) \
+  severity warning high \
+  id 0x02 \
+  format "Could not move file {} to file {}, returned status {}"
+
+@ An error occurred while attempting to remove a file
+event FileRemoveError(
+                       fileName: string size 256 @< The name of the file
+                       status: U32 @< The error status
+                     ) \
+  severity warning high \
+  id 0x03 \
+  format "Could not remove file {}, returned status {}"
+
+@ The File System component executed a shell command that returned status non-zero
+event ShellCommandFailed(
+                          $command: string size 256 @< The command string
+                          status: U32 @< The status code
+                        ) \
+  severity warning high \
+  id 0x04 \
+  format "Shell command {} failed with status {}"
+
+@ The File System component returned status non-zero when trying to append 2 files together
+event AppendFileFailed(
+                        source: string size 256 @< The name of the file being read from
+                        target: string size 256 @< The name of the file to append to
+                        status: U32 @< The error status
+                      ) \
+  severity warning high \
+  id 0x05 \
+  format "Appending {} onto {} failed with status {}"
+
+@ The File System component appended 2 files without error
+event AppendFileSucceeded(
+                           source: string size 256 @< The name of the file being read from
+                           target: string size 256 @< The name of the file to append to
+                         ) \
+  severity activity high \
+  id 0x06 \
+  format "Appended {} to the end of {}"
+
+@ The File System component executed a shell command that returned status zero
+event ShellCommandSucceeded(
+                             $command: string size 256 @< The command string
+                           ) \
+  severity activity high \
+  id 0x07 \
+  format "Shell command {} succeeded"
+
+@ The File System component created a new directory without error
+event CreateDirectorySucceeded(
+                                dirName: string size 256 @< The name of the directory
+                              ) \
+  severity activity high \
+  id 0x08 \
+  format "Created directory {} successfully"
+
+@ The File System component deleted and existing directory without error
+event RemoveDirectorySucceeded(
+                                dirName: string size 256 @< The name of the directory
+                              ) \
+  severity activity high \
+  id 0x09 \
+  format "Removed directory {} successfully"
+
+@ The File System component moved a file to a new location without error
+event MoveFileSucceeded(
+                         sourceFileName: string size 256 @< The name of the source file
+                         destFileName: string size 256 @< The name of the destination file
+                       ) \
+  severity activity high \
+  id 0x0A \
+  format "Moved file {} to file {} successfully"
+
+@ The File System component deleted an existing file without error
+event RemoveFileSucceeded(
+                           fileName: string size 256 @< The name of the file
+                         ) \
+  severity activity high \
+  id 0x0B \
+  format "Removed file {} successfully"
+
+@ The File System component appended 2 files without error
+event AppendFileStarted(
+                         source: string size 256 @< The name of the file being read from
+                         target: string size 256 @< The name of the file to append to
+                       ) \
+  severity activity high \
+  id 0x0C \
+  format "Appending file {} to the end of {}..."
+
+@ The File System component began executing a shell command
+event ShellCommandStarted(
+                           $command: string size 256 @< The command string
+                         ) \
+  severity activity high \
+  id 0x0D \
+  format "Running shell command {}..."
+
+@ The File System component began creating a new directory
+event CreateDirectoryStarted(
+                              dirName: string size 256 @< The name of the directory
+                            ) \
+  severity activity high \
+  id 0x0E \
+  format "Creating directory {}..."
+
+@ The File System component began deleting a directory
+event RemoveDirectoryStarted(
+                              dirName: string size 256 @< The name of the directory
+                            ) \
+  severity activity high \
+  id 0x0F \
+  format "Removing directory {}..."
+
+@ The File System component began moving a file to a new location
+event MoveFileStarted(
+                       sourceFileName: string size 256 @< The name of the source file
+                       destFileName: string size 256 @< The name of the destination file
+                     ) \
+  severity activity high \
+  id 0x10 \
+  format "Moving file {} to file {}..."
+
+@ The File System component began deleting an existing file
+event RemoveFileStarted(
+                         fileName: string size 256 @< The name of the file
+                       ) \
+  severity activity high \
+  id 0x11 \
+  format "Removing file {}..."
+
+@ File size response
+event FileSizeSucceeded(
+                         fileName: string size 256 @< The name of the file
+                         $size: U64 @< The size of the file in bytes
+                       ) \
+  severity activity high \
+  id 0x12 \
+  format "The size of file {} is {} B"
+
+@ Failed to get file size
+event FileSizeError(
+                      fileName: string size 256 @< The name of the file
+                      status: U32 @< The error status
+                    ) \
+  severity warning high \
+  id 0x13 \
+  format "Failed to get the size of file {}, returned status {}"
+
+@ Checking file size
+event FileSizeStarted(
+                       fileName: string size 256 @< The name of the file
+                     ) \
+  severity activity high \
+  id 0x14 \
+  format "Checking size of file {}..."
+```
+
+### `FileManager.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileManager.hpp
+// \author bocchino
+// \brief  hpp file for FileManager component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <cstdio>
+#include <cstdlib>
+
+#include <Fw/FPrimeBasicTypes.hpp>
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/ExternalString.hpp"
+#include "Svc/FileManager/FileManager.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+FileManager ::FileManager(const char* const compName  //!< The component name
+                          )
+    : FileManagerComponentBase(compName), commandCount(0), errorCount(0) {}
+
+FileManager ::~FileManager() {}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void FileManager ::CreateDirectory_cmdHandler(const FwOpcodeType opCode,
+                                              const U32 cmdSeq,
+                                              const Fw::CmdStringArg& dirName) {
+    Fw::LogStringArg logStringDirName(dirName.toChar());
+    this->log_ACTIVITY_HI_CreateDirectoryStarted(logStringDirName);
+    bool errorIfDirExists = true;
+    const Os::FileSystem::Status status = Os::FileSystem::createDirectory(dirName.toChar(), errorIfDirExists);
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_DirectoryCreateError(logStringDirName, status);
+    } else {
+        this->log_ACTIVITY_HI_CreateDirectorySucceeded(logStringDirName);
+    }
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::RemoveFile_cmdHandler(const FwOpcodeType opCode,
+                                         const U32 cmdSeq,
+                                         const Fw::CmdStringArg& fileName,
+                                         const bool ignoreErrors) {
+    Fw::LogStringArg logStringFileName(fileName.toChar());
+    this->log_ACTIVITY_HI_RemoveFileStarted(logStringFileName);
+    const Os::FileSystem::Status status = Os::FileSystem::removeFile(fileName.toChar());
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_FileRemoveError(logStringFileName, status);
+        if (ignoreErrors == true) {
+            ++this->errorCount;
+            this->tlmWrite_Errors(this->errorCount);
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+            return;
+        }
+    } else {
+        this->log_ACTIVITY_HI_RemoveFileSucceeded(logStringFileName);
+    }
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::MoveFile_cmdHandler(const FwOpcodeType opCode,
+                                       const U32 cmdSeq,
+                                       const Fw::CmdStringArg& sourceFileName,
+                                       const Fw::CmdStringArg& destFileName) {
+    Fw::LogStringArg logStringSource(sourceFileName.toChar());
+    Fw::LogStringArg logStringDest(destFileName.toChar());
+    this->log_ACTIVITY_HI_MoveFileStarted(logStringSource, logStringDest);
+    const Os::FileSystem::Status status = Os::FileSystem::moveFile(sourceFileName.toChar(), destFileName.toChar());
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_FileMoveError(logStringSource, logStringDest, status);
+    } else {
+        this->log_ACTIVITY_HI_MoveFileSucceeded(logStringSource, logStringDest);
+    }
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::RemoveDirectory_cmdHandler(const FwOpcodeType opCode,
+                                              const U32 cmdSeq,
+                                              const Fw::CmdStringArg& dirName) {
+    Fw::LogStringArg logStringDirName(dirName.toChar());
+    this->log_ACTIVITY_HI_RemoveDirectoryStarted(logStringDirName);
+    const Os::FileSystem::Status status = Os::FileSystem::removeDirectory(dirName.toChar());
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_DirectoryRemoveError(logStringDirName, status);
+    } else {
+        this->log_ACTIVITY_HI_RemoveDirectorySucceeded(logStringDirName);
+    }
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::ShellCommand_cmdHandler(const FwOpcodeType opCode,
+                                           const U32 cmdSeq,
+                                           const Fw::CmdStringArg& command,
+                                           const Fw::CmdStringArg& logFileName) {
+    Fw::LogStringArg logStringCommand(command.toChar());
+    this->log_ACTIVITY_HI_ShellCommandStarted(logStringCommand);
+    int status = this->systemCall(command, logFileName);
+    if (status == 0) {
+        this->log_ACTIVITY_HI_ShellCommandSucceeded(logStringCommand);
+    } else {
+        this->log_WARNING_HI_ShellCommandFailed(logStringCommand, static_cast<U32>(status));
+    }
+    this->emitTelemetry(status == 0 ? Os::FileSystem::OP_OK : Os::FileSystem::OTHER_ERROR);
+    this->sendCommandResponse(opCode, cmdSeq, status == 0 ? Os::FileSystem::OP_OK : Os::FileSystem::OTHER_ERROR);
+}
+
+void FileManager ::AppendFile_cmdHandler(const FwOpcodeType opCode,
+                                         const U32 cmdSeq,
+                                         const Fw::CmdStringArg& source,
+                                         const Fw::CmdStringArg& target) {
+    Fw::LogStringArg logStringSource(source.toChar());
+    Fw::LogStringArg logStringTarget(target.toChar());
+    this->log_ACTIVITY_HI_AppendFileStarted(logStringSource, logStringTarget);
+
+    Os::FileSystem::Status status;
+    status = Os::FileSystem::appendFile(source.toChar(), target.toChar(), true);
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_AppendFileFailed(logStringSource, logStringTarget, status);
+    } else {
+        this->log_ACTIVITY_HI_AppendFileSucceeded(logStringSource, logStringTarget);
+    }
+
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::FileSize_cmdHandler(const FwOpcodeType opCode, const U32 cmdSeq, const Fw::CmdStringArg& fileName) {
+    Fw::LogStringArg logStringFileName(fileName.toChar());
+    this->log_ACTIVITY_HI_FileSizeStarted(logStringFileName);
+
+    FwSizeType size_arg;
+    const Os::FileSystem::Status status = Os::FileSystem::getFileSize(fileName.toChar(), size_arg);
+    if (status != Os::FileSystem::OP_OK) {
+        this->log_WARNING_HI_FileSizeError(logStringFileName, status);
+    } else {
+        U64 size = static_cast<U64>(size_arg);
+        this->log_ACTIVITY_HI_FileSizeSucceeded(logStringFileName, size);
+    }
+    this->emitTelemetry(status);
+    this->sendCommandResponse(opCode, cmdSeq, status);
+}
+
+void FileManager ::pingIn_handler(const FwIndexType portNum, U32 key) {
+    // return key
+    this->pingOut_out(0, key);
+}
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+int FileManager ::systemCall(const Fw::CmdStringArg& command, const Fw::CmdStringArg& logFileName) const {
+    // Create a buffer of at least enough size for storing the eval string less the 2 %s tokens, two command strings,
+    // and a null terminator at the end
+    const char evalStr[] = "eval '%s' 1>>%s 2>&1\n";
+    constexpr U32 bufferSize = (sizeof(evalStr) - 4) + (2 * FW_CMD_STRING_MAX_SIZE) + 1;
+    char buffer[bufferSize];
+
+    // Wrap that buffer in an external string for formatting purposes
+    Fw::ExternalString stringBuffer(buffer, bufferSize);
+    Fw::FormatStatus formatStatus = stringBuffer.format(evalStr, command.toChar(), logFileName.toChar());
+    // Since the buffer is exactly sized, the only error can occur is a software error not caused by ground
+    FW_ASSERT(formatStatus == Fw::FormatStatus::SUCCESS);
+
+    // Call the system
+    const int status = system(stringBuffer.toChar());
+    return status;
+}
+
+void FileManager ::emitTelemetry(const Os::FileSystem::Status status) {
+    if (status == Os::FileSystem::OP_OK) {
+        ++this->commandCount;
+        this->tlmWrite_CommandsExecuted(this->commandCount);
+    } else {
+        ++this->errorCount;
+        this->tlmWrite_Errors(this->errorCount);
+    }
+}
+
+void FileManager ::sendCommandResponse(const FwOpcodeType opCode,
+                                       const U32 cmdSeq,
+                                       const Os::FileSystem::Status status) {
+    this->cmdResponse_out(opCode, cmdSeq,
+                          (status == Os::FileSystem::OP_OK) ? Fw::CmdResponse::OK : Fw::CmdResponse::EXECUTION_ERROR);
+}
+
+}  // namespace Svc
+```
+
+### `FileManager.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.fpp`
+
+
+```fpp
+module Svc {
+
+  @ A component for managing files
+  active component FileManager {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    @ Ping input port
+    async input port pingIn: Svc.Ping
+
+    @ Ping output port
+    output port pingOut: Svc.Ping
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Command receive port
+    command recv port cmdIn
+
+    @ Command registration port
+    command reg port cmdRegOut
+
+    @ Command response port
+    command resp port cmdResponseOut
+
+    @ Event port
+    event port eventOut
+
+    @ Text event port
+    text event port LogText
+
+    @ Time get port
+    time get port timeCaller
+
+    @ Telemetry port
+    telemetry port tlmOut
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+  }
+
+}
+```
+
+### `FileManager.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/FileManager.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FileManager.hpp
+// \author bocchino
+// \brief  hpp file for FileManager component implementation class
+//
+// \copyright
+// Copyright 2009-2015, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_FileManager_HPP
+#define Svc_FileManager_HPP
+
+#include "Os/FileSystem.hpp"
+#include "Svc/FileManager/FileManagerComponentAc.hpp"
+
+namespace Svc {
+
+class FileManager final : public FileManagerComponentBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FileManager
+    //!
+    FileManager(const char* const compName  //!< The component name
+    );
+
+    //! Destroy object FileManager
+    //!
+    ~FileManager();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for CreateDirectory command handler
+    //!
+    void CreateDirectory_cmdHandler(const FwOpcodeType opCode,       //!< The opcode
+                                    const U32 cmdSeq,                //!< The command sequence number
+                                    const Fw::CmdStringArg& dirName  //!< The directory to create
+    );
+
+    //! Implementation for RemoveFile command handler
+    //!
+    void RemoveFile_cmdHandler(const FwOpcodeType opCode,         //!< The opcode
+                               const U32 cmdSeq,                  //!< The command sequence number
+                               const Fw::CmdStringArg& fileName,  //!< The file to remove
+                               const bool ignoreErrors            //!< Ignore missing files
+    );
+
+    //! Implementation for MoveFile command handler
+    //!
+    void MoveFile_cmdHandler(const FwOpcodeType opCode,               //!< The opcode
+                             const U32 cmdSeq,                        //!< The command sequence number
+                             const Fw::CmdStringArg& sourceFileName,  //!< The source file name
+                             const Fw::CmdStringArg& destFileName     //!< The destination file name
+    );
+
+    //! Implementation for RemoveDirectory command handler
+    //!
+    void RemoveDirectory_cmdHandler(const FwOpcodeType opCode,       //!< The opcode
+                                    const U32 cmdSeq,                //!< The command sequence number
+                                    const Fw::CmdStringArg& dirName  //!< The directory to remove
+    );
+
+    //! Implementation for ShellCommand command handler
+    //!
+    void ShellCommand_cmdHandler(const FwOpcodeType opCode,           //!< The opcode
+                                 const U32 cmdSeq,                    //!< The command sequence number
+                                 const Fw::CmdStringArg& command,     //!< The shell command string
+                                 const Fw::CmdStringArg& logFileName  //!< The name of the log file
+    );
+
+    //! Implementation for ConcatFiles command handler
+    //! Append 1 file's contents to the end of another.
+    void AppendFile_cmdHandler(const FwOpcodeType opCode,       //!< The opcode
+                               const U32 cmdSeq,                //!< The command sequence number
+                               const Fw::CmdStringArg& source,  //! The name of the file to take content from
+                               const Fw::CmdStringArg& target   //! The name of the file to append to
+    );
+
+    //! Implementation for FileSize command handler
+    //!
+    void FileSize_cmdHandler(const FwOpcodeType opCode,        //!< The opcode
+                             const U32 cmdSeq,                 //!< The command sequence number
+                             const Fw::CmdStringArg& fileName  //!< The file to get the size of
+    );
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum, /*!< The port number*/
+                        U32 key                    /*!< Value to return to pinger*/
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper methods
+    // ----------------------------------------------------------------------
+
+    //! A system command with no arguments
+    //!
+    int systemCall(const Fw::CmdStringArg& command,     //!< The command
+                   const Fw::CmdStringArg& logFileName  //!< The log file name
+    ) const;
+
+    //! Emit telemetry based on status
+    //!
+    void emitTelemetry(const Os::FileSystem::Status status  //!< The status
+    );
+
+    //! Send command response based on status
+    //!
+    void sendCommandResponse(const FwOpcodeType opCode,           //!< The opcode
+                             const U32 cmdSeq,                    //!< The command sequence value
+                             const Os::FileSystem::Status status  //!< The status
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The total number of commands successfully executed
+    //!
+    U32 commandCount;
+
+    //! The total number of errors
+    //!
+    U32 errorCount;
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FileManager/Telemetry.fppi`
+
+
+```text
+@ The total number of commands successfully executed
+telemetry CommandsExecuted: U32 id 0x00
+
+@ The total number of errors
+telemetry Errors: U32 id 0x01
+```

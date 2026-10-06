@@ -3,16 +3,63 @@
 
 **경로:** `fsw/apps/sbn/modules/filter/test/fsw/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_f_test.c`
 
-file--sbn_f_test.c
-file--sbn_f_test_events.h
+**경로:** `fsw/apps/sbn/modules/filter/test/fsw/src/sbn_f_test.c`
+
+
+```c
+#include "sbn_interfaces.h"
+#include "sbn_f_test_events.h"
+#include "cfe.h"
+
+CFE_EVS_EventID_t   SBN_F_CCSDS_END_FIRST_EID;
+static SBN_Status_t In(void *msg, SBN_Filter_Ctx_t *Context)
+{
+    CCSDS_PriHdr_t *PriHdrPtr = msg;
+    OS_printf("msg in StreamId=%d\n", CCSDS_RD_SID(*PriHdrPtr));
+    return SBN_SUCCESS;
+} /* end In() */
+
+static SBN_Status_t Out(void *msg, SBN_Filter_Ctx_t *Context)
+{
+    CCSDS_PriHdr_t *PriHdrPtr = msg;
+    OS_printf("msg out StreamId=%d\n", CCSDS_RD_SID(*PriHdrPtr));
+    return SBN_SUCCESS;
+} /* end Out() */
+
+static CFE_Status_t Init(int Version, CFE_EVS_EventID_t BaseEID)
+{
+    SBN_F_CCSDS_END_FIRST_EID = BaseEID;
+
+    if (Version != 1) /* TODO: define */
+    {
+        OS_printf("SBN_F_Test version mismatch: expected %d, got %d\n", 1, Version);
+        return CFE_ES_APP_ERROR;
+    } /* end if */
+
+    OS_printf("SBN_F_Test Lib Initialized.\n");
+
+    return CFE_SUCCESS;
+} /* end Init() */
+
+SBN_FilterInterface_t SBN_F_Test = {Init, In, Out, NULL};
 ```
 
-## 항목
+### `sbn_f_test_events.h`
 
-- [`fsw/apps/sbn/modules/filter/test/fsw/src/sbn_f_test.c`](file--sbn_f_test.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sbn/modules/filter/test/fsw/src/sbn_f_test_events.h`](file--sbn_f_test_events.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sbn/modules/filter/test/fsw/src/sbn_f_test_events.h`
+
+
+```c
+#ifndef _sbn_f_test_events_h
+#define _sbn_f_test_events_h
+
+#include "sbn_types.h"
+
+extern CFE_EVS_EventID_t SBN_F_TEST_FIRST_EID; /* defined at module init time */
+
+#endif /* _sbn_f_test_events_h */
+```

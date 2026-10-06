@@ -3,16 +3,45 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/img/top/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `product-write.png`
 
-file--product-write.png
-file--product-write.txt
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/img/top/product-write.png`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `product-write.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/img/top/product-write.txt`
+
+
+```text
+producer
+productSendOut
+0
+dpManager
+productSendIn
+0
+
+dpManager
+productSendOut
+0
+dpWriter
+bufferSendIn
+0
+
+dpWriter
+procBufferSendOut
+0
+dpProcessor
+bufferSendIn
+0
+
+dpWriter
+deallocBufferSendOut
+0
+bufferManager
+bufferSendIn
+0
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/img/top/product-write.png`](file--product-write.png) — 바이너리 (경로만)
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/docs/img/top/product-write.txt`](file--product-write.txt) — UTF-8 텍스트 파일 본문 포함

@@ -3,26 +3,3190 @@
 
 **경로:** `cfg/gui/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 __pycache__/index
 resources/index
-file--.gitignore
-file--cfg_gui.ui
-file--cfg_gui.ui.nIFTUJ
-file--cfg_gui_main.py
-file--cfg_gui_ui.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`cfg/gui/__pycache__/`](__pycache__/index) — 폴더
-- [`cfg/gui/resources/`](resources/index) — 폴더
-- [`cfg/gui/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/gui/cfg_gui.ui`](file--cfg_gui.ui) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/gui/cfg_gui.ui.nIFTUJ`](file--cfg_gui.ui.nIFTUJ) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/gui/cfg_gui_main.py`](file--cfg_gui_main.py) — UTF-8 텍스트 파일 본문 포함
-- [`cfg/gui/cfg_gui_ui.py`](file--cfg_gui_ui.py) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `cfg/gui/.gitignore`
+
+
+```text
+*.ui
+*.ui.*
+__pycache__
+```
+
+### `cfg_gui.ui`
+
+**경로:** `cfg/gui/cfg_gui.ui`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>658</width>
+    <height>655</height>
+   </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>661</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="tabShape">
+    <enum>QTabWidget::TabShape::Rounded</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Config</string>
+    </attribute>
+    <widget class="QLineEdit" name="lineEdit_curConfig">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>421</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>None</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_browse">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>20</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Browse...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_curConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Current Config:</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_scConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>631</width>
+       <height>321</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Spacecraft Config</string>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item alignment="Qt::AlignmentFlag::AlignTop">
+        <widget class="QScrollArea" name="scrollArea">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="autoFillBackground">
+          <bool>true</bool>
+         </property>
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
+         <property name="horizontalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOff</enum>
+         </property>
+         <property name="widgetResizable">
+          <bool>true</bool>
+         </property>
+         <widget class="QWidget" name="scrollAreaWidgetContents">
+          <property name="geometry">
+           <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>613</width>
+            <height>68</height>
+           </rect>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="sizeConstraint">
+            <enum>QLayout::SizeConstraint::SetDefaultConstraint</enum>
+           </property>
+          </layout>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_configNumber">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>-1</y>
+        <width>48</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_masterConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>631</width>
+       <height>181</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Master Config</string>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget_5">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>161</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QTextEdit" name="textEdit_masterConfig">
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pushButton_save">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>590</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_saveAs">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>590</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save As...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_nos3Logo">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>585</y>
+       <width>111</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_jstarLogo">
+     <property name="geometry">
+      <rect>
+       <x>480</x>
+       <y>585</y>
+       <width>131</width>
+       <height>41</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="scaledContents">
+      <bool>true</bool>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignVCenter</set>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Build</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>631</width>
+       <height>491</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Console Output</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignmentFlag::AlignCenter</set>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <widget class="QTextEdit" name="textEdit_buildConsole">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>471</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled/>
+       </palette>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>641</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Shape::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Shadow::Raised</enum>
+     </property>
+     <widget class="QFrame" name="frame">
+      <property name="geometry">
+       <rect>
+        <x>79</x>
+        <y>0</y>
+        <width>561</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>561</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_buildCleanButtons">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_cleanAll">
+          <property name="text">
+           <string>All</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButton_buildAll">
+          <property name="text">
+           <string>All</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pushButton_fswBuild">
+          <property name="text">
+           <string>FSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pushButton_cfgBuild">
+          <property name="text">
+           <string>CFG</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="4">
+         <widget class="QPushButton" name="pushButton_simClean">
+          <property name="text">
+           <string>SIM</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="4">
+         <widget class="QPushButton" name="pushButton_simBuild">
+          <property name="text">
+           <string>SIM</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="pushButton_gswBuild">
+          <property name="text">
+           <string>GSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pushButton_fswClean">
+          <property name="text">
+           <string>FSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="pushButton_gswClean">
+          <property name="text">
+           <string>GSW</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Build</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>40</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::Shape::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Shadow::Raised</enum>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Clean</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignmentFlag::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Launch</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_control">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>631</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>570</y>
+        <width>611</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>45</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pushButton_play">
+         <property name="text">
+          <string>Play</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg</normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_pause">
+         <property name="text">
+          <string>Pause</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg</normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>611</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton_launch">
+         <property name="text">
+          <string>Launch</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_stop">
+         <property name="text">
+          <string>Stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>611</width>
+        <height>451</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>NOS3 Time Driver</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignCenter</set>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <widget class="QTextEdit" name="textEdit_launchConsole">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>611</width>
+         <height>431</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled/>
+        </palette>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_3">
+      <property name="geometry">
+       <rect>
+        <x>190</x>
+        <y>520</y>
+        <width>261</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_runForUntil">
+       <item>
+        <widget class="QComboBox" name="comboBox_run">
+         <item>
+          <property name="text">
+           <string/>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Run For</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>Run Until</string>
+          </property>
+         </item>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="lineEdit_secondsEntry">
+         <property name="text">
+          <string/>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+```
+
+### `cfg_gui.ui.nIFTUJ`
+
+**경로:** `cfg/gui/cfg_gui.ui.nIFTUJ`
+
+
+```text
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>655</width>
+    <height>655</height>
+   </rect>
+  </property>
+  <property name="palette">
+   <palette>
+    <active>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </active>
+    <inactive>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </inactive>
+    <disabled>
+     <colorrole role="WindowText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Button">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Light">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Midlight">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Dark">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Mid">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>170</red>
+        <green>170</green>
+        <blue>170</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Text">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="BrightText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ButtonText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Base">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Window">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Shadow">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="AlternateBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipBase">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>220</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="ToolTipText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>0</red>
+        <green>0</green>
+        <blue>0</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="PlaceholderText">
+      <brush brushstyle="SolidPattern">
+       <color alpha="127">
+        <red>127</red>
+        <green>127</green>
+        <blue>127</blue>
+       </color>
+      </brush>
+     </colorrole>
+     <colorrole role="Accent">
+      <brush brushstyle="SolidPattern">
+       <color alpha="255">
+        <red>255</red>
+        <green>255</green>
+        <blue>255</blue>
+       </color>
+      </brush>
+     </colorrole>
+    </disabled>
+   </palette>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QTabWidget" name="tabWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>661</width>
+     <height>661</height>
+    </rect>
+   </property>
+   <property name="tabShape">
+    <enum>QTabWidget::Rounded</enum>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="tab">
+    <attribute name="title">
+     <string>Config</string>
+    </attribute>
+    <widget class="QLineEdit" name="lineEdit_curConfig">
+     <property name="geometry">
+      <rect>
+       <x>130</x>
+       <y>20</y>
+       <width>421</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="placeholderText">
+      <string>None</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_browse">
+     <property name="geometry">
+      <rect>
+       <x>550</x>
+       <y>20</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Browse...</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_curConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Current Config:</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_scConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>631</width>
+       <height>281</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Spacecraft Config</string>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget_6">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>261</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <item>
+        <widget class="QTextEdit" name="textEdit_scConfig">
+         <property name="lineWrapMode">
+          <enum>QTextEdit::NoWrap</enum>
+         </property>
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QSpinBox" name="spinBox_configNumber">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>-1</y>
+        <width>48</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="groupBox_masterConfig">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>631</width>
+       <height>231</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Master Config</string>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget_5">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>211</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QTextEdit" name="textEdit_masterConfig">
+         <property name="readOnly">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QPushButton" name="pushButton_save">
+     <property name="geometry">
+      <rect>
+       <x>220</x>
+       <y>590</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="pushButton_saveAs">
+     <property name="geometry">
+      <rect>
+       <x>330</x>
+       <y>590</y>
+       <width>94</width>
+       <height>26</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Save As...</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_2">
+    <attribute name="title">
+     <string>Build</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>120</y>
+       <width>631</width>
+       <height>491</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Console Output</string>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <widget class="QTextEdit" name="textEdit_buildConsole">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>20</y>
+        <width>631</width>
+        <height>471</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Base">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled/>
+       </palette>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>20</y>
+       <width>421</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QFrame" name="frame">
+      <property name="geometry">
+       <rect>
+        <x>79</x>
+        <y>0</y>
+        <width>341</width>
+        <height>80</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QWidget" name="gridLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>340</width>
+         <height>80</height>
+        </rect>
+       </property>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="1">
+         <widget class="QPushButton" name="pushButton_fswClean">
+          <property name="text">
+           <string>FSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QPushButton" name="pushButton_fswBuild">
+          <property name="text">
+           <string>FSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="2">
+         <widget class="QPushButton" name="pushButton_gswClean">
+          <property name="text">
+           <string>GSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="pushButton_simClean">
+          <property name="text">
+           <string>SIM</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pushButton_simBuild">
+          <property name="text">
+           <string>SIM</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2">
+         <widget class="QPushButton" name="pushButton_gswBuild">
+          <property name="text">
+           <string>GSW</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="3">
+         <widget class="QPushButton" name="pushButton_buildAll">
+          <property name="text">
+           <string>All</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="3">
+         <widget class="QPushButton" name="pushButton_cleanAll">
+          <property name="text">
+           <string>All</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_3">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QLabel" name="label_4">
+          <property name="text">
+           <string>Build</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>40</y>
+        <width>81</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QWidget" name="verticalLayoutWidget_2">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>0</y>
+         <width>81</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_5">
+          <property name="text">
+           <string>Clean</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="tab_3">
+    <attribute name="title">
+     <string>Launch</string>
+    </attribute>
+    <widget class="QGroupBox" name="groupBox_control">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>631</width>
+       <height>611</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QWidget" name="horizontalLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>570</y>
+        <width>611</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <property name="spacing">
+        <number>45</number>
+       </property>
+       <item>
+        <widget class="QPushButton" name="pushButton_play">
+         <property name="text">
+          <string>Play</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg</normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg</iconset>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_pause">
+         <property name="text">
+          <string>Pause</string>
+         </property>
+         <property name="icon">
+          <iconset>
+           <normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg</normaloff>../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg</iconset>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="horizontalLayoutWidget_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>611</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <item>
+        <widget class="QPushButton" name="pushButton_launch">
+         <property name="text">
+          <string>Launch</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_stop">
+         <property name="text">
+          <string>Stop</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_9">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>60</y>
+        <width>611</width>
+        <height>451</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Console Output</string>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <widget class="QTextEdit" name="textEdit_launchConsole">
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>20</y>
+         <width>611</width>
+         <height>431</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Base">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled/>
+        </palette>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QComboBox" name="comboBox">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>530</y>
+        <width>93</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <item>
+       <property name="text">
+        <string>Run For</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Run Until</string>
+       </property>
+      </item>
+     </widget>
+     <widget class="QLineEdit" name="lineEdit">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>530</y>
+        <width>181</width>
+        <height>26</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
+```
+
+### `cfg_gui_main.py`
+
+**경로:** `cfg/gui/cfg_gui_main.py`
+
+
+```python
+from pathlib import Path
+from PySide6.QtWidgets import QWidget, QApplication, QFileDialog, QTextEdit, QPushButton, QDateTimeEdit, QLabel, QCheckBox, QVBoxLayout, QSizePolicy, QDoubleSpinBox, QLayout, QMessageBox
+from PySide6.QtCore import QProcess, QDateTime
+from PySide6.QtGui import QTextCharFormat, QPixmap
+from cfg_gui_ui import Ui_Form
+import sys, re, xmltodict, datetime, threading
+import xml.etree.ElementTree as ET
+import os
+
+# TODO: Update master xml sc-x-cfg filename if modified in sc config (in progress)
+# TODO: disableButtons(), enableButtons() not working as intended due to the gnome-terminal thread handling the commands externally
+
+class cfg_gui(QWidget):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.ui = Ui_Form()
+        self.ui.setupUi(self)
+        self.setFixedSize(655, 655)
+        self.setWindowTitle("NOS3 Igniter - Version 0.0.1")
+        self.setWindowIcon(QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/nos3_original.png'))
+
+        # globals
+        self.dateTimeEdit = QDateTimeEdit()
+        self.scConfigs = {}                                                     # Stores child configs {'index' : "filetext"}
+        self.prevButtonPressed = None                                           # Tracks the last button pressed, used in buttonColor()
+        self.defaultStyleSheet = self.ui.pushButton_buildAll.styleSheet()       # Saves default stylesheet to return button color to normal, buttonColor()
+        self.setup = 0                                                          # Allows for switchConfig() to initially be called without calling saveText()
+        self.configNumTrack = 0                                                 # Tracks the index of the previous SC config when switching to another index
+        self.defaultConfig = f'{os.path.dirname(os.path.abspath(__file__))}/../nos3-mission.xml'
+        self.config_path = self.defaultConfig
+
+        # Config Tab
+        self.ui.pushButton_browse.clicked.connect(self.browseConfig)
+        self.ui.pushButton_save.clicked.connect(lambda: self.saveXML("save"))
+        self.ui.pushButton_saveAs.clicked.connect(lambda: self.saveXML("saveAs"))
+        self.ui.spinBox_configNumber.valueChanged.connect(lambda: self.switchConfig(self.ui.spinBox_configNumber.value()))
+        pixmap = QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/JSTAR-transparent_original.png')
+        self.ui.label_jstarLogo.setPixmap(pixmap)
+        pixmap = QPixmap(f'{os.path.dirname(os.path.abspath(__file__))}/resources/nos3_original.png')
+        self.ui.label_nos3Logo.setPixmap(pixmap)
+        
+        # Build Tab
+        self.ui.pushButton_buildAll.clicked.connect(lambda: self.build("all", self.ui.pushButton_buildAll))
+        self.ui.pushButton_cfgBuild.clicked.connect(lambda: self.build("config", self.ui.pushButton_cfgBuild))
+        self.ui.pushButton_fswBuild.clicked.connect(lambda: self.build("fsw", self.ui.pushButton_fswBuild))
+        self.ui.pushButton_gswBuild.clicked.connect(lambda: self.build("gsw", self.ui.pushButton_gswBuild))
+        self.ui.pushButton_simBuild.clicked.connect(lambda: self.build("sim", self.ui.pushButton_simBuild))
+        self.ui.pushButton_cleanAll.clicked.connect(lambda: self.clean("all", self.ui.pushButton_cleanAll))
+        self.ui.pushButton_fswClean.clicked.connect(lambda: self.clean("fsw", self.ui.pushButton_fswClean))
+        self.ui.pushButton_gswClean.clicked.connect(lambda: self.clean("gsw", self.ui.pushButton_gswClean))
+        self.ui.pushButton_simClean.clicked.connect(lambda: self.clean("sim", self.ui.pushButton_simClean))
+
+        # Launch Tab (Time Driver controls disabled)
+        #self.ui.pushButton_play.clicked.connect(lambda: self.startBashProcess(self.ui.textEdit_launchConsole, ["-lc", "echo '>> Starting NOS3 Time Driver'"]))
+        self.ui.pushButton_play.setDisabled(1)
+        self.ui.pushButton_stop.clicked.connect(lambda: self.gnome_terminal(self.ui.textEdit_launchConsole, "make stop"))
+        #self.ui.pushButton_pause.clicked.connect(lambda: self.startBashProcess(self.ui.textEdit_launchConsole, ["-lc", "echo '>> Pausing NOS3 Time Driver'"]))
+        self.ui.pushButton_pause.setDisabled(1)
+        self.ui.pushButton_launch.clicked.connect(lambda: self.gnome_terminal(self.ui.textEdit_launchConsole, "make launch"))
+        #self.ui.comboBox_run.currentIndexChanged.connect(self.run_ForUntil)
+        self.ui.comboBox_run.setDisabled(1)
+        self.ui.lineEdit_secondsEntry.setDisabled(1)
+
+        # Load Default Config
+        self.reloadConfig(self.defaultConfig)
+
+    # Replaces the textbox on launch tab with a date/time box and vice versa
+    def run_ForUntil(self):
+        index = self.ui.comboBox_run.currentIndex()
+        if index == 0:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.ui.lineEdit_secondsEntry)
+            self.ui.lineEdit_secondsEntry.setPlaceholderText("")
+        elif index == 1:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.ui.lineEdit_secondsEntry)
+            self.ui.lineEdit_secondsEntry.setPlaceholderText("Seconds")
+        elif index == 2:
+            self.ui.horizontalLayout_runForUntil.itemAt(1).widget().setParent(None)
+            self.currentTime = datetime.datetime.now()
+            self.dateTimeEdit.setMinimumDateTime(QDateTime(self.currentTime.year, self.currentTime.month, self.currentTime.day, self.currentTime.hour, self.currentTime.minute, self.currentTime.second, 0, 0))
+            self.ui.horizontalLayout_runForUntil.insertWidget(1, self.dateTimeEdit)
+            
+    # Updates the currently saved xml dictionary (not actual xml file) for the currently selected spacecraft config when edited. TODO: change name of function
+    def saveText(self, layout:QLayout, config_value:int):
+        text = self.scConfigs[config_value]
+        filename = text.split('\n')[0]
+        childXml = xmltodict.parse(text.split('\n', 2)[2])
+
+        # TODO: change to dynamically pull apps/components from xml file or directory, but how?
+        applications = ['cf', 'ds', 'fm', 'lc', 'sc']
+        components = ['adcs', 'cam', 'css', 'eps', 'fss', 'gps', 'imu', 'mag', 'radio', 'rw', 'sample', 'st', 'syn', 'torquer', 'thruster']
+
+        i = 0
+        while layout.itemAt(i) != None:
+            widget = layout.itemAt(i).widget()
+
+            # Handle filename
+            if isinstance(widget, QTextEdit):
+                widget:QTextEdit
+                filename = widget.toPlainText()
+                if "Filename:" not in filename:
+                    filename = f'Filename: {filename}'
+                if "Filename: " not in filename:
+                    filename = f'Filename: {filename.split(":")[1]}'
+
+            # Handle checkboxes
+            elif isinstance(widget, QCheckBox):
+                widget:QCheckBox
+                text = widget.text().split(' ')[0]
+                if text in applications:
+                    childXml['sc-1-config']['applications'][text]['enable'] = str(widget.isChecked()).lower()
+                elif text in components:
+                    childXml['sc-1-config']['components'][text]['enable'] = str(widget.isChecked()).lower()
+                elif text == 'gui':
+                    childXml['sc-1-config'][text]['enable'] = str(widget.isChecked()).lower()
+
+            # Handle orbits
+            elif isinstance(widget, QDoubleSpinBox):
+                widget:QDoubleSpinBox
+                prefix = widget.prefix().split(' ')[0]
+                childXml['sc-1-config']['orbit'][prefix] = str(widget.value())
+
+            # Increment index
+            i += 1
+            
+        combined = filename + '\n\n' + xmltodict.unparse(childXml)
+        self.scConfigs[config_value] = combined
+        
+    # Saves the master/child XML's edited in the GUI
+    def saveXML(self, saveType:str):
+        # saveType = "save" (overwrite) or "saveAs" (new)
+
+        if saveType == "saveAs":
+            savePath, _ = QFileDialog.getSaveFileName(None, 'Directory', './cfg')
+        elif saveType == "save":
+            savePath = self.config_path
+
+        # Grab master and save to xml
+        masterXml = xmltodict.parse(self.ui.textEdit_masterConfig.toPlainText())
+        self.convert2xml(masterXml, savePath)
+
+        # Now handle children
+        self.saveText(self.layout_, self.ui.spinBox_configNumber.value()-1)
+
+        for child in self.scConfigs:
+            text = str(self.scConfigs[child])
+            filename = text.split('\n')[0].split(' ')[1]
+            childXml = text.split('\n', 2)[2]
+            childXml = xmltodict.parse(childXml)
+            
+            # save under same directory as masterXml using filename parsed from textEdit
+            self.convert2xml(childXml, savePath.rsplit('/', 1)[0]+f'/{filename}')
+
+        self.reloadConfig(self.config_path)
+
+    # Loads the child config into the Spacecraft Config textbox
+    def switchConfig(self, value:int):
+        # value : index of spacecraft config in the order listed in the master XML
+        #         Note: Parameter indexing starts at 1
+
+        # save edits made to config before viewing next one
+        if self.setup == 1:
+            self.saveText(self.layout_, self.configNumTrack)
+            self.configNumTrack = value-1
+        else:
+            self.setup = 1
+
+        # setup layout to add item to
+        self.ui.scrollArea.setWidgetResizable(True)
+        self.ui.scrollAreaWidgetContents.setLayout(QVBoxLayout().layout())
+        self.layout_ = self.ui.scrollAreaWidgetContents.layout()
+        self.layout_.setSpacing(12)
+
+        # remove all items from SC Config window when switching index
+        while self.layout_.itemAt(0) != None:
+            child = self.layout_.itemAt(0).widget().setParent(None)
+
+        # Now parse the xml and convert to widgets
+        value = value-1
+        if value in self.scConfigs:
+            fileName = self.scConfigs[value].split('\n')[0]
+            childXML = self.scConfigs[value].split('\n')[2::]
+            childXML = ''.join(childXML)
+            childDict = xmltodict.parse(childXML)
+
+            # child = sc-xxx-cfg
+            for child in childDict:
+                configTag = QTextEdit()
+                configTag.setText((fileName))
+                configTag.setMinimumHeight(30)
+                self.layout_.addWidget(configTag)
+
+                # child2 = applications | components | gui | orbit
+                for child2 in childDict[child]:
+                    tag = QLabel()
+                    tag.setText(child2.upper()+": ")
+                    format = QTextCharFormat()
+                    format.setFontUnderline(True)
+                    tag.setFont(format.font())
+                    tag.setMinimumHeight(18)
+                    self.layout_.addWidget(tag)
+
+                    if child2 in ['applications', 'components']:
+
+                        # child 3 = cf | ds | ... | adcs | cam | ...
+                        for child3 in childDict[child][child2]:
+                            enableTag = QCheckBox()
+                            enableTag.setText(child3 + " enable ")
+                            enableTag.setChecked(childDict[child][child2][child3]['enable'] == 'true')
+                            enableTag.setMinimumHeight(18)
+                            enableTag.sizePolicy().setVerticalPolicy(QSizePolicy.Expanding)
+                            self.layout_.addWidget(enableTag)
+
+                    elif child2 == 'gui':
+                        enableTag = QCheckBox()
+                        enableTag.setText(child2 + " enable ")
+                        enableTag.setChecked(childDict[child][child2]['enable'] == 'true')
+                        self.layout_.addWidget(enableTag)
+
+                    elif child2 == 'orbit':
+
+                        # child3 = tipoff_x/y/z
+                        for child3 in childDict[child][child2]:
+                            orbitSpinBox = QDoubleSpinBox()
+                            orbitSpinBox.setMinimum(-99.00)
+                            orbitSpinBox.setMaximum(99.00)
+                            orbitSpinBox.setValue(float(childDict[child][child2][child3]))
+                            orbitSpinBox.setPrefix(f'{child3} = ')
+                            self.layout_.addWidget(orbitSpinBox)
+        else:
+            # No SC configs in master XML file, or selected a SC XML as master
+            tag = QLabel()
+            tag.setText("*ERROR*\n\nMake sure you chose a master configuration file\n\n*ERROR*")
+            self.layout_.addWidget(tag)
+
+    # Converts a dictionary to XML file, saved under the given filename/path
+    def convert2xml(self, attrDict:dict, fileName:str):
+        # ensure file is saved as xml
+        if fileName[-4::] != ".xml":
+            fileName += ".xml"
+
+        # unparse dictionary to xml
+        with open(fileName, "w") as f:
+            xmltodict.unparse(attrDict, f, pretty=True)
+            f.close()
+
+    # Opens file selection menu and calls parseXML() on the selected file
+    def browseConfig(self):
+
+        # Clear SC Config window when selecting a new master config
+        if "layout_" in self.__dict__:
+            while self.layout_.itemAt(0) != None:
+                self.layout_.itemAt(0).widget().setParent(None)
+
+        self.config_path, _ = QFileDialog.getOpenFileName(None, 'File', './cfg', "XML Files [ *.xml ]")
+        if self.config_path != "":
+            self.config_name = self.config_path.split("/")[-1]
+            self.ui.lineEdit_curConfig.setText(self.config_name)
+            self.parseXml(self.config_path)
+
+    # Reloads the whole config after clicking save, allows you to change "sc-x-cfg" xml file
+    def reloadConfig(self, config_path):
+        if "layout_" in self.__dict__:
+            while self.layout_.itemAt(0) != None:
+                self.layout_.itemAt(0).widget().setParent(None)
+        
+        if config_path != "":
+            config_name = config_path.split("/")[-1]
+            self.ui.lineEdit_curConfig.setText(config_name)
+            self.parseXml(config_path)
+
+        self.ui.spinBox_configNumber.setValue(1)
+
+    # Parses Master and child XML files from the given file, updates text boxes accordingly
+    def parseXml(self, config_path):
+        
+        # Read Master
+        with open(config_path, 'r') as f:
+            self.ui.textEdit_masterConfig.setText(f.read())
+            f.close()
+
+        # Parse number of SC and SC filenames from master
+        i = 1
+        self.sc_cfg_files = []
+        childDict = {}
+        self.master_root = ET.parse(config_path).getroot()
+        for child in self.master_root:
+            if child.tag == "number-spacecraft":
+                 self.ui.spinBox_configNumber.setMaximum(int(child.text))
+            if re.match("sc-[0-9]+-cfg", child.tag):
+                 childDict[child.tag] = child.text
+
+                 # Check for duplicate xml's
+                 if child.text in self.sc_cfg_files:
+                     QMessageBox.critical(self, "Error", "Using duplicate Spacecraft Config Files, Changes will not be saved correctly")
+                     print("Duplicate SC Config file")
+
+                 self.sc_cfg_files.append(child.text)
+                 i+=1
+
+        # Read Children
+        config_dir = str(config_path.rsplit('/', 1)[0])
+        for i, child in enumerate(childDict):
+            if Path(f'{config_dir}/{childDict[child]}').is_file():
+                filePath = f'{config_dir}/{childDict[child]}'
+            else:
+                raise FileNotFoundError(childDict[child])
+
+            with open(filePath, 'r') as f:
+                self.scConfigs[i] = f'Filename: {childDict[child]}\n\n{f.read()}'
+                f.close()
+                
+        # Update Spacecraft Config Text to first SC config listed in master config
+        self.switchConfig(1)
+
+    # Test for gnome-terminal instead of bash, also uses startCommand() instead of start()
+    def gnome_terminal(self, textbox:QTextEdit, command:str):
+        process = QProcess()
+
+        # `read line` is to hold the terminal open after execution, allows errors to be seen
+        process.startCommand(f'gnome-terminal --tab -- bash -c "{command}; echo Done. Press ENTER to close.; read line" ')
+
+        process.readyReadStandardOutput.connect(lambda: textbox.append(process.readAllStandardOutput().data().decode()))
+        process.readyReadStandardError.connect(lambda: textbox.append(process.readAllStandardError().data().decode()))
+
+        process.waitForFinished(msecs=-1)
+        textbox.append(f'>> {command}...')
+
+    # Placeholder clean command
+    def clean(self, software:str, button:QPushButton):
+        textbox = self.ui.textEdit_buildConsole
+        if software == 'all':
+            command = f'make clean'
+        else:
+            command = f'make clean-{software}'
+        
+        self.buttonColor(button)
+        t1 = threading.Thread(target=self.thread_gnome(textbox, button, command), name='t1')
+        t1.start()
+        
+    # Placeholder build command, assumes make prep already ran, same with clean commands
+    def build(self, software:str, button:QPushButton):
+        textbox = self.ui.textEdit_buildConsole
+        if software == 'all':
+            command = f'make'
+        else:
+            command = f'make {software}'
+
+        self.buttonColor(button)
+        t1 = threading.Thread(target=self.thread_gnome(textbox, button, command), name='t1')
+        t1.start()
+    
+    # Button/Bash function wrapper for threads
+    def thread_gnome(self, textbox:QTextEdit, button:QPushButton, command:str):
+        self.disableButtons(button)
+        self.gnome_terminal(textbox, command)
+        self.enableButtons(button)
+
+    # Changes the color of the most recently pressed button to green and the last pressed button to default
+    def buttonColor(self, button:QPushButton):
+        if self.prevButtonPressed is not None:
+            self.prevButtonPressed.setStyleSheet(self.defaultStyleSheet)
+        button.setStyleSheet('QPushButton {background-color: green;}')
+        self.prevButtonPressed = button
+
+    # Disable build/clean buttons while another is being ran (not working)
+    def disableButtons(self, button:QPushButton):
+        index = self.ui.gridLayout_buildCleanButtons.count()-1
+        while index >= 0:
+            widget = self.ui.gridLayout_buildCleanButtons.itemAt(index).widget()
+            if widget != button:
+                widget.setDisabled(1)
+            index -= 1
+
+    # Enable build/clean buttons after process is done running (not working)
+    def enableButtons(self, button:QPushButton):
+        index = self.ui.gridLayout_buildCleanButtons.count()-1
+        while index >= 0:
+            widget = self.ui.gridLayout_buildCleanButtons.itemAt(index).widget()
+            if widget != button:
+                widget.setEnabled(1)
+            index -= 1
+
+
+def main():
+    app = QApplication(sys.argv)
+    win = cfg_gui()
+    win.show()
+    sys.exit(app.exec())
+
+main()
+```
+
+### `cfg_gui_ui.py`
+
+**경로:** `cfg/gui/cfg_gui_ui.py`
+
+
+```python
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'cfg_gui.ui'
+##
+## Created by: Qt User Interface Compiler version 6.7.0
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (QCoreApplication, QDate, QDateTime, QLocale,
+    QMetaObject, QObject, QPoint, QRect,
+    QSize, QTime, QUrl, Qt)
+from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
+    QFont, QFontDatabase, QGradient, QIcon,
+    QImage, QKeySequence, QLinearGradient, QPainter,
+    QPalette, QPixmap, QRadialGradient, QTransform)
+from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
+    QGroupBox, QHBoxLayout, QLabel, QLayout,
+    QLineEdit, QPushButton, QScrollArea, QSizePolicy,
+    QSpinBox, QTabWidget, QTextEdit, QVBoxLayout,
+    QWidget)
+
+class Ui_Form(object):
+    def setupUi(self, Form):
+        if not Form.objectName():
+            Form.setObjectName(u"Form")
+        Form.resize(658, 655)
+        palette = QPalette()
+        brush = QBrush(QColor(0, 0, 0, 255))
+        brush.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.WindowText, brush)
+        brush1 = QBrush(QColor(255, 255, 255, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Midlight, brush1)
+        brush2 = QBrush(QColor(127, 127, 127, 255))
+        brush2.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Dark, brush2)
+        brush3 = QBrush(QColor(170, 170, 170, 255))
+        brush3.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Active, QPalette.Text, brush)
+        palette.setBrush(QPalette.Active, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Active, QPalette.ButtonText, brush)
+        palette.setBrush(QPalette.Active, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Active, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Active, QPalette.AlternateBase, brush1)
+        brush4 = QBrush(QColor(255, 255, 220, 255))
+        brush4.setStyle(Qt.SolidPattern)
+        palette.setBrush(QPalette.Active, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Active, QPalette.ToolTipText, brush)
+        brush5 = QBrush(QColor(0, 0, 0, 127))
+        brush5.setStyle(Qt.SolidPattern)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Active, QPalette.PlaceholderText, brush5)
+#endif
+        palette.setBrush(QPalette.Active, QPalette.Accent, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Midlight, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Dark, brush2)
+        palette.setBrush(QPalette.Inactive, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Inactive, QPalette.Text, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.ButtonText, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Inactive, QPalette.AlternateBase, brush1)
+        palette.setBrush(QPalette.Inactive, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Inactive, QPalette.ToolTipText, brush)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Inactive, QPalette.PlaceholderText, brush5)
+#endif
+        palette.setBrush(QPalette.Inactive, QPalette.Accent, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.WindowText, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Button, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Light, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Midlight, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Dark, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Mid, brush3)
+        palette.setBrush(QPalette.Disabled, QPalette.Text, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.BrightText, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.ButtonText, brush2)
+        palette.setBrush(QPalette.Disabled, QPalette.Base, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Window, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.Shadow, brush)
+        palette.setBrush(QPalette.Disabled, QPalette.AlternateBase, brush1)
+        palette.setBrush(QPalette.Disabled, QPalette.ToolTipBase, brush4)
+        palette.setBrush(QPalette.Disabled, QPalette.ToolTipText, brush)
+        brush6 = QBrush(QColor(127, 127, 127, 127))
+        brush6.setStyle(Qt.SolidPattern)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 12, 0)
+        palette.setBrush(QPalette.Disabled, QPalette.PlaceholderText, brush6)
+#endif
+        palette.setBrush(QPalette.Disabled, QPalette.Accent, brush1)
+        Form.setPalette(palette)
+        self.tabWidget = QTabWidget(Form)
+        self.tabWidget.setObjectName(u"tabWidget")
+        self.tabWidget.setGeometry(QRect(0, 0, 661, 661))
+        self.tabWidget.setTabShape(QTabWidget.TabShape.Rounded)
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.lineEdit_curConfig = QLineEdit(self.tab)
+        self.lineEdit_curConfig.setObjectName(u"lineEdit_curConfig")
+        self.lineEdit_curConfig.setGeometry(QRect(130, 20, 421, 26))
+        self.lineEdit_curConfig.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.lineEdit_curConfig.setReadOnly(True)
+        self.pushButton_browse = QPushButton(self.tab)
+        self.pushButton_browse.setObjectName(u"pushButton_browse")
+        self.pushButton_browse.setGeometry(QRect(550, 20, 94, 26))
+        self.label_curConfig = QLabel(self.tab)
+        self.label_curConfig.setObjectName(u"label_curConfig")
+        self.label_curConfig.setGeometry(QRect(10, 20, 121, 21))
+        self.groupBox_scConfig = QGroupBox(self.tab)
+        self.groupBox_scConfig.setObjectName(u"groupBox_scConfig")
+        self.groupBox_scConfig.setGeometry(QRect(10, 260, 631, 321))
+        self.horizontalLayoutWidget_6 = QWidget(self.groupBox_scConfig)
+        self.horizontalLayoutWidget_6.setObjectName(u"horizontalLayoutWidget_6")
+        self.horizontalLayoutWidget_6.setGeometry(QRect(0, 20, 631, 301))
+        self.horizontalLayout_6 = QHBoxLayout(self.horizontalLayoutWidget_6)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.scrollArea = QScrollArea(self.horizontalLayoutWidget_6)
+        self.scrollArea.setObjectName(u"scrollArea")
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.scrollArea.sizePolicy().hasHeightForWidth())
+        self.scrollArea.setSizePolicy(sizePolicy)
+        self.scrollArea.setAutoFillBackground(True)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents = QWidget()
+        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 613, 68))
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.scrollAreaWidgetContents.sizePolicy().hasHeightForWidth())
+        self.scrollAreaWidgetContents.setSizePolicy(sizePolicy1)
+        self.verticalLayout_3 = QVBoxLayout(self.scrollAreaWidgetContents)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.verticalLayout_3.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+
+        self.horizontalLayout_6.addWidget(self.scrollArea, 0, Qt.AlignmentFlag.AlignTop)
+
+        self.spinBox_configNumber = QSpinBox(self.groupBox_scConfig)
+        self.spinBox_configNumber.setObjectName(u"spinBox_configNumber")
+        self.spinBox_configNumber.setGeometry(QRect(150, -1, 48, 21))
+        self.spinBox_configNumber.setMinimum(1)
+        self.groupBox_masterConfig = QGroupBox(self.tab)
+        self.groupBox_masterConfig.setObjectName(u"groupBox_masterConfig")
+        self.groupBox_masterConfig.setGeometry(QRect(10, 60, 631, 181))
+        self.horizontalLayoutWidget_5 = QWidget(self.groupBox_masterConfig)
+        self.horizontalLayoutWidget_5.setObjectName(u"horizontalLayoutWidget_5")
+        self.horizontalLayoutWidget_5.setGeometry(QRect(0, 20, 631, 161))
+        self.horizontalLayout_5 = QHBoxLayout(self.horizontalLayoutWidget_5)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.textEdit_masterConfig = QTextEdit(self.horizontalLayoutWidget_5)
+        self.textEdit_masterConfig.setObjectName(u"textEdit_masterConfig")
+        self.textEdit_masterConfig.setReadOnly(False)
+
+        self.horizontalLayout_5.addWidget(self.textEdit_masterConfig)
+
+        self.pushButton_save = QPushButton(self.tab)
+        self.pushButton_save.setObjectName(u"pushButton_save")
+        self.pushButton_save.setGeometry(QRect(220, 590, 94, 26))
+        self.pushButton_saveAs = QPushButton(self.tab)
+        self.pushButton_saveAs.setObjectName(u"pushButton_saveAs")
+        self.pushButton_saveAs.setGeometry(QRect(330, 590, 94, 26))
+        self.label_nos3Logo = QLabel(self.tab)
+        self.label_nos3Logo.setObjectName(u"label_nos3Logo")
+        self.label_nos3Logo.setGeometry(QRect(50, 585, 111, 41))
+        self.label_nos3Logo.setScaledContents(True)
+        self.label_jstarLogo = QLabel(self.tab)
+        self.label_jstarLogo.setObjectName(u"label_jstarLogo")
+        self.label_jstarLogo.setGeometry(QRect(480, 585, 131, 41))
+        self.label_jstarLogo.setScaledContents(True)
+        self.label_jstarLogo.setAlignment(Qt.AlignmentFlag.AlignLeading|Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignVCenter)
+        self.tabWidget.addTab(self.tab, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.groupBox_8 = QGroupBox(self.tab_2)
+        self.groupBox_8.setObjectName(u"groupBox_8")
+        self.groupBox_8.setGeometry(QRect(10, 120, 631, 491))
+        self.groupBox_8.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.groupBox_8.setFlat(False)
+        self.groupBox_8.setCheckable(False)
+        self.textEdit_buildConsole = QTextEdit(self.groupBox_8)
+        self.textEdit_buildConsole.setObjectName(u"textEdit_buildConsole")
+        self.textEdit_buildConsole.setGeometry(QRect(0, 20, 631, 471))
+        palette1 = QPalette()
+        palette1.setBrush(QPalette.Active, QPalette.Text, brush1)
+        palette1.setBrush(QPalette.Active, QPalette.Base, brush)
+        palette1.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette1.setBrush(QPalette.Inactive, QPalette.Base, brush)
+        self.textEdit_buildConsole.setPalette(palette1)
+        self.textEdit_buildConsole.setReadOnly(True)
+        self.frame_2 = QFrame(self.tab_2)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setGeometry(QRect(10, 20, 641, 81))
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.frame = QFrame(self.frame_2)
+        self.frame.setObjectName(u"frame")
+        self.frame.setGeometry(QRect(79, 0, 561, 80))
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayoutWidget_2 = QWidget(self.frame)
+        self.gridLayoutWidget_2.setObjectName(u"gridLayoutWidget_2")
+        self.gridLayoutWidget_2.setGeometry(QRect(0, 0, 561, 80))
+        self.gridLayout_buildCleanButtons = QGridLayout(self.gridLayoutWidget_2)
+        self.gridLayout_buildCleanButtons.setObjectName(u"gridLayout_buildCleanButtons")
+        self.gridLayout_buildCleanButtons.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_cleanAll = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_cleanAll.setObjectName(u"pushButton_cleanAll")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_cleanAll, 1, 0, 1, 1)
+
+        self.pushButton_buildAll = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_buildAll.setObjectName(u"pushButton_buildAll")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_buildAll, 0, 0, 1, 1)
+
+        self.pushButton_fswBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_fswBuild.setObjectName(u"pushButton_fswBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_fswBuild, 0, 2, 1, 1)
+
+        self.pushButton_cfgBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_cfgBuild.setObjectName(u"pushButton_cfgBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_cfgBuild, 0, 1, 1, 1)
+
+        self.pushButton_simClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_simClean.setObjectName(u"pushButton_simClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_simClean, 1, 4, 1, 1)
+
+        self.pushButton_simBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_simBuild.setObjectName(u"pushButton_simBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_simBuild, 0, 4, 1, 1)
+
+        self.pushButton_gswBuild = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_gswBuild.setObjectName(u"pushButton_gswBuild")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_gswBuild, 0, 3, 1, 1)
+
+        self.pushButton_fswClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_fswClean.setObjectName(u"pushButton_fswClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_fswClean, 1, 2, 1, 1)
+
+        self.pushButton_gswClean = QPushButton(self.gridLayoutWidget_2)
+        self.pushButton_gswClean.setObjectName(u"pushButton_gswClean")
+
+        self.gridLayout_buildCleanButtons.addWidget(self.pushButton_gswClean, 1, 3, 1, 1)
+
+        self.frame_3 = QFrame(self.frame_2)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setGeometry(QRect(0, 0, 81, 41))
+        self.frame_3.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget = QWidget(self.frame_3)
+        self.verticalLayoutWidget.setObjectName(u"verticalLayoutWidget")
+        self.verticalLayoutWidget.setGeometry(QRect(0, 0, 81, 41))
+        self.verticalLayout = QVBoxLayout(self.verticalLayoutWidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.verticalLayout.setContentsMargins(0, 0, 0, 0)
+        self.label_4 = QLabel(self.verticalLayoutWidget)
+        self.label_4.setObjectName(u"label_4")
+        self.label_4.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout.addWidget(self.label_4)
+
+        self.frame_4 = QFrame(self.frame_2)
+        self.frame_4.setObjectName(u"frame_4")
+        self.frame_4.setGeometry(QRect(0, 40, 81, 41))
+        self.frame_4.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_4.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayoutWidget_2 = QWidget(self.frame_4)
+        self.verticalLayoutWidget_2.setObjectName(u"verticalLayoutWidget_2")
+        self.verticalLayoutWidget_2.setGeometry(QRect(0, 0, 81, 41))
+        self.verticalLayout_2 = QVBoxLayout(self.verticalLayoutWidget_2)
+        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.label_5 = QLabel(self.verticalLayoutWidget_2)
+        self.label_5.setObjectName(u"label_5")
+        self.label_5.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_2.addWidget(self.label_5)
+
+        self.tabWidget.addTab(self.tab_2, "")
+        self.tab_3 = QWidget()
+        self.tab_3.setObjectName(u"tab_3")
+        self.groupBox_control = QGroupBox(self.tab_3)
+        self.groupBox_control.setObjectName(u"groupBox_control")
+        self.groupBox_control.setGeometry(QRect(10, 10, 631, 611))
+        self.horizontalLayoutWidget = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget.setObjectName(u"horizontalLayoutWidget")
+        self.horizontalLayoutWidget.setGeometry(QRect(10, 570, 611, 31))
+        self.horizontalLayout = QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setSpacing(45)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_play = QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_play.setObjectName(u"pushButton_play")
+        icon = QIcon()
+        icon.addFile(u"../../../../../../../../usr/share/icons/Humanity/actions/24/gtk-media-play-ltr.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_play.setIcon(icon)
+
+        self.horizontalLayout.addWidget(self.pushButton_play)
+
+        self.pushButton_pause = QPushButton(self.horizontalLayoutWidget)
+        self.pushButton_pause.setObjectName(u"pushButton_pause")
+        icon1 = QIcon()
+        icon1.addFile(u"../../../../../../../../usr/share/icons/Humanity/actions/24/media-playback-pause.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.pushButton_pause.setIcon(icon1)
+
+        self.horizontalLayout.addWidget(self.pushButton_pause)
+
+        self.horizontalLayoutWidget_2 = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget_2.setObjectName(u"horizontalLayoutWidget_2")
+        self.horizontalLayoutWidget_2.setGeometry(QRect(10, 10, 611, 41))
+        self.horizontalLayout_2 = QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.pushButton_launch = QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_launch.setObjectName(u"pushButton_launch")
+
+        self.horizontalLayout_2.addWidget(self.pushButton_launch)
+
+        self.pushButton_stop = QPushButton(self.horizontalLayoutWidget_2)
+        self.pushButton_stop.setObjectName(u"pushButton_stop")
+
+        self.horizontalLayout_2.addWidget(self.pushButton_stop)
+
+        self.groupBox_9 = QGroupBox(self.groupBox_control)
+        self.groupBox_9.setObjectName(u"groupBox_9")
+        self.groupBox_9.setGeometry(QRect(10, 60, 611, 451))
+        self.groupBox_9.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.groupBox_9.setFlat(False)
+        self.groupBox_9.setCheckable(False)
+        self.textEdit_launchConsole = QTextEdit(self.groupBox_9)
+        self.textEdit_launchConsole.setObjectName(u"textEdit_launchConsole")
+        self.textEdit_launchConsole.setGeometry(QRect(0, 20, 611, 431))
+        palette2 = QPalette()
+        palette2.setBrush(QPalette.Active, QPalette.Text, brush1)
+        palette2.setBrush(QPalette.Active, QPalette.Base, brush)
+        palette2.setBrush(QPalette.Inactive, QPalette.Text, brush1)
+        palette2.setBrush(QPalette.Inactive, QPalette.Base, brush)
+        self.textEdit_launchConsole.setPalette(palette2)
+        self.textEdit_launchConsole.setReadOnly(True)
+        self.horizontalLayoutWidget_3 = QWidget(self.groupBox_control)
+        self.horizontalLayoutWidget_3.setObjectName(u"horizontalLayoutWidget_3")
+        self.horizontalLayoutWidget_3.setGeometry(QRect(190, 520, 261, 41))
+        self.horizontalLayout_runForUntil = QHBoxLayout(self.horizontalLayoutWidget_3)
+        self.horizontalLayout_runForUntil.setObjectName(u"horizontalLayout_runForUntil")
+        self.horizontalLayout_runForUntil.setContentsMargins(0, 0, 0, 0)
+        self.comboBox_run = QComboBox(self.horizontalLayoutWidget_3)
+        self.comboBox_run.addItem("")
+        self.comboBox_run.addItem("")
+        self.comboBox_run.addItem("")
+        self.comboBox_run.setObjectName(u"comboBox_run")
+
+        self.horizontalLayout_runForUntil.addWidget(self.comboBox_run)
+
+        self.lineEdit_secondsEntry = QLineEdit(self.horizontalLayoutWidget_3)
+        self.lineEdit_secondsEntry.setObjectName(u"lineEdit_secondsEntry")
+        self.lineEdit_secondsEntry.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.horizontalLayout_runForUntil.addWidget(self.lineEdit_secondsEntry)
+
+        self.tabWidget.addTab(self.tab_3, "")
+
+        self.retranslateUi(Form)
+
+        self.tabWidget.setCurrentIndex(0)
+
+
+        QMetaObject.connectSlotsByName(Form)
+    # setupUi
+
+    def retranslateUi(self, Form):
+        Form.setWindowTitle(QCoreApplication.translate("Form", u"Form", None))
+        self.lineEdit_curConfig.setPlaceholderText(QCoreApplication.translate("Form", u"None", None))
+        self.pushButton_browse.setText(QCoreApplication.translate("Form", u"Browse...", None))
+        self.label_curConfig.setText(QCoreApplication.translate("Form", u"Current Config:", None))
+        self.groupBox_scConfig.setTitle(QCoreApplication.translate("Form", u"Spacecraft Config", None))
+        self.groupBox_masterConfig.setTitle(QCoreApplication.translate("Form", u"Master Config", None))
+        self.pushButton_save.setText(QCoreApplication.translate("Form", u"Save", None))
+        self.pushButton_saveAs.setText(QCoreApplication.translate("Form", u"Save As...", None))
+        self.label_nos3Logo.setText("")
+        self.label_jstarLogo.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), QCoreApplication.translate("Form", u"Config", None))
+        self.groupBox_8.setTitle(QCoreApplication.translate("Form", u"Console Output", None))
+        self.pushButton_cleanAll.setText(QCoreApplication.translate("Form", u"All", None))
+        self.pushButton_buildAll.setText(QCoreApplication.translate("Form", u"All", None))
+        self.pushButton_fswBuild.setText(QCoreApplication.translate("Form", u"FSW", None))
+        self.pushButton_cfgBuild.setText(QCoreApplication.translate("Form", u"CFG", None))
+        self.pushButton_simClean.setText(QCoreApplication.translate("Form", u"SIM", None))
+        self.pushButton_simBuild.setText(QCoreApplication.translate("Form", u"SIM", None))
+        self.pushButton_gswBuild.setText(QCoreApplication.translate("Form", u"GSW", None))
+        self.pushButton_fswClean.setText(QCoreApplication.translate("Form", u"FSW", None))
+        self.pushButton_gswClean.setText(QCoreApplication.translate("Form", u"GSW", None))
+        self.label_4.setText(QCoreApplication.translate("Form", u"Build", None))
+        self.label_5.setText(QCoreApplication.translate("Form", u"Clean", None))
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("Form", u"Build", None))
+        self.groupBox_control.setTitle("")
+        self.pushButton_play.setText(QCoreApplication.translate("Form", u"Play", None))
+        self.pushButton_pause.setText(QCoreApplication.translate("Form", u"Pause", None))
+        self.pushButton_launch.setText(QCoreApplication.translate("Form", u"Launch", None))
+        self.pushButton_stop.setText(QCoreApplication.translate("Form", u"Stop", None))
+        self.groupBox_9.setTitle(QCoreApplication.translate("Form", u"NOS3 Time Driver", None))
+        self.comboBox_run.setItemText(0, "")
+        self.comboBox_run.setItemText(1, QCoreApplication.translate("Form", u"Run For", None))
+        self.comboBox_run.setItemText(2, QCoreApplication.translate("Form", u"Run Until", None))
+
+        self.lineEdit_secondsEntry.setText("")
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("Form", u"Launch", None))
+    # retranslateUi
+
+```

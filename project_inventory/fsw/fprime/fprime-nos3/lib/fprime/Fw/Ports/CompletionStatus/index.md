@@ -3,16 +3,41 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--CompletionStatus.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/CMakeLists.txt`
+
+
+```cmake
+####
+# CMakeLists.txt:
+#
+# Sets up the fprime module build within CMake.
+####
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/CompletionStatus.fpp"
+)
+register_fprime_module()
 ```
 
-## 항목
+### `CompletionStatus.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/CompletionStatus.fpp`](file--CompletionStatus.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Ports/CompletionStatus/CompletionStatus.fpp`
+
+
+```fpp
+#####
+# CompletionStatus Port:
+#
+# A port communicating completion status.
+#####
+
+module Fw {
+    @ Port communicating completion status
+    port CompletionStatus(
+        completed: Fw.Completed @< Completion status
+    )
+}
+```

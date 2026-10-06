@@ -3,16 +3,195 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-parameter-list.component.html`
 
-file--create-parameter-list.component.html
-file--create-parameter-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/create-parameter-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar>
+    <ng-template ya-instance-toolbar-label>
+      <ya-page-icon-button routerLink=".." [queryParams]="{ c: yamcs.context }" icon="arrow_back" />
+      Create parameter list
+    </ng-template>
+  </ya-instance-toolbar>
+
+  <div class="form-content ya-form">
+    <form [formGroup]="form" novalidate>
+      <ya-field label="Name">
+        <input formControlName="name" type="text" />
+      </ya-field>
+
+      <ya-field label="Description">
+        <textarea formControlName="description" rows="5" style="resize: none"></textarea>
+      </ya-field>
+
+      <ya-field-divider />
+
+      <ya-button (click)="showAddPatternDialog()" icon="add_circle">
+        Add parameter or pattern
+      </ya-button>
+
+      @if (patterns$ | async; as patterns) {
+        <table yaDataTable style="width: 100%; margin-top: 16px">
+          <tr>
+            <th>Pattern</th>
+            <th></th>
+          </tr>
+          @if (!patterns.length) {
+            <tr>
+              <td colspan="3">No rows to display</td>
+            </tr>
+          }
+          @for (pattern of patterns; track pattern; let i = $index) {
+            <tr>
+              <td>{{ pattern }}</td>
+              <td style="text-align: right">
+                <ya-icon-action
+                  (click)="moveDown(i); $event.stopPropagation()"
+                  icon="keyboard_arrow_down" />
+                <ya-icon-action
+                  (click)="moveUp(i); $event.stopPropagation()"
+                  icon="keyboard_arrow_up" />
+                <ya-text-action icon="delete" (click)="deletePattern(i)">DELETE</ya-text-action>
+              </td>
+            </tr>
+          }
+        </table>
+      }
+    </form>
+
+    <p>&nbsp;</p>
+    <ya-toolbar appearance="bottom">
+      <ya-button (click)="location.back()">Cancel</ya-button>
+      <ya-button appearance="primary" (click)="onConfirm()" [disabled]="!form.valid">
+        CREATE
+      </ya-button>
+    </ya-toolbar>
+  </div>
+</ya-instance-page>
 ```
 
-## 항목
+### `create-parameter-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/create-parameter-list.component.html`](file--create-parameter-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/create-parameter-list.component.ts`](file--create-parameter-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/parameter-lists/create-parameter-list/create-parameter-list.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  CreateParameterListRequest,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { SelectParameterDialogComponent } from '../../../shared/select-parameter-dialog/select-parameter-dialog.component';
+
+@Component({
+  templateUrl: './create-parameter-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreateParameterListComponent {
+  form: UntypedFormGroup;
+
+  patterns$ = new BehaviorSubject<string[]>([]);
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    private route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private dialog: MatDialog,
+    private messageService: MessageService,
+    readonly location: Location,
+  ) {
+    title.setTitle('Create a Parameter List');
+    this.form = formBuilder.group({
+      name: new UntypedFormControl('', [Validators.required]),
+      description: new UntypedFormControl(),
+    });
+  }
+
+  showAddPatternDialog() {
+    const dialogRef = this.dialog.open(SelectParameterDialogComponent, {
+      width: '500px',
+      data: {
+        label: 'Add parameter or pattern',
+        okLabel: 'ADD',
+        hint: 'Either an exact parameter name, or a glob pattern with *, **, or ? wildcards.',
+      },
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.patterns$.next([...this.patterns$.value, result]);
+      }
+    });
+  }
+
+  deletePattern(idx: number) {
+    this.patterns$.value.splice(idx, 1);
+    this.patterns$.next([...this.patterns$.value]);
+  }
+
+  moveUp(idx: number) {
+    const patterns = this.patterns$.value;
+    const x = patterns[idx];
+    if (idx === 0) {
+      patterns[idx] = patterns[patterns.length - 1];
+      patterns[patterns.length - 1] = x;
+    } else {
+      patterns[idx] = patterns[idx - 1];
+      patterns[idx - 1] = x;
+    }
+
+    this.patterns$.next([...this.patterns$.value]);
+  }
+
+  moveDown(idx: number) {
+    const patterns = this.patterns$.value;
+    const x = patterns[idx];
+    if (idx === patterns.length - 1) {
+      patterns[idx] = patterns[0];
+      patterns[0] = x;
+    } else {
+      patterns[idx] = patterns[idx + 1];
+      patterns[idx + 1] = x;
+    }
+
+    this.patterns$.next([...this.patterns$.value]);
+  }
+
+  onConfirm() {
+    const options: CreateParameterListRequest = {
+      name: this.form.value.name,
+      description: this.form.value.description,
+      patterns: [...this.patterns$.value],
+    };
+    this.yamcs.yamcsClient
+      .createParameterList(this.yamcs.instance!, options)
+      .then(() =>
+        this.router.navigate(['..'], {
+          relativeTo: this.route,
+          queryParams: { c: this.yamcs.context },
+        }),
+      )
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

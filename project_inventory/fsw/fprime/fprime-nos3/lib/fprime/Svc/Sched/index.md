@@ -3,18 +3,53 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
-file--CMakeLists.txt
-file--Sched.fpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/Sched.fpp`](file--Sched.fpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/Sched.fpp"
+)
+
+set(MOD_DEPS
+    Fw/Port
+)
+
+register_fprime_module()
+```
+
+### `Sched.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Sched/Sched.fpp`
+
+
+```fpp
+module Svc {
+
+  @ Scheduler Port with order argument
+  port Sched(
+              context: U32 @< The call order
+            )
+
+}
+```

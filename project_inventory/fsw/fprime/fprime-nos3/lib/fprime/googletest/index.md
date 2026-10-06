@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,32 +13,831 @@ ci/index
 docs/index
 googlemock/index
 googletest/index
-file--.clang-format
-file--.git
-file--.gitignore
-file--BUILD.bazel
-file--CMakeLists.txt
-file--CONTRIBUTING.md
-file--CONTRIBUTORS
-file--LICENSE
-file--README.md
-file--WORKSPACE
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.github/`](.github/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/ci/`](ci/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googlemock/`](googlemock/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googletest/`](googletest/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.clang-format`](file--.clang-format) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/BUILD.bazel`](file--BUILD.bazel) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/CONTRIBUTING.md`](file--CONTRIBUTING.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/CONTRIBUTORS`](file--CONTRIBUTORS) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/LICENSE`](file--LICENSE) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/WORKSPACE`](file--WORKSPACE) — UTF-8 텍스트 파일 본문 포함
+### `.clang-format`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.clang-format`
+
+
+```text
+# Run manually to reformat a file:
+# clang-format -i --style=file <file>
+Language:        Cpp
+BasedOnStyle:  Google
+```
+
+### `.git`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.git`
+
+
+```text
+gitdir: ../../../../../../.git/modules/fsw/fprime/fprime-nos3/modules/lib/fprime/modules/googletest
+```
+
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/.gitignore`
+
+
+```text
+# Ignore CI build directory
+build/
+xcuserdata
+cmake-build-debug/
+.idea/
+bazel-bin
+bazel-genfiles
+bazel-googletest
+bazel-out
+bazel-testlogs
+# python
+*.pyc
+
+# Visual Studio files
+.vs
+*.sdf
+*.opensdf
+*.VC.opendb
+*.suo
+*.user
+_ReSharper.Caches/
+Win32-Debug/
+Win32-Release/
+x64-Debug/
+x64-Release/
+
+# Ignore autoconf / automake files
+Makefile.in
+aclocal.m4
+configure
+build-aux/
+autom4te.cache/
+googletest/m4/libtool.m4
+googletest/m4/ltoptions.m4
+googletest/m4/ltsugar.m4
+googletest/m4/ltversion.m4
+googletest/m4/lt~obsolete.m4
+googlemock/m4
+
+# Ignore generated directories.
+googlemock/fused-src/
+googletest/fused-src/
+
+# macOS files
+.DS_Store
+googletest/.DS_Store
+googletest/xcode/.DS_Store
+
+# Ignore cmake generated directories and files.
+CMakeFiles
+CTestTestfile.cmake
+Makefile
+cmake_install.cmake
+googlemock/CMakeFiles
+googlemock/CTestTestfile.cmake
+googlemock/Makefile
+googlemock/cmake_install.cmake
+googlemock/gtest
+/bin
+/googlemock/gmock.dir
+/googlemock/gmock_main.dir
+/googlemock/RUN_TESTS.vcxproj.filters
+/googlemock/RUN_TESTS.vcxproj
+/googlemock/INSTALL.vcxproj.filters
+/googlemock/INSTALL.vcxproj
+/googlemock/gmock_main.vcxproj.filters
+/googlemock/gmock_main.vcxproj
+/googlemock/gmock.vcxproj.filters
+/googlemock/gmock.vcxproj
+/googlemock/gmock.sln
+/googlemock/ALL_BUILD.vcxproj.filters
+/googlemock/ALL_BUILD.vcxproj
+/lib
+/Win32
+/ZERO_CHECK.vcxproj.filters
+/ZERO_CHECK.vcxproj
+/RUN_TESTS.vcxproj.filters
+/RUN_TESTS.vcxproj
+/INSTALL.vcxproj.filters
+/INSTALL.vcxproj
+/googletest-distribution.sln
+/CMakeCache.txt
+/ALL_BUILD.vcxproj.filters
+/ALL_BUILD.vcxproj
+```
+
+### `BUILD.bazel`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/BUILD.bazel`
+
+
+```text
+# Copyright 2017 Google Inc.
+# All Rights Reserved.
+#
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of Google Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#
+#   Bazel Build for Google C++ Testing Framework(Google Test)
+
+package(default_visibility = ["//visibility:public"])
+
+licenses(["notice"])
+
+exports_files(["LICENSE"])
+
+config_setting(
+    name = "qnx",
+    constraint_values = ["@platforms//os:qnx"],
+)
+
+config_setting(
+    name = "windows",
+    constraint_values = ["@platforms//os:windows"],
+)
+
+config_setting(
+    name = "freebsd",
+    constraint_values = ["@platforms//os:freebsd"],
+)
+
+config_setting(
+    name = "openbsd",
+    constraint_values = ["@platforms//os:openbsd"],
+)
+
+config_setting(
+    name = "msvc_compiler",
+    flag_values = {
+        "@bazel_tools//tools/cpp:compiler": "msvc-cl",
+    },
+    visibility = [":__subpackages__"],
+)
+
+config_setting(
+    name = "has_absl",
+    values = {"define": "absl=1"},
+)
+
+# Library that defines the FRIEND_TEST macro.
+cc_library(
+    name = "gtest_prod",
+    hdrs = ["googletest/include/gtest/gtest_prod.h"],
+    includes = ["googletest/include"],
+)
+
+# Google Test including Google Mock
+cc_library(
+    name = "gtest",
+    srcs = glob(
+        include = [
+            "googletest/src/*.cc",
+            "googletest/src/*.h",
+            "googletest/include/gtest/**/*.h",
+            "googlemock/src/*.cc",
+            "googlemock/include/gmock/**/*.h",
+        ],
+        exclude = [
+            "googletest/src/gtest-all.cc",
+            "googletest/src/gtest_main.cc",
+            "googlemock/src/gmock-all.cc",
+            "googlemock/src/gmock_main.cc",
+        ],
+    ),
+    hdrs = glob([
+        "googletest/include/gtest/*.h",
+        "googlemock/include/gmock/*.h",
+    ]),
+    copts = select({
+        ":qnx": [],
+        ":windows": [],
+        "//conditions:default": ["-pthread"],
+    }),
+    defines = select({
+        ":has_absl": ["GTEST_HAS_ABSL=1"],
+        "//conditions:default": [],
+    }),
+    features = select({
+        ":windows": ["windows_export_all_symbols"],
+        "//conditions:default": [],
+    }),
+    includes = [
+        "googlemock",
+        "googlemock/include",
+        "googletest",
+        "googletest/include",
+    ],
+    linkopts = select({
+        ":qnx": ["-lregex"],
+        ":windows": [],
+        ":freebsd": [
+            "-lm",
+            "-pthread",
+        ],
+        ":openbsd": [
+            "-lm",
+            "-pthread",
+        ],
+        "//conditions:default": ["-pthread"],
+    }),
+    deps = select({
+        ":has_absl": [
+            "@com_google_absl//absl/debugging:failure_signal_handler",
+            "@com_google_absl//absl/debugging:stacktrace",
+            "@com_google_absl//absl/debugging:symbolize",
+            "@com_google_absl//absl/flags:flag",
+            "@com_google_absl//absl/flags:parse",
+            "@com_google_absl//absl/flags:reflection",
+            "@com_google_absl//absl/flags:usage",
+            "@com_google_absl//absl/strings",
+            "@com_google_absl//absl/types:any",
+            "@com_google_absl//absl/types:optional",
+            "@com_google_absl//absl/types:variant",
+            "@com_googlesource_code_re2//:re2",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+cc_library(
+    name = "gtest_main",
+    srcs = ["googlemock/src/gmock_main.cc"],
+    features = select({
+        ":windows": ["windows_export_all_symbols"],
+        "//conditions:default": [],
+    }),
+    deps = [":gtest"],
+)
+
+# The following rules build samples of how to use gTest.
+cc_library(
+    name = "gtest_sample_lib",
+    srcs = [
+        "googletest/samples/sample1.cc",
+        "googletest/samples/sample2.cc",
+        "googletest/samples/sample4.cc",
+    ],
+    hdrs = [
+        "googletest/samples/prime_tables.h",
+        "googletest/samples/sample1.h",
+        "googletest/samples/sample2.h",
+        "googletest/samples/sample3-inl.h",
+        "googletest/samples/sample4.h",
+    ],
+    features = select({
+        ":windows": ["windows_export_all_symbols"],
+        "//conditions:default": [],
+    }),
+)
+
+cc_test(
+    name = "gtest_samples",
+    size = "small",
+    # All Samples except:
+    #   sample9 (main)
+    #   sample10 (main and takes a command line option and needs to be separate)
+    srcs = [
+        "googletest/samples/sample1_unittest.cc",
+        "googletest/samples/sample2_unittest.cc",
+        "googletest/samples/sample3_unittest.cc",
+        "googletest/samples/sample4_unittest.cc",
+        "googletest/samples/sample5_unittest.cc",
+        "googletest/samples/sample6_unittest.cc",
+        "googletest/samples/sample7_unittest.cc",
+        "googletest/samples/sample8_unittest.cc",
+    ],
+    linkstatic = 0,
+    deps = [
+        "gtest_sample_lib",
+        ":gtest_main",
+    ],
+)
+
+cc_test(
+    name = "sample9_unittest",
+    size = "small",
+    srcs = ["googletest/samples/sample9_unittest.cc"],
+    deps = [":gtest"],
+)
+
+cc_test(
+    name = "sample10_unittest",
+    size = "small",
+    srcs = ["googletest/samples/sample10_unittest.cc"],
+    deps = [":gtest"],
+)
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/CMakeLists.txt`
+
+
+```cmake
+# Note: CMake support is community-based. The maintainers do not use CMake
+# internally.
+
+cmake_minimum_required(VERSION 3.5)
+
+if (POLICY CMP0048)
+  cmake_policy(SET CMP0048 NEW)
+endif (POLICY CMP0048)
+
+if (POLICY CMP0077)
+  cmake_policy(SET CMP0077 NEW)
+endif (POLICY CMP0077)
+
+project(googletest-distribution)
+set(GOOGLETEST_VERSION 1.12.1)
+
+if(NOT CYGWIN AND NOT MSYS AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL QNX)
+  set(CMAKE_CXX_EXTENSIONS OFF)
+endif()
+
+enable_testing()
+
+include(CMakeDependentOption)
+include(GNUInstallDirs)
+
+#Note that googlemock target already builds googletest
+option(BUILD_GMOCK "Builds the googlemock subproject" ON)
+option(INSTALL_GTEST "Enable installation of googletest. (Projects embedding googletest may want to turn this OFF.)" ON)
+
+if(BUILD_GMOCK)
+  add_subdirectory( googlemock )
+else()
+  add_subdirectory( googletest )
+endif()
+```
+
+### `CONTRIBUTING.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/CONTRIBUTING.md`
+
+
+```markdown
+# How to become a contributor and submit your own code
+
+## Contributor License Agreements
+
+We'd love to accept your patches! Before we can take them, we have to jump a
+couple of legal hurdles.
+
+Please fill out either the individual or corporate Contributor License Agreement
+(CLA).
+
+*   If you are an individual writing original source code and you're sure you
+    own the intellectual property, then you'll need to sign an
+    [individual CLA](https://developers.google.com/open-source/cla/individual).
+*   If you work for a company that wants to allow you to contribute your work,
+    then you'll need to sign a
+    [corporate CLA](https://developers.google.com/open-source/cla/corporate).
+
+Follow either of the two links above to access the appropriate CLA and
+instructions for how to sign and return it. Once we receive it, we'll be able to
+accept your pull requests.
+
+## Are you a Googler?
+
+If you are a Googler, please make an attempt to submit an internal contribution
+rather than a GitHub Pull Request. If you are not able to submit internally, a
+PR is acceptable as an alternative.
+
+## Contributing A Patch
+
+1.  Submit an issue describing your proposed change to the
+    [issue tracker](https://github.com/google/googletest/issues).
+2.  Please don't mix more than one logical change per submittal, because it
+    makes the history hard to follow. If you want to make a change that doesn't
+    have a corresponding issue in the issue tracker, please create one.
+3.  Also, coordinate with team members that are listed on the issue in question.
+    This ensures that work isn't being duplicated and communicating your plan
+    early also generally leads to better patches.
+4.  If your proposed change is accepted, and you haven't already done so, sign a
+    Contributor License Agreement
+    ([see details above](#contributor-license-agreements)).
+5.  Fork the desired repo, develop and test your code changes.
+6.  Ensure that your code adheres to the existing style in the sample to which
+    you are contributing.
+7.  Ensure that your code has an appropriate set of unit tests which all pass.
+8.  Submit a pull request.
+
+## The Google Test and Google Mock Communities
+
+The Google Test community exists primarily through the
+[discussion group](http://groups.google.com/group/googletestframework) and the
+GitHub repository. Likewise, the Google Mock community exists primarily through
+their own [discussion group](http://groups.google.com/group/googlemock). You are
+definitely encouraged to contribute to the discussion and you can also help us
+to keep the effectiveness of the group high by following and promoting the
+guidelines listed here.
+
+### Please Be Friendly
+
+Showing courtesy and respect to others is a vital part of the Google culture,
+and we strongly encourage everyone participating in Google Test development to
+join us in accepting nothing less. Of course, being courteous is not the same as
+failing to constructively disagree with each other, but it does mean that we
+should be respectful of each other when enumerating the 42 technical reasons
+that a particular proposal may not be the best choice. There's never a reason to
+be antagonistic or dismissive toward anyone who is sincerely trying to
+contribute to a discussion.
+
+Sure, C++ testing is serious business and all that, but it's also a lot of fun.
+Let's keep it that way. Let's strive to be one of the friendliest communities in
+all of open source.
+
+As always, discuss Google Test in the official GoogleTest discussion group. You
+don't have to actually submit code in order to sign up. Your participation
+itself is a valuable contribution.
+
+## Style
+
+To keep the source consistent, readable, diffable and easy to merge, we use a
+fairly rigid coding style, as defined by the
+[google-styleguide](https://github.com/google/styleguide) project. All patches
+will be expected to conform to the style outlined
+[here](https://google.github.io/styleguide/cppguide.html). Use
+[.clang-format](https://github.com/google/googletest/blob/master/.clang-format)
+to check your formatting.
+
+## Requirements for Contributors
+
+If you plan to contribute a patch, you need to build Google Test, Google Mock,
+and their own tests from a git checkout, which has further requirements:
+
+*   [Python](https://www.python.org/) v2.3 or newer (for running some of the
+    tests and re-generating certain source files from templates)
+*   [CMake](https://cmake.org/) v2.8.12 or newer
+
+## Developing Google Test and Google Mock
+
+This section discusses how to make your own changes to the Google Test project.
+
+### Testing Google Test and Google Mock Themselves
+
+To make sure your changes work as intended and don't break existing
+functionality, you'll want to compile and run Google Test and GoogleMock's own
+tests. For that you can use CMake:
+
+    mkdir mybuild
+    cd mybuild
+    cmake -Dgtest_build_tests=ON -Dgmock_build_tests=ON ${GTEST_REPO_DIR}
+
+To choose between building only Google Test or Google Mock, you may modify your
+cmake command to be one of each
+
+    cmake -Dgtest_build_tests=ON ${GTEST_DIR} # sets up Google Test tests
+    cmake -Dgmock_build_tests=ON ${GMOCK_DIR} # sets up Google Mock tests
+
+Make sure you have Python installed, as some of Google Test's tests are written
+in Python. If the cmake command complains about not being able to find Python
+(`Could NOT find PythonInterp (missing: PYTHON_EXECUTABLE)`), try telling it
+explicitly where your Python executable can be found:
+
+    cmake -DPYTHON_EXECUTABLE=path/to/python ...
+
+Next, you can build Google Test and / or Google Mock and all desired tests. On
+\*nix, this is usually done by
+
+    make
+
+To run the tests, do
+
+    make test
+
+All tests should pass.
+```
+
+### `CONTRIBUTORS`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/CONTRIBUTORS`
+
+
+```text
+# This file contains a list of people who've made non-trivial
+# contribution to the Google C++ Testing Framework project.  People
+# who commit code to the project are encouraged to add their names
+# here.  Please keep the list sorted by first names.
+
+Ajay Joshi <jaj@google.com>
+Balázs Dán <balazs.dan@gmail.com>
+Benoit Sigoure <tsuna@google.com>
+Bharat Mediratta <bharat@menalto.com>
+Bogdan Piloca <boo@google.com>
+Chandler Carruth <chandlerc@google.com>
+Chris Prince <cprince@google.com>
+Chris Taylor <taylorc@google.com>
+Dan Egnor <egnor@google.com>
+Dave MacLachlan <dmaclach@gmail.com>
+David Anderson <danderson@google.com>
+Dean Sturtevant
+Eric Roman <eroman@chromium.org>
+Gene Volovich <gv@cite.com>
+Hady Zalek <hady.zalek@gmail.com>
+Hal Burch <gmock@hburch.com>
+Jeffrey Yasskin <jyasskin@google.com>
+Jim Keller <jimkeller@google.com>
+Joe Walnes <joe@truemesh.com>
+Jon Wray <jwray@google.com>
+Jói Sigurðsson <joi@google.com>
+Keir Mierle <mierle@gmail.com>
+Keith Ray <keith.ray@gmail.com>
+Kenton Varda <kenton@google.com>
+Kostya Serebryany <kcc@google.com>
+Krystian Kuzniarek <krystian.kuzniarek@gmail.com>
+Lev Makhlis
+Manuel Klimek <klimek@google.com>
+Mario Tanev <radix@google.com>
+Mark Paskin
+Markus Heule <markus.heule@gmail.com>
+Martijn Vels <mvels@google.com>
+Matthew Simmons <simmonmt@acm.org>
+Mika Raento <mikie@iki.fi>
+Mike Bland <mbland@google.com>
+Miklós Fazekas <mfazekas@szemafor.com>
+Neal Norwitz <nnorwitz@gmail.com>
+Nermin Ozkiranartli <nermin@google.com>
+Owen Carlsen <ocarlsen@google.com>
+Paneendra Ba <paneendra@google.com>
+Pasi Valminen <pasi.valminen@gmail.com>
+Patrick Hanna <phanna@google.com>
+Patrick Riley <pfr@google.com>
+Paul Menage <menage@google.com>
+Peter Kaminski <piotrk@google.com>
+Piotr Kaminski <piotrk@google.com>
+Preston Jackson <preston.a.jackson@gmail.com>
+Rainer Klaffenboeck <rainer.klaffenboeck@dynatrace.com>
+Russ Cox <rsc@google.com>
+Russ Rufer <russ@pentad.com>
+Sean Mcafee <eefacm@gmail.com>
+Sigurður Ásgeirsson <siggi@google.com>
+Sverre Sundsdal <sundsdal@gmail.com>
+Szymon Sobik <sobik.szymon@gmail.com>
+Takeshi Yoshino <tyoshino@google.com>
+Tracy Bialik <tracy@pentad.com>
+Vadim Berman <vadimb@google.com>
+Vlad Losev <vladl@google.com>
+Wolfgang Klier <wklier@google.com>
+Zhanyong Wan <wan@google.com>
+```
+
+### `LICENSE`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/LICENSE`
+
+
+```text
+Copyright 2008, Google Inc.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are
+met:
+
+    * Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above
+copyright notice, this list of conditions and the following disclaimer
+in the documentation and/or other materials provided with the
+distribution.
+    * Neither the name of Google Inc. nor the names of its
+contributors may be used to endorse or promote products derived from
+this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/README.md`
+
+
+```markdown
+# GoogleTest
+
+### Announcements
+
+#### Live at Head
+
+GoogleTest now follows the
+[Abseil Live at Head philosophy](https://abseil.io/about/philosophy#upgrade-support).
+We recommend
+[updating to the latest commit in the `main` branch as often as possible](https://github.com/abseil/abseil-cpp/blob/master/FAQ.md#what-is-live-at-head-and-how-do-i-do-it).
+
+#### Documentation Updates
+
+Our documentation is now live on GitHub Pages at
+https://google.github.io/googletest/. We recommend browsing the documentation on
+GitHub Pages rather than directly in the repository.
+
+#### Release 1.11.0
+
+[Release 1.11.0](https://github.com/google/googletest/releases/tag/release-1.11.0)
+is now available.
+
+#### Coming Soon
+
+*   We are planning to take a dependency on
+    [Abseil](https://github.com/abseil/abseil-cpp).
+*   More documentation improvements are planned.
+
+## Welcome to **GoogleTest**, Google's C++ test framework!
+
+This repository is a merger of the formerly separate GoogleTest and GoogleMock
+projects. These were so closely related that it makes sense to maintain and
+release them together.
+
+### Getting Started
+
+See the [GoogleTest User's Guide](https://google.github.io/googletest/) for
+documentation. We recommend starting with the
+[GoogleTest Primer](https://google.github.io/googletest/primer.html).
+
+More information about building GoogleTest can be found at
+[googletest/README.md](googletest/README.md).
+
+## Features
+
+*   An [xUnit](https://en.wikipedia.org/wiki/XUnit) test framework.
+*   Test discovery.
+*   A rich set of assertions.
+*   User-defined assertions.
+*   Death tests.
+*   Fatal and non-fatal failures.
+*   Value-parameterized tests.
+*   Type-parameterized tests.
+*   Various options for running the tests.
+*   XML test report generation.
+
+## Supported Platforms
+
+GoogleTest requires a codebase and compiler compliant with the C++11 standard or
+newer.
+
+The GoogleTest code is officially supported on the following platforms.
+Operating systems or tools not listed below are community-supported. For
+community-supported platforms, patches that do not complicate the code may be
+considered.
+
+If you notice any problems on your platform, please file an issue on the
+[GoogleTest GitHub Issue Tracker](https://github.com/google/googletest/issues).
+Pull requests containing fixes are welcome!
+
+### Operating Systems
+
+*   Linux
+*   macOS
+*   Windows
+
+### Compilers
+
+*   gcc 5.0+
+*   clang 5.0+
+*   MSVC 2015+
+
+**macOS users:** Xcode 9.3+ provides clang 5.0+.
+
+### Build Systems
+
+*   [Bazel](https://bazel.build/)
+*   [CMake](https://cmake.org/)
+
+**Note:** Bazel is the build system used by the team internally and in tests.
+CMake is supported on a best-effort basis and by the community.
+
+## Who Is Using GoogleTest?
+
+In addition to many internal projects at Google, GoogleTest is also used by the
+following notable projects:
+
+*   The [Chromium projects](http://www.chromium.org/) (behind the Chrome browser
+    and Chrome OS).
+*   The [LLVM](http://llvm.org/) compiler.
+*   [Protocol Buffers](https://github.com/google/protobuf), Google's data
+    interchange format.
+*   The [OpenCV](http://opencv.org/) computer vision library.
+
+## Related Open Source Projects
+
+[GTest Runner](https://github.com/nholthaus/gtest-runner) is a Qt5 based
+automated test-runner and Graphical User Interface with powerful features for
+Windows and Linux platforms.
+
+[GoogleTest UI](https://github.com/ospector/gtest-gbar) is a test runner that
+runs your test binary, allows you to track its progress via a progress bar, and
+displays a list of test failures. Clicking on one shows failure text. GoogleTest
+UI is written in C#.
+
+[GTest TAP Listener](https://github.com/kinow/gtest-tap-listener) is an event
+listener for GoogleTest that implements the
+[TAP protocol](https://en.wikipedia.org/wiki/Test_Anything_Protocol) for test
+result output. If your test runner understands TAP, you may find it useful.
+
+[gtest-parallel](https://github.com/google/gtest-parallel) is a test runner that
+runs tests from your binary in parallel to provide significant speed-up.
+
+[GoogleTest Adapter](https://marketplace.visualstudio.com/items?itemName=DavidSchuldenfrei.gtest-adapter)
+is a VS Code extension allowing to view GoogleTest in a tree view and run/debug
+your tests.
+
+[C++ TestMate](https://github.com/matepek/vscode-catch2-test-adapter) is a VS
+Code extension allowing to view GoogleTest in a tree view and run/debug your
+tests.
+
+[Cornichon](https://pypi.org/project/cornichon/) is a small Gherkin DSL parser
+that generates stub code for GoogleTest.
+
+## Contributing Changes
+
+Please read
+[`CONTRIBUTING.md`](https://github.com/google/googletest/blob/master/CONTRIBUTING.md)
+for details on how to contribute to this project.
+
+Happy testing!
+```
+
+### `WORKSPACE`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/WORKSPACE`
+
+
+```text
+workspace(name = "com_google_googletest")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+    name = "com_google_absl",
+    sha256 = "1a1745b5ee81392f5ea4371a4ca41e55d446eeaee122903b2eaffbd8a3b67a2b",
+    strip_prefix = "abseil-cpp-01cc6567cff77738e416a7ddc17de2d435a780ce",
+    urls = ["https://github.com/abseil/abseil-cpp/archive/01cc6567cff77738e416a7ddc17de2d435a780ce.zip"],  # 2022-06-21T19:28:27Z
+)
+
+# Note this must use a commit from the `abseil` branch of the RE2 project.
+# https://github.com/google/re2/tree/abseil
+http_archive(
+    name = "com_googlesource_code_re2",
+    sha256 = "0a890c2aa0bb05b2ce906a15efb520d0f5ad4c7d37b8db959c43772802991887",
+    strip_prefix = "re2-a427f10b9fb4622dd6d8643032600aa1b50fbd12",
+    urls = ["https://github.com/google/re2/archive/a427f10b9fb4622dd6d8643032600aa1b50fbd12.zip"],  # 2022-06-09
+)
+
+http_archive(
+    name = "rules_python",
+    sha256 = "0b460f17771258341528753b1679335b629d1d25e3af28eda47d009c103a6e15",
+    strip_prefix = "rules_python-aef17ad72919d184e5edb7abf61509eb78e57eda",
+    urls = ["https://github.com/bazelbuild/rules_python/archive/aef17ad72919d184e5edb7abf61509eb78e57eda.zip"],  # 2022-06-21T23:44:47Z
+)
+
+http_archive(
+    name = "bazel_skylib",
+    urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/1.2.1/bazel-skylib-1.2.1.tar.gz"],
+    sha256 = "f7be3474d42aae265405a592bb7da8e171919d74c16f082a5457840f06054728",
+)
+
+http_archive(
+    name = "platforms",
+    sha256 = "a879ea428c6d56ab0ec18224f976515948822451473a80d06c2e50af0bbe5121",
+    strip_prefix = "platforms-da5541f26b7de1dc8e04c075c99df5351742a4a2",
+    urls = ["https://github.com/bazelbuild/platforms/archive/da5541f26b7de1dc8e04c075c99df5351742a4a2.zip"],  # 2022-05-27
+)
+```

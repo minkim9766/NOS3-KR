@@ -3,32 +3,769 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--ArrayFIFOBuffer.cpp
-file--BufferAccumulator.cpp
-file--BufferAccumulator.fpp
-file--BufferAccumulator.hpp
-file--CMakeLists.txt
-file--Commands.fppi
-file--Events.fppi
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/ArrayFIFOBuffer.cpp`](file--ArrayFIFOBuffer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.cpp`](file--BufferAccumulator.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.fpp`](file--BufferAccumulator.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.hpp`](file--BufferAccumulator.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `ArrayFIFOBuffer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/ArrayFIFOBuffer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  ArrayFIFOBuffer.cpp
+// \author mereweth
+// \brief  ArrayFIFOBuffer implementation
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <new>  // For placement new
+#include "Fw/Types/Assert.hpp"
+#include "Fw/Types/BasicTypes.hpp"
+#include "Svc/BufferAccumulator/BufferAccumulator.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Constructors
+// ----------------------------------------------------------------------
+
+BufferAccumulator::ArrayFIFOBuffer ::ArrayFIFOBuffer()
+    : m_elements(nullptr), m_capacity(0), m_enqueueIndex(0), m_dequeueIndex(0), m_size(0) {}
+
+BufferAccumulator::ArrayFIFOBuffer ::~ArrayFIFOBuffer() {}
+
+// ----------------------------------------------------------------------
+// Public functions
+// ----------------------------------------------------------------------
+
+void BufferAccumulator::ArrayFIFOBuffer ::init(Fw::Buffer* const elements, FwSizeType capacity) {
+    this->m_elements = elements;
+    this->m_capacity = capacity;
+
+    // Construct all elements
+    for (FwSizeType idx = 0; idx < capacity; idx++) {
+        new (&this->m_elements[idx]) Fw::Buffer;
+    }
+}
+
+bool BufferAccumulator::ArrayFIFOBuffer ::enqueue(const Fw::Buffer& e) {
+    if (this->m_elements == nullptr) {
+        return false;
+    }
+
+    bool status;
+    if (this->m_size < this->m_capacity) {
+        // enqueueIndex is unsigned, no need to compare with 0
+        FW_ASSERT(m_enqueueIndex < this->m_capacity, static_cast<FwAssertArgType>(m_enqueueIndex));
+        this->m_elements[this->m_enqueueIndex] = e;
+        this->m_enqueueIndex = (this->m_enqueueIndex + 1) % this->m_capacity;
+        status = true;
+        this->m_size++;
+    } else {
+        status = false;
+    }
+
+    return status;
+}
+
+bool BufferAccumulator::ArrayFIFOBuffer ::dequeue(Fw::Buffer& e) {
+    if (this->m_elements == nullptr) {
+        return false;
+    }
+
+    FW_ASSERT(this->m_elements);
+    bool status;
+
+    if (this->m_size > 0) {
+        // dequeueIndex is unsigned, no need to compare with 0
+        FW_ASSERT(m_dequeueIndex < this->m_capacity, static_cast<FwAssertArgType>(m_dequeueIndex));
+        e = this->m_elements[this->m_dequeueIndex];
+        this->m_dequeueIndex = (this->m_dequeueIndex + 1) % this->m_capacity;
+        this->m_size--;
+        status = true;
+    } else {
+        status = false;
+    }
+
+    return status;
+}
+
+FwSizeType BufferAccumulator::ArrayFIFOBuffer ::getSize() const {
+    return this->m_size;
+}
+
+FwSizeType BufferAccumulator::ArrayFIFOBuffer ::getCapacity() const {
+    return this->m_capacity;
+}
+
+}  // namespace Svc
+```
+
+### `BufferAccumulator.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferAccumulator.cpp
+// \author bocchino
+// \brief  BufferAccumulator implementation
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/BufferAccumulator/BufferAccumulator.hpp"
+
+#include <sys/time.h>
+
+#include <limits>
+#include "Fw/Types/BasicTypes.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+BufferAccumulator ::BufferAccumulator(const char* const compName)
+    : BufferAccumulatorComponentBase(compName),  //!< The component name
+      m_mode(BufferAccumulator_OpState::ACCUMULATE),
+      m_bufferMemory(nullptr),
+      m_bufferQueue(),
+      m_send(false),
+      m_waitForBuffer(false),
+      m_numWarnings(0u),
+      m_numDrained(0u),
+      m_numToDrain(0u),
+      m_opCode(),
+      m_cmdSeq(0u),
+      m_allocatorId(0) {}
+
+BufferAccumulator ::~BufferAccumulator() {}
+
+// ----------------------------------------------------------------------
+// Public methods
+// ----------------------------------------------------------------------
+
+void BufferAccumulator ::allocateQueue(FwEnumStoreType identifier,
+                                       Fw::MemAllocator& allocator,
+                                       FwSizeType maxNumBuffers  //!< The maximum number of buffers
+) {
+    this->m_allocatorId = identifier;
+    // Overflow protection
+    FW_ASSERT((std::numeric_limits<FwSizeType>::max() / maxNumBuffers) >= sizeof(Fw::Buffer));
+    FwSizeType memSize = static_cast<FwSizeType>(sizeof(Fw::Buffer) * maxNumBuffers);
+    bool recoverable = false;
+    this->m_bufferMemory = static_cast<Fw::Buffer*>(allocator.allocate(identifier, memSize, recoverable));
+    // TODO: Fail gracefully here
+    m_bufferQueue.init(this->m_bufferMemory, maxNumBuffers);
+}
+
+void BufferAccumulator ::deallocateQueue(Fw::MemAllocator& allocator) {
+    allocator.deallocate(static_cast<FwEnumStoreType>(this->m_allocatorId), this->m_bufferMemory);
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void BufferAccumulator ::bufferSendInFill_handler(const FwIndexType portNum, Fw::Buffer& buffer) {
+    const bool status = this->m_bufferQueue.enqueue(buffer);
+    if (status) {
+        if (this->m_numWarnings > 0) {
+            this->log_ACTIVITY_HI_BA_BufferAccepted();
+        }
+        this->m_numWarnings = 0;
+    } else {
+        if (this->m_numWarnings == 0) {
+            this->log_WARNING_HI_BA_QueueFull();
+        }
+        m_numWarnings++;
+    }
+    if (this->m_send) {
+        this->sendStoredBuffer();
+    }
+
+    this->tlmWrite_BA_NumQueuedBuffers(static_cast<U32>(this->m_bufferQueue.getSize()));
+}
+
+void BufferAccumulator ::bufferSendInReturn_handler(const FwIndexType portNum, Fw::Buffer& buffer) {
+    this->bufferSendOutReturn_out(0, buffer);
+    this->m_waitForBuffer = false;
+    if ((this->m_mode == BufferAccumulator_OpState::DRAIN) ||  // we are draining ALL buffers
+        (this->m_numDrained < this->m_numToDrain)) {           // OR we aren't done draining some buffers
+                                                               // in a partial drain
+        this->m_send = true;
+        this->sendStoredBuffer();
+    }
+}
+
+void BufferAccumulator ::pingIn_handler(const FwIndexType portNum, U32 key) {
+    this->pingOut_out(0, key);
+}
+
+// ----------------------------------------------------------------------
+// Command handler implementations
+// ----------------------------------------------------------------------
+
+void BufferAccumulator ::BA_SetMode_cmdHandler(const FwOpcodeType opCode,
+                                               const U32 cmdSeq,
+                                               BufferAccumulator_OpState mode) {
+    // cancel an in-progress partial drain
+    if (this->m_numToDrain > 0) {
+        // reset counters for partial buffer drain
+        this->m_numToDrain = 0;
+        this->m_numDrained = 0;
+        // respond to the original command
+        this->cmdResponse_out(this->m_opCode, this->m_cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    this->m_mode = mode;
+    if (mode == BufferAccumulator_OpState::DRAIN) {
+        if (!this->m_waitForBuffer) {
+            this->m_send = true;
+            this->sendStoredBuffer();
+        }
+    } else {
+        this->m_send = false;
+    }
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+void BufferAccumulator ::BA_DrainBuffers_cmdHandler(const FwOpcodeType opCode,
+                                                    const U32 cmdSeq,
+                                                    U32 numToDrain,
+                                                    BufferAccumulator_BlockMode blockMode) {
+    if (this->m_numDrained < this->m_numToDrain) {
+        this->log_WARNING_HI_BA_StillDraining(static_cast<U32>(this->m_numDrained),
+                                              static_cast<U32>(this->m_numToDrain));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::BUSY);
+        return;
+    }
+
+    if (this->m_mode == BufferAccumulator_OpState::DRAIN) {
+        this->log_WARNING_HI_BA_AlreadyDraining();
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::VALIDATION_ERROR);
+        return;
+    }
+
+    if (numToDrain == 0) {
+        this->log_ACTIVITY_HI_BA_PartialDrainDone(0);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        return;
+    }
+
+    this->m_opCode = opCode;
+    this->m_cmdSeq = cmdSeq;
+    this->m_numDrained = 0;
+    this->m_numToDrain = static_cast<FwSizeType>(numToDrain);
+
+    if (blockMode == BufferAccumulator_BlockMode::NOBLOCK) {
+        FwSizeType numBuffers = this->m_bufferQueue.getSize();
+
+        if (numBuffers < static_cast<FwSizeType>(numToDrain)) {
+            this->m_numToDrain = numBuffers;
+            this->log_WARNING_LO_BA_NonBlockDrain(static_cast<U32>(this->m_numToDrain), numToDrain);
+        }
+
+        /* OK if there were 0 buffers queued, and we
+         * end up setting numToDrain to 0
+         */
+        if (0 == this->m_numToDrain) {
+            this->log_ACTIVITY_HI_BA_PartialDrainDone(0);
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+            return;
+        }
+    }
+
+    // We are still waiting for a buffer from last time
+    if (!this->m_waitForBuffer) {
+        this->m_send = true;
+        this->sendStoredBuffer();  // kick off the draining;
+    }
+}
+
+// ----------------------------------------------------------------------
+// Private helper methods
+// ----------------------------------------------------------------------
+
+void BufferAccumulator ::sendStoredBuffer() {
+    FW_ASSERT(this->m_send);
+    Fw::Buffer buffer;
+    if ((this->m_numToDrain == 0) ||                  // we are draining ALL buffers
+        (this->m_numDrained < this->m_numToDrain)) {  // OR we aren't done draining some buffers in a
+                                                      // partial drain
+        const bool status = this->m_bufferQueue.dequeue(buffer);
+        if (status) {  // a buffer was dequeued
+            this->m_numDrained++;
+            this->bufferSendOutDrain_out(0, buffer);
+            this->m_waitForBuffer = true;
+            this->m_send = false;
+        } else if (this->m_numToDrain > 0) {
+            this->log_WARNING_HI_BA_DrainStalled(static_cast<U32>(this->m_numDrained),
+                                                 static_cast<U32>(this->m_numToDrain));
+        }
+    }
+
+    /* This used to be "else if", but then you wait for all
+     * drained buffers in a partial drain to be RETURNED before returning OK.
+     * Correct thing is to return OK once they are SENT
+     */
+    if ((this->m_numToDrain > 0) &&                    // we are doing a partial drain
+        (this->m_numDrained == this->m_numToDrain)) {  // AND we just finished draining
+                                                       //
+        this->log_ACTIVITY_HI_BA_PartialDrainDone(static_cast<U32>(this->m_numDrained));
+        // reset counters for partial buffer drain
+        this->m_numToDrain = 0;
+        this->m_numDrained = 0;
+        this->m_send = false;
+        this->cmdResponse_out(this->m_opCode, this->m_cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    this->tlmWrite_BA_NumQueuedBuffers(static_cast<U32>(this->m_bufferQueue.getSize()));
+}
+
+}  // namespace Svc
+```
+
+### `BufferAccumulator.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.fpp`
+
+
+```fpp
+module Svc {
+
+  active component BufferAccumulator {
+
+    include "Commands.fppi"
+
+    include "Events.fppi"
+
+    include "Telemetry.fppi"
+
+    @ Receive a Buffer from an upstream component to enqueue
+    async input port bufferSendInFill: [1] Fw.BufferSend
+
+    @ Receive a Buffer back from a downstream component
+    async input port bufferSendInReturn: [1] Fw.BufferSend
+
+    @ Pass a Buffer onwards to a downstream component
+    output port bufferSendOutDrain: [1] Fw.BufferSend
+
+    @ Return a Buffer to the original upstream component
+    output port bufferSendOutReturn: [1] Fw.BufferSend
+
+    @ Port for receiving commands
+    command recv port cmdIn
+
+    @ Port for sending command registration requests
+    command reg port cmdRegOut
+
+    @ Port for sending command response
+    command resp port cmdResponseOut
+
+    @ Event port for emitting events
+    event port eventOut
+
+    @ Event port for emitting text events
+    text event port eventOutText
+
+    @ Ping input port for health
+    async input port pingIn: [1] Svc.Ping
+
+    @ Ping output port for health
+    output port pingOut: [1] Svc.Ping
+
+    @ A port for getting the time
+    time get port timeCaller
+
+    @ A port for emitting telemetry
+    telemetry port tlmOut
+
+  }
+
+}
+```
+
+### `BufferAccumulator.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/BufferAccumulator.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  BufferAccumulator.hpp
+// \author bocchino
+// \brief  BufferAccumulator interface
+//
+// \copyright
+// Copyright (C) 2017 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_BufferAccumulator_HPP
+#define Svc_BufferAccumulator_HPP
+
+#include <Fw/Types/MemAllocator.hpp>
+
+#include "Os/Queue.hpp"
+#include "Svc/BufferAccumulator/BufferAccumulatorComponentAc.hpp"
+
+namespace Svc {
+
+// Forward declaration for UTs
+namespace Accumulate {
+class BufferAccumulatorTester;
+}
+namespace Drain {
+class BufferAccumulatorTester;
+}
+namespace Errors {
+class BufferAccumulatorTester;
+}
+
+class BufferAccumulator final : public BufferAccumulatorComponentBase {
+    friend class BufferAccumulatorTester;
+    friend class Svc::Accumulate::BufferAccumulatorTester;
+    friend class Svc::Drain::BufferAccumulatorTester;
+    friend class Svc::Errors::BufferAccumulatorTester;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! A BufferLogger file
+    class ArrayFIFOBuffer {
+      public:
+        //! Construct an ArrayFIFOBuffer object
+        ArrayFIFOBuffer();
+
+        //! Destroy an ArrayFIFOBuffer File object
+        ~ArrayFIFOBuffer();
+
+        void init(Fw::Buffer* const elements,  //!< The array elements
+                  FwSizeType capacity          //!< The capacity
+        );
+
+        //! Enqueue an index.
+        //! Fails if the queue is full.
+        //! \return Whether the operation succeeded
+        bool enqueue(const Fw::Buffer& e  //!< The element to enqueue
+        );
+
+        //! Dequeue an index.
+        //! Fails if the queue is empty.
+        bool dequeue(Fw::Buffer& e  //!< The dequeued element
+        );
+
+        //! Get the size of the queue
+        //! \return The size
+        FwSizeType getSize() const;
+
+        //! Get the capacity of the queue
+        //! \return The capacity
+        FwSizeType getCapacity() const;
+
+      private:
+        // ----------------------------------------------------------------------
+        // Private member variables
+        // ----------------------------------------------------------------------
+
+        //! The memory for the elements
+        Fw::Buffer* m_elements;
+
+        //! The capacity of the queue
+        FwSizeType m_capacity;
+
+        //! The enqueue index
+        FwSizeType m_enqueueIndex;
+
+        //! The dequeue index
+        FwSizeType m_dequeueIndex;
+
+        //! The size of the queue
+        FwSizeType m_size;
+    };  // class ArrayFIFOBuffer
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct BufferAccumulator instance
+    //!
+    BufferAccumulator(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy BufferAccumulator instance
+    //!
+    ~BufferAccumulator();
+
+    // ----------------------------------------------------------------------
+    // Public methods
+    // ----------------------------------------------------------------------
+
+    //! Give the class a memory buffer. Should be called after constructor
+    //! and init, but before task is spawned.
+    void allocateQueue(FwEnumStoreType identifier,
+                       Fw::MemAllocator& allocator,
+                       FwSizeType maxNumBuffers  //!< The maximum number of buffers
+    );
+
+    //! Return allocated queue. Should be done during shutdown
+    void deallocateQueue(Fw::MemAllocator& allocator);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for bufferSendInFill
+    //!
+    void bufferSendInFill_handler(const FwIndexType portNum,  //!< The port number
+                                  Fw::Buffer& buffer);
+
+    //! Handler implementation for bufferSendInReturn
+    //!
+    void bufferSendInReturn_handler(const FwIndexType portNum,  //!< The port number
+                                    Fw::Buffer& buffer);
+
+    //! Handler implementation for pingIn
+    //!
+    void pingIn_handler(const FwIndexType portNum,  //!< The port number
+                        U32 key                     //!< Value to return to pinger
+    );
+
+  private:
+    // ----------------------------------------------------------------------
+    // Command handler implementations
+    // ----------------------------------------------------------------------
+
+    //! Implementation for SetMode command handler
+    //! Set the mode
+    void BA_SetMode_cmdHandler(const FwOpcodeType opCode,      //!< The opcode
+                               const U32 cmdSeq,               //!< The command sequence number
+                               BufferAccumulator_OpState mode  //!< The mode
+    );
+
+    //! Implementation for BA_DrainBuffers command handler
+    //! Drain the commanded number of buffers
+    void BA_DrainBuffers_cmdHandler(const FwOpcodeType opCode, /*!< The opcode*/
+                                    const U32 cmdSeq,          /*!< The command sequence number*/
+                                    U32 numToDrain,
+                                    BufferAccumulator_BlockMode blockMode);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Send a stored buffer
+    void sendStoredBuffer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private member variables
+    // ----------------------------------------------------------------------
+
+    //! The mode
+    BufferAccumulator_OpState m_mode;
+
+    //! Memory for the buffer array
+    Fw::Buffer* m_bufferMemory;
+
+    //! The FIFO queue of buffers
+    ArrayFIFOBuffer m_bufferQueue;
+
+    //! Whether to send a buffer to the downstream client
+    bool m_send;
+
+    //! If we are switched to ACCUMULATE then back to DRAIN, whether we were
+    //! waiting on a buffer
+    bool m_waitForBuffer;
+
+    //! The number of QueueFull warnings sent since the last successful enqueue
+    //! operation
+    U32 m_numWarnings;
+
+    //! The number of buffers drained in a partial drain command
+    FwSizeType m_numDrained;
+
+    //! The number of buffers TO drain in a partial drain command
+    FwSizeType m_numToDrain;
+
+    //! The DrainBuffers opcode to respond to
+    FwOpcodeType m_opCode;
+
+    //! The DrainBuffers cmdSeq to respond to
+    U32 m_cmdSeq;
+
+    //! The allocator ID
+    FwEnumStoreType m_allocatorId;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding diles
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+restrict_platforms(Linux Darwin) # Uses sys/time
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/BufferAccumulator.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/BufferAccumulator.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/ArrayFIFOBuffer.cpp"
+)
+
+register_fprime_module()
+
+### UTS ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/BufferAccumulator.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferAccumulatorTester.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Accumulate.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Drain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Errors.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/Health.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/BufferAccumulatorMain.cpp"
+)
+register_fprime_ut()
+
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Commands.fppi`
+
+
+```text
+enum OpState {
+  ACCUMULATE = 0
+  DRAIN = 1
+}
+
+@ Set the mode
+async command BA_SetMode(
+                          mode: OpState
+                        ) \
+  opcode 0x00
+
+enum BlockMode {
+  NOBLOCK = 0
+  BLOCK = 1
+}
+
+@ Drain the commanded number of buffers
+async command BA_DrainBuffers(
+                               numToDrain: U32
+                               blockMode: BlockMode
+                             ) \
+  opcode 0x01
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Events.fppi`
+
+
+```text
+@ The Buffer Accumulator instance accepted and enqueued a buffer. To avoid uncontrolled sending of events, this event occurs only when the previous buffer received caused a QueueFull error.
+event BA_BufferAccepted \
+  severity activity high \
+  id 0x00 \
+  format "Buffer accepted"
+
+@ The Buffer Accumulator instance received a buffer when its queue was full. To avoid uncontrolled sending of events, this event occurs only when the previous buffer received did not cause a QueueFull error.
+event BA_QueueFull \
+  severity warning high \
+  id 0x01 \
+  format "Queue full"
+
+@ Got DrainBuffers command while executing DrainBuffers command
+event BA_StillDraining(
+                        numDrained: U32
+                        numToDrain: U32
+                      ) \
+  severity warning high \
+  id 0x02 \
+  format "Still draining {} of {}"
+
+@ Got DrainBuffers command while in DRAIN mode
+event BA_AlreadyDraining \
+  severity warning high \
+  id 0x03 \
+  format "Already in DRAIN mode"
+
+@ Ran out of buffers while executing DrainBuffers command
+event BA_DrainStalled(
+                       numDrained: U32
+                       numToDrain: U32
+                     ) \
+  severity warning high \
+  id 0x04 \
+  format "Drain stalling - only drained {} of {}"
+
+@ Finished DrainBuffers command
+event BA_PartialDrainDone(
+                           numDrained: U32
+                         ) \
+  severity activity high \
+  id 0x05 \
+  format "Partial drain of {} finished"
+
+@ Not enough buffers to complete requested drain, and NOBLOCK was set; will only drain what we have
+event BA_NonBlockDrain(
+                        numWillDrain: U32
+                        numReqDrain: U32
+                      ) \
+  severity warning low \
+  id 0x06 \
+  format "Only have {}; requested drain of {}"
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/BufferAccumulator/Telemetry.fppi`
+
+
+```text
+@ The number of buffers queued
+telemetry BA_NumQueuedBuffers: U32 id 0
+```

@@ -3,18 +3,135 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--PlatformTypes.fpp
-file--PlatformTypes.h
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/CMakeLists.txt`
+
+
+```cmake
+####
+# unix/Platform/CMakeLists.txt:
+#
+# This file defines a configuration module for unix platforms.
+####
+register_fprime_config(
+        UnixPlatformTypes
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/PlatformTypes.fpp"
+    HEADERS
+        "${CMAKE_CURRENT_LIST_DIR}/PlatformTypes.h"
+    CHOOSES_IMPLEMENTATIONS
+        Os_File_Posix
+        Os_Console_Posix
+        Os_Task_Posix
+        Os_Mutex_Posix
+        Os_Generic_PriorityQueue
+        Os_RawTime_Posix
+        Fw_StringFormat_snprintf
+        # No posix API
+        Os_Cpu_Stub
+        Os_Memory_Stub
+    INTERFACE # No compilable outputs produced
+    BASE_CONFIG
+)
 ```
 
-## 항목
+### `PlatformTypes.fpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/PlatformTypes.fpp`](file--PlatformTypes.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/PlatformTypes.h`](file--PlatformTypes.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/PlatformTypes.fpp`
+
+
+```fpp
+#####
+# PlatformTypes.fpp:
+#
+# Define platform type alias within this file. To maintain C-compatibility
+# leave definitions in global scope.
+####
+
+@ The unsigned type of larger sizes internal to the software,
+@ e.g., memory buffer sizes, file sizes. Must be unsigned.
+@ Supplied by platform, overridable by project.
+type PlatformSizeType = U64
+
+@ The signed type of larger sizes internal to the software, used
+@ for signed offsets, e.g., file seek offsets. Must be signed.
+type PlatformSignedSizeType = I64
+
+@ The type of smaller indices internal to the software, used
+@ for array indices, e.g., port indices. Must be signed.
+type PlatformIndexType = I16
+
+@ The type of arguments to assert functions. Supplied by platform,
+@ overridable by project.
+type PlatformAssertArgType = I32
+
+@ The type of task priorities used. Supplied by platform,
+@ overridable by project.
+type PlatformTaskPriorityType = U8
+
+@ The type of task identifiers. Supplied by platform,
+@ overridable by project.
+type PlatformTaskIdType = I32
+
+@ The type of queue priorities used. Supplied by platform,
+@ overridable by project.
+type PlatformQueuePriorityType = U8
+```
+
+### `PlatformTypes.h`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/platform/unix/Platform/PlatformTypes.h`
+
+
+```c
+
+/**
+ * \brief PlatformTypes.h C-compatible type definitions for Linux/Darwin
+ *
+ * PlatformTypes.h is typically published by platform developers to define
+ * the standard available arithmetic types for use in fprime. This standard
+ * types header is designed to support standard Linux/Darwin (unix) distributions
+ * running on x86, x86_64, arm, and arm64 machines and using the standard gcc/clang
+ * compilers shipped with the operating system.
+ */
+#ifndef PLATFORM_TYPES_H_
+#define PLATFORM_TYPES_H_
+
+#ifdef  __cplusplus
+extern "C" {
+#endif
+#include <stdint.h>
+
+// Linux/Darwin definitions for pointer have various sizes across platforms
+// and since these definitions need to be consistent we must ask the size.
+// Check for __SIZEOF_POINTER__ or cause error
+#ifndef __SIZEOF_POINTER__
+#error "Compiler does not support __SIZEOF_POINTER__, cannot use Linux/Darwin types"
+#endif
+
+// Pointer sizes are determined by compiler
+#if __SIZEOF_POINTER__ == 8
+typedef uint64_t PlatformPointerCastType;
+#define PRI_PlatformPointerCastType PRIx64
+#elif __SIZEOF_POINTER__ == 4
+typedef uint32_t PlatformPointerCastType;
+#define PRI_PlatformPointerCastType PRIx32
+#elif __SIZEOF_POINTER__ == 2
+typedef uint16_t PlatformPointerCastType;
+#define PRI_PlatformPointerCastType PRIx16
+#elif __SIZEOF_POINTER__ == 1
+typedef uint8_t PlatformPointerCastType;
+#define PRI_PlatformPointerCastType PRIx8
+#else
+#error "Expected __SIZEOF_POINTER__ to be one of 8, 4, 2, or 1"
+#endif
+
+#ifdef  __cplusplus
+}
+#endif
+
+#endif  // PLATFORM_TYPES_H_
+```

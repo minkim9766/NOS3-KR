@@ -3,40 +3,497 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/web-interface/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 admin/index
-file--activities.rst
-file--alarms.rst
-file--algorithms.rst
-file--archive.rst
-file--commanding.rst
-file--configuration.rst
-file--events.rst
-file--index.rst
-file--links.rst
-file--mdb.rst
-file--procedures.rst
-file--telemetry.rst
-file--timeline.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/web-interface/admin/`](admin/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/web-interface/activities.rst`](file--activities.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/alarms.rst`](file--alarms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/algorithms.rst`](file--algorithms.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/archive.rst`](file--archive.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/commanding.rst`](file--commanding.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/configuration.rst`](file--configuration.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/events.rst`](file--events.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/links.rst`](file--links.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/mdb.rst`](file--mdb.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/procedures.rst`](file--procedures.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/telemetry.rst`](file--telemetry.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/web-interface/timeline.rst`](file--timeline.rst) — UTF-8 텍스트 파일 본문 포함
+### `activities.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/activities.rst`
+
+
+```rst
+Activities
+==========
+
+The Activities page shows a list of all activities that are ongoing or completed, sorted by time.
+Each activity on the list shows a status icon, indicating whether the activity was/is Successful, Failed, Canceled or Ongoing.
+When at least one activity is ongoing, a label on the Activities navigation button shows the number of ongoing activities.
+Ongoing activities can be canceled from the list.
+An activity's ID can be clicked to view its log, which includes the script output if the activity ran a script.
+
+Activities can either be manual or managed by Yamcs.
+Ongoing manual activities on the list provide buttons for the user to set them `Successful` or `Failed`.
+New manual activities starting immediately can be defined by pressing the `New activity` button.
+New scheduled manual activities can be created from the Timeline Chart or Timeline Items pages.
+New activities managed by Yamcs include scripts, which can be created and scheduled from the Procedures Run a script page.
+```
+
+### `alarms.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/alarms.rst`
+
+
+```rst
+Alarms
+======
+
+Shows an overview of the current alarms. Alarms indicate parameters that are out of limits.
+```
+
+### `algorithms.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/algorithms.rst`
+
+
+```rst
+Algorithms
+==========
+
+The Algorithms page provides access to the algorithms defined for the current Yamcs instance.
+
+Each algorithm can be selected to view general information, input parameters, output parameters, triggers, and edit the algorithm code.
+```
+
+### `archive.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/archive.rst`
+
+
+```rst
+Archive browser
+===============
+
+This view allows inspecting the content of the TM Archive, as well as retrieving data as packets. Data is grouped by packet name in bands. For each band, index blocks indicate the presence of data at a particular time range. Note that a single index block does not necessarily mean that there was no gap in the data. When zooming in, more gaps may appear.
+
+The view can be panned by grabbing the canvas. For long distances you can jump to a specific location via the ``Jump to...`` button.
+
+This view shows the current mission time with a vertical locator.
+
+.. note::
+
+    While the now locator follows mission time, the rendered blocks do not follow realtime. You can force a refresh by panning the canvas or refreshing your browser window.
+
+
+In the top toolbar there are a few actions that only become active once you make a horizontal range selection. To make such a selection you can start a selection on the timescale band. Alternatively you may also select a range by simply clicking an index block. Selecting a range allows you to start a replay for that range, or to download raw packet data.
+```
+
+### `commanding.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/commanding.rst`
+
+
+```rst
+Commanding
+==========
+
+The Commanding group within the Yamcs web interface provides access to commanding pages.
+
+
+Send a command
+--------------
+
+The Send a command page provides access to every command specified for the current Yamcs instance.
+A command can be selected, configured, and sent now or scheduled to be sent later. 
+
+
+Command stack
+-------------
+
+The Command stack page allows users to create and edit command stacks.
+Command stacks define a sequence of configured existing commands to be sent, with a progression rule.
+Progression rules combine a condition based on the status of the previous command (Queued, Released, Sent, Completed) and a delay.
+Command stacks can be sent now or scheduled to be sent later. 
+
+
+Command history
+---------------
+
+The Command history page shows the list of previously sent commands, with status information. 
+Arguments and return value can be displayed. A report can be viewed for each command.
+
+
+Queues
+------
+
+The Queues page shows the status of command queues.
+```
+
+### `configuration.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/configuration.rst`
+
+
+```rst
+Configuration
+=============
+
+Web options are configured in the file :file:`etc/yamcs.yaml`.
+
+.. code-block:: yaml
+
+   yamcs-web:
+     tag: Example Mission
+     logo: etc/logo.png
+     siteLinks:
+       - label: Wiki
+         url: https://example.com/wiki
+         external: true
+
+Some options can also be configured at instance-level in the file :file:`etc/yamcs.{instance}.yaml`.
+
+.. code-block:: yaml
+
+   yamcs-web:
+     displayBucket: customBucket
+     stackBucket: customBucket
+
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+
+Global Configuration Options
+----------------------------
+
+.. options:: ../../yamcs-web/src/main/resources/org/yamcs/web/WebPlugin.yaml
+
+
+Instance Configuration Options
+------------------------------
+
+.. options:: ../../yamcs-web/src/main/resources/org/yamcs/web/WebPlugin.yaml
+   :scope: instance
+```
+
+### `events.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/events.rst`
+
+
+```rst
+Events
+======
+
+This section provides a view on Yamcs events. By default only the latest events within the last hour get shown. The view offers ample filter options to change which events are shown. The table is paged to prevent overloading the browser. If you like to see beyond the current page, you can click the button 'Load More' at the bottom of the view. Alternatively you can choose to click the 'Download Data' button at the top right. This will trigger a download of the events in CSV format. The download will apply the same filter as what is shown in the view.
+
+The Events table can also monitor incoming events on the current processor. Do so by clicking the play button in the top toolbar. You may stop the live streaming at any time by clicking the pause button.
+
+The Events table has a severity filter. This filter allows defining the **minimum** severity of the event. Events that are more severe than the selected severity will also be shown. By default the severity filter is set to the lowest severity, ``Info``, which means that all events will be shown.
+
+With the right privilege, it is possible to manually post an event. You can enter an arbitrary message and assign a severity. The time of the event will by default be set to the current time, but you can override this if preferred. The source of an event created this way will automatically be set to ``User`` and will contain a ``user`` attribute indicating your username.
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/index.rst`
+
+
+```rst
+Web Interface
+=============
+
+Yamcs includes a web interface which provides quick access and control over many of its features. The web interface runs on port 8090 and integrates with the security system of Yamcs.
+
+All pages are aware of the privileges of the logged in user and will hide user interface elements that the user has no permission for.
+
+Most pages (the homepage excluding) show data specific to a particular Yamcs instance. The current instance is always indicated in the top bar. To switch to a different location either return to the homepage, or use the quick-switch dialog in the top bar. When switching instances the user is always redirected to the default page for that instance.
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    configuration
+    links
+    algorithms
+    telemetry
+    events
+    alarms
+    commanding
+    procedures
+    activities
+    timeline
+    mdb
+    archive
+    admin/index
+```
+
+### `links.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/links.rst`
+
+
+```rst
+Links
+=====
+
+Shows a live view of the data links for this instance. Link can be managed directly from this page.
+```
+
+### `mdb.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/mdb.rst`
+
+
+```rst
+Mission database
+================
+
+The MDB module within the Yamcs web interface provides a set of views on the Mission Database.
+
+The MDB Module is always visited for a specific Yamcs instance. The MDB for an instance aggregates the content of the entire MDB loader tree for that instance.
+
+
+Parameters
+----------
+
+The Parameters view shows a filterable list of all parameters inside the MDB. If you are searching for a specific parameter but don't remember the space system this views can help find it quickly.
+
+You can navigate to the detail page of any parameter to see a quick look at its definition, and to see the current realtime value. If the parameter has numeric values, its data can also be rendered on a chart. This chart is updated in realtime. Finally the detail page of a parameter also has a view that allows looking at the exact data points that have been received in a particular time range. This information is presented in a paged view. There is a download option available for downloading data points of the selected time range as a CSV file for offline analysis.
+
+If the parameter is a software parameter, its value can be set via a button in the toolbar.
+
+
+Containers
+----------
+
+The Containers view shows a filterable list of all containers inside the MDB. The detail page allows seeing the parameter or container entries for this container and offers navigation links for quick access.
+
+
+Commands
+--------
+
+The Commands view shows a filterable list of all commands inside the MDB. This also includes abstract commands. Non-abstract commands can be issued directly from the detail page of that command. This opens a dynamic dialog window where you can override default arguments and enter missing arguments.
+
+
+Algorithms
+----------
+
+The Algorithms view shows a filterable list of all algorithms inside the MDB. This detail page provides a quick navigation list of all input and output parameters and shows the script for this algorithm.
+```
+
+### `procedures.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/procedures.rst`
+
+
+```rst
+Procedures
+==========
+
+The Procedures group within the Yamcs web interface provides access to procedural functionality.
+
+Run a script
+------------
+
+The "Run a script" page lets users execute predefined scripts. Scripts are stored under :file:`etc/scripts`.
+
+Script files may be directly executable, or be associated to another program based on its file extension.
+
+The default associations are:
+
+.. list-table::
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Extension
+     - Program
+   * - java
+     - java
+   * - js
+     - node
+   * - mjs
+     - node
+   * - pl
+     - perl
+   * - py
+     - python -u
+   * - rb
+     - ruby
+
+Scripts can be selected from a drop-down. Arguments can be specified, in the format expected by the Script runtime.
+Scripts can be run immediately or later. If later, they will appear on the Timeline.
+
+Once started, the Script appears on the Activities page list. 
+The Script Activity automatically marks itself successful or failed based on the script exitcode (0 for success).
+If the script generates an output, it can be viewed by clicking on the Script Id on the Activities page.
+```
+
+### `telemetry.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/telemetry.rst`
+
+
+```rst
+Telemetry
+=========
+
+The Telemetry group within the Yamcs web interface provides access to monitoring-related pages.
+
+Packets
+-------
+
+This page lists all received packets. The list needs to be manually refreshed with the `circular arrow` icon. Details appear when clicking on a packet. 
+Packets can be extracted into their parameters by clicking `Extract`. 
+Packet Hex or Binary can be copied, or raw telemetry can be downloaded by clicking on the `3-dots` icon.
+
+
+Parameters
+----------
+
+This page shows all parameters. 
+Each parameter can be accessed individually to see the latest value (`Summary` tab), archived values (`Historical Data` tab) or the alarms related to this parameter (`Alarm History tab`). 
+Numeric parameters can be charted (`Chart` tab). 
+Historical data for the selected parameter can be downloaded by clicking `Export CSV` on the Historical Data tab, and picking a range, delimiter and interval.
+
+
+Parameter Lists
+---------------
+
+This page allows users to group parameters together into lists. New lists can be created with the `Create List` button. 
+The list  name for the list, a description and add the parameters by parameter names or with glob patterns.
+Parameter lists can be selected to show latest value (`Realtime` tab) or archived values (`Historical Data` tab).
+Historical data for the selected list can be downloaded by clicking `Export CSV` on the Historical Data tab, and picking a range, delimiter and interval. 
+
+
+Displays
+--------
+
+This page shows the list of displays or display resources that are known by Yamcs Server for the selected instance. 
+Displays are stored within the "displays" storage bucket. 
+Yamcs Studio displays (`.opi`) can be visualized in the Yamcs web interface. They can be uploaded with the `Upload Files` button. 
+Additionally, Parameter Tables (`.par`) can be created, by clicking the `Create Display` button, entering a name and adding parameters.
+Items in the Displays page list can be renamed, downloaded or deleted. Clicking on a display file opens the display. 
+If there is incoming telemetry, it will be received by the opened display file and the display will update accordingly.
+
+Note that only some display types are supported by the Yamcs web interface. The following provides an overview of the current state:
+
+.. list-table::
+    :header-rows: 1
+
+    * - Extension
+      - Display Type
+      - View
+      - Edit
+    * - ``opi``
+      - Yamcs Studio displays
+      - Basics
+      - | No plans to support
+        | (use Yamcs studio)
+    * - ``par``
+      - Parameter tables
+      - Full support
+      - Full support
+
+In addition there is file preview support for the following display resources:
+
+.. list-table::
+    :header-rows: 1
+
+    * - Extension
+      - Resource Type
+      - View
+      - Edit
+    * - ``png``, ``gif``, ``bmp``, ``jpg``, ``jpeg``
+      - Image
+      - Full support
+      - No plans to support
+    * - ``js``
+      - Script file
+      - Full support
+      - Planned
+
+Any other file is displayed in a basic text viewer.
+
+
+Replaying telemetry
+-------------------
+
+Telemetry replays can be triggered from any instance-scoped page by clicking the mission time in the page toolbar and selecting **Replay from date**.
+
+In the dialog that opens, you can choose a replay range. Yamcs will start a *replay* processor which will run in parallel to the *realtime* processor.
+
+The UI will switch to this replay processor, causing pages that normally would show realtime telemetry, to show replayed telemetry instead.
+```
+
+### `timeline.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/web-interface/timeline.rst`
+
+
+```rst
+Timeline
+========
+
+The Timeline group within the Yamcs web interface provides access to the timeline functionality. 
+Essentially, timelines show Items on Bands as a function of time.
+
+`Bands` are labeled horizontal sections spanning the whole timeline. `Items` are labeled sections of time which can be displayed on Item-type Bands. 
+Bands can be stacked vertically to create `Views`. Views can be visualized on the `Chart`.
+
+
+Chart
+-----
+
+The Chart is where Views can be visualized over time. Views can be selected from the drop-down to the right of the "Timeline Chart" title.
+The Items are the colored rectangles or diamonds on the Chart, located on their horizontal Bands. 
+A red vertical line indicates the current time. The Chart can be zoomed in and out with the + and - buttons or with the middle mouse wheel.
+
+The Chart can be panned with the arrow buttons or by holding down the left mouse button. Items can be clicked for editing.
+From the Chart, users can also edit the current View, add an Event- or Activity-type Item (see Items section below for details), or take a snapshot of the Chart.
+
+
+Views
+-----
+
+The Views page shows the list of existing Views. From this page Views can be edited by clicking on their label. 
+Views can be deleted by selecting their checkbox and pressing the `Delete` button. New Views can be created with the `Create View` button.
+
+New Views are composed by sequentially adding Bands from the Available list to the Selected list in the desired order. 
+A Band can only be present once on a single View. 
+
+
+Bands
+-----
+
+The Bands page shows the list of existing Bands. From this page Bands can be edited by clicking on their label. 
+Bands can be deleted by selecting their checkbox and pressing the `Delete` button. New Bands can be created with the `Create Band` button.
+
+Four types of Bands can be created:
+
+* Time Ruler: displays time graduation, in a configurable timezone.
+* Item Band: Band on which Items can be displayed. Dispays only items with matching Tags. The Band defines the default style of its Items.
+* Spacer: creates an empty vertical space. Height can be configured.
+* Commands: shows commands issued over time.  
+
+
+Items
+-----
+
+The Items page shows the list of existing Items. From this page Items can be edited by clicking on their label. 
+Items can be deleted by selecting their checkbox and pressing the `Delete` button. New Items can be created with the `Create Item` button.
+
+Two types of Items can be created:
+
+* Event item: gets added to the list of Items.
+* Activity item: gets added to the list of Items and also to the list of Activities on the Activities page. 
+  It will trigger at the specified time, and can be set Successful or Failed on the Activities page. 
+
+Tags can be assigned to Items. Items will be displayed on Bands with matching Tags. Item start time and duration can be configured. 
+Items will show as rectangles on the Chart unless they have a duration of 0, in which case they will appear as diamonds.
+Items can be set to override the default style specified in a Band.
+
+Items are also automatically added to the list when:
+
+* the user selects "Send later..." when sending a command from the "Send a command" page   
+* the user selects "Schedule" when running a command stack from the "Command stacks" page 
+* the user selects "Run later..." when running a script from the "Run a script" page  
+
+```

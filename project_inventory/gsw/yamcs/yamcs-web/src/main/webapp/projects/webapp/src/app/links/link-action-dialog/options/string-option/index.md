@@ -3,18 +3,140 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `string-option.component.css`
 
-file--string-option.component.css
-file--string-option.component.html
-file--string-option.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.css`
+
+
+```css
+:host.ng-invalid:not(.ng-pristine) ::ng-deep input {
+  border-color: var(--y-error-color) !important;
+}
 ```
 
-## 항목
+### `string-option.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.css`](file--string-option.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.html`](file--string-option.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.ts`](file--string-option.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.html`
+
+
+```html
+@if (option(); as option) {
+  <ya-field
+    [label]="option.name"
+    [hint]="option.required ? undefined : '(optional)'"
+    [class.error]="err.invalid$ | async">
+    <ya-meta>string</ya-meta>
+
+    @if (option.description?.length) {
+      <ya-help>
+        @for (description of option.description; track description) {
+          <p>{{ description }}</p>
+        }
+      </ya-help>
+    }
+
+    <ya-errors #err [controlName]="option.name" />
+
+    <input [formControl]="formControl" type="text" autocomplete="off" />
+  </ya-field>
+}
+```
+
+### `string-option.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/string-option/string-option.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnDestroy,
+  OnInit,
+  forwardRef,
+  input,
+} from '@angular/core';
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  FormControl,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import { Option, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-string-option',
+  templateUrl: './string-option.component.html',
+  styleUrl: './string-option.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => StringOptionComponent),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => StringOptionComponent),
+      multi: true,
+    },
+  ],
+})
+export class StringOptionComponent
+  implements ControlValueAccessor, Validator, OnInit, OnDestroy
+{
+  option = input.required<Option>();
+
+  formControl = new FormControl<string | null>(null);
+
+  private validators: ValidatorFn[] = [];
+  private onChange = (_: string | null) => {};
+  private subscriptions: Subscription[] = [];
+
+  ngOnInit(): void {
+    this.subscriptions.push(
+      this.formControl.valueChanges.subscribe(() => {
+        const value = this.formControl.value;
+        this.onChange(value);
+      }),
+    );
+
+    if (this.option().required) {
+      this.validators.push(Validators.required);
+    }
+  }
+
+  writeValue(obj: any): void {
+    this.formControl.setValue(obj);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {}
+
+  validate(control: AbstractControl<any, any>): ValidationErrors | null {
+    for (const validator of this.validators) {
+      const errors = validator(control);
+      if (errors) {
+        return errors;
+      }
+    }
+    return null;
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((s) => s.unsubscribe());
+  }
+}
+```

@@ -3,16 +3,56 @@
 
 **경로:** `gsw/yamcs/simulator/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 src/index
-file--pom.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/simulator/src/`](src/index) — 폴더
-- [`gsw/yamcs/simulator/pom.xml`](file--pom.xml) — UTF-8 텍스트 파일 본문 포함
+### `pom.xml`
+
+**경로:** `gsw/yamcs/simulator/pom.xml`
+
+
+```xml
+<?xml version="1.0" ?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>org.yamcs</groupId>
+    <artifactId>yamcs</artifactId>
+    <version>5.12.1-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>simulator</artifactId>
+  <packaging>jar</packaging>
+  <name>Yamcs :: Simulator</name>
+  <description>
+    Java-based simulator of a landing spacecraft for test and demo purposes
+  </description>
+
+  <properties>
+    <javaModuleName>org.yamcs.simulator</javaModuleName>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-core</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.yamcs</groupId>
+      <artifactId>yamcs-tse</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+  </dependencies>
+</project>
+```

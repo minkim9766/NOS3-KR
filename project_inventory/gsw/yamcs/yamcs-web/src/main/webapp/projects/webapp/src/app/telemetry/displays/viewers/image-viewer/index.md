@@ -3,16 +3,80 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `image-viewer.component.html`
 
-file--image-viewer.component.html
-file--image-viewer.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/image-viewer.component.html`
+
+
+```html
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1" class="checkerboard">
+  <pattern id="pattern" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+    <rect fill="rgba(204, 204, 204, 0.4)" x="0" width="12" height="12" y="0" />
+    <rect fill="rgba(204, 204, 204, 0.4)" x="12" width="12" height="12" y="12" />
+  </pattern>
+  <rect fill="url(#pattern)" x="0" y="0" width="100%" height="100%" />
+</svg>
+<div class="wrapper">
+  @if (url) {
+    <img [src]="url" />
+  }
+</div>
 ```
 
-## 항목
+### `image-viewer.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/image-viewer.component.html`](file--image-viewer.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/image-viewer.component.ts`](file--image-viewer.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/image-viewer.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ConfigService,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { Viewer } from '../Viewer';
+
+@Component({
+  selector: 'app-image-viewer',
+  templateUrl: './image-viewer.component.html',
+  styles: `
+    .checkerboard {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ImageViewerComponent implements Viewer {
+  url: string;
+
+  private storageClient: StorageClient;
+  private bucket: string;
+
+  constructor(yamcs: YamcsService, configService: ConfigService) {
+    this.storageClient = yamcs.createStorageClient();
+    this.bucket = configService.getDisplayBucket();
+  }
+
+  public init(objectName: string) {
+    this.url = this.storageClient.getObjectURL(this.bucket, objectName);
+    return Promise.resolve();
+  }
+
+  public hasPendingChanges() {
+    return false;
+  }
+}
+```

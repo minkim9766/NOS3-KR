@@ -3,34 +3,1602 @@
 
 **경로:** `fsw/cfe/modules/tbl/config/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `default_cfe_tbl_extern_typedefs.h`
 
-file--default_cfe_tbl_extern_typedefs.h
-file--default_cfe_tbl_fcncodes.h
-file--default_cfe_tbl_interface_cfg.h
-file--default_cfe_tbl_internal_cfg.h
-file--default_cfe_tbl_mission_cfg.h
-file--default_cfe_tbl_msg.h
-file--default_cfe_tbl_msgdefs.h
-file--default_cfe_tbl_msgids.h
-file--default_cfe_tbl_msgstruct.h
-file--default_cfe_tbl_platform_cfg.h
-file--default_cfe_tbl_topicids.h
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_extern_typedefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * Declarations and prototypes for cfe_tbl_extern_typedefs module
+ */
+
+#ifndef CFE_TBL_EXTERN_TYPEDEFS_H
+#define CFE_TBL_EXTERN_TYPEDEFS_H
+
+#include "common_types.h"
+#include "cfe_es_extern_typedefs.h"
+#include "cfe_mission_cfg.h" /* for CFE_MISSION_TBL_MAX_FULL_NAME_LEN */
+
+/**
+ * @brief Label definitions associated with CFE_TBL_BufferSelect_Enum_t
+ */
+enum CFE_TBL_BufferSelect
+{
+    /**
+     * @brief Select the Inactive buffer for validate or dump
+     */
+    CFE_TBL_BufferSelect_INACTIVE = 0,
+
+    /**
+     * @brief Select the Active buffer for validate or dump
+     */
+    CFE_TBL_BufferSelect_ACTIVE = 1
+};
+
+/**
+ * @brief Selects the buffer to operate on for validate or dump commands
+ *
+ * @sa enum CFE_TBL_BufferSelect
+ */
+typedef uint16 CFE_TBL_BufferSelect_Enum_t;
+
+/**
+ * @brief The definition of the header fields that are included in CFE Table Data files.
+ *
+ * This header follows the CFE_FS header and precedes the actual table data.
+ *
+ * @note The Offset and NumBytes fields in the table header are to 32 bits for
+ * backward compatibility with existing CFE versions.  This means that even on
+ * 64-bit CPUs, individual table files will be limited to 4GiB in size.
+ */
+typedef struct CFE_TBL_File_Hdr
+{
+    uint32 Reserved;                                     /**< Future Use: NumTblSegments in File?   */
+    uint32 Offset;                                       /**< Byte Offset at which load should commence */
+    uint32 NumBytes;                                     /**< Number of bytes to load into table */
+    char   TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< Fully qualified name of table to load */
+} CFE_TBL_File_Hdr_t;
+
+#endif /* CFE_TBL_EXTERN_TYPEDEFS_H */
 ```
 
-## 항목
+### `default_cfe_tbl_fcncodes.h`
 
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_extern_typedefs.h`](file--default_cfe_tbl_extern_typedefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_fcncodes.h`](file--default_cfe_tbl_fcncodes.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_interface_cfg.h`](file--default_cfe_tbl_interface_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_internal_cfg.h`](file--default_cfe_tbl_internal_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_mission_cfg.h`](file--default_cfe_tbl_mission_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_msg.h`](file--default_cfe_tbl_msg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_msgdefs.h`](file--default_cfe_tbl_msgdefs.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_msgids.h`](file--default_cfe_tbl_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_msgstruct.h`](file--default_cfe_tbl_msgstruct.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_platform_cfg.h`](file--default_cfe_tbl_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/cfe/modules/tbl/config/default_cfe_tbl_topicids.h`](file--default_cfe_tbl_topicids.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_fcncodes.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command function codes
+ *
+ * @note
+ *   This file should be strictly limited to the command/function code (CC)
+ *   macro definitions.  Other definitions such as enums, typedefs, or other
+ *   macros should be placed in the msgdefs.h or msg.h files.
+ */
+#ifndef CFE_TBL_FCNCODES_H
+#define CFE_TBL_FCNCODES_H
+
+/*
+** Table task command packet command codes
+*/
+/** \name Table Services Command Codes */
+/** \{ */
+
+/** \cfetblcmd Table No-Op
+**
+**  \par Description
+**       This command performs no other function than to increment the
+**       command execution counter. The command may be used to verify
+**       general aliveness of the Table Services task.
+**
+**  \cfecmdmnemonic \TBL_NOOP
+**
+**  \par Command Structure
+**       #CFE_TBL_NoopCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_NOOP_INF_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Table
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       None
+**
+**  \sa
+*/
+#define CFE_TBL_NOOP_CC 0
+
+/** \cfetblcmd Table Reset Counters
+**
+**  \par Description
+**       This command resets the following counters within the Table
+**       Services housekeeping telemetry:
+**       - Command Execution Counter (\TBL_CMDPC)
+**       - Command Error Counter (\TBL_CMDEC)
+**       - Successful Table Validations Counter (\TBL_VALSUCCESSCTR)
+**       - Failed Table Validations Counter (\TBL_VALFAILEDCTR)
+**       - Number of Table Validations Requested (\TBL_VALREQCTR)
+**       - Number of completed table validations (\TBL_VALCOMPLTDCTR)
+**
+**  \cfecmdmnemonic \TBL_RESETCTRS
+**
+**  \par Command Structure
+**       #CFE_TBL_ResetCountersCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         be reset to 0
+**       - The #CFE_TBL_RESET_INF_EID debug event message will be
+**         generated
+**
+**  \par Error Conditions
+**       There are no error conditions for this command. If the Table
+**       Services receives the command, the event is sent (although it
+**       may be filtered by EVS) and the counter is incremented
+**       unconditionally.
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  However, it is
+**       possible for ground systems and on-board safing procedures
+**       to be designed such that they react to changes in the counter
+**       values that are reset by this command.
+**
+**  \sa
+*/
+#define CFE_TBL_RESET_COUNTERS_CC 1
+
+/** \cfetblcmd Load Table
+**
+**  \par Description
+**       This command loads the contents of the specified file into
+**       an inactive buffer for the table specified within the file.
+**
+**  \cfecmdmnemonic \TBL_LOAD
+**
+**  \par Command Structure
+**       #CFE_TBL_LoadCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with
+**       the following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_FILE_LOADED_INF_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command can fail for the following reasons:
+**       - Table name found in table image file's table header is not found
+**         in table registry (ie - The table associated with the table image
+**         in the file has not been registered by an application).
+**       - The table image file has an invalid or incorrect size.  The size of
+**         the image file must match the size field within in the header, and
+**         must also match the expected size of the table indicated in the registry.
+**       - No working buffers are available for the load.  This would indicate
+**         that too many single-buffered table loads are in progress at the same
+**         time.
+**       - An attempt is being made to load an uninitialized table with a file
+**         containing only a partial table image.
+**       - The table image file was unable to be opened.  Either the file does
+**         not exist at the specified location, the filename is in error, or
+**         the file system has been corrupted.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event messages are issued for all error cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It is performing the first
+**       step of loading a table and can be aborted (using the Abort Table Load
+**       command described below) without affecting the contents of the active
+**       table image.
+**
+**  \sa  #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_LOAD_CC 2
+
+/** \cfetblcmd Dump Table
+**
+**  \par Description
+**       This command will cause the Table Services to put the contents
+**       of the specified table buffer into the command specified file.
+**
+**  \cfecmdmnemonic \TBL_DUMP
+**
+**  \par Command Structure
+**       #CFE_TBL_DumpCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - Either the #CFE_TBL_OVERWRITE_DUMP_INF_EID OR the
+**         #CFE_TBL_WRITE_DUMP_INF_EID informational event message will
+**         be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A single buffered table's inactive buffer was requested to be
+**         dumped and no such buffer is currently allocated.
+**       - Error occurred during write operation to file. Possible causes
+**         might be insufficient space in the file system or the filename
+**         or file path is improperly specified.
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - A command specific error event message is issued for all error
+**         cases
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_DUMP_CC 3
+
+/** \cfetblcmd Validate Table
+**
+**  \par Description
+**       This command will cause Table Services to calculate the Data Integrity
+**       Value for the specified table and to notify the owning application that
+**       the table's validation function should be executed.  The results of both
+**       the Data Integrity Value computation and the validation function are
+**       reported in Table Services Housekeeping Telemetry.
+**
+**  \cfecmdmnemonic \TBL_VALIDATE
+**
+**  \par Command Structure
+**       #CFE_TBL_ValidateCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the following
+**       telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - \b \c \TBL_VALREQCTR - table validation request counter will increment
+**       - \b \c \TBL_LASTVALCRC - calculated data integrity value will be updated
+**       - The #CFE_TBL_VAL_REQ_MADE_INF_EID debug event message (indicating the
+**         application is being notified of a validation request)
+**
+**       If the specified table has an associated validation function, then the
+**       following telemetry will also change:
+**       - Either \b \c \TBL_VALSUCCESSCTR OR \b \c \TBL_VALFAILEDCTR will
+**         increment
+**       - \b \c \TBL_VALCOMPLTDCTR - table validations performed counter will
+**         increment
+**       - \b \c \TBL_LASTVALS - table validation function return status will
+**         update
+**       - The #CFE_TBL_VALIDATION_INF_EID informational event message (indicating the
+**         validation function return status) will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A single buffered table's inactive buffer was requested to be validated
+**         and no such buffer is currently allocated.
+**       - Too many validations have been requested simultaneously.  The operator
+**         must wait for one or more applications to perform their table validation
+**         functions before trying again.
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event message are issued for all error cases
+**
+**  \par Criticality
+**       The success or failure of a table validation does not have any immediate
+**       impact on table contents.  The results are sent to the operator in telemetry
+**       and the operator must determine whether the results are acceptable and send a
+**       command to activate the validated table image.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_ACTIVATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_VALIDATE_CC 4
+
+/** \cfetblcmd Activate Table
+**
+**  \par Description
+**       This command will cause Table Services to notify a table's owner
+**       that an update is pending.  The owning application will then update
+**       the contents of the active table buffer with the contents of the
+**       associated inactive table buffer at a time of their convenience.
+**
+**  \cfecmdmnemonic \TBL_ACTIVATE
+**
+**  \par Command Structure
+**       #CFE_TBL_ActivateCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_UPDATE_SUCCESS_INF_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**       - The table was registered as a "dump only" type and thus cannot be activated
+**       - The table buffer has not been validated.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Command specific error event message are issued for all
+**         error cases
+**
+**  \par Criticality
+**       This command will cause the contents of the specified table to be
+**       updated with the contents in the inactive table buffer.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ABORT_LOAD_CC
+*/
+#define CFE_TBL_ACTIVATE_CC 5
+
+/** \cfetblcmd Dump Table Registry
+**
+**  \par Description
+**       This command will cause Table Services to write some of the
+**       contents of the Table Registry to the command specified file.
+**       This allows the operator to see the current state and configuration
+**       of all tables that have been registered with the cFE.
+**
+**  \cfecmdmnemonic \TBL_WRITEREG2FILE
+**
+**  \par Command Structure
+**       #CFE_TBL_DumpRegistryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will
+**         increment
+**       - The generation of either #CFE_TBL_OVERWRITE_REG_DUMP_INF_EID
+**         or #CFE_TBL_WRITE_REG_DUMP_INF_EID debug event messages
+**       - The specified file should appear (or be updated) at the
+**         specified location in the file system
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - A table registry dump is already in progress, not yet completed
+**       - The specified DumpFilename could not be parsed
+**       - Error occurred during write operation to file. Possible
+**         causes might be insufficient space in the file system
+**         or the filename or file path is improperly specified.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - An Error specific event message
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will create a new
+**       file in the file system and could, if performed repeatedly without
+**       sufficient file management by the operator, fill the file system.
+**
+**  \sa  #CFE_TBL_SEND_REGISTRY_CC
+*/
+#define CFE_TBL_DUMP_REGISTRY_CC 6
+
+/** \cfetblcmd Telemeter One Table Registry Entry
+**
+**  \par Description
+**       This command will cause Table Services to telemeter the contents
+**       of the Table Registry for the command specified table.
+**
+**  \cfecmdmnemonic \TBL_TLMREG
+**
+**  \par Command Structure
+**       #CFE_TBL_SendRegistryCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - Receipt of a Table Registry Info Packet (see #CFE_TBL_TableRegistryTlm_t)
+**       - The #CFE_TBL_TLM_REG_CMD_INF_EID debug event message will
+**         be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command is not inherently dangerous.  It will generate
+**       additional telemetry.
+**
+**  \sa  #CFE_TBL_DUMP_REGISTRY_CC
+*/
+#define CFE_TBL_SEND_REGISTRY_CC 7
+
+/** \cfetblcmd Delete Critical Table from Critical Data Store
+**
+**  \par Description
+**       This command will delete the Critical Data Store (CDS) associated
+**       with the specified Critical Table.  Note that any table still
+**       present in the Table Registry is unable to be deleted from
+**       the Critical Data Store.  All Applications that are accessing
+**       the critical table must release and unregister their access
+**       before the CDS can be deleted.
+**
+**  \cfecmdmnemonic \TBL_DELETECDS
+**
+**  \par Command Structure
+**       #CFE_TBL_DeleteCDSCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC - command execution counter will
+**         increment
+**       - The #CFE_TBL_CDS_DELETED_INFO_EID informational event message
+**         will be generated
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the critical data
+**         store registry
+**       - The specified table name WAS found in the table registry (all
+**         registrations/sharing of the table must be unregistered before
+**         the table's CDS can be deleted)
+**       - The table's owning application is still active
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command will cause the loss of the specified table's contents
+**       before the owning Application was terminated.
+**
+**  \sa  #CFE_ES_DUMP_CDS_REGISTRY_CC, #CFE_ES_DELETE_CDS_CC
+*/
+#define CFE_TBL_DELETE_CDS_CC 8
+
+/** \cfetblcmd Abort Table Load
+**
+**  \par Description
+**       This command will cause Table Services to discard the contents of
+**       a table buffer that was previously loaded with the data in a file
+**       as specified by a Table Load command.  For single buffered tables,
+**       the allocated shared working buffer is freed and becomes available
+**       for other Table Load commands.
+**
+**  \cfecmdmnemonic \TBL_LOADABORT
+**
+**  \par Command Structure
+**       #CFE_TBL_AbortLoadCmd_t
+**
+**  \par Command Verification
+**       Successful execution of this command may be verified with the
+**       following telemetry:
+**       - \b \c \TBL_CMDPC -  command execution counter will increment
+**       - The #CFE_TBL_LOAD_ABORT_INF_EID informational event message
+**         is generated
+**       - If the load was aborted for a single buffered table, the
+**         \b \c \TBL_NUMFREESHRBUF telemetry point should increment
+**
+**  \par Error Conditions
+**       This command may fail for the following reason(s):
+**       - The specified table name was not found in the table registry.
+**       - The specified table did not have a load in progress to be aborted.
+**
+**       Evidence of failure may be found in the following telemetry:
+**       - \b \c \TBL_CMDEC - command error counter will increment
+**       - Error specific event message
+**
+**  \par Criticality
+**       This command will cause the loss of data put into an inactive table buffer.
+**
+**  \sa  #CFE_TBL_LOAD_CC, #CFE_TBL_DUMP_CC, #CFE_TBL_VALIDATE_CC, #CFE_TBL_ACTIVATE_CC
+*/
+#define CFE_TBL_ABORT_LOAD_CC 9
+/** \} */
+
+#endif
+```
+
+### `default_cfe_tbl_interface_cfg.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_interface_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Public Definitions
+ *
+ * This provides default values for configurable items that affect
+ * the interface(s) of this module.  This includes the CMD/TLM message
+ * interface, tables definitions, and any other data products that
+ * serve to exchange information with other entities.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_INTERFACE_CFG_H
+#define CFE_TBL_INTERFACE_CFG_H
+
+/**
+**  \cfetblcfg Maximum Table Name Length
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the table name
+**      ('TblName') portion of a Full Table Name of the following
+**      form: "ApplicationName.TblName"
+**
+**      This length does not need to include an extra character for NULL termination.
+**
+**  \par Limits
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_TBL_MAX_NAME_LENGTH 16
+
+/**
+**  \cfetblcfg Maximum Length of Full Table Name in messages
+**
+**  \par Description:
+**      Indicates the maximum length (in characters) of the entire table name
+**      within software bus messages, in "AppName.TableName" notation.
+**
+**      This affects the layout of command/telemetry messages but does not affect run
+**      time behavior or internal allocation.
+**
+**  \par Limits
+**       All CPUs within the same SB domain (mission) must share the same definition
+**       Note this affects the size of messages, so it must not cause any message
+**       to exceed the max length.
+**
+**       This value should be kept as a multiple of 4, to maintain alignment of
+**       any possible neighboring fields without implicit padding.
+*/
+#define CFE_MISSION_TBL_MAX_FULL_NAME_LEN (CFE_MISSION_TBL_MAX_NAME_LENGTH + CFE_MISSION_MAX_API_LEN + 4)
+
+#endif
+```
+
+### `default_cfe_tbl_internal_cfg.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_internal_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Private Config Definitions
+ *
+ * This provides default values for configurable items that are internal
+ * to this module and do NOT affect the interface(s) of this module.  Changes
+ * to items in this file only affect the local module and will be transparent
+ * to external entities that are using the public interface(s).
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_INTERNAL_CFG_H
+#define CFE_TBL_INTERNAL_CFG_H
+
+/**
+**  \cfeescfg Define TBL Task Priority
+**
+**  \par Description:
+**       Defines the cFE_TBL Task priority.
+**
+**  \par Limits
+**       Not Applicable
+*/
+#define CFE_PLATFORM_TBL_START_TASK_PRIORITY 70
+
+/**
+**  \cfeescfg Define TBL Task Stack Size
+**
+**  \par Description:
+**       Defines the cFE_TBL Task Stack Size
+**
+**  \par Limits
+**       There is a lower limit of 2048 on this configuration parameter.  There
+**       are no restrictions on the upper limit however, the maximum stack size
+**       is system dependent and should be verified.  Most operating systems provide
+**       tools for measuring the amount of stack used by a task during operation. It
+**       is always a good idea to verify that no more than 1/2 of the stack is used.
+*/
+#define CFE_PLATFORM_TBL_START_TASK_STACK_SIZE CFE_PLATFORM_ES_DEFAULT_STACK_SIZE
+
+/* Platform Configuration Parameters for Table Service (TBL) */
+
+/**
+**  \cfetblcfg Size of Table Services Table Memory Pool
+**
+**  \par Description:
+**       Defines the TOTAL size of the memory pool that cFE Table Services allocates
+**       from the system.  The size must be large enough to provide memory for each
+**       registered table, the inactive buffers for double buffered tables and for
+**       the shared inactive buffers for single buffered tables.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter.
+*/
+#define CFE_PLATFORM_TBL_BUF_MEMORY_BYTES 524288
+
+/**
+**  \cfetblcfg Maximum Size Allowed for a Double Buffered Table
+**
+**  \par Description:
+**       Defines the maximum allowed size (in bytes) of a double buffered table.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter but it must be
+**       less than half of #CFE_PLATFORM_TBL_BUF_MEMORY_BYTES.
+*/
+#define CFE_PLATFORM_TBL_MAX_DBL_TABLE_SIZE 16384
+
+/**
+**  \cfetblcfg Maximum Size Allowed for a Single Buffered Table
+**
+**  \par Description:
+**       Defines the maximum allowed size (in bytes) of a single buffered table.
+**       \b NOTE: This size determines the size of all shared table buffers.
+**       Therefore, this size will be multiplied by #CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS
+**       below when allocating memory for shared tables.
+**
+**  \par Limits
+**       The cFE does not place a limit on the size of this parameter but it must be
+**       small enough to allow for #CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS number of tables
+**       to fit into #CFE_PLATFORM_TBL_BUF_MEMORY_BYTES.
+*/
+#define CFE_PLATFORM_TBL_MAX_SNGL_TABLE_SIZE 16384
+
+/**
+**  \cfetblcfg Maximum Number of Tables Allowed to be Registered
+**
+**  \par Description:
+**       Defines the maximum number of tables supported by this processor's Table Services.
+**
+**  \par Limits
+**       This number must be less than 32767.  It should be recognized that this parameter
+**       determines the size of the Table Registry.  An excessively high number will waste
+**       memory.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_TABLES 128
+
+/**
+**  \cfetblcfg Maximum Number of Critical Tables that can be Registered
+**
+**  \par Description:
+**       Defines the maximum number of critical tables supported by this processor's Table Services.
+**
+**  \par Limits
+**       This number must be less than 32767.  It should be recognized that this parameter
+**       determines the size of the Critical Table Registry which is maintained in the Critical
+**       Data Store.  An excessively high number will waste Critical Data Store memory.  Therefore,
+**       this number must not exceed the value defined in CFE_ES_CDS_MAX_CRITICAL_TABLES.
+*/
+#define CFE_PLATFORM_TBL_MAX_CRITICAL_TABLES 32
+
+/**
+**  \cfetblcfg Maximum Number of Table Handles
+**
+**  \par Description:
+**       Defines the maximum number of Table Handles.
+**
+**  \par Limits
+**       This number must be less than 32767.  This number must be at least as big as
+**       the number of tables (#CFE_PLATFORM_TBL_MAX_NUM_TABLES) and should be set higher if tables
+**       are shared between applications.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_HANDLES 256
+
+/**
+**  \cfetblcfg Maximum Number of Simultaneous Loads to Support
+**
+**  \par Description:
+**       Defines the maximum number of single buffered tables that can be
+**       loaded simultaneously.  This number is used to determine the number
+**       of shared buffers to allocate.
+**
+**  \par Limits
+**       This number must be less than 32767.  An excessively high number will
+**       degrade system performance and waste memory.  A number less than 5 is
+**       suggested but not required.
+*/
+#define CFE_PLATFORM_TBL_MAX_SIMULTANEOUS_LOADS 4
+
+/**
+**  \cfetblcfg Maximum Number of Simultaneous Table Validations
+**
+**  \par Description:
+**       Defines the maximum number of pending validations that
+**       the Table Services can handle at any one time.  When a
+**       table has a validation function, a validation request is
+**       made of the application to perform that validation.  This
+**       number determines how many of those requests can be
+**       outstanding at any one time.
+**
+**  \par Limits
+**       This number must be less than 32767.  An excessively high number will
+**       degrade system performance and waste memory.  A number less than 20 is
+**       suggested but not required.
+*/
+#define CFE_PLATFORM_TBL_MAX_NUM_VALIDATIONS 10
+
+/**
+**  \cfetblcfg Default Filename for a Table Registry Dump
+**
+**  \par Description:
+**       Defines the file name used to store the table registry when
+**       no filename is specified in the dump registry command.
+**
+**  \par Limits
+**       The length of each string, including the NULL terminator cannot exceed the
+**       #OS_MAX_PATH_LEN value.
+*/
+#define CFE_PLATFORM_TBL_DEFAULT_REG_DUMP_FILE "/ram/cfe_tbl_reg.log"
+
+/**
+**  \cfetblcfg Number of Spacecraft ID's specified for validation
+**
+**  \par Description:
+**       Defines the number of specified spacecraft ID values that
+**       are verified during table loads.  If the number is zero
+**       then no validation of the spacecraft ID field in the table
+**       file header is performed when tables are loaded.  Non-zero
+**       values indicate how many values from the list of spacecraft
+**       ID's defined below are compared to the spacecraft ID field
+**       in the table file header.  The ELF2CFETBL tool may be used
+**       to create table files with specified spacecraft ID values.
+**
+**  \par Limits
+**       This number must be greater than or equal to zero and
+**       less than or equal to 2.
+*/
+#define CFE_PLATFORM_TBL_VALID_SCID_COUNT 0
+
+/* macro to construct 32 bit value from 4 chars */
+#define CFE_PLATFORM_TBL_U32FROM4CHARS(_C1, _C2, _C3, _C4) \
+    ((uint32)(_C1) << 24 | (uint32)(_C2) << 16 | (uint32)(_C3) << 8 | (uint32)(_C4))
+
+/**
+**  \cfetblcfg Spacecraft ID values used for table load validation
+**
+**  \par Description:
+**       Defines the spacecraft ID values used for validating the
+**       spacecraft ID field in the table file header.  To be valid,
+**       the spacecraft ID specified in the table file header must
+**       match one of the values defined here.
+**
+**  \par Limits
+**       This value can be any 32 bit unsigned integer.
+*/
+#define CFE_PLATFORM_TBL_VALID_SCID_1 (0x42)
+#define CFE_PLATFORM_TBL_VALID_SCID_2 (CFE_PLATFORM_TBL_U32FROM4CHARS('a', 'b', 'c', 'd'))
+
+/**
+**  \cfetblcfg Number of Processor ID's specified for validation
+**
+**  \par Description:
+**       Defines the number of specified processor ID values that
+**       are verified during table loads.  If the number is zero
+**       then no validation of the processor ID field in the table
+**       file header is performed when tables are loaded.  Non-zero
+**       values indicate how many values from the list of processor
+**       ID's defined below are compared to the processor ID field
+**       in the table file header.  The ELF2CFETBL tool may be used
+**       to create table files with specified processor ID values.
+**
+**  \par Limits
+**       This number must be greater than or equal to zero and
+**       less than or equal to 4.
+*/
+#define CFE_PLATFORM_TBL_VALID_PRID_COUNT 0
+
+/**
+**  \cfetblcfg Processor ID values used for table load validation
+**
+**  \par Description:
+**       Defines the processor ID values used for validating the
+**       processor ID field in the table file header.  To be valid,
+**       the spacecraft ID specified in the table file header must
+**       match one of the values defined here.
+**
+**  \par Limits
+**       This value can be any 32 bit unsigned integer.
+*/
+#define CFE_PLATFORM_TBL_VALID_PRID_1 (1)
+#define CFE_PLATFORM_TBL_VALID_PRID_2 (CFE_PLATFORM_TBL_U32FROM4CHARS('a', 'b', 'c', 'd'))
+#define CFE_PLATFORM_TBL_VALID_PRID_3 0
+#define CFE_PLATFORM_TBL_VALID_PRID_4 0
+
+#endif
+```
+
+### `default_cfe_tbl_mission_cfg.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_mission_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Event Services (CFE_TBL) Application Mission Configuration Header File
+ *
+ * This is a compatibility header for the "mission_cfg.h" file that has
+ * traditionally provided public config definitions for each CFS app.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_MISSION_CFG_H
+#define CFE_TBL_MISSION_CFG_H
+
+#include "cfe_tbl_interface_cfg.h"
+
+#endif
+```
+
+### `default_cfe_tbl_msg.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_msg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command and telemetry
+ *   message data types.
+ *
+ * This is a compatibility header for the "cfe_tbl_msg.h" file that has
+ * traditionally provided the message definitions for cFS apps.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_MSG_H
+#define CFE_TBL_MSG_H
+
+#include "cfe_mission_cfg.h"
+#include "cfe_tbl_msgdefs.h"
+#include "cfe_tbl_msgstruct.h"
+
+#endif
+```
+
+### `default_cfe_tbl_msgdefs.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_msgdefs.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   Specification for the CFE Event Services (CFE_TBL) command and telemetry
+ *   message constant definitions.
+ *
+ *  For CFE_TBL this is only the function/command code definitions
+ */
+#ifndef CFE_TBL_MSGDEFS_H
+#define CFE_TBL_MSGDEFS_H
+
+#include "cfe_tbl_fcncodes.h"
+
+#endif
+```
+
+### `default_cfe_tbl_msgids.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_msgids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Event Services (CFE_TBL) Application Message IDs
+ */
+#ifndef CFE_TBL_MSGIDS_H
+#define CFE_TBL_MSGIDS_H
+
+#include "cfe_core_api_base_msgids.h"
+#include "cfe_tbl_topicids.h"
+
+/*
+** cFE Command Message Id's
+*/
+#define CFE_TBL_CMD_MID     CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TBL_CMD_MSG     /* 0x1804 */
+#define CFE_TBL_SEND_HK_MID CFE_PLATFORM_CMD_MID_BASE + CFE_MISSION_TBL_SEND_HK_MSG /* 0x180C */
+
+/*
+** CFE Telemetry Message Id's
+*/
+#define CFE_TBL_HK_TLM_MID  CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TBL_HK_TLM_MSG  /* 0x0804 */
+#define CFE_TBL_REG_TLM_MID CFE_PLATFORM_TLM_MID_BASE + CFE_MISSION_TBL_REG_TLM_MSG /* 0x080C */
+
+#endif
+```
+
+### `default_cfe_tbl_msgstruct.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_msgstruct.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ *  Purpose:
+ *  cFE Executive Services (TBL) Command and Telemetry packet definition file.
+ *
+ *  References:
+ *     Flight Software Branch C Coding Standard Version 1.0a
+ *     cFE Flight Software Application Developers Guide
+ *
+ *  Notes:
+ *
+ */
+#ifndef CFE_TBL_MSGSTRUCT_H
+#define CFE_TBL_MSGSTRUCT_H
+
+/************************************************************************
+ * Includes
+ ************************************************************************/
+#include "cfe_mission_cfg.h"
+#include "cfe_tbl_msgdefs.h"
+#include "cfe_msg_hdr.h"
+
+/********************************/
+/* Command Message Data Formats */
+/********************************/
+/**
+** \brief Generic "no arguments" command
+**
+** This command structure is used for commands that do not have any parameters.
+** This includes:
+** -# The Housekeeping Request Message
+** -# The No-Op Command (For details, see #CFE_TBL_NOOP_CC)
+** -# The Reset Counters Command (For details, see #CFE_TBL_RESET_COUNTERS_CC)
+*/
+typedef struct CFE_TBL_NoArgsCmd
+{
+    CFE_MSG_CommandHeader_t CommandHeader; /**< \brief Command header */
+} CFE_TBL_NoArgsCmd_t;
+
+/*
+ * Typedefs for each of the messages that share the command format
+ * Allows each command to evolve independently, while following the command
+ * handler prototype convention
+ */
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_NoopCmd_t;
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_ResetCountersCmd_t;
+typedef CFE_TBL_NoArgsCmd_t CFE_TBL_SendHkCmd_t;
+
+/**
+** \brief Load Table Command Payload
+**
+** For command details, see #CFE_TBL_LOAD_CC
+**
+**/
+typedef struct CFE_TBL_LoadCmd_Payload
+{
+    char LoadFilename[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Filename (and path) of data to be loaded */
+} CFE_TBL_LoadCmd_Payload_t;
+
+/**
+ * \brief Load Table Command
+ */
+typedef struct CFE_TBL_LoadCmd
+{
+    CFE_MSG_CommandHeader_t   CommandHeader; /**< \brief Command header */
+    CFE_TBL_LoadCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_LoadCmd_t;
+
+/**
+** \brief Dump Table Command Payload
+**
+** For command details, see #CFE_TBL_DUMP_CC
+*/
+typedef struct CFE_TBL_DumpCmd_Payload
+{
+    uint16 ActiveTableFlag;                            /**< \brief #CFE_TBL_BufferSelect_INACTIVE=Inactive Table,
+                                                                 #CFE_TBL_BufferSelect_ACTIVE=Active Table */
+                                                       /**< Selects either the "Inactive"
+                                                            (#CFE_TBL_BufferSelect_INACTIVE) buffer or the
+                                                            "Active" (#CFE_TBL_BufferSelect_ACTIVE) buffer
+                                                            to be dumped */
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full name of table to be dumped */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of table to be dumped */
+    char DumpFilename[CFE_MISSION_MAX_PATH_LEN];       /**< \brief Full Filename where data is to be written */
+                                                       /**< ASCII string containing full path of filename
+                                                            where data is to be dumped */
+} CFE_TBL_DumpCmd_Payload_t;
+
+/**
+ * /brief Dump Table Command
+ */
+typedef struct CFE_TBL_DumpCmd
+{
+    CFE_MSG_CommandHeader_t   CommandHeader; /**< \brief Command header */
+    CFE_TBL_DumpCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_DumpCmd_t;
+
+/**
+** \brief Validate Table Command Payload
+**
+** For command details, see #CFE_TBL_VALIDATE_CC
+*/
+typedef struct CFE_TBL_ValidateCmd_Payload
+{
+    uint16 ActiveTableFlag;                            /**< \brief #CFE_TBL_BufferSelect_INACTIVE=Inactive Table,
+                                                                 #CFE_TBL_BufferSelect_ACTIVE=Active Table */
+                                                       /**< Selects either the "Inactive"
+                                                            (#CFE_TBL_BufferSelect_INACTIVE) buffer or the
+                                                            "Active" (#CFE_TBL_BufferSelect_ACTIVE) buffer
+                                                            to be validated */
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full Name of Table to be validated */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of table to be validated */
+} CFE_TBL_ValidateCmd_Payload_t;
+
+/**
+ * \brief Validate Table Command
+ */
+typedef struct CFE_TBL_ValidateCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**< \brief Command header */
+    CFE_TBL_ValidateCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_ValidateCmd_t;
+
+/**
+** \brief Activate Table Command Payload
+**
+** For command details, see #CFE_TBL_ACTIVATE_CC
+*/
+typedef struct CFE_TBL_ActivateCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full Name of Table to be activated */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of table to be activated */
+} CFE_TBL_ActivateCmd_Payload_t;
+
+/**
+ * \brief Activate Table Command
+ */
+typedef struct CFE_TBL_ActivateCmd
+{
+    CFE_MSG_CommandHeader_t       CommandHeader; /**< \brief Command header */
+    CFE_TBL_ActivateCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_ActivateCmd_t;
+
+/**
+** \brief Dump Registry Command Payload
+**
+** For command details, see #CFE_TBL_DUMP_REGISTRY_CC
+*/
+typedef struct CFE_TBL_DumpRegistryCmd_Payload
+{
+    char DumpFilename[CFE_MISSION_MAX_PATH_LEN]; /**< \brief Full Filename where dumped data is to be
+                                             written */
+                                                 /**< ASCII string containing full path of filename
+                                                      where registry is to be dumped */
+} CFE_TBL_DumpRegistryCmd_Payload_t;
+
+/**
+ * \brief Dump Registry Command
+ */
+typedef struct CFE_TBL_DumpRegistryCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**< \brief Command header */
+    CFE_TBL_DumpRegistryCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_DumpRegistryCmd_t;
+
+/**
+** \brief Send Table Registry Command Payload
+**
+** For command details, see #CFE_TBL_SEND_REGISTRY_CC
+*/
+typedef struct CFE_TBL_SendRegistryCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full Name of Table whose registry entry
+                                                    is to be telemetered */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of table whose registry entry is
+                                                            to be telemetered via #CFE_TBL_TableRegistryTlm_t */
+} CFE_TBL_SendRegistryCmd_Payload_t;
+
+/**
+ * \brief Send Table Registry Command
+ */
+typedef struct CFE_TBL_SendRegistryCmd
+{
+    CFE_MSG_CommandHeader_t           CommandHeader; /**< \brief Command header */
+    CFE_TBL_SendRegistryCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_SendRegistryCmd_t;
+
+/**
+** \brief Delete Critical Table CDS Command Payload
+**
+** For command details, see #CFE_TBL_DELETE_CDS_CC
+*/
+typedef struct CFE_TBL_DelCDSCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full Name of Table whose CDS is
+                                                    to be deleted */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of a critical table whose
+                                                            CDS is to be deleted */
+} CFE_TBL_DelCDSCmd_Payload_t;
+
+/**
+ * \brief Delete Critical Table CDS Command
+ */
+typedef struct CFE_TBL_DeleteCDSCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_TBL_DelCDSCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_DeleteCDSCmd_t;
+
+/**
+** \brief Abort Load Command Payload
+**
+** For command details, see #CFE_TBL_ABORT_LOAD_CC
+*/
+typedef struct CFE_TBL_AbortLoadCmd_Payload
+{
+    char TableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \brief Full Name of Table whose load is to be aborted */
+                                                       /**< ASCII string containing full table name
+                                                            identifier of a table whose load is to be aborted */
+} CFE_TBL_AbortLoadCmd_Payload_t;
+
+/**
+ * \brief Abort Load Command
+ */
+typedef struct CFE_TBL_AbortLoadCmd
+{
+    CFE_MSG_CommandHeader_t        CommandHeader; /**< \brief Command header */
+    CFE_TBL_AbortLoadCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_AbortLoadCmd_t;
+
+/*************************************************************************/
+/******************************************/
+/* Generated Command Message Data Formats */
+/******************************************/
+/**
+** \brief Table Management Notification Command Payload
+**
+** \par Description
+**      Whenever an application that owns a table calls the #CFE_TBL_NotifyByMessage API
+**      following the table registration, Table services will generate the following
+**      command message with the application specified message ID, command code and
+**      parameter whenever the table requires management (e.g. - loads and validations).
+*/
+typedef struct CFE_TBL_NotifyCmd_Payload
+{
+    uint32 Parameter; /**< \brief Application specified command parameter */
+} CFE_TBL_NotifyCmd_Payload_t;
+
+/**
+ * /brief Table Management Notification Command
+ */
+typedef struct CFE_TBL_NotifyCmd
+{
+    CFE_MSG_CommandHeader_t     CommandHeader; /**< \brief Command header */
+    CFE_TBL_NotifyCmd_Payload_t Payload;       /**< \brief Command payload */
+} CFE_TBL_NotifyCmd_t;
+
+/*************************************************************************/
+/**********************************/
+/* Telemetry Message Data Formats */
+/**********************************/
+/**
+**  \cfetbltlm Table Services Housekeeping Packet
+**/
+typedef struct CFE_TBL_HousekeepingTlm_Payload
+{
+    /*
+    ** Task command interface counters...
+    */
+    uint8 CommandCounter;      /**< \cfetlmmnemonic \TBL_CMDPC
+                                \brief Count of valid commands received */
+    uint8 CommandErrorCounter; /**< \cfetlmmnemonic \TBL_CMDEC
+                           \brief Count of invalid commands received */
+
+    /*
+    ** Table Registry Statistics
+    */
+    uint16 NumTables;      /**< \cfetlmmnemonic \TBL_NUMTABLES
+                                \brief Number of Tables Registered */
+    uint16 NumLoadPending; /**< \cfetlmmnemonic \TBL_NUMUPDATESPEND
+                                \brief Number of Tables pending on Applications for their update */
+
+    /*
+    ** Last Table Validation Results
+    */
+    uint16 ValidationCounter;                                 /**< \cfetlmmnemonic \TBL_VALCOMPLTDCTR
+                                                               \brief Number of completed table validations */
+    uint32 LastValCrc;                                        /**< \cfetlmmnemonic \TBL_LASTVALCRC
+                                                                   \brief Data Integrity Value computed for last table validated */
+    int32 LastValStatus;                                      /**< \cfetlmmnemonic \TBL_LASTVALS
+                                                                   \brief Returned status from validation function for last table validated */
+    bool ActiveBuffer;                                        /**< \cfetlmmnemonic \TBL_LASTVALBUF
+                                                                   \brief Indicator of whether table buffer validated was 0=Inactive, 1=Active */
+    char LastValTableName[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \cfetlmmnemonic \TBL_LASTVALTBLNAME
+                                                           \brief Name of last table validated */
+    uint8 SuccessValCounter;                                  /**< \cfetlmmnemonic \TBL_VALSUCCESSCTR
+                                                               \brief Total number of successful table validations */
+    uint8 FailedValCounter;                                   /**< \cfetlmmnemonic \TBL_VALFAILEDCTR
+                                                               \brief Total number of unsuccessful table validations */
+    uint8 NumValRequests;                                     /**< \cfetlmmnemonic \TBL_VALREQCTR
+                                                                   \brief Number of times Table Services has requested validations from Apps */
+
+    /*
+    ** Ground system interface information
+    */
+    uint8 NumFreeSharedBufs;                                  /**< \cfetlmmnemonic \TBL_NUMFREESHRBUF
+                                                                   \brief Number of free Shared Working Buffers */
+    uint8 ByteAlignPad1;                                      /**< \cfetlmmnemonic \TBL_BYTEALIGNPAD1
+                                                                   \brief Spare byte to ensure longword alignment */
+    CFE_ES_MemHandle_t MemPoolHandle;                         /**< \cfetlmmnemonic \TBL_MEMPOOLHANDLE
+                                                                   \brief Handle to TBL's memory pool */
+    CFE_TIME_SysTime_t LastUpdateTime;                        /**< \cfetlmmnemonic \TBL_LASTUPDTIME
+                                                                   \brief Time of last table update */
+    char LastUpdatedTable[CFE_MISSION_TBL_MAX_FULL_NAME_LEN]; /**< \cfetlmmnemonic \TBL_LASTUPDTBLNAME
+                                                         \brief Name of the last table updated */
+    char LastFileLoaded[CFE_MISSION_MAX_PATH_LEN];            /**< \cfetlmmnemonic \TBL_LASTFILELOADED
+                                                          \brief Path and Name of last table image file loaded */
+    char LastFileDumped[CFE_MISSION_MAX_PATH_LEN];            /**< \cfetlmmnemonic \TBL_LASTFILEDUMPED
+                                                          \brief Path and Name of last file dumped to */
+    char LastTableLoaded[CFE_MISSION_TBL_MAX_FULL_NAME_LEN];  /**< \cfetlmmnemonic \TBL_LASTTABLELOADED
+                                                          \brief Name of the last table loaded */
+} CFE_TBL_HousekeepingTlm_Payload_t;
+
+typedef struct CFE_TBL_HousekeepingTlm
+{
+    CFE_MSG_TelemetryHeader_t         TelemetryHeader; /**< \brief Telemetry header */
+    CFE_TBL_HousekeepingTlm_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_TBL_HousekeepingTlm_t;
+
+/**
+**  \cfetbltlm Table Registry Info Packet
+**/
+typedef struct CFE_TBL_TblRegPacket_Payload
+{
+    CFE_ES_MemOffset_t Size;                       /**< \cfetlmmnemonic \TBL_SIZE
+                                                        \brief Size, in bytes, of Table */
+    uint32 Crc;                                    /**< \cfetlmmnemonic \TBL_CRC
+                                                        \brief Most recently calculated CRC of Table */
+    CFE_ES_MemAddress_t ActiveBufferAddr;          /**< \cfetlmmnemonic \TBL_ACTBUFADD
+                                                        \brief Address of Active Buffer */
+    CFE_ES_MemAddress_t InactiveBufferAddr;        /**< \cfetlmmnemonic \TBL_IACTBUFADD
+                                                        \brief Address of Inactive Buffer */
+    CFE_ES_MemAddress_t ValidationFuncPtr;         /**< \cfetlmmnemonic \TBL_VALFUNCPTR
+                                                        \brief Ptr to Owner App's function that validates tbl contents */
+    CFE_TIME_SysTime_t TimeOfLastUpdate;           /**< \cfetlmmnemonic \TBL_TIMELASTUPD
+                                                        \brief Time when Table was last updated */
+    uint32 FileCreateTimeSecs;                     /**< \cfetlmmnemonic \TBL_FILECSECONDS
+                                                        \brief File creation time from last file loaded into table */
+    uint32 FileCreateTimeSubSecs;                  /**< \cfetlmmnemonic \TBL_FILECSUBSECONDS
+                                                        \brief File creation time from last file loaded into table */
+    bool TableLoadedOnce;                          /**< \cfetlmmnemonic \TBL_LOADEDONCE
+                                                        \brief Flag indicating whether table has been loaded once or not */
+    bool LoadPending;                              /**< \cfetlmmnemonic \TBL_UPDATEPNDNG
+                                                        \brief Flag indicating an inactive buffer is ready to be copied */
+    bool DumpOnly;                                 /**< \cfetlmmnemonic \TBL_DUMPONLY
+                                                        \brief Flag indicating Table is NOT to be loaded */
+    bool DoubleBuffered;                           /**< \cfetlmmnemonic \TBL_DBLBUFFERED
+                                                     \brief Flag indicating Table has a dedicated inactive buffer */
+    char Name[CFE_MISSION_TBL_MAX_FULL_NAME_LEN];  /**< \cfetlmmnemonic \TBL_NAME
+                                                \brief Processor specific table name */
+    char LastFileLoaded[CFE_MISSION_MAX_PATH_LEN]; /**< \cfetlmmnemonic \TBL_LASTFILEUPD
+                                               \brief Filename of last file loaded into table */
+    char OwnerAppName[CFE_MISSION_MAX_API_LEN];    /**< \cfetlmmnemonic \TBL_OWNERAPP
+                                                \brief Name of owning application */
+    bool Critical;                                 /**< \cfetlmmnemonic \TBL_CRITICAL
+                                                        \brief Indicates whether table is Critical or not */
+    uint8 ByteAlign4;                              /**< \cfetlmmnemonic \TBL_SPARE4
+                                                        \brief Spare byte to maintain byte alignment */
+} CFE_TBL_TblRegPacket_Payload_t;
+
+typedef struct CFE_TBL_TableRegistryTlm
+{
+    CFE_MSG_TelemetryHeader_t      TelemetryHeader; /**< \brief Telemetry header */
+    CFE_TBL_TblRegPacket_Payload_t Payload;         /**< \brief Telemetry payload */
+} CFE_TBL_TableRegistryTlm_t;
+
+#endif
+```
+
+### `default_cfe_tbl_platform_cfg.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_platform_cfg.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *
+ * CFE Table Services (CFE_TBL) Application Platform Configuration Header File
+ *
+ * This is a compatibility header for the "platform_cfg.h" file that has
+ * traditionally provided both public and private config definitions
+ * for each CFS app.
+ *
+ * These definitions are now provided in two separate files, one for
+ * the public/mission scope and one for internal scope.
+ *
+ * @note This file may be overridden/superceded by mission-provided defintions
+ * either by overriding this header or by generating definitions from a command/data
+ * dictionary tool.
+ */
+#ifndef CFE_TBL_PLATFORM_CFG_H
+#define CFE_TBL_PLATFORM_CFG_H
+
+#include "cfe_tbl_mission_cfg.h"
+#include "cfe_tbl_internal_cfg.h"
+
+#endif
+```
+
+### `default_cfe_tbl_topicids.h`
+
+**경로:** `fsw/cfe/modules/tbl/config/default_cfe_tbl_topicids.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   CFE Table Services (CFE_TBL) Application Topic IDs
+ */
+#ifndef CFE_TBL_TOPICIDS_H
+#define CFE_TBL_TOPICIDS_H
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Commands
+**
+**  \par Description:
+**      Portable message numbers for the cFE command messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TBL_CMD_MSG     4
+#define CFE_MISSION_TBL_SEND_HK_MSG 12
+
+/**
+**  \cfemissioncfg cFE Portable Message Numbers for Telemetry
+**
+**  \par Description:
+**      Portable message numbers for the cFE telemetry messages
+**
+**  \par Limits
+**      Not Applicable
+*/
+#define CFE_MISSION_TBL_HK_TLM_MSG  4
+#define CFE_MISSION_TBL_REG_TLM_MSG 12
+
+#endif
+```

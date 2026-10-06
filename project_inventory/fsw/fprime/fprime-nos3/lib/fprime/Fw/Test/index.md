@@ -3,22 +3,325 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--String.hpp
-file--UnitTest.hpp
-file--UnitTestAssert.cpp
-file--UnitTestAssert.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/UnitTestAssert.cpp"
+)
+set(MOD_DEPS Fw_Types)
+register_fprime_module()
 ```
 
-## 항목
+### `String.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/String.hpp`](file--String.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTest.hpp`](file--UnitTest.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTestAssert.cpp`](file--UnitTestAssert.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTestAssert.hpp`](file--UnitTestAssert.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/String.hpp`
+
+
+```cpp
+// ======================================================================
+// @file   Test/String.hpp
+// @author F Prime
+// @brief  A longer string for testing
+// ======================================================================
+
+#ifndef FW_TEST_STRING_HPP
+#define FW_TEST_STRING_HPP
+
+#include <Fw/FPrimeBasicTypes.hpp>
+
+#include "Fw/Types/SerIds.hpp"
+#include "Fw/Types/StringBase.hpp"
+
+namespace Test {
+
+class String : public Fw::StringBase {
+  public:
+    enum {
+        STRING_SIZE = 256,
+        SERIALIZED_SIZE = STATIC_SERIALIZED_SIZE(STRING_SIZE),
+    };
+
+    String() : StringBase() { *this = ""; }
+
+    String(const String& src) : StringBase() { *this = src; }
+
+    String(const StringBase& src) : StringBase() { *this = src; }
+
+    String(const char* src) : StringBase() { *this = src; }
+
+    String& operator=(const String& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    String& operator=(const StringBase& src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    String& operator=(const char* src) {
+        (void)StringBase::operator=(src);
+        return *this;
+    }
+
+    const char* toChar() const { return this->m_buf; }
+
+    StringBase::SizeType getCapacity() const { return sizeof this->m_buf; }
+
+  private:
+    char m_buf[BUFFER_SIZE(STRING_SIZE)];
+};
+}  // namespace Test
+
+#endif
+```
+
+### `UnitTest.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTest.hpp`
+
+
+```cpp
+/**
+ * \file
+ * \author T. Canham
+ * \brief
+ *
+ * This contains macros used to document test cases and requirements in unit tests.
+ * Borrowed from Insight.
+ *
+ * \copyright
+ * Copyright 2009-2015, by the California Institute of Technology.
+ * ALL RIGHTS RESERVED.  United States Government Sponsorship
+ * acknowledged.
+ * <br /><br />
+ */
+
+#ifndef TEST_UNITTEST_HPP_
+#define TEST_UNITTEST_HPP_
+
+#define TEST_CASE(tc, desc)                                \
+    printf("\n***************************************\n"); \
+    printf("TESTCASE %s: " desc "\n", #tc);                \
+    printf("***************************************\n")
+
+#define REQUIREMENT(str)                                   \
+    printf("\n***************************************\n"); \
+    printf("(RQ)       %s\n", str);                        \
+    printf("***************************************\n")
+
+#define COMMENT(str)                                       \
+    printf("\n***************************************\n"); \
+    printf("%s\n", str);                                   \
+    printf("***************************************\n")
+
+#endif /* TEST_UNITTEST_HPP_ */
+```
+
+### `UnitTestAssert.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTestAssert.cpp`
+
+
+```cpp
+/*
+ * UnitTestAssert.cpp
+ *
+ *  Created on: Feb 8, 2016
+ *      Author: tcanham
+ *  Revised July 2020
+ *      Author: bocchino
+ */
+
+#include <Fw/Test/UnitTestAssert.hpp>
+#include <cstdio>
+#include <cstring>
+
+namespace Test {
+
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+const UnitTestAssert::File UnitTestAssert::fileInit = 0;
+#else
+const UnitTestAssert::File UnitTestAssert::fileInit = "";
+#endif
+
+UnitTestAssert::UnitTestAssert()
+    : m_file(fileInit),
+      m_lineNo(0),
+      m_numArgs(0),
+      m_arg1(0),
+      m_arg2(0),
+      m_arg3(0),
+      m_arg4(0),
+      m_arg5(0),
+      m_arg6(0),
+      m_assertFailed(false) {
+    // register this hook
+    Fw::AssertHook::registerHook();
+}
+
+UnitTestAssert::~UnitTestAssert() {
+    // deregister the hook
+    Fw::AssertHook::deregisterHook();
+}
+
+void UnitTestAssert::doAssert() {
+    this->m_assertFailed = true;
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+    (void)fprintf(stderr, "Assert: 0x%" PRIx32 ":%" PRI_FwSizeType "\n", this->m_file, this->m_lineNo);
+#else
+    (void)fprintf(stderr, "Assert: %s:%" PRI_FwSizeType "\n", this->m_file.toChar(), this->m_lineNo);
+#endif
+}
+
+void UnitTestAssert::reportAssert(FILE_NAME_ARG file,
+                                  FwSizeType lineNo,
+                                  FwSizeType numArgs,
+                                  FwAssertArgType arg1,
+                                  FwAssertArgType arg2,
+                                  FwAssertArgType arg3,
+                                  FwAssertArgType arg4,
+                                  FwAssertArgType arg5,
+                                  FwAssertArgType arg6) {
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+    this->m_file = file;
+#else
+    this->m_file = reinterpret_cast<const char*>(file);
+#endif
+    this->m_lineNo = lineNo;
+    this->m_numArgs = numArgs;
+    this->m_arg1 = arg1;
+    this->m_arg2 = arg2;
+    this->m_arg3 = arg3;
+    this->m_arg4 = arg4;
+    this->m_arg5 = arg5;
+    this->m_arg6 = arg6;
+}
+
+void UnitTestAssert::retrieveAssert(File& file,
+                                    FwSizeType& lineNo,
+                                    FwSizeType& numArgs,
+                                    FwAssertArgType& arg1,
+                                    FwAssertArgType& arg2,
+                                    FwAssertArgType& arg3,
+                                    FwAssertArgType& arg4,
+                                    FwAssertArgType& arg5,
+                                    FwAssertArgType& arg6) const {
+    file = this->m_file;
+    lineNo = this->m_lineNo;
+    numArgs = this->m_numArgs;
+    arg1 = this->m_arg1;
+    arg2 = this->m_arg2;
+    arg3 = this->m_arg3;
+    arg4 = this->m_arg4;
+    arg5 = this->m_arg5;
+    arg6 = this->m_arg6;
+}
+
+bool UnitTestAssert::assertFailed() const {
+    return this->m_assertFailed;
+}
+
+void UnitTestAssert::clearAssertFailure() {
+    this->m_assertFailed = false;
+}
+
+} /* namespace Test */
+```
+
+### `UnitTestAssert.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Test/UnitTestAssert.hpp`
+
+
+```cpp
+/*
+ * UnitTestAssert.hpp
+ *
+ *  Created on: Feb 8, 2016
+ *      Author: tcanham
+ *  Revised July 2020
+ *      Author: bocchino
+ */
+
+#ifndef TEST_UNITTESTASSERT_HPP_
+#define TEST_UNITTESTASSERT_HPP_
+
+#include <Fw/Test/String.hpp>
+#include <Fw/Types/Assert.hpp>
+
+namespace Test {
+
+class UnitTestAssert : public Fw::AssertHook {
+  public:
+#if FW_ASSERT_LEVEL == FW_FILEID_ASSERT
+    typedef U32 File;
+#else
+    typedef String File;
+#endif
+    // initial value for File
+    static const File fileInit;
+
+  public:
+    UnitTestAssert();
+    virtual ~UnitTestAssert();
+    // function for hook
+    void doAssert();
+    void reportAssert(FILE_NAME_ARG file,
+                      FwSizeType lineNo,
+                      FwSizeType numArgs,
+                      FwAssertArgType arg1,
+                      FwAssertArgType arg2,
+                      FwAssertArgType arg3,
+                      FwAssertArgType arg4,
+                      FwAssertArgType arg5,
+                      FwAssertArgType arg6);
+    // retrieves assertion failure values
+    void retrieveAssert(File& file,
+                        FwSizeType& lineNo,
+                        FwSizeType& numArgs,
+                        FwAssertArgType& arg1,
+                        FwAssertArgType& arg2,
+                        FwAssertArgType& arg3,
+                        FwAssertArgType& arg4,
+                        FwAssertArgType& arg5,
+                        FwAssertArgType& arg6) const;
+
+    // check whether assertion failure occurred
+    bool assertFailed() const;
+
+    // clear assertion failure
+    void clearAssertFailure();
+
+  private:
+    File m_file;
+    FwSizeType m_lineNo;
+    FwSizeType m_numArgs;
+    FwAssertArgType m_arg1;
+    FwAssertArgType m_arg2;
+    FwAssertArgType m_arg3;
+    FwAssertArgType m_arg4;
+    FwAssertArgType m_arg5;
+    FwAssertArgType m_arg6;
+
+    // Whether an assertion failed
+    bool m_assertFailed;
+};
+
+} /* namespace Test */
+
+#endif /* TEST_UNITTESTASSERT_HPP_ */
+```

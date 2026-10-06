@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -26,41 +26,54 @@ mission-prebuild.dir/index
 mission-version.dir/index
 pkgRedirects/index
 tabletool-execute.dir/index
-file--cmake.check_cache
-file--CMakeConfigureLog.yaml
-file--CMakeDirectoryInformation.cmake
-file--CMakeRuleHashes.txt
-file--Makefile.cmake
-file--Makefile2
-file--progress.marks
-file--TargetDirectories.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/CMakeFiles/3.26.0/`](3.26.0/index) — 폴더
-- [`fsw/build/CMakeFiles/amd64_nos3_default_cpu1-all.dir/`](amd64_nos3_default_cpu1-all.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/amd64_nos3_default_cpu1-cfetables.dir/`](amd64_nos3_default_cpu1-cfetables.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/amd64_nos3_default_cpu1-clean.dir/`](amd64_nos3_default_cpu1-clean.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/amd64_nos3_default_cpu1-install.dir/`](amd64_nos3_default_cpu1-install.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/cfe-build-env.dir/`](cfe-build-env.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/cfe-module-version.dir/`](cfe-module-version.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/cfe-usersguide.dir/`](cfe-usersguide.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/doc-prebuild.dir/`](doc-prebuild.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-all.dir/`](mission-all.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-cfetables.dir/`](mission-cfetables.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-clean.dir/`](mission-clean.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-doc.dir/`](mission-doc.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-install.dir/`](mission-install.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-prebuild.dir/`](mission-prebuild.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/mission-version.dir/`](mission-version.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/pkgRedirects/`](pkgRedirects/index) — 폴더
-- [`fsw/build/CMakeFiles/tabletool-execute.dir/`](tabletool-execute.dir/index) — 폴더
-- [`fsw/build/CMakeFiles/cmake.check_cache`](file--cmake.check_cache) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/CMakeConfigureLog.yaml`](file--CMakeConfigureLog.yaml) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/CMakeRuleHashes.txt`](file--CMakeRuleHashes.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/Makefile.cmake`](file--Makefile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/Makefile2`](file--Makefile2) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
-- [`fsw/build/CMakeFiles/TargetDirectories.txt`](file--TargetDirectories.txt) — 빌드 산출물 (경로만)
+### `cmake.check_cache`
+
+**경로:** `fsw/build/CMakeFiles/cmake.check_cache`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeConfigureLog.yaml`
+
+**경로:** `fsw/build/CMakeFiles/CMakeConfigureLog.yaml`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `fsw/build/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeRuleHashes.txt`
+
+**경로:** `fsw/build/CMakeFiles/CMakeRuleHashes.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile.cmake`
+
+**경로:** `fsw/build/CMakeFiles/Makefile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile2`
+
+**경로:** `fsw/build/CMakeFiles/Makefile2`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `fsw/build/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `TargetDirectories.txt`
+
+**경로:** `fsw/build/CMakeFiles/TargetDirectories.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

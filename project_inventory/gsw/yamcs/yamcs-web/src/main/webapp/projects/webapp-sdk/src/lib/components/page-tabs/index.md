@@ -3,18 +3,139 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `page-tabs.component.css`
 
-file--page-tabs.component.css
-file--page-tabs.component.html
-file--page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.css`
+
+
+```css
+:host {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid var(--y-border-color);
+  height: calc(36px + 1px);
+  box-sizing: border-box;
+}
+
+:host ::ng-deep a {
+  display: flex;
+  justify-content: center;
+  box-sizing: border-box;
+  outline: none;
+  text-align: center;
+  white-space: nowrap;
+  cursor: pointer;
+  z-index: 1;
+  height: 36px;
+  line-height: calc(36px + 1px);
+  font-size: 13px;
+  text-decoration: none;
+  padding: 0 24px;
+  font-weight: 500;
+  letter-spacing: 1.16071px;
+  color: rgba(0, 0, 0, 0.6);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:host ::ng-deep a.active {
+  color: var(--y-accent);
+  border-bottom: 2px solid var(--y-accent);
+}
+
+:host ::ng-deep a.disabled {
+  pointer-events: none;
+  color: #0005;
+}
+
+:host ::ng-deep a:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+}
 ```
 
-## 항목
+### `page-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.css`](file--page-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.html`](file--page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.ts`](file--page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.html`
+
+
+```html
+<ng-content />
+
+<div style="flex: 1 1 auto"></div>
+<div class="actions">
+  <ng-content select="[actions]" />
+</div>
+```
+
+### `page-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/page-tabs/page-tabs.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+import { MatTabsModule } from '@angular/material/tabs';
+
+@Component({
+  selector: 'ya-page-tabs',
+  templateUrl: './page-tabs.component.html',
+  styleUrl: './page-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-page-tabs',
+  },
+  imports: [MatTabsModule],
+})
+export class YaPageTabs implements OnInit, OnDestroy {
+  elementRef = inject(ElementRef);
+
+  selectedIndex: number | undefined = undefined;
+
+  private observer?: MutationObserver;
+
+  ngOnInit(): void {
+    const el = this.elementRef.nativeElement;
+
+    this.observer = new MutationObserver(() => {
+      let selectedIndex = undefined;
+      for (let i = 0; i < el.children.length; i++) {
+        const child = el.children.item(i);
+        if (child?.tagName === 'A') {
+          const tabEl = child as HTMLAnchorElement;
+          if (tabEl.classList.contains('active')) {
+            selectedIndex = i;
+          }
+        } else {
+          break;
+        }
+      }
+      this.selectedIndex = selectedIndex;
+    });
+
+    this.observer.observe(el, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.observer?.disconnect();
+  }
+}
+```

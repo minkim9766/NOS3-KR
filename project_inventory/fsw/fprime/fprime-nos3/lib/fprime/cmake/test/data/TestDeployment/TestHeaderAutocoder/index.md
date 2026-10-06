@@ -3,20 +3,50 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--test.cpp
-file--test1.test-build.hpp
-file--test2.test-build.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/CMakeLists.txt`
+
+
+```cmake
+register_fprime_module(
+        TestHeaderAutocoderModule
+    AUTOCODER_INPUTS
+        "${CMAKE_CURRENT_LIST_DIR}/test1.test-build.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/test2.test-build.hpp"
+    SOURCES
+        "${CMAKE_CURRENT_LIST_DIR}/test.cpp"
+    EXCLUDE_FROM_ALL
+)
+target_include_directories(TestHeaderAutocoderModule PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
 ```
 
-## 항목
+### `test.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test.cpp`](file--test.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test1.test-build.hpp`](file--test1.test-build.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test2.test-build.hpp`](file--test2.test-build.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test.cpp`
+
+
+```cpp
+#include "header-dir/test1.test-build.hpp"
+#include "header-dir/test2.test-build.hpp"
+```
+
+### `test1.test-build.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test1.test-build.hpp`
+
+
+```cpp
+bool a = true;
+```
+
+### `test2.test-build.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/cmake/test/data/TestDeployment/TestHeaderAutocoder/test2.test-build.hpp`
+
+
+```cpp
+bool b = true;
+```

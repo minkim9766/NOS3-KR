@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -13,14 +13,41 @@ DISCUSSION_TEMPLATE/index
 ISSUE_TEMPLATE/index
 scripts/index
 workflows/index
-file--pull_request_template.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/`](actions/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/DISCUSSION_TEMPLATE/`](DISCUSSION_TEMPLATE/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/ISSUE_TEMPLATE/`](ISSUE_TEMPLATE/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/scripts/`](scripts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/`](workflows/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/pull_request_template.md`](file--pull_request_template.md) — UTF-8 텍스트 파일 본문 포함
+### `pull_request_template.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/pull_request_template.md`
+
+
+```markdown
+| | |
+|:---|:---|
+|**_Related Issue(s)_**|  |
+|**_Has Unit Tests (y/n)_**|  |
+|**_Documentation Included (y/n)_**|  |
+|**_Generative AI was used in this contribution (y/n)_**|  |
+
+---
+## Change Description
+
+<!-- A description of the changes contained in the PR. -->
+
+## Rationale
+
+<!-- A rationale for this change. e.g. fixes bug, or most projects need XYZ feature. -->
+
+## Testing/Review Recommendations
+
+<!-- Fill in testing procedures, specific items to focus on for review, or other info to help the team verify these changes are flight-quality. -->
+
+## Future Work
+
+<!-- Note any additional work that will be done relating to this issue. -->
+
+## AI Usage ([policy](../AI_POLICY.md))
+
+<!-- If AI was used, please describe how it was utilized (e.g., code generation, documentation, testing, debugging assistance, etc.). -->
+```

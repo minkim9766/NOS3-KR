@@ -3,20 +3,152 @@
 
 **경로:** `fsw/psp/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `codeql-build.yml`
 
-file--codeql-build.yml
-file--format-check.yml
-file--icbundle.yml
-file--static-analysis.yml
+**경로:** `fsw/psp/.github/workflows/codeql-build.yml`
+
+
+```yaml
+name: "CodeQL Analysis"
+
+on:
+  push:
+  pull_request:
+  
+jobs:
+  codeql:
+    name: Codeql
+    uses: nasa/cFS/.github/workflows/codeql-reusable.yml@main
+    with: 
+      component-path: psp
+      make: 'make -C build/native/default_cpu1/psp'
 ```
 
-## 항목
+### `format-check.yml`
 
-- [`fsw/psp/.github/workflows/codeql-build.yml`](file--codeql-build.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/.github/workflows/icbundle.yml`](file--icbundle.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/.github/workflows/static-analysis.yml`](file--static-analysis.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/.github/workflows/format-check.yml`
+
+
+```yaml
+name: Format Check
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  format-check:
+    name: Run format check
+    uses: nasa/cFS/.github/workflows/format-check.yml@main
+```
+
+### `icbundle.yml`
+
+**경로:** `fsw/psp/.github/workflows/icbundle.yml`
+
+
+```yaml
+name: Integration Candidate Bundle Generation
+
+# Generate Integration Candidate branch for this repository.
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_nums:
+        description: 'The pull request numbers to include (Comma separated)'
+        required: true
+        type: string
+
+jobs:
+  generate-ic-bundle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Dependencies
+        run: sudo apt update
+        run: sudo apt install -y w3m
+      - name: Checkout IC Branch
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+          ref: main
+      - name: Rebase IC Branch
+        run: git config user.name "GitHub Actions"
+        run: git config user.email "cfs-program@list.nasa.gov"
+        run: git pull
+        run: git checkout integration-candidate
+        run: git rebase main
+      - name: Merge each PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          for pr in $prs
+          do
+            src_branch=$(hub pr show -f %H $pr)
+            pr_title=$(hub pr show -f %t $pr)
+            commit_msg=$'Merge pull request #'"${pr}"$' from '"${src_branch}"$'\n\n'"${pr_title}"
+            git fetch origin pull/$pr/head:origin/pull/$pr/head
+            git merge origin/pull/$pr/head --no-ff -m "$commit_msg"
+          done
+      - name: Update Changelog and Version.h files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rev_num=$(git rev-list v1.6.0-rc4.. --count)
+          changelog_entry=$'# Changelog\\n\\n# Development Build: v1.6.0-rc4+dev'${rev_num}
+          prs=$(echo ${{ inputs.pr_nums }} | tr "," "\n")
+          see_entry=$'\-\ See:'
+          for pr in $prs
+          do
+            pr_title=$(hub pr show -f %t $pr)
+            changelog_entry="${changelog_entry}"$'\\n- '"${pr_title@Q}"
+            see_entry="${see_entry}"$' <https://github.com/nasa/cFE/pull/'${pr}$'>'
+          done
+          changelog_entry="${changelog_entry}\n${see_entry}\n"
+          sed -ir "s|# Changelog|$changelog_entry|" CHANGELOG.md
+          
+          buildnumber_entry=$'#define CFE_PSP_IMPL_BUILD_NUMBER   '${rev_num}
+          sed -ir "s|define CFE_PSP_IMPL_BUILD_NUMBER.*|$buildnumber_entry|" fsw/mcp750-vxworks/inc/psp_version.h
+          
+          buildnumber_entry=$'#define CFE_PSP_IMPL_BUILD_NUMBER   '${rev_num}
+          sed -ir "s|define CFE_PSP_IMPL_BUILD_NUMBER.*|$buildnumber_entry|" fsw/pc-linux/inc/psp_version.h
+          
+          buildnumber_entry=$'#define CFE_PSP_IMPL_BUILD_NUMBER   '${rev_num}
+          sed -ir "s|define CFE_PSP_IMPL_BUILD_NUMBER.*|$buildnumber_entry|" fsw/pc-rtems/inc/psp_version.h
+      - name: Commit and Push Updates to IC Branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: git add CHANGELOG.md
+        run: git add fsw/mcp750-vxworks/inc/psp_version.h
+        run: git add fsw/pc-linux/inc/psp_version.h
+        run: git add fsw/pc-rtems/inc/psp_version.h
+        run: |
+          rev_num=$(git rev-list v1.6.0-rc4.. --count)
+          git commit -m "Updating documentation and version numbers for v1.6.0-rc4+dev${rev_num}"
+        run: git push -v origin integration-candidate
+```
+
+### `static-analysis.yml`
+
+**경로:** `fsw/psp/.github/workflows/static-analysis.yml`
+
+
+```yaml
+name: Static Analysis
+
+# Run on all push and pull requests
+on:
+  push:
+  pull_request:
+
+jobs:
+  static-analysis:
+    name: Run cppcheck
+    uses: nasa/cFS/.github/workflows/static-analysis.yml@main
+    with:
+      strict-dir-list: './fsw'
+```

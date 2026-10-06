@@ -3,62 +3,1954 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `build-test-macos.yml`
 
-file--build-test-macos.yml
-file--build-test-rhel8.yml
-file--build-test.yml
-file--cmake-test.yml
-file--codeql-jpl-standard.yml
-file--codeql-security-scan.yml
-file--cppcheck-scan.yml
-file--cpplint-scan.yml
-file--ext-aarch64-linux-led-blinker.yml
-file--ext-build-examples-repo.yml
-file--ext-build-hello-world.yml
-file--ext-build-led-blinker.yml
-file--ext-build-math-comp.yml
-file--ext-cookiecutters-test.yml
-file--ext-raspberry-led-blinker.yml
-file--ext-raspberry-system-reference.yml
-file--format-check.yml
-file--fpp-tests.yml
-file--fpp-to-json.yml
-file--markdown-link-check.yml
-file--pip-check.yml
-file--python-format.yml
-file--reusable-get-pr-branch.yml
-file--reusable-project-builder.yml
-file--spelling.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test-macos.yml`
+
+
+```yaml
+# This is a basic workflow to help you get started with Actions
+
+name: CI [macOS]
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  macOS-Framework:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' 
+    - uses: ./.github/actions/setup
+    - name: F prime CI step
+      run: ./ci/tests/Framework.bash
+      env:
+        # Limit to 2 jobs to avoid resource exhaustion (https://github.com/nasa/fprime/issues/2462)
+        JOBS: 2
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-framework-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
+
+  macOS-Ref:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' 
+    - uses: ./.github/actions/setup
+    - name: F prime CI step
+      run: ./ci/tests/Ref.bash
+      env:
+        JOBS: 2
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-ref-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
+
+  macOS-Integration:
+    runs-on: macos-latest
+    timeout-minutes: 30
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12' 
+    - uses: ./.github/actions/setup
+    - name: Install coreutils
+      run: brew install coreutils
+    - name: F prime CI step
+      run: ./ci/tests/30-ints.bash
+      env:
+        JOBS: 2
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-int-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
 ```
 
-## 항목
+### `build-test-rhel8.yml`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test-macos.yml`](file--build-test-macos.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test-rhel8.yml`](file--build-test-rhel8.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test.yml`](file--build-test.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cmake-test.yml`](file--cmake-test.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/codeql-jpl-standard.yml`](file--codeql-jpl-standard.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/codeql-security-scan.yml`](file--codeql-security-scan.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cppcheck-scan.yml`](file--cppcheck-scan.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cpplint-scan.yml`](file--cpplint-scan.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-aarch64-linux-led-blinker.yml`](file--ext-aarch64-linux-led-blinker.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-examples-repo.yml`](file--ext-build-examples-repo.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-hello-world.yml`](file--ext-build-hello-world.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-led-blinker.yml`](file--ext-build-led-blinker.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-math-comp.yml`](file--ext-build-math-comp.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-cookiecutters-test.yml`](file--ext-cookiecutters-test.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-raspberry-led-blinker.yml`](file--ext-raspberry-led-blinker.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-raspberry-system-reference.yml`](file--ext-raspberry-system-reference.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/format-check.yml`](file--format-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/fpp-tests.yml`](file--fpp-tests.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/fpp-to-json.yml`](file--fpp-to-json.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/markdown-link-check.yml`](file--markdown-link-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/pip-check.yml`](file--pip-check.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/python-format.yml`](file--python-format.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/reusable-get-pr-branch.yml`](file--reusable-get-pr-branch.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/reusable-project-builder.yml`](file--reusable-project-builder.yml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/spelling.yml`](file--spelling.yml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test-rhel8.yml`
+
+
+```yaml
+# Run suite of CI builds and tests in a RHEL8 container
+
+name: CI [RHEL8]
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  Framework:
+    runs-on: ubuntu-latest
+    container:
+      image: redhat/ubi8:8.10
+    steps:
+    - name: "Install dependencies"
+      run: |
+        dnf install -y git python3.12 python3.12-pip llvm-toolset libasan libubsan
+        git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: Build Framework
+      run: |
+        fprime-util generate
+        fprime-util build --all -j4
+
+  Ref:
+    runs-on: ubuntu-latest
+    container:
+      image: redhat/ubi8:8.10
+    steps:
+    - name: "Install dependencies"
+      run: |
+        dnf install -y git python3.12 python3.12-pip llvm-toolset libasan libubsan
+        git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: Build Ref
+      run: |
+        cd Ref
+        fprime-util generate
+        fprime-util build -j4
+
+  UTs:
+    runs-on: ubuntu-latest
+    container:
+      image: redhat/ubi8:8.10
+    steps:
+    - name: "Install dependencies"
+      run: |
+        dnf install -y git python3.12 python3.12-pip llvm-toolset libasan libubsan
+        git config --global --add safe.directory ${GITHUB_WORKSPACE}
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    # Some UTs require a non-root user to run properly due to using file permissions in tests
+    # This issue shows up on RHEL8 containers
+    - name: Setup test environment for permission tests
+      run: |
+        useradd -m -u 1001 -s /bin/bash test-user
+        chown -R test-user:test-user .
+    - name: UT Build and Run
+      run: |
+        su test-user -c "
+          fprime-util generate --ut &&
+          fprime-util build --all --ut -j4 &&
+          fprime-util check --all -j4
+        "
+```
+
+### `build-test.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/build-test.yml`
+
+
+```yaml
+# This is a basic workflow to help you get started with Actions
+
+name: CI [ubuntu]
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  Framework:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: F prime CI step
+      run: ./ci/tests/Framework.bash
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-framework-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
+
+  Ref:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: F prime CI step
+      run: ./ci/tests/Ref.bash
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-ref-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
+
+  Integration:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: Setup Valgrind
+      run: |
+           sudo apt-get update
+           sudo apt-get install valgrind
+    - name: F prime CI step
+      run: ./ci/tests/30-ints.bash
+    # Archive the outputs
+    - name: 'Archive Logs'
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ci-int-logs
+        path: ci-logs.tar.gz
+        retention-days: 5
+
+  Quality:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: "Checkout F´ Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        submodules: true
+    - uses: ./.github/actions/setup
+    - name: Setup Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install clang-tidy-12
+    # Uses the default configuration file (.clang-tidy)
+    - name: General Static Analysis
+      run: |
+        fprime-util generate --ut -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_CXX_CLANG_TIDY=clang-tidy-12
+        fprime-util build --all --ut -j4
+    # Uses the release configuration file (release.clang-tidy)
+    - name: Flight Code Static Analysis
+      run: |
+        fprime-util generate -DCMAKE_C_COMPILER=gcc-10 -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_CXX_CLANG_TIDY="clang-tidy-12;--config-file=$PWD/release.clang-tidy"
+        fprime-util build --all -j4
+
+```
+
+### `cmake-test.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cmake-test.yml`
+
+
+```yaml
+name: CMake Test
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  CMake:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: ./.github/actions/setup
+      - name: CMake Tests
+        working-directory: ./cmake/test
+        shell: bash
+        run: |
+          export CMAKE_INSTALL_DIRECTORY="${GITHUB_WORKSPACE}/tools-override"
+          export PATH="${CMAKE_INSTALL_DIRECTORY}/bin:${PATH}"
+          cmake --version
+          pytest -s
+```
+
+### `codeql-jpl-standard.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/codeql-jpl-standard.yml`
+
+
+```yaml
+# Semantic code analysis with CodeQL 
+# see https://github.com/github/codeql-action
+
+name: "Code Scan: JPL Coding Standard"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp' ]
+        config-file: ['jpl-standard-pack-1.yml', 'jpl-standard-pack-2.yml', 'jpl-standard-pack-3.yml']
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        # Run jobs in parallel for each config-file
+        config-file: ./.github/actions/codeql/${{ matrix.config-file }}
+
+    - name: Build
+      run: |
+          python3 -m venv ./fprime-venv
+          . ./fprime-venv/bin/activate
+          pip install -U setuptools setuptools_scm wheel pip
+          pip install -r ./requirements.txt
+          fprime-util generate
+          fprime-util build --all
+
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+```
+
+### `codeql-security-scan.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/codeql-security-scan.yml`
+
+
+```yaml
+# Semantic code analysis with CodeQL 
+# see https://github.com/github/codeql-action
+
+name: "Code Scan: CodeQL Security"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'cpp', 'python' ]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # Initializes the CodeQL tools for scanning.
+    - name: Initialize CodeQL
+      uses: github/codeql-action/init@v3
+      with:
+        languages: ${{ matrix.language }}
+        config-file: ./.github/actions/codeql/security-pack.yml
+        
+    - if: ${{ matrix.language == 'cpp' }}
+      name: Build
+      run: |
+          python3 -m venv ./fprime-venv
+          . ./fprime-venv/bin/activate
+          pip install -U setuptools setuptools_scm wheel pip
+          pip install -r ./requirements.txt
+          fprime-util generate
+          fprime-util build --all
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v3
+      with:
+        category: "/language:${{matrix.language}}"
+```
+
+### `cppcheck-scan.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cppcheck-scan.yml`
+
+
+```yaml
+# Adapted from https://github.com/nasa/cFS/blob/c36aa2c1df0fb47a3838577908af3d0d0ab0ef54/.github/workflows/static-analysis.yml
+name: "Code Scan: CppCheck"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  cppcheck:
+    name: Cppcheck
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: ./.github/actions/setup
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install cppcheck xsltproc -y
+
+      - name: Install sarif tool
+        run: npm i -g @microsoft/sarif-multitool
+
+      # With a CMake-based project, we get the list of files by setting up a build with CMAKE_EXPORT_COMPILE_COMMANDS=ON and
+      # referencing the compile_commands.json file produced by the tool.  This will capture the correct include paths and
+      # compile definitions based on how the source is actually compiled. See https://cppcheck.sourceforge.io/manual.html
+      - name: Generate & build F´
+        run: |
+          fprime-util generate -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+          fprime-util build --all --jobs "$(nproc || printf '%s\n' 1)"
+
+          # Since our subtopologies have EXCLUDE_FROM_ALL, we need to explicitly build them
+          fprime-util build --target Svc_Subtopologies --jobs "$(nproc || printf '%s\n' 1)"
+          echo CPPCHECK_OPTS=--project="$GITHUB_WORKSPACE/build-fprime-automatic-native/compile_commands.json" >> $GITHUB_ENV
+
+      - name: Run cppcheck
+        run: cppcheck --force --relative-paths=$(pwd) --inline-suppr --std=c++11 -j "$(nproc || printf '%s\n' 1)" --max-ctu-depth=16 --enable=warning,performance,portability --suppress=variableScope --inconclusive --xml $CPPCHECK_OPTS 2> cppcheck_err.xml
+
+      - name: Convert cppcheck results to SARIF
+        run: npx "@microsoft/sarif-multitool" convert "cppcheck_err.xml" --tool "CppCheck" --output "cppcheck_err.sarif"
+
+      - name: Convert cppcheck results to Markdown & Integrate them in the workflow summary
+        run: xsltproc .github/scripts/cppcheck-xml2text.xslt cppcheck_err.xml | tee $GITHUB_STEP_SUMMARY cppcheck_err.txt
+
+      - name: Upload SARIF file to GitHub Code Scanning Alerts
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ github.workspace }}/cppcheck_err.sarif
+          category: "cppcheck"
+
+      - name: Archive static analysis artifacts to download and view
+        uses: actions/upload-artifact@v4
+        with:
+          name: cppcheck-errors
+          path: ./*cppcheck_err.*
+      
+      # Make the whole step fail if there is an error detected by cppcheck. By default, GitHub Actions enables the set -e.
+      # See https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause.
+      - name: Check for reported errors
+        run: tail -n 1 cppcheck_err.txt | grep -q '^\*\*0 error(s) reported\*\*$'
+```
+
+### `cpplint-scan.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/cpplint-scan.yml`
+
+
+```yaml
+name: "Code Scan: Cpplint"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  cpplint:
+    name: Cpplint
+    runs-on: ubuntu-22.04
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: ./.github/actions/setup
+
+      - name: Install cpplint
+        run: pip install cpplint
+
+      - name: Install xsltproc
+        run: sudo apt-get update && sudo apt-get install xsltproc -y
+
+      - name: Install sarif tool
+        run: npm i -g @microsoft/sarif-multitool
+
+      - name: Run cpplint & export output to cppcheck format
+        run: cpplint --counting=detailed --quiet --recursive . 2>&1 | python3 .github/scripts/cpplint_to_cppcheckxml.py &> cpplint_cppcheck_result.xml
+
+      - name: Convert cpplint results to SARIF
+        run: npx "@microsoft/sarif-multitool" convert "cpplint_cppcheck_result.xml" --tool "CppCheck" --output "cpplint_cppcheck_result.sarif"
+
+      - name: Convert cpplint results to Markdown & Integrate them in the workflow summary
+        run: xsltproc .github/scripts/cpplint-xml2text.xslt cpplint_cppcheck_result.xml | tee $GITHUB_STEP_SUMMARY cpplint_cppcheck_result.txt
+
+      # See https://github.com/nasa/fprime/pull/1794 for why this is needed
+      - name: Replace tool name in SARIF file
+        run: |
+          sed -i -e 's/\"name\": \"CppCheck\"/\"name\": \"CppLint\"/g' cpplint_cppcheck_result.sarif
+
+      - name: Upload SARIF file to GitHub Code Scanning Alerts
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: ${{ github.workspace }}/cpplint_cppcheck_result.sarif
+          category: "cpplint"
+
+      - name: Archive static analysis artifacts to download and view
+        uses: actions/upload-artifact@v4
+        with:
+          name: cpplint-errors
+          path: ./*cpplint_cppcheck_result.*
+
+      # Make the whole step fail if there is an error detected by cpplint. By default, GitHub Actions enables the set -e.
+      # See https://stackoverflow.com/questions/73066461/github-actions-why-an-intermediate-command-failure-in-shell-script-would-cause.
+      # - name: Check for reported errors
+      #   run: tail -n 1 cpplint_cppcheck_result.txt | grep -q '^\*\*0 error(s) reported\*\*$'
+```
+
+### `ext-aarch64-linux-led-blinker.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-aarch64-linux-led-blinker.yml`
+
+
+```yaml
+# Cross-compile https://github.com/fprime-community/fprime-workshop-led-blinker
+# Runs integration tests on aarch64-linux
+
+name: "External Repo: AArch64 Linux LedBlinker"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+env:
+  AARCH64_TOOLCHAIN_DIR: /tmp/aarch64-toolchain
+  AARCH64_TOOLCHAIN_URL: https://developer.arm.com/-/media/Files/downloads/gnu-a/10.2-2020.11/binrel/gcc-arm-10.2-2020.11-x86_64-aarch64-none-linux-gnu.tar.xz
+  ARM_TOOLS_PATH: /tmp/aarch64-toolchain
+  FPRIME_LOCATION: ./lib/fprime
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-workshop-led-blinker
+
+  cross-compilation:
+    name: "Cross Compilation"
+    runs-on: ubuntu-22.04
+    needs: get-branch
+    steps:
+      - name: "Checkout target repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          repository: fprime-community/fprime-workshop-led-blinker
+          ref: ${{ needs.get-branch.outputs.target-branch }}
+      - name: "Overlay current F´ revision"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ${{ env.FPRIME_LOCATION }}
+          fetch-depth: 0
+      - uses: ./lib/fprime/.github/actions/setup
+        with:
+          location: ${{ env.FPRIME_LOCATION }}
+      - name: "Download and Setup AArch64 Linux Toolchain"
+        run: |
+          mkdir -p ${AARCH64_TOOLCHAIN_DIR}
+          wget -q ${AARCH64_TOOLCHAIN_URL}
+          tar -xf $(basename ${AARCH64_TOOLCHAIN_URL}) -C ${AARCH64_TOOLCHAIN_DIR} --strip-components 1
+          echo "${AARCH64_TOOLCHAIN_DIR}/bin" >> $GITHUB_PATH
+      - name: "Generate AArch64 Linux Build Cache"
+        run: |
+          fprime-util generate aarch64-linux
+      - name: "Build AArch64 Linux"
+        run: |
+          fprime-util build aarch64-linux
+      - name: "Prepare artifacts"
+        run: |
+          mkdir -p aarch64-linux-artifacts
+          cp -r ./build-artifacts aarch64-linux-artifacts
+          cp -r Components/Led/test/int aarch64-linux-artifacts
+      - name: 'Archive Build Artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: aarch64-linux-artifacts
+          path: aarch64-linux-artifacts
+          retention-days: 5
+
+  aarch64-integration:
+    name: "AArch64 Linux Integration Tests"
+    runs-on: [self-hosted, aarch64-linux]
+    needs: cross-compilation
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: 'requirements.txt'
+          sparse-checkout-cone-mode: false
+      - name: "Setup environment"
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+      - name: "Artifacts Download"
+        uses: actions/download-artifact@v4
+        with:
+          name: aarch64-linux-artifacts
+      - name: Run Integration Tests
+        run: |
+          . venv/bin/activate
+          mkdir -p ci-logs
+          chmod +x ./build-artifacts/aarch64-linux/LedBlinker/bin/LedBlinker
+          fprime-gds --ip-client -d ./build-artifacts/aarch64-linux/LedBlinker --logs ./ci-logs &
+          sleep 10
+          pytest --dictionary ./build-artifacts/aarch64-linux/LedBlinker/dict/LedBlinkerTopologyDictionary.json ./int/led_integration_tests.py
+      - name: 'Archive logs'
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: aarch64-linux-logs
+          path: ci-logs
+          retention-days: 5
+```
+
+### `ext-build-examples-repo.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-examples-repo.yml`
+
+
+```yaml
+# Builds and runs UTs on https://github.com/fprime-community/fprime-examples
+
+name: "External Repo: fprime-examples"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+      - '.gitignore'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: nasa/fprime-examples
+
+  run:
+    needs: get-branch
+    name: ""
+    uses: ./.github/workflows/reusable-project-builder.yml
+    with: 
+      target_repository: nasa/fprime-examples
+      build_location: FlightExamples
+      run_unit_tests: true
+      target_ref: ${{ needs.get-branch.outputs.target-branch }}
+      fprime_location: ./FlightExamples/lib/fprime
+```
+
+### `ext-build-hello-world.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-hello-world.yml`
+
+
+```yaml
+# Builds and runs UTs on https://github.com/fprime-community/fprime-tutorial-hello-world
+
+name: "External Repo: Tutorial: HelloWorld"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-tutorial-hello-world
+
+  run:
+    needs: get-branch
+    name: ""
+    uses: ./.github/workflows/reusable-project-builder.yml
+    with:
+      target_repository: fprime-community/fprime-tutorial-hello-world
+      fprime_location: ./lib/fprime
+      build_location: HelloWorldDeployment
+      run_unit_tests: false # no UTs in HelloWorld project
+      target_ref: ${{ needs.get-branch.outputs.target-branch }}
+```
+
+### `ext-build-led-blinker.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-led-blinker.yml`
+
+
+```yaml
+# Builds and runs UTs on https://github.com/fprime-community/fprime-workshop-led-blinker
+
+name: "External Repo: Tutorial: LedBlinker"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-workshop-led-blinker
+
+  run:
+    needs: get-branch
+    name: ""
+    uses: ./.github/workflows/reusable-project-builder.yml
+    with: 
+      target_repository: fprime-community/fprime-workshop-led-blinker
+      fprime_location: lib/fprime
+      build_location: LedBlinker
+      run_unit_tests: true
+      target_ref: ${{ needs.get-branch.outputs.target-branch }}
+```
+
+### `ext-build-math-comp.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-build-math-comp.yml`
+
+
+```yaml
+# Builds and runs UTs on https://github.com/fprime-community/fprime-tutorial-math-component
+
+name: "External Repo: Tutorial: MathComponent"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-tutorial-math-component
+
+  run:
+    needs: get-branch
+    name: ""
+    uses: ./.github/workflows/reusable-project-builder.yml
+    with: 
+      target_repository: fprime-community/fprime-tutorial-math-component
+      build_location: MathDeployment
+      run_unit_tests: true
+      target_ref: ${{ needs.get-branch.outputs.target-branch }}
+```
+
+### `ext-cookiecutters-test.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-cookiecutters-test.yml`
+
+
+```yaml
+name: "External Repo: Cookiecutters Tests"
+
+on:
+ push:
+   branches: [ devel, release/** ]
+ pull_request:
+   # The branches below must be a subset of the branches above
+   branches: [ devel, release/** ]
+   paths-ignore:
+     - 'docs/**'
+     - '**.md'
+     - '.github/actions/spelling/**'
+     - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+
+
+# This workflow tests the project bootstrapping and cookiecutter templates by creating 
+# a new project, deployment and component and building them
+# This uses the `expect` utility to feed input into the various cookiecutter prompts
+
+jobs:
+
+  # -------- Retrieve target branches for fprime-tools and fprime-bootstrap --------
+  get-tools-branch:
+    name: "Get fprime-tools target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: nasa/fprime-tools
+
+  get-bootstrap-branch:
+    name: "Get fprime-bootstrap target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-bootstrap
+
+  # -------- Install target versions of the cookiecutter templates and validate -------
+  Validate:
+    runs-on: ubuntu-latest
+    needs: [ get-tools-branch, get-bootstrap-branch ]
+    steps:
+      # Checkout only the bootstrap.expect file, since the full F´ repo will be 
+      # checked out as part of the fprime-bootstrap process
+      - name: "Retrieve bootstrap.expect file"
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            .github/actions/cookiecutter-check/bootstrap.expect
+          sparse-checkout-cone-mode: false
+          fetch-depth: 0
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: "Install expect and fprime-bootstrap"
+        run: |
+             sudo apt-get update
+             sudo apt-get install expect
+             pip install git+https://github.com/fprime-community/fprime-bootstrap@${{ needs.get-bootstrap-branch.outputs.target-branch }}
+
+      - name: "Bootstrap Project"
+        run: |
+             expect .github/actions/cookiecutter-check/bootstrap.expect
+
+      # Overlay fprime@current_rev in new project so that we build with it in the tests
+      # current_rev is devel on the devel branch and the PR revision in PR checks
+      - name: "Overlay fprime@current_rev in new project"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ./MyProject/lib/fprime
+          fetch-depth: 0
+
+      - name: "Update dependencies and install fprime-tools"
+        run: |
+             cd MyProject
+             . fprime-venv/bin/activate
+             pip install -U -r ./lib/fprime/requirements.txt
+             pip install git+https://github.com/nasa/fprime-tools@${{ needs.get-tools-branch.outputs.target-branch }}
+
+      - name: "Version Check"
+        run: |
+             cd MyProject
+             . fprime-venv/bin/activate
+             fprime-util version-check
+
+      - name: "Test Generate and Build Project"
+        run: |  
+             cd MyProject
+             . fprime-venv/bin/activate
+             fprime-util generate
+             fprime-util build -j4
+
+      - name: "Test New Deployment and Build"
+        run: |
+             cd MyProject
+             . fprime-venv/bin/activate
+             expect ./lib/fprime/.github/actions/cookiecutter-check/deployment.expect
+             cd MyDeployment
+             fprime-util build -j4
+
+      - name: "Test New Component and Build"
+        run: |
+             cd MyProject
+             . fprime-venv/bin/activate
+             expect ./lib/fprime/.github/actions/cookiecutter-check/component.expect
+             cd MyComponent
+             fprime-util build -j4
+```
+
+### `ext-raspberry-led-blinker.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-raspberry-led-blinker.yml`
+
+
+```yaml
+# Cross-compile https://github.com/fprime-community/fprime-workshop-led-blinker
+# Runs integration tests on RaspberryPi
+
+name: "External Repo: RPI LedBlinker"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+env:
+  RPI_TOOLCHAIN_DIR: /tmp/rpi-toolchain
+  FPRIME_LOCATION: ./lib/fprime
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-workshop-led-blinker
+
+  cross-compilation:
+    name: "Cross Compilation"
+    runs-on: ubuntu-22.04
+    needs: get-branch
+    steps:
+      - name: "Checkout target repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+          repository: fprime-community/fprime-workshop-led-blinker
+          ref: ${{ needs.get-branch.outputs.target-branch }}
+      - name: "Overlay current F´ revision"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ${{ env.FPRIME_LOCATION }}
+          fetch-depth: 0
+      - uses: ./lib/fprime/.github/actions/setup
+        with:
+          location: ${{ env.FPRIME_LOCATION }}
+      - name: "Setup RPI Toolchain"
+        uses: fprime-community/setup-rpi-sysroot@main
+      - name: "Generate RPI Build Cache"
+        run: |
+          fprime-util generate raspberrypi
+      - name: "Build RPI"
+        run: |
+          fprime-util build raspberrypi
+      - name: "Prepare artifacts"
+        run: |
+          mkdir -p rpi-artifacts
+          cp -r ./build-artifacts rpi-artifacts
+          cp -r Components/Led/test/int rpi-artifacts
+      - name: 'Archive Build Artifacts'
+        uses: actions/upload-artifact@v4
+        with:
+          name: rpi-artifacts
+          path: rpi-artifacts
+          retention-days: 5
+
+  RPI-integration:
+    name: "RPI Integration Tests"
+    runs-on: [self-hosted, raspberrypi]
+    needs: cross-compilation
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: 'requirements.txt'
+          sparse-checkout-cone-mode: false
+      - name: "Setup environment"
+        run: |
+          python -m venv venv
+          . venv/bin/activate
+          pip install -r requirements.txt
+      - name: "Artifacts Download"
+        uses: actions/download-artifact@v4
+        with:
+          name: rpi-artifacts
+      - name: Run Integration Tests
+        run: |
+          . venv/bin/activate
+          mkdir -p ci-logs
+          chmod +x ./build-artifacts/raspberrypi/LedBlinker/bin/LedBlinker
+          fprime-gds --ip-client -d ./build-artifacts/raspberrypi/LedBlinker --logs ./ci-logs &
+          sleep 10
+          pytest --dictionary ./build-artifacts/raspberrypi/LedBlinker/dict/LedBlinkerTopologyDictionary.json ./int/led_integration_tests.py
+      - name: 'Archive logs'
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: rpi-logs
+          path: ci-logs
+          retention-days: 5
+```
+
+### `ext-raspberry-system-reference.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/ext-raspberry-system-reference.yml`
+
+
+```yaml
+# Cross-compile https://github.com/fprime-community/fprime-system-reference
+
+name: "External Repo: System Reference"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+env:
+  RPI_TOOLCHAIN_DIR: /tmp/rpi-toolchain
+  PKG_CONFIG_PATH: ${{ github.workspace }}/libcamera/build/lib/pkgconfig/
+
+jobs:
+  get-branch:
+    name: "Get target branch"
+    uses: ./.github/workflows/reusable-get-pr-branch.yml
+    with:
+      target_repository: fprime-community/fprime-system-reference
+      default_target_ref: main
+  
+  cross-compilation:
+    name: "Cross Compilation"
+    runs-on: ubuntu-22.04
+    needs: get-branch
+    steps:
+      - name: "Checkout target repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          repository: fprime-community/fprime-system-reference
+          ref: ${{ needs.get-branch.outputs.target-branch }}
+      - name: "Overlay current F´ revision"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ./fprime
+          fetch-depth: 0
+      - uses: ./fprime/.github/actions/setup
+        with:
+          location: ./fprime
+      - name: "Install meson and ninja"
+        run: |
+          pip3 install meson ninja ply
+        shell: bash
+      - name: "Setup RPI Toolchain"
+        uses: fprime-community/setup-rpi-sysroot@main
+        with:
+          # libcamera requires 8+
+          toolchain: "https://developer.arm.com/-/media/Files/downloads/gnu-a/8.3-2019.03/binrel/gcc-arm-8.3-2019.03-x86_64-arm-linux-gnueabihf.tar.xz"
+      - name: "Add RPI Toolchain to PATH"
+        run: |
+          echo "PATH=$RPI_TOOLCHAIN_DIR/bin:$PATH" >> $GITHUB_ENV
+      - name: Build libcamera
+        run: |
+          cd libcamera
+          meson setup build -Dprefix=${{ github.workspace }}/libcamera/build/ -Dpipelines=rpi/vc4 -Dipas=rpi/vc4 --cross-file ../libcamera-aarch32.txt
+          cd build
+          ninja
+          ninja install
+      - name: "Generate System Reference build cache"
+        working-directory: SystemReference
+        run: |
+          fprime-util generate raspberrypi
+      - name: "Build System Reference"
+        working-directory: SystemReference
+        run: |
+          fprime-util build raspberrypi
+```
+
+### `format-check.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/format-check.yml`
+
+
+```yaml
+name: "Code Format Check"
+
+on:
+  push:
+    branches: [ devel, release/**, ci/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+
+jobs:
+  cpp-formatting:
+    name: C++ Formatting
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+      - uses: ./.github/actions/setup
+      - name: "Check C++ Formatting"
+        env:
+          # Svc is currently listing all but Svc/FpySequencer
+          CHECKED_DIRS: >-
+            Drv
+            Fw
+            Os
+            Svc/ActiveRateGroup
+            Svc/ActiveTextLogger
+            Svc/AssertFatalAdapter
+            Svc/BufferAccumulator
+            Svc/BufferLogger
+            Svc/BufferManager
+            Svc/BufferRepeater
+            Svc/Ccsds
+            Svc/ChronoTime
+            Svc/CmdDispatcher
+            Svc/CmdSequencer
+            Svc/CmdSplitter
+            Svc/ComLogger
+            Svc/ComQueue
+            Svc/ComSplitter
+            Svc/ComStub
+            Svc/Cycle
+            Svc/DpCatalog
+            Svc/DpManager
+            Svc/DpPorts
+            Svc/DpWriter
+            Svc/EventManager
+            Svc/Fatal
+            Svc/FatalHandler
+            Svc/FileDownlink
+            Svc/FileDownlinkPorts
+            Svc/FileManager
+            Svc/FileUplink
+            Svc/FprimeDeframer
+            Svc/FprimeFramer
+            Svc/FprimeProtocol
+            Svc/FprimeRouter
+            Svc/FrameAccumulator
+            Svc/FramingProtocol
+            Svc/GenericHub
+            Svc/Health
+            Svc/Interfaces
+            Svc/LinuxTimer
+            Svc/OsTime
+            Svc/PassiveConsoleTextLogger
+            Svc/PassiveRateGroup
+            Svc/Ping
+            Svc/PolyDb
+            Svc/PolyIf
+            Svc/Ports
+            Svc/PosixTime
+            Svc/PrmDb
+            Svc/RateGroupDriver
+            Svc/Sched
+            Svc/Seq
+            Svc/SeqDispatcher
+            Svc/StaticMemory
+            Svc/Subtopologies
+            Svc/SystemResources
+            Svc/TlmChan
+            Svc/TlmPacketizer
+            Svc/Version
+            Svc/WatchDog
+
+        run: |
+          fprime-util format --check --dirs $CHECKED_DIRS
+        shell: bash
+```
+
+### `fpp-tests.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/fpp-tests.yml`
+
+
+```yaml
+name: "FppTest"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  fpptest:
+    name: Run FppTest
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - name: "Install requirements.txt"
+        run: |
+          pip3 install -r ./requirements.txt
+        shell: bash
+      - name: "Generate UT build cache"
+        working-directory: ./FppTestProject
+        run: |
+          fprime-util generate --ut
+        shell: bash
+      - name: "Build UTs"
+        working-directory: ./FppTestProject/FppTest
+        run: |
+          fprime-util build --ut
+        shell: bash
+      - name: "Run UTs"
+        working-directory: ./FppTestProject/FppTest
+        run: |
+          fprime-util check
+        shell: bash
+      - name: "Archive Logs"
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: FppTest-Logs
+          path: ./FppTestProject/build-fprime-automatic-native-ut/Testing/Temporary/*.log
+          retention-days: 5
+```
+
+### `fpp-to-json.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/fpp-to-json.yml`
+
+
+```yaml
+name: "fpp-to-json Test"
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+    paths-ignore:
+      - 'docs/**'
+      - '**.md'
+      - '.github/actions/spelling/**'
+      - '.github/ISSUE_TEMPLATE/**'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  fpp-to-json-ref:
+    name: Ref Deployment
+    runs-on: ubuntu-22.04
+    steps:
+      - name: "Checkout F´ Repository"
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+      - uses: ./.github/actions/setup
+      - name: "Generate Ref Deployment"
+        working-directory: ./Ref
+        run: |
+          fprime-util generate
+        shell: bash
+      - name: "Run fpp-to-json on Ref topology"
+        working-directory: ./Ref/Top
+        run: |
+          DEPENDENCIES=$(fpp-depend ../build-fprime-automatic-native/locs.fpp *.fpp)
+          fpp-to-json ${DEPENDENCIES} *.fpp
+        shell: bash
+```
+
+### `markdown-link-check.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/markdown-link-check.yml`
+
+
+```yaml
+name: Check Markdown links
+
+on: 
+  push:
+    branches: [devel, docs/new-website]
+  pull_request:
+    branches: [devel]
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  markdown-link-check:
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+
+    - uses: ./.github/actions/setup
+
+    - name: 'Generate Doxygen and CMake docs'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y doxygen
+        ./docs/doxygen/generate_docs.bash
+
+    - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+          use-quiet-mode: 'yes'
+          config-file: ./.github/actions/markdown-check/mlc-config.json
+```
+
+### `pip-check.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/pip-check.yml`
+
+
+```yaml
+# This job is to check that the requirements.txt file isn't giving
+# any troubles to pip for any of the supported versions of Python
+
+name: Python Dependency Check
+
+on:
+  push:
+    paths:
+      - 'requirements.txt'
+  pull_request:
+    paths:
+      - 'requirements.txt'
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  pip-install:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        # macos-13 is the last Intel-family runner; macos-latest is ARM
+        runner: [macos-13, macos-latest, ubuntu-22.04, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+```
+
+### `python-format.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/python-format.yml`
+
+
+```yaml
+name: Format Python
+
+on:
+  push:
+    branches: [ devel, release/** ]
+  pull_request:
+    # The branches below must be a subset of the branches above
+    branches: [ devel, release/** ]
+# Cancel in-progress runs if a newer run is started on a given PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ !contains(github.ref, 'devel') && !contains(github.ref, 'release/')}}
+
+jobs:
+  format:
+      name: Format
+      runs-on: ubuntu-22.04
+      steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Check formatting
+        run: |
+          pip install click==8.0.4 black==21.6b0
+          black --check --diff ./
+```
+
+### `reusable-get-pr-branch.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/reusable-get-pr-branch.yml`
+
+
+```yaml
+# Will return a target branch in the following priority
+# - If the event that triggered this action is a PR and has a matching `pr-<number>` branch on
+# target_repository, then return the name of that branch. 
+# - If the name of the branch the PR is trying to merge into has a matching branch name on target_repo,
+# then return that branch name. (this is useful for example for release/ branches, to have a tracking release branch on the other repo)
+# - Otherwise, return default_target_ref.
+#
+# See the CONTRIBUTING.md for info on why this is used.
+
+name: 'Get PR Branch'
+
+on:
+  workflow_call:
+    inputs:
+      target_repository:
+        description: 'The repository to check for the PR branch'
+        type: string
+        required: true
+      default_target_ref:
+        description: 'Ref to use if no target branch is found'
+        type: string
+        required: false
+        default: devel
+    outputs:
+      target-branch:
+        value: ${{ jobs.runs.outputs.target-branch }}
+
+jobs:
+  runs:
+    runs-on: "ubuntu-22.04"
+    outputs:
+      target-branch: ${{ steps.get_target_branch.outputs.TARGET_BRANCH }}
+    steps:
+      - name: "Get target branch"
+        id: get_target_branch
+        run: |
+          response_code_pr=`curl -w '%{response_code}' https://api.github.com/repos/${{ inputs.target_repository }}/branches/pr-${{ github.event.number }} -o /dev/null`
+          response_code_base=`curl -w '%{response_code}' https://api.github.com/repos/${{ inputs.target_repository }}/branches/${{ github.event.pull_request.base.ref }} -o /dev/null`
+          if [[ "${{ github.event_name }}" == "pull_request" && "$response_code_pr" == "200" ]]; then
+            echo "TARGET_BRANCH=pr-${{ github.event.number }}" >> $GITHUB_OUTPUT
+            echo "PR branch found, using pr-${{ github.event.number }}"
+          elif [[ "${{ github.event_name }}" == "pull_request" && "$response_code_base" == "200" ]]; then
+            echo "TARGET_BRANCH=${{ github.event.pull_request.base.ref  }}" >> $GITHUB_OUTPUT
+            echo "Base branch found, using ${{ github.event.pull_request.base.ref }}"
+          else
+            echo "TARGET_BRANCH=${{ inputs.default_target_ref }}" >> $GITHUB_OUTPUT
+            echo "PR branch not found, using ${{ inputs.default_target_ref }}"
+          fi
+        shell: bash
+
+```
+
+### `reusable-project-builder.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/reusable-project-builder.yml`
+
+
+```yaml
+# This workflow is intended for reuse by other workflows and will not run directly (no triggers).
+# The behavior is to build an external F´ project (e.g. fprime-community/system-reference) using
+# the current F´ version.
+name: "F´ Project Builder - Reusable Workflow"
+
+on:
+  workflow_call:
+    inputs:
+      build_location:
+        description: "Path to F´ module to build. E.g. MyDeployment/"
+        required: true
+        type: string
+      target_repository:
+        description: "Additional external repository to checkout (<owner>/<repo>)"
+        required: true
+        type: string
+      run_unit_tests:
+        description: "Run an additional job in parallel to run unit tests."
+        required: false
+        type: boolean
+        default: true
+      fprime_location:
+        description: "Relative path from the external project root to its F´ submodule"
+        required: false
+        type: string
+        default: "./fprime"
+      runs_on:
+        description: "Platform to run on. Defaults to ubuntu-22.04"
+        required: false
+        type: string
+        default: "ubuntu-22.04"
+      target_platform:
+        description: "Target platform to pass to fprime-util"
+        required: false
+        type: string
+        default: ""
+      target_ref:
+        description: "Branch on target to checkout"
+        required: false
+        type: string
+        default: "devel"
+
+jobs:
+
+  build:
+    runs-on: ${{ inputs.runs_on }}
+    name: "Build"
+    steps:
+      - name: "Checkout target repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive 
+          repository: ${{ inputs.target_repository }}
+          ref: ${{ inputs.target_ref }}
+      - name: "Overlay current F´ revision"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ${{ inputs.fprime_location }}
+      - name: "Install requirements.txt"
+        run: |
+          pip3 install -r ${{ inputs.fprime_location }}/requirements.txt
+        shell: bash
+      - name: "Generate build cache"
+        working-directory: ${{ inputs.build_location }}
+        run: |
+          fprime-util generate ${{ runner.debug == '1' && '--verbose' || '' }} ${{ inputs.target_platform }}
+        shell: bash
+      - name: "Build"
+        working-directory: ${{ inputs.build_location }}
+        run: |
+          fprime-util build -j8 ${{ runner.debug == '1' && '--verbose' || '' }} ${{ inputs.target_platform }}
+        shell: bash
+
+  runUT:
+    if: ${{ inputs.run_unit_tests }}
+    runs-on: ${{ inputs.runs_on }}
+    name: "Unit Tests"
+    steps:
+      - name: "Checkout target repository"
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          repository: ${{ inputs.target_repository }}
+          ref: ${{ inputs.target_ref }}
+      - name: "Overlay current F´ revision"
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+          path: ${{ inputs.fprime_location }}
+      - name: "Install requirements.txt"
+        run: |
+          pip3 install -r ${{ inputs.fprime_location }}/requirements.txt
+        shell: bash
+      - name: "Generate UT build cache"
+        working-directory: ${{ inputs.build_location }}
+        run: |
+          fprime-util generate --ut ${{ runner.debug == '1' && '--verbose' || '' }} ${{ inputs.target_platform }}
+        shell: bash
+      - name: "Build UTs"
+        working-directory: ${{ inputs.build_location }}
+        run: |
+          fprime-util build --ut -j8 ${{ runner.debug == '1' && '--verbose' || '' }} ${{ inputs.target_platform }}
+        shell: bash
+      - name: "Run Unit Tests"
+        working-directory: ${{ inputs.build_location }}
+        run: |
+          fprime-util check -j8 ${{ runner.debug == '1' && '--verbose' || '' }} ${{ inputs.target_platform }}
+        shell: bash
+
+```
+
+### `spelling.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/workflows/spelling.yml`
+
+
+```yaml
+name: Spell checking
+
+# Comment management is handled through a secondary job, for details see:
+# https://github.com/check-spelling/check-spelling/wiki/Feature%3A-Restricted-Permissions
+#
+# `jobs.comment-push` runs when a push is made to a repository and the `jobs.spelling` job needs to make a comment
+#   (in odd cases, it might actually run just to collapse a comment, but that's fairly rare)
+#   it needs `contents: write` in order to add a comment.
+#
+# `jobs.comment-pr` runs when a pull_request is made to a repository and the `jobs.spelling` job needs to make a comment
+#   or collapse a comment (in the case where it had previously made a comment and now no longer needs to show a comment)
+#   it needs `pull-requests: write` in order to manipulate those comments.
+
+# Updating pull request branches is managed via comment handling.
+# For details, see: https://github.com/check-spelling/check-spelling/wiki/Feature:-Update-expect-list
+#
+# These elements work together to make it happen:
+#
+# `on.issue_comment`
+#   This event listens to comments by users asking to update the metadata.
+#
+# `jobs.update`
+#   This job runs in response to an issue_comment and will push a new commit
+#   to update the spelling metadata.
+#
+# `with.experimental_apply_changes_via_bot`
+#   Tells the action to support and generate messages that enable it
+#   to make a commit to update the spelling metadata.
+#
+# `with.ssh_key`
+#   In order to trigger workflows when the commit is made, you can provide a
+#   secret (typically, a write-enabled github deploy key).
+#
+#   For background, see: https://github.com/check-spelling/check-spelling/wiki/Feature:-Update-with-deploy-key
+
+# SARIF reporting
+#
+# Access to SARIF reports is generally restricted (by GitHub) to members of the repository.
+#
+# Requires enabling `security-events: write`
+# and configuring the action with `use_sarif: 1`
+#
+#   For information on the feature, see: https://github.com/check-spelling/check-spelling/wiki/Feature:-SARIF-output
+
+# Minimal workflow structure:
+#
+# on:
+#   push:
+#     ...
+#   pull_request_target:
+#     ...
+# jobs:
+#   # you only want the spelling job, all others should be omitted
+#   spelling:
+#     # remove `security-events: write` and `use_sarif: 1`
+#     # remove `experimental_apply_changes_via_bot: 1`
+#     ... otherwise adjust the `with:` as you wish
+
+on:
+  push:
+    branches:
+      - "**"
+    tags-ignore:
+      - "**"
+  pull_request_target:
+    branches:
+      - "**"
+    types:
+      - "opened"
+      - "reopened"
+      - "synchronize"
+
+jobs:
+  spelling:
+    name: Check Spelling
+    permissions:
+      contents: read
+      pull-requests: read
+      actions: read
+      security-events: write
+    outputs:
+      followup: ${{ steps.spelling.outputs.followup }}
+    runs-on: ubuntu-24.04
+    if: ${{ contains(github.event_name, 'pull_request') || github.event_name == 'push' }}
+    concurrency:
+      group: spelling-${{ github.event.pull_request.number || github.ref }}
+      # note: If you use only_check_changed_files, you do not want cancel-in-progress
+      cancel-in-progress: true
+    steps:
+      - name: check-spelling
+        id: spelling
+        uses: check-spelling/check-spelling@v0.0.24
+        with:
+          suppress_push_for_open_pull_request: ${{ github.actor != 'dependabot[bot]' && 1 }}
+          checkout: true
+          check_file_names: 1
+          spell_check_this: nasa/fprime@devel
+          post_comment: 0
+          use_magic_file: 1
+          report-timing: 1
+          warnings: bad-regex,binary-file,deprecated-feature,ignored-expect-variant,large-file,limited-references,no-newline-at-eof,noisy-file,non-alpha-in-dictionary,token-is-substring,unexpected-line-ending,whitespace-in-dictionary,minified-file,unsupported-configuration,no-files-to-check,unclosed-block-ignore-begin,unclosed-block-ignore-end
+          use_sarif: ${{ (!github.event.pull_request || (github.event.pull_request.head.repo.full_name == github.repository)) && 1 }}
+          check_extra_dictionaries: ''
+          dictionary_source_prefixes: >
+            {
+            "cspell": "https://raw.githubusercontent.com/check-spelling/cspell-dicts/v20241114/dictionaries/"
+            }
+          extra_dictionaries: |
+            cspell:software-terms/softwareTerms.txt
+            cspell:python/python/python-lib.txt
+            cspell:php/php.txt
+            cspell:python/python/python.txt
+            cspell:cpp/stdlib-c.txt
+            cspell:cpp/stdlib-cpp.txt
+            cspell:python/common/extra.txt
+            cspell:filetypes/filetypes.txt
+            cspell:npm/npm.txt
+            cspell:dart/dart.txt
+            cspell:node/node.txt
+            cspell:fullstack/fullstack.txt
+            cspell:golang/go.txt
+            cspell:latex/latex.txt
+            cspell:dotnet/dotnet.txt
+            cspell:java/java.txt
+            cspell:css/css.txt
+            cspell:aws/aws.txt
+            cspell:monkeyc/monkeyc_keywords.txt
+            cspell:django/django.txt
+            cspell:svelte/svelte.txt
+            cspell:cpp/ecosystem.txt
+            cspell:mnemonics/mnemonics.txt
+```

@@ -3,16 +3,1305 @@
 
 **경로:** `fsw/apps/sch/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sch_def_msgtbl.c`
 
-file--sch_def_msgtbl.c
-file--sch_def_schtbl.c
+**경로:** `fsw/apps/sch/fsw/tables/sch_def_msgtbl.c`
+
+
+```c
+/*
+** $Id: sch_def_msgtbl.c 1.3 2017/06/21 15:28:56EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) default message definition table data
+**
+** Author: 
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+#include "cfe_endian.h"
+#include "cfe_tbl_filedef.h"
+#include "sch_platform_cfg.h"
+#include "sch_tbldefs.h"
+
+#include "cfe_msgids.h"
+/* #include "ci_lab_msgids.h" */
+/* #include "to_lab_msgids.h" */
+/* #include "cs_msgids.h"  */
+/* #include "ds_msgids.h"  */
+/* #include "fm_msgids.h"  */
+/* #include "hk_msgids.h"  */
+/* #include "hs_msgids.h"  */
+/* #include "lc_msgids.h"  */
+/* #include "md_msgids.h"  */
+/* #include "mm_msgids.h"  */
+/* #include "sc_msgids.h"  */
+#include "sch_msgids.h"
+
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+/*
+** Message Table entry map...
+**
+**  Entry 0 -- reserved (DO NOT USE)
+**  
+**  Several Entries in this default table provide example messages for a default
+**  system. These messages can be uncommented, and the CFE_MAKE_BIG16(SCH_UNUSED_MID) entry just
+**  below them can be deleted to enable them.
+*/
+
+/*
+** Default command definition table data
+*/
+SCH_MessageEntry_t SCH_DefaultMessageTable[SCH_MAX_MESSAGES] =
+{
+  /*
+  **  DO NOT USE -- entry #0 reserved for "unused" command ID - DO NOT USE
+  */
+    /* command ID #0 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+  /*
+  **  cFE housekeeping request messages
+  */
+    /* command ID #1 - Executive Services HK Request   */
+  { { CFE_MAKE_BIG16(CFE_ES_SEND_HK_MID),   CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+    /* command ID #2 - Event Services HK Request     */
+  { { CFE_MAKE_BIG16(CFE_EVS_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+    /* command ID #3 - Software Bus HK Request       */
+  { { CFE_MAKE_BIG16(CFE_SB_SEND_HK_MID),   CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+    /* command ID #4 - Time Services HK Request      */
+  { { CFE_MAKE_BIG16(CFE_TIME_SEND_HK_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+    /* command ID #5 - Table Services HK Request     */
+  { { CFE_MAKE_BIG16(CFE_TBL_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+
+  /*
+  **  CFS housekeeping request messages
+  */
+    /* command ID #6 - Checksum HK Request           */
+/*{ { CFE_MAKE_BIG16(CS_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #7 - Data Store HK Request         */
+/*{ { CFE_MAKE_BIG16(DS_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #8 - File Manager HK Request       */
+/*{ { CFE_MAKE_BIG16(FM_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #9 - Housekeeping HK Request       */
+/*{ { CFE_MAKE_BIG16(HK_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+    /* command ID #10 - Health & Safety HK Request   */
+/*{ { CFE_MAKE_BIG16(HS_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #11 - Limit Checker HK Request     */
+/*{ { CFE_MAKE_BIG16(LC_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #12 - Memory Dwell HK Request      */
+/*{ { CFE_MAKE_BIG16(MD_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #13 - Memory Manager HK Request    */
+/*{ { CFE_MAKE_BIG16(MM_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #14 - Stored Command HK Request    */
+/*{ { CFE_MAKE_BIG16(SC_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #15 - Scheduler HK Request         */
+  { { CFE_MAKE_BIG16(SCH_SEND_HK_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } },
+
+  /*
+  **  CFS routine messages
+  */
+    /* command ID #16 - HK Send Combined Housekeeping Msg #1 */
+/*{ { CFE_MAKE_BIG16(HK_SEND_COMBINED_PKT_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0003), 0x0000, HK_COMBINED_PKT1_MID } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #17 - HK Send Combined Housekeeping Msg #2 */
+/*{ { CFE_MAKE_BIG16(HK_SEND_COMBINED_PKT_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0003), 0x0000, HK_COMBINED_PKT2_MID } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #18 - HK Send Combined Housekeeping Msg #3 */
+/*{ { CFE_MAKE_BIG16(HK_SEND_COMBINED_PKT_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0003), 0x0000, HK_COMBINED_PKT3_MID } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #19 - HK Send Combined Housekeeping Msg #4 */
+/*{ { CFE_MAKE_BIG16(HK_SEND_COMBINED_PKT_MID), CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0003), 0x0000, HK_COMBINED_PKT4_MID } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #20 - CS Background Cycle               */
+/*{ { CFE_MAKE_BIG16(CS_BACKGROUND_CYCLE_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #21 - SC 1 Hz Wakeup                    */
+/*{ { CFE_MAKE_BIG16(SC_1HZ_WAKEUP_MID),        CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #22 - LC Sample Action Points           */
+/*{ { CFE_MAKE_BIG16(LC_SAMPLE_AP_MID),         CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0005), 0x0000, LC_ALL_ACTIONPOINTS, 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #23 - DS 1 HZ Wakeup                    */
+/*{ { CFE_MAKE_BIG16(DS_1HZ_WAKEUP_MID),        CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #24 - MD Wakeup                         */
+/*{ { CFE_MAKE_BIG16(MD_WAKEUP_MID),            CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #25 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #26 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #27 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #28 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #29 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+  /*
+  **  Mission Defined Messages
+  */
+    /* command ID #30 - Command Ingest HK Request Example */
+/*{ { CFE_MAKE_BIG16(CI_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #31 - Telemetry Output HK Request Example */
+/*{ { CFE_MAKE_BIG16(TO_SEND_HK_MID),  CFE_MAKE_BIG16(0xC000), CFE_MAKE_BIG16(0x0001), 0x0000 } }, */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #32 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #33 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #34 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },  
+    /* command ID #35 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #36 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #37 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #38 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #39 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #40 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #41 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #42 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #43 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #44 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },  
+    /* command ID #45 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #46 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #47 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #48 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #49 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+    /* command ID #50 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #51 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #52 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #53 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #54 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },  
+    /* command ID #55 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #56 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #57 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #58 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #59 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+    /* command ID #60 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #61 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #62 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #63 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #64 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },  
+    /* command ID #65 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #66 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #67 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #68 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #69 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+
+    /* command ID #70 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #71 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #72 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #73 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #74 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #75 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #76 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #77 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #78 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #79 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #80 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #81 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #82 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #83 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #84 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #85 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #86 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #87 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #88 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #89 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #90 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #91 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #92 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #93 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #94 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #95 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #96 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #97 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #98 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #99 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #100 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #101 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #102 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #103 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #104 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #105 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #106 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #107 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #108 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #109 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #110 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #111 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #112 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #113 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #114 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #115 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #116 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #117 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #118 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #119 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+  
+    /* command ID #120 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #121 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #122 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #123 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #124 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #125 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #126 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } },
+    /* command ID #127 */
+  { { CFE_MAKE_BIG16(SCH_UNUSED_MID) } }
+
+};
+
+/*
+** Table file header
+*/
+CFE_TBL_FILEDEF(SCH_DefaultMessageTable, SCH.MSG_DEFS, SCH message definitions table, sch_def_msgtbl.tbl)
+
+/*************************************************************************
+**
+** File data
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Local function prototypes
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/************************/
+/*  End of File Comment */
+/************************/
+
 ```
 
-## 항목
+### `sch_def_schtbl.c`
 
-- [`fsw/apps/sch/fsw/tables/sch_def_msgtbl.c`](file--sch_def_msgtbl.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/sch/fsw/tables/sch_def_schtbl.c`](file--sch_def_schtbl.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/sch/fsw/tables/sch_def_schtbl.c`
+
+
+```c
+/*
+** $Id: sch_def_schtbl.c 1.3 2017/06/21 15:29:50EDT mdeschu Exp  $
+**
+**  Copyright (c) 2007-2014 United States Government as represented by the 
+**  Administrator of the National Aeronautics and Space Administration. 
+**  All Other Rights Reserved.  
+**
+**  This software was created at NASA's Goddard Space Flight Center.
+**  This software is governed by the NASA Open Source Agreement and may be 
+**  used, distributed and modified only pursuant to the terms of that 
+**  agreement.
+**
+** Purpose: Scheduler (SCH) default schedule table data
+**
+** Author: 
+**
+** Notes:
+**
+*/
+
+/*************************************************************************
+**
+** Include section
+**
+**************************************************************************/
+
+#include "cfe.h"
+#include "cfe_tbl_filedef.h"
+#include "sch_platform_cfg.h"
+#include "sch_msgdefs.h"
+#include "sch_tbldefs.h"
+
+/*************************************************************************
+**
+** Macro definitions
+**
+**************************************************************************/
+
+/*
+** Schedule Table "group" definitions
+*/
+#define SCH_GROUP_NONE         (0)
+
+/* Define highest level multi-groups */
+#define SCH_GROUP_CDH         (0x000001)                        /* All C&DH Messages        */
+#define SCH_GROUP_GNC         (0x000002)                        /* All GNC  Messages        */
+
+/* Define sub multi-groups           */
+#define SCH_GROUP_CFS_HK      (  (0x000010) | SCH_GROUP_CDH)    /* CFS HK Messages          */
+#define SCH_GROUP_CFE_HK      (  (0x000020) | SCH_GROUP_CDH)    /* cFE HK Messages          */
+#define SCH_GROUP_GNC_HK      (  (0x000040) | SCH_GROUP_GNC)    /* GNC HK Messages          */
+
+#define SCH_GROUP_
+
+/* Define groups for messages that appear multiple times in Schedule */
+#define SCH_GROUP_MD_WAKEUP   ((0x01000000) | SCH_GROUP_CDH)    /* MD Wakeup (aka Group #1) */
+
+
+/*************************************************************************
+**
+** Type definitions
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Exported data
+**
+**************************************************************************/
+
+/*
+** Default schedule table data
+*/
+SCH_ScheduleEntry_t SCH_DefaultScheduleTable[SCH_TABLE_ENTRIES] =
+{
+
+/*
+** Structure definition...
+**
+**    uint8    EnableState  -- SCH_UNUSED, SCH_ENABLED, SCH_DISABLED
+**    uint8    Type         -- 0 or SCH_ACTIVITY_SEND_MSG
+**    uint16   Frequency    -- how many seconds between Activity execution
+**    uint16   Remainder    -- seconds offset to perform Activity
+**    uint16   MessageIndex -- Message Index into Message Definition table
+**    uint32   GroupData    -- Group and Multi-Group membership definitions
+*/
+
+  /* slot #0 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  
+  /* slot #1 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+    
+  /* slot #2 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #3 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  3,  2, SCH_GROUP_CFE_HK },   /* EVS HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #4 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1,  6, SCH_GROUP_CFS_HK }, */  /* CS HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #5 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                            
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #6 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #7 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                    
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #8 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #9 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2,  7, SCH_GROUP_CFS_HK }, */  /* DS HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #10 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #11 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #12 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #13 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  3,  3, SCH_GROUP_CFE_HK },   /* SB HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #14 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1,  8, SCH_GROUP_CFS_HK }, */  /* FM HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #15 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #16 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 20, SCH_GROUP_NONE }, */  /* CS Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #17 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #18 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #19 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2,  9, SCH_GROUP_CFS_HK }, */  /* HK HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #20 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #21 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #22 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #23 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  3,  4, SCH_GROUP_CFE_HK },   /* TIME HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #24 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 10, SCH_GROUP_CFS_HK }, */  /* HS HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #25 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #26 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 25, SCH_GROUP_NONE }, */  /* SC Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #27 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #28 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #29 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2, 11, SCH_GROUP_CFS_HK }, */  /* LC HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #30 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #31 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #32 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #33 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  3,  5, SCH_GROUP_CFE_HK },   /* TBL HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #34 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 12, SCH_GROUP_CFS_HK }, */  /* MD HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #35 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #36 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 23, SCH_GROUP_NONE }, */  /* DS Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #37 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #38 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #39 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2, 13, SCH_GROUP_CFS_HK }, */  /* MM HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #40 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #41 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #42 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #43 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  3,  1, SCH_GROUP_CFE_HK },   /* ES HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #44 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 14, SCH_GROUP_CFS_HK }, */  /* SC HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #45 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #46 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #47 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #48 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #49 */
+  {  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  2, 15, SCH_GROUP_CFS_HK },   /* SCH HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #50 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #51 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 22, SCH_GROUP_NONE }, */  /* LC Sample Action Points */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #52 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #53 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #54 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #55 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #56 */
+/*{  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  1, 30, SCH_GROUP_NONE }, */  /* CI HK Request */
+/*{  SCH_ENABLED,  SCH_ACTIVITY_SEND_MSG,  4,  2, 31, SCH_GROUP_NONE }, */  /* TO HK Request */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #57 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #58 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #59 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #60 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #61 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #62 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #63 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #64 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #65 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #66 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #67 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #68 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #69 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #70 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #71 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #72 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+ 
+  /* slot #73 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #74 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+ 
+  /* slot #75 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #76 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #77 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #78 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #79 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #80 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #81 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #82 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #83 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #84 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #85 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #86 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #87 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #88 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #89 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #90 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #91 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  0, 16, SCH_GROUP_CFS_HK }, */  /* HK Send Combined HK '1' */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  1, 17, SCH_GROUP_CFS_HK }, */  /* HK Send Combined HK '2' */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #92 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  2, 18, SCH_GROUP_CFS_HK }, */  /* HK Send Combined HK '3' */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  4,  3, 19, SCH_GROUP_CFS_HK }, */  /* HK Send Combined HK '4' */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #93 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #94 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #95 */
+/*{  SCH_DISABLED, SCH_ACTIVITY_SEND_MSG,  1,  0, 24, SCH_GROUP_MD_WAKEUP }, */  /* MD Wakeup */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #96 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #97 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #98 */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+
+  /* slot #99 - Left Empty to allow Scheduler to Easily Resynchronize with 1 Hz */
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE},                                        
+  {  SCH_UNUSED,   0,      0,  0, 0,  SCH_GROUP_NONE}                                       
+};
+
+/*
+** Table file header
+*/
+CFE_TBL_FILEDEF(SCH_DefaultScheduleTable, SCH.SCHED_DEF, SCH schedule table, sch_def_schtbl.tbl)
+
+/*************************************************************************
+**
+** File data
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/*************************************************************************
+**
+** Local function prototypes
+**
+**************************************************************************/
+
+/*
+** (none)
+*/
+
+/************************/
+/*  End of File Comment */
+/************************/
+
+```

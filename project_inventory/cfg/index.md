@@ -3,7 +3,7 @@
 
 **경로:** `cfg/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,45 @@ InOut/index
 nos3_defs/index
 sims/index
 spacecraft/index
-file--nos3-mission.xml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`cfg/build/`](build/index) — 폴더
-- [`cfg/gui/`](gui/index) — 폴더
-- [`cfg/InOut/`](InOut/index) — 폴더
-- [`cfg/nos3_defs/`](nos3_defs/index) — 폴더
-- [`cfg/sims/`](sims/index) — 폴더
-- [`cfg/spacecraft/`](spacecraft/index) — 폴더
-- [`cfg/nos3-mission.xml`](file--nos3-mission.xml) — UTF-8 텍스트 파일 본문 포함
+### `nos3-mission.xml`
+
+**경로:** `cfg/nos3-mission.xml`
+
+
+```xml
+<nos3-mission-cfg>
+    <!-- Mission Start Time (J2000 UTC) -->
+    <!-- Default time: 814254200.0, 20 Oct 2025 -->
+    <start-time>814254200.0</start-time>
+
+    <!-- Ground Software -->
+    <!-- cosmos (default), openc3, fprime, yamcs, or multiple (for yamcs and Cosmos with cFS only) -->
+    <gsw>cosmos</gsw>
+
+    <!-- Flight Software -->
+    <!-- cfs (default) or fprime -->
+    <fsw>cfs</fsw>
+
+    <!-- Scenario -->
+    <!-- STF1 (default) or Gateway or DeepSpace -->
+    <scenario>STF1</scenario>
+
+    <!-- Number of spacecraft -->
+    <!-- Note this is experimental and not ready for use beyond proof of concept -->
+    <number-spacecraft>1</number-spacecraft>
+
+    <!-- Spacecraft 1 Configuration - options are as follows -->
+    <!-- sc-minimal-config.xml (only cFS heritage applications and the sample app) -->
+    <!-- sc-mission-config.xml (default, minimal + generic components and ADCS) -->
+    <!-- sc-research-config.xml (mission + research integrations, arducam, and generic-thruster) -->
+    <!-- sc-fprime-config.xml (only configuration supporting F') -->
+    <sc-1-cfg>spacecraft/sc-mission-config.xml</sc-1-cfg>
+
+    <!-- Spacecraft N Configuration -->
+    <!-- <sc-N-cfg>sc-minimal-config.xml</sc-N-cfg> -->
+</nos3-mission-cfg>
+```

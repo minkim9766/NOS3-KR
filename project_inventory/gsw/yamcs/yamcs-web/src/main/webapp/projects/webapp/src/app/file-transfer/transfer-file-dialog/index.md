@@ -3,18 +3,1100 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `transfer-file-dialog.component.css`
 
-file--transfer-file-dialog.component.css
-file--transfer-file-dialog.component.html
-file--transfer-file-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.css`
+
+
+```css
+::ng-deep .mat-mdc-dialog-container {
+  border-radius: 0;
+  position: relative;
+}
+
+.transfer-files {
+  height: 100%;
+}
+
+.close-button {
+  float: right;
+}
+
+.ya-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-container {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: [header] min-content [tables] auto [footer] min-content [options-footer] min-content;
+  grid-template-columns: [buckets] 140px [local] auto [remote] auto;
+  column-gap: 8px;
+  flex: 1;
+  min-height: 0;
+}
+
+.header {
+  grid-row: header;
+  position: relative;
+  overflow: hidden;
+  font-family: Roboto, sans-serif;
+}
+
+.table-wrapper {
+  grid-row: tables;
+  overflow: auto;
+  border: 1px solid #d3d3d3;
+}
+
+.footer {
+  grid-row: footer;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: stretch;
+  gap: 8px;
+  height: fit-content;
+  font-family: Roboto, sans-serif;
+}
+
+.options-footer {
+  grid-row: options-footer;
+  grid-column: local / span 2;
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: stretch;
+  gap: 8px;
+  height: fit-content;
+  font-family: Roboto, sans-serif;
+}
+
+.buckets-column {
+  grid-column: buckets;
+}
+
+.local-column {
+  grid-column: local;
+}
+
+.remote-column {
+  grid-column: remote;
+}
+
+label {
+  margin: -3px 0 20px 0;
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  line-height: 12px;
+  color: black;
+  text-transform: inherit;
+  cursor: default;
+  position: relative;
+  font-family: Roboto, sans-serif;
+}
+
+label,
+label input[type="text"],
+label input[type="number"],
+label input[type="password"],
+label textarea,
+label select,
+label .date-time-input {
+  margin: 5px 0 0;
+  display: block;
+  width: 100%;
+}
+
+.buckets-column.header > label {
+  position: absolute;
+  bottom: 0;
+  line-height: 24px;
+}
+
+.buckets-column.header > label > a {
+  float: right;
+}
+
+.buckets-column td {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  column-gap: 10px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+a.column-action {
+  font-weight: normal;
+  font-size: 11px;
+  color: #707070;
+  user-select: none;
+  cursor: pointer;
+}
+
+a.column-action:hover {
+  text-decoration: underline;
+}
+
+.local-column.table-wrapper.no-filelist {
+  grid-column: local / span 2;
+}
+
+.local-column.footer {
+  flex-wrap: wrap-reverse;
+  align-items: flex-end;
+}
+
+.remote-column.header.no-filelist > ya-breadcrumb-trail {
+  visibility: hidden;
+}
+
+label.table-caption {
+  margin: 0;
+  bottom: 0;
+}
+
+label.table-caption select {
+  display: inline-block;
+  width: auto;
+  margin: 0 4px;
+}
+
+ya-breadcrumb-trail {
+  display: inline-block;
+}
+
+.lastFileListTime {
+  min-width: 0;
+  line-height: 24px;
+  float: right;
+}
+
+.footer > button,
+.footer > input {
+  flex-shrink: 1;
+}
+
+.footer > button {
+  flex-grow: 1;
+}
+
+.footer > input {
+  flex-grow: 5;
+}
+
+table.ya-data-table {
+  width: 100%;
+}
+
+.ya-data-table td {
+  border: none;
+}
+
+.checkbox-label {
+  font-weight: unset;
+  font-size: unset;
+  letter-spacing: unset;
+  line-height: unset;
+  color: unset;
+  text-transform: unset;
+  cursor: unset;
+  position: unset;
+  display: inline-block;
+  margin: 3px 0 0;
+  user-select: none;
+}
+
+.checkbox-label input {
+  margin: 0 3px 0 4px;
+}
 ```
 
-## 항목
+### `transfer-file-dialog.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.css`](file--transfer-file-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.html`](file--transfer-file-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.ts`](file--transfer-file-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.html`
+
+
+```html
+<div class="transfer-files">
+  <form [formGroup]="form" class="ya-form">
+    <h2>
+      <button mat-icon-button class="close-button" mat-dialog-close>
+        <mat-icon>close</mat-icon>
+      </button>
+      New
+      {{
+        service.capabilities.download && service.capabilities.upload
+          ? "transfer"
+          : service.capabilities.upload
+            ? "upload"
+            : "download"
+      }}
+    </h2>
+
+    <div class="grid-container">
+      <div class="buckets-column header">
+        <label class="table-caption">
+          Buckets
+          <a class="column-action" (click)="toggleBucketSize()">
+            {{ !showBucketSize$.value ? "show" : "hide" }} size
+          </a>
+        </label>
+      </div>
+
+      <div class="buckets-column table-wrapper">
+        <table mat-table [dataSource]="dataSource" class="ya-data-table no-frame">
+          <ng-container cdkColumnDef="name">
+            <td
+              mat-cell
+              *cdkCellDef="let bucket"
+              [title]="(bucket.maxSize - bucket.size | formatBytes) + ' available'">
+              <span>
+                <mat-icon style="vertical-align: middle">shopping_basket</mat-icon>
+                &nbsp; {{ bucket.name }}
+              </span>
+              @if (showBucketSize$.value) {
+                <span>{{ bucket.size | formatBytes }}/{{ bucket.maxSize | formatBytes }}</span>
+              }
+              @if (showBucketSize$.value) {
+                <ya-progress [value]="bucket.size" [total]="bucket.maxSize" />
+              }
+            </td>
+          </ng-container>
+
+          <tr
+            mat-row
+            *cdkRowDef="let row; columns: displayedColumns"
+            [ngClass]="{ selected: row === (selectedBucket$ | async) }"
+            (click)="selectBucket(row)"></tr>
+        </table>
+      </div>
+
+      <div class="local-column header">
+        <label class="table-caption">
+          Local {{ service.localEntities && service.localEntities.length ? "entity" : "" }}
+          <select
+            formControlName="localEntity"
+            [ngStyle]="
+              !(service.localEntities && service.localEntities.length) && { visibility: 'hidden' }
+            ">
+            @for (entity of service.localEntities; track entity) {
+              <option [value]="entity.name">{{ entity.name }} [id={{ entity.id }}]</option>
+            }
+          </select>
+        </label>
+
+        @if (breadcrumb$ | async; as breadcrumb) {
+          <ya-breadcrumb-trail [showMargin]="false">
+            <ya-breadcrumb icon="account_tree" [action]="true" (click)="changeLocalPrefix('')" />
+            @for (item of breadcrumb; track item) {
+              <ya-breadcrumb
+                [label]="item.name"
+                [action]="true"
+                (click)="changeLocalPrefix(item.prefix)" />
+            }
+          </ya-breadcrumb-trail>
+        }
+      </div>
+
+      <div
+        class="local-column table-wrapper"
+        [ngClass]="{ 'no-filelist': !service.capabilities.fileList }"
+        (click)="clearSelection($event, objectSelector)">
+        @if (selectedBucket$ | async; as bucket) {
+          <app-object-selector
+            #objectSelector
+            formControlName="localFilenames"
+            [bucket]="bucket"
+            [isMultiSelect]="true"
+            [foldersOnly]="false"
+            [noSelect]="true"
+            [noFrame]="true"
+            [allowFolderSelection]="true"
+            (prefixChange)="updateLocalBreadcrumb($event)" />
+        }
+      </div>
+
+      <div class="local-column footer">
+        <input
+          type="text"
+          formControlName="localFilenames"
+          placeholder="Local filename"
+          [value]="form.get('localFilenames')?.value" />
+
+        @if (service.capabilities.upload) {
+          <ya-button
+            appearance="primary"
+            [disabled]="!isUploadEnabled"
+            (click)="startUpload()"
+            icon="chevron_right">
+            UPLOAD
+          </ya-button>
+        }
+      </div>
+
+      @if (
+        (service.remoteEntities && service.remoteEntities.length) || service.capabilities.fileList
+      ) {
+        <div
+          class="remote-column header"
+          [ngClass]="{ 'no-filelist': !service.capabilities.fileList }">
+          <label class="table-caption">
+            Remote {{ service.remoteEntities && service.remoteEntities.length ? "entity" : "" }}
+            <select
+              formControlName="remoteEntity"
+              [ngStyle]="
+                !(service.remoteEntities && service.remoteEntities.length) && {
+                  visibility: 'hidden',
+                }
+              ">
+              @for (entity of service.remoteEntities; track entity) {
+                <option [value]="entity.name">{{ entity.name }} [id={{ entity.id }}]</option>
+              }
+            </select>
+          </label>
+          @if (remoteBreadcrumb$ | async; as breadcrumb) {
+            <ya-breadcrumb-trail [showMargin]="false">
+              <ya-breadcrumb icon="account_tree" [action]="true" (click)="changeRemotePrefix('')" />
+              @for (item of breadcrumb; track item) {
+                <ya-breadcrumb
+                  [label]="item.name"
+                  [action]="true"
+                  (click)="changeRemotePrefix(item.prefix)" />
+              }
+            </ya-breadcrumb-trail>
+          }
+          @if (service.capabilities.fileList) {
+            <a
+              class="lastFileListTime column-action"
+              [matMenuTriggerFor]="remoteMenu"
+              matTooltip="Last refresh. Click for actions">
+              {{ (lastFileListTime$ | async | datetime) || "No file list received" }}
+              @if (lastFileListState$ | async; as state) {
+                ({{ state }})
+              }
+              ▾
+            </a>
+            <mat-menu
+              #remoteMenu="matMenu"
+              overlapTrigger="false"
+              class="ya-menu"
+              xPosition="before"
+              yPosition="below">
+              <button mat-menu-item (click)="requestFileList()">Refresh file list</button>
+            </mat-menu>
+          }
+        </div>
+      }
+
+      @if (service.capabilities.fileList) {
+        <div class="remote-column table-wrapper" (click)="clearSelection($event, remoteSelector)">
+          <app-remote-file-selector
+            #remoteSelector
+            formControlName="remoteFilenames"
+            [isMultiSelect]="true"
+            [foldersOnly]="false"
+            [noSelect]="true"
+            [allowFolderSelection]="true"
+            [fileListExtraColumns]="service.capabilities.fileListExtraColumns || []"
+            [fileActions]="service.capabilities.fileActions || []"
+            (prefixChange)="updateRemoteBreadcrumb($event)"
+            (onAction)="onActionRequest($event)" />
+        </div>
+      }
+
+      <div class="remote-column footer">
+        @if (service.capabilities.download) {
+          <ya-button
+            appearance="primary"
+            [disabled]="!isDownloadEnabled"
+            (click)="startDownload()"
+            icon="chevron_left">
+            DOWNLOAD
+          </ya-button>
+        }
+
+        @if (service.capabilities.download || service.capabilities.remotePath) {
+          <input
+            type="text"
+            formControlName="remoteFilenames"
+            placeholder="Remote filename"
+            [value]="form.get('remoteFilenames')?.value" />
+        }
+      </div>
+
+      <div class="options-footer">
+        @for (option of service.transferOptions; track option; let i = $index) {
+          <div [title]="option.description || ''">
+            <label>{{ option.title || option.name }}</label>
+            <!-- Boolean option type -->
+            @if (option.type === "BOOLEAN") {
+              <label class="checkbox-label">
+                <input type="checkbox" [formControlName]="getControlName(option, i)" />
+                {{ option.associatedText }}
+              </label>
+            }
+            <!-- Double and string option type-->
+            <div style="display: flex; column-gap: 8px; flex-wrap: wrap">
+              @if ((option.type === "DOUBLE" || option.type === "STRING") && option.values) {
+                <select [formControlName]="getControlName(option, i) + DROPDOWN_SUFFIX">
+                  @if (option.allowCustomOption) {
+                    <option [value]="CUSTOM_OPTION_VALUE">Custom</option>
+                  }
+                  @for (value of option.values; track value) {
+                    <option [value]="value.value">
+                      {{ value.verboseName != null ? value.verboseName : value.value }}
+                    </option>
+                  }
+                </select>
+              }
+              @if (
+                (option.type === "DOUBLE" || option.type === "STRING") &&
+                ((option.allowCustomOption &&
+                  form.get(getControlName(option, i) + DROPDOWN_SUFFIX)?.value ===
+                    CUSTOM_OPTION_VALUE) ||
+                  !option.values)
+              ) {
+                <input
+                  [formControlName]="getControlName(option, i)"
+                  [type]="option.type === 'DOUBLE' ? 'number' : 'text'"
+                  [placeholder]="option.associatedText || ''"
+                  style="width: 120px" />
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </form>
+</div>
+```
+
+### `transfer-file-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/file-transfer/transfer-file-dialog/transfer-file-dialog.component.ts`
+
+
+```typescript
+import { Component, Inject, OnDestroy, ViewChild } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormGroup,
+  Validators,
+} from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import {
+  Bucket,
+  FileTransferOption,
+  FileTransferService,
+  MessageService,
+  PreferenceStore,
+  RemoteFileListSubscription,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ObjectSelector } from '../../shared/object-selector/object-selector.component';
+import {
+  FileActionRequest,
+  RemoteFileSelectorComponent,
+} from '../remote-file-selector/remote-file-selector.component';
+
+@Component({
+  selector: 'app-transfer-file-dialog',
+  templateUrl: './transfer-file-dialog.component.html',
+  styleUrl: './transfer-file-dialog.component.css',
+  imports: [ObjectSelector, WebappSdkModule, RemoteFileSelectorComponent],
+})
+export class TransferFileDialogComponent implements OnDestroy {
+  public isDownloadEnabled = false;
+  public isUploadEnabled = false;
+  form: UntypedFormGroup;
+  readonly service: FileTransferService;
+  private storageClient: StorageClient;
+  dataSource = new MatTableDataSource<Bucket>();
+
+  displayedColumns = ['name'];
+
+  private prefPrefix = 'filetransfer.';
+
+  showBucketSize$;
+
+  selectedBucket$ = new BehaviorSubject<Bucket | null>(null);
+  breadcrumb$ = new BehaviorSubject<BreadcrumbItem[]>([]);
+  remoteBreadcrumb$ = new BehaviorSubject<BreadcrumbItem[]>([]);
+  lastFileListTime$ = new BehaviorSubject<string>('');
+  lastFileListState$ = new BehaviorSubject<string | undefined>(undefined);
+
+  private fileListSubscription: RemoteFileListSubscription;
+
+  optionsMapping = new Map<FileTransferOption, string>();
+
+  readonly DROPDOWN_SUFFIX = '_Dropdown';
+  readonly CUSTOM_OPTION_VALUE = '_CUSTOM_OPTION_';
+
+  @ViewChild('objectSelector') set content(selector: ObjectSelector) {
+    if (!this.objectSelector) {
+      if (!selector) {
+        return;
+      }
+      this.objectSelector = selector;
+    }
+
+    this.changeLocalPrefix(this.localDirectory$.value);
+  }
+  objectSelector: ObjectSelector;
+  private localDirectory$;
+
+  @ViewChild('remoteSelector')
+  remoteSelector: RemoteFileSelectorComponent;
+
+  constructor(
+    private dialogRef: MatDialogRef<TransferFileDialogComponent>,
+    readonly yamcs: YamcsService,
+    formBuilder: UntypedFormBuilder,
+    private messageService: MessageService,
+    private preferenceStore: PreferenceStore,
+    private snackBar: MatSnackBar,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.service = data.service;
+    this.prefPrefix += this.service.name + '.';
+    this.showBucketSize$ = this.addPreference$('showBucketSize', false);
+    this.localDirectory$ = this.addPreference$('localDirectory', '');
+    const firstLocalEntity =
+      this.service.localEntities && this.service.localEntities.length
+        ? this.service.localEntities[0].name
+        : '';
+    const firstRemoteEntity =
+      this.service.remoteEntities && this.service.remoteEntities.length
+        ? this.service.remoteEntities[0].name
+        : '';
+    const localEntity$ = this.addPreference$('localEntity', firstLocalEntity);
+    const remoteEntity$ = this.addPreference$(
+      'remoteEntity',
+      firstRemoteEntity,
+    );
+
+    this.storageClient = yamcs.createStorageClient();
+    this.storageClient.getBuckets().then((buckets) => {
+      this.dataSource.data = buckets || [];
+      if (buckets) {
+        const bucketPref$ = this.addPreference$(
+          'selectedBucket',
+          buckets[0].name,
+        );
+        const bucket = buckets.find(
+          (bucket) => bucket.name === bucketPref$.value,
+        );
+        this.selectBucket(bucket || buckets[0]);
+      }
+    });
+
+    // Subscribe to remote file list updates
+    this.fileListSubscription =
+      this.yamcs.yamcsClient.createRemoteFileListSubscription(
+        {
+          instance: this.yamcs.instance!,
+          serviceName: this.service.name,
+        },
+        (fileList) => {
+          if (fileList.destination == this.form.get('remoteEntity')!.value) {
+            const currentFolder: string =
+              this.remoteSelector.currentPrefix$.value || '';
+            if (fileList.remotePath == currentFolder) {
+              this.remoteSelector.setFolderContent(currentFolder, fileList);
+              this.lastFileListTime$.next(fileList.listTime);
+              this.lastFileListState$.next(fileList.state);
+            }
+          }
+        },
+      );
+
+    // Prepare form control names for custom options
+    let controlNames: { [key: string]: any } = {};
+
+    this.service.transferOptions?.forEach((option, index) => {
+      let name = this.getControlName(option, index);
+      this.optionsMapping.set(option, name);
+
+      if (option.type === 'BOOLEAN') {
+        const optionPref$ = this.addPreference$(
+          'options.' + option.name,
+          option.default?.toLowerCase() === 'true',
+        );
+        controlNames[name] = [optionPref$.value, []];
+      } else {
+        const optionPref$ = this.addPreference$(
+          'options.' + option.name,
+          option.default || '',
+        );
+        let inValues =
+          option.values &&
+          option.values.find((item) => item.value === optionPref$.value);
+
+        controlNames[name] = [inValues == null ? optionPref$.value : '', []];
+        controlNames[name + this.DROPDOWN_SUFFIX] = [
+          inValues != null ? optionPref$.value : this.CUSTOM_OPTION_VALUE,
+          [],
+        ];
+      }
+    });
+
+    // Setup forms
+    this.form = formBuilder.group({
+      localFilenames: ['', []],
+      remoteFilenames: ['', []],
+      localEntity: [
+        localEntity$.value,
+        this.service.localEntities &&
+          this.service.localEntities.length &&
+          Validators.required,
+      ],
+      remoteEntity: [
+        remoteEntity$.value,
+        this.service.remoteEntities &&
+          this.service.remoteEntities.length &&
+          Validators.required,
+      ],
+      ...controlNames,
+    });
+
+    // Subscribe to some form variables to determine enabled state of buttons
+    this.form.get('localFilenames')?.valueChanges.subscribe((value: any) => {
+      this.updateButtonStates(
+        value,
+        this.form.get('remoteFilenames')?.value,
+        this.form.get('remoteFilenames')?.value,
+      );
+    });
+    this.form.get('remoteFilenames')?.valueChanges.subscribe((value: any) => {
+      this.updateButtonStates(
+        this.form.get('localFilenames')?.value,
+        value,
+        this.form.get('remoteFilenames')?.value,
+      );
+    });
+
+    // Update entity user preference
+    this.form.get('localEntity')?.valueChanges.subscribe((entity: any) => {
+      this.setPreferenceValue('localEntity', entity);
+    });
+
+    // If a new destination is selected -> display cached file list if any
+    this.form.get('remoteEntity')?.valueChanges.subscribe((entity: any) => {
+      this.setPreferenceValue('remoteEntity', entity);
+      // New destination selected -> Go to root folder
+      this.getFileList(entity, '');
+    });
+
+    // Save option preferences
+    this.form.valueChanges.subscribe(async (_) => {
+      this.optionsMapping.forEach((controlName, option) => {
+        const dropDownValue = this.form.get(
+          controlName + this.DROPDOWN_SUFFIX,
+        )?.value;
+        let value =
+          dropDownValue == null || dropDownValue === this.CUSTOM_OPTION_VALUE
+            ? this.form.get(controlName)?.value
+            : dropDownValue;
+
+        switch (option.type) {
+          case 'BOOLEAN':
+            this.setPreferenceValue(
+              'options.' + option.name,
+              String(value) === 'true',
+            );
+            break;
+          case 'DOUBLE':
+          case 'STRING':
+            this.setPreferenceValue(
+              'options.' + option.name,
+              value != null ? value : '',
+            );
+        }
+      });
+    });
+
+    // Show most recent file list
+    const remoteDirectory$ = this.addPreference$('remoteDirectory', '');
+    this.getFileList(remoteEntity$.value, remoteDirectory$.value || '');
+  }
+
+  getControlName(option: FileTransferOption, index: number) {
+    return 'option' + index + option.name.replace(/\s/g, '');
+  }
+
+  // Called when user selects a bucket
+  selectBucket(bucket: Bucket) {
+    this.selectedBucket$.next(bucket);
+    this.setPreferenceValue('selectedBucket', bucket.name);
+  }
+
+  private updateButtonStates(
+    localFiles: string,
+    remoteFile: string,
+    textfieldPath: string,
+  ) {
+    this.isDownloadEnabled =
+      this.service.capabilities.download &&
+      this.selectedBucket$.value! &&
+      remoteFile != '' &&
+      this.form.valid;
+    this.isUploadEnabled =
+      this.service.capabilities.upload && localFiles != '' && this.form.valid;
+  }
+
+  // Returns remote folder path, ready to concatenate a file name
+  private getSelectedRemoteFolderPath() {
+    const items = this.remoteBreadcrumb$.value!;
+    return items.length != 0 ? items[items.length - 1].prefix + '/' : '';
+  }
+
+  // Returns local folder path
+  private getSelectedLocalFolderPath() {
+    const items = this.breadcrumb$.value!;
+    return items.length != 0 ? items[items.length - 1].prefix + '/' : '';
+  }
+
+  async startDownload() {
+    return this.startTransfer(
+      this.form.get('remoteEntity')?.value,
+      this.form.get('localEntity')?.value,
+      this.form.get('remoteFilenames')?.value,
+      this.form.get('localFilenames')?.value,
+      this.getSelectedRemoteFolderPath(),
+      this.getSelectedLocalFolderPath(),
+      'DOWNLOAD',
+    );
+  }
+
+  async startUpload() {
+    return this.startTransfer(
+      this.form.get('localEntity')?.value,
+      this.form.get('remoteEntity')?.value,
+      this.form.get('localFilenames')?.value,
+      this.form.get('remoteFilenames')?.value,
+      this.getSelectedLocalFolderPath(),
+      this.getSelectedRemoteFolderPath(),
+      'UPLOAD',
+    );
+  }
+
+  async startTransfer(
+    sourceEntity: string,
+    destinationEntity: string,
+    sourceFilenames: string,
+    destinationFilenames: string,
+    sourceFolderPath: string,
+    destinationFolderPath: string,
+    direction: 'UPLOAD' | 'DOWNLOAD',
+  ) {
+    const objectNames: string[] = sourceFilenames.trim().split('|');
+    if (!objectNames[0]) {
+      return;
+    }
+
+    const promises = objectNames.map((name) => {
+      // Get file names and append it to selected folders.
+      let paths;
+      try {
+        paths = this.getTransferPaths(
+          name,
+          destinationFilenames,
+          sourceFolderPath,
+          destinationFolderPath,
+          direction,
+        );
+      } catch (error: any) {
+        this.messageService.showError(error);
+        throw error;
+      }
+
+      if (direction == 'DOWNLOAD') {
+        paths = paths.reverse();
+      }
+
+      // Start transfer
+      return this.yamcs.yamcsClient.createFileTransfer(
+        this.yamcs.instance!,
+        this.service.name,
+        {
+          direction: direction,
+          bucket: this.selectedBucket$.value!.name,
+          objectName: paths[0],
+          remotePath: paths[1],
+          source: sourceEntity,
+          destination: destinationEntity,
+          options: this.getTransferOptions(),
+        },
+      );
+    });
+
+    // Collect combined success/failure result
+    let anyError: any;
+    let errorCount = 0;
+    for (const promise of promises) {
+      try {
+        await promise;
+      } catch (err) {
+        anyError = err;
+        errorCount++;
+      }
+    }
+
+    if (anyError) {
+      if (errorCount === 1) {
+        this.messageService.showError(anyError);
+      } else if (errorCount === promises.length) {
+        this.messageService.showError(
+          'Failed to start any of the selected transfers. See server log.',
+        );
+      } else {
+        this.messageService.showError(
+          'Some of the transfers failed to start. See server log.',
+        );
+      }
+    }
+
+    this.dialogRef.close();
+  }
+
+  getTransferPaths(
+    sourceFilename: string,
+    destinationFilenames: string,
+    sourceFolderPath: string,
+    destinationFolderPath: string,
+    direction: 'UPLOAD' | 'DOWNLOAD',
+  ): [string, string] {
+    sourceFilename = sourceFilename.trim();
+    sourceFilename = sourceFilename.startsWith(sourceFolderPath)
+      ? sourceFilename.replace(sourceFolderPath, '')
+      : sourceFilename;
+    const sourcePath = sourceFolderPath + sourceFilename;
+
+    let destinationPath = sourceFilename;
+    if (
+      (direction === 'UPLOAD' && this.service.capabilities.remotePath) ||
+      direction === 'DOWNLOAD'
+    ) {
+      destinationFilenames = destinationFilenames.trim();
+      if (destinationFilenames.includes('|')) {
+        console.error(
+          `Cannot ${direction.toLowerCase()} file "${sourcePath}" to multiple destination filenames: ${destinationFilenames}`,
+        );
+        throw new Error(
+          `Cannot ${direction.toLowerCase()} file "${sourcePath}" to multiple destination filenames: ${destinationFilenames}`,
+        );
+      }
+      const destinationFilename = destinationFilenames.startsWith(
+        destinationFolderPath,
+      )
+        ? destinationFilenames.replace(destinationFolderPath, '')
+        : destinationFilenames;
+      destinationPath =
+        destinationFolderPath +
+        (destinationFilename ? destinationFilename : sourceFilename);
+    }
+
+    return [sourcePath, destinationPath];
+  }
+
+  requestFileList() {
+    const currentFolder: string =
+      this.remoteSelector.currentPrefix$.value || '';
+    this.yamcs.yamcsClient.requestFileList(
+      this.yamcs.instance!,
+      this.service.name,
+      {
+        source: this.form.value['localEntity'],
+        destination: this.form.value['remoteEntity'],
+        remotePath: currentFolder,
+        options: this.getTransferOptions(),
+      },
+    );
+  }
+
+  getFileList(dest: string, prefix: string) {
+    if (this.service.capabilities.fileList) {
+      this.yamcs.yamcsClient
+        .getFileList(this.yamcs.instance!, this.service.name, {
+          source: this.form.value['localEntity'],
+          destination: dest,
+          remotePath: prefix,
+          options: this.getTransferOptions(),
+        })
+        .then((fileList) => {
+          this.remoteSelector.setFolderContent(prefix, fileList);
+          this.setPreferenceValue('remoteDirectory', prefix);
+          this.lastFileListTime$.next(fileList.listTime);
+          this.lastFileListState$.next(fileList.state);
+        });
+    }
+  }
+
+  private getTransferOptions() {
+    return this.service.transferOptions?.reduce((options, option) => {
+      const controlName = this.optionsMapping.get(option);
+      if (!controlName) {
+        return options;
+      }
+
+      const dropDownValue = this.form.get(
+        controlName + this.DROPDOWN_SUFFIX,
+      )?.value;
+      let value =
+        dropDownValue == null || dropDownValue === this.CUSTOM_OPTION_VALUE
+          ? this.form.get(controlName)?.value
+          : dropDownValue;
+
+      if (option.type === 'BOOLEAN' && typeof value !== 'boolean') {
+        value = String(value).toLowerCase() === 'true';
+      } else if (option.type === 'DOUBLE' && typeof value !== 'number') {
+        value = Number(value);
+      } else if (option.type === 'STRING' && typeof value !== 'string') {
+        value = String(value);
+      }
+
+      return {
+        ...options,
+        [option.name]: value,
+      };
+    }, {});
+  }
+
+  updateLocalBreadcrumb(prefix: string | null) {
+    if (!prefix) {
+      this.breadcrumb$.next([]);
+      this.setPreferenceValue('localDirectory', '');
+      return;
+    }
+
+    if (prefix.endsWith('/')) {
+      prefix = prefix.substring(0, prefix.length - 1);
+    }
+
+    const items: BreadcrumbItem[] = [];
+    const parts = prefix.split('/');
+    for (let i = 0; i < parts.length; i++) {
+      items.push({
+        name: parts[i],
+        prefix: parts.slice(0, i + 1).join('/'),
+      });
+    }
+    this.breadcrumb$.next(items);
+    this.setPreferenceValue('localDirectory', prefix);
+  }
+
+  // Called when breadcrumb is selected
+  changeLocalPrefix(prefix: string) {
+    if (prefix) {
+      prefix = prefix + '/';
+    }
+    this.objectSelector.changePrefix(prefix);
+  }
+
+  // Called when a folder is selected in the object selector
+  updateRemoteBreadcrumb(prefix: string | null) {
+    if (!prefix) {
+      this.remoteBreadcrumb$.next([]);
+      this.getFileList(this.form.value['remoteEntity'], '');
+      return;
+    }
+
+    // Remove trailing slash
+    const strippedPrefix = prefix.endsWith('/') ? prefix.slice(0, -1) : prefix;
+
+    const items: BreadcrumbItem[] = [];
+    const parts = strippedPrefix.split('/');
+    for (let i = 0; i < parts.length; i++) {
+      items.push({
+        name: parts[i],
+        prefix: parts.slice(0, i + 1).join('/'),
+      });
+    }
+    this.remoteBreadcrumb$.next(items);
+
+    // Get most recent folder content and update object selector.
+    this.getFileList(this.form.value['remoteEntity'], prefix);
+  }
+
+  // Called when breadcrumb is selected
+  changeRemotePrefix(prefix: string) {
+    if (prefix) {
+      prefix = prefix + '/';
+    }
+    this.remoteSelector.changePrefix(prefix);
+  }
+
+  clearSelection(
+    event: MouseEvent,
+    selector: ObjectSelector | RemoteFileSelectorComponent,
+  ) {
+    if (event.currentTarget === event.target) {
+      selector.clearSelection();
+    }
+  }
+
+  onActionRequest(request: FileActionRequest) {
+    this.snackBar.open(`Running '${request.action.label}' ...`, undefined, {
+      horizontalPosition: 'end',
+    });
+    const remoteEntity = this.form.value['remoteEntity'];
+    this.yamcs.yamcsClient
+      .runFileAction(this.yamcs.instance!, this.service.name, {
+        remoteEntity,
+        file: request.file,
+        action: request.action.id,
+      })
+      .then(() => {
+        this.snackBar.open(`'${request.action.label}' successful`, undefined, {
+          duration: 3000,
+          horizontalPosition: 'end',
+        });
+      })
+      .catch((err) => {
+        this.messageService.showError(err);
+        this.snackBar.open(`'${request.action.label}' failed`, undefined, {
+          duration: 3000,
+          horizontalPosition: 'end',
+        });
+      });
+  }
+
+  toggleBucketSize() {
+    this.setPreferenceValue('showBucketSize', !this.showBucketSize$.value);
+  }
+
+  private addPreference$<Type>(key: string, defaultValue: Type) {
+    return this.preferenceStore.addPreference$(
+      this.prefPrefix + key,
+      defaultValue,
+    );
+  }
+
+  private setPreferenceValue<Type>(key: string, value: Type) {
+    this.preferenceStore.setValue(this.prefPrefix + key, value);
+  }
+
+  ngOnDestroy() {
+    this.fileListSubscription?.cancel();
+  }
+}
+
+interface BreadcrumbItem {
+  name: string;
+  prefix: string;
+}
+```

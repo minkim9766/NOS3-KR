@@ -3,7 +3,7 @@
 
 **경로:** `fsw/apps/io_lib/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,20 +11,76 @@
 analysis/index
 docs/index
 fsw/index
-file--.git
-file--.gitignore
-file--CMakeLists.txt
-file--IO_LIB_NOSA.pdf
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/io_lib/analysis/`](analysis/index) — 폴더
-- [`fsw/apps/io_lib/docs/`](docs/index) — 폴더
-- [`fsw/apps/io_lib/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/io_lib/.git`](file--.git) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/io_lib/IO_LIB_NOSA.pdf`](file--IO_LIB_NOSA.pdf) — 바이너리 (경로만)
-- [`fsw/apps/io_lib/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `.git`
+
+**경로:** `fsw/apps/io_lib/.git`
+
+
+```text
+gitdir: ../../../.git/modules/fsw/apps/io_lib
+```
+
+### `.gitignore`
+
+**경로:** `fsw/apps/io_lib/.gitignore`
+
+
+```text
+.cproject
+.project
+.settings/
+
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/io_lib/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(CFS_IO_LIB C)
+
+include_directories(fsw/public_inc)
+
+aux_source_directory(fsw/src APP_SRC_FILES)
+aux_source_directory(fsw/src/formats APP_SRC_FILES)
+aux_source_directory(fsw/src/services APP_SRC_FILES)
+
+include_directories(${MISSION_SOURCE_DIR}/../components/cryptolib/include)
+
+# Create the app module
+add_cfe_app(io_lib ${APP_SRC_FILES})
+```
+
+### `IO_LIB_NOSA.pdf`
+
+**경로:** `fsw/apps/io_lib/IO_LIB_NOSA.pdf`
+
+바이너리 파일입니다. 본문은 생략했습니다.
+
+### `README.md`
+
+**경로:** `fsw/apps/io_lib/README.md`
+
+
+```markdown
+# Input/Output Library
+
+NASA core Flight System Input/Output Library
+
+## Description
+
+The I/O Library (IO_LIB) is a collection of protocol libraries to be called by the CI/TO application custom implementations.
+
+The cFS is a platform and project independent reusable software framework and set of reusable applications developed by NASA Goddard Space Flight Center. This framework is used as the basis for the flight software for satellite data systems and instruments, but can be used on other embedded systems. More information on the cFS can be found at http://cfs.gsfc.nasa.gov
+
+## License
+
+This software is licensed under the NASA Open Source Agreement. 
+http://ti.arc.nasa.gov/opensource/nosa
+```

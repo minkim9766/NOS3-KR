@@ -3,16 +3,412 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `link.component.html`
 
-file--link.component.html
-file--link.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link/link.component.html`
+
+
+```html
+@if (link$ | async; as link) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        <ya-page-icon-button
+          routerLink=".."
+          [queryParams]="{ c: yamcs.context }"
+          icon="arrow_back" />
+        Links / {{ link.name }}
+      </ng-template>
+
+      @if (mayControlLinks()) {
+        <ya-page-button [disabled]="!link.disabled" (clicked)="enableLink(link.name)" icon="link">
+          Enable
+        </ya-page-button>
+      }
+      @if (mayControlLinks()) {
+        <ya-page-button
+          [disabled]="link.disabled"
+          (clicked)="disableLink(link.name)"
+          icon="link_off">
+          Disable
+        </ya-page-button>
+      }
+      @if (mayControlLinks()) {
+        <ya-page-button [matMenuTriggerFor]="moreActions" dropdown="true">More</ya-page-button>
+      }
+      <mat-menu #moreActions class="ya-menu" yPosition="below" [overlapTrigger]="false">
+        <ng-template matMenuContent>
+          <button mat-menu-item (click)="resetCounters(link.name)">Reset counters</button>
+          @if (link.actions) {
+            <mat-divider />
+            @for (action of link.actions; track action) {
+              <button
+                mat-menu-item
+                [disabled]="!action.enabled"
+                (click)="runAction(link.name, action)">
+                @if (action.style === "CHECK_BOX") {
+                  <mat-icon [style.visibility]="action.checked ? 'visible' : 'hidden'">
+                    check
+                  </mat-icon>
+                }
+                {{ action.label }}
+              </button>
+            }
+          }
+        </ng-template>
+      </mat-menu>
+    </ya-instance-toolbar>
+
+    <div class="form-content">
+      <dl class="dl-horizontal" style="margin-top: 0">
+        <dt>Type</dt>
+        <dd>{{ link.type }}</dd>
+        <dt>Status</dt>
+        <dd style="display: flex; align-items: center">
+          <app-link-status [link]="link" />
+          &nbsp;
+          {{ link.status }}
+        </dd>
+        <dt>In count</dt>
+        <dd>{{ link.dataInCount | number }}</dd>
+        <dt>Out count</dt>
+        <dd>{{ link.dataOutCount | number }}</dd>
+        <dt>Detail</dt>
+        <dd>{{ link.detailedStatus || "-" }}</dd>
+      </dl>
+      @if (link.extra) {
+        <div class="section-divider">
+          <mat-divider />
+        </div>
+        <dl class="dl-horizontal">
+          @for (entry of link.extra | keyvalue; track entry) {
+            <dt>{{ entry.key }}</dt>
+            <dd>
+              @if (getEntriesForValue(entry.value); as subentries) {
+                @if (subentries.length) {
+                  @for (subentry of subentries; track subentry) {
+                    {{ subentry || "-" }}
+                    <br />
+                  }
+                }
+                @if (!subentries.length) {
+                  -
+                }
+              }
+            </dd>
+          }
+        </dl>
+      }
+      @if (link.parameters) {
+        <div class="section-divider">
+          <mat-divider />
+        </div>
+        <h4>System parameters</h4>
+        @for (parameter of link.parameters; track parameter) {
+          <mat-icon class="icon12" style="vertical-align: middle">toll</mat-icon>
+          <a
+            [routerLink]="'/telemetry/parameters' + parameter"
+            [queryParams]="{ c: yamcs.context }"
+            class="ya-link"
+            style="margin-left: 0.5em">
+            {{ parameter }}
+          </a>
+          <br />
+        }
+      }
+      @if (cop1Config$ | async; as config) {
+        @if (cop1Status$ | async; as status) {
+          <div class="section-divider">
+            <mat-divider />
+          </div>
+          <h4>
+            COP-1
+            @if (mayControlLinks()) {
+              <div style="float: right">
+                @if (!status.cop1Active) {
+                  <ya-button icon="adjust" (click)="openInitiateCop1Dialog(link.name)">
+                    Initiate AD
+                  </ya-button>
+                }
+                @if (status.state === "SUSPENDED") {
+                  <ya-button icon="redo" (click)="resumeCop1(link.name)">Resume AD</ya-button>
+                }
+                @if (status.cop1Active) {
+                  <ya-button icon="not_interested" (click)="disableCop1(link.name)">
+                    Terminate AD
+                  </ya-button>
+                }
+              </div>
+            }
+          </h4>
+          <dl class="dl-horizontal">
+            <dt>
+              Service
+              <ya-help>
+                <p>
+                  COP-1 provides two service modes that determine how reliably frames are
+                  transmitted:
+                </p>
+                <table class="ya-data-table">
+                  <tr>
+                    <td width="1" style="white-space: nowrap">AD (Sequence-controlled)</td>
+                    <td>Sends Type-AD and Type-BC Transfer Frames.</td>
+                  </tr>
+                  <tr>
+                    <td width="1" style="white-space: nowrap">BD (Expedited)</td>
+                    <td>Sends Type-BD Transfer Frames. There are no retransmissions.</td>
+                  </tr>
+                </table>
+              </ya-help>
+            </dt>
+            <dd>
+              @if (status.cop1Active) {
+                AD (Sequence-controlled service)
+              }
+              @if (!status.cop1Active) {
+                BD (Expedited service)
+              }
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>Wait queue</dt>
+            <dd>{{ status.waitQueueNumTC || 0 }} TCs</dd>
+            <dt>Enqueue TCs with bypass</dt>
+            <dd>
+              {{ !config.bdAbsolutePriority | nvl: "-" }}
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>TX state</dt>
+            <dd>{{ status.state || "-" }}</dd>
+            <dt>V(S)</dt>
+            <dd>{{ status.vS | nvl: "-" }}</dd>
+            <dt>Sent queue</dt>
+            <dd>{{ status.sentQueueNumFrames || 0 }} frames (limit: {{ config.windowWidth }})</dd>
+            <dt>Out queue</dt>
+            <dd>{{ status.outQueueNumFrames || 0 }}</dd>
+            <dt>Last frame TX attempts</dt>
+            <dd>
+              {{ status.txCount | nvl: "-" }}
+              @if (status.txCount) {
+                of {{ config.txLimit }}
+              }
+            </dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>On TX timeout</dt>
+            <dd>{{ config.timeoutType || "-" }}</dd>
+            <dt>Retransmission delay</dt>
+            <dd>{{ config.t1 }} ms</dd>
+          </dl>
+          <h4>CLCW</h4>
+          <dl class="dl-horizontal" style="margin-top: 0">
+            <dt>Received</dt>
+            <dd>{{ (status.clcw?.receptionTime | datetime) || "-" }}</dd>
+            <dt>Lockout</dt>
+            <dd>
+              {{ status.clcw?.lockout | nvl: "-" }}
+            </dd>
+            <dt>Wait</dt>
+            <dd>
+              {{ status.clcw?.wait | nvl: "-" }}
+            </dd>
+            <dt>Retransmit</dt>
+            <dd>
+              {{ status.clcw?.retransmit | nvl: "-" }}
+            </dd>
+            <dt>N(R)</dt>
+            <dd>{{ status.clcw?.nR | nvl: "-" }}</dd>
+          </dl>
+          <dl class="dl-horizontal">
+            <dt>NN(R)</dt>
+            <dd>{{ status.nnR | nvl: "-" }}</dd>
+          </dl>
+        }
+      }
+    </div>
+  </ya-instance-page>
+}
 ```
 
-## 항목
+### `link.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link/link.component.html`](file--link.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link/link.component.ts`](file--link.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link/link.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import {
+  ActionInfo,
+  AuthService,
+  Cop1Config,
+  Cop1Status,
+  Cop1Subscription,
+  InitiateCop1Request,
+  Link,
+  LinkSubscription,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { InitiateCop1DialogComponent } from '../initiate-cop1-dialog/initiate-cop1-dialog.component';
+import { LinkStatusComponent } from '../link-status/link-status.component';
+import { LinkService } from '../shared/link.service';
+
+@Component({
+  templateUrl: './link.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LinkStatusComponent, WebappSdkModule],
+})
+export class LinkComponent implements OnDestroy {
+  link$ = new BehaviorSubject<Link | null>(null);
+  cop1Config$ = new BehaviorSubject<Cop1Config | null>(null);
+  cop1Status$ = new BehaviorSubject<Cop1Status | null>(null);
+
+  private linkSubscription: LinkSubscription;
+  private cop1Subscription: Cop1Subscription;
+
+  constructor(
+    private title: Title,
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private authService: AuthService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    private linkService: LinkService,
+  ) {
+    route.paramMap.subscribe((params) => {
+      const linkName = params.get('link')!;
+      this.changeLink(linkName);
+    });
+
+    this.linkSubscription = this.yamcs.yamcsClient.createLinkSubscription(
+      {
+        instance: this.yamcs.instance!,
+      },
+      (evt) => {
+        for (const linkInfo of evt.links || []) {
+          const link = this.link$.value;
+          if (link && link.name === linkInfo.name) {
+            this.link$.next(linkInfo);
+          }
+        }
+      },
+    );
+  }
+
+  private changeLink(name: string) {
+    this.cop1Subscription?.cancel();
+
+    this.cop1Status$.next(null);
+    this.cop1Config$.next(null);
+
+    this.yamcs.yamcsClient.getLink(this.yamcs.instance!, name).then((link) => {
+      this.link$.next(link);
+      this.title.setTitle(name);
+      if (link.type.indexOf('Cop1Tc') !== -1) {
+        this.yamcs.yamcsClient
+          .getCop1Config(this.yamcs.instance!, name)
+          .then((cop1Config) => {
+            this.cop1Config$.next(cop1Config);
+          });
+
+        this.cop1Subscription = this.yamcs.yamcsClient.createCop1Subscription(
+          {
+            instance: link.instance,
+            link: name,
+          },
+          (status) => {
+            this.cop1Status$.next(status);
+          },
+        );
+      }
+    });
+  }
+
+  openInitiateCop1Dialog(link: string) {
+    const dialogRef = this.dialog.open(InitiateCop1DialogComponent, {
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.initiateCop1(link, result);
+      }
+    });
+  }
+
+  private initiateCop1(link: string, options: InitiateCop1Request) {
+    this.yamcs.yamcsClient
+      .initiateCop1(this.yamcs.instance!, link, options)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  disableCop1(link: string) {
+    this.yamcs.yamcsClient
+      .disableCop1(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  resumeCop1(link: string) {
+    this.yamcs.yamcsClient
+      .resumeCop1(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  mayControlLinks() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlLinks');
+  }
+
+  enableLink(link: string) {
+    this.yamcs.yamcsClient
+      .enableLink(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  disableLink(link: string) {
+    this.yamcs.yamcsClient
+      .disableLink(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  resetCounters(link: string) {
+    this.yamcs.yamcsClient
+      .resetLinkCounters(this.yamcs.instance!, link)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  runAction(link: string, action: ActionInfo) {
+    this.linkService.runAction(link, action);
+  }
+
+  getEntriesForValue(value: any) {
+    if (value === undefined || value === null) {
+      return [];
+    }
+    const entries: string[] = [];
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        if (typeof value[i] === 'object') {
+          entries.push('' + JSON.stringify(value[i]));
+        } else {
+          entries.push('' + value[i]);
+        }
+      }
+    } else {
+      entries.push('' + value);
+    }
+    return entries;
+  }
+
+  ngOnDestroy() {
+    this.linkSubscription?.cancel();
+    this.cop1Subscription?.cancel();
+  }
+}
+```

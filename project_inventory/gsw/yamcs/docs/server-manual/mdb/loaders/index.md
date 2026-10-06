@@ -3,20 +3,251 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 sheet/index
-file--emptyNode.rst
-file--index.rst
-file--xtce.rst
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/sheet/`](sheet/index) — 폴더
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/emptyNode.rst`](file--emptyNode.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/mdb/loaders/xtce.rst`](file--xtce.rst) — UTF-8 텍스트 파일 본문 포함
+### `emptyNode.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/emptyNode.rst`
+
+
+```rst
+Empty Node
+==========
+
+This loader allows to create an empty node in the space system hierarchy with a given name.
+
+For example this configuration will create two parallel nodes ``/N1`` and ``/N2`` and underneath each of them, load the xls files of the simulator.
+
+.. code-block:: yaml
+
+    mdb:
+      - type: "emptyNode"
+        spec: "N1"
+        subLoaders:
+          - type: "sheet"
+            spec: "mdb/simulator-ccsds.xls"
+            subLoaders:
+              - type: "sheet"
+                spec: "mdb/landing.xls"
+  
+      - type: "emptyNode"
+        spec: "N2"
+        subLoaders:
+          - type: "sheet"
+            spec: "mdb/simulator-ccsds.xls"
+            subLoaders:
+              - type: "sheet"
+                spec: "mdb/landing.xls"
+```
+
+### `index.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/index.rst`
+
+
+```rst
+Loading TM/TC Definitions
+=========================
+
+.. toctree::
+    :maxdepth: 1
+
+    xtce
+    sheet/index
+    emptyNode
+
+Yamcs constructs its Mission Database on server startup from a configurable tree of *loaders*. Each loader is responsible for a particular space system, and optionally its sub-space systems. It is not possible for one loader to add to adjacent space systems.
+
+The tree of space systems (also called a *loader tree*) is typically defined in the instance configuration file :file:`etc/yamcs.{instance}.yaml` under the ``mdb`` section:
+
+.. code-block:: yaml
+    :caption: :file:`etc/yamcs.{instance}.yaml`
+
+    mdb:
+      - type: "sheet"
+        spec: "mdb/simulator-ccsds.xls"
+        subLoaders:
+          - type: "sheet"
+            spec: "mdb/simulator-tmtc.xls"
+
+Alternatively, you can also define arbitrarily named configurations in a configuration file :file:`etc/mdb.yaml`, and then reference the configuration by that name from the instance configuration file using the key ``mdbSpec``:
+
+
+.. code-block:: yaml
+    :caption: :file:`etc/mdb.yaml`
+
+    simulator:
+      - type: "sheet"
+        spec: "mdb/simulator-ccsds.xls"
+        subLoaders:
+          - type: "sheet"
+            spec: "mdb/simulator-tmtc.xls"
+
+.. code-block:: yaml
+    :caption: :file:`etc/yamcs.{instance}.yaml`
+
+    mdbSpec: simulator
+
+
+Multiple different types of loaders may be combined in the loader tree to assemble the full mission database. Each loader can load definitions from any source as long as the definitions can be mapped into Yamcs internal database format, which is based on the XTCE constructs.
+
+For start-up performance, the database is cached serialized on disk in the cache directory. The cached database is composed of two files, one storing the data itself and the other one storing the time when the cache file has been created. These files should be considered Yamcs internal and are subject to change.
+
+A database loader (for example the XTCE loader) is able to load multiple space systems which will all be added as siblings. In this case, the subLoaders option cannot be anymore specified (because otherwise it would not be clear to which of the loaded space systems the children will be added).
+
+
+.. note::
+
+    Yamcs does not persist TM/TC definitions and therefore does not have any "import" functionality.
+```
+
+### `xtce.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/mdb/loaders/xtce.rst`
+
+
+```rst
+XTCE Loader
+===========
+
+This loader reads TM/TC definitions from an XML file compliant with the XTCE exchange format coordinated by OMG. The Yamcs database is very close to XTCE, which makes this mapping relatively straightforward. For more information about XTCE, see http://www.xtce.org.
+
+
+
+Configuration
+-------------
+
+The loader is configured in :file:`etc/mdb.yaml` or in the instance configuration by specifying the type as ``xtce``, and providing the location of the XML file in the ``file`` attribute.
+
+.. code-block:: yaml
+
+    - type: "xtce"
+      args:
+        file: "BogusSAT.xml"
+        autoTmPartitions: true
+        #fileset: ["a*.xml", "b.xml"]
+        
+**Configuration Options**
+
+file (string)
+   The filename to be loaded. Either this or the ``fileset`` attribute are required
+
+fileset (string or list of strings)
+   Can be used to load multiple XML files. A glob pattern can be used to match multiple files and/or the files can be specified in the list. The ``**`` for matching directories recursively is not supported.
+
+   If the ``fileset`` option is used, the ``subLoader`` cannot be used to load child subsystems. This is because it is not possible to specify which subsystem will be the parent of the child.
+
+autoTmPartitions (boolean)
+   If true, Yamcs will automatically mark to be used as archive partitions all containers which do not have a parent.
+
+   If this option is false, the containers can still be manually marked by using the  ancillary data property ``UseAsArchivingPartition``:
+
+   .. code-block:: xml
+
+        <SequenceContainer>
+          ....
+          <AncillaryDataSet>
+              <AncillaryData name="Yamcs">UseAsArchivingPartition</AncillaryData>
+           </AncillaryDataSet>
+        </SequenceContainer>
+
+   Default: true
+
+
+
+Compatibility
+-------------
+
+Yamcs does not seek full compliance with XTCE. It only reads the parts that relate to concepts in its internal Mission Database. This chapter presents an overview of the unsupported features and details where the implementation differs from the standard.
+
+Note that when reading the XML XTCE file Yamcs is on purpose tolerant, it ignores the tags it does not know and it also strives to be backward compatible with XTCE 1.0 and 1.1. Thus the fact that an XML file loads in Yamcs does not mean that is 100% valid. Please use a generic XML validation tool or the `xtcetools <https://gitlab.com/dovereem/xtcetools>`_ project to validate your XML file.
+
+The following concepts are *not supported*:
+
+* ``Stream`` - data is assumed to be injected into Yamcs as packets, any stream processing has to be done as part of the data link definition and is not based on XTCE.
+* ``Message``
+* ``ParameterSegmentRefEntry``
+* ``ContainerSegmentRefEntry``
+* ``DiscreteLookupList``
+* ``ErrorDetectCorrectType``. Note that error detection/correction is implemented directly into the Yamcs data links.
+* ``ContextSignificanceList``
+* ``ParameterToSetList``
+* ``ParameterToSuspendAlarmsOnSet``
+* ``RestrictionCriteria/NextContainer``
+
+The other elements are supported one way or another, exceptions or changes from the specs are given in the sections below.
+
+
+.. rubric:: Header
+
+* Only the version and date are supported. ``AuthorSet`` and ``NoteSet`` are ignored.
+
+
+.. rubric:: Data Encodings
+
+* | changeThreshold
+  | Not supported.
+
+* | FromBinaryTransformAlgorithm
+  | In XTCE the ``FromBinaryTransformAlgorithm`` can be specified for the ``BinaryDataEncoding``. It is not clear how exactly that is supposed to work. In Yamcs the ``FromBinaryTransformAlgorithm`` can be specified on any ``XyzDataEncoding`` and is used to convert from binary to the raw value which is supposed to be of type Xyz.
+
+* | ToBinaryTransformAlgorithm
+  | not supported for any data encoding
+
+
+* | FloatDataEncoding
+  | Yamcs supports IEEE754_1985, MILSTD_1750A and STRING encoding. STRING is not part of XTCE - if used, a StringDataEncoding can be attached to the FloatDataEncoding and the string will be extracted according to the StringDataEncoding and then parsed into a float or double according to the sizeInBits of FloatDataEncoding. DEC, IBM and TI encoding are not supported.
+
+* | StringDataEncoding
+  | For variable size strings whose size is encoded in front of the string, Yamcs allows to specify only for command arguments sizeInBitsOfSizeTag = 0. This means that the value of the argument will be inserted without providing the information about its size. The receiver has to know how to derive the size. This has been implemented for compatibility with other systems (e.g. SCOS-2k) which allows this - however it is not allowed by XTCE which enforces sizeInBitsOfSizeTag > 0. 
+
+
+.. rubric:: Data Types
+
+* | ValidRangeSet
+  | Introduced in XTCE 1.2 for command arguments. Yamcs only supports one range in the set.
+
+* | BooleanDataType
+  | In XTCE, each ``BooleanDataType`` has a string representation. In Yamcs the value is mapped to a org.yacms.parameter.BooleanValue or the protobuf equivalent that is a wrapper for a boolean (either true or false in all sane programming languages). The string value is nevertheless supported in comparisons and math algorithms but they are converted internally to the boolean value. If you want to get to the string representation from the client, use an ``EnumeratedParameterType``.
+
+* | RelativeTimeDataType
+  | Not supported.
+
+
+.. rubric:: Monitoring
+
+* | ParameterSetType
+  | ``parameterRef`` is not supported. According to XTCE doc this is "Used to include a Parameter defined in another sub-system in this sub-system". It is not clear what it means "to include". Parameters from other space systems can be referenced using a fully qualified name or a relative name.
+
+* | ParameterProperties
+  | ``PhysicalAddressSet``, ``SystemName`` and ``TimeAssociation`` are not supported.
+
+* | Containers
+  | ``BinaryEncoding`` not supported in the container definitions.
+
+* | StringParameterType
+  | Alarms are not supported.
+
+
+.. rubric:: Commanding
+
+* Arrays are not supported for commands (they are for telemetry).
+* | ArgumentRefEntry
+  | ``IncludeCondition`` and ``RepeatEntry`` are not supported.
+
+* | Multiple CompleteVerifiers can be declared but the success of any of them will make the command complete successfully; XTCE specifies that all of them  have to succeed for the command to be declared successful. 
+  | Note that when a command is completed (with success or failure), all the pending verifies are canceled. This means that if multiple CompleteVerifiers are declared, the first one finishing will decide the outcome of the command.
+
+
+.. rubric:: Algorithms
+
+* ``OnContainerUpdateTrigger`` is not supported.
+```

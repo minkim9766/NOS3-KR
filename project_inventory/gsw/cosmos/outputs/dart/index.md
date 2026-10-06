@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/outputs/dart/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ data/index
 logs/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/outputs/dart/data/`](data/index) — 폴더
-- [`gsw/cosmos/outputs/dart/logs/`](logs/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

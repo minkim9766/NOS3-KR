@@ -3,16 +3,69 @@
 
 **경로:** `components/mgr/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `mgr_msgids.h`
 
-file--mgr_msgids.h
-file--mgr_platform_cfg.h
+**경로:** `components/mgr/fsw/cfs/platform_inc/mgr_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: mgr_msgids.h  $
+**
+** Purpose:
+**  Define MGR Message IDs
+**
+*************************************************************************/
+#ifndef _MGR_MSGIDS_H_
+#define _MGR_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID)
+*/
+#define MGR_CMD_MID 0x18F8
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define MGR_REQ_HK_MID 0x18F9
+
+/*
+** CCSDS V1 Telemetry Message IDs
+*/
+#define MGR_HK_TLM_MID 0x08F8
+
+#endif /* _MGR_MSGIDS_H_ */
 ```
 
-## 항목
+### `mgr_platform_cfg.h`
 
-- [`components/mgr/fsw/cfs/platform_inc/mgr_msgids.h`](file--mgr_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/mgr/fsw/cfs/platform_inc/mgr_platform_cfg.h`](file--mgr_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/mgr/fsw/cfs/platform_inc/mgr_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: mgr_platform_cfg.h  $
+**
+** Purpose:
+**  Define mgr Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _MGR_PLATFORM_CFG_H_
+#define _MGR_PLATFORM_CFG_H_
+
+/*
+** Default MGR Configuration
+*/
+#ifndef MGR_CFG
+#define MGR_CFG_REBOOT_TIME_TIC_OFFSET 0
+#define MGR_CFG_FILE_PATH              "/data/mgr.bin"
+#endif
+
+#endif /* _MGR_PLATFORM_CFG_H_ */
+```

@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -16,17 +16,19 @@ parameter-table-viewer-controls/index
 script-viewer/index
 script-viewer-controls/index
 text-viewer/index
-file--Viewer.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/image-viewer/`](image-viewer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer/`](opi-display-viewer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/opi-display-viewer-controls/`](opi-display-viewer-controls/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer/`](parameter-table-viewer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/parameter-table-viewer-controls/`](parameter-table-viewer-controls/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer/`](script-viewer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/script-viewer-controls/`](script-viewer-controls/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/text-viewer/`](text-viewer/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/Viewer.ts`](file--Viewer.ts) — UTF-8 텍스트 파일 본문 포함
+### `Viewer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/telemetry/displays/viewers/Viewer.ts`
+
+
+```typescript
+export interface Viewer {
+  init(objectName: string): Promise<any>;
+
+  hasPendingChanges(): boolean;
+}
+```

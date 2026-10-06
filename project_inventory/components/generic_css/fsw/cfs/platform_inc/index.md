@@ -3,16 +3,77 @@
 
 **경로:** `components/generic_css/fsw/cfs/platform_inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `generic_css_msgids.h`
 
-file--generic_css_msgids.h
-file--generic_css_platform_cfg.h
+**경로:** `components/generic_css/fsw/cfs/platform_inc/generic_css_msgids.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_css_msgids.h  $
+**
+** Purpose:
+**  Define GENERIC_CSS Message IDs
+**
+*************************************************************************/
+#ifndef _GENERIC_CSS_MSGIDS_H_
+#define _GENERIC_CSS_MSGIDS_H_
+
+/*
+** CCSDS V1 Command Message IDs (MID) must be 0x18xx
+*/
+#define GENERIC_CSS_CMD_MID 0x1910
+
+/*
+** This MID is for commands telling the app to publish its telemetry message
+*/
+#define GENERIC_CSS_REQ_HK_MID 0x1911
+
+/*
+** CCSDS V1 Telemetry Message IDs must be 0x08xx
+*/
+#define GENERIC_CSS_HK_TLM_MID     0x0910
+#define GENERIC_CSS_DEVICE_TLM_MID 0x0911
+
+#endif /* _GENERIC_CSS_MSGIDS_H_ */
 ```
 
-## 항목
+### `generic_css_platform_cfg.h`
 
-- [`components/generic_css/fsw/cfs/platform_inc/generic_css_msgids.h`](file--generic_css_msgids.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_css/fsw/cfs/platform_inc/generic_css_platform_cfg.h`](file--generic_css_platform_cfg.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_css/fsw/cfs/platform_inc/generic_css_platform_cfg.h`
+
+
+```c
+/************************************************************************
+** File:
+**   $Id: generic_css_platform_cfg.h  $
+**
+** Purpose:
+**  Define generic_css Platform Configuration Parameters
+**
+** Notes:
+**
+*************************************************************************/
+#ifndef _GENERIC_CSS_PLATFORM_CFG_H_
+#define _GENERIC_CSS_PLATFORM_CFG_H_
+
+/*
+** Default GENERIC_CSS Configuration
+*/
+#ifndef GENERIC_CSS_CFG
+/* Notes:
+**   NOS3 uart requires matching handle and bus number
+*/
+#define GENERIC_CSS_CFG_STRING      "i2c_2"
+#define GENERIC_CSS_CFG_HANDLE      2
+#define GENERIC_CSS_CFG_BAUDRATE_HZ 1000
+#define GENERIC_CSS_CFG_MS_TIMEOUT  250 /* Max 255 */
+/* Note: Debug flag disabled (commented out) by default */
+//#define GENERIC_CSS_CFG_DEBUG
+#endif
+
+#endif /* _GENERIC_CSS_PLATFORM_CFG_H_ */
+```

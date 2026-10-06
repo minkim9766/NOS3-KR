@@ -3,7 +3,7 @@
 
 **경로:** `components/novatel_oem615/fsw/fprime/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,17 @@
 mission_inc/index
 novatel_src/index
 platform_inc/index
-file--library.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/novatel_oem615/fsw/fprime/mission_inc/`](mission_inc/index) — 폴더
-- [`components/novatel_oem615/fsw/fprime/novatel_src/`](novatel_src/index) — 폴더
-- [`components/novatel_oem615/fsw/fprime/platform_inc/`](platform_inc/index) — 폴더
-- [`components/novatel_oem615/fsw/fprime/library.cmake`](file--library.cmake) — UTF-8 텍스트 파일 본문 포함
+### `library.cmake`
+
+**경로:** `components/novatel_oem615/fsw/fprime/library.cmake`
+
+
+```cmake
+add_fprime_subdirectory(
+    "${CMAKE_CURRENT_LIST_DIR}/novatel_src"
+)
+```

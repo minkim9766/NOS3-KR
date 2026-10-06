@@ -3,18 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `stack-file-page-tabs.component.css`
 
-file--stack-file-page-tabs.component.css
-file--stack-file-page-tabs.component.html
-file--stack-file-page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.css`
+
+
+```css
+.mat-mdc-tab-link {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
 ```
 
-## 항목
+### `stack-file-page-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.css`](file--stack-file-page-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.html`](file--stack-file-page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.ts`](file--stack-file-page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    [routerLink]="'/procedures/stacks/files/' + objectName()"
+    routerLinkActive
+    [routerLinkActiveOptions]="{ exact: true }"
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Steps
+  </a>
+  <a
+    [routerLink]="'/procedures/stacks/files/' + objectName() + '/-/log'"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Log
+  </a>
+  <a
+    [routerLink]="'/procedures/stacks/files/' + objectName() + '/-/settings'"
+    routerLinkActive
+    #rlc="routerLinkActive"
+    [class.active]="rlc.isActive"
+    [queryParams]="{ c: yamcs.context }">
+    Settings
+  </a>
+
+  <ng-container actions><ng-content /></ng-container>
+</ya-page-tabs>
+```
+
+### `stack-file-page-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/procedures/run-stack/stack-file-page-tabs/stack-file-page-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-stack-file-page-tabs',
+  templateUrl: './stack-file-page-tabs.component.html',
+  styleUrl: './stack-file-page-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class StackFilePageTabsComponent {
+  objectName = input.required<string>();
+
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

@@ -3,32 +3,723 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--check.xml
-file--CMakeLists.txt
-file--Commands.fppi
-file--Events.fppi
-file--SignalGen.cpp
-file--SignalGen.fpp
-file--SignalGen.hpp
-file--Telemetry.fppi
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/check.xml`](file--check.xml) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Commands.fppi`](file--Commands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Events.fppi`](file--Events.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.cpp`](file--SignalGen.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.fpp`](file--SignalGen.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.hpp`](file--SignalGen.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Telemetry.fppi`](file--Telemetry.fppi) — UTF-8 텍스트 파일 본문 포함
+### `check.xml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/check.xml`
+
+
+```xml
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+add_compile_options(
+    -Wno-conversion
+    -Wno-double-promotion
+    -Wno-shadow
+)
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SignalGen.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/SignalGen.cpp"
+
+)
+set(HEADER_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SignalGen.hpp"
+)
+
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/SignalGen.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SignalGenTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SignalGenTestMain.cpp"
+)
+set(UT_HEADER_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/SignalGenTester.hpp"
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+```
+
+### `Commands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Commands.fppi`
+
+
+```text
+@ Signal Generator Settings
+async command Settings(
+                                  Frequency: U32
+                                  Amplitude: F32
+                                  Phase: F32
+                                  SigType: Ref.SignalType
+                                ) \
+  opcode 0x00
+
+@ Toggle Signal Generator On/Off.
+async command Toggle \
+  opcode 1
+
+@ Skip next sample
+async command Skip \
+  opcode 2
+
+enum DpReqType {
+    IMMEDIATE
+    ASYNC
+}
+
+
+@ Signal Generator Settings
+async command Dp(
+                   reqType: DpReqType
+                   records: U32
+                   $priority: U32
+                  ) \
+  opcode 3
+
+```
+
+### `Events.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Events.fppi`
+
+
+```text
+@ Signal Generator Settings Changed
+event SettingsChanged(
+                                 Frequency: U32
+                                 Amplitude: F32
+                                 Phase: F32
+                                 SignalType: Ref.SignalType
+                               ) \
+  severity activity low \
+  id 0 \
+  format "Set Frequency(Hz) {}, Amplitude {f}, Phase {f}, Signal Type {}"
+
+event DpStarted(
+                                 records: U32
+                               ) \
+  severity activity low \
+  id 1 \
+  format "Writing {} DP records"
+
+event DpComplete(
+                                 records: U32
+                                 bytes: U32
+                               ) \
+  severity activity low \
+  id 2 \
+  format "Writing {} DP records {} bytes total"
+
+event DpRecordFull(
+                                 records: U32
+                                 bytes: U32
+                               ) \
+  severity warning low \
+  id 3 \
+  format "DP container full with {} records and {} bytes. Closing DP."
+
+event DpsNotConnected \
+  severity warning high \
+  id 4 \
+  format "DP Ports not connected!"
+
+event DpMemoryFail \
+  severity warning high \
+  id 5 \
+  format "Failed to acquire a DP buffer"
+
+event InSufficientDpRecords \
+  severity warning high \
+  id 6 \
+  format "Need to request at least one record"
+
+event DpMemRequested(
+                                 $size: U32
+                               ) \
+  severity activity low \
+  id 7 \
+  format "Requesting {} bytes for DP"
+
+event DpMemReceived(
+                                 $size: U32
+                               ) \
+  severity activity low \
+  id 8 \
+  format "Received {} bytes for DP"
+```
+
+### `SignalGen.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  SequenceFileLoader.cpp
+// \author bocchino
+// \brief  cpp file for SequenceFileLoader component implementation class
+//
+// \copyright
+// Copyright (C) 2009-2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Fw/Types/Assert.hpp>
+#include <Ref/SignalGen/SignalGen.hpp>
+#include <cmath>
+#include <cstdlib>
+
+// TKC - don't know why it's undefined in VxWorks
+#ifdef TGT_OS_TYPE_VXWORKS
+#define M_PI (22.0/7.0)
+#endif
+
+namespace Ref {
+
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    SignalGen ::
+        SignalGen(const char* name) :
+        SignalGenComponentBase(name),
+        sampleFrequency(25),
+        signalFrequency(1),
+        signalAmplitude(0.0f),
+        signalPhase(0.0f),
+        ticks(0),
+        sigType(SignalType::SINE),
+        sigHistory(),
+        sigPairHistory(),
+        running(false),
+        skipOne(false),
+        m_dpInProgress(false),
+        m_numDps(0),
+        m_currDp(0),
+        m_dpPriority(0)
+    {}
+
+
+    SignalGen :: ~SignalGen() { }
+
+    // ----------------------------------------------------------------------
+    // Handler implementations
+    // ----------------------------------------------------------------------
+
+    F32 SignalGen::generateSample(U32 ticks) {
+        F32 val = 0.0f;
+        if (this->skipOne) {
+            return val;
+        }
+        // Samples per period
+        F32 samplesPerPeriod = static_cast<F32>(this->sampleFrequency) / static_cast<F32>(this->signalFrequency);
+        U32 halfSamplesPerPeriod = samplesPerPeriod / 2;
+        /* Signals courtesy of the open source Aquila DSP Library */
+        switch (this->sigType.e) {
+        case SignalType::TRIANGLE:
+        {
+            F32 m = this->signalAmplitude / static_cast<F32>(halfSamplesPerPeriod);
+            val = m * static_cast<F32>(ticks % halfSamplesPerPeriod);
+            break;
+        }
+        case SignalType::SINE:
+        {
+            F32 normalizedFrequency = 1.0f / samplesPerPeriod;
+            val = this->signalAmplitude * std::sin((2.0 * M_PI * normalizedFrequency *
+                static_cast<F32>(ticks)) + (this->signalPhase * 2.0 * M_PI));
+            break;
+        }
+        case SignalType::SQUARE:
+        {
+            val = this->signalAmplitude * ((ticks % static_cast<U32>(samplesPerPeriod) < halfSamplesPerPeriod) ? 1.0f : -1.0f);
+            break;
+        }
+        case SignalType::NOISE:
+        {
+            val = this->signalAmplitude * (std::rand() / static_cast<double>(RAND_MAX));
+            break;
+        }
+        default:
+            FW_ASSERT(0); // Should never happen
+        }
+        return val;
+    }
+
+    void SignalGen::schedIn_handler(
+        FwIndexType portNum, /*!< The port number*/
+        U32 context /*!< The call order*/
+    )
+    {
+        F32 value = 0.0f;
+        // This is a queued component, so it must intentionally run the dispatch of commands and queue processing on this
+        // synchronous scheduled call
+        this->doDispatch();
+
+        // This short-circuits when the signal generator is not running
+        if (not this->running) {
+            return;
+        }
+        // Allows for skipping a single reading of the signal
+        if (not this->skipOne) {
+            value = this->generateSample(this->ticks);
+        }
+        this->skipOne = false;
+
+        // Build our new types
+        SignalPair pair = SignalPair(this->ticks, value);
+
+        // Shift and assign our array types
+        for (U32 i = 1; i < this->sigHistory.SIZE; i++) {
+            this->sigHistory[i - 1] = this->sigHistory[i];
+            this->sigPairHistory[i - 1] = this->sigPairHistory[i];
+        }
+        this->sigHistory[this->sigHistory.SIZE - 1] = value;
+        this->sigPairHistory[this->sigPairHistory.SIZE - 1] = pair;
+
+        // Composite structure
+        SignalInfo sigInfo(this->sigType, this->sigHistory, this->sigPairHistory);
+
+        // Write all signals
+        this->tlmWrite_Type(this->sigType);
+        this->tlmWrite_Output(value);
+        this->tlmWrite_PairOutput(pair);
+        this->tlmWrite_History(this->sigHistory);
+        this->tlmWrite_PairHistory(this->sigPairHistory);
+        this->tlmWrite_Info(sigInfo);
+
+        // if a Data product is being generated, store a record
+        if (this->m_dpInProgress) {
+            Fw::SerializeStatus stat = this->m_dpContainer.serializeRecord_DataRecord(sigInfo);
+            this->m_currDp++;
+            this->m_dpBytes += SignalInfo::SERIALIZED_SIZE;
+            // check for full data product
+            if (Fw::SerializeStatus::FW_SERIALIZE_NO_ROOM_LEFT == stat) {
+                this->log_WARNING_LO_DpRecordFull(this->m_currDp,this->m_dpBytes);
+                this->cleanupAndSendDp();
+            } else if (this->m_currDp == this->m_numDps) { // if we reached the target number of DPs
+                this->log_ACTIVITY_LO_DpComplete(this->m_numDps,this->m_dpBytes);
+                this->cleanupAndSendDp();
+            }
+
+            this->tlmWrite_DpBytes(this->m_dpBytes);
+            this->tlmWrite_DpRecords(this->m_currDp);
+        }
+
+        this->ticks += 1;
+    }
+
+    void SignalGen::Settings_cmdHandler(
+        FwOpcodeType opCode, /*!< The opcode*/
+        U32 cmdSeq, /*!< The command sequence number*/
+        U32 Frequency,
+        F32 Amplitude,
+        F32 Phase,
+        Ref::SignalType SigType
+    )
+    {
+        this->signalFrequency = Frequency;
+        this->signalAmplitude = Amplitude;
+        this->signalPhase = Phase;
+        this->sigType = SigType;
+
+        // When the settings change, reset the history values
+        for (U32 i = 0; i < SignalSet::SIZE; i++) {
+            this->sigHistory[i] = 0.0f;
+        }
+        for (U32 i = 0; i < SignalPairSet::SIZE; i++) {
+            this->sigPairHistory[i].set_time(0.0f);
+            this->sigPairHistory[i].set_value(0.0f);
+        }
+        this->log_ACTIVITY_LO_SettingsChanged(this->signalFrequency, this->signalAmplitude, this->signalPhase, this->sigType);
+        this->tlmWrite_Type(SigType);
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    void SignalGen::Toggle_cmdHandler(
+        FwOpcodeType opCode, /*!< The opcode*/
+        U32 cmdSeq /*!< The command sequence number*/
+    )
+    {
+        this->running = !this->running;
+        this->ticks = 0;
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    void SignalGen::Skip_cmdHandler(
+        FwOpcodeType opCode, /*!< The opcode*/
+        U32 cmdSeq /*!< The command sequence number*/
+    )
+    {
+        this->skipOne = true;
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+
+    void SignalGen::Dp_cmdHandler(
+        FwOpcodeType opCode,
+        U32 cmdSeq,
+        Ref::SignalGen_DpReqType reqType,
+        U32 records,
+        U32 priority
+    )
+    {
+        // at least one record
+        if (0 == records) {
+            this->log_WARNING_HI_InSufficientDpRecords();
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::VALIDATION_ERROR);
+            return;
+        }
+
+        // make sure DPs are available
+        if (
+            not this->isConnected_productGetOut_OutputPort(0)
+        ) {
+            this->log_WARNING_HI_DpsNotConnected();
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+            return;
+        }
+
+        // get DP buffer. Use sync or async request depending on 
+        // requested type
+        FwSizeType dpSize = records*(SignalInfo::SERIALIZED_SIZE + sizeof(FwDpIdType));
+        this->m_numDps = records;
+        this->m_currDp = 0;
+        this->m_dpPriority = static_cast<FwDpPriorityType>(priority);
+        this->log_ACTIVITY_LO_DpMemRequested(dpSize);
+        if (Ref::SignalGen_DpReqType::IMMEDIATE ==  reqType) {
+            Fw::Success stat = this->dpGet_DataContainer(dpSize,this->m_dpContainer);
+            // make sure we got the memory we wanted
+            if (Fw::Success::FAILURE == stat) {
+                this->log_WARNING_HI_DpMemoryFail();
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+            } else {
+                this->m_dpInProgress = true;
+                this->log_ACTIVITY_LO_DpStarted(records);
+                this->log_ACTIVITY_LO_DpMemReceived(this->m_dpContainer.getBuffer().getSize());
+                this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+                // override priority with requested priority
+                this->m_dpContainer.setPriority(this->m_dpPriority);
+            }
+        } else if (Ref::SignalGen_DpReqType::ASYNC == reqType) {
+            this->dpRequest_DataContainer(dpSize);
+            this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+        } else {
+            // should never get here
+            FW_ASSERT(0,reqType.e);
+        }
+
+    }
+
+    void SignalGen::cleanupAndSendDp() {
+        this->dpSend(this->m_dpContainer);
+        this->m_dpInProgress = false;
+        this->m_dpBytes = 0;
+        this->m_numDps = 0;
+        this->m_currDp = 0;
+    }
+
+
+
+    // ----------------------------------------------------------------------
+    // Handler implementations for data products
+    // ----------------------------------------------------------------------
+
+    void SignalGen ::
+        dpRecv_DataContainer_handler(
+            DpContainer& container,
+            Fw::Success::T status
+        )
+    {
+
+        // Make sure we got the buffer we wanted or quit
+        if (Fw::Success::SUCCESS == status) {
+            this->m_dpContainer = container;
+            this->m_dpInProgress = true;
+            // set previously requested priority
+            this->m_dpContainer.setPriority(this->m_dpPriority);
+            this->log_ACTIVITY_LO_DpStarted(this->m_numDps);
+        } else {
+            this->log_WARNING_HI_DpMemoryFail();
+            // cleanup
+            this->m_dpInProgress = false;
+            this->m_dpBytes = 0;
+            this->m_numDps = 0;
+            this->m_currDp = 0;
+        }
+    }
+
+}
+```
+
+### `SignalGen.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.fpp`
+
+
+```fpp
+module Ref {
+
+  struct SignalInfo {
+    $type: Ref.SignalType
+    history: Ref.SignalSet
+    pairHistory: Ref.SignalPairSet
+  }
+
+  struct SignalPair {
+    $time: F32 format "{f}"
+    value: F32 format "{f}"
+  }
+
+  array SignalPairSet = [4] Ref.SignalPair
+
+  array SignalSet = [4] F32 format "{f}"
+
+  enum SignalType {
+    TRIANGLE
+    SQUARE
+    SINE
+    NOISE
+  }
+
+  @ A component for generating periodic signals
+  queued component SignalGen {
+
+    # ----------------------------------------------------------------------
+    # General Ports
+    # ----------------------------------------------------------------------
+
+    sync input port schedIn: Svc.Sched
+
+    # ----------------------------------------------------------------------
+    # Special ports
+    # ----------------------------------------------------------------------
+
+    @ Data product get port
+    product get port productGetOut
+
+    @ Data product request port
+    product request port productRequestOut
+
+    @ Data product receive port
+    async product recv port productRecvIn
+
+    @ Data product send port
+    product send port productSendOut
+
+    @ Time get port
+    time get port timeCaller
+
+    @ Signal generation data product record
+    product record DataRecord: SignalInfo id 0
+
+    @ Data product container
+    product container DataContainer id 0 default priority 10
+
+
+    # ----------------------------------------------------------------------
+    # Commands
+    # ----------------------------------------------------------------------
+
+    include "Commands.fppi"
+
+    # ----------------------------------------------------------------------
+    # Telemetry
+    # ----------------------------------------------------------------------
+
+    include "Telemetry.fppi"
+
+    # ----------------------------------------------------------------------
+    # Events
+    # ----------------------------------------------------------------------
+
+    include "Events.fppi"
+
+    # ----------------------------------------------------------------------
+    # Interfaces
+    # ----------------------------------------------------------------------
+    import Fw.Event
+    import Fw.Command
+    import Fw.Channel
+
+  }
+
+}
+```
+
+### `SignalGen.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/SignalGen.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  SignalGen.hpp
+// \author bocchino
+// \brief  hpp file for SequenceFileLoader component implementation class
+//
+// \copyright
+// Copyright (C) 2009-2016 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef Svc_SignalGen_HPP
+#define Svc_SignalGen_HPP
+
+#include <Fw/Types/ByteArray.hpp>
+#include <Fw/Types/ConstByteArray.hpp>
+#include <Os/File.hpp>
+#include <Os/ValidateFile.hpp>
+#include <Ref/SignalGen/SignalGenComponentAc.hpp>
+#include <cmath>
+
+namespace Ref {
+
+    class SignalGen final :
+        public SignalGenComponentBase
+    {
+
+    private:
+
+        void schedIn_handler(
+            FwIndexType portNum, /*!< The port number*/
+            U32 context /*!< The call order*/
+        ) final;
+
+        void Settings_cmdHandler(
+            FwOpcodeType opCode, /*!< The opcode*/
+            U32 cmdSeq, /*!< The command sequence number*/
+            U32 Frequency,
+            F32 Amplitude,
+            F32 Phase,
+            Ref::SignalType SigType
+        ) final;
+
+        void Toggle_cmdHandler(
+            FwOpcodeType opCode, /*!< The opcode*/
+            U32 cmdSeq /*!< The command sequence number*/
+        ) final;
+
+        void Skip_cmdHandler(
+            FwOpcodeType opCode, /*!< The opcode*/
+            U32 cmdSeq /*!< The command sequence number*/
+        ) final;
+
+        //! Handler implementation for command Dp
+        //!
+        //! Signal Generator Settings
+        void Dp_cmdHandler(
+           FwOpcodeType opCode, //!< The opcode
+           U32 cmdSeq, //!< The command sequence number
+           Ref::SignalGen_DpReqType reqType,
+           U32 records,
+           U32 priority
+       ) final;
+
+        // ----------------------------------------------------------------------
+        // Handler implementations for data products
+        // ----------------------------------------------------------------------
+
+        //! Receive a container of type DataContainer
+        void dpRecv_DataContainer_handler(
+            DpContainer& container, //!< The container
+            Fw::Success::T status //!< The container status
+        ) final;
+
+
+    public:
+        //! Construct a SignalGen
+        SignalGen(
+            const char* compName //!< The component name
+        );
+
+        //! Destroy a SignalGen
+        ~SignalGen();
+
+    private:
+        // Generate the next sample internal helper
+        F32 generateSample(U32 ticks);
+
+        // DP cleanup helper
+        void cleanupAndSendDp();
+
+        // Member variables
+        U32 sampleFrequency;
+        U32 signalFrequency;
+        F32 signalAmplitude;
+        F32 signalPhase;
+        U32 ticks;
+        SignalType sigType;
+        SignalSet sigHistory;
+        SignalPairSet sigPairHistory;
+        bool running;
+        bool skipOne;
+        DpContainer m_dpContainer;
+        bool m_dpInProgress; //!< flag to indicate data products are being generated
+        U32 m_numDps; //!< number of DPs to store
+        U32 m_currDp; //!< current DP number
+        U32 m_dpBytes; //!< currently serialized records
+        FwDpPriorityType m_dpPriority; //!< stored priority for current DP
+
+    };
+}
+#endif
+```
+
+### `Telemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Ref/SignalGen/Telemetry.fppi`
+
+
+```text
+@ Type of the output signal: SINE, TRIANGLE, etc.
+telemetry Type: Ref.SignalType id 0
+
+@ Single Y value of the output
+telemetry Output: F32 id 1 format "{.4f}"
+
+@ Single (time, value) pair of the signal
+telemetry PairOutput: Ref.SignalPair id 2
+
+@ Last 10 Y values of the signal
+telemetry History: Ref.SignalSet id 3
+
+@ Last 10 (time, value) pairs of the signal
+telemetry PairHistory: Ref.SignalPairSet id 4
+
+@ Composite field of signal information, containing histories, pairs etc
+telemetry Info: Ref.SignalInfo id 5
+
+@ DP bytes written
+telemetry DpBytes: U32 id 6
+
+@ DP records written
+telemetry DpRecords: U32 id 7
+```

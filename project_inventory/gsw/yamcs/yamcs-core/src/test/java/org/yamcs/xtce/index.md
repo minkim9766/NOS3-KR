@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/java/org/yamcs/xtce/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,7 +12,4 @@ xlsv6/index
 xlsv7/index
 ```
 
-## 항목
-
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/xtce/xlsv6/`](xlsv6/index) — 폴더
-- [`gsw/yamcs/yamcs-core/src/test/java/org/yamcs/xtce/xlsv7/`](xlsv7/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

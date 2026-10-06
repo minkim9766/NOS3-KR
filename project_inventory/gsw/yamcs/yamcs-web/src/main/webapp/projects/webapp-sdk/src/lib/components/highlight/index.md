@@ -3,16 +3,59 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/highlight/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `highlight.component.html`
 
-file--highlight.component.html
-file--highlight.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/highlight/highlight.component.html`
+
+
+```html
+<span [innerHTML]="html()"></span>
 ```
 
-## 항목
+### `highlight.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/highlight/highlight.component.html`](file--highlight.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/highlight/highlight.component.ts`](file--highlight.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/highlight/highlight.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  input,
+  SecurityContext,
+} from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
+@Component({
+  selector: 'ya-highlight',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  templateUrl: './highlight.component.html',
+})
+export class YaHighlight {
+  private sanitizer = inject(DomSanitizer);
+
+  text = input<string>();
+  term = input<string>();
+
+  html = computed(() => {
+    const text = this.text();
+    const term = this.term();
+    if (!text || !term) {
+      return text || '';
+    } else {
+      const re = new RegExp('(' + this.escapeRegex(term) + ')', 'ig');
+      const html = text.replace(re, '<strong>$1</strong>');
+      const safeHtml = this.sanitizer.sanitize(SecurityContext.HTML, html);
+      return safeHtml || '';
+    }
+  });
+
+  private escapeRegex(pattern: string) {
+    return pattern.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  }
+}
+```

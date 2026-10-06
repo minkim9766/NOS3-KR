@@ -3,26 +3,428 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AMPCS.hpp`
 
-file--AMPCS.hpp
-file--CRCs.cpp
-file--CRCs.hpp
-file--Headers.cpp
-file--Headers.hpp
-file--Records.cpp
-file--Records.hpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AMPCS.hpp
+// \author Rob Bocchino
+// \brief  Interface for AMPCS sequence files
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_AMPCS_AMPCS_HPP
+#define Svc_SequenceFiles_AMPCS_AMPCS_HPP
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.hpp"
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.hpp"
+
+#endif
 ```
 
-## 항목
+### `CRCs.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/AMPCS.hpp`](file--AMPCS.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.cpp`](file--CRCs.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.hpp`](file--CRCs.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.cpp`](file--Headers.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.hpp`](file--Headers.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.cpp`](file--Records.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.hpp`](file--Records.hpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCs.hpp
+// \author Rob Bocchino
+// \brief  AMPCS CRC files
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.hpp"
+#include "Fw/Types/SerialBuffer.hpp"
+#include "Fw/Types/String.hpp"
+#include "Os/File.hpp"
+#include "Os/FileSystem.hpp"
+#include "gtest/gtest.h"
+
+#define BUFFER_SIZE 256
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace CRCs {
+
+namespace {
+
+//! Open a file
+void openFile(Os::File& file,              //!< The file
+              const char* const fileName,  //!< The file name
+              const Os::File::Mode mode    //!< The mode
+) {
+    const Os::File::Status fileStatus = file.open(fileName, mode);
+    ASSERT_EQ(Os::File::OP_OK, fileStatus);
+}
+
+//! Write a file
+void writeFile(Os::File& file,    //!< The file
+               const U8* buffer,  //!< The buffer
+               const U32 size     //!< The number of bytes to write
+) {
+    FwSizeType sizeThenActualSize = size;
+    const Os::File::Status status = file.write(buffer, sizeThenActualSize, Os::File::WaitType::WAIT);
+    ASSERT_EQ(Os::File::OP_OK, status);
+    const U32 actualSize = sizeThenActualSize;
+    ASSERT_EQ(size, actualSize);
+}
+
+}  // namespace
+
+void createFile(Fw::SerializeBufferBase& buffer, const char* const fileName) {
+    CRC crc;
+    computeCRC(buffer, crc);
+    writeCRC(crc.m_computed, fileName);
+}
+
+void computeCRC(Fw::SerializeBufferBase& buffer, CRC& crc) {
+    crc.init();
+    const U8* const addr = buffer.getBuffAddr();
+    const U32 size = buffer.getBuffLength();
+    crc.update(addr, size);
+    crc.finalize();
+}
+
+void removeFile(const char* const fileName) {
+    Fw::String s("rm -f ");
+    s += fileName;
+    s += ".CRC32";
+    int status = system(s.toChar());
+    ASSERT_EQ(0, status);
+}
+
+void writeCRC(const U32 crc, const char* const fileName) {
+    Os::File file;
+    U8 buffer[sizeof crc];
+    Fw::SerialBuffer serialBuffer(buffer, sizeof(buffer));
+    serialBuffer.serialize(crc);
+    const U8* const addr = serialBuffer.getBuffAddr();
+    Fw::String hashFileName(fileName);
+    hashFileName += ".CRC32";
+    openFile(file, hashFileName.toChar(), Os::File::OPEN_WRITE);
+    writeFile(file, addr, sizeof(crc));
+    file.close();
+}
+
+}  // namespace CRCs
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `CRCs.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/CRCs.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  CRCs.hpp
+// \author Rob Bocchino
+// \brief  AMPCS CRCs
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_AMPCS_CRCs_HPP
+#define Svc_SequenceFiles_AMPCS_CRCs_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace CRCs {
+
+//! Type alias
+typedef CmdSequencerComponentImpl::FPrimeSequence::CRC CRC;
+
+//! Compute a CRC
+void computeCRC(Fw::SerializeBufferBase& buffer,  //!< Buffer containing the data
+                CRC& crc                          //!< The CRC
+);
+
+//! Create a CRC32 file
+void createFile(Fw::SerializeBufferBase& buffer,  //!< Buffer containing the data
+                const char* const fileName        //!< The source file name
+);
+
+//! Remove a CRC file
+void removeFile(const char* const fileName  //!< The source file name
+);
+
+//! Write a computed CRC to a file
+void writeCRC(const U32 crc,              //!< The CRC value
+              const char* const fileName  //!< The source file name
+);
+
+}  // namespace CRCs
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Headers.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Headers.cpp
+// \author Rob Bocchino
+// \brief  AMPCS sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace Headers {
+
+void serialize(Fw::SerializeBufferBase& buffer) {
+    serialize(0x11223344, buffer);
+}
+
+void serialize(const U32 value, Fw::SerializeBufferBase& buffer) {
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, buffer.serialize(value));
+}
+
+}  // namespace Headers
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `Headers.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Headers.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Headers.hpp
+// \author Rob Bocchino
+// \brief  AMPCS sequence file headers
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_AMPCS_Headers_HPP
+#define Svc_SequenceFiles_AMPCS_Headers_HPP
+
+#include "Svc/CmdSequencer/CmdSequencerImpl.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace Headers {
+
+//! Serialize a header with a standard U32 value
+void serialize(Fw::SerializeBufferBase& buffer  //!< The destination buffer
+);
+
+//! Serialize a header from a U32 value
+void serialize(const U32 value,                 //!< The value
+               Fw::SerializeBufferBase& buffer  //!< The destination buffer
+);
+
+}  // namespace Headers
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```
+
+### `Records.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Records.cpp
+// \author Rob Bocchino
+// \brief  AMPCS sequence file records
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#include "Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.hpp"
+#include "Fw/Com/ComPacket.hpp"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace Records {
+
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,
+               const AMPCSSequence::Record::Time::t time,
+               const Fw::SerializeBufferBase& cmdField,
+               Fw::SerializeBufferBase& dest) {
+    const AMPCSSequence::Record::TimeFlag::Serial::t serialTimeFlag = timeFlag;
+    const AMPCSSequence::Record::CmdLength::t cmdLength = cmdField.getBuffLength();
+    const U8* const addr = cmdField.getBuffAddr();
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, dest.serialize(serialTimeFlag));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, dest.serialize(time));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, dest.serialize(cmdLength));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, dest.serialize(addr, cmdLength, Fw::Serialization::OMIT_LENGTH));
+}
+
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,
+               const AMPCSSequence::Record::Time::t time,
+               const AMPCSSequence::Record::Opcode::t opcode,
+               const U32 argument,
+               Fw::SerializeBufferBase& dest) {
+    Fw::ComBuffer cmdField;
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, cmdField.serialize(opcode));
+    ASSERT_EQ(Fw::FW_SERIALIZE_OK, cmdField.serialize(argument));
+    Records::serialize(timeFlag, time, cmdField, dest);
+}
+
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,
+               const AMPCSSequence::Record::Time::t time,
+               Fw::SerializeBufferBase& dest) {
+    Fw::ComBuffer cmdField;
+    Records::serialize(timeFlag, time, cmdField, dest);
+}
+
+}  // namespace Records
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+```
+
+### `Records.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/CmdSequencer/test/ut/SequenceFiles/AMPCS/Records.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Records.hpp
+// \author Rob Bocchino
+// \brief  AMPCS sequence file records
+//
+// \copyright
+// Copyright (C) 2009-2018 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+
+#ifndef Svc_SequenceFiles_AMPCS_Records_HPP
+#define Svc_SequenceFiles_AMPCS_Records_HPP
+
+#include "Svc/CmdSequencer/formats/AMPCSSequence.hpp"
+#include "gtest/gtest.h"
+
+namespace Svc {
+
+namespace SequenceFiles {
+
+namespace AMPCS {
+
+namespace Records {
+
+enum Constants {
+    //! Size of standard arguments
+    STANDARD_ARG_SIZE = sizeof(U32),
+    //! Standard record size
+    STANDARD_SIZE = sizeof(AMPCSSequence::Record::TimeFlag::t) + sizeof(AMPCSSequence::Record::Time::t) +
+                    sizeof(AMPCSSequence::Record::CmdLength::t) + sizeof(AMPCSSequence::Record::Opcode::t) +
+                    STANDARD_ARG_SIZE
+};
+
+//! Serialize a record with a binary command field
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,  //!< Time flag
+               const AMPCSSequence::Record::Time::t time,          //!< Time
+               const Fw::SerializeBufferBase& cmdField,            //!< Command field
+               Fw::SerializeBufferBase& dest                       //!< Destination buffer
+);
+
+//! Serialize a record with a command field containing an opcode
+//! and one U32 argument
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,  //!< Time flag
+               const AMPCSSequence::Record::Time::t time,          //!< Time
+               const AMPCSSequence::Record::Opcode::t opcode,      //!< Opcode
+               const U32 argument,                                 //!< Argument
+               Fw::SerializeBufferBase& dest                       //!< Destination buffer
+);
+
+//! Serialize a record with an empty command field
+void serialize(const AMPCSSequence::Record::TimeFlag::t timeFlag,  //!< Time flag
+               const AMPCSSequence::Record::Time::t time,          //!< Time
+               Fw::SerializeBufferBase& dest                       //!< Destination buffer
+);
+
+}  // namespace Records
+
+}  // namespace AMPCS
+
+}  // namespace SequenceFiles
+
+}  // namespace Svc
+
+#endif
+```

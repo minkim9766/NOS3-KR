@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,20 +15,226 @@ img/index
 reference/index
 tutorials/index
 user-manual/index
-file--index.md
-file--INSTALL.md
-file--mkdocs.yml
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/doxygen/`](doxygen/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/getting-started/`](getting-started/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/how-to/`](how-to/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/img/`](img/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/`](reference/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/tutorials/`](tutorials/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/`](user-manual/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/index.md`](file--index.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/INSTALL.md`](file--INSTALL.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/mkdocs.yml`](file--mkdocs.yml) — UTF-8 텍스트 파일 본문 포함
+### `index.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/index.md`
+
+
+```markdown
+# Documentation
+
+
+<div class="grid cards" markdown>
+
+-   <span class="card-title">__Tutorials__</span> *Learning-oriented*
+
+    ---
+
+    Tutorials walk through the essentials of F Prime development, starting with the canonical HelloWorld example and progressing to cross-compiling and deploying on hardware.
+
+    [Visit Tutorials](tutorials/index.md){ .md-button .md-button--primary }
+
+-   <span class="card-title">__User Manual__</span> *Understanding-oriented*
+
+    ---
+
+    The User Manual dives into F Prime design philosophy and architectural principles, providing a deep understanding of how the framework operates.
+
+    [Visit User Manual](user-manual/index.md){ .md-button .md-button--primary }
+
+-   <span class="card-title">__How To__</span> *Task-oriented*
+
+    ---
+
+    How-To guides offer step-by-step instructions for specific development tasks in F Prime.
+
+    [Visit How Tos](how-to/index.md){ .md-button .md-button--primary }
+
+-   <span class="card-title">__Reference__</span> *Information-oriented*
+
+    ---
+
+    Technical reference for the F Prime C++ API, CMake API, FPP language specification and more.
+
+    [Visit Reference](reference/index.md){ .md-button .md-button--primary }
+
+
+</div>
+```
+
+### `INSTALL.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/INSTALL.md`
+
+
+```markdown
+Please refer to the F´ website: https://fprime.jpl.nasa.gov/
+```
+
+### `mkdocs.yml`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/mkdocs.yml`
+
+
+```yaml
+site_name: F Prime
+site_url: https://fprime.jpl.nasa.gov/
+repo_url: https://github.com/nasa/fprime
+repo_name: nasa/fprime
+docs_dir: .. # using ./fprime/ as the root directory to host all source files in the website
+site_dir: ../../site
+edit_uri: edit/devel/ # for "Edit Source" button (see content.action.edit)
+
+exclude_docs: |
+  Autocoders/
+  ci/
+  googletest/
+
+theme:
+  name: material # enables the material theme, DO NOT CHANGE
+  language: en
+  logo: assets/images/logo-fprime-jpl.svg
+  favicon: assets/images/favicon.svg
+  custom_dir: ../../overrides # external directory
+  icon:
+    annotation: material/information-slab-circle  # custom icon for annotations
+
+  features:
+    - navigation.tabs # enables tabs
+    - navigation.top # enables back to top button
+    - navigation.tabs.sticky # makes tabs sticky
+    # - navigation.expand # expands all navigation links with dropdowns by default
+    - navigation.footer # enables previous/next page navigation links by the footer
+    - navigation.instant # instant loading
+    - navigation.indexes # enables overview pages for sections
+    - navigation.tracking # URL in the address bar is automatically updated with the active anchor as highlighted in the table of contents
+    - content.code.copy # enable code copy for all code blocks
+    - content.code.annotate # enable code annotations for all code blocks
+    - content.tooltips # replaces the browser's rendering logic for title attribute with tooltips (for content, header, navigation)
+    - content.tabs.link # all content tabs across the whole documentation site will be linked and switch to the same label when the user clicks on a tab
+    - content.action.edit # display a "Edit Source" button on the top right of the page
+
+  palette:
+
+    # Palette toggle for light mode
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/lightbulb-on
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - scheme: slate
+      primary: custom
+      toggle:
+        icon: material/lightbulb-off
+        name: Switch to light mode
+
+
+
+# Adds extra settings
+extra:
+  version:
+      provider: mike
+      alias: true
+  generator: false # removes "Made with Material for Mkdocs"
+  homepage: https://fprime.jpl.nasa.gov/ # Forces homepage link not to include versioning info
+
+
+
+# Link to custom css
+extra_css:
+  - assets/stylesheets/extra.css
+
+# Adds material for mkdocs plugins
+plugins:
+  - search # enables search
+  - awesome-nav
+  - mike:
+      # symlink are not allowed in GH Pages so if website needs to be deployed on GH Pages, use `copy` instead
+      # see https://github.blog/changelog/2023-02-21-github-pages-deprecating-symlinks-in-non-actions-builds/
+      alias_type: symlink
+      canonical_version: latest
+  - open-in-new-tab
+  - multirepo:
+      cleanup: true
+      nav_repos:
+        - name: tutorials-hello-world
+          import_url: https://github.com/fprime-community/fprime-tutorial-hello-world?branch=devel
+          imports: [
+            docs/hello-world.md
+          ]
+        - name: tutorials-led-blinker
+          import_url: https://github.com/fprime-community/fprime-workshop-led-blinker?branch=devel
+          imports: [
+            docs/led-blinker.md,
+            docs/hardware.md
+            docs/img
+          ]
+        - name: tutorials-math-component
+          import_url: https://github.com/fprime-community/fprime-tutorial-math-component?branch=devel
+          imports: [
+            docs/math-component.md
+            docs/img
+          ]
+        - name: tutorials-arduino-led-blinker
+          import_url: https://github.com/fprime-community/fprime-tutorial-arduino-blinker?branch=main
+          imports: [
+            docs/arduino-led-blinker.md,
+            docs/img
+          ]
+
+
+markdown_extensions: 
+  - toc:
+      toc_depth: 2
+  - attr_list # allows to add HTML attributes and CSS classes to almost every Markdown inline- and block-level element with a special syntax
+  - md_in_html # allows for writing Markdown inside of HTML
+  - tables # enables markdown tables
+  # enables syntax highlighting on code blocks and inline code blocks
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  # adds support for admonitions/call-outs
+  - admonition
+  - pymdownx.details
+  - github-callouts # enables GitHub-style Markdown alerts (e.g. > [!NOTE])
+  # enables the use of definition lists and tasks lists
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  # enables abbreviations and allows to build a simple project-wide glossary, sourcing definitions from a central location.
+  - abbr
+  - pymdownx.snippets
+  # enables tabs
+  - pymdownx.tabbed:
+      alternate_style: true
+  # enables the use of icons and emojis by using simple shortcodes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+
+# Custom navigation is set in the fprime/.nav.yml file
+# Must keep a copy of just the tutorials nav here to let multirepo know to import them, this does not act as a nav
+nav:
+  - Tutorials:
+    - Tutorials Index: docs/tutorials/index.md
+    - 'Hello World': tutorials-hello-world/docs/hello-world.md
+    - 'LED Blinker': tutorials-led-blinker/docs/led-blinker.md
+    - 'MathComponent': tutorials-math-component/docs/math-component.md
+    - 'Cross-Compilation Setup': docs/tutorials/cross-compilation.md
+    - 'Arduino LED Blinker': tutorials-arduino-led-blinker/docs/arduino-led-blinker.md
+```

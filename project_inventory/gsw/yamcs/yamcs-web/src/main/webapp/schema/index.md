@@ -3,18 +3,356 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/schema/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `command-stack.schema.json`
 
-file--command-stack.schema.json
-file--parameter-table.schema.json
-file--stack.schema.json
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/schema/command-stack.schema.json`
+
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "JSON schema for Yamcs Command Stack files (*.ycs)",
+  "definitions": {
+    "advancement": {
+      "description": "Advancement options",
+      "type": "object",
+      "properties": {
+        "acknowledgment": {
+          "description": "Acknowledgment which needs to succeed before the stack cursor advances",
+          "type": "string",
+          "default": "Acknowledge_Queued"
+        },
+        "wait": {
+          "description": "Time to await before advancing to the next command in the stack. This triggers after the acknowledgment has succeeded.",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "commands": {
+      "description": "Commands",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Name of the command. If namespace is not specified, this should be the fully-qualified name",
+            "type": "string"
+          },
+          "namespace": {
+            "description": "Namespace applicable to the used command name. Not required if the name is the fully-qualified Yamcs name",
+            "type": "string"
+          },
+          "comment": {
+            "description": "Entry comment",
+            "type": "string"
+          },
+          "arguments": {
+            "description": "Command arguments",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "description": "Argument name",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Argument value",
+                  "type": ["array", "boolean", "number", "object", "string"]
+                }
+              },
+              "required": ["name", "value"]
+            }
+          },
+          "extraOptions": {
+            "description": "Additional command options",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "description": "Option identifier",
+                  "type": "string"
+                },
+                "value": {
+                  "description": "Option value",
+                  "type": ["boolean", "number", "string"]
+                }
+              }
+            }
+          },
+          "advancement": {
+            "$ref": "#/definitions/advancement"
+          }
+        },
+        "required": ["name"]
+      }
+    },
+    "advancement": {
+      "$ref": "#/definitions/advancement"
+    }
+  }
+}
 ```
 
-## 항목
+### `parameter-table.schema.json`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/schema/command-stack.schema.json`](file--command-stack.schema.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/schema/parameter-table.schema.json`](file--parameter-table.schema.json) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/schema/stack.schema.json`](file--stack.schema.json) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/schema/parameter-table.schema.json`
+
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "JSON schema for Yamcs Parameter Table files (*.par)",
+  "type": "object",
+  "properties": {
+    "scroll": {
+      "description": "If true, the table shows multiple values for each of the parameters",
+      "type": "boolean",
+      "default": false
+    },
+    "bufferSize": {
+      "description": "Amount of values to show when scroll is set to true",
+      "type": "number"
+    },
+    "parameters": {
+      "description": "Parameter names",
+      "type": "array",
+      "items": {
+        "description": "Parameter name",
+        "type": "string"
+      }
+    }
+  },
+  "required": ["parameters"]
+}
+```
+
+### `stack.schema.json`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/schema/stack.schema.json`
+
+
+```json
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "JSON schema for Yamcs Stack files (*.ycs)",
+  "definitions": {
+    "advancement": {
+      "description": "Command advancement options",
+      "type": "object",
+      "properties": {
+        "acknowledgment": {
+          "description": "Acknowledgment which needs to succeed before the stack cursor advances on a command step",
+          "type": "string",
+          "default": "Acknowledge_Queued"
+        },
+        "wait": {
+          "description": "Time to await (in milliseconds) before advancing to the next step. This triggers after the acknowledgment has succeeded.",
+          "type": "number"
+        }
+      }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "steps": {
+      "description": "Steps",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "description": "Step type",
+            "type": "string",
+            "enum": ["check", "command", "text", "verify"]
+          },
+          "comment": {
+            "description": "Stack comment (Markdown syntax)",
+            "type": "string"
+          }
+        },
+        "required": ["type"],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "check"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "parameters": {
+                  "type": "array",
+                  "description": "Parameters to check",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "parameter": {
+                        "type": "string",
+                        "description": "Qualified parameter name"
+                      }
+                    },
+                    "required": ["parameter"]
+                  }
+                }
+              },
+              "required": ["parameters"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "command"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "name": {
+                  "description": "Name of the command. Unless namespace is specified, this should be the fully-qualified name",
+                  "type": "string"
+                },
+                "namespace": {
+                  "description": "Namespace applicable to the used command name. Not required if the name is the fully-qualified Yamcs name",
+                  "type": "string"
+                },
+                "arguments": {
+                  "description": "Command arguments",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "description": "Argument name",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "Argument value",
+                        "type": [
+                          "array",
+                          "boolean",
+                          "number",
+                          "object",
+                          "string"
+                        ]
+                      }
+                    },
+                    "required": ["name", "value"]
+                  }
+                },
+                "extraOptions": {
+                  "description": "Additional command options",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "description": "Option identifier",
+                        "type": "string"
+                      },
+                      "value": {
+                        "description": "Option value",
+                        "type": ["boolean", "number", "string"]
+                      }
+                    }
+                  }
+                },
+                "stream": {
+                  "description": "Override automatic stream selection",
+                  "type": "string"
+                },
+                "advancement": {
+                  "$ref": "#/definitions/advancement"
+                }
+              },
+              "required": ["name"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "text"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "Text in Markdown format"
+                }
+              },
+              "required": ["text"]
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "type": {
+                  "const": "verify"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "condition": {
+                  "type": "array",
+                  "description": "Comparisons to verify (all must be satisfied)",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "parameter": {
+                        "type": "string",
+                        "description": "Qualified parameter name"
+                      },
+                      "operator": {
+                        "type": "string",
+                        "description": "Comparison operator",
+                        "enum": ["eq", "neq", "le", "lte", "gt", "gte"]
+                      },
+                      "value": {
+                        "type": [
+                          "array",
+                          "boolean",
+                          "number",
+                          "object",
+                          "string"
+                        ],
+                        "description": "Value to compare against"
+                      }
+                    },
+                    "required": ["parameter", "operator", "value"]
+                  }
+                },
+                "delay": {
+                  "type": "integer",
+                  "description": "Wait time before starting to check (in milliseconds)",
+                  "default": 0
+                },
+                "timeout": {
+                  "type": "integer",
+                  "description": "How long before the verification is considered unsuccessful (in milliseconds)"
+                }
+              },
+              "required": ["condition"]
+            }
+          }
+        ]
+      }
+    },
+    "advancement": {
+      "$ref": "#/definitions/advancement"
+    }
+  }
+}
+```

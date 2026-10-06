@@ -3,24 +3,2663 @@
 
 **경로:** `components/generic_adcs/fsw/shared/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cfg/index
-file--generic_adcs_adac.c
-file--generic_adcs_adac.h
-file--generic_adcs_utilities.c
-file--generic_adcs_utilities.h
-file--generic_adcs_version.h
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/generic_adcs/fsw/shared/cfg/`](cfg/index) — 폴더
-- [`components/generic_adcs/fsw/shared/generic_adcs_adac.c`](file--generic_adcs_adac.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/generic_adcs_adac.h`](file--generic_adcs_adac.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/generic_adcs_utilities.c`](file--generic_adcs_utilities.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/generic_adcs_utilities.h`](file--generic_adcs_utilities.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_adcs/fsw/shared/generic_adcs_version.h`](file--generic_adcs_version.h) — UTF-8 텍스트 파일 본문 포함
+### `generic_adcs_adac.c`
+
+**경로:** `components/generic_adcs/fsw/shared/generic_adcs_adac.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file contains the source code for the attitude determination and
+**   attitude control routines of the Generic ADCS application.
+**
+*******************************************************************************/
+
+#include <stdint.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+#include "generic_adcs_msg.h"
+#include "generic_adcs_utilities.h"
+#include "generic_adcs_adac.h"
+
+static int     igrf(Generic_ADCS_EPH_Mag_Tlm_Payload_t *bfld, Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS,
+                    Generic_ADCS_GNC_Tlm_Payload_t *GNC);
+static int32_t solar_ephemeris(Generic_ADCS_EPH_Sol_Tlm_Payload_t *sol, Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS,
+                               Generic_ADCS_GNC_Tlm_Payload_t *GNC);
+static void    AD_imu(const Generic_ADCS_DI_Imu_Tlm_Payload_t *DI_IMU, Generic_ADCS_AD_Imu_Tlm_Payload_t *AD_IMU);
+static void    AD_mag(const Generic_ADCS_DI_Mag_Tlm_Payload_t *DI_Mag, Generic_ADCS_AD_Mag_Tlm_Payload_t *AD_Mag);
+static void    AD_sol(const Generic_ADCS_DI_Fss_Tlm_Payload_t *DI_FSS, const Generic_ADCS_DI_Css_Tlm_Payload_t *DI_CSS,
+                      Generic_ADCS_AD_Sol_Tlm_Payload_t *AD_Sol);
+static void    AD_st(const Generic_ADCS_DI_St_Tlm_Payload_t *DI_ST, Generic_ADCS_AD_ST_Tlm_Payload_t *AD_Mag);
+static void    AD_gps(const Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS, Generic_ADCS_AD_Gps_Tlm_Payload_t *gps);
+static void    AD_rateEst(Generic_ADCS_GNC_Tlm_Payload_t GNC, Generic_ADCS_AD_Mag_Tlm_Payload_t mag,
+                          Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_AD_rateEst_Tlm_Payload_t *AD);
+static void    calc_wmag(double dt, Generic_ADCS_AD_Mag_Tlm_Payload_t mag, Generic_AD_rateEst_Tlm_Payload_t *AD);
+static void    calc_wsol(double dt, Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_AD_rateEst_Tlm_Payload_t *AD);
+static void    AD_murAKF(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AD_ST_Tlm_Payload_t st,
+                         Generic_ADCS_AD_Imu_Tlm_Payload_t imu, Generic_ADCS_AD_Mag_Tlm_Payload_t mag,
+                         Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_ADCS_AD_murAKF_Tlm_Payload_t *AKF);
+static void    AD_to_GNC(const Generic_ADCS_AD_Tlm_Payload_t *AD, Generic_ADCS_GNC_Tlm_Payload_t *GNC);
+static void    AC_bdot(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Bdot_Tlm_t *AC_bdot);
+static void    AC_sunsafe(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Sunsafe_Tlm_t *ACS);
+static void    AC_inertial(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Inertial_Tlm_t *ACS);
+static void    AC_h_mgmt(Generic_ADCS_GNC_Tlm_Payload_t *GNC);
+static void    AC_rw_momentum_dump(Generic_ADCS_GNC_Tlm_Payload_t *GNC);
+
+void Generic_ADCS_init_attitude_determination_and_attitude_control(FILE *in, Generic_ADCS_EPH_Tlm_Payload_t *EPH,
+                                                                   Generic_ADCS_AD_Tlm_Payload_t  *AD,
+                                                                   Generic_ADCS_GNC_Tlm_Payload_t *GNC,
+                                                                   Generic_ADCS_AC_Tlm_Payload_t  *ACS)
+{
+    char junk[512], newline;
+    // EPH
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &EPH->Sol.date_epoch, junk, &newline);
+    fscanf(in, "%lf %lf%[^\n]%[\n]", &EPH->Sol.coeff_G1, &EPH->Sol.coeff_G2, junk, &newline);
+    fscanf(in, "%lf %lf%[^\n]%[\n]", &EPH->Sol.coeff_L1, &EPH->Sol.coeff_l2, junk, &newline);
+    fscanf(in, "%lf %lf%[^\n]%[\n]", &EPH->Sol.coeff_long1, &EPH->Sol.coeff_long2, junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &EPH->Sol.cos_obliq_eclp, junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &EPH->Sol.sin_obliq_eclp, junk, &newline);
+    fscanf(in, "%d%[^\n]%[\n]", &EPH->bfld.nmax, junk, &newline);
+    // AD
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->Imu.alpha, junk, &newline);
+    AD->Imu.init = 0;
+    fscanf(in, "%hhu%[^\n]%[\n]", &AD->RateEst.enable_filter, junk, &newline);
+    fscanf(in, "%d%[^\n]%[\n]", &AD->RateEst.sample_size, junk, &newline);
+    AD->RateEst.Valid   = false;
+    AD->RateEst.MagInit = false;
+    AD->RateEst.SolInit = false;
+    for (int i = 0; i < 3; i++)
+    {
+        AD->RateEst.wbn[i]      = 0.0;
+        AD->RateEst.ws[i]       = 0.0;
+        AD->RateEst.wm[i]       = 0.0;
+        AD->RateEst.svb_prev[i] = 0.0;
+        AD->RateEst.bvb_prev[i] = 0.0;
+    }
+    int    i, j;
+    double param[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+
+    AD->AKF.init       = 1;
+    AD->AKF.dt         = GNC->DT;
+    AD->AKF.AKFvalid   = 0;
+    AD->AKF.reset_flag = 0;
+
+    /* Initialize qbn */
+    AD->AKF.qbn[0] = 0.0;
+    AD->AKF.qbn[1] = 0.0;
+    AD->AKF.qbn[2] = 0.0;
+    AD->AKF.qbn[3] = 1.0;
+
+    /* Initialize wbn */
+    AD->AKF.wbn[0] = 0.0;
+    AD->AKF.wbn[1] = 0.0;
+    AD->AKF.wbn[2] = 0.0;
+
+    AD->AKF.qk_est[0] = 0.0;
+    AD->AKF.qk_est[1] = 0.0;
+    AD->AKF.qk_est[2] = 0.0;
+    AD->AKF.qk_est[3] = 1.0;
+    for (i = 0; i < 6; i++)
+    {
+        AD->AKF.delta_xk_est[i] = 0.0;
+    }
+    for (i = 0; i < 3; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            if (j < 3)
+            {
+                if (i == j)
+                {
+                    AD->AKF.Hk[i][j] = 1.0;
+                }
+                else
+                {
+                    AD->AKF.Hk[i][j] = 0.0;
+                }
+            }
+            else
+            {
+                AD->AKF.Hk[i][j] = 0.0;
+            }
+        }
+    }
+
+    /* Define the identity matrix */
+    for (i = 0; i < 3; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            if (i == j)
+            {
+                AD->AKF.eye3[i][j] = 1.0;
+            }
+            else
+            {
+                AD->AKF.eye3[i][j] = 0.0;
+            }
+        }
+    }
+
+    /* Initialize constants */
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.sig_u, junk,
+           &newline); /* variance associated to gyro drift, from datasheet */
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.sig_v, junk,
+           &newline); /* variance associated with random drift, from datasheet */
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.ek_ST_bound, junk, &newline);
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.ek_FSS_bound, junk, &newline);
+    AD->AKF.ek_FSS_bound *= D2R;
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.ek_MG_bound, junk, &newline);
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.Mag_range, junk, &newline);
+
+    fscanf(in, "%lf%[^\n]%[\n]", &AD->AKF.Dvg_tol, junk, &newline);
+
+    /* Initialize the covariance matrix Pk */
+    fscanf(in, "%lf %lf%[^\n]%[\n]", &param[0], &param[1], junk, &newline);
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            if (i == j)
+            {
+                if (i < 3)
+                {
+                    AD->AKF.Pk[i][j] = param[0];
+                }
+                else
+                {
+                    AD->AKF.Pk[i][j] = param[1];
+                }
+            }
+            else
+            {
+                AD->AKF.Pk[i][j] = 0.0;
+            }
+        }
+    }
+
+    /* Initialize the discrete process noise covariance Qk */
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            if (i < 3 && j < 3)
+            {
+                if (i == j)
+                {
+                    AD->AKF.Qk[i][j] = AD->AKF.sig_v * AD->AKF.sig_v * AD->AKF.dt + (1.0 / 3.0) * AD->AKF.sig_u *
+                                                                                        AD->AKF.sig_u * AD->AKF.dt *
+                                                                                        AD->AKF.dt * AD->AKF.dt;
+                }
+                else
+                {
+                    AD->AKF.Qk[i][j] = 0.0;
+                }
+            }
+            else if (i < 3 && j >= 3)
+            {
+                if (i == j - 3)
+                {
+                    AD->AKF.Qk[i][j] = -(0.5) * AD->AKF.sig_u * AD->AKF.sig_u * AD->AKF.dt * AD->AKF.dt;
+                }
+                else
+                {
+                    AD->AKF.Qk[i][j] = 0.0;
+                }
+            }
+            else if (i >= 3 && j < 3)
+            {
+                if (i - 3 == j)
+                {
+                    AD->AKF.Qk[i][j] = -(0.5) * AD->AKF.sig_u * AD->AKF.sig_u * AD->AKF.dt * AD->AKF.dt;
+                }
+                else
+                {
+                    AD->AKF.Qk[i][j] = 0.0;
+                }
+            }
+            else if (i >= 3 && j >= 3)
+            {
+                if (i == j)
+                {
+                    AD->AKF.Qk[i][j] = AD->AKF.sig_u * AD->AKF.sig_u * AD->AKF.dt;
+                }
+                else
+                {
+                    AD->AKF.Qk[i][j] = 0.0;
+                }
+            }
+        }
+    }
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            if (i == j)
+            {
+                if (i < 3)
+                {
+                    AD->AKF.Gt[i][j] = -1.0;
+                }
+                else
+                {
+                    AD->AKF.Gt[i][j] = 1.0;
+                }
+            }
+            else
+            {
+                AD->AKF.Gt[i][j] = 0.0;
+            }
+        }
+    }
+    /* Initialize covariance matrix of sensor noise, Rk(sensor) = sig(sensor)^2 * eye3 */
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &param[0], &param[1], &param[2], junk, &newline);
+    AD->AKF.sig_mag  = param[0];
+    AD->AKF.sig_sun  = param[1];
+    AD->AKF.sig_star = param[2]; /* 120 arcsec to rad */
+
+    /* Initialize bias to zer0 */
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &param[0], &param[1], &param[2], junk, &newline);
+    AD->AKF.bias_est[0] = param[0];
+    AD->AKF.bias_est[1] = param[1];
+    AD->AKF.bias_est[2] = param[2];
+
+    // GNC
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &GNC->DT, junk, &newline);
+    fscanf(in, "%lf%[^\n]%[\n]", &GNC->MaxMcmd, junk, &newline);
+    // AC Bdot
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf%[^\n]%[\n]", &ACS->Bdot.b_range, &ACS->Bdot.Kb, junk, &newline);
+    // AC Sunsafe
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf %lf %lf%[^\n]%[\n]", &ACS->Sunsafe.Kp[0], &ACS->Sunsafe.Kp[1], &ACS->Sunsafe.Kp[2],
+           &ACS->Sunsafe.Kr[0], &ACS->Sunsafe.Kr[1], &ACS->Sunsafe.Kr[2], junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf %lf %lf %lf%[^\n]%[\n]", &ACS->Sunsafe.sside[0], &ACS->Sunsafe.sside[1],
+           &ACS->Sunsafe.sside[2], &ACS->Sunsafe.vmax, &ACS->Sunsafe.cmd_wbn[0], &ACS->Sunsafe.cmd_wbn[1],
+           &ACS->Sunsafe.cmd_wbn[2], junk, &newline);
+    for (int i = 0; i < 3; i++)
+    {
+        ACS->Sunsafe.therr[i] = ACS->Sunsafe.werr[i] = ACS->Sunsafe.Tcmd[i] = 0;
+    }
+    // AC inertial
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf %lf%[^\n]%[\n]", &ACS->Inertial.qbn_cmd[0], &ACS->Inertial.qbn_cmd[1],
+           &ACS->Inertial.qbn_cmd[2], &ACS->Inertial.qbn_cmd[3], &ACS->Inertial.phiErr_max, junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf %lf %lf%[^\n]%[\n]", &ACS->Inertial.Kp[0], &ACS->Inertial.Kp[1], &ACS->Inertial.Kp[2],
+           &ACS->Inertial.Kr[0], &ACS->Inertial.Kr[1], &ACS->Inertial.Kr[2], junk, &newline);
+    fscanf(in, "%lf %lf %lf%[^\n]%[\n]", &ACS->Inertial.Ki[0], &ACS->Inertial.Ki[1], &ACS->Inertial.Ki[2], junk,
+           &newline);
+    // AC Momentum management
+    fscanf(in, "%[^\n]%[\n]", junk, &newline);
+    fscanf(in, "%lf %lf %lf %lf%[^\n]%[\n]", &GNC->Hmgmt.Kb, &GNC->Hmgmt.b_range, &GNC->Hmgmt.loFrac,
+           &GNC->Hmgmt.hiFrac, junk, &newline);
+}
+
+void Generic_ADCS_execute_attitude_determination_and_attitude_control(const Generic_ADCS_DI_Tlm_Payload_t *DI,
+                                                                      Generic_ADCS_EPH_Tlm_Payload_t      *EPH,
+                                                                      Generic_ADCS_AD_Tlm_Payload_t       *AD,
+                                                                      Generic_ADCS_GNC_Tlm_Payload_t      *GNC,
+                                                                      Generic_ADCS_AC_Tlm_Payload_t       *ACS)
+{
+    igrf(&EPH->bfld, &DI->Gps, GNC);
+    solar_ephemeris(&EPH->Sol, &DI->Gps, GNC);
+    AD_imu(&DI->Imu, &AD->Imu);
+    AD_mag(&DI->Mag, &AD->Mag);
+    AD_st(&DI->St, &AD->ST);
+    AD_gps(&DI->Gps, &AD->Gps);
+    AD_sol(&DI->Fss, &DI->Css, &AD->Sol);
+    AD_rateEst(*GNC, AD->Mag, AD->Sol, &AD->RateEst);
+    AD_murAKF(GNC, AD->ST, AD->Imu, AD->Mag, AD->Sol, &AD->AKF);
+
+    AD_to_GNC(AD, GNC);
+    for (int i = 0; i < 3; i++)
+        GNC->HwhlB[i] = DI->Rw.HwhlB[i];
+    for (int i = 0; i < 3; i++)
+        GNC->HwhlMaxB[i] = DI->Rw.H_maxB[i];
+
+    switch (GNC->Mode)
+    {
+        case BDOT_MODE:
+            AC_bdot(GNC, &ACS->Bdot);
+            AC_rw_momentum_dump(GNC);
+            break;
+
+        case SUNSAFE_MODE:
+            AC_sunsafe(GNC, &ACS->Sunsafe);
+            break;
+
+        case INERTIAL_MODE:
+            AC_inertial(GNC, &ACS->Inertial);
+            break;
+
+        case PASSIVE_MODE:
+        default:
+            for (int i = 0; i < 3; i++)
+            {
+                GNC->Mcmd[i] = 0.0;
+                GNC->Tcmd[i] = 0.0;
+            }
+            break;
+    }
+}
+
+#define MAXDEG   13
+#define MAXCOEFF (MAXDEG * (MAXDEG + 2))
+#define RAD2DEG  (180.0 / M_PI)
+
+const int   IGRF_DATE        = 2020;
+const int   IGRF_ORD         = 13;
+const int   SV_ORD           = 8;
+const float igrf_coeffs[195] = {
+    -29404.8, -1450.9, 4652.5, -2499.6, 2982,  -2991.6, 1677,   -734.6, 1363.2, -2381.2, -82.1,  1236.2, 241.9,  525.7,
+    -543.4,   903,     809.5,  281.9,   86.3,  -158.4,  -309.4, 199.7,  48,     -349.7,  -234.3, 363.2,  47.7,   187.8,
+    208.3,    -140.7,  -121.2, -151.2,  32.3,  13.5,    98.9,   66,     65.5,   -19.1,   72.9,   25.1,   -121.5, 52.8,
+    -36.2,    -64.5,   13.5,   8.9,     -64.7, 68.1,    80.6,   -76.7,  -51.5,  -8.2,    -16.9,  56.5,   2.2,    15.8,
+    23.5,     6.4,     -2.2,   -7.2,    -27.2, 9.8,     -1.8,   23.7,   9.7,    8.4,     -17.6,  -15.3,  -0.5,   12.8,
+    -21.1,    -11.7,   15.3,   14.9,    13.7,  3.6,     -16.5,  -6.9,   -0.3,   2.8,     5,      8.4,    -23.4,  2.9,
+    11,       -1.5,    9.8,    -1.1,    -5.1,  -13.2,   -6.3,   1.1,    7.8,    8.8,     0.4,    -9.3,   -1.4,   -11.9,
+    9.6,      -1.9,    -6.2,   3.4,     -0.1,  -0.2,    1.7,    3.6,    -0.9,   4.8,     0.7,    -8.6,   -0.9,   -0.1,
+    1.9,      -4.3,    1.4,    -3.4,    -2.4,  -0.1,    -3.8,   -8.8,   3,      -1.4,    0,      -2.5,   2.5,    2.3,
+    -0.6,     -0.9,    -0.4,   0.3,     0.6,   -0.7,    -0.2,   -0.1,   -1.7,   1.4,     -1.6,   -0.6,   -3,     0.2,
+    -2,       3.1,     -2.6,   -2,      -0.1,  -1.2,    0.5,    0.5,    1.3,    1.4,     -1.2,   -1.8,   0.7,    0.1,
+    0.3,      0.8,     0.5,    -0.2,    -0.3,  0.6,     -0.5,   0.2,    0.1,    -0.9,    -1.1,   0,      -0.3,   0.5,
+    0.1,      -0.9,    -0.9,   0.5,     0.6,   0.7,     1.4,    -0.3,   -0.4,   0.8,     -1.3,   0,      -0.1,   0.8,
+    0.3,      0,       -0.1,   0.4,     0.5,   0.1,     0.5,    0.5,    -0.4,   -0.5,    -0.4,   -0.4,   -0.6};
+const float igrf_sv[80] = {5.7,  7.4,  -25.9, -11,  -7,   -30.2, -2.1, -22.4, 2.2,  -5.9, 6,    3.1,  -1.1, -12,
+                           0.5,  -1.2, -1.6,  -0.1, -5.9, 6.5,   5.2,  3.6,   -5.1, -5,   -0.3, 0.5,  0,    -0.6,
+                           2.5,  0.2,  -0.6,  1.3,  3,    0.9,   0.3,  -0.5,  -0.3, 0,    0.4,  -1.6, 1.3,  -1.3,
+                           -1.4, 0.8,  0,     0,    0.9,  1,     -0.1, -0.2,  0.6,  0,    0.6,  0.7,  -0.8, 0.1,
+                           -0.2, -0.5, -1.1,  -0.8, 0.1,  0.8,   0.3,  0,     0.1,  -0.2, -0.1, 0.6,  0.4,  -0.2,
+                           -0.1, 0.5,  0.4,   -0.3, 0.3,  -0.4,  -0.1, 0.5,   0.4};
+
+float mag_coeff[MAXCOEFF]; /*Computed coefficients*/
+
+static int extrapsh(int date)
+{
+    int   nmax;
+    int   k, l;
+    int   i;
+    int   igo = IGRF_ORD, svo = SV_ORD;
+    float factor;
+    /*# of years to extrapolate */
+    factor = date - IGRF_DATE;
+    /*make shure that degree is smaller then MAXDEG */
+    if (igo > MAXDEG)
+    {
+        igo = MAXDEG;
+    }
+    if (svo > MAXDEG)
+    {
+        svo = MAXDEG;
+    }
+    /*check for equal degree*/
+    if (igo == svo)
+    {
+        k    = igo * (igo + 2);
+        nmax = igo;
+    }
+    else
+    {
+        /* check if reference is bigger */
+        if (igo > svo)
+        {
+            k = svo * (svo + 2);
+            l = igo * (igo + 2);
+            /* copy extra elements unchanged */
+            for (i = k; i < l; ++i)
+            {
+                mag_coeff[i] = igrf_coeffs[i];
+            }
+            /*maximum degree of model */
+            nmax = igo;
+        }
+        else
+        {
+            k = igo * (igo + 2);
+            l = svo * (svo + 2);
+            /*put in change for extra elements? */
+            for (i = k; i < l; ++i)
+            {
+                mag_coeff[i] = factor * igrf_sv[i];
+            }
+            nmax = svo;
+        }
+    }
+    /*apply secular variations to model */
+    for (i = 0; i < k; ++i)
+    {
+        mag_coeff[i] = igrf_coeffs[i] + factor * igrf_sv[i];
+    }
+    /* return maximum degree of model and secular variations */
+    return nmax;
+}
+
+#define PQ_BUFFSIZE 32
+
+static int igrf(Generic_ADCS_EPH_Mag_Tlm_Payload_t *bfld, Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS,
+                Generic_ADCS_GNC_Tlm_Payload_t *GNC)
+{
+    float      slat;
+    float      clat;
+    float      ratio;
+    float      aa, bb, cc;
+    float      rr;
+    float      fm, fn;
+    float      sl[MAXDEG];
+    float      cl[MAXDEG];
+    float      p[PQ_BUFFSIZE];
+    float      q[PQ_BUFFSIZE];
+    int        i, j, k, l, m, n;
+    int        kw;
+    int        npq;
+    float      x, y, z;
+    Matrix3x3f Dcm_NEDtoECEF, Dcm_ECEFtoECIF;
+    Vector3f   dest, Bfield_ECIF, Bfield_ECEF;
+    float      PriMerAng;
+    double     GMST;
+    float      elev;
+
+    double GpsTime = GpsDateToGpsTime(2, DI_GPS->Weeks,
+                                      DI_GPS->SecondsIntoWeek); // rollover=2, valid April 7, 2019 to November 20, 2038
+    double j2000   = GpsTime - 7300.5 * 86400 + (19 + 32.184);
+    long   year, month, day, hour, minute;
+    double second;
+    TimeToDate(j2000, &year, &month, &day, &hour, &minute, &second, 0.01);
+
+    extrapsh(year);
+
+    /* Prime Meridian Calculation */
+    GMST      = JD_TO_GMST(GpsTime_TO_JD(2, DI_GPS->Weeks,
+                                         DI_GPS->SecondsIntoWeek)); // rollover=2, valid April 7, 2019 to November 20, 2038
+    PriMerAng = TWOPI * GMST;
+
+    /*calculate sin and cos of latitude */
+    slat = sin(DI_GPS->lat);
+    clat = cos(DI_GPS->lat);
+    /*prevent divide by zero */
+    if (clat < EPS16)
+    {
+        clat = EPS16;
+    }
+
+    /*calculate sin and cos of longitude */
+    sl[0] = sin(DI_GPS->lon);
+    cl[0] = cos(DI_GPS->lon);
+
+    /*initialize coordinates */
+    x = 0;
+    y = 0;
+    z = 0;
+
+    Dcm_NEDtoECEF.Comp[0][0] = -slat * cl[0];
+    Dcm_NEDtoECEF.Comp[0][1] = -sl[0];
+    Dcm_NEDtoECEF.Comp[0][2] = -clat * cl[0];
+    Dcm_NEDtoECEF.Comp[1][0] = -slat * sl[0];
+    Dcm_NEDtoECEF.Comp[1][1] = cl[0];
+    Dcm_NEDtoECEF.Comp[1][2] = -clat * sl[0];
+    Dcm_NEDtoECEF.Comp[2][0] = clat;
+    Dcm_NEDtoECEF.Comp[2][1] = 0;
+    Dcm_NEDtoECEF.Comp[2][2] = -slat;
+
+    /*calculate loop iterations */
+    npq = (bfld->nmax * (bfld->nmax + 3)) / 2;
+
+    /*calculate ratio of earths radius to elevation */
+    elev  = (DI_GPS->alt + RE) * M2KM;
+    ratio = RE * M2KM / elev;
+
+    aa = sqrt(3.0);
+
+    /*set initial values of p */
+    p[0] = 2.0 * slat;
+    p[1] = 2.0 * clat;
+    p[2] = 4.5 * slat * slat - 1.5;
+    p[3] = 3.0 * aa * clat * slat;
+
+    /*Set initial values of q */
+    q[0] = -clat;
+    q[1] = slat;
+    q[2] = -3.0 * clat * slat;
+    q[3] = aa * (slat * slat - clat * clat);
+
+    for (k = 0, l = 1, n = 0, m = 0, rr = ratio * ratio; k < npq; k++, m++)
+    {
+        /*testing get wrapped idx */
+        kw = k % PQ_BUFFSIZE;
+        if (n <= m)
+        {
+            m = -1;
+            n += 1;
+            /*rr = pow(ratio,n+2); */
+            rr *= ratio;
+            fn = n;
+        }
+        fm = m + 1;
+        if (k >= 4)
+        {
+            j = k - n;
+            /*wrap j for smaller array */
+            j = j % PQ_BUFFSIZE;
+            if (m + 1 == n)
+            {
+                aa    = sqrt(1.0 - 0.5 / fm);
+                p[kw] = (1.0 + 1.0 / fm) * aa * clat * p[j - 1];
+                q[kw] = aa * (clat * q[j - 1] + slat / fm * p[j - 1]);
+                sl[m] = sl[m - 1] * cl[0] + cl[m - 1] * sl[0];
+                cl[m] = cl[m - 1] * cl[0] - sl[m - 1] * sl[0];
+            }
+            else
+            {
+                aa = sqrt(fn * fn - fm * fm);
+                bb = sqrt(((fn - 1.0) * (fn - 1.0)) - (fm * fm)) / aa;
+                cc = (2.0 * fn - 1.0) / aa;
+                i  = k - 2 * n + 1;
+                /*wrap i for smaller array */
+                i     = i % PQ_BUFFSIZE;
+                p[kw] = (fn + 1.0) * (cc * slat / fn * p[j] - bb / (fn - 1.0) * p[i]);
+                q[kw] = cc * (slat * q[j] - clat / fn * p[j]) - bb * q[i];
+            }
+        }
+        aa = rr * mag_coeff[l - 1];
+
+        if (m == -1)
+        {
+            x = x + aa * q[kw];
+            z = z - aa * p[kw];
+            l += 1;
+        }
+        else
+        {
+            bb = rr * mag_coeff[l];
+            cc = aa * cl[m] + bb * sl[m];
+            x  = x + cc * q[kw];
+            z  = z - cc * p[kw];
+            if (clat > 0)
+            {
+                y = y + (aa * sl[m] - bb * cl[m]) * fm * p[kw] / ((fn + 1.0) * clat);
+            }
+            else
+            {
+                y = y + (aa * sl[m] - bb * cl[m]) * q[kw] * slat;
+            }
+            l += 2;
+        }
+    }
+
+    /*set destination values */
+    dest.Comp[0] = x;
+    dest.Comp[1] = y;
+    dest.Comp[2] = z;
+    Matrix3x3f_MultVec(&Bfield_ECEF, &Dcm_NEDtoECEF, &dest);
+
+    Dcm_ECEFtoECIF.Comp[0][0] = cos(PriMerAng);
+    Dcm_ECEFtoECIF.Comp[0][1] = -sin(PriMerAng);
+    Dcm_ECEFtoECIF.Comp[0][2] = 0;
+    Dcm_ECEFtoECIF.Comp[1][0] = sin(PriMerAng);
+    Dcm_ECEFtoECIF.Comp[1][1] = cos(PriMerAng);
+    Dcm_ECEFtoECIF.Comp[1][2] = 0;
+    Dcm_ECEFtoECIF.Comp[2][0] = 0;
+    Dcm_ECEFtoECIF.Comp[2][1] = 0;
+    Dcm_ECEFtoECIF.Comp[2][2] = 1;
+
+    Matrix3x3f_MultVec(&Bfield_ECIF, &Dcm_ECEFtoECIF, &Bfield_ECEF);
+
+    GNC->Bfield_ECIF[0] = Bfield_ECIF.Comp[0] * NANO2TSLA;
+    GNC->Bfield_ECIF[1] = Bfield_ECIF.Comp[1] * NANO2TSLA;
+    GNC->Bfield_ECIF[2] = Bfield_ECIF.Comp[2] * NANO2TSLA;
+
+    GNC->Bfield_ECEF[0] = Bfield_ECEF.Comp[0] * NANO2TSLA;
+    GNC->Bfield_ECEF[1] = Bfield_ECEF.Comp[1] * NANO2TSLA;
+    GNC->Bfield_ECEF[2] = Bfield_ECEF.Comp[2] * NANO2TSLA;
+
+    GNC->Bfield_NED[0] = x * NANO2TSLA;
+    GNC->Bfield_NED[1] = y * NANO2TSLA;
+    GNC->Bfield_NED[2] = z * NANO2TSLA;
+
+    return 0;
+}
+
+static int32_t solar_ephemeris(Generic_ADCS_EPH_Sol_Tlm_Payload_t *sol, Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS,
+                               Generic_ADCS_GNC_Tlm_Payload_t *GNC)
+{
+    /*float Date_Julian, Date_Solar; */
+    double Date_Solar;
+    double g, g_rad;
+    double Long_Ecliptic;
+    double Sin_Long_Ecliptic;
+    double Unit_Sun_GciF[3];
+    double h[3];
+    double b;
+    double PosN[3];
+    double VelN[3];
+
+    Date_Solar = GpsTime_TO_JD(2, DI_GPS->Weeks, DI_GPS->SecondsIntoWeek) -
+                 sol->date_epoch; // rollover=2, valid April 7, 2019 to November 20, 2038
+
+    g     = sol->coeff_G1 + sol->coeff_G2 * (double)Date_Solar;
+    g_rad = g * D2R;
+
+    Long_Ecliptic =
+        sol->coeff_L1 + sol->coeff_l2 * Date_Solar + sol->coeff_long1 * sin(g_rad) + sol->coeff_long2 * sin(2 * g_rad);
+
+    Sin_Long_Ecliptic = sin(Long_Ecliptic * D2R);
+    Unit_Sun_GciF[0]  = cos(Long_Ecliptic * D2R);
+    Unit_Sun_GciF[1]  = sol->cos_obliq_eclp * Sin_Long_Ecliptic;
+    Unit_Sun_GciF[2]  = sol->sin_obliq_eclp * Sin_Long_Ecliptic;
+
+    GNC->svn[0] = Unit_Sun_GciF[0];
+    GNC->svn[1] = Unit_Sun_GciF[1];
+    GNC->svn[2] = Unit_Sun_GciF[2];
+
+    /*Calcualte number of elapsed days since Epoch of J2000 and corresponding angle of rotation*/
+    double GMST      = JD_TO_GMST(Date_Solar);
+    double PriMerAng = TWOPI * GMST;
+    double ZAxis[3]  = {0.0, 0.0, 1.0};
+    double C_W_TETE[3][3], C_TETE_J2000[3][3], C_ECEF_ECI[3][3];
+    HiFiEarthPrecNute(Date_Solar, C_TETE_J2000);
+    SimpRot(ZAxis, PriMerAng, C_W_TETE);
+    MxM(C_W_TETE, C_TETE_J2000, C_ECEF_ECI);
+    double PosW[3] = {DI_GPS->ECEFX, DI_GPS->ECEFY, DI_GPS->ECEFZ};
+    double VelW[3] = {DI_GPS->VelX, DI_GPS->VelY, DI_GPS->VelZ};
+
+    /* Solar beta angle */
+    MxV(C_ECEF_ECI, PosW, PosN);
+    MxV(C_ECEF_ECI, VelW, VelN);
+
+    VxV(PosN, VelN, h);
+    UNITV(h);
+    b         = Limit(VoV(GNC->svn, h), -1.0, 1.0);
+    GNC->beta = asin(b);
+
+    return 0;
+}
+
+static void AD_imu(const Generic_ADCS_DI_Imu_Tlm_Payload_t *DI_IMU, Generic_ADCS_AD_Imu_Tlm_Payload_t *AD_IMU)
+{
+    if (DI_IMU->valid)
+    {
+        AD_IMU->valid = 1;
+        for (int i = 0; i < 3; i++)
+        {
+            AD_IMU->acc[i] = DI_IMU->acc[i];
+        }
+
+        if (AD_IMU->init == 0)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                AD_IMU->wbn[i] = DI_IMU->wbn[i];
+            }
+            AD_IMU->init = 1;
+        }
+        else
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                AD_IMU->wbn[i] = AD_IMU->alpha * AD_IMU->wbn_prev[i] + (1 - AD_IMU->alpha) * DI_IMU->wbn[i];
+            }
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            AD_IMU->wbn_prev[i] = AD_IMU->wbn[i];
+        }
+    }
+    else
+    {
+        AD_IMU->valid = 0;
+    }
+}
+
+static void AD_mag(const Generic_ADCS_DI_Mag_Tlm_Payload_t *DI_Mag, Generic_ADCS_AD_Mag_Tlm_Payload_t *AD_Mag)
+{
+    /* AD very simple for magnetometer... there is only one mag and no fusion with anything else */
+    for (int i = 0; i < 3; i++)
+    {
+        AD_Mag->bvb[i] = DI_Mag->bvb[i];
+    }
+}
+
+static void AD_sol(const Generic_ADCS_DI_Fss_Tlm_Payload_t *DI_Fss, const Generic_ADCS_DI_Css_Tlm_Payload_t *DI_Css,
+                   Generic_ADCS_AD_Sol_Tlm_Payload_t *AD_Sol)
+{
+    if (DI_Fss->valid == 1)
+    {
+        AD_Sol->SunValid = 1;
+        AD_Sol->FssValid = 1;
+        AD_Sol->svb[0]   = DI_Fss->svb[0];
+        AD_Sol->svb[1]   = DI_Fss->svb[1];
+        AD_Sol->svb[2]   = DI_Fss->svb[2];
+    }
+    else if (DI_Css->valid == 1)
+    {
+        AD_Sol->SunValid = 1;
+        AD_Sol->FssValid = 0;
+        AD_Sol->svb[0]   = DI_Css->svb[0];
+        AD_Sol->svb[1]   = DI_Css->svb[1];
+        AD_Sol->svb[2]   = DI_Css->svb[2];
+    }
+    else
+    {
+        AD_Sol->SunValid = 0;
+        AD_Sol->FssValid = 0;
+        AD_Sol->svb[0]   = 0.0;
+        AD_Sol->svb[1]   = 0.0;
+        AD_Sol->svb[2]   = 0.0;
+    }
+}
+
+static void AD_st(const Generic_ADCS_DI_St_Tlm_Payload_t *DI_ST, Generic_ADCS_AD_ST_Tlm_Payload_t *st)
+{
+    int    i;
+    double qST[4]       = {0.0, 0.0, 0.0, 1.0};
+    int    valid_st_cnt = 0;
+
+    if (DI_ST->valid)
+    {
+        valid_st_cnt = valid_st_cnt + 1;
+        QxQ(DI_ST->q, DI_ST->qbs, qST);
+    }
+
+    if (valid_st_cnt > 0.0)
+    {
+        for (i = 0; i < 4; i++)
+            st->qbn[i] = qST[i];
+        st->Valid = true;
+    }
+    else
+    {
+        st->Valid = false;
+    }
+}
+
+static void AD_gps(const Generic_ADCS_DI_Gps_Tlm_Payload_t *DI_GPS, Generic_ADCS_AD_Gps_Tlm_Payload_t *gps)
+{
+    gps->Weeks           = DI_GPS->Weeks;
+    gps->SecondsIntoWeek = DI_GPS->SecondsIntoWeek;
+    gps->Fractions       = DI_GPS->Fractions;
+    gps->ECEFX           = DI_GPS->ECEFX;
+    gps->ECEFY           = DI_GPS->ECEFY;
+    gps->ECEFZ           = DI_GPS->ECEFZ;
+    gps->VelX            = DI_GPS->VelX;
+    gps->VelY            = DI_GPS->VelY;
+    gps->VelZ            = DI_GPS->VelZ;
+    gps->lat             = DI_GPS->lat;
+    gps->lon             = DI_GPS->lon;
+    gps->alt             = DI_GPS->alt;
+}
+
+static void AD_rateEst(Generic_ADCS_GNC_Tlm_Payload_t GNC, Generic_ADCS_AD_Mag_Tlm_Payload_t mag,
+                       Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_AD_rateEst_Tlm_Payload_t *AD)
+{
+    int           i;
+    static long   valid_counter   = 0;
+    static double w_array[100][3] = {{0}};
+    double        sum_wx          = 0.0;
+    double        sum_wy          = 0.0;
+    double        sum_wz          = 0.0;
+
+    AD->Valid = false;
+
+    for (i = 0; i < 3; i++)
+    {
+        AD->wbn[i] = 0.0;
+    }
+
+    if (sol.FssValid || mag.MagValid)
+    {
+        if (sol.FssValid && mag.MagValid)
+        {
+            if (AD->MagInit || AD->SolInit)
+            {
+                if (AD->MagInit && AD->SolInit)
+                {
+                    calc_wmag(GNC.DT, mag, AD);
+                    calc_wsol(GNC.DT, sol, AD);
+                    for (i = 0; i < 3; i++)
+                        AD->wbn[i] = AD->ws[i] + VoV(AD->wm, sol.svb) * sol.svb[i];
+                    AD->Valid = true;
+                }
+                else
+                {
+                    if (AD->MagInit)
+                    {
+                        AD->SolInit = true;
+                        calc_wmag(GNC.DT, mag, AD);
+                        for (i = 0; i < 3; i++)
+                            AD->wbn[i] = AD->wm[i];
+                        AD->Valid = true;
+                    }
+                    else /*sol is already intitialzied*/
+                    {
+                        AD->MagInit = true;
+                        calc_wsol(GNC.DT, sol, AD);
+                        for (i = 0; i < 3; i++)
+                            AD->wbn[i] = AD->ws[i];
+                        AD->Valid = true;
+                    }
+                }
+            }
+            else
+            {
+                AD->SolInit = true;
+                AD->MagInit = true;
+            }
+        }
+        else
+        {
+            if (sol.FssValid)
+            {
+                AD->MagInit = false;
+                if (AD->SolInit)
+                {
+                    calc_wsol(GNC.DT, sol, AD);
+                    for (i = 0; i < 3; i++)
+                        AD->wbn[i] = AD->ws[i];
+                    AD->Valid = true;
+                }
+                else
+                {
+                    AD->SolInit = true;
+                }
+            }
+            else /*Mag has to be valid*/
+            {
+                AD->SolInit = false;
+                if (AD->MagInit)
+                {
+                    calc_wmag(GNC.DT, mag, AD);
+                    for (i = 0; i < 3; i++)
+                        AD->wbn[i] = AD->wm[i];
+                    AD->Valid = true;
+                }
+                else
+                {
+                    AD->MagInit = true;
+                }
+            }
+        }
+    }
+    else
+    {
+        AD->MagInit = false;
+        AD->SolInit = false;
+    }
+
+    /*Moving average filter applied*/
+    if (AD->enable_filter && AD->Valid)
+    {
+
+        if (valid_counter < AD->sample_size)
+        {
+            w_array[valid_counter][0] = AD->wbn[0];
+            w_array[valid_counter][1] = AD->wbn[1];
+            w_array[valid_counter][2] = AD->wbn[2];
+        }
+        else
+        {
+            for (i = 0; i < AD->sample_size - 1; i++)
+            {
+                w_array[i][0] = w_array[i + 1][0];
+                w_array[i][1] = w_array[i + 1][1];
+                w_array[i][2] = w_array[i + 1][2];
+            }
+            w_array[AD->sample_size - 1][0] = AD->wbn[0];
+            w_array[AD->sample_size - 1][1] = AD->wbn[1];
+            w_array[AD->sample_size - 1][2] = AD->wbn[2];
+
+            for (i = 0; i < AD->sample_size; i++)
+            {
+                sum_wx = sum_wx + w_array[i][0];
+                sum_wy = sum_wy + w_array[i][1];
+                sum_wz = sum_wz + w_array[i][2];
+            }
+            AD->wbn[0] = sum_wx / AD->sample_size;
+            AD->wbn[1] = sum_wy / AD->sample_size;
+            AD->wbn[2] = sum_wz / AD->sample_size;
+        }
+
+        valid_counter = valid_counter + 1;
+    }
+    else
+    {
+        valid_counter = 0.0;
+    }
+
+    /*Update previous states*/
+    for (i = 0; i < 3; i++)
+    {
+        AD->svb_prev[i] = sol.svb[i];
+        AD->bvb_prev[i] = mag.bvb[i];
+    }
+}
+
+static void calc_wmag(double dt, Generic_ADCS_AD_Mag_Tlm_Payload_t mag, Generic_AD_rateEst_Tlm_Payload_t *AD)
+{
+
+    double bvb[3] = {0}, bvb_prev[3] = {0}, ang = 0.0, axis[3] = {0}, rate = 0.0;
+
+    int i;
+    for (i = 0; i < 3; i++)
+    {
+        bvb[i]      = mag.bvb[i];
+        bvb_prev[i] = AD->bvb_prev[i];
+    }
+    UNITV(bvb);
+    UNITV(bvb_prev);
+    ang = arccos(VoV(bvb, bvb_prev));
+    VxV(bvb, bvb_prev, axis);
+    if (MAGV(axis) > 1.0e-10)
+    {
+        UNITV(axis);
+    }
+    rate = ang / dt;
+    for (i = 0; i < 3; i++)
+    {
+        AD->wm[i] = rate * axis[i];
+    }
+}
+
+static void calc_wsol(double dt, Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_AD_rateEst_Tlm_Payload_t *AD)
+{
+
+    int    i;
+    double ang = 0.0, axis[3] = {0}, rate = 0.0;
+    ang = arccos(VoV(sol.svb, AD->svb_prev));
+    VxV(sol.svb, AD->svb_prev, axis);
+    if (MAGV(axis) > 1.0e-10)
+    {
+        UNITV(axis);
+    }
+    rate = ang / dt;
+    for (i = 0; i < 3; i++)
+    {
+        AD->ws[i] = rate * axis[i];
+    }
+}
+
+static void AD_murAKF(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AD_ST_Tlm_Payload_t st,
+                      Generic_ADCS_AD_Imu_Tlm_Payload_t imu, Generic_ADCS_AD_Mag_Tlm_Payload_t mag,
+                      Generic_ADCS_AD_Sol_Tlm_Payload_t sol, Generic_ADCS_AD_murAKF_Tlm_Payload_t *AKF)
+{
+    double west_sk[3][3] = {{0}}, wsk_sq[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+    double PkPhi[6][6], PhiPkPhi[6][6];
+    double Ad[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, r_sk[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+           Hc[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, Pkm[6][6], Phi[6][6], GtQ[6][6], GQGt[6][6];
+    double PkHk[6][3],
+        HkPkHk[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, HkPkHkRk[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}},
+        HkPkHkRk_i[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}}, HkT_HkPkHkRk_i[6][3], Lk[6][3], LkHk[6][6], I6_LkHk[6][6];
+
+    int snum = 1;
+
+    int        i, j;
+    int        magValid         = 0;                              /* Initialize MAG validity flag */
+    int        ResSTValid       = 0;                              /* Initialize ST residual validity flag */
+    int        ResMAGValid      = 0;                              /* Initialize MAG residual validity flag */
+    int        ResFSSValid      = 0;                              /* Initialize FSS residual validity flag */
+    double     qst[4]           = {0.0, 0.0, 0.0, 1.0};           /* Initialize ST quaternion */
+    double     qst_err[4]       = {0.0, 0.0, 0.0, 1.0};           /* Initialize ST error quaternion */
+    double     qkm_est[4]       = {0.0, 0.0, 0.0, 1.0};           /* Initialize estimated quaternion */
+    double     qdot[4]          = {0.0, 0.0, 0.0, 1.0};           /* Initialize quaternion derivative */
+    double     w_meas[3]        = {0.0, 0.0, 0.0};                /* Initialize measured rates */
+    double     w_est[3]         = {0.0, 0.0, 0.0};                /* Initialize estimated rates */
+    double     wn               = 0.0;                            /* Magnitude of estimated rates */
+    double     ek[3]            = {0.0, 0.0, 0.0};                /* Initialize residual */
+    double     sig              = 0.0;                            /* Initialize covariance */
+    double     b[3]             = {0.0, 0.0, 0.0};                /* Initialize measurement vector in the body frame */
+    double     r[3]             = {0.0, 0.0, 0.0};                /* Initialize ephemeris data */
+    double     r_est[3]         = {0.0, 0.0, 0.0};                /* Initialize estimated vector */
+    double     X3k[3]           = {0.0, 0.0, 0.0};                /* Initialize estimated state */
+    double     XiXk[4]          = {0.0, 0.0, 0.0, 0.0};           /* Initialize intermediate parameter */
+    double     delta_xkm_est[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /* Initialize error state */
+    double     xkd2[6]          = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /* Initialize intermediate parameter */
+    double     xkd[3]           = {0.0, 0.0, 0.0};                /* Initialize intermediate parameter */
+    double     Hkxk[3]          = {0.0, 0.0, 0.0};                /* Initialize intermediate parameter */
+    static int StValid_prev     = 0;
+
+    for (i = 0; i < 4; i++)
+        qst[i] = st.qbn[i];
+
+    /* Initialization - Start AKF when ST is valid */
+    if (AKF->init == 1 && st.Valid == 1)
+    {
+        AKF->init = 0;
+        /* Initialize q with star tracker data if valid */
+        for (i = 0; i < 4; i++)
+        {
+            AKF->qk_est[i] = qst[i];
+        }
+        AKF->AKFvalid = 1;
+    }
+    else if (AKF->init == 1 && st.Valid == 0)
+    {
+        AKF->AKFvalid = 0;
+    }
+
+    /* Only run AKF when IMU is valid */
+    if (AKF->init == 0 && imu.valid == 1)
+    {
+        /* ------------------------Discrete Propagation -------------------------- */
+
+        /* Dynamics of Gyro bias */
+        for (i = 0; i < 3; i++)
+        {
+            /* Construct gyro model */
+            w_meas[i] = imu.wbn[i];
+            /* Gyro sampling */
+            w_est[i] = w_meas[i] - AKF->bias_est[i];
+
+            AKF->wbn[i] = w_est[i];
+        }
+
+        /* Calculate the discrete-time State Transition Matrix (Phi) */
+        skewM(w_est, west_sk);
+        wn = MAGV(w_est);
+        MxM(west_sk, west_sk, wsk_sq);
+
+        for (i = 0; i < 6; i++)
+        {
+            for (j = 0; j < 6; j++)
+            {
+                if (i < 3 && j < 3)
+                {
+                    Phi[i][j] = AKF->eye3[i][j] - west_sk[i][j] * (sin(wn * AKF->dt) / wn) +
+                                wsk_sq[i][j] * ((1 - cos(wn * AKF->dt)) / (wn * wn));
+                }
+
+                else if (i < 3 && j >= 3)
+                {
+                    Phi[i][j] = west_sk[i][j - 3] * ((1 - cos(wn * AKF->dt)) / (wn * wn)) -
+                                AKF->eye3[i][j - 3] * AKF->dt -
+                                wsk_sq[i][j - 3] * ((wn * AKF->dt - sin(wn * AKF->dt)) / (wn * wn * wn));
+                }
+                else if (i >= 3 && j < 3)
+                {
+                    Phi[i][j] = 0.0;
+                }
+                else if (i >= 3 && j >= 3)
+                {
+                    if (i == j)
+                    {
+                        Phi[i][j] = 1.0;
+                    }
+                    else
+                    {
+                        Phi[i][j] = 0.0;
+                    }
+                }
+            }
+        }
+
+        /* discrete time quaternion propagation */
+        QW2QDOT(AKF->qk_est, w_est, qdot);
+        for (i = 0; i < 4; i++)
+        {
+            qkm_est[i] = AKF->qk_est[i] + qdot[i] * AKF->dt;
+        }
+        UNITQ(qkm_est);
+
+        /* Propagate the covariance matrix (Pk-) */
+        M66xM66(AKF->Gt, AKF->Qk, GtQ);
+        M66xM66T(GtQ, AKF->Gt, GQGt);
+        M66xM66T(AKF->Pk, Phi, PkPhi);
+        M66xM66(Phi, PkPhi, PhiPkPhi);
+        for (i = 0; i < 6; i++)
+        {
+            for (j = 0; j < 6; j++)
+            {
+                Pkm[i][j] = PhiPkPhi[i][j] + GQGt[i][j];
+            }
+        }
+
+        /* -------------------------------------------------------------- */
+
+        /* ------------------ Murrell's Version: -----------------------  */
+
+        /*  Initialize to Xkm to 0 */
+        for (i = 0; i < 3; i++)
+        {
+            delta_xkm_est[i]     = 0.0;
+            delta_xkm_est[i + 3] = 0.0;
+        }
+
+        /* Get sensor data bi */
+        while (snum < 4)
+        {
+            if (snum == 1)
+            { /* Get Mag data */
+                magValid = MAGV(mag.bvb) > AKF->Mag_range;
+                if (magValid == 1)
+                {
+                    for (i = 0; i < 3; i++)
+                    {
+                        b[i] = mag.bvb[i];
+                    }
+                    sig = AKF->sig_mag;
+                }
+            }
+
+            else if (snum == 2)
+            { /* Get ST data */
+                if (st.Valid == 1)
+                {
+                    QxQT(qst, AKF->qk_est, qst_err);
+                    sig = AKF->sig_star;
+                }
+            }
+
+            else if (snum == 3)
+            { /* Get FSS data */
+                if (sol.FssValid == 1)
+                {
+                    for (i = 0; i < 3; i++)
+                    {
+                        b[i] = sol.svb[i];
+                    }
+                    sig = AKF->sig_sun;
+                }
+            }
+
+            if ((snum == 1 && magValid == 1) || (snum == 3 && sol.FssValid == 1))
+            {
+                /* Get Ephemeris data */
+                if (snum == 1)
+                {
+                    r[0] = GNC->Bfield_ECIF[0];
+                    r[1] = GNC->Bfield_ECIF[1];
+                    r[2] = GNC->Bfield_ECIF[2];
+                }
+                else if (snum == 3)
+                {
+                    r[0] = GNC->svn[0];
+                    r[1] = GNC->svn[1];
+                    r[2] = GNC->svn[2];
+                }
+
+                /* Calculate Sensitivity matrix HK = [skew(A(qm_est)*rx) zeros] */
+                Q2C(qkm_est, Ad);
+                skewM(r, r_sk);
+                MxM(Ad, r_sk, Hc);
+
+                for (i = 0; i < 3; i++)
+                {
+                    for (j = 0; j < 6; j++)
+                    {
+                        if (j < 3)
+                        {
+                            AKF->Hk[i][j] = Hc[i][j];
+                        }
+                        else
+                        {
+                            AKF->Hk[i][j] = 0.0;
+                        }
+                    }
+                }
+
+                /* Calculate Kalman gain Lk = Pkm*HkT[Hk*Pkm*HkT + Rk] */
+                M66xM36T(Pkm, AKF->Hk, PkHk);
+                M36xM63(AKF->Hk, PkHk, HkPkHk);
+                for (i = 0; i < 3; i++)
+                {
+                    for (j = 0; j < 3; j++)
+                    {
+                        HkPkHkRk[i][j] = HkPkHk[i][j] + sig * sig * AKF->eye3[i][j];
+                    }
+                }
+                MINV3(HkPkHkRk, HkPkHkRk_i);
+                M36TxM33(AKF->Hk, HkPkHkRk_i, HkT_HkPkHkRk_i);
+                M66xM63(Pkm, HkT_HkPkHkRk_i, Lk);
+
+                /* Update the covariance matrix (Pk+) = [I-Lk*Hk]*Pkm */
+                M63xM36(Lk, AKF->Hk, LkHk);
+                for (i = 0; i < 6; i++)
+                {
+                    for (j = 0; j < 6; j++)
+                    {
+                        if (i == j)
+                        {
+                            I6_LkHk[i][j] = 1.0 - LkHk[i][j];
+                        }
+                        else
+                        {
+                            I6_LkHk[i][j] = -LkHk[i][j];
+                        }
+                    }
+                }
+                M66xM66(I6_LkHk, Pkm, AKF->Pk);
+
+                /* Calculate residual ek = (bi - A(qm_est)*ri) */
+                MxV(Ad, r, r_est);
+
+                for (i = 0; i < 3; i++)
+                {
+                    ek[i] = b[i] - r_est[i];
+                }
+                /* Define FSS and Mag residual validity */
+                if (snum == 1)
+                {
+                    if (MAGV(ek) < AKF->ek_MG_bound)
+                    {
+                        ResMAGValid = 1;
+                    }
+                    else
+                    {
+                        ResMAGValid = 0;
+                    }
+                }
+                else if (snum == 3)
+                {
+                    if (MAGV(ek) < AKF->ek_FSS_bound)
+                    {
+                        ResFSSValid = 1;
+                    }
+                    else
+                    {
+                        ResFSSValid = 0;
+                    }
+                }
+            }
+
+            else if (snum == 2 && st.Valid == 1)
+            {
+                for (i = 0; i < 3; i++)
+                {
+                    for (j = 0; j < 6; j++)
+                    {
+                        if (j < 3)
+                        {
+                            AKF->Hk[i][j] = AKF->eye3[i][j];
+                        }
+                        else
+                        {
+                            AKF->Hk[i][j] = 0.0;
+                        }
+                    }
+                }
+
+                /* Calculate Kalman gain Lk = Pkm*HkT[Hk*Pkm*HkT + Rk] */
+                M66xM36T(Pkm, AKF->Hk, PkHk);
+                M36xM63(AKF->Hk, PkHk, HkPkHk);
+                for (i = 0; i < 3; i++)
+                {
+                    for (j = 0; j < 3; j++)
+                    {
+                        HkPkHkRk[i][j] = HkPkHk[i][j] + sig * sig * AKF->eye3[i][j];
+                    }
+                }
+                MINV3(HkPkHkRk, HkPkHkRk_i);
+                M36TxM33(AKF->Hk, HkPkHkRk_i, HkT_HkPkHkRk_i);
+                M66xM63(Pkm, HkT_HkPkHkRk_i, Lk);
+
+                /* Update the covariance matrix (Pk+) = [I-Lk*Hk]*Pkm */
+                M63xM36(Lk, AKF->Hk, LkHk);
+                for (i = 0; i < 6; i++)
+                {
+                    for (j = 0; j < 6; j++)
+                    {
+                        if (i == j)
+                        {
+                            I6_LkHk[i][j] = 1.0 - LkHk[i][j];
+                        }
+                        else
+                        {
+                            I6_LkHk[i][j] = -LkHk[i][j];
+                        }
+                    }
+                }
+                M66xM66(I6_LkHk, Pkm, AKF->Pk);
+
+                /* Calculate residual ek */
+                for (i = 0; i < 3; i++)
+                {
+                    ek[i] = 2 * qst_err[i];
+                }
+                /* Define ST residual validity */
+                if (MAGV(ek) < AKF->ek_ST_bound)
+                {
+                    ResSTValid = 1;
+                }
+                else
+                {
+                    ResSTValid = 0;
+                }
+            }
+
+            /* Check for negative and divergence in diagonal elements of covariance P */
+            if (st.Valid == 1 && StValid_prev == 0)
+            {
+                AKF->reset_flag = 1;
+            }
+
+            else if (st.Valid == 1)
+            {
+                for (i = 0; i < 6; i++)
+                {
+                    if (AKF->Pk[i][i] < 0.0 || AKF->Pk[i][i] >= AKF->Dvg_tol)
+                    {
+                        AKF->reset_flag = 1;
+                        break;
+                    }
+                }
+            }
+
+            /* Do an update only if residuals are valid */
+            if (((ResMAGValid == 1) && snum == 1) || ((ResSTValid == 1) && snum == 2) ||
+                ((ResFSSValid == 1) && snum == 3))
+            {
+                /* Update state delta_xk_est = delta_xkm_est + Lk[ek - Hk*delta_xkm_est] */
+                M36xV6(AKF->Hk, delta_xkm_est, Hkxk);
+                for (i = 0; i < 3; i++)
+                {
+                    xkd[i] = ek[i] - Hkxk[i];
+                }
+                M63xV3(Lk, xkd, xkd2);
+                for (i = 0; i < 6; i++)
+                {
+                    AKF->delta_xk_est[i] = delta_xkm_est[i] + xkd2[i];
+                    if (i < 3)
+                    {
+                        X3k[i] = AKF->delta_xk_est[i];
+                    }
+                    delta_xkm_est[i] = AKF->delta_xk_est[i];
+                    /*  delta_xkm_est[i] = 0.0; */ /* Uncomment this line if running only one sensor, ignore for
+                                                      multiple sensors */
+                }
+                for (i = 0; i < 6; i++)
+                {
+                    for (j = 0; j < 6; j++)
+                    {
+                        Pkm[i][j] = AKF->Pk[i][j];
+                    }
+                }
+
+                /* Update quaternion estimate */
+                QW2QDOT(qkm_est, X3k, XiXk);
+                for (i = 0; i < 4; i++)
+                {
+                    AKF->qk_est[i] = qkm_est[i] + XiXk[i];
+                }
+                UNITQ(AKF->qk_est);
+
+                /* Update bias estimate */
+                for (i = 0; i < 3; i++)
+                {
+                    AKF->bias_est[i] = AKF->bias_est[i] + delta_xkm_est[i + 3];
+                }
+                AKF->AKFvalid = 1;
+            }
+            else if ((ResSTValid == 0) && (ResMAGValid == 0) && (ResFSSValid == 0))
+            {
+                AKF->AKFvalid = 0;
+            }
+            snum++;
+        }
+
+        for (i = 0; i < 4; i++)
+        {
+            AKF->qbn[i] = AKF->qk_est[i];
+        }
+    }
+    else if (AKF->init == 0 && imu.valid == 0)
+    {
+        AKF->AKFvalid = 0;
+    }
+
+    StValid_prev = st.Valid;
+}
+
+static void AD_to_GNC(const Generic_ADCS_AD_Tlm_Payload_t *AD, Generic_ADCS_GNC_Tlm_Payload_t *GNC)
+{
+    for (int i = 0; i < 3; i++)
+    {
+        GNC->bvb[i] = AD->Mag.bvb[i];
+        GNC->svb[i] = AD->Sol.svb[i];
+        GNC->wbn[i] = AD->Imu.wbn[i];
+        GNC->qbn[i] = AD->ST.qbn[i];
+    }
+    GNC->qbn[3]   = AD->ST.qbn[3];
+    GNC->qValid   = AD->ST.Valid;
+    GNC->SunValid = AD->Sol.SunValid;
+}
+
+static void AC_bdot(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Bdot_Tlm_t *ACS)
+{
+    /* apply control only if b-field is in range */
+    if (MAGV(GNC->bvb) > ACS->b_range)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            /* backward difference b-field derivative */
+            ACS->bdot[i] = (GNC->bvb[i] - ACS->bold[i]) / GNC->DT;
+            /* store old b-field */
+            ACS->bold[i] = GNC->bvb[i];
+            /* traditional b-dot algorithm */
+            GNC->Mcmd[i] = -ACS->Kb * ACS->bdot[i] / MAGV(GNC->bvb);
+            /* ensure wheels disabled */
+            GNC->Tcmd[i] = 0.0;
+        }
+    }
+    else
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            GNC->Mcmd[i] = 0.0;
+            GNC->Tcmd[i] = 0.0;
+        }
+    }
+}
+
+#define EPS 1.0E-6
+static void AC_sunsafe(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Sunsafe_Tlm_t *ACS)
+{
+    int    i;
+    double u1[3] = {0.0, 0.0, 0.0}, err_b[3] = {0.0, 0.0, 0.0}; /* angle error calculation parameteres */
+    double temp_sside[3] = {0.0, 0.0, 0.0};
+    double SoS           = 0.0;
+
+    /* .. Check that SS Vector is valid */
+    if (GNC->SunValid)
+    {
+
+        /* .. Form attitude error signals */
+        SoS = VoV(GNC->svb, ACS->sside);
+        if ((SoS > (EPS - 1.0)) && (SoS < (1.0 - EPS)))
+        {
+            VxV(GNC->svb, ACS->sside, ACS->therr);
+        }
+        else if (SoS >= (1.0 - EPS))
+        {
+            ACS->therr[0] = 0.0;
+            ACS->therr[1] = 0.0;
+            ACS->therr[2] = 0.0;
+        }
+        else
+        {
+            err_b[0] = ACS->sside[1];
+            err_b[1] = ACS->sside[2];
+            err_b[2] = ACS->sside[0];
+            if (fabs(err_b[0] - err_b[1]) < EPS && fabs(err_b[0] - err_b[2]) < EPS)
+            {
+                err_b[0] = -err_b[0];
+            }
+            VxV(ACS->sside, err_b, temp_sside);
+            VxV(GNC->svb, temp_sside, ACS->therr);
+        }
+
+        /* .. Closed-loop attitude control - PD Method */
+        for (i = 0; i < 3; i++)
+        {
+            /* Clip attitude slew rates */
+            u1[i]        = Limit(ACS->Kp[i] / ACS->Kr[i] * ACS->therr[i], -ACS->vmax, ACS->vmax);
+            ACS->werr[i] = GNC->wbn[i] - ACS->cmd_wbn[i];
+            ACS->Tcmd[i] = -ACS->Kr[i] * (u1[i] + ACS->werr[i]);
+        }
+
+        /* .. Apply Torque Command */
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Tcmd[i] = -ACS->Tcmd[i];
+        }
+    }
+
+    else
+    { /* during eclipse, reduce attitude rates only */
+
+        for (i = 0; i < 3; i++)
+        {
+            ACS->werr[i] = GNC->wbn[i];
+            ACS->Tcmd[i] = -ACS->Kr[i] * ACS->werr[i];
+        }
+        /* .. Apply Torque Command  */
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Tcmd[i] = -ACS->Tcmd[i];
+        }
+    }
+
+    if (GNC->HmgmtOn)
+    {
+        AC_h_mgmt(GNC);
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Mcmd[i] = GNC->Hmgmt.Mcmd[i];
+        }
+    }
+    else
+    {
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Mcmd[i] = 0.0;
+        }
+    }
+}
+
+static void AC_inertial(Generic_ADCS_GNC_Tlm_Payload_t *GNC, Generic_ADCS_AC_Inertial_Tlm_t *ACS)
+{
+    int    i;
+    double qErrLimited[4] = {0.0, 0.0, 0.0, 0.0}; /* Initialize Error quaterion for internal use */
+    double e_axis[3]      = {0.0, 0.0, 0.0};      /* Initialze Eigen axis of the Body to Body quaternion*/
+    double phiErr         = 0.0;                  /* Intialize angular error of Body to Body quaternion */
+
+    if (GNC->qValid)
+    {
+        /*..Form attitude error signals */
+        QxQT(ACS->qbn_cmd, GNC->qbn, ACS->qErr);
+
+        /*..Unitize Quaternion Error */
+        UNITQ(ACS->qErr);
+
+        /*..Adopt shortest path */
+        RECTIFYQ(ACS->qErr);
+
+        for (i = 0; i < 4; i++)
+        {
+            GNC->qErr[i] = ACS->qErr[i];
+        }
+
+        /*..Limit B<-B quaterion Error */
+        phiErr = 2.0 * arccos(ACS->qErr[3]);
+        if (phiErr > ACS->phiErr_max)
+        {
+            phiErr    = ACS->phiErr_max;
+            e_axis[0] = ACS->qErr[0];
+            e_axis[1] = ACS->qErr[1];
+            e_axis[2] = ACS->qErr[2];
+            UNITV(e_axis);
+            for (i = 0; i < 3; i++)
+            {
+                qErrLimited[i] = e_axis[i] * sin(phiErr / 2.0);
+            }
+            qErrLimited[3] = cos(phiErr / 2.0);
+        }
+        else
+        {
+            for (i = 0; i < 4; i++)
+            {
+                qErrLimited[i] = ACS->qErr[i];
+            }
+        }
+
+        /*..Compute attittude/rate errors, Apply PD Control Law and compute minimum Torque margin */
+        for (i = 0; i < 3; i++)
+        {
+            ACS->therr[i]    = 2.0 * qErrLimited[i];
+            ACS->sumtherr[i] = ACS->sumtherr[i] + ACS->therr[i];
+            ACS->werr[i]     = -GNC->wbn[i];
+            ACS->Tcmd[i]     = ACS->Kp[i] * ACS->therr[i] + ACS->Kr[i] * ACS->werr[i] + ACS->Ki[i] * ACS->sumtherr[i];
+        }
+
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Tcmd[i] = -ACS->Tcmd[i];
+        }
+
+        if (ACS->h_mgmt)
+        {
+            AC_h_mgmt(GNC);
+            for (i = 0; i < 3; i++)
+            {
+                GNC->Mcmd[i] = GNC->Hmgmt.Mcmd[i];
+            }
+        }
+        else
+        {
+            for (i = 0; i < 3; i++)
+            {
+                GNC->Mcmd[i] = 0.0;
+            }
+        }
+    }
+}
+
+static void AC_h_mgmt(Generic_ADCS_GNC_Tlm_Payload_t *GNC)
+{
+
+    double Herr[3] = {0.0, 0.0, 0.0};
+    double bvb[3]  = {0.0, 0.0, 0.0};
+    double HxB[3]  = {0.0, 0.0, 0.0};
+    int    i;
+
+    if (MAGV(GNC->bvb) > GNC->Hmgmt.b_range)
+    {
+        /*Test if any axis needs to be momentum managed*/
+        for (i = 0; i < 3; i++)
+        {
+            if (fabs(GNC->HwhlB[i]) > GNC->Hmgmt.hiFrac * fabs(GNC->HwhlMaxB[i]))
+            {
+                GNC->Hmgmt.mm_active[i] = 1;
+            }
+            if (fabs(GNC->HwhlB[i]) < GNC->Hmgmt.loFrac * fabs(GNC->HwhlMaxB[i]))
+            {
+                GNC->Hmgmt.mm_active[i] = 0;
+            }
+        }
+        for (i = 0; i < 3; i++)
+        {
+            Herr[i] = 0.0;
+            if (GNC->Hmgmt.mm_active[i] == 1)
+            {
+                Herr[i] = GNC->HwhlB[i];
+            }
+        }
+        CopyUnitV(GNC->bvb, bvb);
+        VxV(Herr, bvb, HxB);
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Hmgmt.Mcmd[i] = GNC->Hmgmt.Kb * HxB[i] / MAGV(GNC->bvb);
+        }
+    }
+    else
+    {
+        for (i = 0; i < 3; i++)
+        {
+            GNC->Hmgmt.Mcmd[i] = 0.0;
+        }
+    }
+}
+
+static void AC_rw_momentum_dump(Generic_ADCS_GNC_Tlm_Payload_t *GNC)
+{
+    double h_mag     = MAGV(GNC->HwhlB);
+    double h_max     = MAGV(GNC->HwhlMaxB);
+    double Kr        = 1.0;
+    double threshold = 1E-6;
+
+    if ((h_mag / h_max) > threshold)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            // Proportional Control, Momentum --> 0
+            double Tcmd_dump = -Kr * GNC->HwhlB[i];
+
+            GNC->Tcmd[i] += Tcmd_dump;
+        }
+    }
+}
+```
+
+### `generic_adcs_adac.h`
+
+**경로:** `components/generic_adcs/fsw/shared/generic_adcs_adac.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file is the header file for the attitude determination and
+**   attitude control routines of the Generic ADCS application.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_ADAC_H_
+#define _GENERIC_ADCS_ADAC_H_
+
+#define PASSIVE_MODE  0
+#define BDOT_MODE     1
+#define SUNSAFE_MODE  2
+#define INERTIAL_MODE 3
+
+void Generic_ADCS_init_attitude_determination_and_attitude_control(FILE *in, Generic_ADCS_EPH_Tlm_Payload_t *EPH,
+                                                                   Generic_ADCS_AD_Tlm_Payload_t  *AD,
+                                                                   Generic_ADCS_GNC_Tlm_Payload_t *GNC,
+                                                                   Generic_ADCS_AC_Tlm_Payload_t  *ACS);
+void Generic_ADCS_execute_attitude_determination_and_attitude_control(const Generic_ADCS_DI_Tlm_Payload_t *DI,
+                                                                      Generic_ADCS_EPH_Tlm_Payload_t      *EPH,
+                                                                      Generic_ADCS_AD_Tlm_Payload_t       *AD,
+                                                                      Generic_ADCS_GNC_Tlm_Payload_t      *GNC,
+                                                                      Generic_ADCS_AC_Tlm_Payload_t       *ACS);
+
+#endif
+```
+
+### `generic_adcs_utilities.c`
+
+**경로:** `components/generic_adcs/fsw/shared/generic_adcs_utilities.c`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file implements utility functions used by ADCS.
+**
+*******************************************************************************/
+
+#include <math.h>
+#include <stdio.h>
+#include "generic_adcs_utilities.h"
+
+/**********************************************************************/
+/*  Vector Dot Product                                                */
+double VoV(double A[3], double B[3])
+{
+    return (A[0] * B[0] + A[1] * B[1] + A[2] * B[2]);
+}
+/**********************************************************************/
+/*  Vector Cross Product                                              */
+void VxV(double A[3], double B[3], double C[3])
+{
+    C[0] = A[1] * B[2] - A[2] * B[1];
+    C[1] = A[2] * B[0] - A[0] * B[2];
+    C[2] = A[0] * B[1] - A[1] * B[0];
+}
+// Magnitude of v vector
+double MAGV(double v[3])
+{
+    return sqrt(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+}
+
+/**********************************************************************/
+/*  Quaternion product                                                */
+void QxQ(const double A[4], const double B[4], double C[4])
+{
+    C[0] = A[3] * B[0] + A[2] * B[1] - A[1] * B[2] + A[0] * B[3];
+    C[1] = -A[2] * B[0] + A[3] * B[1] + A[0] * B[2] + A[1] * B[3];
+    C[2] = A[1] * B[0] - A[0] * B[1] + A[3] * B[2] + A[2] * B[3];
+    C[3] = -A[0] * B[0] - A[1] * B[1] - A[2] * B[2] + A[3] * B[3];
+}
+
+/**********************************************************************/
+/* Product of a Quaternion (A) with the Complement of a Quaternion (B)*/
+void QxQT(const double A[4], const double B[4], double C[4])
+{
+    C[0] = -A[3] * B[0] - A[2] * B[1] + A[1] * B[2] + A[0] * B[3];
+    C[1] = A[2] * B[0] - A[3] * B[1] - A[0] * B[2] + A[1] * B[3];
+    C[2] = -A[1] * B[0] + A[0] * B[1] - A[3] * B[2] + A[2] * B[3];
+    C[3] = A[0] * B[0] + A[1] * B[1] + A[2] * B[2] + A[3] * B[3];
+}
+
+/**********************************************************************/
+/* Find components of V in A, given components of V in B, and qab     */
+void QxV(const double QAB[4], const double Vb[3], double Va[3])
+{
+    double qq[4][4];
+    long   i, j;
+
+    for (i = 0; i < 4; i++)
+    {
+        for (j = i; j < 4; j++)
+            qq[i][j] = QAB[i] * QAB[j];
+    }
+
+    Va[0] = (qq[0][0] - qq[1][1] - qq[2][2] + qq[3][3]) * Vb[0] +
+            2.0 * ((qq[0][1] + qq[2][3]) * Vb[1] + (qq[0][2] - qq[1][3]) * Vb[2]);
+    Va[1] = (-qq[0][0] + qq[1][1] - qq[2][2] + qq[3][3]) * Vb[1] +
+            2.0 * ((qq[1][2] + qq[0][3]) * Vb[2] + (qq[0][1] - qq[2][3]) * Vb[0]);
+    Va[2] = (-qq[0][0] - qq[1][1] + qq[2][2] + qq[3][3]) * Vb[2] +
+            2.0 * ((qq[0][2] + qq[1][3]) * Vb[0] + (qq[1][2] - qq[0][3]) * Vb[1]);
+}
+/**********************************************************************/
+/* Find components of V in B, given components of V in A, and qab     */
+void QTxV(const double QAB[4], const double Va[3], double Vb[3])
+{
+    double qq[4][4];
+    long   i, j;
+
+    for (i = 0; i < 4; i++)
+    {
+        for (j = i; j < 4; j++)
+            qq[i][j] = QAB[i] * QAB[j];
+    }
+
+    Vb[0] = (qq[0][0] - qq[1][1] - qq[2][2] + qq[3][3]) * Va[0] +
+            2.0 * ((qq[0][1] - qq[2][3]) * Va[1] + (qq[0][2] + qq[1][3]) * Va[2]);
+    Vb[1] = (-qq[0][0] + qq[1][1] - qq[2][2] + qq[3][3]) * Va[1] +
+            2.0 * ((qq[1][2] - qq[0][3]) * Va[2] + (qq[0][1] + qq[2][3]) * Va[0]);
+    Vb[2] = (-qq[0][0] - qq[1][1] + qq[2][2] + qq[3][3]) * Va[2] +
+            2.0 * ((qq[0][2] - qq[1][3]) * Va[0] + (qq[1][2] + qq[0][3]) * Va[1]);
+}
+#ifndef EPS16
+#define EPS16 (1.0E-16)
+#endif
+/**********************************************************************/
+/*  Normalize a quaternion                                            */
+void UNITQ(double Q[4])
+{
+    double A;
+
+    A = sqrt(Q[0] * Q[0] + Q[1] * Q[1] + Q[2] * Q[2] + Q[3] * Q[3]);
+    if (A < EPS16)
+    {
+        Q[0] = 0.0;
+        Q[1] = 0.0;
+        Q[2] = 0.0;
+        Q[3] = 1.0;
+#ifndef ACS_IN_FSW
+        printf("Divide by zero in UNITQ (Line %d of mathkit.c).  You'll want to fix that.\n", __LINE__);
+#endif
+    }
+    else
+    {
+        Q[0] /= A;
+        Q[1] /= A;
+        Q[2] /= A;
+        Q[3] /= A;
+    }
+}
+/**********************************************************************/
+/*  Rectify a quaternion, forcing q[3] to be positive                 */
+void RECTIFYQ(double Q[4])
+{
+    if (Q[3] < 0.0)
+    {
+        Q[0] = -Q[0];
+        Q[1] = -Q[1];
+        Q[2] = -Q[2];
+        Q[3] = -Q[3];
+    }
+}
+/**********************************************************************/
+/*  Normalize a 3-vector if it is non-zero.                           */
+void UNITV(double V[3])
+{
+    double A;
+
+    A = sqrt(V[0] * V[0] + V[1] * V[1] + V[2] * V[2]);
+    if (A > 0.0)
+    {
+        V[0] /= A;
+        V[1] /= A;
+        V[2] /= A;
+    }
+}
+double arccos(double x)
+{
+    if (x > 1.0)
+        x = 1.0;
+    if (x < -1.0)
+        x = -1.0;
+
+    return (acos(x));
+}
+/**********************************************************************/
+double Limit(double x, double min, double max)
+{
+    return (x < min ? min : (x > max ? max : x));
+}
+/**********************************************************************/
+/*  Scalar times 3x1 Vector                                           */
+void SxV(double S, double V[3], double W[3])
+{
+    W[0] = S * V[0];
+    W[1] = S * V[1];
+    W[2] = S * V[2];
+}
+/**********************************************************************/
+/*  Copy and normalize a 3-vector.  Return its magnitude              */
+double CopyUnitV(double V[3], double W[3])
+{
+    double A;
+
+    A = sqrt(V[0] * V[0] + V[1] * V[1] + V[2] * V[2]);
+    if (A > 0.0)
+    {
+        W[0] = V[0] / A;
+        W[1] = V[1] / A;
+        W[2] = V[2] / A;
+    }
+    else
+    {
+        W[0] = 0.0;
+        W[1] = 0.0;
+        W[2] = 0.0;
+    }
+    return (A);
+}
+
+void skewM(double A[3], double B[3][3])
+{
+
+    B[0][0] = 0.0;
+    B[1][1] = 0.0;
+    B[2][2] = 0.0;
+    B[2][1] = A[0];
+    B[0][2] = A[1];
+    B[1][0] = A[2];
+    B[1][2] = -A[0];
+    B[2][0] = -A[1];
+    B[0][1] = -A[2];
+}
+
+void M66xM66(double A[6][6], double B[6][6], double C[6][6])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 6; k++)
+            {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+void M66xM66T(double A[6][6], double B[6][6], double C[6][6])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 6; k++)
+            {
+                C[i][j] += A[i][k] * B[j][k];
+            }
+        }
+    }
+}
+
+void M66xM36T(double A[6][6], double B[3][6], double C[6][3])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 6; k++)
+            {
+                C[i][j] += A[i][k] * B[j][k];
+            }
+        }
+    }
+}
+
+void M36TxM33(double A[3][6], double B[3][3], double C[6][3])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 3; k++)
+            {
+                C[i][j] += A[k][i] * B[k][j];
+            }
+        }
+    }
+}
+
+void M36xM63(double A[3][6], double B[6][3], double C[3][3])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 3; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 6; k++)
+            {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+void M66xM63(double A[6][6], double B[6][3], double C[6][3])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 3; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 6; k++)
+            {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+void M63xM36(double A[6][3], double B[3][6], double C[6][6])
+{
+
+    long i, j, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        for (j = 0; j < 6; j++)
+        {
+            C[i][j] = 0.0;
+            for (k = 0; k < 3; k++)
+            {
+                C[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+void M36xV6(double A[3][6], double B[6], double C[3])
+{
+
+    long i, k;
+
+    for (i = 0; i < 3; i++)
+    {
+        C[i] = 0.0;
+        for (k = 0; k < 6; k++)
+        {
+            C[i] += A[i][k] * B[k];
+        }
+    }
+}
+
+void M63xV3(double A[6][3], double B[3], double C[6])
+{
+
+    long i, k;
+
+    for (i = 0; i < 6; i++)
+    {
+        C[i] = 0.0;
+        for (k = 0; k < 3; k++)
+        {
+            C[i] += A[i][k] * B[k];
+        }
+    }
+}
+
+void M44XV4(double M[4][4], double v[4], double output[4])
+{
+    output[0] = M[0][0] * v[0] + M[0][1] * v[1] + M[0][2] * v[2] + M[0][3] * v[3];
+    output[1] = M[1][0] * v[0] + M[1][1] * v[1] + M[1][2] * v[2] + M[1][3] * v[3];
+    output[2] = M[2][0] * v[0] + M[2][1] * v[1] + M[2][2] * v[2] + M[2][3] * v[3];
+    output[3] = M[3][0] * v[0] + M[3][1] * v[1] + M[3][2] * v[2] + M[3][3] * v[3];
+}
+
+/**********************************************************************/
+/*   3x3 Matrix Product                                               */
+void MxM(double A[3][3], double B[3][3], double C[3][3])
+{
+
+    C[0][0] = A[0][0] * B[0][0] + A[0][1] * B[1][0] + A[0][2] * B[2][0];
+    C[0][1] = A[0][0] * B[0][1] + A[0][1] * B[1][1] + A[0][2] * B[2][1];
+    C[0][2] = A[0][0] * B[0][2] + A[0][1] * B[1][2] + A[0][2] * B[2][2];
+    C[1][0] = A[1][0] * B[0][0] + A[1][1] * B[1][0] + A[1][2] * B[2][0];
+    C[1][1] = A[1][0] * B[0][1] + A[1][1] * B[1][1] + A[1][2] * B[2][1];
+    C[1][2] = A[1][0] * B[0][2] + A[1][1] * B[1][2] + A[1][2] * B[2][2];
+    C[2][0] = A[2][0] * B[0][0] + A[2][1] * B[1][0] + A[2][2] * B[2][0];
+    C[2][1] = A[2][0] * B[0][1] + A[2][1] * B[1][1] + A[2][2] * B[2][1];
+    C[2][2] = A[2][0] * B[0][2] + A[2][1] * B[1][2] + A[2][2] * B[2][2];
+}
+/**********************************************************************/
+/*  3x3 Matrix times 3x1 Vector                                       */
+void MxV(double M[3][3], double V[3], double W[3])
+{
+    W[0] = V[0] * M[0][0] + V[1] * M[0][1] + V[2] * M[0][2];
+    W[1] = V[0] * M[1][0] + V[1] * M[1][1] + V[2] * M[1][2];
+    W[2] = V[0] * M[2][0] + V[1] * M[2][1] + V[2] * M[2][2];
+}
+/******************************************************************************/
+/*  Inverse of a 3x3 Matrix                                                   */
+void MINV3(double A[3][3], double B[3][3])
+{
+    double DET;
+
+    DET = A[0][0] * A[1][1] * A[2][2] + A[0][1] * A[1][2] * A[2][0] + A[0][2] * A[1][0] * A[2][1] -
+          A[2][0] * A[1][1] * A[0][2] - A[2][1] * A[1][2] * A[0][0] - A[2][2] * A[1][0] * A[0][1];
+
+    if (DET < EPS32)
+    {
+        B[0][0] = 0.0;
+        B[0][1] = 0.0;
+        B[0][2] = 0.0;
+        B[1][0] = 0.0;
+        B[1][1] = 0.0;
+        B[1][2] = 0.0;
+        B[2][0] = 0.0;
+        B[2][1] = 0.0;
+        B[2][2] = 0.0;
+#ifndef ACS_IN_FSW
+        printf("DET = %le \n", DET);
+        printf("Attempted inversion of singular matrix in MINV3.  Bailing out.\n");
+#endif
+    }
+    else
+    {
+        B[0][0] = (A[1][1] * A[2][2] - A[2][1] * A[1][2]) / DET;
+        B[0][1] = (A[2][1] * A[0][2] - A[0][1] * A[2][2]) / DET;
+        B[0][2] = (A[0][1] * A[1][2] - A[1][1] * A[0][2]) / DET;
+        B[1][0] = (A[2][0] * A[1][2] - A[1][0] * A[2][2]) / DET;
+        B[1][1] = (A[0][0] * A[2][2] - A[2][0] * A[0][2]) / DET;
+        B[1][2] = (A[1][0] * A[0][2] - A[0][0] * A[1][2]) / DET;
+        B[2][0] = (A[1][0] * A[2][1] - A[2][0] * A[1][1]) / DET;
+        B[2][1] = (A[2][0] * A[0][1] - A[0][0] * A[2][1]) / DET;
+        B[2][2] = (A[0][0] * A[1][1] - A[1][0] * A[0][1]) / DET;
+    }
+}
+
+/**********************************************************************/
+/* Compute direction cosine matrix corresponding to a                 */
+/* simple rotation of THETA radians about a unit vector               */
+/* parallel to AXIS                                                   */
+
+void SimpRot(double AXIS[3], double THETA, double C[3][3])
+{
+    double CTH, STH, CTH1, AX[3];
+
+    CTH  = cos(THETA);
+    STH  = sin(THETA);
+    CTH1 = 1.0 - CTH;
+    CopyUnitV(AXIS, AX);
+
+    C[0][0] = CTH + AX[0] * AX[0] * CTH1;
+    C[1][0] = -AX[2] * STH + AX[0] * AX[1] * CTH1;
+    C[2][0] = AX[1] * STH + AX[2] * AX[0] * CTH1;
+    C[0][1] = AX[2] * STH + AX[0] * AX[1] * CTH1;
+    C[1][1] = CTH + AX[1] * AX[1] * CTH1;
+    C[2][1] = -AX[0] * STH + AX[1] * AX[2] * CTH1;
+    C[0][2] = -AX[1] * STH + AX[2] * AX[0] * CTH1;
+    C[1][2] = AX[0] * STH + AX[1] * AX[2] * CTH1;
+    C[2][2] = CTH + AX[2] * AX[2] * CTH1;
+}
+
+/**********************************************************************/
+/*  Convert quaternion to direction cosine matrix                     */
+
+void Q2C(double Q[4], double C[3][3])
+{
+    double TwoQ00, TwoQ11, TwoQ22;
+    double TwoQ01, TwoQ02, TwoQ03;
+    double TwoQ12, TwoQ13, TwoQ23;
+
+    TwoQ00 = 2.0 * Q[0] * Q[0];
+    TwoQ11 = 2.0 * Q[1] * Q[1];
+    TwoQ22 = 2.0 * Q[2] * Q[2];
+    TwoQ01 = 2.0 * Q[0] * Q[1];
+    TwoQ02 = 2.0 * Q[0] * Q[2];
+    TwoQ03 = 2.0 * Q[0] * Q[3];
+    TwoQ12 = 2.0 * Q[1] * Q[2];
+    TwoQ13 = 2.0 * Q[1] * Q[3];
+    TwoQ23 = 2.0 * Q[2] * Q[3];
+
+    C[0][0] = 1.0 - (TwoQ11 + TwoQ22);
+    C[0][1] = TwoQ01 + TwoQ23;
+    C[0][2] = TwoQ02 - TwoQ13;
+    C[1][0] = TwoQ01 - TwoQ23;
+    C[1][1] = 1.0 - (TwoQ22 + TwoQ00);
+    C[1][2] = TwoQ12 + TwoQ03;
+    C[2][0] = TwoQ02 + TwoQ13;
+    C[2][1] = TwoQ12 - TwoQ03;
+    C[2][2] = 1.0 - (TwoQ00 + TwoQ11);
+}
+/**********************************************************************/
+/*  Given body rates and quaternion, find qdot.  Ref Kane, 1.13       */
+void QW2QDOT(double Q[4], double W[3], double QDOT[4])
+{
+
+    QDOT[0] = 0.5 * (W[0] * Q[3] - W[1] * Q[2] + W[2] * Q[1]);
+    QDOT[1] = 0.5 * (W[0] * Q[2] + W[1] * Q[3] - W[2] * Q[0]);
+    QDOT[2] = 0.5 * (-W[0] * Q[1] + W[1] * Q[0] + W[2] * Q[3]);
+    QDOT[3] = 0.5 * (-W[0] * Q[0] - W[1] * Q[1] - W[2] * Q[2]);
+}
+
+/***********************************************************************************
+**
+** Function: MatrixMxNf_Mult
+**
+** Notes:   None
+*/
+void MatrixMxNf_Mult(float Result[], const float Left[], unsigned int LeftRowSize, unsigned int LeftColSize,
+                     const float Right[], unsigned int RightRowSize, unsigned int RightColSize)
+{
+    float       *ResultPtr;
+    unsigned int Row, Col, Element;
+    unsigned int RightOffset, LeftOffset;
+
+    ResultPtr   = Result;
+    LeftOffset  = 0;
+    RightOffset = 0;
+    for (Row = 0; Row < LeftRowSize; Row++)
+    {
+        for (Col = 0; Col < RightColSize; Col++)
+        {
+            RightOffset = Col;
+            *ResultPtr  = 0.0;
+            for (Element = 0; Element < RightRowSize; Element++)
+            {
+                *ResultPtr += *(Left + LeftOffset) * *(Right + RightOffset);
+                LeftOffset += 1;
+                RightOffset += RightColSize;
+            }
+            ResultPtr++;
+            LeftOffset = 0;
+        }
+        Left += LeftColSize;
+        RightOffset = 0;
+    }
+
+} /* End MatrixMxNf_Mult */
+
+void MatrixMxNf_Copy(float Result[], const float Input[], unsigned int RowSize, unsigned int ColSize)
+{
+    unsigned int Element;
+    unsigned int NumElements;
+
+    NumElements = RowSize * ColSize;
+    for (Element = 0; Element < NumElements; Element++)
+    {
+        *(Result + Element) = *(Input + Element);
+    }
+} /* End MatrixMxNf_Copy */
+
+void Matrix3x3f_MultVec(Vector3f *Result, const Matrix3x3f *Left, const Vector3f *Right)
+{
+    Vector3f Rslt;
+
+    MatrixMxNf_Mult(&Rslt.Comp[0], &Left->Comp[0][0], 3, 3, &Right->Comp[0], 3, 1);
+    MatrixMxNf_Copy(&Result->Comp[0], &Rslt.Comp[0], 3, 1);
+
+} /* End Matrix3x3f_MultVec() */
+
+/**********************************************************************/
+/* Ref Montenbruck and Gill, "Satellite Orbits: Models, Methods,      */
+/* Applications", TL1080.M66                                          */
+void HiFiEarthPrecNute(double JD, double C_TETE_J2000[3][3])
+{
+
+    double        P[3][3], N[3][3];
+    static long   First = 1;
+    static double Al, Bl, Alp, Blp, AF, BF, AD, BD, AOm, BOm;
+    static double A2R;
+    long          i;
+    double        T, zeta, z, theta;
+    double        cos_zeta, sin_zeta, cos_theta, sin_theta, cos_z, sin_z;
+    double        dpsi, de, l, lp, F, D, Om, phi, e, ep;
+    double        cos_e, sin_e, cos_ep, sin_ep, cos_dpsi, sin_dpsi;
+
+    static double pl[106]  = {0, 0, -2, 2,  -2, 1,  0,  2,  0, 0, 0, 0, 0,  2,  0,  0,  0,  0,  0, -2, 0,  2,
+                              0, 1, 2,  0,  0,  0,  -1, 0,  0, 1, 0, 1, 1,  -1, 0,  1,  -1, -1, 1, 0,  2,  1,
+                              2, 0, -1, -1, 1,  -1, 1,  0,  0, 1, 1, 2, 0,  0,  1,  0,  1,  2,  0, 1,  0,  1,
+                              1, 1, -1, -2, 3,  0,  1,  -1, 2, 1, 3, 0, -1, 1,  -2, -1, 2,  1,  1, -2, -1, 1,
+                              2, 2, 1,  0,  3,  1,  0,  -1, 0, 0, 0, 1, 0,  1,  1,  2,  0,  0};
+    static double plp[106] = {0, 0, 0, 0, 0, -1, -2, 0, 0, 1, 1, -1, 0, 0,  0,  2, 1, 2,  -1, 0,  -1, 0, 1, 0, 1, 0,  1,
+                              1, 0, 1, 0, 0, 0,  0,  0, 0, 0, 0, 0,  0, 0,  0,  0, 0, 0,  0,  0,  0,  0, 0, 1, 1, -1, 0,
+                              0, 0, 0, 0, 0, 0,  -1, 0, 1, 0, 0, 1,  0, -1, -1, 0, 0, -1, 1,  0,  0,  0, 0, 0, 0, 0,  0,
+                              0, 0, 1, 0, 0, 0,  -1, 0, 0, 0, 0, 0,  0, 1,  -1, 0, 0, 1,  0,  -1, 1,  0, 0, 0, 1};
+    static double pD[106]  = {0, 0, 2, -2, 2, 0, 2, -2, 2, 0,  2, 2, 2, 0, 2, 0,  0, 2, 0,  0, 2, 0,  2, 0, 0, -2, -2,
+                              0, 0, 2, 2,  0, 2, 2, 0,  2, 0,  0, 0, 2, 2, 2, 0,  2, 2, 2,  2, 0, 0,  2, 0, 2, 2,  2,
+                              0, 2, 0, 2,  2, 0, 0, 2,  0, -2, 0, 0, 2, 2, 2, 0,  2, 2, 2,  2, 0, 0,  0, 2, 0, 0,  2,
+                              2, 0, 2, 2,  2, 4, 0, 2,  2, 0,  4, 2, 2, 2, 0, -2, 2, 0, -2, 2, 0, -2, 0, 2, 0};
+    static double pF[106]  = {0,  0,  0,  0,  0,  -1, -2, 0,  -2, 0,  -2, -2, -2, -2, -2, 0,  0,  -2, 0,  2, -2, -2,
+                              -2, -1, -2, 2,  2,  0,  1,  -2, 0,  0,  0,  0,  -2, 0,  2,  0,  0,  2,  0,  2, 0,  -2,
+                              0,  0,  0,  2,  -2, 2,  -2, 0,  0,  2,  0,  -2, 2,  2,  -2, -2, 0,  0,  -2, 0, 1,  0,
+                              0,  0,  2,  0,  0,  2,  0,  -2, 0,  0,  0,  1,  0,  -4, 2,  4,  -4, -2, 2,  4, 0,  -2,
+                              -2, 2,  2,  -2, -2, -2, 0,  2,  0,  -1, 2,  -2, 0,  -2, 2,  2,  4,  1};
+    static double pOm[106] = {1, 2, 1, 0, 2, 0, 1, 1, 2, 0, 2, 2, 1, 0, 0, 0, 1, 2, 1, 1, 1, 1, 1, 0, 0, 1, 0,
+                              2, 1, 0, 2, 0, 1, 2, 0, 2, 0, 1, 1, 2, 1, 2, 0, 2, 2, 0, 1, 1, 1, 1, 0, 2, 2, 2,
+                              0, 2, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 2, 2, 1, 2, 2, 2, 1, 1, 2, 0, 2, 2, 0, 2,
+                              2, 0, 2, 1, 2, 2, 0, 1, 2, 1, 2, 2, 0, 1, 1, 1, 2, 0, 0, 1, 1, 0, 0, 2, 0};
+    static double dp0[106] = {-171996, 2062, 46,   11,  -3, -3, -2,  1,   -13187, 1426, -517, 217, 129, 48, -22,   17,
+                              -15,     -16,  -12,  -6,  -5, 4,  4,   -4,  1,      1,    -1,   1,   1,   -1, -2274, 712,
+                              -386,    -301, -158, 123, 63, 63, -58, -59, -51,    -38,  29,   29,  -31, 26, 21,    16,
+                              -13,     -10,  -7,   7,   -7, -8, 6,   6,   -6,     -7,   6,    -5,  5,   -5, -4,    4,
+                              -4,      -3,   3,    -3,  -3, -2, -3,  -3,  2,      -2,   2,    -2,  2,   2,  1,     -1,
+                              1,       -2,   -1,   1,   -1, -1, 1,   1,   1,      -1,   -1,   1,   1,   -1, 1,     1,
+                              -1,      -1,   -1,   -1,  -1, -1, -1,  1,   -1,     1};
+    static double dp1[40]  = {-174.2, 0.2, 0, 0, 0, 0, 0, 0, -1.6, -3.4, 1.2,  -0.5, 0.1,  0, 0, -0.1, 0, 0.1, 0,    0,
+                              0,      0,   0, 0, 0, 0, 0, 0, 0,    0,    -0.2, 0.1,  -0.4, 0, 0, 0,    0, 0.1, -0.1, 0};
+    static double de0[106] = {92025, -895, -24, 0,  1,  0,  1,  0,   5736, 54, 224, -95, -70, 1,  0,   0,   9,  7,
+                              6,     3,    3,   -2, -2, 0,  0,  0,   0,    0,  0,   0,   977, -7, 200, 129, -1, -53,
+                              -2,    -33,  32,  26, 27, 16, -1, -12, 13,   -1, -10, -8,  7,   5,  0,   -3,  3,  3,
+                              0,     -3,   3,   3,  -3, 3,  0,  3,   0,    0,  0,   0,   0,   1,  1,   1,   1,  1,
+                              -1,    1,    -1,  1,  0,  -1, -1, 0,   -1,   1,  0,   -1,  1,   1,  0,   0,   -1, 0,
+                              0,     0,    0,   0,  0,  0,  0,  0,   0,    0,  0,   0,   0,   0,  0,   0};
+    static double de1[40]  = {8.9, 0.5, 0, 0, 0, 0, 0, 0, -3.1, -0.1, -0.6, 0.3, 0, 0,    0, 0, 0, 0, 0, 0,
+                              0,   0,   0, 0, 0, 0, 0, 0, 0,    0,    -0.5, 0,   0, -0.1, 0, 0, 0, 0, 0, 0};
+
+    if (First)
+    {
+        First = 0;
+        A2R   = D2R / 3600.0;
+        Al    = 134.0 * 3600.0 + 57.0 * 60.0 + 46.733;
+        Bl    = 477198.0 * 3600.0 + 52 * 60.0 + 2.633;
+        Alp   = 357.0 * 3600.0 + 31.0 * 60.0 + 39.804;
+        Blp   = 35999.0 * 3600.0 + 3.0 * 60.0 + 1.224;
+        AF    = 93.0 * 3600.0 + 16.0 * 60.0 + 18.877;
+        BF    = 483202.0 * 3600.0 + 1.0 * 60.0 + 3.137;
+        AD    = 297.0 * 3600.0 + 51.0 * 60.0 + 1.307;
+        BD    = 445267.0 * 3600.0 + 6.0 * 60.0 + 41.328;
+        AOm   = 125.0 * 3600.0 + 2.0 * 60 + 40.280;
+        BOm   = -(1934.0 * 3600.0 + 8.0 * 60.0 + 10.539);
+    }
+
+    T     = (JD - 2451545.0) / 36525.0;
+    zeta  = (2306.2181 + (0.30188 + 0.017998 * T) * T) * T * A2R;
+    theta = (2004.3109 - (0.42665 + 0.041833 * T) * T) * T * A2R;
+    z     = zeta + (0.79280 + 0.000205 * T) * T * T * A2R;
+
+    cos_zeta  = cos(zeta);
+    sin_zeta  = sin(zeta);
+    cos_theta = cos(theta);
+    sin_theta = sin(theta);
+    cos_z     = cos(z);
+    sin_z     = sin(z);
+    P[0][0]   = -sin_z * sin_zeta + cos_zeta * cos_theta * cos_z;
+    P[1][0]   = cos_z * sin_zeta + sin_z * cos_theta * cos_zeta;
+    P[2][0]   = sin_theta * cos_zeta;
+    P[0][1]   = -sin_z * cos_zeta - cos_z * cos_theta * sin_zeta;
+    P[1][1]   = cos_z * cos_zeta - sin_z * cos_theta * sin_zeta;
+    P[2][1]   = -sin_theta * sin_zeta;
+    P[0][2]   = -cos_z * sin_theta;
+    P[1][2]   = -sin_z * sin_theta;
+    P[2][2]   = cos_theta;
+
+    dpsi = 0.0;
+    de   = 0.0;
+    l    = Al + (Bl + (31.310 + 0.064 * T) * T) * T;
+    lp   = Alp + (Blp + (-0.577 - 0.012 * T) * T) * T;
+    F    = AF + (BF + (-13.257 + 0.011 * T) * T) * T;
+    D    = AD + (BD + (-6.891 + 0.019 * T) * T) * T;
+    Om   = AOm + (BOm + (7.455 + 0.008 * T) * T) * T;
+    for (i = 0; i < 40; i++)
+    {
+        phi = (pl[i] * l + plp[i] * lp + pD[i] * D + pF[i] * F + pOm[i] * Om) * A2R;
+        dpsi += (dp0[i] + dp1[i] * T) * sin(phi);
+        de += (de0[i] + de1[i] * T) * cos(phi);
+    }
+    for (i = 40; i < 106; i++)
+    {
+        phi = (pl[i] * l + plp[i] * lp + pF[i] * F + pD[i] * D + pOm[i] * Om) * A2R;
+        dpsi += dp0[i] * sin(phi);
+        de += de0[i] * cos(phi);
+    }
+    dpsi *= 1.0E-4 * A2R;
+    de *= 1.0E-4 * A2R;
+
+    e  = (23.43929111 + (-46.8150 + (-0.00059 + 0.001813 * T) * T) * T / 3600.0) * D2R;
+    ep = e + de;
+
+    cos_e    = cos(e);
+    sin_e    = sin(e);
+    cos_ep   = cos(ep);
+    sin_ep   = sin(ep);
+    cos_dpsi = cos(dpsi);
+    sin_dpsi = sin(dpsi);
+    N[0][0]  = cos_dpsi;
+    N[1][0]  = cos_ep * sin_dpsi;
+    N[2][0]  = sin_ep * sin_dpsi;
+    N[0][1]  = -cos_e * sin_dpsi;
+    N[1][1]  = cos_e * cos_ep * cos_dpsi + sin_e * sin_ep;
+    N[2][1]  = cos_e * sin_ep * cos_dpsi - sin_e * cos_ep;
+    N[0][2]  = -sin_e * sin_dpsi;
+    N[1][2]  = sin_e * cos_ep * cos_dpsi - cos_e * sin_ep;
+    N[2][2]  = sin_e * sin_ep * cos_dpsi + cos_e * cos_ep;
+
+    C_TETE_J2000[0][0] = N[0][0] * P[0][0] + N[0][1] * P[1][0] + N[0][2] * P[2][0];
+    C_TETE_J2000[0][1] = N[0][0] * P[0][1] + N[0][1] * P[1][1] + N[0][2] * P[2][1];
+    C_TETE_J2000[0][2] = N[0][0] * P[0][2] + N[0][1] * P[1][2] + N[0][2] * P[2][2];
+    C_TETE_J2000[1][0] = N[1][0] * P[0][0] + N[1][1] * P[1][0] + N[1][2] * P[2][0];
+    C_TETE_J2000[1][1] = N[1][0] * P[0][1] + N[1][1] * P[1][1] + N[1][2] * P[2][1];
+    C_TETE_J2000[1][2] = N[1][0] * P[0][2] + N[1][1] * P[1][2] + N[1][2] * P[2][2];
+    C_TETE_J2000[2][0] = N[2][0] * P[0][0] + N[2][1] * P[1][0] + N[2][2] * P[2][0];
+    C_TETE_J2000[2][1] = N[2][0] * P[0][1] + N[2][1] * P[1][1] + N[2][2] * P[2][1];
+    C_TETE_J2000[2][2] = N[2][0] * P[0][2] + N[2][1] * P[1][2] + N[2][2] * P[2][2];
+}
+
+/**********************************************************************/
+/* GPS Epoch is 6 Jan 1980 00:00:00.0 which is JD = 2444244.5         */
+/* GPS Time is expressed in weeks and seconds                         */
+/* GPS Time rolls over every 1024 weeks                               */
+/* *******************************************************************/
+double GpsTime_TO_JD(long GpsRollover, long GpsWeek, double GpsSecond)
+{
+    double DaysSinceWeek = 0.0, DaysSinceRollover = 0.0, DaysSinceEpoch = 0.0, JD = 0.0;
+
+    DaysSinceWeek     = GpsSecond / 86400.0;
+    DaysSinceRollover = DaysSinceWeek + 7.0 * GpsWeek;
+    DaysSinceEpoch    = DaysSinceRollover + 7168.0 * GpsRollover;
+    JD                = DaysSinceEpoch + 2444244.5;
+
+    return (JD);
+}
+/**********************************************************************/
+/*  Find Greenwich Mean Sidereal Time (GMST)                          */
+/*  Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991.  */
+/*  GMST is output in units of days.                                  */
+/* ********************************************************************/
+double JD_TO_GMST(double JD)
+{
+    double T = 0.0, JD0 = 0.0, GMST0 = 0.0, GMST = 0.0;
+
+    JD0 = floor(JD) + 0.5;
+
+    T = (JD0 - 2451545.0) / 36525.0;
+
+    /* .. GMST at UT=0h, in deg */
+    GMST0 = 100.46061837 + T * (36000.770053608 + T * (3.87933E-4 - T / 3.871E7));
+
+    /* .. Convert to days */
+    GMST0 /= 360.0;
+
+    GMST = GMST0 + 1.00273790935 * (JD - JD0);
+
+    GMST -= (int)(GMST);
+
+    return (GMST);
+}
+/**********************************************************************/
+/* GPS Epoch is 6 Jan 1980 00:00:00.0 UTC                             */
+/* which is 6 Jan 1980 00:00:19.0 TAI                                 */
+/* J2000 is 1 Jan 2000 12:00:00.0 TT                                  */
+/* which is 1 Jan 2000 11:59:27.816 TAI                               */
+/* so J2000-GPS epoch is 7300.5 days minus (19+32.184) sec            */
+double GpsDateToGpsTime(long GpsRollover, long GpsWeek, double GpsSecond)
+{
+    return (((GpsRollover * 1024.0 + GpsWeek) * 7.0 - 7300.5) * 86400.0 + GpsSecond);
+}
+/**********************************************************************/
+/*   Convert Time to Year, Month, Day, Hour, Minute, and Second       */
+/*   Time is seconds since J2000 epoch (01 Jan 2000 12:00:00.0)       */
+/*   Outputs are rounded to LSB to avoid loss of precision            */
+/*   Ref. Jean Meeus, 'Astronomical Algorithms', QB51.3.E43M42, 1991. */
+/*   This function is agnostic to the TT-to-UTC offset.  You get out  */
+/*   what you put in.                                                 */
+void TimeToDate(double Time, long *Year, long *Month, long *Day, long *Hour, long *Minute, double *Second, double LSB)
+{
+    double Z, F, A, B, C, D, E, alpha;
+    double FD, JD;
+
+    JD = Time / 86400.0 + 2451545.0;
+
+    Z = floor(JD + 0.5);
+    F = (JD + 0.5) - Z;
+
+    if (Z < 2299161.0)
+    {
+        A = Z;
+    }
+    else
+    {
+        alpha = floor((Z - 1867216.25) / 36524.25);
+        A     = Z + 1.0 + alpha - floor(alpha / 4.0);
+    }
+
+    B = A + 1524.0;
+    C = floor((B - 122.1) / 365.25);
+    D = floor(365.25 * C);
+    E = floor((B - D) / 30.6001);
+
+    FD   = B - D - floor(30.6001 * E) + F;
+    *Day = (long)FD;
+
+    if (E < 14.0)
+    {
+        *Month = (long)(E - 1.0);
+        *Year  = (long)(C - 4716.0);
+    }
+    else
+    {
+        *Month = (long)(E - 13.0);
+        *Year  = (long)(C - 4715.0);
+    }
+
+    FD = Time - 43200.0 + 0.5 * LSB;
+    FD = FD - ((long)(FD / 86400.0)) * 86400.0;
+    if (FD < 0.0)
+        FD += 86400.0;
+
+    *Hour = (long)(FD / 3600.0);
+
+    FD -= 3600.0 * (*Hour);
+
+    *Minute = (long)(FD / 60.0);
+
+    *Second = FD - 60.0 * (*Minute);
+
+    /* Clean up roundoff */
+    *Second = ((long)(*Second / LSB)) * LSB;
+}
+```
+
+### `generic_adcs_utilities.h`
+
+**경로:** `components/generic_adcs/fsw/shared/generic_adcs_utilities.h`
+
+
+```c
+/*******************************************************************************
+** Purpose:
+**   This file has utility functions used by ADCS.
+**
+*******************************************************************************/
+#ifndef _GENERIC_ADCS_UTILITIES_H_
+#define _GENERIC_ADCS_UTILITIES_H_
+
+#ifndef EPS16
+#define EPS16 (1.0E-16)
+#endif
+#ifndef EPS32
+#define EPS32 (1.0E-32)
+#endif
+#ifndef TWOPI
+#define TWOPI (6.283185307179586)
+#endif
+#ifndef D2R
+#define D2R (1.74532925199433E-2)
+#endif
+#ifndef RE
+#define RE (6378137.0)
+#endif
+#ifndef NANO2TSLA
+#define NANO2TSLA (1.0E-9) /* nano to Tesla */
+#endif
+#ifndef M2KM
+#define M2KM (0.001)
+#endif
+
+typedef struct
+{
+    float Comp[3];
+} Vector3f;
+
+typedef struct
+{
+    float Comp[3][3];
+} Matrix3x3f;
+
+double arccos(double x);
+double VoV(double A[3], double B[3]);
+void   VxV(double A[3], double B[3], double C[3]);
+void   SxV(double S, double V[3], double W[3]);
+double MAGV(double v[3]);
+void   UNITV(double V[3]);
+double CopyUnitV(double V[3], double W[3]);
+void   QxQ(const double A[4], const double B[4], double C[4]);
+void   QxQT(const double A[4], const double B[4], double C[4]);
+void   QxV(const double QAB[4], const double Vb[3], double Va[3]);
+void   QTxV(const double QAB[4], const double Va[3], double Vb[3]);
+void   UNITQ(double Q[4]);
+void   RECTIFYQ(double Q[4]);
+double Limit(double x, double min, double max);
+
+void skewM(double A[3], double B[3][3]);
+void M66xM66(double A[6][6], double B[6][6], double C[6][6]);
+void M66xM66T(double A[6][6], double B[6][6], double C[6][6]);
+void M66xM36T(double A[6][6], double B[3][6], double C[6][3]);
+void M36TxM33(double A[3][6], double B[3][3], double C[6][3]);
+void M36xM63(double A[3][6], double B[6][3], double C[3][3]);
+void M66xM63(double A[6][6], double B[6][3], double C[6][3]);
+void M63xM36(double A[6][3], double B[3][6], double C[6][6]);
+void M36xV6(double A[3][6], double B[6], double C[3]);
+void M63xV3(double A[6][3], double B[3], double C[6]);
+void M44XV4(double M[4][4], double v[4], double output[4]);
+
+void MxM(double A[3][3], double B[3][3], double C[3][3]);
+void MxV(double M[3][3], double V[3], double W[3]);
+void MINV3(double A[3][3], double B[3][3]);
+
+void SimpRot(double AXIS[3], double THETA, double C[3][3]);
+
+void Q2C(double Q[4], double C[3][3]);
+void QW2QDOT(double Q[4], double W[3], double QDOT[4]);
+
+void Matrix3x3f_MultVec(Vector3f *Result, const Matrix3x3f *Left, const Vector3f *Right);
+
+void HiFiEarthPrecNute(double JD, double C_TETE_J2000[3][3]);
+
+double GpsTime_TO_JD(long GpsRollover, long GpsWeek, double GpsSecond);
+double JD_TO_GMST(double JD);
+double GpsDateToGpsTime(long GpsRollover, long GpsWeek, double GpsSecond);
+void TimeToDate(double Time, long *Year, long *Month, long *Day, long *Hour, long *Minute, double *Second, double LSB);
+#endif
+```
+
+### `generic_adcs_version.h`
+
+**경로:** `components/generic_adcs/fsw/shared/generic_adcs_version.h`
+
+
+```c
+/************************************************************************
+** Purpose:
+**  The Generic ADCS Application header file containing version number
+**
+*************************************************************************/
+
+#ifndef _GENERIC_ADCS_VERSION_H_
+#define _GENERIC_ADCS_VERSION_H_
+
+#define GENERIC_ADCS_MAJOR_VERSION 1
+#define GENERIC_ADCS_MINOR_VERSION 0
+#define GENERIC_ADCS_REVISION      0
+#define GENERIC_ADCS_MISSION_REV   0
+
+#endif
+```

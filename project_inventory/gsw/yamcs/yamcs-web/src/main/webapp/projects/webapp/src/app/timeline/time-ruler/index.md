@@ -3,18 +3,34 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 create-time-ruler/index
 edit-time-ruler/index
-file--TimeRuler.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/create-time-ruler/`](create-time-ruler/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/edit-time-ruler/`](edit-time-ruler/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/TimeRuler.ts`](file--TimeRuler.ts) — UTF-8 텍스트 파일 본문 포함
+### `TimeRuler.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/time-ruler/TimeRuler.ts`
+
+
+```typescript
+import { TimeRuler as DefaultTimeRuler } from '@fqqb/timeline';
+import { TimelineBand } from '@yamcs/webapp-sdk';
+import { TimelineChartComponent } from '../timeline-chart/timeline-chart.component';
+
+export class TimeRuler extends DefaultTimeRuler {
+  constructor(chart: TimelineChartComponent, bandInfo: TimelineBand) {
+    super(chart.timeline);
+    this.contentHeight = 20;
+    this.label = bandInfo.name;
+    this.timezone = bandInfo.properties!.timezone;
+    this.data = { band: bandInfo };
+  }
+}
+```

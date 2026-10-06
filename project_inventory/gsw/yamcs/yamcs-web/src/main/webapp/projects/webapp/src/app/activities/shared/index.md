@@ -3,28 +3,290 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activity-duration.component.ts`
 
-file--activity-duration.component.ts
-file--activity-icon.component.css
-file--activity-icon.component.html
-file--activity-icon.component.ts
-file--activity-status.component.css
-file--activity-status.component.html
-file--activity-status.component.ts
-file--activity.service.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-duration.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  inject,
+} from '@angular/core';
+import { Activity, Synchronizer, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+
+@Component({
+  selector: 'app-activity-duration',
+  template: '{{ elapsed$ | async | duration }}',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivityDurationComponent implements OnChanges, OnDestroy {
+  private synchronizer = inject(Synchronizer);
+
+  @Input()
+  activity: Activity;
+
+  elapsed$ = new BehaviorSubject<number>(0);
+
+  private syncSubscription: Subscription;
+
+  ngOnChanges() {
+    this.syncSubscription?.unsubscribe();
+    if (!this.activity) {
+      return;
+    }
+
+    this.updateState();
+    if (!this.activity.stop) {
+      this.syncSubscription = this.synchronizer.sync(() => this.updateState());
+    }
+  }
+
+  private updateState() {
+    if (!this.activity.start) {
+      return;
+    }
+    const dt1 = new Date(this.activity.start);
+    if (this.activity.stop) {
+      const dt2 = new Date(this.activity.stop);
+      this.elapsed$.next(this.millisBetween(dt1, dt2));
+    } else {
+      const millis = this.millisBetween(dt1, new Date());
+      this.elapsed$.next(millis);
+    }
+  }
+
+  private millisBetween(dt1: Date, dt2: Date) {
+    return dt2.getTime() - dt1.getTime();
+  }
+
+  ngOnDestroy() {
+    this.syncSubscription?.unsubscribe();
+  }
+}
 ```
 
-## 항목
+### `activity-icon.component.css`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-duration.component.ts`](file--activity-duration.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.css`](file--activity-icon.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.html`](file--activity-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.ts`](file--activity-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.css`](file--activity-status.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.html`](file--activity-status.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.ts`](file--activity-status.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity.service.ts`](file--activity.service.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.css`
+
+
+```css
+.success {
+  color: #00c752;
+}
+
+.warning {
+  color: var(--y-warning-color);
+}
+
+.failed {
+  color: var(--y-error-color);
+}
+
+.cancelled {
+  color: lightgrey;
+}
+
+.spin {
+  animation: yspin 2s infinite linear;
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg);
+    transform: rotate(359deg);
+  }
+}
+```
+
+### `activity-icon.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.html`
+
+
+```html
+@if (activity(); as activity) {
+  @if (activity.status === "SUCCESSFUL") {
+    <mat-icon class="success" [matTooltip]="activity.status">check_circle</mat-icon>
+  }
+  @if (activity.status === "RUNNING") {
+    <mat-icon class="spin" [matTooltip]="activity.status">cached</mat-icon>
+  }
+  @if (activity.status === "FAILED") {
+    <mat-icon class="failed" [matTooltip]="activity.status">highlight_off</mat-icon>
+  }
+  @if (activity.status === "CANCELLED" && !activity.stop) {
+    <mat-icon class="warning spin" [matTooltip]="activity.status">cached</mat-icon>
+  }
+  @if (activity.status === "CANCELLED" && activity.stop) {
+    <mat-icon class="cancelled" [matTooltip]="activity.status">stop_circle</mat-icon>
+  }
+}
+```
+
+### `activity-icon.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-icon.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Activity, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-activity-icon',
+  templateUrl: './activity-icon.component.html',
+  styleUrl: './activity-icon.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivityIconComponent {
+  activity = input.required<Activity>();
+}
+```
+
+### `activity-status.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.css`
+
+
+```css
+.status {
+  padding: 4px;
+  border-radius: 2px;
+}
+
+.status.successful {
+  background: #28a745;
+  color: white;
+}
+
+.status.failed {
+  background: #dc3545;
+  color: white;
+}
+
+.status.running {
+  background: #eee;
+  color: #333;
+}
+
+.status.cancelled {
+  background: #eee;
+  color: #333;
+}
+```
+
+### `activity-status.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.html`
+
+
+```html
+@if (activity(); as activity) {
+  <span
+    class="status"
+    [class.successful]="activity.status === 'SUCCESSFUL'"
+    [class.running]="activity.status === 'RUNNING'"
+    [class.failed]="activity.status === 'FAILED'"
+    [class.cancelled]="activity.status === 'CANCELLED'">
+    {{ activity.status }}
+  </span>
+}
+```
+
+### `activity-status.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity-status.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { Activity, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-activity-status',
+  templateUrl: './activity-status.component.html',
+  styleUrl: './activity-status.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class ActivityStatusComponent {
+  activity = input.required<Activity>();
+}
+```
+
+### `activity.service.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/activities/shared/activity.service.ts`
+
+
+```typescript
+import { Injectable, inject } from '@angular/core';
+import {
+  Activity,
+  ActivitySubscription,
+  MessageService,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+
+/**
+ * Shared information about the detail of an activity
+ */
+@Injectable({
+  providedIn: 'root',
+})
+export class ActivityService {
+  private yamcs = inject(YamcsService);
+  private messageService = inject(MessageService);
+
+  private activitySubscription?: ActivitySubscription;
+
+  activity$ = new BehaviorSubject<Activity | null>(null);
+
+  connect(activityId: string) {
+    const { yamcs } = this;
+    let initialReplyReceived = false;
+
+    this.activitySubscription?.cancel();
+    this.activitySubscription = yamcs.yamcsClient.createActivitySubscription(
+      {
+        instance: yamcs.instance!,
+      },
+      (activity) => {
+        if (initialReplyReceived && activity.id === activityId) {
+          this.activity$.next(activity);
+        }
+      },
+    );
+
+    yamcs.yamcsClient
+      .getActivity(yamcs.instance!, activityId)
+      .then((activity) => {
+        this.activity$.next(activity);
+        initialReplyReceived = true;
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  disconnect() {
+    this.activitySubscription?.cancel();
+    this.activitySubscription = undefined;
+  }
+}
+```

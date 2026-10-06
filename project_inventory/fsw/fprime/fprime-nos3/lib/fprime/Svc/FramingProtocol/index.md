@@ -3,34 +3,571 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--DeframingProtocol.cpp
-file--DeframingProtocol.hpp
-file--DeframingProtocolInterface.hpp
-file--FprimeProtocol.cpp
-file--FprimeProtocol.hpp
-file--FramingProtocol.cpp
-file--FramingProtocol.hpp
-file--FramingProtocolInterface.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocol.cpp`](file--DeframingProtocol.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocol.hpp`](file--DeframingProtocol.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocolInterface.hpp`](file--DeframingProtocolInterface.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FprimeProtocol.cpp`](file--FprimeProtocol.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FprimeProtocol.hpp`](file--FprimeProtocol.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocol.cpp`](file--FramingProtocol.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocol.hpp`](file--FramingProtocol.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocolInterface.hpp`](file--FramingProtocolInterface.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+# Note: using PROJECT_NAME as EXECUTABLE_NAME
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/DeframingProtocol.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FramingProtocol.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FprimeProtocol.cpp"
+)
+
+set(MOD_DEPS
+    Fw/Buffer
+    Fw/Time
+    Utils/Hash
+    Utils/Types
+)
+
+register_fprime_module()
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/DeframingTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FramingTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/main.cpp"
+)
+set(UT_MOD_DEPS STest)
+register_fprime_ut()
+```
+
+### `DeframingProtocol.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocol.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DeframingProtocol.cpp
+// \author mstarch
+// \brief  cpp file for DeframingProtocol class
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "DeframingProtocol.hpp"
+#include "DeframingProtocolInterface.hpp"
+
+namespace Svc {
+
+DeframingProtocol::DeframingProtocol() : m_interface(nullptr) {}
+
+void DeframingProtocol::setup(DeframingProtocolInterface& interface) {
+    FW_ASSERT(m_interface == nullptr);
+    m_interface = &interface;
+}
+}  // namespace Svc
+```
+
+### `DeframingProtocol.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocol.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DeframingProtocol.hpp
+// \author mstarch
+// \brief  hpp file for DeframingProtocol class
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "Fw/Com/ComPacket.hpp"
+#include "Svc/FramingProtocol/DeframingProtocolInterface.hpp"
+#include "Utils/Types/CircularBuffer.hpp"
+
+#ifndef SVC_DEFRAMING_PROTOCOL_HPP
+#define SVC_DEFRAMING_PROTOCOL_HPP
+
+namespace Svc {
+
+/**
+ * \brief Abstract base class representing a deframing protocol
+ *
+ * This class represents the basic interface for writing a deframing protocol. This class may be
+ * subclassed to provide concrete implementations for the protocol. A DeframingProtocolInterface is
+ * be supplied using the `setup` call. This instance is usually the DeframingComponentImpl.
+ *
+ * Implementations are expected to call `m_interface.route` to send the deframed data and may call
+ * `m_interface.allocate` to allocate new memory.
+ */
+class DeframingProtocol {
+  public:
+    virtual ~DeframingProtocol() {};
+    /**
+     * \brief Status of the deframing call
+     */
+    enum DeframingStatus {
+        DEFRAMING_STATUS_SUCCESS,   /*!< Successful deframing */
+        DEFRAMING_INVALID_SIZE,     /*!< Invalid size found */
+        DEFRAMING_INVALID_CHECKSUM, /*!< Invalid checksum */
+        DEFRAMING_MORE_NEEDED,      /*!< Successful deframing likely with more data */
+        DEFRAMING_INVALID_FORMAT,   /*!< Invalid format */
+        DEFRAMING_MAX_STATUS        /*!< The number of status enumerations */
+    };
+    //! Constructor
+    //!
+    DeframingProtocol();
+
+    //! Setup the deframing protocol with the deframing interface
+    //!
+    void setup(DeframingProtocolInterface& interface /*!< Deframing interface */
+    );
+
+    //! Deframe packets from within the circular buffer
+    //! \return deframing status of this deframe attempt
+    virtual DeframingStatus deframe(Types::CircularBuffer& buffer, /*!< Deframe from circular buffer */
+                                    U32& needed                    /*!< Return needed number of bytes */
+                                    ) = 0;
+
+  protected:
+    DeframingProtocolInterface* m_interface;
+};
+}  // namespace Svc
+#endif  // SVC_DEFRAMING_PROTOCOL_HPP
+```
+
+### `DeframingProtocolInterface.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/DeframingProtocolInterface.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DeframingProtocolInterface.hpp
+// \author mstarch
+// \brief  hpp file for deframing protocol interface
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef SVC_DEFRAMING_PROTOCOL_INTERFACE_HPP
+#define SVC_DEFRAMING_PROTOCOL_INTERFACE_HPP
+
+#include <Fw/Buffer/Buffer.hpp>
+#include <Fw/Time/Time.hpp>
+
+namespace Svc {
+
+/**
+ * \brief interface supplied to the deframing protocol
+ *
+ * In order to supply necessary fprime actions to deframing implementations this class provides
+ * the necessary functions. Typically the DeframerComponentImpl is the concrete implementor of this
+ * interface.
+ */
+class DeframingProtocolInterface {
+  public:
+    virtual ~DeframingProtocolInterface() {};
+    /**
+     * \brief called to allocate memory, typically delegating to an allocate port call
+     * \param size: size of the allocation request
+     * \return Fw::Buffer wrapping allocated memory
+     */
+    virtual Fw::Buffer allocate(const U32 size) = 0;
+
+    /**
+     * \brief send deframed data into the system
+     * \param data: deframed buffer
+     */
+    virtual void route(Fw::Buffer& data) = 0;
+};
+
+}  // namespace Svc
+#endif  // SVC_DEFRAMING_PROTOCOL_INTERFACE_HPP
+```
+
+### `FprimeProtocol.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FprimeProtocol.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeProtocol.cpp
+// \author mstarch
+// \brief  cpp file for FprimeProtocol class
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+#include "FprimeProtocol.hpp"
+#include "Fw/FPrimeBasicTypes.hpp"
+#include "Utils/Hash/Hash.hpp"
+
+namespace Svc {
+
+FprimeFraming::FprimeFraming() : FramingProtocol() {}
+
+FprimeDeframing::FprimeDeframing() : DeframingProtocol() {}
+
+void FprimeFraming::frame(const U8* const data, const U32 size, Fw::ComPacketType packet_type) {
+    // NOTE: packet_type is not used in this implementation
+
+    FW_ASSERT(data != nullptr);
+    FW_ASSERT(m_interface != nullptr);
+
+    FpFrameHeader::TokenType totalSize = size + FpFrameHeader::SIZE + HASH_DIGEST_LENGTH;
+    Fw::Buffer buffer = m_interface->allocate(totalSize);
+    auto serializer = buffer.getSerializer();
+    Utils::HashBuffer hash;
+
+    // Serialize start word
+    Fw::SerializeStatus status;
+    status = serializer.serialize(FpFrameHeader::START_WORD);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Serialize data size
+    status = serializer.serialize(size);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Serialize data
+    status = serializer.serialize(data, size, Fw::Serialization::OMIT_LENGTH);  // Serialize without length
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    // Calculate and add transmission hash
+    Utils::Hash::hash(buffer.getData(), static_cast<FwSizeType>(totalSize - HASH_DIGEST_LENGTH), hash);
+    status = serializer.serialize(hash.getBuffAddr(), HASH_DIGEST_LENGTH, Fw::Serialization::OMIT_LENGTH);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    buffer.setSize(totalSize);
+
+    m_interface->send(buffer);
+}
+
+bool FprimeDeframing::validate(Types::CircularBuffer& ring, U32 size) {
+    Utils::Hash hash;
+    Utils::HashBuffer hashBuffer;
+    // Initialize the checksum and loop through all bytes calculating it
+    hash.init();
+    for (U32 i = 0; i < size; i++) {
+        U8 byte;
+        const Fw::SerializeStatus status = ring.peek(byte, i);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+        hash.update(&byte, 1);
+    }
+    hash.final(hashBuffer);
+    // Now loop through the hash digest bytes and check for equality
+    for (U32 i = 0; i < HASH_DIGEST_LENGTH; i++) {
+        U8 calc = static_cast<U8>(hashBuffer.getBuffAddr()[i]);
+        U8 sent = 0;
+        const Fw::SerializeStatus status = ring.peek(sent, size + i);
+        FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+        if (calc != sent) {
+            return false;
+        }
+    }
+    return true;
+}
+
+DeframingProtocol::DeframingStatus FprimeDeframing::deframe(Types::CircularBuffer& ring, U32& needed) {
+    FpFrameHeader::TokenType start = 0;
+    FpFrameHeader::TokenType size = 0;
+    FW_ASSERT(m_interface != nullptr);
+    // Check for header or ask for more data
+    if (ring.get_allocated_size() < FpFrameHeader::SIZE) {
+        needed = FpFrameHeader::SIZE;
+        return DeframingProtocol::DEFRAMING_MORE_NEEDED;
+    }
+    // Read start value from header
+    Fw::SerializeStatus status = ring.peek(start, 0);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    if (start != FpFrameHeader::START_WORD) {
+        // Start word must be valid
+        return DeframingProtocol::DEFRAMING_INVALID_FORMAT;
+    }
+    // Read size from header
+    status = ring.peek(size, sizeof(FpFrameHeader::TokenType));
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    const U32 maxU32 = std::numeric_limits<U32>::max();
+    if (size > maxU32 - (FpFrameHeader::SIZE + HASH_DIGEST_LENGTH)) {
+        // Size is too large to process: needed would overflow
+        return DeframingProtocol::DEFRAMING_INVALID_SIZE;
+    }
+    needed = (FpFrameHeader::SIZE + size + HASH_DIGEST_LENGTH);
+    // Check frame size
+    const U32 frameSize = size + FpFrameHeader::SIZE + HASH_DIGEST_LENGTH;
+    if (frameSize > ring.get_capacity()) {
+        // Frame size is too large for ring buffer
+        return DeframingProtocol::DEFRAMING_INVALID_SIZE;
+    }
+    // Check for enough data to deserialize everything;
+    // otherwise break and wait for more.
+    else if (ring.get_allocated_size() < needed) {
+        return DeframingProtocol::DEFRAMING_MORE_NEEDED;
+    }
+    // Check the checksum
+    if (not this->validate(ring, needed - HASH_DIGEST_LENGTH)) {
+        return DeframingProtocol::DEFRAMING_INVALID_CHECKSUM;
+    }
+    Fw::Buffer buffer = m_interface->allocate(size);
+    // Some allocators may return buffers larger than requested.
+    // That causes issues in routing; adjust size.
+    FW_ASSERT(buffer.getSize() >= size);
+    buffer.setSize(size);
+    status = ring.peek(buffer.getData(), size, FpFrameHeader::SIZE);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    m_interface->route(buffer);
+    return DeframingProtocol::DEFRAMING_STATUS_SUCCESS;
+}
+}  // namespace Svc
+```
+
+### `FprimeProtocol.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FprimeProtocol.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeProtocol.hpp
+// \author mstarch
+// \brief  hpp file for FprimeProtocol class
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef SVC_FPRIME_PROTOCOL_HPP
+#define SVC_FPRIME_PROTOCOL_HPP
+
+#include <Svc/FramingProtocol/DeframingProtocol.hpp>
+#include <Svc/FramingProtocol/FramingProtocol.hpp>
+
+namespace Svc {
+
+// Definitions for the F Prime frame header
+namespace FpFrameHeader {
+
+//! Token type for F Prime frame header
+typedef U32 TokenType;
+
+enum {
+    //! Header size for F Prime frame header
+    SIZE = sizeof(TokenType) * 2
+};
+
+//! The start word for F Prime framing
+const TokenType START_WORD = static_cast<TokenType>(0xdeadbeef);
+
+}  // namespace FpFrameHeader
+
+//! \brief Implements the F Prime framing protocol
+class FprimeFraming : public FramingProtocol {
+  public:
+    //! Constructor
+    FprimeFraming();
+
+    //! Implements the frame method
+    void frame(const U8* const data,          //!< The data
+               const U32 size,                //!< The data size in bytes
+               Fw::ComPacketType packet_type  //!< The packet type
+               ) override;
+};
+
+//! \brief Implements the F Prime deframing protocol
+class FprimeDeframing : public DeframingProtocol {
+  public:
+    //! Constructor
+    FprimeDeframing();
+
+    //! Validates data against the stored hash value
+    //! 1. Computes the hash value V of bytes [0,size-1] in the circular buffer
+    //! 2. Compares V against bytes [size, size + HASH_DIGEST_LENGTH - 1] of
+    //!    the circular buffer, which are expected to be the stored hash value.
+    bool validate(Types::CircularBuffer& buffer,  //!< The circular buffer
+                  U32 size                        //!< The data size in bytes
+    );
+
+    //! Implements the deframe method
+    //! \return Status
+    DeframingStatus deframe(Types::CircularBuffer& buffer,  //!< The circular buffer
+                            U32& needed                     //!< The number of bytes needed, updated by the caller
+                            ) override;
+};
+
+}  // namespace Svc
+#endif  // SVC_FPRIME_PROTOCOL_HPP
+```
+
+### `FramingProtocol.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocol.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FramingProtocol.cpp
+// \author mstarch
+// \brief  cpp file for FramingProtocol class
+//
+// \copyright
+// Copyright 2009-2021, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include "FramingProtocol.hpp"
+#include "FramingProtocolInterface.hpp"
+
+namespace Svc {
+
+FramingProtocol::FramingProtocol() : m_interface(nullptr) {}
+
+void FramingProtocol::setup(FramingProtocolInterface& interface) {
+    FW_ASSERT(m_interface == nullptr);
+    m_interface = &interface;
+}
+}  // namespace Svc
+```
+
+### `FramingProtocol.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocol.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FramingProtocol.hpp
+// \author mstarch
+// \brief  hpp file for FramingProtocol class
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef SVC_FRAMING_PROTOCOL_HPP
+#define SVC_FRAMING_PROTOCOL_HPP
+
+#include "Fw/Com/ComPacket.hpp"
+#include "Svc/FramingProtocol/FramingProtocolInterface.hpp"
+
+namespace Svc {
+/**
+ * \brief abstract class representing a framing protocol
+ *
+ * This class defines the methods used to create a framed packet from Com and Fw::Buffers. The
+ * framing protocol `frame` method is called with data and it in turn is expected to call the
+ * `send` method of m_interface once a packet is constructed.
+ *
+ * There is no requirement that this be one-to-one and thus packetization, aggregation may all
+ * be performed.  A call to `m_interface.allocate` can allocate memory such that framing tokens
+ * may be added.
+ */
+class FramingProtocol {
+  public:
+    //! \brief constructor
+    //!
+    FramingProtocol();
+    virtual ~FramingProtocol() {};
+
+    //! \brief setup function called to supply the interface used for allocation and sending
+    //! \param interface: interface implementation, normally FramerComponentImpl
+    void setup(FramingProtocolInterface& interface);
+
+    //! \brief frame a given set of bytes
+    //! \param data: pointer to a set of bytes to be framed
+    //! \param size: size of data pointed to by `data`
+    //! \param packet_type: type of data supplied for File downlink packets
+    virtual void frame(const U8* const data, const U32 size, Fw::ComPacketType packet_type) = 0;
+
+  protected:
+    FramingProtocolInterface* m_interface;
+};
+}  // namespace Svc
+#endif  // SVC_FRAMING_PROTOCOL_HPP
+```
+
+### `FramingProtocolInterface.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FramingProtocol/FramingProtocolInterface.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FramingProtocolInterface.hpp
+// \author mstarch
+// \brief  hpp file for framing protocol interface
+//
+// \copyright
+// Copyright 2009-2022, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef SVC_FRAMING_PROTOCOL_INTERFACE_HPP
+#define SVC_FRAMING_PROTOCOL_INTERFACE_HPP
+
+#include <Fw/Buffer/Buffer.hpp>
+#include <Fw/Time/Time.hpp>
+
+namespace Svc {
+
+/**
+ * \brief interface supplied to the framing protocol
+ *
+ * In order to supply necessary fprime actions to framing implementations this allows the framing
+ * implementation to call the functions to delegate the actions. Typically the FramerComponentImpl
+ * is the concrete implementor of this interface.
+ */
+class FramingProtocolInterface {
+  public:
+    virtual ~FramingProtocolInterface() {};
+    //! \brief allocation callback to allocate memory when framing
+    //! \param size: size of the allocation request
+    //! \return buffer wrapping allocated memory
+    virtual Fw::Buffer allocate(const U32 size) = 0;
+
+    //! \brief send framed data out of the framer
+    //! \param outgoing: framed data wrapped in an Fw::Buffer
+    virtual void send(Fw::Buffer& outgoing) = 0;
+};
+
+}  // namespace Svc
+#endif  // SVC_FRAMING_PROTOCOL_INTERFACE_HPP
+```

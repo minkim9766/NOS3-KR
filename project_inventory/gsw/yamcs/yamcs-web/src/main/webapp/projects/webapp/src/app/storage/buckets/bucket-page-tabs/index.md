@@ -3,18 +3,67 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bucket-page-tabs.component.css`
 
-file--bucket-page-tabs.component.css
-file--bucket-page-tabs.component.html
-file--bucket-page-tabs.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.css`
+
+
+```css
+.mat-mdc-tab-link {
+  height: 36px;
+  min-width: 0;
+  font-size: 13px;
+}
 ```
 
-## 항목
+### `bucket-page-tabs.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.css`](file--bucket-page-tabs.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.html`](file--bucket-page-tabs.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.ts`](file--bucket-page-tabs.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.html`
+
+
+```html
+<ya-page-tabs>
+  <a
+    [routerLink]="['/storage/buckets', bucket, 'objects']"
+    routerLinkActive
+    #rla="routerLinkActive"
+    [class.active]="rla.isActive">
+    Objects
+  </a>
+  <a
+    [routerLink]="['/storage/buckets', bucket, 'properties']"
+    routerLinkActive
+    #rlb="routerLinkActive"
+    [class.active]="rlb.isActive">
+    Properties
+  </a>
+
+  <ng-container actions><ng-content /></ng-container>
+</ya-page-tabs>
+```
+
+### `bucket-page-tabs.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-page-tabs/bucket-page-tabs.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-bucket-page-tabs',
+  templateUrl: './bucket-page-tabs.component.html',
+  styleUrl: './bucket-page-tabs.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class BucketPageTabsComponent {
+  @Input()
+  bucket: string;
+
+  constructor(readonly yamcs: YamcsService) {}
+}
+```

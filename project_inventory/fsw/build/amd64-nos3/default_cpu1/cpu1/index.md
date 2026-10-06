@@ -3,32 +3,66 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cfe_build_env_table.c
-file--cfe_module_version_table.c
-file--cfe_psp_module_list.c
-file--cfe_static_module_list.c
-file--cfe_static_symbol_list.c
-file--cmake_install.cmake
-file--core-cpu1
-file--CTestTestfile.cmake
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_build_env_table.c`](file--cfe_build_env_table.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_module_version_table.c`](file--cfe_module_version_table.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_psp_module_list.c`](file--cfe_psp_module_list.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_static_module_list.c`](file--cfe_static_module_list.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_static_symbol_list.c`](file--cfe_static_symbol_list.c) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/core-cpu1`](file--core-cpu1) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cfe_build_env_table.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_build_env_table.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_module_version_table.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_module_version_table.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_psp_module_list.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_psp_module_list.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_static_module_list.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_static_module_list.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cfe_static_symbol_list.c`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cfe_static_symbol_list.c`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `core-cpu1`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/core-cpu1`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cpu1/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

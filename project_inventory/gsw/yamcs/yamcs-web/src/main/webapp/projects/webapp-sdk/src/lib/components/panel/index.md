@@ -3,16 +3,42 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/panel/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `panel.component.css`
 
-file--panel.component.css
-file--panel.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/panel/panel.component.css`
+
+
+```css
+:host {
+  display: block;
+  padding: 24px;
+}
+
+@media print {
+  :host {
+    padding: 0;
+  }
+}
 ```
 
-## 항목
+### `panel.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/panel/panel.component.css`](file--panel.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/panel/panel.component.ts`](file--panel.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/panel/panel.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+@Component({
+  selector: 'ya-panel',
+  template: '<ng-content />',
+  styleUrl: './panel.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'ya-panel',
+  },
+})
+export class YaPanel {}
+```

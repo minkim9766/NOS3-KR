@@ -3,18 +3,272 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-parameter-states.component.css`
 
-file--edit-parameter-states.component.css
-file--edit-parameter-states.component.html
-file--edit-parameter-states.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.css`
+
+
+```css
+table.mappings td {
+  white-space: nowrap;
+}
+
+table.mappings td:not(:first-child),
+table.mappings th:not(:first-child) {
+  padding-left: 5px;
+}
+
+table.mappings td:not(:last-child),
+table.mappings th:not(:last-child) {
+  padding-right: 5px;
+}
 ```
 
-## 항목
+### `edit-parameter-states.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.css`](file--edit-parameter-states.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.html`](file--edit-parameter-states.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.ts`](file--edit-parameter-states.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.html`
+
+
+```html
+@if (formConfigured$ | async) {
+  <form [formGroup]="form" class="ya-form">
+    <ya-stepper>
+      <ya-stepper-step label="General" [expanded]="true">
+        <ya-field label="Label" hint="(required)">
+          <input type="text" formControlName="name" style="width: 100%" />
+        </ya-field>
+
+        <ya-field label="Description" hint="(optional)">
+          <textarea formControlName="description" rows="3"></textarea>
+        </ya-field>
+
+        <app-parameter-states-styles [form]="form" />
+      </ya-stepper-step>
+
+      <ya-stepper-step label="Value mapping" [expanded]="true">
+        @if (valueMappings.length) {
+          <table class="mappings" formArrayName="valueMappings">
+            <tr>
+              <th>Type</th>
+              <th>
+                Condition
+                <span class="hint">(required)</span>
+              </th>
+              <th></th>
+              <th>Label</th>
+              <th>Color</th>
+              <th style="width: 99%"></th>
+            </tr>
+            @for (mapping of valueMappings.controls; track mapping; let i = $index) {
+              <tr [formGroupName]="i">
+                <td>
+                  <input #type type="hidden" formControlName="type" />
+                  {{ mapping.value["type"] | titlecase }}
+                </td>
+                <td>
+                  @if (type.value === "value") {
+                    <input
+                      type="text"
+                      placeholder="value"
+                      formControlName="value"
+                      style="width: 164px" />
+                  } @else if (type.value === "range") {
+                    <input
+                      type="number"
+                      placeholder="start"
+                      formControlName="start"
+                      style="display: inline-block; width: 80px; margin-right: 4px" />
+                    <input
+                      type="number"
+                      placeholder="end"
+                      formControlName="end"
+                      style="display: inline-block; width: 80px" />
+                  }
+                </td>
+                <td>→</td>
+                <td>
+                  <input
+                    type="text"
+                    style="width: 140px"
+                    placeholder="(optional)"
+                    formControlName="label" />
+                </td>
+                <td>
+                  <ya-color-input formControlName="color" label="auto" />
+                </td>
+                <td style="text-align: right">
+                  <ya-icon-action
+                    icon="arrow_drop_up"
+                    matTooltip="Move up"
+                    [disabled]="i === 0"
+                    (click)="moveUp(i)" />
+                  <ya-icon-action
+                    icon="arrow_drop_down"
+                    matTooltip="Move down"
+                    [disabled]="i >= valueMappings.controls.length - 1"
+                    (click)="moveDown(i)" />
+                  <ya-icon-action
+                    icon="delete_outline"
+                    matTooltip="Remove mapping"
+                    (click)="removeMapping(i)" />
+                </td>
+              </tr>
+            }
+          </table>
+          <br />
+        }
+        <ya-button icon="add_circle" (click)="addValueMapping()">Add value mapping</ya-button>
+        &nbsp;
+        <ya-button icon="add_circle" (click)="addRangeMapping()">Add range mapping</ya-button>
+      </ya-stepper-step>
+    </ya-stepper>
+  </form>
+}
+```
+
+### `edit-parameter-states.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/edit-parameter-states/edit-parameter-states.component.ts`
+
+
+```typescript
+import { TitleCasePipe } from '@angular/common';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+import { TimelineBand, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { resolveProperties } from '../../shared/properties';
+import {
+  createValueMappingPropertyInfo,
+  propertyInfo,
+  resolveValueMappingProperties,
+} from '../ParameterStateBand';
+import { ParameterStatesStylesComponent } from '../parameter-states-styles/parameter-states-styles.component';
+
+@Component({
+  selector: 'app-edit-parameter-states',
+  templateUrl: './edit-parameter-states.component.html',
+  styleUrl: './edit-parameter-states.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ParameterStatesStylesComponent, TitleCasePipe, WebappSdkModule],
+})
+export class EditParameterStatesComponent implements AfterViewInit {
+  @Input()
+  form: FormGroup;
+
+  @Input()
+  band: TimelineBand;
+
+  formConfigured$ = new BehaviorSubject<boolean>(false);
+
+  constructor(
+    readonly yamcs: YamcsService,
+    private changeDetection: ChangeDetectorRef,
+    private formBuilder: FormBuilder,
+  ) {}
+
+  ngAfterViewInit() {
+    const props = resolveProperties(propertyInfo, this.band.properties || {});
+
+    // Angular does not seem to have form.addGroup. So we get creative.
+    // The properties sub-group is set in the parent component, and here
+    // we append to it in a roundabout way.
+
+    const propConfig: any = {
+      frozen: [props.frozen, [Validators.required]],
+      height: [props.height, [Validators.required]],
+      parameter: [props.parameter, [Validators.required]],
+    };
+
+    const propertiesGroup = this.form.get('properties') as FormGroup;
+    for (const controlName in propConfig) {
+      const config = propConfig[controlName];
+      propertiesGroup.addControl(
+        controlName,
+        new FormControl(config[0], config[1]),
+      );
+    }
+
+    let idx = 0;
+    while (true) {
+      const mappingPropertyInfo = createValueMappingPropertyInfo(idx);
+      const mappingProperties = resolveValueMappingProperties(
+        idx,
+        mappingPropertyInfo,
+        this.band.properties || {},
+      );
+      if (!mappingProperties.type) {
+        break;
+      }
+      idx++;
+      if (mappingProperties.type === 'value') {
+        const mappingForm = this.addValueMapping();
+        mappingForm.patchValue(mappingProperties);
+      } else if (mappingProperties.type === 'range') {
+        const mappingForm = this.addRangeMapping();
+        mappingForm.patchValue(mappingProperties);
+      }
+    }
+
+    this.formConfigured$.next(true);
+    this.changeDetection.detectChanges();
+  }
+
+  get valueMappings() {
+    return this.form.controls['valueMappings'] as FormArray;
+  }
+
+  addValueMapping() {
+    const form = this.formBuilder.group({
+      type: ['value', [Validators.required]],
+      value: ['', [Validators.required]],
+      label: [''],
+      color: [''],
+    });
+    this.valueMappings.push(form);
+    return form;
+  }
+
+  addRangeMapping() {
+    const form = this.formBuilder.group({
+      type: ['range', [Validators.required]],
+      start: ['', [Validators.required]],
+      end: ['', [Validators.required]],
+      label: [''],
+      color: [''],
+    });
+    this.valueMappings.push(form);
+    return form;
+  }
+
+  removeMapping(index: number) {
+    this.valueMappings.removeAt(index);
+  }
+
+  moveUp(index: number) {
+    const form = this.valueMappings.at(index);
+    this.valueMappings.removeAt(index);
+    this.valueMappings.insert(index - 1, form);
+  }
+
+  moveDown(index: number) {
+    const form = this.valueMappings.at(index);
+    this.valueMappings.removeAt(index);
+    this.valueMappings.insert(index + 1, form);
+  }
+}
+```

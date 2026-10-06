@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,20 +11,870 @@
 Rules/index
 Scenarios/index
 TestState/index
-file--AbstractState.hpp
-file--DpManagerTester.cpp
-file--DpManagerTester.hpp
-file--DpManagerTestMain.cpp
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/Rules/`](Rules/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/Scenarios/`](Scenarios/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/TestState/`](TestState/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/AbstractState.hpp`](file--AbstractState.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTester.cpp`](file--DpManagerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTester.hpp`](file--DpManagerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTestMain.cpp`](file--DpManagerTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `AbstractState.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/AbstractState.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AbstractState.hpp
+// \author Rob Bocchino
+// \brief  Header file for abstract state
+//
+// \copyright
+// Copyright (C) 2023 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_AbstractState_HPP
+#define Svc_AbstractState_HPP
+
+#include <cstring>
+
+#include "Fw/Types/Assert.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Svc/DpManager/DpManager.hpp"
+#include "TestUtils/OnChangeChannel.hpp"
+#include "TestUtils/Option.hpp"
+
+namespace Svc {
+
+class AbstractState {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The minimum buffer size
+    static constexpr FwSizeType MIN_BUFFER_SIZE = 1;
+
+    //! The maximum buffer size
+    static constexpr FwSizeType MAX_BUFFER_SIZE = 1024;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Types
+    // ----------------------------------------------------------------------
+
+    //! The type of the buffer get status
+    enum class BufferGetStatus {
+        //! Valid
+        VALID,
+        //! Invalid
+        INVALID
+    };
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct an AbstractState object
+    AbstractState()
+        : bufferSizeOpt(),
+          bufferGetStatus(BufferGetStatus::VALID),
+          NumSuccessfulAllocations(0),
+          NumFailedAllocations(0),
+          NumDataProducts(0),
+          NumBytes(0),
+          bufferGetOutPortNumOpt(),
+          productResponseOutPortNumOpt(),
+          productSendOutPortNumOpt(),
+          bufferAllocationFailedEventCount(0) {}
+
+  public:
+    // ----------------------------------------------------------------------
+    // Accessor methods
+    // ----------------------------------------------------------------------
+
+    //! Get the buffer size
+    FwSizeType getBufferSize() const {
+        return this->bufferSizeOpt.getOrElse(STest::Pick::lowerUpper(MIN_BUFFER_SIZE, MAX_BUFFER_SIZE));
+    }
+
+    //! Set the buffer size
+    void setBufferSize(FwSizeType bufferSize) { this->bufferSizeOpt.set(bufferSize); }
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private state variables
+    // ----------------------------------------------------------------------
+
+    //! The current buffer size
+    TestUtils::Option<FwSizeType> bufferSizeOpt;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public state variables
+    // ----------------------------------------------------------------------
+
+    //! The buffer get status
+    BufferGetStatus bufferGetStatus;
+
+    //! The number of successful buffer allocations
+    TestUtils::OnChangeChannel<U32> NumSuccessfulAllocations;
+
+    //! The number of failed buffer allocations
+    TestUtils::OnChangeChannel<U32> NumFailedAllocations;
+
+    //! The number of data products handled
+    TestUtils::OnChangeChannel<U32> NumDataProducts;
+
+    //! The number of bytes handled
+    TestUtils::OnChangeChannel<U64> NumBytes;
+
+    //! Data for buffers
+    U8 bufferData[MAX_BUFFER_SIZE];
+
+    //! The last port number used for bufferGetOut
+    TestUtils::Option<FwIndexType> bufferGetOutPortNumOpt;
+
+    //! The last port number used for productResponseOut
+    TestUtils::Option<FwIndexType> productResponseOutPortNumOpt;
+
+    //! The last port number used for productSendOut
+    TestUtils::Option<FwIndexType> productSendOutPortNumOpt;
+
+    //! The number of buffer allocation failed events since the last throttle clear
+    FwSizeType bufferAllocationFailedEventCount;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `DpManagerTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpManagerTester.hpp
+// \author Rob Bocchino
+// \brief  cpp file for DpManager test harness implementation
+// ======================================================================
+
+#include "Svc/DpManager/test/ut/DpManagerTester.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+DpManagerTester ::DpManagerTester()
+    : DpManagerGTestBase("DpManagerTester", DpManagerTester::MAX_HISTORY_SIZE), component("DpManager") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+DpManagerTester ::~DpManagerTester() {}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+Fw::Buffer DpManagerTester::from_bufferGetOut_handler(const FwIndexType portNum, FwSizeType size) {
+    this->abstractState.bufferGetOutPortNumOpt = TestUtils::Option<FwIndexType>::some(portNum);
+    this->pushFromPortEntry_bufferGetOut(size);
+    Fw::Buffer buffer;
+    switch (this->abstractState.bufferGetStatus) {
+        case AbstractState::BufferGetStatus::VALID:
+            // Construct a valid buffer
+            buffer.setData(this->abstractState.bufferData);
+            FW_ASSERT(size <= AbstractState::MAX_BUFFER_SIZE);
+            buffer.setSize(size);
+            break;
+        case AbstractState::BufferGetStatus::INVALID:
+            // Leave buffer in invalid state
+            break;
+        default:
+            FW_ASSERT(0);
+            break;
+    }
+    return buffer;
+}
+
+void DpManagerTester::from_productResponseOut_handler(const FwIndexType portNum,
+                                                      FwDpIdType id,
+                                                      const Fw::Buffer& buffer,
+                                                      const Fw::Success& status) {
+    this->abstractState.productResponseOutPortNumOpt = TestUtils::Option<FwIndexType>::some(portNum);
+    this->pushFromPortEntry_productResponseOut(id, buffer, status);
+}
+
+void DpManagerTester::from_productSendOut_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->abstractState.productSendOutPortNumOpt = TestUtils::Option<FwIndexType>::some(portNum);
+    this->pushFromPortEntry_productSendOut(fwBuffer);
+}
+
+// ----------------------------------------------------------------------
+// Helper methods
+// ----------------------------------------------------------------------
+
+#define TESTER_CHECK_CHANNEL(NAME)                                       \
+    {                                                                    \
+        const auto changeStatus = this->abstractState.NAME.updatePrev(); \
+        if (changeStatus == TestUtils::OnChangeStatus::CHANGED) {        \
+            ASSERT_TLM_##NAME##_SIZE(1);                                 \
+            ASSERT_TLM_##NAME(0, this->abstractState.NAME.value);        \
+        } else {                                                         \
+            ASSERT_TLM_##NAME##_SIZE(0);                                 \
+        }                                                                \
+    }
+
+void DpManagerTester::checkTelemetry() {
+    TESTER_CHECK_CHANNEL(NumSuccessfulAllocations);
+    TESTER_CHECK_CHANNEL(NumFailedAllocations);
+    TESTER_CHECK_CHANNEL(NumDataProducts);
+    TESTER_CHECK_CHANNEL(NumBytes);
+}
+
+void DpManagerTester::doDispatch() {
+    this->component.doDispatch();
+}
+
+FwIndexType DpManagerTester::getBufferAllocationFailedThrottleCount() {
+    return this->component.DpManagerComponentBase::m_BufferAllocationFailedThrottle;
+}
+
+}  // end namespace Svc
+```
+
+### `DpManagerTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpManager/test/ut/DpManagerTester.hpp
+// \author Rob Bocchino
+// \brief  hpp file for DpManager test harness implementation
+// ======================================================================
+
+#ifndef Svc_Tester_HPP
+#define Svc_Tester_HPP
+
+#include "DpManagerGTestBase.hpp"
+#include "Svc/DpManager/DpManager.hpp"
+#include "Svc/DpManager/test/ut/AbstractState.hpp"
+
+namespace Svc {
+
+class DpManagerTester : public DpManagerGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 10;
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+    // Queue depth supplied to component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+    //! Construct object DpManagerTester
+    DpManagerTester();
+
+    //! Destroy object DpManagerTester
+    ~DpManagerTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for from_bufferGetOut
+    Fw::Buffer from_bufferGetOut_handler(const FwIndexType portNum,  //!< The port number
+                                         FwSizeType size             //!< The size
+    );
+
+    //! Handler for from_productResponseOut
+    void from_productResponseOut_handler(const FwIndexType portNum,  //!< The port number
+                                         FwDpIdType id,              //!< The container ID
+                                         const Fw::Buffer& buffer,   //!< The buffer
+                                         const Fw::Success& status   //!< The status
+    );
+
+    //! Handler for from_productSendOut
+    void from_productSendOut_handler(const FwIndexType portNum,  //!< The port number
+                                     Fw::Buffer& fwBuffer        //!< The buffer
+    );
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Protected instance methods
+    // ----------------------------------------------------------------------
+    //! Check telemetry
+    void checkTelemetry();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper methods
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Variables
+    // ----------------------------------------------------------------------
+
+    //! The abstract state for testing
+    AbstractState abstractState;
+
+    //! The component under test
+    DpManager component;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Accessor methods for protected/private members
+    // ----------------------------------------------------------------------
+
+    //! Dispatch
+    void doDispatch();
+
+    //! Get the m_BufferAllocationFailedThrottle value
+    FwIndexType getBufferAllocationFailedThrottleCount();
+
+    //! Get the OPCODE_CLEAR_EVENT_THROTTLE value
+    static FwOpcodeType getClearEventThrottleOpcode() { return DpManagerComponentBase::OPCODE_CLEAR_EVENT_THROTTLE; }
+
+    //! Get the EVENTID_BUFFERALLOCATIONFAILED_THROTTLE value
+    static FwSizeType getBufferAllocationFailedThrottle() {
+        return DpManagerComponentBase::EVENTID_BUFFERALLOCATIONFAILED_THROTTLE;
+    }
+};
+
+}  // end namespace Svc
+
+#endif
+```
+
+### `DpManagerTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/DpManagerTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriterTestMain.cpp
+// \author bocchino
+// \brief  cpp file for DpWriter component test main function
+// ======================================================================
+
+#include "Fw/Test/UnitTest.hpp"
+#include "STest/Random/Random.hpp"
+#include "Svc/DpManager/test/ut/Rules/Testers.hpp"
+#include "Svc/DpManager/test/ut/Scenarios/Random.hpp"
+
+namespace Svc {
+
+TEST(BufferGetStatus, Invalid) {
+    COMMENT("Set the buffer get status to INVALID.");
+    BufferGetStatus::Tester tester;
+    tester.Invalid();
+}
+
+TEST(BufferGetStatus, Valid) {
+    COMMENT("Set the buffer get status to VALID.");
+    BufferGetStatus::Tester tester;
+    tester.Valid();
+}
+
+TEST(ProductGetIn, BufferInvalid) {
+    COMMENT("Invoke productGetIn in a state where the test harness returns an invalid buffer.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    ProductGetIn::Tester tester;
+    tester.BufferInvalid();
+}
+
+TEST(ProductGetIn, BufferValid) {
+    COMMENT("Invoke productGetIn in a state where the test harness returns a valid buffer.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    ProductGetIn::Tester tester;
+    tester.BufferValid();
+}
+
+TEST(ProductRequestIn, BufferInvalid) {
+    COMMENT("Invoke productRequestIn in a state where the test harness returns an invalid buffer.");
+    REQUIREMENT("SVC-DPMANAGER-002");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    ProductRequestIn::Tester tester;
+    tester.BufferInvalid();
+}
+
+TEST(ProductRequestIn, BufferValid) {
+    COMMENT("Invoke productRequestIn in a state where the test harness returns a valid buffer.");
+    REQUIREMENT("SVC-DPMANAGER-002");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    ProductRequestIn::Tester tester;
+    tester.BufferValid();
+}
+
+TEST(ProductSendIn, OK) {
+    COMMENT("Invoke productSendIn with nominal input.");
+    REQUIREMENT("SVC-DPMANAGER-003");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    ProductSendIn::Tester tester;
+    tester.OK();
+}
+
+TEST(SchedIn, OK) {
+    COMMENT("Invoke schedIn with nominal input.");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    SchedIn::Tester tester;
+    tester.OK();
+}
+
+TEST(CLEAR_EVENT_THROTTLE, OK) {
+    COMMENT("Send command CLEAR_EVENT_THROTTLE.");
+    CLEAR_EVENT_THROTTLE::Tester tester;
+    tester.OK();
+}
+
+TEST(Scenarios, Random) {
+    COMMENT("Random scenario with all rules.");
+    REQUIREMENT("SVC-DPMANAGER-002");
+    REQUIREMENT("SVC-DPMANAGER-003");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    const FwSizeType numSteps = 10000;
+    Scenarios::Random::Tester tester;
+    tester.run(numSteps);
+}
+
+}  // namespace Svc
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpManager/test/ut/README.md`
+
+
+````markdown
+# DpManager Component Tests
+
+## 1. Abstract State
+
+### 1.1. Types
+
+* `BufferGetStatus`: The status of the `bufferGet` response in
+  the test harness (`VALID` or `INVALID`).
+
+### 1.2. Variables
+
+| Variable | Type | Description | Initial Value |
+|----------|------|-------------|---------------|
+| `bufferGetStatus` | `BufferGetStatus` | The buffer get status | `VALID` |
+| `bufferSize` | `Option<FwSizeType>` | The current buffer size | `none` |
+| `NumSuccessfulAllocations` | `OnChangeChannel<U32>` | The number of successful buffer allocations | 0 |
+| `NumFailedAllocations` | `OnChangeChannel<U32>` | The number of failed buffer allocations | 0 |
+| `NumDataProducts` | `OnChangeChannel<U32>` | The number of data products handled | 0 |
+| `NumBytes` | `OnChangeChannel<U64>` | The number of bytes handled | 0 |
+| `bufferGetOutPortNumOpt` | `Option<FwIndexType>` | The last port number used for `bufferGetOut`. Updated in the port handler for `from_bufferGetOut`. | `none` |
+| `productResponseOutPortNumOpt` | `Option<FwIndexType>` | The last port number used for `productResponseOut`. Updated in the port handler for `from_productResponseOut`. | `none` |
+| `productSendOutPortNumOpt` | `Option<FwIndexType>` | The last port number used for `productSendOut`. Updated in the port handler for `from_productSendOut`. | `none` |
+| `bufferAllocationFailedEventCount` | `FwSizeType` | The number of buffer allocation failed events since the last throttle clear |0 |
+
+## 2. Rule Groups
+
+### 2.1. BufferGetStatus
+
+This rule group manages the buffer get status in the test harness.
+
+#### 2.1.1. Valid
+
+This rule sets the buffer get status to `VALID`, simulating a system state
+in which buffers are available.
+
+**Precondition:**
+`bufferGetStatus != VALID`.
+
+**Action:**
+`bufferGetStatus = VALID`.
+
+**Test:**
+
+1. Apply rule `BufferGetStatus::Invalid`.
+1. Apply rule `BufferGetStatus::Valid`.
+
+**Requirements tested:**
+None (helper rule).
+
+#### 2.1.2. Invalid
+
+This rule sets the buffer get status to `INVALID`, simulating a system
+state in which no buffers are available.
+
+**Precondition:**
+`bufferGetStatus != INVALID`.
+
+**Action:**
+`bufferGetStatus = INVALID`.
+
+**Test:**
+Apply rule `BufferGetStatus::Invalid`.
+
+**Requirements tested:**
+None (helper rule).
+
+### 2.2. ProductGetIn
+
+This rule group sends test input to the `productGetIn` port.
+
+#### 2.2.1. BufferInvalid
+
+This rule invokes `productGetIn` in a state where the test harness returns
+an invalid buffer.
+
+**Precondition:**
+`bufferGetStatus == INVALID`.
+
+**Action:**
+
+1. Clear the history.
+1. Let _S_ be `bufferSize`, or a random value if `bufferSize == none`.
+   Invoke `productGetIn` with a random port number _N_, with a random id _I_,
+   and with size _S_.
+1. Assert that the status returned from the invocation is `FAILURE`.
+1. If `bufferAllocationFailedEventCount` < `DpManagerComponentBase::EVENTID_BUFFERALLOCATIONFAILED_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `BufferAllocationFailed` contains one element.
+   1. Assert that the event history for `BufferAllocationFailed` contains _I_ at index zero.
+   1. Increment `bufferAllocationFailedEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Increment `NumFailedAllocations`.
+1. Assert that the from port history contains one item.
+1. Assert that the history for `bufferGetOut` contains one item.
+1. Assert that the `bufferGetOut` history contains size _S_
+   at index zero.
+1. Assert that `bufferGetOutPortNumOpt` is _N_.
+
+**Test:**
+
+1. Apply rule `BufferGetStatus::Invalid`.
+1. Set `bufferSize` to `MIN_BUFFER_SIZE`.
+1. Apply rule `ProductGetIn::BufferInvalid`.
+1. Apply rule `SchedIn::OK`.
+1. Set `bufferSize` to `MAX_BUFFER_SIZE`.
+1. Apply rule `ProductGetIn::BufferInvalid`.
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-001`, `SVC-DPMANAGER-004`.
+
+#### 2.2.2. BufferValid
+
+This rule invokes `productRequestIn` in a state where the test harness returns
+a valid buffer.
+
+**Precondition:**
+`bufferGetStatus == VALID`.
+
+**Action:**
+
+1. Clear history.
+1. Let _S_ be `bufferSize`, or a random value if `bufferSize == none`.
+   Invoke `productRequestIn` with a random port number _N_, with a random id _I_,
+   and with size _S_.
+1. Assert that the status returned from the invocation is `SUCCESS`.
+1. Assert that the event history is empty.
+1. Increment `NumSuccessfulAllocations`.
+1. Assert that the from port history contains one item.
+1. Assert that the `bufferGetOut` history contains one item.
+1. Assert that the `bufferGetOut` history contains size _S_.
+   at index zero.
+1. Assert that `bufferGetOutPortNumOpt` is _N_.
+
+**Test:**
+
+1. Set `bufferSize` to `MIN_BUFFER_SIZE`.
+1. Apply rule `ProductGetIn::BufferValid`.
+1. Apply rule `SchedIn::OK`.
+1. Set `bufferSize` to `MAX_BUFFER_SIZE`.
+1. Apply rule `ProductGetIn::BufferValid`.
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-001`, `SVC-DP-MANAGER-004`.
+
+### 2.3. ProductRequestIn
+
+This rule group sends test input to the `productRequestIn` port.
+
+#### 2.3.1. BufferInvalid
+
+This rule invokes `productRequestIn` in a state where the test harness returns
+an invalid buffer.
+
+**Precondition:**
+`bufferGetStatus == INVALID`.
+
+**Action:**
+
+1. Clear the history.
+1. Let _S_ be `bufferSize`, or a random value if `bufferSize == none`.
+   Invoke `productRequestIn` with a random port number _N_, with a random id _I_,
+   and with size _S_.
+1. If `bufferAllocationFailedEventCount` < `DpManagerComponentBase::EVENTID_BUFFERALLOCATIONFAILED_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `BufferAllocationFailed` contains one element.
+   1. Assert that the event history for `BufferAllocationFailed` contains _I_ at index zero.
+   1. Increment `bufferAllocationFailedEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Increment `NumFailedAllocations`.
+1. Assert that the from port history contains two items.
+1. Assert that the history for `bufferGetOut` contains one item.
+1. Assert that the `bufferGetOut` history contains size _S_
+   at index zero.
+1. Assert that `bufferGetOutPortNumOpt` is _N_.
+1. Assert that the history for `productResponseOut` contains one item.
+1. Assert that the history for `productResponseOut` contains the expected invalid buffer
+   and status `FAILURE` at index zero.
+1. Assert that `productResponseOutPortNumOpt` is _N_.
+
+**Test:**
+
+1. Apply rule `BufferGetStatus::Invalid`.
+1. Set `bufferSize` to `MIN_BUFFER_SIZE`.
+1. Apply rule `ProductRequestIn::BufferInvalid`.
+1. Apply rule `SchedIn::OK`.
+1. Set `bufferSize` to `MAX_BUFFER_SIZE`.
+1. Apply rule `ProductRequestIn::BufferInvalid`.
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-002`, `SVC-DPMANAGER-004`.
+
+#### 2.3.2. BufferValid
+
+This rule invokes `productRequestIn` in a state where the test harness returns
+a valid buffer.
+
+**Precondition:**
+`bufferGetStatus == VALID`.
+
+**Action:**
+
+1. Clear history.
+1. Let _S_ be `bufferSize`, or a random value if `bufferSize == none`.
+   Invoke `productRequestIn` with a random port number _N_, with a random id _I_,
+   and with size _S_.
+1. Assert that the event history is empty.
+1. Increment `NumSuccessfulAllocations`.
+1. Assert that the from port history contains two items.
+1. Assert that the `bufferGetOut` history contains one item.
+1. Assert that the `bufferGetOut` history contains size _S_.
+   at index zero.
+1. Assert that `bufferGetOutPortNumOpt` is _N_.
+1. Assert that the `productResponseOut` history contains one item.
+1. Assert that the `productResponseOut` history contains the
+   expected valid buffer value and status `SUCCESS` at index zero.
+1. Assert that `productResponseOutPortNumOpt` is _N_.
+
+**Test:**
+
+1. Set `bufferSize` to `MIN_BUFFER_SIZE`.
+1. Apply rule `ProductRequestIn::BufferValid`.
+1. Apply rule `SchedIn::OK`.
+1. Set `bufferSize` to `MAX_BUFFER_SIZE`.
+1. Apply rule `ProductRequestIn::BufferValid`.
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-002`, `SVC-DP-MANAGER-004`.
+
+### 2.4. ProductSendIn
+
+This rule group sends test input to the `productSendIn` port.
+
+#### 2.4.1. OK
+
+This rule invokes `productSendIn` with nominal input.
+
+**Precondition:** `true`.
+
+**Action:**
+
+1. Clear history.
+1. Let _S_ be `bufferSize`, or a random value if `bufferSize == none`.
+   Invoke `productSendIn` with a random port number _N_, with a random id _I_,
+   and with a buffer _B_ of of size _S_.
+1. Assert that the event history is empty.
+1. Increment `NumDataProducts`.
+1. Increase `NumBytes` by the size of _B_.
+1. Assert that the from port history contains one item.
+1. Assert that the `productSendOut` history contains one item.
+1. Assert that the `productSendOut` history contains _B_ at index zero.
+1. Assert that `productSendOutPortNumOpt` is _N_.
+
+**Test:**
+1. Set `bufferSize` to `MIN_BUFFER_SIZE`.
+1. Apply rule `ProductSendIn::OK`.
+1. Apply rule `SchedIn::OK`.
+1. Set `bufferSize` to `MAX_BUFFER_SIZE`.
+1. Apply rule `ProductSendIn::OK`.
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-003`, `SVC-DPMANAGER-004`.
+
+### 2.5. SchedIn
+
+This rule group sends test input to the `schedIn` port.
+
+#### 2.5.1. OK
+
+This rule invokes `schedIn` with nominal input.
+
+**Precondition:** `true`
+
+**Action:**
+
+1. Clear history.
+1. Invoke `schedIn` with a random context.
+1. Check telemetry.
+
+**Test:**
+
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPMANAGER-004`.
+
+### 2.6. CLEAR_EVENT_THROTTLE
+
+This rule group tests the `CLEAR_EVENT_THROTTLE` command.
+
+#### 2.6.1. OK
+
+This rule sends the `CLEAR_EVENT_THROTTLE` command.
+
+**Precondition:** `true`
+
+**Action:**
+
+1. Clear the history.
+1. Send command `CLEAR_EVENT_THROTTLE`.
+1. Check the command response.
+1. Assert `DpManagerComponentBase::m_BufferAllocationFailedThrottle` == 0.
+1. Set `bufferAllocationFailedEventCount` = 0.
+
+**Test:**
+
+1. Apply rule `BufferGetStatus::Invalid`.
+1. Apply rule `ProductRequestIn::BufferInvalid` `DpManagerComponentBase::EVENTID_BUFFERALLOCATIONFAILED_THROTTLE` + 1 times.
+1. Apply rule `CLEAR_EVENT_THROTTLE::OK`.
+1. Apply rule `ProductRequestIn::BufferInvalid`
+
+**Requirements tested:**
+`SVC-DPMANAGER-006`
+
+## 3. Implementation
+
+### 3.1. DpManagerTester and TestState
+
+The abstract state and the component under test are members of the `DpManagerTester` class.
+`TestState` is a derived class of `DpManagerTester`.
+The preconditions and actions of the rules are defined in `TestState` so they can use the functions
+and macros defined in `DpManagerGTestBase`.
+The header file for `TestState` is boilerplate and is defined using macro expansion.
+The function definitions for `TestState` are handwritten.
+They encode the preconditions and actions described above.
+
+```mermaid
+classDiagram
+    class DpManagerTester {
+        +AbstractState abstractState
+        +DpManager component
+    }
+    class TestState {
+        +precondition__BufferGetStatus__Invalid()
+        +action__BufferGetStatus__Invalid()
+        +precondition__BufferGetStatus__Valid()
+        +action__BufferGetStatus__Valid()
+    }
+    DpManagerGTestBase <|-- DpManagerTester
+    DpManagerTester <|-- TestState
+```
+
+The preconditions and actions for the `BufferGetStatus` rule group are shown.
+
+### 3.2. Rules
+
+The classes derived from `STest::Rule` are boilerplate.
+The precondition and action functions turn around and call the corresponding
+functions in `TestState`.
+The boilerplate is defined using macro expansion.
+
+```mermaid
+classDiagram
+    class `Rules::BufferGetStatus::Invalid` {
+        +precondition(state)
+        +action(state)
+    }
+    class `Rules::BufferGetStatus::Valid` {
+        +precondition(state)
+        +action(state)
+    }
+    `STest::Rule`~TestState~ <|-- `Rules::BufferGetStatus::Invalid`
+    `STest::Rule`~TestState~ <|-- `Rules::BufferGetStatus::Valid`
+```
+
+The rules for the `BufferGetStatus` rule group are shown.
+
+### 3.3. Rule Group Testers
+
+There is one tester for each rule group.
+Each tester defines the rules for the group, defines a test state,
+and provides one test scenario for each rule.
+The tester for the `BufferGetStatus` rule group is shown.
+
+```mermaid
+classDiagram
+    class `BufferGetStatus::Tester` {
+        +Valid() : Test scenario for ruleValid
+        +Invalid() : Test scenario for ruleInvalid
+        +Rules::BufferGetStatus::Valid ruleValid
+        +Rules::BufferGetStatus::Invalid ruleInvalid
+        -TestState testState
+    }
+```
+
+### 3.4. Random Scenario Tester
+
+The random scenario tester instantiates all the rules and uses them to provide
+a random scenario.
+
+```mermaid
+classDiagram
+    class `Scenarios::Random::Tester` {
+        +run(maxNumSteps)
+        -TestState testState
+    }
+```
+````

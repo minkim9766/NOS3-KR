@@ -3,18 +3,109 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter.component.css`
 
-file--parameter.component.css
-file--parameter.component.html
-file--parameter.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.css`
+
+
+```css
+.tab-content-wrapper {
+  position: absolute;
+  top: 49px; /* tab height + border */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+}
+
+.tab-content-wrapper.noscroll {
+  overflow: hidden;
+}
 ```
 
-## 항목
+### `parameter.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.css`](file--parameter.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.html`](file--parameter.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.ts`](file--parameter.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.html`
+
+
+```html
+@if (parameter$ | async; as parameter) {
+  <ya-instance-page>
+    <ya-instance-toolbar>
+      <ng-template ya-instance-toolbar-label>
+        @if (parameter.qualifiedName | spaceSystemName; as spaceSystemName) {
+          <a
+            routerLink="/mdb/parameters"
+            [queryParams]="{ c: yamcs.context, filter: spaceSystemName }"
+            class="ya-link ya-header-link">
+            {{ spaceSystemName }}
+          </a>
+          /{{ parameter.qualifiedName | shortName }}{{ offset$ | async }}
+          <ya-title-copy [text]="parameter.qualifiedName + ((offset$ | async) || '')" />
+        }
+      </ng-template>
+    </ya-instance-toolbar>
+    <ya-panel>
+      <app-parameter-detail [parameter]="parameter" [offset]="offset$ | async" />
+    </ya-panel>
+  </ya-instance-page>
+}
+```
+
+### `parameter.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/mdb/parameters/parameter/parameter.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { Parameter, WebappSdkModule, YamcsService } from '@yamcs/webapp-sdk';
+import { BehaviorSubject } from 'rxjs';
+import { ParameterDetailComponent } from '../parameter-detail/parameter-detail.component';
+
+@Component({
+  templateUrl: './parameter.component.html',
+  styleUrl: './parameter.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ParameterDetailComponent, WebappSdkModule],
+})
+export class ParameterComponent {
+  parameter$ = new BehaviorSubject<Parameter | null>(null);
+  offset$ = new BehaviorSubject<string | null>(null);
+
+  constructor(
+    route: ActivatedRoute,
+    readonly yamcs: YamcsService,
+    private title: Title,
+  ) {
+    // When clicking links pointing to this same component, Angular will not reinstantiate
+    // the component. Therefore subscribe to routeParams
+    route.paramMap.subscribe((params) => {
+      const qualifiedName = params.get('qualifiedName')!;
+      this.changeParameter(qualifiedName);
+    });
+  }
+
+  changeParameter(qualifiedName: string) {
+    this.yamcs.yamcsClient
+      .getParameter(this.yamcs.instance!, qualifiedName)
+      .then((parameter) => {
+        this.parameter$.next(parameter);
+
+        let offset;
+        if (qualifiedName !== parameter.qualifiedName) {
+          offset = qualifiedName.substring(parameter.qualifiedName.length);
+        } else {
+          offset = null;
+        }
+        this.offset$.next(offset);
+
+        this.title.setTitle(parameter.name + (offset || ''));
+      });
+  }
+}
+```

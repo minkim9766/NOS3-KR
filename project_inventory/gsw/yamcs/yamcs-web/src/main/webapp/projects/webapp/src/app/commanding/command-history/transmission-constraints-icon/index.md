@@ -3,18 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `transmission-constraints-icon.component.css`
 
-file--transmission-constraints-icon.component.css
-file--transmission-constraints-icon.component.html
-file--transmission-constraints-icon.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.css`
+
+
+```css
+:host {
+  line-height: 0;
+  font-size: 0;
+}
+
+.pending {
+  color: lightgrey;
+  animation: yspin 2s infinite linear;
+}
+
+.not-pending {
+  color: lightgrey;
+}
+
+@keyframes yspin {
+  0% {
+    -webkit-transform: rotate(0deg) scaleX(-1);
+    transform: rotate(0deg) scaleX(-1);
+  }
+
+  100% {
+    -webkit-transform: rotate(359deg) scaleX(-1);
+    transform: rotate(359deg) scaleX(-1);
+  }
+}
 ```
 
-## 항목
+### `transmission-constraints-icon.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.css`](file--transmission-constraints-icon.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.html`](file--transmission-constraints-icon.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.ts`](file--transmission-constraints-icon.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.html`
+
+
+```html
+@switch (command.transmissionConstraints?.status) {
+  @case ("PENDING") {
+    <mat-icon class="pending icon16 spin" matTooltip="Checking transmission constraints">
+      cached
+    </mat-icon>
+  }
+  @default {
+    <mat-icon class="not-pending icon16">lens</mat-icon>
+  }
+}
+```
+
+### `transmission-constraints-icon.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-history/transmission-constraints-icon/transmission-constraints-icon.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommandHistoryRecord, WebappSdkModule } from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-transmission-constraints-icon',
+  templateUrl: './transmission-constraints-icon.component.html',
+  styleUrl: './transmission-constraints-icon.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class TransmissionConstraintsIconComponent {
+  @Input()
+  command: CommandHistoryRecord;
+}
+```

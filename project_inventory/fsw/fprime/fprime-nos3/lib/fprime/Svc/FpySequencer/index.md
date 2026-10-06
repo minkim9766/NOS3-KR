@@ -3,48 +3,4052 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--.gitignore
-file--CMakeLists.txt
-file--FpySequencer.cpp
-file--FpySequencer.fpp
-file--FpySequencer.hpp
-file--FpySequencerCommands.fppi
-file--FpySequencerDirectives.cpp
-file--FpySequencerDirectives.fppi
-file--FpySequencerEvents.fppi
-file--FpySequencerParams.fppi
-file--FpySequencerRunState.cpp
-file--FpySequencerStateMachine.cpp
-file--FpySequencerStateMachine.fppi
-file--FpySequencerTelemetry.fppi
-file--FpySequencerTypes.fpp
-file--FpySequencerValidationState.cpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/.gitignore`](file--.gitignore) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.cpp`](file--FpySequencer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.fpp`](file--FpySequencer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.hpp`](file--FpySequencer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerCommands.fppi`](file--FpySequencerCommands.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerDirectives.cpp`](file--FpySequencerDirectives.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerDirectives.fppi`](file--FpySequencerDirectives.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerEvents.fppi`](file--FpySequencerEvents.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerParams.fppi`](file--FpySequencerParams.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerRunState.cpp`](file--FpySequencerRunState.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerStateMachine.cpp`](file--FpySequencerStateMachine.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerStateMachine.fppi`](file--FpySequencerStateMachine.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerTelemetry.fppi`](file--FpySequencerTelemetry.fppi) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerTypes.fpp`](file--FpySequencerTypes.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerValidationState.cpp`](file--FpySequencerValidationState.cpp) — UTF-8 텍스트 파일 본문 포함
+### `.gitignore`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/.gitignore`
+
+
+```text
+#Ignore Test Outputs
+test.bin
+```
+
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+# UT_SOURCE_FILES: list of source files for unit tests
+#
+####
+set(SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerTypes.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerStateMachine.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerDirectives.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerRunState.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerValidationState.cpp"
+)
+
+register_fprime_module()
+
+### UTS ###
+set(UT_AUTO_HELPERS ON)
+
+set(UT_SOURCE_FILES
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencer.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencer.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerTypes.fpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerStateMachine.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerDirectives.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerRunState.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/FpySequencerValidationState.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FpySequencerTester.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FpySequencerTestMain.cpp"
+  "${CMAKE_CURRENT_LIST_DIR}/test/ut/FpySequencerTestSequences.cpp"
+)
+
+register_fprime_ut()
+```
+
+### `FpySequencer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FpySequencer.cpp
+// \author zimri.leisher
+// \brief  cpp file for FpySequencer component implementation class
+// ======================================================================
+
+#include <Svc/FpySequencer/FpySequencer.hpp>
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+FpySequencer ::FpySequencer(const char* const compName)
+    : FpySequencerComponentBase(compName),
+      m_sequenceBuffer(),
+      m_allocatorId(0),
+      m_sequenceFilePath("<invalid_seq>"),
+      m_sequenceObj(),
+      m_computedCRC(0),
+      m_sequenceBlockState(),
+      m_savedOpCode(0),
+      m_savedCmdSeq(0),
+      m_goalState(),
+      m_sequencesStarted(0),
+      m_statementsDispatched(0),
+      m_runtime(),
+      m_debug(),
+      m_tlm() {}
+
+FpySequencer ::~FpySequencer() {}
+
+//! Handler for command RUN
+//!
+//! Loads, validates and runs a sequence
+void FpySequencer::RUN_cmdHandler(FwOpcodeType opCode,               //!< The opcode
+                                  U32 cmdSeq,                        //!< The command sequence number
+                                  const Fw::CmdStringArg& fileName,  //!< The name of the sequence file
+                                  FpySequencer_BlockState block      //!< Return command status when complete or not
+) {
+    // can only run a seq while in idle
+    if (sequencer_getState() != State::IDLE) {
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    if (block == FpySequencer_BlockState::BLOCK) {
+        // save the opCode and cmdSeq so we can respond later
+        this->m_savedOpCode = opCode;
+        this->m_savedCmdSeq = cmdSeq;
+    }
+
+    this->sequencer_sendSignal_cmd_RUN(FpySequencer_SequenceExecutionArgs(fileName, block));
+
+    // only respond if the user doesn't want us to block further execution
+    if (block == FpySequencer_BlockState::NO_BLOCK) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+//! Handler for command VALIDATE
+//!
+//! Loads and validates a sequence
+void FpySequencer::VALIDATE_cmdHandler(FwOpcodeType opCode,              //!< The opcode
+                                       U32 cmdSeq,                       //!< The command sequence number
+                                       const Fw::CmdStringArg& fileName  //!< The name of the sequence file
+) {
+    // can only validate a seq while in idle
+    if (sequencer_getState() != State::IDLE) {
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    // validate always blocks until finished, so save opcode/cmdseq
+    // so we can respond once done
+    this->m_savedOpCode = opCode;
+    this->m_savedCmdSeq = cmdSeq;
+
+    this->sequencer_sendSignal_cmd_VALIDATE(
+        FpySequencer_SequenceExecutionArgs(fileName, FpySequencer_BlockState::BLOCK));
+}
+
+//! Handler for command RUN_VALIDATED
+//!
+//! Runs a previously validated sequence
+void FpySequencer::RUN_VALIDATED_cmdHandler(
+    FwOpcodeType opCode,           //!< The opcode
+    U32 cmdSeq,                    //!< The command sequence number
+    FpySequencer_BlockState block  //!< Return command status when complete or not
+) {
+    // can only RUN_VALIDATED if we have validated and are awaiting this exact cmd
+    if (sequencer_getState() != State::AWAITING_CMD_RUN_VALIDATED) {
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    if (block == FpySequencer_BlockState::BLOCK) {
+        // save the opCode and cmdSeq so we can respond later
+        this->m_savedOpCode = opCode;
+        this->m_savedCmdSeq = cmdSeq;
+    }
+
+    this->sequencer_sendSignal_cmd_RUN_VALIDATED(FpySequencer_SequenceExecutionArgs(this->m_sequenceFilePath, block));
+
+    // only respond if the user doesn't want us to block further execution
+    if (block == FpySequencer_BlockState::NO_BLOCK) {
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+//! Handler for command CANCEL
+//!
+//! Cancels a running or validated sequence
+void FpySequencer::CANCEL_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                     U32 cmdSeq            //!< The command sequence number
+) {
+    // only state you can't cancel in is IDLE
+    if (sequencer_getState() == State::IDLE) {
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->sequencer_sendSignal_cmd_CANCEL();
+
+    // cancel returns immediately and always succeeds
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for command DEBUG_SET_BREAKPOINT
+//!
+//! Sets the debugging breakpoint which will pause the execution of the sequencer
+//! until unpaused by the DEBUG_CONTINUE command. Will pause just before dispatching
+//! the specified statement. This command is valid in all states. Debug settings are
+//! cleared after a sequence ends execution.
+void FpySequencer::DEBUG_SET_BREAKPOINT_cmdHandler(
+    FwOpcodeType opCode,  //!< The opcode
+    U32 cmdSeq,           //!< The command sequence number
+    U32 stmtIdx,          //!< The statement index to pause execution before.
+    bool breakOnce        //!< Whether or not to break only once at this breakpoint
+) {
+    this->sequencer_sendSignal_cmd_DEBUG_SET_BREAKPOINT(FpySequencer_DebugBreakpointArgs(true, breakOnce, stmtIdx));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for command DEBUG_BREAK
+//!
+//! Pauses the execution of the sequencer once, just before it is about to dispatch the next statement,
+//! until unpaused by the DEBUG_CONTINUE command. This command is only valid in the RUNNING state.
+//! Debug settings are cleared after a sequence ends execution.
+void FpySequencer::DEBUG_BREAK_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                          U32 cmdSeq,           //!< The command sequence number
+                                          bool breakOnce  //!< Whether or not to break only once at this breakpoint
+) {
+    if (!this->isRunningState(this->sequencer_getState())) {
+        // can only break while running
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+    this->sequencer_sendSignal_cmd_DEBUG_BREAK(
+        FpySequencer_DebugBreakpointArgs(true, breakOnce, this->m_runtime.nextStatementIndex));
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for command DEBUG_CONTINUE
+//!
+//! Continues the execution of the sequence after it has been paused by a debug break. This command
+//! is only valid in the RUNNING.DEBUG_BROKEN state.
+void FpySequencer::DEBUG_CONTINUE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                             U32 cmdSeq            //!< The command sequence number
+) {
+    if (this->sequencer_getState() != State::RUNNING_DEBUG_BROKEN) {
+        this->log_WARNING_HI_InvalidCommand(static_cast<I32>(sequencer_getState()));
+        this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+        return;
+    }
+
+    this->sequencer_sendSignal_cmd_DEBUG_CONTINUE();
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for command DEBUG_CLEAR_BREAKPOINT
+//!
+//! Clears the debugging breakpoint, but does not continue executing the sequence. This command
+//! is valid in all states. This happens automatically when a sequence ends execution.
+void FpySequencer::DEBUG_CLEAR_BREAKPOINT_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                                     U32 cmdSeq            //!< The command sequence number
+) {
+    this->sequencer_sendSignal_cmd_DEBUG_CLEAR_BREAKPOINT();
+    this->log_ACTIVITY_HI_DebugBreakpointCleared();
+
+    this->cmdResponse_out(opCode, cmdSeq, Fw::CmdResponse::OK);
+}
+
+//! Handler for input port checkTimers
+void FpySequencer::checkTimers_handler(FwIndexType portNum,  //!< The port number
+                                       U32 context           //!< The call order
+) {
+    this->sequencer_sendSignal_checkTimersIn();
+}
+
+void FpySequencer::pingIn_handler(FwIndexType portNum, /*!< The port number*/
+                                  U32 key              /*!< Value to return to pinger*/
+) {
+    // send ping response
+    this->pingOut_out(0, key);
+}
+
+//! Handler for input port cmdResponseIn
+void FpySequencer::cmdResponseIn_handler(FwIndexType portNum,             //!< The port number
+                                         FwOpcodeType opCode,             //!< Command Op Code
+                                         U32 cmdSeq,                      //!< Command Sequence
+                                         const Fw::CmdResponse& response  //!< The command response argument
+) {
+    // if we aren't in the RUNNING state:
+    if (!this->isRunningState(sequencer_getState())) {
+        // must be a coding error from an outside component (off nom), or due to CANCEL while running a command (nom).
+        // because we can't be sure that it wasn't a nominal sequence of events leading to this, don't fail the
+        // sequence, just report it
+        this->log_WARNING_LO_CmdResponseWhileNotRunningSequence(static_cast<I32>(this->sequencer_getState()), opCode,
+                                                                response);
+        return;
+    }
+
+    // okay, we're running a sequence. now let's use the cmdUid to check if the response was for a cmd
+    // from this sequence
+
+    // the cmdSeq arg is confusingly not the cmdSeq in this case, according to the current implementation
+    // of the CmdDisp. instead, it is the context that we passed in when we originally sent the cmd out.
+    // this context is in turn the cmdUid that we calculated just before sending it. rename the variable for
+    // clarity's sake
+    U32 cmdUid = cmdSeq;
+
+    // pull the sequence index (modulo 2^16) out of the cmdUid. see the comment in FpySequencer::dispatchCommand
+    // for info on the binary format of this cmdUid. as a reminder, this should be equal to the first 16 bits of
+    // the m_sequencesStarted variable
+    U16 sequenceIndex = static_cast<U16>((cmdUid & 0xFFFF0000) >> 16);
+    U16 currentSequenceIndex = static_cast<U16>(this->m_sequencesStarted & 0xFFFF);
+
+    // if it was from a different sequence:
+    if (sequenceIndex != currentSequenceIndex) {
+        this->log_WARNING_LO_CmdResponseFromOldSequence(opCode, response, sequenceIndex, currentSequenceIndex);
+        return;
+    }
+
+    // okay, it was from this sequence. now if anything's wrong from this point on we should fail the sequence
+
+    // first, make sure we're actually awaiting a statement response
+    if (this->sequencer_getState() != State::RUNNING_AWAITING_STATEMENT_RESPONSE) {
+        // okay, crap. something from this sequence responded, and we weren't awaiting anything. end it all
+        this->log_WARNING_HI_CmdResponseWhileNotAwaiting(opCode, response);
+        this->sequencer_sendSignal_stmtResponse_unexpected();
+        return;
+    }
+
+    if (this->m_runtime.currentStatementOpcode != Fpy::DirectiveId::CMD) {
+        // we were not awaiting a cmd response, we were waiting for a directive
+        this->log_WARNING_HI_CmdResponseWhileAwaitingDirective(opCode, response, this->m_runtime.currentStatementOpcode);
+        this->sequencer_sendSignal_stmtResponse_unexpected();
+        return;
+    }
+
+    // okay, we were awaiting a cmd response. were we awaiting this opcode?
+    if (opCode != this->m_runtime.currentCmdOpcode) {
+        // we were not awaiting this opcode. coding error, likely on the part of the responding component or cmd
+        // dispatcher
+        this->log_WARNING_HI_WrongCmdResponseOpcode(opCode, response, this->m_runtime.currentCmdOpcode);
+        this->sequencer_sendSignal_stmtResponse_unexpected();
+        return;
+    }
+
+    // okay, we were awaiting this opcode. but was it from this exact statement, or a different one with the same opcode
+    // in the same file?
+
+    // pull the cmd index (modulo 2^16) out of cmdUid. this should be equal to the first 16 bits of the
+    // m_statementsDispatched variable
+    U16 cmdIndex = static_cast<U16>(cmdUid & 0xFFFF);
+    // check for coding errors. at this point in the function, we have definitely dispatched a stmt
+    FW_ASSERT(this->m_statementsDispatched > 0);
+    U16 currentCmdIndex = static_cast<U16>((this->m_statementsDispatched) & 0xFFFF);
+
+    if (cmdIndex != currentCmdIndex) {
+        // we were not awaiting this exact statement, it was a different one with the same opcode. coding error
+        this->log_WARNING_HI_WrongCmdResponseIndex(opCode, response, cmdIndex, currentCmdIndex);
+        this->sequencer_sendSignal_stmtResponse_unexpected();
+        return;
+    }
+
+    // okay, got the right cmd back. we have verified:
+    // 1) we are in the RUNNING state
+    // 2) the response is from this sequence
+    // 3) the response is from the correct opcode
+    // 4) the response is from the correct instance of that opcode in the sequence
+
+    if (response == Fw::CmdResponse::OK) {
+        this->sequencer_sendSignal_stmtResponse_success();
+    } else {
+        this->log_WARNING_HI_CommandFailed(opCode,
+                                           this->m_runtime.nextStatementIndex - 1, this->m_sequenceFilePath,
+                                           response);
+        this->sequencer_sendSignal_stmtResponse_failure();
+    }
+}
+
+//! Handler for input port seqRunIn
+void FpySequencer::seqRunIn_handler(FwIndexType portNum,
+                                    const Fw::StringBase& filename
+) {
+    // can only run a seq while in idle
+    if (sequencer_getState() != State::IDLE) {
+        this->log_WARNING_HI_InvalidSeqRunCall(static_cast<I32>(sequencer_getState()));
+        return;
+    }
+
+    // seqRunIn is never blocking
+    this->sequencer_sendSignal_cmd_RUN(FpySequencer_SequenceExecutionArgs(filename, FpySequencer_BlockState::NO_BLOCK));
+}
+
+//! Handler for input port tlmWrite
+void FpySequencer::tlmWrite_handler(FwIndexType portNum,  //!< The port number
+                                    U32 context           //!< The call order
+) {
+    this->tlmWrite_State(static_cast<I32>(this->sequencer_getState()));
+    this->tlmWrite_StatementsDispatched(this->m_statementsDispatched);
+    this->tlmWrite_StatementsFailed(this->m_tlm.statementsFailed);
+    this->tlmWrite_SequencesCancelled(this->m_tlm.sequencesCancelled);
+    this->tlmWrite_SequencesSucceeded(this->m_tlm.sequencesSucceeded);
+    this->tlmWrite_SequencesFailed(this->m_tlm.sequencesFailed);
+    this->tlmWrite_LastDirectiveError(this->m_tlm.lastDirectiveError);
+    this->tlmWrite_SeqPath(this->m_sequenceFilePath);
+    this->tlmWrite_DebugBreakpointIdx(this->m_debug.breakpointIndex);
+    this->tlmWrite_Debug(this->getDebugTelemetry());
+}
+
+FpySequencer_DebugTelemetry FpySequencer::getDebugTelemetry() {
+    // only send debug tlm when we are paused in debug break
+    if (this->sequencer_getState() == State::RUNNING_DEBUG_BROKEN) {
+        if (this->m_runtime.nextStatementIndex >= this->m_sequenceObj.get_header().get_statementCount()) {
+            // reached end of file, turn on EOF flag and otherwise send some default tlm
+            return FpySequencer_DebugTelemetry(true, false, 0, 0);
+        }
+
+        const Fpy::Statement& nextStmt = this->m_sequenceObj.get_statements()[this->m_runtime.nextStatementIndex];
+        DirectiveUnion directiveUnion;
+        Fw::Success status = this->deserializeDirective(nextStmt, directiveUnion);
+        if (status != Fw::Success::SUCCESS) {
+            return FpySequencer_DebugTelemetry(false, false, nextStmt.get_opCode(), 0);
+        }
+        if (nextStmt.get_opCode() == Fpy::DirectiveId::CMD) {
+            // send opcode of the cmd to the ground
+            return FpySequencer_DebugTelemetry(false, true, nextStmt.get_opCode(), directiveUnion.cmd.get_opCode());
+        }
+
+        return FpySequencer_DebugTelemetry(false, true, nextStmt.get_opCode(), 0);
+    }
+    // send some default tlm when we aren't in debug break
+    return FpySequencer_DebugTelemetry(false, false, 0, 0);
+}
+
+void FpySequencer::parametersLoaded() {
+    Fw::ParamValid valid;
+    this->paramGet_STATEMENT_TIMEOUT_SECS(valid);
+    // check for coding errors--should have a default
+    FW_ASSERT(valid != Fw::ParamValid::INVALID && valid != Fw::ParamValid::UNINIT);
+}
+
+void FpySequencer::parameterUpdated(FwPrmIdType id) {
+    Fw::ParamValid valid;
+    switch (id) {
+        case PARAMID_STATEMENT_TIMEOUT_SECS: {
+            this->tlmWrite_PRM_STATEMENT_TIMEOUT_SECS(this->paramGet_STATEMENT_TIMEOUT_SECS(valid));
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(id));  // coding error, forgot to include in switch statement
+        }
+    }
+}
+
+bool FpySequencer::isRunningState(State state) {
+    // TODO ask Rob if there's a better way to check if we're in a superstate. I don't want to have
+    // to update this every time I add a new substate to the RUNNING state.
+
+    return this->sequencer_getState() == State::RUNNING_AWAITING_STATEMENT_RESPONSE ||
+           this->sequencer_getState() == State::RUNNING_DISPATCH_STATEMENT ||
+           this->sequencer_getState() == State::RUNNING_DEBUG_BROKEN ||
+           this->sequencer_getState() == State::RUNNING_SLEEPING;
+}
+
+}  // namespace Svc
+```
+
+### `FpySequencer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.fpp`
+
+
+```fpp
+module Svc {
+    @ Dispatches command sequences to available command sequencers
+    active component FpySequencer {
+
+        enum BlockState {
+            BLOCK
+            NO_BLOCK
+        }
+
+        enum GoalState {
+            RUNNING
+            VALID
+            IDLE
+        }
+
+        enum FileReadStage {
+            HEADER
+            BODY
+            FOOTER
+        }
+
+        include "FpySequencerCommands.fppi"
+        include "FpySequencerTelemetry.fppi"
+        include "FpySequencerEvents.fppi"
+        include "FpySequencerStateMachine.fppi"
+        include "FpySequencerDirectives.fppi"
+        include "FpySequencerParams.fppi"
+
+        # sm signals have highest priority besides ping
+        state machine instance sequencer: SequencerStateMachine priority 9 assert
+
+        @ output port for commands from the seq
+        output port cmdOut: Fw.Com
+
+        @ responses back from commands from the seq
+        # cmd responses have lower prio than sm sigs, cmds and ping
+        async input port cmdResponseIn: Fw.CmdResponse priority 5 assert
+
+        @ Ping in port
+        # TODO should ping have highest prio? or lowest?
+        async input port pingIn: Svc.Ping priority 10 assert
+
+        @ port to trigger a wakeup or timeout check. increase frequency
+        @ to increase temporal resolution of sequencer
+        # timer check has lower prio than sm sigs, cmds, cmd resp and ping
+        async input port checkTimers: Svc.Sched priority 4 assert
+
+        @ port to write all telemetry
+        # least important, lowest prio
+        async input port tlmWrite: Svc.Sched priority 1 assert
+
+        @ port for requests to run sequences
+        # same priority as RUN cmd
+        async input port seqRunIn: Svc.CmdSeqIn priority 7 assert
+
+        @ called when a sequence begins running
+        output port seqStartOut: Svc.CmdSeqIn
+
+        @ called when a sequence finishes running, either successfully or not
+        output port seqDoneOut: Fw.CmdResponse
+
+        @ Ping out port
+        output port pingOut: Svc.Ping
+
+        @ port for getting telemetry channel values and storing them in sequence serRegs
+        output port getTlmChan: Fw.TlmGet
+
+        @ port for getting param values and storing them in sequence serRegs
+        output port getParam: Fw.PrmGet
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending command registrations
+        command reg port cmdRegOut
+
+        @ Port for receiving commands
+        command recv port cmdIn
+
+        @ Port for sending command responses
+        command resp port cmdResponseOut
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        param get port prmGet
+
+        param set port prmSet
+
+    }
+}
+```
+
+### `FpySequencer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FpySequencer.hpp
+// \author zimri.leisher
+// \brief  hpp file for FpySequencer component implementation class
+// ======================================================================
+
+#ifndef FpySequencer_HPP
+#define FpySequencer_HPP
+
+#include "Fw/Types/MemAllocator.hpp"
+#include "Fw/Types/StringBase.hpp"
+#include "Fw/Types/SuccessEnumAc.hpp"
+#include "Fw/Types/WaitEnumAc.hpp"
+#include "Os/File.hpp"
+#include "Svc/FpySequencer/DirectiveIdEnumAc.hpp"
+#include "Svc/FpySequencer/FooterSerializableAc.hpp"
+#include "Svc/FpySequencer/FpySequencerComponentAc.hpp"
+#include "Svc/FpySequencer/FpySequencer_GoalStateEnumAc.hpp"
+#include "Svc/FpySequencer/HeaderSerializableAc.hpp"
+#include "Svc/FpySequencer/SequenceSerializableAc.hpp"
+#include "Svc/FpySequencer/StatementSerializableAc.hpp"
+#include "config/FppConstantsAc.hpp"
+
+static_assert(Svc::Fpy::MAX_SEQUENCE_ARG_COUNT <= std::numeric_limits<U8>::max(),
+              "Sequence arg count must be below U8 max");
+static_assert(Svc::Fpy::NUM_REGISTERS <= std::numeric_limits<U8>::max(), "Register count must be below U8 max");
+static_assert(Svc::Fpy::MAX_SEQUENCE_STATEMENT_COUNT <= std::numeric_limits<U16>::max(),
+              "Sequence statement count must be below U16 max");
+static_assert(Svc::Fpy::MAX_SERIALIZABLE_REGISTER_SIZE <= std::numeric_limits<FwSizeType>::max(),
+              "Local variable buffer size must be below FwSizeType max");
+static_assert(Svc::Fpy::MAX_SERIALIZABLE_REGISTER_SIZE >= FW_TLM_BUFFER_MAX_SIZE,
+              "Local variable buffer size must be greater than FW_TLM_BUFFER_MAX_SIZE");
+static_assert(Svc::Fpy::MAX_SERIALIZABLE_REGISTER_SIZE >= FW_PARAM_BUFFER_MAX_SIZE,
+              "Local variable buffer size must be greater than FW_PARAM_BUFFER_MAX_SIZE");
+
+namespace Svc {
+
+using Signal = FpySequencer_SequencerStateMachineStateMachineBase::Signal;
+using State = FpySequencer_SequencerStateMachineStateMachineBase::State;
+using DirectiveError = FpySequencer_DirectiveErrorCode;
+
+class FpySequencer : public FpySequencerComponentBase {
+    friend class FpySequencerTester;
+
+  public:
+    union DirectiveUnion {
+        FpySequencer_WaitRelDirective waitRel;
+        FpySequencer_WaitAbsDirective waitAbs;
+        FpySequencer_SetSerRegDirective setSerReg;
+        FpySequencer_GotoDirective gotoDirective;
+        FpySequencer_IfDirective ifDirective;
+        FpySequencer_NoOpDirective noOp;
+        FpySequencer_GetTlmDirective getTlm;
+        FpySequencer_GetPrmDirective getPrm;
+        FpySequencer_CmdDirective cmd;
+        FpySequencer_DeserSerRegDirective deserSerReg;
+        FpySequencer_SetRegDirective setReg;
+        FpySequencer_BinaryRegOpDirective binaryRegOp;
+        FpySequencer_UnaryRegOpDirective unaryRegOp;
+        FpySequencer_ExitDirective exit;
+
+        DirectiveUnion() {}
+        ~DirectiveUnion() {}
+    };
+
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FpySequencer
+    //!
+    FpySequencer(const char* const compName /*!< The component name*/
+    );
+
+    //! Destroy object FpySequencer
+    //!
+    ~FpySequencer();
+
+  private:
+    //! Handler for command RUN
+    //!
+    //! Loads, validates and runs a sequence
+    void RUN_cmdHandler(FwOpcodeType opCode,               //!< The opcode
+                        U32 cmdSeq,                        //!< The command sequence number
+                        const Fw::CmdStringArg& fileName,  //!< The name of the sequence file
+                        FpySequencer_BlockState block      //!< Return command status when complete or not
+                        ) override;
+
+    //! Handler for command VALIDATE
+    //!
+    //! Loads and validates a sequence
+    void VALIDATE_cmdHandler(FwOpcodeType opCode,              //!< The opcode
+                             U32 cmdSeq,                       //!< The command sequence number
+                             const Fw::CmdStringArg& fileName  //!< The name of the sequence file
+                             ) override;
+
+    //! Handler for command RUN_VALIDATED
+    //!
+    //! Runs a previously validated sequence
+    void RUN_VALIDATED_cmdHandler(FwOpcodeType opCode,           //!< The opcode
+                                  U32 cmdSeq,                    //!< The command sequence number
+                                  FpySequencer_BlockState block  //!< Return command status when complete or not
+                                  ) override;
+
+    //! Handler for command CANCEL
+    //!
+    //! Cancels a running or validated sequence
+    void CANCEL_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                           U32 cmdSeq            //!< The command sequence number
+                           ) override;
+
+    //! Handler for command DEBUG_SET_BREAKPOINT
+    //!
+    //! Sets the debugging breakpoint which will pause the execution of the sequencer
+    //! until unpaused by the DEBUG_CONTINUE command. Will pause just before dispatching
+    //! the specified statement. This command is valid in all states. Debug settings are
+    //! cleared after a sequence ends execution.
+    void DEBUG_SET_BREAKPOINT_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                         U32 cmdSeq,           //!< The command sequence number
+                                         U32 stmtIdx,          //!< The statement index to pause execution before.
+                                         bool breakOnce        //!< Whether or not to break only once at this breakpoint
+                                         ) override;
+
+    //! Handler for command DEBUG_BREAK
+    //!
+    //! Pauses the execution of the sequencer once, just before it is about to dispatch the next statement,
+    //! until unpaused by the DEBUG_CONTINUE command. This command is only valid in the RUNNING state.
+    //! Debug settings are cleared after a sequence ends execution.
+    void DEBUG_BREAK_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                U32 cmdSeq,           //!< The command sequence number
+                                bool breakOnce        //!< Whether or not to break only once at this breakpoint
+                                ) override;
+
+    //! Handler for command DEBUG_CONTINUE
+    //!
+    //! Continues the execution of the sequence after it has been paused by a debug break. This command
+    //! is only valid in the RUNNING.DEBUG_BROKEN state.
+    void DEBUG_CONTINUE_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                   U32 cmdSeq            //!< The command sequence number
+                                   ) override;
+
+    //! Handler for command DEBUG_CLEAR_BREAKPOINT
+    //!
+    //! Clears the debugging breakpoint, but does not continue executing the sequence. This command
+    //! is valid in all states. This happens automatically when a sequence ends execution.
+    void DEBUG_CLEAR_BREAKPOINT_cmdHandler(FwOpcodeType opCode,  //!< The opcode
+                                           U32 cmdSeq            //!< The command sequence number
+                                           ) override;
+
+    // ----------------------------------------------------------------------
+    // Functions to implement for internal state machine actions
+    // ----------------------------------------------------------------------
+
+    //! Implementation for action signalEntered of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! simply raises the "entered" signal
+    void Svc_FpySequencer_SequencerStateMachine_action_signalEntered(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action setSequenceFilePath of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the current sequence file path member var
+    void Svc_FpySequencer_SequencerStateMachine_action_setSequenceFilePath(
+        SmId smId,                                              //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+        const Svc::FpySequencer_SequenceExecutionArgs& value    //!< The value
+        ) override;
+
+    //! Implementation for action setSequenceBlockState of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the block state of the sequence to be run
+    void Svc_FpySequencer_SequencerStateMachine_action_setSequenceBlockState(
+        SmId smId,                                              //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+        const Svc::FpySequencer_SequenceExecutionArgs& value    //!< The value
+        ) override;
+
+    //! Implementation for action validate of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! performs all steps necessary for sequence validation, and raises a signal result_success or result_failure
+    void Svc_FpySequencer_SequencerStateMachine_action_validate(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action report_seqSucceeded of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! reports that a sequence succeeded
+    void Svc_FpySequencer_SequencerStateMachine_action_report_seqSucceeded(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action report_seqCancelled of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! reports that a sequence was cancelled
+    void Svc_FpySequencer_SequencerStateMachine_action_report_seqCancelled(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action setGoalState_RUNNING of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the goal state to RUNNING
+    void Svc_FpySequencer_SequencerStateMachine_action_setGoalState_RUNNING(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action setGoalState_VALID of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the goal state to VALID
+    void Svc_FpySequencer_SequencerStateMachine_action_setGoalState_VALID(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action setGoalState_IDLE of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the goal state to IDLE
+    void Svc_FpySequencer_SequencerStateMachine_action_setGoalState_IDLE(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action sendCmdResponse_OK of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! responds to the calling command with OK
+    void Svc_FpySequencer_SequencerStateMachine_action_sendCmdResponse_OK(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action sendCmdResponse_EXECUTION_ERROR of state machine
+    //! Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! responds to the calling command with EXECUTION_ERROR
+    void Svc_FpySequencer_SequencerStateMachine_action_sendCmdResponse_EXECUTION_ERROR(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action dispatchStatement of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! iterates to the next statement and dispatches it
+    void Svc_FpySequencer_SequencerStateMachine_action_dispatchStatement(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action clearSequenceFile of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! clears all variables related to the loading/validating of the sequence file
+    void Svc_FpySequencer_SequencerStateMachine_action_clearSequenceFile(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action checkShouldWake of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! checks if sequencer should wake from sleep
+    void Svc_FpySequencer_SequencerStateMachine_action_checkShouldWake(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action resetRuntime of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! resets the sequence runtime
+    void Svc_FpySequencer_SequencerStateMachine_action_resetRuntime(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action checkStatementTimeout of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! checks if the current statement has timed out
+    void Svc_FpySequencer_SequencerStateMachine_action_checkStatementTimeout(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action incrementSequenceCounter of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! increments the m_sequencesStarted counter
+    void Svc_FpySequencer_SequencerStateMachine_action_incrementSequenceCounter(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action clearDebugBreakpoint of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! clears the debug breakpoint, allowing execution of the sequence to continue
+    void Svc_FpySequencer_SequencerStateMachine_action_clearDebugBreakpoint(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action report_debugBroken of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! reports that a debug breakpoint was hit
+    void Svc_FpySequencer_SequencerStateMachine_action_report_debugBroken(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action setDebugBreakpoint of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! sets the debug breakpoint to the provided args
+    void Svc_FpySequencer_SequencerStateMachine_action_setDebugBreakpoint(
+        SmId smId,                                              //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+        const Svc::FpySequencer_DebugBreakpointArgs& value      //!< The value
+        ) override;
+
+    //! Implementation for action report_seqFailed of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! called when a sequence failed to execute successfully
+    void Svc_FpySequencer_SequencerStateMachine_action_report_seqFailed(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+    //! Implementation for action report_seqStarted of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! reports that a sequence was started
+    void Svc_FpySequencer_SequencerStateMachine_action_report_seqStarted(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+        ) override;
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Functions to implement for internal state machine guards
+    // ----------------------------------------------------------------------
+
+    //! Implementation for guard goalStateIs_RUNNING of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! return true if the goal state is RUNNING
+    bool Svc_FpySequencer_SequencerStateMachine_guard_goalStateIs_RUNNING(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard shouldDebugBreak of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! return true if should debug break at this point in execution, before dispatching
+    //! next stmt
+    bool Svc_FpySequencer_SequencerStateMachine_guard_shouldDebugBreak(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+    ) const override;
+
+    //! Implementation for guard debugBreakOnce of state machine Svc_FpySequencer_SequencerStateMachine
+    //!
+    //! return true if this debug breakpoint should only happen once
+    bool Svc_FpySequencer_SequencerStateMachine_guard_debugBreakOnce(
+        SmId smId,                                             //!< The state machine id
+        Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+    ) const override;
+
+    // ----------------------------------------------------------------------
+    // Handlers to implement for typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler for input port checkTimers
+    void checkTimers_handler(FwIndexType portNum,  //!< The port number
+                             U32 context           //!< The call order
+                             ) override;
+
+    //! Handler for input port cmdResponseIn
+    void cmdResponseIn_handler(FwIndexType portNum,             //!< The port number
+                               FwOpcodeType opCode,             //!< Command Op Code
+                               U32 cmdSeq,                      //!< Command Sequence
+                               const Fw::CmdResponse& response  //!< The command response argument
+                               ) override;
+
+    //! Handler for input port seqRunIn
+    void seqRunIn_handler(FwIndexType portNum, const Fw::StringBase& filename) override;
+
+    //! Handler for input port pingIn
+    void pingIn_handler(FwIndexType portNum,  //!< The port number
+                        U32 key               //!< Value to return to pinger
+                        ) override;
+
+    //! Handler for input port tlmWrite
+    void tlmWrite_handler(FwIndexType portNum,  //!< The port number
+                          U32 context           //!< The call order
+                          ) override;
+
+    //! Internal interface handler for directive_waitAbs
+    void directive_waitAbs_internalInterfaceHandler(const FpySequencer_WaitAbsDirective& directive) override;
+
+    //! Internal interface handler for directive_waitRel
+    void directive_waitRel_internalInterfaceHandler(const FpySequencer_WaitRelDirective& directive) override;
+
+    //! Internal interface handler for directive_setSerReg
+    void directive_setSerReg_internalInterfaceHandler(const FpySequencer_SetSerRegDirective& directive) override;
+
+    //! Internal interface handler for directive_goto
+    void directive_goto_internalInterfaceHandler(const Svc::FpySequencer_GotoDirective& directive) override;
+
+    //! Internal interface handler for directive_if
+    void directive_if_internalInterfaceHandler(const Svc::FpySequencer_IfDirective& directive) override;
+
+    //! Internal interface handler for directive_noOp
+    void directive_noOp_internalInterfaceHandler(const Svc::FpySequencer_NoOpDirective& directive) override;
+
+    //! Internal interface handler for directive_getTlm
+    void directive_getTlm_internalInterfaceHandler(const Svc::FpySequencer_GetTlmDirective& directive) override;
+
+    //! Internal interface handler for directive_getPrm
+    void directive_getPrm_internalInterfaceHandler(const Svc::FpySequencer_GetPrmDirective& directive) override;
+
+    //! Internal interface handler for directive_cmd
+    void directive_cmd_internalInterfaceHandler(const Svc::FpySequencer_CmdDirective& directive) override;
+
+    //! Internal interface handler for directive_deserSerReg
+    void directive_deserSerReg_internalInterfaceHandler(
+        const Svc::FpySequencer_DeserSerRegDirective& directive) override;
+
+    //! Internal interface handler for directive_setReg
+    void directive_setReg_internalInterfaceHandler(const Svc::FpySequencer_SetRegDirective& directive) override;
+
+    //! Internal interface handler for directive_binaryRegOp
+    void directive_binaryRegOp_internalInterfaceHandler(
+        const Svc::FpySequencer_BinaryRegOpDirective& directive) override;
+
+    //! Internal interface handler for directive_unaryRegOp
+    void directive_unaryRegOp_internalInterfaceHandler(const Svc::FpySequencer_UnaryRegOpDirective& directive) override;
+
+    //! Internal interface handler for directive_exit
+    void directive_exit_internalInterfaceHandler(const Svc::FpySequencer_ExitDirective& directive) override;
+
+    void parametersLoaded() override;
+    void parameterUpdated(FwPrmIdType id) override;
+
+  public:
+    void allocateBuffer(FwEnumStoreType identifier, Fw::MemAllocator& allocator, FwSizeType bytes);
+
+    void deallocateBuffer(Fw::MemAllocator& allocator);
+
+  private:
+    static constexpr U32 CRC_INITIAL_VALUE = 0xFFFFFFFFU;
+
+    // allocated at startup
+    Fw::ExternalSerializeBuffer m_sequenceBuffer;
+    // id of allocator that gave us m_sequenceBuffer
+    FwEnumStoreType m_allocatorId;
+
+    // assigned by the user via cmd
+    Fw::String m_sequenceFilePath;
+    // the sequence, loaded in memory
+    Fpy::Sequence m_sequenceObj;
+    // live running computation of CRC (updated as we read)
+    U32 m_computedCRC;
+
+    // whether or not the sequence we're about to run should return immediately or
+    // block on completion
+    FpySequencer_BlockState m_sequenceBlockState;
+    // if we are to block on completion, save the opCode and cmdSeq we should
+    // return
+    FwOpcodeType m_savedOpCode;
+    U32 m_savedCmdSeq;
+
+    // the goal state is the state that we're trying to reach in the sequencer
+    // if it's RUNNING, then we should promptly go to RUNNING once we validate the
+    // sequence. if it's VALID, we should wait after VALIDATING
+    FpySequencer_GoalState m_goalState;
+
+    // the total number of sequences this sequencer has started since construction
+    U64 m_sequencesStarted;
+    // the total number of statements this sequencer has dispatched, successfully or
+    // otherwise, since construction
+    U64 m_statementsDispatched;
+
+    // the runtime state of the sequence. encapsulates all state
+    // needed to run the sequence.
+    // this is distinct from the state of the sequencer. the
+    // sequencer and all its state is really just a shell to load
+    // and execute this runtime.
+    struct Runtime {
+        // the index of the next statement to be executed
+        U32 nextStatementIndex = 0;
+
+        // the opcode of the statement that is currently executing
+        U8 currentStatementOpcode = Fpy::DirectiveId::INVALID;
+        // the opcode of the command that we are currently awaiting, or 0 if we are executing a directive
+        FwOpcodeType currentCmdOpcode = 0;
+        // the time we dispatched the statement that is currently executing
+        Fw::Time currentStatementDispatchTime = Fw::Time();
+
+        // the absolute time we should wait for until returning
+        // a statement response
+        Fw::Time wakeupTime = Fw::Time();
+
+        // all the serializable registers in the sequence
+        struct SerializableReg {
+            // the value buffer of the serReg
+            U8 value[Fpy::MAX_SERIALIZABLE_REGISTER_SIZE] = {};
+            // the size of the data in the serReg buf
+            FwSizeType valueSize = 0;
+        } serRegs[Fpy::NUM_SERIALIZABLE_REGISTERS] = {};
+
+        // all the regs in the sequence. regs are 8 byte
+        // values of unspecified type
+        I64 regs[Fpy::NUM_REGISTERS] = {0};
+
+    } m_runtime;
+
+    // the state of the debugger. debugger is separate from runtime
+    // because it can be set up before running the sequence.
+    struct Debug {
+        // whether or not to break at the debug breakpoint index
+        bool breakOnBreakpoint = false;
+        // whether or not to remove the breakpoint after breaking on it
+        bool breakOnlyOnceOnBreakpoint = false;
+        // the statement index at which to break, before dispatching
+        U32 breakpointIndex = 0;
+    } m_debug;
+
+    struct Telemetry {
+        // the number of statements that failed to execute
+        U64 statementsFailed = 0;
+
+        // the number of sequences successfully completed
+        U64 sequencesSucceeded = 0;
+
+        // the number of sequences that failed to validate or execute
+        U64 sequencesFailed = 0;
+
+        // the number of sequences that have been cancelled
+        U64 sequencesCancelled = 0;
+
+        // the error code of the last directive that ran
+        DirectiveError lastDirectiveError = DirectiveError::NO_ERROR;
+    } m_tlm;
+
+    // ----------------------------------------------------------------------
+    // Validation state
+    // ----------------------------------------------------------------------
+
+    static void updateCrc(U32& crc,              //!< The CRC to update
+                          const U8* buffer,      //!< The buffer
+                          FwSizeType bufferSize  //!< The buffer size
+    );
+
+    // loads the sequence in memory, and does header/crc/integrity checks.
+    // return success if sequence is valid
+    Fw::Success validate();
+    // reads and validates the header from the m_sequenceBuffer
+    // return success if header is valid
+    Fw::Success readHeader();
+    // reads and validates the body from the m_sequenceBuffer
+    // return success if body is valid
+    Fw::Success readBody();
+    // reads and validates the footer from the m_sequenceBuffer
+    // return success if footer is valid
+    Fw::Success readFooter();
+
+    // reads some bytes from the open file into the m_sequenceBuffer.
+    // updates the CRC by default, but can be turned off if the contents
+    // aren't included in CRC.
+    // return success if successful
+    Fw::Success readBytes(Os::File& file,
+                          FwSizeType readLen,
+                          const FpySequencer_FileReadStage& readStage,
+                          bool updateCrc = true);
+
+    // ----------------------------------------------------------------------
+    // Run state
+    // ----------------------------------------------------------------------
+
+    // dispatches the next statement
+    Signal dispatchStatement();
+
+    // deserializes a directive from bytes into the Fpy type
+    // returns success if able to deserialize, and returns the Fpy type object
+    // as a reference, in a union of all the possible directive type objects
+    Fw::Success deserializeDirective(const Fpy::Statement& stmt, DirectiveUnion& deserializedDirective);
+
+    // dispatches a deserialized sequencer directive to the right handler.
+    void dispatchDirective(const DirectiveUnion& directive, const Fpy::DirectiveId& id);
+
+    // checks whether the currently executing statement timed out
+    Signal checkStatementTimeout();
+
+    // checks whether the sequencer should wake from sleeping
+    Signal checkShouldWake();
+
+    // return true if state is a substate of RUNNING
+    bool isRunningState(State state);
+
+    // return a struct containing debug telemetry, or defaults if not in debug break
+    FpySequencer_DebugTelemetry getDebugTelemetry();
+
+    // ----------------------------------------------------------------------
+    // Directives
+    // ----------------------------------------------------------------------
+
+    // sends a signal based on a signal id
+    void sendSignal(Signal signal);
+
+    // helper function to get a reference to a register from an index
+    // saves a bunch of typing
+    I64& reg(U8 idx);
+
+    // we split these functions up into the internalInterfaceInvoke and these custom member funcs
+    // so that we can unit test them easier
+    Signal waitRel_directiveHandler(const FpySequencer_WaitRelDirective& directive, DirectiveError& error);
+    Signal waitAbs_directiveHandler(const FpySequencer_WaitAbsDirective& directive, DirectiveError& error);
+    Signal setSerReg_directiveHandler(const FpySequencer_SetSerRegDirective& directive, DirectiveError& error);
+    Signal goto_directiveHandler(const FpySequencer_GotoDirective& directive, DirectiveError& error);
+    Signal if_directiveHandler(const FpySequencer_IfDirective& directive, DirectiveError& error);
+    Signal noOp_directiveHandler(const FpySequencer_NoOpDirective& directive, DirectiveError& error);
+    Signal getTlm_directiveHandler(const FpySequencer_GetTlmDirective& directive, DirectiveError& error);
+    Signal getPrm_directiveHandler(const FpySequencer_GetPrmDirective& directive, DirectiveError& error);
+    Signal cmd_directiveHandler(const FpySequencer_CmdDirective& directive, DirectiveError& error);
+    Signal deserSerReg_directiveHandler(const FpySequencer_DeserSerRegDirective& directive, DirectiveError& error);
+    Signal setReg_directiveHandler(const FpySequencer_SetRegDirective& directive, DirectiveError& error);
+
+    Signal binaryRegOp_directiveHandler(const FpySequencer_BinaryRegOpDirective& directive, DirectiveError& error);
+    I64 binaryRegOp_or(I64 lhs, I64 rhs);
+    I64 binaryRegOp_and(I64 lhs, I64 rhs);
+    I64 binaryRegOp_ieq(I64 lhs, I64 rhs);
+    I64 binaryRegOp_ine(I64 lhs, I64 rhs);
+    I64 binaryRegOp_ult(I64 lhs, I64 rhs);
+    I64 binaryRegOp_ule(I64 lhs, I64 rhs);
+    I64 binaryRegOp_ugt(I64 lhs, I64 rhs);
+    I64 binaryRegOp_uge(I64 lhs, I64 rhs);
+    I64 binaryRegOp_slt(I64 lhs, I64 rhs);
+    I64 binaryRegOp_sle(I64 lhs, I64 rhs);
+    I64 binaryRegOp_sgt(I64 lhs, I64 rhs);
+    I64 binaryRegOp_sge(I64 lhs, I64 rhs);
+    I64 binaryRegOp_feq(I64 lhs, I64 rhs);
+    I64 binaryRegOp_fne(I64 lhs, I64 rhs);
+    I64 binaryRegOp_flt(I64 lhs, I64 rhs);
+    I64 binaryRegOp_fle(I64 lhs, I64 rhs);
+    I64 binaryRegOp_fgt(I64 lhs, I64 rhs);
+    I64 binaryRegOp_fge(I64 lhs, I64 rhs);
+
+    Signal unaryRegOp_directiveHandler(const FpySequencer_UnaryRegOpDirective& directive, DirectiveError& error);
+    I64 unaryRegOp_not(I64 src);
+    I64 unaryRegOp_fpext(I64 src);
+    I64 unaryRegOp_fptrunc(I64 src);
+    I64 unaryRegOp_fptoui(I64 src);
+    I64 unaryRegOp_fptosi(I64 src);
+    I64 unaryRegOp_sitofp(I64 src);
+    I64 unaryRegOp_uitofp(I64 src);
+
+    Signal exit_directiveHandler(const FpySequencer_ExitDirective& directive, DirectiveError& error);
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FpySequencerCommands.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerCommands.fppi`
+
+
+```text
+@ Loads, validates and runs a sequence
+# prio: lower than sm sig and CANCEL
+async command RUN(
+                      fileName: string size FileNameStringSize @< The name of the sequence file
+                      $block: BlockState @< Return command status when complete or not
+                    ) \
+    opcode 0 priority 7 assert
+
+@ Loads and validates a sequence
+# prio: lower than sm sig and CANCEL
+async command VALIDATE(
+    fileName: string size FileNameStringSize @< The name of the sequence file
+) \
+    opcode 1 priority 7 assert
+
+@ Must be called after VALIDATE. Runs the sequence that was validated.
+# prio: lower than sm sig and CANCEL
+async command RUN_VALIDATED(
+    $block: BlockState @< Return command status when complete or not
+) \
+    opcode 2 priority 7 assert
+
+@ Cancels a running or validated sequence. After running CANCEL, the sequencer
+@ should return to IDLE
+# less prio than sm sig, but higher than everything else
+async command CANCEL() \
+    opcode 3 priority 8 assert
+
+@ Sets the debugging breakpoint which will pause the execution of the sequencer when
+@ reached, until unpaused by the DEBUG_CONTINUE command. Will pause just before 
+@ dispatching the specified statement. This command is valid in all states. Debug 
+@ settings are cleared after a sequence ends execution.
+async command DEBUG_SET_BREAKPOINT(
+    stmtIdx: U32 @< The statement index to pause execution before.
+    breakOnce: bool @< Whether or not to break only once at this breakpoint
+) \
+    opcode 4 priority 7 assert
+
+@ Pauses the execution of the sequencer, just before it is about to dispatch the next statement,
+@ until unpaused by the DEBUG_CONTINUE command. This command is only valid in the RUNNING state.
+@ Debug settings are cleared after a sequence ends execution.
+async command DEBUG_BREAK(
+    breakOnce: bool @< Whether or not to break only once at this breakpoint
+) \
+    opcode 5 priority 7 assert
+
+@ Continues the execution of the sequence after it has been paused by a debug break. This command
+@ is only valid in the RUNNING.DEBUG_BROKEN state.
+async command DEBUG_CONTINUE() \
+    opcode 6 priority 7 assert
+
+@ Clears the debugging breakpoint, but does not continue executing the sequence. This command
+@ is valid in all states. This happens automatically when a sequence ends execution.
+async command DEBUG_CLEAR_BREAKPOINT() \
+    opcode 7 priority 7 assert
+```
+
+### `FpySequencerDirectives.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerDirectives.cpp`
+
+
+```cpp
+#include <cmath>
+#include "Fw/Com/ComPacket.hpp"
+#include "Svc/FpySequencer/FpySequencer.hpp"
+
+namespace Svc {
+
+void FpySequencer::sendSignal(Signal signal) {
+    switch (signal) {
+        case Signal::stmtResponse_beginSleep: {
+            this->sequencer_sendSignal_stmtResponse_beginSleep();
+            break;
+        }
+        case Signal::stmtResponse_success: {
+            this->sequencer_sendSignal_stmtResponse_success();
+            break;
+        }
+        case Signal::stmtResponse_failure: {
+            this->sequencer_sendSignal_stmtResponse_failure();
+            break;
+        }
+        case Signal::stmtResponse_keepWaiting: {
+            this->sequencer_sendSignal_stmtResponse_keepWaiting();
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(signal));
+        }
+    }
+}
+
+I64& FpySequencer::reg(U8 idx) {
+    return this->m_runtime.regs[idx];
+}
+
+//! Internal interface handler for directive_waitRel
+void FpySequencer::directive_waitRel_internalInterfaceHandler(const FpySequencer_WaitRelDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->waitRel_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_waitAbs
+void FpySequencer::directive_waitAbs_internalInterfaceHandler(const FpySequencer_WaitAbsDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->waitAbs_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_setSerReg
+void FpySequencer::directive_setSerReg_internalInterfaceHandler(const Svc::FpySequencer_SetSerRegDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->setSerReg_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_goto
+void FpySequencer::directive_goto_internalInterfaceHandler(const Svc::FpySequencer_GotoDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->goto_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_if
+void FpySequencer::directive_if_internalInterfaceHandler(const Svc::FpySequencer_IfDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->if_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_noOp
+void FpySequencer::directive_noOp_internalInterfaceHandler(const Svc::FpySequencer_NoOpDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->noOp_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_getTlm
+void FpySequencer::directive_getTlm_internalInterfaceHandler(const Svc::FpySequencer_GetTlmDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->getTlm_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_getPrm
+void FpySequencer::directive_getPrm_internalInterfaceHandler(const Svc::FpySequencer_GetPrmDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->getPrm_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_cmd
+void FpySequencer::directive_cmd_internalInterfaceHandler(const Svc::FpySequencer_CmdDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->cmd_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_deserSerReg
+void FpySequencer::directive_deserSerReg_internalInterfaceHandler(
+    const Svc::FpySequencer_DeserSerRegDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->deserSerReg_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_setReg
+void FpySequencer::directive_setReg_internalInterfaceHandler(const Svc::FpySequencer_SetRegDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->setReg_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_binaryRegOp
+void FpySequencer::directive_binaryRegOp_internalInterfaceHandler(
+    const Svc::FpySequencer_BinaryRegOpDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->binaryRegOp_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_unaryRegOp
+void FpySequencer::directive_unaryRegOp_internalInterfaceHandler(
+    const Svc::FpySequencer_UnaryRegOpDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->unaryRegOp_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_exit
+void FpySequencer::directive_exit_internalInterfaceHandler(const Svc::FpySequencer_ExitDirective& directive) {
+    DirectiveError error = DirectiveError::NO_ERROR;
+    this->sendSignal(this->exit_directiveHandler(directive, error));
+    this->m_tlm.lastDirectiveError = error;
+}
+
+//! Internal interface handler for directive_waitRel
+Signal FpySequencer::waitRel_directiveHandler(const FpySequencer_WaitRelDirective& directive, DirectiveError& error) {
+    Fw::Time wakeupTime = this->getTime();
+
+    wakeupTime.add(directive.get_seconds(), directive.get_uSeconds());
+    this->m_runtime.wakeupTime = wakeupTime;
+    return Signal::stmtResponse_beginSleep;
+}
+
+//! Internal interface handler for directive_waitAbs
+Signal FpySequencer::waitAbs_directiveHandler(const FpySequencer_WaitAbsDirective& directive, DirectiveError& error) {
+    this->m_runtime.wakeupTime = directive.get_wakeupTime();
+    return Signal::stmtResponse_beginSleep;
+}
+
+//! Internal interface handler for directive_setSerReg
+Signal FpySequencer::setSerReg_directiveHandler(const FpySequencer_SetSerRegDirective& directive,
+                                                DirectiveError& error) {
+    if (directive.get_index() >= Fpy::NUM_SERIALIZABLE_REGISTERS) {
+        error = DirectiveError::SER_REG_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    // coding error. should have checked this when we were deserializing the directive. prefer to crash
+    // rather than just fail the sequence
+    FW_ASSERT(directive.get__valueSize() <= Fpy::MAX_SERIALIZABLE_REGISTER_SIZE,
+              static_cast<FwAssertArgType>(directive.get__valueSize()),
+              static_cast<FwAssertArgType>(Fpy::MAX_SERIALIZABLE_REGISTER_SIZE));
+
+    this->m_runtime.serRegs[directive.get_index()].valueSize = directive.get__valueSize();
+
+    (void)memcpy(this->m_runtime.serRegs[directive.get_index()].value, directive.get_value(),
+                 static_cast<size_t>(directive.get__valueSize()));
+
+    return Signal::stmtResponse_success;
+}
+
+//! Internal interface handler for directive_goto
+Signal FpySequencer::goto_directiveHandler(const FpySequencer_GotoDirective& directive, DirectiveError& error) {
+    // check within sequence bounds, or at EOF (we allow == case cuz this just ends the sequence)
+    if (directive.get_statementIndex() > m_sequenceObj.get_header().get_statementCount()) {
+        error = DirectiveError::STMT_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    m_runtime.nextStatementIndex = directive.get_statementIndex();
+    return Signal::stmtResponse_success;
+}
+
+//! Internal interface handler for directive_if
+Signal FpySequencer::if_directiveHandler(const FpySequencer_IfDirective& directive, DirectiveError& error) {
+    if (directive.get_conditionalReg() >= Fpy::NUM_REGISTERS) {
+        error = DirectiveError::REGISTER_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    // check within sequence bounds, or at EOF (we allow == case cuz this just ends the sequence)
+    if (directive.get_falseGotoStmtIndex() > m_sequenceObj.get_header().get_statementCount()) {
+        error = DirectiveError::STMT_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+
+    if (reg(directive.get_conditionalReg())) {
+        // proceed to next instruction
+        return Signal::stmtResponse_success;
+    }
+
+    // conditional false case
+    this->m_runtime.nextStatementIndex = directive.get_falseGotoStmtIndex();
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::noOp_directiveHandler(const FpySequencer_NoOpDirective& directive, DirectiveError& error) {
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::getTlm_directiveHandler(const FpySequencer_GetTlmDirective& directive, DirectiveError& error) {
+    if (directive.get_valueDestSerReg() >= Fpy::NUM_SERIALIZABLE_REGISTERS) {
+        error = DirectiveError::SER_REG_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    if (directive.get_timeDestSerReg() >= Fpy::NUM_SERIALIZABLE_REGISTERS) {
+        error = DirectiveError::SER_REG_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    if (!this->isConnected_getTlmChan_OutputPort(0)) {
+        error = DirectiveError::TLM_GET_NOT_CONNECTED;
+        return Signal::stmtResponse_failure;
+    }
+    Fw::Time tlmTime;
+    Fw::TlmBuffer tlmValue;
+    Fw::TlmValid valid = this->getTlmChan_out(0, directive.get_chanId(), tlmTime, tlmValue);
+
+    if (valid != Fw::TlmValid::VALID) {
+        // could not find this tlm chan
+        error = DirectiveError::TLM_CHAN_NOT_FOUND;
+        return Signal::stmtResponse_failure;
+    }
+
+    // this is an assert in the hpp, the buf should never be bigger than TLM_BUF_MAX
+    FW_ASSERT(tlmValue.getBuffLength() <= Fpy::MAX_SERIALIZABLE_REGISTER_SIZE,
+              static_cast<FwAssertArgType>(tlmValue.getBuffLength()));
+
+    // copy value into serReg
+    Runtime::SerializableReg& valueSerReg = this->m_runtime.serRegs[directive.get_valueDestSerReg()];
+    memcpy(valueSerReg.value, tlmValue.getBuffAddr(), static_cast<size_t>(tlmValue.getBuffLength()));
+    valueSerReg.valueSize = tlmValue.getBuffLength();
+
+    // serialize time into serReg
+    Runtime::SerializableReg& timeSerReg = this->m_runtime.serRegs[directive.get_timeDestSerReg()];
+    // clear the serReg in case of early return
+    timeSerReg.valueSize = 0;
+    Fw::ExternalSerializeBuffer esb(timeSerReg.value, Fpy::MAX_SERIALIZABLE_REGISTER_SIZE);
+    Fw::SerializeStatus stat = esb.serialize(tlmTime);
+
+    if (stat != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        // failed to serialize Fw::Time into the serReg
+        error = DirectiveError::SER_REG_SERIALIZE_FAILURE;
+        return Signal::stmtResponse_failure;
+    }
+
+    timeSerReg.valueSize = esb.getBuffLength();
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::getPrm_directiveHandler(const FpySequencer_GetPrmDirective& directive, DirectiveError& error) {
+    if (directive.get_destSerRegIndex() >= Fpy::NUM_SERIALIZABLE_REGISTERS) {
+        error = DirectiveError::SER_REG_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    if (!this->isConnected_prmGet_OutputPort(0)) {
+        error = DirectiveError::PRM_GET_NOT_CONNECTED;
+        return Signal::stmtResponse_failure;
+    }
+    Fw::ParamBuffer prmValue;
+    // set buff len to 0 before call so we can detect if we failed to get it
+    prmValue.setBuffLen(0);
+    Fw::ParamValid valid = this->getParam_out(0, directive.get_prmId(), prmValue);
+
+    if (valid != Fw::ParamValid::VALID) {
+        // could not find this prm in the DB
+        error = DirectiveError::PRM_NOT_FOUND;
+        return Signal::stmtResponse_failure;
+    }
+
+    if (prmValue.getBuffLength() > Fpy::MAX_SERIALIZABLE_REGISTER_SIZE) {
+        // cannot setReg the prm value in the serReg
+        error = DirectiveError::SER_REG_SERIALIZE_FAILURE;
+        return Signal::stmtResponse_failure;
+    }
+    // copy value into serReg
+    Runtime::SerializableReg& serReg = this->m_runtime.serRegs[directive.get_destSerRegIndex()];
+    memcpy(serReg.value, prmValue.getBuffAddr(), static_cast<size_t>(prmValue.getBuffLength()));
+    serReg.valueSize = prmValue.getBuffLength();
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::cmd_directiveHandler(const FpySequencer_CmdDirective& directive, DirectiveError& error) {
+    Fw::ComBuffer cmdBuf;
+    Fw::SerializeStatus stat = cmdBuf.serialize(Fw::ComPacketType::FW_PACKET_COMMAND);
+    // TODO should I assert here? this really shouldn't fail, I should just add a static assert
+    // on com buf size and then assert here
+    if (stat != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        error = DirectiveError::CMD_SERIALIZE_FAILURE;
+        return Signal::stmtResponse_failure;
+    }
+    stat = cmdBuf.serialize(directive.get_opCode());
+    if (stat != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        error = DirectiveError::CMD_SERIALIZE_FAILURE;
+        return Signal::stmtResponse_failure;
+    }
+    stat = cmdBuf.serialize(directive.get_argBuf(), directive.get__argBufSize(), Fw::Serialization::OMIT_LENGTH);
+    if (stat != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        error = DirectiveError::CMD_SERIALIZE_FAILURE;
+        return Signal::stmtResponse_failure;
+    }
+
+    // calculate the unique command identifier:
+    // cmd UID is formatted like XXYY, where XX are the first two bytes of the m_sequencesStarted counter
+    // and YY are the first two bytes of the m_statementsDispatched counter.
+    // this way, we know when we get a cmd back A) whether or not it's from this sequence (modulo 2^16) and B)
+    // whether or not it's this specific instance of the cmd in the sequence, and not another one with the same opcode
+    // somewhere else in the file.
+    // if we put this uid in the context we send to the cmdDisp, we will get it back when the cmd returns
+    U32 cmdUid =
+        static_cast<U32>(((this->m_sequencesStarted & 0xFFFF) << 16) | (this->m_statementsDispatched & 0xFFFF));
+
+    // little note--theoretically this could produce a cmdResponse before we send the
+    // dispatchSuccess signal. however b/c of priorities the dispatchSuccess signal will
+    // always get processed first, leaving us in the right state for the cmdresponse
+    this->cmdOut_out(0, cmdBuf, cmdUid);
+
+    // now tell the SM to wait some more until we get the cmd response back
+    return Signal::stmtResponse_keepWaiting;
+}
+
+Signal FpySequencer::deserSerReg_directiveHandler(const FpySequencer_DeserSerRegDirective& directive,
+                                                  DirectiveError& error) {
+    if (directive.get_srcSerRegIdx() >= Fpy::NUM_SERIALIZABLE_REGISTERS) {
+        error = DirectiveError::SER_REG_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    if (directive.get_destReg() >= Fpy::NUM_REGISTERS) {
+        error = DirectiveError::REGISTER_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    Runtime::SerializableReg& serReg = this->m_runtime.serRegs[directive.get_srcSerRegIdx()];
+    if (directive.get_srcOffset() + directive.get__deserSize() > serReg.valueSize) {
+        error = DirectiveError::SER_REG_ACCESS_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+
+    // TODO can I use htons/htonl? this code could be way simpler
+    Fw::ExternalSerializeBuffer esb(serReg.value, serReg.valueSize);
+    esb.setBuffLen(serReg.valueSize);
+    FW_ASSERT(esb.deserializeSkip(directive.get_srcOffset()) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+
+    I8 oneByte;
+    I16 twoBytes;
+    I32 fourBytes;
+    I64 eightBytes;
+
+    switch (directive.get__deserSize()) {
+        case 1: {
+            // all these desers should succeed as we've already checked the size above
+            FW_ASSERT(esb.deserialize(oneByte) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+            reg(directive.get_destReg()) = oneByte;
+            break;
+        }
+        case 2: {
+            FW_ASSERT(esb.deserialize(twoBytes) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+            reg(directive.get_destReg()) = twoBytes;
+            break;
+        }
+        case 4: {
+            FW_ASSERT(esb.deserialize(fourBytes) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+            reg(directive.get_destReg()) = fourBytes;
+            break;
+        }
+        case 8: {
+            FW_ASSERT(esb.deserialize(eightBytes) == Fw::SerializeStatus::FW_SERIALIZE_OK);
+            reg(directive.get_destReg()) = eightBytes;
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(directive.get__deserSize()));
+            return Signal::stmtResponse_failure;
+        }
+    }
+
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::setReg_directiveHandler(const FpySequencer_SetRegDirective& directive, DirectiveError& error) {
+    if (directive.get_dest() >= Fpy::NUM_REGISTERS) {
+        error = DirectiveError::REGISTER_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+    reg(directive.get_dest()) = directive.get_value();
+    return Signal::stmtResponse_success;
+}
+
+I8 floatCmp(F64 lhs, F64 rhs) {
+    if (std::isunordered(lhs, rhs)) {
+        // nan is one of the args
+        // always fail a comparison if nan
+        return -2;
+    } else if (std::isgreater(lhs, rhs)) {
+        return 1;
+    } else if (std::isless(lhs, rhs)) {
+        return -1;
+    }
+    return 0;
+}
+
+I64 FpySequencer::binaryRegOp_or(I64 lhs, I64 rhs) {
+    return lhs | rhs;
+}
+I64 FpySequencer::binaryRegOp_and(I64 lhs, I64 rhs) {
+    return lhs & rhs;
+}
+I64 FpySequencer::binaryRegOp_ieq(I64 lhs, I64 rhs) {
+    return lhs == rhs;
+}
+I64 FpySequencer::binaryRegOp_ine(I64 lhs, I64 rhs) {
+    return lhs != rhs;
+}
+I64 FpySequencer::binaryRegOp_ult(I64 lhs, I64 rhs) {
+    return static_cast<U64>(lhs) < static_cast<U64>(rhs);
+}
+I64 FpySequencer::binaryRegOp_ule(I64 lhs, I64 rhs) {
+    return static_cast<U64>(lhs) <= static_cast<U64>(rhs);
+}
+I64 FpySequencer::binaryRegOp_ugt(I64 lhs, I64 rhs) {
+    return static_cast<U64>(lhs) > static_cast<U64>(rhs);
+}
+I64 FpySequencer::binaryRegOp_uge(I64 lhs, I64 rhs) {
+    return static_cast<U64>(lhs) >= static_cast<U64>(rhs);
+}
+I64 FpySequencer::binaryRegOp_slt(I64 lhs, I64 rhs) {
+    return lhs < rhs;
+}
+I64 FpySequencer::binaryRegOp_sle(I64 lhs, I64 rhs) {
+    return lhs <= rhs;
+}
+I64 FpySequencer::binaryRegOp_sgt(I64 lhs, I64 rhs) {
+    return lhs > rhs;
+}
+I64 FpySequencer::binaryRegOp_sge(I64 lhs, I64 rhs) {
+    return lhs >= rhs;
+}
+I64 FpySequencer::binaryRegOp_feq(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    return floatCmp(left, right) == 0;
+}
+I64 FpySequencer::binaryRegOp_fne(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    I8 cmp = floatCmp(left, right);
+    // ne is true if they are not equal and neither is nan
+    return cmp != 0 && cmp != -2;
+}
+I64 FpySequencer::binaryRegOp_flt(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    return floatCmp(left, right) == -1;
+}
+I64 FpySequencer::binaryRegOp_fle(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    I8 cmp = floatCmp(left, right);
+    return cmp == 0 || cmp == -1;
+}
+I64 FpySequencer::binaryRegOp_fgt(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    return floatCmp(left, right) == 1;
+}
+I64 FpySequencer::binaryRegOp_fge(I64 lhs, I64 rhs) {
+    F64 left;
+    memcpy(&left, &lhs, sizeof(left));
+    F64 right;
+    memcpy(&right, &rhs, sizeof(right));
+    I8 cmp = floatCmp(left, right);
+    return cmp == 0 || cmp == 1;
+}
+
+Signal FpySequencer::binaryRegOp_directiveHandler(const FpySequencer_BinaryRegOpDirective& directive,
+                                                  DirectiveError& error) {
+    // coding error, should not have gotten to this binary reg op handler
+    FW_ASSERT(directive.get__op() >= Fpy::DirectiveId::OR && directive.get__op() <= Fpy::DirectiveId::FGE,
+              static_cast<FwAssertArgType>(directive.get__op()));
+
+    if (directive.get_lhs() >= Fpy::NUM_REGISTERS || directive.get_rhs() >= Fpy::NUM_REGISTERS ||
+        directive.get_res() >= Fpy::NUM_REGISTERS) {
+        error = DirectiveError::REGISTER_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+
+    I64 lhs = reg(directive.get_lhs());
+    I64 rhs = reg(directive.get_rhs());
+    I64& res = reg(directive.get_res());
+
+    switch (directive.get__op()) {
+        case Fpy::DirectiveId::OR:
+            res = this->binaryRegOp_or(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::AND:
+            res = this->binaryRegOp_and(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::IEQ:
+            res = this->binaryRegOp_ieq(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::INE:
+            res = this->binaryRegOp_ine(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::ULT:
+            res = this->binaryRegOp_ult(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::ULE:
+            res = this->binaryRegOp_ule(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::UGT:
+            res = this->binaryRegOp_ugt(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::UGE:
+            res = this->binaryRegOp_uge(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::SLT:
+            res = this->binaryRegOp_slt(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::SLE:
+            res = this->binaryRegOp_sle(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::SGT:
+            res = this->binaryRegOp_sgt(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::SGE:
+            res = this->binaryRegOp_sge(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FEQ:
+            res = this->binaryRegOp_feq(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FNE:
+            res = this->binaryRegOp_fne(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FLT:
+            res = this->binaryRegOp_flt(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FLE:
+            res = this->binaryRegOp_fle(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FGT:
+            res = this->binaryRegOp_fgt(lhs, rhs);
+            break;
+        case Fpy::DirectiveId::FGE:
+            res = this->binaryRegOp_fge(lhs, rhs);
+            break;
+        default:
+            FW_ASSERT(0, directive.get__op());
+            break;
+    }
+    return Signal::stmtResponse_success;
+}
+I64 FpySequencer::unaryRegOp_not(I64 src) {
+    if (src) {
+        return static_cast<I64>(false);
+    }
+    return static_cast<I64>(true);
+}
+I64 FpySequencer::unaryRegOp_fpext(I64 src) {
+    // convert F32 to F64
+    // first get the first 32 bits of src
+    I32 trunc = static_cast<I32>(src);
+    // then interpret as float
+    F32 fsrc;
+    memcpy(&fsrc, &trunc, sizeof(fsrc));
+    // then cast to F64
+    F64 ext = static_cast<F64>(fsrc);
+    // then return bits as I64
+    I64 iext;
+    memcpy(&iext, &ext, sizeof(iext));
+    return iext;
+}
+I64 FpySequencer::unaryRegOp_fptrunc(I64 src) {
+    // convert F64 to F32
+    // first interpret as F64
+    F64 fsrc;
+    memcpy(&fsrc, &src, sizeof(fsrc));
+    // then cast to F32
+    F32 trunc = static_cast<F32>(fsrc);
+    // then interpret bits as I32
+    I32 itrunc;
+    memcpy(&itrunc, &trunc, sizeof(itrunc));
+    // then extend to I64
+    return static_cast<I64>(itrunc);
+}
+I64 FpySequencer::unaryRegOp_fptosi(I64 src) {
+    // first interpret as F64
+    F64 fsrc;
+    memcpy(&fsrc, &src, sizeof(fsrc));
+    // then static cast to int
+    return static_cast<I64>(fsrc);
+}
+I64 FpySequencer::unaryRegOp_sitofp(I64 src) {
+    // first static cast to float
+    F64 fsrc = static_cast<F64>(src);
+    // then return bits as I64
+    I64 res;
+    memcpy(&res, &fsrc, sizeof(res));
+    return res;
+}
+I64 FpySequencer::unaryRegOp_fptoui(I64 src) {
+    // first interpret as F64
+    F64 fsrc;
+    memcpy(&fsrc, &src, sizeof(fsrc));
+    // then static cast to unsigned int
+    // then return as a signed int
+    return static_cast<I64>(static_cast<U64>(fsrc));
+}
+I64 FpySequencer::unaryRegOp_uitofp(I64 src) {
+    // first static cast to unsigned, then to float
+    F64 fsrc = static_cast<F64>(static_cast<U64>(src));
+    // then return bits as I64
+    I64 res;
+    memcpy(&res, &fsrc, sizeof(res));
+    return res;
+}
+Signal FpySequencer::unaryRegOp_directiveHandler(const FpySequencer_UnaryRegOpDirective& directive,
+                                                 DirectiveError& error) {
+    // coding error, should not have gotten to this unary reg op handler
+    FW_ASSERT(directive.get__op() >= Fpy::DirectiveId::NOT && directive.get__op() <= Fpy::DirectiveId::UITOFP,
+              static_cast<FwAssertArgType>(directive.get__op()));
+
+    if (directive.get_src() >= Fpy::NUM_REGISTERS || directive.get_res() >= Fpy::NUM_REGISTERS) {
+        error = DirectiveError::REGISTER_OUT_OF_BOUNDS;
+        return Signal::stmtResponse_failure;
+    }
+
+    I64 src = reg(directive.get_src());
+    I64& res = reg(directive.get_res());
+
+    switch (directive.get__op()) {
+        case Fpy::DirectiveId::NOT:
+            res = this->unaryRegOp_not(src);
+            break;
+        case Fpy::DirectiveId::FPEXT:
+            res = this->unaryRegOp_fpext(src);
+            break;
+        case Fpy::DirectiveId::FPTRUNC:
+            res = this->unaryRegOp_fptrunc(src);
+            break;
+        case Fpy::DirectiveId::FPTOSI:
+            res = this->unaryRegOp_fptosi(src);
+            break;
+        case Fpy::DirectiveId::FPTOUI:
+            res = this->unaryRegOp_fptoui(src);
+            break;
+        case Fpy::DirectiveId::SITOFP:
+            res = this->unaryRegOp_sitofp(src);
+            break;
+        case Fpy::DirectiveId::UITOFP:
+            res = this->unaryRegOp_uitofp(src);
+            break;
+        default:
+            FW_ASSERT(0, directive.get__op());
+            break;
+    }
+    return Signal::stmtResponse_success;
+}
+
+Signal FpySequencer::exit_directiveHandler(const FpySequencer_ExitDirective& directive, DirectiveError& error) {
+    if (directive.get_success()) {
+        // just goto the end of the sequence
+        this->m_runtime.nextStatementIndex = this->m_sequenceObj.get_header().get_statementCount();
+        return Signal::stmtResponse_success;
+    }
+    // otherwise, kill the sequence here
+    error = DirectiveError::DELIBERATE_FAILURE;
+    return Signal::stmtResponse_failure;
+}
+}  // namespace Svc
+```
+
+### `FpySequencerDirectives.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerDirectives.fppi`
+
+
+```text
+struct WaitRelDirective {
+    seconds: U32
+    uSeconds: U32
+}
+
+struct WaitAbsDirective {
+    wakeupTime: Fw.Time
+}
+
+# this directive should not be directly serialize/deserialized
+struct SetSerRegDirective {
+    @ the index of the serializable register to set
+    index: U8
+
+    @ the value of the serializable register
+    value: [Fpy.MAX_SERIALIZABLE_REGISTER_SIZE] U8
+
+    @ the length of the value byte array. 
+    # note, the underscore signifies this field is implied and 
+    # is not actually present in the binary form of the directive
+    _valueSize: FwSizeType
+}
+
+struct GotoDirective {
+    @ the statement index to execute next
+    statementIndex: U32
+}
+
+struct IfDirective {
+    @ the register to branch based off of. register will be interpreted as a C++ boolean
+    conditionalReg: U8
+    @ the statement index to go to if the serializable register is false
+    falseGotoStmtIndex: U32
+    # this directive will not goto anywhere if the variable is true
+}
+
+struct NoOpDirective {
+    # fpp requires we have something in a struct
+    _empty: U8
+}
+
+struct GetTlmDirective {
+    @ the serializable register to store the tlm value in
+    valueDestSerReg: U8
+    @ the serializable register to store the tlm time in
+    timeDestSerReg: U8
+    @ the tlm channel id to get the time of
+    chanId: FwChanIdType
+}
+
+struct GetPrmDirective {
+    @ the serializable register to store the prm value in
+    destSerRegIndex: U8
+    @ the param id to get the value of
+    prmId: FwPrmIdType
+}
+
+struct CmdDirective {
+    opCode: FwOpcodeType
+    @ the arg buf of the cmd
+    # TODO please don't let me merge this. need to find a better const here
+    argBuf: [Fpy.MAX_SERIALIZABLE_REGISTER_SIZE] U8
+
+    @ the length of the arg buf byte array
+    _argBufSize: FwSizeType
+}
+
+@ deser up to 8 bytes out of an serReg
+struct DeserSerRegDirective {
+    @ the serReg to deser from
+    srcSerRegIdx: U8
+    @ the start offset to deser from
+    srcOffset: FwSizeType
+    @ the destination register to deser into
+    destReg: U8
+    @ the number of bytes to deserialize from the serReg, max of 8
+    _deserSize: U8
+}
+
+@ sets a register to a constant value
+struct SetRegDirective {
+    @ the register to store the value in
+    dest: U8
+    @ the value to store in the register
+    value: I64
+}
+
+@ performs a binary reg operation on the lhs and rhs regs, and stores the result in the third register
+struct BinaryRegOpDirective {
+    lhs: U8
+    rhs: U8
+    res: U8
+    
+    @ which binary reg op to perform
+    _op: Fpy.DirectiveId
+}
+
+@ performs a unary reg operation on src reg, and stores in res reg
+struct UnaryRegOpDirective {
+    src: U8
+    res: U8
+    
+    @ which unary reg op to perform
+    _op: Fpy.DirectiveId
+}
+
+struct ExitDirective {
+    @ whether or not to consider the sequence successful
+    success: bool
+}
+
+internal port directive_waitRel(directive: WaitRelDirective) priority 6 assert
+
+internal port directive_waitAbs(directive: WaitAbsDirective) priority 6 assert
+
+internal port directive_setSerReg(directive: SetSerRegDirective) priority 6 assert
+
+internal port directive_goto(directive: GotoDirective) priority 6 assert
+
+internal port directive_if(directive: IfDirective) priority 6 assert
+
+internal port directive_noOp(directive: NoOpDirective) priority 6 assert
+
+internal port directive_getTlm(directive: GetTlmDirective) priority 6 assert
+
+internal port directive_getPrm(directive: GetPrmDirective) priority 6 assert
+
+internal port directive_cmd(directive: CmdDirective) priority 6 assert
+
+internal port directive_deserSerReg(directive: DeserSerRegDirective) priority 6 assert
+
+internal port directive_setReg(directive: SetRegDirective) priority 6 assert
+
+internal port directive_binaryRegOp(directive: BinaryRegOpDirective) priority 6 assert
+
+internal port directive_unaryRegOp(directive: UnaryRegOpDirective) priority 6 assert
+
+internal port directive_exit(directive: ExitDirective) priority 6 assert
+
+enum DirectiveErrorCode {
+    NO_ERROR
+    SER_REG_OUT_OF_BOUNDS
+    STMT_OUT_OF_BOUNDS
+    SER_REG_DESERIALIZE_FAILURE
+    SER_REG_SERIALIZE_FAILURE
+    TLM_GET_NOT_CONNECTED
+    TLM_CHAN_NOT_FOUND
+    PRM_GET_NOT_CONNECTED
+    PRM_NOT_FOUND
+    CMD_SERIALIZE_FAILURE
+    REGISTER_OUT_OF_BOUNDS
+    SER_REG_ACCESS_OUT_OF_BOUNDS
+    DELIBERATE_FAILURE
+}
+```
+
+### `FpySequencerEvents.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerEvents.fppi`
+
+
+```text
+event InvalidCommand($state: I32) \
+    severity warning high \
+    format "Cannot execute command in state {}"
+
+event InvalidSeqRunCall($state: I32) \
+    severity warning high \
+    format "Cannot run sequence from a port in state {}"
+
+event FileOpenError(
+    filePath: string
+    errorCode: I32
+) \
+    severity warning high \
+    format "File open error encountered while opening {}: {}"
+
+event FileReadError(
+    readStage: FileReadStage
+    filePath: string
+    errorCode: I32
+) \
+    severity warning high \
+    format "File read error encountered while reading {} of file {}: {}"
+
+event EndOfFileError(
+    readStage: FileReadStage
+    filePath: string
+) \
+    severity warning high \
+    format "End of file encountered unexpectedly while reading {} of file {}"
+
+event FileReadDeserializeError(
+    readStage: FileReadStage
+    filePath: string
+    errorCode: I32
+    buffLeft: U64
+    buffLength: U64
+) \
+    severity warning high \
+    format "Deserialize error encountered while reading {} of file {}: {} ({} bytes left out of {})"
+
+event WrongSchemaVersion(
+    expected: U8
+    actual: U8
+) \
+    severity warning high \
+    format "Expected schema version {}, found {}"
+
+event WrongCRC(
+    expected: U32
+    actual: U32
+) \
+    severity warning high \
+    format "Expected CRC {}, actual was {}"
+
+event ExtraBytesInSequence(
+    remaining: U32
+) \
+    severity warning high \
+    format "File had {} extra bytes at the end"
+
+event InsufficientBufferSpace(
+    bufferSize: U64
+    filePath: string
+) \
+    severity warning high \
+    format "Buffer capacity of {} was not big enough for sequence {}"
+
+# runtime
+
+event CommandFailed(
+    opCode: FwOpcodeType
+    stmtIdx: U32
+    filePath: string
+    response: Fw.CmdResponse
+) \
+    severity warning high \
+    format "Failed to execute command opcode {} index {} in sequence file {}: response was {}"
+
+event SequenceDone(
+    filePath: string
+) \
+    severity activity high \
+    format "Completed sequence file {}"
+
+event SequenceCancelled(
+    filePath: string
+) \
+    severity activity high \
+    format "Cancelled sequence file {}"
+
+event UnknownSequencerDirective(
+    $opcode: U8
+    stmtIdx: U32
+    filePath: string
+) \
+    severity warning high \
+    format "Unknown sequencer directive id {} at index {} in file {}"
+
+event CmdResponseWhileNotRunningSequence(
+    $state: I32
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+) \
+    severity warning low \
+    format "Received a command response while not running a sequence (was in state {} opcode was {} response code {})"
+
+event CmdResponseFromOldSequence(
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+    oldSequenceIdx: U16
+    currentSequenceIdx: U16
+) \
+    severity warning low \
+    format "Received a response from cmd opcode {} (response {}), but it was from a previous sequence, not the current one (old idx: {}, current idx: {})"
+
+event CmdResponseWhileNotAwaiting(
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+) \
+    severity warning high \
+    format "Received a response from cmd opcode {} (response {}) from this sequence, but was not awaiting a response"
+
+event CmdResponseWhileAwaitingDirective(
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+    expectedDirectiveOpcode: U8
+) \
+    severity warning high \
+    format "Received a response from cmd opcode {} (response {}) from this sequence, but was awaiting directive opcode {}"
+
+event WrongCmdResponseOpcode(
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+    expectedOpcode: FwOpcodeType
+) \
+    severity warning high \
+    format "Received a response from cmd opcode {} (response {}) from this sequence, but was expecting a response from command opcode {}"
+
+event WrongCmdResponseIndex(
+    $opcode: FwOpcodeType
+    response: Fw.CmdResponse
+    actualCmdIdx: U16
+    expectedCmdIdx: U16
+) \
+    severity warning high \
+    format "Received a response from the correct cmd (opcode {} response {}), but it was for a different instance of that opcode in the same sequence (actual idx {} expected {})"
+
+# TODO make sure to call this with appropriate stmt idx when directive is dynamically constructed
+event DirectiveDeserializeError(
+    $opcode: U8
+    stmtIdx: U32
+    errorCode: I32
+    buffLeft: U64
+    buffLength: U64
+) \
+    severity warning high \
+    format "Deserialize error encountered while reading directive opcode {} at index {}: {} ({} bytes left out of {})"
+
+event MismatchedTimeBase(
+    internalTimeBase: I32
+    otherTimeBase: I32
+) \
+    severity warning high \
+    format "getTime() time base was {}, but tried to operate on it with time base {}"
+
+event MismatchedTimeContext(
+    internalTimeContext: I32
+    otherTimeContext: I32
+) \
+    severity warning high \
+    format "getTime() time context was {}, but tried to operate on it with time context {}"
+
+event CommandTimedOut(
+    opCode: FwOpcodeType
+    stmtIdx: U32
+    filePath: string
+) \
+    severity warning high \
+    format "A command opcode {} at index {} timed out in sequence {}, causing the sequence to fail"
+
+event DirectiveTimedOut(
+    opCode: U8
+    stmtIdx: U32
+    filePath: string
+) \
+    severity warning high \
+    format "A directive opcode {} at index {} timed out in sequence {}, causing the sequence to fail"
+
+event TooManySequenceArgs(
+    count: U8
+    max: U8
+) \
+    severity warning high \
+    format "A sequence specified it had {} args but the max was {}"
+
+event TooManySequenceStatements(
+    count: U16
+    max: U16
+) \
+    severity warning high \
+    format "A sequence specified it had {} statements but the max was {}"
+
+event DebugBroken(
+    stmtIdx: U32
+    breakOnce: bool
+) \
+    severity activity high \
+    format "Debug breakpoint reached before dispatching statement index {}. Will break once: {}"
+
+event DebugBreakpointSet(
+    breakpointIdx: U32
+    breakOnce: bool
+) \
+    severity activity high \
+    format "Debug breakpoint set before statement index {}. Will break once: {}"
+
+event DebugBreakpointCleared() \
+    severity activity high \
+    format "Debug breakpoint cleared"
+    
+```
+
+### `FpySequencerParams.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerParams.fppi`
+
+
+```text
+@ the number of seconds to wait before giving up
+@ on a directive or command. if <= 0 or greater than U32 max, never time out.
+@ accuracy of this timeout is determined by the rate group driving this
+@ component. it will be rounded up
+param STATEMENT_TIMEOUT_SECS: F32 default 0
+```
+
+### `FpySequencerRunState.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerRunState.cpp`
+
+
+```cpp
+#include <new>
+#include "Fw/Com/ComPacket.hpp"
+#include "Fw/Time/Time.hpp"
+#include "Svc/FpySequencer/FpySequencer.hpp"
+namespace Svc {
+
+Signal FpySequencer::dispatchStatement() {
+    // check to make sure no array out of bounds, or if it is out of bounds it's only 1 out of bound
+    // as that indicates eof
+    FW_ASSERT(this->m_runtime.nextStatementIndex <= this->m_sequenceObj.get_header().get_statementCount());
+
+    if (this->m_runtime.nextStatementIndex == this->m_sequenceObj.get_header().get_statementCount()) {
+        return Signal::result_dispatchStatement_noMoreStatements;
+    }
+
+    const Fpy::Statement& nextStatement = this->m_sequenceObj.get_statements()[this->m_runtime.nextStatementIndex];
+    this->m_runtime.nextStatementIndex++;
+    this->m_runtime.currentStatementOpcode = nextStatement.get_opCode();
+    this->m_runtime.currentCmdOpcode = 0; // we haven't deserialized the directive yet, so we don't know if it's a cmd
+
+    Fw::Success result;
+    DirectiveUnion directiveUnion;
+
+    result = this->deserializeDirective(nextStatement, directiveUnion);
+
+    if (!result) {
+        return Signal::result_dispatchStatement_failure;
+    }
+
+    if (this->m_runtime.currentStatementOpcode == Fpy::DirectiveId::CMD) {
+        // update the opcode of the cmd we will await
+        this->m_runtime.currentCmdOpcode = directiveUnion.cmd.get_opCode();
+    }
+
+    this->dispatchDirective(directiveUnion,
+                            Fpy::DirectiveId(static_cast<Fpy::DirectiveId::T>(nextStatement.get_opCode())));
+    this->m_runtime.currentStatementDispatchTime = getTime(); // set dispatch time right after we have successfully dispatched
+
+    this->m_statementsDispatched++;
+
+    return Signal::result_dispatchStatement_success;
+}
+
+// deserializes a directive from bytes into the Fpy type
+// returns success if able to deserialize, and returns the Fpy type object
+// as a reference, in a union of all the possible directive type objects
+Fw::Success FpySequencer::deserializeDirective(const Fpy::Statement& stmt, DirectiveUnion& deserializedDirective) {
+    Fw::SerializeStatus status;
+    // make our own esb so we can deser from stmt without breaking its constness
+    Fw::ExternalSerializeBuffer argBuf(const_cast<U8*>(stmt.get_argBuf().getBuffAddr()),
+                                       stmt.get_argBuf().getBuffLength());
+    argBuf.setBuffLen(stmt.get_argBuf().getBuffLength());
+
+    switch (stmt.get_opCode()) {
+        case Fpy::DirectiveId::WAIT_REL: {
+            // in order to use a type with non trivial ctor in cpp union, have to manually construct and destruct it
+            new (&deserializedDirective.waitRel) FpySequencer_WaitRelDirective();
+            status = argBuf.deserialize(deserializedDirective.waitRel);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::WAIT_ABS: {
+            new (&deserializedDirective.waitAbs) FpySequencer_WaitAbsDirective();
+            status = argBuf.deserialize(deserializedDirective.waitAbs);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::SET_SER_REG: {
+            new (&deserializedDirective.setSerReg) FpySequencer_SetSerRegDirective();
+            // set local var has some custom deserialization behavior
+            // we don't write a custom class for it though because that deserialization behavior only
+            // applies for the initial time we deserialize it out of the statement
+
+            // the behavior in question is that it will grab the entire remaining part of the statement
+            // arg buf. that is, it uses the remaining length of the statement arg buf to determine the length
+            // of its value buf. this way we get to save on serializing the value length
+
+            // TODO do some trades on the best way to do this. not confident on this one
+
+            // first deserialize the index
+            U8 index;
+            status = argBuf.deserialize(index);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            deserializedDirective.setSerReg.set_index(index);
+
+            // okay, now deserialize the remaining bytes in the stmt arg buf into the value buf
+
+            //  how many bytes are left?
+            FwSizeType valueSize = argBuf.getBuffLeft();
+
+            // check to make sure the value will fit in the FpySequencer_SetSerRegDirective::value buf
+            if (valueSize > Fpy::MAX_SERIALIZABLE_REGISTER_SIZE) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               Fw::SerializeStatus::FW_DESERIALIZE_FORMAT_ERROR,
+                                                               argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            // okay, it will fit. put it in
+            status = argBuf.deserialize(deserializedDirective.setSerReg.get_value(), valueSize, Fw::Serialization::OMIT_LENGTH);
+
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            // now there should be nothing left, otherwise coding err
+            FW_ASSERT(argBuf.getBuffLeft() == 0, static_cast<FwAssertArgType>(argBuf.getBuffLeft()));
+
+            // and set the buf size now that we know it
+            deserializedDirective.setSerReg.set__valueSize(valueSize);
+            break;
+        }
+        case Fpy::DirectiveId::GOTO: {
+            new (&deserializedDirective.gotoDirective) FpySequencer_GotoDirective();
+            status = argBuf.deserialize(deserializedDirective.gotoDirective);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::IF: {
+            new (&deserializedDirective.ifDirective) FpySequencer_IfDirective();
+            status = argBuf.deserialize(deserializedDirective.ifDirective);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::NO_OP: {
+            new (&deserializedDirective.noOp) FpySequencer_NoOpDirective();
+            // no op does not need deser
+            if (argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               Fw::SerializeStatus::FW_DESERIALIZE_SIZE_MISMATCH,
+                                                               argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::GET_TLM: {
+            new (&deserializedDirective.getTlm) FpySequencer_GetTlmDirective();
+            status = argBuf.deserialize(deserializedDirective.getTlm);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::GET_PRM: {
+            new (&deserializedDirective.getPrm) FpySequencer_GetPrmDirective();
+            status = argBuf.deserialize(deserializedDirective.getPrm);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        case Fpy::DirectiveId::CMD: {
+            new (&deserializedDirective.cmd) FpySequencer_CmdDirective();
+            // same deserialization behavior as SET_SER_REG
+
+            // first deserialize the opcode
+            FwOpcodeType opcode;
+            status = argBuf.deserialize(opcode);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            deserializedDirective.cmd.set_opCode(opcode);
+            //  how many bytes are left?
+            FwSizeType cmdArgBufSize = argBuf.getBuffLeft();
+
+            // check to make sure the value will fit in the FpySequencer_CmdDirective::argBuf
+            if (cmdArgBufSize > Fpy::MAX_SERIALIZABLE_REGISTER_SIZE) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               Fw::SerializeStatus::FW_DESERIALIZE_FORMAT_ERROR,
+                                                               argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            // okay, it will fit. put it in
+            status = argBuf.deserialize(deserializedDirective.cmd.get_argBuf(), cmdArgBufSize, Fw::Serialization::OMIT_LENGTH);
+
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+
+            // now there should be nothing left, otherwise coding err
+            FW_ASSERT(argBuf.getBuffLeft() == 0, static_cast<FwAssertArgType>(argBuf.getBuffLeft()));
+
+            // and set the buf size now that we know it
+            deserializedDirective.cmd.set__argBufSize(cmdArgBufSize);
+            break;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::DESER_SER_REG_8:
+        case Fpy::DirectiveId::DESER_SER_REG_4:
+        case Fpy::DirectiveId::DESER_SER_REG_2:
+        case Fpy::DirectiveId::DESER_SER_REG_1: {
+            new (&deserializedDirective.deserSerReg) FpySequencer_DeserSerRegDirective();
+
+            U8 deserSize;
+
+            if (stmt.get_opCode() == Fpy::DirectiveId::DESER_SER_REG_1) {
+                deserSize = 1;
+            } else if (stmt.get_opCode() == Fpy::DirectiveId::DESER_SER_REG_2) {
+                deserSize = 2;
+            } else if (stmt.get_opCode() == Fpy::DirectiveId::DESER_SER_REG_4) {
+                deserSize = 4;
+            } else if (stmt.get_opCode() == Fpy::DirectiveId::DESER_SER_REG_8) {
+                deserSize = 8;
+            } else {
+                FW_ASSERT(0, static_cast<FwAssertArgType>(stmt.get_opCode()));
+                return Fw::Success::FAILURE;
+            }
+
+            deserializedDirective.deserSerReg.set__deserSize(deserSize);
+
+            U8 srcSerRegIdx;
+            status = argBuf.deserialize(srcSerRegIdx);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.deserSerReg.set_srcSerRegIdx(srcSerRegIdx);
+
+            FwSizeType srcOffset;
+            status = argBuf.deserialize(srcOffset);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.deserSerReg.set_srcOffset(srcOffset);
+
+            U8 destReg;
+            status = argBuf.deserialize(destReg);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.deserSerReg.set_destReg(destReg);
+            break;
+        }
+        case Fpy::DirectiveId::SET_REG: {
+            new (&deserializedDirective.setReg) FpySequencer_SetRegDirective();
+            status = argBuf.deserialize(deserializedDirective.setReg);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::OR:
+        case Fpy::DirectiveId::AND:
+        case Fpy::DirectiveId::IEQ:
+        case Fpy::DirectiveId::INE:
+        case Fpy::DirectiveId::UGT:
+        case Fpy::DirectiveId::ULT:
+        case Fpy::DirectiveId::ULE:
+        case Fpy::DirectiveId::UGE: 
+        case Fpy::DirectiveId::SGT:
+        case Fpy::DirectiveId::SLT:
+        case Fpy::DirectiveId::SLE:
+        case Fpy::DirectiveId::SGE: 
+        case Fpy::DirectiveId::FEQ:
+        case Fpy::DirectiveId::FNE:
+        case Fpy::DirectiveId::FLT:
+        case Fpy::DirectiveId::FLE:
+        case Fpy::DirectiveId::FGT:
+        case Fpy::DirectiveId::FGE:
+        {
+            new (&deserializedDirective.binaryRegOp) FpySequencer_BinaryRegOpDirective();
+            
+            U8 lhs;
+            status = argBuf.deserialize(lhs);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.binaryRegOp.set_lhs(lhs);
+            U8 rhs;
+            status = argBuf.deserialize(rhs);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.binaryRegOp.set_rhs(rhs);
+            U8 res;
+            status = argBuf.deserialize(res);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.binaryRegOp.set_res(res);
+
+            deserializedDirective.binaryRegOp.set__op(stmt.get_opCode());
+            break;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::NOT:
+        case Fpy::DirectiveId::FPEXT:
+        case Fpy::DirectiveId::FPTRUNC:
+        case Fpy::DirectiveId::FPTOSI:
+        case Fpy::DirectiveId::FPTOUI:
+        case Fpy::DirectiveId::SITOFP:
+        case Fpy::DirectiveId::UITOFP: {
+            new (&deserializedDirective.unaryRegOp) FpySequencer_UnaryRegOpDirective();
+            
+            U8 src;
+            status = argBuf.deserialize(src);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.unaryRegOp.set_src(src);
+            U8 res;
+            status = argBuf.deserialize(res);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            deserializedDirective.unaryRegOp.set_res(res);
+
+            deserializedDirective.unaryRegOp.set__op(stmt.get_opCode());
+            break;
+        }
+        case Fpy::DirectiveId::EXIT: {
+            new (&deserializedDirective.exit) FpySequencer_ExitDirective();
+            status = argBuf.deserialize(deserializedDirective.exit);
+            if (status != Fw::SerializeStatus::FW_SERIALIZE_OK || argBuf.getBuffLeft() != 0) {
+                this->log_WARNING_HI_DirectiveDeserializeError(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                               status, argBuf.getBuffLeft(), argBuf.getBuffLength());
+                return Fw::Success::FAILURE;
+            }
+            break;
+        }
+        default: {
+            // unsure what this opcode is. check compiler version matches sequencer
+            this->log_WARNING_HI_UnknownSequencerDirective(stmt.get_opCode(), this->m_runtime.nextStatementIndex - 1,
+                                                           this->m_sequenceFilePath);
+            return Fw::Success::FAILURE;
+        }
+    }
+    return Fw::Success::SUCCESS;
+}
+
+// dispatches a deserialized sequencer directive to the right handler.
+void FpySequencer::dispatchDirective(const DirectiveUnion& directive, const Fpy::DirectiveId& id) {
+    switch (id) {
+        case Fpy::DirectiveId::INVALID: {
+            // coding err
+            FW_ASSERT(0);
+            return;
+        }
+        case Fpy::DirectiveId::WAIT_REL: {
+            this->directive_waitRel_internalInterfaceInvoke(directive.waitRel);
+            return;
+        }
+        case Fpy::DirectiveId::WAIT_ABS: {
+            this->directive_waitAbs_internalInterfaceInvoke(directive.waitAbs);
+            return;
+        }
+        case Fpy::DirectiveId::SET_SER_REG: {
+            this->directive_setSerReg_internalInterfaceInvoke(directive.setSerReg);
+            return;
+        }
+        case Fpy::DirectiveId::GOTO: {
+            this->directive_goto_internalInterfaceInvoke(directive.gotoDirective);
+            return;
+        }
+        case Fpy::DirectiveId::IF: {
+            this->directive_if_internalInterfaceInvoke(directive.ifDirective);
+            return;
+        }
+        case Fpy::DirectiveId::NO_OP: {
+            this->directive_noOp_internalInterfaceInvoke(directive.noOp);
+            return;
+        }
+        case Fpy::DirectiveId::GET_TLM: {
+            this->directive_getTlm_internalInterfaceInvoke(directive.getTlm);
+            return;
+        }
+        case Fpy::DirectiveId::GET_PRM: {
+            this->directive_getPrm_internalInterfaceInvoke(directive.getPrm);
+            return;
+        }
+        case Fpy::DirectiveId::CMD: {
+            this->directive_cmd_internalInterfaceInvoke(directive.cmd);
+            return;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::DESER_SER_REG_8:
+        case Fpy::DirectiveId::DESER_SER_REG_4:
+        case Fpy::DirectiveId::DESER_SER_REG_2:
+        case Fpy::DirectiveId::DESER_SER_REG_1: {
+            this->directive_deserSerReg_internalInterfaceInvoke(directive.deserSerReg);
+            return;
+        }
+        case Fpy::DirectiveId::SET_REG: {
+            this->directive_setReg_internalInterfaceInvoke(directive.setReg);
+            return;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::OR:
+        case Fpy::DirectiveId::AND:
+        case Fpy::DirectiveId::IEQ:
+        case Fpy::DirectiveId::INE:
+        case Fpy::DirectiveId::UGT:
+        case Fpy::DirectiveId::ULT:
+        case Fpy::DirectiveId::ULE:
+        case Fpy::DirectiveId::UGE: 
+        case Fpy::DirectiveId::SGT:
+        case Fpy::DirectiveId::SLT:
+        case Fpy::DirectiveId::SLE:
+        case Fpy::DirectiveId::SGE:
+        case Fpy::DirectiveId::FEQ:
+        case Fpy::DirectiveId::FNE:
+        case Fpy::DirectiveId::FLT:
+        case Fpy::DirectiveId::FLE:
+        case Fpy::DirectiveId::FGT:
+        case Fpy::DirectiveId::FGE: {
+            this->directive_binaryRegOp_internalInterfaceInvoke(directive.binaryRegOp);
+            return;
+        }
+        // fallthrough on purpose
+        case Fpy::DirectiveId::NOT:
+        case Fpy::DirectiveId::FPEXT:
+        case Fpy::DirectiveId::FPTRUNC:
+        case Fpy::DirectiveId::FPTOSI:
+        case Fpy::DirectiveId::FPTOUI:
+        case Fpy::DirectiveId::SITOFP:
+        case Fpy::DirectiveId::UITOFP: {
+            this->directive_unaryRegOp_internalInterfaceInvoke(directive.unaryRegOp);
+            return;
+        }
+        case Fpy::DirectiveId::EXIT: {
+            this->directive_exit_internalInterfaceInvoke(directive.exit);
+            return;
+        }
+    }
+    // coding err
+    FW_ASSERT(0, static_cast<FwAssertArgType>(id));
+}
+
+Signal FpySequencer::checkShouldWake() {
+    Fw::Time currentTime = this->getTime();
+
+    if (currentTime.getTimeBase() != this->m_runtime.wakeupTime.getTimeBase()) {
+        // cannot compare these times.
+        this->log_WARNING_HI_MismatchedTimeBase(currentTime.getTimeBase(), this->m_runtime.wakeupTime.getTimeBase());
+
+        return Signal::result_timeOpFailed;
+    }
+
+    // Do not compare time context
+
+    if (currentTime < this->m_runtime.wakeupTime) {
+        // not time to wake up!
+        return Signal::result_checkShouldWake_keepSleeping;
+    }
+
+    // say we've finished our sleep
+    return Signal::result_checkShouldWake_wakeup;
+}
+
+// checks whether the currently executing statement timed out
+Signal FpySequencer::checkStatementTimeout() {
+    Fw::ParamValid valid;
+    F32 timeout = this->paramGet_STATEMENT_TIMEOUT_SECS(valid);
+    if (timeout <= 0 || timeout > static_cast<F32>(std::numeric_limits<U32>::max())) {
+        // no timeout
+        return Signal::result_checkStatementTimeout_noTimeout;
+    }
+
+    Fw::Time currentTime = getTime();
+
+    if (currentTime.getTimeBase() != this->m_runtime.currentStatementDispatchTime.getTimeBase()) {
+        // can't compare time base. must have changed
+        this->log_WARNING_HI_MismatchedTimeBase(currentTime.getTimeBase(),
+                                                this->m_runtime.currentStatementDispatchTime.getTimeBase());
+        return Signal::result_timeOpFailed;
+    }
+
+    // Do not compare time context
+
+    if (this->m_runtime.currentStatementDispatchTime.getSeconds() > currentTime.getSeconds()) {
+        // somehow we've gone back in time... just ignore it and move on. should get fixed
+        // if we wait I guess
+        return Signal::result_checkStatementTimeout_noTimeout;
+    }
+
+    if (this->m_runtime.currentStatementDispatchTime.getSeconds() == currentTime.getSeconds() &&
+        this->m_runtime.currentStatementDispatchTime.getUSeconds() > currentTime.getUSeconds()) {
+        // same as above
+        return Signal::result_checkStatementTimeout_noTimeout;
+    }
+
+    U64 currentUSeconds = currentTime.getSeconds() * 1000000 + currentTime.getUSeconds();
+    U64 dispatchUSeconds = this->m_runtime.currentStatementDispatchTime.getSeconds() * 1000000 +
+                           this->m_runtime.currentStatementDispatchTime.getUSeconds();
+
+    U64 timeoutUSeconds = static_cast<U64>(timeout * 1000000.0f);
+
+    if (currentUSeconds - dispatchUSeconds < timeoutUSeconds) {
+        // not over timeout
+        return Signal::result_checkStatementTimeout_noTimeout;
+    }
+
+    // we timed out
+    if (this->m_runtime.currentStatementOpcode == Fpy::DirectiveId::CMD) {
+        // if we were executing a command, warn that the cmd timed out with its opcode
+        this->log_WARNING_HI_CommandTimedOut(this->m_runtime.currentCmdOpcode,
+                                             this->m_runtime.nextStatementIndex - 1, this->m_sequenceFilePath);
+    } else {
+        this->log_WARNING_HI_DirectiveTimedOut(this->m_runtime.currentStatementOpcode,
+                                               this->m_runtime.nextStatementIndex - 1, this->m_sequenceFilePath);
+    }
+
+    return Signal::result_checkStatementTimeout_statementTimeout;
+}
+
+}  // namespace Svc
+```
+
+### `FpySequencerStateMachine.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerStateMachine.cpp`
+
+
+```cpp
+#include <new>
+#include "Svc/FpySequencer/FpySequencer.hpp"
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Functions to implement for internal state machine actions
+// ----------------------------------------------------------------------
+
+//! Implementation for action signalEntered of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! simply raises the "entered" signal
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_signalEntered(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->sequencer_sendSignal_entered();
+}
+
+//! Implementation for action setSequenceFilePath of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the current sequence file path member var
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setSequenceFilePath(
+    SmId smId,                                              //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+    const Svc::FpySequencer_SequenceExecutionArgs& value    //!< The value
+) {
+    this->m_sequenceFilePath = value.get_filePath();
+}
+
+//! Implementation for action setSequenceBlockState of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the block state of the sequence to be run
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setSequenceBlockState(
+    SmId smId,                                              //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+    const Svc::FpySequencer_SequenceExecutionArgs& value    //!< The value
+) {
+    this->m_sequenceBlockState = value.get_block();
+}
+
+//! Implementation for action report_seqSucceeded of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! reports that a sequence was completed
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_report_seqSucceeded(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_tlm.sequencesSucceeded++;
+    this->log_ACTIVITY_HI_SequenceDone(this->m_sequenceFilePath);
+    if (this->isConnected_seqDoneOut_OutputPort(0)) {
+        // report that the sequence succeeded to internal callers
+        this->seqDoneOut_out(0, 0, 0, Fw::CmdResponse::OK);
+    }
+}
+
+//! Implementation for action report_seqCancelled of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! reports that a sequence was cancelled
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_report_seqCancelled(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_tlm.sequencesCancelled++;
+    this->log_ACTIVITY_HI_SequenceCancelled(this->m_sequenceFilePath);
+    if (this->isConnected_seqDoneOut_OutputPort(0)) {
+        // report that the sequence failed to internal callers
+        this->seqDoneOut_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+//! Implementation for action dispatchStatement of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! iterates to the next statement and dispatches it
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_dispatchStatement(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    Signal result = this->dispatchStatement();
+    switch (result) {
+        case Signal::result_dispatchStatement_noMoreStatements: {
+            this->sequencer_sendSignal_result_dispatchStatement_noMoreStatements();
+            break;
+        }
+        case Signal::result_dispatchStatement_success: {
+            this->sequencer_sendSignal_result_dispatchStatement_success();
+            break;
+        }
+        case Signal::result_dispatchStatement_failure: {
+            this->sequencer_sendSignal_result_dispatchStatement_failure();
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(result));
+        }
+    }
+}
+
+//! Implementation for action setGoalState_RUNNING of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the goal state to RUNNING
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setGoalState_RUNNING(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_goalState = FpySequencer_GoalState::RUNNING;
+}
+
+//! Implementation for action setGoalState_VALID of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the goal state to VALID
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setGoalState_VALID(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_goalState = FpySequencer_GoalState::VALID;
+}
+
+//! Implementation for action setGoalState_IDLE of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the goal state to IDLE
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setGoalState_IDLE(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_goalState = FpySequencer_GoalState::IDLE;
+}
+
+//! Implementation for action sendCmdResponse_OK of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! responds to the calling command with OK
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_sendCmdResponse_OK(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    if (this->m_sequenceBlockState == FpySequencer_BlockState::BLOCK) {
+        // respond if we were waiting on a response
+        this->cmdResponse_out(this->m_savedOpCode, this->m_savedCmdSeq, Fw::CmdResponse::OK);
+    }
+}
+
+//! Implementation for action sendCmdResponse_EXECUTION_ERROR of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! responds to the calling command with EXECUTION_ERROR
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_sendCmdResponse_EXECUTION_ERROR(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    if (this->m_sequenceBlockState == FpySequencer_BlockState::BLOCK) {
+        // respond if we were waiting on a response
+        this->cmdResponse_out(this->m_savedOpCode, this->m_savedCmdSeq, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+//! Implementation for action resetRuntime of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! resets the sequence runtime
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_resetRuntime(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    // explicitly call dtor
+    this->m_runtime.~Runtime();
+    new (&this->m_runtime) Runtime();
+}
+
+//! Implementation for action validate of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! performs all steps necessary for sequence validation, and raises a signal
+//! result_success or result_failure
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_validate(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    Fw::Success result = this->validate();
+    if (result == Fw::Success::FAILURE) {
+        this->sequencer_sendSignal_result_failure();
+        return;
+    }
+    this->sequencer_sendSignal_result_success();
+}
+
+//! Implementation for action checkShouldWake of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! checks if sequencer should wake from sleep
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_checkShouldWake(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    Signal result = this->checkShouldWake();
+    switch (result) {
+        case Signal::result_checkShouldWake_keepSleeping: {
+            this->sequencer_sendSignal_result_checkShouldWake_keepSleeping();
+            break;
+        }
+        case Signal::result_checkShouldWake_wakeup: {
+            this->sequencer_sendSignal_result_checkShouldWake_wakeup();
+            break;
+        }
+        case Signal::result_timeOpFailed: {
+            this->sequencer_sendSignal_result_timeOpFailed();
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(result));
+        }
+    }
+}
+
+//! Implementation for action checkStatementTimeout of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! checks if the current statement has timed out
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_checkStatementTimeout(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    Signal result = this->checkStatementTimeout();
+    switch (result) {
+        case Signal::result_checkStatementTimeout_noTimeout: {
+            this->sequencer_sendSignal_result_checkStatementTimeout_noTimeout();
+            break;
+        }
+        case Signal::result_checkStatementTimeout_statementTimeout: {
+            this->sequencer_sendSignal_result_checkStatementTimeout_statementTimeout();
+            break;
+        }
+        case Signal::result_timeOpFailed: {
+            this->sequencer_sendSignal_result_timeOpFailed();
+            break;
+        }
+        default: {
+            FW_ASSERT(0, static_cast<FwAssertArgType>(result));
+        }
+    }
+}
+
+//! Implementation for action incrementSequenceCounter of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! increments the m_sequencesStarted counter
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_incrementSequenceCounter(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_sequencesStarted++;
+}
+
+//! Implementation for action clearSequenceFile of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! clears all variables related to the loading/validating of the sequence file
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_clearSequenceFile(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_sequenceFilePath = "";
+}
+
+//! Implementation for action clearDebugBreakpoint of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! clears the debug breakpoint, allowing execution of the sequence to continue
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_clearDebugBreakpoint(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->m_debug.breakOnBreakpoint = false;
+    this->m_debug.breakpointIndex = 0;
+    this->m_debug.breakOnlyOnceOnBreakpoint = false;
+}
+
+//! Implementation for action report_debugBroken of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! reports that a debug breakpoint was hit
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_report_debugBroken(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) {
+    this->log_ACTIVITY_HI_DebugBroken(this->m_runtime.nextStatementIndex, this->m_debug.breakOnlyOnceOnBreakpoint);
+}
+
+//! Implementation for action setDebugBreakpoint of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! sets the debug breakpoint to the provided args
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_setDebugBreakpoint(
+    SmId smId,                                              //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal,  //!< The signal
+    const Svc::FpySequencer_DebugBreakpointArgs& value      //!< The value
+) {
+    this->m_debug.breakOnBreakpoint = value.get_breakOnBreakpoint();
+    this->m_debug.breakOnlyOnceOnBreakpoint = value.get_breakOnlyOnceOnBreakpoint();
+    this->m_debug.breakpointIndex = value.get_breakpointIndex();
+    this->log_ACTIVITY_HI_DebugBreakpointSet(value.get_breakpointIndex(), value.get_breakOnlyOnceOnBreakpoint());
+}
+
+//! Implementation for action report_seqFailed of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! called when a sequence failed to execute successfully
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_report_seqFailed(
+    SmId smId, //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal //!< The signal
+) {
+    if (this->isConnected_seqDoneOut_OutputPort(0)) {
+        // report that the sequence failed to internal callers
+        this->seqDoneOut_out(0, 0, 0, Fw::CmdResponse::EXECUTION_ERROR);
+    }
+}
+
+//! Implementation for action report_seqStarted of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! reports that a sequence was started
+void FpySequencer::Svc_FpySequencer_SequencerStateMachine_action_report_seqStarted(
+    SmId smId, //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal //!< The signal
+) {
+    if (this->isConnected_seqDoneOut_OutputPort(0)) {
+        // report that the sequence started to internal callers
+        this->seqStartOut_out(0, this->m_sequenceFilePath);
+    }
+}
+// ----------------------------------------------------------------------
+// Functions to implement for internal state machine guards
+// ----------------------------------------------------------------------
+
+//! Implementation for guard goalStateIs_RUNNING of state machine
+//! Svc_FpySequencer_SequencerStateMachine
+//!
+//! return true if the goal state is RUNNING
+bool FpySequencer::Svc_FpySequencer_SequencerStateMachine_guard_goalStateIs_RUNNING(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) const {
+    return this->m_goalState == FpySequencer_GoalState::RUNNING;
+}
+
+//! Implementation for guard shouldDebugBreak of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! return true if should debug break at this point in execution, before dispatching
+//! next stmt
+bool FpySequencer::Svc_FpySequencer_SequencerStateMachine_guard_shouldDebugBreak(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) const {
+    return this->m_debug.breakOnBreakpoint && this->m_debug.breakpointIndex == this->m_runtime.nextStatementIndex;
+}
+
+//! Implementation for guard debugBreakOnce of state machine Svc_FpySequencer_SequencerStateMachine
+//!
+//! return true if this debug breakpoint should only happen once
+bool FpySequencer::Svc_FpySequencer_SequencerStateMachine_guard_debugBreakOnce(
+    SmId smId,                                             //!< The state machine id
+    Svc_FpySequencer_SequencerStateMachine::Signal signal  //!< The signal
+) const {
+    return this->m_debug.breakOnlyOnceOnBreakpoint;
+}
+}  // namespace Svc
+```
+
+### `FpySequencerStateMachine.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerStateMachine.fppi`
+
+
+```text
+struct SequenceExecutionArgs {
+    filePath: string size FileNameStringSize
+    $block: BlockState
+}
+
+struct DebugBreakpointArgs {
+    @ whether or not to break at the debug breakpoint index
+    breakOnBreakpoint: bool
+    @ whether or not to remove the breakpoint after breaking on it
+    breakOnlyOnceOnBreakpoint: bool
+    @ the statement index at which to break, before dispatching
+    breakpointIndex: U32
+}
+
+state machine SequencerStateMachine {
+    ####################
+    # guards           #
+    ####################
+    @ return true if the goal state is RUNNING
+    # see explanation in FpySequencer::m_goalState
+    guard goalStateIs_RUNNING
+
+    ####################
+    # signals          #
+    ####################
+    @ called on VALIDATE cmd with the path of the sequence file to validate. only raised in IDLE state
+    signal cmd_VALIDATE: SequenceExecutionArgs
+    @ called on RUN cmd with the path of the sequence file to run. only raised in IDLE state
+    signal cmd_RUN: SequenceExecutionArgs
+    @ called on RUN_VALIDATED cmd. only raised in AWAITING_CMD_RUN_VALIDATED state
+    signal cmd_RUN_VALIDATED: SequenceExecutionArgs
+    @ called on CANCEL cmd. raised in all states except IDLE
+    signal cmd_CANCEL
+    @ called in DEBUG_SET_BREAKPOINT cmd. raised in any state
+    signal cmd_DEBUG_SET_BREAKPOINT: DebugBreakpointArgs
+    @ called in DEBUG_CLEAR_BREAKPOINT cmd. raised in any state
+    signal cmd_DEBUG_CLEAR_BREAKPOINT
+
+    @ generic failure of an action
+    signal result_failure
+    @ generic success of an action
+    signal result_success
+
+    @ generic entry of a state
+    signal entered
+
+    ####################
+    # actions          #
+    ####################
+    @ simply raises the "entered" signal
+    action signalEntered
+    @ sets the current sequence file path member var
+    action setSequenceFilePath: SequenceExecutionArgs
+    @ sets the block state of the sequence to be run
+    action setSequenceBlockState: SequenceExecutionArgs
+    @ performs all steps necessary for sequence validation, and raises a signal result_success or result_failure
+    action validate
+
+    @ reports that a sequence succeeded
+    action report_seqSucceeded
+    @ reports that a sequence was cancelled
+    action report_seqCancelled
+    @ called when a sequence failed to execute successfully
+    action report_seqFailed
+    @ called when a sequence starts
+    action report_seqStarted
+
+    @ sets the goal state to RUNNING
+    # see explanation in FpySequencer::m_goalState
+    action setGoalState_RUNNING
+    @ sets the goal state to VALID
+    # see explanation in FpySequencer::m_goalState
+    action setGoalState_VALID
+    @ sets the goal state to IDLE
+    # see explanation in FpySequencer::m_goalState
+    action setGoalState_IDLE
+
+    @ responds to the calling command with OK
+    action sendCmdResponse_OK
+    @ responds to the calling command with EXECUTION_ERROR
+    action sendCmdResponse_EXECUTION_ERROR
+
+    @ clears all variables related to the loading/validating of the sequence file
+    action clearSequenceFile
+    @ clears the debug breakpoint setting
+    action clearDebugBreakpoint
+
+    initial enter IDLE
+
+    @ sequencer is ready to load, validate and run a sequence
+    state IDLE {
+        # start with an unset goal state, and no debugging settings
+        entry do { clearDebugBreakpoint, setGoalState_IDLE, clearSequenceFile }
+        # -->
+        # wait for a cmd
+
+        ####################
+        # commands         #
+        ####################
+        # validate does not take as input a block state, only a path
+        on cmd_VALIDATE do { setGoalState_VALID, setSequenceFilePath } enter VALIDATING
+        # run takes both path and block state
+        on cmd_RUN do { setGoalState_RUNNING, setSequenceFilePath, setSequenceBlockState } enter VALIDATING
+
+        on cmd_DEBUG_SET_BREAKPOINT do { setDebugBreakpoint }
+        on cmd_DEBUG_CLEAR_BREAKPOINT do { clearDebugBreakpoint }
+    }
+
+    state VALIDATING {
+
+        # do it this way so we are only running validate while we
+        # are in the VALIDATING state
+        entry do { report_seqStarted, signalEntered }
+
+        on entered do { validate }
+        # -->
+        on result_failure do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+        on result_success enter VALID
+
+        ####################
+        # commands         #
+        ####################
+        @ cancelled the sequence while it was validating
+        on cmd_CANCEL do { report_seqCancelled, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+
+        on cmd_DEBUG_SET_BREAKPOINT do { setDebugBreakpoint }
+        on cmd_DEBUG_CLEAR_BREAKPOINT do { clearDebugBreakpoint }
+    }
+
+    @ decide whether we should stop after validating, or proceed to running
+    choice VALID {
+        # if we already received the RUN cmd, move on to RUNNING. otherwise wait
+        if goalStateIs_RUNNING enter RUNNING else enter AWAITING_CMD_RUN_VALIDATED
+    }
+
+    @ sequencer has validated the sequence and is waiting for a command to run it
+    state AWAITING_CMD_RUN_VALIDATED {
+
+        # we can only get to this state if we explicitly ran the VALIDATE cmd
+        # that means now's the time to return a response, as VALIDATE always waits
+        # until completion to return response
+        entry do { sendCmdResponse_OK }
+        # wait here until we get the RUN_VALIDATED cmd
+
+        ####################
+        # commands         #
+        ####################
+        @ cancelled the sequence after we validated it
+        on cmd_CANCEL do { report_seqCancelled } enter IDLE
+        @ the sequence path has already been decided on, so only set the sequenceShouldBlock var
+        on cmd_RUN_VALIDATED do { setSequenceBlockState } enter RUNNING
+
+        on cmd_DEBUG_SET_BREAKPOINT do { setDebugBreakpoint }
+        on cmd_DEBUG_CLEAR_BREAKPOINT do { clearDebugBreakpoint }
+    }
+
+
+    ###############
+    # runtime     #    
+    ###############
+
+    @ checks if sequencer should wake from sleep
+    action checkShouldWake
+    @ iterates to the next statement and dispatches it
+    action dispatchStatement
+    @ resets the sequence runtime
+    action resetRuntime
+    @ checks if the current statement has timed out
+    action checkStatementTimeout
+    @ increments the m_sequencesStarted counter
+    action incrementSequenceCounter
+    @ reports that a debug breakpoint was hit
+    action report_debugBroken
+    @ sets the debug breakpoint to the provided args
+    action setDebugBreakpoint: DebugBreakpointArgs
+
+
+    @ called in dispatchStatement method when a statement was successfully dispatched
+    signal result_dispatchStatement_success
+    @ called in dispatchStatement method when a statement was unable to be sent out
+    signal result_dispatchStatement_failure
+    @ called in dispatchStatement method when there were no more statements in the sequence
+    signal result_dispatchStatement_noMoreStatements
+    @ raised whenever the checkTimers port is called
+    signal checkTimersIn
+    @ raised when we are done sleeping
+    signal result_checkShouldWake_wakeup
+    @ raised when we should keep sleeping
+    signal result_checkShouldWake_keepSleeping
+    @ raised when an operation could not be performed on a Fw::Time object due to a
+    @ mismatched time base or context
+    signal result_timeOpFailed
+    @ a statement is telling the sequencer to go to sleep
+    signal stmtResponse_beginSleep
+    @ called when statement successfully executed. only raised in the RUNNING.AWAITING_CMD_RESPONSE state
+    signal stmtResponse_success
+    @ called when the statement unsuccessfully executed. only raised in the RUNNING.AWAITING_CMD_RESPONSE state
+    signal stmtResponse_failure
+    @ called when an unexpected or incorrect statement response comes in. only raised in the RUNNING state
+    signal stmtResponse_unexpected
+    @ called when the statement is telling the sequencer to await a later stmt response
+    signal stmtResponse_keepWaiting
+    @ raised when the statement times out, according to the timeout parameter
+    signal result_checkStatementTimeout_statementTimeout
+    @ raised when the statement has not timed out yet
+    signal result_checkStatementTimeout_noTimeout
+
+    @ called in DEBUG_CONTINUE cmd. only raised in RUNNING.DEBUG_BROKEN state
+    signal cmd_DEBUG_CONTINUE
+    @ called in DEBUG_BREAK cmd. only raised in RUNNING state
+    signal cmd_DEBUG_BREAK: DebugBreakpointArgs
+
+    @ return true if should debug break at this point in execution, before dispatching
+    @ next stmt
+    guard shouldDebugBreak
+    @ return true if this debug breakpoint should only happen once
+    guard debugBreakOnce
+
+    @ sequencer is executing all statements in the sequence
+    state RUNNING {
+        @ start with a fresh baked runtime, and tick up the
+        @ sequence counter
+        entry do { resetRuntime, incrementSequenceCounter }
+
+        initial enter DEBUG_BREAK_CHECK
+
+        @ check whether to pause execution before dispatching the next statement
+        choice DEBUG_BREAK_CHECK {
+            if shouldDebugBreak do { report_debugBroken } enter DEBUG_BROKEN else enter DISPATCH_STATEMENT
+        }
+
+        @ sequencer is stepping into a single statement and dispatching it
+        state DISPATCH_STATEMENT {
+            entry do { dispatchStatement }
+            # -->
+            on result_dispatchStatement_noMoreStatements do { report_seqSucceeded, sendCmdResponse_OK } enter IDLE
+            on result_dispatchStatement_failure do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            on result_dispatchStatement_success enter AWAITING_STATEMENT_RESPONSE
+        }
+
+        state AWAITING_STATEMENT_RESPONSE {
+            on checkTimersIn do { checkStatementTimeout }
+            # -->
+            on result_checkStatementTimeout_statementTimeout do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            # this can occur if the time base/ctx changes, or was invalid from the start
+            on result_timeOpFailed do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            # result_checkStatementTimeout_noTimeout not handled, no need
+
+            on stmtResponse_success enter DEBUG_BREAK_CHECK
+            on stmtResponse_failure do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            on stmtResponse_beginSleep enter SLEEPING
+            # stmtResponse_keepWaiting not handled, we're already in the awaiting state
+        }
+
+        @ sequencer is not taking any action, waiting for a time in the future to continue
+        state SLEEPING {
+            on checkTimersIn do { checkShouldWake, checkStatementTimeout }
+            # -->
+            on result_checkShouldWake_wakeup enter DEBUG_BREAK_CHECK
+            # this can occur if the time base/ctx changes, or was invalid from the start
+            on result_timeOpFailed do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            on result_checkStatementTimeout_statementTimeout do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+            # if result_checkShouldWake_keepSleeping is raised, stay asleep
+            # if result_checkStatementTimeout_noTimeout is raised, stay asleep
+        }
+
+        @ a debug breakpoint was hit. sequencer is not taking any action, or allowing timeouts.
+        @ must be exited via command, either CANCEL or DEBUG_CONTINUE
+        state DEBUG_BROKEN {
+            entry do { signalEntered }
+            # -->
+            on entered if debugBreakOnce do { clearDebugBreakpoint }
+
+            on cmd_DEBUG_CONTINUE enter DISPATCH_STATEMENT
+        }
+
+        @ fail the sequence if we got an unexpected statement response while running it.
+        @ the definition of unexpected is complicated, see FpySequencer::cmdResponseIn_handler.
+        @ in general, it is "unexpected" if there isn't a nominal way of producing this response.
+        @ sometimes, we can produce responses in strange situations nominally by cancelling and
+        @ quickly running sequences. this signal does not cover such cases.
+        on stmtResponse_unexpected do { report_seqFailed, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+
+        ####################
+        # commands         #
+        ####################
+        on cmd_CANCEL do { report_seqCancelled, sendCmdResponse_EXECUTION_ERROR } enter IDLE
+        on cmd_DEBUG_BREAK do { setDebugBreakpoint }
+        on cmd_DEBUG_SET_BREAKPOINT do { setDebugBreakpoint }
+        on cmd_DEBUG_CLEAR_BREAKPOINT do { clearDebugBreakpoint }
+    }
+}
+```
+
+### `FpySequencerTelemetry.fppi`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerTelemetry.fppi`
+
+
+```text
+@ the current state of the sequencer
+telemetry State: I32 update on change
+
+@ the number of sequences successfully completed
+telemetry SequencesSucceeded: U64 update on change
+
+@ the number of sequences that failed to validate or execute
+telemetry SequencesFailed: U64 update on change
+
+@ the number of sequences that were cancelled
+telemetry SequencesCancelled: U64 update on change
+
+@ the number of statements dispatched (successfully or otherwise) total.
+@ Note this is distinct from the number of statements executed. This
+@ number just tracks how many we've sent out
+telemetry StatementsDispatched: U64 update on change
+
+@ the number of statements that failed to execute
+telemetry StatementsFailed: U64 update on change
+
+@ the error code of the last directive that ran
+telemetry LastDirectiveError: DirectiveErrorCode update on change
+
+@ the currently running sequence
+telemetry SeqPath: string size FileNameStringSize update on change
+
+struct DebugTelemetry {
+    @ true if there are no statements remaining in the sequence file
+    reachedEndOfFile: bool
+    @ true if we were able to deserialize the next statement successfully
+    nextStatementReadSuccess: bool
+    @ the opcode of the next statement to dispatch.
+    nextStatementOpcode: U8
+    @ if the next statement is a cmd directive, the opcode of that cmd
+    nextCmdOpcode: FwOpcodeType
+}
+
+@ the current debug breakpoint index
+telemetry DebugBreakpointIdx: U32 update on change
+
+@ debug-only telemetry
+@ only updated in the RUNNING.DEBUG_BROKEN state
+telemetry Debug: DebugTelemetry update on change
+
+@ value of prm STATEMENT_TIMEOUT_SECS
+telemetry PRM_STATEMENT_TIMEOUT_SECS: F32 update on change
+```
+
+### `FpySequencerTypes.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerTypes.fpp`
+
+
+```fpp
+module Svc {
+    module Fpy {
+        @ the current schema version (must be representable in U8)
+        constant SCHEMA_VERSION = 1;
+
+        enum DirectiveId : U8 {
+            INVALID = 0
+            WAIT_REL = 1
+            WAIT_ABS = 2
+            SET_SER_REG = 3
+            GOTO = 4
+            IF = 5
+            NO_OP = 6
+            GET_TLM = 7
+            GET_PRM = 8
+            CMD = 9
+            SET_REG = 10
+            DESER_SER_REG_8 = 11
+            DESER_SER_REG_4 = 12
+            DESER_SER_REG_2 = 13
+            DESER_SER_REG_1 = 14
+            # binary reg op directives
+            # all of these are handled at the CPP level by one BinaryRegOpDirective
+            # boolean ops
+            OR = 15
+            AND = 16
+            # integer equalities
+            IEQ = 17
+            INE = 18
+            # unsigned integer inequalities
+            ULT = 19
+            ULE = 20
+            UGT = 21
+            UGE = 22
+            # signed integer inequalities
+            SLT = 23
+            SLE = 24
+            SGT = 25
+            SGE = 26
+            # floating point equalities
+            FEQ = 27
+            FNE = 28
+            # floating point inequalities
+            FLT = 29
+            FLE = 30
+            FGT = 31
+            FGE = 32
+            # end binary reg op directives
+            
+            # unary reg op dirs
+            NOT = 33
+            # floating point extension and truncation
+            FPEXT = 34
+            FPTRUNC = 35
+            # floating point conversion to signed/unsigned integer,
+            # and vice versa
+            FPTOSI = 36
+            FPTOUI = 37
+            SITOFP = 38
+            UITOFP = 39
+            # end unary reg op dirs
+
+            EXIT = 40
+        }
+
+        struct Header {
+            @ the major version of the FSW
+            majorVersion: U8
+            @ the minor version of the FSW
+            minorVersion: U8
+            @ the patch version of the FSW
+            patchVersion: U8
+            @ the schema version of this file
+            schemaVersion: U8
+
+            @ the number of input arguments to this sequence
+            @ these will become locals in the sequence
+            argumentCount: U8
+
+            @ the number of statements in the sequence
+            statementCount: U16
+
+            @ the size of the body in bytes
+            bodySize: U32
+        } default { majorVersion = 0, minorVersion = 0, patchVersion = 0, schemaVersion = 0, argumentCount = 0, statementCount = 0, bodySize = 0 }
+
+        struct Footer {
+            crc: U32
+        }
+
+        @ a statement is a directive opcode paired with an argument buffer
+        struct Statement {
+            opCode: DirectiveId
+            argBuf: Fw.StatementArgBuffer
+        }
+
+        struct Sequence {
+            header: Header
+            @ an array of size m_header.argumentCount mapping argument position to local
+            @ variable index
+            args: [MAX_SEQUENCE_ARG_COUNT] U8
+            statements: [MAX_SEQUENCE_STATEMENT_COUNT] Statement
+            footer: Footer
+        }
+    }
+}
+```
+
+### `FpySequencerValidationState.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FpySequencer/FpySequencerValidationState.cpp`
+
+
+```cpp
+#include "Svc/FpySequencer/FppConstantsAc.hpp"
+#include "Svc/FpySequencer/FpySequencer.hpp"
+extern "C" {
+#include "Utils/Hash/libcrc/lib_crc.h"
+}
+namespace Svc {
+
+void FpySequencer::allocateBuffer(FwEnumStoreType identifier, Fw::MemAllocator& allocator, FwSizeType bytes) {
+    // if this assertion fails, you aren't allocating enough bytes for the
+    // FpySequencer. this is because you must have a buffer big enough to fit the
+    // header of a sequence
+    FW_ASSERT(bytes >= Fpy::Header::SERIALIZED_SIZE, static_cast<FwAssertArgType>(bytes));
+    FwSizeType originalBytes = bytes;
+    bool recoverable = false;
+    this->m_allocatorId = identifier;
+    U8* allocatedMemory = static_cast<U8*>(allocator.allocate(identifier, bytes, recoverable));
+    // if this fails, unable to allocate the requested amount of money
+    FW_ASSERT(bytes >= originalBytes, static_cast<FwAssertArgType>(bytes));
+    this->m_sequenceBuffer.setExtBuffer(allocatedMemory, bytes);
+}
+
+void FpySequencer::deallocateBuffer(Fw::MemAllocator& allocator) {
+    allocator.deallocate(this->m_allocatorId, this->m_sequenceBuffer.getBuffAddr());
+    this->m_sequenceBuffer.clear();
+}
+
+void FpySequencer::updateCrc(U32& crc, const U8* buffer, FwSizeType bufferSize) {
+    FW_ASSERT(buffer);
+    for (FwSizeType index = 0; index < bufferSize; index++) {
+        crc = static_cast<U32>(update_crc_32(crc, static_cast<char>(buffer[index])));
+    }
+}
+
+// loads the sequence in memory, and does header/crc/integrity checks.
+// return true if sequence is valid
+Fw::Success FpySequencer::validate() {
+    FW_ASSERT(this->m_sequenceFilePath.length() > 0);
+
+    // crc needs to be initialized with a particular value
+    // for the calculation to work
+    this->m_computedCRC = CRC_INITIAL_VALUE;
+
+    Os::File sequenceFile;
+    Os::File::Status openStatus = sequenceFile.open(this->m_sequenceFilePath.toChar(), Os::File::OPEN_READ);
+
+    if (openStatus != Os::File::Status::OP_OK) {
+        this->log_WARNING_HI_FileOpenError(this->m_sequenceFilePath, static_cast<I32>(openStatus));
+        return Fw::Success::FAILURE;
+    }
+
+    Fw::Success readStatus =
+        this->readBytes(sequenceFile, Fpy::Header::SERIALIZED_SIZE, FpySequencer_FileReadStage::HEADER);
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    readStatus = this->readHeader();
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    readStatus =
+        readBytes(sequenceFile, this->m_sequenceObj.get_header().get_bodySize(), FpySequencer_FileReadStage::BODY);
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    readStatus = this->readBody();
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    // read footer bytes but don't include in CRC
+    readStatus = this->readBytes(sequenceFile, Fpy::Footer::SERIALIZED_SIZE, FpySequencer_FileReadStage::FOOTER, false);
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    readStatus = this->readFooter();
+
+    if (readStatus != Fw::Success::SUCCESS) {
+        return Fw::Success::FAILURE;
+    }
+
+    // make sure we're at EOF
+    FwSizeType sequenceFileSize;
+    FW_ASSERT(sequenceFile.size(sequenceFileSize) == Os::File::Status::OP_OK);
+
+    FwSizeType sequenceFilePosition;
+    FW_ASSERT(sequenceFile.position(sequenceFilePosition) == Os::File::Status::OP_OK);
+
+    if (sequenceFileSize != sequenceFilePosition) {
+        this->log_WARNING_HI_ExtraBytesInSequence(static_cast<U32>(sequenceFileSize - sequenceFilePosition));
+        return Fw::Success::FAILURE;
+    }
+
+    return Fw::Success::SUCCESS;
+}
+
+Fw::Success FpySequencer::readHeader() {
+    // deser header
+    Fw::SerializeStatus deserStatus = this->m_sequenceBuffer.deserialize(this->m_sequenceObj.get_header());
+    if (deserStatus != Fw::SerializeStatus::FW_SERIALIZE_OK) {
+        this->log_WARNING_HI_FileReadDeserializeError(
+            FpySequencer_FileReadStage::HEADER, this->m_sequenceFilePath, static_cast<I32>(deserStatus),
+            this->m_sequenceBuffer.getBuffLeft(), this->m_sequenceBuffer.getBuffLength());
+        return Fw::Success::FAILURE;
+    }
+
+    // check matching schema version
+    if (this->m_sequenceObj.get_header().get_schemaVersion() != Fpy::SCHEMA_VERSION) {
+        this->log_WARNING_HI_WrongSchemaVersion(Fpy::SCHEMA_VERSION,
+                                                this->m_sequenceObj.get_header().get_schemaVersion());
+        return Fw::Success::FAILURE;
+    }
+
+    if (this->m_sequenceObj.get_header().get_argumentCount() > Fpy::MAX_SEQUENCE_ARG_COUNT) {
+        this->log_WARNING_HI_TooManySequenceArgs(m_sequenceObj.get_header().get_argumentCount(),
+                                                 Fpy::MAX_SEQUENCE_ARG_COUNT);
+        return Fw::Success::FAILURE;
+    }
+
+    if (this->m_sequenceObj.get_header().get_statementCount() > Fpy::MAX_SEQUENCE_STATEMENT_COUNT) {
+        this->log_WARNING_HI_TooManySequenceStatements(this->m_sequenceObj.get_header().get_statementCount(),
+                                                       Fpy::MAX_SEQUENCE_STATEMENT_COUNT);
+        return Fw::Success::FAILURE;
+    }
+    return Fw::Success::SUCCESS;
+}
+
+Fw::Success FpySequencer::readBody() {
+    Fw::SerializeStatus deserStatus;
+    // deser body:
+    // deser arg mappings
+    for (U8 argMappingIdx = 0; argMappingIdx < this->m_sequenceObj.get_header().get_argumentCount(); argMappingIdx++) {
+        // serializable register index of arg $argMappingIdx
+        // TODO should probably check that this serReg is inside range
+        deserStatus = this->m_sequenceBuffer.deserialize(this->m_sequenceObj.get_args()[argMappingIdx]);
+        if (deserStatus != Fw::FW_SERIALIZE_OK) {
+            this->log_WARNING_HI_FileReadDeserializeError(
+                FpySequencer_FileReadStage::BODY, this->m_sequenceFilePath, static_cast<I32>(deserStatus),
+                this->m_sequenceBuffer.getBuffLeft(), this->m_sequenceBuffer.getBuffLength());
+            return Fw::Success::FAILURE;
+        }
+    }
+
+    // deser statements
+    for (U16 statementIdx = 0; statementIdx < this->m_sequenceObj.get_header().get_statementCount(); statementIdx++) {
+        // deser statement
+        deserStatus = this->m_sequenceBuffer.deserialize(this->m_sequenceObj.get_statements()[statementIdx]);
+        if (deserStatus != Fw::FW_SERIALIZE_OK) {
+            this->log_WARNING_HI_FileReadDeserializeError(
+                FpySequencer_FileReadStage::BODY, this->m_sequenceFilePath, static_cast<I32>(deserStatus),
+                this->m_sequenceBuffer.getBuffLeft(), this->m_sequenceBuffer.getBuffLength());
+            return Fw::Success::FAILURE;
+        }
+    }
+    return Fw::Success::SUCCESS;
+}
+
+Fw::Success FpySequencer::readFooter() {
+    Fw::SerializeStatus deserStatus = this->m_sequenceBuffer.deserialize(this->m_sequenceObj.get_footer());
+    if (deserStatus != Fw::FW_SERIALIZE_OK) {
+        this->log_WARNING_HI_FileReadDeserializeError(
+            FpySequencer_FileReadStage::FOOTER, this->m_sequenceFilePath, static_cast<I32>(deserStatus),
+            this->m_sequenceBuffer.getBuffLeft(), this->m_sequenceBuffer.getBuffLength());
+        return Fw::Success::FAILURE;
+    }
+
+    // need this for some reason to "finalize" the crc TODO get an explanation on this
+    this->m_computedCRC = ~this->m_computedCRC;
+
+    if (this->m_computedCRC != this->m_sequenceObj.get_footer().get_crc()) {
+        this->log_WARNING_HI_WrongCRC(this->m_sequenceObj.get_footer().get_crc(), this->m_computedCRC);
+        return Fw::Success::FAILURE;
+    }
+
+    return Fw::Success::SUCCESS;
+}
+
+// reads some bytes from the open file into the m_sequenceBuffer.
+// return success if successful
+Fw::Success FpySequencer::readBytes(Os::File& file,
+                                    FwSizeType expectedReadLen,
+                                    const FpySequencer_FileReadStage& readStage,
+                                    bool updateCrc) {
+    FW_ASSERT(file.isOpen());
+    // this has to be declared a var because file.read must take a ref
+    FwSizeType actualReadLen = expectedReadLen;
+
+    const FwSizeType capacity = this->m_sequenceBuffer.getBuffCapacity();
+
+    // if this fails, then you need to give the sequencer more buffer memory. pass in a bigger number
+    // to fpySeq.allocateBuffer(). This is usually done in topology setup CPP
+    if (expectedReadLen > capacity) {
+        this->log_WARNING_HI_InsufficientBufferSpace(static_cast<U64>(capacity), this->m_sequenceFilePath);
+        return Fw::Success::FAILURE;
+    }
+
+    Os::File::Status fileStatus = file.read(this->m_sequenceBuffer.getBuffAddr(), actualReadLen);
+
+    if (fileStatus != Os::File::OP_OK) {
+        this->log_WARNING_HI_FileReadError(readStage, this->m_sequenceFilePath, static_cast<I32>(fileStatus));
+        return Fw::Success::FAILURE;
+    }
+
+    if (actualReadLen < expectedReadLen) {
+        this->log_WARNING_HI_EndOfFileError(readStage, this->m_sequenceFilePath);
+        return Fw::Success::FAILURE;
+    }
+
+    // should probably fail if we read in MORE bytes than we ask for
+    FW_ASSERT(expectedReadLen == actualReadLen, static_cast<FwAssertArgType>(expectedReadLen),
+              static_cast<FwAssertArgType>(actualReadLen));
+
+    Fw::SerializeStatus serializeStatus =
+        this->m_sequenceBuffer.setBuffLen(static_cast<Fw::Serializable::SizeType>(expectedReadLen));
+    FW_ASSERT(serializeStatus == Fw::FW_SERIALIZE_OK, serializeStatus);
+
+    if (updateCrc) {
+        FpySequencer::updateCrc(this->m_computedCRC, this->m_sequenceBuffer.getBuffAddr(), expectedReadLen);
+    }
+
+    return Fw::Success::SUCCESS;
+}
+
+}  // namespace Svc
+```

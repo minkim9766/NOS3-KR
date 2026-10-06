@@ -3,16 +3,342 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/ut/detectors/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CcsdsTcFrameDetectorTestMain.cpp`
 
-file--CcsdsTcFrameDetectorTestMain.cpp
-file--FprimeFrameDetectorTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/ut/detectors/CcsdsTcFrameDetectorTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  CcsdsTcFrameDetectorTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for FrameAccumulator component test main function
+// ======================================================================
+
+#include "STest/Random/Random.hpp"
+#include "Svc/Ccsds/Types/TCHeaderSerializableAc.hpp"
+#include "Svc/Ccsds/Types/TCTrailerSerializableAc.hpp"
+#include "Svc/Ccsds/Utils/CRC16.hpp"
+#include "Svc/FrameAccumulator/FrameDetector/CcsdsTcFrameDetector.hpp"
+#include "Utils/Types/test/ut/CircularBuffer/CircularBufferTester.hpp"
+#include "gtest/gtest.h"
+
+using namespace Svc::Ccsds;
+
+constexpr U32 CIRCULAR_BUFFER_TEST_SIZE = 2048;
+constexpr U16 EXPECTED_START_TOKEN =
+    0x1 << TCSubfields::BypassFlagOffset | (ComCfg::FppConstant_SpacecraftId::SpacecraftId);
+
+// Test fixture to set up the detector under test and circular buffer
+class CcsdsFrameDetectorTest : public ::testing::Test {
+  protected:
+    void SetUp() override {
+        ::memset(this->m_buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+        this->circular_buffer = Types::CircularBuffer(this->m_buffer, CIRCULAR_BUFFER_TEST_SIZE);
+    }
+
+    U8 m_buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    Svc::FrameDetectors::CcsdsTcFrameDetector detector;
+    Types::CircularBuffer circular_buffer;
+};
+
+//! \brief Create an F´ frame and serialize it into the supplied circular buffer
+//! \param circular_buffer The circular buffer to serialize the frame into
+//! \note The frame is generated with random data of random size
+//! \return The size of the generated frame
+FwSizeType generate_random_tc_frame(Types::CircularBuffer& circular_buffer) {
+    // Generate random packet size (1-1024 bytes; because 0 would trigger undefined behavior warnings)
+    // U16 packet_size = static_cast<U16>(STest::Random::lowerUpper(1, 1024));
+    U16 packet_size = 10;
+
+    FwSizeType total_frame_size = packet_size + TCHeader::SERIALIZED_SIZE + TCTrailer::SERIALIZED_SIZE;
+
+    U8 packet_data[packet_size];
+    // Generate random packet_data of random size
+    for (FwSizeType i = 0; i < packet_size; i++) {
+        packet_data[i] = static_cast<U8>(STest::Random::lowerUpper(0, 255));
+    }
+    TCHeader tcHeader(EXPECTED_START_TOKEN,                               // Use a predefined token for flags and SC ID
+                      static_cast<U16>(total_frame_size - 1),             // Length (and unused VcId)
+                      static_cast<U8>(STest::Random::lowerUpper(0, 255))  // Random frame sequence number
+    );
+
+    U8 frame_header[TCHeader::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer header_ser_buffer(frame_header, TCHeader::SERIALIZED_SIZE);
+    tcHeader.serialize(header_ser_buffer);
+
+    // Serialize header and packet data into the circular buffer
+    circular_buffer.serialize(frame_header, TCHeader::SERIALIZED_SIZE);
+    circular_buffer.serialize(packet_data, packet_size);
+
+    U8 frame_trailer[TCTrailer::SERIALIZED_SIZE];
+    Fw::ExternalSerializeBuffer trailer_ser_buffer(frame_trailer, TCTrailer::SERIALIZED_SIZE);
+    TCTrailer tcTrailer;
+
+    // Calculate CRC on header + packet_data
+    Svc::Ccsds::Utils::CRC16 crc;
+    for (FwSizeType i = 0; i < static_cast<FwSizeType>(packet_size + TCHeader::SERIALIZED_SIZE); ++i) {
+        U8 byte = 0;
+        circular_buffer.peek(byte, i);
+        crc.update(byte);
+    }
+    tcTrailer.set_fecf(crc.finalize());
+    tcTrailer.serialize(trailer_ser_buffer);
+    // Serialize trailer into the circular buffer
+    circular_buffer.serialize(frame_trailer, TCTrailer::SERIALIZED_SIZE);
+    return total_frame_size;
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestBufferTooSmall) {
+    // Anything smaller than the size of header + trailer is invalid
+    U32 minimum_valid_size = TCHeader::SERIALIZED_SIZE + TCTrailer::SERIALIZED_SIZE;
+    U32 invalid_size = STest::Random::lowerUpper(1, minimum_valid_size - 1);
+    this->circular_buffer.serialize(this->m_buffer, invalid_size);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType size_out = 0;
+    status = this->detector.detect(circular_buffer, size_out);
+
+    // Expect that the detector reports that more data is needed
+    EXPECT_EQ(status, Svc::FrameDetector::Status::MORE_DATA_NEEDED);
+    EXPECT_EQ(size_out, minimum_valid_size);
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestFrameDetected) {
+    FwSizeType frame_size = generate_random_tc_frame(this->circular_buffer);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType size_out = 0;
+    status = this->detector.detect(circular_buffer, size_out);
+
+    EXPECT_EQ(status, Svc::FrameDetector::Status::FRAME_DETECTED);
+    EXPECT_EQ(size_out, frame_size);
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestManyFrameDetected) {
+    U32 MAX_ITERS = 1000;
+    for (U32 i = 0; i < MAX_ITERS; i++) {
+        FwSizeType frame_size = generate_random_tc_frame(this->circular_buffer);
+        Svc::FrameDetector::Status status;
+        FwSizeType size_out = 0;
+        status = this->detector.detect(this->circular_buffer, size_out);
+        EXPECT_EQ(status, Svc::FrameDetector::Status::FRAME_DETECTED);
+        EXPECT_EQ(size_out, frame_size);
+        this->circular_buffer.rotate(size_out);  // clear up used data
+    }
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestNoFrameDetected) {
+    (void)generate_random_tc_frame(this->circular_buffer);
+    // Remove 1 byte from the beginning of the frame, making it invalid
+    this->circular_buffer.rotate(1);
+    Svc::FrameDetector::Status status;
+    FwSizeType unused = 0;
+    status = this->detector.detect(this->circular_buffer, unused);
+    EXPECT_EQ(status, Svc::FrameDetector::Status::NO_FRAME_DETECTED);
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestMoreDataNeeded) {
+    (void)generate_random_tc_frame(this->circular_buffer);
+    // Remove 1 byte from the end of the frame to trigger "more data needed"
+    Types::CircularBufferTester::tester_m_allocated_size_decrement(this->circular_buffer);
+    Svc::FrameDetector::Status status;
+    FwSizeType unused = 0;
+    status = this->detector.detect(this->circular_buffer, unused);
+    EXPECT_EQ(status, Svc::FrameDetector::Status::MORE_DATA_NEEDED);
+}
+
+TEST_F(CcsdsFrameDetectorTest, TestCorruptedCrc) {
+    FwSizeType frame_size = generate_random_tc_frame(this->circular_buffer);
+    this->m_buffer[frame_size - 2] = 0xFF;  // Corrupt the last 2 bytes to fail CRC check
+    this->m_buffer[frame_size - 1] = 0xFF;  // Corrupt the last 2 bytes to fail CRC check
+
+    Svc::FrameDetector::Status status;
+    FwSizeType unused = 0;
+    status = this->detector.detect(this->circular_buffer, unused);
+    EXPECT_EQ(status, Svc::FrameDetector::Status::NO_FRAME_DETECTED);
+}
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `FprimeFrameDetectorTestMain.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/ut/detectors/CcsdsTcFrameDetectorTestMain.cpp`](file--CcsdsTcFrameDetectorTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/ut/detectors/FprimeFrameDetectorTestMain.cpp`](file--FprimeFrameDetectorTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FrameAccumulator/test/ut/detectors/FprimeFrameDetectorTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeFrameDetectorTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for FrameAccumulator component test main function
+// ======================================================================
+
+#include "STest/Random/Random.hpp"
+#include "Svc/FrameAccumulator/FrameDetector/FprimeFrameDetector.hpp"
+#include "Utils/Hash/Hash.hpp"
+#include "Utils/Types/test/ut/CircularBuffer/CircularBufferTester.hpp"
+#include "gtest/gtest.h"
+
+constexpr U32 CIRCULAR_BUFFER_TEST_SIZE = 2048;
+
+//! \brief Create an F´ frame and serialize it into the supplied circular buffer
+//! \param circular_buffer The circular buffer to serialize the frame into
+//! \note The frame is generated with random data of random size
+//! \return The size of the generated frame
+FwSizeType generate_random_fprime_frame(Types::CircularBuffer& circular_buffer) {
+    constexpr FwSizeType FRAME_HEADER_SIZE = 8;
+    constexpr FwSizeType FRAME_FOOTER_SIZE = 4;
+    // Generate random packet size (1-1024 bytes; because 0 would trigger undefined behavior warnings)
+    // 1024 is max length as per FrameAccumulator/FrameDetector/FprimeFrameDetector @ LengthToken::MaximumLength
+    U32 packet_size = STest::Random::lowerUpper(1, 1024);
+
+    U8 packet_data[packet_size];
+    // Generate random packet_data of random size
+    for (FwSizeType i = 0; i < packet_size; i++) {
+        packet_data[i] = static_cast<U8>(STest::Random::lowerUpper(0, 255));
+    }
+    // Frame header                      |  Start Word 4 bytes  |   Length (4 bytes)   |
+    U8 frame_header[FRAME_HEADER_SIZE] = {0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x00, 0x00, 0x00};
+    // Serialize actual packet size into header
+    for (FwSizeType i = 0; i < 4; i++) {
+        frame_header[i + 4] = static_cast<U8>(packet_size >> (8 * (3 - i)));
+    }
+
+    // Calculate CRC on header + packet_data
+    Utils::Hash crc_calculator;
+    Utils::HashBuffer crc_result;
+    crc_calculator.update(frame_header, FRAME_HEADER_SIZE);
+    crc_calculator.update(packet_data, packet_size);
+    crc_calculator.final(crc_result);
+    // printf("crc: %08X\n", crc);
+
+    // Concatenate all packet_data to create the full frame (byte array)
+    FwSizeType fprime_frame_size = FRAME_HEADER_SIZE + packet_size + FRAME_FOOTER_SIZE;
+    U8 fprime_frame[fprime_frame_size];
+    // Copy header, packet_data, and CRC into the full frame
+    for (FwSizeType i = 0; i < static_cast<FwSizeType>(FRAME_HEADER_SIZE); i++) {
+        fprime_frame[i] = frame_header[i];
+    }
+    for (FwSizeType i = 0; i < static_cast<FwSizeType>(packet_size); i++) {
+        fprime_frame[i + FRAME_HEADER_SIZE] = packet_data[i];
+    }
+    for (FwSizeType i = 0; i < static_cast<FwSizeType>(FRAME_FOOTER_SIZE); i++) {
+        // crc is a U32; unpack into 4 bytes (shift by 24->-16->8->0 bits, mask with 0xFF)
+        fprime_frame[i + FRAME_HEADER_SIZE + static_cast<FwSizeType>(packet_size)] =
+            static_cast<U8>((crc_result.asBigEndianU32() >> (8 * (3 - i))) & 0xFF);
+    }
+    // Serialize frame into circular buffer
+    circular_buffer.serialize(fprime_frame, fprime_frame_size);
+
+    // Uncomment for debugging
+    // printf("Serialized %llu bytes:\n", fprime_frame_size);
+    // for (FwSizeType i = 0; i < static_cast<FwSizeType>(fprime_frame_size); i++) {
+    //     printf("%02X ", fprime_frame[i]);
+    // }
+    return fprime_frame_size;
+}
+
+TEST(FprimeFrameDetector, TestBufferTooSmall) {
+    Svc::FrameDetectors::FprimeFrameDetector fprime_detector;
+    U8 buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    ::memset(buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+    Types::CircularBuffer circular_buffer(buffer, CIRCULAR_BUFFER_TEST_SIZE);
+
+    // Anything smaller than the size of header + trailer is invalid
+    U32 minimum_valid_size =
+        Svc::FprimeProtocol::FrameHeader::SERIALIZED_SIZE + Svc::FprimeProtocol::FrameTrailer::SERIALIZED_SIZE;
+    U32 invalid_size = STest::Random::lowerUpper(1, minimum_valid_size - 1);
+    // Set the circular buffer to hold data of invalid size
+    circular_buffer.serialize(buffer, invalid_size);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType size_out = 0;
+    status = fprime_detector.detect(circular_buffer, size_out);
+
+    // Expect that the detector reports that more data is needed
+    EXPECT_EQ(status, Svc::FrameDetector::Status::MORE_DATA_NEEDED);
+    EXPECT_EQ(size_out, minimum_valid_size);
+}
+
+TEST(FprimeFrameDetector, TestFrameDetected) {
+    Svc::FrameDetectors::FprimeFrameDetector fprime_detector;
+    U8 buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    ::memset(buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+    Types::CircularBuffer circular_buffer(buffer, CIRCULAR_BUFFER_TEST_SIZE);
+
+    FwSizeType frame_size = generate_random_fprime_frame(circular_buffer);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType size_out = 0;
+    status = fprime_detector.detect(circular_buffer, size_out);
+
+    EXPECT_EQ(status, Svc::FrameDetector::Status::FRAME_DETECTED);
+    EXPECT_EQ(size_out, frame_size);
+}
+
+TEST(FprimeFrameDetector, TestManyFrameDetected) {
+    U32 MAX_ITERS = 1000;
+    Svc::FrameDetectors::FprimeFrameDetector fprime_detector;
+    U8 buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    ::memset(buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+    Types::CircularBuffer circular_buffer(buffer, CIRCULAR_BUFFER_TEST_SIZE);
+
+    for (U32 i = 0; i < MAX_ITERS; i++) {
+        FwSizeType frame_size = generate_random_fprime_frame(circular_buffer);
+        Svc::FrameDetector::Status status;
+        FwSizeType size_out = 0;
+        status = fprime_detector.detect(circular_buffer, size_out);
+
+        EXPECT_EQ(status, Svc::FrameDetector::Status::FRAME_DETECTED);
+        EXPECT_EQ(size_out, frame_size);
+        circular_buffer.rotate(size_out);  // clear up used data
+    }
+}
+
+TEST(FprimeFrameDetector, TestNoFrameDetected) {
+    Svc::FrameDetectors::FprimeFrameDetector fprime_detector;
+    U8 buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    ::memset(buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+    Types::CircularBuffer circular_buffer(buffer, CIRCULAR_BUFFER_TEST_SIZE);
+
+    (void)generate_random_fprime_frame(circular_buffer);
+    // Remove 1 byte from the beginning of the frame, making it invalid
+    circular_buffer.rotate(1);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType unused = 0;
+    status = fprime_detector.detect(circular_buffer, unused);
+
+    EXPECT_EQ(status, Svc::FrameDetector::Status::NO_FRAME_DETECTED);
+}
+
+TEST(FprimeFrameDetector, TestMoreDataNeeded) {
+    Svc::FrameDetectors::FprimeFrameDetector fprime_detector;
+    U8 buffer[CIRCULAR_BUFFER_TEST_SIZE];
+    ::memset(buffer, 0, CIRCULAR_BUFFER_TEST_SIZE);
+    Types::CircularBuffer circular_buffer(buffer, CIRCULAR_BUFFER_TEST_SIZE);
+
+    (void)generate_random_fprime_frame(circular_buffer);
+    // Remove 1 byte from the end of the frame to trigger "more data needed"
+    Types::CircularBufferTester::tester_m_allocated_size_decrement(circular_buffer);
+
+    Svc::FrameDetector::Status status;
+    FwSizeType unused = 0;
+    status = fprime_detector.detect(circular_buffer, unused);
+
+    EXPECT_EQ(status, Svc::FrameDetector::Status::MORE_DATA_NEEDED);
+}
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

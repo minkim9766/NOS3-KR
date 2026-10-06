@@ -3,16 +3,16 @@
 
 **경로:** `sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `single_simulator.cpp.o`
 
-file--single_simulator.cpp.o
-file--single_simulator.cpp.o.d
-```
+**경로:** `sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/src/single_simulator.cpp.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/src/single_simulator.cpp.o`](file--single_simulator.cpp.o) — 빌드 산출물 (경로만)
-- [`sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/src/single_simulator.cpp.o.d`](file--single_simulator.cpp.o.d) — 빌드 산출물 (경로만)
+### `single_simulator.cpp.o.d`
+
+**경로:** `sims/build/sim_common/CMakeFiles/nos3-single-simulator.dir/src/single_simulator.cpp.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

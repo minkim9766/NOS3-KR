@@ -3,18 +3,157 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `services-table.component.css`
 
-file--services-table.component.css
-file--services-table.component.html
-file--services-table.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.css`
+
+
+```css
+tr.item-detail:not(.expanded) {
+  display: none;
+}
 ```
 
-## 항목
+### `services-table.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.css`](file--services-table.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.html`](file--services-table.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.ts`](file--services-table.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.html`
+
+
+```html
+<table
+  mat-table
+  [dataSource]="dataSource"
+  class="ya-data-table expand"
+  matSort
+  matSortActive="name"
+  matSortDirection="asc"
+  matSortDisableClear
+  multiTemplateDataRows>
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
+    <td mat-cell *matCellDef="let service">{{ service.name }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="className">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Class</th>
+    <td mat-cell *matCellDef="let service">{{ service.className }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="state">
+    <th mat-header-cell *matHeaderCellDef class="status"></th>
+    <td mat-cell *matCellDef="let service" class="status">
+      <app-service-state [service]="service" />
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="failureMessage">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Failure</th>
+    <td mat-cell *matCellDef="let service">
+      {{ service.failureMessage || "-" }}
+      @if (service.failureCause) {
+        @if (service.expanded) {
+          <ya-icon-action icon="expand_less" (click)="service.expanded = false" />
+        } @else {
+          <ya-icon-action icon="expand_more" (click)="service.expanded = true" />
+        }
+      }
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="detail">
+    <td mat-cell *matCellDef="let service" [attr.colspan]="displayedColumns.length">
+      <pre>{{ service.failureCause || "-" }}</pre>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef class="expand"></th>
+    <td mat-cell *matCellDef="let service">
+      @if (!readonly) {
+        <ya-more>
+          <button
+            mat-menu-item
+            (click)="startService.emit(service.name)"
+            [disabled]="service.state !== 'TERMINATED' && service.state !== 'NEW'">
+            Start service
+          </button>
+          <button
+            mat-menu-item
+            (click)="stopService.emit(service.name)"
+            [disabled]="service.state !== 'RUNNING'">
+            Stop service
+          </button>
+        </ya-more>
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  <tr
+    mat-row
+    *matRowDef="let row; columns: ['detail']"
+    class="item-detail"
+    [class.expanded]="row.expanded"
+    (click)="row.expanded = !row.expanded"></tr>
+</table>
+```
+
+### `services-table.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/services-table/services-table.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Service, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { ServiceStateComponent } from '../service-state/service-state.component';
+
+@Component({
+  selector: 'app-services-table',
+  templateUrl: './services-table.component.html',
+  styleUrl: './services-table.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [ServiceStateComponent, WebappSdkModule],
+})
+export class ServicesTableComponent implements AfterViewInit {
+  @ViewChild(MatSort, { static: true })
+  sort: MatSort;
+
+  displayedColumns = [
+    'state',
+    'name',
+    'className',
+    'failureMessage',
+    'actions',
+  ];
+
+  @Input()
+  dataSource = new MatTableDataSource<Service>();
+
+  @Input()
+  readonly = false;
+
+  @Output()
+  startService = new EventEmitter<string>();
+
+  @Output()
+  stopService = new EventEmitter<string>();
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+}
+```

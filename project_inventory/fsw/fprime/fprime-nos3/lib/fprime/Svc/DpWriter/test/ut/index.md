@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,22 +11,1080 @@
 Rules/index
 Scenarios/index
 TestState/index
-file--AbstractState.cpp
-file--AbstractState.hpp
-file--DpWriterTester.cpp
-file--DpWriterTester.hpp
-file--DpWriterTestMain.cpp
-file--README.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Rules/`](Rules/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/Scenarios/`](Scenarios/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/TestState/`](TestState/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/AbstractState.cpp`](file--AbstractState.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/AbstractState.hpp`](file--AbstractState.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTester.cpp`](file--DpWriterTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTester.hpp`](file--DpWriterTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTestMain.cpp`](file--DpWriterTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함
+### `AbstractState.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/AbstractState.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  AbstractState.cpp
+// \author Rob Bocchino
+// \brief  Implementation file for abstract state
+//
+// \copyright
+// Copyright (C) 2024 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government sponsorship
+// acknowledged.
+// ======================================================================
+
+#include <limits>
+
+#include "Fw/Types/Assert.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Svc/DpWriter/test/ut/AbstractState.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Public member functions
+// ----------------------------------------------------------------------
+
+//! Get a data product buffer backed by m_bufferData
+//! \return The buffer
+Fw::Buffer AbstractState::getDpBuffer() {
+    // Generate the ID
+    const FwDpIdType id = static_cast<FwDpIdType>(STest::Pick::lowerUpper(
+        std::numeric_limits<FwDpIdType>::min(), static_cast<U32>(std::numeric_limits<FwDpIdType>::max())));
+    // Get the data size
+    const FwSizeType dataSize = this->getDataSize();
+    const FwSizeType bufferSize = Fw::DpContainer::getPacketSizeForDataSize(dataSize);
+    FW_ASSERT(bufferSize <= MAX_BUFFER_SIZE, static_cast<FwAssertArgType>(bufferSize),
+              static_cast<FwAssertArgType>(MAX_BUFFER_SIZE));
+    // Create the buffer
+    Fw::Buffer buffer(this->m_bufferData, static_cast<Fw::Buffer::SizeType>(bufferSize));
+    // Create the container
+    Fw::DpContainer container(id, buffer);
+    // Update the priority
+    const FwDpPriorityType priority = STest::Pick::lowerUpper(std::numeric_limits<FwDpPriorityType>::min(),
+                                                              std::numeric_limits<FwDpPriorityType>::max());
+    container.setPriority(priority);
+    // Update the time tag
+    const U32 seconds = STest::Pick::any();
+    const U32 microseconds = STest::Pick::startLength(0, 1000000);
+    container.setTimeTag(Fw::Time(seconds, microseconds));
+    // Update the processing types
+    Fw::DpCfg::ProcType::SerialType procTypes = 0;
+    for (FwIndexType i = 0; i < Fw::DpCfg::ProcType::NUM_CONSTANTS; i++) {
+        const bool selector = static_cast<bool>(STest::Pick::lowerUpper(0, 1));
+        if (selector) {
+            procTypes = static_cast<Fw::DpCfg::ProcType::SerialType>(procTypes | (1 << i));
+        }
+    }
+    container.setProcTypes(procTypes);
+    // Update the data size
+    container.setDataSize(dataSize);
+    // Serialize the header and update the header hash
+    container.serializeHeader();
+    // Randomize the data
+    U8* const dataPtr = &this->m_bufferData[Fw::DpContainer::DATA_OFFSET];
+    const FwSizeType dataUpperBound = Fw::DpContainer::DATA_OFFSET + dataSize;
+    FW_ASSERT(dataUpperBound <= bufferSize, static_cast<FwAssertArgType>(dataUpperBound),
+              static_cast<FwAssertArgType>(bufferSize));
+    for (FwSizeType i = 0; i <= dataSize; i++) {
+        dataPtr[i] = static_cast<U8>(STest::Pick::any());
+    }
+    // Update the data hash
+    container.updateDataHash();
+    // Return the buffer
+    return buffer;
+}
+
+}  // namespace Svc
+```
+
+### `AbstractState.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/AbstractState.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  AbstractState.hpp
+// \author Rob Bocchino
+// \brief  Header file for abstract state
+//
+// \copyright
+// Copyright (C) 2024 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef Svc_AbstractState_HPP
+#define Svc_AbstractState_HPP
+
+#include <cstring>
+
+#include "Fw/Types/Assert.hpp"
+#include "Os/File.hpp"
+#include "STest/Pick/Pick.hpp"
+#include "Svc/DpWriter/DpWriter.hpp"
+#include "TestUtils/OnChangeChannel.hpp"
+#include "TestUtils/Option.hpp"
+
+namespace Svc {
+
+class AbstractState {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    //! The minimum data size
+    static constexpr FwSizeType MIN_DATA_SIZE = 0;
+
+    //! The maximum data size
+    static constexpr FwSizeType MAX_DATA_SIZE = 1024;
+
+    //! The maximum buffer size
+    static constexpr FwSizeType MAX_BUFFER_SIZE = Fw::DpContainer::getPacketSizeForDataSize(MAX_DATA_SIZE);
+
+  public:
+    // ----------------------------------------------------------------------
+    // Constructors
+    // ----------------------------------------------------------------------
+
+    //! Construct an AbstractState object
+    AbstractState()
+        : m_dataSizeOpt(),
+          m_NumBuffersReceived(0),
+          m_NumBytesWritten(0),
+          m_NumFailedWrites(0),
+          m_NumSuccessfulWrites(0),
+          m_NumErrors(0),
+          m_procTypes(0) {}
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Get the data size
+    FwSizeType getDataSize() const {
+        return this->m_dataSizeOpt.getOrElse(STest::Pick::lowerUpper(MIN_DATA_SIZE, MAX_DATA_SIZE));
+    }
+
+    //! Set the data size
+    void setDataSize(FwSizeType dataSize) { this->m_dataSizeOpt.set(dataSize); }
+
+    //! Get a data product buffer backed by bufferData
+    //! \return The buffer
+    Fw::Buffer getDpBuffer();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private state variables
+    // ----------------------------------------------------------------------
+
+    //! The current buffer size
+    TestUtils::Option<FwSizeType> m_dataSizeOpt;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public state variables
+    // ----------------------------------------------------------------------
+
+    //! The number of buffers received
+    TestUtils::OnChangeChannel<U32> m_NumBuffersReceived;
+
+    //! The number of bytes written
+    TestUtils::OnChangeChannel<U64> m_NumBytesWritten;
+
+    //! The number of failed writes
+    TestUtils::OnChangeChannel<U32> m_NumFailedWrites;
+
+    //! The number of successful writes
+    TestUtils::OnChangeChannel<U32> m_NumSuccessfulWrites;
+
+    //! The number of errors
+    TestUtils::OnChangeChannel<U32> m_NumErrors;
+
+    //! The number of BufferTooSmallForData events since the last throttle clear
+    FwSizeType m_bufferTooSmallForDataEventCount = 0;
+
+    //! The number of BufferTooSmallForPacket events since the last throttle clear
+    FwSizeType m_bufferTooSmallForPacketEventCount = 0;
+
+    //! The number of buffer invalid events since the last throttle clear
+    FwSizeType m_invalidBufferEventCount = 0;
+
+    //! The number of file open error events since the last throttle clear
+    FwSizeType m_fileOpenErrorEventCount = 0;
+
+    //! The number of file write error events since the last throttle clear
+    FwSizeType m_fileWriteErrorEventCount = 0;
+
+    //! The number of invalid header hash events since the last throttle clear
+    FwSizeType m_invalidHeaderHashEventCount = 0;
+
+    //! The number of invalid header events since the last throttle clear
+    FwSizeType m_invalidHeaderEventCount = 0;
+
+    //! Data for buffers
+    U8 m_bufferData[MAX_BUFFER_SIZE] = {};
+
+    //! Data for write results
+    U8 m_writeResultData[MAX_BUFFER_SIZE] = {};
+
+    //! Bit mask for processing out port calls
+    Fw::DpCfg::ProcType::SerialType m_procTypes;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `DpWriterTester.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriterTester.cpp
+// \author bocchino
+// \brief  cpp file for DpWriter component test harness implementation class
+// ======================================================================
+
+#include "DpWriterTester.hpp"
+#include "Os/Stub/test/File.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+DpWriterTester ::DpWriterTester()
+    : DpWriterGTestBase("DpWriterTester", DpWriterTester::MAX_HISTORY_SIZE), component("DpWriter") {
+    this->initComponents();
+    this->connectPorts();
+    Os::Stub::File::Test::StaticData::data.setNextStatus(Os::File::OP_OK);
+    Os::Stub::File::Test::StaticData::data.writeResult = this->abstractState.m_writeResultData;
+    Os::Stub::File::Test::StaticData::data.writeResultSize = sizeof(this->abstractState.m_writeResultData);
+    Os::Stub::File::Test::StaticData::data.pointer = 0;
+}
+
+DpWriterTester ::~DpWriterTester() {}
+
+// ----------------------------------------------------------------------
+// Handlers for typed from ports
+// ----------------------------------------------------------------------
+
+void DpWriterTester::from_procBufferSendOut_handler(FwIndexType portNum, Fw::Buffer& buffer) {
+    this->pushFromPortEntry_procBufferSendOut(buffer);
+    this->abstractState.m_procTypes =
+        static_cast<Fw::DpCfg::ProcType::SerialType>(this->abstractState.m_procTypes | (1 << portNum));
+}
+
+// ----------------------------------------------------------------------
+// Public member functions
+// ----------------------------------------------------------------------
+
+void DpWriterTester::printEvents() {
+    this->printTextLogHistory(stdout);
+}
+
+// ----------------------------------------------------------------------
+// Protected helper functions
+// ----------------------------------------------------------------------
+
+Os::File::Status DpWriterTester::pickOsFileError() {
+    U32 u32Status = STest::Pick::lowerUpper(Os::File::OP_OK + 1, Os::File::MAX_STATUS - 1);
+    return static_cast<Os::File::Status>(u32Status);
+}
+
+#define TESTER_CHECK_CHANNEL(NAME)                                           \
+    {                                                                        \
+        const auto changeStatus = this->abstractState.m_##NAME.updatePrev(); \
+        if (changeStatus == TestUtils::OnChangeStatus::CHANGED) {            \
+            ASSERT_TLM_##NAME##_SIZE(1);                                     \
+            ASSERT_TLM_##NAME(0, this->abstractState.m_##NAME.value);        \
+        } else {                                                             \
+            ASSERT_TLM_##NAME##_SIZE(0);                                     \
+        }                                                                    \
+    }
+
+void DpWriterTester::constructDpFileName(FwDpIdType id, const Fw::Time& timeTag, Fw::StringBase& fileName) {
+    fileName.format(DP_FILENAME_FORMAT, this->component.m_dpFileNamePrefix.toChar(), id, timeTag.getSeconds(),
+                    timeTag.getUSeconds());
+}
+
+void DpWriterTester::checkProcTypes(const Fw::DpContainer& container) {
+    U32 expectedNumProcTypes = 0;
+    const Fw::DpCfg::ProcType::SerialType procTypes = container.getProcTypes();
+    for (FwIndexType i = 0; i < Fw::DpCfg::ProcType::NUM_CONSTANTS; i++) {
+        if (procTypes & (1 << i)) {
+            ++expectedNumProcTypes;
+        }
+    }
+    ASSERT_from_procBufferSendOut_SIZE(expectedNumProcTypes);
+    ASSERT_EQ(container.getProcTypes(), this->abstractState.m_procTypes);
+}
+
+void DpWriterTester::checkTelemetry() {
+    TESTER_CHECK_CHANNEL(NumBuffersReceived);
+    TESTER_CHECK_CHANNEL(NumBytesWritten);
+    TESTER_CHECK_CHANNEL(NumSuccessfulWrites);
+    TESTER_CHECK_CHANNEL(NumFailedWrites);
+    TESTER_CHECK_CHANNEL(NumErrors);
+}
+
+void DpWriterTester::doDispatch() {
+    this->component.doDispatch();
+}
+
+FwIndexType DpWriterTester::getBufferTooSmallForDataThrottleCount() {
+    return this->component.DpWriterComponentBase::m_BufferTooSmallForDataThrottle;
+}
+
+FwIndexType DpWriterTester::getBufferTooSmallForPacketThrottleCount() {
+    return this->component.DpWriterComponentBase::m_BufferTooSmallForPacketThrottle;
+}
+
+FwIndexType DpWriterTester::getFileOpenErrorThrottleCount() {
+    return this->component.DpWriterComponentBase::m_FileOpenErrorThrottle;
+}
+
+FwIndexType DpWriterTester::getFileWriteErrorThrottleCount() {
+    return this->component.DpWriterComponentBase::m_FileWriteErrorThrottle;
+}
+
+FwIndexType DpWriterTester::getInvalidBufferThrottleCount() {
+    return this->component.DpWriterComponentBase::m_InvalidBufferThrottle;
+}
+
+FwIndexType DpWriterTester::getInvalidHeaderHashThrottleCount() {
+    return this->component.DpWriterComponentBase::m_InvalidHeaderHashThrottle;
+}
+
+FwIndexType DpWriterTester::getInvalidHeaderThrottleCount() {
+    return this->component.DpWriterComponentBase::m_InvalidHeaderThrottle;
+}
+
+}  // namespace Svc
+```
+
+### `DpWriterTester.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriterTester.hpp
+// \author bocchino
+// \brief  hpp file for DpWriter component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_DpWriterTester_HPP
+#define Svc_DpWriterTester_HPP
+
+#include "Svc/DpWriter/DpWriter.hpp"
+#include "Svc/DpWriter/DpWriterGTestBase.hpp"
+#include "Svc/DpWriter/test/ut/AbstractState.hpp"
+
+namespace Svc {
+
+class DpWriterTester : public DpWriterGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const U32 MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+    // Queue depth supplied to the component instance under test
+    static const FwSizeType TEST_INSTANCE_QUEUE_DEPTH = 10;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object DpWriterTester
+    DpWriterTester();
+
+    //! Destroy object DpWriterTester
+    ~DpWriterTester();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handlers for typed from ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for procBufferSendOut
+    void from_procBufferSendOut_handler(FwIndexType portNum,  //!< The port number
+                                        Fw::Buffer& fwBuffer  //!< The buffer
+                                        ) final;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Public member functions
+    // ----------------------------------------------------------------------
+
+    //! Print events
+    void printEvents();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Protected helper functions
+    // ----------------------------------------------------------------------
+
+    //! Pick an Os status other than OP_OK
+    //! \return The status
+    static Os::File::Status pickOsFileError();
+
+    //! Construct a DP file name
+    void constructDpFileName(FwDpIdType id,            //!< The container ID (input)
+                             const Fw::Time& timeTag,  //!< The time tag (input)
+                             Fw::StringBase& fileName  //!< The file name (output)
+    );
+
+    //! Check processing types
+    void checkProcTypes(const Fw::DpContainer& container  //!< The container
+    );
+
+    //! Check telemetry
+    void checkTelemetry();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Private helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The abstract state for testing
+    AbstractState abstractState;
+
+    //! The component under test
+    DpWriter component;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Accessor methods for protected/private members
+    // ----------------------------------------------------------------------
+
+    //! Dispatch a message
+    void doDispatch();
+
+    //! Get the EVENTID_INVALIDBUFFER_THROTTLE value
+    static FwSizeType getInvalidBufferThrottle() { return DpWriterComponentBase::EVENTID_INVALIDBUFFER_THROTTLE; }
+
+    //! Get the EVENTID_BUFFERTOOSMALLFORPACKET_THROTTLE value
+    static FwSizeType getBufferTooSmallForPacketThrottle() {
+        return DpWriterComponentBase::EVENTID_BUFFERTOOSMALLFORPACKET_THROTTLE;
+    }
+
+    //! Get the EVENTID_INVALIDHEADERHASH_THROTTLE value
+    static FwSizeType getInvalidHeaderHashThrottle() {
+        return DpWriterComponentBase::EVENTID_INVALIDHEADERHASH_THROTTLE;
+    }
+
+    //! Get the EVENTID_INVALIDHEADER_THROTTLE value
+    static FwSizeType getInvalidHeaderThrottle() { return DpWriterComponentBase::EVENTID_INVALIDHEADER_THROTTLE; }
+
+    //! Get the EVENTID_FILEOPENERROR_THROTTLE value
+    static FwSizeType getFileOpenErrorThrottle() { return DpWriterComponentBase::EVENTID_FILEOPENERROR_THROTTLE; }
+
+    //! Get the EVENTID_FILEWRITEERROR_THROTTLE value
+    static FwSizeType getFileWriteErrorThrottle() { return DpWriterComponentBase::EVENTID_FILEWRITEERROR_THROTTLE; }
+
+    //! Get the OPCODE_CLEAR_EVENT_THROTTLE value
+    static FwOpcodeType getOpCodeClearEventThrottle() { return DpWriterComponentBase::OPCODE_CLEAR_EVENT_THROTTLE; }
+
+    //! Get the m_BufferTooSmallForDataThrottle value
+    FwIndexType getBufferTooSmallForDataThrottleCount();
+
+    //! Get the m_BufferTooSmallForPacketThrottle value
+    FwIndexType getBufferTooSmallForPacketThrottleCount();
+
+    //! Get the m_FileOpenErrorThrottle value
+    FwIndexType getFileOpenErrorThrottleCount();
+
+    //! Get the m_FileWriteErrorThrottle value
+    FwIndexType getFileWriteErrorThrottleCount();
+
+    //! Get the m_InvalidBufferThrottle value
+    FwIndexType getInvalidBufferThrottleCount();
+
+    //! Get the m_InvalidHeaderHashThrottle value
+    FwIndexType getInvalidHeaderHashThrottleCount();
+
+    //! Get the m_InvalidHeaderThrottle value
+    FwIndexType getInvalidHeaderThrottleCount();
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `DpWriterTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/DpWriterTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  DpWriterTestMain.cpp
+// \author bocchino
+// \brief  cpp file for DpWriter component test main function
+// ======================================================================
+
+#include "Fw/Test/UnitTest.hpp"
+#include "STest/Random/Random.hpp"
+#include "Svc/DpWriter/test/ut/Rules/Testers.hpp"
+#include "Svc/DpWriter/test/ut/Scenarios/Random.hpp"
+
+namespace Svc {
+
+TEST(BufferSendIn, BufferTooSmallForData) {
+    COMMENT("Invoke bufferSendIn with a buffer that is too small to hold the data size specified in the header.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.BufferTooSmallForData();
+}
+
+TEST(BufferSendIn, BufferTooSmallForPacket) {
+    COMMENT("Invoke bufferSendIn with a buffer that is too small to hold a data product packet.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.BufferTooSmallForPacket();
+}
+
+TEST(BufferSendIn, FileOpenError) {
+    COMMENT("Invoke bufferSendIn with a file open error.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.FileOpenError();
+}
+
+TEST(BufferSendIn, FileWriteError) {
+    COMMENT("Invoke bufferSendIn with a file write error.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.FileWriteError();
+}
+
+TEST(BufferSendIn, InvalidBuffer) {
+    COMMENT("Invoke bufferSendIn with an invalid buffer.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.InvalidBuffer();
+}
+
+TEST(BufferSendIn, InvalidHeader) {
+    COMMENT("Invoke bufferSendIn with an invalid packet header.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.InvalidHeader();
+}
+
+TEST(BufferSendIn, InvalidHeaderHash) {
+    COMMENT("Invoke bufferSendIn with a buffer that has an invalid header hash.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    BufferSendIn::Tester tester;
+    tester.InvalidHeaderHash();
+}
+
+TEST(BufferSendIn, OK) {
+    COMMENT("Invoke bufferSendIn with nominal input.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    REQUIREMENT("SVC-DPMANAGER-002");
+    REQUIREMENT("SVC-DPMANAGER-003");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    REQUIREMENT("SVC-DPMANAGER-005");
+    BufferSendIn::Tester tester;
+    tester.OK();
+}
+
+TEST(CLEAR_EVENT_THROTTLE, OK) {
+    COMMENT("Test the CLEAR_EVENT_THROTTLE command.");
+    REQUIREMENT("SVC-DPMANAGER-006");
+    CLEAR_EVENT_THROTTLE::Tester tester;
+    tester.OK();
+}
+
+TEST(FileOpenStatus, Error) {
+    COMMENT("Set the file open status to an error value.");
+    FileOpenStatus::Tester tester;
+    tester.Error();
+}
+
+TEST(FileOpenStatus, OK) {
+    COMMENT("Set the file open status to OP_OK.");
+    FileOpenStatus::Tester tester;
+    tester.OK();
+}
+
+TEST(FileWriteStatus, Error) {
+    COMMENT("Set the file write status to an error value.");
+    FileWriteStatus::Tester tester;
+    tester.Error();
+}
+
+TEST(FileWriteStatus, OK) {
+    COMMENT("Set the file write status to OP_OK.");
+    FileWriteStatus::Tester tester;
+    tester.OK();
+}
+
+TEST(Scenarios, Random) {
+    COMMENT("Random scenario with all rules.");
+    REQUIREMENT("SVC-DPMANAGER-001");
+    REQUIREMENT("SVC-DPMANAGER-002");
+    REQUIREMENT("SVC-DPMANAGER-003");
+    REQUIREMENT("SVC-DPMANAGER-004");
+    REQUIREMENT("SVC-DPMANAGER-005");
+    REQUIREMENT("SVC-DPMANAGER-006");
+    const FwSizeType numSteps = 10000;
+    Scenarios::Random::Tester tester;
+    tester.run(numSteps);
+}
+
+TEST(SchedIn, OK) {
+    COMMENT("Invoke schedIn with nominal input.");
+    REQUIREMENT("SVC-DPMANAGER-006");
+    SchedIn::Tester tester;
+    tester.OK();
+}
+
+}  // namespace Svc
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    STest::Random::seed();
+    return RUN_ALL_TESTS();
+}
+```
+
+### `README.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/DpWriter/test/ut/README.md`
+
+
+```markdown
+# DpWriter Component Tests
+
+## 1. Abstract State
+
+### 1.1. Variables
+
+| Variable | Type | Description | Initial Value |
+|----------|------|-------------|---------------|
+| `m_NumBuffersReceived` | `OnChangeChannel<U32>` | The number of buffers received | 0 |
+| `m_NumBytesWritten` | `OnChangeChannel<U64>` | The number of bytes written | 0 |
+| `m_NumErrors` | `OnChangeChannel<U32>` | The number of errors | 0 |
+| `m_NumFailedWrites` | `OnChangeChannel<U32>` | The number of failed writes | 0 |
+| `m_NumSuccessfulWrites` | `OnChangeChannel<U32>` | The number of successful writes | 0 |
+| `m_bufferTooSmallForDataEventCount` | `FwSizeType` | The number of `BufferTooSmallForData` events since the last throttle clear |0 |
+| `m_bufferTooSmallForPacketEventCount` | `FwSizeType` | The number of `BufferTooSmallForPacket` events since the last throttle clear |0 |
+| `m_fileOpenErrorEventCount` | `FwSizeType` | The number of file open error events since the last throttle clear |0 |
+| `m_fileWriteErrorEventCount` | `FwSizeType` | The number of file write error events since the last throttle clear |0 |
+| `m_invalidBufferEventCount` | `FwSizeType` | The number of buffer invalid events since the last throttle clear |0 |
+| `m_invalidHeaderEventCount` | `FwSizeType` | The number of invalid packet descriptor events since the last throttle clear |0 |
+| `m_invalidHeaderHashEventCount` | `FwSizeType` | The number of invalid header hash events since the last throttle clear |0 |
+
+## 2. Rule Groups
+
+### 2.1. FileOpenStatus
+
+This rule group manages the file open status in the test harness.
+
+#### 2.1.1. OK
+
+This rule sets the file open status to `Os::File::OP_OK`, simulating a system state
+in which a file open call succeeds.
+
+**Precondition:**
+`Os::Stub::File::Test::StaticData::data.openStatus != Os::File::OP_OK`.
+
+**Action:**
+`Os::Stub::File::Test::StaticData::data.openStatus = Os::File::OP_OK`.
+
+**Test:**
+
+1. Apply rule `FileOpenStatus::Error`.
+1. Apply rule `FileOpenStatus::OK`.
+
+**Requirements tested:**
+None (helper rule).
+
+#### 2.1.2. Error
+
+This rule sets the file open status to an error value, simulating a system state
+in which a file open call fails.
+
+**Precondition:**
+`Os::Stub::File::Test::StaticData::data.openStatus == Os::File::OP_OK`.
+
+**Action:**
+Set `Os::Stub::File::Test::StaticData::data.openStatus` to a random
+value other than `Os::File::OP_OK`.
+
+**Test:**
+
+1. Apply rule `FileOpenStatus::Error`.
+
+**Requirements tested:**
+None (helper rule).
+
+### 2.2. FileWriteStatus
+
+This rule group manages the file write status in the test harness.
+
+#### 2.2.1. OK
+
+This rule sets the file open status to `Os::File::OP_OK`, simulating a system state
+in which a file write call succeeds.
+
+**Precondition:**
+`Os::Stub::File::Test::StaticData::data.writeStatus != Os::File::OP_OK`.
+
+**Action:**
+`Os::Stub::File::Test::StaticData::data.writeStatus = Os::File::OP_OK`.
+
+**Test:**
+
+1. Apply rule `FileWriteStatus::Error`.
+1. Apply rule `FileWriteStatus::OK`.
+
+**Requirements tested:**
+None (helper rule).
+
+#### 2.2.2. Error
+
+This rule sets the file write status to an error value, simulating a system state
+in which a file write call fails.
+
+**Precondition:**
+`Os::Stub::File::Test::StaticData::data.writeStatus == Os::File::OP_OK`.
+
+**Action:**
+Set `Os::Stub::File::Test::StaticData::data.writeStatus` to a random value
+other than `Os::File::OP_OK`.
+
+**Test:**
+
+1. Apply rule `FileWriteStatus::Error`.
+
+**Requirements tested:**
+None (helper rule).
+
+### 2.3. SchedIn
+
+This rule group sends test input to the `schedIn` port.
+
+#### 2.3.1. OK
+
+This rule invokes `schedIn` with nominal input.
+
+**Precondition:** `true`
+
+**Action:**
+
+1. Clear history.
+1. Invoke `schedIn` with a random context.
+1. Check telemetry.
+
+**Test:**
+
+1. Apply rule `SchedIn::OK`.
+
+**Requirements tested:**
+`SVC-DPWRITER-006`.
+
+### 2.4. BufferSendIn
+
+This rule group sends test input to the `bufferSendIn` port.
+
+#### 2.4.1. OK
+
+This rule invokes `bufferSendIn` with nominal input.
+
+**Precondition:**
+`fileOpenStatus == Os::File::OP_OK` and
+`fileWriteStatus == Os::File::OP_OK`.
+
+**Action:**
+1. Clear history.
+1. Update `m_NumBuffersReceived`.
+1. Construct a random buffer _B_ with valid packet data and random processing bits.
+1. Send _B_ to `bufferSendIn`.
+1. Assert that the event history contains one element.
+1. Assert that the event history for `FileWritten` contains one element.
+1. Check the event arguments.
+1. Check output on processing ports.
+1. Check output on notification port.
+1. Check output on deallocation port.
+1. Verify that `Os::File::write` has been called with the expected arguments.
+1. Update `m_NumBytesWritten`.
+1. Update `m_NumSuccessfulWrites`.
+
+**Test:**
+1. Apply rule `BufferSendIn::OK`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`,
+`SVC-DPWRITER-002`,
+`SVC-DPWRITER-003`,
+`SVC-DPWRITER-004`,
+`SVC-DPWRITER-005`
+
+#### 2.4.2. InvalidBuffer
+
+This rule invokes `bufferSendIn` with an invalid buffer.
+
+**Precondition:**
+`true`
+
+**Action:**
+1. Clear history.
+1. Update `m_NumBuffersReceived`.
+1. Construct an invalid buffer _B_.
+1. If `m_invalidBufferEventCount` < `DpWriterComponentBase::EVENTID_INVALIDBUFFER_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `InvalidBuffer` contains one element.
+   1. Increment `m_invalidBufferEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Verify no data product file.
+1. Verify no port output.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `BufferSendIn::InvalidBuffer`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`
+
+#### 2.4.3. BufferTooSmallForPacket
+
+This rule invokes `bufferSendIn` with a buffer that is too small to
+hold a data product packet.
+
+**Precondition:**
+`true`
+
+**Action:**
+1. Clear history.
+1. Increment `m_NumBuffersReceived`.
+1. Construct a valid buffer _B_ that is too small to hold a data product packet.
+1. If `m_bufferTooSmallEventCount` < `DpWriterComponentBase::EVENTID_BUFFERTOOSMALLFORPACKET_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `BufferTooSmallForPacket` contains one element.
+   1. Check the event arguments.
+   1. Increment `m_bufferTooSmallEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumErrors`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`
+
+#### 2.4.4. InvalidHeaderHash
+
+This rule invokes `bufferSendIn` with a buffer that has an invalid
+header hash.
+
+**Precondition:**
+`true`
+
+**Action:**
+1. Clear history.
+1. Increment `m_NumBuffersReceived`.
+1. Construct a valid buffer _B_ that is large enough to hold a data product
+   packet and that has an invalid header hash.
+1. If `m_invalidHeaderHashEventCount` < `DpWriterComponentBase::EVENTID_INVALIDHEADERHASH_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `InvalidHeaderHash` contains one element.
+   1. Check the event arguments.
+   1. Increment `m_invalidHeaderHashEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `BufferSendIn::BufferTooSmallForPacket`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`
+
+#### 2.4.5. InvalidHeader
+
+This rule invokes `bufferSendIn` with an invalid packet header.
+
+**Precondition:**
+`true`
+
+**Action:**
+1. Clear history.
+1. Increment `m_NumBuffersReceived`.
+1. Construct a valid buffer _B_ with an invalid packet header.
+1. If `m_invalidPacketHeaderEventCount` < `DpWriterComponentBase::EVENTID_INVALIDHEADER_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `InvalidHeader` contains one element.
+   1. Check the event arguments.
+   1. Increment `m_invalidPacketHeaderEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `BufferSendIn::InvalidHeader`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`
+
+#### 2.4.6. BufferTooSmallForData
+
+This rule invokes `bufferSendIn` with a buffer that is too small to
+hold the data size specified in the header.
+
+**Precondition:**
+`true`
+
+**Action:**
+1. Clear history.
+1. Increment `m_NumBuffersReceived`.
+1. Construct a valid buffer _B_ with a valid packet header, but
+   a data size that will not fit in _B_.
+1. If `m_bufferTooSmallForDataEventCount` < `DpWriterComponentBase::EVENTID_BUFFERTOOSMALLFORDATA_THROTTLE`,
+   then
+   1. Assert that the event history contains one element.
+   1. Assert that the event history for `BufferTooSmallForData` contains one element.
+   1. Check the event arguments.
+   1. Increment `m_bufferTooSmallForDataEventCount`.
+1. Otherwise assert that the event history is empty.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `BufferSendIn::BufferTooSmallForData`.
+
+**Requirements tested:**
+`SVC-DPWRITER-001`
+
+#### 2.4.7. FileOpenError
+
+This rule invokes `bufferSendIn` with a file open error.
+
+**Precondition:**
+`fileOpenStatus != Os::File::OP_OK`
+
+**Action:**
+1. Clear history.
+1. Update `m_NumBuffersReceived`.
+1. Construct a random buffer _B_ with valid packet data.
+1. Send _B_ to `bufferSendIn`.
+1. Assert that the event history contains one element.
+1. Assert that the event history for `FileOpenError` contains one element.
+1. Check the event arguments.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumFailedWrites`.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `FileOpenStatus::Error`.
+1. Apply rule `BufferSendIn::FileOpenError`.
+
+**Requirements tested:**
+`SVC-DPWRITER-004`
+
+#### 2.4.8. FileWriteError
+
+This rule invokes `bufferSendIn` with a file write error.
+
+**Precondition:**
+`fileOpenStatus == Os::File::OP_OK` and
+`fileWriteStatus != Os::File::OP_OK`
+
+**Action:**
+1. Clear history.
+1. Update `m_NumBuffersReceived`.
+1. Construct a random buffer _B_ with valid packet data.
+1. Send _B_ to `bufferSendIn`.
+1. Assert that the event history contains one element.
+1. Assert that the event history for `FileWriteError` contains one element.
+1. Check the event arguments.
+1. Assert no DP written notification.
+1. Assert buffer sent for deallocation.
+1. Verify no data product file.
+1. Increment `m_NumFailedWrites`.
+1. Increment `m_NumErrors`.
+
+**Test:**
+1. Apply rule `FileWriteStatus::Error`.
+1. Apply rule `BufferSendIn::FileWriteError`.
+
+**Requirements tested:**
+`SVC-DPWRITER-004`
+
+### 2.5. CLEAR_EVENT_THROTTLE
+
+This rule group tests the `CLEAR_EVENT_THROTTLE` command.
+
+#### 2.5.1. OK
+
+This rule sends the `CLEAR_EVENT_THROTTLE` command.
+
+**Precondition:** `true`
+
+**Action:**
+
+1. Clear the history.
+1. Send command `CLEAR_EVENT_THROTTLE`.
+1. Check the command response.
+1. Assert `DpWriterComponentBase::m_InvalidBufferThrottle` == 0.
+1. Set `m_bufferTooSmallForDataEventCount` = 0.
+1. Set `m_bufferTooSmallForPacketEventCount` = 0.
+1. Set `m_fileOpenErrorEventCount` = 0.
+1. Set `m_fileWriteErrorEventCount` = 0.
+1. Set `m_invalidBufferEventCount` = 0.
+1. Set `m_invalidHeaderEventCount` = 0.
+1. Set `m_invalidHeaderHashEventCount` = 0.
+
+**Test:**
+
+1. Apply rule `BufferSendIn::InvalidBuffer` `DpWriterComponentBase::EVENTID_INVALIDBUFFER_THROTTLE` + 1 times.
+1. Apply rule `CLEAR_EVENT_THROTTLE::OK`.
+1. Apply rule `BufferSendIn::InvalidBuffer`
+
+## 3. Implementation
+
+See [the DpWriter test README](../../../DpWriter/test/ut/README.md)
+for a description of the pattern used to implement the tests.
+```

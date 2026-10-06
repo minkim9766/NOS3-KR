@@ -3,20 +3,282 @@
 
 **경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `annotations.proto`
 
-file--annotations.proto
-file--exception.proto
-file--httpbody.proto
-file--websocket.proto
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/annotations.proto`
+
+
+```text
+syntax = "proto2";
+
+package yamcs.api;
+
+import "google/protobuf/descriptor.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "AnnotationsProto";
+option java_package = "org.yamcs.api";
+
+extend google.protobuf.ServiceOptions {
+  // Short, human-friendly label describing this service.
+  // This is a hint to programs that process proto
+  // definitions (example: document generation).
+  //
+  // Example:
+  //
+  //   service MdbApi {
+  //     option (yamcs.api.label) = "MDB";
+  //   }
+  optional string label = 2048;
+}
+
+extend google.protobuf.MethodOptions {
+  optional HttpRoute route = 6433;
+  optional WebSocketTopic websocket = 6443;
+}
+
+extend google.protobuf.FieldOptions {
+  repeated FieldBehavior field_behavior = 6533;
+}
+
+message HttpRoute {
+
+  oneof pattern {
+    // Maps to HTTP GET. Used for listing and getting information about
+    // resources.
+    string get = 1;
+
+    // Maps to HTTP PUT. Used for replacing a resource.
+    string put = 2;
+
+    // Maps to HTTP POST. Used for creating a resource or performing an action.
+    string post = 3;
+
+    // Maps to HTTP DELETE. Used for deleting a resource.
+    string delete = 4;
+
+    // Maps to HTTP PATCH. Used for updating a resource.
+    string patch = 5;
+  }
+  optional bool deprecated = 6;
+
+  // Name of the field in the request message that maps to the request body
+  // The special value "*" indicates that the request message as a whole
+  // represents the body (excepting route params).
+  optional string body = 7;
+  
+  optional int32 max_body_size = 8;
+  
+  // Set true if the execution of the route is expected to take a long time
+  // (more than 0.5 seconds). It will be offloaded to a worker thread.
+  // Leave false if the route uses its own threading mechanism (most of the
+  // routes should do that).
+  optional bool offloaded = 9;
+  
+  // Name of the field in the response message where a user-specified field
+  // mask is applied to. If this indicates a repeated field, the field mask
+  // is applied to each of those messages.
+  // If unspecified, Yamcs will try to derive this itself.
+  optional string field_mask_root = 10;
+
+  repeated HttpRoute additional_bindings = 11;
+
+  // Human-friendly log message format.
+  optional string log = 12;
+
+  // Optional method label. This is a hint to programs that process
+  // proto definitions (example: document generation), intended for
+  // when the camel-case method name does not give a good result.
+  optional string label = 13;
+}
+
+message WebSocketTopic {
+
+  optional string topic = 1;
+  optional bool deprecated = 2;
+  
+  repeated WebSocketTopic additional_bindings = 3;
+
+  // Optional method label. This is a hint to programs that process
+  // proto definitions (example: document generation), intended for
+  // when the camel-case method name does not give a good result.
+  optional string label = 4;
+}
+
+enum FieldBehavior {
+  // Default. Do not use.
+  FIELD_BEHAVIOR_UNSPECIFIED = 0;
+
+  // Marks a field as secret. Services, such as audit logging, may use
+  // this as a hint for masking or hiding this field.
+  SECRET = 1;
+}
 ```
 
-## 항목
+### `exception.proto`
 
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/annotations.proto`](file--annotations.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/exception.proto`](file--exception.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/httpbody.proto`](file--httpbody.proto) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/websocket.proto`](file--websocket.proto) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/exception.proto`
+
+
+```text
+syntax = "proto3";
+
+package yamcs.api;
+
+import "google/protobuf/any.proto";
+
+option java_multiple_files = true;
+option java_outer_classname = "ExceptionProto";
+option java_package = "org.yamcs.api";
+
+// Generic holder for an exception
+message ExceptionMessage {
+  int32 code = 1;
+  string type = 2;
+  string msg = 3;
+  google.protobuf.Any detail = 4;
+}
+
+message FilterSyntaxException {
+  // Begin line of the token where the exception occurs
+  int32 beginLine = 1;
+
+  // Begin column of the token where the exception occurs
+  int32 beginColumn = 2;
+
+  // End line of the token where the exception occurs
+  int32 endLine = 3;
+
+  // End column of the token where the exception occurs
+  int32 endColumn = 4;
+}
+```
+
+### `httpbody.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/httpbody.proto`
+
+
+```text
+syntax = "proto2";
+
+package yamcs.api;
+
+option java_multiple_files = true;
+option java_outer_classname = "HttpBodyProto";
+option java_package = "org.yamcs.api";
+
+message HttpBody {
+
+  // The Content-Type header value for this body.
+  // If unspecified, defaults to application/octet-stream
+  optional string content_type = 1;
+  
+  // If set, a Content-Disposition header is added
+  // to the response. Weg agents use this to trigger
+  // a download.
+  optional string filename = 2;
+  
+  // The body as raw binary
+  optional bytes data = 3;
+  
+  // Any other metadata (used in multipart/form)
+  map<string, string> metadata = 4;
+}
+```
+
+### `websocket.proto`
+
+**경로:** `gsw/yamcs/yamcs-api/src/main/proto/yamcs/api/websocket.proto`
+
+
+```text
+syntax="proto3";
+
+package yamcs.api;
+
+option java_package = "org.yamcs.protobuf";
+option java_outer_classname = "WebSocketProto";
+option java_multiple_files = true;
+
+import "google/protobuf/any.proto";
+
+import "yamcs/api/exception.proto";
+
+message ClientMessage {
+  // Message type. Typically the name of a topic to subscribe to, or a built-in like "cancel".
+  string type = 1;
+  
+  // Options specific to the type
+  google.protobuf.Any options = 2;
+  
+  // Optional client-side message identifier, returned in reply messages.
+  int32 id = 3;
+  
+  // If applicable, the call associated with this message
+  // This should be used when the client is streaming multiple messages
+  // handled by the same call.
+  int32 call = 4;
+  
+  // If set, permit the server to keep a WebSocket connection despite frame writes
+  // getting dropped (channel not open or not writable). If unset the default is 0,
+  // meaning that if the server can't write a frame, it will close the connection
+  // (impacting all calls on that connection).
+  //
+  // This attribute is only applied when it is set on the first message of a call.
+  // Since Yamcs 5.7.6 this option is deprecated in favour of lowPriority below.
+  int32 maxDroppedWrites = 5 [deprecated = true];
+
+  //If set to true, permit the server to drop messages if writing the message would cause the
+  // channel to exceed the highWaterMark
+  // (see https://docs.yamcs.org/yamcs-server-manual/services/global/http-server/)
+  // This attribute is only applied when it is set on the first message of a call.
+  //
+  // Note that if a message exceeds the highWaterMark, with this option set it will always be dropped.
+  // A warning will be printed in the Yamcs logs in this case.
+  //
+  bool lowPriority = 6;
+}
+
+message ServerMessage {
+
+  // Message type. Typically the name of the subscribed topic, or a built-in like "reply".
+  string type = 1;
+
+  // If applicable, the call associated with this message
+  int32 call = 2;
+  
+  // Sequence counter (scoped to the call)
+  int32 seq = 3;
+
+  google.protobuf.Any data = 4;
+}
+
+// Message to be provided in a ClientMessage if type is "cancel".
+// This is a special message type that allows cancelling a call.
+message CancelOptions {
+  int32 call = 1;
+}
+
+// Message to be provided in the data field of a ServerMessage if type is "reply".
+message Reply {
+
+  // The id of the original client message (if provided)
+  int32 reply_to = 1;
+  
+  // If set, the call was not successful.
+  ExceptionMessage exception = 2;
+}
+
+// Message to be provided in the data field of a ServerMessage if type is "state".
+message State {
+  message CallInfo {
+    int32 call = 1;
+    string type = 2;
+    google.protobuf.Any options = 3;
+  }
+  repeated CallInfo calls = 1;
+}
+```

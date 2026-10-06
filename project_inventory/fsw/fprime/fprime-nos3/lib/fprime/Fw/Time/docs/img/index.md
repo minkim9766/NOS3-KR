@@ -3,14 +3,10 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/docs/img/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `TimeBDD.jpg`
 
-file--TimeBDD.jpg
-```
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/docs/img/TimeBDD.jpg`
 
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Time/docs/img/TimeBDD.jpg`](file--TimeBDD.jpg) — 바이너리 (경로만)
+바이너리 파일입니다. 본문은 생략했습니다.

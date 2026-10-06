@@ -3,22 +3,527 @@
 
 **경로:** `gsw/yamcs/docs/server-manual/services/global/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `http-server.rst`
 
-file--http-server.rst
-file--index.rst
-file--process-runner.rst
-file--replication-server.rst
-file--tse-commander.rst
+**경로:** `gsw/yamcs/docs/server-manual/services/global/http-server.rst`
+
+
+```rst
+HTTP Server
+===========
+
+Embedded HTTP server that supports static file serving, authentication and API requests.
+
+The HTTP Server is tightly integrated with the security system of Yamcs and serves as the default interface for external tooling wanting to integrate. This covers both server-to-server and server-to-user communication patterns.
+
+The HTTP Server can be disabled when its functionality is not needed. Note that in this case also official external clients such as Yamcs Studio will not be able to connect to Yamcs.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.http.HttpServer`
+
+
+Configuration
+-------------
+
+This is a global service defined in :file:`etc/yamcs.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.http.HttpServer
+        args:
+          port: 8090
+          webSocket:
+            writeBufferWaterMark:
+              low: 32768
+              high: 65536
+          cors:
+            allowOrigin: "*"
+            allowCredentials: false
+
+
+Configuration Options
+---------------------
+
+address (string)
+    The local address to which Yamcs will bind waiting for HTTP clients. If unset, Yamcs binds to a wildcard address.
+
+port (integer)
+    The port to which Yamcs will bind waiting for HTTP clients. Default: ``8090``
+
+tlsCert (string or list of strings)
+    If specified, the server will be listening for TLS connections. TLS is used for encrypting the data.
+
+    In case the file is a bundle containing multiple certificates, the certificates must be ordered from leaf to root.
+
+    Multiple certificate files may also be provided as an array. Again, certificates must then be ordered from leaf to root, between the files and also between certificates within the files.
+
+tlsKey (string)
+    **Required** if ``tlsCert`` is specified. The key to the certificate.
+
+contextPath (string)
+    Path string prepended to all routes. For example, a contextPath of ``/yamcs`` will make the API available on ``/yamcs/api`` instead of the default ``/api``. When using this property in combination with a reverse proxy, you should ensure that the proxy path matches with the context path because rewriting may lead to unexpected results.
+
+maxContentLength (integer)
+    Maximum allowed length of request bodies. This is applied to all non-streaming API requests. Default: ``65536``
+
+    Some routes may specify a custom ``maxBodySize`` option, in which case the maximum of the two values gets applied.
+
+maxInitialLineLength (integer)
+    Maximum allowed length of the initial line (for example: ``GET / HTTP/1.1``). Default: ``8192``
+
+maxHeaderSize (integer)
+    Maximum allowed length of all headers combined. Default: ``8192``
+
+maxPageSize (integer)
+    Maximum allowed page size.
+
+    This corresponds with the ``limit`` query parameter that is used in the HTTP API.
+
+    Default: ``1000``.
+
+nThreads (integer)
+    Configure the number of threads that handle HTTP requests. The value ``0`` resolves to two times the number of CPU cores. Default: ``0``
+
+reverseLookup (boolean)
+    If enabled, hostnames instead of IP addresses are used to identify clients. Use of this option may trigger name service reverse lookups. Default: ``false``
+
+webSocket (map)
+    Configure WebSocket properties. Detailed below. If unset, Yamcs uses sensible defaults.
+
+cors (map)
+    Configure cross-origin resource sharing for the HTTP API. Detailed below. If unset, CORS is not supported.
+
+
+WebSocket sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+maxFrameLength (integer)
+    Maximum frame length in bytes. This is applied to incoming frames. Default: ``65536``
+
+writeBufferWaterMark (map)
+    Water marks for the write buffer of each WebSocket connection. When the buffer is full, messages are dropped. High values lead to increased memory use, but connections will be more resilient against unstable networks (i.e. high jitter). Increasing the values also help if a large number of messages are generated in bursts. The map requires keys ``low`` and ``high`` indicating the low/high water mark in bytes.
+
+    Default: ``{ low: 32768, high: 131072 }``
+
+pingWhenIdleFor (integer)
+    Idle timeout in seconds (either read or write). When this timeout is met, a WebSocket ping frame is sent to the connected client. This helps prevent unexpected closes by intermediate firewalls or proxies.
+
+    To disable ping frames, set this value to 0.
+
+    Default: ``40``.
+
+
+CORS sub-configuration
+^^^^^^^^^^^^^^^^^^^^^^
+
+CORS (cross-origin resource sharing) facilitates use of the API in client-side applications that run in the browser. CORS is a W3C specification enforced by all major browsers. Details are described at `<https://www.w3.org/TR/cors/>`_. Yamcs simply adds configurable support for some of the CORS preflight response headers.
+
+Note that the embedded web interface of Yamcs does not need CORS enabled, because it shares the same origin as the HTTP API.
+
+allowOrigin (string)
+    Exact string that will be set in the ``Access-Control-Allow-Origin`` header of the preflight response.
+
+allowCredentials (boolean)
+    Whether the ``Access-Control-Allow-Credentials`` header of the preflight response is set to true. Default: ``false``
 ```
 
-## 항목
+### `index.rst`
 
-- [`gsw/yamcs/docs/server-manual/services/global/http-server.rst`](file--http-server.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/global/index.rst`](file--index.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/global/process-runner.rst`](file--process-runner.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/global/replication-server.rst`](file--replication-server.rst) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/docs/server-manual/services/global/tse-commander.rst`](file--tse-commander.rst) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/docs/server-manual/services/global/index.rst`
+
+
+```rst
+Global Services
+===============
+
+.. toctree::
+    :maxdepth: 1
+    :caption: Table of Contents
+
+    http-server
+    process-runner
+    tse-commander
+    replication-server
+```
+
+### `process-runner.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/global/process-runner.rst`
+
+
+```rst
+Process Runner
+==============
+
+Runs an external process. If this process exits this Yamcs service stops too unless a ``restart`` option is configured and applicable.
+
+The subprocess inherits environment variables set on Yamcs, and additionally includes the variable ``YAMCS=1``. Further environment variables can be configured.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.ProcessRunner`
+
+
+Configuration
+-------------
+
+This is a global service defined in :file:`etc/yamcs.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.ProcessRunner
+        args:
+          command: "bin/simulator.sh"
+
+
+Configuration Options
+---------------------
+
+command (string or string[])
+    **Required.** Command (and optional arguments) to run.
+
+directory (string)
+    Set the working directory of the started subprocess. If unspecified, this defaults to the working directory of Yamcs.
+
+environment (map)
+    Pass custom environment variables to the subprocess.
+
+logLevel (string)
+    Level at which to log stdout/stderr output. One of ``INFO``, ``DEBUG``, ``TRACE``, ``WARN``, ``ERROR``. Default: ``INFO``
+
+logPrefix (string)
+    Prefix to prepend to all logged process output. If unspecified this defaults to ``[COMMAND]``.
+
+restart (string)
+    When to start a new process if the original process exits. One of ``always``, ``on-success``, ``on-failure`` or ``never``. Default: ``never``.
+
+successExitCode (integer or integer[])
+    Exit codes of the subprocess that are considered successful. This is used to evaluate the appropriate ``restart`` behavior. Default: ``0``.
+```
+
+### `replication-server.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/global/replication-server.rst`
+
+
+```rst
+Replication Server
+==================
+
+
+The replication server facilitates the communication between :doc:`../instance/replication-master` and :doc:`../instance/replication-slave`. The master and slaves defined with the tcpRole ``server`` will register to this component to be called when an external TCP client connects. Multiple master and slaves from different Yamcs instances in the same Yamcs server will register to the same replication server.
+
+A remote slave when connecting will send a request message indicating the instance and the transaction it wants to start the replay with. The replication server will forward the request to the registered local master which will immediately start the replay.
+
+A remote master when connecting to the replication server will send a wakeup message indicating the instance of the slave. The replication server will redirect the message to the registered local slave which in turn will send a request to the master indicating the transaction start.
+
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.replication.ReplicationServer`
+
+
+Configuration
+-------------
+
+This service is defined in :file:`etc/yamcs.yaml`. Example:
+
+.. code-block:: yaml
+
+  services:
+      - class: org.yamcs.replication.ReplicationServer
+        args:
+           port: 8099
+           tlsCert: /path/to/server.crt
+           tlsKey: /path/to/server.key
+           maxTupleSize: 131072
+
+              
+Configuration Options
+---------------------
+
+port  (integer)
+    **Required** The port to listen for TCP connections.               
+
+tlsCert (string or list of strings)
+    If specified, the server will be listening for TLS connections. TLS is used for encrypting the data, client certificates are not supported. If TLS is enabled, all connections have to be encrypted, the server does not support TLS and non-TLS connections simultaneously.
+
+    In case the file is a bundle containing multiple certificates, the certificates must be ordered from leaf to root.
+
+    Multiple certificate files may also be provided as an array. Again, certificates must then be ordered from leaf to root, between the files and also between certificates within the files.
+
+tlsKey (string)
+    **Required** if ``tlsCert`` is specified. The key to the certificate.
+
+maxTupleSize (integer)
+    Used for the slaves with tcpRole = server - configures the maximum size of the serialized tuples received from the master. If the serialized tuples are larger than this size, this limit has to be increased otherwise the tuples cannot be transferred. Default: 131072 (128 KB).
+```
+
+### `tse-commander.rst`
+
+**경로:** `gsw/yamcs/docs/server-manual/services/global/tse-commander.rst`
+
+
+```rst
+TSE Commander
+=============
+
+This service allows dispatching commands to Test Support Equipment (TSE). The instrument must have a remote control interface (Serial, TCP/IP) and should support a text-based command protocol such as SCPI.
+
+
+Class Name
+----------
+
+:javadoc:`org.yamcs.tse.TseCommander`
+
+
+Configuration
+-------------
+
+This is a global service defined in :file:`etc/yamcs.yaml`. Example:
+
+.. code-block:: yaml
+
+    services:
+      - class: org.yamcs.tse.TseCommander
+
+
+Configuration Options
+---------------------
+
+telnet (map)
+    **Required.** Configure Telnet properties.
+
+    Example: ``{ port: 8023 }``
+
+tc (map)
+    **Required.** Configure properties of the TC link.
+
+    Example: ``{ port: 8135 }``
+
+tm (map)
+    **Required.** Configure properties of the TM link.
+
+    Example: ``{ host: localhost, port: 31002 }``
+
+
+This service reads further configuration options from a file :file:`etc/tse.yaml`. This file defines all the instruments that can be commanded. Example:
+
+.. code-block:: yaml
+
+    instruments:
+      - name: tenma
+        class: org.yamcs.tse.SerialPortDriver
+        args:
+          path: /dev/tty.usbmodem14141
+          # Note: this instrument does not terminate responses.
+          # Use a very short timeout to compensate (still within spec)
+          # responseTermination: "\n"
+          responseTimeout: 100
+
+      - name: simulator
+        class: org.yamcs.tse.TcpIpDriver
+        args:
+          host: localhost
+          port: 10023
+          responseTermination: "\r\n"
+
+      - name: rigol
+        class: org.yamcs.tse.TcpIpDriver
+        args:
+          host: 192.168.88.185
+          port: 5555
+          responseTermination: "\n"
+
+      - name: udptest
+        class: org.yamcs.tse.UdpDriver
+        args:
+          host: localhost
+          port: 5005
+
+There are two types of drivers. Both drivers support these base arguments:
+
+responseTermination (string)
+    The character(s) by which the instrument delimits distinct responses. Typically ``\n`` or ``\r\n``. This may be left unspecified if the instrument does not delimit responses.
+
+commandSeparation (string)
+    The character(s) that indicates when the command will generate multiple *distinct* responses (delimited by ``responseTermination``). For most instruments this should be left unspecified.
+
+responseTimeout (integer)
+    Timeout in milliseconds for a response to arrive. Default: ``3000``
+
+requestTermination (string)
+    Character(s) to append to generated string commands. This is typically used for adding newline characters with make the instrument detect a complete request.
+
+    Set this to null if you do not want to disable request termination.
+
+    The default value is driver-specific. For the TCP/IP driver it defaults to ``\n`` whereas for the Serial Port driver, it is unset.
+
+interceptors (list of maps)
+    Adds an interceptor chain where each interceptor must be an implementation of :javadoc:`org.yamcs.tse.Interceptor`. Interceptors are executed top-down on these events:
+    
+    #. A new command is about to be issued. The interceptor can inspect it, or make final changes. The input is in the form of a raw byte array and includes any request termination characters (if applicable).
+
+    #. A non-null response was received. The interceptor can inspect it, or make adjustments before handing it over to the next interceptor. Only at the end of the chain, the response bytes are interpreted by the TSE Commander. Note that the response bytes do **not** include the response termination characters (if any), because the driver already strips them off while delimiting messages from the incoming stream.
+
+    Yamcs ships with one standard interceptor which you can add to an instrument's configuration if you want to enable logging of its command and response messages:
+
+    .. code-block:: yaml
+
+        - name: myinstrument
+          class: org.yamcs.tse.TcpIpDriver
+          args:
+            ...
+            interceptors:
+              - class: org.yamcs.tse.LoggingInterceptor
+
+
+In addition each driver supports driver-specific arguments:
+
+
+TCP/IP
+^^^^^^
+
+host (string)
+    **Required.** The host of the instrument.
+
+port (integer)
+    **Required.** The TCP port to connect to.
+
+
+UDP
+^^^
+
+host (string)
+   **Required.** The host of the instrument.
+
+port (integer)
+   **Required.** The UDP port to send to.
+
+sourcePort (integer)
+   Local sender port. This is also the port where replies can be sent. Default: any available port.
+
+maxLength (integer)
+   Buffer size for receiving a single reply. Default: 1500
+
+
+Serial Port
+^^^^^^^^^^^
+
+path (string)
+    **Required.** Path to the device.
+
+baudrate (number)
+    The baud rate for this serial port. Default: 9600
+
+dataBits (number)
+    The number of data bits per word. Default: 8
+
+parity (string)
+    The parity error-detection scheme. One of ``odd`` or ``even``. By default parity is not set.
+
+
+Mission Database
+----------------
+
+The definition of TSE string commands is done in space systems resorting under ``/TSE``. The ``/TSE`` node is added by defining :javadoc:`org.yamcs.tse.TseLoader` in the MDB loader tree. Example:
+
+.. code-block:: yaml
+
+    mdb:
+      - type: org.yamcs.tse.TseLoader
+        subLoaders:
+          - type: sheet
+            spec: mdb/tse/simulator.xls
+
+The instrument name in :file:`etc/tse.yaml` should match with the name of the a sub space system of /TSE.
+
+The definition of commands and their arguments follows the same approach as non-TSE commands but with some particularities:
+
+* Each command should have either ``QUERY`` or ``COMMAND`` as its parent. These abstract commands are defined by the :javadoc:`org.yamcs.tse.TseLoader`.
+
+  * ``QUERY`` commands send a text command to the remote instrument and expect a text response. The argument assignments ``command`` and ``response`` must both be set to a string template that matches what the instrument expects and returns.
+
+  * ``COMMAND`` commands send a text command to the remote instrument, but no response is expected (or it is simply ignored). Only the argument assignment ``command`` must be set to a string template matching what the instrument expects.
+
+* Each TSE command may define additional arguments needed for the specific command. In the definition of the ``command`` and ``response`` string templates you can refer to the value of these arguments by enclosing the argument name in angle brackets. Example: an argument ``n`` can be dynamically substituted in the string command by referring to it as ``<n>``.
+
+* Additionally you can instruct Yamcs to extract one or more parameter values out of instrument response for a particular command by referring to the parameter name enclosed with backticks. This parameter should be defined in the same space system as the command and use the non-qualified name. The raw type of these parameters should be string.
+
+To illustrate these concepts with an example, consider this query command defined in the space system ``/TSE/simulator``:
+
+.. list-table::
+    :header-rows: 1
+    :widths: 30 50 20
+
+    * - Command name
+      - Assignments
+      - Arguments
+    * - | get_identification
+        | *(parent: QUERY)*
+      - | command=*IDN?
+        | response=\`identification\`
+      -
+
+When issued, this command will send the string ``*IDN?`` to the instrument named ``simulator``. A string response is expected and is read in its entirety as a value of the parameter ``/TSE/simulator/identification``.
+
+The next example shows the definition of a TSE command that uses a dynamic argument in both the command and the response string templates:
+
+.. list-table::
+    :header-rows: 1
+    :widths: 30 50 20
+
+    * - Command name
+      - Assignments
+      - Arguments
+    * - | get_battery_voltage
+        | *(parent: QUERY)*
+      - | command=:BATTERY<n>:VOLTAGE?
+        | response=\`battery_voltage<n>\`
+      - n (range 1-3)
+
+When issued with the argument ``2``, Yamcs will send the string ``:BATTERY2:VOLTAGE?`` to the remote instrument and read back the response into the parameter ``/TSE/simulator/battery_voltage2``. In this simple case you could alternatively have defined three distinct commands without arguments (one for each battery).
+
+.. note::
+
+    When using the option ``commandSeparation``, the ``response`` argument of the command template should use the same separator between the expected responses. For example a query of ``:DATE?;:TIME?`` with command separator ``;`` may be matched in the MDB using the pattern: \`date_param\`;\`time_param\` (regardless of the termination character).
+
+
+Telnet Interface
+----------------
+
+For debugging purposes, this service starts a telnet server that allows to directly relay text-based commands to the configured instruments. This bypasses the TM/TC processing chain. Access this interface with an interactive TCP client such as ``telnet`` or ``netcat``.
+
+The server adds additional SCPI-like commands which allow to switch to any of the configured instruments in a single session. This is best explained via an example:
+
+.. code-block::
+    :emphasize-lines: 4,6,9,11,14
+
+    $ nc localhost 8023
+    :tse:instrument rigol
+    *IDN?
+    RIGOL TECHNOLOGIES,DS2302A,DS2D155201382,00.03.00
+    :cal:date?;time?
+    2018,09,14;21,33,41
+    :tse:instrument tenma
+    *IDN?
+    TENMA72-2540V2.0
+    VOUT1?
+    00.00
+    :tse:output:mode hex
+    VOUT1?
+    30302E3030
+
+In this session we interacted with two different instruments (named ``rigol`` and ``tenma``). The commands starting with ``:tse`` were directly interpreted by the TSE Commander, everything else was sent to the selected instrument.
+```

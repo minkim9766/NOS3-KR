@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,20 +17,85 @@ event-query-list/index
 event-severity/index
 events-page-tabs/index
 export-events-dialog/index
-file--events.resolvers.ts
-file--events.routes.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-dialog/`](create-event-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/`](create-event-query-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/edit-event-query-dialog/`](edit-event-query-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-list/`](event-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-message/`](event-message/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-query-list/`](event-query-list/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/event-severity/`](event-severity/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events-page-tabs/`](events-page-tabs/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/export-events-dialog/`](export-events-dialog/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events.resolvers.ts`](file--events.resolvers.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events.routes.ts`](file--events.routes.ts) — UTF-8 텍스트 파일 본문 포함
+### `events.resolvers.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events.resolvers.ts`
+
+
+```typescript
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { ParseFilterSubscription, YamcsService } from '@yamcs/webapp-sdk';
+
+/**
+ * Resolver that waits for the ParseFilter subscription to be
+ * fully established.
+ *
+ * This can be used to avoid timing issues for the initial
+ * filter parse.
+ */
+export const resolveParseFilterSubscription: ResolveFn<
+  ParseFilterSubscription
+> = (route, state) => {
+  const yamcs = inject(YamcsService);
+  const subscription = yamcs.yamcsClient.createParseFilterSubscription(
+    {
+      resource: 'events',
+      filter: '',
+    },
+    () => null,
+  );
+
+  return new Promise((resolve, reject) => {
+    subscription.addReplyListener(() => {
+      resolve(subscription);
+    });
+  });
+};
+```
+
+### `events.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/events.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { attachContextGuardFn } from '../core/guards/AttachContextGuard';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { mayReadEventsGuardFn } from '../core/guards/MayReadEventsGuard';
+import { InstancePageComponent } from '../shared/instance-page/instance-page.component';
+import { EventListComponent } from './event-list/event-list.component';
+import { EventQueryListComponent } from './event-query-list/event-query-list.component';
+import { resolveParseFilterSubscription } from './events.resolvers';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, attachContextGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: InstancePageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: EventListComponent,
+        canActivate: [mayReadEventsGuardFn],
+        resolve: {
+          parseFilterSubscription: resolveParseFilterSubscription,
+        },
+      },
+      {
+        path: 'queries',
+        component: EventQueryListComponent,
+        canActivate: [mayReadEventsGuardFn],
+      },
+    ],
+  },
+];
+```

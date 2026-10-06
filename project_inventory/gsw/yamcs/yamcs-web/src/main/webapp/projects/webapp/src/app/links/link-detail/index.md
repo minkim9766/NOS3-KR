@@ -3,18 +3,186 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `link-detail.component.css`
 
-file--link-detail.component.css
-file--link-detail.component.html
-file--link-detail.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.css`
+
+
+```css
+:host ::ng-deep .ya-attr.link-status .ya-attr-content {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
 ```
 
-## 항목
+### `link-detail.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.css`](file--link-detail.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.html`](file--link-detail.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.ts`](file--link-detail.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.html`
+
+
+```html
+<ya-attr-list>
+  <ya-attr label="Name">
+    {{ link.name }}
+  </ya-attr>
+
+  <ya-attr label="Class">
+    {{ link.type }}
+  </ya-attr>
+
+  <ya-attr-divider />
+
+  <ya-attr label="Status" class="link-status">
+    <app-link-status [link]="link" />
+    {{ link.status }}
+  </ya-attr>
+
+  <ya-attr label="In count">
+    {{ link.dataInCount | number }}
+  </ya-attr>
+
+  <ya-attr label="Out count">
+    {{ link.dataOutCount | number }}
+  </ya-attr>
+
+  <ya-attr label="Detail">
+    {{ link.detailedStatus || "-" }}
+  </ya-attr>
+
+  @if (link.extra) {
+    <ya-attr-divider />
+    @for (entry of link.extra | keyvalue; track entry) {
+      <ya-attr [label]="entry.key">
+        @if (getEntriesForValue(entry.value); as subentries) {
+          @if (subentries.length) {
+            @for (subentry of subentries; track subentry) {
+              {{ subentry || "-" }}
+              <br />
+            }
+          } @else {
+            -
+          }
+        }
+      </ya-attr>
+    }
+  }
+</ya-attr-list>
+
+@if (mayControlLinks()) {
+  <ya-toolbar appearance="bottom">
+    @if (link.status === "DISABLED") {
+      <ya-button (click)="enableLink()">Enable link</ya-button>
+    } @else {
+      <ya-button (click)="disableLink()">Disable link</ya-button>
+    }
+    <ya-button [matMenuTriggerFor]="moreActions" dropdown="true">More</ya-button>
+    <mat-menu #moreActions class="ya-menu" yPosition="below" [overlapTrigger]="false">
+      <ng-template matMenuContent>
+        <button mat-menu-item (click)="resetCounters()">Reset counters</button>
+        @if (link.actions) {
+          <mat-divider />
+          @for (action of link.actions; track action) {
+            <button mat-menu-item [disabled]="!action.enabled" (click)="runAction(action)">
+              @if (action.style === "CHECK_BOX") {
+                <mat-icon [style.visibility]="action.checked ? 'visible' : 'hidden'">
+                  check
+                </mat-icon>
+              }
+              {{ action.label }}
+              @if (action.spec) {
+                ...
+              }
+            </button>
+          }
+        }
+      </ng-template>
+    </mat-menu>
+  </ya-toolbar>
+}
+```
+
+### `link-detail.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-detail/link-detail.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ActionInfo,
+  AuthService,
+  Link,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { LinkStatusComponent } from '../link-status/link-status.component';
+import { LinkService } from '../shared/link.service';
+
+@Component({
+  selector: 'app-link-detail',
+  templateUrl: './link-detail.component.html',
+  styleUrl: './link-detail.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [LinkStatusComponent, WebappSdkModule],
+})
+export class LinkDetailComponent {
+  @Input()
+  link: Link;
+
+  constructor(
+    private authService: AuthService,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    private linkService: LinkService,
+  ) {}
+
+  mayControlLinks() {
+    return this.authService.getUser()!.hasSystemPrivilege('ControlLinks');
+  }
+
+  enableLink() {
+    this.yamcs.yamcsClient
+      .enableLink(this.link.instance, this.link.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  disableLink() {
+    this.yamcs.yamcsClient
+      .disableLink(this.link.instance, this.link.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  resetCounters() {
+    this.yamcs.yamcsClient
+      .resetLinkCounters(this.link.instance, this.link.name)
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  runAction(action: ActionInfo) {
+    this.linkService.runAction(this.link.name, action);
+  }
+
+  getEntriesForValue(value: any) {
+    if (value === undefined || value === null) {
+      return [];
+    }
+    const entries: string[] = [];
+    if (Array.isArray(value)) {
+      for (let i = 0; i < value.length; i++) {
+        if (typeof value[i] === 'object') {
+          entries.push('' + JSON.stringify(value[i]));
+        } else {
+          entries.push('' + value[i]);
+        }
+      }
+    } else {
+      entries.push('' + value);
+    }
+    return entries;
+  }
+}
+```

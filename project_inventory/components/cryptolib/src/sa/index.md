@@ -3,7 +3,7 @@
 
 **경로:** `components/cryptolib/src/sa/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ sadb_mariadb_sql/index
 test_sadb_mariadb_sql/index
 ```
 
-## 항목
-
-- [`components/cryptolib/src/sa/custom_stub/`](custom_stub/index) — 폴더
-- [`components/cryptolib/src/sa/internal/`](internal/index) — 폴더
-- [`components/cryptolib/src/sa/internal_stub/`](internal_stub/index) — 폴더
-- [`components/cryptolib/src/sa/mariadb/`](mariadb/index) — 폴더
-- [`components/cryptolib/src/sa/mariadb_stub/`](mariadb_stub/index) — 폴더
-- [`components/cryptolib/src/sa/sadb_mariadb_sql/`](sadb_mariadb_sql/index) — 폴더
-- [`components/cryptolib/src/sa/test_sadb_mariadb_sql/`](test_sadb_mariadb_sql/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

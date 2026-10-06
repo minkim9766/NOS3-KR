@@ -3,14 +3,58 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/StaticMemory/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sdd.md`
 
-file--sdd.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/StaticMemory/docs/sdd.md`
+
+
+````markdown
+# Svc::StaticMemory Component
+
+The StaticMemory component is a drop in replacement for Svc::BufferManager that allocates memory out of a static pool of
+memory. This allows for allocations of known sizes and usage patterns to avoid extra dynamic memory complexity at the
+expense of extra allocations.
+
+**Note:** the static memory component operates under the following caveats.
+
+1. Each port index has dedicate memory and should be assigned to one allocator
+2. Memory sizes are fixed size
+3. Memory must be deallocated before being allocated again.
+
+**See:** Svc::BufferManager for usage examples.
+
+## Configuration
+
+StaticMemory number of allocations and ports are configured using `AcConstants.fpp` as shown below. This sets the number
+of allocate and deallocate port indices as well as the memory segments.
+
+```
+@ Number of static memory allocations
+constant StaticMemoryAllocations = 4
 ```
 
-## 항목
+The size of each memory segment is set in `StaticMemoryConfig.hpp` as shown below.
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/StaticMemory/docs/sdd.md`](file--sdd.md) — UTF-8 텍스트 파일 본문 포함
+```c++
+STATIC_MEMORY_ALLOCATION_SIZE = 2048
+```
+
+This means the total memory used is `StaticMemoryAllocations` * `STATIC_MEMORY_ALLOCATION_SIZE` bytes. 
+
+
+## Requirements
+
+| Name | Description | Validation |
+|---|---|---|
+| STAMEM-001 | The static memory shall allocate a fixed block per port index | unit test |
+| STAMEM-002 | The static memory shall define allocate and deallocate ports shadowing Svc::BufferManager | unit test |
+
+
+## Change Log
+
+| Date | Description |
+|---|---|
+| 2020-12-21 | Initial Draft |
+````

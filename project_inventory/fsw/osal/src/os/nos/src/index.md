@@ -3,32 +3,3646 @@
 
 **경로:** `fsw/osal/src/os/nos/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `NOS-time.c`
 
-file--NOS-time.c
-file--os-impl-binsem.c
-file--os-impl-bsd-select.c
-file--os-impl-common.c
-file--os-impl-console.c
-file--os-impl-countsem.c
-file--os-impl-nos-gettime.c
-file--os-impl-queues.c
-file--os-impl-tasks.c
-file--os-impl-timebase.c
+**경로:** `fsw/osal/src/os/nos/src/NOS-time.c`
+
+
+```c
+/* Copyright (C) 2022 - 2022 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+#include <errno.h>
+#include <pthread.h>
+#include <signal.h>
+#include <osconfig.h>
+#include "os-impl-timebase.h"
+#include "NOS-time.h"
+
+#include "Client/CInterface.h"
+
+extern NE_Bus          *CFE_PSP_Bus;
+extern int64_t          CFE_PSP_ticks_per_second;
+extern pthread_mutex_t  CFE_PSP_sim_time_mutex;
+extern NE_SimTime       CFE_PSP_sim_time;
+
+int NOS_clock_getres (clockid_t clock_id, struct timespec * res)
+{
+    res->tv_sec = 0;
+    res->tv_nsec = NOS_NANO / CFE_PSP_ticks_per_second;
+    return 0;
+}
+
+int NOS_clock_gettime (clockid_t clock_id, struct timespec * tp)
+{
+    pthread_mutex_lock(&CFE_PSP_sim_time_mutex);
+    NE_SimTime sim_time = CFE_PSP_sim_time;
+    pthread_mutex_unlock(&CFE_PSP_sim_time_mutex);
+    tp->tv_sec = sim_time / CFE_PSP_ticks_per_second;
+    tp->tv_nsec = (sim_time % CFE_PSP_ticks_per_second) * (NOS_NANO / CFE_PSP_ticks_per_second);
+    return 0;
+}
+
+int NOS_clock_nanosleep (clockid_t clock_id, int flags, const struct timespec * req, struct timespec * rem)
+{
+    if ((req->tv_sec < 0) || (req->tv_nsec < 0) || (req->tv_nsec >= NOS_NANO)) {
+        errno = EINVAL;
+        return -1;
+    }
+    pthread_mutex_lock(&CFE_PSP_sim_time_mutex);
+    NE_SimTime sim_time = CFE_PSP_sim_time;
+    pthread_mutex_unlock(&CFE_PSP_sim_time_mutex);
+    NE_SimTime end_time = req->tv_sec * CFE_PSP_ticks_per_second + req->tv_nsec * CFE_PSP_ticks_per_second / NOS_NANO;
+    if (flags == 0) end_time += sim_time; // relative time
+    struct timespec delay, real_rem;
+    delay.tv_sec = 0;
+    delay.tv_nsec = NOS_NANO / CFE_PSP_ticks_per_second;
+    int interrupt = 0;
+    while ((sim_time < end_time) && !interrupt) {
+        interrupt = clock_nanosleep (clock_id, flags, &delay, &real_rem);
+        pthread_mutex_lock(&CFE_PSP_sim_time_mutex);
+        sim_time = CFE_PSP_sim_time;
+        pthread_mutex_unlock(&CFE_PSP_sim_time_mutex);
+    }
+    if (rem != NULL) {
+        NE_SimTime delta = end_time - sim_time;
+        if (delta < 0) delta = 0;
+        rem->tv_sec = delta / CFE_PSP_ticks_per_second;
+        rem->tv_nsec = ((delta % CFE_PSP_ticks_per_second) * NOS_NANO / CFE_PSP_ticks_per_second) + real_rem.tv_nsec;
+    }
+    return interrupt;
+}
+
+int NOS_clock_settime (clockid_t clock_id, const struct timespec * tp)
+{
+    if ((tp->tv_sec < 0) || (tp->tv_nsec < 0) || (tp->tv_nsec >= NOS_NANO)) {
+        errno = EINVAL;
+        return -1;
+    }
+    NE_SimTime sim_time = tp->tv_sec * CFE_PSP_ticks_per_second + tp->tv_nsec * CFE_PSP_ticks_per_second / NOS_NANO;
+    NE_bus_set_time(CFE_PSP_Bus, sim_time);
+    return 0;
+}
+
+
+typedef struct NOS_timer_t {
+    int in_use;
+    struct sigevent evp;
+    int armed;
+    struct timespec it_interval;
+    NE_SimTime expire_time;
+} NOS_timer_t;
+
+static pthread_mutex_t NOS_timer_table_mutex;
+static NOS_timer_t NOS_timer_table[OS_MAX_TIMEBASES];
+
+int NOS_timer_create (clockid_t clock_id, const struct sigevent * evp, timer_t * timerid)
+{
+    int retval = 0;
+    int i;
+    pthread_mutex_lock(&NOS_timer_table_mutex);
+    for (i = 0; i < OS_MAX_TIMEBASES; i++) {
+        if (NOS_timer_table[i].in_use == 0) break;
+    }
+    if (i >= OS_MAX_TIMEBASES) {
+        errno = ENOMEM;
+        retval = -1;
+    } else {
+        *timerid = (void*) (long) i;
+        NOS_timer_table[i].in_use = 1;
+        NOS_timer_table[i].evp = *evp;
+        retval = 0;
+    }
+    pthread_mutex_unlock(&NOS_timer_table_mutex);
+    return retval;
+}
+
+int NOS_timer_delete (timer_t timerid)
+{
+    int retval = 0;
+    int i = (long) timerid;
+    pthread_mutex_lock(&NOS_timer_table_mutex);
+    if ((i < 0) || (i >= OS_MAX_TIMEBASES)) {
+        errno = EINVAL;
+        retval = -1;
+    } else {
+        NOS_timer_table[i].armed = 0;
+        NOS_timer_table[i].in_use = 0;
+        retval = 0;
+    }
+    pthread_mutex_unlock(&NOS_timer_table_mutex);
+    return retval;
+}
+
+// unused
+//int NOS_timer_gettime (timer_t timerid, struct itimerspec * value)
+//{
+//    return timer_gettime(timerid, value);
+//}
+
+int NOS_timer_settime (timer_t timerid, int flags, const struct itimerspec * value, struct itimerspec * ovalue)
+{
+    // Only call passes ovalue = NULL, so don't need to do anything with it
+    int retval = 0;
+    int i = (long) timerid;
+    pthread_mutex_lock(&NOS_timer_table_mutex);
+    if ((i < 0) || (i >= OS_MAX_TIMEBASES)) {
+        errno = EINVAL;
+        retval = -1;
+    } else {
+        if ((value->it_value.tv_sec == 0) && (value->it_value.tv_nsec == 0)) {
+            NOS_timer_table[i].armed = 0;
+        } else {
+            NOS_timer_table[i].armed = 1;
+            NOS_timer_table[i].it_interval = value->it_interval;
+            NOS_timer_table[i].expire_time = value->it_value.tv_sec * CFE_PSP_ticks_per_second + value->it_value.tv_nsec * CFE_PSP_ticks_per_second / NOS_NANO;
+            if (flags == 0) { // relative time
+                pthread_mutex_lock(&CFE_PSP_sim_time_mutex);
+                NE_SimTime sim_time = CFE_PSP_sim_time;
+                pthread_mutex_unlock(&CFE_PSP_sim_time_mutex);
+                NOS_timer_table[i].expire_time += sim_time;
+            }
+        }
+        retval = 0;
+    }
+    pthread_mutex_unlock(&NOS_timer_table_mutex);
+    return retval;
+}
+
+void NOS_timer_fire(NE_SimTime time)
+{
+    pthread_mutex_lock(&NOS_timer_table_mutex);
+    for (int i = 0; i < OS_MAX_TIMEBASES; i++) {
+        if (NOS_timer_table[i].in_use && NOS_timer_table[i].armed) {
+            if (NOS_timer_table[i].expire_time <= time) {
+                // timer expired
+                if ((NOS_timer_table[i].it_interval.tv_sec == 0) && (NOS_timer_table[i].it_interval.tv_nsec == 0)) {
+                    NOS_timer_table[i].armed = 0; // one shot, disable it
+                } else {
+                    // increment to the next expiration time
+                    NOS_timer_table[i].expire_time += NOS_timer_table[i].it_interval.tv_sec * CFE_PSP_ticks_per_second + 
+                        NOS_timer_table[i].it_interval.tv_nsec * CFE_PSP_ticks_per_second / NOS_NANO;
+                     // make sure the next expiration time is at least now, if so it will get triggered at the next tick
+                    if (NOS_timer_table[i].expire_time < time) NOS_timer_table[i].expire_time = time;
+                }
+                // Use evp to do the timer action
+                struct sigevent evp = NOS_timer_table[i].evp;
+                if (evp.sigev_notify == SIGEV_SIGNAL) {
+                    pthread_kill(OS_impl_timebase_table[evp.sigev_value.sival_int].handler_thread, evp.sigev_signo);
+                } 
+                //else {
+                //    OS_printf("NOS_timer_fire:  timer %d, evp.sigev_notify %d not implemented\n", i, evp.sigev_notify);
+                //}
+            }
+        }
+    }
+    pthread_mutex_unlock(&NOS_timer_table_mutex);
+}
+
+static void NOS_canonicalize_timespec(struct timespec *ts)
+{
+    while (ts->tv_nsec < 0) {
+        ts->tv_nsec += 1000000000L;
+        ts->tv_sec--;
+    }
+    while (ts->tv_nsec >= 1000000000L) {
+        ts->tv_nsec -= 1000000000L;
+        ts->tv_sec++;
+    }
+}
+
+static void NOS_minus_real_timeoffset(struct timespec *offset)
+{
+    struct timespec nos, real;
+    clock_gettime(CLOCK_REALTIME, &real);
+    NOS_clock_gettime (CLOCK_REALTIME, &nos);
+    offset->tv_sec = nos.tv_sec - real.tv_sec;
+    offset->tv_nsec = nos.tv_nsec - real.tv_nsec;
+    NOS_canonicalize_timespec(offset);
+}
+
+void NOS_to_real_timespec(const struct timespec *nos, struct timespec *real)
+{
+    struct timespec offset;
+    NOS_minus_real_timeoffset(&offset);
+    real->tv_sec = nos->tv_sec - offset.tv_sec;
+    real->tv_nsec = nos->tv_nsec - offset.tv_nsec;
+    NOS_canonicalize_timespec(real);
+}
 ```
 
-## 항목
+### `os-impl-binsem.c`
 
-- [`fsw/osal/src/os/nos/src/NOS-time.c`](file--NOS-time.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-binsem.c`](file--os-impl-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-bsd-select.c`](file--os-impl-bsd-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-common.c`](file--os-impl-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-console.c`](file--os-impl-console.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-countsem.c`](file--os-impl-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-nos-gettime.c`](file--os-impl-nos-gettime.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-queues.c`](file--os-impl-queues.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-tasks.c`](file--os-impl-tasks.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/nos/src/os-impl-timebase.c`](file--os-impl-timebase.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/nos/src/os-impl-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains some of the OS APIs abstraction layer
+ *    implementation for POSIX
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "os-shared-idmap.h"
+#include "os-shared-binsem.h"
+#include "os-impl-binsem.h"
+
+#include "NOS-time.h"
+
+/*
+ * This controls the maximum time that the calling thread will wait to
+ * acquire the condition mutex before returning an error.
+ *
+ * Under normal conditions, this lock is held by giving/taking threads very
+ * briefly, so the lock should be available with minimal delay.  However,
+ * if the "taking" thread is canceled or exits abnormally without releasing the
+ * lock, it means any other task accessing the sem can get blocked indefinitely.
+ *
+ * There should be no reason for a user to configure this, as it should
+ * not be relevant in a normally operating system.  This only prevents a
+ * deadlock condition in off-nominal circumstances.
+ */
+#define OS_POSIX_BINSEM_MAX_WAIT_SECONDS 2
+
+/* Tables where the OS object information is stored */
+OS_impl_binsem_internal_record_t OS_impl_bin_sem_table[OS_MAX_BIN_SEMAPHORES];
+
+/*---------------------------------------------------------------------------------------
+ * Helper function for acquiring the mutex when beginning a binary sem operation
+ * This uses timedlock to avoid waiting forever, and is put into a wrapper function
+ * to avoid pending forever.  The code should never pend on these for a long time.
+ ----------------------------------------------------------------------------------------*/
+int32 OS_Posix_BinSemAcquireMutex(pthread_mutex_t *mut)
+{
+    struct timespec timeout;
+
+    if (NOS_clock_gettime(CLOCK_REALTIME, &timeout) != 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    timeout.tv_sec += OS_POSIX_BINSEM_MAX_WAIT_SECONDS;
+
+    if (pthread_mutex_timedlock(mut, &timeout) != 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*---------------------------------------------------------------------------------------
+ * Helper function for releasing the mutex in case the thread
+ * executing pthread_condwait() is canceled.
+ ----------------------------------------------------------------------------------------*/
+void OS_Posix_BinSemReleaseMutex(void *mut)
+{
+    pthread_mutex_unlock(mut);
+}
+
+/****************************************************************************************
+                               BINARY SEMAPHORE API
+ ***************************************************************************************/
+
+/*
+ * Note that the pthreads world does not provide VxWorks-style binary semaphores that the OSAL API is modeled after.
+ * Instead, semaphores are simulated using pthreads mutexes, condition variables, and a bit of internal state.
+ *
+ * IMPORTANT: the side effect of this is that Binary Semaphores are not usable from signal handlers / ISRs.
+ * Use Counting Semaphores instead.
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Posix_BinSemAPI_Impl_Init
+
+   Purpose: Initialize the Binary Semaphore data structures
+
+ ----------------------------------------------------------------------------------------*/
+int32 OS_Posix_BinSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_bin_sem_table, 0, sizeof(OS_impl_bin_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemCreate_Impl(const OS_object_token_t *token, uint32 initial_value, uint32 options)
+{
+    int                               ret;
+    int                               attr_created;
+    int                               mutex_created;
+    int                               cond_created;
+    int32                             return_code;
+    pthread_mutexattr_t               mutex_attr;
+    OS_impl_binsem_internal_record_t *sem;
+
+    /*
+     * This preserves a bit of pre-existing functionality that was particular to binary sems:
+     * if the initial value is greater than 1 it just silently used 1 without error.
+     * (by contrast the counting semaphore will return an error)
+     */
+    if (initial_value > 1)
+    {
+        initial_value = 1;
+    }
+
+    attr_created  = 0;
+    mutex_created = 0;
+    cond_created  = 0;
+    sem           = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+    memset(sem, 0, sizeof(*sem));
+
+    do
+    {
+        /*
+         ** Initialize the pthread mutex attribute structure with default values
+         */
+        ret = pthread_mutexattr_init(&mutex_attr);
+        if (ret != 0)
+        {
+            OS_DEBUG("Error: pthread_mutexattr_init failed: %s\n", strerror(ret));
+            return_code = OS_SEM_FAILURE;
+            break;
+        }
+
+        /* After this point, the attr object should be destroyed before return */
+        attr_created = 1;
+
+        /*
+         ** Use priority inheritance
+         */
+        ret = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT);
+        if (ret != 0)
+        {
+            OS_DEBUG("Error: pthread_mutexattr_setprotocol failed: %s\n", strerror(ret));
+            return_code = OS_SEM_FAILURE;
+            break;
+        }
+
+        /*
+         ** Initialize the mutex that is used with the condition variable
+         */
+        ret = pthread_mutex_init(&(sem->id), &mutex_attr);
+        if (ret != 0)
+        {
+            OS_DEBUG("Error: pthread_mutex_init failed: %s\n", strerror(ret));
+            return_code = OS_SEM_FAILURE;
+            break;
+        }
+
+        mutex_created = 1;
+
+        /*
+         ** Initialize the condition variable
+         */
+        ret = pthread_cond_init(&(sem->cv), NULL);
+        if (ret != 0)
+        {
+            OS_DEBUG("Error: pthread_cond_init failed: %s\n", strerror(ret));
+            return_code = OS_SEM_FAILURE;
+            break;
+        }
+
+        cond_created = 1;
+
+        /*
+         * Check sem call, avoids unreachable destroy logic
+         */
+        ret = pthread_cond_signal(&(sem->cv));
+        if (ret != 0)
+        {
+            OS_DEBUG("Error: initial pthread_cond_signal failed: %s\n", strerror(ret));
+            return_code = OS_SEM_FAILURE;
+            break;
+        }
+
+        /*
+         ** fill out the proper OSAL table fields
+         */
+
+        sem->current_value = initial_value;
+
+        return_code = OS_SUCCESS;
+    } while (0);
+
+    /* Clean up resources if the operation failed */
+    if (return_code != OS_SUCCESS)
+    {
+        if (mutex_created)
+        {
+            pthread_mutex_destroy(&(sem->id));
+        }
+        if (cond_created)
+        {
+            pthread_cond_destroy(&(sem->cv));
+        }
+    }
+
+    if (attr_created)
+    {
+        /* Done with the attribute object -
+         * this call is a no-op in linux - but for other implementations if
+         * the create call allocated something this should free it
+         */
+        pthread_mutexattr_destroy(&mutex_attr);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *sem;
+    int32                             return_code;
+
+    sem = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    if (pthread_cond_destroy(&(sem->cv)) != 0)
+    {
+        /* sem could be busy, i.e. some task is pending on it already.
+         * that means it cannot be deleted at this time. */
+        return_code = OS_SEM_FAILURE;
+    }
+    else
+    {
+        /* Now that the CV is destroyed this sem is unusable,
+         * so we must do our best to clean everything else.  Even if cleanup
+         * does not fully work, returning anything other than OS_SUCCESS would
+         * suggest to the caller that the sem is still usable which it is not.
+         */
+        return_code = OS_SUCCESS;
+
+        /* destroy the associated mutex --
+         * Note that this might fail if the mutex is locked,
+         * but there is no sane way to recover from that (see above). */
+        pthread_mutex_destroy(&(sem->id));
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGive_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *sem;
+
+    sem = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /*
+     * Note there is a possibility that another thread is concurrently taking this sem,
+     * and has just checked the current_value but not yet inside the cond_wait call.
+     *
+     * To address this possibility - the lock must be taken here.  This is unfortunate
+     * as it means there may be a task switch when _giving_ a binary semaphore.  But the
+     * alternative of having a BinSemGive not wake up the other thread is a bigger issue.
+     *
+     * Counting sems do not suffer from this, as there is a native POSIX mechanism for those.
+     *
+     * Note: This lock should be readily available, with only minimal delay if any.
+     * If a long delay occurs here, it means something is fundamentally wrong.
+     */
+
+    /* Lock the mutex ( not the table! ) */
+    if (OS_Posix_BinSemAcquireMutex(&sem->id) != OS_SUCCESS)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    /* Binary semaphores are always set as "1" when given */
+    sem->current_value = 1;
+
+    /* unblock one thread that is waiting on this sem */
+    pthread_cond_signal(&(sem->cv));
+
+    pthread_mutex_unlock(&(sem->id));
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemFlush_Impl(const OS_object_token_t *token)
+{
+    OS_impl_binsem_internal_record_t *sem;
+
+    sem = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* Lock the mutex ( not the table! ) */
+    if (OS_Posix_BinSemAcquireMutex(&sem->id) != OS_SUCCESS)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    /* increment the flush counter.  Any other threads that are
+     * currently pending in SemTake() will see the counter change and
+     * return _without_ modifying the semaphore count.
+     */
+    ++sem->flush_request;
+
+    /* unblock all threads that are be waiting on this sem */
+    pthread_cond_broadcast(&(sem->cv));
+
+    pthread_mutex_unlock(&(sem->id));
+
+    return OS_SUCCESS;
+}
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_GenericBinSemTake_Impl
+
+   Purpose: Helper function that takes a simulated binary semaphore with a "timespec" timeout
+            If the value is zero this will block until either the value
+            becomes nonzero (via SemGive) or the semaphore gets flushed.
+
+---------------------------------------------------------------------------------------*/
+static int32 OS_GenericBinSemTake_Impl(const OS_object_token_t *token, const struct timespec *timeout)
+{
+    sig_atomic_t                      flush_count;
+    int32                             return_code;
+    OS_impl_binsem_internal_record_t *sem;
+
+    sem = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /*
+     * Note - this lock should be quickly available - should not delay here.
+     * The main delay is in the pthread_cond_wait() below.
+     */
+    /* Lock the mutex ( not the table! ) */
+    if (OS_Posix_BinSemAcquireMutex(&sem->id) != OS_SUCCESS)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    /* because pthread_cond_wait() is also a cancellation point,
+     * this uses a cleanup handler to ensure that if canceled during this call,
+     * the mutex is also released */
+    pthread_cleanup_push(OS_Posix_BinSemReleaseMutex, &sem->id);
+
+    return_code = OS_SUCCESS;
+
+    /*
+     * Note that for vxWorks compatibility, we need to stop pending on the semaphore
+     * and return from this function under two possible circumstances:
+     *
+     *  a) the semaphore count was nonzero (may be pre-existing or due to a give)
+     *     this is the normal case, we should decrement the count by 1 and return.
+     *  b) the semaphore got "flushed"
+     *     in this case ALL tasks are un-blocked and we do NOT decrement the count.
+     */
+
+    /*
+     * first take a local snapshot of the flush request counter,
+     * if it changes, we know that someone else called SemFlush.
+     */
+    flush_count = sem->flush_request;
+
+    /* Note - the condition must be checked in a while loop because
+     * even if pthread_cond_wait() returns, it does NOT guarantee that
+     * the condition we are looking for has been met.
+     *
+     * Also if the current_value is already nonzero we will not wait.
+     */
+    while (sem->current_value == 0 && sem->flush_request == flush_count)
+    {
+        /* Must pend until something changes */
+        if (timeout == NULL)
+        {
+            /* wait forever */
+            pthread_cond_wait(&(sem->cv), &(sem->id));
+        }
+        else if (pthread_cond_timedwait(&(sem->cv), &(sem->id), timeout) == ETIMEDOUT)
+        {
+            return_code = OS_SEM_TIMEOUT;
+            break;
+        }
+    }
+
+    /* If the flush counter did not change, set the value to zero */
+    if (return_code == OS_SUCCESS && sem->flush_request == flush_count)
+    {
+        sem->current_value = 0;
+    }
+
+    /*
+     * Pop the cleanup handler.
+     * Passing "true" means it will be executed, which
+     * handles releasing the mutex.
+     */
+    pthread_cleanup_pop(true);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTake_Impl(const OS_object_token_t *token)
+{
+    return (OS_GenericBinSemTake_Impl(token, NULL));
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    struct timespec ts;
+
+    /*
+     ** Compute an absolute time for the delay
+     */
+    OS_Posix_CompAbsDelayTime(msecs, &ts);
+
+    return (OS_GenericBinSemTake_Impl(token, &ts));
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGetInfo_Impl(const OS_object_token_t *token, OS_bin_sem_prop_t *sem_prop)
+{
+    OS_impl_binsem_internal_record_t *sem;
+
+    sem = OS_OBJECT_TABLE_GET(OS_impl_bin_sem_table, *token);
+
+    /* put the info into the structure */
+    sem_prop->value = sem->current_value;
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-bsd-select.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-bsd-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \author joseph.p.hickey@nasa.gov
+ *
+ * Purpose: This file contains wrappers around the select() system call
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must include whatever is required to get the prototypes of these functions:
+ *
+ *   FD_SET/FD_CLR/FD_ISSET macros and fd_set typedef
+ *   select()
+ *   clock_gettime() - for computing select timeouts
+ */
+#include <string.h>
+#include <errno.h>
+#include <time.h>
+
+#include "os-impl-select.h"
+#include "os-shared-select.h"
+#include "os-shared-idmap.h"
+
+#include "NOS-time.h"
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/***************************************************************************************
+                                 FUNCTION PROTOTYPES
+ **************************************************************************************/
+
+/****************************************************************************************
+                                   GLOBAL DATA
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                LOCAL FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Convert an OS_FdSet (OSAL) structure into an fd_set (POSIX)
+ *          which can then be passed to the POSIX select function.
+ *
+ * returns: Highest numbered file descriptor in the output fd_set
+ *-----------------------------------------------------------------*/
+static int32 OS_FdSet_ConvertIn_Impl(int *os_maxfd, fd_set *os_set, const OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+    int32        status;
+
+    status = OS_SUCCESS;
+    for (offset = 0; offset < sizeof(OSAL_set->object_ids); ++offset)
+    {
+        objids = OSAL_set->object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids & 0x01) != 0 && id < OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd >= 0)
+                {
+                    if (osfd >= FD_SETSIZE || !OS_impl_filehandle_table[id].selectable)
+                    {
+                        /* out of range of select() implementation */
+                        status = OS_ERR_OPERATION_NOT_SUPPORTED;
+                    }
+                    else
+                    {
+                        FD_SET(osfd, os_set);
+                        if (osfd > *os_maxfd)
+                        {
+                            *os_maxfd = osfd;
+                        }
+                    }
+                }
+            }
+            ++bit;
+            objids >>= 1;
+        }
+    }
+
+    return status;
+}
+
+/*----------------------------------------------------------------*/
+/**
+ * \brief Convert a POSIX fd_set structure into an OSAL OS_FdSet
+ *        which can then be returned back to the application.
+ *
+ * Local helper routine, not part of OSAL API.
+ *
+ * This un-sets bits in OSAL_set that are set in the OS_set
+ *
+ * \param[in]     OS_set   The fd_set from select
+ * \param[in,out] OSAL_set The OS_FdSet updated by this helper
+ */
+/*-----------------------------------------------------------------*/
+static void OS_FdSet_ConvertOut_Impl(fd_set *OS_set, OS_FdSet *OSAL_set)
+{
+    size_t       offset;
+    size_t       bit;
+    osal_index_t id;
+    uint8        objids;
+    int          osfd;
+
+    for (offset = 0; offset < sizeof(OSAL_set->object_ids); ++offset)
+    {
+        objids = OSAL_set->object_ids[offset];
+        bit    = 0;
+        while (objids != 0)
+        {
+            id = OSAL_INDEX_C((offset * 8) + bit);
+            if ((objids & 0x01) != 0 && id < OS_MAX_NUM_OPEN_FILES)
+            {
+                osfd = OS_impl_filehandle_table[id].fd;
+                if (osfd < 0 || !FD_ISSET(osfd, OS_set))
+                {
+                    OSAL_set->object_ids[offset] &= ~(1 << bit);
+                }
+            }
+            ++bit;
+            objids >>= 1;
+        }
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *          Actual implementation of select() call
+ *          Used by SelectSingle and SelectMultiple implementations (below)
+ *-----------------------------------------------------------------*/
+static int32 OS_DoSelect(int maxfd, fd_set *rd_set, fd_set *wr_set, int32 msecs)
+{
+    int             os_status;
+    int32           return_code;
+    struct timeval  tv;
+    struct timeval *tvptr;
+    struct timespec ts_now;
+    struct timespec ts_end;
+
+    if (msecs > 0)
+    {
+        NOS_clock_gettime(CLOCK_MONOTONIC, &ts_now);
+        ts_end.tv_sec  = ts_now.tv_sec + (msecs / 1000);
+        ts_end.tv_nsec = ts_now.tv_nsec + (1000000 * (msecs % 1000));
+        if (ts_end.tv_nsec >= 1000000000)
+        {
+            ++ts_end.tv_sec;
+            ts_end.tv_nsec -= 1000000000;
+        }
+    }
+    else
+    {
+        /* Zero for consistency and to avoid possible confusion if not cleared */
+        memset(&ts_end, 0, sizeof(ts_end));
+    }
+
+    do
+    {
+        if (msecs < 0)
+        {
+            tvptr = NULL;
+        }
+        else if (msecs == 0)
+        {
+            tvptr      = &tv;
+            tv.tv_sec  = 0;
+            tv.tv_usec = 0;
+        }
+        else
+        {
+            tvptr = &tv;
+
+            NOS_clock_gettime(CLOCK_MONOTONIC, &ts_now);
+
+            /* note that the tv_sec and tv_usec/tv_nsec values are all signed longs, so OK to subtract */
+            tv.tv_sec  = ts_end.tv_sec - ts_now.tv_sec;
+            tv.tv_usec = (ts_end.tv_nsec - ts_now.tv_nsec) / 1000;
+
+            if (tv.tv_sec < 0 || (tv.tv_sec == 0 && tv.tv_usec < 0))
+            {
+                os_status = 0;
+                break;
+            }
+
+            if (tv.tv_usec < 0)
+            {
+                tv.tv_usec += 1000000;
+                --tv.tv_sec;
+            }
+        }
+
+        os_status = select(maxfd + 1, rd_set, wr_set, NULL, tvptr);
+    } while (os_status < 0 && (errno == EINTR || errno == EAGAIN));
+
+    if (os_status < 0)
+    {
+        return_code = OS_ERROR;
+    }
+    else if (os_status == 0)
+    {
+        return_code = OS_ERROR_TIMEOUT;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                SELECT API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle_Impl(const OS_object_token_t *token, uint32 *SelectFlags, int32 msecs)
+{
+    int32                           return_code;
+    fd_set                          wr_set;
+    fd_set                          rd_set;
+    OS_impl_file_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_filehandle_table, *token);
+
+    /*
+     * If called on a stream_id which does not support this
+     * operation, return immediately and do not invoke the system call
+     */
+    if (!impl->selectable)
+    {
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (impl->fd >= FD_SETSIZE)
+    {
+        /* out of range of select() implementation */
+        return OS_ERR_OPERATION_NOT_SUPPORTED;
+    }
+
+    if (*SelectFlags != 0)
+    {
+        FD_ZERO(&wr_set);
+        FD_ZERO(&rd_set);
+        if (*SelectFlags & OS_STREAM_STATE_READABLE)
+        {
+            FD_SET(impl->fd, &rd_set);
+        }
+        if (*SelectFlags & OS_STREAM_STATE_WRITABLE)
+        {
+            FD_SET(impl->fd, &wr_set);
+        }
+
+        return_code = OS_DoSelect(impl->fd, &rd_set, &wr_set, msecs);
+
+        if (return_code == OS_SUCCESS)
+        {
+            if (!FD_ISSET(impl->fd, &rd_set))
+            {
+                *SelectFlags &= ~OS_STREAM_STATE_READABLE;
+            }
+            if (!FD_ISSET(impl->fd, &wr_set))
+            {
+                *SelectFlags &= ~OS_STREAM_STATE_WRITABLE;
+            }
+        }
+        else
+        {
+            *SelectFlags = 0;
+        }
+    }
+    else
+    {
+        /* Nothing to check for, return immediately. */
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple_Impl(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    fd_set wr_set;
+    fd_set rd_set;
+    int    maxfd;
+    int32  return_code;
+
+    FD_ZERO(&rd_set);
+    FD_ZERO(&wr_set);
+    maxfd = -1;
+    if (ReadSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&maxfd, &rd_set, ReadSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+    if (WriteSet != NULL)
+    {
+        return_code = OS_FdSet_ConvertIn_Impl(&maxfd, &wr_set, WriteSet);
+        if (return_code != OS_SUCCESS)
+        {
+            return return_code;
+        }
+    }
+
+    if (maxfd >= 0)
+    {
+        return_code = OS_DoSelect(maxfd, &rd_set, &wr_set, msecs);
+    }
+    else
+    {
+        /*
+         * This return code will be used if the set(s) were
+         * both empty/NULL or otherwise did not contain valid filehandles.
+         */
+        return_code = OS_ERR_INVALID_ID;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if (ReadSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&rd_set, ReadSet);
+        }
+        if (WriteSet != NULL)
+        {
+            OS_FdSet_ConvertOut_Impl(&wr_set, WriteSet);
+        }
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-common.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-common.c`
+
+
+```c
+/*
+ *  NASA Docket No. GSC-18,370-1, and identified as "Operating System Abstraction Layer"
+ *
+ *  Copyright (c) 2019 United States Government as represented by
+ *  the Administrator of the National Aeronautics and Space Administration.
+ *  All Rights Reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+/**
+ * \file     os-impl-common.c
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "bsp-impl.h"
+
+#include "os-impl-tasks.h"
+#include "os-impl-queues.h"
+#include "os-impl-binsem.h"
+#include "os-impl-countsem.h"
+#include "os-impl-mutex.h"
+
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-errors.h"
+
+#include "NOS-time.h"
+
+POSIX_GlobalVars_t   POSIX_GlobalVars = { 0 };
+
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_API_Impl_Init
+
+   Purpose: Initialize the tables that the OS API uses to keep track of information
+            about objects
+
+   returns: OS_SUCCESS or OS_ERROR
+---------------------------------------------------------------------------------------*/
+int32 OS_API_Impl_Init(uint32 idtype)
+{
+    int32               return_code;
+
+    return_code = OS_Posix_TableMutex_Init(idtype);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+
+    switch(idtype)
+    {
+    case OS_OBJECT_TYPE_OS_TASK:
+        return_code = OS_Posix_TaskAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_QUEUE:
+        return_code = OS_Posix_QueueAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_BINSEM:
+        return_code = OS_Posix_BinSemAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_COUNTSEM:
+        return_code = OS_Posix_CountSemAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_MUTEX:
+        return_code = OS_Posix_MutexAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_MODULE:
+        return_code = OS_Posix_ModuleAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_TIMEBASE:
+        return_code = OS_Posix_TimeBaseAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_STREAM:
+        return_code = OS_Posix_StreamAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_DIR:
+        return_code = OS_Posix_DirAPI_Impl_Init();
+        break;
+    case OS_OBJECT_TYPE_OS_FILESYS:
+        return_code = OS_Posix_FileSysAPI_Impl_Init();
+        break;
+    default:
+        break;
+    }
+
+
+    return(return_code);
+} /* end OS_API_Impl_Init */
+
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_IdleLoop_Impl
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_IdleLoop_Impl(void)
+{
+   /*
+    * Unblock signals and wait for something to occur
+    *
+    * Note - "NormalSigMask" was calculated during task init to be the original signal mask
+    * of the process PLUS all "RT" signals.  The RT signals are used by timers, so we want
+    * to keep them masked here (this is different than the original POSIX impl).  The
+    * timebase objects have a dedicated thread that will be doing "sigwait" on those.
+    */
+   sigsuspend(&POSIX_GlobalVars.NormalSigMask);
+} /* end OS_IdleLoop_Impl */
+
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_ApplicationShutdown_Impl
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ApplicationShutdown_Impl(void)
+{
+   /*
+    * Raise a signal that is unblocked in OS_IdleLoop(),
+    * which should break it out of the sigsuspend() call.
+    */
+   kill(getpid(), SIGHUP);
+} /* end OS_ApplicationShutdown_Impl */
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_CompAbsDelayTime
+ *
+ * Purpose:  Local helper function
+ *
+ * This function accept time interval, msecs, as an input and
+ * computes the absolute time at which this time interval will expire.
+ * The absolute time is programmed into a struct.
+ *
+ *-----------------------------------------------------------------*/
+void  OS_Posix_CompAbsDelayTime( uint32 msecs, struct timespec * tm)
+{
+    clock_gettime(CLOCK_REALTIME, tm);
+
+    /* add the delay to the current time */
+    tm->tv_sec  += (time_t) (msecs / 1000) ;
+    /* convert residue ( msecs )  to nanoseconds */
+    tm->tv_nsec +=  (msecs % 1000) * 1000000L ;
+
+    if(tm->tv_nsec  >= 1000000000L )
+    {
+        tm->tv_nsec -= 1000000000L ;
+        tm->tv_sec ++ ;
+    }
+} /* end OS_CompAbsDelayTime */
+
+
+```
+
+### `os-impl-console.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-console.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "os-impl-console.h"
+#include "os-impl-tasks.h"
+
+#include "os-shared-idmap.h"
+#include "os-shared-printf.h"
+#include "os-shared-common.h"
+
+/*
+ * By default the console output is always asynchronous
+ * (equivalent to "OS_UTILITY_TASK_ON" being set)
+ *
+ * This option was removed from osconfig.h and now is
+ * assumed to always be on.
+ */
+#define OS_CONSOLE_ASYNC         true
+#define OS_CONSOLE_TASK_PRIORITY OS_UTILITYTASK_PRIORITY
+
+/* Tables where the OS object information is stored */
+OS_impl_console_internal_record_t OS_impl_console_table[OS_MAX_CONSOLES];
+
+/********************************************************************/
+/*                 CONSOLE OUTPUT                                   */
+/********************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ConsoleWakeup_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+
+    local = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+
+    /* post the sem for the utility task to run */
+    sem_post(&local->data_sem);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local Helper function
+ *           Implements the console output task
+ *
+ *-----------------------------------------------------------------*/
+static void *OS_ConsoleTask_Entry(void *arg)
+{
+    OS_VoidPtrValueWrapper_t           local_arg;
+    OS_impl_console_internal_record_t *local;
+    OS_object_token_t                  token;
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    local_arg.opaque_arg = arg;
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_CONSOLE, local_arg.id, &token) == OS_SUCCESS)
+    {
+        local = OS_OBJECT_TABLE_GET(OS_impl_console_table, token);
+
+        /* Loop forever (unless shutdown is set) */
+        while (OS_SharedGlobalVars.GlobalState != OS_SHUTDOWN_MAGIC_NUMBER)
+        {
+            OS_ConsoleOutput_Impl(&token);
+            sem_wait(&local->data_sem);
+        }
+        OS_ObjectIdRelease(&token);
+    }
+    return NULL;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConsoleCreate_Impl(const OS_object_token_t *token)
+{
+    OS_impl_console_internal_record_t *local;
+    OS_console_internal_record_t *     console;
+    pthread_t                          consoletask;
+    int32                              return_code;
+    OS_VoidPtrValueWrapper_t           local_arg = {0};
+    char console_name[OS_MAX_API_NAME];
+
+    console = OS_OBJECT_TABLE_GET(OS_console_table, *token);
+    local   = OS_OBJECT_TABLE_GET(OS_impl_console_table, *token);
+
+    snprintf(console_name, sizeof(console_name), "console.%d", token->obj_idx);
+
+    if (token->obj_idx == 0)
+    {
+        return_code = OS_SUCCESS;
+
+        if (console->IsAsync)
+        {
+            if (sem_init(&local->data_sem, 0, 0) < 0)
+            {
+                return_code = OS_SEM_FAILURE;
+            }
+            else
+            {
+                /* cppcheck-suppress unreadVariable // intentional use of other union member */
+                local_arg.id = OS_ObjectIdFromToken(token);
+                return_code  = OS_Posix_InternalTaskCreate_Impl(&consoletask, console_name, OS_CONSOLE_TASK_PRIORITY, 0,
+                                                               OS_ConsoleTask_Entry, local_arg.opaque_arg);
+
+                if (return_code != OS_SUCCESS)
+                {
+                    sem_destroy(&local->data_sem);
+                }
+            }
+        }
+    }
+    else
+    {
+        /* only one physical console device is implemented */
+        return_code = OS_ERR_NOT_IMPLEMENTED;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-countsem.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "os-impl-countsem.h"
+#include "os-shared-countsem.h"
+#include "os-shared-idmap.h"
+
+#include "NOS-time.h"
+
+/*
+ * Added SEM_VALUE_MAX Define
+ */
+#ifndef SEM_VALUE_MAX
+#define SEM_VALUE_MAX (UINT32_MAX / 2)
+#endif
+
+/* Tables where the OS object information is stored */
+OS_impl_countsem_internal_record_t OS_impl_count_sem_table[OS_MAX_COUNT_SEMAPHORES];
+
+/****************************************************************************************
+                               COUNTING SEMAPHORE API
+ ***************************************************************************************/
+
+/*
+ * Unlike binary semaphores, counting semaphores can use the standard POSIX semaphore facility.
+ * This has the advantage of more correct behavior on "give" operations:
+ *  - give may be done from a signal / ISR context
+ *  - give should not cause an unexpected task switch nor should it ever block
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Posix_CountSemAPI_Impl_Init
+
+   Purpose: Initialize the Counting Semaphore data structures
+
+---------------------------------------------------------------------------------------*/
+int32 OS_Posix_CountSemAPI_Impl_Init(void)
+{
+    memset(OS_impl_count_sem_table, 0, sizeof(OS_impl_count_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemCreate_Impl(const OS_object_token_t *token, uint32 sem_initial_value, uint32 options)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (sem_initial_value > SEM_VALUE_MAX)
+    {
+        return OS_INVALID_SEM_VALUE;
+    }
+
+    if (sem_init(&impl->id, 0, sem_initial_value) < 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (sem_destroy(&impl->id) < 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGive_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (sem_post(&impl->id) < 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTake_Impl(const OS_object_token_t *token)
+{
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (sem_wait(&impl->id) < 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTimedWait_Impl(const OS_object_token_t *token, uint32 msecs)
+{
+    struct timespec                     ts;
+    int                                 result;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    /*
+     ** Compute an absolute time for the delay
+     */
+    //OS_Posix_CompAbsDelayTime(msecs, &ts);
+    NOS_clock_gettime(CLOCK_REALTIME, &ts);
+    ts.tv_sec += (time_t) (msecs / 1000);
+    ts.tv_nsec += (msecs % 1000) * 1000000L ;
+    if (ts.tv_nsec > 1000000000L ) 
+    {
+        ts.tv_nsec -= 1000000000L ;
+        ts.tv_sec++;
+    }
+
+    if (sem_timedwait(&impl->id, &ts) == 0)
+    {
+        result = OS_SUCCESS;
+    }
+    else if (errno == ETIMEDOUT)
+    {
+        result = OS_SEM_TIMEOUT;
+    }
+    else
+    {
+        /* unspecified failure */
+        result = OS_SEM_FAILURE;
+    }
+
+    return result;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGetInfo_Impl(const OS_object_token_t *token, OS_count_sem_prop_t *count_prop)
+{
+    int                                 sval;
+    OS_impl_countsem_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_count_sem_table, *token);
+
+    if (sem_getvalue(&impl->id, &sval) < 0)
+    {
+        return OS_SEM_FAILURE;
+    }
+
+    /* put the info into the structure */
+    count_prop->value = sval;
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-nos-gettime.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-nos-gettime.c`
+
+
+```c
+/* Copyright (C) 2022 - 2022 National Aeronautics and Space Administration. All Foreign Rights are Reserved to the U.S. Government.
+
+   This software is provided "as is" without any warranty of any, kind either express, implied, or statutory, including, but not
+   limited to, any warranty that the software will conform to, specifications any implied warranties of merchantability, fitness
+   for a particular purpose, and freedom from infringement, and any warranty that the documentation will conform to the program, or
+   any warranty that the software will be error free.
+
+   In no event shall NASA be liable for any damages, including, but not limited to direct, indirect, special or consequential damages,
+   arising out of, resulting from, or in any way connected with the software or its documentation.  Whether or not based upon warranty,
+   contract, tort or otherwise, and whether or not loss was sustained from, or arose out of the results of, or use of, the software,
+   documentation or services provided hereunder
+
+   ITC Team
+   NASA IV&V
+   ivv-itc@lists.nasa.gov
+*/
+
+/**
+ * \file   os-impl-nos-gettime.c
+ *
+ * This file contains implementation for OS_GetTime() and OS_SetTime()
+ * that map to the C library clock_gettime() and clock_settime() calls.
+ * This should be usable on any OS that supports those standard calls.
+ * The OS-specific code must \#include the correct headers that define the
+ * prototypes for these functions before including this implementation file.
+ *
+ * NOTE: This is a "template" file and not a directly usable source file.
+ *       It must be adapted/instantiated from within the OS-specific
+ *       implementation on platforms that wish to use this template.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+/*
+ * Inclusions Defined by OSAL layer.
+ *
+ * This must provide the prototypes of these functions:
+ *
+ *   clock_gettime()
+ *   clock_settime()
+ *
+ * and the "struct timespec" definition
+ */
+#include <string.h>
+#include <errno.h>
+
+#include "osapi-clock.h"
+#include "os-impl-gettime.h"
+#include "os-shared-clock.h"
+
+#include "NOS-time.h"
+
+extern int64_t          CFE_PSP_ticks_per_second;
+
+/****************************************************************************************
+                                FUNCTIONS
+ ***************************************************************************************/
+
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_GetLocalTime_Impl
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetLocalTime_Impl(OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    Status = NOS_clock_gettime(OSAL_GETTIME_SOURCE_CLOCK, &TimeSp);
+
+    if (Status == 0)
+    {
+        //*time_struct = OS_TimeAssembleFromNanoseconds(TimeSp.tv_sec, TimeSp.tv_nsec);
+        time_struct->ticks = (TimeSp.tv_sec * CFE_PSP_ticks_per_second) + 
+                             (TimeSp.tv_nsec * (NOS_NANO / CFE_PSP_ticks_per_second));
+        ReturnCode = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("Error calling clock_gettime: %s\n",strerror(errno));
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+}
+
+
+/*----------------------------------------------------------------
+ *
+ * Function: OS_SetLocalTime_Impl
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SetLocalTime_Impl(const OS_time_t *time_struct)
+{
+    int             Status;
+    int32           ReturnCode;
+    struct timespec TimeSp;
+
+    TimeSp.tv_sec  = OS_TimeGetTotalSeconds(*time_struct);
+    TimeSp.tv_nsec = OS_TimeGetNanosecondsPart(*time_struct);
+
+    Status = NOS_clock_settime(OSAL_GETTIME_SOURCE_CLOCK, &TimeSp);
+
+    if (Status == 0)
+    {
+        ReturnCode = OS_SUCCESS;
+    }
+    else
+    {
+        ReturnCode = OS_ERROR;
+    }
+
+    return ReturnCode;
+
+}
+```
+
+### `os-impl-queues.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-queues.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "bsp-impl.h"
+
+#include "os-impl-queues.h"
+#include "os-shared-queue.h"
+#include "os-shared-idmap.h"
+
+/* Tables where the OS object information is stored */
+OS_impl_queue_internal_record_t OS_impl_queue_table[OS_MAX_QUEUES];
+
+/****************************************************************************************
+                                MESSAGE QUEUE API
+ ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Posix_QueueAPI_Impl_Init
+
+   Purpose: Initialize the Queue data structures
+
+ ----------------------------------------------------------------------------------------*/
+int32 OS_Posix_QueueAPI_Impl_Init(void)
+{
+    memset(OS_impl_queue_table, 0, sizeof(OS_impl_queue_table));
+
+    /*
+     * Automatic truncation is dependent on the OSAL_CONFIG_DEBUG_PERMISSIVE_MODE compile-time define - so
+     * creating a too-large message queue on a target without OSAL_CONFIG_DEBUG_PERMISSIVE_MODE will fail
+     * with an OS error as intended.
+     */
+#ifdef OSAL_CONFIG_DEBUG_PERMISSIVE_MODE
+    /*
+     * Use the BSP-provided limit
+     */
+    POSIX_GlobalVars.TruncateQueueDepth = OS_BSP_Global.MaxQueueDepth;
+#else
+    /*
+     * Initialize this to zero to indicate no limit
+     */
+    POSIX_GlobalVars.TruncateQueueDepth = OSAL_BLOCKCOUNT_C(0);
+#endif
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    int                              return_code;
+    mqd_t                            queueDesc;
+    struct mq_attr                   queueAttr;
+    char                             name[OS_MAX_API_NAME * 2];
+    OS_impl_queue_internal_record_t *impl;
+    OS_queue_internal_record_t *     queue;
+
+    impl  = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+    queue = OS_OBJECT_TABLE_GET(OS_queue_table, *token);
+
+    /* set queue attributes */
+    memset(&queueAttr, 0, sizeof(queueAttr));
+    queueAttr.mq_maxmsg  = queue->max_depth;
+    queueAttr.mq_msgsize = queue->max_size;
+
+    /*
+     * The "TruncateQueueDepth" indicates a soft limit to the size of a queue.
+     * If nonzero, anything larger than this will be silently truncated
+     * (Supports running applications as non-root)
+     */
+    if (POSIX_GlobalVars.TruncateQueueDepth > 0 && POSIX_GlobalVars.TruncateQueueDepth < queueAttr.mq_maxmsg)
+    {
+        queueAttr.mq_maxmsg = POSIX_GlobalVars.TruncateQueueDepth;
+    }
+
+    /*
+    ** Construct the queue name:
+    ** The name will consist of "/<process_id>.queue_name"
+    */
+    snprintf(name, sizeof(name), "/%d.%s", (int)getpid(), queue->queue_name);
+
+    /*
+     ** create message queue
+     */
+    queueDesc = mq_open(name, O_CREAT | O_RDWR, 0666, &queueAttr);
+    if (queueDesc == (mqd_t)(-1))
+    {
+        OS_DEBUG("OS_QueueCreate Error. errno = %d (%s)\n", errno, strerror(errno));
+        if (errno == EINVAL)
+        {
+            OS_DEBUG("Your queue depth may be too large for the\n");
+            OS_DEBUG("OS to handle. Please check the msg_max\n");
+            OS_DEBUG("parameter located in /proc/sys/fs/mqueue/msg_max\n");
+            OS_DEBUG("on your Linux file system and raise it if you\n");
+            OS_DEBUG(" need to or run as root\n");
+        }
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        impl->id    = queueDesc;
+        return_code = OS_SUCCESS;
+
+        /*
+         * Unlink the queue right now --
+         * queues have kernel persistence and if we do a lot of restarts (i.e. during debugging)
+         * a lot of stale message queues will collect in the system.  It is OK to unlink right now
+         * as this only affects the ability of another process to open the same queue, but we do
+         * not need that to happen anyway.
+         */
+        if (mq_unlink(name) != 0)
+        {
+            OS_DEBUG("OS_QueueDelete Error during mq_unlink(). errno = %d (%s)\n", errno, strerror(errno));
+            /* Note - since the queue is already closed, we cannot really handle this failure gracefully,
+             * The queue is no longer usable so we can't return an error and go back to the way things were.
+             * In this case we need to return OS_SUCCESS so the rest of the entry will be cleaned up.
+             */
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueDelete_Impl(const OS_object_token_t *token)
+{
+    int32                            return_code;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /* Try to delete and unlink the queue */
+    if (mq_close(impl->id) != 0)
+    {
+        OS_DEBUG("OS_QueueDelete Error during mq_close(). errno = %d (%s)\n", errno, strerror(errno));
+        return_code = OS_ERROR;
+    }
+    else
+    {
+        return_code = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGet_Impl(const OS_object_token_t *token, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    int32                            return_code;
+    ssize_t                          sizeCopied;
+    struct timespec                  ts;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /*
+     ** Read the message queue for data
+     */
+    sizeCopied = -1;
+    if (timeout == OS_PEND)
+    {
+        /*
+         ** A signal can interrupt the mq_receive call, so the call has to be done with
+         ** a loop
+         */
+        do
+        {
+            sizeCopied = mq_receive(impl->id, data, size, NULL);
+        } while (sizeCopied < 0 && errno == EINTR);
+    }
+    else
+    {
+        /*
+         * NOTE - a prior implementation of OS_CHECK would check the mq_attr for a nonzero depth
+         * and then call mq_receive().  This is insufficient since another thread might do the same
+         * thing at the same time in which case one thread will read and the other will block.
+         *
+         * Calling mq_timedreceive with a zero timeout effectively does the same thing in the typical
+         * case, but for the case where two threads do a simultaneous read, one will get the message
+         * while the other will NOT block (as expected).
+         */
+        if (timeout == OS_CHECK)
+        {
+            memset(&ts, 0, sizeof(ts));
+        }
+        else
+        {
+            OS_Posix_CompAbsDelayTime(timeout, &ts);
+        }
+
+        /*
+         ** If the mq_timedreceive call is interrupted by a system call or signal,
+         ** call it again.
+         */
+        do
+        {
+            sizeCopied = mq_timedreceive(impl->id, data, size, NULL, &ts);
+        } while (timeout != OS_CHECK && sizeCopied < 0 && errno == EINTR);
+
+    } /* END timeout */
+
+    /* Figure out the return code */
+    if (sizeCopied == -1)
+    {
+        *size_copied = OSAL_SIZE_C(0);
+
+        /* Map the system errno to the most appropriate OSAL return code */
+        if (errno == EMSGSIZE)
+        {
+            return_code = OS_QUEUE_INVALID_SIZE;
+        }
+        else if (timeout == OS_PEND || errno != ETIMEDOUT)
+        {
+            /* OS_PEND was supposed to pend forever until a message arrived
+             * so something else is wrong.  Otherwise, at this point the only
+             * "acceptable" errno is TIMEDOUT for the other cases.
+             */
+            return_code = OS_ERROR;
+        }
+        else if (timeout == OS_CHECK)
+        {
+            return_code = OS_QUEUE_EMPTY;
+        }
+        else
+        {
+            return_code = OS_QUEUE_TIMEOUT;
+        }
+    }
+    else
+    {
+        *size_copied = OSAL_SIZE_C(sizeCopied);
+        return_code  = OS_SUCCESS;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueuePut_Impl(const OS_object_token_t *token, const void *data, size_t size, uint32 flags)
+{
+    int32                            return_code;
+    int                              result;
+    struct timespec                  ts;
+    OS_impl_queue_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_queue_table, *token);
+
+    /*
+     * NOTE - using a zero timeout here for the same reason that QueueGet does ---
+     * checking the attributes and doing the actual send is non-atomic, and if
+     * two threads call QueuePut() at the same time on a nearly-full queue,
+     * one could block.
+     */
+    memset(&ts, 0, sizeof(ts));
+
+    /* send message */
+    do
+    {
+        result = mq_timedsend(impl->id, data, size, 1, &ts);
+    } while (result == -1 && errno == EINTR);
+
+    if (result == 0)
+    {
+        return_code = OS_SUCCESS;
+    }
+    else if (errno == ETIMEDOUT)
+    {
+        return_code = OS_QUEUE_FULL;
+    }
+    else
+    {
+        /* Something else went wrong */
+        return_code = OS_ERROR;
+    }
+
+    return return_code;
+}
+```
+
+### `os-impl-tasks.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-tasks.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "bsp-impl.h"
+#include <sched.h>
+#include <pthread.h>
+
+#include "os-impl-tasks.h"
+
+#include "os-shared-task.h"
+#include "os-shared-idmap.h"
+
+#include "NOS-time.h"
+
+/*
+ * Defines
+ */
+#ifndef PTHREAD_STACK_MIN
+#define PTHREAD_STACK_MIN (8 * 1024)
+#endif
+
+/* Tables where the OS object information is stored */
+OS_impl_task_internal_record_t OS_impl_task_table[OS_MAX_TASKS];
+
+//extern int pthread_setname_np(pthread_t thread, const char *name);
+
+/*
+ * Local Function Prototypes
+ */
+
+/*----------------------------------------------------------------------------
+ * Name: OS_PriorityRemap
+ *
+ * Purpose: Remaps the OSAL priority into one that is viable for this OS
+ *
+ * Note: This implementation assumes that InputPri has already been verified
+ * to be within the range of [0,OS_MAX_TASK_PRIORITY]
+ *
+----------------------------------------------------------------------------*/
+static int OS_PriorityRemap(osal_priority_t InputPri)
+{
+    int OutputPri;
+
+    if (InputPri == 0)
+    {
+        /* use the "MAX" local priority only for OSAL tasks with priority=0 */
+        OutputPri = POSIX_GlobalVars.PriLimits.PriorityMax;
+    }
+    else if (InputPri >= OS_MAX_TASK_PRIORITY)
+    {
+        /* use the "MIN" local priority only for OSAL tasks with priority=255 */
+        OutputPri = POSIX_GlobalVars.PriLimits.PriorityMin;
+    }
+    else
+    {
+        /*
+         * Spread the remainder of OSAL priorities over the remainder of local priorities
+         *
+         * Note OSAL priorities use the VxWorks style with zero being the
+         * highest and OS_MAX_TASK_PRIORITY being the lowest, this inverts it
+         */
+        OutputPri = (OS_MAX_TASK_PRIORITY - 1) - (int)InputPri;
+
+        OutputPri *= (POSIX_GlobalVars.PriLimits.PriorityMax - POSIX_GlobalVars.PriLimits.PriorityMin) - 2;
+        OutputPri += OS_MAX_TASK_PRIORITY / 2;
+        OutputPri /= (OS_MAX_TASK_PRIORITY - 2);
+        OutputPri += POSIX_GlobalVars.PriLimits.PriorityMin + 1;
+    }
+
+    return OutputPri;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           A POSIX signal handler that does nothing
+ *
+ *-----------------------------------------------------------------*/
+static void OS_NoopSigHandler(int signal) {} /* end OS_NoopSigHandler */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_PthreadEntry
+
+   Purpose: A Simple pthread-compatible entry point that calls the real task function
+
+   returns: NULL
+
+    NOTES: This wrapper function is only used locally by OS_TaskCreate below
+
+---------------------------------------------------------------------------------------*/
+static void *OS_PthreadTaskEntry(void *arg)
+{
+    OS_VoidPtrValueWrapper_t local_arg;
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    local_arg.opaque_arg = arg;
+    OS_TaskEntryPoint(local_arg.id); /* Never returns */
+
+    return NULL;
+}
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Posix_GetSchedulerParams
+
+   Purpose: Helper function to get the details of the given OS scheduling policy.
+            Determines if the policy is usable by OSAL - namely, that it provides
+            enough priority levels to be useful.
+
+   returns: true if policy is suitable for use by OSAL
+
+    NOTES: Only used locally by task API initialization
+
+---------------------------------------------------------------------------------------*/
+static bool OS_Posix_GetSchedulerParams(int sched_policy, POSIX_PriorityLimits_t *PriLim)
+{
+    int ret;
+
+    /*
+     * Set up the local Min/Max priority levels (varies by OS and scheduler policy)
+     *
+     * Per POSIX:
+     *  - The sched_get_priority_min/max() returns a number >= 0 on success.
+     *    (-1 indicates an error)
+     *  - Numerically higher values are scheduled before numerically lower values
+     *  - A compliant OS will have a spread of at least 32 between min and max
+     */
+    ret = sched_get_priority_max(sched_policy);
+    if (ret < 0)
+    {
+        OS_DEBUG("Policy %d: Unable to obtain maximum scheduling priority: %s\n", sched_policy, strerror(errno));
+        return false;
+    }
+
+    PriLim->PriorityMax = ret;
+
+    ret = sched_get_priority_min(sched_policy);
+    if (ret < 0)
+    {
+        OS_DEBUG("Policy %d: Unable to obtain minimum scheduling priority: %s\n", sched_policy, strerror(errno));
+        return false;
+    }
+
+    PriLim->PriorityMin = ret;
+
+    /*
+     * For OSAL, the absolute minimum spread between min and max must be 4.
+     *
+     * Although POSIX stipulates 32, we don't necessarily need that many, but we
+     * also want to confirm that there is an acceptable spread.
+     *
+     * - Highest is reserved for the root task
+     * - Next highest is reserved for OSAL priority=0 task(s)
+     * - Lowest is reserved for OSAL priority=255 tasks(s)
+     * - Need at least 1 for everything else.
+     */
+    if ((PriLim->PriorityMax - PriLim->PriorityMin) < 4)
+    {
+        OS_DEBUG("Policy %d: Insufficient spread between priority min-max: %d-%d\n", sched_policy,
+                 (int)PriLim->PriorityMin, (int)PriLim->PriorityMax);
+        return false;
+    }
+
+    /* If we get here, then the sched_policy is potentially valid */
+    OS_DEBUG("Policy %d: available, min-max: %d-%d\n", sched_policy, (int)PriLim->PriorityMin,
+             (int)PriLim->PriorityMax);
+    return true;
+}
+
+/*
+ *********************************************************************************
+ *          TASK API
+ *********************************************************************************
+ */
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_Posix_TaskAPI_Impl_Init
+
+   Purpose: Initialize the Posix Task data structures
+
+ ----------------------------------------------------------------------------------------*/
+int32 OS_Posix_TaskAPI_Impl_Init(void)
+{
+    int                    ret;
+    long                   ret_long;
+    int                    sig;
+    struct sched_param     sched_param;
+    int                    sched_policy;
+    POSIX_PriorityLimits_t sched_fifo_limits;
+    bool                   sched_fifo_valid;
+    POSIX_PriorityLimits_t sched_rr_limits;
+    bool                   sched_rr_valid;
+
+    /* Initialize Local Tables */
+    memset(OS_impl_task_table, 0, sizeof(OS_impl_task_table));
+
+    /* Clear the "limits" structs otherwise the compiler may warn
+     * about possibly being used uninitialized (false warning)
+     */
+    memset(&sched_fifo_limits, 0, sizeof(sched_fifo_limits));
+    memset(&sched_rr_limits, 0, sizeof(sched_rr_limits));
+
+    /*
+     * Create the key used to store OSAL task IDs
+     */
+    ret = pthread_key_create(&POSIX_GlobalVars.ThreadKey, NULL);
+    if (ret != 0)
+    {
+        OS_DEBUG("Error creating thread key: %s (%d)\n", strerror(ret), ret);
+        return OS_ERROR;
+    }
+
+    /*
+    ** Disable Signals to parent thread and therefore all
+    ** child threads create will block all signals
+    ** Note: Timers will not work in the application unless
+    **       threads are spawned in OS_Application_Startup.
+    */
+    sigfillset(&POSIX_GlobalVars.MaximumSigMask);
+
+    /*
+     * Keep these signals unblocked so the process can be interrupted
+     */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGINT);  /* CTRL+C */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGABRT); /* Abort */
+
+    /*
+     * One should not typically block ANY of the synchronous error
+     * signals, i.e. SIGSEGV, SIGFPE, SIGILL, SIGBUS
+     *
+     * The kernel generates these signals in response to hardware events
+     * and they get routed to the _specific thread_ that was executing when
+     * the problem occurred.
+     *
+     * While it is technically possible to block these signals, the result is
+     * undefined, and it makes debugging _REALLY_ hard.  If the kernel ever does
+     * send one it means there really is a major problem, best to listen to it,
+     * and not ignore it.
+     */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGSEGV); /* Segfault */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGILL);  /* Illegal instruction */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGBUS);  /* Bus Error */
+    sigdelset(&POSIX_GlobalVars.MaximumSigMask, SIGFPE);  /* Floating Point Exception */
+
+    /*
+     * Set the mask and store the original (default) mask in the POSIX_GlobalVars.NormalSigMask
+     */
+    sigprocmask(SIG_SETMASK, &POSIX_GlobalVars.MaximumSigMask, &POSIX_GlobalVars.NormalSigMask);
+
+    /*
+     * Add all "RT" signals into the POSIX_GlobalVars.NormalSigMask
+     * This will be used for the signal mask of the main thread
+     * (This way it will end up as the default/original signal mask plus all RT sigs)
+     */
+    for (sig = SIGRTMIN; sig <= SIGRTMAX; ++sig)
+    {
+        sigaddset(&POSIX_GlobalVars.NormalSigMask, sig);
+    }
+
+    /*
+     * SIGHUP is used to wake up the main thread when necessary,
+     * so make sure it is NOT in the set.
+     */
+    sigdelset(&POSIX_GlobalVars.NormalSigMask, SIGHUP);
+
+    /*
+    ** Install noop as the signal handler for SIGUP.
+    */
+    signal(SIGHUP, OS_NoopSigHandler);
+
+    /*
+    ** Raise the priority of the current (main) thread so that subsequent
+    ** application initialization will complete.  This had previously been
+    ** done by the BSP and but it is moved here.
+    **
+    ** This will only work if the user owning this process has permission
+    ** to create real time threads.  Otherwise, the default priority will
+    ** be retained.  Typically this is only the root user, but finer grained
+    ** permission controls are out there.  So if it works, great, but if
+    ** a permission denied error is generated, that is OK too - this allows
+    ** easily debugging code as a normal user.
+    */
+    ret = pthread_getschedparam(pthread_self(), &sched_policy, &sched_param);
+    if (ret == 0)
+    {
+        POSIX_GlobalVars.SelectedRtScheduler = sched_policy; /* Fallback/default */
+        do
+        {
+            sched_fifo_valid = OS_Posix_GetSchedulerParams(SCHED_FIFO, &sched_fifo_limits);
+            sched_rr_valid   = OS_Posix_GetSchedulerParams(SCHED_RR, &sched_rr_limits);
+
+            /*
+             * If both policies are valid, choose the best. In general, FIFO is preferred
+             * since it is simpler.
+             *
+             * But, RR is preferred if mapping several OSAL priority levels into the
+             * same local priority level. For instance, if 2 OSAL tasks are created at priorities
+             * "2" and "1", both may get mapped to local priority 98, and if using FIFO then the
+             * task at priority "2" could run indefinitely, never letting priority "1" execute.
+             *
+             * This violates the original intent, which would be to have priority "1" preempt
+             * priority "2" tasks.  RR is less bad since it at least guarantees both tasks some
+             * CPU time,
+             */
+            if (sched_fifo_valid && sched_rr_valid)
+            {
+                /*
+                 * If the spread from min->max is greater than what OSAL actually needs,
+                 * then FIFO is the preferred scheduler.  Must take into account one extra level
+                 * for the root task.
+                 */
+                if ((sched_fifo_limits.PriorityMax - sched_fifo_limits.PriorityMin) > OS_MAX_TASK_PRIORITY)
+                {
+                    sched_policy               = SCHED_FIFO;
+                    POSIX_GlobalVars.PriLimits = sched_fifo_limits;
+                }
+                else
+                {
+                    sched_policy               = SCHED_RR;
+                    POSIX_GlobalVars.PriLimits = sched_rr_limits;
+                }
+            }
+            else if (sched_fifo_valid)
+            {
+                /* only FIFO is available */
+                sched_policy               = SCHED_FIFO;
+                POSIX_GlobalVars.PriLimits = sched_fifo_limits;
+            }
+            else if (sched_rr_valid)
+            {
+                /* only RR is available */
+                sched_policy               = SCHED_RR;
+                POSIX_GlobalVars.PriLimits = sched_rr_limits;
+            }
+            else
+            {
+                /* Nothing is valid, use default */
+                break;
+            }
+
+            /*
+             * This OSAL POSIX implementation will reserve the absolute highest priority
+             * for the root thread, which ultimately will just pend in sigsuspend() so
+             * it will not actually DO anything, except if sent a signal.  This way,
+             * that thread will still be able to preempt a high-priority user thread that
+             * has gone awry (i.e. using 100% cpu in FIFO mode).
+             */
+            sched_param.sched_priority = POSIX_GlobalVars.PriLimits.PriorityMax;
+            --POSIX_GlobalVars.PriLimits.PriorityMax;
+
+            OS_DEBUG("Selected policy %d for RT tasks, root task = %d\n", sched_policy,
+                     (int)sched_param.sched_priority);
+
+            /*
+             * If the spread from min->max is greater than what OSAL actually needs,
+             * then truncate it at the number of OSAL priorities.  This will end up mapping 1:1.
+             * and leaving the highest priority numbers unused.
+             */
+            if ((POSIX_GlobalVars.PriLimits.PriorityMax - POSIX_GlobalVars.PriLimits.PriorityMin) >
+                OS_MAX_TASK_PRIORITY)
+            {
+                POSIX_GlobalVars.PriLimits.PriorityMax = POSIX_GlobalVars.PriLimits.PriorityMin + OS_MAX_TASK_PRIORITY;
+            }
+
+            ret = pthread_setschedparam(pthread_self(), sched_policy, &sched_param);
+            if (ret != 0)
+            {
+                OS_DEBUG("Could not setschedparam in main thread: %s (%d)\n", strerror(ret), ret);
+                break;
+            }
+
+            /*
+             * Set the boolean to indicate that "setschedparam" worked --
+             * This means that it is also expected to work for future calls.
+             */
+            POSIX_GlobalVars.SelectedRtScheduler  = sched_policy;
+            POSIX_GlobalVars.EnableTaskPriorities = true;
+        } while (0);
+    }
+    else
+    {
+        OS_DEBUG("Could not getschedparam in main thread: %s (%d)\n", strerror(ret), ret);
+    }
+
+#if !defined(OSAL_CONFIG_DEBUG_PERMISSIVE_MODE)
+    /*
+     * In strict (non-permissive) mode, if the task priority setting did not work, fail with an error.
+     * This would be used on a real target where it needs to be ensured that priorities are active
+     * and the "silent fallback" of debug mode operation is not desired.
+     */
+    if (!POSIX_GlobalVars.EnableTaskPriorities)
+    {
+        return OS_ERROR;
+    }
+#endif
+
+    ret_long = sysconf(_SC_PAGESIZE);
+    if (ret_long < 0)
+    {
+        OS_DEBUG("Could not get page size via sysconf: %s\n", strerror(errno));
+        return OS_ERROR;
+    }
+    POSIX_GlobalVars.PageSize = ret_long;
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Posix_InternalTaskCreate_Impl(pthread_t *pthr, const char *taskname, osal_priority_t priority, size_t stacksz,
+                                       PthreadFuncPtr_t entry, void *entry_arg)
+{
+    int                return_code = 0;
+    pthread_attr_t     custom_attr;
+    struct sched_param priority_holder;
+
+    /*
+     ** Initialize the pthread_attr structure.
+     ** The structure is used to set the stack and priority
+     */
+    memset(&custom_attr, 0, sizeof(custom_attr));
+    return_code = pthread_attr_init(&custom_attr);
+    if (return_code != 0)
+    {
+        OS_DEBUG("pthread_attr_init error in OS_TaskCreate: %s\n", strerror(return_code));
+        return OS_ERROR;
+    }
+
+    /*
+     * Adjust the stack size parameter.
+     *
+     * POSIX has additional restrictions/limitations on the stack size of tasks that
+     * other RTOS environments may not have.  Specifically POSIX says that the stack
+     * size must be at least PTHREAD_STACK_MIN and may also need to be a multiple of the
+     * system page size.
+     *
+     * Rounding up means the user might get a bigger stack than they requested, but
+     * that should not break anything aside from consuming extra memory.
+     */
+    if (stacksz < PTHREAD_STACK_MIN)
+    {
+        stacksz = PTHREAD_STACK_MIN;
+    }
+
+    stacksz += POSIX_GlobalVars.PageSize - 1;
+    stacksz -= stacksz % POSIX_GlobalVars.PageSize;
+
+    /*
+    ** Set the Stack Size
+    */
+    return_code = pthread_attr_setstacksize(&custom_attr, stacksz);
+    if (return_code != 0)
+    {
+        OS_DEBUG("pthread_attr_setstacksize error in OS_TaskCreate: %s\n", strerror(return_code));
+        return OS_ERROR;
+    }
+
+    /*
+    ** Set the thread to be joinable by default
+    */
+    return_code = pthread_attr_setdetachstate(&custom_attr, PTHREAD_CREATE_JOINABLE);
+    if (return_code != 0)
+    {
+        OS_DEBUG("pthread_attr_setdetachstate error in OS_TaskCreate: %s\n", strerror(return_code));
+        return OS_ERROR;
+    }
+
+    /*
+    ** Test to see if the original main task scheduling priority worked.
+    ** If so, then also set the attributes for this task.  Otherwise attributes
+    ** are left at default.
+    */
+    if (POSIX_GlobalVars.EnableTaskPriorities)
+    {
+        /*
+        ** Set the scheduling inherit attribute to EXPLICIT
+        */
+        return_code = pthread_attr_setinheritsched(&custom_attr, PTHREAD_EXPLICIT_SCHED);
+        if (return_code != 0)
+        {
+            OS_DEBUG("pthread_attr_setinheritsched error in OS_TaskCreate, errno = %s\n", strerror(return_code));
+            return OS_ERROR;
+        }
+
+        /*
+        ** Set the scheduling policy
+        ** The best policy is determined during initialization
+        */
+        return_code = pthread_attr_setschedpolicy(&custom_attr, POSIX_GlobalVars.SelectedRtScheduler);
+        if (return_code != 0)
+        {
+            OS_DEBUG("pthread_attr_setschedpolity error in OS_TaskCreate: %s\n", strerror(return_code));
+            return OS_ERROR;
+        }
+
+        /*
+        ** Set priority
+        */
+        return_code = pthread_attr_getschedparam(&custom_attr, &priority_holder);
+        if (return_code != 0)
+        {
+            OS_DEBUG("pthread_attr_getschedparam error in OS_TaskCreate: %s\n", strerror(return_code));
+            return OS_ERROR;
+        }
+
+        priority_holder.sched_priority = OS_PriorityRemap(priority);
+        return_code                    = pthread_attr_setschedparam(&custom_attr, &priority_holder);
+        if (return_code != 0)
+        {
+            OS_DEBUG("pthread_attr_setschedparam error in OS_TaskCreate: %s\n", strerror(return_code));
+            return OS_ERROR;
+        }
+
+    } /* End if user is root */
+
+    /*
+     ** Create thread
+     */
+    return_code = pthread_create(pthr, &custom_attr, entry, entry_arg);
+    if (return_code != 0)
+    {
+        OS_DEBUG("pthread_create error in OS_TaskCreate: %s\n", strerror(return_code));
+        return OS_ERROR;
+    }
+
+    /* Set threadname for debugging */
+    //OS_printf("pthread_setname_np to %s in  OS_TaskCreate\n", taskname);
+    pthread_setname_np(*pthr, taskname);
+    //return_code = pthread_setname_np(*pthr, taskname);
+    //if (return_code != 0)
+    //{
+    //    OS_printf("pthread_setname_np error in OS_TaskCreate: %s\n",strerror(return_code));
+    //}
+
+    /*
+     ** Free the resources that are no longer needed
+     ** Since the task is now running - pthread_create() was successful -
+     ** Do not treat anything bad that happens after this point as fatal.
+     ** The task is running, after all - better to leave well enough alone.
+     */
+    return_code = pthread_attr_destroy(&custom_attr);
+    if (return_code != 0)
+    {
+        OS_DEBUG("pthread_attr_destroy error in OS_TaskCreate: %s\n", strerror(return_code));
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskCreate_Impl(const OS_object_token_t *token, uint32 flags)
+{
+    OS_VoidPtrValueWrapper_t        arg;
+    int32                           return_code;
+    OS_impl_task_internal_record_t *impl;
+    OS_task_internal_record_t *     task;
+
+    memset(&arg, 0, sizeof(arg));
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    arg.id = OS_ObjectIdFromToken(token);
+
+    task = OS_OBJECT_TABLE_GET(OS_task_table, *token);
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    return_code = OS_Posix_InternalTaskCreate_Impl(&impl->id, task->task_name, task->priority, task->stack_size, OS_PthreadTaskEntry,
+                                                   arg.opaque_arg);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDetach_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+    int                             ret;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    ret = pthread_detach(impl->id);
+
+    if (ret != 0)
+    {
+        OS_DEBUG("pthread_detach: Failed on Task ID = %lu, err = %s\n",
+                 OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), strerror(ret));
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskMatch_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    if (pthread_equal(pthread_self(), impl->id) == 0)
+    {
+        return OS_ERROR;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_task_internal_record_t *impl;
+    void *                          retval;
+    int                             ret;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    /*
+    ** Try to delete the task
+    ** If this fails, not much recourse - the only potential cause of failure
+    ** to cancel here is that the thread ID is invalid because it already exited itself,
+    ** and if that is true there is nothing wrong - everything is OK to continue normally.
+    */
+    ret = pthread_cancel(impl->id);
+    if (ret != 0)
+    {
+        OS_DEBUG("pthread_cancel: Failed on Task ID = %lu, err = %s\n",
+                 OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), strerror(ret));
+
+        /* fall through (will still return OS_SUCCESS) */
+    }
+    else
+    {
+        /*
+         * Note that "pthread_cancel" is a request - and successful return above
+         * only means that the cancellation request is pending.
+         *
+         * pthread_join() will wait until the thread has actually exited.
+         *
+         * This is important for CFE, as task deletion often occurs in
+         * conjunction with an application reload - which means the next
+         * call is likely to be OS_ModuleUnload().  So is critical that all
+         * tasks potentially executing code within that module have actually
+         * been stopped - not just pending cancellation.
+         */
+        ret = pthread_join(impl->id, &retval);
+        if (ret != 0)
+        {
+            OS_DEBUG("pthread_join: Failed on Task ID = %lu, err = %s\n",
+                     OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), strerror(ret));
+        }
+    }
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TaskExit_Impl()
+{
+    pthread_exit(NULL);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelay_Impl(uint32 millisecond)
+{
+    struct timespec sleep_end;
+    int             status;
+    
+    //NOS_clock_gettime(CLOCK_MONOTONIC, &sleep_end);
+    sleep_end.tv_sec = millisecond / 1000;
+    sleep_end.tv_nsec = 1000000 * (millisecond % 1000);
+
+    //if (sleep_end.tv_nsec >= 1000000000)
+    //{
+    //    sleep_end.tv_nsec -= 1000000000;
+    //    ++sleep_end.tv_sec;
+    //}
+
+    do
+    {
+        status = NOS_clock_nanosleep(CLOCK_MONOTONIC, 0, &sleep_end, NULL);
+    } while (status == EINTR);
+
+    if (status != 0)
+    {
+        return OS_ERROR;
+    }
+    else
+    {
+        return OS_SUCCESS;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskSetPriority_Impl(const OS_object_token_t *token, osal_priority_t new_priority)
+{
+    int os_priority;
+    int ret;
+
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    if (POSIX_GlobalVars.EnableTaskPriorities)
+    {
+        /* Change OSAL priority into a priority that will work for this OS */
+        os_priority = OS_PriorityRemap(new_priority);
+
+        /*
+        ** Set priority
+        */
+        ret = pthread_setschedprio(impl->id, os_priority);
+        if (ret != 0)
+        {
+            OS_DEBUG("pthread_setschedprio: Task ID = %lu, prio = %d, err = %s\n",
+                     OS_ObjectIdToInteger(OS_ObjectIdFromToken(token)), os_priority, strerror(ret));
+            return OS_ERROR;
+        }
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskRegister_Impl(osal_id_t global_task_id)
+{
+    int32                    return_code;
+    OS_VoidPtrValueWrapper_t arg;
+    int                      old_state;
+    int                      old_type;
+
+    /*
+     * Set cancel state=ENABLED, type=DEFERRED
+     * This should be the default for new threads, but
+     * setting explicitly to be sure that a pthread_join()
+     * will work as expected in case this thread is deleted.
+     */
+    pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, &old_state);
+    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &old_type);
+
+    memset(&arg, 0, sizeof(arg));
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    arg.id = global_task_id;
+
+    return_code = pthread_setspecific(POSIX_GlobalVars.ThreadKey, arg.opaque_arg);
+    if (return_code == 0)
+    {
+        return_code = OS_SUCCESS;
+    }
+    else
+    {
+        OS_DEBUG("OS_TaskRegister_Impl failed during pthread_setspecific() error=%s\n", strerror(return_code));
+        return_code = OS_ERROR;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+osal_id_t OS_TaskGetId_Impl(void)
+{
+    OS_VoidPtrValueWrapper_t self_record;
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    self_record.opaque_arg = pthread_getspecific(POSIX_GlobalVars.ThreadKey);
+
+    return self_record.id;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskGetInfo_Impl(const OS_object_token_t *token, OS_task_prop_t *task_prop)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+bool OS_TaskIdMatchSystemData_Impl(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    const pthread_t *               target = (const pthread_t *)ref;
+    OS_impl_task_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_task_table, *token);
+
+    return (pthread_equal(*target, impl->id) != 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskValidateSystemData_Impl(const void *sysdata, size_t sysdata_size)
+{
+    if (sysdata == NULL || sysdata_size != sizeof(pthread_t))
+    {
+        return OS_INVALID_POINTER;
+    }
+    return OS_SUCCESS;
+}
+```
+
+### `os-impl-timebase.c`
+
+**경로:** `fsw/osal/src/os/nos/src/os-impl-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  posix
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains the OSAL Timebase API for POSIX systems.
+ *
+ * This implementation depends on the POSIX Timer API which may not be available
+ * in older versions of the Linux kernel. It was developed and tested on
+ * RHEL 5 ./ CentOS 5 with Linux kernel 2.6.18
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+
+#include "os-posix.h"
+#include "os-impl-timebase.h"
+#include "os-impl-tasks.h"
+
+#include "os-shared-timebase.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+#include "NOS-time.h"
+
+extern int64_t          CFE_PSP_ticks_per_second;
+
+/****************************************************************************************
+                                EXTERNAL FUNCTION PROTOTYPES
+ ***************************************************************************************/
+
+/****************************************************************************************
+                                INTERNAL FUNCTION PROTOTYPES
+ ***************************************************************************************/
+
+static void OS_UsecToTimespec(uint32 usecs, struct timespec *time_spec);
+
+/****************************************************************************************
+                                     DEFINES
+ ***************************************************************************************/
+
+/*
+ * Prefer to use the MONOTONIC clock if available, as it will not get disrupted by setting
+ * the time like the REALTIME clock will.
+ */
+#ifndef OS_PREFERRED_CLOCK
+#ifdef _POSIX_MONOTONIC_CLOCK
+#define OS_PREFERRED_CLOCK CLOCK_MONOTONIC
+#else
+#define OS_PREFERRED_CLOCK CLOCK_REALTIME
+#endif
+#endif
+
+/****************************************************************************************
+                                     GLOBALS
+ ***************************************************************************************/
+
+OS_impl_timebase_internal_record_t OS_impl_timebase_table[OS_MAX_TIMEBASES];
+
+/****************************************************************************************
+                                INTERNAL FUNCTIONS
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Convert Microseconds to a POSIX timespec structure.
+ *
+ *-----------------------------------------------------------------*/
+static void OS_UsecToTimespec(uint32 usecs, struct timespec *time_spec)
+{
+    if (usecs < 1000000)
+    {
+        time_spec->tv_nsec = (usecs * 1000);
+        time_spec->tv_sec  = 0;
+    }
+    else
+    {
+        time_spec->tv_sec  = usecs / 1000000;
+        time_spec->tv_nsec = (usecs % 1000000) * 1000;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseLock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    pthread_mutex_lock(&impl->handler_mutex);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBaseUnlock_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *impl;
+
+    impl = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    pthread_mutex_unlock(&impl->handler_mutex);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+static uint32 OS_TimeBase_SigWaitImpl(osal_id_t obj_id)
+{
+    int                                 ret;
+    OS_object_token_t                   token;
+    OS_impl_timebase_internal_record_t *impl;
+    OS_timebase_internal_record_t *     timebase;
+    uint32                              interval_time;
+    int                                 sig;
+
+    interval_time = 0;
+
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMEBASE, obj_id, &token) == OS_SUCCESS)
+    {
+        impl     = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, token);
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+        ret = sigwait(&impl->sigset, &sig);
+
+        if (ret != 0)
+        {
+            /*
+             * the sigwait call failed.
+             * returning 0 will cause the process to repeat.
+             */
+        }
+        else if (impl->reset_flag == 0)
+        {
+            /*
+             * Normal steady-state behavior.
+             * interval_time reflects the configured interval time.
+             */
+            interval_time = timebase->nominal_interval_time;
+        }
+        else
+        {
+            /*
+             * Reset/First interval behavior.
+             * timer_set() was invoked since the previous interval occurred (if any).
+             * interval_time reflects the configured start time.
+             */
+            interval_time    = timebase->nominal_start_time;
+            impl->reset_flag = 0;
+        }
+    }
+
+    return interval_time;
+}
+
+/****************************************************************************************
+                                INITIALIZATION FUNCTION
+ ***************************************************************************************/
+
+/******************************************************************************
+ *
+ *  Purpose:  Initialize the timer implementation layer
+ *
+ *  Arguments:
+ *
+ *  Return:
+ */
+int32 OS_Posix_TimeBaseAPI_Impl_Init(void)
+{
+    int                 status;
+    osal_index_t        idx;
+    pthread_mutexattr_t mutex_attr;
+    struct timespec     clock_resolution;
+    int32               return_code;
+
+    return_code = OS_SUCCESS;
+
+    do
+    {
+        /*
+        ** Mark all timers as available
+        */
+        memset(OS_impl_timebase_table, 0, sizeof(OS_impl_timebase_table));
+
+        /*
+        ** get the resolution of the selected clock
+        */
+        status = NOS_clock_getres(OS_PREFERRED_CLOCK, &clock_resolution);
+        if (status != 0)
+        {
+            OS_DEBUG("failed in clock_getres: %s\n", strerror(errno));
+            return_code = OS_ERROR;
+            break;
+        }
+
+        /*
+        ** Convert to microseconds
+        ** Note that the resolution MUST be in the sub-second range, if not then
+        ** it looks like the POSIX timer API in the C library is broken.
+        ** Note for any flavor of RTOS we would expect <= 1ms.  Even a "desktop"
+        ** linux or development system should be <= 100ms absolute worst-case.
+        */
+        if (clock_resolution.tv_sec > 0)
+        {
+            return_code = OS_TIMER_ERR_INTERNAL;
+            break;
+        }
+
+        /* Round to the nearest microsecond */
+        POSIX_GlobalVars.ClockAccuracyNsec = (uint32)(clock_resolution.tv_nsec);
+
+        /*
+        ** initialize the attribute with default values
+        */
+        status = pthread_mutexattr_init(&mutex_attr);
+        if (status != 0)
+        {
+            OS_DEBUG("Error: pthread_mutexattr_init failed: %s\n", strerror(status));
+            return_code = OS_ERROR;
+            break;
+        }
+
+        /*
+        ** Allow the mutex to use priority inheritance
+        */
+        status = pthread_mutexattr_setprotocol(&mutex_attr, PTHREAD_PRIO_INHERIT);
+        if (status != 0)
+        {
+            OS_DEBUG("Error: pthread_mutexattr_setprotocol failed: %s\n", strerror(status));
+            return_code = OS_ERROR;
+            break;
+        }
+
+        for (idx = 0; idx < OS_MAX_TIMEBASES; ++idx)
+        {
+            /*
+            ** create the timebase sync mutex
+            ** This gives a mechanism to synchronize updates to the timer chain with the
+            ** expiration of the timer and processing the chain.
+            */
+            status = pthread_mutex_init(&OS_impl_timebase_table[idx].handler_mutex, &mutex_attr);
+            if (status != 0)
+            {
+                OS_DEBUG("Error: Mutex could not be created: %s\n", strerror(status));
+                return_code = OS_ERROR;
+                break;
+            }
+        }
+
+        /*
+         * Pre-calculate the clock tick to microsecond conversion factor.
+         */
+        OS_SharedGlobalVars.TicksPerSecond = CFE_PSP_ticks_per_second;
+        if (OS_SharedGlobalVars.TicksPerSecond <= 0)
+        {
+            OS_DEBUG("Error: Unable to determine OS ticks per second: %s\n", strerror(errno));
+            return_code = OS_ERROR;
+            break;
+        }
+
+        /*
+         * Calculate microseconds per tick
+         *  - If the ratio is not an integer, this will round to the nearest integer value
+         *  - This is used internally for reporting accuracy,
+         *  - TicksPerSecond values over 2M will return zero
+         */
+        OS_SharedGlobalVars.MicroSecPerTick =
+            (1000000 + (OS_SharedGlobalVars.TicksPerSecond / 2)) / OS_SharedGlobalVars.TicksPerSecond;
+    } while (0);
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                   Time Base API
+ ***************************************************************************************/
+
+static void *OS_TimeBasePthreadEntry(void *arg)
+{
+    OS_VoidPtrValueWrapper_t local_arg;
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    local_arg.opaque_arg = arg;
+    OS_TimeBase_CallbackThread(local_arg.id);
+
+    return NULL;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseCreate_Impl(const OS_object_token_t *token)
+{
+    int32                               return_code;
+    int                                 status;
+    int                                 i;
+    osal_index_t                        idx;
+    struct sigevent                     evp;
+    struct timespec                     ts;
+    OS_impl_timebase_internal_record_t *local;
+    OS_timebase_internal_record_t *     timebase;
+    OS_VoidPtrValueWrapper_t            arg;
+    char timer_name[OS_MAX_API_NAME];
+
+    local    = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, *token);
+
+    snprintf(timer_name, sizeof(timer_name), "timer.%ld", (long)local->host_timerid);
+
+    /*
+     * Spawn a dedicated time base handler thread
+     *
+     * This alleviates the need to handle expiration in the context of a signal handler -
+     * The handler thread can call a BSP synchronized delay implementation as well as the
+     * application callback function.  It should run with elevated priority to reduce latency.
+     *
+     * Note the thread will not actually start running until this function exits and releases
+     * the global table lock.
+     */
+    memset(&arg, 0, sizeof(arg));
+
+    /* cppcheck-suppress unreadVariable // intentional use of other union member */
+    arg.id      = OS_ObjectIdFromToken(token);
+    return_code = OS_Posix_InternalTaskCreate_Impl(&local->handler_thread, timer_name, OSAL_PRIORITY_C(0), 0,
+                                                   OS_TimeBasePthreadEntry, arg.opaque_arg);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    local->assigned_signal = 0;
+    NOS_clock_gettime(OS_PREFERRED_CLOCK, &local->softsleep);
+
+    /*
+     * Set up the necessary OS constructs
+     *
+     * If an external sync function is used then there is nothing to do here -
+     * we simply call that function and it should synchronize to the time source.
+     *
+     * If no external sync function is provided then this will set up a POSIX
+     * timer to locally simulate the timer tick using the CPU clock.
+     */
+    if (timebase->external_sync == NULL)
+    {
+        sigemptyset(&local->sigset);
+
+        /*
+         * find an RT signal that is not used by another time base object.
+         * This is all done while the global lock is held so no chance of the
+         * underlying tables changing
+         */
+        for (idx = 0; idx < OS_MAX_TIMEBASES; ++idx)
+        {
+            if (OS_ObjectIdIsValid(OS_global_timebase_table[idx].active_id) &&
+                OS_impl_timebase_table[idx].assigned_signal != 0)
+            {
+                sigaddset(&local->sigset, OS_impl_timebase_table[idx].assigned_signal);
+            }
+        }
+
+        for (i = SIGRTMIN; i <= SIGRTMAX; ++i)
+        {
+            if (!sigismember(&local->sigset, i))
+            {
+                local->assigned_signal = i;
+                break;
+            }
+        }
+
+        do
+        {
+            if (local->assigned_signal == 0)
+            {
+                OS_DEBUG("No free RT signals to use for simulated time base\n");
+                return_code = OS_TIMER_ERR_UNAVAILABLE;
+                break;
+            }
+
+            sigemptyset(&local->sigset);
+            sigaddset(&local->sigset, local->assigned_signal);
+
+            /*
+             * Ensure that the chosen signal is NOT already pending.
+             *
+             * Perform a "sigtimedwait" with a zero timeout to poll the
+             * status of the selected signal.  RT signals are also queued,
+             * so this needs to be called in a loop to until sigtimedwait()
+             * returns an error.
+             *
+             * The max number of signals that can be queued is available
+             * via sysconf() as the _SC_SIGQUEUE_MAX value.
+             *
+             * The output is irrelevant here; the objective is to just ensure
+             * that the signal is not already pending.
+             */
+            i = sysconf(_SC_SIGQUEUE_MAX);
+            do
+            {
+                ts.tv_sec  = 0;
+                ts.tv_nsec = 0;
+                if (sigtimedwait(&local->sigset, NULL, &ts) < 0)
+                {
+                    /* signal is NOT pending */
+                    break;
+                }
+                --i;
+            } while (i > 0);
+
+            /*
+            **  Initialize the sigevent structures for the handler.
+            */
+            memset((void *)&evp, 0, sizeof(evp));
+            evp.sigev_notify = SIGEV_SIGNAL;
+            evp.sigev_signo  = local->assigned_signal;
+
+            /*
+             * Pass the Timer Index value of the object ID to the signal handler --
+             *  Note that the upper bits can be safely assumed as a timer ID to recreate the original,
+             *  and doing it this way should still work on a system where sizeof(sival_int) < sizeof(uint32)
+             *  (as long as sizeof(sival_int) >= number of bits in OS_OBJECT_INDEX_MASK)
+             */
+            evp.sigev_value.sival_int = (int)OS_ObjectIdToSerialNumber_Impl(OS_ObjectIdFromToken(token));
+
+            /*
+            ** Create the timer
+            ** Note using the "MONOTONIC" clock here as this will still produce consistent intervals
+            ** even if the system clock is stepped (e.g. clock_settime).
+            */
+            status = NOS_timer_create(OS_PREFERRED_CLOCK, &evp, &local->host_timerid);
+            if (status < 0)
+            {
+                return_code = OS_TIMER_ERR_UNAVAILABLE;
+                break;
+            }
+
+            timebase->external_sync = OS_TimeBase_SigWaitImpl;
+        } while (0);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        /*
+         * NOTE about the thread cancellation -- this technically is just a backup,
+         * we should not need to cancel it because the handler thread will exit automatically
+         * if the active ID does not match the expected value.  This check would fail
+         * if this function returns non-success (the ID in the global will be set zero)
+         */
+        pthread_cancel(local->handler_thread);
+        local->assigned_signal = 0;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseSet_Impl(const OS_object_token_t *token, uint32 start_time, uint32 interval_time)
+{
+    OS_impl_timebase_internal_record_t *local;
+    struct itimerspec                   timeout;
+    int32                               return_code;
+    int                                 status;
+    OS_timebase_internal_record_t *     timebase;
+
+    local       = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+    timebase    = OS_OBJECT_TABLE_GET(OS_timebase_table, *token);
+    return_code = OS_SUCCESS;
+
+    /* There is only something to do here if we are generating a simulated tick */
+    if (local->assigned_signal != 0)
+    {
+        /*
+        ** Convert from Microseconds to timespec structures
+        */
+        memset(&timeout, 0, sizeof(timeout));
+        OS_UsecToTimespec(start_time, &timeout.it_value);
+        OS_UsecToTimespec(interval_time, &timeout.it_interval);
+
+        /*
+        ** Program the real timer
+        */
+        status = NOS_timer_settime(local->host_timerid, 0, /* Flags field can be zero */
+                                   &timeout,               /* struct itimerspec */
+                                   NULL);                  /* Oldvalue */
+
+        if (status < 0)
+        {
+            OS_DEBUG("Error in timer_settime: %s\n", strerror(errno));
+            return_code = OS_TIMER_ERR_INTERNAL;
+        }
+        else if (interval_time > 0)
+        {
+            timebase->accuracy_usec = (uint32)((timeout.it_interval.tv_nsec + 999) / 1000);
+        }
+        else
+        {
+            timebase->accuracy_usec = (uint32)((timeout.it_value.tv_nsec + 999) / 1000);
+        }
+    }
+
+    local->reset_flag = (return_code == OS_SUCCESS);
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseDelete_Impl(const OS_object_token_t *token)
+{
+    OS_impl_timebase_internal_record_t *local;
+    int                                 status;
+
+    local = OS_OBJECT_TABLE_GET(OS_impl_timebase_table, *token);
+
+    pthread_cancel(local->handler_thread);
+
+    /*
+    ** Delete the timer
+    */
+    if (local->assigned_signal != 0)
+    {
+        status = NOS_timer_delete(local->host_timerid);
+        if (status < 0)
+        {
+            OS_DEBUG("Error deleting timer: %s\n", strerror(errno));
+            return OS_TIMER_ERR_INTERNAL;
+        }
+
+        local->assigned_signal = 0;
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per internal OSAL API
+ *           See prototype for argument/return detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetInfo_Impl(const OS_object_token_t *token, OS_timebase_prop_t *timer_prop)
+{
+    return OS_SUCCESS;
+}
+```

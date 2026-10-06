@@ -3,20 +3,62 @@
 
 **경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/tests/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 functional/index
-file--cfdp_test.rb
-file--cfdp_testvars.rb
-file--README.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/tests/functional/`](functional/index) — 폴더
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/tests/cfdp_test.rb`](file--cfdp_test.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/tests/cfdp_testvars.rb`](file--cfdp_testvars.rb) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/config/targets/CFDP_TEST/lib/tests/README.txt`](file--README.txt) — UTF-8 텍스트 파일 본문 포함
+### `cfdp_test.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/tests/cfdp_test.rb`
+
+
+```ruby
+require 'cfdp/cfdp'
+require 'utils_visiona/testutils'
+require 'fileutils'
+require_relative 'cfdp_testvars'
+require_relative 'functional/cfdp_test_uplink_class_1.rb'
+require_relative 'functional/cfdp_test_uplink_class_2.rb'
+require_relative 'functional/cfdp_test_downlink_class_1.rb'
+require_relative 'functional/cfdp_test_downlink_class_2.rb'
+```
+
+### `cfdp_testvars.rb`
+
+**경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/tests/cfdp_testvars.rb`
+
+
+```ruby
+#####
+CFDP_TEST_TARGET_NAME = "CFDP_TEST"
+PDU_TARGET_NAME = "PDU" unless defined?(PDU_TARGET_NAME)
+
+# SATELLITE VARS
+INACTIVITY_TIMEOUT = 60 # seconds
+SATELLITE_MAX_PDU_SIZE = 200 # bytes
+GROUND_MAX_PDU_SIZE = 500
+
+# TEST VARS
+UPLINK_FILE_SIZES = [1, 5, 10, 15, 30, 60, 100] # Kilobytes
+DOWNLINK_FILE_SIZES = [1, 5, 10, 15, 30, 60, 100] # Kilobytes
+TEST_FILE_NAME = "test"
+MAX_PDU_FD_LOSS = 0.2 # percentage. 0.2 -> 20%
+```
+
+### `README.txt`
+
+**경로:** `gsw/cosmos/config/targets/CFDP_TEST/lib/tests/README.txt`
+
+
+```text
+CFDP TEST
+
+In order the execute the tests, change 'testvars.rb' file for local definitions.
+More detailed information inside the file.
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -14,15 +14,36 @@ framework/index
 gds/index
 overview/index
 security/index
-file--index.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/build-system/`](build-system/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/design-patterns/`](design-patterns/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/framework/`](framework/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/gds/`](gds/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/overview/`](overview/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/security/`](security/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/index.md`](file--index.md) — UTF-8 텍스트 파일 본문 포함
+### `index.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/user-manual/index.md`
+
+
+```markdown
+---
+hide:
+  - toc
+---
+
+# User Manual
+
+The User Manual dives into F Prime concepts and usage, providing a deep understanding of how the framework operates. The different chapters are listed below.
+
+- __Overview__ - Technical overview of the F´ ecosystem.
+
+- __Framework__ - Learn concepts and mechanisms needed to build and use an F´ application.
+
+- __FPP User's Guide__ - In-depth user guide for F Prime Prime (FPP), the F´ modeling language.
+
+- __F´ GDS__ - Learn how to use the GDS and how it can be used to test F´ applications.
+
+- __Design Patterns__ - Learn about common design patterns used in F´ applications.
+
+- __Build System__ - Learn about the F´ build system and how to customize it.
+
+- __Security__ - Security considerations when designing and developing F´ applications.
+```

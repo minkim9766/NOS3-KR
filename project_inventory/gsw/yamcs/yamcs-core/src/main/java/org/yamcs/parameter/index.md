@@ -3,108 +3,8672 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AggregateValue.java`
 
-file--AggregateValue.java
-file--ArrayParameterCache.java
-file--ArrayValue.java
-file--BasicParameterValue.java
-file--BinaryValue.java
-file--BooleanValue.java
-file--ContainerParameterValue.java
-file--DiskstatsParameterProducer.java
-file--DoubleValue.java
-file--EnumeratedValue.java
-file--FileStoreParameterProducer.java
-file--FloatValue.java
-file--JvmParameterProducer.java
-file--LastValueCache.java
-file--LocalParameterManager.java
-file--NoProviderException.java
-file--ParameterCache.java
-file--ParameterCacheConfig.java
-file--ParameterConsumer.java
-file--ParameterPersistence.java
-file--ParameterProcessor.java
-file--ParameterProcessorManager.java
-file--ParameterProvider.java
-file--ParameterRequestManager.java
-file--ParameterRetrievalOptions.java
-file--ParameterRetrievalService.java
-file--ParameterStatus.java
-file--ParameterValue.java
-file--ParameterValueList.java
-file--ParameterValueWithId.java
-file--ParameterWithId.java
-file--ParameterWithIdConsumer.java
-file--ParameterWithIdRequestHelper.java
-file--PartialParameterValue.java
-file--RawEngValue.java
-file--SInt32Value.java
-file--SInt64Value.java
-file--SoftwareParameterManager.java
-file--StringValue.java
-file--SubscriptionArray.java
-file--SystemParametersCollector.java
-file--SystemParametersProducer.java
-file--SystemParametersService.java
-file--TimestampValue.java
-file--UInt32Value.java
-file--UInt64Value.java
-file--Value.java
-file--ValueArray.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/AggregateValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.xtce.AggregateDataType;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+public class AggregateValue extends Value {
+    AggregateMemberNames names;
+    Value[] values;
+
+    /**
+     * Create a new aggregate value with the member names.
+     * Make sure that the memberNames are interned string (see {@link String#intern()},
+     * for example as returned by {@link AggregateDataType#getMemberNames()}
+     * 
+     * 
+     * @param memberNames
+     */
+    public AggregateValue(AggregateMemberNames memberNames) {
+        this.names = memberNames;
+        this.values = new Value[memberNames.size()];
+    }
+
+    private int idx(String name) {
+        int idx = names.indexOf(name);
+        if (idx == -1) {
+            throw new IllegalArgumentException("No member named '" + name + "'");
+        }
+        return idx;
+    }
+
+    public void setMemberValue(String name, Value value) {
+        setMemberValue(idx(name), value);
+    }
+
+    /**
+     * Returns the value of the member with the given name
+     * 
+     * @param name
+     *            the name of the aggregate member whos value has to be returned
+     * 
+     * @return the value of the member with the given name
+     * @throws IllegalArgumentException
+     *             if there is no member with that name
+     */
+    public Value getMemberValue(String name) {
+        return values[idx(name)];
+    }
+
+    public void setMemberValue(int idx, Value value) {
+        if (value == null) {
+            throw new NullPointerException();
+        }
+        values[idx] = value;
+    }
+
+    /**
+     * Get the index of the member with the given name or -1 if there is no such member
+     * 
+     * @param name
+     * @return
+     */
+    public int getMemberIndex(String name) {
+        return names.indexOf(name);
+    }
+    @Override
+    public Type getType() {
+        return Type.AGGREGATE;
+    }
+
+    public int numMembers() {
+        return values.length;
+    }
+
+    public String getMemberName(int idx) {
+        return names.get(idx);
+    }
+
+    public Value getMemberValue(int i) {
+        return values[i];
+    }
+
+    public AggregateMemberNames getMemberNames() {
+        return names;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        boolean first = true;
+        for (int i = 0; i < values.length; i++) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(names.get(i)).append(" : ").append(values[i]);
+        }
+        return sb.toString();
+    }
+
+}
 ```
 
-## 항목
+### `ArrayParameterCache.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/AggregateValue.java`](file--AggregateValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ArrayParameterCache.java`](file--ArrayParameterCache.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ArrayValue.java`](file--ArrayValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BasicParameterValue.java`](file--BasicParameterValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BinaryValue.java`](file--BinaryValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BooleanValue.java`](file--BooleanValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ContainerParameterValue.java`](file--ContainerParameterValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/DiskstatsParameterProducer.java`](file--DiskstatsParameterProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/DoubleValue.java`](file--DoubleValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/EnumeratedValue.java`](file--EnumeratedValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/FileStoreParameterProducer.java`](file--FileStoreParameterProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/FloatValue.java`](file--FloatValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/JvmParameterProducer.java`](file--JvmParameterProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/LastValueCache.java`](file--LastValueCache.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/LocalParameterManager.java`](file--LocalParameterManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/NoProviderException.java`](file--NoProviderException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterCache.java`](file--ParameterCache.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterCacheConfig.java`](file--ParameterCacheConfig.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterConsumer.java`](file--ParameterConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterPersistence.java`](file--ParameterPersistence.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProcessor.java`](file--ParameterProcessor.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProcessorManager.java`](file--ParameterProcessorManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProvider.java`](file--ParameterProvider.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRequestManager.java`](file--ParameterRequestManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRetrievalOptions.java`](file--ParameterRetrievalOptions.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRetrievalService.java`](file--ParameterRetrievalService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterStatus.java`](file--ParameterStatus.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValue.java`](file--ParameterValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValueList.java`](file--ParameterValueList.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValueWithId.java`](file--ParameterValueWithId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithId.java`](file--ParameterWithId.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithIdConsumer.java`](file--ParameterWithIdConsumer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithIdRequestHelper.java`](file--ParameterWithIdRequestHelper.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/PartialParameterValue.java`](file--PartialParameterValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/RawEngValue.java`](file--RawEngValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SInt32Value.java`](file--SInt32Value.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SInt64Value.java`](file--SInt64Value.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SoftwareParameterManager.java`](file--SoftwareParameterManager.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/StringValue.java`](file--StringValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SubscriptionArray.java`](file--SubscriptionArray.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersCollector.java`](file--SystemParametersCollector.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersProducer.java`](file--SystemParametersProducer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersService.java`](file--SystemParametersService.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/TimestampValue.java`](file--TimestampValue.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/UInt32Value.java`](file--UInt32Value.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/UInt64Value.java`](file--UInt64Value.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/Value.java`](file--Value.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ValueArray.java`](file--ValueArray.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ArrayParameterCache.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.SortedIntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * This is another implementation of the parameter cache using arrays to store primitive values (instead of storing
+ * {@link Value}).
+ */
+public class ArrayParameterCache implements ParameterCache {
+    SimpleParameterIdMap pidMap = new SimpleParameterIdMap();
+    final Log log;
+    long cacheStartTime = 0;
+    ConcurrentHashMap<SortedIntArray, ParameterValueTable> tables = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<Parameter, Boolean> parametersToCache;
+    final ParameterCacheConfig cacheConfig;
+
+    ArrayParameterCache(String instance, ParameterCacheConfig cacheConfig) {
+        log = new Log(this.getClass(), instance);
+        this.cacheConfig = cacheConfig;
+        parametersToCache = cacheConfig.cacheAll ? null : new ConcurrentHashMap<>();
+    }
+
+    @Override
+    public void update(Collection<ParameterValue> pvs) {
+
+        Map<Long, SortedParameterList> m = new HashMap<>();
+        for (ParameterValue pv : pvs) {
+            long t = pv.getGenerationTime();
+            if (t < cacheStartTime) {
+                continue;
+            }
+            if (!(cacheConfig.cacheAll || parametersToCache.containsKey(pv.getParameter()))) {
+                continue;
+            }
+            SortedParameterList l = m.get(t);
+            if (l == null) {
+                l = new SortedParameterList(pidMap);
+                m.put(t, l);
+            }
+            l.add(pv);
+        }
+        long maxTimestamp = -1;
+        for (Map.Entry<Long, SortedParameterList> entry : m.entrySet()) {
+            long t = entry.getKey();
+            SortedParameterList pvList = entry.getValue();
+            addToCache(t, pvList);
+            if (t > maxTimestamp) {
+                maxTimestamp = t;
+            }
+        }
+    }
+
+    private void addToCache(long t, SortedParameterList pvList) {
+        SortedIntArray sia = pvList.getParameterIdArray();
+        ParameterValueTable table = tables.get(sia);
+        if (table == null) {
+            table = new ParameterValueTable(sia, cacheConfig.maxDuration, cacheConfig.maxNumEntries);
+            ParameterValueTable table1 = tables.putIfAbsent(sia, table);
+            if (table1 != null) {
+                table = table1;
+            }
+        }
+
+        table.add(t, pvList.getParameterValueList());
+    }
+
+    @Override
+    public ParameterValue getLastValue(Parameter pdef) {
+        List<ParameterId> pidlist = getParameterIds(pdef);
+        ParameterValue result = null;
+        long tmax = Long.MIN_VALUE;
+        for (ParameterId p : pidlist) {
+            SortedIntArray sia = findLatestTableContaining(p.id);
+            if (sia == null) {
+                continue;
+            }
+
+            ParameterValueTable table = tables.get(sia);
+            long t = table.getLastTime();
+            if (t < tmax) {
+                continue;
+            }
+
+            ParameterValue pv = table.getLastValue(p);
+            if (t == tmax) {
+                if (result != null && result.getAcquisitionTime() < pv.getAcquisitionTime()) {
+                    result = pv;
+                }
+            } else {
+                result = pv;
+            }
+
+            tmax = t;
+        }
+
+        return result;
+
+    }
+
+    @Override
+    public List<ParameterValue> getValues(List<Parameter> plist) {
+        List<ParameterId> pidlist = getParameterIds(plist);
+
+        List<ParameterValue> result = new ArrayList<>(plist.size());
+
+        for (int i = 0; i < pidlist.size(); i++) {
+            ParameterId p = pidlist.get(i);
+            if (p == null) {
+                continue;
+            }
+            pidlist.set(i, null);
+
+            SortedIntArray sai = findLatestTableContaining(p.id);
+            if (sai == null) {
+                continue;
+            }
+            ParameterValueTable table = tables.get(sai);
+            List<ParameterId> sublist = new ArrayList<>();
+            sublist.add(p);
+            for (int j = i + 1; j < pidlist.size(); j++) {
+                ParameterId p1 = pidlist.get(j);
+                if (p1 == null) {
+                    continue;
+                }
+                if (sai.contains(p1.id)) {
+                    sublist.add(p1);
+                    pidlist.set(j, null);
+                }
+            }
+            table.retrieveLastValues(sublist, result);
+        }
+
+        long now = TimeEncoding.getWallclockTime();
+        // check expiration
+        for (ParameterValue pv : result) {
+            if (!pv.status.isExpired() && pv.isExpired(now)) {
+                pv.status.setExpired();
+            }
+        }
+
+        return result;
+    }
+
+    private SortedIntArray findLatestTableContaining(int pid) {
+        long tmax = Long.MIN_VALUE;
+        SortedIntArray result = null;
+        for (Map.Entry<SortedIntArray, ParameterValueTable> me : tables.entrySet()) {
+            SortedIntArray sai = me.getKey();
+            long t = me.getValue().getLastTime();
+            if (sai.contains(pid) && t > tmax) {
+                result = sai;
+                tmax = t;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<ParameterValue> getAllValues(Parameter pdef) {
+        return getAllValues(pdef, Long.MIN_VALUE, Long.MAX_VALUE);
+    }
+
+    @Override
+    public List<ParameterValue> getAllValues(Parameter pdef, long start, long stop) {
+        List<ParameterId> pidlist = getParameterIds(pdef);
+        List<ParameterValue> result = new ArrayList<>();
+        int numTables = 0;
+        for (ParameterId p : pidlist) {
+            for (Map.Entry<SortedIntArray, ParameterValueTable> me : tables.entrySet()) {
+                SortedIntArray sia = me.getKey();
+                if (sia.contains(p.id)) {
+                    numTables++;
+                    me.getValue().retrieveAll(p, start, stop, result);
+                }
+            }
+        }
+        // if values are retrieved from multiple tables, we need to sort them by generation time
+        // (in reverse order such that the newest is first)
+        if (numTables > 1) {
+            Collections.sort(result, (pv1, pv2) -> Long.compare(pv2.getGenerationTime(), pv1.getGenerationTime()));
+        }
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result;
+    }
+
+    /**
+     * This is the same as above but returns null if the cache does not cover the interval starting with start.
+     * <p>
+     */
+    public List<ParameterValue> getAllValuesIfCovered(Parameter pdef, long start, long stop) {
+
+        List<ParameterId> pidlist = getParameterIds(pdef);
+        List<ParameterValue> result = new ArrayList<>();
+        int numTables = 0;
+        for (ParameterId p : pidlist) {
+            for (Map.Entry<SortedIntArray, ParameterValueTable> me : tables.entrySet()) {
+                SortedIntArray sia = me.getKey();
+                if (sia.contains(p.id)) {
+                    numTables++;
+                    if (!me.getValue().retrieveAllIfCovered(p, start, stop, result)) {
+                        return null;
+                    }
+                }
+            }
+        }
+
+        // if values are retrieved from multiple tables, we need to sort them by generation time
+        // (in reverse order such that the newest is first)
+        if (numTables > 1) {
+            Collections.sort(result, (pv1, pv2) -> Long.compare(pv2.getGenerationTime(), pv1.getGenerationTime()));
+        }
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result;
+    }
+
+    public List<List<ParameterValue>> getAllValues(List<Parameter> parameters, long start, long stop) {
+        List<ParameterId> pidlist = getParameterIds(parameters);
+        List<List<ParameterValue>> result = new ArrayList<>();
+        boolean mergingRequired = false;
+        for (Map.Entry<SortedIntArray, ParameterValueTable> me : tables.entrySet()) {
+            boolean dataFound = me.getValue().retrieveAll(pidlist, start, stop, result);
+            mergingRequired = mergingRequired || dataFound;
+        }
+        // if values are retrieved from multiple tables, we need to sort them by generation time
+        // (in reverse order such that the newest is first)
+        if (mergingRequired) {
+            Collections.sort(result, (pvList1, pvList2) -> Long.compare(pvList2.get(0).getGenerationTime(),
+                    pvList1.get(0).getGenerationTime()));
+        }
+        if (result.isEmpty()) {
+            return null;
+        }
+        return result;
+    }
+
+    public List<List<ParameterValue>> getAllValuesIfCovered(List<Parameter> parameters, long start, long stop) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    private List<ParameterId> getParameterIds(List<Parameter> pdefList) {
+        List<ParameterId> result = new ArrayList<>();
+        for (Parameter pdef : pdefList) {
+            Map<Integer, Integer> m = pidMap.get(pdef);
+            if (m == null) {
+                if (!cacheConfig.cacheAll) {
+                    parametersToCache.put(pdef, Boolean.TRUE);
+                }
+            } else {
+                for (Map.Entry<Integer, Integer> me : m.entrySet()) {
+                    int pid = me.getValue();
+                    int type = me.getKey();
+                    result.add(new ParameterId(pdef, pid, SimpleParameterIdMap.getRawType(type),
+                            SimpleParameterIdMap.getEngType(type)));
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private List<ParameterId> getParameterIds(Parameter pdef) {
+        List<ParameterId> result = new ArrayList<>();
+        Map<Integer, Integer> m = pidMap.get(pdef);
+        if (m == null) {
+            if (!cacheConfig.cacheAll) {
+                parametersToCache.put(pdef, Boolean.TRUE);
+            }
+        } else {
+            for (Map.Entry<Integer, Integer> me : m.entrySet()) {
+                int pid = me.getValue();
+                int type = me.getKey();
+                result.add(new ParameterId(pdef, pid, SimpleParameterIdMap.getRawType(type),
+                        SimpleParameterIdMap.getEngType(type)));
+            }
+        }
+        return result;
+    }
+
+    static class ParameterId {
+        Parameter pdef;
+        int id;
+        Type engType;
+        Type rawType;
+
+        public ParameterId(Parameter p, int pid, Type rawType, Type engType) {
+            this.pdef = p;
+            this.id = pid;
+            this.rawType = rawType;
+            this.engType = engType;
+        }
+
+    }
+
+    static class SimpleParameterIdMap {
+        // parameter fqn -> parameter type -> parameter id
+        Map<Parameter, Map<Integer, Integer>> p2pidCache = new HashMap<>();
+        AtomicInteger pidGenerator = new AtomicInteger();
+
+        public synchronized int createAndGet(Parameter param, Type engType, Type rawType) {
+            int type = numericType(engType, rawType);
+
+            Map<Integer, Integer> m = p2pidCache.get(param);
+            if (m == null) {
+                m = new HashMap<>();
+                p2pidCache.put(param, m);
+            }
+            Integer pid = m.get(type);
+            if (pid == null) {
+                pid = pidGenerator.incrementAndGet();
+                m.put(type, pid);
+            }
+            return pid;
+        }
+
+        Parameter getParameterForPid(int x) {
+            for (Map.Entry<Parameter, Map<Integer, Integer>> me : p2pidCache.entrySet()) {
+                for (Map.Entry<Integer, Integer> me1 : me.getValue().entrySet()) {
+                    if (x == me1.getValue()) {
+                        return me.getKey();
+                    }
+                }
+            }
+            return null;
+        }
+
+        public Map<Integer, Integer> get(Parameter p) {
+            return p2pidCache.get(p);
+        }
+
+        // compose a numeric type from engType and rawType (we assume that no more than 2^15 types will ever exist)
+        static int numericType(Type engType, Type rawType) {
+            int et = (engType == null) ? 0xFFFF : engType.getNumber();
+            int rt = (rawType == null) ? 0xFFFF : rawType.getNumber();
+            return et << 16 | rt;
+        }
+
+        static Type getEngType(int numericType) {
+            int et = numericType >> 16;
+            if (et == 0xFFFF) {
+                return null;
+            } else {
+                return Type.forNumber(et);
+            }
+        }
+
+        static Type getRawType(int numericType) {
+            int rt = numericType & 0xFFFF;
+            if (rt == 0xFFFF) {
+                return null;
+            } else {
+                return Type.forNumber(rt);
+            }
+
+        }
+    }
+
+    static class SortedParameterList {
+        final SimpleParameterIdMap parameterIdMap;
+        final SortedIntArray parameterIdArray = new SortedIntArray();
+        final List<ParameterValue> sortedPvList = new ArrayList<>();
+
+        public SortedParameterList(SimpleParameterIdMap paraId) {
+            this.parameterIdMap = paraId;
+        }
+
+        public void add(ParameterValue pv) {
+            Value engValue = pv.getEngValue();
+            Value rawValue = pv.getRawValue();
+
+            Type engType = (engValue == null) ? null : engValue.getType();
+            Type rawType = (rawValue == null) ? null : rawValue.getType();
+            int parameterId = parameterIdMap.createAndGet(pv.getParameter(), engType, rawType);
+
+            int pos = parameterIdArray.insert(parameterId);
+            sortedPvList.add(pos, pv);
+        }
+
+        public int size() {
+            return parameterIdArray.size();
+        }
+
+        public SortedIntArray getParameterIdArray() {
+            return parameterIdArray;
+        }
+
+        public List<ParameterValue> getParameterValueList() {
+            return sortedPvList;
+        }
+    }
+
+    /**
+     * Stores values for list of parameters of predefined types
+     * 
+     * It's like a big table:
+     * 
+     * <pre>
+     * t0, ev01, rv01, ps01, ev02, rv02, ps02 ... 
+     * t1, ev11, rv11, ps11, ev12, rv12, ps12 ... ....
+     * </pre>
+     * 
+     * where: t = timestamp ev = engineering value rv = raw value ps = parameter status
+     *
+     * Each column is stored as an array of different type (depending on the parameter type). The array works as a
+     * circular list
+     * 
+     */
+    static class ParameterValueTable {
+        static final int MAX_NUM_ENTRIES = 1024;
+        static final int INITIAL_CAPACITY = 16;
+        long[] generationTimeColumn;
+        final Object[] rawValueColumns;
+        final Object[] engValueColumns;
+        final Object[] statusColumns;
+        final long[][] acquisitionTimeColumns;
+        final int numParams;
+        final long timeToCache;
+        int head = 0;
+        int tail = head;
+        int maxNumEntries = MAX_NUM_ENTRIES;
+        final SortedIntArray pids;
+        long coverageStart = TimeEncoding.INVALID_INSTANT;
+
+        ReadWriteLock lock = new ReentrantReadWriteLock();
+
+        ParameterValueTable(SortedIntArray pids, long timeToCache, int maxNumEntries) {
+            this.numParams = pids.size();
+            this.pids = pids;
+            this.rawValueColumns = new Object[numParams];
+            this.engValueColumns = new Object[numParams];
+            this.statusColumns = new Object[numParams];
+            this.acquisitionTimeColumns = new long[numParams][];
+            this.timeToCache = timeToCache;
+            this.maxNumEntries = maxNumEntries;
+        }
+
+        private void init(List<ParameterValue> sortedPvList) {
+            this.generationTimeColumn = new long[INITIAL_CAPACITY];
+            for (int i = 0; i < sortedPvList.size(); i++) {
+                ParameterValue pv = sortedPvList.get(i);
+                Value v = pv.getEngValue();
+                if (v != null) {
+                    engValueColumns[i] = getNewColumn(v.getType());
+                }
+                Value rawV = pv.getRawValue();
+                if (rawV != null) {
+                    rawValueColumns[i] = getNewColumn(rawV.getType());
+                }
+                statusColumns[i] = new ParameterStatus[INITIAL_CAPACITY];
+                acquisitionTimeColumns[i] = new long[INITIAL_CAPACITY];
+            }
+        }
+
+        public void add(long t, List<ParameterValue> sortedPvList) {
+            lock.writeLock().lock();
+            try {
+                if (numParams != sortedPvList.size()) {
+                    throw new IllegalArgumentException("Invalid number of parameters, expected " + sortedPvList.size());
+                }
+                int _head = head;
+                if (generationTimeColumn == null) {
+                    init(sortedPvList);
+                } else if (_head == tail) {
+                    long t0 = generationTimeColumn[_head];
+                    if (t < t0) {
+                        // parameter older than the last one in the table -> ignore
+                        return;
+                    }
+                    boolean doubled = false;
+                    if (t - t0 < timeToCache) {
+                        doubled = doubleCapacity();
+                        _head = head;
+                    }
+                    if (!doubled) {
+                        tail = (tail + 1) & (generationTimeColumn.length - 1);
+                    }
+                }
+                generationTimeColumn[_head] = t;
+
+                for (int i = 0; i < numParams; i++) {
+                    storeParameter(i, _head, sortedPvList.get(i));
+                }
+                head = (_head + 1) & (generationTimeColumn.length - 1);
+            } finally {
+                lock.writeLock().unlock();
+            }
+        }
+
+        public void retrieveLastValues(List<ParameterId> sublist, List<ParameterValue> result) {
+            lock.readLock().lock();
+            try {
+                int row = (head - 1) & (generationTimeColumn.length - 1);
+                for (ParameterId p : sublist) {
+                    result.add(getParameterValue(row, p));
+                }
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+
+        public ParameterValue getLastValue(ParameterId p) {
+            lock.readLock().lock();
+            try {
+                int row = (head - 1) & (generationTimeColumn.length - 1);
+                return getParameterValue(row, p);
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+
+        public void retrieveAll(ParameterId p, long start, long stop, List<ParameterValue> result) {
+
+            lock.readLock().lock();
+            try {
+                // col1 will be different than col2 when there are multiple values for the same parameter
+                int col2 = pids.higherBound(p.id);
+                int col1 = col2;
+                while (col1 > 0 && pids.get(col1 - 1) == p.id) {
+                    col1--;
+                }
+                int _tail = tail;
+                int _head = head;
+                int n = generationTimeColumn.length - 1;
+                int row = _head;
+                do {
+                    row = (row - 1) & n;
+                    for (int col = col2; col >= col1; col--) {
+                        if (generationTimeColumn[row] > start && generationTimeColumn[row] <= stop) {
+                            result.add(getParameterValue(row, col, p));
+                        }
+                    }
+                } while (row != _tail);
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+
+        // return true if any data has been retrieved
+        public boolean retrieveAll(List<ParameterId> plist, long start, long stop, List<List<ParameterValue>> result) {
+            lock.readLock().lock();
+            try {
+                // Precompute column bounds for all requested ParameterIds
+                IntArray bounds = new IntArray();
+                for (ParameterId p : plist) {
+                    int col2 = pids.higherBound(p.id);
+                    int col1 = col2;
+                    while (col1 > 0 && pids.get(col1 - 1) == p.id) {
+                        col1--;
+                    }
+                    bounds.add(col1); // Add the lower bound
+                    bounds.add(col2); // Add the upper bound
+                }
+                if (bounds.isEmpty()) {
+                    return false;
+                }
+
+                int _tail = tail;
+                int _head = head;
+                int n = generationTimeColumn.length - 1;
+                int row = _head;
+
+                // Iterate over the rows of the circular buffer
+                do {
+                    row = (row - 1) & n;
+
+                    // Only process rows within the specified time range
+                    if (generationTimeColumn[row] > start && generationTimeColumn[row] <= stop) {
+                        List<ParameterValue> rowValues = new ArrayList<>();
+
+                        // Collect parameter values for all requested ParameterIds in this row
+                        for (int i = 0; i < plist.size(); i++) {
+                            ParameterId p = plist.get(i);
+                            int col1 = bounds.get(i * 2); // Retrieve lower bound
+                            int col2 = bounds.get(i * 2 + 1); // Retrieve upper bound
+
+                            for (int col = col2; col >= col1; col--) {
+                                rowValues.add(getParameterValue(row, col, p));
+                            }
+                        }
+
+                        // Add the collected values for the current row to the result
+                        result.add(rowValues);
+                    }
+                } while (row != _tail);
+            } finally {
+                lock.readLock().unlock();
+            }
+            return true;
+        }
+
+        /**
+         * This is the same as above but returns false if the timestamp of the first entry in the table is older than
+         * start.
+         * <p>
+         * If this is the case, it means that the interval [start, stop) is not completely covered by this cache entry
+         * (so the code calling this may decide to perform a reply instead)
+         * <p>
+         * If the method returns false, the result will not be modified
+         */
+        public boolean retrieveAllIfCovered(ParameterId p, long start, long stop, List<ParameterValue> result) {
+            lock.readLock().lock();
+            try {
+                if (start + 1 < generationTimeColumn[tail]) {
+                    return false;
+                }
+                // col1 will be different than col2 when there are multiple values for the same parameter
+                int col2 = pids.higherBound(p.id);
+                int col1 = col2;
+                while (col1 > 0 && pids.get(col1 - 1) == p.id) {
+                    col1--;
+                }
+                int _tail = tail;
+                int _head = head;
+                int n = generationTimeColumn.length - 1;
+                int row = _head;
+                do {
+                    row = (row - 1) & n;
+                    for (int col = col2; col >= col1; col--) {
+                        if (generationTimeColumn[row] > start && generationTimeColumn[row] <= stop) {
+                            result.add(getParameterValue(row, col, p));
+                        }
+                    }
+                } while (row != _tail);
+                return true;
+            } finally {
+                lock.readLock().unlock();
+            }
+
+        }
+
+        private ParameterValue getParameterValue(int row, ParameterId p) {
+            int col = pids.search(p.id);
+            return getParameterValue(row, col, p);
+        }
+
+        private ParameterValue getParameterValue(int row, int col, ParameterId p) {
+            ParameterValue pv = new ParameterValue(p.pdef);
+            if (p.rawType != null) {
+                pv.setRawValue(getValue(rawValueColumns[col], p.rawType, row));
+            }
+
+            if (p.engType != null) {
+                pv.setEngValue(getValue(engValueColumns[col], p.engType, row));
+            }
+            pv.setGenerationTime(generationTimeColumn[row]);
+            pv.setAcquisitionTime(acquisitionTimeColumns[col][row]);
+
+            pv.setStatus((ParameterStatus) ((Object[]) statusColumns[col])[row]);
+            return pv;
+        }
+
+        private Value getValue(Object o, Type type, int idx) {
+            switch (type) {
+            case BOOLEAN:
+                return ValueUtility.getBooleanValue(((BitSet) o).get(idx));
+            case DOUBLE:
+                return ValueUtility.getDoubleValue(((double[]) o)[idx]);
+            case FLOAT:
+                return ValueUtility.getFloatValue(((float[]) o)[idx]);
+            case SINT32:
+                return ValueUtility.getSint32Value(((int[]) o)[idx]);
+            case UINT32:
+                return ValueUtility.getUint32Value(((int[]) o)[idx]);
+            case SINT64:
+                return ValueUtility.getSint64Value(((long[]) o)[idx]);
+            case UINT64:
+                return ValueUtility.getUint64Value(((long[]) o)[idx]);
+            case TIMESTAMP:
+                return ValueUtility.getTimestampValue(((long[]) o)[idx]);
+            case STRING:
+                return ValueUtility.getStringValue((String) ((Object[]) o)[idx]);
+            case BINARY:
+                return ValueUtility.getBinaryValue((byte[]) (((Object[]) o)[idx]));
+            case AGGREGATE:
+            case ARRAY:
+            case ENUMERATED:
+                return (Value) (((Object[]) o)[idx]);
+            default:
+                throw new IllegalStateException("Unknown type " + type);
+            }
+        }
+
+        public long getLastTime() {
+            lock.readLock().lock();
+            try {
+                int row = (head - 1) & (generationTimeColumn.length - 1);
+                return generationTimeColumn[row];
+            } finally {
+                lock.readLock().unlock();
+            }
+        }
+
+        private void storeParameter(int col, int row, ParameterValue pv) {
+            Value v = pv.getEngValue();
+            if (v != null) {
+                storeValue(engValueColumns[col], row, v);
+            }
+
+            v = pv.getRawValue();
+            if (v != null) {
+                storeValue(rawValueColumns[col], row, v);
+            }
+            ParameterStatus status = pv.getStatus();
+
+            if (row > 0) { // avoid filling up memory with identical ParameterStatus
+                ParameterStatus prevStatus = (ParameterStatus) ((Object[]) statusColumns[col])[row - 1];
+                if (prevStatus.equals(status)) {
+                    status = prevStatus;
+                }
+            }
+            ((Object[]) statusColumns[col])[row] = status;
+            acquisitionTimeColumns[col][row] = pv.getAcquisitionTime();
+        }
+
+        private void storeValue(Object o, int pos, Value v) {
+            Type type = v.getType();
+
+            switch (type) {
+            case BOOLEAN -> ((BitSet) o).set(pos, v.getBooleanValue());
+            case DOUBLE -> ((double[]) o)[pos] = v.getDoubleValue();
+            case FLOAT -> ((float[]) o)[pos] = v.getFloatValue();
+            case SINT32 -> ((int[]) o)[pos] = v.getSint32Value();
+            case UINT32 -> ((int[]) o)[pos] = v.getUint32Value();
+            case SINT64 -> ((long[]) o)[pos] = v.getSint64Value();
+            case UINT64 -> ((long[]) o)[pos] = v.getUint64Value();
+            case TIMESTAMP -> ((long[]) o)[pos] = v.getTimestampValue();
+            case STRING -> {
+                Object[] objArray = (Object[]) o;
+                String stringValue = v.getStringValue();
+                if (pos > 0 && stringValue.equals(objArray[pos - 1])) {
+                    objArray[pos] = objArray[pos - 1];
+                } else {
+                    objArray[pos] = stringValue;
+                }
+            }
+            case BINARY -> {
+                Object[] objArray = (Object[]) o;
+                byte[] binaryValue = v.getBinaryValue();
+                if (pos > 0 && binaryValue.equals(objArray[pos - 1])) {
+                    objArray[pos] = objArray[pos - 1];
+                } else {
+                    objArray[pos] = binaryValue;
+                }
+            }
+            case AGGREGATE, ARRAY, ENUMERATED -> {
+                Object[] objArray = (Object[]) o;
+                if (pos > 0 && v.equals(objArray[pos - 1])) {
+                    objArray[pos] = objArray[pos - 1];
+                } else {
+                    objArray[pos] = v;
+                }
+            }
+            default -> throw new IllegalStateException("Unknown type " + type);
+            }
+        }
+
+        private Object getNewColumn(Type type) {
+            switch (type) {
+            case BOOLEAN:
+                return new BitSet(INITIAL_CAPACITY);
+            case DOUBLE:
+                return new double[INITIAL_CAPACITY];
+            case FLOAT:
+                return new float[INITIAL_CAPACITY];
+            case SINT32:
+            case UINT32:
+                return new int[INITIAL_CAPACITY];
+            case SINT64:
+            case UINT64:
+            case TIMESTAMP:
+                return new long[INITIAL_CAPACITY];
+            case STRING:
+            case BINARY:
+            case AGGREGATE:
+            case ARRAY:
+            case ENUMERATED:
+                return new Object[INITIAL_CAPACITY];
+            default:
+                throw new IllegalStateException("Unknown type " + type);
+            }
+        }
+
+        private boolean doubleCapacity() {
+            int capacity = generationTimeColumn.length;
+            if (capacity >= maxNumEntries) {
+                return false;
+            }
+
+            int newCapacity = 2 * capacity;
+
+            long[] o2 = new long[newCapacity];
+            System.arraycopy(generationTimeColumn, head, o2, 0, capacity - head);
+            System.arraycopy(generationTimeColumn, 0, o2, capacity - head, head);
+            generationTimeColumn = o2;
+
+            for (int i = 0; i < numParams; i++) {
+                Object c = engValueColumns[i];
+                if (c != null) {
+                    engValueColumns[i] = growCapacity(c, newCapacity);
+                }
+
+                c = rawValueColumns[i];
+                if (c != null) {
+                    rawValueColumns[i] = growCapacity(c, newCapacity);
+                }
+
+                c = statusColumns[i];
+                if (c != null) {
+                    statusColumns[i] = growCapacity(c, newCapacity);
+                }
+                c = acquisitionTimeColumns[i];
+                acquisitionTimeColumns[i] = (long[]) growCapacity(c, newCapacity);
+            }
+            tail = 0;
+            head = capacity;
+            return true;
+        }
+
+        private Object growCapacity(Object o, int newCapacity) {
+            if (o instanceof int[]) {
+                int[] o1 = (int[]) o;
+                int[] o2 = new int[newCapacity];
+                System.arraycopy(o1, head, o2, 0, o1.length - head);
+                System.arraycopy(o1, 0, o2, o1.length - head, head);
+                return o2;
+            } else if (o instanceof double[]) {
+                double[] o1 = (double[]) o;
+                double[] o2 = new double[newCapacity];
+                System.arraycopy(o1, head, o2, 0, o1.length - head);
+                System.arraycopy(o1, 0, o2, o1.length - head, head);
+                return o2;
+            } else if (o instanceof float[]) {
+                float[] o1 = (float[]) o;
+                float[] o2 = new float[newCapacity];
+                System.arraycopy(o1, head, o2, 0, o1.length - head);
+                System.arraycopy(o1, 0, o2, o1.length - head, head);
+                return o2;
+            } else if (o instanceof long[]) {
+                long[] o1 = (long[]) o;
+                long[] o2 = new long[newCapacity];
+                System.arraycopy(o1, head, o2, 0, o1.length - head);
+                System.arraycopy(o1, 0, o2, o1.length - head, head);
+                return o2;
+            } else if (o instanceof Object[]) {
+                Object[] o1 = (Object[]) o;
+                Object[] o2 = new Object[newCapacity];
+                System.arraycopy(o1, head, o2, 0, o1.length - head);
+                System.arraycopy(o1, 0, o2, o1.length - head, head);
+                return o2;
+            } else if (o instanceof BitSet) {
+                return o;
+            } else {
+                throw new IllegalArgumentException("Cannot double objects of type " + o.getClass());
+            }
+        }
+    }
+
+    @Override
+    public void clear() {
+        tables.clear();
+    }
+
+    @Override
+    public boolean caching(ParameterWithId pid) {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+}
+```
+
+### `ArrayValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ArrayValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+/**
+ * Multidimensional value array. All the elements of the array have to have the same type.
+ * <p>
+ * The number of dimensions and the size of each dimension are fixed in the constructor.
+ * <p>
+ * The array is internally stored into a flat java array. The {@link #flatIndex(int[])} can be used to convert from the
+ * multi dimensional index to the flat index.
+ * 
+ */
+public class ArrayValue extends Value {
+    final Value[] elements;
+    final int[] dim;
+    final Type elementType;
+
+    /**
+     * Create a new value array of size dim[0]*dim[1]*...*dim[n]
+     * 
+     * @param dim
+     * @param elementType
+     */
+    public ArrayValue(int[] dim, Type elementType) {
+        if (dim.length == 0) {
+            throw new IllegalArgumentException("The array has to be at least 1 dimensional");
+        }
+        this.elementType = elementType;
+        int fs = flatSize(dim);
+        this.dim = dim;
+        this.elements = new Value[fs];
+    }
+
+    @Override
+    public Type getType() {
+        return Type.ARRAY;
+    }
+
+    /**
+     * Get the value of the element at the given index
+     * 
+     * @param idx
+     *            - multidimensional index
+     * @return - the value
+     * 
+     * @throws ArrayIndexOutOfBoundsException
+     *             if the index is outside of the array
+     */
+    public Value getElementValue(int[] idx) {
+        if (dim.length != idx.length) {
+            throw new IllegalArgumentException("number of dimensions should be " + dim.length);
+        }
+
+        return elements[flatIndex(idx)];
+    }
+
+    /**
+     * Return true of the idx is the same dimensions with this array and if the element exists (i.e. idx is not out of
+     * bounds)
+     * 
+     * @param idx
+     * @return
+     */
+    public boolean hasElement(int[] idx) {
+        if (dim.length != idx.length) {
+            return false;
+        }
+        return flatIndex(idx) < elements.length;
+    }
+
+    /**
+     * Sets the element at the given index.
+     * 
+     * @param idx
+     *            - multidimensional index
+     * @param v
+     *            - the value to be set
+     * 
+     * @throws ArrayIndexOutOfBoundsException
+     *             if the index is outside of the array
+     * @throws IllegalArgumentException
+     *             if the number of dimensions (idx.lenght) does not match with the array number of dimensions or if the
+     *             element type does not match with the array element type
+     */
+    public void setElementValue(int[] idx, Value v) {
+
+        if (dim.length != idx.length) {
+            throw new IllegalArgumentException("number of dimensions should be " + dim.length);
+        }
+        if (v.getType() != elementType) {
+            throw new IllegalArgumentException("Element type should be " + elementType);
+        }
+        elements[flatIndex(idx)] = v;
+    }
+
+    public static int flatIndex(int[] dim, int[] idx) {
+        if (idx.length == 1) {
+            return idx[0];
+        }
+
+        int n = idx[0];
+        for (int i = 1; i < dim.length; i++) {
+            n = n * dim[i] + idx[i];
+        }
+        return n;
+    }
+
+    public int flatIndex(int[] idx) {
+        return flatIndex(dim, idx);
+    }
+
+    static public int flatSize(int[] dim) {
+        if (dim.length == 1) {
+            return dim[0];
+        }
+
+        int n = dim[0];
+
+        for (int i = 1; i < dim.length; i++) {
+            n *= dim[i];
+        }
+        return n;
+    }
+
+    /**
+     * unflatten the flatIndex into the idx array
+     */
+    static public void unFlattenIndex(int flatIndex, int[] dim, int[] idx) {
+        if (idx.length != dim.length) {
+            throw new IllegalArgumentException("idx length is not the expected one");
+        }
+        if (dim.length == 1) {
+            idx[0] = flatIndex;
+            return;
+        }
+        int n = flatIndex;
+
+        int d = 1;
+        for (int i = 1; i < dim.length; i++) {
+            d *= dim[i];
+        }
+
+        int k;
+        for (k = 0; k < dim.length - 1; k++) {
+            idx[k] = n / d;
+            n = n - d * idx[k];
+            d /= dim[k + 1];
+        }
+        idx[k] = n;
+    }
+
+    public int[] unFlattenIndex(int flatIndex) {
+        int[] idx = new int[dim.length];
+        unFlattenIndex(flatIndex, dim, idx);
+        return idx;
+    }
+
+    /**
+     * Set the value of an element using the flat index
+     * 
+     * @param flatIdx
+     *            - flat index of the element to be set
+     * @param v
+     *            - the value to be set
+     * @throws ArrayIndexOutOfBoundsException
+     *             if the index is outside of the array
+     */
+    public void setElementValue(int flatIdx, Value v) {
+        elements[flatIdx] = v;
+    }
+
+    /**
+     * Get the element value using the flat index;
+     * 
+     * @param flatIdx
+     *            - flat index of the element to be set
+     * @return the value
+     */
+    public Value getElementValue(int flatIdx) {
+        return elements[flatIdx];
+    }
+
+    /**
+     * Return the length of the flat array This is the product of the size of the individual dimensions.
+     * 
+     * @return
+     */
+    public int flatLength() {
+        return elements.length;
+    }
+
+    /**
+     * 
+     * @return the type of the array elements
+     */
+    public Type getElementType() {
+        return elementType;
+    }
+
+    /**
+     * returns the dimensions of the array
+     * 
+     * @return
+     */
+    public int[] getDimensions() {
+        return dim;
+    }
+
+    public String flatIndexToString(int flatIndex) {
+        if (dim.length == 1) {
+            return "[" + flatIndex + "]";
+        }
+
+        int[] idx = unFlattenIndex(flatIndex);
+        StringBuilder sb = new StringBuilder();
+        for (int x : idx) {
+            sb.append("[").append(x).append("]");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(dim);
+        result = prime * result + ((elementType == null) ? 0 : elementType.hashCode());
+        result = prime * result + Arrays.hashCode(elements);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ArrayValue other = (ArrayValue) obj;
+        if (!Arrays.equals(dim, other.dim))
+            return false;
+        if (elementType != other.elementType)
+            return false;
+        if (!Arrays.equals(elements, other.elements))
+            return false;
+        return true;
+    }
+
+    public String toString() {
+        return Arrays.toString(elements);
+    }
+
+    public boolean isEmpty() {
+        return flatSize(dim) == 0;
+    }
+}
+```
+
+### `BasicParameterValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BasicParameterValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.List;
+
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Mdb.AlarmRange;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.util.DoubleRange;
+
+/**
+ * Holds the value of a parameter.
+ * <p>
+ * This class does not reference any parameter definition or name.
+ * <p>
+ * It does not have acquisition time for parameters either
+ *
+ */
+public class BasicParameterValue extends RawEngValue {
+
+    // use this singleton as a default status
+    ParameterStatus status = ParameterStatus.NOMINAL;
+
+    public BasicParameterValue() {
+    }
+
+    // copy constructor - copies all the fields in a shallow mode
+    public BasicParameterValue(BasicParameterValue pv) {
+        super(pv);
+        this.status = pv.status;
+    }
+
+    @Override
+    public void setEngValue(Value engValue) {
+        this.engValue = engValue;
+    }
+
+    // *********** parameter status
+    private void changeNominalStatus() {
+        if (status == ParameterStatus.NOMINAL) {
+            status = new ParameterStatus();
+        }
+    }
+
+    public void setExpireMillis(long em) {
+        changeNominalStatus();
+        status.setExpireMillis(em);
+    }
+
+    public long getExpireMillis() {
+        return status.getExpireMills();
+    }
+
+    public void setInvalid() {
+        changeNominalStatus();
+        status.setInvalid();
+    }
+
+    public void setNotReceived() {
+        changeNominalStatus();
+        status.setNotReceived();
+    }
+
+    public void setExpired() {
+        changeNominalStatus();
+        status.setExpired();
+    }
+
+    public boolean isInvalid() {
+        return status.isInvalid();
+    }
+
+    public boolean isExpired() {
+        return status.isExpired();
+    }
+
+    public boolean isNotReceived() {
+        return status.isNotReceived();
+    }
+
+    public void setWatchRange(DoubleRange range) {
+        changeNominalStatus();
+        status.setWatchRange(range);
+    }
+
+    public void setWarningRange(DoubleRange range) {
+        changeNominalStatus();
+        status.setWarningRange(range);
+    }
+
+    public void setDistressRange(DoubleRange range) {
+        changeNominalStatus();
+        status.setDistressRange(range);
+    }
+
+    public void setCriticalRange(DoubleRange range) {
+        changeNominalStatus();
+        status.setCriticalRange(range);
+    }
+
+    public void setSevereRange(DoubleRange range) {
+        changeNominalStatus();
+        status.setSevereRange(range);
+    }
+
+    public void setMonitoringResult(MonitoringResult m) {
+        changeNominalStatus();
+        status.setMonitoringResult(m);
+    }
+
+    public void setDeltaMonitoringResult(MonitoringResult m) {
+        changeNominalStatus();
+        status.setDeltaMonitoringResult(m);
+    }
+
+    public void setRangeCondition(RangeCondition rangeCondition) {
+        changeNominalStatus();
+        status.setRangeCondition(rangeCondition);
+    }
+
+    public void setAcqStatus(int acqStatus) {
+        if (status.getAcqStatus() != acqStatus) {
+            changeNominalStatus();
+        }
+        status.setAcqStatus(acqStatus);
+    }
+
+    public DoubleRange getDistressRange() {
+        return status.getDistressRange();
+    }
+
+    public DoubleRange getWatchRange() {
+        return status.getWatchRange();
+    }
+
+    public DoubleRange getCriticalRange() {
+        return status.getCriticalRange();
+    }
+
+    public DoubleRange getWarningRange() {
+        return status.getWarningRange();
+    }
+
+    public DoubleRange getSevereRange() {
+        return status.getSevereRange();
+    }
+
+    public MonitoringResult getMonitoringResult() {
+        return status.getMonitoringResult();
+    }
+
+    public RangeCondition getRangeCondition() {
+        return status.getRangeCondition();
+    }
+
+    /**
+     * Used for compatibility with the old Parameter status whereas expiration was cancelling the other statuses but was
+     * sent only when clients were subscribed with the option to send the parameter expiration
+     */
+    public AcquisitionStatus getAcquisitionStatus(boolean withExpiration) {
+        return status.getAcquisitionStatus(withExpiration);
+    }
+
+    public MonitoringResult getDeltaMonitoringResult() {
+        return status.getDeltaMonitoringResult();
+    }
+
+    public ParameterStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ParameterStatus parameterStatus) {
+        this.status = parameterStatus;
+    }
+
+    public static AlarmRange toGpbAlarmRange(AlarmLevelType gpbLevel, DoubleRange floatRange) {
+        AlarmRange.Builder rangeb = AlarmRange.newBuilder();
+        rangeb.setLevel(gpbLevel);
+        double min = floatRange.getMin();
+        if (Double.isFinite(min)) { // floatRange represents the IN_LIMIT range, that's why we invert the inclusive and
+                                    // exclusive
+            if (floatRange.isMinInclusive()) {
+                rangeb.setMinInclusive(min);
+            } else {
+                rangeb.setMinExclusive(min);
+            }
+        }
+        double max = floatRange.getMax();
+        if (Double.isFinite(max)) {
+            if (floatRange.isMaxInclusive()) {
+                rangeb.setMaxInclusive(max);
+            } else {
+                rangeb.setMaxExclusive(max);
+            }
+        }
+        return rangeb.build();
+    }
+
+    public static ParameterValue fromGpb(String fqn, org.yamcs.protobuf.Pvalue.ParameterValue gpv) {
+        ParameterValue pv = new ParameterValue(fqn);
+        copyTo(gpv, pv);
+        return pv;
+    }
+
+    public static ParameterValue fromGpb(Parameter pdef, org.yamcs.protobuf.Pvalue.ParameterValue gpv) {
+        ParameterValue pv = new ParameterValue(pdef);
+        copyTo(gpv, pv);
+        return pv;
+    }
+
+    /**
+     * returns true if the parameter is valid and not expired
+     */
+    public boolean isNominal() {
+        return status.isNominal();
+    }
+
+    private static void copyTo(org.yamcs.protobuf.Pvalue.ParameterValue gpv, ParameterValue pv) {
+        pv.getStatus().setAcqStatus(ParameterStatus.getAcquisitionStatus(gpv.getAcquisitionStatus()));
+        if (gpv.hasEngValue()) {
+            pv.setEngValue(ValueUtility.fromGpb(gpv.getEngValue()));
+        }
+
+        if (gpv.hasAcquisitionTime()) {
+            pv.setAcquisitionTime(TimeEncoding.fromProtobufTimestamp(gpv.getAcquisitionTime()));
+        }
+
+        if (gpv.hasExpireMillis()) {
+            pv.setExpireMillis(gpv.getExpireMillis());
+        }
+
+        if (gpv.hasGenerationTime()) {
+            pv.setGenerationTime(TimeEncoding.fromProtobufTimestamp(gpv.getGenerationTime()));
+        }
+        if (gpv.hasMonitoringResult()) {
+            pv.setMonitoringResult(gpv.getMonitoringResult());
+        }
+
+        if (gpv.hasRangeCondition()) {
+            pv.setRangeCondition(gpv.getRangeCondition());
+        }
+
+        if (gpv.hasRawValue()) {
+            pv.setRawValue(ValueUtility.fromGpb(gpv.getRawValue()));
+        }
+    }
+
+    public void addAlarmRanges(List<AlarmRange> alarmRangeList) {
+        for (AlarmRange ar : alarmRangeList) {
+            switch (ar.getLevel()) {
+            case WATCH:
+                setWatchRange(fromGbpAlarmRange(ar));
+                break;
+            case WARNING:
+                setWarningRange(fromGbpAlarmRange(ar));
+                break;
+            case DISTRESS:
+                setDistressRange(fromGbpAlarmRange(ar));
+                break;
+            case CRITICAL:
+                setCriticalRange(fromGbpAlarmRange(ar));
+                break;
+            case SEVERE:
+                setSevereRange(fromGbpAlarmRange(ar));
+                break;
+            case NORMAL: // never used
+            }
+        }
+    }
+
+    public boolean hasExpirationTime() {
+        return status.getExpireMills() >= 0;
+    }
+
+    private DoubleRange fromGbpAlarmRange(AlarmRange ar) {
+        double min = Double.NEGATIVE_INFINITY;
+        double max = Double.POSITIVE_INFINITY;
+        boolean minInclusive = false;
+        boolean maxInclusive = false;
+
+        if (ar.hasMinInclusive()) {
+            min = ar.getMinInclusive();
+            minInclusive = true;
+        } else if (ar.hasMinExclusive()) {
+            min = ar.getMinExclusive();
+        }
+
+        if (ar.hasMaxInclusive()) {
+            max = ar.getMaxInclusive();
+            maxInclusive = true;
+        } else if (ar.hasMaxExclusive()) {
+            max = ar.getMaxExclusive();
+        }
+        return new DoubleRange(min, max, minInclusive, maxInclusive);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(" genTime: {").append(TimeEncoding.toString(generationTime)).append("}");
+        if (rawValue != null) {
+            sb.append(" rawValue: {").append(rawValue.toString()).append("}");
+        }
+        if (engValue != null) {
+            sb.append(" engValue: {").append(engValue.toString()).append("}");
+        }
+        return sb.toString();
+    }
+}
+```
+
+### `BinaryValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BinaryValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.StringConverter;
+
+public class BinaryValue extends Value {
+    final  byte[] v;
+    
+    public BinaryValue(byte[] v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.BINARY;
+    }
+    
+    @Override
+    public byte[] getBinaryValue() {
+        return v;
+    }
+    
+    
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(v);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        
+        if(obj instanceof BinaryValue) {
+            return Arrays.equals(v, ((BinaryValue)obj).v);
+        }
+        
+        return false;
+    }
+    
+    @Override
+    public String toString() {
+        return StringConverter.arrayToHexString(v);
+    }
+}
+```
+
+### `BooleanValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/BooleanValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class BooleanValue extends Value {
+    final boolean v;
+    public static final BooleanValue TRUE = new BooleanValue(true);
+    public static final BooleanValue FALSE = new BooleanValue(false);
+    
+    public BooleanValue(boolean v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.BOOLEAN;
+    }
+    
+    @Override
+    public boolean getBooleanValue() {
+        return v;
+    }
+    
+    @Override
+    public int hashCode() {
+        return Boolean.hashCode(v);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BooleanValue) {
+            return v == ((BooleanValue)obj).v;
+        }
+        return false;
+    }
+    
+    
+    public String toString() {
+        return Boolean.toString(v);
+    }
+}
+```
+
+### `ContainerParameterValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ContainerParameterValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.SequenceEntry;
+
+/**
+ * A parameter value corresponding to a parameter that has been extracted from a container.
+ *  
+ * It contains the position in the container where it has been extracted from.
+ *
+ */
+public class ContainerParameterValue extends ParameterValue {
+    SequenceEntry entry;
+    // the start of the container in the packet in bytes
+    // this is the start of the top container in the hierarchy
+    // this means it is normally 0 unless we have container composition (not inheritance!) and then it is the
+    // byte offset where the sub-container appears in the containing container
+    final int startOffset;
+    // bit offset relative to the startOffset
+    final int bitOffset;
+
+    int bitSize;
+
+    public ContainerParameterValue(Parameter def, int startOffset, int bitOffset) {
+        super(def);
+        this.startOffset = startOffset;
+        this.bitOffset = bitOffset;
+    }
+
+    public ContainerParameterValue(ContainerParameterValue cpv) {
+        super(cpv);
+        this.entry = cpv.entry;
+        this.bitOffset = cpv.bitOffset;
+        this.startOffset = cpv.startOffset;
+        this.bitSize = cpv.bitSize;
+    }
+    
+    public int getAbsoluteBitOffset() {
+        return startOffset * 8 + bitOffset;
+    }
+
+    /**
+     * Returns the start of the byte offset of the container start in the packet. This is the start of the top
+     * container in the hierarchy where entry.getContainer() belongs.
+     * <p>
+     * It is 0 unless we have container composition (not inheritance!) and then it is the
+     * byte offset where the sub-container appears in the containing container
+     */
+    public int getContainerStartOffset() {
+        return startOffset;
+    }
+
+    public int getBitSize() {
+        return bitSize;
+    }
+
+    public void setBitSize(int bitSize) {
+        this.bitSize = bitSize;
+    }
+
+    public SequenceEntry getSequenceEntry() {
+        return entry;
+    }
+
+    public void setSequenceEntry(SequenceEntry entry) {
+        this.entry = entry;
+    }
+
+}
+```
+
+### `DiskstatsParameterProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/DiskstatsParameterProducer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+import static org.yamcs.utils.ValueUtility.getFloatValue;
+
+/**
+ * Generates parameters containing information about the disk IO, similarly with what the command iostat provides.
+ * <p>
+ * Works only on Linux, reads all the info from /proc/diskstats.
+ * 
+ */
+public class DiskstatsParameterProducer implements SystemParametersProducer {
+    final static Log log = new Log(DiskstatsParameterProducer.class);
+
+    final List<DiskStatsParam> diskstatsParams;
+
+    private AggregateParameterType diskstatAggrType;
+
+    public DiskstatsParameterProducer(SystemParametersService sysParamsService) throws IOException {
+        UnitType kbsecunit = new UnitType("KB/s");
+        UnitType readsecunit = new UnitType("reads/s");
+        UnitType writesecunit = new UnitType("writes/s");
+        UnitType millisecunit = new UnitType("millis");
+
+        UnitType pctunit = new UnitType("%");
+
+        Member diskReadsMember = new Member("diskReads", sysParamsService.getBasicType(Type.FLOAT, readsecunit));
+        diskReadsMember.setShortDescription("Number of reads");
+
+        Member kbReadsMember = new Member("kbReads", sysParamsService.getBasicType(Type.FLOAT, kbsecunit));
+        kbReadsMember.setShortDescription("Amount of data read");
+
+        Member readWaitMember = new Member("readWait", sysParamsService.getBasicType(Type.FLOAT, millisecunit));
+        readWaitMember.setShortDescription("Average wait for a read");
+
+        Member diskWritesMember = new Member("diskWrites", sysParamsService.getBasicType(Type.FLOAT, writesecunit));
+        diskWritesMember.setShortDescription("Number of writes");
+
+        Member kbWritesMember = new Member("kbWrites", sysParamsService.getBasicType(Type.FLOAT, kbsecunit));
+        kbWritesMember.setShortDescription("Amount of data written");
+
+        Member writeWaitMember = new Member("writeWait", sysParamsService.getBasicType(Type.FLOAT, millisecunit));
+        writeWaitMember.setShortDescription("Average wait for a write");
+
+        Member utilMember = new Member("util", sysParamsService.getBasicType(Type.FLOAT, pctunit));
+        utilMember.setShortDescription("Percentage  of  elapsed  time during which "
+                + "I/O requests were issued to the device");
+
+        diskstatAggrType = new AggregateParameterType.Builder().setName("DiskStats")
+                .addMember(diskReadsMember)
+                .addMember(kbReadsMember)
+                .addMember(readWaitMember)
+                .addMember(diskWritesMember)
+                .addMember(kbWritesMember)
+                .addMember(writeWaitMember)
+                .addMember(utilMember)
+                .build();
+
+        diskstatsParams = new ArrayList<>();
+
+        for (var me : readStats().entrySet()) {
+            String device = me.getKey();
+            Parameter p = sysParamsService.createSystemParameter("diskstats/" + device, diskstatAggrType,
+                    "Disk statistics for " + device);
+            diskstatsParams.add(new DiskStatsParam(device, p, me.getValue()));
+        }
+    }
+
+    @Override
+    public Collection<ParameterValue> getSystemParameters(long gentime) {
+        List<ParameterValue> pvlist = new ArrayList<>();
+        try {
+            Map<String, DiskStat> stats = readStats();
+
+            for (DiskStatsParam ioparam : diskstatsParams) {
+                var s1 = stats.get(ioparam.devName);
+                if (s1 == null) {
+                    continue;
+                }
+                var s0 = ioparam.stats;
+                float timeMillis = (float) ((s1.nanoTime - s0.nanoTime) / 1000_000.0);
+
+                float timeSec = timeMillis / 1000f;
+                if (timeSec < 0) {
+                    return pvlist;
+                }
+
+                AggregateValue v = new AggregateValue(diskstatAggrType.getMemberNames());
+
+                v.setMemberValue("diskReads", getFloatValue((s1.diskReads - s0.diskReads) / timeSec));
+                v.setMemberValue("kbReads", getFloatValue((s1.sectorReads - s0.sectorReads) / timeSec / 2f));
+                float readWait = s1.diskReads > s0.diskReads
+                        ? (s1.readTime - s0.readTime) / (float) (s1.diskReads - s0.diskReads)
+                        : 0;
+                
+                v.setMemberValue("readWait", getFloatValue(readWait));
+                v.setMemberValue("diskWrites", getFloatValue((s1.diskWrites - s0.diskWrites) / timeSec));
+                v.setMemberValue("kbWrites", getFloatValue((s1.sectorWrites - s0.sectorWrites) / timeSec / 2f));
+                
+                float writeWait = s1.diskWrites > s0.diskWrites
+                        ? (s1.writeTime - s0.writeTime) / (float) (s1.diskWrites - s0.diskWrites)
+                        : 0;
+                v.setMemberValue("writeWait", getFloatValue(writeWait));
+                v.setMemberValue("util", getFloatValue((s1.ioTime - s0.ioTime) / timeSec / 10f));
+
+                ParameterValue pv = new ParameterValue(ioparam.param);
+                pv.setGenerationTime(gentime);
+                pv.setAcquisitionTime(gentime);
+                pv.setEngValue(v);
+
+                pv.setExpireMillis((long) (1.9 * getFrequency() * 1000));
+                pvlist.add(pv);
+
+                ioparam.stats = s1;
+            }
+        } catch (IOException e) {
+            log.error("Failed to collect disk statistics", e);
+        }
+        return pvlist;
+    }
+
+    Map<String, DiskStat> readStats() throws IOException {
+        Map<String, DiskStat> r = new HashMap<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader("/proc/diskstats"))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                long nanoTime = System.nanoTime();
+                String[] parts = line.trim().split("\\s+");
+                if (parts.length < 14) {
+                    continue;
+                }
+                if ("7".equals(parts[0])) {
+                    // skip loopback devices
+                    continue;
+                }
+                String device = parts[2];
+                DiskStat stat = new DiskStat(nanoTime,
+                        Long.parseLong(parts[3]), Long.parseLong(parts[5]), Long.parseLong(parts[6]),
+                        Long.parseLong(parts[7]), Long.parseLong(parts[9]), Long.parseLong(parts[10]),
+                        Long.parseLong(parts[12]));
+
+                r.put(device, stat);
+            }
+        }
+        return r;
+    }
+
+    public long uptime() throws IOException {
+        try (BufferedReader reader = new BufferedReader(new FileReader("/proc/uptime"))) {
+            String line = reader.readLine();
+            String[] parts = line.trim().split("\\s+");
+            double uptimeSeconds = Double.parseDouble(parts[0]);
+            return (long) (uptimeSeconds * 1000);
+        }
+    }
+
+    @Override
+    public int getFrequency() {
+        return 5;
+    }
+
+    static class DiskStatsParam {
+        final String devName;
+        final Parameter param;
+
+        DiskStat stats;
+
+        public DiskStatsParam(String devName, Parameter param, DiskStat stats) {
+            this.devName = devName;
+            this.param = param;
+            this.stats = stats;
+        }
+    }
+
+    static class DiskStat {
+
+        final long nanoTime;
+        final long sectorReads;
+        final long diskReads;
+        final long readTime;
+
+        final long diskWrites;
+        final long sectorWrites;
+        final long writeTime;
+
+        final long ioTime;
+
+        public DiskStat(long nanoTime,
+                long diskReads, long sectorReads, long readTime,
+                long diskWrites, long sectorWrites, long writeTime,
+                long ioTime) {
+            this.nanoTime = nanoTime;
+            this.diskReads = diskReads;
+            this.sectorReads = sectorReads;
+            this.readTime = readTime;
+
+            this.sectorWrites = sectorWrites;
+            this.diskWrites = diskWrites;
+            this.writeTime = writeTime;
+
+            this.ioTime = ioTime;
+        }
+
+        @Override
+        public String toString() {
+            return "DiskStat [nanoTime=" + nanoTime + ", sectorReads=" + sectorReads + ", diskReads=" + diskReads
+                    + ", readTime=" + readTime + ", diskWrites=" + diskWrites + ", sectorWrites=" + sectorWrites
+                    + ", writeTime=" + writeTime + ", ioTime=" + ioTime + "]";
+        }
+    }
+
+    public static boolean hasDisksStats() {
+        return new File("/proc/diskstats").canRead();
+    }
+
+}
+```
+
+### `DoubleValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/DoubleValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class DoubleValue extends Value {
+    final double v;
+
+    public DoubleValue(double v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.DOUBLE;
+    }
+
+    @Override
+    public double getDoubleValue() {
+        return v;
+    }
+
+    @Override
+    public double toDouble() {
+        return v;
+    }
+
+    @Override
+    public int hashCode() {
+        return Double.hashCode(v);
+    }
+
+    public boolean equals(Object obj) {
+        return (obj instanceof DoubleValue)
+                && (Double.doubleToLongBits(((DoubleValue) obj).v) == Double.doubleToLongBits(v));
+    }
+
+    @Override
+    public String toString() {
+        return Double.toString(v);
+    }
+}
+```
+
+### `EnumeratedValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/EnumeratedValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+/**
+ * An enumerated value is a value that has both an integer and a string representation.
+ * 
+ * @author nm
+ *
+ */
+public class EnumeratedValue extends Value {
+    final String stringValue;
+    final long longValue;
+
+    public EnumeratedValue(long longValue, String stringValue) {
+        this.longValue = longValue;
+        this.stringValue = stringValue;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.ENUMERATED;
+    }
+
+    @Override
+    public long getSint64Value() {
+        return longValue;
+    }
+
+    @Override
+    public String getStringValue() {
+        return stringValue;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(longValue) ^ stringValue.hashCode();
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof EnumeratedValue) {
+            return ((longValue == ((EnumeratedValue) obj).longValue)
+                    && stringValue.equals(((EnumeratedValue) obj).stringValue));
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString() {
+        return stringValue;
+    }
+}
+```
+
+### `FileStoreParameterProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/FileStoreParameterProducer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.io.IOException;
+import java.nio.file.FileStore;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
+import org.yamcs.YamcsServer;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+/**
+ * Generates parameters containing information about the system disks: total space, available space and percentage used.
+ * 
+ */
+public class FileStoreParameterProducer implements SystemParametersProducer {
+    static final List<String> FILE_SYSTEM_TYPES = Arrays.asList("ext4", "ext3", "xfs");
+    final static Log log = new Log(FileStoreParameterProducer.class);
+
+    List<FileStoreParam> fileStores;
+
+    private AggregateParameterType fileStoreAggrType;
+
+    public FileStoreParameterProducer(SystemParametersService sysParamsService) throws IOException {
+        UnitType kbunit = new UnitType("KB");
+        UnitType pctunit = new UnitType("%");
+
+        Member totalMember = new Member("total", sysParamsService.getBasicType(Type.SINT64, kbunit));
+        totalMember.setShortDescription("Size of the file store");
+
+        Member availableMember = new Member("available", sysParamsService.getBasicType(Type.SINT64, kbunit));
+        availableMember.setShortDescription(
+                "The number of bytes available to this Java Virtual Machine on the file store");
+
+        Member percentageUseMember = new Member("percentageUse", sysParamsService.getBasicType(Type.FLOAT, pctunit));
+        percentageUseMember.setShortDescription("Percentage of bytes used on the file store");
+
+        fileStoreAggrType = new AggregateParameterType.Builder().setName("FileStore")
+                .addMember(totalMember)
+                .addMember(availableMember)
+                .addMember(percentageUseMember)
+                .build();
+
+        fileStores = new ArrayList<>();
+
+        if (isWindows()) {
+            Path dataDirectory = YamcsServer.getServer().getDataDirectory().toAbsolutePath().getRoot();
+            FileStore store = Files.getFileStore(dataDirectory);
+            // store.name() returns the name of the drive, which can be empty, so prefer drive letter
+            String displayName = dataDirectory.getRoot().toString();
+            String driveLetter = displayName.replace(":\\", ""); // Change C:\ to C
+            addFileStore(store, driveLetter, displayName, sysParamsService);
+        } else if (isMac()) {
+            FileStore store = Files.getFileStore(YamcsServer.getServer().getDataDirectory());
+            addFileStore(store, store.name(), store.name(), sysParamsService);
+        } else {
+            for (FileStore store : FileSystems.getDefault().getFileStores()) {
+                if (FILE_SYSTEM_TYPES.contains(store.type())) {
+                    if (fileStores.stream()
+                            .filter(fs -> fs.store.name().equals(store.name())).findFirst()
+                            .isPresent()) {
+                        // sometimes (e.g. docker) the same filesystem is mounted multiple times in different locations
+                        log.debug("Not adding duplicate store '{}' to the file stores to be monitored", store);
+                    } else {
+                        addFileStore(store, store.name(), store.name(), sysParamsService);
+                    }
+                }
+            }
+        }
+    }
+
+    private void addFileStore(FileStore store, String name, String displayName,
+            SystemParametersService sysParamsService) {
+        log.debug("Adding store '{}' to the file stores to be monitored", store);
+        Parameter p = sysParamsService.createSystemParameter("df/" + name, fileStoreAggrType,
+                "Information about disk usage for the " + displayName + " file store of type " + store.type());
+        fileStores.add(new FileStoreParam(store, p));
+    }
+
+    @Override
+    public Collection<ParameterValue> getSystemParameters(long gentime) {
+        List<ParameterValue> pvlist = new ArrayList<>();
+        for (FileStoreParam storep : fileStores) {
+            FileStore store = storep.store;
+            try {
+                long ts = store.getTotalSpace();
+                long av = store.getUsableSpace();
+                float perc = (float) (100 - av * 100.0 / ts);
+
+                AggregateValue v = new AggregateValue(fileStoreAggrType.getMemberNames());
+                v.setMemberValue("total", ValueUtility.getSint64Value(ts / 1024));
+                v.setMemberValue("available", ValueUtility.getSint64Value(av / 1024));
+                v.setMemberValue("percentageUse", ValueUtility.getFloatValue(perc));
+
+                ParameterValue pv = new ParameterValue(storep.param);
+                pv.setGenerationTime(gentime);
+                pv.setAcquisitionTime(gentime);
+                pv.setEngValue(v);
+
+                pv.setExpireMillis((long) (1.9 * getFrequency() * 1000));
+                pvlist.add(pv);
+            } catch (NoSuchFileException e) {
+                // Maybe drive became inaccessible. Don't be verbose about it,
+                // value will eventually expire.
+                log.trace("Failed to collect information about the file store {}", store, e);
+            } catch (IOException e) {
+                log.error("Failed to collect information about the file store {}", store, e);
+            }
+        }
+
+        return pvlist;
+    }
+
+    @Override
+    public int getFrequency() {
+        return 60;
+    }
+
+    private static boolean isWindows() {
+        String os = System.getProperty("os.name").toLowerCase();
+        return os.contains("win");
+    }
+
+    private static boolean isMac() {
+        String os = System.getProperty("os.name").toLowerCase();
+        return os.contains("mac");
+    }
+
+    static class FileStoreParam {
+        final FileStore store;
+        final Parameter param;
+
+        public FileStoreParam(FileStore store, Parameter param) {
+            this.store = store;
+            this.param = param;
+        }
+    }
+
+}
+```
+
+### `FloatValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/FloatValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class FloatValue extends Value {
+    final float v;
+
+    public FloatValue(float v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.FLOAT;
+    }
+
+    @Override
+    public float getFloatValue() {
+        return v;
+    }
+
+    @Override
+    public double toDouble() {
+        return v;
+    }
+
+    @Override
+    public int hashCode() {
+        return Float.hashCode(v);
+    }
+
+    public boolean equals(Object obj) {
+        return (obj instanceof FloatValue)
+                && (Float.floatToIntBits(((FloatValue) obj).v) == Float.floatToIntBits(v));
+    }
+
+    @Override
+    public String toString() {
+        return Float.toString(v);
+    }
+}
+```
+
+### `JvmParameterProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/JvmParameterProducer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.UnitType;
+
+public class JvmParameterProducer implements SystemParametersProducer {
+    final static Log log = new Log(JvmParameterProducer.class);
+
+    private Parameter spJvmTotalMemory, spJvmMemoryUsed, spJvmTheadCount;
+
+    public JvmParameterProducer(SystemParametersService sysParamsService) {
+        UnitType kbunit = new UnitType("KB");
+        spJvmTotalMemory = sysParamsService.createSystemParameter("jvm/totalMemory", Type.UINT64, kbunit,
+                "Total amount of memory allocated by the Java Virtual Machine");
+        log.debug("Publishing jvmTotalMemory with parameter id {}", spJvmTotalMemory);
+
+        spJvmMemoryUsed = sysParamsService.createSystemParameter("jvm/memoryUsed", Type.UINT64, kbunit,
+                "Amount of memory currently used in the Java Virtual Machine");
+        log.debug("Publishing jvmMemoryUsed with parameter id {}", spJvmMemoryUsed);
+
+        spJvmTheadCount = sysParamsService.createSystemParameter("jvm/threadCount", Type.UINT32,
+                "Current thread count of the Java Virtual Machine");
+        log.debug("Publishing jvmThreadCount with parameter id {}", spJvmTheadCount);
+    }
+
+    @Override
+    public Collection<ParameterValue> getSystemParameters(long gentime) {
+        List<ParameterValue> pvlist = new ArrayList<>();
+        Runtime r = Runtime.getRuntime();
+        ParameterValue jvmTotalMemory = SystemParametersService.getPV(spJvmTotalMemory, gentime,
+                r.totalMemory() / 1024);
+        ParameterValue jvmMemoryUsed = SystemParametersService.getPV(spJvmMemoryUsed, gentime,
+                (r.totalMemory() - r.freeMemory()) / 1024);
+        ParameterValue jvmThreadCount = SystemParametersService.getUnsignedIntPV(spJvmTheadCount, gentime,
+                Thread.activeCount());
+
+        pvlist.add(jvmTotalMemory);
+        pvlist.add(jvmMemoryUsed);
+        pvlist.add(jvmThreadCount);
+
+        return pvlist;
+    }
+
+    @Override
+    public int getFrequency() {
+        return 60;
+    }
+}
+```
+
+### `LastValueCache.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/LastValueCache.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Cache for the last known value of each parameter.
+ * <p>
+ * Can also stored a number of n values for certain parameters (required by algorithms and match criteria)
+ * <p>
+ * it uses a readwrite lock to synchronize access from multiple threads.
+ *
+ */
+public class LastValueCache {
+    HashMap<Parameter, ParameterValue> constants = new HashMap<>();
+    HashMap<Parameter, ParameterValue> params = new HashMap<>();
+    HashMap<Parameter, ParamBuffer> bufferedParams = new HashMap<>();
+
+    ReadWriteLock lock = new ReentrantReadWriteLock();
+
+    public LastValueCache() {
+    }
+
+    public LastValueCache(Collection<ParameterValue> constants) {
+        constants.forEach(pv -> this.constants.put(pv.getParameter(), pv));
+    }
+
+    /**
+     * Returns the latest known value for p or null if there is none.
+     * 
+     * @param param
+     * @return
+     */
+    public ParameterValue getValue(Parameter param) {
+        if (param.getDataSource() == DataSource.CONSTANT) {
+            return constants.get(param);
+        }
+
+        lock.readLock().lock();
+        try {
+            ParamBuffer pb = bufferedParams.get(param);
+            if (pb != null) {
+                return pb.end();
+            } else {
+                return params.get(param);
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * return the n'th newest value or null if no such a value exist. n has to be greater or equal with 0.
+     * <p>
+     * If n=0 it is equivalent with {@link LastValueCache#getValue(Parameter)}
+     * <p>
+     * If n<0 but buffering is not enabled for the parameter or the buffer capacity is smaller than -n+1, an
+     * IllegalStateException will be thrown
+     * 
+     * @throws IllegalArgumentException
+     *             if n>0 or if n<0 and the parameter is constant
+     * @throws IllegalStateException
+     *             if buffering is not enabled or the buffer capacity is smaller than -n+1
+     */
+    public ParameterValue getValueFromEnd(Parameter param, int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n has to be positive:" + n);
+        }
+        if (param.getDataSource() == DataSource.CONSTANT) {
+            if (n > 0) {
+                throw new IllegalArgumentException("Cannot request buffered data for constant prameters");
+            } else {
+                return constants.get(param);
+            }
+        }
+
+        lock.readLock().lock();
+        try {
+            if (n == 0) {
+                return getValue(param);
+            }
+
+            ParamBuffer pb = bufferedParams.get(param);
+            if (pb == null) {
+                throw new IllegalStateException("Buffering not enabled for " + param.getQualifiedName());
+            }
+            if (pb.capacity() < -n + 1) {
+                throw new IllegalStateException("Buffering enabled for " + param.getQualifiedName()
+                        + " but it's capacity " + pb.capacity() + " is smaller than " + (n + 1));
+            }
+            return pb.nthFromEnd(n);
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Configure the parameter cache to remember at least capacity values for the parameter.
+     * <p>
+     * The size has to be at least 2 (because size 1 is by default)
+     * 
+     * @throws IllegalArgumentException
+     *             if the capacity is smaller than 2 or the parameter is a constant.
+     */
+    public void enableBuffering(Parameter param, int capacity) {
+        if (capacity < 2) {
+            throw new IllegalArgumentException("Buffer capacity has to be at least 2");
+        }
+        if (param.getDataSource() == DataSource.CONSTANT) {
+            throw new IllegalArgumentException("Cannot enable buffering for constant parameters");
+        }
+        lock.writeLock().lock();
+        try {
+
+            ParamBuffer pb = bufferedParams.get(param);
+            if (pb == null) {
+                pb = new ParamBuffer(capacity);
+                ParameterValue pv = params.remove(param);
+                if (pv != null) {
+                    pb.add(pv);
+                }
+                bufferedParams.put(param, pb);
+            } else {
+                if (capacity <= pb.capacity()) {
+                    return;
+                } else {
+                    ParamBuffer pb1 = new ParamBuffer(pb, capacity);
+
+                    bufferedParams.put(param, pb1);
+                }
+            }
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    /**
+     * Adds a new value. If buffering is enabled, the value is added to the buffer, otherwise it replaces the old value
+     * (if any)
+     * 
+     * @param pv
+     */
+    public void add(ParameterValue pv) {
+        lock.writeLock().lock();
+        try {
+            doAdd(pv);
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    private void doAdd(ParameterValue pv) {
+        Parameter param = pv.getParameter();
+        if (param.getDataSource() == DataSource.CONSTANT) {
+            throw new IllegalArgumentException("Cannot add constants (they can only be added in the constructor)");
+        }
+        ParamBuffer pb = bufferedParams.get(param);
+        if (pb == null) {
+            params.put(param, pv);
+        } else {
+            pb.add(pv);
+        }
+    }
+
+    /**
+     * Add all parameters to the cache
+     * 
+     * @param newValues
+     */
+    public void addAll(Collection<ParameterValue> newValues) {
+        lock.writeLock().lock();
+        try {
+            newValues.forEach(pv -> doAdd(pv));
+        } finally {
+            lock.writeLock().unlock();
+        }
+    }
+
+    public int size() {
+        lock.readLock().lock();
+        try {
+            return constants.size() + params.size() + bufferedParams.size();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * returns all the values from the cache
+     * 
+     * @return
+     */
+    public Collection<ParameterValue> getValues() {
+        lock.readLock().lock();
+        try {
+            return params.values();
+        } finally {
+            lock.readLock().unlock();
+        }
+    }
+
+    /**
+     * returns a list of parameter values for all the parameters having the persistence flag set
+     * <p>
+     * The list may be empty if no parameter has the flag set
+     */
+    public List<ParameterValue> getValuesToBePersisted() {
+        List<ParameterValue> pvList = new ArrayList<>();
+        lock.readLock().lock();
+        try {
+            for (var entry : bufferedParams.entrySet()) {
+                if (entry.getKey().isPersistent()) {
+                    var pv = entry.getValue().end();
+                    if (pv != null) {
+                        pvList.add(pv);
+                    }
+                }
+            }
+            for (var entry : params.entrySet()) {
+                if (entry.getKey().isPersistent()) {
+                    pvList.add(entry.getValue());
+                }
+            }
+        } finally {
+            lock.readLock().unlock();
+        }
+        return pvList;
+    }
+
+    // fixed size circular buffer
+    static class ParamBuffer {
+        final ParameterValue[] data;
+        int end = -1;
+
+        ParamBuffer(int capacity) {
+            this.data = new ParameterValue[capacity];
+        }
+
+        ParamBuffer(ParamBuffer pb1, int capacity) {
+            this.data = Arrays.copyOf(pb1.data, capacity);
+            this.end = pb1.end;
+        }
+
+        public int capacity() {
+            return data.length;
+        }
+
+        public ParameterValue end() {
+            return end == -1 ? null : data[end];
+        }
+
+        /**
+         * Return the element end-n (n is positive)
+         * 
+         */
+        public ParameterValue nthFromEnd(int n) {
+            if (n < 0) {
+                throw new IllegalArgumentException("n has to be positive");
+            }
+
+            int k = end - n;
+            if (k < 0) {
+                k += data.length;
+            }
+            return data[k];
+        }
+
+        public void add(ParameterValue pv) {
+            end = incr(end);
+            data[end] = pv;
+        }
+
+        private int incr(int k) {
+            int k1 = k + 1;
+            return k1 < data.length ? k1 : k1 - data.length;
+        }
+
+        public boolean isEmpty() {
+            return end == -1;
+        }
+
+        @Override
+        public String toString() {
+
+            if (end == -1) {
+                return "[]";
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            int k = end;
+            while (true) {
+                ParameterValue pv = data[k];
+                if (pv == null) {
+                    sb.append("null");
+                } else {
+                    sb.append(pv.getParameter().getName())
+                            .append("(")
+                            .append(pv.getRawValue())
+                            .append(", ")
+                            .append(pv.getEngValue())
+                            .append(")");
+                }
+                k = incr(k);
+                if (k == end) {
+                    break;
+                }
+
+            }
+            return sb.toString();
+        }
+    }
+
+}
+```
+
+### `LocalParameterManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/LocalParameterManager.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+
+import org.yamcs.AbstractProcessorService;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.YConfiguration;
+import org.yamcs.mdb.Mdb;
+
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.tctm.StreamParameterSender;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Implements local parameters - these are parameters that can be set from the clients.
+ * 
+ * <p>
+ * All the parameters are sent from the executor thread.
+ * 
+ */
+public class LocalParameterManager extends AbstractProcessorService
+        implements SoftwareParameterManager, ParameterProvider {
+
+    ExecutorService executor;
+    private List<ParameterProcessor> parameterListeners = new CopyOnWriteArrayList<>();
+
+    boolean subscribeToAllParams = false;
+    Set<Parameter> subscribedParams = new HashSet<>();
+
+    String yamcsInstance;
+    Processor proc;
+    Mdb mdb;
+    LastValueCache lvc;
+    StreamParameterSender streamParameterSender;
+
+    @Override
+    public void init(Processor proc, YConfiguration config, Object spec) {
+        super.init(proc, config, spec);
+        this.proc = proc;
+        this.mdb = proc.getMdb();
+        this.lvc = proc.getLastValueCache();
+        this.executor = proc.getTimer();
+
+        ParameterProcessorManager ppm = proc.getParameterProcessorManager();
+        ppm.addParameterProvider(this);
+        ppm.addSoftwareParameterManager(DataSource.LOCAL, this);
+
+        if (proc.recordLocalValues()) {
+            streamParameterSender = proc.getStreamParameterSender();
+        }
+    }
+
+    @Override
+    public void setParameterProcessor(ParameterProcessor parameterListener) {
+        parameterListeners.add(parameterListener);
+    }
+
+    public void addParameterListener(ParameterProcessor parameterListener) {
+        parameterListeners.add(parameterListener);
+    }
+
+    // called on the execution thread to update
+    // TODO: convert from raw to engineering values
+    private void doUpdate(final List<ParameterValue> gpvList) {
+        ParameterValueList pvlist = new ParameterValueList();
+        for (ParameterValue pv : gpvList) {
+            Parameter p = pv.getParameter();
+            if (subscribeToAllParams || subscribedParams.contains(p)) {
+                long t;
+                if (proc != null) {
+                    t = proc.getCurrentTime();
+                } else {
+                    t = TimeEncoding.getWallclockTime();
+                }
+
+                if (pv.getGenerationTime() == TimeEncoding.INVALID_INSTANT) {
+                    pv.setGenerationTime(t);
+                }
+                if (pv.getAcquisitionTime() == TimeEncoding.INVALID_INSTANT) {
+                    pv.setAcquisitionTime(t);
+                }
+
+                pvlist.add(pv);
+            }
+        }
+        if (pvlist.size() > 0) {
+            ProcessingContext pctx = ProcessingContext.createForTmProcessing(lvc, processor.getCurrentTime());
+            pctx.getTmParams().addAll(pvlist);
+            parameterListeners.forEach(l -> l.process(pctx));
+
+            if (streamParameterSender != null) {
+                streamParameterSender.sendParameters(pvlist);
+            }
+        }
+    }
+
+    /**
+     * update the list of parameters.
+     * <p>
+     * Converts the value to the target type and sends the result to PRM
+     */
+    @Override
+    public void updateParameters(final List<ParameterValue> pvList) {
+        List<ParameterValue> pvl = new ArrayList<>(pvList.size());
+        for (ParameterValue pv : pvList) {
+            pvl.add(SoftwareParameterManager.transformValue(lvc, pv));
+        }
+        // then filter out the subscribed ones and send it to PRM
+        executor.submit(() -> {
+            try {
+                doUpdate(pvl);
+            } catch (Exception e) {
+                log.error("Error while updating parameter values", e);
+            }
+        });
+    }
+
+    @Override
+    public void startProviding(final Parameter paramDef) {
+        log.debug("requested to provide {}", paramDef.getQualifiedName());
+        executor.submit(() -> subscribedParams.add(paramDef));
+    }
+
+    @Override
+    public void startProvidingAll() {
+        log.debug("requested to provide all");
+        executor.submit(() -> subscribeToAllParams = true);
+    }
+
+    @Override
+    public void stopProviding(final Parameter paramDef) {
+        log.debug("requested to stop providing {}", paramDef.getQualifiedName());
+        executor.submit(() -> subscribedParams.remove(paramDef));
+    }
+
+    @Override
+    public boolean canProvide(NamedObjectId paraId) {
+        return getLocalParam(paraId) != null;
+    }
+
+    private Parameter getLocalParam(NamedObjectId paraId) {
+        Parameter p;
+        if (paraId.hasNamespace()) {
+            p = mdb.getParameter(paraId.getNamespace(), paraId.getName());
+        } else {
+            p = mdb.getParameter(paraId.getName());
+        }
+
+        return (p != null && p.getDataSource() == DataSource.LOCAL) ? p : null;
+    }
+
+    @Override
+    public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+        Parameter p = getLocalParam(paraId);
+        if (p == null) {
+            log.info("throwing InvalidIdentification because cannot provide {}", paraId);
+            throw new InvalidIdentification(paraId);
+        }
+        return p;
+    }
+
+    @Override
+    public boolean canProvide(Parameter param) {
+        return param.getDataSource() == DataSource.LOCAL;
+    }
+
+    @Override
+    protected void doStart() {
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        executor.shutdown();
+        notifyStopped();
+    }
+
+    // used in unit tests to synchronize with the sending of the parameters to the PPM
+    public void sync() throws InterruptedException, ExecutionException {
+        executor.submit(() -> {
+        }).get();
+    }
+}
+```
+
+### `NoProviderException.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/NoProviderException.java`
+
+
+```java
+package org.yamcs.parameter;
+
+public class NoProviderException extends RuntimeException {
+
+    public NoProviderException() {
+	super();
+    }
+
+    public NoProviderException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+	super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public NoProviderException(String message, Throwable cause) {
+	super(message, cause);
+    }
+
+    public NoProviderException(String message) {
+	super(message);
+    }
+
+    public NoProviderException(Throwable cause) {
+	super(cause);
+    }
+    
+}
+```
+
+### `ParameterCache.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterCache.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.yamcs.xtce.Parameter;
+
+public interface ParameterCache {
+
+    /**
+     * update the parameters in the cache
+    
+     * @param pvs - parameter value list
+     */
+    void update(Collection<ParameterValue> pvs);
+
+    /**
+     * Returns cached value for parameter or an empty list if there is no value in the cache
+     * 
+     * 
+     * @param plist
+     * @return
+     */
+    List<ParameterValue> getValues(List<Parameter> plist);
+
+    /**
+     * Returns last cached value for parameter or null if there is no value in the cache
+     * @param p - parameter for which the last value is returned
+     * @return
+     */
+    ParameterValue getLastValue(Parameter p);
+
+    /**
+     * Returns all values from the cache for the parameter or null if there is no value cached
+     * 
+     * The parameter are returned in descending order (newest parameter is returned first)
+     * @param p - parameter for which all values are returned
+     * @return all values from the cache for the parameter or null if there is no value cached
+     */
+    List<ParameterValue> getAllValues(Parameter p);
+
+    /**
+     * Same as above but return all values that have the generation time in the (start, stop] interval
+     * @param p
+     * @param start
+     * @param stop
+     * @return
+     */
+    List<ParameterValue> getAllValues(Parameter p, long start, long stop);
+
+    /**
+     * Remove all the parameters from the cache
+     */
+    void clear();
+
+    boolean caching(ParameterWithId pid);
+}
+```
+
+### `ParameterCacheConfig.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterCacheConfig.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.YConfiguration;
+import org.yamcs.logging.Log;
+
+public class ParameterCacheConfig {
+    final boolean cacheAll;
+    //maximum duration of the cache
+    final long maxDuration;
+    final int maxNumEntries;
+    
+    public ParameterCacheConfig(boolean enabled, boolean cacheAll, long duration, int maxNumEntries) {
+        this.cacheAll = cacheAll;
+        this.maxDuration = duration;
+        this.maxNumEntries = maxNumEntries;
+    }
+    
+    public ParameterCacheConfig() {
+        this.cacheAll = false;
+        this.maxDuration = 0;
+        this.maxNumEntries = 0;
+    }
+
+    public ParameterCacheConfig(YConfiguration cacheConfig, Log log) {
+        cacheAll = cacheConfig.getBoolean("cacheAll", true);
+        maxDuration = 1000L * cacheConfig.getInt("duration", 600);
+        maxNumEntries = cacheConfig.getInt("maxNumEntries", 4096);
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterCacheConfig [cacheAll=" + cacheAll + ", maxDuration=" + maxDuration
+                + ", maxNumEntries=" + maxNumEntries + "]";
+    }
+}
+```
+
+### `ParameterConsumer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterConsumer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.List;
+
+/**
+ * Used by the ParameterRequestManager to deliver parameters
+ * 
+ */
+public interface ParameterConsumer {
+    void updateItems(int subscriptionId, List<ParameterValue> items);
+}
+```
+
+### `ParameterPersistence.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterPersistence.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.yamcs.InitException;
+import org.yamcs.logging.Log;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.parser.ParseException;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.streamsql.StreamSqlException;
+
+/**
+ * Archives and retrieves the value of parameters that have the persistence flag activated.
+ * 
+ */
+public class ParameterPersistence {
+    final static String TABLE_NAME = "param_persistence";
+    final static Log log = new Log(ParameterPersistence.class);
+
+    public static final TupleDefinition TDEF = new TupleDefinition();
+    public static final String CNAME_SAVETIME = "savetime";
+    public static final String CNAME_PROCESSOR = "processor";
+    static {
+        TDEF.addColumn(CNAME_SAVETIME, DataType.TIMESTAMP);
+        TDEF.addColumn(CNAME_PROCESSOR, DataType.ENUM);
+    }
+
+    final Stream stream;
+    final String yamcsInstance;
+    final String processor;
+
+    public ParameterPersistence(String yamcsInstance, String processor) throws InitException {
+        this.yamcsInstance = yamcsInstance;
+        this.processor = processor;
+        try {
+            this.stream = setupRecording();
+        } catch (StreamSqlException | ParseException e) {
+            throw new InitException(e);
+        }
+    }
+
+    private Stream setupRecording() throws StreamSqlException, ParseException {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+
+        String streamName = TABLE_NAME + "_in";
+        if (ydb.getTable(TABLE_NAME) == null) {
+            String query = "create table " + TABLE_NAME + "(" + TDEF.getStringDefinition1()
+                    + ", primary key(savetime, processor))";
+            ydb.execute(query);
+        }
+        if (ydb.getStream(streamName) == null) {
+            ydb.execute("create stream " + streamName + TDEF.getStringDefinition());
+        }
+        ydb.execute("upsert into " + TABLE_NAME + " select * from " + streamName);
+        return ydb.getStream(streamName);
+    }
+
+    /**
+     * Called at startup to load the parameters saved before the server shutdown
+     * 
+     * <p>
+     * returns null if no record was found
+     */
+    public Iterator<ParameterValue> load() {
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        try {
+            var r = ydb.execute(
+                    "select * from " + TABLE_NAME + " where processor = ? order desc limit 1",
+                    processor);
+            if (r.hasNext()) {
+                var t = r.next();
+                r.close();
+                List<?> cols = t.getColumns();
+                if (cols.size() < 2) {
+                    log.error("Invalid record retrieved from the param_persistence table: {}", t);
+                    return null;
+                }
+                return (Iterator<ParameterValue>) t.getColumns().listIterator(2);
+            }
+
+        } catch (ParseException | StreamSqlException e) {
+            throw new RuntimeException(e);
+        }
+
+        return null;
+    }
+
+    /**
+     * Save all parameters with the persistence flag set
+     */
+    public void save(Iterator<ParameterValue> pvIterator) {
+        Tuple tuple = new Tuple();
+        tuple.addTimestampColumn(CNAME_SAVETIME, TimeEncoding.getWallclockTime());
+        tuple.addColumn(CNAME_PROCESSOR, processor);
+        while (pvIterator.hasNext()) {
+            var pv = pvIterator.next();
+            tuple.addColumn(pv.getParameterQualifiedName(), DataType.PARAMETER_VALUE, pv);
+        }
+
+        stream.emitTuple(tuple);
+    }
+}
+```
+
+### `ParameterProcessor.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProcessor.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.mdb.ProcessingContext;
+
+/**
+ * This is the interface implemented by the ParameterRequestManager to receive parameters from 
+ * the different parameter providers.  
+ *
+ */
+public interface ParameterProcessor {
+    public void process(ProcessingContext processingCtx);
+}
+```
+
+### `ParameterProcessorManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProcessorManager.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.alarms.AlarmServer;
+import org.yamcs.alarms.ParameterAlarmServer;
+import org.yamcs.alarms.ParameterAlarmStreamer;
+import org.yamcs.logging.Log;
+import org.yamcs.mdb.ParameterAlarmChecker;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.XtceTmProcessor;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.DataSource;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.common.util.concurrent.AbstractService;
+
+/**
+ * Makes the connection between {@link ParameterProvider} and {@link ParameterProcessor}
+ * <p>
+ * Each parameter processor will get the {@link ProcessingContext} delivery (those containing parameters it is
+ * interested into) and can further add parameters to it.
+ * <p>
+ * The AlgorithmManager is a parameter processor and is added first in the list.
+ * <p>
+ * After each parameter processor is called, the alarm manager (if enabled) will check the newly added parameters
+ * 
+ * 
+ */
+public class ParameterProcessorManager extends AbstractService implements ParameterProcessor {
+    Log log;
+    static final String REALTIME_ALARM_SERVER = "alarms_realtime";
+    ParameterProcessor[] parameterProcessors = new ParameterProcessor[10];
+
+    // Maps the parameters to the request(subscription id) in which they have been asked
+    private ConcurrentHashMap<Parameter, BitSet> param2SubscriptionMap = new ConcurrentHashMap<>();
+
+    // contains subscribe all
+    private BitSet subscribeAll = new BitSet();
+
+    private Map<Class<?>, ParameterProvider> parameterProviders = new LinkedHashMap<>();
+
+    public final Processor processor;
+
+    LastValueCache lastValueCache;
+
+    // if all parameter shall be subscribed/processed
+    private boolean shouldSubcribeAllParameters = false;
+    private boolean subscribedAllParameters = false;
+
+    AlarmServer<Parameter, ParameterValue> parameterAlarmServer;
+    Map<DataSource, SoftwareParameterManager> spm = new HashMap<>();
+
+    private ParameterAlarmChecker alarmChecker;
+    ParameterRequestManager prm;
+
+    /**
+     * Creates a new ParameterRequestManager, configured to listen to the specified XtceTmProcessor.
+     */
+    public ParameterProcessorManager(Processor proc, XtceTmProcessor tmProcessor) throws ConfigurationException {
+        this.processor = proc;
+        log = new Log(getClass(), proc.getInstance());
+        log.setContext(proc.getName());
+        shouldSubcribeAllParameters = proc.isSubscribeAll();
+
+        this.lastValueCache = proc.getLastValueCache();
+
+        tmProcessor.setParameterProcessor(this);
+        addParameterProvider(tmProcessor);
+        if (proc.hasAlarmChecker()) {
+            alarmChecker = new ParameterAlarmChecker(this, proc.getProcessorData());
+        }
+        if (proc.hasAlarmServer()) {
+            parameterAlarmServer = new ParameterAlarmServer(proc.getInstance(), proc.getConfig(), proc.getTimer());
+            alarmChecker.enableServer(parameterAlarmServer);
+        }
+
+        prm = new ParameterRequestManager(this);
+    }
+
+    /**
+     * This is called after all the parameter providers have been added but before the start.
+     */
+    public void init() {
+        if (shouldSubcribeAllParameters) {
+            for (ParameterProvider prov : parameterProviders.values()) {
+                prov.startProvidingAll();
+            }
+        } else if (parameterAlarmServer != null) { // at least get all that have alarms
+            for (Parameter p : processor.getMdb().getParameters()) {
+                if (p.getParameterType() != null && p.getParameterType().hasAlarm()) {
+                    try {
+                        subscribeToProviders(p);
+                    } catch (NoProviderException e) {
+                        log.warn("No provider found for parameter {} which has alarms", p.getQualifiedName());
+                    }
+                }
+            }
+        }
+    }
+
+    public void addParameterProvider(ParameterProvider parameterProvider) {
+        if (parameterProviders.containsKey(parameterProvider.getClass())) {
+            log.warn("Ignoring duplicate parameter provider of type {}", parameterProvider.getClass());
+        } else {
+            log.debug("Adding parameter provider: {}", parameterProvider.getClass());
+            parameterProvider.setParameterProcessor(this);
+            parameterProviders.put(parameterProvider.getClass(), parameterProvider);
+        }
+    }
+
+    public int subscribe(final Collection<Parameter> paraList, final ParameterProcessor paramProcessor) {
+        int id = allocateProcessorId(paramProcessor);
+        log.debug("new request with subscriptionId {} with {} items for {}", id, paraList.size(),
+                paramProcessor.getClass());
+        subscribeToProviders(paraList);
+
+        for (Parameter p : paraList) {
+            log.trace("adding to subscriptionID: {} item:{} ", id, p.getQualifiedName());
+            addItemToSubscription(id, p);
+        }
+
+        return id;
+    }
+
+    private void addItemToSubscription(int id, Parameter para) {
+        BitSet bitset = param2SubscriptionMap.computeIfAbsent(para, k -> new BitSet());
+        bitset.set(id);
+    }
+
+    public int subscribeAll(ParameterProcessor processor) {
+        int id = allocateProcessorId(processor);
+        log.debug("new subscribeAll with subscriptionId {}", id);
+
+        subscribeAll.set(id);
+        return id;
+    }
+
+    public void unsubscribeAll(int subscriptionId) {
+        subscribeAll.clear(subscriptionId);
+        removeSubscriptionId(subscriptionId);
+    }
+
+    private synchronized int allocateProcessorId(ParameterProcessor processor) {
+        for (int i = 0; i < parameterProcessors.length; i++) {
+            if (parameterProcessors[i] == null) {
+                parameterProcessors[i] = processor;
+                return i;
+            }
+        }
+        int n = parameterProcessors.length;
+        parameterProcessors = Arrays.copyOf(parameterProcessors, n + 10);
+        parameterProcessors[n] = processor;
+        return n;
+    }
+
+    private synchronized void removeSubscriptionId(int id) {
+        parameterProcessors[id] = null;
+    }
+
+    public void unsubscribe(int subscriptionId) {
+        param2SubscriptionMap.values().forEach(bitset -> bitset.clear(subscriptionId));
+        removeSubscriptionId(subscriptionId);
+    }
+
+    /**
+     * returns a parameter based on fully qualified name
+     * 
+     * @param fqn
+     * @return
+     * @throws InvalidIdentification
+     */
+    public Parameter getParameter(String fqn) throws InvalidIdentification {
+        return getParameter(NamedObjectId.newBuilder().setName(fqn).build());
+    }
+
+    /**
+     * @param paraId
+     * @return the corresponding parameter definition for a IntemIdentification
+     * @throws InvalidIdentification
+     *             in case no provider knows of this parameter.
+     */
+    public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+        for (ParameterProvider provider : parameterProviders.values()) {
+            if (provider.canProvide(paraId)) {
+                return provider.getParameter(paraId);
+            }
+        }
+        throw new InvalidIdentification(paraId);
+    }
+
+    @Override
+    public void process(ProcessingContext processingCtx) {
+        ParameterValueList pvlist = processingCtx.getTmParams();
+        log.trace("Received TM data with {} parameters", pvlist.size);
+        if (alarmChecker != null) {
+            alarmChecker.performAlarmChecking(processingCtx, pvlist.iterator());
+        }
+        BitSet bitset = new BitSet();
+        bitset.or(subscribeAll);
+
+        for (ParameterValue pv : pvlist) {
+            BitSet bitset1 = param2SubscriptionMap.get(pv.getParameter());
+            if (bitset1 != null) {
+                bitset.or(bitset1);
+            }
+        }
+        // at this point bitset contains all the subscriptions with parameters from the original delivery.
+        // as we run the delivery through the processors, new parameters may be created and so new subscriptions might
+        // be added to the set. We do not want to deliver twice for the same subscription though.
+        // In particular, the subscribe all processors will only get called once, so they will not be called again if
+        // other parameters have been added to delivery
+        // (the algorithm manager handles that by doing its internal parameter dependency management)
+        boolean finished = false;
+        int loopCount = 1;
+        while (!finished) {
+            finished = true;
+            Iterator<ParameterValue> tailIt = pvlist.tailIterator();
+
+            for (int id = bitset.nextSetBit(0); id != -1; id = bitset.nextSetBit(id + 1)) {
+                finished = false;
+                sendToProcessor(parameterProcessors[id], processingCtx);
+            }
+
+            // check the new parameters added in the loop above
+            BitSet bitset1 = new BitSet();
+            while (tailIt.hasNext()) {
+                ParameterValue pv = tailIt.next();
+                BitSet bitset2 = param2SubscriptionMap.get(pv.getParameter());
+                if (bitset2 != null) {
+                    bitset1.or(bitset2);
+                }
+            }
+
+            // remove the subscriptions for which the data has already been sent
+            // - even though without the extra parameters! because we don't like cyclic dependencies
+            // cyclic dependencies could be detected by checking bitset1 intersection with bitset
+            bitset1.andNot(bitset);
+
+            bitset = bitset1;
+        }
+
+        prm.update(pvlist);
+
+        lastValueCache.addAll(pvlist);
+    }
+
+    // sends the parameter to processor
+    private void sendToProcessor(ParameterProcessor paramProcessor, ProcessingContext processingCtx) {
+        log.trace("Sending data to parameter processor {}", paramProcessor.getClass());
+        ParameterValueList pvlist = processingCtx.getTmParams();
+
+        Iterator<ParameterValue> tailIt = pvlist.tailIterator();
+
+        try {
+            paramProcessor.process(processingCtx);
+        } catch (Exception e) {
+            log.error("Parameter processor exception ", e);
+        }
+        if (alarmChecker != null) {
+            alarmChecker.performAlarmChecking(processingCtx, tailIt);
+        }
+    }
+
+    /**
+     * 
+     * @return the SoftwareParameterManager associated to the DataSource or null if not configured
+     */
+    public SoftwareParameterManager getSoftwareParameterManager(DataSource ds) {
+        return spm.get(ds);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends ParameterProvider> T getParameterProvider(Class<T> type) {
+        return (T) parameterProviders.get(type);
+    }
+
+    public ParameterAlarmChecker getAlarmChecker() {
+        return alarmChecker;
+    }
+
+    public AlarmServer<Parameter, ParameterValue> getAlarmServer() {
+        return parameterAlarmServer;
+    }
+
+    void subscribeAllToProviders() {
+        if (!subscribedAllParameters) {
+            for (ParameterProvider provider : parameterProviders.values()) {
+                provider.startProvidingAll();
+            }
+            subscribedAllParameters = true;
+        }
+    }
+
+    /**
+     * Called to subscribe to providers for the given parameters.
+     * <p>
+     * Unless already subscribed, the PRM will start delivering from now on those parameters.
+     * 
+     * 
+     * @param itemList
+     */
+    public void subscribeToProviders(Collection<Parameter> itemList) {
+        if (shouldSubcribeAllParameters) {
+            return;
+        }
+        for (Parameter p : itemList) {
+            subscribeToProviders(p);
+        }
+    }
+
+    void subscribeToProviders(Parameter param) throws NoProviderException {
+        if (shouldSubcribeAllParameters) {
+            return;
+        }
+        boolean providerFound = false;
+
+        for (ParameterProvider provider : parameterProviders.values()) {
+            if (provider.canProvide(param)) {
+                providerFound = true;
+                provider.startProviding(param);
+            }
+        }
+        if (!providerFound) {
+            throw new NoProviderException("No provider found for " + param);
+        }
+
+    }
+
+    @Override
+    protected void doStart() {
+        if (parameterAlarmServer != null) {
+            YarchDatabaseInstance ydb = YarchDatabase.getInstance(processor.getInstance());
+            Stream s = ydb.getStream(REALTIME_ALARM_SERVER);
+            if (s == null) {
+                notifyFailed(new ConfigurationException("Cannot find a stream named '" + REALTIME_ALARM_SERVER + "'"));
+                return;
+            }
+            parameterAlarmServer.addAlarmListener(new ParameterAlarmStreamer(s));
+            parameterAlarmServer.startAsync();
+        }
+
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        if (parameterAlarmServer != null) {
+            parameterAlarmServer.stopAsync();
+        }
+        notifyStopped();
+    }
+
+    public LastValueCache getLastValueCache() {
+        return lastValueCache;
+    }
+
+    /**
+     * Register a {@link SoftwareParameterManager} for the given {@link DataSource}. Throws an
+     * {@link IllegalStateException} if there is already registered a parameter manager for this data source.
+     * 
+     * @param ds
+     * @param swParameterManager
+     */
+    public void addSoftwareParameterManager(DataSource ds, SoftwareParameterManager swParameterManager) {
+        if (spm.containsKey(ds)) {
+            throw new IllegalStateException("There is already a soft parameter manager for " + ds);
+        }
+        spm.put(ds, swParameterManager);
+    }
+
+    public ParameterRequestManager getParameterRequestManager() {
+        return prm;
+    }
+}
+```
+
+### `ParameterProvider.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterProvider.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.ProcessorService;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * interface implemented by all the classes that can provide parameters to the {@link ParameterProcessorManager}
+ *
+ */
+public interface ParameterProvider extends ProcessorService {
+    /**
+     * Send parameters to this processor.
+     * 
+     * @param parameterProcessor
+     */
+    public abstract void setParameterProcessor(ParameterProcessor parameterProcessor);
+
+    /**
+     * Adds a new parameter to the list of parameters that have to provided
+     * 
+     * @param paramDef
+     */
+    public abstract void startProviding(Parameter paramDef);
+
+    /**
+     * start providing all known parameters
+     */
+    public abstract void startProvidingAll();
+
+    /**
+     * Removes a parameter from the list of parameters that have to be provided
+     * 
+     * @param paramDef
+     */
+    public abstract void stopProviding(Parameter paramDef);
+
+    /**
+     * Returns whether or not a given parameter can be provided by this provider
+     * 
+     * @return
+     */
+    public abstract boolean canProvide(NamedObjectId paraId);
+
+    /**
+     * Returns the parameterDefinition corresponding to the parameter id
+     * 
+     * @param paraId
+     *            - id of the parameter that is returned
+     * @return
+     * @throws InvalidIdentification
+     */
+    public abstract Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification;
+
+    public abstract boolean canProvide(Parameter param);
+}
+```
+
+### `ParameterRequestManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRequestManager.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.yamcs.ConfigurationException;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.InvalidRequestIdentification;
+import org.yamcs.Processor;
+import org.yamcs.logging.Log;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Distributes parameters from {@link ParameterProcessorManager} to {@link ParameterConsumer}
+ * <p>
+ * The consumers will subscribe to parameters, this class (we call it PRM) will subscribe itself to providers
+ * and send to consumers each time the providers provide some values.
+ * 
+ */
+public class ParameterRequestManager {
+    Log log;
+
+    // Maps the parameters to the request(subscription id) in which they have been asked
+    private ConcurrentHashMap<Parameter, SubscriptionArray> param2RequestMap = new ConcurrentHashMap<>();
+
+    // Maps the request (subscription id) to the consumer
+    private Map<Integer, ParameterConsumer> request2ParameterConsumerMap = new ConcurrentHashMap<>();
+
+    // contains subscribe all
+    private Map<Integer, ParameterConsumer> subscribeAllConsumers = new ConcurrentHashMap<>();
+
+    private static AtomicInteger lastSubscriptionId = new AtomicInteger();
+
+    public final Processor processor;
+
+    LastValueCache lastValueCache;
+    ParameterProcessorManager ppm;
+
+    /**
+     * Creates a new ParameterRequestManager, configured to listen to the specified XtceTmProcessor.
+     */
+    public ParameterRequestManager(ParameterProcessorManager ppm) throws ConfigurationException {
+        this.processor = ppm.processor;
+        this.ppm = ppm;
+        log = new Log(getClass(), processor.getInstance());
+        log.setContext(processor.getName());
+        this.lastValueCache = processor.getLastValueCache();
+    }
+
+    /**
+     * called by a consumer to subscribe to all parameters
+     */
+    public int subscribeAll(ParameterConsumer consumer) {
+        int id = lastSubscriptionId.incrementAndGet();
+        log.debug("new subscribeAll with subscriptionId {}", id);
+        ppm.subscribeAllToProviders();
+
+        subscribeAllConsumers.put(id, consumer);
+        return id;
+    }
+
+    /**
+     * called by a consumer to remove a "subscribe all" subscription
+     * 
+     * return true of the subscription has been removed or false if it was not there
+     * 
+     * @param subscriptionId
+     * @return
+     */
+    public boolean unsubscribeAll(int subscriptionId) {
+        return subscribeAllConsumers.remove(subscriptionId) != null;
+    }
+
+    /**
+     * Called by a consumer to create a new subscription
+     * 
+     * @param paraList
+     * @param tpc
+     * @return the newly created subscription id
+     */
+    public int addRequest(final Collection<Parameter> paraList, final ParameterConsumer tpc) {
+        final int id = lastSubscriptionId.incrementAndGet();
+        log.debug("new request with subscriptionId {} with {} items", id, paraList.size());
+        subscribeToProviders(paraList);
+
+        for (Parameter p : paraList) {
+            log.trace("adding to subscriptionID: {} item:{} ", id, p.getQualifiedName());
+            addItemToRequest(id, p);
+        }
+
+        request2ParameterConsumerMap.put(id, tpc);
+        return id;
+    }
+
+    /**
+     * Called by a consumer to create a subscription with one parameter
+     * 
+     * @param para
+     * @param tpc
+     * @return the newly created subscription id
+     */
+    public int addRequest(final Parameter para, final ParameterConsumer tpc) {
+        final int id = lastSubscriptionId.incrementAndGet();
+        log.debug("new request with subscriptionId {} for parameter: {}", id, para.getQualifiedName());
+        subscribeToProviders(para);
+        addItemToRequest(id, para);
+        request2ParameterConsumerMap.put(id, tpc);
+
+        return id;
+    }
+
+    /**
+     * Called by a consumer to create request with a given id. This is called when switching processors, the id is
+     * coming from the other processor.
+     * 
+     * @param subscriptionId
+     *            - subscription id
+     * @param paraList
+     * @param tpc
+     */
+    public void addRequest(int subscriptionId, List<Parameter> paraList, ParameterConsumer tpc) {
+        subscribeToProviders(paraList);
+        for (int i = 0; i < paraList.size(); i++) {
+            log.trace("creating subscriptionID:{} with item:{}", subscriptionId, paraList.get(i));
+            addItemToRequest(subscriptionId, paraList.get(i));
+        }
+        request2ParameterConsumerMap.put(subscriptionId, tpc);
+    }
+
+    /**
+     * Called by a consumer to add a parameter to an existing subscription.
+     * 
+     * @param subscriptionId
+     * @param para
+     */
+    public void addItemsToRequest(final int subscriptionId, final Parameter para) throws InvalidRequestIdentification {
+        log.debug("adding to subscriptionID {}: items: {} ", subscriptionId, para.getName());
+        verifySubscriptionId(subscriptionId);
+        subscribeToProviders(para);
+        addItemToRequest(subscriptionId, para);
+    }
+
+    /**
+     * Called by a consumer to add parameters to an existing subscription.
+     * 
+     * @param subscriptionId
+     * @param paraList
+     *            list of parameters that are added to the subscription
+     * @throws InvalidRequestIdentification
+     */
+    public void addItemsToRequest(final int subscriptionId, final List<Parameter> paraList)
+            throws InvalidRequestIdentification {
+        log.debug("adding to subscriptionID {}: {} items ", subscriptionId, paraList.size());
+        verifySubscriptionId(subscriptionId);
+
+        subscribeToProviders(paraList);
+        for (int i = 0; i < paraList.size(); i++) {
+            addItemToRequest(subscriptionId, paraList.get(i));
+        }
+    }
+
+    private void verifySubscriptionId(int subscriptionId) throws InvalidRequestIdentification {
+        if (!request2ParameterConsumerMap.containsKey(subscriptionId)) {
+            throw new InvalidRequestIdentification("no such subscriptionID", subscriptionId);
+        }
+    }
+
+    /**
+     * Called by a consumer to remove a parameter from a subscription.
+     * <p>
+     * If the parameter is not part of the subscription, the operation will have no effect.
+     * 
+     * @param subscriptionID
+     * @param param
+     */
+    public void removeItemsFromRequest(int subscriptionID, Parameter param) {
+        removeItemFromRequest(subscriptionID, param);
+    }
+
+    /**
+     * Called by a consumer to remove parameters from a subscription.
+     * <p>
+     * Any parameter that is not in the subscription will be ignored.
+     * 
+     * @param subscriptionID
+     * @param paraList
+     */
+    public void removeItemsFromRequest(int subscriptionID, List<Parameter> paraList) {
+        for (int i = 0; i < paraList.size(); i++) {
+            removeItemFromRequest(subscriptionID, paraList.get(i));
+        }
+    }
+
+    private void addItemToRequest(int id, Parameter para) {
+        SubscriptionArray al_req = param2RequestMap.computeIfAbsent(para, k -> new SubscriptionArray());
+        al_req.add(id);
+    }
+
+    private void removeItemFromRequest(int subscriptionId, Parameter para) {
+        if (param2RequestMap.containsKey(para)) { // is there really any request associated to this parameter?
+            SubscriptionArray al_req = param2RequestMap.get(para);
+            // remove the subscription from the list of this parameter
+            if (al_req.remove(subscriptionId)) {
+                /*
+                 * Don't remove the al_req from the map and
+                 * don't ask provider to stop providing
+                 * because it is not thread safe (maybe another thread just asked to start providing after seeing that
+                 * the list is empty
+                 * if(al_req.isEmpty()) { //nobody wants this parameter anymore
+                 * if(!cacheAll) provider.stopProviding(para);
+                 * }
+                 */
+            } else {
+                log.warn("parameter removal requested for {} but not part of subscription {}", para, subscriptionId);
+            }
+        } else {
+            log.warn("parameter removal requested for {} but not subscribed", para);
+        }
+    }
+
+    /**
+     * Removes all the parameters from a subscription and returns them into an List.
+     * 
+     */
+    public List<Parameter> removeRequest(int subscriptionId) {
+        log.debug("removing request for subscriptionId {}", subscriptionId);
+        // It's a bit annoying that we have to loop through all the parameters to find the ones that
+        // are relevant for this request. We could keep track of an additional map.
+        ArrayList<Parameter> result = new ArrayList<>();
+        // loop through all the parameter definitions
+        // find all the subscriptions with the requested subscriptionId and add their corresponding
+        // itemId to the list.
+        Iterator<Map.Entry<Parameter, SubscriptionArray>> it = param2RequestMap.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry<Parameter, SubscriptionArray> m = it.next();
+            Parameter param = m.getKey();
+            SubscriptionArray al_req = m.getValue();
+            if (al_req.remove(subscriptionId)) {
+                result.add(param);
+            }
+            if (al_req.isEmpty()) { // nobody wants this parameter anymore
+                /*
+                 * if(!cacheAll) { commented out because not thread safe
+                 * getProvider(param).stopProviding(param);
+                 * }
+                 */
+            }
+        }
+        request2ParameterConsumerMap.remove(subscriptionId);
+        return result;
+    }
+
+    private void subscribeToProviders(Parameter param) throws NoProviderException {
+        ppm.subscribeToProviders(param);
+    }
+
+    /**
+     * Called to subscribe to providers for the given parameters.
+     * <p>
+     * Unless already subscribed, the PRM will start delivering from now on those parameters.
+     * 
+     * 
+     * @param itemList
+     */
+    public void subscribeToProviders(Collection<Parameter> itemList) {
+        ppm.subscribeToProviders(itemList);
+    }
+
+    /**
+     * returns a parameter based on fully qualified name
+     * 
+     * @param fqn
+     * @return
+     * @throws InvalidIdentification
+     */
+    public Parameter getParameter(String fqn) throws InvalidIdentification {
+        return ppm.getParameter(fqn);
+    }
+
+    /**
+     * @param paraId
+     * @return the corresponding parameter definition for a IntemIdentification
+     * @throws InvalidIdentification
+     *             in case no provider knows of this parameter.
+     */
+    public Parameter getParameter(NamedObjectId paraId) throws InvalidIdentification {
+        return ppm.getParameter(paraId);
+    }
+
+    /**
+     * Called by a provider with a list of provided parameters called "current delivery".
+     * <p>
+     * The PRM will take ownership of the current delivery (and modify it!).
+     * 
+     * <p>
+     * The following steps are performed (in the provider thread, possible by multiple providers in parallel!):
+     * <ol>
+     * <li>Run algorithms. All results from algorithms are also added to the list.</li>
+     * <li>Check alarms.</li>
+     * <li>Distribute to subscribers.</li>
+     * <li>Add to parameter cache (if enabled).</li>
+     * <li>Add to the last value cache.</li>
+     * </ol>
+     * 
+     * 
+     */
+    public void update(ParameterValueList pvlist) {
+        // build the customised lists for the subscribers and send it to them
+        HashMap<Integer, ArrayList<ParameterValue>> subscription = new HashMap<>();
+        for (var consumer : subscribeAllConsumers.values()) {
+            consumer.updateItems(0, pvlist);
+        }
+        updateSubscription(subscription, pvlist);
+
+        for (Map.Entry<Integer, ArrayList<ParameterValue>> entry : subscription.entrySet()) {
+            Integer subscriptionId = entry.getKey();
+
+            ArrayList<ParameterValue> al = entry.getValue();
+            ParameterConsumer consumer = request2ParameterConsumerMap.get(subscriptionId);
+            if (consumer == null) {
+                log.warn("subscriptionId {} appears in the delivery list, but there is no consumer for it",
+                        subscriptionId);
+            } else {
+                consumer.updateItems(subscriptionId, al);
+            }
+        }
+    }
+
+    /**
+     * adds the passed parameters to the subscription
+     * 
+     * @param subscription
+     * @param currentDelivery
+     */
+    private void updateSubscription(HashMap<Integer, ArrayList<ParameterValue>> subscription,
+            Collection<ParameterValue> currentDelivery) {
+        if (currentDelivery == null) {
+            return;
+        }
+
+        for (Iterator<ParameterValue> it = currentDelivery.iterator(); it.hasNext();) {
+            ParameterValue pv = it.next();
+            Parameter pDef = pv.getParameter();
+            SubscriptionArray cowal = param2RequestMap.get(pDef);
+            // now walk through the requests and add this item to their delivery list
+            if (cowal == null) {
+                continue;
+            }
+
+            for (int s : cowal.getArray()) {
+                ArrayList<ParameterValue> al = subscription.get(s);
+                if (al == null) {
+                    al = new ArrayList<>();
+                    subscription.put(s, al);
+                }
+                al.add(pv);
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Current Subscription list:\n");
+        for (Parameter param : param2RequestMap.keySet()) {
+            sb.append(param);
+            sb.append("requested by [");
+            SubscriptionArray al_req = param2RequestMap.get(param);
+            for (int id : al_req.getArray()) {
+                sb.append(id);
+            }
+            sb.append("]\n");
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Returns the last known value for each parameter.
+     * 
+     * @param plist
+     * @return
+     */
+    public List<ParameterValue> getValuesFromCache(Collection<Parameter> plist) {
+        List<ParameterValue> al = new ArrayList<>(plist.size());
+        for (Parameter p : plist) {
+            ParameterValue pv = lastValueCache.getValue(p);
+            if (pv != null) {
+                al.add(pv);
+            }
+        }
+        return al;
+    }
+
+    /**
+     * Get the last value from cache for a specific parameters
+     * 
+     * @param param
+     * @return
+     */
+    public ParameterValue getLastValueFromCache(Parameter param) {
+        return lastValueCache.getValue(param);
+    }
+}
+```
+
+### `ParameterRetrievalOptions.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRetrievalOptions.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.PacketReplayRequest;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Contains retrieval options used when retrieving parameters.
+ */
+public record ParameterRetrievalOptions(
+        long start,
+        long stop,
+        boolean ascending,
+        boolean retrieveEngValues,
+        boolean retrieveRawValues,
+        boolean retrieveParameterStatus,
+        /**
+         * If true, do not send data from the Parameter Cache or from the Realtime parameter archive filler
+         */
+        boolean norealtime,
+        /**
+         * If true, do not send data from the Parameter Archive
+         */
+        boolean noparchive,
+        /**
+         * If true, do not perform replays
+         */
+        boolean noreplay,
+        /**
+         * If not null and a replay is performed, this can be used to limit the packets that go in replay
+         */
+        PacketReplayRequest packetReplayRequest) {
+
+    public static class Builder {
+        // invalid start and/or stop means open ended interval
+        private long start = TimeEncoding.INVALID_INSTANT;
+        private long stop = TimeEncoding.INVALID_INSTANT;
+        private boolean ascending = true;
+        private boolean retrieveEngineeringValues = true;
+        private boolean retrieveRawValues = true;
+        private boolean retrieveParameterStatus = true;
+        private boolean norealtime = false;
+        private boolean noparchive = false;
+        private boolean noreplay = false;
+        private PacketReplayRequest packetReplayRequest = null;
+
+        public Builder withStartStop(long start, long stop) {
+            this.start = start;
+            this.stop = stop;
+            return this;
+        }
+
+        public Builder withStart(long start) {
+            this.start = start;
+            return this;
+        }
+
+        public Builder withStop(long stop) {
+            this.stop = stop;
+            return this;
+        }
+
+        public Builder withAscending(boolean ascending) {
+            this.ascending = ascending;
+            return this;
+        }
+
+        public Builder withoutRealtime(boolean norealtime) {
+            this.norealtime = norealtime;
+            return this;
+        }
+
+        public Builder withoutParchive(boolean noparchive) {
+            this.noparchive = noparchive;
+            return this;
+        }
+
+        public Builder withoutReplay(boolean noreplay) {
+            this.noreplay = noreplay;
+            return this;
+        }
+
+        public Builder withRetrieveEngineeringValues(boolean retrieveEngineeringValues) {
+            this.retrieveEngineeringValues = retrieveEngineeringValues;
+            return this;
+        }
+
+        public Builder withRetrieveRawValues(boolean retrieveRawValues) {
+            this.retrieveRawValues = retrieveRawValues;
+            return this;
+        }
+
+        public Builder withRetrieveParameterStatus(boolean retrieveParameterStatus) {
+            this.retrieveParameterStatus = retrieveParameterStatus;
+            return this;
+        }
+
+        public Builder withPacketReplayRequest(PacketReplayRequest packetReplayRequest) {
+            this.packetReplayRequest = packetReplayRequest;
+            return this;
+        }
+
+
+        public ParameterRetrievalOptions build() {
+            return new ParameterRetrievalOptions(
+                    start, stop, ascending,
+                    retrieveEngineeringValues, retrieveRawValues, retrieveParameterStatus,
+                    norealtime, noparchive, noreplay, packetReplayRequest);
+        }
+
+    }
+
+    public Builder toBuilder() {
+        return new Builder()
+                .withStartStop(this.start, this.stop)
+                .withAscending(this.ascending)
+                .withRetrieveEngineeringValues(this.retrieveEngValues)
+                .withRetrieveRawValues(this.retrieveRawValues)
+                .withRetrieveParameterStatus(this.retrieveParameterStatus);
+    }
+
+    public ParameterRetrievalOptions withUpdatedStart(long newStart) {
+        return this.toBuilder().withStartStop(newStart, this.stop).build();
+    }
+
+    public ParameterRetrievalOptions withUpdatedStop(long newStop) {
+        return this.toBuilder().withStartStop(this.start, newStop).build();
+    }
+
+    public static Builder newBuilder() {
+        return new Builder();
+    }
+}
+```
+
+### `ParameterRetrievalService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterRetrievalService.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+
+import org.rocksdb.RocksDBException;
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.archive.ReplayOptions;
+import org.yamcs.parameterarchive.ConsumerAbortException;
+import org.yamcs.parameterarchive.MultiParameterRetrieval;
+import org.yamcs.parameterarchive.MultipleParameterRequest;
+import org.yamcs.parameterarchive.ParameterArchive;
+import org.yamcs.parameterarchive.ParameterId;
+import org.yamcs.parameterarchive.ParameterIdDb;
+import org.yamcs.parameterarchive.ParameterValueArray;
+import org.yamcs.parameterarchive.SingleParameterRetrieval;
+import org.yamcs.protobuf.Yamcs.ParameterReplayRequest;
+import org.yamcs.time.Instant;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.utils.IntArray;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+import com.google.common.collect.Lists;
+
+/**
+ * Combines retrieval from different sources:
+ * <ul>
+ * <li>Parameter Archive</li>
+ * <li>Replays</li>
+ * <li>Parameter cache</li>
+ * <li>Realtime Parameter Archive filler</li>
+ * </ul>
+ * 
+ */
+public class ParameterRetrievalService extends AbstractYamcsService {
+    private static final String DEFAULT_PROCESSOR = "realtime";
+
+    String procName = DEFAULT_PROCESSOR;
+    ArrayParameterCache pcache;
+    ParameterArchive parchive;
+    ParameterCacheConfig cacheConfig;
+    ExecutorService executor;
+    static AtomicInteger count = new AtomicInteger();
+
+    // if this is true, then we stick to the cacheConfig discovered during init
+    // if this is false (meaning no explicit cache has been configured) then we set a cache if the realtime archive
+    // filler is not enabled
+    boolean pcacheConfigured;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        this.procName = config.getString("processor", DEFAULT_PROCESSOR);
+
+        int parallelRetrievals = config.getInt("parallelRetrievals", 4);
+        this.executor = createExecutor(parallelRetrievals);
+        if (config.containsKey("parameterCache")) {
+            pcacheConfigured = true;
+            YConfiguration pcacheConfig = config.getConfig("parameterCache");
+            if (pcacheConfig.getBoolean("enabled", true)) {
+                this.cacheConfig = new ParameterCacheConfig(pcacheConfig, log);
+            }
+        } else {
+            pcacheConfigured = false;
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        var ysi = YamcsServer.getServer().getInstance(yamcsInstance);
+        var l = ysi.getServices(ParameterArchive.class);
+        if (!l.isEmpty()) {
+            parchive = l.get(0);
+        } else {
+            log.info("The parameter archive service was not found");
+        }
+        if ((parchive == null || parchive.getRealtimeFiller() == null) && !pcacheConfigured) {
+            cacheConfig = new ParameterCacheConfig(YConfiguration.emptyConfig(), log);
+        }
+
+        if (cacheConfig != null) {
+            pcache = new ArrayParameterCache(yamcsInstance, cacheConfig);
+            var proc = ysi.getProcessor(procName);
+            if (proc == null) {
+                log.info("No processor '" + procName + '"');
+            } else {
+                proc.getParameterRequestManager()
+                        .subscribeAll((id, items) -> pcache.update(items));
+            }
+        }
+
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        executor.shutdown();
+        notifyStopped();
+    }
+
+    /**
+     * Retrieves a single scalar parameter or aggregate/array member.
+     */
+    public CompletableFuture<Void> retrieveScalar(ParameterWithId pid, ParameterRetrievalOptions opts,
+            Consumer<ParameterValueArray> consumer) {
+        log.debug("retrieveScalar pid: {}, opts: {} ", pid, opts);
+        var cf = new CompletableFuture<Void>();
+        executor.submit(() -> {
+            try {
+                if (parchive == null || opts.noparchive()) {
+                    retrieveScalarReplayOrCache(pid, opts, consumer);
+                } else if (parchive.getRealtimeFiller() != null) {
+                    retrieveScalarParameterArchive(pid, opts, consumer);
+                } else {
+                    long coverageEnd = parchive.coverageEnd();
+
+                    if (opts.ascending()) {
+                        // ascending case -> retrieve max possible from the parameter archive
+                        var tc = retrieveScalarParameterArchive(pid, opts, consumer);
+                        // then from cache or via replay
+                        if (tc.isValid()) {
+                            if (opts.stop() > tc.time && opts.stop() > coverageEnd) {
+                                var opts1 = opts.withUpdatedStart(tc.time + 1);
+                                retrieveScalarReplayOrCache(pid, opts1, consumer);
+                            }
+                        } else {// no data retrieved from the parameter archive
+                            retrieveScalarReplayOrCache(pid, opts, consumer);
+                        }
+                    } else {
+                        // descending case
+                        // if the request is beyond parameter archive coverage, retrieve first by cache or replay
+                        if (opts.stop() > coverageEnd) {
+                            if (opts.start() >= coverageEnd) {
+                                // request does not overlap at all with the parameter archive coverage
+                                retrieveScalarReplayOrCache(pid, opts, consumer);
+                            } else {
+                                // request overlaps with the parameter archive coverage
+                                var req1 = opts.withUpdatedStart(coverageEnd);
+                                retrieveScalarReplayOrCache(pid, req1, consumer);
+                                var req2 = opts.withUpdatedStop(coverageEnd);
+                                retrieveScalarParameterArchive(pid, req2, consumer);
+
+                            }
+                        } else {
+                            // request can be satisfied only by parameter archive
+                            retrieveScalarParameterArchive(pid, opts, consumer);
+                        }
+                    }
+                }
+                cf.complete(null);
+            } catch (Exception e) {
+                log.error("Error during retrieval", e);
+                cf.completeExceptionally(e);
+            }
+        });
+        return cf;
+    }
+
+    public CompletableFuture<Void> retrieveSingle(ParameterWithId pid, ParameterRetrievalOptions opts,
+            Consumer<ParameterValueWithId> consumer) {
+        log.debug("retrieveSingle requestedParamWithId: {}, opts: {}", pid, opts);
+
+        var cf = new CompletableFuture<Void>();
+        executor.submit(() -> {
+            try {
+                if (parchive == null || opts.noparchive()) {
+                    retrieveSingleReplayOrCache(pid, opts, consumer);
+                } else if (parchive.getRealtimeFiller() != null) {
+                    retrieveSingleParameterArchive(pid, opts, consumer);
+                } else {
+                    long coverageEnd = parchive.coverageEnd();
+                    if (opts.ascending()) {
+                        // ascending case -> retrieve max possible from the parameter archive
+                        var tc = retrieveSingleParameterArchive(pid, opts, consumer);
+                        // then from cache or via replay
+                        if (tc.isValid()) {
+                            if (opts.stop() > tc.time && opts.stop() > coverageEnd) {
+                                var req1 = opts.withUpdatedStart(tc.time + 1);
+                                retrieveSingleReplayOrCache(pid, req1, consumer);
+                            }
+                        } else {
+                            retrieveSingleReplayOrCache(pid, opts, consumer);
+                        }
+                    } else {
+                        // descending case
+                        // if the request is beyond parameter archive coverage, retrieve first by cache or replay
+                        if (opts.stop() > coverageEnd) {
+                            if (opts.start() >= coverageEnd) {
+                                // request does not overlap at all with the parameter archive coverage
+                                retrieveSingleReplayOrCache(pid, opts, consumer);
+                            } else {
+                                // request overlaps with the parameter archive coverage
+                                var req1 = opts.withUpdatedStart(coverageEnd);
+                                retrieveSingleReplayOrCache(pid, req1, consumer);
+                                var req2 = opts.withUpdatedStop(coverageEnd);
+                                retrieveSingleParameterArchive(pid, req2, consumer);
+
+                            }
+                        } else {
+                            // request can be satisfied only by parameter archive
+                            retrieveSingleParameterArchive(pid, opts, consumer);
+                        }
+                    }
+                }
+
+                cf.complete(null);
+            } catch (ConsumerAbortException e) {
+                cf.complete(null);
+            } catch (Exception e) {
+                log.error("Error during retrieval", e);
+                cf.completeExceptionally(e);
+            }
+        });
+        return cf;
+    };
+
+    public CompletableFuture<Void> retrieveMulti(List<ParameterWithId> pids, ParameterRetrievalOptions opts,
+            Consumer<List<ParameterValueWithId>> consumer) {
+        log.debug("retrieveMulti pids: {}, opts: {}", pids, opts);
+        var cf = new CompletableFuture<Void>();
+        executor.submit(() -> {
+            try {
+                if (parchive == null || opts.noparchive()) {
+                    retrieveMultiReplayOrCache(pids, opts, consumer);
+                } else if (parchive.getRealtimeFiller() != null) {
+                    retrieveMultiParameterArchive(pids, opts, consumer);
+                } else {
+                    long coverageEnd = parchive.coverageEnd();
+                    if (opts.ascending()) {
+                        // ascending case -> retrieve max possible from the parameter archive
+                        var tc = retrieveMultiParameterArchive(pids, opts, consumer);
+                        // then from cache or via replay
+                        if (tc.isValid()) {
+                            if (opts.stop() > tc.time && opts.stop() > coverageEnd) {
+                                var req1 = opts.withUpdatedStart(tc.time + 1);
+                                retrieveMultiReplayOrCache(pids, req1, consumer);
+                            }
+                        } else {
+                            retrieveMultiReplayOrCache(pids, opts, consumer);
+                        }
+                    } else {
+                        // descending case
+                        // if the request is beyond parameter archive coverage, retrieve first by cache or replay
+                        if (opts.stop() > coverageEnd) {
+                            if (opts.start() >= coverageEnd) {
+                                // request does not overlap at all with the parameter archive coverage
+                                retrieveMultiReplayOrCache(pids, opts, consumer);
+                            } else {
+                                // request overlaps with the parameter archive coverage
+                                var req1 = opts.withUpdatedStart(coverageEnd);
+                                retrieveMultiReplayOrCache(pids, req1, consumer);
+                                var req2 = opts.withUpdatedStop(coverageEnd);
+                                retrieveMultiParameterArchive(pids, req2, consumer);
+
+                            }
+                        } else {
+                            // request can be satisfied only by parameter archive
+                            retrieveMultiParameterArchive(pids, opts, consumer);
+                        }
+                    }
+                }
+
+                cf.complete(null);
+            } catch (ConsumerAbortException e) {
+                cf.complete(null);
+            } catch (Exception e) {
+                log.error("Error during retrieval", e);
+                cf.completeExceptionally(e);
+            }
+        });
+        return cf;
+    }
+
+    public ParameterCache getParameterCache() {
+        return pcache;
+    }
+
+    private TimeAndCount retrieveScalarParameterArchive(ParameterWithId pid, ParameterRetrievalOptions request,
+            Consumer<ParameterValueArray> consumer) throws IOException {
+        log.debug("retrieveScalarParameterArchive pid: {}, request: {}", pid, request);
+        SingleParameterRetrieval spar = new SingleParameterRetrieval(parchive, pid.getQualifiedName(), request);
+        TimeAndCount tc = new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+        try {
+            spar.retrieve(pva -> {
+                long[] timestamps = pva.getTimestamps();
+                tc.time = timestamps[timestamps.length - 1];
+                tc.count += timestamps.length;
+                consumer.accept(pva);
+            });
+        } catch (RocksDBException e) {
+            throw new IOException(e);
+        }
+        return tc;
+    }
+
+    TimeAndCount retrieveScalarReplayOrCache(ParameterWithId pid, ParameterRetrievalOptions opts,
+            Consumer<ParameterValueArray> consumer) throws Exception {
+
+        log.debug("retrieveScalarReplayOrCache pid: {}, opts: {} pcache present: {}", pid, opts, pcache != null);
+        if (pcache != null && !opts.norealtime()) {
+            long start = opts.start();
+            long stop = opts.stop();
+            // parameter cache returns value in reverse order in (start, stop]
+            // if ascending is required we have to retrieve [start, stop)
+            if (opts.ascending()) {
+                start--;
+                stop--;
+            }
+            // TODO this could be optimised because the pcache stores already arrays of values
+            var pvList = opts.noreplay() ? pcache.getAllValues(pid.getParameter(), start, stop)
+                    : pcache.getAllValuesIfCovered(pid.getParameter(), start, stop);
+            log.debug("pcache returned {} results", pvList == null ? null : pvList.size());
+            if (pvList != null) {
+                if (pid.getPath() != null) {
+                    pvList = extractMembers(pvList, pid.getPath());
+                }
+                if (opts.ascending()) {
+                    pvList = Lists.reverse(pvList);
+                }
+                return splitAndSend(pvList, consumer);
+            } // else it means the cache does not cover the requested interval,
+              // send everything via replay if allowed
+        }
+
+        if (!opts.noreplay()) {
+            return replay(Collections.singletonList(pid), opts, new Consumer<List<ParameterValueWithId>>() {
+                @Override
+                public void accept(List<ParameterValueWithId> pvList) {
+                    for (var pv : pvList) {
+                        consumer.accept(toScalarPva(pv.getParameterValue(), opts));
+                    }
+                }
+            });
+        } else {
+            // noreplay is specified and no data has been found in the cache
+            return new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+        }
+    }
+
+    private TimeAndCount retrieveSingleParameterArchive(ParameterWithId pid, ParameterRetrievalOptions opts,
+            Consumer<ParameterValueWithId> consumer) throws RocksDBException, IOException {
+
+        log.debug("retrieveSingleParameterArchive pid: {}, opts: {}", pid, opts);
+
+        MultipleParameterRequest mpvr;
+        ParameterIdDb piddb = parchive.getParameterIdDb();
+        String qn = pid.getQualifiedName();
+        ParameterId[] pids = piddb.get(qn);
+        if (pids != null) {
+            TimeAndCount tc = new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+            mpvr = new MultipleParameterRequest(opts.start(), opts.stop(), pids, opts.ascending());
+            MultiParameterRetrieval mpdr = new MultiParameterRetrieval(parchive, mpvr);
+            mpdr.retrieve(pvList -> {
+                tc.count += pvList.size();
+                tc.time = pvList.time();
+                for (var pv : pvList.getValues()) {
+                    consumer.accept(new ParameterValueWithId(pv, pid.id));
+                }
+            });
+            return tc;
+        } else {
+            return new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+        }
+    }
+
+    TimeAndCount retrieveSingleReplayOrCache(ParameterWithId pid, ParameterRetrievalOptions opts,
+            Consumer<ParameterValueWithId> consumer) throws Exception {
+
+        log.debug("retrieveSingleReplayOrCache pid: {}, opts: {} pcache present: {}", pid, opts, pcache != null);
+        if (pcache != null && !opts.norealtime()) {
+            long start = opts.start();
+            long stop = opts.stop();
+            // parameter cache returns value in reverse order in (start, stop]
+            // if ascending is required we have to retrieve [start, stop)
+            if (opts.ascending()) {
+                start--;
+                stop--;
+            }
+
+            var pvList = opts.noreplay() ? pcache.getAllValues(pid.getParameter(), start, stop)
+                    : pcache.getAllValuesIfCovered(pid.getParameter(), start, stop);
+            log.debug("pcache returned {} results", pvList == null ? null : pvList.size());
+            if (pvList != null) {
+                if (pid.getPath() != null) {
+                    pvList = extractMembers(pvList, pid.getPath());
+                }
+                if (opts.ascending()) {
+                    for (int i = pvList.size() - 1; i >= 0; i--) {
+                        var pv = pvList.get(i);
+                        consumer.accept(new ParameterValueWithId(pv, pid.id));
+                    }
+                    return new TimeAndCount(pvList.get(0).getGenerationTime(), pvList.size());
+                } else {
+                    for (var pv : pvList) {
+                        consumer.accept(new ParameterValueWithId(pv, pid.id));
+                    }
+                    return new TimeAndCount(pvList.get(pvList.size() - 1).getGenerationTime(), pvList.size());
+                }
+            } // else it means the cache does not cover the requested interval,
+              // send everything via replay if allowed
+        }
+
+        if (!opts.noreplay()) {
+            return replay(Collections.singletonList(pid), opts, new Consumer<List<ParameterValueWithId>>() {
+                @Override
+                public void accept(List<ParameterValueWithId> pvList) {
+                    for (var pv : pvList) {
+                        consumer.accept(pv);
+                    }
+                }
+            });
+        } else {
+            // noreplay is specified and no data has been found in the cache
+            return new TimeAndCount(Instant.MIN_INSTANT, 0);
+        }
+    }
+
+    private TimeAndCount retrieveMultiParameterArchive(List<ParameterWithId> pidList, ParameterRetrievalOptions opts,
+            Consumer<List<ParameterValueWithId>> consumer) throws RocksDBException, IOException {
+
+        log.debug("retrieveMultiParameterArchive pid: {}, opts: {}", pidList, opts);
+        MultipleParameterRequest mpvr;
+        ParameterIdDb piddb = parchive.getParameterIdDb();
+        List<ParameterId> parameterIds = new ArrayList<>();
+        // map between the
+        Map<Integer, List<ParameterWithId>> pidMapping = new HashMap<>();
+
+        for (ParameterWithId pid : pidList) {
+            String qn = pid.getQualifiedName();
+            ParameterId[] pids = piddb.get(qn);
+            if (pids != null) {
+                parameterIds.addAll(Arrays.asList(pids));
+                for (var paraid : pids) {
+                    pidMapping.computeIfAbsent(paraid.getPid(), k -> new ArrayList<>()).add(pid);
+                }
+            }
+        }
+
+        if (!parameterIds.isEmpty()) {
+            TimeAndCount tc = new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+            mpvr = new MultipleParameterRequest(opts.start(), opts.stop(),
+                    parameterIds.toArray(new ParameterId[0]), opts.ascending());
+            MultiParameterRetrieval mpdr = new MultiParameterRetrieval(parchive, mpvr);
+
+            mpdr.retrieve(pvList -> {
+                tc.count += pvList.size();
+                tc.time = pvList.time();
+                List<ParameterValueWithId> pvl = new ArrayList<>();
+                IntArray parchiveIds = pvList.getPids();
+                var x = pvList.getValues();
+                for (int i = 0; i < parchiveIds.size(); i++) {
+                    var paraIdList = pidMapping.get(parchiveIds.get(i));
+                    for (var paraId : paraIdList) {
+                        pvl.add(new ParameterValueWithId(x.get(i), paraId.id));
+                    }
+                }
+                consumer.accept(pvl);
+
+            });
+            return tc;
+        } else {
+            return new TimeAndCount(TimeEncoding.INVALID_INSTANT, 0);
+        }
+    }
+
+    TimeAndCount retrieveMultiReplayOrCache(List<ParameterWithId> pids, ParameterRetrievalOptions opts,
+            Consumer<List<ParameterValueWithId>> consumer) throws Exception {
+        log.debug("retrieveSingleReplayOrCache pid: {}, opts: {} pcache present: {}", pids, opts, pcache != null);
+        if (pcache != null && !opts.norealtime()) {
+            long start = opts.start();
+            long stop = opts.stop();
+            // parameter cache returns value in reverse order in (start, stop]
+            // if ascending is required we have to retrieve [start, stop)
+            if (opts.ascending()) {
+                start--;
+                stop--;
+            }
+            Map<Parameter, List<ParameterWithId>> pidMapping = new HashMap<>();
+            for (var pid : pids) {
+                Parameter parameter = pid.getParameter();
+                pidMapping.computeIfAbsent(parameter, k -> new ArrayList<>()).add(pid);
+            }
+            var parameters = new ArrayList<>(pidMapping.keySet());
+
+            var pvListList = opts.noreplay() ? pcache.getAllValues(parameters, start, stop)
+                    : pcache.getAllValuesIfCovered(parameters, start, stop);
+            log.debug("pcache returned {} results", pvListList.size());
+            if (opts.ascending()) {
+                pvListList = Lists.reverse(pvListList);
+            }
+            if (!pvListList.isEmpty()) {
+                long t = 0;
+                for (var pvList : pvListList) {
+                    var pvidList = new ArrayList<ParameterValueWithId>();
+                    for (var pv : pvList) {
+                        for (var pid : pidMapping.get(pv.getParameter())) {
+                            if (pid.getPath() != null) {
+                                pv = AggregateUtil.extractMember(pv, pid.getPath());
+                            }
+                            pvidList.add(new ParameterValueWithId(pv, pid.getId()));
+                        }
+                        t = pv.getGenerationTime();
+                    }
+                    consumer.accept(pvidList);
+                }
+                return new TimeAndCount(t, pvListList.size());
+            } // else it means the cache does not cover the requested interval,
+              // send everything via replay if allowed
+        }
+
+        if (!opts.noreplay()) {
+            return replay(pids, opts, consumer);
+        } else {
+            // noreplay is specified and no data has been found in the cache
+            return new TimeAndCount(Instant.MIN_INSTANT, 0);
+        }
+    }
+
+    // splits the list in arrays of parameters having the same type
+    private TimeAndCount splitAndSend(List<ParameterValue> pvlist, Consumer<ParameterValueArray> consumer) {
+        int n = 0;
+        int m = pvlist.size();
+        ParameterValue pv0 = pvlist.get(n);
+
+        for (int j = 1; j < m; j++) {
+            ParameterValue pv = pvlist.get(j);
+            if (differentType(pv0, pv)) {
+                sendToConsumer(pvlist, n, j, consumer);
+                pv0 = pv;
+                n = j;
+            }
+        }
+        sendToConsumer(pvlist, n, m, consumer);
+        return new TimeAndCount(pvlist.get(0).getGenerationTime(), pvlist.size());
+    }
+
+    private void sendToConsumer(List<ParameterValue> pvlist, int n, int m, Consumer<ParameterValueArray> consumer) {
+        ParameterValue pv0 = pvlist.get(n);
+        ValueArray rawValues = null;
+        if (pv0.getRawValue() != null) {
+            rawValues = new ValueArray(pv0.getRawValue().getType(), m - n);
+            for (int i = n; i < m; i++) {
+                rawValues.setValue(i - n, pvlist.get(i).getRawValue());
+            }
+        }
+
+        ValueArray engValues = null;
+        if (pv0.getEngValue() != null) {
+            engValues = new ValueArray(pv0.getEngValue().getType(), m - n);
+            for (int i = n; i < m; i++) {
+                engValues.setValue(i - n, pvlist.get(i).getEngValue());
+            }
+        }
+        long[] timestamps = new long[m - n];
+        var statuses = new org.yamcs.yarch.protobuf.Db.ParameterStatus[m - n];
+        for (int i = n; i < m; i++) {
+            ParameterValue pv = pvlist.get(i);
+            timestamps[i - n] = pv.getGenerationTime();
+            statuses[i - n] = pv.getStatus().toProtoBuf(false);
+        }
+        ParameterValueArray pva = new ParameterValueArray(timestamps, engValues, rawValues, statuses);
+        consumer.accept(pva);
+    }
+
+    private boolean differentType(ParameterValue pv0, ParameterValue pv1) {
+        return differentType(pv0.getRawValue(), pv1.getRawValue())
+                || differentType(pv0.getEngValue(), pv1.getEngValue());
+    }
+
+    private boolean differentType(Value v1, Value v2) {
+        if (v1 == null) {
+            return v2 != null;
+        }
+        if (v2 == null) {
+            return true;
+        }
+
+        return v1.getType() != v2.getType();
+    }
+
+    private List<ParameterValue> extractMembers(List<ParameterValue> pvlist, PathElement[] path) {
+        List<ParameterValue> l = new ArrayList<ParameterValue>(pvlist.size());
+        for (ParameterValue pv : pvlist) {
+            ParameterValue pv1 = AggregateUtil.extractMember(pv, path);
+            if (pv1 != null) {
+                l.add(pv1);
+            }
+        }
+        return l;
+    }
+
+    private TimeAndCount replay(List<ParameterWithId> paramList, ParameterRetrievalOptions opts,
+            Consumer<List<ParameterValueWithId>> consumer) throws Exception {
+        ReplayOptions replayOpts = ReplayOptions.getAfapReplay(opts.start(), opts.stop(), !opts.ascending());
+        if (opts.packetReplayRequest() != null) {
+            replayOpts.setPacketRequest(opts.packetReplayRequest());
+        }
+
+        var prrb = ParameterReplayRequest.newBuilder();
+        Map<Parameter, List<ParameterWithId>> params = new HashMap<>();
+
+        for (var pid : paramList) {
+            prrb.addNameFilter(pid.id);
+            params.computeIfAbsent(pid.getParameter(), k -> new ArrayList<>()).add(pid);
+        }
+
+        replayOpts.setParameterRequest(prrb.build());
+        Processor processor = ProcessorFactory.create(yamcsInstance, "api_replay" + count.incrementAndGet(),
+                "ArchiveRetrieval", "internal", replayOpts);
+
+        TimeAndCount tc = new TimeAndCount(Instant.MIN_INSTANT, 0);
+
+        ParameterConsumer prmConsumer = new ParameterConsumer() {
+            @Override
+            public void updateItems(int subscriptionId, List<ParameterValue> pvalues) {
+                List<ParameterValueWithId> pvaluesWithIds = new ArrayList<>(params.size());
+                for (ParameterValue pv : pvalues) {
+                    var pids = params.get(pv.getParameter());
+                    if (pids != null) {
+                        if (opts.ascending()) {
+                            tc.time = Math.max(pv.getGenerationTime(), tc.time);
+                        } else {
+                            tc.time = Math.min(pv.getGenerationTime(), tc.time);
+                        }
+                        for (var pid : pids) {
+                            if (pid.getPath() != null) {
+                                pv = AggregateUtil.extractMember(pv, pid.getPath());
+                            }
+                            pvaluesWithIds.add(new ParameterValueWithId(pv, pid.getId()));
+                        }
+                    }
+                }
+                try {
+                    consumer.accept(pvaluesWithIds);
+                } catch (ConsumerAbortException e) {
+                    processor.quit();
+                }
+                ;
+            }
+        };
+        processor.getParameterRequestManager().addRequest(params.keySet(), prmConsumer);
+        processor.startAsync();
+        processor.awaitTerminated();
+
+        return tc;
+    }
+
+    private ParameterValueArray toScalarPva(ParameterValue pv, ParameterRetrievalOptions opts) {
+        long[] timestamps = new long[] { pv.getGenerationTime() };
+        ValueArray engValues = null;
+
+        if (opts.retrieveEngValues() && pv.getEngValue() != null) {
+            engValues = new ValueArray(pv.getEngValue().getType(), 1);
+            engValues.setValue(0, pv.getEngValue());
+        }
+
+        ValueArray rawValues = null;
+        if (opts.retrieveRawValues() && pv.getRawValue() != null) {
+            rawValues = new ValueArray(pv.getRawValue().getType(), 1);
+            rawValues.setValue(0, pv.getRawValue());
+        }
+
+        org.yamcs.yarch.protobuf.Db.ParameterStatus[] paramStatus = null;
+
+        if (opts.retrieveParameterStatus()) {
+            paramStatus = new org.yamcs.yarch.protobuf.Db.ParameterStatus[] {
+                    pv.getStatus().toProtoBuf(false) };
+        }
+
+        return new ParameterValueArray(timestamps, engValues, rawValues, paramStatus);
+    }
+
+    private ExecutorService createExecutor(int numThreads) {
+        return Executors.newFixedThreadPool(numThreads, new ThreadFactory() {
+            private int count = 1;
+
+            @Override
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setName("ParameterRetrievalService-" + count++);
+                return thread;
+            }
+        });
+    }
+
+    static final class TimeAndCount {
+        long time;
+        int count;
+
+        public TimeAndCount(long time, int count) {
+            this.time = time;
+            this.count = count;
+        }
+
+        public boolean isValid() {
+            return this.time != TimeEncoding.INVALID_INSTANT;
+        }
+
+        @Override
+        public String toString() {
+            return "TimeAndCount [time=" + TimeEncoding.toString(time) + ", count=" + count + "]";
+        }
+    }
+}
+```
+
+### `ParameterStatus.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterStatus.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Pvalue.AcquisitionStatus;
+import org.yamcs.protobuf.Pvalue.MonitoringResult;
+import org.yamcs.protobuf.Pvalue.RangeCondition;
+import org.yamcs.xtce.util.DoubleRange;
+
+public class ParameterStatus {
+    public static final ParameterStatus NOMINAL = new ParameterStatus();
+
+    // Yamcs 5.11 changed the acquisition status from an enum into a bitfield
+    // Meaning of each bit (0=LSB) when set:
+    // bit 0 - INVALID
+    // bit 1 - NOT_RECEIVED
+    // bit 2 - EXPIRED
+    private int acqStatus = 0;
+    private MonitoringResult monitoringResult;
+    private MonitoringResult deltaMonitoringResult;
+    private RangeCondition rangeCondition;
+
+    private DoubleRange watchRange;
+    private DoubleRange warningRange;
+    private DoubleRange distressRange;
+    private DoubleRange criticalRange;
+    private DoubleRange severeRange;
+
+    /**
+     * how long from the acquisition time before the parameter expires
+     * <p>
+     * -1 means it's not set (=valid forever)
+     */
+    private long expireMillis = -1;
+
+    /**
+     * This is the old interface to the parameter status
+     * <p>
+     * It does not make much sense because expiration shouldn't invalidate the other statuses
+     */
+    public static AcquisitionStatus getAcquisitionStatus(int acqStatus) {
+        if (acqStatus == 0) {
+            return AcquisitionStatus.ACQUIRED;
+        } else if (isBitSet(acqStatus, 2)) {
+            return AcquisitionStatus.EXPIRED;
+        } else if (isBitSet(acqStatus, 0)) {
+            return AcquisitionStatus.INVALID;
+        } else if (isBitSet(acqStatus, 1)) {
+            return AcquisitionStatus.NOT_RECEIVED;
+        } else {
+            throw new IllegalStateException("Illegal acqStatus " + acqStatus);
+        }
+    }
+
+    /**
+     * Used for compatibility with the old Parameter status whereas expiration was cancelling the other statuses but was
+     * sent only when clients were subscribed with the option to send the parameter expiration
+     */
+    public AcquisitionStatus getAcquisitionStatus(boolean withExpiration) {
+        if (withExpiration && isExpired()) {
+            return AcquisitionStatus.EXPIRED;
+        } else {
+            // clear out the expired bit
+            return getAcquisitionStatus(this.acqStatus & 0xFFFFFFFD);
+        }
+    }
+
+
+    public static int getAcquisitionStatus(AcquisitionStatus acquisitionStatus) {
+        return switch (acquisitionStatus) {
+        case ACQUIRED -> 0;
+        case EXPIRED -> 1 << 2;
+        case INVALID -> 1 << 0;
+        case NOT_RECEIVED -> 1 << 1;
+        default -> throw new IllegalArgumentException("Unknown status: " + acquisitionStatus);
+        };
+    }
+
+    /**
+     * return true if parameter is received, valid and not expired
+     */
+    public boolean isNominal() {
+        return acqStatus == 0;
+    }
+
+    public int getAcqStatus() {
+        return acqStatus;
+    }
+
+    public void setAcqStatus(int acqStatus) {
+        this.acqStatus = acqStatus;
+    }
+
+    public boolean isInvalid() {
+        return isInvalid(acqStatus);
+    }
+
+    public void setInvalid() {
+        acqStatus |= 1 << 0;
+    }
+
+    public boolean isNotReceived() {
+        return isNotReceived(acqStatus);
+    }
+
+    public void setNotReceived() {
+        acqStatus |= 1 << 1;
+    }
+
+    public boolean isExpired() {
+        return isExpired(acqStatus);
+    }
+
+    public void setExpired() {
+        acqStatus |= 1 << 2;
+    }
+
+    public static boolean isNominal(int acqStatus) {
+        return acqStatus == 0;
+    }
+
+    public static boolean isValid(int acqStatus) {
+        return !isBitSet(acqStatus, 0);
+    }
+
+    public static boolean isInvalid(int acqStatus) {
+        return isBitSet(acqStatus, 0);
+    }
+
+    public static boolean isNotReceived(int acqStatus) {
+        return isBitSet(acqStatus, 1);
+    }
+
+    public static boolean isExpired(int acqStatus) {
+        return isBitSet(acqStatus, 2);
+    }
+
+    private static boolean isBitSet(int acqStatus, int x) {
+        return ((acqStatus >> x) & 1) == 1;
+    }
+
+    public MonitoringResult getMonitoringResult() {
+        return monitoringResult;
+    }
+
+    public void setMonitoringResult(MonitoringResult monitoringResult) {
+        this.monitoringResult = monitoringResult;
+    }
+
+    public MonitoringResult getDeltaMonitoringResult() {
+        return deltaMonitoringResult;
+    }
+
+    public void setDeltaMonitoringResult(MonitoringResult deltaMonitoringResult) {
+        this.deltaMonitoringResult = deltaMonitoringResult;
+    }
+
+    public RangeCondition getRangeCondition() {
+        return rangeCondition;
+    }
+
+    public void setRangeCondition(RangeCondition rangeCondition) {
+        this.rangeCondition = rangeCondition;
+    }
+
+    public DoubleRange getWatchRange() {
+        return watchRange;
+    }
+
+    public void setWatchRange(DoubleRange watchRange) {
+        this.watchRange = watchRange;
+    }
+
+    public DoubleRange getWarningRange() {
+        return warningRange;
+    }
+
+    public void setWarningRange(DoubleRange warningRange) {
+        this.warningRange = warningRange;
+    }
+
+    public DoubleRange getDistressRange() {
+        return distressRange;
+    }
+
+    public void setDistressRange(DoubleRange distressRange) {
+        this.distressRange = distressRange;
+    }
+
+    public DoubleRange getCriticalRange() {
+        return criticalRange;
+    }
+
+    public void setCriticalRange(DoubleRange criticalRange) {
+        this.criticalRange = criticalRange;
+    }
+
+    public DoubleRange getSevereRange() {
+        return severeRange;
+    }
+
+    public void setSevereRange(DoubleRange severeRange) {
+        this.severeRange = severeRange;
+    }
+
+    public void setExpireMillis(long em) {
+        this.expireMillis = em;
+    }
+
+    public long getExpireMills() {
+        return expireMillis;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + acqStatus;
+        result = prime * result + ((criticalRange == null) ? 0 : criticalRange.hashCode());
+        result = prime * result + ((deltaMonitoringResult == null) ? 0 : deltaMonitoringResult.hashCode());
+        result = prime * result + ((distressRange == null) ? 0 : distressRange.hashCode());
+        result = prime * result + (int) (expireMillis ^ (expireMillis >>> 32));
+        result = prime * result + ((monitoringResult == null) ? 0 : monitoringResult.hashCode());
+        result = prime * result + ((rangeCondition == null) ? 0 : rangeCondition.hashCode());
+        result = prime * result + ((severeRange == null) ? 0 : severeRange.hashCode());
+        result = prime * result + ((warningRange == null) ? 0 : warningRange.hashCode());
+        result = prime * result + ((watchRange == null) ? 0 : watchRange.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        ParameterStatus other = (ParameterStatus) obj;
+        if (acqStatus != other.acqStatus)
+            return false;
+        if (criticalRange == null) {
+            if (other.criticalRange != null)
+                return false;
+        } else if (!criticalRange.equals(other.criticalRange))
+            return false;
+        if (deltaMonitoringResult != other.deltaMonitoringResult)
+            return false;
+        if (distressRange == null) {
+            if (other.distressRange != null)
+                return false;
+        } else if (!distressRange.equals(other.distressRange))
+            return false;
+        if (expireMillis != other.expireMillis)
+            return false;
+        if (monitoringResult != other.monitoringResult)
+            return false;
+        if (rangeCondition != other.rangeCondition)
+            return false;
+        if (severeRange == null) {
+            if (other.severeRange != null)
+                return false;
+        } else if (!severeRange.equals(other.severeRange))
+            return false;
+        if (warningRange == null) {
+            if (other.warningRange != null)
+                return false;
+        } else if (!warningRange.equals(other.warningRange))
+            return false;
+        if (watchRange == null) {
+            if (other.watchRange != null)
+                return false;
+        } else if (!watchRange.equals(other.watchRange))
+            return false;
+        return true;
+    }
+
+    public org.yamcs.yarch.protobuf.Db.ParameterStatus toProtoBuf(boolean withExpiration) {
+        var b = org.yamcs.yarch.protobuf.Db.ParameterStatus.newBuilder();
+        b.setAcqStatus(acqStatus);
+
+        if (monitoringResult != null) {
+            b.setMonitoringResult(monitoringResult);
+        }
+        if (rangeCondition != null) {
+            b.setRangeCondition(rangeCondition);
+        }
+
+        if (expireMillis != -1) {
+            b.setExpireMillis(expireMillis);
+        }
+
+        addAlarmRange(b, AlarmLevelType.WATCH, watchRange);
+        addAlarmRange(b, AlarmLevelType.WARNING, warningRange);
+        addAlarmRange(b, AlarmLevelType.DISTRESS, distressRange);
+        addAlarmRange(b, AlarmLevelType.CRITICAL, criticalRange);
+        addAlarmRange(b, AlarmLevelType.SEVERE, severeRange);
+
+        return b.build();
+    }
+
+    private static void addAlarmRange(org.yamcs.yarch.protobuf.Db.ParameterStatus.Builder pvfb, AlarmLevelType level,
+            DoubleRange range) {
+        if (range == null) {
+            return;
+        }
+        pvfb.addAlarmRange(BasicParameterValue.toGpbAlarmRange(level, range));
+    }
+
+
+}
+```
+
+### `ParameterValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Optional;
+import java.util.OptionalInt;
+
+import org.yamcs.protobuf.Mdb.AlarmLevelType;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Parameter;
+
+public class ParameterValue extends BasicParameterValue {
+    // the definition of the parameter may be null if we do not have a reference to an MDB object
+    // this could happen if the ParameterValue is extracted from the ParameterArchive
+    private Parameter def;
+    private final String paramFqn;
+
+    private long acquisitionTime = TimeEncoding.INVALID_INSTANT;
+
+    /**
+     * Creates a parameter value for a parameter
+     * 
+     * @param def
+     *            the parameter definition
+     */
+    public ParameterValue(Parameter def) {
+        this.def = def;
+        paramFqn = def.getQualifiedName();
+    }
+
+    public ParameterValue(String fqn) {
+        this.def = null;
+        this.paramFqn = fqn;
+    }
+
+    // copy constructor - copies all the fields in a shallow mode
+    public ParameterValue(ParameterValue pv) {
+        super(pv);
+        this.def = pv.def;
+        this.paramFqn = pv.paramFqn;
+        this.acquisitionTime = pv.acquisitionTime;
+    }
+
+    public void setAcquisitionTime(long instant) {
+        acquisitionTime = instant;
+    }
+
+    public void setParameter(Parameter p) {
+        this.def = p;
+    }
+
+    /**
+     * Retrieve the parameter definition for this parameter value
+     * 
+     * @return parameter definition
+     */
+    public Parameter getParameter() {
+        return def;
+    }
+
+    public String getParameterQualifiedName() {
+        return paramFqn;
+    }
+
+    /**
+     * @deprecated use {@link #getParameterQualifiedName()}
+     * @return
+     */
+    @Deprecated
+    public String getParameterQualifiedNamed() {
+        return paramFqn;
+    }
+
+    public long getAcquisitionTime() {
+        return acquisitionTime;
+    }
+
+    public org.yamcs.protobuf.Pvalue.ParameterValue toGpb() {
+        NamedObjectId id = NamedObjectId.newBuilder().setName(getParameterQualifiedName()).build();
+        return toProtobufParameterValue(Optional.of(id), OptionalInt.empty(), true);
+    }
+
+    public org.yamcs.protobuf.Pvalue.ParameterValue toGpb(NamedObjectId id) {
+        Optional<NamedObjectId> optionalId = Optional.ofNullable(id);
+        return toProtobufParameterValue(optionalId, OptionalInt.empty(), false);
+    }
+
+    public org.yamcs.protobuf.Pvalue.ParameterValue toGpb(int numericId) {
+        return toProtobufParameterValue(Optional.empty(), OptionalInt.of(numericId), true);
+    }
+
+    /**
+     * Convert a PV to a ProtobufPV
+     * 
+     * @param id
+     *            - the parameter identifier
+     * @return the created ProtobufPV
+     */
+    public org.yamcs.protobuf.Pvalue.ParameterValue toProtobufParameterValue(Optional<NamedObjectId> id,
+            OptionalInt numericId, boolean withExpiration) {
+
+        org.yamcs.protobuf.Pvalue.ParameterValue.Builder gpvb = org.yamcs.protobuf.Pvalue.ParameterValue.newBuilder()
+                .setAcquisitionStatus(getAcquisitionStatus(withExpiration))
+                .setGenerationTime(TimeEncoding.toProtobufTimestamp(generationTime));
+        if (id.isPresent()) {
+            gpvb.setId(id.get());
+        }
+        if (numericId.isPresent()) {
+            gpvb.setNumericId(numericId.getAsInt());
+        }
+
+        if (acquisitionTime != TimeEncoding.INVALID_INSTANT) {
+            gpvb.setAcquisitionTime(TimeEncoding.toProtobufTimestamp(acquisitionTime));
+        }
+        if (engValue != null) {
+            gpvb.setEngValue(ValueUtility.toGbp(engValue));
+        }
+        if (getMonitoringResult() != null) {
+            gpvb.setMonitoringResult(getMonitoringResult());
+        }
+        if (getRangeCondition() != null) {
+            gpvb.setRangeCondition(getRangeCondition());
+        }
+
+        long expireMillis = status.getExpireMills();
+        if (expireMillis >= 0) {
+            gpvb.setExpireMillis(expireMillis);
+        }
+
+        if (getWatchRange() != null) {
+            gpvb.addAlarmRange(toGpbAlarmRange(AlarmLevelType.WATCH, getWatchRange()));
+        }
+        if (getWarningRange() != null) {
+            gpvb.addAlarmRange(toGpbAlarmRange(AlarmLevelType.WARNING, getWarningRange()));
+        }
+        if (getDistressRange() != null) {
+            gpvb.addAlarmRange(toGpbAlarmRange(AlarmLevelType.DISTRESS, getDistressRange()));
+        }
+        if (getCriticalRange() != null) {
+            gpvb.addAlarmRange(toGpbAlarmRange(AlarmLevelType.CRITICAL, getCriticalRange()));
+        }
+        if (getSevereRange() != null) {
+            gpvb.addAlarmRange(toGpbAlarmRange(AlarmLevelType.SEVERE, getSevereRange()));
+        }
+
+        if (rawValue != null) {
+            gpvb.setRawValue(ValueUtility.toGbp(rawValue));
+        }
+        return gpvb.build();
+    }
+
+    public boolean hasAcquisitionTime() {
+        return acquisitionTime != TimeEncoding.INVALID_INSTANT;
+    }
+
+    /**
+     * Verifies if the parameter value is expired at a given timestamp. Returns false if the expireMillis is not set.
+     * 
+     * @param now
+     * @return true if the parameter is expired at the timestamp now.
+     */
+    public boolean isExpired(long now) {
+        long expireMillis = status.getExpireMills();
+        return (expireMillis > 0) && (acquisitionTime + expireMillis < now);
+    }
+
+    public int getAcqStatus() {
+        return status.getAcqStatus();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("name: ");
+        if (def != null) {
+            sb.append(def.getName());
+        } else {
+            sb.append(paramFqn);
+        }
+        sb.append(" genTime: {").append(TimeEncoding.toString(generationTime)).append("}");
+        if (rawValue != null) {
+            sb.append(" rawValue: {").append(rawValue.toString()).append("}");
+        }
+        if (engValue != null) {
+            sb.append(" engValue: {").append(engValue.toString()).append("}");
+        }
+        return sb.toString();
+    }
+
+    
+}
+```
+
+### `ParameterValueList.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValueList.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.AbstractSequentialList;
+import java.util.Collection;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
+import java.util.function.Consumer;
+
+import org.yamcs.xtce.Parameter;
+
+/**
+ * 
+ * Stores a collection of ParameterValue indexed on Parameter
+ * <p>
+ * it works like a LinkedHashMap&lt;Parameter, LinkedList&lt;ParameterValue&gt;&gt;
+ * <p>
+ * it also works like a LinkedList&lt;ParameterValue;&gt;
+ * <p>
+ * Not thread safe
+ * 
+ */
+public class ParameterValueList extends AbstractSequentialList<ParameterValue> {
+    static public final ParameterValueList EMPTY = new ParameterValueList();
+
+    Entry[] table;
+
+    Entry head;
+    int size;
+    int threshold;
+    float loadFactor = 0.75f;
+    private int rmCount = 0;
+
+    public ParameterValueList() {
+        size = 0;
+        table = new Entry[16];
+        threshold = (int) (table.length * loadFactor);
+        initHead();
+    }
+
+    /**
+     * @param pvs
+     */
+    public ParameterValueList(Collection<ParameterValue> pvs) {
+        int len = (int) (pvs.size() / loadFactor) + 1;
+        len = roundUpToPowerOfTwo(len);
+        table = new Entry[len];
+        threshold = (int) (len * loadFactor);
+        size = 0;
+        initHead();
+        for (ParameterValue pv : pvs) {
+            doAdd(pv);
+        }
+    }
+
+    // used for unit tests to ensure max collision
+    ParameterValueList(int capacity, Collection<ParameterValue> pvs) {
+        int len = roundUpToPowerOfTwo(capacity);
+        table = new Entry[len];
+        threshold = (int) (len * loadFactor);
+        size = 0;
+        initHead();
+
+        for (ParameterValue pv : pvs) {
+            doAdd(pv);
+        }
+    }
+
+    private void initHead() {
+        head = new Entry(null);
+        head.before = head.after = head;
+    }
+
+    @Override
+    public boolean add(ParameterValue pv) {
+        if (pv == null) {
+            throw new NullPointerException();
+        }
+        if (size - 1 >= threshold) {
+            ensureCapacity(2 * table.length);
+            threshold = 2 * threshold;
+        }
+        doAdd(pv);
+        return true;
+    }
+
+    /**
+     * Return the number of values for p
+     * 
+     * @param p
+     * @return
+     */
+    public int count(Parameter p) {
+        int hash = getHash(p);
+        int index = hash & (table.length - 1);
+        Entry e = table[index];
+        int count = 0;
+
+        while (e != null) {
+            if (e.pv.getParameter() == p) {
+                count++;
+            }
+            e = e.next;
+        }
+        return count;
+    }
+
+    private void ensureCapacity(int newCapacity) {
+        Entry[] oldt = table;
+        Entry[] newt = new Entry[newCapacity];
+
+        // transfer content
+        for (int i = 0; i < oldt.length; i++) {
+            Entry e = oldt[i];
+            while (e != null) {
+                int hash = getHash(e.pv.getParameter());
+                int index = hash & (newt.length - 1);
+
+                Entry next = e.next;
+                e.next = null;
+                Entry e1 = newt[index];
+                if (e1 == null) {
+                    newt[index] = e;
+                } else {
+                    while (e1.next != null) {
+                        e1 = e1.next;
+                    }
+                    e1.next = e;
+
+                }
+                e = next;
+            }
+        }
+        table = newt;
+    }
+
+    /**
+     * add a parameter to the hashtable, to the end of the list for the same parameter
+     * 
+     * @param pv
+     */
+    private void doAdd(ParameterValue pv) {
+        Entry newEntry = new Entry(pv);
+        Entry[] t = table;
+
+        int hash = getHash(pv.getParameter());
+        int index = hash & (t.length - 1);
+        if (t[index] == null) {
+            t[index] = newEntry;
+        } else {
+            Entry e = t[index];
+            while (e.next != null) {
+                e = e.next;
+            }
+            e.next = newEntry;
+        }
+        newEntry.after = head;
+        newEntry.before = head.before;
+        head.before.after = newEntry;
+        head.before = newEntry;
+
+        size++;
+    }
+
+    public ParameterValue getFirst() {
+        return head.after.pv;
+    }
+
+    public ParameterValue getLast() {
+        return head.before.pv;
+    }
+
+    private int getHash(Parameter p) {
+        return p.hashCode();
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    /**
+     * Returns the last inserted value for Parameter p or null if there is no value
+     * 
+     * @param p
+     * @return
+     */
+    public ParameterValue getLastInserted(Parameter p) {
+        int index = getHash(p) & (table.length - 1);
+        ParameterValue r = null;
+        for (Entry e = table[index]; e != null; e = e.next) {
+            if (e.pv.getParameter() == p) {
+                r = e.pv;
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Returns first inserted parameter value for the given parameter or null if there is none
+     * 
+     * @param p
+     * @return
+     */
+    public ParameterValue getFirstInserted(Parameter p) {
+        int index = getHash(p) & (table.length - 1);
+        ParameterValue r = null;
+        for (Entry e = table[index]; e != null; e = e.next) {
+            if (e.pv.getParameter() == p) {
+                r = e.pv;
+                break;
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Returns the n'th instance of the parameter or null if it does not exist
+     * <p>
+     * If n = 0 it is equivalent with {@link #getFirstInserted(Parameter)}
+     * 
+     */
+    public ParameterValue get(Parameter p, int n) {
+        int index = getHash(p) & (table.length - 1);
+        ParameterValue r = null;
+        for (Entry e = table[index]; e != null; e = e.next) {
+            if (e.pv.getParameter() == p) {
+                r = e.pv;
+                if (n-- == 0) {
+                    break;
+                }
+            }
+        }
+        return r;
+    }
+
+    /**
+     * Returns the n'th instance of the parameter from the end or null if it does not exist
+     * <p>
+     * If n = 0 it is equivalent with {@link #getLastInserted(Parameter)}
+     * 
+     */
+    public ParameterValue getFromEnd(Parameter p, int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("n must be non-negative");
+        }
+
+        int index = getHash(p) & (table.length - 1);
+        Entry e = table[index];
+        Entry lastMatch = null;
+
+        // Traverse the linked list and find the last entry for the given parameter
+        while (e != null) {
+            if (e.pv.getParameter() == p) {
+                lastMatch = e;
+            }
+            e = e.next;
+        }
+
+        if (lastMatch == null) {
+            return null; // No entry found for this parameter
+        }
+
+        // Now walk backwards from the last match
+        Entry current = lastMatch;
+        for (int i = 0; i < n; i++) {
+            do {
+                current = current.before;
+            } while (current != head && current.pv.getParameter() != p);
+
+            if (current == head) {
+                return null; // Less than n matches
+            }
+        }
+
+        return current.pv;
+    }
+
+    /**
+     * Performs the given action for each value of the parameter p The values are considered in insertion order - oldest
+     * is first to be processed
+     * 
+     * @param p
+     * @param action
+     */
+    public void forEach(Parameter p, Consumer<ParameterValue> action) {
+        int index = getHash(p) & (table.length - 1);
+        for (Entry e = table[index]; e != null; e = e.next) {
+            if (e.pv.getParameter() == p) {
+                action.accept(e.pv);
+            }
+        }
+    }
+
+    /**
+     * Remove the last inserted value for Parameter p
+     * 
+     * @param p
+     * @return the value removed or null if there was no value for p
+     */
+    public ParameterValue removeLast(Parameter p) {
+        int index = getHash(p) & (table.length - 1);
+        Entry e = table[index];
+        if (e == null) {
+            return null;
+        }
+
+        Entry prev_r = null;
+
+        Entry prev_e = null;
+        Entry r = null;
+
+        while (e != null) {
+            if (e.pv.getParameter() == p) {
+                prev_r = prev_e;
+                r = e;
+            }
+            prev_e = e;
+            e = e.next;
+        }
+
+        if (r == null) {
+            return null;
+        }
+        rmCount++;
+
+        size--;
+        if (table[index] == r) {
+            table[index] = r.next;
+        } else {
+            prev_r.next = r.next;
+        }
+        removeEntryFromLinkedList(r);
+        return r.pv;
+    }
+
+    private void removeEntryFromLinkedList(Entry r) {
+        Entry b = r.before;
+        Entry a = r.after;
+        b.after = a;
+        a.before = b;
+    }
+
+    /**
+     * Remove the first inserted value for Parameter p
+     * 
+     * @param p
+     * @return the value removed or null if there was no value for p
+     */
+    public ParameterValue removeFirst(Parameter p) {
+        int index = getHash(p) & (table.length - 1);
+        Entry prev = table[index];
+        if (prev == null) {
+            return null;
+        }
+
+        Entry e = prev;
+        Entry r = null;
+
+        while (e != null) {
+            if (e.pv.getParameter() == p) {
+                r = e;
+                break;
+            }
+            prev = e;
+            e = e.next;
+        }
+
+        if (r == null) {
+            return null;
+        }
+        rmCount++;
+        size--;
+        if (table[index] == r) {
+            table[index] = r.next;
+        } else {
+            prev.next = r.next;
+        }
+        removeEntryFromLinkedList(r);
+
+        return r.pv;
+    }
+
+    /**
+     * this is copied from http://graphics.stanford.edu/~seander/bithacks.html#RoundUpPowerOf2
+     * 
+     * 
+     */
+    static int roundUpToPowerOfTwo(int v) {
+        v--;
+        v |= v >> 1;
+        v |= v >> 2;
+        v |= v >> 4;
+        v |= v >> 8;
+        v |= v >> 16;
+        v++;
+        return v;
+    }
+
+    /**
+     * Creates an iterator which is positioned on the end of the list but returns all the elements added after the
+     * iterator has been created.
+     * <p>
+     * Removing elements will invalidate the iterator.
+     * 
+     * @return
+     */
+    public Iterator<ParameterValue> tailIterator() {
+        return new Iter(true);
+    }
+
+    @Override
+    public Iterator<ParameterValue> iterator() {
+        return new Iter(false);
+    }
+
+    /**
+     * Adds all element to this collection
+     * 
+     * @param c
+     * @return
+     */
+    @Override
+    public boolean addAll(Collection<? extends ParameterValue> c) {
+        int newSize = size + c.size();
+        if (newSize > threshold) {
+            int newCapacity = roundUpToPowerOfTwo(newSize);
+            ensureCapacity(newCapacity);
+            threshold = (int) (newCapacity * loadFactor);
+        }
+
+        for (ParameterValue pv : c) {
+            doAdd(pv);
+        }
+        return false;
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public void clear() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Return true if the list contains the exact same ParameterValue. That means exactly the same object.
+     * 
+     * @param o
+     * @return
+     */
+    @Override
+    public boolean contains(Object o) {
+        if (!(o instanceof ParameterValue)) {
+            return false;
+        }
+
+        ParameterValue pv = (ParameterValue) o;
+
+        int index = getHash(pv.getParameter()) & (table.length - 1);
+        for (Entry e = table[index]; e != null; e = e.next) {
+            if (e.pv == pv) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public boolean remove(Object o) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    /**
+     * Returns a copy of the list as array
+     */
+    @Override
+    public Object[] toArray() {
+        ParameterValue[] r = new ParameterValue[size];
+        int i = 0;
+        Iterator<ParameterValue> it = iterator();
+        while (it.hasNext()) {
+            r[i++] = it.next();
+        }
+        return r;
+    }
+
+    /**
+     * Throws UnsupportedOperationException
+     */
+    @Override
+    public <T> T[] toArray(T[] a) {
+        throw new UnsupportedOperationException();
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        boolean first = true;
+        for (ParameterValue pv : this) {
+            if (first) {
+                first = false;
+            } else {
+                sb.append(", ");
+            }
+            sb.append(pv.toString());
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+    @Override
+    public ListIterator<ParameterValue> listIterator(int index) {
+        return new ListIter(index);
+    }
+
+    static class Entry {
+        final ParameterValue pv;
+        // next value for the same parameter
+        Entry next;
+
+        // ordering in the linked list
+        Entry before, after;
+
+        Entry(ParameterValue pv) {
+            this.pv = pv;
+        }
+    }
+
+    private final class Iter implements Iterator<ParameterValue> {
+        Entry cur;
+        int expectedRmCount;
+
+        public Iter(boolean tail) {
+            cur = tail ? head.before : head;
+            expectedRmCount = rmCount;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return cur.after != head;
+        }
+
+        @Override
+        public ParameterValue next() {
+            if (cur.after == head) {
+                throw new NoSuchElementException();
+            }
+            if (rmCount != expectedRmCount) {
+                throw new ConcurrentModificationException();
+            }
+            cur = cur.after;
+
+            return cur.pv;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    private class ListIter implements ListIterator<ParameterValue> {
+        Entry current;
+        int expectedRmCount;
+        int index;
+
+        ListIter(int index) {
+            if (index < 0 || index > size) {
+                throw new IndexOutOfBoundsException("Index: " + index);
+            }
+            this.index = index;
+            this.expectedRmCount = rmCount;
+            this.current = head;
+            for (int i = 0; i < index; i++) {
+                current = current.after;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current.after != head;
+        }
+
+        @Override
+        public ParameterValue next() {
+            if (current.after == head) {
+                throw new NoSuchElementException();
+            }
+            if (rmCount != expectedRmCount) {
+                throw new ConcurrentModificationException();
+            }
+            current = current.after;
+            index++;
+            return current.pv;
+        }
+
+        @Override
+        public boolean hasPrevious() {
+            return current != head;
+        }
+
+        @Override
+        public ParameterValue previous() {
+            if (current == head) {
+                throw new NoSuchElementException();
+            }
+            if (rmCount != expectedRmCount) {
+                throw new ConcurrentModificationException();
+            }
+            ParameterValue pv = current.pv;
+            current = current.before;
+            index--;
+            return pv;
+        }
+
+        @Override
+        public int nextIndex() {
+            return index;
+        }
+
+        @Override
+        public int previousIndex() {
+            return index - 1;
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void set(ParameterValue pv) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public void add(ParameterValue pv) {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public static ParameterValueList asList(ParameterValue... pvs) {
+        ParameterValueList pvl = new ParameterValueList();
+        for (ParameterValue pv : pvs) {
+            pvl.add(pv);
+        }
+        return pvl;
+    }
+
+}
+```
+
+### `ParameterValueWithId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterValueWithId.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+
+
+/**
+ * groups together a parameter value with a telemetry item id.
+ * The reason for this is that the consumers subscribe to telemetry items based on NamedObjectId (and they want to receive the same back)
+ *  while all the computation inside is done based on ParameterDefinition. There can be many NamedObjectId
+ *  pointing to the same ParameterDefinition
+ * @author nm
+ *
+ */
+public class ParameterValueWithId {
+    private ParameterValue pv;
+    private NamedObjectId id;
+
+    public ParameterValueWithId(ParameterValue pv, NamedObjectId id) {
+        this.pv = pv;
+        this.id = id;
+    }
+
+    public void setId(NamedObjectId id) {
+	this.id = id;
+    }
+    public NamedObjectId getId() {
+	return id;
+    }
+    public void setParameterValue(ParameterValue pv) {
+	this.pv = pv;
+    }
+    public ParameterValue getParameterValue() {
+	return pv;
+    }
+    
+    public org.yamcs.protobuf.Pvalue.ParameterValue toGbpParameterValue() {
+	return pv.toGpb(id);
+    }
+
+    @Override
+    public String toString() {
+	return "id:"+id+", pv:"+pv;
+    }
+}
+```
+
+### `ParameterWithId.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithId.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Holder class for a parameter together with the id what used to subscribe (or request) it.
+ * 
+ * The subscription/request can point to an aggregate/array element.
+ * 
+ */
+public class ParameterWithId {
+    final NamedObjectId id; // the id used by the client to subscribe
+
+    final PathElement[] path; // the path to reach the end element in case the subscribed parameter is an aggregate
+                              // or array
+    final Parameter p; // the parameter the id refers to
+
+    public ParameterWithId(Parameter p, NamedObjectId id, PathElement[] path) {
+        this.p = p;
+        this.id = id;
+        this.path = path;
+    }
+
+    public NamedObjectId getId() {
+        return id;
+    }
+
+    public PathElement[] getPath() {
+        return path;
+    }
+
+    public Parameter getParameter() {
+        return p;
+    }
+
+    /**
+     * 
+     * @return the qualified name of the parameter plus the aggregate part if any
+     */
+    public String getQualifiedName() {
+        if (path == null) {
+            return p.getQualifiedName();
+        } else {
+            return p.getQualifiedName() + AggregateUtil.toString(path);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ParameterWithId [id=" + id + ", path=" + PathElement.pathToString(path) + ", p=" + p.getQualifiedName()
+                + "]";
+    }
+
+}
+```
+
+### `ParameterWithIdConsumer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithIdConsumer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.List;
+
+public interface ParameterWithIdConsumer {
+    public abstract void update(int subscriptionId, List<ParameterValueWithId> params);
+
+}
+```
+
+### `ParameterWithIdRequestHelper.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ParameterWithIdRequestHelper.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.InvalidRequestIdentification;
+import org.yamcs.NoPermissionException;
+import org.yamcs.protobuf.Yamcs.NamedObjectId;
+import org.yamcs.security.ObjectPrivilegeType;
+import org.yamcs.security.User;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+
+/**
+ * This sits in front of the ParameterRequestManager and implements subscriptions based on NamedObjectId taking care to
+ * send to the consumers the parameters with the requested id.
+ * 
+ * A client can request in fact the same parameter with two different names and they will get it twice each time.
+ * 
+ * In addition it can also provide updates on parameter expirations.
+ * 
+ * TODO: impose some subscription limits
+ *
+ */
+public class ParameterWithIdRequestHelper implements ParameterConsumer {
+    ParameterRequestManager prm;
+    final ParameterWithIdConsumer listener;
+    static Logger log = LoggerFactory.getLogger(ParameterWithIdRequestHelper.class.getName());
+    Map<Integer, Subscription> subscriptions = new ConcurrentHashMap<>();
+
+    // how often to check expiration
+    private static long CHECK_EXPIRATION_INTERVAL = 1000;
+    final static ScheduledThreadPoolExecutor timer = new ScheduledThreadPoolExecutor(1);
+    int subscribeAllId = -1;
+
+    public ParameterWithIdRequestHelper(ParameterRequestManager prm, ParameterWithIdConsumer listener) {
+        this.prm = prm;
+        this.listener = listener;
+        schedulePeriodicExpirationChecking(this);
+    }
+
+    public int addRequest(List<NamedObjectId> idList, User user)
+            throws InvalidIdentification, NoPermissionException {
+        return addRequest(idList, false, user);
+    }
+
+    public int addRequest(List<NamedObjectId> idList, boolean checkExpiration, User user)
+            throws InvalidIdentification, NoPermissionException {
+        List<ParameterWithId> plist = checkNames(idList);
+        Subscription subscr = new Subscription(checkExpiration);
+        for (int i = 0; i < idList.size(); i++) {
+            ParameterWithId pwid = plist.get(i);
+            checkParameterPrivilege(user, pwid.p);
+            subscr.add(pwid);
+        }
+        int subscriptionId = prm.addRequest(plist.stream().map(pwid -> pwid.p).collect(Collectors.toList()), this);
+        subscriptions.put(subscriptionId, subscr);
+
+        return subscriptionId;
+    }
+
+    public void addItemsToRequest(int subscriptionId, List<NamedObjectId> idList, User user)
+            throws InvalidIdentification, NoPermissionException {
+        Subscription subscr = subscriptions.get(subscriptionId);
+        if (subscr == null) {
+            log.warn("add item requested for an invalid subscription id {}", subscriptionId);
+            throw new InvalidRequestIdentification("Invalid subcription id", subscriptionId);
+        }
+        List<ParameterWithId> plist = checkNames(idList);
+        synchronized (subscr) {
+            for (int i = 0; i < idList.size(); i++) {
+                Parameter p = plist.get(i).p;
+                checkParameterPrivilege(user, p);
+                NamedObjectId id = idList.get(i);
+                if (!subscr.add(plist.get(i))) {
+                    log.info("Ignoring duplicate subscription for '{}', id: {}", p.getName(),
+                            StringConverter.idToString(id));
+                }
+            }
+        }
+        prm.addItemsToRequest(subscriptionId, plist.stream().map(pwid -> pwid.p).collect(Collectors.toList()));
+    }
+
+    private static void schedulePeriodicExpirationChecking(ParameterWithIdRequestHelper x) {
+        // trick to allow GC to collect this object and remove it from the timer
+        final WeakReference<ParameterWithIdRequestHelper> ref = new WeakReference<>(x);
+        final AtomicReference<ScheduledFuture<?>> futureRef = new AtomicReference<>();
+        ScheduledFuture<?> future = timer.scheduleAtFixedRate(() -> {
+            ParameterWithIdRequestHelper pwirh = ref.get();
+            if (pwirh == null) {
+                ScheduledFuture<?> f = futureRef.get();
+                f.cancel(false);
+            } else {
+                pwirh.checkPeriodicExpiration();
+            }
+        }, CHECK_EXPIRATION_INTERVAL, CHECK_EXPIRATION_INTERVAL, TimeUnit.MILLISECONDS);
+        futureRef.set(future);
+    }
+
+    List<ParameterWithId> checkNames(List<NamedObjectId> idList) throws InvalidIdentification {
+        return checkNames(prm, idList);
+    }
+
+    // turn NamedObjectId to Parameter references
+    public static ParameterWithId checkName(ParameterRequestManager prm, NamedObjectId id)
+            throws InvalidIdentification {
+        String name = id.getName();
+        int x = AggregateUtil.findSeparator(name);
+        NamedObjectId id1;
+        PathElement[] path;
+        if (x > 0) { // this is an array or aggregate element
+            id1 = NamedObjectId.newBuilder(id).setName(name.substring(0, x)).build();
+            try {
+                path = AggregateUtil.parseReference(name.substring(x));
+            } catch (IllegalArgumentException e) {
+                throw new InvalidIdentification(id);
+            }
+        } else {
+            id1 = id;
+            path = null;
+        }
+        Parameter p = prm.getParameter(id1);
+        if (path != null) {
+            if (!AggregateUtil.verifyPath(p.getParameterType(), path)) {
+                throw new InvalidIdentification(id);
+            }
+        }
+        return new ParameterWithId(p, id, path);
+
+    }
+
+    // turn NamedObjectId to Parameter references
+    public static List<ParameterWithId> checkNames(ParameterRequestManager prm, List<NamedObjectId> idList)
+            throws InvalidIdentification {
+        List<ParameterWithId> result = new ArrayList<>();
+        List<NamedObjectId> invalid = new ArrayList<>(0);
+        for (NamedObjectId id : idList) {
+            try {
+                result.add(checkName(prm, id));
+            } catch (InvalidIdentification e) {
+                invalid.add(id);
+                continue;
+            }
+
+        }
+        if (!invalid.isEmpty()) {
+            log.info("Throwing invalid identification for the following items: {}", invalid);
+            throw new InvalidIdentification(invalid);
+        }
+        return result;
+    }
+
+    public void removeRequest(int subscriptionId) {
+        if (subscriptions.remove(subscriptionId) == null) {
+            log.warn("remove requested for an invalid subscription id {}", subscriptionId);
+            return;
+        }
+        prm.removeRequest(subscriptionId);
+    }
+
+    public void removeItemsFromRequest(int subscriptionId, List<NamedObjectId> parameterIds, User user)
+            throws NoPermissionException {
+        Subscription subscr = subscriptions.get(subscriptionId);
+
+        if (subscr == null) {
+            log.warn("remove requested for an invalid subscription id {}", subscriptionId);
+            return;
+        }
+        List<Parameter> paramsToRemove = new ArrayList<>();
+        synchronized (subscr) {
+            for (NamedObjectId id : parameterIds) {
+                Parameter p = subscr.remove(id);
+                if (p != null) {
+                    paramsToRemove.add(p);
+                }
+            }
+        }
+        if (!paramsToRemove.isEmpty()) {
+            prm.removeItemsFromRequest(subscriptionId, paramsToRemove);
+        }
+    }
+
+    public ParameterRequestManager getPrm() {
+        return prm;
+    }
+
+    public int subscribeAll(User user) throws NoPermissionException {
+        if(!user.hasObjectPrivilege(ObjectPrivilegeType.ReadParameter, ".*")) {
+            throw new NoPermissionException("User " + user + " has no permission for parameter .*");
+        }
+        subscribeAllId = prm.subscribeAll(this);
+        return subscribeAllId;
+    }
+
+    /**
+     * retrieve the subscribed values from cache
+     * 
+     * @param subscriptionId
+     * @return
+     */
+    public List<ParameterValueWithId> getValuesFromCache(int subscriptionId) {
+        Subscription subscr = subscriptions.get(subscriptionId);
+        if (subscr == null) {
+            log.warn("add item requested for an invalid subscription id {}", subscriptionId);
+            throw new InvalidRequestIdentification("Invalid subcription id", subscriptionId);
+        }
+        long now = prm.processor.getCurrentTime();
+
+        List<ParameterValue> values = prm.getValuesFromCache(subscr.params.keySet());
+        List<ParameterValueWithId> pvlist = new ArrayList<>(values.size());
+        for (ParameterValue pv : values) {
+            if (pv.isExpired(now)) {
+                pv = new ParameterValue(pv);
+                pv.setExpired();
+            }
+            if (subscr.checkExpiration && pv.hasExpirationTime()) {
+                subscr.pvexp.put(pv.getParameter(), pv);
+            }
+            List<ParameterWithId> l = subscr.params.get(pv.getParameter());
+            if (l == null) {
+                log.warn("Received values for a parameter not requested: {}", pv.getParameter());
+                continue;
+            }
+            addValueForAllIds(pvlist, l, pv);
+        }
+
+        return pvlist;
+    }
+
+    /**
+     * Retrieve a list of parameter values from cache. This call does not block.
+     * 
+     * @param idList
+     * @param user
+     * @return
+     * @throws InvalidIdentification
+     * @throws NoPermissionException
+     */
+    public List<ParameterValueWithId> getValuesFromCache(List<NamedObjectId> idList, User user)
+            throws InvalidIdentification, NoPermissionException {
+        List<ParameterWithId> plist = checkNames(idList);
+
+        ListMultimap<Parameter, ParameterWithId> lm = ArrayListMultimap.create();
+        for (int i = 0; i < idList.size(); i++) {
+            ParameterWithId pwid = plist.get(i);
+            checkParameterPrivilege(user, pwid.p);
+            lm.put(pwid.p, pwid);
+        }
+
+        List<ParameterValue> values = prm
+                .getValuesFromCache(plist.stream().map(pwid -> pwid.p).distinct().collect(Collectors.toList()));
+        List<ParameterValueWithId> pvlist = new ArrayList<>(values.size());
+
+        for (ParameterValue pv : values) {
+            List<ParameterWithId> l = lm.get(pv.getParameter());
+            if (l == null) {
+                log.warn("Received values for a parameter not requested: {}", pv.getParameter());
+                continue;
+            }
+            addValueForAllIds(pvlist, l, pv);
+        }
+
+        return pvlist;
+    }
+
+    // adds the pv into plist with all ids from idList
+    private void addValueForAllIds(List<ParameterValueWithId> plist, List<ParameterWithId> idList, ParameterValue pv) {
+        for (ParameterWithId pwid : idList) {
+            ParameterValue pv1 = null;
+            if (pwid.path != null) {
+                try {
+                    pv1 = AggregateUtil.extractMember(pv, pwid.path);
+                    if (pv1 == null) { // could be that we reference an element of an array that doesn't exist
+                        continue;
+                    }
+                } catch (Exception e) {
+                    log.error("Failed to extract {} from parameter value {}", Arrays.toString(pwid.path), pv, e);
+                    continue;
+                }
+            } else {
+                pv1 = pv;
+            }
+
+            ParameterValueWithId pvwi = new ParameterValueWithId(pv1, pwid.id);
+            plist.add(pvwi);
+        }
+    }
+
+    /**
+     * Called from {@link ParameterRequestManager when new parameters are available to be sent to clients}
+     */
+    @Override
+    public void updateItems(int subscriptionId, List<ParameterValue> items) {
+        if (subscriptionId == subscribeAllId) {
+            updateAllSubscription(subscriptionId, items);
+            return;
+        }
+        Subscription subscription = subscriptions.get(subscriptionId);
+        if (subscription == null) { // probably the subscription has just been removed
+            log.debug("Received an updateItems for an unknown subscription {}", subscriptionId);
+            return;
+        }
+
+        List<ParameterValueWithId> plist = new ArrayList<>(items.size());
+        synchronized (subscription) {
+            if (subscription.checkExpiration) {
+                long now = getAquisitionTime(items);
+
+                List<ParameterValueWithId> expired = updateAndCheckExpiration(subscription, items, now);
+                if (!expired.isEmpty()) {
+                    log.debug("Updating {} parameters due to expiration", expired.size());
+                    listener.update(subscriptionId, expired);
+                }
+            }
+
+            for (ParameterValue pv : items) {
+                addValueForAllSubscribedIds(plist, subscription, pv);
+            }
+        }
+        listener.update(subscriptionId, plist);
+    }
+
+    private void updateAllSubscription(int subscriptionId, List<ParameterValue> items) {
+        List<ParameterValueWithId> plist = new ArrayList<>(items.size());
+        for (ParameterValue pv : items) {
+            plist.add(new ParameterValueWithId(pv,
+                    NamedObjectId.newBuilder().setName(pv.getParameterQualifiedName()).build()));
+        }
+        listener.update(subscriptionId, plist);
+    }
+
+    public void unselectPrm() {
+        for (int subscriptionId : subscriptions.keySet()) {
+            prm.removeRequest(subscriptionId);
+        }
+        prm = null;
+    }
+
+    public List<NamedObjectId> selectPrm(ParameterRequestManager prm, User user) throws NoPermissionException {
+        List<NamedObjectId> invalid = new ArrayList<>();
+        // Parameter references may be invalid for the new processor
+        // we have to re-create the subscriptions starting from the original subscribed names
+        // and take care that some names may have become invalid
+        this.prm = prm;
+        for (int subscriptionId : subscriptions.keySet()) {
+            Subscription subscr = subscriptions.get(subscriptionId);
+            synchronized (subscr) {
+                List<NamedObjectId> idList = subscr.getallIds();
+                List<ParameterWithId> plist;
+                try {
+                    plist = checkNames(idList);
+                } catch (InvalidIdentification e) {
+                    log.warn("Got invalid identification when selecting parameters for processor {}: {}",
+                            prm.processor.getName(), e.getInvalidParameters());
+                    idList.removeAll(e.getInvalidParameters());
+                    invalid.addAll(e.getInvalidParameters());
+                    try {
+                        plist = checkNames(idList);
+                    } catch (InvalidIdentification e1) { // shouldn't happen again
+                        throw new IllegalStateException(e1);
+                    }
+                }
+                assert (idList.size() == plist.size());
+                Subscription subscr1 = new Subscription(subscr.checkExpiration);
+
+                for (int i = 0; i < plist.size(); i++) {
+                    ParameterWithId pwid = plist.get(i);
+                    checkParameterPrivilege(user, pwid.p);
+                    subscr1.add(pwid);
+                }
+                prm.addRequest(subscriptionId, plist.stream().map(pwid -> pwid.p).collect(Collectors.toList()), this);
+                subscriptions.put(subscriptionId, subscr1);
+            }
+        }
+        return invalid;
+    }
+
+    /**
+     * Change processor and return the list of parameters that were valid in the old processor and are not anymore
+     */
+    public List<NamedObjectId> switchPrm(ParameterRequestManager newPrm, User user) throws NoPermissionException {
+        if (prm != null) {
+            unselectPrm();
+        }
+        if (newPrm != null) {
+            return selectPrm(newPrm, user);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private long getAquisitionTime(List<ParameterValue> items) {
+        for (ParameterValue pv : items) {
+            if (pv.hasAcquisitionTime()) {
+                return pv.getAcquisitionTime();
+            }
+        }
+        return prm.processor.getCurrentTime();
+    }
+
+    // adds the pv into plist with all ids subscribed
+    private void addValueForAllSubscribedIds(List<ParameterValueWithId> plist, Subscription subscription,
+            ParameterValue pv) {
+        Parameter p = pv.getParameter();
+        List<ParameterWithId> idList = subscription.get(p);
+        if (idList == null || idList.isEmpty()) {
+            log.warn("Received values for a parameter not subscribed: {}", pv.getParameter());
+            return;
+        }
+        addValueForAllIds(plist, idList, pv);
+    }
+
+    private void checkPeriodicExpiration() {
+        for (Map.Entry<Integer, Subscription> me : subscriptions.entrySet()) {
+            Subscription subscription = me.getValue();
+            synchronized (subscription) {
+                long now = prm.processor.getCurrentTime();
+                if ((subscription.checkExpiration)
+                        && (now - subscription.lastExpirationCheck > CHECK_EXPIRATION_INTERVAL)) {
+                    List<ParameterValueWithId> expired = checkExpiration(subscription, now);
+                    if (!expired.isEmpty()) {
+                        log.debug("Updating {} parameters due to expiration", expired.size());
+                        listener.update(me.getKey(), expired);
+                    }
+                }
+            }
+        }
+    }
+
+    // update the expiration list with new values and check expiration of parameters that are just updating
+    // in case the expiration is shorter than the check interval - this method would detect and send the parameters that
+    // have just expired
+    private List<ParameterValueWithId> updateAndCheckExpiration(Subscription subscription, List<ParameterValue> items,
+            long now) {
+        List<ParameterValueWithId> expired = new ArrayList<>();
+        for (ParameterValue pv : items) {
+            Parameter p = pv.getParameter();
+            ParameterValue oldPv;
+            if (pv.hasExpirationTime()) {
+                oldPv = subscription.pvexp.put(p, pv);
+            } else {
+                oldPv = subscription.pvexp.remove(p);
+            }
+            if (oldPv != null) {
+                if (oldPv.isExpired()) {
+                    addValueForAllSubscribedIds(expired, subscription, oldPv);
+                } else if (oldPv.isExpired(now)) {
+                    oldPv.setExpired();
+                    addValueForAllSubscribedIds(expired, subscription, oldPv);
+                }
+            }
+        }
+        return expired;
+    }
+
+    // check expiration of all parameters from subscription
+    private List<ParameterValueWithId> checkExpiration(Subscription subscription, long now) {
+        List<ParameterValueWithId> expired = new ArrayList<>();
+        var it = subscription.pvexp.entrySet().iterator();
+        while (it.hasNext()) {
+            var entry = it.next();
+            var pv = entry.getValue();
+            if (pv.isExpired()) {
+                addValueForAllSubscribedIds(expired, subscription, pv);
+                it.remove();
+            } else if (pv.isExpired(now)) {
+                pv.setExpired();
+                addValueForAllSubscribedIds(expired, subscription, pv);
+                it.remove();
+            }
+        }
+        subscription.lastExpirationCheck = now;
+        return expired;
+    }
+
+    /**
+     * Check if the user has a privilege for the specified parameter name
+     *
+     * @param user user to check permissions for
+     * @param parameter parameter to check
+     * @throws NoPermissionException
+     */
+    private void checkParameterPrivilege(User user, Parameter parameter)
+            throws NoPermissionException {
+        if (!user.hasParameterPrivilege(ObjectPrivilegeType.ReadParameter, parameter)) {
+            throw new NoPermissionException("User " + user + " has no permission for parameter " + parameter.getQualifiedName());
+        }
+    }
+
+    public void quit() {
+        for (int subscriptionId : subscriptions.keySet()) {
+            prm.removeRequest(subscriptionId);
+        }
+        subscriptions.clear();
+        if (subscribeAllId != -1) {
+            prm.unsubscribeAll(subscribeAllId);
+        }
+    }
+
+    static class Subscription {
+        Map<Parameter, List<ParameterWithId>> params = new LinkedHashMap<>();
+        boolean checkExpiration = false;
+        long lastExpirationCheck = -1;
+        // contains the parameters that have an expiration time set
+        Map<Parameter, ParameterValue> pvexp;
+
+        public Subscription(boolean checkExpiration) {
+            this.checkExpiration = checkExpiration;
+            if (checkExpiration) {
+                pvexp = new HashMap<>();
+            }
+        }
+
+        public List<NamedObjectId> getallIds() {
+            List<NamedObjectId> r = new ArrayList<>();
+            for (List<ParameterWithId> l : params.values()) {
+                for (ParameterWithId pwid : l) {
+                    r.add(pwid.id);
+                }
+            }
+            return r;
+        }
+
+        /**
+         * looks and removes the id from a list and returns the associated parameter if there is no id mapped to it
+         * anymore otherwise return null
+         * 
+         * @param id
+         * @return
+         */
+        public Parameter remove(NamedObjectId id) {
+            Parameter p = null;
+            boolean found = false;
+            for (Map.Entry<Parameter, List<ParameterWithId>> me : params.entrySet()) {
+                List<ParameterWithId> l = me.getValue();
+                for (ParameterWithId pwid : l) {
+                    if (pwid.id.equals(id)) {
+                        l.remove(pwid);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) {
+                    if (l.isEmpty()) {
+                        p = me.getKey();
+                    }
+                    break;
+                }
+            }
+            if (p != null) {
+                params.remove(p);
+                if (pvexp != null) {
+                    pvexp.remove(p);
+                }
+            }
+            return p;
+        }
+
+        public List<ParameterWithId> get(Parameter parameter) {
+            return params.get(parameter);
+        }
+
+        public boolean add(ParameterWithId pwid) {
+            List<ParameterWithId> l = params.get(pwid.p);
+            if (l == null) {
+                l = new ArrayList<>();
+                params.put(pwid.p, l);
+            } else if (l.stream().anyMatch(pwid1 -> pwid1.id.equals(pwid.id))) {
+                return false;
+            }
+            l.add(pwid);
+
+            return true;
+        }
+    }
+}
+```
+
+### `PartialParameterValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/PartialParameterValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.PathElement;
+
+/**
+ * Holds values related to members of aggregates or arrays 
+ * 
+ * @author nm
+ *
+ */
+public class PartialParameterValue extends ParameterValue {
+    final PathElement[] path;
+    
+    public PartialParameterValue(Parameter def, PathElement[] path) {
+        super(def);
+        this.path = path;
+    }
+    
+    /**
+     * The path to the element of the aggregate or array for which the value applies
+     * @return
+     */
+    public PathElement[] getPath() {
+        return path;
+    }
+
+}
+```
+
+### `RawEngValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/RawEngValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.commanding.ArgumentValue;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Abstract class storing a raw value, engineering value and a generation time.
+ * <p>
+ * It used as base class by {@link ParameterValue} and {@link ArgumentValue}
+ *
+ */
+public abstract class RawEngValue {
+    protected Value rawValue;
+    protected Value engValue;
+    protected long generationTime = TimeEncoding.INVALID_INSTANT;
+
+    public RawEngValue() {
+    }
+
+    // copy constructor - copies all the fields in a shallow mode
+    public RawEngValue(RawEngValue pv) {
+        this.rawValue = pv.rawValue;
+        this.engValue = pv.engValue;
+        this.generationTime = pv.generationTime;
+    }
+
+    public Value getEngValue() {
+        return engValue;
+    }
+
+    public Value getRawValue() {
+        return rawValue;
+    }
+
+    public long getGenerationTime() {
+        return generationTime;
+    }
+
+    public void setRawValue(Value rv) {
+        this.rawValue = rv;
+    }
+
+    public void setGenerationTime(long instant) {
+        generationTime = instant;
+    }
+
+    public void setRawValue(byte[] b) {
+        rawValue = new BinaryValue(b);
+    }
+
+    public void setRawFloatValue(float f) {
+        rawValue = new FloatValue(f);
+    }
+
+    public void setRawDoubleValue(double d) {
+        rawValue = new DoubleValue(d);
+    }
+
+    public void setRawValue(boolean b) {
+        rawValue = new BooleanValue(b);
+    }
+
+    public void setRawValue(String s) {
+        rawValue = new StringValue(s);
+    }
+
+    public void setRawSignedInteger(int x) {
+        rawValue = new SInt32Value(x);
+    }
+
+    public void setRawUnsignedInteger(int x) {
+        rawValue = new UInt32Value(x);
+    }
+
+    public void setRawSignedLong(long x) {
+        rawValue = new SInt64Value(x);
+    }
+
+    public void setRawUnsignedLong(long x) {
+        rawValue = new UInt64Value(x);
+    }
+
+    public void setStringValue(String s) {
+        engValue = new StringValue(s);
+    }
+
+    public void setBinaryValue(byte[] v) {
+        engValue = new BinaryValue(v);
+    }
+
+    public void setBooleanValue(boolean b) {
+        engValue = new BooleanValue(b);
+    }
+
+    public void setDoubleValue(double v) {
+        engValue = new DoubleValue(v);
+    }
+
+    public void setFloatValue(float v) {
+        engValue = new FloatValue(v);
+    }
+
+    public void setSignedIntegerValue(int v) {
+        engValue = new SInt32Value(v);
+    }
+
+    public void setUnsignedIntegerValue(int v) {
+        engValue = new UInt32Value(v);
+    }
+
+    public void setSignedLongValue(long v) {
+        engValue = new SInt64Value(v);
+    }
+
+    public void setUnsignedLongValue(long v) {
+        engValue = new UInt64Value(v);
+    }
+
+    public void setEngValue(Value ev) {
+        this.engValue = ev;
+    }
+
+    @Deprecated
+    /**
+     * 
+     * @deprecated use {@link #setEngValue(Value)} (for consistency with the getter)
+     */
+    public void setEngineeringValue(Value ev) {
+        this.engValue = ev;
+    }
+
+    public boolean hasGenerationTime() {
+        return generationTime != TimeEncoding.INVALID_INSTANT;
+    }
+}
+```
+
+### `SInt32Value.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SInt32Value.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class SInt32Value extends Value {
+    final int v;
+
+    public SInt32Value(int v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.SINT32;
+    }
+
+    @Override
+    public int getSint32Value() {
+        return v;
+    }
+
+    @Override
+    public long toLong() {
+        return v;
+    }
+
+    @Override
+    public double toDouble() {
+        return v;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(v);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof SInt32Value) {
+            return v == ((SInt32Value) obj).v;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toString(v);
+    }
+}
+```
+
+### `SInt64Value.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SInt64Value.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class SInt64Value extends Value {
+    final long v;
+
+    public SInt64Value(long v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.SINT64;
+    }
+
+    @Override
+    public long getSint64Value() {
+        return v;
+    }
+
+    @Override
+    public long toLong() {
+        return v;
+    }
+
+    @Override
+    public double toDouble() {
+        return v;
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(v);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof SInt64Value) {
+            return v == ((SInt64Value) obj).v;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toString(v);
+    }
+}
+```
+
+### `SoftwareParameterManager.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SoftwareParameterManager.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.yamcs.mdb.DataTypeProcessor;
+import org.yamcs.utils.AggregateUtil;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+
+/**
+ * Handles parameters that can be set from the clients.
+ * 
+ */
+public interface SoftwareParameterManager {
+
+    /**
+     * Called (usually via the external Yamcs API) to update a list of parameters.
+     * <p>
+     * Note that the value can be of type {@link PartialParameterValue} meaning that it refers to an element of an
+     * array.
+     * 
+     */
+    void updateParameters(List<ParameterValue> pvals);
+
+    /**
+     * Called (usually via the external Yamcs API) to pdate the engineering value of a parameter.
+     * 
+     */
+    default void updateParameter(Parameter p, Value engValue) {
+        ParameterValue pv = new ParameterValue(p);
+        pv.setEngValue(engValue);
+
+        List<ParameterValue> pvlist = Arrays.asList(pv);
+        updateParameters(pvlist);
+    }
+
+    /**
+     * Transforms a parameter value into its target type
+     * <p>
+     * Also assembles a full aggregate value out of a number of partial members, taking the rest from the current value
+     * in the cache
+     * <p>
+     * Throws an {@link IllegalArgumentException} if it receives a partial aggregate value and does not find a full
+     * value in the cache
+     */
+    public static ParameterValue transformValue(LastValueCache lvc, ParameterValue pv) {
+        Parameter p = pv.getParameter();
+        ParameterType ptype = p.getParameterType();
+        if (ptype == null) {
+            return pv;
+        }
+
+        ParameterValue r;
+
+        if (pv instanceof PartialParameterValue) {
+            ParameterValue oldValue = lvc.getValue(p);
+            if (oldValue == null) {
+                throw new IllegalArgumentException("Received request to partially update " + p.getQualifiedName()
+                        + " but has no value in the cache");
+            }
+            r = new ParameterValue(oldValue);
+            AggregateUtil.updateMember(r, (PartialParameterValue) pv);
+        } else {
+            Value v = DataTypeProcessor.convertEngValueForType(ptype, pv.getEngValue());
+            r = new ParameterValue(pv);
+            r.setEngValue(v);
+        }
+
+        return r;
+    }
+
+}
+```
+
+### `StringValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/StringValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class StringValue extends Value {
+   final  String v;
+    
+    public StringValue(String v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.STRING;
+    }
+    
+    @Override
+    public String getStringValue() {
+        return v;
+    }
+    
+    @Override
+    public int hashCode() {
+        return v.hashCode();
+    }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof StringValue) {
+            return v.equals(((StringValue)obj).v);
+        }
+        return false;
+    }
+    
+    @Override
+    public String toString() {
+        return v;
+    }
+    
+}
+```
+
+### `SubscriptionArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SubscriptionArray.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+import java.util.concurrent.locks.ReentrantLock;
+
+/**
+ * set of subscription ids - represented as sorted array
+ * 
+ * no duplicate allowed
+ * 
+ * copy on write
+ * @author nm
+ *
+ */
+public class SubscriptionArray {
+    private volatile int[] array = new int[0];
+    private final ReentrantLock lock = new ReentrantLock();
+
+    /**
+     * add subscription id to the array
+     * If it's already in the array, the operation has no effect
+     * @param subscriptionId
+     */
+    public void add(int subscriptionId) {
+	lock.lock();
+	try {
+	    int[] a = array;
+	    int pos = Arrays.binarySearch(a, subscriptionId);
+	    if(pos>=0) {
+	        return;
+	    }
+	    pos = -pos-1;
+	    int[] b = new int[a.length+1];
+	    System.arraycopy(a, 0, b, 0, pos);
+	    b[pos] = subscriptionId;
+	    System.arraycopy(a, pos, b, pos+1, a.length-pos);
+	    array = b;
+	} finally {
+	    lock.unlock();
+	}
+    }
+    /**
+     * Remove the subscriptionId from the array 
+     *  return true if it has been removed or false if it was not there
+     * 
+     * @param subscriptionId
+     * @return
+     */
+    public boolean remove(int subscriptionId) {
+	lock.lock();
+	try {
+	    int[] a = array;
+	    int pos = Arrays.binarySearch(a, subscriptionId);
+	    if(pos<0) return false;
+
+	    int[] b = new int[a.length-1];
+	    System.arraycopy(a, 0, b, 0, pos);
+	    System.arraycopy(a, pos+1, b, pos, a.length-pos-1);
+	    array = b;
+	    return true;
+	} finally {
+	    lock.unlock();
+	}
+    }
+
+    public boolean isEmpty() {	
+	return array.length==0;
+    }
+
+    public int[] getArray() {
+	return array;
+    }
+    public int size() {
+	return array.length;
+    }
+    
+    public String toString() {
+	return Arrays.toString(array);
+    }
+}
+```
+
+### `SystemParametersCollector.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersCollector.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.utils.DeprecationInfo;
+
+@Deprecated
+@DeprecationInfo(info = "The SystemParametersCollector has been renamed to SystemParametersService. Please update your configuration.")
+public class SystemParametersCollector extends SystemParametersService {
+
+}
+```
+
+### `SystemParametersProducer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersProducer.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Collection;
+
+/**
+ * Interface implemented by classes that want to provide system parameters.
+ * These are collected regularly by the {@link SystemParametersService}
+ * 
+ * @author nm
+ *
+ */
+public interface SystemParametersProducer {
+
+    /**
+     * return the next bunch of parameter values.
+     * <p>
+     * The gentime is the mission time when the parameter collection started. The returning parameters can use this time
+     * to allow all parameters in one collection interval to be timestamped with the same time.
+     */
+    Collection<ParameterValue> getSystemParameters(long gentime);
+
+    /**
+     * How often this producer should be called. This is a multiplier for the base frequency which is 1 second.
+     * <p>
+     * For example a value of 3 means call each 3 seconds)
+     * 
+     * @return
+     */
+    default int getFrequency() {
+        return 1;
+    }
+
+}
+```
+
+### `SystemParametersService.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/SystemParametersService.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import static org.yamcs.xtce.NameDescription.qualifiedName;
+import static org.yamcs.mdb.Mdb.YAMCS_SPACESYSTEM_NAME;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.StandardTupleDefinitions;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.protobuf.Yamcs;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.ArrayParameterType;
+import org.yamcs.xtce.EnumeratedParameterType;
+import org.yamcs.xtce.Member;
+import org.yamcs.xtce.NameDescription;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.xtce.SystemParameter;
+import org.yamcs.xtce.UnitType;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+import org.yamcs.yarch.rocksdb.RdbStorageEngine;
+
+import com.google.common.io.Files;
+
+/**
+ * Collects each second system processed parameters from whomever registers and sends them on the sys_var stream
+ * <p>
+ * Starting with Yamcs 5.5.0, all system parameters have types defined in the MDB. For the basic types (corresponding to
+ * scalar values), this class will provide some types (e.g. uint65, float32, etc)
+ * <p>
+ * For aggregate, the caller can use the {@link #createSystemParameter(String, AggregateParameterType, String)} to make
+ * the parameter and also add the corresponding type to the MDB.
+ *
+ */
+public class SystemParametersService extends AbstractYamcsService implements Runnable {
+
+    static Map<String, SystemParametersService> instances = new HashMap<>();
+    static long frequencyMillisec = 1000;
+    List<SysVarProducer> providers = new CopyOnWriteArrayList<>();
+
+    static final String STREAM_NAME = "sys_param";
+
+    Stream stream;
+
+    int seqCount = 0;
+
+    // /yamcs/<server_id>
+    private String namespace;
+    private String serverId;
+    Mdb mdb;
+
+    TimeService timeService;
+    ScheduledFuture<?> collectionFuture;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("provideJvmVariables", OptionType.BOOLEAN).withDefault(false)
+                .withDeprecationMessage("This option is obsolete, please add 'jvm' to the list of producers");
+        spec.addOption("provideFsVariables", OptionType.BOOLEAN).withDefault(false)
+                .withDeprecationMessage("This option is obsolete, please add 'fs' to the list of producers");
+        spec.addOption("producers", OptionType.LIST)
+                .withRequired(false)
+                .withElementType(OptionType.STRING)
+                .withDescription("Current providers are: jvm, fs and diskstats. Diskstats only works on Linux");
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        mdb = YamcsServer.getServer().getInstance(yamcsInstance).getMdb();
+
+        YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+        stream = ydb.getStream(STREAM_NAME);
+        if (stream == null) {
+            throw new ConfigurationException("Stream '" + STREAM_NAME + "' does not exist");
+        }
+
+        serverId = YamcsServer.getServer().getServerId();
+        namespace = Mdb.YAMCS_SPACESYSTEM_NAME + NameDescription.PATH_SEPARATOR + serverId;
+
+        List<String> producers = config.containsKey("producers") ? producers = config.getList("producers")
+                : Collections.emptyList();
+
+        log.debug("Using {} as serverId, and {} as namespace for system parameters", serverId, namespace);
+        if (config.getBoolean("provideJvmVariables") || producers.contains("jvm")) {
+            providers.add(new SysVarProducer(new JvmParameterProducer(this)));
+        }
+
+        if (config.getBoolean("provideFsVariables") || producers.contains("fs")) {
+            try {
+                providers.add(new SysVarProducer(new FileStoreParameterProducer(this)));
+            } catch (IOException e) {
+                throw new InitException(e);
+            }
+        }
+
+        if (producers.contains("diskstats")) {
+            try {
+                if (DiskstatsParameterProducer.hasDisksStats()) {
+                    providers.add(new SysVarProducer(new DiskstatsParameterProducer(this)));
+                } else {
+                    log.info("No /proc/diskstats present, cannot produce diskstats parameters (only works on Linux)");
+                }
+            } catch (IOException e) {
+                throw new InitException(e);
+            }
+        }
+
+        if (producers.contains("rocksdb")) {
+            var producer = RdbStorageEngine.getInstance().newRdbParameterProducer(yamcsInstance, this);
+            providers.add(new SysVarProducer(producer));
+        }
+
+        synchronized (instances) {
+            instances.put(yamcsInstance, this);
+        }
+    }
+
+    public static SystemParametersService getInstance(String instance) {
+        synchronized (instances) {
+            return instances.get(instance);
+        }
+    }
+
+    @Override
+    public void doStart() {
+        YamcsServer server = YamcsServer.getServer();
+        timeService = server.getInstance(yamcsInstance).getTimeService();
+        ScheduledThreadPoolExecutor timer = server.getThreadPoolExecutor();
+        collectionFuture = timer.scheduleAtFixedRate(this, 1000L, frequencyMillisec, TimeUnit.MILLISECONDS);
+        notifyStarted();
+    }
+
+    @Override
+    public void doStop() {
+        collectionFuture.cancel(true);
+        synchronized (instances) {
+            instances.remove(yamcsInstance);
+        }
+        try {
+            collectionFuture.get();
+            notifyStopped();
+        } catch (CancellationException e) {
+            notifyStopped();
+        } catch (Exception e) {
+            notifyFailed(e);
+        }
+    }
+
+    /**
+     * Run from the timer, collect all parameters and send them on the stream
+     */
+    @Override
+    public void run() {
+        long gentime = timeService.getMissionTime();
+
+        List<ParameterValue> params = new ArrayList<>();
+
+        for (SysVarProducer svp : providers) {
+            svp.count++;
+            if (svp.count >= svp.freq) {
+                svp.count = 0;
+                try {
+                    Collection<ParameterValue> pvc = svp.producer.getSystemParameters(gentime);
+                    params.addAll(pvc);
+                } catch (Exception e) {
+                    log.warn("Error getting parameters from provider {}", svp.producer, e);
+                }
+            }
+        }
+
+        if (params.isEmpty()) {
+            return;
+        }
+        TupleDefinition tdef = StandardTupleDefinitions.PARAMETER.copy();
+        List<Object> cols = new ArrayList<>(4 + params.size());
+        cols.add(gentime);
+        cols.add(namespace);
+        cols.add(seqCount);
+        cols.add(gentime);
+        for (ParameterValue pv : params) {
+            if (pv == null) {
+                log.error("Null parameter value encountered, skipping");
+                continue;
+            }
+            String name = pv.getParameterQualifiedName();
+            int idx = tdef.getColumnIndex(name);
+            if (idx != -1) {
+                log.warn("duplicate value for {}\nfirst: {}\n second: {}", name, cols.get(idx), pv);
+                continue;
+            }
+            tdef.addColumn(name, DataType.PARAMETER_VALUE);
+            cols.add(pv);
+        }
+        Tuple t = new Tuple(tdef, cols);
+        stream.emitTuple(t);
+    }
+
+    /**
+     * Register a parameter producer to be called each time the parameters are collected
+     */
+    public void registerProducer(SystemParametersProducer p) {
+        log.debug("Registering system variables producer {}", p);
+        if (providers.stream().anyMatch(spv -> spv.producer == p)) {
+            throw new IllegalStateException("Producer already registered");
+        }
+        providers.add(new SysVarProducer(p));
+    }
+
+    /**
+     * Unregister producer - from now on it will not be invoked. Note that the collector collects parameters into a
+     * different thread taking all producer in turns, and there might be one collection already started when this method
+     * is called.
+     *
+     */
+    public void unregisterProducer(SystemParametersProducer p) {
+        log.debug("Unregistering system variables producer {}", p);
+        providers.stream().filter(spv -> spv.producer == p).forEach(svp -> providers.remove(svp));
+    }
+
+    /**
+     * this is the namespace all system parameters should be in
+     *
+     * @return the namespace to be used by the system parameters
+     */
+    public String getNamespace() {
+        return namespace;
+    }
+
+    /**
+     * Creates a system parameter for an aggregate type.
+     * <p>
+     * If the type has no qualified name, one is set and is added to the MDB. Otherwise it is assumed it already comes
+     * from he MDB and it is not added.
+     * 
+     * @param relativeName
+     * @param type
+     * @return
+     */
+    public SystemParameter createSystemParameter(String relativeName, AggregateParameterType type, String description) {
+        relativeName = Files.simplifyPath(relativeName);
+        if (relativeName.startsWith("/")) {
+            throw new IllegalArgumentException("The name has to be relative");
+        }
+
+        if (type.getQualifiedName() == null) {
+            ((NameDescription) type).setQualifiedName(qualifiedName(namespace, type.getName()));
+            type = (AggregateParameterType) mdb.addSystemParameterType(type);
+        }
+
+        return mdb.createSystemParameter(qualifiedName(namespace, relativeName), type, description);
+    }
+
+    /**
+     * Create a system parameter for a basic value type. The created parameter will have a shared basic parameter type.
+     * <p>
+     * If the type is aggregate, the method {@link #createSystemParameter(String, AggregateParameterType, String)}
+     * should be used after making an appropriate {@link AggregateParameterType}
+     * 
+     * @param relativeName
+     *            - the relative name of the parameter, can contain multiple subsystems but cannot start with "/"
+     * 
+     * @param basicType
+     *            - any type except aggregate and array
+     * @return
+     */
+    public SystemParameter createSystemParameter(String relativeName, Yamcs.Value.Type basicType, UnitType unit,
+            String description) {
+        relativeName = Files.simplifyPath(relativeName);
+        if (relativeName.startsWith("/")) {
+            throw new IllegalArgumentException("The name has to be relative");
+        }
+        return createSystemParameter(mdb, qualifiedName(namespace, relativeName), basicType, unit, description);
+    }
+
+    public SystemParameter createSystemParameter(String relativeName, Yamcs.Value.Type basicType, String description) {
+        return createSystemParameter(relativeName, basicType, null, description);
+    }
+
+    public static SystemParameter createSystemParameter(Mdb mdb, String fqn, Value engValue) {
+        return createSystemParameter(mdb, fqn, engValue, null);
+    }
+
+    public static SystemParameter createSystemParameter(Mdb mdb, String fqn, Value engValue, UnitType unit) {
+        String name = NameDescription.getName(fqn);
+        ParameterType ptype = createSystemParameterType(mdb, name, engValue, unit);
+        return mdb.createSystemParameter(fqn, ptype, null);
+    }
+
+    public static SystemParameter createSystemParameter(Mdb mdb, String fqn, Yamcs.Value.Type basicType,
+            UnitType unit, String description) {
+        ParameterType ptype = getBasicType(mdb, basicType, unit);
+        return mdb.createSystemParameter(fqn, ptype, description);
+    }
+
+    public static SystemParameter createSystemParameter(Mdb mdb, String fqn, Yamcs.Value.Type basicType,
+            String description) {
+        return createSystemParameter(mdb, fqn, basicType, null, description);
+    }
+
+    public EnumeratedParameterType createEnumeratedParameterType(Class<? extends Enum<?>> enumClass) {
+        String typeName = enumClass.getCanonicalName().replace(".", "_");
+        EnumeratedParameterType type = (EnumeratedParameterType) mdb.getParameterType(YAMCS_SPACESYSTEM_NAME, typeName);
+        if (type == null) {
+            EnumeratedParameterType.Builder etypeb = new EnumeratedParameterType.Builder();
+            etypeb.setName(typeName);
+            etypeb.setQualifiedName(qualifiedName(YAMCS_SPACESYSTEM_NAME, typeName));
+            for (Enum<?> x : enumClass.getEnumConstants()) {
+                etypeb.addEnumerationValue(x.ordinal(), x.name());
+            }
+            type = (EnumeratedParameterType) mdb.addSystemParameterType(etypeb.build());
+        }
+        return type;
+    }
+
+    /**
+     * Creates an enumerated system parameter by deducing the possible enumeration states from the java enum.
+     */
+    public SystemParameter createEnumeratedSystemParameter(String relativeName, Class<? extends Enum<?>> enumClass,
+            String description) {
+        EnumeratedParameterType type = createEnumeratedParameterType(enumClass);
+        return mdb.createSystemParameter(qualifiedName(namespace, relativeName), type, description);
+    }
+
+    public static ParameterType createSystemParameterType(Mdb mdb, String name, Value v, UnitType unit) {
+        if (v instanceof AggregateValue) {
+            AggregateValue aggrv = (AggregateValue) v;
+            AggregateParameterType.Builder aggrType = new AggregateParameterType.Builder();
+            aggrType.setName(name).setQualifiedName(qualifiedName(YAMCS_SPACESYSTEM_NAME, name));
+
+            for (int i = 0; i < aggrv.numMembers(); i++) {
+                String mname = aggrv.getMemberName(i);
+                Value mvalue = aggrv.getMemberValue(i);
+                Member m = new Member(mname);
+                ParameterType mtype = createSystemParameterType(mdb, name + "." + mname, mvalue, null);
+                m.setDataType(mtype);
+                aggrType.addMember(m);
+            }
+            return mdb.addSystemParameterType(aggrType.build());
+        } else if (v instanceof ArrayValue) {
+            ArrayValue av = (ArrayValue) v;
+            if (av.flatLength() == 0) {
+                throw new IllegalArgumentException("Cannot create a type for an empty array "
+                        + "because the elemnt type cannot be determined");
+            }
+            ParameterType elementType = createSystemParameterType(mdb, name + "[]", av.getElementValue(0), null);
+            ArrayParameterType arrayType = new ArrayParameterType.Builder()
+                    .setName(name)
+                    .setQualifiedName(qualifiedName(YAMCS_SPACESYSTEM_NAME, name))
+                    .setElementType(elementType)
+                    .build();
+            return mdb.addSystemParameterType(arrayType);
+        } else {
+            return getBasicType(mdb, v.getType(), unit);
+        }
+    }
+
+    public ParameterType getBasicType(Yamcs.Value.Type type) {
+        return getBasicType(mdb, type, null);
+    }
+
+    /**
+     * Create (if not already existing) a basic parameter type in the MDB and return it.
+     * <p>
+     * Basic type is everything except aggregate and arrays
+     * 
+     * @param type
+     * @return
+     */
+    public ParameterType getBasicType(Yamcs.Value.Type type, UnitType unit) {
+        return getBasicType(mdb, type, unit);
+    }
+
+    static ParameterType getBasicType(Mdb mdb, Yamcs.Value.Type type, UnitType unit) {
+        try {
+            return mdb.getOrCreateBasicParameterType(Mdb.YAMCS_SPACESYSTEM_NAME, type, unit);
+        } catch (IOException e) {
+            // this normally does not happen becasuse the /yamcs spacesystem is not actually written to disk
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    public static ParameterValue getNewPv(Parameter parameter, long time) {
+        ParameterValue pv = new ParameterValue(parameter);
+        pv.setAcquisitionTime(time);
+        pv.setGenerationTime(time);
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, String v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getStringValue(v));
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, double v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getDoubleValue(v));
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, float v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getFloatValue(v));
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, boolean v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getBooleanValue(v));
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, long v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getSint64Value(v));
+        return pv;
+    }
+
+    public static ParameterValue getUnsignedIntPV(Parameter parameter, long time, int v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getUint64Value(v));
+        return pv;
+    }
+
+    public static <T extends Enum<T>> ParameterValue getPV(Parameter parameter, long time, T v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(ValueUtility.getEnumeratedValue(v.ordinal(), v.name()));
+        return pv;
+    }
+
+    public static ParameterValue getPV(Parameter parameter, long time, Value v) {
+        ParameterValue pv = getNewPv(parameter, time);
+        pv.setEngValue(v);
+        return pv;
+    }
+
+    // the methods below are deprecated because they create parameter values without types
+    @Deprecated
+    public static ParameterValue getNewPv(String fqn, long time) {
+        ParameterValue pv = new ParameterValue(fqn);
+        pv.setAcquisitionTime(time);
+        pv.setGenerationTime(time);
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, String v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getStringValue(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, double v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getDoubleValue(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, float v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getFloatValue(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, boolean v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getBooleanValue(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, long v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getSint64Value(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getUnsignedIntPV(String fqn, long time, int v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(ValueUtility.getUint64Value(v));
+        return pv;
+    }
+
+    @Deprecated
+    public static ParameterValue getPV(String fqn, long time, Value v) {
+        ParameterValue pv = getNewPv(fqn, time);
+        pv.setEngValue(v);
+        return pv;
+    }
+
+    public Mdb getMdb() {
+        return mdb;
+    }
+
+    class SysVarProducer {
+        SystemParametersProducer producer;
+        int freq;
+        int count;
+
+        SysVarProducer(SystemParametersProducer producer) {
+            this.producer = producer;
+            this.freq = producer.getFrequency();
+            this.count = this.freq;
+        }
+
+    }
+
+}
+```
+
+### `TimestampValue.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/TimestampValue.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Objects;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.TimeEncoding;
+
+/**
+ * Picosecond resolution timestamp stored as (millis, picos)
+ */
+public class TimestampValue extends Value {
+    final long millis;
+    final int picos;
+
+    public TimestampValue(long millis) {
+        this(millis, 0);
+    }
+
+    public TimestampValue(long millis, int picos) {
+        this.millis = millis;
+        this.picos = picos;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.TIMESTAMP;
+    }
+
+    @Override
+    public long getTimestampValue() {
+        return millis;
+    }
+
+    public long millis() {
+        return millis;
+    }
+
+    public int picos() {
+        return picos;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(millis, picos);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        TimestampValue other = (TimestampValue) obj;
+        return millis == other.millis && picos == other.picos;
+    }
+
+    @Override
+    public String toString() {
+        return TimeEncoding.toString(millis);
+    }
+}
+```
+
+### `UInt32Value.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/UInt32Value.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class UInt32Value extends Value {
+    final int v;
+
+    public UInt32Value(int v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.UINT32;
+    }
+
+    @Override
+    public int getUint32Value() {
+        return v;
+    }
+
+    @Override
+    public long toLong() {
+        return v & 0xFFFFFFFFL;
+    }
+
+    @Override
+    public double toDouble() {
+        return toLong();
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(v);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof UInt32Value) {
+            return v == ((UInt32Value) obj).v;
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return Integer.toUnsignedString(v);
+    }
+}
+```
+
+### `UInt64Value.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/UInt64Value.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+
+public class UInt64Value extends Value {
+    final long v;
+
+    public UInt64Value(long v) {
+        this.v = v;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.UINT64;
+    }
+
+    @Override
+    public long getUint64Value() {
+        return v;
+    }
+
+    @Override
+    public long toLong() {
+        if (v < 0) {
+            return v;
+        } else {
+            throw new UnsupportedOperationException(
+                    "Cannot use convert value " + Long.toUnsignedString(v) + " to signed long");
+        }
+    }
+
+    @Override
+    public double toDouble() {
+        return unsignedAsDouble(v);
+    }
+
+    @Override
+    public int hashCode() {
+        return Long.hashCode(v);
+    }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof UInt64Value) {
+            return v == ((UInt64Value) obj).v;
+        }
+        return false;
+    }
+
+    static public double unsignedAsDouble(long x) {
+        double d = (double) x;
+        if (d < 0) {
+            d += 18446744073709551616.0;
+        }
+        return d;
+    }
+
+    @Override
+    public String toString() {
+        return Long.toUnsignedString(v);
+    }
+}
+```
+
+### `Value.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/Value.java`
+
+
+```java
+package org.yamcs.parameter;
+
+/**
+ * Union like class
+ * 
+ */
+public abstract class Value {
+    public abstract org.yamcs.protobuf.Yamcs.Value.Type getType();
+
+    public int getUint32Value() {
+        throw cantUseException("getUint32Value()");
+    }
+
+    public int getSint32Value() {
+        throw cantUseException("getSint32Value()");
+    }
+
+    public long getUint64Value() {
+        throw cantUseException("getUint64Value()");
+    }
+
+    public long getSint64Value() {
+        throw cantUseException("getSint64Value()");
+    }
+
+    public byte[] getBinaryValue() {
+        throw cantUseException("getBinaryValue()");
+    }
+
+    public String getStringValue() {
+        throw cantUseException("getStringValue()");
+    }
+
+    public float getFloatValue() {
+        throw cantUseException("getFloatValue()");
+    }
+
+    public double getDoubleValue() {
+        throw cantUseException("getDoubleValue()");
+    }
+
+    public boolean getBooleanValue() {
+        throw cantUseException("getBooleanValue()");
+    }
+
+    public long getTimestampValue() {
+        throw cantUseException("getTimestampValue()");
+    }
+
+    /**
+     * 
+     * @return the value as signed long
+     * @throws UnsupportedOperationException
+     *             if the value cannot be converted - for example if a double value is encountered or an unsigned 64
+     *             bits integer greater than {@link Long#MAX_VALUE}
+     */
+    public long toLong() {
+        throw cantUseException("toLong()");
+    }
+
+    /**
+     * return the value as a double. Precision will be lost when converting large integer numbers.
+     * 
+     * @throws UnsupportedOperationException
+     *             for non numeric values.
+     * 
+     */
+    public double toDouble() {
+        throw cantUseException("toDouble()");
+    }
+
+    private UnsupportedOperationException cantUseException(String method) {
+        return new UnsupportedOperationException("Cannot use " + method + " for " + getType() + " values");
+    }
+}
+```
+
+### `ValueArray.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/parameter/ValueArray.java`
+
+
+```java
+package org.yamcs.parameter;
+
+import java.util.Arrays;
+import java.util.BitSet;
+
+import org.yamcs.protobuf.Yamcs.Value.Type;
+import org.yamcs.utils.ValueUtility;
+
+/**
+ * Stores parameters of the same type as array
+ * 
+ * For primitive types, it uses much less memory than having an Value[]
+ * @author nm
+ *
+ */
+public class ValueArray {
+    static final int INITIAL_CAPACITY = 16;
+    
+    final Type type;
+    Object obj;
+    int size;
+
+    public ValueArray(Type type, int size) {
+        this.type = type;
+        obj = newObj(type, size);
+        this.size = size;
+    }
+
+    public ValueArray(Type type) {
+        this(type, INITIAL_CAPACITY);
+        
+    }
+   
+    public ValueArray(Type type, int[] r) {
+        this.type = type;
+        this.obj = r;
+        this.size = r.length;
+    }
+
+    public ValueArray(Type type, long[] r) {
+        this.type = type;
+        this.obj = r;
+        this.size = r.length;
+    }
+
+    public ValueArray(double[] r) {
+        this.type = Type.DOUBLE;
+        this.obj = r;
+        this.size = r.length;
+    }
+    
+    public ValueArray(float[] r) {
+        this.type = Type.FLOAT;
+        this.obj = r;
+        this.size = r.length;
+    }
+
+    public ValueArray(byte[][] r) {
+        this.type = Type.BINARY;
+        this.obj = r;
+        this.size = r.length;
+    }
+
+
+    public ValueArray(Type type, Object[] r) {
+        this.type = type;
+        this.obj = r;
+        this.size = r.length;
+    }
+
+    public ValueArray(BitSet bitset, int size) {
+        this.type = Type.BOOLEAN;
+        this.obj = bitset;
+        this.size = size;
+    }
+
+    public ValueArray(String[] r) {
+        this(Type.STRING, Arrays.copyOf(r, r.length, Object[].class));
+    }
+
+    public void setValue(int idx, boolean b) {
+        if(type!=Type.BOOLEAN) {
+            throw new IllegalArgumentException("This array is not of boolean type but "+type);
+        }
+        ((BitSet) obj).set(idx, b);
+    }
+
+    public void setValue(int idx, Value v) {
+        if(this.type!=v.getType()) {
+            throw new IllegalArgumentException("Expected type "+this.type+" got: "+v.getType());
+        }
+        
+        switch (type) {
+        case DOUBLE:
+            ((double[]) obj)[idx] = v.getDoubleValue();
+            break;
+        case FLOAT:
+            ((float[]) obj)[idx] = v.getFloatValue();
+            break;
+        case SINT32:
+            ((int[]) obj)[idx] = v.getSint32Value();
+            break;
+        case UINT32:
+            ((int[]) obj)[idx] = v.getUint32Value();
+            break;
+        case SINT64:
+            ((long[]) obj)[idx] = v.getSint64Value();
+            break;
+        case UINT64:
+            ((long[]) obj)[idx] = v.getUint64Value();
+            break;
+        case TIMESTAMP:
+            ((long[]) obj)[idx] = v.getTimestampValue();
+            break;
+        case STRING:
+        case ENUMERATED:
+            ((Object[]) obj)[idx] = v.getStringValue();
+            break;
+        case BINARY:
+            ((Object[]) obj)[idx] = v.getBinaryValue();
+            break;
+        case BOOLEAN:
+            ((BitSet) obj).set(idx, v.getBooleanValue());
+            break;
+        default:
+            throw new IllegalStateException("Unknown type " + type);
+        }
+    }
+    
+    
+    public Value getValue(int idx) {
+        switch (type) {
+        case BOOLEAN:
+            return ValueUtility.getBooleanValue(((BitSet) obj).get(idx));
+        case DOUBLE:
+            return ValueUtility.getDoubleValue(((double[]) obj)[idx]);
+        case FLOAT:
+            return ValueUtility.getFloatValue(((float[]) obj)[idx]);
+        case SINT32:
+            return ValueUtility.getSint32Value(((int[]) obj)[idx]);
+        case UINT32:
+            return ValueUtility.getUint32Value(((int[]) obj)[idx]);
+        case SINT64:
+            return ValueUtility.getSint64Value(((long[]) obj)[idx]);
+        case UINT64:
+            return ValueUtility.getUint64Value(((long[]) obj)[idx]);
+        case TIMESTAMP:
+            return ValueUtility.getTimestampValue(((long[]) obj)[idx]);
+        case STRING:
+        case ENUMERATED:
+            return ValueUtility.getStringValue((String)((Object[]) obj)[idx]);
+        case BINARY:
+            return ValueUtility.getBinaryValue((byte[]) (((Object[]) obj)[idx]));
+        default:
+            throw new IllegalStateException("Unknown type " + type);
+        }
+    }
+    
+    
+    private static Object newObj(Type type, int size) {
+        switch (type) {
+        case BOOLEAN:
+            return new BitSet(size);
+        case DOUBLE:
+            return new double[size];
+        case FLOAT:
+            return new float[size];
+        case SINT32:
+        case UINT32:
+            return new int[size];
+        case SINT64:
+        case UINT64:
+        case TIMESTAMP:
+            return new long[size];
+        case STRING:
+        case ENUMERATED:
+            return new Object[size];
+        case BINARY:
+            return new Object[size];
+        default:
+            throw new IllegalStateException("Unknown type " + type);
+        }
+
+    }
+
+    public Type getType() {
+        return type;
+    }
+    /**
+     * get the array as an int[].
+     * Throws a {@link ClassCastException} if the array's type is not one of {@link Type#UINT32} or {@link Type#SINT32}
+     * @return
+     */
+    public int[] getIntArray() {
+        return (int[])obj;
+    }
+    /**
+     * get the array as an long[].
+     * Throws a {@link ClassCastException} if the array's type is not one of {@link Type#UINT64}, {@link Type#SINT64} or {@link Type#TIMESTAMP}
+     * @return
+     */
+    public long[] getLongArray() {
+        return (long[])obj;
+    }
+
+    /**
+     * get the array as an float[].
+     * Throws a {@link ClassCastException} if the array is not of {@link Type#FLOAT} type
+     * @return
+     */
+    public float[] getFloatArray() {
+        return (float[])obj;
+    }
+
+    /**
+     * get the array as an double[].
+     * Throws a {@link ClassCastException} if the array is not of {@link Type#DOUBLE} type
+     * @return
+     */
+    public double[] getDoubleArray() {
+        return (double[])obj;
+    }
+    
+    public int size() {
+        return size;
+    }
+    
+    /**
+     * merges the value arrays srcValueArray into a new array based on idx.
+     * 
+     * The returned array has the size of the sum of the sizes of srcValueArray arrays.
+     * 
+     * The src[] array has the length of the returned array and for each element i of the returned array src[i] says which of the inputValueArray is used.   
+     * 
+     * The types of the inputValueArray arrays have to be the same and that will also be the type of the returned array.
+     * 
+     * @param src - an array indicating which from the srcValueArray is the source of the data for each index
+     * @param srcValueArray the source elements
+     * @return a new array representing the merge of the input arrays
+     */
+    static public ValueArray merge(int[] src, ValueArray...srcValueArray) {
+        
+        ValueArray va0 = srcValueArray[0];
+        Type type = va0.getType();
+        int length = va0.size();
+        for(int i=1; i<srcValueArray.length; i++) {
+            if(srcValueArray[i].getType()!=type) {
+                throw new IllegalArgumentException("The input arrays have to be all of the same type");
+            }
+            length+=srcValueArray[i].size();
+        }
+        if(length!=src.length) {
+            throw new IllegalArgumentException("The length of n has to be the sum of the sizes of the input arrays");
+        }
+
+        
+        if(va0.obj instanceof int[]) {
+            return new ValueArray(type, mergeIntArrays(src, srcValueArray));
+        } else if(va0.obj instanceof long[]) {
+            return new ValueArray(type, mergeLongArrays(src, srcValueArray));
+        } else if(va0.obj instanceof double[]) {
+            return new ValueArray(mergeDoubleArrays(src, srcValueArray));
+        } else if(va0.obj instanceof float[]) {
+            return new ValueArray(mergeFloatArrays(src, srcValueArray));
+        } else if(va0.obj instanceof Object[]) {
+            return new ValueArray(type, mergeObjectArrays(src, srcValueArray));
+        } else if(va0.obj instanceof BitSet) {
+            return new ValueArray(mergeBitsets(src, srcValueArray), length);
+        }
+        
+        return null;
+    }
+    
+ 
+
+    static private int[] mergeIntArrays(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        int [] r = new int[n.length];
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            r[i] = ((int[])inputValueArray[src].obj)[idx[src]];
+            idx[src]++;
+        }
+        return r;
+    }
+    
+    static private long[] mergeLongArrays(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        long [] r = new long[n.length];
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            r[i] = ((long[])inputValueArray[src].obj)[idx[src]];
+            idx[src]++;
+        }
+        return r;
+    }
+    
+    static private double[] mergeDoubleArrays(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        double [] r = new double[n.length];
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            r[i] = ((double[])inputValueArray[src].obj)[idx[src]];
+            idx[src]++;
+        }
+        return r;
+    }
+    
+    
+    static private float[] mergeFloatArrays(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        float [] r = new float[n.length];
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            r[i] = ((float[])inputValueArray[src].obj)[idx[src]];
+            idx[src]++;
+        }
+        return r;
+    }
+    
+    static private Object[] mergeObjectArrays(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        Object [] r = new Object[n.length];
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            r[i] = ((Object[])inputValueArray[src].obj)[idx[src]];
+            idx[src]++;
+        }
+        return r;
+    }
+    
+    static private BitSet mergeBitsets(int[] n, ValueArray...inputValueArray) {
+        int[] idx = new int[inputValueArray.length];
+        BitSet r = new BitSet(n.length);
+        for(int i= 0; i<n.length; i++) {
+            int src = n[i];
+            boolean b =((BitSet)inputValueArray[src].obj).get(idx[src]); 
+            r.set(i, b);
+            idx[src]++;
+        }
+        return r;
+    }
+}
+```

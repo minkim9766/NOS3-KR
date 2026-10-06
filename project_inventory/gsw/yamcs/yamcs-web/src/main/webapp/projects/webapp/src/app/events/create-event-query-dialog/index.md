@@ -3,16 +3,113 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `create-event-query-dialog.component.html`
 
-file--create-event-query-dialog.component.html
-file--create-event-query-dialog.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/create-event-query-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>Save query</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    <ya-field label="Name">
+      <input formControlName="name" type="text" />
+    </ya-field>
+    <ya-field label="Query">
+      <ya-filter-textarea formControlName="filter" />
+    </ya-field>
+    <ya-field label="Severity">
+      <ya-select formControlName="severity">
+        <ya-option id="INFO" label="Info level" />
+        <ya-option id="WATCH" label="Watch level" />
+        <ya-option id="WARNING" label="Warning level" />
+        <ya-option id="DISTRESS" label="Distress level" />
+        <ya-option id="CRITICAL" label="Critical level" />
+        <ya-option id="SEVERE" label="Severe level" />
+      </ya-select>
+    </ya-field>
+    <ya-field label="Source">
+      <ya-multi-select
+        formControlName="source"
+        [options]="data.sourceOptions"
+        emptyOption="Any source" />
+    </ya-field>
+    <ya-field label="Share with other users">
+      <mat-slide-toggle formControlName="shared" />
+    </ya-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="save()" [disabled]="!form.valid">SAVE</ya-button>
+</mat-dialog-actions>
 ```
 
-## 항목
+### `create-event-query-dialog.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/create-event-query-dialog.component.html`](file--create-event-query-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/create-event-query-dialog.component.ts`](file--create-event-query-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/events/create-event-query-dialog/create-event-query-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+  EventSeverity,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+const defaultSeverity: EventSeverity = 'INFO';
+const defaultSource: string[] = [];
+
+@Component({
+  selector: 'app-create-event-query-dialog',
+  templateUrl: './create-event-query-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class CreateEventQueryDialogComponent {
+  form = new FormGroup({
+    name: new FormControl<string>('', Validators.required),
+    filter: new FormControl<string>(''),
+    severity: new FormControl<string>(defaultSeverity, Validators.required),
+    source: new FormControl<string[]>(defaultSource),
+    shared: new FormControl<boolean>(false, Validators.required),
+  });
+
+  constructor(
+    private dialogRef: MatDialogRef<CreateEventQueryDialogComponent>,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    @Inject(MAT_DIALOG_DATA) readonly data: any,
+  ) {
+    this.form.patchValue({
+      filter: data.filter || undefined,
+      severity: data.severity,
+      source: data.source,
+    });
+  }
+
+  save() {
+    const { value: fv } = this.form;
+    this.yamcs.yamcsClient
+      .createQuery(this.yamcs.instance!, 'events', {
+        name: fv.name!,
+        shared: fv.shared ?? false,
+        query: {
+          filter: fv.filter ?? undefined,
+          source: fv.source ?? defaultSource,
+          severity: fv.severity ?? defaultSeverity,
+        },
+      })
+      .then((query) => this.dialogRef.close(query))
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

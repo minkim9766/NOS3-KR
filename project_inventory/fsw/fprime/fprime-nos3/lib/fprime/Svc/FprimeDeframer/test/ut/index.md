@@ -3,18 +3,337 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `FprimeDeframerTester.cpp`
 
-file--FprimeDeframerTester.cpp
-file--FprimeDeframerTester.hpp
-file--FprimeDeframerTestMain.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTester.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeDeframerTester.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeDeframer component test harness implementation class
+// ======================================================================
+
+#include "FprimeDeframerTester.hpp"
+#include "STest/Random/Random.hpp"
+
+namespace Svc {
+
+// ----------------------------------------------------------------------
+// Construction and destruction
+// ----------------------------------------------------------------------
+
+FprimeDeframerTester ::FprimeDeframerTester()
+    : FprimeDeframerGTestBase("FprimeDeframerTester", FprimeDeframerTester::MAX_HISTORY_SIZE),
+      component("FprimeDeframer") {
+    this->initComponents();
+    this->connectPorts();
+}
+
+FprimeDeframerTester ::~FprimeDeframerTester() {}
+
+// ----------------------------------------------------------------------
+// Tests
+// ----------------------------------------------------------------------
+
+void FprimeDeframerTester ::testNominalFrame() {
+    // Get random byte of data
+    U8 randomByte = static_cast<U8>(STest::Random::lowerUpper(1, 255));
+    //           |  F´ start word        |     Length (= 1)      |   Data     |   Checksum (4 bytes)   |
+    U8 data[13] = {0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x00, 0x00, 0x01, randomByte, 0x00, 0x00, 0x00, 0x00};
+    // Inject the checksum into the data and send it to the component under test
+    this->injectChecksum(data, sizeof(data));
+    this->mockReceiveData(data, sizeof(data));
+
+    ASSERT_from_dataOut_SIZE(1);        // something emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(0);  // nothing emitted on dataReturnOut
+    // Assert that the data that was emitted on dataOut is equal to Data field above (randomByte)
+    ASSERT_EQ(this->fromPortHistory_dataOut->at(0).data.getData()[0], randomByte);
+    // Not enough data to read a valid APID -> should default to FW_PACKET_UNKNOWN
+    ASSERT_EQ(this->fromPortHistory_dataOut->at(0).context.get_apid(), ComCfg::APID::FW_PACKET_UNKNOWN);
+    ASSERT_EVENTS_SIZE(0);  // no events emitted
+}
+
+void FprimeDeframerTester ::testNominalFrameApid() {
+    // Get random byte of data which represents the APID (PacketDescriptor)
+    U8 randomByte = static_cast<U8>(STest::Random::lowerUpper(0, 255));
+    //           |  F´ start word        |     Length (= 4)      |   PacketDescriptor (APID)   |   Checksum (4 bytes) |
+    U8 data[16] = {0xDE, 0xAD, 0xBE, 0xEF,       0x00, 0x00, 0x00, 0x04,
+                   0x00, 0x00, 0x00, randomByte, 0x00, 0x00, 0x00, 0x00};
+    // Inject the checksum into the data and send it to the component under test
+    this->injectChecksum(data, sizeof(data));
+    this->mockReceiveData(data, sizeof(data));
+
+    ASSERT_from_dataOut_SIZE(1);                                                     // something emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(0);                                               // nothing emitted on dataReturnOut
+    ASSERT_EQ(this->fromPortHistory_dataOut->at(0).context.get_apid(), randomByte);  // APID should be set in context
+    ASSERT_EVENTS_SIZE(0);                                                           // no events emitted
+}
+
+void FprimeDeframerTester ::testIncorrectLengthToken() {
+    // Frame:     |  F´ start word       |  INCORRECT Length=5   | Data |   Checksum (4 bytes)   |
+    U8 data[13] = {0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00};
+    // Inject the checksum into the data and send it to the component under test
+    this->injectChecksum(data, sizeof(data));
+    this->mockReceiveData(data, sizeof(data));
+
+    ASSERT_from_dataOut_SIZE(0);        // nothing emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(1);  // invalid buffer was deallocated
+    // Check which event was emitted
+    ASSERT_EVENTS_SIZE(1);                        // exactly 1 event emitted
+    ASSERT_EVENTS_InvalidLengthReceived_SIZE(1);  // event was emitted for invalid length
+}
+
+void FprimeDeframerTester ::testIncorrectStartWord() {
+    // Frame:     |  INCORRECT start word |      Length = 1      | Data |   Checksum (4 bytes)   |
+    U8 data[13] = {0x00, 0x11, 0x22, 0x33, 0x00, 0x00, 0x00, 0x05, 0x00, 0x00, 0x00, 0x00, 0x00};
+    // Inject the checksum into the data and send it to the component under test
+    this->injectChecksum(data, sizeof(data));
+    this->mockReceiveData(data, sizeof(data));
+
+    ASSERT_from_dataOut_SIZE(0);        // nothing emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(1);  // invalid buffer was deallocated
+    // Check which event was emitted
+    ASSERT_EVENTS_SIZE(1);                   // exactly 1 event emitted
+    ASSERT_EVENTS_InvalidStartWord_SIZE(1);  // event was emitted for invalid start word
+}
+
+void FprimeDeframerTester ::testIncorrectCrc() {
+    // Frame:     |   F´ start word      |      Length = 1       | Data |  INCORRECT Checksum  |
+    U8 data[13] = {0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00};
+    this->mockReceiveData(data, sizeof(data));
+    ASSERT_from_dataOut_SIZE(0);        // nothing emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(1);  // invalid buffer was deallocated
+    // Check which event was emitted
+    ASSERT_EVENTS_SIZE(1);                  // exactly 1 event emitted
+    ASSERT_EVENTS_InvalidChecksum_SIZE(1);  // event was emitted for invalid checksum
+}
+
+void FprimeDeframerTester::testTruncatedFrame() {
+    // Send a truncated frame, too short to be valid
+    U8 data[11] = {0xDE, 0xAD, 0xBE, 0xEF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+    this->mockReceiveData(data, sizeof(data));
+    ASSERT_from_dataOut_SIZE(0);        // nothing emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(1);  // invalid buffer was deallocated
+    // Check which event was emitted
+    ASSERT_EVENTS_SIZE(1);                        // exactly 1 event emitted
+    ASSERT_EVENTS_InvalidBufferReceived_SIZE(1);  // event was emitted for invalid buffer
+}
+
+void FprimeDeframerTester::testZeroSizeFrame() {
+    // Send an empty frame, too short to be valid
+    this->mockReceiveData(nullptr, 0);
+    ASSERT_from_dataOut_SIZE(0);        // nothing emitted on dataOut
+    ASSERT_from_dataReturnOut_SIZE(1);  // invalid buffer was deallocated
+    // Check which event was emitted
+    ASSERT_EVENTS_SIZE(1);                        // exactly 1 event emitted
+    ASSERT_EVENTS_InvalidBufferReceived_SIZE(1);  // event was emitted for invalid buffer
+}
+
+void FprimeDeframerTester::testDataReturn() {
+    U8 data[1];
+    Fw::Buffer buffer(data, sizeof(data));
+    ComCfg::FrameContext nullContext;
+    this->invoke_to_dataReturnIn(0, buffer, nullContext);
+    ASSERT_from_dataReturnOut_SIZE(1);  // incoming buffer should be deallocated
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getData(), data);
+    ASSERT_EQ(this->fromPortHistory_dataReturnOut->at(0).data.getSize(), sizeof(data));
+}
+
+// ----------------------------------------------------------------------
+// Test Helpers
+// ----------------------------------------------------------------------
+
+void FprimeDeframerTester::injectChecksum(U8* data, FwSizeType size) {
+    // Needs 4 bytes for the checksum field and at least 1 byte of data to checksum
+    if (size < 5) {
+        return;
+    }
+    // Compute the checksum
+    Utils::Hash crc_calculator;
+    Utils::HashBuffer crc_result;
+    crc_calculator.update(data, size - 4);
+    crc_calculator.final(crc_result);
+    // Inject the checksum into the data
+    for (FwSizeType i = 0; i < 4; i++) {
+        data[size - 4 + i] = static_cast<U8>(crc_result.asBigEndianU32() >> (8 * (3 - i)) & 0xFF);
+    }
+}
+
+void FprimeDeframerTester::mockReceiveData(U8* data, FwSizeType size) {
+    ComCfg::FrameContext nullContext;
+    Fw::Buffer buffer(data, static_cast<Fw::Buffer::SizeType>(size));
+    this->invoke_to_dataIn(0, buffer, nullContext);
+}
+
+}  // namespace Svc
 ```
 
-## 항목
+### `FprimeDeframerTester.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTester.cpp`](file--FprimeDeframerTester.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTester.hpp`](file--FprimeDeframerTester.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTestMain.cpp`](file--FprimeDeframerTestMain.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTester.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeDeframerTester.hpp
+// \author thomas-bc
+// \brief  hpp file for FprimeDeframer component test harness implementation class
+// ======================================================================
+
+#ifndef Svc_FprimeDeframerTester_HPP
+#define Svc_FprimeDeframerTester_HPP
+
+#include "Svc/FprimeDeframer/FprimeDeframer.hpp"
+#include "Svc/FprimeDeframer/FprimeDeframerGTestBase.hpp"
+
+namespace Svc {
+
+class FprimeDeframerTester : public FprimeDeframerGTestBase {
+  public:
+    // ----------------------------------------------------------------------
+    // Constants
+    // ----------------------------------------------------------------------
+
+    // Maximum size of histories storing events, telemetry, and port outputs
+    static const FwSizeType MAX_HISTORY_SIZE = 10;
+
+    // Instance ID supplied to the component instance under test
+    static const FwEnumStoreType TEST_INSTANCE_ID = 0;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct object FprimeDeframerTester
+    FprimeDeframerTester();
+
+    //! Destroy object FprimeDeframerTester
+    ~FprimeDeframerTester();
+
+  public:
+    // ----------------------------------------------------------------------
+    // Tests
+    // ----------------------------------------------------------------------
+
+    //! Test receiving a nominal frame
+    void testNominalFrame();
+
+    //! Test receiving a nominal frame that contains a valid packet (with APID)
+    void testNominalFrameApid();
+
+    //! Test receiving a truncated frame
+    void testTruncatedFrame();
+
+    //! Test receiving a zero size frame
+    void testZeroSizeFrame();
+
+    //! Test receiving a frame with an incorrect length token (too long for the data)
+    void testIncorrectLengthToken();
+
+    //! Test receiving a frame with an incorrect start word
+    void testIncorrectStartWord();
+
+    //! Test receiving a frame with an incorrect Crc field
+    void testIncorrectCrc();
+
+    //! Test bufferReturn passthrough
+    void testDataReturn();
+
+  private:
+    // ----------------------------------------------------------------------
+    // Helper functions
+    // ----------------------------------------------------------------------
+
+    //! Connect ports
+    void connectPorts();
+
+    //! Initialize components
+    void initComponents();
+
+    //! Takes in a buffer of data and size, and injects a checksum into the buffer
+    //! If the buffer doesn't have enough room for the checksum (4 bytes), the buffer is left unchanged
+    void injectChecksum(U8* data, FwSizeType size);
+
+    //! Sends a buffer of supplied data and size on the component input port
+    void mockReceiveData(U8* data, FwSizeType size);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Member variables
+    // ----------------------------------------------------------------------
+
+    //! The component under test
+    FprimeDeframer component;
+};
+
+}  // namespace Svc
+
+#endif
+```
+
+### `FprimeDeframerTestMain.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/FprimeDeframer/test/ut/FprimeDeframerTestMain.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  FprimeDeframerTestMain.cpp
+// \author thomas-bc
+// \brief  cpp file for FprimeDeframer component test main function
+// ======================================================================
+
+#include "FprimeDeframerTester.hpp"
+#include "STest/Random/Random.hpp"
+
+TEST(FprimeDeframer, NominalFrame) {
+    Svc::FprimeDeframerTester tester;
+    tester.testNominalFrame();
+}
+
+TEST(FprimeDeframer, NominalFrameApid) {
+    Svc::FprimeDeframerTester tester;
+    tester.testNominalFrameApid();
+}
+
+TEST(FprimeDeframer, TruncatedFrame) {
+    Svc::FprimeDeframerTester tester;
+    tester.testTruncatedFrame();
+}
+
+TEST(FprimeDeframer, ZeroSizeFrame) {
+    Svc::FprimeDeframerTester tester;
+    tester.testZeroSizeFrame();
+}
+
+TEST(FprimeDeframer, testIncorrectLengthToken) {
+    Svc::FprimeDeframerTester tester;
+    tester.testIncorrectLengthToken();
+}
+
+TEST(FprimeDeframer, testIncorrectStartWord) {
+    Svc::FprimeDeframerTester tester;
+    tester.testIncorrectStartWord();
+}
+
+TEST(FprimeDeframer, testIncorrectCrc) {
+    Svc::FprimeDeframerTester tester;
+    tester.testIncorrectCrc();
+}
+
+TEST(FprimeDeframer, testDataReturn) {
+    Svc::FprimeDeframerTester tester;
+    tester.testDataReturn();
+}
+
+int main(int argc, char** argv) {
+    STest::Random::seed();
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

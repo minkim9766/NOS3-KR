@@ -3,52 +3,2759 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `activities.ts`
 
-file--activities.ts
-file--alarms.ts
-file--commandHistory.ts
-file--config.ts
-file--cop1.ts
-file--events.ts
-file--filetransfer.ts
-file--internal.ts
-file--management.ts
-file--mdb.ts
-file--monitoring.ts
-file--plists.ts
-file--processing.ts
-file--queue.ts
-file--session.ts
-file--system.ts
-file--table.ts
-file--time.ts
-file--timeline.ts
-file--web.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/activities.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export type ActivityStatus = 'RUNNING' | 'SUCCESSFUL' | 'CANCELLED' | 'FAILED';
+
+export interface Activity {
+  type: string;
+  args: { [key: string]: any };
+  detail: string;
+  id: string;
+  start: string;
+  seq: number;
+  status: string;
+  startedBy: string;
+  stop?: string;
+  stoppedBy?: string;
+  failureReason?: string;
+}
+
+export interface ActivitiesPage {
+  activities: Activity[];
+  continuationToken?: string;
+}
+
+export interface GetActivityLogResponse {
+  logs: ActivityLog[];
+}
+
+export interface ActivityLog {
+  time: string;
+  source: string;
+  level: string;
+  message: string;
+}
+
+export interface ExecutorsWrapper {
+  executors: Executor[];
+}
+
+export interface Executor {
+  type: string;
+  displayName: string;
+  description?: string;
+  icon?: string;
+}
+
+export interface ActivityScriptsPage {
+  scripts: string[];
+}
+
+export interface SubscribeActivitiesRequest {
+  instance: string;
+}
+
+export interface SubscribeActivityLogRequest {
+  instance: string;
+  activity: string;
+}
+
+export type GlobalActivityStatusSubscription = WebSocketCall<
+  SubscribeGlobalActivityStatusRequest,
+  GlobalActivityStatus
+>;
+export type ActivitySubscription = WebSocketCall<
+  SubscribeActivitiesRequest,
+  Activity
+>;
+export type ActivityLogSubscription = WebSocketCall<
+  SubscribeActivityLogRequest,
+  ActivityLog
+>;
+
+export class StartActivityOptions {
+  type: string;
+  args?: { [key: string]: any };
+  comment?: string;
+}
+
+export class CompleteManualActivityOptions {
+  failureReason?: string;
+}
+
+export interface SubscribeGlobalActivityStatusRequest {
+  instance: string;
+}
+
+export interface GlobalActivityStatus {
+  ongoingCount: number;
+}
+
+export interface GetActivitiesOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  status?: string | string[];
+  q?: string;
+  type?: string | string[];
+  limit?: number;
+  order?: 'asc' | 'desc';
+  next?: string;
+}
 ```
 
-## 항목
+### `alarms.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/activities.ts`](file--activities.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/alarms.ts`](file--alarms.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/commandHistory.ts`](file--commandHistory.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/config.ts`](file--config.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/cop1.ts`](file--cop1.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/events.ts`](file--events.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/filetransfer.ts`](file--filetransfer.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/internal.ts`](file--internal.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/management.ts`](file--management.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/mdb.ts`](file--mdb.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/monitoring.ts`](file--monitoring.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/plists.ts`](file--plists.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/processing.ts`](file--processing.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/queue.ts`](file--queue.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/session.ts`](file--session.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/system.ts`](file--system.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/table.ts`](file--table.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/time.ts`](file--time.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/timeline.ts`](file--timeline.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/web.ts`](file--web.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/alarms.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { Event } from './events';
+import { NamedObjectId, Parameter } from './mdb';
+import { ParameterValue } from './monitoring';
+
+export interface GlobalAlarmStatus {
+  unacknowledgedCount: number;
+  unacknowledgedActive: boolean;
+  unacknowledgedSeverity?: string;
+  acknowledgedCount: number;
+  acknowledgedActive: boolean;
+  acknowledgedSeverity?: string;
+  shelvedCount: number;
+  shelvedActive: boolean;
+  shelvedSeverity?: string;
+}
+
+export interface SubscribeGlobalAlarmStatusRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeAlarmsRequest {
+  instance: string;
+  processor: string;
+  includePending: boolean;
+}
+
+export interface ListAlarmsResponse {
+  alarms: Alarm[];
+}
+
+export type AlarmNotificationType =
+  | 'ACTIVE'
+  | 'TRIGGERED_PENDING'
+  | 'TRIGGERED'
+  | 'SEVERITY_INCREASED'
+  | 'VALUE_UPDATED'
+  | 'ACKNOWLEDGED'
+  | 'CLEARED'
+  | 'RTN'
+  | 'SHELVED'
+  | 'UNSHELVED'
+  | 'RESET';
+
+export type AlarmSeverity =
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface Alarm {
+  seqNum: number;
+  type: 'EVENT' | 'PARAMETER';
+  notificationType: AlarmNotificationType;
+  id: NamedObjectId;
+  updateTime: string;
+  triggerTime: string;
+  violations: number;
+  count: number;
+  acknowledgeInfo: AlarmAcknowledgeInfo;
+  shelveInfo: ShelveInfo;
+  clearInfo: ClearInfo;
+  severity: AlarmSeverity;
+  readonly: boolean;
+
+  latching: boolean;
+  processOK: boolean;
+  triggered: boolean;
+  acknowledged: boolean;
+  pending?: boolean;
+
+  parameterDetail?: ParameterAlarmData;
+  eventDetail?: EventAlarmData;
+}
+
+export interface ParameterAlarmData {
+  triggerValue: ParameterValue;
+  mostSevereValue: ParameterValue;
+  currentValue: ParameterValue;
+  parameter: Parameter;
+}
+
+export interface EventAlarmData {
+  triggerEvent: Event;
+  mostSevereEvent: Event;
+  currentEvent: Event;
+}
+
+export interface AlarmAcknowledgeInfo {
+  acknowledgedBy: string;
+  acknowledgeMessage: string;
+  acknowledgeTime: string;
+}
+
+export interface ShelveInfo {
+  shelvedBy: string;
+  shelveMessage: string;
+  shelveTime: string;
+  shelveExpiration: string;
+}
+
+export interface ClearInfo {
+  clearedBy: string;
+  clearTime: string;
+  clearMessage: string;
+}
+
+export interface GetAlarmsOptions {
+  start?: string;
+  stop?: string;
+  detail?: boolean;
+  pos?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface AcknowledgeAlarmOptions {
+  comment?: string;
+}
+
+export interface ShelveAlarmOptions {
+  comment?: string;
+  shelveDuration?: number;
+}
+
+export interface ClearAlarmOptions {
+  comment?: string;
+}
+
+export type GlobalAlarmStatusSubscription = WebSocketCall<
+  SubscribeGlobalAlarmStatusRequest,
+  GlobalAlarmStatus
+>;
+export type AlarmSubscription = WebSocketCall<SubscribeAlarmsRequest, Alarm>;
+```
+
+### `commandHistory.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/commandHistory.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { CommandHistoryEntry } from './monitoring';
+
+export interface SubscribeCommandsRequest {
+  instance: string;
+  processor: string;
+  ignorePastCommands?: boolean;
+}
+
+export type CommandSubscription = WebSocketCall<
+  SubscribeCommandsRequest,
+  CommandHistoryEntry
+>;
+```
+
+### `config.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/config.ts`
+
+
+```typescript
+export interface Spec {
+  options: Option[];
+}
+
+export type OptionType = 'BOOLEAN' | 'FLOAT' | 'STRING' | 'INTEGER';
+
+export interface Option {
+  name: string;
+  type: OptionType;
+  default: any;
+  hidden: boolean;
+  required: boolean;
+  secret: boolean;
+  description?: string[];
+}
+```
+
+### `cop1.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/cop1.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export type Cop1State =
+  | 'ACTIVE'
+  | 'RETRANSMIT_WITHOUT_WAIT'
+  | 'RETRANSMIT_WITH_WAIT'
+  | 'INITIALIZING_WITHOUT_BC'
+  | 'INITIALIZING_WITH_BC'
+  | 'UNINTIALIZED'
+  | 'SUSPENDED';
+
+export interface Clcw {
+  receptionTime: string;
+  lockout: boolean;
+  wait: boolean;
+  retransmit: boolean;
+  nR: number;
+}
+
+export interface Cop1Status {
+  link: string;
+  cop1Active: boolean;
+  setBypassAll: boolean;
+  clcw?: Clcw;
+  state: Cop1State;
+  vS: number;
+  nnR: number;
+  waitQueueNumTC: number;
+  sentQueueNumFrames: number;
+  outQueueNumFrames: number;
+  txCount: number;
+}
+
+export interface Cop1Config {
+  link: string;
+  vcId: number;
+  bdAbsolutePriority: boolean;
+  windowWidth: number;
+  timeoutType: string;
+  txLimit: number;
+  t1: number;
+}
+
+export interface InitiateCop1Request {
+  type: 'WITH_CLCW_CHECK' | 'WITHOUT_CLCW_CHECK' | 'UNLOCK' | 'SET_VR';
+  clcwCheckInitializeTimeout?: number;
+  vR?: number;
+}
+
+export interface DisableCop1Request {
+  setBypassAll?: boolean;
+}
+
+export interface SubscribeCop1Request {
+  instance: string;
+  link: string;
+}
+
+export type Cop1Subscription = WebSocketCall<SubscribeCop1Request, Cop1Status>;
+```
+
+### `events.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/events.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export interface SubscribeEventsRequest {
+  instance: string;
+  filter?: string;
+}
+
+export type EventSeverity =
+  | 'INFO'
+  | 'WARNING'
+  | 'ERROR'
+  | 'WATCH'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface Event {
+  source: string;
+  generationTime: string;
+  receptionTime: string;
+  seqNumber: number;
+  type: string;
+  message: string;
+  severity: EventSeverity;
+  extra?: { [key: string]: string };
+}
+
+export interface CreateEventRequest {
+  message: string;
+  type?: string;
+  severity?: EventSeverity;
+  time?: string;
+  extra?: { [key: string]: string };
+}
+
+export interface GetEventsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  /**
+   * Filter query
+   */
+  filter?: string;
+  severity?: EventSeverity;
+  source?: string[];
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface DownloadEventsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  /**
+   * Filter query
+   */
+  filter?: string;
+  severity?: EventSeverity;
+  source?: string | string[];
+  delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
+}
+
+export type EventSubscription = WebSocketCall<SubscribeEventsRequest, Event>;
+```
+
+### `filetransfer.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/filetransfer.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { ActionInfo } from './management';
+
+export type FileTransferDirection = 'UPLOAD' | 'DOWNLOAD';
+
+export type FileTransferStatus =
+  | 'RUNNING'
+  | 'PAUSED'
+  | 'FAILED'
+  | 'COMPLETED'
+  | 'CANCELLING'
+  | 'QUEUED';
+
+export interface FileTransferService {
+  instance: string;
+  name: string;
+  localEntities: Entity[];
+  remoteEntities: Entity[];
+  capabilities: FileTransferCapabilities;
+  transferOptions: FileTransferOption[];
+}
+
+export interface FileTransferOption {
+  name: string;
+  type: 'BOOLEAN' | 'DOUBLE' | 'STRING';
+  title?: string;
+  description?: string;
+  associatedText?: string;
+  default?: string;
+  values?: { value: string; verboseName?: string }[];
+  allowCustomOption?: boolean;
+}
+
+export interface FileTransferCapabilities {
+  upload: boolean;
+  download: boolean;
+  reliability: boolean;
+  remotePath: boolean;
+  hasTransferType: boolean;
+  pauseResume: boolean;
+  fileList: boolean;
+  fileListExtraColumns?: FileListExtraColumnInfo[];
+  fileActions?: ActionInfo[];
+}
+
+export interface GetFileTransfersOptions {
+  start?: string;
+  stop?: string;
+  state?: string | string[];
+  direction?: FileTransferDirection;
+  localEntityId?: number;
+  remoteEntityId?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface FileListExtraColumnInfo {
+  id: string;
+  label: string;
+}
+
+export interface Entity {
+  name: string;
+  id: number;
+}
+
+export interface Transfer {
+  id: number;
+  startTime?: string;
+  creationTime: string;
+  state: FileTransferStatus;
+  bucket: string;
+  objectName: string;
+  remotePath: string;
+  direction: FileTransferDirection;
+  totalSize: number;
+  sizeTransferred: number;
+  failureReason?: string;
+  transferType?: string;
+  localEntity: Entity;
+  remoteEntity: Entity;
+}
+
+export interface CreateTransferRequest {
+  direction: FileTransferDirection;
+  bucket: string;
+  objectName: string;
+  remotePath: string;
+  source: string;
+  destination: string;
+  options: { [key: string]: boolean | number | string };
+}
+
+export interface TransfersPage {
+  transfers: Transfer[];
+}
+
+export interface ListFilesRequest {
+  source: string;
+  destination: string;
+  remotePath: string;
+  options?: { [key: string]: boolean | number | string };
+}
+
+export interface RemoteFile {
+  name: string;
+  displayName: string;
+  isDirectory: boolean;
+  size: number;
+  modified: string;
+  extra?: { [key: string]: any };
+}
+
+export interface ListFilesResponse {
+  files: RemoteFile[];
+  destination: string;
+  remotePath: string;
+  listTime: string;
+  state?: string;
+  progressMessage?: string;
+}
+
+export interface RunFileActionRequest {
+  remoteEntity: string;
+  file: string;
+  action: string;
+  message?: { [key: string]: any };
+}
+
+export interface ServicesPage {
+  services: FileTransferService[];
+}
+
+export interface SubscribeTransfersRequest {
+  instance: string;
+  serviceName: string;
+  ongoingOnly: true;
+}
+
+export interface SubscribeRemoteFileListRequest {
+  instance: string;
+  serviceName: string;
+}
+
+export type TransferSubscription = WebSocketCall<
+  SubscribeTransfersRequest,
+  Transfer
+>;
+export type RemoteFileListSubscription = WebSocketCall<
+  SubscribeRemoteFileListRequest,
+  ListFilesResponse
+>;
+```
+
+### `internal.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/internal.ts`
+
+
+```typescript
+import { Alarm } from './alarms';
+import { Event } from './events';
+import { Link } from './management';
+import { IndexGroup, Range, Sample } from './monitoring';
+import { Processor } from './processing';
+import { CommandQueue } from './queue';
+import {
+  Bucket,
+  GroupInfo,
+  Instance,
+  InstanceTemplate,
+  RocksDbDatabase,
+  RoleInfo,
+  Service,
+  SessionInfo,
+  UserInfo,
+} from './system';
+import { Record, Stream, Table } from './table';
+
+export interface EventsWrapper {
+  events: Event[];
+}
+
+export interface InstancesWrapper {
+  instances: Instance[];
+}
+
+export interface InstanceTemplatesWrapper {
+  templates: InstanceTemplate[];
+}
+
+export interface LinksWrapper {
+  links: Link[];
+}
+
+export interface ServicesWrapper {
+  services: Service[];
+}
+
+export interface AlarmsWrapper {
+  alarms: Alarm[];
+}
+
+export interface UsersWrapper {
+  users: UserInfo[];
+}
+
+export interface GroupsWrapper {
+  groups: GroupInfo[];
+}
+
+export interface RolesWrapper {
+  roles: RoleInfo[];
+}
+
+export interface SessionsWrapper {
+  sessions: SessionInfo[];
+}
+
+export interface CommandQueuesWrapper {
+  queues: CommandQueue[];
+}
+
+export interface ProcessorsWrapper {
+  processors: Processor[];
+}
+
+export interface StreamsWrapper {
+  streams: Stream[];
+}
+
+export interface TablesWrapper {
+  tables: Table[];
+}
+
+export interface RecordsWrapper {
+  record: Record[];
+}
+
+export interface SamplesWrapper {
+  sample: Sample[];
+}
+
+export interface RangesWrapper {
+  range: Range[];
+}
+
+export interface SourcesWrapper {
+  sources: string[];
+}
+
+export interface IndexResult {
+  group: IndexGroup[];
+}
+
+export interface BucketsWrapper {
+  buckets: Bucket[];
+}
+
+export interface RocksDbDatabasesWrapper {
+  databases: RocksDbDatabase[];
+}
+```
+
+### `management.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/management.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { Spec } from './config';
+import { Instance } from './system';
+
+export interface ListInstancesOptions {
+  filter?: string;
+}
+
+export interface CreateInstanceRequest {
+  name: string;
+  template: string;
+  templateArgs?: { [key: string]: string };
+  labels?: { [key: string]: string };
+}
+
+export interface LinkEvent {
+  type: string;
+  links: Link[];
+}
+
+export interface Link {
+  instance: string;
+  name: string;
+  type: string;
+  spec: string;
+  stream: string;
+  disabled: boolean;
+  dataInCount: number;
+  dataOutCount: number;
+  status: LinkStatus;
+  detailedStatus: string;
+  parentName?: string;
+  actions?: ActionInfo[];
+  extra?: { [key: string]: any };
+  parameters?: string[];
+}
+
+export interface ActionInfo {
+  id: string;
+  label: string;
+  style: 'CHECK_BOX' | 'PUSH_BUTTON';
+  enabled: boolean;
+  checked: boolean;
+  spec?: Spec;
+}
+
+export interface SubscribeLinksRequest {
+  instance: string;
+}
+
+export type LinkStatus = 'OK' | 'UNAVAIL' | 'DISABLED' | 'FAILED';
+
+export type InstancesSubscription = WebSocketCall<{}, Instance>;
+export type LinkSubscription = WebSocketCall<SubscribeLinksRequest, LinkEvent>;
+```
+
+### `mdb.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/mdb.ts`
+
+
+```typescript
+import { ParameterValue } from './monitoring';
+
+export interface MissionDatabase {
+  configName: string;
+  name: string;
+  version: string;
+  spaceSystems: SpaceSystem[];
+  parameterCount: number;
+  containerCount: number;
+  commandCount: number;
+  algorithmCount: number;
+  parameterTypeCount: number;
+}
+
+export interface NameDescription {
+  name: string;
+  qualifiedName: string;
+  alias?: NamedObjectId[];
+  shortDescription?: string;
+  longDescription?: string;
+}
+
+export interface SpaceSystem extends NameDescription {
+  version: string;
+  history?: HistoryInfo[];
+  sub: SpaceSystem[];
+}
+
+export interface SpaceSystemsPage {
+  spaceSystems?: SpaceSystem[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface HistoryInfo {
+  version: string;
+  date: string;
+  message: string;
+  author: string;
+}
+
+export type DataSource =
+  | 'COMMAND'
+  | 'COMMAND_HISTORY'
+  | 'CONSTANT'
+  | 'DERIVED'
+  | 'EXTERNAL1'
+  | 'EXTERNAL2'
+  | 'EXTERNAL3'
+  | 'GROUND'
+  | 'LOCAL'
+  | 'SYSTEM'
+  | 'TELEMETERED';
+
+export interface Parameter extends NameDescription {
+  dataSource: DataSource;
+  type?: ParameterType;
+  usedBy?: UsedByInfo;
+  path?: string[];
+}
+
+export interface UsedByInfo {
+  algorithm?: Algorithm[];
+  container?: Container[];
+}
+
+export interface UnitInfo {
+  unit: string;
+}
+
+export interface NamedObjectId {
+  namespace?: string;
+  name: string;
+}
+
+export interface ParameterType {
+  name: string;
+  qualifiedName: string;
+  shortDescription: string;
+  longDescription: string;
+  alias: NamedObjectId[];
+  engType: string;
+  arrayInfo?: ArrayInfo;
+  dataEncoding?: DataEncoding;
+  unitSet?: UnitInfo[];
+  defaultAlarm?: AlarmInfo;
+  contextAlarm: ContextAlarmInfo[];
+  enumValues: EnumValue[];
+  enumRanges: EnumRange[];
+  absoluteTimeInfo: AbsoluteTimeInfo;
+  member: ParameterMember[];
+  signed?: boolean;
+  sizeInBits?: number;
+  oneStringValue?: string;
+  zeroStringValue?: string;
+  usedBy?: Parameter[];
+}
+
+export interface ArrayInfo {
+  type: ParameterType;
+  dimensions: number;
+}
+
+export interface Member {
+  name: string;
+  type: ParameterType | ArgumentType;
+  initialValue?: string;
+  shortDescription: string;
+  longDescription: string;
+  alias: NamedObjectId[];
+}
+
+export interface ParameterMember extends Member {
+  type: ParameterType;
+}
+
+export interface ArgumentMember extends Member {
+  type: ArgumentType;
+}
+
+export interface AbsoluteTimeInfo {
+  initialValue: string;
+  scale: number;
+  offset: number;
+  offsetFrom: Parameter;
+  epoch: string;
+}
+
+export interface AlarmInfo {
+  minViolations: number;
+  staticAlarmRanges: AlarmRange[];
+  enumerationAlarms: EnumerationAlarm[];
+  defaultLevel?: AlarmLevelType;
+}
+
+export interface ContextAlarmInfo {
+  context: string;
+  alarm: AlarmInfo;
+}
+
+export interface EnumerationAlarm {
+  level: AlarmLevelType;
+  label: string;
+}
+
+export interface DataEncoding {
+  type: string;
+  littleEndian: boolean;
+  sizeInBits: number;
+  encoding: string;
+  defaultCalibrator: Calibrator;
+  contextCalibrators: ContextCalibrator[];
+}
+
+export interface Calibrator {
+  type: string;
+  polynomialCalibrator: PolynomialCalibrator;
+  splineCalibrator: SplineCalibrator;
+  javaExpressionCalibrator: JavaExpressionCalibrator;
+}
+
+export interface ContextCalibrator {
+  context: string;
+  calibrator: Calibrator;
+}
+
+export interface PolynomialCalibrator {
+  coefficients: number[];
+}
+
+export interface SplineCalibrator {
+  points: SplinePoint[];
+}
+
+export interface SplinePoint {
+  raw: number;
+  calibrated: number;
+}
+
+export interface JavaExpressionCalibrator {
+  formula: string;
+}
+
+export interface Command extends NameDescription {
+  baseCommand?: Command;
+  abstract: boolean;
+  argument: Argument[];
+  argumentAssignment: ArgumentAssignment[];
+  significance: Significance;
+  effectiveSignificance: Significance;
+  constraint: TransmissionConstraint[];
+  commandContainer?: CommandContainer;
+  verifier?: Verifier[];
+}
+
+export type TerminationActionType = 'SUCCESS' | 'FAIL';
+
+export interface Verifier {
+  stage: string;
+  container?: Container;
+  algorithm?: Algorithm;
+  expression?: string;
+  onSuccess: TerminationActionType;
+  onFail: TerminationActionType;
+  onTimeout: TerminationActionType;
+  checkWindow: CheckWindow;
+}
+
+export interface CheckWindow {
+  timeToStartChecking?: number;
+  timeToStopChecking: number;
+  relativeTo: string;
+}
+
+export interface CommandContainer extends NameDescription {
+  sizeInBits: number;
+  baseContainer?: Container;
+  entry: SequenceEntry[];
+}
+
+export interface Argument {
+  name: string;
+  description: string;
+  initialValue?: string;
+  type: ArgumentType;
+}
+
+export interface ArgumentType {
+  engType: string;
+  dataEncoding?: DataEncoding;
+  unitSet: UnitInfo[];
+  enumValue: EnumValue[];
+  signed?: boolean;
+  rangeMin?: number;
+  rangeMax?: number;
+  minChars?: number;
+  maxChars?: number;
+  minBytes?: number;
+  maxBytes?: number;
+  member?: ArgumentMember[];
+  zeroStringValue?: string;
+  oneStringValue?: string;
+  dimensions?: ArgumentDimension[];
+  elementType?: ArgumentType;
+}
+
+export interface ArgumentDimension {
+  fixedValue: string;
+  argument: string;
+  parameter: Parameter;
+  slope: string;
+  intercept: string;
+}
+
+export interface ArgumentAssignment {
+  name: string;
+  value: string;
+}
+
+export interface Significance {
+  consequenceLevel:
+    | 'NONE'
+    | 'WATCH'
+    | 'WARNING'
+    | 'DISTRESS'
+    | 'CRITICAL'
+    | 'SEVERE';
+  reasonForWarning: string;
+}
+
+export interface TransmissionConstraint {
+  expression: string;
+  timeout: number;
+}
+
+export interface EnumValue {
+  value: number;
+  label: string;
+  description?: string;
+}
+
+export interface EnumRange {
+  min: number;
+  max: number;
+  minInclusive: boolean;
+  maxInclusive: boolean;
+  label: string;
+  description?: string;
+}
+
+export type AlarmLevelType =
+  | 'NORMAL'
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface AlarmRange {
+  level: AlarmLevelType;
+  minInclusive: number;
+  maxInclusive: number;
+  minExclusive: number;
+  maxExclusive: number;
+}
+
+export interface Algorithm extends NameDescription {
+  scope: 'GLOBAL' | 'COMMAND_VERIFICATION' | 'CONTAINER_PROCESSING';
+  type: 'CUSTOM' | 'MATH';
+  language: string;
+  text: string;
+  inputParameter: InputParameter[];
+  outputParameter: OutputParameter[];
+  onParameterUpdate: Parameter[];
+  onPeriodicRate: number[];
+  mathElements: any[];
+}
+
+export interface AlgorithmStatus {
+  active: boolean;
+  traceEnabled: boolean;
+  runCount: number;
+  lastRun?: string;
+  errorCount: number;
+  execTimeNs: number;
+  errorMessage?: string;
+  errorTime?: string;
+}
+
+export interface AlgorithmTrace {
+  runs?: AlgorithmRun[];
+  logs?: AlgorithmLog[];
+}
+
+export interface AlgorithmRun {
+  time: string;
+  inputs?: ParameterValue[];
+  outputs?: ParameterValue[];
+  returnValue: string;
+  error: string;
+}
+
+export interface AlgorithmLog {
+  time: string;
+  msg: string;
+}
+
+export interface AlgorithmOverrides {
+  textOverride?: AlgorithmTextOverride;
+}
+
+export interface AlgorithmTextOverride {
+  algorithm: string;
+  text: string;
+}
+
+export interface InputParameter {
+  parameter?: Parameter;
+  parameterInstance?: number;
+  argument?: Argument;
+  inputName: string;
+  mandatory: boolean;
+}
+
+export interface OutputParameter {
+  parameter: Parameter;
+  outputName: string;
+}
+
+export interface Container extends NameDescription {
+  maxInterval?: number;
+  sizeInBits?: number;
+  baseContainer?: Container;
+  archivePartition: boolean;
+  restrictionCriteriaExpression?: string;
+  entry?: SequenceEntry[];
+}
+
+export interface SequenceEntry {
+  locationInBits: number;
+  referenceLocation: 'CONTAINER_START' | 'PREVIOUS_ENTRY';
+  repeat?: RepeatInfo;
+
+  container?: Container;
+  parameter?: Parameter;
+  argument?: Argument;
+  fixedValue?: FixedValue;
+  indirectParameterRef?: IndirectParameterRef;
+}
+
+export interface FixedValue {
+  name: string;
+  hexValue: string;
+  sizeInBits: number;
+}
+
+export interface IndirectParameterRef {
+  parameter: Parameter;
+  aliasNamespace: string;
+}
+
+export interface RepeatInfo {
+  fixedCount: number;
+  dynamicCount: Parameter;
+  bitsBetween: number;
+}
+
+export interface GetParametersOptions {
+  type?: string;
+  source?: string;
+  q?: string;
+  system?: string;
+  searchMembers?: boolean;
+  details?: boolean;
+  pos?: number;
+  limit?: number;
+  next?: string;
+}
+
+export interface GetParameterTypesOptions {
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+  next?: string;
+  fields?: Array<keyof ParameterType>;
+}
+
+export interface ParametersPage {
+  systems?: SpaceSystem[];
+  parameters?: Parameter[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface ParameterTypesPage {
+  systems?: SpaceSystem[];
+  parameterTypes?: ParameterType[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetAlgorithmsOptions {
+  scope?: string;
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+}
+
+export interface AlgorithmsPage {
+  systems?: SpaceSystem[];
+  algorithms?: Algorithm[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetContainersOptions {
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+}
+
+export interface ContainersPage {
+  systems?: SpaceSystem[];
+  containers?: Container[];
+  continuationToken?: string;
+  totalSize: number;
+}
+
+export interface GetCommandsOptions {
+  noAbstract?: boolean;
+  q?: string;
+  system?: string;
+  pos?: number;
+  limit?: number;
+  details?: boolean;
+  fields?: Array<keyof Command>;
+}
+
+export interface CommandsPage {
+  systems?: SpaceSystem[];
+  commands?: Command[];
+  continuationToken?: string;
+  totalSize: number;
+}
+```
+
+### `monitoring.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/monitoring.ts`
+
+
+```typescript
+import { AlarmRange, NamedObjectId } from './mdb';
+
+export interface Value {
+  type:
+    | 'AGGREGATE'
+    | 'ARRAY'
+    | 'BINARY'
+    | 'BOOLEAN'
+    | 'DOUBLE'
+    | 'ENUMERATED'
+    | 'FLOAT'
+    | 'NONE'
+    | 'SINT32'
+    | 'SINT64'
+    | 'STRING'
+    | 'TIMESTAMP'
+    | 'UINT32'
+    | 'UINT64';
+  aggregateValue?: AggregateValue;
+  arrayValue?: Value[];
+  binaryValue?: string;
+  booleanValue?: boolean;
+  doubleValue?: number;
+  floatValue?: number;
+  sint32Value?: number;
+  sint64Value?: number;
+  stringValue?: string;
+  timestampValue?: number;
+  uint32Value?: number;
+  uint64Value?: number;
+}
+
+export interface AggregateValue {
+  name: string[];
+  value: Value[];
+}
+
+export type MonitoringResult =
+  | 'DISABLED'
+  | 'IN_LIMITS'
+  | 'WATCH'
+  | 'WARNING'
+  | 'DISTRESS'
+  | 'CRITICAL'
+  | 'SEVERE';
+
+export interface ParameterData {
+  parameter: ParameterValue[];
+  subscriptionId: number;
+}
+
+export interface ParameterValue {
+  numericId: number;
+  id: NamedObjectId;
+  rawValue: Value;
+  engValue: Value;
+  acquisitionTime: string;
+  generationTime: string;
+
+  acquisitionStatus: 'ACQUIRED' | 'NOT_RECEIVED' | 'INVALID' | 'EXPIRED';
+  monitoringResult: MonitoringResult;
+  alarmRange: AlarmRange[];
+  rangeCondition?: 'LOW' | 'HIGH';
+  expireMillis: number;
+}
+
+export interface Sample {
+  time: string;
+  avg: number;
+  min: number;
+  minTime: string;
+  max: number;
+  maxTime: string;
+  firstTime?: string;
+  lastTime?: string;
+  n: number;
+}
+
+export interface Range {
+  start: string;
+  stop: string;
+  engValues: Value[];
+  counts: number[];
+  otherCount: number;
+}
+
+export interface IssueCommandOptions {
+  args?: { [key: string]: any };
+  origin?: string;
+  sequenceNumber?: number;
+  dryRun?: boolean;
+  comment?: string;
+  stream?: string;
+  extra?: { [key: string]: Value };
+}
+
+export interface IssueCommandResponse {
+  id: string;
+  generationTime: string;
+  origin: string;
+  sequenceNumber: number;
+  commandName: string;
+  aliases?: { [key: string]: string };
+  binary: string;
+  username: string;
+  queue?: string;
+}
+
+export interface StartProcedureOptions {
+  arguments?: { [key: string]: string };
+}
+
+export interface ExecutorInfo {
+  id: string;
+}
+
+export interface CommandHistoryAttribute {
+  name: string;
+  value: Value;
+}
+
+export interface CommandAssignment {
+  name: string;
+  value: Value;
+  userInput: boolean;
+}
+
+export interface CommandHistoryEntry {
+  id: string;
+  commandName: string;
+  aliases?: { [key: string]: string };
+  origin: string;
+  sequenceNumber: number;
+  generationTime: string;
+  attr: CommandHistoryAttribute[];
+  assignments: CommandAssignment[];
+}
+
+export interface CommandHistoryPage {
+  commands?: CommandHistoryEntry[];
+  continuationToken?: string;
+}
+
+export interface GetCommandHistoryOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+  next?: string;
+  q?: string;
+  queue?: string;
+  order?: 'asc' | 'desc';
+}
+
+export interface CreateProcessorRequest {
+  instance: string;
+  name: string;
+  type: string;
+  persistent?: boolean;
+  config?: string;
+}
+
+export interface EditReplayProcessorRequest {
+  state?: 'running' | 'paused';
+  seek?: string;
+  speed?: string;
+  start?: string;
+  stop?: string;
+  loop?: boolean;
+}
+
+export interface GetPacketsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  filter?: string;
+  name?: string[];
+  link?: string;
+  next?: string;
+  limit?: number;
+  order?: 'asc' | 'desc';
+  fields?: Array<keyof Packet>;
+}
+
+export interface ListPacketsResponse {
+  packets?: Packet[];
+  continuationToken?: string;
+}
+
+export interface Packet {
+  id: NamedObjectId;
+  receptionTime: string;
+  earthReceptionTime: string;
+  generationTime: string;
+  sequenceNumber: number;
+  packet: string;
+  size: number;
+  link: string;
+}
+
+export interface GetParameterValuesOptions {
+  start?: string;
+  stop?: string;
+  pos?: number;
+  limit?: number;
+  norepeat?: boolean;
+  format?: 'csv';
+  source?: 'ParameterArchive' | 'replay';
+  order?: 'asc' | 'desc';
+}
+
+export interface DownloadParameterValuesOptions {
+  parameters?: string | string[];
+  list?: string;
+  start?: string;
+  stop?: string;
+  norepeat?: boolean;
+  delimiter?: 'TAB' | 'COMMA' | 'SEMICOLON';
+  header?: 'QUALIFIED_NAME' | 'SHORT_NAME' | 'NONE';
+  interval?: number;
+  filename?: string;
+}
+
+export interface ExportParameterValuesOptions {
+  start?: string;
+  stop?: string;
+  parameters?: string[];
+  list?: string;
+  namespace?: string;
+  delimiter?: 'TAB' | 'COMMA' | 'SEMICOLON';
+  preserveLastValue?: boolean;
+  interval?: number;
+  limit?: number;
+  order?: 'asc' | 'desc';
+}
+
+export interface GetParameterSamplesOptions {
+  start?: string;
+  stop?: string;
+  count?: number;
+  gapTime?: number;
+  source?: 'ParameterArchive' | 'replay';
+  order?: 'asc' | 'desc';
+  fields?: Array<keyof Sample>;
+}
+
+export interface GetParameterRangesOptions {
+  start?: string;
+  stop?: string;
+  minGap?: number;
+  maxGap?: number;
+  minRange?: number;
+  maxValues?: number;
+  source?: 'ParameterArchive' | 'replay';
+}
+
+export interface GetPacketIndexOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+  mergeTime?: number;
+}
+
+export interface StreamPacketIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetParameterIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamParameterIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetCommandIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamCommandIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetEventIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+  limit?: number;
+}
+
+export interface StreamEventIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface GetCompletenessIndexOptions {
+  start?: string;
+  stop?: string;
+  limit?: number;
+}
+
+export interface StreamCompletenessIndexOptions {
+  start?: string;
+  stop?: string;
+  mergeTime?: number;
+}
+
+export interface DownloadPacketsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+  name?: string | string[];
+  link?: string;
+  format?: 'raw';
+  order?: 'asc' | 'desc';
+}
+
+export interface IndexGroup {
+  id: NamedObjectId;
+  entry: IndexEntry[];
+}
+
+export interface IndexEntry {
+  start: string;
+  stop: string;
+  count: number;
+}
+
+export interface ArchiveRecord {
+  id: NamedObjectId;
+  first: string;
+  last: string;
+  num: number;
+}
+```
+
+### `plists.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/plists.ts`
+
+
+```typescript
+import { Parameter } from './mdb';
+
+export interface CreateParameterListRequest {
+  name: string;
+  description?: string;
+  patterns?: string[];
+}
+
+export interface ParameterList {
+  id: string;
+  name: string;
+  description: string;
+  patterns: string[];
+  match?: Parameter[];
+}
+
+export interface GetParameterListsResponse {
+  lists?: ParameterList[];
+}
+
+export interface UpdateParameterListRequest {
+  name?: string;
+  description?: string;
+  patternDefinition?: PatternDefinition;
+}
+
+export interface PatternDefinition {
+  patterns: string[];
+}
+```
+
+### `processing.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/processing.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import {
+  AlgorithmStatus,
+  Container,
+  DataSource,
+  EnumRange,
+  EnumValue,
+  NamedObjectId,
+  Parameter,
+} from './mdb';
+import { ParameterValue, Value } from './monitoring';
+import { Service, ServiceState } from './system';
+
+export interface SubscribeTMStatisticsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeAlgorithmStatusRequest {
+  instance: string;
+  processor: string;
+  name: string;
+}
+
+export interface Statistics {
+  instance: string;
+  processor: string;
+  tmstats: TmStatistics[];
+  lastUpdated: string;
+}
+
+export interface ExtractPacketResponse {
+  packetName: string;
+  parameterValues: ExtractedParameter[];
+  messages?: string[];
+}
+
+export interface ExtractedParameter {
+  parameter: Parameter;
+  entryContainer: Container;
+  location: number;
+  size: number;
+  rawValue: Value;
+  engValue: Value;
+}
+
+export interface TmStatistics {
+  packetName: string;
+  receivedPackets: number;
+  packetRate: number;
+  dataRate: number;
+  lastReceived: string;
+  lastPacketTime: string;
+  subscribedParameterCount: number;
+}
+
+export interface PacketNamesResponse {
+  packets: string[];
+  links: string[];
+}
+
+export interface SubscribeParametersRequest {
+  instance: string;
+  processor: string;
+  id: NamedObjectId[];
+  abortOnInvalid: boolean;
+  updateOnExpiration: boolean;
+  sendFromCache: boolean;
+  maxBytes?: number;
+  action: 'REPLACE' | 'ADD' | 'REMOVE';
+}
+
+export interface SubscribeParametersData {
+  mapping: { [key: number]: NamedObjectId };
+  info: { [key: number]: SubscribedParameterInfo };
+  invalid: NamedObjectId[];
+  values: ParameterValue[];
+}
+
+export interface SubscribedParameterInfo {
+  parameter: string;
+  dataSource: DataSource;
+  units?: string;
+  enumValues?: EnumValue[];
+  enumRanges?: EnumRange[];
+}
+
+export interface SubscribeProcessorsRequest {
+  instance?: string;
+  processor?: string;
+}
+
+export interface SubscribeBackfillingRequest {
+  instance: string;
+}
+
+export interface SubscribeBackfillingData {
+  finished?: BackfillFinished[];
+}
+
+export interface BackfillFinished {
+  start: string;
+  stop: string;
+  processedParameters: number;
+}
+
+export interface Processor {
+  instance: string;
+  name: string;
+  type: string;
+  creator: string;
+  hasAlarms: boolean;
+  hasCommanding: boolean;
+  checkCommandClearance: boolean;
+  state: ServiceState;
+  persistent: boolean;
+  protected: boolean;
+  time: string;
+  replay: boolean;
+  replayRequest?: ReplayRequest;
+  replayState?: string;
+  services: Service[];
+  acknowledgments: AcknowledgmentInfo[];
+}
+
+export interface AcknowledgmentInfo {
+  name: string;
+  description?: string;
+}
+
+export interface ReplayRequest {
+  start: string;
+  stop: string;
+  speed: ReplaySpeed;
+  endAction: string;
+}
+
+export interface ReplaySpeed {
+  type: 'AFAP' | 'FIXED_DELAY' | 'REALTIME';
+  param: number;
+}
+
+export interface DownloadCommandsOptions {
+  /**
+   * Inclusive lower bound
+   */
+  start?: string;
+  /**
+   * Exclusive upper bound
+   */
+  stop?: string;
+
+  delimiter?: 'COMMA' | 'SEMICOLON' | 'TAB';
+}
+
+export type TMStatisticsSubscription = WebSocketCall<
+  SubscribeTMStatisticsRequest,
+  Statistics
+>;
+
+export type AlgorithmStatusSubscription = WebSocketCall<
+  SubscribeAlgorithmStatusRequest,
+  AlgorithmStatus
+>;
+
+export type ParameterSubscription = WebSocketCall<
+  SubscribeParametersRequest,
+  SubscribeParametersData
+>;
+
+export type ProcessorSubscription = WebSocketCall<
+  SubscribeProcessorsRequest,
+  Processor
+>;
+
+export type BackfillingSubscription = WebSocketCall<
+  SubscribeBackfillingRequest,
+  SubscribeBackfillingData
+>;
+```
+
+### `queue.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/queue.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { CommandAssignment } from './monitoring';
+
+export interface SubscribeQueueStatisticsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface SubscribeQueueEventsRequest {
+  instance: string;
+  processor: string;
+}
+
+export interface CommandQueueEntry {
+  instance: string;
+  processorName: string;
+  queueName: string;
+  id: string;
+  commandName: string;
+  origin: string;
+  sequenceNumber: number;
+  assignments: CommandAssignment[];
+  binary: string;
+  username: string;
+  generationTime: string;
+  pendingTransmissionConstraints: boolean;
+}
+
+export interface CommandQueue {
+  instance: string;
+  processorName: string;
+  name: string;
+  state: 'BLOCKED' | 'DISABLED' | 'ENABLED';
+  users: string[];
+  groups: string[];
+  tcPatterns: string[];
+  minLevel: string;
+  entries: CommandQueueEntry[];
+  acceptedCommandsCount: number;
+  rejectedCommandsCount: number;
+  order: number;
+}
+
+export interface CommandQueueEvent {
+  type:
+    | 'COMMAND_ADDED'
+    | 'COMMAND_UPDATED'
+    | 'COMMAND_REJECTED'
+    | 'COMMAND_SENT';
+  data: CommandQueueEntry;
+}
+
+export type QueueStatisticsSubscription = WebSocketCall<
+  SubscribeQueueStatisticsRequest,
+  CommandQueue
+>;
+export type QueueEventsSubscription = WebSocketCall<
+  SubscribeQueueEventsRequest,
+  CommandQueueEvent
+>;
+```
+
+### `session.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/session.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export interface SessionEvent {
+  endReason: string;
+}
+
+export type SessionSubscription = WebSocketCall<{}, SessionEvent>;
+```
+
+### `system.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/system.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { Processor } from './processing';
+
+export interface AuthInfo {
+  requireAuthentication: boolean;
+  spnego: boolean;
+  openid?: OpenIDConnectInfo;
+}
+
+export interface OpenIDConnectInfo {
+  clientId: string;
+  authorizationEndpoint: string;
+  scope: string;
+}
+
+export interface TokenResponse {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token: string;
+  user: UserInfo;
+}
+
+export interface InstanceConfig {
+  displayBucket: string;
+  stackBucket: string;
+  parameterArchive: boolean;
+  tcStreams?: string[];
+}
+
+export interface GeneralInfo {
+  yamcsVersion: string;
+  revision: string;
+  serverId: string;
+  plugins: PluginInfo[];
+  commandOptions: CommandOption[];
+}
+
+export interface ListRoutesResponse {
+  routes: Route[];
+}
+
+export interface ListTopicsResponse {
+  topics: Topic[];
+}
+
+export interface ListProcessorTypesResponse {
+  types: string[];
+}
+
+export interface ListThreadsResponse {
+  threads: ThreadInfo[];
+}
+
+export interface ThreadGroup {
+  name: string;
+  parent?: ThreadGroup;
+}
+
+export interface ThreadInfo {
+  id: number;
+  name: string;
+  state: string;
+  native: boolean;
+  suspended: boolean;
+  group?: ThreadGroup;
+  trace: TraceElementInfo[];
+}
+
+export interface TraceElementInfo {
+  className: string;
+  fileName: string;
+  methodName: string;
+  lineNumber: number;
+}
+
+export interface ListClearancesResponse {
+  clearances: Clearance[];
+}
+
+export interface Database {
+  name: string;
+  tablespace: string;
+  path: string;
+  tables: string[];
+  streams: string[];
+}
+
+export interface ListDatabasesResponse {
+  databases: Database[];
+}
+
+export interface Route {
+  service: string;
+  method: string;
+  description: string;
+  inputType: string;
+  outputType: string;
+  deprecated: boolean;
+  url: string;
+  httpMethod: string;
+  requestCount: number;
+  logFormat: string;
+}
+
+export interface Topic {
+  topic: string;
+  service: string;
+  method: string;
+  inputType: string;
+  outputType: string;
+  deprecated: boolean;
+}
+
+export interface PluginInfo {
+  name: string;
+  description: string;
+  version: string;
+  vendor: string;
+}
+
+export type CommandOptionType = 'BOOLEAN' | 'STRING' | 'NUMBER' | 'TIMESTAMP';
+
+export interface CommandOption {
+  id: string;
+  verboseName: string;
+  type: CommandOptionType;
+  help: string;
+}
+
+export type ServiceState =
+  | 'NEW'
+  | 'STARTING'
+  | 'RUNNING'
+  | 'STOPPING'
+  | 'TERMINATED'
+  | 'FAILED';
+
+export type InstanceState =
+  | 'OFFLINE'
+  | 'INITIALIZING'
+  | 'INITIALIZED'
+  | 'STARTING'
+  | 'RUNNING'
+  | 'STOPPING'
+  | 'FAILED';
+
+export interface Instance {
+  name: string;
+  state: InstanceState;
+  processors: Processor[];
+  labels?: { [key: string]: string };
+  missionTime: string;
+  capabilities: string[];
+  template?: string;
+  templateArgs?: { [key: string]: string };
+  templateAvailable: boolean;
+  templateChanged: boolean;
+}
+
+export interface InstanceTemplate {
+  name: string;
+  description: string;
+  variables: TemplateVariable[];
+}
+
+export interface TemplateVariable {
+  name: string;
+  label?: string;
+  help?: string;
+  required: boolean;
+  type: string;
+  initial?: string;
+  choices?: string[];
+}
+
+export interface ConnectionInfo {
+  instance: Instance;
+  processor?: Processor;
+}
+
+export interface HttpTraffic {
+  readBytes: number;
+  writtenBytes: number;
+  readThroughput: number;
+  writeThroughput: number;
+  connections: ClientConnectionInfo[];
+}
+
+export interface ClientConnectionInfo {
+  id: string;
+  open: boolean;
+  active: boolean;
+  writable: boolean;
+  remoteAddress: string;
+  localAddress: string;
+  readBytes: number;
+  writtenBytes: number;
+  readThroughput: number;
+  writeThroughput: number;
+  httpRequest: HttpRequestInfo;
+}
+
+export interface AuditRecordsPage {
+  records: AuditRecord[];
+}
+
+export interface GetAuditRecordsOptions {
+  start?: string;
+  stop?: string;
+  q?: string;
+  service?: string;
+}
+
+export interface AuditRecord {
+  time: string;
+  service: string;
+  method: string;
+  user: string;
+  summary: string;
+  request: any;
+}
+
+export interface SessionInfo {
+  id: string;
+  username: string;
+  ipAddress: string;
+  hostname: string;
+  startTime: string;
+  lastAccessTime: string;
+  expirationTime: string;
+}
+
+export interface ResultSet {
+  columns: any;
+  rows: any;
+}
+
+export interface HttpRequestInfo {
+  protocol: string;
+  method: string;
+  uri: string;
+  keepAlive: string;
+  userAgent: string;
+}
+
+export interface EditClearanceRequest {
+  level: string;
+}
+
+export interface CreateUserRequest {
+  name: string;
+  displayName?: string;
+  email?: string;
+  password?: string;
+}
+
+export interface EditUserRequest {
+  displayName?: string;
+  email?: string;
+  active?: boolean;
+  superuser?: boolean;
+  password?: string;
+  roleAssignment?: RoleAssignmentInfo;
+}
+
+export interface UserInfo {
+  name: string;
+  displayName: string;
+  email: string;
+  active: boolean;
+  superuser: boolean;
+  createdBy: UserInfo;
+  creationTime: string;
+  confirmationTime: string;
+  lastLoginTime: string;
+  groups?: GroupInfo[];
+  roles?: RoleInfo[];
+  identities?: ExternalIdentity[];
+  clearance: string;
+
+  systemPrivileges?: string[];
+  objectPrivileges?: ObjectPrivilege[];
+}
+
+export interface ExternalIdentity {
+  identity: string;
+  provider: string;
+}
+
+export interface ListServiceAccountsResponse {
+  serviceAccounts: ServiceAccount[];
+}
+
+export interface CreateServiceAccountRequest {
+  name: string;
+}
+
+export interface CreateServiceAccountResponse {
+  name: string;
+  applicationId: string;
+  applicationSecret: string;
+}
+
+export interface ServiceAccount {
+  name: string;
+  active: boolean;
+}
+
+export interface GroupInfo {
+  name: string;
+  description: string;
+  users?: UserInfo[];
+  serviceAccounts?: ServiceAccount[];
+}
+
+export interface GroupMemberInfo {
+  users?: string[];
+  serviceAccounts?: string[];
+}
+
+export interface EditGroupRequest {
+  newName?: string;
+  description?: string;
+  memberInfo?: GroupMemberInfo;
+}
+
+export interface RoleAssignmentInfo {
+  roles?: string[];
+}
+
+export interface ObjectPrivilege {
+  type: string;
+  objects: string[];
+}
+
+export interface RoleInfo {
+  name: string;
+  description: string;
+  default: boolean;
+  systemPrivileges?: string[];
+  objectPrivileges?: ObjectPrivilege[];
+}
+
+export interface Clearance {
+  username: string;
+  level: string;
+  issuedBy: string;
+  issueTime: string;
+  hasCommandPrivileges: boolean;
+}
+
+export type ClearanceSubscription = WebSocketCall<void, Clearance>;
+
+export type ReplicationInfoSubscription = WebSocketCall<void, ReplicationInfo>;
+
+export type SystemInfoSubscription = WebSocketCall<void, SystemInfo>;
+
+export type HttpTrafficSubscription = WebSocketCall<void, HttpTraffic>;
+
+export interface Service {
+  instance: string;
+  name: string;
+  state: ServiceState;
+  className: string;
+}
+
+export interface Bucket {
+  name: string;
+  location: BucketLocation;
+  size: number;
+  maxSize: number;
+  numObjects: number;
+  maxObjects: number;
+  created: string;
+  directory?: string;
+}
+
+export interface BucketLocation {
+  name: string;
+  description: string;
+}
+
+export interface ListObjectsResponse {
+  prefixes: string[];
+  objects: ObjectInfo[];
+}
+
+export interface ObjectInfo {
+  name: string;
+  created: string;
+  size: number;
+  metadata: { [key: string]: string };
+}
+
+export interface CreateBucketRequest {
+  name: string;
+}
+
+export interface ListObjectsOptions {
+  prefix?: string;
+  delimiter?: string;
+}
+
+export interface CreateGroupRequest {
+  name: string;
+  description?: string;
+  users?: string[];
+  serviceAccounts?: string[];
+}
+
+export interface RocksDbDatabase {
+  tablespace: string;
+  dbPath: string;
+  dataDir: string;
+}
+
+export interface CompactRocksDbDatabaseRequest {
+  cfname?: string;
+}
+
+export interface SystemInfo {
+  yamcsVersion: string;
+  revision: string;
+  serverId: string;
+  uptime: number;
+  jvm: string;
+  workingDirectory: string;
+  configDirectory: string;
+  dataDirectory: string;
+  cacheDirectory: string;
+  os: string;
+  arch: string;
+  availableProcessors: number;
+  loadAverage: number;
+  heapMemory: number;
+  usedHeapMemory: number;
+  maxHeapMemory: number;
+  nonHeapMemory: number;
+  usedNonHeapMemory: number;
+  usedMaxHeapMemory: number;
+  maxNonHeapMemory: number;
+  jvmThreadCount: number;
+  rootDirectories: RootDirectory[];
+  process: ProcessInfo;
+}
+
+export interface ProcessInfo {
+  pid: number;
+  user: string;
+  command: string;
+  arguments?: string[];
+  startTime: string;
+  totalCpuDuration: string;
+  children?: ProcessInfo[];
+}
+
+export interface RootDirectory {
+  directory: string;
+  type: string;
+  totalSpace: number;
+  unallocatedSpace: number;
+  usableSpace: number;
+}
+
+export interface LeapSecondsTable {
+  ranges: ValidityRange[];
+}
+
+export interface ValidityRange {
+  start: string;
+  stop: string;
+  leapSeconds: number;
+  taiDifference: number;
+}
+
+export interface ReplicationInfo {
+  masters: ReplicationMaster[];
+  slaves: ReplicationSlave[];
+}
+
+export interface ReplicationMaster {
+  instance: string;
+  streams: string[];
+  localAddress: string;
+  remoteAddress: string;
+  push: boolean;
+  pushTo?: string;
+  localTx: number;
+  nextTx: number;
+}
+
+export interface ReplicationSlave {
+  instance: string;
+  streams: string;
+  localAddress: string;
+  remoteAddress: string;
+  push: boolean;
+  pullFrom?: string;
+  tx: number;
+}
+
+export interface ParameterId {
+  pid: number;
+  parameter: string;
+  rawType: string;
+  engType: string;
+  gids?: number[];
+}
+
+export interface GetParameterArchivePidsOptions {
+  filter?: string;
+  limit?: number;
+  next?: string;
+}
+
+export interface GetParameterArchivePidsPage {
+  pids?: ParameterId[];
+  continuationToken?: string;
+}
+```
+
+### `table.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/table.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+import { Value } from './monitoring';
+
+export interface SubscribeStreamStatisticsRequest {
+  instance: string;
+}
+
+export interface SubscribeStreamRequest {
+  instance: string;
+  stream: string;
+}
+
+export interface StreamEvent {
+  type: string;
+  name: string;
+  dataCount: number;
+}
+
+export interface Stream {
+  name: string;
+  columns: Column[];
+  script: string;
+  dataCount: number;
+  subscribers: string[];
+}
+
+export interface StreamData {
+  stream: string;
+  column: ColumnData[];
+}
+
+export interface Column {
+  name: string;
+  type: string;
+  enumValue: SQLEnumValue[];
+  autoIncrement?: boolean;
+}
+
+export interface SQLEnumValue {
+  value: number;
+  label: string;
+}
+
+export interface Table {
+  name: string;
+  keyColumn: Column[];
+  valueColumn: Column[];
+  histogramColumn?: string[];
+  storageEngine: string;
+  formatVersion: number;
+  tablespace?: string;
+  compressed: boolean;
+  partitioningInfo?: PartitioningInfo;
+  script: string;
+}
+
+export interface PartitioningInfo {
+  type: 'TIME' | 'VALUE' | 'TIME_AND_VALUE';
+  timeColumn: string;
+  timePartitionSchema: string;
+  valueColumn: string;
+  valueColumnType: string;
+}
+
+export interface Record {
+  column: ColumnData[];
+}
+
+export interface ColumnData {
+  name: string;
+  value: Value;
+}
+
+export type StreamStatisticsSubscription = WebSocketCall<
+  SubscribeStreamStatisticsRequest,
+  StreamEvent
+>;
+export type StreamSubscription = WebSocketCall<
+  SubscribeStreamRequest,
+  StreamData
+>;
+```
+
+### `time.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/time.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export interface SubscribeTimeRequest {
+  instance: string;
+  processor?: string;
+}
+
+export interface Time {
+  value: string;
+}
+
+export type TimeSubscription = WebSocketCall<SubscribeTimeRequest, Time>;
+```
+
+### `timeline.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/timeline.ts`
+
+
+```typescript
+export interface CreateTimelineItemRequest {
+  name: string;
+  start: string;
+  duration: string;
+  type: TimelineItemType;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  activityDefinition?: ActivityDefinition;
+}
+
+export interface UpdateTimelineItemRequest {
+  name: string;
+  start: string;
+  duration: string;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  clearTags?: boolean;
+  clearProperties?: boolean;
+}
+
+export type TimelineItemType = 'EVENT' | 'ACTIVITY';
+
+export interface TimelineItem {
+  id: string;
+  name: string;
+  start: string;
+  duration: string;
+  type: TimelineItemType;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  status?: string;
+  activityDefinition?: ActivityDefinition;
+}
+
+export interface ActivityDefinition {
+  type: string;
+  args?: { [key: string]: any };
+}
+
+export interface TimelineViewsPage {
+  views: TimelineView[];
+}
+
+export interface TimelineBandsPage {
+  bands: TimelineBand[];
+}
+
+export interface TimelineTagsPage {
+  tags: string[];
+}
+
+export interface TimelineItemsPage {
+  items: TimelineItem[];
+}
+
+export interface GetTimelineItemsOptions {
+  source: string;
+  start?: string;
+  stop?: string;
+  band?: string;
+}
+
+export type TimelineBandType =
+  | 'TIME_RULER'
+  | 'ITEM_BAND'
+  | 'SPACER'
+  | 'COMMAND_BAND'
+  | 'PARAMETER_PLOT'
+  | 'PARAMETER_STATES';
+
+export interface CreateTimelineBandRequest {
+  name: string;
+  description: string;
+  type: TimelineBandType;
+  shared: boolean;
+  tags?: string[];
+  properties?: { [key: string]: string };
+}
+
+export interface TimelineBand {
+  id: string;
+  type: TimelineBandType;
+  shared: boolean;
+  name: string;
+  description: string;
+  tags?: string[];
+  properties?: { [key: string]: string };
+  username: string;
+}
+
+export interface UpdateTimelineBandRequest {
+  name: string;
+  description: string;
+  shared: boolean;
+  tags?: string[];
+  properties?: { [key: string]: string };
+}
+
+export interface TimelineView {
+  id: string;
+  name: string;
+  bands?: TimelineBand[];
+}
+
+export interface CreateTimelineViewRequest {
+  name: string;
+  bands?: string[];
+}
+
+export interface UpdateTimelineViewRequest {
+  name: string;
+  bands?: string[];
+}
+```
+
+### `web.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/client/types/web.ts`
+
+
+```typescript
+import { WebSocketCall } from '../WebSocketCall';
+
+export interface CreateQueryRequest {
+  name: string;
+  query: { [key: string]: any };
+  shared: boolean;
+}
+
+export interface Query {
+  id: string;
+  name: string;
+  shared: boolean;
+  query: { [key: string]: any };
+}
+
+export interface ListQueriesResponse {
+  queries?: Query[];
+}
+
+export interface EditQueryRequest {
+  name: string;
+  shared: boolean;
+  query: { [key: string]: any };
+}
+
+export interface ParseFilterRequest {
+  resource: string;
+  filter: string;
+}
+
+export interface ParseFilterData {
+  errorMessage?: string;
+  beginLine?: number;
+  beginColumn?: number;
+  endLine?: number;
+  endColumn?: number;
+}
+
+export type ParseFilterSubscription = WebSocketCall<
+  ParseFilterRequest,
+  ParseFilterData
+>;
+```

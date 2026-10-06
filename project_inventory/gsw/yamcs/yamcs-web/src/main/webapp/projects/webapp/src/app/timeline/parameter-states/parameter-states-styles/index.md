@@ -3,16 +3,77 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `parameter-states-styles.component.html`
 
-file--parameter-states-styles.component.html
-file--parameter-states-styles.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/parameter-states-styles.component.html`
+
+
+```html
+<form [formGroup]="form">
+  <table class="style-table" formGroupName="properties">
+    <tr>
+      <td class="property">
+        Frozen
+        <ya-help dialogTitle="Frozen">
+          Fix this line to the top of the view. Frozen bands are always rendered above other bands.
+        </ya-help>
+      </td>
+      <td class="widget">
+        <mat-slide-toggle formControlName="frozen" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Height</td>
+      <td class="widget">
+        <input type="number" formControlName="height" style="width: 100px" min="0" />
+      </td>
+    </tr>
+    <tr>
+      <td class="property">Parameter</td>
+      <td class="widget">
+        <app-parameter-input formControlName="parameter" [fill]="true" />
+      </td>
+    </tr>
+  </table>
+  <br />
+  <p class="hint">
+    For best results the displayed parameter should have a limited amount of possible values and/or
+    change infrequently. Else the visualization will not be very useful, especially when zoomed out.
+  </p>
+  <p class="hint">
+    This generally means that
+    <strong>enumeration</strong>
+    ,
+    <strong>boolean</strong>
+    or
+    <strong>string</strong>
+    parameters are the best candidates. Or a numeric parameter with custom value mapping.
+  </p>
+</form>
 ```
 
-## 항목
+### `parameter-states-styles.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/parameter-states-styles.component.html`](file--parameter-states-styles.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/parameter-states-styles.component.ts`](file--parameter-states-styles.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/parameter-states/parameter-states-styles/parameter-states-styles.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { WebappSdkModule } from '@yamcs/webapp-sdk';
+import { AppParameterInput } from '../../../shared/parameter-input/parameter-input.component';
+
+@Component({
+  selector: 'app-parameter-states-styles',
+  templateUrl: './parameter-states-styles.component.html',
+  styleUrl: '../../shared/StyleTable.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AppParameterInput, WebappSdkModule],
+})
+export class ParameterStatesStylesComponent {
+  @Input()
+  form: FormGroup;
+}
+```

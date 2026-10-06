@@ -3,14 +3,35 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/setup/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `action.yml`
 
-file--action.yml
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/.github/actions/setup/action.yml`
+
+
+```yaml
+name: 'Setup F´'
+description: 'Setup the F´ repository and tools'
+inputs:
+  location:
+    required: true
+    default: $GITHUB_WORKSPACE
+runs:
+  using: "composite"
+  steps:
+  - run: git fetch --tags
+    shell: bash
+  # Python path should be added at a higher level
+  - run: pip3 install setuptools_scm wheel urllib3
+    shell: bash
+  - run: pip3 install -U -r ${{ inputs.location }}/requirements.txt
+    shell: bash
+  - run: which fprime-util
+    shell: bash
+  - run: which fprime-gds
+    shell: bash
+  - run: which fpp-check
+    shell: bash
+    
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/.github/actions/setup/action.yml`](file--action.yml) — UTF-8 텍스트 파일 본문 포함

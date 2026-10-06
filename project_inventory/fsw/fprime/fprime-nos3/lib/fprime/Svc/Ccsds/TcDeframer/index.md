@@ -3,24 +3,311 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--TcDeframer.cpp
-file--TcDeframer.fpp
-file--TcDeframer.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.cpp`](file--TcDeframer.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.fpp`](file--TcDeframer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.hpp`](file--TcDeframer.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/CMakeLists.txt`
+
+
+```cmake
+####
+# FPrime CMakeLists.txt:
+#
+# SOURCES: list of source files (to be compiled)
+# AUTOCODER_INPUTS: list of files to be passed to the autocoders
+# DEPENDS: list of libraries that this module depends on
+#
+# More information in the F´ CMake API documentation:
+# https://fprime.jpl.nasa.gov/devel/docs/reference/api/cmake/API/
+#
+####
+
+register_fprime_library(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/TcDeframer.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/TcDeframer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+)
+
+register_fprime_ut(
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TcDeframerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TcDeframerTester.cpp"
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/TcDeframer.fpp"
+  DEPENDS
+    Svc_Ccsds_Types
+    STest
+  UT_AUTO_HELPERS
+)
+```
+
+### `TcDeframer.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcDeframer.cpp
+// \author thomas-bc
+// \brief  cpp file for TcDeframer component implementation class
+// ======================================================================
+
+#include "Svc/Ccsds/TcDeframer/TcDeframer.hpp"
+#include "Svc/Ccsds/Types/FppConstantsAc.hpp"
+#include "Svc/Ccsds/Types/TCHeaderSerializableAc.hpp"
+#include "Svc/Ccsds/Types/TCTrailerSerializableAc.hpp"
+#include "Svc/Ccsds/Utils/CRC16.hpp"
+#include "config/FpConfig.hpp"
+
+namespace Svc {
+namespace Ccsds {
+
+// ----------------------------------------------------------------------
+// Component construction and destruction
+// ----------------------------------------------------------------------
+
+TcDeframer ::TcDeframer(const char* const compName)
+    : TcDeframerComponentBase(compName), m_spacecraftId(ComCfg::SpacecraftId) {}
+
+TcDeframer ::~TcDeframer() {}
+
+void TcDeframer::configure(U16 vcId, U16 spacecraftId, bool acceptAllVcid) {
+    this->m_vcId = vcId;
+    this->m_spacecraftId = spacecraftId;
+    this->m_acceptAllVcid = acceptAllVcid;
+}
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+void TcDeframer ::dataIn_handler(FwIndexType portNum, Fw::Buffer& data, const ComCfg::FrameContext& context) {
+    // CCSDS TC Format:
+    // 5 octets - TC Primary Header
+    // Up to 1019 octets - Data Field (including optional 2 octets frame error control field)
+
+    // Note: F Prime uses Type-BD
+    // CCSDS TC Primary Header:
+    // 2b - 00  - TF Version Number
+    // 1b - 0/1 - Bypass Flag            (0 = Type-A FARM checks enabled, 1 = Type-B FARM checks bypassed)
+    // 1b - 0/1 - Control Command Flag   (0 = Type-D data, 1 = Type-C control command)
+    // 2b - 00  - Reserved Spare         (set to 00)
+    // 10b- XX  - Spacecraft ID
+    // 6b - XX  - Virtual Channel ID
+    // 10b- XX  - Frame Length
+    // 8b - XX  - Frame Sequence Number  (unused for Type-B frames)
+
+    // CCSDS TC Trailer:
+    // 16b - Frame Error Control Field (FECF): CRC16
+
+    FW_ASSERT(data.getSize() > TCHeader::SERIALIZED_SIZE + TCTrailer::SERIALIZED_SIZE,
+              static_cast<FwAssertArgType>(data.getSize()));
+
+    TCHeader header;
+    Fw::SerializeStatus status = data.getDeserializer().deserialize(header);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+    // TC protocol defines the Frame Length as number of bytes minus 1, so we add 1 back to get length in bytes
+    U16 total_frame_length = static_cast<U16>((header.get_vcIdAndLength() & TCSubfields::FrameLengthMask) + 1);
+    U8 vc_id = static_cast<U8>((header.get_vcIdAndLength() & TCSubfields::VcIdMask) >> TCSubfields::VcIdOffset);
+    U16 spacecraft_id = header.get_flagsAndScId() & TCSubfields::SpacecraftIdMask;
+
+    if (spacecraft_id != this->m_spacecraftId) {
+        this->log_WARNING_LO_InvalidSpacecraftId(spacecraft_id, this->m_spacecraftId);
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+    if (data.getSize() < static_cast<Fw::Buffer::SizeType>(total_frame_length)) {
+        FwSizeType maxDataAvailable = static_cast<FwSizeType>(data.getSize());
+        this->log_WARNING_HI_InvalidFrameLength(total_frame_length, maxDataAvailable);
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+    if (not this->m_acceptAllVcid && vc_id != this->m_vcId) {
+        this->log_ACTIVITY_LO_InvalidVcId(vc_id, this->m_vcId);
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+    // Note: F Prime uses TC Type-BD frames for now, so the FARM checks are not ran
+    // This means there is no sequence count checks at the TC level (there are at the Space Packet level)
+
+    // -------------------------------------------------
+    // CRC Check
+    // -------------------------------------------------
+    // Compute CRC over the entire frame buffer minus the FECF trailer
+    U16 computed_crc = Ccsds::Utils::CRC16::compute(data.getData(), total_frame_length - TCTrailer::SERIALIZED_SIZE);
+    TCTrailer trailer;
+    auto deserializer = data.getDeserializer();
+    deserializer.moveDeserToOffset(total_frame_length - TCTrailer::SERIALIZED_SIZE);
+    status = deserializer.deserialize(trailer);
+    FW_ASSERT(status == Fw::FW_SERIALIZE_OK, status);
+
+    U16 transmitted_crc = trailer.get_fecf();
+    if (transmitted_crc != computed_crc) {
+        this->log_WARNING_HI_InvalidCrc(computed_crc, transmitted_crc);
+        this->dataReturnOut_out(0, data, context);  // drop the frame
+        return;
+    }
+
+    // Point to the start of the data field and set appropriate size
+    data.setData(data.getData() + TCHeader::SERIALIZED_SIZE);
+    // Shrink size to that of the encapsulated data field ( header | data | trailer )
+    data.setSize(total_frame_length - TCHeader::SERIALIZED_SIZE - TCTrailer::SERIALIZED_SIZE);
+
+    this->dataOut_out(0, data, context);
+}
+
+void TcDeframer ::dataReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer, const ComCfg::FrameContext& context) {
+    this->dataReturnOut_out(0, fwBuffer, context);
+}
+
+}  // namespace Ccsds
+}  // namespace Svc
+```
+
+### `TcDeframer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.fpp`
+
+
+```fpp
+module Svc {
+module Ccsds {
+    @ Deframer for the TC Space Data Link Protocol (CCSDS Standard)
+    passive component TcDeframer {
+
+        import Deframer
+
+        @ Deframing received an invalid SCID
+        event InvalidSpacecraftId(transmitted: U16, configured: U16) \
+            severity warning low \ 
+            format "Invalid Spacecraft ID Received. Received: {} | Deframer configured with: {}"
+
+        @ Deframing received an invalid frame length
+        event InvalidFrameLength(transmitted: U16, actual: FwSizeType) \
+            severity warning high \
+            format "Not enough data received. Header length specified: {} | Received data length: {}"
+
+        @ Deframing received an invalid VCID
+        event InvalidVcId(transmitted: U16, configured: U16) \
+            severity activity low \
+            format "Invalid Virtual Channel ID Received. Header token specified: {} | Deframer configured with: {}"
+
+        @ Deframing received an invalid checksum
+        event InvalidCrc(transmitted: U16, computed: U16) \
+            severity warning high \
+            format "Invalid checksum received. Trailer specified: {} | Computed on board: {}"
+
+        ###############################################################################
+        # Standard AC Ports: Required for Channels, Events, Commands, and Parameters  #
+        ###############################################################################
+        @ Port for requesting the current time
+        time get port timeCaller
+
+        @ Port for sending textual representation of events
+        text event port logTextOut
+
+        @ Port for sending events to downlink
+        event port logOut
+
+        @ Port for sending telemetry channels to downlink
+        telemetry port tlmOut
+
+        @ Port to return the value of a parameter
+        param get port prmGetOut
+
+        @Port to set the value of a parameter
+        param set port prmSetOut
+
+    }
+}
+}
+```
+
+### `TcDeframer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ccsds/TcDeframer/TcDeframer.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcDeframer.hpp
+// \author thomas-bc
+// \brief  hpp file for TcDeframer component implementation class
+// ======================================================================
+
+#ifndef Svc_Ccsds_TcDeframer_HPP
+#define Svc_Ccsds_TcDeframer_HPP
+
+#include "Svc/Ccsds/TcDeframer/TcDeframerComponentAc.hpp"
+
+namespace Svc {
+namespace Ccsds {
+class TcDeframer : public TcDeframerComponentBase {
+    friend class TcDeframerTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Component construction and destruction
+    // ----------------------------------------------------------------------
+
+    //! Construct TcDeframer object
+    TcDeframer(const char* const compName  //!< The component name
+    );
+
+    //! Destroy TcDeframer object
+    ~TcDeframer();
+
+    //! \brief Configure the TcDeframer to deframe only a specific VCID and spacecraft ID
+    //!
+    //! By default, the TcDeframer is configured with the spacecraft ID set in the config/ComCfg.fpp file,
+    //! and deframes all incoming frames regardless of their VCID. Should project instantiate a TcDeframer
+    //! with a different configuration, they can use this configure method to set the desired properties.
+    //!
+    //! \param vcId The virtual channel ID to accept (if acceptAllVcid is false)
+    //! \param spacecraftId The spacecraft ID to accept
+    //! \param acceptAllVcid If true, the deframer will accept all VCIDs. If false, it will only accept configured vcId
+    //!
+    void configure(U16 vcId, U16 spacecraftId, bool acceptAllVcid);
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    //! Handler implementation for dataIn
+    //!
+    //! Port to receive framed data
+    void dataIn_handler(FwIndexType portNum,  //!< The port number
+                        Fw::Buffer& data,
+                        const ComCfg::FrameContext& context) override;
+
+    //! Handler implementation for dataReturnIn
+    //!
+    //! Port receiving back ownership of sent frame buffers
+    void dataReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& data,     //!< The buffer
+                              const ComCfg::FrameContext& context) override;
+
+  private:
+    U16 m_vcId;                   //!< The virtual channel ID this deframer is configured to handle
+    U16 m_spacecraftId;           //!< The spacecraft ID this deframer is configured to handle
+    bool m_acceptAllVcid = true;  //!< Flag to accept all VCIDs
+};
+}  // namespace Ccsds
+}  // namespace Svc
+
+#endif
+```

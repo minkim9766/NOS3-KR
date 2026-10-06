@@ -3,62 +3,7258 @@
 
 **경로:** `fsw/osal/src/unit-test-coverage/shared/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `coveragetest-binsem.c`
 
-file--coveragetest-binsem.c
-file--coveragetest-clock.c
-file--coveragetest-common.c
-file--coveragetest-condvar.c
-file--coveragetest-countsem.c
-file--coveragetest-dir.c
-file--coveragetest-errors.c
-file--coveragetest-file.c
-file--coveragetest-filesys.c
-file--coveragetest-heap.c
-file--coveragetest-idmap.c
-file--coveragetest-module.c
-file--coveragetest-mutex.c
-file--coveragetest-network.c
-file--coveragetest-printf.c
-file--coveragetest-queue.c
-file--coveragetest-select.c
-file--coveragetest-shell.c
-file--coveragetest-sockets.c
-file--coveragetest-task.c
-file--coveragetest-time.c
-file--coveragetest-timebase.c
-file--coveragetest-version.c
-file--os-shared-coverage-support.c
-file--os-shared-coveragetest.h
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-binsem.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_BinSemAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_BinSemCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemCreate (uint32 *sem_id, const char *sem_name,
+     *          uint32 sem_initial_value, uint32 options)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate(&objid, "UT", 0, 0), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate(NULL, "UT", 0, 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate(&objid, NULL, 0, 0), OS_INVALID_POINTER);
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate(&objid, "UT", 0, 0), OS_ERR_NAME_TOO_LONG);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemCreate(&objid, "UT", 0, 0), OS_ERR_NO_FREE_IDS);
+}
+
+void Test_OS_BinSemDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemDelete (uint32 sem_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemDelete(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemDelete(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_BinSemGive(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemGive ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGive(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGive(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_BinSemTake(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemTake ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTake(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTake(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_BinSemFlush(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemFlush (uint32 sem_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemFlush(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemFlush(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_BinSemTimedWait(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemTimedWait ( uint32 sem_id, uint32 msecs )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTimedWait(UT_OBJID_1, 1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemTimedWait(UT_OBJID_1, 1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_BinSemGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemGetIdByName (uint32 *sem_id, const char *sem_name)
+     */
+    int32     expected = OS_SUCCESS;
+    int32     actual   = ~OS_SUCCESS;
+    osal_id_t objid    = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName), OS_SUCCESS);
+    actual = OS_BinSemGetIdByName(&objid, "UT");
+    UtAssert_True(actual == expected, "OS_BinSemGetIdByName() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName));
+
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_BinSemGetIdByName(&objid, "NF");
+    UtAssert_True(actual == expected, "OS_BinSemGetIdByName() (%ld) == %ld", (long)actual, (long)expected);
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_BinSemGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_BinSemGetInfo (uint32 sem_id, OS_bin_sem_prop_t *bin_prop)
+     */
+    int32             expected = OS_SUCCESS;
+    int32             actual   = ~OS_SUCCESS;
+    OS_bin_sem_prop_t prop;
+
+    memset(&prop, 0, sizeof(prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_BINSEM, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    actual = OS_BinSemGetInfo(UT_OBJID_1, &prop);
+
+    UtAssert_True(actual == expected, "OS_BinSemGetInfo() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(prop.name, "ABC") == 0, "prop.name (%s) == ABC", prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_BinSemGetInfo(UT_OBJID_1, &prop), OS_ERR_INVALID_ID);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_BinSemAPI_Init);
+    ADD_TEST(OS_BinSemCreate);
+    ADD_TEST(OS_BinSemDelete);
+    ADD_TEST(OS_BinSemGive);
+    ADD_TEST(OS_BinSemTake);
+    ADD_TEST(OS_BinSemFlush);
+    ADD_TEST(OS_BinSemTimedWait);
+    ADD_TEST(OS_BinSemGetIdByName);
+    ADD_TEST(OS_BinSemGetInfo);
+}
 ```
 
-## 항목
+### `coveragetest-clock.c`
 
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-binsem.c`](file--coveragetest-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-clock.c`](file--coveragetest-clock.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-common.c`](file--coveragetest-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-condvar.c`](file--coveragetest-condvar.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-countsem.c`](file--coveragetest-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-dir.c`](file--coveragetest-dir.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-errors.c`](file--coveragetest-errors.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-file.c`](file--coveragetest-file.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-filesys.c`](file--coveragetest-filesys.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-heap.c`](file--coveragetest-heap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-idmap.c`](file--coveragetest-idmap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-module.c`](file--coveragetest-module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-mutex.c`](file--coveragetest-mutex.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-network.c`](file--coveragetest-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-printf.c`](file--coveragetest-printf.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-queue.c`](file--coveragetest-queue.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-select.c`](file--coveragetest-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-shell.c`](file--coveragetest-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-sockets.c`](file--coveragetest-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-task.c`](file--coveragetest-task.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-time.c`](file--coveragetest-time.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-timebase.c`](file--coveragetest-timebase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/coveragetest-version.c`](file--coveragetest-version.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/os-shared-coverage-support.c`](file--os-shared-coverage-support.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/unit-test-coverage/shared/src/os-shared-coveragetest.h`](file--os-shared-coveragetest.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-clock.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-clock.h"
+
+void Test_OS_GetLocalTime(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetLocalTime(OS_time_t *time_struct)
+     */
+    OS_time_t time_struct;
+    int32     expected = OS_SUCCESS;
+    int32     actual   = OS_GetLocalTime(&time_struct);
+
+    UtAssert_True(actual == expected, "OS_GetLocalTime() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_GetLocalTime(NULL);
+    UtAssert_True(actual == expected, "OS_GetLocalTime() (%ld) == OS_INVALID_POINTER", (long)actual);
+}
+
+void Test_OS_SetLocalTime(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SetLocalTime(OS_time_t *time_struct)
+     */
+    OS_time_t time_struct = OS_TimeAssembleFromMicroseconds(5, 12345);
+    int32     expected    = OS_SUCCESS;
+    int32     actual      = OS_SetLocalTime(&time_struct);
+
+    UtAssert_True(actual == expected, "OS_SetLocalTime() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_SetLocalTime(NULL);
+    UtAssert_True(actual == expected, "OS_SetLocalTime() (%ld) == OS_INVALID_POINTER", (long)actual);
+}
+
+void Test_OS_TimeAccessConversions(void)
+{
+    /*
+     * Test cases for the various time access and conversion functions:
+     *
+     * int64 OS_TimeGetTotalSeconds(OS_time_t tm)
+     * int64 OS_TimeGetTotalMilliseconds(OS_time_t tm)
+     * int64 OS_TimeGetTotalMicroseconds(OS_time_t tm)
+     * int64 OS_TimeGetTotalNanoseconds(OS_time_t tm)
+     *
+     * uint32 OS_TimeGetSubsecondsPart(OS_time_t tm)
+     * uint32 OS_TimeGetMillisecondsPart(OS_time_t tm)
+     * uint32 OS_TimeGetMicrosecondsPart(OS_time_t tm)
+     * uint32 OS_TimeGetNanosecondsPart(OS_time_t tm)
+     *
+     * OS_time_t OS_TimeAssembleFromMilliseconds(int64 seconds, uint32 milliseconds)
+     * OS_time_t OS_TimeAssembleFromMicroseconds(int64 seconds, uint32 microseconds)
+     * OS_time_t OS_TimeAssembleFromNanoseconds(int64 seconds, uint32 nanoseconds)
+     * OS_time_t OS_TimeAssembleFromSubseconds(int64 seconds, uint32 subseconds)
+     *
+     * OS_time_t OS_TimeAdd(OS_time_t time1, OS_time_t time2)
+     * OS_time_t OS_TimeSubtract(OS_time_t time1, OS_time_t time2)
+     */
+    OS_time_t t1;
+    OS_time_t t2;
+    OS_time_t t3;
+    OS_time_t t4;
+
+    /* To base-2 32-bit fixed point: 0.234567890 s * 0x100000000 ~= 0x3c0ca428 */
+    t1 = OS_TimeAssembleFromNanoseconds(1, 234567890);
+
+    /* From base-2 32-bit fixed point: 0x87654321 / 0x100000000 ~= 0.528888888 s */
+    t2 = OS_TimeAssembleFromSubseconds(2, 0x87654321);
+
+    /* To base-2 32-bit fixed point: 0.045678 s * 0x100000000 ~= 0x0bb18dad */
+    t3 = OS_TimeAssembleFromMicroseconds(0, 45678);
+
+    /* To base-2 32-bit fixed point: 0.901 s * 0x100000000 ~= 0xe6a7ef9e */
+    t4 = OS_TimeAssembleFromMilliseconds(1, 901);
+
+    /* These functions only return the total (whole + fraction) in the requested units */
+    UtAssert_UINT32_EQ(OS_TimeGetTotalSeconds(t1), 1);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalSeconds(t2), 2);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalSeconds(t3), 0);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalSeconds(t4), 1);
+
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t1), 1234);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t2), 2528);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t3), 45);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t4), 1901);
+
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMicroseconds(t1), 1234567);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMicroseconds(t2), 2528888);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMicroseconds(t3), 45678);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMicroseconds(t4), 1901000);
+
+    /* Note: Nanoseconds/Subseconds may not be exact due to limitations of OS_time_t resolution */
+    UtAssert_UINT32_EQ(OS_TimeGetTotalNanoseconds(t1), 1234567800);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalNanoseconds(t2), 2528888800);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalNanoseconds(t3), 45678000);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalNanoseconds(t4), 1901000000);
+
+    /* These functions only return the fractional part, not the whole part */
+    UtAssert_UINT32_EQ(OS_TimeGetSubsecondsPart(t1), 0x3c0ca2a6);
+    UtAssert_UINT32_EQ(OS_TimeGetSubsecondsPart(t2), 0x876541a4);
+    UtAssert_UINT32_EQ(OS_TimeGetSubsecondsPart(t3), 0x0bb18dad);
+    UtAssert_UINT32_EQ(OS_TimeGetSubsecondsPart(t4), 0xe6a7ef9e);
+
+    UtAssert_UINT32_EQ(OS_TimeGetMillisecondsPart(t1), 234);
+    UtAssert_UINT32_EQ(OS_TimeGetMillisecondsPart(t2), 528);
+    UtAssert_UINT32_EQ(OS_TimeGetMillisecondsPart(t3), 45);
+    UtAssert_UINT32_EQ(OS_TimeGetMillisecondsPart(t4), 901);
+
+    UtAssert_UINT32_EQ(OS_TimeGetMicrosecondsPart(t1), 234567);
+    UtAssert_UINT32_EQ(OS_TimeGetMicrosecondsPart(t2), 528888);
+    UtAssert_UINT32_EQ(OS_TimeGetMicrosecondsPart(t3), 45678);
+    UtAssert_UINT32_EQ(OS_TimeGetMicrosecondsPart(t4), 901000);
+
+    UtAssert_UINT32_EQ(OS_TimeGetNanosecondsPart(t1), 234567800);
+    UtAssert_UINT32_EQ(OS_TimeGetNanosecondsPart(t2), 528888800);
+    UtAssert_UINT32_EQ(OS_TimeGetNanosecondsPart(t3), 45678000);
+    UtAssert_UINT32_EQ(OS_TimeGetNanosecondsPart(t4), 901000000);
+
+    /* Simple Add/Subtract */
+    t3 = OS_TimeAdd(t1, t2);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t3), 3763);
+    t4 = OS_TimeSubtract(t3, t2);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t4), 1234);
+
+    /* Add/Subtract that will require carry */
+    t1 = OS_TimeAssembleFromNanoseconds(3, 777777777);
+    t2 = OS_TimeAssembleFromNanoseconds(4, 888888888);
+
+    t3 = OS_TimeAdd(t1, t2);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t3), 8666);
+    t4 = OS_TimeSubtract(t3, t2);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(t4), 3777);
+
+    /*
+     * Confirm reciprocity of the Get/From unit conversions.
+     * Note there is no (easy) way to directly compare a OS_time_t here,
+     * so this uses both conversions an just confirms the result, subject
+     * to rounding from the conversion.  In the default configuration the
+     * tick units are 100ns and so the numbers here are chosen such that
+     * the result will not lose precision, and also not overflow a uint32.
+     */
+    UtAssert_UINT32_EQ(OS_TimeGetTotalSeconds(OS_TimeFromTotalSeconds(123)), 123);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMilliseconds(OS_TimeFromTotalMilliseconds(12659687)), 12659687);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalMicroseconds(OS_TimeFromTotalMicroseconds(3329165800)), 3329165800);
+    UtAssert_UINT32_EQ(OS_TimeGetTotalNanoseconds(OS_TimeFromTotalNanoseconds(347230000)), 347230000);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GetLocalTime);
+    ADD_TEST(OS_SetLocalTime);
+    ADD_TEST(OS_TimeAccessConversions);
+}
+```
+
+### `coveragetest-common.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-common.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-common.h"
+#include "os-shared-task.h"
+#include "os-shared-timebase.h"
+
+#include "OCS_stdlib.h"
+
+/*
+** OS_CleanUpObject() is an internal helper function.
+** It is not exposed in the public API as it is not intended to be called directly.
+** However the coverage test case needs to invoke it directly to test it.
+*/
+extern void OS_CleanUpObject(osal_id_t object_id, void *arg);
+
+int32 Test_MicroSecPerTick = 0;
+int32 Test_TicksPerSecond  = 0;
+
+/*
+**********************************************************************************
+**          HOOK/CALLBACK FUNCTIONS
+**********************************************************************************
+*/
+
+/* as a side effect, the OS_TimeBaseAPI_Init must initialize the globals */
+static int32 TimeBaseInitGlobal(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    OS_SharedGlobalVars.MicroSecPerTick = Test_MicroSecPerTick;
+    OS_SharedGlobalVars.TicksPerSecond  = Test_TicksPerSecond;
+    return StubRetcode;
+}
+
+static int32 ObjectDeleteCountHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    uint32 *counter = UT_Hook_GetArgValueByName(Context, "callback_arg", uint32 *);
+
+    if (CallCount < 2)
+    {
+        *counter = 1;
+    }
+    else
+    {
+        *counter = 0;
+    }
+
+    return StubRetcode;
+}
+
+/* Always returns 1 so TryCount will be exceeded */
+static int32 ObjectDeleteFailHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    uint32 *counter = UT_Hook_GetArgValueByName(Context, "callback_arg", uint32 *);
+
+    *counter = 1;
+
+    return StubRetcode;
+}
+
+static int32 SetShutdownFlagHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    OS_ApplicationShutdown(true);
+    return StubRetcode;
+}
+
+static int32 TestEventHandlerHook(OS_Event_t event, osal_id_t object_id, void *data)
+{
+    return UT_DEFAULT_IMPL(TestEventHandlerHook);
+}
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+void Test_OS_API_Init(void)
+{
+    /* Setup Inputs */
+    UT_SetHookFunction(UT_KEY(OS_TimeBaseAPI_Init), TimeBaseInitGlobal, NULL);
+
+    /* Execute Test */
+    Test_MicroSecPerTick            = 0;
+    Test_TicksPerSecond             = 0;
+    OS_SharedGlobalVars.GlobalState = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), OS_ERROR);
+    UtAssert_UINT32_EQ(OS_SharedGlobalVars.GlobalState, OS_SHUTDOWN_MAGIC_NUMBER);
+
+    /* TicksPerSec == 0 branch */
+    Test_MicroSecPerTick            = 1;
+    Test_TicksPerSecond             = 0;
+    OS_SharedGlobalVars.GlobalState = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), OS_ERROR);
+    UtAssert_UINT32_EQ(OS_SharedGlobalVars.GlobalState, OS_SHUTDOWN_MAGIC_NUMBER);
+
+    Test_MicroSecPerTick            = 1000;
+    Test_TicksPerSecond             = 1000;
+    OS_SharedGlobalVars.GlobalState = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), OS_SUCCESS);
+
+    Test_MicroSecPerTick            = 1000;
+    Test_TicksPerSecond             = 1001;
+    OS_SharedGlobalVars.GlobalState = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), OS_SUCCESS);
+    UtAssert_UINT32_EQ(OS_SharedGlobalVars.GlobalState, OS_INIT_MAGIC_NUMBER);
+
+    /* Second call should return SUCCESS (but is a no-op) */
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), OS_SUCCESS);
+    UtAssert_UINT32_EQ(OS_SharedGlobalVars.GlobalState, OS_INIT_MAGIC_NUMBER);
+
+    /* other error paths */
+    OS_SharedGlobalVars.GlobalState = 0;
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdInit), -222);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), -222);
+    UT_ResetState(UT_KEY(OS_ObjectIdInit));
+
+    OS_SharedGlobalVars.GlobalState = 0;
+    UT_SetDefaultReturnValue(UT_KEY(OS_API_Impl_Init), -333);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), -333);
+    UT_ResetState(UT_KEY(OS_API_Impl_Init));
+
+    OS_SharedGlobalVars.GlobalState = 0;
+    UT_SetDefaultReturnValue(UT_KEY(OS_TaskAPI_Init), -444);
+    OSAPI_TEST_FUNCTION_RC(OS_API_Init(), -444);
+    UT_ResetState(UT_KEY(OS_TaskAPI_Init));
+}
+
+void Test_OS_API_Teardown(void)
+{
+    /*
+     * Test Case For:
+     * void OS_API_Teardown(void);
+     */
+
+    /* Just need to call the API for coverage; there are no conditionals
+     * and the internal functions are each tested separately */
+    OS_API_Teardown();
+}
+
+void Test_OS_ApplicationExit(void)
+{
+    /*
+     * Test Case For:
+     * void OS_ApplicationExit(int32 Status);
+     */
+    uint32 CallCount = 0;
+    OS_ApplicationExit(OS_SUCCESS);
+    OS_ApplicationExit(OS_ERROR);
+    CallCount = UT_GetStubCount(UT_KEY(OCS_exit));
+
+    UtAssert_True(CallCount == 2, "exit() call count (%lu) == 2", (unsigned long)CallCount);
+}
+
+void Test_OS_CleanUpObject(void)
+{
+    uint32        objtype;
+    uint32        CallCount;
+    uint32        ActualObjs;
+    uint32        ExpObjs;
+    UT_EntryKey_t delhandler;
+
+    ActualObjs = 0;
+    ExpObjs    = 0;
+    objtype    = OS_OBJECT_TYPE_UNDEFINED;
+    while (objtype < OS_OBJECT_TYPE_USER)
+    {
+        UT_ResetState(0);
+        UT_SetDefaultReturnValue(UT_KEY(OS_IdentifyObject), objtype);
+
+        switch (objtype)
+        {
+            case OS_OBJECT_TYPE_OS_TASK:
+                delhandler = UT_KEY(OS_TaskDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_QUEUE:
+                delhandler = UT_KEY(OS_QueueDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_BINSEM:
+                delhandler = UT_KEY(OS_BinSemDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_COUNTSEM:
+                delhandler = UT_KEY(OS_CountSemDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_MUTEX:
+                delhandler = UT_KEY(OS_MutSemDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_MODULE:
+                delhandler = UT_KEY(OS_ModuleUnload);
+                break;
+            case OS_OBJECT_TYPE_OS_TIMEBASE:
+                delhandler = UT_KEY(OS_TimeBaseDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_TIMECB:
+                delhandler = UT_KEY(OS_TimerDelete);
+                break;
+            case OS_OBJECT_TYPE_OS_STREAM:
+                delhandler = UT_KEY(OS_close);
+                break;
+            case OS_OBJECT_TYPE_OS_DIR:
+                delhandler = UT_KEY(OS_DirectoryClose);
+                break;
+            default:
+                delhandler = 0;
+                break;
+        }
+
+        if (delhandler != 0)
+        {
+            /* note the return code here is ignored -
+             * the goal is simply to defeat the default
+             * check that the objid was valid (it isn't) */
+            UT_SetDefaultReturnValue(delhandler, OS_ERROR);
+            OS_CleanUpObject(OS_OBJECT_ID_UNDEFINED, &ActualObjs);
+
+            CallCount = UT_GetStubCount(delhandler);
+            UtAssert_True(CallCount == 1, "Objtype %lu call count (%lu) == 1", (unsigned long)objtype,
+                          (unsigned long)CallCount);
+        }
+        else
+        {
+            OS_CleanUpObject(OS_OBJECT_ID_UNDEFINED, &ActualObjs);
+        }
+        ++objtype;
+        ++ExpObjs;
+    }
+
+    UtAssert_True(ActualObjs == ExpObjs, "Total objects cleaned up (%lu) == %lu", (unsigned long)ActualObjs,
+                  (unsigned long)ExpObjs);
+}
+
+void Test_OS_DeleteAllObjects(void)
+{
+    /*
+     * Test Case For:
+     * void OS_DeleteAllObjects(void);
+     *
+     * This function returns no status; it
+     * just invokes OS_ForEachObject() with
+     * the callback set to OS_CleanUpObject().
+     *
+     * OS_CleanUpObject() will be covered separately.
+     */
+
+    /*
+     * The "ForEachObject" API will be invoked in a loop.
+     * For the first pass, have it output nonzero
+     * For the second pass, have it output zero top stop the loop
+     */
+    UT_SetHookFunction(UT_KEY(OS_ForEachObject), ObjectDeleteCountHook, NULL);
+
+    /*
+     * This gets coverage of the function but
+     * there is nothing to assert/verify for postconditions here
+     */
+    OS_DeleteAllObjects();
+
+    /* Exceed TryCount */
+    UT_SetHookFunction(UT_KEY(OS_ForEachObject), ObjectDeleteFailHook, NULL);
+    OS_DeleteAllObjects();
+}
+
+void Test_OS_IdleLoopAndShutdown(void)
+{
+    /*
+     * Test Case For:
+     * void OS_ApplicationShutdown(uint8 flag);
+     * void OS_IdleLoop(void);
+     */
+    uint32 CallCount = 0;
+
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+
+    UT_SetHookFunction(UT_KEY(OS_IdleLoop_Impl), SetShutdownFlagHook, NULL);
+    OS_IdleLoop();
+
+    CallCount = UT_GetStubCount(UT_KEY(OS_ApplicationShutdown_Impl));
+
+    UtAssert_True(CallCount == 1, "OS_ApplicationShutdown_Impl() call count (%lu) == 1", (unsigned long)CallCount);
+
+    OS_ApplicationShutdown(false);
+}
+
+void Test_OS_NotifyEvent(void)
+{
+    /*
+     * Test cases for:
+     * int32 OS_NotifyEvent(OS_Event_t event, osal_id_t object_id, void *data)
+     * int32 OS_RegisterEventHandler(OS_EventHandler_t handler)
+     */
+
+    OS_SharedGlobalVars.EventHandler = NULL;
+
+    /* With no hook function registered OS_NotifyEvent() should return success */
+    OSAPI_TEST_FUNCTION_RC(OS_NotifyEvent(OS_EVENT_RESERVED, OS_OBJECT_ID_UNDEFINED, NULL), OS_SUCCESS);
+
+    /* Registering a NULL hook function should fail */
+    OSAPI_TEST_FUNCTION_RC(OS_RegisterEventHandler(NULL), OS_INVALID_POINTER);
+
+    /* Now Register the locally-defined hook function */
+    OSAPI_TEST_FUNCTION_RC(OS_RegisterEventHandler(TestEventHandlerHook), OS_SUCCESS);
+
+    /* Now this should invoke the test hook */
+    OSAPI_TEST_FUNCTION_RC(OS_NotifyEvent(OS_EVENT_RESERVED, OS_OBJECT_ID_UNDEFINED, NULL), OS_SUCCESS);
+    UtAssert_STUB_COUNT(TestEventHandlerHook, 1);
+
+    /* Should also return whatever the hook returned */
+    UT_SetDefaultReturnValue(UT_KEY(TestEventHandlerHook), -12345);
+    OSAPI_TEST_FUNCTION_RC(OS_NotifyEvent(OS_EVENT_RESERVED, OS_OBJECT_ID_UNDEFINED, NULL), -12345);
+    UtAssert_STUB_COUNT(TestEventHandlerHook, 2);
+
+    OS_SharedGlobalVars.EventHandler = NULL;
+}
+
+/* ------------------- End of test cases --------------------------------------*/
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_API_Init);
+    ADD_TEST(OS_DeleteAllObjects);
+    ADD_TEST(OS_CleanUpObject);
+    ADD_TEST(OS_IdleLoopAndShutdown);
+    ADD_TEST(OS_ApplicationExit);
+    ADD_TEST(OS_NotifyEvent);
+    ADD_TEST(OS_API_Teardown);
+}
+```
+
+### `coveragetest-condvar.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-condvar.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-condvar.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_CondVarAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_CondVarCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarCreate (uint32 *sem_id, const char *sem_name, uint32 options)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate(&objid, "UT", 0), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate(NULL, "UT", 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate(&objid, NULL, 0), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate(&objid, "UT", 0), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarCreate(&objid, "UT", 0), OS_ERR_NAME_TOO_LONG);
+}
+
+void Test_OS_CondVarDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarDelete (uint32 sem_id)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarDelete(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarDelete(UT_OBJID_1), OS_ERROR);
+}
+
+void Test_OS_CondVarUnlock(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarUnlock ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarUnlock(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarUnlock_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarUnlock(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarUnlock(UT_OBJID_1), OS_ERROR);
+}
+
+void Test_OS_CondVarLock(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarLock ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarLock(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarLock_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarLock(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarLock(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CondVarSignal(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarSignal(osal_id_t var_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarSignal(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarSignal_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarSignal(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarSignal(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CondVarBroadcast(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarBroadcast(osal_id_t var_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarBroadcast(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarBroadcast_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarBroadcast(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarBroadcast(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CondVarWait(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarWait(osal_id_t var_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarWait(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarWait_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarWait(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarWait(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CondVarTimedWait(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarTimedWait(osal_id_t var_id, const OS_time_t *abs_wakeup_time)
+     */
+    OS_time_t wakeup_time;
+
+    wakeup_time = OS_TimeAssembleFromMilliseconds(100, 100);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait(UT_OBJID_1, &wakeup_time), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_CondVarTimedWait_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait(UT_OBJID_1, &wakeup_time), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarTimedWait(UT_OBJID_1, &wakeup_time), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CondVarGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarGetIdByName (uint32 *sem_id, const char *sem_name)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetIdByName(&objid, "UT"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName));
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_CondVarGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CondVarGetInfo (uint32 sem_id, OS_condvar_prop_t *mut_prop)
+     */
+    OS_condvar_prop_t prop;
+
+    memset(&prop, 0, sizeof(prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_CONDVAR, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetInfo(UT_OBJID_1, &prop), OS_SUCCESS);
+
+    OSAPI_TEST_OBJID(prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(prop.name, "ABC") == 0, "prop.name (%s) == ABC", prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CondVarGetInfo(UT_OBJID_1, &prop), OS_ERR_INVALID_ID);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_CondVarAPI_Init);
+    ADD_TEST(OS_CondVarCreate);
+    ADD_TEST(OS_CondVarDelete);
+    ADD_TEST(OS_CondVarUnlock);
+    ADD_TEST(OS_CondVarLock);
+    ADD_TEST(OS_CondVarSignal);
+    ADD_TEST(OS_CondVarBroadcast);
+    ADD_TEST(OS_CondVarWait);
+    ADD_TEST(OS_CondVarTimedWait);
+    ADD_TEST(OS_CondVarGetIdByName);
+    ADD_TEST(OS_CondVarGetInfo);
+}
+```
+
+### `coveragetest-countsem.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-countsem.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_CountSemAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_CountSemCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemCreate (uint32 *sem_id, const char *sem_name,
+     *          uint32 sem_initial_value, uint32 options)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate(&objid, "UT", 0, 0), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate(NULL, "UT", 0, 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate(&objid, NULL, 0, 0), OS_INVALID_POINTER);
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate(&objid, "UT", 0, 0), OS_ERR_NAME_TOO_LONG);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemCreate(&objid, "UT", 0, 0), OS_ERR_NO_FREE_IDS);
+}
+
+void Test_OS_CountSemDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemDelete (uint32 sem_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemDelete(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemDelete(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CountSemGive(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemGive ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGive(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGive(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CountSemTake(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemTake ( uint32 sem_id )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTake(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTake(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CountSemTimedWait(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemTimedWait ( uint32 sem_id, uint32 msecs )
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTimedWait(UT_OBJID_1, 1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemTimedWait(UT_OBJID_1, 1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_CountSemGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemGetIdByName (uint32 *sem_id, const char *sem_name)
+     */
+    int32     expected = OS_SUCCESS;
+    int32     actual   = ~OS_SUCCESS;
+    osal_id_t objid    = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName), OS_SUCCESS);
+    actual = OS_CountSemGetIdByName(&objid, "UT");
+    UtAssert_True(actual == expected, "OS_CountSemGetIdByName() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName));
+
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_CountSemGetIdByName(&objid, "NF");
+    UtAssert_True(actual == expected, "OS_CountSemGetIdByName() (%ld) == %ld", (long)actual, (long)expected);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_CountSemGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CountSemGetInfo (uint32 sem_id, OS_count_sem_prop_t *count_prop)
+     */
+    int32               expected = OS_SUCCESS;
+    int32               actual   = ~OS_SUCCESS;
+    OS_count_sem_prop_t prop;
+
+    memset(&prop, 0, sizeof(prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_COUNTSEM, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    actual = OS_CountSemGetInfo(UT_OBJID_1, &prop);
+
+    UtAssert_True(actual == expected, "OS_CountSemGetInfo() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(prop.name, "ABC") == 0, "prop.name (%s) == ABC", prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_CountSemGetInfo(UT_OBJID_1, &prop), OS_ERR_INVALID_ID);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_CountSemAPI_Init);
+    ADD_TEST(OS_CountSemCreate);
+    ADD_TEST(OS_CountSemDelete);
+    ADD_TEST(OS_CountSemGive);
+    ADD_TEST(OS_CountSemTake);
+    ADD_TEST(OS_CountSemTimedWait);
+    ADD_TEST(OS_CountSemGetIdByName);
+    ADD_TEST(OS_CountSemGetInfo);
+}
+```
+
+### `coveragetest-dir.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-dir.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-dir.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_DirAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_mkdir(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_mkdir (const char *path, uint32 access)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_mkdir("Dir", OS_READ_WRITE), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mkdir("Dir", OS_READ_WRITE), OS_ERROR);
+}
+
+void Test_OS_DirectoryOpen(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirectoryOpen(uint32 *dir_id, const char *path)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryOpen(&objid, "Dir"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    /* Branch coverage for errors */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryOpen(&objid, "Dir"), OS_ERR_NO_FREE_IDS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryOpen(&objid, "Dir"), OS_ERROR);
+
+    /*
+     * Note that the second arg (path) is validated by a separate unit (OS_TranslatePath),
+     * so it should not be passed NULL here
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryOpen(NULL, "Dir"), OS_INVALID_POINTER);
+}
+
+void Test_OS_DirectoryClose(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirectoryClose(uint32 dir_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryClose(UT_OBJID_1), OS_SUCCESS);
+
+    /* Branch coverage for errors */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryClose(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_DirectoryRead(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirectoryRead(uint32 dir_id, OS_DirEntry_t *dirent)
+     */
+    os_dirent_t dirent;
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryRead(UT_OBJID_1, &dirent), OS_SUCCESS);
+
+    /* Branch coverage for errors */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryRead(UT_OBJID_1, &dirent), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryRead(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_DirectoryRewind(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_DirectoryRewind(uint32 dir_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryRewind(UT_OBJID_1), OS_SUCCESS);
+
+    /* Branch coverage for errors */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_DirectoryRewind(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_rmdir(void)
+{
+    /*
+     * Test Case For:
+     * int32  OS_rmdir (const char *path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_rmdir("Dir"), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_rmdir("Dir"), OS_ERROR);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_DirAPI_Init);
+    ADD_TEST(OS_mkdir);
+    ADD_TEST(OS_DirectoryOpen);
+    ADD_TEST(OS_DirectoryClose);
+    ADD_TEST(OS_DirectoryRead);
+    ADD_TEST(OS_DirectoryRewind);
+    ADD_TEST(OS_rmdir);
+}
+```
+
+### `coveragetest-errors.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-errors.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-errors.h"
+
+void Test_OS_GetErrorName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetErrorName(int32 error_num, os_err_name_t* err_name);
+     */
+    os_err_name_t err_name;
+
+    memset(&err_name, 0, sizeof(err_name));
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetErrorName(OS_ERROR, &err_name), OS_SUCCESS);
+    UtAssert_True(strcmp(err_name, "OS_ERROR") == 0, "string(%s) == OS_ERROR", err_name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetErrorName(-4444, &err_name), OS_SUCCESS);
+    UtAssert_True(strcmp(err_name, "UT_ERROR") == 0, "string(%s) == UT_ERROR", err_name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetErrorName(-4445, &err_name), OS_ERROR);
+    UtAssert_True(strcmp(err_name, "OS_UNKNOWN(-4445)") == 0, "string(%s) == OS_UNKNOWN(-4445)", err_name);
+    OSAPI_TEST_FUNCTION_RC(OS_GetErrorName(-555555, &err_name), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_GetErrorName(-555555, NULL), OS_INVALID_POINTER);
+}
+
+/*--------------------------------------------------------------------------------*
+** OS_StatusToString test helper function to avoid repeating logic
+**--------------------------------------------------------------------------------*/
+void Test_OS_StatusToString_Helper(osal_status_t status)
+{
+    os_status_string_t status_string;
+    char *             rtn_addr;
+    char               expected[OS_STATUS_STRING_LENGTH + 1];
+
+    /* Used oversized string to test for truncation */
+    snprintf(expected, sizeof(expected), "%ld", OS_StatusToInteger(status));
+    rtn_addr = OS_StatusToString(status, &status_string);
+    UtAssert_ADDRESS_EQ(rtn_addr, status_string);
+    UtAssert_STRINGBUF_EQ(status_string, sizeof(status_string), expected, sizeof(expected));
+}
+
+/*--------------------------------------------------------------------------------*
+** Functional OS_StatusToString test
+**--------------------------------------------------------------------------------*/
+void Test_OS_StatusToString(void)
+{
+    /* NULL test */
+    UtAssert_ADDRESS_EQ(OS_StatusToString(OS_SUCCESS, NULL), NULL);
+
+    /* Status value tests */
+    Test_OS_StatusToString_Helper(OS_SUCCESS);
+    Test_OS_StatusToString_Helper(OS_ERROR);
+    Test_OS_StatusToString_Helper(OSAL_STATUS_C(INT32_MAX));
+    Test_OS_StatusToString_Helper(OSAL_STATUS_C(INT32_MIN));
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GetErrorName);
+    ADD_TEST(OS_StatusToString);
+}
+```
+
+### `coveragetest-file.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-file.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_FileAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_OpenCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_OpenCreate(osal_id_t *filedes, const char *path, int32 flags, int32 access_mode)
+     */
+    int32     expected;
+    int32     actual;
+    osal_id_t filedes;
+
+    /* Test in OS_creat mode */
+    expected = OS_SUCCESS;
+    actual   = OS_OpenCreate(&filedes, "/cf/file", OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_READ_WRITE);
+    UtAssert_True(actual == expected, "OS_OpenCreate() (%ld) == OS_SUCCESS (create mode)", (long)actual);
+
+    /* Test in OS_open mode */
+    actual = OS_OpenCreate(&filedes, "/cf/file", OS_FILE_FLAG_NONE, OS_READ_WRITE);
+    UtAssert_True(actual == expected, "OS_OpenCreate() (%ld) == OS_SUCCESS (open mode)", (long)actual);
+
+    /* Test with bad descriptor buffer */
+    expected = OS_INVALID_POINTER;
+    actual   = OS_OpenCreate(NULL, "/cf/file", OS_FILE_FLAG_NONE, OS_READ_WRITE);
+    UtAssert_True(actual == expected, "OS_OpenCreate() (%ld) == OS_INVALID_POINTER (bad buffer)", (long)actual);
+
+    /* Test with bad access flags */
+    expected = OS_ERROR;
+    actual   = OS_OpenCreate(&filedes, "/cf/file", OS_FILE_FLAG_NONE, 9999);
+    UtAssert_True(actual == expected, "OS_OpenCreate() (%ld) == OS_ERROR (bad flags)", (long)actual);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_OpenCreate(&filedes, "/cf/file", OS_FILE_FLAG_NONE, OS_READ_WRITE), OS_ERR_NO_FREE_IDS);
+
+    /* Test failure to convert path */
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    expected = OS_ERROR;
+    actual   = OS_OpenCreate(&filedes, "/cf/file", OS_FILE_FLAG_NONE, OS_READ_WRITE);
+    UtAssert_True(actual == OS_ERROR, "OS_OpenCreate() (%ld) == OS_ERROR (bad path)", (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_TranslatePath));
+}
+
+void Test_OS_close(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_close (uint32 filedes)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_close(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_close(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimedRead(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimedRead(uint32  filedes, void *buffer, uint32 nbytes, int32 timeout)
+     */
+    char  Buf[4]    = "zzz";
+    char  SrcBuf[8] = "rrrrrrr";
+    int32 expected  = sizeof(Buf);
+    int32 actual    = 0;
+
+    UT_SetDataBuffer(UT_KEY(OS_GenericRead_Impl), SrcBuf, sizeof(SrcBuf), false);
+    actual = OS_TimedRead(UT_OBJID_1, Buf, sizeof(Buf), 10);
+    UtAssert_True(actual == expected, "OS_TimedRead() (%ld) == %ld", (long)actual, (long)expected);
+    UtAssert_True(memcmp(Buf, SrcBuf, actual) == 0, "buffer content match");
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedRead(UT_OBJID_1, Buf, sizeof(Buf), 10), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimedRead(UT_OBJID_1, NULL, sizeof(Buf), 10), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedRead(UT_OBJID_1, Buf, OSAL_SIZE_C(0), 10), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedRead(UT_OBJID_1, Buf, OSAL_SIZE_C(UINT32_MAX), 10), OS_ERR_INVALID_SIZE);
+}
+
+void Test_OS_TimedWrite(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimedWrite(uint32  filedes, const void *buffer, uint32 nbytes, int32 timeout)
+     */
+    const char Buf[4]    = "www";
+    char       DstBuf[8] = "zzz";
+    int32      expected  = sizeof(Buf);
+    int32      actual    = 0;
+
+    UT_SetDataBuffer(UT_KEY(OS_GenericWrite_Impl), DstBuf, sizeof(DstBuf), false);
+    actual = OS_TimedWrite(UT_OBJID_1, Buf, sizeof(Buf), 10);
+
+    UtAssert_True(actual == expected, "OS_TimedWrite() (%ld) == %ld", (long)actual, (long)expected);
+    UtAssert_True(memcmp(Buf, DstBuf, actual) == 0, "buffer content match");
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedWrite(UT_OBJID_1, Buf, sizeof(Buf), 10), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimedWrite(UT_OBJID_1, NULL, sizeof(Buf), 10), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedWrite(UT_OBJID_1, Buf, OSAL_SIZE_C(0), 10), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_TimedWrite(UT_OBJID_1, Buf, OSAL_SIZE_C(UINT32_MAX), 10), OS_ERR_INVALID_SIZE);
+}
+
+void Test_OS_read(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_read  (uint32  filedes, void *buffer, uint32 nbytes)
+     */
+    char  Buf[4]    = "zzz";
+    char  SrcBuf[8] = "RRRRRRR";
+    int32 expected  = sizeof(Buf);
+    int32 actual    = 0;
+
+    UT_SetDataBuffer(UT_KEY(OS_GenericRead_Impl), SrcBuf, sizeof(SrcBuf), false);
+    actual = OS_read(UT_OBJID_1, Buf, sizeof(Buf));
+    UtAssert_True(actual == expected, "OS_read() (%ld) == %ld", (long)actual, (long)expected);
+    UtAssert_True(memcmp(Buf, SrcBuf, actual) == 0, "buffer content match");
+}
+
+void Test_OS_write(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_write (uint32  filedes, const void *buffer, uint32 nbytes)
+     */
+    const char Buf[4]    = "WWW";
+    char       DstBuf[8] = "zzz";
+    int32      expected  = sizeof(Buf);
+    int32      actual    = 0;
+
+    UT_SetDataBuffer(UT_KEY(OS_GenericWrite_Impl), DstBuf, sizeof(DstBuf), false);
+    actual = OS_write(UT_OBJID_1, Buf, sizeof(Buf));
+
+    UtAssert_True(actual == expected, "OS_write() (%ld) == %ld", (long)actual, (long)expected);
+    UtAssert_True(memcmp(Buf, DstBuf, actual) == 0, "buffer content match");
+}
+
+void Test_OS_chmod(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_chmod  (const char *path, uint32 access_mode)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_chmod("/cf/file", 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_chmod("/cf/file", 0), OS_ERROR);
+}
+
+void Test_OS_stat(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_stat   (const char *path, OS_FileStat_t *filestats)
+     */
+    os_fstat_t statbuf;
+
+    OSAPI_TEST_FUNCTION_RC(OS_stat("/cf/file", &statbuf), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_stat("/cf/file", &statbuf), OS_ERROR);
+
+    OSAPI_TEST_FUNCTION_RC(OS_stat("/cf/file", NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_lseek(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_lseek  (uint32  filedes, int32 offset, uint32 whence)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_lseek(UT_OBJID_1, 0, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_lseek(UT_OBJID_1, 0, 0), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_remove(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_remove (const char *path)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_remove("/cf/file"), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_remove("/cf/file"), OS_ERROR);
+}
+
+void Test_OS_rename(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_rename (const char *old, const char *new)
+     */
+    OS_UT_SetupIterator(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, 3);
+    strncpy(OS_stream_table[1].stream_name, "/cf/file1", sizeof(OS_stream_table[1].stream_name));
+    OS_stream_table[2].socket_domain = OS_SocketDomain_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_rename("/cf/file1", "/cf/file2"), OS_SUCCESS);
+    UtAssert_True(strcmp(OS_stream_table[1].stream_name, "/cf/file2") == 0,
+                  "OS_stream_table[1].stream_name (%s) == /cf/file2", OS_stream_table[1].stream_name);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TranslatePath), 2, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_rename("/cf/file1", "/cf/file2"), OS_ERROR);
+    UT_SetDeferredRetcode(UT_KEY(OS_TranslatePath), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_rename("/cf/file1", "/cf/file2"), OS_ERROR);
+}
+
+void Test_OS_cp(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_cp (const char *src, const char *dest)
+     */
+    char ReadBuf[]                 = "cpcpcpcp";
+    char WriteBuf[sizeof(ReadBuf)] = "";
+
+    OSAPI_TEST_FUNCTION_RC(OS_cp(NULL, "/cf/file2"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_cp("/cf/file1", NULL), OS_INVALID_POINTER);
+
+    /* setup to make internal copy loop execute at least once */
+    UT_SetDataBuffer(UT_KEY(OS_GenericRead_Impl), ReadBuf, sizeof(ReadBuf), false);
+    UT_SetDataBuffer(UT_KEY(OS_GenericWrite_Impl), WriteBuf, sizeof(WriteBuf), false);
+    OSAPI_TEST_FUNCTION_RC(OS_cp("/cf/file1", "/cf/file2"), OS_SUCCESS);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_GenericRead_Impl), 1, -444);
+    OSAPI_TEST_FUNCTION_RC(OS_cp("/cf/file1", "/cf/file2"), -444);
+
+    UT_SetDataBuffer(UT_KEY(OS_GenericRead_Impl), ReadBuf, sizeof(ReadBuf), false);
+    UT_SetDefaultReturnValue(UT_KEY(OS_GenericWrite_Impl), -555);
+    OSAPI_TEST_FUNCTION_RC(OS_cp("/cf/file1", "/cf/file2"), -555);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), -666);
+    OSAPI_TEST_FUNCTION_RC(OS_cp("/cf/file1", "/cf/file2"), -666);
+}
+
+void Test_OS_mv(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_mv (const char *src, const char *dest)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_mv("/cf/file1", "/cf/file2"), OS_SUCCESS);
+
+    /* In the default case, the implementation tries to rename first.
+     * Force rename to fail so it does a full copy and remove */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileRename_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mv("/cf/file1", "/cf/file2"), OS_SUCCESS);
+
+    /* Fail the OS_cp/OS_OpenCreate */
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mv("/cf/file1", "/cf/file2"), OS_ERROR);
+}
+
+void Test_OS_FDGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FDGetInfo (uint32 filedes, OS_file_prop_t *fd_prop)
+     */
+    OS_file_prop_t file_prop;
+
+    memset(&file_prop, 0, sizeof(file_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+    OSAPI_TEST_FUNCTION_RC(OS_FDGetInfo(UT_OBJID_1, &file_prop), OS_SUCCESS);
+    UtAssert_True(strcmp(file_prop.Path, "ABC") == 0, "file_prop.Path (%s) == ABC", file_prop.Path);
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, NULL, UT_OBJID_OTHER);
+    OSAPI_TEST_FUNCTION_RC(OS_FDGetInfo(UT_OBJID_1, &file_prop), OS_SUCCESS);
+    UtAssert_STRINGBUF_EQ(file_prop.Path, 1, "", 1);
+
+    OSAPI_TEST_FUNCTION_RC(OS_FDGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_FDGetInfo(UT_OBJID_1, &file_prop), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_FileOpenCheck(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileOpenCheck(const char *Filename)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpenCheck("/cf/file"), OS_ERROR);
+
+    OS_UT_SetupIterator(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, 3);
+    strncpy(OS_stream_table[3].stream_name, "/cf/file", sizeof(OS_stream_table[1].stream_name));
+    OS_stream_table[2].socket_domain = OS_SocketDomain_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpenCheck("/cf/file"), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileOpenCheck(NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_CloseFileByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CloseFileByName(const char *Filename)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_CloseFileByName("/cf/file"), OS_FS_ERR_PATH_INVALID);
+
+    /* setup for success */
+    OS_UT_SetupIterator(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, 5);
+    OS_stream_table[2].socket_domain = OS_SocketDomain_INET;
+    strncpy(OS_stream_table[3].stream_name, "/cf/file", sizeof(OS_stream_table[3].stream_name));
+    strncpy(OS_stream_table[4].stream_name, "/cf/file", sizeof(OS_stream_table[4].stream_name));
+    strncpy(OS_stream_table[5].stream_name, "/cf/file", sizeof(OS_stream_table[5].stream_name));
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdIteratorProcessEntry), 3, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_CloseFileByName("/cf/file"), OS_ERROR);
+
+    OSAPI_TEST_FUNCTION_RC(OS_CloseFileByName(NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_CloseAllFiles(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_CloseAllFiles(void)
+     */
+    int32 expected = -222;
+    int32 actual;
+
+    OS_UT_SetupIterator(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, 2);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdIteratorProcessEntry), 1, expected);
+    actual = OS_CloseAllFiles();
+
+    UtAssert_True(actual == expected, "OS_CloseAllFiles() (%ld) == -222", (long)actual);
+
+    /* This uses a helper function OS_FileIteratorClose() with the iterator,
+     * which needs to be called for coverage - it just invokes OS_close() */
+    expected = OS_SUCCESS;
+    actual   = OS_FileIteratorClose(UT_OBJID_1, NULL);
+
+    UtAssert_True(actual == expected, "OS_FileIteratorClose() (%ld) == OS_SUCCESS", (long)actual);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+    memset(OS_global_stream_table, 0, sizeof(OS_common_record_t) * OS_MAX_NUM_OPEN_FILES);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_FileAPI_Init);
+    ADD_TEST(OS_OpenCreate);
+    ADD_TEST(OS_close);
+    ADD_TEST(OS_TimedRead);
+    ADD_TEST(OS_TimedWrite);
+    ADD_TEST(OS_read);
+    ADD_TEST(OS_write);
+    ADD_TEST(OS_chmod);
+    ADD_TEST(OS_stat);
+    ADD_TEST(OS_lseek);
+    ADD_TEST(OS_remove);
+    ADD_TEST(OS_rename);
+    ADD_TEST(OS_cp);
+    ADD_TEST(OS_mv);
+    ADD_TEST(OS_FDGetInfo);
+    ADD_TEST(OS_FileOpenCheck);
+    ADD_TEST(OS_CloseFileByName);
+    ADD_TEST(OS_CloseAllFiles);
+}
+```
+
+### `coveragetest-filesys.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-filesys.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-filesys.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+void Test_OS_FileSysAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysAPI_Init(void)
+     */
+    int32 expected = OS_SUCCESS;
+    int32 actual;
+
+    actual = OS_FileSysAPI_Init();
+    UtAssert_True(actual == expected, "OS_FileSysAPI_Init() (%ld) == OS_SUCCESS", (long)actual);
+}
+
+void Test_OS_FileSysAddFixedMap(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysAddFixedMap(uint32 *filesys_id, const char *phys_path, const char *virt_path)
+     */
+    osal_id_t id;
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, NULL, "/virt"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(NULL, "/phys", "/virt"), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_FS_ERR_PATH_TOO_LONG);
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 2, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_FS_ERR_PATH_TOO_LONG);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_strrchr), -1);
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 3, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_ERR_NAME_TOO_LONG);
+    UT_ResetState(UT_KEY(OCS_memchr));
+    UT_ResetState(UT_KEY(OCS_strrchr));
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdAllocateNew), 1, OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_ERR_NO_FREE_IDS);
+    UT_SetDeferredRetcode(UT_KEY(OS_FileSysStartVolume_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_ERROR);
+    UT_SetDeferredRetcode(UT_KEY(OS_FileSysMountVolume_Impl), 1, OS_ERROR - 1);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_ERROR - 1);
+
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_FileSysAddFixedMap(&id, "/phys", "/virt"), OS_SUCCESS);
+}
+
+void Test_OS_mkfs(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_mkfs (char *address, const char *devname, const char * volname,
+     *          uint32 blocksize, uint32 numblocks)
+     */
+    char TestBuffer[128];
+
+    /* Success case for existing entry */
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_SUCCESS);
+
+    /*
+     * Test an entry NOT found in the OS_VolumeTable
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/rd1", "vol1", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_SUCCESS);
+
+    /* NULL addr with RAM volume to cover branches */
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(NULL, "/rd1", "RAM1", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, NULL, "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", NULL, OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_INVALID_POINTER);
+
+    /* First string check error */
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_PATH_TOO_LONG);
+
+    /* Second string check error */
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 2, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_PATH_TOO_LONG);
+
+    /* failure due to empty strings */
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_PATH_INVALID);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_PATH_INVALID);
+
+    /* set up for failure due to formatting */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysFormatVolume_Impl), OS_FS_ERR_DRIVE_NOT_CREATED);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_DRIVE_NOT_CREATED);
+
+    /* Start failure */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysStartVolume_Impl), OS_ERR_INCORRECT_OBJ_STATE);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_DEVICE_NOT_FREE);
+
+    /* set up for failure due to no free slots */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_mkfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_DEVICE_NOT_FREE);
+}
+
+void Test_OS_rmfs(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_rmfs (const char *devname)
+     */
+    int32 expected = OS_SUCCESS;
+    int32 actual   = ~OS_SUCCESS;
+
+    actual = OS_rmfs("/ramdev5");
+    UtAssert_True(actual == expected, "OS_rmfs() (%ld) == OS_SUCCESS", (long)actual);
+
+    /* check error paths */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetByName), OS_ERR_NAME_NOT_FOUND);
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_rmfs("/ramdev4");
+    UtAssert_True(actual == expected, "OS_rmfs() (%ld) == OS_ERR_NAME_NOT_FOUND", (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdGetByName));
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_rmfs(NULL);
+    UtAssert_True(actual == expected, "OS_rmfs() (%ld) == OS_INVALID_POINTER", (long)actual);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    expected = OS_FS_ERR_PATH_TOO_LONG;
+    actual   = OS_rmfs("/ramdev4");
+    UtAssert_True(actual == expected, "OS_rmfs() (%ld) == OS_FS_ERR_PATH_TOO_LONG", (long)actual);
+}
+
+void Test_OS_initfs(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_initfs (char *address,const char *devname, const char *volname,
+     *          uint32 blocksize, uint32 numblocks)
+     */
+    char TestBuffer[128];
+
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(NULL, "/hda2", "vol2", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(NULL, NULL, NULL, OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_PATH_TOO_LONG);
+
+    /* set up for failure */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdAllocateNew), 1, OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_DEVICE_NOT_FREE);
+
+    /* Start failure */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysStartVolume_Impl), OS_ERR_INCORRECT_OBJ_STATE);
+    OSAPI_TEST_FUNCTION_RC(OS_initfs(TestBuffer, "/ramdev0", "vol", OSAL_SIZE_C(0), OSAL_BLOCKCOUNT_C(0)),
+                           OS_FS_ERR_DEVICE_NOT_FREE);
+}
+
+void Test_OS_mount(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_mount (const char *devname, const char* mountpoint)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev5", "/ram5"), OS_ERR_NAME_NOT_FOUND);
+
+    /* Test unknown/unset system mountpoint */
+    OS_filesys_table[1].flags             = OS_FILESYS_FLAG_IS_READY;
+    OS_filesys_table[1].system_mountpt[0] = 0;
+    /* should be OS_FS_ERR_PATH_INVALID, but compat return overwrites */
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev5", "/ram5"), OS_ERR_NAME_NOT_FOUND);
+
+    /* set up so record is in the right state for mounting */
+    snprintf(OS_filesys_table[1].system_mountpt, sizeof(OS_filesys_table[1].system_mountpt), "/ut");
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev5", "/ram5"), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_mount(NULL, "/ram5"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev5", NULL), OS_INVALID_POINTER);
+
+    /* Path too long errors */
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev0", "/ram0"), OS_FS_ERR_PATH_TOO_LONG);
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 2, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev0", "/ram0"), OS_FS_ERR_PATH_TOO_LONG);
+
+    /* Fail OS_ObjectIdGetByName */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetByName), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_mount("/ramdev5", "/ram5"), OS_ERR_NAME_NOT_FOUND);
+}
+
+void Test_OS_unmount(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_unmount (const char *mountpoint)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_unmount("/ram0"), OS_ERR_NAME_NOT_FOUND);
+
+    /* set up so record is in the right state for mounting */
+    OS_filesys_table[1].flags =
+        OS_FILESYS_FLAG_IS_READY | OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+    OSAPI_TEST_FUNCTION_RC(OS_unmount("/ram0"), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_unmount(NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetBySearch), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_unmount("/ram0"), OS_ERR_NAME_NOT_FOUND);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_unmount("/ram0"), OS_FS_ERR_PATH_TOO_LONG);
+}
+
+void Test_OS_FileSysStatVolume(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FileSysStatVolume(const char *name, OS_statvfs_t *statbuf)
+     */
+
+    OS_statvfs_t statbuf;
+    OS_statvfs_t statref;
+    int32        expected;
+    int32        actual;
+
+    memset(&statbuf, 0, sizeof(statbuf));
+
+    statref.block_size   = OSAL_SIZE_C(1024);
+    statref.blocks_free  = OSAL_BLOCKCOUNT_C(1111);
+    statref.total_blocks = OSAL_BLOCKCOUNT_C(2222);
+    UT_SetDataBuffer(UT_KEY(OS_FileSysStatVolume_Impl), &statref, sizeof(statref), false);
+    OS_filesys_table[1].flags =
+        OS_FILESYS_FLAG_IS_READY | OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+
+    expected = OS_SUCCESS;
+    actual   = OS_FileSysStatVolume("/cf", &statbuf);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_SUCCESS", (long)actual);
+
+    UtAssert_True(statbuf.block_size == statref.block_size, "blocks_size (%lu) == %lu",
+                  (unsigned long)statbuf.block_size, (unsigned long)statref.block_size);
+    UtAssert_True(statbuf.total_blocks == statref.total_blocks, "total_blocks (%lu) == %lu",
+                  (unsigned long)statbuf.total_blocks, (unsigned long)statref.total_blocks);
+    UtAssert_True(statbuf.blocks_free == statref.blocks_free, "blocks_free (%lu) == %lu",
+                  (unsigned long)statbuf.blocks_free, (unsigned long)statref.blocks_free);
+
+    /* validate error checking */
+    expected = OS_INVALID_POINTER;
+    actual   = OS_FileSysStatVolume(NULL, &statbuf);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_INVALID_POINTER", (long)actual);
+    actual = OS_FileSysStatVolume("/cf", NULL);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_INVALID_POINTER", (long)actual);
+
+    /* Test Fail due to no matching VolTab entry */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetBySearch), OS_ERR_NAME_NOT_FOUND);
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_FileSysStatVolume("/cf", &statbuf);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_ERR_NAME_NOT_FOUND", (long)actual);
+    UT_ResetState(UT_KEY(OS_ObjectIdGetBySearch));
+
+    /* Verify pass through of impl error */
+    UT_SetDefaultReturnValue(UT_KEY(OS_FileSysStatVolume_Impl), OS_ERR_OPERATION_NOT_SUPPORTED);
+    expected = OS_ERR_OPERATION_NOT_SUPPORTED;
+    actual   = OS_FileSysStatVolume("/cf", &statbuf);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_ERR_OPERATION_NOT_SUPPORTED", (long)actual);
+    UT_ResetState(UT_KEY(OS_FileSysStatVolume_Impl));
+
+    /* Verify OS_FS_ERR_PATH_TOO_LONG */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), -1);
+    expected = OS_FS_ERR_PATH_TOO_LONG;
+    actual   = OS_FileSysStatVolume("/cf", &statbuf);
+    UtAssert_True(actual == expected, "OS_FileSysStatVolume() (%ld) == OS_FS_ERR_PATH_TOO_LONG", (long)actual);
+    UT_ResetState(UT_KEY(OCS_memchr));
+}
+
+void Test_OS_chkfs(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_chkfs (const char *name, bool repair)
+     */
+    int32 expected;
+    int32 actual;
+
+    /* Setup for success by having strings match */
+    expected = OS_SUCCESS;
+    actual   = OS_chkfs("/cf", true);
+    UtAssert_True(actual == expected, "OS_chkfs() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_chkfs(NULL, false);
+    UtAssert_True(actual == expected, "OS_fsBytesFree() (%ld) == OS_INVALID_POINTER", (long)actual);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    expected = OS_FS_ERR_PATH_TOO_LONG;
+    actual   = OS_chkfs("/cf", false);
+    UtAssert_True(actual == expected, "OS_fsBytesFree() (%ld) == OS_FS_ERR_PATH_TOO_LONG", (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    /* Test Fail due to no matching VolTab entry */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetBySearch), OS_ERR_NAME_NOT_FOUND);
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_chkfs("none", true);
+    UtAssert_True(actual == expected, "OS_chkfs() (%ld) == OS_ERR_NAME_NOT_FOUND", (long)actual);
+}
+
+void Test_OS_FS_GetPhysDriveName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_FS_GetPhysDriveName(char * PhysDriveName, const char * MountPoint)
+     */
+    char NameBuf[OS_FS_PHYS_NAME_LEN];
+
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NULL, "none"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NameBuf, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NameBuf, "none"), OS_FS_ERR_PATH_TOO_LONG);
+
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NameBuf, "none"), OS_ERR_INCORRECT_OBJ_STATE);
+
+    OS_filesys_table[1].flags =
+        OS_FILESYS_FLAG_IS_READY | OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NameBuf, "none"), OS_SUCCESS);
+
+    /* Test Fail due to no matching VolTab entry */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetBySearch), OS_ERR_NAME_NOT_FOUND);
+    OSAPI_TEST_FUNCTION_RC(OS_FS_GetPhysDriveName(NameBuf, "none"), OS_ERR_NAME_NOT_FOUND);
+}
+
+void Test_OS_GetFsInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetFsInfo(OS_FsInfo_t  *filesys_info)
+     */
+    int32              expected = OS_SUCCESS;
+    int32              actual   = ~OS_SUCCESS;
+    os_fsinfo_t        filesys_info;
+    OS_common_record_t rec;
+
+    memset(&filesys_info, 0, sizeof(filesys_info));
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdIteratorGetNext), 1);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdIteratorGetNext), 3, 0);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdIteratorGetNext), 4, 0);
+
+    actual = OS_GetFsInfo(&filesys_info);
+
+    UtAssert_True(actual == expected, "OS_FileSysInfo() (%ld) == OS_SUCCESS", (long)actual);
+
+    UtAssert_True(filesys_info.MaxFds == OS_MAX_NUM_OPEN_FILES, "filesys_info.MaxFds (%lu) == OS_MAX_NUM_OPEN_FILES",
+                  (unsigned long)filesys_info.MaxFds);
+    UtAssert_True(filesys_info.MaxVolumes == OS_MAX_FILE_SYSTEMS,
+                  "filesys_info.MaxVolumes (%lu) == OS_MAX_FILE_SYSTEMS", (unsigned long)filesys_info.MaxVolumes);
+
+    /* since there are no open files, the free fd count should match the max */
+    UtAssert_True(filesys_info.FreeFds == 2, "filesys_info.FreeFds (%lu) == 2", (unsigned long)filesys_info.FreeFds);
+
+    UtAssert_True(filesys_info.FreeVolumes == 3, "filesys_info.FreeVolumes (%lu) == 3",
+                  (unsigned long)filesys_info.FreeVolumes);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_GetFsInfo(NULL);
+    UtAssert_True(actual == expected, "OS_GetFsInfo() (%ld) == OS_INVALID_POINTER", (long)actual);
+
+    /* This function uses a helper OS_FileSysFilterFree() that needs to be called for coverage. */
+    /* It is just a wrapper around OS_ObjectIdDefined() for the record ID */
+    memset(&rec, 0, sizeof(rec));
+    UtAssert_True(OS_FileSysFilterFree(NULL, NULL, &rec), "OS_FileSysFilterFree() (unused record)");
+    rec.active_id = UT_OBJID_1;
+    UtAssert_True(!OS_FileSysFilterFree(NULL, NULL, &rec), "!OS_FileSysFilterFree() (used record)");
+}
+
+void Test_OS_TranslatePath(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TranslatePath(const char *VirtualPath, char *LocalPath)
+     */
+    char  LocalBuffer[OS_MAX_PATH_LEN];
+    int32 expected = OS_SUCCESS;
+    int32 actual   = ~OS_SUCCESS;
+
+    memset(LocalBuffer, 0, sizeof(LocalBuffer));
+
+    /* Set up the local record for success */
+    OS_filesys_table[1].flags =
+        OS_FILESYS_FLAG_IS_READY | OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+    strcpy(OS_filesys_table[1].virtual_mountpt, "/cf");
+    strcpy(OS_filesys_table[1].system_mountpt, "/mnt/cf");
+
+    actual = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath(/cf/test) (%ld) == OS_SUCCESS", (long)actual);
+    UtAssert_True(strcmp(LocalBuffer, "/mnt/cf/test") == 0, "OS_TranslatePath(/cf/test) (%s)  == /mnt/cf/test",
+                  LocalBuffer);
+
+    /* Check various error paths */
+    UtAssert_INT32_EQ(OS_TranslatePath("/cf/test", NULL), OS_INVALID_POINTER);
+    UtAssert_INT32_EQ(OS_TranslatePath(NULL, LocalBuffer), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    expected = OS_FS_ERR_PATH_TOO_LONG;
+    actual   = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath() (%ld) == OS_FS_ERR_PATH_TOO_LONG", (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    /* Invalid no '/' */
+    expected = OS_FS_ERR_PATH_INVALID;
+    actual   = OS_TranslatePath("invalid", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath() (%ld) == OS_FS_ERR_PATH_INVALID", (long)actual);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 2, OS_ERROR);
+    expected = OS_FS_ERR_NAME_TOO_LONG;
+    actual   = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath(/cf/test) (%ld) == OS_FS_ERR_NAME_TOO_LONG", (long)actual);
+
+    /* Invalid no leading '/' */
+    expected = OS_FS_ERR_PATH_INVALID;
+    actual   = OS_TranslatePath("invalid/", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath() (%ld) == OS_FS_ERR_PATH_INVALID", (long)actual);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetBySearch), OS_ERR_NAME_NOT_FOUND);
+    actual = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath() (%ld) == OS_FS_ERR_PATH_INVALID", (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdGetBySearch));
+
+    /* VirtPathLen < VirtPathBegin */
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 4, OS_ERROR);
+    expected = OS_FS_ERR_PATH_INVALID;
+    actual   = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath(/cf/test) (%ld) == OS_FS_ERR_PATH_INVALID", (long)actual);
+
+    /* (SysMountPointLen + VirtPathLen) > OS_MAX_LOCAL_PATH_LEN */
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 3, OS_ERROR);
+    expected = OS_FS_ERR_PATH_TOO_LONG;
+    actual   = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath(/cf/test) (%ld) == OS_FS_ERR_PATH_TOO_LONG", (long)actual);
+
+    OS_filesys_table[1].flags = 0;
+    expected                  = OS_ERR_INCORRECT_OBJ_STATE;
+    actual                    = OS_TranslatePath("/cf/test", LocalBuffer);
+    UtAssert_True(actual == expected, "OS_TranslatePath(/cf/test) (%ld) == OS_ERR_INCORRECT_OBJ_STATE", (long)actual);
+}
+
+void Test_OS_FileSys_FindVirtMountPoint(void)
+{
+    /*
+     * Test Case For:
+     * static bool OS_FileSys_FindVirtMountPoint(void *ref, uint32 local_id, const OS_common_record_t *obj)
+     *
+     * This is a static internal function and must be invoked through a UT-specific wrapper in
+     * order to get coverage on it.
+     */
+    bool               result;
+    OS_common_record_t refobj;
+    const char         refstr[]  = "/ut";
+    const char         refstr1[] = "/ut/";
+    OS_object_token_t  token;
+
+    memset(&token, 0, sizeof(token));
+    token.obj_idx  = UT_INDEX_1;
+    token.obj_type = OS_OBJECT_TYPE_OS_FILESYS;
+
+    memset(&refobj, 0, sizeof(refobj));
+    OS_filesys_table[1].flags              = 0;
+    OS_filesys_table[1].virtual_mountpt[0] = 0;
+
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(!result, "OS_FileSys_FindVirtMountPoint(%s) (unmounted) == false", refstr);
+
+    OS_filesys_table[1].flags = OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+
+    /* Branch coverage for mismatches */
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(!result, "OS_FileSys_FindVirtMountPoint(%s) (mountpt=%s) == false", refstr,
+                  OS_filesys_table[1].virtual_mountpt);
+
+    memset(OS_filesys_table[1].virtual_mountpt, 'a', sizeof(OS_filesys_table[1].virtual_mountpt));
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(!result, "OS_FileSys_FindVirtMountPoint(%s) (mountpt=%s) == false", refstr,
+                  OS_filesys_table[1].virtual_mountpt);
+
+    /* Verify cases where one is a substring of the other -
+     * these should also return false */
+    strncpy(OS_filesys_table[1].virtual_mountpt, "/ut11", sizeof(OS_filesys_table[1].virtual_mountpt));
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(!result, "OS_FileSys_FindVirtMountPoint(%s) (mountpt=%s) == false", refstr,
+                  OS_filesys_table[1].virtual_mountpt);
+
+    strncpy(OS_filesys_table[1].virtual_mountpt, "/u", sizeof(OS_filesys_table[1].virtual_mountpt));
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(!result, "OS_FileSys_FindVirtMountPoint(%s) (mountpt=%s) == false", refstr,
+                  OS_filesys_table[1].virtual_mountpt);
+
+    strncpy(OS_filesys_table[1].virtual_mountpt, "/ut", sizeof(OS_filesys_table[1].virtual_mountpt));
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr, &token, &refobj);
+    UtAssert_True(result, "OS_FileSys_FindVirtMountPoint(%s) (nominal) == true", refstr);
+
+    /* Passing case with reference ending in "/" */
+    strncpy(OS_filesys_table[1].virtual_mountpt, "/ut", sizeof(OS_filesys_table[1].virtual_mountpt));
+    result = OS_FileSys_FindVirtMountPoint((void *)refstr1, &token, &refobj);
+    UtAssert_True(result, "OS_FileSys_FindVirtMountPoint(%s) (nominal) == true", refstr);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_filesys_table, 0, sizeof(OS_filesys_table));
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_FileSysAPI_Init);
+    ADD_TEST(OS_FileSysAddFixedMap);
+    ADD_TEST(OS_mkfs);
+    ADD_TEST(OS_rmfs);
+    ADD_TEST(OS_initfs);
+    ADD_TEST(OS_mount);
+    ADD_TEST(OS_unmount);
+    ADD_TEST(OS_chkfs);
+    ADD_TEST(OS_FS_GetPhysDriveName);
+    ADD_TEST(OS_GetFsInfo);
+    ADD_TEST(OS_TranslatePath);
+    ADD_TEST(OS_FileSys_FindVirtMountPoint);
+    ADD_TEST(OS_FileSysStatVolume);
+}
+```
+
+### `coveragetest-heap.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-heap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-heap.h"
+
+void Test_OS_HeapGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_HeapGetInfo(OS_heap_prop_t *heap_prop)
+     */
+    OS_heap_prop_t heap_prop;
+    int32          expected = OS_SUCCESS;
+    int32          actual   = OS_HeapGetInfo(&heap_prop);
+
+    UtAssert_True(actual == expected, "OS_HeapGetInfo() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_HeapGetInfo(NULL);
+
+    UtAssert_True(actual == expected, "OS_HeapGetInfo() (%ld) == OS_INVALID_POINTER", (long)actual);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_HeapGetInfo);
+}
+```
+
+### `coveragetest-idmap.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-idmap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+#include "os-shared-task.h"
+
+#include "OCS_string.h"
+
+typedef struct
+{
+    uint32 TaskCount;
+    uint32 QueueCount;
+    uint32 MutexCount;
+    uint32 OtherCount;
+} Test_OS_ObjTypeCount_t;
+
+/* a match function that always matches */
+static bool TestAlwaysMatch(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    return true;
+}
+
+/* OS_TaskGetId_Impl handler to provide a valid id */
+void UT_Handler_OS_TaskGetId_Impl(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context)
+{
+    osal_id_t objid;
+
+    OS_ObjectIdCompose_Impl(OS_OBJECT_TYPE_OS_TASK, 1, &objid);
+    UT_Stub_SetReturnValue(FuncKey, objid);
+}
+
+static void ObjTypeCounter(osal_id_t object_id, void *arg)
+{
+    Test_OS_ObjTypeCount_t *count = arg;
+
+    switch (OS_IdentifyObject(object_id))
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            ++count->TaskCount;
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            ++count->QueueCount;
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            ++count->MutexCount;
+            break;
+        default:
+            ++count->OtherCount;
+            break;
+    }
+}
+
+static int32 TestIterator(osal_id_t object_id, void *arg)
+{
+    uint32 *c = arg;
+    ++(*c);
+    return UT_DEFAULT_IMPL(TestIterator);
+}
+
+void Test_OS_ObjectIdInit(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdInit(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdInit(), OS_SUCCESS);
+}
+
+void Test_OS_LockUnlockGlobal(void)
+{
+    /*
+     * Test Case For:
+     * void OS_Lock_Global(uint32 idtype)
+     * void OS_Unlock_Global(uint32 idtype)
+     */
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    token.obj_type  = OS_OBJECT_TYPE_OS_COUNTSEM;
+    token.lock_mode = OS_LOCK_MODE_NONE;
+
+    /*
+     * As these have no return codes, these tests
+     * exist to get coverage of the paths.
+     */
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+
+    token.lock_mode = OS_LOCK_MODE_GLOBAL;
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+
+    /* Register handler to provide valid self_task_id for branch coverage*/
+    UT_SetHandlerFunction(UT_KEY(OS_TaskGetId_Impl), UT_Handler_OS_TaskGetId_Impl, NULL);
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+    UT_ResetState(UT_KEY(OS_TaskGetId_Impl));
+
+    token.obj_type = OS_OBJECT_TYPE_UNDEFINED;
+
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+
+    token.obj_type = 55555;
+
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TaskGetId), 0);
+    token.obj_type = OS_OBJECT_TYPE_OS_BINSEM;
+
+    OS_Lock_Global(&token);
+    OS_Unlock_Global(&token);
+
+    UT_ResetState(UT_KEY(OS_TaskGetId));
+
+    /*
+     * Execute paths where the incorrect pattern is followed,
+     * such as unlocking from a different task than the lock.
+     * These trigger OS_DEBUG messages, if compiled in.
+     *
+     * Start by locking twice in a row
+     */
+    OS_Lock_Global(&token);
+    OS_Lock_Global(&token);
+
+    /*
+     * Next unlock with wrong/corrupt/bad key
+     */
+    token.lock_key.key_value ^= 0x11111111;
+    OS_Unlock_Global(&token);
+}
+
+void Test_OS_ObjectIdConvertToken(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdConvertToken(OS_object_token_t *token)
+     *
+     * NOTE: These test cases just focus on code paths that are not exercised
+     * by the other test cases in this file.
+     */
+    int32               expected;
+    int32               actual;
+    OS_object_token_t   token;
+    OS_common_record_t *record;
+    osal_id_t           objid;
+
+    /* confirm that calling w/invalid token returns OS_ERR_INCORRECT_OBJ_STATE */
+    memset(&token, 0, sizeof(token));
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdConvertToken(&token), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* get a valid (fake) OSAL ID to start with */
+    OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, "ut", &token);
+    objid = token.obj_id;
+
+    /* The prep function should have unlocked once */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    record            = OS_OBJECT_TABLE_GET(OS_global_task_table, token);
+    record->refcount  = 5;
+    record->active_id = objid;
+
+    /*
+     * Attempt to obtain a lock for the same record with a non-matching ID
+     * This should return an error.
+     */
+    token.lock_mode = OS_LOCK_MODE_NONE;
+    token.obj_id    = OS_ObjectIdFromInteger(OS_ObjectIdToInteger(token.obj_id) ^ 0x10); /* flip a bit */
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_ERR_INVALID_ID;
+
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock() (%ld) == OS_ERR_INVALID_ID (%ld)", (long)actual,
+                  (long)expected);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    /* object in use, not OS_OBJECT_ID_RESERVED */
+    token.lock_mode   = OS_LOCK_MODE_GLOBAL;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdConvertToken(&token), OS_ERR_OBJECT_IN_USE);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+    UtAssert_STUB_COUNT(OS_WaitForStateChange_Impl, 4);
+    UT_ResetState(UT_KEY(OS_WaitForStateChange_Impl));
+    record->active_id = objid;
+
+    /* Failure branch for exclusive lock where active id was overwritten (non-reserved expected_id) */
+    token.lock_mode = OS_LOCK_MODE_EXCLUSIVE;
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdConvertToken(&token), OS_ERR_INVALID_ID);
+
+    /*
+     * Use mode OS_LOCK_MODE_NONE with matching ID
+     * This should return success.
+     */
+    token.lock_mode = OS_LOCK_MODE_NONE;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_SUCCESS;
+
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(NONE) (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    /*
+     * Use mode OS_LOCK_MODE_GLOBAL with matching ID
+     * This should return success and update refcount
+     */
+    token.lock_mode = OS_LOCK_MODE_GLOBAL;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_SUCCESS;
+
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(GLOBAL) (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    UtAssert_UINT32_EQ(record->refcount, 6);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    /*
+     * Use mode OS_LOCK_MODE_REFCOUNT with matching ID
+     * This should return success, increment refcount
+     */
+    token.lock_mode = OS_LOCK_MODE_REFCOUNT;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_SUCCESS;
+
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(REFCOUNT) (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    UtAssert_UINT32_EQ(record->refcount, 7);
+
+    /* Global should be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 2);
+
+    /*
+     * Use mode OS_LOCK_MODE_RESERVED with non-reserved ID.
+     */
+    token.lock_mode = OS_LOCK_MODE_RESERVED;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_ERR_INVALID_ID;
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(RESERVED) (%ld) == OS_ERR_INVALID_ID (%ld)", (long)actual,
+                  (long)expected);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 2);
+    /*
+     * Use mode OS_LOCK_MODE_EXCLUSIVE with matching ID and other refs.
+     * This should return OS_ERR_OBJECT_IN_USE.
+     */
+    token.lock_mode = OS_LOCK_MODE_EXCLUSIVE;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_ERR_OBJECT_IN_USE;
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(EXCLUSIVE) (%ld) == OS_ERR_OBJECT_IN_USE (%ld)",
+                  (long)actual, (long)expected);
+
+    /* should have delayed 4 times, on the 5th try it returns error */
+    UtAssert_STUB_COUNT(OS_WaitForStateChange_Impl, 4);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 2);
+
+    /* It should also have preserved the original ID */
+    UtAssert_True(OS_ObjectIdEqual(record->active_id, objid), "OS_ObjectIdConvertLock(EXCLUSIVE) objid restored");
+
+    /*
+     * Use mode OS_LOCK_MODE_EXCLUSIVE with matching ID and no other refs.
+     * This should return success and set the active_id to OS_OBJECT_ID_RESERVED.
+     */
+    record->refcount = 0;
+    actual           = OS_ObjectIdConvertToken(&token);
+    expected         = OS_SUCCESS;
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(EXCLUSIVE) (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    UtAssert_True(OS_ObjectIdEqual(record->active_id, OS_OBJECT_ID_RESERVED),
+                  "OS_ObjectIdConvertLock(EXCLUSIVE) objid reserved");
+
+    /* Global should be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 3);
+
+    /*
+     * Use mode OS_LOCK_MODE_RESERVED with reserved ID.
+     * This should return OS_SUCCESS.
+     */
+    token.lock_mode = OS_LOCK_MODE_RESERVED;
+    token.obj_id    = objid;
+    actual          = OS_ObjectIdConvertToken(&token);
+    expected        = OS_SUCCESS;
+    UtAssert_True(actual == expected, "OS_ObjectIdConvertLock(RESERVED) (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+
+    /* Global should not be released */
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 3);
+}
+
+void Test_OS_ObjectIdGetBySearch(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdGetBySearch(OS_lock_mode_t lock_mode, uint32 idtype,
+     *      OS_ObjectMatchFunc_t MatchFunc, void *arg, OS_common_record_t **record)
+     *
+     * NOTE: These test cases just focus on code paths that are not exercised
+     * by the other test cases in this file.
+     */
+    int32             expected;
+    int32             actual;
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    OS_global_task_table[0].active_id = UT_OBJID_OTHER;
+    actual   = OS_ObjectIdGetBySearch(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TASK, TestAlwaysMatch, NULL, &token);
+    expected = OS_SUCCESS;
+
+    UtAssert_True(actual == expected, "OS_ObjectIdGetBySearch() (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+
+    UtAssert_Bool(OS_ObjectIdEqual(token.obj_id, UT_OBJID_OTHER), "Token Object ID");
+    UtAssert_UINT32_EQ(token.obj_idx, 0);
+
+    OS_global_task_table[0].active_id = OS_OBJECT_ID_UNDEFINED;
+}
+
+void Test_OS_GetMaxForObjectType(void)
+{
+    /*
+     * Test Case For:
+     * uint32 OS_GetMaxForObjectType(uint32 idtype);
+     */
+    osal_objtype_t idtype;
+    uint32         expected = 0xFFFFFFFF;
+    uint32         max      = 0;
+
+    for (idtype = 0; idtype < OS_OBJECT_TYPE_USER; ++idtype)
+    {
+        if (idtype == OS_OBJECT_TYPE_UNDEFINED)
+        {
+            expected = 0;
+        }
+        else
+        {
+            expected = 0xFFFFFFFF;
+        }
+
+        max = OS_GetMaxForObjectType(idtype);
+
+        if (expected != 0xFFFFFFFF)
+        {
+            /* Verify Outputs */
+            /* only the "0" is verifiable, since everything else depends on OS config */
+            UtAssert_True(max == expected, "OS_GetMaxForObjectType(%lu) (%lu) == 0", (unsigned long)idtype,
+                          (unsigned long)max);
+        }
+    }
+}
+
+void Test_OS_GetBaseForObjectType(void)
+{
+    /*
+     * Test Case For:
+     * uint32 OS_GetBaseForObjectType(uint32 idtype);
+     */
+    osal_objtype_t idtype;
+    uint32         expected = 0xFFFFFFFF;
+    uint32         max      = 0;
+
+    for (idtype = 0; idtype < OS_OBJECT_TYPE_USER; ++idtype)
+    {
+        if (idtype == OS_OBJECT_TYPE_UNDEFINED)
+        {
+            expected = 0;
+        }
+        else
+        {
+            expected = 0xFFFFFFFF;
+        }
+
+        max = OS_GetBaseForObjectType(idtype);
+
+        if (expected != 0xFFFFFFFF)
+        {
+            /* Verify Outputs */
+            /* only the "0" is verifiable, since everything else depends on OS config */
+            UtAssert_True(max == expected, "OS_GetBaseForObjectType(%lu) (%lu) == 0", (unsigned long)idtype,
+                          (unsigned long)max);
+        }
+    }
+}
+
+void Test_OS_ObjectIdToArrayIndex(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdToArrayIndex(uint32 idtype, uint32 id, uint32 *ArrayIndex);
+     *
+     * Internally this uses OS_Id_UnMap for the nominal case, which is covered by a
+     * different test case.  The only additional test here is to provide a value
+     * which is out of range.
+     */
+    osal_id_t    objid;
+    osal_index_t local_idx = OSAL_INDEX_C(0);
+    int32        expected  = OS_SUCCESS;
+    int32        actual    = ~OS_SUCCESS;
+
+    /* need to get a "valid" objid for the nominal case */
+    OS_ObjectIdCompose_Impl(OS_OBJECT_TYPE_OS_TASK, 1, &objid);
+    actual = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_TASK, objid, &local_idx);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "OS_ObjectIdToArrayIndex() (%ld) == OS_SUCCESS", (long)actual);
+    UtAssert_True(local_idx == 1, "local_idx (%lu) == 1", (unsigned long)local_idx);
+
+    /* coverage for off-nominal case */
+    expected = OS_ERR_INVALID_ID;
+    actual   = OS_ObjectIdToArrayIndex(0xFFFF, UT_OBJID_OTHER, &local_idx);
+    UtAssert_True(actual == expected, "OS_ObjectIdToArrayIndex() (%ld) == OS_ERR_INVALID_ID", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_TASK, objid, NULL);
+    UtAssert_True(actual == expected, "OS_ObjectIdToArrayIndex() (%ld) == OS_INVALID_POINTER", (long)actual);
+}
+
+void Test_OS_ObjectIdFindByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectFindIdByName (uint32 idtype, const char *name, uint32 *object_id);
+     *
+     * Nominal case (with no additional setup) should return OS_ERR_NAME_NOT_FOUND
+     * Setting up a special matching entry should yield OS_SUCCESS
+     */
+    char      TaskName[] = "UT_find";
+    osal_id_t objid;
+    int32     expected = OS_ERR_NAME_NOT_FOUND;
+    int32     actual   = OS_ObjectIdFindByName(OS_OBJECT_TYPE_UNDEFINED, NULL, &objid);
+    UtAssert_True(actual == expected, "OS_ObjectFindIdByName(%s) (%ld) == OS_ERR_NAME_NOT_FOUND", "NULL", (long)actual);
+
+    /*
+     * Pass in a name that is beyond OS_MAX_API_NAME
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    expected = OS_ERR_NAME_TOO_LONG;
+    actual   = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TASK, TaskName, &objid);
+    UtAssert_True(actual == expected, "OS_ObjectFindIdByName(%s) (%ld) == OS_ERR_NAME_TOO_LONG", TaskName,
+                  (long)actual);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    /*
+     * Pass in a name that is actually not found
+     */
+    OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TASK, TaskName, &objid);
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TASK, TaskName, &objid);
+
+    UtAssert_True(actual == expected, "OS_ObjectFindIdByName(%s) (%ld) == OS_ERR_NAME_NOT_FOUND", TaskName,
+                  (long)actual);
+
+    /*
+     * Set up for the ObjectIdSearch function to return success
+     */
+    OS_global_task_table[0].active_id  = UT_OBJID_OTHER;
+    OS_global_task_table[0].name_entry = TaskName;
+    actual                             = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TASK, TaskName, &objid);
+    expected                           = OS_SUCCESS;
+    OS_global_task_table[0].active_id  = OS_OBJECT_ID_UNDEFINED;
+    OS_global_task_table[0].name_entry = NULL;
+
+    UtAssert_True(actual == expected, "OS_ObjectFindIdByName(%s) (%ld) == OS_SUCCESS", TaskName, (long)actual);
+}
+
+void Test_OS_ObjectIdGetById(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdGetById(OS_lock_mode_t lock_mode, osal_objtype_t idtype, osal_id_t id, OS_object_token_t
+     * *token);
+     *
+     */
+    int32               actual   = ~OS_SUCCESS;
+    int32               expected = OS_SUCCESS;
+    osal_id_t           refobjid;
+    osal_index_t        local_idx = OSAL_INDEX_C(0);
+    OS_common_record_t *rptr      = NULL;
+    OS_object_token_t   token1;
+    OS_object_token_t   token2;
+
+    memset(&token1, 0, sizeof(token1));
+
+    /* verify that the call returns ERROR when not initialized */
+    OS_SharedGlobalVars.GlobalState = 0;
+    actual                          = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, 0, OS_OBJECT_ID_UNDEFINED, &token1);
+    expected                        = OS_ERROR;
+    UtAssert_True(actual == expected, "OS_ObjectIdGetById(uninitialized) (%ld) == OS_ERROR", (long)actual);
+
+    /* set "true" for the remainder of tests */
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+
+    /* OS_ObjectIdToArrayIndex failure branch */
+    OSAPI_TEST_FUNCTION_RC(
+        OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TASK, OS_OBJECT_ID_UNDEFINED, &token1),
+        OS_ERR_INVALID_ID);
+
+    OS_ObjectIdCompose_Impl(OS_OBJECT_TYPE_OS_TASK, 1000, &refobjid);
+    OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_TASK, refobjid, &local_idx);
+    rptr            = &OS_global_task_table[local_idx];
+    rptr->active_id = refobjid;
+    expected        = OS_SUCCESS;
+    actual          = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_TASK, refobjid, &token1);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "OS_ObjectIdGetById() (%ld) == OS_SUCCESS", (long)actual);
+    UtAssert_UINT32_EQ(token1.obj_idx, local_idx);
+    UtAssert_True(rptr->refcount == 1, "refcount (%u) == 1", (unsigned int)rptr->refcount);
+
+    /* attempting to get an exclusive lock should return IN_USE error */
+    expected = OS_ERR_OBJECT_IN_USE;
+    actual   = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, OS_OBJECT_TYPE_OS_TASK, refobjid, &token2);
+    UtAssert_True(actual == expected, "OS_ObjectIdGetById() (%ld) == OS_ERR_OBJECT_IN_USE", (long)actual);
+
+    /* refcount decrement should work */
+    OS_ObjectIdRelease(&token1);
+    UtAssert_True(rptr->refcount == 0, "refcount (%u) == 0", (unsigned int)rptr->refcount);
+
+    /* noop if done a second time */
+    OS_ObjectIdRelease(&token1);
+    UtAssert_True(rptr->refcount == 0, "refcount (%u) == 0", (unsigned int)rptr->refcount);
+
+    /* attempt to get non-exclusive lock during shutdown should fail */
+    OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    expected                        = OS_ERR_INCORRECT_OBJ_STATE;
+    actual                          = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TASK, refobjid, &token1);
+    UtAssert_True(actual == expected, "OS_ObjectIdGetById() (%ld) == OS_ERR_INCORRECT_OBJ_STATE", (long)actual);
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+
+    /* attempt to get lock for invalid type object should fail */
+    expected = OS_ERR_INVALID_ID;
+    actual   = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, 0xFFFF, refobjid, &token1);
+    UtAssert_True(actual == expected, "OS_ObjectIdGetById() (%ld) == OS_ERR_INVALID_ID", (long)actual);
+
+    /* clear out state entry */
+    memset(&OS_global_task_table[local_idx], 0, sizeof(OS_global_task_table[local_idx]));
+}
+
+void Test_OS_ObjectIdFindNextFree(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdFindNextFree(OS_object_token_t *token);
+     * int32 OS_ObjectIdFinalizeNew(int32 operation_status, &token, uint32 *outid);
+     *
+     * Note This test case covers both functions because they are somewhat interlinked and
+     * they share state between them - The output of FindNext() should be passed to Finalize()
+     * before use.
+     */
+
+    int32               expected;
+    int32               actual;
+    OS_object_token_t   token1;
+    OS_object_token_t   token2;
+    OS_common_record_t *rec1;
+    OS_common_record_t *rec2;
+    osal_id_t           id1;
+    osal_id_t           id2;
+    osal_id_t           saved_id;
+    uint32              i;
+
+    memset(&token1, 0, sizeof(token1));
+    token1.lock_mode = OS_LOCK_MODE_GLOBAL;
+    token1.obj_type  = OS_OBJECT_TYPE_OS_TASK;
+
+    /* Need to first obtain a valid ID to finalize */
+    expected = OS_SUCCESS;
+    actual   = OS_ObjectIdFindNextFree(&token1);
+    UtAssert_True(actual == expected, "OS_ObjectIdFindNextFree() (%ld) == OS_SUCCESS", (long)actual);
+
+    /* nominal case (success) */
+    id1    = OS_OBJECT_ID_UNDEFINED;
+    actual = OS_ObjectIdFinalizeNew(OS_SUCCESS, &token1, &id1);
+    OSAPI_TEST_OBJID(id1, ==, token1.obj_id);
+
+    /* Verify Outputs */
+    rec1 = OS_OBJECT_TABLE_GET(OS_global_task_table, token1);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeNew() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(token1.obj_id, ==, rec1->active_id);
+
+    /* Allocate another ID (should be different!) */
+    memset(&token2, 0, sizeof(token2));
+    token2.lock_mode = OS_LOCK_MODE_GLOBAL;
+    token2.obj_type  = OS_OBJECT_TYPE_OS_TASK;
+    actual           = OS_ObjectIdFindNextFree(&token2);
+    UtAssert_True(actual == expected, "OS_ObjectIdFindNextFree() (%ld) == OS_SUCCESS", (long)actual);
+    rec2 = OS_OBJECT_TABLE_GET(OS_global_task_table, token2);
+    OSAPI_TEST_OBJID(token2.obj_id, !=, token1.obj_id);
+
+    /* Failure to initialize the second one.
+     * Verify the error code passes thru */
+    expected = -1234;
+    saved_id = token2.obj_id;
+    id2      = OS_OBJECT_ID_UNDEFINED;
+    actual   = OS_ObjectIdFinalizeNew(expected, &token2, &id2);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeNew() (%ld) == %ld", (long)actual, (long)expected);
+    OSAPI_TEST_OBJID(id2, ==, OS_OBJECT_ID_UNDEFINED);
+    OSAPI_TEST_OBJID(rec2->active_id, ==, OS_OBJECT_ID_UNDEFINED);
+    OSAPI_TEST_OBJID(token2.obj_id, ==, saved_id);
+
+    /* next call should not re-issue the same id */
+    memset(&token2, 0, sizeof(token2));
+    token2.obj_type = OS_OBJECT_TYPE_OS_TASK;
+    expected        = OS_SUCCESS;
+    actual          = OS_ObjectIdFindNextFree(&token2);
+    UtAssert_True(actual == expected, "OS_ObjectIdFindNextFree() (%ld) == OS_SUCCESS", (long)actual);
+    OSAPI_TEST_OBJID(token2.obj_id, !=, saved_id);
+
+    /*
+     * Finally - test the wrap-around function to verify that object IDs
+     * will continue to allocate correctly after OS_OBJECT_INDEX_MASK
+     */
+    expected = OS_SUCCESS;
+    saved_id = OS_OBJECT_ID_UNDEFINED;
+    for (i = 0; i < (OS_OBJECT_INDEX_MASK + 2); ++i)
+    {
+        actual = OS_ObjectIdFindNextFree(&token2);
+        /* not using UtAssert_True here as it will create thousands  of duplicates. */
+        if (expected != actual)
+        {
+            UtAssert_Failed("OS_ObjectIdFindNextFree() failure (%ld)", (long)actual);
+            break;
+        }
+
+        actual = OS_ObjectIdFinalizeNew(OS_SUCCESS, &token2, NULL);
+        if (expected != actual)
+        {
+            UtAssert_Failed("OS_ObjectIdFinalizeNew() failure (%ld)", (long)actual);
+            break;
+        }
+
+        /* should always be different than the previous ID */
+        if (OS_ObjectIdEqual(saved_id, token2.obj_id))
+        {
+            UtAssert_Failed("OS_ObjectIdFindNextFree() re-issued ID (%lx)", OS_ObjectIdToInteger(token2.obj_id));
+            break;
+        }
+
+        /* it also should never be id1, which was previously allocated */
+        if (OS_ObjectIdEqual(token1.obj_id, token2.obj_id))
+        {
+            UtAssert_Failed("OS_ObjectIdFindNextFree() duplicate ID (%lx)", OS_ObjectIdToInteger(token1.obj_id));
+            break;
+        }
+        if (rec1 == rec2)
+        {
+            UtAssert_Failed("OS_ObjectIdFindNextFree() duplicate slot (%p)", (void *)rec1);
+            break;
+        }
+
+        /* Find the wrap.  Once this occurs the test is successful. */
+        if (OS_ObjectIdToInteger(saved_id) > OS_ObjectIdToInteger(token2.obj_id))
+        {
+            /* Success */
+            break;
+        }
+
+        /* clear the entry for re-use */
+        saved_id = token2.obj_id;
+        rec2     = OS_OBJECT_TABLE_GET(OS_global_task_table, token2);
+        memset(rec2, 0, sizeof(*rec2));
+    }
+
+    /* verify that the wrap occurred */
+    UtAssert_True(i < (OS_OBJECT_INDEX_MASK + 2), "OS_ObjectIdFindNextFree() wrap around occurred");
+
+    /* Now fill the task table */
+    memset(&token2, 0, sizeof(token2));
+    token2.obj_type = OS_OBJECT_TYPE_OS_TASK;
+    for (i = 0; i < OS_MAX_TASKS; ++i)
+    {
+        token2.obj_idx = i;
+
+        rec2 = OS_OBJECT_TABLE_GET(OS_global_task_table, token2);
+        OS_ObjectIdCompose_Impl(OS_OBJECT_TYPE_OS_TASK, i, &rec2->active_id);
+    }
+
+    /* Attempt to allocate another task, should result in OS_ERR_NO_FREE_IDS */
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdFindNextFree(&token2), OS_ERR_NO_FREE_IDS);
+
+    /* Clear the task table */
+    memset(OS_global_task_table, 0, sizeof(OS_common_record_t) * OS_MAX_TASKS);
+
+    /* Try to allocate an instance of an objtype which is not implemented */
+    memset(&token2, 0, sizeof(token2));
+    token2.obj_type = 22;
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdFindNextFree(&token2), OS_ERR_NOT_IMPLEMENTED);
+}
+
+void Test_OS_ObjectIdAllocateNew(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdAllocateNew(osal_objtype_t idtype, const char *name, OS_object_token_t *token)
+     *
+     * Most of the business logic is done by OS_ObjectIdFindNextFree() which is tested separately
+     * This test case mainly focuses on additional error checking
+     */
+    int32             expected = OS_SUCCESS;
+    int32             actual   = ~OS_SUCCESS;
+    OS_object_token_t token;
+
+    memset(&token, 0, sizeof(token));
+
+    actual = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, "UT_alloc", &token);
+
+    /* Verify Outputs */
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocate() (%ld) == OS_SUCCESS", (long)actual);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_EXCLUSIVE);
+    UtAssert_UINT32_EQ(token.obj_type, OS_OBJECT_TYPE_OS_TASK);
+    UtAssert_Bool(OS_ObjectIdDefined(token.obj_id), "ObjectIdDefined(token.obj_id)");
+
+    /* Passing a NULL name also should work here (used for internal objects) */
+    actual = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, NULL, &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocate(NULL) (%ld) == OS_SUCCESS", (long)actual);
+
+    OS_global_task_table[0].name_entry = "UT_alloc";
+    expected                           = OS_ERR_NAME_TAKEN;
+    actual                             = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, "UT_alloc", &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocate() (%ld) == OS_ERR_NAME_TAKEN", (long)actual);
+
+    /*
+     * Although an object with that name exists, it isn't fully created yet.
+     * OS_ObjectIdAllocateNew() should leave the object record in a state where
+     * attempts to get object ID by name should fail.
+     */
+    expected = OS_ERR_INCORRECT_OBJ_STATE;
+    actual   = OS_ObjectIdGetByName(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TASK, "UT_alloc", &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdGetByName() (%ld) == OS_ERR_INCORRECT_OBJ_STATE", (long)actual);
+
+    OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    expected                        = OS_ERR_INCORRECT_OBJ_STATE;
+    actual                          = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, "UT_alloc", &token);
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocate() (%ld) == OS_ERR_INCORRECT_OBJ_STATE", (long)actual);
+
+    expected = OS_ERR_INVALID_ID;
+    actual   = OS_ObjectIdAllocateNew(0xFFFF, "UT_alloc", &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocate() (%ld) == OS_ERR_INVALID_ID", (long)actual);
+
+    /*
+     * Test late-stage failure path -
+     * If object was allocated successfully to the point that a table index was assigned,
+     * but then failed later, it should call FinalizeNew with the error code so the table
+     * entry can be cleaned up (effect is the same as if the underlying impl failed).
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OS_NotifyEvent), OS_ERR_INVALID_SIZE);
+    expected = OS_ERR_INVALID_SIZE;
+    actual   = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TASK, "UT_alloc2", &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdAllocateNew() (%ld) == OS_ERR_INVALID_SIZE", (long)actual);
+}
+
+void Test_OS_ConvertToArrayIndex(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ConvertToArrayIndex(uint32 object_id, uint32 *ArrayIndex);
+     *
+     *
+     */
+    int32        expected = OS_SUCCESS;
+    int32        actual;
+    osal_id_t    refobjid;
+    osal_index_t local_idx = OSAL_INDEX_C(0);
+
+    /* Need a valid ID to work with */
+    OS_ObjectIdCompose_Impl(OS_OBJECT_TYPE_OS_TASK, 1234, &refobjid);
+    actual = OS_ConvertToArrayIndex(refobjid, &local_idx);
+    UtAssert_True(actual == expected, "OS_ConvertToArrayIndex() (%ld) == OS_SUCCESS", (long)actual);
+    UtAssert_True(local_idx < OS_MAX_TASKS, "local_idx (%lu) < OS_MAX_TASKS (%lu)", (unsigned long)local_idx,
+                  (unsigned long)OS_MAX_TASKS);
+
+    expected = OS_ERR_INVALID_ID;
+    actual   = OS_ConvertToArrayIndex(OS_OBJECT_ID_UNDEFINED, &local_idx);
+    UtAssert_True(actual == expected, "OS_ConvertToArrayIndex() (%ld) == OS_ERR_INVALID_ID", (long)actual);
+}
+
+void Test_OS_ObjectIdTransaction(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdTransactionInit(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_object_token_t *token);
+     * void OS_ObjectIdTransactionCancel(OS_object_token_t *token);
+     * void OS_ObjectIdTransactionFinish(OS_object_token_t *token, osal_id_t *final_id);
+     * void OS_ObjectIdTransferToken(OS_object_token_t *token_from, OS_object_token_t *token_to);
+     */
+
+    OS_object_token_t   token;
+    OS_object_token_t   token2;
+    osal_id_t           objid;
+    OS_common_record_t *record;
+
+    memset(&token, 0xAA, sizeof(token));
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+
+    /* With OS_SharedGlobalVars uninitialized (0) it should prevent transactions */
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_BINSEM, &token), OS_ERROR);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 0);
+
+    /* shutdown will prevent transactions */
+    OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_BINSEM, &token),
+                           OS_ERR_INCORRECT_OBJ_STATE);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+    UtAssert_UINT32_EQ(token.obj_type, OS_OBJECT_TYPE_UNDEFINED);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 0);
+
+    /* except for exclusive (delete) transactions, which should succeed */
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdTransactionInit(OS_LOCK_MODE_EXCLUSIVE, OS_OBJECT_TYPE_OS_BINSEM, &token),
+                           OS_SUCCESS);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_EXCLUSIVE);
+    UtAssert_UINT32_EQ(token.obj_idx, -1);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 1);
+
+    /* cancel should unlock */
+    OS_ObjectIdTransactionCancel(&token);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    /* Call again to cover OS_LOCK_MODE_NONE branch */
+    OS_ObjectIdTransactionCancel(&token);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+
+    /* other cases for normal operating mode */
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_COUNTSEM, &token),
+                           OS_SUCCESS);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_GLOBAL);
+    UtAssert_UINT32_EQ(token.obj_type, OS_OBJECT_TYPE_OS_COUNTSEM);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 2);
+
+    /* bad object type */
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_UNDEFINED, &token),
+                           OS_ERR_INVALID_ID);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+    UtAssert_UINT32_EQ(token.obj_type, OS_OBJECT_TYPE_UNDEFINED);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 2);
+
+    /* normal finish (sets ID from passed in value) */
+    objid            = UT_OBJID_1;
+    token.obj_id     = UT_OBJID_2;
+    token.obj_idx    = UT_INDEX_2;
+    token.obj_type   = OS_OBJECT_TYPE_OS_TASK;
+    token.lock_mode  = OS_LOCK_MODE_GLOBAL;
+    record           = OS_ObjectIdGlobalFromToken(&token);
+    record->refcount = 1;
+
+    OS_ObjectIdTransactionFinish(&token, &objid);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 2);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 2);
+    OSAPI_TEST_OBJID(record->active_id, ==, objid);
+    UtAssert_UINT32_EQ(record->refcount, 0);
+
+    /* exclusive lock finish (restores ID from token) */
+    record->refcount  = 1;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    OS_ObjectIdTransactionFinish(&token, NULL);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 3);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 3);
+    OSAPI_TEST_OBJID(record->active_id, ==, token.obj_id);
+    UtAssert_UINT32_EQ(record->refcount, 0);
+
+    /* refcount finish (no change to ID) */
+    token.lock_mode   = OS_LOCK_MODE_REFCOUNT;
+    record->refcount  = 1;
+    record->active_id = UT_OBJID_1;
+    OS_ObjectIdTransactionFinish(&token, NULL);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 4);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 4);
+    OSAPI_TEST_OBJID(record->active_id, ==, UT_OBJID_1);
+    UtAssert_UINT32_EQ(record->refcount, 0);
+
+    /* other finish with refcount already 0 */
+    token.lock_mode = OS_LOCK_MODE_GLOBAL;
+    OS_ObjectIdTransactionFinish(&token, NULL);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 4);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 5);
+    OSAPI_TEST_OBJID(record->active_id, ==, UT_OBJID_1);
+    UtAssert_UINT32_EQ(record->refcount, 0);
+
+    /* test transferring a refcount token */
+    memset(&token2, 0xBB, sizeof(token2));
+    token.obj_id    = UT_OBJID_2;
+    token.obj_idx   = UT_INDEX_2;
+    token.obj_type  = OS_OBJECT_TYPE_OS_TASK;
+    token.lock_mode = OS_LOCK_MODE_GLOBAL;
+
+    OS_ObjectIdTransferToken(&token, &token2);
+
+    /* actual lock_mode should only be on token2 now */
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+    UtAssert_UINT32_EQ(token2.lock_mode, OS_LOCK_MODE_GLOBAL);
+
+    /* other fields should stay the same */
+    UtAssert_UINT32_EQ(token.obj_idx, token2.obj_idx);
+    UtAssert_UINT32_EQ(token.obj_type, token2.obj_type);
+    OSAPI_TEST_OBJID(token.obj_id, ==, token2.obj_id);
+}
+
+void Test_OS_ObjectIdFinalize(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ObjectIdFinalizeNew(int32 operation_status, OS_object_token_t *token, osal_id_t *outid);
+     * int32 OS_ObjectIdFinalizeDelete(int32 operation_status, OS_object_token_t *token);
+     */
+    int32               expected;
+    int32               actual;
+    OS_object_token_t   token;
+    osal_id_t           objid;
+    OS_common_record_t *record;
+
+    memset(&token, 0, sizeof(token));
+
+    objid           = UT_OBJID_1;
+    token.obj_id    = UT_OBJID_2;
+    token.obj_idx   = UT_INDEX_2;
+    token.obj_type  = OS_OBJECT_TYPE_OS_TASK;
+    token.lock_mode = OS_LOCK_MODE_EXCLUSIVE;
+
+    record = OS_ObjectIdGlobalFromToken(&token);
+
+    /* if creation fails, RC should be passed through and ID set to UNDEFINED */
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    expected          = OS_ERR_INVALID_ID;
+    actual            = OS_ObjectIdFinalizeNew(OS_ERR_INVALID_ID, &token, &objid);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeNew() rc passthru (%ld) == OS_ERR_INVALID_ID (%ld)",
+                  (long)actual, (long)expected);
+    OSAPI_TEST_OBJID(objid, ==, OS_OBJECT_ID_UNDEFINED);
+    OSAPI_TEST_OBJID(record->active_id, ==, OS_OBJECT_ID_UNDEFINED);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+
+    /* if creation succeeds, RC should be passed through and ID set to token value */
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    expected          = OS_SUCCESS;
+    actual            = OS_ObjectIdFinalizeNew(OS_SUCCESS, &token, &objid);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeNew() rc passthru (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    OSAPI_TEST_OBJID(objid, ==, token.obj_id);
+    OSAPI_TEST_OBJID(record->active_id, ==, token.obj_id);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+
+    /* verify passing NULL for out ID for path coverage */
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    expected          = OS_SUCCESS;
+    actual            = OS_ObjectIdFinalizeNew(OS_SUCCESS, &token, NULL);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeNew() rc passthru (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    OSAPI_TEST_OBJID(record->active_id, ==, token.obj_id);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+
+    /* if delete succeeds, RC should be passed through and ID set to UNDEFINED */
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    expected          = OS_SUCCESS;
+    actual            = OS_ObjectIdFinalizeDelete(OS_SUCCESS, &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeDelete() rc passthru (%ld) == OS_SUCCESS (%ld)", (long)actual,
+                  (long)expected);
+    OSAPI_TEST_OBJID(record->active_id, ==, OS_OBJECT_ID_UNDEFINED);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+
+    /* if delete fails, RC should be passed through and ID set to the token value */
+    token.lock_mode   = OS_LOCK_MODE_EXCLUSIVE;
+    record->active_id = OS_OBJECT_ID_RESERVED;
+    expected          = OS_ERR_INVALID_ID;
+    actual            = OS_ObjectIdFinalizeDelete(OS_ERR_INVALID_ID, &token);
+    UtAssert_True(actual == expected, "OS_ObjectIdFinalizeDelete() rc passthru (%ld) == OS_ERR_INVALID_ID (%ld)",
+                  (long)actual, (long)expected);
+    OSAPI_TEST_OBJID(record->active_id, ==, token.obj_id);
+    UtAssert_UINT32_EQ(token.lock_mode, OS_LOCK_MODE_NONE);
+}
+
+void Test_OS_ForEachObject(void)
+{
+    /*
+     * Test Case For:
+     * void OS_ForEachObject (uint32 creator_id, OS_ArgCallback_t callback_ptr, void *callback_arg);
+     */
+    OS_object_token_t      token;
+    UT_idbuf_t             self_id;
+    Test_OS_ObjTypeCount_t Count;
+
+    self_id.id = OS_TaskGetId();
+
+    memset(&Count, 0, sizeof(Count));
+    memset(&token, 0, sizeof(token));
+
+    while (token.obj_type < OS_OBJECT_TYPE_USER)
+    {
+        if (OS_ObjectIdFindNextFree(&token) == OS_SUCCESS)
+        {
+            OS_ObjectIdGlobalFromToken(&token)->active_id = token.obj_id;
+        }
+        ++token.obj_type;
+    }
+
+    OS_ForEachObject(OS_OBJECT_ID_UNDEFINED, &ObjTypeCounter, &Count);
+
+    /* Verify Outputs */
+    UtAssert_True(Count.TaskCount == 1, "OS_ForEachObject() TaskCount (%lu) == 1", (unsigned long)Count.TaskCount);
+    UtAssert_True(Count.QueueCount == 1, "OS_ForEachObject() QueueCount (%lu) == 1", (unsigned long)Count.QueueCount);
+    UtAssert_True(Count.MutexCount == 1, "OS_ForEachObject() MutexCount (%lu) == 1", (unsigned long)Count.MutexCount);
+    UtAssert_True(Count.OtherCount == 10, "OS_ForEachObject() OtherCount (%lu) == 9", (unsigned long)Count.OtherCount);
+
+    OS_ForEachObjectOfType(OS_OBJECT_TYPE_OS_QUEUE, self_id.id, ObjTypeCounter, &Count);
+    UtAssert_True(Count.TaskCount == 1, "OS_ForEachObjectOfType(), creator %08lx TaskCount (%lu) == 1",
+                  (unsigned long)self_id.val, (unsigned long)Count.TaskCount);
+    UtAssert_True(Count.QueueCount == 2, "OS_ForEachObjectOfType() QueueCount (%lu) == 2",
+                  (unsigned long)Count.QueueCount);
+    UtAssert_True(Count.MutexCount == 1, "OS_ForEachObjectOfType() MutexCount (%lu) == 1",
+                  (unsigned long)Count.MutexCount);
+
+    self_id.val ^= 0x01;
+    OS_ForEachObjectOfType(OS_OBJECT_TYPE_OS_QUEUE, self_id.id, ObjTypeCounter, &Count);
+    UtAssert_True(Count.TaskCount == 1, "OS_ForEachObjectOfType(), non-matching creator TaskCount (%lu) == 1",
+                  (unsigned long)Count.TaskCount);
+    UtAssert_True(Count.QueueCount == 2, "OS_ForEachObjectOfType() QueueCount (%lu) == 2",
+                  (unsigned long)Count.QueueCount);
+    UtAssert_True(Count.MutexCount == 1, "OS_ForEachObjectOfType() MutexCount (%lu) == 1",
+                  (unsigned long)Count.MutexCount);
+}
+
+void Test_OS_GetResourceName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_GetResourceName(uint32 id, char *buffer, uint32 buffer_size)
+     */
+    OS_object_token_t   token;
+    OS_common_record_t *rptr;
+    char                NameBuffer[OS_MAX_API_NAME];
+
+    memset(NameBuffer, 0, sizeof(NameBuffer));
+
+    /*
+     * Set up for the OS_GetResourceName function to return success
+     */
+    /* Need a valid ID to work with */
+    memset(&token, 0, sizeof(token));
+    token.obj_type = OS_OBJECT_TYPE_OS_TASK;
+    OS_ObjectIdFindNextFree(&token);
+    rptr             = OS_OBJECT_TABLE_GET(OS_global_task_table, token);
+    rptr->name_entry = "UTTask";
+    rptr->active_id  = token.obj_id;
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, sizeof(NameBuffer)), OS_SUCCESS);
+    UtAssert_True(strcmp(NameBuffer, "UTTask") == 0, "NameBuffer (%s) == UTTask", NameBuffer);
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, OSAL_SIZE_C(2)), OS_ERR_NAME_TOO_LONG);
+
+    /* Null entry */
+    rptr->name_entry = NULL;
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, sizeof(NameBuffer)), OS_SUCCESS);
+
+    /* Invalid token */
+    memset(&token, 0, sizeof(token));
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, sizeof(NameBuffer)), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NULL, sizeof(NameBuffer)), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, OSAL_SIZE_C(0)), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_GetResourceName(token.obj_id, NameBuffer, OSAL_SIZE_C(UINT32_MAX)), OS_ERR_INVALID_SIZE);
+}
+
+void Test_OS_ObjectIdIterator(void)
+{
+    /*
+     * Test Case For:
+     * OS_ObjectIdIteratorInit, OS_ObjectFilterActive, OS_ObjectIdIterateActive
+     * OS_ObjectIdIteratorGetNext, OS_ObjectIdIteratorDestroy, OS_ObjectIdIteratorProcessEntry
+     */
+    OS_object_iter_t   iter;
+    OS_common_record_t rec;
+    uint32             testarg;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdIteratorInit(NULL, NULL, OS_OBJECT_TYPE_UNDEFINED, &iter), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdIteratorInit(NULL, NULL, OS_OBJECT_TYPE_OS_TASK, &iter), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 1);
+
+    /* Cover NULL match function case */
+    UtAssert_True(OS_ObjectIdIteratorGetNext(&iter), "OS_ObjectIdIteratorGetNext() with null match function");
+
+    OSAPI_TEST_FUNCTION_RC(OS_ObjectIdIterateActive(OS_OBJECT_TYPE_OS_TASK, &iter), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 2);
+
+    memset(&rec, 0, sizeof(rec));
+    UtAssert_True(!OS_ObjectFilterActive(NULL, NULL, &rec), "OS_ObjectFilterActive() empty record");
+
+    rec.active_id = UT_OBJID_1;
+    UtAssert_True(OS_ObjectFilterActive(NULL, NULL, &rec), "OS_ObjectFilterActive() non-empty record");
+
+    /* OS_ObjectIdIteratorProcessEntry unlocks and re-locks */
+    testarg  = 4;
+    iter.arg = &testarg;
+    OS_ObjectIdIteratorProcessEntry(&iter, TestIterator);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 1);
+    UtAssert_STUB_COUNT(OS_Lock_Global_Impl, 3);
+
+    /* OS_ObjectIdIteratorDestroy is just a passthrough to OS_ObjectIdTransactionCancel,
+     * but need to call for coverage */
+    OS_ObjectIdIteratorDestroy(&iter);
+    UtAssert_STUB_COUNT(OS_Unlock_Global_Impl, 2);
+}
+
+void Test_OS_ObjectIDInteger(void)
+{
+    /*
+     * Test Case For:
+     * OS_ObjectIdToInteger, OS_ObjectIdFromInteger, OS_ObjectIdEqual, OS_ObjectIdDefined
+     */
+    int32             actual;
+    OS_object_token_t token;
+    osal_id_t         typesI[OS_MAX_TOTAL_RECORDS];
+    osal_id_t         typesJ[OS_MAX_TOTAL_RECORDS];
+    uint32            intID;
+    int32             recordscount = 0;
+    osal_objtype_t    idtype;
+    char              str[OS_MAX_API_NAME];
+
+    memset(&token, 0, sizeof(token));
+
+    for (idtype = 0; idtype < OS_OBJECT_TYPE_USER; ++idtype)
+    {
+        actual = OS_SUCCESS;
+        while (actual == OS_SUCCESS && recordscount < OS_MAX_TOTAL_RECORDS)
+        {
+            snprintf(str, sizeof(str), "%d", (int)recordscount);
+            actual = OS_ObjectIdAllocateNew(idtype, str, &token);
+
+            if (actual == OS_SUCCESS)
+            {
+                typesI[recordscount] = token.obj_id;
+                intID                = OS_ObjectIdToInteger(typesI[recordscount]);
+                typesJ[recordscount] = OS_ObjectIdFromInteger(intID);
+
+                recordscount++;
+            }
+        }
+    }
+
+    UtAssert_True(recordscount < OS_MAX_TOTAL_RECORDS, "All Id types checked");
+
+    for (int i = 0; i < recordscount; i++)
+    {
+        UtAssert_True(OS_ObjectIdDefined(typesI[i]), "%lu Is defined", OS_ObjectIdToInteger(typesI[i]));
+
+        for (int j = 0; j < recordscount; j++)
+        {
+            if (i == j)
+            {
+                UtAssert_True(OS_ObjectIdEqual(typesI[i], typesJ[j]), "%lu equals %lu", OS_ObjectIdToInteger(typesI[i]),
+                              OS_ObjectIdToInteger(typesJ[j]));
+            }
+            else if (OS_ObjectIdEqual(typesI[i], typesJ[j]))
+            {
+                UtAssert_Failed("%lu does not equal %lu", OS_ObjectIdToInteger(typesI[i]),
+                                OS_ObjectIdToInteger(typesJ[j]));
+            }
+        }
+    }
+}
+
+void Test_OS_ObjectIDUndefined(void)
+{
+    osal_id_t id;
+    uint32    intID;
+
+    UtAssert_True(!OS_ObjectIdDefined(OS_OBJECT_ID_UNDEFINED), "%lu Is undefined",
+                  OS_ObjectIdToInteger(OS_OBJECT_ID_UNDEFINED));
+
+    intID = OS_ObjectIdToInteger(OS_OBJECT_ID_UNDEFINED);
+    id    = OS_ObjectIdFromInteger(intID);
+
+    UtAssert_True(!OS_ObjectIdDefined(id), "%lu Is undefined", OS_ObjectIdToInteger(id));
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+
+    /* for sanity also clear out the task table, which is used by several test cases */
+    memset(OS_global_task_table, 0, OS_MAX_TASKS * sizeof(OS_common_record_t));
+
+    /*
+     * The OS_SharedGlobalVars is also used here, but set the
+     * "GlobalState" field to init by default, as this is needed by most tests.
+     */
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ObjectIdInit);
+    ADD_TEST(OS_LockUnlockGlobal);
+    ADD_TEST(OS_ObjectIdFindNextFree);
+    ADD_TEST(OS_ObjectIdToArrayIndex);
+    ADD_TEST(OS_ObjectIdFindByName);
+    ADD_TEST(OS_ObjectIdGetById);
+    ADD_TEST(OS_ObjectIdTransaction);
+    ADD_TEST(OS_ObjectIdAllocateNew);
+    ADD_TEST(OS_ObjectIdFinalize);
+    ADD_TEST(OS_ObjectIdConvertToken);
+    ADD_TEST(OS_ObjectIdGetBySearch);
+    ADD_TEST(OS_ConvertToArrayIndex);
+    ADD_TEST(OS_ForEachObject);
+    ADD_TEST(OS_GetMaxForObjectType);
+    ADD_TEST(OS_GetBaseForObjectType);
+    ADD_TEST(OS_GetResourceName);
+    ADD_TEST(OS_ObjectIdIterator);
+    ADD_TEST(OS_ObjectIDInteger);
+    ADD_TEST(OS_ObjectIDUndefined);
+}
+```
+
+### `coveragetest-module.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "ut-adaptor-module.h"
+
+#include "os-shared-module.h"
+
+#include "OCS_string.h"
+
+/* A dummy function for the static symbol lookup test.  Not called */
+void Test_DummyFunc(void) {}
+
+/*
+ * A symbol table for the static loader.
+ *
+ * Note - the symbol name is intentionally not the actual function name here.
+ * This way, the test case knows that the answer actually came from the static table
+ */
+OS_static_symbol_record_t OS_UT_STATIC_SYMBOL_TABLE[] = {
+    {"UT_staticsym", &Test_DummyFunc, "UTS"}, {"UT_nullmod", NULL, NULL}, {NULL}};
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_ModuleAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ModuleAPI_Init(void)
+     */
+    int32 expected = OS_SUCCESS;
+    int32 actual   = OS_ModuleAPI_Init();
+
+    UtAssert_True(actual == expected, "OS_ModuleAPI_Init() (%ld) == OS_SUCCESS", (long)actual);
+}
+
+void Test_OS_ModuleLoad(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ModuleLoad ( uint32 *module_id, const char *module_name, const char *filename )
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UT", "File", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_ModuleLoad_Impl, 1);
+    UT_ResetState(UT_KEY(OS_ModuleLoad_Impl));
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    /* for a static module, it should also return a valid objid, but should NOT invoke OS_ModuleLoad_Impl */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UTS", "File2", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_ModuleLoad_Impl, 0);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    /* a dynamic module with local symbols */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UT", "File3", OS_MODULE_FLAG_LOCAL_SYMBOLS), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_ModuleLoad_Impl, 1);
+    UT_ResetState(UT_KEY(OS_ModuleLoad_Impl));
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    /* error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(NULL, "UT", "File", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, NULL, "File", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UTS", "File2", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_ERR_NAME_TOO_LONG);
+    UT_ResetState(UT_KEY(OCS_memchr));
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UT", "FileBad", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UT", "FileBad", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_ERR_NO_FREE_IDS);
+}
+
+void Test_OS_ModuleUnload(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ModuleUnload ( uint32 module_id )
+     */
+    osal_id_t objid;
+
+    /* Clear module table */
+    memset(OS_module_table, 0, sizeof(OS_module_table));
+
+    /* Set up one dynamic and one static entry */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UT", "File", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleLoad(&objid, "UTS", "File2", OS_MODULE_FLAG_GLOBAL_SYMBOLS), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload(UT_OBJID_1), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload(UT_OBJID_2), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleUnload(OS_OBJECT_ID_UNDEFINED), OS_ERROR);
+}
+
+void Test_OS_SymbolLookup(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SymbolLookup(cpuaddr *SymbolAddress, const char *SymbolName)
+     */
+    int32   expected = OS_SUCCESS;
+    int32   actual   = ~OS_SUCCESS;
+    cpuaddr testaddr = 0;
+    cpuaddr symaddr  = 0;
+
+    actual = OS_SymbolLookup(&symaddr, "uttestsym0");
+    UtAssert_True(actual == expected, "OS_SymbolLookup(name=%s) (%ld) == OS_SUCCESS", "uttestsym0", (long)actual);
+
+    UT_ResetState(UT_KEY(OS_SymbolLookup_Impl));
+    UT_SetDefaultReturnValue(UT_KEY(OS_SymbolLookup_Impl), OS_ERROR);
+
+    /* this lookup should always fail */
+    symaddr  = 0;
+    testaddr = 0;
+    actual   = OS_SymbolLookup(&symaddr, "uttestsym1");
+    expected = OS_ERROR;
+    UtAssert_True(actual == expected, "OS_SymbolLookup(name=%s) (%ld) == OS_ERROR", "uttestsym1", (long)actual);
+    UtAssert_True(symaddr == testaddr, "OS_SymbolLookup(address=%lx) == %lx", (unsigned long)symaddr,
+                  (unsigned long)testaddr);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup(NULL, "uttestsym0"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SymbolLookup(&symaddr, NULL), OS_INVALID_POINTER);
+
+    /*
+     * Look up a symbol that is present in the static symbol table
+     */
+    actual   = OS_SymbolLookup(&symaddr, "UT_staticsym");
+    expected = OS_SUCCESS;
+    UtAssert_True(actual == expected, "OS_SymbolLookup(UT_staticsym) (%ld) == OS_SUCCESS", (long)actual);
+}
+
+void Test_OS_ModuleSymbolLookup(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ModuleSymbolLookup(osal_id_t module_id, cpuaddr *symbol_address, const char *symbol_name)
+     */
+    cpuaddr testaddr = 0;
+    cpuaddr symaddr  = 0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symaddr, "uttestsym0"), OS_SUCCESS);
+
+    /* Fail implementation layer */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ModuleSymbolLookup_Impl), OS_ERROR);
+    symaddr  = 0;
+    testaddr = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symaddr, "uttestsym1"), OS_ERROR);
+    UtAssert_True(symaddr == testaddr, "OS_ModuleSymbolLookup(address=%lx) == %lx", (unsigned long)symaddr,
+                  (unsigned long)testaddr);
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, NULL, "ut"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symaddr, NULL), OS_INVALID_POINTER);
+
+    /*
+     * Look up a symbol that is present in the static symbol table
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symaddr, "UT_staticsym"), OS_SUCCESS);
+
+    /* Fail OS_ObjectIdGetById */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleSymbolLookup(OS_OBJECT_ID_UNDEFINED, &symaddr, "uttestsym0"), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_StaticSymbolLookup(void)
+{
+    /*
+     * Test case for:
+     * static int32 OS_ModuleLoad_Static(OS_static_symbol_record_t *StaticSymTable, const char *ModuleName)
+     * static int32 OS_SymbolLookup_Static(OS_static_symbol_record_t *StaticSymTable, cpuaddr *SymbolAddress, const char
+     * *SymbolName)
+     *
+     * As these are internal helper functions we must go through a wrapper to invoke them.
+     * The ability to get line coverage requires a non-empty lookup table, so one is supplied here.
+     */
+    int32   expected = OS_SUCCESS;
+    int32   actual   = ~OS_SUCCESS;
+    cpuaddr addr     = 0;
+
+    /* nominal */
+    actual = OS_SymbolLookup_Static(&addr, "UT_staticsym", NULL);
+    UtAssert_True(actual == expected, "OS_SymbolLookup_Static(name=%s, NULL) (%ld) == OS_SUCCESS", "Test_Func1",
+                  (long)actual);
+    UtAssert_True(addr == (cpuaddr)&Test_DummyFunc, "OS_SymbolLookup_Static(address=%lx) == %lx", (unsigned long)addr,
+                  (unsigned long)&Test_DummyFunc);
+
+    actual = OS_SymbolLookup_Static(&addr, "UT_staticsym", "UTS");
+    UtAssert_True(actual == expected, "OS_SymbolLookup_Static(name=%s, UTS) (%ld) == OS_SUCCESS", "Test_Func1",
+                  (long)actual);
+    UtAssert_True(addr == (cpuaddr)&Test_DummyFunc, "OS_SymbolLookup_Static(address=%lx) == %lx", (unsigned long)addr,
+                  (unsigned long)&Test_DummyFunc);
+
+    actual = OS_ModuleLoad_Static("UTS");
+    UtAssert_True(actual == expected, "OS_ModuleLoad_Static(name=%s) (%ld) == OS_SUCCESS", "UT", (long)actual);
+
+    expected = OS_ERROR;
+    actual   = OS_SymbolLookup_Static(&addr, "UT_staticsym", "NoModuleMatch");
+    UtAssert_True(actual == expected, "OS_SymbolLookup_Static(name=%s, NoModuleMatch) (%ld) == OS_ERROR", "Test_Func1",
+                  (long)actual);
+    UtAssert_True(addr == (cpuaddr)&Test_DummyFunc, "OS_SymbolLookup_Static(address=%lx) == %lx", (unsigned long)addr,
+                  (unsigned long)&Test_DummyFunc);
+
+    expected = OS_ERROR;
+    actual   = OS_SymbolLookup_Static(&addr, "Invalid", NULL);
+    UtAssert_True(actual == expected, "OS_SymbolLookup_Static(name=%s) (%ld) == OS_ERROR", "Invalid", (long)actual);
+
+    expected = OS_ERR_NAME_NOT_FOUND;
+    actual   = OS_ModuleLoad_Static("Invalid");
+    UtAssert_True(actual == expected, "OS_ModuleLoad_Static(name=%s) (%ld) == OS_SUCCESS", "Invalid", (long)actual);
+}
+
+void Test_OS_SymbolTableDump(void)
+{
+    int32 expected = OS_SUCCESS;
+    int32 actual   = ~OS_SUCCESS;
+
+    actual = OS_SymbolTableDump("test", OSAL_SIZE_C(555));
+    UtAssert_True(actual == expected, "OS_SymbolTableDump() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_SymbolTableDump(NULL, OSAL_SIZE_C(555));
+    UtAssert_True(actual == expected, "OS_SymbolTableDump() (%ld) == OS_INVALID_POINTER", (long)actual);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_TranslatePath), OS_ERROR);
+    expected = OS_ERROR;
+    actual   = OS_SymbolTableDump("test", OSAL_SIZE_C(555));
+    UtAssert_True(actual == expected, "OS_SymbolTableDump() (%ld) == OS_ERROR", (long)actual);
+
+    UT_ResetState(UT_KEY(OS_TranslatePath));
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdTransactionInit), OS_ERROR);
+    expected = OS_ERROR;
+    actual   = OS_SymbolTableDump("test", OSAL_SIZE_C(555));
+    UtAssert_True(actual == expected, "OS_SymbolTableDump() (%ld) == OS_ERROR", (long)actual);
+}
+
+void Test_OS_ModuleGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ModuleInfo ( uint32 module_id, OS_module_prop_t *module_prop )
+     */
+    OS_module_prop_t module_prop;
+
+    memset(&module_prop, 0, sizeof(module_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_MODULE, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+    strncpy(OS_module_table[1].file_name, "DEF", sizeof(OS_module_table[1].file_name));
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleInfo(UT_OBJID_1, &module_prop), OS_SUCCESS);
+    UtAssert_True(strcmp(module_prop.filename, "DEF") == 0, "module_prop.filename (%s) == DEF", module_prop.filename);
+    UtAssert_True(strcmp(module_prop.name, "ABC") == 0, "module_prop.name (%s) == ABC", module_prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_ModuleInfo(OS_OBJECT_ID_UNDEFINED, &module_prop), OS_ERROR);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ModuleAPI_Init);
+    ADD_TEST(OS_ModuleLoad);
+    ADD_TEST(OS_ModuleUnload);
+    ADD_TEST(OS_SymbolLookup);
+    ADD_TEST(OS_ModuleSymbolLookup);
+    ADD_TEST(OS_ModuleGetInfo);
+    ADD_TEST(OS_SymbolTableDump);
+    ADD_TEST(OS_StaticSymbolLookup);
+}
+```
+
+### `coveragetest-mutex.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-mutex.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-mutex.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_MutexAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_MutexAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_MutSemCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemCreate (uint32 *sem_id, const char *sem_name, uint32 options)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate(&objid, "UT", 0), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate(NULL, "UT", 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate(&objid, NULL, 0), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate(&objid, "UT", 0), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemCreate(&objid, "UT", 0), OS_ERR_NAME_TOO_LONG);
+}
+
+void Test_OS_MutSemDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemDelete (uint32 sem_id)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemDelete(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemDelete(UT_OBJID_1), OS_ERROR);
+}
+
+void Test_OS_MutSemGive(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemGive ( uint32 sem_id )
+     */
+    OS_mutex_internal_record_t *mutex;
+
+    /* Set up for "last owner" matching the calling task (nominal) */
+    mutex             = &OS_mutex_table[1];
+    mutex->last_owner = OS_TaskGetId();
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGive(UT_OBJID_1), OS_SUCCESS);
+
+    /* owner should be unset */
+    UtAssert_True(!OS_ObjectIdDefined(mutex->last_owner), "Mutex owner unset");
+
+    /* Call again when not "owned".  This still works (or at least it calls the OS impl)
+     * but should generate a debug message */
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGive(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGive(UT_OBJID_1), OS_ERROR);
+}
+
+void Test_OS_MutSemTake(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemTake ( uint32 sem_id )
+     */
+    OS_mutex_internal_record_t *mutex;
+
+    /* Set up for "last owner" being undefined (nominal) */
+    mutex             = &OS_mutex_table[1];
+    mutex->last_owner = OS_OBJECT_ID_UNDEFINED;
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemTake(UT_OBJID_1), OS_SUCCESS);
+
+    /* owner should be set */
+    UtAssert_True(OS_ObjectIdDefined(mutex->last_owner), "Mutex owner set");
+
+    /* Call again when not already "owned".  This still works (or at least it calls the OS impl) */
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemTake(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_MutSemTake_Impl), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemTake(UT_OBJID_1), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemTake(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_MutSemGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemGetIdByName (uint32 *sem_id, const char *sem_name)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetIdByName(&objid, "UT"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName));
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_MutSemGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_MutSemGetInfo (uint32 sem_id, OS_mut_sem_prop_t *mut_prop)
+     */
+    OS_mut_sem_prop_t prop;
+
+    memset(&prop, 0, sizeof(prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_MUTEX, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetInfo(UT_OBJID_1, &prop), OS_SUCCESS);
+
+    OSAPI_TEST_OBJID(prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(prop.name, "ABC") == 0, "prop.name (%s) == ABC", prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_MutSemGetInfo(UT_OBJID_1, &prop), OS_ERR_INVALID_ID);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_MutexAPI_Init);
+    ADD_TEST(OS_MutSemCreate);
+    ADD_TEST(OS_MutSemDelete);
+    ADD_TEST(OS_MutSemGive);
+    ADD_TEST(OS_MutSemTake);
+    ADD_TEST(OS_MutSemGetIdByName);
+    ADD_TEST(OS_MutSemGetInfo);
+}
+```
+
+### `coveragetest-network.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-network.h"
+
+void Test_OS_NetworkAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_NetworkAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_NetworkGetHostName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_NetworkGetHostName(char *host_name, uint32 name_len)
+     */
+    char Buffer[32];
+
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName(Buffer, sizeof(Buffer)), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_NetworkGetHostName_Impl), -4444);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName(Buffer, sizeof(Buffer)), -4444);
+
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName(NULL, sizeof(Buffer)), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName(Buffer, 0), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetHostName(Buffer, UINT32_MAX), OS_ERR_INVALID_SIZE);
+}
+
+void Test_OS_NetworkGetID(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_NetworkGetID(void)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID(), 42);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_NetworkGetID_Impl), -5555);
+    OSAPI_TEST_FUNCTION_RC(OS_NetworkGetID(), -1);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_NetworkAPI_Init);
+    ADD_TEST(OS_NetworkGetID);
+    ADD_TEST(OS_NetworkGetHostName);
+}
+```
+
+### `coveragetest-printf.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-printf.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-printf.h"
+#include "os-shared-common.h"
+
+#include "OCS_stdio.h"
+
+char TestConsoleBuffer[16];
+
+void Test_OS_ConsoleAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ConsoleAPI_Init(void)
+     */
+    OS_object_token_t token;
+
+    /* make a custom token to force use of array index 0 */
+    token.lock_mode = OS_LOCK_MODE_NONE;
+    token.obj_type  = OS_OBJECT_TYPE_OS_CONSOLE;
+    token.obj_idx   = UT_INDEX_0;
+    token.obj_id    = UT_OBJID_1;
+
+    UT_SetDataBuffer(UT_KEY(OS_ObjectIdAllocateNew), &token, sizeof(token), false);
+
+    /* call for coverage */
+    OS_ConsoleAPI_Init();
+    UtAssert_STUB_COUNT(OS_ConsoleCreate_Impl, 1);
+    UT_ResetState(UT_KEY(OS_ConsoleCreate_Impl));
+
+    /* Fail OS_ObjectIdAllocateNew */
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OS_ConsoleAPI_Init();
+    UtAssert_STUB_COUNT(OS_ConsoleCreate_Impl, 0);
+}
+
+void Test_OS_printf(void)
+{
+    /*
+     * Test Case For:
+     * void OS_printf( const char *String, ...);
+     * void OS_printf_disable(void);
+     * void OS_printf_enable(void);
+     */
+
+    /* catch case where OS_printf called before init */
+    OS_SharedGlobalVars.PrintfConsoleId = OS_OBJECT_ID_UNDEFINED;
+    OS_SharedGlobalVars.GlobalState     = 0;
+    OS_printf("UnitTest1");
+    UtAssert_True(OS_console_table[0].WritePos == 0, "WritePos (%lu) >= 0",
+                  (unsigned long)OS_console_table[0].WritePos);
+
+    /* because printf is disabled, the call count should _not_ increase here */
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+    OS_printf_disable();
+    OS_printf("UnitTest2");
+    UtAssert_True(OS_console_table[0].WritePos == 0, "WritePos (%lu) >= 0",
+                  (unsigned long)OS_console_table[0].WritePos);
+
+    /* normal case - sync mode */
+    OS_console_table[0].IsAsync = false;
+    OS_printf_enable();
+    OS_printf("UnitTest3s");
+    UtAssert_STUB_COUNT(OS_ConsoleWakeup_Impl, 0);
+    UtAssert_STUB_COUNT(OS_ConsoleOutput_Impl, 1);
+    UtAssert_True(OS_console_table[0].WritePos >= 10, "WritePos (%lu) >= 10",
+                  (unsigned long)OS_console_table[0].WritePos);
+
+    /* normal case - async mode */
+    OS_console_table[0].IsAsync  = true;
+    OS_console_table[0].WritePos = 0;
+    OS_printf("UnitTest3a");
+    UtAssert_STUB_COUNT(OS_ConsoleWakeup_Impl, 1);
+    UtAssert_STUB_COUNT(OS_ConsoleOutput_Impl, 1);
+    UtAssert_True(OS_console_table[0].WritePos >= 10, "WritePos (%lu) >= 10",
+                  (unsigned long)OS_console_table[0].WritePos);
+
+    /* print a long string that does not fit in the 16-char buffer */
+    OS_printf_enable();
+    OS_printf("UnitTest4BufferLengthExceeded");
+    UtAssert_UINT32_EQ(OS_console_table[0].OverflowEvents, 1);
+
+    /* test writing with a non-empty console name */
+    strncpy(OS_console_table[0].device_name, "ut", sizeof(OS_console_table[0].device_name) - 1);
+    OS_printf("UnitTest5");
+
+    /* Cover branch for console name overflowing buffer*/
+    OS_console_table[0].WritePos = 0;
+    OS_console_table[0].ReadPos  = 1;
+    OS_printf("UnitTest5.5");
+    UtAssert_UINT32_EQ(OS_console_table[0].OverflowEvents, 3);
+
+    /*
+     * For coverage, exercise different paths depending on the return value
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OCS_vsnprintf), -1);
+    OS_printf("UnitTest6");
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_vsnprintf), OS_BUFFER_SIZE + 10);
+    OS_printf("UnitTest7");
+
+    /* Null case */
+    OS_printf(NULL);
+
+    /* OS_ObjectIdGetById failure */
+    UT_ResetState(UT_KEY(OS_ConsoleWakeup_Impl));
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OS_printf("a");
+    UtAssert_STUB_COUNT(OS_ConsoleWakeup_Impl, 0);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_console_table, 0, sizeof(OS_console_table));
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+    OS_console_table[0].BufBase = TestConsoleBuffer;
+    OS_console_table[0].BufSize = sizeof(TestConsoleBuffer);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ConsoleAPI_Init);
+    ADD_TEST(OS_printf);
+}
+```
+
+### `coveragetest-queue.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-queue.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-queue.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_QueueAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_QueueAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_QueueCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueCreate (uint32 *queue_id, const char *queue_name, uint32 queue_depth, uint32 data_size, uint32
+     * flags)
+     */
+    osal_id_t objid;
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(4), 0), OS_SUCCESS);
+
+    /* test error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(NULL, "UT", OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(4), 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, NULL, OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(4), 0), OS_INVALID_POINTER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(0), 0), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(UINT32_MAX), 0),
+                           OS_ERR_INVALID_SIZE);
+
+    UT_SetDefaultReturnValue(UT_KEY(OCS_memchr), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(0), OSAL_SIZE_C(4), 0), OS_ERR_NAME_TOO_LONG);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(1 + OS_QUEUE_MAX_DEPTH), OSAL_SIZE_C(4), 0),
+                           OS_QUEUE_INVALID_SIZE);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueCreate(&objid, "UT", OSAL_BLOCKCOUNT_C(4), OSAL_SIZE_C(4), 0), OS_ERROR);
+}
+
+void Test_OS_QueueDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueDelete (uint32 queue_id)
+     */
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueDelete(UT_OBJID_1), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueDelete(UT_OBJID_1), OS_ERROR);
+}
+
+void Test_OS_QueueGet(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueGet (uint32 queue_id, void *data, uint32 size, uint32 *size_copied, int32 timeout)
+     */
+    size_t actual_size;
+    char   Buf[4];
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, sizeof(Buf), &actual_size, 0), OS_SUCCESS);
+
+    /* test error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, NULL, sizeof(Buf), &actual_size, 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, sizeof(Buf), NULL, 0), OS_INVALID_POINTER);
+
+    OS_queue_table[1].max_size = sizeof(Buf) + 10;
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, sizeof(Buf), &actual_size, 0), OS_QUEUE_INVALID_SIZE);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, OSAL_SIZE_C(0), &actual_size, 0), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, OSAL_SIZE_C(UINT32_MAX), &actual_size, 0), OS_ERR_INVALID_SIZE);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGet(UT_OBJID_1, Buf, sizeof(Buf), &actual_size, 0), OS_ERROR);
+}
+
+void Test_OS_QueuePut(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueuePut (uint32 queue_id, const void *data, uint32 size, uint32 flags)
+     */
+    const char Data[4] = "xyz";
+
+    OS_queue_table[1].max_depth = 10;
+    OS_queue_table[1].max_size  = sizeof(Data);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, Data, sizeof(Data), 0), OS_SUCCESS);
+
+    /* test error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, NULL, sizeof(Data), 0), OS_INVALID_POINTER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, Data, 1 + sizeof(Data), 0), OS_QUEUE_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, Data, OSAL_SIZE_C(0), 0), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, Data, OSAL_SIZE_C(UINT32_MAX), 0), OS_ERR_INVALID_SIZE);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueuePut(UT_OBJID_1, Data, sizeof(Data), 0), OS_ERROR);
+}
+
+void Test_OS_QueueGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueGetIdByName (uint32 *queue_id, const char *queue_name)
+     */
+    osal_id_t objid;
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetIdByName(&objid, "UT"), OS_SUCCESS);
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdFindByName));
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetIdByName(NULL, "NF"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+void Test_OS_QueueGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_QueueGetInfo (uint32 queue_id, OS_queue_prop_t *queue_prop)
+     */
+    OS_queue_prop_t queue_prop;
+    osal_id_t       id = UT_OBJID_OTHER;
+
+    memset(&queue_prop, 0, sizeof(queue_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_QUEUE, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetInfo(UT_OBJID_1, &queue_prop), OS_SUCCESS);
+    UtAssert_MemCmp(&queue_prop.creator, &id, sizeof(osal_id_t), "queue_prop.creator == UT_OBJID_OTHER");
+    UtAssert_True(strcmp(queue_prop.name, "ABC") == 0, "queue_prop.name (%s) == ABC", queue_prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_QueueGetInfo(UT_OBJID_1, &queue_prop), OS_ERROR);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_QueueAPI_Init);
+    ADD_TEST(OS_QueueCreate);
+    ADD_TEST(OS_QueueDelete);
+    ADD_TEST(OS_QueueGet);
+    ADD_TEST(OS_QueuePut);
+    ADD_TEST(OS_QueueGetIdByName);
+    ADD_TEST(OS_QueueGetInfo);
+}
+```
+
+### `coveragetest-select.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-select.h"
+
+#include "OCS_string.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_SelectSingle(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SelectSingle(uint32 objid, uint32 *StateFlags, int32 msecs);
+     */
+    uint32 StateFlags = 0;
+
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle(UT_OBJID_1, &StateFlags, 0), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle(UT_OBJID_1, NULL, 0), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectSingle(UT_OBJID_1, &StateFlags, 0), OS_ERROR);
+}
+
+void Test_OS_SelectMultiple(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SelectMultiple(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs);
+     */
+    OS_FdSet ReadSet;
+    OS_FdSet WriteSet;
+
+    OS_SelectFdZero(&ReadSet);
+    OS_SelectFdZero(&WriteSet);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectMultiple(&ReadSet, &WriteSet, 0), OS_SUCCESS);
+}
+
+void Test_OS_SelectFdAddClearOps(void)
+{
+    /*
+     * Test Cases For:
+     * int32 OS_SelectFdZero(OS_FdSet *Set);
+     * int32 OS_SelectFdAdd(OS_FdSet *Set, uint32 objid);
+     * int32 OS_SelectFdClear(OS_FdSet *Set, uint32 objid);
+     * bool OS_SelectFdIsSet(OS_FdSet *Set, uint32 objid);
+     */
+    OS_FdSet UtSet;
+
+    /* Error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdZero(NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdAdd(NULL, UT_OBJID_1), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdClear(NULL, UT_OBJID_1), OS_INVALID_POINTER);
+    UtAssert_True(!OS_SelectFdIsSet(NULL, UT_OBJID_1), "!OS_SelectFdIsSet(NULL, UT_OBJID_1)");
+
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdZero(&UtSet), OS_SUCCESS);
+
+    /* Verify Outputs */
+    UtAssert_STUB_COUNT(OCS_memset, 1);
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == false");
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == false");
+
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdAdd(&UtSet, UT_OBJID_1), OS_SUCCESS);
+
+    UtAssert_True(OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == true");
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == false");
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdAdd(&UtSet, UT_OBJID_2), OS_SUCCESS);
+
+    UtAssert_True(OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == true");
+    UtAssert_True(OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == true");
+
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdClear(&UtSet, UT_OBJID_2), OS_SUCCESS);
+    UtAssert_True(OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == true");
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == false");
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdToArrayIndex), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdAdd(&UtSet, UT_OBJID_2), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SelectFdClear(&UtSet, UT_OBJID_1), OS_ERROR);
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == false");
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == false");
+
+    UT_ClearDefaultReturnValue(UT_KEY(OS_ObjectIdToArrayIndex));
+    UtAssert_True(OS_SelectFdIsSet(&UtSet, UT_OBJID_1), "OS_SelectFdIsSet(1) == true");
+    UtAssert_True(!OS_SelectFdIsSet(&UtSet, UT_OBJID_2), "OS_SelectFdIsSet(2) == false");
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SelectFdAddClearOps);
+    ADD_TEST(OS_SelectSingle);
+    ADD_TEST(OS_SelectMultiple);
+}
+```
+
+### `coveragetest-shell.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-shell.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_ShellOutputToFile(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_ShellOutputToFile(const char* Cmd, uint32 filedes)
+     */
+    int32 expected = OS_SUCCESS;
+    int32 actual   = OS_ShellOutputToFile("Cmd", 1);
+
+    UtAssert_True(actual == expected, "OS_ShellOutputToFile() (%ld) == OS_SUCCESS", (long)actual);
+
+    expected = OS_INVALID_POINTER;
+    actual   = OS_ShellOutputToFile(NULL, 1);
+
+    UtAssert_True(actual == expected, "OS_ShellOutputToFile() (%ld) == OS_SUCCESS", (long)actual);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_ShellOutputToFile);
+}
+```
+
+### `coveragetest-sockets.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-sockets.h"
+#include "os-shared-idmap.h"
+#include "os-shared-file.h"
+
+#include "OCS_stdio.h"
+
+void Test_OS_SocketAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketAPI_Init(void)
+     */
+    int32 expected = OS_SUCCESS;
+    int32 actual   = OS_SocketAPI_Init();
+
+    UtAssert_True(actual == expected, "OS_SocketAPI_Init() (%ld) == OS_SUCCESS", (long)actual);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_CreateSocketName()
+ * This is a static helper function invoked via a wrapper
+ *
+ *****************************************************************************/
+void Test_OS_CreateSocketName(void)
+{
+    /*
+     * Test Case For:
+     * static void OS_CreateSocketName(OS_stream_internal_record_t *sock,
+     *      const OS_SockAddr_t *Addr, const char *parent_name)
+     *
+     * This focuses on coverage paths, as this function does not return a value
+     */
+    OS_SockAddr_t     testaddr;
+    OS_object_token_t token;
+
+    OS_stream_table[0].stream_name[0] = 'x';
+
+    token.lock_mode = OS_LOCK_MODE_NONE;
+    token.obj_idx   = UT_INDEX_0;
+    token.obj_id    = UT_OBJID_1;
+    token.obj_type  = OS_OBJECT_TYPE_OS_STREAM;
+
+    /* Hit off-nominal branches, nominal covered by use of helper in code */
+    UT_SetDefaultReturnValue(UT_KEY(OS_SocketAddrToString_Impl), OS_ERROR);
+    OS_CreateSocketName(&token, &testaddr, "ut");
+    UT_SetDefaultReturnValue(UT_KEY(OS_SocketAddrGetPort_Impl), OS_ERROR);
+    OS_CreateSocketName(&token, &testaddr, "ut");
+
+    /*
+     * The function should have called snprintf() to create the name
+     */
+    UtAssert_STUB_COUNT(OCS_snprintf, 3);
+    UtAssert_True(OS_stream_table[0].stream_name[0] != 'x', "OS_CreateSocketName() set stream name");
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketOpen()
+ *
+ *****************************************************************************/
+void Test_OS_SocketOpen(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketOpen(uint32 *sock_id, OS_SocketDomain_t Domain, OS_SocketType_t Type)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen(&objid, OS_SocketDomain_INET, OS_SocketType_STREAM), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen(NULL, OS_SocketDomain_INVALID, OS_SocketType_INVALID), OS_INVALID_POINTER);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketOpen(&objid, OS_SocketDomain_INET, OS_SocketType_STREAM), OS_ERROR);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketBind()
+ *
+ *****************************************************************************/
+void Test_OS_SocketBind(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketBind(uint32 sock_id, const OS_SockAddr_t *Addr)
+     */
+    OS_SockAddr_t Addr;
+
+    OS_stream_table[1].socket_domain = OS_SocketDomain_INET;
+    memset(&Addr, 0, sizeof(Addr));
+
+    /* Non-stream socket (not an error) */
+    OS_stream_table[1].stream_state = 0;
+    OS_stream_table[1].socket_type  = OS_SocketType_DATAGRAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), OS_SUCCESS);
+
+    /* Normal success */
+    OS_stream_table[1].stream_state = 0;
+    OS_stream_table[1].socket_type  = OS_SocketType_STREAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), OS_SUCCESS);
+
+    /* Failure of OS_SocketBind() - RC passed thru */
+    OS_stream_table[1].stream_state = 0;
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, -111);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), -111);
+
+    /* Failure of OS_SocketListen() - RC passed thru */
+    OS_stream_table[1].stream_state = 0;
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 2, -112);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), -112);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketBindAddress()
+ *
+ *****************************************************************************/
+void Test_OS_SocketBindAddress(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketBindAddress(uint32 sock_id, const OS_SockAddr_t *Addr)
+     */
+    OS_SockAddr_t                Addr;
+    OS_stream_internal_record_t *stream;
+
+    stream = &OS_stream_table[1];
+
+    stream->socket_type   = OS_SocketType_STREAM;
+    stream->socket_domain = OS_SocketDomain_INET;
+    stream->stream_state  = 0;
+
+    memset(&Addr, 0, sizeof(Addr));
+
+    /* Bad pointer */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    /* Invalid object ID */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress(UT_OBJID_1, &Addr), OS_ERR_INVALID_ID);
+
+    /* Fail implementation */
+    UT_SetDeferredRetcode(UT_KEY(OS_SocketBindAddress_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress(UT_OBJID_1, &Addr), OS_ERROR);
+    UtAssert_BITMASK_UNSET(stream->stream_state, OS_STREAM_STATE_BOUND);
+
+    /* Nominal success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBindAddress(UT_OBJID_1, &Addr), OS_SUCCESS);
+    UtAssert_BITMASK_SET(stream->stream_state, OS_STREAM_STATE_BOUND);
+
+    /* Should fail if already bound */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* Should fail if not a socket domain */
+    stream->socket_domain = OS_SocketDomain_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketBind(UT_OBJID_1, &Addr), OS_ERR_INCORRECT_OBJ_TYPE);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketListen()
+ *
+ *****************************************************************************/
+void Test_OS_SocketListen(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketListen(uint32 sock_id)
+     */
+    OS_stream_internal_record_t *stream;
+
+    stream = &OS_stream_table[1];
+
+    stream->socket_type   = OS_SocketType_INVALID;
+    stream->socket_domain = OS_SocketDomain_INVALID;
+    stream->stream_state  = 0;
+
+    /* Invalid object ID */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERR_INVALID_ID);
+
+    /* Should fail if not a stream */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    /* Should fail if not a socket domain */
+    stream->socket_type = OS_SocketType_STREAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    /* Should fail if not bound */
+    stream->socket_domain = OS_SocketDomain_INET;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* Fail implementation (does not set listenting state) */
+    stream->stream_state = OS_STREAM_STATE_BOUND;
+    UT_SetDeferredRetcode(UT_KEY(OS_SocketListen_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERROR);
+    UtAssert_BITMASK_SET(stream->stream_state, OS_STREAM_STATE_BOUND);
+    UtAssert_BITMASK_UNSET(stream->stream_state, OS_STREAM_STATE_LISTENING);
+
+    /* Nominal success */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_SUCCESS);
+    UtAssert_BITMASK_SET(stream->stream_state, OS_STREAM_STATE_LISTENING);
+
+    /* Should fail if already listening */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketListen(UT_OBJID_1), OS_ERR_INCORRECT_OBJ_STATE);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketAccept()
+ *
+ *****************************************************************************/
+void Test_OS_SocketAccept(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketAccept(uint32 sock_id, uint32 *connsock_id, OS_SockAddr_t *Addr, int32 timeout)
+     */
+    osal_index_t  local_id;
+    osal_id_t     connsock_id;
+    OS_SockAddr_t Addr;
+
+    local_id    = UT_INDEX_0;
+    connsock_id = OS_OBJECT_ID_UNDEFINED;
+
+    OS_stream_table[local_id].socket_type  = OS_SocketType_STREAM;
+    OS_stream_table[local_id].stream_state = OS_STREAM_STATE_BOUND;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_STREAM, local_id);
+    memset(&Addr, 0, sizeof(Addr));
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, NULL, &Addr, 0), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, NULL, 0), OS_INVALID_POINTER);
+
+    /*
+     * Should fail if not a stream socket
+     */
+    OS_stream_table[1].socket_type = OS_SocketType_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    /*
+     * Should fail if already connected
+     */
+    OS_stream_table[1].socket_type  = OS_SocketType_STREAM;
+    OS_stream_table[1].stream_state = OS_STREAM_STATE_BOUND | OS_STREAM_STATE_CONNECTED;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /*
+     * Underlying implementation failure test
+     */
+    OS_stream_table[1].stream_state = OS_STREAM_STATE_BOUND;
+    UT_SetDefaultReturnValue(UT_KEY(OS_SocketAccept_Impl), -1234);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), -1234);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdAllocateNew), OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), OS_ERROR);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAccept(UT_OBJID_1, &connsock_id, &Addr, 0), OS_ERR_INVALID_ID);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketConnect()
+ *
+ *****************************************************************************/
+void Test_OS_SocketConnect(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketConnect(uint32 sock_id, const OS_SockAddr_t *Addr, int32 Timeout)
+     */
+    OS_SockAddr_t Addr;
+    osal_index_t  idbuf;
+
+    memset(&Addr, 0, sizeof(Addr));
+    idbuf = UT_INDEX_1;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_STREAM, idbuf);
+    OS_stream_table[idbuf].socket_domain = OS_SocketDomain_INET;
+    OS_stream_table[idbuf].socket_type   = OS_SocketType_STREAM;
+    OS_stream_table[idbuf].stream_state  = 0;
+
+    /* Fail implementation */
+    UT_SetDeferredRetcode(UT_KEY(OS_SocketConnect_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_ERROR);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, NULL, 0), OS_INVALID_POINTER);
+
+    /*
+     * Should fail if not a stream socket
+     */
+    OS_stream_table[1].socket_domain = OS_SocketDomain_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    /*
+     * Should fail if already connected
+     */
+    OS_stream_table[1].socket_domain = OS_SocketDomain_INET;
+    OS_stream_table[1].stream_state  = OS_STREAM_STATE_CONNECTED;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* Only stream type will fail if connected */
+    OS_stream_table[1].socket_type = OS_SocketType_DATAGRAM;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_SUCCESS);
+
+    UT_SetDefaultReturnValue(UT_KEY(OS_ObjectIdGetById), OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketConnect(UT_OBJID_1, &Addr, 0), OS_ERR_INVALID_ID);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketShutdown()
+ *
+ *****************************************************************************/
+void Test_OS_SocketShutdown(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketShutdown(osal_id_t sock_id, OS_SocketShutdownMode_t Mode)
+     */
+    osal_index_t idbuf;
+
+    idbuf = UT_INDEX_1;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_STREAM, idbuf);
+    OS_stream_table[idbuf].socket_domain = OS_SocketDomain_INET;
+    OS_stream_table[idbuf].socket_type   = OS_SocketType_STREAM;
+    OS_stream_table[idbuf].stream_state =
+        OS_STREAM_STATE_CONNECTED | OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+
+    /* nominal */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READ), OS_SUCCESS);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) == 0, "Stream bits cleared");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) != 0, "Stream bits unchanged");
+
+    OS_stream_table[idbuf].stream_state =
+        OS_STREAM_STATE_CONNECTED | OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_WRITE), OS_SUCCESS);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) != 0, "Stream bits unchanged");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) == 0, "Stream bits cleared");
+
+    OS_stream_table[idbuf].stream_state =
+        OS_STREAM_STATE_CONNECTED | OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE), OS_SUCCESS);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) == 0, "Stream bits cleared");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) == 0, "Stream bits cleared");
+
+    /* Invalid Argument */
+    OS_stream_table[idbuf].stream_state =
+        OS_STREAM_STATE_CONNECTED | OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_NONE), OS_ERR_INVALID_ARGUMENT);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) != 0, "Stream bits unchanged");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) != 0, "Stream bits unchanged");
+
+    /* Implementation failure */
+    UT_SetDeferredRetcode(UT_KEY(OS_SocketShutdown_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE), OS_ERROR);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) != 0, "Stream bits unchanged");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) != 0, "Stream bits unchanged");
+
+    /* Invalid ID */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE), OS_ERR_INVALID_ID);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) != 0, "Stream bits unchanged");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) != 0, "Stream bits unchanged");
+
+    /* Unconnected socket */
+    OS_stream_table[idbuf].stream_state = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE),
+                           OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* Unconnected datagram should clear bits */
+    OS_stream_table[idbuf].socket_type  = OS_SocketType_DATAGRAM;
+    OS_stream_table[idbuf].stream_state = OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE), OS_SUCCESS);
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_READABLE) == 0, "Stream bits cleared");
+    UtAssert_True((OS_stream_table[idbuf].stream_state & OS_STREAM_STATE_WRITABLE) == 0, "Stream bits cleared");
+
+    /* Invalid socket type */
+    OS_stream_table[idbuf].socket_domain = OS_SocketDomain_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketShutdown(UT_OBJID_1, OS_SocketShutdownMode_SHUT_READWRITE),
+                           OS_ERR_INCORRECT_OBJ_TYPE);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketRecvFrom()
+ *
+ *****************************************************************************/
+void Test_OS_SocketRecvFrom(void)
+{
+    /*
+     * Test Case For:
+     * OS_SocketRecvFrom(uint32 sock_id, void *buffer, uint32 buflen, OS_SockAddr_t *RemoteAddr, int32 timeout)
+     */
+    char          Buf;
+    OS_SockAddr_t Addr;
+    osal_index_t  idbuf;
+
+    memset(&Addr, 0, sizeof(Addr));
+    idbuf = UT_INDEX_1;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_STREAM, idbuf);
+    OS_stream_table[idbuf].socket_type  = OS_SocketType_DATAGRAM;
+    OS_stream_table[idbuf].stream_state = OS_STREAM_STATE_BOUND;
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, 1, &Addr, 0), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, sizeof(Buf), &Addr, 0), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, NULL, OSAL_SIZE_C(0), NULL, 0), OS_INVALID_POINTER);
+
+    /*
+     * Should fail if not a datagram socket
+     */
+    OS_stream_table[1].socket_type = OS_SocketType_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, sizeof(Buf), &Addr, 0), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    /*
+     * Should fail if not bound
+     */
+    OS_stream_table[1].socket_type  = OS_SocketType_DATAGRAM;
+    OS_stream_table[1].stream_state = 0;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, sizeof(Buf), &Addr, 0), OS_ERR_INCORRECT_OBJ_STATE);
+
+    /* Fail w/OS_ERR_INVALID_SIZE */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, OSAL_SIZE_C(0), &Addr, 0), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, OSAL_SIZE_C(UINT32_MAX), &Addr, 0), OS_ERR_INVALID_SIZE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketRecvFrom(UT_OBJID_1, &Buf, sizeof(Buf), &Addr, 0), OS_ERR_INVALID_ID);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketSendTo()
+ *
+ *****************************************************************************/
+void Test_OS_SocketSendTo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketSendTo(uint32 sock_id, const void *buffer, uint32 buflen, const OS_SockAddr_t *RemoteAddr)
+     */
+    char          Buf = 'A';
+    OS_SockAddr_t Addr;
+    osal_index_t  idbuf;
+
+    memset(&Addr, 0, sizeof(Addr));
+    idbuf = UT_INDEX_1;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_STREAM, idbuf);
+    OS_stream_table[idbuf].socket_type  = OS_SocketType_DATAGRAM;
+    OS_stream_table[idbuf].stream_state = OS_STREAM_STATE_BOUND;
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, sizeof(Buf), &Addr), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, NULL, sizeof(Buf), &Addr), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, sizeof(Buf), NULL), OS_INVALID_POINTER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, OSAL_SIZE_C(0), &Addr), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, OSAL_SIZE_C(UINT32_MAX), &Addr), OS_ERR_INVALID_SIZE);
+
+    /*
+     * Should fail if not a datagram socket
+     */
+    OS_stream_table[1].socket_type = OS_SocketType_INVALID;
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, sizeof(Buf), &Addr), OS_ERR_INCORRECT_OBJ_TYPE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketSendTo(UT_OBJID_1, &Buf, sizeof(Buf), &Addr), OS_ERR_INVALID_ID);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketGetIdByName()
+ *
+ *****************************************************************************/
+void Test_OS_SocketGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketGetIdByName (uint32 *sock_id, const char *sock_name)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdFindByName), 1, OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetIdByName(&objid, "UT"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+}
+
+/*****************************************************************************
+ *
+ * Test case for OS_SocketGetInfo()
+ *
+ *****************************************************************************/
+void Test_OS_SocketGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketGetInfo (uint32 sock_id, OS_socket_prop_t *sock_prop)
+     */
+    OS_socket_prop_t prop;
+
+    memset(&prop, 0, sizeof(prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_STREAM, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo(UT_OBJID_1, &prop), OS_SUCCESS);
+    OSAPI_TEST_OBJID(prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(prop.name, "ABC") == 0, "prop.name (%s) == ABC", prop.name);
+
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketGetInfo(UT_OBJID_1, &prop), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_SocketAddr(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_SocketAddrInit(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+     * int32 OS_SocketAddrToString(char *buffer, uint32 buflen, const OS_SockAddr_t *Addr)
+     * int32 OS_SocketAddrSetPort(OS_SockAddr_t *Addr, uint16 PortNum)
+     * int32 OS_SocketAddrGetPort(uint16 *PortNum, const OS_SockAddr_t *Addr)
+     */
+    OS_SockAddr_t Addr;
+    char          Buffer[32];
+    uint16        PortNum;
+
+    /* First verify nominal case for each function */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit(&Addr, OS_SocketDomain_INVALID), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString(Buffer, sizeof(Buffer), &Addr), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString(&Addr, Buffer), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort(&Addr, 1234), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort(&PortNum, &Addr), OS_SUCCESS);
+
+    /* Verify invalid pointer checking in each function */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrInit(NULL, OS_SocketDomain_INVALID), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString(Buffer, 1, NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString(NULL, 1, &Addr), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString(&Addr, NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrFromString(NULL, Buffer), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrSetPort(NULL, 1234), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort(&PortNum, NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrGetPort(NULL, &Addr), OS_INVALID_POINTER);
+
+    /* Invalid sizes */
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString(Buffer, OSAL_SIZE_C(0), &Addr), OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_SocketAddrToString(Buffer, OSAL_SIZE_C(UINT32_MAX), &Addr), OS_ERR_INVALID_SIZE);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+    memset(OS_global_stream_table, 0, sizeof(OS_common_record_t) * OS_MAX_NUM_OPEN_FILES);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_SocketAPI_Init);
+    ADD_TEST(OS_SocketAddr);
+    ADD_TEST(OS_SocketOpen);
+    ADD_TEST(OS_SocketBind);
+    ADD_TEST(OS_SocketBindAddress);
+    ADD_TEST(OS_SocketListen);
+    ADD_TEST(OS_SocketAccept);
+    ADD_TEST(OS_SocketConnect);
+    ADD_TEST(OS_SocketRecvFrom);
+    ADD_TEST(OS_SocketSendTo);
+    ADD_TEST(OS_SocketShutdown);
+    ADD_TEST(OS_SocketGetIdByName);
+    ADD_TEST(OS_SocketGetInfo);
+    ADD_TEST(OS_CreateSocketName);
+}
+```
+
+### `coveragetest-task.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-task.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-task.h"
+
+#include "OCS_string.h"
+
+static uint32 UT_TestHook_Count = 0;
+
+static void UT_TestHook(void)
+{
+    ++UT_TestHook_Count;
+}
+
+/*
+**********************************************************************************
+**          INTERNAL API TEST CASES
+**********************************************************************************
+*/
+
+void Test_OS_TaskEntryPoint(void)
+{
+    /*
+     * Test Case For:
+     * void OS_TaskEntryPoint(uint32 task_id)
+     */
+
+    /* by default with no additional setup,
+     * the internal "prepare" call will return INVALID_ID,
+     * which in turn will invoke OS_TaskExit()
+     */
+    UT_TestHook_Count = 0;
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERROR);
+    OS_TaskEntryPoint(UT_OBJID_1);
+    UtAssert_True(UT_TestHook_Count == 0, "UT_TestHook_Count (%lu) == 0", (unsigned long)UT_TestHook_Count);
+    UtAssert_STUB_COUNT(OS_TaskMatch_Impl, 0);
+    UtAssert_STUB_COUNT(OS_TaskRegister_Impl, 0);
+
+    OS_global_task_table[1].active_id       = UT_OBJID_1;
+    OS_task_table[1].entry_function_pointer = UT_TestHook;
+
+    OS_TaskEntryPoint(UT_OBJID_1);
+    UtAssert_True(UT_TestHook_Count == 1, "UT_TestHook_Count (%lu) == 1", (unsigned long)UT_TestHook_Count);
+    UtAssert_STUB_COUNT(OS_TaskMatch_Impl, 1);
+    UtAssert_STUB_COUNT(OS_TaskRegister_Impl, 1);
+
+    OS_task_table[1].entry_function_pointer = NULL;
+    UT_TestHook_Count                       = 0;
+    OS_TaskEntryPoint(UT_OBJID_1);
+    UtAssert_True(UT_TestHook_Count == 0, "UT_TestHook_Count (%lu) == 0", (unsigned long)UT_TestHook_Count);
+
+    OS_global_task_table[1].active_id = OS_OBJECT_ID_UNDEFINED;
+}
+
+void Test_OS_TaskAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskAPI_Init(), OS_SUCCESS);
+}
+
+/*
+**********************************************************************************
+**          TASK API TEST CASES
+**********************************************************************************
+*/
+
+void Test_OS_TaskCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskCreate (uint32 *task_id, const char *task_name, osal_task_entry function_pointer,
+     *                uint32 *stack_pointer, uint32 stack_size, uint32 priority, uint32 flags)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(NULL, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, NULL, UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, "UT", NULL, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(0), OSAL_PRIORITY_C(0), 0),
+        OS_ERR_INVALID_SIZE);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskCreate(&objid, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(UINT32_MAX),
+                                         OSAL_PRIORITY_C(0), 0),
+                           OS_ERR_INVALID_SIZE);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_ERR_NAME_TOO_LONG);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdAllocateNew), 1, OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(
+        OS_TaskCreate(&objid, "UT", UT_TestHook, OSAL_TASK_STACK_ALLOCATE, OSAL_SIZE_C(128), OSAL_PRIORITY_C(0), 0),
+        OS_ERR_NO_FREE_IDS);
+}
+
+void Test_OS_TaskDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskDelete (uint32 task_id)
+     */
+    UT_TestHook_Count                    = 0;
+    OS_task_table[1].delete_hook_pointer = UT_TestHook;
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete(UT_OBJID_1), OS_SUCCESS);
+    UtAssert_True(UT_TestHook_Count == 1, "UT_TestHook_Count (%lu) == 1", (unsigned long)UT_TestHook_Count);
+    UT_TestHook_Count = 0;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskDelete_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete(UT_OBJID_1), OS_ERROR);
+    UtAssert_True(UT_TestHook_Count == 0, "UT_TestHook_Count (%lu) == 0", (unsigned long)UT_TestHook_Count);
+
+    /* Null case */
+    OS_task_table[1].delete_hook_pointer = NULL;
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete(UT_OBJID_1), OS_SUCCESS);
+    UtAssert_True(UT_TestHook_Count == 0, "UT_TestHook_Count (%lu) == 0", (unsigned long)UT_TestHook_Count);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelete(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TaskExit(void)
+{
+    /*
+     * Test Case For:
+     * void OS_TaskExit()
+     */
+
+    OS_TaskExit();
+
+    /* TaskExit should have called OS_ObjectIdFinalizeDelete to clear the active_id */
+    UtAssert_STUB_COUNT(OS_ObjectIdFinalizeDelete, 1);
+    UT_ResetState(UT_KEY(OS_ObjectIdFinalizeDelete));
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OS_TaskExit();
+    UtAssert_STUB_COUNT(OS_ObjectIdFinalizeDelete, 0);
+}
+
+void Test_OS_TaskDelay(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskDelay(uint32 millisecond)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskDelay(1), OS_SUCCESS);
+}
+
+void Test_OS_TaskSetPriority(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskSetPriority (uint32 task_id, uint32 new_priority)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskSetPriority(UT_OBJID_1, OSAL_PRIORITY_C(1)), OS_SUCCESS);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskSetPriority(UT_OBJID_1, OSAL_PRIORITY_C(1)), OS_ERR_INVALID_ID);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskSetPriority_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskSetPriority(UT_OBJID_1, OSAL_PRIORITY_C(1)), OS_ERROR);
+}
+
+void Test_OS_TaskGetId(void)
+{
+    /*
+     * Test Case For:
+     * uint32 OS_TaskGetId (void)
+     */
+    UT_idbuf_t idbuf;
+    osal_id_t  objid;
+
+    idbuf.val = 5555;
+    UT_SetDefaultReturnValue(UT_KEY(OS_TaskGetId_Impl), idbuf.val);
+    objid = OS_TaskGetId();
+    OSAPI_TEST_OBJID(objid, ==, idbuf.id);
+}
+
+void Test_OS_TaskGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskGetIdByName (uint32 *task_id, const char *task_name)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdFindByName), 1, OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetIdByName(&objid, "UT"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+}
+
+void Test_OS_TaskGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskGetInfo (uint32 task_id, OS_task_prop_t *task_prop)
+     */
+    OS_task_prop_t task_prop;
+
+    memset(&task_prop, 0, sizeof(task_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_TASK, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+    OS_task_table[1].stack_size = OSAL_SIZE_C(222);
+    OS_task_table[1].priority   = OSAL_PRIORITY_C(133);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetInfo(UT_OBJID_1, &task_prop), OS_SUCCESS);
+    OSAPI_TEST_OBJID(task_prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(task_prop.name, "ABC") == 0, "task_prop.name (%s) == ABC", task_prop.name);
+    UtAssert_True(task_prop.stack_size == 222, "task_prop.stack_size (%lu) == 222",
+                  (unsigned long)task_prop.stack_size);
+    UtAssert_True(task_prop.priority == 133, "task_prop.priority (%lu) == 133", (unsigned long)task_prop.priority);
+
+    /* Null name entry path */
+    task_prop.name[0]                  = 0;
+    OS_global_task_table[1].name_entry = NULL;
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetInfo(UT_OBJID_1, &task_prop), OS_SUCCESS);
+    UtAssert_True(strlen(task_prop.name) == 0, "task_prop.name empty");
+
+    OS_task_table[1].stack_size = OSAL_SIZE_C(0);
+    OS_task_table[1].priority   = OSAL_PRIORITY_C(0);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskGetInfo(UT_OBJID_1, &task_prop), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TaskInstallDeleteHandler(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskInstallDeleteHandler(osal_task_entry function_pointer)
+     */
+    UT_SetDefaultReturnValue(UT_KEY(OS_TaskGetId_Impl), 1);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskInstallDeleteHandler(UT_TestHook), OS_SUCCESS);
+    UtAssert_True(OS_task_table[1].delete_hook_pointer == UT_TestHook,
+                  "OS_task_table[1].delete_hook_pointer (%lx) == %lx",
+                  (unsigned long)OS_task_table[1].delete_hook_pointer, (unsigned long)UT_TestHook);
+
+    OS_task_table[1].delete_hook_pointer = NULL;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskInstallDeleteHandler(UT_TestHook), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TaskFindIdBySystemData(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TaskFindIdBySystemData(uint32 *task_id, const void *sysdata, size_t sysdata_size)
+     */
+    osal_id_t task_id;
+
+    /*
+     * Use a compound data struct for the system data.
+     * The intent is to intentionally make something bigger that will not fit into e.g. "uint32"
+     */
+    struct
+    {
+        unsigned long v;
+        void *        p;
+    } test_sysdata;
+
+    memset(&test_sysdata, 'x', sizeof(test_sysdata));
+
+    OSAPI_TEST_FUNCTION_RC(OS_TaskFindIdBySystemData(&task_id, &test_sysdata, sizeof(test_sysdata)), OS_SUCCESS);
+
+    /* Test parameter validation branches */
+    OSAPI_TEST_FUNCTION_RC(OS_TaskFindIdBySystemData(NULL, &test_sysdata, sizeof(test_sysdata)), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskValidateSystemData_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskFindIdBySystemData(&task_id, &test_sysdata, sizeof(test_sysdata)), OS_ERROR);
+
+    /* Test search failure */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetBySearch), 1, OS_ERR_NAME_NOT_FOUND);
+    OSAPI_TEST_FUNCTION_RC(OS_TaskFindIdBySystemData(&task_id, &test_sysdata, sizeof(test_sysdata)),
+                           OS_ERR_NAME_NOT_FOUND);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_TaskAPI_Init);
+    ADD_TEST(OS_TaskEntryPoint);
+    ADD_TEST(OS_TaskCreate);
+    ADD_TEST(OS_TaskDelete);
+    ADD_TEST(OS_TaskExit);
+    ADD_TEST(OS_TaskDelay);
+    ADD_TEST(OS_TaskSetPriority);
+    ADD_TEST(OS_TaskGetId);
+    ADD_TEST(OS_TaskGetIdByName);
+    ADD_TEST(OS_TaskGetInfo);
+    ADD_TEST(OS_TaskInstallDeleteHandler);
+    ADD_TEST(OS_TaskFindIdBySystemData);
+}
+```
+
+### `coveragetest-time.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-time.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-time.h"
+#include "os-shared-timebase.h"
+#include "os-shared-task.h"
+
+#include "OCS_string.h"
+
+static uint32 UT_TimerCount    = 0;
+static uint32 UT_TimerArgCount = 0;
+
+void UT_TimerCallback(osal_id_t timer_id)
+{
+    ++UT_TimerCount;
+}
+
+void UT_TimerArgCallback(osal_id_t object_id, void *arg)
+{
+    ++UT_TimerArgCount;
+}
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_TimerCbAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerCbAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCbAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_TimerAdd(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerAdd(uint32 *timer_id, const char *timer_name, uint32 timebase_ref_id, OS_ArgCallback_t
+     * callback_ptr, void *callback_arg)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+    char      arg   = 'a';
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_SUCCESS);
+
+    /* test error cases */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(NULL, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, NULL, UT_OBJID_1, UT_TimerArgCallback, &arg), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_ERR_NAME_TOO_LONG);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, NULL, &arg), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg),
+                           OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_ERR_INVALID_ID);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdAllocateNew), 1, OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_ERR_NO_FREE_IDS);
+
+    /* Callback ring paths (still success) */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 2, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_SUCCESS);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 3, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerAdd(&objid, "UT", UT_OBJID_1, UT_TimerArgCallback, &arg), OS_SUCCESS);
+}
+
+void Test_OS_TimerCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerCreate(uint32 *timer_id, const char *timer_name, uint32 *accuracy, OS_TimerCallback_t callback_ptr)
+     */
+    osal_id_t    objid    = OS_OBJECT_ID_UNDEFINED;
+    osal_index_t local_id = OSAL_INDEX_C(0);
+    uint32       accuracy = 0xFFFFFFFF;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", &accuracy, UT_TimerCallback), OS_SUCCESS);
+    OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_TIMECB, objid, &local_id);
+    UtAssert_True(OS_timecb_table[local_id].callback_ptr != NULL, "OS_timecb_table[%lu].callback_ptr (%lx) != NULL",
+                  (unsigned long)local_id, (unsigned long)OS_timecb_table[local_id].callback_ptr);
+    UT_TimerCount = 0;
+    OS_timecb_table[local_id].callback_ptr(objid, OS_timecb_table[local_id].callback_arg);
+    UtAssert_True(UT_TimerCount == 1, "UT_TimerCount (%lu) == 1", (unsigned long)UT_TimerCount);
+
+    /* additional cases to exercise error paths */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(NULL, "UT", &accuracy, UT_TimerCallback), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, NULL, &accuracy, UT_TimerCallback), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", NULL, UT_TimerCallback), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", &accuracy, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TimeBaseCreate), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", &accuracy, UT_TimerCallback), OS_ERROR);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", &accuracy, UT_TimerCallback), OS_ERR_NAME_TOO_LONG);
+    UT_ClearDefaultReturnValue(UT_KEY(OCS_memchr));
+
+    /* This function creates its own timebase.  If OS_DoTimerAdd() fails this timebase needs to be deleted */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerCreate(&objid, "UT", &accuracy, UT_TimerCallback), OS_ERR_INVALID_ID);
+    UtAssert_STUB_COUNT(OS_TimeBaseDelete, 1);
+}
+
+void Test_OS_TimerSet(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerSet(uint32 timer_id, uint32 start_time, uint32 interval_time)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_1, 0, 0), OS_TIMER_ERR_INVALID_ARGS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_1, 0, 1), OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_1, 1, 0), OS_SUCCESS);
+
+    OS_timecb_table[2].timebase_token.obj_type = OS_OBJECT_TYPE_OS_TIMEBASE;
+    OS_timecb_table[2].timebase_token.obj_id   = UT_OBJID_2;
+    OS_timecb_table[2].timebase_token.obj_idx  = UT_INDEX_0;
+    OS_timecb_table[2].flags                   = TIMECB_FLAG_DEDICATED_TIMEBASE;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, 0, 1), OS_SUCCESS);
+    memset(OS_timecb_table, 0, sizeof(OS_timecb_table));
+
+    /* Call again without dedicated timebase */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, 0, 1), OS_SUCCESS);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, 0, 1), OS_ERR_INVALID_ID);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, UINT32_MAX, 1), OS_TIMER_ERR_INVALID_ARGS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, 1, UINT32_MAX), OS_TIMER_ERR_INVALID_ARGS);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimerSet(UT_OBJID_2, 0, 1), OS_ERR_INCORRECT_OBJ_STATE);
+}
+
+void Test_OS_TimerDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerDelete(uint32 timer_id)
+     */
+    osal_id_t                      timebase_id   = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t                      timer_objid_1 = OS_OBJECT_ID_UNDEFINED;
+    osal_id_t                      timer_objid_2 = OS_OBJECT_ID_UNDEFINED;
+    OS_timebase_internal_record_t *timebase;
+    OS_object_token_t              timebase_token;
+    uint32                         accuracy;
+
+    memset(&timebase_token, 0, sizeof(timebase_token));
+
+    /* The ObjIds in the ring need to match what will be in the token */
+    /* Get a "timebase" from the stub so the objid will validate */
+    OS_TimeBaseCreate(&timebase_id, "ut", NULL);
+    OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id, &timebase_token);
+    timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, timebase_token);
+
+    /* Add and confirm timebase and cb references */
+    OS_TimerAdd(&timer_objid_1, "UT1", timebase_id, UT_TimerArgCallback, NULL);
+    UtAssert_True(OS_ObjectIdEqual(timebase->first_cb, timer_objid_1), "1st timer add - First CB at timer 1");
+
+    OS_TimerAdd(&timer_objid_2, "UT2", timebase_id, UT_TimerArgCallback, NULL);
+    UtAssert_True(OS_ObjectIdEqual(timebase->first_cb, timer_objid_2), "2nd timer add - First CB at timer 2");
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(timer_objid_2), OS_SUCCESS);
+
+    /* After deleting timer 2 the "first_cb" should be pointing at timer 1 */
+    UtAssert_True(OS_ObjectIdEqual(timebase->first_cb, timer_objid_1), "First CB at timer 1");
+
+    /* Re-add timer 2 again */
+    OS_TimerAdd(&timer_objid_2, "UT2", timebase_id, UT_TimerArgCallback, NULL);
+
+    /* Sanity check: the "first_cb" should be pointing at timer 2 again */
+    UtAssert_True(OS_ObjectIdEqual(timebase->first_cb, timer_objid_2), "First CB at timer 2");
+
+    /* delete timer 1 */
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(timer_objid_1), OS_SUCCESS);
+
+    /* The "first_cb" should be still pointing at timer 2 */
+    UtAssert_True(OS_ObjectIdEqual(timebase->first_cb, timer_objid_2), "First CB at timer 2");
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(timer_objid_2), OS_SUCCESS);
+
+    /* The "first_cb" should be undefined */
+    UtAssert_True(!OS_ObjectIdDefined(timebase->first_cb), "First CB at OS_OBJECT_ID_UNDEFINED");
+
+    /* verify deletion of the dedicated timebase objects
+     * these are implicitly created as part of timer creation for API compatibility */
+    OS_TimerCreate(&timer_objid_1, "UT1", &accuracy, UT_TimerCallback);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(timer_objid_1), OS_SUCCESS);
+    UtAssert_STUB_COUNT(OS_TimeBaseDelete, 1);
+
+    /* Cover OS_ObjectIdGetById failure cases for callback ring which can't occur nominally */
+    OS_TimerAdd(&timer_objid_1, "UT1", timebase_id, UT_TimerArgCallback, NULL);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 2, OS_ERR_INVALID_ID);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(UT_OBJID_1), OS_SUCCESS);
+
+    memset(OS_timecb_table, 0, sizeof(OS_timecb_table));
+    memset(OS_timebase_table, 0, sizeof(OS_timebase_table));
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(UT_OBJID_2), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerDelete(UT_OBJID_2), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimerGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerGetIdByName (uint32 *timer_id, const char *timer_name)
+     */
+    osal_id_t objid;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdFindByName), 1, OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetIdByName(&objid, "UT"), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetIdByName(NULL, "NF"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetIdByName(&objid, "NF"), OS_ERR_INCORRECT_OBJ_STATE);
+}
+
+void Test_OS_TimerGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimerGetInfo (uint32 timer_id, OS_timer_prop_t *timer_prop)
+     */
+    OS_timer_prop_t timer_prop;
+
+    memset(&timer_prop, 0, sizeof(timer_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_TIMECB, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OS_timecb_table[1].interval_time           = 2222;
+    OS_timecb_table[1].timebase_token.obj_type = OS_OBJECT_TYPE_OS_TIMEBASE;
+    OS_timecb_table[1].timebase_token.obj_id   = UT_OBJID_1;
+    OS_timecb_table[1].timebase_token.obj_idx  = UT_INDEX_0;
+    OS_timebase_table[0].accuracy_usec         = 3333;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetInfo(UT_OBJID_1, &timer_prop), OS_SUCCESS);
+    UtAssert_True(strcmp(timer_prop.name, "ABC") == 0, "timer_prop.name (%s) == ABC", timer_prop.name);
+    UtAssert_True(timer_prop.interval_time == 2222, "timer_prop.interval_time (%lu) == 2222",
+                  (unsigned long)timer_prop.interval_time);
+    UtAssert_True(timer_prop.accuracy == 3333, "timer_prop.accuracy (%lu) == 3333", (unsigned long)timer_prop.accuracy);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetInfo(UT_OBJID_1, &timer_prop), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimerGetInfo(UT_OBJID_1, &timer_prop), OS_ERR_INVALID_ID);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_TimerCbAPI_Init);
+    ADD_TEST(OS_TimerAdd);
+    ADD_TEST(OS_TimerCreate);
+    ADD_TEST(OS_TimerSet);
+    ADD_TEST(OS_TimerDelete);
+    ADD_TEST(OS_TimerGetIdByName);
+    ADD_TEST(OS_TimerGetInfo);
+}
+```
+
+### `coveragetest-timebase.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+
+#include "os-shared-timebase.h"
+#include "os-shared-time.h"
+#include "os-shared-task.h"
+#include "os-shared-common.h"
+
+#include "OCS_string.h"
+#include <limits.h>
+
+static uint32 TimerSyncCount  = 0;
+static uint32 TimerSyncRetVal = 0;
+static uint32 TimeCB          = 0;
+
+static uint32 UT_TimerSync(osal_id_t timer_id)
+{
+    ++TimerSyncCount;
+    return TimerSyncRetVal;
+}
+
+static int32 ClearObjectsHook(void *UserObj, int32 StubRetcode, uint32 CallCount, const UT_StubContext_t *Context)
+{
+    OS_common_record_t *recptr = UserObj;
+
+    if (CallCount >= 10)
+    {
+        memset(recptr, 0, sizeof(*recptr));
+    }
+    return StubRetcode;
+}
+
+static void UT_TimeCB(osal_id_t object_id, void *arg)
+{
+    ++TimeCB;
+}
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_TimeBaseAPI_Init(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseAPI_Init(void)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseAPI_Init(), OS_SUCCESS);
+}
+
+void Test_OS_TimeBaseCreate(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseCreate(uint32 *timer_id, const char *timebase_name, OS_TimerSync_t external_sync)
+     */
+    osal_id_t objid;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, "UT1", UT_TimerSync), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, "UT2", NULL), OS_SUCCESS);
+
+    /* test error paths */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(NULL, "UT1", UT_TimerSync), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, NULL, UT_TimerSync), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, "UT", UT_TimerSync), OS_ERR_NAME_TOO_LONG);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, "UT", UT_TimerSync), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdAllocateNew), 1, OS_ERR_NO_FREE_IDS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseCreate(&objid, "UT1", UT_TimerSync), OS_ERR_NO_FREE_IDS);
+}
+
+void Test_OS_TimeBaseSet(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseSet(uint32 timer_id, uint32 start_time, uint32 interval_time)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, 1000, 1000), OS_SUCCESS);
+
+    /* test error paths: overflow on input */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, UINT32_MAX, 1000), OS_TIMER_ERR_INVALID_ARGS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, 1000, UINT32_MAX), OS_TIMER_ERR_INVALID_ARGS);
+
+    /* test error paths */
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, 1000, 1000), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TimeBaseSet_Impl), 1, OS_ERROR);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, 1000, 1000), OS_ERROR);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseSet(UT_OBJID_1, 1000, 1000), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimeBaseDelete(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseDelete(uint32 timer_id)
+     */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseDelete(UT_OBJID_1), OS_SUCCESS);
+
+    /* test error paths */
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseDelete(UT_OBJID_1), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseDelete(UT_OBJID_1), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimeBaseGetIdByName(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseGetIdByName (uint32 *timer_id, const char *timebase_name)
+     */
+    osal_id_t objid = OS_OBJECT_ID_UNDEFINED;
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdFindByName), 1, OS_SUCCESS);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(&objid, "UT"), OS_SUCCESS);
+    OSAPI_TEST_OBJID(objid, !=, OS_OBJECT_ID_UNDEFINED);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(&objid, "NF"), OS_ERR_NAME_NOT_FOUND);
+
+    UT_SetDeferredRetcode(UT_KEY(OCS_memchr), 1, -1);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(&objid, "TL"), OS_ERR_NAME_TOO_LONG);
+
+    /* test error paths */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(NULL, "UT"), OS_INVALID_POINTER);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(&objid, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetIdByName(&objid, "NF"), OS_ERR_INCORRECT_OBJ_STATE);
+}
+
+void Test_OS_TimeBaseGetInfo(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseGetInfo (uint32 timebase_id, OS_timebase_prop_t *timebase_prop)
+     */
+    OS_timebase_prop_t timebase_prop;
+
+    memset(&timebase_prop, 0, sizeof(timebase_prop));
+
+    OS_UT_SetupBasicInfoTest(OS_OBJECT_TYPE_OS_TIMEBASE, UT_INDEX_1, "ABC", UT_OBJID_OTHER);
+
+    OS_timebase_table[1].nominal_interval_time = 2222;
+    OS_timebase_table[1].freerun_time          = 3333;
+    OS_timebase_table[1].accuracy_usec         = 4444;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetInfo(UT_OBJID_1, &timebase_prop), OS_SUCCESS);
+
+    OSAPI_TEST_OBJID(timebase_prop.creator, ==, UT_OBJID_OTHER);
+    UtAssert_True(strcmp(timebase_prop.name, "ABC") == 0, "timebase_prop.name (%s) == ABC", timebase_prop.name);
+    UtAssert_True(timebase_prop.nominal_interval_time == 2222, "timebase_prop.nominal_interval_time (%lu) == 2222",
+                  (unsigned long)timebase_prop.nominal_interval_time);
+    UtAssert_True(timebase_prop.freerun_time == 3333, "timebase_prop.freerun_time (%lu) == 3333",
+                  (unsigned long)timebase_prop.freerun_time);
+    UtAssert_True(timebase_prop.accuracy == 4444, "timebase_prop.accuracy (%lu) == 4444",
+                  (unsigned long)timebase_prop.accuracy);
+
+    /* test error paths */
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetInfo(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_TaskGetId_Impl), 1, 1 | (OS_OBJECT_TYPE_OS_TIMEBASE << OS_OBJECT_TYPE_SHIFT));
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetInfo(UT_OBJID_1, &timebase_prop), OS_ERR_INCORRECT_OBJ_STATE);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetInfo(UT_OBJID_1, &timebase_prop), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimeBaseGetFreeRun(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_TimeBaseGetFreeRun     (uint32 timebase_id, uint32 *freerun_val)
+     */
+    uint32 freerun = 0xFFFFFFFF;
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetFreeRun(UT_OBJID_1, &freerun), OS_SUCCESS);
+
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetFreeRun(UT_OBJID_1, NULL), OS_INVALID_POINTER);
+
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERR_INVALID_ID);
+    OSAPI_TEST_FUNCTION_RC(OS_TimeBaseGetFreeRun(UT_OBJID_1, &freerun), OS_ERR_INVALID_ID);
+}
+
+void Test_OS_TimeBase_CallbackThread(void)
+{
+    /*
+     * Test Case For:
+     * void OS_TimeBase_CallbackThread(uint32 timebase_id)
+     */
+    OS_common_record_t *recptr;
+    OS_object_token_t   timecb_token;
+    OS_object_token_t   timecb_token2;
+
+    memset(&timecb_token, 0, sizeof(timecb_token));
+    memset(&timecb_token2, 0, sizeof(timecb_token2));
+
+    recptr = &OS_global_timebase_table[2];
+    memset(recptr, 0, sizeof(*recptr));
+    recptr->active_id = UT_OBJID_2;
+
+    OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, UT_OBJID_1, &timecb_token);
+    OS_timebase_table[2].external_sync = UT_TimerSync;
+    OS_timebase_table[2].first_cb      = timecb_token.obj_id;
+    OS_timecb_table[1].prev_cb         = timecb_token.obj_id;
+    OS_timecb_table[1].next_cb         = timecb_token.obj_id;
+    OS_timecb_table[1].wait_time       = 2000;
+    OS_timecb_table[1].callback_ptr    = UT_TimeCB;
+    TimerSyncCount                     = 0;
+    TimerSyncRetVal                    = 0;
+    TimeCB                             = 0;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_TIMEBASE, UT_INDEX_2);
+    UT_SetHookFunction(UT_KEY(OS_TimeBaseLock_Impl), ClearObjectsHook, recptr);
+    OS_TimeBase_CallbackThread(UT_OBJID_2);
+
+    UtAssert_True(TimerSyncCount == 11, "TimerSyncCount (%lu) == 11", (unsigned long)TimerSyncCount);
+
+    /* No spin path, first timebase->first_cb token get will error */
+    UT_ResetState(UT_KEY(OS_TimeBaseLock_Impl));
+    TimerSyncCount    = 0;
+    TimerSyncRetVal   = 1000;
+    recptr->active_id = UT_OBJID_2;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_TIMEBASE, UT_INDEX_2);
+    UT_SetHookFunction(UT_KEY(OS_TimeBaseLock_Impl), ClearObjectsHook, recptr);
+    OS_TimeBase_CallbackThread(UT_OBJID_2);
+
+    /* Check that the TimeCB function was called */
+    UtAssert_True(TimeCB > 0, "TimeCB (%lu) > 0", (unsigned long)TimeCB);
+
+    /* Error on call to get timebase token */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERROR);
+    OS_TimeBase_CallbackThread(UT_OBJID_2);
+
+    /* Other paths for cb logic */
+    OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, UT_OBJID_2, &timecb_token2);
+    OS_timecb_table[1].next_cb = timecb_token2.obj_id;
+    OS_timecb_table[2].next_cb = timecb_token.obj_id;
+    UT_ResetState(UT_KEY(OS_TimeBaseLock_Impl));
+    recptr->active_id = UT_OBJID_2;
+    OS_UT_SetupTestTargetIndex(OS_OBJECT_TYPE_OS_TIMEBASE, UT_INDEX_2);
+    UT_SetHookFunction(UT_KEY(OS_TimeBaseLock_Impl), ClearObjectsHook, recptr);
+    OS_timecb_table[1].interval_time = 1;
+    OS_timecb_table[1].callback_ptr  = NULL;
+
+    /* OS_UT_SetupTestTargetIndex sets the first OS_ObjectIdGetById return, so this sets the second and fourth */
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_ERROR);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 2, OS_ERROR);
+    OS_TimeBase_CallbackThread(UT_OBJID_2);
+}
+
+void Test_OS_Milli2Ticks(void)
+{
+    /*
+     * Test Case For:
+     * int32 OS_Milli2Ticks(uint32 milli_seconds)
+     */
+    uint32 msec;
+    int    ticks = 0;
+    int    expected;
+
+    msec                               = 5678;
+    OS_SharedGlobalVars.TicksPerSecond = 500;
+    UtAssert_INT32_EQ(OS_Milli2Ticks(msec, &ticks), OS_SUCCESS);
+    UtAssert_INT32_EQ(ticks, 2839);
+
+    /* Bigger than uint32 but valid case */
+    msec     = UINT_MAX - 1;
+    expected = (((uint64)msec * OS_SharedGlobalVars.TicksPerSecond) + 999) / 1000;
+    UtAssert_INT32_EQ(OS_Milli2Ticks(msec, &ticks), OS_SUCCESS);
+    UtAssert_INT32_EQ(ticks, expected);
+
+    /* int rollover case */
+    msec = UINT_MAX;
+    UtAssert_INT32_EQ(OS_Milli2Ticks(msec, &ticks), OS_ERROR);
+    UtAssert_INT32_EQ(ticks, 0);
+
+    /* Max value rollover case */
+    OS_SharedGlobalVars.TicksPerSecond = INT_MAX;
+    UtAssert_INT32_EQ(OS_Milli2Ticks(msec, &ticks), OS_ERROR);
+    UtAssert_INT32_EQ(ticks, 0);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void)
+{
+    UT_ResetState(0);
+}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_TimeBaseAPI_Init);
+    ADD_TEST(OS_TimeBaseCreate);
+    ADD_TEST(OS_TimeBaseSet);
+    ADD_TEST(OS_TimeBaseDelete);
+    ADD_TEST(OS_TimeBaseGetIdByName);
+    ADD_TEST(OS_TimeBaseGetInfo);
+    ADD_TEST(OS_TimeBaseGetFreeRun);
+    ADD_TEST(OS_TimeBase_CallbackThread);
+    ADD_TEST(OS_Milli2Ticks);
+}
+```
+
+### `coveragetest-version.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/coveragetest-version.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * Exercise the "GetVersion" functions.  These functions do not have any actual
+ * logic, they just directly return fixed strings, but they should be called as
+ * part of unit test for coverage reasons.
+ *
+ * The strings are free-form and no specific format is checked, the only real
+ * requirement is that they are not NULL.
+ */
+#include "os-shared-coveragetest.h"
+
+#include "osapi-version.h"
+
+/*
+**********************************************************************************
+**          PUBLIC API FUNCTIONS
+**********************************************************************************
+*/
+
+void Test_OS_GetVersionString(void)
+{
+    /*
+     * Test Case For:
+     * const char *OS_GetVersionString(void)
+     */
+    const char *Result;
+
+    Result = OS_GetVersionString();
+    UtAssert_NOT_NULL(Result);
+
+    /*
+     * Display the version description string, just for informational purposes
+     */
+    UtPrintf("OS_GetVersionString() Returned: %s\n", Result);
+}
+
+void Test_OS_GetVersionCodeName(void)
+{
+    /*
+     * Test Case For:
+     * const char *OS_GetVersionCodeName(void)
+     */
+    const char *Result;
+
+    Result = OS_GetVersionCodeName();
+    UtAssert_NOT_NULL(Result);
+
+    /*
+     * Display the code name string, just for informational purposes
+     */
+    UtPrintf("OS_GetVersionCodeName() Returned: %s\n", Result);
+}
+
+void Test_OS_GetVersionNumber(void)
+{
+    /*
+     * Test Case For:
+     * void OS_GetVersionNumber(uint8 VersionNumbers[4])
+     */
+    uint8 VersionNum[4] = {0};
+
+    OS_GetVersionNumber(VersionNum);
+
+    /*
+     * This should output the same info as the version macros
+     */
+    UtAssert_INT32_EQ(VersionNum[0], OS_MAJOR_VERSION);
+    UtAssert_INT32_EQ(VersionNum[1], OS_MINOR_VERSION);
+    UtAssert_INT32_EQ(VersionNum[2], OS_REVISION);
+    UtAssert_INT32_EQ(VersionNum[3], OS_MISSION_REV);
+
+    /*
+     * Display the version number, just for informational purposes
+     */
+    UtPrintf("OS_GetVersionNumber() Returned: %u.%u.%u.%u\n", (unsigned int)VersionNum[0], (unsigned int)VersionNum[1],
+             (unsigned int)VersionNum[2], (unsigned int)VersionNum[3]);
+}
+
+void Test_OS_GetBuildNumber(void)
+{
+    /*
+     * Test Case For:
+     * uint32 OS_GetBuildNumber(void)
+     */
+    uint32 Result;
+
+    Result = OS_GetBuildNumber();
+    UtAssert_NONZERO(Result);
+
+    /*
+     * Display the build number, just for informational purposes
+     */
+    UtPrintf("Test_OS_GetBuildNumber() Returned: %lu\n", (unsigned long)Result);
+}
+
+/* Osapi_Test_Setup
+ *
+ * Purpose:
+ *   Called by the unit test tool to set up the app prior to each test
+ */
+void Osapi_Test_Setup(void) {}
+
+/*
+ * Osapi_Test_Teardown
+ *
+ * Purpose:
+ *   Called by the unit test tool to tear down the app after each test
+ */
+void Osapi_Test_Teardown(void) {}
+
+/*
+ * Register the test cases to execute with the unit test tool
+ */
+void UtTest_Setup(void)
+{
+    ADD_TEST(OS_GetVersionString);
+    ADD_TEST(OS_GetVersionCodeName);
+    ADD_TEST(OS_GetVersionNumber);
+    ADD_TEST(OS_GetBuildNumber);
+}
+```
+
+### `os-shared-coverage-support.c`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/os-shared-coverage-support.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  adaptors
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ */
+#include "os-shared-coveragetest.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+void OS_UT_SetupIterator(osal_objtype_t obj_type, osal_index_t first_idx, osal_index_t num_entries)
+{
+    OS_object_token_t tokenlist[num_entries];
+    osal_index_t      idx = OSAL_INDEX_C(0);
+
+    while (idx < num_entries)
+    {
+        tokenlist[idx].lock_mode = OS_LOCK_MODE_NONE;
+        tokenlist[idx].obj_type  = obj_type;
+        tokenlist[idx].obj_idx   = first_idx + idx;
+        tokenlist[idx].obj_id    = OS_ObjectIdFromInteger((obj_type << OS_OBJECT_TYPE_SHIFT) | tokenlist[idx].obj_idx);
+        ++idx;
+    }
+
+    UT_SetDataBuffer(UT_KEY(OS_ObjectIdIteratorGetNext), tokenlist, sizeof(OS_object_token_t) * num_entries, true);
+}
+
+void OS_UT_SetupTestTargetIndex(osal_objtype_t obj_type, osal_index_t test_idx)
+{
+    OS_object_token_t token;
+
+    token.lock_mode = OS_LOCK_MODE_NONE;
+    token.obj_type  = obj_type;
+    token.obj_idx   = test_idx;
+    token.obj_id    = OS_ObjectIdFromInteger((obj_type << OS_OBJECT_TYPE_SHIFT) | test_idx);
+
+    UT_SetDataBuffer(UT_KEY(OS_ObjectIdGetById), &token, sizeof(OS_object_token_t), true);
+    UT_SetDeferredRetcode(UT_KEY(OS_ObjectIdGetById), 1, OS_SUCCESS);
+}
+
+void OS_UT_SetupBasicInfoTest(osal_objtype_t obj_type, osal_index_t test_idx, const char *name, osal_id_t creator)
+{
+    OS_common_record_t *rptr;
+
+    switch (obj_type)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            rptr = OS_global_task_table;
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            rptr = OS_global_queue_table;
+            break;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            rptr = OS_global_bin_sem_table;
+            break;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            rptr = OS_global_count_sem_table;
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            rptr = OS_global_mutex_table;
+            break;
+        case OS_OBJECT_TYPE_OS_CONSOLE:
+            rptr = OS_global_console_table;
+            break;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            rptr = OS_global_module_table;
+            break;
+        case OS_OBJECT_TYPE_OS_FILESYS:
+            rptr = OS_global_filesys_table;
+            break;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            rptr = OS_global_timebase_table;
+            break;
+        case OS_OBJECT_TYPE_OS_TIMECB:
+            rptr = OS_global_timecb_table;
+            break;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            rptr = OS_global_stream_table;
+            break;
+        case OS_OBJECT_TYPE_OS_DIR:
+            rptr = OS_global_dir_table;
+            break;
+        case OS_OBJECT_TYPE_OS_CONDVAR:
+            rptr = OS_global_condvar_table;
+            break;
+        default:
+            rptr = NULL;
+            break;
+    }
+
+    rptr += test_idx;
+    memset(rptr, 0, sizeof(*rptr));
+    rptr->creator    = UT_OBJID_OTHER;
+    rptr->name_entry = name;
+
+    OS_UT_SetupTestTargetIndex(obj_type, test_idx);
+}
+```
+
+### `os-shared-coveragetest.h`
+
+**경로:** `fsw/osal/src/unit-test-coverage/shared/src/os-shared-coveragetest.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup shared
+ *
+ * Declarations and prototypes for os-shared-coveragetest
+ */
+
+#ifndef OS_SHARED_COVERAGETEST_H
+#define OS_SHARED_COVERAGETEST_H
+
+#include "utassert.h"
+#include "uttest.h"
+#include "utstubs.h"
+#include "osapi.h"
+
+#include "os-shared-idmap.h"
+
+/*
+ * Macro to call a function and check its int32 return code
+ */
+#define OSAPI_TEST_FUNCTION_RC(func, exp)                                                             \
+    {                                                                                                 \
+        int32 rcexp = exp;                                                                            \
+        int32 rcact = func;                                                                           \
+        UtAssert_True(rcact == rcexp, "%s (%ld) == %s (%ld)", #func, (long)rcact, #exp, (long)rcexp); \
+    }
+
+/*
+ * A union type allowing the osal_id_t to be manipulated as a uint32.
+ * Normally application code would NOT do this, but coverage test can
+ * because it has inside knowledge of the ID value structure.
+ */
+typedef union
+{
+    osal_id_t id;
+    uint32    val;
+} UT_idbuf_t;
+
+#define OSAPI_TEST_OBJID(act, op, exp)                                                              \
+    {                                                                                               \
+        UT_idbuf_t idexp = {.id = exp};                                                             \
+        UT_idbuf_t idact = {.id = act};                                                             \
+        UtAssert_True(memcmp(&idexp, &idact, sizeof(osal_id_t)) op 0, "%s (%lu) %s %s (%lu)", #act, \
+                      (unsigned long)idact.val, #op, #exp, (unsigned long)idexp.val);               \
+    }
+
+/*
+ * Macro to add a test case to the list of tests to execute
+ */
+#define ADD_TEST(test) UtTest_Add((Test_##test), Osapi_Test_Setup, Osapi_Test_Teardown, #test)
+
+#define UT_OBJID_1     ((osal_id_t) {1})
+#define UT_OBJID_2     ((osal_id_t) {2})
+#define UT_OBJID_OTHER ((osal_id_t) {0x12345})
+#define UT_OBJID_MAX   ((osal_id_t) {0xFFFFFFFF})
+
+#define UT_INDEX_0 OSAL_INDEX_C(0)
+#define UT_INDEX_1 OSAL_INDEX_C(1)
+#define UT_INDEX_2 OSAL_INDEX_C(2)
+
+/*
+ * Set up a coverage test iterator of the given type.
+ *
+ * The OS_ObjectIdIteratorGetNext() stub routine will be configured
+ * to return the given range of IDs.
+ */
+void OS_UT_SetupIterator(osal_objtype_t obj_type, osal_index_t first_idx, osal_index_t num_entries);
+
+/*
+ * Set up the UT stubs for the target entry of the next test case.
+ *
+ * This configures the OS_ObjectIdGetById() stub to return a token
+ * that refers to the given entry index.
+ */
+void OS_UT_SetupTestTargetIndex(osal_objtype_t obj_type, osal_index_t test_idx);
+
+/*
+ * Set up the UT stubs for a "get info" test.
+ *
+ * This sets up a single entry in the global table with the given name and
+ * ID value.  It also configures the OS_ObjectIdGetById() stub to return a
+ * token that refers to the same table entry.
+ */
+void OS_UT_SetupBasicInfoTest(osal_objtype_t obj_type, osal_index_t test_idx, const char *name, osal_id_t creator);
+
+/*
+ * Setup function prior to every test
+ */
+void Osapi_Test_Setup(void);
+
+/*
+ * Teardown function after every test
+ */
+void Osapi_Test_Teardown(void);
+
+#endif /* OS_SHARED_COVERAGETEST_H */
+```

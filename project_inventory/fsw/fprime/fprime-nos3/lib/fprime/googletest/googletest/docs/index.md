@@ -3,14 +3,16 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googletest/docs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `README.md`
 
-file--README.md
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/googletest/googletest/docs/README.md`
+
+
+```markdown
+# Content Moved
+
+We are working on updates to the GoogleTest documentation, which has moved to
+the top-level [docs](../../docs) directory.
 ```
-
-## 항목
-
-- [`fsw/fprime/fprime-nos3/lib/fprime/googletest/googletest/docs/README.md`](file--README.md) — UTF-8 텍스트 파일 본문 포함

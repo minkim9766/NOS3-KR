@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/src/tests/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -28,29 +28,30 @@ symbol-api-test/index
 time-base-api-test/index
 timer-add-api-test/index
 timer-test/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/osal/src/tests/bin-sem-flush-test/`](bin-sem-flush-test/index) — 폴더
-- [`fsw/osal/src/tests/bin-sem-test/`](bin-sem-test/index) — 폴더
-- [`fsw/osal/src/tests/bin-sem-timeout-test/`](bin-sem-timeout-test/index) — 폴더
-- [`fsw/osal/src/tests/condvar-test/`](condvar-test/index) — 폴더
-- [`fsw/osal/src/tests/count-sem-test/`](count-sem-test/index) — 폴더
-- [`fsw/osal/src/tests/count-sem-timeout-test/`](count-sem-timeout-test/index) — 폴더
-- [`fsw/osal/src/tests/file-api-test/`](file-api-test/index) — 폴더
-- [`fsw/osal/src/tests/file-sys-add-fixed-map-api-test/`](file-sys-add-fixed-map-api-test/index) — 폴더
-- [`fsw/osal/src/tests/idmap-api-test/`](idmap-api-test/index) — 폴더
-- [`fsw/osal/src/tests/mutex-test/`](mutex-test/index) — 폴더
-- [`fsw/osal/src/tests/network-api-test/`](network-api-test/index) — 폴더
-- [`fsw/osal/src/tests/osal-core-test/`](osal-core-test/index) — 폴더
-- [`fsw/osal/src/tests/queue-test/`](queue-test/index) — 폴더
-- [`fsw/osal/src/tests/select-test/`](select-test/index) — 폴더
-- [`fsw/osal/src/tests/sem-speed-test/`](sem-speed-test/index) — 폴더
-- [`fsw/osal/src/tests/shell-test/`](shell-test/index) — 폴더
-- [`fsw/osal/src/tests/symbol-api-test/`](symbol-api-test/index) — 폴더
-- [`fsw/osal/src/tests/time-base-api-test/`](time-base-api-test/index) — 폴더
-- [`fsw/osal/src/tests/timer-add-api-test/`](timer-add-api-test/index) — 폴더
-- [`fsw/osal/src/tests/timer-test/`](timer-test/index) — 폴더
-- [`fsw/osal/src/tests/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/osal/src/tests/CMakeLists.txt`
+
+
+```cmake
+#
+# CMake build snippet for OSAL tests
+#
+
+# Indicates that this should output a ctest script
+enable_testing()
+
+# Each test module is stored within its own subdir
+file(GLOB OSAL_TESTS *-test)
+
+foreach(OSTEST ${OSAL_TESTS})
+  get_filename_component(TESTNAME ${OSTEST} NAME)
+  set(TESTFILES)
+  aux_source_directory(${OSTEST} TESTFILES)
+  #add_osal_ut_exe(${TESTNAME} ${TESTFILES})
+endforeach(OSTEST ${OSAL_TESTS})
+```

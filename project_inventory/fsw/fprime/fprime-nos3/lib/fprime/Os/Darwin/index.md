@@ -3,28 +3,443 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 test/index
-file--CMakeLists.txt
-file--Cpu.cpp
-file--Cpu.hpp
-file--DefaultCpu.cpp
-file--DefaultMemory.cpp
-file--Memory.cpp
-file--Memory.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Cpu.cpp`](file--Cpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Cpu.hpp`](file--Cpu.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/DefaultCpu.cpp`](file--DefaultCpu.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/DefaultMemory.cpp`](file--DefaultMemory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Memory.cpp`](file--Memory.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Memory.hpp`](file--Memory.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Darwin)
+add_custom_target("${FPRIME_CURRENT_MODULE}")
+
+register_os_implementation(Cpu Darwin)
+register_os_implementation(Memory Darwin)
+
+# -----------------------------------------
+### Os/Darwin/Cpu Section
+# -----------------------------------------
+register_fprime_ut(
+    DarwinCpuTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/cpu/CommonCpuTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/DarwinCpuTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Cpu_Darwin
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+# -----------------------------------------
+### Os/Darwin/Memory Section
+# -----------------------------------------
+register_fprime_ut(
+    DarwinMemoryTest
+  SOURCES
+    "${CMAKE_CURRENT_LIST_DIR}/../test/ut/memory/CommonMemoryTests.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/DarwinMemoryTests.cpp"
+  CHOOSES_IMPLEMENTATIONS
+    Os_Memory_Darwin
+  DEPENDS
+    Fw_Types
+    Fw_Time
+    STest
+)
+```
+
+### `Cpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Cpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/Cpu.cpp
+// \brief Darwin implementation for Os::Cpu
+// ======================================================================
+#include <mach/mach_error.h>
+#include <mach/mach_host.h>
+#include <mach/mach_init.h>
+#include <mach/mach_types.h>
+#include <mach/message.h>
+#include <Fw/Types/Assert.hpp>
+#include <Os/Darwin/Cpu.hpp>
+
+namespace Os {
+namespace Darwin {
+namespace Cpu {
+
+//! \brief helper around raw CPU capture API
+//!
+//! Calls for the CPU information from the machine, improving readability in cpu_by_index
+//!
+//! \param cpu_load_info: filled with CPU data
+//! \param cpu_count: filled with CPU count
+//!
+//! \return success/failure using kern_return_t
+kern_return_t cpu_data_helper(processor_cpu_load_info_t& cpu_load_info, FwSizeType& cpu_count) {
+    static_assert(std::numeric_limits<FwSizeType>::max() >= std::numeric_limits<natural_t>::max(),
+                  "FwSizeType cannot hold natural_t values");
+    natural_t cpu_count_natural;
+    mach_msg_type_number_t processor_msg_count;
+    kern_return_t stat =
+        host_processor_info(mach_host_self(), PROCESSOR_CPU_LOAD_INFO, &cpu_count_natural,
+                            reinterpret_cast<processor_info_array_t*>(&cpu_load_info), &processor_msg_count);
+    cpu_count = cpu_count_natural;
+    return stat;
+}
+
+//! \brief Query for a single CPU's ticks information
+//!
+//! Queries all CPU information but only deals with a single CPU's output. This is done because the load average is
+//! tracked sample to sample and the call pattern is cpu0, cpu1, ..., cpu last, wait for sample window, cpu0, ... and
+//! thus each call should update one CPU's sample or only the last cpu will have the benefit of the sampling window.
+//!
+//! \param cpu_index: index of current CPU being queried
+//! \param used: filled with CPU's used ticks count
+//! \param total: filled with CPU's total ticks
+//!
+//! \return success/failure using kern_return_t
+kern_return_t cpu_by_index(FwSizeType cpu_index, FwSizeType& used, FwSizeType& total) {
+    processor_cpu_load_info_t cpu_load_info;
+    FwSizeType cpu_count = 0;
+    kern_return_t status = cpu_data_helper(cpu_load_info, cpu_count);
+
+    // Failure for CPU index
+    if (cpu_count <= cpu_index) {
+        status = KERN_FAILURE;
+    } else if (KERN_SUCCESS == status) {
+        processor_cpu_load_info per_cpu_info = cpu_load_info[cpu_index];
+
+        // Total the ticks across the different states: idle, system, user, etc...
+        total = 0;
+        for (FwSizeType i = 0; i < CPU_STATE_MAX; i++) {
+            total += per_cpu_info.cpu_ticks[i];
+        }
+        used = total - per_cpu_info.cpu_ticks[CPU_STATE_IDLE];
+    }
+    return status;
+}
+
+CpuInterface::Status DarwinCpu::_getCount(FwSizeType& cpu_count) {
+    processor_cpu_load_info_t cpu_load_info;
+    if (KERN_SUCCESS == cpu_data_helper(cpu_load_info, cpu_count)) {
+        return Status::OP_OK;
+    }
+    cpu_count = 0;
+    return Status::ERROR;
+}
+
+CpuInterface::Status DarwinCpu::_getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) {
+    kern_return_t status = cpu_by_index(cpu_index, ticks.used, ticks.total);
+    if (KERN_SUCCESS == status) {
+        return Status::OP_OK;
+    }
+    ticks.total = 1;
+    ticks.used = 1;
+    return Status::ERROR;
+}
+
+CpuHandle* DarwinCpu::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Cpu
+}  // namespace Darwin
+}  // namespace Os
+```
+
+### `Cpu.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Cpu.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/Cpu.hpp
+// \brief Darwin implementation for Os::Cpu, header and test definitions
+// ======================================================================
+#include <Os/Cpu.hpp>
+#ifndef OS_Darwin_Cpu_HPP
+#define OS_Darwin_Cpu_HPP
+
+namespace Os {
+namespace Darwin {
+namespace Cpu {
+
+//! CpuHandle class definition for stub implementations.
+//!
+struct DarwinCpuHandle : public CpuHandle {};
+
+//! \brief stub implementation of Os::CpuInterface
+//!
+//! Darwin implementation of `CpuInterface` for use as a delegate class handling stub console operations.
+//!
+class DarwinCpu : public CpuInterface {
+  public:
+    //! \brief constructor
+    //!
+    DarwinCpu() = default;
+
+    //! \brief copy constructor
+    DarwinCpu(const DarwinCpu& other) = delete;
+
+    //! \brief default copy assignment
+    CpuInterface& operator=(const CpuInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~DarwinCpu() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief Request the count of the CPUs detected by the system
+    //!
+    //! This method wraps delegates to the underlying implementation.
+    //!
+    //! \param cpu_count: (output) filled with CPU count on system
+    //! \return: OP_OK with valid CPU count, ERROR when error occurs
+    //!
+    Status _getCount(FwSizeType& cpu_count) override;
+
+    //! \brief Get the CPU tick information for a given CPU
+    //!
+    //! CPU ticks represent a small time slice of processor time. This will retrieve the used CPU ticks and total
+    //! ticks for a given CPU. This information in a running accumulation and thus a sample-to-sample
+    //! differencing is needed to see the 'realtime' changing load. This shall be done by the caller. This method wraps
+    //! delegates to the underlying implementation.
+    //!
+    //! \param ticks: (output) filled with the tick information for the given CPU
+    //! \param cpu_index: index for CPU to read. Default: 0
+    //! \return:  ERROR when error occurs, OK otherwise.
+    //!
+    Status _getTicks(Os::Cpu::Ticks& ticks, FwSizeType cpu_index) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    CpuHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    DarwinCpuHandle m_handle;
+};
+}  // namespace Cpu
+}  // namespace Darwin
+}  // namespace Os
+
+#endif  // OS_Darwin_Cpu_HPP
+```
+
+### `DefaultCpu.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/DefaultCpu.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/DefaultCpu.cpp
+// \brief sets default Os::Cpu to Darwin implementation via linker
+// ======================================================================
+#include "Os/Cpu.hpp"
+#include "Os/Darwin/Cpu.hpp"
+#include "Os/Delegate.hpp"
+
+namespace Os {
+CpuInterface* CpuInterface::getDelegate(CpuHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<CpuInterface, Os::Darwin::Cpu::DarwinCpu>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `DefaultMemory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/DefaultMemory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/DefaultMemory.cpp
+// \brief sets default Os::Memory to Darwin implementation via linker
+// ======================================================================
+#include "Os/Darwin/Memory.hpp"
+#include "Os/Delegate.hpp"
+#include "Os/Memory.hpp"
+
+namespace Os {
+MemoryInterface* MemoryInterface::getDelegate(MemoryHandleStorage& aligned_new_memory) {
+    return Os::Delegate::makeDelegate<MemoryInterface, Os::Darwin::Memory::DarwinMemory>(aligned_new_memory);
+}
+}  // namespace Os
+```
+
+### `Memory.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Memory.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/Memory.cpp
+// \brief Darwin implementation for Os::Memory
+// ======================================================================
+#include <mach/mach_error.h>
+#include <mach/mach_host.h>
+#include <mach/mach_init.h>
+#include <mach/mach_types.h>
+#include <mach/message.h>
+#include <Os/Darwin/Memory.hpp>
+
+namespace Os {
+namespace Darwin {
+namespace Memory {
+
+/**
+ * \brief reads macOS virtual memory statistics for memory calculation
+ *
+ * Queries the macOS kernel for virtual memory information. These items are returned in units of page-size and are
+ * then converted back into bytes.
+ *
+ * Thanks to: https://stackoverflow.com/questions/8782228/retrieve-ram-info-on-a-mac
+ *
+ * \param used: used memory in bytes
+ * \param total: total memory in bytes
+ * \return: kern_return_t with success/failure straight from the kernel
+ */
+kern_return_t vm_stat_helper(FwSizeType& used, FwSizeType& total) {
+    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
+    vm_statistics_data_t vmstat;
+    vm_size_t vmsize;
+
+    kern_return_t status1 =
+        host_statistics(mach_host_self(), HOST_VM_INFO, reinterpret_cast<host_info_t>(&vmstat), &count);
+    kern_return_t status2 = host_page_size(mach_host_self(), &vmsize);
+
+    if (KERN_SUCCESS == status1 and KERN_SUCCESS == status2) {
+        // Wired (permanently in RAM), active (recently used), and inactive (not recently used) pages
+        used = vmstat.wire_count + vmstat.active_count + vmstat.inactive_count;
+        total = used + vmstat.free_count;
+
+        // Pages to totals
+        used *= vmsize;
+        total *= vmsize;
+    }
+    return (status1 == KERN_SUCCESS) ? status2 : status1;
+}
+
+MemoryInterface::Status DarwinMemory::_getUsage(Os::Memory::Usage& memory_usage) {
+    // Call out VM helper
+    if (KERN_SUCCESS == vm_stat_helper(memory_usage.used, memory_usage.total)) {
+        return Status::OP_OK;
+    }
+    // Force something sensible, while preventing divide by zero
+    memory_usage.total = 1;
+    memory_usage.used = 1;
+    return Status::ERROR;
+}
+
+MemoryHandle* DarwinMemory::getHandle() {
+    return &this->m_handle;
+}
+
+}  // namespace Memory
+}  // namespace Darwin
+}  // namespace Os
+```
+
+### `Memory.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/Memory.hpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/Memory.hpp
+// \brief Darwin implementation for Os::Memory, header and test definitions
+// ======================================================================
+#include <Os/Memory.hpp>
+#ifndef OS_Darwin_Memory_HPP
+#define OS_Darwin_Memory_HPP
+
+namespace Os {
+namespace Darwin {
+namespace Memory {
+
+//! MemoryHandle class definition for stub implementations.
+//!
+struct DarwinMemoryHandle : public MemoryHandle {};
+
+//! \brief stub implementation of Os::MemoryInterface
+//!
+//! Darwin implementation of `MemoryInterface` for use as a delegate class handling stub console operations.
+//!
+class DarwinMemory : public MemoryInterface {
+  public:
+    //! \brief constructor
+    //!
+    DarwinMemory() = default;
+
+    //! \brief copy constructor
+    DarwinMemory(const DarwinMemory& other) = delete;
+
+    //! \brief default copy assignment
+    MemoryInterface& operator=(const MemoryInterface& other) override = delete;
+
+    //! \brief destructor
+    //!
+    ~DarwinMemory() override = default;
+
+    // ------------------------------------
+    // Functions overrides
+    // ------------------------------------
+  public:
+    //! \brief get system memory usage
+    //!
+    //! This method delegates to the underlying implementation.
+    //!
+    //! \param memory_usage: (output) data structure used to store memory usage
+    //! \return:  ERROR when error occurs, OK otherwise.
+    Status _getUsage(Os::Memory::Usage& memory_usage) override;
+
+    //! \brief returns the raw console handle
+    //!
+    //! Gets the raw console handle from the implementation. Note: users must include the implementation specific
+    //! header to make any real use of this handle. Otherwise it will be as an opaque type.
+    //!
+    //! \return raw console handle
+    //!
+    MemoryHandle* getHandle() override;
+
+  private:
+    //! File handle for PosixFile
+    DarwinMemoryHandle m_handle;
+};
+}  // namespace Memory
+}  // namespace Darwin
+}  // namespace Os
+
+#endif  // OS_Darwin_Memory_HPP
+```

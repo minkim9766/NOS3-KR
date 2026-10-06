@@ -3,18 +3,63 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `algorithm-status.component.css`
 
-file--algorithm-status.component.css
-file--algorithm-status.component.html
-file--algorithm-status.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.css`
+
+
+```css
+:host {
+  line-height: 0;
+  font-size: 0;
+}
 ```
 
-## 항목
+### `algorithm-status.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.css`](file--algorithm-status.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.html`](file--algorithm-status.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.ts`](file--algorithm-status.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.html`
+
+
+```html
+@if (!status.errorMessage) {
+  <ya-led [color]="onColor" [fade]="false" [width]="size" [height]="size" />
+}
+@if (status.errorMessage) {
+  <ya-led color="red" [fade]="false" [width]="size" [height]="size" />
+}
+```
+
+### `algorithm-status.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/algorithms/algorithm-status/algorithm-status.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  AlgorithmStatus,
+  OFF_COLOR,
+  ON_COLOR,
+  WebappSdkModule,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  selector: 'app-algorithm-status',
+  templateUrl: './algorithm-status.component.html',
+  styleUrl: './algorithm-status.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class AlgorithmStatusComponent {
+  @Input()
+  status: AlgorithmStatus;
+
+  @Input()
+  size = 14;
+
+  onColor = ON_COLOR;
+  offColor = OFF_COLOR;
+}
+```

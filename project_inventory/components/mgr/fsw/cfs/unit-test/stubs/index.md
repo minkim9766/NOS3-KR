@@ -3,14 +3,15 @@
 
 **경로:** `components/mgr/fsw/cfs/unit-test/stubs/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `mgr_device_stubs.c`
 
-file--mgr_device_stubs.c
+**경로:** `components/mgr/fsw/cfs/unit-test/stubs/mgr_device_stubs.c`
+
+
+```c
+#include "utgenstub.h"
+
+// Not applicable
 ```
-
-## 항목
-
-- [`components/mgr/fsw/cfs/unit-test/stubs/mgr_device_stubs.c`](file--mgr_device_stubs.c) — UTF-8 텍스트 파일 본문 포함

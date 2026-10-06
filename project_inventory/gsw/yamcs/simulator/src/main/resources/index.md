@@ -3,16 +3,28 @@
 
 **경로:** `gsw/yamcs/simulator/src/main/resources/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 landing_data/index
-file--simulator-logging.properties
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/simulator/src/main/resources/landing_data/`](landing_data/index) — 폴더
-- [`gsw/yamcs/simulator/src/main/resources/simulator-logging.properties`](file--simulator-logging.properties) — UTF-8 텍스트 파일 본문 포함
+### `simulator-logging.properties`
+
+**경로:** `gsw/yamcs/simulator/src/main/resources/simulator-logging.properties`
+
+
+```text
+handlers=java.util.logging.ConsoleHandler
+
+java.util.logging.ConsoleHandler.formatter=java.util.logging.SimpleFormatter
+java.util.logging.ConsoleHandler.level=INFO
+java.util.logging.SimpleFormatter.format=%1$tH:%1$tM:%1$tS.%1$tL %5$s %6$s\n
+
+.level=WARNING
+org.yamcs.level=INFO
+```

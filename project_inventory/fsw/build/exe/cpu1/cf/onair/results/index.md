@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/results/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,6 +11,4 @@
 tmp/index
 ```
 
-## 항목
-
-- [`fsw/build/exe/cpu1/cf/onair/results/tmp/`](tmp/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

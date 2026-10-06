@@ -3,16 +3,217 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `band-list.component.html`
 
-file--band-list.component.html
-file--band-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/band-list.component.html`
+
+
+```html
+<ya-instance-page>
+  <ya-instance-toolbar label="Bands">
+    <ya-page-button routerLink="create" [queryParams]="{ c: yamcs.context }" icon="add_box">
+      Create band
+    </ya-page-button>
+    <ya-page-button
+      [disabled]="!isGroupDeleteEnabled()"
+      (clicked)="deleteSelectedBands()"
+      icon="close">
+      Delete
+    </ya-page-button>
+  </ya-instance-toolbar>
+
+  <ya-panel>
+    @if (dataSource) {
+      <table
+        mat-table
+        class="ya-data-table expand"
+        [dataSource]="dataSource"
+        [trackBy]="tableTrackerFn"
+        matSort
+        matSortActive="name"
+        matSortDirection="asc"
+        matSortDisableClear>
+        <ng-container cdkColumnDef="select">
+          <th
+            mat-header-cell
+            *cdkHeaderCellDef
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+          </th>
+          <td
+            mat-cell
+            *cdkCellDef="let item"
+            class="checkbox"
+            (click)="cb.toggle(); $event.stopPropagation()">
+            <ya-table-checkbox
+              #cb
+              [dataSource]="dataSource"
+              [selection]="selection"
+              [item]="item" />
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Label</th>
+          <td mat-cell *matCellDef="let band">
+            <a [routerLink]="band.id" [queryParams]="{ c: yamcs.context }">
+              @if (band.name) {
+                {{ band.name }}
+              }
+              @if (!band.name) {
+                <i>(none)</i>
+              }
+            </a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef class="wrap200">Description</th>
+          <td mat-cell *matCellDef="let band">
+            {{ band.description || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container cdkColumnDef="tags">
+          <th mat-header-cell *cdkHeaderCellDef>Tags</th>
+          <td mat-cell *cdkCellDef="let row">
+            @for (tag of row.tags || []; track tag) {
+              <ya-label>{{ tag }}</ya-label>
+            }
+            @if (!row.tags) {
+              -
+            }
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
+          <td mat-cell *matCellDef="let band">
+            {{ band.type }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef class="expand"></th>
+          <td mat-cell *matCellDef="let band"></td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.selected]="selection.isSelected(row)"
+          (click)="toggleOne(row)"></tr>
+      </table>
+    }
+  </ya-panel>
+</ya-instance-page>
 ```
 
-## 항목
+### `band-list.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/band-list.component.html`](file--band-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/band-list.component.ts`](file--band-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/timeline/band-list/band-list.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ViewChild,
+} from '@angular/core';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import {
+  MessageService,
+  TimelineBand,
+  TrackBySelectionModel,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+
+@Component({
+  templateUrl: './band-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [WebappSdkModule],
+})
+export class BandListComponent implements AfterViewInit {
+  @ViewChild(MatSort)
+  sort: MatSort;
+
+  displayedColumns = [
+    'select',
+    'name',
+    'description',
+    'tags',
+    'type',
+    'actions',
+  ];
+
+  tableTrackerFn = (index: number, band: TimelineBand) => band.id;
+
+  dataSource = new MatTableDataSource<TimelineBand>();
+  selection = new TrackBySelectionModel<TimelineBand>(
+    this.tableTrackerFn,
+    true,
+    [],
+  );
+
+  constructor(
+    readonly yamcs: YamcsService,
+    title: Title,
+    private messageService: MessageService,
+  ) {
+    title.setTitle('Timeline Bands');
+    this.refreshData();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
+  toggleOne(row: TimelineBand) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  deleteSelectedBands() {
+    if (confirm('Are you sure you want to delete the selected bands?')) {
+      for (const band of this.selection.selected) {
+        this.deleteBand(band.id, false);
+      }
+    }
+  }
+
+  deleteBand(id: string, prompt = true) {
+    if (
+      !prompt ||
+      confirm('Are you sure you want to delete the selected band?')
+    )
+      this.yamcs.yamcsClient
+        .deleteTimelineBand(this.yamcs.instance!, id)
+        .then(() => this.refreshData())
+        .catch((err) => this.messageService.showError(err));
+  }
+
+  isGroupDeleteEnabled() {
+    return !this.selection.isEmpty();
+  }
+
+  private refreshData() {
+    this.yamcs.yamcsClient
+      .getTimelineBands(this.yamcs.instance!)
+      .then((page) => {
+        this.selection.matchNewValues(page.bands || []);
+        this.dataSource.data = page.bands || [];
+      })
+      .catch((err) => this.messageService.showError(err));
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `components/onair/fsw/onair/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,13 +12,14 @@ config/index
 data/index
 data_handling/index
 src/index
-file--__init__.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`components/onair/fsw/onair/config/`](config/index) — 폴더
-- [`components/onair/fsw/onair/data/`](data/index) — 폴더
-- [`components/onair/fsw/onair/data_handling/`](data_handling/index) — 폴더
-- [`components/onair/fsw/onair/src/`](src/index) — 폴더
-- [`components/onair/fsw/onair/__init__.py`](file--__init__.py) — UTF-8 텍스트 파일 본문 포함
+### `__init__.py`
+
+**경로:** `components/onair/fsw/onair/__init__.py`
+
+
+```python
+```

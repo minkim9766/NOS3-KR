@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/src/bsp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -15,10 +15,4 @@ pc-rtems/index
 shared/index
 ```
 
-## 항목
-
-- [`fsw/osal/src/bsp/generic-linux/`](generic-linux/index) — 폴더
-- [`fsw/osal/src/bsp/generic-vxworks/`](generic-vxworks/index) — 폴더
-- [`fsw/osal/src/bsp/nos-linux/`](nos-linux/index) — 폴더
-- [`fsw/osal/src/bsp/pc-rtems/`](pc-rtems/index) — 폴더
-- [`fsw/osal/src/bsp/shared/`](shared/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

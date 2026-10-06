@@ -3,16 +3,16 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/sbn/CMakeFiles/tblobj_cpu1_sbn.tblf7728de0698b31096feaf5e21c2edc396127ce19.dir/fsw/tables/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `sbn_conf_tbl.c.o`
 
-file--sbn_conf_tbl.c.o
-file--sbn_conf_tbl.c.o.d
-```
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/sbn/CMakeFiles/tblobj_cpu1_sbn.tblf7728de0698b31096feaf5e21c2edc396127ce19.dir/fsw/tables/sbn_conf_tbl.c.o`
 
-## 항목
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn/CMakeFiles/tblobj_cpu1_sbn.tblf7728de0698b31096feaf5e21c2edc396127ce19.dir/fsw/tables/sbn_conf_tbl.c.o`](file--sbn_conf_tbl.c.o) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/sbn/CMakeFiles/tblobj_cpu1_sbn.tblf7728de0698b31096feaf5e21c2edc396127ce19.dir/fsw/tables/sbn_conf_tbl.c.o.d`](file--sbn_conf_tbl.c.o.d) — 빌드 산출물 (경로만)
+### `sbn_conf_tbl.c.o.d`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/sbn/CMakeFiles/tblobj_cpu1_sbn.tblf7728de0698b31096feaf5e21c2edc396127ce19.dir/fsw/tables/sbn_conf_tbl.c.o.d`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

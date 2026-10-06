@@ -3,18 +3,143 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `hex-integer-input.component.css`
 
-file--hex-integer-input.component.css
-file--hex-integer-input.component.html
-file--hex-integer-input.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.css`
+
+
+```css
+.binary-input {
+  position: relative;
+}
+
+.binary-input input {
+  padding-left: 24px;
+}
+
+.hex-icon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  text-align: center;
+  color: darkgrey;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 4px;
+  font-weight: 300;
+}
 ```
 
-## 항목
+### `hex-integer-input.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.css`](file--hex-integer-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.html`](file--hex-integer-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.ts`](file--hex-integer-input.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.html`
+
+
+```html
+<div class="binary-input">
+  <input
+    #input
+    class="ya-input"
+    type="text"
+    autocomplete="off"
+    (keyup)="fireChange()"
+    (change)="fireChange()" />
+  <div class="hex-icon">0x</div>
+</div>
+```
+
+### `hex-integer-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/hex-integer-input/hex-integer-input.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  Validator,
+} from '@angular/forms';
+
+@Component({
+  selector: 'ya-hex-integer-input',
+  templateUrl: './hex-integer-input.component.html',
+  styleUrl: './hex-integer-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaHexIntegerInput),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => YaHexIntegerInput),
+      multi: true,
+    },
+  ],
+})
+export class YaHexIntegerInput implements ControlValueAccessor, Validator {
+  @ViewChild('input', { static: true })
+  private inputComponent: ElementRef;
+
+  private onChange = (_: number | null) => {};
+
+  // Called for initial values, assuming decimal
+  writeValue(value: any) {
+    if (value) {
+      const numberValue = Number(value);
+      if (!isNaN(numberValue)) {
+        this.inputComponent.nativeElement.value = numberValue.toString(16);
+        this.fireChange();
+      }
+    }
+  }
+
+  fireChange() {
+    try {
+      const numberValue = this.createNumberOrThrow();
+      this.onChange(numberValue);
+    } catch {
+      this.onChange(NaN);
+    }
+  }
+
+  private createNumberOrThrow() {
+    const hexValue = this.inputComponent.nativeElement.value;
+    if (!hexValue) {
+      return null;
+    }
+
+    if (/^[a-fA-F0-9]+$/.test(hexValue)) {
+      return parseInt(hexValue, 16);
+    } else {
+      throw new Error('Invalid hex pattern');
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: UntypedFormControl) {
+    if (!control.value) {
+      return null;
+    }
+    return isNaN(control.value) ? { notHex: true } : null;
+  }
+}
+```

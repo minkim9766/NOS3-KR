@@ -3,16 +3,38 @@
 
 **경로:** `fsw/apps/sbn/modules/filter/remap/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 fsw/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/apps/sbn/modules/filter/remap/fsw/`](fsw/index) — 폴더
-- [`fsw/apps/sbn/modules/filter/remap/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/apps/sbn/modules/filter/remap/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+project(SBN_F_REMAP C)
+
+if(NOT(IS_DIRECTORY ${SBN_APP_SOURCE_DIR}))
+    message(FATAL_ERROR "SBN_APP_SOURCE_DIR not defined, is sbn in the target list before this module?")
+endif()
+
+include_directories(fsw/platform_inc)
+
+include_directories(${SBN_APP_SOURCE_DIR}/fsw/platform_inc)
+
+aux_source_directory(fsw/src LIB_SRC_FILES)
+
+aux_source_directory(fsw/tables APP_TBL_FILES)
+add_cfe_tables(sbn_f_remap ${APP_TBL_FILES})
+
+# Create the app module
+add_cfe_app(sbn_f_remap ${LIB_SRC_FILES})
+```

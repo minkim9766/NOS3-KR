@@ -3,18 +3,19 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 COMPONENTS/index
 config/index
-file--marshal_d46b80621ccef71709bd4066144fefb6.bin
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/`](COMPONENTS/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/`](config/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin`](file--marshal_d46b80621ccef71709bd4066144fefb6.bin) — 바이너리 (경로만)
+### `marshal_d46b80621ccef71709bd4066144fefb6.bin`
+
+**경로:** `gsw/cosmos/outputs/tmp/marshal_d46b80621ccef71709bd4066144fefb6.bin`
+
+바이너리 파일입니다. 본문은 생략했습니다.

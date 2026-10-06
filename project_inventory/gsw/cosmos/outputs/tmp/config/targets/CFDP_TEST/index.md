@@ -3,16 +3,38 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/config/targets/CFDP_TEST/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 cmd_tlm/index
-file--target.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/cosmos/outputs/tmp/config/targets/CFDP_TEST/cmd_tlm/`](cmd_tlm/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/config/targets/CFDP_TEST/target.txt`](file--target.txt) — UTF-8 텍스트 파일 본문 포함
+### `target.txt`
+
+**경로:** `gsw/cosmos/outputs/tmp/config/targets/CFDP_TEST/target.txt`
+
+
+```text
+# Requires for additinal .rb files
+REQUIRE cfdp_test_defines.rb
+
+# Ignored Parameters
+# IGNORE_PARAMETER parameter_name
+
+# CCSDS 
+IGNORE_PARAMETER CCSDS_STREAMID
+IGNORE_PARAMETER CCSDS_SEQUENCE
+IGNORE_PARAMETER CCSDS_LENGTH
+IGNORE_PARAMETER CCSDS_SPARE
+IGNORE_PARAMETER CCSDS_FC  
+IGNORE_PARAMETER CCSDS_CHECKSUM 
+
+# Ignored Items
+#IGNORE_ITEM CCSDS_STREAMID
+#IGNORE_ITEM CCSDS_SEQUENCE
+#IGNORE_ITEM CCSDS_LENGTH
+```

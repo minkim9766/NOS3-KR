@@ -3,18 +3,24 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 generic_st.dir/index
-file--CMakeDirectoryInformation.cmake
-file--progress.marks
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/generic_st.dir/`](generic_st.dir/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/CMakeDirectoryInformation.cmake`](file--CMakeDirectoryInformation.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/progress.marks`](file--progress.marks) — 빌드 산출물 (경로만)
+### `CMakeDirectoryInformation.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/CMakeDirectoryInformation.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `progress.marks`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/apps/generic_star_tracker/fsw/cfs/CMakeFiles/progress.marks`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

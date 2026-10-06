@@ -3,24 +3,1804 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 gds-plugins/index
-file--communication-adapter-interface.md
-file--fpp-json-dict.md
-file--fprime-translations.md
-file--index.md
-file--numerical-types.md
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/gds-plugins/`](gds-plugins/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/communication-adapter-interface.md`](file--communication-adapter-interface.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/fpp-json-dict.md`](file--fpp-json-dict.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/fprime-translations.md`](file--fprime-translations.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/index.md`](file--index.md) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/docs/reference/numerical-types.md`](file--numerical-types.md) — UTF-8 텍스트 파일 본문 포함
+### `communication-adapter-interface.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/communication-adapter-interface.md`
+
+
+```markdown
+# Communication Adapter Interface
+
+Any communication component (e.g. a radio component) that is intended for use with the standard F´ uplink and downlink
+stack should implement the *Communication Adapter Interface* [`ComInterface.fppi`](../../Svc/Interfaces/ComInterface.fppi). This interface specifies both the ports and protocols used
+to operate with the standard F´ uplink and downlink components.
+
+Implementors of this interface are referred to as *Communication Adapters*.
+
+![Communication Adapter Interface](../img/com-adapter.png)
+
+The communication adapter interface protocol is designed to work alongside the framer status protocol and the com queue
+protocol to ensure that data messages do not overload a communication interface. These protocols are discussed below.
+
+## Ports
+
+The `Svc.ComDataWithContext` port type is used to transmit comms data between components of the F´ system. This port type is composed of a `Fw::Buffer` object and a `ComCfg::FrameContext` object. The `Fw::Buffer` object is used to transmit the data, while the `ComCfg::FrameContext` object is used to provide context for the data being transmitted, such as header information once the header has been consumed.
+
+The communication adapter interface is composed of five ports. These ports are used to transmit outgoing data through
+some communication hardware and receive incoming data from that same hardware. These ports share types with the byte
+stream driver model for backwards compatibility.
+
+| Kind     | Suggested Name | Port Type                | Description                                                    |
+|----------|----------------|--------------------------|----------------------------------------------------------------|
+| `input`  | `dataIn`       | `Svc.ComDataWithContext` | Port receiving data for outgoing transmission (to be sent on the wire) |
+| `output` | `dataOut`      | `Svc.ComDataWithContext` | Port producing data from incoming transmissions (received on the wire) |
+| `output` | `dataReturnOut`| `Svc.ComDataWithContext` | Port for sending back ownership of the `Fw::Buffer` received on the `dataIn` port |
+| `input`  | `dataReturnIn` | `Svc.ComDataWithContext` | Port for receiving back ownership of the `Fw::Buffer` sent on the `dataOut` port |
+| `output` | `comStatusOut` | `Fw.SuccessCondition`    | Port indicating status of outgoing transmission. See protocol. |
+
+
+> [!NOTE]
+> About buffer management: after receiving a buffer on the `dataIn` port, the communication component must return ownership of said buffer through the `dataReturnOut` port. The common scenario is to connect `dataIn` and `dataReturnOut` to the same component, so that the sender can handle deallocation. This is done with a callback so that `dataIn` can be an asynchronous port if needed.
+> Similarly, the buffer sent out on `dataOut` is expected to be returned through the `dataReturnIn` port.
+
+### dataIn Description
+
+This port receives data from an F´ application in the form of an argument of `Fw::Buffer` type and a `ComCfg::FrameContext` context. This data is intended to be sent out the communications interface managed by this component (often referred to as _the wire_). From the perspective of the application this is the _outgoing data_ port.
+
+### dataOut Description
+
+This port produces data to the F´ application once it is received on the wire. From the perspective of the application this is the _incoming data_ port.
+
+### dataReturnOut Description
+
+This port is used to send a callback returning ownership of the `Fw::Buffer` object that was received on the `dataIn` port. Ownership is typically returned to the sender. A callback is used so that `dataIn` may be an asynchronous port if needed.
+
+### dataReturnIn Description
+
+This port is used to receive a callback returning ownership of the `Fw::Buffer` object that was sent on the `dataOut` port. Ownership is typically returned from the receiver of dataOut. A callback is used so that `dataOut` may be an asynchronous call if needed.
+
+### comStatusOut Description
+
+This port carries a status of `Fw::Success::SUCCESS` or `Fw::Success::FAILURE` typically in response to a call to the `dataIn` port described above. 
+
+> [!NOTE]
+> it is critical to obey the protocol as described in the protocol section below.
+
+## Communication Queue Protocol
+
+`Svc::ComQueue` queues messages until the communication adapter is ready to receive these messages. For each `Fw::Success::SUCCESS` message received, `Svc::ComQueue` will emit one message. `Svc::ComQueue` will not emit messages at any other time. This implies several things:
+
+1. An initial `Fw::Success::SUCCESS` message must be sent to `Svc::ComQueue` to initiate data flow
+2. A `Fw::Success::SUCCESS` must be eventually received in response to each message for data to continue to flow
+
+These implications are discussed in more depth in the appropriate protocol sections.
+
+## Framer Status Protocol
+
+Framing typically happens between `Svc::ComQueue` and a communications adapter. The action taken by this protocol is dependent on the number of framed messages (frames) sent to the communication adapter in response to each message received from `Svc::ComQueue`.
+
+The `Svc::FprimeFramer` implements the Framer status protocol by emitting a frame for each message received from `Svc::ComQueue`. Therefore, the `Svc::FprimeFramer` receives a status from the communication adapter on each sent frame and forwards it back to `Svc::ComQueue`. This allows the data flow to continue, or pause if the communication adapter is unable to receive more data.
+
+Framer implementations may choose to implement a different behavior. For example, a framer may choose to accept multiple messages from `Svc::ComQueue` and concatenate them in a single frame. In this case, the framer implementation must manage the flow of statuses accordingly. This is summarized in the table below.
+
+| Produced Frames | Action                                 | Rationale                                                |
+|-----------------|----------------------------------------|----------------------------------------------------------|
+| 0               | Send one `Fw::Success::SUCCESS` status | Data must continue to flow to produce a frame            |
+| 1               | Pass through received status from ComQueue | Frame produced and communication adapter produces status |
+
+> [!IMPORTANT]
+> All framer implementations must pass through the initiation message from the communication adapter to start data flow.
+
+## Communication Adapter Protocol
+
+The communication adapter must obey a specific protocol to indicate to F´ application components the status of outgoing
+transmissions. This is done with the `comStatus` port. A communication status is one of two possibilities:
+
+| Status               | Description                                                                       |
+|----------------------|-----------------------------------------------------------------------------------|
+| Fw::Success::SUCCESS | *Communication adapter* transmission succeeded and is ready for more data.       |
+| Fw::Success::FAILURE | Last transmission failed; *communication adapter* is unable to receive more data. |
+
+* Fw::Success::SUCCESS may also indicate a connection/reconnection success when data flow must be initiated.
+
+A *Communication Adapter* shall emit either Fw::Success::SUCCESS or Fw::Success::FAILURE via the `comStatusOut` port once
+for each call received on `dataIn`. Additionally, a *Communication Adapter* shall emit Fw::Success::SUCCESS once at
+startup to indicate communication is initially ready and once after each Fw::Success::FAILURE event to indicate that
+communication has been restored. By emitting Fw::Success::SUCCESS after any failure, the communication adapter ensures
+that each received message eventually results in a Fw::Success::SUCCESS.
+
+> [!NOTE]
+> It is imperative that *Communication Adapters* implement the `comStatusOut` protocol correctly.
+```
+
+### `fpp-json-dict.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/fpp-json-dict.md`
+
+
+````markdown
+# FPP JSON Dictionary Specification
+
+This document describes the format of FPP JSON dictionaries.
+
+## Contents
+
+- [Type Descriptors](#type-descriptors)
+    - [Primitive Integer Type Descriptors](#primitive-integer-type-descriptors)
+        - [Unsigned Integer Types](#unsigned-integer-types)
+        - [Signed Integer Types](#signed-integer-types)
+    - [Floating-Point Type Descriptors](#floating-point-type-descriptors)
+        - [Floating-Point Types](#floating-point-types)
+    - [Boolean Type Descriptors](#boolean-type-descriptors)
+        - [Boolean Types](#boolean-types)
+    - [String Type Descriptors](#string-type-descriptors)
+        - [String Types](#string-types)
+    - [Qualified Identifier Type Descriptors](#qualified-identifier-type-descriptors)
+- [Constants](#constants)
+- [Type Definitions](#type-definitions)
+    - [Array Type Definition](#array-type-definition)
+    - [Enumeration Type Definition](#enumeration-type-definition)
+        - [Enumerated Constant Descriptors](#enumerated-constant-descriptors)
+    - [Struct Type Definition](#struct-type-definition)
+        - [Struct Type Definition](#struct-type-definition_1)
+        - [Struct Member](#struct-member-descriptor)
+    - [Type Alias Definition](#type-alias-definition)
+- [Values](#values)
+    - [Primitive Integer Values](#primitive-integer-values)
+    - [Floating-Point Values](#floating-point-values)
+    - [Boolean Values](#boolean-values)
+    - [String Values](#string-values)
+    - [Array Values](#array-values)
+    - [Constant Values](#constant-values)
+    - [Enumeration Values](#enumeration-values)
+    - [Struct Values](#struct-values)
+    - [Invalid Values](#invalid-values)
+        - [Null Values](#null-values)
+        - [Infinity Values](#infinity-values)
+        - [Negative Infinity Values](#negative-infinity-values)
+- [Commands, Telemetry Channels, Events, and Parameters](#commands-telemetry-channels-events-and-parameters)
+    - [Formal Parameters](#formal-parameters)
+    - [Commands](#commands)
+    - [Telemetry Channels](#telemetry-channels)
+    - [Events](#events)
+    - [Parameters](#parameters)
+- [Data Products](#data-products)
+    - [Records](#records)
+    - [Containers](#containers)
+- [Telemetry Packet Sets](#telemetry-packet-sets) 
+  - [Telemetry Packets](#telemetry-packets) 
+  - [Telemetry Packet Sets](#telemetry-packet-sets-1)  
+- [Dictionaries](#dictionaries)
+    - [Dictionary Metadata](#dictionary-metadata)
+    - [Dictionary Content](#dictionary-content)
+    - [Framework Definitions Required by the Dictionary](#framework-definitions-required-by-the-dictionary)
+
+## Type Descriptors
+
+A _Type Descriptor_ is a JSON Dictionary that describes a type.
+
+### Primitive Integer Type Descriptors
+| Field | Description | Options | Required | 
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** representing the FPP type name |  `U8`, `U16`, `U32`, `U64`, `I8`, `I16`, `I32`, `I64` | true |
+| `kind` | **String** representing the kind of type | `integer` | true |
+| `size` | **Number** of bits supported by the data type  | `8`, `16`, `32`, `64` | true |
+| `signed` | **Boolean** indicating whether the integer is signed or unsigned | **Boolean** | true |
+
+#### Unsigned Integer Types
+- U8
+- U16
+- U32
+- U64
+
+Example: Type Descriptor for `U64`
+```json
+{
+    "name": "U64",
+    "kind": "integer",
+    "size": 64,
+    "signed": false,
+}
+```
+
+#### Signed Integer Types
+- I8
+- I16
+- I32
+- I64
+
+Example: Type Descriptor for `I8`
+```json
+{
+    "name": "I8",
+    "kind": "integer",
+    "size": 8,
+    "signed": true,
+}
+```
+
+### Floating-Point Type Descriptors
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** representing the FPP type name |  `F32`, `F64` | true |
+| `kind` | **String** representing the kind of type | `float` | true |
+| `size` | **Number** of bits supported by the data type  | `32`, `64` | true |
+
+#### Floating-Point Types
+- F32
+- F64
+
+Example: Type Descriptor for F64
+```json
+{
+    "name": "F64",
+    "kind": "float",
+    "size": 64,
+}
+```
+
+### Boolean Type Descriptors
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** representing the FPP type name | `bool` | true
+| `kind` | **String** representing the kind of type | `bool` | true |
+| `size` | **Number** of bits supported by the data type  | `8` | true |
+
+#### Boolean Types
+- true
+- false
+
+Example: Type Descriptor for booleans
+```json
+{
+    "name": "bool",
+    "kind": "bool",
+    "size": 8
+}
+```
+
+### String Type Descriptors
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** representing the FPP type name |  `string` | true |
+| `kind` | **String** representing the kind of type | `string` | true | 
+| `size` | **Number** representing the maximum string size in bytes | **Number** in the range [1, 2<sup>31</sup>) | true |
+
+#### String Types
+Any sequence of characters
+
+Example Type Descriptor for string
+```json
+{
+    "name": "string",
+    "kind": "string",
+    "size": 80,
+}
+```
+
+### Qualified Identifier Type Descriptors
+
+A _Qualified Identifier_ is a kind of _[Type Descriptor](#type-descriptors)_ that refers to a _[Type Definition](#type-definitions)_.
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** representing the fully qualified FPP type name |  Period-separated **String** | true |
+| `kind` | **String** representing the kind of type | qualifiedIdentifier | true |
+
+
+Example JSON of qualified name
+```json
+{
+    "name": "Module1.MyArray",
+    "kind": "qualifiedIdentifier",
+}
+```
+
+## Constants
+
+| Field | Description | Options | Required | 
+| ----- | ----------- | ------- | -------- |
+| `qualifiedName` | Fully qualified name of element in FPP model | Period-separated **String** | true |
+| `type` | The type of the constant value | **[Type Descriptor](#type-descriptors)** | true
+| `value` | Value associated with the constant | **[Constant Value](#constant-values)** | true |
+| `annotation` | User-defined annotation | **String** | false |
+
+Type information for integer constant dictionary entries is determined by
+checking the sign of a constant and will always default to the maximum integer size (64 bits):
+- If the constant is positive, the type of the constant is U64.
+- If the constant is negative, the type of the constant is I64.
+  
+Example FPP model with JSON representation:
+```
+module M1 {
+  @ Constant with value 1
+  constant C = 1
+}
+```
+
+```json
+{
+  "qualifiedName" : "M1.C",
+  "type" : {
+    "name" : "U64",
+    "kind" : "integer",
+    "size" : 64,
+    "signed" : false
+  },
+  "value" : 1,
+  "annotation" : "Constant with value 1"
+}
+```
+
+## Type Definitions
+
+### Array Type Definition
+
+| Field | Description | Options | Required | 
+| ----- | ----------- | ------- | -------- |
+| `kind` | The kind of type | `array` | true |
+| `qualifiedName` | Fully qualified name of element in FPP model | Period-separated **String** | true |
+| `size` | Size of the data structure | **Number** | true |
+| `elementType` | The type of the array's elements | **[Type Descriptor](#type-descriptors)** | true
+| `default` | Default array value |  **[Array Value](#array-values)**  | true |
+| `annotation` | User-defined annotation | **String** | false |
+
+Example FPP model with JSON representation:
+```
+module M1 {
+    @ My array named A
+    array A = [3] U8
+}
+```
+
+```json
+{
+    "kind": "array",
+    "qualifiedName": "M1.A",
+    "size": 3,
+    "elementType": {
+        "name": "U8",
+        "kind": "integer",
+        "signed": false,
+        "size": 8
+    },
+    "default": [0, 0, 0],
+    "annotation": "My array named A"
+}
+```
+
+
+### Enumeration Type Definition
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `kind` | The kind of type | `enum` | true |
+| `qualifiedName` | Fully qualified name of element in FPP model | Period-separated **String** | true |
+| `representationType` | Type of the enumerated values | **[Type Descriptor](#type-descriptors)** | true |
+| `enumeratedConstants` | The enumerated constants | JSON Dictionary of enumerated constants (keys) to [Enumerated Constant Descriptor](#enumerated-constant-descriptors) (values) | true |
+| `default` | Qualified name of the enumeration's default value | **[Enumeration Value](#enumeration-values)** | true |
+| `annotation` | User-defined annotation | **String** | false |
+
+#### Enumerated Constant Descriptors
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Name of the enumerated constant | **String** | true |
+| `value` | Value associated to the enumerated constant | **Number** | true |
+| `annotation` | User-defined annotation for the enumerated constant | **String** | false |
+
+Example FPP model with JSON representation:
+```
+module M1 {
+    @ Schroedinger's status
+    enum Status {
+        YES
+        NO
+        MAYBE @< The cat would know
+    } default MAYBE
+}
+```
+```json
+{
+    "kind": "enum",
+    "qualifiedName": "M1.Status",
+    "representationType": {
+        "name": "I32",
+        "kind": "integer",
+        "signed": true,
+        "size": 32
+    },
+    "enumeratedConstants": [
+        {
+            "name": "YES",
+            "value" : 0
+        },
+        {
+            "name": "NO",
+            "value" : 1
+        },
+        {
+            "name" : "MAYBE",
+            "value" : 2,
+            "annotation": "The cat would know"
+        },
+    ],
+    "default": "M.Status.MAYBE",
+    "annotation": "Schroedinger's status"
+}
+```
+
+### Struct Type Definition
+
+#### Struct Type Definition
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `kind` | The kind of type | `struct` | true |
+| `qualifiedName` | Fully qualified name of element in FPP model | Period-separated **String** | true |
+| `members` | The members of the struct | JSON dictionary of Member Name (key) to [Struct Member Descriptor](#struct-member-descriptor) (value) | true |
+| `default` | The default value of the struct | JSON dictionary of Member Name (key) to **[Struct Value](#struct-values)** (value) | true |
+| `annotation` | User-defined annotation | **String** extracted from FPP model | false |
+
+#### Struct Member Descriptor
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `type` | [Type Descriptor](#type-descriptors) of member | [Type Descriptor](#type-descriptors) | true |
+| `index` | Index of the struct member | **Number** | true |
+| `size` | Size of the struct member | **Number** | false |
+| `format` | Format specifier | **String** | false |
+| `annotation` | User-defined annotation | **String** extracted from FPP model | false |
+
+Example FPP model with JSON representation:
+```
+module M1 {
+    @ Struct for wxy values
+    struct S {
+        w: [3] U32 @< This is an array
+        x: U32
+        y: F32
+    }
+}
+```
+```json
+{
+    "kind": "struct",
+    "qualifiedName": "M1.S",
+    "annotation": "Struct for wxy values",
+    "members": {
+         "w": {
+            "type": {
+                "name": "M.S.w",
+                "kind": "qualifiedIdentifier"
+            },
+            "index": 0,
+            "size": 3,
+            "annotation" : "This is an array"
+        },
+        "x": {
+            "type": {
+                "name": "U32",
+                "kind": "integer",
+                "signed": false,
+                "size": 32
+            },
+            "format": "the count is {}",
+            "index": 1
+        },
+        "y": {
+            "type": {
+                "name": "F32",
+                "kind": "float",
+                "size": 32
+            },
+            "index": 2
+        }
+    },
+    "default": {
+        "w": [0, 0, 0],
+        "x": 0,
+        "y": 0
+    },
+}
+```
+
+### Type Alias Definition
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `kind` | The kind of type | `alias` | true |
+| `qualifiedName` | Fully qualified name of element in FPP model | Period-separated **String** | true |
+| `type` | [Type Descriptor](#type-descriptors) of the alias | [Type Descriptor](#type-descriptors) | true |
+| `underlyingType` | [Type Descriptor](#type-descriptors) of the underlying type of the alias | [Type Descriptor](#type-descriptors) | true |
+| `annotation` | User-defined annotation | **String** extracted from FPP model | false |
+
+Example FPP model with JSON representation:
+```
+module M1 {
+    @ Alias of type U32
+    type A1 = U32
+    @ Alias of type A1
+    type A2 = A1
+}
+```
+```json
+[
+  {
+    "kind": "alias",
+    "qualifiedName": "M1.A1",
+    "type": {
+      "name": "U32",
+      "kind": "integer",
+      "signed": false,
+      "size": 32
+    },
+    "underlyingType": {
+      "name": "U32",
+      "kind": "integer",
+      "signed": false,
+      "size": 32
+    },
+    "annotation": "Alias of type U32"
+  },
+  {
+    "kind": "alias",
+    "qualifiedName": "M1.A2",
+      "type": {
+        "name": "M1.A1",
+        "kind": "qualifiedIdentifier"
+      },
+      "underlyingType": {
+        "name": "U32",
+        "kind": "integer",
+        "signed": false,
+        "size": 32
+      },
+    "annotation": "Alias of type A2"
+  }
+]
+```
+
+## Values
+
+### Primitive Integer Values
+**Number** representing integer value
+
+Example JSON of type U8 with a value of 2:
+```json
+2
+```
+
+Example JSON of type I8 with a value of -2:
+```json
+-2
+```
+
+### Floating-Point Values
+**Number** representing float value
+
+Example JSON of type F32 with a value of 10.0
+```json
+10.5
+```
+
+### Boolean Values
+**Boolean** value
+
+Example JSON of type bool with a value of true
+
+```json
+true
+```
+
+### String Values
+**String** containing sequence of characters
+
+Example JSON of type string with a value of "Hello World!"
+```json
+"Hello World!"
+```
+
+
+### Array Values
+**Array** with elements
+
+Example JSON of an array of type U32 consisting of 10 elements
+```json
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+### Constant Values
+Constant values include [Primitive Integer](#primitive-integer-values), [Floating-Point](#floating-point-values), 
+[String](#string-values), and [Boolean](#boolean-values) values.
+
+### Enumeration Values
+String qualified identifier name of enumeration value
+
+Example JSON of an enum
+```json
+"Status.YES"
+```
+
+### Struct Values
+**JSON Dictionary** consisting of String qualified identifier names (keys) and values (values)
+
+Example JSON of a struct:
+```json
+{
+    "S.w": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "S.x": 20,
+    "S.y": "Hello World!",
+    "S.z": 15.5
+}
+```
+
+### Invalid Values
+#### Null Values
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** indicating that the value is null | null | true |
+| `kind` | **String** indicating that the kind of value is invalid | invalid | true |
+
+#### Infinity Values
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** indicating that the value is infinity|  infinity | true |
+| `kind` | **String** indicating that the kind of value is invalid | invalid | true |
+
+#### Negative Infinity Values
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | **String** indicating that the value is negative infinity |  negativeInfinity | true |
+| `kind` | **String** indicating that the kind of value is invalid | invalid | true |
+
+
+## Commands, Telemetry Channels, Events, and Parameters
+
+### Formal Parameters
+
+Formal Parameters are used in Commands and Events definitions.
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Name of parameter | **String** | true |
+| `type` | [Type Descriptor](#type-descriptors) of parameter | [Type Descriptor](#type-descriptors) | true |
+| `ref` | **Boolean** indicating whether the formal parameter is to be passed by referenced when it is used in a synchronous port invocation | **Boolean** | true |
+| `annotation` | User-defined annotation of parameter | **String** | false |
+
+```json
+{
+    "name": "param1",
+    "type": {
+        "name": "U32",
+        "kind": "integer",
+        "size": 32,
+        "signed": false,
+    },
+    "ref": false,
+    "annotation": "This is param1"
+}
+```
+
+### Commands
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the command | Period-separated **String** | true |
+| `commandKind` | The kind of command | `async`, `guarded`, `sync`, `set`, `save` | true |
+| `opcode` | Command opcode | **Number** | true |
+| `formalParams` | Parameters of the command | Array of [Formal Parameters](#formal-parameters) | true |
+| `annotation` | User-defined annotation of command | **String** | false |
+| `priority` | Priority for the command on the input queue | **Number** | required for async command kinds |
+| `queueFullBehavior` | Behavior of the command when the input full is queue | `assert`, `block`, `drop` | required for async command kinds |
+
+Example Command in FPP:
+```
+module M {
+
+  active component Component1 { 
+
+    @ A sync command with parameters
+    sync command SyncParams(
+        param1: U32 @< Param 1
+        param2: string @< Param 2
+    ) opcode 0x01
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+```
+JSON representation:
+```json
+{
+    "name": "M.c1.SyncParams",
+    "commandKind": "sync",
+    "opcode": 257,
+    "annotation": "A sync command with parameters",
+    "formalParams": [
+        {
+            "name": "param1",
+            "annotation": "Param 1",
+            "type": {
+                "name": "U32",
+                "kind": "integer",
+                "size": 32,
+                "signed": false,
+            },
+            "ref": false
+        },
+         {
+            "name": "param2",
+            "annotation": "Param 2",
+            "type": {
+                "name": "string",
+                "kind": "string",
+                "size": "80"
+            },
+            "ref": false
+        }
+    ],
+}
+```
+
+### Telemetry Channels
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the telemetry channel | Period-separated **String** | true |
+| `type` | [Type Descriptor](#type-descriptors) of the telemetry channel | [Type Descriptor](#type-descriptors) | true |
+| `id` | Numeric identifier of the channel | **Number** | true |
+| `telemetryUpdate` | Update specifier of the telemetry channel | `always`, `on change` | true |
+| `format` | Format string of the channel | **String** | false |
+| `annotation` | User-defined annotation of channel | **String** | false |
+| `limit` | Low and high limits of the channel | **JSON dictionary** | false |
+
+Example FPP model with JSON representation:
+```
+
+module M {
+
+  active component Component1 { 
+
+    @ Telemetry channel 1
+    telemetry Channel1: F64 \
+      id 0x02 \
+      update on change \
+      low { yellow -1, orange -2, red -3 } \
+      high { yellow 1, orange 2, red 3 }
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+
+```
+
+```json
+[
+    {
+        "name": "M.c1.Channel1",
+        "annotation": "Telemetry channel 1",
+        "type": {
+            "name": "F64",
+            "kind": "float",
+            "size": 64
+        },
+        "id": 258,
+        "telemetryUpdate": "on change",
+        "limit": {
+            "low": {
+                "yellow": -1,
+                "orange": -2,
+                "red": -3
+            },
+            "high": {
+                "yellow": 1,
+                "orange": 2,
+                "red": 3
+            }
+        }
+    }
+]
+```
+
+### Events
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the event | Period-separated **String** | true |
+| `severity` | Severity of the event | `ACTIVITY_HI`, `ACTIVITY_LO`, `COMMAND`, `DIAGNOSTIC`, `FATAL`, `WARNING_HI`, `WARNING_LO` | true |
+| `formalParams` | Parameters of the event | Array of [Formal Parameters](#formal-parameters) | true |
+| `id` | Numeric identifier of the event | **Number** | true |
+| `format` | Format string of the event | **String** | true |
+| `throttle` | Maximum number of times to emit the event before throttling it | **Number** | false |
+| `annotation` | User-defined annotation of the event | **String** | false |
+
+
+Example FPP model with JSON representation:
+```
+module M {
+
+  active component Component1 { 
+
+    @ This is the annotation for Event 1
+    event Event1(
+      arg1: U32 @< Argument 1
+    ) \
+      severity activity low \
+      id 0x03 \
+      format "Event 1 occurred"
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+
+```
+
+```json
+{
+    "name": "M.c1.Event1",
+    "annotation": "This is the annotation for Event 1",
+    "severity": "ACTIVITY_LO",
+    "formalParams": [
+      {
+        "name": "arg1",
+        "annotation": "Argument 1",
+        "type": {
+            "name": "U32",
+            "kind": "integer",
+            "size": 32,
+            "signed": false,
+        },
+        "ref": false  
+      }
+    ],
+    "id": 259,
+    "format": "Event 1 occurred",
+}
+```
+
+### Parameters
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the parameter | Period-separated **String** | true |
+| `type` | [Type Descriptor](#type-descriptors) of the parameter | [Type Descriptor](#type-descriptors) | true |
+| `id` | Numeric identifier of the parameter | **Number** | true |
+| `default` | Default value (of type specified in `type`)  of the parameter | Value of type specified in `type` | false |
+| `annotation` | User-defined annotation of parameter | **String** | false |
+
+Example FPP model with JSON representation:
+```
+
+module M {
+
+  active component Component1 { 
+
+    @ This is the annotation for Parameter 1
+    param Parameter1: U32 \
+      id 0x04 \
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+
+```
+
+```json
+{
+    "name": "M.c1.Parameter1",
+    "type": {
+        "name": "U32",
+        "kind": "integer",
+        "signed": false,
+        "size": 32
+    },
+    "id": "260",
+    "annotation": "This is the annotation for Parameter 1",
+    "default": 0
+}
+```
+
+## Data Products
+### Records
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the record | Period-separated **String** | true |
+| `type` | [Type Descriptor](#type-descriptors) the record | [Type Descriptor](#type-descriptors) | true |
+| `array` | **Boolean** specifying whether the record stores a variable number of elements | **Boolean** | true |
+| `id` | The numeric identifier of the record | **Number** | true |
+| `annotation` | User-defined annotation of record | **String** | false |
+
+Example FPP model with JSON representation:
+```
+module M {
+
+  active component Component1 { 
+
+    @ Record 0: A variable number of F32 values
+    product record Record0: F32 array id 0x05
+
+    @ Record 1: A single U32 value
+    product record Record1: U32 id 0x06
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+
+```
+
+```json
+[
+    {
+        "name": "M.c1.Record0",
+        "annotation": "Record 0: A variable number of F32 values",
+        "type": {
+            "name": "F32",
+            "kind": "float",
+            "size": 32
+        },
+        "array": true,
+        "id": 261 
+    },
+    {
+        "name": "M.c1.Record1",
+        "annotation": "Record 1: A single U32 value",
+        "type": {
+            "name": "U32",
+            "kind": "integer",
+            "signed": false,
+            "size": 32
+        },
+        "array": false,
+        "id": 262
+    }      
+]
+```
+
+### Containers
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Fully qualified name of the container | Period-separated **String** | true |
+| `id` | The numeric identifier of the record | **Number** | true |
+| `defaultPriority` | The downlink priority for the container | **Number** | false |
+| `annotation` | User-defined annotation of container | **String** | false |
+
+Example FPP model with JSON representation:
+```
+module M {
+
+  active component Component1 { 
+
+    @ Container 0
+    product container Container0 id 0x07
+
+    @ Container 1
+    product container Container1 id 0x08
+
+    @ Container 2
+    product container Container2 id 0x09 default priority 10
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+  }
+
+}
+
+```
+
+```json
+[
+    {
+       "name": "M.c1.Container0",
+       "annotation": "Container 0",
+       "id": 263,
+    },
+    {
+        "name": "M.c1.Container1",
+        "annotation": "Container 1",
+        "id": 264,
+    },
+    {
+        "name": "M.c1.Container2",
+        "annotation": "Container 2",
+        "id": 265,
+        "defaultPriority": 259
+    }
+]
+```
+
+## Telemetry Packet Sets
+
+### Telemetry Packets
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Name of the telemetry packet | **String** | true |
+| `id` | Numeric identifier of the packet | **Number** | true |
+| `group` | Packet group number | **Number** | true |
+| `members` | Telemetry Channels in the packet | Array of Fully Qualified Names of [Telemetry Channels](#telemetry-channels) | true
+
+### Telemetry Packet Sets
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `name` | Name of the telemetry packet set | **String** | true |
+| `members` | Telemetry Packets in the set | Array of [Telemetry Packets](#telemetry-packets) | true |
+| `omitted` | Telemetry Channels omitted from the set | Array of Fully Qualified Names of [Telemetry Channels](#telemetry-channels) | true |
+
+
+Example FPP model with JSON representation:
+```
+module M {
+
+  active component Component1 {
+    @ Telemetry channel 0
+    telemetry Channel0: U32 id 0x00
+
+    @ Telemetry channel 1
+    telemetry Channel1: U32 \
+      id 0x01 \
+      update on change
+
+    @ Telemetry channel 2
+    telemetry Channel2: F64 \
+      id 0x02 \
+      format "{.3f}"
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+
+    telemetry packets Packets {
+      packet P1 id 0 level 0 {
+        M.c1.Channel0
+        M.c1.Channel1
+      }
+    } omit {
+      M.c1.Channel2
+    }
+  }
+}
+```
+
+```json
+[
+  {
+      "name" : "Packets",
+      "members" : [
+        {
+          "name" : "P1",
+          "id" : 0,
+          "group" : 0,
+          "members" : [
+            "M.c1.Channel0",
+            "M.c1.Channel1"
+          ]
+        }
+      ],
+      "omitted" : [
+        "M.c1.Channel2"
+      ]
+    }
+]
+```
+
+## Dictionaries
+### Dictionary Metadata
+
+| Field | Description | Options | Required |
+| ----- | ----------- | ------- | -------- |
+| `deploymentName` | **String** representing the fully qualified name of the topology | **String** | true |
+| `frameworkVersion` | **String** representing the F´ framework version (semantic versioning) | **String** | true |
+| `projectVersion` | **String** representing the project version (semantic versioning) | **String** | true |
+| `libraryVersions` | **Array of Strings** corresponding to the version (semantic versioning) of libraries used by the F´ project | **Array of Strings** | true
+| `dictionarySpecVersion` | **String** representing the JSON dictionary specification version | **String** | true |
+```json
+{
+    "deploymentName": "MyDeployment",
+    "frameworkVersion": "3.3.2",
+    "projectVersion": "1.0.0",
+    "libraryVersions": [],
+    "dictionarySpecVersion": "1.0.0"
+}
+```
+
+### Dictionary Content
+
+| Field | Content | Required |
+| ----- | ------- | -------- |
+| `metadata` | [Dictionary Metadata](#dictionary-metadata) | true |
+| `typeDefinitions` | Array of [Type Definitions](#type-definitions)| true |
+| `constants` | Array of [Constants](#constants)| true |
+| `commands` | Array of [Commands](#commands) | true |
+| `events` | Array of [Events](#events) | true |
+| `telemetryChannels` | Array of [Telemetry Channels](#telemetry-channels) | true |
+| `parameters` | Array of [Parameters](#parameters) | true |
+| `records` | Array of [Records](#records) | true |
+| `containers` | Array of [Containers](#containers) | true |
+| `telemetryPacketSets` | Array of [Telemetry Packet Sets](#telemetry-packet-sets) | true |
+
+Example FPP model with JSON representation:
+```
+module M {
+
+  array StringArray = [2] string size 80 default [ "A", "B"]
+
+  enum StatusEnum {
+    YES
+    NO
+    MAYBE
+  } default MAYBE
+
+  struct A {
+    x: U32 format "The value of x is {}"
+    y: F32 format "The value of y is {}"
+  } default { x = 1, y = 1.15}
+
+
+  active component Component1 { 
+
+    @ A command with a single StringArray argument
+    sync command CommandString(
+        arg1: M.StringArray @< description for argument 1
+    ) opcode 0x01
+
+    @ This is the annotation for Parameter 1
+    param Parameter1: A \
+      id 0x02 \
+      set opcode 0x03 \
+      save opcode 0x04
+
+    @ Event with one StatusEnum argument
+    event Event1(
+      arg1: M.StatusEnum @< Description of arg1 formal param
+    ) \
+      severity activity high \
+      id 0x05 \
+      format "Event 1 occurred, status {}"
+
+    @ Telemetry channel 1 of type I32
+    telemetry Channel1: I32 \
+      id 0x06 \
+      update on change \
+      low { yellow -1, orange -2, red -3 } \
+      high { yellow 1, orange 2, red 3 }
+
+    @ Record 0: A variable number of F32 values
+    product record Record0: F32 array id 0x05
+
+    @ Record 1: A single U32 value
+    product record Record1: U32 id 0x06
+
+    @ Container 0
+    product container Container0 id 0x07
+
+    @ Container 1
+    product container Container1 id 0x08
+
+    @ Container 2
+    product container Container2 id 0x09 default priority 10
+
+  }
+
+  instance c1: Component1 base id 0x100 \
+    queue size 10
+
+  topology T {
+    instance c1
+
+    telemetry packets Packets {
+      packet P1 id 0 level 0 {
+        M.c1.Channel1
+      }
+    }
+  }
+}
+
+```
+
+```json
+{
+  "metadata": {
+    "deploymentName": "M.T",
+    "frameworkVersion": "3.3.2",
+    "projectVersion": "1.0.0",
+    "libraryVersions": [],
+    "dictionarySpecVersion": "1.0.0"
+  },
+  "typeDefinitions" : [
+    {
+      "kind" : "array",
+      "qualifiedName" : "M.StringArray",
+      "size" : 2,
+      "elementType" : {
+        "name" : "string",
+        "kind" : "string",
+        "size" : 80
+      },
+      "default" : [
+        "A",
+        "B"
+      ],
+      "annotation" : "An array of 2 String values"
+    },
+    {
+      "kind" : "enum",
+      "qualifiedName" : "M.StatusEnum",
+      "representationType" : {
+        "name" : "U8",
+        "kind" : "integer",
+        "size" : 8,
+        "signed" : false
+      },
+      "enumeratedConstants" : [
+        {
+          "name" : "YES",
+          "value" : 0
+        },
+        {
+          "name" : "NO",
+          "value" : 1
+        },
+        {
+          "name" : "MAYBE",
+          "value" : 2
+        }
+      ],
+      "default" : "M1.StatusEnum.MAYBE"
+    },
+    {
+      "kind" : "struct",
+      "qualifiedName" : "M.A",
+      "members" : {
+        "x" : {
+          "type" : {
+            "name" : "U32",
+            "kind" : "integer",
+            "size" : 32,
+            "signed" : false
+          },
+          "index" : 0,
+          "format" : "The value of x is {}"
+        },
+        "y" : {
+          "type" : {
+            "name" : "F32",
+            "kind" : "float",
+            "size" : 32
+          },
+          "index" : 1,
+          "format" : "The value of y is {}"
+        }
+      },
+      "default" : {
+        "x" : 1,
+        "y" : 1.15
+      }
+    }
+  ],
+  "constants": [],
+  "commands" : [
+    {
+      "name" : "M.c1.CommandString",
+      "commandKind" : "sync",
+      "opcode" : 257,
+      "formalParams" : [
+        {
+          "name" : "arg1",
+          "type" : {
+            "name" : "M.StringArray",
+            "kind" : "qualifiedIdentifier"
+          },
+          "ref" : false,
+          "annotation" : "description for argument 1"
+        }
+      ],
+      "annotation" : "A command with a single StringArray argument"
+    },
+    {
+      "name" : "M.c1.Parameter1_PRM_SET",
+      "commandKind" : "set",
+      "opcode" : 259,
+      "formalParams" : [
+        {
+          "name" : "val",
+          "type" : {
+            "name" : "M.A",
+            "kind" : "qualifiedIdentifier"
+          },
+          "ref" : false
+        }
+      ],
+      "annotation" : "Parameter (struct)"
+    },
+    {
+      "name" : "M.c1.Parameter1_PRM_SAVE",
+      "commandKind" : "save",
+      "opcode" : 260,
+      "formalParams" : [
+      ],
+      "annotation" : "Parameter (struct)"
+    }
+  ],
+  "parameters" : [
+    {
+      "name" : "M.c1.Parameter1",
+      "type" : {
+        "name" : "M.A",
+        "kind" : "qualifiedIdentifier"
+      },
+      "id" : 258,
+      "default" : {
+        "x" : 1,
+        "y" : 1.15
+      },
+      "annotation" : "Parameter (struct)"
+    }
+  ],
+  "events" : [
+    {
+      "name" : "M.c1.Event1",
+      "severity" : "ACTIVITY_HI",
+      "formalParams" : [
+        {
+          "name" : "arg1",
+          "type" : {
+            "name" : "M.StatusEnum",
+            "kind" : "qualifiedIdentifier"
+          },
+          "ref" : false,
+          "annotation" : "Description of arg1 formal param"
+        }
+      ],
+      "id" : 259,
+      "format" : "Event 1 occurred, status {}",
+      "annotation" : "Event with one StatusEnum argument"
+    }
+  ],
+  "telemetryChannels" : [
+    {
+      "name" : "M.c1.Channel1",
+      "type" : {
+        "name" : "I32",
+        "kind" : "integer",
+        "size" : 32
+      },
+      "id" : 260,
+      "telemetryUpdate" : "on change",
+      "annotation" : "Telemetry channel 1 of type I32",
+      "limit": {
+        "low": {
+          "yellow": "-1",
+          "orange": "-2",
+          "red": "-3"
+        },
+        "high": {
+          "yellow": "1",
+          "orange": "2",
+          "red": "3"
+        }
+      }
+    }
+  ],
+  "records" : [
+    {
+        "name": "M.c1.Record0",
+        "annotation": "Record 0: A variable number of F32 values",
+        "type": {
+            "name": "F32",
+            "kind": "float",
+            "size": 32
+        },
+        "array": true,
+        "id": 261 
+    },
+    {
+        "name": "M.c1.Record1",
+        "annotation": "Record 1: A single U32 value",
+        "type": {
+            "name": "U32",
+            "kind": "integer",
+            "signed": false,
+            "size": 32
+        },
+        "array": false,
+        "id": 262
+    }   
+  ],
+  "containers" : [
+    {
+       "name": "M.c1.Container0",
+       "annotation": "Container 0",
+       "id": 263,
+    },
+    {
+        "name": "M.c1.Container1",
+        "annotation": "Container 1",
+        "id": 264,
+    },
+    {
+        "name": "M.c1.Container2",
+        "annotation": "Container 2",
+        "id": 265,
+        "defaultPriority": 10
+    }
+  ],
+  "telemetryPacketSets": [
+    {
+      "name" : "Packets",
+      "members" : [
+        {
+          "name" : "P1",
+          "id" : 0,
+          "group" : 0,
+          "members" : [
+            "M.c1.Channel1"
+          ]
+        }
+      ],
+      "omitted" : []
+    }
+  ]
+}
+
+```
+
+### Framework Definitions Required by the Dictionary
+
+The following framework definitions are required by the dictionary and will always be present in the dictionary content:
+
+| Name  | Kind    | Location | Purpose  |
+| ----- | ------- | -------- | -------- |
+| `FwChanIdType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of a telemetry channel identifier |
+| `FwEventIdType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of an event identifier |
+| `FwOpcodeType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of a command opcode | 
+| `FwPacketDescriptorType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of a com packet descriptor | 
+| `FwDpIdType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of a data product identifier | 
+| `FwDpPriorityType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type of a data product priority |
+| `FwSizeStoreType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type used to serialize a size value | 
+| `FwTimeBaseStoreType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type used to serialize a time base value |
+| `FwTimeContextStoreType` | [Alias type definition](#type-alias-definition)| `typeDefinitions` | The type used to serialize a time context value |
+| `Fw.DpState` | [Enum type definition](#enumeration-type-definition)| `typeDefinitions` | The data product state | |
+| `Fw.DpCfg.ProcType` | [Enum type definition](#enumeration-type-definition)| `typeDefinitions` | A bit mask for selecting the type of processing to perform on a container before writing it to disk. |
+| `Fw.DpCfg.CONTAINER_USER_DATA_SIZE` | [Constant Definition](#constants)| `constants` | The size in bytes of the user-configurable data in the container packet header |
+
+````
+
+### `fprime-translations.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/fprime-translations.md`
+
+
+```markdown
+# F Prime Translation Guide: Software Engineering Terminology to F Prime Nomenclature
+
+This guide provides a mapping between common software engineering concepts and their equivalent implementations in the F´ framework. It serves as a reference for developers new to F´ development.
+
+## Data Structures & Containers
+
+| Software Concept | F Prime Equivalent | Notes |
+|-----------------|-------------------|--------|
+| String | Fw::String | Safe string implementation with size limits |
+| Buffer | [Fw::Buffer](../../Fw/Buffer/docs/sdd.md) | Memory buffer with size tracking |
+| Queue | Os::Queue | Thread-safe queue implementation |
+
+> [!NOTE]
+> `Os::Queue` is rarely used directly but rather is used via `async` port calls.
+
+## Communication & Synchronization
+
+| Software Concept | F Prime Equivalent | Notes |
+|-----------------|-------------------|--------|
+| Function Call | Synchronous Port | Direct component-to-component calls |
+| Message Queue | Async Port | Asynchronous component communication supported by a queue |
+| Event Loop | Active Component | Components with their own execution thread |
+| Mutex | Os::Mutex | Thread synchronization primitive |
+| Thread | Os::Task | OS task abstraction |
+
+
+> [!NOTE]
+> `Os::Task` is rarely used directly but rather is contained  within `active` components.
+
+## Memory Management
+
+| Software Concept | F Prime Equivalent | Notes |
+|-----------------|-------------------|--------|
+| Stack Allocation | Local variables | Standard stack allocation |
+| Heap Allocation | Fw::MemAllocator | Managed heap allocation |
+| Memory Pooling | [Svc::BufferManager](../../Svc/BufferManager/docs/sdd.md) | Fixed-size buffer management |
+| Smart Pointer | [Fw::Buffer](../../Fw/Buffer/docs/sdd.md) | Buffer containing pointer, size, and context |
+
+## System Architecture
+
+| Software Concept | F Prime Equivalent | Notes |
+|-----------------|-------------------|--------|
+| Module | Component | Basic unit of functionality |
+| Interface | Port(s) | Component communication interface |
+| System Service | Service Component | Components providing system services |
+| Driver | Driver Component | Hardware abstraction components |
+| Runtime Configuration | Parameters | Component configuration management via ground-commanded parameters |
+
+## Error Handling
+
+| Software Concept | F Prime Equivalent | Notes |
+|-----------------|-------------------|--------|
+| Exception | Assert + Event | Assertion and event logging |
+| Error Code | Status Type | Enumerated status returns |
+| Logging | Events | System event logging framework |
+| Debug Print | Fw::Logger | Debug output facility |
+
+```
+
+### `index.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/index.md`
+
+
+```markdown
+---
+hide:
+  - toc
+---
+
+# Reference
+
+Technical reference for the F Prime C++ API, CMake API, FPP language specification and more.
+
+
+<div class="grid cards" markdown>
+
+-   <span class="card-title">__C++ Documentation__</span>
+
+    ---
+
+    This is the F´ automatically generated documentation for C++.
+
+    [View C++ Documentation](./api/cpp/html/index.html){ .md-button .md-button--primary }
+
+-   <span class="card-title">__F´ Components SDDs__</span>
+
+    ---
+
+    Software Design Documents (SDD) capture the design of the F´ core components.
+
+    Please use the left navigation panel to browse the SDDs.
+
+-   <span class="card-title">__FPP Language Specification__</span>
+
+    ---
+
+    This document describes F Prime Prime, also known as FPP or F Double Prime.
+
+    [View FPP Language Spec](https://nasa.github.io/fpp/fpp-spec.html){ .md-button .md-button--primary }
+
+-   <span class="card-title">__CMake User API__</span>
+
+    ---
+
+    This section of the documentation captures step by step how tos for various F´ development tasks.
+
+    [View CMake User API Documentation](./api/cmake/API.md){ .md-button .md-button--primary }
+
+
+</div>
+```
+
+### `numerical-types.md`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/docs/reference/numerical-types.md`
+
+
+````markdown
+# F´ Numerical Types
+
+On physical hardware, numerical types have a size in bits. The sizes of these integers are either explicitly set by the
+programmer or implicitly set by the compiler. i.e. `uint32_t` is explicitly 32-bits whereas `int` is implicitly set by
+the compiler. Flight software practice encourages use of explicitly sized types because there is less risk of an
+unintentional overflow when using explicitly sized types. However, in-practice it is nice to also use logical types that
+represent concepts in the system (e.g. size) and are configured to use a specific size as determined by the platform.
+
+This document describes: fixed-width types and logical types.
+
+> [!TIP]
+> Many APIs (e.g. POSIX APIs) use types such as `int` or `long`. Projects should use those types when interfacing with the API and convert into fixed-width or logical types within the calling code.
+
+## Fixed Width Types
+
+In F´, fixed width types map to the standard definitions either in the C standard or in the `stdint.h` header as seen
+below. Since platforms are not guaranteed to support all types (e.g. 64bits integers) these types can be turned off
+by setting a configuration field to `0` in the platform-supplied `PlatformTypes.h` header.  These types are on by
+default and users must turn off types their compiler or platform does not support. Each type also defines a matching 
+format specifier for use with the `printf` family of functions. Note that C/C++ always promotes floats to doubles so
+the correct format specifier for a F32 is PRI_F64 as indicated in the table below.
+
+
+| F´ Type | Equivalent   | Format Specifier | `PlatformTypes.h` Configuration Field |
+|---------|--------------|------------------|---------------------------------------|
+| I8      | int8_t       | PRI_I8           | n/a                                   |
+| I16     | int16_t      | PRI_I16          | FW_HAS_16_BIT                         |
+| I32     | int32_t      | PRI_I32          | FW_HAS_32_BIT                         |
+| I64     | int64_t      | PRI_I64          | FW_HAS_64_BIT                         |
+| U8      | uint8_t      | PRI_U8           | n/a                                   |
+| U16     | uint16_t     | PRI_U16          | FW_HAS_16_BIT                         |
+| U32     | uint32_t     | PRI_U32          | FW_HAS_32_BIT                         |
+| U64     | uint64_t     | PRI_U64          | FW_HAS_64_BIT                         |
+| F32     | float        | PRI_F64          | n/a                                   |
+| F64     | double       | PRI_F64          | FW_HAS_F64                            |
+
+Platform developers should include `stdint.h` or equivalent in their `PlatformTypes.h` to ensure F´ can construct a
+mapping from the C equivalents to the F´ type. If for some reason that header does not exist or does not define all
+types, then developers must define the missing C equivalent types directly in that header.
+
+To print these types, users may use the standard C++ PRI macros as shown described:
+[https://cplusplus.com/reference/cinttypes/](https://cplusplus.com/reference/cinttypes/).
+
+The limits of these types can be obtained by using `std::numeric_limits<T>::min()` and `std::numeric_limits<T>::min()`
+for the defined type T.
+
+```c++
+U32 value = 10;
+U32 my_max = std::numeric_limits<U32>::max();
+printf("My value: %" PRIu32 " could store a max of: %" PRIu32 "\n", value, my_max);
+```
+
+## F´ Logical Integer Type Design
+
+
+Typically, in flight software we try to use fixed-sized types wherever possible as this produces consistent results
+across platforms. However, when building components for use on multiple different architectures it is nice to be able
+to use logical integer types whose exact widths are determined by the platform and project instead of needing
+to pick a one-size-fits-all fixed with type. For example, representing a size as an unsigned 64-bit integer is logical
+on some systems that have 64-bit data widths, but will not compile on systems that do not define 64-bit integers at all
+(8-bit systems often lack this data size).
+
+Thus, for these logical types the actual data size needs to be configured. This configuration needs to be available
+from two sources: a given project, and a given platform. Platforms need to set the idea size for these types, and
+projects need to be able to control these sizes when operating across multiple platforms.
+
+It is important to check against type limits when using these types to ensure compatibility across systems.
+
+### Platform Configured Types
+
+Platform developers must define the following logical types in the `PlatformTypes.h` header provided alongside their
+CMake platform and toolchain files. Each type also defines a format specifier for use with the `printf` family of
+functions.
+
+| Platform Logical Type   | Logical Use                   | Format Specifier            | Signed | Size            |
+|-------------------------|-------------------------------|-----------------------------|--------|-----------------|
+| PlatformIndexType       | Ports and small array indices | PRI_PlatformIndexType       | Yes    | Minimum 1 Byte  |
+| PlatformSizeType        | Sizes                         | PRI_PlatformSizeType        | No     | Minimum 4 Bytes |
+| PlatformSignedSizeType  | Signed sizes                  | PRI_PlatformSignedSizeType  | Yes    | Minimum 4 Bytes |
+| PlatformPointerCastType | Pointers stored as integers   | PRI_PlatformPointerCastType | No     | sizeof(void*)   |
+| PlatformAssertArgType   | Argument to FW_ASSERT         | PRI_PlatformAssertArgType   | Yes/No | Any             |
+
+> [!WARNING]
+> `PlatformPointerCastType` values shall never be sent nor used outside the address space where a value was initialized because these values represent pointers only valid in a single address space.
+
+A complete definition of each type for a given platform must be supplied within `PlatformTypes.h` as shown in the
+example below. Notice the type is defined along with a format specifier.
+
+```c++
+typedef int32_t PlatformIndexType;
+#define PRI_PlatformIndexType PRId32
+...
+```
+
+Limits for these types are obtained using the `std::numeric_limits<T>::min()` and `std::numeric_limits<T>::max()`
+constants defined in the `limits` header.
+
+In order to print these types, developers can use the following example as a basis for using the PRI_* macros. This
+example also shows the use of the type's minimum limit.
+
+```c++
+PlatformIndexType index = 3;
+// Print the above index type, and the minimum value supported by the same type
+printf("Index %" PRI_PlatformIndexType ". Min %" PRI_PlatformIndexType, index, std::numeric_limits<PlatformIndexType>::min());
+```
+
+> [!NOTE]
+> in order for F´ to compile without warnings it is necessary that each of the platform types are elements in the set of integers supplied by the C standard integers header (`stdint.h`). i.e. each type must be an `int8_t`, `int16_t`, `int32_t`, `int64_t` or unsigned variants.
+
+### Configurable Integer Types
+
+Project may configure the framework types that the framework and components use for implementation through
+`FpConfig.h`. The default configuration as supplied with F´ uses the above platform types where applicable.
+
+| Framework Type   | Logical Usage                | Default                | Format Specifier     | Signed | Size            |
+|------------------|------------------------------|------------------------|----------------------|--------|-----------------|
+| FwIndexType      | Port and small array indices | PlatformIndexType      | PRI_FwIndexType      | Yes    | Minimum 1 Byte  |
+| FwSizeType       | Sizes                        | PlatformSizeType       | PRI_FwSizeType       | No     | Minimum 4 Bytes |
+| FwSignedSizeType | Signed sizes                 | PlatformSignedSizeType | PRI_FwSignedSizeType | Yes    | Minimum 4 Bytes |
+| FwAssertArgType  | Arguments to asserts         | PlatformAssertArgType  | PRI_FwAssertArgType  | Yes/No | Any             |
+
+There is also a set of framework types that are used across F´ deployments and specifically interact with ground data
+systems. These GDS types have defaults based on configurable platform independent fixed-widths as shown below:
+
+| GDS Type               | Logical Usage              | Default               | Format Specifier           |
+|------------------------|----------------------------|-----------------------|----------------------------|
+| FwBuffSizeType         | `Fw::Buffer` sizes         | U16                   | PRI_FwBuffSizeType         |
+| FwEnumStoreType        | Enumeration values         | I32                   | PRI_FwEnumStoreType        |
+| FwTimeBaseStoreType    | Time base                  | U16                   | PRI_FwTimeBaseStoreType    |
+| FwTimeContextStoreType | Time context               | U8                    | PRI_FwTimeContextStoreType |
+| FwPacketDescriptorType | F´ packet descriptor field | U32                   | PRI_FwPacketDescriptorType |
+| FwOpcodeType           | F´ command opcodes         | U32                   | PRI_FwOpcodeType           |
+| FwChanIdType           | F´ channel ids             | U32                   | PRI_FwChanIdType           |
+| FwEventIdType          | F´ event ids               | U32                   | PRI_FwEventIdType          |
+| FwPrmIdType            | F´ parameter ids           | U32                   | PRI_FwPrmIdType            |
+| FwTlmPacketizeIdType   | F´ telemetry packet ids    | U16                   | PRI_FwTlmPacketizeIdType   |
+
+> [!NOTE]
+> the F´ GDS expects the above types to use their default setting. Users intending to use the F´ GDS should not stray from the above definitions.
+
+All defaults can be overridden via project specific configuration supplying a custom `FpConfig.h`. A complete
+definition of a framework/GDS type in `FpConfig.h` would look like:
+
+```c++
+#include <BasicTypes.hpp>
+...
+typedef U32 FwSizeType;
+#define PRI_FwSizeType PRIu32
+...
+```
+````

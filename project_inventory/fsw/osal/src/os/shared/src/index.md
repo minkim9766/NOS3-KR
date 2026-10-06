@@ -3,60 +3,8882 @@
 
 **경로:** `fsw/osal/src/os/shared/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `osapi-binsem.c`
 
-file--osapi-binsem.c
-file--osapi-clock.c
-file--osapi-common.c
-file--osapi-condvar.c
-file--osapi-countsem.c
-file--osapi-debug.c
-file--osapi-dir.c
-file--osapi-errors.c
-file--osapi-file.c
-file--osapi-filesys.c
-file--osapi-heap.c
-file--osapi-idmap.c
-file--osapi-module.c
-file--osapi-mutex.c
-file--osapi-network.c
-file--osapi-printf.c
-file--osapi-queue.c
-file--osapi-select.c
-file--osapi-shell.c
-file--osapi-sockets.c
-file--osapi-task.c
-file--osapi-time.c
-file--osapi-timebase.c
-file--osapi-version.c
+**경로:** `fsw/osal/src/os/shared/src/osapi-binsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-binsem.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_BIN_SEMAPHORES) || (OS_MAX_BIN_SEMAPHORES <= 0)
+#error "osconfig.h must define OS_MAX_BIN_SEMAPHORES to a valid value"
+#endif
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_BIN_SEMAPHORES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_BINSEM
+};
+
+OS_bin_sem_internal_record_t OS_bin_sem_table[LOCAL_NUM_OBJECTS];
+
+/****************************************************************************************
+                                  SEMAPHORE API
+ ***************************************************************************************/
+
+/*---------------------------------------------------------------------------------------
+   Name: OS_BinSemAPI_Init
+
+   Purpose: Init function for OS-independent layer
+
+   Returns: OS_SUCCESS
+
+---------------------------------------------------------------------------------------*/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemAPI_Init(void)
+{
+    memset(OS_bin_sem_table, 0, sizeof(OS_bin_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    int32                         return_code;
+    OS_object_token_t             token;
+    OS_bin_sem_internal_record_t *binsem;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_APINAME(sem_name);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, sem_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        binsem = OS_OBJECT_TABLE_GET(OS_bin_sem_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, binsem, obj_name, sem_name);
+
+        /* Now call the OS-specific implementation.  This reads info from the table. */
+        return_code = OS_BinSemCreate_Impl(&token, sem_initial_value, options);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, sem_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemDelete(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_BinSemDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGive(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_BinSemGive_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemFlush(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_BinSemFlush_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTake(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_BinSemTake_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemTimedWait(osal_id_t sem_id, uint32 msecs)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_BinSemTimedWait_Impl(&token, msecs);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_POINTER(sem_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, sem_name, sem_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_BinSemGetInfo(osal_id_t sem_id, OS_bin_sem_prop_t *bin_prop)
+{
+    OS_common_record_t *record;
+    OS_object_token_t   token;
+    int32               return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(bin_prop);
+
+    memset(bin_prop, 0, sizeof(OS_bin_sem_prop_t));
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_bin_sem_table, token);
+
+        strncpy(bin_prop->name, record->name_entry, sizeof(bin_prop->name) - 1);
+        bin_prop->creator = record->creator;
+        return_code       = OS_BinSemGetInfo_Impl(&token, bin_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
 ```
 
-## 항목
+### `osapi-clock.c`
 
-- [`fsw/osal/src/os/shared/src/osapi-binsem.c`](file--osapi-binsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-clock.c`](file--osapi-clock.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-common.c`](file--osapi-common.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-condvar.c`](file--osapi-condvar.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-countsem.c`](file--osapi-countsem.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-debug.c`](file--osapi-debug.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-dir.c`](file--osapi-dir.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-errors.c`](file--osapi-errors.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-file.c`](file--osapi-file.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-filesys.c`](file--osapi-filesys.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-heap.c`](file--osapi-heap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-idmap.c`](file--osapi-idmap.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-module.c`](file--osapi-module.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-mutex.c`](file--osapi-mutex.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-network.c`](file--osapi-network.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-printf.c`](file--osapi-printf.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-queue.c`](file--osapi-queue.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-select.c`](file--osapi-select.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-shell.c`](file--osapi-shell.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-sockets.c`](file--osapi-sockets.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-task.c`](file--osapi-task.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-time.c`](file--osapi-time.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-timebase.c`](file--osapi-timebase.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/osal/src/os/shared/src/osapi-version.c`](file--osapi-version.c) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/osal/src/os/shared/src/osapi-clock.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         Contains the code related to clock getting / setting.
+ *         Implementation of these are mostly in the lower layer; however
+ *         a wrapper must exist at this level which allows for unit testing.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-clock.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetLocalTime(OS_time_t *time_struct)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(time_struct);
+
+    return OS_GetLocalTime_Impl(time_struct);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SetLocalTime(const OS_time_t *time_struct)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(time_struct);
+
+    return OS_SetLocalTime_Impl(time_struct);
+}
+```
+
+### `osapi-common.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-common.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ *         Instantiates the global object tables and the overall OSAL
+ *         init/teardown logic such as OS_API_Init() and OS_ApplicationExit().
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-binsem.h"
+#include "os-shared-common.h"
+#include "os-shared-condvar.h"
+#include "os-shared-countsem.h"
+#include "os-shared-dir.h"
+#include "os-shared-file.h"
+#include "os-shared-filesys.h"
+#include "os-shared-idmap.h"
+#include "os-shared-module.h"
+#include "os-shared-mutex.h"
+#include "os-shared-network.h"
+#include "os-shared-printf.h"
+#include "os-shared-queue.h"
+#include "os-shared-sockets.h"
+#include "os-shared-task.h"
+#include "os-shared-timebase.h"
+#include "os-shared-time.h"
+
+OS_SharedGlobalVars_t OS_SharedGlobalVars = {
+    .GlobalState     = 0,
+    .PrintfEnabled   = false,
+    .MicroSecPerTick = 0, /* invalid, _must_ be set by implementation init */
+    .TicksPerSecond  = 0, /* invalid, _must_ be set by implementation init */
+    .EventHandler    = NULL,
+#if defined(OSAL_CONFIG_DEBUG_PRINTF)
+    .DebugLevel = 1,
+#endif
+};
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Helper function to invoke the user-defined event handler
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NotifyEvent(OS_Event_t event, osal_id_t object_id, void *data)
+{
+    int32 status;
+
+    if (OS_SharedGlobalVars.EventHandler != NULL)
+    {
+        status = OS_SharedGlobalVars.EventHandler(event, object_id, data);
+    }
+    else
+    {
+        status = OS_SUCCESS;
+    }
+
+    return status;
+}
+
+/*
+ *********************************************************************************
+ *          PUBLIC API (application-callable functions)
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_API_Init(void)
+{
+    int32          return_code = OS_SUCCESS;
+    osal_objtype_t idtype;
+    uint32         microSecPerSec;
+
+    /*
+     * If OSAL is already initialized, not really a big issue, just return.
+     * This is not typically expected though, so its worth a debug statement.
+     *
+     * However this can validly occur when running tests on some platforms
+     * without a reset/reload between invocations.
+     */
+    if (OS_SharedGlobalVars.GlobalState == OS_INIT_MAGIC_NUMBER)
+    {
+        OS_DEBUG("NOTE: ignored redundant OS_API_Init() call\n");
+        return OS_SUCCESS;
+    }
+
+    /* Wipe global state structure to be sure everything is clean */
+    memset(&OS_SharedGlobalVars, 0, sizeof(OS_SharedGlobalVars));
+
+    /* Reset debug to default level if enabled */
+#if defined(OSAL_CONFIG_DEBUG_PRINTF)
+    OS_SharedGlobalVars.DebugLevel = 1;
+#endif
+
+    /* Set flag that says OSAL has been initialized */
+    OS_SharedGlobalVars.GlobalState = OS_INIT_MAGIC_NUMBER;
+
+    /* Initialize the common table that everything shares */
+    return_code = OS_ObjectIdInit();
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    for (idtype = 0; idtype < OS_OBJECT_TYPE_USER; ++idtype)
+    {
+        /* Initialize the implementation first, as the shared layer depends on it */
+        return_code = OS_API_Impl_Init(idtype);
+        if (return_code != OS_SUCCESS)
+        {
+            OS_DEBUG("OS_API_Impl_Init(0x%x) failed to initialize: %d\n", (unsigned int)idtype, (int)return_code);
+            break;
+        }
+
+        switch (idtype)
+        {
+            case OS_OBJECT_TYPE_OS_TASK:
+                return_code = OS_TaskAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_QUEUE:
+                return_code = OS_QueueAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_BINSEM:
+                return_code = OS_BinSemAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_COUNTSEM:
+                return_code = OS_CountSemAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_MUTEX:
+                return_code = OS_MutexAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_MODULE:
+                return_code = OS_ModuleAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_TIMEBASE:
+                return_code = OS_TimeBaseAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_TIMECB:
+                return_code = OS_TimerCbAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_STREAM:
+                return_code = OS_FileAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_DIR:
+                return_code = OS_DirAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_FILESYS:
+                return_code = OS_FileSysAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_CONSOLE:
+                return_code = OS_ConsoleAPI_Init();
+                break;
+            case OS_OBJECT_TYPE_OS_CONDVAR:
+                return_code = OS_CondVarAPI_Init();
+                break;
+            default:
+                break;
+        }
+        if (return_code != OS_SUCCESS)
+        {
+            OS_DEBUG("ID type 0x%x shared layer failed to initialize: %d\n", (unsigned int)idtype, (int)return_code);
+            break;
+        }
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_NetworkAPI_Init();
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_SocketAPI_Init();
+    }
+
+    /*
+     * Confirm that somewhere during initialization,
+     * the time variables got set to something valid
+     */
+    if (return_code == OS_SUCCESS &&
+        (OS_SharedGlobalVars.MicroSecPerTick == 0 || OS_SharedGlobalVars.TicksPerSecond == 0))
+    {
+        OS_DEBUG("Implementation failed to initialize tick time globals\n");
+        return_code = OS_ERROR;
+    }
+
+    microSecPerSec = OS_SharedGlobalVars.MicroSecPerTick * OS_SharedGlobalVars.TicksPerSecond;
+
+    if (microSecPerSec != 1000000)
+    {
+        OS_DEBUG("Warning: Microsecs per sec value of %lu does not equal 1000000 (MicroSecPerTick: %ld   "
+                 "TicksPerSecond: %ld)\n",
+                 (unsigned long)microSecPerSec, (long)OS_SharedGlobalVars.MicroSecPerTick,
+                 (long)OS_SharedGlobalVars.TicksPerSecond);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        /*
+         * Some part of init failed, so set global flag that says OSAL is in shutdown state.
+         *
+         * In particular if certain internal resources (such as the console utility task)
+         * were created, this should cause those tasks to self-exit such that the system
+         * is ultimately returned to the same state it started in.
+         */
+        OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_API_Teardown(void)
+{
+    /*
+     * This should delete any remaining user-created objects/tasks
+     */
+    OS_DeleteAllObjects();
+
+    /*
+     * This should cause the "internal" objects (e.g. console utility task)
+     * to exit, and will prevent any new objects from being created.
+     */
+    OS_ApplicationShutdown(true);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_RegisterEventHandler(OS_EventHandler_t handler)
+{
+    OS_CHECK_POINTER(handler);
+
+    OS_SharedGlobalVars.EventHandler = handler;
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ApplicationExit(int32 Status)
+{
+    if (Status == OS_SUCCESS)
+    {
+        exit(EXIT_SUCCESS);
+    }
+    else
+    {
+        exit(EXIT_FAILURE);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine that can delete ANY object, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+void OS_CleanUpObject(osal_id_t object_id, void *arg)
+{
+    uint32 *ObjectCount;
+
+    ObjectCount = (uint32 *)arg;
+    ++(*ObjectCount);
+    switch (OS_IdentifyObject(object_id))
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            OS_TaskDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            OS_QueueDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            OS_BinSemDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            OS_CountSemDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            OS_MutSemDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            OS_ModuleUnload(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            OS_TimeBaseDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_TIMECB:
+            OS_TimerDelete(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            OS_close(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_DIR:
+            OS_DirectoryClose(object_id);
+            break;
+        case OS_OBJECT_TYPE_OS_CONDVAR:
+            OS_CondVarDelete(object_id);
+            break;
+        default:
+            break;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_DeleteAllObjects(void)
+{
+    uint32 ObjectCount;
+    uint32 TryCount;
+
+    /*
+     * Note - this is done in a loop because some objects depend on other objects
+     * and you will not be able to delete the object until the ref count becomes zero.
+     */
+    TryCount = 0;
+    while (true)
+    {
+        ObjectCount = 0;
+        ++TryCount;
+
+        /* Delete timers and tasks first, as they could be actively using other object types  */
+        OS_ForEachObjectOfType(OS_OBJECT_TYPE_OS_TIMECB, OS_OBJECT_CREATOR_ANY, OS_CleanUpObject, &ObjectCount);
+        OS_ForEachObjectOfType(OS_OBJECT_TYPE_OS_TIMEBASE, OS_OBJECT_CREATOR_ANY, OS_CleanUpObject, &ObjectCount);
+        OS_ForEachObjectOfType(OS_OBJECT_TYPE_OS_TASK, OS_OBJECT_CREATOR_ANY, OS_CleanUpObject, &ObjectCount);
+
+        /* Then try to delete all other remaining objects of any type */
+        OS_ForEachObject(OS_OBJECT_CREATOR_ANY, OS_CleanUpObject, &ObjectCount);
+
+        if (ObjectCount == 0 || TryCount > 4)
+        {
+            break;
+        }
+        OS_TaskDelay(5);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_IdleLoop()
+{
+    /*
+     * Wait until the shutdown value is set to the shutdown number
+     * In most "real" embedded systems, this will never happen.
+     * However it will happen in debugging situations (CTRL+C, etc).
+     */
+    while (OS_SharedGlobalVars.GlobalState != OS_SHUTDOWN_MAGIC_NUMBER)
+    {
+        OS_IdleLoop_Impl();
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ApplicationShutdown(uint8 flag)
+{
+    if (flag == true)
+    {
+        OS_SharedGlobalVars.GlobalState = OS_SHUTDOWN_MAGIC_NUMBER;
+    }
+
+    /*
+     * Hook to allow the underlying implementation to do something.
+     * Assuming the main task is sitting in OS_IdleLoop(), this implementation
+     * should do whatever is needed to wake that task up.
+     */
+    OS_ApplicationShutdown_Impl();
+}
+```
+
+### `osapi-condvar.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-condvar.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-idmap.h"
+#include "os-shared-condvar.h"
+
+/*
+ * Other OSAL public APIs used by this module
+ */
+#include "osapi-task.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_CONDVARS) || (OS_MAX_CONDVARS <= 0)
+#error "osconfig.h must define OS_MAX_CONDVARS to a valid value"
+#endif
+
+OS_condvar_internal_record_t OS_condvar_table[OS_MAX_CONDVARS];
+
+/****************************************************************************************
+                                  CONDITION VARIABLE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarAPI_Init(void)
+{
+    memset(OS_condvar_table, 0, sizeof(OS_condvar_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarCreate(osal_id_t *var_id, const char *var_name, uint32 options)
+{
+    int32                         return_code;
+    OS_object_token_t             token;
+    OS_condvar_internal_record_t *condvar;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(var_id);
+    OS_CHECK_APINAME(var_name);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_CONDVAR, var_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        condvar = OS_OBJECT_TABLE_GET(OS_condvar_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, condvar, obj_name, var_name);
+
+        /* Now call the OS-specific implementation.  This reads info from the table. */
+        return_code = OS_CondVarCreate_Impl(&token, options);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, var_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarDelete(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarLock(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarLock_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarUnlock(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarUnlock_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarSignal(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarSignal_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarBroadcast(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarBroadcast_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarWait(osal_id_t var_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarWait_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarTimedWait(osal_id_t var_id, const OS_time_t *abs_wakeup_time)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(abs_wakeup_time);
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CondVarTimedWait_Impl(&token, abs_wakeup_time);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarGetIdByName(osal_id_t *var_id, const char *var_name)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(var_id);
+    OS_CHECK_POINTER(var_name);
+
+    return_code = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_CONDVAR, var_name, var_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CondVarGetInfo(osal_id_t var_id, OS_condvar_prop_t *condvar_prop)
+{
+    OS_common_record_t *record;
+    int32               return_code;
+    OS_object_token_t   token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(condvar_prop);
+
+    memset(condvar_prop, 0, sizeof(OS_condvar_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_CONDVAR, var_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_condvar_table, token);
+
+        strncpy(condvar_prop->name, record->name_entry, sizeof(condvar_prop->name) - 1);
+        condvar_prop->creator = record->creator;
+
+        return_code = OS_CondVarGetInfo_Impl(&token, condvar_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-countsem.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-countsem.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-countsem.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_COUNT_SEMAPHORES) || (OS_MAX_COUNT_SEMAPHORES <= 0)
+#error "osconfig.h must define OS_MAX_COUNT_SEMAPHORES to a valid value"
+#endif
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_COUNT_SEMAPHORES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_COUNTSEM
+};
+
+OS_count_sem_internal_record_t OS_count_sem_table[LOCAL_NUM_OBJECTS];
+
+/****************************************************************************************
+                                  SEMAPHORE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemAPI_Init(void)
+{
+    memset(OS_count_sem_table, 0, sizeof(OS_count_sem_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 sem_initial_value, uint32 options)
+{
+    int32                           return_code;
+    OS_object_token_t               token;
+    OS_count_sem_internal_record_t *countsem;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_APINAME(sem_name);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, sem_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        countsem = OS_OBJECT_TABLE_GET(OS_count_sem_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, countsem, obj_name, sem_name);
+
+        /* Now call the OS-specific implementation.  This reads info from the table. */
+        return_code = OS_CountSemCreate_Impl(&token, sem_initial_value, options);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, sem_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemDelete(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CountSemDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGive(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CountSemGive_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTake(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CountSemTake_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemTimedWait(osal_id_t sem_id, uint32 msecs)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_CountSemTimedWait_Impl(&token, msecs);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_POINTER(sem_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, sem_name, sem_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CountSemGetInfo(osal_id_t sem_id, OS_count_sem_prop_t *count_prop)
+{
+    OS_common_record_t *record;
+    OS_object_token_t   token;
+    int32               return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(count_prop);
+
+    memset(count_prop, 0, sizeof(OS_count_sem_prop_t));
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_count_sem_table, token);
+
+        strncpy(count_prop->name, record->name_entry, sizeof(count_prop->name) - 1);
+        count_prop->creator = record->creator;
+
+        return_code = OS_CountSemGetInfo_Impl(&token, count_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-debug.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-debug.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      Contains the implementation for OS_DEBUG().
+ *
+ *      This is only compiled when OSAL_CONFIG_DEBUG_PRINTF is enabled.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-globaldefs.h"
+#include "os-shared-common.h"
+#include "bsp-impl.h"
+
+#define OS_DEBUG_OUTPUT_STREAM stdout
+#define OS_DEBUG_MAX_LINE_LEN  132
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Outputs a single debug statement to the console
+ *
+ *-----------------------------------------------------------------*/
+void OS_DebugPrintf(uint32 Level, const char *Func, uint32 Line, const char *Format, ...)
+{
+    char    buffer[OS_DEBUG_MAX_LINE_LEN];
+    va_list va;
+
+    if (OS_SharedGlobalVars.DebugLevel >= Level)
+    {
+        /*
+         * Lock the console so this appears coherently,
+         * not mixed with other chars from other tasks
+         */
+        OS_BSP_Lock_Impl();
+
+        snprintf(buffer, sizeof(buffer), "%s():%lu:", Func, (unsigned long)Line);
+        OS_BSP_ConsoleOutput_Impl(buffer, strlen(buffer));
+
+        va_start(va, Format);
+        vsnprintf(buffer, sizeof(buffer), Format, va);
+        va_end(va);
+
+        OS_BSP_ConsoleOutput_Impl(buffer, strlen(buffer));
+
+        OS_BSP_Unlock_Impl();
+    }
+}
+```
+
+### `osapi-dir.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-dir.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+#include "osapi-filesys.h"
+
+/*
+ * User defined include files
+ */
+#include "os-shared-dir.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_NUM_OPEN_DIRS) || (OS_MAX_NUM_OPEN_DIRS <= 0)
+#error "osconfig.h must define OS_MAX_NUM_OPEN_DIRS to a valid value"
+#endif
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_NUM_OPEN_DIRS,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_DIR
+};
+
+OS_dir_internal_record_t OS_dir_table[LOCAL_NUM_OBJECTS];
+
+/****************************************************************************************
+                                  DIRECTORY API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirAPI_Init(void)
+{
+    memset(OS_dir_table, 0, sizeof(OS_dir_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_mkdir(const char *path, uint32 access)
+{
+    int32 return_code;
+    char  local_path[OS_MAX_LOCAL_PATH_LEN];
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_DirCreate_Impl(local_path, access);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirectoryOpen(osal_id_t *dir_id, const char *path)
+{
+    char                      local_path[OS_MAX_LOCAL_PATH_LEN];
+    OS_object_token_t         token;
+    OS_dir_internal_record_t *dir;
+    int32                     return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(dir_id);
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+        return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, NULL, &token);
+        if (return_code == OS_SUCCESS)
+        {
+            dir = OS_OBJECT_TABLE_GET(OS_dir_table, token);
+
+            /* Reset the table entry and save the name */
+            OS_OBJECT_INIT(token, dir, dir_name, path);
+
+            /* Now call the OS-specific implementation.  */
+            return_code = OS_DirOpen_Impl(&token, local_path);
+
+            /* Check result, finalize record, and unlock global table. */
+            return_code = OS_ObjectIdFinalizeNew(return_code, &token, dir_id);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirectoryClose(osal_id_t dir_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Make sure the file descriptor is legit before using it */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, dir_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_DirClose_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirectoryRead(osal_id_t dir_id, os_dirent_t *dirent)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(dirent);
+
+    /* Make sure the file descriptor is legit before using it */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, dir_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * Call the underlying implementation to perform the read
+         *
+         * NOTE: This does not map "virtual mount points" that
+         * may appear in the dir listing back to the virtualized
+         * name.  For instance, if the (real) /eeprom directory
+         * is virtualized to /cf via the OS_VolumeTable, and one
+         * reads the "/" directory, the application will see the
+         * real name (eeprom) and not the virtualized name (cf).
+         */
+        return_code = OS_DirRead_Impl(&token, dirent);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_DirectoryRewind(osal_id_t dir_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Make sure the file descriptor is legit before using it */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, dir_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_DirRewind_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_rmdir(const char *path)
+{
+    int32 return_code;
+    char  local_path[OS_MAX_LOCAL_PATH_LEN];
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_DirRemove_Impl(local_path);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-errors.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-errors.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         Contains the code related to error handling.  Currently this
+ *         entails conversion of OSAL error codes into printable strings.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-errors.h"
+
+/**
+ * Global error name table
+ * These are the errors that are defined at the top layer and
+ * are intended to have consistent in meaning across all
+ * operating systems.
+ *
+ * The low level implementation can extend this with
+ * additional codes if necessary (but they may not be consistent).
+ */
+static const OS_ErrorTable_Entry_t OS_GLOBAL_ERROR_NAME_TABLE[] = {
+    {OS_SUCCESS, "OS_SUCCESS"},
+    {OS_ERROR, "OS_ERROR"},
+    {OS_INVALID_POINTER, "OS_INVALID_POINTER"},
+    {OS_ERROR_ADDRESS_MISALIGNED, "OS_ERROR_ADDRESS_MISALIGNED"},
+    {OS_ERROR_TIMEOUT, "OS_ERROR_TIMEOUT"},
+    {OS_INVALID_INT_NUM, "OS_INVALID_INT_NUM"},
+    {OS_SEM_FAILURE, "OS_SEM_FAILURE"},
+    {OS_SEM_TIMEOUT, "OS_SEM_TIMEOUT"},
+    {OS_QUEUE_EMPTY, "OS_QUEUE_EMPTY"},
+    {OS_QUEUE_FULL, "OS_QUEUE_FULL"},
+    {OS_QUEUE_TIMEOUT, "OS_QUEUE_TIMEOUT"},
+    {OS_QUEUE_INVALID_SIZE, "OS_QUEUE_INVALID_SIZE"},
+    {OS_QUEUE_ID_ERROR, "OS_QUEUE_ID_ERROR"},
+    {OS_ERR_NAME_TOO_LONG, "OS_ERR_NAME_TOO_LONG"},
+    {OS_ERR_NO_FREE_IDS, "OS_ERR_NO_FREE_IDS"},
+    {OS_ERR_NAME_TAKEN, "OS_ERR_NAME_TAKEN"},
+    {OS_ERR_INVALID_ID, "OS_ERR_INVALID_ID"},
+    {OS_ERR_NAME_NOT_FOUND, "OS_ERR_NAME_NOT_FOUND"},
+    {OS_ERR_SEM_NOT_FULL, "OS_ERR_SEM_NOT_FULL"},
+    {OS_ERR_INVALID_PRIORITY, "OS_ERR_INVALID_PRIORITY"},
+    {OS_INVALID_SEM_VALUE, "OS_INVALID_SEM_VALUE"},
+    {OS_ERR_FILE, "OS_ERR_FILE"},
+    {OS_ERR_NOT_IMPLEMENTED, "OS_ERR_NOT_IMPLEMENTED"},
+    {OS_TIMER_ERR_INVALID_ARGS, "OS_TIMER_ERR_INVALID_ARGS"},
+    {OS_TIMER_ERR_TIMER_ID, "OS_TIMER_ERR_TIMER_ID"},
+    {OS_TIMER_ERR_UNAVAILABLE, "OS_TIMER_ERR_UNAVAILABLE"},
+    {OS_TIMER_ERR_INTERNAL, "OS_TIMER_ERR_INTERNAL"},
+    {OS_ERR_OBJECT_IN_USE, "OS_ERR_OBJECT_IN_USE"},
+    {OS_ERR_BAD_ADDRESS, "OS_ERR_BAD_ADDRESS"},
+    {OS_ERR_INCORRECT_OBJ_STATE, "OS_ERR_INCORRECT_OBJ_STATE"},
+    {OS_ERR_INCORRECT_OBJ_TYPE, "OS_ERR_INCORRECT_OBJ_TYPE"},
+    {OS_ERR_STREAM_DISCONNECTED, "OS_ERR_STREAM_DISCONNECTED"},
+    {OS_ERR_OPERATION_NOT_SUPPORTED, "OS_ERR_OPERATION_NOT_SUPPORTED"},
+    {OS_ERR_INVALID_SIZE, "OS_ERR_INVALID_SIZE"},
+    {OS_ERR_OUTPUT_TOO_LARGE, "OS_ERR_OUTPUT_TOO_LARGE"},
+    {OS_ERR_INVALID_ARGUMENT, "OS_ERR_INVALID_ARGUMENT"},
+    {OS_FS_ERR_PATH_TOO_LONG, "OS_FS_ERR_PATH_TOO_LONG"},
+    {OS_FS_ERR_NAME_TOO_LONG, "OS_FS_ERR_NAME_TOO_LONG"},
+    {OS_FS_ERR_DRIVE_NOT_CREATED, "OS_FS_ERR_DRIVE_NOT_CREATED"},
+    {OS_FS_ERR_DEVICE_NOT_FREE, "OS_FS_ERR_DEVICE_NOT_FREE"},
+    {OS_FS_ERR_PATH_INVALID, "OS_FS_ERR_PATH_INVALID"},
+
+    {0, NULL} /* End of table marker */
+};
+
+/*
+ *********************************************************************************
+ *          PUBLIC API (application-callable functions)
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+char *OS_StatusToString(osal_status_t status, os_status_string_t *status_string)
+{
+    char *string = NULL;
+
+    if (status_string != NULL)
+    {
+        snprintf(*status_string, sizeof(*status_string), "%ld", OS_StatusToInteger(status));
+        string = *status_string;
+    }
+    return string;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetErrorName(int32 error_num, os_err_name_t *err_name)
+{
+    int32                        return_code;
+    const OS_ErrorTable_Entry_t *Error;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(err_name);
+
+    Error = OS_GLOBAL_ERROR_NAME_TABLE;
+    while (Error->Name != NULL && Error->Number != error_num)
+    {
+        ++Error;
+    }
+
+    if (Error->Number != error_num)
+    {
+        Error = OS_IMPL_ERROR_NAME_TABLE;
+        while (Error->Name != NULL && Error->Number != error_num)
+        {
+            ++Error;
+        }
+    }
+
+    if (Error->Number == error_num && Error->Name != NULL)
+    {
+        strncpy(*err_name, Error->Name, sizeof(*err_name) - 1);
+        *err_name[sizeof(*err_name) - 1] = 0;
+        return_code                      = OS_SUCCESS;
+    }
+    else
+    {
+        snprintf(*err_name, OS_ERROR_NAME_LENGTH, "OS_UNKNOWN(%d)", (int)error_num);
+        return_code = OS_ERROR;
+    }
+
+    (*err_name)[OS_ERROR_NAME_LENGTH - 1] = '\0';
+
+    return return_code;
+}
+```
+
+### `osapi-file.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-file.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Other OSAL public APIs used by this module
+ */
+#include "osapi-filesys.h"
+#include "osapi-sockets.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_NUM_OPEN_FILES) || (OS_MAX_NUM_OPEN_FILES <= 0)
+#error "osconfig.h must define OS_MAX_NUM_OPEN_FILES to a valid value"
+#endif
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_NUM_OPEN_FILES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_STREAM
+};
+
+OS_stream_internal_record_t OS_stream_table[OS_MAX_NUM_OPEN_FILES];
+
+/*
+ * OS_cp copyblock size - in theory could be adjusted
+ * to match page size for performance so providing a unique
+ * define here.  Given a requirement/request could be transitioned
+ * to a configuration parameter
+ */
+#define OS_CP_BLOCK_SIZE 512
+
+/*----------------------------------------------------------------
+ *
+ * Helper function to close a file from an iterator
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileIteratorClose(osal_id_t filedes, void *arg)
+{
+    return OS_close(filedes);
+}
+
+/****************************************************************************************
+                                  FILE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileAPI_Init(void)
+{
+    memset(OS_stream_table, 0, sizeof(OS_stream_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_OpenCreate(osal_id_t *filedes, const char *path, int32 flags, int32 access_mode)
+{
+    int32                        return_code;
+    char                         local_path[OS_MAX_LOCAL_PATH_LEN];
+    OS_object_token_t            token;
+    OS_stream_internal_record_t *stream;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(filedes);
+
+    /* Initialize file descriptor */
+    *filedes = OS_OBJECT_ID_UNDEFINED;
+
+    /*
+    ** Check for a valid access mode
+    */
+    if (access_mode != OS_WRITE_ONLY && access_mode != OS_READ_ONLY && access_mode != OS_READ_WRITE)
+    {
+        return OS_ERROR;
+    }
+
+    /*
+     * Translate the path
+     */
+    return_code = OS_TranslatePath(path, (char *)local_path);
+
+    if (return_code == OS_SUCCESS)
+    {
+        /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+        return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, NULL, &token);
+        if (return_code == OS_SUCCESS)
+        {
+            stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+            /* Reset the table entry and save the name */
+            OS_OBJECT_INIT(token, stream, stream_name, path);
+
+            /* Now call the OS-specific implementation.  */
+            return_code = OS_FileOpen_Impl(&token, local_path, flags, access_mode);
+
+            /* Check result, finalize record, and unlock global table. */
+            return_code = OS_ObjectIdFinalizeNew(return_code, &token, filedes);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_close(osal_id_t filedes)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Make sure the file descriptor is legit before using it */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_GenericClose_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimedRead(osal_id_t filedes, void *buffer, size_t nbytes, int32 timeout)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(nbytes);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_GenericRead_Impl(&token, buffer, nbytes, timeout);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimedWrite(osal_id_t filedes, const void *buffer, size_t nbytes, int32 timeout)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(nbytes);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_GenericWrite_Impl(&token, buffer, nbytes, timeout);
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_read(osal_id_t filedes, void *buffer, size_t nbytes)
+{
+    return OS_TimedRead(filedes, buffer, nbytes, OS_PEND);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_write(osal_id_t filedes, const void *buffer, size_t nbytes)
+{
+    return OS_TimedWrite(filedes, buffer, nbytes, OS_PEND);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_chmod(const char *path, uint32 access_mode)
+{
+    char  local_path[OS_MAX_LOCAL_PATH_LEN];
+    int32 return_code;
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileChmod_Impl(local_path, access_mode);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_stat(const char *path, os_fstat_t *filestats)
+{
+    int32 return_code;
+    char  local_path[OS_MAX_LOCAL_PATH_LEN];
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(filestats);
+
+    memset(filestats, 0, sizeof(*filestats));
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileStat_Impl(local_path, filestats);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_lseek(osal_id_t filedes, int32 offset, uint32 whence)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Make sure the file descriptor is legit before using it */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_GenericSeek_Impl(&token, offset, whence);
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_remove(const char *path)
+{
+    int32 return_code;
+    char  local_path[OS_MAX_LOCAL_PATH_LEN];
+
+    return_code = OS_TranslatePath(path, local_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileRemove_Impl(local_path);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_rename(const char *old, const char *new)
+{
+    OS_object_iter_t             iter;
+    OS_stream_internal_record_t *stream;
+    int32                        return_code;
+    char                         old_path[OS_MAX_LOCAL_PATH_LEN];
+    char                         new_path[OS_MAX_LOCAL_PATH_LEN];
+
+    return_code = OS_TranslatePath(old, old_path);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_TranslatePath(new, new_path);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileRename_Impl(old_path, new_path);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        OS_ObjectIdIterateActive(LOCAL_OBJID_TYPE, &iter);
+
+        while (OS_ObjectIdIteratorGetNext(&iter))
+        {
+            stream = OS_OBJECT_TABLE_GET(OS_stream_table, iter.token);
+
+            if (stream->socket_domain == OS_SocketDomain_INVALID && strcmp(stream->stream_name, old) == 0)
+            {
+                strncpy(stream->stream_name, new, sizeof(stream->stream_name) - 1);
+                stream->stream_name[sizeof(stream->stream_name) - 1] = 0;
+            }
+        }
+
+        OS_ObjectIdIteratorDestroy(&iter);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_cp(const char *src, const char *dest)
+{
+    int32     return_code;
+    int32     rd_size;
+    int32     wr_size;
+    int32     wr_total;
+    osal_id_t file1;
+    osal_id_t file2;
+    uint8     copyblock[OS_CP_BLOCK_SIZE];
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(src);
+    OS_CHECK_POINTER(dest);
+
+    file1       = OS_OBJECT_ID_UNDEFINED;
+    file2       = OS_OBJECT_ID_UNDEFINED;
+    return_code = OS_OpenCreate(&file1, src, OS_FILE_FLAG_NONE, OS_READ_ONLY);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_OpenCreate(&file2, dest, OS_FILE_FLAG_CREATE | OS_FILE_FLAG_TRUNCATE, OS_WRITE_ONLY);
+    }
+
+    while (return_code == OS_SUCCESS)
+    {
+        rd_size = OS_read(file1, copyblock, sizeof(copyblock));
+        if (rd_size < 0)
+        {
+            return_code = rd_size;
+            break;
+        }
+        if (rd_size == 0)
+        {
+            break;
+        }
+        wr_total = 0;
+        while (wr_total < rd_size)
+        {
+            wr_size = OS_write(file2, &copyblock[wr_total], rd_size - wr_total);
+            if (wr_size < 0)
+            {
+                return_code = wr_size;
+                break;
+            }
+            wr_total += wr_size;
+        }
+    }
+
+    if (OS_ObjectIdDefined(file1))
+    {
+        OS_close(file1);
+    }
+    if (OS_ObjectIdDefined(file2))
+    {
+        OS_close(file2);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_mv(const char *src, const char *dest)
+{
+    int32 return_code;
+
+    /* First try rename - this only works if it is on the same filesystem */
+    return_code = OS_rename(src, dest);
+    if (return_code != OS_SUCCESS)
+    {
+        return_code = OS_cp(src, dest);
+        if (return_code == OS_SUCCESS)
+        {
+            OS_remove(src);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FDGetInfo(osal_id_t filedes, OS_file_prop_t *fd_prop)
+{
+    OS_common_record_t *record;
+    OS_object_token_t   token;
+    int32               return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(fd_prop);
+
+    memset(fd_prop, 0, sizeof(OS_file_prop_t));
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_stream_table, token);
+
+        if (record->name_entry != NULL)
+        {
+            strncpy(fd_prop->Path, record->name_entry, sizeof(fd_prop->Path) - 1);
+        }
+        fd_prop->User    = record->creator;
+        fd_prop->IsValid = true;
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileOpenCheck(const char *Filename)
+{
+    int32                        return_code;
+    OS_object_iter_t             iter;
+    OS_stream_internal_record_t *stream;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(Filename);
+
+    return_code = OS_ERROR;
+
+    OS_ObjectIdIterateActive(LOCAL_OBJID_TYPE, &iter);
+
+    while (OS_ObjectIdIteratorGetNext(&iter))
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, iter.token);
+        if (stream->socket_domain == OS_SocketDomain_INVALID && (strcmp(stream->stream_name, Filename) == 0))
+        {
+            return_code = OS_SUCCESS;
+            break;
+        }
+    }
+
+    OS_ObjectIdIteratorDestroy(&iter);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CloseFileByName(const char *Filename)
+{
+    int32                        return_code;
+    int32                        close_code;
+    OS_object_iter_t             iter;
+    OS_stream_internal_record_t *stream;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(Filename);
+
+    return_code = OS_FS_ERR_PATH_INVALID;
+
+    OS_ObjectIdIterateActive(LOCAL_OBJID_TYPE, &iter);
+
+    while (OS_ObjectIdIteratorGetNext(&iter))
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, iter.token);
+
+        if (stream->socket_domain == OS_SocketDomain_INVALID && (strcmp(stream->stream_name, Filename) == 0))
+        {
+            /* call OS_close() on the entry referred to by the iterator */
+            close_code = OS_ObjectIdIteratorProcessEntry(&iter, OS_FileIteratorClose);
+
+            if (return_code == OS_FS_ERR_PATH_INVALID || close_code != OS_SUCCESS)
+            {
+                return_code = close_code;
+            }
+        }
+    }
+
+    OS_ObjectIdIteratorDestroy(&iter);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_CloseAllFiles(void)
+{
+    int32            return_code;
+    int32            close_code;
+    OS_object_iter_t iter;
+
+    return_code = OS_SUCCESS;
+
+    OS_ObjectIdIterateActive(LOCAL_OBJID_TYPE, &iter);
+
+    while (OS_ObjectIdIteratorGetNext(&iter))
+    {
+        /* call OS_close() on the entry referred to by the iterator */
+        close_code = OS_ObjectIdIteratorProcessEntry(&iter, OS_FileIteratorClose);
+        if (close_code != OS_SUCCESS)
+        {
+            return_code = close_code;
+        }
+    }
+
+    OS_ObjectIdIteratorDestroy(&iter);
+
+    return return_code;
+}
+```
+
+### `osapi-filesys.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-filesys.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-filesys.h"
+#include "os-shared-idmap.h"
+#include "os-shared-common.h"
+
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_FILE_SYSTEMS,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_FILESYS
+};
+
+/*
+ * Internal filesystem state table entries
+ */
+OS_filesys_internal_record_t OS_filesys_table[LOCAL_NUM_OBJECTS];
+
+/*
+ * A string that should be the prefix of RAM disk volume names, which
+ * provides a hint that the file system refers to a RAM disk.
+ *
+ * If multiple RAM disks are required then these can be numbered,
+ * e.g. RAM0, RAM1, etc.
+ */
+const char OS_FILESYS_RAMDISK_VOLNAME_PREFIX[] = "RAM";
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Iterator function to match only the free/open entries
+ *
+ *  Returns: true if the entry is free, false if it is in use
+ *
+ *-----------------------------------------------------------------*/
+bool OS_FileSysFilterFree(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    return !OS_ObjectIdDefined(obj->active_id);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Checks if the filesys table index matches the "virtual_mountpt" field.
+ *           Function is Compatible with the Search object lookup routine
+ *
+ *  Returns: true if the entry matches, false if it does not match
+ *
+ *-----------------------------------------------------------------*/
+bool OS_FileSys_FindVirtMountPoint(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    OS_filesys_internal_record_t *filesys;
+    const char *                  target = (const char *)ref;
+    size_t                        mplen;
+
+    filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, *token);
+
+    if ((filesys->flags & OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL) == 0)
+    {
+        return false;
+    }
+
+    mplen = OS_strnlen(filesys->virtual_mountpt, sizeof(filesys->virtual_mountpt));
+
+    /*
+     * The virtual_mountpt member should be a substring of the search target.
+     * If this matches a basic substring check then it may be match
+     */
+    if (mplen == 0 || mplen >= sizeof(filesys->virtual_mountpt) ||
+        strncmp(target, filesys->virtual_mountpt, mplen) != 0)
+    {
+        /* not a substring, so not a match */
+        return false;
+    }
+
+    /*
+     * Confirm that the substring ends at either a directory separator
+     * or the end of string  (so exact mount points also match).
+     *
+     * For instance consider a virtual_mountpt of /mnt/abc and searching
+     * for target=/mnt/abcd - this should return false in that case.
+     */
+    return (target[mplen] == '/' || target[mplen] == 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Implements Common code between the mkfs and initfs calls -
+ *           mkfs passes the "should_format" as true and initfs passes as false.
+ *
+ *  Returns: OS_SUCCESS on creating the disk, or appropriate error code.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSys_Initialize(char *address, const char *fsdevname, const char *fsvolname, size_t blocksize,
+                            osal_blockcount_t numblocks, bool should_format)
+{
+    OS_filesys_internal_record_t *filesys;
+    int32                         return_code;
+    OS_object_token_t             token;
+
+    /*
+     * Check parameters
+     *
+     * Note "address" is not checked, because in certain configurations it can be validly null.
+     */
+    OS_CHECK_STRING(fsdevname, sizeof(filesys->device_name), OS_FS_ERR_PATH_TOO_LONG);
+    OS_CHECK_STRING(fsvolname, sizeof(filesys->volume_name), OS_FS_ERR_PATH_TOO_LONG);
+
+    /* check names are not empty strings */
+    if (fsdevname[0] == 0 || fsvolname[0] == 0)
+    {
+        return OS_FS_ERR_PATH_INVALID;
+    }
+
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, fsdevname, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, filesys, device_name, fsdevname);
+
+        /* populate the VolumeName and BlockSize ahead of the Impl call,
+         * so the implementation can reference this info if necessary */
+        filesys->blocksize = blocksize;
+        filesys->numblocks = numblocks;
+        filesys->address   = address;
+        strncpy(filesys->volume_name, fsvolname, sizeof(filesys->volume_name) - 1);
+
+        /*
+         * Determine basic type of filesystem, if not already known
+         *
+         * if either an address was supplied, or if the volume name
+         * contains the string "RAM" then it is a RAM disk. Otherwise
+         * leave the type as UNKNOWN and let the implementation decide.
+         */
+        if (filesys->fstype == OS_FILESYS_TYPE_UNKNOWN &&
+            (filesys->address != NULL || strncmp(filesys->volume_name, OS_FILESYS_RAMDISK_VOLNAME_PREFIX,
+                                                 sizeof(OS_FILESYS_RAMDISK_VOLNAME_PREFIX) - 1) == 0))
+        {
+            filesys->fstype = OS_FILESYS_TYPE_VOLATILE_DISK;
+        }
+
+        return_code = OS_FileSysStartVolume_Impl(&token);
+
+        if (return_code == OS_SUCCESS)
+        {
+            /*
+             * The "mkfs" call also formats the device.
+             * this is the primary difference between mkfs and initfs.
+             */
+            if (should_format)
+            {
+                return_code = OS_FileSysFormatVolume_Impl(&token);
+            }
+
+            if (return_code == OS_SUCCESS)
+            {
+                filesys->flags |= OS_FILESYS_FLAG_IS_READY;
+            }
+            else
+            {
+                /*
+                 * To avoid leaving in an intermediate state,
+                 * this also stops the volume if formatting failed.
+                 * Cast to void to repress analysis warnings for
+                 * ignored return value.
+                 */
+                (void)OS_FileSysStopVolume_Impl(&token);
+            }
+        }
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, NULL);
+    }
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                  INITIALIZATION
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysAPI_Init(void)
+{
+    int32 return_code = OS_SUCCESS;
+
+    memset(OS_filesys_table, 0, sizeof(OS_filesys_table));
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysAddFixedMap(osal_id_t *filesys_id, const char *phys_path, const char *virt_path)
+{
+    OS_filesys_internal_record_t *filesys;
+    int32                         return_code;
+    OS_object_token_t             token;
+    const char *                  dev_name;
+
+    /*
+     * Validate inputs
+     */
+    OS_CHECK_POINTER(filesys_id);
+    OS_CHECK_STRING(phys_path, sizeof(filesys->system_mountpt), OS_FS_ERR_PATH_TOO_LONG);
+    OS_CHECK_PATHNAME(virt_path);
+
+    /*
+     * Generate a dev name by taking the basename of the phys_path.
+     */
+    dev_name = strrchr(phys_path, '/');
+    if (dev_name == NULL)
+    {
+        dev_name = phys_path;
+    }
+    else
+    {
+        ++dev_name;
+    }
+
+    if (memchr(dev_name, 0, sizeof(filesys->volume_name)) == NULL)
+    {
+        return OS_ERR_NAME_TOO_LONG;
+    }
+
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, dev_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, filesys, device_name, dev_name);
+
+        strncpy(filesys->volume_name, dev_name, sizeof(filesys->volume_name) - 1);
+        strncpy(filesys->system_mountpt, phys_path, sizeof(filesys->system_mountpt) - 1);
+        strncpy(filesys->virtual_mountpt, virt_path, sizeof(filesys->virtual_mountpt) - 1);
+
+        /*
+         * mark the entry that it is a fixed disk
+         */
+        filesys->fstype = OS_FILESYS_TYPE_FS_BASED;
+        filesys->flags  = OS_FILESYS_FLAG_IS_FIXED;
+
+        /*
+         * The "mount" implementation is required as it will
+         * create the mountpoint if it does not already exist
+         */
+        return_code = OS_FileSysStartVolume_Impl(&token);
+
+        if (return_code == OS_SUCCESS)
+        {
+            filesys->flags |= OS_FILESYS_FLAG_IS_READY;
+            return_code = OS_FileSysMountVolume_Impl(&token);
+        }
+
+        if (return_code == OS_SUCCESS)
+        {
+            /*
+             * mark the entry that it is a fixed disk
+             */
+            filesys->flags |= OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+        }
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, filesys_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_mkfs(char *address, const char *devname, const char *volname, size_t blocksize, osal_blockcount_t numblocks)
+{
+    int32 return_code;
+
+    return_code = OS_FileSys_Initialize(address, devname, volname, blocksize, numblocks, true);
+
+    if (return_code == OS_ERR_INCORRECT_OBJ_STATE || return_code == OS_ERR_NO_FREE_IDS)
+    {
+        /*
+         * This is the historic filesystem-specific error code generated when
+         * attempting to mkfs()/initfs() on a filesystem that was
+         * already initialized, or if there were no free slots in the table.
+         *
+         * This code preserved just in case application code was checking for it.
+         */
+        return_code = OS_FS_ERR_DEVICE_NOT_FREE;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_rmfs(const char *devname)
+{
+    int32             return_code;
+    OS_object_token_t token;
+
+    /* Check parameters */
+    OS_CHECK_PATHNAME(devname);
+
+    return_code = OS_ObjectIdGetByName(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, devname, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * NOTE: It is likely that if the file system is mounted,
+         * this call to stop the volume will fail.
+         *
+         * It would be prudent to first check the flags to ensure that
+         * the filesystem is unmounted first, but this would break
+         * compatibility with the existing unit tests.
+         */
+        return_code = OS_FileSysStopVolume_Impl(&token);
+
+        /* Free the entry in the master table  */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+    else
+    {
+        return_code = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_initfs(char *address, const char *devname, const char *volname, size_t blocksize, osal_blockcount_t numblocks)
+{
+    int32 return_code;
+
+    return_code = OS_FileSys_Initialize(address, devname, volname, blocksize, numblocks, false);
+
+    if (return_code == OS_ERR_INCORRECT_OBJ_STATE || return_code == OS_ERR_NO_FREE_IDS)
+    {
+        /*
+         * This is the historic filesystem-specific error code generated when
+         * attempting to mkfs()/initfs() on a filesystem that was
+         * already initialized, or if there were no free slots in the table.
+         *
+         * This code preserved just in case application code was checking for it.
+         */
+        return_code = OS_FS_ERR_DEVICE_NOT_FREE;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_mount(const char *devname, const char *mountpoint)
+{
+    int32                         return_code;
+    OS_object_token_t             token;
+    OS_filesys_internal_record_t *filesys;
+
+    /* Check parameters */
+    OS_CHECK_STRING(devname, sizeof(filesys->device_name), OS_FS_ERR_PATH_TOO_LONG);
+    OS_CHECK_STRING(mountpoint, sizeof(filesys->virtual_mountpt), OS_FS_ERR_PATH_TOO_LONG);
+
+    return_code = OS_ObjectIdGetByName(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, devname, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        /*
+         * READY flag should be set (mkfs/initfs must have been called on this FS)
+         * MOUNTED SYSTEM/VIRTUAL should always be unset.
+         *
+         * FIXED flag _should_ always be unset (these don't support mount/unmount)
+         * but to support abstraction this is not enforced.
+         */
+        if ((filesys->flags & ~OS_FILESYS_FLAG_IS_FIXED) != OS_FILESYS_FLAG_IS_READY)
+        {
+            /* mount() cannot be used on this file system at this time */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else if (filesys->system_mountpt[0] == 0)
+        {
+            /*
+             * The system mount point should be a non-empty string.
+             */
+            return_code = OS_FS_ERR_PATH_INVALID;
+        }
+        else
+        {
+            return_code = OS_FileSysMountVolume_Impl(&token);
+        }
+
+        if (return_code == OS_SUCCESS)
+        {
+            /* mark as mounted in the local table.
+             * For now this does both sides (system and virtual) */
+            filesys->flags |= OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL;
+            strncpy(filesys->virtual_mountpt, mountpoint, sizeof(filesys->virtual_mountpt) - 1);
+            filesys->virtual_mountpt[sizeof(filesys->virtual_mountpt) - 1] = 0;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        return_code = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_unmount(const char *mountpoint)
+{
+    int32                         return_code;
+    OS_object_token_t             token;
+    OS_filesys_internal_record_t *filesys;
+
+    /* Check parameters */
+    OS_CHECK_STRING(mountpoint, sizeof(filesys->virtual_mountpt), OS_FS_ERR_PATH_TOO_LONG);
+
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, OS_FileSys_FindVirtMountPoint,
+                                         (void *)mountpoint, &token);
+
+    if (return_code == OS_SUCCESS)
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        /*
+         * FIXED flag should always be unset (these don't support mount/unmount at all)
+         * READY flag should be set (mkfs/initfs must have been called on this FS)
+         * MOUNTED SYSTEM/VIRTUAL should always be unset.
+         *
+         * The FIXED flag is not enforced to support abstraction.
+         */
+        if ((filesys->flags & ~OS_FILESYS_FLAG_IS_FIXED) !=
+            (OS_FILESYS_FLAG_IS_READY | OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL))
+        {
+            /* unmount() cannot be used on this file system at this time */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_FileSysUnmountVolume_Impl(&token);
+        }
+
+        if (return_code == OS_SUCCESS)
+        {
+            /* mark as mounted in the local table.
+             * For now this does both sides (system and virtual) */
+            filesys->flags &= ~(OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM | OS_FILESYS_FLAG_IS_MOUNTED_VIRTUAL);
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        return_code = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FileSysStatVolume(const char *name, OS_statvfs_t *statbuf)
+{
+    int32             return_code;
+    OS_object_token_t token;
+
+    /* Check parameters */
+    OS_CHECK_PATHNAME(name);
+    OS_CHECK_POINTER(statbuf);
+
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, OS_FileSys_FindVirtMountPoint,
+                                         (void *)name, &token);
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileSysStatVolume_Impl(&token, statbuf);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_chkfs(const char *name, bool repair)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check parameters */
+    OS_CHECK_PATHNAME(name);
+
+    /* Get a reference lock, as a filesystem check could take some time. */
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, OS_FileSys_FindVirtMountPoint,
+                                         (void *)name, &token);
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_FileSysCheckVolume_Impl(&token, repair);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_FS_GetPhysDriveName(char *PhysDriveName, const char *MountPoint)
+{
+    OS_object_token_t             token;
+    int32                         return_code;
+    OS_filesys_internal_record_t *filesys;
+
+    /* Check parameters */
+    OS_CHECK_PATHNAME(MountPoint);
+    OS_CHECK_POINTER(PhysDriveName);
+
+    /* Get a reference lock, as a filesystem check could take some time. */
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, OS_FileSys_FindVirtMountPoint,
+                                         (void *)MountPoint, &token);
+
+    if (return_code == OS_SUCCESS)
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        if ((filesys->flags & OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM) != 0)
+        {
+            strncpy(PhysDriveName, filesys->system_mountpt, OS_FS_PHYS_NAME_LEN - 1);
+            PhysDriveName[OS_FS_PHYS_NAME_LEN - 1] = 0;
+        }
+        else
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+    else
+    {
+        return_code = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetFsInfo(os_fsinfo_t *filesys_info)
+{
+    OS_object_iter_t iter;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(filesys_info);
+
+    memset(filesys_info, 0, sizeof(*filesys_info));
+
+    filesys_info->MaxFds     = OS_MAX_NUM_OPEN_FILES;
+    filesys_info->MaxVolumes = OS_MAX_FILE_SYSTEMS;
+
+    OS_ObjectIdIteratorInit(OS_FileSysFilterFree, NULL, OS_OBJECT_TYPE_OS_STREAM, &iter);
+    while (OS_ObjectIdIteratorGetNext(&iter))
+    {
+        ++filesys_info->FreeFds;
+    }
+    OS_ObjectIdIteratorDestroy(&iter);
+
+    OS_ObjectIdIteratorInit(OS_FileSysFilterFree, NULL, OS_OBJECT_TYPE_OS_FILESYS, &iter);
+    while (OS_ObjectIdIteratorGetNext(&iter))
+    {
+        ++filesys_info->FreeVolumes;
+    }
+    OS_ObjectIdIteratorDestroy(&iter);
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TranslatePath(const char *VirtualPath, char *LocalPath)
+{
+    OS_object_token_t             token;
+    int32                         return_code;
+    const char *                  name_ptr;
+    OS_filesys_internal_record_t *filesys;
+    size_t                        SysMountPointLen;
+    size_t                        VirtPathLen;
+    size_t                        VirtPathBegin;
+
+    /*
+    ** Check to see if the path pointers are NULL
+    */
+    /* Check parameters */
+    OS_CHECK_POINTER(VirtualPath);
+    OS_CHECK_POINTER(LocalPath);
+
+    /*
+    ** Check length
+    */
+    VirtPathLen = OS_strnlen(VirtualPath, OS_MAX_PATH_LEN);
+    if (VirtPathLen >= OS_MAX_PATH_LEN)
+    {
+        return OS_FS_ERR_PATH_TOO_LONG;
+    }
+
+    /* checks to see if there is a '/' somewhere in the path */
+    name_ptr = strrchr(VirtualPath, '/');
+    if (name_ptr == NULL)
+    {
+        return OS_FS_ERR_PATH_INVALID;
+    }
+
+    /* strrchr returns a pointer to the last '/' char, so we advance one char */
+    name_ptr = name_ptr + 1;
+    if (memchr(name_ptr, 0, OS_MAX_FILE_NAME) == NULL)
+    {
+        return OS_FS_ERR_NAME_TOO_LONG;
+    }
+
+    SysMountPointLen = 0;
+    VirtPathBegin    = VirtPathLen;
+
+    /*
+    ** All valid Virtual paths must start with a '/' character
+    */
+    if (VirtualPath[0] != '/')
+    {
+        return OS_FS_ERR_PATH_INVALID;
+    }
+
+    /* Get a reference lock, as a filesystem check could take some time. */
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, OS_FileSys_FindVirtMountPoint,
+                                         (void *)VirtualPath, &token);
+
+    if (return_code != OS_SUCCESS)
+    {
+        return_code = OS_FS_ERR_PATH_INVALID;
+    }
+    else
+    {
+        filesys = OS_OBJECT_TABLE_GET(OS_filesys_table, token);
+
+        if ((filesys->flags & OS_FILESYS_FLAG_IS_MOUNTED_SYSTEM) != 0)
+        {
+            SysMountPointLen = OS_strnlen(filesys->system_mountpt, sizeof(filesys->system_mountpt));
+            VirtPathBegin    = OS_strnlen(filesys->virtual_mountpt, sizeof(filesys->virtual_mountpt));
+            if (SysMountPointLen < OS_MAX_LOCAL_PATH_LEN)
+            {
+                memcpy(LocalPath, filesys->system_mountpt, SysMountPointLen);
+            }
+        }
+        else
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        if (VirtPathLen < VirtPathBegin)
+        {
+            return_code = OS_FS_ERR_PATH_INVALID;
+        }
+        else
+        {
+            VirtPathLen -= VirtPathBegin;
+            if ((SysMountPointLen + VirtPathLen) < OS_MAX_LOCAL_PATH_LEN)
+            {
+                memcpy(&LocalPath[SysMountPointLen], &VirtualPath[VirtPathBegin], VirtPathLen);
+                LocalPath[SysMountPointLen + VirtPathLen] = 0;
+            }
+            else
+            {
+                return_code = OS_FS_ERR_PATH_TOO_LONG;
+            }
+        }
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-heap.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-heap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         Contains the code related to heap.
+ *         Implementation of these are mostly in the lower layer; however
+ *         a wrapper must exist at this level which allows for unit testing.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-heap.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_HeapGetInfo(OS_heap_prop_t *heap_prop)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(heap_prop);
+
+    return OS_HeapGetInfo_Impl(heap_prop);
+}
+```
+
+### `osapi-idmap.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-idmap.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ * This file contains utility functions to manipulate/interpret OSAL IDs
+ * in a generic/common manner.
+ *
+ * In order to add additional verification capabilities, each class of fundamental
+ * objects will use its own ID space within the 32-bit integer ID value.  This way
+ * one could not mistake a Task ID for a Queue ID or vice versa.  Also, all IDs will
+ * become nonzero and an ID of zero is ALWAYS invalid.
+ *
+ * These functions provide a consistent way to validate a 32-bit OSAL ID as
+ * well as determine its internal type and index.
+ *
+ * NOTE: This file includes local helpers, OSAL scope, and public API implementations
+ * as documented in the function headers
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-task.h"
+
+/*
+ * A fixed nonzero value to put into the upper 8 bits
+ * of lock keys.
+ */
+#define OS_LOCK_KEY_FIXED_VALUE 0x4D000000
+#define OS_LOCK_KEY_INVALID     ((osal_key_t) {0})
+
+/*
+ * A structure containing the user-specified
+ * details of a "foreach" iteration request
+ */
+typedef struct
+{
+    osal_id_t        creator_id;
+    OS_ArgCallback_t user_callback;
+    void *           user_arg;
+} OS_creator_filter_t;
+
+/*
+ * Global ID storage tables
+ */
+
+/* Tables where the OS object information is stored */
+static OS_common_record_t OS_common_table[OS_MAX_TOTAL_RECORDS];
+
+typedef struct
+{
+    /* Keep track of the last successfully-issued object ID of each type */
+    osal_id_t last_id_issued;
+
+    /* The number of individual transactions (lock/unlock cycles) on this type */
+    uint32 transaction_count;
+
+    /* The key required to unlock this table */
+    osal_key_t owner_key;
+} OS_objtype_state_t;
+
+OS_objtype_state_t OS_objtype_state[OS_OBJECT_TYPE_USER];
+
+OS_common_record_t *const OS_global_task_table      = &OS_common_table[OS_TASK_BASE];
+OS_common_record_t *const OS_global_queue_table     = &OS_common_table[OS_QUEUE_BASE];
+OS_common_record_t *const OS_global_bin_sem_table   = &OS_common_table[OS_BINSEM_BASE];
+OS_common_record_t *const OS_global_count_sem_table = &OS_common_table[OS_COUNTSEM_BASE];
+OS_common_record_t *const OS_global_mutex_table     = &OS_common_table[OS_MUTEX_BASE];
+OS_common_record_t *const OS_global_stream_table    = &OS_common_table[OS_STREAM_BASE];
+OS_common_record_t *const OS_global_dir_table       = &OS_common_table[OS_DIR_BASE];
+OS_common_record_t *const OS_global_timebase_table  = &OS_common_table[OS_TIMEBASE_BASE];
+OS_common_record_t *const OS_global_timecb_table    = &OS_common_table[OS_TIMECB_BASE];
+OS_common_record_t *const OS_global_module_table    = &OS_common_table[OS_MODULE_BASE];
+OS_common_record_t *const OS_global_filesys_table   = &OS_common_table[OS_FILESYS_BASE];
+OS_common_record_t *const OS_global_console_table   = &OS_common_table[OS_CONSOLE_BASE];
+OS_common_record_t *const OS_global_condvar_table   = &OS_common_table[OS_CONDVAR_BASE];
+
+/*
+ *********************************************************************************
+ *          IDENTIFIER MAP / UNMAP FUNCTIONS
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           clears the entire table and brings it to a proper initial state
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdInit(void)
+{
+    memset(OS_common_table, 0, sizeof(OS_common_table));
+    memset(OS_objtype_state, 0, sizeof(OS_objtype_state));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+uint32 OS_GetMaxForObjectType(osal_objtype_t idtype)
+{
+    switch (idtype)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            return OS_MAX_TASKS;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            return OS_MAX_QUEUES;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            return OS_MAX_BIN_SEMAPHORES;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            return OS_MAX_COUNT_SEMAPHORES;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            return OS_MAX_MUTEXES;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            return OS_MAX_NUM_OPEN_FILES;
+        case OS_OBJECT_TYPE_OS_DIR:
+            return OS_MAX_NUM_OPEN_DIRS;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            return OS_MAX_TIMEBASES;
+        case OS_OBJECT_TYPE_OS_TIMECB:
+            return OS_MAX_TIMERS;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            return OS_MAX_MODULES;
+        case OS_OBJECT_TYPE_OS_FILESYS:
+            return OS_MAX_FILE_SYSTEMS;
+        case OS_OBJECT_TYPE_OS_CONSOLE:
+            return OS_MAX_CONSOLES;
+        case OS_OBJECT_TYPE_OS_CONDVAR:
+            return OS_MAX_CONDVARS;
+        default:
+            return 0;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+uint32 OS_GetBaseForObjectType(osal_objtype_t idtype)
+{
+    switch (idtype)
+    {
+        case OS_OBJECT_TYPE_OS_TASK:
+            return OS_TASK_BASE;
+        case OS_OBJECT_TYPE_OS_QUEUE:
+            return OS_QUEUE_BASE;
+        case OS_OBJECT_TYPE_OS_BINSEM:
+            return OS_BINSEM_BASE;
+        case OS_OBJECT_TYPE_OS_COUNTSEM:
+            return OS_COUNTSEM_BASE;
+        case OS_OBJECT_TYPE_OS_MUTEX:
+            return OS_MUTEX_BASE;
+        case OS_OBJECT_TYPE_OS_STREAM:
+            return OS_STREAM_BASE;
+        case OS_OBJECT_TYPE_OS_DIR:
+            return OS_DIR_BASE;
+        case OS_OBJECT_TYPE_OS_TIMEBASE:
+            return OS_TIMEBASE_BASE;
+        case OS_OBJECT_TYPE_OS_TIMECB:
+            return OS_TIMECB_BASE;
+        case OS_OBJECT_TYPE_OS_MODULE:
+            return OS_MODULE_BASE;
+        case OS_OBJECT_TYPE_OS_FILESYS:
+            return OS_FILESYS_BASE;
+        case OS_OBJECT_TYPE_OS_CONSOLE:
+            return OS_CONSOLE_BASE;
+        case OS_OBJECT_TYPE_OS_CONDVAR:
+            return OS_CONDVAR_BASE;
+        default:
+            return 0;
+    }
+}
+
+/**************************************************************
+ * LOCAL HELPER FUNCTIONS
+ * (not used outside of this unit)
+ **************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Determine if the object is a match for "foreach" operations
+ *
+ *-----------------------------------------------------------------*/
+bool OS_ForEachFilterCreator(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    OS_creator_filter_t *filter = ref;
+
+    /*
+     * Check if the obj_id is both valid and matches
+     * the specified creator_id
+     */
+    return (OS_ObjectIdIsValid(obj->active_id) && (OS_ObjectIdEqual(filter->creator_id, OS_OBJECT_CREATOR_ANY) ||
+                                                   OS_ObjectIdEqual(obj->creator, filter->creator_id)));
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Invoke the user-specified callback routine
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ForEachDoCallback(osal_id_t obj_id, void *ref)
+{
+    OS_creator_filter_t *filter = ref;
+
+    /* Just invoke the user callback */
+    filter->user_callback(obj_id, filter->user_arg);
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Gets the global/common record associated with the token
+ *
+ *  returns: pointer to record (never NULL - token MUST be valid)
+ *
+ *-----------------------------------------------------------------*/
+OS_common_record_t *OS_ObjectIdGlobalFromToken(const OS_object_token_t *token)
+{
+    uint32 base_idx = OS_GetBaseForObjectType(token->obj_type);
+    return &OS_common_table[base_idx + token->obj_idx];
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           A matching function to compare the name of the record against
+ *           a reference value (which must be a const char* string).
+ *
+ *           This allows OS_ObjectIdFindByName() to be implemented using the
+ *           generic OS_ObjectIdFindNextMatch() routine.
+ *
+ *  returns: true if match, false otherwise
+ *
+ *-----------------------------------------------------------------*/
+bool OS_ObjectNameMatch(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    return (obj->name_entry != NULL && strcmp((const char *)ref, obj->name_entry) == 0);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *   Initiate the locking process for the given mode and ID type, prior
+ *   to looking up a specific object.
+ *
+ *   For any lock_mode other than OS_LOCK_MODE_NONE, this acquires the
+ *   global table lock for that ID type.
+ *
+ *   Once the lookup operation is completed, the OS_ObjectIdConvertToken()
+ *   routine should be used to convert this global lock into the actual
+ *   lock type requested (lock_mode).
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdTransactionInit(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_object_token_t *token)
+{
+    memset(token, 0, sizeof(*token));
+
+    /*
+     * Confirm that OSAL has been fully initialized before allowing any transactions
+     */
+    if (OS_SharedGlobalVars.GlobalState != OS_INIT_MAGIC_NUMBER &&
+        OS_SharedGlobalVars.GlobalState != OS_SHUTDOWN_MAGIC_NUMBER)
+    {
+        return OS_ERROR;
+    }
+
+    /*
+     * only "exclusive" locks allowed after shutdown request (this is mode used for delete).
+     * All regular ops will be blocked.
+     */
+    if (OS_SharedGlobalVars.GlobalState == OS_SHUTDOWN_MAGIC_NUMBER && lock_mode != OS_LOCK_MODE_EXCLUSIVE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    /*
+     * Transactions cannot be started on an object type for which
+     * there are no actual objects
+     */
+    if (OS_GetMaxForObjectType(idtype) == 0)
+    {
+        return OS_ERR_INVALID_ID;
+    }
+
+    token->lock_mode = lock_mode;
+    token->obj_type  = idtype;
+    token->obj_idx   = OSAL_INDEX_C(-1);
+
+    if (lock_mode != OS_LOCK_MODE_NONE)
+    {
+        OS_Lock_Global(token);
+    }
+
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Cancels/aborts a previously initialized transaction
+ *
+ *-----------------------------------------------------------------*/
+void OS_ObjectIdTransactionCancel(OS_object_token_t *token)
+{
+    if (token->lock_mode != OS_LOCK_MODE_NONE)
+    {
+        OS_Unlock_Global(token);
+        token->lock_mode = OS_LOCK_MODE_NONE;
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *   Selectively convert the existing lock on a given resource, depending on the lock mode.
+ *
+ *   For any lock_mode other than OS_LOCK_MODE_NONE, the global table lock **must**
+ *   already be held prior to entering this function.  This function may or may
+ *   not unlock the global table, depending on the lock_mode and state of the entry.
+ *
+ *   For all modes, this verifies that the reference_id passed in and the active_id
+ *   within the record are a match.  If they do not match, then OS_ERR_INVALID_ID
+ *   is returned.
+ *
+ *   If lock_mode is set to either OS_LOCK_MODE_NONE or OS_LOCK_MODE_GLOBAL,
+ *   no additional operation is performed, as the existing lock (if any) is
+ *   sufficient and no conversion is necessary.
+ *
+ *   If lock_mode is set to OS_LOCK_MODE_REFCOUNT, then this increments
+ *   the reference count within the object itself and releases the table lock,
+ *   so long as there is no "exclusive" request already pending.
+ *
+ *   If lock_mode is set to OS_LOCK_MODE_EXCLUSIVE, then this verifies
+ *   that the refcount is zero, but also keeps the global lock held.
+ *
+ *   For EXCLUSIVE and REFCOUNT style locks, if the state is not appropriate,
+ *   this may unlock the global table and re-lock it several times
+ *   while waiting for the state to change.
+ *
+ *   Returns: OS_SUCCESS if operation was successful,
+ *            or suitable error code if operation was not successful.
+ *
+ *   NOTE: Upon failure, the global table lock is always released for
+ *         all lock modes other than OS_LOCK_MODE_NONE.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdConvertToken(OS_object_token_t *token)
+{
+    int32               return_code = OS_ERROR;
+    uint32              attempts    = 0;
+    OS_common_record_t *obj;
+    osal_id_t           expected_id;
+
+    obj         = OS_ObjectIdGlobalFromToken(token);
+    expected_id = OS_ObjectIdFromToken(token);
+
+    /*
+     * Upon entry the ID from the token must be valid
+     */
+    if (!OS_ObjectIdIsValid(expected_id))
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    /*
+     * If lock mode is RESERVED, then the ID in the record should
+     * already be set to OS_OBJECT_ID_RESERVED.  This is for very
+     * specific use cases where a secondary task needs to access an
+     * object during its creation/deletion.
+     *
+     * For all typical modes the ID in the record should be equal
+     * to the token ID.
+     */
+    if (token->lock_mode == OS_LOCK_MODE_RESERVED)
+    {
+        expected_id = OS_OBJECT_ID_RESERVED;
+    }
+
+    while (true)
+    {
+        /* Validate the integrity of the ID.  As the "active_id" is a single
+         * integer, we can do this check regardless of whether global is locked or not. */
+        if (OS_ObjectIdEqual(obj->active_id, expected_id))
+        {
+            /*
+             * Got an ID match...
+             */
+            if (token->lock_mode == OS_LOCK_MODE_EXCLUSIVE)
+            {
+                /*
+                 * For EXCLUSIVE mode, overwrite the ID to be RESERVED now -- this
+                 * makes any future ID checks or lock attempts in other tasks fail to match.
+                 */
+                if (!OS_ObjectIdEqual(expected_id, OS_OBJECT_ID_RESERVED))
+                {
+                    expected_id    = OS_OBJECT_ID_RESERVED;
+                    obj->active_id = expected_id;
+                }
+
+                /*
+                 * Also confirm that reference count is zero
+                 * If not zero, will need to wait for other tasks to release.
+                 */
+                if (obj->refcount == 0)
+                {
+                    return_code = OS_SUCCESS;
+                    break;
+                }
+            }
+            else
+            {
+                /*
+                 * Nothing else to test for this lock type
+                 */
+                return_code = OS_SUCCESS;
+                break;
+            }
+        }
+        else if (token->lock_mode == OS_LOCK_MODE_NONE || !OS_ObjectIdEqual(obj->active_id, OS_OBJECT_ID_RESERVED))
+        {
+            /* Not an ID match and not RESERVED - fail out */
+            return_code = OS_ERR_INVALID_ID;
+            break;
+        }
+
+        /*
+         * If we get this far, it means there is contention for access to the object.
+         *  a) we want to some type of lock but the ID is currently RESERVED
+         *  b) the refcount is too high - need to wait for release
+         *
+         * In this case we will UNLOCK the global object again so that the holder
+         * can relinquish it.  We'll try again a few times before giving up hope.
+         */
+        ++attempts;
+        if (attempts >= 5)
+        {
+            return_code = OS_ERR_OBJECT_IN_USE;
+            break;
+        }
+
+        /*
+         * Call the impl layer to wait for some sort of change to occur.
+         */
+        OS_WaitForStateChange(token, attempts);
+    }
+
+    /*
+     * Determine if the global table needs to be unlocked now.
+     *
+     * If lock_mode is OS_LOCK_MODE_NONE, then the table was never locked
+     * to begin with, and therefore never needs to be unlocked.
+     */
+    if (token->lock_mode != OS_LOCK_MODE_NONE)
+    {
+        if (return_code == OS_SUCCESS)
+        {
+            /* always increment the refcount, which means a task is actively
+             * using or modifying this record. */
+            ++obj->refcount;
+
+            /*
+             * On a successful operation, the global is unlocked if it is
+             * a REFCOUNT or EXCLUSIVE lock.  Note for EXCLUSIVE, because the ID
+             * was overwritten to OS_OBJECT_ID_RESERVED, other tasks will not be
+             * able to access the object because the ID will not match, so the
+             * table can be unlocked while the remainder of the create/delete process
+             * continues.
+             *
+             * For OS_LOCK_MODE_GLOBAL the global lock should be maintained and
+             * returned to the caller.
+             */
+            if (token->lock_mode == OS_LOCK_MODE_REFCOUNT || token->lock_mode == OS_LOCK_MODE_EXCLUSIVE)
+            {
+                OS_Unlock_Global(token);
+            }
+        }
+        else if (token->lock_mode == OS_LOCK_MODE_EXCLUSIVE && OS_ObjectIdEqual(expected_id, OS_OBJECT_ID_RESERVED))
+        {
+            /*
+             * On failure, if the active_id was overwritten, then set
+             * it back to the original value which is in the token.
+             * (note it had to match initially before overwrite)
+             */
+            obj->active_id = OS_ObjectIdFromToken(token);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Locate an existing object using the supplied Match function.
+ *           Matching object ID is stored in the object_id pointer
+ *
+ *           This is an internal function and no table locking is performed here.
+ *           Locking must be done by the calling function.
+ *
+ *  returns: OS_ERR_NAME_NOT_FOUND if not found, OS_SUCCESS if match is found
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdFindNextMatch(OS_ObjectMatchFunc_t MatchFunc, void *arg, OS_object_token_t *token)
+{
+    int32               return_code;
+    uint32              obj_count;
+    OS_common_record_t *base;
+    OS_common_record_t *record;
+
+    return_code   = OS_ERR_NAME_NOT_FOUND;
+    base          = &OS_common_table[OS_GetBaseForObjectType(token->obj_type)];
+    obj_count     = OS_GetMaxForObjectType(token->obj_type);
+    token->obj_id = OS_OBJECT_ID_UNDEFINED;
+
+    while (true)
+    {
+        ++token->obj_idx;
+
+        if (token->obj_idx >= obj_count)
+        {
+            break;
+        }
+
+        record = OS_OBJECT_TABLE_GET(base, *token);
+
+        if (OS_ObjectIdDefined(record->active_id) && MatchFunc(arg, token, record))
+        {
+            return_code   = OS_SUCCESS;
+            token->obj_id = record->active_id;
+            break;
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Find the next available Object ID of the given type
+ *           Searches the global name/id table for an open entry of the given type.
+ *           The search will start at the location of the last-issued ID.
+ *
+ *           Note: This is an internal helper function and no locking is performed.
+ *           The appropriate global table lock must be held prior to calling this.
+ *
+ *  Outputs: *record is set to point to the global entry and active_id member is set
+ *           *array_index updated to the offset of the found entry (local_id)
+ *
+ *  returns: OS_SUCCESS if an empty location was found.
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdFindNextFree(OS_object_token_t *token)
+{
+    uint32              max_id;
+    uint32              base_id;
+    uint32              local_id = 0;
+    uint32              serial;
+    uint32              i;
+    int32               return_code;
+    OS_common_record_t *obj = NULL;
+    OS_objtype_state_t *objtype_state;
+
+    base_id       = OS_GetBaseForObjectType(token->obj_type);
+    max_id        = OS_GetMaxForObjectType(token->obj_type);
+    objtype_state = &OS_objtype_state[token->obj_type];
+
+    if (max_id == 0)
+    {
+        /* if the max id is zero, then this build of OSAL
+         * does not include any support for that object type.
+         * Return the "not implemented" to differentiate between
+         * this case vs. running out of valid slots  */
+        return_code = OS_ERR_NOT_IMPLEMENTED;
+        serial      = 0;
+    }
+    else
+    {
+        return_code = OS_ERR_NO_FREE_IDS;
+        serial      = OS_ObjectIdToSerialNumber_Impl(objtype_state->last_id_issued);
+    }
+
+    for (i = 0; i < max_id; ++i)
+    {
+        local_id = (++serial) % max_id;
+        if (serial >= OS_OBJECT_INDEX_MASK)
+        {
+            /* reset to beginning of ID space */
+            serial = local_id;
+        }
+        obj = &OS_common_table[local_id + base_id];
+        if (!OS_ObjectIdDefined(obj->active_id))
+        {
+            return_code = OS_SUCCESS;
+            break;
+        }
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        token->obj_idx = OSAL_INDEX_C(local_id);
+        OS_ObjectIdCompose_Impl(token->obj_type, serial, &token->obj_id);
+
+        /* Ensure any data in the record has been cleared */
+        obj->active_id  = token->obj_id;
+        obj->name_entry = NULL;
+        obj->creator    = OS_TaskGetId();
+        obj->refcount   = 0;
+
+        /* preemptively update the last id issued */
+        objtype_state->last_id_issued = token->obj_id;
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        token->obj_idx = OSAL_INDEX_C(-1);
+        token->obj_id  = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    return return_code;
+}
+
+/*
+ *********************************************************************************
+ *          OSAL INTERNAL FUNCTIONS
+ *
+ * These functions are invoked by other units within OSAL,
+ *  but are NOT directly invoked by applications
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+
+    Purpose: Locks the global table identified by "idtype"
+ ------------------------------------------------------------------*/
+void OS_Lock_Global(OS_object_token_t *token)
+{
+    osal_id_t           self_task_id;
+    OS_objtype_state_t *objtype;
+
+    if (token->obj_type < OS_OBJECT_TYPE_USER && token->lock_mode != OS_LOCK_MODE_NONE)
+    {
+        objtype      = &OS_objtype_state[token->obj_type];
+        self_task_id = OS_TaskGetId_Impl();
+
+        OS_Lock_Global_Impl(token->obj_type);
+
+        /*
+         * Track ownership of this table.  It should only be owned by one
+         * task at a time, and this aids in recovery if the owning task is
+         * deleted or experiences an exception causing it to not be freed.
+         *
+         * This is done after successfully locking, so this has exclusive access
+         * to the state object.
+         */
+        if (!OS_ObjectIdIsValid(self_task_id))
+        {
+            /*
+             * This just means the calling context is not an OSAL-created task.
+             * This is not necessarily an error, but it should be tracked.
+             * Also note that the root/initial task also does not have an ID.
+             */
+            self_task_id = OS_OBJECT_ID_RESERVED; /* nonzero, but also won't alias a known task */
+        }
+
+        /*
+         * The key value is computed with fixed/nonzero flag bits combined
+         * with the lower 24 bits of the task ID xor'ed with transaction id.
+         * This makes it different for every operation, and different depending
+         * on what task is calling the function.
+         */
+        token->lock_key.key_value =
+            OS_LOCK_KEY_FIXED_VALUE | ((OS_ObjectIdToInteger(self_task_id) ^ objtype->transaction_count) & 0xFFFFFF);
+
+        ++objtype->transaction_count;
+
+        if (objtype->owner_key.key_value != 0)
+        {
+            /* this is almost certainly a bug */
+            OS_DEBUG("ERROR: global %u acquired by task 0x%lx when already assigned key 0x%lx\n",
+                     (unsigned int)token->obj_type, OS_ObjectIdToInteger(self_task_id),
+                     (unsigned long)objtype->owner_key.key_value);
+        }
+        else
+        {
+            objtype->owner_key = token->lock_key;
+        }
+    }
+    else
+    {
+        OS_DEBUG("ERROR: cannot lock global %u for mode %u\n", (unsigned int)token->obj_type,
+                 (unsigned int)token->lock_mode);
+    }
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Unlocks the global table identified by "idtype"
+ ------------------------------------------------------------------*/
+void OS_Unlock_Global(OS_object_token_t *token)
+{
+    OS_objtype_state_t *objtype;
+
+    if (token->obj_type < OS_OBJECT_TYPE_USER && token->lock_mode != OS_LOCK_MODE_NONE)
+    {
+        objtype = &OS_objtype_state[token->obj_type];
+
+        /*
+         * Un-track ownership of this table.  It should only be owned by one
+         * task at a time, and this aids in recovery if the owning task is
+         * deleted or experiences an exception causing it to not be freed.
+         *
+         * This is done before unlocking, while this has exclusive access
+         * to the state object.
+         */
+        if ((objtype->owner_key.key_value & 0xFF000000) != OS_LOCK_KEY_FIXED_VALUE ||
+            objtype->owner_key.key_value != token->lock_key.key_value)
+        {
+            /* this is almost certainly a bug */
+            OS_DEBUG("ERROR: global %u released using mismatched key=0x%lx expected=0x%lx\n",
+                     (unsigned int)token->obj_type, (unsigned long)token->lock_key.key_value,
+                     (unsigned long)objtype->owner_key.key_value);
+        }
+
+        objtype->owner_key = OS_LOCK_KEY_INVALID;
+        token->lock_key    = OS_LOCK_KEY_INVALID;
+
+        OS_Unlock_Global_Impl(token->obj_type);
+    }
+    else
+    {
+        OS_DEBUG("ERROR: cannot unlock global %u for mode %u\n", (unsigned int)token->obj_type,
+                 (unsigned int)token->lock_mode);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *  Waits for a change in the global table identified by "idtype"
+ *
+ *  NOTE: this must be called while the table is _LOCKED_
+ *  The "OS_WaitForStateChange_Impl" function should unlock + relock
+ *
+ *-----------------------------------------------------------------*/
+void OS_WaitForStateChange(OS_object_token_t *token, uint32 attempts)
+{
+    osal_key_t          saved_unlock_key;
+    OS_objtype_state_t *objtype;
+
+    /*
+     * This needs to release the lock, to allow other
+     * tasks to make a change to the table.  But to avoid
+     * ownership warnings the key must also be temporarily
+     * cleared too, and restored after waiting.
+     */
+
+    objtype          = &OS_objtype_state[token->obj_type];
+    saved_unlock_key = objtype->owner_key;
+
+    /* temporarily release the table */
+    objtype->owner_key = OS_LOCK_KEY_INVALID;
+
+    /*
+     * The implementation layer takes care of the actual unlock + wait.
+     * This permits use of condition variables where these two actions
+     * are done atomically.
+     */
+    OS_WaitForStateChange_Impl(token->obj_type, attempts);
+
+    /*
+     * After return, this task owns the table again
+     */
+    /* cppcheck-suppress redundantAssignment */
+    objtype->owner_key = saved_unlock_key;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Called when the initialization of a newly-issued object ID is fully complete,
+ *           to perform finalization of the object and record state.
+ *
+ *           If the operation_status was successful (OS_SUCCESS) then the ID is exported
+ *           to the caller through the "outid" pointer.
+ *
+ *           If the operation_status is unsuccessful, then the temporary id in the record
+ *           is cleared and an ID value of 0 is exported to the caller.
+ *
+ *  returns: The same operation_status value passed-in, or OS_ERR_INVALID_ID if problems
+ *           were detected while validating the ID.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdFinalizeNew(int32 operation_status, OS_object_token_t *token, osal_id_t *outid)
+{
+    osal_id_t final_id;
+
+    /* if operation was unsuccessful, then clear
+     * the active_id field within the record, so
+     * the record can be re-used later.
+     *
+     * Otherwise, ensure that the record_id to be
+     * exported is sane (it always should be)
+     */
+    if (operation_status == OS_SUCCESS)
+    {
+        final_id = token->obj_id;
+    }
+    else
+    {
+        final_id = OS_OBJECT_ID_UNDEFINED;
+    }
+
+    /* Either way we must unlock the object type */
+    OS_ObjectIdTransactionFinish(token, &final_id);
+
+    /* Give event callback to the application */
+    if (operation_status == OS_SUCCESS)
+    {
+        OS_NotifyEvent(OS_EVENT_RESOURCE_CREATED, token->obj_id, NULL);
+    }
+
+    if (outid != NULL)
+    {
+        /* always write the final value to the output buffer */
+        *outid = final_id;
+    }
+
+    return operation_status;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Helper routine, not part of OSAL public API.
+             See description in prototype
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdFinalizeDelete(int32 operation_status, OS_object_token_t *token)
+{
+    osal_id_t final_id;
+
+    /* Clear the OSAL ID if successful - this returns the record to the pool */
+    if (operation_status == OS_SUCCESS)
+    {
+        final_id = OS_OBJECT_ID_UNDEFINED;
+    }
+    else
+    {
+        /* this restores the original ID */
+        final_id = token->obj_id;
+    }
+
+    /* Either way we must unlock the object type */
+    OS_ObjectIdTransactionFinish(token, &final_id);
+
+    /* Give event callback to the application */
+    if (operation_status == OS_SUCCESS)
+    {
+        OS_NotifyEvent(OS_EVENT_RESOURCE_DELETED, token->obj_id, NULL);
+    }
+
+    return operation_status;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Locate an existing object using the supplied Match function.
+ *           Matching object ID is stored in the object_id pointer
+ *
+ *           Global locking is performed according to the lock_mode
+ *           parameter.
+ *
+ *  returns: OS_ERR_NAME_NOT_FOUND if not found, OS_SUCCESS if match is found
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdGetBySearch(OS_lock_mode_t lock_mode, osal_objtype_t idtype, OS_ObjectMatchFunc_t MatchFunc, void *arg,
+                             OS_object_token_t *token)
+{
+    int32 return_code;
+
+    OS_ObjectIdTransactionInit(lock_mode, idtype, token);
+
+    return_code = OS_ObjectIdFindNextMatch(MatchFunc, arg, token);
+
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * The "ConvertToken" routine will return with the global lock
+         * in a state appropriate for returning to the caller, as indicated
+         * by the "lock_mode" parameter.
+         */
+        return_code = OS_ObjectIdConvertToken(token);
+    }
+    else
+    {
+        OS_ObjectIdTransactionCancel(token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Locate an existing object with matching name and type
+ *           Matching record is stored in the record pointer
+ *
+ *           Global locking is performed according to the lock_mode
+ *           parameter.
+ *
+ *  returns: OS_ERR_NAME_NOT_FOUND if not found, OS_SUCCESS if match is found
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdGetByName(OS_lock_mode_t lock_mode, osal_objtype_t idtype, const char *name, OS_object_token_t *token)
+{
+    return OS_ObjectIdGetBySearch(lock_mode, idtype, OS_ObjectNameMatch, (void *)name, token);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Locate an existing object with matching name and type
+ *           Matching object ID is stored in the object_id pointer
+ *
+ *  returns: OS_ERR_NAME_NOT_FOUND if not found, OS_SUCCESS if match is found
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdFindByName(osal_objtype_t idtype, const char *name, osal_id_t *object_id)
+{
+    int32             return_code;
+    OS_object_token_t token;
+
+    /*
+     * As this is an internal-only function, calling it with NULL is allowed.
+     * This is required by the file/dir/socket API since these DO allow multiple
+     * instances of the same name.
+     */
+    ARGCHECK(name, OS_ERR_NAME_NOT_FOUND);
+    LENGTHCHECK(name, OS_MAX_API_NAME, OS_ERR_NAME_TOO_LONG);
+
+    return_code = OS_ObjectIdGetByName(OS_LOCK_MODE_GLOBAL, idtype, name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        *object_id = token.obj_id;
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Gets the resource record pointer and index associated with the given resource ID.
+ *           If successful, this returns with the item locked according to "lock_mode".
+ *
+ *           IMPORTANT: when this function returns OS_SUCCESS with lock_mode something
+ *           other than NONE, then the caller must take appropriate action to UNLOCK
+ *           after completing the respective operation.  The OS_ObjectIdRelease()
+ *           function may be used to release the lock appropriately for the lock_mode.
+ *
+ *           If this returns something other than OS_SUCCESS then the global is NOT locked.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdGetById(OS_lock_mode_t lock_mode, osal_objtype_t idtype, osal_id_t id, OS_object_token_t *token)
+{
+    int32 return_code;
+
+    return_code = OS_ObjectIdTransactionInit(lock_mode, idtype, token);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    return_code = OS_ObjectIdToArrayIndex(idtype, id, &token->obj_idx);
+    if (return_code == OS_SUCCESS)
+    {
+        token->obj_id = id;
+
+        /*
+         * The "ConvertToken" routine will return with the global lock
+         * in a state appropriate for returning to the caller, as indicated
+         * by the "check_mode" parameter.
+         *
+         * Note If this operation fails, then it always unlocks the global for
+         * all check_mode's other than NONE.
+         */
+        return_code = OS_ObjectIdConvertToken(token);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        OS_ObjectIdTransactionCancel(token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Complete a transaction which was previously obtained via
+ *           OS_ObjectIdGetById() or OS_ObjectIdGetBySearch().
+ *
+ * This also updates the ID from the value in the final_id parameter, which
+ * is used for create/delete.
+ *
+ * If no ID update is pending, then NULL may be passed and the ID will not
+ * be changed.
+ *
+ *-----------------------------------------------------------------*/
+void OS_ObjectIdTransactionFinish(OS_object_token_t *token, const osal_id_t *final_id)
+{
+    OS_common_record_t *record;
+
+    if (token->lock_mode == OS_LOCK_MODE_NONE)
+    {
+        /* nothing to do */
+        return;
+    }
+
+    record = OS_ObjectIdGlobalFromToken(token);
+
+    /* re-acquire global table lock to adjust refcount */
+    if (token->lock_mode == OS_LOCK_MODE_EXCLUSIVE || token->lock_mode == OS_LOCK_MODE_REFCOUNT)
+    {
+        OS_Lock_Global(token);
+    }
+
+    if (record->refcount > 0)
+    {
+        --record->refcount;
+    }
+
+    /*
+     * at this point the global mutex is always held, either
+     * from re-acquiring it above or it is still held from
+     * the original lock when using OS_LOCK_MODE_GLOBAL.
+     *
+     * If an ID update was pending (i.e. for a create/delete op)
+     * then do the ID update now while holding the mutex.
+     */
+    if (final_id != NULL)
+    {
+        record->active_id = *final_id;
+    }
+    else if (token->lock_mode == OS_LOCK_MODE_EXCLUSIVE)
+    {
+        /*
+         * If the lock type was EXCLUSIVE, it means that the ID in the record
+         * was reset to OS_OBJECT_ID_RESERVED.  This must restore the original
+         * object ID from the token.
+         */
+        record->active_id = token->obj_id;
+    }
+
+    /* always unlock (this also covers OS_LOCK_MODE_GLOBAL case) */
+    OS_Unlock_Global(token);
+
+    /*
+     * Setting to "NONE" indicates that this token has been
+     * released, and should not be released again.
+     */
+    token->lock_mode = OS_LOCK_MODE_NONE;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Release/Unlock a transaction token which was previously obtained via
+ *           OS_ObjectIdGetById() or OS_ObjectIdGetBySearch().
+ *
+ * This is used for completing normal operations other than create/delete -
+ * that is where the same ID exists before and after the transaction without
+ * change.
+ *
+ * (There is a dedicated routine for finalization of create and delete ops)
+ *
+ *-----------------------------------------------------------------*/
+void OS_ObjectIdRelease(OS_object_token_t *token)
+{
+    OS_ObjectIdTransactionFinish(token, NULL);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Locks the global table for the indicated ID type and allocates a
+ *           new object of the given type with the given name.
+ *
+ *   Inputs: last_alloc_id represents the previously issued ID of this type.
+ *              (The search for a free entry will start here +1 to avoid repeats).
+ *
+ *  Outputs: *record is set to point to the global entry and active_id member is set
+ *
+ *  returns: OS_SUCCESS if a NEW object was allocated and the table remains locked.
+ *
+ *  IMPORTANT: The global table is remains in a locked state if this returns OS_SUCCESS,
+ *             so that additional initialization can be performed in an atomic manner.
+ *
+ *             If this fails for any reason (i.e. a duplicate name or no free slots)
+ *             then the global table is unlocked inside this function prior to
+ *             returning to the caller.
+ *
+ *             If OS_SUCCESS is returned, then the global lock MUST be either unlocked
+ *             or converted to a different style lock (see OS_ObjectIdConvertLock) once
+ *             the initialization of the new object is completed.
+ *
+ *             For any return code other than OS_SUCCESS, the caller must NOT
+ *             manipulate the global lock at all.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdAllocateNew(osal_objtype_t idtype, const char *name, OS_object_token_t *token)
+{
+    int32 return_code;
+
+    /*
+     * No new objects can be created after Shutdown request
+     */
+    if (OS_SharedGlobalVars.GlobalState == OS_SHUTDOWN_MAGIC_NUMBER)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdTransactionInit(OS_LOCK_MODE_EXCLUSIVE, idtype, token);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    /*
+     * Check if an object of the same name already exists.
+     * If so, a new object cannot be allocated.
+     */
+    if (name != NULL)
+    {
+        return_code = OS_ObjectIdFindNextMatch(OS_ObjectNameMatch, (void *)name, token);
+    }
+    else
+    {
+        return_code = OS_ERR_NAME_NOT_FOUND;
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_ERR_NAME_TAKEN;
+    }
+    else
+    {
+        return_code = OS_ObjectIdFindNextFree(token);
+    }
+
+    /* If allocation failed, abort the operation now - no ID was allocated.
+     * After this point, if a future step fails, the allocated ID must be
+     * released. */
+    if (return_code != OS_SUCCESS)
+    {
+        OS_ObjectIdTransactionCancel(token);
+        return return_code;
+    }
+    else
+    {
+        return_code = OS_NotifyEvent(OS_EVENT_RESOURCE_ALLOCATED, token->obj_id, NULL);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_ObjectIdConvertToken(token);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        return_code = OS_ObjectIdFinalizeNew(return_code, token, NULL);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Transfer ownership of a token to another buffer
+ ------------------------------------------------------------------*/
+void OS_ObjectIdTransferToken(OS_object_token_t *token_from, OS_object_token_t *token_to)
+{
+    /* start with a simple copy */
+    *token_to = *token_from;
+
+    /*
+     * nullify the old token, such that if release/cancel
+     * is invoked it will have no effect (the real lock is
+     * now on token_to).
+     */
+    token_from->lock_mode = OS_LOCK_MODE_NONE;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Start the process of iterating through OSAL objects
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIteratorInit(OS_ObjectMatchFunc_t matchfunc, void *matcharg, osal_objtype_t objtype,
+                              OS_object_iter_t *iter)
+{
+    iter->match = matchfunc;
+    iter->arg   = matcharg;
+    iter->limit = OS_GetMaxForObjectType(objtype);
+    iter->base  = &OS_common_table[OS_GetBaseForObjectType(objtype)];
+
+    return OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, objtype, &iter->token);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Match function to iterate only active objects
+ ------------------------------------------------------------------*/
+bool OS_ObjectFilterActive(void *ref, const OS_object_token_t *token, const OS_common_record_t *obj)
+{
+    return OS_ObjectIdDefined(obj->active_id);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Start the process of iterating through OSAL objects
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIterateActive(osal_objtype_t objtype, OS_object_iter_t *iter)
+{
+    return OS_ObjectIdIteratorInit(OS_ObjectFilterActive, NULL, objtype, iter);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Move iterator to the next entry
+ ------------------------------------------------------------------*/
+bool OS_ObjectIdIteratorGetNext(OS_object_iter_t *iter)
+{
+    OS_common_record_t *record;
+    bool                got_next;
+
+    got_next           = false;
+    iter->token.obj_id = OS_OBJECT_ID_UNDEFINED;
+
+    do
+    {
+        ++iter->token.obj_idx;
+        if (iter->token.obj_idx >= iter->limit)
+        {
+            break;
+        }
+
+        record = OS_OBJECT_TABLE_GET(iter->base, iter->token);
+        if (iter->match == NULL || iter->match(iter->arg, &iter->token, record))
+        {
+            iter->token.obj_id = record->active_id;
+            got_next           = true;
+        }
+    } while (!got_next);
+
+    return got_next;
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Release iterator resources
+ ------------------------------------------------------------------*/
+void OS_ObjectIdIteratorDestroy(OS_object_iter_t *iter)
+{
+    OS_ObjectIdTransactionCancel(&iter->token);
+}
+
+/*----------------------------------------------------------------
+
+    Purpose: Call a handler function on an iterator object ID
+ ------------------------------------------------------------------*/
+int32 OS_ObjectIdIteratorProcessEntry(OS_object_iter_t *iter, int32 (*func)(osal_id_t, void *))
+{
+    int32 status;
+
+    /*
+     * This needs to temporarily unlock the global,
+     * call the handler function, then re-lock.
+     */
+    OS_Unlock_Global(&iter->token);
+    status = func(OS_ObjectIdFromToken(&iter->token), iter->arg);
+    OS_Lock_Global(&iter->token);
+
+    return status;
+}
+
+/*
+ *********************************************************************************
+ *          PUBLIC API (these functions may be called externally)
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConvertToArrayIndex(osal_id_t object_id, osal_index_t *ArrayIndex)
+{
+    /* pass to conversion routine with undefined type */
+    return OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_UNDEFINED, object_id, ArrayIndex);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ForEachObject(osal_id_t creator_id, OS_ArgCallback_t callback_ptr, void *callback_arg)
+{
+    osal_objtype_t idtype;
+
+    for (idtype = 0; idtype < OS_OBJECT_TYPE_USER; ++idtype)
+    {
+        OS_ForEachObjectOfType(idtype, creator_id, callback_ptr, callback_arg);
+    }
+}
+
+/*-----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_ForEachObjectOfType(osal_objtype_t idtype, osal_id_t creator_id, OS_ArgCallback_t callback_ptr,
+                            void *callback_arg)
+{
+    OS_object_iter_t    iter;
+    OS_creator_filter_t filter;
+
+    filter.creator_id    = creator_id;
+    filter.user_callback = callback_ptr;
+    filter.user_arg      = callback_arg;
+
+    if (OS_ObjectIdIteratorInit(OS_ForEachFilterCreator, &filter, idtype, &iter) == OS_SUCCESS)
+    {
+        while (OS_ObjectIdIteratorGetNext(&iter))
+        {
+            OS_ObjectIdIteratorProcessEntry(&iter, OS_ForEachDoCallback);
+        }
+
+        OS_ObjectIdIteratorDestroy(&iter);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+osal_objtype_t OS_IdentifyObject(osal_id_t object_id)
+{
+    return OS_ObjectIdToType_Impl(object_id);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_GetResourceName(osal_id_t object_id, char *buffer, size_t buffer_size)
+{
+    OS_common_record_t *record;
+    int32               return_code;
+    size_t              name_len;
+    OS_object_token_t   token;
+
+    /* sanity check the passed-in buffer and size */
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(buffer_size);
+
+    /*
+     * Initially set the output string to empty.
+     * This avoids undefined behavior in case the function fails
+     * and the caller does not check the return code.
+     */
+    buffer[0] = 0;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_ObjectIdToType_Impl(object_id), object_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_ObjectIdGlobalFromToken(&token);
+
+        if (record->name_entry != NULL)
+        {
+            name_len = OS_strnlen(record->name_entry, buffer_size);
+            if (buffer_size <= name_len)
+            {
+                /* indicates the name does not fit into supplied buffer */
+                return_code = OS_ERR_NAME_TOO_LONG;
+                name_len    = buffer_size - 1;
+            }
+            memcpy(buffer, record->name_entry, name_len);
+            buffer[name_len] = 0;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ObjectIdToArrayIndex(osal_objtype_t idtype, osal_id_t object_id, osal_index_t *ArrayIndex)
+{
+    uint32         max_id;
+    uint32         obj_index;
+    osal_objtype_t actual_type;
+    int32          return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(ArrayIndex);
+
+    obj_index   = OS_ObjectIdToSerialNumber_Impl(object_id);
+    actual_type = OS_ObjectIdToType_Impl(object_id);
+
+    /*
+     * If requested by the caller, enforce that the ID is of the correct type.
+     * If the caller passed OS_OBJECT_TYPE_UNDEFINED, then anything is allowed.
+     */
+    if (idtype != OS_OBJECT_TYPE_UNDEFINED && actual_type != idtype)
+    {
+        return_code = OS_ERR_INVALID_ID;
+    }
+    else
+    {
+        max_id = OS_GetMaxForObjectType(actual_type);
+        if (max_id == 0)
+        {
+            return_code = OS_ERR_INVALID_ID;
+        }
+        else
+        {
+            return_code = OS_SUCCESS;
+            *ArrayIndex = OSAL_INDEX_C(obj_index % max_id);
+        }
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-module.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-module.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-module.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Other OSAL public APIs used by this module
+ */
+#include "osapi-filesys.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_MODULES) || (OS_MAX_MODULES <= 0)
+#error "osconfig.h must define OS_MAX_MODULES to a valid value"
+#endif
+
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_MODULES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_MODULE
+};
+
+OS_module_internal_record_t OS_module_table[OS_MAX_MODULES];
+
+/*
+ * If the "OS_STATIC_LOADER" directive is enabled,
+ * then the user application/BSP must provide a symbol
+ * called "OS_STATIC_SYMBOL_TABLE" which will provide
+ * user-defined mappings of symbol names to addresses.
+ *
+ * Note - when compiling unit tests, the UT code will
+ * supply a custom definition for OS_STATIC_SYMTABLE_SOURCE
+ */
+#if !defined(OS_STATIC_SYMTABLE_SOURCE) && defined(OSAL_CONFIG_INCLUDE_STATIC_LOADER)
+/* use default symbol name for static table */
+#define OS_STATIC_SYMTABLE_SOURCE OS_STATIC_SYMBOL_TABLE
+#endif
+
+#ifdef OS_STATIC_SYMTABLE_SOURCE
+/* the BSP should supply the static symbol table when this is set */
+extern OS_static_symbol_record_t OS_STATIC_SYMTABLE_SOURCE[];
+#else
+/* there is no static symbol table, use NULL */
+#define OS_STATIC_SYMTABLE_SOURCE NULL
+#endif /* OS_STATIC_SYMTABLE_SOURCE */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Checks for a symbol name in the static symbol table
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup_Static(cpuaddr *SymbolAddress, const char *SymbolName, const char *ModuleName)
+{
+    int32                      return_code = OS_ERR_NOT_IMPLEMENTED;
+    OS_static_symbol_record_t *StaticSym   = OS_STATIC_SYMTABLE_SOURCE;
+
+    while (StaticSym != NULL)
+    {
+        if (StaticSym->Name == NULL)
+        {
+            /* end of list --
+             * Return "OS_ERROR" to indicate that an actual search was done
+             * with a not-found result, vs. not searching at all. */
+            return_code = OS_ERROR;
+            break;
+        }
+        if (strcmp(StaticSym->Name, SymbolName) == 0 &&
+            (ModuleName == NULL || strcmp(StaticSym->Module, ModuleName) == 0))
+        {
+            /* found matching symbol */
+            *SymbolAddress = (cpuaddr)StaticSym->Address;
+            return_code    = OS_SUCCESS;
+            break;
+        }
+
+        ++StaticSym;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Checks for a module name in the static symbol table
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad_Static(const char *ModuleName)
+{
+    int32                      return_code = OS_ERR_NAME_NOT_FOUND;
+    OS_static_symbol_record_t *StaticSym   = OS_STATIC_SYMTABLE_SOURCE;
+
+    while (StaticSym != NULL)
+    {
+        if (StaticSym->Name == NULL)
+        {
+            /* end of list  */
+            break;
+        }
+        if (StaticSym->Module != NULL && strcmp(StaticSym->Module, ModuleName) == 0)
+        {
+            /* found matching module name */
+            return_code = OS_SUCCESS;
+            break;
+        }
+
+        ++StaticSym;
+    }
+
+    return return_code;
+}
+
+/****************************************************************************************
+                                   Module API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleAPI_Init(void)
+{
+    memset(OS_module_table, 0, sizeof(OS_module_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleLoad(osal_id_t *module_id, const char *module_name, const char *filename, uint32 flags)
+{
+    char                         translated_path[OS_MAX_LOCAL_PATH_LEN];
+    int32                        return_code;
+    int32                        filename_status;
+    OS_object_token_t            token;
+    OS_module_internal_record_t *module;
+
+    /*
+     * Check parameters
+     *
+     * Note "filename" is not checked, because in certain configurations it can be validly
+     * null.  filename is checked for NULL-ness by the OS_TranslatePath() later.
+     */
+    OS_CHECK_POINTER(module_id);
+    OS_CHECK_APINAME(module_name);
+
+    /*
+     * Preemptively translate the filename, and hold it in a temporary buffer.
+     *
+     * This should be done before allocating a new object ID because it also
+     * locks the global table, and this prevents double-locking.
+     *
+     * The status of this operation is stored separately, because it may or
+     * may not be relevant, depending on whether the static module table is enabled.
+     */
+    filename_status = OS_TranslatePath(filename, translated_path);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, module_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        module = OS_OBJECT_TABLE_GET(OS_module_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, module, module_name, module_name);
+
+        module->flags = flags; /* save user-supplied flags */
+
+        /*
+         * Check the statically-linked module list.
+         * If a matching entry is found, this means its
+         * already effectively "loaded" through static linkage.
+         * Return success without any more action.
+         *
+         * If the OSAL_CONFIG_INCLUDE_STATIC_LOADER feature is disabled,
+         * then the list of static modules is empty and this always
+         * returns OS_ERR_NAME_NOT_FOUND.
+         */
+        return_code = OS_ModuleLoad_Static(module_name);
+        if (return_code == OS_SUCCESS)
+        {
+            /* mark this as a statically loaded module */
+            module->module_type = OS_MODULE_TYPE_STATIC;
+        }
+        else
+        {
+            /*
+             * If this is NOT a static module, then the module file must be loaded by normal
+             * means using the dynamic loader, if available.  This also means the filename
+             * must be valid, so this is when the "filename_status" is checked/enforced.
+             */
+            if (filename_status != OS_SUCCESS)
+            {
+                /* supplied filename was not valid */
+                return_code = filename_status;
+            }
+            else
+            {
+                /* supplied filename was valid, so store a copy for future reference */
+                strncpy(module->file_name, filename, sizeof(module->file_name) - 1);
+                module->module_type = OS_MODULE_TYPE_DYNAMIC;
+
+                /* Now call the OS-specific implementation.  This reads info from the module table. */
+                return_code = OS_ModuleLoad_Impl(&token, translated_path);
+            }
+        }
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, module_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleUnload(osal_id_t module_id)
+{
+    OS_module_internal_record_t *module;
+    int32                        return_code;
+    OS_object_token_t            token;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, module_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        module = OS_OBJECT_TABLE_GET(OS_module_table, token);
+
+        /*
+         * Only call the implementation if the file was actually loaded.
+         * If this is a static module, then this is just a placeholder and
+         * it means there was no file actually loaded.
+         */
+        if (module->module_type == OS_MODULE_TYPE_DYNAMIC)
+        {
+            return_code = OS_ModuleUnload_Impl(&token);
+        }
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleInfo(osal_id_t module_id, OS_module_prop_t *module_prop)
+{
+    OS_common_record_t *         record;
+    OS_module_internal_record_t *module;
+    int32                        return_code;
+    OS_object_token_t            token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(module_prop);
+
+    memset(module_prop, 0, sizeof(OS_module_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, module_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_module_table, token);
+        module = OS_OBJECT_TABLE_GET(OS_module_table, token);
+
+        strncpy(module_prop->name, record->name_entry, sizeof(module_prop->name) - 1);
+        strncpy(module_prop->filename, module->file_name, sizeof(module_prop->filename) - 1);
+
+        return_code = OS_ModuleGetInfo_Impl(&token, module_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolLookup(cpuaddr *SymbolAddress, const char *SymbolName)
+{
+    int32 return_code;
+    int32 staticsym_status;
+
+    /*
+    ** Check parameters
+    */
+    OS_CHECK_POINTER(SymbolAddress);
+    OS_CHECK_POINTER(SymbolName);
+
+    /*
+     * attempt to find the symbol in the symbol table
+     */
+    return_code = OS_SymbolLookup_Impl(SymbolAddress, SymbolName);
+
+    /*
+     * If the OS call did not find the symbol or the loader is
+     * disabled, then check if a static symbol table is present
+     */
+    if (return_code != OS_SUCCESS)
+    {
+        staticsym_status = OS_SymbolLookup_Static(SymbolAddress, SymbolName, NULL);
+
+        /*
+         * Only overwrite the return code if static lookup was successful.
+         * Otherwise keep the error code from the low level implementation.
+         */
+        if (staticsym_status == OS_SUCCESS)
+        {
+            return_code = staticsym_status;
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ModuleSymbolLookup(osal_id_t module_id, cpuaddr *symbol_address, const char *symbol_name)
+{
+    int32               return_code;
+    int32               staticsym_status;
+    OS_common_record_t *record;
+    OS_object_token_t   token;
+
+    /*
+    ** Check parameters
+    */
+    OS_CHECK_POINTER(symbol_address);
+    OS_CHECK_POINTER(symbol_name);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, module_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_module_table, token);
+
+        return_code = OS_ModuleSymbolLookup_Impl(&token, symbol_address, symbol_name);
+        if (return_code != OS_SUCCESS)
+        {
+            /* look for a static symbol that also matches this module name */
+            staticsym_status = OS_SymbolLookup_Static(symbol_address, symbol_name, record->name_entry);
+
+            /*
+             * Only overwrite the return code if static lookup was successful.
+             * Otherwise keep the error code from the low level implementation.
+             */
+            if (staticsym_status == OS_SUCCESS)
+            {
+                return_code = staticsym_status;
+            }
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SymbolTableDump(const char *filename, size_t SizeLimit)
+{
+    int32             return_code;
+    char              translated_path[OS_MAX_LOCAL_PATH_LEN];
+    OS_object_token_t token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(filename);
+
+    /*
+     ** Translate the filename to the Host System
+     */
+    return_code = OS_TranslatePath(filename, translated_path);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    /*
+     * Locking the global ensures only one symbol table dump
+     * can be executing.  It also prevents module loading/unloading
+     * while the dump is occurring.
+     *
+     * Because calls to this function are serialized, the
+     * underlying implementation may safely use globals for
+     * state storage.
+     */
+    return_code = OS_ObjectIdTransactionInit(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, &token);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    return_code = OS_SymbolTableDump_Impl(translated_path, SizeLimit);
+
+    OS_ObjectIdTransactionCancel(&token);
+
+    return return_code;
+}
+```
+
+### `osapi-mutex.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-mutex.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-idmap.h"
+#include "os-shared-mutex.h"
+
+/*
+ * Other OSAL public APIs used by this module
+ */
+#include "osapi-task.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_MUTEXES) || (OS_MAX_MUTEXES <= 0)
+#error "osconfig.h must define OS_MAX_MUTEXES to a valid value"
+#endif
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_MUTEXES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_MUTEX
+};
+
+OS_mutex_internal_record_t OS_mutex_table[LOCAL_NUM_OBJECTS];
+
+/****************************************************************************************
+                                  MUTEX API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutexAPI_Init(void)
+{
+    memset(OS_mutex_table, 0, sizeof(OS_mutex_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemCreate(osal_id_t *sem_id, const char *sem_name, uint32 options)
+{
+    int32                       return_code;
+    OS_object_token_t           token;
+    OS_mutex_internal_record_t *mutex;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_APINAME(sem_name);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, sem_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        mutex = OS_OBJECT_TABLE_GET(OS_mutex_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, mutex, obj_name, sem_name);
+
+        /* Now call the OS-specific implementation.  This reads info from the table. */
+        return_code = OS_MutSemCreate_Impl(&token, options);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, sem_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemDelete(osal_id_t sem_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_MutSemDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGive(osal_id_t sem_id)
+{
+    OS_mutex_internal_record_t *mutex;
+    OS_object_token_t           token;
+    int32                       return_code;
+    osal_id_t                   self_task;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        mutex = OS_OBJECT_TABLE_GET(OS_mutex_table, token);
+
+        self_task = OS_TaskGetId();
+
+        if (!OS_ObjectIdEqual(mutex->last_owner, self_task))
+        {
+            OS_DEBUG("WARNING: Task %lu giving mutex %lu while owned by task %lu\n", OS_ObjectIdToInteger(self_task),
+                     OS_ObjectIdToInteger(sem_id), OS_ObjectIdToInteger(mutex->last_owner));
+        }
+
+        mutex->last_owner = OS_OBJECT_ID_UNDEFINED;
+
+        return_code = OS_MutSemGive_Impl(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemTake(osal_id_t sem_id)
+{
+    OS_mutex_internal_record_t *mutex;
+    OS_object_token_t           token;
+    int32                       return_code;
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        mutex = OS_OBJECT_TABLE_GET(OS_mutex_table, token);
+
+        return_code = OS_MutSemTake_Impl(&token);
+        if (return_code == OS_SUCCESS)
+        {
+            /* Always set the owner if OS_MutSemTake_Impl() returned success */
+            mutex->last_owner = OS_TaskGetId();
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGetIdByName(osal_id_t *sem_id, const char *sem_name)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sem_id);
+    OS_CHECK_POINTER(sem_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, sem_name, sem_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_MutSemGetInfo(osal_id_t sem_id, OS_mut_sem_prop_t *mut_prop)
+{
+    OS_common_record_t *record;
+    int32               return_code;
+    OS_object_token_t   token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(mut_prop);
+
+    memset(mut_prop, 0, sizeof(OS_mut_sem_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, sem_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_mutex_table, token);
+
+        strncpy(mut_prop->name, record->name_entry, sizeof(mut_prop->name) - 1);
+        mut_prop->creator = record->creator;
+
+        return_code = OS_MutSemGetInfo_Impl(&token, mut_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-network.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-network.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-network.h"
+
+/****************************************************************************************
+                                  NETWORK API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkAPI_Init(void)
+{
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetHostName(char *host_name, size_t name_len)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(host_name);
+    OS_CHECK_SIZE(name_len);
+
+    /* delegate to low-level API */
+    return_code = OS_NetworkGetHostName_Impl(host_name, name_len);
+    if (return_code != OS_SUCCESS)
+    {
+        /* return an empty string on failure, just in case */
+        host_name[0] = 0;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_NetworkGetID(void)
+{
+    int32 IdBuf;
+
+    /* always delegate to low-level API */
+    if (OS_NetworkGetID_Impl(&IdBuf) != OS_SUCCESS)
+    {
+        /* return a hardcoded value on failure */
+        return -1;
+    }
+
+    return IdBuf;
+}
+```
+
+### `osapi-printf.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-printf.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *      Contains the abstraction for the OS_printf() call.
+ *
+ *      This top level contains only the master on/off switch for OS_printf(),
+ *      that is the OS_printf_enable() and OS_printf_disable() API calls.
+ *
+ *      If enabled, this OS_printf() uses the C library "vsnprintf()" call
+ *      to format the actual string for output.  As this is a C99 function
+ *      it should be present on all compliant machines.  In the event that
+ *      the machine's C library does not provide this function, the user
+ *      would have to provide a compatible substitute to link to.
+ *
+ *      Once the string is formatted, it is passed to the lower level
+ *      implementation to do the actual output.  This would typically write
+ *      to a console device but may alternatively write to any other
+ *      implementation-defined output interface, such as a system log or
+ *      serial port.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdarg.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-printf.h"
+
+/*
+ * The choice of whether to run a separate utility task
+ * comes from osal compile-time config
+ */
+#ifdef OSAL_CONFIG_CONSOLE_ASYNC
+#define OS_CONSOLE_IS_ASYNC true
+#else
+#define OS_CONSOLE_IS_ASYNC false
+#endif
+
+/* reserve buffer memory for the printf console device */
+static char OS_printf_buffer_mem[(sizeof(OS_PRINTF_CONSOLE_NAME) + OS_BUFFER_SIZE) * OS_BUFFER_MSG_DEPTH];
+
+/* The global console state table */
+OS_console_internal_record_t OS_console_table[OS_MAX_CONSOLES];
+
+/*
+ *********************************************************************************
+ *          INITIALIZATION
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConsoleAPI_Init(void)
+{
+    OS_console_internal_record_t *console;
+    int32                         return_code;
+    OS_object_token_t             token;
+
+    memset(&OS_console_table, 0, sizeof(OS_console_table));
+
+    /*
+     * Configure a console device to be used for OS_printf() calls.
+     */
+    return_code = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_CONSOLE, OS_PRINTF_CONSOLE_NAME, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        console = OS_OBJECT_TABLE_GET(OS_console_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, console, device_name, OS_PRINTF_CONSOLE_NAME);
+
+        /*
+         * Initialize the ring buffer pointers
+         */
+        console->BufBase = OS_printf_buffer_mem;
+        console->BufSize = sizeof(OS_printf_buffer_mem);
+        console->IsAsync = OS_CONSOLE_IS_ASYNC;
+
+        return_code = OS_ConsoleCreate_Impl(&token);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, &OS_SharedGlobalVars.PrintfConsoleId);
+
+        /*
+         * Printf can be enabled by default now that the buffer is configured.
+         */
+        OS_SharedGlobalVars.PrintfEnabled = true;
+    }
+
+    return return_code;
+}
+
+/*
+ *********************************************************************************
+ *          LOCAL HELPER FUNCTIONS
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *    Write into the console ring buffer
+ *
+ *    The NextWritePos is an input-output and contains the position
+ *    in the ring buffer to start writing into.  This may or may not
+ *    be the same as the value in the global.  It is only updated
+ *    if the string is written in its entirety.
+ *
+ *    The intent is to avoid truncating a string if it does not fit.
+ *    Either the entire string should be written, or none of it.
+ *
+ *-----------------------------------------------------------------*/
+static int32 OS_Console_CopyOut(OS_console_internal_record_t *console, const char *Str, size_t *NextWritePos)
+{
+    const char *pmsg;
+    size_t      WriteOffset;
+    int32       return_code;
+
+    return_code = OS_ERROR;
+    pmsg        = Str;
+    WriteOffset = *NextWritePos;
+    while (true)
+    {
+        if (*pmsg == 0)
+        {
+            /* String is complete */
+            *NextWritePos = WriteOffset;
+            return_code   = OS_SUCCESS;
+            break;
+        }
+        console->BufBase[WriteOffset] = *pmsg;
+        WriteOffset                   = WriteOffset + 1;
+        if (WriteOffset >= console->BufSize)
+        {
+            WriteOffset = 0;
+        }
+
+        if (WriteOffset == console->ReadPos)
+        {
+            /* out of space */
+            return_code = OS_QUEUE_FULL;
+            break;
+        }
+
+        ++pmsg;
+    }
+
+    return return_code;
+}
+
+/*
+ *********************************************************************************
+ *          PUBLIC API (application-callable functions)
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Write into the console ring buffer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ConsoleWrite(osal_id_t console_id, const char *Str)
+{
+    int32                         return_code;
+    OS_object_token_t             token;
+    OS_console_internal_record_t *console;
+    size_t                        PendingWritePos;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_CONSOLE, console_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        console = OS_OBJECT_TABLE_GET(OS_console_table, token);
+
+        /*
+         * The entire string should be put to the ring buffer,
+         * or none of it.  Therefore the WritePos in the table
+         * is not updated until complete success.
+         */
+        PendingWritePos = console->WritePos;
+
+        if (console->device_name[0] != 0)
+        {
+            return_code = OS_Console_CopyOut(console, console->device_name, &PendingWritePos);
+        }
+        if (return_code == OS_SUCCESS)
+        {
+            return_code = OS_Console_CopyOut(console, Str, &PendingWritePos);
+        }
+
+        if (return_code == OS_SUCCESS)
+        {
+            /* the entire message was successfully written */
+            console->WritePos = PendingWritePos;
+        }
+        else
+        {
+            /* the message did not fit */
+            ++console->OverflowEvents;
+        }
+
+        /*
+         * Notify the underlying console implementation of new data.
+         * This will forward the data to the actual console device.
+         *
+         * This is done while still locked, so it can support
+         * either a synchronous or asynchronous implementation.
+         */
+        if (console->IsAsync)
+        {
+            /* post the sem for the utility task to run */
+            OS_ConsoleWakeup_Impl(&token);
+        }
+        else
+        {
+            /* output directly */
+            OS_ConsoleOutput_Impl(&token);
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_printf(const char *String, ...)
+{
+    va_list va;
+    char    msg_buffer[OS_BUFFER_SIZE];
+    int     actualsz;
+
+    BUGCHECK_VOID(String != NULL)
+
+    if (OS_SharedGlobalVars.GlobalState != OS_INIT_MAGIC_NUMBER)
+    {
+        /*
+         * Catch some historical mis-use of the OS_printf() call.
+         *
+         * Typically OS_printf() should NOT be called before OS_API_Init().
+         *
+         * This was never guaranteed to work, particularly on a VxWorks
+         * deployment where the utility task was enabled.
+         *
+         * However, some PSPs do this, particularly those that used POSIX
+         * where it happened to work (because OS_printf just called printf).
+         *
+         * As a workaround, use the OS_DEBUG facility to dump the message,
+         * along with a clue that this API is being used inappropriately.
+         *
+         * If debugging is not enabled, then this message will be silently
+         * discarded.
+         */
+        OS_DEBUG("BUG: OS_printf() called when OSAL not initialized: %s", String);
+    }
+    else if (OS_SharedGlobalVars.PrintfEnabled)
+    {
+        /* Format and determine the size of string to write */
+        va_start(va, String);
+        actualsz = vsnprintf(msg_buffer, sizeof(msg_buffer), String, va);
+        va_end(va);
+
+        if (actualsz < 0)
+        {
+            /* unlikely: vsnprintf failed */
+            actualsz = 0;
+        }
+        else if (actualsz >= OS_BUFFER_SIZE)
+        {
+            /* truncate */
+            actualsz = OS_BUFFER_SIZE - 1;
+        }
+
+        msg_buffer[actualsz] = 0;
+
+        OS_ConsoleWrite(OS_SharedGlobalVars.PrintfConsoleId, msg_buffer);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_printf_disable(void)
+{
+    OS_SharedGlobalVars.PrintfEnabled = false;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_printf_enable(void)
+{
+    OS_SharedGlobalVars.PrintfEnabled = true;
+}
+```
+
+### `osapi-queue.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-queue.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ *         This code only uses very basic C library calls that are expected
+ *         to be available on every sane C-language compiler.  For everything else,
+ *         a platform-specific implementation function is used.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-queue.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_QUEUES) || (OS_MAX_QUEUES <= 0)
+#error "osconfig.h must define OS_MAX_QUEUES to a valid value"
+#endif
+
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_QUEUES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_QUEUE
+};
+
+OS_queue_internal_record_t OS_queue_table[LOCAL_NUM_OBJECTS];
+
+/****************************************************************************************
+                                MESSAGE QUEUE API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueAPI_Init(void)
+{
+    memset(OS_queue_table, 0, sizeof(OS_queue_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueCreate(osal_id_t *queue_id, const char *queue_name, osal_blockcount_t queue_depth, size_t data_size,
+                     uint32 flags)
+{
+    int32                       return_code;
+    OS_object_token_t           token;
+    OS_queue_internal_record_t *queue;
+
+    /* validate inputs */
+    OS_CHECK_POINTER(queue_id);
+    OS_CHECK_APINAME(queue_name);
+    OS_CHECK_SIZE(data_size);
+    ARGCHECK(queue_depth <= OS_QUEUE_MAX_DEPTH, OS_QUEUE_INVALID_SIZE);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, queue_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        queue = OS_OBJECT_TABLE_GET(OS_queue_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, queue, queue_name, queue_name);
+
+        queue->max_depth = queue_depth;
+        queue->max_size  = data_size;
+
+        /* Now call the OS-specific implementation.  This reads info from the queue table. */
+        return_code = OS_QueueCreate_Impl(&token, flags);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, queue_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueDelete(osal_id_t queue_id)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, queue_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_QueueDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGet(osal_id_t queue_id, void *data, size_t size, size_t *size_copied, int32 timeout)
+{
+    OS_object_token_t           token;
+    int32                       return_code;
+    OS_queue_internal_record_t *queue;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(data);
+    OS_CHECK_POINTER(size_copied);
+    OS_CHECK_SIZE(size);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, queue_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        queue = OS_OBJECT_TABLE_GET(OS_queue_table, token);
+
+        if (size < queue->max_size)
+        {
+            /*
+            ** The buffer that the user is passing in is potentially too small
+            */
+            *size_copied = 0;
+            return_code  = OS_QUEUE_INVALID_SIZE;
+        }
+        else
+        {
+            return_code = OS_QueueGet_Impl(&token, data, size, size_copied, timeout);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueuePut(osal_id_t queue_id, const void *data, size_t size, uint32 flags)
+{
+    OS_object_token_t           token;
+    int32                       return_code;
+    OS_queue_internal_record_t *queue;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(data);
+    OS_CHECK_SIZE(size);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, queue_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        queue = OS_OBJECT_TABLE_GET(OS_queue_table, token);
+
+        if (size > queue->max_size)
+        {
+            /*
+            ** The buffer that the user is passing in is too large
+            */
+            return_code = OS_QUEUE_INVALID_SIZE;
+        }
+        else
+        {
+            return_code = OS_QueuePut_Impl(&token, data, size, flags);
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGetIdByName(osal_id_t *queue_id, const char *queue_name)
+{
+    int32 return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(queue_id);
+    OS_CHECK_POINTER(queue_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, queue_name, queue_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_QueueGetInfo(osal_id_t queue_id, OS_queue_prop_t *queue_prop)
+{
+    OS_common_record_t *record;
+    int32               return_code;
+    OS_object_token_t   token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(queue_prop);
+
+    memset(queue_prop, 0, sizeof(OS_queue_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, queue_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_queue_table, token);
+
+        strncpy(queue_prop->name, record->name_entry, sizeof(queue_prop->name) - 1);
+        queue_prop->creator = record->creator;
+
+        /*
+         * Currently there are no additional queue details provided by the impl layer -
+         * But this could be added in the future (i.e. current/max depth, msg size, etc)
+         */
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-select.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-select.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ *         This code only uses very basic C library calls that are expected
+ *         to be available on every sane C-language compiler.  For everything else,
+ *         a platform-specific implementation function is used.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-idmap.h"
+#include "os-shared-select.h"
+
+/*
+ *********************************************************************************
+ *          SELECT API
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectSingle(osal_id_t objid, uint32 *StateFlags, int32 msecs)
+{
+    int32             return_code;
+    OS_object_token_t token;
+
+    /* check parameters */
+    OS_CHECK_POINTER(StateFlags);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_STREAM, objid, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_SelectSingle_Impl(&token, StateFlags, msecs);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectMultiple(OS_FdSet *ReadSet, OS_FdSet *WriteSet, int32 msecs)
+{
+    int32 return_code;
+
+    /*
+     * Check parameters
+     *
+     * Note "ReadSet" and "WriteSet" are not checked, because in certain configurations they can be validly null.
+     */
+
+    /*
+     * This does not currently increment any refcounts.
+     * That means a file/socket can be closed while actively inside a
+     * OS_SelectMultiple() call in another thread.
+     */
+    return_code = OS_SelectMultiple_Impl(ReadSet, WriteSet, msecs);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectFdZero(OS_FdSet *Set)
+{
+    /* check parameters */
+    OS_CHECK_POINTER(Set);
+
+    memset(Set, 0, sizeof(OS_FdSet));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectFdAdd(OS_FdSet *Set, osal_id_t objid)
+{
+    int32        return_code;
+    osal_index_t local_id;
+
+    /* check parameters */
+    OS_CHECK_POINTER(Set);
+
+    return_code = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_STREAM, objid, &local_id);
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * Sets the bit in the uint8 object_ids array that corresponds
+         * to the local_id where local_id >> 3 determines the array element,
+         * and the mask/shift sets the bit within that element.
+         */
+        Set->object_ids[local_id >> 3] |= 1 << (local_id & 0x7);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SelectFdClear(OS_FdSet *Set, osal_id_t objid)
+{
+    int32        return_code;
+    osal_index_t local_id;
+
+    /* check parameters */
+    OS_CHECK_POINTER(Set);
+
+    return_code = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_STREAM, objid, &local_id);
+    if (return_code == OS_SUCCESS)
+    {
+        /*
+         * Clears the bit in the uint8 object_ids array that corresponds
+         * to the local_id where local_id >> 3 determines the array element,
+         * and the mask/shift clears the bit within that element.
+         */
+        Set->object_ids[local_id >> 3] &= ~(1 << (local_id & 0x7));
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+bool OS_SelectFdIsSet(const OS_FdSet *Set, osal_id_t objid)
+{
+    int32        return_code;
+    osal_index_t local_id;
+
+    /* check parameters */
+    BUGCHECK(Set != NULL, false);
+
+    return_code = OS_ObjectIdToArrayIndex(OS_OBJECT_TYPE_OS_STREAM, objid, &local_id);
+    if (return_code != OS_SUCCESS)
+    {
+        return false;
+    }
+
+    /*
+     * Returns boolean for if the bit in the uint8 object_ids array that corresponds
+     * to the local_id is set where local_id >> 3 determines the array element,
+     * and the mask/shift checks the bit within that element.
+     */
+    return ((Set->object_ids[local_id >> 3] >> (local_id & 0x7)) & 0x1);
+}
+```
+
+### `osapi-shell.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-shell.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-shell.h"
+#include "os-shared-file.h"
+#include "os-shared-idmap.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_ShellOutputToFile(const char *Cmd, osal_id_t filedes)
+{
+    OS_object_token_t token;
+    int32             return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(Cmd);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_STREAM, filedes, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_ShellOutputToFile_Impl(&token, Cmd);
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-sockets.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-sockets.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-idmap.h"
+#include "os-shared-file.h"
+#include "os-shared-sockets.h"
+#include "os-shared-common.h"
+
+/*
+ * Other OSAL public APIs used by this module
+ */
+#include "osapi-select.h"
+
+/*
+ * Global data for the API
+ */
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_NUM_OPEN_FILES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_STREAM
+};
+
+/****************************************************************************************
+                                Init Functions
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAPI_Init(void)
+{
+    /*
+     * Placeholder - nothing right now
+     * also serves to make this a non-empty compilation unit for
+     * cases where OS_INCLUDE_NETWORK is off
+     */
+    return OS_SUCCESS;
+}
+
+/****************************************************************************************
+                                Local Helper Functions
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+void OS_CreateSocketName(const OS_object_token_t *token, const OS_SockAddr_t *Addr, const char *parent_name)
+{
+    size_t                       len;
+    uint16                       port;
+    OS_stream_internal_record_t *sock;
+
+    sock = OS_OBJECT_TABLE_GET(OS_stream_table, *token);
+
+    if (OS_SocketAddrToString_Impl(sock->stream_name, sizeof(sock->stream_name), Addr) != OS_SUCCESS)
+    {
+        sock->stream_name[0] = 0;
+    }
+    if (OS_SocketAddrGetPort_Impl(&port, Addr) == OS_SUCCESS)
+    {
+        len = OS_strnlen(sock->stream_name, sizeof(sock->stream_name));
+        snprintf(&sock->stream_name[len], sizeof(sock->stream_name) - len, ":%u", (unsigned int)port);
+    }
+
+    if (parent_name)
+    {
+        /* Append the name from the parent socket. */
+        len = OS_strnlen(sock->stream_name, sizeof(sock->stream_name));
+        snprintf(&sock->stream_name[len], sizeof(sock->stream_name) - len, "-%s", parent_name);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketOpen(osal_id_t *sock_id, OS_SocketDomain_t Domain, OS_SocketType_t Type)
+{
+    OS_object_token_t            token;
+    OS_stream_internal_record_t *stream;
+    int32                        return_code;
+
+    /* Check for NULL pointers */
+    OS_CHECK_POINTER(sock_id);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, NULL, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        /* Save all the data to our own internal table */
+        memset(stream, 0, sizeof(OS_stream_internal_record_t));
+        stream->socket_domain = Domain;
+        stream->socket_type   = Type;
+
+        /* Now call the OS-specific implementation.  This reads info from the table. */
+        return_code = OS_SocketOpen_Impl(&token);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, sock_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ * This is now just a convenience/shorthand routine handling both bind
+ * and listen, preserved for backward compatibility.
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBind(osal_id_t sock_id, const OS_SockAddr_t *Addr)
+{
+    int32 return_code;
+
+    return_code = OS_SocketBindAddress(sock_id, Addr);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_SocketListen(sock_id);
+        if (return_code == OS_ERR_INCORRECT_OBJ_TYPE)
+        {
+            /* This one is OK, it happens if the socket is a datagram/connectionless
+             * type that does not need to listen().  For backward compatibility, report
+             * success to the caller.
+             */
+            return_code = OS_SUCCESS;
+        }
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketListen(osal_id_t sock_id)
+{
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        /* This call is only applicable to stream sockets */
+        if (stream->socket_domain == OS_SocketDomain_INVALID || stream->socket_type != OS_SocketType_STREAM)
+        {
+            /* Not a stream socket */
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if ((stream->stream_state & OS_STREAM_STATE_BOUND) == 0)
+        {
+            /* Socket must be bound to an address already */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else if ((stream->stream_state & (OS_STREAM_STATE_LISTENING | OS_STREAM_STATE_CONNECTED)) != 0)
+        {
+            /* Socket must be neither listening nor connected */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_SocketListen_Impl(&token);
+
+            if (return_code == OS_SUCCESS)
+            {
+                stream->stream_state |= OS_STREAM_STATE_LISTENING;
+            }
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketBindAddress(osal_id_t sock_id, const OS_SockAddr_t *Addr)
+{
+    OS_common_record_t *         record;
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(Addr);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_stream_table, token);
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        if (stream->socket_domain == OS_SocketDomain_INVALID)
+        {
+            /* Not a socket */
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if ((stream->stream_state & (OS_STREAM_STATE_BOUND | OS_STREAM_STATE_CONNECTED)) != 0)
+        {
+            /* Socket must be neither bound nor connected */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_SocketBindAddress_Impl(&token, Addr);
+
+            if (return_code == OS_SUCCESS)
+            {
+                OS_CreateSocketName(&token, Addr, NULL);
+                record->name_entry = stream->stream_name;
+                stream->stream_state |= OS_STREAM_STATE_BOUND;
+            }
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAccept(osal_id_t sock_id, osal_id_t *connsock_id, OS_SockAddr_t *Addr, int32 timeout)
+{
+    OS_common_record_t *         sock_record;
+    OS_common_record_t *         conn_record;
+    OS_stream_internal_record_t *sock;
+    OS_stream_internal_record_t *conn;
+    OS_object_token_t            sock_token;
+    OS_object_token_t            conn_token;
+    int32                        return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(Addr);
+    OS_CHECK_POINTER(connsock_id);
+
+    /*
+     * Note: setting "connrecord" here avoids a false warning
+     * from static analysis tools about the value being
+     * possibly used uninitialized (it cannot be, because
+     * return_code is checked, and return_code is only
+     * set to OS_SUCCESS when connrecord is also initialized)
+     */
+    conn_record = NULL;
+    sock_record = NULL;
+    sock        = NULL;
+    conn        = NULL;
+    memset(&sock_token, 0, sizeof(sock_token));
+    memset(&conn_token, 0, sizeof(conn_token));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, sock_id, &sock_token);
+    if (return_code == OS_SUCCESS)
+    {
+        sock_record = OS_OBJECT_TABLE_GET(OS_global_stream_table, sock_token);
+        sock        = OS_OBJECT_TABLE_GET(OS_stream_table, sock_token);
+
+        if (sock->socket_type != OS_SocketType_STREAM)
+        {
+            /* Socket must be of the STREAM variety */
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if ((sock->stream_state & (OS_STREAM_STATE_BOUND | OS_STREAM_STATE_CONNECTED)) != OS_STREAM_STATE_BOUND)
+        {
+            /* Socket must be bound but not connected */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            /* Now create a unique ID for the connection */
+            return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, NULL, &conn_token);
+            if (return_code == OS_SUCCESS)
+            {
+                conn_record = OS_OBJECT_TABLE_GET(OS_global_stream_table, conn_token);
+                conn        = OS_OBJECT_TABLE_GET(OS_stream_table, conn_token);
+
+                /* Incr the refcount to record the fact that an operation is pending on this */
+                memset(conn, 0, sizeof(OS_stream_internal_record_t));
+
+                conn->socket_domain = sock->socket_domain;
+                conn->socket_type   = sock->socket_type;
+
+                OS_SocketAddrInit_Impl(Addr, sock->socket_domain);
+
+                return_code = OS_SocketAccept_Impl(&sock_token, &conn_token, Addr, timeout);
+
+                if (return_code == OS_SUCCESS)
+                {
+                    /* Generate an entry name based on the remote address */
+                    OS_CreateSocketName(&conn_token, Addr, sock_record->name_entry);
+                    conn_record->name_entry = conn->stream_name;
+                    conn->stream_state |= OS_STREAM_STATE_CONNECTED;
+                }
+
+                return_code = OS_ObjectIdFinalizeNew(return_code, &conn_token, connsock_id);
+            }
+        }
+
+        OS_ObjectIdRelease(&sock_token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketConnect(osal_id_t sock_id, const OS_SockAddr_t *Addr, int32 Timeout)
+{
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(Addr);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        if (stream->socket_domain == OS_SocketDomain_INVALID)
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if (stream->socket_type == OS_SocketType_STREAM && (stream->stream_state & OS_STREAM_STATE_CONNECTED) != 0)
+        {
+            /* Stream socket must not be connected */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_SocketConnect_Impl(&token, Addr, Timeout);
+
+            if (return_code == OS_SUCCESS)
+            {
+                stream->stream_state |= OS_STREAM_STATE_CONNECTED | OS_STREAM_STATE_READABLE | OS_STREAM_STATE_WRITABLE;
+            }
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketShutdown(osal_id_t sock_id, OS_SocketShutdownMode_t Mode)
+{
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    /* Confirm that "Mode" is one of the 3 acceptable values */
+    BUGCHECK(Mode == OS_SocketShutdownMode_SHUT_READ || Mode == OS_SocketShutdownMode_SHUT_WRITE ||
+                 Mode == OS_SocketShutdownMode_SHUT_READWRITE,
+             OS_ERR_INVALID_ARGUMENT);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        if (stream->socket_domain == OS_SocketDomain_INVALID)
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if (stream->socket_type == OS_SocketType_STREAM && (stream->stream_state & OS_STREAM_STATE_CONNECTED) == 0)
+        {
+            /* Stream socket must not be connected */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_SocketShutdown_Impl(&token, Mode);
+
+            if (return_code == OS_SUCCESS)
+            {
+                if (Mode & OS_SocketShutdownMode_SHUT_READ)
+                {
+                    stream->stream_state &= ~OS_STREAM_STATE_READABLE;
+                }
+                if (Mode & OS_SocketShutdownMode_SHUT_WRITE)
+                {
+                    stream->stream_state &= ~OS_STREAM_STATE_WRITABLE;
+                }
+            }
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketRecvFrom(osal_id_t sock_id, void *buffer, size_t buflen, OS_SockAddr_t *RemoteAddr, int32 timeout)
+{
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    /*
+     * Check parameters
+     *
+     * Note "RemoteAddr" is not checked, because in certain configurations it can be validly null.
+     */
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(buflen);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        if (stream->socket_type != OS_SocketType_DATAGRAM)
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else if ((stream->stream_state & OS_STREAM_STATE_BOUND) == 0)
+        {
+            /* Socket needs to be bound first */
+            return_code = OS_ERR_INCORRECT_OBJ_STATE;
+        }
+        else
+        {
+            return_code = OS_SocketRecvFrom_Impl(&token, buffer, buflen, RemoteAddr, timeout);
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketSendTo(osal_id_t sock_id, const void *buffer, size_t buflen, const OS_SockAddr_t *RemoteAddr)
+{
+    OS_stream_internal_record_t *stream;
+    OS_object_token_t            token;
+    int32                        return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(buflen);
+    OS_CHECK_POINTER(RemoteAddr);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        stream = OS_OBJECT_TABLE_GET(OS_stream_table, token);
+
+        if (stream->socket_type != OS_SocketType_DATAGRAM)
+        {
+            return_code = OS_ERR_INCORRECT_OBJ_TYPE;
+        }
+        else
+        {
+            return_code = OS_SocketSendTo_Impl(&token, buffer, buflen, RemoteAddr);
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetIdByName(osal_id_t *sock_id, const char *sock_name)
+{
+    int32 return_code;
+
+    /* Check Parameters */
+    OS_CHECK_POINTER(sock_id);
+    OS_CHECK_POINTER(sock_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, sock_name, sock_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketGetInfo(osal_id_t sock_id, OS_socket_prop_t *sock_prop)
+{
+    OS_common_record_t *record;
+    OS_object_token_t   token;
+    int32               return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(sock_prop);
+
+    memset(sock_prop, 0, sizeof(OS_socket_prop_t));
+
+    /* Check Parameters */
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, sock_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_stream_table, token);
+
+        strncpy(sock_prop->name, record->name_entry, sizeof(sock_prop->name) - 1);
+        sock_prop->creator = record->creator;
+        return_code        = OS_SocketGetInfo_Impl(&token, sock_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrInit(OS_SockAddr_t *Addr, OS_SocketDomain_t Domain)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(Addr);
+
+    return OS_SocketAddrInit_Impl(Addr, Domain);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrToString(char *buffer, size_t buflen, const OS_SockAddr_t *Addr)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(Addr);
+    OS_CHECK_POINTER(buffer);
+    OS_CHECK_SIZE(buflen);
+
+    return OS_SocketAddrToString_Impl(buffer, buflen, Addr);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrFromString(OS_SockAddr_t *Addr, const char *string)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(Addr);
+    OS_CHECK_POINTER(string);
+
+    return OS_SocketAddrFromString_Impl(Addr, string);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrGetPort(uint16 *PortNum, const OS_SockAddr_t *Addr)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(Addr);
+    OS_CHECK_POINTER(PortNum);
+
+    return OS_SocketAddrGetPort_Impl(PortNum, Addr);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_SocketAddrSetPort(OS_SockAddr_t *Addr, uint16 PortNum)
+{
+    /* Check parameters */
+    OS_CHECK_POINTER(Addr);
+
+    return OS_SocketAddrSetPort_Impl(Addr, PortNum);
+}
+```
+
+### `osapi-task.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-task.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ *         This code only uses very basic C library calls that are expected
+ *         to be available on every sane C-language compiler.  For everything else,
+ *         a platform-specific implementation function is used.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-task.h"
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_TASKS) || (OS_MAX_TASKS <= 0)
+#error "osconfig.h must define OS_MAX_TASKS to a valid value"
+#endif
+
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_TASKS,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_TASK
+};
+
+OS_task_internal_record_t OS_task_table[LOCAL_NUM_OBJECTS];
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Helper function for registering new tasks in the global database.
+ *           This maps the given task_id back to the array entry (OS_task_internal_record_t)
+ *           so that the caller can call the real entry point.
+ *
+ *           In the process, this also verifies that the task_id is valid and
+ *           it matches the expected entry, and this calls the implementation's
+ *           "Register" function to make sure that the appropriate thread-specific
+ *           variables are set - this guarantees that GetTaskId will work.
+ *
+ *
+ *-----------------------------------------------------------------*/
+static int32 OS_TaskPrepare(osal_id_t task_id, osal_task_entry *entrypt)
+{
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_TASK, task_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        task = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        return_code = OS_TaskMatch_Impl(&token);
+        *entrypt    = task->entry_function_pointer;
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_TaskRegister_Impl(task_id);
+    }
+
+    if (return_code == OS_SUCCESS)
+    {
+        /* Give event callback to the application */
+        return_code = OS_NotifyEvent(OS_EVENT_TASK_STARTUP, task_id, NULL);
+    }
+
+    if (return_code != OS_SUCCESS)
+    {
+        *entrypt = NULL;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           The entry point for all OSAL tasks
+ *           This function is called from the OS-specific layers after a task is spawned
+ *           and is the first thing to run under the context of the task itself.
+ *           This will register the task appropriately in the global data structures and
+ *           call the user's intended entry point function.
+ *
+ *-----------------------------------------------------------------*/
+void OS_TaskEntryPoint(osal_id_t task_id)
+{
+    osal_task_entry task_entry;
+
+    if (OS_TaskPrepare(task_id, &task_entry) == OS_SUCCESS)
+    {
+        if (task_entry != NULL)
+        {
+            (*task_entry)();
+        }
+    }
+
+    /* If the function returns, treat as a normal exit and do the proper cleanup */
+    OS_TaskExit();
+}
+
+/*
+ *********************************************************************************
+ *          TASK API
+ *********************************************************************************
+ */
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskAPI_Init(void)
+{
+    memset(OS_task_table, 0, sizeof(OS_task_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskCreate(osal_id_t *task_id, const char *task_name, osal_task_entry function_pointer,
+                    osal_stackptr_t stack_pointer, size_t stack_size, osal_priority_t priority, uint32 flags)
+{
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+
+    /*
+     * Check parameters
+     *
+     * Note "stack_pointer" is not checked, because in certain configurations it can be validly null.
+     */
+    OS_CHECK_POINTER(task_id);
+    OS_CHECK_POINTER(function_pointer);
+    OS_CHECK_APINAME(task_name);
+    OS_CHECK_SIZE(stack_size);
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(LOCAL_OBJID_TYPE, task_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        task = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, task, task_name, task_name);
+
+        task->stack_size             = stack_size;
+        task->priority               = priority;
+        task->entry_function_pointer = function_pointer;
+        task->stack_pointer          = stack_pointer;
+
+        /* Add default flags */
+        flags |= OS_ADD_TASK_FLAGS;
+
+        /* Now call the OS-specific implementation.  This reads info from the task table. */
+        return_code = OS_TaskCreate_Impl(&token, flags);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, task_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelete(osal_id_t task_id)
+{
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+    osal_task_entry            delete_hook;
+
+    delete_hook = NULL;
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, LOCAL_OBJID_TYPE, task_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        task = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        /* Save the delete hook, as we do not want to call it while locked */
+        delete_hook = task->delete_hook_pointer;
+
+        return_code = OS_TaskDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    /*
+    ** Call the thread Delete hook if there is one.
+    */
+    if (return_code == OS_SUCCESS && delete_hook != NULL)
+    {
+        delete_hook();
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_TaskExit()
+{
+    osal_id_t         task_id;
+    OS_object_token_t token;
+
+    task_id = OS_TaskGetId_Impl();
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, task_id, &token) == OS_SUCCESS)
+    {
+        OS_TaskDetach_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        OS_ObjectIdFinalizeDelete(OS_SUCCESS, &token);
+    }
+
+    /* call the implementation */
+    OS_TaskExit_Impl();
+
+    /* Impl function never returns */
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskDelay(uint32 millisecond)
+{
+    /* just call the implementation */
+    return OS_TaskDelay_Impl(millisecond);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskSetPriority(osal_id_t task_id, osal_priority_t new_priority)
+{
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, task_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        task = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        return_code = OS_TaskSetPriority_Impl(&token, new_priority);
+
+        if (return_code == OS_SUCCESS)
+        {
+            /* Use the abstracted priority, not the OS one */
+            /* Change the priority in the table as well */
+            task->priority = new_priority;
+        }
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+osal_id_t OS_TaskGetId(void)
+{
+    osal_id_t task_id;
+
+    task_id = OS_TaskGetId_Impl();
+
+    return task_id;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskGetIdByName(osal_id_t *task_id, const char *task_name)
+{
+    int32 return_code;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(task_id);
+    OS_CHECK_POINTER(task_name);
+
+    return_code = OS_ObjectIdFindByName(LOCAL_OBJID_TYPE, task_name, task_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskGetInfo(osal_id_t task_id, OS_task_prop_t *task_prop)
+{
+    OS_common_record_t *       record;
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(task_prop);
+
+    memset(task_prop, 0, sizeof(OS_task_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, task_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record = OS_OBJECT_TABLE_GET(OS_global_task_table, token);
+        task   = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        if (record->name_entry != NULL)
+        {
+            strncpy(task_prop->name, record->name_entry, sizeof(task_prop->name) - 1);
+            task_prop->name[sizeof(task_prop->name) - 1] = 0;
+        }
+        task_prop->creator    = record->creator;
+        task_prop->stack_size = task->stack_size;
+        task_prop->priority   = task->priority;
+
+        return_code = OS_TaskGetInfo_Impl(&token, task_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskInstallDeleteHandler(osal_task_entry function_pointer)
+{
+    int32                      return_code;
+    OS_object_token_t          token;
+    OS_task_internal_record_t *task;
+    osal_id_t                  task_id;
+
+    task_id     = OS_TaskGetId_Impl();
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, task_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        task = OS_OBJECT_TABLE_GET(OS_task_table, token);
+
+        /*
+        ** Install the pointer
+        */
+        task->delete_hook_pointer = function_pointer;
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TaskFindIdBySystemData(osal_id_t *task_id, const void *sysdata, size_t sysdata_size)
+{
+    int32             return_code;
+    OS_object_token_t token;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(task_id);
+
+    /* The "sysdata" and "sysdata_size" must be passed to the underlying impl for validation */
+    return_code = OS_TaskValidateSystemData_Impl(sysdata, sysdata_size);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    return_code = OS_ObjectIdGetBySearch(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, OS_TaskIdMatchSystemData_Impl,
+                                         (void *)sysdata, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        *task_id = OS_ObjectIdFromToken(&token);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-time.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-time.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <limits.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-timebase.h"
+#include "os-shared-time.h"
+#include "os-shared-task.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_TIMERS) || (OS_MAX_TIMERS <= 0)
+#error "osconfig.h must define OS_MAX_TIMERS to a valid value"
+#endif
+
+OS_timecb_internal_record_t OS_timecb_table[OS_MAX_TIMERS];
+
+typedef union
+{
+    OS_TimerCallback_t timer_callback_func;
+    void *             opaque_arg;
+} OS_Timer_ArgWrapper_t;
+
+/****************************************************************************************
+                                   Timer API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerCbAPI_Init(void)
+{
+    memset(OS_timecb_table, 0, sizeof(OS_timecb_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Adds new OSAL Timer based on an existing timebase
+ *           Internal function used by TimerCreate and TimerAdd API calls
+ *
+ *  Arguments:  flags to specify the internal bits to set in the created record
+ *
+ *  Return:     OS_SUCCESS or error code
+ *
+ *-----------------------------------------------------------------*/
+static int32 OS_DoTimerAdd(osal_id_t *timer_id, const char *timer_name, osal_id_t timebase_ref_id,
+                           OS_ArgCallback_t callback_ptr, void *callback_arg, uint32 flags)
+{
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    OS_object_token_t              timebase_token;
+    OS_object_token_t              timecb_token;
+    OS_object_token_t              listcb_token;
+    OS_timecb_internal_record_t *  timecb;
+    OS_timecb_internal_record_t *  list_timecb;
+    OS_timebase_internal_record_t *timebase;
+
+    /*
+     * Check parameters
+     *
+     * Note "callback_arg" is not checked, because in certain configurations it can be validly null.
+     */
+    OS_CHECK_POINTER(timer_id);
+    OS_CHECK_APINAME(timer_name);
+    OS_CHECK_POINTER(callback_ptr);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    /*
+     * Check that the timebase reference is valid
+     * If successful, then after this statement, we MUST decrement the refcount
+     * if we leave this routine with an error.
+     */
+    return_code =
+        OS_ObjectIdGetById(OS_LOCK_MODE_REFCOUNT, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_ref_id, &timebase_token);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TIMECB, timer_name, &timecb_token);
+    if (return_code == OS_SUCCESS)
+    {
+        timecb   = OS_OBJECT_TABLE_GET(OS_timecb_table, timecb_token);
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, timebase_token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(timecb_token, timecb, timer_name, timer_name);
+
+        /*
+         * transfer ownership so the refcount obtained earlier is now
+         * associated with the timecb object, and will be retained until
+         * the object is deleted.
+         */
+        OS_ObjectIdTransferToken(&timebase_token, &timecb->timebase_token);
+
+        timecb->callback_ptr = callback_ptr;
+        timecb->callback_arg = callback_arg;
+        timecb->flags        = flags;
+        timecb->prev_cb      = OS_ObjectIdFromToken(&timecb_token);
+        timecb->next_cb      = OS_ObjectIdFromToken(&timecb_token);
+
+        /*
+         * Now we need to add it to the time base callback ring, so take the
+         * timebase-specific lock to prevent a tick from being processed at this moment.
+         */
+        OS_TimeBaseLock_Impl(&timebase_token);
+
+        if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timebase->first_cb, &listcb_token) ==
+            OS_SUCCESS)
+        {
+            list_timecb = OS_OBJECT_TABLE_GET(OS_timecb_table, listcb_token);
+
+            timecb->next_cb = OS_ObjectIdFromToken(&listcb_token);
+            timecb->prev_cb = list_timecb->prev_cb;
+
+            if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timecb->prev_cb, &listcb_token) ==
+                OS_SUCCESS)
+            {
+                list_timecb->prev_cb = OS_ObjectIdFromToken(&timecb_token);
+                list_timecb          = OS_OBJECT_TABLE_GET(OS_timecb_table, listcb_token);
+                list_timecb->next_cb = OS_ObjectIdFromToken(&timecb_token);
+            }
+        }
+
+        timebase->first_cb = OS_ObjectIdFromToken(&timecb_token);
+
+        OS_TimeBaseUnlock_Impl(&timebase_token);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &timecb_token, timer_id);
+    }
+    else
+    {
+        OS_ObjectIdRelease(&timebase_token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerAdd(osal_id_t *timer_id, const char *timer_name, osal_id_t timebase_ref_id, OS_ArgCallback_t callback_ptr,
+                  void *callback_arg)
+{
+    return (OS_DoTimerAdd(timer_id, timer_name, timebase_ref_id, callback_ptr, callback_arg, 0));
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *
+ *-----------------------------------------------------------------*/
+static void OS_Timer_NoArgCallback(osal_id_t objid, void *arg)
+{
+    OS_Timer_ArgWrapper_t Conv;
+
+    /*
+     * Note - did not write this as simply *((OS_SimpleCallback_t)arg) because
+     * technically you cannot cast a void * to a function pointer.
+     */
+    Conv.opaque_arg = arg;
+    (*Conv.timer_callback_func)(objid);
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerCreate(osal_id_t *timer_id, const char *timer_name, uint32 *accuracy, OS_TimerCallback_t callback_ptr)
+{
+    int32                 return_code;
+    osal_id_t             timebase_ref_id;
+    OS_Timer_ArgWrapper_t Conv;
+
+    /*
+    ** Check Parameters.  Although DoTimerAdd will also
+    ** check this stuff, also doing it here avoids unnecessarily
+    ** creating and deleting a timebase object in case something is bad.
+    */
+    OS_CHECK_POINTER(timer_id);
+    OS_CHECK_APINAME(timer_name);
+    OS_CHECK_POINTER(accuracy);
+    OS_CHECK_POINTER(callback_ptr);
+
+    /*
+     * Create our dedicated time base object to drive this timer
+     */
+    return_code = OS_TimeBaseCreate(&timebase_ref_id, timer_name, NULL);
+    if (return_code != OS_SUCCESS)
+    {
+        return return_code;
+    }
+
+    /*
+     * Create the actual timer object based off our dedicated time base
+     * The TIMECB_FLAG_DEDICATED_TIMEBASE flag is used to mark this object
+     * that the time base object attached to it was automatically created for it
+     *
+     * Although this passes a function pointer through the "void*" argument
+     * to the callback function (technically a no-no), this should be safe
+     * because it is already verified by a CompileTimeAssert that
+     * sizeof(OS_TimerCallback_t) <= sizeof(void*) on this platform.
+     */
+    Conv.opaque_arg          = NULL;
+    Conv.timer_callback_func = callback_ptr;
+
+    return_code = OS_DoTimerAdd(timer_id, timer_name, timebase_ref_id, OS_Timer_NoArgCallback, Conv.opaque_arg,
+                                TIMECB_FLAG_DEDICATED_TIMEBASE);
+
+    /*
+     * If returning from this call unsuccessfully, then we need to delete the
+     * dedicated timebase object that we just created earlier.
+     */
+    if (return_code != OS_SUCCESS)
+    {
+        OS_TimeBaseDelete(timebase_ref_id);
+    }
+    else
+    {
+        *accuracy = OS_SharedGlobalVars.MicroSecPerTick;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerSet(osal_id_t timer_id, uint32 start_time, uint32 interval_time)
+{
+    OS_timecb_internal_record_t *timecb;
+    int32                        return_code;
+    osal_objtype_t               objtype;
+    osal_id_t                    dedicated_timebase_id;
+    OS_object_token_t            token;
+
+    dedicated_timebase_id = OS_OBJECT_ID_UNDEFINED;
+
+    ARGCHECK(start_time < (UINT32_MAX / 2), OS_TIMER_ERR_INVALID_ARGS);
+    ARGCHECK(interval_time < (UINT32_MAX / 2), OS_TIMER_ERR_INVALID_ARGS);
+    ARGCHECK(start_time != 0 || interval_time != 0, OS_TIMER_ERR_INVALID_ARGS);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_TIMECB, timer_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        timecb = OS_OBJECT_TABLE_GET(OS_timecb_table, token);
+
+        OS_TimeBaseLock_Impl(&timecb->timebase_token);
+
+        if ((timecb->flags & TIMECB_FLAG_DEDICATED_TIMEBASE) != 0)
+        {
+            dedicated_timebase_id = OS_ObjectIdFromToken(&timecb->timebase_token);
+        }
+
+        timecb->wait_time     = (int32)start_time;
+        timecb->interval_time = (int32)interval_time;
+
+        OS_TimeBaseUnlock_Impl(&timecb->timebase_token);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    /*
+     * If the timer uses a dedicated time base, then also change that to the same interval.
+     *
+     * This is not perfect in the sense that the update is not all done atomically.  If this
+     * is not the first call to TimerSet, then weirdness can happen:
+     *  - a timer tick could occur between setting the callback times above and now
+     *  - the call to OS_TimeBaseSet() could fail leaving us in a mixed state
+     *
+     * However, the notion of multiple TimerSet() calls is a gray area to begin with, since
+     * timer ticks can occur at any moment - there is never a guarantee your new TimerSet values
+     * will get applied before the old timer expires.  Therefore by definition an application
+     * MUST be able to handle a possible "spurious" callback in these circumstances.
+     */
+    if (return_code == OS_SUCCESS && OS_ObjectIdDefined(dedicated_timebase_id))
+    {
+        return_code = OS_TimeBaseSet(dedicated_timebase_id, start_time, interval_time);
+    }
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerDelete(osal_id_t timer_id)
+{
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    osal_id_t                      dedicated_timebase_id;
+    OS_object_token_t              timecb_token;
+    OS_object_token_t              timebase_token;
+    OS_object_token_t              listcb_token;
+    OS_timebase_internal_record_t *timebase;
+    OS_timecb_internal_record_t *  timecb;
+    OS_timecb_internal_record_t *  list_timecb;
+
+    dedicated_timebase_id = OS_OBJECT_ID_UNDEFINED;
+    memset(&timebase_token, 0, sizeof(timebase_token));
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, OS_OBJECT_TYPE_OS_TIMECB, timer_id, &timecb_token);
+    if (return_code == OS_SUCCESS)
+    {
+        timecb   = OS_OBJECT_TABLE_GET(OS_timecb_table, timecb_token);
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, timecb->timebase_token);
+
+        OS_ObjectIdTransferToken(&timecb->timebase_token, &timebase_token);
+
+        OS_TimeBaseLock_Impl(&timecb->timebase_token);
+
+        /*
+         * If the timer uses a dedicated time base, then also delete that.
+         */
+        if ((timecb->flags & TIMECB_FLAG_DEDICATED_TIMEBASE) != 0)
+        {
+            dedicated_timebase_id = OS_ObjectIdFromToken(&timecb->timebase_token);
+        }
+
+        /*
+         * Now we need to remove it from the time base callback ring
+         */
+        if (OS_ObjectIdEqual(timebase->first_cb, OS_ObjectIdFromToken(&timecb_token)))
+        {
+            if (OS_ObjectIdEqual(OS_ObjectIdFromToken(&timecb_token), timecb->next_cb))
+            {
+                timebase->first_cb = OS_OBJECT_ID_UNDEFINED;
+            }
+            else
+            {
+                timebase->first_cb = timecb->next_cb;
+            }
+        }
+
+        if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timecb->prev_cb, &listcb_token) ==
+            OS_SUCCESS)
+        {
+            list_timecb          = OS_OBJECT_TABLE_GET(OS_timecb_table, listcb_token);
+            list_timecb->next_cb = timecb->next_cb;
+        }
+        if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timecb->next_cb, &listcb_token) ==
+            OS_SUCCESS)
+        {
+            list_timecb          = OS_OBJECT_TABLE_GET(OS_timecb_table, listcb_token);
+            list_timecb->prev_cb = timecb->prev_cb;
+        }
+
+        timecb->next_cb = OS_ObjectIdFromToken(&timecb_token);
+        timecb->prev_cb = OS_ObjectIdFromToken(&timecb_token);
+
+        OS_TimeBaseUnlock_Impl(&timecb->timebase_token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &timecb_token);
+    }
+
+    /*
+     * Remove the reference count against the timebase
+     */
+    OS_ObjectIdRelease(&timebase_token);
+
+    /*
+     * If the timer uses a dedicated time base, then also delete it.
+     */
+    if (return_code == OS_SUCCESS && OS_ObjectIdDefined(dedicated_timebase_id))
+    {
+        OS_TimeBaseDelete(dedicated_timebase_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerGetIdByName(osal_id_t *timer_id, const char *timer_name)
+{
+    int32          return_code;
+    osal_objtype_t objtype;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(timer_id);
+    OS_CHECK_POINTER(timer_name);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TIMECB, timer_name, timer_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimerGetInfo(osal_id_t timer_id, OS_timer_prop_t *timer_prop)
+{
+    OS_common_record_t *           record;
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    OS_object_token_t              token;
+    OS_timecb_internal_record_t *  timecb;
+    OS_timebase_internal_record_t *timebase;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(timer_prop);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    memset(timer_prop, 0, sizeof(OS_timer_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_TIMECB, timer_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record   = OS_OBJECT_TABLE_GET(OS_global_timecb_table, token);
+        timecb   = OS_OBJECT_TABLE_GET(OS_timecb_table, token);
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, timecb->timebase_token);
+
+        strncpy(timer_prop->name, record->name_entry, sizeof(timer_prop->name) - 1);
+        timer_prop->creator       = record->creator;
+        timer_prop->interval_time = (uint32)timecb->interval_time;
+        timer_prop->accuracy      = timebase->accuracy_usec;
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-timebase.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-timebase.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *         This file  contains some of the OS APIs abstraction layer code
+ *         that is shared/common across all OS-specific implementations.
+ *
+ *         A "timebase" provides the reference for which "timer" objects are based.
+ *
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <limits.h>
+
+/*
+ * User defined include files
+ */
+#include "os-shared-timebase.h"
+#include "os-shared-common.h"
+#include "os-shared-idmap.h"
+#include "os-shared-task.h"
+#include "os-shared-time.h"
+
+/*
+ * Sanity checks on the user-supplied configuration
+ * The relevant OS_MAX limit should be defined and greater than zero
+ */
+#if !defined(OS_MAX_TIMEBASES) || (OS_MAX_TIMEBASES <= 0)
+#error "osconfig.h must define OS_MAX_TIMEBASES to a valid value"
+#endif
+
+enum
+{
+    LOCAL_NUM_OBJECTS = OS_MAX_TIMEBASES,
+    LOCAL_OBJID_TYPE  = OS_OBJECT_TYPE_OS_TIMEBASE
+};
+
+OS_timebase_internal_record_t OS_timebase_table[OS_MAX_TIMEBASES];
+
+/*
+ * Limit to the number of times that the OS timebase servicing thread
+ * is allowed to spin without achieving external sync.
+ */
+#define OS_TIMEBASE_SPIN_LIMIT 4
+
+/****************************************************************************************
+                                   TimeBase API
+ ***************************************************************************************/
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Init function for OS-independent layer
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseAPI_Init(void)
+{
+    memset(OS_timebase_table, 0, sizeof(OS_timebase_table));
+    return OS_SUCCESS;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseCreate(osal_id_t *timer_id, const char *timebase_name, OS_TimerSync_t external_sync)
+{
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    OS_object_token_t              token;
+    OS_timebase_internal_record_t *timebase;
+
+    /*
+     * Specifying a NULL sync function means the timebase is not externally synchronized.
+     * In this case an appropriate OS timer will be used to generate the simulated timer tick.
+     */
+
+    /*
+     ** Check Parameters
+     */
+    OS_CHECK_POINTER(timer_id);
+    OS_CHECK_APINAME(timebase_name);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    /* Note - the common ObjectIdAllocate routine will lock the object type and leave it locked. */
+    return_code = OS_ObjectIdAllocateNew(OS_OBJECT_TYPE_OS_TIMEBASE, timebase_name, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+        /* Reset the table entry and save the name */
+        OS_OBJECT_INIT(token, timebase, timebase_name, timebase_name);
+
+        timebase->external_sync = external_sync;
+        if (external_sync == NULL)
+        {
+            timebase->accuracy_usec = OS_SharedGlobalVars.MicroSecPerTick;
+        }
+        else
+        {
+            timebase->accuracy_usec = 0;
+        }
+
+        /* Now call the OS-specific implementation.  This reads info from the timer table. */
+        return_code = OS_TimeBaseCreate_Impl(&token);
+
+        /* Check result, finalize record, and unlock global table. */
+        return_code = OS_ObjectIdFinalizeNew(return_code, &token, timer_id);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseSet(osal_id_t timer_id, uint32 start_time, uint32 interval_time)
+{
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    OS_object_token_t              token;
+    OS_timebase_internal_record_t *timebase;
+
+    /*
+     * Internally the implementation represents the interval as a
+     * signed 32-bit integer, but the parameter is unsigned because a negative interval
+     * does not make sense.
+     *
+     * Note that the units are intentionally left unspecified.  The external sync period
+     * could be measured in microseconds or hours -- it is whatever the application requires.
+     */
+    ARGCHECK(start_time < 1000000000, OS_TIMER_ERR_INVALID_ARGS);
+    ARGCHECK(interval_time < 1000000000, OS_TIMER_ERR_INVALID_ARGS);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_TIMEBASE, timer_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+        /* Need to take the time base lock to ensure that no ticks are currently being processed */
+        OS_TimeBaseLock_Impl(&token);
+
+        return_code = OS_TimeBaseSet_Impl(&token, start_time, interval_time);
+
+        if (return_code == OS_SUCCESS)
+        {
+            /* Save the value since we were successful */
+            timebase->nominal_start_time    = start_time;
+            timebase->nominal_interval_time = interval_time;
+        }
+
+        OS_TimeBaseUnlock_Impl(&token);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseDelete(osal_id_t timer_id)
+{
+    int32             return_code;
+    osal_objtype_t    objtype;
+    OS_object_token_t token;
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_EXCLUSIVE, OS_OBJECT_TYPE_OS_TIMEBASE, timer_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        return_code = OS_TimeBaseDelete_Impl(&token);
+
+        /* Complete the operation via the common routine */
+        return_code = OS_ObjectIdFinalizeDelete(return_code, &token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetIdByName(osal_id_t *timer_id, const char *timebase_name)
+{
+    int32          return_code;
+    osal_objtype_t objtype;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(timer_id);
+    OS_CHECK_APINAME(timebase_name);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    return_code = OS_ObjectIdFindByName(OS_OBJECT_TYPE_OS_TIMEBASE, timebase_name, timer_id);
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetInfo(osal_id_t timebase_id, OS_timebase_prop_t *timebase_prop)
+{
+    OS_common_record_t *           record;
+    int32                          return_code;
+    osal_objtype_t                 objtype;
+    OS_object_token_t              token;
+    OS_timebase_internal_record_t *timebase;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(timebase_prop);
+
+    /*
+     * Check our context.  Not allowed to use the timer API from a timer callback.
+     * Just interested in the object type returned.
+     */
+    objtype = OS_ObjectIdToType_Impl(OS_TaskGetId_Impl());
+    if (objtype == OS_OBJECT_TYPE_OS_TIMEBASE)
+    {
+        return OS_ERR_INCORRECT_OBJ_STATE;
+    }
+
+    memset(timebase_prop, 0, sizeof(OS_timebase_prop_t));
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, LOCAL_OBJID_TYPE, timebase_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        record   = OS_OBJECT_TABLE_GET(OS_global_timebase_table, token);
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+        strncpy(timebase_prop->name, record->name_entry, sizeof(timebase_prop->name) - 1);
+        timebase_prop->creator               = record->creator;
+        timebase_prop->nominal_interval_time = timebase->nominal_interval_time;
+        timebase_prop->freerun_time          = timebase->freerun_time;
+        timebase_prop->accuracy              = timebase->accuracy_usec;
+
+        return_code = OS_TimeBaseGetInfo_Impl(&token, timebase_prop);
+
+        OS_ObjectIdRelease(&token);
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_TimeBaseGetFreeRun(osal_id_t timebase_id, uint32 *freerun_val)
+{
+    int32                          return_code;
+    OS_object_token_t              token;
+    OS_timebase_internal_record_t *timebase;
+
+    /* Check parameters */
+    OS_CHECK_POINTER(freerun_val);
+
+    return_code = OS_ObjectIdGetById(OS_LOCK_MODE_NONE, LOCAL_OBJID_TYPE, timebase_id, &token);
+    if (return_code == OS_SUCCESS)
+    {
+        timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+        *freerun_val = timebase->freerun_time;
+    }
+
+    return return_code;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Local helper routine, not part of OSAL API.
+ *           Implementation of the time base "helper thread"
+ *
+ *           This is executed in a dedicated thread context (typically elevated priority)
+ *           and performs two basic functions:
+ *             1) call the BSP-specified delay routine to sync with the time reference (tick)
+ *             2) process the requested Application callbacks each time the tick occurs
+ *
+ *    Returns: None.
+ *
+ *    Note: Application callbacks will be done under this thread context.
+ *          Doing callbacks directly as an ISR or signal handler can be dangerous, as the
+ *          available C library calls are very limited in that context.
+ *
+ *-----------------------------------------------------------------*/
+void OS_TimeBase_CallbackThread(osal_id_t timebase_id)
+{
+    OS_TimerSync_t                 syncfunc;
+    OS_timebase_internal_record_t *timebase;
+    OS_timecb_internal_record_t *  timecb;
+    OS_common_record_t *           record;
+    OS_object_token_t              token;
+    OS_object_token_t              cb_token;
+    uint32                         tick_time;
+    uint32                         spin_cycles;
+    int32                          saved_wait_time;
+
+    /*
+     * Register this task as a time base handler.
+     * Application code MUST NOT attempt to configure timers from the context of a
+     * timer callback, otherwise deadlock is possible.  Additional checks prevent this.
+     *
+     */
+    OS_TaskRegister_Impl(timebase_id);
+
+    /* Grab the relevant info from the global structure */
+    if (OS_ObjectIdGetById(OS_LOCK_MODE_GLOBAL, OS_OBJECT_TYPE_OS_TIMEBASE, timebase_id, &token) != 0)
+    {
+        /* Something went wrong - abort this thread */
+        return;
+    }
+
+    record   = OS_OBJECT_TABLE_GET(OS_global_timebase_table, token);
+    timebase = OS_OBJECT_TABLE_GET(OS_timebase_table, token);
+
+    syncfunc    = timebase->external_sync;
+    spin_cycles = 0;
+
+    OS_ObjectIdRelease(&token);
+
+    while (1)
+    {
+        /*
+         * Call the sync function - this will pend for some period of time
+         * and return the amount of elapsed time in units of "timebase ticks"
+         */
+        tick_time = (*syncfunc)(timebase_id);
+
+        /*
+         * The returned tick_time should be nonzero.  If the sync function
+         * returns zero, then it means something went wrong and it is not
+         * known how many ticks have elapsed.
+         *
+         * This can validly occur, for instance, if the underlying wait
+         * operation was interrupted for some reason, e.g. EINTR or EAGAIN
+         * on a POSIX-like OS.
+         *
+         * In some instances it is appropriate to simply call the
+         * function again.  However, since this task typically runs as a
+         * high-priority thread, it is prudent to limit such spinning.
+         */
+        if (tick_time != 0)
+        {
+            /* nominal case - reset counter */
+            spin_cycles = 0;
+        }
+        else if (spin_cycles < OS_TIMEBASE_SPIN_LIMIT)
+        {
+            /* off-nominal but OK for now */
+            ++spin_cycles;
+        }
+        else
+        {
+            /*
+             * Spin-loop detected.
+             * Just call OS_TaskDelay_Impl() to yield the CPU.
+             * generate a debug warning only on the first time
+             * so the operator knows this is happening.
+             */
+            OS_TaskDelay_Impl(10);
+
+            if (spin_cycles == OS_TIMEBASE_SPIN_LIMIT)
+            {
+                ++spin_cycles;
+                OS_DEBUG("WARNING: Timebase Sync Spin Loop detected\n");
+            }
+        }
+
+        OS_TimeBaseLock_Impl(&token);
+
+        /*
+         * After waiting, check that our ID still matches
+         * If not then it means this time base got deleted....
+         */
+        if (!OS_ObjectIdEqual(timebase_id, record->active_id))
+        {
+            OS_TimeBaseUnlock_Impl(&token);
+            break;
+        }
+
+        timebase->freerun_time += tick_time;
+        if (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timebase->first_cb, &cb_token) == 0)
+        {
+            do
+            {
+                timecb          = OS_OBJECT_TABLE_GET(OS_timecb_table, cb_token);
+                saved_wait_time = timecb->wait_time;
+                timecb->wait_time -= tick_time;
+                while (timecb->wait_time <= 0)
+                {
+                    timecb->wait_time += timecb->interval_time;
+
+                    /*
+                     * Only allow the "wait_time" underflow to go as far negative as one interval time
+                     * This prevents a cb "interval_time" of less than the timebase interval_time from
+                     * accumulating infinitely
+                     */
+                    if (timecb->wait_time < -timecb->interval_time)
+                    {
+                        ++timecb->backlog_resets;
+                        timecb->wait_time = -timecb->interval_time;
+                    }
+
+                    /*
+                     * Only give the callback if the wait_time actually transitioned from positive to negative.
+                     * This allows one-shot operation where the API sets the "wait_time" positive but keeps
+                     * the "interval_time" at zero.  With the interval_time at zero the wait time will never
+                     * go positive again unless the API sets it again.
+                     */
+                    if (saved_wait_time > 0 && timecb->callback_ptr != NULL)
+                    {
+                        (*timecb->callback_ptr)(OS_ObjectIdFromToken(&cb_token), timecb->callback_arg);
+                    }
+
+                    /*
+                     * Do not repeat the loop unless interval_time is configured.
+                     */
+                    if (timecb->interval_time <= 0)
+                    {
+                        break;
+                    }
+                }
+
+            } while (OS_ObjectIdGetById(OS_LOCK_MODE_NONE, OS_OBJECT_TYPE_OS_TIMECB, timecb->next_cb, &cb_token) ==
+                         OS_SUCCESS &&
+                     !OS_ObjectIdEqual(OS_ObjectIdFromToken(&cb_token), timebase->first_cb));
+        }
+
+        OS_TimeBaseUnlock_Impl(&token);
+    }
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Internal helper to convert milliseconds to ticks
+ *
+ *  Returns: OS_SUCCESS on success, OS_ERROR on failure (rollover)
+ *
+ *-----------------------------------------------------------------*/
+int32 OS_Milli2Ticks(uint32 milli_seconds, int *ticks)
+{
+    uint64 num_of_ticks;
+    int32  return_code = OS_SUCCESS;
+
+    num_of_ticks = (((uint64)milli_seconds * OS_SharedGlobalVars.TicksPerSecond) + 999) / 1000;
+
+    /* Check against maximum int32 (limit from some OS's) */
+    if (num_of_ticks <= INT_MAX)
+    {
+        *ticks = (int)num_of_ticks;
+    }
+    else
+    {
+        return_code = OS_ERROR;
+        *ticks      = 0;
+    }
+
+    return return_code;
+}
+```
+
+### `osapi-version.c`
+
+**경로:** `fsw/osal/src/os/shared/src/osapi-version.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ * \ingroup  shared
+ * \author   joseph.p.hickey@nasa.gov
+ *
+ *  Defines functions that return version information
+ */
+
+/****************************************************************************************
+                                    INCLUDE FILES
+ ***************************************************************************************/
+#include "osapi-version.h"
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+const char *OS_GetVersionString(void)
+{
+    return OS_VERSION;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+const char *OS_GetVersionCodeName(void)
+{
+    return OS_VERSION_CODENAME;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+void OS_GetVersionNumber(uint8 VersionNumbers[4])
+{
+    VersionNumbers[0] = OS_MAJOR_VERSION;
+    VersionNumbers[1] = OS_MINOR_VERSION;
+    VersionNumbers[2] = OS_REVISION;
+    VersionNumbers[3] = OS_MISSION_REV;
+}
+
+/*----------------------------------------------------------------
+ *
+ *  Purpose: Implemented per public OSAL API
+ *           See description in API and header file for detail
+ *
+ *-----------------------------------------------------------------*/
+uint32 OS_GetBuildNumber(void)
+{
+    return OS_BUILD_NUMBER;
+}
+```

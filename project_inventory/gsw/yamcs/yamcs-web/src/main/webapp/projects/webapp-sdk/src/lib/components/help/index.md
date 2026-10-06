@@ -3,24 +3,160 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `help.component.css`
 
-file--help.component.css
-file--help.component.html
-file--help.component.ts
-file--help.dialog.css
-file--help.dialog.html
-file--help.dialog.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.css`
+
+
+```css
+::ng-deep .help table {
+  border-spacing: 0;
+}
+
+::ng-deep .help td,
+::ng-deep .help th {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.654);
+  border-bottom: 1px solid #d3d3d3;
+}
+
+mat-icon {
+  font-size: 12px !important;
+  height: 12px !important;
+  width: 12px !important;
+}
 ```
 
-## 항목
+### `help.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.css`](file--help.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.html`](file--help.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.ts`](file--help.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.css`](file--help.dialog.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.html`](file--help.dialog.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.ts`](file--help.dialog.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.html`
+
+
+```html
+<ya-text-action (click)="showHelp()" class="help">
+  <mat-icon>help</mat-icon>
+  <div #dialogContent style="display: none">
+    <ng-content />
+  </div>
+</ya-text-action>
+```
+
+### `help.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.component.ts`
+
+
+```typescript
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { YaTextAction } from '../text-action/text-action.component';
+import { YaHelpDialog } from './help.dialog';
+
+@Component({
+  selector: 'ya-help',
+  templateUrl: './help.component.html',
+  styleUrl: './help.component.css',
+  imports: [MatIcon, YaTextAction],
+})
+export class YaHelp {
+  @Input()
+  dialogTitle: string;
+
+  @Input()
+  dialogWidth = '500px';
+
+  @ViewChild('dialogContent', { static: true })
+  dialogContent: ElementRef;
+
+  constructor(
+    private dialog: MatDialog,
+    private sanitizer: DomSanitizer,
+  ) {}
+
+  showHelp() {
+    const html = this.dialogContent.nativeElement.innerHTML;
+    this.dialog.open(YaHelpDialog, {
+      width: this.dialogWidth,
+      data: {
+        title: this.dialogTitle,
+        content: this.sanitizer.bypassSecurityTrustHtml(html),
+      },
+    });
+
+    // Prevent further click handling.
+    // (for example because this component was used in a <label/>)
+    return false;
+  }
+}
+```
+
+### `help.dialog.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.css`
+
+
+```css
+span.help-dialog-content {
+  font-size: 14px !important;
+  line-height: 16px !important;
+}
+```
+
+### `help.dialog.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.html`
+
+
+```html
+<h2 mat-dialog-title>
+  <mat-icon style="vertical-align: middle">{{ data.icon || "help" }}</mat-icon>
+  <span style="vertical-align: middle">{{ data.title }}</span>
+</h2>
+
+<mat-dialog-content style="text-align: justify">
+  <span class="help-dialog-content" [innerHTML]="data.content"></span>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button appearance="primary" mat-dialog-close>{{ data.closeText || "Close" }}</ya-button>
+</mat-dialog-actions>
+```
+
+### `help.dialog.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/help/help.dialog.ts`
+
+
+```typescript
+import { Component, Inject } from '@angular/core';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
+import { YaButton } from '../button/button.component';
+
+@Component({
+  selector: 'ya-help-dialog',
+  templateUrl: './help.dialog.html',
+  styleUrl: './help.dialog.css',
+  imports: [
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
+    MatDialogTitle,
+    MatIcon,
+    YaButton,
+  ],
+})
+export class YaHelpDialog {
+  constructor(@Inject(MAT_DIALOG_DATA) readonly data: any) {}
+}
+```

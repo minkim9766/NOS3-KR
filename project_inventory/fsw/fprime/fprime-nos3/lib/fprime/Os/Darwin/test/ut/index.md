@@ -3,16 +3,40 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/ut/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `DarwinCpuTests.cpp`
 
-file--DarwinCpuTests.cpp
-file--DarwinMemoryTests.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/ut/DarwinCpuTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/test/ut/DarwinCpuTests.cpp
+// \brief tests using Darwin implementation for Os::Cpu interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
 ```
 
-## 항목
+### `DarwinMemoryTests.cpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/ut/DarwinCpuTests.cpp`](file--DarwinCpuTests.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/ut/DarwinMemoryTests.cpp`](file--DarwinMemoryTests.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Os/Darwin/test/ut/DarwinMemoryTests.cpp`
+
+
+```cpp
+// ======================================================================
+// \title Os/Darwin/test/ut/DarwinMemoryTests.cpp
+// \brief tests using Darwin implementation for Os::Memory interface testing
+// ======================================================================
+#include <gtest/gtest.h>
+
+int main(int argc, char** argv) {
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
+```

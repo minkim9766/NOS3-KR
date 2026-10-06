@@ -3,7 +3,7 @@
 
 **경로:** `fsw/build/amd64-nos3/default_cpu1/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -26,35 +26,36 @@ sb/index
 sbr/index
 tbl/index
 time/index
-file--cmake_install.cmake
-file--CMakeCache.txt
-file--CTestTestfile.cmake
-file--install_manifest.txt
-file--Makefile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/amd64-nos3/default_cpu1/apps/`](apps/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/config/`](config/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/core_api/`](core_api/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/core_private/`](core_private/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/cpu1/`](cpu1/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/es/`](es/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/evs/`](evs/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/fs/`](fs/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/inc/`](inc/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/msg/`](msg/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/osal/`](osal/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/psp/`](psp/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/resourceid/`](resourceid/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/sb/`](sb/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/sbr/`](sbr/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/tbl/`](tbl/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/time/`](time/index) — 폴더
-- [`fsw/build/amd64-nos3/default_cpu1/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/CMakeCache.txt`](file--CMakeCache.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/install_manifest.txt`](file--install_manifest.txt) — 빌드 산출물 (경로만)
-- [`fsw/build/amd64-nos3/default_cpu1/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CMakeCache.txt`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/CMakeCache.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `install_manifest.txt`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/install_manifest.txt`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/amd64-nos3/default_cpu1/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

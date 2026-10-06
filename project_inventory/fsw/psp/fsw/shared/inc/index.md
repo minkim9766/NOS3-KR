@@ -3,20 +3,428 @@
 
 **경로:** `fsw/psp/fsw/shared/inc/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfe_psp_exceptionstorage_api.h`
 
-file--cfe_psp_exceptionstorage_api.h
-file--cfe_psp_exceptionstorage_types.h
-file--cfe_psp_memory.h
-file--cfe_psp_module.h
+**경로:** `fsw/psp/fsw/shared/inc/cfe_psp_exceptionstorage_api.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Provides a generic storage buffer ring for exceptions
+ */
+
+#ifndef CFE_PSP_EXCEPTIONSTORAGE_API_H_
+#define CFE_PSP_EXCEPTIONSTORAGE_API_H_
+
+#include "cfe_psp.h"
+
+/*
+ * Abstract types for exception storage.
+ * These are made concrete depending on PSP-specific config information.
+ */
+struct CFE_PSP_Exception_LogData;
+
+/* -------------------------------------------------------------
+ * Functions implemented in shared layer, invoked by impl layer.
+ * ------------------------------------------------------------- */
+
+/**
+ * \brief Get the next buffer for exception buffer corresponding to sequence
+ *
+ * This function obtains a storage buffer corresponding to the given sequence number.
+ * The pointer to storage memory is directly returned. It is not cleared or modified,
+ * and no checks are performed to determine if the sequence number is valid.
+ *
+ * \param   seq     Sequence number
+ * \returns pointer to buffer.
+ */
+extern struct CFE_PSP_Exception_LogData *CFE_PSP_Exception_GetBuffer(uint32 seq);
+
+/**
+ * \brief Get the next buffer for exception context storage
+ *
+ * This function is invoked by the low level exception handler (typically an ISR/signal)
+ * to obtain a buffer for context capture.  The buffer is cleared (memset zero) before
+ * returning to the caller.
+ *
+ * \returns pointer to buffer, or NULL if storage is full.
+ */
+extern struct CFE_PSP_Exception_LogData *CFE_PSP_Exception_GetNextContextBuffer(void);
+
+/**
+ * \brief Finish storage of exception data
+ *
+ * This function is invoked by the low level exception handler (typically an ISR/signal)
+ * once the exception context capture is complete.  This should be invoked after a successful
+ * call to CFE_PSP_Exception_GetNextContextBuffer() to commit the information to the log.
+ */
+extern void CFE_PSP_Exception_WriteComplete(void);
+
+/**
+ * \brief Reset the exception storage buffer
+ *
+ * Marks any pending exceptions as "read".  This resets the state of exception processing.
+ */
+extern void CFE_PSP_Exception_Reset(void);
+
+/* -------------------------------------------------------------
+ * Functions implemented in impl layer, invoked by shared layer.
+ * ------------------------------------------------------------- */
+
+/**
+ * \brief Translate the exception context data into a user-friendly "reason" string
+ *
+ * This is called in an application context to determine the cause of the exception.
+ *
+ * \param[in] Buffer Context data previously stored by ISR/signal handler
+ * \param[out] ReasonBuf Buffer to store string
+ * \param[in] ReasonSize Size of string buffer
+ *
+ * \returns CFE_PSP_SUCCESS on success
+ */
+extern int32 CFE_PSP_ExceptionGetSummary_Impl(const struct CFE_PSP_Exception_LogData *Buffer, char *ReasonBuf,
+                                              uint32 ReasonSize);
+
+#endif /* CFE_PSP_EXCEPTIONSTORAGE_API_H_ */
 ```
 
-## 항목
+### `cfe_psp_exceptionstorage_types.h`
 
-- [`fsw/psp/fsw/shared/inc/cfe_psp_exceptionstorage_api.h`](file--cfe_psp_exceptionstorage_api.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/inc/cfe_psp_exceptionstorage_types.h`](file--cfe_psp_exceptionstorage_types.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/inc/cfe_psp_memory.h`](file--cfe_psp_memory.h) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/shared/inc/cfe_psp_module.h`](file--cfe_psp_module.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/psp/fsw/shared/inc/cfe_psp_exceptionstorage_types.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ * Provides a generic storage buffer ring for exceptions
+ */
+
+#ifndef CFE_PSP_EXCEPTIONSTORAGE_TYPES_H_
+#define CFE_PSP_EXCEPTIONSTORAGE_TYPES_H_
+
+#include "cfe_psp.h"
+#include "cfe_psp_config.h"
+
+/*
+ * The "MetaData" stores ephemeral exception information
+ * which only has meaning within the currently-running process.
+ *
+ * This data is important for diagnosing the exception, but it
+ * is NOT saved to any persistent log because it will not be
+ * relevant once the process ends.
+ */
+struct CFE_PSP_Exception_LogData
+{
+    uint32                               context_id;   /**< a unique ID assigned to this exception entry */
+    uint32                               context_size; /**< actual size of the "context_info" data */
+    CFE_PSP_Exception_SysTaskId_t        sys_task_id;  /**< the BSP-specific task info (not osal abstracted id) */
+    CFE_PSP_Exception_ContextDataEntry_t context_info;
+};
+
+struct CFE_PSP_ExceptionStorage
+{
+    volatile uint32                  NumWritten;
+    volatile uint32                  NumRead;
+    struct CFE_PSP_Exception_LogData Entries[CFE_PSP_MAX_EXCEPTION_ENTRIES];
+};
+
+typedef struct CFE_PSP_Exception_LogData CFE_PSP_Exception_LogData_t;
+typedef struct CFE_PSP_ExceptionStorage  CFE_PSP_ExceptionStorage_t;
+
+#endif /* CFE_PSP_EXCEPTIONSTORAGE_TYPES_H_ */
+```
+
+### `cfe_psp_memory.h`
+
+**경로:** `fsw/psp/fsw/shared/inc/cfe_psp_memory.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/*
+**  Author:  A. Cudmore
+**
+**  Purpose:  This file contains PSP support routine internal prototypes
+**            and typedefs. The routines and typedefs are intended for
+**            the local PSP routines only.
+**
+**  Modification History:
+**
+*/
+
+#ifndef CFE_PSP_MEMORY_H
+#define CFE_PSP_MEMORY_H
+
+/*
+** Include Files
+*/
+
+#include "common_types.h"
+#include "cfe_psp_config.h"
+#include "cfe_psp_exceptionstorage_types.h"
+
+/*
+** Memory table type
+*/
+typedef struct
+{
+    uint32  MemoryType;
+    size_t  WordSize;
+    cpuaddr StartAddr;
+    size_t  Size;
+    uint32  Attributes;
+} CFE_PSP_MemTable_t;
+
+typedef struct
+{
+    void * BlockPtr;
+    size_t BlockSize;
+} CFE_PSP_MemoryBlock_t;
+
+typedef struct
+{
+    CFE_PSP_ReservedMemoryBootRecord_t *BootPtr;
+    CFE_PSP_ExceptionStorage_t *        ExceptionStoragePtr;
+
+    CFE_PSP_MemoryBlock_t ResetMemory;
+    CFE_PSP_MemoryBlock_t VolatileDiskMemory;
+    CFE_PSP_MemoryBlock_t CDSMemory;
+    CFE_PSP_MemoryBlock_t UserReservedMemory;
+
+    /**
+     * \brief The system memory table
+     *
+     * This is the table used for CFE_PSP_MemRangeGet/Set and related ops
+     * that allow CFE applications to query the general system memory map.
+     */
+
+    CFE_PSP_MemTable_t SysMemoryTable[CFE_PSP_MEM_TABLE_SIZE];
+} CFE_PSP_ReservedMemoryMap_t;
+
+/**
+ * \brief Initialize the CFE_PSP_ReservedMemoryMap global object
+ *
+ * This must be called by the startup code before the map is accessed.
+ */
+extern void CFE_PSP_SetupReservedMemoryMap(void);
+
+/*
+ * CFE_PSP_InitProcessorReservedMemory initializes all of the memory in the
+ * BSP that is preserved on a processor reset. The memory includes the
+ * Critical Data Store, the ES Reset Area, the Volatile Disk Memory, and
+ * the User Reserved Memory.
+ *
+ * This initializes based on the reset type.  Typically, the information
+ * is preserved on a processor reset, and cleared/reinitialized on a power-on
+ * reset.
+ */
+extern int32 CFE_PSP_InitProcessorReservedMemory(uint32 RestartType);
+
+/**
+ * \brief Unlink the memory segments within the CFE_PSP_ReservedMemoryMap global object
+ *
+ * This function is only relevant on systems where the objects are implemented
+ * as kernel shared memory segments.  The segments will be marked for deletion
+ * but the local maps remain usable until the process ends.
+ */
+extern void CFE_PSP_DeleteProcessorReservedMemory(void);
+
+/*
+** External variables
+*/
+
+/*
+** Map to the reserved memory area(s)
+** Contains a pointer to each of the separate memory blocks
+*/
+extern CFE_PSP_ReservedMemoryMap_t CFE_PSP_ReservedMemoryMap;
+
+#endif
+```
+
+### `cfe_psp_module.h`
+
+**경로:** `fsw/psp/fsw/shared/inc/cfe_psp_module.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,719-1, and identified as “core Flight System: Bootes”
+ *
+ * Copyright (c) 2020 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * \file
+ *
+ *  Created on: Jul 17, 2015
+ *      Author: joseph.p.hickey@nasa.gov
+ *
+ * Placeholder for file content description
+ */
+
+#ifndef CFE_PSP_MODULE_H_
+#define CFE_PSP_MODULE_H_
+
+#include "cfe_psp.h"
+#include "target_config.h"
+
+typedef enum
+{
+    CFE_PSP_MODULE_TYPE_INVALID = 0,
+    CFE_PSP_MODULE_TYPE_SIMPLE,
+    CFE_PSP_MODULE_TYPE_DEVICEDRIVER,
+    /* May be extended in the future */
+} CFE_PSP_ModuleType_t;
+
+/**
+ * Prototype for a PSP module initialization function
+ */
+typedef void (*CFE_PSP_ModuleInitFunc_t)(uint32 PspModuleId);
+
+/**
+ * Concrete version of the abstract API definition structure
+ */
+typedef const struct
+{
+    CFE_PSP_ModuleType_t     ModuleType;
+    uint32                   OperationFlags;
+    CFE_PSP_ModuleInitFunc_t Init;
+    /* More API calls may be added for other module types */
+    const void *ExtendedApi;
+} CFE_PSP_ModuleApi_t;
+
+/**
+ * Macro to simplify declaration of the IO Driver API structure
+ * according to the required naming convention.
+ *
+ * The "name" argument should match the name of the module object file
+ */
+#define CFE_PSP_MODULE_DECLARE_SIMPLE(name)              \
+    static void         name##_Init(uint32 PspModuleId); \
+    CFE_PSP_ModuleApi_t CFE_PSP_##name##_API = {         \
+        .ModuleType     = CFE_PSP_MODULE_TYPE_SIMPLE,    \
+        .OperationFlags = 0,                             \
+        .Init           = name##_Init,                   \
+    }
+
+/**
+ * Initialize the included PSP modules.
+ *
+ * This is an optional part of the PSP and some PSPs may not use it.
+ *
+ * This function should only be called during PSP initialization before the
+ * system is operational.  It is not intended to be called from application code after
+ * CFE has started.  The function is not necessarily thread-safe and should be called
+ * before any child threads are created.
+ *
+ * Note that this does _not_ return any status --
+ * If a failure occurs during initialization that would make normal operation impossible,
+ * then the module itself will call CFE_PSP_Panic() and this will not return.  Otherwise,
+ * benign/recoverable failures are expected to be just that, and the calling code will not
+ * need to take any special action either way.
+ *
+ * In short, if this function returns, then it means the system is good enough to continue.
+ */
+void CFE_PSP_ModuleInit(void);
+
+/**
+ * Obtain the ID for a named module.
+ *
+ * Although this is currently prototyped as a function scoped to the PSP,
+ * this prototype could be moved to the public area so the CFS could use this (TBD)
+ *
+ * \param ModuleName    Name of the module to look up
+ * \param PspModuleId   Will be set to the ID of the module if successful
+ * \returns CFE_PSP_SUCCESS if lookup succeeded
+ */
+int32 CFE_PSP_Module_FindByName(const char *ModuleName, uint32 *PspModuleId);
+
+/**
+ * Obtain the API for a specific module.
+ *
+ * \param PspModuleId   The ID of the module (configuration-dependent)
+ * \param API           Will be set to the API structure if successful
+ * \returns CFE_PSP_SUCCESS if lookup succeeded
+ */
+int32 CFE_PSP_Module_GetAPIEntry(uint32 PspModuleId, CFE_PSP_ModuleApi_t **API);
+
+/**
+ * \brief A list of fixed/base modules associated with the PSP
+ *
+ * This list should be generated by the build system based on the user-selected PSP
+ */
+extern CFE_StaticModuleLoadEntry_t CFE_PSP_BASE_MODULE_LIST[];
+
+#endif /* CFE_PSP_MODULE_H_ */
+```

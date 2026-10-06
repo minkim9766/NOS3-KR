@@ -3,20 +3,78 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Channel.fpp`
 
-file--Channel.fpp
-file--CMakeLists.txt
-file--Command.fpp
-file--Event.fpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Channel.fpp`
+
+
+```fpp
+module Fw {
+    interface Channel {
+        @ Telemetry port
+        telemetry port tlmOut
+    }
+}
 ```
 
-## 항목
+### `CMakeLists.txt`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Channel.fpp`](file--Channel.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Command.fpp`](file--Command.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Event.fpp`](file--Event.fpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+register_fprime_module(
+    Fw_Interfaces
+  AUTOCODER_INPUTS
+    "${CMAKE_CURRENT_LIST_DIR}/Channel.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Command.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/Event.fpp"
+  INTERFACE
+)
+```
+
+### `Command.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Command.fpp`
+
+
+```fpp
+module Fw {
+    interface Command {
+        @ Command registration port
+        command reg port cmdRegOut
+
+        @ Command received port
+        command recv port cmdIn
+
+        @ Command response port
+        command resp port cmdResponseOut
+    }
+}
+```
+
+### `Event.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Fw/Interfaces/Event.fpp`
+
+
+```fpp
+module Fw {
+    interface Event {
+        @ Text event port
+        text event port logTextOut
+
+        @ Event port
+        event port logOut
+    }
+}
+```

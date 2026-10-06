@@ -3,20 +3,650 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `date-time-input.component.css`
 
-file--date-time-input.component.css
-file--date-time-input.component.html
-file--date-time-input.component.ts
-file--UtcDateAdapter.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.css`
+
+
+```css
+.date-time-input {
+  display: flex;
+  position: relative;
+  align-items: center;
+}
+
+input {
+  margin: 0 !important;
+}
+
+input.day {
+  padding-left: 24px !important;
+  margin-left: 0;
+  margin-right: 0;
+  display: inline-block !important;
+  width: 130px !important;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.cal {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+
+.cal .material-symbols {
+  color: darkgrey;
+  padding: 3px;
+  cursor: pointer;
+  font-size: 14px !important;
+  height: 14px !important;
+  width: 14px !important;
+}
+
+input.hh,
+input.mm,
+input.ss {
+  width: 40px !important;
+  display: inline-block !important;
+}
+
+input.sss {
+  width: 50px !important;
+  display: inline-block !important;
+}
+
+input.hh:not(:focus),
+input.mm:not(:focus),
+input.ss:not(:focus),
+input.sss:not(:focus) {
+  border-left-color: transparent;
+}
+
+input.hh {
+  border-radius: 0;
+}
+
+input.mm {
+  border-radius: 0;
+}
+
+input.ss {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
 ```
 
-## 항목
+### `date-time-input.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.css`](file--date-time-input.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.html`](file--date-time-input.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.ts`](file--date-time-input.component.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/UtcDateAdapter.ts`](file--UtcDateAdapter.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.html`
+
+
+```html
+<div class="date-time-input">
+  <input
+    #dayInput
+    class="day ya-input"
+    type="text"
+    autocomplete="off"
+    placeholder="YYYY-MM-DD"
+    [matDatepicker]="picker"
+    (keyup)="fireChange({ standardizeInputs: false })"
+    (dateInput)="fireChange()"
+    (paste)="processPaste($event)" />
+  <div class="cal">
+    <mat-icon (click)="picker.open()">calendar_today</mat-icon>
+  </div>
+  <mat-datepicker #picker [restoreFocus]="false" />
+  <input
+    #hourInput
+    class="hh ya-input"
+    type="text"
+    placeholder="hh"
+    (keyup)="fireChange({ standardizeInputs: false })"
+    (change)="fireChange()"
+    (paste)="processPaste($event)" />
+  <input
+    #minuteInput
+    class="mm ya-input"
+    type="text"
+    placeholder="mm"
+    (keyup)="fireChange({ standardizeInputs: false })"
+    (change)="fireChange()"
+    (paste)="processPaste($event)" />
+  <input
+    #secondInput
+    class="ss ya-input"
+    type="text"
+    placeholder="ss"
+    (keyup)="fireChange({ standardizeInputs: false })"
+    (change)="fireChange()"
+    (paste)="processPaste($event)" />
+  <input
+    #millisInput
+    class="sss ya-input"
+    [type]="showMillis ? 'text' : 'hidden'"
+    placeholder="ms"
+    (keyup)="fireChange({ standardizeInputs: false })"
+    (change)="fireChange()"
+    (paste)="processPaste($event)" />
+  @if (showNow) {
+    <ya-icon-action icon="timer" [padding]="true" (click)="setNow()" matTooltip="Set to now" />
+  }
+  @if (showClear) {
+    <ya-icon-action
+      icon="clear"
+      [padding]="true"
+      [disabled]="
+        !dayInput.value &&
+        !hourInput.value &&
+        !minuteInput.value &&
+        !secondInput.value &&
+        !millisInput.value
+      "
+      (click)="clearValue()"
+      matTooltip="Clear value" />
+  }
+</div>
+```
+
+### `date-time-input.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/date-time-input.component.ts`
+
+
+```typescript
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  forwardRef,
+  Input,
+  ViewChild,
+} from '@angular/core';
+import {
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  UntypedFormControl,
+  ValidationErrors,
+  Validator,
+} from '@angular/forms';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+} from '@angular/material/datepicker';
+import { MatIcon } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
+import { formatInTimeZone } from 'date-fns-tz';
+import { provideUtcNativeDateAdapter } from '../../providers';
+import { Formatter } from '../../services/formatter.service';
+import * as utils from '../../utils';
+import { YaIconAction } from '../icon-action/icon-action.component';
+
+export interface FireChangeOptions {
+  /**
+   * Update the HTML input element to show for example '07' instead of '7'
+   */
+  standardizeInputs?: boolean;
+}
+
+// Used as a signal to show validation results
+const INVALID_ISOSTRING = 'invalid';
+const DAY_OF_YEAR_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+@Component({
+  selector: 'ya-date-time-input',
+  templateUrl: './date-time-input.component.html',
+  styleUrl: './date-time-input.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => YaDateTimeInput),
+      multi: true,
+    },
+    {
+      provide: NG_VALIDATORS,
+      useExisting: forwardRef(() => YaDateTimeInput),
+      multi: true,
+    },
+    provideUtcNativeDateAdapter(),
+  ],
+  imports: [
+    MatDatepicker,
+    MatDatepickerInput,
+    MatIcon,
+    MatTooltip,
+    YaIconAction,
+  ],
+})
+export class YaDateTimeInput
+  implements AfterViewInit, ControlValueAccessor, Validator
+{
+  @Input()
+  showMillis = false;
+
+  @Input()
+  showClear = false;
+
+  @Input()
+  showNow = false;
+
+  @ViewChild('dayInput', { static: true })
+  private dayInputComponent: ElementRef<HTMLInputElement>;
+
+  @ViewChild('hourInput', { static: true })
+  private hourInputComponent: ElementRef<HTMLInputElement>;
+
+  @ViewChild('minuteInput', { static: true })
+  private minuteInputComponent: ElementRef<HTMLInputElement>;
+
+  @ViewChild('secondInput', { static: true })
+  private secondInputComponent: ElementRef<HTMLInputElement>;
+
+  @ViewChild('millisInput', { static: true })
+  private millisInputComponent: ElementRef<HTMLInputElement>;
+
+  @ViewChild('picker', { static: true })
+  private picker: MatDatepicker<Date>;
+
+  private onChange = (_: string | null) => {};
+
+  constructor(private formatter: Formatter) {}
+
+  ngAfterViewInit(): void {
+    this.picker.closedStream.subscribe(() => {
+      if (this.dayInputComponent.nativeElement.value) {
+        this.hourInputComponent.nativeElement.focus();
+        this.hourInputComponent.nativeElement.select();
+      }
+    });
+  }
+
+  // Called for initial values, assuming ISO strings
+  writeValue(value: any) {
+    if (value) {
+      let iso = value as string;
+      iso = formatInTimeZone(
+        iso,
+        this.formatter.getTimezone(),
+        "yyyy-MM-dd'T'HH:mm:ss.SSS",
+      );
+
+      this.dayInputComponent.nativeElement.value = iso.substring(0, 10);
+      this.picker.select(utils.toDate(iso));
+      const hours = iso.substring(11, 13);
+      const minutes = iso.substring(14, 16);
+      const seconds = iso.length >= 18 ? iso.substring(17, 19) : '00';
+      this.hourInputComponent.nativeElement.value = hours;
+      this.minuteInputComponent.nativeElement.value = minutes;
+      this.secondInputComponent.nativeElement.value = seconds;
+      if (this.showMillis) {
+        const millis = iso.length >= 22 ? iso.substring(20, 23) : '000';
+        this.millisInputComponent.nativeElement.value = millis;
+      }
+    }
+  }
+
+  fireChange(options: FireChangeOptions = {}) {
+    try {
+      const dt = this.createDateOrThrow(options.standardizeInputs ?? true);
+      this.onChange(dt?.toISOString() || null);
+    } catch {
+      // Trigger a validation error
+      this.onChange(INVALID_ISOSTRING);
+    }
+  }
+
+  registerOnChange(fn: any) {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any) {}
+
+  validate(control: UntypedFormControl): ValidationErrors | null {
+    if (control.value === INVALID_ISOSTRING) {
+      return { date: true };
+    }
+    return null;
+  }
+
+  // If the user is pasting an ISO string then apply it to all inputs
+  processPaste(event: ClipboardEvent) {
+    let data = (event.clipboardData || (window as any).clipboardData).getData(
+      'text',
+    );
+    if (data) {
+      try {
+        const pastedDate = utils.toDate(data);
+        if (pastedDate instanceof Date && !isNaN(pastedDate.getTime())) {
+          event.preventDefault();
+          this.writeValue(pastedDate.toISOString());
+          this.fireChange();
+          return false;
+        }
+      } catch {
+        // Ignore
+      }
+    }
+  }
+
+  clearValue() {
+    this.dayInputComponent.nativeElement.value = '';
+    this.hourInputComponent.nativeElement.value = '';
+    this.minuteInputComponent.nativeElement.value = '';
+    this.secondInputComponent.nativeElement.value = '';
+    this.millisInputComponent.nativeElement.value = '';
+    this.fireChange();
+  }
+
+  setNow() {
+    const now = new Date().toISOString();
+    this.writeValue(now);
+    this.fireChange();
+  }
+
+  private createDateOrThrow(standardizeInputs: boolean) {
+    const dayInput = this.dayInputComponent.nativeElement.value;
+    const hourInput = this.hourInputComponent.nativeElement.value;
+    const minuteInput = this.minuteInputComponent.nativeElement.value;
+    const secondInput = this.secondInputComponent.nativeElement.value;
+    const millisInput = this.millisInputComponent.nativeElement.value;
+    if (!dayInput) {
+      return null;
+    }
+
+    const match = dayInput.match(DAY_OF_YEAR_PATTERN);
+    if (!match) {
+      throw new Error('Invalid date pattern');
+    }
+
+    const year = Number(match[1]);
+    const month = Number(match[2]) - 1;
+    const day = Number(match[3]);
+
+    const hours = hourInput ? Number(hourInput) : 0;
+    if (!Number.isInteger(hours)) {
+      throw new Error('Hours must be an integer');
+    }
+
+    const minutes = minuteInput ? Number(minuteInput) : 0;
+    if (!Number.isInteger(minutes)) {
+      throw new Error('Minutes must be an integer');
+    }
+
+    const seconds = secondInput ? Number(secondInput) : 0;
+    if (!Number.isInteger(seconds)) {
+      throw new Error('Seconds must be an integer');
+    }
+
+    const millis = millisInput ? Number(millisInput) : 0;
+    if (!Number.isInteger(millis)) {
+      throw new Error('Milliseconds must be an integer');
+    }
+
+    if (standardizeInputs) {
+      const { nativeElement: hourEl } = this.hourInputComponent;
+      if (hours < 10) {
+        hourEl.value = '0' + hours;
+      }
+
+      const { nativeElement: minuteEl } = this.minuteInputComponent;
+      if (minutes < 10) {
+        minuteEl.value = '0' + minutes;
+      }
+
+      const { nativeElement: secondEl } = this.secondInputComponent;
+      if (seconds < 10) {
+        secondEl.value = '0' + seconds;
+      }
+
+      if (this.showMillis) {
+        const { nativeElement: millisEl } = this.millisInputComponent;
+        if (millis < 10) {
+          millisEl.value = '00' + millis;
+        } else if (millis < 100) {
+          millisEl.value = '0' + millis;
+        }
+      }
+    }
+
+    return new Date(
+      Date.UTC(year, month, day, hours, minutes, seconds, millis),
+    );
+  }
+}
+```
+
+### `UtcDateAdapter.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/components/date-time-input/UtcDateAdapter.ts`
+
+
+```typescript
+import { DateAdapter } from '@angular/material/core';
+
+const MONTH_NAMES = {
+  long: [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ],
+  short: [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ],
+  narrow: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+};
+
+const DATE_NAMES = Array(31);
+for (let i = 0; i < DATE_NAMES.length; i++) {
+  DATE_NAMES[i] = String(i + 1);
+}
+
+const DAY_OF_WEEK_NAMES = {
+  long: [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ],
+  short: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  narrow: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+};
+
+const PARSE_PATTERN = /^(\d{4})-(\d{2})-(\d{2})$/;
+
+/**
+ * A date adapter based on NativeDateAdapter but that
+ * formats as YYYY-MM-DD and uses UTC.
+ */
+export class UtcDateAdapter extends DateAdapter<Date> {
+  getYear(date: Date): number {
+    return date.getUTCFullYear();
+  }
+
+  getMonth(date: Date): number {
+    return date.getUTCMonth();
+  }
+
+  getDate(date: Date): number {
+    return date.getUTCDate();
+  }
+
+  getDayOfWeek(date: Date): number {
+    return date.getUTCDay();
+  }
+
+  getMonthNames(style: 'long' | 'short' | 'narrow'): string[] {
+    return MONTH_NAMES[style];
+  }
+
+  getDateNames(): string[] {
+    return DATE_NAMES;
+  }
+
+  getDayOfWeekNames(style: 'long' | 'short' | 'narrow'): string[] {
+    return DAY_OF_WEEK_NAMES[style];
+  }
+
+  getYearName(date: Date): string {
+    return String(this.getYear(date));
+  }
+
+  getFirstDayOfWeek(): number {
+    return 1; // Monday
+  }
+
+  getNumDaysInMonth(date: Date): number {
+    return this.getDate(
+      this._createDateWithOverflow(
+        this.getYear(date),
+        this.getMonth(date) + 1,
+        0,
+      ),
+    );
+  }
+
+  clone(date: Date): Date {
+    return new Date(date.getTime());
+  }
+
+  createDate(year: number, month: number, date: number): Date {
+    return this._createDateWithOverflow(year, month, date);
+  }
+
+  today(): Date {
+    return new Date();
+  }
+
+  parse(value: any, parseFormat: any): Date | null {
+    if (value) {
+      const match = value.match(PARSE_PATTERN);
+      if (match) {
+        return new Date(Date.UTC(match[1], match[2] - 1, match[3]));
+      }
+    }
+    return null;
+  }
+
+  // "Strict" parser (not used for user input, but maybe for form initial values)
+  override deserialize(value: any): Date | null {
+    let date;
+    if (value instanceof Date) {
+      date = this.clone(value);
+    } else if (typeof value === 'string') {
+      if (!value) {
+        return null;
+      }
+      const match = value.match(PARSE_PATTERN);
+      if (match) {
+        date = new Date(
+          Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])),
+        );
+      } else {
+        throw new Error(`Cannot parse '${value}' date string`);
+      }
+    }
+    return super.deserialize(value);
+  }
+
+  format(date: Date, displayFormat: any): string {
+    if (!this.isValid(date)) {
+      throw new Error('Cannot format invalid date.');
+    }
+    return this.toIso8601(date);
+  }
+
+  addCalendarYears(date: Date, years: number): Date {
+    return this.addCalendarMonths(date, years * 12);
+  }
+
+  addCalendarMonths(date: Date, months: number): Date {
+    let newDate = this._createDateWithOverflow(
+      this.getYear(date),
+      this.getMonth(date) + months,
+      this.getDate(date),
+    );
+
+    // It's possible to wind up in the wrong month if the original month has more days than the new
+    // month. In this case we want to go to the last day of the desired month.
+    // Note: the additional + 12 % 12 ensures we end up with a positive number, since JS % doesn't
+    // guarantee this.
+    if (
+      this.getMonth(newDate) !=
+      (((this.getMonth(date) + months) % 12) + 12) % 12
+    ) {
+      newDate = this._createDateWithOverflow(
+        this.getYear(newDate),
+        this.getMonth(newDate),
+        0,
+      );
+    }
+
+    return newDate;
+  }
+
+  addCalendarDays(date: Date, days: number): Date {
+    return this._createDateWithOverflow(
+      this.getYear(date),
+      this.getMonth(date),
+      this.getDate(date) + days,
+    );
+  }
+
+  toIso8601(date: Date): string {
+    return date.toISOString().substring(0, 10);
+  }
+
+  isDateInstance(obj: any): boolean {
+    return obj instanceof Date;
+  }
+
+  isValid(date: Date): boolean {
+    return !isNaN(date.getTime());
+  }
+
+  invalid(): Date {
+    return new Date(NaN);
+  }
+
+  /** Creates a date but allows the month and date to overflow. */
+  private _createDateWithOverflow(year: number, month: number, date: number) {
+    const result = new Date(Date.UTC(year, month, date));
+
+    // We need to correct for the fact that JS native Date treats years in range [0, 99] as
+    // abbreviations for 19xx.
+    if (year >= 0 && year < 100) {
+      result.setUTCFullYear(this.getYear(result) - 1900);
+    }
+    return result;
+  }
+}
+```

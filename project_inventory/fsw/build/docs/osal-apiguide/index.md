@@ -3,22 +3,36 @@
 
 **경로:** `fsw/build/docs/osal-apiguide/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 CMakeFiles/index
-file--cmake_install.cmake
-file--CTestTestfile.cmake
-file--Makefile
-file--osal-apiguide.doxyfile
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/docs/osal-apiguide/CMakeFiles/`](CMakeFiles/index) — 폴더
-- [`fsw/build/docs/osal-apiguide/cmake_install.cmake`](file--cmake_install.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osal-apiguide/CTestTestfile.cmake`](file--CTestTestfile.cmake) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osal-apiguide/Makefile`](file--Makefile) — 빌드 산출물 (경로만)
-- [`fsw/build/docs/osal-apiguide/osal-apiguide.doxyfile`](file--osal-apiguide.doxyfile) — 빌드 산출물 (경로만)
+### `cmake_install.cmake`
+
+**경로:** `fsw/build/docs/osal-apiguide/cmake_install.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `CTestTestfile.cmake`
+
+**경로:** `fsw/build/docs/osal-apiguide/CTestTestfile.cmake`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `Makefile`
+
+**경로:** `fsw/build/docs/osal-apiguide/Makefile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `osal-apiguide.doxyfile`
+
+**경로:** `fsw/build/docs/osal-apiguide/osal-apiguide.doxyfile`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

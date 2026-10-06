@@ -3,18 +3,68 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/test/resources/cfdp/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `cfdp-streams.sql`
 
-file--cfdp-streams.sql
-file--yamcs.cfdp-test-inst.yaml
-file--yamcs.yaml
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/cfdp/cfdp-streams.sql`
+
+
+```text
+create stream cfdp_in (pdu binary) 
+create stream cfdp_out (gentime TIMESTAMP, entityId long, seqNum int, pdu  binary)
 ```
 
-## 항목
+### `yamcs.cfdp-test-inst.yaml`
 
-- [`gsw/yamcs/yamcs-core/src/test/resources/cfdp/cfdp-streams.sql`](file--cfdp-streams.sql) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/cfdp/yamcs.cfdp-test-inst.yaml`](file--yamcs.cfdp-test-inst.yaml) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/test/resources/cfdp/yamcs.yaml`](file--yamcs.yaml) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/cfdp/yamcs.cfdp-test-inst.yaml`
+
+
+```yaml
+services:   
+  - class: org.yamcs.cfdp.CfdpService
+    args: 
+      inStream: cfdp_in
+      outStream: cfdp_out
+      localEntities:
+        - name: local12
+          id: 12
+      remoteEntities:
+        - name: remote15
+          id: 15
+      sleepBetweenPdus: 10
+      eofAckTimeout: 500
+      eofAckLimit: 1
+      finAckTimeout: 500
+      finAckLimit: 0
+  - class: org.yamcs.parameter.ParameterRetrievalService
+    args:
+      parameterCache:
+          enabled: false
+
+mdb:
+  - type: "emptyNode"
+    spec: "CFDP"
+
+streamConfig:
+  sqlFile: "src/test/resources/cfdp/cfdp-streams.sql"
+```
+
+### `yamcs.yaml`
+
+**경로:** `gsw/yamcs/yamcs-core/src/test/resources/cfdp/yamcs.yaml`
+
+
+```yaml
+services:
+  - class: org.yamcs.http.HttpServer
+    args:
+      port: 9193
+
+dataDir: ${java.io.tmpdir}/yamcs-cfdp-data/
+
+instances:
+  - cfdp-test-inst
+
+secretKey: testtest
+```

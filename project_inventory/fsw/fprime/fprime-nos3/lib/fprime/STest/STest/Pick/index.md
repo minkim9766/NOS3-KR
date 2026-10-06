@@ -3,18 +3,144 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `Pick.cpp`
 
-file--Pick.cpp
-file--Pick.hpp
-file--Pick_default.cpp
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Pick.cpp
+// \author bocchino
+// \brief  Pick implementation
+//
+// \copyright
+// Copyright (C) 2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "STest/Pick/Pick.hpp"
+
+namespace STest {
+
+  namespace Pick {
+
+    U32 any() {
+      return lowerUpper(0, 0xFFFFFFFFU);
+    }
+
+  }
+
+}
 ```
 
-## 항목
+### `Pick.hpp`
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick.cpp`](file--Pick.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick.hpp`](file--Pick.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick_default.cpp`](file--Pick_default.cpp) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  Pick.hpp
+// \author bocchino
+// \brief  Pick interface
+//
+// \copyright
+// Copyright (C) 2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#ifndef STEST_PICK_HPP
+#define STEST_PICK_HPP
+
+#include "STest/types/basic_types.h"
+#ifdef STEST_MODE_spin
+#include "STest/Pick/Pick_spin.hpp"
+#endif
+
+namespace STest {
+
+  namespace Pick {
+
+    //! Pick a double value in the interval [0, 1]
+    double inUnitInterval();
+
+    //! Return a U32 value in the range given by [start, start + length - 1].
+    //! For example, startLength(5, 3) returns a number
+    //! between 5 and 7, inclusive.
+    //! \return The U32 value
+    U32 startLength(
+        const U32 start, //!< The start value of the range
+        const U32 length //!< The length of the range, including the start and end values
+    );
+
+    //! Return a U32 value between the lower and the upper bound.
+    //! For example, lowerUpper(3, 5) returns a number between 3 and 5,
+    //! inclusive.
+    //! \return The U32 value
+    U32 lowerUpper(
+        const U32 lower, //!< The lower bound
+        const U32 upper //!< The upper bound
+    );
+
+    //! Return an arbitrary U32 value
+    //! \return The U32 value
+    U32 any();
+
+  }
+
+}
+
+#endif
+```
+
+### `Pick_default.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/STest/STest/Pick/Pick_default.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  Pick_default.cpp
+// \author bocchino
+// \brief  Pick_default implementation
+//
+// \copyright
+// Copyright (C) 2022 California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+// ======================================================================
+
+#include "STest/Pick/Pick.hpp"
+#include "STest/Random/Random.hpp"
+
+namespace STest {
+
+  namespace Pick {
+
+    double inUnitInterval() {
+      return STest::Random::inUnitInterval();
+    }
+
+    U32 startLength(
+        const U32 start,
+        const U32 length
+    ) {
+      return STest::Random::startLength(start, length);
+    }
+
+    U32 lowerUpper(
+        const U32 lower,
+        const U32 upper
+    ) {
+      return STest::Random::lowerUpper(lower, upper);
+    }
+
+  }
+
+}
+```

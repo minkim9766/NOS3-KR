@@ -3,28 +3,54 @@
 
 **경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 __pycache__/index
-file--__init__.py
-file--cleanup.py
-file--data_conversion.py
-file--file_io.py
-file--plugin_import.py
-file--print_io.py
-file--sim_io.py
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__pycache__/`](__pycache__/index) — 폴더
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/__init__.py`](file--__init__.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/cleanup.py`](file--cleanup.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/data_conversion.py`](file--data_conversion.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/file_io.py`](file--file_io.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/plugin_import.py`](file--plugin_import.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/print_io.py`](file--print_io.py) — 빌드 산출물 (경로만)
-- [`fsw/build/exe/cpu1/cf/onair/onair/src/util/sim_io.py`](file--sim_io.py) — 빌드 산출물 (경로만)
+### `__init__.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/__init__.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `cleanup.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/cleanup.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `data_conversion.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/data_conversion.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `file_io.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/file_io.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `plugin_import.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/plugin_import.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `print_io.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/print_io.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.
+
+### `sim_io.py`
+
+**경로:** `fsw/build/exe/cpu1/cf/onair/onair/src/util/sim_io.py`
+
+빌드 또는 생성 디렉터리의 항목입니다. 본문은 생략했습니다.

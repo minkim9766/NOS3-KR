@@ -3,16 +3,230 @@
 
 **경로:** `fsw/apps/lc/unit-test/utilities/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `lc_test_utils.c`
 
-file--lc_test_utils.c
-file--lc_test_utils.h
+**경로:** `fsw/apps/lc/unit-test/utilities/lc_test_utils.c`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains unit test utilities for the DS application.
+ */
+
+/*
+ * Includes
+ */
+
+#include "lc_test_utils.h"
+#include "lc_app.h"
+
+/* UT includes */
+#include "uttest.h"
+#include "utassert.h"
+#include "utstubs.h"
+
+LC_WDTEntry_t WDTable[LC_MAX_WATCHPOINTS];
+LC_ADTEntry_t ADTable[LC_MAX_ACTIONPOINTS];
+LC_WRTEntry_t WRTable[LC_MAX_WATCHPOINTS];
+LC_ARTEntry_t ARTable[LC_MAX_ACTIONPOINTS];
+
+#define UT_MAX_SENDEVENT_DEPTH 4
+CFE_EVS_SendEvent_context_t    context_CFE_EVS_SendEvent[UT_MAX_SENDEVENT_DEPTH];
+CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
+
+UT_CmdBuf_t UT_CmdBuf;
+
+void UT_Handler_CFE_EVS_SendEvent(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
+{
+    uint16 CallCount;
+    uint16 idx;
+
+    CallCount = UT_GetStubCount(UT_KEY(CFE_EVS_SendEvent));
+
+    if (CallCount > (sizeof(context_CFE_EVS_SendEvent) / sizeof(context_CFE_EVS_SendEvent[0])))
+    {
+        UtAssert_Failed("CFE_EVS_SendEvent UT depth %u exceeded: %u, increase UT_MAX_SENDEVENT_DEPTH",
+                        UT_MAX_SENDEVENT_DEPTH, CallCount);
+    }
+    else
+    {
+        idx                                      = CallCount - 1;
+        context_CFE_EVS_SendEvent[idx].EventID   = UT_Hook_GetArgValueByName(Context, "EventID", uint16);
+        context_CFE_EVS_SendEvent[idx].EventType = UT_Hook_GetArgValueByName(Context, "EventType", uint16);
+
+        strncpy(context_CFE_EVS_SendEvent[idx].Spec, UT_Hook_GetArgValueByName(Context, "Spec", const char *),
+                CFE_MISSION_EVS_MAX_MESSAGE_LENGTH);
+        context_CFE_EVS_SendEvent[idx].Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
+    }
+}
+
+void UT_Handler_CFE_ES_WriteToSysLog(void *UserObj, UT_EntryKey_t FuncKey, const UT_StubContext_t *Context, va_list va)
+{
+    strncpy(context_CFE_ES_WriteToSysLog.Spec, UT_Hook_GetArgValueByName(Context, "SpecStringPtr", const char *),
+            CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1);
+    context_CFE_ES_WriteToSysLog.Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH - 1] = '\0';
+}
+
+/*
+ * Function Definitions
+ */
+
+void LC_Test_Setup(void)
+{
+    /* initialize test environment to default state for every test */
+    UT_ResetState(0);
+
+    memset(&LC_AppData, 0, sizeof(LC_AppData));
+    memset(&LC_OperData, 0, sizeof(LC_OperData));
+
+    LC_OperData.WDTPtr = WDTable;
+    LC_OperData.ADTPtr = ADTable;
+    LC_OperData.WRTPtr = WRTable;
+    LC_OperData.ARTPtr = ARTable;
+
+    memset(&WDTable, 0, sizeof(WDTable));
+    memset(&ADTable, 0, sizeof(ADTable));
+    memset(&WRTable, 0, sizeof(WRTable));
+    memset(&ARTable, 0, sizeof(ARTable));
+
+    memset(context_CFE_EVS_SendEvent, 0, sizeof(context_CFE_EVS_SendEvent));
+    memset(&context_CFE_ES_WriteToSysLog, 0, sizeof(context_CFE_ES_WriteToSysLog));
+    memset(&UT_CmdBuf, 0, sizeof(UT_CmdBuf));
+
+    /* Register custom handlers */
+    UT_SetVaHandlerFunction(UT_KEY(CFE_EVS_SendEvent), UT_Handler_CFE_EVS_SendEvent, NULL);
+    UT_SetVaHandlerFunction(UT_KEY(CFE_ES_WriteToSysLog), UT_Handler_CFE_ES_WriteToSysLog, NULL);
+}
+
+void LC_Test_TearDown(void)
+{
+    /* cleanup test environment */
+}
 ```
 
-## 항목
+### `lc_test_utils.h`
 
-- [`fsw/apps/lc/unit-test/utilities/lc_test_utils.c`](file--lc_test_utils.c) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/apps/lc/unit-test/utilities/lc_test_utils.h`](file--lc_test_utils.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `fsw/apps/lc/unit-test/utilities/lc_test_utils.h`
+
+
+```c
+/************************************************************************
+ * NASA Docket No. GSC-18,921-1, and identified as “CFS Limit Checker
+ * Application version 2.2.1”
+ *
+ * Copyright (c) 2021 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may
+ * not use this file except in compliance with the License. You may obtain
+ * a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ ************************************************************************/
+
+/**
+ * @file
+ *   This file contains the function prototypes and global variables for
+ *   the unit test utilities for the LC application.
+ */
+#ifndef LC_TEST_UTILS_H
+#define LC_TEST_UTILS_H
+
+#include "lc_app.h"
+#include "utstubs.h"
+#include "cfe_msgids.h"
+
+/*
+ * Allow UT access to the global "LC_AppData" object.
+ */
+extern LC_AppData_t  LC_AppData;
+extern LC_OperData_t LC_OperData;
+
+/* Global table variables for table pointers contained in LC_OperData */
+extern LC_WDTEntry_t WDTable[LC_MAX_WATCHPOINTS];
+extern LC_ADTEntry_t ADTable[LC_MAX_ACTIONPOINTS];
+extern LC_WRTEntry_t WRTable[LC_MAX_WATCHPOINTS];
+extern LC_ARTEntry_t ARTable[LC_MAX_ACTIONPOINTS];
+
+/*
+ * Global context structures
+ */
+typedef struct
+{
+    uint16 EventID;
+    uint16 EventType;
+    char   Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+} CFE_EVS_SendEvent_context_t;
+
+typedef struct
+{
+    char Spec[CFE_MISSION_EVS_MAX_MESSAGE_LENGTH];
+} CFE_ES_WriteToSysLog_context_t;
+
+extern CFE_EVS_SendEvent_context_t    context_CFE_EVS_SendEvent[];
+extern CFE_ES_WriteToSysLog_context_t context_CFE_ES_WriteToSysLog;
+
+/* Command buffer typedef for any handler */
+typedef union
+{
+    CFE_SB_Buffer_t   Buf;
+    LC_NoArgsCmd_t    NoArgsCmd;
+    LC_SetLCState_t   SetLCStateCmd;
+    LC_SetAPState_t   SetAPStateCmd;
+    LC_SetAPPermOff_t SetAPPermOffCmd;
+    LC_ResetAPStats_t ResetAPStatsCmd;
+    LC_ResetWPStats_t ResetWPStatsCmd;
+    LC_SampleAP_t     SampleAPCmd;
+    LC_RTSRequest_t   RTSRequestCmd;
+} UT_CmdBuf_t;
+
+extern UT_CmdBuf_t UT_CmdBuf;
+
+/*
+ * Macro to add a test case to the list of tests to execute
+ */
+#define ADD_TEST(test) UtTest_Add((Test_##test), LC_UT_Setup, LC_UT_TearDown, #test)
+
+/* Unit test MID */
+#define LC_UT_MID_1 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 1)
+#define LC_UT_MID_2 CFE_SB_ValueToMsgId(CFE_PLATFORM_TLM_MID_BASE + 2)
+
+/*
+ * Setup function prior to every test
+ */
+void LC_Test_Setup(void);
+
+/*
+ * Teardown function after every test
+ */
+void LC_Test_TearDown(void);
+
+#endif
+```

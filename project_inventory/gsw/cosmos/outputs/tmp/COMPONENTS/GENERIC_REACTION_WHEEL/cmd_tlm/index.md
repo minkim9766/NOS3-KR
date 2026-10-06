@@ -3,16 +3,91 @@
 
 **경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/cmd_tlm/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `GENERIC_REACTION_WHEEL_CMD.txt`
 
-file--GENERIC_REACTION_WHEEL_CMD.txt
-file--GENERIC_REACTION_WHEEL_TLM.txt
+**경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/cmd_tlm/GENERIC_REACTION_WHEEL_CMD.txt`
+
+
+```text
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_NOOP_CC BIG_ENDIAN "Generic Reaction Wheel NOOP Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_RST_COUNTERS_CC BIG_ENDIAN "Generic Reaction Wheel Reset Counters Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 1        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_REQ_DATA_CC BIG_ENDIAN "Generic Reaction Wheel Request Data Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 1      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 2        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum" 
+
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_SET_TORQUE_CC BIG_ENDIAN "Generic Reaction Wheel Set Torque Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 4      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 3        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER WHEEL_NUMBER        8  UINT 0         2         0        "Wheel number to command"
+  APPEND_PARAMETER TORQUE              16 INT  MIN_INT16 MAX_INT16 0        "Torque to set in 10^-4 Newton-meters" LITTLE_ENDIAN
+
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_ENABLE_CC BIG_ENDIAN "Generic_RW0 Enable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 4      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 4        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER WHEEL_NUMBER        8  UINT 0         2         0        "Wheel number to command"
+
+COMMAND GENERIC_REACTION_WHEEL GENERIC_RW_DISABLE_CC BIG_ENDIAN "Generic_RW0 Disable Command"
+  APPEND_PARAMETER CCSDS_STREAMID      16 UINT MIN_UINT16 MAX_UINT16 0x1992 "CCSDS Packet Identification" 
+  APPEND_PARAMETER CCSDS_SEQUENCE      16 UINT MIN_UINT16 MAX_UINT16 0xC000 "CCSDS Packet Sequence Control" 
+  APPEND_PARAMETER CCSDS_LENGTH        16 UINT MIN_UINT16 MAX_UINT16 4      "CCSDS Packet Data Length" 
+  APPEND_PARAMETER CCSDS_FC            8  UINT MIN_UINT8 MAX_UINT8 5        "CCSDS Command Function Code" 
+  APPEND_PARAMETER CCSDS_CHECKSUM      8  UINT MIN_UINT8 MAX_UINT8 0        "CCSDS Command Checksum"
+  APPEND_PARAMETER WHEEL_NUMBER        8  UINT 0         2         0        "Wheel number to command"
+
 ```
 
-## 항목
+### `GENERIC_REACTION_WHEEL_TLM.txt`
 
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/cmd_tlm/GENERIC_REACTION_WHEEL_CMD.txt`](file--GENERIC_REACTION_WHEEL_CMD.txt) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/cmd_tlm/GENERIC_REACTION_WHEEL_TLM.txt`](file--GENERIC_REACTION_WHEEL_TLM.txt) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/cosmos/outputs/tmp/COMPONENTS/GENERIC_REACTION_WHEEL/cmd_tlm/GENERIC_REACTION_WHEEL_TLM.txt`
+
+
+```text
+TELEMETRY GENERIC_REACTION_WHEEL GENRW_HK_TLM_T LITTLE_ENDIAN "Generic Reaction Wheel Application Housekeeping Telemetry Message"
+  APPEND_ID_ITEM CCSDS_STREAMID 16 UINT 0x0993 "CCSDS Packet Identification" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SEQUENCE 16 UINT        "CCSDS Packet Sequence Control" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_LENGTH   16 UINT        "CCSDS Packet Data Length" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SECONDS  32 UINT        "CCSDS Telemetry Secondary Header (seconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SUBSECS  16 UINT        "CCSDS Telemetry Secondary Header (subseconds)" BIG_ENDIAN
+  APPEND_ITEM    CCSDS_SPARE    32 UINT        ""
+  APPEND_ITEM    ERROR_COUNT     8 UINT        "Error Count"
+  APPEND_ITEM    COMMAND_COUNT   8 UINT        "Command Count"
+  APPEND_ITEM    DEVICE_ERR_COUNT_RW0      8 UINT         "Device Command Error Count RW0"
+  APPEND_ITEM    DEVICE_ERR_COUNT_RW1      8 UINT         "Device Command Error Count RW1"
+  APPEND_ITEM    DEVICE_ERR_COUNT_RW2      8 UINT         "Device Command Error Count RW2"
+  APPEND_ITEM    DEVICE_COUNT_RW0          8 UINT         "Device Command Count RW1"
+  APPEND_ITEM    DEVICE_COUNT_RW1          8 UINT         "Device Command Count RW1"
+  APPEND_ITEM    DEVICE_COUNT_RW2          8 UINT         "Device Command Count RW2"
+  APPEND_ITEM    DEVICE_ENABLED_RW0    8 UINT         "Device Enable Status"
+  APPEND_ITEM    DEVICE_ENABLED_RW1    8 UINT         "Device Enable Status"
+  APPEND_ITEM    DEVICE_ENABLED_RW2    8 UINT         "Device Enable Status"
+  APPEND_ITEM    MOMENTUM_NMS_0 64 FLOAT       "Reaction Wheel 0 Momentum in Newton-meter-seconds"
+    FORMAT_STRING "%.6f"
+  APPEND_ITEM    MOMENTUM_NMS_1 64 FLOAT       "Reaction Wheel 1 Momentum in Newton-meter-seconds"
+    FORMAT_STRING "%.6f"
+  APPEND_ITEM    MOMENTUM_NMS_2 64 FLOAT       "Reaction Wheel 2 Momentum in Newton-meter-seconds"
+    FORMAT_STRING "%.6f"
+    
+```

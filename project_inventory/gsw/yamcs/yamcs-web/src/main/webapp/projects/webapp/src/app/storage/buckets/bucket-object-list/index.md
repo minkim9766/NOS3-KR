@@ -3,18 +3,744 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `bucket-object-list.component.css`
 
-file--bucket-object-list.component.css
-file--bucket-object-list.component.html
-file--bucket-object-list.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.css`
+
+
+```css
+mat-toolbar {
+  border-bottom: 1px solid #d3d3d3;
+  background-color: #fff;
+  box-sizing: content-box;
+  color: rgba(0, 0, 0, 0.654);
+}
+
+mat-toolbar-row {
+  padding-left: 24px;
+}
+
+.droparea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.droparea-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  background: rgba(27, 97, 185, 0.1);
+  border: 1px solid rgba(27, 97, 185, 1);
+  z-index: 10;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+::ng-deep .progress-dialog .mat-mdc-dialog-container {
+  box-shadow: none;
+  padding: 0;
+  overflow: hidden;
+}
+
+::ng-deep .progress-dialog .mat-mdc-dialog-content {
+  overflow: hidden;
+}
+
+.mat-sidenav-container {
+  height: 100%;
+  width: 100%;
+  background-color: inherit;
+}
+
+.mat-sidenav-container .mat-sidenav {
+  background-color: #000;
+}
+
+.mat-sidenav .mat-drawer-inner-container {
+  overflow: hidden !important;
+}
+
+.resize-handle {
+  position: absolute;
+  background-color: #000;
+  top: 0;
+  left: 0;
+  width: 20px;
+  bottom: 0;
+  cursor: ew-resize;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.mat-sidenav-container img {
+  margin: 2em;
+  max-width: calc(100% - 5em);
+  max-height: calc(100% - 5em);
+}
 ```
 
-## 항목
+### `bucket-object-list.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.css`](file--bucket-object-list.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.html`](file--bucket-object-list.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.ts`](file--bucket-object-list.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.html`
+
+
+```html
+<app-storage-page>
+  <app-storage-toolbar>
+    <ng-template app-storage-toolbar-label>
+      <ya-page-icon-button routerLink="/storage/buckets" icon="arrow_back" />
+      {{ name }}
+    </ng-template>
+
+    <ya-page-button (clicked)="uploader.click()" icon="file_upload">
+      Upload files
+      <input #uploader type="file" hidden multiple (change)="uploadObjects()" />
+    </ya-page-button>
+    <ya-page-button (clicked)="createFolder()" icon="create_new_folder">
+      Create folder
+    </ya-page-button>
+    <ya-page-button
+      (clicked)="deleteSelectedObjects()"
+      [disabled]="!selection.hasValue()"
+      icon="delete">
+      Delete
+    </ya-page-button>
+    <ya-page-button
+      (clicked)="togglePreview()"
+      [icon]="(showPreview$ | async) ? 'image_not_supported' : 'image'">
+      Preview panel
+    </ya-page-button>
+  </app-storage-toolbar>
+
+  <div
+    #droparea
+    class="droparea"
+    [class.active]="dragActive$ | async"
+    (dragenter)="dragEnter($event)">
+    <div
+      class="droparea-overlay"
+      [class.hide]="!(dragActive$ | async)"
+      (dragover)="dragOver($event)"
+      (dragleave)="dragLeave($event)"
+      (drop)="drop($event)"></div>
+
+    <mat-sidenav-container [autosize]="true">
+      <mat-sidenav
+        mode="side"
+        [opened]="showPreview$ | async"
+        [disableClose]="false"
+        position="end"
+        [style.width]="(previewWidth$ | async) + 'px'"
+        style="text-align: center">
+        <div class="resize-handle" (mousedown)="resizeMouseDown($event)"></div>
+        @if (selection.selected.length === 1 && isImage(selection.selected[0])) {
+          <img [src]="selection.selected[0].objectUrl" />
+        } @else {
+          <div style="margin-top: 4em; color: #fff">
+            <mat-icon>arrow_back</mat-icon>
+            <p>Select an image to make it appear here</p>
+          </div>
+        }
+      </mat-sidenav>
+      <mat-sidenav-content>
+        <ya-panel>
+          <app-bucket-page-tabs [bucket]="name" />
+          @if (breadcrumb$ | async; as breadcrumb) {
+            <div style="margin-top: 16px">
+              <ya-breadcrumb-trail>
+                <ya-breadcrumb [link]="['/storage/buckets']" label="Buckets" />
+                <ya-breadcrumb [link]="['/storage/buckets', name, 'objects']" [label]="name" />
+                @for (item of breadcrumb; track item) {
+                  <ya-breadcrumb [link]="item.route" [label]="item.name" />
+                }
+              </ya-breadcrumb-trail>
+            </div>
+          }
+          @if (dataSource && dataSource.data.length) {
+            <table mat-table [dataSource]="dataSource" class="ya-data-table expand">
+              <ng-container cdkColumnDef="select">
+                <th
+                  mat-header-cell
+                  *cdkHeaderCellDef
+                  class="checkbox"
+                  (click)="cb.toggle(); $event.stopPropagation()">
+                  <ya-table-checkbox #cb [dataSource]="dataSource" [selection]="selection" />
+                </th>
+                <td
+                  mat-cell
+                  *cdkCellDef="let item"
+                  class="checkbox"
+                  (click)="cb.toggle(); $event.stopPropagation()">
+                  <ya-table-checkbox
+                    #cb
+                    [dataSource]="dataSource"
+                    [selection]="selection"
+                    [item]="item" />
+                </td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="name">
+                <th mat-header-cell *cdkHeaderCellDef>Name</th>
+                <td mat-cell *cdkCellDef="let item">
+                  @if (item.folder) {
+                    <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                      folder
+                    </mat-icon>
+                    <a
+                      [routerLink]="'/storage/buckets/' + name + '/objects/' + item.name"
+                      (click)="$event.stopPropagation()">
+                      {{ item.name | filename }}
+                    </a>
+                  } @else {
+                    <mat-icon class="icon12" style="vertical-align: middle; margin-right: 7px">
+                      description
+                    </mat-icon>
+                    <a [href]="item.objectUrl" download (click)="$event.stopPropagation()">
+                      {{ item.name | filename }}
+                    </a>
+                  }
+                </td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="modified">
+                <th mat-header-cell *cdkHeaderCellDef>Date modified</th>
+                <td mat-cell *cdkCellDef="let item">
+                  {{ (item.modified | datetime) || "-" }}
+                </td>
+              </ng-container>
+
+              <ng-container cdkColumnDef="size">
+                <th mat-header-cell *cdkHeaderCellDef>Size</th>
+                <td mat-cell *cdkCellDef="let item">
+                  {{ (item.size | formatBytes) || "-" }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="expand"></th>
+                <td mat-cell *matCellDef="let item">
+                  @if (!item.folder) {
+                    <ya-more>
+                      <button mat-menu-item (click)="renameFile(item)">Rename</button>
+                      <a mat-menu-item [href]="item.objectUrl" download>Download</a>
+                      <mat-divider />
+                      <button
+                        mat-menu-item
+                        [disabled]="!item.metadata"
+                        (click)="openViewMetadataDialog(item)">
+                        View metadata
+                      </button>
+                      <mat-divider />
+                      <button mat-menu-item (click)="deleteFile(item)">Delete</button>
+                    </ya-more>
+                  }
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *cdkHeaderRowDef="displayedColumns"></tr>
+              <tr
+                mat-row
+                *cdkRowDef="let row; columns: displayedColumns"
+                [class.selected]="selection.isSelected(row)"
+                (click)="toggleOne(row)"></tr>
+            </table>
+          } @else {
+            <ya-empty-message>Empty directory.</ya-empty-message>
+          }
+        </ya-panel>
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+</app-storage-page>
+```
+
+### `bucket-object-list.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/storage/buckets/bucket-object-list/bucket-object-list.component.ts`
+
+
+```typescript
+import { SelectionModel } from '@angular/cdk/collections';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild,
+} from '@angular/core';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import {
+  HttpError,
+  ListObjectsOptions,
+  ListObjectsResponse,
+  StorageClient,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
+import * as dnd from '../../../shared/dnd';
+import { StoragePageTemplateComponent } from '../../storage-page-template/storage-page-template.component';
+import { AppStorageToolbarLabel } from '../../storage-toolbar/storage-toolbar-label.directive';
+import { AppStorageToolbar } from '../../storage-toolbar/storage-toolbar.component';
+import { BucketPageTabsComponent } from '../bucket-page-tabs/bucket-page-tabs.component';
+import { CreateFolderDialogComponent } from '../create-folder-dialog/create-folder-dialog.component';
+import { RenameObjectDialogComponent } from '../rename-object-dialog/rename-object-dialog.component';
+import { Upload } from '../upload-progress-dialog/Upload';
+import { UploadProgressDialogComponent } from '../upload-progress-dialog/upload-progress-dialog.component';
+import { ViewObjectMetadataDialogComponent } from '../view-object-metadata-dialog/view-object-metadata-dialog.component';
+
+@Component({
+  templateUrl: './bucket-object-list.component.html',
+  styleUrl: './bucket-object-list.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    AppStorageToolbar,
+    AppStorageToolbarLabel,
+    BucketPageTabsComponent,
+    StoragePageTemplateComponent,
+    WebappSdkModule,
+  ],
+})
+export class BucketObjectListComponent implements OnDestroy {
+  @ViewChild('droparea', { static: true })
+  dropArea: ElementRef;
+
+  @ViewChild('uploader')
+  private uploaderEl: ElementRef<HTMLInputElement>;
+
+  name: string;
+
+  breadcrumb$ = new BehaviorSubject<BreadCrumbItem[]>([]);
+  dragActive$ = new BehaviorSubject<boolean>(false);
+  showPreview$ = new BehaviorSubject<boolean>(false);
+  previewWidth$ = new BehaviorSubject<number>(600);
+
+  displayedColumns = ['select', 'name', 'size', 'modified', 'actions'];
+  dataSource = new MatTableDataSource<BrowseItem>([]);
+  selection = new SelectionModel<BrowseItem>(true, []);
+
+  uploads$ = new BehaviorSubject<Upload[]>([]);
+
+  private routerSubscription: Subscription;
+  private storageClient: StorageClient;
+
+  private progressDialogOpen = false;
+
+  private dialogRef: MatDialogRef<any>;
+
+  constructor(
+    private dialog: MatDialog,
+    router: Router,
+    private route: ActivatedRoute,
+    yamcs: YamcsService,
+    title: Title,
+  ) {
+    this.name = route.snapshot.parent!.parent!.paramMap.get('name')!;
+    title.setTitle(this.name);
+    this.storageClient = yamcs.createStorageClient();
+
+    this.loadCurrentFolder();
+    this.routerSubscription = router.events
+      .pipe(filter((evt) => evt instanceof NavigationEnd))
+      .subscribe(() => {
+        this.loadCurrentFolder();
+      });
+  }
+
+  private loadCurrentFolder() {
+    const options: ListObjectsOptions = {
+      delimiter: '/',
+    };
+    const routeSegments = this.route.snapshot.url;
+    if (routeSegments.length) {
+      options.prefix = routeSegments.map((s) => s.path).join('/') + '/';
+    }
+
+    this.storageClient.listObjects(this.name, options).then((dir) => {
+      this.updateBrowsePath();
+      this.changedir(dir);
+    });
+  }
+
+  private changedir(dir: ListObjectsResponse) {
+    this.selection.clear();
+    const items: BrowseItem[] = [];
+    for (const prefix of dir.prefixes || []) {
+      items.push({
+        folder: true,
+        name: prefix,
+      });
+    }
+    for (const object of dir.objects || []) {
+      // Ignore fake objects that represent an empty directory
+      if (object.name.endsWith('/')) {
+        continue;
+      }
+      items.push({
+        folder: false,
+        name: object.name,
+        modified: object.created,
+        size: object.size,
+        objectUrl: this.storageClient.getObjectURL(this.name, object.name),
+        metadata: object.metadata,
+      });
+    }
+    this.dataSource.data = items;
+  }
+
+  toggleOne(row: BrowseItem) {
+    if (!this.selection.isSelected(row) || this.selection.selected.length > 1) {
+      this.selection.clear();
+    }
+    this.selection.toggle(row);
+  }
+
+  createFolder() {
+    this.dialog
+      .open(CreateFolderDialogComponent, {
+        width: '400px',
+        data: {
+          bucket: this.name,
+          path: this.getCurrentPath(),
+        },
+      })
+      .afterClosed()
+      .subscribe({
+        next: () => this.loadCurrentFolder(),
+      });
+  }
+
+  uploadObjects() {
+    let path = this.getCurrentPath();
+    // Full path should not have a leading slash
+    if (path.startsWith('/')) {
+      path = path.substring(1);
+    }
+
+    const files = this.uploaderEl.nativeElement.files;
+
+    const uploads: any[] = [];
+    for (const key in files) {
+      if (!isNaN(parseInt(key, 10))) {
+        const file = files[key as any];
+        const fullPath = path ? path + '/' + file.name : file.name;
+
+        const bucket = this.name;
+        const promise = this.storageClient.uploadObject(bucket, fullPath, file);
+        uploads.push({ filename: file.name, promise });
+      }
+    }
+
+    if (uploads.length) {
+      this.showUploadProgress().then(() => {
+        for (const upload of uploads) {
+          this.trackUpload(upload);
+        }
+        this.settlePromises(uploads.map((u) => u.promise)).then(() => {
+          this.loadCurrentFolder();
+        });
+      });
+    }
+  }
+
+  /**
+   * Returns a promise that is always successful and that captures
+   * the success/error of the passed promises.
+   */
+  private settlePromises(promises: Promise<any>[]) {
+    return Promise.all(
+      promises.map((promise) => {
+        return promise.then(
+          (value) => ({ state: 'fullfilled', value }),
+          (value) => ({ state: 'rejected', value }),
+        );
+      }),
+    );
+  }
+
+  private trackUpload(upload: Upload) {
+    upload.promise
+      .then(() => {
+        upload.complete = true;
+        this.uploads$.next([...this.uploads$.value]);
+      })
+      .catch((err: HttpError) => {
+        err.response
+          .json()
+          .then((msg) => {
+            upload.complete = true;
+            upload.err = msg['msg'];
+            this.uploads$.next([...this.uploads$.value]);
+          })
+          .catch(() => {
+            upload.complete = true;
+            upload.err = err.statusText;
+            this.uploads$.next([...this.uploads$.value]);
+          });
+      });
+    this.uploads$.next([...this.uploads$.value, upload]);
+  }
+
+  private getCurrentPath() {
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+    }
+    return path || '/';
+  }
+
+  togglePreview() {
+    this.showPreview$.next(!this.showPreview$.value);
+  }
+
+  deleteSelectedObjects() {
+    const deletableObjects: string[] = [];
+    const findObjectPromises = [];
+    for (const item of this.selection.selected) {
+      if (item.folder) {
+        findObjectPromises.push(
+          this.storageClient
+            .listObjects(this.name, {
+              prefix: item.name,
+            })
+            .then((response) => {
+              const objects = response.objects || [];
+              deletableObjects.push(...objects.map((o) => o.name));
+            }),
+        );
+      } else {
+        deletableObjects.push(item.name);
+      }
+    }
+
+    Promise.all(findObjectPromises).then(() => {
+      if (
+        confirm(
+          `You are about to delete ${deletableObjects.length} files. Are you sure you want to continue?`,
+        )
+      ) {
+        const deletePromises = [];
+        for (const object of deletableObjects) {
+          deletePromises.push(
+            this.storageClient.deleteObject(this.name, object),
+          );
+        }
+
+        Promise.all(deletePromises).then(() => {
+          this.loadCurrentFolder();
+        });
+      }
+    });
+  }
+
+  renameFile(item: BrowseItem) {
+    const dialogRef = this.dialog.open(RenameObjectDialogComponent, {
+      data: {
+        bucket: this.name,
+        name: item.name,
+      },
+      width: '400px',
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.loadCurrentFolder();
+      }
+    });
+  }
+
+  deleteFile(item: BrowseItem) {
+    if (confirm(`Are you sure you want to delete ${item.name}?`)) {
+      this.storageClient.deleteObject(this.name, item.name).then(() => {
+        this.loadCurrentFolder();
+      });
+    }
+  }
+
+  openViewMetadataDialog(item: BrowseItem) {
+    this.dialog.open(ViewObjectMetadataDialogComponent, {
+      width: '600px',
+      data: { metadata: item.metadata || {} },
+    });
+  }
+
+  dragEnter(evt: DragEvent) {
+    this.dragActive$.next(true);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragOver(evt: DragEvent) {
+    // This event must be prevented. Otherwise drop doesn't trigger.
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  dragLeave(evt: DragEvent) {
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  drop(evt: DragEvent) {
+    const dataTransfer: any = evt.dataTransfer || {};
+    if (dataTransfer) {
+      let objectPrefix = this.getCurrentPath().substring(1);
+      if (objectPrefix !== '') {
+        objectPrefix += '/';
+      }
+
+      dnd.listDroppedFiles(dataTransfer).then((droppedFiles) => {
+        if (droppedFiles.length) {
+          const uploadPromises: any[] = [];
+
+          this.showUploadProgress().then(() => {
+            for (const droppedFile of droppedFiles) {
+              const objectPath = objectPrefix + droppedFile._fullPath;
+              const promise = this.storageClient.uploadObject(
+                this.name,
+                objectPath,
+                droppedFile,
+              );
+              this.trackUpload({ filename: droppedFile._fullPath, promise });
+              uploadPromises.push(promise);
+            }
+
+            this.settlePromises(uploadPromises).then(() => {
+              this.loadCurrentFolder();
+            });
+          });
+        }
+      });
+    }
+    this.dragActive$.next(false);
+    evt.preventDefault();
+    evt.stopPropagation();
+    return false;
+  }
+
+  private updateBrowsePath() {
+    const breadcrumb: BreadCrumbItem[] = [];
+    let path = '';
+    for (const segment of this.route.snapshot.url) {
+      path += '/' + segment.path;
+      breadcrumb.push({
+        name: segment.path,
+        route: `/storage/buckets/${this.name}/objects` + path,
+      });
+    }
+    this.breadcrumb$.next(breadcrumb);
+    return path || '/';
+  }
+
+  isImage(item: BrowseItem) {
+    if (item.folder) {
+      return false;
+    }
+    const lc = item.name.toLocaleLowerCase();
+    return (
+      lc.endsWith('.png') ||
+      lc.endsWith('.gif') ||
+      lc.endsWith('.jpg') ||
+      lc.endsWith('jpeg') ||
+      lc.endsWith('bmp') ||
+      lc.endsWith('svg') ||
+      lc.endsWith('ico')
+    );
+  }
+
+  private async showUploadProgress() {
+    if (this.progressDialogOpen) {
+      return;
+    }
+
+    this.dialogRef = this.dialog.open(UploadProgressDialogComponent, {
+      position: {
+        bottom: '10px',
+        right: '10px',
+      },
+      width: '500px',
+      data: {
+        uploads$: this.uploads$,
+      },
+      hasBackdrop: false,
+      autoFocus: false,
+      panelClass: ['progress-dialog', 'elevation-z1'],
+    });
+    this.dialogRef
+      .afterOpened()
+      .subscribe(() => (this.progressDialogOpen = true));
+    this.dialogRef.afterClosed().subscribe(() => {
+      this.uploads$.next([]);
+      this.progressDialogOpen = false;
+    });
+
+    return new Promise<any>((resolve, reject) => {
+      this.dialogRef.afterOpened().subscribe(
+        () => {
+          resolve(true);
+        },
+        (err) => {
+          reject(err);
+        },
+      );
+    });
+  }
+
+  resizeMouseDown(event: MouseEvent) {
+    let resizeGrabX: number | null = event.clientX;
+    const originalWidth = this.previewWidth$.value;
+
+    const mousemoveListener = (moveEvent: MouseEvent) => {
+      if (resizeGrabX !== null) {
+        const newWidth = originalWidth - (moveEvent.clientX - resizeGrabX);
+        this.previewWidth$.next(Math.max(400, newWidth));
+      }
+    };
+    const mouseupListener = (upEvent: MouseEvent) => {
+      resizeGrabX = null;
+      document.removeEventListener('mousemove', mousemoveListener);
+      document.removeEventListener('mouseup', mouseupListener);
+    };
+
+    document.addEventListener('mousemove', mousemoveListener);
+    document.addEventListener('mouseup', mouseupListener);
+  }
+
+  ngOnDestroy() {
+    this.routerSubscription?.unsubscribe();
+    this.dialogRef?.close();
+  }
+}
+
+export class BrowseItem {
+  folder: boolean;
+  name: string;
+  modified?: string;
+  objectUrl?: string;
+  size?: number;
+  metadata?: { [key: string]: string };
+}
+
+export interface BreadCrumbItem {
+  name: string;
+  route: string;
+}
+```

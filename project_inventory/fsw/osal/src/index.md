@@ -3,7 +3,7 @@
 
 **경로:** `fsw/osal/src/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ unit-tests/index
 ut-stubs/index
 ```
 
-## 항목
-
-- [`fsw/osal/src/bsp/`](bsp/index) — 폴더
-- [`fsw/osal/src/examples/`](examples/index) — 폴더
-- [`fsw/osal/src/os/`](os/index) — 폴더
-- [`fsw/osal/src/tests/`](tests/index) — 폴더
-- [`fsw/osal/src/unit-test-coverage/`](unit-test-coverage/index) — 폴더
-- [`fsw/osal/src/unit-tests/`](unit-tests/index) — 폴더
-- [`fsw/osal/src/ut-stubs/`](ut-stubs/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.

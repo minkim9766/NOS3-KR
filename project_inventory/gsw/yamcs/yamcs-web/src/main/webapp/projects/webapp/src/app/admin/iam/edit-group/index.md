@@ -3,16 +3,203 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-group/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `edit-group.component.html`
 
-file--edit-group.component.html
-file--edit-group.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-group/edit-group.component.html`
+
+
+```html
+@if (group$ | async; as group) {
+  <app-admin-page>
+    <app-admin-toolbar [label]="'Edit Group: ' + group.name" />
+
+    <div class="form-content ya-form">
+      <form [formGroup]="form" novalidate autocomplete="off">
+        <ya-field label="Name">
+          <input formControlName="name" type="text" />
+        </ya-field>
+
+        <ya-field label="Description">
+          <textarea formControlName="description" rows="5"></textarea>
+        </ya-field>
+
+        <ya-field-divider />
+
+        <ya-button (click)="showAddMembersDialog()" icon="add_circle">Add members</ya-button>
+
+        @if (memberItems$ | async; as memberItems) {
+          <table yaDataTable style="width: 100%; margin-top: 16px">
+            <tr>
+              <th width="1">Type</th>
+              <th>Member</th>
+              <th></th>
+            </tr>
+            @if (!memberItems.length) {
+              <tr>
+                <td colspan="3">No rows to display</td>
+              </tr>
+            }
+            @for (item of memberItems; track item) {
+              <tr>
+                <td>
+                  <mat-icon matTooltip="User" style="vertical-align: middle">person</mat-icon>
+                </td>
+                <td>{{ item.label }}</td>
+                <td style="text-align: right">
+                  <ya-text-action icon="delete" (click)="deleteItem(item)">DELETE</ya-text-action>
+                </td>
+              </tr>
+            }
+          </table>
+        }
+      </form>
+
+      <p>&nbsp;</p>
+      <ya-toolbar appearance="bottom">
+        <ya-button (click)="location.back()">Cancel</ya-button>
+        <ya-button
+          appearance="primary"
+          (click)="onConfirm()"
+          [disabled]="!(dirty$ | async) || !form.valid">
+          SAVE CHANGES
+        </ya-button>
+      </ya-toolbar>
+    </div>
+  </app-admin-page>
+}
 ```
 
-## 항목
+### `edit-group.component.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-group/edit-group.component.html`](file--edit-group.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-group/edit-group.component.ts`](file--edit-group.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/edit-group/edit-group.component.ts`
+
+
+```typescript
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import {
+  UntypedFormBuilder,
+  UntypedFormControl,
+  UntypedFormGroup,
+} from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  EditGroupRequest,
+  GroupInfo,
+  MessageService,
+  WebappSdkModule,
+  YamcsService,
+} from '@yamcs/webapp-sdk';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { AdminPageTemplateComponent } from '../../shared/admin-page-template/admin-page-template.component';
+import { AppAdminToolbar } from '../../shared/admin-toolbar/admin-toolbar.component';
+import {
+  AddMembersDialogComponent,
+  MemberItem,
+} from '../add-members-dialog/add-members-dialog.component';
+
+@Component({
+  templateUrl: './edit-group.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [AdminPageTemplateComponent, AppAdminToolbar, WebappSdkModule],
+})
+export class EditGroupComponent implements OnDestroy {
+  form: UntypedFormGroup;
+  group$: Promise<GroupInfo>;
+  private group: GroupInfo;
+
+  memberItems$ = new BehaviorSubject<MemberItem[]>([]);
+
+  dirty$ = new BehaviorSubject<boolean>(false);
+  private formSubscription: Subscription;
+
+  constructor(
+    formBuilder: UntypedFormBuilder,
+    title: Title,
+    private router: Router,
+    route: ActivatedRoute,
+    private yamcs: YamcsService,
+    private messageService: MessageService,
+    private dialog: MatDialog,
+    readonly location: Location,
+  ) {
+    title.setTitle('Edit group');
+    const name = route.snapshot.paramMap.get('name')!;
+    this.group$ = yamcs.yamcsClient.getGroup(name);
+    this.group$.then((group) => {
+      this.group = group;
+      this.form = formBuilder.group({
+        name: new UntypedFormControl(group.name),
+        description: new UntypedFormControl(group.description),
+      });
+      this.formSubscription = this.form.valueChanges.subscribe(() => {
+        this.dirty$.next(true);
+      });
+      const memberItems: MemberItem[] = [];
+      if (group.users) {
+        for (const user of group.users) {
+          memberItems.push({
+            label: user.displayName || user.name,
+            user: user,
+          });
+        }
+      }
+      this.updateMemberItems(memberItems, false);
+    });
+  }
+
+  showAddMembersDialog() {
+    const dialogRef = this.dialog.open(AddMembersDialogComponent, {
+      data: {
+        items: this.memberItems$.value,
+      },
+      width: '600px',
+    });
+    dialogRef.afterClosed().subscribe((memberItems) => {
+      if (memberItems) {
+        this.updateMemberItems([...this.memberItems$.value, ...memberItems]);
+      }
+    });
+  }
+
+  private updateMemberItems(items: MemberItem[], dirty = true) {
+    items.sort((i1, i2) =>
+      i1.label < i2.label ? -1 : i1.label > i2.label ? 1 : 0,
+    );
+    this.memberItems$.next(items);
+    this.dirty$.next(dirty);
+  }
+
+  deleteItem(item: MemberItem) {
+    this.updateMemberItems(this.memberItems$.value.filter((i) => i !== item));
+  }
+
+  onConfirm() {
+    const formValue = this.form.value;
+
+    const options: EditGroupRequest = {
+      newName: formValue.name,
+      description: formValue.description,
+      memberInfo: {
+        users: this.memberItems$.value
+          .filter((item) => item.user)
+          .map((item) => item.user!.name),
+      },
+    };
+
+    const newName = formValue.name;
+    this.yamcs.yamcsClient
+      .editGroup(this.group.name, options)
+      .then(() => this.router.navigateByUrl(`/admin/iam/groups/${newName}`))
+      .catch((err) => this.messageService.showError(err));
+  }
+
+  ngOnDestroy() {
+    this.formSubscription?.unsubscribe();
+  }
+}
+```

@@ -3,7 +3,7 @@
 
 **경로:** `fsw/psp/fsw/nos-linux/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -12,15 +12,66 @@ doc/index
 inc/index
 make/index
 src/index
-file--CMakeLists.txt
-file--psp_module_list.cmake
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/psp/fsw/nos-linux/doc/`](doc/index) — 폴더
-- [`fsw/psp/fsw/nos-linux/inc/`](inc/index) — 폴더
-- [`fsw/psp/fsw/nos-linux/make/`](make/index) — 폴더
-- [`fsw/psp/fsw/nos-linux/src/`](src/index) — 폴더
-- [`fsw/psp/fsw/nos-linux/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/psp/fsw/nos-linux/psp_module_list.cmake`](file--psp_module_list.cmake) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/psp/fsw/nos-linux/CMakeLists.txt`
+
+
+```cmake
+######################################################################
+#
+# CMAKE build recipe for pc-linux PSP component
+#
+######################################################################
+
+# This contains the fully platform-specific code to
+# run CFE on this target.
+
+# Build the pc-linux implementation as a library
+add_library(psp-${CFE_PSP_TARGETNAME}-impl OBJECT
+    src/cfe_psp_exception.c
+    ../pc-linux/src/cfe_psp_memory.c
+    #../pc-linux/src/cfe_psp_memtab.c
+    ../pc-linux/src/cfe_psp_ssr.c
+    src/cfe_psp_start.c
+    ../pc-linux/src/cfe_psp_support.c
+    src/cfe_psp_timer.c
+    ../pc-linux/src/cfe_psp_watchdog.c
+)
+
+# The _GNU_SOURCE directive is required to call non-posix APIs
+# that are specific to the Linux/glibc environment.
+# Code outside the pc-linux PSP should _not_ depend on this.
+target_compile_definitions(psp-${CFE_SYSTEM_PSPNAME}-impl PRIVATE
+    _GNU_SOURCE
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_COMPILE_DEFINITIONS>
+)
+
+target_include_directories(psp-${CFE_PSP_TARGETNAME}-impl PRIVATE
+    inc
+    ${NOSENGINE_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../apps/hwlib/sim/inc
+    ${CMAKE_CURRENT_SOURCE_DIR}/../../../osal/src/os/nos/inc
+    $<TARGET_PROPERTY:psp_module_api,INTERFACE_INCLUDE_DIRECTORIES>
+)
+```
+
+### `psp_module_list.cmake`
+
+**경로:** `fsw/psp/fsw/nos-linux/psp_module_list.cmake`
+
+
+```cmake
+# This is a list of modules that is included as a fixed/base set
+# when this PSP is selected.  They must exist under fsw/modules
+
+eeprom_notimpl
+port_notimpl
+ram_notimpl
+#soft_timebase
+#timebase_posix_clock
+```

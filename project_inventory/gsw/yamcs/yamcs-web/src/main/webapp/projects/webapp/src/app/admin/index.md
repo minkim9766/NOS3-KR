@@ -3,7 +3,7 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -22,25 +22,351 @@ sessions/index
 shared/index
 system/index
 threads/index
-file--admin.routes.ts
-file--pids.resolvers.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin-action-log/`](admin-action-log/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/databases/`](databases/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/http-traffic/`](http-traffic/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/iam/`](iam/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/leap-seconds/`](leap-seconds/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/processor-types/`](processor-types/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/replication/`](replication/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/rocksdb/`](rocksdb/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/routes/`](routes/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/services/`](services/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/sessions/`](sessions/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/shared/`](shared/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/system/`](system/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/threads/`](threads/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin.routes.ts`](file--admin.routes.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/pids.resolvers.ts`](file--pids.resolvers.ts) — UTF-8 텍스트 파일 본문 포함
+### `admin.routes.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/admin.routes.ts`
+
+
+```typescript
+import { Routes } from '@angular/router';
+import { authGuardChildFn, authGuardFn } from '../core/guards/AuthGuard';
+import { clearContextGuardFn } from '../core/guards/ClearContextGuard';
+import { mayAccessAdminAreaGuardFn } from '../core/guards/MayAccessAdminAreaGuard';
+import { mayControlAccessGuardFn } from '../core/guards/MayControlAccessGuard';
+import { mayControlArchivingGuardFn } from '../core/guards/MayControlArchivingGuard';
+import { mayControlServicesGuardFn } from '../core/guards/MayControlServicesGuard';
+import { mayReadSystemInfoGuardFn } from '../core/guards/MayReadSystemInfoGuard';
+import { AdminActionLogComponent } from './admin-action-log/admin-action-log.component';
+import { DatabaseListComponent } from './databases/database-list/database-list.component';
+import { DatabaseComponent } from './databases/database/database.component';
+import { ParameterArchiveComponent } from './databases/parameter-archive/parameter-archive.component';
+import { StreamColumnListComponent } from './databases/stream-column-list/stream-column-list.component';
+import { StreamDataTabComponent } from './databases/stream-data-tab/stream-data-tab.component';
+import { StreamListComponent } from './databases/stream-list/stream-list.component';
+import { StreamScriptTabComponent } from './databases/stream-script-tab/stream-script-tab.component';
+import { StreamComponent } from './databases/stream/stream.component';
+import { TableDataTabComponent } from './databases/table-data-tab/table-data-tab.component';
+import { TableInfoTabComponent } from './databases/table-info-tab/table-info-tab.component';
+import { TableListComponent } from './databases/table-list/table-list.component';
+import { TableScriptTabComponent } from './databases/table-script-tab/table-script-tab.component';
+import { TableComponent } from './databases/table/table.component';
+import { HttpTrafficComponent } from './http-traffic/http-traffic.component';
+import { CreateGroupComponent } from './iam/create-group/create-group.component';
+import { CreateServiceAccountComponent } from './iam/create-service-account/create-service-account.component';
+import { CreateUserComponent } from './iam/create-user/create-user.component';
+import { EditGroupComponent } from './iam/edit-group/edit-group.component';
+import { EditUserComponent } from './iam/edit-user/edit-user.component';
+import { GroupListComponent } from './iam/group-list/group-list.component';
+import { GroupComponent } from './iam/group/group.component';
+import { RoleListComponent } from './iam/role-list/role-list.component';
+import { RoleComponent } from './iam/role/role.component';
+import { ServiceAccountListComponent } from './iam/service-account-list/service-account-list.component';
+import { UserListComponent } from './iam/user-list/user-list.component';
+import { UserComponent } from './iam/user/user.component';
+import { LeapSecondsComponent } from './leap-seconds/leap-seconds.component';
+import { resolveParseFilterSubscription } from './pids.resolvers';
+import { ProcessorTypesComponent } from './processor-types/processor-types.component';
+import { ReplicationComponent } from './replication/replication/replication.component';
+import { RocksDbDatabasesComponent } from './rocksdb/rocksdb-database-list/rocksdb-database-list.component';
+import { RocksDbDatabaseComponent } from './rocksdb/rocksdb-database/rocksdb-database.component';
+import { RouteListComponent } from './routes/route-list/route-list.component';
+import { ServiceListComponent } from './services/service-list/service-list.component';
+import { SessionListComponent } from './sessions/session-list.component';
+import { AdminPageComponent } from './shared/admin-page/admin-page.component';
+import { SystemComponent } from './system/system.component';
+import { ThreadListComponent } from './threads/thread-list/thread-list.component';
+import { ThreadComponent } from './threads/thread/thread.component';
+
+export const ROUTES: Routes = [
+  {
+    path: '',
+    canActivate: [authGuardFn, clearContextGuardFn, mayAccessAdminAreaGuardFn],
+    canActivateChild: [authGuardChildFn],
+    runGuardsAndResolvers: 'always',
+    component: AdminPageComponent,
+    children: [
+      {
+        path: '',
+        pathMatch: 'full',
+        component: AdminActionLogComponent,
+      },
+      {
+        path: 'http-traffic',
+        canActivate: [mayReadSystemInfoGuardFn],
+        component: HttpTrafficComponent,
+      },
+      {
+        path: 'sessions',
+        canActivate: [mayControlAccessGuardFn],
+        component: SessionListComponent,
+      },
+      {
+        path: 'routes',
+        canActivate: [mayReadSystemInfoGuardFn],
+        component: RouteListComponent,
+      },
+      {
+        path: 'leap-seconds',
+        canActivate: [mayReadSystemInfoGuardFn],
+        component: LeapSecondsComponent,
+      },
+      {
+        path: 'processor-types',
+        canActivate: [mayReadSystemInfoGuardFn],
+        component: ProcessorTypesComponent,
+      },
+      {
+        path: 'replication',
+        canActivate: [mayReadSystemInfoGuardFn],
+        component: ReplicationComponent,
+      },
+      {
+        path: 'services',
+        canActivate: [mayControlServicesGuardFn],
+        component: ServiceListComponent,
+      },
+      {
+        path: 'databases',
+        canActivate: [mayControlArchivingGuardFn],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            component: DatabaseListComponent,
+          },
+          {
+            path: ':database',
+            component: DatabaseComponent,
+            children: [
+              {
+                path: '',
+                pathMatch: 'full',
+                redirectTo: 'tables',
+              },
+              {
+                path: 'tables',
+                pathMatch: 'full',
+                component: TableListComponent,
+              },
+              {
+                path: 'tables/:table',
+                component: TableComponent,
+                children: [
+                  {
+                    path: '',
+                    pathMatch: 'full',
+                    redirectTo: 'info',
+                  },
+                  {
+                    path: 'info',
+                    component: TableInfoTabComponent,
+                  },
+                  {
+                    path: 'data',
+                    component: TableDataTabComponent,
+                  },
+                  {
+                    path: 'script',
+                    component: TableScriptTabComponent,
+                  },
+                ],
+              },
+              {
+                path: 'streams',
+                pathMatch: 'full',
+                component: StreamListComponent,
+              },
+              {
+                path: 'streams/:stream',
+                component: StreamComponent,
+                children: [
+                  {
+                    path: '',
+                    pathMatch: 'full',
+                    redirectTo: 'columns',
+                  },
+                  {
+                    path: 'columns',
+                    component: StreamColumnListComponent,
+                  },
+                  {
+                    path: 'data',
+                    component: StreamDataTabComponent,
+                  },
+                  {
+                    path: 'script',
+                    component: StreamScriptTabComponent,
+                  },
+                ],
+              },
+              {
+                path: 'parameter-archive',
+                component: ParameterArchiveComponent,
+                resolve: {
+                  parseFilterSubscription: resolveParseFilterSubscription,
+                },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'rocksdb',
+        runGuardsAndResolvers: 'always',
+        canActivate: [mayControlArchivingGuardFn],
+        children: [
+          {
+            path: '',
+            pathMatch: 'full',
+            redirectTo: 'databases',
+          },
+          {
+            path: 'databases',
+            pathMatch: 'full',
+            component: RocksDbDatabasesComponent,
+          },
+          {
+            path: 'databases/:tablespace',
+            children: [
+              {
+                path: '**',
+                component: RocksDbDatabaseComponent,
+              },
+            ],
+          },
+        ],
+      },
+      {
+        path: 'iam/service-accounts',
+        pathMatch: 'full',
+        component: ServiceAccountListComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/service-accounts/create',
+        pathMatch: 'full',
+        component: CreateServiceAccountComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/users',
+        pathMatch: 'full',
+        component: UserListComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/users/create',
+        pathMatch: 'full',
+        component: CreateUserComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/users/:username',
+        pathMatch: 'full',
+        component: UserComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/users/:username/edit',
+        pathMatch: 'full',
+        component: EditUserComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/groups',
+        pathMatch: 'full',
+        component: GroupListComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/groups/create',
+        pathMatch: 'full',
+        component: CreateGroupComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/groups/:name',
+        pathMatch: 'full',
+        component: GroupComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/groups/:name/edit',
+        pathMatch: 'full',
+        component: EditGroupComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/roles',
+        pathMatch: 'full',
+        component: RoleListComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'iam/roles/:name',
+        pathMatch: 'full',
+        component: RoleComponent,
+        canActivate: [mayControlAccessGuardFn],
+      },
+      {
+        path: 'threads',
+        pathMatch: 'full',
+        component: ThreadListComponent,
+        canActivate: [mayReadSystemInfoGuardFn],
+      },
+      {
+        path: 'threads/:id',
+        component: ThreadComponent,
+        canActivate: [mayReadSystemInfoGuardFn],
+      },
+      {
+        path: 'system',
+        pathMatch: 'full',
+        component: SystemComponent,
+        canActivate: [mayReadSystemInfoGuardFn],
+      },
+    ],
+  },
+];
+```
+
+### `pids.resolvers.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/admin/pids.resolvers.ts`
+
+
+```typescript
+import { inject } from '@angular/core';
+import { ResolveFn } from '@angular/router';
+import { ParseFilterSubscription, YamcsService } from '@yamcs/webapp-sdk';
+
+/**
+ * Resolver that waits for the ParseFilter subscription to be
+ * fully established.
+ *
+ * This can be used to avoid timing issues for the initial
+ * filter parse.
+ */
+export const resolveParseFilterSubscription: ResolveFn<
+  ParseFilterSubscription
+> = (route, state) => {
+  const yamcs = inject(YamcsService);
+  const subscription = yamcs.yamcsClient.createParseFilterSubscription(
+    {
+      resource: 'pids',
+      filter: '',
+    },
+    () => null,
+  );
+
+  return new Promise((resolve, reject) => {
+    subscription.addReplyListener(() => {
+      resolve(subscription);
+    });
+  });
+};
+```

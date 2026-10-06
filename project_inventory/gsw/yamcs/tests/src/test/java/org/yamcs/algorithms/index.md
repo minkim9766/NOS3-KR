@@ -3,22 +3,1224 @@
 
 **경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `AlgorithmManagerJavaExprTest.java`
 
-file--AlgorithmManagerJavaExprTest.java
-file--AlgorithmManagerJavaTest.java
-file--AlgorithmManagerPyTest.java
-file--AlgorithmManagerTest.java
-file--AlgorithmWithContextTest.java
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerJavaExprTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.tests.RefMdbPacketGenerator;
+import org.yamcs.protobuf.AlgorithmStatus;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.CustomAlgorithm;
+import org.yamcs.xtce.Parameter;
+
+/**
+ * Java algorithms test
+ */
+public class AlgorithmManagerJavaExprTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest(instance);
+        MdbFactory.reset();
+    }
+
+    static String instance = "refmdb";
+    private Processor processor;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterRequestManager prm;
+    private AlgorithmManager algoMgr;
+
+    @BeforeEach
+    public void beforeEachTest() throws Exception {
+        EventProducerFactory.setMockup(true);
+
+        tmGenerator = new RefMdbPacketGenerator();
+        tmGenerator.setGenerationTime(TimeEncoding.getWallclockTime());
+
+        algoMgr = new AlgorithmManager();
+        processor = ProcessorFactory.create(instance, "AlgorithmManagerJavaTest", tmGenerator, algoMgr);
+        prm = processor.getParameterRequestManager();
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        processor.quit();
+    }
+
+    @Test
+    public void testJavaExprAlgo1() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJe");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+
+        tmGenerator.generate_PKT1_1();
+
+        assertEquals(1, params.size());
+        ParameterValue pv = params.get(0);
+
+        assertEquals(2.1672918, pv.getEngValue().getFloatValue(), 0.001);
+        assertEquals(tmGenerator.getGenerationTime(), pv.getGenerationTime());
+    }
+
+    @Test
+    public void testJavaExprAlgoFailure1() throws InvalidIdentification {
+        CustomAlgorithm calg = (CustomAlgorithm) processor.getMdb().getAlgorithm("/REFMDB/SUBSYS1/float_addje");
+        algoMgr.overrideAlgorithm(calg, "bum");
+        assertTrue(algoMgr.algorithmsInError.containsKey(calg.getQualifiedName()));
+    }
+
+    @Test
+    public void testJavaExprAlgoFailure2() throws InvalidIdentification {
+        processor.start();
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJe");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> {
+            params.addAll(items);
+        });
+        CustomAlgorithm calg = (CustomAlgorithm) processor.getMdb().getAlgorithm("/REFMDB/SUBSYS1/float_addje");
+        algoMgr.overrideAlgorithm(calg, "AlgoFloatAdditionJe.setFloatValue((float)(5/0));");
+
+        AlgorithmStatus status = algoMgr.getAlgorithmStatus(calg);
+        assertEquals(0, status.getErrorCount());
+
+        // after 10 errors, it should be automatically deactivated
+        for (int i = 0; i < 10; i++) {
+            status = algoMgr.getAlgorithmStatus(calg);
+            assertTrue(status.getActive());
+            assertEquals(i, status.getErrorCount());
+
+            tmGenerator.generate_PKT1_1();
+
+            status = algoMgr.getAlgorithmStatus(calg);
+
+            assertTrue(status.getErrorMessage().contains("/ by zero"));
+        }
+
+        assertEquals(0, params.size());
+
+        assertEquals(10, status.getErrorCount());
+        assertTrue(status.getErrorMessage().contains("Deactivated after 10 errors"));
+        assertFalse(status.getActive());
+    }
+}
 ```
 
-## 항목
+### `AlgorithmManagerJavaTest.java`
 
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerJavaExprTest.java`](file--AlgorithmManagerJavaExprTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerJavaTest.java`](file--AlgorithmManagerJavaTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerPyTest.java`](file--AlgorithmManagerPyTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerTest.java`](file--AlgorithmManagerTest.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmWithContextTest.java`](file--AlgorithmWithContextTest.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerJavaTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.AggregateValue;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.tests.RefMdbPacketGenerator;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.AggregateParameterType;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.InputParameter;
+import org.yamcs.xtce.OutputParameter;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.xtce.ParameterType;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.xtce.util.AggregateMemberNames;
+
+/**
+ * Java algorithms test
+ */
+public class AlgorithmManagerJavaTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest(instance);
+        MdbFactory.reset();
+    }
+
+    static String instance = "refmdb";
+    private Mdb db;
+    private Processor processor;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterRequestManager prm;
+
+    @BeforeEach
+    public void beforeEachTest() throws Exception {
+        EventProducerFactory.setMockup(true);
+
+        db = MdbFactory.getInstance(instance);
+        assertNotNull(db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        tmGenerator = new RefMdbPacketGenerator();
+
+        Map<String, Object> jslib = new HashMap<>();
+        Map<String, Object> config = new HashMap<>();
+        jslib.put("python", Arrays.asList("mdb/algolib.py"));
+        jslib.put("JavaScript", Arrays.asList("mdb/algolib.js"));
+
+        config.put("libraries", jslib);
+        AlgorithmManager am = new AlgorithmManager();
+        processor = ProcessorFactory.create(instance, "AlgorithmManagerJavaTest", tmGenerator, am);
+        prm = processor.getParameterRequestManager();
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        processor.quit();
+    }
+
+    @Test
+    public void testJavaAlgo1() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoJavaFloat1");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(0.1672918, params.get(0).getEngValue().getDoubleValue(), 0.001);
+    }
+
+    @Test
+    public void testJavaAlgo2() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoJavaFloat2");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(3.3672918, params.get(0).getEngValue().getDoubleValue(), 0.001);
+    }
+
+    @Test
+    public void testJavaAlgo3() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoJavaFloat3");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(8.2672918, params.get(0).getEngValue().getDoubleValue(), 0.001);
+    }
+
+    @Test
+    public void testJavaAlgo4() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoJavaAggr4");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+
+        AggregateValue v = (AggregateValue) params.get(0).getEngValue();
+        assertEquals(0.1672918051481247, v.getMemberValue("member3").getDoubleValue(), 0.001);
+    }
+
+    public static class MyAlgo1 extends AbstractAlgorithmExecutor {
+        float v;
+
+        public MyAlgo1(Algorithm algorithmDef, AlgorithmExecutionContext execCtx) {
+            super(algorithmDef, execCtx);
+        }
+
+        @Override
+        public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+            Parameter p = algorithmDef.getOutputSet().get(0).getParameter();
+            ParameterValue pv = new ParameterValue(p);
+
+            pv.setEngValue(ValueUtility.getDoubleValue(v));
+            return new AlgorithmExecutionResult(pv);
+        }
+
+        @Override
+        protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+            v = newValue.getEngValue().getFloatValue();
+        }
+    }
+
+    public static class MyAlgo2 extends AbstractAlgorithmExecutor {
+        double x;
+        float v;
+
+        public MyAlgo2(Algorithm algorithmDef, AlgorithmExecutionContext execCtx, Double x) {
+            super(algorithmDef, execCtx);
+            this.x = x;
+        }
+
+        @Override
+        public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+            Parameter p = algorithmDef.getOutputSet().get(0).getParameter();
+            ParameterValue pv = new ParameterValue(p);
+
+            pv.setEngValue(ValueUtility.getDoubleValue(x + v));
+            return new AlgorithmExecutionResult(Arrays.asList(pv));
+        }
+
+        @Override
+        protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+            v = newValue.getEngValue().getFloatValue();
+        }
+    }
+
+    public static class MyAlgo3 extends AbstractAlgorithmExecutor {
+        int a;
+        double b;
+        String c;
+        float v;
+
+        public MyAlgo3(Algorithm algorithmDef, AlgorithmExecutionContext execCtx, Map<String, Object> m) {
+            super(algorithmDef, execCtx);
+            this.a = (Integer) m.get("a");
+            this.b = (Double) m.get("b");
+            this.c = (String) m.get("c");
+        }
+
+        @Override
+        public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+            Parameter p = algorithmDef.getOutputSet().get(0).getParameter();
+            ParameterValue pv = new ParameterValue(p);
+
+            pv.setEngValue(ValueUtility.getDoubleValue(a + b + c.length() + v));
+            return new AlgorithmExecutionResult(pv);
+        }
+
+        @Override
+        protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+            v = newValue.getEngValue().getFloatValue();
+        }
+    }
+
+    public static class MyAlgo4 extends AbstractAlgorithmExecutor {
+        int m1;
+        float v;
+        AggregateMemberNames aggrMbr;
+        Parameter out;
+
+        public MyAlgo4(Algorithm algorithmDef, AlgorithmExecutionContext execCtx, Integer m1) {
+            super(algorithmDef, execCtx);
+            this.m1 = m1;
+            out = execCtx.getMdb().getParameter("/REFMDB/SUBSYS1/AlgoJavaAggr4");
+            ParameterType pt = out.getParameterType();
+
+            this.aggrMbr = ((AggregateParameterType) pt).getMemberNames();
+        }
+
+        @Override
+        public AlgorithmExecutionResult execute(long acqTime, long genTime, ProcessingContext ctx) {
+            ParameterValue pv = new ParameterValue(out);
+            AggregateValue ev = new AggregateValue(aggrMbr);
+            ev.setMemberValue("member1", ValueUtility.getUint32Value(m1));
+            ev.setMemberValue("member2", ValueUtility.getUint32Value(23));
+            ev.setMemberValue("member3", ValueUtility.getDoubleValue(v));
+
+            pv.setEngValue(ev);
+            return new AlgorithmExecutionResult(pv);
+        }
+
+        @Override
+        protected void updateInput(int idx, InputParameter inputParameter, ParameterValue newValue) {
+            v = newValue.getEngValue().getFloatValue();
+        }
+
+        public List<OutputParameter> getOutputList() {
+            return Collections.singletonList(new OutputParameter(out));
+        }
+    }
+}
+```
+
+### `AlgorithmManagerPyTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerPyTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.yamcs.algorithms.AlgorithmManagerTest.getPwc;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.tests.RefMdbPacketGenerator;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.mdb.Mdb;
+
+/**
+ * Just a small sanity check to verify python/jython still works. Uses algorithms in the spreadsheet that are
+ * interpreted the same in javascript and python
+ */
+public class AlgorithmManagerPyTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest(instance);
+        MdbFactory.reset();
+        // org.yamcs.LoggingUtils.enableLogging();
+    }
+
+    static String instance = "refmdb";
+    private Mdb mdb;
+    private Processor processor;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterRequestManager prm;
+
+    @BeforeEach
+    public void beforeEachTest() throws Exception {
+        EventProducerFactory.setMockup(true);
+
+        mdb = MdbFactory.getInstance(instance);
+        assertNotNull(mdb.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        tmGenerator = new RefMdbPacketGenerator();
+
+        Map<String, Object> jslib = new HashMap<>();
+        Map<String, Object> config = new HashMap<>();
+        jslib.put("python", Arrays.asList("mdb/algolib.py"));
+        jslib.put("JavaScript", Arrays.asList("mdb/algolib.js"));
+
+        config.put("libraries", jslib);
+
+        AlgorithmManager am = new AlgorithmManager();
+        processor = ProcessorFactory.create("refmdb", "AlgorithmManagerPyTest",
+                getPwc(tmGenerator, YConfiguration.emptyConfig()),
+                getPwc(am, YConfiguration.wrap(config)));
+
+        prm = processor.getParameterRequestManager();
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        processor.quit();
+    }
+
+    @Test
+    public void testFloats() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionPy");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(2.1672918, params.get(0).getEngValue().getFloatValue(), 0.001);
+    }
+
+    @Test
+    public void testTime() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoTestTimePy");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        long t = TimeEncoding.parse("2022-01-30T12:06:00Z");
+        processor.start();
+        long pt0 = processor.getCurrentTime();
+
+        tmGenerator.setGenerationTime(t);
+        tmGenerator.generate_PKT1_1();
+        long pt1 = processor.getCurrentTime();
+
+        assertEquals(1, params.size());
+        long parav = params.get(0).getEngValue().getUint64Value();
+
+        assertTrue(t + pt0 <= parav);
+
+        assertTrue(parav <= t + pt1);
+    }
+
+    @Test
+    public void testSignedIntegers() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoNegativeOutcome1"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoNegativeOutcome2"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoNegativeOutcome3"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoNegativeOutcome4")),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_8(2, -2);
+        assertEquals(4, params.size());
+        assertEquals(2, params.get(0).getEngValue().getSint32Value());
+        assertEquals(-2, params.get(1).getEngValue().getSint32Value());
+        assertEquals(-2, params.get(2).getEngValue().getSint32Value());
+        assertEquals(2, params.get(3).getEngValue().getSint32Value());
+    }
+
+    @Test
+    public void testExternalLibrary() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatDivisionPy"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        processor.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getFloatValue() * 3, 0.001);
+    }
+}
+```
+
+### `AlgorithmManagerTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmManagerTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.ProcessorService;
+import org.yamcs.ProcessorServiceWithConfig;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterConsumer;
+import org.yamcs.parameter.ParameterRequestManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.protobuf.AlgorithmTrace.Log;
+import org.yamcs.protobuf.AlgorithmTrace.Run;
+import org.yamcs.protobuf.Event.EventSeverity;
+import org.yamcs.protobuf.Pvalue;
+import org.yamcs.tests.LoggingUtils;
+import org.yamcs.tests.RefMdbPacketGenerator;
+import org.yamcs.utils.StringConverter;
+import org.yamcs.utils.TimeEncoding;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Parameter;
+import org.yamcs.yarch.protobuf.Db.Event;
+
+public class AlgorithmManagerTest {
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+    }
+
+    private Mdb db;
+    private Processor proc;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterRequestManager prm;
+    private Queue<Event> q;
+    AlgorithmManager algMgr;
+
+    @BeforeEach
+    public void beforeEachTest() throws Exception {
+        EventProducerFactory.setMockup(true);
+        q = EventProducerFactory.getMockupQueue();
+
+        db = MdbFactory.getInstance("refmdb");
+        assertNotNull(db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        tmGenerator = new RefMdbPacketGenerator();
+        Map<String, Object> jslib = new HashMap<>();
+
+        jslib.put("JavaScript", Arrays.asList("mdb/algolib.js"));
+        jslib.put("python", Arrays.asList("mdb/algolib.py"));
+        Map<String, Object> config = new HashMap<>();
+        config.put("libraries", jslib);
+
+        algMgr = new AlgorithmManager();
+        proc = ProcessorFactory.create("refmdb", "AlgorithmManagerTest",
+                getPwc(tmGenerator, YConfiguration.emptyConfig()),
+                getPwc(algMgr, YConfiguration.wrap(config)));
+        prm = proc.getParameterRequestManager();
+
+    }
+
+    static ProcessorServiceWithConfig getPwc(ProcessorService service, YConfiguration config) {
+        return new ProcessorServiceWithConfig(service, service.getClass().getName(),
+                service.getClass().getName(), config);
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        proc.quit();
+    }
+
+    @Test
+    public void testFloatAdd() throws InvalidIdentification {
+        Parameter floatPara = db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2");
+        Parameter floatAddition = db.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJs");
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(floatPara, floatAddition),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+
+        // enable temporarily the logging at trrace level to see that we can have access to detailed information for
+        // debugging (and also to improve the test coverage...)
+        LoggingUtils.ArrayLogHandler alh = LoggingUtils.startCapture(ScriptAlgorithmExecutor.class);
+        tmGenerator.generate_PKT1_1();
+        LoggingUtils.stopCapture(ScriptAlgorithmExecutor.class);
+
+        assertEquals(2, params.size());
+        verifyEqual(params.get(0), floatPara, 0.1672918f);
+        verifyEqual(params.get(1), floatAddition, 2.1672918f);
+
+        // a bit fragile these messages but it's easy enough to change the test in case the messages would change
+        assertTrue(alh.contains("Running algorithm float_add( f0: [r: 1000, v: 0.1672918], f1: [r: 2.0, v: 2.0])"));
+        assertTrue(alh.contains("algorithm float_add outputs: "
+                + "( null: OutputValueBinding [rawValue=null, value=2.1672918051481247, updated=true]) returnValue: null"));
+    }
+
+    @Test
+    @Disabled
+    // this can be used to test the performance of a very simple addition algorithm
+    // to do that, you can comment in/out the right version of the parameter
+    //
+    // The number at the end includes the time it takes to process the packet, if you want to compute that time,
+    // comment out the AlgoFloatAddition and comment in the FloatPara1_1_3, this is a parameter part of the packet
+    // Results i7-8650U java 11:
+    // no algorithm: 1500 nsec/iteration
+    // java-expression: 1900 nsec/iteration
+    // python: 5000 nsec/iteration
+    // javascript: 23000 nsec/iteration
+    public void testPerformanceFloatAdd() throws InvalidIdentification {
+        List<Parameter> paraList = new ArrayList<>();
+
+        paraList.add(prm.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        // paraList.add(prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionPy"));
+        // paraList.add(prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJe"));
+        paraList.add(prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJs"));
+
+        // paraList.add(prm.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_3"));
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(paraList, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        long t0 = System.nanoTime();
+
+        int m = 10;
+        int n = 100000;
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                tmGenerator.generate_PKT1_1();
+            }
+            if (j == 0) {
+                System.out.println(params.get(1));
+            }
+            assertEquals(2 * n, params.size());
+            params.clear();
+        }
+        long t1 = System.nanoTime();
+        System.out.println("time: " + (t1 - t0) / (n * m) + " nsec/iteration");
+
+    }
+
+    @Test
+    public void testSlidingWindow() throws InvalidIdentification, InterruptedException {
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoWindowResult");
+        final List<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(p, (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        long startTime = TimeEncoding.getWallclockTime();
+        tmGenerator.generate_PKT1_6(1, 2, startTime, startTime);
+        assertEquals(0, params.size()); // Windows: [* * * 1] && [* 2]
+
+        tmGenerator.generate_PKT1_6(2, 4, startTime + 1, startTime + 1);
+        assertEquals(0, params.size()); // Windows: [* * 1 2] && [2 4]
+
+        tmGenerator.generate_PKT1_6(3, 6, startTime + 2, startTime + 2);
+        assertEquals(0, params.size()); // Windows: [* 1 2 3] && [4 6]
+
+        // Production starts only when all relevant values for the expression are present
+        tmGenerator.generate_PKT1_6(5, 8, startTime + 3, startTime + 3);
+        assertEquals(1, params.size()); // Windows: [1 2 3 5] && [6 8] => produce (1 + 5) * 6
+        assertEquals(36, params.get(0).getEngValue().getUint32Value());
+
+        params.clear();
+        tmGenerator.generate_PKT1_6(8, 10, startTime + 4, startTime + 4);
+        assertEquals(1, params.size()); // Windows: [2 3 5 8] && [8 10] => produce (2 + 8) * 8
+        assertEquals(80, params.get(0).getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testFunctions() throws Exception {
+        // No need to subscribe. This algorithm doesn't have any outputs
+        // and is therefore auto-activated (will only trigger if an input changes)
+
+        proc.start();
+        tmGenerator.generate_PKT1_6(1, 0);
+        assertEquals(17, q.size());
+        String algName = "/REFMDB/SUBSYS1/script_functions";
+        String defaultSource = "CustomAlgorithm";
+
+        for (EventSeverity sev : EventSeverity.values()) {
+            if (sev == EventSeverity.ERROR || sev == EventSeverity.WARNING_NEW) {
+                continue;
+            }
+
+            String s = sev.name().toLowerCase();
+            verifyEvent(q.poll(), sev, defaultSource, algName, s + " message1");
+            verifyEvent(q.poll(), sev, s + "_source", s + " type", s + " message2");
+        }
+
+        // processor name
+        verifyEventMessage(q.poll(), proc.getInstance());
+
+        // processor name
+        verifyEventMessage(q.poll(), proc.getName());
+
+        // calibrate polynomial
+        verifyEventMessage(q.poll(), "0.0001672918");
+
+        // calibrate enumeration
+        verifyEventMessage(q.poll(), "one_why not");
+
+        // little endian to host
+        verifyEventMessage(q.poll(), Long.toString(0xF3F2F1F0l));
+    }
+
+    private void verifyEventMessage(Event evt, String message) {
+        assertEquals(message, evt.getMessage());
+    }
+
+    private void verifyEvent(Event evt, EventSeverity severity, String source, String type, String message) {
+        assertEquals(severity, evt.getSeverity());
+        assertEquals(source, evt.getSource());
+        assertEquals(type, evt.getType());
+        assertEquals(message, evt.getMessage());
+    }
+
+    @Test
+    public void testExternalLibrary() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatDivision");
+        prm.addRequest(p, (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getFloatValue() * 3, 0.001);
+    }
+
+    @Test
+    public void testAlgorithmChaining() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        Parameter p = prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatMultiplication");
+        int subscriptionId = prm.addRequest(p, (ParameterConsumer) (subscriptionId1, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getFloatValue(), 0.001);
+
+        // Test unsubscribe
+        params.clear();
+        prm.removeItemsFromRequest(subscriptionId, p);
+        tmGenerator.generate_PKT1_1();
+        assertTrue(params.isEmpty());
+
+        // Subscribe again
+        params.clear();
+        prm.addItemsToRequest(subscriptionId, p);
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getFloatValue(), 0.001);
+    }
+
+    @Test
+    public void testAlgorithmChainingWithWindowing() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        int subscriptionId = prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAverage"),
+                prm.getParameter("/REFMDB/SUBSYS1/IntegerPara1_1_1")),
+                (ParameterConsumer) (subscriptionId1, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getUint32Value());
+
+        params.clear();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(2, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getUint32Value());
+        assertEquals((20 + 20 + 20 + (20 / 3.0)) / 4.0, params.get(1).getEngValue().getFloatValue(), 0.001);
+
+        // Unsubscribe
+        params.clear();
+        prm.removeItemsFromRequest(subscriptionId, prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAverage"));
+
+        tmGenerator.generate_PKT1_1();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(2, params.size());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(0).getEngValue().getUint32Value());
+        assertEquals(tmGenerator.pIntegerPara1_1_1, params.get(1).getEngValue().getUint32Value());
+
+        // Unsubscribe after subscribing to dependent algorithm's output as well
+        params.clear();
+        prm.addItemsToRequest(subscriptionId, Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAverage"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatMultiplication")));
+        prm.removeItemsFromRequest(subscriptionId, prm.getParameter("/REFMDB/SUBSYS1/AlgoFloatAverage"));
+        tmGenerator.generate_PKT1_1();
+        // We should still get AlgoFloatMultiplication
+        assertEquals(2, params.size());
+        assertEquals("/REFMDB/SUBSYS1/IntegerPara1_1_1", params.get(0).getParameter().getQualifiedName());
+        assertEquals("/REFMDB/SUBSYS1/AlgoFloatMultiplication", params.get(1).getParameter().getQualifiedName());
+    }
+
+    @Test
+    public void testEnumCalibration() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoCalibrationEnum"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_6(1, 1);
+        assertEquals(1, params.size());
+        assertEquals(1, params.get(0).getRawValue().getUint32Value());
+        assertEquals("one_why not", params.get(0).getEngValue().getStringValue());
+    }
+
+    @Test
+    public void testBooleanAlgorithms() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoBooleanTrueOutcome"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoBooleanFalseOutcome")),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_9();
+        assertEquals(2, params.size());
+        assertEquals(true, params.get(0).getEngValue().getBooleanValue());
+        assertEquals(false, params.get(1).getEngValue().getBooleanValue());
+    }
+
+    @Test
+    public void testFloatCalibration() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoCalibrationFloat"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_6(1, 1);
+        assertEquals(1, params.size());
+        assertEquals(1, params.get(0).getRawValue().getUint32Value());
+        assertEquals(0.0001672918, params.get(0).getEngValue().getFloatValue(), 1e-8);
+    }
+
+    @Test
+    public void testSeparateUpdate() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoSeparateUpdateOutcome"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size());
+        assertEquals(0.1672918, params.get(0).getEngValue().getFloatValue(), 1e-8);
+
+        params.clear();
+        tmGenerator.generate_PKT1_6(5, 6);
+        assertEquals(1, params.size());
+        assertEquals(5.167291, params.get(0).getEngValue().getFloatValue(), 1e-6);
+
+        params.clear();
+        tmGenerator.generate_PKT1_6(4, 6);
+        assertEquals(1, params.size());
+        assertEquals(4.167291, params.get(0).getEngValue().getFloatValue(), 1e-6);
+    }
+
+    @Test
+    public void testMarkedNotUpdated() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoUpdatedOut"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoUnupdatedOut")),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        int pIntegerPara16_1 = 5;
+        tmGenerator.generate_PKT1_6(pIntegerPara16_1, 0);
+        assertEquals(1, params.size());
+        assertEquals("/REFMDB/SUBSYS1/AlgoUpdatedOut", params.get(0).getParameter().getQualifiedName());
+        assertEquals(pIntegerPara16_1, params.get(0).getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testSelectiveRun() throws InvalidIdentification {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoSelectiveOut"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        int pIntegerPara16_1 = 5;
+        tmGenerator.generate_PKT1_6(pIntegerPara16_1, 0);
+        assertEquals(1, params.size());
+        assertEquals("/REFMDB/SUBSYS1/AlgoSelectiveOut", params.get(0).getParameter().getQualifiedName());
+        assertEquals(pIntegerPara16_1, params.get(0).getEngValue().getFloatValue(), 1e-6);
+
+        tmGenerator.generate_PKT1_1();
+        assertEquals(1, params.size()); // No change, not in OnParameterUpdate list
+
+        pIntegerPara16_1 = 7;
+        tmGenerator.generate_PKT1_6(pIntegerPara16_1, 0);
+        assertEquals(2, params.size()); // Now change, also with updated float from PKT11
+        assertEquals(pIntegerPara16_1 + tmGenerator.pFloatPara1_1_3, params.get(1).getEngValue().getFloatValue(), 1e-6);
+    }
+
+    @Test
+    public void testOnPeriodicRate() throws InvalidIdentification, InterruptedException {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/OnPeriodicRateOut"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        Thread.sleep(10000);
+    }
+
+    @Test
+    public void testBinaryInput() throws InvalidIdentification, InterruptedException {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/PrependedSizeBinary1"),
+                prm.getParameter("/REFMDB/SUBSYS1/PrependedSizeBinary1_length")),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+
+        tmGenerator.generate_PKT5();
+
+        assertEquals(2, params.size());
+        ParameterValue pv0 = params.get(0);
+        ParameterValue pv1 = params.get(1);
+
+        assertEquals("/REFMDB/SUBSYS1/PrependedSizeBinary1_length", pv1.getParameter().getQualifiedName());
+        assertEquals(pv0.getEngValue().getBinaryValue().length, pv1.getEngValue().getUint32Value());
+    }
+
+    @Test
+    public void testAlgoAggrInput() throws InvalidIdentification, InterruptedException {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoAggr1"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+
+        tmGenerator.generate_PKT7();
+        assertEquals(1, params.size());
+        ParameterValue pv0 = params.get(0);
+        assertEquals("/REFMDB/SUBSYS1/AlgoAggr1", pv0.getParameter().getQualifiedName());
+        assertEquals(8.0, pv0.getEngValue().getDoubleValue(), 1e-5);
+    }
+
+    @Test
+    public void testAlgoArrayInput() throws InvalidIdentification, InterruptedException {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(prm.getParameter("/REFMDB/SUBSYS1/AlgoArray1"),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT8();
+        assertEquals(1, params.size());
+        ParameterValue pv0 = params.get(0);
+        assertEquals("/REFMDB/SUBSYS1/AlgoArray1", pv0.getParameter().getQualifiedName());
+        assertEquals(3.0, pv0.getEngValue().getDoubleValue(), 1e-5);
+    }
+
+    @Test
+    public void testAllInOut() throws Exception {
+        Parameter p_sint32 = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_sint32");
+        Parameter p_uint32 = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_uint32");
+        Parameter p_sint64 = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_sint64");
+        Parameter p_uint64 = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_uint64");
+        Parameter p_double = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_double");
+        Parameter p_float = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_float");
+        Parameter p_bool = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_bool");
+        Parameter p_enum = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_enum");
+        Parameter p_string = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_string");
+        Parameter p_binary = db.getParameter("/REFMDB/SUBSYS1/AlgoOut_binary");
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(
+                Arrays.asList(p_sint32, p_uint32, p_sint64, p_uint64, p_double, p_float, p_bool, p_enum, p_string,
+                        p_binary),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        // LoggingUtils.enableTracing();
+        tmGenerator.generate_PKT12();
+        assertEquals(10, params.size());
+
+        // from generate_PKT12();
+        assertEquals(-1, params.get(0).getEngValue().getSint32Value());
+        assertEquals(0xF0F1F2F3, params.get(1).getEngValue().getUint32Value());
+        assertEquals(-2, params.get(2).getEngValue().getSint64Value());
+        assertEquals(0xF0F1F2F3F4F5F6F7l, params.get(3).getEngValue().getUint64Value());
+        assertEquals(3.14, params.get(4).getEngValue().getDoubleValue(), 1e-5);
+        assertEquals(2.72f, params.get(5).getEngValue().getFloatValue(), 1e-5);
+        assertEquals(true, params.get(6).getEngValue().getBooleanValue());
+        assertEquals("one_why not", params.get(7).getEngValue().getStringValue());
+
+        // generate_PK12() sends "bla" and the algorithm adds " yes"
+        assertEquals("bla yes", params.get(8).getEngValue().getStringValue());
+
+        // from generate_PK12
+        assertEquals("0102030405", StringConverter.arrayToHexString(params.get(9).getEngValue().getBinaryValue()));
+    }
+
+    @Test
+    public void testTrace() throws InvalidIdentification {
+        Parameter floatPara = db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2");
+        Parameter floatAddition = db.getParameter("/REFMDB/SUBSYS1/AlgoFloatAdditionJs");
+
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(floatPara, floatAddition),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        Algorithm floatAddAlgo = db.getAlgorithm("/REFMDB/SUBSYS1/float_add");
+        algMgr.enableTracing(floatAddAlgo);
+
+        tmGenerator.generate_PKT1_1();
+        assertEquals(2, params.size());
+        verifyEqual(params.get(0), floatPara, 0.1672918f);
+        verifyEqual(params.get(1), floatAddition, 2.1672918f);
+
+        AlgorithmTrace trace = algMgr.getTrace(floatAddAlgo);
+        assertEquals(1, trace.runs.size());
+        Run run = trace.runs.getFirst();
+        assertEquals(2, run.getInputsCount());
+        assertEquals(1, run.getOutputsCount());
+
+        Pvalue.ParameterValue in0 = run.getInputs(0);
+        Pvalue.ParameterValue in1 = run.getInputs(1);
+
+        Pvalue.ParameterValue out0 = run.getOutputs(0);
+
+        assertEquals(0.1672918f, in0.getEngValue().getFloatValue(), 1e-5);
+        assertEquals(2f, in1.getEngValue().getFloatValue(), 1e-5);
+        assertEquals(2.1672918f, out0.getEngValue().getFloatValue(), 1e-5);
+
+        assertEquals(1, trace.logs.size());
+        Log traceLog = trace.logs.getFirst();
+        assertEquals("adding 0.1672918051481247 and 2", traceLog.getMsg());
+
+        algMgr.disableTracing(floatAddAlgo);
+        assertNull(algMgr.getTrace(floatAddAlgo));
+    }
+
+    @Test
+    public void testTimestampOutput() throws InvalidIdentification, InterruptedException {
+        final ArrayList<ParameterValue> params = new ArrayList<>();
+        prm.addRequest(Arrays.asList(
+                prm.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoTestTimeJs1"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoTestTimeJs2"),
+                prm.getParameter("/REFMDB/SUBSYS1/AlgoTestTimeJs3")),
+                (ParameterConsumer) (subscriptionId, items) -> params.addAll(items));
+
+        proc.start();
+        tmGenerator.generate_PKT1_1();
+        assertEquals(4, params.size());
+
+        assertEquals(params.get(0).getGenerationTime() + 1234, params.get(1).getEngValue().getTimestampValue());
+        assertEquals(params.get(0).getGenerationTime() + 2234, params.get(2).getEngValue().getTimestampValue());
+        assertEquals(params.get(0).getGenerationTime(), params.get(3).getEngValue().getTimestampValue());
+    }
+
+    void verifyEqual(ParameterValue pv, Parameter p, float v) {
+        assertEquals(p, pv.getParameter());
+        assertEquals(v, pv.getEngValue().getFloatValue(), 1e-5);
+    }
+}
+```
+
+### `AlgorithmWithContextTest.java`
+
+**경로:** `gsw/yamcs/tests/src/test/java/org/yamcs/algorithms/AlgorithmWithContextTest.java`
+
+
+```java
+package org.yamcs.algorithms;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.yamcs.InvalidIdentification;
+import org.yamcs.Processor;
+import org.yamcs.ProcessorFactory;
+import org.yamcs.YConfiguration;
+import org.yamcs.events.EventProducerFactory;
+import org.yamcs.mdb.ProcessingContext;
+import org.yamcs.mdb.Mdb;
+import org.yamcs.mdb.MdbFactory;
+import org.yamcs.parameter.ParameterProcessorManager;
+import org.yamcs.parameter.ParameterValue;
+import org.yamcs.tests.RefMdbPacketGenerator;
+import org.yamcs.utils.ValueUtility;
+import org.yamcs.xtce.Algorithm;
+import org.yamcs.xtce.Parameter;
+
+public class AlgorithmWithContextTest {
+
+    private Mdb db;
+    private Processor proc;
+    private RefMdbPacketGenerator tmGenerator;
+    private ParameterProcessorManager ppm;
+
+    @BeforeAll
+    public static void setUpBeforeClass() throws Exception {
+        YConfiguration.setupTest("refmdb");
+        MdbFactory.reset();
+        EventProducerFactory.setMockup(true);
+    }
+
+    @BeforeEach
+    public void beforeEachTest() throws Exception {
+        db = MdbFactory.getInstance("refmdb");
+        assertNotNull(db.getParameter("/REFMDB/SUBSYS1/FloatPara1_1_2"));
+
+        tmGenerator = new RefMdbPacketGenerator();
+        tmGenerator = new RefMdbPacketGenerator();
+        Map<String, Object> jslib = new HashMap<>();
+        Map<String, Object> config = new HashMap<>();
+        jslib.put("JavaScript", Arrays.asList("mdb/algolib.js"));
+        jslib.put("python", Arrays.asList("mdb/algolib.py"));
+        config.put("libraries", jslib);
+
+        AlgorithmManager am = new AlgorithmManager();
+        proc = ProcessorFactory.create("refmdb", "AlgorithmManagerTest", tmGenerator, am);
+        ppm = proc.getParameterProcessorManager();
+    }
+
+    @AfterEach
+    public void afterEachTest() { // Prevents us from wrapping our code in try-finally
+        proc.quit();
+    }
+
+    @Test
+    public void testIt() throws InvalidIdentification {
+        final ArrayList<Object> params = new ArrayList<>();
+        proc.start();
+
+        AlgorithmManager algm = ppm.getParameterProvider(AlgorithmManager.class);
+        AlgorithmExecutionContext ctx = algm.createContext("test");
+        Algorithm alg = db.getAlgorithm("/REFMDB/SUBSYS1/ctx_param_test");
+        algm.activateAlgorithm(alg, ctx)
+                .addExecListener((inputValues, returnValue, outputValues) -> params.add(returnValue));
+
+        tmGenerator.generate_PKT1_1();
+        Parameter p = db.getParameter("/yamcs/cmd/para1");
+        ParameterValue pv = new ParameterValue(p);
+        pv.setEngValue(ValueUtility.getUint32Value(10));
+
+        ctx.process(0, ProcessingContext.createForTestCmd(pv));
+
+        assertEquals(2, params.size());
+        assertNull(params.get(0));
+        assertEquals(10, ((Number) params.get(1)).intValue());
+    }
+}
+```

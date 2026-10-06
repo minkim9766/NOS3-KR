@@ -3,74 +3,962 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `alias.pipe.ts`
 
-file--alias.pipe.ts
-file--array-contains.pipe.ts
-file--basename.pipe.ts
-file--data-rate.pipe.ts
-file--datetime.pipe.ts
-file--default-processor.pipe.ts
-file--delta-with.pipe.ts
-file--duration.pipe.ts
-file--entry-for-offset.pipe.ts
-file--extension.pipe.ts
-file--filename.pipe.ts
-file--format-bytes.pipe.ts
-file--hex-dump.pipe.ts
-file--hex.pipe.ts
-file--may-access-admin-area.pipe.ts
-file--member-path.pipe.ts
-file--millis-duration.pipe.ts
-file--nanos-duration.pipe.ts
-file--nvl.pipe.ts
-file--parameter-type-for-path.pipe.ts
-file--parents.pipe.ts
-file--print-json.pipe.ts
-file--print-obj.pipe.ts
-file--relativize.pipe.ts
-file--reverse.pipe.ts
-file--short-name.pipe.ts
-file--space-system.pipe.ts
-file--storage-url.pipe.ts
-file--to-value.pipe.ts
-file--units.pipe.ts
-file--value.pipe.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/alias.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { NamedObjectId } from '../client';
+
+interface HasAlias {
+  // Old-style
+  alias?: NamedObjectId[];
+  // New-style
+  aliases?: { [key: string]: string };
+}
+
+@Pipe({
+  name: 'alias',
+})
+export class AliasPipe implements PipeTransform {
+  transform(item: HasAlias | null, namespace: string): string | null {
+    if (!item?.alias?.length && !item?.aliases) {
+      return null;
+    }
+
+    for (const alias of item?.alias || []) {
+      if (alias.namespace === namespace) {
+        return alias.name;
+      }
+    }
+
+    if (item.aliases?.hasOwnProperty(namespace)) {
+      return item.aliases[namespace];
+    }
+
+    return null;
+  }
+}
 ```
 
-## 항목
+### `array-contains.pipe.ts`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/alias.pipe.ts`](file--alias.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/array-contains.pipe.ts`](file--array-contains.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/basename.pipe.ts`](file--basename.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/data-rate.pipe.ts`](file--data-rate.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/datetime.pipe.ts`](file--datetime.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/default-processor.pipe.ts`](file--default-processor.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/delta-with.pipe.ts`](file--delta-with.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/duration.pipe.ts`](file--duration.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/entry-for-offset.pipe.ts`](file--entry-for-offset.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/extension.pipe.ts`](file--extension.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/filename.pipe.ts`](file--filename.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/format-bytes.pipe.ts`](file--format-bytes.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/hex-dump.pipe.ts`](file--hex-dump.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/hex.pipe.ts`](file--hex.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/may-access-admin-area.pipe.ts`](file--may-access-admin-area.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/member-path.pipe.ts`](file--member-path.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/millis-duration.pipe.ts`](file--millis-duration.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/nanos-duration.pipe.ts`](file--nanos-duration.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/nvl.pipe.ts`](file--nvl.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/parameter-type-for-path.pipe.ts`](file--parameter-type-for-path.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/parents.pipe.ts`](file--parents.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/print-json.pipe.ts`](file--print-json.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/print-obj.pipe.ts`](file--print-obj.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/relativize.pipe.ts`](file--relativize.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/reverse.pipe.ts`](file--reverse.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/short-name.pipe.ts`](file--short-name.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/space-system.pipe.ts`](file--space-system.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/storage-url.pipe.ts`](file--storage-url.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/to-value.pipe.ts`](file--to-value.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/units.pipe.ts`](file--units.pipe.ts) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/value.pipe.ts`](file--value.pipe.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/array-contains.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'arrayContains',
+})
+export class ArrayContainsPipe implements PipeTransform {
+  transform(haystack: any[] | null | undefined, needle: any): boolean {
+    if (!haystack) {
+      return false;
+    }
+    return haystack.indexOf(needle) !== -1;
+  }
+}
+```
+
+### `basename.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/basename.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { getBasename } from '../utils';
+
+/**
+ * Outputs the basename of a path string (no extension).
+ */
+@Pipe({
+  name: 'basename',
+})
+export class BasenamePipe implements PipeTransform {
+  transform(path: string | null): string | null {
+    return getBasename(path);
+  }
+}
+```
+
+### `data-rate.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/data-rate.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+const sizes = ['bps', 'kbps', 'Mbps', 'Gbps', 'Tbps'];
+
+@Pipe({
+  name: 'dataRate',
+})
+export class DataRatePipe implements PipeTransform {
+  transform(bps: string | number | null, decimals = 1): string | null {
+    const bpsNumber = Number(bps);
+    if (bpsNumber === 0) {
+      return '0 bps';
+    } else if (!bps) {
+      return null;
+    }
+    const i = Math.floor(Math.log(bpsNumber) / Math.log(1000));
+    return (
+      parseFloat((bpsNumber / Math.pow(1000, i)).toFixed(decimals)) +
+      ' ' +
+      sizes[i]
+    );
+  }
+}
+```
+
+### `datetime.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/datetime.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Formatter } from '../services/formatter.service';
+
+@Pipe({
+  name: 'datetime',
+})
+export class DateTimePipe implements PipeTransform {
+  constructor(private formatter: Formatter) {}
+
+  transform(
+    date: Date | string | null | undefined,
+    addTimezone = true,
+  ): string | null {
+    if (!date) {
+      return null;
+    }
+    return this.formatter.formatDateTime(date, addTimezone);
+  }
+}
+```
+
+### `default-processor.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/default-processor.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Instance } from '../client';
+
+@Pipe({
+  name: 'defaultProcessor',
+})
+export class DefaultProcessorPipe implements PipeTransform {
+  transform(instance: Instance): string | null {
+    if (!instance) {
+      return null;
+    }
+
+    // Try to find a 'default' processor for this instance.
+    // The alphabetic-first non-replay persistent processor
+    for (const processor of instance.processors || []) {
+      if (processor.persistent && !processor.replay) {
+        return processor.name;
+      }
+    }
+
+    return null;
+  }
+}
+```
+
+### `delta-with.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/delta-with.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import * as utils from '../utils';
+
+@Pipe({
+  name: 'deltaWith',
+})
+export class DeltaWithPipe implements PipeTransform {
+  transform(
+    second: Date | string | undefined,
+    first: Date | string,
+    showSign = true,
+  ): string | null {
+    if (!first || !second) {
+      return null;
+    }
+
+    const firstDate = utils.toDate(first);
+    const secondDate = utils.toDate(second);
+    let millis = secondDate.getTime() - firstDate.getTime();
+
+    const sign = showSign ? (millis >= 0 ? '+' : '-') : '';
+    millis = Math.abs(millis);
+
+    const totalSeconds = Math.floor(millis / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+    const seconds = totalSeconds - hours * 3600 - minutes * 60;
+    const milliseconds = millis % 1000;
+
+    const days = Math.floor(hours / 24);
+    const years = Math.floor(days / 365);
+
+    if (years) {
+      return years === 1 ? `${sign}1 year` : `${sign}${years} years`;
+    } else if (days) {
+      return days === 1 ? `${sign}1 day` : `${sign}${days} days`;
+    } else if (hours) {
+      if (minutes) {
+        return `${sign}${hours}h ${minutes}m`;
+      } else {
+        return `${sign}${hours}h`;
+      }
+    } else if (minutes) {
+      if (seconds) {
+        return `${sign}${minutes}m ${seconds}s`;
+      } else {
+        return `${sign}${minutes} min`;
+      }
+    } else if (seconds) {
+      return `${sign}${seconds} s`;
+    } else {
+      return `${sign}${milliseconds} ms`;
+    }
+  }
+}
+```
+
+### `duration.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/duration.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { convertDurationToMillis } from '../utils';
+
+@Pipe({
+  name: 'duration',
+})
+export class DurationPipe implements PipeTransform {
+  transform(millis?: number | string | null): string | null {
+    if (millis === null || millis === undefined) {
+      return null;
+    }
+
+    const isStringifiedNumber =
+      !isNaN(millis as any) && Number.isInteger(parseFloat(millis as any));
+
+    if (typeof millis === 'string' && !isStringifiedNumber) {
+      millis = convertDurationToMillis(millis);
+    }
+
+    const totalSeconds = Math.floor((millis as any) / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds - days * 86400) / 3600);
+    const minutes = Math.floor(
+      (totalSeconds - days * 86400 - hours * 3600) / 60,
+    );
+    const seconds = totalSeconds - days * 86400 - hours * 3600 - minutes * 60;
+    if (days) {
+      if (hours) {
+        return `${days}d ${hours}h`;
+      } else {
+        return `${days}d`;
+      }
+    } else if (hours) {
+      if (minutes) {
+        return `${hours}h ${minutes}m`;
+      } else {
+        return `${hours}h`;
+      }
+    } else if (minutes) {
+      if (seconds) {
+        return `${minutes}m ${seconds}s`;
+      } else {
+        return `${minutes}m`;
+      }
+    } else {
+      return `${seconds}s`;
+    }
+  }
+}
+```
+
+### `entry-for-offset.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/entry-for-offset.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Member, Parameter } from '../client';
+import { getEntryForOffset } from '../utils';
+
+@Pipe({
+  name: 'entryForOffset',
+})
+export class EntryForOffsetPipe implements PipeTransform {
+  transform(parameter: Parameter, offset: string): Parameter | Member | null {
+    return getEntryForOffset(parameter, offset);
+  }
+}
+```
+
+### `extension.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/extension.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { getExtension } from '../utils';
+
+/**
+ * Outputs the extension of a filename.
+ */
+@Pipe({
+  name: 'extension',
+})
+export class ExtensionPipe implements PipeTransform {
+  transform(filename: string | null): string | null {
+    return getExtension(filename);
+  }
+}
+```
+
+### `filename.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/filename.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { getFilename } from '../utils';
+
+/**
+ * Outputs the filename of a path string. The path may end with a trailing slash which is preserved.
+ */
+@Pipe({
+  name: 'filename',
+})
+export class FilenamePipe implements PipeTransform {
+  transform(path: string): string | null {
+    return getFilename(path);
+  }
+}
+```
+
+### `format-bytes.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/format-bytes.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+@Pipe({
+  name: 'formatBytes',
+})
+export class FormatBytesPipe implements PipeTransform {
+  transform(bytes: string | number | null, decimals = 2): string | null {
+    const bytesNumber = Number(bytes);
+    if (bytesNumber === 0) {
+      return '0 bytes';
+    } else if (!bytes) {
+      return null;
+    }
+    const i = Math.floor(Math.log(bytesNumber) / Math.log(1024));
+    return (
+      parseFloat((bytesNumber / Math.pow(1024, i)).toFixed(decimals)) +
+      ' ' +
+      sizes[i]
+    );
+  }
+}
+```
+
+### `hex-dump.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/hex-dump.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Formatter } from '../services/formatter.service';
+
+@Pipe({
+  name: 'hexDump',
+})
+export class HexDumpPipe implements PipeTransform {
+  constructor(private formatter: Formatter) {}
+
+  transform(value: string | null | undefined): string | null {
+    if (!value) {
+      return null;
+    }
+    return this.formatter.formatHexDump(value);
+  }
+}
+```
+
+### `hex.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/hex.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Formatter } from '../services/formatter.service';
+
+@Pipe({
+  name: 'hex',
+})
+export class HexPipe implements PipeTransform {
+  constructor(private formatter: Formatter) {}
+
+  transform(value: string | null): string | null {
+    if (!value) {
+      return null;
+    }
+    return this.formatter.formatHexPreview(value);
+  }
+}
+```
+
+### `may-access-admin-area.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/may-access-admin-area.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { User } from '../User';
+
+@Pipe({
+  name: 'mayAccessAdminArea',
+})
+export class MayAccessAdminAreaPipe implements PipeTransform {
+  transform(user: User): boolean {
+    if (!user) {
+      return false;
+    }
+    return user.hasSystemPrivilege('web.AccessAdminArea');
+  }
+}
+```
+
+### `member-path.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/member-path.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Parameter } from '../client';
+import { getMemberPath } from '../utils';
+
+/**
+ * Prints a qualified name of a specific parameter member entry
+ */
+@Pipe({
+  name: 'memberPath',
+})
+export class MemberPathPipe implements PipeTransform {
+  transform(parameter: Parameter): string | null {
+    return getMemberPath(parameter);
+  }
+}
+```
+
+### `millis-duration.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/millis-duration.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'millisDuration',
+})
+export class MillisDurationPipe implements PipeTransform {
+  transform(millis?: number | null): string | null {
+    if (millis === null || millis === undefined) {
+      return null;
+    }
+    millis = Math.floor(millis);
+    const totalSeconds = Math.floor(millis / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+    const seconds = totalSeconds - hours * 3600 - minutes * 60;
+    const remainingMillis = millis - totalSeconds * 1000;
+    if (hours) {
+      if (minutes) {
+        return `${hours}h ${minutes}m`;
+      } else {
+        return `${hours}h`;
+      }
+    } else if (minutes) {
+      if (seconds) {
+        return `${minutes}m ${seconds}s`;
+      } else {
+        return `${minutes}m`;
+      }
+    } else if (seconds) {
+      if (remainingMillis) {
+        return `${seconds}s ${remainingMillis}ms`;
+      } else {
+        return `${seconds}s`;
+      }
+    } else {
+      return `${remainingMillis}ms`;
+    }
+  }
+}
+```
+
+### `nanos-duration.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/nanos-duration.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import * as utils from '../utils';
+
+@Pipe({
+  name: 'nanosDuration',
+})
+export class NanosDurationPipe implements PipeTransform {
+  transform(nanos: number | null): string | null {
+    if (nanos == null) {
+      return null;
+    }
+    nanos = Math.floor(nanos);
+    const totalSeconds = Math.floor(nanos / 1000 / 1000 / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds - hours * 3600) / 60);
+    const seconds = totalSeconds - hours * 3600 - minutes * 60;
+    const subseconds = nanos - totalSeconds * 1000 * 1000 * 1000;
+    if (hours) {
+      if (minutes) {
+        return `${hours}h ${minutes}m`;
+      } else {
+        return `${hours}h`;
+      }
+    } else if (minutes) {
+      if (seconds) {
+        return `${minutes}m ${seconds}s`;
+      } else {
+        return `${minutes}m`;
+      }
+    } else {
+      const formatted = utils.lpad(subseconds, 9);
+      return `${seconds}.${formatted} s`;
+    }
+  }
+}
+```
+
+### `nvl.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/nvl.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+/**
+ * Displays the second argument when the first argument
+ * is null or undefined.
+ *
+ * This is sometimes more appropriate than relying on
+ * falsiness. (e.g. it will also render 0, or detect unset booleans)
+ */
+@Pipe({
+  name: 'nvl',
+})
+export class NvlPipe implements PipeTransform {
+  transform(subject: any, replacement: any): any {
+    if (subject === null || subject === undefined) {
+      return replacement;
+    }
+    return subject;
+  }
+}
+```
+
+### `parameter-type-for-path.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/parameter-type-for-path.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Parameter, ParameterType } from '../client';
+import { getParameterTypeForPath } from '../utils';
+
+@Pipe({
+  name: 'parameterTypeForPath',
+})
+export class ParameterTypeForPathPipe implements PipeTransform {
+  transform(
+    parameter: Parameter,
+    pathString?: string,
+  ): ParameterType | null | undefined {
+    return getParameterTypeForPath(parameter, pathString);
+  }
+}
+```
+
+### `parents.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/parents.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+export interface Parent {
+  name: string;
+  path: string;
+}
+
+/**
+ * Outputs an array with parents of a path-like name
+ */
+@Pipe({
+  name: 'parents',
+})
+export class ParentsPipe implements PipeTransform {
+  transform(path: string | null): Parent[] | null {
+    if (!path) {
+      return null;
+    }
+
+    const idx = path.lastIndexOf('/');
+    if (idx === -1) {
+      return [];
+    } else {
+      const segments = path.split('/');
+      if (segments.length > 1) {
+        segments.splice(segments.length - 1, 1);
+      }
+
+      const parents: Parent[] = [];
+
+      let node = '';
+      for (let i = 0; i < segments.length; i++) {
+        node += segments[i];
+        parents.push({
+          name: segments[i],
+          path: node || '/',
+        });
+        if (i !== segments.length - 1) {
+          node += '/';
+        }
+      }
+
+      return parents;
+    }
+  }
+}
+```
+
+### `print-json.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/print-json.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'printJson',
+})
+export class PrintJsonPipe implements PipeTransform {
+  transform(json: string): string | null {
+    if (!json) {
+      return json;
+    }
+    const obj = JSON.parse(json) as { [key: string]: any };
+    return this.doPrint(obj);
+  }
+
+  private doPrint(obj: { [key: string]: any }, indent = ''): string {
+    const props = [];
+    for (const key in obj) {
+      if (obj.hasOwnProperty(key)) {
+        const val = obj[key];
+        const label = `${indent}&bull;&nbsp;${key}:`;
+        if (Array.isArray(val)) {
+          props.push(label + '[');
+          for (const item of val) {
+            props.push(this.doPrint(val, indent + '&nbsp;&nbsp;'));
+          }
+          props.push(']');
+        } else if (typeof val === 'object') {
+          props.push(label);
+          props.push(this.doPrint(val, indent + '&nbsp;&nbsp;'));
+        } else {
+          props.push(`${label} ${val}`);
+        }
+      }
+    }
+    return props.join('<br>');
+  }
+}
+```
+
+### `print-obj.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/print-obj.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'printObj',
+})
+export class PrintObjPipe implements PipeTransform {
+  transform(obj: any): string | null {
+    if (!obj) {
+      return obj;
+    }
+    return this.doPrint(obj);
+  }
+
+  private doPrint(obj: { [key: string]: any }): string {
+    if (typeof obj === 'number') {
+      return '' + obj;
+    } else if (typeof obj === 'boolean') {
+      return '' + obj;
+    } else if (typeof obj === 'string') {
+      return obj;
+    } else {
+      const props = [];
+      for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          const val = obj[key];
+          const label = `${key}:`;
+          if (Array.isArray(val)) {
+            props.push(label + '[');
+            for (const item of val) {
+              props.push(this.doPrint(val));
+            }
+            props.push(']');
+          } else if (typeof val === 'object') {
+            props.push(label);
+            props.push(this.doPrint(val));
+          } else {
+            props.push(`${label} ${val}`);
+          }
+        }
+      }
+      return props.join('');
+    }
+  }
+}
+```
+
+### `relativize.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/relativize.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import * as utils from '../utils';
+
+@Pipe({
+  name: 'relativize',
+})
+export class RelativizePipe implements PipeTransform {
+  transform(
+    path: string | null | undefined,
+    relto: string | null | undefined,
+  ): string | null {
+    if (!path) {
+      return null;
+    }
+    if (!relto) {
+      return path;
+    }
+
+    return utils.relativizePath(path, relto);
+  }
+}
+```
+
+### `reverse.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/reverse.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'reverse',
+})
+export class ReversePipe implements PipeTransform {
+  transform(value: any[]): any[] | null {
+    if (!value) {
+      return value;
+    }
+    return value.slice().reverse();
+  }
+}
+```
+
+### `short-name.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/short-name.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'shortName',
+})
+export class ShortNamePipe implements PipeTransform {
+  transform(name: string | null | undefined): string | null {
+    if (!name) {
+      return null;
+    }
+    const idx = name.lastIndexOf('/');
+    return idx === -1 ? name : name.substring(idx + 1);
+  }
+}
+```
+
+### `space-system.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/space-system.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'spaceSystemName',
+})
+export class SpaceSystemPipe implements PipeTransform {
+  transform(name: string | null | undefined): string | null {
+    if (!name) {
+      return null;
+    }
+    const idx = name.lastIndexOf('/');
+    return idx === -1 ? '' : name.substring(0, idx);
+  }
+}
+```
+
+### `storage-url.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/storage-url.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'storageUrl',
+})
+export class StorageUrlPipe implements PipeTransform {
+  transform(objectName: string, bucket: string): string | null {
+    if (!bucket || !objectName) {
+      return null;
+    }
+    return `ys://${bucket}/${objectName}`;
+  }
+}
+```
+
+### `to-value.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/to-value.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Value } from '../client';
+import * as utils from '../utils';
+
+@Pipe({
+  name: 'tovalue',
+})
+export class ToValuePipe implements PipeTransform {
+  transform(value: any | null | undefined): Value | null {
+    if (value === null || value === undefined) {
+      return null;
+    }
+    return utils.toValue(value);
+  }
+}
+```
+
+### `units.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/units.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { UnitInfo } from '../client';
+import { getUnits } from '../utils';
+
+@Pipe({
+  name: 'units',
+})
+export class UnitsPipe implements PipeTransform {
+  transform(unitSet?: UnitInfo[]): string | null {
+    return getUnits(unitSet);
+  }
+}
+```
+
+### `value.pipe.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp-sdk/src/lib/pipes/value.pipe.ts`
+
+
+```typescript
+import { Pipe, PipeTransform } from '@angular/core';
+import { Value } from '../client';
+import { FormatValueOptions, Formatter } from '../services/formatter.service';
+
+@Pipe({
+  name: 'value',
+})
+export class ValuePipe implements PipeTransform {
+  constructor(private formatter: Formatter) {}
+
+  transform(
+    value: Value | null | undefined,
+    options?: FormatValueOptions,
+  ): string | null {
+    if (!value) {
+      return null;
+    }
+    return this.formatter.formatValue(value, options);
+  }
+}
+```

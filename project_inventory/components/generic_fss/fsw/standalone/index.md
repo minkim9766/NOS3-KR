@@ -3,20 +3,397 @@
 
 **경로:** `components/generic_fss/fsw/standalone/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CMakeLists.txt`
 
-file--CMakeLists.txt
-file--device_cfg.h
-file--generic_fss_checkout.c
-file--generic_fss_checkout.h
+**경로:** `components/generic_fss/fsw/standalone/CMakeLists.txt`
+
+
+```cmake
+cmake_minimum_required(VERSION 2.6.4)
+
+project (generic_fss_checkout)
+
+if (NOT DEFINED TGTNAME)
+  message(FATAL_ERROR "TGTNAME must be defined on the cmake command line (e.g. \"-DTGTNAME=cpu1\")")
+endif()
+
+include(../../../ComponentSettings.cmake)
+
+if(${TGTNAME} STREQUAL cpu1)
+  find_path(_ITC_CMAKE_MODULES_
+    NAMES FindITC_Common.cmake
+    PATHS ${ITC_CMAKE_MODULES}
+            ${ITC_DEV_ROOT}/cmake/modules
+            $ENV{ITC_DEV_ROOT}/cmake/modules
+            /usr/local/cmake/modules
+            /usr/cmake/modules)
+  if(NOT _ITC_CMAKE_MODULES_)
+    message(WARNING "Unable to find ITC CMake Modules")
+  endif()
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${_ITC_CMAKE_MODULES_})
+
+  find_package(NOSENGINE REQUIRED QUIET COMPONENTS common transport client uart can i2c spi)
+endif()
+
+include_directories("./")
+include_directories("../cfs/platform_inc")
+include_directories("../cfs/src")
+include_directories("../shared")
+include_directories("../../../../fsw/apps/hwlib/fsw/public_inc")
+
+set(generic_fss_checkout_src
+  generic_fss_checkout.c 
+  ../shared/generic_fss_device.c
+)
+
+if(${TGTNAME} STREQUAL cpu1)
+  include_directories("../../../../fsw/apps/hwlib/sim/inc")
+  set(generic_fss_checkout_src 
+    ${generic_fss_checkout_src}
+    ../../../../fsw/apps/hwlib/sim/src/libuart.c
+    ../../../../fsw/apps/hwlib/sim/src/libcan.c
+    ../../../../fsw/apps/hwlib/sim/src/libi2c.c
+    ../../../../fsw/apps/hwlib/sim/src/libspi.c
+    ../../../../fsw/apps/hwlib/sim/src/nos_link.c
+  )
+  set(generic_fss_checkout_libs
+    ${ITC_Common_LIBRARIES}
+    ${NOSENGINE_LIBRARIES}
+  )
+endif()
+if(${TGTNAME} STREQUAL cpu2)
+  set(generic_fss_checkout_src 
+    ${generic_fss_checkout_src}
+    ../../../../fsw/apps/hwlib/fsw/linux/libuart.c
+  )
+endif()
+
+add_executable(generic_fss_checkout ${generic_fss_checkout_src})
+target_link_libraries(generic_fss_checkout ${generic_fss_checkout_libs})
+
+if(${TGTNAME} STREQUAL cpu1)
+  set_target_properties(generic_fss_checkout PROPERTIES COMPILE_FLAGS "-g" LINK_FLAGS "-g")
+endif()
 ```
 
-## 항목
+### `device_cfg.h`
 
-- [`components/generic_fss/fsw/standalone/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/standalone/device_cfg.h`](file--device_cfg.h) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/standalone/generic_fss_checkout.c`](file--generic_fss_checkout.c) — UTF-8 텍스트 파일 본문 포함
-- [`components/generic_fss/fsw/standalone/generic_fss_checkout.h`](file--generic_fss_checkout.h) — UTF-8 텍스트 파일 본문 포함
+**경로:** `components/generic_fss/fsw/standalone/device_cfg.h`
+
+
+```c
+#ifndef _GENERIC_FSS_CHECKOUT_DEVICE_CFG_H_
+#define _GENERIC_FSS_CHECKOUT_DEVICE_CFG_H_
+
+/*
+** GENERIC_FSS Checkout Configuration
+*/
+#define GENERIC_FSS_CFG
+/* Note: NOS3 SPI requires matching handle and bus number */
+#define GENERIC_FSS_CFG_STRING        "spi_1"
+#define GENERIC_FSS_CFG_HANDLE        1
+#define GENERIC_FSS_CFG_DELAY         32 /* SPI transaction delay, in microseconds */
+#define GENERIC_FSS_CFG_BAUD          1000000
+#define GENERIC_FSS_CFG_SPI_MODE      1
+#define GENERIC_FSS_CFG_BITS_PER_WORD 8
+#define GENERIC_FSS_CFG_BUS           0
+#define GENERIC_FSS_CFG_CS            1
+
+#define GENERIC_FSS_CFG_DEBUG
+
+#endif /* _GENERIC_FSS_CHECKOUT_DEVICE_CFG_H_ */
+```
+
+### `generic_fss_checkout.c`
+
+**경로:** `components/generic_fss/fsw/standalone/generic_fss_checkout.c`
+
+
+```c
+/*******************************************************************************
+** File: generic_fss_checkout.c
+**
+** Purpose:
+**   This checkout can be run without cFS and is used to quickly develop and
+**   test functions required for a specific component.
+**
+*******************************************************************************/
+
+/*
+** Include Files
+*/
+#include "generic_fss_checkout.h"
+
+/*
+** Global Variables
+*/
+spi_info_t                    FssSpi;
+GENERIC_FSS_Device_Data_tlm_t FSSData;
+
+/*
+** Component Functions
+*/
+void fss_print_help(void)
+{
+    printf(PROMPT "command [args]\n"
+                  "---------------------------------------------------------------------\n"
+                  "help                               - Display help                    \n"
+                  "exit                               - Exit app                        \n"
+                  "fss                                - Request generic_fss data        \n"
+                  "  f                                - ^                               \n"
+                  "\n");
+}
+
+int fss_get_command(const char *str)
+{
+    int  status = CMD_UNKNOWN;
+    char lcmd[MAX_INPUT_TOKEN_SIZE];
+    strncpy(lcmd, str, MAX_INPUT_TOKEN_SIZE);
+
+    /* Convert command to lower case */
+    fss_to_lower(lcmd);
+
+    if (strcmp(lcmd, "help") == 0)
+    {
+        status = CMD_HELP;
+    }
+    else if (strcmp(lcmd, "exit") == 0)
+    {
+        status = CMD_EXIT;
+    }
+    else if (strcmp(lcmd, "fss") == 0)
+    {
+        status = CMD_GENERIC_FSS;
+    }
+    else if (strcmp(lcmd, "f") == 0)
+    {
+        status = CMD_GENERIC_FSS;
+    }
+    return status;
+}
+
+int fss_process_command(int cc, int num_tokens, char tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE])
+{
+    int32_t status      = OS_SUCCESS;
+    int32_t exit_status = OS_SUCCESS;
+
+    /* Process command */
+    switch (cc)
+    {
+        case CMD_HELP:
+            fss_print_help();
+            break;
+
+        case CMD_EXIT:
+            exit_status = OS_ERROR;
+            break;
+
+        case CMD_GENERIC_FSS:
+            if (fss_check_number_arguments(num_tokens, 0) == OS_SUCCESS)
+            {
+                status = GENERIC_FSS_RequestData(&FssSpi, &FSSData);
+                if (status == OS_SUCCESS)
+                {
+                    OS_printf("GENERIC_FSS_RequestData command success.\n");
+                }
+                else
+                {
+                    OS_printf("GENERIC_FSS_RequestData command failed!\n");
+                }
+            }
+            break;
+
+        default:
+            OS_printf("Invalid command format, type 'help' for more info\n");
+            break;
+    }
+    return exit_status;
+}
+
+int main(int argc, char *argv[])
+{
+    int     status = OS_SUCCESS;
+    char    input_buf[MAX_INPUT_BUF];
+    char    input_tokens[MAX_INPUT_TOKENS][MAX_INPUT_TOKEN_SIZE];
+    int     num_input_tokens;
+    int     cmd;
+    char   *token_ptr;
+    uint8_t run_status = OS_SUCCESS;
+
+/* Initialize HWLIB */
+#ifdef _NOS_ENGINE_LINK_
+    nos_init_link();
+#endif
+
+    /*
+    ** Initialize hardware interface data
+    */
+    FssSpi.deviceString  = GENERIC_FSS_CFG_STRING;
+    FssSpi.handle        = GENERIC_FSS_CFG_HANDLE;
+    FssSpi.baudrate      = GENERIC_FSS_CFG_BAUD;
+    FssSpi.spi_mode      = GENERIC_FSS_CFG_SPI_MODE;
+    FssSpi.bits_per_word = GENERIC_FSS_CFG_BITS_PER_WORD;
+    FssSpi.bus           = GENERIC_FSS_CFG_BUS;
+    FssSpi.cs            = GENERIC_FSS_CFG_CS;
+
+    /* Open device specific protocols */
+    status = spi_init_dev(&FssSpi);
+    if (status == OS_SUCCESS)
+    {
+        printf("SPI device %s configured with baudrate %d \n", FssSpi.deviceString, FssSpi.baudrate);
+    }
+    else
+    {
+        printf("SPI device %s failed to initialize! \n", FssSpi.deviceString);
+        run_status = OS_ERROR;
+    }
+
+    /* Main loop */
+    fss_print_help();
+    while (run_status == OS_SUCCESS)
+    {
+        num_input_tokens = -1;
+        cmd              = CMD_UNKNOWN;
+
+        /* Read user input */
+        printf(PROMPT);
+        fgets(input_buf, MAX_INPUT_BUF, stdin);
+
+        /* Tokenize line buffer */
+        token_ptr = strtok(input_buf, " \t\n");
+        while ((num_input_tokens < MAX_INPUT_TOKENS) && (token_ptr != NULL))
+        {
+            if (num_input_tokens == -1)
+            {
+                /* First token is command */
+                cmd = fss_get_command(token_ptr);
+            }
+            else
+            {
+                strncpy(input_tokens[num_input_tokens], token_ptr, MAX_INPUT_TOKEN_SIZE);
+            }
+            token_ptr = strtok(NULL, " \t\n");
+            num_input_tokens++;
+        }
+
+        /* Process command if valid */
+        if (num_input_tokens >= 0)
+        {
+            /* Process command */
+            run_status = fss_process_command(cmd, num_input_tokens, input_tokens);
+        }
+    }
+
+    // Close the device
+    spi_close_device(&FssSpi);
+
+#ifdef _NOS_ENGINE_LINK_
+    nos_destroy_link();
+#endif
+
+    OS_printf("Cleanly exiting generic_fss application...\n\n");
+    return 1;
+}
+
+/*
+** Generic Functions
+*/
+int fss_check_number_arguments(int actual, int expected)
+{
+    int status = OS_SUCCESS;
+    if (actual != expected)
+    {
+        status = OS_ERROR;
+        OS_printf("Invalid command format, type 'help' for more info\n");
+    }
+    return status;
+}
+
+void fss_to_lower(char *str)
+{
+    char *ptr = str;
+    while (*ptr)
+    {
+        *ptr = tolower((unsigned char)*ptr);
+        ptr++;
+    }
+    return;
+}
+```
+
+### `generic_fss_checkout.h`
+
+**경로:** `components/generic_fss/fsw/standalone/generic_fss_checkout.h`
+
+
+```c
+/*******************************************************************************
+** File: generic_fss_checkout.h
+**
+** Purpose:
+**   This is the header file for the GENERIC_FSS checkout.
+**
+*******************************************************************************/
+#ifndef _GENERIC_FSS_CHECKOUT_H_
+#define _GENERIC_FSS_CHECKOUT_H_
+
+/*
+** Includes
+*/
+#include <stdio.h>
+#include <string.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <unistd.h>
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include <time.h>
+
+#include "hwlib.h"
+#include "device_cfg.h"
+#include "generic_fss_device.h"
+
+#if TGTNAME == cpu1
+#include "nos_link.h"
+#endif
+
+/*
+** Standard Defines
+*/
+#define PROMPT               "generic_fss> "
+#define MAX_INPUT_BUF        512
+#define MAX_INPUT_TOKENS     64
+#define MAX_INPUT_TOKEN_SIZE 50
+#define TELEM_BUF_LEN        8
+
+/*
+** Command Defines
+*/
+#define CMD_UNKNOWN     -1
+#define CMD_HELP        0
+#define CMD_EXIT        1
+#define CMD_NOOP        2
+#define CMD_HK          3
+#define CMD_GENERIC_FSS 4
+#define CMD_CFG         5
+
+/*
+** Prototypes
+*/
+void fss_print_help(void);
+int  fss_get_command(const char *str);
+int  main(int argc, char *argv[]);
+
+/*
+** Generic Prototypes
+*/
+int  fss_check_number_arguments(int actual, int expected);
+void fss_to_lower(char *str);
+
+#endif /* _GENERIC_FSS_CHECKOUT_H_ */
+```

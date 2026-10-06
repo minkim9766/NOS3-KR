@@ -3,20 +3,120 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 options/index
-file--link-action-dialog.component.css
-file--link-action-dialog.component.html
-file--link-action-dialog.component.ts
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/options/`](options/index) — 폴더
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.css`](file--link-action-dialog.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.html`](file--link-action-dialog.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.ts`](file--link-action-dialog.component.ts) — UTF-8 텍스트 파일 본문 포함
+### `link-action-dialog.component.css`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.css`
+
+
+```css
+hr.half-break {
+  visibility: hidden;
+  line-height: 0.5em;
+}
+```
+
+### `link-action-dialog.component.html`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.html`
+
+
+```html
+<h2 mat-dialog-title>{{ data.action.label }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="form" class="ya-form">
+    @for (option of options; track option; let first = $first) {
+      @if (!first) {
+        <hr class="half-break" />
+      }
+      @switch (option.type) {
+        @case ("BOOLEAN") {
+          <app-boolean-option [formControlName]="option.name" [option]="option" />
+        }
+        @case ("FLOAT") {
+          <app-float-option [formControlName]="option.name" [option]="option" />
+        }
+        @case ("INTEGER") {
+          <app-integer-option [formControlName]="option.name" [option]="option" />
+        }
+        @case ("STRING") {
+          <app-string-option [formControlName]="option.name" [option]="option" />
+        }
+      }
+    }
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <ya-button mat-dialog-close>CANCEL</ya-button>
+  <ya-button appearance="primary" (click)="sendRequest()" [disabled]="!form.valid">
+    SUBMIT
+  </ya-button>
+</mat-dialog-actions>
+```
+
+### `link-action-dialog.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/links/link-action-dialog/link-action-dialog.component.ts`
+
+
+```typescript
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ActionInfo, WebappSdkModule } from '@yamcs/webapp-sdk';
+import { BooleanOptionComponent } from './options/boolean-option/boolean-option.component';
+import { FloatOptionComponent } from './options/float-option/float-option.component';
+import { IntegerOptionComponent } from './options/integer-option/integer-option.component';
+import { StringOptionComponent } from './options/string-option/string-option.component';
+
+export interface LinkActionDialogData {
+  action: ActionInfo;
+}
+
+@Component({
+  templateUrl: './link-action-dialog.component.html',
+  styleUrl: './link-action-dialog.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [
+    BooleanOptionComponent,
+    FloatOptionComponent,
+    IntegerOptionComponent,
+    WebappSdkModule,
+    StringOptionComponent,
+  ],
+})
+export class LinkActionDialogComponent {
+  form: FormGroup;
+
+  constructor(
+    private dialogRef: MatDialogRef<LinkActionDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) readonly data: LinkActionDialogData,
+  ) {
+    this.form = new FormGroup({});
+    for (const option of this.options) {
+      const control = new FormControl<string | null>(option.default ?? null);
+      this.form.addControl(option.name, control);
+    }
+  }
+
+  get options() {
+    return this.data.action.spec?.options || [];
+  }
+
+  sendRequest() {
+    const value = this.form.value;
+    this.dialogRef.close(value);
+  }
+}
+```

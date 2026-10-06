@@ -3,34 +3,3068 @@
 
 **경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `CorruptedFileException.java`
 
-file--CorruptedFileException.java
-file--MasterChannelHandler.java
-file--Message.java
-file--ReplicationClient.java
-file--ReplicationFile.java
-file--ReplicationMaster.java
-file--ReplicationServer.java
-file--ReplicationSlave.java
-file--ReplicationTail.java
-file--TcpRole.java
-file--Transaction.java
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/CorruptedFileException.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.nio.file.Path;
+
+public class CorruptedFileException extends RuntimeException {
+    Path path;
+    public CorruptedFileException(Path path,String message) {
+        super(message);
+        this.path = path;
+    }
+    
+    public String toString() {
+        String msg = getMessage();
+        return "Corrupted file " + path + (msg == null ? "" : ": " + msg);
+    }
+}
 ```
 
-## 항목
+### `MasterChannelHandler.java`
 
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/CorruptedFileException.java`](file--CorruptedFileException.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/MasterChannelHandler.java`](file--MasterChannelHandler.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Message.java`](file--Message.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationClient.java`](file--ReplicationClient.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationFile.java`](file--ReplicationFile.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationMaster.java`](file--ReplicationMaster.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationServer.java`](file--ReplicationServer.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationSlave.java`](file--ReplicationSlave.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationTail.java`](file--ReplicationTail.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/TcpRole.java`](file--TcpRole.java) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Transaction.java`](file--Transaction.java) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/MasterChannelHandler.java`
+
+
+```java
+package org.yamcs.replication;
+
+import static org.yamcs.replication.ReplicationServer.workerGroup;
+
+import java.nio.ByteBuffer;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
+
+import org.yamcs.logging.Log;
+import org.yamcs.replication.ReplicationMaster.SlaveServer;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.DecodingException;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.util.concurrent.ScheduledFuture;
+
+/**
+ * 
+ * runs on the master side sending data to slave
+ *
+ */
+public class MasterChannelHandler extends ChannelInboundHandlerAdapter {
+    final ReplicationMaster replMaster;
+    final TimeService timeService;
+    final Log log;
+
+    Request req;
+    private ChannelHandlerContext channelHandlerContext;
+    ChannelFuture dataHandlingFuture;
+    ReplicationFile currentFile;
+    long nextTxToSend;
+    ReplicationTail fileTail;
+    SlaveServer slaveServer;
+    private ScheduledFuture<?> timeMsgFuture;
+
+
+    // called when we are TCP client
+    public MasterChannelHandler(TimeService timeService, ReplicationMaster master, SlaveServer slaveServer) {
+        this.replMaster = master;
+        this.slaveServer = slaveServer;
+        this.req = null;
+        this.timeService = timeService;
+        log = new Log(MasterChannelHandler.class, master.getYamcsInstance());
+    }
+
+    // called when we are connected to a TCP server
+    public MasterChannelHandler(TimeService timeService, ReplicationMaster master, Request req) {
+        this.replMaster = master;
+        this.req = req;
+        this.timeService = timeService;
+        log = new Log(MasterChannelHandler.class, master.getYamcsInstance());
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object o) {
+        ByteBuf nettyBuf = (ByteBuf) o;
+        try {
+            doChannelRead(ctx, nettyBuf);
+        } finally {
+            nettyBuf.release();
+        }
+    }
+
+    private void doChannelRead(ChannelHandlerContext ctx, ByteBuf nettyBuf) {
+        ByteBuffer buf = nettyBuf.nioBuffer();
+        Message msg;
+        try {
+            msg = Message.decode(buf);
+        } catch (DecodingException e) {
+            log.warn("Failed to decode message", e);
+            ctx.close();
+            return;
+        }
+
+        if (msg.type == Message.REQUEST) {
+            this.req = (Request) msg.protoMsg;
+            processRequest();
+        } else if (msg.type == Message.RESPONSE) {
+            Response resp = (Response) msg.protoMsg;
+            if (resp.getResult() != 0) {
+                log.warn("Received negative response: {}, closing the connection", resp.getErrorMsg());
+                ctx.close();
+                return;
+            } else {
+                log.info("Received response {}", resp);
+            }
+        } else {
+            log.warn("Unexpected message type {} received, closing the connection", msg.type);
+            ctx.close();
+        }
+    }
+
+    // if tcpRole=Server, called when we have been added to the pipeline by the ReplicationServer
+    // if tcpRole=Client, called when we have been added to the pipeline by the ReplicationClient
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+        super.handlerAdded(ctx);
+        this.channelHandlerContext = ctx;
+        if (req != null) {// this is the request in the constructor, if tcpRole=Server
+            processRequest();
+        }
+    }
+
+    public void shutdown() {
+        channelHandlerContext.close();
+        if (timeMsgFuture != null) {
+            timeMsgFuture.cancel(true);
+        }
+    }
+
+    private void processRequest() {
+        if (dataHandlingFuture != null) {
+            dataHandlingFuture.cancel(true);
+        }
+        if (req.hasStartTxId()) {
+            nextTxToSend = req.getStartTxId();
+        } else {
+            log.info("The slave did not provide a startTxId, starting from 0");
+            nextTxToSend = 0;
+        }
+        scheduleTimeMsgs();
+        goToNextFile();
+    }
+
+    private void scheduleTimeMsgs() {
+        long timeMsgFreqMillis = replMaster.timeMsgFreqMillis;
+        this.timeMsgFuture = channelHandlerContext.executor().scheduleAtFixedRate(this::sendTimeMsg,
+                0, timeMsgFreqMillis, TimeUnit.MILLISECONDS);
+    }
+
+    void goToNextFile() {
+        if (!channelHandlerContext.channel().isActive()) {
+            return;
+        }
+        log.trace("Looking for a new file for transaction {}", nextTxToSend);
+        currentFile = replMaster.getFile(nextTxToSend);
+        if (currentFile == null) {
+            log.warn("next TX to send {} is in the future, checking back in 60 seconds", nextTxToSend);
+            workerGroup.schedule(() -> goToNextFile(), 60, TimeUnit.SECONDS);
+            return;
+        }
+        log.trace("Found file with firstTxId={} nextTxId={}", currentFile.getFirstId(), currentFile.getNextTxId());
+        if (nextTxToSend < currentFile.getFirstId()) {
+            log.warn("Requested start from {} but the first available transaction is {}. Replaying from there",
+                    nextTxToSend, currentFile.getFirstId());
+            nextTxToSend = currentFile.getFirstId();
+        } else if (nextTxToSend > currentFile.getFirstId()) {
+            // start from the middle of the file, write first the metadata
+            Iterator<ByteBuffer> it = currentFile.metadataIterator();
+            while (it.hasNext()) {
+                ByteBuffer buf = it.next();
+                long txId = buf.getLong(buf.position() + 8);
+                if (txId >= nextTxToSend) {
+                    break;
+                }
+                log.debug("Sending metadata TX{} length: {} ", txId, buf.remaining());
+                ByteBuf bb = Unpooled.wrappedBuffer(buf);
+                channelHandlerContext.writeAndFlush(bb);
+            }
+        }
+        fileTail = null;
+        sendMoreData();
+    }
+
+    void sendMoreData() {
+        if (!channelHandlerContext.channel().isActive()) {
+            return;
+        }
+        if (fileTail == null) {
+            fileTail = currentFile.tail(nextTxToSend);
+        } else {
+            currentFile.getNewData(fileTail);
+        }
+
+        log.trace("nextTxToSend: {}, FileTail: {} ", nextTxToSend, fileTail);
+        if (fileTail.nextTxId == nextTxToSend) {// no more data available
+            if (fileTail.eof) { // file, full, go to next file
+                goToNextFile();
+            } else { // check back in 200 millisec
+                workerGroup.schedule(() -> sendMoreData(), 200, TimeUnit.MILLISECONDS);
+            }
+        } else {// got some data, send it and check back for more once the data has been sent
+            ByteBuf buf = Unpooled.wrappedBuffer(fileTail.buf);
+            dataHandlingFuture = channelHandlerContext.writeAndFlush(buf).addListener(a -> {
+                fileTail.buf.position(fileTail.buf.limit());
+                nextTxToSend = fileTail.nextTxId;
+                sendMoreData();
+            });
+        }
+    }
+
+    public long getNextTxId() {
+        return nextTxToSend;
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        log.warn("Caught exception {}", cause.getMessage());
+    }
+
+    private void sendTimeMsg() {
+        TimeMessage tm = TimeMessage.newBuilder()
+                .setLocalTime(System.currentTimeMillis())
+                .setMissionTime(timeService.getMissionTime())
+                .setSpeed(timeService.getSpeed())
+                .build();
+        Message msg = Message.get(tm);
+        ByteBuf bb = Unpooled.wrappedBuffer(msg.encode());
+        channelHandlerContext.writeAndFlush(bb);
+    }
+
+    /**
+     * this is called when the TCP connection is established, only when we are working as TCP client in the other case
+     * the ReplicationServer adds us to the pipeline after the connection is established)
+     * <p>
+     * Send a Wakeup message
+     */
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        log.debug("Connection {} opened, sending a wakeup message", ctx.channel().remoteAddress());
+        Wakeup wp = Wakeup.newBuilder().setYamcsInstance(slaveServer.instance).build();
+        Message msg = Message.get(wp);
+        ctx.writeAndFlush(Unpooled.wrappedBuffer(msg.encode()));
+    }
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.info("Replication connection {} closed", ctx.channel().remoteAddress());
+        super.channelInactive(ctx);
+        if (dataHandlingFuture != null) {
+            dataHandlingFuture.cancel(true);
+        }
+    }
+}
+```
+
+### `Message.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Message.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.zip.CRC32;
+
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.utils.DecodingException;
+
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.MessageLite;
+
+/**
+ * Defines all the message types that are exchanged between master and slave.
+ * 
+ * <p>
+ * Message format:
+ * 
+ * <pre>
+ * 1 byte type
+ * 3 bytes message size (size of data to follow) = n+4
+ * n bytes data
+ * 4 bytes CRC.
+ * </pre>
+ * <p>
+ * This is the same structure used in the replication file to be able to play it directly over the network.
+ * <p>
+ * The replication file contains only STREAM_INFO and DATA messages (and we call them transactions)
+ */
+public class Message {
+    public final static byte WAKEUP = 1;
+    public final static byte REQUEST = 2;
+    public final static byte RESPONSE = 3;
+    public final static byte STREAM_INFO = 4;
+    public final static byte DATA = 5;
+    public final static byte TIME = 6;
+
+    final byte type;
+    MessageLite protoMsg;
+
+    public static Message decode(ByteBuffer buf) throws DecodingException {
+        verifyCrc(buf);
+
+        int lengthtype = buf.getInt();
+        int length = lengthtype & 0xFFFFFF;
+        byte type = (byte) (lengthtype >> 24);
+
+        if (length != buf.remaining()) {// netty will split the messages based on this length so if this
+            // message has been received via netty, this error cannot really happen
+            throw new DecodingException(
+                    "Message length does not match. header length: " + length + " buffer length:" + buf.remaining());
+        }
+
+        Message msg;
+
+        buf.limit(buf.limit() - 4); // get rid of CRC
+
+        switch (type) {
+        case DATA:
+            msg = new TransactionMessage(type, buf.getInt(), buf.getLong());
+            ((TransactionMessage) msg).buf = buf;
+            break;
+        case WAKEUP:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Wakeup.newBuilder()).build();
+            break;
+        case REQUEST:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Request.newBuilder()).build();
+            break;
+        case RESPONSE:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, Response.newBuilder()).build();
+            break;
+        case STREAM_INFO:
+            msg = new TransactionMessage(type, buf.getInt(), buf.getLong());
+            buf.getInt();// pointer to next metadata
+            msg.protoMsg = decodeProto(buf, StreamInfo.newBuilder()).build();
+            break;
+        case TIME:
+            msg = new Message(type);
+            msg.protoMsg = decodeProto(buf, TimeMessage.newBuilder()).build();
+            break;
+        default:
+            throw new DecodingException("unknown message type " + type);
+
+        }
+
+        return msg;
+    }
+
+    Message(byte type) {
+        this.type = type;
+    }
+
+    public byte type() {
+        return type;
+    }
+
+    public MessageLite protoMsg() {
+        return protoMsg;
+    }
+
+    private static void verifyCrc(ByteBuffer buf) throws DecodingException {
+        int pos = buf.position();
+        buf.limit(buf.limit() - 4);
+        CRC32 crc = new CRC32();
+        crc.update(buf);
+        int ccrc = (int) crc.getValue();
+
+        buf.limit(buf.limit() + 4);
+        int rcrc = buf.getInt();
+
+        if (ccrc != rcrc) {
+            throw new DecodingException("CRC verification failed");
+        }
+        buf.position(pos);
+    }
+
+    /**
+     * decodes the proto message. buf has to be positioned before the size.
+     * 
+     * <p>
+     * the CRC is the last 4 bytes and is not checked.
+     */
+    private static <T extends MessageLite.Builder> T decodeProto(ByteBuffer buf, T builder)
+            throws DecodingException {
+        try {
+            builder.mergeFrom(CodedInputStream.newInstance(buf));
+            return builder;
+        } catch (IOException e) {
+            throw new DecodingException(e);
+        }
+    }
+
+    public static Message get(Wakeup wp) {
+        Message msg = new Message(WAKEUP);
+        msg.protoMsg = wp;
+        return msg;
+    }
+
+    public static Message get(TimeMessage tm) {
+        Message msg = new Message(TIME);
+        msg.protoMsg = tm;
+        return msg;
+    }
+
+    public static Message get(Response resp) {
+        Message msg = new Message(RESPONSE);
+        msg.protoMsg = resp;
+        return msg;
+    }
+
+    public static Message get(Request req) {
+        Message msg = new Message(REQUEST);
+        msg.protoMsg = req;
+        return msg;
+    }
+
+    public ByteBuffer encode() {
+        byte[] b = protoMsg.toByteArray();
+        ByteBuffer buf = ByteBuffer.allocate(b.length + 8);
+
+        buf.putInt((type << 24) | (b.length + 4));
+        buf.put(b);
+        CRC32 crc = new CRC32();
+        buf.position(0);
+        buf.limit(b.length + 4);
+        crc.update(buf);
+
+        buf.limit(b.length + 8);
+        buf.putInt((int) crc.getValue());
+        buf.position(0);
+        return buf;
+    }
+
+    // this is a message that comes from a replication file
+    public static class TransactionMessage extends Message {
+        long txId;
+        int instanceId;
+        ByteBuffer buf;
+
+        TransactionMessage(byte type, int instanceId, long txId) {
+            super(type);
+            this.instanceId = instanceId;
+            this.txId = txId;
+        }
+
+        public ByteBuffer encode() {
+            throw new UnsupportedOperationException();
+        }
+
+        public long txId() {
+            return txId;
+        }
+
+        public ByteBuffer buf() {
+            return buf;
+        }
+
+    }
+
+}
+```
+
+### `ReplicationClient.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationClient.java`
+
+
+```java
+package org.yamcs.replication;
+
+import static org.yamcs.replication.ReplicationServer.workerGroup;
+
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
+
+import org.yamcs.logging.Log;
+
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.util.concurrent.ScheduledFuture;
+
+/**
+ * Replication TCP client - works both on the master and on the slave side depending on the config
+ * 
+ */
+public class ReplicationClient {
+    final String host;
+    final int port;
+    final Supplier<ChannelHandler> channelHandlerSupplier;
+    final Log log;
+    final long reconnectionInterval;
+    final int maxTupleSize;
+    Channel channel;
+    ScheduledFuture<?> reconnectFuture;
+    Bootstrap bootstrap;
+    volatile boolean quitting = false;
+    SslContext sslCtx = null;
+
+    public ReplicationClient(String yamcsInstance, String host, int port, SslContext sslCtx,
+            long reconnectionInterval, int maxTupleSize,
+            Supplier<ChannelHandler> channelHandlerSupplier) {
+        this.port = port;
+        this.host = host;
+        this.channelHandlerSupplier = channelHandlerSupplier;
+        this.reconnectionInterval = reconnectionInterval;
+        log = new Log(getClass(), yamcsInstance);
+        this.sslCtx = sslCtx;
+        this.maxTupleSize = maxTupleSize;
+    }
+
+    public void start() {
+        bootstrap = new Bootstrap();
+        bootstrap.group(workerGroup)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        if (sslCtx != null) {
+                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(maxTupleSize, 1, 3));
+                        ch.pipeline().addLast(channelHandlerSupplier.get());
+                    }
+                });
+        doConnect();
+    }
+
+    private void doConnect() {
+        log.debug("Connecting for replication to {}:{}", host, port);
+        bootstrap.connect(host, port).addListener((ChannelFuture f) -> {
+            if (f.isSuccess()) {
+                channel = f.channel();
+                log.info("Connected to server at {}:{}", host, port);
+                channel.closeFuture().addListener(f1 -> {
+                    scheduleReconnect();
+                });
+            } else {
+                log.warn("Failed to connect: {}", f.cause().getMessage(), f.cause());
+                scheduleReconnect();
+            }
+        });
+    }
+
+    void scheduleReconnect() {
+        if (quitting || reconnectionInterval < 0) {
+            return;
+        }
+
+        if (reconnectFuture != null) {
+            reconnectFuture.cancel(true);
+        }
+        reconnectFuture = workerGroup.schedule(() -> doConnect(), reconnectionInterval, TimeUnit.MILLISECONDS);
+    }
+
+    public void stop() {
+        quitting = true;
+        if (reconnectFuture != null) {
+            reconnectFuture.cancel(true);
+        }
+        if (channel != null) {
+            channel.close();
+        }
+    }
+
+    public Channel getChannel() {
+        return channel;
+    }
+}
+```
+
+### `ReplicationFile.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationFile.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileChannel.MapMode;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.Instant;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.zip.CRC32;
+
+import org.yamcs.logging.Log;
+import org.yamcs.utils.StringConverter;
+
+import io.netty.util.internal.PlatformDependent;
+
+/**
+ * Stores transactions in a memory mapped file. The data is split into pages, each page has a fixed number of
+ * transactions.
+ * <p>
+ * An index gives a pointer to the beginning of each page to allow to jump faster to a given transaction number.
+ * <p>
+ * The metadata transactions form a linked list in order to allow to send them all when a client connects.
+ * 
+ * <p>
+ * Header:
+ * 
+ * <pre>
+ * 12 bytes magic "YAMCS_STREAM"
+ *  1 byte version
+ *  3 bytes spare
+ *  8 bytes first_id =  first transaction in the file = file_id - used for consistency check(if someone renames the file)
+ *  4 bytes page_size - number of transactions per page 
+ *  4 bytes max_pages - max number of pages (and the size of the index)
+ * 
+ *  8 bytes last_mod = last modification time
+ *  4 bytes n =  number of full pages. If n=max_pages, the file is full, cannot be written to it
+ *  4 bytes m = number of transactions on page n
+ *  4 bytes firstMetadataPos - position of the first metadata transaction
+ *  (max_pages+1) x 4 bytes idx - transaction index 
+ *      idx[i] (i=0..max_pages) - offset in the file where transaction with id id_first + i*page_size starts
+ *      idx[i] = 0 -> no such transaction. this means num_tx < i*m
+ *      idx[max_pages] -> pointer to the end of the file.
+ * </pre>
+ * 
+ * transaction data:
+ * 
+ * <pre>
+ * 
+ * 1 byte type - the type can be DATA or STREAM_INFO with the constants defined in {@link Message}
+ * 3 bytes - size of the data that follows including the CRC (or alternatively including the first 4 bytes type+size but excluding the crc)
+ * 4 bytes instance_id
+ * 8 bytes transaction_id
+ * n bytes data
+ * 4 bytes CRC32 calculated over the data including the type and length
+ * 
+ *  for metadata the first 4 bytes of the data is the position of the next metadata record
+ * 
+ * </pre>
+ * 
+ * <p>
+ * The methods of this class throw {@link UncheckedIOException} instead of {@link IOException}. When working with memory
+ * mapped files in java, an IO error will cause an unspecified unchecked exception or even crash of Java (because file
+ * data is accessed using memory reads/writes). Therefore we prefer not to give a false sense of security by throwing
+ * IOException only in some limited situations and converted all these to {@link UncheckedIOException}..
+ * 
+ * <p>
+ * The one occasion when Java may crash while no hardware failure is present is when the disk is full.
+ * <p>
+ * TODO: add a checker and stop writing data if the disk usage is above a threshold.
+ * 
+ */
+public class ReplicationFile implements Closeable {
+    static final String RPL_FILENAME_PREFIX = "RPL";
+    final static byte[] MAGIC = { 'Y', 'A', 'M', 'C', 'S', '_', 'S', 'T', 'R', 'E', 'A', 'M' };
+
+    // the position inside the record where the metadata position pointer sits
+    // it is after size, instanceId, txid
+    final static int METADATA_POS_OFFSET = 16;
+    final static int MIN_RECORD_SIZE = 20; // size, instanceId, txId, crc
+
+    final Log log;
+
+    ReadWriteLock rwlock = new ReentrantReadWriteLock();
+
+    private MappedByteBuffer buf;
+    private int lastMetadataTxStart;
+    private FileChannel fc;
+    final private boolean readOnly;
+    final private Header1 hdr1;
+    final private Header2 hdr2;
+    private boolean fileFull = false;
+    final Path path;
+    CRC32 crc32 = new CRC32();
+    private boolean syncRequired;
+
+    class Header1 { // this is the first part - fixed - of the header
+
+        final static byte VERSION = 0;
+        final static int LENGTH = 32;
+        final long firstId; // first transaction id
+        final int pageSize, maxPages;
+
+        // new file
+        Header1(long firstId, int pageSize, int maxPages) {
+            this.firstId = firstId;
+            this.pageSize = pageSize;
+            this.maxPages = maxPages;
+            buf.put(MAGIC);
+            buf.putInt(VERSION << 24);
+            buf.putLong(firstId);
+            buf.putInt(pageSize);
+            buf.putInt(maxPages);
+        }
+
+        // open existing file
+        Header1(long firstTxId) {
+            checkHdr1(firstTxId);
+            firstId = firstTxId;
+            pageSize = buf.getInt();
+            maxPages = buf.getInt();
+        }
+
+        private void checkHdr1(long firstTxId) {
+            byte[] magic = new byte[MAGIC.length];
+            buf.get(magic);
+            if (!Arrays.equals(magic, MAGIC)) {
+                throw new CorruptedFileException(path,
+                        "bad file, magic entry does not match: " + StringConverter.arrayToHexString(magic)
+                                + ". Expected " + StringConverter.arrayToHexString(MAGIC));
+            }
+            int version = buf.getInt() >> 24;
+            if (version != VERSION) {
+                throw new CorruptedFileException(path, "bad version: " + version + ". Expected " + VERSION);
+            }
+            long id = buf.getLong();
+            if (id != firstTxId) {
+                throw new CorruptedFileException(path, "bad firstId " + id + " expected " + firstTxId);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return "Header1 [firstId=" + firstId + ", pageSize=" + pageSize + ", maxPages=" + maxPages + "]";
+        }
+    }
+
+    class Header2 {
+        final static int HDR_IDX_OFFSET = Header1.LENGTH + 20;
+
+        int numFullPages; // number of full pages
+        int lastPageNumTx; // number of transaction on the last page
+        long lastMod; // last modification
+
+        Header2(boolean newFile) {
+            if (newFile) {
+                this.numFullPages = 0;
+                this.lastPageNumTx = 0;
+                this.lastMod = System.currentTimeMillis();
+                write();
+                buf.position(HDR_IDX_OFFSET - 4);
+                buf.putInt(0);// first metadata pointer
+
+                writeIndex(0, endOffset());
+                buf.putInt(endOffset());// position of the transaction 0
+                for (int i = 1; i <= hdr1.maxPages; i++) {
+                    writeIndex(i, 0);
+                }
+            } else {
+                buf.position(Header1.LENGTH);
+                lastMod = buf.getLong();
+                numFullPages = buf.getInt();
+                lastPageNumTx = buf.getInt();
+            }
+        }
+
+        void write() {
+            buf.putLong(Header1.LENGTH, lastMod);
+            buf.putInt(Header1.LENGTH + 8, numFullPages);
+            buf.putInt(Header1.LENGTH + 12, lastPageNumTx);
+        }
+
+        public int firstMetadataPointer() {
+            return buf.getInt(HDR_IDX_OFFSET - 4);
+        }
+
+        /**
+         * returns the offset of the end of hdr2 - where data begins
+         */
+        public int endOffset() {
+            return HDR_IDX_OFFSET + 4 * (hdr1.maxPages + 1);
+        }
+
+        public int getIndex(int n) {
+            return buf.getInt(HDR_IDX_OFFSET + n * 4);
+        }
+
+        void writeIndex(int n, int txPos) {
+            buf.putInt(HDR_IDX_OFFSET + n * 4, txPos);
+        }
+
+        void incrNumTx() {
+            hdr2.lastPageNumTx++;
+            if (hdr2.lastPageNumTx == hdr1.pageSize) {
+                hdr2.numFullPages++;
+                hdr2.lastPageNumTx = 0;
+                if (!readOnly) {
+                    hdr2.writeIndex(hdr2.numFullPages, buf.position());
+                } // else this method is called from recover when reading an old file which cannot be modified
+            }
+        }
+
+        int numTx() {
+            return hdr1.pageSize * hdr2.numFullPages + hdr2.lastPageNumTx;
+        }
+
+        @Override
+        public String toString() {
+            return "Header2 [numFullPages=" + numFullPages + ", lastPageNumTx=" + lastPageNumTx + ", lastMod="
+                    + Instant.ofEpochMilli(lastMod)
+                    + "]";
+        }
+    }
+
+    public long getFirstId() {
+        return hdr1.firstId;
+    }
+
+    /**
+     * Creates a new empty file
+     * 
+     * @param dir
+     * @param id
+     * @param pageSize
+     * @param maxPages
+     * @param maxFileSize
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long id, int pageSize, int maxPages, int maxFileSize) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.path = path;
+        if (Files.exists(path)) {
+            throw new IllegalArgumentException("File " + path + " exists. Refusing to overwrite");
+        }
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.CREATE, StandardOpenOption.WRITE,
+                    StandardOpenOption.READ);
+            buf = fc.map(MapMode.READ_WRITE, 0, maxFileSize);
+            hdr1 = new Header1(id, pageSize, maxPages);
+            hdr2 = new Header2(true);
+            this.readOnly = false;
+            this.lastMetadataTxStart = Header2.HDR_IDX_OFFSET - METADATA_POS_OFFSET - 4;
+            buf.position(hdr2.endOffset());
+            log.info("Created new replication file {} pageSize: {}, maxPages:{}, maxFileSize: {}", path, hdr1.pageSize,
+                    hdr1.maxPages, maxFileSize);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Open an existing file for append
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long firstTxId, int maxFileSize) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.path = path;
+        this.readOnly = false;
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.READ, StandardOpenOption.WRITE);
+            buf = fc.map(MapMode.READ_WRITE, 0, maxFileSize);
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        hdr1 = new Header1(firstTxId);
+        hdr2 = new Header2(false);
+
+        log.debug("{}, {}", hdr1, hdr2);
+        // recover any non indexed good transactions at the end of the file and set the position at the end
+        recover();
+
+        long endOffset = buf.position();
+        // find the offset where the next metadata has to be written
+        lastMetadataTxStart = Header2.HDR_IDX_OFFSET - METADATA_POS_OFFSET - 4;
+        while (true) {
+            int nextMetadataTxStart = buf.getInt(lastMetadataTxStart + METADATA_POS_OFFSET);
+            if (nextMetadataTxStart == 0 || nextMetadataTxStart + METADATA_POS_OFFSET > endOffset) {
+                break;
+            }
+            if (nextMetadataTxStart <= lastMetadataTxStart) {
+                throw new UncheckedIOException(
+                        new IOException("Corrupted file " + path + " at position " + lastMetadataTxStart
+                                + " the metadata pointer points in the past"));
+            }
+            lastMetadataTxStart = nextMetadataTxStart;
+        }
+        log.info("Opened for append {} pageSize: {}, maxPages:{}, num_tx: {}", path, hdr1.pageSize, hdr1.maxPages,
+                hdr2.numTx());
+    }
+
+    /**
+     * Open an existing file read only
+     */
+    private ReplicationFile(String yamcsInstance, Path path, long firstTxId) {
+        log = new Log(this.getClass(), yamcsInstance);
+        this.readOnly = true;
+        this.path = path;
+
+        try {
+            fc = FileChannel.open(path, StandardOpenOption.READ);
+            buf = fc.map(MapMode.READ_ONLY, 0, fc.size());
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+        hdr1 = new Header1(firstTxId);
+        hdr2 = new Header2(false);
+        log.debug("hdr1: {}, hdr2: {}", hdr1, hdr2);
+
+        this.lastMetadataTxStart = Header2.HDR_IDX_OFFSET - 4;
+
+        // set the filefull
+        this.fileFull = true;
+        recover();
+
+        log.info("Opened read-only {} pageSize: {}, maxPages:{}, num_tx: {}", path, hdr1.pageSize, hdr1.maxPages,
+                hdr2.numTx());
+    }
+
+    public static ReplicationFile newFile(String yamcsInstance, Path path, long firstTxId, int pageSize, int maxPages,
+            int maxFileSize) {
+        checkSize(pageSize, maxPages, maxFileSize);
+        return new ReplicationFile(yamcsInstance, path, firstTxId, pageSize, maxPages, maxFileSize);
+    }
+
+    private static void checkSize(int pageSize, int maxPages, int maxFileSize) {
+        int minSize = headerSize(pageSize, maxPages) + MIN_RECORD_SIZE;
+        if (maxFileSize < minSize) {
+            throw new IllegalArgumentException(
+                    "maxFileSize=" + maxFileSize + " too small; " + minSize
+                            + " bytes required for storing an empty transaction");
+        }
+
+    }
+
+    public static ReplicationFile openReadOnly(String yamcsInstance, Path path, long firstTxId) {
+        return new ReplicationFile(yamcsInstance, path, firstTxId);
+    }
+
+    public static ReplicationFile openReadWrite(String yamcsInstance, Path path, long firstTxId, int maxFileSize) {
+        return new ReplicationFile(yamcsInstance, path, firstTxId, maxFileSize);
+    }
+
+    /**
+     * Write transaction to the file and returns the transaction id.
+     * <p>
+     * returns -1 if the transaction could not be written because the file is full.
+     * 
+     * @param tx
+     * @return
+     */
+    public long writeData(Transaction tx) {
+        if (readOnly) {
+            throw new IllegalStateException("Read only file");
+        } else if (!fc.isOpen()) {
+            // this may happen if the thread writing to the replication file is interrupted when writing
+            log.warn("Attempting to write to a closed file");
+            return -1;
+        }
+
+        rwlock.writeLock().lock();
+        final int txStartPos = buf.position();
+
+        try {
+            if (fileFull) {
+                return -1;
+            } else if (hdr2.numFullPages == hdr1.maxPages) {
+                return abortWriteFileFull(txStartPos);
+            } else if (buf.remaining() < MIN_RECORD_SIZE) {
+                return abortWriteFileFull(txStartPos);
+            }
+
+            long txid = hdr1.firstId + hdr2.numTx();
+            log.trace("Writing transaction {} at position {}", txid, buf.position());
+
+            buf.putInt(0);// this is where the the type and size is written below
+            buf.putInt(tx.getInstanceId());
+            buf.putLong(txid);
+
+            byte type = tx.getType();
+
+            if (Transaction.isMetadata(type)) {
+                buf.putInt(0);// next metadata position
+            }
+
+            try {
+                tx.marshall(buf);
+            } catch (BufferOverflowException | IndexOutOfBoundsException e) {// end of file
+                return abortWriteFileFull(txStartPos);
+            }
+
+            if (buf.remaining() < 4) {// no space left for CRC
+                return abortWriteFileFull(txStartPos);
+            }
+
+            int size = buf.position() - txStartPos;
+            buf.putInt(txStartPos, (type << 24) | (size));
+            int crc = compute_crc(buf, txStartPos);
+            buf.putInt(crc);
+
+            if (Transaction.isMetadata(type)) {
+                buf.putInt(lastMetadataTxStart + METADATA_POS_OFFSET, txStartPos);
+
+                // update crc of the modified metadata record
+                if (lastMetadataTxStart >= hdr2.endOffset()) {
+                    updateCrc(lastMetadataTxStart);
+                }
+                if (log.isTraceEnabled()) {
+                    log.trace("Wrote at offset {} the pointer to the next metadata at {}",
+                            lastMetadataTxStart + METADATA_POS_OFFSET, txStartPos);
+                }
+
+                lastMetadataTxStart = txStartPos;
+            }
+
+            hdr2.lastMod = System.currentTimeMillis();
+            log.trace("Wrote transaction {} of type {} at position {}, total size: {}", txid, type, txStartPos,
+                    size + 4);
+            hdr2.incrNumTx();
+            return txid;
+        } catch (Throwable e) {
+            buf.position(txStartPos);
+            log.error("Caught exception when writing the replication file ", e);
+            throw e;
+        } finally {
+            rwlock.writeLock().unlock();
+        }
+    }
+
+    // starts from latest known transaction (according to the header) and checks for new ones
+    private void recover() {
+        int n = hdr2.numTx();
+
+        int startTxPos = getPosition(n);
+        buf.position(startTxPos);
+        int k = 0;
+        while (buf.remaining() > MIN_RECORD_SIZE) {
+            n = hdr2.numTx();
+            startTxPos = buf.position();
+
+            int size = buf.getInt() & 0xFFFFFF;
+
+            if (size > buf.remaining() || size < 12) {
+                break;
+            }
+
+            buf.getInt();// serverId
+            long txId = buf.getLong();
+            if (txId != hdr1.firstId + n) {
+                break;
+            }
+            buf.position(startTxPos + size);
+            int crc = compute_crc(buf, startTxPos);
+            if (crc != buf.getInt()) {
+                log.debug("Trying to recover TX{}: CRC does not match", txId);
+                break;
+            }
+            log.debug("Recovered TX{}", txId);
+            hdr2.incrNumTx();
+            k++;
+        }
+        log.debug("Found {} transactions more than indicated in the header", k);
+        buf.position(startTxPos);
+    }
+
+    private int abortWriteFileFull(int txStartPos) {
+        fileFull = true;
+        buf.position(txStartPos);
+        log.debug("File {} full, numTx: {}", path, hdr2.numTx());
+        return -1;
+    }
+
+    // update the CRC of the record starting at the position
+    private void updateCrc(int pos) {
+        ByteBuffer buf1 = buf.duplicate();
+        buf1.position(pos);
+        int size = buf1.getInt() & 0xFFFFFF;
+        buf1.position(pos);
+        buf1.limit(pos + size);
+        crc32.reset();
+        crc32.update(buf1);
+        buf1.limit(buf1.limit() + 4);
+        buf1.putInt((int) crc32.getValue());
+    }
+
+    // compute checksum from start to the current position
+    private int compute_crc(ByteBuffer buf, int start) {
+        int prevLimit = buf.limit();
+        buf.limit(buf.position());
+        buf.position(start);
+        crc32.reset();
+        crc32.update(buf);
+        buf.limit(prevLimit);
+
+        return (int) crc32.getValue();
+    }
+
+    /**
+     * Returns a {@link ReplicationTail} containing a read only {@link ByteBuffer} having the position on given txId and
+     * with the limit set to the current end of tx data.
+     * 
+     * <p>
+     * The tail can be sent back in {@link #getNewData(ReplicationTail)} to obtain more data if available.
+     * <p>
+     * {@link ReplicationTail#eof} = true means the file is full so no more data will be available in the future.
+     *
+     * <p>
+     * if the txId is smaller than the first transaction of this file, an {@link IllegalArgumentException} is thrown.
+     * <p>
+     * If the txId is greater than the highest transaction in this file plus 1, null is returned
+     * <p>
+     * If the txId is the highest transaction in this file plus one, a tail with 0 transactions (i.e. position=limit in
+     * the buffer) is returned; it can be used later to get more data.
+     * 
+     * @param txId
+     * @return
+     */
+    public ReplicationTail tail(long txId) {
+        int txNum = (int) (txId - hdr1.firstId);
+        if (txNum < 0) {
+            throw new IllegalArgumentException(txId + " is smaller than " + hdr1.firstId);
+        }
+        rwlock.readLock().lock();
+        try {
+
+            int pos = getPosition(txNum);
+            if (pos < 0) {
+                return null;
+            }
+
+            ByteBuffer buf1 = buf.duplicate().asReadOnlyBuffer();
+            buf1.position(pos);
+            buf1.limit(buf.position());
+            ReplicationTail rfe = new ReplicationTail();
+            rfe.buf = buf1;
+            rfe.nextTxId = getNextTxId();
+            if (fileFull) {
+                rfe.eof = true;
+            }
+            return rfe;
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Change the limit inside the file tail to the current position in the file buffer. Update the nextTxId
+     * <p>
+     * Also update the eof flag if the file filled up since the last call.
+     * 
+     * @param rfe
+     */
+    public void getNewData(ReplicationTail rfe) {
+        rwlock.readLock().lock();
+        try {
+            rfe.buf.limit(buf.position());
+            if (fileFull) {
+                rfe.eof = true;
+            }
+            rfe.nextTxId = getNextTxId();
+        } finally {
+            rwlock.readLock().unlock();
+        }
+    }
+
+    /**
+     * Get the position of the txNum th transaction in the file according to the index
+     * <p>
+     * return -1 if the transaction is beyond the end of the file.
+     */
+    private int getPosition(int txNum) {
+        // number of full pages
+        int nfp = txNum / hdr1.pageSize;
+        int m1 = txNum - nfp * hdr1.pageSize;
+
+        if ((nfp > hdr2.numFullPages) || (nfp == hdr2.numFullPages && m1 > hdr2.lastPageNumTx)) {
+            return -1;
+        }
+
+        // first jump to the right page
+        int pos = hdr2.getIndex(nfp);
+
+        long expectedTxId = hdr1.firstId + hdr1.pageSize * nfp;
+        // then skip m1 transactions
+        for (int i = 0; i < m1; i++) {
+            pos = skipTransaction(pos, expectedTxId++);
+        }
+        return pos;
+    }
+
+    private int skipTransaction(int pos, long expectedTxId) {
+        int typeSize = buf.getInt(pos);
+        long txId = buf.getLong(pos + 8);
+        if (txId != expectedTxId) {// consistency check
+            throw new CorruptedFileException(path, "at offset " + pos + " expected txId " + expectedTxId
+                    + " but found " + txId + " instead");
+        }
+        return pos + 4 + (typeSize & 0xFFFFFF);
+    }
+
+    public boolean isFull() {
+        return fileFull;
+    }
+
+    /**
+     * Iterate through the metadata
+     */
+    public Iterator<ByteBuffer> metadataIterator() {
+        return new MetadataIterator();
+    }
+
+    /**
+     * Iterate through the data
+     */
+    public Iterator<ByteBuffer> iterator() {
+        return new TxIterator();
+    }
+
+    public void close() {
+        try {
+            if (!readOnly) {
+                hdr2.write();
+
+                // Required to unmap on Windows, else truncate fails
+                PlatformDependent.freeDirectBuffer(buf);
+
+                fc.truncate(buf.position());
+            } else {
+                // Required on Windows
+                PlatformDependent.freeDirectBuffer(buf);
+            }
+            fc.close();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    /**
+     * Force writing the content on disk.
+     * <p>
+     * The method will call first {@link FileChannel#force(boolean)}, write the number of transactions to the header and
+     * then call again {@link FileChannel#force(boolean)} to force also the header on the disk.
+     * <p>
+     * This way should guarantee that the transaction data is written on the disk before the header
+     */
+    public void sync() throws IOException {
+        if (!readOnly) {
+            rwlock.readLock().lock();
+            try {
+                fc.force(true);
+                hdr2.write();
+                fc.force(true);
+            } finally {
+                rwlock.readLock().unlock();
+            }
+        }
+    }
+
+    public static int headerSize(int pageSize, int maxPages) {
+        return Header2.HDR_IDX_OFFSET + 4 * (maxPages + 1);
+    }
+
+    public int numTx() {
+        return hdr2.numTx();
+    }
+
+    public boolean isSyncRequired() {
+        return syncRequired;
+    }
+
+    /**
+     * Set the sync required flag such that the file is synchronized by the ReplicationMaster
+     * 
+     * @param syncRequired
+     */
+    public void setSyncRequired(boolean syncRequired) {
+        this.syncRequired = syncRequired;
+    }
+
+    /**
+     * Returns the last tx id from this file + 1.
+     * <p>
+     * If there is no transaction in this file, return 0.
+     */
+    public long getNextTxId() {
+        return hdr1.firstId + hdr2.numTx();
+    }
+
+    class MetadataIterator implements Iterator<ByteBuffer> {
+        int nextPos;
+
+        MetadataIterator() {
+            nextPos = hdr2.firstMetadataPointer();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextPos > 0;
+        }
+
+        /**
+         * Returns a ByteBuffer with the position set to where the record begins and the limit sets to where it ends
+         * <p>
+         * The structure of the metadata is
+         * 
+         * <pre>
+         *  1 byte type
+         *  3 bytes size -size of data that follows( i.e. without the size itself) = n + 20
+         *  4 bytes serverId
+         *  8 bytes txId
+         *  4 bytes metadata next position (to be ignored, only relevant inside the file)
+         *   n bytes data
+         *  4 bytes crc
+         * </pre>
+         */
+        @Override
+        public ByteBuffer next() {
+            ByteBuffer buf1 = buf.asReadOnlyBuffer();
+            buf1.position(nextPos);
+            int typesize = buf1.getInt(nextPos);
+            int limit = nextPos + 4 + (typesize & 0xFFFFFF);
+            buf1.limit(limit);
+            nextPos = buf1.getInt(nextPos + METADATA_POS_OFFSET);
+
+            return buf1;
+        }
+    }
+
+    class TxIterator implements Iterator<ByteBuffer> {
+        int nextPos;
+
+        TxIterator() {
+            nextPos = hdr2.endOffset();
+        }
+
+        @Override
+        public boolean hasNext() {
+            return nextPos > 0;
+        }
+
+        /**
+         * Returns a ByteBuffer with the position set to where the record begins and the limit sets to where it ends
+         * <p>
+         * The structure of the metadata is
+         * 
+         * <pre>
+         *  1 byte type
+         *  3 bytes size -size of data that follows( i.e. without the size itself) = n + 20
+         *  4 bytes serverId
+         *  8 bytes txId
+         *  4 bytes metadata next position (to be ignored, only relevant inside the file)
+         *   n bytes data
+         *  4 bytes crc
+         * </pre>
+         */
+        @Override
+        public ByteBuffer next() {
+            if (nextPos < 0) {
+                throw new NoSuchElementException();
+            }
+            ByteBuffer buf1 = buf.asReadOnlyBuffer();
+            buf1.position(nextPos);
+            int typesize = buf1.getInt(nextPos);
+
+            nextPos += 4 + (typesize & 0xFFFFFF);
+
+            if (nextPos >= buf.limit()) {
+                nextPos = -1;
+            } else {
+                buf1.limit(nextPos);
+            }
+
+            return buf1;
+        }
+    }
+
+}
+```
+
+### `ReplicationMaster.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationMaster.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsServer;
+import org.yamcs.replication.protobuf.ColumnInfo;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.StreamSubscriber;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.CodedOutputStream;
+import com.google.protobuf.MessageLite;
+import com.google.protobuf.TextFormat;
+
+import io.netty.channel.ChannelHandler;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+/**
+ * 
+ * Implements the master part of the replication. At any moment there is one current file where the replication data is
+ * written.
+ * 
+ * @author nm
+ *
+ */
+public class ReplicationMaster extends AbstractYamcsService {
+
+    ConcurrentSkipListMap<Long, ReplFileAccess> replFiles = new ConcurrentSkipListMap<>();
+    volatile ReplicationFile currentFile = null;
+
+    List<ReplFileAccess> toDeleteList = new ArrayList<>();
+    int port;
+    List<String> streamNames;
+    List<StreamToFile> translators = new ArrayList<>();
+    long expiration;
+    Path replicationDir;
+    int pageSize;
+    int maxPages;
+    int maxFileSize;
+    TcpRole tcpRole;
+    List<SlaveServer> slaves;
+    long reconnectionInterval;
+    int instanceId;
+    SslContext sslCtx = null;
+    // files not accessed longer than this will be closed
+    private long fileCloseTime;
+
+    // how often to run the sync on the current file
+    private long fileSyncTime;
+    Pattern filePattern;
+    int maxTupleSize;
+    long timeMsgFreqMillis;
+
+    ScheduledFuture<?> closeUnusedFilesSchedule;
+    ScheduledFuture<?> deleteExpiredFilesSchedule;
+    ScheduledFuture<?> syncCurrentFileSchedule;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        instanceId = YamcsServer.getServer().getInstance(yamcsInstance).getInstanceId();
+        tcpRole = config.getEnum("tcpRole", TcpRole.class, TcpRole.SERVER);
+        port = config.getInt("port", -1);
+        expiration = (long) (config.getDouble("expirationDays", 7.0) * 24 * 3600 * 1000);
+        streamNames = config.getList("streams");
+        pageSize = config.getInt("pageSize", 500);
+        maxPages = config.getInt("maxPages", 500);
+        maxFileSize = 1024 * config.getInt("maxFileSizeKB", 100 * 1024);
+        this.maxTupleSize = config.getInt("maxTupleSize");
+        this.timeMsgFreqMillis = config.getLong("timeMsgFreqSec") * 1000;
+
+        int hdrSize = ReplicationFile.headerSize(pageSize, maxPages);
+        if (maxFileSize < hdrSize) {
+            throw new InitException(
+                    "maxFileSize has to be higher than header size which for maxPages=" + maxPages + " is " + hdrSize);
+        }
+        this.filePattern = Pattern.compile(Pattern.quote(serviceName) + "_([0-9A-Fa-f]{16})\\.dat");
+
+        var exec = YamcsServer.getServer().getThreadPoolExecutor();
+
+        fileCloseTime = config.getLong("fileCloseTimeSec", 300) * 1000;
+        closeUnusedFilesSchedule = exec.scheduleAtFixedRate(() -> closeUnusedFiles(), fileCloseTime,
+                fileCloseTime, TimeUnit.MILLISECONDS);
+
+        deleteExpiredFilesSchedule = exec.scheduleAtFixedRate(() -> deleteExpiredFiles(), fileCloseTime,
+                fileCloseTime, TimeUnit.MILLISECONDS);
+
+        fileSyncTime = config.getLong("fileSyncTime", 10) * 1000;
+        syncCurrentFileSchedule = exec.scheduleAtFixedRate(() -> syncCurrentFile(), fileSyncTime,
+                fileSyncTime, TimeUnit.MILLISECONDS);
+
+        if (tcpRole == TcpRole.SERVER) {
+            List<ReplicationServer> servers = YamcsServer.getServer().getGlobalServices(ReplicationServer.class);
+            if (servers.isEmpty()) {
+                throw new InitException(
+                        "ReplicationMaster is defined with the role Server; that requires the ReplicationServer global service (yamcs.yaml) to be defined");
+            } else if (servers.size() > 1) {
+                log.warn("There are {} ReplicationServer services defined. Registering to the first one.",
+                        servers.size());
+            }
+            ReplicationServer server = servers.get(0);
+            server.registerMaster(this);
+        } else {
+            reconnectionInterval = 1000 * config.getLong("reconnectionIntervalSec", 30);
+            List<YConfiguration> clist = config.getConfigList("slaves");
+            slaves = new ArrayList<>(clist.size());
+            for (YConfiguration yc : clist) {
+                slaves.add(new SlaveServer(yc.getString("host"), yc.getInt("port"), yc.getString("instance"),
+                        yc.getBoolean("enableTls", false)));
+            }
+            boolean enableTls = slaves.stream().map(s -> s.enableTls).filter(b -> b).findAny().isPresent();
+
+            if (enableTls) {
+                try {
+                    sslCtx = SslContextBuilder.forClient().build();
+                } catch (SSLException e) {
+                    throw new InitException("Failed to initialize the TLS: " + e.toString());
+                }
+            }
+
+        }
+        String dataDir = YarchDatabase.getDataDir();
+        replicationDir = Paths.get(dataDir).resolve(yamcsInstance).resolve("replication");
+        try {
+            Files.createDirectories(replicationDir);
+        } catch (IOException e) {
+            throw new InitException("Cannot create the directory where replication files are stored " + replicationDir
+                    + ": " + e.getMessage());
+        }
+        renameOldReplicationFiles();
+
+        scanFiles();
+        try {
+            initCurrentFile();
+        } catch (IOException e) {
+            throw new InitException("Error opening/creating a replication file: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+
+        Spec slaveSpec = new Spec();
+        slaveSpec.addOption("host", OptionType.STRING);
+        slaveSpec.addOption("port", OptionType.INTEGER);
+        slaveSpec.addOption("instance", OptionType.STRING);
+        slaveSpec.addOption("enableTls", OptionType.BOOLEAN);
+
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(true);
+        spec.addOption("tcpRole", OptionType.STRING);
+        spec.addOption("port", OptionType.INTEGER);
+        spec.addOption("expirationDays", OptionType.FLOAT);
+        spec.addOption("pageSize", OptionType.INTEGER);
+        spec.addOption("maxPages", OptionType.INTEGER);
+        spec.addOption("maxFileSizeKB", OptionType.INTEGER);
+        spec.addOption("fileCloseTimeSec", OptionType.INTEGER);
+        spec.addOption("reconnectionIntervalSec", OptionType.INTEGER);
+        spec.addOption("slaves", OptionType.LIST).withElementType(OptionType.MAP).withSpec(slaveSpec);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(65536)
+                .withDescription("Maximum size of the serialized tuple");
+        spec.addOption("timeMsgFreqSec", OptionType.INTEGER).withDefault(10)
+                .withDescription("How often (in seconds) to send the time message to the slaves");
+
+        return spec;
+    }
+
+    private void initCurrentFile() throws IOException, InitException {
+        if (replFiles.isEmpty()) {
+            openNewFile(null);
+        } else { // open last file
+            Map.Entry<Long, ReplFileAccess> e = replFiles.lastEntry();
+            long firstTxId = e.getKey();
+            ReplFileAccess rfa = e.getValue();
+            Path path = getPath(firstTxId);
+            if (Files.size(path) > maxFileSize) {
+                // the last file is greater that maxFileSize (probably maxFileSize has been changed)
+                // we have to open it read only to find out last transaction, then open a new file
+                rfa.rf = currentFile = ReplicationFile.openReadOnly(yamcsInstance, path, firstTxId);
+                if (currentFile.numTx() == 0) {
+                    throw new InitException("file " + path
+                            + " has zero transactions inside but is bigger that currently defined maxiFileSize. Maybe maxFileSize is too small? Please consider the header size: "
+                            + ReplicationFile.headerSize(pageSize, maxPages) + " bytes");
+                }
+                openNewFile(currentFile);
+            } else {
+                rfa.rf = currentFile = ReplicationFile.openReadWrite(yamcsInstance, path,
+                        firstTxId, maxFileSize);
+                if (currentFile.isFull()) {
+                    openNewFile(currentFile);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        YarchDatabaseInstance db = YarchDatabase.getInstance(yamcsInstance);
+        for (int i = 0; i < streamNames.size(); i++) {
+            String sn = streamNames.get(i);
+            Stream s = db.getStream(sn);
+            if (s == null) {
+                notifyFailed(new ConfigurationException("Cannot find stream '" + sn + "'"));
+                return;
+            }
+            translators.add(new StreamToFile(s, i));
+        }
+        if (tcpRole == TcpRole.CLIENT) {
+            // connect to all slaves
+            for (SlaveServer sa : slaves) {
+                sa.client = new ReplicationClient(yamcsInstance, sa.host, sa.port,
+                        sa.enableTls ? sslCtx : null, reconnectionInterval, maxTupleSize,
+                        () -> {
+                            return new MasterChannelHandler(YamcsServer.getTimeService(yamcsInstance), this, sa);
+                        });
+                sa.client.start();
+            }
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        closeUnusedFilesSchedule.cancel(false);
+        deleteExpiredFilesSchedule.cancel(false);
+        syncCurrentFileSchedule.cancel(false);
+
+        for (StreamToFile stf : translators) {
+            stf.quit();
+        }
+        translators.clear();
+
+        for (ReplFileAccess rf : replFiles.values()) {
+            if (rf.rf != null) {
+                rf.rf.close();
+            }
+        }
+        replFiles.clear();
+
+        if (tcpRole == TcpRole.CLIENT) {
+            for (SlaveServer sa : slaves) {
+                sa.client.stop();
+            }
+            slaves.clear();
+        }
+
+        toDeleteList.clear();
+        currentFile = null;
+        notifyStopped();
+    }
+
+    private synchronized void openNewFile(ReplicationFile rf) {
+        if (rf != currentFile) {// some other thread has already open a new file
+            return;
+        }
+        long firstTxId = 0;
+
+        if (currentFile != null) {
+            firstTxId = currentFile.getNextTxId();
+            currentFile.setSyncRequired(true);
+        }
+
+        try {
+            currentFile = ReplicationFile.newFile(yamcsInstance, getPath(firstTxId), firstTxId, pageSize,
+                    maxPages,
+                    maxFileSize);
+            replFiles.put(firstTxId, new ReplFileAccess(currentFile));
+            // send a StreamInfo for all streams
+            for (StreamToFile stf : translators) {
+                if (currentFile.writeData(getProtoTransaction(stf.getStreamInfo())) == -1) {
+                    throw new IOException(
+                            "Failed to write stream info at the beginning of the replication file. Is the file too small??");
+                }
+            }
+        } catch (IOException | UncheckedIOException e) {
+            log.error("Failed to open a replication file", e);
+            abort(e.getMessage());
+        }
+    }
+
+    private void scanFiles() throws InitException {
+        log.debug("Scanning for replication files in {}", replicationDir);
+
+        try (java.util.stream.Stream<Path> stream = Files.list(replicationDir)) {
+            List<Path> files = stream.collect(Collectors.toList());
+            for (Path file : files) {
+                String name = file.getFileName().toString();
+                Matcher m = filePattern.matcher(name);
+                if (m.matches()) {
+                    long txId = Long.parseLong(m.group(1), 16);
+                    replFiles.put(txId, new ReplFileAccess(file));
+                    log.debug("Found file starting with txId {}", txId);
+                }
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        }
+
+    }
+
+    /**
+     * returns the id of the last transaction
+     * <p>
+     * If there is no transaction, returns -1
+     */
+    public long getTxId() {
+        return (currentFile) == null ? -1 : currentFile.getNextTxId() - 1;
+    }
+
+    private void writeToFile(Transaction tx) {
+        ReplicationFile cf = currentFile;
+        try {
+            long txId = cf.writeData(tx);
+            if (txId == -1) {// file full
+                openNewFile(cf);
+                cf = currentFile;
+                txId = cf.writeData(tx);
+                if (txId == -1) {
+                    log.error(
+                            "New file cannot accomodate a single transaction. Please increase the maxFileSize. Consider the header size "
+                                    + ReplicationFile.headerSize(pageSize, maxPages));
+                    abort("maxFileSize too small; cannot accomodate a single transaction");
+                }
+            }
+        } catch (UncheckedIOException e) {
+            log.error("Got exception when writing transaction to file, forcefully opening a new replication file", e);
+            replFiles.remove(cf.getFirstId());
+            openNewFile(cf);
+        }
+    }
+
+    private void abort(String msg) {
+        log.error("Aborting the replication master");
+        for (StreamToFile stf : translators) {
+            stf.quit();
+        }
+
+        notifyFailed(new Exception(msg));
+    }
+
+    private Transaction getProtoTransaction(MessageLite msg) {
+        return new Transaction() {
+            @Override
+            public byte getType() {
+                return Message.STREAM_INFO;
+            }
+
+            @Override
+            public void marshall(ByteBuffer buf) {
+                try {
+                    CodedOutputStream cos = CodedOutputStream.newInstance(buf);
+                    msg.writeTo(cos);
+                    buf.position(buf.position() + cos.getTotalBytesWritten());
+                } catch (CodedOutputStream.OutOfSpaceException e) {
+                    throw new BufferOverflowException();
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            }
+
+            @Override
+            public int getInstanceId() {
+                return instanceId;
+            }
+        };
+    }
+
+    public ChannelHandler newChannelHandler(Request req) {
+        return new MasterChannelHandler(YamcsServer.getTimeService(yamcsInstance), this, req);
+    }
+
+    public List<String> getStreamNames() {
+        return streamNames;
+    }
+
+    public boolean isTcpClient() {
+        return tcpRole == TcpRole.CLIENT;
+    }
+
+    public List<SlaveServer> getSlaveServers() {
+        return slaves;
+    }
+
+    class StreamToFile implements StreamSubscriber {
+        TupleDefinition completeTuple = new TupleDefinition();
+        final Stream stream;
+        private volatile ColumnSerializer<?>[] valueSerializers = new ColumnSerializer<?>[10];
+        final int streamId;
+
+        StreamToFile(Stream s, int streamId) {
+            this.stream = s;
+            stream.addSubscriber(this);
+            this.streamId = streamId;
+        }
+
+        @Override
+        public void onTuple(Stream s, Tuple tuple) {
+            ensureIndices(tuple.getDefinition());
+
+            Transaction tx = new Transaction() {
+                @Override
+                public void marshall(ByteBuffer buf) {
+
+                    buf.putInt(streamId);
+                    TupleDefinition tdef = tuple.getDefinition();
+                    for (int i = 0; i < tdef.size(); i++) {
+                        Object v = tuple.getColumn(i);
+                        if (v == null) { // since Yamcs 5.3.1 we allow nulls in the tuple values
+                            continue;
+                        }
+                        ColumnDefinition cd = tdef.getColumn(i);
+                        int cidx = completeTuple.getColumnIndex(cd.getName());
+
+                        ColumnSerializer tcs = valueSerializers[cidx];
+                        int x = (cd.getType().getTypeId() << 24) | cidx;
+                        buf.putInt(x);
+                        tcs.serialize(buf, v);
+                    }
+                    // add a final -1 eof marker
+                    buf.putInt(-1);
+                }
+
+                @Override
+                public byte getType() {
+                    return Message.DATA;
+                }
+
+                @Override
+                public int getInstanceId() {// in the future we may put this as part of the tuple
+                    return instanceId;
+                }
+            };
+            writeToFile(tx);
+        }
+
+        private synchronized void ensureIndices(TupleDefinition tdef) {
+            boolean addedColumns = false;
+            for (int i = 0; i < tdef.size(); i++) {
+                ColumnDefinition cd = tdef.getColumn(i);
+                int colId = completeTuple.getColumnIndex(cd.getName());
+                if (colId == -1) {
+                    completeTuple.addColumn(cd);
+                    addedColumns = true;
+                }
+            }
+
+            for (int i = tdef.size() - 1; i >= 0; i--) { // we go backwards because columns with higher ids are likely
+                // added at the end
+                ColumnDefinition cd = tdef.getColumn(i);
+                int cidx = completeTuple.getColumnIndex(cd.getName());
+                assert (cidx != -1);
+                if (cidx >= valueSerializers.length) {
+                    valueSerializers = Arrays.copyOf(valueSerializers, cidx + 1);
+                }
+                valueSerializers[cidx] = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+            }
+
+            if (addedColumns) {
+                StreamInfo strinfo = getStreamInfo();
+                log.debug("Writing stream info transaction {}", TextFormat.shortDebugString(strinfo));
+                Transaction tx = getProtoTransaction(strinfo);
+                ReplicationFile cf = currentFile;
+                long txId = cf.writeData(tx);
+                if (txId == -1) {
+                    // file full - open a new one and don't write the metadata transaction anymore, it will be written
+                    // in the openNewFile for all streams
+                    openNewFile(cf);
+                }
+            }
+        }
+
+        private StreamInfo getStreamInfo() {
+            StreamInfo.Builder sib = StreamInfo.newBuilder();
+            sib.setId(streamId).setName(stream.getName());
+            for (int i = 0; i < completeTuple.size(); i++) {
+                ColumnDefinition cd = completeTuple.getColumn(i);
+                sib.addColumns(ColumnInfo.newBuilder().setId(i).setName(cd.getName())
+                        .setType(cd.getType().toString()).build());
+            }
+            return sib.build();
+        }
+
+        void quit() {
+            stream.removeSubscriber(this);
+        }
+    }
+
+    /**
+     * Get the file where startTxId transaction is or the earliest file available if the transaction is in the past
+     * <p>
+     * Return null if the transaction is in the future. If there is a file which does not contain the startTxId but it's
+     * just the next one to come, then return that file.
+     * 
+     * 
+     * @param startTxId
+     * @return
+     */
+    public ReplicationFile getFile(long startTxId) {
+        Map.Entry<Long, ReplFileAccess> e = replFiles.floorEntry(startTxId);
+        if (e == null) { // transaction is in the past not available
+            e = replFiles.firstEntry();
+        }
+        ReplFileAccess rfa = e.getValue();
+        synchronized (rfa) {
+            if (rfa.rf == null) {
+                long firstTxId = e.getKey();
+                rfa.rf = ReplicationFile.openReadOnly(yamcsInstance, getPath(firstTxId),
+                        firstTxId);
+            }
+            rfa.lastAccess = System.currentTimeMillis();
+        }
+        ReplicationFile rf = rfa.rf;
+        long nextTxId = rf.getNextTxId();
+        if (nextTxId < startTxId) {
+            Long k = replFiles.ceilingKey(nextTxId);
+            if (k != null && k != nextTxId) {
+                log.error("There is a gap in the replication files, transactions {} to {} are missing", nextTxId,
+                        k - 1);
+                return getFile(k);
+            }
+            return null;
+        }
+
+        return rf;
+    }
+
+    Path getPath(long firstTxId) {
+        return replicationDir.resolve(String.format("%s_%016x.dat", serviceName, firstTxId));
+    }
+
+    /**
+     * closes files not accessed in a while
+     */
+    private void closeUnusedFiles() {
+        long t = System.currentTimeMillis() - fileCloseTime;
+        try {
+            for (ReplFileAccess rfa : replFiles.values()) {
+                synchronized (rfa) {
+                    if (rfa.rf != currentFile && rfa.rf != null && rfa.lastAccess < t) {
+                        log.debug("Closing {} because it has not been accessed since {}", rfa.path,
+                                Instant.ofEpochMilli(rfa.lastAccess));
+                        rfa.rf.close();
+                        rfa.rf = null;
+                    } else if (rfa.rf != null && rfa.rf.isSyncRequired()) {
+                        // the file has just been rotated by the data thread
+                        rfa.rf.sync();
+                        currentFile.setSyncRequired(false);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when closing or syncing files", e);
+        }
+
+        try {
+            for (ReplFileAccess rfa : toDeleteList) {
+                synchronized (rfa) {
+                    if (rfa.rf != null && rfa.lastAccess < t) {
+                        log.debug("Closing and removing {} because it has not been accessed since {} "
+                                + "and it is on the list for deletion.",
+                                rfa.path, Instant.ofEpochMilli(rfa.lastAccess));
+                        rfa.rf.close();
+                        Files.delete(rfa.path);
+                        rfa.rf = null;
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when looking for files to remove ", e);
+        }
+    }
+
+    private void deleteExpiredFiles() {
+        try (java.util.stream.Stream<Path> stream = Files.list(replicationDir)) {
+            List<Path> files = stream.collect(Collectors.toList());
+            for (Path file : files) {
+                String name = file.getFileName().toString();
+                Matcher m = filePattern.matcher(name);
+                if (m.matches()) {
+                    long txId = Long.parseLong(m.group(1), 16);
+                    if (txId != currentFile.getFirstId()) {// never remove the current file
+                        checkForRemoval(file, txId);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.warn("Caught exception when looking for files to remove ", e);
+        }
+    }
+
+    private void syncCurrentFile() {
+        try {
+            log.trace("Syncing current replication file {}", currentFile.path);
+            currentFile.sync();
+        } catch (Exception e) {
+            log.error("Error syncing current replication file", e);
+        }
+    }
+
+    void checkForRemoval(Path file, long firstTxId) throws IOException {
+        long t = System.currentTimeMillis() - expiration;
+        BasicFileAttributes bfa = Files.readAttributes(file, BasicFileAttributes.class);
+        if (bfa.creationTime().toMillis() > t) {
+            return;
+        }
+        ReplFileAccess rfa = replFiles.remove(firstTxId);
+        if (rfa == null) {// probably one that is on the toDeleteList
+            return;
+        }
+        synchronized (rfa) {
+            if (rfa.rf == null) {
+                log.debug("Deleting file {} created {}", file, bfa.creationTime());
+                Files.delete(file);
+            } else {
+                // file is open for replay, put it on the list to be removed when it is closed
+                toDeleteList.add(rfa);
+            }
+        }
+    }
+
+    // this is called at init starting with yamcs 5.4.2 when the replication files have been renamed to contain the
+    // service name.
+    // it renames the old replication files to the new names
+    // to be removed after a while
+    private void renameOldReplicationFiles() throws InitException {
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(replicationDir)) {
+            for (Path path : stream) {
+                if (!Files.isDirectory(path)) {
+                    String name = path.getFileName().toString();
+                    if (name.matches("RPL_[0-9a-fA-F]{16}\\.dat")) {
+                        Path newPath = replicationDir.resolve(name.replace("RPL_", serviceName + "_"));
+                        log.info("Renaming {} to {}", path, newPath);
+                        Files.move(path, newPath, StandardCopyOption.ATOMIC_MOVE);
+                    }
+                }
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        }
+    }
+
+    static class ReplFileAccess {
+        long lastAccess;
+        ReplicationFile rf;
+        Path path;
+
+        public ReplFileAccess(ReplicationFile file) {
+            this.lastAccess = System.currentTimeMillis();
+            this.rf = file;
+        }
+
+        public ReplFileAccess(Path path) {
+            this.lastAccess = -1;
+            this.rf = null;
+            this.path = path;
+        }
+    }
+
+    public static class SlaveServer {
+        String host;
+        int port;
+        ReplicationClient client;
+        String instance;
+        boolean enableTls = false;
+
+        public SlaveServer(String host, int port, String instance, boolean enableTls) {
+            this.host = host;
+            this.port = port;
+            this.instance = instance;
+            this.enableTls = enableTls;
+        }
+
+        public String getHost() {
+            return host;
+        }
+
+        public int getPort() {
+            return port;
+        }
+
+        public String getInstance() {
+            return instance;
+        }
+
+        public ReplicationClient getTcpClient() {
+            return client;
+        }
+    }
+}
+```
+
+### `ReplicationServer.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationServer.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsException;
+import org.yamcs.replication.ReplicationSlave.SlaveChannelHandler;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.Wakeup;
+import org.yamcs.utils.DecodingException;
+
+import com.google.common.io.ByteStreams;
+import com.google.protobuf.TextFormat;
+
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelPipeline;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.SocketChannel;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+
+/**
+ * TCP replication server - works both on the master and on the slave side depending on the channel handler
+ * <p>
+ * Has to be defined as a global Yamcs service. The {@link ReplicationMaster} or {@link ReplicationSlave} defined at the
+ * instance level will register to this if the tcpRole is set to "Server".
+ * 
+ */
+public class ReplicationServer extends AbstractYamcsService {
+    int port;
+    static final EventLoopGroup workerGroup = new NioEventLoopGroup();
+    ServerBootstrap serverBootstrap;
+    private Map<String, ReplicationMaster> masters = new HashMap<>();
+    private Map<String, ReplicationSlave> slaves = new HashMap<>();
+    Set<Channel> activeChannels = Collections.newSetFromMap(new ConcurrentHashMap<Channel, Boolean>());
+    SslContext sslCtx;
+    int maxTupleSize;
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("port", OptionType.INTEGER).withRequired(true);
+        spec.addOption("tlsCert", OptionType.ANY);
+        spec.addOption("tlsKey", OptionType.STRING);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(131072);
+
+        return spec;
+    }
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        this.port = config.getInt("port");
+        this.maxTupleSize = config.getInt("maxTupleSize");
+
+        if (config.containsKey("tlsCert")) {
+            List<String> tlsCerts;
+            String tlsKey = config.getString("tlsKey");
+            if (config.isList("tlsCert")) {
+                tlsCerts = config.getList("tlsCert");
+            } else {
+                tlsCerts = Arrays.asList(config.getString("tlsCert"));
+            }
+
+            try {
+                ByteArrayOutputStream buf = new ByteArrayOutputStream();
+                for (String cert : tlsCerts) {
+                    try (InputStream certIn = Files.newInputStream(Paths.get(cert))) {
+                        ByteStreams.copy(certIn, buf);
+                    }
+                }
+                try (InputStream chain = new ByteArrayInputStream(buf.toByteArray());
+                        InputStream key = new FileInputStream(tlsKey)) {
+                    sslCtx = SslContextBuilder.forServer(chain, key).build();
+                }
+            } catch (SSLException e) {
+                throw new InitException("Failed to initialize TLS: " + e.toString());
+            } catch (IOException e) {
+                throw new InitException("Failed to process TLS certificates", e);
+            }
+        }
+    }
+
+    @Override
+    protected void doStart() {
+        serverBootstrap = new ServerBootstrap();
+        serverBootstrap.group(workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<SocketChannel>() {
+                    @Override
+                    public void initChannel(SocketChannel ch) throws Exception {
+                        if (sslCtx != null) {
+                            ch.pipeline().addLast(sslCtx.newHandler(ch.alloc()));
+                        }
+                        ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(maxTupleSize, 1, 3));
+                        ch.pipeline().addLast(new MyChannelHandler());
+                    }
+                })
+                .option(ChannelOption.SO_BACKLOG, 128)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
+
+        log.debug("Starting replication server on port {}", port);
+        try {
+            Channel ch = serverBootstrap.bind(port).sync().channel();
+            activeChannels.add(ch);
+            notifyStarted();
+        } catch (InterruptedException e) {
+            notifyFailed(e);
+        }
+    }
+
+    @Override
+    protected void doStop() {
+        for (Channel ch : activeChannels) {
+            ch.close();
+        }
+        notifyStopped();
+    }
+
+    public void registerMaster(ReplicationMaster replicationMaster) {
+        masters.put(replicationMaster.getYamcsInstance(), replicationMaster);
+    }
+
+    public void registerSlave(ReplicationSlave replicationSlave) {
+        slaves.put(replicationSlave.getYamcsInstance(), replicationSlave);
+    }
+
+    public void unregisterSlave(ReplicationSlave replicationSlave) {
+        slaves.remove(replicationSlave.getYamcsInstance());
+    }
+
+    public List<Channel> getActiveChannels(ReplicationMaster replicationMaster) {
+        return activeChannels.stream().filter(ch -> {
+            for (Entry<String, ChannelHandler> entry : ch.pipeline()) {
+                if (entry.getValue() instanceof MasterChannelHandler) {
+                    var handler = (MasterChannelHandler) entry.getValue();
+                    return replicationMaster.equals(handler.replMaster);
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
+    }
+
+    public List<Channel> getActiveChannels(ReplicationSlave replicationSlave) {
+        return activeChannels.stream().filter(ch -> {
+            for (Entry<String, ChannelHandler> entry : ch.pipeline()) {
+                if (entry.getValue() instanceof SlaveChannelHandler) {
+                    var handler = (SlaveChannelHandler) entry.getValue();
+                    return replicationSlave.equals(handler.replSlave);
+                }
+            }
+            return false;
+        }).collect(Collectors.toList());
+    }
+
+    class MyChannelHandler extends ChannelInboundHandlerAdapter {
+        ChannelHandlerContext channelHandlerContext;
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object o) throws Exception {
+            ByteBuffer buf = ((ByteBuf) o).nioBuffer();
+            Message msg;
+            try {
+                msg = Message.decode(buf);
+            } catch (DecodingException e) {
+                log.warn("Failed to decode message", e);
+                sendErrorReturn(0, "Failed to decode message: " + e.getMessage());
+                return;
+            } finally {
+                ((ByteBuf) o).release();
+            }
+
+            if (msg.type == Message.WAKEUP) {// this is sent by a master when we are slave.
+                processWakeup((Wakeup) msg.protoMsg);
+            } else if (msg.type == Message.REQUEST) {
+                processRequest((Request) msg.protoMsg);
+            } else {
+                log.warn("Unexpected message type {} received, closing the connection", msg.type);
+                ctx.close();
+            }
+        }
+
+        private void processWakeup(Wakeup wp) { // called when we are slave
+            log.debug("Received wakeup message: {}", TextFormat.shortDebugString(wp));
+
+            verifyAuth(wp.getAuthToken());
+            if (!wp.hasYamcsInstance()) {
+                sendErrorReturn(0, "instance not present in the request");
+                return;
+            }
+            ReplicationSlave slave = slaves.get(wp.getYamcsInstance());
+            if (slave == null) {
+                log.warn("No replication slave registered for instance '{}'", wp.getYamcsInstance());
+                sendErrorReturn(0, "No replication slave registered for instance '" + wp.getYamcsInstance() + "''");
+                return;
+            }
+            ChannelHandler sch;
+            try {
+                sch = slave.newChannelHandler();
+            } catch (YamcsException e) { // this happens if the master connects twice to the same slave
+                log.warn("Got exception when creating a slave handler: " + e);
+                sendErrorReturn(0, e.toString());
+                return;
+            }
+
+            ChannelPipeline pipeline = channelHandlerContext.channel().pipeline();
+            pipeline.remove(this);
+            pipeline.addLast(sch);
+        }
+
+        private void processRequest(Request req) {// called when we are master to initiate a request
+            if (!req.hasYamcsInstance()) {
+                sendErrorReturn(0, "instance not present in the request");
+                return;
+            }
+            ReplicationMaster master = masters.get(req.getYamcsInstance());
+            if (master == null) {
+                log.warn("Received a replication request for non registered master: {}",
+                        TextFormat.shortDebugString(req));
+                sendErrorReturn(req.getRequestSeq(),
+                        "No replication master registered for instance '" + req.getYamcsInstance() + "''");
+                return;
+            }
+            log.debug("Received a replication request: {}, starting a new handler on the master",
+                    TextFormat.shortDebugString(req));
+            ChannelPipeline pipeline = channelHandlerContext.channel().pipeline();
+            pipeline.remove(this);
+            pipeline.addLast(master.newChannelHandler(req));
+        }
+
+        private void verifyAuth(String authToken) {
+            // TODO Auto-generated method stub
+
+        }
+
+        private void sendErrorReturn(int requestSeq, String error) {
+            Response resp = Response.newBuilder().setRequestSeq(requestSeq).setResult(-1).setErrorMsg(error).build();
+            channelHandlerContext.writeAndFlush(Unpooled.wrappedBuffer(Message.get(resp).encode()));
+        }
+
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("New connection from {}", ctx.channel().remoteAddress());
+        }
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            this.channelHandlerContext = ctx;
+            activeChannels.add(ctx.channel());
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("Connection {} closed", ctx.channel().remoteAddress());
+            activeChannels.remove(ctx.channel());
+        }
+    }
+
+}
+```
+
+### `ReplicationSlave.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationSlave.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
+import javax.net.ssl.SSLException;
+
+import org.yamcs.AbstractYamcsService;
+import org.yamcs.ConfigurationException;
+import org.yamcs.InitException;
+import org.yamcs.Spec;
+import org.yamcs.YConfiguration;
+import org.yamcs.YamcsException;
+import org.yamcs.YamcsServer;
+import org.yamcs.YamcsServerInstance;
+import org.yamcs.Spec.OptionType;
+import org.yamcs.replication.Message.TransactionMessage;
+import org.yamcs.replication.protobuf.ColumnInfo;
+import org.yamcs.replication.protobuf.Request;
+import org.yamcs.replication.protobuf.Response;
+import org.yamcs.replication.protobuf.StreamInfo;
+import org.yamcs.replication.protobuf.TimeMessage;
+import org.yamcs.time.SimulationTimeService;
+import org.yamcs.time.TimeService;
+import org.yamcs.utils.DecodingException;
+import org.yamcs.yarch.ColumnDefinition;
+import org.yamcs.yarch.ColumnSerializer;
+import org.yamcs.yarch.ColumnSerializerFactory;
+import org.yamcs.yarch.DataType;
+import org.yamcs.yarch.Stream;
+import org.yamcs.yarch.Tuple;
+import org.yamcs.yarch.TupleDefinition;
+import org.yamcs.yarch.YarchDatabase;
+import org.yamcs.yarch.YarchDatabaseInstance;
+
+import com.google.protobuf.TextFormat;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandler;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.handler.ssl.SslContext;
+import io.netty.handler.ssl.SslContextBuilder;
+import io.netty.util.concurrent.ScheduledFuture;
+
+public class ReplicationSlave extends AbstractYamcsService {
+    private TcpRole tcpRole;
+    int port;
+    String host;
+    ReplicationClient tcpClient;
+    long reconnectionInterval;
+    String masterInstance;
+    long lastTxId;
+    SlaveChannelHandler slaveChannelHandler;
+    // remote (master) stream name -> local stream name
+    Map<String, String> streamNames = new HashMap<>();
+    RandomAccessFile lastTxFile;
+
+    Path txtfilePath;
+    int localInstanceId;
+    SslContext sslCtx = null;
+    int maxTupleSize;
+    long timeoutMillis;
+    SimulationTimeService simTimeService = null;
+
+    @Override
+    public void init(String yamcsInstance, String serviceName, YConfiguration config) throws InitException {
+        super.init(yamcsInstance, serviceName, config);
+        YamcsServerInstance ysi =YamcsServer.getServer().getInstance(yamcsInstance); 
+        this.localInstanceId = ysi.getInstanceId();
+        boolean updateSimTime = config.getBoolean("updateSimTime");
+        if (updateSimTime) {
+            TimeService srv = ysi.getTimeService();
+            if (srv instanceof SimulationTimeService) {
+                simTimeService = (SimulationTimeService) srv;
+                simTimeService.setTime0(0);
+            } else {
+                throw new ConfigurationException(
+                        "Cannot use updateSimTime unless the simulated time service is configured");
+            }
+        }
+        List<String> streams = config.getList("streams");
+        for (String s : streams) {
+            String[] a = s.split("\\s*\\-\\>\\s*");
+            if(a.length == 1) {
+                streamNames.put(a[0], a[0]);
+            } else if (a.length == 2) {
+                streamNames.put(a[0], a[1]);
+            } else {
+                throw new ConfigurationException("Invalid stream spec '" + s + "'");
+            }
+        }
+        tcpRole = config.getEnum("tcpRole", TcpRole.class, TcpRole.CLIENT);
+        if (tcpRole == TcpRole.CLIENT) {
+            host = config.getString("masterHost");
+            port = config.getInt("masterPort");
+            reconnectionInterval = 1000 * config.getLong("reconnectionIntervalSec", 30);
+            boolean enableTls = config.getBoolean("enableTls", false);
+
+            if (enableTls) {
+                try {
+                    sslCtx = SslContextBuilder.forClient().build();
+                } catch (SSLException e) {
+                    throw new InitException("Failed to initialize the TLS: " + e.toString());
+                }
+            }
+
+        } else {
+            ReplicationServer server = getReplicationServer();
+            server.registerSlave(this);
+        }
+        masterInstance = config.getString("masterInstance", yamcsInstance);// by default we ask the same instance from
+        String dataDir = YarchDatabase.getDataDir();
+        Path replicationDir = Paths.get(dataDir).resolve(yamcsInstance).resolve("replication");
+        replicationDir.toFile().mkdirs();
+        String lastTxFilename = config.getString("lastTxFile", serviceName + "-lastid.txt");
+        this.maxTupleSize = config.getInt("maxTupleSize");
+        this.timeoutMillis = (long) (config.getDouble("timeoutSec") * 1000);
+
+        txtfilePath = replicationDir.resolve(lastTxFilename);
+        try {
+            lastTxFile = new RandomAccessFile(txtfilePath.toFile(), "rw");
+            String line = lastTxFile.readLine();
+            if (line != null) {
+                lastTxId = Long.parseLong(line);
+            } else {
+                lastTxId = -1;
+            }
+        } catch (IOException e) {
+            throw new InitException(e);
+        } catch (NumberFormatException e) {
+            throw new InitException("Cannot parse number from " + txtfilePath + ": " + e);
+        }
+
+    }
+
+    @Override
+    public Spec getSpec() {
+        Spec spec = new Spec();
+        spec.addOption("streams", OptionType.LIST).withElementType(OptionType.STRING).withRequired(true);
+        spec.addOption("tcpRole", OptionType.STRING);
+        spec.addOption("masterHost", OptionType.STRING);
+        spec.addOption("masterPort", OptionType.INTEGER);
+        spec.addOption("reconnectionIntervalSec", OptionType.INTEGER);
+        spec.addOption("enableTls", OptionType.BOOLEAN);
+        spec.addOption("masterInstance", OptionType.STRING);
+        spec.addOption("lastTxFile", OptionType.STRING);
+        spec.addOption("maxTupleSize", OptionType.INTEGER).withDefault(131072)
+                .withDescription("Maximum size of the serialized tuple");
+        spec.addOption("timeoutSec", OptionType.FLOAT)
+                .withDescription(
+                        "Timeout in seconds. If no message is received in this time, the connection will be closed")
+                .withDefault(30);
+
+        spec.addOption("updateSimTime", OptionType.BOOLEAN).withDefault(false)
+                .withDescription("If true, update the simulation time with the time received from the master");
+        return spec;
+    }
+
+    @Override
+    protected void doStart() {
+        if (tcpRole == TcpRole.CLIENT) {
+            tcpClient = new ReplicationClient(yamcsInstance, host, port, sslCtx, reconnectionInterval, maxTupleSize,
+                    () -> new SlaveChannelHandler(this));
+            tcpClient.start();
+        }
+        notifyStarted();
+    }
+
+    @Override
+    protected void doStop() {
+        shutdown();
+        notifyStopped();
+    }
+
+    private void failService(String errMsg) {
+        log.warn("Replication failed: {}", errMsg);
+        log.warn("Shutting down the service");
+        shutdown();
+        notifyFailed(new Exception(errMsg));
+    }
+
+    private void shutdown() {
+        log.debug("Shutting down the replication slave");
+        if (tcpClient != null) {
+            tcpClient.stop();
+        }
+        if (tcpRole == TcpRole.SERVER) {
+            try {
+                getReplicationServer().unregisterSlave(this);
+            } catch (InitException e) {
+                // shouldn't happen since we are already started
+                throw new RuntimeException(e);
+            }
+        }
+        if (slaveChannelHandler != null) {
+            slaveChannelHandler.shutdown();
+            slaveChannelHandler = null;
+        }
+
+        try {
+            lastTxFile.close();
+        } catch (IOException e) {
+            log.error("Failed to close the last TX id file");
+            notifyFailed(e);
+        }
+    }
+
+    private void updateLastTxFile() {
+        try {
+            lastTxFile.seek(0);
+            lastTxFile.writeBytes(Long.toString(lastTxId) + "\n");
+        } catch (IOException e) {
+            log.warn("Failed to update the last tx file " + txtfilePath, e);
+        }
+    }
+
+    private ReplicationServer getReplicationServer() throws InitException {
+        List<ReplicationServer> servers = YamcsServer.getServer().getGlobalServices(ReplicationServer.class);
+        if (servers.isEmpty()) {
+            throw new InitException(
+                    "ReplicationSlave is defined with the role Server; that requires the ReplicationServer global service (yamcs.yaml) to be defined");
+        } else if (servers.size() > 1) {
+            log.warn("There are {} ReplicationServer services defined. Registering to the first one.",
+                    servers.size());
+        }
+        return servers.get(0);
+    }
+
+
+    public List<String> getStreamNames() {
+        return streamNames.entrySet().stream().map(e -> {
+            if (e.getKey().equals(e.getValue())) {
+                return e.getKey();
+            } else {
+                return e.getKey() + "->" + e.getValue();
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public boolean isTcpClient() {
+        return tcpRole == TcpRole.CLIENT;
+    }
+
+    public ReplicationClient getTcpClient() {
+        return tcpClient;
+    }
+
+    public String getMasterHost() {
+        return host;
+    }
+
+    public int getMasterPort() {
+        return port;
+    }
+
+    public String getMasterInstance() {
+        return masterInstance;
+    }
+
+    public long getTxId() {
+        return lastTxId;
+    }
+
+    /**
+     * Called when the tcpRole = Server and a new client connects to {@link ReplicationServer}
+     * 
+     * @throws YamcsException
+     *             if there is already a connection open to this slave
+     */
+    public ChannelHandler newChannelHandler() throws YamcsException {
+        if (slaveChannelHandler != null) {
+            throw new YamcsException("There is already a connection open to this slave");
+        }
+        slaveChannelHandler = new SlaveChannelHandler(this);
+        return slaveChannelHandler;
+    }
+
+    private void processTimeMessage(TimeMessage timeMsg) {
+        if (simTimeService != null) {
+            simTimeService.setSimElapsedTime(timeMsg.getLocalTime(), timeMsg.getMissionTime());
+            if (timeMsg.hasSpeed()) {
+                simTimeService.setSimSpeed(timeMsg.getSpeed());
+            }
+        }
+    }
+
+    public class SlaveChannelHandler extends ChannelInboundHandlerAdapter {
+        ReplicationSlave replSlave;
+        private ChannelHandlerContext channelHandlerContext;
+        Map<Integer, ByteBufToStream> streamWriters = new HashMap<>();
+        long lastMsgReceivedTime;
+        private ScheduledFuture<?> timeoutFuture;
+
+        public SlaveChannelHandler(ReplicationSlave slave) {
+            this.replSlave = slave;
+            this.lastMsgReceivedTime = System.currentTimeMillis();
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object o) {
+            ByteBuf nettybuf = (ByteBuf) o;
+            try {
+                doChannelRead(ctx, nettybuf);
+            } finally {
+                nettybuf.release();
+            }
+        }
+
+        private void doChannelRead(ChannelHandlerContext ctx, ByteBuf nettybuf) {
+            ByteBuffer buf = nettybuf.nioBuffer();
+
+            if (state() != State.RUNNING) {
+                return;
+            }
+
+            Message msg;
+            try {
+                msg = Message.decode(buf);
+            } catch (DecodingException e) {
+                log.warn("TX{} Failed to decode message {}; closing connection", lastTxId,
+                        ByteBufUtil.hexDump(nettybuf), e);
+                ctx.close();
+                return;
+            }
+            lastMsgReceivedTime = System.currentTimeMillis();
+            if (msg.type == Message.DATA) {
+                TransactionMessage tmsg = (TransactionMessage) msg;
+
+                if (tmsg.txId <= lastTxId) {
+                    log.warn("Received data from the past txId={}, lastTxId={}", tmsg.txId, lastTxId);
+                } else {
+                    checkMissing(tmsg);
+                }
+
+                int streamId = tmsg.buf.getInt();
+
+                if (tmsg.instanceId == localInstanceId) {
+                    log.trace("Skipping data originating from myself (serverId: {})", tmsg.instanceId);
+                    return;
+                }
+                ByteBufToStream bbs = streamWriters.get(streamId);
+                if (bbs == null) {
+                    log.trace("Skipping data for unknown stream {}", streamId);
+                    return;
+                }
+                if (log.isTraceEnabled()) {
+                    log.trace("TX{} received data for stream {}, length {}", tmsg.txId, bbs.stream.getName(),
+                            tmsg.buf.remaining());
+                }
+
+                bbs.processData(tmsg.txId, tmsg.buf);
+            } else if (msg.type == Message.STREAM_INFO) {
+                TransactionMessage tmsg = (TransactionMessage) msg;
+                if (tmsg.txId > lastTxId) { // we expect to receive previous stream info transactions
+                    checkMissing(tmsg);
+                }
+
+                StreamInfo streamInfo = (StreamInfo) msg.protoMsg;
+                if (!streamInfo.hasName() || !streamInfo.hasId()) {
+                    failService("TX" + tmsg.txId + ": received invalid stream info: " + streamInfo);
+                    return;
+                }
+                log.debug("TX{}: received stream info {}", tmsg.txId, TextFormat.shortDebugString(streamInfo));
+                String remoteStreamName = streamInfo.getName();
+                if (!streamNames.containsKey(remoteStreamName)) {
+                    log.debug("TX{}: Ignoring stream {} because it is not in the list configured", tmsg.txId,
+                            remoteStreamName);
+                    return;
+                }
+                String localStreamName = streamNames.get(remoteStreamName);
+                YarchDatabaseInstance ydb = YarchDatabase.getInstance(yamcsInstance);
+                Stream stream = ydb.getStream(localStreamName);
+                if (stream == null) {
+                    log.warn("TX{}: Received data for stream {} which does not exist", tmsg.txId, localStreamName);
+                    return;
+                }
+                streamWriters.put(streamInfo.getId(), new ByteBufToStream(stream, streamInfo));
+            } else if (msg.type == Message.RESPONSE) {// this is sent by a master when we are slave.
+                Response resp = (Response) msg.protoMsg;
+                if (resp.getResult() != 0) {
+                    failService("Received negative response: " + resp.getErrorMsg());
+                    return;
+                } else {
+                    log.info("Received response {}", resp);
+                }
+            } else if (msg.type == Message.TIME) {
+                TimeMessage timeMsg = (TimeMessage) msg.protoMsg;
+                processTimeMessage(timeMsg);
+            } else {
+                failService("Unexpected message type " + msg.type + " received from the master");
+                return;
+            }
+        }
+
+
+        private void checkMissing(TransactionMessage tmsg) {
+            if (tmsg.txId != lastTxId + 1) {
+                log.warn("Transactions {} to {} are missing", lastTxId + 1, tmsg.txId - 1);
+            }
+            lastTxId = tmsg.txId;
+        }
+
+        // called when tcpRole=Client and the connection is open
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            super.channelActive(ctx);
+            sendRequest();
+        }
+
+        // called when tcpRole=Server and this handler is added to the pipeline by the ReplicationServer
+        @Override
+        public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+            super.handlerAdded(ctx);
+            if (tcpRole == TcpRole.CLIENT) {
+                return;
+            }
+            this.channelHandlerContext = ctx;
+            sendRequest();
+        }
+
+        private void sendRequest() {
+            Request.Builder reqb = Request.newBuilder().setRequestSeq(1).setYamcsInstance(masterInstance);
+            if (lastTxId >= 0) {
+                reqb.setStartTxId(lastTxId + 1);
+            }
+            Request req = reqb.build();
+            log.debug("Connection {} opened, sending request {}", channelHandlerContext.channel().remoteAddress(),
+                    TextFormat.shortDebugString(req));
+            ByteBuf buf = Unpooled.wrappedBuffer(Message.get(req).encode());
+            channelHandlerContext.writeAndFlush(buf);
+            cancelTimeoutFuture();
+            timeoutFuture = channelHandlerContext.executor().scheduleAtFixedRate(this::checkTimeout, timeoutMillis,
+                    timeoutMillis, TimeUnit.MILLISECONDS);
+        }
+
+        void checkTimeout() {
+            long now = System.currentTimeMillis();
+            if (now - lastMsgReceivedTime > timeoutMillis) {
+                log.warn("No message received in the last {} seconds. Closing the connection",
+                        (now - lastMsgReceivedTime) / 1000);
+                channelHandlerContext.close();
+                cancelTimeoutFuture();
+            }
+        }
+
+        void cancelTimeoutFuture() {
+            ScheduledFuture<?> sf = timeoutFuture;
+            if (sf != null) {
+                sf.cancel(true);
+            }
+        }
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            this.channelHandlerContext = ctx;
+        }
+
+        public void shutdown() {
+            channelHandlerContext.close();
+            cancelTimeoutFuture();
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+            log.warn("Caught exception", cause);
+        }
+
+        @Override
+        public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+            log.debug("Connection {} closed", ctx.channel().remoteAddress());
+            super.channelInactive(ctx);
+            cancelTimeoutFuture();
+            slaveChannelHandler = null;
+        }
+
+        class ByteBufToStream {
+            TupleDefinition completeTuple;
+            ColumnSerializer<?>[] serializers;
+            Stream stream;
+
+            public ByteBufToStream(Stream stream, StreamInfo streamInfo) {
+                this.stream = stream;
+
+                completeTuple = new TupleDefinition();
+                serializers = new ColumnSerializer<?>[streamInfo.getColumnsCount()];
+                for (int i = 0; i < serializers.length; i++) {
+                    ColumnInfo cinfo = streamInfo.getColumns(i);
+                    if (cinfo.getId() != i) {
+                        log.warn("Corrupted metadata? c[{}].getId = {} (should be {})", i, cinfo.getId(), i);
+                        return;
+                    }
+                    String cname = cinfo.getName();
+                    String ctype = cinfo.getType();
+                    DataType type = DataType.byName(ctype);
+                    ColumnDefinition cd = new ColumnDefinition(cname, type);
+                    completeTuple.addColumn(cd);
+                    serializers[i] = ColumnSerializerFactory.getColumnSerializerForReplication(cd);
+                }
+            }
+
+            @SuppressWarnings("rawtypes")
+            public void processData(long txId, ByteBuffer niobuf) {
+                TupleDefinition tdef = new TupleDefinition();
+                ArrayList<Object> cols = new ArrayList<>();
+                // deserialize the value
+                try {
+                    while (true) {
+                        int id = niobuf.getInt(); // column index
+                        if (id == -1) {
+                            break;
+                        }
+                        int cidx = id & 0xFFFF;
+                        if (cidx >= completeTuple.size()) {
+                            log.warn(
+                                    "TX{}: when deserializing data for stream {}: reference to unknown column index {}",
+                                    txId, stream.getName(), cidx);
+                            return;
+                        }
+                        int typeId = id >>> 24;
+                        ColumnDefinition cd = completeTuple.getColumn(cidx);
+                        ColumnSerializer cs = serializers[cidx];
+                        if (cd.getType().getTypeId() != typeId) {
+                            log.warn(
+                                    "TX{}: when deserializing data for stream {}: type id for index {} (column {}) is {}; expected {}",
+                                    txId, stream.getName(), cidx, cd.getName(), typeId, cd.getType().getTypeId());
+                            return;
+                        }
+                        Object o = cs.deserialize(niobuf, cd);
+                        tdef.addColumn(cd);
+                        cols.add(o);
+                    }
+                    Tuple t = new Tuple(tdef, cols);
+                    stream.emitTuple(t);
+                    updateLastTxFile();
+
+                } catch (Exception e) {
+                    log.warn("Cannot deserialize data for stream {}", stream.getName(), e);
+                }
+            }
+        }
+    }
+
+}
+```
+
+### `ReplicationTail.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/ReplicationTail.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.nio.ByteBuffer;
+
+public class ReplicationTail {
+    ByteBuffer buf;
+   
+    boolean eof;//end of file
+    public long nextTxId;
+    
+    @Override
+    public String toString() {
+        return "ReplicationTail [buf.pos=" + buf.position()+", buf.limit="+buf.limit() + ", eof=" + eof + ", nextTxId=" + nextTxId + "]";
+    }
+}
+```
+
+### `TcpRole.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/TcpRole.java`
+
+
+```java
+package org.yamcs.replication;
+
+public enum TcpRole {
+    SERVER, CLIENT;
+}
+```
+
+### `Transaction.java`
+
+**경로:** `gsw/yamcs/yamcs-core/src/main/java/org/yamcs/replication/Transaction.java`
+
+
+```java
+package org.yamcs.replication;
+
+import java.nio.BufferOverflowException;
+import java.nio.ByteBuffer;
+
+public interface Transaction {
+    
+    static boolean isMetadata(byte type) {
+        return type == Message.STREAM_INFO;
+    }
+    
+    byte getType();
+    void marshall(ByteBuffer buf) throws BufferOverflowException;
+
+    int getInstanceId();
+}
+```

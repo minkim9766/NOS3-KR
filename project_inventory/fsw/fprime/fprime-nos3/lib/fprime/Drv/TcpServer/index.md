@@ -3,26 +3,445 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 docs/index
 test/index
-file--CMakeLists.txt
-file--TcpServer.fpp
-file--TcpServer.hpp
-file--TcpServerComponentImpl.cpp
-file--TcpServerComponentImpl.hpp
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/docs/`](docs/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/test/`](test/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServer.fpp`](file--TcpServer.fpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServer.hpp`](file--TcpServer.hpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServerComponentImpl.cpp`](file--TcpServerComponentImpl.cpp) — UTF-8 텍스트 파일 본문 포함
-- [`fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServerComponentImpl.hpp`](file--TcpServerComponentImpl.hpp) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/CMakeLists.txt`
+
+
+```cmake
+####
+# F prime CMakeLists.txt:
+#
+# SOURCE_FILES: combined list of source and autocoding files
+# MOD_DEPS: (optional) module dependencies
+#
+####
+restrict_platforms(Posix SOCKETS)
+
+set(SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/TcpServer.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/TcpServerComponentImpl.cpp"
+)
+
+# Necessary shared helpers
+set(MOD_DEPS
+    "Fw/Logger"
+    "Drv/ByteStreamDriverModel"
+    "Drv/Ip"
+)
+
+register_fprime_module()
+
+### UTs ###
+set(UT_SOURCE_FILES
+    "${CMAKE_CURRENT_LIST_DIR}/TcpServer.fpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TcpServerTestMain.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/test/ut/TcpServerTester.cpp"
+)
+set(UT_MOD_DEPS
+    STest
+    SocketTestHelper
+)
+set(UT_AUTO_HELPERS ON)
+register_fprime_ut()
+set (UT_TARGET_NAME "${FPRIME_CURRENT_MODULE}_ut_exe")
+if (TARGET "${UT_TARGET_NAME}")
+    target_compile_options("${UT_TARGET_NAME}" PRIVATE -Wno-conversion)
+endif()
+```
+
+### `TcpServer.fpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServer.fpp`
+
+
+```fpp
+module Drv {
+    passive component TcpServer {
+
+        import ByteStreamDriver
+
+        @ Allocation for received data
+        output port allocate: Fw.BufferGet
+
+        @ Deallocation of allocated buffers
+        output port deallocate: Fw.BufferSend
+
+    }
+}
+```
+
+### `TcpServer.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServer.hpp`
+
+
+```cpp
+// ======================================================================
+// TcpServer.hpp
+// Standardization header for TcpServer
+// ======================================================================
+
+#ifndef Drv_TcpServer_HPP
+#define Drv_TcpServer_HPP
+
+#include "Drv/TcpServer/TcpServerComponentImpl.hpp"
+
+namespace Drv {
+
+typedef TcpServerComponentImpl TcpServer;
+
+}
+
+#endif
+```
+
+### `TcpServerComponentImpl.cpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServerComponentImpl.cpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpServerComponentImpl.cpp
+// \author mstarch
+// \brief  cpp file for TcpServerComponentImpl component implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#include <Drv/TcpServer/TcpServerComponentImpl.hpp>
+#include <Fw/FPrimeBasicTypes.hpp>
+#include <limits>
+#include "Fw/Logger/Logger.hpp"
+#include "Fw/Types/Assert.hpp"
+
+namespace Drv {
+
+// ----------------------------------------------------------------------
+// Construction, initialization, and destruction
+// ----------------------------------------------------------------------
+
+TcpServerComponentImpl::TcpServerComponentImpl(const char* const compName) : TcpServerComponentBase(compName) {}
+
+SocketIpStatus TcpServerComponentImpl::configure(const char* hostname,
+                                                 const U16 port,
+                                                 const U32 send_timeout_seconds,
+                                                 const U32 send_timeout_microseconds,
+                                                 FwSizeType buffer_size) {
+    // Check that ensures the configured buffer size fits within the limits fixed-width type, U32
+
+    FW_ASSERT(buffer_size <= std::numeric_limits<U32>::max(), static_cast<FwAssertArgType>(buffer_size));
+    m_allocation_size = buffer_size;  // Store the buffer size
+                                      //
+    (void)m_socket.configure(hostname, port, send_timeout_seconds, send_timeout_microseconds);
+    return startup();
+}
+
+TcpServerComponentImpl::~TcpServerComponentImpl() {}
+
+// ----------------------------------------------------------------------
+// Implementations for socket read task virtual methods
+// ----------------------------------------------------------------------
+
+U16 TcpServerComponentImpl::getListenPort() {
+    return m_socket.getListenPort();
+}
+
+IpSocket& TcpServerComponentImpl::getSocketHandler() {
+    return m_socket;
+}
+
+Fw::Buffer TcpServerComponentImpl::getBuffer() {
+    return allocate_out(0, static_cast<U32>(m_allocation_size));
+}
+
+void TcpServerComponentImpl::sendBuffer(Fw::Buffer buffer, SocketIpStatus status) {
+    Drv::ByteStreamStatus recvStatus = ByteStreamStatus::OTHER_ERROR;
+    if (status == SOCK_SUCCESS) {
+        recvStatus = ByteStreamStatus::OP_OK;
+    } else if (status == SOCK_NO_DATA_AVAILABLE) {
+        recvStatus = ByteStreamStatus::RECV_NO_DATA;
+    } else {
+        recvStatus = ByteStreamStatus::OTHER_ERROR;
+    }
+    this->recv_out(0, buffer, recvStatus);
+}
+
+void TcpServerComponentImpl::connected() {
+    if (isConnected_ready_OutputPort(0)) {
+        this->ready_out(0);
+    }
+}
+
+bool TcpServerComponentImpl::isStarted() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    return this->m_descriptor.serverFd != -1;
+}
+
+SocketIpStatus TcpServerComponentImpl::startup() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    Drv::SocketIpStatus status = SOCK_SUCCESS;
+    // Prevent multiple startup attempts
+    if (this->m_descriptor.serverFd == -1) {
+        status = this->m_socket.startup(this->m_descriptor);
+    }
+    return status;
+}
+
+void TcpServerComponentImpl::terminate() {
+    Os::ScopeLock scopedLock(this->m_lock);
+    this->m_socket.terminate(this->m_descriptor);
+    this->m_descriptor.serverFd = -1;
+}
+
+void TcpServerComponentImpl::readLoop() {
+    Drv::SocketIpStatus status = Drv::SocketIpStatus::SOCK_NOT_STARTED;
+    // Keep trying to reconnect until the status is good, told to stop, or reconnection is turned off
+    do {
+        status = this->startup();
+        if (status != SOCK_SUCCESS) {
+            Fw::Logger::log("[WARNING] Failed to listen on port %hu with status %d\n", this->getListenPort(), status);
+            (void)Os::Task::delay(SOCKET_RETRY_INTERVAL);
+            continue;
+        }
+    } while (this->running() && status != SOCK_SUCCESS && this->m_reopen);
+    // If start up was successful then perform normal operations
+    if (this->running() && status == SOCK_SUCCESS) {
+        // Perform the nominal read loop
+        SocketComponentHelper::readLoop();
+    }
+    // Terminate the server
+    this->terminate();
+}
+
+// ----------------------------------------------------------------------
+// Handler implementations for user-defined typed input ports
+// ----------------------------------------------------------------------
+
+Drv::ByteStreamStatus TcpServerComponentImpl::send_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    FW_ASSERT_NO_OVERFLOW(fwBuffer.getSize(), U32);
+    Drv::SocketIpStatus status = this->send(fwBuffer.getData(), static_cast<U32>(fwBuffer.getSize()));
+    Drv::ByteStreamStatus returnStatus;
+    switch (status) {
+        case SOCK_INTERRUPTED_TRY_AGAIN:
+            returnStatus = ByteStreamStatus::SEND_RETRY;
+            break;
+        case SOCK_SUCCESS:
+            returnStatus = ByteStreamStatus::OP_OK;
+            break;
+        default:
+            returnStatus = ByteStreamStatus::OTHER_ERROR;
+            break;
+    }
+    return returnStatus;
+}
+
+void TcpServerComponentImpl::recvReturnIn_handler(FwIndexType portNum, Fw::Buffer& fwBuffer) {
+    this->deallocate_out(0, fwBuffer);
+}
+
+}  // end namespace Drv
+```
+
+### `TcpServerComponentImpl.hpp`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Drv/TcpServer/TcpServerComponentImpl.hpp`
+
+
+```cpp
+// ======================================================================
+// \title  TcpServerComponentImpl.hpp
+// \author mstarch
+// \brief  hpp file for TcpServerComponentImpl component implementation class
+//
+// \copyright
+// Copyright 2009-2020, by the California Institute of Technology.
+// ALL RIGHTS RESERVED.  United States Government Sponsorship
+// acknowledged.
+//
+// ======================================================================
+
+#ifndef TcpServerComponentImpl_HPP
+#define TcpServerComponentImpl_HPP
+
+#include <Drv/Ip/IpSocket.hpp>
+#include <Drv/Ip/SocketComponentHelper.hpp>
+#include <Drv/Ip/TcpServerSocket.hpp>
+#include <config/IpCfg.hpp>
+#include "Drv/TcpServer/TcpServerComponentAc.hpp"
+
+namespace Drv {
+
+class TcpServerComponentImpl final : public TcpServerComponentBase, public SocketComponentHelper {
+    friend class TcpServerTester;
+
+  public:
+    // ----------------------------------------------------------------------
+    // Construction, initialization, and destruction
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief construct the TcpServer component.
+     * \param compName: name of this component
+     */
+    TcpServerComponentImpl(const char* const compName);
+
+    /**
+     * \brief Destroy the component
+     */
+    ~TcpServerComponentImpl();
+
+    // ----------------------------------------------------------------------
+    // Helper methods to start and stop socket
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief Configures the TcpServer settings but does not open the connection
+     *
+     * The TcpServerComponent needs to listen for a remote TCP client. This call configures the hostname, port and
+     * send timeouts for that socket connection. This call should be performed on system startup before recv or send
+     * are called. Note: hostname must be a dot-notation IP address of the form "x.x.x.x". DNS translation is left up
+     * to the user.
+     *
+     * \param hostname: ip address of remote tcp server in the form x.x.x.x
+     * \param port: port of remote tcp server
+     * \param send_timeout_seconds: send timeout seconds component. Defaults to: SOCKET_TIMEOUT_SECONDS
+     * \param send_timeout_microseconds: send timeout microseconds component. Must be less than 1000000. Defaults to:
+     * SOCKET_TIMEOUT_MICROSECONDS
+     * \param buffer_size: size of the buffer to be allocated. Defaults to 1024.
+     * \return status of the configure
+     */
+    SocketIpStatus configure(const char* hostname,
+                             const U16 port,
+                             const U32 send_timeout_seconds = SOCKET_SEND_TIMEOUT_SECONDS,
+                             const U32 send_timeout_microseconds = SOCKET_SEND_TIMEOUT_MICROSECONDS,
+                             FwSizeType buffer_size = 1024);
+
+    /**
+     * \brief is started
+     */
+    bool isStarted();
+
+    /**
+     * \brief startup the server socket for communications
+     *
+     * Start up the server socket by listening on a port. Note: does not accept clients, this is done in open to
+     * facilitate re-connection of clients.
+     */
+    SocketIpStatus startup();
+
+    /**
+     * \brief terminate the server socket
+     *
+     * Close the server socket. Should be done after all clients are shutdown and closed.
+     */
+    void terminate();
+
+    /**
+     * \brief get the port being listened on
+     *
+     * Most useful when listen was configured to use port "0", this will return the port used for listening after a port
+     * has been determined. Will return 0 if the connection has not been setup.
+     *
+     * \return receive port
+     */
+    U16 getListenPort();
+
+  protected:
+    // ----------------------------------------------------------------------
+    // Implementations for socket read task virtual methods
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief returns a reference to the socket handler
+     *
+     * Gets a reference to the current socket handler in order to operate generically on the IpSocket instance. Used for
+     * receive, and open calls. This socket handler will be a TcpServer.
+     *
+     * \return IpSocket reference
+     */
+    IpSocket& getSocketHandler() override;
+
+    /**
+     * \brief returns a buffer to fill with data
+     *
+     * Gets a reference to a buffer to fill with data. This allows the component to determine how to provide a
+     * buffer and the socket read task just fills said buffer.
+     *
+     * \return Fw::Buffer to fill with data
+     */
+    Fw::Buffer getBuffer() override;
+
+    /**
+     * \brief sends a buffer to be filled with data
+     *
+     * Sends the buffer gotten by getBuffer that has now been filled with data. This is used to delegate to the
+     * component how to send back the buffer. Ignores buffers with error status error.
+     *
+     * \return Fw::Buffer filled with data to send out
+     */
+    void sendBuffer(Fw::Buffer buffer, SocketIpStatus status) override;
+
+    /**
+     * \brief called when the IPv4 system has been connected
+     */
+    void connected() override;
+
+    /**
+     * \brief read from the socket, overridden to start and terminate the server socket
+     */
+    void readLoop() override;
+
+  private:
+    // ----------------------------------------------------------------------
+    // Handler implementations for user-defined typed input ports
+    // ----------------------------------------------------------------------
+
+    /**
+     * \brief Send data out of the TcpServer
+     *
+     * Passing data to this port will send data from the TcpServer to whatever TCP client this component has connected
+     * to. Should the socket not be opened or was disconnected, then this port call will return SEND_RETRY and critical
+     * transmissions should be retried. OTHER_ERROR indicates an unresolvable error. OP_OK is returned when the data
+     * has been sent.
+     *
+     * Note: this component delegates the reopening of the socket to the read thread and thus the caller should retry
+     * after the read thread has attempted to reopen the port but does not need to reopen the port manually.
+     *
+     * \param portNum: fprime port number of the incoming port call
+     * \param fwBuffer: buffer containing data to be sent
+     */
+    Drv::ByteStreamStatus send_handler(const FwIndexType portNum, Fw::Buffer& fwBuffer) override;
+
+    //! Handler implementation for recvReturnIn
+    //!
+    //! Port receiving back ownership of data sent out on $recv port
+    void recvReturnIn_handler(FwIndexType portNum,  //!< The port number
+                              Fw::Buffer& fwBuffer  //!< The buffer
+                              ) override;
+
+    Drv::TcpServerSocket m_socket;  //!< Socket implementation
+
+    FwSizeType m_allocation_size;  //!< Member variable to store the buffer size
+};
+
+}  // end namespace Drv
+
+#endif  // end TcpServerComponentImpl
+```

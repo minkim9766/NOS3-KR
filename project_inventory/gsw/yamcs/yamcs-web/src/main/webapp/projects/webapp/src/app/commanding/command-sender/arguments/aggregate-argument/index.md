@@ -3,18 +3,270 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `aggregate-argument.component.css`
 
-file--aggregate-argument.component.css
-file--aggregate-argument.component.html
-file--aggregate-argument.component.ts
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.css`
+
+
+```css
+.members {
+  margin-top: 5px;
+  padding-top: 5px;
+  padding-left: 10px;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+}
 ```
 
-## 항목
+### `aggregate-argument.component.html`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.css`](file--aggregate-argument.component.css) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.html`](file--aggregate-argument.component.html) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.ts`](file--aggregate-argument.component.ts) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.html`
+
+
+```html
+<ya-field [label]="label">
+  <ya-meta>aggregate</ya-meta>
+
+  @if (description) {
+    <ya-help>
+      {{ description }}
+    </ya-help>
+  }
+
+  <div class="members" [formGroupName]="controlName">
+    @for (member of type.member; track member; let i = $index; let isFirst = $first) {
+      <div [style.paddingTop.px]="isFirst ? 0 : 10">
+        @switch (member.type.engType) {
+          @case ("aggregate") {
+            <app-aggregate-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [initialValue]="memberInitialValues[i]" />
+          }
+          @case ("binary") {
+            <app-binary-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("boolean") {
+            <app-boolean-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("enumeration") {
+            <app-enumeration-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("float") {
+            <app-float-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("integer") {
+            <app-integer-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("string") {
+            <app-string-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case ("time") {
+            <app-time-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [formControlName]="member.name" />
+          }
+          @case (member.type.engType.endsWith("[]") ? member.type.engType : "") {
+            <app-array-argument
+              [name]="member.name"
+              [type]="member.type"
+              [description]="member.shortDescription"
+              [initialValue]="memberInitialValues[i]" />
+          }
+        }
+      </div>
+    }
+  </div>
+</ya-field>
+```
+
+### `aggregate-argument.component.ts`
+
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/webapp/src/app/commanding/command-sender/arguments/aggregate-argument/aggregate-argument.component.ts`
+
+
+```typescript
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+  Optional,
+  SkipSelf,
+  forwardRef,
+} from '@angular/core';
+import {
+  ControlContainer,
+  FormArray,
+  FormArrayName,
+  FormGroup,
+  FormGroupName,
+  UntypedFormControl,
+} from '@angular/forms';
+import { ArgumentType, WebappSdkModule, utils } from '@yamcs/webapp-sdk';
+import { ArrayArgumentComponent } from '../array-argument/array-argument.component';
+import { BinaryArgumentComponent } from '../binary-argument/binary-argument.component';
+import { BooleanArgumentComponent } from '../boolean-argument/boolean-argument.component';
+import { EnumerationArgumentComponent } from '../enumeration-argument/enumeration-argument.component';
+import { FloatArgumentComponent } from '../float-argument/float-argument.component';
+import { IntegerArgumentComponent } from '../integer-argument/integer-argument.component';
+import { StringArgumentComponent } from '../string-argument/string-argument.component';
+import { TimeArgumentComponent } from '../time-argument/time-argument.component';
+
+@Component({
+  selector: 'app-aggregate-argument',
+  templateUrl: './aggregate-argument.component.html',
+  styleUrl: './aggregate-argument.component.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  viewProviders: [
+    {
+      provide: ControlContainer,
+      useFactory: (
+        formArrayName: FormArrayName,
+        formGroupName: FormGroupName,
+      ) => {
+        if (
+          formArrayName &&
+          formArrayName.control.parent === formGroupName.control
+        ) {
+          return formArrayName;
+        } else {
+          return formGroupName;
+        }
+      },
+      deps: [[new SkipSelf(), new Optional(), FormArrayName], FormGroupName],
+    },
+  ],
+  imports: [
+    // Break circular imports
+    forwardRef(() => ArrayArgumentComponent),
+    BinaryArgumentComponent,
+    BooleanArgumentComponent,
+    EnumerationArgumentComponent,
+    FloatArgumentComponent,
+    IntegerArgumentComponent,
+    WebappSdkModule,
+    StringArgumentComponent,
+    TimeArgumentComponent,
+  ],
+})
+export class AggregateArgumentComponent implements OnInit {
+  @Input()
+  name: string;
+
+  @Input()
+  description?: string;
+
+  @Input()
+  type: ArgumentType;
+
+  @Input()
+  index?: number;
+
+  @Input()
+  dimensions?: number[];
+
+  @Input()
+  initialValue: { [key: string]: any };
+
+  controlName: string;
+
+  // Holds initial values for array/aggregate members.
+  // These are passed as @Input rather than control values.
+  memberInitialValues: any[] = [];
+
+  constructor(
+    private formGroupName: FormGroupName,
+    @Optional() private formArrayName: FormArrayName,
+  ) {}
+
+  ngOnInit() {
+    const parent = this.formGroupName.control;
+    let formGroup: FormGroup;
+
+    if (this.index === undefined) {
+      this.controlName = this.name;
+      formGroup = new FormGroup({});
+      parent.setControl(this.name, formGroup);
+    } else {
+      this.controlName = String(this.index);
+      const index = Number(this.index);
+      const formArray = parent.controls[this.name] as FormArray;
+      formGroup = formArray.at(index) as FormGroup;
+    }
+
+    for (const member of this.type.member || []) {
+      let initialValue;
+      if (member.type.engType === 'aggregate') {
+        initialValue = {};
+        if (
+          this.initialValue &&
+          this.initialValue.hasOwnProperty(member.name)
+        ) {
+          initialValue = this.initialValue[member.name];
+        }
+      } else if (member.type.engType.endsWith('[]')) {
+        initialValue = [];
+        if (
+          this.initialValue &&
+          this.initialValue.hasOwnProperty(member.name)
+        ) {
+          initialValue = this.initialValue[member.name];
+        }
+      } else {
+        initialValue = member.initialValue ?? '';
+        if (
+          this.initialValue &&
+          this.initialValue.hasOwnProperty(member.name)
+        ) {
+          initialValue = this.initialValue[member.name];
+        }
+
+        const control = new UntypedFormControl(initialValue);
+        formGroup.setControl(member.name, control, {
+          emitEvent: false, // Don't trigger event for each added member control
+        });
+      }
+
+      this.memberInitialValues.push(initialValue);
+    }
+  }
+
+  get label() {
+    if (this.index === undefined) {
+      return this.name;
+    } else {
+      const index = utils.unflattenIndex(this.index, this.dimensions!);
+      return index.map((i) => '[' + i + ']').join('');
+    }
+  }
+}
+```

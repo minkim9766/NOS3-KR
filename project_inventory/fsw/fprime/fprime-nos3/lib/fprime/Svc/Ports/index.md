@@ -3,7 +3,7 @@
 
 **경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -11,12 +11,18 @@
 CommsPorts/index
 OsTimeEpoch/index
 VersionPorts/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/CommsPorts/`](CommsPorts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/OsTimeEpoch/`](OsTimeEpoch/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/VersionPorts/`](VersionPorts/index) — 폴더
-- [`fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/fprime/fprime-nos3/lib/fprime/Svc/Ports/CMakeLists.txt`
+
+
+```cmake
+# Module subdirectories
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/CommsPorts/")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/OsTimeEpoch")
+add_fprime_subdirectory("${CMAKE_CURRENT_LIST_DIR}/VersionPorts/")
+```

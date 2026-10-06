@@ -3,18 +3,36 @@
 
 **경로:** `fsw/cfe/modules/cfe_assert/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
 
 inc/index
 src/index
-file--CMakeLists.txt
 ```
 
-## 항목
+## 이 폴더의 파일
 
-- [`fsw/cfe/modules/cfe_assert/inc/`](inc/index) — 폴더
-- [`fsw/cfe/modules/cfe_assert/src/`](src/index) — 폴더
-- [`fsw/cfe/modules/cfe_assert/CMakeLists.txt`](file--CMakeLists.txt) — UTF-8 텍스트 파일 본문 포함
+### `CMakeLists.txt`
+
+**경로:** `fsw/cfe/modules/cfe_assert/CMakeLists.txt`
+
+
+```cmake
+project(CFE_ASSERT C)
+
+# Create the app module
+add_cfe_app(cfe_assert
+    src/cfe_assert_io.c
+    src/cfe_assert_init.c
+    src/cfe_assert_runner.c
+    $<TARGET_OBJECTS:ut_assert_pic>
+)
+
+# publicize the interface to cfe_assert (and ut_assert)
+target_include_directories(cfe_assert PUBLIC
+    ${CFE_ASSERT_SOURCE_DIR}/inc
+    $<TARGET_PROPERTY:ut_assert,INTERFACE_INCLUDE_DIRECTORIES>
+)
+```

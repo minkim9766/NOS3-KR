@@ -3,16 +3,93 @@
 
 **경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/src/`
 
-## 하위 폴더 및 파일
+## 이 폴더의 파일
 
-```{toctree}
-:maxdepth: 1
+### `filter.grammar`
 
-file--filter.grammar
-file--highlight.js
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/src/filter.grammar`
+
+
+```text
+@top Filter {(value | Comparison | LogicOp)* }
+
+value {
+  True
+  | False
+  | Null
+  | Number
+  | (Minus? String)
+  | (Minus? Text)
+}
+
+String[isolate] { string }
+Text[isolate] { text }
+
+Comparison { Minus? Comparable CompareOp value }
+Comparable[isolate] { text | string }
+
+CompareOp { "=" | "!=" | "<" | ">" | "<=" | ">=" | "=~" | "!~" | ":" }
+LogicOp { "AND" | "OR" | "NOT" }
+
+
+@tokens {
+  True  { "true" }
+  False { "false" }
+  Null  { "null" }
+
+  Number { '-'? int frac? exp?  }
+  int  { '0' | $[1-9] @digit* }
+  frac { '.' @digit+ }
+  exp  { $[eE] $[+\-]? @digit+ }
+
+  string { '"' char* '"' }
+  text { $[a-zA-Z_$] $[a-zA-Z0-9_$\.]* }
+  char { $[\u{20}\u{21}\u{23}-\u{5b}\u{5d}-\u{10ffff}] | "\\" esc }
+  esc  { $["\\\/bfnrt] }
+
+  LineComment { "--" ![\n]* }
+  Minus { "-" }
+
+  whitespace { $[ \n\r\t] }
+
+  "(" ")"
+
+  @precedence { True, text }
+  @precedence { False, text }
+  @precedence { Null, text }
+  @precedence { LineComment, Minus }
+  @precedence { Number, Minus }
+  @precedence { "AND", text }
+  @precedence { "OR", text }
+  @precedence { "NOT", text }
+}
+
+@skip { whitespace | LineComment | "(" | ")" }
+
+@external propSource filterHighlighting from "./highlight"
+
+@detectDelim
 ```
 
-## 항목
+### `highlight.js`
 
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/src/filter.grammar`](file--filter.grammar) — UTF-8 텍스트 파일 본문 포함
-- [`gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/src/highlight.js`](file--highlight.js) — UTF-8 텍스트 파일 본문 포함
+**경로:** `gsw/yamcs/yamcs-web/src/main/webapp/projects/lezer-filter/src/highlight.js`
+
+
+```javascript
+import { styleTags, tags as t } from '@lezer/highlight';
+
+export const filterHighlighting = styleTags({
+  String: t.string,
+  Text: t.literal,
+  LineComment: t.lineComment,
+  CompareOp: t.compareOperator,
+  Comparable: t.propertyName,
+  LogicOp: t.logicOperator,
+  Number: t.number,
+  'True False': t.bool,
+  Minus: t.operator,
+  Null: t.null,
+  '( )': t.paren,
+});
+```

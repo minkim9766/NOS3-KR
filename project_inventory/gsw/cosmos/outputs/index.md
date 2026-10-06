@@ -3,7 +3,7 @@
 
 **경로:** `gsw/cosmos/outputs/`
 
-## 하위 폴더 및 파일
+## 하위 폴더
 
 ```{toctree}
 :maxdepth: 1
@@ -17,12 +17,4 @@ tables/index
 tmp/index
 ```
 
-## 항목
-
-- [`gsw/cosmos/outputs/dart/`](dart/index) — 폴더
-- [`gsw/cosmos/outputs/handbooks/`](handbooks/index) — 폴더
-- [`gsw/cosmos/outputs/logs/`](logs/index) — 폴더
-- [`gsw/cosmos/outputs/saved_config/`](saved_config/index) — 폴더
-- [`gsw/cosmos/outputs/sequences/`](sequences/index) — 폴더
-- [`gsw/cosmos/outputs/tables/`](tables/index) — 폴더
-- [`gsw/cosmos/outputs/tmp/`](tmp/index) — 폴더
+이 폴더에는 직접 포함된 파일이 없습니다.
